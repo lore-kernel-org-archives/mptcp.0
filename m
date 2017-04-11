@@ -1,74 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============6515310322994543565=="
+Content-Type: multipart/mixed; boundary="===============6622948892702543009=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] MPTCP Linux upstreaming introduction
-Date: Sun, 09 Apr 2017 13:18:34 -0400
-Message-ID: <alpine.OSX.2.21.1704091318010.32374@mjmartin-mac01.local>
-X-IMAPbase: 1616104606 8212
+Subject: Re: [MPTCP] MPTCP upstreaming introduction
+Date: Tue, 11 Apr 2017 15:52:06 -0700
+Message-ID: <alpine.OSX.2.21.1704111002110.40519@mlee4-mobl1.amr.corp.intel.com>
+In-Reply-To: 20170410052845.GN11821@Chimay.local
 X-Status: 
-X-Keywords:                    
-X-UID: 1
+X-Keywords:                  
+X-UID: 2
 
---===============6515310322994543565==
+--===============6622948892702543009==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Welcome to the MPTCP upstreaming mailing list!
 
-This list (mptcp(a)lists.01.org) is focused on integrating MPTCP (RFC 6824 =
-/ =
+Hi Christoph,
 
-RFC 6824bis) as part of the standard
-Linux kernel. In speaking with the Linux networking / TCP maintainers, it =
+Rao and I talked with David Miller and Eric Dumazet. They aren't =
 
-is important that MPTCP does not
-interfere with the performance or reliability of the TCP stack, or =
+enthusiastic about MPTCP from a protocol perpective, and pointed to the =
 
-complicate the existing TCP code.
+example of kcm as something that builds on top of multiple TCP connections =
 
-Given the Linux netdev maintainer's needs, we have the following =
+rather than modifying TCP itself. I think they're a little skeptical that =
 
-high-level design goals in mind:
+there's a committment to put in the necessary effort to upstream.
 
-* Minimize changes to core TCP.
+A few specific points of our discussions:
 
-* Favor atomic operations and RCU synchronization over more expensive =
+* Intrusive changes to TCP are not acceptable, the code is already complex =
 
-options like mutexes or spinlocks.
+and they don't want to introduce bugs or create additional maintenance =
 
-* Implement features in userspace where latency isn't important and data =
+burden. Given the need to tie in to TCP for option parsing (and other =
 
-flow is not affected
+changed behaviors), they're willing to look at adding hooks - but of =
 
-* TCP operates as "normal TCP" by default. Individual sockets may opt-in, =
+course reserved judgment until there are actual patches to look at.
 
-or systemwide configuration can be
-used to broadly enable MPTCP.
+* Related to that, skb size cannot increase.
 
-The role of this list is to coordinate upstreaming efforts and share code =
+* Regular TCP connections should remain the default and should work like =
 
-prior to upstream submission on
-netdev(a)lists.01.org . This list is separate from the mptcp-dev list =
+they do now.
 
-associated with the multipath-tcp.org
-kernel in order to avoid confusion between netdev-focused efforts and work =
+* Expect the review process to take a while.
 
-related to multipath-tcp.org .
-Anyone interested in MPTCP for the upstream kernel is welcome on =
+These points are what drives the goals I listed below. Identifying the =
 
-mptcp(a)lists.01.org, we appreciate your
-expertise and contributions!
+right (limited) set of hooks in to the TCP code is going to be an =
 
-You can manage your subscription or view list archives at =
-
-https://lists.01.org/mailman/listinfo/mptcp
+important early step.
 
 Best regards,
+Mat
+
+
+On Mon, 10 Apr 2017, Christoph Paasch wrote:
+
+> Hi Mat,
+>
+> what was the feedback/info you got from netdev 2.1 ?
+>
+>
+> Christoph
+>
+> On 09/04/17 - 13:12:26, Mat Martineau wrote:
+>> Welcome to the MPTCP upstreaming mailing list!
+>>
+>> This list (mptcp(a)lists.01.org) is focused on integrating MPTCP (RFC 68=
+24 /
+>> RFC 6824bis) as part of the standard Linux kernel. In speaking with the
+>> Linux networking / TCP maintainers, it is important that MPTCP does not
+>> interfere with the performance or reliability of the TCP stack, or
+>> complicate the existing TCP code.
+>>
+>> Given the Linux netdev maintainer's needs, we have the following high-le=
+vel
+>> design goals in mind:
+>>
+>> * Minimize changes to core TCP.
+>>
+>> * Favor atomic operations and RCU synchronization over more expensive
+>> options like mutexes or spinlocks.
+>>
+>> * Implement features in userspace where latency isn't important and data
+>> flow is not affected
+>>
+>> * TCP operates as "normal TCP" by default. Individual sockets may opt-in=
+, or
+>> systemwide configuration can be used to broadly enable MPTCP.
+>>
+>> The role of this list is to coordinate upstreaming efforts and share code
+>> prior to upstream submission on netdev(a)lists.01.org . This list is sep=
+arate
+>> from the mptcp-dev list associated with the multipath-tcp.org kernel in
+>> order to avoid confusion between netdev-focused efforts and work related=
+ to
+>> multipath-tcp.org . Anyone interested in MPTCP for the upstream kernel is
+>> welcome on mptcp(a)lists.01.org, we appreciate your expertise and
+>> contributions!
+>>
+>> You can manage your subscription or view list archives at
+>> https://lists.01.org/mailman/listinfo/mptcp
+>>
+>> Best regards,
+>>
+>> --
+>> Mat Martineau
+>> Intel OTC
+>
 
 --
 Mat Martineau
 Intel OTC
 
---===============6515310322994543565==--
+--===============6622948892702543009==--
