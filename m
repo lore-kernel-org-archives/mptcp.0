@@ -1,365 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============4878488437050651989=="
+Content-Type: multipart/mixed; boundary="===============4908290488720258147=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] tcp: Register handlers for extra TCP options
-Date: Thu, 27 Apr 2017 17:32:15 -0700
-Message-ID: <alpine.OSX.2.21.1704271617001.77713@dtabachn-mobl2.amr.corp.intel.com>
-In-Reply-To: d370ac9a-4221-ec1b-91be-ff6612f7748b@oracle.com
+Subject: Re: [MPTCP] Change to remove MPTCP members from tcp_skb_cb
+Date: Fri, 28 Apr 2017 15:52:53 -0700
+Message-ID: <alpine.OSX.2.21.1704281335460.85462@mjmartin-mac01.local>
+In-Reply-To: 0591abe1-066b-2a2c-59ba-4956a183348c@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 17
+X-UID: 18
 
---===============4878488437050651989==
+--===============4908290488720258147==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
 On Wed, 26 Apr 2017, Rao Shoaib wrote:
 
+> Hi,
 >
->
-> On 04/26/2017 06:02 PM, Mat Martineau wrote:
->> =
-
->> On Wed, 26 Apr 2017, Rao Shoaib wrote:
->> =
-
->>> Hi Matt,
->>> =
-
->>> Good work see my comments inline..
->>> =
-
->>> =
-
->>> On 04/24/2017 04:06 PM, Mat Martineau wrote:
->>>> =
-
->>>> On Thu, 20 Apr 2017, Mat Martineau wrote:
->>>> =
-
->>>>> Allow additional TCP options to be handled by registered hook
->>>>> functions.
->>>>> =
-
->>>>> Option parsing will call the provided 'parse' function when a TCP opt=
-ion
->>>>> number is not recognized by the normal option parsing code.
->>>>> =
-
->>>>> The 'prepare' and 'prepare_req' functions determine the required space
->>>>> for registered options and store associated data. There are two varia=
-nts
->>>>> because options must be generated for connections that are associated
->>>>> with either tcp_sock or request_sock structures.
->>> If I understand correctly the only difference should be the options =
-
->>> chosen. Why not handle this as is done today, syn and established optio=
-ns =
-
->>> ?
->> =
-
->> Christoph had a good suggestion for getting rid of prepare_req (see that =
-
->> reply).
->
-> Yeah. I should have read his email before replying as there was quite an =
-
-> overlap. I do have to say that looking at socket state when we are down a=
-t =
-
-> the transport level just seems strange, but I guess in Linux that is quit=
+> Here is an attempt to not use tcp_skb_cb with minimal change to MPTCP cod=
 e =
 
-> common.
+> and skb code. I have tested the change by using wget from multipath-tcp.o=
+rg. =
+
+> pcap file is attached.
 >
-> Can you guys save me some the trouble of digging through the code and tel=
-l me =
+> The approach that I have taken is very straight forward. On Tx when an sk=
+b is =
 
-> what is the locking strategy for sockets and tcp structures.
+> allocated and the underlying socket is MPTCP , 32 bytes extra are =
 
-Thank you to Christoph for covering this!
+> allocated[1] and reserved as the head room. This space is used for passin=
+g =
 
->> =
+> what was being passed in tcp_skb_cb. An used bit in sk_buff is used to =
 
->>>>> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
->>>>> index 04843ae77b9e..e0d0504f005a 100644
->>>>> --- a/net/ipv4/tcp.c
->>>>> +++ b/net/ipv4/tcp.c
->>>>> @@ -3279,6 +3287,132 @@ EXPORT_SYMBOL(tcp_md5_hash_key);
->>>>> =
+> indicate this special case and when skb is copied the extra data is also =
 
->>>>> #endif
->>>>> =
+> copied. clone is not an issue as the data is shared. This work for =
 
->>>>> +/* Linear search, few entries are expected. The RCU read lock must
->>>>> + * be held before calling.
->>>>> + */
->>>>> +static struct tcp_extra_option_ops =
-
->>>>> *tcp_extra_options_find_kind(unsigned char kind)
->>>>> +{
->>>>> +    struct tcp_extra_option_ops *entry;
->>>>> +
->>>>> +    list_for_each_entry_rcu(entry, &tcp_option_list, list) {
->>>>> +        if (entry->option_kind =3D=3D kind)
->>>>> +            return entry;
->>>>> +    }
->>>>> +
->>>>> +    return NULL;
->>>>> +}
->>>>> +
->>>>> +void tcp_extra_options_parse(int opcode, int opsize, const unsigned =
-
->>>>> char *opptr,
->>>>> +                 const struct sk_buff *skb,
->>>>> +                 struct tcp_options_received *opt_rx,
->>>>> +                 struct tcp_sock *tp)
->>>>> +{
->>>>> +    struct tcp_extra_option_ops *entry;
->>>>> +
->>>>> +    rcu_read_lock();
->>>>> +    entry =3D tcp_extra_options_find_kind(opcode);
->>>>> +    if (entry && entry->parse)
->>>>> +        entry->parse(opsize, opptr, skb, opt_rx, tp);
->>> =
-
->>> There does not seems to be a return value, what happens if the parsing =
-
->>> fails or the processing requires resetting the connection. For example =
-in =
-
->>> MPTCP if checksum required is present but is not configured, the curren=
-t =
-
->>> code returns an error and the connection is reset.
->> =
-
->> tcp_parse_options() doesn't have an error path, so I stayed with that =
-
->> approach. But maybe we need something a little different, if MPTCP can't =
-
->> handle the error on a different path (for example by putting something o=
-n a =
-
->> work queue to handle the connection reset).
-> Take a look at tcp_validate_incoming() -- since MPTCP packets take the sl=
-ow =
-
-> path.
-
-Ok, I will look that over. The current TCP code separates the parsing from =
-
-the actions taken (sending resets, etc), so maybe we can return some =
-
-information that informs the caller about what actions to take.
-
->> =
-
->>> We should provide provision to call a default function for an option th=
-at =
-
->>> does not match, so it can at least be documented and the user may set a=
-n =
-
->>> option to reset the connection.
->> =
-
->> Unrecognized TCP options are currently ignored - is a wildcard option =
-
->> handler useful for MPTCP or TCP in general?
+> retransmission also because tcp_transmit_skb clones the original skb.
 >
-> That was just a suggestion to add something for observability.
->>>>> +    list_for_each_entry_rcu(entry, &tcp_option_list, list) {
->>>>> +        if (unlikely(!entry->prepare))
->>>>> +            continue;
->>>>> +
->>>>> +        used +=3D entry->prepare(skb, flags, remaining - used, opts,=
- tp);
->>>>> +    }
->>>>> +    rcu_read_unlock();
->>> Should there be a check to stop calling when no space is left ?
->>> This also raises the question of priority, which seems to be based on t=
-he =
+> On the Rx side, options are parsed in tcp at that point we can reuse the =
 
->>> place in the list. What happens if there is no space left ? Do you add =
-
->>> MPTCP's DSS  option or SACK or MD5 ?
->> =
-
->> I think it should keep calling even if there's no space - it might be =
-
->> useful to know a packet is going out with its option space used. The =
-
->> prepare() call will need to handle too little space anyway (even if it's =
-
->> more than 0).
-> OK.
->> =
-
->> Ordering is an open question. It would be a minor extension to maintain =
-the =
-
->> list ordered by priority when each option is registered. There's a comme=
-nt =
-
->> before tcp_options_write cautioning that option ordering can be sensitiv=
-e, =
-
->> but we aren't changing the order of the "normal" TCP options. Still, I =
-
->> think I agree with you that changing the order of options based on who =
-
->> registered first is not great.
->> =
-
->> Regarding SACK specifically, I placed the prepare() call before SACK so =
-
->> that the registered options would consume space before SACK tried to use=
- up =
-
->> the rest.
-> Let me figure out how retransmission is being handled. I am worried about=
- the =
-
-> case where sending SACK would be more beneficial than some other option.
->> +
->>>>> +    return used;
->>>>> +}
->>>>> +
->>>>> +void tcp_extra_options_write(__be32 *ptr, struct tcp_out_options *op=
-ts,
->>>>> +                 struct tcp_sock *tp)
->>>>> +{
->>>>> +    struct tcp_extra_option_ops *entry;
->>>>> +
->>>>> +    rcu_read_lock();
->>>>> +    list_for_each_entry_rcu(entry, &tcp_option_list, list) {
->>>>> +        if (unlikely(!entry->write))
->>>>> +            continue;
->>>>> +
->>>>> +        entry->write(ptr, opts, tp);
->>> I think you need a check here to call only options that are in opts ?
->> =
-
->> This code doesn't know which opts are relevant - =
-
-> Actually it does. The options (KIND) to put in the packet have already be=
-en =
-
-> chosen.
-
-I wasn't very clear there, sorry about that. Yes, the prepare function did =
-
-determine what options will be used. But the function here doesn't =
-
-necessarily understand what will be stored in the opts struct (which we =
-
-haven't defined yet) - if we have a generic way to represent that that =
-
-includes the option number, then yes the choice can be made here.
-
->> does it make a big difference if we check here and optionally call, or c=
-all =
-
->> and let that function quickly check to see if it needs to write? The lis=
-t =
-
->> is expected to be short.
-> Someone will have to look through the opts list and make a decision. It w=
-ould =
-
-> be better to do it here but if you have another idea than that is OK.
-
-Ok.
-
->> =
-
->>> We should also pass in skb, In case tcp header is needed to generate =
-
->>> option values.
->> =
-
->> I was trying to not add a parameter to tcp_options_write, but we can cha=
-nge =
-
->> this if needed. The prepare() call gets the skb pointer, so it could sto=
-re =
-
->> necessary information (if we figure out where to put it).
-> I am not sure if that is convenient because when prepare is called header=
-s =
-
-> are not present. There is code in MPTCP that checks for say if the pakcet=
- is =
-
-> a FIN etc.
->> =
-
->>>>> +    }
->>>>> +    rcu_read_unlock();
->>>>> +}
->>>> =
-
->>> =
-
->>> This is a great framework for handling options, my concern is that the =
-
->>> options processing is intertwined with TCP code. Unless we can implemen=
-t =
-
->>> that separately there will not be much benefit.
->> =
-
->> Are you suggesting a larger rewrite of TCP option handling overall? Or a=
-re =
-
->> you referring to the intertwined MPTCP option handling in the =
-
->> multipath-tcp.org kernel?
-> I was trying to point out that if we can not move MPTCP, MD5SIG code out =
-of =
-
-> TCP into a separate module it will be difficult to sell this mechanism to =
-
-> netdev.
-
-Ah, thanks for clarifying.
-
->> =
-
->>> Just search for CONFIG_TCP_MD5SIG, MPTCP related code is also sprinkled =
-
->>> all over tcp code. Before we go down this path should we evaluate if th=
-at =
-
->>> can be achieved ?
->> =
-
->> As Christoph mentioned, MD5SIG would be one way to validate that the =
-
->> framework provides a useful approach for multiple TCP features. There's =
-
->> still more work to do to see if MPTCP can fit within this framework, and=
- I =
-
->> expect the approach to options to evolve as we learn more.
->> =
-
-> This is exactly what I meant to say above.
+> space that was used for ether and IP  headers and no extra space is requi=
+red.
 >
-> The design of the options handling framework is pretty good, the details =
-will =
+> The space used is always right below the skb head pointer because the =
 
-> evolve. So continue on with the good work.
+> location of head never changes.
+>
+> Please take a look and let me know what I have missed.
 
-Ok, thanks again for your help!
+Hi Rao -
+
+It's quite a bit easier to review patches on a mailing list when they're =
+
+plain text (as opposed to attachments), so I'd like ask that we stick to =
+
+the kernel patch guidelines: =
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+
+(I recognize that it's a long read - using 'git send-email' will get you =
+
+most of the way there!)
+
+
+I'm wary of using the skb data to hide away an extra control block. The =
+
+number of data bytes consumed isn't really accounted for (other than being =
+
+hard coded for the MPTCP use case), and keeping track of the size of the =
+
+extra control block would take some space in the skb, which is what we're =
+
+trying to avoid. On the rx side, overwriting the network or mac headers =
+
+doesn't seem right - what if the skb was cloned for monitoring purposes? =
+
+We'd have to force an skb_copy before modifying the buffer. It might be =
+
+safer to use space after skb_end_pointer() - but that's where the =
+
+skb_shared_info struct is, so maybe what we need is a way to optionally =
+
+put something after skb_shared_info?
+
+I think we need to take a step back: what data does MPTCP really need to =
+
+attach to an skb? If we have extra mptcp data with the tcp_sock for the =
+
+subflow, is there a way to keep track of auxiliary data outside the skb? =
+
+I'll think on this some more too.
 
 --
 Mat Martineau
 Intel OTC
 
---===============4878488437050651989==--
+--===============4908290488720258147==--
