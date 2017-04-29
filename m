@@ -1,104 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============4908290488720258147=="
+Content-Type: multipart/mixed; boundary="===============6538820012889952152=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Change to remove MPTCP members from tcp_skb_cb
-Date: Fri, 28 Apr 2017 15:52:53 -0700
-Message-ID: <alpine.OSX.2.21.1704281335460.85462@mjmartin-mac01.local>
-In-Reply-To: 0591abe1-066b-2a2c-59ba-4956a183348c@oracle.com
+Subject: Re: [MPTCP] [PATCH] tcp: Register handlers for extra TCP options
+Date: Fri, 28 Apr 2017 19:36:48 -0700
+Message-ID: <35c062a5-90a7-20b5-db00-f06d01ee76d8@oracle.com>
+In-Reply-To: 20170427215151.GH82766@Chimay.local
 X-Status: 
 X-Keywords:                  
-X-UID: 18
+X-UID: 19
 
---===============4908290488720258147==
+--===============6538820012889952152==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 26 Apr 2017, Rao Shoaib wrote:
 
-> Hi,
+
+On 04/27/2017 02:51 PM, Christoph Paasch wrote:
+> lock_sock() and bh_lock_sock(). The former, used when coming from
+> user-context. All it does it setting sk->sk_lock.owned to 1, so that
+> sock_owned_by_user() returns 1. This prevents other user-context threads
+> from accessing the socket.
 >
-> Here is an attempt to not use tcp_skb_cb with minimal change to MPTCP cod=
-e =
-
-> and skb code. I have tested the change by using wget from multipath-tcp.o=
-rg. =
-
-> pcap file is attached.
+> bh_lock_sock() is the spin-lock, that one must take when coming from
+> interrupt-context. When it takes a spinlock, it usually checks
+> sock_owned_by_user() to see if another user-space process is currently us=
+ing
+> the socket as well. If that's the case, it pushes the packet on the
+> backlog-queue (see tcp_v4_rcv), instead of going through the stack.
 >
-> The approach that I have taken is very straight forward. On Tx when an sk=
-b is =
-
-> allocated and the underlying socket is MPTCP , 32 bytes extra are =
-
-> allocated[1] and reserved as the head room. This space is used for passin=
-g =
-
-> what was being passed in tcp_skb_cb. An used bit in sk_buff is used to =
-
-> indicate this special case and when skb is copied the extra data is also =
-
-> copied. clone is not an issue as the data is shared. This work for =
-
-> retransmission also because tcp_transmit_skb clones the original skb.
+> When the user-context has finished its work, it calls release_sock(), whi=
+ch
+> processes the work that has been queued by interrupt-context "threads" on
+> the backlog-queue.
 >
-> On the Rx side, options are parsed in tcp at that point we can reuse the =
-
-> space that was used for ether and IP  headers and no extra space is requi=
-red.
 >
-> The space used is always right below the skb head pointer because the =
-
-> location of head never changes.
+> That's a very quick, rough and high-level explanation:)
 >
-> Please take a look and let me know what I have missed.
+>
+> Christoph
+Thanks a lot Christoph.
 
-Hi Rao -
+Rao
 
-It's quite a bit easier to review patches on a mailing list when they're =
-
-plain text (as opposed to attachments), so I'd like ask that we stick to =
-
-the kernel patch guidelines: =
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-
-(I recognize that it's a long read - using 'git send-email' will get you =
-
-most of the way there!)
-
-
-I'm wary of using the skb data to hide away an extra control block. The =
-
-number of data bytes consumed isn't really accounted for (other than being =
-
-hard coded for the MPTCP use case), and keeping track of the size of the =
-
-extra control block would take some space in the skb, which is what we're =
-
-trying to avoid. On the rx side, overwriting the network or mac headers =
-
-doesn't seem right - what if the skb was cloned for monitoring purposes? =
-
-We'd have to force an skb_copy before modifying the buffer. It might be =
-
-safer to use space after skb_end_pointer() - but that's where the =
-
-skb_shared_info struct is, so maybe what we need is a way to optionally =
-
-put something after skb_shared_info?
-
-I think we need to take a step back: what data does MPTCP really need to =
-
-attach to an skb? If we have extra mptcp data with the tcp_sock for the =
-
-subflow, is there a way to keep track of auxiliary data outside the skb? =
-
-I'll think on this some more too.
-
---
-Mat Martineau
-Intel OTC
-
---===============4908290488720258147==--
+--===============6538820012889952152==--
