@@ -1,133 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============5547446591382429560=="
+Content-Type: multipart/mixed; boundary="===============1026399210179632982=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] Revert tcp_skb_cb to it's original size using
- 'struct tcp_skb_cb_ext'
-Date: Tue, 23 May 2017 11:32:16 -0700
-Message-ID: <c663a358-7ffd-54c2-3f5a-fcd71cd22c6c@oracle.com>
-In-Reply-To: alpine.OSX.2.21.1705191425460.33772@mjmartin-mac01.sea.intel.com
+Subject: [MPTCP] New Linux TCP feature: generic upper layer protocol
+Date: Thu, 15 Jun 2017 16:35:17 -0700
+Message-ID: <alpine.OSX.2.21.1706151550060.33450@jrhamric-mobl03.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 42
+X-UID: 43
 
---===============5547446591382429560==
+--===============1026399210179632982==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
+Hello,
 
-On 05/19/2017 03:29 PM, Mat Martineau wrote:
->
-> On Thu, 18 May 2017, Rao Shoaib wrote:
->
->>
->>
->> On 05/18/2017 05:08 PM, Mat Martineau wrote:
->>>
->>> Rao,
->>>
->>> If we take the approach we discussed yesterday (rx side defers MPTCP =
+A new piece of TCP extension infrastructure was just merged to net-next: =
 
->>> processing until skb reaches the MPTCP layer, tx side pre-populates =
+generic upper layer protocol (ULP) support for TCP.
 
->>> the TCP option), is it necessary to alter the tcp control block as =
+The relevant commit is =
 
->>> this patch does?
->> That idea came to me when I was working on coding this solution as I =
+https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?=
+id=3D734942cc4ea6478eed125af258da1bdbb4afe578
 
->> did not like allocating a buffer on the Rx side. Since I was almost =
+It was added as part of in-kernel TLS support. The TLS code didn't =
 
->> done I posted it. I will be working on the alternate solution.
->>
->>>
->>> I think with one bit in struct tcp_skb_cb, TCP could be told to =
+initially have this framework, but Tom Herbert asked them to generalize =
 
->>> interpret the beginning of the buffer as a TCP option (the kind & =
+this feature when reviewing an early patch set.
 
->>> length encoded in the option would give enough context to finish =
+If we use ULP for MPTCP, creating a multipatch socket would look like:
 
->>> writing the TCP header).
->> Where will be the content of the option ?
->
-> At skb->data. An sk_buff waiting to be transmitted (or retransmitted) =
+sock =3D socket(AF_INET, SOCK_STREAM, 0);
+setsockopt(sock, SOL_TCP, TCP_ULP, "mptcp", sizeof("mptcp"));
 
-> would look like this:
->
-> head ->  +------------+
->          | (headroom) |
->          |            |
->          |            |
->          |            |
-> data ->  +------------+
->          | DSS Option |
->          +------------+
->          | Packet     |
->          | payload    |
->          |            |
->          |            |
->          |            |
->          |            |
-> tail ->  +------------+
->          | (tailroom) |
->          |            |
->          |            |
-> end  ->  +------------+
->
-> The DSS option has a length encoded in it, so TCP can determine the =
+instead of:
 
-> length of the option and account for the already-used option space. =
+sock =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
 
-> TCP then writes the rest of the header:
->
-> head ->  +------------+
->          | (headroom) |
->          |            |
-> data ->  +------------+
->          | TCP Header | (including other options)
->          | ...        |
->          | DSS Option | (this option in-place from earlier)
->          +------------+
->          | Packet     |
->          | payload    |
->          |            |
->          |            |
->          |            |
->          |            |
-> tail ->  +------------+
->          | (tailroom) |
->          |            |
->          |            |
-> end  ->  +------------+
->
->
->> How will retransmission work ?
->
-> TCP retransmission makes a copy of the skb, so that should work ok for =
 
-> (the cb is copied, so the tcp_skb_cb "data includes a TCP option" bit =
+A case can be made for either interface. MPTCP shares an IP protocol =
 
-> would be kept). MPTCP retransmission on different subflows would =
+number with TCP, so IPPROTO_MPTCP is a awkward to define in a way that's =
 
-> depend on how we keep a copy of the data around at the MPTCP layer - =
+consistent with other AF_INET{,6} protocols. On the other hand, MPTCP is =
 
-> I'm thinking we could avoid sharing skbs across subflows, possibly =
+not a layer above TCP like TLS - however, we have the same need to =
 
-> using some zerocopy techniques when passing data from MPTCP to the TCP =
+override some TCP socket behavior.
 
-> layer.
->
-> -- =
+In the end, there's not much difference in functionality, but the =
 
-> Mat Martineau
-> Intel OTC
-Hi Mat,
+maintainers may favor the ULP approach. Any preferences here on this list?
 
-Got it. This is what we discussed earlier.
+--
+Mat Martineau
+Intel OTC
 
-Thanks,
-
-Rao.
-
---===============5547446591382429560==--
+--===============1026399210179632982==--
