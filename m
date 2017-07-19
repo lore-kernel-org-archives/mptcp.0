@@ -1,220 +1,179 @@
-Content-Type: multipart/mixed; boundary="===============3012727451203247186=="
+Content-Type: multipart/mixed; boundary="===============5564340742434653835=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] Revert tcp_skb_cb to it's original size and
- cleanup main TCP Rx code from MPTCP specific code.
-Date: Wed, 28 Jun 2017 13:13:13 -0700
-Message-ID: <a64db09f-6e2d-d96a-9653-f3f3ef36fea8@oracle.com>
-In-Reply-To: alpine.OSX.2.21.1706271459160.10721@jvshah-mobl3.amr.corp.intel.com
+Subject: [MPTCP] MPTCP upstreaming strategy and design
+Date: Tue, 18 Jul 2017 17:31:51 -0700
+Message-ID: <alpine.OSX.2.21.1707181728570.11990@dhruvmeh-mobl1.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 64
+X-UID: 65
 
---===============3012727451203247186==
+--===============5564340742434653835==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
 
-Please see my response inline
+Hello everyone,
+
+Our goal on this mailing list is to add an MPTCP implementation to the =
+
+upstream Linux kernel. There's a fair amount of work to be done to achieve =
+
+this, and a number of options for how to go about it. Some of this =
+
+revisits previous discussions on this list and elsewhere, but I want to be =
+
+sure we have some level of consensus about the direction to head in.
+
+A couple of us on this list have had discussions with the Linux net =
+
+maintainers, and they have some some specific needs concerning =
+
+modifications to the Linux TCP stack:
+
+  * TCP complexity can't increase. It's already a complex, =
+
+performance-sensitive piece of software that every Linux user depends on. =
+
+Intrusive changes have a risk of creating bugs or changing operation of =
+
+the stack in unexpected ways.
+
+  * sk_buff structure size can't get bigger. It's already large and, if =
+
+anything, they hope to reduce it's size. Changes to the data structure =
+
+size are amplified by the large number of instances in a system handling a =
+
+lot of traffic.
+
+  * An additional protocol like MPTCP should be opt-in, so users of regular =
+
+TCP continue to get the same type of connection and performance unless =
+
+MPTCP is requested.
+
+I also recommend reading "On submitting kernel patches" =
+
+(http://halobates.de/on-submitting-patches.pdf) to get an idea of the =
+
+process and hurdles involved in merging major core functionality for the =
+
+Linux kernel.
 
 
-On 06/27/2017 04:22 PM, Mat Martineau wrote:
->
-> Hi Rao,
->
-> On Mon, 26 Jun 2017, Rao Shoaib wrote:
->
->> This patch returns tcp_skb_cb to it's original size. It also =
+Various Strategies
+------------------
 
->> refactors MPTCP code so that there are no MPTCP checks in the main Rx =
+One approach is to attempt to merge the multipath-tcp.org fork. This is an =
 
->> pathi, no performance overheads such as cpu prodiction issues. =
+implementation in which the multipath-tcp.org community has invested a lot =
 
->> tcp_v4_rcv() and tcp_v4_do_rcv() do not have any MPTCP specific =
+of time and effort, and it is in production for major applications (see =
 
->> checks any more, niether does tcp_ack(). On the Rx path MPTCP options =
+https://tools.ietf.org/html/rfc8041). This is a tremendous amount of code =
 
->> are not parsed till the data is being pushed up to the meta socket =
+to review at once (even separating out modules), and currently doesn't fit =
 
->> (mptcp_data_ready). on the Tx side there is one check to add MPTCP =
+with what the maintainers have asked for (non-intrusive, sk_buff size, =
 
->> specific options but that's it, that should not be that bad as for =
+MPTCP by default). I don't think the maintainers would consider merging =
 
->> regular TCP it is a simple check, but it would be good to remove it..
->>
->> I have tested the changes with ndiffports set to 2, so join works. I =
+such an extensive piece git history, especially where there are a fair =
 
->> have also tested accessing multipath-tcp.org and downloading files =
+number of commits without an "mptcp:" label on the subject line or without =
 
->> from there and also ran the speed test.
->>
->> The Bad:
->>
->> The error cases still have MPTCP checks but that should be OK as they =
+a DCO signoff =
 
->> are error cases. I had to use a special marker 0xFEE1DEAD for =
+(https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sig=
+n-your-work-the-developer-s-certificate-of-origin). =
 
->> indicate a special case. I had to introdue a new socket specfic =
+Today, the fork is at kernel v4.4 and current upstream development is at =
 
->> function. IPv6 has not been changed yet. I am sure I have missed some =
+v4.13-rc1, so the fork would have to catch up and stay current.
 
->> corner cases and more testing will reveal more issues but we just =
+The other extreme is to rewrite from scratch. This would allow incremental =
 
->> have to fix them.
->>
->> I would like to hear comments from the list and if this direction =
+development with maintainer review from the start, but doesn't take =
 
->> seems reasonable we can take this as the starting point, port it to =
+advantage of existing code.
 
->> latest Linux and share the design with the mainstream folks.
->
-> I've read the earlier messages in this thread, so I've seen =
+The most realistic approach is somewhere in between, where we write new =
 
-> Christoph's concern about zero-length packets and your comment that =
+code that fits maintainer expectations and utilize components from the =
 
-> more work is needed.
->
-> The TCP option handling patch I posted earlier (I'm testing an updated =
+fork where licensing allows and the code fits. We'll have to find the =
 
-> version of that before sending it out again) might help us avoid =
+right balance: over-reliance on new code could take extra time, but =
 
-> passing unexpected zero-length packets up the stack.
-Christoph has elaborated his concerns. His concern is not about zero =
+constantly reworking the fork and keeping it up-to-date with net-next is =
 
-length packets going up the stack (there is no issue with that), instead =
+also a lot of overhead.
 
-he is concerned about some packets not making up the stack and onto =
+To start with, we can create RFC patches (code that's ready for comment =
 
-MPTCP,  for that there are solutions.
+rather than merge -- not "RFC" in the IETF sense) that allow us to extend =
 
->
-> My coworkers and I have some ideas for other upstream-friendly =
+TCP in the ways that are useful for both MPTCP and other extended TCP =
 
-> architecture changes, but I still need to type those up for mailing =
+features. The maintainers would be able to review those standalone =
 
-> list discussion. We've done some work building up from the current =
+patches, and there's potential to backport the patches to prove them out =
 
-> net-next kernel and will get some patches in shape for this list.
->
-> I have some comments below:
->
->
->>
->>
->
-> I think the maintainers will oppose placement of protocol-specific =
+with the multipath-tcp.org code. Does this sound sensible? Any other =
 
-> fields in struct sk_buff.
+approaches to consider, or details that we should discuss here?
 
-I don't see this as an issue at all. As you point out below, UDP is =
 
-already using it. There is a reason why they named it dev_scratch.
+Design for Upstream
+-------------------
 
-union {
-                 struct net_device       *dev;
-                 /* Some protocols might use this space to store =
+As a starting point for discussion, here are some characteristics that =
 
-information,
-                  * while device pointer would be NULL.
-                  * UDP receive path is one user.
-                  */
-                 unsigned long           dev_scratch;
-         };
+might make MPTCP more upstream-friendly:
 
-In the patch the field is being used when dev is null. It would have =
+  * MPTCP is used when requested by the application, either through an =
 
-been legal to overload this field even if the change had not been made =
+IPPROTO_MPTCP parameter to socket() or by using the new ULP (Upper Layer =
 
-upstream, we missed the chance to be the first one :-(.
+Protocol) capability.
 
-> Recent kernels have changed this to a union between the dev pointer =
+  * Move away from meta-sockets, treating each subflow more like a regular =
 
-> and a dev_scratch integer. So far dev_scratch is only used by UDP.
+TCP connection. The overall MPTCP connection is coordinated by an upper =
 
->
->
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index 655ecd4..cbe8ef2 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -47,6 +47,9 @@
->> #include <linux/seq_file.h>
->> #include <linux/memcontrol.h>
->>
->> +typedef int (* process_unclaimed)(struct sock *sk, struct sk_buff =
+layer socket that is distinct from tcp_sock.
 
->> *skb);
->> +extern process_unclaimed tcp_process_unclaimed;
->> +
->> extern struct inet_hashinfo tcp_hashinfo;
->>
->> extern struct percpu_counter tcp_orphan_count;
->> @@ -581,6 +584,7 @@ struct sock *tcp_v4_syn_recv_sock(struct sock =
+  * Move functionality to userspace where possible, like tracking ADD_ADDRs =
 
->> *sk, struct sk_buff *skb,
->>                   struct request_sock *req,
->>                   struct dst_entry *dst);
->> int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb);
->> +
->> int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int =
+received, initiating new subflows, or accepting new subflows.
 
->> addr_len);
->> int tcp_connect(struct sock *sk);
->> struct sk_buff *tcp_make_synack(struct sock *sk, struct dst_entry *dst,
->> @@ -842,11 +846,6 @@ struct tcp_skb_cb {
->>         __u32        tcp_gso_segs;
->>     };
->>
->> -#ifdef CONFIG_MPTCP
->> -    __u8        mptcp_flags;    /* flags for the MPTCP layer */
->> -    __u8        dss_off;    /* Number of 4-byte words until
->> -                     * seq-number */
->> -#endif
->>     __u8        tcp_flags;    /* TCP header flags. (tcp[13]) */
->>
->>     __u8        sacked;        /* State flags for SACK/FACK. */
->> @@ -859,9 +858,13 @@ struct tcp_skb_cb {
->> #define TCPCB_RETRANS (TCPCB_SACKED_RETRANS|TCPCB_EVER_RETRANS| \
->>                 TCPCB_REPAIRED)
->>
->> -    __u8        ip_dsfield;    /* IPv4 tos or IPv6 dsfield */
->> +    __u8        ip_dsfield;    /* IPv4 tos or IPv6 dsfield */
->>     /* 1 byte hole */
->> -    __u32        ack_seq;    /* Sequence number ACK'd    */
->> +    union {
->> +        __u32        ack_seq;    /* Sequence number ACK'd */
->> +        __u32         mptcp_data_seq;
->
-> ack_seq is only used on incoming packets, and mptcp_data_seq only on =
+  * Avoid adding locks to coordinate access to data that's shared between =
 
-> outgoing?
-Yup, there are three members of this union and none of them are used at =
+subflows. Utilize capabilities like compare-and-swap (cmpxchg), atomics, =
 
-the same time.
->
->> +        __u32        mptcp_path_mask;
->> +    };
->
-> One architectural change we're considering is not sharing sk_buffs =
+and RCU to deal with shared data efficiently.
 
-> between subflows, which would make mptcp_path_mask unnecessary. It =
+  * Add generic capabilities to the TCP stack where it looks useful to =
 
-> would still be necessary to track that information, just not as part =
+other protocol extensions. Examples: dynamically register handlers for TCP =
 
-> of sk_buff.
-Any change that reduces the usage of sk_buff is very good. However this =
+option headers, make it possible to pass TCP options to/from an upper =
 
-is not a big issue any more. I prefer we rather look at reducing mptcp =
+layer.
 
-checks in the main tcp code.
+Any comment on these? Maybe each deserves a thread of its own.
 
-The patch that I have sent should apply cleanly to the net-next as well.
 
-I am looking forward to your patch.
+Thanks again to Rao, Christoph, Peter, and Ossama for your help, work, and =
 
-Rao
+interest. I'm looking forward to your insights.
 
---===============3012727451203247186==--
+
+--
+Mat Martineau
+Intel OTC
+
+--===============5564340742434653835==--
