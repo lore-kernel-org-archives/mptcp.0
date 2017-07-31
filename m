@@ -1,179 +1,236 @@
-Content-Type: multipart/mixed; boundary="===============5564340742434653835=="
+Content-Type: multipart/mixed; boundary="===============3320686282353619180=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] MPTCP upstreaming strategy and design
-Date: Tue, 18 Jul 2017 17:31:51 -0700
-Message-ID: <alpine.OSX.2.21.1707181728570.11990@dhruvmeh-mobl1.amr.corp.intel.com>
+Subject: Re: [MPTCP] MPTCP upstreaming strategy and design
+Date: Mon, 31 Jul 2017 16:03:05 -0700
+Message-ID: <0697febd-ebbb-ce51-86a9-00a36a31b9dc@oracle.com>
+In-Reply-To: alpine.OSX.2.21.1707181728570.11990@dhruvmeh-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 65
+X-UID: 66
 
---===============5564340742434653835==
+--===============3320686282353619180==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Mat,
 
-Hello everyone,
+Thanks for writing this up. See my comments in line
 
-Our goal on this mailing list is to add an MPTCP implementation to the =
 
-upstream Linux kernel. There's a fair amount of work to be done to achieve =
+On 07/18/2017 05:31 PM, Mat Martineau wrote:
+>
+> Hello everyone,
+>
+> Our goal on this mailing list is to add an MPTCP implementation to the =
 
-this, and a number of options for how to go about it. Some of this =
+> upstream Linux kernel. There's a fair amount of work to be done to =
 
-revisits previous discussions on this list and elsewhere, but I want to be =
+> achieve this, and a number of options for how to go about it. Some of =
 
-sure we have some level of consensus about the direction to head in.
+> this revisits previous discussions on this list and elsewhere, but I =
 
-A couple of us on this list have had discussions with the Linux net =
+> want to be sure we have some level of consensus about the direction to =
 
-maintainers, and they have some some specific needs concerning =
+> head in.
+>
+> A couple of us on this list have had discussions with the Linux net =
 
-modifications to the Linux TCP stack:
+> maintainers, and they have some some specific needs concerning =
 
-  * TCP complexity can't increase. It's already a complex, =
+> modifications to the Linux TCP stack:
+>
+>  * TCP complexity can't increase. It's already a complex, =
 
-performance-sensitive piece of software that every Linux user depends on. =
+> performance-sensitive piece of software that every Linux user depends =
 
-Intrusive changes have a risk of creating bugs or changing operation of =
+> on. Intrusive changes have a risk of creating bugs or changing =
 
-the stack in unexpected ways.
+> operation of the stack in unexpected ways.
+>
+>  * sk_buff structure size can't get bigger. It's already large and, if =
 
-  * sk_buff structure size can't get bigger. It's already large and, if =
+> anything, they hope to reduce it's size. Changes to the data structure =
 
-anything, they hope to reduce it's size. Changes to the data structure =
+> size are amplified by the large number of instances in a system =
 
-size are amplified by the large number of instances in a system handling a =
+> handling a lot of traffic.
+>
+>  * An additional protocol like MPTCP should be opt-in, so users of =
 
-lot of traffic.
+> regular TCP continue to get the same type of connection and =
 
-  * An additional protocol like MPTCP should be opt-in, so users of regular =
+> performance unless MPTCP is requested.
+>
+> I also recommend reading "On submitting kernel patches" =
 
-TCP continue to get the same type of connection and performance unless =
+> (http://halobates.de/on-submitting-patches.pdf) to get an idea of the =
 
-MPTCP is requested.
+> process and hurdles involved in merging major core functionality for =
 
-I also recommend reading "On submitting kernel patches" =
+> the Linux kernel.
+>
+>
+> Various Strategies
+> ------------------
+>
+> One approach is to attempt to merge the multipath-tcp.org fork. This =
 
-(http://halobates.de/on-submitting-patches.pdf) to get an idea of the =
+> is an implementation in which the multipath-tcp.org community has =
 
-process and hurdles involved in merging major core functionality for the =
+> invested a lot of time and effort, and it is in production for major =
 
-Linux kernel.
+> applications (see https://tools.ietf.org/html/rfc8041). This is a =
 
+> tremendous amount of code to review at once (even separating out =
 
-Various Strategies
-------------------
+> modules), and currently doesn't fit with what the maintainers have =
 
-One approach is to attempt to merge the multipath-tcp.org fork. This is an =
+> asked for (non-intrusive, sk_buff size, MPTCP by default). I don't =
 
-implementation in which the multipath-tcp.org community has invested a lot =
+> think the maintainers would consider merging such an extensive piece =
 
-of time and effort, and it is in production for major applications (see =
+> git history, especially where there are a fair number of commits =
 
-https://tools.ietf.org/html/rfc8041). This is a tremendous amount of code =
+> without an "mptcp:" label on the subject line or without a DCO signoff =
 
-to review at once (even separating out modules), and currently doesn't fit =
+> (https://www.kernel.org/doc/html/latest/process/submitting-patches.html#s=
+ign-your-work-the-developer-s-certificate-of-origin). =
 
-with what the maintainers have asked for (non-intrusive, sk_buff size, =
+> Today, the fork is at kernel v4.4 and current upstream development is =
 
-MPTCP by default). I don't think the maintainers would consider merging =
+> at v4.13-rc1, so the fork would have to catch up and stay current.
+>
+> The other extreme is to rewrite from scratch. This would allow =
 
-such an extensive piece git history, especially where there are a fair =
+> incremental development with maintainer review from the start, but =
 
-number of commits without an "mptcp:" label on the subject line or without =
+> doesn't take advantage of existing code.
+>
+> The most realistic approach is somewhere in between, where we write =
 
-a DCO signoff =
+> new code that fits maintainer expectations and utilize components from =
 
-(https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sig=
-n-your-work-the-developer-s-certificate-of-origin). =
+> the fork where licensing allows and the code fits. We'll have to find =
 
-Today, the fork is at kernel v4.4 and current upstream development is at =
+> the right balance: over-reliance on new code could take extra time, =
 
-v4.13-rc1, so the fork would have to catch up and stay current.
+> but constantly reworking the fork and keeping it up-to-date with =
 
-The other extreme is to rewrite from scratch. This would allow incremental =
+> net-next is also a lot of overhead.
+>
+> To start with, we can create RFC patches (code that's ready for =
 
-development with maintainer review from the start, but doesn't take =
+> comment rather than merge -- not "RFC" in the IETF sense) that allow =
 
-advantage of existing code.
+> us to extend TCP in the ways that are useful for both MPTCP and other =
 
-The most realistic approach is somewhere in between, where we write new =
+> extended TCP features. The maintainers would be able to review those =
 
-code that fits maintainer expectations and utilize components from the =
+> standalone patches, and there's potential to backport the patches to =
 
-fork where licensing allows and the code fits. We'll have to find the =
+> prove them out with the multipath-tcp.org code. Does this sound =
 
-right balance: over-reliance on new code could take extra time, but =
+> sensible? Any other approaches to consider, or details that we should =
 
-constantly reworking the fork and keeping it up-to-date with net-next is =
+> discuss here?
+I agree with the above approach but want to expand on the initial goal.
 
-also a lot of overhead.
+Our initial goal must be to put a minimal (bare bones) MPTCP =
 
-To start with, we can create RFC patches (code that's ready for comment =
+implementation in main stream Linux. That could mean no fancy scheduling =
 
-rather than merge -- not "RFC" in the IETF sense) that allow us to extend =
+schemes, just simple round robin or just active/standby. Implementing =
 
-TCP in the ways that are useful for both MPTCP and other extended TCP =
+minimal MPTCP functionality will pretty much expose how main TCP code =
 
-features. The maintainers would be able to review those standalone =
+will be impacted. Any future work to add features will be confined to =
 
-patches, and there's potential to backport the patches to prove them out =
+changes within MPTCP and should not be a concern right now. Such an =
 
-with the multipath-tcp.org code. Does this sound sensible? Any other =
+implementation will also be fully RFC compliant.
 
-approaches to consider, or details that we should discuss here?
+I agree with you that upstream folks would want an opt-in option. I am =
 
+in favor of a completely different socket family as that would leave tcp =
 
-Design for Upstream
--------------------
+socket code untouched. However we should talk to upstream folks once again.
 
-As a starting point for discussion, here are some characteristics that =
+I would like us to use as much code as possible from the current =
 
-might make MPTCP more upstream-friendly:
+implementation. In fact if for some reason (I don't see one) we can not =
 
-  * MPTCP is used when requested by the application, either through an =
+ship a minimal implementation than I prefer that we just port the =
 
-IPPROTO_MPTCP parameter to socket() or by using the new ULP (Upper Layer =
+current implementation and worry about architectural issues later.
 
-Protocol) capability.
+In short, I would like our focus to be on putting a minimal MPTCP =
 
-  * Move away from meta-sockets, treating each subflow more like a regular =
+implementation in Linux so that we have a stake in the ground. =
 
-TCP connection. The overall MPTCP connection is coordinated by an upper =
+Performance and Features can come later. That does not mean that the =
 
-layer socket that is distinct from tcp_sock.
+quality of our implementation is so bad that it is unusable.
 
-  * Move functionality to userspace where possible, like tracking ADD_ADDRs =
+Shoaib
 
-received, initiating new subflows, or accepting new subflows.
 
-  * Avoid adding locks to coordinate access to data that's shared between =
+>
+> Design for Upstream
+> -------------------
+>
+> As a starting point for discussion, here are some characteristics that =
 
-subflows. Utilize capabilities like compare-and-swap (cmpxchg), atomics, =
+> might make MPTCP more upstream-friendly:
+>
+>  * MPTCP is used when requested by the application, either through an =
 
-and RCU to deal with shared data efficiently.
+> IPPROTO_MPTCP parameter to socket() or by using the new ULP (Upper =
 
-  * Add generic capabilities to the TCP stack where it looks useful to =
+> Layer Protocol) capability.
+>
+>  * Move away from meta-sockets, treating each subflow more like a =
 
-other protocol extensions. Examples: dynamically register handlers for TCP =
+> regular TCP connection. The overall MPTCP connection is coordinated by =
 
-option headers, make it possible to pass TCP options to/from an upper =
+> an upper layer socket that is distinct from tcp_sock.
+>
+>  * Move functionality to userspace where possible, like tracking =
 
-layer.
+> ADD_ADDRs received, initiating new subflows, or accepting new subflows.
+>
+>  * Avoid adding locks to coordinate access to data that's shared =
 
-Any comment on these? Maybe each deserves a thread of its own.
+> between subflows. Utilize capabilities like compare-and-swap =
 
+> (cmpxchg), atomics, and RCU to deal with shared data efficiently.
+>
+>  * Add generic capabilities to the TCP stack where it looks useful to =
 
-Thanks again to Rao, Christoph, Peter, and Ossama for your help, work, and =
+> other protocol extensions. Examples: dynamically register handlers for =
 
-interest. I'm looking forward to your insights.
+> TCP option headers, make it possible to pass TCP options to/from an =
 
+> upper layer.
+>
+> Any comment on these? Maybe each deserves a thread of its own.
+>
+>
+> Thanks again to Rao, Christoph, Peter, and Ossama for your help, work, =
 
---
-Mat Martineau
-Intel OTC
+> and interest. I'm looking forward to your insights.
+>
+>
+> -- =
 
---===============5564340742434653835==--
+> Mat Martineau
+> Intel OTC
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+
+
+--===============3320686282353619180==--
