@@ -1,85 +1,123 @@
-Content-Type: multipart/mixed; boundary="===============8675761710897364649=="
+Content-Type: multipart/mixed; boundary="===============0010361121771731110=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 05/18] tcp6: Prepare for maximum TCP option-space
-Date: Tue, 03 Oct 2017 09:21:51 -0700
-Message-ID: <20171003162204.17945-6-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 07/18] tcp_extra_option: add_header callback for TCP
+ extra options
+Date: Tue, 03 Oct 2017 09:21:53 -0700
+Message-ID: <20171003162204.17945-8-cpaasch@apple.com>
 In-Reply-To: 20171003162204.17945-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 88
+X-UID: 89
 
---===============8675761710897364649==
+--===============0010361121771731110==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-With a generic TCP-option framework we don't know in advance how much
-space will be used. So, estimate the worst and allocate the maximum.
-Later on, we pull skb->tail back in again.
+Extra options need to be accounted in tcp_header_len of tcp_sock.
+Thus, we need another callback for this as well.
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/ipv6/tcp_ipv6.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ include/net/tcp.h        |  5 +++++
+ net/ipv4/tcp.c           | 18 ++++++++++++++++++
+ net/ipv4/tcp_minisocks.c |  3 +++
+ net/ipv4/tcp_output.c    |  3 +++
+ 4 files changed, 29 insertions(+)
 
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 64d94afa427f..17f7e0cd8755 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -784,17 +784,11 @@ static void tcp_v6_send_response(const struct sock *s=
-k, struct sk_buff *skb, u32
- 	struct flowi6 fl6;
- 	struct net *net =3D sk ? sock_net(sk) : dev_net(skb_dst(skb)->dev);
- 	struct sock *ctl_sk =3D net->ipv6.tcp_sk;
--	unsigned int tot_len =3D sizeof(struct tcphdr);
-+	unsigned int tot_len =3D sizeof(struct tcphdr) + MAX_TCP_OPTION_SPACE;
-+	unsigned int reduce =3D 0; /* By how much to pull skb->tail back in? */
- 	struct dst_entry *dst;
- 	__be32 *topt;
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 676ae8991e7f..641b1cf71528 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2126,6 +2126,8 @@ struct tcp_extra_option_ops {
+ 				    struct request_sock *req);
+ 	void (*write)(__be32 *ptr, struct tcp_out_options *opts,
+ 		      struct tcp_sock *tp);
++	int (*add_header_len)(const struct sock *listener,
++			      const struct sock *sk);
+ 	struct module		*owner;
+ };
  =
 
--	if (tsecr)
--		tot_len +=3D TCPOLEN_TSTAMP_ALIGNED;
--#ifdef CONFIG_TCP_MD5SIG
--	if (key)
--		tot_len +=3D TCPOLEN_MD5SIG_ALIGNED;
--#endif
--
- 	buff =3D alloc_skb(MAX_HEADER + sizeof(struct ipv6hdr) + tot_len,
- 			 GFP_ATOMIC);
- 	if (!buff)
-@@ -823,6 +817,8 @@ static void tcp_v6_send_response(const struct sock *sk,=
- struct sk_buff *skb, u32
- 				(TCPOPT_TIMESTAMP << 8) | TCPOLEN_TIMESTAMP);
- 		*topt++ =3D htonl(tsval);
- 		*topt++ =3D htonl(tsecr);
-+
-+		reduce +=3D TCPOLEN_TSTAMP_ALIGNED;
- 	}
+@@ -2147,6 +2149,9 @@ unsigned int tcp_extra_options_prepare_req(struct sk_=
+buff *skb, u8 flags,
+ void tcp_extra_options_write(__be32 *ptr, struct tcp_out_options *opts,
+ 			     struct tcp_sock *tp);
  =
 
- #ifdef CONFIG_TCP_MD5SIG
-@@ -832,9 +828,13 @@ static void tcp_v6_send_response(const struct sock *sk=
-, struct sk_buff *skb, u32
- 		tcp_v6_md5_hash_hdr((__u8 *)topt, key,
- 				    &ipv6_hdr(skb)->saddr,
- 				    &ipv6_hdr(skb)->daddr, t1);
++int tcp_extra_options_add_header(const struct sock *listener,
++				 const struct sock *sk);
 +
-+		reduce +=3D TCPOLEN_MD5SIG_ALIGNED;
- 	}
+ int tcp_register_extra_option(struct tcp_extra_option_ops *ops);
+ void tcp_unregister_extra_option(struct tcp_extra_option_ops *ops);
+ =
+
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 82b022d5f215..7ecd1ffdf3ad 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3466,6 +3466,24 @@ void tcp_extra_options_write(__be32 *ptr, struct tcp=
+_out_options *opts,
+ 	rcu_read_unlock();
+ }
+ =
+
++int tcp_extra_options_add_header(const struct sock *listener,
++				 const struct sock *sk)
++{
++	struct tcp_extra_option_ops *entry;
++	int tcp_header_len =3D 0;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(entry, &tcp_option_list, list) {
++		if (unlikely(!entry->add_header_len))
++			continue;
++
++		tcp_header_len +=3D entry->add_header_len(listener, sk);
++	}
++	rcu_read_unlock();
++
++	return tcp_header_len;
++}
++
+ int tcp_register_extra_option(struct tcp_extra_option_ops *ops)
+ {
+ 	int ret =3D 0;
+diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+index 1c3e91899dac..2b1683611898 100644
+--- a/net/ipv4/tcp_minisocks.c
++++ b/net/ipv4/tcp_minisocks.c
+@@ -525,6 +525,9 @@ struct sock *tcp_create_openreq_child(const struct sock=
+ *sk,
+ 		if (newtp->af_specific->md5_lookup(sk, newsk))
+ 			newtp->tcp_header_len +=3D TCPOLEN_MD5SIG_ALIGNED;
+ #endif
++		if (static_branch_unlikely(&tcp_extra_options_enabled))
++			newtp->tcp_header_len +=3D tcp_extra_options_add_header(sk, newsk);
++
+ 		if (skb->len >=3D TCP_MSS_DEFAULT + newtp->tcp_header_len)
+ 			newicsk->icsk_ack.last_seg_size =3D skb->len - newtp->tcp_header_len;
+ 		newtp->rx_opt.mss_clamp =3D req->mss;
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index c4089202e686..60b3b85ff2d3 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3250,6 +3250,9 @@ static void tcp_connect_init(struct sock *sk)
+ 		tp->tcp_header_len +=3D TCPOLEN_MD5SIG_ALIGNED;
  #endif
  =
 
-+	buff->tail -=3D reduce;
++	if (static_branch_unlikely(&tcp_extra_options_enabled))
++		tp->tcp_header_len +=3D tcp_extra_options_add_header(sk, sk);
 +
- 	memset(&fl6, 0, sizeof(fl6));
- 	fl6.daddr =3D ipv6_hdr(skb)->saddr;
- 	fl6.saddr =3D ipv6_hdr(skb)->daddr;
+ 	/* If user gave his TCP_MAXSEG, record it to clamp */
+ 	if (tp->rx_opt.user_mss)
+ 		tp->rx_opt.mss_clamp =3D tp->rx_opt.user_mss;
 -- =
 
 2.14.1
 
 
---===============8675761710897364649==--
+--===============0010361121771731110==--
