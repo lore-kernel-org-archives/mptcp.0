@@ -1,221 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============8617673610613590206=="
+Content-Type: multipart/mixed; boundary="===============3999547280206380303=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 13/18] tcp_md5: Detect key inside tcp_v6_send_response
- instead of passing it as an argument
-Date: Tue, 03 Oct 2017 09:21:59 -0700
-Message-ID: <20171003162204.17945-14-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 14/18] tcp_md5: Check for TCP_MD5 after TCP Timestamps
+ in tcp_established_options
+Date: Tue, 03 Oct 2017 09:22:00 -0700
+Message-ID: <20171003162204.17945-15-cpaasch@apple.com>
 In-Reply-To: 20171003162204.17945-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 97
+X-UID: 98
 
---===============8617673610613590206==
+--===============3999547280206380303==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+It really does not matter, because we never use TCP timestamps when
+TCP_MD5 is enabled (see tcp_syn_options).
+
+Moving TCP_MD5 a bit lower allows for easier adoption of the
+tcp_extra_option framework.
+
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/ipv6/tcp_ipv6.c | 106 ++++++++++++++++++++++++++----------------------=
-----
- 1 file changed, 53 insertions(+), 53 deletions(-)
+ net/ipv4/tcp_output.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 17f7e0cd8755..f1afa3236c4a 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -775,8 +775,7 @@ static const struct tcp_request_sock_ops tcp_request_so=
-ck_ipv6_ops =3D {
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 1eb00e93c895..67a3779294ad 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -683,6 +683,13 @@ static unsigned int tcp_established_options(struct soc=
+k *sk, struct sk_buff *skb
  =
 
- static void tcp_v6_send_response(const struct sock *sk, struct sk_buff *sk=
-b, u32 seq,
- 				 u32 ack, u32 win, u32 tsval, u32 tsecr,
--				 int oif, struct tcp_md5sig_key *key, int rst,
--				 u8 tclass, __be32 label)
-+				 int oif, int rst, u8 tclass, __be32 label)
- {
- 	const struct tcphdr *th =3D tcp_hdr(skb);
- 	struct tcphdr *t1;
-@@ -789,6 +788,12 @@ static void tcp_v6_send_response(const struct sock *sk=
-, struct sk_buff *skb, u32
- 	struct dst_entry *dst;
- 	__be32 *topt;
+ 	opts->options =3D 0;
  =
 
-+#ifdef CONFIG_TCP_MD5SIG
-+	struct tcp_md5sig_key *key =3D NULL;
-+	const __u8 *hash_location =3D NULL;
-+	struct ipv6hdr *ipv6h =3D ipv6_hdr(skb);
-+#endif
-+
- 	buff =3D alloc_skb(MAX_HEADER + sizeof(struct ipv6hdr) + tot_len,
- 			 GFP_ATOMIC);
- 	if (!buff)
-@@ -822,6 +827,48 @@ static void tcp_v6_send_response(const struct sock *sk=
-, struct sk_buff *skb, u32
- 	}
- =
-
- #ifdef CONFIG_TCP_MD5SIG
-+	rcu_read_lock();
-+	hash_location =3D tcp_parse_md5sig_option(th);
-+	if (sk && sk_fullsock(sk)) {
-+		key =3D tcp_v6_md5_do_lookup(sk, &ipv6h->saddr);
-+	} else if (sk && sk->sk_state =3D=3D TCP_TIME_WAIT) {
-+		struct tcp_timewait_sock *tcptw =3D tcp_twsk(sk);
-+
-+		key =3D tcp_twsk_md5_key(tcptw);
-+	} else if (sk && sk->sk_state =3D=3D TCP_NEW_SYN_RECV) {
-+		key =3D tcp_v6_md5_do_lookup(sk, &ipv6h->daddr);
-+	} else if (hash_location) {
-+		unsigned char newhash[16];
-+		struct sock *sk1 =3D NULL;
-+		int genhash;
-+
-+		/* active side is lost. Try to find listening socket through
-+		 * source port, and then find md5 key through listening socket.
-+		 * we are not loose security here:
-+		 * Incoming packet is checked with md5 hash with finding key,
-+		 * no RST generated if md5 hash doesn't match.
-+		 */
-+		sk1 =3D inet6_lookup_listener(dev_net(skb_dst(skb)->dev),
-+					    &tcp_hashinfo, NULL, 0,
-+					    &ipv6h->saddr,
-+					    th->source, &ipv6h->daddr,
-+					    ntohs(th->source), tcp_v6_iif(skb),
-+					    tcp_v6_sdif(skb));
-+		if (!sk1)
-+			goto go_on;
-+
-+		key =3D tcp_v6_md5_do_lookup(sk1, &ipv6h->saddr);
-+		if (!key)
-+			goto go_on;
-+
-+		genhash =3D tcp_v6_md5_hash_skb(newhash, key, NULL, skb);
-+		if (genhash || memcmp(hash_location, newhash, 16) !=3D 0)
-+			goto go_on;
++	if (likely(tp->rx_opt.tstamp_ok)) {
++		opts->options |=3D OPTION_TS;
++		opts->tsval =3D skb ? tcp_skb_timestamp(skb) + tp->tsoffset : 0;
++		opts->tsecr =3D tp->rx_opt.ts_recent;
++		size +=3D TCPOLEN_TSTAMP_ALIGNED;
 +	}
 +
-+go_on:
-+	rcu_read_unlock();
-+
- 	if (key) {
- 		*topt++ =3D htonl((TCPOPT_NOP << 24) | (TCPOPT_NOP << 16) |
- 				(TCPOPT_MD5SIG << 8) | TCPOLEN_MD5SIG);
-@@ -882,14 +929,6 @@ static void tcp_v6_send_reset(const struct sock *sk, s=
-truct sk_buff *skb)
- {
- 	const struct tcphdr *th =3D tcp_hdr(skb);
- 	u32 seq =3D 0, ack_seq =3D 0;
--	struct tcp_md5sig_key *key =3D NULL;
--#ifdef CONFIG_TCP_MD5SIG
--	const __u8 *hash_location =3D NULL;
--	struct ipv6hdr *ipv6h =3D ipv6_hdr(skb);
--	unsigned char newhash[16];
--	int genhash;
--	struct sock *sk1 =3D NULL;
--#endif
- 	int oif;
+ #ifdef CONFIG_TCP_MD5SIG
+ 	*md5 =3D tp->af_specific->md5_lookup(sk, sk);
+ 	if (unlikely(*md5)) {
+@@ -693,13 +700,6 @@ static unsigned int tcp_established_options(struct soc=
+k *sk, struct sk_buff *skb
+ 	*md5 =3D NULL;
+ #endif
  =
 
- 	if (th->rst)
-@@ -901,38 +940,6 @@ static void tcp_v6_send_reset(const struct sock *sk, s=
-truct sk_buff *skb)
- 	if (!sk && !ipv6_unicast_destination(skb))
- 		return;
- =
-
--#ifdef CONFIG_TCP_MD5SIG
--	rcu_read_lock();
--	hash_location =3D tcp_parse_md5sig_option(th);
--	if (sk && sk_fullsock(sk)) {
--		key =3D tcp_v6_md5_do_lookup(sk, &ipv6h->saddr);
--	} else if (hash_location) {
--		/*
--		 * active side is lost. Try to find listening socket through
--		 * source port, and then find md5 key through listening socket.
--		 * we are not loose security here:
--		 * Incoming packet is checked with md5 hash with finding key,
--		 * no RST generated if md5 hash doesn't match.
--		 */
--		sk1 =3D inet6_lookup_listener(dev_net(skb_dst(skb)->dev),
--					   &tcp_hashinfo, NULL, 0,
--					   &ipv6h->saddr,
--					   th->source, &ipv6h->daddr,
--					   ntohs(th->source), tcp_v6_iif(skb),
--					   tcp_v6_sdif(skb));
--		if (!sk1)
--			goto out;
--
--		key =3D tcp_v6_md5_do_lookup(sk1, &ipv6h->saddr);
--		if (!key)
--			goto out;
--
--		genhash =3D tcp_v6_md5_hash_skb(newhash, key, NULL, skb);
--		if (genhash || memcmp(hash_location, newhash, 16) !=3D 0)
--			goto out;
+-	if (likely(tp->rx_opt.tstamp_ok)) {
+-		opts->options |=3D OPTION_TS;
+-		opts->tsval =3D skb ? tcp_skb_timestamp(skb) + tp->tsoffset : 0;
+-		opts->tsecr =3D tp->rx_opt.ts_recent;
+-		size +=3D TCPOLEN_TSTAMP_ALIGNED;
 -	}
--#endif
 -
- 	if (th->ack)
- 		seq =3D ntohl(th->ack_seq);
- 	else
-@@ -940,20 +947,14 @@ static void tcp_v6_send_reset(const struct sock *sk, =
-struct sk_buff *skb)
- 			  (th->doff << 2);
- =
-
- 	oif =3D sk ? sk->sk_bound_dev_if : 0;
--	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, key, 1, 0, 0);
--
--#ifdef CONFIG_TCP_MD5SIG
--out:
--	rcu_read_unlock();
--#endif
-+	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1, 0, 0);
- }
- =
-
- static void tcp_v6_send_ack(const struct sock *sk, struct sk_buff *skb, u3=
-2 seq,
- 			    u32 ack, u32 win, u32 tsval, u32 tsecr, int oif,
--			    struct tcp_md5sig_key *key, u8 tclass,
--			    __be32 label)
-+			    u8 tclass, __be32 label)
- {
--	tcp_v6_send_response(sk, skb, seq, ack, win, tsval, tsecr, oif, key, 0,
-+	tcp_v6_send_response(sk, skb, seq, ack, win, tsval, tsecr, oif, 0,
- 			     tclass, label);
- }
- =
-
-@@ -965,7 +966,7 @@ static void tcp_v6_timewait_ack(struct sock *sk, struct=
- sk_buff *skb)
- 	tcp_v6_send_ack(sk, skb, tcptw->tw_snd_nxt, tcptw->tw_rcv_nxt,
- 			tcptw->tw_rcv_wnd >> tw->tw_rcv_wscale,
- 			tcp_time_stamp_raw() + tcptw->tw_ts_offset,
--			tcptw->tw_ts_recent, tw->tw_bound_dev_if, tcp_twsk_md5_key(tcptw),
-+			tcptw->tw_ts_recent, tw->tw_bound_dev_if,
- 			tw->tw_tclass, cpu_to_be32(tw->tw_flowlabel));
- =
-
- 	inet_twsk_put(tw);
-@@ -988,7 +989,6 @@ static void tcp_v6_reqsk_send_ack(const struct sock *sk=
-, struct sk_buff *skb,
- 			req->rsk_rcv_wnd >> inet_rsk(req)->rcv_wscale,
- 			tcp_time_stamp_raw() + tcp_rsk(req)->ts_off,
- 			req->ts_recent, sk->sk_bound_dev_if,
--			tcp_v6_md5_do_lookup(sk, &ipv6_hdr(skb)->daddr),
- 			0, 0);
- }
- =
-
+ 	if (static_branch_unlikely(&tcp_extra_options_enabled))
+ 		size +=3D tcp_extra_options_prepare(skb, 0,
+ 						  MAX_TCP_OPTION_SPACE - size,
 -- =
 
 2.14.1
 
 
---===============8617673610613590206==--
+--===============3999547280206380303==--
