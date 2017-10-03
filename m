@@ -1,74 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============6715270380834954857=="
+Content-Type: multipart/mixed; boundary="===============8675761710897364649=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 02/18] tcp: Pass sock to tcp_options_write instead of
- tcp_sock
-Date: Tue, 03 Oct 2017 09:21:48 -0700
-Message-ID: <20171003162204.17945-3-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 05/18] tcp6: Prepare for maximum TCP option-space
+Date: Tue, 03 Oct 2017 09:21:51 -0700
+Message-ID: <20171003162204.17945-6-cpaasch@apple.com>
 In-Reply-To: 20171003162204.17945-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 87
+X-UID: 88
 
---===============6715270380834954857==
+--===============8675761710897364649==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Because, to write the extra-options, we need also the request-socket to
-properly write the correct info.
+With a generic TCP-option framework we don't know in advance how much
+space will be used. So, estimate the worst and allocate the maximum.
+Later on, we pull skb->tail back in again.
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/ipv4/tcp_output.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/ipv6/tcp_ipv6.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index aca05ec7c841..0fe9b930b72e 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -443,10 +443,14 @@ struct tcp_out_options {
-  * At least SACK_PERM as the first option is known to lead to a disaster
-  * (but it may well be that other scenarios fail similarly).
-  */
--static void tcp_options_write(__be32 *ptr, struct tcp_sock *tp,
-+static void tcp_options_write(__be32 *ptr, struct sock *sk,
- 			      struct tcp_out_options *opts)
- {
- 	u16 options =3D opts->options;	/* mungable copy */
-+	struct tcp_sock *tp =3D NULL;
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 64d94afa427f..17f7e0cd8755 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -784,17 +784,11 @@ static void tcp_v6_send_response(const struct sock *s=
+k, struct sk_buff *skb, u32
+ 	struct flowi6 fl6;
+ 	struct net *net =3D sk ? sock_net(sk) : dev_net(skb_dst(skb)->dev);
+ 	struct sock *ctl_sk =3D net->ipv6.tcp_sk;
+-	unsigned int tot_len =3D sizeof(struct tcphdr);
++	unsigned int tot_len =3D sizeof(struct tcphdr) + MAX_TCP_OPTION_SPACE;
++	unsigned int reduce =3D 0; /* By how much to pull skb->tail back in? */
+ 	struct dst_entry *dst;
+ 	__be32 *topt;
+ =
+
+-	if (tsecr)
+-		tot_len +=3D TCPOLEN_TSTAMP_ALIGNED;
+-#ifdef CONFIG_TCP_MD5SIG
+-	if (key)
+-		tot_len +=3D TCPOLEN_MD5SIG_ALIGNED;
+-#endif
+-
+ 	buff =3D alloc_skb(MAX_HEADER + sizeof(struct ipv6hdr) + tot_len,
+ 			 GFP_ATOMIC);
+ 	if (!buff)
+@@ -823,6 +817,8 @@ static void tcp_v6_send_response(const struct sock *sk,=
+ struct sk_buff *skb, u32
+ 				(TCPOPT_TIMESTAMP << 8) | TCPOLEN_TIMESTAMP);
+ 		*topt++ =3D htonl(tsval);
+ 		*topt++ =3D htonl(tsecr);
 +
-+	if (sk_fullsock(sk))
-+		tp =3D tcp_sk(sk);
- =
-
- 	if (unlikely(OPTION_MD5 & options)) {
- 		*ptr++ =3D htonl((TCPOPT_NOP << 24) | (TCPOPT_NOP << 16) |
-@@ -1083,7 +1087,7 @@ static int tcp_transmit_skb(struct sock *sk, struct s=
-k_buff *skb, int clone_it,
- 		 */
- 		th->window	=3D htons(min(tp->rcv_wnd, 65535U));
++		reduce +=3D TCPOLEN_TSTAMP_ALIGNED;
  	}
--	tcp_options_write((__be32 *)(th + 1), tp, &opts);
-+	tcp_options_write((__be32 *)(th + 1), sk, &opts);
- #ifdef CONFIG_TCP_MD5SIG
- 	/* Calculate the MD5 hash, as we have all we need now */
- 	if (md5) {
-@@ -3188,7 +3192,7 @@ struct sk_buff *tcp_make_synack(const struct sock *sk=
-, struct dst_entry *dst,
- 	/* RFC1323: The window in SYN & SYN/ACK segments is never scaled. */
- 	th->window =3D htons(min(req->rsk_rcv_wnd, 65535U));
- 	th->doff =3D (tcp_header_size >> 2);
--	tcp_options_write((__be32 *)(th + 1), NULL, &opts);
-+	tcp_options_write((__be32 *)(th + 1), req_to_sk(req), &opts);
- 	__TCP_INC_STATS(sock_net(sk), TCP_MIB_OUTSEGS);
  =
 
  #ifdef CONFIG_TCP_MD5SIG
+@@ -832,9 +828,13 @@ static void tcp_v6_send_response(const struct sock *sk=
+, struct sk_buff *skb, u32
+ 		tcp_v6_md5_hash_hdr((__u8 *)topt, key,
+ 				    &ipv6_hdr(skb)->saddr,
+ 				    &ipv6_hdr(skb)->daddr, t1);
++
++		reduce +=3D TCPOLEN_MD5SIG_ALIGNED;
+ 	}
+ #endif
+ =
+
++	buff->tail -=3D reduce;
++
+ 	memset(&fl6, 0, sizeof(fl6));
+ 	fl6.daddr =3D ipv6_hdr(skb)->saddr;
+ 	fl6.saddr =3D ipv6_hdr(skb)->daddr;
 -- =
 
 2.14.1
 
 
---===============6715270380834954857==--
+--===============8675761710897364649==--
