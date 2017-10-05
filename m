@@ -1,40 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============3795945206537613529=="
+Content-Type: multipart/mixed; boundary="===============2811881348278633521=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 05/18] tcp6: Prepare for maximum TCP option-space
-Date: Thu, 05 Oct 2017 00:41:38 -0700
-Message-ID: <20171005074138.GQ4897@Chimay.local>
-In-Reply-To: alpine.OSX.2.21.1710041523440.28273@syyang-mobl2.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH 11/18] tcp_extra_option: Pass sock to prepare_req
+Date: Thu, 05 Oct 2017 00:46:14 -0700
+Message-ID: <20171005074614.GR4897@Chimay.local>
+In-Reply-To: alpine.OSX.2.21.1710041709340.28273@syyang-mobl2.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 118
+X-UID: 119
 
---===============3795945206537613529==
+--===============2811881348278633521==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 04/10/17 - 15:33:35, Mat Martineau wrote:
+On 04/10/17 - 17:33:24, Mat Martineau wrote:
 > =
 
 > On Tue, 3 Oct 2017, Christoph Paasch wrote:
 > =
 
-> > With a generic TCP-option framework we don't know in advance how much
-> > space will be used. So, estimate the worst and allocate the maximum.
-> > Later on, we pull skb->tail back in again.
+> > Will be needed for TCP_MD5.
 > =
 
-> v2 of the option registration patch will conflict with this. The prepare
-> callback does figure out the number of option bytes required before writi=
-ng
-> to the outgoing skb, so that can happen before the alloc_skb().
+> Patches 7-10 look good to me. Some overlap with v2 of patch 6 that I post=
+ed
+> earlier today, so there will be some conflicts to sort out.
 
-No worries, I will take care of the conflicts.
+Ok, if 7-10 are fine, I will squash them into your patch so that we have a
+single one for the extra options.
 
-Will be working on a v2 of my patchset to handle the incoming data path as
-well.
+> =
+
+> =
+
+> > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> > ---
+> > include/net/tcp.h     | 6 ++++--
+> > net/ipv4/tcp.c        | 5 +++--
+> > net/ipv4/tcp_output.c | 3 ++-
+> > 3 files changed, 9 insertions(+), 5 deletions(-)
+> > =
+
+> > diff --git a/include/net/tcp.h b/include/net/tcp.h
+> > index a66671127936..bc3b8f655a43 100644
+> > --- a/include/net/tcp.h
+> > +++ b/include/net/tcp.h
+> > @@ -2123,7 +2123,8 @@ struct tcp_extra_option_ops {
+> > 	unsigned int (*prepare_req)(struct sk_buff *skb, u8 flags,
+> > 				    unsigned int remaining,
+> > 				    struct tcp_out_options *opts,
+> > -				    struct request_sock *req);
+> > +				    struct request_sock *req,
+> > +				    const struct sock *sk);
+> > 	void (*write)(__be32 *ptr, struct sk_buff *skb,
+> > 		      struct tcp_out_options *opts, struct sock *sk);
+> > 	int (*add_header_len)(const struct sock *listener,
+> > @@ -2144,7 +2145,8 @@ unsigned int tcp_extra_options_prepare(struct sk_=
+buff *skb, u8 flags,
+> > unsigned int tcp_extra_options_prepare_req(struct sk_buff *skb, u8 flag=
+s,
+> > 					   unsigned int remaining,
+> > 					   struct tcp_out_options *opts,
+> > -					   struct request_sock *req);
+> > +					   struct request_sock *req,
+> > +					   const struct sock *sk);
+> =
+
+> v2 of the option registration patch will cause a problem here, since I
+> consolidated the prepare callbacks.
+> =
+
+> Is it better to keep these callbacks separate to allow for different
+> parameters? It might be possible to have one "get_length" callback instead
+> of prepare/prepare_req/add_header_len, if we can determine a simple set of
+> rules for the callback implementor to follow. This only makes sense if it
+> looks like the callbacks are very similar to each other in practice - a
+> quick look at the MD5 code makes me think that's the case.
+
+prepare and prepare_req are fine to merge IMO.
+
+add_header_len has quite different semantics in my opinion in that it gets
+called during connect() and tcp_create_openreq_child(). And is rather stati=
+c.
+For example, for MPTCP prepare and add_header_len would be quite different.
 
 
 Christoph
@@ -48,68 +98,52 @@ Christoph
 
 > =
 
+> > void tcp_extra_options_write(__be32 *ptr, struct sk_buff *skb,
+> > 			     struct tcp_out_options *opts, struct sock *sk);
+> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> > index 3310e252b325..e6aea011b65d 100644
+> > --- a/net/ipv4/tcp.c
+> > +++ b/net/ipv4/tcp.c
+> > @@ -3433,7 +3433,8 @@ unsigned int tcp_extra_options_prepare(struct sk_=
+buff *skb, u8 flags,
+> > unsigned int tcp_extra_options_prepare_req(struct sk_buff *skb, u8 flag=
+s,
+> > 					   unsigned int remaining,
+> > 					   struct tcp_out_options *opts,
+> > -					   struct request_sock *req)
+> > +					   struct request_sock *req,
+> > +					   const struct sock *sk)
+> > {
+> > 	struct tcp_extra_option_ops *entry;
+> > 	unsigned int used =3D 0;
+> > @@ -3444,7 +3445,7 @@ unsigned int tcp_extra_options_prepare_req(struct=
+ sk_buff *skb, u8 flags,
+> > 			continue;
 > > =
 
-> > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-> > ---
-> > net/ipv6/tcp_ipv6.c | 16 ++++++++--------
-> > 1 file changed, 8 insertions(+), 8 deletions(-)
-> > =
-
-> > diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-> > index 64d94afa427f..17f7e0cd8755 100644
-> > --- a/net/ipv6/tcp_ipv6.c
-> > +++ b/net/ipv6/tcp_ipv6.c
-> > @@ -784,17 +784,11 @@ static void tcp_v6_send_response(const struct soc=
-k *sk, struct sk_buff *skb, u32
-> > 	struct flowi6 fl6;
-> > 	struct net *net =3D sk ? sock_net(sk) : dev_net(skb_dst(skb)->dev);
-> > 	struct sock *ctl_sk =3D net->ipv6.tcp_sk;
-> > -	unsigned int tot_len =3D sizeof(struct tcphdr);
-> > +	unsigned int tot_len =3D sizeof(struct tcphdr) + MAX_TCP_OPTION_SPACE;
-> > +	unsigned int reduce =3D 0; /* By how much to pull skb->tail back in? =
-*/
-> > 	struct dst_entry *dst;
-> > 	__be32 *topt;
-> > =
-
-> > -	if (tsecr)
-> > -		tot_len +=3D TCPOLEN_TSTAMP_ALIGNED;
-> > -#ifdef CONFIG_TCP_MD5SIG
-> > -	if (key)
-> > -		tot_len +=3D TCPOLEN_MD5SIG_ALIGNED;
-> > -#endif
-> > -
-> > 	buff =3D alloc_skb(MAX_HEADER + sizeof(struct ipv6hdr) + tot_len,
-> > 			 GFP_ATOMIC);
-> > 	if (!buff)
-> > @@ -823,6 +817,8 @@ static void tcp_v6_send_response(const struct sock =
-*sk, struct sk_buff *skb, u32
-> > 				(TCPOPT_TIMESTAMP << 8) | TCPOLEN_TIMESTAMP);
-> > 		*topt++ =3D htonl(tsval);
-> > 		*topt++ =3D htonl(tsecr);
-> > +
-> > +		reduce +=3D TCPOLEN_TSTAMP_ALIGNED;
+> > 		used +=3D entry->prepare_req(skb, flags, remaining - used, opts,
+> > -					   req);
+> > +					   req, sk);
 > > 	}
+> > 	rcu_read_unlock();
 > > =
 
-> > #ifdef CONFIG_TCP_MD5SIG
-> > @@ -832,9 +828,13 @@ static void tcp_v6_send_response(const struct sock=
- *sk, struct sk_buff *skb, u32
-> > 		tcp_v6_md5_hash_hdr((__u8 *)topt, key,
-> > 				    &ipv6_hdr(skb)->saddr,
-> > 				    &ipv6_hdr(skb)->daddr, t1);
-> > +
-> > +		reduce +=3D TCPOLEN_MD5SIG_ALIGNED;
-> > 	}
-> > #endif
+> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > index 522103a43941..1eb00e93c895 100644
+> > --- a/net/ipv4/tcp_output.c
+> > +++ b/net/ipv4/tcp_output.c
+> > @@ -664,7 +664,8 @@ static unsigned int tcp_synack_options(const struct=
+ sock *sk,
+> > 							   TCPHDR_SYN |
+> > 							   TCPHDR_ACK,
+> > 							   remaining, opts,
+> > -							   req);
+> > +							   req,
+> > +							   sk);
 > > =
 
-> > +	buff->tail -=3D reduce;
-> > +
-> > 	memset(&fl6, 0, sizeof(fl6));
-> > 	fl6.daddr =3D ipv6_hdr(skb)->saddr;
-> > 	fl6.saddr =3D ipv6_hdr(skb)->daddr;
+> > 	return MAX_TCP_OPTION_SPACE - remaining;
+> > }
 > > -- =
 
 > > 2.14.1
@@ -123,4 +157,4 @@ k *sk, struct sk_buff *skb, u32
 > Mat Martineau
 > Intel OTC
 
---===============3795945206537613529==--
+--===============2811881348278633521==--
