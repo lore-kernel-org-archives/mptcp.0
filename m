@@ -1,28 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============8362082577545259884=="
+Content-Type: multipart/mixed; boundary="===============0826867737619496128=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH 1/2] skbuff: Add shared control buffer
-Date: Mon, 23 Oct 2017 09:37:33 -0700
-Message-ID: <20171023163733.GC25570@da0602a-dhcp113.apple.com>
+Date: Mon, 23 Oct 2017 12:49:53 -0700
+Message-ID: <7887be8b-1d52-f077-02d5-87cf342a3937@oracle.com>
 In-Reply-To: 20171020230232.14721-2-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 133
+X-UID: 134
 
---===============8362082577545259884==
+--===============0826867737619496128==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Mat,
 
-On 20/10/17 - 16:02:31, Mat Martineau wrote:
+On 10/20/2017 04:02 PM, Mat Martineau wrote:
 > The sk_buff control buffer is of limited size, and cannot be enlarged
 > without significant impact on systemwide memory use. However, additional
 > per-packet state is needed for some protocols, like Multipath TCP.
-> =
-
+>
 > An optional shared control buffer placed after the normal struct
 > skb_shared_info can accomodate the necessary state without imposing
 > extra memory usage or code changes on normal struct sk_buff
@@ -31,62 +29,73 @@ On 20/10/17 - 16:02:31, Mat Martineau wrote:
 > sk_buff continue to use the skb_shinfo() macro to access shared
 > info. skb_shinfo(skb)->is_ext is set if the extended structure is
 > available, and cleared if it is not.
-> =
-
+>
 > pskb_expand_head will preserve the shared control buffer if it is present.
-> =
 
+Hi Matt,
+
+I personally think the change looks good. It does have some minor issues =
+
+that still need to be resolved.
+
+Like Christoph stated the use of sizeof() is something to think about, =
+
+for example Solarflare driver on the Tx side uses sizeof(). See =
+
+efx_enqueue_skb_pio. Maybe create a macro so that the code can be =
+
+replaced by a call to the MACRO which looks at the flag and returns the =
+
+correct size.
+
+There are some issues to look at connection establishment time and =
+
+fallback to regular tcp. What if the other side does not support MPTCP ? =
+
+Will we be able to switch to an allocation that does not allocate these =
+
+extra 48 bytes. BTW we really do not need this change for MPTCP, =
+
+overloading current fields just works fine, however the enhacement does =
+
+open other possibilities.
+
+FYI. I am working on restructuring MPTCP code so it's not intrusive to =
+
+main TCP code. I will probably try a few other techniques but can use =
+
+this as well. I will post the changes at the appropriate time.
+
+Shoaib
+
+>
 > Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 > ---
->  include/linux/skbuff.h | 24 +++++++++++++++++++++-
->  net/core/skbuff.c      | 56 ++++++++++++++++++++++++++++++++++++++------=
-------
->  2 files changed, 66 insertions(+), 14 deletions(-)
-
-While digging through your patch, I realized that there could be one issue.
-
-In many places in the code we use sizeof(struct skb_shared_info) to compute
-the overhead (e.g., see tcp_sndbuf_expand).
-
-There are also countless users of (sizeof(struct skb_shared_info) in the
-drivers. They all seem to be in the rx-path, so it should be fine.
-
-But the prevalent use of skb_shared_info throughout the stack seems a bit
-scary to me. My concern here is that the driver assumes that the overhead is
-always sizeof(skb_shared_info) and thus underestimates the size of the skb.
-
-At least, in tcp_sndbuf_expand() the overhead-estimation would be wrong. I
-don't think the consequences will be catastrophic, but it's something to
-think about.
-
-
-What do you think?
-
-
-Christoph
-
-> =
-
+>   include/linux/skbuff.h | 24 +++++++++++++++++++++-
+>   net/core/skbuff.c      | 56 ++++++++++++++++++++++++++++++++++++++-----=
+-------
+>   2 files changed, 66 insertions(+), 14 deletions(-)
+>
 > diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
 > index 03634ec2f918..873910c66df9 100644
 > --- a/include/linux/skbuff.h
 > +++ b/include/linux/skbuff.h
 > @@ -489,7 +489,8 @@ int skb_zerocopy_iter_stream(struct sock *sk, struct =
 sk_buff *skb,
->   * the end of the header data, ie. at skb->end.
->   */
->  struct skb_shared_info {
+>    * the end of the header data, ie. at skb->end.
+>    */
+>   struct skb_shared_info {
 > -	__u8		__unused;
 > +	__u8		is_ext:1,
 > +			__unused:7;
->  	__u8		meta_len;
->  	__u8		nr_frags;
->  	__u8		tx_flags;
+>   	__u8		meta_len;
+>   	__u8		nr_frags;
+>   	__u8		tx_flags;
 > @@ -530,6 +531,24 @@ struct skb_shared_info {
->  #define SKB_DATAREF_MASK ((1 << SKB_DATAREF_SHIFT) - 1)
->  =
+>   #define SKB_DATAREF_MASK ((1 << SKB_DATAREF_SHIFT) - 1)
+>   =
 
->  =
+>   =
 
 > +/* This is an extended version of skb_shared_info, also invariant across
 > + * clones and living at the end of the header data.
@@ -106,69 +115,69 @@ sk_buff *skb,
 > +	(SKB_DATA_ALIGN(sizeof(struct skb_shared_info_ext)) - \
 > +	 SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
 > +
->  enum {
->  	SKB_FCLONE_UNAVAILABLE,	/* skb has no fclone (from head_cache) */
->  	SKB_FCLONE_ORIG,	/* orig skb (from fclone_cache) */
+>   enum {
+>   	SKB_FCLONE_UNAVAILABLE,	/* skb has no fclone (from head_cache) */
+>   	SKB_FCLONE_ORIG,	/* orig skb (from fclone_cache) */
 > @@ -856,6 +875,7 @@ struct sk_buff {
->  #define SKB_ALLOC_FCLONE	0x01
->  #define SKB_ALLOC_RX		0x02
->  #define SKB_ALLOC_NAPI		0x04
+>   #define SKB_ALLOC_FCLONE	0x01
+>   #define SKB_ALLOC_RX		0x02
+>   #define SKB_ALLOC_NAPI		0x04
 > +#define SKB_ALLOC_SHINFO_EXT	0x08
->  =
+>   =
 
->  /* Returns true if the skb was allocated from PFMEMALLOC reserves */
->  static inline bool skb_pfmemalloc(const struct sk_buff *skb)
+>   /* Returns true if the skb was allocated from PFMEMALLOC reserves */
+>   static inline bool skb_pfmemalloc(const struct sk_buff *skb)
 > @@ -1271,6 +1291,8 @@ static inline unsigned int skb_end_offset(const str=
 uct sk_buff *skb)
->  =
+>   =
 
->  /* Internal */
->  #define skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(SKB)=
-))
+>   /* Internal */
+>   #define skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(SKB=
+)))
 > +#define skb_shinfo_ext(SKB)	\
 > +	((struct skb_shared_info_ext *)(skb_end_pointer(SKB)))
->  =
+>   =
 
->  static inline struct skb_shared_hwtstamps *skb_hwtstamps(struct sk_buff =
-*skb)
->  {
+>   static inline struct skb_shared_hwtstamps *skb_hwtstamps(struct sk_buff=
+ *skb)
+>   {
 > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
 > index 40717501cbdd..397edd5c0613 100644
 > --- a/net/core/skbuff.c
 > +++ b/net/core/skbuff.c
 > @@ -166,6 +166,8 @@ static void *__kmalloc_reserve(size_t size, gfp_t fla=
 gs, int node,
->   *		instead of head cache and allocate a cloned (child) skb.
->   *		If SKB_ALLOC_RX is set, __GFP_MEMALLOC will be used for
->   *		allocations in case the data is required for writeback
+>    *		instead of head cache and allocate a cloned (child) skb.
+>    *		If SKB_ALLOC_RX is set, __GFP_MEMALLOC will be used for
+>    *		allocations in case the data is required for writeback
 > + *		If SKB_ALLOC_SHINFO_EXT is set, the skb will be allocated
 > + *		with an extended shared info struct.
->   *	@node: numa node to allocate memory on
->   *
->   *	Allocate a new &sk_buff. The returned buffer has no headroom and a
+>    *	@node: numa node to allocate memory on
+>    *
+>    *	Allocate a new &sk_buff. The returned buffer has no headroom and a
 > @@ -179,9 +181,9 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t =
 gfp_mask,
->  			    int flags, int node)
->  {
->  	struct kmem_cache *cache;
+>   			    int flags, int node)
+>   {
+>   	struct kmem_cache *cache;
 > -	struct skb_shared_info *shinfo;
->  	struct sk_buff *skb;
->  	u8 *data;
+>   	struct sk_buff *skb;
+>   	u8 *data;
 > +	unsigned int shinfo_size;
->  	bool pfmemalloc;
->  =
+>   	bool pfmemalloc;
+>   =
 
->  	cache =3D (flags & SKB_ALLOC_FCLONE)
+>   	cache =3D (flags & SKB_ALLOC_FCLONE)
 > @@ -199,18 +201,22 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_=
 t gfp_mask,
->  	/* We do our best to align skb_shared_info on a separate cache
->  	 * line. It usually works because kmalloc(X > SMP_CACHE_BYTES) gives
->  	 * aligned memory blocks, unless SLUB/SLAB debug is enabled.
+>   	/* We do our best to align skb_shared_info on a separate cache
+>   	 * line. It usually works because kmalloc(X > SMP_CACHE_BYTES) gives
+>   	 * aligned memory blocks, unless SLUB/SLAB debug is enabled.
 > -	 * Both skb->head and skb_shared_info are cache line aligned.
 > +	 * Both skb->head and skb_shared_info (or skb_shared_info_ext) are
 > +	 * cache line aligned.
->  	 */
->  	size =3D SKB_DATA_ALIGN(size);
+>   	 */
+>   	size =3D SKB_DATA_ALIGN(size);
 > -	size +=3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
 > -	data =3D kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
 > +	if (flags & SKB_ALLOC_SHINFO_EXT)
@@ -177,37 +186,37 @@ t gfp_mask,
 > +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
 > +	data =3D kmalloc_reserve(size + shinfo_size, gfp_mask, node, &pfmemallo=
 c);
->  	if (!data)
->  		goto nodata;
->  	/* kmalloc(size) might give us more room than requested.
->  	 * Put skb_shared_info exactly at the end of allocated zone,
->  	 * to allow max possible filling before reallocation.
->  	 */
+>   	if (!data)
+>   		goto nodata;
+>   	/* kmalloc(size) might give us more room than requested.
+>   	 * Put skb_shared_info exactly at the end of allocated zone,
+>   	 * to allow max possible filling before reallocation.
+>   	 */
 > -	size =3D SKB_WITH_OVERHEAD(ksize(data));
 > +	size =3D ksize(data) - shinfo_size;
->  	prefetchw(data + size);
->  =
+>   	prefetchw(data + size);
+>   =
 
->  	/*
+>   	/*
 > @@ -220,7 +226,10 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t=
  gfp_mask,
->  	 */
->  	memset(skb, 0, offsetof(struct sk_buff, tail));
->  	/* Account for allocated memory : skb + skb->head */
+>   	 */
+>   	memset(skb, 0, offsetof(struct sk_buff, tail));
+>   	/* Account for allocated memory : skb + skb->head */
 > -	skb->truesize =3D SKB_TRUESIZE(size);
 > +	if (flags & SKB_ALLOC_SHINFO_EXT)
 > +		skb->truesize =3D SKB_TRUESIZE(size) + SKB_SHINFO_EXT_OVERHEAD;
 > +	else
 > +		skb->truesize =3D SKB_TRUESIZE(size);
->  	skb->pfmemalloc =3D pfmemalloc;
->  	refcount_set(&skb->users, 1);
->  	skb->head =3D data;
+>   	skb->pfmemalloc =3D pfmemalloc;
+>   	refcount_set(&skb->users, 1);
+>   	skb->head =3D data;
 > @@ -231,10 +240,21 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_=
 t gfp_mask,
->  	skb->transport_header =3D (typeof(skb->transport_header))~0U;
->  =
+>   	skb->transport_header =3D (typeof(skb->transport_header))~0U;
+>   =
 
->  	/* make sure we initialize shinfo sequentially */
+>   	/* make sure we initialize shinfo sequentially */
 > -	shinfo =3D skb_shinfo(skb);
 > -	memset(shinfo, 0, offsetof(struct skb_shared_info, dataref));
 > -	atomic_set(&shinfo->dataref, 1);
@@ -227,26 +236,26 @@ t gfp_mask,
 > +		atomic_set(&shinfo->dataref, 1);
 > +		kmemcheck_annotate_variable(shinfo->destructor_arg);
 > +	}
->  =
+>   =
 
->  	if (flags & SKB_ALLOC_FCLONE) {
->  		struct sk_buff_fclones *fclones;
+>   	if (flags & SKB_ALLOC_FCLONE) {
+>   		struct sk_buff_fclones *fclones;
 > @@ -1443,6 +1463,7 @@ int pskb_expand_head(struct sk_buff *skb, int nhead=
 , int ntail,
->  {
->  	int i, osize =3D skb_end_offset(skb);
->  	int size =3D osize + nhead + ntail;
+>   {
+>   	int i, osize =3D skb_end_offset(skb);
+>   	int size =3D osize + nhead + ntail;
 > +	int shinfo_size;
->  	long off;
->  	u8 *data;
->  =
+>   	long off;
+>   	u8 *data;
+>   =
 
 > @@ -1454,11 +1475,14 @@ int pskb_expand_head(struct sk_buff *skb, int nhe=
 ad, int ntail,
->  =
+>   =
 
->  	if (skb_pfmemalloc(skb))
->  		gfp_mask |=3D __GFP_MEMALLOC;
+>   	if (skb_pfmemalloc(skb))
+>   		gfp_mask |=3D __GFP_MEMALLOC;
 > -	data =3D kmalloc_reserve(size + SKB_DATA_ALIGN(sizeof(struct skb_shared=
 _info)),
 > -			       gfp_mask, NUMA_NO_NODE, NULL);
@@ -256,38 +265,30 @@ _info)),
 > +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
 > +	data =3D kmalloc_reserve(size + shinfo_size, gfp_mask, NUMA_NO_NODE, NU=
 LL);
->  	if (!data)
->  		goto nodata;
+>   	if (!data)
+>   		goto nodata;
 > -	size =3D SKB_WITH_OVERHEAD(ksize(data));
 > +	size =3D ksize(data) - shinfo_size;
->  =
+>   =
 
->  	/* Copy only real data... and, alas, header. This should be
->  	 * optimized for the cases when header is void.
+>   	/* Copy only real data... and, alas, header. This should be
+>   	 * optimized for the cases when header is void.
 > @@ -1468,6 +1492,12 @@ int pskb_expand_head(struct sk_buff *skb, int nhea=
 d, int ntail,
->  	memcpy((struct skb_shared_info *)(data + size),
->  	       skb_shinfo(skb),
->  	       offsetof(struct skb_shared_info, frags[skb_shinfo(skb)->nr_frags=
-]));
+>   	memcpy((struct skb_shared_info *)(data + size),
+>   	       skb_shinfo(skb),
+>   	       offsetof(struct skb_shared_info, frags[skb_shinfo(skb)->nr_frag=
+s]));
 > +	if (skb_shinfo(skb)->is_ext) {
 > +		int offset =3D offsetof(struct skb_shared_info_ext, shcb);
 > +		memcpy((struct skb_shared_info_ext *)(data + size + offset),
 > +		       &skb_shinfo_ext(skb)->shcb,
 > +		       sizeof(skb_shinfo_ext(skb)->shcb));
 > +	}
->  =
+>   =
 
->  	/*
->  	 * if shinfo is shared we must drop the old head gracefully, but if it
-> -- =
+>   	/*
+>   	 * if shinfo is shared we must drop the old head gracefully, but if it
 
-> 2.14.2
-> =
 
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
-
---===============8362082577545259884==--
+--===============0826867737619496128==--
