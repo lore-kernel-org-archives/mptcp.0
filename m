@@ -1,326 +1,437 @@
-Content-Type: multipart/mixed; boundary="===============0501613732319806323=="
+Content-Type: multipart/mixed; boundary="===============2147680506817180049=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH 1/2] skbuff: Add shared control buffer
-Date: Mon, 23 Oct 2017 16:10:08 -0700
-Message-ID: <alpine.OSX.2.21.1710231557350.5863@mjmartin-mac01.sea.intel.com>
-In-Reply-To: 20171023201012.GG25570@da0602a-dhcp113.apple.com
+Date: Thu, 26 Oct 2017 15:26:00 -0700
+Message-ID: <5e21435e-d6e2-7950-b4c8-9b6adaf53a6e@oracle.com>
+In-Reply-To: alpine.OSX.2.21.1710231557350.5863@mjmartin-mac01.sea.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 138
+X-UID: 139
 
---===============0501613732319806323==
+--===============2147680506817180049==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-Rao and Christoph,
+Hullo,
 
-On Mon, 23 Oct 2017, Christoph Paasch wrote:
-
-> Hello,
+On 10/23/2017 04:10 PM, Mat Martineau wrote:
 >
-> On 23/10/17 - 12:49:53, Rao Shoaib wrote:
->>
->> On 10/20/2017 04:02 PM, Mat Martineau wrote:
->>> The sk_buff control buffer is of limited size, and cannot be enlarged
->>> without significant impact on systemwide memory use. However, additional
->>> per-packet state is needed for some protocols, like Multipath TCP.
->>>
->>> An optional shared control buffer placed after the normal struct
->>> skb_shared_info can accomodate the necessary state without imposing
->>> extra memory usage or code changes on normal struct sk_buff
->>> users. __alloc_skb will now place a skb_shared_info_ext structure at
->>> skb->end when given the SKB_ALLOC_SHINFO_EXT flag. Most users of struct
->>> sk_buff continue to use the skb_shinfo() macro to access shared
->>> info. skb_shinfo(skb)->is_ext is set if the extended structure is
->>> available, and cleared if it is not.
->>>
->>> pskb_expand_head will preserve the shared control buffer if it is prese=
-nt.
->>
->> Hi Matt,
->>
->> I personally think the change looks good. It does have some minor issues
->> that still need to be resolved.
->>
->> Like Christoph stated the use of sizeof() is something to think about, f=
-or
->> example Solarflare driver on the Tx side uses sizeof(). See
->> efx_enqueue_skb_pio. Maybe create a macro so that the code can be replac=
-ed
->> by a call to the MACRO which looks at the flag and returns the correct s=
-ize.
->>
+> Yes, I'm interested too! I know David Miller is interested in making =
 
-In efx_enqueue_skb_pio, they're only interested in verifying that =
+> good use of space in data structures: =
 
-skb_shared_info is bigger than a cache line in order to optimize a copy =
-
-and ensure that it doesn't access invalid memory. We only add more valid =
-
-memory at the end of the struct, so their logic still works as designed.
-
->> There are some issues to look at connection establishment time and fallb=
-ack
->> to regular tcp. What if the other side does not support MPTCP ?
+> https://netdevconf.org/2.2/session.html?miller-datastructurebloat-keynote
 >
-> It should be fine. What happens in that case is that the initiator realiz=
-es
-> that the other side does not support MPTCP and at that point simply stops
-> adding the extra bytes to the SKBs it is pushing down the connection.
+> If there's a lot of unnecessary space being used they'd probably want =
 
-I agree.
-
->> Will we be able to switch to an allocation that does not allocate these =
-extra 48 bytes.
->> BTW we really do not need this change for MPTCP, overloading current fie=
-lds
->> just works fine, however the enhacement does open other possibilities.
+> to reclaim it and then we'd need the extra shared info again :)
 >
-> You were able to reduce the cb-size back down to 48 bytes with overloading
-> fields? I would love to see the patch :)
+Thanks for the pointer, I will take a look.
+Take a look at my last couple of patches, they are all using regular =
 
-Yes, I'm interested too! I know David Miller is interested in making good =
+size CB. The relevant changes are in mptcp_skb_entail() and =
 
-use of space in data structures: =
+mptcp_write_dss_mapping() and the obvious=C2=A0 tcp_skb_cb and sk_buff =
 
-https://netdevconf.org/2.2/session.html?miller-datastructurebloat-keynote
+structures. The change is to calculate the mapping when the header is =
 
-If there's a lot of unnecessary space being used they'd probably want to =
+being written not before.
 
-reclaim it and then we'd need the extra shared info again :)
+I am working on net-next 4.14.0-rc4 and have been able to achieve the =
 
-> I had to bump cb up to 80 bytes in the current mptcp_trunk :/
->
->
-> Christoph
->
->> FYI. I am working on restructuring MPTCP code so it's not intrusive to m=
-ain
->> TCP code. I will probably try a few other techniques but can use this as
->> well. I will post the changes at the appropriate time.
+same. Here are the changes to the structure, cut and paste of the =
 
-Nice, thanks for the update.
+relevant code from any patch just works.
 
-Regards,
-Mat
+The change to tcp_skb_cb is
+
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ip_dsfield;=C2=A0=C2=A0=C2=A0=C2=A0=
+ /* IPv4 tos or IPv6 dsfield=C2=A0=C2=A0=C2=A0=C2=A0 */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 txstamp_ack:1,=C2=A0 /* Record TX t=
+imestamp for ack? */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 eor:1,=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Is skb MSG_EOR ma=
+rked? */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 has_rxts=
+tamp:1, /* SKB has a RX timestamp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unused:5;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u32=C2=
+=A0=C2=A0 ack_seq;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Sequence nu=
+mber ACK'd */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u32=C2=
+=A0=C2=A0 mptcp_data_seq;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u32=C2=
+=A0=C2=A0 mptcp_path_mask;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+
+And used a scratch field in sk_buff, these are only needed on the Rx side.
+
+struct sk_buff {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 struct {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* These=
+ two members must be first. */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct s=
+k_buff=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *next;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct s=
+k_buff=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *prev;
+
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct net_device=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 *dev;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Some protocols might use this sp=
+ace =
+
+to store information,
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * while device pointer would =
+be NULL.
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * UDP receive path is one use=
+r.
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_scratch;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 __u8 mptcp_flags;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 __u8 mptcp_dss_off;
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 };
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 struct rb_node=C2=A0 rbnode; /* used in netem & tcp stac=
+k */
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+
+And here is a tcpdump. Host 192.168.1.3 is running net-next "4.14.0 =
+
+Fearless Coyote" and host 192.168.1.32 is running "4.4.88 Blurry Fish Butt"
 
 
->> Shoaib
+15:21:28.581388 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [S], seq =
+
+1515497212, win 29200, options [mss 1460,sackOK,TS val 2460468540 ecr =
+
+0,nop,wscale 7,mptcp capable csum {0x26b923d415f6c4d4}], length 0
+15:21:28.581449 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [S.], seq =
+
+3412665074, ack 1515497213, win 28560, options [mss 1460,sackOK,TS val =
+
+25517800 ecr 2460468540,nop,wscale 7,mptcp capable csum =
+
+{0x8fd2dd8f92b5f72c}], length 0
+15:21:28.582533 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1:42, ack 1, win 229, options [nop,nop,TS val 2460468541 ecr 25517800], =
+
+length 41
+15:21:28.582612 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
+
+42, win 224, options [nop,nop,TS val 25517800 ecr 2460468541], length 0
+15:21:28.591889 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
+
+1:42, ack 42, win 224, options [nop,nop,TS val 25517802 ecr 2460468541], =
+
+length 41
+15:21:28.592922 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
+
+42:1378, ack 42, win 229, options [nop,nop,TS val 2460468552 ecr =
+
+25517802], length 1336
+15:21:28.593028 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
+
+42:1018, ack 42, win 224, options [nop,nop,TS val 25517803 ecr =
+
+2460468552], length 976
+15:21:28.633043 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
+
+1378, win 246, options [nop,nop,TS val 25517813 ecr 2460468552], length 0
+15:21:28.633956 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1378:1426, ack 1018, win 244, options [nop,nop,TS val 2460468593 ecr =
+
+25517803], length 48
+15:21:28.634012 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
+
+1426, win 246, options [nop,nop,TS val 25517813 ecr 2460468593], length 0
+15:21:28.647684 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
+
+1018:1382, ack 1426, win 246, options [nop,nop,TS val 25517816 ecr =
+
+2460468593], length 364
+15:21:28.653439 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1426:1442, ack 1382, win 259, options [nop,nop,TS val 2460468612 ecr =
+
+25517816], length 16
+15:21:28.692996 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
+
+1442, win 246, options [nop,nop,TS val 25517828 ecr 2460468612], length 0
+15:21:28.693584 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1442:1486, ack 1382, win 259, options [nop,nop,TS val 2460468652 ecr =
+
+25517828], length 44
+15:21:28.693632 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
+
+1486, win 246, options [nop,nop,TS val 25517828 ecr 2460468652], length 0
+15:21:28.693706 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
+
+1382:1426, ack 1486, win 246, options [nop,nop,TS val 25517828 ecr =
+
+2460468652], length 44
+15:21:28.694310 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1486:1554, ack 1426, win 259, options [nop,nop,TS val 2460468653 ecr =
+
+25517828], length 68
+15:21:28.694976 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
+
+1426:1478, ack 1554, win 246, options [nop,nop,TS val 25517828 ecr =
+
+2460468653], length 52
+15:21:28.737617 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [.], ack =
+
+1478, win 259, options [nop,nop,TS val 2460468654 ecr 25517828], length 0
+15:21:31.599860 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1554:1702, ack 1478, win 259, options [nop,nop,TS val 2460471559 ecr =
+
+25517828], length 148
+
+I have some other ideas that I want to try but right now I focused on =
+
+getting something working so we can all start hacking.
+
+Rao
+
+
+>> I had to bump cb up to 80 bytes in the current mptcp_trunk :/
 >>
->>>
->>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->>> ---
->>>   include/linux/skbuff.h | 24 +++++++++++++++++++++-
->>>   net/core/skbuff.c      | 56 ++++++++++++++++++++++++++++++++++++++---=
----------
->>>   2 files changed, 66 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
->>> index 03634ec2f918..873910c66df9 100644
->>> --- a/include/linux/skbuff.h
->>> +++ b/include/linux/skbuff.h
->>> @@ -489,7 +489,8 @@ int skb_zerocopy_iter_stream(struct sock *sk, struc=
-t sk_buff *skb,
->>>    * the end of the header data, ie. at skb->end.
->>>    */
->>>   struct skb_shared_info {
->>> -	__u8		__unused;
->>> +	__u8		is_ext:1,
->>> +			__unused:7;
->>>   	__u8		meta_len;
->>>   	__u8		nr_frags;
->>>   	__u8		tx_flags;
->>> @@ -530,6 +531,24 @@ struct skb_shared_info {
->>>   #define SKB_DATAREF_MASK ((1 << SKB_DATAREF_SHIFT) - 1)
->>> +/* This is an extended version of skb_shared_info, also invariant acro=
-ss
->>> + * clones and living at the end of the header data.
->>> + */
->>> +struct skb_shared_info_ext {
->>> +	/* skb_shared_info must be the first member */
->>> +	struct skb_shared_info	shinfo;
->>> +
->>> +	/* This is the shared control buffer. It is similar to sk_buff's
->>> +	 * control buffer, but is shared across clones. It must not be
->>> +	 * modified when multiple sk_buffs are referencing this structure.
->>> +	 */
->>> +	char			shcb[48];
->>> +};
->>> +
->>> +#define SKB_SHINFO_EXT_OVERHEAD	\
->>> +	(SKB_DATA_ALIGN(sizeof(struct skb_shared_info_ext)) - \
->>> +	 SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
->>> +
->>>   enum {
->>>   	SKB_FCLONE_UNAVAILABLE,	/* skb has no fclone (from head_cache) */
->>>   	SKB_FCLONE_ORIG,	/* orig skb (from fclone_cache) */
->>> @@ -856,6 +875,7 @@ struct sk_buff {
->>>   #define SKB_ALLOC_FCLONE	0x01
->>>   #define SKB_ALLOC_RX		0x02
->>>   #define SKB_ALLOC_NAPI		0x04
->>> +#define SKB_ALLOC_SHINFO_EXT	0x08
->>>   /* Returns true if the skb was allocated from PFMEMALLOC reserves */
->>>   static inline bool skb_pfmemalloc(const struct sk_buff *skb)
->>> @@ -1271,6 +1291,8 @@ static inline unsigned int skb_end_offset(const s=
-truct sk_buff *skb)
->>>   /* Internal */
->>>   #define skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(S=
-KB)))
->>> +#define skb_shinfo_ext(SKB)	\
->>> +	((struct skb_shared_info_ext *)(skb_end_pointer(SKB)))
->>>   static inline struct skb_shared_hwtstamps *skb_hwtstamps(struct sk_bu=
-ff *skb)
->>>   {
->>> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
->>> index 40717501cbdd..397edd5c0613 100644
->>> --- a/net/core/skbuff.c
->>> +++ b/net/core/skbuff.c
->>> @@ -166,6 +166,8 @@ static void *__kmalloc_reserve(size_t size, gfp_t f=
-lags, int node,
->>>    *		instead of head cache and allocate a cloned (child) skb.
->>>    *		If SKB_ALLOC_RX is set, __GFP_MEMALLOC will be used for
->>>    *		allocations in case the data is required for writeback
->>> + *		If SKB_ALLOC_SHINFO_EXT is set, the skb will be allocated
->>> + *		with an extended shared info struct.
->>>    *	@node: numa node to allocate memory on
->>>    *
->>>    *	Allocate a new &sk_buff. The returned buffer has no headroom and a
->>> @@ -179,9 +181,9 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_=
-t gfp_mask,
->>>   			    int flags, int node)
->>>   {
->>>   	struct kmem_cache *cache;
->>> -	struct skb_shared_info *shinfo;
->>>   	struct sk_buff *skb;
->>>   	u8 *data;
->>> +	unsigned int shinfo_size;
->>>   	bool pfmemalloc;
->>>   	cache =3D (flags & SKB_ALLOC_FCLONE)
->>> @@ -199,18 +201,22 @@ struct sk_buff *__alloc_skb(unsigned int size, gf=
-p_t gfp_mask,
->>>   	/* We do our best to align skb_shared_info on a separate cache
->>>   	 * line. It usually works because kmalloc(X > SMP_CACHE_BYTES) gives
->>>   	 * aligned memory blocks, unless SLUB/SLAB debug is enabled.
->>> -	 * Both skb->head and skb_shared_info are cache line aligned.
->>> +	 * Both skb->head and skb_shared_info (or skb_shared_info_ext) are
->>> +	 * cache line aligned.
->>>   	 */
->>>   	size =3D SKB_DATA_ALIGN(size);
->>> -	size +=3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
->>> -	data =3D kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
->>> +	if (flags & SKB_ALLOC_SHINFO_EXT)
->>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info_ext));
->>> +	else
->>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
->>> +	data =3D kmalloc_reserve(size + shinfo_size, gfp_mask, node, &pfmemal=
-loc);
->>>   	if (!data)
->>>   		goto nodata;
->>>   	/* kmalloc(size) might give us more room than requested.
->>>   	 * Put skb_shared_info exactly at the end of allocated zone,
->>>   	 * to allow max possible filling before reallocation.
->>>   	 */
->>> -	size =3D SKB_WITH_OVERHEAD(ksize(data));
->>> +	size =3D ksize(data) - shinfo_size;
->>>   	prefetchw(data + size);
->>>   	/*
->>> @@ -220,7 +226,10 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp=
-_t gfp_mask,
->>>   	 */
->>>   	memset(skb, 0, offsetof(struct sk_buff, tail));
->>>   	/* Account for allocated memory : skb + skb->head */
->>> -	skb->truesize =3D SKB_TRUESIZE(size);
->>> +	if (flags & SKB_ALLOC_SHINFO_EXT)
->>> +		skb->truesize =3D SKB_TRUESIZE(size) + SKB_SHINFO_EXT_OVERHEAD;
->>> +	else
->>> +		skb->truesize =3D SKB_TRUESIZE(size);
->>>   	skb->pfmemalloc =3D pfmemalloc;
->>>   	refcount_set(&skb->users, 1);
->>>   	skb->head =3D data;
->>> @@ -231,10 +240,21 @@ struct sk_buff *__alloc_skb(unsigned int size, gf=
-p_t gfp_mask,
->>>   	skb->transport_header =3D (typeof(skb->transport_header))~0U;
->>>   	/* make sure we initialize shinfo sequentially */
->>> -	shinfo =3D skb_shinfo(skb);
->>> -	memset(shinfo, 0, offsetof(struct skb_shared_info, dataref));
->>> -	atomic_set(&shinfo->dataref, 1);
->>> -	kmemcheck_annotate_variable(shinfo->destructor_arg);
->>> +	if (flags & SKB_ALLOC_SHINFO_EXT) {
->>> +		struct skb_shared_info_ext *shinfo_ext =3D skb_shinfo_ext(skb);
->>> +		shinfo_ext->shinfo.is_ext =3D 1;
->>> +		memset(&shinfo_ext->shinfo.meta_len, 0,
->>> +		       offsetof(struct skb_shared_info, dataref) -
->>> +		       offsetof(struct skb_shared_info, meta_len));
->>> +		atomic_set(&shinfo_ext->shinfo.dataref, 1);
->>> +		kmemcheck_annotate_variable(shinfo_ext->shinfo.destructor_arg);
->>> +		memset(&shinfo_ext->shcb, 0, sizeof(shinfo_ext->shcb));
->>> +	} else {
->>> +		struct skb_shared_info *shinfo =3D skb_shinfo(skb);
->>> +		memset(shinfo, 0, offsetof(struct skb_shared_info, dataref));
->>> +		atomic_set(&shinfo->dataref, 1);
->>> +		kmemcheck_annotate_variable(shinfo->destructor_arg);
->>> +	}
->>>   	if (flags & SKB_ALLOC_FCLONE) {
->>>   		struct sk_buff_fclones *fclones;
->>> @@ -1443,6 +1463,7 @@ int pskb_expand_head(struct sk_buff *skb, int nhe=
-ad, int ntail,
->>>   {
->>>   	int i, osize =3D skb_end_offset(skb);
->>>   	int size =3D osize + nhead + ntail;
->>> +	int shinfo_size;
->>>   	long off;
->>>   	u8 *data;
->>> @@ -1454,11 +1475,14 @@ int pskb_expand_head(struct sk_buff *skb, int n=
-head, int ntail,
->>>   	if (skb_pfmemalloc(skb))
->>>   		gfp_mask |=3D __GFP_MEMALLOC;
->>> -	data =3D kmalloc_reserve(size + SKB_DATA_ALIGN(sizeof(struct skb_shar=
-ed_info)),
->>> -			       gfp_mask, NUMA_NO_NODE, NULL);
->>> +	if (skb_shinfo(skb)->is_ext)
->>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info_ext));
->>> +	else
->>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
->>> +	data =3D kmalloc_reserve(size + shinfo_size, gfp_mask, NUMA_NO_NODE, =
-NULL);
->>>   	if (!data)
->>>   		goto nodata;
->>> -	size =3D SKB_WITH_OVERHEAD(ksize(data));
->>> +	size =3D ksize(data) - shinfo_size;
->>>   	/* Copy only real data... and, alas, header. This should be
->>>   	 * optimized for the cases when header is void.
->>> @@ -1468,6 +1492,12 @@ int pskb_expand_head(struct sk_buff *skb, int nh=
-ead, int ntail,
->>>   	memcpy((struct skb_shared_info *)(data + size),
->>>   	       skb_shinfo(skb),
->>>   	       offsetof(struct skb_shared_info, frags[skb_shinfo(skb)->nr_fr=
-ags]));
->>> +	if (skb_shinfo(skb)->is_ext) {
->>> +		int offset =3D offsetof(struct skb_shared_info_ext, shcb);
->>> +		memcpy((struct skb_shared_info_ext *)(data + size + offset),
->>> +		       &skb_shinfo_ext(skb)->shcb,
->>> +		       sizeof(skb_shinfo_ext(skb)->shcb));
->>> +	}
->>>   	/*
->>>   	 * if shinfo is shared we must drop the old head gracefully, but if =
-it
 >>
->> _______________________________________________
->> mptcp mailing list
->> mptcp(a)lists.01.org
->> https://lists.01.org/mailman/listinfo/mptcp
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
+>> Christoph
+>>
+>>> FYI. I am working on restructuring MPTCP code so it's not intrusive =
+
+>>> to main
+>>> TCP code. I will probably try a few other techniques but can use =
+
+>>> this as
+>>> well. I will post the changes at the appropriate time.
 >
+> Nice, thanks for the update.
+>
+> Regards,
+> Mat
 
---
-Mat Martineau
-Intel OTC
 
---===============0501613732319806323==--
+--===============2147680506817180049==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
+bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
+MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPHA+PGJyPgogICAgPC9wPgogICAgSHVsbG8s
+PGJyPgogICAgPGJyPgogICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAxMC8yMy8y
+MDE3IDA0OjEwIFBNLCBNYXQgTWFydGluZWF1CiAgICAgIHdyb3RlOjxicj4KICAgIDwvZGl2Pgog
+ICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIKY2l0ZT0ibWlkOmFscGluZS5PU1guMi4yMS4xNzEw
+MjMxNTU3MzUwLjU4NjNAbWptYXJ0aW4tbWFjMDEuc2VhLmludGVsLmNvbSI+PGJyPgogICAgICBZ
+ZXMsIEknbSBpbnRlcmVzdGVkIHRvbyEgSSBrbm93IERhdmlkIE1pbGxlciBpcyBpbnRlcmVzdGVk
+IGluCiAgICAgIG1ha2luZyBnb29kIHVzZSBvZiBzcGFjZSBpbiBkYXRhIHN0cnVjdHVyZXM6IDxh
+CiAgICAgICAgY2xhc3M9Im1vei10eHQtbGluay1mcmVldGV4dCIKaHJlZj0iaHR0cHM6Ly9uZXRk
+ZXZjb25mLm9yZy8yLjIvc2Vzc2lvbi5odG1sP21pbGxlci1kYXRhc3RydWN0dXJlYmxvYXQta2V5
+bm90ZSIKICAgICAgICBtb3otZG8tbm90LXNlbmQ9InRydWUiPmh0dHBzOi8vbmV0ZGV2Y29uZi5v
+cmcvMi4yL3Nlc3Npb24uaHRtbD9taWxsZXItZGF0YXN0cnVjdHVyZWJsb2F0LWtleW5vdGU8L2E+
+CiAgICAgIDxicj4KICAgICAgPGJyPgogICAgICBJZiB0aGVyZSdzIGEgbG90IG9mIHVubmVjZXNz
+YXJ5IHNwYWNlIGJlaW5nIHVzZWQgdGhleSdkIHByb2JhYmx5CiAgICAgIHdhbnQgdG8gcmVjbGFp
+bSBpdCBhbmQgdGhlbiB3ZSdkIG5lZWQgdGhlIGV4dHJhIHNoYXJlZCBpbmZvIGFnYWluCiAgICAg
+IDxzcGFuIGNsYXNzPSJtb3otc21pbGV5LXMxIiB0aXRsZT0iOikiPjxzcGFuPjopPC9zcGFuPjwv
+c3Bhbj4KICAgICAgPGJyPgogICAgICA8YnI+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICBUaGFua3Mg
+Zm9yIHRoZSBwb2ludGVyLCBJIHdpbGwgdGFrZSBhIGxvb2suPGJyPgogICAgVGFrZSBhIGxvb2sg
+YXQgbXkgbGFzdCBjb3VwbGUgb2YgcGF0Y2hlcywgdGhleSBhcmUgYWxsIHVzaW5nIHJlZ3VsYXIK
+ICAgIHNpemUgQ0IuIFRoZSByZWxldmFudCBjaGFuZ2VzIGFyZSBpbiBtcHRjcF9za2JfZW50YWls
+KCkgYW5kCiAgICBtcHRjcF93cml0ZV9kc3NfbWFwcGluZygpIGFuZCB0aGUgb2J2aW91c8KgIHRj
+cF9za2JfY2IgYW5kIHNrX2J1ZmYKICAgIHN0cnVjdHVyZXMuIFRoZSBjaGFuZ2UgaXMgdG8gY2Fs
+Y3VsYXRlIHRoZSBtYXBwaW5nIHdoZW4gdGhlIGhlYWRlcgogICAgaXMgYmVpbmcgd3JpdHRlbiBu
+b3QgYmVmb3JlLiA8YnI+CiAgICA8YnI+CiAgICBJIGFtIHdvcmtpbmcgb24gbmV0LW5leHQgNC4x
+NC4wLXJjNCBhbmQgaGF2ZSBiZWVuIGFibGUgdG8gYWNoaWV2ZQogICAgdGhlIHNhbWUuIEhlcmUg
+YXJlIHRoZSBjaGFuZ2VzIHRvIHRoZSBzdHJ1Y3R1cmUsIGN1dCBhbmQgcGFzdGUgb2YKICAgIHRo
+ZSByZWxldmFudCBjb2RlIGZyb20gYW55IHBhdGNoIGp1c3Qgd29ya3MuPGJyPgogICAgPGJyPgog
+ICAgVGhlIGNoYW5nZSB0byB0Y3Bfc2tiX2NiIGlzIDxicj4KICAgIDxicj4KICAgIMKgwqDCoMKg
+wqDCoMKgIF9fdTjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlwX2RzZmllbGQ7wqDCoMKgwqAgLyog
+SVB2NCB0b3Mgb3IgSVB2NgogICAgZHNmaWVsZMKgwqDCoMKgICovPGJyPgogICAgwqDCoMKgwqDC
+oMKgwqAgX191OMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHhzdGFtcF9hY2s6MSzCoCAvKiBSZWNv
+cmQgVFggdGltZXN0YW1wIGZvcgogICAgYWNrPyAqLzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZW9yOjEswqDCoMKgwqDCoMKgwqDCoMKgIC8q
+IElzIHNrYiBNU0dfRU9SIG1hcmtlZD8gKi88YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGhhc19yeHRzdGFtcDoxLCAvKiBTS0IgaGFzIGEgUlgK
+ICAgIHRpbWVzdGFtcMKgwqDCoMKgwqDCoCAqLzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW51c2VkOjU7PGJyPgogICAgwqDCoMKgwqDCoMKg
+wqAgdW5pb24gezxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgX191MzLCoMKgIGFja19zZXE7wqDCoMKgwqDCoMKgwqAgLyogU2VxdWVuY2UgbnVt
+YmVyCiAgICBBQ0snZCAqLzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgX191MzLCoMKgIG1wdGNwX2RhdGFfc2VxOzxicj4KICAgIMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgX191MzLCoMKgIG1wdGNwX3Bh
+dGhfbWFzazs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoCB9Ozxicj4KICAgIDxicj4KICAgIEFuZCB1
+c2VkIGEgc2NyYXRjaCBmaWVsZCBpbiBza19idWZmLCB0aGVzZSBhcmUgb25seSBuZWVkZWQgb24g
+dGhlIFJ4CiAgICBzaWRlLjxicj4KICAgIDxicj4KICAgIHN0cnVjdCBza19idWZmIHs8YnI+CiAg
+ICDCoMKgwqDCoMKgwqDCoCB1bmlvbiB7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHN0cnVjdCB7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCAvKiBUaGVzZSB0d28gbWVtYmVycyBtdXN0IGJlIGZpcnN0LiAqLzxicj4K
+ICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0
+IHNrX2J1ZmbCoMKgwqDCoMKgwqDCoMKgwqAgKm5leHQ7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qgc2tfYnVmZsKgwqDCoMKgwqDC
+oMKgwqDCoCAqcHJldjs8YnI+CiAgICA8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVuaW9uIHs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgbmV0X2Rl
+dmljZcKgwqDCoMKgwqDCoCAqZGV2Ozxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIFNvbWUgcHJvdG9jb2xzIG1p
+Z2h0IHVzZSB0aGlzCiAgICBzcGFjZSB0byBzdG9yZSBpbmZvcm1hdGlvbiw8YnI+CiAgICDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgICogd2hpbGUgZGV2aWNlIHBvaW50ZXIgd291bGQgYmUKICAgIE5VTEwuPGJyPgogICAgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCAqIFVEUCByZWNlaXZlIHBhdGggaXMgb25lIHVzZXIuPGJyPgogICAgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqLzxi
+cj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHVuc2lnbmVkIGxvbmfCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZfc2NyYXRj
+aDs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qgezxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBf
+X3U4IG1wdGNwX2ZsYWdzOzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBfX3U4IG1wdGNw
+X2Rzc19vZmY7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIH07PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVj
+dCByYl9ub2RlwqAgcmJub2RlOyAvKiB1c2VkIGluIG5ldGVtICZhbXA7IHRjcAogICAgc3RhY2sg
+Ki88YnI+CiAgICDCoMKgwqDCoMKgwqDCoCB9Ozxicj4KICAgIDxicj4KICAgIEFuZCBoZXJlIGlz
+IGEgdGNwZHVtcC4gSG9zdCAxOTIuMTY4LjEuMyBpcyBydW5uaW5nIG5ldC1uZXh0ICI0LjE0LjAK
+ICAgIEZlYXJsZXNzIENveW90ZSIgYW5kIGhvc3QgMTkyLjE2OC4xLjMyIGlzIHJ1bm5pbmcgIjQu
+NC44OCBCbHVycnkKICAgIEZpc2ggQnV0dCI8YnI+CiAgICA8YnI+CiAgICA8YnI+CiAgICAxNToy
+MToyOC41ODEzODggSVAgMTkyLjE2OC4xLjMuNDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBG
+bGFncwogICAgW1NdLCBzZXEgMTUxNTQ5NzIxMiwgd2luIDI5MjAwLCBvcHRpb25zIFttc3MgMTQ2
+MCxzYWNrT0ssVFMgdmFsCiAgICAyNDYwNDY4NTQwIGVjciAwLG5vcCx3c2NhbGUgNyxtcHRjcCBj
+YXBhYmxlIGNzdW0KICAgIHsweDI2YjkyM2Q0MTVmNmM0ZDR9XSwgbGVuZ3RoIDA8YnI+CiAgICAx
+NToyMToyOC41ODE0NDkgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2
+OiBGbGFncwogICAgW1MuXSwgc2VxIDM0MTI2NjUwNzQsIGFjayAxNTE1NDk3MjEzLCB3aW4gMjg1
+NjAsIG9wdGlvbnMgW21zcwogICAgMTQ2MCxzYWNrT0ssVFMgdmFsIDI1NTE3ODAwIGVjciAyNDYw
+NDY4NTQwLG5vcCx3c2NhbGUgNyxtcHRjcAogICAgY2FwYWJsZSBjc3VtIHsweDhmZDJkZDhmOTJi
+NWY3MmN9XSwgbGVuZ3RoIDA8YnI+CiAgICAxNToyMToyOC41ODI1MzMgSVAgMTkyLjE2OC4xLjMu
+NDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgW1AuXSwgc2VxIDE6NDIsIGFj
+ayAxLCB3aW4gMjI5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbCAyNDYwNDY4NTQxCiAgICBlY3Ig
+MjU1MTc4MDBdLCBsZW5ndGggNDE8YnI+CiAgICAxNToyMToyOC41ODI2MTIgSVAgMTkyLjE2OC4x
+LjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwogICAgWy5dLCBhY2sgNDIsIHdp
+biAyMjQsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODAwIGVjcgogICAgMjQ2MDQ2ODU0
+MV0sIGxlbmd0aCAwPGJyPgogICAgMTU6MjE6MjguNTkxODg5IElQIDE5Mi4xNjguMS4zMi5zc2gg
+Jmd0OyAxOTIuMTY4LjEuMy40MDA5NjogRmxhZ3MKICAgIFtQLl0sIHNlcSAxOjQyLCBhY2sgNDIs
+IHdpbiAyMjQsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODAyCiAgICBlY3IgMjQ2MDQ2
+ODU0MV0sIGxlbmd0aCA0MTxicj4KICAgIDE1OjIxOjI4LjU5MjkyMiBJUCAxOTIuMTY4LjEuMy40
+MDA5NiAmZ3Q7IDE5Mi4xNjguMS4zMi5zc2g6IEZsYWdzCiAgICBbUC5dLCBzZXEgNDI6MTM3OCwg
+YWNrIDQyLCB3aW4gMjI5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgMjQ2MDQ2ODU1MiBl
+Y3IgMjU1MTc4MDJdLCBsZW5ndGggMTMzNjxicj4KICAgIDE1OjIxOjI4LjU5MzAyOCBJUCAxOTIu
+MTY4LjEuMzIuc3NoICZndDsgMTkyLjE2OC4xLjMuNDAwOTY6IEZsYWdzCiAgICBbUC5dLCBzZXEg
+NDI6MTAxOCwgYWNrIDQyLCB3aW4gMjI0LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbCAyNTUxNzgw
+MwogICAgZWNyIDI0NjA0Njg1NTJdLCBsZW5ndGggOTc2PGJyPgogICAgMTU6MjE6MjguNjMzMDQz
+IElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAxOTIuMTY4LjEuMy40MDA5NjogRmxhZ3MKICAgIFsu
+XSwgYWNrIDEzNzgsIHdpbiAyNDYsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODEzIGVj
+cgogICAgMjQ2MDQ2ODU1Ml0sIGxlbmd0aCAwPGJyPgogICAgMTU6MjE6MjguNjMzOTU2IElQIDE5
+Mi4xNjguMS4zLjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFtQLl0sIHNl
+cSAxMzc4OjE0MjYsIGFjayAxMDE4LCB3aW4gMjQ0LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAog
+ICAgMjQ2MDQ2ODU5MyBlY3IgMjU1MTc4MDNdLCBsZW5ndGggNDg8YnI+CiAgICAxNToyMToyOC42
+MzQwMTIgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwog
+ICAgWy5dLCBhY2sgMTQyNiwgd2luIDI0Niwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwgMjU1MTc4
+MTMgZWNyCiAgICAyNDYwNDY4NTkzXSwgbGVuZ3RoIDA8YnI+CiAgICAxNToyMToyOC42NDc2ODQg
+SVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwogICAgW1Au
+XSwgc2VxIDEwMTg6MTM4MiwgYWNrIDE0MjYsIHdpbiAyNDYsIG9wdGlvbnMgW25vcCxub3AsVFMg
+dmFsCiAgICAyNTUxNzgxNiBlY3IgMjQ2MDQ2ODU5M10sIGxlbmd0aCAzNjQ8YnI+CiAgICAxNToy
+MToyOC42NTM0MzkgSVAgMTkyLjE2OC4xLjMuNDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBG
+bGFncwogICAgW1AuXSwgc2VxIDE0MjY6MTQ0MiwgYWNrIDEzODIsIHdpbiAyNTksIG9wdGlvbnMg
+W25vcCxub3AsVFMgdmFsCiAgICAyNDYwNDY4NjEyIGVjciAyNTUxNzgxNl0sIGxlbmd0aCAxNjxi
+cj4KICAgIDE1OjIxOjI4LjY5Mjk5NiBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsgMTkyLjE2OC4x
+LjMuNDAwOTY6IEZsYWdzCiAgICBbLl0sIGFjayAxNDQyLCB3aW4gMjQ2LCBvcHRpb25zIFtub3As
+bm9wLFRTIHZhbCAyNTUxNzgyOCBlY3IKICAgIDI0NjA0Njg2MTJdLCBsZW5ndGggMDxicj4KICAg
+IDE1OjIxOjI4LjY5MzU4NCBJUCAxOTIuMTY4LjEuMy40MDA5NiAmZ3Q7IDE5Mi4xNjguMS4zMi5z
+c2g6IEZsYWdzCiAgICBbUC5dLCBzZXEgMTQ0MjoxNDg2LCBhY2sgMTM4Miwgd2luIDI1OSwgb3B0
+aW9ucyBbbm9wLG5vcCxUUyB2YWwKICAgIDI0NjA0Njg2NTIgZWNyIDI1NTE3ODI4XSwgbGVuZ3Ro
+IDQ0PGJyPgogICAgMTU6MjE6MjguNjkzNjMyIElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAxOTIu
+MTY4LjEuMy40MDA5NjogRmxhZ3MKICAgIFsuXSwgYWNrIDE0ODYsIHdpbiAyNDYsIG9wdGlvbnMg
+W25vcCxub3AsVFMgdmFsIDI1NTE3ODI4IGVjcgogICAgMjQ2MDQ2ODY1Ml0sIGxlbmd0aCAwPGJy
+PgogICAgMTU6MjE6MjguNjkzNzA2IElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAxOTIuMTY4LjEu
+My40MDA5NjogRmxhZ3MKICAgIFtQLl0sIHNlcSAxMzgyOjE0MjYsIGFjayAxNDg2LCB3aW4gMjQ2
+LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgMjU1MTc4MjggZWNyIDI0NjA0Njg2NTJdLCBs
+ZW5ndGggNDQ8YnI+CiAgICAxNToyMToyOC42OTQzMTAgSVAgMTkyLjE2OC4xLjMuNDAwOTYgJmd0
+OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgW1AuXSwgc2VxIDE0ODY6MTU1NCwgYWNrIDE0
+MjYsIHdpbiAyNTksIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsCiAgICAyNDYwNDY4NjUzIGVjciAy
+NTUxNzgyOF0sIGxlbmd0aCA2ODxicj4KICAgIDE1OjIxOjI4LjY5NDk3NiBJUCAxOTIuMTY4LjEu
+MzIuc3NoICZndDsgMTkyLjE2OC4xLjMuNDAwOTY6IEZsYWdzCiAgICBbUC5dLCBzZXEgMTQyNjox
+NDc4LCBhY2sgMTU1NCwgd2luIDI0Niwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwKICAgIDI1NTE3
+ODI4IGVjciAyNDYwNDY4NjUzXSwgbGVuZ3RoIDUyPGJyPgogICAgMTU6MjE6MjguNzM3NjE3IElQ
+IDE5Mi4xNjguMS4zLjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFsuXSwg
+YWNrIDE0NzgsIHdpbiAyNTksIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI0NjA0Njg2NTQgZWNy
+CiAgICAyNTUxNzgyOF0sIGxlbmd0aCAwPGJyPgogICAgMTU6MjE6MzEuNTk5ODYwIElQIDE5Mi4x
+NjguMS4zLjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFtQLl0sIHNlcSAx
+NTU0OjE3MDIsIGFjayAxNDc4LCB3aW4gMjU5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAg
+MjQ2MDQ3MTU1OSBlY3IgMjU1MTc4MjhdLCBsZW5ndGggMTQ4PGJyPgogICAgPGJyPgogICAgSSBo
+YXZlIHNvbWUgb3RoZXIgaWRlYXMgdGhhdCBJIHdhbnQgdG8gdHJ5IGJ1dCByaWdodCBub3cgSSBm
+b2N1c2VkCiAgICBvbiBnZXR0aW5nIHNvbWV0aGluZyB3b3JraW5nIHNvIHdlIGNhbiBhbGwgc3Rh
+cnQgaGFja2luZy48YnI+CiAgICA8YnI+CiAgICBSYW88YnI+CiAgICA8YnI+CiAgICA8YnI+CiAg
+ICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIgpjaXRlPSJtaWQ6YWxwaW5lLk9TWC4yLjIxLjE3MTAy
+MzE1NTczNTAuNTg2M0Btam1hcnRpbi1tYWMwMS5zZWEuaW50ZWwuY29tIj4KICAgICAgPGJsb2Nr
+cXVvdGUgdHlwZT0iY2l0ZSIgc3R5bGU9ImNvbG9yOiAjMDAwMDAwOyI+SSBoYWQgdG8gYnVtcCBj
+YgogICAgICAgIHVwIHRvIDgwIGJ5dGVzIGluIHRoZSBjdXJyZW50IG1wdGNwX3RydW5rIDovCiAg
+ICAgICAgPGJyPgogICAgICAgIDxicj4KICAgICAgICA8YnI+CiAgICAgICAgQ2hyaXN0b3BoCiAg
+ICAgICAgPGJyPgogICAgICAgIDxicj4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBz
+dHlsZT0iY29sb3I6ICMwMDAwMDA7Ij5GWUkuIEkgYW0KICAgICAgICAgIHdvcmtpbmcgb24gcmVz
+dHJ1Y3R1cmluZyBNUFRDUCBjb2RlIHNvIGl0J3Mgbm90IGludHJ1c2l2ZSB0bwogICAgICAgICAg
+bWFpbgogICAgICAgICAgPGJyPgogICAgICAgICAgVENQIGNvZGUuIEkgd2lsbCBwcm9iYWJseSB0
+cnkgYSBmZXcgb3RoZXIgdGVjaG5pcXVlcyBidXQgY2FuCiAgICAgICAgICB1c2UgdGhpcyBhcwog
+ICAgICAgICAgPGJyPgogICAgICAgICAgd2VsbC4gSSB3aWxsIHBvc3QgdGhlIGNoYW5nZXMgYXQg
+dGhlIGFwcHJvcHJpYXRlIHRpbWUuCiAgICAgICAgICA8YnI+CiAgICAgICAgPC9ibG9ja3F1b3Rl
+PgogICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgIDxicj4KICAgICAgTmljZSwgdGhhbmtzIGZvciB0
+aGUgdXBkYXRlLgogICAgICA8YnI+CiAgICAgIDxicj4KICAgICAgUmVnYXJkcywKICAgICAgPGJy
+PgogICAgICBNYXQKICAgICAgPGJyPgogICAgPC9ibG9ja3F1b3RlPgogICAgPGJyPgogIDwvYm9k
+eT4KPC9odG1sPgo=
+
+--===============2147680506817180049==--
