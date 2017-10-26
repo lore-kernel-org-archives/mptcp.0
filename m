@@ -1,271 +1,413 @@
-Content-Type: multipart/mixed; boundary="===============2147680506817180049=="
+Content-Type: multipart/mixed; boundary="===============8912967299046605504=="
 MIME-Version: 1.0
 From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH 1/2] skbuff: Add shared control buffer
-Date: Thu, 26 Oct 2017 15:26:00 -0700
-Message-ID: <5e21435e-d6e2-7950-b4c8-9b6adaf53a6e@oracle.com>
-In-Reply-To: alpine.OSX.2.21.1710231557350.5863@mjmartin-mac01.sea.intel.com
+Date: Thu, 26 Oct 2017 16:20:05 -0700
+Message-ID: <4dc5d12b-762a-6b98-316f-2162679e9ebf@oracle.com>
+In-Reply-To: 5e21435e-d6e2-7950-b4c8-9b6adaf53a6e@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 139
+X-UID: 140
 
---===============2147680506817180049==
+--===============8912967299046605504==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Please disregard the tcpdump as I just noticed that the connection is =
 
-Hullo,
+failing over to regular TCP, The race was based on a kernel that I am =
 
-On 10/23/2017 04:10 PM, Mat Martineau wrote:
+working on right now. However, the change does work, here is tcpdump =
+
+from an older working kernel.
+
+16:15:51.392175 ARP, Request who-has 192.168.1.32 tell 192.168.1.3, =
+
+length 46
+16:15:51.392201 ARP, Reply 192.168.1.32 is-at 00:25:64:d7:d7:db (oui =
+
+Unknown), length 28
+16:15:51.392404 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [S], seq =
+
+2312071799, win 29200, options [mss 1460,sackOK,TS val 4294909772 ecr =
+
+0,nop,wscale 7,mptcp capable csum {0xf7920474e5c2051e}], length 0
+16:15:51.392474 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [S.], seq =
+
+3881715284, ack 2312071800, win 28560, options [mss 1460,sackOK,TS val =
+
+26333502 ecr 4294909772,nop,wscale 7,mptcp capable csum =
+
+{0x902725838161c390}], length 0
+16:15:51.392701 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [.], ack =
+
+1, win 229, options [nop,nop,TS val 4294909772 ecr 26333502,mptcp =
+
+capable csum {0xf7920474e5c2051e,0x902725838161c390},mptcp dss ack =
+
+1863922122], length 0
+16:15:51.392822 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1:42, ack 1, win 229, options [nop,nop,TS val 4294909772 ecr =
+
+26333502,mptcp dss ack 1863922122 seq 3903772137 subseq 1 len 41 csum =
+
+0x7389], length 41
+16:15:51.392853 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [.], ack =
+
+42, win 224, options [nop,nop,TS val 26333502 ecr 4294909772,mptcp dss =
+
+ack 3903772178], length 0
+16:15:51.403073 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [P.], seq =
+
+1:42, ack 42, win 224, options [nop,nop,TS val 26333505 ecr =
+
+4294909772,mptcp dss ack 3903772178 seq 1863922122 subseq 1 len 41 csum =
+
+0x91a9], length 41
+16:15:51.403353 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [.], ack =
+
+42, win 229, options [nop,nop,TS val 4294909775 ecr 26333502,mptcp dss =
+
+ack 1863922163], length 0
+16:15:51.404010 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [P.], seq =
+
+42:1018, ack 42, win 224, options [nop,nop,TS val 26333505 ecr =
+
+4294909775,mptcp dss ack 3903772178 seq 1863922163 subseq 42 len 976 =
+
+csum 0xa893], length 976
+16:15:51.404260 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [.], ack =
+
+1018, win 244, options [nop,nop,TS val 4294909775 ecr 26333502,mptcp dss =
+
+ack 1863923139], length 0
+16:15:51.424501 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [P.], seq =
+
+42:1378, ack 1018, win 244, options [nop,nop,TS val 4294909780 ecr =
+
+26333502,mptcp dss ack 1863923139 seq 3903772178 subseq 42 len 1336 csum =
+
+0x8a2c], length 1336
+16:15:51.460964 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [.], ack =
+
+1378, win 246, options [nop,nop,TS val 26333520 ecr 4294909780,mptcp dss =
+
+ack 3903773514], length 0
+16:15:51.461176 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1378:1426, ack 1018, win 244, options [nop,nop,TS val 4294909789 ecr =
+
+26333520,mptcp dss ack 1863923139 seq 3903773514 subseq 1378 len 48 csum =
+
+0x8282], length 48
+16:15:51.461201 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [.], ack =
+
+1426, win 246, options [nop,nop,TS val 26333520 ecr 4294909789,mptcp dss =
+
+ack 3903773562], length 0
+16:15:51.468913 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [P.], seq =
+
+1018:1382, ack 1426, win 246, options [nop,nop,TS val 26333521 ecr =
+
+4294909789,mptcp dss ack 3903773562 seq 1863923139 subseq 1018 len 364 =
+
+csum 0x9409], length 364
+16:15:51.471589 IP 192.168.1.3.52119 > 192.168.1.32.ssh: Flags [P.], seq =
+
+1426:1442, ack 1382, win 250, options [nop,nop,TS val 4294909792 ecr =
+
+26333520,mptcp dss ack 1863923503 seq 3903773562 subseq 1426 len 16 csum =
+
+0x8287], length 16
+16:15:51.509044 IP 192.168.1.32.ssh > 192.168.1.3.52119: Flags [.], ack =
+
+1442, win 246, options [nop,nop,TS val 26333532 ecr 4294909792,mptcp dss =
+
+ack 3903773578], length 0
+
+Rao.
+
+On 10/26/2017 03:26 PM, Rao Shoaib wrote:
 >
-> Yes, I'm interested too! I know David Miller is interested in making =
-
-> good use of space in data structures: =
-
-> https://netdevconf.org/2.2/session.html?miller-datastructurebloat-keynote
 >
-> If there's a lot of unnecessary space being used they'd probably want =
-
-> to reclaim it and then we'd need the extra shared info again :)
+> Hullo,
 >
-Thanks for the pointer, I will take a look.
-Take a look at my last couple of patches, they are all using regular =
+> On 10/23/2017 04:10 PM, Mat Martineau wrote:
+>>
+>> Yes, I'm interested too! I know David Miller is interested in making =
 
-size CB. The relevant changes are in mptcp_skb_entail() and =
+>> good use of space in data structures: =
 
-mptcp_write_dss_mapping() and the obvious=C2=A0 tcp_skb_cb and sk_buff =
+>> https://netdevconf.org/2.2/session.html?miller-datastructurebloat-keynot=
+e =
 
-structures. The change is to calculate the mapping when the header is =
+>>
+>>
+>> If there's a lot of unnecessary space being used they'd probably want =
 
-being written not before.
+>> to reclaim it and then we'd need the extra shared info again :)
+>>
+> Thanks for the pointer, I will take a look.
+> Take a look at my last couple of patches, they are all using regular =
 
-I am working on net-next 4.14.0-rc4 and have been able to achieve the =
+> size CB. The relevant changes are in mptcp_skb_entail() and =
 
-same. Here are the changes to the structure, cut and paste of the =
+> mptcp_write_dss_mapping() and the obvious=C2=A0 tcp_skb_cb and sk_buff =
 
-relevant code from any patch just works.
+> structures. The change is to calculate the mapping when the header is =
 
-The change to tcp_skb_cb is
+> being written not before.
+>
+> I am working on net-next 4.14.0-rc4 and have been able to achieve the =
 
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ip_dsfield;=C2=A0=C2=A0=C2=A0=C2=A0=
- /* IPv4 tos or IPv6 dsfield=C2=A0=C2=A0=C2=A0=C2=A0 */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 txstamp_ack:1,=C2=A0 /* Record TX t=
-imestamp for ack? */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> same. Here are the changes to the structure, cut and paste of the =
+
+> relevant code from any patch just works.
+>
+> The change to tcp_skb_cb is
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u8=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ip_dsfield;=C2=A0=C2=A0=C2=A0=C2=
+=A0 /* IPv4 tos or IPv6 dsfield=C2=A0=C2=A0=C2=A0=C2=A0 */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u8=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 txstamp_ack:1,=C2=A0 /* Record T=
+X timestamp for ack? */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 eor:1,=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Is skb MSG_EOR ma=
 rked? */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 has_rxts=
 tamp:1, /* SKB has a RX timestamp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unused:5;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u32=C2=
 =A0=C2=A0 ack_seq;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Sequence nu=
-mber ACK'd */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+mber =
+
+> ACK'd */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u32=C2=
 =A0=C2=A0 mptcp_data_seq;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __u32=C2=
 =A0=C2=A0 mptcp_path_mask;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
-
-And used a scratch field in sk_buff, these are only needed on the Rx side.
-
-struct sk_buff {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>
+> And used a scratch field in sk_buff, these are only needed on the Rx side.
+>
+> struct sk_buff {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0 struct {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* These=
  two members must be first. */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct s=
 k_buff=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *next;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct s=
 k_buff=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *prev;
-
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct net_device=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0 *dev;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Some protocols might use this sp=
 ace =
 
-to store information,
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> to store information,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * while device pointer would =
 be NULL.
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * UDP receive path is one use=
 r.
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_scratch;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long dev_scratch;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0 __u8 mptcp_flags;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0 __u8 mptcp_dss_off;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0 };
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0 struct rb_node=C2=A0 rbnode; /* used in netem & tcp stac=
 k */
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
-
-And here is a tcpdump. Host 192.168.1.3 is running net-next "4.14.0 =
-
-Fearless Coyote" and host 192.168.1.32 is running "4.4.88 Blurry Fish Butt"
-
-
-15:21:28.581388 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [S], seq =
-
-1515497212, win 29200, options [mss 1460,sackOK,TS val 2460468540 ecr =
-
-0,nop,wscale 7,mptcp capable csum {0x26b923d415f6c4d4}], length 0
-15:21:28.581449 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [S.], seq =
-
-3412665074, ack 1515497213, win 28560, options [mss 1460,sackOK,TS val =
-
-25517800 ecr 2460468540,nop,wscale 7,mptcp capable csum =
-
-{0x8fd2dd8f92b5f72c}], length 0
-15:21:28.582533 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
-
-1:42, ack 1, win 229, options [nop,nop,TS val 2460468541 ecr 25517800], =
-
-length 41
-15:21:28.582612 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
-
-42, win 224, options [nop,nop,TS val 25517800 ecr 2460468541], length 0
-15:21:28.591889 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
-
-1:42, ack 42, win 224, options [nop,nop,TS val 25517802 ecr 2460468541], =
-
-length 41
-15:21:28.592922 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
-
-42:1378, ack 42, win 229, options [nop,nop,TS val 2460468552 ecr =
-
-25517802], length 1336
-15:21:28.593028 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
-
-42:1018, ack 42, win 224, options [nop,nop,TS val 25517803 ecr =
-
-2460468552], length 976
-15:21:28.633043 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
-
-1378, win 246, options [nop,nop,TS val 25517813 ecr 2460468552], length 0
-15:21:28.633956 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
-
-1378:1426, ack 1018, win 244, options [nop,nop,TS val 2460468593 ecr =
-
-25517803], length 48
-15:21:28.634012 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
-
-1426, win 246, options [nop,nop,TS val 25517813 ecr 2460468593], length 0
-15:21:28.647684 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
-
-1018:1382, ack 1426, win 246, options [nop,nop,TS val 25517816 ecr =
-
-2460468593], length 364
-15:21:28.653439 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
-
-1426:1442, ack 1382, win 259, options [nop,nop,TS val 2460468612 ecr =
-
-25517816], length 16
-15:21:28.692996 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
-
-1442, win 246, options [nop,nop,TS val 25517828 ecr 2460468612], length 0
-15:21:28.693584 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
-
-1442:1486, ack 1382, win 259, options [nop,nop,TS val 2460468652 ecr =
-
-25517828], length 44
-15:21:28.693632 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], ack =
-
-1486, win 246, options [nop,nop,TS val 25517828 ecr 2460468652], length 0
-15:21:28.693706 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
-
-1382:1426, ack 1486, win 246, options [nop,nop,TS val 25517828 ecr =
-
-2460468652], length 44
-15:21:28.694310 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
-
-1486:1554, ack 1426, win 259, options [nop,nop,TS val 2460468653 ecr =
-
-25517828], length 68
-15:21:28.694976 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], seq =
-
-1426:1478, ack 1554, win 246, options [nop,nop,TS val 25517828 ecr =
-
-2460468653], length 52
-15:21:28.737617 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [.], ack =
-
-1478, win 259, options [nop,nop,TS val 2460468654 ecr 25517828], length 0
-15:21:31.599860 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], seq =
-
-1554:1702, ack 1478, win 259, options [nop,nop,TS val 2460471559 ecr =
-
-25517828], length 148
-
-I have some other ideas that I want to try but right now I focused on =
-
-getting something working so we can all start hacking.
-
-Rao
-
-
->> I had to bump cb up to 80 bytes in the current mptcp_trunk :/
->>
->>
->> Christoph
->>
->>> FYI. I am working on restructuring MPTCP code so it's not intrusive =
-
->>> to main
->>> TCP code. I will probably try a few other techniques but can use =
-
->>> this as
->>> well. I will post the changes at the appropriate time.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
 >
-> Nice, thanks for the update.
+> And here is a tcpdump. Host 192.168.1.3 is running net-next "4.14.0 =
+
+> Fearless Coyote" and host 192.168.1.32 is running "4.4.88 Blurry Fish =
+
+> Butt"
 >
-> Regards,
-> Mat
+>
+> 15:21:28.581388 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [S], =
+
+> seq 1515497212, win 29200, options [mss 1460,sackOK,TS val 2460468540 =
+
+> ecr 0,nop,wscale 7,mptcp capable csum {0x26b923d415f6c4d4}], length 0
+> 15:21:28.581449 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [S.], =
+
+> seq 3412665074, ack 1515497213, win 28560, options [mss 1460,sackOK,TS =
+
+> val 25517800 ecr 2460468540,nop,wscale 7,mptcp capable csum =
+
+> {0x8fd2dd8f92b5f72c}], length 0
+> 15:21:28.582533 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], =
+
+> seq 1:42, ack 1, win 229, options [nop,nop,TS val 2460468541 ecr =
+
+> 25517800], length 41
+> 15:21:28.582612 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], =
+
+> ack 42, win 224, options [nop,nop,TS val 25517800 ecr 2460468541], =
+
+> length 0
+> 15:21:28.591889 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], =
+
+> seq 1:42, ack 42, win 224, options [nop,nop,TS val 25517802 ecr =
+
+> 2460468541], length 41
+> 15:21:28.592922 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], =
+
+> seq 42:1378, ack 42, win 229, options [nop,nop,TS val 2460468552 ecr =
+
+> 25517802], length 1336
+> 15:21:28.593028 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], =
+
+> seq 42:1018, ack 42, win 224, options [nop,nop,TS val 25517803 ecr =
+
+> 2460468552], length 976
+> 15:21:28.633043 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], =
+
+> ack 1378, win 246, options [nop,nop,TS val 25517813 ecr 2460468552], =
+
+> length 0
+> 15:21:28.633956 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], =
+
+> seq 1378:1426, ack 1018, win 244, options [nop,nop,TS val 2460468593 =
+
+> ecr 25517803], length 48
+> 15:21:28.634012 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], =
+
+> ack 1426, win 246, options [nop,nop,TS val 25517813 ecr 2460468593], =
+
+> length 0
+> 15:21:28.647684 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], =
+
+> seq 1018:1382, ack 1426, win 246, options [nop,nop,TS val 25517816 ecr =
+
+> 2460468593], length 364
+> 15:21:28.653439 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], =
+
+> seq 1426:1442, ack 1382, win 259, options [nop,nop,TS val 2460468612 =
+
+> ecr 25517816], length 16
+> 15:21:28.692996 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], =
+
+> ack 1442, win 246, options [nop,nop,TS val 25517828 ecr 2460468612], =
+
+> length 0
+> 15:21:28.693584 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], =
+
+> seq 1442:1486, ack 1382, win 259, options [nop,nop,TS val 2460468652 =
+
+> ecr 25517828], length 44
+> 15:21:28.693632 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [.], =
+
+> ack 1486, win 246, options [nop,nop,TS val 25517828 ecr 2460468652], =
+
+> length 0
+> 15:21:28.693706 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], =
+
+> seq 1382:1426, ack 1486, win 246, options [nop,nop,TS val 25517828 ecr =
+
+> 2460468652], length 44
+> 15:21:28.694310 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], =
+
+> seq 1486:1554, ack 1426, win 259, options [nop,nop,TS val 2460468653 =
+
+> ecr 25517828], length 68
+> 15:21:28.694976 IP 192.168.1.32.ssh > 192.168.1.3.40096: Flags [P.], =
+
+> seq 1426:1478, ack 1554, win 246, options [nop,nop,TS val 25517828 ecr =
+
+> 2460468653], length 52
+> 15:21:28.737617 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [.], =
+
+> ack 1478, win 259, options [nop,nop,TS val 2460468654 ecr 25517828], =
+
+> length 0
+> 15:21:31.599860 IP 192.168.1.3.40096 > 192.168.1.32.ssh: Flags [P.], =
+
+> seq 1554:1702, ack 1478, win 259, options [nop,nop,TS val 2460471559 =
+
+> ecr 25517828], length 148
+>
+> I have some other ideas that I want to try but right now I focused on =
+
+> getting something working so we can all start hacking.
+>
+> Rao
+>
+>
+>>> I had to bump cb up to 80 bytes in the current mptcp_trunk :/
+>>>
+>>>
+>>> Christoph
+>>>
+>>>> FYI. I am working on restructuring MPTCP code so it's not intrusive =
+
+>>>> to main
+>>>> TCP code. I will probably try a few other techniques but can use =
+
+>>>> this as
+>>>> well. I will post the changes at the appropriate time.
+>>
+>> Nice, thanks for the update.
+>>
+>> Regards,
+>> Mat
+>
+>
+>
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
 
 
---===============2147680506817180049==
+--===============8912967299046605504==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -273,165 +415,255 @@ Content-Disposition: attachment; filename="attachment.html"
 
 PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
 bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
-MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPHA+PGJyPgogICAgPC9wPgogICAgSHVsbG8s
-PGJyPgogICAgPGJyPgogICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAxMC8yMy8y
-MDE3IDA0OjEwIFBNLCBNYXQgTWFydGluZWF1CiAgICAgIHdyb3RlOjxicj4KICAgIDwvZGl2Pgog
-ICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIKY2l0ZT0ibWlkOmFscGluZS5PU1guMi4yMS4xNzEw
-MjMxNTU3MzUwLjU4NjNAbWptYXJ0aW4tbWFjMDEuc2VhLmludGVsLmNvbSI+PGJyPgogICAgICBZ
-ZXMsIEknbSBpbnRlcmVzdGVkIHRvbyEgSSBrbm93IERhdmlkIE1pbGxlciBpcyBpbnRlcmVzdGVk
-IGluCiAgICAgIG1ha2luZyBnb29kIHVzZSBvZiBzcGFjZSBpbiBkYXRhIHN0cnVjdHVyZXM6IDxh
-CiAgICAgICAgY2xhc3M9Im1vei10eHQtbGluay1mcmVldGV4dCIKaHJlZj0iaHR0cHM6Ly9uZXRk
-ZXZjb25mLm9yZy8yLjIvc2Vzc2lvbi5odG1sP21pbGxlci1kYXRhc3RydWN0dXJlYmxvYXQta2V5
-bm90ZSIKICAgICAgICBtb3otZG8tbm90LXNlbmQ9InRydWUiPmh0dHBzOi8vbmV0ZGV2Y29uZi5v
-cmcvMi4yL3Nlc3Npb24uaHRtbD9taWxsZXItZGF0YXN0cnVjdHVyZWJsb2F0LWtleW5vdGU8L2E+
-CiAgICAgIDxicj4KICAgICAgPGJyPgogICAgICBJZiB0aGVyZSdzIGEgbG90IG9mIHVubmVjZXNz
-YXJ5IHNwYWNlIGJlaW5nIHVzZWQgdGhleSdkIHByb2JhYmx5CiAgICAgIHdhbnQgdG8gcmVjbGFp
-bSBpdCBhbmQgdGhlbiB3ZSdkIG5lZWQgdGhlIGV4dHJhIHNoYXJlZCBpbmZvIGFnYWluCiAgICAg
-IDxzcGFuIGNsYXNzPSJtb3otc21pbGV5LXMxIiB0aXRsZT0iOikiPjxzcGFuPjopPC9zcGFuPjwv
-c3Bhbj4KICAgICAgPGJyPgogICAgICA8YnI+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICBUaGFua3Mg
-Zm9yIHRoZSBwb2ludGVyLCBJIHdpbGwgdGFrZSBhIGxvb2suPGJyPgogICAgVGFrZSBhIGxvb2sg
-YXQgbXkgbGFzdCBjb3VwbGUgb2YgcGF0Y2hlcywgdGhleSBhcmUgYWxsIHVzaW5nIHJlZ3VsYXIK
-ICAgIHNpemUgQ0IuIFRoZSByZWxldmFudCBjaGFuZ2VzIGFyZSBpbiBtcHRjcF9za2JfZW50YWls
-KCkgYW5kCiAgICBtcHRjcF93cml0ZV9kc3NfbWFwcGluZygpIGFuZCB0aGUgb2J2aW91c8KgIHRj
-cF9za2JfY2IgYW5kIHNrX2J1ZmYKICAgIHN0cnVjdHVyZXMuIFRoZSBjaGFuZ2UgaXMgdG8gY2Fs
-Y3VsYXRlIHRoZSBtYXBwaW5nIHdoZW4gdGhlIGhlYWRlcgogICAgaXMgYmVpbmcgd3JpdHRlbiBu
-b3QgYmVmb3JlLiA8YnI+CiAgICA8YnI+CiAgICBJIGFtIHdvcmtpbmcgb24gbmV0LW5leHQgNC4x
-NC4wLXJjNCBhbmQgaGF2ZSBiZWVuIGFibGUgdG8gYWNoaWV2ZQogICAgdGhlIHNhbWUuIEhlcmUg
-YXJlIHRoZSBjaGFuZ2VzIHRvIHRoZSBzdHJ1Y3R1cmUsIGN1dCBhbmQgcGFzdGUgb2YKICAgIHRo
-ZSByZWxldmFudCBjb2RlIGZyb20gYW55IHBhdGNoIGp1c3Qgd29ya3MuPGJyPgogICAgPGJyPgog
-ICAgVGhlIGNoYW5nZSB0byB0Y3Bfc2tiX2NiIGlzIDxicj4KICAgIDxicj4KICAgIMKgwqDCoMKg
-wqDCoMKgIF9fdTjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlwX2RzZmllbGQ7wqDCoMKgwqAgLyog
-SVB2NCB0b3Mgb3IgSVB2NgogICAgZHNmaWVsZMKgwqDCoMKgICovPGJyPgogICAgwqDCoMKgwqDC
-oMKgwqAgX191OMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHhzdGFtcF9hY2s6MSzCoCAvKiBSZWNv
-cmQgVFggdGltZXN0YW1wIGZvcgogICAgYWNrPyAqLzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZW9yOjEswqDCoMKgwqDCoMKgwqDCoMKgIC8q
-IElzIHNrYiBNU0dfRU9SIG1hcmtlZD8gKi88YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGhhc19yeHRzdGFtcDoxLCAvKiBTS0IgaGFzIGEgUlgK
-ICAgIHRpbWVzdGFtcMKgwqDCoMKgwqDCoCAqLzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW51c2VkOjU7PGJyPgogICAgwqDCoMKgwqDCoMKg
-wqAgdW5pb24gezxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgX191MzLCoMKgIGFja19zZXE7wqDCoMKgwqDCoMKgwqAgLyogU2VxdWVuY2UgbnVt
-YmVyCiAgICBBQ0snZCAqLzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgX191MzLCoMKgIG1wdGNwX2RhdGFfc2VxOzxicj4KICAgIMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgX191MzLCoMKgIG1wdGNwX3Bh
-dGhfbWFzazs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoCB9Ozxicj4KICAgIDxicj4KICAgIEFuZCB1
-c2VkIGEgc2NyYXRjaCBmaWVsZCBpbiBza19idWZmLCB0aGVzZSBhcmUgb25seSBuZWVkZWQgb24g
-dGhlIFJ4CiAgICBzaWRlLjxicj4KICAgIDxicj4KICAgIHN0cnVjdCBza19idWZmIHs8YnI+CiAg
-ICDCoMKgwqDCoMKgwqDCoCB1bmlvbiB7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHN0cnVjdCB7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCAvKiBUaGVzZSB0d28gbWVtYmVycyBtdXN0IGJlIGZpcnN0LiAqLzxicj4K
-ICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0
-IHNrX2J1ZmbCoMKgwqDCoMKgwqDCoMKgwqAgKm5leHQ7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qgc2tfYnVmZsKgwqDCoMKgwqDC
-oMKgwqDCoCAqcHJldjs8YnI+CiAgICA8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVuaW9uIHs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgbmV0X2Rl
-dmljZcKgwqDCoMKgwqDCoCAqZGV2Ozxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIFNvbWUgcHJvdG9jb2xzIG1p
-Z2h0IHVzZSB0aGlzCiAgICBzcGFjZSB0byBzdG9yZSBpbmZvcm1hdGlvbiw8YnI+CiAgICDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgICogd2hpbGUgZGV2aWNlIHBvaW50ZXIgd291bGQgYmUKICAgIE5VTEwuPGJyPgogICAgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCAqIFVEUCByZWNlaXZlIHBhdGggaXMgb25lIHVzZXIuPGJyPgogICAgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqLzxi
-cj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHVuc2lnbmVkIGxvbmfCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZfc2NyYXRj
-aDs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qgezxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBf
-X3U4IG1wdGNwX2ZsYWdzOzxicj4KICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBfX3U4IG1wdGNw
-X2Rzc19vZmY7PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTs8YnI+CiAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIH07PGJyPgogICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVj
-dCByYl9ub2RlwqAgcmJub2RlOyAvKiB1c2VkIGluIG5ldGVtICZhbXA7IHRjcAogICAgc3RhY2sg
-Ki88YnI+CiAgICDCoMKgwqDCoMKgwqDCoCB9Ozxicj4KICAgIDxicj4KICAgIEFuZCBoZXJlIGlz
-IGEgdGNwZHVtcC4gSG9zdCAxOTIuMTY4LjEuMyBpcyBydW5uaW5nIG5ldC1uZXh0ICI0LjE0LjAK
-ICAgIEZlYXJsZXNzIENveW90ZSIgYW5kIGhvc3QgMTkyLjE2OC4xLjMyIGlzIHJ1bm5pbmcgIjQu
-NC44OCBCbHVycnkKICAgIEZpc2ggQnV0dCI8YnI+CiAgICA8YnI+CiAgICA8YnI+CiAgICAxNToy
-MToyOC41ODEzODggSVAgMTkyLjE2OC4xLjMuNDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBG
-bGFncwogICAgW1NdLCBzZXEgMTUxNTQ5NzIxMiwgd2luIDI5MjAwLCBvcHRpb25zIFttc3MgMTQ2
-MCxzYWNrT0ssVFMgdmFsCiAgICAyNDYwNDY4NTQwIGVjciAwLG5vcCx3c2NhbGUgNyxtcHRjcCBj
-YXBhYmxlIGNzdW0KICAgIHsweDI2YjkyM2Q0MTVmNmM0ZDR9XSwgbGVuZ3RoIDA8YnI+CiAgICAx
-NToyMToyOC41ODE0NDkgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2
-OiBGbGFncwogICAgW1MuXSwgc2VxIDM0MTI2NjUwNzQsIGFjayAxNTE1NDk3MjEzLCB3aW4gMjg1
-NjAsIG9wdGlvbnMgW21zcwogICAgMTQ2MCxzYWNrT0ssVFMgdmFsIDI1NTE3ODAwIGVjciAyNDYw
-NDY4NTQwLG5vcCx3c2NhbGUgNyxtcHRjcAogICAgY2FwYWJsZSBjc3VtIHsweDhmZDJkZDhmOTJi
-NWY3MmN9XSwgbGVuZ3RoIDA8YnI+CiAgICAxNToyMToyOC41ODI1MzMgSVAgMTkyLjE2OC4xLjMu
-NDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgW1AuXSwgc2VxIDE6NDIsIGFj
-ayAxLCB3aW4gMjI5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbCAyNDYwNDY4NTQxCiAgICBlY3Ig
-MjU1MTc4MDBdLCBsZW5ndGggNDE8YnI+CiAgICAxNToyMToyOC41ODI2MTIgSVAgMTkyLjE2OC4x
-LjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwogICAgWy5dLCBhY2sgNDIsIHdp
-biAyMjQsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODAwIGVjcgogICAgMjQ2MDQ2ODU0
-MV0sIGxlbmd0aCAwPGJyPgogICAgMTU6MjE6MjguNTkxODg5IElQIDE5Mi4xNjguMS4zMi5zc2gg
-Jmd0OyAxOTIuMTY4LjEuMy40MDA5NjogRmxhZ3MKICAgIFtQLl0sIHNlcSAxOjQyLCBhY2sgNDIs
-IHdpbiAyMjQsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODAyCiAgICBlY3IgMjQ2MDQ2
-ODU0MV0sIGxlbmd0aCA0MTxicj4KICAgIDE1OjIxOjI4LjU5MjkyMiBJUCAxOTIuMTY4LjEuMy40
-MDA5NiAmZ3Q7IDE5Mi4xNjguMS4zMi5zc2g6IEZsYWdzCiAgICBbUC5dLCBzZXEgNDI6MTM3OCwg
-YWNrIDQyLCB3aW4gMjI5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgMjQ2MDQ2ODU1MiBl
-Y3IgMjU1MTc4MDJdLCBsZW5ndGggMTMzNjxicj4KICAgIDE1OjIxOjI4LjU5MzAyOCBJUCAxOTIu
-MTY4LjEuMzIuc3NoICZndDsgMTkyLjE2OC4xLjMuNDAwOTY6IEZsYWdzCiAgICBbUC5dLCBzZXEg
-NDI6MTAxOCwgYWNrIDQyLCB3aW4gMjI0LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbCAyNTUxNzgw
-MwogICAgZWNyIDI0NjA0Njg1NTJdLCBsZW5ndGggOTc2PGJyPgogICAgMTU6MjE6MjguNjMzMDQz
-IElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAxOTIuMTY4LjEuMy40MDA5NjogRmxhZ3MKICAgIFsu
-XSwgYWNrIDEzNzgsIHdpbiAyNDYsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODEzIGVj
-cgogICAgMjQ2MDQ2ODU1Ml0sIGxlbmd0aCAwPGJyPgogICAgMTU6MjE6MjguNjMzOTU2IElQIDE5
-Mi4xNjguMS4zLjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFtQLl0sIHNl
-cSAxMzc4OjE0MjYsIGFjayAxMDE4LCB3aW4gMjQ0LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAog
-ICAgMjQ2MDQ2ODU5MyBlY3IgMjU1MTc4MDNdLCBsZW5ndGggNDg8YnI+CiAgICAxNToyMToyOC42
-MzQwMTIgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwog
-ICAgWy5dLCBhY2sgMTQyNiwgd2luIDI0Niwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwgMjU1MTc4
-MTMgZWNyCiAgICAyNDYwNDY4NTkzXSwgbGVuZ3RoIDA8YnI+CiAgICAxNToyMToyOC42NDc2ODQg
-SVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwogICAgW1Au
-XSwgc2VxIDEwMTg6MTM4MiwgYWNrIDE0MjYsIHdpbiAyNDYsIG9wdGlvbnMgW25vcCxub3AsVFMg
-dmFsCiAgICAyNTUxNzgxNiBlY3IgMjQ2MDQ2ODU5M10sIGxlbmd0aCAzNjQ8YnI+CiAgICAxNToy
-MToyOC42NTM0MzkgSVAgMTkyLjE2OC4xLjMuNDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBG
-bGFncwogICAgW1AuXSwgc2VxIDE0MjY6MTQ0MiwgYWNrIDEzODIsIHdpbiAyNTksIG9wdGlvbnMg
-W25vcCxub3AsVFMgdmFsCiAgICAyNDYwNDY4NjEyIGVjciAyNTUxNzgxNl0sIGxlbmd0aCAxNjxi
-cj4KICAgIDE1OjIxOjI4LjY5Mjk5NiBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsgMTkyLjE2OC4x
-LjMuNDAwOTY6IEZsYWdzCiAgICBbLl0sIGFjayAxNDQyLCB3aW4gMjQ2LCBvcHRpb25zIFtub3As
-bm9wLFRTIHZhbCAyNTUxNzgyOCBlY3IKICAgIDI0NjA0Njg2MTJdLCBsZW5ndGggMDxicj4KICAg
-IDE1OjIxOjI4LjY5MzU4NCBJUCAxOTIuMTY4LjEuMy40MDA5NiAmZ3Q7IDE5Mi4xNjguMS4zMi5z
-c2g6IEZsYWdzCiAgICBbUC5dLCBzZXEgMTQ0MjoxNDg2LCBhY2sgMTM4Miwgd2luIDI1OSwgb3B0
-aW9ucyBbbm9wLG5vcCxUUyB2YWwKICAgIDI0NjA0Njg2NTIgZWNyIDI1NTE3ODI4XSwgbGVuZ3Ro
-IDQ0PGJyPgogICAgMTU6MjE6MjguNjkzNjMyIElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAxOTIu
-MTY4LjEuMy40MDA5NjogRmxhZ3MKICAgIFsuXSwgYWNrIDE0ODYsIHdpbiAyNDYsIG9wdGlvbnMg
-W25vcCxub3AsVFMgdmFsIDI1NTE3ODI4IGVjcgogICAgMjQ2MDQ2ODY1Ml0sIGxlbmd0aCAwPGJy
-PgogICAgMTU6MjE6MjguNjkzNzA2IElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAxOTIuMTY4LjEu
-My40MDA5NjogRmxhZ3MKICAgIFtQLl0sIHNlcSAxMzgyOjE0MjYsIGFjayAxNDg2LCB3aW4gMjQ2
-LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgMjU1MTc4MjggZWNyIDI0NjA0Njg2NTJdLCBs
-ZW5ndGggNDQ8YnI+CiAgICAxNToyMToyOC42OTQzMTAgSVAgMTkyLjE2OC4xLjMuNDAwOTYgJmd0
-OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgW1AuXSwgc2VxIDE0ODY6MTU1NCwgYWNrIDE0
-MjYsIHdpbiAyNTksIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsCiAgICAyNDYwNDY4NjUzIGVjciAy
-NTUxNzgyOF0sIGxlbmd0aCA2ODxicj4KICAgIDE1OjIxOjI4LjY5NDk3NiBJUCAxOTIuMTY4LjEu
-MzIuc3NoICZndDsgMTkyLjE2OC4xLjMuNDAwOTY6IEZsYWdzCiAgICBbUC5dLCBzZXEgMTQyNjox
-NDc4LCBhY2sgMTU1NCwgd2luIDI0Niwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwKICAgIDI1NTE3
-ODI4IGVjciAyNDYwNDY4NjUzXSwgbGVuZ3RoIDUyPGJyPgogICAgMTU6MjE6MjguNzM3NjE3IElQ
-IDE5Mi4xNjguMS4zLjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFsuXSwg
-YWNrIDE0NzgsIHdpbiAyNTksIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI0NjA0Njg2NTQgZWNy
-CiAgICAyNTUxNzgyOF0sIGxlbmd0aCAwPGJyPgogICAgMTU6MjE6MzEuNTk5ODYwIElQIDE5Mi4x
-NjguMS4zLjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFtQLl0sIHNlcSAx
-NTU0OjE3MDIsIGFjayAxNDc4LCB3aW4gMjU5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAg
-MjQ2MDQ3MTU1OSBlY3IgMjU1MTc4MjhdLCBsZW5ndGggMTQ4PGJyPgogICAgPGJyPgogICAgSSBo
-YXZlIHNvbWUgb3RoZXIgaWRlYXMgdGhhdCBJIHdhbnQgdG8gdHJ5IGJ1dCByaWdodCBub3cgSSBm
-b2N1c2VkCiAgICBvbiBnZXR0aW5nIHNvbWV0aGluZyB3b3JraW5nIHNvIHdlIGNhbiBhbGwgc3Rh
-cnQgaGFja2luZy48YnI+CiAgICA8YnI+CiAgICBSYW88YnI+CiAgICA8YnI+CiAgICA8YnI+CiAg
-ICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIgpjaXRlPSJtaWQ6YWxwaW5lLk9TWC4yLjIxLjE3MTAy
-MzE1NTczNTAuNTg2M0Btam1hcnRpbi1tYWMwMS5zZWEuaW50ZWwuY29tIj4KICAgICAgPGJsb2Nr
-cXVvdGUgdHlwZT0iY2l0ZSIgc3R5bGU9ImNvbG9yOiAjMDAwMDAwOyI+SSBoYWQgdG8gYnVtcCBj
-YgogICAgICAgIHVwIHRvIDgwIGJ5dGVzIGluIHRoZSBjdXJyZW50IG1wdGNwX3RydW5rIDovCiAg
-ICAgICAgPGJyPgogICAgICAgIDxicj4KICAgICAgICA8YnI+CiAgICAgICAgQ2hyaXN0b3BoCiAg
-ICAgICAgPGJyPgogICAgICAgIDxicj4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBz
-dHlsZT0iY29sb3I6ICMwMDAwMDA7Ij5GWUkuIEkgYW0KICAgICAgICAgIHdvcmtpbmcgb24gcmVz
-dHJ1Y3R1cmluZyBNUFRDUCBjb2RlIHNvIGl0J3Mgbm90IGludHJ1c2l2ZSB0bwogICAgICAgICAg
-bWFpbgogICAgICAgICAgPGJyPgogICAgICAgICAgVENQIGNvZGUuIEkgd2lsbCBwcm9iYWJseSB0
-cnkgYSBmZXcgb3RoZXIgdGVjaG5pcXVlcyBidXQgY2FuCiAgICAgICAgICB1c2UgdGhpcyBhcwog
-ICAgICAgICAgPGJyPgogICAgICAgICAgd2VsbC4gSSB3aWxsIHBvc3QgdGhlIGNoYW5nZXMgYXQg
-dGhlIGFwcHJvcHJpYXRlIHRpbWUuCiAgICAgICAgICA8YnI+CiAgICAgICAgPC9ibG9ja3F1b3Rl
-PgogICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgIDxicj4KICAgICAgTmljZSwgdGhhbmtzIGZvciB0
-aGUgdXBkYXRlLgogICAgICA8YnI+CiAgICAgIDxicj4KICAgICAgUmVnYXJkcywKICAgICAgPGJy
-PgogICAgICBNYXQKICAgICAgPGJyPgogICAgPC9ibG9ja3F1b3RlPgogICAgPGJyPgogIDwvYm9k
-eT4KPC9odG1sPgo=
+MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPHA+UGxlYXNlIGRpc3JlZ2FyZCB0aGUgdGNw
+ZHVtcCBhcyBJIGp1c3Qgbm90aWNlZCB0aGF0IHRoZQogICAgICBjb25uZWN0aW9uIGlzIGZhaWxp
+bmcgb3ZlciB0byByZWd1bGFyIFRDUCwgVGhlIHJhY2Ugd2FzIGJhc2VkIG9uIGEKICAgICAga2Vy
+bmVsIHRoYXQgSSBhbSB3b3JraW5nIG9uIHJpZ2h0IG5vdy4gSG93ZXZlciwgdGhlIGNoYW5nZSBk
+b2VzCiAgICAgIHdvcmssIGhlcmUgaXMgdGNwZHVtcCBmcm9tIGFuIG9sZGVyIHdvcmtpbmcga2Vy
+bmVsLjwvcD4KICAgIDE2OjE1OjUxLjM5MjE3NSBBUlAsIFJlcXVlc3Qgd2hvLWhhcyAxOTIuMTY4
+LjEuMzIgdGVsbCAxOTIuMTY4LjEuMywKICAgIGxlbmd0aCA0Njxicj4KICAgIDE2OjE1OjUxLjM5
+MjIwMSBBUlAsIFJlcGx5IDE5Mi4xNjguMS4zMiBpcy1hdCAwMDoyNTo2NDpkNzpkNzpkYiAob3Vp
+CiAgICBVbmtub3duKSwgbGVuZ3RoIDI4PGJyPgogICAgMTY6MTU6NTEuMzkyNDA0IElQIDE5Mi4x
+NjguMS4zLjUyMTE5ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFtTXSwgc2VxIDIz
+MTIwNzE3OTksIHdpbiAyOTIwMCwgb3B0aW9ucyBbbXNzIDE0NjAsc2Fja09LLFRTIHZhbAogICAg
+NDI5NDkwOTc3MiBlY3IgMCxub3Asd3NjYWxlIDcsbXB0Y3AgY2FwYWJsZSBjc3VtCiAgICB7MHhm
+NzkyMDQ3NGU1YzIwNTFlfV0sIGxlbmd0aCAwPGJyPgogICAgMTY6MTU6NTEuMzkyNDc0IElQIDE5
+Mi4xNjguMS4zMi5zc2ggJmd0OyAxOTIuMTY4LjEuMy41MjExOTogRmxhZ3MKICAgIFtTLl0sIHNl
+cSAzODgxNzE1Mjg0LCBhY2sgMjMxMjA3MTgwMCwgd2luIDI4NTYwLCBvcHRpb25zIFttc3MKICAg
+IDE0NjAsc2Fja09LLFRTIHZhbCAyNjMzMzUwMiBlY3IgNDI5NDkwOTc3Mixub3Asd3NjYWxlIDcs
+bXB0Y3AKICAgIGNhcGFibGUgY3N1bSB7MHg5MDI3MjU4MzgxNjFjMzkwfV0sIGxlbmd0aCAwPGJy
+PgogICAgMTY6MTU6NTEuMzkyNzAxIElQIDE5Mi4xNjguMS4zLjUyMTE5ICZndDsgMTkyLjE2OC4x
+LjMyLnNzaDogRmxhZ3MKICAgIFsuXSwgYWNrIDEsIHdpbiAyMjksIG9wdGlvbnMgW25vcCxub3As
+VFMgdmFsIDQyOTQ5MDk3NzIgZWNyCiAgICAyNjMzMzUwMixtcHRjcCBjYXBhYmxlIGNzdW0KICAg
+IHsweGY3OTIwNDc0ZTVjMjA1MWUsMHg5MDI3MjU4MzgxNjFjMzkwfSxtcHRjcCBkc3MgYWNrIDE4
+NjM5MjIxMjJdLAogICAgbGVuZ3RoIDA8YnI+CiAgICAxNjoxNTo1MS4zOTI4MjIgSVAgMTkyLjE2
+OC4xLjMuNTIxMTkgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgW1AuXSwgc2VxIDE6
+NDIsIGFjayAxLCB3aW4gMjI5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbCA0Mjk0OTA5NzcyCiAg
+ICBlY3IgMjYzMzM1MDIsbXB0Y3AgZHNzIGFjayAxODYzOTIyMTIyIHNlcSAzOTAzNzcyMTM3IHN1
+YnNlcSAxIGxlbiA0MQogICAgY3N1bSAweDczODldLCBsZW5ndGggNDE8YnI+CiAgICAxNjoxNTo1
+MS4zOTI4NTMgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjUyMTE5OiBGbGFn
+cwogICAgWy5dLCBhY2sgNDIsIHdpbiAyMjQsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI2MzMz
+NTAyIGVjcgogICAgNDI5NDkwOTc3MixtcHRjcCBkc3MgYWNrIDM5MDM3NzIxNzhdLCBsZW5ndGgg
+MDxicj4KICAgIDE2OjE1OjUxLjQwMzA3MyBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsgMTkyLjE2
+OC4xLjMuNTIxMTk6IEZsYWdzCiAgICBbUC5dLCBzZXEgMTo0MiwgYWNrIDQyLCB3aW4gMjI0LCBv
+cHRpb25zIFtub3Asbm9wLFRTIHZhbCAyNjMzMzUwNQogICAgZWNyIDQyOTQ5MDk3NzIsbXB0Y3Ag
+ZHNzIGFjayAzOTAzNzcyMTc4IHNlcSAxODYzOTIyMTIyIHN1YnNlcSAxIGxlbgogICAgNDEgY3N1
+bSAweDkxYTldLCBsZW5ndGggNDE8YnI+CiAgICAxNjoxNTo1MS40MDMzNTMgSVAgMTkyLjE2OC4x
+LjMuNTIxMTkgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgWy5dLCBhY2sgNDIsIHdp
+biAyMjksIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDQyOTQ5MDk3NzUgZWNyCiAgICAyNjMzMzUw
+MixtcHRjcCBkc3MgYWNrIDE4NjM5MjIxNjNdLCBsZW5ndGggMDxicj4KICAgIDE2OjE1OjUxLjQw
+NDAxMCBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsgMTkyLjE2OC4xLjMuNTIxMTk6IEZsYWdzCiAg
+ICBbUC5dLCBzZXEgNDI6MTAxOCwgYWNrIDQyLCB3aW4gMjI0LCBvcHRpb25zIFtub3Asbm9wLFRT
+IHZhbCAyNjMzMzUwNQogICAgZWNyIDQyOTQ5MDk3NzUsbXB0Y3AgZHNzIGFjayAzOTAzNzcyMTc4
+IHNlcSAxODYzOTIyMTYzIHN1YnNlcSA0MiBsZW4KICAgIDk3NiBjc3VtIDB4YTg5M10sIGxlbmd0
+aCA5NzY8YnI+CiAgICAxNjoxNTo1MS40MDQyNjAgSVAgMTkyLjE2OC4xLjMuNTIxMTkgJmd0OyAx
+OTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgWy5dLCBhY2sgMTAxOCwgd2luIDI0NCwgb3B0aW9u
+cyBbbm9wLG5vcCxUUyB2YWwgNDI5NDkwOTc3NSBlY3IKICAgIDI2MzMzNTAyLG1wdGNwIGRzcyBh
+Y2sgMTg2MzkyMzEzOV0sIGxlbmd0aCAwPGJyPgogICAgMTY6MTU6NTEuNDI0NTAxIElQIDE5Mi4x
+NjguMS4zLjUyMTE5ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFtQLl0sIHNlcSA0
+MjoxMzc4LCBhY2sgMTAxOCwgd2luIDI0NCwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwKICAgIDQy
+OTQ5MDk3ODAgZWNyIDI2MzMzNTAyLG1wdGNwIGRzcyBhY2sgMTg2MzkyMzEzOSBzZXEgMzkwMzc3
+MjE3OAogICAgc3Vic2VxIDQyIGxlbiAxMzM2IGNzdW0gMHg4YTJjXSwgbGVuZ3RoIDEzMzY8YnI+
+CiAgICAxNjoxNTo1MS40NjA5NjQgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4z
+LjUyMTE5OiBGbGFncwogICAgWy5dLCBhY2sgMTM3OCwgd2luIDI0Niwgb3B0aW9ucyBbbm9wLG5v
+cCxUUyB2YWwgMjYzMzM1MjAgZWNyCiAgICA0Mjk0OTA5NzgwLG1wdGNwIGRzcyBhY2sgMzkwMzc3
+MzUxNF0sIGxlbmd0aCAwPGJyPgogICAgMTY6MTU6NTEuNDYxMTc2IElQIDE5Mi4xNjguMS4zLjUy
+MTE5ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgIFtQLl0sIHNlcSAxMzc4OjE0MjYs
+IGFjayAxMDE4LCB3aW4gMjQ0LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgNDI5NDkwOTc4
+OSBlY3IgMjYzMzM1MjAsbXB0Y3AgZHNzIGFjayAxODYzOTIzMTM5IHNlcSAzOTAzNzczNTE0CiAg
+ICBzdWJzZXEgMTM3OCBsZW4gNDggY3N1bSAweDgyODJdLCBsZW5ndGggNDg8YnI+CiAgICAxNjox
+NTo1MS40NjEyMDEgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjUyMTE5OiBG
+bGFncwogICAgWy5dLCBhY2sgMTQyNiwgd2luIDI0Niwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwg
+MjYzMzM1MjAgZWNyCiAgICA0Mjk0OTA5Nzg5LG1wdGNwIGRzcyBhY2sgMzkwMzc3MzU2Ml0sIGxl
+bmd0aCAwPGJyPgogICAgMTY6MTU6NTEuNDY4OTEzIElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAx
+OTIuMTY4LjEuMy41MjExOTogRmxhZ3MKICAgIFtQLl0sIHNlcSAxMDE4OjEzODIsIGFjayAxNDI2
+LCB3aW4gMjQ2LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgMjYzMzM1MjEgZWNyIDQyOTQ5
+MDk3ODksbXB0Y3AgZHNzIGFjayAzOTAzNzczNTYyIHNlcSAxODYzOTIzMTM5CiAgICBzdWJzZXEg
+MTAxOCBsZW4gMzY0IGNzdW0gMHg5NDA5XSwgbGVuZ3RoIDM2NDxicj4KICAgIDE2OjE1OjUxLjQ3
+MTU4OSBJUCAxOTIuMTY4LjEuMy41MjExOSAmZ3Q7IDE5Mi4xNjguMS4zMi5zc2g6IEZsYWdzCiAg
+ICBbUC5dLCBzZXEgMTQyNjoxNDQyLCBhY2sgMTM4Miwgd2luIDI1MCwgb3B0aW9ucyBbbm9wLG5v
+cCxUUyB2YWwKICAgIDQyOTQ5MDk3OTIgZWNyIDI2MzMzNTIwLG1wdGNwIGRzcyBhY2sgMTg2Mzky
+MzUwMyBzZXEgMzkwMzc3MzU2MgogICAgc3Vic2VxIDE0MjYgbGVuIDE2IGNzdW0gMHg4Mjg3XSwg
+bGVuZ3RoIDE2PGJyPgogICAgMTY6MTU6NTEuNTA5MDQ0IElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0
+OyAxOTIuMTY4LjEuMy41MjExOTogRmxhZ3MKICAgIFsuXSwgYWNrIDE0NDIsIHdpbiAyNDYsIG9w
+dGlvbnMgW25vcCxub3AsVFMgdmFsIDI2MzMzNTMyIGVjcgogICAgNDI5NDkwOTc5MixtcHRjcCBk
+c3MgYWNrIDM5MDM3NzM1NzhdLCBsZW5ndGggMDxicj4KICAgIDxicj4KICAgIFJhby48YnI+CiAg
+ICA8YnI+CiAgICA8ZGl2IGNsYXNzPSJtb3otY2l0ZS1wcmVmaXgiPk9uIDEwLzI2LzIwMTcgMDM6
+MjYgUE0sIFJhbyBTaG9haWIKICAgICAgd3JvdGU6PGJyPgogICAgPC9kaXY+CiAgICA8YmxvY2tx
+dW90ZSB0eXBlPSJjaXRlIgogICAgICBjaXRlPSJtaWQ6NWUyMTQzNWUtZDZlMi03OTUwLWI0Yzgt
+OWI2YWRhZjUzYTZlQG9yYWNsZS5jb20iPgogICAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50
+LVR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgICAgIDxwPjxicj4K
+ICAgICAgPC9wPgogICAgICBIdWxsbyw8YnI+CiAgICAgIDxicj4KICAgICAgPGRpdiBjbGFzcz0i
+bW96LWNpdGUtcHJlZml4Ij5PbiAxMC8yMy8yMDE3IDA0OjEwIFBNLCBNYXQgTWFydGluZWF1CiAg
+ICAgICAgd3JvdGU6PGJyPgogICAgICA8L2Rpdj4KICAgICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0
+ZSIKY2l0ZT0ibWlkOmFscGluZS5PU1guMi4yMS4xNzEwMjMxNTU3MzUwLjU4NjNAbWptYXJ0aW4t
+bWFjMDEuc2VhLmludGVsLmNvbSI+PGJyPgogICAgICAgIFllcywgSSdtIGludGVyZXN0ZWQgdG9v
+ISBJIGtub3cgRGF2aWQgTWlsbGVyIGlzIGludGVyZXN0ZWQgaW4KICAgICAgICBtYWtpbmcgZ29v
+ZCB1c2Ugb2Ygc3BhY2UgaW4gZGF0YSBzdHJ1Y3R1cmVzOiA8YQogICAgICAgICAgY2xhc3M9Im1v
+ei10eHQtbGluay1mcmVldGV4dCIKaHJlZj0iaHR0cHM6Ly9uZXRkZXZjb25mLm9yZy8yLjIvc2Vz
+c2lvbi5odG1sP21pbGxlci1kYXRhc3RydWN0dXJlYmxvYXQta2V5bm90ZSIKICAgICAgICAgIG1v
+ei1kby1ub3Qtc2VuZD0idHJ1ZSI+aHR0cHM6Ly9uZXRkZXZjb25mLm9yZy8yLjIvc2Vzc2lvbi5o
+dG1sP21pbGxlci1kYXRhc3RydWN0dXJlYmxvYXQta2V5bm90ZTwvYT4KICAgICAgICA8YnI+CiAg
+ICAgICAgPGJyPgogICAgICAgIElmIHRoZXJlJ3MgYSBsb3Qgb2YgdW5uZWNlc3Nhcnkgc3BhY2Ug
+YmVpbmcgdXNlZCB0aGV5J2QgcHJvYmFibHkKICAgICAgICB3YW50IHRvIHJlY2xhaW0gaXQgYW5k
+IHRoZW4gd2UnZCBuZWVkIHRoZSBleHRyYSBzaGFyZWQgaW5mbwogICAgICAgIGFnYWluIDxzcGFu
+IGNsYXNzPSJtb3otc21pbGV5LXMxIiB0aXRsZT0iOikiPjxzcGFuPjopPC9zcGFuPjwvc3Bhbj4K
+ICAgICAgICA8YnI+CiAgICAgICAgPGJyPgogICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgIFRoYW5r
+cyBmb3IgdGhlIHBvaW50ZXIsIEkgd2lsbCB0YWtlIGEgbG9vay48YnI+CiAgICAgIFRha2UgYSBs
+b29rIGF0IG15IGxhc3QgY291cGxlIG9mIHBhdGNoZXMsIHRoZXkgYXJlIGFsbCB1c2luZwogICAg
+ICByZWd1bGFyIHNpemUgQ0IuIFRoZSByZWxldmFudCBjaGFuZ2VzIGFyZSBpbiBtcHRjcF9za2Jf
+ZW50YWlsKCkKICAgICAgYW5kIG1wdGNwX3dyaXRlX2Rzc19tYXBwaW5nKCkgYW5kIHRoZSBvYnZp
+b3VzwqAgdGNwX3NrYl9jYiBhbmQKICAgICAgc2tfYnVmZiBzdHJ1Y3R1cmVzLiBUaGUgY2hhbmdl
+IGlzIHRvIGNhbGN1bGF0ZSB0aGUgbWFwcGluZyB3aGVuCiAgICAgIHRoZSBoZWFkZXIgaXMgYmVp
+bmcgd3JpdHRlbiBub3QgYmVmb3JlLiA8YnI+CiAgICAgIDxicj4KICAgICAgSSBhbSB3b3JraW5n
+IG9uIG5ldC1uZXh0IDQuMTQuMC1yYzQgYW5kIGhhdmUgYmVlbiBhYmxlIHRvIGFjaGlldmUKICAg
+ICAgdGhlIHNhbWUuIEhlcmUgYXJlIHRoZSBjaGFuZ2VzIHRvIHRoZSBzdHJ1Y3R1cmUsIGN1dCBh
+bmQgcGFzdGUgb2YKICAgICAgdGhlIHJlbGV2YW50IGNvZGUgZnJvbSBhbnkgcGF0Y2gganVzdCB3
+b3Jrcy48YnI+CiAgICAgIDxicj4KICAgICAgVGhlIGNoYW5nZSB0byB0Y3Bfc2tiX2NiIGlzIDxi
+cj4KICAgICAgPGJyPgogICAgICDCoMKgwqDCoMKgwqDCoCBfX3U4wqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBpcF9kc2ZpZWxkO8KgwqDCoMKgIC8qIElQdjQgdG9zIG9yIElQdjYKICAgICAgZHNmaWVs
+ZMKgwqDCoMKgICovPGJyPgogICAgICDCoMKgwqDCoMKgwqDCoCBfX3U4wqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB0eHN0YW1wX2FjazoxLMKgIC8qIFJlY29yZCBUWCB0aW1lc3RhbXAgZm9yCiAgICAg
+IGFjaz8gKi88YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgZW9yOjEswqDCoMKgwqDCoMKgwqDCoMKgIC8qIElzIHNrYiBNU0dfRU9SIG1hcmtl
+ZD8KICAgICAgKi88YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgaGFzX3J4dHN0YW1wOjEsIC8qIFNLQiBoYXMgYSBSWAogICAgICB0aW1lc3Rh
+bXDCoMKgwqDCoMKgwqAgKi88YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgdW51c2VkOjU7PGJyPgogICAgICDCoMKgwqDCoMKgwqDCoCB1bmlv
+biB7PGJyPgogICAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIF9fdTMywqDCoCBhY2tfc2VxO8KgwqDCoMKgwqDCoMKgIC8qIFNlcXVlbmNlIG51bWJlcgog
+ICAgICBBQ0snZCAqLzxicj4KICAgICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBfX3UzMsKgwqAgbXB0Y3BfZGF0YV9zZXE7PGJyPgogICAgICDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIF9fdTMywqDCoCBtcHRjcF9w
+YXRoX21hc2s7PGJyPgogICAgICDCoMKgwqDCoMKgwqDCoCB9Ozxicj4KICAgICAgPGJyPgogICAg
+ICBBbmQgdXNlZCBhIHNjcmF0Y2ggZmllbGQgaW4gc2tfYnVmZiwgdGhlc2UgYXJlIG9ubHkgbmVl
+ZGVkIG9uIHRoZQogICAgICBSeCBzaWRlLjxicj4KICAgICAgPGJyPgogICAgICBzdHJ1Y3Qgc2tf
+YnVmZiB7PGJyPgogICAgICDCoMKgwqDCoMKgwqDCoCB1bmlvbiB7PGJyPgogICAgICDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IHs8YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogVGhlc2UgdHdvIG1lbWJlcnMgbXVz
+dCBiZSBmaXJzdC4gKi88YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgc3RydWN0IHNrX2J1ZmbCoMKgwqDCoMKgwqDCoMKgwqAgKm5leHQ7PGJy
+PgogICAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0
+cnVjdCBza19idWZmwqDCoMKgwqDCoMKgwqDCoMKgICpwcmV2Ozxicj4KICAgICAgPGJyPgogICAg
+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVuaW9uIHs8
+YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBuZXRfZGV2aWNlwqDCoMKgwqDCoMKgICpkZXY7PGJyPgog
+ICAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCAvKiBTb21lIHByb3RvY29scyBtaWdodCB1c2UgdGhpcwogICAgICBzcGFjZSB0
+byBzdG9yZSBpbmZvcm1hdGlvbiw8YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKiB3aGlsZSBkZXZpY2UgcG9p
+bnRlciB3b3VsZCBiZQogICAgICBOVUxMLjxicj4KICAgICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqIFVEUCByZWNlaXZl
+IHBhdGggaXMgb25lIHVzZXIuPGJyPgogICAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICovPGJyPgogICAgICDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1
+bnNpZ25lZCBsb25nwqDCoMKgwqDCoMKgwqDCoMKgwqAKICAgICAgZGV2X3NjcmF0Y2g7PGJyPgog
+ICAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBzdHJ1Y3Qgezxicj4KICAgICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIF9fdTgg
+bXB0Y3BfZmxhZ3M7PGJyPgogICAgICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgX191OCBtcHRjcF9k
+c3Nfb2ZmOzxicj4KICAgICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTs8YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTs8YnI+CiAgICAgIMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB9Ozxicj4KICAgICAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHN0cnVjdCByYl9ub2RlwqAgcmJub2RlOyAvKiB1c2VkIGluIG5ldGVtICZhbXA7IHRjcAogICAg
+ICBzdGFjayAqLzxicj4KICAgICAgwqDCoMKgwqDCoMKgwqAgfTs8YnI+CiAgICAgIDxicj4KICAg
+ICAgQW5kIGhlcmUgaXMgYSB0Y3BkdW1wLiBIb3N0IDE5Mi4xNjguMS4zIGlzIHJ1bm5pbmcgbmV0
+LW5leHQKICAgICAgIjQuMTQuMCBGZWFybGVzcyBDb3lvdGUiIGFuZCBob3N0IDE5Mi4xNjguMS4z
+MiBpcyBydW5uaW5nICI0LjQuODgKICAgICAgQmx1cnJ5IEZpc2ggQnV0dCI8YnI+CiAgICAgIDxi
+cj4KICAgICAgPGJyPgogICAgICAxNToyMToyOC41ODEzODggSVAgMTkyLjE2OC4xLjMuNDAwOTYg
+Jmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgICBbU10sIHNlcSAxNTE1NDk3MjEyLCB3
+aW4gMjkyMDAsIG9wdGlvbnMgW21zcyAxNDYwLHNhY2tPSyxUUyB2YWwKICAgICAgMjQ2MDQ2ODU0
+MCBlY3IgMCxub3Asd3NjYWxlIDcsbXB0Y3AgY2FwYWJsZSBjc3VtCiAgICAgIHsweDI2YjkyM2Q0
+MTVmNmM0ZDR9XSwgbGVuZ3RoIDA8YnI+CiAgICAgIDE1OjIxOjI4LjU4MTQ0OSBJUCAxOTIuMTY4
+LjEuMzIuc3NoICZndDsgMTkyLjE2OC4xLjMuNDAwOTY6IEZsYWdzCiAgICAgIFtTLl0sIHNlcSAz
+NDEyNjY1MDc0LCBhY2sgMTUxNTQ5NzIxMywgd2luIDI4NTYwLCBvcHRpb25zIFttc3MKICAgICAg
+MTQ2MCxzYWNrT0ssVFMgdmFsIDI1NTE3ODAwIGVjciAyNDYwNDY4NTQwLG5vcCx3c2NhbGUgNyxt
+cHRjcAogICAgICBjYXBhYmxlIGNzdW0gezB4OGZkMmRkOGY5MmI1ZjcyY31dLCBsZW5ndGggMDxi
+cj4KICAgICAgMTU6MjE6MjguNTgyNTMzIElQIDE5Mi4xNjguMS4zLjQwMDk2ICZndDsgMTkyLjE2
+OC4xLjMyLnNzaDogRmxhZ3MKICAgICAgW1AuXSwgc2VxIDE6NDIsIGFjayAxLCB3aW4gMjI5LCBv
+cHRpb25zIFtub3Asbm9wLFRTIHZhbCAyNDYwNDY4NTQxCiAgICAgIGVjciAyNTUxNzgwMF0sIGxl
+bmd0aCA0MTxicj4KICAgICAgMTU6MjE6MjguNTgyNjEyIElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0
+OyAxOTIuMTY4LjEuMy40MDA5NjogRmxhZ3MKICAgICAgWy5dLCBhY2sgNDIsIHdpbiAyMjQsIG9w
+dGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODAwIGVjcgogICAgICAyNDYwNDY4NTQxXSwgbGVu
+Z3RoIDA8YnI+CiAgICAgIDE1OjIxOjI4LjU5MTg4OSBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsg
+MTkyLjE2OC4xLjMuNDAwOTY6IEZsYWdzCiAgICAgIFtQLl0sIHNlcSAxOjQyLCBhY2sgNDIsIHdp
+biAyMjQsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsIDI1NTE3ODAyCiAgICAgIGVjciAyNDYwNDY4
+NTQxXSwgbGVuZ3RoIDQxPGJyPgogICAgICAxNToyMToyOC41OTI5MjIgSVAgMTkyLjE2OC4xLjMu
+NDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFncwogICAgICBbUC5dLCBzZXEgNDI6MTM3
+OCwgYWNrIDQyLCB3aW4gMjI5LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgICAyNDYwNDY4
+NTUyIGVjciAyNTUxNzgwMl0sIGxlbmd0aCAxMzM2PGJyPgogICAgICAxNToyMToyOC41OTMwMjgg
+SVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwogICAgICBb
+UC5dLCBzZXEgNDI6MTAxOCwgYWNrIDQyLCB3aW4gMjI0LCBvcHRpb25zIFtub3Asbm9wLFRTIHZh
+bAogICAgICAyNTUxNzgwMyBlY3IgMjQ2MDQ2ODU1Ml0sIGxlbmd0aCA5NzY8YnI+CiAgICAgIDE1
+OjIxOjI4LjYzMzA0MyBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsgMTkyLjE2OC4xLjMuNDAwOTY6
+IEZsYWdzCiAgICAgIFsuXSwgYWNrIDEzNzgsIHdpbiAyNDYsIG9wdGlvbnMgW25vcCxub3AsVFMg
+dmFsIDI1NTE3ODEzIGVjcgogICAgICAyNDYwNDY4NTUyXSwgbGVuZ3RoIDA8YnI+CiAgICAgIDE1
+OjIxOjI4LjYzMzk1NiBJUCAxOTIuMTY4LjEuMy40MDA5NiAmZ3Q7IDE5Mi4xNjguMS4zMi5zc2g6
+IEZsYWdzCiAgICAgIFtQLl0sIHNlcSAxMzc4OjE0MjYsIGFjayAxMDE4LCB3aW4gMjQ0LCBvcHRp
+b25zIFtub3Asbm9wLFRTIHZhbAogICAgICAyNDYwNDY4NTkzIGVjciAyNTUxNzgwM10sIGxlbmd0
+aCA0ODxicj4KICAgICAgMTU6MjE6MjguNjM0MDEyIElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAx
+OTIuMTY4LjEuMy40MDA5NjogRmxhZ3MKICAgICAgWy5dLCBhY2sgMTQyNiwgd2luIDI0Niwgb3B0
+aW9ucyBbbm9wLG5vcCxUUyB2YWwgMjU1MTc4MTMgZWNyCiAgICAgIDI0NjA0Njg1OTNdLCBsZW5n
+dGggMDxicj4KICAgICAgMTU6MjE6MjguNjQ3Njg0IElQIDE5Mi4xNjguMS4zMi5zc2ggJmd0OyAx
+OTIuMTY4LjEuMy40MDA5NjogRmxhZ3MKICAgICAgW1AuXSwgc2VxIDEwMTg6MTM4MiwgYWNrIDE0
+MjYsIHdpbiAyNDYsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsCiAgICAgIDI1NTE3ODE2IGVjciAy
+NDYwNDY4NTkzXSwgbGVuZ3RoIDM2NDxicj4KICAgICAgMTU6MjE6MjguNjUzNDM5IElQIDE5Mi4x
+NjguMS4zLjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgICAgW1AuXSwgc2Vx
+IDE0MjY6MTQ0MiwgYWNrIDEzODIsIHdpbiAyNTksIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsCiAg
+ICAgIDI0NjA0Njg2MTIgZWNyIDI1NTE3ODE2XSwgbGVuZ3RoIDE2PGJyPgogICAgICAxNToyMToy
+OC42OTI5OTYgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFn
+cwogICAgICBbLl0sIGFjayAxNDQyLCB3aW4gMjQ2LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbCAy
+NTUxNzgyOCBlY3IKICAgICAgMjQ2MDQ2ODYxMl0sIGxlbmd0aCAwPGJyPgogICAgICAxNToyMToy
+OC42OTM1ODQgSVAgMTkyLjE2OC4xLjMuNDAwOTYgJmd0OyAxOTIuMTY4LjEuMzIuc3NoOiBGbGFn
+cwogICAgICBbUC5dLCBzZXEgMTQ0MjoxNDg2LCBhY2sgMTM4Miwgd2luIDI1OSwgb3B0aW9ucyBb
+bm9wLG5vcCxUUyB2YWwKICAgICAgMjQ2MDQ2ODY1MiBlY3IgMjU1MTc4MjhdLCBsZW5ndGggNDQ8
+YnI+CiAgICAgIDE1OjIxOjI4LjY5MzYzMiBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsgMTkyLjE2
+OC4xLjMuNDAwOTY6IEZsYWdzCiAgICAgIFsuXSwgYWNrIDE0ODYsIHdpbiAyNDYsIG9wdGlvbnMg
+W25vcCxub3AsVFMgdmFsIDI1NTE3ODI4IGVjcgogICAgICAyNDYwNDY4NjUyXSwgbGVuZ3RoIDA8
+YnI+CiAgICAgIDE1OjIxOjI4LjY5MzcwNiBJUCAxOTIuMTY4LjEuMzIuc3NoICZndDsgMTkyLjE2
+OC4xLjMuNDAwOTY6IEZsYWdzCiAgICAgIFtQLl0sIHNlcSAxMzgyOjE0MjYsIGFjayAxNDg2LCB3
+aW4gMjQ2LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgICAyNTUxNzgyOCBlY3IgMjQ2MDQ2
+ODY1Ml0sIGxlbmd0aCA0NDxicj4KICAgICAgMTU6MjE6MjguNjk0MzEwIElQIDE5Mi4xNjguMS4z
+LjQwMDk2ICZndDsgMTkyLjE2OC4xLjMyLnNzaDogRmxhZ3MKICAgICAgW1AuXSwgc2VxIDE0ODY6
+MTU1NCwgYWNrIDE0MjYsIHdpbiAyNTksIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsCiAgICAgIDI0
+NjA0Njg2NTMgZWNyIDI1NTE3ODI4XSwgbGVuZ3RoIDY4PGJyPgogICAgICAxNToyMToyOC42OTQ5
+NzYgSVAgMTkyLjE2OC4xLjMyLnNzaCAmZ3Q7IDE5Mi4xNjguMS4zLjQwMDk2OiBGbGFncwogICAg
+ICBbUC5dLCBzZXEgMTQyNjoxNDc4LCBhY2sgMTU1NCwgd2luIDI0Niwgb3B0aW9ucyBbbm9wLG5v
+cCxUUyB2YWwKICAgICAgMjU1MTc4MjggZWNyIDI0NjA0Njg2NTNdLCBsZW5ndGggNTI8YnI+CiAg
+ICAgIDE1OjIxOjI4LjczNzYxNyBJUCAxOTIuMTY4LjEuMy40MDA5NiAmZ3Q7IDE5Mi4xNjguMS4z
+Mi5zc2g6IEZsYWdzCiAgICAgIFsuXSwgYWNrIDE0NzgsIHdpbiAyNTksIG9wdGlvbnMgW25vcCxu
+b3AsVFMgdmFsIDI0NjA0Njg2NTQgZWNyCiAgICAgIDI1NTE3ODI4XSwgbGVuZ3RoIDA8YnI+CiAg
+ICAgIDE1OjIxOjMxLjU5OTg2MCBJUCAxOTIuMTY4LjEuMy40MDA5NiAmZ3Q7IDE5Mi4xNjguMS4z
+Mi5zc2g6IEZsYWdzCiAgICAgIFtQLl0sIHNlcSAxNTU0OjE3MDIsIGFjayAxNDc4LCB3aW4gMjU5
+LCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbAogICAgICAyNDYwNDcxNTU5IGVjciAyNTUxNzgyOF0s
+IGxlbmd0aCAxNDg8YnI+CiAgICAgIDxicj4KICAgICAgSSBoYXZlIHNvbWUgb3RoZXIgaWRlYXMg
+dGhhdCBJIHdhbnQgdG8gdHJ5IGJ1dCByaWdodCBub3cgSSBmb2N1c2VkCiAgICAgIG9uIGdldHRp
+bmcgc29tZXRoaW5nIHdvcmtpbmcgc28gd2UgY2FuIGFsbCBzdGFydCBoYWNraW5nLjxicj4KICAg
+ICAgPGJyPgogICAgICBSYW88YnI+CiAgICAgIDxicj4KICAgICAgPGJyPgogICAgICA8YmxvY2tx
+dW90ZSB0eXBlPSJjaXRlIgpjaXRlPSJtaWQ6YWxwaW5lLk9TWC4yLjIxLjE3MTAyMzE1NTczNTAu
+NTg2M0Btam1hcnRpbi1tYWMwMS5zZWEuaW50ZWwuY29tIj4KICAgICAgICA8YmxvY2txdW90ZSB0
+eXBlPSJjaXRlIiBzdHlsZT0iY29sb3I6ICMwMDAwMDA7Ij5JIGhhZCB0byBidW1wIGNiCiAgICAg
+ICAgICB1cCB0byA4MCBieXRlcyBpbiB0aGUgY3VycmVudCBtcHRjcF90cnVuayA6LyA8YnI+CiAg
+ICAgICAgICA8YnI+CiAgICAgICAgICA8YnI+CiAgICAgICAgICBDaHJpc3RvcGggPGJyPgogICAg
+ICAgICAgPGJyPgogICAgICAgICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIgc3R5bGU9ImNvbG9y
+OiAjMDAwMDAwOyI+RllJLiBJIGFtCiAgICAgICAgICAgIHdvcmtpbmcgb24gcmVzdHJ1Y3R1cmlu
+ZyBNUFRDUCBjb2RlIHNvIGl0J3Mgbm90IGludHJ1c2l2ZSB0bwogICAgICAgICAgICBtYWluIDxi
+cj4KICAgICAgICAgICAgVENQIGNvZGUuIEkgd2lsbCBwcm9iYWJseSB0cnkgYSBmZXcgb3RoZXIg
+dGVjaG5pcXVlcyBidXQgY2FuCiAgICAgICAgICAgIHVzZSB0aGlzIGFzIDxicj4KICAgICAgICAg
+ICAgd2VsbC4gSSB3aWxsIHBvc3QgdGhlIGNoYW5nZXMgYXQgdGhlIGFwcHJvcHJpYXRlIHRpbWUu
+IDxicj4KICAgICAgICAgIDwvYmxvY2txdW90ZT4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAg
+ICAgPGJyPgogICAgICAgIE5pY2UsIHRoYW5rcyBmb3IgdGhlIHVwZGF0ZS4gPGJyPgogICAgICAg
+IDxicj4KICAgICAgICBSZWdhcmRzLCA8YnI+CiAgICAgICAgTWF0IDxicj4KICAgICAgPC9ibG9j
+a3F1b3RlPgogICAgICA8YnI+CiAgICAgIDxicj4KICAgICAgPGZpZWxkc2V0IGNsYXNzPSJtaW1l
+QXR0YWNobWVudEhlYWRlciI+PC9maWVsZHNldD4KICAgICAgPGJyPgogICAgICA8cHJlIHdyYXA9
+IiI+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbXB0Y3Ag
+bWFpbGluZyBsaXN0CjxhIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiIGhyZWY9Im1h
+aWx0bzptcHRjcEBsaXN0cy4wMS5vcmciPm1wdGNwQGxpc3RzLjAxLm9yZzwvYT4KPGEgY2xhc3M9
+Im1vei10eHQtbGluay1mcmVldGV4dCIgaHJlZj0iaHR0cHM6Ly9saXN0cy4wMS5vcmcvbWFpbG1h
+bi9saXN0aW5mby9tcHRjcCI+aHR0cHM6Ly9saXN0cy4wMS5vcmcvbWFpbG1hbi9saXN0aW5mby9t
+cHRjcDwvYT4KPC9wcmU+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICA8YnI+CiAgPC9ib2R5Pgo8L2h0
+bWw+Cg==
 
---===============2147680506817180049==--
+--===============8912967299046605504==--
