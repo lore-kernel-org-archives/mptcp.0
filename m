@@ -1,82 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============2453163313727604250=="
+Content-Type: multipart/mixed; boundary="===============3804293641651179656=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH 1/2] skbuff: Add shared control buffer
-Date: Wed, 08 Nov 2017 09:25:52 +0900
-Message-ID: <20171108002552.GK5226@Chimay.local>
-In-Reply-To: d8c5760d-5716-98f1-22b8-13f17b4bb8b3@oracle.com
+Date: Wed, 08 Nov 2017 12:41:31 -0800
+Message-ID: <cea6ef13-6f80-87a9-3734-2484e57e2a71@oracle.com>
+In-Reply-To: 20171108002552.GK5226@Chimay.local
 X-Status: 
 X-Keywords:                  
-X-UID: 160
+X-UID: 161
 
---===============2453163313727604250==
+--===============3804293641651179656==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 07/11/17 - 15:23:42, Rao Shoaib wrote:
-> =
-
-> =
-
-> On 11/07/2017 01:15 PM, Christoph Paasch wrote:
-> > hese are meta-level retransmissions that are being sent on a different
-> > subflow and/or on the same subflow but with new TCP sequence numbers an=
-d a
-> > new DSS-mapping. These indeed end up going through mptcp_skb_entail().
-> > =
-
-> > The retransmissions I mean are the TCP-level retransmissions (aka.,
-> > fast-retransmits, tail-loss-probe, RTO,...). They don't go through
-> > mptcp_skb_entail again.
-> > =
-
-> > I will take a look at the trace in the other mail.
-> > =
-
-> > =
-
-> > Christoph
-> RTO will go through this code.
-> Partial ACK and fast-retransmit etc are fine if they are transmitted with
-> the same mapping (or else DSS will fail as well) In fact it is required. =
-On
-> the receiver an adjustment is made for the TCP flow's seq number.=C2=A0 S=
-ee
-> mptcp_detect_mapping() it requires that the (partial)=C2=A0 skb has the e=
-xact
-> same mapping as if it was transmitted as part of the original skb and than
-> look at mptcp_validate_mapping() and mptcp_prepare_skb() that adjust the
-> data sequence number based on the tcp sequence number of the packet.
-> =
-
-> If not than can you explain how the current mechanism works and what happ=
-ens
-> to the DSS settings in case of retransmission. Where/How does it gets
-> updated because mptcp_options_write() only does a copy with the updated A=
-CK.
-
-The way it is handled currently is that the mapping is decided during
-mptcp_skb_entail(), which writes the mapping to the skb->cb.
-
-From that moment on it won't change anymore and, as you know, it will simp=
-ly
-get copied from the skb->cb to the TCP-header in mptcp_options_write().
 
 
-Christoph
+On 11/07/2017 04:25 PM, Christoph Paasch wrote:
+> The way it is handled currently is that the mapping is decided during
+> mptcp_skb_entail(), which writes the mapping to the skb->cb.
+>
+>  From that moment on it won't change anymore and, as you know, it will si=
+mply
+> get copied from the skb->cb to the TCP-header in mptcp_options_write().
+>
+>
+> Christoph
+Yes thanks I get it. And the receiver is coded that way. That is very =
 
-> =
+implementation specific.
 
-> When I have some more time I will verify by hacking the kernel. Sorry I c=
-an
-> not upload the complete kernel as it is a mess right now, I changed a lot=
- of
-> things, that is why it has taken this long to even get ssh working. I will
-> try to get you just the patch for this fix.
-> =
+RFC 6824 Says:
 
-> Shoaib
 
---===============2453163313727604250==--
+ =C2=A0=C2=A0 A data sequence mapping does not need to be included in every=
+ MPTCP
+ =C2=A0=C2=A0 packet, as long as the subflow sequence space in that packet =
+is
+ =C2=A0=C2=A0 covered by a mapping known at the receiver.=C2=A0 This can be=
+ used to
+ =C2=A0=C2=A0 reduce overhead in cases where the mapping is known in advanc=
+e; one
+ =C2=A0=C2=A0 such case is when there is a single subflow between the hosts,
+ =C2=A0=C2=A0 another is when segments of data are scheduled in larger than=
+ packet-
+ =C2=A0=C2=A0 sized chunks.
+
+So DSS mapping is not required in every packet. There could also be a =
+
+sub mapping for the segment itself that does not violates the original =
+
+larger mapping or there can be a super mapping which extends the current =
+
+mapping without violating it. Current code does not handle that, I will =
+
+update the code.
+
+Thanks for pointing out this case as I had not tested partial ACK. =
+
+Without partial ACK everything will work. Luckily the fix is very =
+
+straight forward.
+
+Regards,
+
+Shoaib
+
+
+
+--===============3804293641651179656==--
