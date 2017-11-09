@@ -1,346 +1,372 @@
-Content-Type: multipart/mixed; boundary="===============1379211239362599451=="
+Content-Type: multipart/mixed; boundary="===============1278301241487762839=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] Revert tcp_skb_cb to its original size
-Date: Thu, 09 Nov 2017 06:55:41 -0800
-Message-ID: <e7486d99-701f-428d-0406-8b4fd14a580e@oracle.com>
-In-Reply-To: 20171109023204.GC77702@Chimay.local
+Subject: Re: [MPTCP] [PATCH 1/2] skbuff: Add shared control buffer
+Date: Thu, 09 Nov 2017 08:26:23 -0800
+Message-ID: <alpine.OSX.2.21.1711090813060.34898@nagarwal-mobl2.amr.corp.intel.com>
+In-Reply-To: 20171109044803.GA87737@Chimay.local
 X-Status: 
 X-Keywords:                  
-X-UID: 170
+X-UID: 171
 
---===============1379211239362599451==
+--===============1278301241487762839==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
+Hi everyone,
 
-On 11/08/2017 06:32 PM, Christoph Paasch wrote:
-> Hello Rao,
->
-> On 08/11/17 - 13:19:49, Shoaib Rao wrote:
->> Christoph,
+On Thu, 9 Nov 2017, cpaasch(a)apple.com wrote:
+
+> On 09/11/17 - 04:32:54, Boris Pismenny wrote:
+>> +Ilya and Liran
 >>
->> Following is a patch based on branch mptcp_v0.91.
->> I have looked into the issue that you pointed out. It is same as the par=
-tial ACK issue. If there is no partial ack everything will work and this pa=
-tch covers all the non partial ack cases.
+>> Hi,
 >>
->> For the partial ACK case the fix is very simple. We can send the packet =
-out without any mapping and the previous mapping should cover it. We can al=
-so update the mapping i.e. care a sub mapping.
-> Indeed, you can omit the DSS-option in these segments.
+>>> -----Original Message-----
+>>> From: cpaasch(a)apple.com [mailto:cpaasch(a)apple.com]
+>>> Sent: Thursday, November 09, 2017 13:13
+>>> To: Mat Martineau <mathew.j.martineau(a)linux.intel.com>; Boris Pismenny
+>>> <borisp(a)mellanox.com>
+>>> Cc: mptcp(a)lists.01.org
+>>> Subject: Re: [MPTCP] [PATCH 1/2] skbuff: Add shared control buffer
+>>>
+>>> +Boris
+>>>
+>>> On 20/10/17 - 16:02:31, Mat Martineau wrote:
+>>>> The sk_buff control buffer is of limited size, and cannot be enlarged
+>>>> without significant impact on systemwide memory use. However, addition=
+al
+>>>> per-packet state is needed for some protocols, like Multipath TCP.
+>>>>
+>>>> An optional shared control buffer placed after the normal struct
+>>>> skb_shared_info can accomodate the necessary state without imposing
+>>>> extra memory usage or code changes on normal struct sk_buff
+>>>> users. __alloc_skb will now place a skb_shared_info_ext structure at
+>>>> skb->end when given the SKB_ALLOC_SHINFO_EXT flag. Most users of struct
+>>>> sk_buff continue to use the skb_shinfo() macro to access shared
+>>>> info. skb_shinfo(skb)->is_ext is set if the extended structure is
+>>>> available, and cleared if it is not.
+>>>>
+>>>> pskb_expand_head will preserve the shared control buffer if it is pres=
+ent.
+>>>>
+>>>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>>>> ---
+>>>>  include/linux/skbuff.h | 24 +++++++++++++++++++++-
+>>>>  net/core/skbuff.c      | 56 ++++++++++++++++++++++++++++++++++++++---=
+----
+>>> -----
+>>>>  2 files changed, 66 insertions(+), 14 deletions(-)
+>>>
+>>> Boris, below is the change I mentioned to you.
+>>>
+>>> It allows to allocate 48 additional bytes on-demand after skb_shared_in=
+fo.
+>>> As it is on-demand, it won't increase the size of the skb for other use=
+rs.
+>>>
+>>> For example, TLS could start using it when it creates the skb that it
+>>> pushes down to the TCP-stack. That way you don't need to handle the
+>>> tls_record lists.
+>>>
+>>
+>> One small problem is that TLS doesn't create SKBs. As a ULP it calls the=
+ transport send
+>> Functions (do_tcp_sendpages for TLS). This function receives a page and =
+not a SKB.
 >
-> One other case is when you get SACK'd bytes. In that case the size of the
-> segment also gets reduced and the DSS-mapping length will be wrong.
+> yes, that's a good point. Mat has another patch as part of this series,
+> that adds an skb-arg to sendpages
+> (https://lists.01.org/pipermail/mptcp/2017-October/000130.html)
 >
-> Basically, all you need to store in this skb is the original data_length =
-of
-> the segment. Are there 16 bytes somewhere that we could use?
+> That should do the job for you.
+
+After working with the extended control block some more, I found that the =
+
+arg to sendpages (at least as I implemented it in that patch) doesn't work =
+
+out because skb_entail() isn't called. I'm experimenting with allocating =
+
+and entailing an empty skb before calling do_tcp_sendpages(), which will =
+
+then find the extended skb on the write queue and append to it. It's =
+
+involving a lot of code to handle the memory waits and error conditions, =
+
+though - it's probably cleaner to plumb some parameters in to =
+
+do_tcp_sendpages() and sk_stream_alloc_skb() to request the extended skb.
+
+
+Mat
+
+
+>> We decided not to create the SKB outside of the TCP layer to reduce the =
+number of
+>> changes we made to TCP.
+>>
+>> It would be nice if we could use something like that. Did you talk to Da=
+veM about
+>> upstreaming this?
+>
+> No, we didn't talk yet to anyone outside of this list here about it.
+>
+> We were looking for a user of it outside of MPTCP but couldn't find one.
+> Now, it seems like we found one that would be interested :)
+>
+>
+> I think this infrastructure here would simplify your code quite a bit, no?
+>
+>> We will definitely find it useful for the receive side, there we allocat=
+e the SKB in the driver.
+>
+> Interesting! So even there you could use it. We were under the impression
+> that it would be of less interest for the receive-side.
 >
 >
 > Christoph
-No, all we need is a bit in the skb to mark the skb to not send out the =
-
-mapping.=C2=A0 I am looking at other options too.
-
-Shoaib
 >
->> The Receiver code (detect mapping()) is very implementation based. I wil=
-l change it to accept two more mapping, sub mapping that does not violate a=
-n existing mapping and a super mapping.
 >>
->> I will provide that patch later. Also note that the fields used in this =
-patch are specific to this release.
->>
->> Shoaib
->>
->> ---
->>   include/linux/skbuff.h   |  2 +-
->>   include/net/tcp.h        | 32 +++++++++-------
->>   net/mptcp/mptcp_output.c | 97 ++++++++++++++++++++++++++++++----------=
---------
->>   3 files changed, 80 insertions(+), 51 deletions(-)
->>
->> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
->> index f66cd5e..ca2e26a 100644
->> --- a/include/linux/skbuff.h
->> +++ b/include/linux/skbuff.h
->> @@ -540,7 +540,7 @@ struct sk_buff {
->>   	 * want to keep them across layers you have to do a skb_clone()
->>   	 * first. This is owned by whoever has the skb queued ATM.
->>   	 */
->> -	char			cb[56] __aligned(8);
->> +	char			cb[48] __aligned(8);
->>   =
+>>> See below for the rest of the patch.
+>>>
+>>>
+>>> Christoph
+>>>
+>>>
+>>>>
+>>>> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+>>>> index 03634ec2f918..873910c66df9 100644
+>>>> --- a/include/linux/skbuff.h
+>>>> +++ b/include/linux/skbuff.h
+>>>> @@ -489,7 +489,8 @@ int skb_zerocopy_iter_stream(struct sock *sk, stru=
+ct
+>>> sk_buff *skb,
+>>>>   * the end of the header data, ie. at skb->end.
+>>>>   */
+>>>>  struct skb_shared_info {
+>>>> -	__u8		__unused;
+>>>> +	__u8		is_ext:1,
+>>>> +			__unused:7;
+>>>>  	__u8		meta_len;
+>>>>  	__u8		nr_frags;
+>>>>  	__u8		tx_flags;
+>>>> @@ -530,6 +531,24 @@ struct skb_shared_info {
+>>>>  #define SKB_DATAREF_MASK ((1 << SKB_DATAREF_SHIFT) - 1)
+>>>>
+>>>>
+>>>> +/* This is an extended version of skb_shared_info, also invariant acr=
+oss
+>>>> + * clones and living at the end of the header data.
+>>>> + */
+>>>> +struct skb_shared_info_ext {
+>>>> +	/* skb_shared_info must be the first member */
+>>>> +	struct skb_shared_info	shinfo;
+>>>> +
+>>>> +	/* This is the shared control buffer. It is similar to sk_buff's
+>>>> +	 * control buffer, but is shared across clones. It must not be
+>>>> +	 * modified when multiple sk_buffs are referencing this structure.
+>>>> +	 */
+>>>> +	char			shcb[48];
+>>>> +};
+>>>> +
+>>>> +#define SKB_SHINFO_EXT_OVERHEAD	\
+>>>> +	(SKB_DATA_ALIGN(sizeof(struct skb_shared_info_ext)) - \
+>>>> +	 SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
+>>>> +
+>>>>  enum {
+>>>>  	SKB_FCLONE_UNAVAILABLE,	/* skb has no fclone (from head_cache)
+>>> */
+>>>>  	SKB_FCLONE_ORIG,	/* orig skb (from fclone_cache) */
+>>>> @@ -856,6 +875,7 @@ struct sk_buff {
+>>>>  #define SKB_ALLOC_FCLONE	0x01
+>>>>  #define SKB_ALLOC_RX		0x02
+>>>>  #define SKB_ALLOC_NAPI		0x04
+>>>> +#define SKB_ALLOC_SHINFO_EXT	0x08
+>>>>
+>>>>  /* Returns true if the skb was allocated from PFMEMALLOC reserves */
+>>>>  static inline bool skb_pfmemalloc(const struct sk_buff *skb)
+>>>> @@ -1271,6 +1291,8 @@ static inline unsigned int skb_end_offset(const
+>>> struct sk_buff *skb)
+>>>>
+>>>>  /* Internal */
+>>>>  #define skb_shinfo(SKB)	((struct skb_shared_info
+>>> *)(skb_end_pointer(SKB)))
+>>>> +#define skb_shinfo_ext(SKB)	\
+>>>> +	((struct skb_shared_info_ext *)(skb_end_pointer(SKB)))
+>>>>
+>>>>  static inline struct skb_shared_hwtstamps *skb_hwtstamps(struct sk_bu=
+ff
+>>> *skb)
+>>>>  {
+>>>> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+>>>> index 40717501cbdd..397edd5c0613 100644
+>>>> --- a/net/core/skbuff.c
+>>>> +++ b/net/core/skbuff.c
+>>>> @@ -166,6 +166,8 @@ static void *__kmalloc_reserve(size_t size, gfp_t
+>>> flags, int node,
+>>>>   *		instead of head cache and allocate a cloned (child) skb.
+>>>>   *		If SKB_ALLOC_RX is set, __GFP_MEMALLOC will be used for
+>>>>   *		allocations in case the data is required for writeback
+>>>> + *		If SKB_ALLOC_SHINFO_EXT is set, the skb will be allocated
+>>>> + *		with an extended shared info struct.
+>>>>   *	@node: numa node to allocate memory on
+>>>>   *
+>>>>   *	Allocate a new &sk_buff. The returned buffer has no headroom and a
+>>>> @@ -179,9 +181,9 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp=
+_t
+>>> gfp_mask,
+>>>>  			    int flags, int node)
+>>>>  {
+>>>>  	struct kmem_cache *cache;
+>>>> -	struct skb_shared_info *shinfo;
+>>>>  	struct sk_buff *skb;
+>>>>  	u8 *data;
+>>>> +	unsigned int shinfo_size;
+>>>>  	bool pfmemalloc;
+>>>>
+>>>>  	cache =3D (flags & SKB_ALLOC_FCLONE)
+>>>> @@ -199,18 +201,22 @@ struct sk_buff *__alloc_skb(unsigned int size,
+>>> gfp_t gfp_mask,
+>>>>  	/* We do our best to align skb_shared_info on a separate cache
+>>>>  	 * line. It usually works because kmalloc(X > SMP_CACHE_BYTES) gives
+>>>>  	 * aligned memory blocks, unless SLUB/SLAB debug is enabled.
+>>>> -	 * Both skb->head and skb_shared_info are cache line aligned.
+>>>> +	 * Both skb->head and skb_shared_info (or skb_shared_info_ext) are
+>>>> +	 * cache line aligned.
+>>>>  	 */
+>>>>  	size =3D SKB_DATA_ALIGN(size);
+>>>> -	size +=3D SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+>>>> -	data =3D kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
+>>>> +	if (flags & SKB_ALLOC_SHINFO_EXT)
+>>>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct
+>>> skb_shared_info_ext));
+>>>> +	else
+>>>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct
+>>> skb_shared_info));
+>>>> +	data =3D kmalloc_reserve(size + shinfo_size, gfp_mask, node,
+>>> &pfmemalloc);
+>>>>  	if (!data)
+>>>>  		goto nodata;
+>>>>  	/* kmalloc(size) might give us more room than requested.
+>>>>  	 * Put skb_shared_info exactly at the end of allocated zone,
+>>>>  	 * to allow max possible filling before reallocation.
+>>>>  	 */
+>>>> -	size =3D SKB_WITH_OVERHEAD(ksize(data));
+>>>> +	size =3D ksize(data) - shinfo_size;
+>>>>  	prefetchw(data + size);
+>>>>
+>>>>  	/*
+>>>> @@ -220,7 +226,10 @@ struct sk_buff *__alloc_skb(unsigned int size, gf=
+p_t
+>>> gfp_mask,
+>>>>  	 */
+>>>>  	memset(skb, 0, offsetof(struct sk_buff, tail));
+>>>>  	/* Account for allocated memory : skb + skb->head */
+>>>> -	skb->truesize =3D SKB_TRUESIZE(size);
+>>>> +	if (flags & SKB_ALLOC_SHINFO_EXT)
+>>>> +		skb->truesize =3D SKB_TRUESIZE(size) +
+>>> SKB_SHINFO_EXT_OVERHEAD;
+>>>> +	else
+>>>> +		skb->truesize =3D SKB_TRUESIZE(size);
+>>>>  	skb->pfmemalloc =3D pfmemalloc;
+>>>>  	refcount_set(&skb->users, 1);
+>>>>  	skb->head =3D data;
+>>>> @@ -231,10 +240,21 @@ struct sk_buff *__alloc_skb(unsigned int size,
+>>> gfp_t gfp_mask,
+>>>>  	skb->transport_header =3D (typeof(skb->transport_header))~0U;
+>>>>
+>>>>  	/* make sure we initialize shinfo sequentially */
+>>>> -	shinfo =3D skb_shinfo(skb);
+>>>> -	memset(shinfo, 0, offsetof(struct skb_shared_info, dataref));
+>>>> -	atomic_set(&shinfo->dataref, 1);
+>>>> -	kmemcheck_annotate_variable(shinfo->destructor_arg);
+>>>> +	if (flags & SKB_ALLOC_SHINFO_EXT) {
+>>>> +		struct skb_shared_info_ext *shinfo_ext =3D skb_shinfo_ext(skb);
+>>>> +		shinfo_ext->shinfo.is_ext =3D 1;
+>>>> +		memset(&shinfo_ext->shinfo.meta_len, 0,
+>>>> +		       offsetof(struct skb_shared_info, dataref) -
+>>>> +		       offsetof(struct skb_shared_info, meta_len));
+>>>> +		atomic_set(&shinfo_ext->shinfo.dataref, 1);
+>>>> +		kmemcheck_annotate_variable(shinfo_ext-
+>>>> shinfo.destructor_arg);
+>>>> +		memset(&shinfo_ext->shcb, 0, sizeof(shinfo_ext->shcb));
+>>>> +	} else {
+>>>> +		struct skb_shared_info *shinfo =3D skb_shinfo(skb);
+>>>> +		memset(shinfo, 0, offsetof(struct skb_shared_info, dataref));
+>>>> +		atomic_set(&shinfo->dataref, 1);
+>>>> +		kmemcheck_annotate_variable(shinfo->destructor_arg);
+>>>> +	}
+>>>>
+>>>>  	if (flags & SKB_ALLOC_FCLONE) {
+>>>>  		struct sk_buff_fclones *fclones;
+>>>> @@ -1443,6 +1463,7 @@ int pskb_expand_head(struct sk_buff *skb, int
+>>> nhead, int ntail,
+>>>>  {
+>>>>  	int i, osize =3D skb_end_offset(skb);
+>>>>  	int size =3D osize + nhead + ntail;
+>>>> +	int shinfo_size;
+>>>>  	long off;
+>>>>  	u8 *data;
+>>>>
+>>>> @@ -1454,11 +1475,14 @@ int pskb_expand_head(struct sk_buff *skb, int
+>>> nhead, int ntail,
+>>>>
+>>>>  	if (skb_pfmemalloc(skb))
+>>>>  		gfp_mask |=3D __GFP_MEMALLOC;
+>>>> -	data =3D kmalloc_reserve(size + SKB_DATA_ALIGN(sizeof(struct
+>>> skb_shared_info)),
+>>>> -			       gfp_mask, NUMA_NO_NODE, NULL);
+>>>> +	if (skb_shinfo(skb)->is_ext)
+>>>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct
+>>> skb_shared_info_ext));
+>>>> +	else
+>>>> +		shinfo_size =3D SKB_DATA_ALIGN(sizeof(struct
+>>> skb_shared_info));
+>>>> +	data =3D kmalloc_reserve(size + shinfo_size, gfp_mask,
+>>> NUMA_NO_NODE, NULL);
+>>>>  	if (!data)
+>>>>  		goto nodata;
+>>>> -	size =3D SKB_WITH_OVERHEAD(ksize(data));
+>>>> +	size =3D ksize(data) - shinfo_size;
+>>>>
+>>>>  	/* Copy only real data... and, alas, header. This should be
+>>>>  	 * optimized for the cases when header is void.
+>>>> @@ -1468,6 +1492,12 @@ int pskb_expand_head(struct sk_buff *skb, int
+>>> nhead, int ntail,
+>>>>  	memcpy((struct skb_shared_info *)(data + size),
+>>>>  	       skb_shinfo(skb),
+>>>>  	       offsetof(struct skb_shared_info, frags[skb_shinfo(skb)->nr_fr=
+ags]));
+>>>> +	if (skb_shinfo(skb)->is_ext) {
+>>>> +		int offset =3D offsetof(struct skb_shared_info_ext, shcb);
+>>>> +		memcpy((struct skb_shared_info_ext *)(data + size + offset),
+>>>> +		       &skb_shinfo_ext(skb)->shcb,
+>>>> +		       sizeof(skb_shinfo_ext(skb)->shcb));
+>>>> +	}
+>>>>
+>>>>  	/*
+>>>>  	 * if shinfo is shared we must drop the old head gracefully, but if =
+it
+>>>> --
+>>>> 2.14.2
+>>>>
+>>>> _______________________________________________
+>>>> mptcp mailing list
+>>>> mptcp(a)lists.01.org
+>>>>
+>>> https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fli=
+sts.0
+>>> 1.org%2Fmailman%2Flistinfo%2Fmptcp&data=3D02%7C01%7Cborisp%40mellano
+>>> x.com%7C57765cda687e4c3ab8ed08d527283bd5%7Ca652971c7d2e4d9ba6a4
+>>> d149256f461b%7C0%7C0%7C636457976113353851&sdata=3DRtZwfWQx%2FSw
+>>> HoF9miFLpa2r4kA4pf0ta7la6k7F3OZI%3D&reserved=3D0
+>
 
->>   	unsigned long		_skb_refdst;
->>   	void			(*destructor)(struct sk_buff *skb);
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index 655ecd4..b476e86 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -842,14 +842,18 @@ struct tcp_skb_cb {
->>   		__u32		tcp_gso_segs;
->>   	};
->>   =
+--
+Mat Martineau
+Intel OTC
 
->> -#ifdef CONFIG_MPTCP
->> -	__u8		mptcp_flags;	/* flags for the MPTCP layer    */
->> -	__u8		dss_off;	/* Number of 4-byte words until
->> -					 * seq-number */
->> -#endif
->>   	__u8		tcp_flags;	/* TCP header flags. (tcp[13])	*/
->>   =
-
->> -	__u8		sacked;		/* State flags for SACK/FACK.	*/
->> +	/* Below union is fine as the skb will use one or the other
->> +	 * The SKB in the rtx queue will set sacked and does not care
->> +	 * about dss_off.
->> +	 * Eventually dss_off will not be needed.
->> +	 */
->> +	=
-
->> +	union {
->> +		__u8		sacked;	/* State flags for SACK/FACK.	*/
->> +		__u8            dss_off;
->> +	};
->>   #define TCPCB_SACKED_ACKED	0x01	/* SKB ACK'd by a SACK block	*/
->>   #define TCPCB_SACKED_RETRANS	0x02	/* SKB retransmitted		*/
->>   #define TCPCB_LOST		0x04	/* SKB is lost			*/
->> @@ -860,8 +864,14 @@ struct tcp_skb_cb {
->>   				TCPCB_REPAIRED)
->>   =
-
->>   	__u8		ip_dsfield;	/* IPv4 tos or IPv6 dsfield	*/
->> -	/* 1 byte hole */
->> -	__u32		ack_seq;	/* Sequence number ACK'd	*/
->> +
->> +	__u8		mptcp_flags;
->> +	union {
->> +		__u32		ack_seq; /* Sequence number ACK'd	*/
->> +		__u32		mptcp_data_seq;
->> +		__u32		path_mask;
->> +		=
-
->> +	};
->>   	union {
->>   		union {
->>   			struct inet_skb_parm	h4;
->> @@ -869,12 +879,6 @@ struct tcp_skb_cb {
->>   			struct inet6_skb_parm	h6;
->>   #endif
->>   		} header;	/* For incoming frames		*/
->> -#ifdef CONFIG_MPTCP
->> -		union {			/* For MPTCP outgoing frames */
->> -			__u32 path_mask; /* paths that tried to send this skb */
->> -			__u32 dss[6];	/* DSS options */
->> -		};
->> -#endif
->>   	};
->>   };
->>   =
-
->> diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
->> index 691ef6f..5318459 100644
->> --- a/net/mptcp/mptcp_output.c
->> +++ b/net/mptcp/mptcp_output.c
->> @@ -57,34 +57,13 @@ EXPORT_SYMBOL(mptcp_sub_len_remove_addr_align);
->>   /* get the data-seq and end-data-seq and store them again in the
->>    * tcp_skb_cb
->>    */
->> +/* Rao: May need work */
->>   static bool mptcp_reconstruct_mapping(struct sk_buff *skb)
->>   {
->> -	const struct mp_dss *mpdss =3D (struct mp_dss *)TCP_SKB_CB(skb)->dss;
->> -	u32 *p32;
->> -	u16 *p16;
->> -
->>   	if (!mptcp_is_data_seq(skb))
->>   		return false;
->>   =
-
->> -	if (!mpdss->M)
->> -		return false;
->> -
->> -	/* Move the pointer to the data-seq */
->> -	p32 =3D (u32 *)mpdss;
->> -	p32++;
->> -	if (mpdss->A) {
->> -		p32++;
->> -		if (mpdss->a)
->> -			p32++;
->> -	}
->> -
->> -	TCP_SKB_CB(skb)->seq =3D ntohl(*p32);
->> -
->> -	/* Get the data_len to calculate the end_data_seq */
->> -	p32++;
->> -	p32++;
->> -	p16 =3D (u16 *)p32;
->> -	TCP_SKB_CB(skb)->end_seq =3D ntohs(*p16) + TCP_SKB_CB(skb)->seq;
->> +	TCP_SKB_CB(skb)->seq =3D TCP_SKB_CB(skb)->mptcp_data_seq;
->>   =
-
->>   	return true;
->>   }
->> @@ -182,7 +161,7 @@ static void __mptcp_reinject_data(struct sk_buff *or=
-ig_skb, struct sock *meta_sk
->>   	/* Segment goes back to the MPTCP-layer. So, we need to zero the
->>   	 * path_mask/dss.
->>   	 */
->> -	memset(TCP_SKB_CB(skb)->dss, 0 , mptcp_dss_len);
->> +	TCP_SKB_CB(skb)->path_mask =3D 0;
->>   =
-
->>   	/* We need to find out the path-mask from the meta-write-queue
->>   	 * to properly select a subflow.
->> @@ -319,25 +298,30 @@ combine:
->>   	}
->>   }
->>   =
-
->> -static int mptcp_write_dss_mapping(const struct tcp_sock *tp, const str=
-uct sk_buff *skb,
->> -				   __be32 *ptr)
->> +
->> +static int mptcp_write_dss_mapping(const struct tcp_sock *tp,
->> +				   const struct sk_buff *skb, __be32 *ptr)
->>   {
->>   	const struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb);
->>   	__be32 *start =3D ptr;
->>   	__u16 data_len;
->>   =
-
->> -	*ptr++ =3D htonl(tcb->seq); /* data_seq */
->> +	*ptr++ =3D htonl(tcb->mptcp_data_seq); /* data_seq */
->>   =
-
->>   	/* If it's a non-data DATA_FIN, we set subseq to 0 (draft v7) */
->>   	if (mptcp_is_data_fin(skb) && skb->len =3D=3D 0)
->>   		*ptr++ =3D 0; /* subseq */
->>   	else
->> -		*ptr++ =3D htonl(tp->write_seq - tp->mptcp->snt_isn); /* subseq */
->> +		*ptr++ =3D htonl(tcb->seq - tp->mptcp->snt_isn); /* subseq */
->>   =
-
->> -	if (tcb->mptcp_flags & MPTCPHDR_INF)
->> +	if (tcb->mptcp_flags & MPTCPHDR_INF) {
->>   		data_len =3D 0;
->> -	else
->> +	} else {
->>   		data_len =3D tcb->end_seq - tcb->seq;
->> +		/* mptcp_entail_skb adds one for FIN */
->> +		if (tcb->tcp_flags & TCPHDR_FIN)
->> +			data_len -=3D 1;
->> +	}
->>   =
-
->>   	if (tp->mpcb->dss_csum && data_len) {
->>   		__be16 *p16 =3D (__be16 *)ptr;
->> @@ -395,6 +379,47 @@ static int mptcp_write_dss_data_ack(const struct tc=
-p_sock *tp, const struct sk_b
->>    * To avoid this we save the initial DSS mapping which allows us to
->>    * send the same DSS mapping even for fragmented retransmits.
->>    */
->> +#if 0
->> +static int mptcp_write_dss_mapping(const struct tcp_sock *tp, const str=
-uct sk_buff *skb,
->> +				   __be32 *ptr)
->> +{
->> +	const struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb);
->> +	__be32 *start =3D ptr;
->> +	__u16 data_len;
->> +
->> +	*ptr++ =3D htonl(tcb->seq); /* data_seq */
->> +
->> +	/* If it's a non-data DATA_FIN, we set subseq to 0 (draft v7) */
->> +	if (mptcp_is_data_fin(skb) && skb->len =3D=3D 0)
->> +		*ptr++ =3D 0; /* subseq */
->> +	else
->> +		*ptr++ =3D htonl(tp->write_seq - tp->mptcp->snt_isn); /* subseq */
->> +
->> +	if (tcb->mptcp_flags & MPTCPHDR_INF)
->> +		data_len =3D 0;
->> +	else
->> +		data_len =3D tcb->end_seq - tcb->seq;
->> +
->> +	if (tp->mpcb->dss_csum && data_len) {
->> +		__be16 *p16 =3D (__be16 *)ptr;
->> +		__be32 hdseq =3D mptcp_get_highorder_sndbits(skb, tp->mpcb);
->> +		__wsum csum;
->> +
->> +		*ptr =3D htonl(((data_len) << 16) |
->> +			     (TCPOPT_EOL << 8) |
->> +			     (TCPOPT_EOL));
->> +		csum =3D csum_partial(ptr - 2, 12, skb->csum);
->> +		p16++;
->> +		*p16++ =3D csum_fold(csum_partial(&hdseq, sizeof(hdseq), csum));
->> +	} else {
->> +		*ptr++ =3D htonl(((data_len) << 16) |
->> +			       (TCPOPT_NOP << 8) |
->> +			       (TCPOPT_NOP));
->> +	}
->> +
->> +	return ptr - start;
->> +}
->> +
->>   static void mptcp_save_dss_data_seq(const struct tcp_sock *tp, struct =
-sk_buff *skb)
->>   {
->>   	struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb);
->> @@ -424,6 +449,7 @@ static int mptcp_write_dss_data_seq(const struct tcp=
-_sock *tp, struct sk_buff *s
->>   =
-
->>   	return mptcp_dss_len/sizeof(*ptr);
->>   }
->> +#endif
->>   =
-
->>   static bool mptcp_skb_entail(struct sock *sk, struct sk_buff *skb, int=
- reinject)
->>   {
->> @@ -469,8 +495,8 @@ static bool mptcp_skb_entail(struct sock *sk, struct=
- sk_buff *skb, int reinject)
->>   	if (mptcp_is_data_fin(subskb))
->>   		mptcp_combine_dfin(subskb, meta_sk, sk);
->>   =
-
->> -	mptcp_save_dss_data_seq(tp, subskb);
->> -
->> +	TCP_SKB_CB(subskb)->mptcp_flags |=3D MPTCPHDR_SEQ;
->> +	tcb->mptcp_data_seq =3D tcb->seq;
->>   	tcb->seq =3D tp->write_seq;
->>   =
-
->>   	/* Take into account seg len */
->> @@ -1197,10 +1223,9 @@ void mptcp_options_write(__be32 *ptr, struct tcp_=
-sock *tp,
->>   	}
->>   =
-
->>   	if (OPTION_DATA_ACK & opts->mptcp_options) {
->> -		if (!mptcp_is_data_seq(skb))
->> -			ptr +=3D mptcp_write_dss_data_ack(tp, skb, ptr);
->> -		else
->> -			ptr +=3D mptcp_write_dss_data_seq(tp, skb, ptr);
->> +		ptr +=3D mptcp_write_dss_data_ack(tp, skb, ptr);
->> +		if (mptcp_is_data_seq(skb))
->> +			ptr +=3D mptcp_write_dss_mapping(tp, skb, ptr);
->>   	}
->>   	if (unlikely(OPTION_MP_PRIO & opts->mptcp_options)) {
->>   		struct mp_prio *mpprio =3D (struct mp_prio *)ptr;
->> -- =
-
->> 2.7.4
->>
->> _______________________________________________
->> mptcp mailing list
->> mptcp(a)lists.01.org
->> https://lists.01.org/mailman/listinfo/mptcp
-
-
---===============1379211239362599451==--
+--===============1278301241487762839==--
