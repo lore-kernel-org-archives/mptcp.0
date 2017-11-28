@@ -1,245 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============1543100770632476140=="
+Content-Type: multipart/mixed; boundary="===============1109141764043801917=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 08/25] tcp_md5: Detect key inside
- tcp_v6_send_response instead of passing it as an argument
-Date: Mon, 27 Nov 2017 21:57:09 -0800
-Message-ID: <20171128055726.430-9-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH v2 07/25] tcp_md5: Detect key inside tcp_v4_send_ack
+ instead of passing it as an argument
+Date: Mon, 27 Nov 2017 21:57:08 -0800
+Message-ID: <20171128055726.430-8-cpaasch@apple.com>
 In-Reply-To: 20171128055726.430-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 182
+X-UID: 183
 
---===============1543100770632476140==
+--===============1109141764043801917==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+This will simplify to consolidate the TCP_MD5-code into a single place.
+
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/ipv6/tcp_ipv6.c | 113 ++++++++++++++++++++++++++----------------------=
-----
- 1 file changed, 57 insertions(+), 56 deletions(-)
+ net/ipv4/tcp_ipv4.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 6bb98c93edfe..7075f4a1d701 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -777,22 +777,65 @@ static const struct tcp_request_sock_ops tcp_request_=
-sock_ipv6_ops =3D {
- =
-
- static void tcp_v6_send_response(const struct sock *sk, struct sk_buff *sk=
-b, u32 seq,
- 				 u32 ack, u32 win, u32 tsval, u32 tsecr,
--				 int oif, struct tcp_md5sig_key *key, int rst,
--				 u8 tclass, __be32 label)
-+				 int oif, int rst, u8 tclass, __be32 label)
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index c6bc0c4d19c6..6f14004bd36d 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -736,7 +736,6 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
+ruct sk_buff *skb)
+ static void tcp_v4_send_ack(const struct sock *sk,
+ 			    struct sk_buff *skb, u32 seq, u32 ack,
+ 			    u32 win, u32 tsval, u32 tsecr, int oif,
+-			    struct tcp_md5sig_key *key,
+ 			    int reply_flags, u8 tos)
  {
  	const struct tcphdr *th =3D tcp_hdr(skb);
- 	struct tcphdr *t1;
--	struct sk_buff *buff;
-+	struct sk_buff *buff =3D NULL;
- 	struct flowi6 fl6;
- 	struct net *net =3D sk ? sock_net(sk) : dev_net(skb_dst(skb)->dev);
- 	struct sock *ctl_sk =3D net->ipv6.tcp_sk;
- 	unsigned int tot_len =3D sizeof(struct tcphdr);
- 	struct dst_entry *dst;
- 	__be32 *topt;
+@@ -748,6 +747,9 @@ static void tcp_v4_send_ack(const struct sock *sk,
+ #endif
+ 			];
+ 	} rep;
 +#ifdef CONFIG_TCP_MD5SIG
-+	struct tcp_md5sig_key *key =3D NULL;
-+	const __u8 *hash_location =3D NULL;
-+	struct ipv6hdr *ipv6h =3D ipv6_hdr(skb);
++	struct tcp_md5sig_key *key;
 +#endif
+ 	struct net *net =3D sock_net(sk);
+ 	struct ip_reply_arg arg;
  =
 
- 	if (tsecr)
- 		tot_len +=3D TCPOLEN_TSTAMP_ALIGNED;
+@@ -775,6 +777,17 @@ static void tcp_v4_send_ack(const struct sock *sk,
+ 	rep.th.window  =3D htons(win);
+ =
+
  #ifdef CONFIG_TCP_MD5SIG
-+	rcu_read_lock();
-+	hash_location =3D tcp_parse_md5sig_option(th);
-+	if (sk && sk_fullsock(sk)) {
-+		key =3D tcp_v6_md5_do_lookup(sk, &ipv6h->saddr);
-+	} else if (sk && sk->sk_state =3D=3D TCP_TIME_WAIT) {
++	if (sk->sk_state =3D=3D TCP_TIME_WAIT) {
 +		struct tcp_timewait_sock *tcptw =3D tcp_twsk(sk);
 +
 +		key =3D tcp_twsk_md5_key(tcptw);
-+	} else if (sk && sk->sk_state =3D=3D TCP_NEW_SYN_RECV) {
-+		key =3D tcp_v6_md5_do_lookup(sk, &ipv6h->daddr);
-+	} else if (hash_location) {
-+		unsigned char newhash[16];
-+		struct sock *sk1 =3D NULL;
-+		int genhash;
-+
-+		/* active side is lost. Try to find listening socket through
-+		 * source port, and then find md5 key through listening socket.
-+		 * we are not loose security here:
-+		 * Incoming packet is checked with md5 hash with finding key,
-+		 * no RST generated if md5 hash doesn't match.
-+		 */
-+		sk1 =3D inet6_lookup_listener(dev_net(skb_dst(skb)->dev),
-+					    &tcp_hashinfo, NULL, 0,
-+					    &ipv6h->saddr,
-+					    th->source, &ipv6h->daddr,
-+					    ntohs(th->source), tcp_v6_iif(skb),
-+					    tcp_v6_sdif(skb));
-+		if (!sk1)
-+			goto out;
-+
-+		key =3D tcp_v6_md5_do_lookup(sk1, &ipv6h->saddr);
-+		if (!key)
-+			goto out;
-+
-+		genhash =3D tcp_v6_md5_hash_skb(newhash, key, NULL, skb);
-+		if (genhash || memcmp(hash_location, newhash, 16) !=3D 0)
-+			goto out;
++	} else if (sk->sk_state =3D=3D TCP_NEW_SYN_RECV) {
++		key =3D tcp_md5_do_lookup(sk, (union tcp_md5_addr *)&ip_hdr(skb)->daddr,
++					AF_INET);
++	} else {
++		BUG();
 +	}
 +
- 	if (key)
- 		tot_len +=3D TCPOLEN_MD5SIG_ALIGNED;
- #endif
-@@ -800,7 +843,7 @@ static void tcp_v6_send_response(const struct sock *sk,=
- struct sk_buff *skb, u32
- 	buff =3D alloc_skb(MAX_HEADER + sizeof(struct ipv6hdr) + tot_len,
- 			 GFP_ATOMIC);
- 	if (!buff)
--		return;
-+		goto out;
+ 	if (key) {
+ 		int offset =3D (tsecr) ? 3 : 0;
  =
 
- 	skb_reserve(buff, MAX_HEADER + sizeof(struct ipv6hdr) + tot_len);
- =
-
-@@ -874,24 +917,21 @@ static void tcp_v6_send_response(const struct sock *s=
-k, struct sk_buff *skb, u32
- 		TCP_INC_STATS(net, TCP_MIB_OUTSEGS);
- 		if (rst)
- 			TCP_INC_STATS(net, TCP_MIB_OUTRSTS);
--		return;
-+		buff =3D NULL;
- 	}
- =
-
-+out:
- 	kfree_skb(buff);
-+
-+#if CONFIG_TCP_MD5SIG
-+	rcu_read_unlock();
-+#endif
- }
- =
-
- static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb)
- {
- 	const struct tcphdr *th =3D tcp_hdr(skb);
- 	u32 seq =3D 0, ack_seq =3D 0;
--	struct tcp_md5sig_key *key =3D NULL;
--#ifdef CONFIG_TCP_MD5SIG
--	const __u8 *hash_location =3D NULL;
--	struct ipv6hdr *ipv6h =3D ipv6_hdr(skb);
--	unsigned char newhash[16];
--	int genhash;
--	struct sock *sk1 =3D NULL;
--#endif
- 	int oif =3D 0;
- =
-
- 	if (th->rst)
-@@ -903,38 +943,6 @@ static void tcp_v6_send_reset(const struct sock *sk, s=
-truct sk_buff *skb)
- 	if (!sk && !ipv6_unicast_destination(skb))
- 		return;
- =
-
--#ifdef CONFIG_TCP_MD5SIG
--	rcu_read_lock();
--	hash_location =3D tcp_parse_md5sig_option(th);
--	if (sk && sk_fullsock(sk)) {
--		key =3D tcp_v6_md5_do_lookup(sk, &ipv6h->saddr);
--	} else if (hash_location) {
--		/*
--		 * active side is lost. Try to find listening socket through
--		 * source port, and then find md5 key through listening socket.
--		 * we are not loose security here:
--		 * Incoming packet is checked with md5 hash with finding key,
--		 * no RST generated if md5 hash doesn't match.
--		 */
--		sk1 =3D inet6_lookup_listener(dev_net(skb_dst(skb)->dev),
--					   &tcp_hashinfo, NULL, 0,
--					   &ipv6h->saddr,
--					   th->source, &ipv6h->daddr,
--					   ntohs(th->source), tcp_v6_iif(skb),
--					   tcp_v6_sdif(skb));
--		if (!sk1)
--			goto out;
--
--		key =3D tcp_v6_md5_do_lookup(sk1, &ipv6h->saddr);
--		if (!key)
--			goto out;
--
--		genhash =3D tcp_v6_md5_hash_skb(newhash, key, NULL, skb);
--		if (genhash || memcmp(hash_location, newhash, 16) !=3D 0)
--			goto out;
--	}
--#endif
--
- 	if (th->ack)
- 		seq =3D ntohl(th->ack_seq);
- 	else
-@@ -946,20 +954,14 @@ static void tcp_v6_send_reset(const struct sock *sk, =
-struct sk_buff *skb)
- 		trace_tcp_send_reset(sk, skb);
- 	}
- =
-
--	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, key, 1, 0, 0);
--
--#ifdef CONFIG_TCP_MD5SIG
--out:
--	rcu_read_unlock();
--#endif
-+	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1, 0, 0);
- }
- =
-
- static void tcp_v6_send_ack(const struct sock *sk, struct sk_buff *skb, u3=
-2 seq,
- 			    u32 ack, u32 win, u32 tsval, u32 tsecr, int oif,
--			    struct tcp_md5sig_key *key, u8 tclass,
--			    __be32 label)
-+			    u8 tclass, __be32 label)
- {
--	tcp_v6_send_response(sk, skb, seq, ack, win, tsval, tsecr, oif, key, 0,
-+	tcp_v6_send_response(sk, skb, seq, ack, win, tsval, tsecr, oif, 0,
- 			     tclass, label);
- }
- =
-
-@@ -971,7 +973,7 @@ static void tcp_v6_timewait_ack(struct sock *sk, struct=
+@@ -820,7 +833,6 @@ static void tcp_v4_timewait_ack(struct sock *sk, struct=
  sk_buff *skb)
- 	tcp_v6_send_ack(sk, skb, tcptw->tw_snd_nxt, tcptw->tw_rcv_nxt,
- 			tcptw->tw_rcv_wnd >> tw->tw_rcv_wscale,
  			tcp_time_stamp_raw() + tcptw->tw_ts_offset,
--			tcptw->tw_ts_recent, tw->tw_bound_dev_if, tcp_twsk_md5_key(tcptw),
-+			tcptw->tw_ts_recent, tw->tw_bound_dev_if,
- 			tw->tw_tclass, cpu_to_be32(tw->tw_flowlabel));
- =
-
- 	inet_twsk_put(tw);
-@@ -994,7 +996,6 @@ static void tcp_v6_reqsk_send_ack(const struct sock *sk=
+ 			tcptw->tw_ts_recent,
+ 			tw->tw_bound_dev_if,
+-			tcp_twsk_md5_key(tcptw),
+ 			tw->tw_transparent ? IP_REPLY_ARG_NOSRCCHECK : 0,
+ 			tw->tw_tos
+ 			);
+@@ -848,8 +860,6 @@ static void tcp_v4_reqsk_send_ack(const struct sock *sk=
 , struct sk_buff *skb,
- 			req->rsk_rcv_wnd >> inet_rsk(req)->rcv_wscale,
  			tcp_time_stamp_raw() + tcp_rsk(req)->ts_off,
- 			req->ts_recent, sk->sk_bound_dev_if,
--			tcp_v6_md5_do_lookup(sk, &ipv6_hdr(skb)->daddr),
- 			0, 0);
+ 			req->ts_recent,
+ 			0,
+-			tcp_md5_do_lookup(sk, (union tcp_md5_addr *)&ip_hdr(skb)->daddr,
+-					  AF_INET),
+ 			inet_rsk(req)->no_srccheck ? IP_REPLY_ARG_NOSRCCHECK : 0,
+ 			ip_hdr(skb)->tos);
  }
- =
-
 -- =
 
 2.15.0
 
 
---===============1543100770632476140==--
+--===============1109141764043801917==--
