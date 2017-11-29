@@ -1,193 +1,142 @@
-Content-Type: multipart/mixed; boundary="===============4693469654564460232=="
+Content-Type: multipart/mixed; boundary="===============4933041139436068722=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 00/25] TCP Extra-option framework for TCP-MD5
- and SMC
-Date: Wed, 29 Nov 2017 09:21:18 -0800
-Message-ID: <20171129172118.GL94116@Chimay.local>
-In-Reply-To: alpine.OSX.2.21.1711281706590.17380@ddombrow-mobl1.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH v2 04/25] tcp: Allow tcp_fast_parse_options to
+ drop segments
+Date: Wed, 29 Nov 2017 09:27:25 -0800
+Message-ID: <20171129172725.GM94116@Chimay.local>
+In-Reply-To: alpine.OSX.2.21.1711281716080.17380@ddombrow-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 211
+X-UID: 212
 
---===============4693469654564460232==
+--===============4933041139436068722==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 28/11/17 - 17:15:54, Mat Martineau wrote:
-> =
-
-> Christoph -
-> =
-
+On 28/11/17 - 17:26:14, Mat Martineau wrote:
 > On Mon, 27 Nov 2017, Christoph Paasch wrote:
 > =
 
-> > Finally, the second version of this patch-set.
+> > The TCP extra-options parser might decide to drop the segment based on
+> > the present option. Especially, for TCP_MD5, we want to do this as soon
+> > as possible (thus, right after the parsing).
 > > =
 
-> > At netdev I talked about this with Eric, and he is looking forward to s=
-ee
-> > TCP-MD5 get out of the hot TCP data-path. He was planning to avoid TCP-=
-MD5
-> > with static jump-labels and also move TCP-MD5 in a separate file.
+> > This patch allows to do this by splitting out tcp_fast_parse_options() =
+in
+> > tcp_validate_incoming()
 > =
 
-> Good to hear that he's interested.
-> =
+> I suggest some additional explanation of how the return value of
+> tcp_parse_fast_options() has changed meaning. The change to the control f=
+low
+> in tcp_validate_incoming() doesn't have quite enough context in the email=
+ to
+> see what's going on.
 
-> > =
+I made it:
 
-> > =
 
-> > There are quite a few changes in this new set. I extended much more the
-> > extra-option framework. Making the list on a per-socket basis in the
-> > request-socket, tcp-socket and time-wait-socket. This eliminates the ne=
-ed
-> > for RCU-locking. See patch "tcp_extra_options: Make extra-option list p=
-er-socket"
-> > =
+tcp: Allow tcp_fast_parse_options to drop segments
 
-> > I also added callbacks for response_write/prepare that can be called fr=
-om the
-> > tcp_v4_send_ack/rst, and v6 counterparts. This is needed because in the=
-se
-> > code-paths the skb and sk have entirely different semantics.
-> > =
+The TCP extra-options parser might decide to drop the segment based on
+the present option. Especially, for TCP_MD5, we want to do this as soon
+as possible (thus, right after the parsing).
 
-> > Finally, in the input-path I added a check-callback and a post-process =
-callback.
-> > =
+This patch allows to do this by splitting out tcp_fast_parse_options() in
+tcp_validate_incoming().
 
-> > This is needed because after parsing the option in tcp_parse_options() =
-we also
-> > need to act on them. The actions can be either before any other checks =
-(e.g.,
-> > as is the case for TCP_MD5, because we want to drop segments) or after =
-the
-> > validity checks (e.g., as is needed for SMC).
-> > =
+Originally, tcp_fast_parse_options() returned false, when there is no
+timestamp option (except in the case of the slow-path processing through
+tcp_parse_options() where it always returns true.
 
-> > And I also opted SMC into the new framework.
-> > =
+So, the return-value of tcp_fast_parse_options() was kind of
+inconsistent. With this patch, we make it return true when the segment
+should get dropped based on the parsed options, and false otherwise.
 
-> > And, I made the TCP-MD5 input code-path use the framework.
-> =
+In tcp_validate_incoming, we will then just check for
+tp->rx_opt.saw_tstamp to see if we should verify PAWS.
 
-> All of these seem like the right way to go. Nice to have two users of the
-> framework already.
-> =
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 
-> > =
-
-> > =
-
-> > There are still a few things that I need to double-check, notably
-> > sk_nocaps_add() in TCP_MD5.
-> > =
-
-> > And, I need to test ;-)
-> =
-
-> Yeah, that testing :)
-> =
-
-> > =
-
-> > But I would like to have some early feedback already - especially on th=
-e patches
-> > prefixed with "tcp_extra_options". If they look good, I can merge them =
-into Mat's
-> > patch, which will simplify my patch-juggling.
-> =
-
-> I have a few comments, but no major structural changes. I'll reply to the
-> individual patches where needed.
-
-Thanks for the feedback! I will reply to each individually.
 
 
 Christoph
 
-> =
-
-> > I want to get this patch-set out to netdev as an RFC as quickly as poss=
-ible, so
-> > that we can make some progress.
-> =
-
-> Agreed!
-> =
-
-> Mat
-> =
 
 > =
 
 > > =
 
+> > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> > ---
+> > net/ipv4/tcp_input.c | 16 +++++++++++-----
+> > 1 file changed, 11 insertions(+), 5 deletions(-)
 > > =
 
-> > Christoph Paasch (24):
-> >  tcp: Write options after the header has been fully done
-> >  tcp: Pass sock to tcp_options_write instead of tcp_sock
-> >  tcp: Pass skb in tcp_options_write
-> >  tcp: Allow tcp_fast_parse_options to drop segments
-> >  tcp: Make smc_parse_options return 1 on success
-> >  tcp_md5: Don't pass along md5-key
-> >  tcp_md5: Detect key inside tcp_v4_send_ack instead of passing it as an
-> >    argument
-> >  tcp_md5: Detect key inside tcp_v6_send_response instead of passing it
-> >    as an argument
-> >  tcp_extra_options: Extend tcp_extra_options_write
-> >  tcp_extra_options: Make extra-option list per-socket
-> >  tcp_extra_options: Export module fixes
-> >  tcp_extra_options: Add response_prepare callback
-> >  tcp_extra_options: Check static branch before _parse
-> >  tcp_extra_options: Skip fast-path when extra-options are present
-> >  tcp_extra_options: Pass sk to tcp_parse_options instead of tp
-> >  tcp_extra_options: Add check-callback right after parsing the option
-> >  tcp_extra_options: Allow to parse experimental options
-> >  tcp_extra_options: Add post_process callback
-> >  tcp_smc: Make SMC use TCP extra-option framework
-> >  tcp_md5: Check for TCP_MD5 after TCP Timestamps in
-> >    tcp_established_options
-> >  tcp_md5: Move TCP-MD5 code out of TCP itself
-> >  tcp_md5: Use tcp_extra_options in output path
-> >  tcp_md5: Cleanup TCP-code
-> >  tcp_md5: Use TCP extra-options on the input path
+> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > index 734cfc8ff76e..a97f54005452 100644
+> > --- a/net/ipv4/tcp_input.c
+> > +++ b/net/ipv4/tcp_input.c
+> > @@ -3824,6 +3824,8 @@ static bool tcp_parse_aligned_timestamp(struct tc=
+p_sock *tp, const struct tcphdr
 > > =
 
-> > Mat Martineau (1):
-> >  tcp: Register handlers for extra TCP options
+> > /* Fast parse options. This hopes to only see timestamps.
+> >  * If it is wrong it falls back on tcp_parse_options().
+> > + *
+> > + * Returns true if we should drop this packet based on present TCP-opt=
+ions.
+> >  */
+> > static bool tcp_fast_parse_options(const struct net *net,
+> > 				   const struct sk_buff *skb,
+> > @@ -3834,18 +3836,20 @@ static bool tcp_fast_parse_options(const struct=
+ net *net,
+> > 	 */
+> > 	if (th->doff =3D=3D (sizeof(*th) / 4)) {
+> > 		tp->rx_opt.saw_tstamp =3D 0;
+> > -		return false;
+> > +		goto extra_opt_check;
+> > 	} else if (tp->rx_opt.tstamp_ok &&
+> > 		   th->doff =3D=3D ((sizeof(*th) + TCPOLEN_TSTAMP_ALIGNED) / 4)) {
+> > 		if (tcp_parse_aligned_timestamp(tp, th))
+> > -			return true;
+> > +			goto extra_opt_check;
+> > 	}
 > > =
 
-> > drivers/infiniband/hw/cxgb4/cm.c |    2 +-
-> > include/linux/inet_diag.h        |    1 +
-> > include/linux/tcp.h              |   41 +-
-> > include/linux/tcp_md5.h          |   38 ++
-> > include/net/inet_sock.h          |    3 +-
-> > include/net/tcp.h                |  216 ++++---
-> > net/ipv4/Makefile                |    1 +
-> > net/ipv4/syncookies.c            |    6 +-
-> > net/ipv4/tcp.c                   |  372 ++++++++---
-> > net/ipv4/tcp_diag.c              |   81 +--
-> > net/ipv4/tcp_input.c             |  134 ++--
-> > net/ipv4/tcp_ipv4.c              |  553 ++--------------
-> > net/ipv4/tcp_md5.c               | 1317 +++++++++++++++++++++++++++++++=
-+++++++
-> > net/ipv4/tcp_minisocks.c         |   76 +--
-> > net/ipv4/tcp_output.c            |  183 +-----
-> > net/ipv6/syncookies.c            |    6 +-
-> > net/ipv6/tcp_ipv6.c              |  386 ++---------
-> > net/smc/af_smc.c                 |  170 ++++-
-> > 18 files changed, 2148 insertions(+), 1438 deletions(-)
-> > create mode 100644 include/linux/tcp_md5.h
-> > create mode 100644 net/ipv4/tcp_md5.c
+> > 	tcp_parse_options(net, skb, &tp->rx_opt, 1, NULL);
+> > 	if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr)
+> > 		tp->rx_opt.rcv_tsecr -=3D tp->tsoffset;
 > > =
 
+> > -	return true;
+> > +extra_opt_check:
+> > +	/* ToDo - will be added here */
+> > +	return false;
+> > }
+> > =
+
+> > #ifdef CONFIG_TCP_MD5SIG
+> > @@ -5165,9 +5169,11 @@ static bool tcp_validate_incoming(struct sock *s=
+k, struct sk_buff *skb,
+> > 	struct tcp_sock *tp =3D tcp_sk(sk);
+> > 	bool rst_seq_match =3D false;
+> > =
+
+> > +	if (tcp_fast_parse_options(sock_net(sk), skb, th, tp))
+> > +		goto discard;
+> > +
+> > 	/* RFC1323: H1. Apply PAWS check first. */
+> > -	if (tcp_fast_parse_options(sock_net(sk), skb, th, tp) &&
+> > -	    tp->rx_opt.saw_tstamp &&
+> > +	if (tp->rx_opt.saw_tstamp &&
+> > 	    tcp_paws_discard(sk, skb)) {
+> > 		if (!th->rst) {
+> > 			NET_INC_STATS(sock_net(sk), LINUX_MIB_PAWSESTABREJECTED);
 > > -- =
 
 > > 2.15.0
@@ -201,4 +150,4 @@ ible, so
 > Mat Martineau
 > Intel OTC
 
---===============4693469654564460232==--
+--===============4933041139436068722==--
