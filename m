@@ -1,209 +1,259 @@
-Content-Type: multipart/mixed; boundary="===============5708064647992018567=="
+Content-Type: multipart/mixed; boundary="===============1076442573478531346=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 00/25] TCP Extra-option framework for TCP-MD5
- and SMC
-Date: Wed, 29 Nov 2017 12:56:17 -0800
-Message-ID: <20171129205617.GV94116@Chimay.local>
-In-Reply-To: alpine.OSX.2.21.1711281706590.17380@ddombrow-mobl1.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH v2 14/25] tcp_extra_options: Check static branch
+ before _parse
+Date: Wed, 29 Nov 2017 13:16:08 -0800
+Message-ID: <20171129211608.GX94116@Chimay.local>
+In-Reply-To: 20171129205024.GU94116@Chimay.local
 X-Status: 
 X-Keywords:                  
-X-UID: 222
+X-UID: 223
 
---===============5708064647992018567==
+--===============1076442573478531346==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Oh, and one more thing.
+On 29/11/17 - 12:50:24, Christoph Paasch wrote:
+> On 29/11/17 - 12:19:32, Mat Martineau wrote:
+> > On Wed, 29 Nov 2017, Christoph Paasch wrote:
+> > =
 
-tcp_extra_options_* is quite long, and function-names are really long,
-bringing us often close to the 80-char "limit".
+> > > On 28/11/17 - 17:58:52, Mat Martineau wrote:
+> > > > =
 
-What do you think of abbreviating it to "tcp_eo" or "teo" or something like
-that?
+> > > > On Tue, 28 Nov 2017, Mat Martineau wrote:
+> > > > =
 
+> > > > > =
 
-Christoph
+> > > > > On Mon, 27 Nov 2017, Christoph Paasch wrote:
+> > > > > =
 
-On 28/11/17 - 17:15:54, Mat Martineau wrote:
+> > > > > > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> > > > > > ---
+> > > > > > net/ipv4/tcp_input.c | 8 +++++---
+> > > > > > 1 file changed, 5 insertions(+), 3 deletions(-)
+> > > > > > =
+
+> > > > > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > > > > > index 4e84f299c96f..7acc1f46641c 100644
+> > > > > > --- a/net/ipv4/tcp_input.c
+> > > > > > +++ b/net/ipv4/tcp_input.c
+> > > > > > @@ -3799,9 +3799,11 @@ void tcp_parse_options(const struct net =
+*net,
+> > > > > > 				break;
+> > > > > > =
+
+> > > > > > 			default:
+> > > > > > -				tcp_extra_options_parse(opcode, opsize, ptr,
+> > > > > > -							skb, opt_rx,
+> > > > > > -							tcp_to_sk(tp));
+> > > > > > +				if (static_branch_unlikely(&tcp_extra_options_enabled))
+> > > > > =
+
+> > > > > Since this case in the switch statement is only executed for
+> > > > > unrecognized options, I had skipped the static branch in the init=
+ial
+> > > > > implementation. It is more consistent to use the static branch, a=
+nd
+> > > > > there isn't much use in making the function call just to try to i=
+terate
+> > > > > over an empty list.
+> > > > > =
+
+> > > > > > +					tcp_extra_options_parse(opcode, opsize,
+> > > > > > +								ptr, skb,
+> > > > > > +								opt_rx,
+> > > > > > + tcp_to_sk(tp));
+> > > > > > 				break;
+> > > > > > =
+
+> > > > > > 			}
+> > > > > > --
+> > > > > > 2.15.0
+> > > > > > =
+
+> > > > > > =
+
+> > > > =
+
+> > > > I sent my reply and then realized I had one more point to make. We =
+might
+> > > > need to take another look at the use of static branching by the ext=
+ra
+> > > > options framework. It's one thing to inc/dec tcp_extra_options_enab=
+led when
+> > > > modules are added or removed, but we don't want to be rapidly chang=
+ing
+> > > > static branches as MPTCP sockets come and go. Does tcp_extra_option=
+s_enabled
+> > > > still make sense for per-socket extra_option lists?
+> > > =
+
+> > > You think that the test for whether or not the tcp_option_list is emt=
+py is
+> > > sufficient?
+> > =
+
+> > It might be if we wrap it in a "unlikely()".
+> > =
+
+> > > =
+
+> > > I don't know about the cost of static_branch_inc/dec. Is it that bad?
+> > > =
+
+> > =
+
+> > Yeah, it's that bad. The kernel is patching machine code every time the=
+ key
+> > is enabled or disabled (rewriting no-ops with jump instructions and
+> > vice-versa).
+> > =
+
+> > """
+> >  * Since this relies on modifying code, the branch modifying functions
+> >  * must be considered absolute slow paths (machine wide synchronization=
+ etc.).
+> > """
+> > =
+
+> > http://elixir.free-electrons.com/linux/v4.15-rc1/source/include/linux/j=
+ump_label.h#L56
+> > =
+
+> > Not just a slow path, but an *absolute* slow path!
+> > =
+
+> > static_key_deferred and static_key_slow_dec_deferred() are available in
+> > jump_label_ratelimit.h, which is one way to keep it from thrashing too =
+much.
+> > This rate-limited static key is only used in one file
+> > (arch/x86/kvm/lapic.c). That subsystem limits jump label patching to on=
+ce
+> > per second.
 > =
 
-> Christoph -
-> =
-
-> On Mon, 27 Nov 2017, Christoph Paasch wrote:
-> =
-
-> > Finally, the second version of this patch-set.
-> > =
-
-> > At netdev I talked about this with Eric, and he is looking forward to s=
-ee
-> > TCP-MD5 get out of the hot TCP data-path. He was planning to avoid TCP-=
-MD5
-> > with static jump-labels and also move TCP-MD5 in a separate file.
-> =
-
-> Good to hear that he's interested.
+> I see.
 > =
 
 > > =
 
+> > > =
+
+> > > One thing is that having the static branches allows for sure to avoid=
+ any
+> > > cost in the hot data-path. Which is definitely something netdev will =
+want.
+> > > =
+
+> > > =
+
+> > > If we pay a cost for MPTCP, I think it's fine IMO. (at least in a fir=
+st step ;))
 > > =
 
-> > There are quite a few changes in this new set. I extended much more the
-> > extra-option framework. Making the list on a per-socket basis in the
-> > request-socket, tcp-socket and time-wait-socket. This eliminates the ne=
-ed
-> > for RCU-locking. See patch "tcp_extra_options: Make extra-option list p=
-er-socket"
-> > =
-
-> > I also added callbacks for response_write/prepare that can be called fr=
-om the
-> > tcp_v4_send_ack/rst, and v6 counterparts. This is needed because in the=
-se
-> > code-paths the skb and sk have entirely different semantics.
-> > =
-
-> > Finally, in the input-path I added a check-callback and a post-process =
-callback.
-> > =
-
-> > This is needed because after parsing the option in tcp_parse_options() =
-we also
-> > need to act on them. The actions can be either before any other checks =
-(e.g.,
-> > as is the case for TCP_MD5, because we want to drop segments) or after =
-the
-> > validity checks (e.g., as is needed for SMC).
-> > =
-
-> > And I also opted SMC into the new framework.
-> > =
-
-> > And, I made the TCP-MD5 input code-path use the framework.
+> > It would be more straightforward if only MPTCP was paying the cost, but=
+ in
+> > this case the hit is systemwide if any extra TCP options are in use. The
+> > combination of a rate-limiting static_key and checking the option list
+> > before the call could be fast enough.
 > =
 
-> All of these seem like the right way to go. Nice to have two users of the
-> framework already.
+> If we have rate-limited static keys, do we still need to check the
+> option-list before the call?
 > =
 
-> > =
-
-> > =
-
-> > There are still a few things that I need to double-check, notably
-> > sk_nocaps_add() in TCP_MD5.
-> > =
-
-> > And, I need to test ;-)
+> Also, what if we rather inc/dec the static key more rarely. E.g., not for
+> every new connection but rather for the very first one and then dec again=
+ at
+> the very last one.
 > =
 
-> Yeah, that testing :)
-> =
+> I'm trying to cook a patch...
 
-> > =
+This is what I have in mind:
 
-> > But I would like to have some early feedback already - especially on th=
-e patches
-> > prefixed with "tcp_extra_options". If they look good, I can merge them =
-into Mat's
-> > patch, which will simplify my patch-juggling.
-> =
 
-> I have a few comments, but no major structural changes. I'll reply to the
-> individual patches where needed.
-> =
+-----
+commit ba22182b0b3100539e545313e0eb12a9c466c1fe
+Author: Christoph Paasch <cpaasch(a)apple.com>
+Date:   Wed Nov 29 13:11:44 2017 -0800
 
-> > I want to get this patch-set out to netdev as an RFC as quickly as poss=
-ible, so
-> > that we can make some progress.
-> =
+    tcp_extra_options: Reduce static_branch_inc/dec through a refcnt
+    =
 
-> Agreed!
-> =
+    Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 
-> Mat
-> =
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 6db92bbbf3e2..344a0d859b37 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2008,6 +2008,7 @@ struct tcp_extra_option_ops {
+ 	struct tcp_extra_option_store *(*move)(struct tcp_extra_option_store *fro=
+m);
+ 	void (*destroy)(struct tcp_extra_option_store *store);
+ 	struct module		*owner;
++	atomic_t		*refcnt;
+ };
+ =
 
-> =
+ /* Every extra-option in a TCP-socket gets stored in a _store structure wh=
+ich
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 2dcb12c330eb..3067e7b5ad00 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3570,7 +3570,8 @@ int tcp_register_extra_option(struct tcp_extra_option=
+_store *store,
+ 	list_add_tail(&store->list, add_before);
+ 	pr_debug("Option kind %u registered\n", store->ops->option_kind);
+ =
 
-> > =
+-	static_branch_inc(&tcp_extra_options_enabled);
++	if (atomic_inc_return(store->ops->refcnt) =3D=3D 1)
++		static_branch_inc(&tcp_extra_options_enabled);
+ =
 
-> > =
+ 	return ret;
+ }
+@@ -3602,7 +3603,8 @@ void tcp_extra_options_copy(struct sock *listener,
+ =
 
-> > Christoph Paasch (24):
-> >  tcp: Write options after the header has been fully done
-> >  tcp: Pass sock to tcp_options_write instead of tcp_sock
-> >  tcp: Pass skb in tcp_options_write
-> >  tcp: Allow tcp_fast_parse_options to drop segments
-> >  tcp: Make smc_parse_options return 1 on success
-> >  tcp_md5: Don't pass along md5-key
-> >  tcp_md5: Detect key inside tcp_v4_send_ack instead of passing it as an
-> >    argument
-> >  tcp_md5: Detect key inside tcp_v6_send_response instead of passing it
-> >    as an argument
-> >  tcp_extra_options: Extend tcp_extra_options_write
-> >  tcp_extra_options: Make extra-option list per-socket
-> >  tcp_extra_options: Export module fixes
-> >  tcp_extra_options: Add response_prepare callback
-> >  tcp_extra_options: Check static branch before _parse
-> >  tcp_extra_options: Skip fast-path when extra-options are present
-> >  tcp_extra_options: Pass sk to tcp_parse_options instead of tp
-> >  tcp_extra_options: Add check-callback right after parsing the option
-> >  tcp_extra_options: Allow to parse experimental options
-> >  tcp_extra_options: Add post_process callback
-> >  tcp_smc: Make SMC use TCP extra-option framework
-> >  tcp_md5: Check for TCP_MD5 after TCP Timestamps in
-> >    tcp_established_options
-> >  tcp_md5: Move TCP-MD5 code out of TCP itself
-> >  tcp_md5: Use tcp_extra_options in output path
-> >  tcp_md5: Cleanup TCP-code
-> >  tcp_md5: Use TCP extra-options on the input path
-> > =
+ 		list_add_tail(&new->list, to);
+ =
 
-> > Mat Martineau (1):
-> >  tcp: Register handlers for extra TCP options
-> > =
+-		static_branch_inc(&tcp_extra_options_enabled);
++		if (atomic_inc_return(new->ops->refcnt) =3D=3D 1)
++			static_branch_inc(&tcp_extra_options_enabled);
+ 	}
+ }
+ =
 
-> > drivers/infiniband/hw/cxgb4/cm.c |    2 +-
-> > include/linux/inet_diag.h        |    1 +
-> > include/linux/tcp.h              |   41 +-
-> > include/linux/tcp_md5.h          |   38 ++
-> > include/net/inet_sock.h          |    3 +-
-> > include/net/tcp.h                |  216 ++++---
-> > net/ipv4/Makefile                |    1 +
-> > net/ipv4/syncookies.c            |    6 +-
-> > net/ipv4/tcp.c                   |  372 ++++++++---
-> > net/ipv4/tcp_diag.c              |   81 +--
-> > net/ipv4/tcp_input.c             |  134 ++--
-> > net/ipv4/tcp_ipv4.c              |  553 ++--------------
-> > net/ipv4/tcp_md5.c               | 1317 +++++++++++++++++++++++++++++++=
-+++++++
-> > net/ipv4/tcp_minisocks.c         |   76 +--
-> > net/ipv4/tcp_output.c            |  183 +-----
-> > net/ipv6/syncookies.c            |    6 +-
-> > net/ipv6/tcp_ipv6.c              |  386 ++---------
-> > net/smc/af_smc.c                 |  170 ++++-
-> > 18 files changed, 2148 insertions(+), 1438 deletions(-)
-> > create mode 100644 include/linux/tcp_md5.h
-> > create mode 100644 net/ipv4/tcp_md5.c
-> > =
+@@ -3632,11 +3634,16 @@ void tcp_extra_options_destroy(struct sock *sk)
+ =
 
-> > -- =
+ 	list_for_each_entry_safe(entry, tmp, lhead, list) {
+ 		struct module *owner =3D entry->ops->owner;
++		bool dec_static =3D false;
+ 		list_del(&entry->list);
+ =
 
-> > 2.15.0
-> > =
++		if (atomic_dec_return(entry->ops->refcnt) =3D=3D 0)
++			dec_static =3D true;
++
+ 		entry->ops->destroy(entry);
+ =
 
-> > =
+-		static_branch_dec(&tcp_extra_options_enabled);
++		if (dec_static)
++			static_branch_dec(&tcp_extra_options_enabled);
+ =
 
-> =
+ 		module_put(owner);
+ 	}
 
-> --
-> Mat Martineau
-> Intel OTC
-
---===============5708064647992018567==--
+--===============1076442573478531346==--
