@@ -1,99 +1,234 @@
-Content-Type: multipart/mixed; boundary="===============6292486935440975426=="
+Content-Type: multipart/mixed; boundary="===============6856660391902858454=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 04/25] tcp: Allow tcp_fast_parse_options to
- drop segments
-Date: Tue, 28 Nov 2017 17:26:14 -0800
-Message-ID: <alpine.OSX.2.21.1711281716080.17380@ddombrow-mobl1.amr.corp.intel.com>
-In-Reply-To: 20171128055726.430-5-cpaasch@apple.com
+Subject: Re: [MPTCP] [PATCH v2 06/25] tcp_md5: Don't pass along md5-key
+Date: Tue, 28 Nov 2017 17:36:22 -0800
+Message-ID: <alpine.OSX.2.21.1711281726590.17380@ddombrow-mobl1.amr.corp.intel.com>
+In-Reply-To: 20171128055726.430-7-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 203
+X-UID: 204
 
---===============6292486935440975426==
+--===============6856660391902858454==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 27 Nov 2017, Christoph Paasch wrote:
 
-> The TCP extra-options parser might decide to drop the segment based on
-> the present option. Especially, for TCP_MD5, we want to do this as soon
-> as possible (thus, right after the parsing).
->
-> This patch allows to do this by splitting out tcp_fast_parse_options() in
-> tcp_validate_incoming()
-
-I suggest some additional explanation of how the return value of =
-
-tcp_parse_fast_options() has changed meaning. The change to the control =
-
-flow in tcp_validate_incoming() doesn't have quite enough context in the =
-
-email to see what's going on.
-
+> It is much cleaner to store the key-pointer in tcp_out_options.
 >
 > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 > ---
-> net/ipv4/tcp_input.c | 16 +++++++++++-----
-> 1 file changed, 11 insertions(+), 5 deletions(-)
+> net/ipv4/tcp_output.c | 47 +++++++++++++++++++++--------------------------
+> 1 file changed, 21 insertions(+), 26 deletions(-)
 >
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 734cfc8ff76e..a97f54005452 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -3824,6 +3824,8 @@ static bool tcp_parse_aligned_timestamp(struct tcp_=
-sock *tp, const struct tcphdr
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index 751396f22bb3..fedaaea83b43 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -429,6 +429,7 @@ struct tcp_out_options {
+> 	__u8 *hash_location;	/* temporary pointer, overloaded */
+> 	__u32 tsval, tsecr;	/* need to include OPTION_TS */
+> 	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
+> +	struct tcp_md5sig_key *md5; /* TCP_MD5 signature key */
+
+The md5 member can be wrapped in an #ifdef CONFIG_TCP_MD5SIG (and =
+
+propagated to tcp.h when the struct gets moved), with some tweaks below.
+
+> };
 >
-> /* Fast parse options. This hopes to only see timestamps.
->  * If it is wrong it falls back on tcp_parse_options().
-> + *
-> + * Returns true if we should drop this packet based on present TCP-optio=
-ns.
+> /* Write previously computed TCP options to the packet.
+> @@ -582,21 +583,20 @@ static void smc_set_option_cond(const struct tcp_so=
+ck *tp,
+>  * network wire format yet.
 >  */
-> static bool tcp_fast_parse_options(const struct net *net,
-> 				   const struct sk_buff *skb,
-> @@ -3834,18 +3836,20 @@ static bool tcp_fast_parse_options(const struct n=
-et *net,
-> 	 */
-> 	if (th->doff =3D=3D (sizeof(*th) / 4)) {
-> 		tp->rx_opt.saw_tstamp =3D 0;
-> -		return false;
-> +		goto extra_opt_check;
-> 	} else if (tp->rx_opt.tstamp_ok &&
-> 		   th->doff =3D=3D ((sizeof(*th) + TCPOLEN_TSTAMP_ALIGNED) / 4)) {
-> 		if (tcp_parse_aligned_timestamp(tp, th))
-> -			return true;
-> +			goto extra_opt_check;
-> 	}
->
-> 	tcp_parse_options(net, skb, &tp->rx_opt, 1, NULL);
-> 	if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr)
-> 		tp->rx_opt.rcv_tsecr -=3D tp->tsoffset;
->
-> -	return true;
-> +extra_opt_check:
-> +	/* ToDo - will be added here */
-> +	return false;
-> }
+> static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
+> -				struct tcp_out_options *opts,
+> -				struct tcp_md5sig_key **md5)
+> +				struct tcp_out_options *opts)
+> {
+> 	struct tcp_sock *tp =3D tcp_sk(sk);
+> 	unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
+> 	struct tcp_fastopen_request *fastopen =3D tp->fastopen_req;
 >
 > #ifdef CONFIG_TCP_MD5SIG
-> @@ -5165,9 +5169,11 @@ static bool tcp_validate_incoming(struct sock *sk,=
- struct sk_buff *skb,
-> 	struct tcp_sock *tp =3D tcp_sk(sk);
-> 	bool rst_seq_match =3D false;
+> -	*md5 =3D tp->af_specific->md5_lookup(sk, sk);
+> -	if (*md5) {
+> +	opts->md5 =3D tp->af_specific->md5_lookup(sk, sk);
+> +	if (opts->md5) {
+> 		opts->options |=3D OPTION_MD5;
+> 		remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
+> 	}
+> #else
+> -	*md5 =3D NULL;
+> +	opts->md5 =3D NULL;
+> #endif
+
+Since *opts is zeroed out, the #else block might not be needed. This would =
+
+allow the struct member to be configured out too. While this is an =
+
+intermediate step in the refactoring process, it is helpful to have =
+
+opts.md5 #ifdef'd from the start.
+
 >
-> +	if (tcp_fast_parse_options(sock_net(sk), skb, th, tp))
-> +		goto discard;
-> +
-> 	/* RFC1323: H1. Apply PAWS check first. */
-> -	if (tcp_fast_parse_options(sock_net(sk), skb, th, tp) &&
-> -	    tp->rx_opt.saw_tstamp &&
-> +	if (tp->rx_opt.saw_tstamp &&
-> 	    tcp_paws_discard(sk, skb)) {
-> 		if (!th->rst) {
-> 			NET_INC_STATS(sock_net(sk), LINUX_MIB_PAWSESTABREJECTED);
+> 	/* We always get an MSS option.  The option bytes which will be seen in
+> @@ -611,7 +611,7 @@ static unsigned int tcp_syn_options(struct sock *sk, =
+struct sk_buff *skb,
+> 	opts->mss =3D tcp_advertise_mss(sk);
+> 	remaining -=3D TCPOLEN_MSS_ALIGNED;
+>
+> -	if (likely(sock_net(sk)->ipv4.sysctl_tcp_timestamps && !*md5)) {
+> +	if (likely(sock_net(sk)->ipv4.sysctl_tcp_timestamps && !opts->md5)) {
+> 		opts->options |=3D OPTION_TS;
+> 		opts->tsval =3D tcp_skb_timestamp(skb) + tp->tsoffset;
+> 		opts->tsecr =3D tp->rx_opt.ts_recent;
+> @@ -653,14 +653,13 @@ static unsigned int tcp_synack_options(const struct=
+ sock *sk,
+> 				       struct request_sock *req,
+> 				       unsigned int mss, struct sk_buff *skb,
+> 				       struct tcp_out_options *opts,
+> -				       const struct tcp_md5sig_key *md5,
+> 				       struct tcp_fastopen_cookie *foc)
+> {
+> 	struct inet_request_sock *ireq =3D inet_rsk(req);
+> 	unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
+>
+> #ifdef CONFIG_TCP_MD5SIG
+> -	if (md5) {
+> +	if (opts->md5) {
+> 		opts->options |=3D OPTION_MD5;
+> 		remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
+>
+> @@ -715,8 +714,7 @@ static unsigned int tcp_synack_options(const struct s=
+ock *sk,
+>  * final wire format yet.
+>  */
+> static unsigned int tcp_established_options(struct sock *sk, struct sk_bu=
+ff *skb,
+> -					struct tcp_out_options *opts,
+> -					struct tcp_md5sig_key **md5)
+> +					struct tcp_out_options *opts)
+> {
+> 	struct tcp_sock *tp =3D tcp_sk(sk);
+> 	unsigned int size =3D 0;
+> @@ -725,13 +723,13 @@ static unsigned int tcp_established_options(struct =
+sock *sk, struct sk_buff *skb
+> 	opts->options =3D 0;
+>
+> #ifdef CONFIG_TCP_MD5SIG
+> -	*md5 =3D tp->af_specific->md5_lookup(sk, sk);
+> -	if (unlikely(*md5)) {
+> +	opts->md5 =3D tp->af_specific->md5_lookup(sk, sk);
+> +	if (unlikely(opts->md5)) {
+> 		opts->options |=3D OPTION_MD5;
+> 		size +=3D TCPOLEN_MD5SIG_ALIGNED;
+> 	}
+> #else
+> -	*md5 =3D NULL;
+> +	opts->md5 =3D NULL;
+> #endif
+
+Same as previous comment.
+
+>
+> 	if (likely(tp->rx_opt.tstamp_ok)) {
+> @@ -1045,7 +1043,6 @@ static int tcp_transmit_skb(struct sock *sk, struct=
+ sk_buff *skb, int clone_it,
+> 	struct tcp_out_options opts;
+> 	unsigned int tcp_options_size, tcp_header_size;
+> 	struct sk_buff *oskb =3D NULL;
+> -	struct tcp_md5sig_key *md5;
+> 	struct tcphdr *th;
+> 	int err;
+>
+> @@ -1074,10 +1071,9 @@ static int tcp_transmit_skb(struct sock *sk, struc=
+t sk_buff *skb, int clone_it,
+> 	memset(&opts, 0, sizeof(opts));
+>
+> 	if (unlikely(tcb->tcp_flags & TCPHDR_SYN))
+> -		tcp_options_size =3D tcp_syn_options(sk, skb, &opts, &md5);
+> +		tcp_options_size =3D tcp_syn_options(sk, skb, &opts);
+> 	else
+> -		tcp_options_size =3D tcp_established_options(sk, skb, &opts,
+> -							   &md5);
+> +		tcp_options_size =3D tcp_established_options(sk, skb, &opts);
+> 	tcp_header_size =3D tcp_options_size + sizeof(struct tcphdr);
+>
+> 	/* if no packet is in qdisc/device queue, then allow XPS to select
+> @@ -1143,10 +1139,10 @@ static int tcp_transmit_skb(struct sock *sk, stru=
+ct sk_buff *skb, int clone_it,
+> 	tcp_options_write((__be32 *)(th + 1), skb, sk, &opts);
+> #ifdef CONFIG_TCP_MD5SIG
+> 	/* Calculate the MD5 hash, as we have all we need now */
+> -	if (md5) {
+> +	if (opts.md5) {
+> 		sk_nocaps_add(sk, NETIF_F_GSO_MASK);
+> 		tp->af_specific->calc_md5_hash(opts.hash_location,
+> -					       md5, sk, skb);
+> +					       opts.md5, sk, skb);
+> 	}
+> #endif
+>
+> @@ -1590,7 +1586,6 @@ unsigned int tcp_current_mss(struct sock *sk)
+> 	u32 mss_now;
+> 	unsigned int header_len;
+> 	struct tcp_out_options opts;
+> -	struct tcp_md5sig_key *md5;
+>
+> 	mss_now =3D tp->mss_cache;
+>
+> @@ -1600,7 +1595,7 @@ unsigned int tcp_current_mss(struct sock *sk)
+> 			mss_now =3D tcp_sync_mss(sk, mtu);
+> 	}
+>
+> -	header_len =3D tcp_established_options(sk, NULL, &opts, &md5) +
+> +	header_len =3D tcp_established_options(sk, NULL, &opts) +
+> 		     sizeof(struct tcphdr);
+> 	/* The mss_cache is sized based on tp->tcp_header_len, which assumes
+> 	 * some common options. If this is an odd packet (because we have SACK
+> @@ -3179,7 +3174,6 @@ struct sk_buff *tcp_make_synack(const struct sock *=
+sk, struct dst_entry *dst,
+> {
+> 	struct inet_request_sock *ireq =3D inet_rsk(req);
+> 	const struct tcp_sock *tp =3D tcp_sk(sk);
+> -	struct tcp_md5sig_key *md5 =3D NULL;
+> 	struct tcp_out_options opts;
+> 	struct sk_buff *skb;
+> 	int tcp_header_size;
+> @@ -3225,10 +3219,10 @@ struct sk_buff *tcp_make_synack(const struct sock=
+ *sk, struct dst_entry *dst,
+>
+> #ifdef CONFIG_TCP_MD5SIG
+> 	rcu_read_lock();
+> -	md5 =3D tcp_rsk(req)->af_specific->req_md5_lookup(sk, req_to_sk(req));
+> +	opts.md5 =3D tcp_rsk(req)->af_specific->req_md5_lookup(sk, req_to_sk(re=
+q));
+> #endif
+> 	skb_set_hash(skb, tcp_rsk(req)->txhash, PKT_HASH_TYPE_L4);
+> -	tcp_header_size =3D tcp_synack_options(sk, req, mss, skb, &opts, md5,
+> +	tcp_header_size =3D tcp_synack_options(sk, req, mss, skb, &opts,
+> 					     foc) + sizeof(*th);
+>
+> 	skb_push(skb, tcp_header_size);
+> @@ -3255,9 +3249,10 @@ struct sk_buff *tcp_make_synack(const struct sock =
+*sk, struct dst_entry *dst,
+>
+> #ifdef CONFIG_TCP_MD5SIG
+> 	/* Okay, we have all we need - do the md5 hash if needed */
+> -	if (md5)
+> +	if (opts.md5)
+> 		tcp_rsk(req)->af_specific->calc_md5_hash(opts.hash_location,
+> -					       md5, req_to_sk(req), skb);
+> +							 opts.md5,
+> +							 req_to_sk(req), skb);
+> 	rcu_read_unlock();
+> #endif
+>
 > -- =
 
 > 2.15.0
@@ -104,4 +239,4 @@ et *net,
 Mat Martineau
 Intel OTC
 
---===============6292486935440975426==--
+--===============6856660391902858454==--
