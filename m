@@ -1,81 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============2539203146074611501=="
+Content-Type: multipart/mixed; boundary="===============3186212772614573985=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC v3 03/15] tcp: Pass sock and skb to tcp_options_write
-Date: Mon, 11 Dec 2017 13:42:06 -0800
-Message-ID: <20171211214218.35868-4-cpaasch@apple.com>
+Subject: [MPTCP] [RFC v3 11/15] tcp_md5: Check for TCP_MD5 after TCP
+ Timestamps in tcp_established_options
+Date: Mon, 11 Dec 2017 13:42:14 -0800
+Message-ID: <20171211214218.35868-12-cpaasch@apple.com>
 In-Reply-To: 20171211214218.35868-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 241
+X-UID: 242
 
---===============2539203146074611501==
+--===============3186212772614573985==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Because, to write the extra-options, we need the request-socket to parse the
-list of extra-options to be written to the TCP-header.
-The skb is also needed so that extra-options like TCP_MD5SIG can compute
-the hash properly.
+It really does not matter, because we never use TCP timestamps when
+TCP_MD5 is enabled (see tcp_syn_options).
+
+Moving TCP_MD5 a bit lower allows for easier adoption of the
+tcp_extra_option framework.
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
-
-Notes:
-    v3: * Merged with next commit to make it to reduce the number of commit=
-s.
-
- net/ipv4/tcp_output.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/ipv4/tcp_output.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index e0335be600d3..751396f22bb3 100644
+index 2ca662499c28..b0297f19984f 100644
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
-@@ -444,10 +444,14 @@ struct tcp_out_options {
-  * At least SACK_PERM as the first option is known to lead to a disaster
-  * (but it may well be that other scenarios fail similarly).
-  */
--static void tcp_options_write(__be32 *ptr, struct tcp_sock *tp,
-+static void tcp_options_write(__be32 *ptr, struct sk_buff *skb, struct soc=
-k *sk,
- 			      struct tcp_out_options *opts)
- {
- 	u16 options =3D opts->options;	/* mungable copy */
-+	struct tcp_sock *tp =3D NULL;
+@@ -659,6 +659,13 @@ static unsigned int tcp_established_options(struct soc=
+k *sk, struct sk_buff *skb
+ =
+
+ 	opts->options =3D 0;
+ =
+
++	if (likely(tp->rx_opt.tstamp_ok)) {
++		opts->options |=3D OPTION_TS;
++		opts->tsval =3D skb ? tcp_skb_timestamp(skb) + tp->tsoffset : 0;
++		opts->tsecr =3D tp->rx_opt.ts_recent;
++		size +=3D TCPOLEN_TSTAMP_ALIGNED;
++	}
 +
-+	if (sk_fullsock(sk))
-+		tp =3D tcp_sk(sk);
+ #ifdef CONFIG_TCP_MD5SIG
+ 	opts->md5 =3D tp->af_specific->md5_lookup(sk, sk);
+ 	if (unlikely(opts->md5)) {
+@@ -669,13 +676,6 @@ static unsigned int tcp_established_options(struct soc=
+k *sk, struct sk_buff *skb
+ 	opts->md5 =3D NULL;
+ #endif
  =
 
- 	if (unlikely(OPTION_MD5 & options)) {
- 		*ptr++ =3D htonl((TCPOPT_NOP << 24) | (TCPOPT_NOP << 16) |
-@@ -1136,7 +1140,7 @@ static int tcp_transmit_skb(struct sock *sk, struct s=
-k_buff *skb, int clone_it,
- 		 */
- 		th->window	=3D htons(min(tp->rcv_wnd, 65535U));
- 	}
--	tcp_options_write((__be32 *)(th + 1), tp, &opts);
-+	tcp_options_write((__be32 *)(th + 1), skb, sk, &opts);
- #ifdef CONFIG_TCP_MD5SIG
- 	/* Calculate the MD5 hash, as we have all we need now */
- 	if (md5) {
-@@ -3246,7 +3250,7 @@ struct sk_buff *tcp_make_synack(const struct sock *sk=
-, struct dst_entry *dst,
- 	/* RFC1323: The window in SYN & SYN/ACK segments is never scaled. */
- 	th->window =3D htons(min(req->rsk_rcv_wnd, 65535U));
- 	th->doff =3D (tcp_header_size >> 2);
--	tcp_options_write((__be32 *)(th + 1), NULL, &opts);
-+	tcp_options_write((__be32 *)(th + 1), skb, req_to_sk(req), &opts);
- 	__TCP_INC_STATS(sock_net(sk), TCP_MIB_OUTSEGS);
- =
-
- #ifdef CONFIG_TCP_MD5SIG
+-	if (likely(tp->rx_opt.tstamp_ok)) {
+-		opts->options |=3D OPTION_TS;
+-		opts->tsval =3D skb ? tcp_skb_timestamp(skb) + tp->tsoffset : 0;
+-		opts->tsecr =3D tp->rx_opt.ts_recent;
+-		size +=3D TCPOLEN_TSTAMP_ALIGNED;
+-	}
+-
+ 	if (static_branch_unlikely(&tcp_extopt_enabled))
+ 		size +=3D tcp_extopt_prepare(skb, 0, MAX_TCP_OPTION_SPACE - size,
+ 					   opts, tcp_to_sk(tp));
 -- =
 
 2.15.0
 
 
---===============2539203146074611501==--
+--===============3186212772614573985==--
