@@ -1,75 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============4242612150745749343=="
+Content-Type: multipart/mixed; boundary="===============4871742833185078760=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC v3 04/15] tcp: Allow tcp_fast_parse_options to drop
- segments
-Date: Thu, 14 Dec 2017 12:18:07 -0800
-Message-ID: <20171214201807.GH64966@da0602a-dhcp135.apple.com>
-In-Reply-To: 20171214201340.GG64966@da0602a-dhcp135.apple.com
+Subject: Re: [MPTCP] [RFC v3 05/15] tcp: Make smc_parse_options return 1 on
+ success
+Date: Thu, 14 Dec 2017 12:29:50 -0800
+Message-ID: <20171214202950.GJ64966@da0602a-dhcp135.apple.com>
+In-Reply-To: alpine.OSX.2.21.1712121630520.15459@sjweber-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 261
+X-UID: 262
 
---===============4242612150745749343==
+--===============4871742833185078760==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 14/12/17 - 12:13:40, Christoph Paasch wrote:
-> On 12/12/17 - 16:28:31, Mat Martineau wrote:
-> > =
-
-> > On Mon, 11 Dec 2017, Christoph Paasch wrote:
-> > =
-
-> > > The TCP extra-options parser might decide to drop the segment based on
-> > > the present option. Especially, for TCP_MD5, we want to do this as so=
-on
-> > > as possible (thus, right after the parsing).
-> > > =
-
-> > > This patch allows to do this by splitting out tcp_fast_parse_options(=
-) in
-> > > tcp_validate_incoming().
-> > > =
-
-> > > Originally, tcp_fast_parse_options() returned false, when there is no
-> > > timestamp option (except in the case of the slow-path processing thro=
-ugh
-> > > tcp_parse_options() where it always returns true.
-> > =
-
-> > Minor nitpick: unmatched paren above.
+On 12/12/17 - 16:37:49, Mat Martineau wrote:
 > =
 
-> Thanks, I fixed this.
+> Tag as "tcp_smc: ..." ?
 
-Also, changed the commit-message to the below text to avoid the mention of
-extra-options explicitly:
+Yes, done.
 
-=3D=3D=3D=3D=3D
-tcp: Allow tcp_fast_parse_options to drop segments
+> =
 
-After parsing the TCP-options, some option-kinds might trigger a drop of
-the segment (e.g., as is the case for TCP_MD5). As we are moving to
-consolidate the TCP_MD5-code in follow-up patches, we need to add the
-capability to drop a segment right after parsing the options in
-tcp_fast_parse_options().
+> On Mon, 11 Dec 2017, Christoph Paasch wrote:
+> =
 
-Originally, tcp_fast_parse_options() returned false, when there is no
-timestamp option, except in the case of the slow-path processing through
-tcp_parse_options() where it always returns true.
+> > Will be needed to allow extra-options to parse experimental TCP options.
+> > That way, if the SMC-options don't match, we check the extra-options.
+> =
 
-So, the return-value of tcp_fast_parse_options() was kind of
-inconsistent. With this patch, we make it return true when the segment
-should get dropped based on the parsed options, and false otherwise.
+> Similar to the earlier patch, the "extra-options" name is still unfamiliar
+> to most on netdev.
 
-In tcp_validate_incoming, we will then just check for
-tp->rx_opt.saw_tstamp to see if we should verify PAWS.
+Yes, reworded it to:
 
-The goto will be used in a follow-up patch to check whether one of the
-options triggers a drop of the segment.
+    tcp: Make smc_parse_options return 1 on success
+
+    As we allow a generic TCP-option parser that also parses experimental
+    TCP options, we need to add a return-value to smc_parse_options() that
+    indicates whether the option actually matched or not.
+
+> =
+
+> > =
+
+> > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> > ---
+> > net/ipv4/tcp_input.c | 19 +++++++++++--------
+> > 1 file changed, 11 insertions(+), 8 deletions(-)
+> > =
+
+> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > index cba194a0222f..eedb355a0533 100644
+> > --- a/net/ipv4/tcp_input.c
+> > +++ b/net/ipv4/tcp_input.c
+> > @@ -3676,19 +3676,22 @@ static void tcp_parse_fastopen_option(int len, =
+const unsigned char *cookie,
+> > 	foc->exp =3D exp_opt;
+> > }
+> > =
+
+> > -static void smc_parse_options(const struct tcphdr *th,
+> > -			      struct tcp_options_received *opt_rx,
+> > -			      const unsigned char *ptr,
+> > -			      int opsize)
+> > +static int smc_parse_options(const struct tcphdr *th,
+> > +			     struct tcp_options_received *opt_rx,
+> > +			     const unsigned char *ptr,
+> > +			     int opsize)
+> > {
+> > #if IS_ENABLED(CONFIG_SMC)
+> > 	if (static_branch_unlikely(&tcp_have_smc)) {
+> > 		if (th->syn && !(opsize & 1) &&
+> > 		    opsize >=3D TCPOLEN_EXP_SMC_BASE &&
+> > -		    get_unaligned_be32(ptr) =3D=3D TCPOPT_SMC_MAGIC)
+> > +		    get_unaligned_be32(ptr) =3D=3D TCPOPT_SMC_MAGIC) {
+> > 			opt_rx->smc_ok =3D 1;
+> > +			return 1;
+> > +		}
+> > 	}
+> > #endif
+> > +	return 0;
+> > }
+> > =
+
+> > /* Look for tcp options. Normally only called on SYN and SYNACK packets.
+> > @@ -3798,9 +3801,9 @@ void tcp_parse_options(const struct net *net,
+> > 					tcp_parse_fastopen_option(opsize -
+> > 						TCPOLEN_EXP_FASTOPEN_BASE,
+> > 						ptr + 2, th->syn, foc, true);
+> > -				else
+> > -					smc_parse_options(th, opt_rx, ptr,
+> > -							  opsize);
+> > +				else if (smc_parse_options(th, opt_rx, ptr,
+> > +							   opsize))
+> > +					break;
+> > 				break;
+> =
+
+> From a "standalone patch" perspective, I can see someone wondering why th=
+ere
+> would be an if statement when the break happens no matter what
+> smc_parse_options returns. I'm not sure if it's best to set the stage for
+> the next patch, as this does, or just leave this chunk of code alone until
+> the next patch.
+
+Agreed - I will remove this last chunk of the change.
 
 
---===============4242612150745749343==--
+Christoph
+
+
+--===============4871742833185078760==--
