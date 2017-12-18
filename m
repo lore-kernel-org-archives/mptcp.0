@@ -1,114 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============0315483615881533110=="
+Content-Type: multipart/mixed; boundary="===============3737513168485300199=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC final 00/14] Generic TCP-option framework and adoption
- for TCP-SMC and TCP-MD5
-Date: Sun, 17 Dec 2017 22:42:31 -0800
-Message-ID: <20171218064245.94150-1-cpaasch@apple.com>
+Subject: [MPTCP] [RFC final 01/14] tcp: Write options after the header has
+ been fully done
+Date: Sun, 17 Dec 2017 22:42:32 -0800
+Message-ID: <20171218064245.94150-2-cpaasch@apple.com>
+In-Reply-To: 20171218064245.94150-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 277
+X-UID: 278
 
---===============0315483615881533110==
+--===============3737513168485300199==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Final post to the mptcp-list before submission to netdev :)
+The generic TCP-option framework will need to have access to the full
+TCP-header (e.g., if we want to compute a checksum for TCP-MD5).
 
+Thus, we move the call to tcp_options_write() to after all the fields in
+the header have been filled out.
+
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
+ net/ipv4/tcp_output.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This patchset introduces a generic framework for handling TCP-options.
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 04be9f833927..0f66d101d0ca 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1126,7 +1126,6 @@ static int tcp_transmit_skb(struct sock *sk, struct s=
+k_buff *skb, int clone_it,
+ 		}
+ 	}
+ =
 
-TCP-options like TCP_MD5 and SMC are rather rare use-cases, but their
-implementation is rather intrusive to the TCP-stack. Other, more recent
-TCP extensions like TCP-crypt, MPTCP or TCP-AO would make this situation
-even worse.
+-	tcp_options_write((__be32 *)(th + 1), tp, &opts);
+ 	skb_shinfo(skb)->gso_type =3D sk->sk_gso_type;
+ 	if (likely(!(tcb->tcp_flags & TCPHDR_SYN))) {
+ 		th->window      =3D htons(tcp_select_window(sk));
+@@ -1137,6 +1136,7 @@ static int tcp_transmit_skb(struct sock *sk, struct s=
+k_buff *skb, int clone_it,
+ 		 */
+ 		th->window	=3D htons(min(tp->rcv_wnd, 65535U));
+ 	}
++	tcp_options_write((__be32 *)(th + 1), tp, &opts);
+ #ifdef CONFIG_TCP_MD5SIG
+ 	/* Calculate the MD5 hash, as we have all we need now */
+ 	if (md5) {
+@@ -3242,8 +3242,8 @@ struct sk_buff *tcp_make_synack(const struct sock *sk=
+, struct dst_entry *dst,
+ =
 
-This new framework allows to add these TCP-options in a modular way. Writin=
-g,
-reading and acting upon these options is done through callbacks that get
-registered to a TCP-socket. A TCP-socket has a list of "extra" TCP-options
-that it will use.
+ 	/* RFC1323: The window in SYN & SYN/ACK segments is never scaled. */
+ 	th->window =3D htons(min(req->rsk_rcv_wnd, 65535U));
+-	tcp_options_write((__be32 *)(th + 1), NULL, &opts);
+ 	th->doff =3D (tcp_header_size >> 2);
++	tcp_options_write((__be32 *)(th + 1), NULL, &opts);
+ 	__TCP_INC_STATS(sock_net(sk), TCP_MIB_OUTSEGS);
+ =
 
-We make TCP-SMC and TCP-MD5SIG adopt this new framework. As can be seen, th=
-ere
-is now no more TCP-SMC code in the TCP-files and the TCP-MD5 code has been
-reduced to a bare minimum.
-
-This patchset is admittedly rather big, but we wanted to show where the
-framework will lead to and what it enables. Suggestions as to how to better
-structure the patchset is appreciated.
-
-One point of discussion might be whether or not we should use static-keys
-before accessing the tcp_option_list to avoid branching and the additional
-access to the tcp_sock, request-sock, time-wait-sock structure.
-The way static keys could be used is that they get incremented each time a
-socket starts using one of the new TCP-options and decremented when the soc=
-ket
-eventually gets destroyed. A caveat of this design would be that if a host =
-keeps
-on creating/closing these sockets in a sequence, each time we go into the s=
-low
-path of the static keys occuring potentially a big overhead to update all t=
-he
-jump-labels.
-For now we opted for a simple if (unlikely(!hlist_empty(...)) check.
-
-Feedback is very welcome!
-
-Thanks,
-Mat & Christoph
-
-
-Christoph Paasch (13):
-  tcp: Write options after the header has been fully done
-  tcp: Pass sock and skb to tcp_options_write
-  tcp: Allow tcp_fast_parse_options to drop segments
-  tcp_smc: Make smc_parse_options return 1 on success
-  tcp_smc: Make SMC use TCP extra-option framework
-  tcp_md5: Don't pass along md5-key
-  tcp_md5: Detect key inside tcp_v4_send_ack instead of passing it as an
-    argument
-  tcp_md5: Detect key inside tcp_v6_send_response instead of passing it
-    as an argument
-  tcp_md5: Check for TCP_MD5 after TCP Timestamps in
-    tcp_established_options
-  tcp_md5: Move TCP-MD5 code out of TCP itself
-  tcp_md5: Use tcp_extra_options in output path
-  tcp_md5: Cleanup TCP-code
-  tcp_md5: Use TCP extra-options on the input path
-
-Mat Martineau (1):
-  tcp: Register handlers for extra TCP options
-
- drivers/infiniband/hw/cxgb4/cm.c |    2 +-
- include/linux/inet_diag.h        |    1 +
- include/linux/tcp.h              |   43 +-
- include/linux/tcp_md5.h          |   39 ++
- include/net/inet_sock.h          |    3 +-
- include/net/tcp.h                |  212 +++---
- net/ipv4/Makefile                |    1 +
- net/ipv4/syncookies.c            |    6 +-
- net/ipv4/tcp.c                   |  391 ++++++++---
- net/ipv4/tcp_diag.c              |   81 +--
- net/ipv4/tcp_input.c             |  137 ++--
- net/ipv4/tcp_ipv4.c              |  552 ++--------------
- net/ipv4/tcp_md5.c               | 1359 ++++++++++++++++++++++++++++++++++=
-++++
- net/ipv4/tcp_minisocks.c         |   77 +--
- net/ipv4/tcp_output.c            |  182 +----
- net/ipv6/syncookies.c            |    6 +-
- net/ipv6/tcp_ipv6.c              |  386 ++---------
- net/smc/af_smc.c                 |  190 +++++-
- 18 files changed, 2222 insertions(+), 1446 deletions(-)
- create mode 100644 include/linux/tcp_md5.h
- create mode 100644 net/ipv4/tcp_md5.c
-
+ #ifdef CONFIG_TCP_MD5SIG
 -- =
 
 2.15.0
 
 
---===============0315483615881533110==--
+--===============3737513168485300199==--
