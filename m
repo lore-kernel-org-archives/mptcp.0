@@ -1,245 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============9059575703430476420=="
+Content-Type: multipart/mixed; boundary="===============1970332076727233199=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC final 07/14] tcp_md5: Don't pass along md5-key
-Date: Sun, 17 Dec 2017 22:42:38 -0800
-Message-ID: <20171218064245.94150-8-cpaasch@apple.com>
+Subject: [MPTCP] [RFC final 08/14] tcp_md5: Detect key inside tcp_v4_send_ack
+ instead of passing it as an argument
+Date: Sun, 17 Dec 2017 22:42:39 -0800
+Message-ID: <20171218064245.94150-9-cpaasch@apple.com>
 In-Reply-To: 20171218064245.94150-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 282
+X-UID: 283
 
---===============9059575703430476420==
+--===============1970332076727233199==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-It is much cleaner to store the key-pointer in tcp_out_options. It
-allows to remove some MD5-specific code out of the function-arguments
-and paves the way to adopting the TCP-option framework with TCP-MD5.
+This will simplify to consolidate the TCP_MD5-code into a single place.
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/linux/tcp.h   |  1 +
- net/ipv4/tcp_output.c | 46 +++++++++++++++++++---------------------------
- 2 files changed, 20 insertions(+), 27 deletions(-)
+ net/ipv4/tcp_ipv4.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 231b352f587f..b0b38f7100a4 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -131,6 +131,7 @@ struct tcp_out_options {
- 	__u8 *hash_location;	/* temporary pointer, overloaded */
- 	__u32 tsval, tsecr;	/* need to include OPTION_TS */
- 	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
-+	struct tcp_md5sig_key *md5; /* TCP_MD5 signature key */
- };
- =
-
- /* This is the max number of SACKS that we'll generate and process. It's s=
-afe
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index baf1c913ca7f..43849ed73b03 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -520,21 +520,18 @@ static void tcp_options_write(__be32 *ptr, struct sk_=
-buff *skb, struct sock *sk,
-  * network wire format yet.
-  */
- static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
--				struct tcp_out_options *opts,
--				struct tcp_md5sig_key **md5)
-+				struct tcp_out_options *opts)
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 4e8690667b17..1ebcbc01215f 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -764,7 +764,6 @@ static void tcp_v4_send_reset(const struct sock *sk, st=
+ruct sk_buff *skb)
+ static void tcp_v4_send_ack(const struct sock *sk,
+ 			    struct sk_buff *skb, u32 seq, u32 ack,
+ 			    u32 win, u32 tsval, u32 tsecr, int oif,
+-			    struct tcp_md5sig_key *key,
+ 			    int reply_flags, u8 tos)
  {
- 	struct tcp_sock *tp =3D tcp_sk(sk);
- 	unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
- 	struct tcp_fastopen_request *fastopen =3D tp->fastopen_req;
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+@@ -773,6 +772,9 @@ static void tcp_v4_send_ack(const struct sock *sk,
+ 		__be32 opt[(MAX_TCP_OPTION_SPACE >> 2)];
+ 	} rep;
+ 	struct hlist_head *extopt_list =3D NULL;
++#ifdef CONFIG_TCP_MD5SIG
++	struct tcp_md5sig_key *key;
++#endif
+ 	struct net *net =3D sock_net(sk);
+ 	struct ip_reply_arg arg;
+ 	int offset =3D 0;
+@@ -803,6 +805,17 @@ static void tcp_v4_send_ack(const struct sock *sk,
+ 	rep.th.ack     =3D 1;
+ 	rep.th.window  =3D htons(win);
  =
 
- #ifdef CONFIG_TCP_MD5SIG
--	*md5 =3D tp->af_specific->md5_lookup(sk, sk);
--	if (*md5) {
-+	opts->md5 =3D tp->af_specific->md5_lookup(sk, sk);
-+	if (opts->md5) {
- 		opts->options |=3D OPTION_MD5;
- 		remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
- 	}
--#else
--	*md5 =3D NULL;
- #endif
- =
-
- 	/* We always get an MSS option.  The option bytes which will be seen in
-@@ -549,7 +546,7 @@ static unsigned int tcp_syn_options(struct sock *sk, st=
-ruct sk_buff *skb,
- 	opts->mss =3D tcp_advertise_mss(sk);
- 	remaining -=3D TCPOLEN_MSS_ALIGNED;
- =
-
--	if (likely(sock_net(sk)->ipv4.sysctl_tcp_timestamps && !*md5)) {
-+	if (likely(sock_net(sk)->ipv4.sysctl_tcp_timestamps && !opts->md5)) {
- 		opts->options |=3D OPTION_TS;
- 		opts->tsval =3D tcp_skb_timestamp(skb) + tp->tsoffset;
- 		opts->tsecr =3D tp->rx_opt.ts_recent;
-@@ -593,14 +590,13 @@ static unsigned int tcp_synack_options(const struct s=
-ock *sk,
- 				       struct request_sock *req,
- 				       unsigned int mss, struct sk_buff *skb,
- 				       struct tcp_out_options *opts,
--				       const struct tcp_md5sig_key *md5,
- 				       struct tcp_fastopen_cookie *foc)
- {
- 	struct inet_request_sock *ireq =3D inet_rsk(req);
- 	unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
- =
-
- #ifdef CONFIG_TCP_MD5SIG
--	if (md5) {
-+	if (opts->md5) {
- 		opts->options |=3D OPTION_MD5;
- 		remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
- =
-
-@@ -658,8 +654,7 @@ static unsigned int tcp_synack_options(const struct soc=
-k *sk,
-  * final wire format yet.
-  */
- static unsigned int tcp_established_options(struct sock *sk, struct sk_buf=
-f *skb,
--					struct tcp_out_options *opts,
--					struct tcp_md5sig_key **md5)
-+					struct tcp_out_options *opts)
- {
- 	struct tcp_sock *tp =3D tcp_sk(sk);
- 	unsigned int size =3D 0;
-@@ -668,13 +663,13 @@ static unsigned int tcp_established_options(struct so=
-ck *sk, struct sk_buff *skb
- 	opts->options =3D 0;
- =
-
- #ifdef CONFIG_TCP_MD5SIG
--	*md5 =3D tp->af_specific->md5_lookup(sk, sk);
--	if (unlikely(*md5)) {
-+	opts->md5 =3D tp->af_specific->md5_lookup(sk, sk);
-+	if (unlikely(opts->md5)) {
- 		opts->options |=3D OPTION_MD5;
- 		size +=3D TCPOLEN_MD5SIG_ALIGNED;
- 	}
- #else
--	*md5 =3D NULL;
-+	opts->md5 =3D NULL;
- #endif
- =
-
- 	if (likely(tp->rx_opt.tstamp_ok)) {
-@@ -992,7 +987,6 @@ static int tcp_transmit_skb(struct sock *sk, struct sk_=
-buff *skb, int clone_it,
- 	struct tcp_out_options opts;
- 	unsigned int tcp_options_size, tcp_header_size;
- 	struct sk_buff *oskb =3D NULL;
--	struct tcp_md5sig_key *md5;
- 	struct tcphdr *th;
- 	int err;
- =
-
-@@ -1021,10 +1015,9 @@ static int tcp_transmit_skb(struct sock *sk, struct =
-sk_buff *skb, int clone_it,
- 	memset(&opts, 0, sizeof(opts));
- =
-
- 	if (unlikely(tcb->tcp_flags & TCPHDR_SYN))
--		tcp_options_size =3D tcp_syn_options(sk, skb, &opts, &md5);
-+		tcp_options_size =3D tcp_syn_options(sk, skb, &opts);
- 	else
--		tcp_options_size =3D tcp_established_options(sk, skb, &opts,
--							   &md5);
-+		tcp_options_size =3D tcp_established_options(sk, skb, &opts);
- 	tcp_header_size =3D tcp_options_size + sizeof(struct tcphdr);
- =
-
- 	/* if no packet is in qdisc/device queue, then allow XPS to select
-@@ -1090,10 +1083,10 @@ static int tcp_transmit_skb(struct sock *sk, struct=
- sk_buff *skb, int clone_it,
- 	tcp_options_write((__be32 *)(th + 1), skb, sk, &opts);
- #ifdef CONFIG_TCP_MD5SIG
- 	/* Calculate the MD5 hash, as we have all we need now */
--	if (md5) {
-+	if (opts.md5) {
- 		sk_nocaps_add(sk, NETIF_F_GSO_MASK);
- 		tp->af_specific->calc_md5_hash(opts.hash_location,
--					       md5, sk, skb);
-+					       opts.md5, sk, skb);
- 	}
- #endif
- =
-
-@@ -1537,7 +1530,6 @@ unsigned int tcp_current_mss(struct sock *sk)
- 	u32 mss_now;
- 	unsigned int header_len;
- 	struct tcp_out_options opts;
--	struct tcp_md5sig_key *md5;
- =
-
- 	mss_now =3D tp->mss_cache;
- =
-
-@@ -1547,7 +1539,7 @@ unsigned int tcp_current_mss(struct sock *sk)
- 			mss_now =3D tcp_sync_mss(sk, mtu);
- 	}
- =
-
--	header_len =3D tcp_established_options(sk, NULL, &opts, &md5) +
-+	header_len =3D tcp_established_options(sk, NULL, &opts) +
- 		     sizeof(struct tcphdr);
- 	/* The mss_cache is sized based on tp->tcp_header_len, which assumes
- 	 * some common options. If this is an odd packet (because we have SACK
-@@ -3123,7 +3115,6 @@ struct sk_buff *tcp_make_synack(const struct sock *sk=
-, struct dst_entry *dst,
- {
- 	struct inet_request_sock *ireq =3D inet_rsk(req);
- 	const struct tcp_sock *tp =3D tcp_sk(sk);
--	struct tcp_md5sig_key *md5 =3D NULL;
- 	struct tcp_out_options opts;
- 	struct sk_buff *skb;
- 	int tcp_header_size;
-@@ -3169,10 +3160,10 @@ struct sk_buff *tcp_make_synack(const struct sock *=
-sk, struct dst_entry *dst,
- =
-
- #ifdef CONFIG_TCP_MD5SIG
- 	rcu_read_lock();
--	md5 =3D tcp_rsk(req)->af_specific->req_md5_lookup(sk, req_to_sk(req));
-+	opts.md5 =3D tcp_rsk(req)->af_specific->req_md5_lookup(sk, req_to_sk(req)=
-);
- #endif
- 	skb_set_hash(skb, tcp_rsk(req)->txhash, PKT_HASH_TYPE_L4);
--	tcp_header_size =3D tcp_synack_options(sk, req, mss, skb, &opts, md5,
-+	tcp_header_size =3D tcp_synack_options(sk, req, mss, skb, &opts,
- 					     foc) + sizeof(*th);
- =
-
- 	skb_push(skb, tcp_header_size);
-@@ -3199,9 +3190,10 @@ struct sk_buff *tcp_make_synack(const struct sock *s=
-k, struct dst_entry *dst,
- =
-
- #ifdef CONFIG_TCP_MD5SIG
- 	/* Okay, we have all we need - do the md5 hash if needed */
--	if (md5)
-+	if (opts.md5)
- 		tcp_rsk(req)->af_specific->calc_md5_hash(opts.hash_location,
--					       md5, req_to_sk(req), skb);
-+							 opts.md5,
-+							 req_to_sk(req), skb);
- 	rcu_read_unlock();
- #endif
- =
-
++#ifdef CONFIG_TCP_MD5SIG
++	if (sk->sk_state =3D=3D TCP_TIME_WAIT) {
++		key =3D tcp_twsk_md5_key(tcp_twsk(sk));
++	} else if (sk->sk_state =3D=3D TCP_NEW_SYN_RECV) {
++		key =3D tcp_md5_do_lookup(sk, (union tcp_md5_addr *)&ip_hdr(skb)->saddr,
++					AF_INET);
++	} else {
++		key =3D NULL;     /* Should not happen */
++	}
++#endif
++
+ 	if (unlikely(extopt_list && !hlist_empty(extopt_list))) {
+ 		unsigned int remaining;
+ 		struct tcp_out_options opts;
+@@ -872,7 +885,6 @@ static void tcp_v4_timewait_ack(struct sock *sk, struct=
+ sk_buff *skb)
+ 			tcp_time_stamp_raw() + tcptw->tw_ts_offset,
+ 			tcptw->tw_ts_recent,
+ 			tw->tw_bound_dev_if,
+-			tcp_twsk_md5_key(tcptw),
+ 			tw->tw_transparent ? IP_REPLY_ARG_NOSRCCHECK : 0,
+ 			tw->tw_tos
+ 			);
+@@ -900,8 +912,6 @@ static void tcp_v4_reqsk_send_ack(const struct sock *sk=
+, struct sk_buff *skb,
+ 			tcp_time_stamp_raw() + tcp_rsk(req)->ts_off,
+ 			req->ts_recent,
+ 			0,
+-			tcp_md5_do_lookup(sk, (union tcp_md5_addr *)&ip_hdr(skb)->saddr,
+-					  AF_INET),
+ 			inet_rsk(req)->no_srccheck ? IP_REPLY_ARG_NOSRCCHECK : 0,
+ 			ip_hdr(skb)->tos);
+ }
 -- =
 
 2.15.0
 
 
---===============9059575703430476420==--
+--===============1970332076727233199==--
