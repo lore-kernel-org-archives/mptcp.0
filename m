@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============9153166697510970147=="
+Content-Type: multipart/mixed; boundary="===============0090923044325699762=="
 MIME-Version: 1.0
 From: rao.shoaib at oracle.com
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 6/9] Make TCP options processing abstract
-Date: Thu, 22 Feb 2018 15:49:58 -0800
-Message-ID: <1519343401-19027-7-git-send-email-rao.shoaib@oracle.com>
+Subject: [MPTCP] [RFC 7/9] Restructure syncookie code to use pointers
+Date: Thu, 22 Feb 2018 15:49:59 -0800
+Message-ID: <1519343401-19027-8-git-send-email-rao.shoaib@oracle.com>
 In-Reply-To: 1519343401-19027-1-git-send-email-rao.shoaib@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 305
+X-UID: 306
 
---===============9153166697510970147==
+--===============0090923044325699762==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,243 +19,274 @@ From: Rao Shoaib <rao.shoaib(a)oracle.com>
 
 Signed-off-by: Rao Shoaib <rao.shoaib(a)oracle.com>
 ---
- include/net/tcp.h     | 12 ++++++++++
- net/ipv4/tcp.c        |  3 +++
- net/ipv4/tcp_output.c | 66 +++++++++++++++++++++++++++++++++--------------=
+ net/ipv4/syncookies.c | 109 ++++++++++++++++++++++++++++++++++++++--------=
 ----
- 3 files changed, 58 insertions(+), 23 deletions(-)
+ net/ipv4/tcp.c        |   1 +
+ net/ipv6/syncookies.c |  40 ++----------------
+ 3 files changed, 88 insertions(+), 62 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index bd6b082..f5d748a 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -571,6 +571,18 @@ int select_size(const struct sock *sk, bool sg, bool f=
-irst_skb, bool zc);
- bool tcp_write_xmit(struct sock *sk, unsigned int mss_now, int nonagle,
- 		    int push_one, gfp_t gfp);
- void tcp_cwnd_validate(struct sock *sk, bool is_cwnd_limited);
-+unsigned int tcp_synack_options_size(const struct sock *sk,
-+				     struct request_sock *req,
-+				     unsigned int mss, struct sk_buff *skb,
-+				     struct tcp_out_options *opts,
-+				     const struct tcp_md5sig_key *md5,
-+				     struct tcp_fastopen_cookie *foc);
-+int tcp_options_size(struct sock *sk, struct sk_buff *skb,
-+		     struct tcp_out_options *opts,
-+		     struct tcp_md5sig_key **md5);
-+void tcp_options_write(__be32 **ptr, struct tcp_sock *tp,
-+		       struct tcp_out_options *opts,
-+		       struct sk_buff *skb);
- void tcp_connect_init(struct sock *sk);
- int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
- int tcp_mtu_probe(struct sock *sk);
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index ab82e7c..136be43 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -435,6 +435,9 @@ static const struct tcp_operational_ops __tcp_default_o=
-p_ops =3D {
- 	.trim_head			=3D tcp_trim_head,
- 	.urg				=3D tcp_urg,
- 	.can_send			=3D tcp_can_send,
-+	.synack_options_size		=3D tcp_synack_options_size,
-+	.options_size			=3D tcp_options_size,
-+	.options_write			=3D tcp_options_write,
- 	.connect_init			=3D tcp_connect_init,
- 	.send_mss			=3D tcp_send_mss,
- 	.mtu_probe			=3D tcp_mtu_probe,
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index f296f1f7..2fa5c05 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -430,10 +430,12 @@ static void smc_options_write(__be32 *ptr, u16 *optio=
-ns)
-  * At least SACK_PERM as the first option is known to lead to a disaster
-  * (but it may well be that other scenarios fail similarly).
-  */
--static void tcp_options_write(__be32 *ptr, struct tcp_sock *tp,
--			      struct tcp_out_options *opts)
-+void tcp_options_write(__be32 **ptr_ptr, struct tcp_sock *tp,
-+		       struct tcp_out_options *opts,
-+		       struct sk_buff *skb)
- {
- 	u16 options =3D opts->options;	/* mungable copy */
-+	__be32 *ptr =3D *ptr_ptr;
- =
-
- 	if (unlikely(OPTION_MD5 & options)) {
- 		*ptr++ =3D htonl((TCPOPT_NOP << 24) | (TCPOPT_NOP << 16) |
-@@ -525,6 +527,8 @@ static void tcp_options_write(__be32 *ptr, struct tcp_s=
-ock *tp,
- 	}
- =
-
- 	smc_options_write(ptr, &options);
-+
-+	*ptr_ptr =3D ptr;
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index fda37f2..e0f511e 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -276,6 +276,87 @@ bool cookie_ecn_ok(const struct tcp_options_received *=
+tcp_opt,
  }
+ EXPORT_SYMBOL(cookie_ecn_ok);
  =
 
- static void smc_set_option(const struct tcp_sock *tp,
-@@ -563,9 +567,9 @@ static void smc_set_option_cond(const struct tcp_sock *=
-tp,
- /* Compute TCP options for SYN packets. This is not the final
-  * network wire format yet.
-  */
--static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
--				struct tcp_out_options *opts,
--				struct tcp_md5sig_key **md5)
-+unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
-+			     struct tcp_out_options *opts,
-+			     struct tcp_md5sig_key **md5)
- {
- 	struct tcp_sock *tp =3D tcp_sk(sk);
- 	unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
-@@ -631,12 +635,12 @@ static unsigned int tcp_syn_options(struct sock *sk, =
-struct sk_buff *skb,
- }
- =
-
- /* Set up TCP options for SYN-ACKs. */
--static unsigned int tcp_synack_options(const struct sock *sk,
--				       struct request_sock *req,
--				       unsigned int mss, struct sk_buff *skb,
--				       struct tcp_out_options *opts,
--				       const struct tcp_md5sig_key *md5,
--				       struct tcp_fastopen_cookie *foc)
-+unsigned int tcp_synack_options_size(const struct sock *sk,
-+				     struct request_sock *req,
-+				     unsigned int mss, struct sk_buff *skb,
-+				     struct tcp_out_options *opts,
-+				     const struct tcp_md5sig_key *md5,
-+				     struct tcp_fastopen_cookie *foc)
- {
- 	struct inet_request_sock *ireq =3D inet_rsk(req);
- 	unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
-@@ -737,6 +741,16 @@ static unsigned int tcp_established_options(struct soc=
-k *sk, struct sk_buff *skb
- 	return size;
- }
- =
-
-+int tcp_options_size(struct sock *sk, struct sk_buff *skb,
-+		     struct tcp_out_options *opts,
-+		     struct tcp_md5sig_key **md5)
++void tcp_cookie_req_init(struct sock *sk, struct sk_buff *skb,
++			 struct request_sock *req,
++			 struct tcp_options_received *tcp_opts, __u32 cookie,
++			 int mss)
 +{
-+	if (unlikely(skb && (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)))
-+		return (tcp_syn_options(sk, skb, opts, md5));
-+	else
-+		return (tcp_established_options(sk, skb, opts, md5));
++	const struct tcphdr *th =3D tcp_hdr(skb);
++	struct inet_request_sock *ireq;
++	struct tcp_request_sock *treq;
++
++	ireq			=3D inet_rsk(req);
++	treq			=3D tcp_rsk(req);
++
++	req->mss		=3D mss;
++	req->num_retrans	=3D 0;
++	req->ts_recent		=3D tcp_opts->saw_tstamp ?
++				  tcp_opts->rcv_tsval : 0;
++
++	treq->tfo_listener	=3D false;
++	treq->rcv_isn		=3D ntohl(th->seq) - 1;
++	treq->snt_isn		=3D cookie;
++	treq->ts_off		=3D 0;
++	treq->txhash		=3D net_tx_rndhash();
++	treq->snt_synack	=3D 0;
++
++	ireq->ir_num		=3D ntohs(th->dest);
++	ireq->ir_rmt_port	=3D th->source;
++	ireq->ir_iif		=3D inet_request_bound_dev_if(sk, skb);
++
++	ireq->ir_mark		=3D inet_request_mark(sk, skb);
++	ireq->snd_wscale	=3D tcp_opts->snd_wscale;
++	ireq->sack_ok		=3D tcp_opts->sack_ok;
++	ireq->wscale_ok		=3D tcp_opts->wscale_ok;
++	ireq->tstamp_ok		=3D tcp_opts->saw_tstamp;
++
++	if (sk->sk_family =3D=3D AF_INET) {
++		sk_rcv_saddr_set(req_to_sk(req), ip_hdr(skb)->daddr);
++		sk_daddr_set(req_to_sk(req), ip_hdr(skb)->saddr);
++	}
++#if IS_ENABLED(CONFIG_IPV6)
++	else if (sk->sk_family =3D=3D AF_INET6) {
++		struct ipv6_pinfo *np =3D inet6_sk(sk);
++
++		ireq->ir_v6_rmt_addr =3D ipv6_hdr(skb)->saddr;
++		ireq->ir_v6_loc_addr =3D ipv6_hdr(skb)->daddr;
++		if (ipv6_opt_accepted(sk, skb,
++				      &TCP_SKB_CB(skb)->header.h6) ||
++				      np->rxopt.bits.rxinfo ||
++				      np->rxopt.bits.rxoinfo ||
++				      np->rxopt.bits.rxhlim ||
++				      np->rxopt.bits.rxohlim) {
++			refcount_inc(&skb->users);
++			ireq->pktopts =3D skb;
++		}
++		/* So that link locals have meaning */
++		if (!sk->sk_bound_dev_if &&
++		    ipv6_addr_type(&ireq->ir_v6_rmt_addr) &
++		    IPV6_ADDR_LINKLOCAL)
++			ireq->ir_iif =3D tcp_v6_iif(skb);
++	}
++#endif
 +}
 +
- =
-
- /* TCP SMALL QUEUES (TSQ)
-  *
-@@ -1030,6 +1044,8 @@ static int tcp_transmit_skb(struct sock *sk, struct s=
-k_buff *skb, int clone_it,
- 	struct tcp_md5sig_key *md5;
- 	struct tcphdr *th;
- 	int err;
-+	__be32	*ptr;
-+	__be32	*orig_ptr;
- =
-
- 	BUG_ON(!skb || !tcp_skb_pcount(skb));
- 	tp =3D tcp_sk(sk);
-@@ -1055,12 +1071,9 @@ static int tcp_transmit_skb(struct sock *sk, struct =
-sk_buff *skb, int clone_it,
- 	tcb =3D TCP_SKB_CB(skb);
- 	memset(&opts, 0, sizeof(opts));
- =
-
--	if (unlikely(tcb->tcp_flags & TCPHDR_SYN))
--		tcp_options_size =3D tcp_syn_options(sk, skb, &opts, &md5);
--	else
--		tcp_options_size =3D tcp_established_options(sk, skb, &opts,
--							   &md5);
-+	tcp_options_size =3D tp->op_ops->options_size(sk, skb, &opts, &md5);
- 	tcp_header_size =3D tcp_options_size + sizeof(struct tcphdr);
-+	WARN_ON(tcp_options_size > MAX_TCP_OPTION_SPACE);
- =
-
- 	/* if no packet is in qdisc/device queue, then allow XPS to select
- 	 * another queue. We can be called from tcp_tsq_handler()
-@@ -1112,7 +1125,10 @@ static int tcp_transmit_skb(struct sock *sk, struct =
-sk_buff *skb, int clone_it,
- 		}
- 	}
- =
-
--	tcp_options_write((__be32 *)(th + 1), tp, &opts);
-+	ptr =3D (__be32 *)(th + 1);
-+	orig_ptr =3D ptr;
-+	tp->op_ops->options_write(&ptr, tp, &opts, skb);
-+	WARN_ON((ptr - orig_ptr) * 4 !=3D tcp_options_size);
- 	skb_shinfo(skb)->gso_type =3D sk->sk_gso_type;
- 	if (likely(!(tcb->tcp_flags & TCPHDR_SYN))) {
- 		th->window      =3D htons(tcp_select_window(sk));
-@@ -1582,8 +1598,9 @@ unsigned int tcp_current_mss(struct sock *sk)
- 			mss_now =3D tcp_sync_mss(sk, mtu);
- 	}
- =
-
--	header_len =3D tcp_established_options(sk, NULL, &opts, &md5) +
--		     sizeof(struct tcphdr);
-+	header_len =3D tp->op_ops->options_size(sk, NULL, &opts, &md5) +
-+					      sizeof(struct tcphdr);
++struct request_sock *tcp_cookie_req_alloc(struct sock *sk,
++					  struct sk_buff *skb,
++					  struct tcp_options_received *tcp_opts,
++					  __u32 cookie, int mss)
++{
++	struct request_sock *req =3D NULL;
 +
- 	/* The mss_cache is sized based on tp->tcp_header_len, which assumes
- 	 * some common options. If this is an odd packet (because we have SACK
- 	 * blocks etc) then our calculated header_len will be different, and
-@@ -3164,13 +3181,14 @@ struct sk_buff *tcp_make_synack(const struct sock *=
-sk, struct dst_entry *dst,
- 				enum tcp_synack_type synack_type)
++	if (sk->sk_family =3D=3D AF_INET)
++		req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false);
++#if IS_ENABLED(CONFIG_IPV6)
++	else
++		req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false);
++#endif
++	if (req)
++		tcp_cookie_req_init(sk, skb, req, tcp_opts, cookie, mss);
++	return req;
++}
++EXPORT_SYMBOL(tcp_cookie_req_alloc);
++
+ /* On input, sk is a listener.
+  * Output is listener if incoming packet would not create a child
+  *           NULL if memory could not be allocated.
+@@ -285,7 +366,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	struct ip_options *opt =3D &TCP_SKB_CB(skb)->header.h4.opt;
+ 	struct tcp_options_received tcp_opt;
+ 	struct inet_request_sock *ireq;
+-	struct tcp_request_sock *treq;
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+ 	__u32 cookie =3D ntohl(th->ack_seq) - 1;
+@@ -326,31 +406,12 @@ struct sock *cookie_v4_check(struct sock *sk, struct =
+sk_buff *skb)
+ 		goto out;
+ =
+
+ 	ret =3D NULL;
+-	req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety=
+ */
++
++	req =3D tp->op_ops->cookie_req_alloc(sk, skb, &tcp_opt, cookie, mss);
+ 	if (!req)
+ 		goto out;
+ =
+
+ 	ireq =3D inet_rsk(req);
+-	treq =3D tcp_rsk(req);
+-	treq->rcv_isn		=3D ntohl(th->seq) - 1;
+-	treq->snt_isn		=3D cookie;
+-	treq->ts_off		=3D 0;
+-	treq->txhash		=3D net_tx_rndhash();
+-	req->mss		=3D mss;
+-	ireq->ir_num		=3D ntohs(th->dest);
+-	ireq->ir_rmt_port	=3D th->source;
+-	sk_rcv_saddr_set(req_to_sk(req), ip_hdr(skb)->daddr);
+-	sk_daddr_set(req_to_sk(req), ip_hdr(skb)->saddr);
+-	ireq->ir_mark		=3D inet_request_mark(sk, skb);
+-	ireq->snd_wscale	=3D tcp_opt.snd_wscale;
+-	ireq->sack_ok		=3D tcp_opt.sack_ok;
+-	ireq->wscale_ok		=3D tcp_opt.wscale_ok;
+-	ireq->tstamp_ok		=3D tcp_opt.saw_tstamp;
+-	req->ts_recent		=3D tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
+-	treq->snt_synack	=3D 0;
+-	treq->tfo_listener	=3D false;
+-
+-	ireq->ir_iif =3D inet_request_bound_dev_if(sk, skb);
+ =
+
+ 	/* We throwed the options of the initial SYN away, so we hope
+ 	 * the ACK carries the same options again (see RFC1122 4.2.3.8)
+@@ -362,8 +423,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 		goto out;
+ 	}
+ =
+
+-	req->num_retrans =3D 0;
+-
+ 	/*
+ 	 * We need to lookup the route here to get at the correct
+ 	 * window size. We should better make sure that the window size
+@@ -393,7 +452,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	ireq->rcv_wscale  =3D rcv_wscale;
+ 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), &rt->dst);
+ =
+
+-	ret =3D tcp_get_cookie_sock(sk, skb, req, &rt->dst, tsoff);
++	ret =3D tp->op_ops->get_cookie_sock(sk, skb, req, &rt->dst, tsoff);
+ 	/* ip_queue_xmit() depends on our flow being setup
+ 	 * Normal sockets get it right from inet_csk_route_child_sock()
+ 	 */
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 136be43..ea89a41 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -444,6 +444,7 @@ static const struct tcp_operational_ops __tcp_default_o=
+p_ops =3D {
+ 	.retrans_try_collapse		=3D tcp_retrans_try_collapse,
+ 	.fastopen_synack		=3D tcp_rcv_fastopen_synack,
+ 	.sendpage_locked		=3D tcp_sendpage_locked,
++	.cookie_req_alloc		=3D tcp_cookie_req_alloc,
+ 	.get_cookie_sock		=3D tcp_get_cookie_sock,
+ };
+ =
+
+diff --git a/net/ipv6/syncookies.c b/net/ipv6/syncookies.c
+index e7a3a6b..916792c 100644
+--- a/net/ipv6/syncookies.c
++++ b/net/ipv6/syncookies.c
+@@ -134,7 +134,6 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
+_buff *skb)
  {
- 	struct inet_request_sock *ireq =3D inet_rsk(req);
--	const struct tcp_sock *tp =3D tcp_sk(sk);
-+	struct tcp_sock *tp =3D tcp_sk(sk);
- 	struct tcp_md5sig_key *md5 =3D NULL;
- 	struct tcp_out_options opts;
- 	struct sk_buff *skb;
- 	int tcp_header_size;
- 	struct tcphdr *th;
- 	int mss;
-+	__be32 *ptr;
+ 	struct tcp_options_received tcp_opt;
+ 	struct inet_request_sock *ireq;
+-	struct tcp_request_sock *treq;
+ 	struct ipv6_pinfo *np =3D inet6_sk(sk);
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+@@ -175,49 +174,16 @@ struct sock *cookie_v6_check(struct sock *sk, struct =
+sk_buff *skb)
+ 		goto out;
  =
 
- 	skb =3D alloc_skb(MAX_TCP_HEADER, GFP_ATOMIC);
- 	if (unlikely(!skb)) {
-@@ -3214,8 +3232,9 @@ struct sk_buff *tcp_make_synack(const struct sock *sk=
-, struct dst_entry *dst,
- 	md5 =3D tcp_rsk(req)->af_specific->req_md5_lookup(sk, req_to_sk(req));
- #endif
- 	skb_set_hash(skb, tcp_rsk(req)->txhash, PKT_HASH_TYPE_L4);
--	tcp_header_size =3D tcp_synack_options(sk, req, mss, skb, &opts, md5,
--					     foc) + sizeof(*th);
-+	tcp_header_size =3D tp->op_ops->synack_options_size(sk, req, mss, skb,
-+							  &opts, md5, foc);
-+	tcp_header_size +=3D sizeof(*th);
+ 	ret =3D NULL;
+-	req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
++
++	req =3D tp->op_ops->cookie_req_alloc(sk, skb, &tcp_opt, cookie, mss);
+ 	if (!req)
+ 		goto out;
  =
 
- 	skb_push(skb, tcp_header_size);
- 	skb_reset_transport_header(skb);
-@@ -3235,7 +3254,8 @@ struct sk_buff *tcp_make_synack(const struct sock *sk=
-, struct dst_entry *dst,
+ 	ireq =3D inet_rsk(req);
+-	treq =3D tcp_rsk(req);
+-	treq->tfo_listener =3D false;
  =
 
- 	/* RFC1323: The window in SYN & SYN/ACK segments is never scaled. */
- 	th->window =3D htons(min(req->rsk_rcv_wnd, 65535U));
--	tcp_options_write((__be32 *)(th + 1), NULL, &opts);
-+	ptr =3D (__be32 *)(th + 1);
-+	tp->op_ops->options_write(&ptr, tp, &opts, skb);
- 	th->doff =3D (tcp_header_size >> 2);
- 	__TCP_INC_STATS(sock_net(sk), TCP_MIB_OUTSEGS);
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto out_free;
  =
 
+-	req->mss =3D mss;
+-	ireq->ir_rmt_port =3D th->source;
+-	ireq->ir_num =3D ntohs(th->dest);
+-	ireq->ir_v6_rmt_addr =3D ipv6_hdr(skb)->saddr;
+-	ireq->ir_v6_loc_addr =3D ipv6_hdr(skb)->daddr;
+-	if (ipv6_opt_accepted(sk, skb, &TCP_SKB_CB(skb)->header.h6) ||
+-	    np->rxopt.bits.rxinfo || np->rxopt.bits.rxoinfo ||
+-	    np->rxopt.bits.rxhlim || np->rxopt.bits.rxohlim) {
+-		refcount_inc(&skb->users);
+-		ireq->pktopts =3D skb;
+-	}
+-
+-	ireq->ir_iif =3D inet_request_bound_dev_if(sk, skb);
+-	/* So that link locals have meaning */
+-	if (!sk->sk_bound_dev_if &&
+-	    ipv6_addr_type(&ireq->ir_v6_rmt_addr) & IPV6_ADDR_LINKLOCAL)
+-		ireq->ir_iif =3D tcp_v6_iif(skb);
+-
+-	ireq->ir_mark =3D inet_request_mark(sk, skb);
+-
+-	req->num_retrans =3D 0;
+-	ireq->snd_wscale	=3D tcp_opt.snd_wscale;
+-	ireq->sack_ok		=3D tcp_opt.sack_ok;
+-	ireq->wscale_ok		=3D tcp_opt.wscale_ok;
+-	ireq->tstamp_ok		=3D tcp_opt.saw_tstamp;
+-	req->ts_recent		=3D tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
+-	treq->snt_synack	=3D 0;
+-	treq->rcv_isn =3D ntohl(th->seq) - 1;
+-	treq->snt_isn =3D cookie;
+-	treq->ts_off =3D 0;
+-	treq->txhash =3D net_tx_rndhash();
+-
+ 	/*
+ 	 * We need to lookup the dst_entry to get the correct window size.
+ 	 * This is taken from tcp_v6_syn_recv_sock.  Somebody please enlighten
+@@ -252,7 +218,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	ireq->rcv_wscale =3D rcv_wscale;
+ 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), dst);
+ =
+
+-	ret =3D tcp_get_cookie_sock(sk, skb, req, dst, tsoff);
++	ret =3D tp->op_ops->get_cookie_sock(sk, skb, req, dst, tsoff);
+ out:
+ 	return ret;
+ out_free:
 -- =
 
 2.7.4
 
 
---===============9153166697510970147==--
+--===============0090923044325699762==--
