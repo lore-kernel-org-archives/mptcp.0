@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============7414845349632128397=="
+Content-Type: multipart/mixed; boundary="===============4977578403379084190=="
 MIME-Version: 1.0
 From: rao.shoaib at oracle.com
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 2/9] Introduce MPTCP specific elements that will
- co-exist with TCP even when MPTCP is not compiled
-Date: Thu, 22 Feb 2018 15:49:54 -0800
-Message-ID: <1519343401-19027-3-git-send-email-rao.shoaib@oracle.com>
+Subject: [MPTCP] [RFC 3/9] Introduce MPTCP specific elements that can be under
+ #ifdef MPTCP_CONFIG
+Date: Thu, 22 Feb 2018 15:49:55 -0800
+Message-ID: <1519343401-19027-4-git-send-email-rao.shoaib@oracle.com>
 In-Reply-To: 1519343401-19027-1-git-send-email-rao.shoaib@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 302
+X-UID: 303
 
---===============7414845349632128397==
+--===============4977578403379084190==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -20,132 +20,210 @@ From: Rao Shoaib <rao.shoaib(a)oracle.com>
 
 Signed-off-by: Rao Shoaib <rao.shoaib(a)oracle.com>
 ---
- include/net/inet_sock.h  |  6 ++++--
- include/net/sock.h       |  1 +
- include/net/tcp.h        | 19 ++++++++++++++++---
- include/uapi/linux/tcp.h |  1 +
- 4 files changed, 22 insertions(+), 5 deletions(-)
+ include/linux/tcp.h      | 78 ++++++++++++++++++++++++++++++++++++++++++++=
+++++
+ include/net/secure_seq.h |  9 +++++-
+ include/net/tcp_states.h |  4 ++-
+ include/uapi/linux/bpf.h |  4 ++-
+ include/uapi/linux/if.h  |  5 ++++
+ 5 files changed, 97 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/inet_sock.h b/include/net/inet_sock.h
-index 0a671c3..8961273 100644
---- a/include/net/inet_sock.h
-+++ b/include/net/inet_sock.h
-@@ -83,7 +83,7 @@ struct inet_request_sock {
- #define ireq_state		req.__req_common.skc_state
- #define ireq_family		req.__req_common.skc_family
- =
-
--	u16			snd_wscale : 4,
-+	u32			snd_wscale : 4,
- 				rcv_wscale : 4,
- 				tstamp_ok  : 1,
- 				sack_ok	   : 1,
-@@ -91,7 +91,9 @@ struct inet_request_sock {
- 				ecn_ok	   : 1,
- 				acked	   : 1,
- 				no_srccheck: 1,
--				smc_ok	   : 1;
-+				smc_ok	   : 1,
-+				mptcp_rqsk : 1, /* set if the syn had MP_CAP */
-+				saw_mpc	   : 1;
- 	u32                     ir_mark;
- 	union {
- 		struct ip_options_rcu __rcu	*ireq_opt;
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 3aa7b7d..10e00d7 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -777,6 +777,7 @@ enum sock_flags {
- 	SOCK_FILTER_LOCKED, /* Filter cannot be changed anymore */
- 	SOCK_SELECT_ERR_QUEUE, /* Wake select on error queue */
- 	SOCK_RCU_FREE, /* wait rcu grace period in sk_destruct() */
-+	SOCK_MPTCP, /* MPTCP set on this socket */
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 612360b..62c8e6c 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -92,6 +92,44 @@ struct tcp_out_options {
+ 	__u8 *hash_location;	/* temporary pointer, overloaded */
+ 	__u32 tsval, tsecr;	/* need to include OPTION_TS */
+ 	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
++#ifdef CONFIG_MPTCP
++	u16	mptcp_options;  /* bit field of MPTCP related OPTION_* */
++	u8	dss_csum:1,     /* dss-checksum required? */
++		add_addr_v4:1,
++		add_addr_v6:1,
++		mptcp_ver:4;
++
++	union {
++		struct {
++			__u64   sender_key;	/* sender's key for mptcp */
++			__u64   receiver_key;	/* receiver's key for mptcp */
++		} mp_capable;
++
++		struct {
++			__u64   sender_truncated_mac;
++			__u32   sender_nonce;
++					/* random number of the sender */
++			__u32   token;	/* token for mptcp */
++			u8      low_prio:1;
++		} mp_join_syns;
++	};
++
++	struct {
++		__u64 trunc_mac;
++		struct in_addr addr;
++		u16 port;
++		u8 addr_id;
++	} add_addr4;
++	struct {
++		__u64 trunc_mac;
++		struct in6_addr addr;
++		u16 port;
++		u8 addr_id;
++	} add_addr6;
++
++	u16     remove_addrs;   /* list of address id */
++	u8      addr_id;        /* address id (mp_join or add_address) */
++#endif /* CONFIG_MPTCP */
  };
  =
 
- #define SK_FLAGS_TIMESTAMP ((1UL << SOCK_TIMESTAMP) | (1UL << SOCK_TIMESTA=
-MPING_RX_SOFTWARE))
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 8bc724f..e9f7582 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -52,6 +52,9 @@ extern struct inet_hashinfo tcp_hashinfo;
- extern struct percpu_counter tcp_orphan_count;
- void tcp_time_wait(struct sock *sk, int state, int timeo);
- =
-
-+typedef int (*process_unclaimed)(const struct sock *sk, struct sk_buff *sk=
-b);
-+extern process_unclaimed tcp_process_unclaimed;
+ /*These are used to set the sack_ok field in struct tcp_options_received */
+@@ -397,6 +435,35 @@ struct tcp_sock {
+ 	u32	*saved_syn;
+ 	const struct tcp_operational_ops	*op_ops;
+ 	const struct tcp_state_ops		*state_ops;
++	void	*tcp_sock_private;
++#ifdef CONFIG_MPTCP
++	struct mptcp_cb         *mpcb;
++	struct sock             *meta_sk;
++	/* We keep these flags even if CONFIG_MPTCP is not checked, because
++	 * it allows checking MPTCP capability just by checking the mpc flag,
++	 * rather than adding ifdefs everywhere.
++	 */
++	u16     mpc:1,          /* Other end is multipath capable */
++		inside_tk_table:1, /* Is the tcp_sock inside the token-table? */
++		send_mp_fclose:1,
++		request_mptcp:1, /* Did we send out an MP_CAPABLE?
++				  * (this speeds up mptcp_doit() in tcp_recvmsg)
++				  */
++		pf:1, /* Potentially Failed state: when this flag is set, we
++		       * stop using the subflow
++		       */
++		mp_killed:1, /* Killed with a tcp_done in mptcp? */
++		was_meta_sk:1,  /* This was a meta sk (in case of reuse) */
++		is_master_sk:1,
++		close_it:1,     /* Must close socket in mptcp_data_ready? */
++		closing:1,
++		mptcp_ver:4;
++		struct mptcp_tcp_sock *mptcp;
++	struct hlist_nulls_node tk_table;
++	u32 mptcp_loc_token;
++	u64 mptcp_loc_key;
++#endif /* CONFIG_MPTCP */
 +
- #define MAX_TCP_HEADER	(128 + MAX_HEADER)
- #define MAX_TCP_OPTION_SPACE 40
+ };
  =
 
-@@ -182,6 +185,7 @@ void tcp_time_wait(struct sock *sk, int state, int time=
-o);
- #define TCPOPT_SACK             5       /* SACK Block */
- #define TCPOPT_TIMESTAMP	8	/* Better RTT estimations/PAWS */
- #define TCPOPT_MD5SIG		19	/* MD5 Signature (RFC2385) */
-+#define TCPOPT_MPTCP		30	/* MPTCP (RFC6824) */
- #define TCPOPT_FASTOPEN		34	/* Fast open (RFC7413) */
- #define TCPOPT_EXP		254	/* Experimental */
- /* Magic number to be after the option value for sharing TCP
-@@ -312,7 +316,6 @@ static inline bool tcp_too_many_orphans(struct sock *sk=
-, int shift)
+ enum tsq_enum {
+@@ -408,6 +475,10 @@ enum tsq_enum {
+ 	TCP_MTU_REDUCED_DEFERRED,  /* tcp_v{4|6}_err() could not call
+ 				    * tcp_v{4|6}_mtu_reduced()
+ 				    */
++#ifdef CONFIG_MPTCP
++	MPTCP_PATH_MANAGER,	/* MPTCP deferred creation of new subflows */
++	MPTCP_SUB_DEFERRED,	/* A subflow got deferred - process them */
++#endif
+ };
  =
 
- bool tcp_check_oom(struct sock *sk, int shift);
+ enum tsq_flags {
+@@ -417,6 +488,10 @@ enum tsq_flags {
+ 	TCPF_WRITE_TIMER_DEFERRED	=3D (1UL << TCP_WRITE_TIMER_DEFERRED),
+ 	TCPF_DELACK_TIMER_DEFERRED	=3D (1UL << TCP_DELACK_TIMER_DEFERRED),
+ 	TCPF_MTU_REDUCED_DEFERRED	=3D (1UL << TCP_MTU_REDUCED_DEFERRED),
++#ifdef CONFIG_MPTCP
++	MPTCPF_PATH_MANAGER		=3D (1UL << MPTCP_PATH_MANAGER),
++	MPTCPF_SUB_DEFERRED		=3D (1UL << MPTCP_SUB_DEFERRED),
++#endif
+ };
  =
 
+ static inline struct tcp_sock *tcp_sk(const struct sock *sk)
+@@ -439,6 +514,9 @@ struct tcp_timewait_sock {
+ #ifdef CONFIG_TCP_MD5SIG
+ 	struct tcp_md5sig_key	  *tw_md5_key;
+ #endif
++#ifdef CONFIG_MPTCP
++	struct	mptcp_tw	  *mptcp_tw;
++#endif
+ };
+ =
+
+ static inline struct tcp_timewait_sock *tcp_twsk(const struct sock *sk)
+diff --git a/include/net/secure_seq.h b/include/net/secure_seq.h
+index d7d2495f..102dc91 100644
+--- a/include/net/secure_seq.h
++++ b/include/net/secure_seq.h
+@@ -18,5 +18,12 @@ u64 secure_dccp_sequence_number(__be32 saddr, __be32 dad=
+dr,
+ 				__be16 sport, __be16 dport);
+ u64 secure_dccpv6_sequence_number(__be32 *saddr, __be32 *daddr,
+ 				  __be16 sport, __be16 dport);
 -
- extern struct proto tcp_prot;
++#ifdef CONFIG_MPTCP
++u32 mptcp_v4_get_nonce(__be32 saddr, __be32 daddr, __be16 sport, __be16 dp=
+ort);
++u64 mptcp_v4_get_key(__be32 saddr, __be32 daddr, __be16 sport, __be16 dpor=
+t);
++u32 mptcp_v6_get_nonce(const __be32 *saddr, const __be32 *daddr,
++		       __be16 sport, __be16 dport);
++u64 mptcp_v6_get_key(const __be32 *saddr, const __be32 *daddr,
++		     __be16 sport, __be16 dport);
++#endif
+ #endif /* _NET_SECURE_SEQ */
+diff --git a/include/net/tcp_states.h b/include/net/tcp_states.h
+index 50e78a7..73eb518 100644
+--- a/include/net/tcp_states.h
++++ b/include/net/tcp_states.h
+@@ -26,7 +26,9 @@ enum {
+ 	TCP_LISTEN,
+ 	TCP_CLOSING,	/* Now a valid state */
+ 	TCP_NEW_SYN_RECV,
+-
++#ifdef CONFIG_MPTCP
++	TCP_RST_WAIT,
++#endif
+ 	TCP_MAX_STATES	/* Leave at the end! */
+ };
  =
 
- #define TCP_INC_STATS(net, field)	SNMP_INC_STATS((net)->mib.tcp_statistics=
-, field)
-@@ -800,12 +803,22 @@ struct tcp_skb_cb {
- #define TCPCB_RETRANS		(TCPCB_SACKED_RETRANS|TCPCB_EVER_RETRANS| \
- 				TCPCB_REPAIRED)
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index db6bdc3..f837e91 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -1079,7 +1079,9 @@ enum {
+ 	BPF_TCP_LISTEN,
+ 	BPF_TCP_CLOSING,	/* Now a valid state */
+ 	BPF_TCP_NEW_SYN_RECV,
+-
++#ifdef CONFIG_MPTCP
++	BPF_TCP_RST_WAIT,
++#endif
+ 	BPF_TCP_MAX_STATES	/* Leave at the end! */
+ };
  =
 
--	__u8		ip_dsfield;	/* IPv4 tos or IPv6 dsfield	*/
-+	union {
-+		__u8		ip_dsfield;	/* IPv4 tos or IPv6 dsfield */
-+		/* ip_dstfield is only used on the Rx side. It's value
-+		 * is consumed by the time MPTCP starts processing.
-+		 */
-+		__u8		mptcp_flags;
-+	};
- 	__u8		txstamp_ack:1,	/* Record TX timestamp for ack? */
- 			eor:1,		/* Is skb MSG_EOR marked? */
- 			has_rxtstamp:1,	/* SKB has a RX timestamp	*/
- 			unused:5;
--	__u32		ack_seq;	/* Sequence number ACK'd	*/
-+	union {
-+			__u32	ack_seq;	/* Sequence number ACK'd */
-+			__u32	mptcp_data_seq; /* Used on Tx subskb */
-+			__u32	mptcp_path_mask; /* Used on orig skb */
-+	};
- 	union {
- 		struct {
- 			/* There is space for up to 24 bytes */
-diff --git a/include/uapi/linux/tcp.h b/include/uapi/linux/tcp.h
-index b4a4f64..c1a5e5d 100644
---- a/include/uapi/linux/tcp.h
-+++ b/include/uapi/linux/tcp.h
-@@ -122,6 +122,7 @@ enum {
- #define TCP_MD5SIG_EXT		32	/* TCP MD5 Signature with extensions */
- #define TCP_FASTOPEN_KEY	33	/* Set the key for Fast Open (cookie) */
- #define TCP_FASTOPEN_NO_COOKIE	34	/* Enable TFO without a TFO cookie */
-+#define	MPTCP_ENABLED		42
+diff --git a/include/uapi/linux/if.h b/include/uapi/linux/if.h
+index 7fea0fd..fa08d86 100644
+--- a/include/uapi/linux/if.h
++++ b/include/uapi/linux/if.h
+@@ -132,6 +132,11 @@ enum net_device_flags {
+ #define IFF_ECHO			IFF_ECHO
+ #endif /* __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO */
  =
 
- struct tcp_repair_opt {
- 	__u32	opt_code;
++#ifdef CONFIG_MPTCP
++#define IFF_NOMULTIPATH 0x80000         /* Disable for MPTCP            */
++#define IFF_MPBACKUP    0x100000        /* Use as backup path for MPTCP */
++#endif
++
+ #define IFF_VOLATILE	(IFF_LOOPBACK|IFF_POINTOPOINT|IFF_BROADCAST|IFF_ECHO|\
+ 		IFF_MASTER|IFF_SLAVE|IFF_RUNNING|IFF_LOWER_UP|IFF_DORMANT)
+ =
+
 -- =
 
 2.7.4
 
 
---===============7414845349632128397==--
+--===============4977578403379084190==--
