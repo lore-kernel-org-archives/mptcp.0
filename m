@@ -1,43 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============8281390415232097977=="
+Content-Type: multipart/mixed; boundary="===============8978919803711175801=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Introduction
-Date: Mon, 26 Feb 2018 09:47:24 +0100
-Message-ID: <20180226084724.GW1235@MacBook-Pro-4.local>
+Subject: Re: [MPTCP] Introduction
+Date: Mon, 26 Feb 2018 10:01:55 +0100
+Message-ID: <CAKuKrBm0ZpZK=0YWvdoD9yx0B2y6X-TguZD=R+JniAi8eraBtQ@mail.gmail.com>
+In-Reply-To: 20180226084724.GW1235@MacBook-Pro-4.local
 X-Status: 
 X-Keywords:                  
-X-UID: 312
+X-UID: 313
 
---===============8281390415232097977==
+--===============8978919803711175801==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+Hi Christoph and every other users on this mailing list!
 
-this weekend I was at the MPTCP Hackathon at the UCLouvain
-(https://goo.gl/ontLse).
+On Mon, Feb 26, 2018 at 9:47 AM, Christoph Paasch <cpaasch(a)apple.com> wro=
+te:
+> In any case, welcome to the list, Gregory and Matt!
 
-The people from Tessares (Matt and Gregory in CC) told me there that they a=
-re
-interested in participating and helping on the upstream effort.
+Thank you for the introduction!
 
-You probably know both of them from the mptcp-dev mailing-list and some
-scientific papers on MPTCP. They have a lot of experience in evolving the
-Linux MPTCP implementation and I'm sure they will be of great help.
+> I'm sending a separate e-mail to kick off a discussion on next steps.
 
-Besides code, they suggested that they could also contribute in terms of
-tooling (syzbot jumps to my mind), infrastructure and other ways. I let them
-chime in for their ideas and suggestions.
+Thank you for this! We would be glad to participate to these
+discussions as well!
 
-In any case, welcome to the list, Gregory and Matt!
+Best regards,
+Matt (or call me Matthieu to avoid confusions with Mat ;-) )
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+-- =
 
 
-I'm sending a separate e-mail to kick off a discussion on next steps.
+------------------------------
+DISCLAIMER.
+This email and any files transmitted with it are confidential and intended =
 
+solely for the use of the individual or entity to whom they are addressed. =
 
-Christoph
+If you have received this email in error please notify the system manager. =
 
+This message contains confidential information and is intended only for the =
 
---===============8281390415232097977==--
+individual named. If you are not the named addressee you should not =
+
+disseminate, distribute or copy this e-mail. Please notify the sender =
+
+immediately by e-mail if you have received this e-mail by mistake and =
+
+delete this e-mail from your system. If you are not the intended recipient =
+
+you are notified that disclosing, copying, distributing or taking any =
+
+action in reliance on the contents of this information is strictly =
+
+prohibited.
+
+--===============8978919803711175801==--
