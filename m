@@ -1,161 +1,256 @@
-Content-Type: multipart/mixed; boundary="===============4456984430056264406=="
+Content-Type: multipart/mixed; boundary="===============2920466115876161443=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
-Date: Wed, 28 Feb 2018 14:59:19 -0800
-Message-ID: <alpine.OSX.2.21.1802281436490.20016@mjmartin-mac01.sea.intel.com>
-In-Reply-To: 20180228223235.GA15661@MacBook-Pro-4.local
+Subject: Re: [MPTCP] Next steps discussion
+Date: Wed, 28 Feb 2018 15:08:05 -0800
+Message-ID: <20180228230805.GL2038@MacBook-Pro-4.local>
+In-Reply-To: alpine.OSX.2.21.1802261405290.7401@cporter-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 324
+X-UID: 325
 
---===============4456984430056264406==
+--===============2920466115876161443==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On 27/02/18 - 10:50:38, Mat Martineau wrote:
+> =
 
-On Wed, 28 Feb 2018, Christoph Paasch wrote:
+> Hi Christoph,
+> =
 
-> Hello Rao,
->
-> On 28/02/18 - 14:01:09, Rao Shoaib wrote:
->> On 02/23/2018 12:20 PM, Mat Martineau wrote:
->>> On Thu, 22 Feb 2018, rao.shoaib(a)oracle.com wrote:
->>>> From: Rao Shoaib <rao.shoaib(a)oracle.com>
->>>>
->>>> Following patches modify TCP code to enable implementation of MPTCP.
->>>> MPTCP implementation requires sharing of TCP code with minor
->>>> modification here and there. In order to keep the TCP code clean and
->>>> easy to maintain, common code has been moved to new functions for
->>>> use by both TCP and MPTCP. struct tcp_sock now has function pointers
->>>> and based on the socket type (TCP/MPTCP) appropriate function is
->>>> called.
->>>>
->>>> A basic implementation of MPTCP that works with IPv4/IPv6 and
->>>> supports join has been tested based on these changes.
->>>>
->>>> The changes are being submitted as an RFC to get feedback from the
->>>> community and to start a discussion on how to move forward.
->>>>
->>>
->>> Hi Rao -
->>>
->>> I'd encourage you to closely read David Miller's response
->>> (https://www.spinics.net/lists/netdev/msg481868.html) to the TCP-MD5 RFC
->>> patch set that Christoph posted. We proposed some targeted indirect
->>> calls to callbacks for handling TCP options. He said "Sorry, I'm really
->>> not thrilled about this", and was focused on the performance
->>> implications of those callbacks. Have you looked at the performance and
->>> memory impact of adding indirection to a few dozen core TCP function
->>> calls?
->> Yes I have. There are several papers on this subject and the jury is out=
-. In
->> the case of the frame work I have not looked at the code but Dave says
->>
->> "I can already see in your patches that new overhead is added, new
->> tests in the packet building fast paths that are completely
->> unnecessary with the existing code, etc."
->>
->> In my changes there are no new tests and fast is completely untouched. T=
-he
->> only change is to call functions via a pointer instead of having inline.=
- The
->> impact of that has been a topic of discussion for a long time because of
->> c++.
->
-> The problem is in patch 5/9. For example, the change in
-> __tcp_push_pending_frames.
->
-> Accessing the function-pointer makes two memory-accesses which potentially
-> can have a cache-miss.
->
-> That's the fast-path cost that upstream is worried about.
->
->>> To give some more background, when Christoph was crafting the MD5 patch
->>> set I pushed to take out some static-branch code that needed some work
->>> but eliminated the impact of the added callbacks for normal TCP. David
->>> focused on exactly that issue and didn't dive in to other aspects of the
->>> code. I can't fault him for that - he sorts through a staggering volume
->>> of patches every day, and if there's an issue that's clear at a glance
->>> it will pull all attention from the rest of the proposal. Also consider
->>> that Christoph replied with a few more questions, but the discussion
->>> stalled.
->>>
->>> I do have more to say about the proposed architecture and how to
->>> structure the patch set for netdev - but I think the maintainer feedback
->>> we already have about indirect callbacks is most critical to consider
->>> and factor in to what we send to netdev in the future. We have the
->>> shared goal to get MPTCP in to the upstream kernel and it's going to
->>> take a coordinated community to get there!
->> I agree that it will take a co-ordinated effort but we need to know what
->> upstream will accept. I have not seen any code or a detailed proposal.
->>
->> I will be sending out modified MPTCP code that works with the IP changes.
->>
->> What are the other issues besides the direct calls ?
->
-> The list of function pointers is huge.
->
-> If we post this on netdev, it won't cast a good light on the MPTCP
-> upstreaming effort. DaveM wants the design to fit neatly into the TCP-sta=
+> On Mon, 26 Feb 2018, Christoph Paasch wrote:
+> =
+
+> > Hello,
+> > =
+
+> > as for next steps after the submission of the TCP-option framework to n=
+etdev
+> > and DaveM's feedback on it.
+> > =
+
+> > Even if the submission got rejected, I think we still have a very usefu=
+l set
+> > of patches here. The need for a framework might pop up again in the fut=
+ure,
+> > and so these patches could come in handy.
+> > Mat, maybe you can put our latest submission on your kernel.org-git repo
+> > just so that we don't lose track of these patches?
+> =
+
+> Done: https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git=
+/log/?h=3Dmd5
+
+Thanks!
+
+> > I can also create a github repo if you prefer that.
+> > =
+
+> > =
+
+> > As for DaveM's feedback, the main takeaway - as Mat already noted on hi=
+s other
+> > mail - is that fast-path performance he the highest priority. Branching=
+ and
+> > indirect function calls are hardly accepted there.
+> > =
+
+> > =
+
+> > So, in that spirit I think we need to work towards reducing MPTCP's
+> > intrusiveness to the TCP stack.
+> > =
+
+> > * Stop taking meta-lock when receiving subflow data (all the changes wh=
+ere
+> >  we check for mptcp(tp) and then do bh_lock_sock(meta_sk)).
+> >  The reason we do this in today's implementation is because it allows to
+> >  access the meta data-structure at any point. If we stop taking the
+> >  meta-lock a few things need to change:
+> >  1. Do lockless accesses for selected fields (e.g., for the DATA_ACK).
+> >  2. Group the more intrusive accesses to few select points in the TCP-s=
+tack
+> >     where we then take the meta-lock (e.g., when receiving data).
+> >     (this would be equivalent as if the TCP-option framework would be t=
+here
+> >     - thus we need to move code to these or similar points in the stack)
+> >  3. Sometimes schedule work-queues when we need to avoid deadlocks due =
+to
+> >     lock-ordering issues (e.g., when we can't take the meta-lock because
+> >     it's already held by another thread).
+> > =
+
+> >  I think, the way to approach this here, is by working iteratively and =
+start
+> >  moving code in such a way that accesses to the meta-socket are grouped
+> >  together.
+> > =
+
+> >  Also, we have a few callbacks that we added (cfr., struct tcp_sock_ops=
+).
+> >  We added them to avoid duplicating the code. Let's review those and se=
+e if
+> >  we can get rid of them. (as an example: .send_fin could be removed as =
+it is only
+> >  called from tcp_shutdown, called from the .shutdown callback in tcp_pr=
+ot -
+> >  thus if we expose a separate MPTCP socket-type with its own struct pro=
+to,
+> >  we can get rid of the .send_fin callback)
+> > =
+
+> =
+
+> I think a separate MPTCP socket type will be important for upstream
+> acceptance. My team has been working on some code with this separate sock=
+et
+> type that we can share.
+
+Great! I would love to move MPTCP to a separate socket-type.
+
+> I'm thinking that it will be useful to share once a
+> connection can stay up without falling back to TCP.
+
+Hmm... I'm not sure I understand. What do you mean with "connection can stay
+up without falling back to TCP".
+
+> =
+
+> > * Investigate how/if we can make MPTCP adopt KCM or ULP.
+> =
+
+> My main concern about ULP is that only one upper layer protocol can be set
+> up (at least as the code is now), so you wouldn't be able to do something
+> like use in-kernel TLS over MPTCP. Other than that, it seems like a natur=
+al
+> fit for MPTCP.
+
+Do you think it would be feasible to make ULP use multiple ULPs ?
+
+> =
+
+> So far I've been looking at KCM as a source of good ideas rather than
+> something we could use directly. KCM uses SOCK_SEQPACKET or SOCK_DGRAM, b=
+ut
+> maybe it could be extended to include SOCK_STREAM. Where MPTCP places DSS
+> mappings in the TCP options, KCM handles message boundaries within the da=
+ta
+> stream - that made me ponder using XDP to place the DSS mappings in the d=
+ata
+> payload (with the necessary TCP sequence number adjustments). I'm not sure
+> it's workable because it can be expensive to change the length of an
+> incoming skb and adjusting the acks gets complicated, but it's at least an
+> interesting thought experiment :)
+> =
+
+> > * There is still the open question of the API, path-management,... Tess=
+ares
+> >  has some experience with that, so maybe they can provide some ideas he=
+re.
+> =
+
+> We (at OTC) are working on a generic netlink proposal for path management=
+ as
+> well.
+> =
+
+> > =
+
+> > * The size of the skb. Well, we have been discussing this for quite a w=
+hile :)
+> >  One option is always to have a lookup table as they do for the
+> >  TLS-records. That will hurt performance, but at least it's a step forw=
+ard.
+> >  And we have a bunch of other ideas that might be worth exploring as we=
+ll.
+> >  If I'm not mistaken, Rao had an approach that could work as well, righ=
+t?
+> =
+
+> This is what I'm working on now. For outgoing packets, I have a way to
+> optionally allocate sk_buffs with extra control block space. For incoming
+> packets, my initial experiment is with preventing packet coalesce/collapse
+> so TCP options are still in the skb headroom. I don't consider that a
+> long-term solution, though. Some kind of lookup table will probably be
+> needed.
+> =
+
+> > Any other comments, suggestions,...? :-)
+> =
+
+> I had these thoughts on evolving the multipath-tcp.org kernel fork last
+> summer (excerpt from
+> https://lists.01.org/pipermail/mptcp/2017-July/000064.html), which I think
+> are still relevant:
+> =
+
+> """
+> =
+
+> One approach is to attempt to merge the multipath-tcp.org fork. This is an
+> implementation in which the multipath-tcp.org community has invested a lot
+> of time and effort, and it is in production for major applications (see
+> https://tools.ietf.org/html/rfc8041). This is a tremendous amount of code=
+ to
+> review at once (even separating out modules), and currently doesn't fit w=
+ith
+> what the maintainers have asked for (non-intrusive, sk_buff size, MPTCP by
+> default). I don't think the maintainers would consider merging such an
+> extensive piece of git history, especially where there are a fair number =
+of
+> commits without an "mptcp:" label on the subject line or without a DCO
+> signoff (https://www.kernel.org/doc/html/latest/process/submitting-patche=
+s.html#sign-your-work-the-developer-s-certificate-of-origin).
+> Today, the fork is at kernel v4.4 and current upstream development is at
+> v4.13-rc1, so the fork would have to catch up and stay current. (2018 not=
+e:
+> Christoph has merged up to more recent kernels now)
+> =
+
+> The other extreme is to rewrite from scratch. This would allow incremental
+> development with maintainer review from the start, but doesn't take
+> advantage of existing code.
+> =
+
+> The most realistic approach is somewhere in between, where we write new
+> code that fits maintainer expectations and utilize components from the
+> fork where licensing allows and the code fits. We'll have to find the
+> right balance: over-reliance on new code could take extra time, but
+> constantly reworking the fork and keeping it up-to-date with net-next is
+> also a lot of overhead.
+> =
+
+> """
+> =
+
+> Gregory and Matthieu, do you have any thoughts on where the right balance=
+ is
+> on evolving the fork vs. adding new code?
+> =
+
+> =
+
+> > On my side, as a first concrete step, I will work towards lockless subf=
+low
+> > establishment. In tcp_v4_rcv, we are currently taking the meta-level lo=
 ck
-> with minimal/zero performance impact.
->
-> We have to try to achieve that before we post on netdev.
+> > when the socket-lookup matches on a request-socket. Now that TCP suppor=
+ts
+> > lockless listeners, MPTCP should do that as well.
+> =
 
-Well said, Christoph.
+> I'll work on getting my team's MPTCP socket type code posted to
+> git.kernel.org, and getting our generic netlink proposal posted to this
+> list.
 
-> The problem is also that the patches don't provide any context to netdev
-> as to why this is needed (e.g., why is a function-pointer for tcp_urg
-> needed?). Without the context, it will be hard for people to provide
-> feedback.
-
-I have some more recommendations:
-
-  * Include the new Kconfig modification to add CONFIG_MPTCP early in the =
-
-patch set
-
-  * Make sure that all patches will build with the config option enabled or =
-
-disabled (all include files and symbols present, etc.)
-
-  * Handle conditional compilation according to =
-
-https://www.kernel.org/doc/html/latest/process/coding-style.html#conditiona=
-l-compilation
-
-  * Don't define callbacks in the data structure until there's code that =
-
-uses them
-
-  * Craft commit messages and subject lines that will help the reviewers =
-
-understand the changes and what drives tham
+Cool! I think, the MPTCP socket-type code should also find its way into
+mptcp-dev. It would allow to move that one forward as well.
 
 
-Even for RFC patch sets, the expectation is that thay will meet =
-
-submission guidelines:
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-https://www.kernel.org/doc/html/latest/process/coding-style.html
-https://www.kernel.org/doc/html/latest/process/submit-checklist.html
+Christoph
 
 
-I think you'll help MPTCP ultimately arrive upstream by putting some more =
-
-work in to how this TCP architecture proposal is presented to the netdev =
-
-maintainers.
-
-
-Regards,
-
---
-Mat Martineau
-Intel OTC
-
---===============4456984430056264406==--
+--===============2920466115876161443==--
