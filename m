@@ -1,25 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============3052419199576407809=="
+Content-Type: multipart/mixed; boundary="===============4456984430056264406=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
-Date: Wed, 28 Feb 2018 14:57:08 -0800
-Message-ID: <8c03e117-1f20-656d-8f0e-af279abf70c1@oracle.com>
+Date: Wed, 28 Feb 2018 14:59:19 -0800
+Message-ID: <alpine.OSX.2.21.1802281436490.20016@mjmartin-mac01.sea.intel.com>
 In-Reply-To: 20180228223235.GA15661@MacBook-Pro-4.local
 X-Status: 
 X-Keywords:                  
-X-UID: 323
+X-UID: 324
 
---===============3052419199576407809==
+--===============4456984430056264406==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-Hi Christoph,
+On Wed, 28 Feb 2018, Christoph Paasch wrote:
 
-On 02/28/2018 02:32 PM, Christoph Paasch wrote:
+> Hello Rao,
 >
+> On 28/02/18 - 14:01:09, Rao Shoaib wrote:
+>> On 02/23/2018 12:20 PM, Mat Martineau wrote:
+>>> On Thu, 22 Feb 2018, rao.shoaib(a)oracle.com wrote:
+>>>> From: Rao Shoaib <rao.shoaib(a)oracle.com>
+>>>>
+>>>> Following patches modify TCP code to enable implementation of MPTCP.
+>>>> MPTCP implementation requires sharing of TCP code with minor
+>>>> modification here and there. In order to keep the TCP code clean and
+>>>> easy to maintain, common code has been moved to new functions for
+>>>> use by both TCP and MPTCP. struct tcp_sock now has function pointers
+>>>> and based on the socket type (TCP/MPTCP) appropriate function is
+>>>> called.
+>>>>
+>>>> A basic implementation of MPTCP that works with IPv4/IPv6 and
+>>>> supports join has been tested based on these changes.
+>>>>
+>>>> The changes are being submitted as an RFC to get feedback from the
+>>>> community and to start a discussion on how to move forward.
+>>>>
+>>>
 >>> Hi Rao -
 >>>
 >>> I'd encourage you to closely read David Miller's response
@@ -44,6 +64,7 @@ he
  The
 >> impact of that has been a topic of discussion for a long time because of
 >> c++.
+>
 > The problem is in patch 5/9. For example, the change in
 > __tcp_push_pending_frames.
 >
@@ -51,13 +72,6 @@ he
 > can have a cache-miss.
 >
 > That's the fast-path cost that upstream is worried about.
-Anything can cause a cache miss, the code for the function may not be =
-
-there. If this is a fast path, the chances are very likely everything =
-
-will be in the CPU cache. I have to look at the options framework on =
-
-which all these comments are based on.
 >
 >>> To give some more background, when Christoph was crafting the MD5 patch
 >>> set I pushed to take out some static-branch code that needed some work
@@ -81,42 +95,67 @@ which all these comments are based on.
 >> I will be sending out modified MPTCP code that works with the IP changes.
 >>
 >> What are the other issues besides the direct calls ?
+>
 > The list of function pointers is huge.
 >
 > If we post this on netdev, it won't cast a good light on the MPTCP
 > upstreaming effort. DaveM wants the design to fit neatly into the TCP-sta=
 ck
 > with minimal/zero performance impact.
-That is not exactly correct. When we talked to them they were willing to =
-
-accept some regression. Also I recently exchanged some email with them =
-
-about how to submit a patch in which I did mention I was using pointers, =
-
-I did not hear an concern. All they said was submit the patch and lets =
-
-us look at the code.
 >
 > We have to try to achieve that before we post on netdev.
-Well how do we determine that ?
 
->
->
+Well said, Christoph.
+
 > The problem is also that the patches don't provide any context to netdev
 > as to why this is needed (e.g., why is a function-pointer for tcp_urg
 > needed?). Without the context, it will be hard for people to provide
 > feedback.
-That is fine. Let the community reject the patch. I see no harm in =
 
-asking the community. I am ready for my patch to be rejected, but what =
+I have some more recommendations:
 
-if they say yes fine ?
+  * Include the new Kconfig modification to add CONFIG_MPTCP early in the =
 
-Shoaib
->
->
-> Christoph
->
+patch set
+
+  * Make sure that all patches will build with the config option enabled or =
+
+disabled (all include files and symbols present, etc.)
+
+  * Handle conditional compilation according to =
+
+https://www.kernel.org/doc/html/latest/process/coding-style.html#conditiona=
+l-compilation
+
+  * Don't define callbacks in the data structure until there's code that =
+
+uses them
+
+  * Craft commit messages and subject lines that will help the reviewers =
+
+understand the changes and what drives tham
 
 
---===============3052419199576407809==--
+Even for RFC patch sets, the expectation is that thay will meet =
+
+submission guidelines:
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+https://www.kernel.org/doc/html/latest/process/coding-style.html
+https://www.kernel.org/doc/html/latest/process/submit-checklist.html
+
+
+I think you'll help MPTCP ultimately arrive upstream by putting some more =
+
+work in to how this TCP architecture proposal is presented to the netdev =
+
+maintainers.
+
+
+Regards,
+
+--
+Mat Martineau
+Intel OTC
+
+--===============4456984430056264406==--
