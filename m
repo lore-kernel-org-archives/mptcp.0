@@ -1,188 +1,141 @@
-Content-Type: multipart/mixed; boundary="===============8431908118616523262=="
+Content-Type: multipart/mixed; boundary="===============2819481862549350281=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] Next steps discussion
-Date: Thu, 01 Mar 2018 11:37:09 -0800
-Message-ID: <alpine.OSX.2.21.1803011132510.24753@mjmartin-mac01.local>
-In-Reply-To: 20180301004439.GN2038@MacBook-Pro-4.local
+Date: Thu, 01 Mar 2018 11:38:47 -0800
+Message-ID: <20180301193847.GV2038@MacBook-Pro-4.local>
+In-Reply-To: CAKuKrBnwqGth+dGqwBiJHgh90fCUhg9AWgy+VVUxRWdNjx8zLg@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 334
+X-UID: 335
 
---===============8431908118616523262==
+--===============2819481862549350281==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 28 Feb 2018, Christoph Paasch wrote:
+On 01/03/18 - 18:05:40, Matthieu Baerts wrote:
+> Hi Christoph,
+> =
 
-> On 28/02/18 - 15:44:39, Mat Martineau wrote:
->> On Wed, 28 Feb 2018, Christoph Paasch wrote:
->>
->>> On 27/02/18 - 10:50:38, Mat Martineau wrote:
->>>>
->>>> Hi Christoph,
->>>>
->>>> On Mon, 26 Feb 2018, Christoph Paasch wrote:
->>>>
->>>>> Hello,
->>>>>
->>>>> as for next steps after the submission of the TCP-option framework to=
- netdev
->>>>> and DaveM's feedback on it.
->>>>>
->>>>> Even if the submission got rejected, I think we still have a very use=
-ful set
->>>>> of patches here. The need for a framework might pop up again in the f=
-uture,
->>>>> and so these patches could come in handy.
->>>>> Mat, maybe you can put our latest submission on your kernel.org-git r=
-epo
->>>>> just so that we don't lose track of these patches?
->>>>
->>>> Done: https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.=
-git/log/?h=3Dmd5
->>>
->>> Thanks!
->>>
->>>>> I can also create a github repo if you prefer that.
->>>>>
->>>>>
->>>>> As for DaveM's feedback, the main takeaway - as Mat already noted on =
-his other
->>>>> mail - is that fast-path performance he the highest priority. Branchi=
-ng and
->>>>> indirect function calls are hardly accepted there.
->>>>>
->>>>>
->>>>> So, in that spirit I think we need to work towards reducing MPTCP's
->>>>> intrusiveness to the TCP stack.
->>>>>
->>>>> * Stop taking meta-lock when receiving subflow data (all the changes =
-where
->>>>>  we check for mptcp(tp) and then do bh_lock_sock(meta_sk)).
->>>>>  The reason we do this in today's implementation is because it allows=
- to
->>>>>  access the meta data-structure at any point. If we stop taking the
->>>>>  meta-lock a few things need to change:
->>>>>  1. Do lockless accesses for selected fields (e.g., for the DATA_ACK).
->>>>>  2. Group the more intrusive accesses to few select points in the TCP=
--stack
->>>>>     where we then take the meta-lock (e.g., when receiving data).
->>>>>     (this would be equivalent as if the TCP-option framework would be=
- there
->>>>>     - thus we need to move code to these or similar points in the sta=
-ck)
->>>>>  3. Sometimes schedule work-queues when we need to avoid deadlocks du=
-e to
->>>>>     lock-ordering issues (e.g., when we can't take the meta-lock beca=
-use
->>>>>     it's already held by another thread).
->>>>>
->>>>>  I think, the way to approach this here, is by working iteratively an=
-d start
->>>>>  moving code in such a way that accesses to the meta-socket are group=
-ed
->>>>>  together.
->>>>>
->>>>>  Also, we have a few callbacks that we added (cfr., struct tcp_sock_o=
-ps).
->>>>>  We added them to avoid duplicating the code. Let's review those and =
-see if
->>>>>  we can get rid of them. (as an example: .send_fin could be removed a=
-s it is only
->>>>>  called from tcp_shutdown, called from the .shutdown callback in tcp_=
-prot -
->>>>>  thus if we expose a separate MPTCP socket-type with its own struct p=
-roto,
->>>>>  we can get rid of the .send_fin callback)
->>>>>
->>>>
->>>> I think a separate MPTCP socket type will be important for upstream
->>>> acceptance. My team has been working on some code with this separate s=
-ocket
->>>> type that we can share.
->>>
->>> Great! I would love to move MPTCP to a separate socket-type.
->>>
->>>> I'm thinking that it will be useful to share once a
->>>> connection can stay up without falling back to TCP.
->>>
->>> Hmm... I'm not sure I understand. What do you mean with "connection can=
- stay
->>> up without falling back to TCP".
->>
->> Sorry, to clarify:
->>
->> The code I have today does not process incoming DSS options or send a da=
-ta
->> ack, so the connection falls back to regular TCP after a couple of packe=
-ts.
->> It's based on net-next.
->
-> Oh, so it is not integrated on top of the MPTCP-code and rather a fresh
-> start from scratch?
+> On Wed, Feb 28, 2018 at 11:41 PM, Christoph Paasch <cpaasch(a)apple.com>
+> wrote:
+> =
 
-Not entirely from scratch, but mostly.
+> > Yeah, feedback was disappointingly scarce :/
+> >
+> > It probably was not what he had completely in mind, as he didn't talk a=
+bout
+> > a TCP-option framework but simply about moving TCP-MD5 code out of the
+> > TCP-stack. So, with our proposal we went a bit further.
+> >
+> =
 
->> I would like to get my code to a point where it sends a correct data ack=
- so
->> the connection does not fall back, and at that point post the code on
->> git.kernel.org and as a patch set on this list.
->
-> Maybe, even if the data-reception is not yet working, I still would be
-> intersted in the MPTCP socket-type patches. Because that could be integra=
-ted
-> into multipath-tcp.org.
->
-> Because, getting the data-reception to work if you started from scratch is
-> going to take you a lot of time.
+> Or maybe simply unlucky with who was available at this time to have a look
+> at them :)
+> =
 
-We've been working on it for a while, and I'm pretty close to having data =
+> =
 
-reception working (just a single subflow, no join, various other early =
+> > TLS is a good example. They actually do have a lookup table where the
+> > driver
+> > is calling back into the TCP-stack to get the TLS-record information.
+> >
+> > We had discussed this with people from Mellanox that proposed the
+> > TLS hardware offloading: https://lists.01.org/
+> > pipermail/mptcp/2017-November/000165.html
+> =
 
-implementation constraints).
+> =
 
->
->>>>> * Investigate how/if we can make MPTCP adopt KCM or ULP.
->>>>
->>>> My main concern about ULP is that only one upper layer protocol can be=
- set
->>>> up (at least as the code is now), so you wouldn't be able to do someth=
-ing
->>>> like use in-kernel TLS over MPTCP. Other than that, it seems like a na=
-tural
->>>> fit for MPTCP.
->>>
->>> Do you think it would be feasible to make ULP use multiple ULPs ?
->>
->> I think it's possible to have a layered approach to ULP, maybe by provid=
-ing
->> a list of protocols to setsockopt. It would be nice to have some
->> infrastructure to help implement it correctly, rather than depending on =
-each
->> ULP to correctly call in to the layer below it whether it's the "normal"=
- TCP
->> code or some other ULP. The combinatorics would be a headache for sure:
->> running TLS over an MPTCP connection makes sense, but MPTCP layered on t=
-op
->> of TLS doesn't make sense. At least if all the protocols were specified =
-in
->> one setsockopt we could limit which combinations are allowed.
->
-> Yes, MPTCP in this case would be special as it is so tightly coupled to T=
-CP.
->
-> MPTCP is always the protocol that would be at the bottom of the stack I
-> think.
+> Thank you for the link!
+> =
 
-Ok, thanks for the confirmation.
+> Yes, that would be good! Just a short weekly sync could be useful.
+> >
+> > Do you have a Webex or other means to set this up?
+> >
+> =
+
+> I think I can setup a webex (even if it is less fun to use that on a Linux
+> desktop :) ). We already used talky.io, more Linux friendly if we need to
+> share screen and others, maybe not needed.
+
+talky.io is fine for me as well.
+
+> Another issue may be the time. I think you are all in the west coast of t=
+he
+> US :-)
+> But I am sure I can find time on the evening for a short meeting!
+
+Ideally for me, it would be at 9am (for you 6pm). Otherwise, I can make 8am
+as well (5pm for you).
+
+I don't know what the opinion of the others is on the timing.
 
 
---
-Mat Martineau
-Intel OTC
+Christoph
 
---===============8431908118616523262==--
+
+> =
+
+> =
+
+> > Looking forward to the netlink PM! :-)
+> >
+> =
+
+> I hope I will have time very soon to clean this.
+> Mat, do you prefer to talk about that directly by commenting the patches =
+on
+> mptcp-dev ML?
+> =
+
+> Matthieu
+> -- =
+
+> [image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+> Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> <https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Lou=
+vain-la-Neuve,+Belgium>
+> =
+
+> -- =
+
+> =
+
+> ------------------------------
+> DISCLAIMER.
+> This email and any files transmitted with it are confidential and intende=
+d =
+
+> solely for the use of the individual or entity to whom they are addressed=
+. =
+
+> If you have received this email in error please notify the system manager=
+. =
+
+> This message contains confidential information and is intended only for t=
+he =
+
+> individual named. If you are not the named addressee you should not =
+
+> disseminate, distribute or copy this e-mail. Please notify the sender =
+
+> immediately by e-mail if you have received this e-mail by mistake and =
+
+> delete this e-mail from your system. If you are not the intended recipien=
+t =
+
+> you are notified that disclosing, copying, distributing or taking any =
+
+> action in reliance on the contents of this information is strictly =
+
+> prohibited.
+
+--===============2819481862549350281==--
