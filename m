@@ -1,137 +1,137 @@
-Content-Type: multipart/mixed; boundary="===============3389999889200756048=="
+Content-Type: multipart/mixed; boundary="===============6150892605667979642=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Next steps discussion
-Date: Thu, 01 Mar 2018 12:05:30 -0800
-Message-ID: <alpine.OSX.2.21.1803011143000.24753@mjmartin-mac01.local>
-In-Reply-To: 20180301193847.GV2038@MacBook-Pro-4.local
+Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
+Date: Thu, 01 Mar 2018 12:05:21 -0800
+Message-ID: <df4ffe43-f99a-fff6-81ac-cd1507f78525@oracle.com>
+In-Reply-To: 20180301191802.GA41258@MacBook-Pro-4.local
 X-Status: 
 X-Keywords:                  
-X-UID: 337
+X-UID: 338
 
---===============3389999889200756048==
+--===============6150892605667979642==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 1 Mar 2018, Christoph Paasch wrote:
 
-> On 01/03/18 - 18:05:40, Matthieu Baerts wrote:
+
+On 03/01/2018 11:18 AM, Christoph Paasch wrote:
+> Rao,
+>
+> On 28/02/18 - 14:57:08, Rao Shoaib wrote:
 >> Hi Christoph,
 >>
->> On Wed, Feb 28, 2018 at 11:41 PM, Christoph Paasch <cpaasch(a)apple.com>
->> wrote:
->>
->>> Yeah, feedback was disappointingly scarce :/
+>> On 02/28/2018 02:32 PM, Christoph Paasch wrote:
+>>>>> Hi Rao -
+>>>>>
+>>>>> I'd encourage you to closely read David Miller's response
+>>>>> (https://www.spinics.net/lists/netdev/msg481868.html) to the TCP-MD5 =
+RFC
+>>>>> patch set that Christoph posted. We proposed some targeted indirect
+>>>>> calls to callbacks for handling TCP options. He said "Sorry, I'm real=
+ly
+>>>>> not thrilled about this", and was focused on the performance
+>>>>> implications of those callbacks. Have you looked at the performance a=
+nd
+>>>>> memory impact of adding indirection to a few dozen core TCP function
+>>>>> calls?
+>>>> Yes I have. There are several papers on this subject and the jury is o=
+ut. In
+>>>> the case of the frame work I have not looked at the code but Dave says
+>>>>
+>>>> "I can already see in your patches that new overhead is added, new
+>>>> tests in the packet building fast paths that are completely
+>>>> unnecessary with the existing code, etc."
+>>>>
+>>>> In my changes there are no new tests and fast is completely untouched.=
+ The
+>>>> only change is to call functions via a pointer instead of having inlin=
+e. The
+>>>> impact of that has been a topic of discussion for a long time because =
+of
+>>>> c++.
+>>> The problem is in patch 5/9. For example, the change in
+>>> __tcp_push_pending_frames.
 >>>
->>> It probably was not what he had completely in mind, as he didn't talk a=
-bout
->>> a TCP-option framework but simply about moving TCP-MD5 code out of the
->>> TCP-stack. So, with our proposal we went a bit further.
+>>> Accessing the function-pointer makes two memory-accesses which potentia=
+lly
+>>> can have a cache-miss.
 >>>
->>
->> Or maybe simply unlucky with who was available at this time to have a lo=
-ok
->> at them :)
->>
->>
->>> TLS is a good example. They actually do have a lookup table where the
->>> driver
->>> is calling back into the TCP-stack to get the TLS-record information.
->>>
->>> We had discussed this with people from Mellanox that proposed the
->>> TLS hardware offloading: https://lists.01.org/
->>> pipermail/mptcp/2017-November/000165.html
->>
->>
->> Thank you for the link!
->>
->> Yes, that would be good! Just a short weekly sync could be useful.
->>>
->>> Do you have a Webex or other means to set this up?
->>>
->>
->> I think I can setup a webex (even if it is less fun to use that on a Lin=
-ux
->> desktop :) ). We already used talky.io, more Linux friendly if we need to
->> share screen and others, maybe not needed.
->
-> talky.io is fine for me as well.
-
-I haven't used it before, but it looks like a fine option. Thank you for =
-
-setting this up.
-
->
->> Another issue may be the time. I think you are all in the west coast of =
+>>> That's the fast-path cost that upstream is worried about.
+>> Anything can cause a cache miss, the code for the function may not be th=
+ere.
+>> If this is a fast path, the chances are very likely everything will be in
+>> the CPU cache. I have to look at the options framework on which all these
+>> comments are based on.
+>>>>> To give some more background, when Christoph was crafting the MD5 pat=
+ch
+>>>>> set I pushed to take out some static-branch code that needed some work
+>>>>> but eliminated the impact of the added callbacks for normal TCP. David
+>>>>> focused on exactly that issue and didn't dive in to other aspects of =
 the
->> US :-)
->> But I am sure I can find time on the evening for a short meeting!
->
-> Ideally for me, it would be at 9am (for you 6pm). Otherwise, I can make 8=
-am
-> as well (5pm for you).
->
-> I don't know what the opinion of the others is on the timing.
-
-I'm also in the Pacific time zone, as are my coworkers Peter and Ossama. =
-
-Personally, 9am works better.
-
->
->>
->>
->>> Looking forward to the netlink PM! :-)
+>>>>> code. I can't fault him for that - he sorts through a staggering volu=
+me
+>>>>> of patches every day, and if there's an issue that's clear at a glance
+>>>>> it will pull all attention from the rest of the proposal. Also consid=
+er
+>>>>> that Christoph replied with a few more questions, but the discussion
+>>>>> stalled.
+>>>>>
+>>>>> I do have more to say about the proposed architecture and how to
+>>>>> structure the patch set for netdev - but I think the maintainer feedb=
+ack
+>>>>> we already have about indirect callbacks is most critical to consider
+>>>>> and factor in to what we send to netdev in the future. We have the
+>>>>> shared goal to get MPTCP in to the upstream kernel and it's going to
+>>>>> take a coordinated community to get there!
+>>>> I agree that it will take a co-ordinated effort but we need to know wh=
+at
+>>>> upstream will accept. I have not seen any code or a detailed proposal.
+>>>>
+>>>> I will be sending out modified MPTCP code that works with the IP chang=
+es.
+>>>>
+>>>> What are the other issues besides the direct calls ?
+>>> The list of function pointers is huge.
 >>>
+>>> If we post this on netdev, it won't cast a good light on the MPTCP
+>>> upstreaming effort. DaveM wants the design to fit neatly into the TCP-s=
+tack
+>>> with minimal/zero performance impact.
+>> That is not exactly correct. When we talked to them they were willing to
+>> accept some regression. Also I recently exchanged some email with them a=
+bout
+>> how to submit a patch in which I did mention I was using pointers, I did=
+ not
+>> hear an concern. All they said was submit the patch and lets us look at =
+the
+>> code.
+>>> We have to try to achieve that before we post on netdev.
+>> Well how do we determine that ?
 >>
->> I hope I will have time very soon to clean this.
->> Mat, do you prefer to talk about that directly by commenting the patches=
- on
->> mptcp-dev ML?
-
-That's fine with me. I did read the paper (unfortunately I hadn't come =
-
-across it before!), and it looks like our approaches have a lot in common =
-
-- it will be informative to compare the details.
-
-
-From earlier in this sub-thread:
-
->      This is what I'm working on now. For outgoing packets, I have a way
->      to optionally allocate sk_buffs with extra control block space. For
->      incoming packets, my initial experiment is with preventing packet
->      coalesce/collapse so TCP options are still in the skb headroom. I
->      don't consider that a long-term solution, though. Some kind of
->      lookup table will probably be needed.
+>>>
+>>> The problem is also that the patches don't provide any context to netdev
+>>> as to why this is needed (e.g., why is a function-pointer for tcp_urg
+>>> needed?). Without the context, it will be hard for people to provide
+>>> feedback.
+>> That is fine. Let the community reject the patch. I see no harm in asking
+>> the community. I am ready for my patch to be rejected, but what if they =
+say
+>> yes fine ?
+> The harm can be that they put MPTCP on a "mental spam-filter" because we =
+are
+> not taking their feedback into account.
 >
-> That looks interesting!
 >
-> On some systems with hardware acceleration to bypass the main CPU for =
+> Christoph
+>
+What feedback -- I have read Dave's reply. How you concluded anything =
 
-> established connections, I guess they also have to modify the skb to =
+specific is besides me.
 
-> share info between the main CPU and another component. Do you have any =
+Rao
 
-> ideas how they are doing that? It is maybe not a real problem for them =
 
-> to increase the size of the skb if most of the traffic goes in the "fast =
-
-> path".
-
-Are you referring to userspace stacks (like DPDK), or optimizations like =
-
-GRO? I'm not sure of the specific answer to your question, but from what I =
-
-see the drivers try to allocate enough space in the skbs to accomodate the =
-
-storage needs through the skb's lifetime.
-
-Thanks,
-
---
-Mat Martineau
-Intel OTC
-
---===============3389999889200756048==--
+--===============6150892605667979642==--
