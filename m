@@ -1,207 +1,154 @@
-Content-Type: multipart/mixed; boundary="===============3178922838245252146=="
+Content-Type: multipart/mixed; boundary="===============5834417331465792204=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Next steps discussion
-Date: Thu, 01 Mar 2018 18:05:40 +0100
-Message-ID: <CAKuKrBnwqGth+dGqwBiJHgh90fCUhg9AWgy+VVUxRWdNjx8zLg@mail.gmail.com>
-In-Reply-To: 20180228224156.GB15661@MacBook-Pro-4.local
+Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
+Date: Thu, 01 Mar 2018 11:18:02 -0800
+Message-ID: <20180301191802.GA41258@MacBook-Pro-4.local>
+In-Reply-To: 8c03e117-1f20-656d-8f0e-af279abf70c1@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 331
+X-UID: 332
 
---===============3178922838245252146==
+--===============5834417331465792204==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
+Rao,
 
-On Wed, Feb 28, 2018 at 11:41 PM, Christoph Paasch <cpaasch(a)apple.com>
-wrote:
+On 28/02/18 - 14:57:08, Rao Shoaib wrote:
+> =
 
-> Yeah, feedback was disappointingly scarce :/
->
-> It probably was not what he had completely in mind, as he didn't talk abo=
-ut
-> a TCP-option framework but simply about moving TCP-MD5 code out of the
-> TCP-stack. So, with our proposal we went a bit further.
->
+> Hi Christoph,
+> =
 
-Or maybe simply unlucky with who was available at this time to have a look
-at them :)
+> On 02/28/2018 02:32 PM, Christoph Paasch wrote:
+> > =
+
+> > > > Hi Rao -
+> > > > =
+
+> > > > I'd encourage you to closely read David Miller's response
+> > > > (https://www.spinics.net/lists/netdev/msg481868.html) to the TCP-MD=
+5 RFC
+> > > > patch set that Christoph posted. We proposed some targeted indirect
+> > > > calls to callbacks for handling TCP options. He said "Sorry, I'm re=
+ally
+> > > > not thrilled about this", and was focused on the performance
+> > > > implications of those callbacks. Have you looked at the performance=
+ and
+> > > > memory impact of adding indirection to a few dozen core TCP function
+> > > > calls?
+> > > Yes I have. There are several papers on this subject and the jury is =
+out. In
+> > > the case of the frame work I have not looked at the code but Dave says
+> > > =
+
+> > > "I can already see in your patches that new overhead is added, new
+> > > tests in the packet building fast paths that are completely
+> > > unnecessary with the existing code, etc."
+> > > =
+
+> > > In my changes there are no new tests and fast is completely untouched=
+. The
+> > > only change is to call functions via a pointer instead of having inli=
+ne. The
+> > > impact of that has been a topic of discussion for a long time because=
+ of
+> > > c++.
+> > The problem is in patch 5/9. For example, the change in
+> > __tcp_push_pending_frames.
+> > =
+
+> > Accessing the function-pointer makes two memory-accesses which potentia=
+lly
+> > can have a cache-miss.
+> > =
+
+> > That's the fast-path cost that upstream is worried about.
+> Anything can cause a cache miss, the code for the function may not be the=
+re.
+> If this is a fast path, the chances are very likely everything will be in
+> the CPU cache. I have to look at the options framework on which all these
+> comments are based on.
+> > =
+
+> > > > To give some more background, when Christoph was crafting the MD5 p=
+atch
+> > > > set I pushed to take out some static-branch code that needed some w=
+ork
+> > > > but eliminated the impact of the added callbacks for normal TCP. Da=
+vid
+> > > > focused on exactly that issue and didn't dive in to other aspects o=
+f the
+> > > > code. I can't fault him for that - he sorts through a staggering vo=
+lume
+> > > > of patches every day, and if there's an issue that's clear at a gla=
+nce
+> > > > it will pull all attention from the rest of the proposal. Also cons=
+ider
+> > > > that Christoph replied with a few more questions, but the discussion
+> > > > stalled.
+> > > > =
+
+> > > > I do have more to say about the proposed architecture and how to
+> > > > structure the patch set for netdev - but I think the maintainer fee=
+dback
+> > > > we already have about indirect callbacks is most critical to consid=
+er
+> > > > and factor in to what we send to netdev in the future. We have the
+> > > > shared goal to get MPTCP in to the upstream kernel and it's going to
+> > > > take a coordinated community to get there!
+> > > I agree that it will take a co-ordinated effort but we need to know w=
+hat
+> > > upstream will accept. I have not seen any code or a detailed proposal.
+> > > =
+
+> > > I will be sending out modified MPTCP code that works with the IP chan=
+ges.
+> > > =
+
+> > > What are the other issues besides the direct calls ?
+> > The list of function pointers is huge.
+> > =
+
+> > If we post this on netdev, it won't cast a good light on the MPTCP
+> > upstreaming effort. DaveM wants the design to fit neatly into the TCP-s=
+tack
+> > with minimal/zero performance impact.
+> That is not exactly correct. When we talked to them they were willing to
+> accept some regression. Also I recently exchanged some email with them ab=
+out
+> how to submit a patch in which I did mention I was using pointers, I did =
+not
+> hear an concern. All they said was submit the patch and lets us look at t=
+he
+> code.
+> > =
+
+> > We have to try to achieve that before we post on netdev.
+> Well how do we determine that ?
+> =
+
+> > =
+
+> > =
+
+> > The problem is also that the patches don't provide any context to netdev
+> > as to why this is needed (e.g., why is a function-pointer for tcp_urg
+> > needed?). Without the context, it will be hard for people to provide
+> > feedback.
+> That is fine. Let the community reject the patch. I see no harm in asking
+> the community. I am ready for my patch to be rejected, but what if they s=
+ay
+> yes fine ?
+
+The harm can be that they put MPTCP on a "mental spam-filter" because we are
+not taking their feedback into account.
 
 
-> TLS is a good example. They actually do have a lookup table where the
-> driver
-> is calling back into the TCP-stack to get the TLS-record information.
->
-> We had discussed this with people from Mellanox that proposed the
-> TLS hardware offloading: https://lists.01.org/
-> pipermail/mptcp/2017-November/000165.html
+Christoph
 
 
-Thank you for the link!
-
-Yes, that would be good! Just a short weekly sync could be useful.
->
-> Do you have a Webex or other means to set this up?
->
-
-I think I can setup a webex (even if it is less fun to use that on a Linux
-desktop :) ). We already used talky.io, more Linux friendly if we need to
-share screen and others, maybe not needed.
-
-Another issue may be the time. I think you are all in the west coast of the
-US :-)
-But I am sure I can find time on the evening for a short meeting!
-
-
-> Looking forward to the netlink PM! :-)
->
-
-I hope I will have time very soon to clean this.
-Mat, do you prefer to talk about that directly by commenting the patches on
-mptcp-dev ML?
-
-Matthieu
--- =
-
-[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
-Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
-in-la-Neuve,+Belgium>
-
--- =
-
-
-------------------------------
-DISCLAIMER.
-This email and any files transmitted with it are confidential and intended =
-
-solely for the use of the individual or entity to whom they are addressed. =
-
-If you have received this email in error please notify the system manager. =
-
-This message contains confidential information and is intended only for the =
-
-individual named. If you are not the named addressee you should not =
-
-disseminate, distribute or copy this e-mail. Please notify the sender =
-
-immediately by e-mail if you have received this e-mail by mistake and =
-
-delete this e-mail from your system. If you are not the intended recipient =
-
-you are notified that disclosing, copying, distributing or taking any =
-
-action in reliance on the contents of this information is strictly =
-
-prohibited.
-
---===============3178922838245252146==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGRpdiBkaXI9Imx0ciI+SGkgQ2hyaXN0b3BoLDxicj48ZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2V4
-dHJhIj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPk9uIFdlZCwgRmViIDI4LCAyMDE4IGF0
-IDExOjQxIFBNLCBDaHJpc3RvcGggUGFhc2NoIDxzcGFuIGRpcj0ibHRyIj4mbHQ7PGEgaHJlZj0i
-bWFpbHRvOmNwYWFzY2hAYXBwbGUuY29tIiB0YXJnZXQ9Il9ibGFuayI+Y3BhYXNjaEBhcHBsZS5j
-b208L2E+Jmd0Ozwvc3Bhbj4gd3JvdGU6PHNwYW4gY2xhc3M9ImdtYWlsLSI+PC9zcGFuPjxicj48
-c3BhbiBjbGFzcz0iZ21haWwtIj48L3NwYW4+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3Rl
-IiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCBy
-Z2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxzcGFuIGNsYXNzPSJnbWFpbC0iPgo8
-L3NwYW4+WWVhaCwgZmVlZGJhY2sgd2FzIGRpc2FwcG9pbnRpbmdseSBzY2FyY2UgOi88YnI+Cjxi
-cj4KSXQgcHJvYmFibHkgd2FzIG5vdCB3aGF0IGhlIGhhZCBjb21wbGV0ZWx5IGluIG1pbmQsIGFz
-IGhlIGRpZG4mIzM5O3QgdGFsayBhYm91dDxicj4KYSBUQ1Atb3B0aW9uIGZyYW1ld29yayBidXQg
-c2ltcGx5IGFib3V0IG1vdmluZyBUQ1AtTUQ1IGNvZGUgb3V0IG9mIHRoZTxicj4KVENQLXN0YWNr
-LiBTbywgd2l0aCBvdXIgcHJvcG9zYWwgd2Ugd2VudCBhIGJpdCBmdXJ0aGVyLjxicj48L2Jsb2Nr
-cXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj5PciBtYXliZSBzaW1wbHkgdW5sdWNreSB3aXRoIHdo
-byB3YXMgYXZhaWxhYmxlIGF0IHRoaXMgdGltZSB0byBoYXZlIGEgbG9vayBhdCB0aGVtIDopPGJy
-PjwvZGl2PjxkaXY+wqA8L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxl
-PSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQs
-MjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+VExTIGlzIGEgZ29vZCBleGFtcGxlLiBUaGV5IGFj
-dHVhbGx5IGRvIGhhdmUgYSBsb29rdXAgdGFibGUgd2hlcmUgdGhlIGRyaXZlcjxicj4KaXMgY2Fs
-bGluZyBiYWNrIGludG8gdGhlIFRDUC1zdGFjayB0byBnZXQgdGhlIFRMUy1yZWNvcmQgaW5mb3Jt
-YXRpb24uPGJyPgo8YnI+CldlIGhhZCBkaXNjdXNzZWQgdGhpcyB3aXRoIHBlb3BsZSBmcm9tIE1l
-bGxhbm94IHRoYXQgcHJvcG9zZWQgdGhlPGJyPgpUTFMgaGFyZHdhcmUgb2ZmbG9hZGluZzogPGEg
-aHJlZj0iaHR0cHM6Ly9saXN0cy4wMS5vcmcvcGlwZXJtYWlsL21wdGNwLzIwMTctTm92ZW1iZXIv
-MDAwMTY1Lmh0bWwiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8vbGlz
-dHMuMDEub3JnLzx3YnI+cGlwZXJtYWlsL21wdGNwLzIwMTctTm92ZW1iZXIvPHdicj4wMDAxNjUu
-aHRtbDwvYT48L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFuayB5b3UgZm9yIHRo
-ZSBsaW5rISA8YnI+PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5
-bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIw
-NCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2PjxkaXYgY2xhc3M9ImdtYWlsLWg1Ij4K
-CjwvZGl2PjwvZGl2PlllcywgdGhhdCB3b3VsZCBiZSBnb29kISBKdXN0IGEgc2hvcnQgd2Vla2x5
-IHN5bmMgY291bGQgYmUgdXNlZnVsLjxicj4KPGJyPgpEbyB5b3UgaGF2ZSBhIFdlYmV4IG9yIG90
-aGVyIG1lYW5zIHRvIHNldCB0aGlzIHVwPzxicj48L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+
-PGRpdj5JIHRoaW5rIEkgY2FuIHNldHVwIGEgd2ViZXggKGV2ZW4gaWYgaXQgaXMgbGVzcyBmdW4g
-dG8gdXNlIHRoYXQgb24gYSBMaW51eCBkZXNrdG9wIDopICkuIFdlIGFscmVhZHkgdXNlZCA8YSBo
-cmVmPSJodHRwOi8vdGFsa3kuaW8iPnRhbGt5LmlvPC9hPiwgbW9yZSBMaW51eCBmcmllbmRseSBp
-ZiB3ZSBuZWVkIHRvIHNoYXJlIHNjcmVlbiBhbmQgb3RoZXJzLCBtYXliZSBub3QgbmVlZGVkLjxi
-cj48YnI+PC9kaXY+PGRpdj5Bbm90aGVyIGlzc3VlIG1heSBiZSB0aGUgdGltZS4gSSB0aGluayB5
-b3UgYXJlIGFsbCBpbiB0aGUgd2VzdCBjb2FzdCBvZiB0aGUgVVMgOi0pPGJyPjwvZGl2PjxkaXY+
-QnV0IEkgYW0gc3VyZSBJIGNhbiBmaW5kIHRpbWUgb24gdGhlIGV2ZW5pbmcgZm9yIGEgc2hvcnQg
-bWVldGluZyE8L2Rpdj48ZGl2PsKgPC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3Rl
-IiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCBy
-Z2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPgoKTG9va2luZyBmb3J3YXJkIHRvIHRo
-ZSBuZXRsaW5rIFBNISA6LSk8YnI+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+SSBo
-b3BlIEkgd2lsbCBoYXZlIHRpbWUgdmVyeSBzb29uIHRvIGNsZWFuIHRoaXMuPC9kaXY+PGRpdj5N
-YXQsIGRvIHlvdSBwcmVmZXIgdG8gdGFsayBhYm91dCB0aGF0IGRpcmVjdGx5IGJ5IGNvbW1lbnRp
-bmcgdGhlIHBhdGNoZXMgb24gbXB0Y3AtZGV2IE1MPzxicj48YnI+PC9kaXY+PGRpdj5NYXR0aGll
-dTxicj48L2Rpdj48L2Rpdj4tLSA8YnI+PGRpdiBjbGFzcz0iZ21haWxfc2lnbmF0dXJlIj48ZGl2
-IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PHRhYmxl
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDs7bGV0dGVyLXNw
-YWNpbmc6bm9ybWFsO3RleHQtaW5kZW50OjBweDt0ZXh0LXRyYW5zZm9ybTpub25lO3dvcmQtc3Bh
-Y2luZzowcHgiIHdpZHRoPSIxMDAlIiBib3JkZXI9IjAiPjx0Ym9keT48dHI+PHRkIHJvd3NwYW49
-IjMiIHN0eWxlPSJwYWRkaW5nLWxlZnQ6NXB4O3BhZGRpbmctcmlnaHQ6NXB4IiB3aWR0aD0iMTAi
-IHZhbGlnbj0idG9wIiBhbGlnbj0ibGVmdCI+PGEgaHJlZj0iaHR0cDovL3d3dy50ZXNzYXJlcy5u
-ZXQiIHRhcmdldD0iX2JsYW5rIj48aW1nIHNyYz0iaHR0cDovL3d3dy50ZXNzYXJlcy5uZXQvc2ln
-bG9nby5wbmciIGFsdD0iVGVzc2FyZXMgU0EiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgYm9yZGVy
-PSIwIj48L2E+PC90ZD48dGQgc3R5bGU9InBhZGRpbmc6MHB4O2ZvbnQtZmFtaWx5OkhlbHZldGlj
-YSxBcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMHB4IiBoZWlnaHQ9IjEyIiBhbGlnbj0ibGVm
-dCI+PHNwYW4gc3R5bGU9ImZvbnQtd2VpZ2h0OmJvbGQ7Y29sb3I6cmdiKDM3LDgzLDE1NSk7ZGlz
-cGxheTppbmxpbmUiPk1hdHRoaWV1IEJhZXJ0cyB8IFImYW1wO0QgRW5naW5lZXI8L3NwYW4+PC90
-ZD48L3RyPjx0cj48dGQgc3R5bGU9InBhZGRpbmc6MHB4O2ZvbnQtZmFtaWx5OkhlbHZldGljYSxB
-cmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMHB4IiBoZWlnaHQ9IjEyIiBhbGlnbj0ibGVmdCI+
-PGEgaHJlZj0ibWFpbHRvOm1hdHRoaWV1LmJhZXJ0cyU0MHRlc3NhcmVzLm5ldCIgc3R5bGU9ImNv
-bG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdl
-dD0iX2JsYW5rIj5tYXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0PGJyPjwvYT48L3RkPjwvdHI+
-PHRyPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNh
-bnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGFsaWduPSJsZWZ0Ij48c3BhbiBzdHlsZT0iZm9udC13
-ZWlnaHQ6Ym9sZDtjb2xvcjpyZ2IoMzcsODMsMTU1KTtkaXNwbGF5OmlubGluZSI+VGVzc2FyZXMg
-U0EgfCBIeWJyaWQgQWNjZXNzIFNvbHV0aW9uczxicj48L3NwYW4+PGEgaHJlZj0iaHR0cDovL3d3
-dy50ZXNzYXJlcy5uZXQiIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO3RleHQtZGVjb3JhdGlvbjpu
-b25lO2Rpc3BsYXk6aW5saW5lIiB0YXJnZXQ9Il9ibGFuayI+d3d3LnRlc3NhcmVzLm5ldDwvYT48
-c3Bhbj7CoDwvc3Bhbj48YnI+PGEgaHJlZj0iaHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS9tYXBzP3E9
-MStBdmVudWUrSmVhbitNb25uZXQsKzEzNDgrT3R0aWduaWVzLUxvdXZhaW4tbGEtTmV1dmUsK0Jl
-bGdpdW0iIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO3RleHQtZGVjb3JhdGlvbjpub25lO2Rpc3Bs
-YXk6aW5saW5lIiB0YXJnZXQ9Il9ibGFuayI+MSBBdmVudWUgSmVhbiBNb25uZXQsIDEzNDggTG91
-dmFpbi1sYS1OZXV2ZSwgQmVsZ2l1bTwvYT48L3RkPjwvdHI+PC90Ym9keT48L3RhYmxlPjwvZGl2
-PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2Pgo8L2Rpdj48L2Rpdj48L2Rpdj4KCjxicj4K
-PGRpdj48YnI+PGhyPjwvZGl2Pjxmb250IHNpemU9IjEiPjxzcGFuIHN0eWxlPSJmb250LWZhbWls
-eTpWZXJkYW5hLHNhbnMtc2VyaWY7YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj5E
-SVNDTEFJTUVSLjwvc3Bhbj48YnIgc3R5bGU9ImZvbnQtZmFtaWx5OlZlcmRhbmEsc2Fucy1zZXJp
-ZjtiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPjxmb250IGNvbG9yPSIjMDAwMDAw
-IiBmYWNlPSJWZXJkYW5hLCBzYW5zLXNlcmlmIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjpyZ2Io
-MjU1LDI1NSwyNTUpIj5UaGlzIGVtYWlsIGFuZCBhbnkgZmlsZXMgdHJhbnNtaXR0ZWQgd2l0aCBp
-dCBhcmUgY29uZmlkZW50aWFsIGFuZCBpbnRlbmRlZCBzb2xlbHkgZm9yIHRoZSB1c2Ugb2YgdGhl
-IGluZGl2aWR1YWwgb3IgZW50aXR5IHRvIHdob20gdGhleSBhcmUgYWRkcmVzc2VkLiBJZiB5b3Ug
-aGF2ZSByZWNlaXZlZCB0aGlzIGVtYWlsIGluIGVycm9yIHBsZWFzZSBub3RpZnkgdGhlIHN5c3Rl
-bSBtYW5hZ2VyLiBUaGlzIG1lc3NhZ2UgY29udGFpbnMgY29uZmlkZW50aWFsIGluZm9ybWF0aW9u
-IGFuZCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgaW5kaXZpZHVhbCBuYW1lZC4gSWYgeW91IGFy
-ZSBub3QgdGhlIG5hbWVkIGFkZHJlc3NlZSB5b3Ugc2hvdWxkIG5vdCBkaXNzZW1pbmF0ZSwgZGlz
-dHJpYnV0ZSBvciBjb3B5IHRoaXMgZS1tYWlsLiBQbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1t
-ZWRpYXRlbHkgYnkgZS1tYWlsIGlmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGJ5IG1p
-c3Rha2UgYW5kIGRlbGV0ZSB0aGlzIGUtbWFpbCBmcm9tIHlvdXIgc3lzdGVtLiBJZiB5b3UgYXJl
-IG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50IHlvdSBhcmUgbm90aWZpZWQgdGhhdCBkaXNjbG9z
-aW5nLCBjb3B5aW5nLCBkaXN0cmlidXRpbmcgb3IgdGFraW5nIGFueSBhY3Rpb24gaW4gcmVsaWFu
-Y2Ugb24gdGhlIGNvbnRlbnRzIG9mIHRoaXMgaW5mb3JtYXRpb24gaXMgc3RyaWN0bHkgcHJvaGli
-aXRlZC48L2ZvbnQ+PC9mb250Pg==
---===============3178922838245252146==--
+--===============5834417331465792204==--
