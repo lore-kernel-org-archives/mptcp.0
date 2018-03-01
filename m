@@ -1,61 +1,188 @@
-Content-Type: multipart/mixed; boundary="===============5169690233345997303=="
+Content-Type: multipart/mixed; boundary="===============8431908118616523262=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 1/1] Add MPTCP code to work with the modified TCP
- code
-Date: Thu, 01 Mar 2018 11:20:41 -0800
-Message-ID: <20180301192041.GB41258@MacBook-Pro-4.local>
-In-Reply-To: 1519865392-10321-2-git-send-email-rao.shoaib@oracle.com
+Subject: Re: [MPTCP] Next steps discussion
+Date: Thu, 01 Mar 2018 11:37:09 -0800
+Message-ID: <alpine.OSX.2.21.1803011132510.24753@mjmartin-mac01.local>
+In-Reply-To: 20180301004439.GN2038@MacBook-Pro-4.local
 X-Status: 
 X-Keywords:                  
-X-UID: 333
+X-UID: 334
 
---===============5169690233345997303==
+--===============8431908118616523262==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 28/02/18 - 16:49:52, rao.shoaib(a)oracle.com wrote:
-> From: Rao Shoaib <rao.shoaib(a)oracle.com>
-> =
+On Wed, 28 Feb 2018, Christoph Paasch wrote:
 
-> Signed-off-by: Rao Shoaib <rao.shoaib(a)oracle.com>
-> ---
->  include/net/mptcp.h          | 1474 +++++++++++++++++++++
->  include/net/mptcp_v4.h       |   56 +
->  include/net/mptcp_v6.h       |   56 +
->  include/net/netns/mptcp.h    |   52 +
->  net/Kconfig                  |    1 +
->  net/Makefile                 |    1 +
->  net/mptcp/Kconfig            |  129 ++
->  net/mptcp/Makefile           |   22 +
->  net/mptcp/mptcp_balia.c      |  267 ++++
->  net/mptcp/mptcp_binder.c     |  487 +++++++
->  net/mptcp/mptcp_coupled.c    |  270 ++++
->  net/mptcp/mptcp_ctrl.c       | 2981 ++++++++++++++++++++++++++++++++++++=
-++++++
->  net/mptcp/mptcp_fullmesh.c   | 1877 ++++++++++++++++++++++++++
->  net/mptcp/mptcp_input.c      | 2970 ++++++++++++++++++++++++++++++++++++=
-+++++
->  net/mptcp/mptcp_ipv4.c       |  345 +++++
->  net/mptcp/mptcp_ipv6.c       |  316 +++++
->  net/mptcp/mptcp_ndiffports.c |  169 +++
->  net/mptcp/mptcp_ofo_queue.c  |  177 +++
->  net/mptcp/mptcp_olia.c       |  309 +++++
->  net/mptcp/mptcp_output.c     | 1837 ++++++++++++++++++++++++++
->  net/mptcp/mptcp_pm.c         |  178 +++
->  net/mptcp/mptcp_redundant.c  |  268 ++++
->  net/mptcp/mptcp_rr.c         |  301 +++++
->  net/mptcp/mptcp_sched.c      |  597 +++++++++
->  net/mptcp/mptcp_wvegas.c     |  268 ++++
->  25 files changed, 15408 insertions(+)
+> On 28/02/18 - 15:44:39, Mat Martineau wrote:
+>> On Wed, 28 Feb 2018, Christoph Paasch wrote:
+>>
+>>> On 27/02/18 - 10:50:38, Mat Martineau wrote:
+>>>>
+>>>> Hi Christoph,
+>>>>
+>>>> On Mon, 26 Feb 2018, Christoph Paasch wrote:
+>>>>
+>>>>> Hello,
+>>>>>
+>>>>> as for next steps after the submission of the TCP-option framework to=
+ netdev
+>>>>> and DaveM's feedback on it.
+>>>>>
+>>>>> Even if the submission got rejected, I think we still have a very use=
+ful set
+>>>>> of patches here. The need for a framework might pop up again in the f=
+uture,
+>>>>> and so these patches could come in handy.
+>>>>> Mat, maybe you can put our latest submission on your kernel.org-git r=
+epo
+>>>>> just so that we don't lose track of these patches?
+>>>>
+>>>> Done: https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.=
+git/log/?h=3Dmd5
+>>>
+>>> Thanks!
+>>>
+>>>>> I can also create a github repo if you prefer that.
+>>>>>
+>>>>>
+>>>>> As for DaveM's feedback, the main takeaway - as Mat already noted on =
+his other
+>>>>> mail - is that fast-path performance he the highest priority. Branchi=
+ng and
+>>>>> indirect function calls are hardly accepted there.
+>>>>>
+>>>>>
+>>>>> So, in that spirit I think we need to work towards reducing MPTCP's
+>>>>> intrusiveness to the TCP stack.
+>>>>>
+>>>>> * Stop taking meta-lock when receiving subflow data (all the changes =
+where
+>>>>>  we check for mptcp(tp) and then do bh_lock_sock(meta_sk)).
+>>>>>  The reason we do this in today's implementation is because it allows=
+ to
+>>>>>  access the meta data-structure at any point. If we stop taking the
+>>>>>  meta-lock a few things need to change:
+>>>>>  1. Do lockless accesses for selected fields (e.g., for the DATA_ACK).
+>>>>>  2. Group the more intrusive accesses to few select points in the TCP=
+-stack
+>>>>>     where we then take the meta-lock (e.g., when receiving data).
+>>>>>     (this would be equivalent as if the TCP-option framework would be=
+ there
+>>>>>     - thus we need to move code to these or similar points in the sta=
+ck)
+>>>>>  3. Sometimes schedule work-queues when we need to avoid deadlocks du=
+e to
+>>>>>     lock-ordering issues (e.g., when we can't take the meta-lock beca=
+use
+>>>>>     it's already held by another thread).
+>>>>>
+>>>>>  I think, the way to approach this here, is by working iteratively an=
+d start
+>>>>>  moving code in such a way that accesses to the meta-socket are group=
+ed
+>>>>>  together.
+>>>>>
+>>>>>  Also, we have a few callbacks that we added (cfr., struct tcp_sock_o=
+ps).
+>>>>>  We added them to avoid duplicating the code. Let's review those and =
+see if
+>>>>>  we can get rid of them. (as an example: .send_fin could be removed a=
+s it is only
+>>>>>  called from tcp_shutdown, called from the .shutdown callback in tcp_=
+prot -
+>>>>>  thus if we expose a separate MPTCP socket-type with its own struct p=
+roto,
+>>>>>  we can get rid of the .send_fin callback)
+>>>>>
+>>>>
+>>>> I think a separate MPTCP socket type will be important for upstream
+>>>> acceptance. My team has been working on some code with this separate s=
+ocket
+>>>> type that we can share.
+>>>
+>>> Great! I would love to move MPTCP to a separate socket-type.
+>>>
+>>>> I'm thinking that it will be useful to share once a
+>>>> connection can stay up without falling back to TCP.
+>>>
+>>> Hmm... I'm not sure I understand. What do you mean with "connection can=
+ stay
+>>> up without falling back to TCP".
+>>
+>> Sorry, to clarify:
+>>
+>> The code I have today does not process incoming DSS options or send a da=
+ta
+>> ack, so the connection falls back to regular TCP after a couple of packe=
+ts.
+>> It's based on net-next.
+>
+> Oh, so it is not integrated on top of the MPTCP-code and rather a fresh
+> start from scratch?
 
-Please read the sections "Separate your changes" and "E-mail size" of
-process/submitting-patches.rst.
+Not entirely from scratch, but mostly.
+
+>> I would like to get my code to a point where it sends a correct data ack=
+ so
+>> the connection does not fall back, and at that point post the code on
+>> git.kernel.org and as a patch set on this list.
+>
+> Maybe, even if the data-reception is not yet working, I still would be
+> intersted in the MPTCP socket-type patches. Because that could be integra=
+ted
+> into multipath-tcp.org.
+>
+> Because, getting the data-reception to work if you started from scratch is
+> going to take you a lot of time.
+
+We've been working on it for a while, and I'm pretty close to having data =
+
+reception working (just a single subflow, no join, various other early =
+
+implementation constraints).
+
+>
+>>>>> * Investigate how/if we can make MPTCP adopt KCM or ULP.
+>>>>
+>>>> My main concern about ULP is that only one upper layer protocol can be=
+ set
+>>>> up (at least as the code is now), so you wouldn't be able to do someth=
+ing
+>>>> like use in-kernel TLS over MPTCP. Other than that, it seems like a na=
+tural
+>>>> fit for MPTCP.
+>>>
+>>> Do you think it would be feasible to make ULP use multiple ULPs ?
+>>
+>> I think it's possible to have a layered approach to ULP, maybe by provid=
+ing
+>> a list of protocols to setsockopt. It would be nice to have some
+>> infrastructure to help implement it correctly, rather than depending on =
+each
+>> ULP to correctly call in to the layer below it whether it's the "normal"=
+ TCP
+>> code or some other ULP. The combinatorics would be a headache for sure:
+>> running TLS over an MPTCP connection makes sense, but MPTCP layered on t=
+op
+>> of TLS doesn't make sense. At least if all the protocols were specified =
+in
+>> one setsockopt we could limit which combinations are allowed.
+>
+> Yes, MPTCP in this case would be special as it is so tightly coupled to T=
+CP.
+>
+> MPTCP is always the protocol that would be at the bottom of the stack I
+> think.
+
+Ok, thanks for the confirmation.
 
 
-Christoph
+--
+Mat Martineau
+Intel OTC
 
-
---===============5169690233345997303==--
+--===============8431908118616523262==--
