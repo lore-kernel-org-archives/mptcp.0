@@ -1,203 +1,180 @@
-Content-Type: multipart/mixed; boundary="===============7099526676306890991=="
+Content-Type: multipart/mixed; boundary="===============6785318655313715316=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Othman, Ossama <ossama.othman at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 8th of March 2018
-Date: Thu, 08 Mar 2018 19:39:22 +0100
-Message-ID: <b6feaf42-9dea-46c7-a697-286bdaf8cff9@tessares.net>
+Subject: [MPTCP] [RFC] MPTCP Path Management Generic Netlink API
+Date: Thu, 08 Mar 2018 12:48:40 -0800
+Message-ID: <CAPyD+=CnxCpvN+h7zeUx-LRcn-jFfziEqpW8KuJjBcDy59m+ow@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 354
+X-UID: 355
 
---===============7099526676306890991==
+--===============6785318655313715316==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Everyone,
-
-We just had our first meeting with Mat and Ossama (Intel OTC), Christoph =
-
-(Apple) and myself (Tessares). Thank you guys for having participated to =
-
-this first nice meeting, it was very useful!
-
-
-Here are the minutes of the meeting, AP's are at the end:
-
-
-
-Direction: do we all agree that we need a mix between a new fork with =
-
-code from scratch and only adding new code to the current base?
-
-   Mat:
-	mptcp.org implementation is clearly not ready for upstream. On the =
-
-other hand, it seems stable and used.
-	We should not be afraid to rewrite code to fit with netdev's =
-
-maintainers expectations.
-	We need to get feedback from netdev maintainers, not wait to do =
-
-everything before asking for comments.
-
-   Christoph:
-	We should work on both sides: modify TCP stack to help for the =
-
-introduction of MPTCP and modify MPTCP to fit with these changes.
-	We should also try to do modifications on the current MPTCP code as =
-
-well. Of course if it is possible, sometimes it is better to work =
-
-without it to stay generic.
-	It could be good to share code as soon as possible, even if it is not =
-
-ready, more to share the concept. Working as a team.
-
-
-
-Could we draw a kind of roadmap? Not really for fixing dates - something =
-
-maybe impossible in our way of working - but to have an overview of the =
-
-work we still need to do.
-
-	Hard to draw something. We have big points (skb' size, API, meta-lock, =
-
-etc.) but we need to get feedback from netdev to know what's next.
-
-
-
-Discussion with netdev: it seems it is not clear what netdev maintainer =
-
-and main contributors would like to have. On the other hand, it seems =
-
-clear they would like to see MPTCP coming but not as it is. How can get =
-
-more input from them not to work on something they would not like?  Rao =
-
-proposed to send patches of the design to get comments. Is it the only =
-
-possibility? Is it possible to initiate longer discussions with them =
-
-about how to upstream MPTCP?
-
-	After the first feedback we got from David Miller about the TCP options =
-
-framework, it looks difficult for us to introduce any new extensions. He =
-
-maybe wants to see what would be the implementation without the =
-
-abstraction. Adding new abstractions for nothing will not be accepted.
-
-	For the TCP options framework, MPTCP was also mentioned, maybe not the =
-
-good thing. On the other hand, the framework was already useful (e.g. =
-
-for TCP MD5). Maybe not posted at the best moment, lack of people =
-
-reacting to these patches.
-	Ossama proposed to add data: perf are still the same, etc. It can =
-
-indeed help, sometimes difficult to know if they are interested by some =
-
-changes, especially when they are in the core system.
-	Would be easier if the modifications where not in the core system, if =
-
-MPTCP was on top of KCM or ULP but not really possible for MPTCP.
-	Note that it doesn't look like a clear NO. Maybe more discussions about =
-
-that could help.
-	Maybe they don't see MPTCP as something asked by many people. But MPTCP =
-
-is used by many people everyday in the world (iOS, Android in =
-
-South-Korea, Internet Hybrid)
-
-
-
-Concrete next steps:
-
-	- Mat's team: working with the PM netlink.
-  	- Mat: incoming skb with DSS on them. Having a generic POC to share
-	- Christoph: new stable release based on 4.14 upstream release. =
-
-Mid-term goal: working on the meta-socket lock. Can prevent MPTCP to be =
-
-on a completely separated area. It includes: consolidate all areas where =
-
-the subflow receives something and need to interact with the =
-
-meta-socket. Then we would be able to reduce the lock at the subflow level.
-	- Matthieu: cleaning MPTCP Netlink PM patches and send it on mptcp-dev.
-
-
-
-Meetings:
-
-	- having them each week looks good using the same tools (talky.io =
-
-currently seems to work better with Firefox and Safari, if you have =
-
-issues, reload and/or try with another browser)
-	- we didn't have time to go through the whole list of items we had in =
-
-mind. We will continue to do that next time.
-	- anybody else is free to join!
-
-
-
-Action Points:
-
-	Mat: check with other people from Intel who were more involved in =
-
-netdev community what could help: e.g. creating a workshop at Linux =
-
-plumber conf, meeting netdev maintainer and main contributors as a team, =
-
-not alone this time, show interest in MPTCP from different companies, etc.
-
-
-
-Feel free to comment these points and propose new ones for the next meeting!
-
-See you next week,
-Matthieu
-
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
--- =
-
-
-------------------------------
-DISCLAIMER.
-This email and any files transmitted with it are confidential and intended =
-
-solely for the use of the individual or entity to whom they are addressed. =
-
-If you have received this email in error please notify the system manager. =
-
-This message contains confidential information and is intended only for the =
-
-individual named. If you are not the named addressee you should not =
-
-disseminate, distribute or copy this e-mail. Please notify the sender =
-
-immediately by e-mail if you have received this e-mail by mistake and =
-
-delete this e-mail from your system. If you are not the intended recipient =
-
-you are notified that disclosing, copying, distributing or taking any =
-
-action in reliance on the contents of this information is strictly =
-
-prohibited.
-
---===============7099526676306890991==--
+Hi,
+
+Following up on on a brief exchange between Matthieu and Mat regarding
+a MPTCP path manager netlink API, I'd like to share to our own
+proposed generic netlink API developed in parallel.
+
+Please find the high level description below.  It'll be great to
+compare the two netlink based APIs to determine if either can be
+improved by leveraging different aspects from each one.
+
+Thanks!
+
+--
+Ossama Othman
+Intel OTC
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+RFC: MPTCP Path Management Generic Netlink API
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+A generic netlink socket is used to facilitate communication between
+the kernel and a user space daemon that handles MPTCP path management
+related operations, from here on in called the path manager.  Several
+multicast groups, attributes and operations are exposed by the "mptcp"
+generic netlink family, e.g.:
+
+$ genl ctrl list
+...
+Name: mptcp
+       ID: 0x1d  Version: 0x1  header size: 0  max attribs: 7
+       commands supported:
+               #1:  ID-0x0
+               #2:  ID-0x1
+               #3:  ID-0x2
+               #4:  ID-0x3
+               #5:  ID-0x4
+
+
+       multicast groups:
+               #1:  ID-0xa  name: new_connection
+               #2:  ID-0xb  name: new_addr
+               #3:  ID-0xc  name: join_attempt
+               #4:  ID-0xd  name: new_subflow
+               #5:  ID-0xe  name: subflow_closed
+               #6:  ID-0xf  name: conn_closed
+
+Each of the multicast groups corresponds to MPTCP path manager events
+supported by the kernel MPTCP stack.
+
+Kernel Initiated Events
+-----------------------
+* new_connection
+   * Called upon completion of new MPTCP-capable connection.
+     Information for initial subflow is made available to the path
+     manager.
+   * Payload
+      * Connection ID (globally unique for host)
+      * Local address
+      * Local port
+      * Remote address
+      * Remote port
+      * Priority
+* new_addr
+   * Triggered when the host receives an ADD_ADDR MPTCP option, i.e. a
+     new address is advertised by the remote side.
+   * Payload
+      * Connection ID
+      * Remote address ID
+      * Remote address
+      * Remote port
+* join_attempt
+   * Called when a MP_JOIN has been ACKed.  The path manager is
+     expected to respond with an allow_join event containing its
+     decision based on the configured policy.
+   * Payload
+      * Connection ID
+      * Local address ID
+      * Local address
+      * Local port
+      * Remote address ID
+      * Remote address
+      * Remote port
+* new_subflow
+   * Called when final MP_JOIN ACK has been ACKed.
+   * Payload
+      * Connection ID
+      * Subflow ID
+* subflow_closed
+   * Called when a subflow has been closed.  Allows path manager to
+     clean up subflow related resources.
+   * Payload
+      * Connection ID
+      * Subflow ID
+* conn_closed
+   * Call when an MPTCP connection as a whole, as opposed to a single
+     subflow, has been closed.  This is the case when close(2) has
+     been called on an MPTCP connection.
+   * Payload
+      * Connection ID
+
+Path Manager Initiated Events (Commands)
+----------------------------------------
+* send_addr
+   * Notify the kernel of the availability of new address for use in
+     MPTCP connections.  Triggers an ADD_ADDR to be sent to the peer.
+   * Payload
+      * Connection ID
+      * Address ID
+      * Local address
+      * Local port (optional, use same port as initial subflow if not
+        specified)
+* add_subflow
+   * Add new subflow to the MPTCP connection.  This triggers an
+     MP_JOIN to be sent to the peer.
+   * Payload
+      * Connection ID
+      * Local address ID
+      * Local address (optional, required if send_addr not previously
+        sent to establish the local address ID)
+      * Local port (optional, use same port as initial subflow if not
+        specified)
+      * Remote address ID (e.g. from a previously received new_addr or
+        join_attempt event)
+      * Backup priority flag (optional, use default priority if not
+        specified)
+      * Subflow ID
+* allow_join
+   * Allow MP_JOIN attempt from peer.
+   * Payload
+      * Connection ID
+      * Remote address ID (e.g from a previously received join_attempt
+        event).
+      * Local address
+      * Local port
+      * Allow indication (optional, do not allow join if not
+        specified)
+      * Backup priority flag (optional, use default priority if not
+        specified)
+      * Subflow ID
+* set_backup
+   * Set subflow priority to backup priority.
+   * Payload
+      * Connection ID
+      * Subflow ID
+      * Backup priority flag (optional, use default priority if not
+        specified)
+* remove_subflow
+   * Triggers a REMOVE_ADDR MPTCP option to be sent, ultimately
+     resulting in subflows routed through that invalidated address to
+     be closed.
+   * Payload
+      * Connection ID
+      * Subflow ID
+
+Security
+--------
+For security reasons, path management operations may only be performed
+by privileged processes due to the GENL_ADMIN_PERM generic netlink
+flag being set.  In particular, access to the MPTCP generic netlink
+interface will require CAP_NET_ADMIN privileges.
+
+--===============6785318655313715316==--
