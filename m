@@ -1,217 +1,343 @@
-Content-Type: multipart/mixed; boundary="===============7176295489566971182=="
+Content-Type: multipart/mixed; boundary="===============0803849292191284507=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Restructuring of TCP code for implementing MPTCP
-Date: Fri, 09 Mar 2018 15:25:17 -0800
-Message-ID: <73143413-688f-c7ee-98f6-76ed4c82faaf@oracle.com>
-In-Reply-To: cba72947-007a-2312-aaf7-feb90b71a2e4@oracle.com
+Subject: Re: [MPTCP] Summary of the discussion on the patch
+Date: Fri, 09 Mar 2018 17:25:37 -0800
+Message-ID: <alpine.OSX.2.21.1803091505350.2360@msottenb-mobl1.amr.corp.intel.com>
+In-Reply-To: 17cb97ed-94dc-1d8f-47bf-475fab89de1a@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 362
+X-UID: 363
 
---===============7176295489566971182==
+--===============0803849292191284507==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
+On Fri, 9 Mar 2018, Rao Shoaib wrote:
 
-On 03/09/2018 03:01 PM, Rao Shoaib wrote:
+> A few days ago I submitted a patch that implemented MPTCP using the =
+
+> latest net-next kernel. The patch that I submitted uses the latest =
+
+> kernel changes such as lock less listener, rb trees, resolves the long =
+
+> standing skb issue, allows upstream to build TCP only without requiring =
+
+> a single MPTCP file or definition, and also consolidates MPTCP code. =
+
+> Most importantly it is based on the current net-next kernel without =
+
+> requiring any new framework.
 >
+> Comments about the patch have exclusively been about the performance and =
+
+> memory overhead of using indirect function pointers. I have repeatedly =
+
+> solicited for any other comments. I have not received any.
 >
-> On 03/09/2018 02:19 PM, Mat Martineau wrote:
->>
->> Hi Rao -
->>
->> On Thu, 22 Feb 2018, Rao Shoaib wrote:
->>
->>> Hi Folks,
->>>
->>> When we met with David Miller and Eric Dumazet about a year ago to =
 
->>> discuss how to include MPTCP in the main Linux distribution, they =
+I had some additional recommendations in =
 
->>> wanted to have some code that could be evaluated and used at the =
+https://lists.01.org/pipermail/mptcp/2018-February/000323.html :
 
->>> basis for discussion.
->>>
->>> The patches that I have submitted are for starting that discussion =
+"""
+   * Include the new Kconfig modification to add CONFIG_MPTCP early in the =
 
->>> only and nothing else. If the approach is acceptable we can do more =
+patch set
 
->>> cleanup, If not we will have a discussion and hopefully agree on =
+   * Make sure that all patches will build with the config option enabled =
 
->>> something.
->>>
->>> I would like to send the patches, perhaps a week from now to the =
+or disabled (all include files and symbols present, etc.)
 
->>> netdev mailing list to start a discussion there and come up with a =
+   * Handle conditional compilation according to =
 
->>> plan to implement MPTCP.
->>>
->>> Comments/Suggestions ?
->>>
->>
->> I saw that you posted some questions on netdev this week and got some =
+https://www.kernel.org/doc/html/latest/process/coding-style.html#conditiona=
+l-compilation
 
->> maintainer feedback: https://marc.info/?t=3D152039384300002&r=3D1&w=3D2
->>
->> David mentions:
->>
->> """
->> Indirect calls are terrible and we are now looking at ways in which
->> we can remove them from as many parts of the networking as possible.
->> """
->>
-> Yes against all objections I did post to net-dev and got some very =
+   * Don't define callbacks in the data structure until there's code that =
 
-> informative answers. David is not allowing indirect function calls =
+uses them
 
-> because of the security issues. You should see the comments that Linus =
+   * Craft commit messages and subject lines that will help the reviewers =
 
-> has made about the fixes and folks asking for an alternative as they =
+understand the changes and what drives tham
+"""
 
-> are heavily used.
+> I have since contacted David Miller and Eric Dumazet. They are not =
+
+> allowing use of direct function pointers because of the current security =
+
+> issues and Linux is building a new framework for such use.
 >
-> https://www.theregister.co.uk/2018/01/22/intel_spectre_fix_linux/
-Sorry wrong url -- See
-
-https://news.ycombinator.com/item?id=3D16066968
-
-Edit: To give a bit more background, predicting indirect calls and =
-
-speculating into them is absolutely critical to getting good performance =
-
-from OOP-ish code which tends to use them a lot (virtual functions in =
-
-C++, function pointers in C). *The Linux kernel is (thankfully?) not =
-
-very OOP-ish, but it does rely on indirect calls (function pointers) =
-
-extensively.
-
-*Rao*.
-*
+> This is a minor change and we will be submitting a patch with the fix.
 >
->> It's not immediately clear which techniques are being looked at (and =
+> When the comments about the use of indirect function pointers were made =
 
->> both Eric and David did not elaborate when you followed up). I'm =
+> I was busy and brushed them aside with one line emails. To complete the =
 
->> trying to find out which alternatives he's referring to - anyone else =
+> discussion I think they need to be addressed with a little more =
 
->> seen information on this?
-> Nope. It's not clear what the solution will be, but that should not =
+> technical analysis. If=C2=A0 my analysis is wrong I would appreciate bein=
+g =
 
-> have any impact on the patch that we submitted. As a simple fix we can =
-
-> add if/else as there are only two ways to go.
+> corrected based on technical data.
 >
-> Please see my email and comment.
+> Comments:
 >
-> Rao.
+> * Memory bloat due to allocation of function pointer table:
 >
->> Regards,
->>
->> -- =
+> The function pointer tables (I believe 4) are pre-populated, are =
 
->> Mat Martineau
->> Intel OTC
+> __read_mostly and are shared among all sockets. The largest function =
+
+> pointer table on my system is around 320 bytes; compare that to the size =
+
+> of a socket which is 1024 and will get more bloated with the addition of =
+
+> MPTCP specific data structures.
 >
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
 
+I agree, the size of data structures that are not per-socket or per-packet =
 
---===============7176295489566971182==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+are not a big concern.
 
-PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
-bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
-MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPHA+PGJyPgogICAgPC9wPgogICAgPGJyPgog
-ICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAwMy8wOS8yMDE4IDAzOjAxIFBNLCBS
-YW8gU2hvYWliCiAgICAgIHdyb3RlOjxicj4KICAgIDwvZGl2PgogICAgPGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSIKICAgICAgY2l0ZT0ibWlkOmNiYTcyOTQ3LTAwN2EtMjMxMi1hYWY3LWZlYjkwYjcx
-YTJlNEBvcmFjbGUuY29tIj4KICAgICAgPGJyPgogICAgICA8YnI+CiAgICAgIE9uIDAzLzA5LzIw
-MTggMDI6MTkgUE0sIE1hdCBNYXJ0aW5lYXUgd3JvdGU6CiAgICAgIDxicj4KICAgICAgPGJsb2Nr
-cXVvdGUgdHlwZT0iY2l0ZSI+CiAgICAgICAgPGJyPgogICAgICAgIEhpIFJhbyAtCiAgICAgICAg
-PGJyPgogICAgICAgIDxicj4KICAgICAgICBPbiBUaHUsIDIyIEZlYiAyMDE4LCBSYW8gU2hvYWli
-IHdyb3RlOgogICAgICAgIDxicj4KICAgICAgICA8YnI+CiAgICAgICAgPGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSI+SGkgRm9sa3MsCiAgICAgICAgICA8YnI+CiAgICAgICAgICA8YnI+CiAgICAgICAg
-ICBXaGVuIHdlIG1ldCB3aXRoIERhdmlkIE1pbGxlciBhbmQgRXJpYyBEdW1hemV0IGFib3V0IGEg
-eWVhcgogICAgICAgICAgYWdvIHRvIGRpc2N1c3MgaG93IHRvIGluY2x1ZGUgTVBUQ1AgaW4gdGhl
-IG1haW4gTGludXgKICAgICAgICAgIGRpc3RyaWJ1dGlvbiwgdGhleSB3YW50ZWQgdG8gaGF2ZSBz
-b21lIGNvZGUgdGhhdCBjb3VsZCBiZQogICAgICAgICAgZXZhbHVhdGVkIGFuZCB1c2VkIGF0IHRo
-ZSBiYXNpcyBmb3IgZGlzY3Vzc2lvbi4KICAgICAgICAgIDxicj4KICAgICAgICAgIDxicj4KICAg
-ICAgICAgIFRoZSBwYXRjaGVzIHRoYXQgSSBoYXZlIHN1Ym1pdHRlZCBhcmUgZm9yIHN0YXJ0aW5n
-IHRoYXQKICAgICAgICAgIGRpc2N1c3Npb24gb25seSBhbmQgbm90aGluZyBlbHNlLiBJZiB0aGUg
-YXBwcm9hY2ggaXMKICAgICAgICAgIGFjY2VwdGFibGUgd2UgY2FuIGRvIG1vcmUgY2xlYW51cCwg
-SWYgbm90IHdlIHdpbGwgaGF2ZSBhCiAgICAgICAgICBkaXNjdXNzaW9uIGFuZCBob3BlZnVsbHkg
-YWdyZWUgb24gc29tZXRoaW5nLgogICAgICAgICAgPGJyPgogICAgICAgICAgPGJyPgogICAgICAg
-ICAgSSB3b3VsZCBsaWtlIHRvIHNlbmQgdGhlIHBhdGNoZXMsIHBlcmhhcHMgYSB3ZWVrIGZyb20g
-bm93IHRvCiAgICAgICAgICB0aGUgbmV0ZGV2IG1haWxpbmcgbGlzdCB0byBzdGFydCBhIGRpc2N1
-c3Npb24gdGhlcmUgYW5kIGNvbWUKICAgICAgICAgIHVwIHdpdGggYSBwbGFuIHRvIGltcGxlbWVu
-dCBNUFRDUC4KICAgICAgICAgIDxicj4KICAgICAgICAgIDxicj4KICAgICAgICAgIENvbW1lbnRz
-L1N1Z2dlc3Rpb25zID8KICAgICAgICAgIDxicj4KICAgICAgICAgIDxicj4KICAgICAgICA8L2Js
-b2NrcXVvdGU+CiAgICAgICAgPGJyPgogICAgICAgIEkgc2F3IHRoYXQgeW91IHBvc3RlZCBzb21l
-IHF1ZXN0aW9ucyBvbiBuZXRkZXYgdGhpcyB3ZWVrIGFuZCBnb3QKICAgICAgICBzb21lIG1haW50
-YWluZXIgZmVlZGJhY2s6CiAgICAgICAgPGEgY2xhc3M9Im1vei10eHQtbGluay1mcmVldGV4dCIg
-aHJlZj0iaHR0cHM6Ly9tYXJjLmluZm8vP3Q9MTUyMDM5Mzg0MzAwMDAyJmFtcDtyPTEmYW1wO3c9
-MiI+aHR0cHM6Ly9tYXJjLmluZm8vP3Q9MTUyMDM5Mzg0MzAwMDAyJmFtcDtyPTEmYW1wO3c9Mjwv
-YT4KICAgICAgICA8YnI+CiAgICAgICAgPGJyPgogICAgICAgIERhdmlkIG1lbnRpb25zOgogICAg
-ICAgIDxicj4KICAgICAgICA8YnI+CiAgICAgICAgIiIiCiAgICAgICAgPGJyPgogICAgICAgIElu
-ZGlyZWN0IGNhbGxzIGFyZSB0ZXJyaWJsZSBhbmQgd2UgYXJlIG5vdyBsb29raW5nIGF0IHdheXMg
-aW4KICAgICAgICB3aGljaAogICAgICAgIDxicj4KICAgICAgICB3ZSBjYW4gcmVtb3ZlIHRoZW0g
-ZnJvbSBhcyBtYW55IHBhcnRzIG9mIHRoZSBuZXR3b3JraW5nIGFzCiAgICAgICAgcG9zc2libGUu
-CiAgICAgICAgPGJyPgogICAgICAgICIiIgogICAgICAgIDxicj4KICAgICAgICA8YnI+CiAgICAg
-IDwvYmxvY2txdW90ZT4KICAgICAgWWVzIGFnYWluc3QgYWxsIG9iamVjdGlvbnMgSSBkaWQgcG9z
-dCB0byBuZXQtZGV2IGFuZCBnb3Qgc29tZSB2ZXJ5CiAgICAgIGluZm9ybWF0aXZlIGFuc3dlcnMu
-IERhdmlkIGlzIG5vdCBhbGxvd2luZyBpbmRpcmVjdCBmdW5jdGlvbiBjYWxscwogICAgICBiZWNh
-dXNlIG9mIHRoZSBzZWN1cml0eSBpc3N1ZXMuIFlvdSBzaG91bGQgc2VlIHRoZSBjb21tZW50cyB0
-aGF0CiAgICAgIExpbnVzIGhhcyBtYWRlIGFib3V0IHRoZSBmaXhlcyBhbmQgZm9sa3MgYXNraW5n
-IGZvciBhbiBhbHRlcm5hdGl2ZQogICAgICBhcyB0aGV5IGFyZSBoZWF2aWx5IHVzZWQuCiAgICAg
-IDxicj4KICAgICAgPGJyPgogICAgICA8YSBjbGFzcz0ibW96LXR4dC1saW5rLWZyZWV0ZXh0IiBo
-cmVmPSJodHRwczovL3d3dy50aGVyZWdpc3Rlci5jby51ay8yMDE4LzAxLzIyL2ludGVsX3NwZWN0
-cmVfZml4X2xpbnV4LyI+aHR0cHM6Ly93d3cudGhlcmVnaXN0ZXIuY28udWsvMjAxOC8wMS8yMi9p
-bnRlbF9zcGVjdHJlX2ZpeF9saW51eC88L2E+CiAgICAgIDxicj4KICAgIDwvYmxvY2txdW90ZT4K
-ICAgIFNvcnJ5IHdyb25nIHVybCAtLSBTZWUgPGJyPgogICAgPGJyPgogICAgPGEgY2xhc3M9Im1v
-ei10eHQtbGluay1mcmVldGV4dCIgaHJlZj0iaHR0cHM6Ly9uZXdzLnljb21iaW5hdG9yLmNvbS9p
-dGVtP2lkPTE2MDY2OTY4Ij5odHRwczovL25ld3MueWNvbWJpbmF0b3IuY29tL2l0ZW0/aWQ9MTYw
-NjY5Njg8L2E+PGJyPgogICAgPGJyPgogICAgRWRpdDogVG8gZ2l2ZSBhIGJpdCBtb3JlIGJhY2tn
-cm91bmQsIHByZWRpY3RpbmcgaW5kaXJlY3QgY2FsbHMgYW5kCiAgICBzcGVjdWxhdGluZyBpbnRv
-IHRoZW0gaXMgYWJzb2x1dGVseSBjcml0aWNhbCB0byBnZXR0aW5nIGdvb2QKICAgIHBlcmZvcm1h
-bmNlIGZyb20gT09QLWlzaCBjb2RlIHdoaWNoIHRlbmRzIHRvIHVzZSB0aGVtIGEgbG90ICh2aXJ0
-dWFsCiAgICBmdW5jdGlvbnMgaW4gQysrLCBmdW5jdGlvbiBwb2ludGVycyBpbiBDKS4gPGI+VGhl
-IExpbnV4IGtlcm5lbCBpcwogICAgICAodGhhbmtmdWxseT8pIG5vdCB2ZXJ5IE9PUC1pc2gsIGJ1
-dCBpdCBkb2VzIHJlbHkgb24gaW5kaXJlY3QgY2FsbHMKICAgICAgKGZ1bmN0aW9uIHBvaW50ZXJz
-KSBleHRlbnNpdmVseS48YnI+CiAgICAgIDxicj4KICAgIDwvYj5SYW88Yj4uPGJyPgogICAgPC9i
-Pjxicj4KICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiCiAgICAgIGNpdGU9Im1pZDpjYmE3Mjk0
-Ny0wMDdhLTIzMTItYWFmNy1mZWI5MGI3MWEyZTRAb3JhY2xlLmNvbSI+CiAgICAgIDxicj4KICAg
-ICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+SXQncyBub3QgaW1tZWRpYXRlbHkgY2xlYXIgd2hp
-Y2gKICAgICAgICB0ZWNobmlxdWVzIGFyZSBiZWluZyBsb29rZWQgYXQgKGFuZCBib3RoIEVyaWMg
-YW5kIERhdmlkIGRpZCBub3QKICAgICAgICBlbGFib3JhdGUgd2hlbiB5b3UgZm9sbG93ZWQgdXAp
-LiBJJ20gdHJ5aW5nIHRvIGZpbmQgb3V0IHdoaWNoCiAgICAgICAgYWx0ZXJuYXRpdmVzIGhlJ3Mg
-cmVmZXJyaW5nIHRvIC0gYW55b25lIGVsc2Ugc2VlbiBpbmZvcm1hdGlvbiBvbgogICAgICAgIHRo
-aXM/CiAgICAgICAgPGJyPgogICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgIE5vcGUuIEl0J3Mgbm90
-IGNsZWFyIHdoYXQgdGhlIHNvbHV0aW9uIHdpbGwgYmUsIGJ1dCB0aGF0IHNob3VsZAogICAgICBu
-b3QgaGF2ZSBhbnkgaW1wYWN0IG9uIHRoZSBwYXRjaCB0aGF0IHdlIHN1Ym1pdHRlZC4gQXMgYSBz
-aW1wbGUKICAgICAgZml4IHdlIGNhbiBhZGQgaWYvZWxzZSBhcyB0aGVyZSBhcmUgb25seSB0d28g
-d2F5cyB0byBnby4KICAgICAgPGJyPgogICAgICA8YnI+CiAgICAgIFBsZWFzZSBzZWUgbXkgZW1h
-aWwgYW5kIGNvbW1lbnQuCiAgICAgIDxicj4KICAgICAgPGJyPgogICAgICBSYW8uCiAgICAgIDxi
-cj4KICAgICAgPGJyPgogICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj5SZWdhcmRzLAogICAg
-ICAgIDxicj4KICAgICAgICA8YnI+CiAgICAgICAgLS3CoDxicj4KICAgICAgICBNYXQgTWFydGlu
-ZWF1CiAgICAgICAgPGJyPgogICAgICAgIEludGVsIE9UQwogICAgICAgIDxicj4KICAgICAgPC9i
-bG9ja3F1b3RlPgogICAgICA8YnI+CiAgICAgIF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCiAgICAgIDxicj4KICAgICAgbXB0Y3AgbWFpbGluZyBsaXN0CiAg
-ICAgIDxicj4KICAgICAgPGEgY2xhc3M9Im1vei10eHQtbGluay1hYmJyZXZpYXRlZCIgaHJlZj0i
-bWFpbHRvOm1wdGNwQGxpc3RzLjAxLm9yZyI+bXB0Y3BAbGlzdHMuMDEub3JnPC9hPgogICAgICA8
-YnI+CiAgICAgIDxhIGNsYXNzPSJtb3otdHh0LWxpbmstZnJlZXRleHQiIGhyZWY9Imh0dHBzOi8v
-bGlzdHMuMDEub3JnL21haWxtYW4vbGlzdGluZm8vbXB0Y3AiPmh0dHBzOi8vbGlzdHMuMDEub3Jn
-L21haWxtYW4vbGlzdGluZm8vbXB0Y3A8L2E+CiAgICAgIDxicj4KICAgIDwvYmxvY2txdW90ZT4K
-ICAgIDxicj4KICA8L2JvZHk+CjwvaHRtbD4K
+> * Too many indirect function pointers:
+>
+> I don't understand why the number even matters. What might matter is =
 
---===============7176295489566971182==--
+> their usage -- for that see below
+>
+
+The large number of pointers correlates to a large number of changes for =
+
+all the places those functions are called. What I've seen the maintainers =
+
+ask for is targeted, incremental changes with clear motivation. Replacing =
+
+lots of direct function calls with calls via function pointers is a broad =
+
+change.
+
+> * Overhead in the fast path of regular TCP
+>
+> Let's evaluate a simple Rx path
+>
+> Rx:
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0 one check was added in tcp_v[4,6]_rcv,
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0 one indirect call is encountered in tcp_recv_est=
+ablished or in =
+
+> tcp_data_queue
+>
+> Tx:
+>
+> =C2=A0=C2=A0=C2=A0 Indirect call to appropriate write_xmit function and t=
+han options =
+
+> processing
+>
+> That's it. All other indirect function calls are used in the slow =
+
+> control path. I may have missed counting one or two calls so in general =
+
+> the extra overhead is two indirect function calls in the fast path. I =
+
+> would love to see a solution with less than this overhead.
+>
+> Please note that these are not new calls, the original code was also =
+
+> making a call here. The only overhead is accessing the address of the =
+
+> table and indexing it.
+>
+
+I think expending a few clock cycles to make the TCP stack more flexible =
+
+and better accomodate MPTCP would be a good idea, but I have a different =
+
+set of priorities from the maintainers. What I've observed is that the =
+
+maintainers have some rules-of-thumb for optimizing (or even =
+
+micro-optimizing) fast paths, and converting hard-coded function calls to =
+
+calls made with a function pointer stored in a struct is something they'll =
+
+take a close look at on a case-by-case basis and will want to have a clear =
+
+sense of the justification for each change.
+
+> * Overhead of indirect function calls
+>
+> The example given to show the overhead was very simplistic, one that is =
+
+> used in a beginner level assembly language course. Most modern =
+
+> processors are very complicated, instructions are broken down into =
+
+> multiple micro operations and are executed in parallel, add prefetching =
+
+> and branch prediction and the whole situation becomes extremely =
+
+> complicated. It is so irrelevant and difficult to measure the cost that =
+
+> Intel does not even publish the cost in cycles. Perhaps Intel folks can =
+
+> get us the difference between callq and *callq to better evaluate the =
+
+> overhead.
+>
+> A similar argument applies to cache miss. Predicting a cache miss or =
+
+> guaranteeing a cache hit for data or instruction is nearly impossible =
+
+> except in very rare cases.
+>
+
+As I mentioned above, I think this comes down to way the maintainers look =
+
+at performance. I'm not so much trying to justify their criteria as point =
+
+out that these are the criteria I have observed them using. If some code =
+
+looks less efficient to them, but really has no impact or even makes an =
+
+improvement, I think they'll be convinced by profiling data.
+
+> I posted the same explanation on net-dev and I have not heard otherwise =
+
+> from anyone. As has been posted elsewhere, if indirect function calls =
+
+> are so bad then why are they used in libraries? file system code is =
+
+> completely based on indirect function calls.
+>
+
+I understand where you're coming from here - C function pointers are a =
+
+staple of any non-trivial C program and are widely used throughout the =
+
+kernel. It's unclear what they prefer instead.
+
+David did give a technical response to your point about measureable =
+
+overhead by saying current kernels disable optimizations for indirect =
+
+function calls.
+
+> * Not enough context and why indirect call for urg
+>
+> I thought I had provided the context in the cover letter and the code =
+
+> changes were straight forward. If more context is needed I will be happy =
+
+> to provide that.
+>
+
+I do think more detailed context would help. There's a need for both the =
+
+high level overview (as in the cover letter) and information in each patch =
+
+to justify the specific changes and provide helpful information that will =
+
+live on in the commit history. I try to take that perspective even with =
+
+RFCs that aren't expected to be merged.
+
+> MPTCP currently does not have support for urgent data, TCP urgent data =
+
+> has a particular syntax that needs to be adhered to when processing it =
+
+> (It is common knowledge that the syntax is broken though :-)). When =
+
+> support for urgent data is added, handling will be different than =
+
+> regular TCP hence the separate function.
+>
+
+Ok, that's exactly the kind of information that would be very helpful in =
+
+the commit message or comments.
+
+> * Comparison with a different patch
+>
+> It was suggested that if we ask David we will look like fools because we =
+
+> know why a previous patch was rejected -- because of the overhead due to =
+
+> indirect function calls.
+>
+> If David was concerned about indirect function calls he would have given =
+
+> the same argument as he did to my email. It seems to me that he was not =
+
+> happy about the new checks in the fast path and indirect calls are not =
+
+> even used in the fast path.
+>
+> for example in comments to patch 02/14 he says
+>
+> This adds a new test to the packet header building fast path,
+> and all of the call sites know whether they are dealing with
+> a full sock or not so the test is superfluous.
+>
+> And in the last comment he summarizes his concerns
+>
+> I can already see in your patches that new overhead is added, new
+> tests in the packet building fast paths that are completely
+> unnecessary with the existing code, etc.
+>
+> The reality is that only David knows what he was thinking, so when in =
+
+> doubt, directly asking him does not make you look like fool. It saves =
+
+> you a lot of time.
+>
+
+I think the core point is that the maintainers have finite time and =
+
+attention to share. We had some suggestions, based on what maintainers =
+
+have said in many different contexts, to iterate on the patch set to get =
+
+the most out of the maintainer's time.
+
+> In my email exchange on net-dev another issue over which there was =
+
+> disagreement was also confirmed. Upstream folks will allow changes to =
+
+> the current code; how much depends on the importance of the feature. I =
+
+> am sure they will be very skeptical of any new framework. David added =
+
+> that he will have to look at the change, there is no blank rule.
+>
+
+Sure, that's what I'd expect.
+
+> I hope that I have addressed the concerns raised and explained my =
+
+> thoughts on the design and performance. If there are any remaining =
+
+> technical, architectural concerns please feel free to post them and we =
+
+> will work together to resolve them.
+>
+> We will submit an updated patch based on the input from net-dev.
+
+Since there are a few revisions underway, I'll take a closer look at the =
+
+technical/architectural aspects of the code in the next posting.
+
+Thanks,
+
+--
+Mat Martineau
+Intel OTC
+
+--===============0803849292191284507==--
