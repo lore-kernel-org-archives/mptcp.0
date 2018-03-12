@@ -1,26 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============3943090012963441326=="
+Content-Type: multipart/mixed; boundary="===============7291471988226065391=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Othman, Ossama <ossama.othman at intel.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [RFC] MPTCP Path Management Generic Netlink API
-Date: Sun, 11 Mar 2018 20:27:43 -0700
-Message-ID: <20180312032743.GK74937@MacBook-Pro-4.local>
+Date: Mon, 12 Mar 2018 10:27:29 -0700
+Message-ID: <CAPyD+=AKor9ZD9W=OQxir=8LT-boHtduNSCi=4JPRUDNK9+vJQ@mail.gmail.com>
 In-Reply-To: 20180308234629.GA31562@greed.cult
 X-Status: 
 X-Keywords:                  
-X-UID: 365
+X-UID: 366
 
---===============3943090012963441326==
+--===============7291471988226065391==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Stephen,
+Hi Stephen,
 
-On 08/03/18 - 15:46:29, Stephen Brennan wrote:
-> Hi Ossama,
-> =
-
+On Thu, Mar 8, 2018 at 3:46 PM, Stephen Brennan <stephen(a)brennan.io> wrot=
+e:
 > I'm very interested in the idea of a MPTCP path manager Netlink API, since
 > I actually posted a patch on mptcp-dev recently containing a path manager
 > which did send and receive some commands over a Netlink API. My API was n=
@@ -30,119 +28,53 @@ ot
 of
 > research I was working on a lot easier.
 
-I saw your patches and will do a review soon.
+Thanks for pointing this out!  I'm interested in seeing your approach,
+so I'll take a look, too.
 
 > I do have some inline comments drawn from my experience, but first one
 > question. Is the implementation strategy for the Netlink PM to simply be
 > another path manager (selectable among the other path managers), or would
 > it replace the other path managers in some way?
 
-Long-term we definitely want to go away from having the kernel-moduled
-path-managers. They were very useful when we had to write research papers,
-but for upstreaming it's not a good design :)
+Our approach is to move all path management related operations to a
+user space daemon since they aren't in the critical path (assuming
+connection setup/teardown doesn't occur often), with the goal of
+minimizing the amount of work done in the kernel.  That daemon
+provides path manager plugin infrastructure.  Path manager plugins
+would implement the plugin interface (callback functions)
+corresponding to the generic netlink events described below.
+Selection of a path manager would be done at daemon start (the
+default) or at run-time through a socket option, similar to the socket
+option based selection in the multipath-tcp.org implementation.  To
+start, and to simplify the initial implementation, we'll only support
+selecting a path manager at run-time before the MPTCP connection has
+been established.  However, the below generic netlink proposal lacks a
+payload field, such as the path manager name, necessary to support
+run-time selection.  Adding a path manager name payload field to the
+new_connection event should suffice, as far as I can tell.
 
-
-Christoph
-
-> =
+More comments inline below ...
 
 > On Thu, Mar 08, 2018 at 12:48:40PM -0800, Othman, Ossama wrote:
-> > Hi,
-> > =
-
-> > Following up on on a brief exchange between Matthieu and Mat regarding
-> > a MPTCP path manager netlink API, I'd like to share to our own
-> > proposed generic netlink API developed in parallel.
-> > =
-
-> > Please find the high level description below.  It'll be great to
-> > compare the two netlink based APIs to determine if either can be
-> > improved by leveraging different aspects from each one.
-> > =
-
-> > Thanks!
-> > =
-
-> > --
-> > Ossama Othman
-> > Intel OTC
-> > =
-
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > RFC: MPTCP Path Management Generic Netlink API
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > =
-
-> > A generic netlink socket is used to facilitate communication between
-> > the kernel and a user space daemon that handles MPTCP path management
-> > related operations, from here on in called the path manager.  Several
-> > multicast groups, attributes and operations are exposed by the "mptcp"
-> > generic netlink family, e.g.:
-> > =
-
-> > $ genl ctrl list
-> > ...
-> > Name: mptcp
-> >        ID: 0x1d  Version: 0x1  header size: 0  max attribs: 7
-> >        commands supported:
-> >                #1:  ID-0x0
-> >                #2:  ID-0x1
-> >                #3:  ID-0x2
-> >                #4:  ID-0x3
-> >                #5:  ID-0x4
-> > =
-
-> > =
-
-> >        multicast groups:
-> >                #1:  ID-0xa  name: new_connection
-> >                #2:  ID-0xb  name: new_addr
-> >                #3:  ID-0xc  name: join_attempt
-> >                #4:  ID-0xd  name: new_subflow
-> >                #5:  ID-0xe  name: subflow_closed
-> >                #6:  ID-0xf  name: conn_closed
-> > =
-
-> > Each of the multicast groups corresponds to MPTCP path manager events
-> > supported by the kernel MPTCP stack.
-> > =
-
-> > Kernel Initiated Events
-> > -----------------------
-> > * new_connection
-> >    * Called upon completion of new MPTCP-capable connection.
-> >      Information for initial subflow is made available to the path
-> >      manager.
-> >    * Payload
-> >       * Connection ID (globally unique for host)
-> >       * Local address
-> >       * Local port
-> >       * Remote address
-> >       * Remote port
-> >       * Priority
-> > * new_addr
-> >    * Triggered when the host receives an ADD_ADDR MPTCP option, i.e. a
-> >      new address is advertised by the remote side.
-> >    * Payload
-> >       * Connection ID
-> >       * Remote address ID
-> >       * Remote address
-> >       * Remote port
-> > * join_attempt
-> >    * Called when a MP_JOIN has been ACKed.  The path manager is
-> >      expected to respond with an allow_join event containing its
-> >      decision based on the configured policy.
-> =
-
+>> * join_attempt
+>>    * Called when a MP_JOIN has been ACKed.  The path manager is
+>>      expected to respond with an allow_join event containing its
+>>      decision based on the configured policy.
+>
 > How would this be implemented? I'm not sure of the specifics, but many pa=
 th
 > manager functions are called from contexts in which sleeping is not
 > possible. It seems like waiting on a user-space decision for join_attempt
 > would require a decent amount of re-implementation. Plus, there is the
 > possibility that userspace may never respond.
-> =
+
+You certainly bring up good point.  I'm not far enough in the
+implementation, particularly for this join_attempt event, to be able
+to give you a meaningful answer regarding the inability to sleep.
+Regarding the issue of user space potentially not responding, wouldn't
+leveraging a timeout prevent the kernel space from waiting
+indefinitely?  It may not be the best solution but at least we could
+bound the wait time.
 
 > It seems like a more pragmatic approach could be to have some strategies
 > implemented in the kernel. EG: default decline, default accept, accept on
@@ -151,130 +83,59 @@ t,
 > and userspace could modify the global policy, or set the policy on a
 > particular connection. This would allow the kernel implementation to
 > respond immediately, while still giving userspace some flexibility.
-> =
 
-> >    * Payload
-> >       * Connection ID
-> >       * Local address ID
-> >       * Local address
-> >       * Local port
-> >       * Remote address ID
-> >       * Remote address
-> >       * Remote port
-> > * new_subflow
-> >    * Called when final MP_JOIN ACK has been ACKed.
-> >    * Payload
-> >       * Connection ID
-> >       * Subflow ID
-> > * subflow_closed
-> >    * Called when a subflow has been closed.  Allows path manager to
-> >      clean up subflow related resources.
-> >    * Payload
-> >       * Connection ID
-> >       * Subflow ID
-> > * conn_closed
-> >    * Call when an MPTCP connection as a whole, as opposed to a single
-> >      subflow, has been closed.  This is the case when close(2) has
-> >      been called on an MPTCP connection.
-> >    * Payload
-> >       * Connection ID
-> > =
-
-> =
+Yes, that sounds reasonable.  I'll take this into account as our
+implementation progresses.  Thanks!
 
 > Is there any event for "new network interface added"? Or would the
 > user-space daemon need to subscribe to that information elsewhere?
-> =
 
-> > Path Manager Initiated Events (Commands)
-> > ----------------------------------------
-> > * send_addr
-> >    * Notify the kernel of the availability of new address for use in
-> >      MPTCP connections.  Triggers an ADD_ADDR to be sent to the peer.
-> >    * Payload
-> >       * Connection ID
-> >       * Address ID
-> >       * Local address
-> >       * Local port (optional, use same port as initial subflow if not
-> >         specified)
-> > * add_subflow
-> >    * Add new subflow to the MPTCP connection.  This triggers an
-> >      MP_JOIN to be sent to the peer.
-> >    * Payload
-> >       * Connection ID
-> >       * Local address ID
-> >       * Local address (optional, required if send_addr not previously
-> >         sent to establish the local address ID)
-> >       * Local port (optional, use same port as initial subflow if not
-> >         specified)
-> >       * Remote address ID (e.g. from a previously received new_addr or
-> >         join_attempt event)
-> =
+The daemon subscribes to rtnetlink events to determine when network
+interfaces have been added or removed, and propagates those events to
+the path manager plugins.  I'm not sure if this is the best approach
+since we could also propagate such network interface related events
+from the kernel MPTCP implementation, similar to how the
+multipath-tcp.org implementation propagates such events to its
+in-kernel path managers.  Ultimately I opted to listen for network
+interface changes in the user space to avoid adding more code in the
+kernel.
 
+>> Path Manager Initiated Events (Commands)
+>> ----------------------------------------
+...
 > It seems like a command to list the available remote address IDs would be=
  a
 > useful addition to this, so a user-space daemon could learn of remote
 > address IDs that are currently in use for a connection that was already
 > established when the daemon started.
-> =
+
+I was under the assumption that MPTCP connections would not be
+established without the daemon up and running, meaning it would know
+about all remote address IDs.  Perhaps that isn't a reasonable
+assumption, especially if we implement the default path management
+strategies in the kernel you mentioned above.
 
 > Similarly, a list_subflows command could be useful to allow an application
 > to query the existing subflows of a connection.
-> =
 
-> >       * Backup priority flag (optional, use default priority if not
-> >         specified)
-> >       * Subflow ID
-> > * allow_join
-> >    * Allow MP_JOIN attempt from peer.
-> >    * Payload
-> >       * Connection ID
-> >       * Remote address ID (e.g from a previously received join_attempt
-> >         event).
-> >       * Local address
-> >       * Local port
-> >       * Allow indication (optional, do not allow join if not
-> >         specified)
-> >       * Backup priority flag (optional, use default priority if not
-> >         specified)
-> >       * Subflow ID
-> > * set_backup
-> >    * Set subflow priority to backup priority.
-> >    * Payload
-> >       * Connection ID
-> >       * Subflow ID
-> >       * Backup priority flag (optional, use default priority if not
-> >         specified)
-> > * remove_subflow
-> >    * Triggers a REMOVE_ADDR MPTCP option to be sent, ultimately
-> >      resulting in subflows routed through that invalidated address to
-> >      be closed.
-> >    * Payload
-> >       * Connection ID
-> >       * Subflow ID
-> > =
+That sounds reasonable.
 
-> > Security
-> > --------
-> > For security reasons, path management operations may only be performed
-> > by privileged processes due to the GENL_ADMIN_PERM generic netlink
-> > flag being set.  In particular, access to the MPTCP generic netlink
-> > interface will require CAP_NET_ADMIN privileges.
-> =
-
+>> Security
+>> --------
+>> For security reasons, path management operations may only be performed
+>> by privileged processes due to the GENL_ADMIN_PERM generic netlink
+>> flag being set.  In particular, access to the MPTCP generic netlink
+>> interface will require CAP_NET_ADMIN privileges.
+>
 > It seems important to require additionally that a process can only act on=
  a
 > MPTCP connection if they are within the same network namespace. This might
 > be implicit in your security model but I wanted to confirm it.
-> =
 
-> Regards,
-> Stephen
-> =
+It is now. :)
 
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
+Thanks for the excellent feedback!
 
---===============3943090012963441326==--
+-Ossama
+
+--===============7291471988226065391==--
