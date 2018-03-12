@@ -1,343 +1,260 @@
-Content-Type: multipart/mixed; boundary="===============0803849292191284507=="
+Content-Type: multipart/mixed; boundary="===============8555434687863331159=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Summary of the discussion on the patch
-Date: Fri, 09 Mar 2018 17:25:37 -0800
-Message-ID: <alpine.OSX.2.21.1803091505350.2360@msottenb-mobl1.amr.corp.intel.com>
-In-Reply-To: 17cb97ed-94dc-1d8f-47bf-475fab89de1a@oracle.com
+Subject: Re: [MPTCP] [RFC] MPTCP Path Management Generic Netlink API
+Date: Sun, 11 Mar 2018 20:25:43 -0700
+Message-ID: <20180312032543.GJ74937@MacBook-Pro-4.local>
+In-Reply-To: CAPyD+=CnxCpvN+h7zeUx-LRcn-jFfziEqpW8KuJjBcDy59m+ow@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 363
+X-UID: 364
 
---===============0803849292191284507==
+--===============8555434687863331159==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
-On Fri, 9 Mar 2018, Rao Shoaib wrote:
-
-> A few days ago I submitted a patch that implemented MPTCP using the =
-
-> latest net-next kernel. The patch that I submitted uses the latest =
-
-> kernel changes such as lock less listener, rb trees, resolves the long =
-
-> standing skb issue, allows upstream to build TCP only without requiring =
-
-> a single MPTCP file or definition, and also consolidates MPTCP code. =
-
-> Most importantly it is based on the current net-next kernel without =
-
-> requiring any new framework.
->
-> Comments about the patch have exclusively been about the performance and =
-
-> memory overhead of using indirect function pointers. I have repeatedly =
-
-> solicited for any other comments. I have not received any.
->
-
-I had some additional recommendations in =
-
-https://lists.01.org/pipermail/mptcp/2018-February/000323.html :
-
-"""
-   * Include the new Kconfig modification to add CONFIG_MPTCP early in the =
-
-patch set
-
-   * Make sure that all patches will build with the config option enabled =
-
-or disabled (all include files and symbols present, etc.)
-
-   * Handle conditional compilation according to =
-
-https://www.kernel.org/doc/html/latest/process/coding-style.html#conditiona=
-l-compilation
-
-   * Don't define callbacks in the data structure until there's code that =
-
-uses them
-
-   * Craft commit messages and subject lines that will help the reviewers =
-
-understand the changes and what drives tham
-"""
-
-> I have since contacted David Miller and Eric Dumazet. They are not =
-
-> allowing use of direct function pointers because of the current security =
-
-> issues and Linux is building a new framework for such use.
->
-> This is a minor change and we will be submitting a patch with the fix.
->
-> When the comments about the use of indirect function pointers were made =
-
-> I was busy and brushed them aside with one line emails. To complete the =
-
-> discussion I think they need to be addressed with a little more =
-
-> technical analysis. If=C2=A0 my analysis is wrong I would appreciate bein=
-g =
-
-> corrected based on technical data.
->
-> Comments:
->
-> * Memory bloat due to allocation of function pointer table:
->
-> The function pointer tables (I believe 4) are pre-populated, are =
-
-> __read_mostly and are shared among all sockets. The largest function =
-
-> pointer table on my system is around 320 bytes; compare that to the size =
-
-> of a socket which is 1024 and will get more bloated with the addition of =
-
-> MPTCP specific data structures.
->
-
-I agree, the size of data structures that are not per-socket or per-packet =
-
-are not a big concern.
-
-> * Too many indirect function pointers:
->
-> I don't understand why the number even matters. What might matter is =
-
-> their usage -- for that see below
->
-
-The large number of pointers correlates to a large number of changes for =
-
-all the places those functions are called. What I've seen the maintainers =
-
-ask for is targeted, incremental changes with clear motivation. Replacing =
-
-lots of direct function calls with calls via function pointers is a broad =
-
-change.
-
-> * Overhead in the fast path of regular TCP
->
-> Let's evaluate a simple Rx path
->
-> Rx:
->
-> =C2=A0=C2=A0=C2=A0=C2=A0 one check was added in tcp_v[4,6]_rcv,
->
-> =C2=A0=C2=A0=C2=A0=C2=A0 one indirect call is encountered in tcp_recv_est=
-ablished or in =
-
-> tcp_data_queue
->
-> Tx:
->
-> =C2=A0=C2=A0=C2=A0 Indirect call to appropriate write_xmit function and t=
-han options =
-
-> processing
->
-> That's it. All other indirect function calls are used in the slow =
-
-> control path. I may have missed counting one or two calls so in general =
-
-> the extra overhead is two indirect function calls in the fast path. I =
-
-> would love to see a solution with less than this overhead.
->
-> Please note that these are not new calls, the original code was also =
-
-> making a call here. The only overhead is accessing the address of the =
-
-> table and indexing it.
->
-
-I think expending a few clock cycles to make the TCP stack more flexible =
-
-and better accomodate MPTCP would be a good idea, but I have a different =
-
-set of priorities from the maintainers. What I've observed is that the =
-
-maintainers have some rules-of-thumb for optimizing (or even =
-
-micro-optimizing) fast paths, and converting hard-coded function calls to =
-
-calls made with a function pointer stored in a struct is something they'll =
-
-take a close look at on a case-by-case basis and will want to have a clear =
-
-sense of the justification for each change.
-
-> * Overhead of indirect function calls
->
-> The example given to show the overhead was very simplistic, one that is =
-
-> used in a beginner level assembly language course. Most modern =
-
-> processors are very complicated, instructions are broken down into =
-
-> multiple micro operations and are executed in parallel, add prefetching =
-
-> and branch prediction and the whole situation becomes extremely =
-
-> complicated. It is so irrelevant and difficult to measure the cost that =
-
-> Intel does not even publish the cost in cycles. Perhaps Intel folks can =
-
-> get us the difference between callq and *callq to better evaluate the =
-
-> overhead.
->
-> A similar argument applies to cache miss. Predicting a cache miss or =
-
-> guaranteeing a cache hit for data or instruction is nearly impossible =
-
-> except in very rare cases.
->
-
-As I mentioned above, I think this comes down to way the maintainers look =
-
-at performance. I'm not so much trying to justify their criteria as point =
-
-out that these are the criteria I have observed them using. If some code =
-
-looks less efficient to them, but really has no impact or even makes an =
-
-improvement, I think they'll be convinced by profiling data.
-
-> I posted the same explanation on net-dev and I have not heard otherwise =
-
-> from anyone. As has been posted elsewhere, if indirect function calls =
-
-> are so bad then why are they used in libraries? file system code is =
-
-> completely based on indirect function calls.
->
-
-I understand where you're coming from here - C function pointers are a =
-
-staple of any non-trivial C program and are widely used throughout the =
-
-kernel. It's unclear what they prefer instead.
-
-David did give a technical response to your point about measureable =
-
-overhead by saying current kernels disable optimizations for indirect =
-
-function calls.
-
-> * Not enough context and why indirect call for urg
->
-> I thought I had provided the context in the cover letter and the code =
-
-> changes were straight forward. If more context is needed I will be happy =
-
-> to provide that.
->
-
-I do think more detailed context would help. There's a need for both the =
-
-high level overview (as in the cover letter) and information in each patch =
-
-to justify the specific changes and provide helpful information that will =
-
-live on in the commit history. I try to take that perspective even with =
-
-RFCs that aren't expected to be merged.
-
-> MPTCP currently does not have support for urgent data, TCP urgent data =
-
-> has a particular syntax that needs to be adhered to when processing it =
-
-> (It is common knowledge that the syntax is broken though :-)). When =
-
-> support for urgent data is added, handling will be different than =
-
-> regular TCP hence the separate function.
->
-
-Ok, that's exactly the kind of information that would be very helpful in =
-
-the commit message or comments.
-
-> * Comparison with a different patch
->
-> It was suggested that if we ask David we will look like fools because we =
-
-> know why a previous patch was rejected -- because of the overhead due to =
-
-> indirect function calls.
->
-> If David was concerned about indirect function calls he would have given =
-
-> the same argument as he did to my email. It seems to me that he was not =
-
-> happy about the new checks in the fast path and indirect calls are not =
-
-> even used in the fast path.
->
-> for example in comments to patch 02/14 he says
->
-> This adds a new test to the packet header building fast path,
-> and all of the call sites know whether they are dealing with
-> a full sock or not so the test is superfluous.
->
-> And in the last comment he summarizes his concerns
->
-> I can already see in your patches that new overhead is added, new
-> tests in the packet building fast paths that are completely
-> unnecessary with the existing code, etc.
->
-> The reality is that only David knows what he was thinking, so when in =
-
-> doubt, directly asking him does not make you look like fool. It saves =
-
-> you a lot of time.
->
-
-I think the core point is that the maintainers have finite time and =
-
-attention to share. We had some suggestions, based on what maintainers =
-
-have said in many different contexts, to iterate on the patch set to get =
-
-the most out of the maintainer's time.
-
-> In my email exchange on net-dev another issue over which there was =
-
-> disagreement was also confirmed. Upstream folks will allow changes to =
-
-> the current code; how much depends on the importance of the feature. I =
-
-> am sure they will be very skeptical of any new framework. David added =
-
-> that he will have to look at the change, there is no blank rule.
->
-
-Sure, that's what I'd expect.
-
-> I hope that I have addressed the concerns raised and explained my =
-
-> thoughts on the design and performance. If there are any remaining =
-
-> technical, architectural concerns please feel free to post them and we =
-
-> will work together to resolve them.
->
-> We will submit an updated patch based on the input from net-dev.
-
-Since there are a few revisions underway, I'll take a closer look at the =
-
-technical/architectural aspects of the code in the next posting.
-
-Thanks,
-
---
-Mat Martineau
-Intel OTC
-
---===============0803849292191284507==--
+Hello Ossama,
+
+thanks for sharing this! Looks quite well thought-through.
+
+Please find some comments inline:
+
+On 08/03/18 - 12:48:40, Othman, Ossama wrote:
+> Hi,
+> =
+
+> Following up on on a brief exchange between Matthieu and Mat regarding
+> a MPTCP path manager netlink API, I'd like to share to our own
+> proposed generic netlink API developed in parallel.
+> =
+
+> Please find the high level description below.  It'll be great to
+> compare the two netlink based APIs to determine if either can be
+> improved by leveraging different aspects from each one.
+> =
+
+> Thanks!
+> =
+
+> --
+> Ossama Othman
+> Intel OTC
+> =
+
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> RFC: MPTCP Path Management Generic Netlink API
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =
+
+> A generic netlink socket is used to facilitate communication between
+> the kernel and a user space daemon that handles MPTCP path management
+> related operations, from here on in called the path manager.  Several
+> multicast groups, attributes and operations are exposed by the "mptcp"
+> generic netlink family, e.g.:
+> =
+
+> $ genl ctrl list
+> ...
+> Name: mptcp
+>        ID: 0x1d  Version: 0x1  header size: 0  max attribs: 7
+>        commands supported:
+>                #1:  ID-0x0
+>                #2:  ID-0x1
+>                #3:  ID-0x2
+>                #4:  ID-0x3
+>                #5:  ID-0x4
+> =
+
+> =
+
+>        multicast groups:
+>                #1:  ID-0xa  name: new_connection
+>                #2:  ID-0xb  name: new_addr
+>                #3:  ID-0xc  name: join_attempt
+>                #4:  ID-0xd  name: new_subflow
+>                #5:  ID-0xe  name: subflow_closed
+>                #6:  ID-0xf  name: conn_closed
+> =
+
+> Each of the multicast groups corresponds to MPTCP path manager events
+> supported by the kernel MPTCP stack.
+> =
+
+> Kernel Initiated Events
+> -----------------------
+> * new_connection
+>    * Called upon completion of new MPTCP-capable connection.
+>      Information for initial subflow is made available to the path
+>      manager.
+>    * Payload
+>       * Connection ID (globally unique for host)
+>       * Local address
+>       * Local port
+>       * Remote address
+>       * Remote port
+>       * Priority
+
+What is the meaning of "Priority" here? Is this whether the interface is a
+backup one, based on the 'ip link set dev ... multipath backup'
+configuration?
+
+If that's the case, I suggest that this is not needed. Ultimately, the
+netlink path-manager should configure the backup-flag of an interface.
+
+
+Additional info that could be useful would be the pid of the process (or
+does Linux has a notion of UUID (?)) that owns the socket. That would allow=
+ a
+client-side path manager to apply policies based on the app. E.g., think of=
+ an
+Android implementation where some apps are allowed to use cell, while others
+aren't.
+
+> * new_addr
+>    * Triggered when the host receives an ADD_ADDR MPTCP option, i.e. a
+>      new address is advertised by the remote side.
+>    * Payload
+>       * Connection ID
+>       * Remote address ID
+>       * Remote address
+>       * Remote port
+> * join_attempt
+>    * Called when a MP_JOIN has been ACKed.  The path manager is
+>      expected to respond with an allow_join event containing its
+>      decision based on the configured policy.
+
+I'm not sure what you mean with "has been ACKed". Can you explain? Is this
+here a server-side, where we are receiving a SYN+MP_JOIN?
+
+>    * Payload
+>       * Connection ID
+>       * Local address ID
+>       * Local address
+>       * Local port
+>       * Remote address ID
+>       * Remote address
+>       * Remote port
+> * new_subflow
+>    * Called when final MP_JOIN ACK has been ACKed.
+>    * Payload
+>       * Connection ID
+>       * Subflow ID
+
+Same here as above. Maybe it would help if you clarify if we are the active
+or the passive opener in these cases.
+
+> * subflow_closed
+>    * Called when a subflow has been closed.  Allows path manager to
+>      clean up subflow related resources.
+
+For the payload, an optional "error" would be good. That allows to see if
+the subflow got closed because of an incoming RST, timeout,...
+
+As for "regular" closing, I'm not sure how this applies here, because when
+subflows are managed by the path-manager, it should not go away unless the
+path-manager does the remove_subflow command.
+
+One subtlety is that the peer could decide to close a subflow (thus, sends a
+FIN), while we still keep this subflow alive.
+So, maybe we need another event that says "subflow_read_closed", upon which
+the path-manager can do a remove_subflow command.
+
+>    * Payload
+>       * Connection ID
+>       * Subflow ID
+> * conn_closed
+>    * Call when an MPTCP connection as a whole, as opposed to a single
+>      subflow, has been closed.  This is the case when close(2) has
+>      been called on an MPTCP connection.
+>    * Payload
+>       * Connection ID
+> =
+
+> Path Manager Initiated Events (Commands)
+> ----------------------------------------
+> * send_addr
+>    * Notify the kernel of the availability of new address for use in
+>      MPTCP connections.  Triggers an ADD_ADDR to be sent to the peer.
+>    * Payload
+>       * Connection ID
+>       * Address ID
+>       * Local address
+>       * Local port (optional, use same port as initial subflow if not
+>         specified)
+> * add_subflow
+>    * Add new subflow to the MPTCP connection.  This triggers an
+>      MP_JOIN to be sent to the peer.
+>    * Payload
+>       * Connection ID
+>       * Local address ID
+>       * Local address (optional, required if send_addr not previously
+>         sent to establish the local address ID)
+>       * Local port (optional, use same port as initial subflow if not
+>         specified)
+>       * Remote address ID (e.g. from a previously received new_addr or
+>         join_attempt event)
+>       * Backup priority flag (optional, use default priority if not
+>         specified)
+>       * Subflow ID
+
+We need the interface-index as well here. There are use-cases where one has
+multiple interfaces with the same IP address. Think of a host with multiple
+interfaces, each behind a NAT and the gateways each give 192.168.1.2.
+
+> * allow_join
+>    * Allow MP_JOIN attempt from peer.
+>    * Payload
+>       * Connection ID
+>       * Remote address ID (e.g from a previously received join_attempt
+>         event).
+>       * Local address
+>       * Local port
+>       * Allow indication (optional, do not allow join if not
+>         specified)
+>       * Backup priority flag (optional, use default priority if not
+>         specified)
+>       * Subflow ID
+
+This means we are delaying the sending of the SYN/ACK+MP_JOIN, right?
+
+From an implementation point-of-view, how does this look like? It seems
+quite tricky to me.
+
+Would it be easier to restrict the path-manager to active-opener only?
+
+
+Cheers,
+Christoph
+
+> * set_backup
+>    * Set subflow priority to backup priority.
+>    * Payload
+>       * Connection ID
+>       * Subflow ID
+>       * Backup priority flag (optional, use default priority if not
+>         specified)
+> * remove_subflow
+>    * Triggers a REMOVE_ADDR MPTCP option to be sent, ultimately
+>      resulting in subflows routed through that invalidated address to
+>      be closed.
+>    * Payload
+>       * Connection ID
+>       * Subflow ID
+> =
+
+> Security
+> --------
+> For security reasons, path management operations may only be performed
+> by privileged processes due to the GENL_ADMIN_PERM generic netlink
+> flag being set.  In particular, access to the MPTCP generic netlink
+> interface will require CAP_NET_ADMIN privileges.
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+
+--===============8555434687863331159==--
