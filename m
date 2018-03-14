@@ -1,37 +1,221 @@
-Content-Type: multipart/mixed; boundary="===============4685156497488097687=="
+Content-Type: multipart/mixed; boundary="===============0421001789819551268=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 15 March 2018 16:00 UTC (9am PDT, 5pm CEST)
-Date: Wed, 14 Mar 2018 09:49:19 -0700
-Message-ID: <alpine.OSX.2.21.1803140924210.15888@ecespedx-mobl.amr.corp.intel.com>
+Subject: Re: [MPTCP] Weekly meeting - 15 March 2018 16:00 UTC (9am PDT,
+ 5pm CEST)
+Date: Wed, 14 Mar 2018 18:15:55 +0100
+Message-ID: <CAKuKrBn2XQDmids22F2QKbEQkuQ9D+YUKaVQjqp=OfBR=-hDYA@mail.gmail.com>
+In-Reply-To: alpine.OSX.2.21.1803140924210.15888@ecespedx-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 373
+X-UID: 374
 
---===============4685156497488097687==
+--===============0421001789819551268==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Mat,
 
-Our MPTCP upstreaming weekly web conference is scheduled for tomorrow.
+Thank you for this email!
+I was going to send one this evening but sorry I was very busy this week :-/
+I will make sure to reserve more time for that next week!
 
-The list of topics is here: =
+On Wed, Mar 14, 2018 at 5:49 PM, Mat Martineau <
+mathew.j.martineau(a)linux.intel.com> wrote:
 
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180315
-
-Meeting link: https://talky.io/mptcp_upstreaming
-
-Depending on your location, the time has shifted for this week and next =
-
-due to varying dates for the daylight time shift.
+>
+> Our MPTCP upstreaming weekly web conference is scheduled for tomorrow.
+>
+> The list of topics is here: https://annuel2.framapad.org/p
+> /mptcp_upstreaming_20180315
 
 
-Thanks,
+Thank you for the link!
+I just added a few new topics, mainly inspired from a few mails exchanges
+on the ML. Note that we still need to reorder them:
 
---
-Mat Martineau
-Intel OTC
+    - https://www.mail-archive.com/netdev(a)vger.kernel.org/msg221741.html =
+=E2=86=92
+indirect calls are expensive
+    - Rao's patches and feedback from upstream
+    - points from last week: Mat: check with other people from Intel what
+could help: create a workshop at Linux plumber conf, meet these people not
+alone.
+    - concrete next steps: what has changed
+    - roadmap to share with community =E2=86=92 goal: hoping people will he=
+lp if
+they know what need to be done
+    - Netlink API
 
---===============4685156497488097687==--
+See you tomorrow, I will be there!
+Matthieu
+
+-- =
+
+[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
+in-la-Neuve,+Belgium>
+
+-- =
+
+
+------------------------------
+DISCLAIMER.
+This email and any files transmitted with it are confidential and intended =
+
+solely for the use of the individual or entity to whom they are addressed. =
+
+If you have received this email in error please notify the system manager. =
+
+This message contains confidential information and is intended only for the =
+
+individual named. If you are not the named addressee you should not =
+
+disseminate, distribute or copy this e-mail. Please notify the sender =
+
+immediately by e-mail if you have received this e-mail by mistake and =
+
+delete this e-mail from your system. If you are not the intended recipient =
+
+you are notified that disclosing, copying, distributing or taking any =
+
+action in reliance on the contents of this information is strictly =
+
+prohibited.
+
+--===============0421001789819551268==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2PjxkaXY+SGkgTWF0LDxicj48YnI+PC9kaXY+VGhhbmsg
+eW91IGZvciB0aGlzIGVtYWlsITxicj48L2Rpdj5JIHdhcyBnb2luZyB0byBzZW5kIG9uZSB0aGlz
+IGV2ZW5pbmcgYnV0IHNvcnJ5IEkgd2FzIHZlcnkgYnVzeSB0aGlzIHdlZWsgOi0vPGJyPjwvZGl2
+Pkkgd2lsbCBtYWtlIHN1cmUgdG8gcmVzZXJ2ZSBtb3JlIHRpbWUgZm9yIHRoYXQgbmV4dCB3ZWVr
+ITxicj48ZGl2PjxkaXY+PGRpdj48ZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48YnI+PGRp
+diBjbGFzcz0iZ21haWxfcXVvdGUiPk9uIFdlZCwgTWFyIDE0LCAyMDE4IGF0IDU6NDkgUE0sIE1h
+dCBNYXJ0aW5lYXUgPHNwYW4gZGlyPSJsdHIiPiZsdDs8YSBocmVmPSJtYWlsdG86bWF0aGV3Lmou
+bWFydGluZWF1QGxpbnV4LmludGVsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPm1hdGhldy5qLm1hcnRp
+bmVhdUBsaW51eC5pbnRlbC5jb208L2E+Jmd0Ozwvc3Bhbj4gd3JvdGU6PGJyPjxibG9ja3F1b3Rl
+IGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0
+OjFweCAjY2NjIHNvbGlkO3BhZGRpbmctbGVmdDoxZXgiPjxicj4KT3VyIE1QVENQIHVwc3RyZWFt
+aW5nIHdlZWtseSB3ZWIgY29uZmVyZW5jZSBpcyBzY2hlZHVsZWQgZm9yIHRvbW9ycm93Ljxicj4K
+PGJyPgpUaGUgbGlzdCBvZiB0b3BpY3MgaXMgaGVyZTogPGEgaHJlZj0iaHR0cHM6Ly9hbm51ZWwy
+LmZyYW1hcGFkLm9yZy9wL21wdGNwX3Vwc3RyZWFtaW5nXzIwMTgwMzE1IiByZWw9Im5vcmVmZXJy
+ZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2FubnVlbDIuZnJhbWFwYWQub3JnL3A8d2JyPi9t
+cHRjcF91cHN0cmVhbWluZ18yMDE4MDMxNTwvYT48L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+
+PGRpdj5UaGFuayB5b3UgZm9yIHRoZSBsaW5rITxicj48L2Rpdj48ZGl2PkkganVzdCBhZGRlZCBh
+IGZldyBuZXcgdG9waWNzLCBtYWlubHkgaW5zcGlyZWQgZnJvbSBhIGZldyBtYWlscyBleGNoYW5n
+ZXMgb24gdGhlIE1MLiBOb3RlIHRoYXQgd2Ugc3RpbGwgbmVlZCB0byByZW9yZGVyIHRoZW06PGJy
+Pjxicj48ZGl2IGlkPSJnbWFpbC1tYWdpY2RvbWlkMTMyIiBjbGFzcz0iZ21haWwtYWNlLWxpbmUi
+PjxzcGFuIGNsYXNzPSJnbWFpbC1hdXRob3ItYS1qejcyeno3OHp6NzB6ejY1ejljNHN6NzF6ZjA3
+ejY4eno2OXplIj7CoMKgwqAgLSA8L3NwYW4+PHNwYW4gY2xhc3M9ImdtYWlsLWF1dGhvci1hLWp6
+NzJ6ejc4eno3MHp6NjV6OWM0c3o3MXpmMDd6Njh6ejY5emUgZ21haWwtdXJsIj48YSBocmVmPSJo
+dHRwczovL3d3dy5tYWlsLWFyY2hpdmUuY29tL25ldGRldkB2Z2VyLmtlcm5lbC5vcmcvbXNnMjIx
+NzQxLmh0bWwiPmh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbmV0ZGV2QHZnZXIua2VybmVs
+Lm9yZy9tc2cyMjE3NDEuaHRtbDwvYT48L3NwYW4+PHNwYW4gY2xhc3M9ImdtYWlsLWF1dGhvci1h
+LWp6NzJ6ejc4eno3MHp6NjV6OWM0c3o3MXpmMDd6Njh6ejY5emUiPiDihpIgaW5kaXJlY3QgY2Fs
+bHMgYXJlIGV4cGVuc2l2ZTwvc3Bhbj48L2Rpdj48ZGl2IGlkPSJnbWFpbC1tYWdpY2RvbWlkMTY2
+IiBjbGFzcz0iZ21haWwtYWNlLWxpbmUiPjxzcGFuIGNsYXNzPSJnbWFpbC1hdXRob3ItYS1qejcy
+eno3OHp6NzB6ejY1ejljNHN6NzF6ZjA3ejY4eno2OXplIj7CoMKgwqAgLSBSYW8mIzM5O3MgcGF0
+Y2hlcyBhbmQgZmVlZGJhY2sgZnJvbSB1cHN0cmVhbTwvc3Bhbj48L2Rpdj48ZGl2IGlkPSJnbWFp
+bC1tYWdpY2RvbWlkMjEzIiBjbGFzcz0iZ21haWwtYWNlLWxpbmUiPjxzcGFuIGNsYXNzPSJnbWFp
+bC1hdXRob3ItYS1qejcyeno3OHp6NzB6ejY1ejljNHN6NzF6ZjA3ejY4eno2OXplIj7CoMKgwqAg
+LSBwb2ludHMgZnJvbSBsYXN0IHdlZWs6IE1hdDogY2hlY2sgd2l0aCBvdGhlciBwZW9wbGUgZnJv
+bSBJbnRlbCB3aGF0IGNvdWxkIGhlbHA6IGNyZWF0ZSBhIHdvcmtzaG9wIGF0IExpbnV4IHBsdW1i
+ZXIgY29uZiwgbWVldCB0aGVzZSBwZW9wbGUgbm90IGFsb25lLjwvc3Bhbj48L2Rpdj48ZGl2IGlk
+PSJnbWFpbC1tYWdpY2RvbWlkMjczIiBjbGFzcz0iZ21haWwtYWNlLWxpbmUiPjxzcGFuIGNsYXNz
+PSJnbWFpbC1hdXRob3ItYS1qejcyeno3OHp6NzB6ejY1ejljNHN6NzF6ZjA3ejY4eno2OXplIj7C
+oMKgwqAgLSBjb25jcmV0ZSBuZXh0IHN0ZXBzOiB3aGF0IGhhcyBjaGFuZ2VkPC9zcGFuPjwvZGl2
+PjxkaXYgaWQ9ImdtYWlsLW1hZ2ljZG9taWQyNTAiIGNsYXNzPSJnbWFpbC1hY2UtbGluZSI+PHNw
+YW4gY2xhc3M9ImdtYWlsLWF1dGhvci1hLWp6NzJ6ejc4eno3MHp6NjV6OWM0c3o3MXpmMDd6Njh6
+ejY5emUiPsKgwqDCoCAtIHJvYWRtYXAgdG8gc2hhcmUgd2l0aCBjb21tdW5pdHkg4oaSIGdvYWw6
+IGhvcGluZyBwZW9wbGUgd2lsbCBoZWxwIGlmIHRoZXkga25vdyB3aGF0IG5lZWQgdG8gYmUgZG9u
+ZTwvc3Bhbj48L2Rpdj48ZGl2IGlkPSJnbWFpbC1tYWdpY2RvbWlkMjYxIiBjbGFzcz0iZ21haWwt
+YWNlLWxpbmUiPjxzcGFuIGNsYXNzPSJnbWFpbC1hdXRob3ItYS1qejcyeno3OHp6NzB6ejY1ejlj
+NHN6NzF6ZjA3ejY4eno2OXplIj7CoMKgwqAgLSBOZXRsaW5rIEFQSTwvc3Bhbj48L2Rpdj48YnI+
+PC9kaXY+PGRpdj5TZWUgeW91IHRvbW9ycm93LCBJIHdpbGwgYmUgdGhlcmUhPGJyPjwvZGl2Pjxk
+aXY+TWF0dGhpZXU8YnIgY2xlYXI9ImFsbCI+PC9kaXY+PC9kaXY+PGJyPi0tIDxicj48ZGl2IGNs
+YXNzPSJnbWFpbF9zaWduYXR1cmUiIGRhdGEtc21hcnRtYWlsPSJnbWFpbF9zaWduYXR1cmUiPjxk
+aXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48dGFi
+bGUgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OztsZXR0ZXIt
+c3BhY2luZzpub3JtYWw7dGV4dC1pbmRlbnQ6MHB4O3RleHQtdHJhbnNmb3JtOm5vbmU7d29yZC1z
+cGFjaW5nOjBweCIgd2lkdGg9IjEwMCUiIGJvcmRlcj0iMCI+PHRib2R5Pjx0cj48dGQgcm93c3Bh
+bj0iMyIgc3R5bGU9InBhZGRpbmctbGVmdDo1cHg7cGFkZGluZy1yaWdodDo1cHgiIHdpZHRoPSIx
+MCIgdmFsaWduPSJ0b3AiIGFsaWduPSJsZWZ0Ij48YSBocmVmPSJodHRwOi8vd3d3LnRlc3NhcmVz
+Lm5ldCIgdGFyZ2V0PSJfYmxhbmsiPjxpbWcgc3JjPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldC9z
+aWdsb2dvLnBuZyIgYWx0PSJUZXNzYXJlcyBTQSIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBib3Jk
+ZXI9IjAiPjwvYT48L3RkPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0
+aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdodD0iMTIiIGFsaWduPSJs
+ZWZ0Ij48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6Ym9sZDtjb2xvcjpyZ2IoMzcsODMsMTU1KTtk
+aXNwbGF5OmlubGluZSI+TWF0dGhpZXUgQmFlcnRzIHwgUiZhbXA7RCBFbmdpbmVlcjwvc3Bhbj48
+L3RkPjwvdHI+PHRyPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNh
+LEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdodD0iMTIiIGFsaWduPSJsZWZ0
+Ij48YSBocmVmPSJtYWlsdG86bWF0dGhpZXUuYmFlcnRzJTQwdGVzc2FyZXMubmV0IiBzdHlsZT0i
+Y29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRpb246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFy
+Z2V0PSJfYmxhbmsiPm1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ8YnI+PC9hPjwvdGQ+PC90
+cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWlseTpIZWx2ZXRpY2EsQXJpYWws
+c2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgYWxpZ249ImxlZnQiPjxzcGFuIHN0eWxlPSJmb250
+LXdlaWdodDpib2xkO2NvbG9yOnJnYigzNyw4MywxNTUpO2Rpc3BsYXk6aW5saW5lIj5UZXNzYXJl
+cyBTQSB8IEh5YnJpZCBBY2Nlc3MgU29sdXRpb25zPGJyPjwvc3Bhbj48YSBocmVmPSJodHRwOi8v
+d3d3LnRlc3NhcmVzLm5ldCIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9u
+Om5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj53d3cudGVzc2FyZXMubmV0PC9h
+PjxzcGFuPsKgPC9zcGFuPjxicj48YSBocmVmPSJodHRwczovL3d3dy5nb29nbGUuY29tL21hcHM/
+cT0xK0F2ZW51ZStKZWFuK01vbm5ldCwrMTM0OCtPdHRpZ25pZXMtTG91dmFpbi1sYS1OZXV2ZSwr
+QmVsZ2l1bSIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlz
+cGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj4xIEF2ZW51ZSBKZWFuIE1vbm5ldCwgMTM0OCBM
+b3V2YWluLWxhLU5ldXZlLCBCZWxnaXVtPC9hPjwvdGQ+PC90cj48L3Rib2R5PjwvdGFibGU+PC9k
+aXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2
+PjwvZGl2PjwvZGl2PgoKPGJyPgo8ZGl2Pjxicj48aHI+PC9kaXY+PGZvbnQgc2l6ZT0iMSI+PHNw
+YW4gc3R5bGU9ImZvbnQtZmFtaWx5OlZlcmRhbmEsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kLWNvbG9y
+OnJnYigyNTUsMjU1LDI1NSkiPkRJU0NMQUlNRVIuPC9zcGFuPjxiciBzdHlsZT0iZm9udC1mYW1p
+bHk6VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+
+PGZvbnQgY29sb3I9IiMwMDAwMDAiIGZhY2U9IlZlcmRhbmEsIHNhbnMtc2VyaWYiIHN0eWxlPSJi
+YWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPlRoaXMgZW1haWwgYW5kIGFueSBmaWxl
+cyB0cmFuc21pdHRlZCB3aXRoIGl0IGFyZSBjb25maWRlbnRpYWwgYW5kIGludGVuZGVkIHNvbGVs
+eSBmb3IgdGhlIHVzZSBvZiB0aGUgaW5kaXZpZHVhbCBvciBlbnRpdHkgdG8gd2hvbSB0aGV5IGFy
+ZSBhZGRyZXNzZWQuIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwgaW4gZXJyb3IgcGxl
+YXNlIG5vdGlmeSB0aGUgc3lzdGVtIG1hbmFnZXIuIFRoaXMgbWVzc2FnZSBjb250YWlucyBjb25m
+aWRlbnRpYWwgaW5mb3JtYXRpb24gYW5kIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBpbmRpdmlk
+dWFsIG5hbWVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgbmFtZWQgYWRkcmVzc2VlIHlvdSBzaG91bGQg
+bm90IGRpc3NlbWluYXRlLCBkaXN0cmlidXRlIG9yIGNvcHkgdGhpcyBlLW1haWwuIFBsZWFzZSBu
+b3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBieSBlLW1haWwgaWYgeW91IGhhdmUgcmVjZWl2
+ZWQgdGhpcyBlLW1haWwgYnkgbWlzdGFrZSBhbmQgZGVsZXRlIHRoaXMgZS1tYWlsIGZyb20geW91
+ciBzeXN0ZW0uIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgeW91IGFyZSBu
+b3RpZmllZCB0aGF0IGRpc2Nsb3NpbmcsIGNvcHlpbmcsIGRpc3RyaWJ1dGluZyBvciB0YWtpbmcg
+YW55IGFjdGlvbiBpbiByZWxpYW5jZSBvbiB0aGUgY29udGVudHMgb2YgdGhpcyBpbmZvcm1hdGlv
+biBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLjwvZm9udD48L2ZvbnQ+
+--===============0421001789819551268==
+Content-Type: text/calendar
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="MPTCP_upstreaming_weekly_meeting_15032018.ics"
+
+QkVHSU46VkNBTEVOREFSClZFUlNJT046Mi4wCkNBTFNDQUxFOkdSRUdPUklBTgpNRVRIT0Q6UkVR
+VUVTVApQUk9ESUQ6LS8vRXRhci8vd3MueHNvaC5ldGFyCkJFR0lOOlZFVkVOVApMT0NBVElPTjpo
+dHRwczovL3RhbGt5LmlvL21wdGNwX3Vwc3RyZWFtaW5nClVJRDowM2JhZjhlZC02NGEyLTQ3Y2It
+OGFjYy02ZTk4NWZkYTFjMjVAd3MueHNvaC5ldGFyCkRUU1RBTVA6MjAxODAzMTRUMTcxMTE4WgpT
+VU1NQVJZOk1QVENQIHVwc3RyZWFtaW5nOiB3ZWVrbHkgbWVldGluZwpEVFNUQVJUOjIwMTgwMzE1
+VDE2MDAwMFoKREVTQ1JJUFRJT046PGJyPlRvcGljcyB0byBkaXNjdXNzXCwgZmVlbCBmcmVlIHRv
+IG1vZGlmeSB0aGlzIGRvY3VtZW50OiA8YSBocgogZWY9Imh0dHBzOi8vYW5udWVsMi5mcmFtYXBh
+ZC5vcmcvcC9tcHRjcF91cHN0cmVhbWluZ18yMDE4MDMxNSIgcmVsPSJub3JlZmVyCiByZXIiIHRh
+cmdldD0iX2JsYW5rIiBkYXRhLXNhZmVyZWRpcmVjdHVybD0iaHR0cHM6Ly93d3cuZ29vZ2xlLmNv
+bS91cmw/aGw9ZW4KICZhbXBcO3E9aHR0cHM6Ly9hbm51ZWwyLmZyYW1hcGFkLm9yZy9wL21wdGNw
+X3Vwc3RyZWFtaW5nXzIwMTgwMzE1JmFtcFw7c291cgogY2U9Z21haWwmYW1wXDt1c3Q9MTUyMTEz
+MjkwOTMxNTAwMCZhbXBcO3VzZz1BRlFqQ05GcE4yQndwU1NXeFFXMl9BRzk3NTVpQjE0CiBLZVEi
+Pmh0dHBzOi8vYW5udWVsMi5mcmFtYXBhZC5vcmcvcDx3YnI+L21wdGNwX3Vwc3RyZWFtaW5nXzIw
+MTgwMzE1PC9hPjxicj4KIDxicj5NZWV0aW5nIGxpbms6IGh0dHBzOi8vdGFsa3kuaW8vbXB0Y3Bf
+dXBzdHJlYW1pbmcKRFRFTkQ6MjAxODAzMTVUMTcwMDAwWgpPUkdBTklaRVI7Q049bWF0dGhpZXUu
+YmFlcnRzQHRlc3NhcmVzLm5ldDptYWlsdG86bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5lCiB0
+CkVORDpWRVZFTlQKRU5EOlZDQUxFTkRBUgo=
+
+--===============0421001789819551268==--
