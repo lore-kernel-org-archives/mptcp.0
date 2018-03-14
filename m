@@ -1,47 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============3642597199568268560=="
+Content-Type: multipart/mixed; boundary="===============4685156497488097687=="
 MIME-Version: 1.0
-From: 'Christoph Paasch' <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC] MPTCP Path Management Generic Netlink API
-Date: Tue, 13 Mar 2018 11:26:06 -0700
-Message-ID: <20180313182606.GI74937@MacBook-Pro-4.local>
-In-Reply-To: 01fe01d3ba45$c830fdc0$5892f940$@froemmgen.de
+Subject: [MPTCP] Weekly meeting - 15 March 2018 16:00 UTC (9am PDT, 5pm CEST)
+Date: Wed, 14 Mar 2018 09:49:19 -0700
+Message-ID: <alpine.OSX.2.21.1803140924210.15888@ecespedx-mobl.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 372
+X-UID: 373
 
---===============3642597199568268560==
+--===============4685156497488097687==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/03/18 - 22:04:59, Alexander Fr=C3=B6mmgen wrote:
-> Hi
-> =
 
-> > How do you plan to handle schedulers? Given the good experimental resul=
-ts
-> of the min-RTT-first scheduler, will that be the only option? Or will it
-> remain as a kernel module due to the time-sensitive nature of scheduling?
-> =
+Our MPTCP upstreaming weekly web conference is scheduled for tomorrow.
 
-> We experimented with a programmable scheduler in the Kernel, which enables
-> timely scheduling decisions and a lot of flexibility. Details are availab=
-le
-> at https://progmp.net and you might want to directly test a scheduler at
-> http://progmp.net/progmp.html =
+The list of topics is here: =
 
-> =
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180315
 
-> Our current setup contains a lot of additional logic in the Kernel (e.g.,
-> lexer, parser). While this has some benefits, I think that the eBPF-based
-> part of our work should be sufficient  for most application scenarios.
+Meeting link: https://talky.io/mptcp_upstreaming
 
-I would love to see a patch-submission :-)
+Depending on your location, the time has shifted for this week and next =
+
+due to varying dates for the daylight time shift.
 
 
-Cheers,
-Christoph
+Thanks,
 
+--
+Mat Martineau
+Intel OTC
 
---===============3642597199568268560==--
+--===============4685156497488097687==--
