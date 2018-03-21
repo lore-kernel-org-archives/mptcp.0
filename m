@@ -1,38 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============5767824893457061733=="
+Content-Type: multipart/mixed; boundary="===============2997208085589882682=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [net-next,01/14] tcp: Add clean acked data hook
-Date: Tue, 20 Mar 2018 13:19:52 -0700
-Message-ID: <42415f22-60c9-0395-9b39-9fe49103b2d5@oracle.com>
-In-Reply-To: 20180320111711.GP2418@MacBook-Pro-5.local
+Subject: [MPTCP] Weekly meeting - 22 March 2018 16:00 UTC (9am PDT, 5pm CEST)
+Date: Wed, 21 Mar 2018 13:18:42 +0100
+Message-ID: <CAKuKrBm7LcQ7f1eYkxyAoKT5Jo7t91Akc7a=vK4gc+DdK9Z+1g@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 383
+X-UID: 384
 
---===============5767824893457061733==
+--===============2997208085589882682==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Already part of my changes but implemented a little differently.
+Hello,
 
-Shoaib
+Our MPTCP upstreaming weekly web conference is scheduled for tomorrow.
+
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180322
+Feel free to add/modify topics!
+
+Meeting link: https://talky.io/mptcp_upstreaming
+
+Speak to you tomorrow!
+Matthieu
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+-- =
 
 
-On 03/20/2018 04:17 AM, Christoph Paasch wrote:
-> cfr., https://patchwork.ozlabs.org/patch/888002/
->
-> This callback will be very useful. In general, kTLS seems to have lots of
-> commonalities with MPTCP.
->
->
-> Christoph
->
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
+------------------------------
+DISCLAIMER.
+This email and any files transmitted with it are confidential and intended =
 
+solely for the use of the individual or entity to whom they are addressed. =
 
---===============5767824893457061733==--
+If you have received this email in error please notify the system manager. =
+
+This message contains confidential information and is intended only for the =
+
+individual named. If you are not the named addressee you should not =
+
+disseminate, distribute or copy this e-mail. Please notify the sender =
+
+immediately by e-mail if you have received this e-mail by mistake and =
+
+delete this e-mail from your system. If you are not the intended recipient =
+
+you are notified that disclosing, copying, distributing or taking any =
+
+action in reliance on the contents of this information is strictly =
+
+prohibited.
+
+--===============2997208085589882682==--
