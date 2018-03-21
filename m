@@ -1,38 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============2997208085589882682=="
+Content-Type: multipart/mixed; boundary="===============0082428780393532212=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 22 March 2018 16:00 UTC (9am PDT, 5pm CEST)
-Date: Wed, 21 Mar 2018 13:18:42 +0100
-Message-ID: <CAKuKrBm7LcQ7f1eYkxyAoKT5Jo7t91Akc7a=vK4gc+DdK9Z+1g@mail.gmail.com>
+Subject: Re: [MPTCP] Fwd: [NetDev-People] 0x12 Call for Submissions open
+Date: Wed, 21 Mar 2018 14:34:36 +0100
+Message-ID: <CAKuKrBnGNyzjZkGysLpc75hVu=PquFUdQjMv7jeUvCDXiU0LDg@mail.gmail.com>
+In-Reply-To: d9726b77-26f8-983d-1acb-125efe6e93c7@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 384
+X-UID: 385
 
---===============2997208085589882682==
+--===============0082428780393532212==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Rao,
 
-Our MPTCP upstreaming weekly web conference is scheduled for tomorrow.
+On Tue, Mar 20, 2018 at 9:10 PM, Rao Shoaib <rao.shoaib(a)oracle.com> wrote:
 
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180322
-Feel free to add/modify topics!
+> FYI. I plan to submit a proposal for a talk based on my changes. It will
+> be an individual presentation so as not to hurt anyone else's reputation,
+> just mine :-).
+>
+That's a good idea!
 
-Meeting link: https://talky.io/mptcp_upstreaming
+Note that recently, David Miller said he will not go there for unclear
+reasons. We don't know if it is his final answer.
+https://lists.01.org/pipermail/mptcp/2018-March/000379.html
+But most of the main NetDev contributors will be there!
 
-Speak to you tomorrow!
+To be honest, I was also thinking about submitting a proposal for either a
+talk or a workshop.
+I also think it would be very interesting to join forces. It is maybe in my
+genes to propose that because the motto of my country is "Unity makes
+Strength" but I really think that it could help to have one single
+presentation about that. Note that in my country, we usually use this motto
+when we need to drink all available beers but that's something else :)
+
+I don't think I am wrong to say that we all want to upstream MPTCP without
+having to rework all the current implementation. Like you, our main concern
+is to adapt both TCP and MPTCP stacks to fit with NetDev maintainer's
+expectations. These expectations are not always clear and we agree that
+NetDevConf is a very good place to discuss about that.
+
+From my point of view, it would be possible and even better to propose two
+or more different ideas to make progress on this project of upstreaming
+MPTCP. But presenting them together will certainly indicate that we have
+different ideas to achieve our unique goal.
+What do you think about that?
+
+By chance, do you think you could join our weekly web conf tomorrow?
+https://lists.01.org/pipermail/mptcp/2018-March/000383.html
+It would be very nice to discuss about this topic and others with you!
+It is also possible to change the day and the time of these meetings!
+
+Best regards,
 Matthieu
 -- =
 
-Matthieu Baerts | R&D Engineer
+[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+Engineer
 matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
+in-la-Neuve,+Belgium>
 
 -- =
 
@@ -61,4 +95,107 @@ action in reliance on the contents of this information is strictly =
 
 prohibited.
 
---===============2997208085589882682==--
+--===============0082428780393532212==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+SGVsbG8gUmFvLDxicj48ZGl2IGNsYXNzPSJnbWFpbF9leHRyYSI+PGJy
+PjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj5PbiBUdWUsIE1hciAyMCwgMjAxOCBhdCA5OjEwIFBN
+LCBSYW8gU2hvYWliIDxzcGFuIGRpcj0ibHRyIj4mbHQ7PGEgaHJlZj0ibWFpbHRvOnJhby5zaG9h
+aWJAb3JhY2xlLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPnJhby5zaG9haWJAb3JhY2xlLmNvbTwvYT4m
+Z3Q7PC9zcGFuPiB3cm90ZTo8YnI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHls
+ZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0
+LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPgogIAoKICAgIAogIAogIDxkaXYgYmdjb2xvcj0i
+I0ZGRkZGRiI+CiAgICA8cD5GWUkuIEkgcGxhbiB0byBzdWJtaXQgYSBwcm9wb3NhbCBmb3IgYSB0
+YWxrIGJhc2VkIG9uIG15IGNoYW5nZXMuCiAgICAgIEl0IHdpbGwgYmUgYW4gaW5kaXZpZHVhbCBw
+cmVzZW50YXRpb24gc28gYXMgbm90IHRvIGh1cnQgYW55b25lCiAgICAgIGVsc2UmIzM5O3MgcmVw
+dXRhdGlvbiwganVzdCBtaW5lIDotKS48YnI+PC9wPjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2Pjwv
+ZGl2PjxkaXY+VGhhdCYjMzk7cyBhIGdvb2QgaWRlYSE8YnI+PGJyPk5vdGUgdGhhdCByZWNlbnRs
+eSwgRGF2aWQgTWlsbGVyIHNhaWQgaGUgd2lsbCBub3QgZ28gdGhlcmUgZm9yIHVuY2xlYXIgcmVh
+c29ucy4gV2UgZG9uJiMzOTt0IGtub3cgaWYgaXQgaXMgaGlzIGZpbmFsIGFuc3dlci48YnI+PGEg
+aHJlZj0iaHR0cHM6Ly9saXN0cy4wMS5vcmcvcGlwZXJtYWlsL21wdGNwLzIwMTgtTWFyY2gvMDAw
+Mzc5Lmh0bWwiPmh0dHBzOi8vbGlzdHMuMDEub3JnL3BpcGVybWFpbC9tcHRjcC8yMDE4LU1hcmNo
+LzAwMDM3OS5odG1sPC9hPjxicj48L2Rpdj48ZGl2PkJ1dCBtb3N0IG9mIHRoZSBtYWluIE5ldERl
+diBjb250cmlidXRvcnMgd2lsbCBiZSB0aGVyZSE8YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRp
+dj5UbyBiZSBob25lc3QsIEkgd2FzIGFsc28gdGhpbmtpbmcgYWJvdXQgc3VibWl0dGluZyBhIHBy
+b3Bvc2FsIGZvciBlaXRoZXIgYSB0YWxrIG9yIGEgd29ya3Nob3AuPGJyPjwvZGl2PjxkaXY+SSBh
+bHNvIHRoaW5rIGl0IHdvdWxkIGJlIHZlcnkgaW50ZXJlc3RpbmcgdG8gam9pbiBmb3JjZXMuIEl0
+IGlzIG1heWJlIGluIG15IGdlbmVzIHRvIHByb3Bvc2UgdGhhdCBiZWNhdXNlIHRoZSBtb3R0byBv
+ZiBteSBjb3VudHJ5IGlzICZxdW90O1VuaXR5IG1ha2VzIFN0cmVuZ3RoJnF1b3Q7IGJ1dCBJIHJl
+YWxseSB0aGluayB0aGF0IGl0IGNvdWxkIGhlbHAgdG8gaGF2ZSBvbmUgc2luZ2xlIHByZXNlbnRh
+dGlvbiBhYm91dCB0aGF0LiBOb3RlIHRoYXQgaW4gbXkgY291bnRyeSwgd2UgdXN1YWxseSB1c2Ug
+dGhpcyBtb3R0byB3aGVuIHdlIG5lZWQgdG8gZHJpbmsgYWxsIGF2YWlsYWJsZSBiZWVycyBidXQg
+dGhhdCYjMzk7cyBzb21ldGhpbmcgZWxzZSA6KTxicj48YnI+PC9kaXY+PGRpdj5JIGRvbiYjMzk7
+dCB0aGluayBJIGFtIHdyb25nIHRvIHNheSB0aGF0IHdlIGFsbCB3YW50IHRvIHVwc3RyZWFtIE1Q
+VENQIHdpdGhvdXQgaGF2aW5nIHRvIHJld29yayBhbGwgdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRp
+b24uIExpa2UgeW91LCBvdXIgbWFpbiBjb25jZXJuIGlzIHRvIGFkYXB0IGJvdGggVENQIGFuZCBN
+UFRDUCBzdGFja3MgdG8gZml0IHdpdGggTmV0RGV2IG1haW50YWluZXImIzM5O3MgZXhwZWN0YXRp
+b25zLiBUaGVzZSBleHBlY3RhdGlvbnMgYXJlIG5vdCBhbHdheXMgY2xlYXIgYW5kIHdlIGFncmVl
+IHRoYXQgTmV0RGV2Q29uZiBpcyBhIHZlcnkgZ29vZCBwbGFjZSB0byBkaXNjdXNzIGFib3V0IHRo
+YXQuPGJyPjwvZGl2PjxkaXY+PGJyPkZyb20gbXkgcG9pbnQgb2YgdmlldywgaXQgd291bGQgYmUg
+cG9zc2libGUgYW5kIGV2ZW4gYmV0dGVyIHRvIHByb3Bvc2UgdHdvIG9yIG1vcmUgZGlmZmVyZW50
+IGlkZWFzIHRvIG1ha2UgcHJvZ3Jlc3Mgb24gdGhpcyBwcm9qZWN0IG9mIHVwc3RyZWFtaW5nIE1Q
+VENQLiBCdXQgcHJlc2VudGluZyB0aGVtIHRvZ2V0aGVyIHdpbGwgY2VydGFpbmx5IGluZGljYXRl
+IHRoYXQgd2UgaGF2ZSBkaWZmZXJlbnQgaWRlYXMgdG8gYWNoaWV2ZSBvdXIgdW5pcXVlIGdvYWwu
+PGJyPjwvZGl2PjxkaXY+V2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQgdGhhdD88YnI+PC9kaXY+PGRp
+dj48YnI+PC9kaXY+PGRpdj5CeSBjaGFuY2UsIGRvIHlvdSB0aGluayB5b3UgY291bGQgam9pbiBv
+dXIgd2Vla2x5IHdlYiBjb25mIHRvbW9ycm93PyA8YSBocmVmPSJodHRwczovL2xpc3RzLjAxLm9y
+Zy9waXBlcm1haWwvbXB0Y3AvMjAxOC1NYXJjaC8wMDAzODMuaHRtbCIgdGFyZ2V0PSJfYmxhbmsi
+Pmh0dHBzOi8vbGlzdHMuMDEub3JnLzx3YnI+cGlwZXJtYWlsL21wdGNwLzIwMTgtTWFyY2gvPHdi
+cj4wMDAzODMuaHRtbDwvYT48YnI+PC9kaXY+PGRpdj5JdCB3b3VsZCBiZSB2ZXJ5IG5pY2UgdG8g
+ZGlzY3VzcyBhYm91dCB0aGlzIHRvcGljIGFuZCBvdGhlcnMgd2l0aCB5b3UhPGJyPjwvZGl2Pjxk
+aXY+SXQgaXMgYWxzbyBwb3NzaWJsZSB0byBjaGFuZ2UgdGhlIGRheSBhbmQgdGhlIHRpbWUgb2Yg
+dGhlc2UgbWVldGluZ3MhPGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+QmVzdCByZWdhcmRz
+LDxicj48L2Rpdj48ZGl2Pk1hdHRoaWV1PGJyPjwvZGl2PjwvZGl2Pi0tIDxicj48ZGl2IGNsYXNz
+PSJnbWFpbC1tXzgxMzE1NjI2MzAyODE5MjIyMjVnbWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJs
+dHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48dGFibGUgc3R5bGU9
+ImZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OztsZXR0ZXItc3BhY2luZzpu
+b3JtYWw7dGV4dC1pbmRlbnQ6MHB4O3RleHQtdHJhbnNmb3JtOm5vbmU7d29yZC1zcGFjaW5nOjBw
+eCIgd2lkdGg9IjEwMCUiIGJvcmRlcj0iMCI+PHRib2R5Pjx0cj48dGQgcm93c3Bhbj0iMyIgc3R5
+bGU9InBhZGRpbmctbGVmdDo1cHg7cGFkZGluZy1yaWdodDo1cHgiIHdpZHRoPSIxMCIgdmFsaWdu
+PSJ0b3AiIGFsaWduPSJsZWZ0Ij48YSBocmVmPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldCIgdGFy
+Z2V0PSJfYmxhbmsiPjxpbWcgc3JjPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldC9zaWdsb2dvLnBu
+ZyIgYWx0PSJUZXNzYXJlcyBTQSIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBib3JkZXI9IjAiPjwv
+YT48L3RkPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFs
+LHNhbnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdodD0iMTIiIGFsaWduPSJsZWZ0Ij48c3Bh
+biBzdHlsZT0iZm9udC13ZWlnaHQ6Ym9sZDtjb2xvcjpyZ2IoMzcsODMsMTU1KTtkaXNwbGF5Omlu
+bGluZSI+TWF0dGhpZXUgQmFlcnRzIHwgUiZhbXA7RCBFbmdpbmVlcjwvc3Bhbj48L3RkPjwvdHI+
+PHRyPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNh
+bnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdodD0iMTIiIGFsaWduPSJsZWZ0Ij48YSBocmVm
+PSJtYWlsdG86bWF0dGhpZXUuYmFlcnRzJTQwdGVzc2FyZXMubmV0IiBzdHlsZT0iY29sb3I6cmdi
+KDAsMCwwKTt0ZXh0LWRlY29yYXRpb246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFyZ2V0PSJfYmxh
+bmsiPm1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ8YnI+PC9hPjwvdGQ+PC90cj48dHI+PHRk
+IHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWlseTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJp
+Zjtmb250LXNpemU6MTBweCIgYWxpZ249ImxlZnQiPjxzcGFuIHN0eWxlPSJmb250LXdlaWdodDpi
+b2xkO2NvbG9yOnJnYigzNyw4MywxNTUpO2Rpc3BsYXk6aW5saW5lIj5UZXNzYXJlcyBTQSB8IEh5
+YnJpZCBBY2Nlc3MgU29sdXRpb25zPGJyPjwvc3Bhbj48YSBocmVmPSJodHRwOi8vd3d3LnRlc3Nh
+cmVzLm5ldCIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlz
+cGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj53d3cudGVzc2FyZXMubmV0PC9hPjxzcGFuPsKg
+PC9zcGFuPjxicj48YSBocmVmPSJodHRwczovL3d3dy5nb29nbGUuY29tL21hcHM/cT0xK0F2ZW51
+ZStKZWFuK01vbm5ldCwrMTM0OCtPdHRpZ25pZXMtTG91dmFpbi1sYS1OZXV2ZSwrQmVsZ2l1bSIg
+c3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxp
+bmUiIHRhcmdldD0iX2JsYW5rIj4xIEF2ZW51ZSBKZWFuIE1vbm5ldCwgMTM0OCBMb3V2YWluLWxh
+LU5ldXZlLCBCZWxnaXVtPC9hPjwvdGQ+PC90cj48L3Rib2R5PjwvdGFibGU+PC9kaXY+PC9kaXY+
+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvZGl2PjwvZGl2PgoKPGJyPgo8ZGl2Pjxicj48aHI+
+PC9kaXY+PGZvbnQgc2l6ZT0iMSI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OlZlcmRhbmEsc2Fu
+cy1zZXJpZjtiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPkRJU0NMQUlNRVIuPC9z
+cGFuPjxiciBzdHlsZT0iZm9udC1mYW1pbHk6VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQt
+Y29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+PGZvbnQgY29sb3I9IiMwMDAwMDAiIGZhY2U9IlZlcmRh
+bmEsIHNhbnMtc2VyaWYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSki
+PlRoaXMgZW1haWwgYW5kIGFueSBmaWxlcyB0cmFuc21pdHRlZCB3aXRoIGl0IGFyZSBjb25maWRl
+bnRpYWwgYW5kIGludGVuZGVkIHNvbGVseSBmb3IgdGhlIHVzZSBvZiB0aGUgaW5kaXZpZHVhbCBv
+ciBlbnRpdHkgdG8gd2hvbSB0aGV5IGFyZSBhZGRyZXNzZWQuIElmIHlvdSBoYXZlIHJlY2VpdmVk
+IHRoaXMgZW1haWwgaW4gZXJyb3IgcGxlYXNlIG5vdGlmeSB0aGUgc3lzdGVtIG1hbmFnZXIuIFRo
+aXMgbWVzc2FnZSBjb250YWlucyBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gYW5kIGlzIGludGVu
+ZGVkIG9ubHkgZm9yIHRoZSBpbmRpdmlkdWFsIG5hbWVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgbmFt
+ZWQgYWRkcmVzc2VlIHlvdSBzaG91bGQgbm90IGRpc3NlbWluYXRlLCBkaXN0cmlidXRlIG9yIGNv
+cHkgdGhpcyBlLW1haWwuIFBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBieSBl
+LW1haWwgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkgbWlzdGFrZSBhbmQgZGVs
+ZXRlIHRoaXMgZS1tYWlsIGZyb20geW91ciBzeXN0ZW0uIElmIHlvdSBhcmUgbm90IHRoZSBpbnRl
+bmRlZCByZWNpcGllbnQgeW91IGFyZSBub3RpZmllZCB0aGF0IGRpc2Nsb3NpbmcsIGNvcHlpbmcs
+IGRpc3RyaWJ1dGluZyBvciB0YWtpbmcgYW55IGFjdGlvbiBpbiByZWxpYW5jZSBvbiB0aGUgY29u
+dGVudHMgb2YgdGhpcyBpbmZvcm1hdGlvbiBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLjwvZm9udD48
+L2ZvbnQ+
+--===============0082428780393532212==--
