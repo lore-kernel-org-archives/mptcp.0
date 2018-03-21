@@ -1,92 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============1864201976462766014=="
+Content-Type: multipart/mixed; boundary="===============2119229848018172558=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Lorenzo Colitti <lorenzo at google.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Weekly meeting - 22 March 2018 16:00 UTC (9am PDT,
- 5pm CEST)
-Date: Wed, 21 Mar 2018 15:43:54 +0000
-Message-ID: <20180321154354.GA2418@MacBook-Pro-5.local>
-In-Reply-To: CAKuKrBm7LcQ7f1eYkxyAoKT5Jo7t91Akc7a=vK4gc+DdK9Z+1g@mail.gmail.com
+Subject: Re: [MPTCP] Fwd: [NetDev-People] 0x12 Call for Submissions open
+Date: Wed, 21 Mar 2018 16:14:45 +0000
+Message-ID: <CAKD1Yr3-=8mBT8Hi2EzGSC5=KyzGfin+ndk4Q62fiimYf5YGaA@mail.gmail.com>
+In-Reply-To: CAKuKrBnGNyzjZkGysLpc75hVu=PquFUdQjMv7jeUvCDXiU0LDg@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 386
+X-UID: 387
 
---===============1864201976462766014==
+--===============2119229848018172558==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 21/03/18 - 13:18:42, Matthieu Baerts wrote:
-> Hello,
-> =
+On Wed, Mar 21, 2018 at 1:34 PM, Matthieu Baerts <
+matthieu.baerts(a)tessares.net> wrote:
 
-> Our MPTCP upstreaming weekly web conference is scheduled for tomorrow.
+> Note that recently, David Miller said he will not go there for unclear
+> reasons. We don't know if it is his final answer.
+> https://lists.01.org/pipermail/mptcp/2018-March/000379.html
+> But most of the main NetDev contributors will be there!
+>
 
-I will try to call-in here from the IETF.
+An alternative would be to go to the Linux Plumbers networking track. I
+think that's not much later than netdev. Maybe September?
 
-If I'm not in the call, don't wait for me. It means that I got pulled into
-some other conversation here.
+--===============2119229848018172558==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
+PGRpdiBkaXI9Imx0ciI+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPjxkaXYgY2xhc3M9ImdtYWls
+X3F1b3RlIj5PbiBXZWQsIE1hciAyMSwgMjAxOCBhdCAxOjM0IFBNLCBNYXR0aGlldSBCYWVydHMg
+PHNwYW4gZGlyPSJsdHIiPiZsdDs8YSBocmVmPSJtYWlsdG86bWF0dGhpZXUuYmFlcnRzQHRlc3Nh
+cmVzLm5ldCIgdGFyZ2V0PSJfYmxhbmsiPm1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ8L2E+
+Jmd0Ozwvc3Bhbj4gd3JvdGU6PGJyPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5
+bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmct
+bGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48ZGl2IGNs
+YXNzPSJnbWFpbF9xdW90ZSI+PGRpdj5Ob3RlIHRoYXQgcmVjZW50bHksIERhdmlkIE1pbGxlciBz
+YWlkIGhlIHdpbGwgbm90IGdvIHRoZXJlIGZvciB1bmNsZWFyIHJlYXNvbnMuIFdlIGRvbiYjMzk7
+dCBrbm93IGlmIGl0IGlzIGhpcyBmaW5hbCBhbnN3ZXIuPGJyPjxhIGhyZWY9Imh0dHBzOi8vbGlz
+dHMuMDEub3JnL3BpcGVybWFpbC9tcHRjcC8yMDE4LU1hcmNoLzAwMDM3OS5odG1sIiB0YXJnZXQ9
+Il9ibGFuayI+aHR0cHM6Ly9saXN0cy4wMS5vcmcvPHdicj5waXBlcm1haWwvbXB0Y3AvMjAxOC1N
+YXJjaC88d2JyPjAwMDM3OS5odG1sPC9hPjxicj48L2Rpdj48ZGl2PkJ1dCBtb3N0IG9mIHRoZSBt
+YWluIE5ldERldiBjb250cmlidXRvcnMgd2lsbCBiZSB0aGVyZSE8YnI+PC9kaXY+PC9kaXY+PC9k
+aXY+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+QW4gYWx0ZXJuYXRpdmUg
+d291bGQgYmUgdG8gZ28gdG8gdGhlIExpbnV4IFBsdW1iZXJzIG5ldHdvcmtpbmcgdHJhY2suIEkg
+dGhpbmsgdGhhdCYjMzk7cyBub3QgbXVjaCBsYXRlciB0aGFuIG5ldGRldi4gTWF5YmUgU2VwdGVt
+YmVyPzwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2Pgo=
 
-Christoph
-
-
-> =
-
-> The list of topics is here:
-> https://annuel2.framapad.org/p/mptcp_upstreaming_20180322
-> Feel free to add/modify topics!
-> =
-
-> Meeting link: https://talky.io/mptcp_upstreaming
-> =
-
-> Speak to you tomorrow!
-> Matthieu
-> -- =
-
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-> =
-
-> -- =
-
-> =
-
-> ------------------------------
-> DISCLAIMER.
-> This email and any files transmitted with it are confidential and intende=
-d =
-
-> solely for the use of the individual or entity to whom they are addressed=
-. =
-
-> If you have received this email in error please notify the system manager=
-. =
-
-> This message contains confidential information and is intended only for t=
-he =
-
-> individual named. If you are not the named addressee you should not =
-
-> disseminate, distribute or copy this e-mail. Please notify the sender =
-
-> immediately by e-mail if you have received this e-mail by mistake and =
-
-> delete this e-mail from your system. If you are not the intended recipien=
-t =
-
-> you are notified that disclosing, copying, distributing or taking any =
-
-> action in reliance on the contents of this information is strictly =
-
-> prohibited.
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
-
---===============1864201976462766014==--
+--===============2119229848018172558==--
