@@ -1,136 +1,181 @@
-Content-Type: multipart/mixed; boundary="===============4828605253946340938=="
+Content-Type: multipart/mixed; boundary="===============3345263354802380982=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 1/1] Add MPTCP code to work with the modified TCP
- code
-Date: Wed, 21 Mar 2018 14:22:54 -0700
-Message-ID: <6e15594b-0d8d-45c8-9271-2e9fdc09f71d@oracle.com>
-In-Reply-To: 1521663482.23414.4.camel@intel.com
+Subject: Re: [MPTCP] Fwd: [NetDev-People] 0x12 Call for Submissions open
+Date: Thu, 22 Mar 2018 09:35:05 +0100
+Message-ID: <CAKuKrBmqGpjE5vuD5YCUv9W_CBki_2W2pKzNobs39iXYS67Vig@mail.gmail.com>
+In-Reply-To: CAKD1Yr3-=8mBT8Hi2EzGSC5=KyzGfin+ndk4Q62fiimYf5YGaA@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 391
+X-UID: 392
 
---===============4828605253946340938==
+--===============3345263354802380982==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Lorenzo,
 
+On Wed, Mar 21, 2018 at 5:14 PM, Lorenzo Colitti <lorenzo(a)google.com> wro=
+te:
 
-On 03/21/2018 01:18 PM, Krystad, Peter wrote:
-> Hi Rao -
+> On Wed, Mar 21, 2018 at 1:34 PM, Matthieu Baerts <
+> matthieu.baerts(a)tessares.net> wrote:
 >
-> On Thu, 2018-03-01 at 12:02 -0800, Rao Shoaib wrote:
->> On 03/01/2018 11:20 AM, Christoph Paasch wrote:
->>> On 28/02/18 - 16:49:52, rao.shoaib(a)oracle.com wrote:
->>>> From: Rao Shoaib <rao.shoaib(a)oracle.com>
->>>>
->>>> Signed-off-by: Rao Shoaib <rao.shoaib(a)oracle.com>
->>>> ---
->>>>    include/net/mptcp.h          | 1474 +++++++++++++++++++++
->>>>    include/net/mptcp_v4.h       |   56 +
->>>>    include/net/mptcp_v6.h       |   56 +
->>>>    include/net/netns/mptcp.h    |   52 +
->>>>    net/Kconfig                  |    1 +
->>>>    net/Makefile                 |    1 +
->>>>    net/mptcp/Kconfig            |  129 ++
->>>>    net/mptcp/Makefile           |   22 +
->>>>    net/mptcp/mptcp_balia.c      |  267 ++++
->>>>    net/mptcp/mptcp_binder.c     |  487 +++++++
->>>>    net/mptcp/mptcp_coupled.c    |  270 ++++
->>>>    net/mptcp/mptcp_ctrl.c       | 2981
->>>> ++++++++++++++++++++++++++++++++++++++++++
->>>>    net/mptcp/mptcp_fullmesh.c   | 1877 ++++++++++++++++++++++++++
->>>>    net/mptcp/mptcp_input.c      | 2970
->>>> +++++++++++++++++++++++++++++++++++++++++
->>>>    net/mptcp/mptcp_ipv4.c       |  345 +++++
->>>>    net/mptcp/mptcp_ipv6.c       |  316 +++++
->>>>    net/mptcp/mptcp_ndiffports.c |  169 +++
->>>>    net/mptcp/mptcp_ofo_queue.c  |  177 +++
->>>>    net/mptcp/mptcp_olia.c       |  309 +++++
->>>>    net/mptcp/mptcp_output.c     | 1837 ++++++++++++++++++++++++++
->>>>    net/mptcp/mptcp_pm.c         |  178 +++
->>>>    net/mptcp/mptcp_redundant.c  |  268 ++++
->>>>    net/mptcp/mptcp_rr.c         |  301 +++++
->>>>    net/mptcp/mptcp_sched.c      |  597 +++++++++
->>>>    net/mptcp/mptcp_wvegas.c     |  268 ++++
->>>>    25 files changed, 15408 insertions(+)
->>> Please read the sections "Separate your changes" and "E-mail size"
->>> of
->>> process/submitting-patches.rst.
->> If you are worried about the size than do not use it. I am not
->> asking
->> for review, just posting it in case someone wants to try out MPTCP
->> with
->> my changes.
+>> Note that recently, David Miller said he will not go there for unclear
+>> reasons. We don't know if it is his final answer.
+>> https://lists.01.org/pipermail/mptcp/2018-March/000379.html
+>> But most of the main NetDev contributors will be there!
 >>
 >
-> It seems now you are asking for a review. Can we get this as a patch
-> relative to the existing MPTCP implementation so we can see your work?
+> An alternative would be to go to the Linux Plumbers networking track. I
+> think that's not much later than netdev. Maybe September?
 >
-> Thanks,
->
-> Peter.
->
-Hi Peter,
 
-Thanks a lot for stepping up, you are brave :-).
-Yes, I am asking for a review but only for the core networking changes. =
+Thank you for the idea!
 
-I have not created a patch for MPTCP because the code is not formatted =
+Indeed, that seems to be the place to go if people want to meet David
+Miller. But it will be in November.
+https://www.linuxplumbersconf.org/2017/linux-plumbers-conference-2018-site-=
+and-dates/trackback/index.html
 
-properly. I have provided the MPTCP code that I used for testing. The =
+At NetDevConf, most of the main netdev contributors will be there I guess.
+If the goal is to have "live" feedback and advices before November, it
+should still be interesting to go to NetDevConf in July.
 
-code base for MPTCP used is a little old but initially we only plan to =
+Cheers,
+Matthieu
+-- =
 
-support very basic MPTCP operations. So I suggest that you just use the =
+[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
+in-la-Neuve,+Belgium>
 
-MPTCP code that I posted. We do not intend to provide an implementation =
-
-that is fully compatible with the current MPTCP implementation, any =
-
-extra features needed will be added as needed. However, I do not see any =
-
-issues.
-
-Also note we do not expect this patch series to be accepted (It would be =
-
-great if it is :-)). We only want to start a conversation with the =
-
-upstream folks on the direction to take. The review I am looking for are =
-
-issues that would prevent TCP code to be independently enhanced, impact =
-
-on regular TCP performance (without MPTCP) and ease of build without =
-
-requiring any MPTCP file and of course readability of the code. I think =
-
-that is all that the upstream folks care. If something else should be =
-
-added to the list please suggest.
-
-The code uses function pointers as that was the most clean interface, =
-
-but due to the recent security issues the performance enhancements for =
-
-indirect branch predictions for certain CPU's have been turned off (They =
-
-were ON before). I am in the process of changing the code to use a macro =
-
-that activates when MPTCP is compiled and does a check on the socket. As =
-
-someone commented, function pointers are integral to current software, =
-
-so there will be a solution and we will revert back.
-
-Please do not hesitate to contact me.
-
-Thanks a lot,
-
-Shoaib
+-- =
 
 
+------------------------------
+DISCLAIMER.
+This email and any files transmitted with it are confidential and intended =
 
+solely for the use of the individual or entity to whom they are addressed. =
 
---===============4828605253946340938==--
+If you have received this email in error please notify the system manager. =
+
+This message contains confidential information and is intended only for the =
+
+individual named. If you are not the named addressee you should not =
+
+disseminate, distribute or copy this e-mail. Please notify the sender =
+
+immediately by e-mail if you have received this e-mail by mistake and =
+
+delete this e-mail from your system. If you are not the intended recipient =
+
+you are notified that disclosing, copying, distributing or taking any =
+
+action in reliance on the contents of this information is strictly =
+
+prohibited.
+
+--===============3345263354802380982==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+SGkgTG9yZW56byw8YnI+PGRpdj48ZGl2PjxkaXYgY2xhc3M9ImdtYWls
+X2V4dHJhIj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPk9uIFdlZCwgTWFyIDIxLCAyMDE4
+IGF0IDU6MTQgUE0sIExvcmVuem8gQ29saXR0aSA8c3BhbiBkaXI9Imx0ciI+Jmx0OzxhIGhyZWY9
+Im1haWx0bzpsb3JlbnpvQGdvb2dsZS5jb20iIHRhcmdldD0iX2JsYW5rIj5sb3JlbnpvQGdvb2ds
+ZS5jb208L2E+Jmd0Ozwvc3Bhbj4gd3JvdGU6PGJyPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9x
+dW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29s
+aWQgcmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGRpcj0ibHRyIj48ZGl2
+IGNsYXNzPSJnbWFpbF9leHRyYSI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxzcGFuIGNsYXNz
+PSJnbWFpbC0iPk9uIFdlZCwgTWFyIDIxLCAyMDE4IGF0IDE6MzQgUE0sIE1hdHRoaWV1IEJhZXJ0
+cyA8c3BhbiBkaXI9Imx0ciI+Jmx0OzxhIGhyZWY9Im1haWx0bzptYXR0aGlldS5iYWVydHNAdGVz
+c2FyZXMubmV0IiB0YXJnZXQ9Il9ibGFuayI+bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5ldDwv
+YT4mZ3Q7PC9zcGFuPiB3cm90ZTo8YnI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
+dHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2Io
+MjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXYgY2xhc3M9
+ImdtYWlsX2V4dHJhIj48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGRpdj5Ob3RlIHRoYXQgcmVj
+ZW50bHksIERhdmlkIE1pbGxlciBzYWlkIGhlIHdpbGwgbm90IGdvIHRoZXJlIGZvciB1bmNsZWFy
+IHJlYXNvbnMuIFdlIGRvbiYjMzk7dCBrbm93IGlmIGl0IGlzIGhpcyBmaW5hbCBhbnN3ZXIuPGJy
+PjxhIGhyZWY9Imh0dHBzOi8vbGlzdHMuMDEub3JnL3BpcGVybWFpbC9tcHRjcC8yMDE4LU1hcmNo
+LzAwMDM3OS5odG1sIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly9saXN0cy4wMS5vcmcvcGlwZXJt
+YWlsPHdicj4vbXB0Y3AvMjAxOC1NYXJjaC8wMDAzNzkuaHRtbDwvYT48YnI+PC9kaXY+PGRpdj5C
+dXQgbW9zdCBvZiB0aGUgbWFpbiBOZXREZXYgY29udHJpYnV0b3JzIHdpbGwgYmUgdGhlcmUhPGJy
+PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48L3Nw
+YW4+PGRpdj5BbiBhbHRlcm5hdGl2ZSB3b3VsZCBiZSB0byBnbyB0byB0aGUgTGludXggUGx1bWJl
+cnMgbmV0d29ya2luZyB0cmFjay4gSSB0aGluayB0aGF0JiMzOTtzIG5vdCBtdWNoIGxhdGVyIHRo
+YW4gbmV0ZGV2LiBNYXliZSBTZXB0ZW1iZXI/PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvYmxv
+Y2txdW90ZT48L2Rpdj48YnI+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPlRoYW5rIHlv
+dSBmb3IgdGhlIGlkZWEhPGJyPjxicj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9leHRyYSI+SW5k
+ZWVkLCB0aGF0IHNlZW1zIHRvIGJlIHRoZSBwbGFjZSB0byBnbyBpZiBwZW9wbGUgd2FudCB0byBt
+ZWV0IERhdmlkIE1pbGxlci4gQnV0IGl0IHdpbGwgYmUgaW4gTm92ZW1iZXIuPGJyPjxhIGhyZWY9
+Imh0dHBzOi8vd3d3LmxpbnV4cGx1bWJlcnNjb25mLm9yZy8yMDE3L2xpbnV4LXBsdW1iZXJzLWNv
+bmZlcmVuY2UtMjAxOC1zaXRlLWFuZC1kYXRlcy90cmFja2JhY2svaW5kZXguaHRtbCI+aHR0cHM6
+Ly93d3cubGludXhwbHVtYmVyc2NvbmYub3JnLzIwMTcvbGludXgtcGx1bWJlcnMtY29uZmVyZW5j
+ZS0yMDE4LXNpdGUtYW5kLWRhdGVzL3RyYWNrYmFjay9pbmRleC5odG1sPC9hPjxiciBjbGVhcj0i
+YWxsIj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9leHRyYSI+PGJyPkF0IE5ldERldkNvbmYsIG1v
+c3Qgb2YgdGhlIG1haW4gbmV0ZGV2IGNvbnRyaWJ1dG9ycyB3aWxsIGJlIHRoZXJlIEkgZ3Vlc3Mu
+IElmIHRoZSBnb2FsIGlzIHRvIGhhdmUgJnF1b3Q7bGl2ZSZxdW90OyBmZWVkYmFjayBhbmQgYWR2
+aWNlcyBiZWZvcmUgTm92ZW1iZXIsIGl0IHNob3VsZCBzdGlsbCBiZSBpbnRlcmVzdGluZyB0byBn
+byB0byBOZXREZXZDb25mIGluIEp1bHkuPGJyPjxicj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9l
+eHRyYSI+Q2hlZXJzLDxicj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9leHRyYSI+TWF0dGhpZXU8
+YnI+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPi0tIDxicj48ZGl2IGNsYXNzPSJnbWFp
+bF9zaWduYXR1cmUiPjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2
+IGRpcj0ibHRyIj48dGFibGUgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5ldyBSb21h
+biZxdW90OztsZXR0ZXItc3BhY2luZzpub3JtYWw7dGV4dC1pbmRlbnQ6MHB4O3RleHQtdHJhbnNm
+b3JtOm5vbmU7d29yZC1zcGFjaW5nOjBweCIgd2lkdGg9IjEwMCUiIGJvcmRlcj0iMCI+PHRib2R5
+Pjx0cj48dGQgcm93c3Bhbj0iMyIgc3R5bGU9InBhZGRpbmctbGVmdDo1cHg7cGFkZGluZy1yaWdo
+dDo1cHgiIHdpZHRoPSIxMCIgdmFsaWduPSJ0b3AiIGFsaWduPSJsZWZ0Ij48YSBocmVmPSJodHRw
+Oi8vd3d3LnRlc3NhcmVzLm5ldCIgdGFyZ2V0PSJfYmxhbmsiPjxpbWcgc3JjPSJodHRwOi8vd3d3
+LnRlc3NhcmVzLm5ldC9zaWdsb2dvLnBuZyIgYWx0PSJUZXNzYXJlcyBTQSIgd2lkdGg9IjgwIiBo
+ZWlnaHQ9IjgwIiBib3JkZXI9IjAiPjwvYT48L3RkPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9u
+dC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdo
+dD0iMTIiIGFsaWduPSJsZWZ0Ij48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6Ym9sZDtjb2xvcjpy
+Z2IoMzcsODMsMTU1KTtkaXNwbGF5OmlubGluZSI+TWF0dGhpZXUgQmFlcnRzIHwgUiZhbXA7RCBF
+bmdpbmVlcjwvc3Bhbj48L3RkPjwvdHI+PHRyPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1m
+YW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdodD0i
+MTIiIGFsaWduPSJsZWZ0Ij48YSBocmVmPSJtYWlsdG86bWF0dGhpZXUuYmFlcnRzJTQwdGVzc2Fy
+ZXMubmV0IiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRpb246bm9uZTtkaXNw
+bGF5OmlubGluZSIgdGFyZ2V0PSJfYmxhbmsiPm1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ8
+YnI+PC9hPjwvdGQ+PC90cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWlseTpI
+ZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgYWxpZ249ImxlZnQiPjxz
+cGFuIHN0eWxlPSJmb250LXdlaWdodDpib2xkO2NvbG9yOnJnYigzNyw4MywxNTUpO2Rpc3BsYXk6
+aW5saW5lIj5UZXNzYXJlcyBTQSB8IEh5YnJpZCBBY2Nlc3MgU29sdXRpb25zPGJyPjwvc3Bhbj48
+YSBocmVmPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldCIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7
+dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj53d3cu
+dGVzc2FyZXMubmV0PC9hPjxzcGFuPsKgPC9zcGFuPjxicj48YSBocmVmPSJodHRwczovL3d3dy5n
+b29nbGUuY29tL21hcHM/cT0xK0F2ZW51ZStKZWFuK01vbm5ldCwrMTM0OCtPdHRpZ25pZXMtTG91
+dmFpbi1sYS1OZXV2ZSwrQmVsZ2l1bSIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNv
+cmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj4xIEF2ZW51ZSBKZWFu
+IE1vbm5ldCwgMTM0OCBMb3V2YWluLWxhLU5ldXZlLCBCZWxnaXVtPC9hPjwvdGQ+PC90cj48L3Ri
+b2R5PjwvdGFibGU+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvZGl2Pjwv
+ZGl2PjwvZGl2PjwvZGl2PgoKPGJyPgo8ZGl2Pjxicj48aHI+PC9kaXY+PGZvbnQgc2l6ZT0iMSI+
+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OlZlcmRhbmEsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kLWNv
+bG9yOnJnYigyNTUsMjU1LDI1NSkiPkRJU0NMQUlNRVIuPC9zcGFuPjxiciBzdHlsZT0iZm9udC1m
+YW1pbHk6VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1
+KSI+PGZvbnQgY29sb3I9IiMwMDAwMDAiIGZhY2U9IlZlcmRhbmEsIHNhbnMtc2VyaWYiIHN0eWxl
+PSJiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPlRoaXMgZW1haWwgYW5kIGFueSBm
+aWxlcyB0cmFuc21pdHRlZCB3aXRoIGl0IGFyZSBjb25maWRlbnRpYWwgYW5kIGludGVuZGVkIHNv
+bGVseSBmb3IgdGhlIHVzZSBvZiB0aGUgaW5kaXZpZHVhbCBvciBlbnRpdHkgdG8gd2hvbSB0aGV5
+IGFyZSBhZGRyZXNzZWQuIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwgaW4gZXJyb3Ig
+cGxlYXNlIG5vdGlmeSB0aGUgc3lzdGVtIG1hbmFnZXIuIFRoaXMgbWVzc2FnZSBjb250YWlucyBj
+b25maWRlbnRpYWwgaW5mb3JtYXRpb24gYW5kIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBpbmRp
+dmlkdWFsIG5hbWVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgbmFtZWQgYWRkcmVzc2VlIHlvdSBzaG91
+bGQgbm90IGRpc3NlbWluYXRlLCBkaXN0cmlidXRlIG9yIGNvcHkgdGhpcyBlLW1haWwuIFBsZWFz
+ZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBieSBlLW1haWwgaWYgeW91IGhhdmUgcmVj
+ZWl2ZWQgdGhpcyBlLW1haWwgYnkgbWlzdGFrZSBhbmQgZGVsZXRlIHRoaXMgZS1tYWlsIGZyb20g
+eW91ciBzeXN0ZW0uIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgeW91IGFy
+ZSBub3RpZmllZCB0aGF0IGRpc2Nsb3NpbmcsIGNvcHlpbmcsIGRpc3RyaWJ1dGluZyBvciB0YWtp
+bmcgYW55IGFjdGlvbiBpbiByZWxpYW5jZSBvbiB0aGUgY29udGVudHMgb2YgdGhpcyBpbmZvcm1h
+dGlvbiBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLjwvZm9udD48L2ZvbnQ+
+--===============3345263354802380982==--
