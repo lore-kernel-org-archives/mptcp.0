@@ -1,45 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============0351098860432631714=="
+Content-Type: multipart/mixed; boundary="===============3859778372900874294=="
 MIME-Version: 1.0
-From: Stephen Brennan <stephen at brennan.io>
+From: rao.shoaib at oracle.com
 To: mptcp at lists.01.org
-Subject: [MPTCP] Userspace Path Manager Draft
-Date: Thu, 22 Mar 2018 13:41:09 -0700
-Message-ID: <20180322204109.GA29903@pride>
+Subject: [MPTCP] [RFC 0/1] MPTCP patch requested by Peter Krystad
+Date: Thu, 22 Mar 2018 16:21:27 -0700
+Message-ID: <1521760888-19026-1-git-send-email-rao.shoaib@oracle.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 401
+X-UID: 402
 
---===============0351098860432631714==
+--===============3859778372900874294==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+From: Rao Shoaib <rao.shoaib(a)oracle.com>
 
-I did not sit in on the meeting since I am feeling sick, so I haven't had a
-chance to see whether this is actually a useful contribution. However, over
-the past week I've been tinkering with the userspace Generic Netlink
-libraries, getting a prototype of what a userspace path manager framework
-could look like.
+This patch has been created at the request of Peter Krystad. This is not a =
+submission, nor code review. The code does not meet Linux coding style stan=
+dards. It does work and has been tested against latest MPTCP. This is based=
+ on mptcp_v0.91.
 
-My current idea is built so that it could support multiple path managers,
-implemented as shared libraries, which are dynamically loaded at runtime.
-There would need to be some policy or logic to decide which connections are
-assigned to which path manager; I haven't fleshed out what that looks like.
+I will be happy to answer any questions. Please report any issues.
+I do have plans to clean it up and make more modifications.
 
-Without an exact API reference, I simply based the API on what Ossama
-proposed last week. To test, I created a dummy kernel path manager which
-sends empty Netlink messages. It seems to work so far.
+Rao Shoaib (1):
+  MPTCP changes that work with the modified network code
 
-I don't know if those working on the Netlink API have been developing
-userspace tooling in parallel, but if not, maybe this will be useful. You
-can find it here:
+ include/net/mptcp.h         | 343 +++++++--------
+ include/net/mptcp_v4.h      |  14 +-
+ include/net/mptcp_v6.h      |  13 -
+ net/mptcp/mptcp_ctrl.c      | 600 +++++++++++++++++++-------
+ net/mptcp/mptcp_fullmesh.c  |  20 +-
+ net/mptcp/mptcp_input.c     | 996 ++++++++++++++++++++++++++++++++--------=
+----
+ net/mptcp/mptcp_ipv4.c      | 232 ++---------
+ net/mptcp/mptcp_ipv6.c      | 288 ++-----------
+ net/mptcp/mptcp_ofo_queue.c | 306 +++++---------
+ net/mptcp/mptcp_output.c    | 475 +++++++++++----------
+ net/mptcp/mptcp_redundant.c |   6 +-
+ net/mptcp/mptcp_rr.c        |   4 +-
+ net/mptcp/mptcp_sched.c     |  55 ++-
+ 13 files changed, 1793 insertions(+), 1559 deletions(-)
 
-https://github.com/brenns10/pathmand
+-- =
 
-Hope this is useful!
-
-Stephen
+2.7.4
 
 
---===============0351098860432631714==--
+--===============3859778372900874294==--
