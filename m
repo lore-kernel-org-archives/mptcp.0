@@ -1,85 +1,154 @@
-Content-Type: multipart/mixed; boundary="===============4523409192891489375=="
+Content-Type: multipart/mixed; boundary="===============8124916907076885607=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Fwd: Re: Few questions about submitting patches
-Date: Thu, 22 Mar 2018 11:36:33 +0100
-Message-ID: <CAKuKrBmm=MxTer1XYyfJJ0v0GBG-waiH3RGHrKZiTH2=iZCq6A@mail.gmail.com>
-In-Reply-To: 3b8f175a-3485-6725-ebc3-52f6d2e6ce47@oracle.com
+Subject: [MPTCP] [Weekly meetings] MoM - 22th of March 2018
+Date: Thu, 22 Mar 2018 18:25:33 +0100
+Message-ID: <afe2f5d0-b98a-ca29-605d-98d85688946d@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 394
+X-UID: 395
 
---===============4523409192891489375==
+--===============8124916907076885607==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rao,
+Hello,
 
-On Wed, Mar 21, 2018 at 6:01 PM, Rao Shoaib <rao.shoaib(a)oracle.com> wrote:
+We just had our third meeting with Mat, Ossama and Peter (Intel OTC), =
 
-> There has been some misunderstanding on what an RFC patch is and what
-> standards it needs to meet. Following is the official response of David
-> Miller.
->
-Thank you for this forwarded message.
+Christoph (Apple) and myself (Tessares).
 
-> Based on those guidelines the RFC patch we submitted meets and exceeds the
-> requirements. So please review it.
->
-I don't have the same experiences as some other here but I will try to give
-interesting comments if I have some.
-Was the version you sent last month with 9 patches the last one?
+Thanks again for this new good meeting!
 
-> Replacement of function pointers will be addressed later as a separate
-> issue.
->
-I agree about that.
+Here are the minutes of the meeting:
 
-> In case there are other procedural issues that would prohibit technical
-> discussion please site the written rules or first ask David Miller.
->
-> There are a lot of technical issues to discuss, so if possible lets not
-> get tied up on process and bureaucracy. Looking forward to detailed
-> technical comments.
->
-Good idea.
 
-> -------- Forwarded Message --------
-> Subject: Re: Few questions about submitting patches
-> Date: Wed, 21 Mar 2018 12:46:17 -0400 (EDT)
-> From: David Miller <davem(a)davemloft.net> <davem(a)davemloft.net>
-> To: rao.shoaib(a)oracle.com
-> CC: netdev(a)vger.kernel.org, eric.dumazet(a)gmail.com
->
-> > * #ifdef FOO
-> >
-> > In a regular patch consisting of a series of patches, can the above
-> > #ifdef be used in a patch before the patch that allows the selection
-> > of FOO. That patch is part of the series but comes later.
->
-> It is better to introduce them at the same time.
->
-> But if it is prohibitively difficult to do so, yet at the same
-> time properly split up your changes into manageable pieces, it
-> can be OK.
->
-> It is definitely determined on a case by case basis.
->
-> So ok to keep them to clearly indicate where MPTCP specific code will be?
 
+Work from last 7 days:
+
+     - Mat: pretty close to finish his work to get the DSS ACK from the =
+
+SKB. Not fully functional but ready to be tested. We can now parse what =
+
+it coming back. To have something working with MPTCP and not having a =
+
+fallback to TCP, we need to at least read the DSS options from the "3rd" =
+
+ACK. Work was based on net-next. Will first need to have a rebase on =
+
+latest net-next before sharing code. Will be ready to be tested "soon".
+     - Christoph is looking at the lock-less part, patches should arrive =
+
+very soon.
+     - Matthieu: should send patches for the Netlink PM very soon.
+
+
+
+Indirect function calls:
+
+     - we didn't get new input after asking around.
+     - message from the maintainer: we cannot simply remove them, =
+
+sometimes needed (e.g. for the drivers)
+     - maybe not the best time to introduce new ones (except in RFC).
+     - we should certainly reduce their usage to only when it is really =
+
+needed (seems what DaveM said)
+
+
+
+Patches that could be sent to netdev:
+
+     - we need to design them for the maintainers: if they are too big =
+
+with not so many explanations, the maintainers may not take the time to =
+
+go over them in detail. These "details" seem very important for them.
+
+
+
+Netdevconf:
+     - there was a talk in Ottawa (Netdev 0.1)
+     - what was presented there is still valid at the end.
+     - maybe tutorial (proposed by Jamal): at least to convince other =
+
+devs that there is a very big interest. Then: "we are interested by =
+
+upstreaming that, any recommendations from you guys about (...)?"
+     - please propose ideas on ML. We can discuss about them next week.
+     - We should propose something and discuss about upstreaming MPTCP =
+
+there and get feedback, advises, ideas, more people interested by that =
+
+or by the issues we have in common with other projects, etc.
+     - Deadline: Proposals must be received on or before May 1, 2018
+     - Need to check with managers if we can participate to both Netdev =
+
+and Linux Plumbers conf.
+
+
+
+kTLS:
+     - https://patchwork.ozlabs.org/patch/888002/
+     - what they are doing is very similar of what we need to do with =
+
+the DSS.
+     - they are maintaining a look-up table not to affect SKB size.
+     - callback is used to know when the sent data got acknowledged, so =
+
+that they can then purge elements out of the lookup-table
+
+
+
+Next steps:
+     - Mat will try to write an email on the ML to summary the next =
+
+steps, what need to be done (from what has already been discussed =
+
+previously). Note that it is still difficult to have a roadmap because =
+
+we don't know exactly what the maintainers want, the list can change a =
+
+lot depending on their feedback. Mat will also testing his new version =
+
+regarding the problem with SKB size.
+     - Christoph: will continue to polish patches (lock-less) and share =
+
+them ASAP.
+     - Matthieu: publish Netlink PM patches and fix issues.
+     - Peter will continue the rebase, share it soon. Will also have a =
+
+look at patches posted on ML.
+     - Ossama: will also continue the rebase. Will be off next week. =
+
+Happy holidays!
+
+
+
+Next meeting:
+     - proposition: the 29th of March at 9am PDT - 16:00 UTC (9am PDT, =
+
+6pm CEST)
+     - open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20180329
+
+
+
+Feel free to comment these points and propose new ones for the next meeting!
+
+
+
+Talk to you next week,
 Matthieu
 -- =
 
-[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
-Engineer
+Matthieu Baerts | R&D Engineer
 matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
-in-la-Neuve,+Belgium>
 
 -- =
 
@@ -108,139 +177,4 @@ action in reliance on the contents of this information is strictly =
 
 prohibited.
 
---===============4523409192891489375==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGRpdiBkaXI9Imx0ciI+SGkgUmFvLDxicj48ZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48
-YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPk9uIFdlZCwgTWFyIDIxLCAyMDE4IGF0IDY6MDEg
-UE0sIFJhbyBTaG9haWIgPHNwYW4gZGlyPSJsdHIiPiZsdDs8YSBocmVmPSJtYWlsdG86cmFvLnNo
-b2FpYkBvcmFjbGUuY29tIiB0YXJnZXQ9Il9ibGFuayI+cmFvLnNob2FpYkBvcmFjbGUuY29tPC9h
-PiZndDs8L3NwYW4+IHdyb3RlOjxicj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0
-eWxlPSJtYXJnaW46MCAwIDAgLjhleDtib3JkZXItbGVmdDoxcHggI2NjYyBzb2xpZDtwYWRkaW5n
-LWxlZnQ6MWV4Ij4KICAKCiAgICAKICAKICA8ZGl2IHRleHQ9IiMwMDAwMDAiIGJnY29sb3I9IiNG
-RkZGRkYiPgogICAgPHA+VGhlcmUgaGFzIGJlZW4gc29tZSBtaXN1bmRlcnN0YW5kaW5nIG9uIHdo
-YXQgYW4gUkZDIHBhdGNoIGlzIGFuZAogICAgICB3aGF0IHN0YW5kYXJkcyBpdCBuZWVkcyB0byBt
-ZWV0LiBGb2xsb3dpbmcgaXMgdGhlIG9mZmljaWFsCiAgICAgIHJlc3BvbnNlIG9mIERhdmlkIE1p
-bGxlci48L3A+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+VGhhbmsgeW91IGZvciB0aGlzIGZvcndh
-cmRlZCBtZXNzYWdlLiA8YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
-dHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mgc29saWQ7cGFkZGlu
-Zy1sZWZ0OjFleCI+PGRpdiB0ZXh0PSIjMDAwMDAwIiBiZ2NvbG9yPSIjRkZGRkZGIj4KICAgIDxw
-PkJhc2VkIG9uIHRob3NlIGd1aWRlbGluZXMgdGhlIFJGQyBwYXRjaCB3ZSBzdWJtaXR0ZWQgbWVl
-dHMgYW5kCiAgICAgIGV4Y2VlZHMgdGhlIHJlcXVpcmVtZW50cy4gU28gcGxlYXNlIHJldmlldyBp
-dC48L3A+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+SSBkb24mIzM5O3QgaGF2ZSB0aGUgc2FtZSBl
-eHBlcmllbmNlcyBhcyBzb21lIG90aGVyIGhlcmUgYnV0IEkgd2lsbCB0cnkgdG8gZ2l2ZSBpbnRl
-cmVzdGluZyBjb21tZW50cyBpZiBJIGhhdmUgc29tZS48YnI+PC9kaXY+PGRpdj5XYXMgdGhlIHZl
-cnNpb24geW91IHNlbnQgbGFzdCBtb250aCB3aXRoIDkgcGF0Y2hlcyB0aGUgbGFzdCBvbmU/PGJy
-PjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowIDAg
-MCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYg
-dGV4dD0iIzAwMDAwMCIgYmdjb2xvcj0iI0ZGRkZGRiI+PHA+UmVwbGFjZW1lbnQgb2YKICAgICAg
-ZnVuY3Rpb24gcG9pbnRlcnMgd2lsbCBiZSBhZGRyZXNzZWQgbGF0ZXIgYXMgYSBzZXBhcmF0ZSBp
-c3N1ZS48L3A+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+SSBhZ3JlZSBhYm91dCB0aGF0Ljxicj48
-L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MCAwIDAg
-LjhleDtib3JkZXItbGVmdDoxcHggI2NjYyBzb2xpZDtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IHRl
-eHQ9IiMwMDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPHA+SW4gY2FzZSB0aGVyZSBhcmUg
-b3RoZXIgcHJvY2VkdXJhbCBpc3N1ZXMgdGhhdCB3b3VsZCBwcm9oaWJpdAogICAgICB0ZWNobmlj
-YWwgZGlzY3Vzc2lvbiBwbGVhc2Ugc2l0ZSB0aGUgd3JpdHRlbiBydWxlcyBvciBmaXJzdCBhc2sK
-ICAgICAgRGF2aWQgTWlsbGVyLjxicj4KICAgIDwvcD4KICAgIDxwPlRoZXJlIGFyZSBhIGxvdCBv
-ZiB0ZWNobmljYWwgaXNzdWVzIHRvIGRpc2N1c3MsIHNvIGlmIHBvc3NpYmxlCiAgICAgIGxldHMg
-bm90IGdldCB0aWVkIHVwIG9uIHByb2Nlc3MgYW5kIGJ1cmVhdWNyYWN5LiBMb29raW5nIGZvcndh
-cmQKICAgICAgdG8gZGV0YWlsZWQgdGVjaG5pY2FsIGNvbW1lbnRzLjxicj48L3A+PC9kaXY+PC9i
-bG9ja3F1b3RlPjxkaXY+R29vZCBpZGVhLjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9x
-dW90ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlk
-O3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgdGV4dD0iIzAwMDAwMCIgYmdjb2xvcj0iI0ZGRkZGRiI+
-PHA+CiAgICA8L3A+PGRpdiBjbGFzcz0ibV8tMzU1MTI5OTg4MzcxMDAwMTYyNG1fNDI4MjAyODIx
-NjYzMTgyNDQ5Nm1fNjM3MTE2NDczNDAwMDI2MzE0Mm1vei1mb3J3YXJkLWNvbnRhaW5lciI+CiAg
-ICAgIC0tLS0tLS0tIEZvcndhcmRlZCBNZXNzYWdlIC0tLS0tLS0tCiAgICAgIDx0YWJsZSBjbGFz
-cz0ibV8tMzU1MTI5OTg4MzcxMDAwMTYyNG1fNDI4MjAyODIxNjYzMTgyNDQ5Nm1fNjM3MTE2NDcz
-NDAwMDI2MzE0Mm1vei1lbWFpbC1oZWFkZXJzLXRhYmxlIiBjZWxsc3BhY2luZz0iMCIgY2VsbHBh
-ZGRpbmc9IjAiIGJvcmRlcj0iMCI+CiAgICAgICAgPHRib2R5PgogICAgICAgICAgPHRyPgogICAg
-ICAgICAgICA8dGggdmFsaWduPSJCQVNFTElORSIgbm93cmFwIGFsaWduPSJSSUdIVCI+U3ViamVj
-dDoKICAgICAgICAgICAgPC90aD4KICAgICAgICAgICAgPHRkPlJlOiBGZXcgcXVlc3Rpb25zIGFi
-b3V0IHN1Ym1pdHRpbmcgcGF0Y2hlczwvdGQ+CiAgICAgICAgICA8L3RyPgogICAgICAgICAgPHRy
-PgogICAgICAgICAgICA8dGggdmFsaWduPSJCQVNFTElORSIgbm93cmFwIGFsaWduPSJSSUdIVCI+
-RGF0ZTogPC90aD4KICAgICAgICAgICAgPHRkPldlZCwgMjEgTWFyIDIwMTggMTI6NDY6MTcgLTA0
-MDAgKEVEVCk8L3RkPgogICAgICAgICAgPC90cj4KICAgICAgICAgIDx0cj4KICAgICAgICAgICAg
-PHRoIHZhbGlnbj0iQkFTRUxJTkUiIG5vd3JhcCBhbGlnbj0iUklHSFQiPkZyb206IDwvdGg+CiAg
-ICAgICAgICAgIDx0ZD5EYXZpZCBNaWxsZXIgPGEgY2xhc3M9Im1fLTM1NTEyOTk4ODM3MTAwMDE2
-MjRtXzQyODIwMjgyMTY2MzE4MjQ0OTZtXzYzNzExNjQ3MzQwMDAyNjMxNDJtb3otdHh0LWxpbmst
-cmZjMjM5NkUiIGhyZWY9Im1haWx0bzpkYXZlbUBkYXZlbWxvZnQubmV0IiB0YXJnZXQ9Il9ibGFu
-ayI+Jmx0O2RhdmVtQGRhdmVtbG9mdC5uZXQmZ3Q7PC9hPjwvdGQ+CiAgICAgICAgICA8L3RyPgog
-ICAgICAgICAgPHRyPgogICAgICAgICAgICA8dGggdmFsaWduPSJCQVNFTElORSIgbm93cmFwIGFs
-aWduPSJSSUdIVCI+VG86IDwvdGg+CiAgICAgICAgICAgIDx0ZD48YSBjbGFzcz0ibV8tMzU1MTI5
-OTg4MzcxMDAwMTYyNG1fNDI4MjAyODIxNjYzMTgyNDQ5Nm1fNjM3MTE2NDczNDAwMDI2MzE0Mm1v
-ei10eHQtbGluay1hYmJyZXZpYXRlZCIgaHJlZj0ibWFpbHRvOnJhby5zaG9haWJAb3JhY2xlLmNv
-bSIgdGFyZ2V0PSJfYmxhbmsiPnJhby5zaG9haWJAb3JhY2xlLmNvbTwvYT48L3RkPgogICAgICAg
-ICAgPC90cj4KICAgICAgICAgIDx0cj4KICAgICAgICAgICAgPHRoIHZhbGlnbj0iQkFTRUxJTkUi
-IG5vd3JhcCBhbGlnbj0iUklHSFQiPkNDOiA8L3RoPgogICAgICAgICAgICA8dGQ+PGEgY2xhc3M9
-Im1fLTM1NTEyOTk4ODM3MTAwMDE2MjRtXzQyODIwMjgyMTY2MzE4MjQ0OTZtXzYzNzExNjQ3MzQw
-MDAyNjMxNDJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiIGhyZWY9Im1haWx0bzpuZXRkZXZAdmdl
-ci5rZXJuZWwub3JnIiB0YXJnZXQ9Il9ibGFuayI+bmV0ZGV2QHZnZXIua2VybmVsLm9yZzwvYT4s
-IDxhIGNsYXNzPSJtXy0zNTUxMjk5ODgzNzEwMDAxNjI0bV80MjgyMDI4MjE2NjMxODI0NDk2bV82
-MzcxMTY0NzM0MDAwMjYzMTQybW96LXR4dC1saW5rLWFiYnJldmlhdGVkIiBocmVmPSJtYWlsdG86
-ZXJpYy5kdW1hemV0QGdtYWlsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPmVyaWMuZHVtYXpldEBnbWFp
-bC5jb208L2E+PC90ZD4KICAgICAgICAgIDwvdHI+CiAgICAgICAgPC90Ym9keT4KICAgICAgPC90
-YWJsZT48cHJlPiZndDsgKiAjaWZkZWYgRk9PCiZndDsgCiZndDsgSW4gYSByZWd1bGFyIHBhdGNo
-IGNvbnNpc3Rpbmcgb2YgYSBzZXJpZXMgb2YgcGF0Y2hlcywgY2FuIHRoZSBhYm92ZQomZ3Q7ICNp
-ZmRlZiBiZSB1c2VkIGluIGEgcGF0Y2ggYmVmb3JlIHRoZSBwYXRjaCB0aGF0IGFsbG93cyB0aGUg
-c2VsZWN0aW9uCiZndDsgb2YgRk9PLiBUaGF0IHBhdGNoIGlzIHBhcnQgb2YgdGhlIHNlcmllcyBi
-dXQgY29tZXMgbGF0ZXIuCgpJdCBpcyBiZXR0ZXIgdG8gaW50cm9kdWNlIHRoZW0gYXQgdGhlIHNh
-bWUgdGltZS4KCkJ1dCBpZiBpdCBpcyBwcm9oaWJpdGl2ZWx5IGRpZmZpY3VsdCB0byBkbyBzbywg
-eWV0IGF0IHRoZSBzYW1lCnRpbWUgcHJvcGVybHkgc3BsaXQgdXAgeW91ciBjaGFuZ2VzIGludG8g
-bWFuYWdlYWJsZSBwaWVjZXMsIGl0CmNhbiBiZSBPSy4KCkl0IGlzIGRlZmluaXRlbHkgZGV0ZXJt
-aW5lZCBvbiBhIGNhc2UgYnkgY2FzZSBiYXNpcy48L3ByZT48L2Rpdj48L2Rpdj48L2Jsb2NrcXVv
-dGU+PGRpdj5TbyBvayB0byBrZWVwIHRoZW0gdG8gY2xlYXJseSBpbmRpY2F0ZSB3aGVyZSBNUFRD
-UCBzcGVjaWZpYyBjb2RlIHdpbGwgYmU/PGRpdj48YnI+TWF0dGhpZXUgPC9kaXY+PC9kaXY+PC9k
-aXY+LS0gPGJyPjxkaXYgY2xhc3M9Im1fLTM1NTEyOTk4ODM3MTAwMDE2MjRtXzQyODIwMjgyMTY2
-MzE4MjQ0OTZnbWFpbF9zaWduYXR1cmUiIGRhdGEtc21hcnRtYWlsPSJnbWFpbF9zaWduYXR1cmUi
-PjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48
-dGFibGUgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OztsZXR0
-ZXItc3BhY2luZzpub3JtYWw7dGV4dC1pbmRlbnQ6MHB4O3RleHQtdHJhbnNmb3JtOm5vbmU7d29y
-ZC1zcGFjaW5nOjBweCIgd2lkdGg9IjEwMCUiIGJvcmRlcj0iMCI+PHRib2R5Pjx0cj48dGQgcm93
-c3Bhbj0iMyIgc3R5bGU9InBhZGRpbmctbGVmdDo1cHg7cGFkZGluZy1yaWdodDo1cHgiIHdpZHRo
-PSIxMCIgdmFsaWduPSJ0b3AiIGFsaWduPSJsZWZ0Ij48YSBocmVmPSJodHRwOi8vd3d3LnRlc3Nh
-cmVzLm5ldCIgdGFyZ2V0PSJfYmxhbmsiPjxpbWcgc3JjPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5l
-dC9zaWdsb2dvLnBuZyIgYWx0PSJUZXNzYXJlcyBTQSIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBi
-b3JkZXI9IjAiPjwvYT48L3RkPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1mYW1pbHk6SGVs
-dmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdodD0iMTIiIGFsaWdu
-PSJsZWZ0Ij48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6Ym9sZDtjb2xvcjpyZ2IoMzcsODMsMTU1
-KTtkaXNwbGF5OmlubGluZSI+TWF0dGhpZXUgQmFlcnRzIHwgUiZhbXA7RCBFbmdpbmVlcjwvc3Bh
-bj48L3RkPjwvdHI+PHRyPjx0ZCBzdHlsZT0icGFkZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0
-aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEwcHgiIGhlaWdodD0iMTIiIGFsaWduPSJs
-ZWZ0Ij48YSBocmVmPSJtYWlsdG86bWF0dGhpZXUuYmFlcnRzJTQwdGVzc2FyZXMubmV0IiBzdHls
-ZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRpb246bm9uZTtkaXNwbGF5OmlubGluZSIg
-dGFyZ2V0PSJfYmxhbmsiPm1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ8YnI+PC9hPjwvdGQ+
-PC90cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWlseTpIZWx2ZXRpY2EsQXJp
-YWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgYWxpZ249ImxlZnQiPjxzcGFuIHN0eWxlPSJm
-b250LXdlaWdodDpib2xkO2NvbG9yOnJnYigzNyw4MywxNTUpO2Rpc3BsYXk6aW5saW5lIj5UZXNz
-YXJlcyBTQSB8IEh5YnJpZCBBY2Nlc3MgU29sdXRpb25zPGJyPjwvc3Bhbj48YSBocmVmPSJodHRw
-Oi8vd3d3LnRlc3NhcmVzLm5ldCIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0
-aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj53d3cudGVzc2FyZXMubmV0
-PC9hPjxzcGFuPsKgPC9zcGFuPjxicj48YSBocmVmPSJodHRwczovL3d3dy5nb29nbGUuY29tL21h
-cHM/cT0xK0F2ZW51ZStKZWFuK01vbm5ldCwrMTM0OCtPdHRpZ25pZXMtTG91dmFpbi1sYS1OZXV2
-ZSwrQmVsZ2l1bSIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7
-ZGlzcGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj4xIEF2ZW51ZSBKZWFuIE1vbm5ldCwgMTM0
-OCBMb3V2YWluLWxhLU5ldXZlLCBCZWxnaXVtPC9hPjwvdGQ+PC90cj48L3Rib2R5PjwvdGFibGU+
-PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvZGl2PjwvZGl2PjwvZGl2PgoK
-PGJyPgo8ZGl2Pjxicj48aHI+PC9kaXY+PGZvbnQgc2l6ZT0iMSI+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OlZlcmRhbmEsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1
-NSkiPkRJU0NMQUlNRVIuPC9zcGFuPjxiciBzdHlsZT0iZm9udC1mYW1pbHk6VmVyZGFuYSxzYW5z
-LXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+PGZvbnQgY29sb3I9IiMw
-MDAwMDAiIGZhY2U9IlZlcmRhbmEsIHNhbnMtc2VyaWYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9y
-OnJnYigyNTUsMjU1LDI1NSkiPlRoaXMgZW1haWwgYW5kIGFueSBmaWxlcyB0cmFuc21pdHRlZCB3
-aXRoIGl0IGFyZSBjb25maWRlbnRpYWwgYW5kIGludGVuZGVkIHNvbGVseSBmb3IgdGhlIHVzZSBv
-ZiB0aGUgaW5kaXZpZHVhbCBvciBlbnRpdHkgdG8gd2hvbSB0aGV5IGFyZSBhZGRyZXNzZWQuIElm
-IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwgaW4gZXJyb3IgcGxlYXNlIG5vdGlmeSB0aGUg
-c3lzdGVtIG1hbmFnZXIuIFRoaXMgbWVzc2FnZSBjb250YWlucyBjb25maWRlbnRpYWwgaW5mb3Jt
-YXRpb24gYW5kIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBpbmRpdmlkdWFsIG5hbWVkLiBJZiB5
-b3UgYXJlIG5vdCB0aGUgbmFtZWQgYWRkcmVzc2VlIHlvdSBzaG91bGQgbm90IGRpc3NlbWluYXRl
-LCBkaXN0cmlidXRlIG9yIGNvcHkgdGhpcyBlLW1haWwuIFBsZWFzZSBub3RpZnkgdGhlIHNlbmRl
-ciBpbW1lZGlhdGVseSBieSBlLW1haWwgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwg
-YnkgbWlzdGFrZSBhbmQgZGVsZXRlIHRoaXMgZS1tYWlsIGZyb20geW91ciBzeXN0ZW0uIElmIHlv
-dSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgeW91IGFyZSBub3RpZmllZCB0aGF0IGRp
-c2Nsb3NpbmcsIGNvcHlpbmcsIGRpc3RyaWJ1dGluZyBvciB0YWtpbmcgYW55IGFjdGlvbiBpbiBy
-ZWxpYW5jZSBvbiB0aGUgY29udGVudHMgb2YgdGhpcyBpbmZvcm1hdGlvbiBpcyBzdHJpY3RseSBw
-cm9oaWJpdGVkLjwvZm9udD48L2ZvbnQ+
---===============4523409192891489375==--
+--===============8124916907076885607==--
