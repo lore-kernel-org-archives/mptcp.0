@@ -1,45 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============8316892919756482090=="
+Content-Type: multipart/mixed; boundary="===============0351098860432631714=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Stephen Brennan <stephen at brennan.io>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 1/1] Add MPTCP code to work with the modified TCP
- code
-Date: Thu, 22 Mar 2018 12:00:43 -0700
-Message-ID: <fd618aff-02e4-dcb9-ee0b-fab868da46f2@oracle.com>
-In-Reply-To: 1521744972.23414.11.camel@intel.com
+Subject: [MPTCP] Userspace Path Manager Draft
+Date: Thu, 22 Mar 2018 13:41:09 -0700
+Message-ID: <20180322204109.GA29903@pride>
 X-Status: 
 X-Keywords:                  
-X-UID: 400
+X-UID: 401
 
---===============8316892919756482090==
+--===============0351098860432631714==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello everyone,
 
->> Peter I may have mis-understood your question. In case you want to
->> see
->> what was changed in MPTCP you can compare what I posted with
->> mptcp_v0.91. If you want I can provide you the diff or a patch.
->>
->> Shoaib.
-> That is what I was hoping to see (the differences against the existing
-> MPTCP implementation). A patch would be great.
->
-> Thanks,
->
-> Peter.
->
->
-I will get that for you but based on mptcp_v0.91, the implementation =
+I did not sit in on the meeting since I am feeling sick, so I haven't had a
+chance to see whether this is actually a useful contribution. However, over
+the past week I've been tinkering with the userspace Generic Netlink
+libraries, getting a prototype of what a userspace path manager framework
+could look like.
 
-that I used not the latest implementation. Also the code is in bad shape =
+My current idea is built so that it could support multiple path managers,
+implemented as shared libraries, which are dynamically loaded at runtime.
+There would need to be some policy or logic to decide which connections are
+assigned to which path manager; I haven't fleshed out what that looks like.
 
-(it works though). I was planning on cleaning it up but have been side =
+Without an exact API reference, I simply based the API on what Ossama
+proposed last week. To test, I created a dummy kernel path manager which
+sends empty Netlink messages. It seems to work so far.
 
-tracked with other issues.
+I don't know if those working on the Netlink API have been developing
+userspace tooling in parallel, but if not, maybe this will be useful. You
+can find it here:
 
-Shoaib.
+https://github.com/brenns10/pathmand
+
+Hope this is useful!
+
+Stephen
 
 
---===============8316892919756482090==--
+--===============0351098860432631714==--
