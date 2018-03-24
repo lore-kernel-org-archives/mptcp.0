@@ -1,70 +1,144 @@
-Content-Type: multipart/mixed; boundary="===============6696291213532812012=="
+Content-Type: multipart/mixed; boundary="===============5212624310563816527=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Userspace Path Manager Draft
-Date: Fri, 23 Mar 2018 16:14:43 +0000
-Message-ID: <20180323161443.GA54772@MacBook-Pro-6.local>
-In-Reply-To: 20180322204109.GA29903@pride
+Subject: [MPTCP] Status and what's next
+Date: Sat, 24 Mar 2018 12:47:46 -0700
+Message-ID: <alpine.OSX.2.21.1803241236490.21805@siradov-mobl.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 405
+X-UID: 406
 
---===============6696291213532812012==
+--===============5212624310563816527==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Stephen,
 
-On 22/03/18 - 13:41:09, Stephen Brennan wrote:
-> Hello everyone,
-> =
+Hello everyone -
 
-> I did not sit in on the meeting since I am feeling sick, so I haven't had=
- a
-> chance to see whether this is actually a useful contribution. However, ov=
-er
-> the past week I've been tinkering with the userspace Generic Netlink
-> libraries, getting a prototype of what a userspace path manager framework
-> could look like.
+In our recent web conference call, we thought it would be helpful to =
 
-Awesome!
+summarize what is coming up for MPTCP upstreaming. To start, I'd like to =
 
-> My current idea is built so that it could support multiple path managers,
-> implemented as shared libraries, which are dynamically loaded at runtime.
-> There would need to be some policy or logic to decide which connections a=
-re
-> assigned to which path manager; I haven't fleshed out what that looks lik=
-e.
+review work that's already been done and is underway.
 
-I see, kinda like a pluggable path-manager in user-space, right?
-I like that idea.
+Previous work:
 
-> Without an exact API reference, I simply based the API on what Ossama
-> proposed last week. To test, I created a dummy kernel path manager which
-> sends empty Netlink messages. It seems to work so far.
-> =
+* Mat developed an extensible TCP option framework patch, and Christoph =
 
-> I don't know if those working on the Netlink API have been developing
-> userspace tooling in parallel, but if not, maybe this will be useful.
+refactored upstream TCP-MD5 and SMC functionality to use it. The idea was =
 
-I think it will be very useful. I'm sure that Matthieu has also a
-path-manager daemon. But having an additional one with other use-cases and
-implementations in mind will allow to validate that the netlink API works
-for more diverse use-cases.
+to integrate some extensions in to TCP that had utility for existing =
 
-> You
-> can find it here:
-> =
+functionality, but would also help integrate MPTCP. This RFC patch set was =
 
-> https://github.com/brenns10/pathmand
+turned down by Dave Miller, but did give us useful guidance.
 
-I will take a look at it.
+* Mat published a proposal for optionally extending sk_buff shared info to =
+
+carry MPTCP metadata.
 
 
-Cheers,
-Christoph
+Ongoing work:
+
+* Christoph keeps the multipath-tcp.org kernel merged with recent kernel =
+
+releases as part of his maintainership role for the multipath-tcp.org =
+
+project, and is refactoring parts of the MPTCP implementation to take =
+
+advantage of newer kernel or TCP features and to align with upstreaming =
+
+goals.
+
+* Rao has published an RFC patch set based on the multipath-tcp.org MPTCP =
+
+implementation and the current upstream kernel, with modifications to make =
+
+the TCP implementation extensible in a way that's useful for MPTCP. It is =
+
+currently under review by community members.
+
+* Matthieu has sent a generic netlink patch set to mptcp-dev.
+
+* Ossama shared a generic netlink path management API proposal. The Intel =
+
+group developed this before we knew Matthieu would be sharing an =
+
+implementation.
+
+* Stephan shared a userspace path manager draft implementation at =
+
+https://github.com/brenns10/pathmand
+
+* Peter and Mat are preparing a patch set showing an MPTCP architecture =
+
+with a separate socket type for the MPTCP connection and using in-kernel =
+
+TCP sockets for subflows. The extended sk_buff structure patch is part of =
+
+this.
+
+* Ossama has made significant progress on a userspace path manager =
+
+implementation with the goal to open source it
+
+That gives us quite a bit to discuss and review on the list in the near =
+
+term. The bigger and longer-term challenge is to take these pieces and =
+
+develop a strategy and patches for upstream submissions.
 
 
---===============6696291213532812012==--
+There are a few things the MPTCP upstreaming community members on this =
+
+list seem aligned on:
+
+* MPTCP belongs in the upstream kernel
+
+* The multipath-tcp.org implementation is not upstream-ready as-is
+
+* Implementing 100% from scratch is not the preferred strategy
+
+
+How do we get to upstreamable patch sets from here? I think if we can =
+
+agree on what an upstreamable MPTCP architecture looks we can evaluate =
+
+patch sets accordingly. I've proposed these design characteristics before, =
+
+but the mailing list has expanded significantly since then:
+
+* MPTCP is used when requested by the application, either through an =
+
+IPPROTO_MPTCP parameter to socket() or by using the new ULP (Upper Layer =
+
+Protocol) capability.
+
+* Move away from meta-sockets, treating each subflow more like a regular =
+
+TCP connection. The overall MPTCP connection is coordinated by an upper =
+
+layer socket that is distinct from tcp_sock.
+
+* Move functionality to userspace where possible, like tracking ADD_ADDRs =
+
+received, initiating new subflows, or accepting new subflows.
+
+* Avoid adding locks to coordinate access to data that's shared between =
+
+subflows. Utilize capabilities like compare-and-swap (cmpxchg), atomics, =
+
+and RCU to deal with shared data efficiently.
+
+Are these the right place to start? Anyone want to expand the list?
+
+
+Thanks,
+
+--
+Mat Martineau
+Intel OTC
+
+--===============5212624310563816527==--
