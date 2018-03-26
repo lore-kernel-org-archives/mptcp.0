@@ -1,163 +1,317 @@
-Content-Type: multipart/mixed; boundary="===============5659142923114058073=="
+Content-Type: multipart/mixed; boundary="===============0513217758912748706=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 12/12] mptcp: Make mptcp_do_join_short and
- mptcp_lookup_join lockless
-Date: Mon, 26 Mar 2018 09:32:15 +0200
-Message-ID: <20180326073215.83607-13-cpaasch@apple.com>
-In-Reply-To: 20180326073215.83607-1-cpaasch@apple.com
+Subject: Re: [MPTCP] Status and what's next
+Date: Mon, 26 Mar 2018 10:13:24 +0200
+Message-ID: <CAKuKrB=kBMyozwaMuELe1CGqUVUu2O4FPGnO=uafPjU1uOQDkA@mail.gmail.com>
+In-Reply-To: alpine.OSX.2.21.1803241236490.21805@siradov-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 419
+X-UID: 420
 
---===============5659142923114058073==
+--===============0513217758912748706==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Now we can also make the subflow-SYN+MP_JOIN reception lockless.
+Hi Mat,
 
-In mptcp_lookup_join and mptcp_do_join_short, we were checking for
-mptcp_can_new_subflow(), because it is not possible to call
-tcp_v4_send_reset() while holding two locks (the listener lock and the
-meta-lock when coming from mptcp_do_join_short) when in mptcp_v4_do_rcv.
-Now that we remove the locking, we can remove the check for
-mptcp_can_new_subflow().
+Thank you for this email! I am sure it is useful for people not
+participating to our public web conference calls.
 
-The remaining changes simply skip taking the meta-level lock which also
-implies that we don't have to check for sock_owned_by_user().
+I just added a link to your email in MPTCP's wiki:
+http://multipath-tcp.org/pmwiki.php/Developer/Upstreaming
 
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- net/mptcp/mptcp_input.c | 70 +++++++--------------------------------------=
-----
- 1 file changed, 9 insertions(+), 61 deletions(-)
+Best regards,
+Matthieu
 
-diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index 64b0265bfd06..34cc613ee584 100644
---- a/net/mptcp/mptcp_input.c
-+++ b/net/mptcp/mptcp_input.c
-@@ -1151,7 +1151,6 @@ struct mp_join *mptcp_find_join(const struct sk_buff =
-*skb)
- =
+On Sat, Mar 24, 2018 at 8:47 PM, Mat Martineau <
+mathew.j.martineau(a)linux.intel.com> wrote:
 
- int mptcp_lookup_join(struct sk_buff *skb, struct inet_timewait_sock *tw)
- {
--	const struct mptcp_cb *mpcb;
- 	struct sock *meta_sk;
- 	u32 token;
- 	bool meta_v4;
-@@ -1184,16 +1183,6 @@ int mptcp_lookup_join(struct sk_buff *skb, struct in=
-et_timewait_sock *tw)
- 		return -1;
- 	}
- =
+>
+> Hello everyone -
+>
+> In our recent web conference call, we thought it would be helpful to
+> summarize what is coming up for MPTCP upstreaming. To start, I'd like to
+> review work that's already been done and is underway.
+>
+> Previous work:
+>
+> * Mat developed an extensible TCP option framework patch, and Christoph
+> refactored upstream TCP-MD5 and SMC functionality to use it. The idea was
+> to integrate some extensions in to TCP that had utility for existing
+> functionality, but would also help integrate MPTCP. This RFC patch set was
+> turned down by Dave Miller, but did give us useful guidance.
+>
+> * Mat published a proposal for optionally extending sk_buff shared info to
+> carry MPTCP metadata.
+>
+>
+> Ongoing work:
+>
+> * Christoph keeps the multipath-tcp.org kernel merged with recent kernel
+> releases as part of his maintainership role for the multipath-tcp.org
+> project, and is refactoring parts of the MPTCP implementation to take
+> advantage of newer kernel or TCP features and to align with upstreaming
+> goals.
+>
+> * Rao has published an RFC patch set based on the multipath-tcp.org MPTCP
+> implementation and the current upstream kernel, with modifications to make
+> the TCP implementation extensible in a way that's useful for MPTCP. It is
+> currently under review by community members.
+>
+> * Matthieu has sent a generic netlink patch set to mptcp-dev.
+>
+> * Ossama shared a generic netlink path management API proposal. The Intel
+> group developed this before we knew Matthieu would be sharing an
+> implementation.
+>
+> * Stephan shared a userspace path manager draft implementation at
+> https://github.com/brenns10/pathmand
+>
+> * Peter and Mat are preparing a patch set showing an MPTCP architecture
+> with a separate socket type for the MPTCP connection and using in-kernel
+> TCP sockets for subflows. The extended sk_buff structure patch is part of
+> this.
+>
+> * Ossama has made significant progress on a userspace path manager
+> implementation with the goal to open source it
+>
+> That gives us quite a bit to discuss and review on the list in the near
+> term. The bigger and longer-term challenge is to take these pieces and
+> develop a strategy and patches for upstream submissions.
+>
+>
+> There are a few things the MPTCP upstreaming community members on this
+> list seem aligned on:
+>
+> * MPTCP belongs in the upstream kernel
+>
+> * The multipath-tcp.org implementation is not upstream-ready as-is
+>
+> * Implementing 100% from scratch is not the preferred strategy
+>
+>
+> How do we get to upstreamable patch sets from here? I think if we can
+> agree on what an upstreamable MPTCP architecture looks we can evaluate
+> patch sets accordingly. I've proposed these design characteristics before,
+> but the mailing list has expanded significantly since then:
+>
+> * MPTCP is used when requested by the application, either through an
+> IPPROTO_MPTCP parameter to socket() or by using the new ULP (Upper Layer
+> Protocol) capability.
+>
+> * Move away from meta-sockets, treating each subflow more like a regular
+> TCP connection. The overall MPTCP connection is coordinated by an upper
+> layer socket that is distinct from tcp_sock.
+>
+> * Move functionality to userspace where possible, like tracking ADD_ADDRs
+> received, initiating new subflows, or accepting new subflows.
+>
+> * Avoid adding locks to coordinate access to data that's shared between
+> subflows. Utilize capabilities like compare-and-swap (cmpxchg), atomics,
+> and RCU to deal with shared data efficiently.
+>
+> Are these the right place to start? Anyone want to expand the list?
+>
+>
+> Thanks,
+>
+> --
+> Mat Martineau
+> Intel OTC
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+>
 
--	mpcb =3D tcp_sk(meta_sk)->mpcb;
--	if (!mptcp_can_new_subflow(meta_sk)) {
--		/* We are in fallback-mode on the reception-side -
--		 * no new subflows!
--		 */
--		sock_put(meta_sk); /* Taken by mptcp_hash_find */
--		MPTCP_INC_STATS(sock_net(meta_sk), MPTCP_MIB_JOINFALLBACK);
--		return -1;
--	}
--
- 	/* Coming from time-wait-sock processing in tcp_v4_rcv.
- 	 * We have to deschedule it before continuing, because otherwise
- 	 * mptcp_v4_do_rcv will hit again on it inside tcp_v4_hnd_req.
-@@ -1204,26 +1193,13 @@ int mptcp_lookup_join(struct sk_buff *skb, struct i=
-net_timewait_sock *tw)
- 	/* OK, this is a new syn/join, let's create a new open request and
- 	 * send syn+ack
- 	 */
--	bh_lock_sock_nested(meta_sk);
--	if (sock_owned_by_user(meta_sk)) {
--		skb->sk =3D meta_sk;
--		if (unlikely(sk_add_backlog(meta_sk, skb,
--					    meta_sk->sk_rcvbuf + meta_sk->sk_sndbuf))) {
--			bh_unlock_sock(meta_sk);
--			__NET_INC_STATS(sock_net(meta_sk),
--					 LINUX_MIB_TCPBACKLOGDROP);
--			sock_put(meta_sk); /* Taken by mptcp_hash_find */
--			kfree_skb(skb);
--			return 1;
--		}
--	} else if (skb->protocol =3D=3D htons(ETH_P_IP)) {
-+	if (skb->protocol =3D=3D htons(ETH_P_IP)) {
- 		tcp_v4_do_rcv(meta_sk, skb);
- #if IS_ENABLED(CONFIG_IPV6)
- 	} else {
- 		tcp_v6_do_rcv(meta_sk, skb);
- #endif /* CONFIG_IPV6 */
- 	}
--	bh_unlock_sock(meta_sk);
- 	sock_put(meta_sk); /* Taken by mptcp_hash_find */
- 	return 1;
- }
-@@ -1260,48 +1236,20 @@ int mptcp_do_join_short(struct sk_buff *skb,
- 	/* OK, this is a new syn/join, let's create a new open request and
- 	 * send syn+ack
- 	 */
--	bh_lock_sock(meta_sk);
- =
 
--	/* This check is also done in mptcp_vX_do_rcv. But, there we cannot
--	 * call tcp_vX_send_reset, because we hold already two socket-locks.
--	 * (the listener and the meta from above)
--	 *
--	 * And the send-reset will try to take yet another one (ip_send_reply).
--	 * Thus, we propagate the reset up to tcp_rcv_state_process.
-+	/* mptcp_v4_do_rcv tries to free the skb - we prevent this, as
-+	 * the skb will finally be freed by tcp_v4_do_rcv (where we are
-+	 * coming from)
- 	 */
--	if (!mptcp_can_new_subflow(meta_sk)) {
--		MPTCP_INC_STATS(sock_net(meta_sk), MPTCP_MIB_JOINFALLBACK);
--		bh_unlock_sock(meta_sk);
--		sock_put(meta_sk); /* Taken by mptcp_hash_find */
--		return -1;
--	}
--
--	if (sock_owned_by_user(meta_sk)) {
--		skb->sk =3D meta_sk;
--		if (unlikely(sk_add_backlog(meta_sk, skb,
--					    meta_sk->sk_rcvbuf + meta_sk->sk_sndbuf)))
--			__NET_INC_STATS(net, LINUX_MIB_TCPBACKLOGDROP);
--		else
--			/* Must make sure that upper layers won't free the
--			 * skb if it is added to the backlog-queue.
--			 */
--			skb_get(skb);
--	} else {
--		/* mptcp_v4_do_rcv tries to free the skb - we prevent this, as
--		 * the skb will finally be freed by tcp_v4_do_rcv (where we are
--		 * coming from)
--		 */
--		skb_get(skb);
--		if (skb->protocol =3D=3D htons(ETH_P_IP)) {
--			tcp_v4_do_rcv(meta_sk, skb);
-+	skb_get(skb);
-+	if (skb->protocol =3D=3D htons(ETH_P_IP)) {
-+		tcp_v4_do_rcv(meta_sk, skb);
- #if IS_ENABLED(CONFIG_IPV6)
--		} else { /* IPv6 */
--			tcp_v6_do_rcv(meta_sk, skb);
-+	} else { /* IPv6 */
-+		tcp_v6_do_rcv(meta_sk, skb);
- #endif /* CONFIG_IPV6 */
--		}
- 	}
- =
 
--	bh_unlock_sock(meta_sk);
- 	sock_put(meta_sk); /* Taken by mptcp_hash_find */
- 	return 0;
- }
 -- =
 
-2.16.2
+[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
+in-la-Neuve,+Belgium>
+
+-- =
 
 
---===============5659142923114058073==--
+------------------------------
+DISCLAIMER.
+This email and any files transmitted with it are confidential and intended =
+
+solely for the use of the individual or entity to whom they are addressed. =
+
+If you have received this email in error please notify the system manager. =
+
+This message contains confidential information and is intended only for the =
+
+individual named. If you are not the named addressee you should not =
+
+disseminate, distribute or copy this e-mail. Please notify the sender =
+
+immediately by e-mail if you have received this e-mail by mistake and =
+
+delete this e-mail from your system. If you are not the intended recipient =
+
+you are notified that disclosing, copying, distributing or taking any =
+
+action in reliance on the contents of this information is strictly =
+
+prohibited.
+
+--===============0513217758912748706==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSBNYXQsPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFu
+ayB5b3UgZm9yIHRoaXMgZW1haWwhIEkgYW0gc3VyZSBpdCBpcyB1c2VmdWwgZm9yIHBlb3BsZSBu
+b3QgcGFydGljaXBhdGluZyB0byBvdXIgcHVibGljIHdlYiBjb25mZXJlbmNlIGNhbGxzLjxicj48
+L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkganVzdCBhZGRlZCBhIGxpbmsgdG8geW91ciBlbWFp
+bCBpbiBNUFRDUCYjMzk7cyB3aWtpOiA8YSBocmVmPSJodHRwOi8vbXVsdGlwYXRoLXRjcC5vcmcv
+cG13aWtpLnBocC9EZXZlbG9wZXIvVXBzdHJlYW1pbmciPmh0dHA6Ly9tdWx0aXBhdGgtdGNwLm9y
+Zy9wbXdpa2kucGhwL0RldmVsb3Blci9VcHN0cmVhbWluZzwvYT48L2Rpdj48ZGl2Pjxicj48L2Rp
+dj48ZGl2PkJlc3QgcmVnYXJkcyw8L2Rpdj48ZGl2Pk1hdHRoaWV1PGJyPjwvZGl2PjwvZGl2Pjxk
+aXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPk9uIFNh
+dCwgTWFyIDI0LCAyMDE4IGF0IDg6NDcgUE0sIE1hdCBNYXJ0aW5lYXUgPHNwYW4gZGlyPSJsdHIi
+PiZsdDs8YSBocmVmPSJtYWlsdG86bWF0aGV3LmoubWFydGluZWF1QGxpbnV4LmludGVsLmNvbSIg
+dGFyZ2V0PSJfYmxhbmsiPm1hdGhldy5qLm1hcnRpbmVhdUBsaW51eC5pbnRlbC5jb208L2E+Jmd0
+Ozwvc3Bhbj4gd3JvdGU6PGJyPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9
+Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmctbGVm
+dDoxZXgiPjxicj4KSGVsbG8gZXZlcnlvbmUgLTxicj4KPGJyPgpJbiBvdXIgcmVjZW50IHdlYiBj
+b25mZXJlbmNlIGNhbGwsIHdlIHRob3VnaHQgaXQgd291bGQgYmUgaGVscGZ1bCB0byBzdW1tYXJp
+emUgd2hhdCBpcyBjb21pbmcgdXAgZm9yIE1QVENQIHVwc3RyZWFtaW5nLiBUbyBzdGFydCwgSSYj
+Mzk7ZCBsaWtlIHRvIHJldmlldyB3b3JrIHRoYXQmIzM5O3MgYWxyZWFkeSBiZWVuIGRvbmUgYW5k
+IGlzIHVuZGVyd2F5Ljxicj4KPGJyPgpQcmV2aW91cyB3b3JrOjxicj4KPGJyPgoqIE1hdCBkZXZl
+bG9wZWQgYW4gZXh0ZW5zaWJsZSBUQ1Agb3B0aW9uIGZyYW1ld29yayBwYXRjaCwgYW5kIENocmlz
+dG9waCByZWZhY3RvcmVkIHVwc3RyZWFtIFRDUC1NRDUgYW5kIFNNQyBmdW5jdGlvbmFsaXR5IHRv
+IHVzZSBpdC4gVGhlIGlkZWEgd2FzIHRvIGludGVncmF0ZSBzb21lIGV4dGVuc2lvbnMgaW4gdG8g
+VENQIHRoYXQgaGFkIHV0aWxpdHkgZm9yIGV4aXN0aW5nIGZ1bmN0aW9uYWxpdHksIGJ1dCB3b3Vs
+ZCBhbHNvIGhlbHAgaW50ZWdyYXRlIE1QVENQLiBUaGlzIFJGQyBwYXRjaCBzZXQgd2FzIHR1cm5l
+ZCBkb3duIGJ5IERhdmUgTWlsbGVyLCBidXQgZGlkIGdpdmUgdXMgdXNlZnVsIGd1aWRhbmNlLjxi
+cj4KPGJyPgoqIE1hdCBwdWJsaXNoZWQgYSBwcm9wb3NhbCBmb3Igb3B0aW9uYWxseSBleHRlbmRp
+bmcgc2tfYnVmZiBzaGFyZWQgaW5mbyB0byBjYXJyeSBNUFRDUCBtZXRhZGF0YS48YnI+Cjxicj4K
+PGJyPgpPbmdvaW5nIHdvcms6PGJyPgo8YnI+CiogQ2hyaXN0b3BoIGtlZXBzIHRoZSA8YSBocmVm
+PSJodHRwOi8vbXVsdGlwYXRoLXRjcC5vcmciIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxh
+bmsiPm11bHRpcGF0aC10Y3Aub3JnPC9hPiBrZXJuZWwgbWVyZ2VkIHdpdGggcmVjZW50IGtlcm5l
+bCByZWxlYXNlcyBhcyBwYXJ0IG9mIGhpcyBtYWludGFpbmVyc2hpcCByb2xlIGZvciB0aGUgPGEg
+aHJlZj0iaHR0cDovL211bHRpcGF0aC10Y3Aub3JnIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0i
+X2JsYW5rIj5tdWx0aXBhdGgtdGNwLm9yZzwvYT4gcHJvamVjdCwgYW5kIGlzIHJlZmFjdG9yaW5n
+IHBhcnRzIG9mIHRoZSBNUFRDUCBpbXBsZW1lbnRhdGlvbiB0byB0YWtlIGFkdmFudGFnZSBvZiBu
+ZXdlciBrZXJuZWwgb3IgVENQIGZlYXR1cmVzIGFuZCB0byBhbGlnbiB3aXRoIHVwc3RyZWFtaW5n
+IGdvYWxzLjxicj4KPGJyPgoqIFJhbyBoYXMgcHVibGlzaGVkIGFuIFJGQyBwYXRjaCBzZXQgYmFz
+ZWQgb24gdGhlIDxhIGhyZWY9Imh0dHA6Ly9tdWx0aXBhdGgtdGNwLm9yZyIgcmVsPSJub3JlZmVy
+cmVyIiB0YXJnZXQ9Il9ibGFuayI+bXVsdGlwYXRoLXRjcC5vcmc8L2E+IE1QVENQIGltcGxlbWVu
+dGF0aW9uIGFuZCB0aGUgY3VycmVudCB1cHN0cmVhbSBrZXJuZWwsIHdpdGggbW9kaWZpY2F0aW9u
+cyB0byBtYWtlIHRoZSBUQ1AgaW1wbGVtZW50YXRpb24gZXh0ZW5zaWJsZSBpbiBhIHdheSB0aGF0
+JiMzOTtzIHVzZWZ1bCBmb3IgTVBUQ1AuIEl0IGlzIGN1cnJlbnRseSB1bmRlciByZXZpZXcgYnkg
+Y29tbXVuaXR5IG1lbWJlcnMuPGJyPgo8YnI+CiogTWF0dGhpZXUgaGFzIHNlbnQgYSBnZW5lcmlj
+IG5ldGxpbmsgcGF0Y2ggc2V0IHRvIG1wdGNwLWRldi48YnI+Cjxicj4KKiBPc3NhbWEgc2hhcmVk
+IGEgZ2VuZXJpYyBuZXRsaW5rIHBhdGggbWFuYWdlbWVudCBBUEkgcHJvcG9zYWwuIFRoZSBJbnRl
+bCBncm91cCBkZXZlbG9wZWQgdGhpcyBiZWZvcmUgd2Uga25ldyBNYXR0aGlldSB3b3VsZCBiZSBz
+aGFyaW5nIGFuIGltcGxlbWVudGF0aW9uLjxicj4KPGJyPgoqIFN0ZXBoYW4gc2hhcmVkIGEgdXNl
+cnNwYWNlIHBhdGggbWFuYWdlciBkcmFmdCBpbXBsZW1lbnRhdGlvbiBhdCA8YSBocmVmPSJodHRw
+czovL2dpdGh1Yi5jb20vYnJlbm5zMTAvcGF0aG1hbmQiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0
+PSJfYmxhbmsiPmh0dHBzOi8vZ2l0aHViLmNvbS9icmVubnMxMC9wYTx3YnI+dGhtYW5kPC9hPjxi
+cj4KPGJyPgoqIFBldGVyIGFuZCBNYXQgYXJlIHByZXBhcmluZyBhIHBhdGNoIHNldCBzaG93aW5n
+IGFuIE1QVENQIGFyY2hpdGVjdHVyZSB3aXRoIGEgc2VwYXJhdGUgc29ja2V0IHR5cGUgZm9yIHRo
+ZSBNUFRDUCBjb25uZWN0aW9uIGFuZCB1c2luZyBpbi1rZXJuZWwgVENQIHNvY2tldHMgZm9yIHN1
+YmZsb3dzLiBUaGUgZXh0ZW5kZWQgc2tfYnVmZiBzdHJ1Y3R1cmUgcGF0Y2ggaXMgcGFydCBvZiB0
+aGlzLjxicj4KPGJyPgoqIE9zc2FtYSBoYXMgbWFkZSBzaWduaWZpY2FudCBwcm9ncmVzcyBvbiBh
+IHVzZXJzcGFjZSBwYXRoIG1hbmFnZXIgaW1wbGVtZW50YXRpb24gd2l0aCB0aGUgZ29hbCB0byBv
+cGVuIHNvdXJjZSBpdDxicj4KPGJyPgpUaGF0IGdpdmVzIHVzIHF1aXRlIGEgYml0IHRvIGRpc2N1
+c3MgYW5kIHJldmlldyBvbiB0aGUgbGlzdCBpbiB0aGUgbmVhciB0ZXJtLiBUaGUgYmlnZ2VyIGFu
+ZCBsb25nZXItdGVybSBjaGFsbGVuZ2UgaXMgdG8gdGFrZSB0aGVzZSBwaWVjZXMgYW5kIGRldmVs
+b3AgYSBzdHJhdGVneSBhbmQgcGF0Y2hlcyBmb3IgdXBzdHJlYW0gc3VibWlzc2lvbnMuPGJyPgo8
+YnI+Cjxicj4KVGhlcmUgYXJlIGEgZmV3IHRoaW5ncyB0aGUgTVBUQ1AgdXBzdHJlYW1pbmcgY29t
+bXVuaXR5IG1lbWJlcnMgb24gdGhpcyBsaXN0IHNlZW0gYWxpZ25lZCBvbjo8YnI+Cjxicj4KKiBN
+UFRDUCBiZWxvbmdzIGluIHRoZSB1cHN0cmVhbSBrZXJuZWw8YnI+Cjxicj4KKiBUaGUgPGEgaHJl
+Zj0iaHR0cDovL211bHRpcGF0aC10Y3Aub3JnIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2Js
+YW5rIj5tdWx0aXBhdGgtdGNwLm9yZzwvYT4gaW1wbGVtZW50YXRpb24gaXMgbm90IHVwc3RyZWFt
+LXJlYWR5IGFzLWlzPGJyPgo8YnI+CiogSW1wbGVtZW50aW5nIDEwMCUgZnJvbSBzY3JhdGNoIGlz
+IG5vdCB0aGUgcHJlZmVycmVkIHN0cmF0ZWd5PGJyPgo8YnI+Cjxicj4KSG93IGRvIHdlIGdldCB0
+byB1cHN0cmVhbWFibGUgcGF0Y2ggc2V0cyBmcm9tIGhlcmU/IEkgdGhpbmsgaWYgd2UgY2FuIGFn
+cmVlIG9uIHdoYXQgYW4gdXBzdHJlYW1hYmxlIE1QVENQIGFyY2hpdGVjdHVyZSBsb29rcyB3ZSBj
+YW4gZXZhbHVhdGUgcGF0Y2ggc2V0cyBhY2NvcmRpbmdseS4gSSYjMzk7dmUgcHJvcG9zZWQgdGhl
+c2UgZGVzaWduIGNoYXJhY3RlcmlzdGljcyBiZWZvcmUsIGJ1dCB0aGUgbWFpbGluZyBsaXN0IGhh
+cyBleHBhbmRlZCBzaWduaWZpY2FudGx5IHNpbmNlIHRoZW46PGJyPgo8YnI+CiogTVBUQ1AgaXMg
+dXNlZCB3aGVuIHJlcXVlc3RlZCBieSB0aGUgYXBwbGljYXRpb24sIGVpdGhlciB0aHJvdWdoIGFu
+IElQUFJPVE9fTVBUQ1AgcGFyYW1ldGVyIHRvIHNvY2tldCgpIG9yIGJ5IHVzaW5nIHRoZSBuZXcg
+VUxQIChVcHBlciBMYXllciBQcm90b2NvbCkgY2FwYWJpbGl0eS48YnI+Cjxicj4KKiBNb3ZlIGF3
+YXkgZnJvbSBtZXRhLXNvY2tldHMsIHRyZWF0aW5nIGVhY2ggc3ViZmxvdyBtb3JlIGxpa2UgYSBy
+ZWd1bGFyIFRDUCBjb25uZWN0aW9uLiBUaGUgb3ZlcmFsbCBNUFRDUCBjb25uZWN0aW9uIGlzIGNv
+b3JkaW5hdGVkIGJ5IGFuIHVwcGVyIGxheWVyIHNvY2tldCB0aGF0IGlzIGRpc3RpbmN0IGZyb20g
+dGNwX3NvY2suPGJyPgo8YnI+CiogTW92ZSBmdW5jdGlvbmFsaXR5IHRvIHVzZXJzcGFjZSB3aGVy
+ZSBwb3NzaWJsZSwgbGlrZSB0cmFja2luZyBBRERfQUREUnMgcmVjZWl2ZWQsIGluaXRpYXRpbmcg
+bmV3IHN1YmZsb3dzLCBvciBhY2NlcHRpbmcgbmV3IHN1YmZsb3dzLjxicj4KPGJyPgoqIEF2b2lk
+IGFkZGluZyBsb2NrcyB0byBjb29yZGluYXRlIGFjY2VzcyB0byBkYXRhIHRoYXQmIzM5O3Mgc2hh
+cmVkIGJldHdlZW4gc3ViZmxvd3MuIFV0aWxpemUgY2FwYWJpbGl0aWVzIGxpa2UgY29tcGFyZS1h
+bmQtc3dhcCAoY21weGNoZyksIGF0b21pY3MsIGFuZCBSQ1UgdG8gZGVhbCB3aXRoIHNoYXJlZCBk
+YXRhIGVmZmljaWVudGx5Ljxicj4KPGJyPgpBcmUgdGhlc2UgdGhlIHJpZ2h0IHBsYWNlIHRvIHN0
+YXJ0PyBBbnlvbmUgd2FudCB0byBleHBhbmQgdGhlIGxpc3Q/PGJyPgo8YnI+Cjxicj4KVGhhbmtz
+LDxicj4KPGJyPgotLTxicj4KTWF0IE1hcnRpbmVhdTxicj4KSW50ZWwgT1RDPGJyPgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX188d2JyPl9fX19fX19fX19fX19fX19fPGJyPgptcHRjcCBt
+YWlsaW5nIGxpc3Q8YnI+CjxhIGhyZWY9Im1haWx0bzptcHRjcEBsaXN0cy4wMS5vcmciIHRhcmdl
+dD0iX2JsYW5rIj5tcHRjcEBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8YSBocmVmPSJodHRwczovL2xp
+c3RzLjAxLm9yZy9tYWlsbWFuL2xpc3RpbmZvL21wdGNwIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdl
+dD0iX2JsYW5rIj5odHRwczovL2xpc3RzLjAxLm9yZy9tYWlsbWFuL2w8d2JyPmlzdGluZm8vbXB0
+Y3A8L2E+PGJyPgo8L2Jsb2NrcXVvdGU+PC9kaXY+PGJyPjxiciBjbGVhcj0iYWxsIj48YnI+LS0g
+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9ImdtYWlsX3Np
+Z25hdHVyZSI+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGly
+PSJsdHIiPjx0YWJsZSBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1
+b3Q7O2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWluZGVudDowcHg7dGV4dC10cmFuc2Zvcm06
+bm9uZTt3b3JkLXNwYWNpbmc6MHB4IiBib3JkZXI9IjAiIHdpZHRoPSIxMDAlIj48dGJvZHk+PHRy
+Pjx0ZCByb3dzcGFuPSIzIiBzdHlsZT0icGFkZGluZy1sZWZ0OjVweDtwYWRkaW5nLXJpZ2h0OjVw
+eCIgd2lkdGg9IjEwIiB2YWxpZ249InRvcCIgYWxpZ249ImxlZnQiPjxhIGhyZWY9Imh0dHA6Ly93
+d3cudGVzc2FyZXMubmV0IiB0YXJnZXQ9Il9ibGFuayI+PGltZyBzcmM9Imh0dHA6Ly93d3cudGVz
+c2FyZXMubmV0L3NpZ2xvZ28ucG5nIiBhbHQ9IlRlc3NhcmVzIFNBIiBib3JkZXI9IjAiIHdpZHRo
+PSI4MCIgaGVpZ2h0PSI4MCI+PC9hPjwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZh
+bWlseTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgaGVpZ2h0PSIx
+MiIgYWxpZ249ImxlZnQiPjxzcGFuIHN0eWxlPSJmb250LXdlaWdodDpib2xkO2NvbG9yOnJnYigz
+Nyw4MywxNTUpO2Rpc3BsYXk6aW5saW5lIj5NYXR0aGlldSBCYWVydHMgfCBSJmFtcDtEIEVuZ2lu
+ZWVyPC9zcGFuPjwvdGQ+PC90cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWls
+eTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgaGVpZ2h0PSIxMiIg
+YWxpZ249ImxlZnQiPjxhIGhyZWY9Im1haWx0bzptYXR0aGlldS5iYWVydHMlNDB0ZXNzYXJlcy5u
+ZXQiIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO3RleHQtZGVjb3JhdGlvbjpub25lO2Rpc3BsYXk6
+aW5saW5lIiB0YXJnZXQ9Il9ibGFuayI+bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5ldDxicj48
+L2E+PC90ZD48L3RyPjx0cj48dGQgc3R5bGU9InBhZGRpbmc6MHB4O2ZvbnQtZmFtaWx5OkhlbHZl
+dGljYSxBcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMHB4IiBhbGlnbj0ibGVmdCI+PHNwYW4g
+c3R5bGU9ImZvbnQtd2VpZ2h0OmJvbGQ7Y29sb3I6cmdiKDM3LDgzLDE1NSk7ZGlzcGxheTppbmxp
+bmUiPlRlc3NhcmVzIFNBIHwgSHlicmlkIEFjY2VzcyBTb2x1dGlvbnM8YnI+PC9zcGFuPjxhIGhy
+ZWY9Imh0dHA6Ly93d3cudGVzc2FyZXMubmV0IiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0
+LWRlY29yYXRpb246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFyZ2V0PSJfYmxhbmsiPnd3dy50ZXNz
+YXJlcy5uZXQ8L2E+PHNwYW4+wqA8L3NwYW4+PGJyPjxhIGhyZWY9Imh0dHBzOi8vd3d3Lmdvb2ds
+ZS5jb20vbWFwcz9xPTErQXZlbnVlK0plYW4rTW9ubmV0LCsxMzQ4K090dGlnbmllcy1Mb3V2YWlu
+LWxhLU5ldXZlLCtCZWxnaXVtIiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRp
+b246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFyZ2V0PSJfYmxhbmsiPjEgQXZlbnVlIEplYW4gTW9u
+bmV0LCAxMzQ4IExvdXZhaW4tbGEtTmV1dmUsIEJlbGdpdW08L2E+PC90ZD48L3RyPjwvdGJvZHk+
+PC90YWJsZT48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4KPC9kaXY+Cgo8YnI+
+CjxkaXY+PGJyPjxocj48L2Rpdj48Zm9udCBzaXplPSIxIj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
+bHk6VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+
+RElTQ0xBSU1FUi48L3NwYW4+PGJyIHN0eWxlPSJmb250LWZhbWlseTpWZXJkYW5hLHNhbnMtc2Vy
+aWY7YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj48Zm9udCBjb2xvcj0iIzAwMDAw
+MCIgZmFjZT0iVmVyZGFuYSwgc2Fucy1zZXJpZiIgc3R5bGU9ImJhY2tncm91bmQtY29sb3I6cmdi
+KDI1NSwyNTUsMjU1KSI+VGhpcyBlbWFpbCBhbmQgYW55IGZpbGVzIHRyYW5zbWl0dGVkIHdpdGgg
+aXQgYXJlIGNvbmZpZGVudGlhbCBhbmQgaW50ZW5kZWQgc29sZWx5IGZvciB0aGUgdXNlIG9mIHRo
+ZSBpbmRpdmlkdWFsIG9yIGVudGl0eSB0byB3aG9tIHRoZXkgYXJlIGFkZHJlc3NlZC4gSWYgeW91
+IGhhdmUgcmVjZWl2ZWQgdGhpcyBlbWFpbCBpbiBlcnJvciBwbGVhc2Ugbm90aWZ5IHRoZSBzeXN0
+ZW0gbWFuYWdlci4gVGhpcyBtZXNzYWdlIGNvbnRhaW5zIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlv
+biBhbmQgaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIGluZGl2aWR1YWwgbmFtZWQuIElmIHlvdSBh
+cmUgbm90IHRoZSBuYW1lZCBhZGRyZXNzZWUgeW91IHNob3VsZCBub3QgZGlzc2VtaW5hdGUsIGRp
+c3RyaWJ1dGUgb3IgY29weSB0aGlzIGUtbWFpbC4gUGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGlt
+bWVkaWF0ZWx5IGJ5IGUtbWFpbCBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBieSBt
+aXN0YWtlIGFuZCBkZWxldGUgdGhpcyBlLW1haWwgZnJvbSB5b3VyIHN5c3RlbS4gSWYgeW91IGFy
+ZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCB5b3UgYXJlIG5vdGlmaWVkIHRoYXQgZGlzY2xv
+c2luZywgY29weWluZywgZGlzdHJpYnV0aW5nIG9yIHRha2luZyBhbnkgYWN0aW9uIGluIHJlbGlh
+bmNlIG9uIHRoZSBjb250ZW50cyBvZiB0aGlzIGluZm9ybWF0aW9uIGlzIHN0cmljdGx5IHByb2hp
+Yml0ZWQuPC9mb250PjwvZm9udD4=
+--===============0513217758912748706==--
