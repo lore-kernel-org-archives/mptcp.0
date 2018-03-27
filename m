@@ -1,154 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============6870285668358366968=="
+Content-Type: multipart/mixed; boundary="===============4315206052590043354=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Fwd: Re: Few questions about submitting patches
-Date: Mon, 26 Mar 2018 19:06:31 -0700
-Message-ID: <5bf41b9a-6a59-926c-1cb7-35c312c573ae@oracle.com>
-In-Reply-To: alpine.OSX.2.21.1803261815180.1473@anandur-mobl3.amr.corp.intel.com
+Subject: [MPTCP] Using struct socket for subflows
+Date: Tue, 27 Mar 2018 11:18:47 +0200
+Message-ID: <20180327091847.GC39174@MacBook-Pro-6.lan>
 X-Status: 
 X-Keywords:                  
-X-UID: 422
+X-UID: 423
 
---===============6870285668358366968==
+--===============4315206052590043354==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
 
-On 03/26/2018 06:27 PM, Mat Martineau wrote:
->
-> Hi Rao -
->
-> On Wed, 21 Mar 2018, Rao Shoaib wrote:
->
->>
->> There has been some misunderstanding on what an RFC patch is and what =
+(first, sorry for the long e-mail)
 
->> standards it needs to meet. Following is the official response of David
->> Miller.
->>
->> Based on those guidelines the RFC patch we submitted meets and =
 
->> exceeds the requirements. So please review it. Replacement of =
+I now started working on cleaning up the input path to prepare it for
+input-processing without holding the MPTCP-level lock.
 
->> function pointers
->> will be addressed later as a separate issue.
->
-> Given what David has said, I still think it's better to structure the =
+To do this, I go through all the places where we access data-structures from
+the meta-socket and see if I can move it to mptcp_data_ready or
+mptcp_write_space (the callbacks that are called from
+sk_data_ready/sk_write_space).
 
-> patch set according to the guidelines I pointed to before. Required? =
+In tcp_check_space() we have the following:
+                if (mptcp(tcp_sk(sk)) ||
+                    (sk->sk_socket &&
+                     test_bit(SOCK_NOSPACE, &sk->sk_socket->flags))) {
+                        tcp_new_space(sk);
+                        if (sk->sk_socket && !test_bit(SOCK_NOSPACE, &sk->s=
+k_socket->flags))
+                                tcp_chrono_stop(sk, TCP_CHRONO_SNDBUF_LIMIT=
+ED);
+                }
 
-> No, but I think it's worth the effort. You might not agree, and that's =
+We do the if (mptcp(...)), because currently subflow's sk_socket is pointin=
+g to
+application's struct socket. Thus, we need to avoid the check for
+SOCK_NOSPACE, as otherwise we might end up not calling sk_write_space.
 
-> ok.
->
-> I know at least one other community member is taking a look at the =
 
-> first version of your patches. You mentioned that you are reworking =
+Other kernel-modules that create TCP-connections rather have an in-kernel
+struct socket. And modules like RDS even force SOCK_NOSPACE to be set, such
+that the TCP-stack keeps on up-calling. I thought that this was a good thing
+to do in MPTCP as well.
 
-> your changes to invoke MPTCP functions using macros instead of =
+So, my goal became to have a fully functional struct socket for subflows.
+The benefit is also that we can end up using kernel_sendmsg,
+kernel_recvmsg,... in the future. It also allows to do kernel_accept() on
+the MPTCP-level socket to receive new subflows (a problem I mentioned in an
+earlier mail).
+It also would allow us to expose subflows as file-descriptors to the
+user-space. That way the user-space can do setsockopt, getsockopt,... on the
+subflows. An idea that came up in the past when we were thinking on how to
+expose an MPTCP API that allows apps to control certain things on the
+subflows.
 
-> indirect calls, so my personal plan is to take a closer look after you =
+To get there, there are a few places where things would need to change:
 
-> post v2.
-I am not planning to submit version 2. Dealing with function pointers is =
+* mptcp_init4_subsockets - Here, this works perfectly. It also allows to
+  avoid "faking" the struct socket, as we are currently doing.
+* mptcp_alloc_mpcb for the active opener - This is the first problem. mptcp=
+_alloc_mpcb() can be
+  called with bh disabled. But sock_create_lite() assumes that bh is enabled
+  as it ends up doing an alloc with GFP_KERNEL.
+  A few ways this could be solved:
+  - Schedule a work-queue item in mptcp_alloc_mpcb that creates the struct
+    socket. This looks a bit racy to me. Not sure what side-effects this
+    might have.
+  - Change things entirely, such that the master-sock is being allocated
+    when the connection is created. That way, we allocate all the necessary
+    struct socket's right away.
+    In the past, we decided to allocate the master-sk only when receiving
+    the SYN/ACK. We did that so as to minimize the impact on regular TCP
+    when the server does not support MPTCP. But, as we are moving towards
+    explicitly exposing MPTCP at the socket-layer, we can rethink that
+    decision.
+    Any thoughts? Is it ok to pay the cost of allocating a master-sk before
+    we know whether the server supports MPTCP?
+    I think, we should do this, and transition to that model.
+* mptcp_alloc_mpcb for the passive opener - same problem as above but on the
+  other side. We could allocate the master's struct socket upon the accept()
+  call from the application. This again sounds a bit racy to me. The struct
+  socket will be there for the subflow potentially much later than it has
+  been established. What happens if the peer sends data or an
+  MP_FASTCLOSE,... ?
+* New subflows on the passive opener side - again, we are receiving those
+  subflows while bh is disabled. So, we have to schedule a work-queue to
+  do a kerne_accept() on the MPTCP-socket.
+  Again something that can potentially be racy.
 
-a separate and straight forward issue so please review the current patch =
+In general, subflow-establishment on the passive-opener side again seems to
+be a major pain-point. I think, we really need to redesign that.
 
-as it is.
+
+Any thoughts, feedback, suggestions?
+Or maybe, using real struct socket for subflows is not worth it? :)
+
 
 Thanks,
-
-Shoaib
-
->
->>
->> In case there are other procedural issues that would prohibit =
-
->> technical discussion please site the written rules or first ask David =
-
->> Miller.
->>
->> There are a lot of technical issues to discuss, so if possible lets =
-
->> not get tied up on process and bureaucracy. Looking forward to detailed
->> technical comments.
->>
->
-> In my experience, a lot of the work involved in getting patches merged =
-
-> has been the unglamourous stuff to get the patches set up for review =
-
-> and upstreaming. My goal has been to help others and pass on that =
-
-> knowledge. But, to be clear, I'm not waiting for review based on the =
-
-> patch set structural changes, I want to look at everything in context =
-
-> with the macro/indirect call changes.
-
->
-> Thanks,
->
-> Mat
->
->
->>
->>
->> -------- Forwarded Message --------
->> Subject:
->> Re: Few questions about submitting patches
->> Date:
->> Wed, 21 Mar 2018 12:46:17 -0400 (EDT)
->> From:
->> David Miller <davem(a)davemloft.net>
->> To:
->> rao.shoaib(a)oracle.com
->> CC:
->> netdev(a)vger.kernel.org, eric.dumazet(a)gmail.com
->>
->> From: Rao Shoaib <rao.shoaib(a)oracle.com>
->> Date: Wed, 21 Mar 2018 09:41:13 -0700
->>
->> > I am new to Linux. I would like to understand the rules and etiquettes
->> > of engaging with the community. I have read the materials that I could
->> > find. As I work with Linux I come across situations for which I can
->> > not seem to find any answers. Hopefully folks on the list can answer
->> > them.
->> > > * Submitting an RFC Patch
->> > > As I understand, an RFC patch is submitted to solicit comments =
-
->> and is
->> > not for inclusion. Is it sufficient for an RFC patch to have the
->> > correct coding style and compile, or does it need more? For example,
->> > If the patch consists of a series of patches, does each patch have to
->> > compile independently etc etc.
->>
->> It should build and function, unless you explicitly state that the
->> patch is not build nor functionally tested and is intended to show
->> the design of the change.
->>
->> > * #ifdef FOO
->> > > In a regular patch consisting of a series of patches, can the above
->> > #ifdef be used in a patch before the patch that allows the selection
->> > of FOO. That patch is part of the series but comes later.
->>
->> It is better to introduce them at the same time.
->>
->> But if it is prohibitively difficult to do so, yet at the same
->> time properly split up your changes into manageable pieces, it
->> can be OK.
->>
->> It is definitely determined on a case by case basis.
->>
->>
->
-> -- =
-
-> Mat Martineau
-> Intel OTC
+Christoph
 
 
---===============6870285668358366968==--
+--===============4315206052590043354==--
