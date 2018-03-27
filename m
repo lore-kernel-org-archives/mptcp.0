@@ -1,133 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============0976127503901895080=="
+Content-Type: multipart/mixed; boundary="===============1227515066608619366=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Lorenzo Colitti <lorenzo at google.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
-Date: Tue, 27 Mar 2018 12:37:25 +0200
-Message-ID: <20180327103725.GF71178@MacBook-Pro-6.lan>
-In-Reply-To: 1519343401-19027-1-git-send-email-rao.shoaib@oracle.com
+Subject: Re: [MPTCP] Using struct socket for subflows
+Date: Tue, 27 Mar 2018 14:04:28 +0200
+Message-ID: <CAKD1Yr2sBCdUO48cp=rZQ6s4v13ytpPd9oPT+U=iYrdXtba5HA@mail.gmail.com>
+In-Reply-To: 20180327091847.GC39174@MacBook-Pro-6.lan
 X-Status: 
 X-Keywords:                  
-X-UID: 429
+X-UID: 430
 
---===============0976127503901895080==
+--===============1227515066608619366==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Mar 27, 2018 at 11:18 AM, Christoph Paasch <cpaasch(a)apple.com>
+wrote:
 
-On 22/02/18 - 15:49:52, rao.shoaib(a)oracle.com wrote:
-> From: Rao Shoaib <rao.shoaib(a)oracle.com>
-> =
+> It also would allow us to expose subflows as file-descriptors to the
+> user-space. That way the user-space can do setsockopt, getsockopt,... on
+> the
+> subflows. An idea that came up in the past when we were thinking on how to
+> expose an MPTCP API that allows apps to control certain things on the
+> subflows.
+>
 
-> Following patches modify TCP code to enable implementation of MPTCP. MPTC=
-P implementation requires sharing of TCP code with minor modification here =
-and there. In order to keep the TCP code clean and easy to maintain, common=
- code has been moved to new functions for use by both TCP and MPTCP. struct=
- tcp_sock now has function pointers and based on the socket type (TCP/MPTCP=
-) appropriate function is called.
-> =
++1 to this since it will allow client platforms to use setsockopt to, for
+example, bind subflows to interfaces (e.g., with SO_BINDTODEVICE, or with
+SO_MARK as used by Android).
 
-> A basic implementation of MPTCP that works with IPv4/IPv6 and supports jo=
-in has been tested based on these changes.
-> =
+--===============1227515066608619366==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> The changes are being submitted as an RFC to get feedback from the commun=
-ity and to start a discussion on how to move forward.
+PGRpdiBkaXI9Imx0ciI+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPjxkaXYgY2xhc3M9ImdtYWls
+X3F1b3RlIj5PbiBUdWUsIE1hciAyNywgMjAxOCBhdCAxMToxOCBBTSwgQ2hyaXN0b3BoIFBhYXNj
+aCA8c3BhbiBkaXI9Imx0ciI+Jmx0OzxhIGhyZWY9Im1haWx0bzpjcGFhc2NoQGFwcGxlLmNvbSIg
+dGFyZ2V0PSJfYmxhbmsiPmNwYWFzY2hAYXBwbGUuY29tPC9hPiZndDs8L3NwYW4+IHdyb3RlOjxi
+cj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MCAwIDAgLjhl
+eDtib3JkZXItbGVmdDoxcHggI2NjYyBzb2xpZDtwYWRkaW5nLWxlZnQ6MWV4Ij5JdCBhbHNvIHdv
+dWxkIGFsbG93IHVzIHRvIGV4cG9zZSBzdWJmbG93cyBhcyBmaWxlLWRlc2NyaXB0b3JzIHRvIHRo
+ZTxicj4KdXNlci1zcGFjZS4gVGhhdCB3YXkgdGhlIHVzZXItc3BhY2UgY2FuIGRvIHNldHNvY2tv
+cHQsIGdldHNvY2tvcHQsLi4uIG9uIHRoZTxicj4Kc3ViZmxvd3MuIEFuIGlkZWEgdGhhdCBjYW1l
+IHVwIGluIHRoZSBwYXN0IHdoZW4gd2Ugd2VyZSB0aGlua2luZyBvbiBob3cgdG88YnI+CmV4cG9z
+ZSBhbiBNUFRDUCBBUEkgdGhhdCBhbGxvd3MgYXBwcyB0byBjb250cm9sIGNlcnRhaW4gdGhpbmdz
+IG9uIHRoZTxicj4Kc3ViZmxvd3MuPGJyPjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48ZGl2
+PisxIHRvIHRoaXMgc2luY2UgaXQgd2lsbCBhbGxvdyBjbGllbnQgcGxhdGZvcm1zIHRvIHVzZSBz
+ZXRzb2Nrb3B0IHRvLCBmb3IgZXhhbXBsZSwgYmluZCBzdWJmbG93cyB0byBpbnRlcmZhY2VzIChl
+LmcuLCB3aXRoIFNPX0JJTkRUT0RFVklDRSwgb3Igd2l0aCBTT19NQVJLIGFzIHVzZWQgYnkgQW5k
+cm9pZCkuPC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
 
-I did a full review of the patches.
-
-Besides the details I commented on in the individual patches, I have a few
-higher-level comments:
-
-* The patchset introduces function-pointers to reduce the impact of MPTCP on
-  the TCP-stack. Ignoring potential performance costs for a moment:
-
-  The patchset should show why these function-pointers are needed for an
-  MPTCP implementation. While reviewing the patches, it wasn't clear to me
-  Although, I can guess it because I know the MPTCP-code. However, someone
-  not familiar with MPTCP will have an even harder time to understand the
-  reason for these function pointers.
-
-* Another question that should be answered in the patchset is how these
-  function pointers can be used by other TCP extensions (I am assuming that=
- is
-  the intention). The question that arises then is how could MPTCP be shared
-  with these other TCP extensions?
-
-* It should also be explained in the patchset how one switches the function
-  pointers. It was unclear to me how MPTCP gets enabled.
-
-  In tcp_init_sock() tp->op_ops is currently set to tcp_default_op_ops.
-  Thus, would that mean that MPTCP would get enabled on a system-level by
-  changing tcp_default_op_ops?
-
-* The patches are holding the meta-lock when processing incoming packets or
-  timer-events. This will trigger a lot of RCU-warnings. Adressing this is
-  not trivial and will require significant architectural changes.
-
-
-Cheers,
-Christoph
-
-> =
-
-> Rao Shoaib (9):
->   Modify tcp structures to support function pointers
->   Introduce MPTCP specific elements that will co-exist with TCP even
->     when MPTCP is not compiled
->   Introduce MPTCP specific elements that can be under #ifdef
->     MPTCP_CONFIG
->   Populate function pointers -- few (5) will be populated later
->   Switch code to use function pointers
->   Make TCP options processing abstract
->   Restructure syncookie code to use pointers
->   Restructure TCP code so that it can be shared primarily with MPTCP
->   Add MPTCP specific code to core TCP code
-> =
-
->  crypto/md5.c                    |   3 -
->  include/crypto/md5.h            |   2 +
->  include/linux/tcp.h             |  91 ++++++++++++
->  include/net/inet_common.h       |   2 +
->  include/net/inet_sock.h         |   6 +-
->  include/net/net_namespace.h     |   6 +
->  include/net/secure_seq.h        |   9 +-
->  include/net/sock.h              |   1 +
->  include/net/tcp.h               | 321 ++++++++++++++++++++++++++++++++++=
-++++--
->  include/net/tcp_states.h        |   4 +-
->  include/net/transp_v6.h         |   3 -
->  include/uapi/linux/bpf.h        |   4 +-
->  include/uapi/linux/if.h         |   5 +
->  include/uapi/linux/tcp.h        |   1 +
->  net/core/secure_seq.c           |  70 +++++++++
->  net/ipv4/af_inet.c              |  16 +-
->  net/ipv4/inet_connection_sock.c |  17 ++-
->  net/ipv4/ip_sockglue.c          |  20 +++
->  net/ipv4/syncookies.c           | 112 ++++++++++----
->  net/ipv4/tcp.c                  | 221 +++++++++++++++++++++------
->  net/ipv4/tcp_input.c            | 195 ++++++++++++++----------
->  net/ipv4/tcp_ipv4.c             | 112 ++++++++++----
->  net/ipv4/tcp_minisocks.c        |  56 ++++++-
->  net/ipv4/tcp_output.c           | 206 +++++++++++++++-----------
->  net/ipv4/tcp_timer.c            |  55 +++++--
->  net/ipv6/af_inet6.c             |   4 +-
->  net/ipv6/ipv6_sockglue.c        |  14 ++
->  net/ipv6/syncookies.c           |  40 +----
->  net/ipv6/tcp_ipv6.c             | 163 +++++++++++++-------
->  29 files changed, 1360 insertions(+), 399 deletions(-)
-> =
-
-> -- =
-
-> 2.7.4
-> =
-
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
-
---===============0976127503901895080==--
+--===============1227515066608619366==--
