@@ -1,317 +1,143 @@
-Content-Type: multipart/mixed; boundary="===============0513217758912748706=="
+Content-Type: multipart/mixed; boundary="===============7203017517501430309=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Status and what's next
-Date: Mon, 26 Mar 2018 10:13:24 +0200
-Message-ID: <CAKuKrB=kBMyozwaMuELe1CGqUVUu2O4FPGnO=uafPjU1uOQDkA@mail.gmail.com>
-In-Reply-To: alpine.OSX.2.21.1803241236490.21805@siradov-mobl.amr.corp.intel.com
+Subject: Re: [MPTCP] Fwd: Re: Few questions about submitting patches
+Date: Mon, 26 Mar 2018 18:27:42 -0700
+Message-ID: <alpine.OSX.2.21.1803261815180.1473@anandur-mobl3.amr.corp.intel.com>
+In-Reply-To: 3b8f175a-3485-6725-ebc3-52f6d2e6ce47@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 420
+X-UID: 421
 
---===============0513217758912748706==
+--===============7203017517501430309==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
 
-Thank you for this email! I am sure it is useful for people not
-participating to our public web conference calls.
+Hi Rao -
 
-I just added a link to your email in MPTCP's wiki:
-http://multipath-tcp.org/pmwiki.php/Developer/Upstreaming
+On Wed, 21 Mar 2018, Rao Shoaib wrote:
 
-Best regards,
-Matthieu
+> =
 
-On Sat, Mar 24, 2018 at 8:47 PM, Mat Martineau <
-mathew.j.martineau(a)linux.intel.com> wrote:
+> There has been some misunderstanding on what an RFC patch is and what sta=
+ndards it needs to meet. Following is the official response of David
+> Miller.
+>
+> Based on those guidelines the RFC patch we submitted meets and exceeds th=
+e requirements. So please review it. Replacement of function pointers
+> will be addressed later as a separate issue.
 
->
-> Hello everyone -
->
-> In our recent web conference call, we thought it would be helpful to
-> summarize what is coming up for MPTCP upstreaming. To start, I'd like to
-> review work that's already been done and is underway.
->
-> Previous work:
->
-> * Mat developed an extensible TCP option framework patch, and Christoph
-> refactored upstream TCP-MD5 and SMC functionality to use it. The idea was
-> to integrate some extensions in to TCP that had utility for existing
-> functionality, but would also help integrate MPTCP. This RFC patch set was
-> turned down by Dave Miller, but did give us useful guidance.
->
-> * Mat published a proposal for optionally extending sk_buff shared info to
-> carry MPTCP metadata.
->
->
-> Ongoing work:
->
-> * Christoph keeps the multipath-tcp.org kernel merged with recent kernel
-> releases as part of his maintainership role for the multipath-tcp.org
-> project, and is refactoring parts of the MPTCP implementation to take
-> advantage of newer kernel or TCP features and to align with upstreaming
-> goals.
->
-> * Rao has published an RFC patch set based on the multipath-tcp.org MPTCP
-> implementation and the current upstream kernel, with modifications to make
-> the TCP implementation extensible in a way that's useful for MPTCP. It is
-> currently under review by community members.
->
-> * Matthieu has sent a generic netlink patch set to mptcp-dev.
->
-> * Ossama shared a generic netlink path management API proposal. The Intel
-> group developed this before we knew Matthieu would be sharing an
-> implementation.
->
-> * Stephan shared a userspace path manager draft implementation at
-> https://github.com/brenns10/pathmand
->
-> * Peter and Mat are preparing a patch set showing an MPTCP architecture
-> with a separate socket type for the MPTCP connection and using in-kernel
-> TCP sockets for subflows. The extended sk_buff structure patch is part of
-> this.
->
-> * Ossama has made significant progress on a userspace path manager
-> implementation with the goal to open source it
->
-> That gives us quite a bit to discuss and review on the list in the near
-> term. The bigger and longer-term challenge is to take these pieces and
-> develop a strategy and patches for upstream submissions.
->
->
-> There are a few things the MPTCP upstreaming community members on this
-> list seem aligned on:
->
-> * MPTCP belongs in the upstream kernel
->
-> * The multipath-tcp.org implementation is not upstream-ready as-is
->
-> * Implementing 100% from scratch is not the preferred strategy
->
->
-> How do we get to upstreamable patch sets from here? I think if we can
-> agree on what an upstreamable MPTCP architecture looks we can evaluate
-> patch sets accordingly. I've proposed these design characteristics before,
-> but the mailing list has expanded significantly since then:
->
-> * MPTCP is used when requested by the application, either through an
-> IPPROTO_MPTCP parameter to socket() or by using the new ULP (Upper Layer
-> Protocol) capability.
->
-> * Move away from meta-sockets, treating each subflow more like a regular
-> TCP connection. The overall MPTCP connection is coordinated by an upper
-> layer socket that is distinct from tcp_sock.
->
-> * Move functionality to userspace where possible, like tracking ADD_ADDRs
-> received, initiating new subflows, or accepting new subflows.
->
-> * Avoid adding locks to coordinate access to data that's shared between
-> subflows. Utilize capabilities like compare-and-swap (cmpxchg), atomics,
-> and RCU to deal with shared data efficiently.
->
-> Are these the right place to start? Anyone want to expand the list?
->
->
-> Thanks,
->
-> --
-> Mat Martineau
-> Intel OTC
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
+Given what David has said, I still think it's better to structure the =
+
+patch set according to the guidelines I pointed to before. Required? No, =
+
+but I think it's worth the effort. You might not agree, and that's ok.
+
+I know at least one other community member is taking a look at the first =
+
+version of your patches. You mentioned that you are reworking your changes =
+
+to invoke MPTCP functions using macros instead of indirect calls, so my =
+
+personal plan is to take a closer look after you post v2.
+
+> =
+
+> In case there are other procedural issues that would prohibit technical d=
+iscussion please site the written rules or first ask David Miller.
+> =
+
+> There are a lot of technical issues to discuss, so if possible lets not g=
+et tied up on process and bureaucracy. Looking forward to detailed
+> technical comments.
 >
 
+In my experience, a lot of the work involved in getting patches merged has =
+
+been the unglamourous stuff to get the patches set up for review and =
+
+upstreaming. My goal has been to help others and pass on that knowledge. =
+
+But, to be clear, I'm not waiting for review based on the patch set =
+
+structural changes, I want to look at everything in context with the =
+
+macro/indirect call changes.
+
+Thanks,
+
+Mat
 
 
--- =
+> =
 
-[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
-Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
-in-la-Neuve,+Belgium>
+> =
 
--- =
+> -------- Forwarded Message --------
+> Subject:
+> Re: Few questions about submitting patches
+> Date:
+> Wed, 21 Mar 2018 12:46:17 -0400 (EDT)
+> From:
+> David Miller <davem(a)davemloft.net>
+> To:
+> rao.shoaib(a)oracle.com
+> CC:
+> netdev(a)vger.kernel.org, eric.dumazet(a)gmail.com
+> =
 
+> From: Rao Shoaib <rao.shoaib(a)oracle.com>
+> Date: Wed, 21 Mar 2018 09:41:13 -0700
+> =
 
-------------------------------
-DISCLAIMER.
-This email and any files transmitted with it are confidential and intended =
+> > I am new to Linux. I would like to understand the rules and etiquettes
+> > of engaging with the community. I have read the materials that I could
+> > find. As I work with Linux I come across situations for which I can
+> > not seem to find any answers. Hopefully folks on the list can answer
+> > them.
+> > =
 
-solely for the use of the individual or entity to whom they are addressed. =
+> > * Submitting an RFC Patch
+> > =
 
-If you have received this email in error please notify the system manager. =
+> > As I understand, an RFC patch is submitted to solicit comments and is
+> > not for inclusion. Is it sufficient for an RFC patch to have the
+> > correct coding style and compile, or does it need more? For example,
+> > If the patch consists of a series of patches, does each patch have to
+> > compile independently etc etc.
+> =
 
-This message contains confidential information and is intended only for the =
+> It should build and function, unless you explicitly state that the
+> patch is not build nor functionally tested and is intended to show
+> the design of the change.
+> =
 
-individual named. If you are not the named addressee you should not =
+> > * #ifdef FOO
+> > =
 
-disseminate, distribute or copy this e-mail. Please notify the sender =
+> > In a regular patch consisting of a series of patches, can the above
+> > #ifdef be used in a patch before the patch that allows the selection
+> > of FOO. That patch is part of the series but comes later.
+> =
 
-immediately by e-mail if you have received this e-mail by mistake and =
+> It is better to introduce them at the same time.
+> =
 
-delete this e-mail from your system. If you are not the intended recipient =
+> But if it is prohibitively difficult to do so, yet at the same
+> time properly split up your changes into manageable pieces, it
+> can be OK.
+> =
 
-you are notified that disclosing, copying, distributing or taking any =
+> It is definitely determined on a case by case basis.
+> =
 
-action in reliance on the contents of this information is strictly =
+>
 
-prohibited.
+--
+Mat Martineau
+Intel OTC
 
---===============0513217758912748706==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSBNYXQsPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFu
-ayB5b3UgZm9yIHRoaXMgZW1haWwhIEkgYW0gc3VyZSBpdCBpcyB1c2VmdWwgZm9yIHBlb3BsZSBu
-b3QgcGFydGljaXBhdGluZyB0byBvdXIgcHVibGljIHdlYiBjb25mZXJlbmNlIGNhbGxzLjxicj48
-L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkganVzdCBhZGRlZCBhIGxpbmsgdG8geW91ciBlbWFp
-bCBpbiBNUFRDUCYjMzk7cyB3aWtpOiA8YSBocmVmPSJodHRwOi8vbXVsdGlwYXRoLXRjcC5vcmcv
-cG13aWtpLnBocC9EZXZlbG9wZXIvVXBzdHJlYW1pbmciPmh0dHA6Ly9tdWx0aXBhdGgtdGNwLm9y
-Zy9wbXdpa2kucGhwL0RldmVsb3Blci9VcHN0cmVhbWluZzwvYT48L2Rpdj48ZGl2Pjxicj48L2Rp
-dj48ZGl2PkJlc3QgcmVnYXJkcyw8L2Rpdj48ZGl2Pk1hdHRoaWV1PGJyPjwvZGl2PjwvZGl2Pjxk
-aXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPk9uIFNh
-dCwgTWFyIDI0LCAyMDE4IGF0IDg6NDcgUE0sIE1hdCBNYXJ0aW5lYXUgPHNwYW4gZGlyPSJsdHIi
-PiZsdDs8YSBocmVmPSJtYWlsdG86bWF0aGV3LmoubWFydGluZWF1QGxpbnV4LmludGVsLmNvbSIg
-dGFyZ2V0PSJfYmxhbmsiPm1hdGhldy5qLm1hcnRpbmVhdUBsaW51eC5pbnRlbC5jb208L2E+Jmd0
-Ozwvc3Bhbj4gd3JvdGU6PGJyPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9
-Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmctbGVm
-dDoxZXgiPjxicj4KSGVsbG8gZXZlcnlvbmUgLTxicj4KPGJyPgpJbiBvdXIgcmVjZW50IHdlYiBj
-b25mZXJlbmNlIGNhbGwsIHdlIHRob3VnaHQgaXQgd291bGQgYmUgaGVscGZ1bCB0byBzdW1tYXJp
-emUgd2hhdCBpcyBjb21pbmcgdXAgZm9yIE1QVENQIHVwc3RyZWFtaW5nLiBUbyBzdGFydCwgSSYj
-Mzk7ZCBsaWtlIHRvIHJldmlldyB3b3JrIHRoYXQmIzM5O3MgYWxyZWFkeSBiZWVuIGRvbmUgYW5k
-IGlzIHVuZGVyd2F5Ljxicj4KPGJyPgpQcmV2aW91cyB3b3JrOjxicj4KPGJyPgoqIE1hdCBkZXZl
-bG9wZWQgYW4gZXh0ZW5zaWJsZSBUQ1Agb3B0aW9uIGZyYW1ld29yayBwYXRjaCwgYW5kIENocmlz
-dG9waCByZWZhY3RvcmVkIHVwc3RyZWFtIFRDUC1NRDUgYW5kIFNNQyBmdW5jdGlvbmFsaXR5IHRv
-IHVzZSBpdC4gVGhlIGlkZWEgd2FzIHRvIGludGVncmF0ZSBzb21lIGV4dGVuc2lvbnMgaW4gdG8g
-VENQIHRoYXQgaGFkIHV0aWxpdHkgZm9yIGV4aXN0aW5nIGZ1bmN0aW9uYWxpdHksIGJ1dCB3b3Vs
-ZCBhbHNvIGhlbHAgaW50ZWdyYXRlIE1QVENQLiBUaGlzIFJGQyBwYXRjaCBzZXQgd2FzIHR1cm5l
-ZCBkb3duIGJ5IERhdmUgTWlsbGVyLCBidXQgZGlkIGdpdmUgdXMgdXNlZnVsIGd1aWRhbmNlLjxi
-cj4KPGJyPgoqIE1hdCBwdWJsaXNoZWQgYSBwcm9wb3NhbCBmb3Igb3B0aW9uYWxseSBleHRlbmRp
-bmcgc2tfYnVmZiBzaGFyZWQgaW5mbyB0byBjYXJyeSBNUFRDUCBtZXRhZGF0YS48YnI+Cjxicj4K
-PGJyPgpPbmdvaW5nIHdvcms6PGJyPgo8YnI+CiogQ2hyaXN0b3BoIGtlZXBzIHRoZSA8YSBocmVm
-PSJodHRwOi8vbXVsdGlwYXRoLXRjcC5vcmciIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxh
-bmsiPm11bHRpcGF0aC10Y3Aub3JnPC9hPiBrZXJuZWwgbWVyZ2VkIHdpdGggcmVjZW50IGtlcm5l
-bCByZWxlYXNlcyBhcyBwYXJ0IG9mIGhpcyBtYWludGFpbmVyc2hpcCByb2xlIGZvciB0aGUgPGEg
-aHJlZj0iaHR0cDovL211bHRpcGF0aC10Y3Aub3JnIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0i
-X2JsYW5rIj5tdWx0aXBhdGgtdGNwLm9yZzwvYT4gcHJvamVjdCwgYW5kIGlzIHJlZmFjdG9yaW5n
-IHBhcnRzIG9mIHRoZSBNUFRDUCBpbXBsZW1lbnRhdGlvbiB0byB0YWtlIGFkdmFudGFnZSBvZiBu
-ZXdlciBrZXJuZWwgb3IgVENQIGZlYXR1cmVzIGFuZCB0byBhbGlnbiB3aXRoIHVwc3RyZWFtaW5n
-IGdvYWxzLjxicj4KPGJyPgoqIFJhbyBoYXMgcHVibGlzaGVkIGFuIFJGQyBwYXRjaCBzZXQgYmFz
-ZWQgb24gdGhlIDxhIGhyZWY9Imh0dHA6Ly9tdWx0aXBhdGgtdGNwLm9yZyIgcmVsPSJub3JlZmVy
-cmVyIiB0YXJnZXQ9Il9ibGFuayI+bXVsdGlwYXRoLXRjcC5vcmc8L2E+IE1QVENQIGltcGxlbWVu
-dGF0aW9uIGFuZCB0aGUgY3VycmVudCB1cHN0cmVhbSBrZXJuZWwsIHdpdGggbW9kaWZpY2F0aW9u
-cyB0byBtYWtlIHRoZSBUQ1AgaW1wbGVtZW50YXRpb24gZXh0ZW5zaWJsZSBpbiBhIHdheSB0aGF0
-JiMzOTtzIHVzZWZ1bCBmb3IgTVBUQ1AuIEl0IGlzIGN1cnJlbnRseSB1bmRlciByZXZpZXcgYnkg
-Y29tbXVuaXR5IG1lbWJlcnMuPGJyPgo8YnI+CiogTWF0dGhpZXUgaGFzIHNlbnQgYSBnZW5lcmlj
-IG5ldGxpbmsgcGF0Y2ggc2V0IHRvIG1wdGNwLWRldi48YnI+Cjxicj4KKiBPc3NhbWEgc2hhcmVk
-IGEgZ2VuZXJpYyBuZXRsaW5rIHBhdGggbWFuYWdlbWVudCBBUEkgcHJvcG9zYWwuIFRoZSBJbnRl
-bCBncm91cCBkZXZlbG9wZWQgdGhpcyBiZWZvcmUgd2Uga25ldyBNYXR0aGlldSB3b3VsZCBiZSBz
-aGFyaW5nIGFuIGltcGxlbWVudGF0aW9uLjxicj4KPGJyPgoqIFN0ZXBoYW4gc2hhcmVkIGEgdXNl
-cnNwYWNlIHBhdGggbWFuYWdlciBkcmFmdCBpbXBsZW1lbnRhdGlvbiBhdCA8YSBocmVmPSJodHRw
-czovL2dpdGh1Yi5jb20vYnJlbm5zMTAvcGF0aG1hbmQiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0
-PSJfYmxhbmsiPmh0dHBzOi8vZ2l0aHViLmNvbS9icmVubnMxMC9wYTx3YnI+dGhtYW5kPC9hPjxi
-cj4KPGJyPgoqIFBldGVyIGFuZCBNYXQgYXJlIHByZXBhcmluZyBhIHBhdGNoIHNldCBzaG93aW5n
-IGFuIE1QVENQIGFyY2hpdGVjdHVyZSB3aXRoIGEgc2VwYXJhdGUgc29ja2V0IHR5cGUgZm9yIHRo
-ZSBNUFRDUCBjb25uZWN0aW9uIGFuZCB1c2luZyBpbi1rZXJuZWwgVENQIHNvY2tldHMgZm9yIHN1
-YmZsb3dzLiBUaGUgZXh0ZW5kZWQgc2tfYnVmZiBzdHJ1Y3R1cmUgcGF0Y2ggaXMgcGFydCBvZiB0
-aGlzLjxicj4KPGJyPgoqIE9zc2FtYSBoYXMgbWFkZSBzaWduaWZpY2FudCBwcm9ncmVzcyBvbiBh
-IHVzZXJzcGFjZSBwYXRoIG1hbmFnZXIgaW1wbGVtZW50YXRpb24gd2l0aCB0aGUgZ29hbCB0byBv
-cGVuIHNvdXJjZSBpdDxicj4KPGJyPgpUaGF0IGdpdmVzIHVzIHF1aXRlIGEgYml0IHRvIGRpc2N1
-c3MgYW5kIHJldmlldyBvbiB0aGUgbGlzdCBpbiB0aGUgbmVhciB0ZXJtLiBUaGUgYmlnZ2VyIGFu
-ZCBsb25nZXItdGVybSBjaGFsbGVuZ2UgaXMgdG8gdGFrZSB0aGVzZSBwaWVjZXMgYW5kIGRldmVs
-b3AgYSBzdHJhdGVneSBhbmQgcGF0Y2hlcyBmb3IgdXBzdHJlYW0gc3VibWlzc2lvbnMuPGJyPgo8
-YnI+Cjxicj4KVGhlcmUgYXJlIGEgZmV3IHRoaW5ncyB0aGUgTVBUQ1AgdXBzdHJlYW1pbmcgY29t
-bXVuaXR5IG1lbWJlcnMgb24gdGhpcyBsaXN0IHNlZW0gYWxpZ25lZCBvbjo8YnI+Cjxicj4KKiBN
-UFRDUCBiZWxvbmdzIGluIHRoZSB1cHN0cmVhbSBrZXJuZWw8YnI+Cjxicj4KKiBUaGUgPGEgaHJl
-Zj0iaHR0cDovL211bHRpcGF0aC10Y3Aub3JnIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2Js
-YW5rIj5tdWx0aXBhdGgtdGNwLm9yZzwvYT4gaW1wbGVtZW50YXRpb24gaXMgbm90IHVwc3RyZWFt
-LXJlYWR5IGFzLWlzPGJyPgo8YnI+CiogSW1wbGVtZW50aW5nIDEwMCUgZnJvbSBzY3JhdGNoIGlz
-IG5vdCB0aGUgcHJlZmVycmVkIHN0cmF0ZWd5PGJyPgo8YnI+Cjxicj4KSG93IGRvIHdlIGdldCB0
-byB1cHN0cmVhbWFibGUgcGF0Y2ggc2V0cyBmcm9tIGhlcmU/IEkgdGhpbmsgaWYgd2UgY2FuIGFn
-cmVlIG9uIHdoYXQgYW4gdXBzdHJlYW1hYmxlIE1QVENQIGFyY2hpdGVjdHVyZSBsb29rcyB3ZSBj
-YW4gZXZhbHVhdGUgcGF0Y2ggc2V0cyBhY2NvcmRpbmdseS4gSSYjMzk7dmUgcHJvcG9zZWQgdGhl
-c2UgZGVzaWduIGNoYXJhY3RlcmlzdGljcyBiZWZvcmUsIGJ1dCB0aGUgbWFpbGluZyBsaXN0IGhh
-cyBleHBhbmRlZCBzaWduaWZpY2FudGx5IHNpbmNlIHRoZW46PGJyPgo8YnI+CiogTVBUQ1AgaXMg
-dXNlZCB3aGVuIHJlcXVlc3RlZCBieSB0aGUgYXBwbGljYXRpb24sIGVpdGhlciB0aHJvdWdoIGFu
-IElQUFJPVE9fTVBUQ1AgcGFyYW1ldGVyIHRvIHNvY2tldCgpIG9yIGJ5IHVzaW5nIHRoZSBuZXcg
-VUxQIChVcHBlciBMYXllciBQcm90b2NvbCkgY2FwYWJpbGl0eS48YnI+Cjxicj4KKiBNb3ZlIGF3
-YXkgZnJvbSBtZXRhLXNvY2tldHMsIHRyZWF0aW5nIGVhY2ggc3ViZmxvdyBtb3JlIGxpa2UgYSBy
-ZWd1bGFyIFRDUCBjb25uZWN0aW9uLiBUaGUgb3ZlcmFsbCBNUFRDUCBjb25uZWN0aW9uIGlzIGNv
-b3JkaW5hdGVkIGJ5IGFuIHVwcGVyIGxheWVyIHNvY2tldCB0aGF0IGlzIGRpc3RpbmN0IGZyb20g
-dGNwX3NvY2suPGJyPgo8YnI+CiogTW92ZSBmdW5jdGlvbmFsaXR5IHRvIHVzZXJzcGFjZSB3aGVy
-ZSBwb3NzaWJsZSwgbGlrZSB0cmFja2luZyBBRERfQUREUnMgcmVjZWl2ZWQsIGluaXRpYXRpbmcg
-bmV3IHN1YmZsb3dzLCBvciBhY2NlcHRpbmcgbmV3IHN1YmZsb3dzLjxicj4KPGJyPgoqIEF2b2lk
-IGFkZGluZyBsb2NrcyB0byBjb29yZGluYXRlIGFjY2VzcyB0byBkYXRhIHRoYXQmIzM5O3Mgc2hh
-cmVkIGJldHdlZW4gc3ViZmxvd3MuIFV0aWxpemUgY2FwYWJpbGl0aWVzIGxpa2UgY29tcGFyZS1h
-bmQtc3dhcCAoY21weGNoZyksIGF0b21pY3MsIGFuZCBSQ1UgdG8gZGVhbCB3aXRoIHNoYXJlZCBk
-YXRhIGVmZmljaWVudGx5Ljxicj4KPGJyPgpBcmUgdGhlc2UgdGhlIHJpZ2h0IHBsYWNlIHRvIHN0
-YXJ0PyBBbnlvbmUgd2FudCB0byBleHBhbmQgdGhlIGxpc3Q/PGJyPgo8YnI+Cjxicj4KVGhhbmtz
-LDxicj4KPGJyPgotLTxicj4KTWF0IE1hcnRpbmVhdTxicj4KSW50ZWwgT1RDPGJyPgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX188d2JyPl9fX19fX19fX19fX19fX19fPGJyPgptcHRjcCBt
-YWlsaW5nIGxpc3Q8YnI+CjxhIGhyZWY9Im1haWx0bzptcHRjcEBsaXN0cy4wMS5vcmciIHRhcmdl
-dD0iX2JsYW5rIj5tcHRjcEBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8YSBocmVmPSJodHRwczovL2xp
-c3RzLjAxLm9yZy9tYWlsbWFuL2xpc3RpbmZvL21wdGNwIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdl
-dD0iX2JsYW5rIj5odHRwczovL2xpc3RzLjAxLm9yZy9tYWlsbWFuL2w8d2JyPmlzdGluZm8vbXB0
-Y3A8L2E+PGJyPgo8L2Jsb2NrcXVvdGU+PC9kaXY+PGJyPjxiciBjbGVhcj0iYWxsIj48YnI+LS0g
-PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9ImdtYWlsX3Np
-Z25hdHVyZSI+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGly
-PSJsdHIiPjx0YWJsZSBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1
-b3Q7O2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWluZGVudDowcHg7dGV4dC10cmFuc2Zvcm06
-bm9uZTt3b3JkLXNwYWNpbmc6MHB4IiBib3JkZXI9IjAiIHdpZHRoPSIxMDAlIj48dGJvZHk+PHRy
-Pjx0ZCByb3dzcGFuPSIzIiBzdHlsZT0icGFkZGluZy1sZWZ0OjVweDtwYWRkaW5nLXJpZ2h0OjVw
-eCIgd2lkdGg9IjEwIiB2YWxpZ249InRvcCIgYWxpZ249ImxlZnQiPjxhIGhyZWY9Imh0dHA6Ly93
-d3cudGVzc2FyZXMubmV0IiB0YXJnZXQ9Il9ibGFuayI+PGltZyBzcmM9Imh0dHA6Ly93d3cudGVz
-c2FyZXMubmV0L3NpZ2xvZ28ucG5nIiBhbHQ9IlRlc3NhcmVzIFNBIiBib3JkZXI9IjAiIHdpZHRo
-PSI4MCIgaGVpZ2h0PSI4MCI+PC9hPjwvdGQ+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZh
-bWlseTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgaGVpZ2h0PSIx
-MiIgYWxpZ249ImxlZnQiPjxzcGFuIHN0eWxlPSJmb250LXdlaWdodDpib2xkO2NvbG9yOnJnYigz
-Nyw4MywxNTUpO2Rpc3BsYXk6aW5saW5lIj5NYXR0aGlldSBCYWVydHMgfCBSJmFtcDtEIEVuZ2lu
-ZWVyPC9zcGFuPjwvdGQ+PC90cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWls
-eTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgaGVpZ2h0PSIxMiIg
-YWxpZ249ImxlZnQiPjxhIGhyZWY9Im1haWx0bzptYXR0aGlldS5iYWVydHMlNDB0ZXNzYXJlcy5u
-ZXQiIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO3RleHQtZGVjb3JhdGlvbjpub25lO2Rpc3BsYXk6
-aW5saW5lIiB0YXJnZXQ9Il9ibGFuayI+bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5ldDxicj48
-L2E+PC90ZD48L3RyPjx0cj48dGQgc3R5bGU9InBhZGRpbmc6MHB4O2ZvbnQtZmFtaWx5OkhlbHZl
-dGljYSxBcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMHB4IiBhbGlnbj0ibGVmdCI+PHNwYW4g
-c3R5bGU9ImZvbnQtd2VpZ2h0OmJvbGQ7Y29sb3I6cmdiKDM3LDgzLDE1NSk7ZGlzcGxheTppbmxp
-bmUiPlRlc3NhcmVzIFNBIHwgSHlicmlkIEFjY2VzcyBTb2x1dGlvbnM8YnI+PC9zcGFuPjxhIGhy
-ZWY9Imh0dHA6Ly93d3cudGVzc2FyZXMubmV0IiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0
-LWRlY29yYXRpb246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFyZ2V0PSJfYmxhbmsiPnd3dy50ZXNz
-YXJlcy5uZXQ8L2E+PHNwYW4+wqA8L3NwYW4+PGJyPjxhIGhyZWY9Imh0dHBzOi8vd3d3Lmdvb2ds
-ZS5jb20vbWFwcz9xPTErQXZlbnVlK0plYW4rTW9ubmV0LCsxMzQ4K090dGlnbmllcy1Mb3V2YWlu
-LWxhLU5ldXZlLCtCZWxnaXVtIiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRp
-b246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFyZ2V0PSJfYmxhbmsiPjEgQXZlbnVlIEplYW4gTW9u
-bmV0LCAxMzQ4IExvdXZhaW4tbGEtTmV1dmUsIEJlbGdpdW08L2E+PC90ZD48L3RyPjwvdGJvZHk+
-PC90YWJsZT48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4KPC9kaXY+Cgo8YnI+
-CjxkaXY+PGJyPjxocj48L2Rpdj48Zm9udCBzaXplPSIxIj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+
-RElTQ0xBSU1FUi48L3NwYW4+PGJyIHN0eWxlPSJmb250LWZhbWlseTpWZXJkYW5hLHNhbnMtc2Vy
-aWY7YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj48Zm9udCBjb2xvcj0iIzAwMDAw
-MCIgZmFjZT0iVmVyZGFuYSwgc2Fucy1zZXJpZiIgc3R5bGU9ImJhY2tncm91bmQtY29sb3I6cmdi
-KDI1NSwyNTUsMjU1KSI+VGhpcyBlbWFpbCBhbmQgYW55IGZpbGVzIHRyYW5zbWl0dGVkIHdpdGgg
-aXQgYXJlIGNvbmZpZGVudGlhbCBhbmQgaW50ZW5kZWQgc29sZWx5IGZvciB0aGUgdXNlIG9mIHRo
-ZSBpbmRpdmlkdWFsIG9yIGVudGl0eSB0byB3aG9tIHRoZXkgYXJlIGFkZHJlc3NlZC4gSWYgeW91
-IGhhdmUgcmVjZWl2ZWQgdGhpcyBlbWFpbCBpbiBlcnJvciBwbGVhc2Ugbm90aWZ5IHRoZSBzeXN0
-ZW0gbWFuYWdlci4gVGhpcyBtZXNzYWdlIGNvbnRhaW5zIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlv
-biBhbmQgaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIGluZGl2aWR1YWwgbmFtZWQuIElmIHlvdSBh
-cmUgbm90IHRoZSBuYW1lZCBhZGRyZXNzZWUgeW91IHNob3VsZCBub3QgZGlzc2VtaW5hdGUsIGRp
-c3RyaWJ1dGUgb3IgY29weSB0aGlzIGUtbWFpbC4gUGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGlt
-bWVkaWF0ZWx5IGJ5IGUtbWFpbCBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBieSBt
-aXN0YWtlIGFuZCBkZWxldGUgdGhpcyBlLW1haWwgZnJvbSB5b3VyIHN5c3RlbS4gSWYgeW91IGFy
-ZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCB5b3UgYXJlIG5vdGlmaWVkIHRoYXQgZGlzY2xv
-c2luZywgY29weWluZywgZGlzdHJpYnV0aW5nIG9yIHRha2luZyBhbnkgYWN0aW9uIGluIHJlbGlh
-bmNlIG9uIHRoZSBjb250ZW50cyBvZiB0aGlzIGluZm9ybWF0aW9uIGlzIHN0cmljdGx5IHByb2hp
-Yml0ZWQuPC9mb250PjwvZm9udD4=
---===============0513217758912748706==--
+--===============7203017517501430309==--
