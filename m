@@ -1,96 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============2495926812964767643=="
+Content-Type: multipart/mixed; boundary="===============6708460076318939692=="
 MIME-Version: 1.0
-From: Stephen Brennan <stephen at brennan.io>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Using struct socket for subflows
-Date: Wed, 28 Mar 2018 14:33:03 -0700
-Message-ID: <20180328213303.GB31782@greed.cult>
-In-Reply-To: 634b848f-cc34-43c7-93ee-1906b9534f6a@oracle.com
+Subject: Re: [MPTCP] Socket layer changes to MPTCP
+Date: Wed, 28 Mar 2018 14:39:43 -0700
+Message-ID: <alpine.OSX.2.21.1803281344420.16850@fmorale1-mobl2.amr.corp.intel.com>
+In-Reply-To: fb9eaa79-5284-8ec7-b8ce-688d567be143@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 440
+X-UID: 441
 
---===============2495926812964767643==
+--===============6708460076318939692==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rao et al.,
 
-On Tue, Mar 27, 2018 at 06:53:46PM -0700, Rao Shoaib wrote:
-> =
+Hi Rao -
 
-> =
+On Wed, 28 Mar 2018, Rao Shoaib wrote:
 
-> On 03/27/2018 05:04 AM, Lorenzo Colitti wrote:
-> > On Tue, Mar 27, 2018 at 11:18 AM, Christoph Paasch <cpaasch(a)apple.com
-> > <mailto:cpaasch(a)apple.com>> wrote:
-> > =
+> I have recently noticed that the group is working on socket level =
 
-> >     It also would allow us to expose subflows as file-descriptors to the
-> >     user-space. That way the user-space can do setsockopt,
-> >     getsockopt,... on the
-> >     subflows. An idea that came up in the past when we were thinking
-> >     on how to
-> >     expose an MPTCP API that allows apps to control certain things on t=
-he
-> >     subflows.
-> > =
-
-> > =
-
-> > +1 to this since it will allow client platforms to use setsockopt to,
-> > for example, bind subflows to interfaces (e.g., with SO_BINDTODEVICE, or
-> > with SO_MARK as used by Android).
-> May I ask why it can not be done=C2=A0 -- Only flow id should be needed.
-
-It sounds like you're referring to the proposed MPTCP_SUB_GETSOCKOPT and
-MPTCP_SUB_SETSOCKOPT operations in this IETF draft [1], correct?
-
-[1]: https://tools.ietf.org/html/draft-hesmans-mptcp-socket-00
-
-> Plus for
-> policy enforcement the meta socket would have to be consulted. I am new to
-> Linux but based on what I have read SO_BINDTODEVICE does not guarantee mu=
-ch
-> for Tx if the routing says otherwise, quick check of ip_queue_xmit() shows
-> it first consults the routing table. I understand policy routing can be u=
-sed
-> to steer the packets. Perhaps my understanding is incorrect.
+> changes to MPTCP.
 >
-> IMHO this whole idea of exposing individual flows to the application seems
-> to go against the basic design of MPTCP. I am not sure what the use case =
-is
-> as TCP is streams based and MPTCP will spread out data on multiple flows.=
- I
-> am not a involved in the cellular space so I don' know, feel free to
-> enlighten me.
+> Can a summary of the issues and how the changes will solve them be =
 
-I'm also a bit confused at this. I've read the Socket API drafts from IETF,
-which seem to be motivated by the idea that mobile apps will want to
-directly control which subflows and paths are created (similar to the iOS
-APIs released recently). It sounds like we have two approaches: (1) MPTCP
-as a drop-in replacement for TCP, so unmodified applications may use it,
-and (2) MPTCP as an explicitly requested protocol which user-space
-applications request, and then manipulate via socket options. Given the
-amount of drafts and other work put in so far, it seems that use case (2)
-has enough demand that it ought to be supported.
+> posted to the list?=C2=A0 That would help any new participants as well. I=
+f =
 
-Going slightly off topic from this discussion, it seems that a lot of what
-is desired in use case (2) is allowing the application to manage its own
-paths. We now have a Netlink API for userspace path managers. Have we
-thought about the possibility of a userspace application creating an MPTCP
-socket, and also a netlink socket, so that it could manage its own paths?
-Just an off-the-wall idea. If such a thing were possible, it could give the
-userspace app much more control over its own path management, while
-reducing duplication of functionality in-kernel (e.g. wouldn't have both
-socket option for opening a subflow, plus a netlink command for opening a
-subflow). A userspace library could hide some of this complexity for users
-of use-case (2), while still allowing use-case (1) to exist through the
-normal socket API.
+> they have already been discussed please point me to the thread.
 
-Stephen
+I proposed moving away from the metasocket architecture last summer:
+https://lists.01.org/pipermail/mptcp/2017-July/000064.html
+
+When I reviewed the multipath-tcp.org implementation of MPTCP, my =
+
+assessment was (and is) that using metasockets resulted in more intrusive =
+
+code changes for TCP. The more partitioned approach of KCM and RDS (using =
+
+internal kernel sockets) shows an example of in-kernel features that the =
+
+maintainers have merged. The approach seemed feasible and I proposed it as =
+
+a direction to go.
+
+> It will also help if it can be made clear how these changes will =
+
+> expedite implementation of a basic MPTCP implementation. I believe that =
+
+> is the current goal, but my understanding may be incorrect.
+
+I think it will expedite upstreaming in the sense that metasockets would =
+
+never get merged upstream, and that a more partitioned approach with =
+
+dedicated subflow sockets has a reasonable shot. That's my opinion based =
+
+on what I've seen from the maintainers (in terms of mailing list =
+
+discussions, conversations, and what they have merged in the past).
+
+Now, Christoph has raised the topic for more detailed discussion with =
+
+regard to the specifics of the multipath-tcp.org implementation. I don't =
+
+think anything is a foregone conclusion in terms of this aspect of the =
+
+upstreaming project, you can propose a different approach to discuss.
 
 
+Thanks,
 
---===============2495926812964767643==--
+--
+Mat Martineau
+Intel OTC
+
+--===============6708460076318939692==--
