@@ -1,71 +1,109 @@
-Content-Type: multipart/mixed; boundary="===============6220578140650163364=="
+Content-Type: multipart/mixed; boundary="===============1451141528810202265=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 11/16] mptcp: Add shutdown() socket operation
-Date: Wed, 28 Mar 2018 16:18:35 -0700
-Message-ID: <20180328231840.12410-12-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH 14/16] tcp: Export low-level TCP functions
+Date: Wed, 28 Mar 2018 16:18:38 -0700
+Message-ID: <20180328231840.12410-15-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20180328231840.12410-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 455
+X-UID: 456
 
---===============6220578140650163364==
+--===============1451141528810202265==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Krystad <peter.krystad(a)intel.com>
-
-Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ include/net/tcp.h |  4 ++++
+ net/ipv4/tcp.c    | 12 ++++++------
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index bf35d86a20ff..63cf5ead52f2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -244,6 +244,26 @@ int mptcp_listen(struct socket *sock, int backlog)
- 	return inet_listen(subflow, backlog);
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index f1be93536463..21955e4f4b39 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -330,6 +330,10 @@ int tcp_sendpage_locked(struct sock *sk, struct page *=
+page, int offset,
+ 			size_t size, int flags);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb);
++void tcp_push(struct sock *sk, int flags, int mss_now, int nonagle,
++	      int size_goal);
+ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 0c31be306572..80093e91c25e 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -649,7 +649,7 @@ static inline bool forced_push(const struct tcp_sock *t=
+p)
+ 	return after(tp->write_seq, tp->pushed_seq + (tp->max_window >> 1));
  }
  =
 
-+int mptcp_stream_shutdown(struct socket *sock, int how)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	int ret =3D 0;
-+
-+	pr_debug("sk=3D%p, how=3D%d", msk, how);
-+
-+	if (msk->subflow) {
-+		pr_debug("subflow=3D%p", msk->subflow->sk);
-+		ret =3D kernel_sock_shutdown(msk->subflow, how);
-+	}
-+	if (msk->connection_list) {
-+		pr_debug("conn_list->subflow=3D%p", msk->connection_list->sk);
-+		ret =3D kernel_sock_shutdown(msk->connection_list, how);
-+	}
-+	inet_shutdown(sock, how);
-+
-+	return ret;
-+}
-+
- static struct proto mptcp_prot =3D {
- 	.name		=3D "MPTCP",
- 	.owner		=3D THIS_MODULE,
-@@ -274,7 +294,7 @@ const struct proto_ops mptcp_stream_ops =3D {
- 	.poll		   =3D tcp_poll,
- 	.ioctl		   =3D inet_ioctl,
- 	.listen		   =3D mptcp_listen,
--	.shutdown	   =3D inet_shutdown,
-+	.shutdown	   =3D mptcp_stream_shutdown,
- 	.setsockopt	   =3D sock_common_setsockopt,
- 	.getsockopt	   =3D sock_common_getsockopt,
- 	.sendmsg	   =3D inet_sendmsg,
+-static void skb_entail(struct sock *sk, struct sk_buff *skb)
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb);
+@@ -693,8 +693,8 @@ static bool tcp_should_autocork(struct sock *sk, struct=
+ sk_buff *skb,
+ 	       refcount_read(&sk->sk_wmem_alloc) > skb->truesize;
+ }
+ =
+
+-static void tcp_push(struct sock *sk, int flags, int mss_now,
+-		     int nonagle, int size_goal)
++void tcp_push(struct sock *sk, int flags, int mss_now,
++	      int nonagle, int size_goal)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct sk_buff *skb;
+@@ -917,7 +917,7 @@ static unsigned int tcp_xmit_size_goal(struct sock *sk,=
+ u32 mss_now,
+ 	return max(size_goal, mss_now);
+ }
+ =
+
+-static int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
+ {
+ 	int mss_now;
+ =
+
+@@ -972,7 +972,7 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct page *=
+page, int offset,
+ 			if (!skb)
+ 				goto wait_for_memory;
+ =
+
+-			skb_entail(sk, skb);
++			tcp_skb_entail(sk, skb);
+ 			copy =3D size_goal;
+ 		}
+ =
+
+@@ -1286,7 +1286,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr=
+ *msg, size_t size)
+ 			process_backlog =3D true;
+ 			skb->ip_summed =3D CHECKSUM_PARTIAL;
+ =
+
+-			skb_entail(sk, skb);
++			tcp_skb_entail(sk, skb);
+ 			copy =3D size_goal;
+ =
+
+ 			/* All packets are restored as if they have
 -- =
 
 2.16.3
 
 
---===============6220578140650163364==--
+--===============1451141528810202265==--
