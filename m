@@ -1,43 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============4385345773226906468=="
+Content-Type: multipart/mixed; boundary="===============5598746542855105452=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 01/16] tcp: Add MPTCP option number
-Date: Wed, 28 Mar 2018 16:18:25 -0700
-Message-ID: <20180328231840.12410-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH 02/16] tcp: Define IPPROTO_MPTCP
+Date: Wed, 28 Mar 2018 16:18:26 -0700
+Message-ID: <20180328231840.12410-3-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20180328231840.12410-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 445
+X-UID: 446
 
---===============4385345773226906468==
+--===============5598746542855105452==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-TCP option 30 is allocated for MPTCP by the IANA.
+To open a MPTCP socket with socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP),
+IPPROTO_MPTCP needs a value that differs from IPPROTO_TCP. The existing
+IPPROTO numbers mostly map directly to IANA-specified protocol numbers.
+MPTCP does not have a protocol number allocated because MPTCP packets
+use the TCP protocol number. Use private number not used OTA.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/tcp.h | 1 +
- 1 file changed, 1 insertion(+)
+ include/uapi/linux/in.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 9c9b3768b350..c474f5478f76 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -182,6 +182,7 @@ void tcp_time_wait(struct sock *sk, int state, int time=
-o);
- #define TCPOPT_SACK             5       /* SACK Block */
- #define TCPOPT_TIMESTAMP	8	/* Better RTT estimations/PAWS */
- #define TCPOPT_MD5SIG		19	/* MD5 Signature (RFC2385) */
-+#define TCPOPT_MPTCP		30	/* Multipath TCP (RFC6824) */
- #define TCPOPT_FASTOPEN		34	/* Fast open (RFC7413) */
- #define TCPOPT_EXP		254	/* Experimental */
- /* Magic number to be after the option value for sharing TCP
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index 48e8a225b985..f65975c801e5 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -64,6 +64,8 @@ enum {
+ #define IPPROTO_BEETPH		IPPROTO_BEETPH
+   IPPROTO_ENCAP =3D 98,		/* Encapsulation Header			*/
+ #define IPPROTO_ENCAP		IPPROTO_ENCAP
++  IPPROTO_MPTCP =3D 99,		/* Multipath TCP connection 		*/
++#define IPPROTO_MPTCP		IPPROTO_MPTCP
+   IPPROTO_PIM =3D 103,		/* Protocol Independent Multicast	*/
+ #define IPPROTO_PIM		IPPROTO_PIM
+   IPPROTO_COMP =3D 108,		/* Compression Header Protocol		*/
 -- =
 
 2.16.3
 
 
---===============4385345773226906468==--
+--===============5598746542855105452==--
