@@ -1,203 +1,180 @@
-Content-Type: multipart/mixed; boundary="===============7748957628296674635=="
+Content-Type: multipart/mixed; boundary="===============1400223420415525650=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Status and what's next
-Date: Wed, 28 Mar 2018 14:55:33 -0700
-Message-ID: <alpine.OSX.2.21.1803281440140.16850@fmorale1-mobl2.amr.corp.intel.com>
-In-Reply-To: 20180328203942.GA31782@greed.cult
+Subject: Re: [MPTCP] Socket layer changes to MPTCP
+Date: Wed, 28 Mar 2018 16:16:30 -0700
+Message-ID: <077d13b4-f0a3-9079-d59e-bec24c919970@oracle.com>
+In-Reply-To: alpine.OSX.2.21.1803281344420.16850@fmorale1-mobl2.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 442
+X-UID: 443
 
---===============7748957628296674635==
+--===============1400223420415525650==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-Hi Stephen,
 
-On Wed, 28 Mar 2018, Stephen Brennan wrote:
-
-> Hi Mat,
+On 03/28/2018 02:39 PM, Mat Martineau wrote:
 >
-> I've been catching up a bit on the patches and discussion going on, so
-> please excuse my late reply. Please see my inline question.
+> Hi Rao -
 >
-> On Sat, Mar 24, 2018 at 12:47:46PM -0700, Mat Martineau wrote:
->>
->> Hello everyone -
->>
->> In our recent web conference call, we thought it would be helpful to
->> summarize what is coming up for MPTCP upstreaming. To start, I'd like to
->> review work that's already been done and is underway.
->>
->> Previous work:
->>
->> * Mat developed an extensible TCP option framework patch, and Christoph
->> refactored upstream TCP-MD5 and SMC functionality to use it. The idea wa=
-s to
->> integrate some extensions in to TCP that had utility for existing
->> functionality, but would also help integrate MPTCP. This RFC patch set w=
-as
->> turned down by Dave Miller, but did give us useful guidance.
->>
->> * Mat published a proposal for optionally extending sk_buff shared info =
-to
->> carry MPTCP metadata.
->>
->>
->> Ongoing work:
->>
->> * Christoph keeps the multipath-tcp.org kernel merged with recent kernel
->> releases as part of his maintainership role for the multipath-tcp.org
->> project, and is refactoring parts of the MPTCP implementation to take
->> advantage of newer kernel or TCP features and to align with upstreaming
->> goals.
->>
->> * Rao has published an RFC patch set based on the multipath-tcp.org MPTCP
->> implementation and the current upstream kernel, with modifications to ma=
-ke
->> the TCP implementation extensible in a way that's useful for MPTCP. It is
->> currently under review by community members.
->>
->> * Matthieu has sent a generic netlink patch set to mptcp-dev.
->>
->> * Ossama shared a generic netlink path management API proposal. The Intel
->> group developed this before we knew Matthieu would be sharing an
->> implementation.
->>
->> * Stephan shared a userspace path manager draft implementation at
->> https://github.com/brenns10/pathmand
->>
->> * Peter and Mat are preparing a patch set showing an MPTCP architecture =
-with
->> a separate socket type for the MPTCP connection and using in-kernel TCP
->> sockets for subflows. The extended sk_buff structure patch is part of th=
-is.
->>
->> * Ossama has made significant progress on a userspace path manager
->> implementation with the goal to open source it
->>
->> That gives us quite a bit to discuss and review on the list in the near
->> term. The bigger and longer-term challenge is to take these pieces and
->> develop a strategy and patches for upstream submissions.
->>
->>
->> There are a few things the MPTCP upstreaming community members on this l=
-ist
->> seem aligned on:
->>
->> * MPTCP belongs in the upstream kernel
->>
->> * The multipath-tcp.org implementation is not upstream-ready as-is
->>
->> * Implementing 100% from scratch is not the preferred strategy
->>
->>
->> How do we get to upstreamable patch sets from here? I think if we can ag=
-ree
->> on what an upstreamable MPTCP architecture looks we can evaluate patch s=
-ets
->> accordingly. I've proposed these design characteristics before, but the
->> mailing list has expanded significantly since then:
->>
->> * MPTCP is used when requested by the application, either through an
->> IPPROTO_MPTCP parameter to socket() or by using the new ULP (Upper Layer
->> Protocol) capability.
+> On Wed, 28 Mar 2018, Rao Shoaib wrote:
 >
-> I'm curious why this is listed as a strategy for upstreaming. It sounds
-> like the only way to create a userspace MPTCP socket would be the calls:
->
->    sk =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP)
->    sk =3D socket(AF_INET6, SOCK_STREAM, IPPROTO_MPTCP)
->
-> Whereas most TCP users use
->
->    sk =3D socket(AF_INET, SOCK_STREAM, 0)
->    sk =3D socket(AF_INET6, SOCK_STREAM, 0)
->
-> or
->
->    sk =3D socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)
->    sk =3D socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP)
->
-> Isn't part of the goal of MPTCP to be compatible with unmodified
-> applications? Requiring IPPROTO_MPTCP means that existing TCP apps won't
-> benefit from MPTCP.
+>> I have recently noticed that the group is working on socket level =
 
-That's a stated goal in RFC 6824. However, we've been discussing an opt-in =
-
-approach to MPTCP in the context of upstreaming. The MPTCP community is =
-
-all-in on multipath, as you might expect from individuals putting a lot of =
-
-hard work in to the spec. The Linux networking maintainers, not so much:
-
-https://lists.01.org/pipermail/mptcp/2017-April/000001.html
-
-They mentioned that they liked the approach of QUIC and that they wished =
-
-MPTCP hadn't opted to reuse the TCP protocol number.
-
-TCP apps could transparently utilize MPTCP in a couple of ways:
-
-1. Use an LD_PRELOAD library to add IPPROTO_MPTCP to relevant socket calls
-
-2. Use a kernel configuration option to set the default behavior of =
-
-socket(AF_INET, SOCK_STREAM, 0) to be MPTCP, with socket(AF_INET, =
-
-SOCK_STREAM, IPPROTO_TCP) as a way to opt-out of multipath.
-
-> Or is this simply an initial strategy for getting into the mainline, with
-> the hopes of making MPTCP the default for TCP apps later on?
-
-It's the upstreaming that's important to me, since that will enable MPTCP =
-
-where people want to choose it. The ability to set the TCP/MPTCP default =
-
-for proto =3D=3D 0 (#2 above) makes it possible to go further and make MPTC=
-P =
-
-always-on if people want to take it there.
-
-
-Mat
-
-
+>> changes to MPTCP.
 >>
->> * Move away from meta-sockets, treating each subflow more like a regular=
- TCP
->> connection. The overall MPTCP connection is coordinated by an upper layer
->> socket that is distinct from tcp_sock.
->>
->> * Move functionality to userspace where possible, like tracking ADD_ADDRs
->> received, initiating new subflows, or accepting new subflows.
->>
->> * Avoid adding locks to coordinate access to data that's shared between
->> subflows. Utilize capabilities like compare-and-swap (cmpxchg), atomics,=
- and
->> RCU to deal with shared data efficiently.
->>
->> Are these the right place to start? Anyone want to expand the list?
->>
->>
->> Thanks,
->>
->> --
->> Mat Martineau
->> Intel OTC
->> _______________________________________________
->> mptcp mailing list
->> mptcp(a)lists.01.org
->> https://lists.01.org/mailman/listinfo/mptcp
->
->
+>> Can a summary of the issues and how the changes will solve them be =
 
---
-Mat Martineau
-Intel OTC
+>> posted to the list?=C2=A0 That would help any new participants as well. =
+If =
 
---===============7748957628296674635==--
+>> they have already been discussed please point me to the thread.
+>
+> I proposed moving away from the metasocket architecture last summer:
+> https://lists.01.org/pipermail/mptcp/2017-July/000064.html
+>
+> When I reviewed the multipath-tcp.org implementation of MPTCP, my =
+
+> assessment was (and is) that using metasockets resulted in more =
+
+> intrusive code changes for TCP. The more partitioned approach of KCM =
+
+> and RDS (using internal kernel sockets) shows an example of in-kernel =
+
+> features that the maintainers have merged. The approach seemed =
+
+> feasible and I proposed it as a direction to go.
+Thanks for pointing the thread out. That was a proposal we never agreed =
+
+on it=C2=A0 ?
+Here is my response to it.
+
+"""""
+I agree with the above approach but want to expand on the initial goal.
+
+Our initial goal must be to put a minimal (bare bones) MPTCP =
+
+implementation in main stream Linux. That could mean no fancy scheduling =
+
+schemes, just simple round robin or just active/standby. Implementing =
+
+minimal MPTCP functionality will pretty much expose how main TCP code =
+
+will be impacted. Any future work to add features will be confined to =
+
+changes within MPTCP and should not be a concern right now. Such an =
+
+implementation will also be fully RFC compliant.
+
+I agree with you that upstream folks would want an opt-in option. I am =
+
+in favor of a completely different socket family as that would leave tcp =
+
+socket code untouched. However we should talk to upstream folks once again.
+
+I should have been more specific, I was referring to the socket layer =
+
+changes. Now that I have implemented MPTCP on Linux and understand the =
+
+design better I don't think using a separate
+
+I would like us to use as much code as possible from the current =
+
+implementation. In fact if for some reason (I don't see one) we can not =
+
+ship a minimal implementation than I prefer that we just port the =
+
+current implementation and worry about architectural issues later.
+
+In short, I would like our focus to be on putting a minimal MPTCP =
+
+implementation in Linux so that we have a stake in the ground. =
+
+Performance and Features can come later. That does not mean that the =
+
+quality of our implementation is so bad that it is unusable.
+
+Shoaib
+
+""""""""""""""
+
+I was OK using KCM or a different socket family, but nothing else, as I =
+
+say using a socket family would only save changes to the socket code.
+
+Since our initial goal was not adhered to and I have had more =
+
+experience, I would like a technical analysis or better yet an =
+
+implementation that supports the said claims. Any mention of upstream =
+
+should have pointers to the email threads or should not be used. KCM and =
+
+RDS are completely different, they do not add options to TCP header or =
+
+deal with TCP state machine.
+
+I have submitted a patch that provides a complete working implementation =
+
+based on the current design. It can be used as a reference to point out =
+
+how the proposed solution would be better.
+
+>
+>> It will also help if it can be made clear how these changes will =
+
+>> expedite implementation of a basic MPTCP implementation. I believe =
+
+>> that is the current goal, but my understanding may be incorrect.
+>
+> I think it will expedite upstreaming in the sense that metasockets =
+
+> would never get merged upstream, and that a more partitioned approach =
+
+> with dedicated subflow sockets has a reasonable shot. That's my =
+
+> opinion based on what I've seen from the maintainers (in terms of =
+
+> mailing list discussions, conversations, and what they have merged in =
+
+> the past).
+>
+> Now, Christoph has raised the topic for more detailed discussion with =
+
+> regard to the specifics of the multipath-tcp.org implementation. I =
+
+> don't think anything is a foregone conclusion in terms of this aspect =
+
+> of the upstreaming project, you can propose a different approach to =
+
+> discuss.
+I want to point out that folks propose a lot of enhancements on Netdev =
+
+and IETF with valid uses cases. 99.99% get rejected. There has to be =
+
+very valid reasons -- We are not going to build a kitchen sink of =
+
+options that will make the design complex and unmaintainable. If a =
+
+vendor has certain requirements they need to provide us a list that we =
+
+evaluate and find out the best way to implement it if we choose to. We =
+
+are not there yet and talking about any kind of options is premature.
+
+Thanks,
+
+Shoaib
+> Thanks,
+>
+> -- =
+
+> Mat Martineau
+> Intel OTC
+
+
+--===============1400223420415525650==--
