@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============6634622934478595570=="
+Content-Type: multipart/mixed; boundary="===============6220578140650163364=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 10/16] mptcp: Add getname() socket operation
-Date: Wed, 28 Mar 2018 16:18:34 -0700
-Message-ID: <20180328231840.12410-11-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH 11/16] mptcp: Add shutdown() socket operation
+Date: Wed, 28 Mar 2018 16:18:35 -0700
+Message-ID: <20180328231840.12410-12-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20180328231840.12410-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 454
+X-UID: 455
 
---===============6634622934478595570==
+--===============6220578140650163364==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,50 +19,53 @@ From: Peter Krystad <peter.krystad(a)intel.com>
 
 Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
 ---
- net/mptcp/protocol.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 373e89cf8eda..bf35d86a20ff 100644
+index bf35d86a20ff..63cf5ead52f2 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -218,6 +218,22 @@ int mptcp_stream_connect(struct socket *sock, struct s=
-ockaddr *uaddr,
- 	return err;
+@@ -244,6 +244,26 @@ int mptcp_listen(struct socket *sock, int backlog)
+ 	return inet_listen(subflow, backlog);
  }
  =
 
-+int mptcp_getname(struct socket *sock, struct sockaddr *uaddr, int peer)
++int mptcp_stream_shutdown(struct socket *sock, int how)
 +{
 +	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	struct socket *subflow;
-+	int err =3D -EPERM;
++	int ret =3D 0;
 +
-+	if (msk->connection_list)
-+		subflow =3D msk->connection_list;
-+	else
-+		subflow =3D msk->subflow;
++	pr_debug("sk=3D%p, how=3D%d", msk, how);
 +
-+	err =3D inet_getname(subflow, uaddr, peer);
++	if (msk->subflow) {
++		pr_debug("subflow=3D%p", msk->subflow->sk);
++		ret =3D kernel_sock_shutdown(msk->subflow, how);
++	}
++	if (msk->connection_list) {
++		pr_debug("conn_list->subflow=3D%p", msk->connection_list->sk);
++		ret =3D kernel_sock_shutdown(msk->connection_list, how);
++	}
++	inet_shutdown(sock, how);
 +
-+	return err;
++	return ret;
 +}
 +
- int mptcp_listen(struct socket *sock, int backlog)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-@@ -254,7 +270,7 @@ const struct proto_ops mptcp_stream_ops =3D {
- 	.connect	   =3D mptcp_stream_connect,
- 	.socketpair	   =3D sock_no_socketpair,
- 	.accept		   =3D inet_accept,
--	.getname	   =3D inet_getname,
-+	.getname	   =3D mptcp_getname,
+ static struct proto mptcp_prot =3D {
+ 	.name		=3D "MPTCP",
+ 	.owner		=3D THIS_MODULE,
+@@ -274,7 +294,7 @@ const struct proto_ops mptcp_stream_ops =3D {
  	.poll		   =3D tcp_poll,
  	.ioctl		   =3D inet_ioctl,
  	.listen		   =3D mptcp_listen,
+-	.shutdown	   =3D inet_shutdown,
++	.shutdown	   =3D mptcp_stream_shutdown,
+ 	.setsockopt	   =3D sock_common_setsockopt,
+ 	.getsockopt	   =3D sock_common_getsockopt,
+ 	.sendmsg	   =3D inet_sendmsg,
 -- =
 
 2.16.3
 
 
---===============6634622934478595570==--
+--===============6220578140650163364==--
