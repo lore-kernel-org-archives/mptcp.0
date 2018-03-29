@@ -1,140 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============5128968181942651151=="
+Content-Type: multipart/mixed; boundary="===============2997000444295556577=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Using struct socket for subflows
-Date: Thu, 29 Mar 2018 10:05:09 +0200
-Message-ID: <20180329080509.GV71178@MacBook-Pro-6.lan>
-In-Reply-To: alpine.OSX.2.21.1803280908300.16850@fmorale1-mobl2.amr.corp.intel.com
+Subject: Re: [MPTCP] Patch does not apply
+Date: Thu, 29 Mar 2018 08:40:49 -0700
+Message-ID: <alpine.OSX.2.21.1803290816510.35193@mjmartin-mac01.local>
+In-Reply-To: ad8326d2-0a99-d265-1ad9-fe8d6e9fcc04@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 465
+X-UID: 466
 
---===============5128968181942651151==
+--===============2997000444295556577==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 28/03/18 - 09:25:46, Mat Martineau wrote:
-> =
 
-> On Wed, 28 Mar 2018, Christoph Paasch wrote:
-> =
+Hi Rao -
 
-> > On 27/03/18 - 16:29:26, Mat Martineau wrote:
-> > > =
+On Wed, 28 Mar 2018, Rao Shoaib wrote:
 
-> > > Hi Christoph,
-> > > =
+> I am unable to apply the 6th patch.
+>
+> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux.old(master)$git am =
 
-> > > On Tue, 27 Mar 2018, Christoph Paasch wrote:
-> > > =
+> "/tmp/mails/[MPTCP] [RFC PATCH 03_16] mptcp: Add MPTCP socket stubs - Mat =
 
-> > > > Hello,
-> > > > =
+> Martineau <mathew.j.martineau(a)linux.intel.com> - 2018-03-28 1618.eml"
+> Applying: mptcp: Add MPTCP socket stubs
+> .git/rebase-apply/patch:87: new blank line at EOF.
+> +
+> warning: 1 line adds whitespace errors.
+>
+> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master)$git am =
 
-> > > > =
+> "/tmp/mails/[MPTCP] [RFC PATCH 06_16] tcp: expose tcp routines and struct=
+s =
 
-> > > > (first, sorry for the long e-mail)
-> > > > =
+> for MPTCP - Mat Martineau <mathew.j.martineau(a)linux.intel.com> - 2018-0=
+3-28 =
 
-> > > > =
+> 1618.eml"
+> Applying: tcp: expose tcp routines and structs for MPTCP
+> error: patch failed: include/net/inet_common.h:35
+> error: include/net/inet_common.h: patch does not apply
+> Patch failed at 0001 tcp: expose tcp routines and structs for MPTCP
+> The copy of the patch that failed is found in: .git/rebase-apply/patch
+> When you have resolved this problem, run "git am --continue".
+> If you prefer to skip this patch, run "git am --skip" instead.
+> To restore the original branch and stop patching, run "git am --abort".
+>
+> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master|AM 1/1)$git remot=
+e -v
+> origin https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.gi=
+t =
 
-> > > > I now started working on cleaning up the input path to prepare it f=
-or
-> > > > input-processing without holding the MPTCP-level lock.
-> > > > =
+> (fetch)
+> origin https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.gi=
+t =
 
-> > > > To do this, I go through all the places where we access data-struct=
-ures from
-> > > > the meta-socket and see if I can move it to mptcp_data_ready or
-> > > > mptcp_write_space (the callbacks that are called from
-> > > > sk_data_ready/sk_write_space).
-> > > > =
+> (push)
 
-> > > > In tcp_check_space() we have the following:
-> > > >                if (mptcp(tcp_sk(sk)) ||
-> > > >                    (sk->sk_socket &&
-> > > >                     test_bit(SOCK_NOSPACE, &sk->sk_socket->flags)))=
- {
-> > > >                        tcp_new_space(sk);
-> > > >                        if (sk->sk_socket && !test_bit(SOCK_NOSPACE,=
- &sk->sk_socket->flags))
-> > > >                                tcp_chrono_stop(sk, TCP_CHRONO_SNDBU=
-F_LIMITED);
-> > > >                }
-> > > > =
+If you cloned my git.kernel.org repo (which appears to be the case from =
 
-> > > > We do the if (mptcp(...)), because currently subflow's sk_socket is=
- pointing to
-> > > > application's struct socket. Thus, we need to avoid the check for
-> > > > SOCK_NOSPACE, as otherwise we might end up not calling sk_write_spa=
-ce.
-> > > > =
+your 'git remote -v' output), you shouldn't need to apply the patches from =
 
-> > > > =
+email. Instead:
 
-> > > > Other kernel-modules that create TCP-connections rather have an in-=
-kernel
-> > > > struct socket. And modules like RDS even force SOCK_NOSPACE to be s=
-et, such
-> > > > that the TCP-stack keeps on up-calling. I thought that this was a g=
-ood thing
-> > > > to do in MPTCP as well.
-> > > > =
+$ git checkout -t origin/mptcp-proposal
 
-> > > > So, my goal became to have a fully functional struct socket for sub=
-flows.
-> > > > The benefit is also that we can end up using kernel_sendmsg,
-> > > > kernel_recvmsg,... in the future. It also allows to do kernel_accep=
-t() on
-> > > > the MPTCP-level socket to receive new subflows (a problem I mention=
-ed in an
-> > > > earlier mail).
-> > > =
-
-> > > I think we'll have a patch set illustrating this approach ready to po=
-st
-> > > tomorrow.
-> > =
-
-> > Awesome! I am waiting for your patch :)
-> > =
-
-> > > Peter and I have been working on this net-next-based code with
-> > > in-kernel sockets for many months now. I missed the SOCK_NOSPACE deta=
-il
-> > > though - I'll take a look at that.
-> > > =
-
-> > > Rather than using kernel_sendmsg and kernel_recvmsg, I use do_tcp_sen=
-dpages
-> > > (to reduce copying and let the MPTCP connection layer share data acro=
-ss skbs
-> > > and subflows as it needs to) and tcp_read_sock (to read intact skbs o=
-ut of
-> > > the rx queue). The kernel_* functions are used for most everything el=
-se
-> > > though.
-> > =
-
-> > Do you also handle kernel_accept ?
-> > If yes, how do you do it? Because, it's quite complex to avoid races.
-> =
-
-> Yes, but we don't support joins yet so it's maybe only the trivial case. =
-The
-> connection level socket owns a subflow listening socket (which it created=
- at
-> init time), and when the application calls accept() it's immediately pass=
-ed
-> through to kernel_accept() for the subflow.
-
-I see you posted your patches. I will try to go over them before our
-meeting tonight.
+will get you the commits directly from the git server.
 
 
-Christoph
+Just to be specific, to apply the patches from email instead of directly =
 
+checking out, you would clone =
 
---===============5128968181942651151==--
+https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git and =
+
+apply the patches to that repository. In addition, I'm not 100% sure 'git =
+
+am' understands .eml files - the man page for the latest git release =
+
+mentions maildir, mbox, mboxrd, stgit, stgit-series and hg as supported =
+
+email formats.
+
+Hope this helps!
+
+--
+Mat Martineau
+Intel OTC
+
+--===============2997000444295556577==--
