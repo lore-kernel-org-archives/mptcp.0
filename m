@@ -1,137 +1,123 @@
-Content-Type: multipart/mixed; boundary="===============2551804250177271566=="
+Content-Type: multipart/mixed; boundary="===============7692843293570256453=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Using struct socket for subflows
-Date: Thu, 29 Mar 2018 13:01:10 -0700
-Message-ID: <c8b8a471-0f08-68e5-12c9-3d57ea6e35a8@oracle.com>
-In-Reply-To: 7aca469a-a2ed-b795-cd9f-9eca5f2fe0a0@oracle.com
+Subject: Re: [MPTCP] How function pointers will be replaced
+Date: Thu, 29 Mar 2018 14:44:28 -0700
+Message-ID: <alpine.OSX.2.21.1803291304310.39118@mjmartin-mac01.sea.intel.com>
+In-Reply-To: c460b76e-b00b-3adf-8305-34f43e615720@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 474
+X-UID: 475
 
---===============2551804250177271566==
+--===============7692843293570256453==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
+On Tue, 27 Mar 2018, Rao Shoaib wrote:
 
-On 03/29/2018 12:19 PM, Rao Shoaib wrote:
-> Hi Steve,
+> I am in the process of replacing function pointers with a macro that =
+
+> calls the appropriate function based on the socket. Mat, suggested that =
+
+> I share what it looks like. So here it is.
 >
-> Sorry I did not respond to your email, too many issues to worry about :-)
+> The current code in the patch:
 >
+> /* Send _single_ skb sitting at the send head. This function requires
+> =C2=A0* true push pending frames to setup probe timer etc.
+> =C2=A0*/
+> void tcp_push_one(struct sock *sk, unsigned int mss_now)
+> {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sk_buff *skb =3D tcp_se=
+nd_head(sk);
 >
-> On 03/28/2018 02:33 PM, Stephen Brennan wrote:
->> Hi Rao et al.,
->>
->> On Tue, Mar 27, 2018 at 06:53:46PM -0700, Rao Shoaib wrote:
->>>
->>> On 03/27/2018 05:04 AM, Lorenzo Colitti wrote:
->>>> On Tue, Mar 27, 2018 at 11:18 AM, Christoph Paasch <cpaasch(a)apple.com
->>>> <mailto:cpaasch(a)apple.com>> wrote:
->>>>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 It also would allow us to expose subflows as =
-file-descriptors =
-
->>>> to the
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 user-space. That way the user-space can do se=
-tsockopt,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 getsockopt,... on the
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 subflows. An idea that came up in the past wh=
-en we were thinking
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 on how to
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 expose an MPTCP API that allows apps to contr=
-ol certain things =
-
->>>> on the
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 subflows.
->>>>
->>>>
->>>> +1 to this since it will allow client platforms to use setsockopt to,
->>>> for example, bind subflows to interfaces (e.g., with =
-
->>>> SO_BINDTODEVICE, or
->>>> with SO_MARK as used by Android).
->>> May I ask why it can not be done=C2=A0 -- Only flow id should be needed.
->> It sounds like you're referring to the proposed MPTCP_SUB_GETSOCKOPT and
->> MPTCP_SUB_SETSOCKOPT operations in this IETF draft [1], correct?
->>
->> [1]: https://tools.ietf.org/html/draft-hesmans-mptcp-socket-00
-> Actually I have not read the draft, my comment was based on general =
-
-> understanding of the kernel. I am coming of Solaris and we know how to =
-
-> create custom socket, special setopt/getopt , special fd's to expose =
-
-> something etc etc. It is not rocket science. If someone has already =
-
-> thought of it then we have less work to do.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(!skb || skb->len < mss_=
+now);
 >
-> Any change of this kind has to be discussed in a standards body so =
-
-> vendors and users can comment.
->>
->>> Plus for
->>> policy enforcement the meta socket would have to be consulted. I am =
-
->>> new to
->>> Linux but based on what I have read SO_BINDTODEVICE does not =
-
->>> guarantee much
->>> for Tx if the routing says otherwise, quick check of ip_queue_xmit() =
-
->>> shows
->>> it first consults the routing table. I understand policy routing can =
-
->>> be used
->>> to steer the packets. Perhaps my understanding is incorrect.
->>>
->>> IMHO this whole idea of exposing individual flows to the application =
-
->>> seems
->>> to go against the basic design of MPTCP. I am not sure what the use =
-
->>> case is
->>> as TCP is streams based and MPTCP will spread out data on multiple =
-
->>> flows. I
->>> am not a involved in the cellular space so I don' know, feel free to
->>> enlighten me.
->> I'm also a bit confused at this. I've read the Socket API drafts from =
-
->> IETF,
->> which seem to be motivated by the idea that mobile apps will want to
->> directly control which subflows and paths are created (similar to the =
-
->> iOS
->> APIs released recently). It sounds like we have two approaches: (1) =
-
->> MPTCP
->> as a drop-in replacement for TCP, so unmodified applications may use it,
->> and (2) MPTCP as an explicitly requested protocol which user-space
->> applications request, and then manipulate via socket options. Given the
->> amount of drafts and other work put in so far, it seems that use case =
-
->> (2)
->> has enough demand that it ought to be supported.
-> Can you point me to the drafts or requests. As I said with the current =
-
-> design everything is possible. No change is needed.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tcp_sk(sk)->op_ops->write_xmit=
+(sk, mss_now, TCP_NAGLE_PUSH, 1,
+> sk->sk_allocation);
+> }
 >
-> Shoaib
+> After my fix to not use function pointers it will look like
+>
+> /* Send _single_ skb sitting at the send head. This function requires
+> =C2=A0* true push pending frames to setup probe timer etc.
+> =C2=A0*/
+> void tcp_push_one(struct sock *sk, unsigned int mss_now)
+> {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sk_buff *skb =3D tcp_se=
+nd_head(sk);
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(!skb || skb->len < mss_=
+now);
+>
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CALL_ONE(tcp_write_xmit, sk, m=
+ss_now, TCP_NAGLE_PUSH, 1,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 sk->sk_allocation);
+> }
+>
+> /* Macro to call appropriate function depending upon the socket type.
+> =C2=A0* First two arguments are required to be the name of the function =
 
-Steve take a look at the following -- The possibilities are endless.
+> called and socket
+> =C2=A0* pointer respectively. Any other arguments are optional as require=
+d by
+> =C2=A0* the called function.
+> =C2=A0*/
+> #define CALL_ONE(fn, __sk, ...) \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (likely (!tcp_sk(__sk)->tcp_al=
+t) ? \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (fn)(__sk, ##__VA_ARGS__) : (m=
+p##fn)(__sk, ##__VA_ARGS__))
+>
+> I am not happy about this as function pointers kept the code cleaner. If =
 
-https://arxiv.org/pdf/1707.03585.pdf
+> anyone has better ideas or see any issues please speak up so I can make =
 
-The best approach I think is to enhance netlink. I have a=C2=A0 pie in the =
+> the change now than later.
 
-sky idea, we can have meta/master socket register with netlink, =
+Yeah, I agree that function pointers are a simpler way to express the =
 
-identified by src and destination addresses for direct communication.
+intended behavior. It seems like davem wants conditional calls, and this =
 
-Shoaib
+macro approach clearly implements that.
 
---===============2551804250177271566==--
+Based on code idioms I've observed in the Linux kernel, my suggestion is =
+
+to not abstract the conditional call behind the macro and to use an if =
+
+statement at each call site so it's clear that control flow is going to =
+
+either the regular tcp call or the mptcp call without having to look up =
+
+the macro. I can't point to any written policy that says this, but it =
+
+would fit the existing code style better (in my opinion).
+
+If you'd like to stick with the macro, are CALL_ONE and tcp_alt =
+
+placeholders to illustrate the concept? Since the macro is MPTCP-specific, =
+
+I think it would help to have less generic names that make the association =
+
+with MPTCP clear.
+
+Yes, these are style comments. I point these things out because =
+
+maintainers do pay attention to this stuff for readability and =
+
+maintainability purposes. Like I said above, the macro works as =
+
+advertised, so the functionality is not in question.
+
+--
+Mat Martineau
+Intel OTC
+
+--===============7692843293570256453==--
