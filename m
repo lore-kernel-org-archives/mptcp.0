@@ -1,140 +1,215 @@
-Content-Type: multipart/mixed; boundary="===============8374162093985937951=="
+Content-Type: multipart/mixed; boundary="===============7891320728316091815=="
 MIME-Version: 1.0
 From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Patch does not apply
-Date: Thu, 29 Mar 2018 10:41:08 -0700
-Message-ID: <c8071f6c-b69a-0721-be22-c79bc77ae4df@oracle.com>
-In-Reply-To: alpine.OSX.2.21.1803290816510.35193@mjmartin-mac01.local
+Subject: Re: [MPTCP] Weekly meeting - 29 March 2018 16:00 UTC (9am PDT,
+ 6pm CEST)
+Date: Thu, 29 Mar 2018 10:49:34 -0700
+Message-ID: <53820e9f-5756-92cc-506d-88497798b35d@oracle.com>
+In-Reply-To: CAKuKrB=V3QOj0U6QiCeWtJNUo3r9ksJA2fV+8yuD-2wNMq8wdg@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 467
+X-UID: 468
 
---===============8374162093985937951==
+--===============7891320728316091815==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
 
-On 03/29/2018 08:40 AM, Mat Martineau wrote:
+On 03/29/2018 01:03 AM, Matthieu Baerts wrote:
+> Hi Rao,
 >
-> Hi Rao -
+> On Thu, Mar 29, 2018 at 8:17 AM, Rao Shoaib <rao.shoaib(a)oracle.com =
+
+> <mailto:rao.shoaib(a)oracle.com>> wrote:
 >
-> On Wed, 28 Mar 2018, Rao Shoaib wrote:
->
->> I am unable to apply the 6th patch.
->>
->> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux.old(master)$git am =
-
->> "/tmp/mails/[MPTCP] [RFC PATCH 03_16] mptcp: Add MPTCP socket stubs - =
-
->> Mat Martineau <mathew.j.martineau(a)linux.intel.com> - 2018-03-28 =
-
->> 1618.eml"
->> Applying: mptcp: Add MPTCP socket stubs
->> .git/rebase-apply/patch:87: new blank line at EOF.
->> +
->> warning: 1 line adds whitespace errors.
->>
->> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master)$git am =
-
->> "/tmp/mails/[MPTCP] [RFC PATCH 06_16] tcp: expose tcp routines and =
-
->> structs for MPTCP - Mat Martineau =
-
->> <mathew.j.martineau(a)linux.intel.com> - 2018-03-28 1618.eml"
->> Applying: tcp: expose tcp routines and structs for MPTCP
->> error: patch failed: include/net/inet_common.h:35
->> error: include/net/inet_common.h: patch does not apply
->> Patch failed at 0001 tcp: expose tcp routines and structs for MPTCP
->> The copy of the patch that failed is found in: .git/rebase-apply/patch
->> When you have resolved this problem, run "git am --continue".
->> If you prefer to skip this patch, run "git am --skip" instead.
->> To restore the original branch and stop patching, run "git am --abort".
->>
->> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master|AM 1/1)$git =
-
->> remote -v
->> origin =
-
->> https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git =
-
->> (fetch)
->> origin =
-
->> https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git =
-
->> (push)
->
-> If you cloned my git.kernel.org repo (which appears to be the case =
-
-> from your 'git remote -v' output), you shouldn't need to apply the =
-
-> patches from email. Instead:
->
-> $ git checkout -t origin/mptcp-proposal
->
-> will get you the commits directly from the git server.
+>     I will not be able to make it to the meeting. My daughter's flight
+>     got canceled and now she is arriving around 9:00 AM, and I have to
+>     pick her up. Mat has put my patch up for review. The only action I
+>     have for the meeting is to decide when the review will end.
 >
 >
-> Just to be specific, to apply the patches from email instead of =
-
-> directly checking out, you would clone =
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git and =
-
-> apply the patches to that repository. In addition, I'm not 100% sure =
-
-> 'git am' understands .eml files - the man page for the latest git =
-
-> release mentions maildir, mbox, mboxrd, stgit, stgit-series and hg as =
-
-> supported email formats.
+> Thank you for the notification!
 >
-> Hope this helps!
->
-> -- =
+> Do you think we could discuss about them next week?
+What is there to discuss? I have provided the patches, they are up for =
 
-> Mat Martineau
-> Intel OTC
-Hi Mat,
+review, if there are any questions or issues please post them.
 
-For some reason that was not clear to me, anyways I just looked at the =
+Yes, I can attend the meeting next week but I am not feeling good about =
 
-patches and I am sorry to say I do not see any thing special about the =
-
-patch.
-
-For example the patch uses
-
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .conn_request=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 =3D subflow_conn_request,
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .syn_recv_sock=C2=A0=C2=A0=C2=A0=C2=
-=A0 =3D subflow_syn_recv_sock,
-
-The original implementation used
-
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .conn_request=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 =3D mptcp_conn_request,
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .syn_recv_sock=C2=A0=C2=A0=C2=
-=A0=C2=A0 =3D tcp_v4_syn_recv_sock,
-
-subflow_syn_recv_sock() calls tcp_v4_syn_recv_sock()
-
-The patch handles options exactly the same way as they have always been =
-
-handled. Old implementation had struct mptcp_request_sock the patch has =
-
-struct subflow_request_sock.
-
-The patch is incomplete as it can not exchange any data using MPTCP. I =
-
-see no reason to use this approach, we have a working implementation and =
-
-that should be used and improved upon.
+the constant push back of my patch.
 
 Shoaib
+>
+> Regards,
+> Matthieu
+> -- =
+
+> Tessares SA <http://www.tessares.net> 	Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> <mailto:matthieu.baerts%40tessares.net>
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net <http://www.tessares.net>
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium =
+
+> <https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Lou=
+vain-la-Neuve,+Belgium> =
+
+>
+>
+>
+>
+> ------------------------------------------------------------------------
+> DISCLAIMER.
+> This email and any files transmitted with it are confidential and =
+
+> intended solely for the use of the individual or entity to whom they =
+
+> are addressed. If you have received this email in error please notify =
+
+> the system manager. This message contains confidential information and =
+
+> is intended only for the individual named. If you are not the named =
+
+> addressee you should not disseminate, distribute or copy this e-mail. =
+
+> Please notify the sender immediately by e-mail if you have received =
+
+> this e-mail by mistake and delete this e-mail from your system. If you =
+
+> are not the intended recipient you are notified that disclosing, =
+
+> copying, distributing or taking any action in reliance on the contents =
+
+> of this information is strictly prohibited. =
 
 
---===============8374162093985937951==--
+
+--===============7891320728316091815==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
+bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
+MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPHA+PGJyPgogICAgPC9wPgogICAgPGJyPgog
+ICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAwMy8yOS8yMDE4IDAxOjAzIEFNLCBN
+YXR0aGlldSBCYWVydHMKICAgICAgd3JvdGU6PGJyPgogICAgPC9kaXY+CiAgICA8YmxvY2txdW90
+ZSB0eXBlPSJjaXRlIgpjaXRlPSJtaWQ6Q0FLdUtyQj1WM1FPajBVNlFpQ2VXdEpOVW8zcjlrc0pB
+MmZWKzh5dUQtMndOTXE4d2RnQG1haWwuZ21haWwuY29tIj4KICAgICAgPGRpdiBkaXI9Imx0ciI+
+CiAgICAgICAgPGRpdj5IaSBSYW8sPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzcz0iZ21haWxfZXh0
+cmEiPjxicj4KICAgICAgICAgIDxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj5PbiBUaHUsIE1hciAy
+OSwgMjAxOCBhdCA4OjE3IEFNLCBSYW8KICAgICAgICAgICAgU2hvYWliIDxzcGFuIGRpcj0ibHRy
+Ij4mbHQ7PGEKICAgICAgICAgICAgICAgIGhyZWY9Im1haWx0bzpyYW8uc2hvYWliQG9yYWNsZS5j
+b20iIHRhcmdldD0iX2JsYW5rIgogICAgICAgICAgICAgICAgbW96LWRvLW5vdC1zZW5kPSJ0cnVl
+Ij5yYW8uc2hvYWliQG9yYWNsZS5jb208L2E+Jmd0Ozwvc3Bhbj4KICAgICAgICAgICAgd3JvdGU6
+PGJyPgogICAgICAgICAgICA8YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJt
+YXJnaW46MCAwIDAKICAgICAgICAgICAgICAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlk
+O3BhZGRpbmctbGVmdDoxZXgiPjxzcGFuCiAgICAgICAgICAgICAgICBjbGFzcz0iIj4KICAgICAg
+ICAgICAgICA8L3NwYW4+CiAgICAgICAgICAgICAgSSB3aWxsIG5vdCBiZSBhYmxlIHRvIG1ha2Ug
+aXQgdG8gdGhlIG1lZXRpbmcuIE15CiAgICAgICAgICAgICAgZGF1Z2h0ZXIncyBmbGlnaHQgZ290
+IGNhbmNlbGVkIGFuZCBub3cgc2hlIGlzIGFycml2aW5nCiAgICAgICAgICAgICAgYXJvdW5kIDk6
+MDAgQU0sIGFuZCBJIGhhdmUgdG8gcGljayBoZXIgdXAuIE1hdCBoYXMgcHV0IG15CiAgICAgICAg
+ICAgICAgcGF0Y2ggdXAgZm9yIHJldmlldy4gVGhlIG9ubHkgYWN0aW9uIEkgaGF2ZSBmb3IgdGhl
+CiAgICAgICAgICAgICAgbWVldGluZyBpcyB0byBkZWNpZGUgd2hlbiB0aGUgcmV2aWV3IHdpbGwg
+ZW5kLjxicj4KICAgICAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgICAgICA8ZGl2Pjxicj4K
+ICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDxkaXY+VGhhbmsgeW91IGZvciB0aGUgbm90
+aWZpY2F0aW9uITwvZGl2PgogICAgICAgICAgICA8ZGl2Pjxicj4KICAgICAgICAgICAgPC9kaXY+
+CiAgICAgICAgICAgIDxkaXY+RG8geW91IHRoaW5rIHdlIGNvdWxkIGRpc2N1c3MgYWJvdXQgdGhl
+bSBuZXh0IHdlZWs/PC9kaXY+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAg
+PC9kaXY+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICBXaGF0IGlzIHRoZXJlIHRvIGRpc2N1c3M/IEkg
+aGF2ZSBwcm92aWRlZCB0aGUgcGF0Y2hlcywgdGhleSBhcmUgdXAKICAgIGZvciByZXZpZXcsIGlm
+IHRoZXJlIGFyZSBhbnkgcXVlc3Rpb25zIG9yIGlzc3VlcyBwbGVhc2UgcG9zdCB0aGVtLiA8YnI+
+CiAgICA8YnI+CiAgICBZZXMsIEkgY2FuIGF0dGVuZCB0aGUgbWVldGluZyBuZXh0IHdlZWsgYnV0
+IEkgYW0gbm90IGZlZWxpbmcgZ29vZAogICAgYWJvdXQgdGhlIGNvbnN0YW50IHB1c2ggYmFjayBv
+ZiBteSBwYXRjaC48YnI+CiAgICA8YnI+CiAgICBTaG9haWI8YnI+CiAgICA8YmxvY2txdW90ZSB0
+eXBlPSJjaXRlIgpjaXRlPSJtaWQ6Q0FLdUtyQj1WM1FPajBVNlFpQ2VXdEpOVW8zcjlrc0pBMmZW
+Kzh5dUQtMndOTXE4d2RnQG1haWwuZ21haWwuY29tIj4KICAgICAgPGRpdiBkaXI9Imx0ciI+CiAg
+ICAgICAgPGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPgogICAgICAgICAgPGRpdiBjbGFzcz0iZ21h
+aWxfcXVvdGUiPgogICAgICAgICAgICA8ZGl2Pjxicj4KICAgICAgICAgICAgPC9kaXY+CiAgICAg
+ICAgICAgIDxkaXY+UmVnYXJkcyw8L2Rpdj4KICAgICAgICAgICAgPGRpdj5NYXR0aGlldTxicj4K
+ICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICAgIC0tIDxicj4KICAg
+ICAgICAgIDxkaXYgY2xhc3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9ImdtYWls
+X3NpZ25hdHVyZSI+CiAgICAgICAgICAgIDxkaXYgZGlyPSJsdHIiPgogICAgICAgICAgICAgIDxk
+aXY+CiAgICAgICAgICAgICAgICA8ZGl2IGRpcj0ibHRyIj4KICAgICAgICAgICAgICAgICAgPGRp
+dj4KICAgICAgICAgICAgICAgICAgICA8ZGl2IGRpcj0ibHRyIj4KICAgICAgICAgICAgICAgICAg
+ICAgIDx0YWJsZSBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGltZXMgTmV3ClJvbWFuJnF1b3Q7
+O2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWluZGVudDowcHg7dGV4dC10cmFuc2Zvcm06bm9u
+ZTt3b3JkLXNwYWNpbmc6MHB4IgogICAgICAgICAgICAgICAgICAgICAgICB3aWR0aD0iMTAwJSIg
+Ym9yZGVyPSIwIj4KICAgICAgICAgICAgICAgICAgICAgICAgPHRib2R5PgogICAgICAgICAgICAg
+ICAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCByb3dzcGFu
+PSIzIgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHlsZT0icGFkZGluZy1sZWZ0OjVw
+eDtwYWRkaW5nLXJpZ2h0OjVweCIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsaWdu
+PSJ0b3AiIGFsaWduPSJsZWZ0IiB3aWR0aD0iMTAiPjxhCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgaHJlZj0iaHR0cDovL3d3dy50ZXNzYXJlcy5uZXQiCiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgdGFyZ2V0PSJfYmxhbmsiIG1vei1kby1ub3Qtc2VuZD0idHJ1ZSI+PGlt
+ZwpzcmM9Imh0dHA6Ly93d3cudGVzc2FyZXMubmV0L3NpZ2xvZ28ucG5nIiBhbHQ9IlRlc3NhcmVz
+IFNBIgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbW96LWRvLW5vdC1zZW5kPSJ0
+cnVlIiBoZWlnaHQ9IjgwIgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd2lkdGg9
+IjgwIiBib3JkZXI9IjAiPjwvYT48L3RkPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRk
+CnN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWlseTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJp
+Zjtmb250LXNpemU6MTBweCIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaGVpZ2h0PSIx
+MiIgYWxpZ249ImxlZnQiPjxzcGFuCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5
+bGU9ImZvbnQtd2VpZ2h0OmJvbGQ7Y29sb3I6cmdiKDM3LDgzLDE1NSk7ZGlzcGxheTppbmxpbmUi
+Pk1hdHRoaWV1CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQmFlcnRzIHwgUiZhbXA7
+RCBFbmdpbmVlcjwvc3Bhbj48L3RkPgogICAgICAgICAgICAgICAgICAgICAgICAgIDwvdHI+CiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgPHRyPgogICAgICAgICAgICAgICAgICAgICAgICAgICAg
+PHRkCnN0eWxlPSJwYWRkaW5nOjBweDtmb250LWZhbWlseTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1z
+ZXJpZjtmb250LXNpemU6MTBweCIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaGVpZ2h0
+PSIxMiIgYWxpZ249ImxlZnQiPjxhCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHJl
+Zj0ibWFpbHRvOm1hdHRoaWV1LmJhZXJ0cyU0MHRlc3NhcmVzLm5ldCIKc3R5bGU9ImNvbG9yOnJn
+YigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0PSJfYmxhbmsiIG1vei1kby1ub3Qtc2VuZD0idHJ1
+ZSI+bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5ldDxicj4KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgPC9hPjwvdGQ+CiAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4KICAgICAg
+ICAgICAgICAgICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQK
+c3R5bGU9InBhZGRpbmc6MHB4O2ZvbnQtZmFtaWx5OkhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlm
+O2ZvbnQtc2l6ZToxMHB4IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhbGlnbj0ibGVm
+dCI+PHNwYW4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHlsZT0iZm9udC13ZWln
+aHQ6Ym9sZDtjb2xvcjpyZ2IoMzcsODMsMTU1KTtkaXNwbGF5OmlubGluZSI+VGVzc2FyZXMKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTQSB8IEh5YnJpZCBBY2Nlc3MgU29sdXRpb25z
+PGJyPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3NwYW4+PGEgaHJlZj0iaHR0cDov
+L3d3dy50ZXNzYXJlcy5uZXQiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9
+ImNvbG9yOnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiCiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0PSJfYmxhbmsiIG1vei1kby1ub3Qt
+c2VuZD0idHJ1ZSI+d3d3LnRlc3NhcmVzLm5ldDwvYT48c3Bhbj7CoDwvc3Bhbj48YnI+CiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDxhCmhyZWY9Imh0dHBzOi8vd3d3Lmdvb2dsZS5jb20v
+bWFwcz9xPTErQXZlbnVlK0plYW4rTW9ubmV0LCsxMzQ4K090dGlnbmllcy1Mb3V2YWluLWxhLU5l
+dXZlLCtCZWxnaXVtIgpzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRpb246bm9u
+ZTtkaXNwbGF5OmlubGluZSIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YXJnZXQ9
+Il9ibGFuayIgbW96LWRvLW5vdC1zZW5kPSJ0cnVlIj4xCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgQXZlbnVlIEplYW4gTW9ubmV0LCAxMzQ4CiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgTG91dmFpbi1sYS1OZXV2ZSwgQmVsZ2l1bTwvYT48L3RkPgogICAgICAgICAgICAg
+ICAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGJvZHk+CiAgICAg
+ICAgICAgICAgICAgICAgICA8L3RhYmxlPgogICAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAg
+ICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAg
+IDwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2
+PgogICAgICA8L2Rpdj4KICAgICAgPGJyPgogICAgICA8ZGl2Pjxicj4KICAgICAgICA8aHI+PC9k
+aXY+CiAgICAgIDxmb250IHNpemU9IjEiPjxzcGFuCiAgICAgICAgICBzdHlsZT0iZm9udC1mYW1p
+bHk6VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+
+RElTQ0xBSU1FUi48L3NwYW4+PGJyCnN0eWxlPSJmb250LWZhbWlseTpWZXJkYW5hLHNhbnMtc2Vy
+aWY7YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj4KICAgICAgICA8Zm9udCBzdHls
+ZT0iYmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIiBmYWNlPSJWZXJkYW5hLAogICAg
+ICAgICAgc2Fucy1zZXJpZiIgY29sb3I9IiMwMDAwMDAiPlRoaXMgZW1haWwgYW5kIGFueSBmaWxl
+cwogICAgICAgICAgdHJhbnNtaXR0ZWQgd2l0aCBpdCBhcmUgY29uZmlkZW50aWFsIGFuZCBpbnRl
+bmRlZCBzb2xlbHkgZm9yCiAgICAgICAgICB0aGUgdXNlIG9mIHRoZSBpbmRpdmlkdWFsIG9yIGVu
+dGl0eSB0byB3aG9tIHRoZXkgYXJlCiAgICAgICAgICBhZGRyZXNzZWQuIElmIHlvdSBoYXZlIHJl
+Y2VpdmVkIHRoaXMgZW1haWwgaW4gZXJyb3IgcGxlYXNlCiAgICAgICAgICBub3RpZnkgdGhlIHN5
+c3RlbSBtYW5hZ2VyLiBUaGlzIG1lc3NhZ2UgY29udGFpbnMgY29uZmlkZW50aWFsCiAgICAgICAg
+ICBpbmZvcm1hdGlvbiBhbmQgaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIGluZGl2aWR1YWwgbmFt
+ZWQuIElmCiAgICAgICAgICB5b3UgYXJlIG5vdCB0aGUgbmFtZWQgYWRkcmVzc2VlIHlvdSBzaG91
+bGQgbm90IGRpc3NlbWluYXRlLAogICAgICAgICAgZGlzdHJpYnV0ZSBvciBjb3B5IHRoaXMgZS1t
+YWlsLiBQbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIKICAgICAgICAgIGltbWVkaWF0ZWx5IGJ5IGUt
+bWFpbCBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBieQogICAgICAgICAgbWlzdGFr
+ZSBhbmQgZGVsZXRlIHRoaXMgZS1tYWlsIGZyb20geW91ciBzeXN0ZW0uIElmIHlvdSBhcmUKICAg
+ICAgICAgIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50IHlvdSBhcmUgbm90aWZpZWQgdGhhdCBk
+aXNjbG9zaW5nLAogICAgICAgICAgY29weWluZywgZGlzdHJpYnV0aW5nIG9yIHRha2luZyBhbnkg
+YWN0aW9uIGluIHJlbGlhbmNlIG9uIHRoZQogICAgICAgICAgY29udGVudHMgb2YgdGhpcyBpbmZv
+cm1hdGlvbiBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLjwvZm9udD48L2ZvbnQ+CiAgICA8L2Jsb2Nr
+cXVvdGU+CiAgICA8YnI+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============7891320728316091815==--
