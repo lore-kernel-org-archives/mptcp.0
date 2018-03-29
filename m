@@ -1,58 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============2040857095286325515=="
+Content-Type: multipart/mixed; boundary="===============0966107437702290585=="
 MIME-Version: 1.0
 From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Patch does not apply
-Date: Wed, 28 Mar 2018 18:46:20 -0700
-Message-ID: <ad8326d2-0a99-d265-1ad9-fe8d6e9fcc04@oracle.com>
-In-Reply-To: 20180328231840.12410-1-mathew.j.martineau@linux.intel.com
+Subject: Re: [MPTCP] Weekly meeting - 29 March 2018 16:00 UTC (9am PDT,
+ 6pm CEST)
+Date: Wed, 28 Mar 2018 23:17:15 -0700
+Message-ID: <d0238a64-9f9f-f517-2c97-2569786bf25f@oracle.com>
+In-Reply-To: 4314de43-98c8-f88d-6d4e-95ceb601e515@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 462
+X-UID: 463
 
---===============2040857095286325515==
+--===============0966107437702290585==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I am unable to apply the 6th patch.
 
-rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux.old(master)$git am =
 
-"/tmp/mails/[MPTCP] [RFC PATCH 03_16] mptcp: Add MPTCP socket stubs - =
+On 03/28/2018 03:03 AM, Matthieu Baerts wrote:
+> Hello,
+>
+> Our public MPTCP upstreaming weekly web conference is scheduled for =
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> - 2018-03-28 1618.eml"
-Applying: mptcp: Add MPTCP socket stubs
-.git/rebase-apply/patch:87: new blank line at EOF.
-+
-warning: 1 line adds whitespace errors.
+> tomorrow.
+>
+> The list of topics is here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20180329
+> Feel free to add/modify topics!
+>
+> Meeting link: https://talky.io/mptcp_upstreaming
+>
+> Speak to you tomorrow!
+> Matthieu
+Hi Matthieu,
 
-rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master)$git am =
+I will not be able to make it to the meeting. My daughter's flight got =
 
-"/tmp/mails/[MPTCP] [RFC PATCH 06_16] tcp: expose tcp routines and =
+canceled and now she is arriving around 9:00 AM, and I have to pick her =
 
-structs for MPTCP - Mat Martineau <mathew.j.martineau(a)linux.intel.com> - =
+up. Mat has put my patch up for review. The only action I have for the =
 
-2018-03-28 1618.eml"
-Applying: tcp: expose tcp routines and structs for MPTCP
-error: patch failed: include/net/inet_common.h:35
-error: include/net/inet_common.h: patch does not apply
-Patch failed at 0001 tcp: expose tcp routines and structs for MPTCP
-The copy of the patch that failed is found in: .git/rebase-apply/patch
-When you have resolved this problem, run "git am --continue".
-If you prefer to skip this patch, run "git am --skip" instead.
-To restore the original branch and stop patching, run "git am --abort".
+meeting is to decide when the review will end.
 
-rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master|AM 1/1)$git remote =
--v
-origin =
-
-https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git (fetch)
-origin =
-
-https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git (push)
+Regards,
 
 Shoaib
 
-
---===============2040857095286325515==--
+--===============0966107437702290585==--
