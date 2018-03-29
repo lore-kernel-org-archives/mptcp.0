@@ -1,144 +1,140 @@
-Content-Type: multipart/mixed; boundary="===============2804939898874932990=="
+Content-Type: multipart/mixed; boundary="===============5128968181942651151=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Weekly meeting - 29 March 2018 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Thu, 29 Mar 2018 10:03:46 +0200
-Message-ID: <CAKuKrB=V3QOj0U6QiCeWtJNUo3r9ksJA2fV+8yuD-2wNMq8wdg@mail.gmail.com>
-In-Reply-To: d0238a64-9f9f-f517-2c97-2569786bf25f@oracle.com
+Subject: Re: [MPTCP] Using struct socket for subflows
+Date: Thu, 29 Mar 2018 10:05:09 +0200
+Message-ID: <20180329080509.GV71178@MacBook-Pro-6.lan>
+In-Reply-To: alpine.OSX.2.21.1803280908300.16850@fmorale1-mobl2.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 464
+X-UID: 465
 
---===============2804939898874932990==
+--===============5128968181942651151==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rao,
+On 28/03/18 - 09:25:46, Mat Martineau wrote:
+> =
 
-On Thu, Mar 29, 2018 at 8:17 AM, Rao Shoaib <rao.shoaib(a)oracle.com> wrote:
+> On Wed, 28 Mar 2018, Christoph Paasch wrote:
+> =
 
-> I will not be able to make it to the meeting. My daughter's flight got
-> canceled and now she is arriving around 9:00 AM, and I have to pick her u=
-p.
-> Mat has put my patch up for review. The only action I have for the meeting
-> is to decide when the review will end.
->
+> > On 27/03/18 - 16:29:26, Mat Martineau wrote:
+> > > =
 
-Thank you for the notification!
+> > > Hi Christoph,
+> > > =
 
-Do you think we could discuss about them next week?
+> > > On Tue, 27 Mar 2018, Christoph Paasch wrote:
+> > > =
 
-Regards,
-Matthieu
--- =
+> > > > Hello,
+> > > > =
 
-[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
-Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
-in-la-Neuve,+Belgium>
+> > > > =
 
--- =
+> > > > (first, sorry for the long e-mail)
+> > > > =
+
+> > > > =
+
+> > > > I now started working on cleaning up the input path to prepare it f=
+or
+> > > > input-processing without holding the MPTCP-level lock.
+> > > > =
+
+> > > > To do this, I go through all the places where we access data-struct=
+ures from
+> > > > the meta-socket and see if I can move it to mptcp_data_ready or
+> > > > mptcp_write_space (the callbacks that are called from
+> > > > sk_data_ready/sk_write_space).
+> > > > =
+
+> > > > In tcp_check_space() we have the following:
+> > > >                if (mptcp(tcp_sk(sk)) ||
+> > > >                    (sk->sk_socket &&
+> > > >                     test_bit(SOCK_NOSPACE, &sk->sk_socket->flags)))=
+ {
+> > > >                        tcp_new_space(sk);
+> > > >                        if (sk->sk_socket && !test_bit(SOCK_NOSPACE,=
+ &sk->sk_socket->flags))
+> > > >                                tcp_chrono_stop(sk, TCP_CHRONO_SNDBU=
+F_LIMITED);
+> > > >                }
+> > > > =
+
+> > > > We do the if (mptcp(...)), because currently subflow's sk_socket is=
+ pointing to
+> > > > application's struct socket. Thus, we need to avoid the check for
+> > > > SOCK_NOSPACE, as otherwise we might end up not calling sk_write_spa=
+ce.
+> > > > =
+
+> > > > =
+
+> > > > Other kernel-modules that create TCP-connections rather have an in-=
+kernel
+> > > > struct socket. And modules like RDS even force SOCK_NOSPACE to be s=
+et, such
+> > > > that the TCP-stack keeps on up-calling. I thought that this was a g=
+ood thing
+> > > > to do in MPTCP as well.
+> > > > =
+
+> > > > So, my goal became to have a fully functional struct socket for sub=
+flows.
+> > > > The benefit is also that we can end up using kernel_sendmsg,
+> > > > kernel_recvmsg,... in the future. It also allows to do kernel_accep=
+t() on
+> > > > the MPTCP-level socket to receive new subflows (a problem I mention=
+ed in an
+> > > > earlier mail).
+> > > =
+
+> > > I think we'll have a patch set illustrating this approach ready to po=
+st
+> > > tomorrow.
+> > =
+
+> > Awesome! I am waiting for your patch :)
+> > =
+
+> > > Peter and I have been working on this net-next-based code with
+> > > in-kernel sockets for many months now. I missed the SOCK_NOSPACE deta=
+il
+> > > though - I'll take a look at that.
+> > > =
+
+> > > Rather than using kernel_sendmsg and kernel_recvmsg, I use do_tcp_sen=
+dpages
+> > > (to reduce copying and let the MPTCP connection layer share data acro=
+ss skbs
+> > > and subflows as it needs to) and tcp_read_sock (to read intact skbs o=
+ut of
+> > > the rx queue). The kernel_* functions are used for most everything el=
+se
+> > > though.
+> > =
+
+> > Do you also handle kernel_accept ?
+> > If yes, how do you do it? Because, it's quite complex to avoid races.
+> =
+
+> Yes, but we don't support joins yet so it's maybe only the trivial case. =
+The
+> connection level socket owns a subflow listening socket (which it created=
+ at
+> init time), and when the application calls accept() it's immediately pass=
+ed
+> through to kernel_accept() for the subflow.
+
+I see you posted your patches. I will try to go over them before our
+meeting tonight.
 
 
-------------------------------
-DISCLAIMER.
-This email and any files transmitted with it are confidential and intended =
+Christoph
 
-solely for the use of the individual or entity to whom they are addressed. =
 
-If you have received this email in error please notify the system manager. =
-
-This message contains confidential information and is intended only for the =
-
-individual named. If you are not the named addressee you should not =
-
-disseminate, distribute or copy this e-mail. Please notify the sender =
-
-immediately by e-mail if you have received this e-mail by mistake and =
-
-delete this e-mail from your system. If you are not the intended recipient =
-
-you are notified that disclosing, copying, distributing or taking any =
-
-action in reliance on the contents of this information is strictly =
-
-prohibited.
-
---===============2804939898874932990==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSBSYW8sPC9kaXY+PGRpdj48L2Rpdj48ZGl2IGNsYXNzPSJn
-bWFpbF9leHRyYSI+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj5PbiBUaHUsIE1hciAyOSwg
-MjAxOCBhdCA4OjE3IEFNLCBSYW8gU2hvYWliIDxzcGFuIGRpcj0ibHRyIj4mbHQ7PGEgaHJlZj0i
-bWFpbHRvOnJhby5zaG9haWJAb3JhY2xlLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPnJhby5zaG9haWJA
-b3JhY2xlLmNvbTwvYT4mZ3Q7PC9zcGFuPiB3cm90ZTo8YnI+PGJsb2NrcXVvdGUgY2xhc3M9Imdt
-YWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mg
-c29saWQ7cGFkZGluZy1sZWZ0OjFleCI+PHNwYW4gY2xhc3M9IiI+Cjwvc3Bhbj4KSSB3aWxsIG5v
-dCBiZSBhYmxlIHRvIG1ha2UgaXQgdG8gdGhlIG1lZXRpbmcuIE15IGRhdWdodGVyJiMzOTtzIGZs
-aWdodCBnb3QgY2FuY2VsZWQgYW5kIG5vdyBzaGUgaXMgYXJyaXZpbmcgYXJvdW5kIDk6MDAgQU0s
-IGFuZCBJIGhhdmUgdG8gcGljayBoZXIgdXAuIE1hdCBoYXMgcHV0IG15IHBhdGNoIHVwIGZvciBy
-ZXZpZXcuIFRoZSBvbmx5IGFjdGlvbiBJIGhhdmUgZm9yIHRoZSBtZWV0aW5nIGlzIHRvIGRlY2lk
-ZSB3aGVuIHRoZSByZXZpZXcgd2lsbCBlbmQuPGJyPjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rp
-dj48ZGl2PlRoYW5rIHlvdSBmb3IgdGhlIG5vdGlmaWNhdGlvbiE8L2Rpdj48ZGl2Pjxicj48L2Rp
-dj48ZGl2PkRvIHlvdSB0aGluayB3ZSBjb3VsZCBkaXNjdXNzIGFib3V0IHRoZW0gbmV4dCB3ZWVr
-PzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+UmVnYXJkcyw8L2Rpdj48ZGl2Pk1hdHRoaWV1PGJy
-PjwvZGl2PjwvZGl2Pi0tIDxicj48ZGl2IGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiIGRhdGEtc21h
-cnRtYWlsPSJnbWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0
-ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48dGFibGUgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1Rp
-bWVzIE5ldyBSb21hbiZxdW90OztsZXR0ZXItc3BhY2luZzpub3JtYWw7dGV4dC1pbmRlbnQ6MHB4
-O3RleHQtdHJhbnNmb3JtOm5vbmU7d29yZC1zcGFjaW5nOjBweCIgd2lkdGg9IjEwMCUiIGJvcmRl
-cj0iMCI+PHRib2R5Pjx0cj48dGQgcm93c3Bhbj0iMyIgc3R5bGU9InBhZGRpbmctbGVmdDo1cHg7
-cGFkZGluZy1yaWdodDo1cHgiIHdpZHRoPSIxMCIgdmFsaWduPSJ0b3AiIGFsaWduPSJsZWZ0Ij48
-YSBocmVmPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldCIgdGFyZ2V0PSJfYmxhbmsiPjxpbWcgc3Jj
-PSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldC9zaWdsb2dvLnBuZyIgYWx0PSJUZXNzYXJlcyBTQSIg
-d2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBib3JkZXI9IjAiPjwvYT48L3RkPjx0ZCBzdHlsZT0icGFk
-ZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXpl
-OjEwcHgiIGhlaWdodD0iMTIiIGFsaWduPSJsZWZ0Ij48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6
-Ym9sZDtjb2xvcjpyZ2IoMzcsODMsMTU1KTtkaXNwbGF5OmlubGluZSI+TWF0dGhpZXUgQmFlcnRz
-IHwgUiZhbXA7RCBFbmdpbmVlcjwvc3Bhbj48L3RkPjwvdHI+PHRyPjx0ZCBzdHlsZT0icGFkZGlu
-ZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEw
-cHgiIGhlaWdodD0iMTIiIGFsaWduPSJsZWZ0Ij48YSBocmVmPSJtYWlsdG86bWF0dGhpZXUuYmFl
-cnRzJTQwdGVzc2FyZXMubmV0IiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRp
-b246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFyZ2V0PSJfYmxhbmsiPm1hdHRoaWV1LmJhZXJ0c0B0
-ZXNzYXJlcy5uZXQ8YnI+PC9hPjwvdGQ+PC90cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtm
-b250LWZhbWlseTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgYWxp
-Z249ImxlZnQiPjxzcGFuIHN0eWxlPSJmb250LXdlaWdodDpib2xkO2NvbG9yOnJnYigzNyw4Mywx
-NTUpO2Rpc3BsYXk6aW5saW5lIj5UZXNzYXJlcyBTQSB8IEh5YnJpZCBBY2Nlc3MgU29sdXRpb25z
-PGJyPjwvc3Bhbj48YSBocmVmPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldCIgc3R5bGU9ImNvbG9y
-OnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0i
-X2JsYW5rIj53d3cudGVzc2FyZXMubmV0PC9hPjxzcGFuPsKgPC9zcGFuPjxicj48YSBocmVmPSJo
-dHRwczovL3d3dy5nb29nbGUuY29tL21hcHM/cT0xK0F2ZW51ZStKZWFuK01vbm5ldCwrMTM0OCtP
-dHRpZ25pZXMtTG91dmFpbi1sYS1OZXV2ZSwrQmVsZ2l1bSIgc3R5bGU9ImNvbG9yOnJnYigwLDAs
-MCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj4x
-IEF2ZW51ZSBKZWFuIE1vbm5ldCwgMTM0OCBMb3V2YWluLWxhLU5ldXZlLCBCZWxnaXVtPC9hPjwv
-dGQ+PC90cj48L3Rib2R5PjwvdGFibGU+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9k
-aXY+CjwvZGl2PjwvZGl2PgoKPGJyPgo8ZGl2Pjxicj48aHI+PC9kaXY+PGZvbnQgc2l6ZT0iMSI+
-PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OlZlcmRhbmEsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kLWNv
-bG9yOnJnYigyNTUsMjU1LDI1NSkiPkRJU0NMQUlNRVIuPC9zcGFuPjxiciBzdHlsZT0iZm9udC1m
-YW1pbHk6VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1
-KSI+PGZvbnQgY29sb3I9IiMwMDAwMDAiIGZhY2U9IlZlcmRhbmEsIHNhbnMtc2VyaWYiIHN0eWxl
-PSJiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPlRoaXMgZW1haWwgYW5kIGFueSBm
-aWxlcyB0cmFuc21pdHRlZCB3aXRoIGl0IGFyZSBjb25maWRlbnRpYWwgYW5kIGludGVuZGVkIHNv
-bGVseSBmb3IgdGhlIHVzZSBvZiB0aGUgaW5kaXZpZHVhbCBvciBlbnRpdHkgdG8gd2hvbSB0aGV5
-IGFyZSBhZGRyZXNzZWQuIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwgaW4gZXJyb3Ig
-cGxlYXNlIG5vdGlmeSB0aGUgc3lzdGVtIG1hbmFnZXIuIFRoaXMgbWVzc2FnZSBjb250YWlucyBj
-b25maWRlbnRpYWwgaW5mb3JtYXRpb24gYW5kIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBpbmRp
-dmlkdWFsIG5hbWVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgbmFtZWQgYWRkcmVzc2VlIHlvdSBzaG91
-bGQgbm90IGRpc3NlbWluYXRlLCBkaXN0cmlidXRlIG9yIGNvcHkgdGhpcyBlLW1haWwuIFBsZWFz
-ZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBieSBlLW1haWwgaWYgeW91IGhhdmUgcmVj
-ZWl2ZWQgdGhpcyBlLW1haWwgYnkgbWlzdGFrZSBhbmQgZGVsZXRlIHRoaXMgZS1tYWlsIGZyb20g
-eW91ciBzeXN0ZW0uIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgeW91IGFy
-ZSBub3RpZmllZCB0aGF0IGRpc2Nsb3NpbmcsIGNvcHlpbmcsIGRpc3RyaWJ1dGluZyBvciB0YWtp
-bmcgYW55IGFjdGlvbiBpbiByZWxpYW5jZSBvbiB0aGUgY29udGVudHMgb2YgdGhpcyBpbmZvcm1h
-dGlvbiBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLjwvZm9udD48L2ZvbnQ+
---===============2804939898874932990==--
+--===============5128968181942651151==--
