@@ -1,132 +1,119 @@
-Content-Type: multipart/mixed; boundary="===============3335177138971264193=="
+Content-Type: multipart/mixed; boundary="===============1712482126667308956=="
 MIME-Version: 1.0
 From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Patch does not apply
-Date: Thu, 29 Mar 2018 12:01:00 -0700
-Message-ID: <dff16cb5-970b-b3f1-0189-d8b09ef58857@oracle.com>
-In-Reply-To: 20180329181213.GC71178@MacBook-Pro-6.lan
+Subject: Re: [MPTCP] Using struct socket for subflows
+Date: Thu, 29 Mar 2018 12:19:38 -0700
+Message-ID: <7aca469a-a2ed-b795-cd9f-9eca5f2fe0a0@oracle.com>
+In-Reply-To: 20180328213303.GB31782@greed.cult
 X-Status: 
 X-Keywords:                  
-X-UID: 471
+X-UID: 472
 
---===============3335177138971264193==
+--===============1712482126667308956==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Steve,
+
+Sorry I did not respond to your email, too many issues to worry about :-)
 
 
-On 03/29/2018 11:12 AM, Christoph Paasch wrote:
-> On 29/03/18 - 10:41:08, Rao Shoaib wrote:
->> On 03/29/2018 08:40 AM, Mat Martineau wrote:
->>> On Wed, 28 Mar 2018, Rao Shoaib wrote:
->>>> I am unable to apply the 6th patch.
->>>>
->>>> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux.old(master)$git am
->>>> "/tmp/mails/[MPTCP] [RFC PATCH 03_16] mptcp: Add MPTCP socket stubs
->>>> - Mat Martineau <mathew.j.martineau(a)linux.intel.com> - 2018-03-28
->>>> 1618.eml"
->>>> Applying: mptcp: Add MPTCP socket stubs
->>>> .git/rebase-apply/patch:87: new blank line at EOF.
->>>> +
->>>> warning: 1 line adds whitespace errors.
->>>>
->>>> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master)$git am
->>>> "/tmp/mails/[MPTCP] [RFC PATCH 06_16] tcp: expose tcp routines and
->>>> structs for MPTCP - Mat Martineau
->>>> <mathew.j.martineau(a)linux.intel.com> - 2018-03-28 1618.eml"
->>>> Applying: tcp: expose tcp routines and structs for MPTCP
->>>> error: patch failed: include/net/inet_common.h:35
->>>> error: include/net/inet_common.h: patch does not apply
->>>> Patch failed at 0001 tcp: expose tcp routines and structs for MPTCP
->>>> The copy of the patch that failed is found in: .git/rebase-apply/patch
->>>> When you have resolved this problem, run "git am --continue".
->>>> If you prefer to skip this patch, run "git am --skip" instead.
->>>> To restore the original branch and stop patching, run "git am --abort".
->>>>
->>>> rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master|AM 1/1)$git
->>>> remote -v
->>>> origin
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git
->>>> (fetch)
->>>> origin
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git
->>>> (push)
->>> If you cloned my git.kernel.org repo (which appears to be the case from
->>> your 'git remote -v' output), you shouldn't need to apply the patches
->>> from email. Instead:
+On 03/28/2018 02:33 PM, Stephen Brennan wrote:
+> Hi Rao et al.,
+>
+> On Tue, Mar 27, 2018 at 06:53:46PM -0700, Rao Shoaib wrote:
+>>
+>> On 03/27/2018 05:04 AM, Lorenzo Colitti wrote:
+>>> On Tue, Mar 27, 2018 at 11:18 AM, Christoph Paasch <cpaasch(a)apple.com
+>>> <mailto:cpaasch(a)apple.com>> wrote:
 >>>
->>> $ git checkout -t origin/mptcp-proposal
->>>
->>> will get you the commits directly from the git server.
+>>>      It also would allow us to expose subflows as file-descriptors to t=
+he
+>>>      user-space. That way the user-space can do setsockopt,
+>>>      getsockopt,... on the
+>>>      subflows. An idea that came up in the past when we were thinking
+>>>      on how to
+>>>      expose an MPTCP API that allows apps to control certain things on =
+the
+>>>      subflows.
 >>>
 >>>
->>> Just to be specific, to apply the patches from email instead of directly
->>> checking out, you would clone
->>> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git and
->>> apply the patches to that repository. In addition, I'm not 100% sure
->>> 'git am' understands .eml files - the man page for the latest git
->>> release mentions maildir, mbox, mboxrd, stgit, stgit-series and hg as
->>> supported email formats.
->>>
->>> Hope this helps!
->>>
->>> -- =
+>>> +1 to this since it will allow client platforms to use setsockopt to,
+>>> for example, bind subflows to interfaces (e.g., with SO_BINDTODEVICE, or
+>>> with SO_MARK as used by Android).
+>> May I ask why it can not be done=C2=A0 -- Only flow id should be needed.
+> It sounds like you're referring to the proposed MPTCP_SUB_GETSOCKOPT and
+> MPTCP_SUB_SETSOCKOPT operations in this IETF draft [1], correct?
+>
+> [1]: https://tools.ietf.org/html/draft-hesmans-mptcp-socket-00
+Actually I have not read the draft, my comment was based on general =
 
->>> Mat Martineau
->>> Intel OTC
->> Hi Mat,
->>
->> For some reason that was not clear to me, anyways I just looked at the
->> patches and I am sorry to say I do not see any thing special about the
->> patch.
->>
->> For example the patch uses
->>
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .conn_request=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 =3D subflow_conn_request,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .syn_recv_sock=C2=A0=C2=A0=C2=A0=
-=C2=A0 =3D subflow_syn_recv_sock,
->>
->> The original implementation used
->>
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .conn_request=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 =3D mptcp_conn_request,
->>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .syn_recv_sock=C2=A0=C2=A0=
-=C2=A0=C2=A0 =3D tcp_v4_syn_recv_sock,
->>
->> subflow_syn_recv_sock() calls tcp_v4_syn_recv_sock()
->>
->> The patch handles options exactly the same way as they have always been
->> handled. Old implementation had struct mptcp_request_sock the patch has
->> struct subflow_request_sock.
->>
->> The patch is incomplete as it can not exchange any data using MPTCP. I s=
-ee
->> no reason to use this approach, we have a working implementation and that
->> should be used and improved upon.
-> I think the intention with this patchset was to show how the struct prot
-> and exposing MPTCP fully at the socket layer allows to simplify things.
-It does=C2=A0 not, Look at my patch, compare and post.
->
-> Creation of a real struct socket for subflows is also going to help a lot,
-> as that's the path forward to enable proper lock-separation. We can't tak=
-e the
-> meta-socket lock in the TCP-stack as I mentioned in my review to your
-> patchset.
->
->
-> So, in that sense for the above two points, the patchset is very useful as
-> it shows how MPTCP fits in such a model.
-It does not show anything because it does nothing.
+understanding of the kernel. I am coming of Solaris and we know how to =
 
-Rao.
+create custom socket, special setopt/getopt , special fd's to expose =
 
+something etc etc. It is not rocket science. If someone has already =
+
+thought of it then we have less work to do.
+
+Any change of this kind has to be discussed in a standards body so =
+
+vendors and users can comment.
+>
+>> Plus for
+>> policy enforcement the meta socket would have to be consulted. I am new =
+to
+>> Linux but based on what I have read SO_BINDTODEVICE does not guarantee m=
+uch
+>> for Tx if the routing says otherwise, quick check of ip_queue_xmit() sho=
+ws
+>> it first consults the routing table. I understand policy routing can be =
+used
+>> to steer the packets. Perhaps my understanding is incorrect.
+>>
+>> IMHO this whole idea of exposing individual flows to the application see=
+ms
+>> to go against the basic design of MPTCP. I am not sure what the use case=
+ is
+>> as TCP is streams based and MPTCP will spread out data on multiple flows=
+. I
+>> am not a involved in the cellular space so I don' know, feel free to
+>> enlighten me.
+> I'm also a bit confused at this. I've read the Socket API drafts from IET=
+F,
+> which seem to be motivated by the idea that mobile apps will want to
+> directly control which subflows and paths are created (similar to the iOS
+> APIs released recently). It sounds like we have two approaches: (1) MPTCP
+> as a drop-in replacement for TCP, so unmodified applications may use it,
+> and (2) MPTCP as an explicitly requested protocol which user-space
+> applications request, and then manipulate via socket options. Given the
+> amount of drafts and other work put in so far, it seems that use case (2)
+> has enough demand that it ought to be supported.
+Can you point me to the drafts or requests. As I said with the current =
+
+design everything is possible. No change is needed.
+
+Shoaib
+>
+> Going slightly off topic from this discussion, it seems that a lot of what
+> is desired in use case (2) is allowing the application to manage its own
+> paths. We now have a Netlink API for userspace path managers. Have we
+> thought about the possibility of a userspace application creating an MPTCP
+> socket, and also a netlink socket, so that it could manage its own paths?
+> Just an off-the-wall idea. If such a thing were possible, it could give t=
+he
+> userspace app much more control over its own path management, while
+> reducing duplication of functionality in-kernel (e.g. wouldn't have both
+> socket option for opening a subflow, plus a netlink command for opening a
+> subflow). A userspace library could hide some of this complexity for users
+> of use-case (2), while still allowing use-case (1) to exist through the
+> normal socket API.
+>
+> Stephen
 >
 >
-> Christoph
->
 
 
---===============3335177138971264193==--
+--===============1712482126667308956==--
