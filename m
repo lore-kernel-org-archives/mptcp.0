@@ -1,122 +1,203 @@
-Content-Type: multipart/mixed; boundary="===============6342103388617448871=="
+Content-Type: multipart/mixed; boundary="===============6087600112299580308=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Krystad, Peter <peter.krystad at intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
-Date: Fri, 30 Mar 2018 11:24:52 -0700
-Message-ID: <4fbe3680-0e1a-d642-c369-c5d8334dfdfe@oracle.com>
-In-Reply-To: 1522432497.16359.84.camel@intel.com
+Subject: Re: [MPTCP] Patch does not apply
+Date: Fri, 30 Mar 2018 18:25:19 +0000
+Message-ID: <1522434318.16359.97.camel@intel.com>
+In-Reply-To: dff16cb5-970b-b3f1-0189-d8b09ef58857@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 489
+X-UID: 490
 
---===============6342103388617448871==
+--===============6087600112299580308==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, 2018-03-29 at 12:01 -0700, Rao Shoaib wrote:
+> =
 
+> On 03/29/2018 11:12 AM, Christoph Paasch wrote:
+> > On 29/03/18 - 10:41:08, Rao Shoaib wrote:
+> > > On 03/29/2018 08:40 AM, Mat Martineau wrote:
+> > > > On Wed, 28 Mar 2018, Rao Shoaib wrote:
+> > > > > I am unable to apply the 6th patch.
+> > > > > =
 
-On 03/30/2018 10:54 AM, Krystad, Peter wrote:
-> Hi Rao -
->
-> Review complete. I've supplied just a few comments on specific items.
->
-> Overall I think the patchset shows a re-factoring of TCP that is more
-> structured than the existing Linux implementations "changes all over
-> TCP" approach (my apologies to the contributors) but does not really
-> address any of that implementations other weaknesses or non-
-> upstreamable nature.
->
-> Without any MPTCP code or explanation to provide context to netdev
-> maintainers it can't stand as a patchset to provide an overall view of
-> what the MPTCP implementation will look like. It could provide material
->   to pose the question "is re-factoring TCP like this acceptable?".
-And that is the whole point of this exercise, to ask upstream if we are =
+> > > > > rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux.old(master)$git =
+am
+> > > > > "/tmp/mails/[MPTCP] [RFC PATCH 03_16] mptcp: Add MPTCP socket stu=
+bs
+> > > > > - Mat Martineau <mathew.j.martineau(a)linux.intel.com> - 2018-03-=
+28
+> > > > > 1618.eml"
+> > > > > Applying: mptcp: Add MPTCP socket stubs
+> > > > > .git/rebase-apply/patch:87: new blank line at EOF.
+> > > > > +
+> > > > > warning: 1 line adds whitespace errors.
+> > > > > =
 
-on the right track. You mention "implementations other weaknesses". Can =
+> > > > > rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master)$git am
+> > > > > "/tmp/mails/[MPTCP] [RFC PATCH 06_16] tcp: expose tcp routines and
+> > > > > structs for MPTCP - Mat Martineau
+> > > > > <mathew.j.martineau(a)linux.intel.com> - 2018-03-28 1618.eml"
+> > > > > Applying: tcp: expose tcp routines and structs for MPTCP
+> > > > > error: patch failed: include/net/inet_common.h:35
+> > > > > error: include/net/inet_common.h: patch does not apply
+> > > > > Patch failed at 0001 tcp: expose tcp routines and structs for MPT=
+CP
+> > > > > The copy of the patch that failed is found in: .git/rebase-apply/=
+patch
+> > > > > When you have resolved this problem, run "git am --continue".
+> > > > > If you prefer to skip this patch, run "git am --skip" instead.
+> > > > > To restore the original branch and stop patching, run "git am --a=
+bort".
+> > > > > =
 
-you be more specific. I will review your comments and see if that =
+> > > > > rshoaib(a)caduceus5:/home/mptcp/sock_mptcp/linux(master|AM 1/1)$g=
+it
+> > > > > remote -v
+> > > > > origin
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.g=
+it
+> > > > > (fetch)
+> > > > > origin
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.g=
+it
+> > > > > (push)
+> > > > =
 
-answers my question. Please also note that MPTCP code was not ready but =
+> > > > If you cloned my git.kernel.org repo (which appears to be the case =
+from
+> > > > your 'git remote -v' output), you shouldn't need to apply the patch=
+es
+> > > > from email. Instead:
+> > > > =
 
-I provided for completeness. I do not think upstream initially really =
+> > > > $ git checkout -t origin/mptcp-proposal
+> > > > =
 
-cares about what happens in MPTCP.
+> > > > will get you the commits directly from the git server.
+> > > > =
 
-Shoaib
+> > > > =
 
->
-> Regards,
->
-> Peter.
->
->
-> On Thu, 2018-02-22 at 15:49 -0800, rao.shoaib(a)oracle.com wrote:
->> From: Rao Shoaib <rao.shoaib(a)oracle.com>
->>
->> Following patches modify TCP code to enable implementation of MPTCP. MPT=
-CP implementation requires sharing of TCP code with minor modification here=
- and there. In order to keep the TCP code clean and easy to maintain, commo=
-n code has been moved to new functions for use by both TCP and MPTCP. struc=
-t tcp_sock now has function pointers and based on the socket type (TCP/MPTC=
-P) appropriate function is called.
->>
->> A basic implementation of MPTCP that works with IPv4/IPv6 and supports j=
-oin has been tested based on these changes.
->>
->> The changes are being submitted as an RFC to get feedback from the commu=
-nity and to start a discussion on how to move forward.
->>
->> Rao Shoaib (9):
->>    Modify tcp structures to support function pointers
->>    Introduce MPTCP specific elements that will co-exist with TCP even
->>      when MPTCP is not compiled
->>    Introduce MPTCP specific elements that can be under #ifdef
->>      MPTCP_CONFIG
->>    Populate function pointers -- few (5) will be populated later
->>    Switch code to use function pointers
->>    Make TCP options processing abstract
->>    Restructure syncookie code to use pointers
->>    Restructure TCP code so that it can be shared primarily with MPTCP
->>    Add MPTCP specific code to core TCP code
->>
->>   crypto/md5.c                    |   3 -
->>   include/crypto/md5.h            |   2 +
->>   include/linux/tcp.h             |  91 ++++++++++++
->>   include/net/inet_common.h       |   2 +
->>   include/net/inet_sock.h         |   6 +-
->>   include/net/net_namespace.h     |   6 +
->>   include/net/secure_seq.h        |   9 +-
->>   include/net/sock.h              |   1 +
->>   include/net/tcp.h               | 321 ++++++++++++++++++++++++++++++++=
-++++++--
->>   include/net/tcp_states.h        |   4 +-
->>   include/net/transp_v6.h         |   3 -
->>   include/uapi/linux/bpf.h        |   4 +-
->>   include/uapi/linux/if.h         |   5 +
->>   include/uapi/linux/tcp.h        |   1 +
->>   net/core/secure_seq.c           |  70 +++++++++
->>   net/ipv4/af_inet.c              |  16 +-
->>   net/ipv4/inet_connection_sock.c |  17 ++-
->>   net/ipv4/ip_sockglue.c          |  20 +++
->>   net/ipv4/syncookies.c           | 112 ++++++++++----
->>   net/ipv4/tcp.c                  | 221 +++++++++++++++++++++------
->>   net/ipv4/tcp_input.c            | 195 ++++++++++++++----------
->>   net/ipv4/tcp_ipv4.c             | 112 ++++++++++----
->>   net/ipv4/tcp_minisocks.c        |  56 ++++++-
->>   net/ipv4/tcp_output.c           | 206 +++++++++++++++-----------
->>   net/ipv4/tcp_timer.c            |  55 +++++--
->>   net/ipv6/af_inet6.c             |   4 +-
->>   net/ipv6/ipv6_sockglue.c        |  14 ++
->>   net/ipv6/syncookies.c           |  40 +----
->>   net/ipv6/tcp_ipv6.c             | 163 +++++++++++++-------
->>   29 files changed, 1360 insertions(+), 399 deletions(-)
->>
+> > > > Just to be specific, to apply the patches from email instead of dir=
+ectly
+> > > > checking out, you would clone
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git =
+and
+> > > > apply the patches to that repository. In addition, I'm not 100% sure
+> > > > 'git am' understands .eml files - the man page for the latest git
+> > > > release mentions maildir, mbox, mboxrd, stgit, stgit-series and hg =
+as
+> > > > supported email formats.
+> > > > =
+
+> > > > Hope this helps!
+> > > > =
+
+> > > > -- =
+
+> > > > Mat Martineau
+> > > > Intel OTC
+> > > =
+
+> > > Hi Mat,
+> > > =
+
+> > > For some reason that was not clear to me, anyways I just looked at the
+> > > patches and I am sorry to say I do not see any thing special about the
+> > > patch.
+> > > =
+
+> > > For example the patch uses
+> > > =
+
+> > > +       .conn_request      =3D subflow_conn_request,
+> > > +       .syn_recv_sock     =3D subflow_syn_recv_sock,
+> > > =
+
+> > > The original implementation used
+> > > =
+
+> > >          .conn_request      =3D mptcp_conn_request,
+> > >          .syn_recv_sock     =3D tcp_v4_syn_recv_sock,
+> > > =
+
+> > > subflow_syn_recv_sock() calls tcp_v4_syn_recv_sock()
+> > > =
+
+> > > The patch handles options exactly the same way as they have always be=
+en
+> > > handled. Old implementation had struct mptcp_request_sock the patch h=
+as
+> > > struct subflow_request_sock.
+> > > =
+
+> > > The patch is incomplete as it can not exchange any data using MPTCP. =
+I see
+> > > no reason to use this approach, we have a working implementation and =
+that
+> > > should be used and improved upon.
+> > =
+
+> > I think the intention with this patchset was to show how the struct prot
+> > and exposing MPTCP fully at the socket layer allows to simplify things.
+> =
+
+> It does  not, Look at my patch, compare and post.
+
+I did look at your patchset. This one has ~200 lines of code change in
+net/ipv4/*.c, a very low impact, yours is >1000. While yours has more
+functionality this one is simpler, in the sense of having less obvious
+impact to TCP code.
+
+> > =
+
+> > Creation of a real struct socket for subflows is also going to help a l=
+ot,
+> > as that's the path forward to enable proper lock-separation. We can't t=
+ake the
+> > meta-socket lock in the TCP-stack as I mentioned in my review to your
+> > patchset.
+> > =
+
+> > =
+
+> > So, in that sense for the above two points, the patchset is very useful=
+ as
+> > it shows how MPTCP fits in such a model.
+> =
+
+> It does not show anything because it does nothing.
+
+I beg to differ. The point of this patchset is to show, not do. We had
+direct feedback from the netdev maintainers that "something like KCM"
+would be of interest to them, this is an attempt at that.
+
+Regards,
+
+Peter.
+ =
+
+> =
+
+> Rao.
+> =
+
+> > =
+
+> > =
+
+> > Christoph
+> > =
+
+> =
+
 > _______________________________________________
 > mptcp mailing list
 > mptcp(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/mptcp
-
-
---===============6342103388617448871==--
+--===============6087600112299580308==--
