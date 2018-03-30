@@ -1,364 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============8828988622664436270=="
+Content-Type: multipart/mixed; boundary="===============6220990399557529015=="
 MIME-Version: 1.0
 From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 1/9] Modify tcp structures to support function
- pointers
-Date: Fri, 30 Mar 2018 11:37:25 -0700
-Message-ID: <140de777-8d5d-0f93-8f5b-a5467fa5e18b@oracle.com>
-In-Reply-To: 1522432520.16359.88.camel@intel.com
+Subject: Re: [MPTCP] Patch does not apply
+Date: Fri, 30 Mar 2018 12:07:46 -0700
+Message-ID: <acc51422-9436-c847-2e69-b0f66e168ce0@oracle.com>
+In-Reply-To: 1522434318.16359.97.camel@intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 494
+X-UID: 495
 
---===============8828988622664436270==
+--===============6220990399557529015==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
 
-On 03/30/2018 10:55 AM, Krystad, Peter wrote:
-> Hi -
+On 03/30/2018 11:25 AM, Krystad, Peter wrote:
 >
-> Also beginning a review, see inline....
+>>> I think the intention with this patchset was to show how the struct prot
+>>> and exposing MPTCP fully at the socket layer allows to simplify things.
+>> It does  not, Look at my patch, compare and post.
+> I did look at your patchset. This one has ~200 lines of code change in
+> net/ipv4/*.c, a very low impact, yours is >1000. While yours has more
+> functionality this one is simpler, in the sense of having less obvious
+> impact to TCP code.
+Hi Peter,
+
+No offense to you and Mat.
+If I were to implement the same level of functionality I would make the =
+
+same number of changes. I can take RDS code right now and create an =
+
+MPTCP connection. That is all this patch does.
+
 >
-> On Thu, 2018-02-22 at 15:49 -0800, rao.shoaib(a)oracle.com wrote:
->> From: Rao Shoaib <rao.shoaib(a)oracle.com>
->>
->> Signed-off-by: Rao Shoaib <rao.shoaib(a)oracle.com>
->> ---
->>   include/linux/tcp.h   |  13 +++++
->>   include/net/tcp.h     | 129
->> ++++++++++++++++++++++++++++++++++++++++++++++----
->>   net/ipv4/tcp_input.c  |  13 -----
->>   net/ipv4/tcp_output.c |  11 -----
->>   4 files changed, 133 insertions(+), 33 deletions(-)
->>
->> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
->> index 8f4c549..612360b 100644
->> --- a/include/linux/tcp.h
->> +++ b/include/linux/tcp.h
->> @@ -83,6 +83,17 @@ struct tcp_sack_block {
->>   	u32	end_seq;
->>   };
->>   =
-
->> +struct tcp_out_options {
->> +	u16 options;		/* bit field of OPTION_* */
->> +	u16 mss;		/* 0 to disable */
->> +	u8 ws;			/* window scale, 0 to disable
->> */
->> +	u8 num_sack_blocks;	/* number of SACK blocks to
->> include */
->> +	u8 hash_size;		/* bytes in hash_location */
->> +	__u8 *hash_location;	/* temporary pointer, overloaded
->> */
->> +	__u32 tsval, tsecr;	/* need to include OPTION_TS */
->> +	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast
->> open cookie */
->> +};
->> +
->>   /*These are used to set the sack_ok field in struct
->> tcp_options_received */
->>   #define TCP_SACK_SEEN     (1 << 0)   /*1 =3D peer is SACK capable, */
->>   #define TCP_DSACK_SEEN    (1 << 2)   /*1 =3D DSACK was received from
->> peer*/
->> @@ -384,6 +395,8 @@ struct tcp_sock {
->>   	 */
->>   	struct request_sock *fastopen_rsk;
->>   	u32	*saved_syn;
->> +	const struct tcp_operational_ops	*op_ops;
->> +	const struct tcp_state_ops		*state_ops;
->>   };
->>   =
-
->>   enum tsq_enum {
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index 92b06c6..8bc724f 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -250,6 +250,17 @@ extern atomic_long_t tcp_memory_allocated;
->>   extern struct percpu_counter tcp_sockets_allocated;
->>   extern unsigned long tcp_memory_pressure;
->>   =
-
->> +enum tcp_synack_type {
->> +	TCP_SYNACK_NORMAL,
->> +	TCP_SYNACK_FASTOPEN,
->> +	TCP_SYNACK_COOKIE,
->> +};
->> +
->> +enum tcp_queue {
->> +	TCP_FRAG_IN_WRITE_QUEUE,
->> +	TCP_FRAG_IN_RTX_QUEUE,
->> +};
->> +
->>   /* optimized version of sk_under_memory_pressure() for TCP sockets
->> */
->>   static inline bool tcp_under_memory_pressure(const struct sock *sk)
->>   {
->> @@ -369,6 +380,18 @@ enum tcp_tw_status {
->>   	TCP_TW_SYN =3D 3
->>   };
->>   =
-
->> +struct tcp_sacktag_state {
->> +	u32     reord;
->> +	/* Timestamps for earliest and latest never-retransmitted
->> segment
->> +	 * that was SACKed. RTO needs the earliest RTT to stay
->> conservative,
->> +	 * but congestion control should still get an accurate delay
->> signal.
->> +	 */
->> +	u64     first_sackt;
->> +	u64     last_sackt;
->> +	struct rate_sample *rate;
->> +	int     flag;
->> +	unsigned int mss_now;
->> +};
->>   =
-
->>   enum tcp_tw_status tcp_timewait_state_process(struct
->> inet_timewait_sock *tw,
->>   					      struct sk_buff *skb,
->> @@ -427,11 +450,6 @@ struct sock *tcp_v4_syn_recv_sock(const struct
->> sock *sk, struct sk_buff *skb,
->>   int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb);
->>   int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int
->> addr_len);
->>   int tcp_connect(struct sock *sk);
->> -enum tcp_synack_type {
->> -	TCP_SYNACK_NORMAL,
->> -	TCP_SYNACK_FASTOPEN,
->> -	TCP_SYNACK_COOKIE,
->> -};
->>   struct sk_buff *tcp_make_synack(const struct sock *sk, struct
->> dst_entry *dst,
->>   				struct request_sock *req,
->>   				struct tcp_fastopen_cookie *foc,
->> @@ -522,10 +540,6 @@ void tcp_xmit_retransmit_queue(struct sock *);
->>   void tcp_simple_retransmit(struct sock *);
->>   void tcp_enter_recovery(struct sock *sk, bool ece_ack);
->>   int tcp_trim_head(struct sock *, struct sk_buff *, u32);
->> -enum tcp_queue {
->> -	TCP_FRAG_IN_WRITE_QUEUE,
->> -	TCP_FRAG_IN_RTX_QUEUE,
->> -};
->>   int tcp_fragment(struct sock *sk, enum tcp_queue tcp_queue,
->>   		 struct sk_buff *skb, u32 len,
->>   		 unsigned int mss_now, gfp_t gfp);
->> @@ -1822,6 +1836,103 @@ struct tcp_sock_af_ops {
->>   #endif
->>   };
->>   =
-
->> +/* TCP operational functions */
->> +struct tcp_operational_ops {
->> +	u32 (*__select_window)(struct sock *sk);
->> +	u16 (*select_window)(struct sock *sk);
->> +	void (*select_initial_window)(const struct sock *sk,
->> +				      int __space, __u32 mss, __u32
->> *rcv_wnd,
->> +				      __u32 *window_clamp, int
->> wscale_ok,
->> +				      __u8 *rcv_wscale, __u32
->> init_rcv_wnd);
->> +	int (*select_size)(const struct sock *sk, bool sg,
->> +			   bool first_skb, bool zc);
->> +	void (*init_buffer_space)(struct sock *sk);
->> +	void (*set_rto)(struct sock *sk);
->> +	bool (*should_expand_sndbuf)(const struct sock *sk);
->> +	void (*send_fin)(struct sock *sk);
->> +	bool (*write_xmit)(struct sock *sk, unsigned int mss_now,
->> int nonagle,
->> +			   int push_one, gfp_t gfp);
->> +	void (*send_active_reset)(struct sock *sk, gfp_t priority);
->> +	int (*write_wakeup)(struct sock *sk, int mib);
->> +	bool (*prune_ofo_queue)(struct sock *sk);
->> +	void (*retransmit_timer)(struct sock *sk);
->> +	void (*time_wait)(struct sock *sk, int state, int timeo);
->> +	void (*cleanup_rbuf)(struct sock *sk, int copied);
->> +	void (*cwnd_validate)(struct sock *sk, bool
->> is_cwnd_limited);
->> +	void (*sndbuf_expand)(struct sock *sk);
->> +	struct sk_buff *(*shift_skb_data)(struct sock *sk, struct
->> sk_buff *skb,
->> +					  struct tcp_sacktag_state
->> *state,
->> +					  u32 start_seq, u32
->> end_seq,
->> +					  bool dup_sack);
->> +	void (*grow_window)(struct sock *sk, const struct sk_buff
->> *skb);
->> +	bool (*check_rtt)(struct sock *sk);
->> +	bool (*try_coalesce)(struct sock *sk, struct sk_buff *to,
->> +			     struct sk_buff *from,
->> +			     bool *fragstolen);
->> +	int (*try_rmem_schedule)(struct sock *sk, struct sk_buff
->> *skb,
->> +				 unsigned int size);
->> +	struct sk_buff *(*collapse_one)(struct sock *sk, struct
->> sk_buff *skb,
->> +					struct sk_buff_head *list,
->> +					struct rb_root *root);
->> +	void (*urg)(struct sock *sk, struct sk_buff *skb,
->> +		    const struct tcphdr *th);
->> +	int (*trim_head)(struct sock *sk, struct sk_buff *skb, u32
->> len);
->> +	/* MPTCP wants certain skb's that may be dropped, to process
->> options */
->> +	void (*ack_only)(struct sock *sk, struct sk_buff *skb);
->> +	bool (*can_send)(struct sock *sk);
->> +	int (*rx)(struct sock *sk, struct sk_buff *skb, int
->> refcounted);
->> +	unsigned int (*synack_options_size)(const struct sock *sk,
->> +					    struct request_sock
->> *req,
->> +					    unsigned int mss,
->> +					    struct sk_buff *skb,
->> +					    struct tcp_out_options
->> *opts,
->> +					    const struct
->> tcp_md5sig_key *md5,
->> +					    struct
->> tcp_fastopen_cookie *foc);
->> +	int (*options_size)(struct sock *sk, struct sk_buff *skb,
->> +			    struct tcp_out_options *opts,
->> +			    struct tcp_md5sig_key **md5);
->> +	void (*options_write)(__be32 **ptr_ptr, struct tcp_sock *tp,
->> +			      struct tcp_out_options *opts,
->> +			      struct sk_buff *skb);
->> +	void (*connect_init)(struct sock *sk);
->> +	void (*sock_init)(struct sock *sk);
->> +	int (*send_mss)(struct sock *sk, int *size_goal, int flags);
->> +	int (*mtu_probe)(struct sock *sk);
->> +	void (*retrans_try_collapse)(struct sock *sk, struct sk_buff
->> *to,
->> +				     int space);
->> +	bool (*fastopen_synack)(struct sock *sk, struct sk_buff
->> *synack,
->> +				struct tcp_fastopen_cookie *cookie);
->> +	int (*sendpage_locked)(struct sock *sk, struct page *page,
->> int offset,
->> +			       size_t size, int flags);
->> +	struct request_sock *(*cookie_req_alloc)(struct sock *sk,
->> +						 struct sk_buff
->> *skb,
->> +						 struct
->> tcp_options_received *
->> +						 tcp_opts,
->> +						 __u32 cookie, int
->> mss);
->> +	struct sock *(*get_cookie_sock)(struct sock *sk, struct
->> sk_buff *skb,
->> +					struct request_sock *req,
->> +					struct dst_entry *dst, u32
->> tsoff);
->> +};
->> +
->> +/*
->> + * Pointers to state specific TCP functions
->> + */
->> +struct tcp_state_ops {
->> +	int (*rcv_state_process)(struct sock *sk, struct sk_buff
->> *skb);
->> +	int (*close)(struct sock *sk, struct sk_buff *skb);
->> +	int (*synsent)(struct sock *sk, struct sk_buff *skb,
->> +		       const struct tcphdr *th);
->> +	int (*listen)(struct sock *sk, struct sk_buff *skb);
->> +	int (*synrcv)(struct sock *sk, struct sk_buff *skb);
->> +	int (*finwait1)(struct sock *sk, struct sk_buff *skb);
->> +	int (*finwait2)(struct sock *sk, struct sk_buff *skb);
->> +	int (*established)(struct sock *sk, struct sk_buff *skb);
->> +	int (*closewait)(struct sock *sk, struct sk_buff *skb);
->> +};
->> +
-> This structure looks like a facility to have different processing for
-> MPTCP for each of these states. Peaking at the patch for the mptcp side
-> shows only synsent being re-implemented. If it is not necessary to
-> rework all of these it would be less impact to TCP code to just address
-> the synsent case directly and do away with this.
+>>> Creation of a real struct socket for subflows is also going to help a l=
+ot,
+>>> as that's the path forward to enable proper lock-separation. We can't t=
+ake the
+>>> meta-socket lock in the TCP-stack as I mentioned in my review to your
+>>> patchset.
+>>>
+>>>
+>>> So, in that sense for the above two points, the patchset is very useful=
+ as
+>>> it shows how MPTCP fits in such a model.
+>> It does not show anything because it does nothing.
+> I beg to differ. The point of this patchset is to show, not do. We had
+> direct feedback from the netdev maintainers that "something like KCM"
+> would be of interest to them, this is an attempt at that.
 >
-> Peter.
-Agreed.
-Thanks for the comments. I will try to address them.
+KCM, RDS do not change TCP, they use it, as it is. KCM uses eBPF instead =
+
+of adding code to TCP. MPTCP requires mucking with TCP processing, there =
+
+is a lot of difference. If you can use KCM than please use it, even =
+
+better if eBPF can be used. I am not sure about direct input from =
+
+upstream. I am aware that a statement was made "maybe we can use KCM" =
+
+and the response was, that would be great, that is the obvious response =
+
+because the proposal is to use an existing functionality and it is =
+
+implied that no mucking with TCP will be done.
+
+The code is not there. I looked at MPTCP specific processing and do not =
+
+see any change compared to the default implementation. There is talk =
+
+about creating an interface to push the arguments up, once you keep =
+
+adding these small changes, we will be where we are. All the interfaces =
+
+needed are already present and they are very clean. Just look at the Rx =
+
+path, after my cleanup it literally has no MPTCP specific code. I can =
+
+even narrow down the branch taken in tcp_v4_rcv.
+
+This is getting personal and controversial so I am going to refrain from =
+
+any other comment. If you can provide a detailed design doc that sites =
+
+the issues and the resolution I will be happy to review it. It would =
+
+also be good to compare the two approaches.
+
+Regards,
 
 Shoaib
 
->
->> +extern struct tcp_operational_ops *tcp_default_op_ops;
->> +extern struct tcp_state_ops *tcp_default_state_ops;
->> +
->>   struct tcp_request_sock_ops {
->>   	u16 mss_clamp;
->>   #ifdef CONFIG_TCP_MD5SIG
->> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
->> index a6b48f6..be81be4 100644
->> --- a/net/ipv4/tcp_input.c
->> +++ b/net/ipv4/tcp_input.c
->> @@ -1093,19 +1093,6 @@ static bool tcp_check_dsack(struct sock *sk,
->> const struct sk_buff *ack_skb,
->>   	return dup_sack;
->>   }
->>   =
-
->> -struct tcp_sacktag_state {
->> -	u32	reord;
->> -	/* Timestamps for earliest and latest never-retransmitted
->> segment
->> -	 * that was SACKed. RTO needs the earliest RTT to stay
->> conservative,
->> -	 * but congestion control should still get an accurate delay
->> signal.
->> -	 */
->> -	u64	first_sackt;
->> -	u64	last_sackt;
->> -	struct rate_sample *rate;
->> -	int	flag;
->> -	unsigned int mss_now;
->> -};
->> -
->>   /* Check if skb is fully within the SACK block. In presence of GSO
->> skbs,
->>    * the incoming SACK may not exactly match but we can find smaller
->> MSS
->>    * aligned portion of it that matches. Therefore we might need to
->> fragment
->> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->> index e9f985e..777c8b5 100644
->> --- a/net/ipv4/tcp_output.c
->> +++ b/net/ipv4/tcp_output.c
->> @@ -420,17 +420,6 @@ static void smc_options_write(__be32 *ptr, u16
->> *options)
->>   #endif
->>   }
->>   =
-
->> -struct tcp_out_options {
->> -	u16 options;		/* bit field of OPTION_* */
->> -	u16 mss;		/* 0 to disable */
->> -	u8 ws;			/* window scale, 0 to disable
->> */
->> -	u8 num_sack_blocks;	/* number of SACK blocks to
->> include */
->> -	u8 hash_size;		/* bytes in hash_location */
->> -	__u8 *hash_location;	/* temporary pointer, overloaded
->> */
->> -	__u32 tsval, tsecr;	/* need to include OPTION_TS */
->> -	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast
->> open cookie */
->> -};
->> -
->>   /* Write previously computed TCP options to the packet.
->>    *
->>    * Beware: Something in the Internet is very sensitive to the
->> ordering of
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
-
-
---===============8828988622664436270==--
+--===============6220990399557529015==--
