@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============6746401931848340967=="
+Content-Type: multipart/mixed; boundary="===============1591878870110952130=="
 MIME-Version: 1.0
 From: Krystad, Peter <peter.krystad at intel.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [RFC 7/9] Restructure syncookie code to use pointers
-Date: Fri, 30 Mar 2018 20:00:24 +0000
-Message-ID: <1522440023.16359.101.camel@intel.com>
+Date: Mon, 02 Apr 2018 15:53:41 +0000
+Message-ID: <1522439843.16359.100.camel@intel.com>
 In-Reply-To: 368b67e6-8ac8-1ffc-6b66-f74278806795@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 496
+X-UID: 497
 
---===============6746401931848340967==
+--===============1591878870110952130==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -266,11 +266,8 @@ truct sk_buff *skb)
 
 > Sorry do not understand your question ?
 
-No question here, just marking the original usage of
-tcp6_request_sock_ops that I refer to in my first comment in this
-patch.
-
-> =
+There is no question here, this marks the original usage of
+tcp6_request_sock_ops I refer to in my first comment in this patch.
 
 > Shoaib
 > > =
@@ -355,4 +352,4 @@ uct sk_buff *skb)
 > mptcp mailing list
 > mptcp(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/mptcp
---===============6746401931848340967==--
+--===============1591878870110952130==--
