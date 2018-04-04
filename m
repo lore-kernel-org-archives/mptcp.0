@@ -1,16 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============0292329705531131811=="
+Content-Type: multipart/mixed; boundary="===============2518056213992832318=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 00/12] Make subflow establishment lockless
-Date: Wed, 04 Apr 2018 17:54:42 +0200
-Message-ID: <4335219f-bb96-d31c-e518-995623ea22fe@tessares.net>
-In-Reply-To: 20180326073215.83607-1-cpaasch@apple.com
+Subject: Re: [MPTCP] [PATCH 03/12] mptcp: Use correct tcp_queue when calling
+ mptcp_fragment
+Date: Wed, 04 Apr 2018 17:55:27 +0200
+Message-ID: <bdfbbb60-356a-1e56-8452-bc75ef3c1903@tessares.net>
+In-Reply-To: 20180326073215.83607-4-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 503
+X-UID: 504
 
---===============0292329705531131811==
+--===============2518056213992832318==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,67 +19,109 @@ Content-Transfer-Encoding: quoted-printable
 Hi Christoph,
 
 On 26/03/2018 09:32, Christoph Paasch wrote:
-> The most recent TCP stack supports lockless listeners. For MPTCP, we
-> however are still taking the meta-lock when creating new subflows (cfr.,
-> tcp_v4_rcv and mptcp_lookup_join).
-> =
+> The skb may come from the write-queue, the rtx-queue or the reinject
+> queue.
 
-> This patchset makes subflow establishment lockless by using lockless
-> procedures in the stack, RCU-lists, atomic operations,...
+Good catch! :)
 
-Thank you for this nice patch set! I took me a bit of time to even start =
+Should we not clearly document that in mptcp_fragment() code? I mean =
 
-the review, sorry for that!
+the skb may come from the write-queue, the rtx-queue or the =
 
-Unfortunately, today, I have been interrupted in my review again. But =
+reinject-queue but a reinjection is not a retransmission on the same sk, =
 
-here are already a few comments for the first 7th patches. I will =
+it should then go in the write-queue. This is quite tricky and specific =
 
-continue to look at them ASAP!
+to MPTCP, we need to have that in mind when looking at this code.
 
-Cheers,
+I guess it is not easy to debug when this kind of fragments are in the =
+
+wrong queue. :)
+
+Best regards,
 Matt
 
-> Christoph Paasch (12):
->    mptcp: Cleanup
->    mptcp: Improved debugging
->    mptcp: Use correct tcp_queue when calling mptcp_fragment
->    mptcp: Use mptcp_can_new_subflow where possible
->    mptcp: Render mptcp_sub_inherit_sockopts lockless
->    mptcp: Make mptcp_set_new_pathindex lockless
->    mptcp: Remove cnt_subflows
->    mptcp: Remove cnt_established
->    mptcp: Rename tw_lock to mpcb_list_lock
->    mptcp: Make subflow-list an RCU-list
->    mptcp: Don't take meta-lock when receiving third ACK
->    mptcp: Make mptcp_do_join_short and mptcp_lookup_join lockless
+> When it comes from the rtx-queue, we need to give mptcp_fragment the
+> right tcp_queue.
 > =
 
->   include/net/mptcp.h          | 120 ++++++++++-----------------
->   net/ipv4/af_inet.c           |   9 ++-
->   net/ipv4/ip_sockglue.c       |   7 +-
->   net/ipv4/tcp.c               |  31 ++++---
->   net/ipv4/tcp_ipv4.c          |  41 +---------
->   net/ipv4/tcp_minisocks.c     |   9 ++-
->   net/ipv6/tcp_ipv6.c          |  41 +---------
->   net/mptcp/mctcp_desync.c     |  22 ++---
->   net/mptcp/mptcp_balia.c      |  21 ++---
->   net/mptcp/mptcp_binder.c     |  23 +++++-
->   net/mptcp/mptcp_coupled.c    |  52 +++++-------
->   net/mptcp/mptcp_ctrl.c       | 187 ++++++++++++++++++++++++++++--------=
--------
->   net/mptcp/mptcp_fullmesh.c   |  30 ++++---
->   net/mptcp/mptcp_input.c      | 150 ++++++++++++----------------------
->   net/mptcp/mptcp_ipv4.c       |  34 +++-----
->   net/mptcp/mptcp_ipv6.c       |  15 ++--
->   net/mptcp/mptcp_ndiffports.c |  17 +++-
->   net/mptcp/mptcp_olia.c       |  28 ++++---
->   net/mptcp/mptcp_output.c     |  50 ++++++++----
->   net/mptcp/mptcp_redundant.c  | 151 +++++++++++++++++++++++++++-------
->   net/mptcp/mptcp_rr.c         |  22 +++--
->   net/mptcp/mptcp_sched.c      |  32 ++++----
->   net/mptcp/mptcp_wvegas.c     |   5 +-
->   23 files changed, 586 insertions(+), 511 deletions(-)
+> To handle the case when it comes from the reinject-queue, I will post a
+> follow-up patch as this seems to be a bug in the stable release as well.
+> =
+
+> Fixes: 8a1051d977cf ("Merge tag 'v4.15' into mptcp_trunk")
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> ---
+>   net/mptcp/mptcp_output.c | 12 +++++++++---
+>   1 file changed, 9 insertions(+), 3 deletions(-)
+> =
+
+> diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+> index 43a21f66ac34..fc950a98ce31 100644
+> --- a/net/mptcp/mptcp_output.c
+> +++ b/net/mptcp/mptcp_output.c
+> @@ -607,7 +607,10 @@ static int mptcp_fragment(struct sock *meta_sk, enum=
+ tcp_queue tcp_queue,
+>   	if (ret)
+>   		return ret;
+>   =
+
+> -	buff =3D skb->next;
+> +	if (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
+> +		buff =3D skb->next;
+> +	else
+> +		buff =3D skb_rb_next(skb);
+>   =
+
+>   	flags =3D TCP_SKB_CB(skb)->mptcp_flags;
+>   	TCP_SKB_CB(skb)->mptcp_flags =3D flags & ~(MPTCPHDR_FIN);
+> @@ -740,6 +743,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned =
+int mss_now, int nonagle,
+>   =
+
+>   	while ((skb =3D mpcb->sched_ops->next_segment(meta_sk, &reinject, &sub=
+sk,
+>   						    &sublimit))) {
+> +		enum tcp_queue tcp_queue =3D TCP_FRAG_IN_WRITE_QUEUE;
+>   		unsigned int limit;
+>   =
+
+>   		WARN(TCP_SKB_CB(skb)->sacked, "sacked: %u reinject: %u",
+> @@ -755,6 +759,8 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned =
+int mss_now, int nonagle,
+>   				__kfree_skb(skb);
+>   				continue;
+>   			}
+> +		} else if (reinject =3D=3D -1) {
+> +			tcp_queue =3D TCP_FRAG_IN_RTX_QUEUE;
+>   		}
+>   =
+
+>   		/* If the segment was cloned (e.g. a meta retransmission),
+> @@ -817,7 +823,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned =
+int mss_now, int nonagle,
+>   			limit =3D min(limit, sublimit);
+>   =
+
+>   		if (skb->len > limit &&
+> -		    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE,
+> +		    unlikely(mptcp_fragment(meta_sk, tcp_queue,
+>   					    skb, limit, gfp, reinject)))
+>   			break;
+>   =
+
+> @@ -1545,7 +1551,7 @@ int mptcp_retransmit_skb(struct sock *meta_sk, stru=
+ct sk_buff *skb)
+>   					    TCP_NAGLE_OFF);
+>   =
+
+>   	if (skb->len > limit &&
+> -	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE, skb,
+> +	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_RTX_QUEUE, skb,
+>   				    limit, GFP_ATOMIC, 0)))
+>   		goto failed;
+>   =
+
 > =
 
 
@@ -117,4 +160,4 @@ or taking any action in reliance on the contents of this information is =
 
 strictly prohibited.
 
---===============0292329705531131811==--
+--===============2518056213992832318==--
