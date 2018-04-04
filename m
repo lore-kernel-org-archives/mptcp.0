@@ -1,78 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============4919753556793539978=="
+Content-Type: multipart/mixed; boundary="===============6031144084826294630=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Socket layer changes to MPTCP
-Date: Tue, 03 Apr 2018 18:20:13 -0700
-Message-ID: <alpine.OSX.2.21.1804031551340.21631@mgutzman-mobl1.amr.corp.intel.com>
-In-Reply-To: 818f54ae-b558-29d2-d2b1-76adb8e7b608@oracle.com
+Subject: [MPTCP] Weekly meeting - 05 April 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 04 Apr 2018 17:51:58 +0200
+Message-ID: <99b39954-b837-d083-fee2-eb6a71c1075a@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 501
+X-UID: 502
 
---===============4919753556793539978==
+--===============6031144084826294630==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-Hi Rao,
+Our public MPTCP upstreaming weekly web conference is scheduled for =
 
-On Mon, 2 Apr 2018, Rao Shoaib wrote:
+tomorrow.
 
-> Hi Mat,
->
-> We have an implementation that implements MPTCP with much much less =
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180405
+Feel free to add/modify topics!
 
-> intrusiveness than the current implementation. It's review has not reveal=
-ed =
+Meeting link: https://talky.io/mptcp_upstreaming
 
-> any serious issues. If it's interaction with TCP can be improved further =
-that =
+Speak to you tomorrow!
+Matthieu
 
-> is great and patches should be submitted.
->
-> I have yet to see any other proposal that would result in any better =
+-- =
 
-> implementation and contrary to individual belief's that some folks have, =
-no =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-> one knows what upstream will accept. I bet even David Miller and Eric do =
-not =
+-- =
 
-> know what they will accept. That is why they asked for an implementation =
-to =
 
-> start a discussion, which we have now.
->
-> There is no reason to keep working in the dark. Once we have the discussi=
-on =
 
-> there will be ample opportunity to improve the implementation based on so=
-me =
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
 
-> guideline.
+and intended solely for the use of the individual or entity to whom they =
 
-I do see what you're saying about not knowing with total certainty what =
+are addressed. If you have received this email in error please notify the =
 
-the maintainers will say until they say it, and I also think there are =
+system manager. This message contains confidential information and is =
 
-benefits to be had from our smaller MPTCP upstreaming community in helping =
+intended only for the individual named. If you are not the named addressee =
 
-each other shape a proposal.
+you should not disseminate, distribute or copy this e-mail. Please notify =
 
-I think the call on Thursday will be a great opportunity to discuss the =
+the sender immediately by e-mail if you have received this e-mail by =
 
-current proposals and patch sets. The real-time discussions there have =
+mistake and delete this e-mail from your system. If you are not the =
 
-been very helpful - without the latency of email I think we can more =
+intended recipient you are notified that disclosing, copying, distributing =
 
-quickly understand where there is consensus.
+or taking any action in reliance on the contents of this information is =
 
-Thanks,
+strictly prohibited.
 
---
-Mat Martineau
-Intel OTC
-
---===============4919753556793539978==--
+--===============6031144084826294630==--
