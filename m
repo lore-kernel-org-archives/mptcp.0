@@ -1,107 +1,108 @@
-Content-Type: multipart/mixed; boundary="===============1060830982606422031=="
+Content-Type: multipart/mixed; boundary="===============6147810291768131861=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Socket layer changes to MPTCP
-Date: Wed, 04 Apr 2018 11:56:27 -0700
-Message-ID: <alpine.OSX.2.21.1804041148170.44036@chunyuya-mobl1.amr.corp.intel.com>
-In-Reply-To: b003b1f1-0ce2-eba1-bd17-78f96bcf6d1b@oracle.com
+Subject: Re: [MPTCP] [PATCH 05/12] mptcp: Render mptcp_sub_inherit_sockopts
+ lockless
+Date: Wed, 04 Apr 2018 21:29:29 +0200
+Message-ID: <a676829c-4e27-c3e9-6ad6-9308cf742e5b@tessares.net>
+In-Reply-To: 20180326073215.83607-6-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 507
+X-UID: 508
 
---===============1060830982606422031==
+--===============6147810291768131861==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Christoph,
 
-On Wed, 4 Apr 2018, Rao Shoaib wrote:
+On 26/03/2018 09:32, Christoph Paasch wrote:
+> We are accessing the meta-socket's TOS field twice. It could change
+> in-between as we do this in a lockless manner.
 
->
->
-> On 04/03/2018 06:20 PM, Mat Martineau wrote:
->> =
+I hope this will not add more complexities in the code :)
 
->> Hi Rao,
->> =
+Should we not clearly identify/mark all functions that are called with =
 
->> On Mon, 2 Apr 2018, Rao Shoaib wrote:
->> =
+or without holding locks? Functions could be renamed maybe? I know, =
 
->>> Hi Mat,
->>> =
+quite a big work :-)
 
->>> We have an implementation that implements MPTCP with much much less =
+Best regards,
+Matt
 
->>> intrusiveness than the current implementation. It's review has not =
+> Thus, let's make sure we read it only once.
+> =
 
->>> revealed any serious issues. If it's interaction with TCP can be improv=
-ed =
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> ---
+>   net/mptcp/mptcp_ctrl.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+> =
 
->>> further that is great and patches should be submitted.
->>> =
+> diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+> index 29fe6485d69a..fb37053dd127 100644
+> --- a/net/mptcp/mptcp_ctrl.c
+> +++ b/net/mptcp/mptcp_ctrl.c
+> @@ -945,11 +945,15 @@ static void mptcp_mpcb_inherit_sockopts(struct sock=
+ *meta_sk, struct sock *maste
+>   	inet_sk(master_sk)->recverr =3D 0;
+>   }
+>   =
 
->>> I have yet to see any other proposal that would result in any better =
+> +/* Called without holding lock on meta_sk */
+>   static void mptcp_sub_inherit_sockopts(const struct sock *meta_sk, stru=
+ct sock *sub_sk)
+>   {
+> +	__u8 meta_tos;
+> +
+>   	/* IP_TOS also goes to the subflow. */
+> -	if (inet_sk(sub_sk)->tos !=3D inet_sk(meta_sk)->tos) {
+> -		inet_sk(sub_sk)->tos =3D inet_sk(meta_sk)->tos;
+> +	meta_tos =3D READ_ONCE(inet_sk(meta_sk)->tos);
+> +	if (inet_sk(sub_sk)->tos !=3D meta_tos) {
+> +		inet_sk(sub_sk)->tos =3D meta_tos;
+>   		sub_sk->sk_priority =3D meta_sk->sk_priority;
+>   		sk_dst_reset(sub_sk);
+>   	}
+> =
 
->>> implementation and contrary to individual belief's that some folks have=
-, =
 
->>> no one knows what upstream will accept. I bet even David Miller and Eri=
-c =
+-- =
 
->>> do not know what they will accept. That is why they asked for an =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
->>> implementation to start a discussion, which we have now.
->>> =
+-- =
 
->>> There is no reason to keep working in the dark. Once we have the =
 
->>> discussion there will be ample opportunity to improve the implementatio=
-n =
 
->>> based on some guideline.
->> =
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
 
->> I do see what you're saying about not knowing with total certainty what =
-the =
+and intended solely for the use of the individual or entity to whom they =
 
->> maintainers will say until they say it, and I also think there are benef=
-its =
+are addressed. If you have received this email in error please notify the =
 
->> to be had from our smaller MPTCP upstreaming community in helping each =
+system manager. This message contains confidential information and is =
 
->> other shape a proposal.
->> =
+intended only for the individual named. If you are not the named addressee =
 
->> I think the call on Thursday will be a great opportunity to discuss the =
+you should not disseminate, distribute or copy this e-mail. Please notify =
 
->> current proposals and patch sets. The real-time discussions there have b=
-een =
+the sender immediately by e-mail if you have received this e-mail by =
 
->> very helpful - without the latency of email I think we can more quickly =
+mistake and delete this e-mail from your system. If you are not the =
 
->> understand where there is consensus.
->> =
+intended recipient you are notified that disclosing, copying, distributing =
 
-> Sorry I can not make it to the call -- I have been asked to attend a meet=
-ing =
+or taking any action in reliance on the contents of this information is =
 
-> at the same time. I know that this is disruptive to everyone but it is be=
-yond =
+strictly prohibited.
 
-> my control. We can instead meet on Friday or Monday or wait till the next =
-
-> call.
->
-> Sorry for the inconvenience.
-
-No problem, given the complexity of group scheduling and time zones I =
-
-think the April 12th call is the straightforward solution.
-
---
-Mat Martineau
-Intel OTC
-
---===============1060830982606422031==--
+--===============6147810291768131861==--
