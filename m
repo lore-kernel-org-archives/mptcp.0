@@ -1,148 +1,154 @@
-Content-Type: multipart/mixed; boundary="===============5061563419810163528=="
+Content-Type: multipart/mixed; boundary="===============6304001648104068115=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 5th of April 2018
-Date: Fri, 06 Apr 2018 16:14:43 -0700
-Message-ID: <alpine.OSX.2.21.1804061538020.64474@snanja-mobl.amr.corp.intel.com>
-In-Reply-To: 2200a65a-460b-bebe-a3f1-348a26baf004@oracle.com
+Subject: Re: [MPTCP] [PATCH 03/12] mptcp: Use correct tcp_queue when calling
+ mptcp_fragment
+Date: Sun, 08 Apr 2018 21:04:52 -0700
+Message-ID: <20180409040452.GQ16289@MacBook-Pro-6.local>
+In-Reply-To: bdfbbb60-356a-1e56-8452-bc75ef3c1903@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 517
+X-UID: 518
 
---===============5061563419810163528==
+--===============6304001648104068115==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-On Fri, 6 Apr 2018, Rao Shoaib wrote:
+On 04/04/18 - 17:55:27, Matthieu Baerts wrote:
+> Hi Christoph,
+> =
 
->
->
-> On 04/05/2018 03:39 PM, Mat Martineau wrote:
->>
->> On Thu, 5 Apr 2018, Christoph Paasch wrote:
->>
->>> Hello,
->>>
->>> On 05/04/18 - 15:17:59, Mat Martineau wrote:
->>>>
->>>> On Thu, 5 Apr 2018, Matthieu Baerts wrote:
->>>>
->>>>> Branches on Github (multipath-tcp/mptcp):
->>>>> =C2=A0=C2=A0=C2=A0 - keep mptcp_trunk "clean", following official Lin=
-ux versions =E2=86=92 =
+> On 26/03/2018 09:32, Christoph Paasch wrote:
+> > The skb may come from the write-queue, the rtx-queue or the reinject
+> > queue.
+> =
 
->>>>> goal
->>>>> is at least to reach the next LTS (4.18?). We will see what to do =
+> Good catch! :)
+> =
 
->>>>> after.
->>>>> =C2=A0=C2=A0=C2=A0 - we still need a "usable" version, fully function=
-al for both the
->>>>> client and server with almost the same performances while the "version
->>>>> for upstream" is still in progress in parallel
->>>>> =C2=A0=C2=A0=C2=A0 - next stable version should then contain Netlink =
-PM, lockless
->>>>> subflows, etc..
->>>>> =C2=A0=C2=A0=C2=A0 - a new branch will be created (mptcp-net-next) fo=
-llowing =
+> Should we not clearly document that in mptcp_fragment() code? I mean the =
+skb
+> may come from the write-queue, the rtx-queue or the reinject-queue but a
+> reinjection is not a retransmission on the same sk, it should then go in =
+the
+> write-queue. This is quite tricky and specific to MPTCP, we need to have
+> that in mind when looking at this code.
 
->>>>> net-next.
->>>>> =C2=A0=C2=A0=C2=A0 - all final patches shared, reviewed and accepted =
-in MPTCP =
-
->>>>> upstream
->>>>> ML would be integrated in this branch if they cannot be directly
->>>>> integrated upstream in net-next
->>>>
->>>> To spread the workload around, I can help by keeping the new =
-
->>>> mptcp-net-next
->>>> branch merged with net-next. Christoph has a lot of experience doing =
-
->>>> this
->>>> type of merge for MPTCP but the addition of this branch shouldn't =
-
->>>> create
->>>> more work for him by default.
->>>
->>> Thanks, that would be great!
->>>
->>>> (Note that I'm not requesting push access to the github repo, I can =
-
->>>> push to
->>>> git.kernel.org and someone with permissions can transfer the commits =
-
->>>> from
->>>> there)
->>>
->>> Actually, back in the days, we already had an mptcp_net-next repo on the
->>> github at https://github.com/multipath-tcp/mptcp_net-next.
->>>
->>> I will simply give you write-access to this one. Then you can remove =
-
->>> the old
->>> branches there and put there the merge with net-next.
->>
->> Ok, thanks. Seems like that's a good place for the upstreaming wiki too.
->>
->>
->> Mat
-> Hi Mat,
->
-> May I point out we are once again moving in a different direction =
-
-> without any consensus.
->
-> When we started the effort there was an understanding that we will =
-
-> implement a *very basic* MPTCP implementation that necessarily does not =
-
-> have to follow mptcp-dev. I see no reason for this group to be concerned =
-
-> with maintaining mptcp-dev implementation. If someone wants to do it =
-
-> they can, but as their private project.=C2=A0 Please remove that as a wor=
-k =
-
-> item from this list.
->
-> Our time is better spent on a technical discussion of the patch that has =
-
-> been submitted, how to make it better or work on an alternate =
-
-> implementation, etc... I am waiting for technical comments from you -- =
-
-> should I wait or should I just start addressing the comments?
-
-You should start addressing the comments.
+sounds good! I will add a comment at the top of the function.
 
 
-Regards,
-Mat
+Christoph
 
+> =
 
-> The group needs to have it's own repo/website under a completely =
+> I guess it is not easy to debug when this kind of fragments are in the wr=
+ong
+> queue. :)
+> =
 
-> different account and each company should have full access to the account.
->
-> Any code placed there should be the work done by this group. Oracle is =
+> Best regards,
+> Matt
+> =
 
-> the only company that has put forward an improved implementation. It may =
+> > When it comes from the rtx-queue, we need to give mptcp_fragment the
+> > right tcp_queue.
+> > =
 
-> not be the final implementation, but until there is a better =
+> > To handle the case when it comes from the reinject-queue, I will post a
+> > follow-up patch as this seems to be a bug in the stable release as well.
+> > =
 
-> implementation that is it.
->
-> We are working on an open source project, all discussions and decisions =
+> > Fixes: 8a1051d977cf ("Merge tag 'v4.15' into mptcp_trunk")
+> > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> > ---
+> >   net/mptcp/mptcp_output.c | 12 +++++++++---
+> >   1 file changed, 9 insertions(+), 3 deletions(-)
+> > =
 
-> need to happen on the list. Meetings should be rare not the norm, even =
+> > diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+> > index 43a21f66ac34..fc950a98ce31 100644
+> > --- a/net/mptcp/mptcp_output.c
+> > +++ b/net/mptcp/mptcp_output.c
+> > @@ -607,7 +607,10 @@ static int mptcp_fragment(struct sock *meta_sk, en=
+um tcp_queue tcp_queue,
+> >   	if (ret)
+> >   		return ret;
+> > -	buff =3D skb->next;
+> > +	if (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
+> > +		buff =3D skb->next;
+> > +	else
+> > +		buff =3D skb_rb_next(skb);
+> >   	flags =3D TCP_SKB_CB(skb)->mptcp_flags;
+> >   	TCP_SKB_CB(skb)->mptcp_flags =3D flags & ~(MPTCPHDR_FIN);
+> > @@ -740,6 +743,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigne=
+d int mss_now, int nonagle,
+> >   	while ((skb =3D mpcb->sched_ops->next_segment(meta_sk, &reinject, &s=
+ubsk,
+> >   						    &sublimit))) {
+> > +		enum tcp_queue tcp_queue =3D TCP_FRAG_IN_WRITE_QUEUE;
+> >   		unsigned int limit;
+> >   		WARN(TCP_SKB_CB(skb)->sacked, "sacked: %u reinject: %u",
+> > @@ -755,6 +759,8 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigne=
+d int mss_now, int nonagle,
+> >   				__kfree_skb(skb);
+> >   				continue;
+> >   			}
+> > +		} else if (reinject =3D=3D -1) {
+> > +			tcp_queue =3D TCP_FRAG_IN_RTX_QUEUE;
+> >   		}
+> >   		/* If the segment was cloned (e.g. a meta retransmission),
+> > @@ -817,7 +823,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigne=
+d int mss_now, int nonagle,
+> >   			limit =3D min(limit, sublimit);
+> >   		if (skb->len > limit &&
+> > -		    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE,
+> > +		    unlikely(mptcp_fragment(meta_sk, tcp_queue,
+> >   					    skb, limit, gfp, reinject)))
+> >   			break;
+> > @@ -1545,7 +1551,7 @@ int mptcp_retransmit_skb(struct sock *meta_sk, st=
+ruct sk_buff *skb)
+> >   					    TCP_NAGLE_OFF);
+> >   	if (skb->len > limit &&
+> > -	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE, skb,
+> > +	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_RTX_QUEUE, skb,
+> >   				    limit, GFP_ATOMIC, 0)))
+> >   		goto failed;
+> > =
 
-> then the consensus has to be built on the list.
+> =
 
---
-Mat Martineau
-Intel OTC
+> -- =
 
---===============5061563419810163528==--
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> =
+
+> -- =
+
+> =
+
+> =
+
+> DISCLAIMER.
+> This email and any files transmitted with it are confidential and intended
+> solely for the use of the individual or entity to whom they are addressed.
+> If you have received this email in error please notify the system manager.
+> This message contains confidential information and is intended only for t=
+he
+> individual named. If you are not the named addressee you should not
+> disseminate, distribute or copy this e-mail. Please notify the sender
+> immediately by e-mail if you have received this e-mail by mistake and del=
+ete
+> this e-mail from your system. If you are not the intended recipient you a=
+re
+> notified that disclosing, copying, distributing or taking any action in
+> reliance on the contents of this information is strictly prohibited.
+
+--===============6304001648104068115==--
