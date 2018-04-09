@@ -1,135 +1,427 @@
-Content-Type: multipart/mixed; boundary="===============3906378863932905270=="
+Content-Type: multipart/mixed; boundary="===============8422206336849755780=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
-Date: Sun, 08 Apr 2018 22:03:25 -0700
-Message-ID: <20180409050325.GY16289@MacBook-Pro-6.local>
-In-Reply-To: 0d6a315a-b66b-a1a8-67bf-30331120c0dd@oracle.com
+Subject: Re: [MPTCP] [PATCH 08/12] mptcp: Remove cnt_established
+Date: Mon, 09 Apr 2018 18:04:31 +0200
+Message-ID: <3408d7ae-e500-1469-4e2f-70f67d47cf57@tessares.net>
+In-Reply-To: 20180326073215.83607-9-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 524
+X-UID: 525
 
---===============3906378863932905270==
+--===============8422206336849755780==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 30/03/18 - 11:20:54, Rao Shoaib wrote:
+Hi Christoph,
+
+On 26/03/2018 09:32, Christoph Paasch wrote:
+> We want to remove the number of up-calls into the meta-socket.
+> cnt_established is one of those where we are modifying a field in the
+> mpcb.
 > =
 
+> We can remove it fairly safely. It's only use is in some MPTCP-specific
+> congestion controls to short-circuit some parts of it.
+
+Not a big optimisation I guess, no?
+Anyway if MPTCP is not used, MPTCP-specific CC will still fallback to =
+
+the TCP ones if I remember well.
+
+> One particular use was in mptcp_should_expand_sndbuf(). There, we use it
+> to see whether to expand the sndbuf when there are only backup subflows
+> available.
 > =
 
-> On 03/27/2018 03:37 AM, Christoph Paasch wrote:
-> > Hello,
-> > =
+> One problem with this old code is that the decision whether or not to sen=
+d on
+> a backup subflow is steered by the modular scheduler. We cannot assume in
+> core-MPTCP code that backup subflows are never being sent on.
 
-> > On 22/02/18 - 15:49:52, rao.shoaib(a)oracle.com wrote:
-> > > From: Rao Shoaib <rao.shoaib(a)oracle.com>
-> > > =
+Should we not ask the scheduler if this subflow can be used?
 
-> > > Following patches modify TCP code to enable implementation of MPTCP. =
-MPTCP implementation requires sharing of TCP code with minor modification h=
-ere and there. In order to keep the TCP code clean and easy to maintain, co=
-mmon code has been moved to new functions for use by both TCP and MPTCP. st=
-ruct tcp_sock now has function pointers and based on the socket type (TCP/M=
-PTCP) appropriate function is called.
-> > > =
+> By no more taking backup subflows into account, we greatly simplify
+> mptcp_should_expand_sndbuf at the cost of potentially increasing the
+> window even if there is no subflow ready to send because it's a backup
+> subflow.
 
-> > > A basic implementation of MPTCP that works with IPv4/IPv6 and support=
-s join has been tested based on these changes.
-> > > =
+I am sorry, I didn't check when the callback should_expand_sndbuf is =
 
-> > > The changes are being submitted as an RFC to get feedback from the co=
-mmunity and to start a discussion on how to move forward.
-> > I did a full review of the patches.
-> > =
+used yet. Is it only to pro-actively expend the sndbuf? Or is it asked =
 
-> > Besides the details I commented on in the individual patches, I have a =
-few
-> > higher-level comments:
-> > =
+always when it seems we need to increase the window? (If yes we should =
 
-> > * The patchset introduces function-pointers to reduce the impact of MPT=
-CP on
-> >    the TCP-stack. Ignoring potential performance costs for a moment:
-> > =
+maybe ask the scheduler, no?)
 
-> >    The patchset should show why these function-pointers are needed for =
-an
-> >    MPTCP implementation. While reviewing the patches, it wasn't clear t=
-o me
-> >    Although, I can guess it because I know the MPTCP-code. However, som=
-eone
-> >    not familiar with MPTCP will have an even harder time to understand =
-the
-> >    reason for these function pointers.
-> Your point is valid my bad.
-> > =
+But we can maybe see that as an optimisation and replace the code by a =
 
-> > * Another question that should be answered in the patchset is how these
-> >    function pointers can be used by other TCP extensions (I am assuming=
- that is
-> >    the intention). The question that arises then is how could MPTCP be =
-shared
-> >    with these other TCP extensions?
-> What extensions -- Give me an example.
-> > =
+comment, no?
 
-> > * It should also be explained in the patchset how one switches the func=
-tion
-> >    pointers. It was unclear to me how MPTCP gets enabled.
-> See the magic in tcp_init_sock. If unlikely(tp->op_ops->sock_init) is set
-> that is where all the magic will happen. That is not part of this patch. =
-If
-> you want to see that check the MPTCP pages. This patch is only about
-> refactoring TCP code so that MPTCP is less intrusive.
-> > =
+Best regards,
+Matt
 
-> >    In tcp_init_sock() tp->op_ops is currently set to tcp_default_op_ops.
-> >    Thus, would that mean that MPTCP would get enabled on a system-level=
- by
-> >    changing tcp_default_op_ops?
-> Kind of -- we simple change the pointer. MPTCP has to be compiled in and
-> enabled, but eventually MPTCP will have an option to be either deployed
-> system wide or just on selected sockets. That part is orthogonal and
-> independent to the main TCP code that upstream is concerned about.
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> ---
+>   include/net/mptcp.h       |  4 ----
+>   net/mptcp/mctcp_desync.c  |  4 ++--
+>   net/mptcp/mptcp_balia.c   | 13 ++-----------
+>   net/mptcp/mptcp_coupled.c | 41 +++++++++++++++--------------------------
+>   net/mptcp/mptcp_ctrl.c    |  8 --------
+>   net/mptcp/mptcp_input.c   | 20 ++------------------
+>   net/mptcp/mptcp_olia.c    |  8 +++++---
+>   7 files changed, 26 insertions(+), 72 deletions(-)
 > =
 
-> Please also remember our initial goal is to implement a very simple MPTCP
-> implementation and we are not trying to be on par with mptcp-dev.
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 523abc8ce01d..758f2038e7cf 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -166,7 +166,6 @@ struct mptcp_tcp_sock {
+>   	u16	map_data_len;
+>   	u16	slave_sk:1,
+>   		fully_established:1,
+> -		establish_increased:1,
+>   		second_packet:1,
+>   		attached:1,
+>   		send_mp_fail:1,
+> @@ -279,9 +278,6 @@ struct mptcp_cb {
+>   		snd_hiseq_index:1, /* Index in snd_high_order of snd_nxt */
+>   		rcv_hiseq_index:1; /* Index in rcv_high_order of rcv_nxt */
+>   =
 
-Yes, I couldn't agree more with this. We should do a simple and minimal
-implementation of MPTCP. Which is why in some of my comments I ask why a
-certain change is needed as we could simplify things.
+> -	/* socket count in this connection */
+> -	u8 cnt_established;
+> -
+>   #define MPTCP_SCHED_DATA_SIZE 8
+>   	u8 mptcp_sched[MPTCP_SCHED_DATA_SIZE] __aligned(8);
+>   	struct mptcp_sched_ops *sched_ops;
+> diff --git a/net/mptcp/mctcp_desync.c b/net/mptcp/mctcp_desync.c
+> index 9c5d6c196da5..cfc26fcc3161 100644
+> --- a/net/mptcp/mctcp_desync.c
+> +++ b/net/mptcp/mctcp_desync.c
+> @@ -59,7 +59,7 @@ static void mctcp_desync_cong_avoid(struct sock *sk, u3=
+2 ack, u32 acked)
+>   {
+>   	struct tcp_sock *tp =3D tcp_sk(sk);
+>   =
 
-> > =
+> -	if (!mptcp(tp) || (1 =3D=3D tp->mpcb->cnt_established)) {
+> +	if (!mptcp(tp)) {
+>   		tcp_reno_cong_avoid(sk, ack, acked);
+>   		return;
+>   	} else if (!tcp_is_cwnd_limited(sk)) {
+> @@ -121,7 +121,7 @@ static u32 mctcp_desync_ssthresh(struct sock *sk)
+>   {
+>   	struct tcp_sock *tp =3D tcp_sk(sk);
+>   =
 
-> > * The patches are holding the meta-lock when processing incoming packet=
-s or
-> >    timer-events. This will trigger a lot of RCU-warnings. Adressing thi=
-s is
-> >    not trivial and will require significant architectural changes.
-> > =
+> -	if (!mptcp(tp) || (1 =3D=3D tp->mpcb->cnt_established)) {
+> +	if (!mptcp(tp)) {
+>   		return max(tp->snd_cwnd >> 1U, 2U);
+>   	} else {
+>   		struct mctcp_desync *ca =3D inet_csk_ca(mptcp_meta_sk(sk));
+> diff --git a/net/mptcp/mptcp_balia.c b/net/mptcp/mptcp_balia.c
+> index 8b1fe11b08d5..ac5c5e550539 100644
+> --- a/net/mptcp/mptcp_balia.c
+> +++ b/net/mptcp/mptcp_balia.c
+> @@ -86,10 +86,6 @@ static void mptcp_balia_recalc_ai(const struct sock *s=
+k)
+>   	if (!mpcb)
+>   		return;
+>   =
 
-> I do not want any significant architectural changes. I have not seen any =
-RCU
-> warnings in my testing so I was not aware of that.
+> -	/* Only one subflow left - fall back to normal reno-behavior */
+> -	if (mpcb->cnt_established <=3D 1)
+> -		goto exit;
+> -
+>   	/* Find max_rate first */
+>   	mptcp_for_each_sk(mpcb, sub_sk) {
+>   		struct tcp_sock *sub_tp =3D tcp_sk(sub_sk);
+> @@ -186,7 +182,6 @@ static void mptcp_balia_set_state(struct sock *sk, u8=
+ ca_state)
+>   static void mptcp_balia_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+>   {
+>   	struct tcp_sock *tp =3D tcp_sk(sk);
+> -	const struct mptcp_cb *mpcb =3D tp->mpcb;
+>   	int snd_cwnd;
+>   =
 
-You can simply enable LOCKDEP and then you will see plenty of them.
+>   	if (!mptcp(tp)) {
+> @@ -209,10 +204,7 @@ static void mptcp_balia_cong_avoid(struct sock *sk, =
+u32 ack, u32 acked)
+>   		mptcp_set_forced(sk, 0);
+>   	}
+>   =
 
+> -	if (mpcb->cnt_established > 1)
+> -		snd_cwnd =3D (int) mptcp_get_ai(sk);
+> -	else
+> -		snd_cwnd =3D tp->snd_cwnd;
+> +	snd_cwnd =3D (int) mptcp_get_ai(sk);
+>   =
 
-Christoph
+>   	if (tp->snd_cwnd_cnt >=3D snd_cwnd) {
+>   		if (tp->snd_cwnd < tp->snd_cwnd_clamp) {
+> @@ -229,9 +221,8 @@ static void mptcp_balia_cong_avoid(struct sock *sk, u=
+32 ack, u32 acked)
+>   static u32 mptcp_balia_ssthresh(struct sock *sk)
+>   {
+>   	const struct tcp_sock *tp =3D tcp_sk(sk);
+> -	const struct mptcp_cb *mpcb =3D tp->mpcb;
+>   =
 
-> =C2=A0 As I have said
-> previously I will deal with them later.
+> -	if (unlikely(!mptcp(tp) || mpcb->cnt_established <=3D 1))
+> +	if (unlikely(!mptcp(tp)))
+>   		return tcp_reno_ssthresh(sk);
+>   	else
+>   		return max((u32)(tp->snd_cwnd - mptcp_get_md(sk)), 1U);
+> diff --git a/net/mptcp/mptcp_coupled.c b/net/mptcp/mptcp_coupled.c
+> index f9d856334ca9..a6569f5e20ab 100644
+> --- a/net/mptcp/mptcp_coupled.c
+> +++ b/net/mptcp/mptcp_coupled.c
+> @@ -87,12 +87,6 @@ static void mptcp_ccc_recalc_alpha(const struct sock *=
+sk)
+>   	if (!mpcb)
+>   		return;
+>   =
+
+> -	/* Only one subflow left - fall back to normal reno-behavior
+> -	 * (set alpha to 1)
+> -	 */
+> -	if (mpcb->cnt_established <=3D 1)
+> -		goto exit;
+> -
+>   	/* Do regular alpha-calculation for multiple subflows */
+>   =
+
+>   	/* Find the max numerator of the alpha-calculation */
+> @@ -137,8 +131,7 @@ static void mptcp_ccc_recalc_alpha(const struct sock =
+*sk)
+>   	}
+>   	sum_denominator *=3D sum_denominator;
+>   	if (unlikely(!sum_denominator)) {
+> -		pr_err("%s: sum_denominator =3D=3D 0, cnt_established:%d\n",
+> -		       __func__, mpcb->cnt_established);
+> +		pr_err("%s: sum_denominator =3D=3D 0\n", __func__);
+>   		mptcp_for_each_sk(mpcb, sub_sk) {
+>   			struct tcp_sock *sub_tp =3D tcp_sk(sub_sk);
+>   			pr_err("%s: pi:%d, state:%d\n, rtt:%u, cwnd: %u",
+> @@ -183,8 +176,8 @@ static void mptcp_ccc_set_state(struct sock *sk, u8 c=
+a_state)
+>   static void mptcp_ccc_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+>   {
+>   	struct tcp_sock *tp =3D tcp_sk(sk);
+> -	const struct mptcp_cb *mpcb =3D tp->mpcb;
+>   	int snd_cwnd;
+> +	u64 alpha;
+>   =
+
+>   	if (!mptcp(tp)) {
+>   		tcp_reno_cong_avoid(sk, ack, acked);
+> @@ -206,27 +199,23 @@ static void mptcp_ccc_cong_avoid(struct sock *sk, u=
+32 ack, u32 acked)
+>   		mptcp_set_forced(mptcp_meta_sk(sk), 0);
+>   	}
+>   =
+
+> -	if (mpcb->cnt_established > 1) {
+> -		u64 alpha =3D mptcp_get_alpha(mptcp_meta_sk(sk));
+> +	alpha =3D mptcp_get_alpha(mptcp_meta_sk(sk));
+>   =
+
+> -		/* This may happen, if at the initialization, the mpcb
+> -		 * was not yet attached to the sock, and thus
+> -		 * initializing alpha failed.
+> -		 */
+> -		if (unlikely(!alpha))
+> -			alpha =3D 1;
+> +	/* This may happen, if at the initialization, the mpcb
+> +	 * was not yet attached to the sock, and thus
+> +	 * initializing alpha failed.
+> +	 */
+> +	if (unlikely(!alpha))
+> +		alpha =3D 1;
+>   =
+
+> -		snd_cwnd =3D (int) div_u64 ((u64) mptcp_ccc_scale(1, alpha_scale),
+> -						alpha);
+> +	snd_cwnd =3D (int) div_u64 ((u64) mptcp_ccc_scale(1, alpha_scale),
+> +					alpha);
+>   =
+
+> -		/* snd_cwnd_cnt >=3D max (scale * tot_cwnd / alpha, cwnd)
+> -		 * Thus, we select here the max value.
+> -		 */
+> -		if (snd_cwnd < tp->snd_cwnd)
+> -			snd_cwnd =3D tp->snd_cwnd;
+> -	} else {
+> +	/* snd_cwnd_cnt >=3D max (scale * tot_cwnd / alpha, cwnd)
+> +	 * Thus, we select here the max value.
+> +	 */
+> +	if (snd_cwnd < tp->snd_cwnd)
+>   		snd_cwnd =3D tp->snd_cwnd;
+> -	}
+>   =
+
+>   	if (tp->snd_cwnd_cnt >=3D snd_cwnd) {
+>   		if (tp->snd_cwnd < tp->snd_cwnd_clamp) {
+> diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+> index b1109ee9770f..da072fe21ec6 100644
+> --- a/net/mptcp/mptcp_ctrl.c
+> +++ b/net/mptcp/mptcp_ctrl.c
+> @@ -737,11 +737,6 @@ static void mptcp_set_state(struct sock *sk)
+>   		tcp_sk(meta_sk)->lsndtime =3D tcp_jiffies32;
+>   	}
+>   =
+
+> -	if (sk->sk_state =3D=3D TCP_ESTABLISHED) {
+> -		tcp_sk(sk)->mptcp->establish_increased =3D 1;
+> -		tcp_sk(sk)->mpcb->cnt_established++;
+> -	}
+> -
+>   	if (sk->sk_state =3D=3D TCP_CLOSE) {
+>   		if (!sock_flag(sk, SOCK_DEAD))
+>   			mptcp_sub_close(sk, 0);
+> @@ -1449,9 +1444,6 @@ void mptcp_del_sock(struct sock *sk)
+>   			}
+>   		}
+>   	}
+> -	if (tp->mptcp->establish_increased)
+> -		mpcb->cnt_established--;
+> -
+>   	tp->mptcp->next =3D NULL;
+>   	tp->mptcp->attached =3D 0;
+>   	mpcb->path_index_bits &=3D ~(1 << tp->mptcp->path_index);
+> diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
+> index 126c961ec55a..211605347f70 100644
+> --- a/net/mptcp/mptcp_input.c
+> +++ b/net/mptcp/mptcp_input.c
+> @@ -2357,11 +2357,9 @@ int mptcp_rcv_synsent_state_process(struct sock *s=
+k, struct sock **skptr,
+>   /* Similar to tcp_should_expand_sndbuf */
+>   bool mptcp_should_expand_sndbuf(const struct sock *sk)
+>   {
+> -	const struct sock *sk_it;
+>   	const struct sock *meta_sk =3D mptcp_meta_sk(sk);
+>   	const struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> -	int cnt_backups =3D 0;
+> -	int backup_available =3D 0;
+> +	const struct sock *sk_it;
+>   =
+
+>   	/* We circumvent this check in tcp_check_space, because we want to
+>   	 * always call sk_write_space. So, we reproduce the check here.
+> @@ -2393,24 +2391,10 @@ bool mptcp_should_expand_sndbuf(const struct sock=
+ *sk)
+>   		if (!mptcp_sk_can_send(sk_it))
+>   			continue;
+>   =
+
+> -		/* Backup-flows have to be counted - if there is no other
+> -		 * subflow we take the backup-flow into account.
+> -		 */
+> -		if (tp_it->mptcp->rcv_low_prio || tp_it->mptcp->low_prio)
+> -			cnt_backups++;
+> -
+> -		if (tcp_packets_in_flight(tp_it) < tp_it->snd_cwnd) {
+> -			if (tp_it->mptcp->rcv_low_prio || tp_it->mptcp->low_prio) {
+> -				backup_available =3D 1;
+> -				continue;
+> -			}
+> +		if (tcp_packets_in_flight(tp_it) < tp_it->snd_cwnd)
+>   			return true;
+> -		}
+>   	}
+>   =
+
+> -	/* Backup-flow is available for sending - update send-buffer */
+> -	if (meta_tp->mpcb->cnt_established =3D=3D cnt_backups && backup_availab=
+le)
+> -		return true;
+>   	return false;
+>   }
+>   =
+
+> diff --git a/net/mptcp/mptcp_olia.c b/net/mptcp/mptcp_olia.c
+> index c17c306849a3..9f61e1eff65a 100644
+> --- a/net/mptcp/mptcp_olia.c
+> +++ b/net/mptcp/mptcp_olia.c
+> @@ -105,7 +105,7 @@ static void mptcp_get_epsilon(const struct mptcp_cb *=
+mpcb)
+>   	struct tcp_sock *tp;
+>   	struct sock *sk;
+>   	u64 tmp_int, tmp_rtt, best_int =3D 0, best_rtt =3D 1;
+> -	u32 max_cwnd, tmp_cwnd;
+> +	u32 max_cwnd, tmp_cwnd, established_cnt =3D 0;
+>   	u8 M =3D 0, B_not_M =3D 0;
+>   =
+
+>   	/* TODO - integrate this in the following loop - we just want to itera=
+te once */
+> @@ -120,6 +120,8 @@ static void mptcp_get_epsilon(const struct mptcp_cb *=
+mpcb)
+>   		if (!mptcp_olia_sk_can_send(sk))
+>   			continue;
+>   =
+
+> +		established_cnt++;
+> +
+>   		tmp_rtt =3D (u64)tp->srtt_us * tp->srtt_us;
+>   		/* TODO - check here and rename variables */
+>   		tmp_int =3D max(ca->mptcp_loss3 - ca->mptcp_loss2,
+> @@ -173,10 +175,10 @@ static void mptcp_get_epsilon(const struct mptcp_cb=
+ *mpcb)
+>   			if (tmp_cwnd < max_cwnd &&
+>   			    (u64)tmp_int * best_rtt =3D=3D (u64)best_int * tmp_rtt) {
+>   				ca->epsilon_num =3D 1;
+> -				ca->epsilon_den =3D mpcb->cnt_established * B_not_M;
+> +				ca->epsilon_den =3D established_cnt * B_not_M;
+>   			} else if (tmp_cwnd =3D=3D max_cwnd) {
+>   				ca->epsilon_num =3D -1;
+> -				ca->epsilon_den =3D mpcb->cnt_established  * M;
+> +				ca->epsilon_den =3D established_cnt * M;
+>   			} else {
+>   				ca->epsilon_num =3D 0;
+>   				ca->epsilon_den =3D 1;
 > =
 
-> Thank you for your comments. If I have not answered any comment to your
-> satisfaction please raise it again.
-> =
 
-> Shoaib.
->=20
+-- =
 
---===============3906378863932905270==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+-- =
+
+
+
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
+
+and intended solely for the use of the individual or entity to whom they =
+
+are addressed. If you have received this email in error please notify the =
+
+system manager. This message contains confidential information and is =
+
+intended only for the individual named. If you are not the named addressee =
+
+you should not disseminate, distribute or copy this e-mail. Please notify =
+
+the sender immediately by e-mail if you have received this e-mail by =
+
+mistake and delete this e-mail from your system. If you are not the =
+
+intended recipient you are notified that disclosing, copying, distributing =
+
+or taking any action in reliance on the contents of this information is =
+
+strictly prohibited.
+
+--===============8422206336849755780==--
