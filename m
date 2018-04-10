@@ -1,73 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============4173366711804933675=="
+Content-Type: multipart/mixed; boundary="===============6162475266398949641=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 5th of April 2018
-Date: Mon, 09 Apr 2018 13:50:50 -0700
-Message-ID: <alpine.OSX.2.21.1804091345020.4166@mjmartin-mac01.sea.intel.com>
-In-Reply-To: alpine.OSX.2.21.1804051358240.56457@mjmartin-mac01.sea.intel.com
+Subject: Re: [MPTCP] [RFC 1/9] Modify tcp structures to support function
+ pointers
+Date: Mon, 09 Apr 2018 22:19:57 -0700
+Message-ID: <c11199d8-3859-10f0-89b7-ba861ac5b769@oracle.com>
+In-Reply-To: 20180409044101.GW16289@MacBook-Pro-6.local
 X-Status: 
 X-Keywords:                  
-X-UID: 528
+X-UID: 529
 
---===============4173366711804933675==
+--===============6162475266398949641==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Thu, 5 Apr 2018, Mat Martineau wrote:
+
+On 04/08/2018 09:41 PM, Christoph Paasch wrote:
+> On 30/03/18 - 10:32:23, Rao Shoaib wrote:
+>>
+>> On 03/27/2018 02:36 AM, Christoph Paasch wrote:
+>>> it is important to explain (in the commit-message) for each of these ca=
+llbacks
+>>> why they are needed for an MPTCP implementation and why it can't be done
+>>> without them.
+>>>
+>>> This is important to allow people to understand why the change is neces=
+sary and
+>>> where it is leading to. Ignoring potential performance hits for a momen=
+t,
+>>> callbacks also increase the code-maintenance overhead and thus each of =
+them
+>>> will need to justified.
+>>>
+>>>
+>>> Christoph
+>>>
+>>>
+>>>
+>> These callbacks are needed to make the code more readable and maintainab=
+le.
+>> These will be replace by the macro anyways so this does not matter.
+> Even with the macros, it is important to describe to the reviewer in the
+> commit message why each of these changes is there for.
+>
+>
+> Christoph
+The patch was not sent to just any group. It was sent to folks who I =
+
+assumed were very familiar with the code and what was being done.=C2=A0 I d=
+id =
+
+say.
+
+Following patches modify TCP code to enable implementation of MPTCP. MPTCP =
+implementation requires sharing of TCP code with minor modification here an=
+d there. In order to keep the TCP code clean and easy to maintain, common c=
+ode has been moved to new functions for use by both TCP and MPTCP. struct t=
+cp_sock now has function pointers and based on the socket type (TCP/MPTCP) =
+appropriate function is called.
+
+
+Shoaib
 
 >
-> On Thu, 5 Apr 2018, Matthieu Baerts wrote:
->
->> netdevconf:
->>     - new ideas? =E2=86=92 not really
->>     - seems the tutorial is what is the best for us for now (because the =
-
->> maintainer will not be there)
->>     - Matthieu: will ask colleagues for ideas
->>     - for the tutorial, we mostly need a description of max 350 words: n=
-ot =
-
->> too much to prepare before the 1st of May
->>     - we need to check Linux Plumbers participation guidelines (Mat will =
-
->> try to have a look): =
-
->> https://www.linuxplumbersconf.org/2017/participate.1.html#cfp & =
-
->> https://www.linuxplumbersconf.org/2018/participate/ (not ready)
->
-> One promising option is a microconference discussion topic, which would b=
-e a =
-
-> more interactive session than a traditional presentation. There would lik=
-ely =
-
-> be a good cross-section of networking contributors and maintainers in the =
-
-> room. I haven't been to LPC before, so I'll chat with some coworkers who =
-have =
-
-> attended.
->
-> Given the lead times last year, I'm guessing the LPC proposal deadlines w=
-ill =
-
-> be around July.
-
-While I don't see any new information about LPC miniconferences, the =
-
-networking track submission deadline for LPC is July 11:
-
-http://vger.kernel.org/lpc-networking.html
-
-350 word proposal for a 40 minute talk plus 2-10 page paper.
 
 
---
-Mat Martineau
-Intel OTC
-
---===============4173366711804933675==--
+--===============6162475266398949641==--
