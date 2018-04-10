@@ -1,55 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============6320579981088196418=="
+Content-Type: multipart/mixed; boundary="===============9022382267430459878=="
 MIME-Version: 1.0
 From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 0/9] Changes for implementing MPTCP
-Date: Mon, 09 Apr 2018 22:33:55 -0700
-Message-ID: <21ef15b3-fbb9-960a-5faf-2221144b4997@oracle.com>
-In-Reply-To: 20180409050325.GY16289@MacBook-Pro-6.local
+Subject: Re: [MPTCP] [RFC 8/9] Restructure TCP code so that it can be shared
+ primarily with MPTCP
+Date: Mon, 09 Apr 2018 22:42:10 -0700
+Message-ID: <8fb0cc8b-4f60-c42b-a2a6-940e72fad2ac@oracle.com>
+In-Reply-To: 20180409045814.GX16289@MacBook-Pro-6.local
 X-Status: 
 X-Keywords:                  
-X-UID: 530
+X-UID: 531
 
---===============6320579981088196418==
+--===============9022382267430459878==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
 
-On 04/08/2018 10:03 PM, Christoph Paasch wrote:
->> Please also remember our initial goal is to implement a very simple MPTCP
->> implementation and we are not trying to be on par with mptcp-dev.
-> Yes, I couldn't agree more with this. We should do a simple and minimal
-> implementation of MPTCP. Which is why in some of my comments I ask why a
-> certain change is needed as we could simplify things.
-That is great. Please submit patches that simplify MPTCP's interaction =
-
-with TCP or at least creates a clean API. That is what I have tried to =
-
-do but there is still a lot of work to be done.
->
->>> * The patches are holding the meta-lock when processing incoming packet=
-s or
->>>     timer-events. This will trigger a lot of RCU-warnings. Adressing th=
-is is
->>>     not trivial and will require significant architectural changes.
+On 04/08/2018 09:58 PM, Christoph Paasch wrote:
+>>> are needed.
 >>>
->> I do not want any significant architectural changes. I have not seen any=
- RCU
->> warnings in my testing so I was not aware of that.
-> You can simply enable LOCKDEP and then you will see plenty of them.
-I have not addressed MPTCP=C2=A0 code yet. The patches that I have submitte=
-d =
+>>> You would need to explain this in the commit-message as otherwise the r=
+eview
+>>> is very difficult.
+>> These changes are part of restructuring as the title says. MPTCP is very
+>> intrusive to TCP code. Where possible I have re-factored TCP functions i=
+nto
+>> common code and separated out the code where MPTCP and TCP differ. The
+>> calling function calls the socket type specific function that uses the
+>> common function.
+> Yes, I see that. What I mean is that the commit-message has to describe w=
+hy
+> a certain change is needed, not only what the change is doing.
+>
+> For MPTCP, the problem is that the interface might not support
+> scatter-gather because a connection is no more "linked" to a single
+> interface.
+>
+> To reduce the amount of code-changes needed for MPTCP in a patch-submissi=
+on
+> to netdev (even if such a submission would be just for feedback), we could
+> simply make MPTCP always do sock_no_sendpage().
+>
+>
+> Christoph
+>
+As I said before I was not sending it to netdev. If I were sending it to =
 
-for Peter will show that I have changed it a lot. I will try to test =
+netdev everything would be different. If anyone has any questions please =
 
-with LOCKDEP and see if I can resolve the issue.
+ask, truly I thought I would be insulting the reviewers by providing =
+
+this kind of details.
+
+I submitted the following patch which makes changes that are not =
+
+obvious, not one person has said that I have not described the changes =
+
+in detail.
+
+https://lkml.org/lkml/2018/4/2/13
 
 Shoaib
 
-
---===============6320579981088196418==
+--===============9022382267430459878==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -58,39 +73,40 @@ Content-Disposition: attachment; filename="attachment.html"
 PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
 bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
 MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPHA+PGJyPgogICAgPC9wPgogICAgPGJyPgog
-ICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAwNC8wOC8yMDE4IDEwOjAzIFBNLCBD
+ICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAwNC8wOC8yMDE4IDA5OjU4IFBNLCBD
 aHJpc3RvcGgKICAgICAgUGFhc2NoIHdyb3RlOjxicj4KICAgIDwvZGl2PgogICAgPGJsb2NrcXVv
-dGUgdHlwZT0iY2l0ZSIKICAgICAgY2l0ZT0ibWlkOjIwMTgwNDA5MDUwMzI1LkdZMTYyODlATWFj
+dGUgdHlwZT0iY2l0ZSIKICAgICAgY2l0ZT0ibWlkOjIwMTgwNDA5MDQ1ODE0LkdYMTYyODlATWFj
 Qm9vay1Qcm8tNi5sb2NhbCI+CiAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIHN0eWxlPSJj
-b2xvcjogIzAwMDAwMDsiPgogICAgICAgIDxwcmUgd3JhcD0iIj5QbGVhc2UgYWxzbyByZW1lbWJl
-ciBvdXIgaW5pdGlhbCBnb2FsIGlzIHRvIGltcGxlbWVudCBhIHZlcnkgc2ltcGxlIE1QVENQCmlt
-cGxlbWVudGF0aW9uIGFuZCB3ZSBhcmUgbm90IHRyeWluZyB0byBiZSBvbiBwYXIgd2l0aCBtcHRj
-cC1kZXYuCjwvcHJlPgogICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgIDxwcmUgd3JhcD0iIj5ZZXMs
-IEkgY291bGRuJ3QgYWdyZWUgbW9yZSB3aXRoIHRoaXMuIFdlIHNob3VsZCBkbyBhIHNpbXBsZSBh
-bmQgbWluaW1hbAppbXBsZW1lbnRhdGlvbiBvZiBNUFRDUC4gV2hpY2ggaXMgd2h5IGluIHNvbWUg
-b2YgbXkgY29tbWVudHMgSSBhc2sgd2h5IGEKY2VydGFpbiBjaGFuZ2UgaXMgbmVlZGVkIGFzIHdl
-IGNvdWxkIHNpbXBsaWZ5IHRoaW5ncy48L3ByZT4KICAgIDwvYmxvY2txdW90ZT4KICAgIFRoYXQg
-aXMgZ3JlYXQuIFBsZWFzZSBzdWJtaXQgcGF0Y2hlcyB0aGF0IHNpbXBsaWZ5IE1QVENQJ3MKICAg
-IGludGVyYWN0aW9uIHdpdGggVENQIG9yIGF0IGxlYXN0IGNyZWF0ZXMgYSBjbGVhbiBBUEkuIFRo
-YXQgaXMgd2hhdCBJCiAgICBoYXZlIHRyaWVkIHRvIGRvIGJ1dCB0aGVyZSBpcyBzdGlsbCBhIGxv
-dCBvZiB3b3JrIHRvIGJlIGRvbmUuPGJyPgogICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIKICAg
-ICAgY2l0ZT0ibWlkOjIwMTgwNDA5MDUwMzI1LkdZMTYyODlATWFjQm9vay1Qcm8tNi5sb2NhbCI+
-CiAgICAgIDxwcmUgd3JhcD0iIj4KCjwvcHJlPgogICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRl
-IiBzdHlsZT0iY29sb3I6ICMwMDAwMDA7Ij4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRl
-IiBzdHlsZT0iY29sb3I6ICMwMDAwMDA7Ij4KICAgICAgICAgIDxwcmUgd3JhcD0iIj4qIFRoZSBw
-YXRjaGVzIGFyZSBob2xkaW5nIHRoZSBtZXRhLWxvY2sgd2hlbiBwcm9jZXNzaW5nIGluY29taW5n
-IHBhY2tldHMgb3IKICAgdGltZXItZXZlbnRzLiBUaGlzIHdpbGwgdHJpZ2dlciBhIGxvdCBvZiBS
-Q1Utd2FybmluZ3MuIEFkcmVzc2luZyB0aGlzIGlzCiAgIG5vdCB0cml2aWFsIGFuZCB3aWxsIHJl
-cXVpcmUgc2lnbmlmaWNhbnQgYXJjaGl0ZWN0dXJhbCBjaGFuZ2VzLgoKPC9wcmU+CiAgICAgICAg
-PC9ibG9ja3F1b3RlPgogICAgICAgIDxwcmUgd3JhcD0iIj5JIGRvIG5vdCB3YW50IGFueSBzaWdu
-aWZpY2FudCBhcmNoaXRlY3R1cmFsIGNoYW5nZXMuIEkgaGF2ZSBub3Qgc2VlbiBhbnkgUkNVCndh
-cm5pbmdzIGluIG15IHRlc3Rpbmcgc28gSSB3YXMgbm90IGF3YXJlIG9mIHRoYXQuCjwvcHJlPgog
-ICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgIDxwcmUgd3JhcD0iIj5Zb3UgY2FuIHNpbXBseSBlbmFi
-bGUgTE9DS0RFUCBhbmQgdGhlbiB5b3Ugd2lsbCBzZWUgcGxlbnR5IG9mIHRoZW0uCjwvcHJlPgog
-ICAgPC9ibG9ja3F1b3RlPgogICAgSSBoYXZlIG5vdCBhZGRyZXNzZWQgTVBUQ1DCoCBjb2RlIHll
-dC4gVGhlIHBhdGNoZXMgdGhhdCBJIGhhdmUKICAgIHN1Ym1pdHRlZCBmb3IgUGV0ZXIgd2lsbCBz
-aG93IHRoYXQgSSBoYXZlIGNoYW5nZWQgaXQgYSBsb3QuIEkgd2lsbAogICAgdHJ5IHRvIHRlc3Qg
-d2l0aCBMT0NLREVQIGFuZCBzZWUgaWYgSSBjYW4gcmVzb2x2ZSB0aGUgaXNzdWUuPGJyPgogICAg
-PGJyPgogICAgU2hvYWliPGJyPgogICAgPGJyPgogIDwvYm9keT4KPC9odG1sPgo=
+b2xvcjogIzAwMDAwMDsiPgogICAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIHN0eWxlPSJj
+b2xvcjogIzAwMDAwMDsiPgogICAgICAgICAgPHByZSB3cmFwPSIiPmFyZSBuZWVkZWQuCgpZb3Ug
+d291bGQgbmVlZCB0byBleHBsYWluIHRoaXMgaW4gdGhlIGNvbW1pdC1tZXNzYWdlIGFzIG90aGVy
+d2lzZSB0aGUgcmV2aWV3CmlzIHZlcnkgZGlmZmljdWx0Lgo8L3ByZT4KICAgICAgICA8L2Jsb2Nr
+cXVvdGU+CiAgICAgICAgPHByZSB3cmFwPSIiPlRoZXNlIGNoYW5nZXMgYXJlIHBhcnQgb2YgcmVz
+dHJ1Y3R1cmluZyBhcyB0aGUgdGl0bGUgc2F5cy4gTVBUQ1AgaXMgdmVyeQppbnRydXNpdmUgdG8g
+VENQIGNvZGUuIFdoZXJlIHBvc3NpYmxlIEkgaGF2ZSByZS1mYWN0b3JlZCBUQ1AgZnVuY3Rpb25z
+IGludG8KY29tbW9uIGNvZGUgYW5kIHNlcGFyYXRlZCBvdXQgdGhlIGNvZGUgd2hlcmUgTVBUQ1Ag
+YW5kIFRDUCBkaWZmZXIuIFRoZQpjYWxsaW5nIGZ1bmN0aW9uIGNhbGxzIHRoZSBzb2NrZXQgdHlw
+ZSBzcGVjaWZpYyBmdW5jdGlvbiB0aGF0IHVzZXMgdGhlCmNvbW1vbiBmdW5jdGlvbi4KPC9wcmU+
+CiAgICAgIDwvYmxvY2txdW90ZT4KICAgICAgPHByZSB3cmFwPSIiPlllcywgSSBzZWUgdGhhdC4g
+V2hhdCBJIG1lYW4gaXMgdGhhdCB0aGUgY29tbWl0LW1lc3NhZ2UgaGFzIHRvIGRlc2NyaWJlIHdo
+eQphIGNlcnRhaW4gY2hhbmdlIGlzIG5lZWRlZCwgbm90IG9ubHkgd2hhdCB0aGUgY2hhbmdlIGlz
+IGRvaW5nLgoKRm9yIE1QVENQLCB0aGUgcHJvYmxlbSBpcyB0aGF0IHRoZSBpbnRlcmZhY2UgbWln
+aHQgbm90IHN1cHBvcnQKc2NhdHRlci1nYXRoZXIgYmVjYXVzZSBhIGNvbm5lY3Rpb24gaXMgbm8g
+bW9yZSAibGlua2VkIiB0byBhIHNpbmdsZQppbnRlcmZhY2UuCgpUbyByZWR1Y2UgdGhlIGFtb3Vu
+dCBvZiBjb2RlLWNoYW5nZXMgbmVlZGVkIGZvciBNUFRDUCBpbiBhIHBhdGNoLXN1Ym1pc3Npb24K
+dG8gbmV0ZGV2IChldmVuIGlmIHN1Y2ggYSBzdWJtaXNzaW9uIHdvdWxkIGJlIGp1c3QgZm9yIGZl
+ZWRiYWNrKSwgd2UgY291bGQKc2ltcGx5IG1ha2UgTVBUQ1AgYWx3YXlzIGRvIHNvY2tfbm9fc2Vu
+ZHBhZ2UoKS4KCgpDaHJpc3RvcGgKCjwvcHJlPgogICAgPC9ibG9ja3F1b3RlPgogICAgQXMgSSBz
+YWlkIGJlZm9yZSBJIHdhcyBub3Qgc2VuZGluZyBpdCB0byBuZXRkZXYuIElmIEkgd2VyZSBzZW5k
+aW5nCiAgICBpdCB0byBuZXRkZXYgZXZlcnl0aGluZyB3b3VsZCBiZSBkaWZmZXJlbnQuIElmIGFu
+eW9uZSBoYXMgYW55CiAgICBxdWVzdGlvbnMgcGxlYXNlIGFzaywgdHJ1bHkgSSB0aG91Z2h0IEkg
+d291bGQgYmUgaW5zdWx0aW5nIHRoZQogICAgcmV2aWV3ZXJzIGJ5IHByb3ZpZGluZyB0aGlzIGtp
+bmQgb2YgZGV0YWlscy4gPGJyPgogICAgPGJyPgogICAgSSBzdWJtaXR0ZWQgdGhlIGZvbGxvd2lu
+ZyBwYXRjaCB3aGljaCBtYWtlcyBjaGFuZ2VzIHRoYXQgYXJlIG5vdAogICAgb2J2aW91cywgbm90
+IG9uZSBwZXJzb24gaGFzIHNhaWQgdGhhdCBJIGhhdmUgbm90IGRlc2NyaWJlZCB0aGUKICAgIGNo
+YW5nZXMgaW4gZGV0YWlsLjxicj4KICAgIDxicj4KICAgIDxhIGNsYXNzPSJtb3otdHh0LWxpbmst
+ZnJlZXRleHQiIGhyZWY9Imh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4LzQvMi8xMyI+aHR0cHM6
+Ly9sa21sLm9yZy9sa21sLzIwMTgvNC8yLzEzPC9hPjxicj4KICAgIDxicj4KICAgIFNob2FpYjxi
+cj4KICA8L2JvZHk+CjwvaHRtbD4K
 
---===============6320579981088196418==--
+--===============9022382267430459878==--
