@@ -1,25 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============5317004676231053294=="
+Content-Type: multipart/mixed; boundary="===============5218072508227921738=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Offline until Monday
-Date: Tue, 10 Apr 2018 18:43:53 -0700
-Message-ID: <776B4FB5-2FD9-49A4-8A5E-94EA92863A15@apple.com>
+Subject: [MPTCP] Will there be a meeting tomorrow
+Date: Wed, 11 Apr 2018 12:43:04 -0700
+Message-ID: <1dfd3309-a880-dfa3-007f-9e796df800c2@oracle.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 534
+X-UID: 535
 
---===============5317004676231053294==
+--===============5218072508227921738==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Since I have not seen an announcement, I am wondering if there will be a =
 
-starting tomorrow I will be offline until Monday.
+meeting tomorrow or not?
 
-Thus, I won=E2=80=99t be able to participate in the call on Thursday.
+Shoaib
 
 
-Christoph=20
---===============5317004676231053294==--
+--===============5218072508227921738==--
