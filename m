@@ -1,86 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============7653827956600141346=="
+Content-Type: multipart/mixed; boundary="===============4394786208757995136=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Initial net-next merge
-Date: Thu, 12 Apr 2018 14:43:08 -0700
-Message-ID: <alpine.OSX.2.21.1804121346030.28008@pchaturv-mobl1.amr.corp.intel.com>
+Subject: [MPTCP] Weekly meeting - 16 April 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Sun, 15 Apr 2018 19:42:03 +0200
+Message-ID: <e0e3657e-443c-264d-3769-4310e01b7ffb@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 538
+X-UID: 539
 
---===============7653827956600141346==
+--===============4394786208757995136==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-Hello -
+Our public MPTCP upstreaming weekly web conference is scheduled for =
 
-I've pushed a merge of mptcp_trunk and net-next to =
+tomorrow.
 
-https://github.com/multipath-tcp/mptcp_net-next/commits/master . The =
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180416
+Feel free to add/modify topics!
 
-intent (as discussed in the 05-April-2018 meeting) is to work toward an =
+Meeting link: https://talky.io/mptcp_upstreaming
 
-upstreamable implementation by:
+Speak to you tomorrow!
+Matthieu
+-- =
 
-  * Removing features and optimizations not strictly necessary for a =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-baseline MPTCP server
-
-  * Integrating architectural changes that are reviewed and accepted on =
-
-this mailing list
-
-  * Keeping up with net-next
-
-While this repository is hosted on github, we will be conducting patch =
-
-review on this mailing list (and not using the github pull request =
-
-workflow).
-
-I'll be handling the net-next merges and pushing those directly to the =
-
-repository. In the future I will push proposed merges to a separate (TBD) =
-
-branch and notify the mailing list before updating master so people have =
-
-an opportunity to review the changes.
+-- =
 
 
-Specifics about this merge:
 
-I did minimal conflict resolution in the merge commit itself, and made the =
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
 
-build fixes and code changes in a follow-up commit.
+and intended solely for the use of the individual or entity to whom they =
 
-There was a significant TCP change where GSO (generic segmentation =
+are addressed. If you have received this email in error please notify the =
 
-offload) is now always enabled (see =
+system manager. This message contains confidential information and is =
 
-https://github.com/multipath-tcp/mptcp_net-next/commit/0a6b2a1dc2a2105f1782=
-55fe495eb914b09cb37a) =
+intended only for the individual named. If you are not the named addressee =
 
-This led to some new assumptions, like only supporting CHECKSUM_PARTIAL =
+you should not disseminate, distribute or copy this e-mail. Please notify =
 
-skbs for TCP transmission.
+the sender immediately by e-mail if you have received this e-mail by =
 
-Christoph, you might want to look at the checksum change in =
+mistake and delete this e-mail from your system. If you are not the =
 
-mptcp_skb_entail(). I did some simple tests with and without the DSS =
+intended recipient you are notified that disclosing, copying, distributing =
 
-checksum enabled that seemed to work fine.
+or taking any action in reliance on the contents of this information is =
 
-There may be opportunity to simplify mptcp_select_size() too, since the =
+strictly prohibited.
 
-TCP select_size() has been cut down to only a few lines.  I kept the =
-
-current MPTCP behavior for now.
-
---
-Mat Martineau
-Intel OTC
-
---===============7653827956600141346==--
+--===============4394786208757995136==--
