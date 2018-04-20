@@ -1,149 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============5779344416913064139=="
+Content-Type: multipart/mixed; boundary="===============6948873577530703566=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 16th of April 2018
-Date: Mon, 16 Apr 2018 19:18:36 +0200
-Message-ID: <021c8818-f78d-5e02-9a76-aaa715ac39c8@tessares.net>
+Subject: [MPTCP] Call for ideas for a presentation about MPTCP Upstream
+ project at NetDev 0x12 in July
+Date: Fri, 20 Apr 2018 17:26:50 +0200
+Message-ID: <512756bd-89e6-712d-b68f-9fecd3103aea@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 540
+X-UID: 541
 
---===============5779344416913064139==
+--===============6948873577530703566==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-We just had our 6th meeting with Mat (Intel OTC), Christoph (Apple) and =
 
-myself (Tessares).
-
-Thanks again for this new good meeting!
-
-Please note that this meeting was exceptionally on Monday because it was =
-
-not possible to have it at the end of last week nor at the end of this =
-
-week. We propose to have the next meeting next Thursday (26th of April). =
-
-Feel free to propose other dates if needed.
+NetDev 0x12 is coming to Montr=C3=A9al this summer: July 11th to 13th, 2018.
 
 
+We already talked about this event on this ML and at our weekly meetings =
 
-Here are the minutes of the meeting:
+but here is a summary of the discussions we had:
 
+  - we would like to have a presentation there mainly to get feedback =
 
+and advice from other kernel developers
+  - a presentation would clearly indicate that this MPTCP Upstream =
 
-Progress from last week:
-     - as expected, many people off or busy with other stuffs, not so =
+project exists and we could get help from more developers
+  - we would like to indicate that having MPTCP upstream is asked by =
 
-much new to share.
-     - Mat has updated the mptcp_net-net repo (see below)
-     - Mat is dealing with issue on the client side (version from =
+different companies, some are even ready to contribute ; it is then =
 
-github.com/multipath-tcp/mptcp) when using it with a modified server =
-
-(having his patches). More discussions will continue later with a pcap.
-     - Matthieu finished the review of Christoph's patches (Note for =
-
-myself: not the review of Christoph's Paasch, that's different...). Do =
-
-not hesitate to review the two last commits.
+important to have MPTCP upstream
 
 
+Also note that:
 
-mptcp_net-next merge:
-     - Mat started the work: =
+  - David Miller will not be present in Montr=C3=A9al [1] but other main =
 
-https://github.com/multipath-tcp/mptcp_net-next/
-     - one fix has been done (related to checksum and gso), seems OK, =
+contributors should be there (we don't have a list)
+  - A presentation by Octavian Purdila about "MPTCP Upstreaming" has =
 
-feel free to comment if not: =
+already been given in 2015 (NetDev 0.1) [2]
+  - 3 types of presentation are available: talks, tutorials and =
 
-https://github.com/multipath-tcp/mptcp_net-next/commit/6ba7f217d3a69a88152a=
-3fbee8b9dfc47c77bf4d
-     - Christoph will try to launch some tests using this branch
-     - Could be good to merge with net-next once per week to reduce the =
-
-amount of conflicts we need to fix in once
-     - Could be good to have two branches:
-         - one close to net-next and the current mptcp_trunk
-         - one where we have a minimal implementation =E2=86=92 focus on th=
-e =
-
-client, simple version.
+workshops [3]
+  - Call for Presentation Proposals closes on May 1st, 2018.
 
 
+The current idea we briefly discussed during our weekly meetings is to =
 
-netdevconf:
-     - tutorial ideas: more should come. Feel free to propose any idea.
-     - Matthieu is trying to get more ideas
-     - Matthieu: will start a dedicated discussion on the ML (should do =
+give a tutorial:
 
-that on Wednesday (or short after) after having collected more ideas)
+  - It is not useful to give almost the same presentation as the one of =
 
+Octavian
+  - It will allow us more flexibility somehow to explain what is MPTCP, =
 
+the different use-cases, why it is important to have it upstream and =
 
-topgit to manage patch sets, maybe not needed now, maybe later
-     - looks like a good tool for what we have to do
-     - could be good to have a look:
-         https://github.com/mackyle/topgit (new version -- recommended)
-         https://github.com/greenrd/topgit (original version)
-     - Matthieu has some experiences with it if you need some support.
-     - Feel free to try it, instructions are in the README
+what problems we are currently facing.
+  - David Miller and many other kernel developers will go to LPC in =
+
+November: a good place to give a talk this time.
 
 
-
-LPC:
-     - From Mat: still not clear what it will be.
-     - it is possible that they will have more miniconferences and they =
-
-will prefer that
-     - but will be a lot of people there (davem), very interesting to =
-
-participate, get feedback, help, advises, etc.
-     - the networking track submission deadline for LPC is July 11: =
-
-http://vger.kernel.org/lpc-networking.html =E2=86=92 350 word proposal for =
-a 40 =
-
-minute talk plus 2-10 page paper.
+Do you have any ideas on what we could show in this tutorial?
 
 
+I recently discussed with my colleague Olivier Bonaventure who has a lot =
 
-Next steps:
-     - Mat: wiki update: with links, etc. (could be good, when the base =
+of experiences in giving different introductions and more about MPTCP =
 
-is there, to have some help to maintain that, at least reporting =
+and here is what he suggests:
 
-outdated links, etc.
-     - Christoph: will first look at the lockless patches then maybe =
+  - A first part about a basic introduction of MPTCP
+  - Indicate different use-cases -- if possible with a "closed demo" to =
 
-look at the net-next branch
-     - Peter will also look at mptcp-net-next branch + continue to work =
+be sure it is working -- asking people to setup something is not easy in =
 
-on the patch-set with Mat
-     - Matthieu: update Netlink PM patches.
+1h, max 1h30.
+  - Then trying to have interactive discussions or explanations about =
+
+how MPTCP is currently implemented or should be implemented if it goes =
+
+upstream, e.g.: for MPTCP, we need to have extra TCP Options, we need to =
+
+support middleboxes, we need to link subflows of the same connection =
+
+together, we need a scheduler, a PM, etc.
+  - Of course, we should focus our discussions on the upstreaming =
+
+aspect, e.g. reducing the footprint of MPTCP in the current TCP stack: =
+
+what are we allow to do, what not. It is linked to many previous =
+
+discussions we had on this ML, e.g. why we need more indirect function =
+
+calls and how to reduce the impact, etc.
+  - If we have time, we could discuss about how users could interact =
+
+with MPTCP: enable it per connection, control the path manager, maybe =
+
+the scheduler, etc.
 
 
+What do you think about this? Feel free to comment and even propose =
 
-Next meeting:
-     - proposition: the 26th of April at 9am PDT - 16:00 UTC (9am PDT, =
-
-6pm CEST)
-     - open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20180426
+completely different ideas!
 
 
-
-Feel free to comment these points and propose new ones for the next meeting!
-
-
-
-Talk to you next week,
+Cheers,
 Matthieu
+
+[1] https://lists.01.org/pipermail/mptcp/2018-March/000379.html
+[2] https://www.youtube.com/watch?v=3Dwftz2cU5SZs
+[3] https://www.netdevconf.org/0x12/submit-proposal.html
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -179,4 +155,4 @@ or taking any action in reliance on the contents of this information is =
 
 strictly prohibited.
 
---===============5779344416913064139==--
+--===============6948873577530703566==--
