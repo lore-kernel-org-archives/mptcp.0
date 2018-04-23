@@ -1,36 +1,181 @@
-Content-Type: multipart/mixed; boundary="===============6034466485428302546=="
+Content-Type: multipart/mixed; boundary="===============0441642085102153567=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] MPTCP Upstreaming wiki
-Date: Fri, 20 Apr 2018 17:17:26 -0700
-Message-ID: <alpine.OSX.2.21.1804201707090.3140@hunteral-mobl1.amr.corp.intel.com>
+Subject: Re: [MPTCP] MPTCP Upstreaming wiki
+Date: Mon, 23 Apr 2018 09:25:28 +0200
+Message-ID: <CAKuKrB=BvxHquz65iJsZkbD8VNN9-4G2TtjfYJ2giFYtB+Ragg@mail.gmail.com>
+In-Reply-To: alpine.OSX.2.21.1804201707090.3140@hunteral-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 542
+X-UID: 543
 
---===============6034466485428302546==
+--===============0441642085102153567==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Mat,
 
-Hello -
+Thank you for this!
 
-I've set up a wiki for our project:
+I just updated this page to refer to this new wiki:
+http://multipath-tcp.org/pmwiki.php/Developer/Upstreaming
 
-https://github.com/multipath-tcp/mptcp_net-next/wiki
-
-To start with I've added some information that was otherwise buried in our =
-
-mailing list archives. This includes a summary of what the community has =
-
-shared so far, meeting information, and pointers to relevant resources.
+I can maintain the "Meeting" section if it is OK for you. And help trying
+to maintain the rest up to date.
 
 Regards,
+Matthieu
 
---
-Mat Martineau
-Intel OTC
+On Sat, Apr 21, 2018 at 2:17 AM, Mat Martineau <
+mathew.j.martineau(a)linux.intel.com> wrote:
 
---===============6034466485428302546==--
+>
+> Hello -
+>
+> I've set up a wiki for our project:
+>
+> https://github.com/multipath-tcp/mptcp_net-next/wiki
+>
+> To start with I've added some information that was otherwise buried in our
+> mailing list archives. This includes a summary of what the community has
+> shared so far, meeting information, and pointers to relevant resources.
+>
+> Regards,
+>
+> --
+> Mat Martineau
+> Intel OTC
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+>
+
+
+
+-- =
+
+[image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+<https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Louva=
+in-la-Neuve,+Belgium>
+
+-- =
+
+
+
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
+
+and intended solely for the use of the individual or entity to whom they =
+
+are addressed. If you have received this email in error please notify the =
+
+system manager. This message contains confidential information and is =
+
+intended only for the individual named. If you are not the named addressee =
+
+you should not disseminate, distribute or copy this e-mail. Please notify =
+
+the sender immediately by e-mail if you have received this e-mail by =
+
+mistake and delete this e-mail from your system. If you are not the =
+
+intended recipient you are notified that disclosing, copying, distributing =
+
+or taking any action in reliance on the contents of this information is =
+
+strictly prohibited.
+
+--===============0441642085102153567==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSBNYXQsPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFu
+ayB5b3UgZm9yIHRoaXMhPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JIGp1c3QgdXBkYXRlZCB0
+aGlzIHBhZ2UgdG8gcmVmZXIgdG8gdGhpcyBuZXcgd2lraTogPGEgaHJlZj0iaHR0cDovL211bHRp
+cGF0aC10Y3Aub3JnL3Btd2lraS5waHAvRGV2ZWxvcGVyL1Vwc3RyZWFtaW5nIj5odHRwOi8vbXVs
+dGlwYXRoLXRjcC5vcmcvcG13aWtpLnBocC9EZXZlbG9wZXIvVXBzdHJlYW1pbmc8L2E+PC9kaXY+
+PGRpdj48YnI+PC9kaXY+PGRpdj5JIGNhbiBtYWludGFpbiB0aGUgJnF1b3Q7TWVldGluZyZxdW90
+OyBzZWN0aW9uIGlmIGl0IGlzIE9LIGZvciB5b3UuIEFuZCBoZWxwIHRyeWluZyB0byBtYWludGFp
+biB0aGUgcmVzdCB1cCB0byBkYXRlLjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlJlZ2Fy
+ZHMsPGJyPjwvZGl2PjxkaXY+TWF0dGhpZXU8YnI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iZ21h
+aWxfZXh0cmEiPjxicj48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+T24gU2F0LCBBcHIgMjEsIDIw
+MTggYXQgMjoxNyBBTSwgTWF0IE1hcnRpbmVhdSA8c3BhbiBkaXI9Imx0ciI+Jmx0OzxhIGhyZWY9
+Im1haWx0bzptYXRoZXcuai5tYXJ0aW5lYXVAbGludXguaW50ZWwuY29tIiB0YXJnZXQ9Il9ibGFu
+ayI+bWF0aGV3LmoubWFydGluZWF1QGxpbnV4LmludGVsLmNvbTwvYT4mZ3Q7PC9zcGFuPiB3cm90
+ZTo8YnI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjAgMCAw
+IC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mgc29saWQ7cGFkZGluZy1sZWZ0OjFleCI+PGJyPgpI
+ZWxsbyAtPGJyPgo8YnI+CkkmIzM5O3ZlIHNldCB1cCBhIHdpa2kgZm9yIG91ciBwcm9qZWN0Ojxi
+cj4KPGJyPgo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vbXVsdGlwYXRoLXRjcC9tcHRjcF9u
+ZXQtbmV4dC93aWtpIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2dp
+dGh1Yi5jb20vbXVsdGlwYXRoLXQ8d2JyPmNwL21wdGNwX25ldC1uZXh0L3dpa2k8L2E+PGJyPgo8
+YnI+ClRvIHN0YXJ0IHdpdGggSSYjMzk7dmUgYWRkZWQgc29tZSBpbmZvcm1hdGlvbiB0aGF0IHdh
+cyBvdGhlcndpc2UgYnVyaWVkIGluIG91ciBtYWlsaW5nIGxpc3QgYXJjaGl2ZXMuIFRoaXMgaW5j
+bHVkZXMgYSBzdW1tYXJ5IG9mIHdoYXQgdGhlIGNvbW11bml0eSBoYXMgc2hhcmVkIHNvIGZhciwg
+bWVldGluZyBpbmZvcm1hdGlvbiwgYW5kIHBvaW50ZXJzIHRvIHJlbGV2YW50IHJlc291cmNlcy48
+YnI+Cjxicj4KUmVnYXJkcyw8YnI+Cjxicj4KLS08YnI+Ck1hdCBNYXJ0aW5lYXU8YnI+CkludGVs
+IE9UQzxicj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPHdicj5fX19fX19fX19fX19f
+X19fXzxicj4KbXB0Y3AgbWFpbGluZyBsaXN0PGJyPgo8YSBocmVmPSJtYWlsdG86bXB0Y3BAbGlz
+dHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+bXB0Y3BAbGlzdHMuMDEub3JnPC9hPjxicj4KPGEg
+aHJlZj0iaHR0cHM6Ly9saXN0cy4wMS5vcmcvbWFpbG1hbi9saXN0aW5mby9tcHRjcCIgcmVsPSJu
+b3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly9saXN0cy4wMS5vcmcvbWFpbG1hbi9s
+PHdicj5pc3RpbmZvL21wdGNwPC9hPjxicj4KPC9ibG9ja3F1b3RlPjwvZGl2Pjxicj48YnIgY2xl
+YXI9ImFsbCI+PGJyPi0tIDxicj48ZGl2IGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiIGRhdGEtc21h
+cnRtYWlsPSJnbWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0
+ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48dGFibGUgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1Rp
+bWVzIE5ldyBSb21hbiZxdW90OztsZXR0ZXItc3BhY2luZzpub3JtYWw7dGV4dC1pbmRlbnQ6MHB4
+O3RleHQtdHJhbnNmb3JtOm5vbmU7d29yZC1zcGFjaW5nOjBweCIgYm9yZGVyPSIwIiB3aWR0aD0i
+MTAwJSI+PHRib2R5Pjx0cj48dGQgcm93c3Bhbj0iMyIgc3R5bGU9InBhZGRpbmctbGVmdDo1cHg7
+cGFkZGluZy1yaWdodDo1cHgiIHdpZHRoPSIxMCIgdmFsaWduPSJ0b3AiIGFsaWduPSJsZWZ0Ij48
+YSBocmVmPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldCIgdGFyZ2V0PSJfYmxhbmsiPjxpbWcgc3Jj
+PSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldC9zaWdsb2dvLnBuZyIgYWx0PSJUZXNzYXJlcyBTQSIg
+Ym9yZGVyPSIwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiPjwvYT48L3RkPjx0ZCBzdHlsZT0icGFk
+ZGluZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXpl
+OjEwcHgiIGhlaWdodD0iMTIiIGFsaWduPSJsZWZ0Ij48c3BhbiBzdHlsZT0iZm9udC13ZWlnaHQ6
+Ym9sZDtjb2xvcjpyZ2IoMzcsODMsMTU1KTtkaXNwbGF5OmlubGluZSI+TWF0dGhpZXUgQmFlcnRz
+IHwgUiZhbXA7RCBFbmdpbmVlcjwvc3Bhbj48L3RkPjwvdHI+PHRyPjx0ZCBzdHlsZT0icGFkZGlu
+ZzowcHg7Zm9udC1mYW1pbHk6SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEw
+cHgiIGhlaWdodD0iMTIiIGFsaWduPSJsZWZ0Ij48YSBocmVmPSJtYWlsdG86bWF0dGhpZXUuYmFl
+cnRzJTQwdGVzc2FyZXMubmV0IiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTt0ZXh0LWRlY29yYXRp
+b246bm9uZTtkaXNwbGF5OmlubGluZSIgdGFyZ2V0PSJfYmxhbmsiPm1hdHRoaWV1LmJhZXJ0c0B0
+ZXNzYXJlcy5uZXQ8YnI+PC9hPjwvdGQ+PC90cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjBweDtm
+b250LWZhbWlseTpIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTBweCIgYWxp
+Z249ImxlZnQiPjxzcGFuIHN0eWxlPSJmb250LXdlaWdodDpib2xkO2NvbG9yOnJnYigzNyw4Mywx
+NTUpO2Rpc3BsYXk6aW5saW5lIj5UZXNzYXJlcyBTQSB8IEh5YnJpZCBBY2Nlc3MgU29sdXRpb25z
+PGJyPjwvc3Bhbj48YSBocmVmPSJodHRwOi8vd3d3LnRlc3NhcmVzLm5ldCIgc3R5bGU9ImNvbG9y
+OnJnYigwLDAsMCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0i
+X2JsYW5rIj53d3cudGVzc2FyZXMubmV0PC9hPjxzcGFuPsKgPC9zcGFuPjxicj48YSBocmVmPSJo
+dHRwczovL3d3dy5nb29nbGUuY29tL21hcHM/cT0xK0F2ZW51ZStKZWFuK01vbm5ldCwrMTM0OCtP
+dHRpZ25pZXMtTG91dmFpbi1sYS1OZXV2ZSwrQmVsZ2l1bSIgc3R5bGU9ImNvbG9yOnJnYigwLDAs
+MCk7dGV4dC1kZWNvcmF0aW9uOm5vbmU7ZGlzcGxheTppbmxpbmUiIHRhcmdldD0iX2JsYW5rIj4x
+IEF2ZW51ZSBKZWFuIE1vbm5ldCwgMTM0OCBMb3V2YWluLWxhLU5ldXZlLCBCZWxnaXVtPC9hPjwv
+dGQ+PC90cj48L3Rib2R5PjwvdGFibGU+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9k
+aXY+CjwvZGl2PgoKPGJyPgo8ZGl2Pjxicj48aHI+PC9kaXY+PGZvbnQgc2l6ZT0iMSI+PHNwYW4g
+c3R5bGU9ImZvbnQtZmFtaWx5OlZlcmRhbmEsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kLWNvbG9yOnJn
+YigyNTUsMjU1LDI1NSkiPkRJU0NMQUlNRVIuPC9zcGFuPjxiciBzdHlsZT0iZm9udC1mYW1pbHk6
+VmVyZGFuYSxzYW5zLXNlcmlmO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+PGZv
+bnQgY29sb3I9IiMwMDAwMDAiIGZhY2U9IlZlcmRhbmEsIHNhbnMtc2VyaWYiIHN0eWxlPSJiYWNr
+Z3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPlRoaXMgZW1haWwgYW5kIGFueSBmaWxlcyB0
+cmFuc21pdHRlZCB3aXRoIGl0IGFyZSBjb25maWRlbnRpYWwgYW5kIGludGVuZGVkIHNvbGVseSBm
+b3IgdGhlIHVzZSBvZiB0aGUgaW5kaXZpZHVhbCBvciBlbnRpdHkgdG8gd2hvbSB0aGV5IGFyZSBh
+ZGRyZXNzZWQuIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwgaW4gZXJyb3IgcGxlYXNl
+IG5vdGlmeSB0aGUgc3lzdGVtIG1hbmFnZXIuIFRoaXMgbWVzc2FnZSBjb250YWlucyBjb25maWRl
+bnRpYWwgaW5mb3JtYXRpb24gYW5kIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBpbmRpdmlkdWFs
+IG5hbWVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgbmFtZWQgYWRkcmVzc2VlIHlvdSBzaG91bGQgbm90
+IGRpc3NlbWluYXRlLCBkaXN0cmlidXRlIG9yIGNvcHkgdGhpcyBlLW1haWwuIFBsZWFzZSBub3Rp
+ZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBieSBlLW1haWwgaWYgeW91IGhhdmUgcmVjZWl2ZWQg
+dGhpcyBlLW1haWwgYnkgbWlzdGFrZSBhbmQgZGVsZXRlIHRoaXMgZS1tYWlsIGZyb20geW91ciBz
+eXN0ZW0uIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgeW91IGFyZSBub3Rp
+ZmllZCB0aGF0IGRpc2Nsb3NpbmcsIGNvcHlpbmcsIGRpc3RyaWJ1dGluZyBvciB0YWtpbmcgYW55
+IGFjdGlvbiBpbiByZWxpYW5jZSBvbiB0aGUgY29udGVudHMgb2YgdGhpcyBpbmZvcm1hdGlvbiBp
+cyBzdHJpY3RseSBwcm9oaWJpdGVkLjwvZm9udD48L2ZvbnQ+
+--===============0441642085102153567==--
