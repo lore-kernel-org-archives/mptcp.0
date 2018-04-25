@@ -1,66 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============1619886088400078368=="
+Content-Type: multipart/mixed; boundary="===============0208000744838256966=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Rao Shoaib <rao.shoaib at oracle.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 26 April 2018 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 25 Apr 2018 14:55:37 +0200
-Message-ID: <2f17163f-964c-c367-5c21-46e4a8541d45@tessares.net>
+Subject: Re: [MPTCP] MPTCP Upstreaming wiki
+Date: Wed, 25 Apr 2018 09:20:16 -0700
+Message-ID: <c09f47fc-3ef1-65ae-04fd-86a96cc6d32f@oracle.com>
+In-Reply-To: alpine.OSX.2.21.1804231446530.4969@mjmartin-mac01.sea.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 550
+X-UID: 551
 
---===============1619886088400078368==
+--===============0208000744838256966==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-Our public MPTCP upstreaming weekly web conference is scheduled for =
-
-tomorrow.
-
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180426
-Feel free to add/modify topics!
-
-Meeting link: https://talky.io/mptcp_upstreaming
-
-Speak to you tomorrow!
-Matthieu
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
--- =
 
 
+On 04/23/2018 02:53 PM, Mat Martineau wrote:
+>
+> On Mon, 23 Apr 2018, Rao Shoaib wrote:
+>
+>>
+>>
+>> On 04/20/2018 05:17 PM, Mat Martineau wrote:
+>>>
+>>> Hello -
+>>>
+>>> I've set up a wiki for our project:
+>>>
+>>> https://github.com/multipath-tcp/mptcp_net-next/wiki
+>>>
+>>> To start with I've added some information that was otherwise buried =
 
-DISCLAIMER.
-This email and any files transmitted with it are confidential =
+>>> in our mailing list archives. This includes a summary of what the =
 
-and intended solely for the use of the individual or entity to whom they =
+>>> community has shared so far, meeting information, and pointers to =
 
-are addressed. If you have received this email in error please notify the =
+>>> relevant resources.
+>>>
+>> Hi Mat,
+>>
+>> Why is the following a requirement for the initial implementation
+>>
+>> "Move away from meta-sockets, treating each subflow more like a =
 
-system manager. This message contains confidential information and is =
+>> regular TCP connection. The overall MPTCP connection is coordinated =
 
-intended only for the individual named. If you are not the named addressee =
+>> by an upper layer socket that is distinct from tcp_sock."
+>>
+>> This can be done later.
+>
+> Hi Rao,
+>
+> The idea is to make the MPTCP changes less invasive to TCP by =
 
-you should not disseminate, distribute or copy this e-mail. Please notify =
+> isolating the socket-level changes in separate MPTCP-specific socket =
 
-the sender immediately by e-mail if you have received this e-mail by =
+> code. I think "less invasive to TCP" is an important goal from the start.
 
-mistake and delete this e-mail from your system. If you are not the =
+Really, IMHO meta socket is not the cause of MPTCP being intrusive. We =
 
-intended recipient you are notified that disclosing, copying, distributing =
+can discuss this requirement later, perhaps an example will help.
 
-or taking any action in reliance on the contents of this information is =
+Shoaib
 
-strictly prohibited.
+>
+> -- =
 
---===============1619886088400078368==--
+> Mat Martineau
+> Intel OTC
+
+
+--===============0208000744838256966==--
