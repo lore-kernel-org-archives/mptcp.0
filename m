@@ -1,105 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============8911305352809455444=="
+Content-Type: multipart/mixed; boundary="===============1619886088400078368=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] One approach to indirect call optimization
-Date: Tue, 24 Apr 2018 16:35:26 -0700
-Message-ID: <alpine.OSX.2.21.1804241612160.11767@jebishop-mobl1.amr.corp.intel.com>
+Subject: [MPTCP] Weekly meeting - 26 April 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 25 Apr 2018 14:55:37 +0200
+Message-ID: <2f17163f-964c-c367-5c21-46e4a8541d45@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 549
+X-UID: 550
 
---===============8911305352809455444==
+--===============1619886088400078368==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-I noticed this patch on netdev to avoid an indirect call to md5_lookup, =
+Our public MPTCP upstreaming weekly web conference is scheduled for =
 
-which was accepted. It is mitigating the cost of an existing indirect call =
+tomorrow.
 
-rather than adding a new one, but shows how the maintainers are looking at =
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180426
+Feel free to add/modify topics!
 
-the problem.
+Meeting link: https://talky.io/mptcp_upstreaming
 
---
-Mat Martineau
-Intel OTC
-
----------- Forwarded message ----------
-Date: Mon, 23 Apr 2018 14:46:25
-From: Eric Dumazet <edumazet(a)google.com>
-To: David S . Miller <davem(a)davemloft.net>
-Cc: netdev <netdev(a)vger.kernel.org>, Eric Dumazet <edumazet(a)google.com>,
-     Eric Dumazet <eric.dumazet(a)gmail.com>
-Subject: [PATCH net-next] tcp: md5: only call tp->af_specific->md5_lookup()=
- for
-     md5 sockets
-
-RETPOLINE made calls to tp->af_specific->md5_lookup() quite expensive,
-given they have no result.
-We can omit the calls for sockets that have no md5 keys.
-
-Signed-off-by: Eric Dumazet <edumazet(a)google.com>
----
-  net/ipv4/tcp_output.c | 26 ++++++++++++++------------
-  1 file changed, 14 insertions(+), 12 deletions(-)
-
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 383cac0ff0ec059ca7dbc1a6304cc7f8183e008d..95feffb6d53f8a9eadfb15a2fff=
-eec498d6e993a 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -585,14 +585,15 @@ static unsigned int tcp_syn_options(struct sock *sk, =
-struct sk_buff *skb,
-  	unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
-  	struct tcp_fastopen_request *fastopen =3D tp->fastopen_req;
-
-+	*md5 =3D NULL;
-  #ifdef CONFIG_TCP_MD5SIG
--	*md5 =3D tp->af_specific->md5_lookup(sk, sk);
--	if (*md5) {
--		opts->options |=3D OPTION_MD5;
--		remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
-+	if (unlikely(rcu_access_pointer(tp->md5sig_info))) {
-+		*md5 =3D tp->af_specific->md5_lookup(sk, sk);
-+		if (*md5) {
-+			opts->options |=3D OPTION_MD5;
-+			remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
-+		}
-  	}
--#else
--	*md5 =3D NULL;
-  #endif
-
-  	/* We always get an MSS option.  The option bytes which will be seen in
-@@ -720,14 +721,15 @@ static unsigned int tcp_established_options(struct so=
-ck *sk, struct sk_buff *skb
-
-  	opts->options =3D 0;
-
-+	*md5 =3D NULL;
-  #ifdef CONFIG_TCP_MD5SIG
--	*md5 =3D tp->af_specific->md5_lookup(sk, sk);
--	if (unlikely(*md5)) {
--		opts->options |=3D OPTION_MD5;
--		size +=3D TCPOLEN_MD5SIG_ALIGNED;
-+	if (unlikely(rcu_access_pointer(tp->md5sig_info))) {
-+		*md5 =3D tp->af_specific->md5_lookup(sk, sk);
-+		if (*md5) {
-+			opts->options |=3D OPTION_MD5;
-+			size +=3D TCPOLEN_MD5SIG_ALIGNED;
-+		}
-  	}
--#else
--	*md5 =3D NULL;
-  #endif
-
-  	if (likely(tp->rx_opt.tstamp_ok)) {
+Speak to you tomorrow!
+Matthieu
 -- =
 
-2.17.0.484.g0c8726318c-goog
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+-- =
 
 
---===============8911305352809455444==--
+
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
+
+and intended solely for the use of the individual or entity to whom they =
+
+are addressed. If you have received this email in error please notify the =
+
+system manager. This message contains confidential information and is =
+
+intended only for the individual named. If you are not the named addressee =
+
+you should not disseminate, distribute or copy this e-mail. Please notify =
+
+the sender immediately by e-mail if you have received this e-mail by =
+
+mistake and delete this e-mail from your system. If you are not the =
+
+intended recipient you are notified that disclosing, copying, distributing =
+
+or taking any action in reliance on the contents of this information is =
+
+strictly prohibited.
+
+--===============1619886088400078368==--
