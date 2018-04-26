@@ -1,120 +1,185 @@
-Content-Type: multipart/mixed; boundary="===============1930488965176494636=="
+Content-Type: multipart/mixed; boundary="===============8900207600042966950=="
 MIME-Version: 1.0
-From: Rao Shoaib <rao.shoaib at oracle.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [Weekly meetings] MoM - 16th of April 2018
-Date: Thu, 26 Apr 2018 12:04:31 -0700
-Message-ID: <28091722-69f0-d2a7-9c95-e85bb8532a11@oracle.com>
-In-Reply-To: 658d8d1f-9b74-9754-26b5-32e06bd3b958@tessares.net
+Date: Thu, 26 Apr 2018 13:52:06 -0700
+Message-ID: <20180426205206.GA19260@MacBook-Pro-6.local>
+In-Reply-To: 30106729-92a9-4d10-f2ea-d21ab265eff8@oracle.com
 X-Status: 
 X-Keywords:                  
-X-UID: 556
+X-UID: 557
 
---===============1930488965176494636==
+--===============8900207600042966950==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On 26/04/18 - 11:31:14, Rao Shoaib wrote:
+> =
+
+> =
+
+> On 04/26/2018 10:27 AM, Matthieu Baerts wrote:
+> > Hello,
+> > =
+
+> > We just had our 7th meeting with Mat, Peter, Ossama (Intel OTC),
+> > Christoph (Apple), Rao (Oracle) and myself (Tessares).
+> > =
+
+> > Thanks again for this new meeting!
+> > =
+
+> > =
+
+> > =
+
+> > Here are the minutes of the meeting:
+> > =
+
+> > =
+
+> > =
+
+> > Progress from last week:
+> > =C2=A0=C2=A0=C2=A0 - the wiki is ready and need to be kept updated
+> > =C2=A0=C2=A0=C2=A0 - there is an update in the mptcp_net-next branch (s=
+ync with
+> > net-next)
+> > =C2=A0=C2=A0=C2=A0 - discussions about NetDev tutorial presentations ha=
+ve started.
+> > =
+
+> > =
+
+> > =
+
+> > Netdev:
+> > =C2=A0=C2=A0=C2=A0 From what has been shared on the ML:
+> > =C2=A0=C2=A0=C2=A0 - https://lists.01.org/pipermail/mptcp/2018-April/00=
+0540.html
+> > =
+
+> > =C2=A0=C2=A0=C2=A0 We cannot only count on discussions: we need a backu=
+p plan if nobody
+> > is expressing something.
+> > =C2=A0=C2=A0=C2=A0 Show different approaches:
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - current implementation where any app c=
+an benefit from MPTCP
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - only on demand + API
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (and respecting impact on the TCP code)
+> > =C2=A0=C2=A0=C2=A0 We could get more attention by talking about APIs.
+> > =C2=A0=C2=A0=C2=A0 Who will be there:
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Christoph for sure
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Maybe Mat, Peter and Matthie=
+u, waiting for more details from
+> > their manager(s)
+> > =C2=A0=C2=A0=C2=A0 Matthieu: write a proposal for the netdev conf on th=
+e ML.
+> > =C2=A0=C2=A0=C2=A0 Important: Discussions will continue there. We need =
+to send
+> > something on Monday!
+> > =
+
+> > =
+
+> > =
+
+> > Wiki:
+> > =C2=A0=C2=A0=C2=A0 The base is there, we need to maintain it.
+> > =C2=A0=C2=A0=C2=A0 It is indexed by Google and others, that's good!
+> > =
+
+> > =
+
+> > =
+
+> > Approach to indirect call optimization by Eric Dumazet:
+> > =C2=A0=C2=A0=C2=A0 that's one example, it is a bit specific to MD5 but =
+the idea is
+> > there. That's what we had in mind (but the solution is not generic)
+> > =
+
+> > =
+
+> > =
+
+> > Discussion of Oracle's patches:
+> > =C2=A0=C2=A0=C2=A0 - Rao is asking what to do next with these patches
+> > =C2=A0=C2=A0=C2=A0 - (Matthieu: I got disconnected, I maybe missed some=
+thing important,
+> > feel free to comment)
+> > =C2=A0=C2=A0=C2=A0 - One main concerning point raised during the call i=
+s that we will
+> > still have a big intrusiveness with a lot of "if(mptcp)" in the code
+> > =C2=A0=C2=A0=C2=A0 - Rao would prefer not to rewrite the current MPTCP =
+implementation
+> > as much as proposed here during the meetings. Propose this first
+> > implementation based on a previous mptcp_trunk version.
+> > =C2=A0=C2=A0=C2=A0 - By Christoph: this kind of code should be avoided =
+for
+> > maintainability reasons:
+> > =
+
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 struct inet_connection_sock *icsk =3D from_timer(icsk, t,
+> > icsk_delack_timer);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 struct sock *sk =3D &icsk->icsk_inet.sk;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +#ifndef CONFIG_MPTCP
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 struct s=
+ock *meta_sk =3D sk;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +#else
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 struct s=
+ock *meta_sk =3D mptcp(tcp_sk(sk)) ?
+> > mptcp_meta_sk(sk) : sk;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +#endif
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0 bh=
+_lock_sock(sk);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 bh_lock_=
+sock(meta_sk);
+> > =
+
+> > =C2=A0=C2=A0=C2=A0 - Discussions will continue next week.
+> > =
+
+> > =
+
+> I would like to point out that the statement made was that the code is
+> littered with what is shown above. The patch that Oracle submitted has not
+> such code in the fast path plus unlike the mptcp-dev implementation we ha=
+ve
+> significantly reduced it.=C2=A0 Please take a look at the patch. I also d=
+o not
+> see any maintenance issues with the code, the only issue is that it is an
+> eye sore but not when used minimally and we have plans to clean it up.
+> =
+
+> rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv4(upstream)$grep bh_lock_=
+sock
+> tcp*.c | grep meta_sk | wc -l
+> 5
+> rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv4(upstream)$cd ../ipv6
+> rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv6(upstream)$!grep
+> rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv6(upstream)$grep bh_lock_=
+sock
+> tcp*.c | grep meta_sk | wc -l
+> 1
+
+This kind of lock-taking also causes trouble with RCU LOCKDEP debugging - as
+I mentioned in a previous e-mail.
+
+And beyond that, it requires that everytime a TCP-change is being done, one
+needs to take MPTCP into account. E.g., when upstream added the SOCK_DESTROY
+interface (and Samsung backported it to v4.4), there were panics on Android
+devices (https://github.com/multipath-tcp/mptcp/issues/170).
+
+Avoid taking the meta-socket lock on subflow-work allows for much easier
+maintenance in the long-term.
 
 
-On 04/26/2018 10:27 AM, Matthieu Baerts wrote:
->
-> Approach to indirect call optimization by Eric Dumazet:
-> =C2=A0=C2=A0=C2=A0 that's one example, it is a bit specific to MD5 but th=
-e idea is =
-
-> there. That's what we had in mind (but the solution is not generic)
-Can someone point me to it.
->
->
->
-> Discussion of Oracle's patches:
-> =C2=A0=C2=A0=C2=A0 - Rao is asking what to do next with these patches
-> =C2=A0=C2=A0=C2=A0 - (Matthieu: I got disconnected, I maybe missed someth=
-ing =
-
-> important, feel free to comment)
-> =C2=A0=C2=A0=C2=A0 - One main concerning point raised during the call is =
-that we will =
-
-> still have a big intrusiveness with a lot of "if(mptcp)" in the code
-What is a lot ? Our patch has 14 instances...
-
-rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv4(upstream)$sed -n '{/if =
-
-*(mptcp/p}' tcp_*.c
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (mptcp(tp))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (mptcp(tp)) {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (mptcp(tp))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp(tp))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp(tp))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp(tp))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (mptcp(tp)) {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptc=
-p_init_tw_sock(sk, tcptw)) {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp(tcp_sk(child)))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp_is_data_fin(skb))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp_is_data_fin(skb))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptc=
-p(tcp_sk(sk)))
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (mptcp(tcp_sk(sk)))
-rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv4(upstream)$cd ../ipv6
-rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv6(upstream)$!grep
-rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv6(upstream)$grep "if =
-
-(mptcp" *.c
-tcp_ipv6.c:=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp(tp))
-tcp_ipv6.c:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mptcp(tp))
-
-And all of this code is under #ifdef MPTCP --- Does MD5 have any such code ?
-Here is a better comparison of intrusiveness.
-
-rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv4(upstream)$grep MD5 =
-
-tcp_*.c | wc -l
-73
-rshoaib(a)caduceus5:/home/mptcp/upstream/net/ipv4(upstream)$grep MPTCP =
-
-tcp_*.c | wc -l
-39
-
-Once again note, any MPTCP specific code is under #ifdef MPTCP. Our =
-
-patch allows tcp to be built with MPTCP and does not require any mptcp =
-
-file including header files.
-
-> =C2=A0=C2=A0=C2=A0 - Rao would prefer not to rewrite the current MPTCP im=
-plementation =
-
-> as much as proposed here during the meetings. Propose this first =
-
-> implementation based on a previous mptcp_trunk version.
-
-The trunk version is irrelevant as we are not going to keep up with what =
-
-mptcp-dev does. Having said that, I believe any changes to MPTCP code =
-
-should just work.
-
-Even though I do not think sentiments towards our patch will change. I =
-
-wanted to point out the facts as the comments were made without truly =
-
-evaluating the changes.
-
-Shoaib
+Christoph
 
 
-
---===============1930488965176494636==--
+--===============8900207600042966950==--
