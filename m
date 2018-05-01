@@ -1,482 +1,773 @@
-Content-Type: multipart/mixed; boundary="===============1166440179873186958=="
+Content-Type: multipart/mixed; boundary="===============0773906010022218782=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 07/12] mptcp: Remove cnt_subflows
-Date: Mon, 30 Apr 2018 17:24:53 -0700
-Message-ID: <20180501002453.GA19260@MacBook-Pro-6.local>
-In-Reply-To: a8b464ec-9fad-f2f7-9c5c-73ccbe627805@tessares.net
+Subject: Re: [MPTCP] Call for ideas for a presentation about MPTCP Upstream
+ project at NetDev 0x12 in July
+Date: Tue, 01 May 2018 07:35:22 -0700
+Message-ID: <alpine.OSX.2.21.1805010734480.2511@blkatz-mobl.amr.corp.intel.com>
+In-Reply-To: 20180430193523.GX19260@MacBook-Pro-6.local
 X-Status: 
 X-Keywords:                  
-X-UID: 583
+X-UID: 584
 
---===============1166440179873186958==
+--===============0773906010022218782==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 09/04/18 - 18:04:42, Matthieu Baerts wrote:
-> =
 
-> =
+On Mon, 30 Apr 2018, Christoph Paasch wrote:
 
-> On 09/04/2018 06:14, Christoph Paasch wrote:
-> > Hello,
-> > =
+> On 30/04/18 - 21:03:31, Matthieu Baerts wrote:
+>> On Mon, Apr 30, 2018 at 8:44 PM, Matthieu Baerts <
+>> matthieu.baerts(a)tessares.net> wrote:
+>>
+>>>
+>>>
+>>> On Mon, Apr 30, 2018 at 8:40 PM, Christoph Paasch <cpaasch(a)apple.com>
+>>> wrote:
+>>>
+>>>> On 30/04/18 - 11:17:06, Christoph Paasch wrote:
+>>>>> On 30/04/18 - 19:34:10, Matthieu Baerts wrote:
+>>>>>> On Mon, Apr 30, 2018 at 6:18 PM, Christoph Paasch <cpaasch(a)apple.c=
+om>
+>>>> wrote:
+>>>>>>
+>>>>>>> On 30/04/18 - 16:26:01, Matthieu Baerts wrote:
+>>>>>>>> Hi Mat, Christoph, Peter, Ossama,
+>>>>>>>>
+>>>>>>>> I will wait for ~10am your time before sending it to let you some
+>>>> times
+>>>>>>> to
+>>>>>>>> comment this if you want to do so.
+>>>>>>>>
+>>>>>>>> Best regards,
+>>>>>>>> Matthieu
+>>>>>>>>
+>>>>>>>> On Sun, Apr 29, 2018 at 4:08 PM, Matthieu Baerts <
+>>>>>>>> matthieu.baerts(a)tessares.net> wrote:
+>>>>>>>>
+>>>>>>>>> Hi Mat,
+>>>>>>>>>
+>>>>>>>>> Thank you for your review and input!
+>>>>>>>>>
+>>>>>>>>> On Sat, Apr 28, 2018 at 2:44 AM, Mat Martineau
+>>>>>>> <mathew.j.martineau(a)linux.
+>>>>>>>>> intel.com> wrote:
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Hi Matthieu -
+>>>>>>>>>>
+>>>>>>>>>> On Fri, 27 Apr 2018, Matthieu Baerts wrote:
+>>>>>>>>>>
+>>>>>>>>>> Hello,
+>>>>>>>>>>>
+>>>>>>>>>>> Following yesterday's discussion about NetDev 0x12, here is a
+>>>>>>>>>>> proposition of mail to send to NetDev committee. I already
+>>>> put some
+>>>>>>>>>>> comments. Note that I have followed the submission guidelines
+>>>> from:
+>>>>>>>>>>> https://www.netdevconf.org/0x12/submit-proposal.html#proposa
+>>>> ls
+>>>>>>>>>>>
+>>>>>>>>>>> Please comment it before Monday morning. Sorry for the rush
+>>>> but the
+>>>>>>>>>>> deadline is the 1st of May :)
+>>>>>>>>>>>
+>>>>>>>>>>> * Name(s) of the submitter(s): Christoph Paasch (Apple), Mat
+>>>>>>> Martineau
+>>>>>>>>>>>>
+>>>>>>>>>>> (Intel), Peter Krystad (Intel), Ossama Othman (Intel) and
+>>>> myself,
+>>>>>>>>>>> Matthieu Baerts (Tessares)
+>>>>>>>>>>>
+>>>>>>>>>>> I wrote down the names of people who participated in the
+>>>> discussion
+>>>>>>> in
+>>>>>>>>>>> the ML and during the weekly meetings. I can add more people
+>>>> if more
+>>>>>>> people
+>>>>>>>>>>> would like to join the preparation and presentation of this
+>>>> tutorial.
+>>>>>>>>>>> @Christoph, Mat, Peter, Ossama: can I write your names there?
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Ossama won't be able to attend. It looks like most sessions
+>>>> have 1 or
+>>>>>>> 2
+>>>>>>>>>> presenters, so I don't know if 4 is too many. I'm sure they'll
+>>>> give
+>>>>>>> us some
+>>>>>>>>>> feedback if they want to limit the number of presenters.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> OK thank you!
+>>>>>>>>> Yes indeed, I am sure they will say something if we are too
+>>>> many.
+>>>>>>>>>
+>>>>>>>>> * Title of the submission: MPTCP: from the basic to an
+>>>> upstreamable
+>>>>>>> base
+>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> We certainly need a better title, please comment!
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> "Multipath TCP: Present Use Cases and an Upstream Future" ?
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> I was trying to find something that catch the attention but it
+>>>> is maybe
+>>>>>>>>> not needed for these kind of presentation.
+>>>>>>>>>
+>>>>>>>>>> * Label (one of moonshot, nuts'n bolts, hands-on): hands-on
+>>>>>>>>>>>
+>>>>>>>>>>> "hands-on" seems to be the correct one according to the
+>>>> Submission
+>>>>>>> Types.
+>>>>>>>>>>> https://www.netdevconf.org/0x12/submit-proposal.html#types
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> It's a little bit of "nuts & bolts" too, but I agree that
+>>>> hands-on is
+>>>>>>> the
+>>>>>>>>>> better match.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Thank you!
+>>>>>>>>>
+>>>>>>>>> * Submission type (one of talk, presentation, workshop):
+>>>> tutorial,
+>>>>>>>>>>>>
+>>>>>>>>>>> instructor-led sessions (minimum 1 hour long and not to
+>>>> exceed 1.5
+>>>>>>>>>>> hours. The instructor will go over the technology either
+>>>> through code
+>>>>>>>>>>> review or execution and interact with the attendees.)
+>>>>>>>>>>>
+>>>>>>>>>>> I guess there is a typo here: presentation should be replaced
+>>>> by
+>>>>>>>>>>> tutorial in the guidelines.
+>>>>>>>>>>>
+>>>>>>>>>>> Estimate of length of time for presentation: 1h
+>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> That's what we agreed yesterday but I can change.
+>>>>>>>>>>>
+>>>>>>>>>>> Affiliations of submitters (needed for conflict of interest
+>>>> check):
+>>>>>>>>>>>> Apple,
+>>>>>>>
+>>>>>>> I will have to double-check on the affiliation part wrt to Apple.
+>>>>>>>
+>>>>>>> If I don't get a thumbs up, you can simply remove me from the list.
+>>>>>>>
+>>>>>>
+>>>>>> Do you want me to wait or can I send it today and ask to remove you
+>>>> from
+>>>>>> the list later if needed?
+>>>>>
+>>>>> Can you wait a little bit? I am trying to get a hold of the one who c=
+an
+>>>> tell
+>>>>> me "yes" or "no".
+>>>>
+>>>> Matthieu, you can leave the Apple-affiliation in for now.
+>>>>
+>>>> At worst, we can always remove me from the list.
+>>>>
+>>>>
+>>>> Sorry for the delay on this here.
+>>>>
+>>>
+>>> All good, I can wait more if you prefer!
+>>>
+>>> From my point-of-view, you can go ahead and submit the proposal.
+>>>>
+>>>
+>>> Great!
+>>> Let me recompile all bits!
+>>>
+>>
+>> Here is what I am going to send:
+>>
+>> Names of the submitters: Christoph Paasch (Apple), Mat Martineau (Intel),
+>>> Peter Krystad (Intel) and myself, Matthieu Baerts (Tessares)
+>>> Title of the submission: Multipath TCP: Present Use Cases and an Upstre=
+am
+>>> Future
+>>> Label: hands-on
+>>> Submission type: tutorial
+>>> Estimate of length of time for presentation: 1h
+>>> Affiliations of submitters (needed for conflict of interest check): App=
+le,
+>>> Intel, Tessares
+>>> Description of proposal:
+>>>     A community project is underway to add Multipath TCP to the upstream
+>>> Linux kernel. This tutorial will introduce the audience to this TCP
+>>> extension (RFC 6824), show some use-cases already in production and have
+>>> interactive discussions of the challenges in converging on an upstream
+>>> MPTCP implementation.
+>>>
+>>>     We will use the current MPTCP implementation, already used by milli=
+ons
+>>> of devices, to demonstrate the utility of the protocol on today's Inter=
+net
+>>> and to show how this implementation can currently be extended with APIs
+>>> like Netlink. This not only has practical application for deploying
+>>> Multipath TCP now, but also illustrates how the APIs and code will need=
+ to
+>>> evolve in order to properly coexist with the optimized Linux TCP core we
+>>> all rely on. We will discuss our ideas for bringing MPTCP to the upstre=
+am
+>>> kernel so the technology is available to all Linux users.
+>>>
+>>>     For more information about this project:
+>>> https://github.com/multipath-tcp/mptcp_net-next/wiki
+>>>
+>>
+>> I don't want to bother you for a new review. I hope and I guess it is fi=
+ne
+>> for everybody :)
+>
+> Awesome!
 
-> > On 04/04/18 - 17:57:05, Matthieu Baerts wrote:
-> > > Hi Christoph,
-> > > =
-
-> > > On 26/03/2018 09:32, Christoph Paasch wrote:
-> > > > Our goal is to make subflow establishment lockless. cnt_subflows wo=
-uld
-> > > > need to either become an atomic variable, or we can remove it.
-> > > =
-
-> > > Just out of curiosity, is it a big cost to have it atomic?
-> > =
-
-> > looking again at this patch and your comments, it's probably better to =
-simply
-> > make it atomic.
-> > I was a bit over-enthousiastic for removing code :-)
-> > =
-
-> > Sounds good?
-> =
-
-> I think it still makes sense to avoid duplicated info.
-> =
-
-> Here we can easily get the number subflows with a for-loop in a list. Exc=
-ept
-> that in a later patch, it will be in a hlist I think. I don't know what's
-> the cost of doing this check to count the number of sublows. If the cost =
-is
-> very low, why not removing cnt_subflows and call a function when we need =
-the
-> info?
-
-Hmmm... Well, honestly I'm not sure about what is the best design here :)
-
-Let's do the following. I export a function to count the number of subflows
-and then when it's needed we call that one. Also, without any changes to
-/proc/
+Yes, looks great! Thanks for all your work on this, Matthieu.
 
 
-Christoph
+Mat
 
 
-> =
+>
+>
+> Christoph
+>
+>>
+>> Matthieu
+>>
+>>
+>>> Matthieu
+>>>
+>>>
+>>>>
+>>>> Christoph
+>>>>
+>>>>
+>>>>
+>>>>>
+>>>>>
+>>>>> Christoph
+>>>>>
+>>>>>>
+>>>>>> Matthieu
+>>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> Christoph
+>>>>>>>
+>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>> Intel, Tessares
+>>>>>>>>>>>
+>>>>>>>>>>> Description of proposal:
+>>>>>>>>>>>>     A project to add an implementation of the MultiPath TCP
+>>>>>>> protocol to
+>>>>>>>>>>>> the
+>>>>>>>>>>>>
+>>>>>>>>>>> Linux kernel is in progress by a small community. The goal of
+>>>> this
+>>>>>>>>>>> tutorial is to discover what is this TCP extension (RFC
+>>>> 6824), what
+>>>>>>> are the
+>>>>>>>>>>> different use-cases already in production by some companies
+>>>> and what
+>>>>>>> are
+>>>>>>>>>>> the challenges to upstream MPTCP. We hope having interactive
+>>>>>>> discussions
+>>>>>>>>>>> and getting feedback from experienced developers will help us
+>>>> in
+>>>>>>> this task
+>>>>>>>>>>> of easily bringing MPTCP to all Linux users, a technology
+>>>> already
+>>>>>>> used by
+>>>>>>>>>>> millions of people.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>     In a bit more detail, we will start with a basic
+>>>> introduction of
+>>>>>>>>>>>> MPTCP.
+>>>>>>>>>>>>
+>>>>>>>>>>> A few use-cases will be presented with a demo to explain how
+>>>> useful
+>>>>>>> this
+>>>>>>>>>>> protocol is in today's Internet and how it can be extended
+>>>> with
+>>>>>>> API's like
+>>>>>>>>>>> Netlink and BPF.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> I recognize how Netlink is associated with a userspace path
+>>>> manager,
+>>>>>>> but
+>>>>>>>>>> what's the BPF extensibility you're referring to?
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> It was only to mention that it would be possible to extend
+>>>> MPTCP with
+>>>>>>> eBPF.
+>>>>>>>>> Even if it is not already available in the current Open-Source
+>>>>>>>>> implementation, there is already the possibility to get a
+>>>> version with
+>>>>>>> a
+>>>>>>>>> programmable scheduler: https://progmp.net
+>>>>>>>>>
+>>>>>>>>> Then we will have some explanations about how MPTCP is currently
+>>>>>>>>>>> implemented. This current implementation is quite intrusive
+>>>> and that
+>>>>>>> is
+>>>>>>>>>>> certainly not something we would like to have upstream. We
+>>>> would
+>>>>>>> like to
+>>>>>>>>>>> express what we have in mind to change that, with some
+>>>> samples and
+>>>>>>> initiate
+>>>>>>>>>>> discussions.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> My edit of the above:
+>>>>>>>>>>
+>>>>>>>>>> """
+>>>>>>>>>>
+>>>>>>>>>> A community project is underway to add Multipath TCP to the
+>>>> upstream
+>>>>>>>>>> Linux kernel. This tutorial will introduce the audience to
+>>>> this TCP
+>>>>>>>>>> extension (RFC 6824), show some use cases already in
+>>>> production, and
+>>>>>>>>>> discuss the challenges in converging on an upstream MPTCP
+>>>>>>> implementation.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Should we insist on the "discussion" part? Like saying:
+>>>> "discuss with
+>>>>>>> the
+>>>>>>>>> audience"? "have interactive discussions"?
+>>>>>>>>> It is maybe not needed but it was mainly to express the
+>>>> interactivity,
+>>>>>>> it
+>>>>>>>>> is a tutorial, not just a "simple" presentation.
+>>>>>>>>>
+>>>>>>>>> We will use the current MPTCP implementation to demonstrate the
+>>>>>>> utility of
+>>>>>>>>>> the protocol on today's internet, and to show how this
+>>>> implementation
+>>>>>>> can
+>>>>>>>>>> currently be extended with netlink and BPF. This not only has
+>>>>>>> practical
+>>>>>>>>>> application for deploying MPTCP now, but also illustrates how
+>>>> the
+>>>>>>> APIs and
+>>>>>>>>>> code will need to evolve in order to properly coexist with the
+>>>>>>> optimized
+>>>>>>>>>> Linux TCP core we all rely on. We will discuss our ideas for
+>>>> bringing
+>>>>>>> MPTCP
+>>>>>>>>>> to the upstream kernel so the technology is available to all
+>>>> Linux
+>>>>>>> users.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> To "attract" people, should we mention that the current
+>>>> implementation
+>>>>>>> is
+>>>>>>>>> already used by millions of users?
+>>>>>>>>> I like how your improve the last bit :-)
+>>>>>>>>>
+>>>>>>>>> """
+>>>>>>>>>>
+>>>>>>>>>> Feel free to edit/merge/expand/discard as needed :)
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Thank you for your edit, it is indeed cleaner!
+>>>>>>>>>
+>>>>>>>>>     For more information about this project:
+>>>>>>>>>>>>
+>>>>>>>>>>> https://github.com/multipath-tcp/mptcp_net-next/wiki
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>> I guess I can keep this, right?
+>>>>>>>>>
+>>>>>>>>> Please feel free to comment this as well. We are still far from
+>>>> the max
+>>>>>>>>>>> 350 words limit we found last time. But on the other hand, I
+>>>> can no
+>>>>>>> longer
+>>>>>>>>>>> find this limit on their website :)
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Hope the above is helpful. Thanks again for your work on this
+>>>>>>> proposal.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Yes it is, thank you for your help!
+>>>>>>>>>
+>>>>>>>>> Matthieu
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Mat
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>> Thank you for your help!
+>>>>>>>>>>>
+>>>>>>>>>>> Have a good day/evening,
+>>>>>>>>>>> Matthieu
+>>>>>>>>>>>
+>>>>>>>>>>> On 25/04/2018 21:58, Mat Martineau wrote:
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Hi Matthieu -
+>>>>>>>>>>>>
+>>>>>>>>>>>> On Fri, 20 Apr 2018, Matthieu Baerts wrote:
+>>>>>>>>>>>>
+>>>>>>>>>>>> Hello,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> NetDev 0x12 is coming to Montr=C3=A9al this summer: July 11th=
+ to
+>>>> 13th,
+>>>>>>> 2018.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> We already talked about this event on this ML and at our
+>>>> weekly
+>>>>>>>>>>>>> meetings but here is a summary of the discussions we had:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>  - we would like to have a presentation there mainly to get
+>>>>>>> feedback
+>>>>>>>>>>>>> and advice from other kernel developers
+>>>>>>>>>>>>>  - a presentation would clearly indicate that this MPTCP
+>>>> Upstream
+>>>>>>>>>>>>> project exists and we could get help from more developers
+>>>>>>>>>>>>>  - we would like to indicate that having MPTCP upstream is
+>>>> asked by
+>>>>>>>>>>>>> different companies, some are even ready to contribute ; it
+>>>> is then
+>>>>>>>>>>>>> important to have MPTCP upstream
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Also note that:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>  - David Miller will not be present in Montr=C3=A9al [1] but
+>>>> other main
+>>>>>>>>>>>>> contributors should be there (we don't have a list)
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Side note, in the past day David reiterated his statement
+>>>> about not
+>>>>>>>>>>>> attending or supporting the conference:
+>>>>>>>>>>>>
+>>>>>>>>>>>> https://marc.info/?l=3Dlinux-netdev&m=3D152466827203301&w=3D2
+>>>>>>>>>>>>
+>>>>>>>>>>>>  - A presentation by Octavian Purdila about "MPTCP
+>>>> Upstreaming" has
+>>>>>>>>>>>>> already been given in 2015 (NetDev 0.1) [2]
+>>>>>>>>>>>>>  - 3 types of presentation are available: talks, tutorials
+>>>> and
+>>>>>>>>>>>>> workshops [3]
+>>>>>>>>>>>>>  - Call for Presentation Proposals closes on May 1st, 2018.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> The current idea we briefly discussed during our weekly
+>>>> meetings
+>>>>>>> is to
+>>>>>>>>>>>>> give a tutorial:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>  - It is not useful to give almost the same presentation as
+>>>> the
+>>>>>>> one of
+>>>>>>>>>>>>> Octavian
+>>>>>>>>>>>>>  - It will allow us more flexibility somehow to explain
+>>>> what is
+>>>>>>> MPTCP,
+>>>>>>>>>>>>> the different use-cases, why it is important to have it
+>>>> upstream
+>>>>>>> and what
+>>>>>>>>>>>>> problems we are currently facing.
+>>>>>>>>>>>>>  - David Miller and many other kernel developers will go to
+>>>> LPC in
+>>>>>>>>>>>>> November: a good place to give a talk this time.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Do you have any ideas on what we could show in this
+>>>> tutorial?
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I recently discussed with my colleague Olivier Bonaventure
+>>>> who has
+>>>>>>> a
+>>>>>>>>>>>>> lot of experiences in giving different introductions and
+>>>> more
+>>>>>>> about MPTCP
+>>>>>>>>>>>>> and here is what he suggests:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>  - A first part about a basic introduction of MPTCP
+>>>>>>>>>>>>>  - Indicate different use-cases -- if possible with a
+>>>> "closed
+>>>>>>> demo" to
+>>>>>>>>>>>>> be sure it is working -- asking people to setup something
+>>>> is not
+>>>>>>> easy in
+>>>>>>>>>>>>> 1h, max 1h30.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>>  From the description at [3], either "instructor-led" 60-90
+>>>> minute
+>>>>>>>>>>>> tutorials or "student-participation" 2-3 hour sessions are
+>>>>>>> possible. The
+>>>>>>>>>>>> closed demo maps well to their "instructor-led" category.
+>>>> Looking
+>>>>>>> at the
+>>>>>>>>>>>> schedule, the past two Netdev Conferences have had one
+>>>> tutorial
+>>>>>>> each, of
+>>>>>>>>>>>> 60-70 minutes. I think it helps to be closer to an hour in
+>>>> length
+>>>>>>> to hold
+>>>>>>>>>>>> the audience's attention.
+>>>>>>>>>>>>
+>>>>>>>>>>>>  - Then trying to have interactive discussions or
+>>>> explanations about
+>>>>>>>>>>>>> how MPTCP is currently implemented or should be implemented
+>>>> if it
+>>>>>>> goes
+>>>>>>>>>>>>> upstream, e.g.: for MPTCP, we need to have extra TCP
+>>>> Options, we
+>>>>>>> need to
+>>>>>>>>>>>>> support middleboxes, we need to link subflows of the same
+>>>>>>> connection
+>>>>>>>>>>>>> together, we need a scheduler, a PM, etc.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> It's difficult to predict how interactive an audience will
+>>>> be. I've
+>>>>>>>>>>>> only attended one Netdev Conference, and it seemed like
+>>>> there were
+>>>>>>> a lot
+>>>>>>>>>>>> more people with expertise and interest in drivers, lower
+>>>> layers
+>>>>>>> (XDP, BPF,
+>>>>>>>>>>>> TC, netfilter), and network topology/simulation. Discussion
+>>>> around
+>>>>>>>>>>>> middlebox support and the userspace API might have more
+>>>> audience
+>>>>>>>>>>>> interaction. If we want to drive a discussion, we could try
+>>>> to
+>>>>>>> strike a
+>>>>>>>>>>>> balance between topics for the broader audience and those
+>>>> with more
+>>>>>>>>>>>> knowledge of TCP internals. (Hopefully some TCP internals
+>>>> people
+>>>>>>> are still
+>>>>>>>>>>>> planning to attend)
+>>>>>>>>>>>>
+>>>>>>>>>>>>  - Of course, we should focus our discussions on the
+>>>> upstreaming
+>>>>>>>>>>>>> aspect, e.g. reducing the footprint of MPTCP in the current
+>>>> TCP
+>>>>>>> stack: what
+>>>>>>>>>>>>> are we allow to do, what not. It is linked to many previous
+>>>>>>> discussions we
+>>>>>>>>>>>>> had on this ML, e.g. why we need more indirect function
+>>>> calls and
+>>>>>>> how to
+>>>>>>>>>>>>> reduce the impact, etc.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> The previous talk ([2]) had a section like this. I haven't
+>>>> watched
+>>>>>>> it
+>>>>>>>>>>>> recently, I should look at it again to see what kind of
+>>>> questions
+>>>>>>> the
+>>>>>>>>>>>> audience was asking. As you mentioned above we should be
+>>>> careful to
+>>>>>>> have
+>>>>>>>>>>>> new content compared to the previous session.
+>>>>>>>>>>>>
+>>>>>>>>>>>>  - If we have time, we could discuss about how users could
+>>>> interact
+>>>>>>>>>>>>> with MPTCP: enable it per connection, control the path
+>>>> manager,
+>>>>>>> maybe the
+>>>>>>>>>>>>> scheduler, etc.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> What do you think about this? Feel free to comment and even
+>>>> propose
+>>>>>>>>>>>>> completely different ideas!
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Thank you for outlining these ideas. I see that this topic
+>>>> is on our
+>>>>>>>>>>>> meeting agenda so it will be good to discuss the tutorial
+>>>> there.
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> [1] https://lists.01.org/pipermail
+>>>> /mptcp/2018-March/000379.html
+>>>>>>>>>>>>> [2] https://www.youtube.com/watch?v=3Dwftz2cU5SZs
+>>>>>>>>>>>>> [3] https://www.netdevconf.org/0x12/submit-proposal.html
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>> --
+>>>>>>>>>> Mat Martineau
+>>>>>>>>>> Intel OTC
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> --
+>>>>>>>>> [image: Tessares SA] <http://www.tessares.net> Matthieu Baerts
+>>>> | R&D
+>>>>>>>>> Engineer
+>>>>>>>>> matthieu.baerts(a)tessares.net
+>>>>>>>>> Tessares SA | Hybrid Access Solutions
+>>>>>>>>> www.tessares.net
+>>>>>>>>> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+>>>>>>>>> <https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+
+>>>>>>> Ottignies-Louvain-la-Neuve,+Belgium>
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> --
+>>>>>>>> [image: Tessares SA] <http://www.tessares.net> Matthieu Baerts |
+>>>> R&D
+>>>>>>>> Engineer
+>>>>>>>> matthieu.baerts(a)tessares.net
+>>>>>>>> Tessares SA | Hybrid Access Solutions
+>>>>>>>> www.tessares.net
+>>>>>>>> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+>>>>>>>> <https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+
+>>>>>>> Ottignies-Louvain-la-Neuve,+Belgium>
+>>>>>>>>
+>>>>>>>> --
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> DISCLAIMER.
+>>>>>>>> This email and any files transmitted with it are confidential
+>>>>>>>> and intended solely for the use of the individual or entity to
+>>>> whom they
+>>>>>>>> are addressed. If you have received this email in error please
+>>>> notify
+>>>>>>> the
+>>>>>>>> system manager. This message contains confidential information
+>>>> and is
+>>>>>>>> intended only for the individual named. If you are not the named
+>>>>>>> addressee
+>>>>>>>> you should not disseminate, distribute or copy this e-mail. Please
+>>>>>>> notify
+>>>>>>>> the sender immediately by e-mail if you have received this e-mail
+>>>> by
+>>>>>>>> mistake and delete this e-mail from your system. If you are not
+>>>> the
+>>>>>>>> intended recipient you are notified that disclosing, copying,
+>>>>>>> distributing
+>>>>>>>> or taking any action in reliance on the contents of this
+>>>> information is
+>>>>>>>> strictly prohibited.
+>>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> --
+>>>>>> [image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+>>>>>> Engineer
+>>>>>> matthieu.baerts(a)tessares.net
+>>>>>> Tessares SA | Hybrid Access Solutions
+>>>>>> www.tessares.net
+>>>>>> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+>>>>>> <https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ot
+>>>> tignies-Louvain-la-Neuve,+Belgium>
+>>>>>>
+>>>>>> --
+>>>>>>
+>>>>>>
+>>>>>> DISCLAIMER.
+>>>>>> This email and any files transmitted with it are confidential
+>>>>>> and intended solely for the use of the individual or entity to whom
+>>>> they
+>>>>>> are addressed. If you have received this email in error please notify
+>>>> the
+>>>>>> system manager. This message contains confidential information and is
+>>>>>> intended only for the individual named. If you are not the named
+>>>> addressee
+>>>>>> you should not disseminate, distribute or copy this e-mail. Please
+>>>> notify
+>>>>>> the sender immediately by e-mail if you have received this e-mail by
+>>>>>> mistake and delete this e-mail from your system. If you are not the
+>>>>>> intended recipient you are notified that disclosing, copying,
+>>>> distributing
+>>>>>> or taking any action in reliance on the contents of this information
+>>>> is
+>>>>>> strictly prohibited.
+>>>>> _______________________________________________
+>>>>> mptcp mailing list
+>>>>> mptcp(a)lists.01.org
+>>>>> https://lists.01.org/mailman/listinfo/mptcp
+>>>>
+>>>
+>>>
+>>>
+>>> --
+>>> [image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+>>> Engineer
+>>> matthieu.baerts(a)tessares.net
+>>> Tessares SA | Hybrid Access Solutions
+>>> www.tessares.net
+>>> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+>>> <https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-L=
+ouvain-la-Neuve,+Belgium>
+>>>
+>>
+>>
+>>
+>> --
+>> [image: Tessares SA] <http://www.tessares.net> Matthieu Baerts | R&D
+>> Engineer
+>> matthieu.baerts(a)tessares.net
+>> Tessares SA | Hybrid Access Solutions
+>> www.tessares.net
+>> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+>> <https://www.google.com/maps?q=3D1+Avenue+Jean+Monnet,+1348+Ottignies-Lo=
+uvain-la-Neuve,+Belgium>
+>>
+>> --
+>>
+>>
+>> DISCLAIMER.
+>> This email and any files transmitted with it are confidential
+>> and intended solely for the use of the individual or entity to whom they
+>> are addressed. If you have received this email in error please notify the
+>> system manager. This message contains confidential information and is
+>> intended only for the individual named. If you are not the named address=
+ee
+>> you should not disseminate, distribute or copy this e-mail. Please notify
+>> the sender immediately by e-mail if you have received this e-mail by
+>> mistake and delete this e-mail from your system. If you are not the
+>> intended recipient you are notified that disclosing, copying, distributi=
+ng
+>> or taking any action in reliance on the contents of this information is
+>> strictly prohibited.
+>
 
-> Matt
-> =
+--
+Mat Martineau
+Intel OTC
 
-> =
-
-> > =
-
-> > =
-
-> > Christoph
-> > =
-
-> > =
-
-> > > That looks like a good idea to remove, it avoid duplicating data we c=
-an get
-> > > differently.
-> > > =
-
-> > > > Well, let's remove it! In the general case it is not needed at all.=
- Some
-> > > > exotic schedulers need cnt_subflows, but we don't care if we add
-> > > > complexity in these schedulers.
-> > > =
-
-> > > On the other hand, that's not a big complexity to get this number, th=
-at's
-> > > why we don't care adding this tiny bit more complexity :-)
-> > > =
-
-> > > > One place where it was used is in the /proc/net/mptcp_net/mptcp out=
-put.
-> > > > We don't guarantee backwards compatibility, so we can just change t=
-he
-> > > > output. I will submit a follow-up patch for net-tools.
-> > > =
-
-> > > I agree that we don't guarantee backwards compatibility but this info=
- is
-> > > quite useful when debugging. Especially when someone discovering MPTC=
-P wants
-> > > to check if there is more than one subflow.
-> > > =
-
-> > > By chance, could we not count the number of subflows here without loc=
-king on
-> > > each subflow? (Just with mptcp_for_each_sk(mpcb, sk_unused) i++;)
-> > > =
-
-> > >  From my point of view, data from /proc/net/mptcp_net/mptcp doesn't n=
-eed to
-> > > be accurate: if a new subflow has just been added/removed, that's fin=
-e if we
-> > > missed that, we just don't want crashes and locking too much :)
-> > > =
-
-> > > > Another place is mptcp_verif_dss_csum(). There the access was actua=
-lly
-> > > > wrong. Simply because cnt_subflows > 1, it doesn't mean we have a
-> > > > working subflow. So, we fix that. I don't think this issue is big e=
-nough
-> > > > to backport it.
-> > > =
-
-> > > Can we not use 'cnt_established > 1' in the backports?
-> > > =
-
-> > > > Finally mptcp_sched.c was also using cnt_subflows but merely for
-> > > > speeding up things to avoid going through the whole scheduler code =
-when
-> > > > there is only one subflow. So, we can remove it and trade performan=
-ce
-> > > > for a better design.
-> > > =
-
-> > > For this one, can we not check if there is more than one subflow to k=
-eep the
-> > > fastpath? Anyway we will still have to iterate on each subflow just a=
-fter I
-> > > guess.
-> > > =
-
-> > > But in general, it is good to simplify the design!
-> > > =
-
-> > > > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-> > > > ---
-> > > >    include/net/mptcp.h          |  1 -
-> > > >    net/mptcp/mptcp_binder.c     | 17 +++++++++++++++--
-> > > >    net/mptcp/mptcp_ctrl.c       | 16 ++++++----------
-> > > >    net/mptcp/mptcp_input.c      | 11 ++++++++++-
-> > > >    net/mptcp/mptcp_ndiffports.c | 17 +++++++++++++++--
-> > > >    net/mptcp/mptcp_output.c     |  2 +-
-> > > >    net/mptcp/mptcp_sched.c      | 11 -----------
-> > > >    7 files changed, 47 insertions(+), 28 deletions(-)
-> > > > =
-
-> > > > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> > > > index 647183460200..523abc8ce01d 100644
-> > > > --- a/include/net/mptcp.h
-> > > > +++ b/include/net/mptcp.h
-> > > > @@ -280,7 +280,6 @@ struct mptcp_cb {
-> > > >    		rcv_hiseq_index:1; /* Index in rcv_high_order of rcv_nxt */
-> > > >    	/* socket count in this connection */
-> > > > -	u8 cnt_subflows;
-> > > >    	u8 cnt_established;
-> > > >    #define MPTCP_SCHED_DATA_SIZE 8
-> > > > diff --git a/net/mptcp/mptcp_binder.c b/net/mptcp/mptcp_binder.c
-> > > > index 58a342dc1620..d6ef9c5b6ce5 100644
-> > > > --- a/net/mptcp/mptcp_binder.c
-> > > > +++ b/net/mptcp/mptcp_binder.c
-> > > > @@ -287,6 +287,18 @@ static int mptcp_parse_gateway_ipv4(char *gate=
-ways)
-> > > >    	return -1;
-> > > >    }
-> > > > +static int mptcp_binder_subflow_count(const struct mptcp_cb *mpcb)
-> > > > +{
-> > > > +	struct sock *sk;
-> > > > +	int i =3D 0;
-> > > > +
-> > > > +	mptcp_for_each_sk(mpcb, sk) {
-> > > > +		i++;
-> > > > +	}
-> > > > +
-> > > > +	return i;
-> > > > +}
-> > > > +
-> > > >    /**
-> > > >     * Create all new subflows, by doing calls to mptcp_initX_subsoc=
-kets
-> > > >     *
-> > > > @@ -301,7 +313,7 @@ static void create_subflow_worker(struct work_s=
-truct *work)
-> > > >    						     subflow_work);
-> > > >    	struct mptcp_cb *mpcb =3D pm_priv->mpcb;
-> > > >    	struct sock *meta_sk =3D mpcb->meta_sk;
-> > > > -	int iter =3D 0;
-> > > > +	int iter =3D 0, subflow_cnt;
-> > > >    next_subflow:
-> > > >    	if (iter) {
-> > > > @@ -322,8 +334,9 @@ static void create_subflow_worker(struct work_s=
-truct *work)
-> > > >    	    !tcp_sk(mpcb->master_sk)->mptcp->fully_established)
-> > > >    		goto exit;
-> > > > +	subflow_cnt =3D mptcp_binder_subflow_count(mpcb);
-> > > >    	if (mptcp_binder_ndiffports > iter &&
-> > > > -	    mptcp_binder_ndiffports > mpcb->cnt_subflows) {
-> > > > +	    mptcp_binder_ndiffports > subflow_cnt) {
-> > > >    		struct mptcp_loc4 loc;
-> > > >    		struct mptcp_rem4 rem;
-> > > > diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
-> > > > index 321a8578e9c3..b1109ee9770f 100644
-> > > > --- a/net/mptcp/mptcp_ctrl.c
-> > > > +++ b/net/mptcp/mptcp_ctrl.c
-> > > > @@ -1379,7 +1379,6 @@ int mptcp_add_sock(struct sock *meta_sk, stru=
-ct sock *sk, u8 loc_id, u8 rem_id,
-> > > >    	mpcb->connection_list =3D tp;
-> > > >    	tp->mptcp->attached =3D 1;
-> > > > -	mpcb->cnt_subflows++;
-> > > >    	atomic_add(atomic_read(&((struct sock *)tp)->sk_rmem_alloc),
-> > > >    		   &meta_sk->sk_rmem_alloc);
-> > > > @@ -1399,23 +1398,21 @@ int mptcp_add_sock(struct sock *meta_sk, st=
-ruct sock *sk, u8 loc_id, u8 rem_id,
-> > > >    	sk->sk_destruct =3D mptcp_sock_destruct;
-> > > >    	if (sk->sk_family =3D=3D AF_INET)
-> > > > -		mptcp_debug("%s: token %#x pi %d, src_addr:%pI4:%d dst_addr:%pI4=
-:%d, cnt_subflows now %d\n",
-> > > > +		mptcp_debug("%s: token %#x pi %d, src_addr:%pI4:%d dst_addr:%pI4=
-:%d\n",
-> > > >    			    __func__ , mpcb->mptcp_loc_token,
-> > > >    			    tp->mptcp->path_index,
-> > > >    			    &((struct inet_sock *)tp)->inet_saddr,
-> > > >    			    ntohs(((struct inet_sock *)tp)->inet_sport),
-> > > >    			    &((struct inet_sock *)tp)->inet_daddr,
-> > > > -			    ntohs(((struct inet_sock *)tp)->inet_dport),
-> > > > -			    mpcb->cnt_subflows);
-> > > > +			    ntohs(((struct inet_sock *)tp)->inet_dport));
-> > > >    #if IS_ENABLED(CONFIG_IPV6)
-> > > >    	else
-> > > > -		mptcp_debug("%s: token %#x pi %d, src_addr:%pI6:%d dst_addr:%pI6=
-:%d, cnt_subflows now %d\n",
-> > > > +		mptcp_debug("%s: token %#x pi %d, src_addr:%pI6:%d dst_addr:%pI6=
-:%d\n",
-> > > >    			    __func__ , mpcb->mptcp_loc_token,
-> > > >    			    tp->mptcp->path_index, &inet6_sk(sk)->saddr,
-> > > >    			    ntohs(((struct inet_sock *)tp)->inet_sport),
-> > > >    			    &sk->sk_v6_daddr,
-> > > > -			    ntohs(((struct inet_sock *)tp)->inet_dport),
-> > > > -			    mpcb->cnt_subflows);
-> > > > +			    ntohs(((struct inet_sock *)tp)->inet_dport));
-> > > >    #endif
-> > > >    	return 0;
-> > > > @@ -1452,7 +1449,6 @@ void mptcp_del_sock(struct sock *sk)
-> > > >    			}
-> > > >    		}
-> > > >    	}
-> > > > -	mpcb->cnt_subflows--;
-> > > >    	if (tp->mptcp->establish_increased)
-> > > >    		mpcb->cnt_established--;
-> > > > @@ -2816,8 +2812,8 @@ static int mptcp_pm_seq_show(struct seq_file =
-*seq, void *v)
-> > > >    					   ntohs(isk->inet_dport));
-> > > >    #endif
-> > > >    			}
-> > > > -			seq_printf(seq, " %02X %02X %08X:%08X %lu",
-> > > > -				   meta_sk->sk_state, mpcb->cnt_subflows,
-> > > > +			seq_printf(seq, " %02X %08X:%08X %lu",
-> > > > +				   meta_sk->sk_state,
-> > > =
-
-> > > You missed the update of the "header" at the line 2796 ;-)
-> > > (to remove the 'ns' from there)
-> > > =
-
-> > > >    				   meta_tp->write_seq - meta_tp->snd_una,
-> > > >    				   max_t(int, meta_tp->rcv_nxt -
-> > > >    					 meta_tp->copied_seq, 0),
-> > > > diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-> > > > index ba9e3fe62824..126c961ec55a 100644
-> > > > --- a/net/mptcp/mptcp_input.c
-> > > > +++ b/net/mptcp/mptcp_input.c
-> > > > @@ -347,6 +347,8 @@ static int mptcp_verif_dss_csum(struct sock *sk)
-> > > >    	/* Now, checksum must be 0 */
-> > > >    	if (unlikely(csum_fold(csum_tcp))) {
-> > > > +		struct sock *sk_it =3D NULL;
-> > > > +
-> > > >    		pr_err("%s csum is wrong: %#x tcp-seq %u dss_csum_added %d ove=
-rflowed %d iterations %d\n",
-> > > >    		       __func__, csum_fold(csum_tcp), TCP_SKB_CB(last)->seq,
-> > > >    		       dss_csum_added, overflowed, iter);
-> > > > @@ -359,7 +361,14 @@ static int mptcp_verif_dss_csum(struct sock *s=
-k)
-> > > >    		 */
-> > > >    		tp->mpcb->csum_cutoff_seq =3D tp->mptcp->map_data_seq;
-> > > > -		if (tp->mpcb->cnt_subflows > 1) {
-> > > > +		/* Search for another subflow that is fully established */
-> > > > +		mptcp_for_each_sk(tp->mpcb, sk_it) {
-> > > > +			if (sk_it !=3D sk &&
-> > > > +			    tcp_sk(sk_it)->mptcp->fully_established)
-> > > > +				break;
-> > > > +		}
-> > > > +
-> > > > +		if (sk_it) {
-> > > >    			mptcp_send_reset(sk);
-> > > >    			ans =3D -1;
-> > > >    		} else {
-> > > > diff --git a/net/mptcp/mptcp_ndiffports.c b/net/mptcp/mptcp_ndiffpo=
-rts.c
-> > > > index 10147d5e3cca..fe73ade7ba24 100644
-> > > > --- a/net/mptcp/mptcp_ndiffports.c
-> > > > +++ b/net/mptcp/mptcp_ndiffports.c
-> > > > @@ -18,6 +18,18 @@ static int num_subflows __read_mostly =3D 2;
-> > > >    module_param(num_subflows, int, 0644);
-> > > >    MODULE_PARM_DESC(num_subflows, "choose the number of subflows pe=
-r MPTCP connection");
-> > > > +static int mptcp_ndiffports_subflow_count(const struct mptcp_cb *m=
-pcb)
-> > > > +{
-> > > > +	struct sock *sk;
-> > > > +	int i =3D 0;
-> > > > +
-> > > > +	mptcp_for_each_sk(mpcb, sk) {
-> > > > +		i++;
-> > > > +	}
-> > > > +
-> > > > +	return i;
-> > > > +}
-> > > =
-
-> > > Can we not add this function with a generic name in mptcp.h? (and use=
- it
-> > > here, in binder, maybe for /proc/net/mptcp_net/mptcp, etc.)
-> > > =
-
-> > > Cheers,
-> > > Matt
-> > > =
-
-> > > > +
-> > > >    /**
-> > > >     * Create all new subflows, by doing calls to mptcp_initX_subsoc=
-kets
-> > > >     *
-> > > > @@ -32,7 +44,7 @@ static void create_subflow_worker(struct work_str=
-uct *work)
-> > > >    						     subflow_work);
-> > > >    	struct mptcp_cb *mpcb =3D pm_priv->mpcb;
-> > > >    	struct sock *meta_sk =3D mpcb->meta_sk;
-> > > > -	int iter =3D 0;
-> > > > +	int iter =3D 0, subflow_cnt;
-> > > >    next_subflow:
-> > > >    	if (iter) {
-> > > > @@ -53,7 +65,8 @@ static void create_subflow_worker(struct work_str=
-uct *work)
-> > > >    	    !tcp_sk(mpcb->master_sk)->mptcp->fully_established)
-> > > >    		goto exit;
-> > > > -	if (num_subflows > iter && num_subflows > mpcb->cnt_subflows) {
-> > > > +	subflow_cnt =3D mptcp_ndiffports_subflow_count(mpcb);
-> > > > +	if (num_subflows > iter && num_subflows > subflow_cnt) {
-> > > >    		if (meta_sk->sk_family =3D=3D AF_INET ||
-> > > >    		    mptcp_v6_is_v4_mapped(meta_sk)) {
-> > > >    			struct mptcp_loc4 loc;
-> > > > diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-> > > > index fc950a98ce31..cc1a4f7d39e9 100644
-> > > > --- a/net/mptcp/mptcp_output.c
-> > > > +++ b/net/mptcp/mptcp_output.c
-> > > > @@ -1353,7 +1353,7 @@ void mptcp_send_active_reset(struct sock *met=
-a_sk, gfp_t priority)
-> > > >    	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
-> > > >    	struct sock *sk;
-> > > > -	if (!mpcb->cnt_subflows)
-> > > > +	if (!mpcb->connection_list)
-> > > >    		return;
-> > > >    	WARN_ON(meta_tp->send_mp_fclose);
-> > > > diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
-> > > > index 2b10a6683c5e..c831515fd7f0 100644
-> > > > --- a/net/mptcp/mptcp_sched.c
-> > > > +++ b/net/mptcp/mptcp_sched.c
-> > > > @@ -219,14 +219,6 @@ struct sock *get_available_subflow(struct sock=
- *meta_sk, struct sk_buff *skb,
-> > > >    	struct sock *sk;
-> > > >    	bool force;
-> > > > -	/* if there is only one subflow, bypass the scheduling function */
-> > > > -	if (mpcb->cnt_subflows =3D=3D 1) {
-> > > > -		sk =3D (struct sock *)mpcb->connection_list;
-> > > > -		if (!mptcp_is_available(sk, skb, zero_wnd_test))
-> > > > -			sk =3D NULL;
-> > > > -		return sk;
-> > > > -	}
-> > > > -
-> > > >    	/* Answer data_fin on same subflow!!! */
-> > > >    	if (meta_sk->sk_shutdown & RCV_SHUTDOWN &&
-> > > >    	    skb && mptcp_is_data_fin(skb)) {
-> > > > @@ -268,9 +260,6 @@ static struct sk_buff *mptcp_rcv_buf_optimizati=
-on(struct sock *sk, int penal)
-> > > >    	struct sk_buff *skb_head;
-> > > >    	struct defsched_priv *dsp =3D defsched_get_priv(tp);
-> > > > -	if (tp->mpcb->cnt_subflows =3D=3D 1)
-> > > > -		return NULL;
-> > > > -
-> > > >    	meta_sk =3D mptcp_meta_sk(sk);
-> > > >    	skb_head =3D tcp_rtx_queue_head(meta_sk);
-> > > > =
-
-> > > -- =
-
-> > > Matthieu Baerts | R&D Engineer
-> > > matthieu.baerts(a)tessares.net
-> > > Tessares SA | Hybrid Access Solutions
-> > > www.tessares.net
-> > > 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-> > > =
-
-> > > -- =
-
-> > > =
-
-> > > =
-
-> > > DISCLAIMER.
-> > > This email and any files transmitted with it are confidential and int=
-ended
-> > > solely for the use of the individual or entity to whom they are addre=
-ssed.
-> > > If you have received this email in error please notify the system man=
-ager.
-> > > This message contains confidential information and is intended only f=
-or the
-> > > individual named. If you are not the named addressee you should not
-> > > disseminate, distribute or copy this e-mail. Please notify the sender
-> > > immediately by e-mail if you have received this e-mail by mistake and=
- delete
-> > > this e-mail from your system. If you are not the intended recipient y=
-ou are
-> > > notified that disclosing, copying, distributing or taking any action =
-in
-> > > reliance on the contents of this information is strictly prohibited.
-> =
-
-> -- =
-
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-> =
-
-> -- =
-
-> =
-
-> =
-
-> DISCLAIMER.
-> This email and any files transmitted with it are confidential and intended
-> solely for the use of the individual or entity to whom they are addressed.
-> If you have received this email in error please notify the system manager.
-> This message contains confidential information and is intended only for t=
-he
-> individual named. If you are not the named addressee you should not
-> disseminate, distribute or copy this e-mail. Please notify the sender
-> immediately by e-mail if you have received this e-mail by mistake and del=
-ete
-> this e-mail from your system. If you are not the intended recipient you a=
-re
-> notified that disclosing, copying, distributing or taking any action in
-> reliance on the contents of this information is strictly prohibited.
-
---===============1166440179873186958==--
+--===============0773906010022218782==--
