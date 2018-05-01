@@ -1,49 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============3644990922642794541=="
+Content-Type: multipart/mixed; boundary="===============5570510029169015442=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next] tcp/mptcp: Purge write-queue of the sk
- not meta_sk in tcp_abort()
-Date: Tue, 01 May 2018 13:44:09 -0700
-Message-ID: <20180501204409.96816-1-cpaasch@apple.com>
+Subject: Re: [MPTCP] [PATCH mptcp-net-next 0/9] Remove some MPTCP-modules
+Date: Tue, 01 May 2018 14:16:22 -0700
+Message-ID: <alpine.OSX.2.21.1805011415550.6259@blkatz-mobl.amr.corp.intel.com>
+In-Reply-To: 20180501203538.95477-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 595
+X-UID: 596
 
---===============3644990922642794541==
+--===============5570510029169015442==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tcp_abort terminates a specific subflow (e.g., when the interface goes
-down).
 
-However, in tcp_abort() we should not purge the write-queue of the
-meta-sk but of the sk that we are removing.
+On Tue, 1 May 2018, Christoph Paasch wrote:
 
-Fixes: 16b5a42fd18e ("Merge branch 'net-next/master'")
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- net/ipv4/tcp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> I had a bit of time, so just went through the code and removed some
+> modules. These patches are based off of the mptcp-net-next repo's master.
+>
+> I would like to get rid of fullmesh/ndiffports as well, but need to see
+> if I can do it such that I can run the net-next kernel on the
+> server-side and still have my test-scripts succeed.
+>
+> Also, a next series could get rid of the scheduler module-selector.
+>
+> 2500 lines of code gone! ;-)
+>
+> Christoph Paasch (9):
+>  mptcp: Remove Balia congestion control
+>  mptcp: Remove wVegas congestion control
+>  mptcp: Remove OLIA congestion control
+>  mptcp: Remove Coupled congestion control
+>  mptcp: Remove MCTCP Desync congestion control
+>  mptcp: Remove Redundant scheduler
+>  mptcp: Remove RoundRobin Scheduler
+>  mptcp: Remove Binder Path-Manager
+>  mptcp: Cleanup after removals
 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index eaa32600fe63..eeb98619b181 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3932,7 +3932,7 @@ int tcp_abort(struct sock *sk, int err)
- =
+Thanks Christoph - all applied.
 
- 	bh_unlock_sock(meta_sk);
- 	local_bh_enable();
--	tcp_write_queue_purge(meta_sk);
-+	tcp_write_queue_purge(sk);
- 	release_sock(meta_sk);
- 	return 0;
- }
--- =
+--
+Mat Martineau
+Intel OTC
 
-2.16.2
-
-
---===============3644990922642794541==--
+--===============5570510029169015442==--
