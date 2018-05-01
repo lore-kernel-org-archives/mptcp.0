@@ -1,274 +1,391 @@
-Content-Type: multipart/mixed; boundary="===============3788996892624854669=="
+Content-Type: multipart/mixed; boundary="===============1364816815351436042=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next 5/9] mptcp: Remove MCTCP Desync
- congestion control
-Date: Tue, 01 May 2018 13:35:34 -0700
-Message-ID: <20180501203538.95477-6-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH mptcp-net-next 6/9] mptcp: Remove Redundant scheduler
+Date: Tue, 01 May 2018 13:35:35 -0700
+Message-ID: <20180501203538.95477-7-cpaasch@apple.com>
 In-Reply-To: 20180501203538.95477-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 590
+X-UID: 591
 
---===============3788996892624854669==
+--===============1364816815351436042==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/ipv4/Kconfig         |  13 ----
- net/mptcp/Makefile       |   1 -
- net/mptcp/mctcp_desync.c | 189 -------------------------------------------=
+ net/mptcp/Kconfig           |  13 --
+ net/mptcp/Makefile          |   1 -
+ net/mptcp/mptcp_redundant.c | 301 ----------------------------------------=
 ----
- 3 files changed, 203 deletions(-)
- delete mode 100644 net/mptcp/mctcp_desync.c
+ 3 files changed, 315 deletions(-)
+ delete mode 100644 net/mptcp/mptcp_redundant.c
 
-diff --git a/net/ipv4/Kconfig b/net/ipv4/Kconfig
-index d5cd17c3e74b..28de03f7a931 100644
---- a/net/ipv4/Kconfig
-+++ b/net/ipv4/Kconfig
-@@ -680,19 +680,6 @@ config TCP_CONG_BBR
- 	bufferbloat, policers, or AQM schemes that do not provide a delay
- 	signal. It requires the fq ("Fair Queue") pacing packet scheduler.
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index 13cf4d51ce1f..e4d5dd5d1959 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -85,13 +85,6 @@ config MPTCP_ROUNDROBIN
+ 	  This is a very simple round-robin scheduler. Probably has bad performan=
+ce
+ 	  but might be interesting for researchers.
  =
 
--config TCP_CONG_MCTCPDESYNC
--	tristate "DESYNCHRONIZED MCTCP CONGESTION CONTROL (EXPERIMENTAL)"
--	depends on MPTCP
--	default n
+-config MPTCP_REDUNDANT
+-	tristate "MPTCP Redundant"
+-	depends on (MPTCP=3Dy)
 -	---help---
--	Desynchronized MultiChannel TCP Congestion Control. This is experimental
--	code that only supports single path and must have set mptcp_ndiffports
--	larger than one.
--	To enable it, just put 'mctcpdesync' in tcp_congestion_control
--	For further details see:
--	  http://ieeexplore.ieee.org/abstract/document/6911722/
--	  https://doi.org/10.1016/j.comcom.2015.07.010
+-	  This scheduler sends all packets redundantly over all subflows to decre=
+ases
+-	  latency and jitter on the cost of lower throughput.
 -
  choice
- 	prompt "Default TCP congestion control"
- 	default DEFAULT_CUBIC
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index 06068fa6c6f8..dd9714fa070b 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -8,7 +8,6 @@ obj-$(CONFIG_MPTCP) +=3D mptcp.o
- mptcp-y :=3D mptcp_ctrl.o mptcp_ipv4.o mptcp_pm.o \
- 	   mptcp_output.o mptcp_input.o mptcp_sched.o
+ 	prompt "Default MPTCP Scheduler"
+ 	default DEFAULT
+@@ -110,12 +103,6 @@ choice
+ 		  This is the round-rob scheduler, sending in a round-robin
+ 		  fashion..
  =
 
--obj-$(CONFIG_TCP_CONG_MCTCPDESYNC) +=3D mctcp_desync.o
- obj-$(CONFIG_MPTCP_FULLMESH) +=3D mptcp_fullmesh.o
+-	config DEFAULT_REDUNDANT
+-		bool "Redundant" if MPTCP_REDUNDANT=3Dy
+-		---help---
+-		  This is the redundant scheduler, sending packets redundantly over
+-		  all the subflows.
+-
+ endchoice
+ endif
+ =
+
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index dd9714fa070b..81dd47c2a52a 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -12,7 +12,6 @@ obj-$(CONFIG_MPTCP_FULLMESH) +=3D mptcp_fullmesh.o
  obj-$(CONFIG_MPTCP_NDIFFPORTS) +=3D mptcp_ndiffports.o
  obj-$(CONFIG_MPTCP_BINDER) +=3D mptcp_binder.o
-diff --git a/net/mptcp/mctcp_desync.c b/net/mptcp/mctcp_desync.c
+ obj-$(CONFIG_MPTCP_ROUNDROBIN) +=3D mptcp_rr.o
+-obj-$(CONFIG_MPTCP_REDUNDANT) +=3D mptcp_redundant.o
+ =
+
+ mptcp-$(subst m,y,$(CONFIG_IPV6)) +=3D mptcp_ipv6.o
+ =
+
+diff --git a/net/mptcp/mptcp_redundant.c b/net/mptcp/mptcp_redundant.c
 deleted file mode 100644
-index 9c5d6c196da5..000000000000
---- a/net/mptcp/mctcp_desync.c
+index 001a3f8a974d..000000000000
+--- a/net/mptcp/mptcp_redundant.c
 +++ /dev/null
-@@ -1,189 +0,0 @@
+@@ -1,301 +0,0 @@
 -/*
-- *  Desynchronized Multi-Channel TCP Congestion Control Algorithm
+- *	MPTCP Scheduler to reduce latency and jitter.
 - *
-- *  Implementation based on publications of "DMCTCP:Desynchronized Multi-C=
-hannel
-- *  TCP for high speed access networks with tiny buffers" in 23rd internat=
-ional
-- *  conference of Computer Communication and Networks (ICCCN), 2014, and
-- *  "Exploring parallelism and desynchronization of TCP over high speed ne=
-tworks
-- *  with tiny buffers" in Journal of Computer Communications Elsevier, 201=
-5.
+- *	This scheduler sends all packets redundantly on all available subflows.
 - *
-- *  http://ieeexplore.ieee.org/abstract/document/6911722/
-- *  https://doi.org/10.1016/j.comcom.2015.07.010
+- *	Initial Design & Implementation:
+- *	Tobias Erbshaeusser <erbshauesser(a)dvs.tu-darmstadt.de>
+- *	Alexander Froemmgen <froemmge(a)dvs.tu-darmstadt.de>
 - *
-- *  This prototype is for research purpose and is currently experimental c=
-ode
-- *  that only support a single path. Future support of multi-channel over
-- *  multi-path requires channels grouping.
+- *	Initial corrections & modifications:
+- *	Christian Pinedo <christian.pinedo(a)ehu.eus>
+- *	Igor Lopez <igor.lopez(a)ehu.eus>
 - *
-- *  Initial Design and Implementation:
-- *  Cheng Cui <Cheng.Cui(a)netapp.com>
-- *
-- *  This program is free software; you can redistribute it and/or modify it
-- *  under the terms of the GNU General Public License as published by the =
-Free
-- *  Software Foundation; either version 2 of the License, or (at your opti=
-on)
-- *  any later version.
+- *	This program is free software; you can redistribute it and/or
+- *      modify it under the terms of the GNU General Public License
+- *      as published by the Free Software Foundation; either version
+- *      2 of the License, or (at your option) any later version.
 - */
--#include <net/tcp.h>
--#include <net/mptcp.h>
+-
 -#include <linux/module.h>
+-#include <net/mptcp.h>
 -
--enum {
--	MASTER_CHANNEL =3D 1,
--	INI_MIN_CWND =3D 2,
+-/* Struct to store the data of a single subflow */
+-struct redsched_sock_data {
+-	/* The skb or NULL */
+-	struct sk_buff *skb;
+-	/* End sequence number of the skb. This number should be checked
+-	 * to be valid before the skb field is used
+-	 */
+-	u32 skb_end_seq;
 -};
 -
--/* private congestion control structure:
-- * off_tstamp: the last backoff timestamp for loss synchronization event
-- * off_subfid: the subflow which was backoff on off_tstamp
-- */
--struct mctcp_desync {
--	u64	off_tstamp;
--	u8	off_subfid;
+-/* Struct to store the data of the control block */
+-struct redsched_cb_data {
+-	/* The next subflow where a skb should be sent or NULL */
+-	struct tcp_sock *next_subflow;
 -};
 -
--static inline int mctcp_cc_sk_can_send(const struct sock *sk)
+-/* Returns the socket data from a given subflow socket */
+-static struct redsched_sock_data *redsched_get_sock_data(struct tcp_sock *=
+tp)
 -{
--	return mptcp_sk_can_send(sk) && tcp_sk(sk)->srtt_us;
+-	return (struct redsched_sock_data *)&tp->mptcp->mptcp_sched[0];
 -}
 -
--static void mctcp_desync_init(struct sock *sk)
+-/* Returns the control block data from a given meta socket */
+-static struct redsched_cb_data *redsched_get_cb_data(struct tcp_sock *tp)
 -{
--	if (mptcp(tcp_sk(sk))) {
--		struct mctcp_desync *ca =3D inet_csk_ca(mptcp_meta_sk(sk));
--		ca->off_tstamp =3D 0;
--		ca->off_subfid =3D 0;
--    }
--    /* If we do not mptcp, behave like reno: return */
+-	return (struct redsched_cb_data *)&tp->mpcb->mptcp_sched[0];
 -}
 -
--static void mctcp_desync_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+-static bool redsched_get_active_valid_sks(struct sock *meta_sk)
 -{
--	struct tcp_sock *tp =3D tcp_sk(sk);
+-	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
+-	struct sock *sk;
+-	int active_valid_sks =3D 0;
 -
--	if (!mptcp(tp) || (1 =3D=3D tp->mpcb->cnt_established)) {
--		tcp_reno_cong_avoid(sk, ack, acked);
--		return;
--	} else if (!tcp_is_cwnd_limited(sk)) {
--		return;
--	} else {
--		const struct mctcp_desync *ca =3D inet_csk_ca(mptcp_meta_sk(sk));
--		const u8 subfid =3D tp->mptcp->path_index;
--		const struct sock *sub_sk;
+-	mptcp_for_each_sk(mpcb, sk) {
+-		if (subflow_is_active((struct tcp_sock *)sk) &&
+-		    !mptcp_is_def_unavailable(sk))
+-			active_valid_sks++;
+-	}
 -
--		/* current aggregated cwnd */
--		u32 agg_cwnd =3D 0;
--		u32 min_cwnd =3D 0xffffffff;
--		u8 min_cwnd_subfid =3D 0;
+-	return active_valid_sks;
+-}
 -
--		/* In "safe" area, increase */
--		if (tcp_in_slow_start(tp)) {
--			if (ca->off_subfid) {
--				/* passed initial phase, allow slow start */
--				tcp_slow_start(tp, acked);
--			} else if (MASTER_CHANNEL =3D=3D tp->mptcp->path_index) {
--				/* master channel is normal slow start in
--				 * initial phase */
--				tcp_slow_start(tp, acked);
--			} else {
--				/* secondary channels increase slowly until
--				 * the initial phase passed
--				 */
--				tp->snd_ssthresh =3D tp->snd_cwnd =3D INI_MIN_CWND;
--			}
--			return;
--		}
--		  /* In dangerous area, increase slowly and linearly. */
--		  else {
--			/* get total cwnd and the subflow that has min cwnd */
--			mptcp_for_each_sk(tp->mpcb, sub_sk) {
--				if (mctcp_cc_sk_can_send(sub_sk)) {
--					const struct tcp_sock *sub_tp =3D
--								tcp_sk(sub_sk);
--					agg_cwnd +=3D sub_tp->snd_cwnd;
--					if(min_cwnd > sub_tp->snd_cwnd) {
--						min_cwnd =3D sub_tp->snd_cwnd;
--						min_cwnd_subfid =3D
--						      sub_tp->mptcp->path_index;
--					}
--				}
--			}
--			/* the smallest subflow grows faster than others */
--			if (subfid =3D=3D min_cwnd_subfid) {
--				tcp_cong_avoid_ai(tp, min_cwnd, acked);
--			} else {
--				tcp_cong_avoid_ai(tp, agg_cwnd - min_cwnd,
--						  acked);
--			}
+-static bool redsched_use_subflow(struct sock *meta_sk,
+-				 int active_valid_sks,
+-				 struct tcp_sock *tp,
+-				 struct sk_buff *skb)
+-{
+-	if (!skb || !mptcp_is_available((struct sock *)tp, skb, false))
+-		return false;
+-
+-	if (TCP_SKB_CB(skb)->path_mask !=3D 0)
+-		return subflow_is_active(tp);
+-
+-	if (TCP_SKB_CB(skb)->path_mask =3D=3D 0) {
+-		if (active_valid_sks =3D=3D -1)
+-			active_valid_sks =3D redsched_get_active_valid_sks(meta_sk);
+-
+-		if (subflow_is_backup(tp) && active_valid_sks > 0)
+-			return false;
+-		else
+-			return true;
+-	}
+-
+-	return false;
+-}
+-
+-static struct sock *redundant_get_subflow(struct sock *meta_sk,
+-					  struct sk_buff *skb,
+-					  bool zero_wnd_test)
+-{
+-	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
+-	struct redsched_cb_data *cb_data =3D redsched_get_cb_data(meta_tp);
+-	struct tcp_sock *first_tp =3D cb_data->next_subflow;
+-	struct sock *sk;
+-	struct tcp_sock *tp;
+-
+-	/* Answer data_fin on same subflow */
+-	if (meta_sk->sk_shutdown & RCV_SHUTDOWN &&
+-	    skb && mptcp_is_data_fin(skb)) {
+-		mptcp_for_each_sk(mpcb, sk) {
+-			if (tcp_sk(sk)->mptcp->path_index =3D=3D
+-				mpcb->dfin_path_index &&
+-			    mptcp_is_available(sk, skb, zero_wnd_test))
+-				return sk;
 -		}
 -	}
+-
+-	if (!first_tp)
+-		first_tp =3D mpcb->connection_list;
+-	tp =3D first_tp;
+-
+-	/* still NULL (no subflow in connection_list?) */
+-	if (!first_tp)
+-		return NULL;
+-
+-	/* Search for any subflow to send it */
+-	do {
+-		if (mptcp_is_available((struct sock *)tp, skb,
+-				       zero_wnd_test)) {
+-			cb_data->next_subflow =3D tp->mptcp->next;
+-			return (struct sock *)tp;
+-		}
+-
+-		tp =3D tp->mptcp->next;
+-		if (!tp)
+-			tp =3D mpcb->connection_list;
+-	} while (tp !=3D first_tp);
+-
+-	/* No space */
+-	return NULL;
 -}
 -
--static u32 mctcp_desync_ssthresh(struct sock *sk)
+-/* Corrects the stored skb pointers if they are invalid */
+-static void redsched_correct_skb_pointers(struct sock *meta_sk,
+-					  struct redsched_sock_data *sk_data)
+-{
+-	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-
+-	if (sk_data->skb && !after(sk_data->skb_end_seq, meta_tp->snd_una))
+-		sk_data->skb =3D NULL;
+-}
+-
+-/* Returns the next skb from the queue */
+-static struct sk_buff *redundant_next_skb_from_queue(struct sk_buff_head *=
+queue,
+-						     struct sk_buff *previous,
+-						     struct sock *meta_sk)
+-{
+-	if (skb_queue_empty(queue))
+-		return NULL;
+-
+-	if (!previous)
+-		return skb_peek(queue);
+-
+-	if (skb_queue_is_last(queue, previous))
+-		return NULL;
+-
+-	/* sk_data->skb stores the last scheduled packet for this subflow.
+-	 * If sk_data->skb was scheduled but not sent (e.g., due to nagle),
+-	 * we have to schedule it again.
+-	 *
+-	 * For the redundant scheduler, there are two cases:
+-	 * 1. sk_data->skb was not sent on another subflow:
+-	 *    we have to schedule it again to ensure that we do not
+-	 *    skip this packet.
+-	 * 2. sk_data->skb was already sent on another subflow:
+-	 *    with regard to the redundant semantic, we have to
+-	 *    schedule it again. However, we keep it simple and ignore it,
+-	 *    as it was already sent by another subflow.
+-	 *    This might be changed in the future.
+-	 *
+-	 * For case 1, send_head is equal previous, as only a single
+-	 * packet can be skipped.
+-	 */
+-	if (tcp_send_head(meta_sk) =3D=3D previous)
+-		return tcp_send_head(meta_sk);
+-
+-	return skb_queue_next(queue, previous);
+-}
+-
+-static struct sk_buff *redundant_next_segment(struct sock *meta_sk,
+-					      int *reinject,
+-					      struct sock **subsk,
+-					      unsigned int *limit)
+-{
+-	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
+-	struct redsched_cb_data *cb_data =3D redsched_get_cb_data(meta_tp);
+-	struct tcp_sock *first_tp =3D cb_data->next_subflow;
+-	struct tcp_sock *tp;
+-	struct sk_buff *skb;
+-	int active_valid_sks =3D -1;
+-
+-	/* As we set it, we have to reset it as well. */
+-	*limit =3D 0;
+-
+-	if (skb_queue_empty(&mpcb->reinject_queue) &&
+-	    skb_queue_empty(&meta_sk->sk_write_queue))
+-		/* Nothing to send */
+-		return NULL;
+-
+-	/* First try reinjections */
+-	skb =3D skb_peek(&mpcb->reinject_queue);
+-	if (skb) {
+-		*subsk =3D get_available_subflow(meta_sk, skb, false);
+-		if (!*subsk)
+-			return NULL;
+-		*reinject =3D 1;
+-		return skb;
+-	}
+-
+-	/* Then try indistinctly redundant and normal skbs */
+-
+-	if (!first_tp)
+-		first_tp =3D mpcb->connection_list;
+-
+-	/* still NULL (no subflow in connection_list?) */
+-	if (!first_tp)
+-		return NULL;
+-
+-	tp =3D first_tp;
+-
+-	*reinject =3D 0;
+-	active_valid_sks =3D redsched_get_active_valid_sks(meta_sk);
+-	do {
+-		struct redsched_sock_data *sk_data;
+-
+-		/* Correct the skb pointers of the current subflow */
+-		sk_data =3D redsched_get_sock_data(tp);
+-		redsched_correct_skb_pointers(meta_sk, sk_data);
+-
+-		skb =3D redundant_next_skb_from_queue(&meta_sk->sk_write_queue,
+-						    sk_data->skb, meta_sk);
+-		if (skb && redsched_use_subflow(meta_sk, active_valid_sks, tp,
+-						skb)) {
+-			sk_data->skb =3D skb;
+-			sk_data->skb_end_seq =3D TCP_SKB_CB(skb)->end_seq;
+-			cb_data->next_subflow =3D tp->mptcp->next;
+-			*subsk =3D (struct sock *)tp;
+-
+-			if (TCP_SKB_CB(skb)->path_mask)
+-				*reinject =3D -1;
+-			return skb;
+-		}
+-
+-		tp =3D tp->mptcp->next;
+-		if (!tp)
+-			tp =3D mpcb->connection_list;
+-	} while (tp !=3D first_tp);
+-
+-	/* Nothing to send */
+-	return NULL;
+-}
+-
+-static void redundant_release(struct sock *sk)
 -{
 -	struct tcp_sock *tp =3D tcp_sk(sk);
+-	struct redsched_cb_data *cb_data =3D redsched_get_cb_data(tp);
 -
--	if (!mptcp(tp) || (1 =3D=3D tp->mpcb->cnt_established)) {
--		return max(tp->snd_cwnd >> 1U, 2U);
--	} else {
--		struct mctcp_desync *ca =3D inet_csk_ca(mptcp_meta_sk(sk));
--		const u8 subfid =3D tp->mptcp->path_index;
--		const struct sock *sub_sk;
--		u32 max_cwnd =3D 0;
--		u8 max_cwnd_subfid =3D 0;
--
--		/* Find the subflow that has the max cwnd. */
--		mptcp_for_each_sk(tp->mpcb, sub_sk) {
--			if (mctcp_cc_sk_can_send(sub_sk)) {
--				const struct tcp_sock *sub_tp =3D tcp_sk(sub_sk);
--				if (max_cwnd < sub_tp->snd_cwnd) {
--					max_cwnd =3D sub_tp->snd_cwnd;
--					max_cwnd_subfid =3D
--						sub_tp->mptcp->path_index;
--				}
--			}
--		}
--		/* Use high resolution clock. */
--		if (subfid =3D=3D max_cwnd_subfid) {
--			u64 now =3D tcp_clock_us();
--			u32 delta =3D tcp_stamp_us_delta(now, ca->off_tstamp);
--
--			if (delta < (tp->srtt_us >> 3)) {
--				/* desynchronize */
--				return tp->snd_cwnd;
--			} else {
--				ca->off_tstamp =3D now;
--				ca->off_subfid =3D subfid;
--				return max(max_cwnd >> 1U, 2U);
--			}
--		} else {
--			return tp->snd_cwnd;
--		}
--	}
+-	/* Check if the next subflow would be the released one. If yes correct
+-	 * the pointer
+-	 */
+-	if (cb_data->next_subflow =3D=3D tp)
+-		cb_data->next_subflow =3D tp->mptcp->next;
 -}
 -
--static struct tcp_congestion_ops mctcp_desync =3D {
--	.init       =3D mctcp_desync_init,
--	.ssthresh   =3D mctcp_desync_ssthresh,
--	.undo_cwnd  =3D tcp_reno_undo_cwnd,
--	.cong_avoid =3D mctcp_desync_cong_avoid,
--	.owner      =3D THIS_MODULE,
--	.name       =3D "mctcpdesync",
+-static struct mptcp_sched_ops mptcp_sched_redundant =3D {
+-	.get_subflow =3D redundant_get_subflow,
+-	.next_segment =3D redundant_next_segment,
+-	.release =3D redundant_release,
+-	.name =3D "redundant",
+-	.owner =3D THIS_MODULE,
 -};
 -
--static int __init mctcp_desync_register(void)
+-static int __init redundant_register(void)
 -{
--	BUILD_BUG_ON(sizeof(struct mctcp_desync) > ICSK_CA_PRIV_SIZE);
--	return tcp_register_congestion_control(&mctcp_desync);
+-	BUILD_BUG_ON(sizeof(struct redsched_sock_data) > MPTCP_SCHED_SIZE);
+-	BUILD_BUG_ON(sizeof(struct redsched_cb_data) > MPTCP_SCHED_DATA_SIZE);
+-
+-	if (mptcp_register_scheduler(&mptcp_sched_redundant))
+-		return -1;
+-
+-	return 0;
 -}
 -
--static void __exit mctcp_desync_unregister(void)
+-static void redundant_unregister(void)
 -{
--	tcp_unregister_congestion_control(&mctcp_desync);
+-	mptcp_unregister_scheduler(&mptcp_sched_redundant);
 -}
 -
--module_init(mctcp_desync_register);
--module_exit(mctcp_desync_unregister);
+-module_init(redundant_register);
+-module_exit(redundant_unregister);
 -
--MODULE_AUTHOR("Cheng Cui");
+-MODULE_AUTHOR("Tobias Erbshaeusser, Alexander Froemmgen");
 -MODULE_LICENSE("GPL");
--MODULE_DESCRIPTION("MCTCP: DESYNCHRONIZED MULTICHANNEL TCP CONGESTION CONT=
-ROL");
--MODULE_VERSION("1.0");
+-MODULE_DESCRIPTION("REDUNDANT MPTCP");
+-MODULE_VERSION("0.90");
 -- =
 
 2.16.2
 
 
---===============3788996892624854669==--
+--===============1364816815351436042==--
