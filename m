@@ -1,391 +1,395 @@
-Content-Type: multipart/mixed; boundary="===============1364816815351436042=="
+Content-Type: multipart/mixed; boundary="===============8897411264763186922=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next 6/9] mptcp: Remove Redundant scheduler
-Date: Tue, 01 May 2018 13:35:35 -0700
-Message-ID: <20180501203538.95477-7-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH mptcp-net-next 7/9] mptcp: Remove RoundRobin Scheduler
+Date: Tue, 01 May 2018 13:35:36 -0700
+Message-ID: <20180501203538.95477-8-cpaasch@apple.com>
 In-Reply-To: 20180501203538.95477-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 591
+X-UID: 592
 
---===============1364816815351436042==
+--===============8897411264763186922==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/Kconfig           |  13 --
- net/mptcp/Makefile          |   1 -
- net/mptcp/mptcp_redundant.c | 301 ----------------------------------------=
+ net/mptcp/Kconfig    |  13 ---
+ net/mptcp/Makefile   |   1 -
+ net/mptcp/mptcp_rr.c | 301 -----------------------------------------------=
 ----
  3 files changed, 315 deletions(-)
- delete mode 100644 net/mptcp/mptcp_redundant.c
+ delete mode 100644 net/mptcp/mptcp_rr.c
 
 diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index 13cf4d51ce1f..e4d5dd5d1959 100644
+index e4d5dd5d1959..0333de3e6349 100644
 --- a/net/mptcp/Kconfig
 +++ b/net/mptcp/Kconfig
-@@ -85,13 +85,6 @@ config MPTCP_ROUNDROBIN
- 	  This is a very simple round-robin scheduler. Probably has bad performan=
-ce
- 	  but might be interesting for researchers.
+@@ -78,13 +78,6 @@ menuconfig MPTCP_SCHED_ADVANCED
  =
 
--config MPTCP_REDUNDANT
--	tristate "MPTCP Redundant"
+ if MPTCP_SCHED_ADVANCED
+ =
+
+-config MPTCP_ROUNDROBIN
+-	tristate "MPTCP Round-Robin"
 -	depends on (MPTCP=3Dy)
 -	---help---
--	  This scheduler sends all packets redundantly over all subflows to decre=
-ases
--	  latency and jitter on the cost of lower throughput.
+-	  This is a very simple round-robin scheduler. Probably has bad performan=
+ce
+-	  but might be interesting for researchers.
 -
  choice
  	prompt "Default MPTCP Scheduler"
  	default DEFAULT
-@@ -110,12 +103,6 @@ choice
- 		  This is the round-rob scheduler, sending in a round-robin
- 		  fashion..
+@@ -97,12 +90,6 @@ choice
+ 		  This is the default scheduler, sending first on the subflow
+ 		  with the lowest RTT.
  =
 
--	config DEFAULT_REDUNDANT
--		bool "Redundant" if MPTCP_REDUNDANT=3Dy
+-	config DEFAULT_ROUNDROBIN
+-		bool "Round-Robin" if MPTCP_ROUNDROBIN=3Dy
 -		---help---
--		  This is the redundant scheduler, sending packets redundantly over
--		  all the subflows.
+-		  This is the round-rob scheduler, sending in a round-robin
+-		  fashion..
 -
  endchoice
  endif
  =
 
 diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index dd9714fa070b..81dd47c2a52a 100644
+index 81dd47c2a52a..d722b8266014 100644
 --- a/net/mptcp/Makefile
 +++ b/net/mptcp/Makefile
-@@ -12,7 +12,6 @@ obj-$(CONFIG_MPTCP_FULLMESH) +=3D mptcp_fullmesh.o
+@@ -11,7 +11,6 @@ mptcp-y :=3D mptcp_ctrl.o mptcp_ipv4.o mptcp_pm.o \
+ obj-$(CONFIG_MPTCP_FULLMESH) +=3D mptcp_fullmesh.o
  obj-$(CONFIG_MPTCP_NDIFFPORTS) +=3D mptcp_ndiffports.o
  obj-$(CONFIG_MPTCP_BINDER) +=3D mptcp_binder.o
- obj-$(CONFIG_MPTCP_ROUNDROBIN) +=3D mptcp_rr.o
--obj-$(CONFIG_MPTCP_REDUNDANT) +=3D mptcp_redundant.o
+-obj-$(CONFIG_MPTCP_ROUNDROBIN) +=3D mptcp_rr.o
  =
 
  mptcp-$(subst m,y,$(CONFIG_IPV6)) +=3D mptcp_ipv6.o
  =
 
-diff --git a/net/mptcp/mptcp_redundant.c b/net/mptcp/mptcp_redundant.c
+diff --git a/net/mptcp/mptcp_rr.c b/net/mptcp/mptcp_rr.c
 deleted file mode 100644
-index 001a3f8a974d..000000000000
---- a/net/mptcp/mptcp_redundant.c
+index 8910ba9e6052..000000000000
+--- a/net/mptcp/mptcp_rr.c
 +++ /dev/null
 @@ -1,301 +0,0 @@
--/*
-- *	MPTCP Scheduler to reduce latency and jitter.
-- *
-- *	This scheduler sends all packets redundantly on all available subflows.
-- *
-- *	Initial Design & Implementation:
-- *	Tobias Erbshaeusser <erbshauesser(a)dvs.tu-darmstadt.de>
-- *	Alexander Froemmgen <froemmge(a)dvs.tu-darmstadt.de>
-- *
-- *	Initial corrections & modifications:
-- *	Christian Pinedo <christian.pinedo(a)ehu.eus>
-- *	Igor Lopez <igor.lopez(a)ehu.eus>
-- *
-- *	This program is free software; you can redistribute it and/or
-- *      modify it under the terms of the GNU General Public License
-- *      as published by the Free Software Foundation; either version
-- *      2 of the License, or (at your option) any later version.
-- */
+-/* MPTCP Scheduler module selector. Highly inspired by tcp_cong.c */
 -
 -#include <linux/module.h>
 -#include <net/mptcp.h>
 -
--/* Struct to store the data of a single subflow */
--struct redsched_sock_data {
--	/* The skb or NULL */
--	struct sk_buff *skb;
--	/* End sequence number of the skb. This number should be checked
--	 * to be valid before the skb field is used
--	 */
--	u32 skb_end_seq;
+-static unsigned char num_segments __read_mostly =3D 1;
+-module_param(num_segments, byte, 0644);
+-MODULE_PARM_DESC(num_segments, "The number of consecutive segments that ar=
+e part of a burst");
+-
+-static bool cwnd_limited __read_mostly =3D 1;
+-module_param(cwnd_limited, bool, 0644);
+-MODULE_PARM_DESC(cwnd_limited, "if set to 1, the scheduler tries to fill t=
+he congestion-window on all subflows");
+-
+-struct rrsched_priv {
+-	unsigned char quota;
 -};
 -
--/* Struct to store the data of the control block */
--struct redsched_cb_data {
--	/* The next subflow where a skb should be sent or NULL */
--	struct tcp_sock *next_subflow;
--};
--
--/* Returns the socket data from a given subflow socket */
--static struct redsched_sock_data *redsched_get_sock_data(struct tcp_sock *=
-tp)
+-static struct rrsched_priv *rrsched_get_priv(const struct tcp_sock *tp)
 -{
--	return (struct redsched_sock_data *)&tp->mptcp->mptcp_sched[0];
+-	return (struct rrsched_priv *)&tp->mptcp->mptcp_sched[0];
 -}
 -
--/* Returns the control block data from a given meta socket */
--static struct redsched_cb_data *redsched_get_cb_data(struct tcp_sock *tp)
+-/* If the sub-socket sk available to send the skb? */
+-static bool mptcp_rr_is_available(const struct sock *sk, const struct sk_b=
+uff *skb,
+-				  bool zero_wnd_test, bool cwnd_test)
 -{
--	return (struct redsched_cb_data *)&tp->mpcb->mptcp_sched[0];
--}
+-	const struct tcp_sock *tp =3D tcp_sk(sk);
+-	unsigned int space, in_flight;
 -
--static bool redsched_get_active_valid_sks(struct sock *meta_sk)
--{
--	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
--	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
--	struct sock *sk;
--	int active_valid_sks =3D 0;
--
--	mptcp_for_each_sk(mpcb, sk) {
--		if (subflow_is_active((struct tcp_sock *)sk) &&
--		    !mptcp_is_def_unavailable(sk))
--			active_valid_sks++;
--	}
--
--	return active_valid_sks;
--}
--
--static bool redsched_use_subflow(struct sock *meta_sk,
--				 int active_valid_sks,
--				 struct tcp_sock *tp,
--				 struct sk_buff *skb)
--{
--	if (!skb || !mptcp_is_available((struct sock *)tp, skb, false))
+-	/* Set of states for which we are allowed to send data */
+-	if (!mptcp_sk_can_send(sk))
 -		return false;
 -
--	if (TCP_SKB_CB(skb)->path_mask !=3D 0)
--		return subflow_is_active(tp);
+-	/* We do not send data on this subflow unless it is
+-	 * fully established, i.e. the 4th ack has been received.
+-	 */
+-	if (tp->mptcp->pre_established)
+-		return false;
 -
--	if (TCP_SKB_CB(skb)->path_mask =3D=3D 0) {
--		if (active_valid_sks =3D=3D -1)
--			active_valid_sks =3D redsched_get_active_valid_sks(meta_sk);
+-	if (tp->pf)
+-		return false;
 -
--		if (subflow_is_backup(tp) && active_valid_sks > 0)
+-	if (inet_csk(sk)->icsk_ca_state =3D=3D TCP_CA_Loss) {
+-		/* If SACK is disabled, and we got a loss, TCP does not exit
+-		 * the loss-state until something above high_seq has been acked.
+-		 * (see tcp_try_undo_recovery)
+-		 *
+-		 * high_seq is the snd_nxt at the moment of the RTO. As soon
+-		 * as we have an RTO, we won't push data on the subflow.
+-		 * Thus, snd_una can never go beyond high_seq.
+-		 */
+-		if (!tcp_is_reno(tp))
 -			return false;
--		else
--			return true;
+-		else if (tp->snd_una !=3D tp->high_seq)
+-			return false;
 -	}
 -
--	return false;
+-	if (!tp->mptcp->fully_established) {
+-		/* Make sure that we send in-order data */
+-		if (skb && tp->mptcp->second_packet &&
+-		    tp->mptcp->last_end_data_seq !=3D TCP_SKB_CB(skb)->seq)
+-			return false;
+-	}
+-
+-	if (!cwnd_test)
+-		goto zero_wnd_test;
+-
+-	in_flight =3D tcp_packets_in_flight(tp);
+-	/* Not even a single spot in the cwnd */
+-	if (in_flight >=3D tp->snd_cwnd)
+-		return false;
+-
+-	/* Now, check if what is queued in the subflow's send-queue
+-	 * already fills the cwnd.
+-	 */
+-	space =3D (tp->snd_cwnd - in_flight) * tp->mss_cache;
+-
+-	if (tp->write_seq - tp->snd_nxt > space)
+-		return false;
+-
+-zero_wnd_test:
+-	if (zero_wnd_test && !before(tp->write_seq, tcp_wnd_end(tp)))
+-		return false;
+-
+-	return true;
 -}
 -
--static struct sock *redundant_get_subflow(struct sock *meta_sk,
--					  struct sk_buff *skb,
--					  bool zero_wnd_test)
+-/* Are we not allowed to reinject this skb on tp? */
+-static int mptcp_rr_dont_reinject_skb(const struct tcp_sock *tp, const str=
+uct sk_buff *skb)
 -{
--	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
--	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
--	struct redsched_cb_data *cb_data =3D redsched_get_cb_data(meta_tp);
--	struct tcp_sock *first_tp =3D cb_data->next_subflow;
--	struct sock *sk;
--	struct tcp_sock *tp;
+-	/* If the skb has already been enqueued in this sk, try to find
+-	 * another one.
+-	 */
+-	return skb &&
+-		/* Has the skb already been enqueued into this subsocket? */
+-		mptcp_pi_to_flag(tp->mptcp->path_index) & TCP_SKB_CB(skb)->path_mask;
+-}
 -
--	/* Answer data_fin on same subflow */
+-/* We just look for any subflow that is available */
+-static struct sock *rr_get_available_subflow(struct sock *meta_sk,
+-					     struct sk_buff *skb,
+-					     bool zero_wnd_test)
+-{
+-	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+-	struct sock *sk, *bestsk =3D NULL, *backupsk =3D NULL;
+-
+-	/* Answer data_fin on same subflow!!! */
 -	if (meta_sk->sk_shutdown & RCV_SHUTDOWN &&
 -	    skb && mptcp_is_data_fin(skb)) {
 -		mptcp_for_each_sk(mpcb, sk) {
--			if (tcp_sk(sk)->mptcp->path_index =3D=3D
--				mpcb->dfin_path_index &&
--			    mptcp_is_available(sk, skb, zero_wnd_test))
+-			if (tcp_sk(sk)->mptcp->path_index =3D=3D mpcb->dfin_path_index &&
+-			    mptcp_rr_is_available(sk, skb, zero_wnd_test, true))
 -				return sk;
 -		}
 -	}
 -
--	if (!first_tp)
--		first_tp =3D mpcb->connection_list;
--	tp =3D first_tp;
+-	/* First, find the best subflow */
+-	mptcp_for_each_sk(mpcb, sk) {
+-		struct tcp_sock *tp =3D tcp_sk(sk);
 -
--	/* still NULL (no subflow in connection_list?) */
--	if (!first_tp)
--		return NULL;
+-		if (!mptcp_rr_is_available(sk, skb, zero_wnd_test, true))
+-			continue;
 -
--	/* Search for any subflow to send it */
--	do {
--		if (mptcp_is_available((struct sock *)tp, skb,
--				       zero_wnd_test)) {
--			cb_data->next_subflow =3D tp->mptcp->next;
--			return (struct sock *)tp;
+-		if (mptcp_rr_dont_reinject_skb(tp, skb)) {
+-			backupsk =3D sk;
+-			continue;
 -		}
 -
--		tp =3D tp->mptcp->next;
--		if (!tp)
--			tp =3D mpcb->connection_list;
--	} while (tp !=3D first_tp);
+-		bestsk =3D sk;
+-	}
 -
--	/* No space */
--	return NULL;
+-	if (bestsk) {
+-		sk =3D bestsk;
+-	} else if (backupsk) {
+-		/* It has been sent on all subflows once - let's give it a
+-		 * chance again by restarting its pathmask.
+-		 */
+-		if (skb)
+-			TCP_SKB_CB(skb)->path_mask =3D 0;
+-		sk =3D backupsk;
+-	}
+-
+-	return sk;
 -}
 -
--/* Corrects the stored skb pointers if they are invalid */
--static void redsched_correct_skb_pointers(struct sock *meta_sk,
--					  struct redsched_sock_data *sk_data)
+-/* Returns the next segment to be sent from the mptcp meta-queue.
+- * (chooses the reinject queue if any segment is waiting in it, otherwise,
+- * chooses the normal write queue).
+- * Sets *@reinject to 1 if the returned segment comes from the
+- * reinject queue. Sets it to 0 if it is the regular send-head of the meta=
+-sk,
+- * and sets it to -1 if it is a meta-level retransmission to optimize the
+- * receive-buffer.
+- */
+-static struct sk_buff *__mptcp_rr_next_segment(const struct sock *meta_sk,=
+ int *reinject)
 -{
--	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+-	struct sk_buff *skb =3D NULL;
 -
--	if (sk_data->skb && !after(sk_data->skb_end_seq, meta_tp->snd_una))
--		sk_data->skb =3D NULL;
--}
+-	*reinject =3D 0;
 -
--/* Returns the next skb from the queue */
--static struct sk_buff *redundant_next_skb_from_queue(struct sk_buff_head *=
-queue,
--						     struct sk_buff *previous,
--						     struct sock *meta_sk)
--{
--	if (skb_queue_empty(queue))
--		return NULL;
--
--	if (!previous)
--		return skb_peek(queue);
--
--	if (skb_queue_is_last(queue, previous))
--		return NULL;
--
--	/* sk_data->skb stores the last scheduled packet for this subflow.
--	 * If sk_data->skb was scheduled but not sent (e.g., due to nagle),
--	 * we have to schedule it again.
--	 *
--	 * For the redundant scheduler, there are two cases:
--	 * 1. sk_data->skb was not sent on another subflow:
--	 *    we have to schedule it again to ensure that we do not
--	 *    skip this packet.
--	 * 2. sk_data->skb was already sent on another subflow:
--	 *    with regard to the redundant semantic, we have to
--	 *    schedule it again. However, we keep it simple and ignore it,
--	 *    as it was already sent by another subflow.
--	 *    This might be changed in the future.
--	 *
--	 * For case 1, send_head is equal previous, as only a single
--	 * packet can be skipped.
--	 */
--	if (tcp_send_head(meta_sk) =3D=3D previous)
+-	/* If we are in fallback-mode, just take from the meta-send-queue */
+-	if (mpcb->infinite_mapping_snd || mpcb->send_infinite_mapping)
 -		return tcp_send_head(meta_sk);
 -
--	return skb_queue_next(queue, previous);
+-	skb =3D skb_peek(&mpcb->reinject_queue);
+-
+-	if (skb)
+-		*reinject =3D 1;
+-	else
+-		skb =3D tcp_send_head(meta_sk);
+-	return skb;
 -}
 -
--static struct sk_buff *redundant_next_segment(struct sock *meta_sk,
--					      int *reinject,
--					      struct sock **subsk,
--					      unsigned int *limit)
+-static struct sk_buff *mptcp_rr_next_segment(struct sock *meta_sk,
+-					     int *reinject,
+-					     struct sock **subsk,
+-					     unsigned int *limit)
 -{
--	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
--	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
--	struct redsched_cb_data *cb_data =3D redsched_get_cb_data(meta_tp);
--	struct tcp_sock *first_tp =3D cb_data->next_subflow;
--	struct tcp_sock *tp;
--	struct sk_buff *skb;
--	int active_valid_sks =3D -1;
+-	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+-	struct sock *sk_it, *choose_sk =3D NULL;
+-	struct sk_buff *skb =3D __mptcp_rr_next_segment(meta_sk, reinject);
+-	unsigned char split =3D num_segments;
+-	unsigned char iter =3D 0, full_subs =3D 0;
 -
 -	/* As we set it, we have to reset it as well. */
 -	*limit =3D 0;
 -
--	if (skb_queue_empty(&mpcb->reinject_queue) &&
--	    skb_queue_empty(&meta_sk->sk_write_queue))
--		/* Nothing to send */
+-	if (!skb)
 -		return NULL;
 -
--	/* First try reinjections */
--	skb =3D skb_peek(&mpcb->reinject_queue);
--	if (skb) {
--		*subsk =3D get_available_subflow(meta_sk, skb, false);
+-	if (*reinject) {
+-		*subsk =3D rr_get_available_subflow(meta_sk, skb, false);
 -		if (!*subsk)
 -			return NULL;
--		*reinject =3D 1;
+-
 -		return skb;
 -	}
 -
--	/* Then try indistinctly redundant and normal skbs */
+-retry:
 -
--	if (!first_tp)
--		first_tp =3D mpcb->connection_list;
+-	/* First, we look for a subflow who is currently being used */
+-	mptcp_for_each_sk(mpcb, sk_it) {
+-		struct tcp_sock *tp_it =3D tcp_sk(sk_it);
+-		struct rrsched_priv *rsp =3D rrsched_get_priv(tp_it);
 -
--	/* still NULL (no subflow in connection_list?) */
--	if (!first_tp)
--		return NULL;
+-		if (!mptcp_rr_is_available(sk_it, skb, false, cwnd_limited))
+-			continue;
 -
--	tp =3D first_tp;
+-		iter++;
 -
--	*reinject =3D 0;
--	active_valid_sks =3D redsched_get_active_valid_sks(meta_sk);
--	do {
--		struct redsched_sock_data *sk_data;
--
--		/* Correct the skb pointers of the current subflow */
--		sk_data =3D redsched_get_sock_data(tp);
--		redsched_correct_skb_pointers(meta_sk, sk_data);
--
--		skb =3D redundant_next_skb_from_queue(&meta_sk->sk_write_queue,
--						    sk_data->skb, meta_sk);
--		if (skb && redsched_use_subflow(meta_sk, active_valid_sks, tp,
--						skb)) {
--			sk_data->skb =3D skb;
--			sk_data->skb_end_seq =3D TCP_SKB_CB(skb)->end_seq;
--			cb_data->next_subflow =3D tp->mptcp->next;
--			*subsk =3D (struct sock *)tp;
--
--			if (TCP_SKB_CB(skb)->path_mask)
--				*reinject =3D -1;
--			return skb;
+-		/* Is this subflow currently being used? */
+-		if (rsp->quota > 0 && rsp->quota < num_segments) {
+-			split =3D num_segments - rsp->quota;
+-			choose_sk =3D sk_it;
+-			goto found;
 -		}
 -
--		tp =3D tp->mptcp->next;
--		if (!tp)
--			tp =3D mpcb->connection_list;
--	} while (tp !=3D first_tp);
+-		/* Or, it's totally unused */
+-		if (!rsp->quota) {
+-			split =3D num_segments;
+-			choose_sk =3D sk_it;
+-		}
 -
--	/* Nothing to send */
+-		/* Or, it must then be fully used  */
+-		if (rsp->quota >=3D num_segments)
+-			full_subs++;
+-	}
+-
+-	/* All considered subflows have a full quota, and we considered at
+-	 * least one.
+-	 */
+-	if (iter && iter =3D=3D full_subs) {
+-		/* So, we restart this round by setting quota to 0 and retry
+-		 * to find a subflow.
+-		 */
+-		mptcp_for_each_sk(mpcb, sk_it) {
+-			struct tcp_sock *tp_it =3D tcp_sk(sk_it);
+-			struct rrsched_priv *rsp =3D rrsched_get_priv(tp_it);
+-
+-			if (!mptcp_rr_is_available(sk_it, skb, false, cwnd_limited))
+-				continue;
+-
+-			rsp->quota =3D 0;
+-		}
+-
+-		goto retry;
+-	}
+-
+-found:
+-	if (choose_sk) {
+-		unsigned int mss_now;
+-		struct tcp_sock *choose_tp =3D tcp_sk(choose_sk);
+-		struct rrsched_priv *rsp =3D rrsched_get_priv(choose_tp);
+-
+-		if (!mptcp_rr_is_available(choose_sk, skb, false, true))
+-			return NULL;
+-
+-		*subsk =3D choose_sk;
+-		mss_now =3D tcp_current_mss(*subsk);
+-		*limit =3D split * mss_now;
+-
+-		if (skb->len > mss_now)
+-			rsp->quota +=3D DIV_ROUND_UP(skb->len, mss_now);
+-		else
+-			rsp->quota++;
+-
+-		return skb;
+-	}
+-
 -	return NULL;
 -}
 -
--static void redundant_release(struct sock *sk)
--{
--	struct tcp_sock *tp =3D tcp_sk(sk);
--	struct redsched_cb_data *cb_data =3D redsched_get_cb_data(tp);
--
--	/* Check if the next subflow would be the released one. If yes correct
--	 * the pointer
--	 */
--	if (cb_data->next_subflow =3D=3D tp)
--		cb_data->next_subflow =3D tp->mptcp->next;
--}
--
--static struct mptcp_sched_ops mptcp_sched_redundant =3D {
--	.get_subflow =3D redundant_get_subflow,
--	.next_segment =3D redundant_next_segment,
--	.release =3D redundant_release,
--	.name =3D "redundant",
+-static struct mptcp_sched_ops mptcp_sched_rr =3D {
+-	.get_subflow =3D rr_get_available_subflow,
+-	.next_segment =3D mptcp_rr_next_segment,
+-	.name =3D "roundrobin",
 -	.owner =3D THIS_MODULE,
 -};
 -
--static int __init redundant_register(void)
+-static int __init rr_register(void)
 -{
--	BUILD_BUG_ON(sizeof(struct redsched_sock_data) > MPTCP_SCHED_SIZE);
--	BUILD_BUG_ON(sizeof(struct redsched_cb_data) > MPTCP_SCHED_DATA_SIZE);
+-	BUILD_BUG_ON(sizeof(struct rrsched_priv) > MPTCP_SCHED_SIZE);
 -
--	if (mptcp_register_scheduler(&mptcp_sched_redundant))
+-	if (mptcp_register_scheduler(&mptcp_sched_rr))
 -		return -1;
 -
 -	return 0;
 -}
 -
--static void redundant_unregister(void)
+-static void rr_unregister(void)
 -{
--	mptcp_unregister_scheduler(&mptcp_sched_redundant);
+-	mptcp_unregister_scheduler(&mptcp_sched_rr);
 -}
 -
--module_init(redundant_register);
--module_exit(redundant_unregister);
+-module_init(rr_register);
+-module_exit(rr_unregister);
 -
--MODULE_AUTHOR("Tobias Erbshaeusser, Alexander Froemmgen");
+-MODULE_AUTHOR("Christoph Paasch");
 -MODULE_LICENSE("GPL");
--MODULE_DESCRIPTION("REDUNDANT MPTCP");
--MODULE_VERSION("0.90");
+-MODULE_DESCRIPTION("ROUNDROBIN MPTCP");
+-MODULE_VERSION("0.89");
 -- =
 
 2.16.2
 
 
---===============1364816815351436042==--
+--===============8897411264763186922==--
