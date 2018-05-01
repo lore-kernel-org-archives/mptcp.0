@@ -1,348 +1,388 @@
-Content-Type: multipart/mixed; boundary="===============8663360925619508775=="
+Content-Type: multipart/mixed; boundary="===============6807450419829180741=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next 2/9] mptcp: Remove wVegas congestion
+Subject: [MPTCP] [PATCH mptcp-net-next 3/9] mptcp: Remove OLIA congestion
  control
-Date: Tue, 01 May 2018 13:35:31 -0700
-Message-ID: <20180501203538.95477-3-cpaasch@apple.com>
+Date: Tue, 01 May 2018 13:35:32 -0700
+Message-ID: <20180501203538.95477-4-cpaasch@apple.com>
 In-Reply-To: 20180501203538.95477-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 586
+X-UID: 587
 
---===============8663360925619508775==
+--===============6807450419829180741==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/ipv4/Kconfig         |   8 --
- net/mptcp/Makefile       |   1 -
- net/mptcp/mptcp_wvegas.c | 270 -------------------------------------------=
+ net/ipv4/Kconfig       |   8 --
+ net/mptcp/Makefile     |   1 -
+ net/mptcp/mptcp_olia.c | 310 ---------------------------------------------=
 ----
- 3 files changed, 279 deletions(-)
- delete mode 100644 net/mptcp/mptcp_wvegas.c
+ 3 files changed, 319 deletions(-)
+ delete mode 100644 net/mptcp/mptcp_olia.c
 
 diff --git a/net/ipv4/Kconfig b/net/ipv4/Kconfig
-index 9c70f42cc091..32e98ea9d7c6 100644
+index 32e98ea9d7c6..eb8e5b0296b6 100644
 --- a/net/ipv4/Kconfig
 +++ b/net/ipv4/Kconfig
-@@ -696,14 +696,6 @@ config TCP_CONG_OLIA
- 	MultiPath TCP Opportunistic Linked Increase Congestion Control
- 	To enable it, just put 'olia' in tcp_congestion_control
+@@ -688,14 +688,6 @@ config TCP_CONG_LIA
+ 	MultiPath TCP Linked Increase Congestion Control
+ 	To enable it, just put 'lia' in tcp_congestion_control
  =
 
--config TCP_CONG_WVEGAS
--	tristate "MPTCP WVEGAS CONGESTION CONTROL"
+-config TCP_CONG_OLIA
+-	tristate "MPTCP Opportunistic Linked Increase"
 -	depends on MPTCP
 -	default n
 -	---help---
--	wVegas congestion control for MPTCP
--	To enable it, just put 'wvegas' in tcp_congestion_control
+-	MultiPath TCP Opportunistic Linked Increase Congestion Control
+-	To enable it, just put 'olia' in tcp_congestion_control
 -
  config TCP_CONG_MCTCPDESYNC
  	tristate "DESYNCHRONIZED MCTCP CONGESTION CONTROL (EXPERIMENTAL)"
  	depends on MPTCP
 diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index 2cb1e2cde40a..ccb1c44a06cf 100644
+index ccb1c44a06cf..bcdbc899db05 100644
 --- a/net/mptcp/Makefile
 +++ b/net/mptcp/Makefile
-@@ -10,7 +10,6 @@ mptcp-y :=3D mptcp_ctrl.o mptcp_ipv4.o mptcp_pm.o \
+@@ -9,7 +9,6 @@ mptcp-y :=3D mptcp_ctrl.o mptcp_ipv4.o mptcp_pm.o \
+ 	   mptcp_output.o mptcp_input.o mptcp_sched.o
  =
 
  obj-$(CONFIG_TCP_CONG_LIA) +=3D mptcp_coupled.o
- obj-$(CONFIG_TCP_CONG_OLIA) +=3D mptcp_olia.o
--obj-$(CONFIG_TCP_CONG_WVEGAS) +=3D mptcp_wvegas.o
+-obj-$(CONFIG_TCP_CONG_OLIA) +=3D mptcp_olia.o
  obj-$(CONFIG_TCP_CONG_MCTCPDESYNC) +=3D mctcp_desync.o
  obj-$(CONFIG_MPTCP_FULLMESH) +=3D mptcp_fullmesh.o
  obj-$(CONFIG_MPTCP_NDIFFPORTS) +=3D mptcp_ndiffports.o
-diff --git a/net/mptcp/mptcp_wvegas.c b/net/mptcp/mptcp_wvegas.c
+diff --git a/net/mptcp/mptcp_olia.c b/net/mptcp/mptcp_olia.c
 deleted file mode 100644
-index 4373b8d1ee8d..000000000000
---- a/net/mptcp/mptcp_wvegas.c
+index c17c306849a3..000000000000
+--- a/net/mptcp/mptcp_olia.c
 +++ /dev/null
-@@ -1,270 +0,0 @@
+@@ -1,310 +0,0 @@
 -/*
-- *	MPTCP implementation - WEIGHTED VEGAS
+- * MPTCP implementation - OPPORTUNISTIC LINKED INCREASES CONGESTION CONTRO=
+L:
 - *
-- *	Algorithm design:
-- *	Yu Cao <cyAnalyst(a)126.com>
-- *	Mingwei Xu <xmw(a)csnet1.cs.tsinghua.edu.cn>
-- *	Xiaoming Fu <fu(a)cs.uni-goettinggen.de>
+- * Algorithm design:
+- * Ramin Khalili <ramin.khalili(a)epfl.ch>
+- * Nicolas Gast <nicolas.gast(a)epfl.ch>
+- * Jean-Yves Le Boudec <jean-yves.leboudec(a)epfl.ch>
 - *
-- *	Implementation:
-- *	Yu Cao <cyAnalyst(a)126.com>
-- *	Enhuan Dong <deh13(a)mails.tsinghua.edu.cn>
+- * Implementation:
+- * Ramin Khalili <ramin.khalili(a)epfl.ch>
 - *
-- *	Ported to the official MPTCP-kernel:
-- *	Christoph Paasch <christoph.paasch(a)uclouvain.be>
+- * Ported to the official MPTCP-kernel:
+- * Christoph Paasch <christoph.paasch(a)uclouvain.be>
 - *
-- *	This program is free software; you can redistribute it and/or
-- *	modify it under the terms of the GNU General Public License
-- *	as published by the Free Software Foundation; either version
-- *	2 of the License, or (at your option) any later version.
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; either version
+- * 2 of the License, or (at your option) any later version.
 - */
 -
--#include <linux/skbuff.h>
+-
 -#include <net/tcp.h>
 -#include <net/mptcp.h>
+-
 -#include <linux/module.h>
--#include <linux/tcp.h>
 -
--static int initial_alpha =3D 2;
--static int total_alpha =3D 10;
--static int gamma =3D 1;
+-static int scale =3D 10;
 -
--module_param(initial_alpha, int, 0644);
--MODULE_PARM_DESC(initial_alpha, "initial alpha for all subflows");
--module_param(total_alpha, int, 0644);
--MODULE_PARM_DESC(total_alpha, "total alpha for all subflows");
--module_param(gamma, int, 0644);
--MODULE_PARM_DESC(gamma, "limit on increase (scale by 2)");
--
--#define MPTCP_WVEGAS_SCALE 16
--
--/* wVegas variables */
--struct wvegas {
--	u32	beg_snd_nxt;	/* right edge during last RTT */
--	u8	doing_wvegas_now;/* if true, do wvegas for this RTT */
--
--	u16	cnt_rtt;		/* # of RTTs measured within last RTT */
--	u32 sampled_rtt; /* cumulative RTTs measured within last RTT (in usec) */
--	u32	base_rtt;	/* the min of all wVegas RTT measurements seen (in usec) */
--
--	u64 instant_rate; /* cwnd / srtt_us, unit: pkts/us * 2^16 */
--	u64 weight; /* the ratio of subflow's rate to the total rate, * 2^16 */
--	int alpha; /* alpha for each subflows */
--
--	u32 queue_delay; /* queue delay*/
+-struct mptcp_olia {
+-	u32	mptcp_loss1;
+-	u32	mptcp_loss2;
+-	u32	mptcp_loss3;
+-	int	epsilon_num;
+-	u32	epsilon_den;
+-	int	mptcp_snd_cwnd_cnt;
 -};
 -
+-static inline int mptcp_olia_sk_can_send(const struct sock *sk)
+-{
+-	return mptcp_sk_can_send(sk) && tcp_sk(sk)->srtt_us;
+-}
 -
--static inline u64 mptcp_wvegas_scale(u32 val, int scale)
+-static inline u64 mptcp_olia_scale(u64 val, int scale)
 -{
 -	return (u64) val << scale;
 -}
 -
--static void wvegas_enable(const struct sock *sk)
+-/* take care of artificially inflate (see RFC5681)
+- * of cwnd during fast-retransmit phase
+- */
+-static u32 mptcp_get_crt_cwnd(struct sock *sk)
+-{
+-	const struct inet_connection_sock *icsk =3D inet_csk(sk);
+-
+-	if (icsk->icsk_ca_state =3D=3D TCP_CA_Recovery)
+-		return tcp_sk(sk)->snd_ssthresh;
+-	else
+-		return tcp_sk(sk)->snd_cwnd;
+-}
+-
+-/* return the dominator of the first term of  the increasing term */
+-static u64 mptcp_get_rate(const struct mptcp_cb *mpcb , u32 path_rtt)
+-{
+-	struct sock *sk;
+-	u64 rate =3D 1; /* We have to avoid a zero-rate because it is used as a d=
+ivisor */
+-
+-	mptcp_for_each_sk(mpcb, sk) {
+-		struct tcp_sock *tp =3D tcp_sk(sk);
+-		u64 scaled_num;
+-		u32 tmp_cwnd;
+-
+-		if (!mptcp_olia_sk_can_send(sk))
+-			continue;
+-
+-		tmp_cwnd =3D mptcp_get_crt_cwnd(sk);
+-		scaled_num =3D mptcp_olia_scale(tmp_cwnd, scale) * path_rtt;
+-		rate +=3D div_u64(scaled_num , tp->srtt_us);
+-	}
+-	rate *=3D rate;
+-	return rate;
+-}
+-
+-/* find the maximum cwnd, used to find set M */
+-static u32 mptcp_get_max_cwnd(const struct mptcp_cb *mpcb)
+-{
+-	struct sock *sk;
+-	u32 best_cwnd =3D 0;
+-
+-	mptcp_for_each_sk(mpcb, sk) {
+-		u32 tmp_cwnd;
+-
+-		if (!mptcp_olia_sk_can_send(sk))
+-			continue;
+-
+-		tmp_cwnd =3D mptcp_get_crt_cwnd(sk);
+-		if (tmp_cwnd > best_cwnd)
+-			best_cwnd =3D tmp_cwnd;
+-	}
+-	return best_cwnd;
+-}
+-
+-static void mptcp_get_epsilon(const struct mptcp_cb *mpcb)
+-{
+-	struct mptcp_olia *ca;
+-	struct tcp_sock *tp;
+-	struct sock *sk;
+-	u64 tmp_int, tmp_rtt, best_int =3D 0, best_rtt =3D 1;
+-	u32 max_cwnd, tmp_cwnd;
+-	u8 M =3D 0, B_not_M =3D 0;
+-
+-	/* TODO - integrate this in the following loop - we just want to iterate =
+once */
+-
+-	max_cwnd =3D mptcp_get_max_cwnd(mpcb);
+-
+-	/* find the best path */
+-	mptcp_for_each_sk(mpcb, sk) {
+-		tp =3D tcp_sk(sk);
+-		ca =3D inet_csk_ca(sk);
+-
+-		if (!mptcp_olia_sk_can_send(sk))
+-			continue;
+-
+-		tmp_rtt =3D (u64)tp->srtt_us * tp->srtt_us;
+-		/* TODO - check here and rename variables */
+-		tmp_int =3D max(ca->mptcp_loss3 - ca->mptcp_loss2,
+-			      ca->mptcp_loss2 - ca->mptcp_loss1);
+-
+-		if ((u64)tmp_int * best_rtt >=3D (u64)best_int * tmp_rtt) {
+-			best_rtt =3D tmp_rtt;
+-			best_int =3D tmp_int;
+-		}
+-	}
+-
+-	/* TODO - integrate this here in mptcp_get_max_cwnd and in the previous l=
+oop */
+-	/* find the size of M and B_not_M */
+-	mptcp_for_each_sk(mpcb, sk) {
+-		tp =3D tcp_sk(sk);
+-		ca =3D inet_csk_ca(sk);
+-
+-		if (!mptcp_olia_sk_can_send(sk))
+-			continue;
+-
+-		tmp_cwnd =3D mptcp_get_crt_cwnd(sk);
+-		if (tmp_cwnd =3D=3D max_cwnd) {
+-			M++;
+-		} else {
+-			tmp_rtt =3D (u64)tp->srtt_us * tp->srtt_us;
+-			tmp_int =3D max(ca->mptcp_loss3 - ca->mptcp_loss2,
+-				      ca->mptcp_loss2 - ca->mptcp_loss1);
+-
+-			if ((u64)tmp_int * best_rtt =3D=3D (u64)best_int * tmp_rtt)
+-				B_not_M++;
+-		}
+-	}
+-
+-	/* check if the path is in M or B_not_M and set the value of epsilon acco=
+rdingly */
+-	mptcp_for_each_sk(mpcb, sk) {
+-		tp =3D tcp_sk(sk);
+-		ca =3D inet_csk_ca(sk);
+-
+-		if (!mptcp_olia_sk_can_send(sk))
+-			continue;
+-
+-		if (B_not_M =3D=3D 0) {
+-			ca->epsilon_num =3D 0;
+-			ca->epsilon_den =3D 1;
+-		} else {
+-			tmp_rtt =3D (u64)tp->srtt_us * tp->srtt_us;
+-			tmp_int =3D max(ca->mptcp_loss3 - ca->mptcp_loss2,
+-				      ca->mptcp_loss2 - ca->mptcp_loss1);
+-			tmp_cwnd =3D mptcp_get_crt_cwnd(sk);
+-
+-			if (tmp_cwnd < max_cwnd &&
+-			    (u64)tmp_int * best_rtt =3D=3D (u64)best_int * tmp_rtt) {
+-				ca->epsilon_num =3D 1;
+-				ca->epsilon_den =3D mpcb->cnt_established * B_not_M;
+-			} else if (tmp_cwnd =3D=3D max_cwnd) {
+-				ca->epsilon_num =3D -1;
+-				ca->epsilon_den =3D mpcb->cnt_established  * M;
+-			} else {
+-				ca->epsilon_num =3D 0;
+-				ca->epsilon_den =3D 1;
+-			}
+-		}
+-	}
+-}
+-
+-/* setting the initial values */
+-static void mptcp_olia_init(struct sock *sk)
 -{
 -	const struct tcp_sock *tp =3D tcp_sk(sk);
--	struct wvegas *wvegas =3D inet_csk_ca(sk);
+-	struct mptcp_olia *ca =3D inet_csk_ca(sk);
 -
--	wvegas->doing_wvegas_now =3D 1;
--
--	wvegas->beg_snd_nxt =3D tp->snd_nxt;
--
--	wvegas->cnt_rtt =3D 0;
--	wvegas->sampled_rtt =3D 0;
--
--	wvegas->instant_rate =3D 0;
--	wvegas->alpha =3D initial_alpha;
--	wvegas->weight =3D mptcp_wvegas_scale(1, MPTCP_WVEGAS_SCALE);
--
--	wvegas->queue_delay =3D 0;
+-	if (mptcp(tp)) {
+-		ca->mptcp_loss1 =3D tp->snd_una;
+-		ca->mptcp_loss2 =3D tp->snd_una;
+-		ca->mptcp_loss3 =3D tp->snd_una;
+-		ca->mptcp_snd_cwnd_cnt =3D 0;
+-		ca->epsilon_num =3D 0;
+-		ca->epsilon_den =3D 1;
+-	}
 -}
 -
--static inline void wvegas_disable(const struct sock *sk)
+-/* updating inter-loss distance and ssthresh */
+-static void mptcp_olia_set_state(struct sock *sk, u8 new_state)
 -{
--	struct wvegas *wvegas =3D inet_csk_ca(sk);
--
--	wvegas->doing_wvegas_now =3D 0;
--}
--
--static void mptcp_wvegas_init(struct sock *sk)
--{
--	struct wvegas *wvegas =3D inet_csk_ca(sk);
--
--	wvegas->base_rtt =3D 0x7fffffff;
--	wvegas_enable(sk);
--}
--
--static inline u64 mptcp_wvegas_rate(u32 cwnd, u32 rtt_us)
--{
--	return div_u64(mptcp_wvegas_scale(cwnd, MPTCP_WVEGAS_SCALE), rtt_us);
--}
--
--static void mptcp_wvegas_pkts_acked(struct sock *sk,
--				    const struct ack_sample *sample)
--{
--	struct wvegas *wvegas =3D inet_csk_ca(sk);
--	u32 vrtt;
--
--	if (sample->rtt_us < 0)
+-	if (!mptcp(tcp_sk(sk)))
 -		return;
 -
--	vrtt =3D sample->rtt_us + 1;
+-	if (new_state =3D=3D TCP_CA_Loss ||
+-	    new_state =3D=3D TCP_CA_Recovery || new_state =3D=3D TCP_CA_CWR) {
+-		struct mptcp_olia *ca =3D inet_csk_ca(sk);
 -
--	if (vrtt < wvegas->base_rtt)
--		wvegas->base_rtt =3D vrtt;
--
--	wvegas->sampled_rtt +=3D vrtt;
--	wvegas->cnt_rtt++;
--}
--
--static void mptcp_wvegas_state(struct sock *sk, u8 ca_state)
--{
--	if (ca_state =3D=3D TCP_CA_Open)
--		wvegas_enable(sk);
--	else
--		wvegas_disable(sk);
--}
--
--static void mptcp_wvegas_cwnd_event(struct sock *sk, enum tcp_ca_event eve=
-nt)
--{
--	if (event =3D=3D CA_EVENT_CWND_RESTART) {
--		mptcp_wvegas_init(sk);
--	} else if (event =3D=3D CA_EVENT_LOSS) {
--		struct wvegas *wvegas =3D inet_csk_ca(sk);
--		wvegas->instant_rate =3D 0;
+-		if (ca->mptcp_loss3 !=3D ca->mptcp_loss2 &&
+-		    !inet_csk(sk)->icsk_retransmits) {
+-			ca->mptcp_loss1 =3D ca->mptcp_loss2;
+-			ca->mptcp_loss2 =3D ca->mptcp_loss3;
+-		}
 -	}
 -}
 -
--static inline u32 mptcp_wvegas_ssthresh(const struct tcp_sock *tp)
--{
--	return  min(tp->snd_ssthresh, tp->snd_cwnd);
--}
--
--static u64 mptcp_wvegas_weight(const struct mptcp_cb *mpcb, const struct s=
-ock *sk)
--{
--	u64 total_rate =3D 0;
--	struct sock *sub_sk;
--	const struct wvegas *wvegas =3D inet_csk_ca(sk);
--
--	if (!mpcb)
--		return wvegas->weight;
--
--
--	mptcp_for_each_sk(mpcb, sub_sk) {
--		struct wvegas *sub_wvegas =3D inet_csk_ca(sub_sk);
--
--		/* sampled_rtt is initialized by 0 */
--		if (mptcp_sk_can_send(sub_sk) && (sub_wvegas->sampled_rtt > 0))
--			total_rate +=3D sub_wvegas->instant_rate;
--	}
--
--	if (total_rate && wvegas->instant_rate)
--		return div64_u64(mptcp_wvegas_scale(wvegas->instant_rate, MPTCP_WVEGAS_S=
-CALE), total_rate);
--	else
--		return wvegas->weight;
--}
--
--static void mptcp_wvegas_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+-/* main algorithm */
+-static void mptcp_olia_cong_avoid(struct sock *sk, u32 ack, u32 acked)
 -{
 -	struct tcp_sock *tp =3D tcp_sk(sk);
--	struct wvegas *wvegas =3D inet_csk_ca(sk);
+-	struct mptcp_olia *ca =3D inet_csk_ca(sk);
+-	const struct mptcp_cb *mpcb =3D tp->mpcb;
 -
--	if (!wvegas->doing_wvegas_now) {
+-	u64 inc_num, inc_den, rate, cwnd_scaled;
+-
+-	if (!mptcp(tp)) {
 -		tcp_reno_cong_avoid(sk, ack, acked);
 -		return;
 -	}
 -
--	if (after(ack, wvegas->beg_snd_nxt)) {
--		wvegas->beg_snd_nxt  =3D tp->snd_nxt;
+-	ca->mptcp_loss3 =3D tp->snd_una;
 -
--		if (wvegas->cnt_rtt <=3D 2) {
--			tcp_reno_cong_avoid(sk, ack, acked);
--		} else {
--			u32 rtt, diff, q_delay;
--			u64 target_cwnd;
+-	if (!tcp_is_cwnd_limited(sk))
+-		return;
 -
--			rtt =3D wvegas->sampled_rtt / wvegas->cnt_rtt;
--			target_cwnd =3D div_u64(((u64)tp->snd_cwnd * wvegas->base_rtt), rtt);
--
--			diff =3D div_u64((u64)tp->snd_cwnd * (rtt - wvegas->base_rtt), rtt);
--
--			if (diff > gamma && tcp_in_slow_start(tp)) {
--				tp->snd_cwnd =3D min(tp->snd_cwnd, (u32)target_cwnd+1);
--				tp->snd_ssthresh =3D mptcp_wvegas_ssthresh(tp);
--
--			} else if (tcp_in_slow_start(tp)) {
--				tcp_slow_start(tp, acked);
--			} else {
--				if (diff >=3D wvegas->alpha) {
--					wvegas->instant_rate =3D mptcp_wvegas_rate(tp->snd_cwnd, rtt);
--					wvegas->weight =3D mptcp_wvegas_weight(tp->mpcb, sk);
--					wvegas->alpha =3D max(2U, (u32)((wvegas->weight * total_alpha) >> MPT=
-CP_WVEGAS_SCALE));
--				}
--				if (diff > wvegas->alpha) {
--					tp->snd_cwnd--;
--					tp->snd_ssthresh =3D mptcp_wvegas_ssthresh(tp);
--				} else if (diff < wvegas->alpha) {
--					tp->snd_cwnd++;
--				}
--
--				/* Try to drain link queue if needed*/
--				q_delay =3D rtt - wvegas->base_rtt;
--				if ((wvegas->queue_delay =3D=3D 0) || (wvegas->queue_delay > q_delay))
--					wvegas->queue_delay =3D q_delay;
--
--				if (q_delay >=3D 2 * wvegas->queue_delay) {
--					u32 backoff_factor =3D div_u64(mptcp_wvegas_scale(wvegas->base_rtt, M=
-PTCP_WVEGAS_SCALE), 2 * rtt);
--					tp->snd_cwnd =3D ((u64)tp->snd_cwnd * backoff_factor) >> MPTCP_WVEGAS=
-_SCALE;
--					wvegas->queue_delay =3D 0;
--				}
--			}
--
--			if (tp->snd_cwnd < 2)
--				tp->snd_cwnd =3D 2;
--			else if (tp->snd_cwnd > tp->snd_cwnd_clamp)
--				tp->snd_cwnd =3D tp->snd_cwnd_clamp;
--
--			tp->snd_ssthresh =3D tcp_current_ssthresh(sk);
--		}
--
--		wvegas->cnt_rtt =3D 0;
--		wvegas->sampled_rtt =3D 0;
--	}
--	/* Use normal slow start */
--	else if (tcp_in_slow_start(tp))
+-	/* slow start if it is in the safe area */
+-	if (tcp_in_slow_start(tp)) {
 -		tcp_slow_start(tp, acked);
+-		return;
+-	}
+-
+-	mptcp_get_epsilon(mpcb);
+-	rate =3D mptcp_get_rate(mpcb, tp->srtt_us);
+-	cwnd_scaled =3D mptcp_olia_scale(tp->snd_cwnd, scale);
+-	inc_den =3D ca->epsilon_den * tp->snd_cwnd * rate ? : 1;
+-
+-	/* calculate the increasing term, scaling is used to reduce the rounding =
+effect */
+-	if (ca->epsilon_num =3D=3D -1) {
+-		if (ca->epsilon_den * cwnd_scaled * cwnd_scaled < rate) {
+-			inc_num =3D rate - ca->epsilon_den *
+-				cwnd_scaled * cwnd_scaled;
+-			ca->mptcp_snd_cwnd_cnt -=3D div64_u64(
+-			    mptcp_olia_scale(inc_num , scale) , inc_den);
+-		} else {
+-			inc_num =3D ca->epsilon_den *
+-			    cwnd_scaled * cwnd_scaled - rate;
+-			ca->mptcp_snd_cwnd_cnt +=3D div64_u64(
+-			    mptcp_olia_scale(inc_num , scale) , inc_den);
+-		}
+-	} else {
+-		inc_num =3D ca->epsilon_num * rate +
+-		    ca->epsilon_den * cwnd_scaled * cwnd_scaled;
+-		ca->mptcp_snd_cwnd_cnt +=3D div64_u64(
+-		    mptcp_olia_scale(inc_num , scale) , inc_den);
+-	}
+-
+-
+-	if (ca->mptcp_snd_cwnd_cnt >=3D (1 << scale) - 1) {
+-		if (tp->snd_cwnd < tp->snd_cwnd_clamp)
+-			tp->snd_cwnd++;
+-		ca->mptcp_snd_cwnd_cnt =3D 0;
+-	} else if (ca->mptcp_snd_cwnd_cnt <=3D 0 - (1 << scale) + 1) {
+-		tp->snd_cwnd =3D max((int) 1 , (int) tp->snd_cwnd - 1);
+-		ca->mptcp_snd_cwnd_cnt =3D 0;
+-	}
 -}
 -
--
--static struct tcp_congestion_ops mptcp_wvegas __read_mostly =3D {
--	.init		=3D mptcp_wvegas_init,
+-static struct tcp_congestion_ops mptcp_olia =3D {
+-	.init		=3D mptcp_olia_init,
 -	.ssthresh	=3D tcp_reno_ssthresh,
--	.cong_avoid	=3D mptcp_wvegas_cong_avoid,
+-	.cong_avoid	=3D mptcp_olia_cong_avoid,
 -	.undo_cwnd	=3D tcp_reno_undo_cwnd,
--	.pkts_acked	=3D mptcp_wvegas_pkts_acked,
--	.set_state	=3D mptcp_wvegas_state,
--	.cwnd_event	=3D mptcp_wvegas_cwnd_event,
--
+-	.set_state	=3D mptcp_olia_set_state,
 -	.owner		=3D THIS_MODULE,
--	.name		=3D "wvegas",
+-	.name		=3D "olia",
 -};
 -
--static int __init mptcp_wvegas_register(void)
+-static int __init mptcp_olia_register(void)
 -{
--	BUILD_BUG_ON(sizeof(struct wvegas) > ICSK_CA_PRIV_SIZE);
--	tcp_register_congestion_control(&mptcp_wvegas);
--	return 0;
+-	BUILD_BUG_ON(sizeof(struct mptcp_olia) > ICSK_CA_PRIV_SIZE);
+-	return tcp_register_congestion_control(&mptcp_olia);
 -}
 -
--static void __exit mptcp_wvegas_unregister(void)
+-static void __exit mptcp_olia_unregister(void)
 -{
--	tcp_unregister_congestion_control(&mptcp_wvegas);
+-	tcp_unregister_congestion_control(&mptcp_olia);
 -}
 -
--module_init(mptcp_wvegas_register);
--module_exit(mptcp_wvegas_unregister);
+-module_init(mptcp_olia_register);
+-module_exit(mptcp_olia_unregister);
 -
--MODULE_AUTHOR("Yu Cao, Enhuan Dong");
+-MODULE_AUTHOR("Ramin Khalili, Nicolas Gast, Jean-Yves Le Boudec");
 -MODULE_LICENSE("GPL");
--MODULE_DESCRIPTION("MPTCP wVegas");
+-MODULE_DESCRIPTION("MPTCP COUPLED CONGESTION CONTROL");
 -MODULE_VERSION("0.1");
 -- =
 
 2.16.2
 
 
---===============8663360925619508775==--
+--===============6807450419829180741==--
