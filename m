@@ -1,121 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============2050733080851432742=="
+Content-Type: multipart/mixed; boundary="===============2308500737413896090=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next 03/14] mptcp: Use correct tcp_queue
- when calling mptcp_fragment
-Date: Thu, 03 May 2018 14:04:47 -0700
-Message-ID: <20180503210458.21524-4-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH mptcp-net-next 05/14] mptcp: Render
+ mptcp_sub_inherit_sockopts lockless
+Date: Thu, 03 May 2018 14:04:49 -0700
+Message-ID: <20180503210458.21524-6-cpaasch@apple.com>
 In-Reply-To: 20180503210458.21524-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 604
+X-UID: 605
 
---===============2050733080851432742==
+--===============2308500737413896090==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The skb may come from the write-queue, the rtx-queue or the reinject
-queue.
+We are accessing the meta-socket's TOS field twice. It could change
+in-between as we do this in a lockless manner.
 
-When it comes from the rtx-queue, we need to give mptcp_fragment the
-right tcp_queue.
+Thus, let's make sure we read it only once.
 
-To handle the case when it comes from the reinject-queue, I will post a
-follow-up patch as this seems to be a bug in the stable release as well.
-
-Fixes: 8a1051d977cf ("Merge tag 'v4.15' into mptcp_trunk")
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit edf4b8133e304238b1812c147455f65b2c15c436)
+(cherry picked from commit 343a132cbc92989d311c09ae5976a354eec3c9fd)
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/mptcp_output.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ net/mptcp/mptcp_ctrl.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index 3dd4c17c7681..3b99cef02c98 100644
---- a/net/mptcp/mptcp_output.c
-+++ b/net/mptcp/mptcp_output.c
-@@ -575,6 +575,11 @@ static bool mptcp_skb_entail(struct sock *sk, struct s=
-k_buff *skb, int reinject)
+diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+index 001ba216db7f..1e67d5d6c87d 100644
+--- a/net/mptcp/mptcp_ctrl.c
++++ b/net/mptcp/mptcp_ctrl.c
+@@ -945,11 +945,15 @@ static void mptcp_mpcb_inherit_sockopts(struct sock *=
+meta_sk, struct sock *maste
+ 	inet_sk(master_sk)->recverr =3D 0;
+ }
  =
 
- /* Fragment an skb and update the mptcp meta-data. Due to reinject, we
-  * might need to undo some operations done by tcp_fragment.
-+ *
-+ * Be careful, the skb may come from 3 different places:
-+ * - The send-queue (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
-+ * - The retransmit-queue (tcp_queue =3D=3D TCP_FRAG_IN_RTX_QUEUE)
-+ * - The reinject-queue (reinject =3D=3D -1)
-  */
- static int mptcp_fragment(struct sock *meta_sk, enum tcp_queue tcp_queue,
- 			  struct sk_buff *skb, u32 len,
-@@ -599,7 +604,10 @@ static int mptcp_fragment(struct sock *meta_sk, enum t=
-cp_queue tcp_queue,
- 	if (ret)
- 		return ret;
- =
-
--	buff =3D skb->next;
-+	if (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
-+		buff =3D skb->next;
-+	else
-+		buff =3D skb_rb_next(skb);
- =
-
- 	flags =3D TCP_SKB_CB(skb)->mptcp_flags;
- 	TCP_SKB_CB(skb)->mptcp_flags =3D flags & ~(MPTCPHDR_FIN);
-@@ -732,6 +740,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned in=
-t mss_now, int nonagle,
- =
-
- 	while ((skb =3D mpcb->sched_ops->next_segment(meta_sk, &reinject, &subsk,
- 						    &sublimit))) {
-+		enum tcp_queue tcp_queue =3D TCP_FRAG_IN_WRITE_QUEUE;
- 		unsigned int limit;
- =
-
- 		WARN(TCP_SKB_CB(skb)->sacked, "sacked: %u reinject: %u",
-@@ -747,6 +756,8 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned in=
-t mss_now, int nonagle,
- 				__kfree_skb(skb);
- 				continue;
- 			}
-+		} else if (reinject =3D=3D -1) {
-+			tcp_queue =3D TCP_FRAG_IN_RTX_QUEUE;
- 		}
- =
-
- 		/* If the segment was cloned (e.g. a meta retransmission),
-@@ -809,7 +820,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned in=
-t mss_now, int nonagle,
- 			limit =3D min(limit, sublimit);
- =
-
- 		if (skb->len > limit &&
--		    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE,
-+		    unlikely(mptcp_fragment(meta_sk, tcp_queue,
- 					    skb, limit, gfp, reinject)))
- 			break;
- =
-
-@@ -1537,7 +1548,7 @@ int mptcp_retransmit_skb(struct sock *meta_sk, struct=
- sk_buff *skb)
- 					    TCP_NAGLE_OFF);
- =
-
- 	if (skb->len > limit &&
--	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE, skb,
-+	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_RTX_QUEUE, skb,
- 				    limit, GFP_ATOMIC, 0)))
- 		goto failed;
- =
-
++/* Called without holding lock on meta_sk */
+ static void mptcp_sub_inherit_sockopts(const struct sock *meta_sk, struct =
+sock *sub_sk)
+ {
++	__u8 meta_tos;
++
+ 	/* IP_TOS also goes to the subflow. */
+-	if (inet_sk(sub_sk)->tos !=3D inet_sk(meta_sk)->tos) {
+-		inet_sk(sub_sk)->tos =3D inet_sk(meta_sk)->tos;
++	meta_tos =3D READ_ONCE(inet_sk(meta_sk)->tos);
++	if (inet_sk(sub_sk)->tos !=3D meta_tos) {
++		inet_sk(sub_sk)->tos =3D meta_tos;
+ 		sub_sk->sk_priority =3D meta_sk->sk_priority;
+ 		sk_dst_reset(sub_sk);
+ 	}
 -- =
 
 2.16.2
 
 
---===============2050733080851432742==--
+--===============2308500737413896090==--
