@@ -1,56 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============3816219919111302159=="
+Content-Type: multipart/mixed; boundary="===============8811413192043116720=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next 13/14] mptcp: Reset tsorted_anchor
- after call to tcp_fragment
-Date: Thu, 03 May 2018 14:04:57 -0700
-Message-ID: <20180503210458.21524-14-cpaasch@apple.com>
-In-Reply-To: 20180503210458.21524-1-cpaasch@apple.com
+Subject: [MPTCP] [PATCH mptcp-net-next 00/14] Forward-ports from mptcp_trunk
+ to mptcp-net-next
+Date: Thu, 03 May 2018 14:04:44 -0700
+Message-ID: <20180503210458.21524-1-cpaasch@apple.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 613
+X-UID: 614
 
---===============3816219919111302159==
+--===============8811413192043116720==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The reinject-queue is special in the sense that its segments get kfree'd
-right after sending. We need to make sure that the dst-pointer is NULL
-as otherwise during the freeing we will access garbage.
+Here are some forward-ports from mptcp_trunk to mptcp-net-next of the
+lockless subflows patches and the two bug-fixes.
 
-Fixes: 8a1051d977cf ("Merge tag 'v4.15' into mptcp_trunk")
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit e4eeb8266879fd69407381751ddcd232d266d0b8)
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- net/mptcp/mptcp_output.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Christoph Paasch (14):
+  mptcp: Cleanup
+  mptcp: Improved debugging
+  mptcp: Use correct tcp_queue when calling mptcp_fragment
+  mptcp: Use mptcp_can_new_subflow where possible
+  mptcp: Render mptcp_sub_inherit_sockopts lockless
+  mptcp: Make mptcp_set_new_pathindex lockless
+  mptcp: Remove cnt_subflows
+  mptcp: Remove cnt_established
+  mptcp: Rename tw_lock to mpcb_list_lock
+  mptcp: Make subflow-list an RCU-list
+  mptcp: Don't take meta-lock when receiving third ACK
+  mptcp: Make mptcp_do_join_short and mptcp_lookup_join lockless
+  mptcp: Reset tsorted_anchor after call to tcp_fragment
+  mptcp: Pick correct sk when iterating in mptcp_set_rto
 
-diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index 12733ba2c1e1..b8c69aa17a55 100644
---- a/net/mptcp/mptcp_output.c
-+++ b/net/mptcp/mptcp_output.c
-@@ -634,6 +634,12 @@ static int mptcp_fragment(struct sock *meta_sk, enum t=
-cp_queue tcp_queue,
- 			if (undo)
- 				tcp_adjust_pcount(meta_sk, skb, -undo);
- 		}
-+
-+		/* tcp_fragment's call to sk_stream_alloc_skb initializes the
-+		 * tcp_tsorted_anchor. We need to revert this as it clashes
-+		 * with the refdst pointer.
-+		 */
-+		tcp_skb_tsorted_anchor_cleanup(buff);
- 	}
- =
+ include/net/mptcp.h          | 127 ++++++++++++-----------------
+ net/ipv4/af_inet.c           |   9 ++-
+ net/ipv4/ip_sockglue.c       |   7 +-
+ net/ipv4/tcp.c               |  31 +++++---
+ net/ipv4/tcp_ipv4.c          |  41 +---------
+ net/ipv4/tcp_minisocks.c     |   9 ++-
+ net/ipv6/tcp_ipv6.c          |  41 +---------
+ net/mptcp/mptcp_ctrl.c       | 186 ++++++++++++++++++++++++++++-----------=
+----
+ net/mptcp/mptcp_fullmesh.c   |  30 ++++---
+ net/mptcp/mptcp_input.c      | 150 ++++++++++++----------------------
+ net/mptcp/mptcp_ipv4.c       |  34 +++-----
+ net/mptcp/mptcp_ipv6.c       |  15 ++--
+ net/mptcp/mptcp_ndiffports.c |   2 +-
+ net/mptcp/mptcp_output.c     |  61 ++++++++++----
+ net/mptcp/mptcp_sched.c      |  32 ++++----
+ 15 files changed, 371 insertions(+), 404 deletions(-)
 
- 	return 0;
 -- =
 
 2.16.2
 
 
---===============3816219919111302159==--
+--===============8811413192043116720==--
