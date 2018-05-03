@@ -1,60 +1,281 @@
-Content-Type: multipart/mixed; boundary="===============8811413192043116720=="
+Content-Type: multipart/mixed; boundary="===============6202417215921868177=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next 00/14] Forward-ports from mptcp_trunk
- to mptcp-net-next
-Date: Thu, 03 May 2018 14:04:44 -0700
-Message-ID: <20180503210458.21524-1-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH mptcp-net-next 01/14] mptcp: Cleanup
+Date: Thu, 03 May 2018 14:04:45 -0700
+Message-ID: <20180503210458.21524-2-cpaasch@apple.com>
+In-Reply-To: 20180503210458.21524-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 614
+X-UID: 615
 
---===============8811413192043116720==
+--===============6202417215921868177==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Here are some forward-ports from mptcp_trunk to mptcp-net-next of the
-lockless subflows patches and the two bug-fixes.
+Just some basic cleanup, fixing some comments, renaming sk to
+meta_sk, and moving mptcp_finish_handshake out of mptcp_ipv4.c to
+mptcp_ctrl.c
 
-Christoph Paasch (14):
-  mptcp: Cleanup
-  mptcp: Improved debugging
-  mptcp: Use correct tcp_queue when calling mptcp_fragment
-  mptcp: Use mptcp_can_new_subflow where possible
-  mptcp: Render mptcp_sub_inherit_sockopts lockless
-  mptcp: Make mptcp_set_new_pathindex lockless
-  mptcp: Remove cnt_subflows
-  mptcp: Remove cnt_established
-  mptcp: Rename tw_lock to mpcb_list_lock
-  mptcp: Make subflow-list an RCU-list
-  mptcp: Don't take meta-lock when receiving third ACK
-  mptcp: Make mptcp_do_join_short and mptcp_lookup_join lockless
-  mptcp: Reset tsorted_anchor after call to tcp_fragment
-  mptcp: Pick correct sk when iterating in mptcp_set_rto
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+(cherry picked from commit 1b95146829844c1c98471194cafd5d4d99fc682a)
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+---
+ include/net/mptcp.h        |  8 ++++----
+ net/mptcp/mptcp_ctrl.c     | 25 +++++++++++++++++++++----
+ net/mptcp/mptcp_fullmesh.c |  2 +-
+ net/mptcp/mptcp_input.c    |  7 ++-----
+ net/mptcp/mptcp_ipv4.c     | 26 ++++----------------------
+ net/mptcp/mptcp_ipv6.c     |  8 ++++----
+ 6 files changed, 36 insertions(+), 40 deletions(-)
 
- include/net/mptcp.h          | 127 ++++++++++++-----------------
- net/ipv4/af_inet.c           |   9 ++-
- net/ipv4/ip_sockglue.c       |   7 +-
- net/ipv4/tcp.c               |  31 +++++---
- net/ipv4/tcp_ipv4.c          |  41 +---------
- net/ipv4/tcp_minisocks.c     |   9 ++-
- net/ipv6/tcp_ipv6.c          |  41 +---------
- net/mptcp/mptcp_ctrl.c       | 186 ++++++++++++++++++++++++++++-----------=
-----
- net/mptcp/mptcp_fullmesh.c   |  30 ++++---
- net/mptcp/mptcp_input.c      | 150 ++++++++++++----------------------
- net/mptcp/mptcp_ipv4.c       |  34 +++-----
- net/mptcp/mptcp_ipv6.c       |  15 ++--
- net/mptcp/mptcp_ndiffports.c |   2 +-
- net/mptcp/mptcp_output.c     |  61 ++++++++++----
- net/mptcp/mptcp_sched.c      |  32 ++++----
- 15 files changed, 371 insertions(+), 404 deletions(-)
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 8abb6985d852..f6ca550d9e6c 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -660,10 +660,10 @@ extern int sysctl_mptcp_syn_retries;
+ =
 
+ extern struct workqueue_struct *mptcp_wq;
+ =
+
+-#define mptcp_debug(fmt, args...)					\
+-	do {								\
+-		if (unlikely(sysctl_mptcp_debug))			\
+-			pr_err(fmt, ##args);	\
++#define mptcp_debug(fmt, args...)						\
++	do {									\
++		if (unlikely(sysctl_mptcp_debug))				\
++			pr_err(fmt, ##args);					\
+ 	} while (0)
+ =
+
+ /* Iterates over all subflows */
+diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+index 5b8320687122..001ba216db7f 100644
+--- a/net/mptcp/mptcp_ctrl.c
++++ b/net/mptcp/mptcp_ctrl.c
+@@ -1315,8 +1315,8 @@ void mptcp_fallback_meta_sk(struct sock *meta_sk)
+ int mptcp_add_sock(struct sock *meta_sk, struct sock *sk, u8 loc_id, u8 re=
+m_id,
+ 		   gfp_t flags)
+ {
+-	struct mptcp_cb *mpcb	=3D tcp_sk(meta_sk)->mpcb;
+-	struct tcp_sock *tp	=3D tcp_sk(sk);
++	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
++	struct tcp_sock *tp =3D tcp_sk(sk);
+ =
+
+ 	tp->mptcp =3D kmem_cache_zalloc(mptcp_sock_cache, flags);
+ 	if (!tp->mptcp)
+@@ -2119,9 +2119,9 @@ struct sock *mptcp_check_req_child(struct sock *meta_=
+sk,
+ 				   struct sk_buff *skb,
+ 				   const struct mptcp_options_received *mopt)
+ {
+-	struct tcp_sock *child_tp =3D tcp_sk(child);
++	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	struct mptcp_request_sock *mtreq =3D mptcp_rsk(req);
+-	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
++	struct tcp_sock *child_tp =3D tcp_sk(child);
+ 	u8 hash_mac_check[20];
+ =
+
+ 	child_tp->inside_tk_table =3D 0;
+@@ -2487,6 +2487,23 @@ int mptcp_conn_request(struct sock *sk, struct sk_bu=
+ff *skb)
+ 	return 0;
+ }
+ =
+
++int mptcp_finish_handshake(struct sock *child, struct sk_buff *skb)
++	__releases(&child->sk_lock.slock)
++{
++	int ret;
++
++	/* We don't call tcp_child_process here, because we hold
++	 * already the meta-sk-lock and are sure that it is not owned
++	 * by the user.
++	 */
++	tcp_sk(child)->segs_in +=3D max_t(u16, 1, skb_shinfo(skb)->gso_segs);
++	ret =3D tcp_rcv_state_process(child, skb);
++	bh_unlock_sock(child);
++	sock_put(child);
++
++	return ret;
++}
++
+ static void __mptcp_get_info(const struct sock *meta_sk,
+ 			     struct mptcp_meta_info *info)
+ {
+diff --git a/net/mptcp/mptcp_fullmesh.c b/net/mptcp/mptcp_fullmesh.c
+index 9690478fae70..d29102a1dffb 100644
+--- a/net/mptcp/mptcp_fullmesh.c
++++ b/net/mptcp/mptcp_fullmesh.c
+@@ -79,7 +79,7 @@ struct fullmesh_priv {
+ 	u8 rem4_bits;
+ 	u8 rem6_bits;
+ =
+
+-	/* Are we established the additional subflows for primary pair? */
++	/* Have we established the additional subflows for primary pair? */
+ 	u8 first_pair:1;
+ };
+ =
+
+diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
+index 12d7337b9b18..f3a4dbe45bc6 100644
+--- a/net/mptcp/mptcp_input.c
++++ b/net/mptcp/mptcp_input.c
+@@ -89,10 +89,7 @@ static inline int mptcp_tso_acked_reinject(const struct =
+sock *meta_sk,
+ 	return packets_acked;
+ }
+ =
+
+-/**
+- * Cleans the meta-socket retransmission queue and the reinject-queue.
+- * @sk must be the metasocket.
+- */
++/* Cleans the meta-socket retransmission queue and the reinject-queue. */
+ static void mptcp_clean_rtx_queue(struct sock *meta_sk, u32 prior_snd_una)
+ {
+ 	struct sk_buff *skb, *tmp, *next;
+@@ -350,7 +347,7 @@ static int mptcp_verif_dss_csum(struct sock *sk)
+ =
+
+ 	/* Now, checksum must be 0 */
+ 	if (unlikely(csum_fold(csum_tcp))) {
+-		pr_err("%s csum is wrong: %#x data_seq %u dss_csum_added %d overflowed %=
+d iterations %d\n",
++		pr_err("%s csum is wrong: %#x tcp-seq %u dss_csum_added %d overflowed %d=
+ iterations %d\n",
+ 		       __func__, csum_fold(csum_tcp), TCP_SKB_CB(last)->seq,
+ 		       dss_csum_added, overflowed, iter);
+ =
+
+diff --git a/net/mptcp/mptcp_ipv4.c b/net/mptcp/mptcp_ipv4.c
+index 061377f79a18..f059117139be 100644
+--- a/net/mptcp/mptcp_ipv4.c
++++ b/net/mptcp/mptcp_ipv4.c
+@@ -96,11 +96,11 @@ static u32 mptcp_v4_cookie_init_seq(struct request_sock=
+ *req, const struct sock
+ }
+ #endif
+ =
+
+-static int mptcp_v4_join_init_req(struct request_sock *req, const struct s=
+ock *sk,
++static int mptcp_v4_join_init_req(struct request_sock *req, const struct s=
+ock *meta_sk,
+ 				  struct sk_buff *skb, bool want_cookie)
+ {
+ 	struct mptcp_request_sock *mtreq =3D mptcp_rsk(req);
+-	const struct mptcp_cb *mpcb =3D tcp_sk(sk)->mpcb;
++	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	union inet_addr addr;
+ 	int loc_id;
+ 	bool low_prio =3D false;
+@@ -112,14 +112,14 @@ static int mptcp_v4_join_init_req(struct request_sock=
+ *req, const struct sock *s
+ 	 */
+ 	mtreq->hash_entry.pprev =3D NULL;
+ =
+
+-	tcp_request_sock_ipv4_ops.init_req(req, sk, skb, want_cookie);
++	tcp_request_sock_ipv4_ops.init_req(req, meta_sk, skb, want_cookie);
+ =
+
+ 	mtreq->mptcp_loc_nonce =3D mptcp_v4_get_nonce(ip_hdr(skb)->saddr,
+ 						    ip_hdr(skb)->daddr,
+ 						    tcp_hdr(skb)->source,
+ 						    tcp_hdr(skb)->dest);
+ 	addr.ip =3D inet_rsk(req)->ir_loc_addr;
+-	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET, &addr, sock_net(sk), &low_=
+prio);
++	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET, &addr, sock_net(meta_sk), =
+&low_prio);
+ 	if (loc_id =3D=3D -1)
+ 		return -1;
+ 	mtreq->loc_id =3D loc_id;
+@@ -149,24 +149,6 @@ static int mptcp_v4_join_request(struct sock *meta_sk,=
+ struct sk_buff *skb)
+ 				meta_sk, skb);
+ }
+ =
+
+-int mptcp_finish_handshake(struct sock *child, struct sk_buff *skb)
+-	__releases(&child->sk_lock.slock)
+-{
+-	int ret;
+-
+-	/* We don't call tcp_child_process here, because we hold
+-	 * already the meta-sk-lock and are sure that it is not owned
+-	 * by the user.
+-	 */
+-	tcp_sk(child)->segs_in +=3D max_t(u16, 1, skb_shinfo(skb)->gso_segs);
+-	ret =3D tcp_rcv_state_process(child, skb);
+-	bh_unlock_sock(child);
+-	sock_put(child);
+-
+-	return ret;
+-}
+-
+-
+ /* Similar to: tcp_v4_do_rcv
+  * We only process join requests here. (either the SYN or the final ACK)
+  */
+diff --git a/net/mptcp/mptcp_ipv6.c b/net/mptcp/mptcp_ipv6.c
+index c968de95709e..a367f103e81a 100644
+--- a/net/mptcp/mptcp_ipv6.c
++++ b/net/mptcp/mptcp_ipv6.c
+@@ -125,11 +125,11 @@ static u32 mptcp_v6_cookie_init_seq(struct request_so=
+ck *req, const struct sock
+ }
+ #endif
+ =
+
+-static int mptcp_v6_join_init_req(struct request_sock *req, const struct s=
+ock *sk,
++static int mptcp_v6_join_init_req(struct request_sock *req, const struct s=
+ock *meta_sk,
+ 				  struct sk_buff *skb, bool want_cookie)
+ {
+ 	struct mptcp_request_sock *mtreq =3D mptcp_rsk(req);
+-	const struct mptcp_cb *mpcb =3D tcp_sk(sk)->mpcb;
++	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	union inet_addr addr;
+ 	int loc_id;
+ 	bool low_prio =3D false;
+@@ -141,14 +141,14 @@ static int mptcp_v6_join_init_req(struct request_sock=
+ *req, const struct sock *s
+ 	 */
+ 	mtreq->hash_entry.pprev =3D NULL;
+ =
+
+-	tcp_request_sock_ipv6_ops.init_req(req, sk, skb, want_cookie);
++	tcp_request_sock_ipv6_ops.init_req(req, meta_sk, skb, want_cookie);
+ =
+
+ 	mtreq->mptcp_loc_nonce =3D mptcp_v6_get_nonce(ipv6_hdr(skb)->saddr.s6_add=
+r32,
+ 						    ipv6_hdr(skb)->daddr.s6_addr32,
+ 						    tcp_hdr(skb)->source,
+ 						    tcp_hdr(skb)->dest);
+ 	addr.in6 =3D inet_rsk(req)->ir_v6_loc_addr;
+-	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET6, &addr, sock_net(sk), &low=
+_prio);
++	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET6, &addr, sock_net(meta_sk),=
+ &low_prio);
+ 	if (loc_id =3D=3D -1)
+ 		return -1;
+ 	mtreq->loc_id =3D loc_id;
 -- =
 
 2.16.2
 
 
---===============8811413192043116720==--
+--===============6202417215921868177==--
