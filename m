@@ -1,152 +1,132 @@
-Content-Type: multipart/mixed; boundary="===============6645560206776104868=="
+Content-Type: multipart/mixed; boundary="===============9108431743201150012=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next 08/14] mptcp: Remove cnt_established
-Date: Thu, 03 May 2018 14:04:52 -0700
-Message-ID: <20180503210458.21524-9-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH mptcp-net-next 09/14] mptcp: Rename tw_lock to
+ mpcb_list_lock
+Date: Thu, 03 May 2018 14:04:53 -0700
+Message-ID: <20180503210458.21524-10-cpaasch@apple.com>
 In-Reply-To: 20180503210458.21524-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 608
+X-UID: 609
 
---===============6645560206776104868==
+--===============9108431743201150012==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We want to remove the number of up-calls into the meta-socket.
-cnt_established is one of those where we are modifying a field in the
-mpcb.
-
-We can remove it fairly safely. It's only use is in some MPTCP-specific
-congestion controls to short-circuit some parts of it.
-
-One particular use was in mptcp_should_expand_sndbuf(). There, we use it
-to see whether to expand the sndbuf when there are only backup subflows
-available.
-
-One problem with this old code is that the decision whether or not to send =
-on
-a backup subflow is steered by the modular scheduler. We cannot assume in
-core-MPTCP code that backup subflows are never being sent on.
-
-By no more taking backup subflows into account, we greatly simplify
-mptcp_should_expand_sndbuf at the cost of potentially increasing the
-window even if there is no subflow ready to send because it's a backup
-subflow.
+The lock is going to cover more than just the tw-list.
+Namely, the subflow-list stored in the mpcb.
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit 773f0e58474e56dfdf4334b889beebd4a8062d51)
+(cherry picked from commit 411ffb5c2b2a42d578f11b800c97f23db1cb77ee)
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/net/mptcp.h     |  4 ----
- net/mptcp/mptcp_ctrl.c  |  8 --------
- net/mptcp/mptcp_input.c | 20 ++------------------
- 3 files changed, 2 insertions(+), 30 deletions(-)
+ include/net/mptcp.h    |  4 +++-
+ net/mptcp/mptcp_ctrl.c | 14 +++++++-------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index b1ea946ea898..1174b0ae6d88 100644
+index 1174b0ae6d88..0f9d47b45895 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -166,7 +166,6 @@ struct mptcp_tcp_sock {
- 	u16	map_data_len;
- 	u16	slave_sk:1,
- 		fully_established:1,
--		establish_increased:1,
- 		second_packet:1,
- 		attached:1,
- 		send_mp_fail:1,
-@@ -276,9 +275,6 @@ struct mptcp_cb {
- 		snd_hiseq_index:1, /* Index in snd_high_order of snd_nxt */
- 		rcv_hiseq_index:1; /* Index in rcv_high_order of rcv_nxt */
+@@ -258,6 +258,9 @@ struct mptcp_cb {
+ 	/* list of sockets that need a call to release_cb */
+ 	struct hlist_head callback_list;
  =
 
--	/* socket count in this connection */
--	u8 cnt_established;
--
- #define MPTCP_SCHED_DATA_SIZE 8
- 	u8 mptcp_sched[MPTCP_SCHED_DATA_SIZE] __aligned(8);
- 	struct mptcp_sched_ops *sched_ops;
++	/* Lock used for protecting the different rcu-lists of mptcp_cb */
++	spinlock_t mpcb_list_lock;
++
+ 	/* High-order bits of 64-bit sequence numbers */
+ 	u32 snd_high_order[2];
+ 	u32 rcv_high_order[2];
+@@ -289,7 +292,6 @@ struct mptcp_cb {
+ 	u64	infinite_rcv_seq;
+ =
+
+ 	/***** Start of fields, used for connection closure */
+-	spinlock_t	 tw_lock;
+ 	unsigned char	 mptw_state;
+ 	u8		 dfin_path_index;
+ =
+
 diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
-index 60e778ac362a..02eaf2208db6 100644
+index 02eaf2208db6..052ae0e052b0 100644
 --- a/net/mptcp/mptcp_ctrl.c
 +++ b/net/mptcp/mptcp_ctrl.c
-@@ -737,11 +737,6 @@ static void mptcp_set_state(struct sock *sk)
- 		tcp_sk(meta_sk)->lsndtime =3D tcp_jiffies32;
- 	}
- =
-
--	if (sk->sk_state =3D=3D TCP_ESTABLISHED) {
--		tcp_sk(sk)->mptcp->establish_increased =3D 1;
--		tcp_sk(sk)->mpcb->cnt_established++;
--	}
--
- 	if (sk->sk_state =3D=3D TCP_CLOSE) {
- 		if (!sock_flag(sk, SOCK_DEAD))
- 			mptcp_sub_close(sk, 0);
-@@ -1446,9 +1441,6 @@ void mptcp_del_sock(struct sock *sk)
- 			}
+@@ -665,14 +665,14 @@ void mptcp_sock_destruct(struct sock *sk)
+ 		 * update to the rcv_nxt of the time-wait-sock and remove
+ 		 * its reference to the mpcb.
+ 		 */
+-		spin_lock_bh(&mpcb->tw_lock);
++		spin_lock_bh(&mpcb->mpcb_list_lock);
+ 		list_for_each_entry_rcu(mptw, &mpcb->tw_list, list) {
+ 			list_del_rcu(&mptw->list);
+ 			mptw->in_list =3D 0;
+ 			mptcp_mpcb_put(mpcb);
+ 			rcu_assign_pointer(mptw->mpcb, NULL);
  		}
- 	}
--	if (tp->mptcp->establish_increased)
--		mpcb->cnt_established--;
--
- 	tp->mptcp->next =3D NULL;
- 	tp->mptcp->attached =3D 0;
- 	mpcb->path_index_bits &=3D ~(1 << tp->mptcp->path_index);
-diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index 126c961ec55a..211605347f70 100644
---- a/net/mptcp/mptcp_input.c
-+++ b/net/mptcp/mptcp_input.c
-@@ -2357,11 +2357,9 @@ int mptcp_rcv_synsent_state_process(struct sock *sk,=
- struct sock **skptr,
- /* Similar to tcp_should_expand_sndbuf */
- bool mptcp_should_expand_sndbuf(const struct sock *sk)
- {
--	const struct sock *sk_it;
- 	const struct sock *meta_sk =3D mptcp_meta_sk(sk);
- 	const struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
--	int cnt_backups =3D 0;
--	int backup_available =3D 0;
-+	const struct sock *sk_it;
+-		spin_unlock_bh(&mpcb->tw_lock);
++		spin_unlock_bh(&mpcb->mpcb_list_lock);
  =
 
- 	/* We circumvent this check in tcp_check_space, because we want to
- 	 * always call sk_write_space. So, we reproduce the check here.
-@@ -2393,24 +2391,10 @@ bool mptcp_should_expand_sndbuf(const struct sock *=
-sk)
- 		if (!mptcp_sk_can_send(sk_it))
- 			continue;
+ 		mptcp_debug("%s destroying meta-sk token %#x\n", __func__,
+ 			    tcp_sk(sk)->mpcb->mptcp_loc_token);
+@@ -1279,9 +1279,9 @@ static int mptcp_alloc_mpcb(struct sock *meta_sk, __u=
+64 remote_key,
  =
 
--		/* Backup-flows have to be counted - if there is no other
--		 * subflow we take the backup-flow into account.
--		 */
--		if (tp_it->mptcp->rcv_low_prio || tp_it->mptcp->low_prio)
--			cnt_backups++;
--
--		if (tcp_packets_in_flight(tp_it) < tp_it->snd_cwnd) {
--			if (tp_it->mptcp->rcv_low_prio || tp_it->mptcp->low_prio) {
--				backup_available =3D 1;
--				continue;
--			}
-+		if (tcp_packets_in_flight(tp_it) < tp_it->snd_cwnd)
- 			return true;
--		}
- 	}
+ 	/* Init time-wait stuff */
+ 	INIT_LIST_HEAD(&mpcb->tw_list);
+-	spin_lock_init(&mpcb->tw_lock);
  =
 
--	/* Backup-flow is available for sending - update send-buffer */
--	if (meta_tp->mpcb->cnt_established =3D=3D cnt_backups && backup_available)
--		return true;
- 	return false;
+ 	INIT_HLIST_HEAD(&mpcb->callback_list);
++	spin_lock_init(&mpcb->mpcb_list_lock);
+ =
+
+ 	mptcp_mpcb_inherit_sockopts(meta_sk, master_sk);
+ =
+
+@@ -2249,10 +2249,10 @@ int mptcp_init_tw_sock(struct sock *sk, struct tcp_=
+timewait_sock *tw)
+ 		mptw->rcv_nxt++;
+ 	rcu_assign_pointer(mptw->mpcb, mpcb);
+ =
+
+-	spin_lock_bh(&mpcb->tw_lock);
++	spin_lock_bh(&mpcb->mpcb_list_lock);
+ 	list_add_rcu(&mptw->list, &tp->mpcb->tw_list);
+ 	mptw->in_list =3D 1;
+-	spin_unlock_bh(&mpcb->tw_lock);
++	spin_unlock_bh(&mpcb->mpcb_list_lock);
+ =
+
+ 	return 0;
  }
+@@ -2268,12 +2268,12 @@ void mptcp_twsk_destructor(struct tcp_timewait_sock=
+ *tw)
+ 	 * from the list and drop the ref properly.
+ 	 */
+ 	if (mpcb && refcount_inc_not_zero(&mpcb->mpcb_refcnt)) {
+-		spin_lock_bh(&mpcb->tw_lock);
++		spin_lock_bh(&mpcb->mpcb_list_lock);
+ 		if (tw->mptcp_tw->in_list) {
+ 			list_del_rcu(&tw->mptcp_tw->list);
+ 			tw->mptcp_tw->in_list =3D 0;
+ 		}
+-		spin_unlock_bh(&mpcb->tw_lock);
++		spin_unlock_bh(&mpcb->mpcb_list_lock);
  =
 
+ 		/* Twice, because we increased it above */
+ 		mptcp_mpcb_put(mpcb);
 -- =
 
 2.16.2
 
 
---===============6645560206776104868==--
+--===============9108431743201150012==--
