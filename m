@@ -1,116 +1,138 @@
-Content-Type: multipart/mixed; boundary="===============8102407478113779001=="
+Content-Type: multipart/mixed; boundary="===============7731846765284673442=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 8th of May 2018
-Date: Tue, 08 May 2018 21:18:50 +0200
-Message-ID: <772357cb-a96d-a374-f2df-e96330c5c3e8@tessares.net>
+Subject: [MPTCP] Conference talk ideas, round 2
+Date: Sun, 13 May 2018 21:02:49 -0700
+Message-ID: <alpine.OSX.2.21.1805132031200.60813@gemorgan-mobl1.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 623
+X-UID: 624
 
---===============8102407478113779001==
+--===============7731846765284673442==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-We just had a short and improvised meeting dedicated to the Netdev
-presentation we would like to do in July this year. Because we also
-decided that there will not be our usual meeting on Thursday this week,
-we can say that it was our 9th weekly meeting with Mat, Peter, Ossama
-(Intel OTC), Christoph (Apple) and myself (Tessares).
+Hello -
 
-Thanks again for having accepted to participate to this improvised but
-useful meeting!
+We had a meeting last week to discuss reshaping our netdev conference =
 
+MPTCP talk proposal based on feedback from the committee. The plan is to =
 
-Here are the minutes of the meeting:
+re-focus on upstreaming concerns, challenges, and progress.
 
+I worked on outlining some topics that might fit with the talk. I don't =
 
-Why we had this meeting: We got a reply from the program committee
-asking us some questions about our proposal. They are mainly concerned
-about not having the same talk as Octavian presented at Netdev 0.1 and
-if we already addressed the different comments raised during the call.
-But also they think it would be more interesting to discuss about the
-challenges/progress instead of a tutorial and use-cases.
+think this is exhaustive, and I'm also not saying everything here is =
+
+required to be in the talk. I'm looking forward to your comments and =
+
+additional ideas.
 
 
-Octavian's call:
-    There were mainly questions about the protocol but also a bit about
-PM and schedulers, not a lot about the upstreaming bit.
-    We don't think we really need to list the progressions that was made
-but mention that the talk will be different.
-    Questions related to the upstream bits were taken into account but
-we still need more feedback.
-    kind of discussion: TCP options' framework =E2=86=92 what we learned fr=
-om
-that. We develop something but it was not well understood/supported/...
-    kind of discussion: how to integrate a big kernel change, cannot be
-completely outside of the core system.
+* Why is adding MPTCP to the upstream kernel complicated?
+
+     * Differences in requirements and features from existing =
+
+implementation
+
+         * Every TCP socket affected vs. staying out of the way for normal =
+
+TCP
+
+         * Multipath protocol development and research vs giving TCP =
+
+users/maintainers weight
+
+     * Protocol challenges
+
+         * Coupled receive windows across TCP subflows
+
+         * Behavior change for duplicate acks
+
+         * Per-packet metadata (tx path) and option writing
+
+         * TCP option parsing - packets are currently dropped after options =
+
+are parsed
+
+         * Collapse/coalesce of skbs after receive - per-packet headers =
+
+lost in TCP layer
+
+     * Must do all this without adversely affecting TCP or networking =
+
+structs (like sk_buff)
+
+         * TCP performance not reduced
+
+         * Memory requirements for TCP not increased
+
+         * Maintainability not made harder
+
+     * Compare to KCM, which adds metadata to each stream, didn't require =
+
+TCP changes
+
+* What fits well in the networking subsystem
+
+     * Some connection code (callbacks exist)
+
+     * Creating a new socket type for MPTCP
+
+     * New ULP capability
+
+         * No rules yet for multiple users, because TLS is the only user
+
+     * In-kernel sockets
+
+     * do_tcp_sendpages() to send data buffered at the connection level
+
+     * tcp_read_sock() to get incoming skbs
+
+* What's a challenge in the networking subsystem
+
+     * Indirect calls are now more expensive
+
+     * MPTCP builds on TCP in a unique way
+
+* What we have tried
+
+     * Identify where other features could use TCP extension capabilities =
+
+and merge before MPTCP
+
+         * Options framework used by TCP-MD5 and SMC
+
+         * Didn't work out - expensive indirect calls and no MPTCP frame of =
+
+reference for the maintainer
+
+     * Sharing code demonstrating architectural approaches that use current =
+
+upstream netdev functionality
+
+     * Moving components to userspace
+
+     * Forking and reducing functionality of existing MPTCP code base
+
+* Large change logistics
+
+     * Reshaping code in to a reviewable patch set or patch sets. Implement =
+
+functionality in stages?
+
+* Fundamental challenge of "show us the code" - must decide what seems =
+
+upstreamable, implement it, share, and iterate.
 
 
-Tutorial:
-    we should avoid talking about the protocol to focus the discussions
-on the upstreaming bit
-    we agree to switch to a "moonshot" talk and focus on challenges /
-progress.
-    For the talk, not the email: mention that these conferences are the
-only occasions for us to talk with maintainers and main developers.
+Thanks,
 
+--
+Mat Martineau
+Intel OTC
 
-Mat kindly accepted to look at writing a new description in that way. We
-would finish this email by saying something like: Do you think it is the
-right way to go? If yes, we will come back to you with a proper proposal
-next week.
-
-
-Next meeting:
-    - proposition: the 17th of May. Usual time: 16:00 UTC (9am PDT, 6pm
-CEST)
-    - open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20180517
-
-
-Feel free to comment these points and propose new ones for the next meeting!
-
-
-Talk to you in two weeks,
-Matthieu
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
--- =
-
-
-
-DISCLAIMER.
-This email and any files transmitted with it are confidential =
-
-and intended solely for the use of the individual or entity to whom they =
-
-are addressed. If you have received this email in error please notify the =
-
-system manager. This message contains confidential information and is =
-
-intended only for the individual named. If you are not the named addressee =
-
-you should not disseminate, distribute or copy this e-mail. Please notify =
-
-the sender immediately by e-mail if you have received this e-mail by =
-
-mistake and delete this e-mail from your system. If you are not the =
-
-intended recipient you are notified that disclosing, copying, distributing =
-
-or taking any action in reliance on the contents of this information is =
-
-strictly prohibited.
-
---===============8102407478113779001==--
+--===============7731846765284673442==--
