@@ -1,54 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============2233025072938658354=="
+Content-Type: multipart/mixed; boundary="===============8069102725792406428=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Updated net-next merge
-Date: Mon, 21 May 2018 09:41:26 -0700
-Message-ID: <20180521164126.GB9303@MacBook-Pro-19.local>
-In-Reply-To: alpine.OSX.2.21.1805181657560.16804@johnferg-ivm.amr.corp.intel.com
+Subject: [MPTCP] Weekly meeting - 24 May 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 23 May 2018 17:44:16 +0200
+Message-ID: <950bbf52-3bf0-7d3d-fb77-4de05d5bc8a0@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 634
+X-UID: 635
 
---===============2233025072938658354==
+--===============8069102725792406428==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Mat,
+Hello,
 
-On 18/05/18 - 17:10:43, Mat Martineau wrote:
-> =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> Hello everyone -
-> =
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180524
+Feel free to add/modify topics!
 
-> I updated the master branch at https://github.com/multipath-tcp/mptcp_net=
--next
-> =
+Meeting link: https://talky.io/mptcp_upstreaming
 
-> There was a conflict this time, due to an upstream change in the pacing
-> timer callback from hard irq to soft irq context:
-> =
+Speak to you tomorrow!
+Matthieu
+-- =
 
-> https://github.com/multipath-tcp/mptcp_net-next/commit/73a6bab5aa2a83cb7d=
-f85805e08bc03b4065aea7
-> =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-> =
-
-> Here's the fixup commit with the relevant changes to tcp_tsq_handler() and
-> its call to mptcp_tsq_flags():
-> =
-
-> https://github.com/multipath-tcp/mptcp_net-next/commit/6ae85f7b54d5766131=
-170b363cbeb86e421ced26
-
-this looks good to me!
+-- =
 
 
-Cheers,
-Christoph
 
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
 
---===============2233025072938658354==--
+and intended solely for the use of the individual or entity to whom they =
+
+are addressed. If you have received this email in error please notify the =
+
+system manager. This message contains confidential information and is =
+
+intended only for the individual named. If you are not the named addressee =
+
+you should not disseminate, distribute or copy this e-mail. Please notify =
+
+the sender immediately by e-mail if you have received this e-mail by =
+
+mistake and delete this e-mail from your system. If you are not the =
+
+intended recipient you are notified that disclosing, copying, distributing =
+
+or taking any action in reliance on the contents of this information is =
+
+strictly prohibited.
+
+--===============8069102725792406428==--
