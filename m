@@ -1,594 +1,1263 @@
-Content-Type: multipart/mixed; boundary="===============8157509782071110719=="
+Content-Type: multipart/mixed; boundary="===============1491064707302180562=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH v2 04/19] mptcp: Handle MPTCP TCP options
-Date: Thu, 07 Jun 2018 11:53:43 -0700
-Message-ID: <20180607185343.GK93701@MacBook-Pro-19.local>
-In-Reply-To: 20180605234038.28497-5-mathew.j.martineau@linux.intel.com
+Subject: Re: [MPTCP] [PATCH mptcp-net-next 10/14] mptcp: Make subflow-list an
+ RCU-list
+Date: Fri, 08 Jun 2018 13:31:04 -0700
+Message-ID: <20180608203104.GQ93701@MacBook-Pro-19.local>
+In-Reply-To: alpine.OSX.2.21.1805041710340.31156@pasarr-mobl4.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 665
+X-UID: 666
 
---===============8157509782071110719==
+--===============1491064707302180562==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 05/06/18 - 16:40:23, Mat Martineau wrote:
-> From: Peter Krystad <peter.krystad(a)intel.com>
+Hello Mat,
+
+On 04/05/18 - 17:25:28, Mat Martineau wrote:
 > =
 
-> Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
-> ---
->  include/linux/tcp.h   |  14 ++++
->  include/net/mptcp.h   |  49 ++++++++++++
->  include/net/tcp.h     |   2 +
->  net/ipv4/tcp_input.c  |  15 ++++
->  net/ipv4/tcp_output.c |  72 +++++++++++++++++
->  net/mptcp/Makefile    |   2 +-
->  net/mptcp/options.c   | 176 ++++++++++++++++++++++++++++++++++++++++++
->  7 files changed, 329 insertions(+), 1 deletion(-)
->  create mode 100644 net/mptcp/options.c
+> Christoph -
 > =
 
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 72705eaf4b84..17ecbebf129d 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -104,6 +104,16 @@ struct tcp_options_received {
->  	u8	num_sacks;	/* Number of SACK blocks		*/
->  	u16	user_mss;	/* mss requested by user in ioctl	*/
->  	u16	mss_clamp;	/* Maximal mss, negotiated at connection setup */
-> +	struct {
-> +	u8      mp_capable : 1,
-> +		mp_join : 1,
-> +		dss : 1,
-> +		version : 4;
-> +	u8      flags;
-> +	u64     sndr_key;
-> +	u64     rcvr_key;
-> +	} mptcp;
+> On Thu, 3 May 2018, Christoph Paasch wrote:
+> =
 
-Indentation looks wrong here.
+> > mptcp_add_sock() will now be called without holding the meta-level lock.
+> > However, mptcp_add_sock() wants to add the subflow to the meta-level
+> > list, thus we need to protect this by a lock. We use the mpcb_list_lock
+> > for that.
+> > =
 
-Nit-picking ;-) (because I have a bigger comment further down below)
+> > Now that we are locking during add/del, and want to allow lockless
+> > traversal of the list, this implies that we need to make it an RCU-list.
+> > =
 
-> +
->  };
->  =
+> > So, this patch transitions to the RCU hlist. The list-traversal macros
+> > (hlist_for_each_entry_rcu) require me to now pass the mptcp_tcp_sock to
+> > mptcp_for_each_*. So, I had to change all the places in the code where
+> > we call one of the list-traversal macros to adapt to this.
+> > =
 
->  static inline void tcp_clear_options(struct tcp_options_received *rx_opt)
-> @@ -113,6 +123,7 @@ static inline void tcp_clear_options(struct tcp_optio=
-ns_received *rx_opt)
->  #if IS_ENABLED(CONFIG_SMC)
->  	rx_opt->smc_ok =3D 0;
->  #endif
-> +	rx_opt->mptcp.mp_capable =3D rx_opt->mptcp.mp_join =3D rx_opt->mptcp.ds=
-s =3D 0;
->  }
->  =
+> > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> > Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> > (cherry picked from commit 7a662b690069642c138da16ff9396e6826fd0a95)
+> > ---
+> > include/net/mptcp.h        | 67 +++++++++++++++++-----------------
+> > net/ipv4/af_inet.c         |  9 ++---
+> > net/ipv4/ip_sockglue.c     |  7 ++--
+> > net/ipv4/tcp.c             | 31 +++++++++-------
+> > net/mptcp/mptcp_ctrl.c     | 89 ++++++++++++++++++++++++++++-----------=
+-------
+> > net/mptcp/mptcp_fullmesh.c | 28 ++++++++++-----
+> > net/mptcp/mptcp_input.c    | 44 +++++++++++++++--------
+> > net/mptcp/mptcp_output.c   | 38 +++++++++++++-------
+> > net/mptcp/mptcp_sched.c    | 21 +++++++----
+> > 9 files changed, 207 insertions(+), 127 deletions(-)
+> > =
 
->  /* This is the max number of SACKS that we'll generate and process. It's=
- safe
-> @@ -137,6 +148,7 @@ struct tcp_request_sock {
->  						  * FastOpen it's the seq#
->  						  * after data-in-SYN.
->  						  */
-> +	bool				is_mptcp;
->  };
->  =
+> > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> > index 0f9d47b45895..091e56a7b334 100644
+> > --- a/include/net/mptcp.h
+> > +++ b/include/net/mptcp.h
+> > @@ -156,7 +156,7 @@ struct mptcp_options_received {
+> > };
+> > =
 
->  static inline struct tcp_request_sock *tcp_rsk(const struct request_sock=
- *req)
-> @@ -387,6 +399,8 @@ struct tcp_sock {
->  	 */
->  	struct request_sock *fastopen_rsk;
->  	u32	*saved_syn;
-> +
-> +	bool	is_mptcp;
->  };
->  =
+> > struct mptcp_tcp_sock {
+> > -	struct tcp_sock	*next;		/* Next subflow socket */
+> > +	struct hlist_node node;
+> > 	struct hlist_node cb_list;
+> > 	struct mptcp_options_received rx_opt;
+> > =
 
->  enum tsq_enum {
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 7f7b18b000fe..736febd2a9d4 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -18,6 +18,23 @@
->  =
+> > @@ -254,7 +254,7 @@ struct mptcp_sched_ops {
+> > =
 
->  #include <linux/tcp.h>
->  =
+> > struct mptcp_cb {
+> > 	/* list of sockets in this multipath connection */
+> > -	struct tcp_sock *connection_list;
+> > +	struct hlist_head conn_list;
+> > 	/* list of sockets that need a call to release_cb */
+> > 	struct hlist_head callback_list;
+> > =
 
-> +/* MPTCP option subtypes */
-> +
-> +#define MPTCPOPT_MP_CAPABLE	0
-> +#define MPTCPOPT_MP_JOIN	1
-> +#define MPTCPOPT_DSS		2
-> +#define MPTCPOPT_ADD_ADDR	3
-> +#define MPTCPOPT_REMOVE_ADDR	4
-> +#define MPTCPOPT_MP_PRIO	5
-> +#define MPTCPOPT_MP_FAIL	6
-> +#define MPTCPOPT_MP_FASTCLOSE	7
-> +
-> +/* MPTCP handshake flags */
-> +
-> +#define MPTCP_CAP_CHECKSUM_REQD	(1 << 7)
-> +#define MPTCP_CAP_EXTENSIBILITY	(1 << 6)
-> +#define MPTCP_CAP_HMAC_SHA1	(1 << 0)
-> +
->  /* MPTCP connection sock */
->  struct mptcp_sock {
->  	/* inet_connection_sock must be the first member */
-> @@ -30,4 +47,36 @@ static inline struct mptcp_sock *mptcp_sk(const struct=
- sock *sk)
->  	return (struct mptcp_sock *)sk;
->  }
->  =
+> > @@ -309,7 +309,7 @@ struct mptcp_cb {
+> > 	/***** Start of fields, used for subflow establishment */
+> > 	struct sock *meta_sk;
+> > =
 
-> +#ifdef CONFIG_MPTCP
-> +
-> +void mptcp_parse_option(const unsigned char *ptr, int opsize,
-> +			struct tcp_options_received *opt_rx);
-> +unsigned int mptcp_syn_options(struct sock *sk, u64 *local_key);
-> +unsigned int mptcp_synack_options(struct request_sock *req,
-> +				  u64 *local_key, u64 *remote_key);
-> +
-> +void mptcp_get_options(const struct sk_buff *skb,
-> +		       struct tcp_options_received *options);
-> +
-> +#else
-> +
-> +static inline void mptcp_parse_option(const unsigned char *ptr, int opsi=
-ze,
-> +				      struct tcp_options_received *opt_rx)
-> +{
-> +}
-> +
-> +static inline unsigned int mptcp_syn_options(struct sock *sk, u64 *local=
-_key)
-> +{
-> +	return 0;
-> +}
-> +static inline unsigned int mptcp_synack_options(struct request_sock *sk,
-> +						u64 *local_key,
-> +						u64 *remote_key)
-> +{
-> +	return 0;
-> +}
-> +
-> +
-> +
-> +#endif /* CONFIG_MPTCP */
->  #endif /* __NET_MPTCP_H */
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index c8716de4547c..a1d4e744b258 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -214,6 +214,8 @@ void tcp_time_wait(struct sock *sk, int state, int ti=
-meo);
->  #define TCPOLEN_MD5SIG_ALIGNED		20
->  #define TCPOLEN_MSS_ALIGNED		4
->  #define TCPOLEN_EXP_SMC_BASE_ALIGNED	8
-> +#define TCPOLEN_MPTCP_MPC_SYN		12
-> +#define TCPOLEN_MPTCP_MPC_SYNACK	20
->  =
+> > -	/* Master socket, also part of the connection_list, this
+> > +	/* Master socket, also part of the conn_list, this
+> > 	 * socket is the one that the application sees.
+> > 	 */
+> > 	struct sock *master_sk;
+> > @@ -661,21 +661,17 @@ extern struct workqueue_struct *mptcp_wq;
+> > 			pr_err(fmt, ##args);					\
+> > 	} while (0)
+> > =
 
->  /* Flags in tp->nonagle */
->  #define TCP_NAGLE_OFF		1	/* Nagle's algo is disabled */
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 355d3dffd021..bdc36001ce90 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -78,6 +78,7 @@
->  #include <linux/errqueue.h>
->  #include <trace/events/tcp.h>
->  #include <linux/static_key.h>
-> +#include <net/mptcp.h>
->  =
+> > -/* Iterates over all subflows */
+> > -#define mptcp_for_each_tp(mpcb, tp)					\
+> > -	for ((tp) =3D (mpcb)->connection_list; (tp); (tp) =3D (tp)->mptcp->ne=
+xt)
+> > +static inline struct sock *mptcp_to_sock(const struct mptcp_tcp_sock *=
+mptcp)
+> > +{
+> > +	return (struct sock *)mptcp->tp;
+> > +}
+> > =
 
->  int sysctl_tcp_max_orphans __read_mostly =3D NR_FILE;
->  =
+> > -#define mptcp_for_each_sk(mpcb, sk)					\
+> > -	for ((sk) =3D (struct sock *)(mpcb)->connection_list;		\
+> > -	     sk;							\
+> > -	     sk =3D (struct sock *)tcp_sk(sk)->mptcp->next)
+> > +#define mptcp_for_each_sub(__mpcb, __mptcp)					\
+> > +	hlist_for_each_entry_rcu(__mptcp, &((__mpcb)->conn_list), node)
+> > =
 
-> @@ -3842,6 +3843,10 @@ void tcp_parse_options(const struct net *net,
->  				 */
->  				break;
->  #endif
-> +                        case TCPOPT_MPTCP:
-> +				mptcp_parse_option(ptr, opsize, opt_rx);
-> +				break;
-> +
->  			case TCPOPT_FASTOPEN:
->  				tcp_parse_fastopen_option(
->  					opsize - TCPOLEN_FASTOPEN_BASE,
-> @@ -5763,6 +5768,15 @@ static int tcp_rcv_synsent_state_process(struct so=
-ck *sk, struct sk_buff *skb,
->  		tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
->  		tcp_initialize_rcv_mss(sk);
->  =
+> > -#define mptcp_for_each_sk_safe(__mpcb, __sk, __temp)			\
+> > -	for (__sk =3D (struct sock *)(__mpcb)->connection_list,		\
+> > -	     __temp =3D __sk ? (struct sock *)tcp_sk(__sk)->mptcp->next : NUL=
+L; \
+> > -	     __sk;							\
+> > -	     __sk =3D __temp,						\
+> > -	     __temp =3D __sk ? (struct sock *)tcp_sk(__sk)->mptcp->next : NUL=
+L)
+> > +/* Must be called with the appropriate lock held */
+> > +#define mptcp_for_each_sub_safe(__mpcb, __mptcp, __tmp)				\
+> > +	hlist_for_each_entry_safe(__mptcp, __tmp, &((__mpcb)->conn_list), nod=
+e)
+> > =
 
-> +		// @@ could use a callout here
-> +		if (tp->is_mptcp) {
-> +			struct subflow_sock *subflow =3D subflow_sk(sk);
-> +			if (subflow->request_mptcp && tp->rx_opt.mptcp.mp_capable) {
-> +				subflow->mp_capable =3D 1;
-> +				subflow->remote_key =3D tp->rx_opt.mptcp.sndr_key;
-> +			}
-> +		}
-> +
->  		/* Remember, tcp_poll() does not lock socket!
->  		 * Change state from SYN-SENT only after copied_seq
->  		 * is initialized. */
-> @@ -6339,6 +6353,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_o=
-ps,
->  =
+> > /* Iterates over all bit set to 1 in a bitset */
+> > #define mptcp_for_each_bit_set(b, i)					\
+> > @@ -922,12 +918,14 @@ struct request_sock *rev_mptcp_rsk(const struct m=
+ptcp_request_sock *req)
+> > =
 
->  	tcp_rsk(req)->af_specific =3D af_ops;
->  	tcp_rsk(req)->ts_off =3D 0;
-> +	tcp_rsk(req)->is_mptcp =3D 0;
->  =
+> > static inline bool mptcp_can_sendpage(struct sock *sk)
+> > {
+> > -	struct sock *sk_it;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > =
 
->  	tcp_clear_options(&tmp_opt);
->  	tmp_opt.mss_clamp =3D af_ops->mss_clamp;
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index 8e08b409c71e..fc49d80d3ba7 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -37,6 +37,7 @@
->  #define pr_fmt(fmt) "TCP: " fmt
->  =
+> > 	if (tcp_sk(sk)->mpcb->dss_csum)
+> > 		return false;
+> > =
 
->  #include <net/tcp.h>
-> +#include <net/mptcp.h>
->  =
+> > -	mptcp_for_each_sk(tcp_sk(sk)->mpcb, sk_it) {
+> > +	mptcp_for_each_sub(tcp_sk(sk)->mpcb, mptcp) {
+> > +		struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 		if (!(sk_it->sk_route_caps & NETIF_F_SG))
+> > 			return false;
+> > 	}
+> > @@ -961,9 +959,12 @@ static inline void mptcp_send_reset(struct sock *s=
+k)
+> > static inline void mptcp_sub_force_close_all(struct mptcp_cb *mpcb,
+> > 					     struct sock *except)
+> > {
+> > -	struct sock *sk_it, *tmp;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > +	struct hlist_node *tmp;
+> > +
+> > +	mptcp_for_each_sub_safe(mpcb, mptcp, tmp) {
+> > +		struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > =
 
->  #include <linux/compiler.h>
->  #include <linux/gfp.h>
-> @@ -411,6 +412,8 @@ static inline bool tcp_urg_mode(const struct tcp_sock=
- *tp)
->  #define OPTION_WSCALE		(1 << 3)
->  #define OPTION_FAST_OPEN_COOKIE	(1 << 8)
->  #define OPTION_SMC		(1 << 9)
-> +#define OPTION_MPTCP		(1 << 10)
-> +#define OPTION_MPTCP_ACK	(1 << 11)
->  =
+> > -	mptcp_for_each_sk_safe(mpcb, sk_it, tmp) {
+> > 		if (sk_it !=3D except)
+> > 			mptcp_send_reset(sk_it);
+> > 	}
+> > @@ -1149,12 +1150,14 @@ static inline int mptcp_sk_can_send_ack(const s=
+truct sock *sk)
+> > =
 
->  static void smc_options_write(__be32 *ptr, u16 *options)
->  {
-> @@ -436,6 +439,8 @@ struct tcp_out_options {
->  	__u8 *hash_location;	/* temporary pointer, overloaded */
->  	__u32 tsval, tsecr;	/* need to include OPTION_TS */
->  	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
-> +	u64 sndr_key;
-> +	u64 rcvr_key;
->  };
->  =
+> > static inline bool mptcp_can_sg(const struct sock *meta_sk)
+> > {
+> > -	struct sock *sk;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > =
 
->  /* Write previously computed TCP options to the packet.
-> @@ -546,6 +551,29 @@ static void tcp_options_write(__be32 *ptr, struct tc=
-p_sock *tp,
->  	}
->  =
+> > 	if (tcp_sk(meta_sk)->mpcb->dss_csum)
+> > 		return false;
+> > =
 
->  	smc_options_write(ptr, &options);
-> +
-> +	if (OPTION_MPTCP & options) {
-> +		u8 *p =3D (u8 *)ptr;
-> +		*p++ =3D 0x1e; // TCP option: Multipath TCP
-> +		*p++ =3D 12;   // length
-> +		*p++ =3D 0;    // subtype=3DMP_CAPABLE | version=3D0
-> +		*p++ =3D 0x1;  // flags=3DHMAC-SHA1
-> +		memcpy(p, &opts->sndr_key, 8);
-> +		pr_debug("tcp_options_write: opts->sndr_key=3D%llu", opts->sndr_key);
-> +	}
-> +
-> +	if (OPTION_MPTCP_ACK & options) {
-> +		u8 *p =3D (u8 *)ptr;
-> +		*p++ =3D 0x1e; // TCP option: Multipath TCP
-> +		*p++ =3D 20;   // length
-> +		*p++ =3D 0;    // subtype=3DMP_CAPABLE | version=3D0
-> +		*p++ =3D 0x1;  // flags=3DHMAC-SHA1
-> +		memcpy(p, &opts->sndr_key, 8);
-> +		pr_debug("tcp_options_write: opts->sndr_key=3D%llu", opts->sndr_key);
-> +		p +=3D 8;
-> +		memcpy(p, &opts->rcvr_key, 8);
-> +		pr_debug("tcp_options_write: opts->rcvr_key=3D%llu", opts->rcvr_key);
-> +	}
->  }
->  =
+> > -	mptcp_for_each_sk(tcp_sk(meta_sk)->mpcb, sk) {
+> > +	mptcp_for_each_sub(tcp_sk(meta_sk)->mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > +
+> > 		if (!mptcp_sk_can_send(sk))
+> > 			continue;
+> > 		if (!(sk->sk_route_caps & NETIF_F_SG))
+> > @@ -1165,9 +1168,9 @@ static inline bool mptcp_can_sg(const struct sock=
+ *meta_sk)
+> > =
 
->  static void smc_set_option(const struct tcp_sock *tp,
-> @@ -649,6 +677,15 @@ static unsigned int tcp_syn_options(struct sock *sk,=
- struct sk_buff *skb,
->  =
+> > static inline void mptcp_set_rto(struct sock *sk)
+> > {
+> > -	struct tcp_sock *tp =3D tcp_sk(sk);
+> > -	struct sock *sk_it;
+> > 	struct inet_connection_sock *micsk =3D inet_csk(mptcp_meta_sk(sk));
+> > +	struct tcp_sock *tp =3D tcp_sk(sk);
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	__u32 max_rto =3D 0;
+> > =
 
->  	smc_set_option(tp, opts, &remaining);
->  =
+> > 	/* We are in recovery-phase on the MPTCP-level. Do not update the
+> > @@ -1176,7 +1179,9 @@ static inline void mptcp_set_rto(struct sock *sk)
+> > 	if (micsk->icsk_retransmits)
+> > 		return;
+> > =
 
-> +	if (tp->is_mptcp) {
-> +		u64 local_key;
-> +		if (mptcp_syn_options(sk, &local_key)) {
-> +			opts->options |=3D OPTION_MPTCP;
-> +			opts->sndr_key =3D local_key;
-> +			remaining -=3D TCPOLEN_MPTCP_MPC_SYN;
-> +		}
-> +	}
-> +
->  	return MAX_TCP_OPTION_SPACE - remaining;
->  }
->  =
+> > -	mptcp_for_each_sk(tp->mpcb, sk_it) {
+> > +	mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +		struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 		if ((mptcp_sk_can_send(sk_it) || sk->sk_state =3D=3D TCP_SYN_RECV) &&
+> > 		    inet_csk(sk_it)->icsk_rto > max_rto)
+> > 			max_rto =3D inet_csk(sk_it)->icsk_rto;
+> > @@ -1265,10 +1270,10 @@ static inline bool mptcp_can_new_subflow(const =
+struct sock *meta_sk)
+> > =
 
-> @@ -709,6 +746,18 @@ static unsigned int tcp_synack_options(const struct =
-sock *sk,
->  			remaining -=3D need;
->  		}
->  	}
-> +	if (tcp_rsk(req)->is_mptcp) {
-> +		u64 local_key;
-> +		u64 remote_key;
-> +		if (mptcp_synack_options(req, &local_key, &remote_key)) {
-> +			if (remaining >=3D TCPOLEN_MPTCP_MPC_SYNACK) {
-> +				opts->options |=3D OPTION_MPTCP_ACK;
-> +				opts->sndr_key =3D local_key;
-> +				opts->rcvr_key =3D remote_key;
-> +				remaining -=3D TCPOLEN_MPTCP_MPC_SYNACK;
-> +			}
-> +		}
-> +	}
->  =
+> > static inline int mptcp_subflow_count(const struct mptcp_cb *mpcb)
+> > {
+> > -	struct sock *sk;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	int i =3D 0;
+> > =
 
->  	smc_set_option_cond(tcp_sk(sk), ireq, opts, &remaining);
->  =
+> > -	mptcp_for_each_sk(mpcb, sk)
+> > +	mptcp_for_each_sub(mpcb, mptcp)
+> > 		i++;
+> > =
 
-> @@ -757,6 +806,29 @@ static unsigned int tcp_established_options(struct s=
-ock *sk, struct sk_buff *skb
->  			opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
->  	}
->  =
+> > 	return i;
+> > @@ -1286,12 +1291,8 @@ bool mptcp_prune_ofo_queue(struct sock *sk);
+> > 	do {				\
+> > 	} while (0)
+> > =
 
-> +	if (tp->is_mptcp) {
-> +		struct subflow_sock *subflow =3D subflow_sk(sk);
-> +		pr_debug("tcp_established_options: subflow=3D%p", subflow);
-> +		if (subflow->mp_capable) {
-> +			const unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
-> +			pr_debug("tcp_established_options: remaining=3D%d", remaining);
-> +			if (!subflow->fourth_ack) {
-> +				pr_debug("tcp_established_options: OPTION_MPTCP_ACK");
-> +				if (remaining >=3D 20) {
-> +					opts->options |=3D OPTION_MPTCP_ACK;
-> +					opts->sndr_key =3D subflow->local_key;
-> +					opts->rcvr_key =3D subflow->remote_key;
-> +					size +=3D 20;
-> +				}
-> +				subflow->fourth_ack =3D 1;
-> +				// @@ also this is where first DSS goes in?
-> +			}
-> +			else {
-> +				pr_debug("tcp_established_options: OPTION_MPTCP_DSS");
-> +				// @@ send DSS based on remaining
-> +			}
-> +		}
-> +	}
+> > -/* Without MPTCP, we just do one iteration
+> > - * over the only socket available. This assumes that
+> > - * the sk/tp arg is the socket in that case.
+> > - */
+> > -#define mptcp_for_each_sk(mpcb, sk)
+> > -#define mptcp_for_each_sk_safe(__mpcb, __sk, __temp)
+> > +#define mptcp_for_each_sub(__mpcb, __mptcp)					\
+> > +	if (0)
+> > =
 
-You would need to have this code before the SACK-code. Because otherwise
-SACK might fill up the available space and you will end up not writing the
-DSS-option.
+> > #define MPTCP_INC_STATS(net, field)	\
+> > 	do {				\
+> > diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+> > index a58a8fbd6192..4b44aa87af2d 100644
+> > --- a/net/ipv4/af_inet.c
+> > +++ b/net/ipv4/af_inet.c
+> > @@ -744,13 +744,14 @@ int inet_accept(struct socket *sock, struct socke=
+t *newsock, int flags,
+> > 	sock_rps_record_flow(sk2);
+> > =
 
-This also implies that you need to check whether at all there is space for a
-SACK-block.
+> > 	if (sk2->sk_protocol =3D=3D IPPROTO_TCP && mptcp(tcp_sk(sk2))) {
+> > -		struct sock *sk_it =3D sk2;
+> > +		struct mptcp_tcp_sock *mptcp;
+> > =
+
+> > -		mptcp_for_each_sk(tcp_sk(sk2)->mpcb, sk_it)
+> > -			sock_rps_record_flow(sk_it);
+> > +		mptcp_for_each_sub(tcp_sk(sk2)->mpcb, mptcp) {
+> > +			sock_rps_record_flow(mptcp_to_sock(mptcp));
+> > +		}
+> > =
+
+> > 		if (tcp_sk(sk2)->mpcb->master_sk) {
+> > -			sk_it =3D tcp_sk(sk2)->mpcb->master_sk;
+> > +			struct sock *sk_it =3D tcp_sk(sk2)->mpcb->master_sk;
+> > =
+
+> > 			write_lock_bh(&sk_it->sk_callback_lock);
+> > 			sk_it->sk_wq =3D newsock->wq;
+> > diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+> > index 6a41981c276e..eb72cf990876 100644
+> > --- a/net/ipv4/ip_sockglue.c
+> > +++ b/net/ipv4/ip_sockglue.c
+> > @@ -753,8 +753,11 @@ static int do_ip_setsockopt(struct sock *sk, int l=
+evel,
+> > 			sk_dst_reset(sk);
+> > 			/* Update TOS on mptcp subflow */
+> > 			if (is_meta_sk(sk)) {
+> > -				struct sock *sk_it;
+> > -				mptcp_for_each_sk(tcp_sk(sk)->mpcb, sk_it) {
+> > +				struct mptcp_tcp_sock *mptcp;
+> > +
+> > +				mptcp_for_each_sub(tcp_sk(sk)->mpcb, mptcp) {
+> > +					struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 					if (inet_sk(sk_it)->tos !=3D inet_sk(sk)->tos) {
+> > 						inet_sk(sk_it)->tos =3D inet_sk(sk)->tos;
+> > 						sk_it->sk_priority =3D sk->sk_priority;
+> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> > index eeb98619b181..ab17bc222490 100644
+> > --- a/net/ipv4/tcp.c
+> > +++ b/net/ipv4/tcp.c
+> > @@ -813,9 +813,11 @@ ssize_t tcp_splice_read(struct socket *sock, loff_=
+t *ppos,
+> > =
+
+> > #ifdef CONFIG_MPTCP
+> > 	if (mptcp(tcp_sk(sk))) {
+> > -		struct sock *sk_it;
+> > -		mptcp_for_each_sk(tcp_sk(sk)->mpcb, sk_it)
+> > -			sock_rps_record_flow(sk_it);
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +
+> > +		mptcp_for_each_sub(tcp_sk(sk)->mpcb, mptcp) {
+> > +			sock_rps_record_flow(mptcp_to_sock(mptcp));
+> > +		}
+> > 	}
+> > #endif
+> > 	/*
+> > @@ -993,7 +995,7 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct pa=
+ge *page, int offset,
+> > 	}
+> > =
+
+> > 	if (mptcp(tp)) {
+> > -		struct sock *sk_it =3D sk;
+> > +		struct mptcp_tcp_sock *mptcp;
+> > =
+
+> > 		/* We must check this with socket-lock hold because we iterate
+> > 		 * over the subflows.
+> > @@ -1008,8 +1010,9 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct =
+page *page, int offset,
+> > 			return ret;
+> > 		}
+> > =
+
+> > -		mptcp_for_each_sk(tp->mpcb, sk_it)
+> > -			sock_rps_record_flow(sk_it);
+> > +		mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +			sock_rps_record_flow(mptcp_to_sock(mptcp));
+> > +		}
+> > 	}
+> > =
+
+> > 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+> > @@ -1287,9 +1290,11 @@ int tcp_sendmsg_locked(struct sock *sk, struct m=
+sghdr *msg, size_t size)
+> > 	}
+> > =
+
+> > 	if (mptcp(tp)) {
+> > -		struct sock *sk_it =3D sk;
+> > -		mptcp_for_each_sk(tp->mpcb, sk_it)
+> > -			sock_rps_record_flow(sk_it);
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +
+> > +		mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +			sock_rps_record_flow(mptcp_to_sock(mptcp));
+> > +		}
+> > 	}
+> > =
+
+> > 	if (unlikely(tp->repair)) {
+> > @@ -1994,9 +1999,11 @@ int tcp_recvmsg(struct sock *sk, struct msghdr *=
+msg, size_t len, int nonblock,
+> > =
+
+> > #ifdef CONFIG_MPTCP
+> > 	if (mptcp(tp)) {
+> > -		struct sock *sk_it;
+> > -		mptcp_for_each_sk(tp->mpcb, sk_it)
+> > -			sock_rps_record_flow(sk_it);
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +
+> > +		mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +			sock_rps_record_flow(mptcp_to_sock(mptcp));
+> > +		}
+> > 	}
+> > #endif
+> > =
+
+> > diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+> > index 052ae0e052b0..925d05d673d8 100644
+> > --- a/net/mptcp/mptcp_ctrl.c
+> > +++ b/net/mptcp/mptcp_ctrl.c
+> > @@ -553,10 +553,12 @@ void mptcp_hash_remove_bh(struct tcp_sock *meta_t=
+p)
+> > struct sock *mptcp_select_ack_sock(const struct sock *meta_sk)
+> > {
+> > 	const struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> > -	struct sock *sk, *rttsk =3D NULL, *lastsk =3D NULL;
+> > +	struct sock *rttsk =3D NULL, *lastsk =3D NULL;
+> > 	u32 min_time =3D 0, last_active =3D 0;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > =
+
+> > -	mptcp_for_each_sk(meta_tp->mpcb, sk) {
+> > +	mptcp_for_each_sub(meta_tp->mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 		struct tcp_sock *tp =3D tcp_sk(sk);
+> > 		u32 elapsed;
+> > =
+
+> > @@ -689,7 +691,8 @@ void mptcp_sock_destruct(struct sock *sk)
+> > void mptcp_destroy_sock(struct sock *sk)
+> > {
+> > 	if (is_meta_sk(sk)) {
+> > -		struct sock *sk_it, *tmpsk;
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +		struct hlist_node *tmp;
+> > =
+
+> > 		__skb_queue_purge(&tcp_sk(sk)->mpcb->reinject_queue);
+> > =
+
+> > @@ -699,7 +702,9 @@ void mptcp_destroy_sock(struct sock *sk)
+> > 		 * not have been closed properly (as we are waiting for the
+> > 		 * DATA_ACK of the DATA_FIN).
+> > 		 */
+> > -		mptcp_for_each_sk_safe(tcp_sk(sk)->mpcb, sk_it, tmpsk) {
+> > +		mptcp_for_each_sub_safe(tcp_sk(sk)->mpcb, mptcp, tmp) {
+> > +			struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 			/* Already did call tcp_close - waiting for graceful
+> > 			 * closure, or if we are retransmitting fast-close on
+> > 			 * the subflow. The reset (or timeout) will kill the
+> > @@ -1281,6 +1286,7 @@ static int mptcp_alloc_mpcb(struct sock *meta_sk,=
+ __u64 remote_key,
+> > 	INIT_LIST_HEAD(&mpcb->tw_list);
+> > =
+
+> > 	INIT_HLIST_HEAD(&mpcb->callback_list);
+> > +	INIT_HLIST_HEAD(&mpcb->conn_list);
+> > 	spin_lock_init(&mpcb->mpcb_list_lock);
+> > =
+
+> > 	mptcp_mpcb_inherit_sockopts(meta_sk, master_sk);
+> > @@ -1370,8 +1376,12 @@ int mptcp_add_sock(struct sock *meta_sk, struct =
+sock *sk, u8 loc_id, u8 rem_id,
+> > 	sock_hold(meta_sk);
+> > 	refcount_inc(&mpcb->mpcb_refcnt);
+> > =
+
+> > -	tp->mptcp->next =3D mpcb->connection_list;
+> > -	mpcb->connection_list =3D tp;
+> > +	local_bh_disable();
+> > +	spin_lock(&mpcb->mpcb_list_lock);
+> > +	hlist_add_head_rcu(&tp->mptcp->node, &mpcb->conn_list);
+> > +	spin_unlock(&mpcb->mpcb_list_lock);
+> > +	local_bh_enable();
+> =
+
+> I'm curious why the local_bh_disable is required here - I'm assuming it's
+> possible to be called in softirq conext in this function but not where you
+> delete from the list. A comment might help.
+
+Yes, mptcp_add_sock() can be called from both contexts.
+
+I just realize that mptcp_del_sock() can now also be called from both
+contexts. I need to disable bh there as well. spin_lock_bh() /
+spin_unlock_bh() would probably also be a better.
+
+I will submit a separate patch to mptcp_trunk to fix and comment this. That
+way we have the same history on both.
+
+> > +
+> > 	tp->mptcp->attached =3D 1;
+> > =
+
+> > 	atomic_add(atomic_read(&((struct sock *)tp)->sk_rmem_alloc),
+> > @@ -1415,14 +1425,13 @@ int mptcp_add_sock(struct sock *meta_sk, struct=
+ sock *sk, u8 loc_id, u8 rem_id,
+> > =
+
+> > void mptcp_del_sock(struct sock *sk)
+> > {
+> > -	struct tcp_sock *tp =3D tcp_sk(sk), *tp_prev;
+> > +	struct tcp_sock *tp =3D tcp_sk(sk);
+> > 	struct mptcp_cb *mpcb;
+> > =
+
+> > 	if (!tp->mptcp || !tp->mptcp->attached)
+> > 		return;
+> > =
+
+> > 	mpcb =3D tp->mpcb;
+> > -	tp_prev =3D mpcb->connection_list;
+> > =
+
+> > 	if (mpcb->pm_ops->delete_subflow)
+> > 		mpcb->pm_ops->delete_subflow(sk);
+> > @@ -1431,17 +1440,10 @@ void mptcp_del_sock(struct sock *sk)
+> > 		    __func__, mpcb->mptcp_loc_token, tp->mptcp->path_index,
+> > 		    sk->sk_state, is_meta_sk(sk));
+> > =
+
+> > -	if (tp_prev =3D=3D tp) {
+> > -		mpcb->connection_list =3D tp->mptcp->next;
+> > -	} else {
+> > -		for (; tp_prev && tp_prev->mptcp->next; tp_prev =3D tp_prev->mptcp->=
+next) {
+> > -			if (tp_prev->mptcp->next =3D=3D tp) {
+> > -				tp_prev->mptcp->next =3D tp->mptcp->next;
+> > -				break;
+> > -			}
+> > -		}
+> > -	}
+> > -	tp->mptcp->next =3D NULL;
+> > +	spin_lock(&mpcb->mpcb_list_lock);
+> > +	hlist_del_init_rcu(&tp->mptcp->node);
+> > +	spin_unlock(&mpcb->mpcb_list_lock);
+> =
+
+> Is it guaranteed that RCU synchronization happens between here and when
+> the tcp_sock is freed? Do you need to set SOCK_RCU_FREE?
+
+Looking more through this, I think we are good here.
+
+The trick is that traversal of the list actually always happens while
+holding the MPTCP-level lock.
+
+I needed to convert this to RCU so that we can add to the list (without
+holding MPTCP-level lock), while traversing it. Using the hlist guarantees
+that the traversal is going forward.
 
 
+I have some more patches coming now for mptcp_trunk to fix some of the
+fallout after this series here. How do you want to take these
+"forward-ports" ? Do you want me to submit everything (including this set
+here) at once to mptcp-net-next, or do you want to take the sets separately=
+ ?
+
+
+Thanks,
 Christoph
 
->  	return size;
->  }
->  =
 
-> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-> index 5624e7d51d48..2bd18e3b9fda 100644
-> --- a/net/mptcp/Makefile
-> +++ b/net/mptcp/Makefile
-> @@ -1,3 +1,3 @@
->  obj-$(CONFIG_MPTCP) +=3D mptcp.o
->  =
-
-> -mptcp-y :=3D protocol.o
-> +mptcp-y :=3D protocol.o options.o
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> new file mode 100644
-> index 000000000000..2ef7ba20b33b
-> --- /dev/null
-> +++ b/net/mptcp/options.c
-> @@ -0,0 +1,176 @@
-> +/*
-> + * Multipath TCP
-> + *
-> + * Copyright (c) 2017, Intel Corporation.
-> + *
-> + * This program is free software; you can redistribute it and/or modify =
-it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License=
- for
-> + * more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <net/tcp.h>
-> +#include <net/mptcp.h>
-> +
-> +void mptcp_parse_option(const unsigned char *ptr, int opsize,
-> +			struct tcp_options_received *opt_rx)
-> +{
-> +	u8 subtype;
-> +	u64 *p;
-> +
-> +	opsize -=3D 2;
-> +	subtype =3D *ptr++;
-> +
-> +	/* MPTCPOPT_MP_CAPABLE
-> +	 * 0: 4MSB=3Dsubtype, 4LSB=3Dversion
-> +	 * 1: Handshake flags
-> +	 * 2-9: Sender key
-> +	 * 10-17: Receiver key (optional)
-> +	 */
-> +	switch (subtype & 0xF0) {
-> +	case 0x00:
-> +		pr_debug("MP_CAPABLE");
-> +		pr_debug("flags=3D%02x", *ptr);
-> +		opt_rx->mptcp.mp_capable =3D 1;
-> +		opt_rx->mptcp.version =3D subtype & 0x0F;
-> +		opt_rx->mptcp.flags =3D *ptr++;
-> +		p =3D (u64 *)ptr;
-> +		pr_debug("sndr_key=3D%llu", *p);
-> +		opt_rx->mptcp.sndr_key =3D *p++;
-> +		if (opsize > 10) {
-> +			pr_debug("rcvr_key=3D%llu", *p);
-> +			opt_rx->mptcp.rcvr_key =3D *p++;
-> +		}
-> +		break;
-> +
-> +	/* MPTCPOPT_MP_JOIN
-> +	 *
-> +	 * Initial SYN
-> +	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
-> +	 * 1: Address ID
-> +	 * 2-5: Receiver token
-> +	 * 6-9: Sender random number
-> +	 *
-> +	 * SYN/ACK response
-> +	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
-> +	 * 1: Address ID
-> +	 * 2-9: Sender truncated HMAC
-> +	 * 10-13: Sender random number
-> +	 *
-> +	 * Third ACK
-> +	 * 0: 4MSB=3Dsubtype, 0000
-> +	 * 1: 0 (Reserved)
-> +	 * 2-21: Sender HMAC
-> +	 */
-> +
-> +	/* MPTCPOPT_DSS
-> +	 * 0: 4MSB=3Dsubtype, 0000
-> +	 * 1: 3MSB=3D0, F=3DData FIN, m=3DDSN length, M=3Dhas DSN/SSN/DLL/check=
-sum,
-> +	 *    a=3DDACK length, A=3Dhas DACK
-> +	 * 0, 4, or 8 bytes of DACK (depending on A/a)
-> +	 * 0, 4, or 8 bytes of DSN (depending on M/m)
-> +	 * 0 or 4 bytes of SSN (depending on M)
-> +	 * 0 or 2 bytes of DLL (depending on M)
-> +	 * 0 or 2 bytes of checksum (depending on M)
-> +	 */
-> +	case 0x20:
-> +		pr_debug("DSS");
-> +		opt_rx->mptcp.dss =3D 1;
-> +		break;
-> +
-> +	/* MPTCPOPT_ADD_ADDR
-> +	 * 0: 4MSB=3Dsubtype, 4LSB=3DIP version (4 or 6)
-> +	 * 1: Address ID
-> +	 * 4 or 16 bytes of address (depending on ip version)
-> +	 * 0 or 2 bytes of port (depending on length)
-> +	 */
-> +
-> +	/* MPTCPOPT_REMOVE_ADDR
-> +	 * 0: 4MSB=3Dsubtype, 0000
-> +	 * 1: Address ID
-> +	 * Additional bytes: More address IDs (depending on length)
-> +	 */
-> +
-> +	/* MPTCPOPT_MP_PRIO
-> +	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
-> +	 * 1: Address ID (optional, current addr implied if not present)
-> +	 */
-> +
-> +	/* MPTCPOPT_MP_FAIL
-> +	 * 0: 4MSB=3Dsubtype, 0000
-> +	 * 1: 0 (Reserved)
-> +	 * 2-9: DSN
-> +	 */
-> +
-> +	/* MPTCPOPT_MP_FASTCLOSE
-> +	 * 0: 4MSB=3Dsubtype, 0000
-> +	 * 1: 0 (Reserved)
-> +	 * 2-9: Receiver key
-> +	 */
-> +	default:
-> +		break;
-> +	}
-> +}
-> +
-> +void mptcp_get_options(const struct sk_buff *skb,
-> +		       struct tcp_options_received *opt_rx)
-> +{
-> +	const unsigned char *ptr;
-> +	const struct tcphdr *th =3D tcp_hdr(skb);
-> +	int length =3D (th->doff * 4) - sizeof(struct tcphdr);
-> +
-> +	ptr =3D (const unsigned char *)(th + 1);
-> +
-> +	while (length > 0) {
-> +		int opcode =3D *ptr++;
-> +		int opsize;
-> +
-> +		switch (opcode) {
-> +		case TCPOPT_EOL:
-> +			return;
-> +		case TCPOPT_NOP:	/* Ref: RFC 793 section 3.1 */
-> +			length--;
-> +			continue;
-> +		default:
-> +			opsize =3D *ptr++;
-> +			if (opsize < 2) /* "silly options" */
-> +				return;
-> +			if (opsize > length)
-> +				return;	/* don't parse partial options */
-> +			if (opcode =3D=3D TCPOPT_MPTCP)
-> +				mptcp_parse_option(ptr, opsize, opt_rx);
-> +			ptr +=3D opsize - 2;
-> +			length -=3D opsize;
-> +		}
-> +	}
-> +}
-> +
-> +unsigned int mptcp_syn_options(struct sock *sk, u64 *local_key)
-> +{
-> +	struct subflow_sock *subflow =3D subflow_sk(sk);
-> +
-> +	if (subflow->request_mptcp) {
-> +		pr_debug("local_key=3D%llu", subflow->local_key);
-> +		*local_key =3D subflow->local_key;
-> +	}
-> +	return subflow->request_mptcp;
-> +}
-> +
-> +unsigned int mptcp_synack_options(struct request_sock *req, u64 *local_k=
-ey,
-> +				  u64 *remote_key)
-> +{
-> +	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
-> +
-> +	if (subflow_req->mp_capable) {
-> +		*local_key =3D subflow_req->local_key;
-> +		*remote_key =3D subflow_req->remote_key;
-> +		pr_debug("local_key=3D%llu", *local_key);
-> +		pr_debug("remote_key=3D%llu", *remote_key);
-> +	}
-> +	return subflow_req->mp_capable;
-> +}
-> -- =
-
-> 2.17.1
 > =
 
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
+> =
 
---===============8157509782071110719==--
+> Mat
+> =
+
+> =
+
+> > +
+> > 	tp->mptcp->attached =3D 0;
+> > 	mpcb->path_index_bits &=3D ~(1 << tp->mptcp->path_index);
+> > =
+
+> > @@ -1488,8 +1490,8 @@ void mptcp_update_metasocket(const struct sock *m=
+eta_sk)
+> > void mptcp_cleanup_rbuf(struct sock *meta_sk, int copied)
+> > {
+> > 	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> > -	struct sock *sk;
+> > 	bool recheck_rcv_window =3D false;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	__u32 rcv_window_now =3D 0;
+> > =
+
+> > 	if (copied > 0 && !(meta_sk->sk_shutdown & RCV_SHUTDOWN)) {
+> > @@ -1500,7 +1502,8 @@ void mptcp_cleanup_rbuf(struct sock *meta_sk, int=
+ copied)
+> > 			recheck_rcv_window =3D true;
+> > 	}
+> > =
+
+> > -	mptcp_for_each_sk(meta_tp->mpcb, sk) {
+> > +	mptcp_for_each_sub(meta_tp->mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 		struct tcp_sock *tp =3D tcp_sk(sk);
+> > 		const struct inet_connection_sock *icsk =3D inet_csk(sk);
+> > =
+
+> > @@ -1687,10 +1690,13 @@ EXPORT_SYMBOL(mptcp_sub_force_close);
+> >  */
+> > void mptcp_update_sndbuf(const struct tcp_sock *tp)
+> > {
+> > -	struct sock *meta_sk =3D tp->meta_sk, *sk;
+> > +	struct sock *meta_sk =3D tp->meta_sk;
+> > 	int new_sndbuf =3D 0, old_sndbuf =3D meta_sk->sk_sndbuf;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > +
+> > +	mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > =
+
+> > -	mptcp_for_each_sk(tp->mpcb, sk) {
+> > 		if (!mptcp_sk_can_send(sk))
+> > 			continue;
+> > =
+
+> > @@ -1719,8 +1725,8 @@ void mptcp_update_sndbuf(const struct tcp_sock *t=
+p)
+> > void mptcp_close(struct sock *meta_sk, long timeout)
+> > {
+> > 	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> > -	struct sock *sk_it, *tmpsk;
+> > 	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	struct sk_buff *skb;
+> > 	int data_was_unread =3D 0;
+> > 	int state;
+> > @@ -1753,7 +1759,12 @@ void mptcp_close(struct sock *meta_sk, long time=
+out)
+> > =
+
+> > 	/* If socket has been already reset (e.g. in tcp_reset()) - kill it. */
+> > 	if (meta_sk->sk_state =3D=3D TCP_CLOSE) {
+> > -		mptcp_for_each_sk_safe(mpcb, sk_it, tmpsk) {
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +		struct hlist_node *tmp;
+> > +
+> > +		mptcp_for_each_sub_safe(mpcb, mptcp, tmp) {
+> > +			struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 			if (tcp_sk(sk_it)->send_mp_fclose)
+> > 				continue;
+> > 			mptcp_sub_close(sk_it, 0);
+> > @@ -1774,10 +1785,14 @@ void mptcp_close(struct sock *meta_sk, long tim=
+eout)
+> > 	} else if (tcp_close_state(meta_sk)) {
+> > 		mptcp_send_fin(meta_sk);
+> > 	} else if (meta_tp->snd_una =3D=3D meta_tp->write_seq) {
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +		struct hlist_node *tmp;
+> > +
+> > 		/* The DATA_FIN has been sent and acknowledged
+> > 		 * (e.g., by sk_shutdown). Close all the other subflows
+> > 		 */
+> > -		mptcp_for_each_sk_safe(mpcb, sk_it, tmpsk) {
+> > +		mptcp_for_each_sub_safe(mpcb, mptcp, tmp) {
+> > +			struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > 			unsigned long delay =3D 0;
+> > 			/* If we are the passive closer, don't trigger
+> > 			 * subflow-fin until the subflow has been finned
+> > @@ -1801,7 +1816,9 @@ void mptcp_close(struct sock *meta_sk, long timeo=
+ut)
+> > 	/* socket will be freed after mptcp_close - we have to prevent
+> > 	 * access from the subflows.
+> > 	 */
+> > -	mptcp_for_each_sk(mpcb, sk_it) {
+> > +	mptcp_for_each_sub(mpcb, mptcp) {
+> > +		struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 		/* Similar to sock_orphan, but we don't set it DEAD, because
+> > 		 * the callbacks are still set and must be called.
+> > 		 */
+> > @@ -1886,8 +1903,9 @@ void mptcp_close(struct sock *meta_sk, long timeo=
+ut)
+> > =
+
+> > void mptcp_disconnect(struct sock *sk)
+> > {
+> > -	struct sock *subsk, *tmpsk;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	struct tcp_sock *tp =3D tcp_sk(sk);
+> > +	struct hlist_node *tmp;
+> > =
+
+> > 	__skb_queue_purge(&tp->mpcb->reinject_queue);
+> > =
+
+> > @@ -1895,7 +1913,9 @@ void mptcp_disconnect(struct sock *sk)
+> > 		mptcp_hash_remove_bh(tp);
+> > =
+
+> > 	local_bh_disable();
+> > -	mptcp_for_each_sk_safe(tp->mpcb, subsk, tmpsk) {
+> > +	mptcp_for_each_sub_safe(tp->mpcb, mptcp, tmp) {
+> > +		struct sock *subsk =3D mptcp_to_sock(mptcp);
+> > +
+> > 		/* The socket will get removed from the subsocket-list
+> > 		 * and made non-mptcp by setting mpc to 0.
+> > 		 *
+> > @@ -2579,7 +2599,6 @@ static void mptcp_get_sub_info(struct sock *sk, s=
+truct mptcp_sub_info *info)
+> > int mptcp_get_info(const struct sock *meta_sk, char __user *optval, int=
+ optlen)
+> > {
+> > 	const struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> > -	struct sock *sk;
+> > =
+
+> > 	struct mptcp_meta_info meta_info;
+> > 	struct mptcp_info m_info;
+> > @@ -2625,16 +2644,17 @@ int mptcp_get_info(const struct sock *meta_sk, =
+char __user *optval, int optlen)
+> > =
+
+> > 	if (m_info.subflows) {
+> > 		unsigned int len, sub_len =3D 0;
+> > +		struct mptcp_tcp_sock *mptcp;
+> > 		char __user *ptr;
+> > =
+
+> > 		ptr =3D (char __user *)m_info.subflows;
+> > 		len =3D m_info.sub_len;
+> > =
+
+> > -		mptcp_for_each_sk(meta_tp->mpcb, sk) {
+> > +		mptcp_for_each_sub(meta_tp->mpcb, mptcp) {
+> > 			struct tcp_info t_info;
+> > 			unsigned int tmp_len;
+> > =
+
+> > -			tcp_get_info(sk, &t_info);
+> > +			tcp_get_info(mptcp_to_sock(mptcp), &t_info);
+> > =
+
+> > 			tmp_len =3D min_t(unsigned int, len, info_len);
+> > 			len -=3D tmp_len;
+> > @@ -2654,6 +2674,7 @@ int mptcp_get_info(const struct sock *meta_sk, ch=
+ar __user *optval, int optlen)
+> > =
+
+> > 	if (m_info.subflow_info) {
+> > 		unsigned int len, sub_info_len, total_sub_info_len =3D 0;
+> > +		struct mptcp_tcp_sock *mptcp;
+> > 		char __user *ptr;
+> > =
+
+> > 		ptr =3D (char __user *)m_info.subflow_info;
+> > @@ -2663,11 +2684,11 @@ int mptcp_get_info(const struct sock *meta_sk, =
+char __user *optval, int optlen)
+> > 				     sizeof(struct mptcp_sub_info));
+> > 		m_info.sub_info_len =3D sub_info_len;
+> > =
+
+> > -		mptcp_for_each_sk(meta_tp->mpcb, sk) {
+> > +		mptcp_for_each_sub(meta_tp->mpcb, mptcp) {
+> > 			struct mptcp_sub_info m_sub_info;
+> > 			unsigned int tmp_len;
+> > =
+
+> > -			mptcp_get_sub_info(sk, &m_sub_info);
+> > +			mptcp_get_sub_info(mptcp_to_sock(mptcp), &m_sub_info);
+> > =
+
+> > 			tmp_len =3D min_t(unsigned int, len, sub_info_len);
+> > 			len -=3D tmp_len;
+> > diff --git a/net/mptcp/mptcp_fullmesh.c b/net/mptcp/mptcp_fullmesh.c
+> > index d29102a1dffb..53c1ba7319f5 100644
+> > --- a/net/mptcp/mptcp_fullmesh.c
+> > +++ b/net/mptcp/mptcp_fullmesh.c
+> > @@ -903,8 +903,9 @@ static void mptcp_address_worker(struct work_struct=
+ *work)
+> > 			}
+> > =
+
+> > 			if (event->code =3D=3D MPTCP_EVENT_DEL) {
+> > -				struct sock *sk, *tmpsk;
+> > +				struct mptcp_tcp_sock *mptcp;
+> > 				struct mptcp_loc_addr *mptcp_local;
+> > +				struct hlist_node *tmp;
+> > 				bool found =3D false;
+> > =
+
+> > 				mptcp_local =3D rcu_dereference_bh(fm_ns->local);
+> > @@ -914,7 +915,9 @@ static void mptcp_address_worker(struct work_struct=
+ *work)
+> > 					update_addr_bitfields(meta_sk, mptcp_local);
+> > =
+
+> > 				/* Look for the socket and remove him */
+> > -				mptcp_for_each_sk_safe(mpcb, sk, tmpsk) {
+> > +				mptcp_for_each_sub_safe(mpcb, mptcp, tmp) {
+> > +					struct sock *sk =3D mptcp_to_sock(mptcp);
+> > +
+> > 					if ((event->family =3D=3D AF_INET6 &&
+> > 					     (sk->sk_family =3D=3D AF_INET ||
+> > 					      mptcp_v6_is_v4_mapped(sk))) ||
+> > @@ -964,9 +967,10 @@ static void mptcp_address_worker(struct work_struc=
+t *work)
+> > 			}
+> > =
+
+> > 			if (event->code =3D=3D MPTCP_EVENT_MOD) {
+> > -				struct sock *sk;
+> > +				struct mptcp_tcp_sock *mptcp;
+> > =
+
+> > -				mptcp_for_each_sk(mpcb, sk) {
+> > +				mptcp_for_each_sub(mpcb, mptcp) {
+> > +					struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 					struct tcp_sock *tp =3D tcp_sk(sk);
+> > 					if (event->family =3D=3D AF_INET &&
+> > 					    (sk->sk_family =3D=3D AF_INET ||
+> > @@ -1455,8 +1459,9 @@ static void full_mesh_release_sock(struct sock *m=
+eta_sk)
+> > 	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+> > 	struct fullmesh_priv *fmp =3D fullmesh_get_priv(mpcb);
+> > 	const struct mptcp_fm_ns *fm_ns =3D fm_get_ns(sock_net(meta_sk));
+> > -	struct sock *sk, *tmpsk;
+> > 	bool meta_v4 =3D meta_sk->sk_family =3D=3D AF_INET;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > +	struct hlist_node *tmp;
+> > 	int i;
+> > =
+
+> > 	rcu_read_lock_bh();
+> > @@ -1470,7 +1475,8 @@ static void full_mesh_release_sock(struct sock *m=
+eta_sk)
+> > 		struct in_addr ifa =3D mptcp_local->locaddr4[i].addr;
+> > 		bool found =3D false;
+> > =
+
+> > -		mptcp_for_each_sk(mpcb, sk) {
+> > +		mptcp_for_each_sub(mpcb, mptcp) {
+> > +			struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 			struct tcp_sock *tp =3D tcp_sk(sk);
+> > =
+
+> > 			if (sk->sk_family =3D=3D AF_INET6 &&
+> > @@ -1491,6 +1497,8 @@ static void full_mesh_release_sock(struct sock *m=
+eta_sk)
+> > 		}
+> > =
+
+> > 		if (!found) {
+> > +			struct sock *sk;
+> > +
+> > 			fmp->add_addr++;
+> > 			mpcb->addr_signal =3D 1;
+> > =
+
+> > @@ -1511,7 +1519,8 @@ static void full_mesh_release_sock(struct sock *m=
+eta_sk)
+> > 		struct in6_addr ifa =3D mptcp_local->locaddr6[i].addr;
+> > 		bool found =3D false;
+> > =
+
+> > -		mptcp_for_each_sk(mpcb, sk) {
+> > +		mptcp_for_each_sub(mpcb, mptcp) {
+> > +			struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 			struct tcp_sock *tp =3D tcp_sk(sk);
+> > =
+
+> > 			if (sk->sk_family =3D=3D AF_INET ||
+> > @@ -1532,6 +1541,8 @@ static void full_mesh_release_sock(struct sock *m=
+eta_sk)
+> > 		}
+> > =
+
+> > 		if (!found) {
+> > +			struct sock *sk;
+> > +
+> > 			fmp->add_addr++;
+> > 			mpcb->addr_signal =3D 1;
+> > =
+
+> > @@ -1546,7 +1557,8 @@ static void full_mesh_release_sock(struct sock *m=
+eta_sk)
+> > #endif
+> > =
+
+> > 	/* Now, detect address-removals */
+> > -	mptcp_for_each_sk_safe(mpcb, sk, tmpsk) {
+> > +	mptcp_for_each_sub_safe(mpcb, mptcp, tmp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 		bool shall_remove =3D true;
+> > =
+
+> > 		if (sk->sk_family =3D=3D AF_INET || mptcp_v6_is_v4_mapped(sk)) {
+> > diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
+> > index 211605347f70..64b0265bfd06 100644
+> > --- a/net/mptcp/mptcp_input.c
+> > +++ b/net/mptcp/mptcp_input.c
+> > @@ -126,12 +126,14 @@ static void mptcp_clean_rtx_queue(struct sock *me=
+ta_sk, u32 prior_snd_una)
+> > 		tcp_rtx_queue_unlink(skb, meta_sk);
+> > =
+
+> > 		if (mptcp_is_data_fin(skb)) {
+> > -			struct sock *sk_it, *sk_tmp;
+> > +			struct mptcp_tcp_sock *mptcp;
+> > +			struct hlist_node *tmp;
+> > =
+
+> > 			/* DATA_FIN has been acknowledged - now we can close
+> > 			 * the subflows
+> > 			 */
+> > -			mptcp_for_each_sk_safe(mpcb, sk_it, sk_tmp) {
+> > +			mptcp_for_each_sub_safe(mpcb, mptcp, tmp) {
+> > +				struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > 				unsigned long delay =3D 0;
+> > =
+
+> > 				/* If we are the passive closer, don't trigger
+> > @@ -347,6 +349,7 @@ static int mptcp_verif_dss_csum(struct sock *sk)
+> > =
+
+> > 	/* Now, checksum must be 0 */
+> > 	if (unlikely(csum_fold(csum_tcp))) {
+> > +		struct mptcp_tcp_sock *mptcp;
+> > 		struct sock *sk_it =3D NULL;
+> > =
+
+> > 		pr_err("%s csum is wrong: %#x tcp-seq %u dss_csum_added %d overflowed=
+ %d iterations %d\n",
+> > @@ -362,7 +365,9 @@ static int mptcp_verif_dss_csum(struct sock *sk)
+> > 		tp->mpcb->csum_cutoff_seq =3D tp->mptcp->map_data_seq;
+> > =
+
+> > 		/* Search for another subflow that is fully established */
+> > -		mptcp_for_each_sk(tp->mpcb, sk_it) {
+> > +		mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +			sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 			if (sk_it !=3D sk &&
+> > 			    tcp_sk(sk_it)->mptcp->fully_established)
+> > 				break;
+> > @@ -1308,12 +1313,15 @@ int mptcp_do_join_short(struct sk_buff *skb,
+> >  */
+> > void mptcp_fin(struct sock *meta_sk)
+> > {
+> > -	struct sock *sk =3D NULL, *sk_it;
+> > +	struct sock *sk =3D NULL;
+> > 	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> > 	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	unsigned char state;
+> > =
+
+> > -	mptcp_for_each_sk(mpcb, sk_it) {
+> > +	mptcp_for_each_sub(mpcb, mptcp) {
+> > +		struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 		if (tcp_sk(sk_it)->mptcp->path_index =3D=3D mpcb->dfin_path_index) {
+> > 			sk =3D sk_it;
+> > 			break;
+> > @@ -1585,9 +1593,12 @@ void mptcp_clean_rtx_infinite(const struct sk_bu=
+ff *skb, struct sock *sk)
+> > =
+
+> > static void mptcp_send_reset_rem_id(const struct mptcp_cb *mpcb, u8 rem=
+_id)
+> > {
+> > -	struct sock *sk_it, *tmpsk;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > +	struct hlist_node *tmp;
+> > +
+> > +	mptcp_for_each_sub_safe(mpcb, mptcp, tmp) {
+> > +		struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > =
+
+> > -	mptcp_for_each_sk_safe(mpcb, sk_it, tmpsk) {
+> > 		if (tcp_sk(sk_it)->mptcp->rem_id =3D=3D rem_id) {
+> > 			mptcp_reinject_data(sk_it, 0);
+> > 			mptcp_send_reset(sk_it);
+> > @@ -1892,13 +1903,15 @@ void tcp_parse_mptcp_options(const struct sk_bu=
+ff *skb,
+> > bool mptcp_check_rtt(const struct tcp_sock *tp, int time)
+> > {
+> > 	struct mptcp_cb *mpcb =3D tp->mpcb;
+> > -	struct sock *sk;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	u32 rtt_max =3D 0;
+> > =
+
+> > 	/* In MPTCP, we take the max delay across all flows,
+> > 	 * in order to take into account meta-reordering buffers.
+> > 	 */
+> > -	mptcp_for_each_sk(mpcb, sk) {
+> > +	mptcp_for_each_sub(mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > +
+> > 		if (!mptcp_sk_can_recv(sk))
+> > 			continue;
+> > =
+
+> > @@ -2173,9 +2186,9 @@ bool mptcp_handle_options(struct sock *sk, const =
+struct tcphdr *th,
+> > 		if (mopt->saw_low_prio =3D=3D 1) {
+> > 			tp->mptcp->rcv_low_prio =3D mopt->low_prio;
+> > 		} else {
+> > -			struct sock *sk_it;
+> > -			mptcp_for_each_sk(tp->mpcb, sk_it) {
+> > -				struct mptcp_tcp_sock *mptcp =3D tcp_sk(sk_it)->mptcp;
+> > +			struct mptcp_tcp_sock *mptcp;
+> > +
+> > +			mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > 				if (mptcp->rem_id =3D=3D mopt->prio_addr_id)
+> > 					mptcp->rcv_low_prio =3D mopt->low_prio;
+> > 			}
+> > @@ -2359,7 +2372,7 @@ bool mptcp_should_expand_sndbuf(const struct sock=
+ *sk)
+> > {
+> > 	const struct sock *meta_sk =3D mptcp_meta_sk(sk);
+> > 	const struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> > -	const struct sock *sk_it;
+> > +	const struct mptcp_tcp_sock *mptcp;
+> > =
+
+> > 	/* We circumvent this check in tcp_check_space, because we want to
+> > 	 * always call sk_write_space. So, we reproduce the check here.
+> > @@ -2385,8 +2398,9 @@ bool mptcp_should_expand_sndbuf(const struct sock=
+ *sk)
+> > 	/* For MPTCP we look for a subsocket that could send data.
+> > 	 * If we found one, then we update the send-buffer.
+> > 	 */
+> > -	mptcp_for_each_sk(meta_tp->mpcb, sk_it) {
+> > -		struct tcp_sock *tp_it =3D tcp_sk(sk_it);
+> > +	mptcp_for_each_sub(meta_tp->mpcb, mptcp) {
+> > +		const struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +		const struct tcp_sock *tp_it =3D tcp_sk(sk_it);
+> > =
+
+> > 		if (!mptcp_sk_can_send(sk_it))
+> > 			continue;
+> > diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+> > index 4b88b32d5954..12733ba2c1e1 100644
+> > --- a/net/mptcp/mptcp_output.c
+> > +++ b/net/mptcp/mptcp_output.c
+> > @@ -644,7 +644,6 @@ int mptcp_write_wakeup(struct sock *meta_sk, int mi=
+b)
+> > {
+> > 	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+> > 	struct sk_buff *skb;
+> > -	struct sock *sk_it;
+> > 	int ans =3D 0;
+> > =
+
+> > 	if (meta_sk->sk_state =3D=3D TCP_CLOSE)
+> > @@ -701,17 +700,22 @@ int mptcp_write_wakeup(struct sock *meta_sk, int =
+mib)
+> > =
+
+> > 		return 0;
+> > 	} else {
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +
+> > window_probe:
+> > 		if (between(meta_tp->snd_up, meta_tp->snd_una + 1,
+> > 			    meta_tp->snd_una + 0xFFFF)) {
+> > -			mptcp_for_each_sk(meta_tp->mpcb, sk_it) {
+> > +			mptcp_for_each_sub(meta_tp->mpcb, mptcp) {
+> > +				struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > +
+> > 				if (mptcp_sk_can_send_ack(sk_it))
+> > 					tcp_xmit_probe_skb(sk_it, 1, mib);
+> > 			}
+> > 		}
+> > =
+
+> > 		/* At least one of the tcp_xmit_probe_skb's has to succeed */
+> > -		mptcp_for_each_sk(meta_tp->mpcb, sk_it) {
+> > +		mptcp_for_each_sub(meta_tp->mpcb, mptcp) {
+> > +			struct sock *sk_it =3D mptcp_to_sock(mptcp);
+> > 			int ret;
+> > =
+
+> > 			if (!mptcp_sk_can_send_ack(sk_it))
+> > @@ -729,6 +733,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigne=
+d int mss_now, int nonagle,
+> > 		     int push_one, gfp_t gfp)
+> > {
+> > 	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk), *subtp;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	struct sock *subsk =3D NULL;
+> > 	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
+> > 	struct sk_buff *skb;
+> > @@ -853,7 +858,8 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigne=
+d int mss_now, int nonagle,
+> > 			break;
+> > 	}
+> > =
+
+> > -	mptcp_for_each_sk(mpcb, subsk) {
+> > +	mptcp_for_each_sub(mpcb, mptcp) {
+> > +		subsk =3D mptcp_to_sock(mptcp);
+> > 		subtp =3D tcp_sk(subsk);
+> > =
+
+> > 		if (!(path_mask & mptcp_pi_to_flag(subtp->mptcp->path_index)))
+> > @@ -1350,7 +1356,7 @@ void mptcp_send_active_reset(struct sock *meta_sk=
+, gfp_t priority)
+> > 	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
+> > 	struct sock *sk;
+> > =
+
+> > -	if (!mpcb->connection_list)
+> > +	if (hlist_empty(&mpcb->conn_list))
+> > 		return;
+> > =
+
+> > 	WARN_ON(meta_tp->send_mp_fclose);
+> > @@ -1725,10 +1731,11 @@ void mptcp_select_initial_window(const struct s=
+ock *sk, int __space, __u32 mss,
+> > static inline u64 mptcp_calc_rate(const struct sock *meta_sk, unsigned =
+int mss,
+> > 				  unsigned int (*mss_cb)(struct sock *sk))
+> > {
+> > -	struct sock *sk;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	u64 rate =3D 0;
+> > =
+
+> > -	mptcp_for_each_sk(tcp_sk(meta_sk)->mpcb, sk) {
+> > +	mptcp_for_each_sub(tcp_sk(meta_sk)->mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 		struct tcp_sock *tp =3D tcp_sk(sk);
+> > 		int this_mss;
+> > 		u64 this_rate;
+> > @@ -1780,11 +1787,12 @@ static inline u64 mptcp_calc_rate(const struct =
+sock *meta_sk, unsigned int mss,
+> > static unsigned int __mptcp_current_mss(const struct sock *meta_sk,
+> > 					unsigned int (*mss_cb)(struct sock *sk))
+> > {
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	unsigned int mss =3D 0;
+> > 	u64 rate =3D 0;
+> > -	struct sock *sk;
+> > =
+
+> > -	mptcp_for_each_sk(tcp_sk(meta_sk)->mpcb, sk) {
+> > +	mptcp_for_each_sub(tcp_sk(meta_sk)->mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 		int this_mss;
+> > 		u64 this_rate;
+> > =
+
+> > @@ -1849,14 +1857,16 @@ int mptcp_select_size(const struct sock *meta_s=
+k, bool first_skb, bool zc)
+> > =
+
+> > int mptcp_check_snd_buf(const struct tcp_sock *tp)
+> > {
+> > -	const struct sock *sk;
+> > +	const struct mptcp_tcp_sock *mptcp;
+> > 	u32 rtt_max =3D tp->srtt_us;
+> > 	u64 bw_est;
+> > =
+
+> > 	if (!tp->srtt_us)
+> > 		return tp->reordering + 1;
+> > =
+
+> > -	mptcp_for_each_sk(tp->mpcb, sk) {
+> > +	mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +		const struct sock *sk =3D mptcp_to_sock(mptcp);
+> > +
+> > 		if (!mptcp_sk_can_send(sk))
+> > 			continue;
+> > =
+
+> > @@ -1874,11 +1884,13 @@ int mptcp_check_snd_buf(const struct tcp_sock *=
+tp)
+> > unsigned int mptcp_xmit_size_goal(const struct sock *meta_sk, u32 mss_n=
+ow,
+> > 				  int large_allowed)
+> > {
+> > -	struct sock *sk;
+> > 	u32 xmit_size_goal =3D 0;
+> > =
+
+> > 	if (large_allowed && !tcp_sk(meta_sk)->mpcb->dss_csum) {
+> > -		mptcp_for_each_sk(tcp_sk(meta_sk)->mpcb, sk) {
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +
+> > +		mptcp_for_each_sub(tcp_sk(meta_sk)->mpcb, mptcp) {
+> > +			struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 			int this_size_goal;
+> > =
+
+> > 			if (!mptcp_sk_can_send(sk))
+> > diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
+> > index a2543c60bd31..b440df7aae71 100644
+> > --- a/net/mptcp/mptcp_sched.c
+> > +++ b/net/mptcp/mptcp_sched.c
+> > @@ -135,9 +135,10 @@ static struct sock
+> > 	u32 min_srtt =3D 0xffffffff;
+> > 	bool found_unused =3D false;
+> > 	bool found_unused_una =3D false;
+> > -	struct sock *sk;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > =
+
+> > -	mptcp_for_each_sk(mpcb, sk) {
+> > +	mptcp_for_each_sub(mpcb, mptcp) {
+> > +		struct sock *sk =3D mptcp_to_sock(mptcp);
+> > 		struct tcp_sock *tp =3D tcp_sk(sk);
+> > 		bool unused =3D false;
+> > =
+
+> > @@ -219,7 +220,11 @@ static struct sock *get_available_subflow(struct s=
+ock *meta_sk,
+> > 	/* Answer data_fin on same subflow!!! */
+> > 	if (meta_sk->sk_shutdown & RCV_SHUTDOWN &&
+> > 	    skb && mptcp_is_data_fin(skb)) {
+> > -		mptcp_for_each_sk(mpcb, sk) {
+> > +		struct mptcp_tcp_sock *mptcp;
+> > +
+> > +		mptcp_for_each_sub(mpcb, mptcp) {
+> > +			sk =3D mptcp_to_sock(mptcp);
+> > +
+> > 			if (tcp_sk(sk)->mptcp->path_index =3D=3D mpcb->dfin_path_index &&
+> > 			    mptcp_is_available(sk, skb, zero_wnd_test))
+> > 				return sk;
+> > @@ -252,7 +257,7 @@ static struct sk_buff *mptcp_rcv_buf_optimization(s=
+truct sock *sk, int penal)
+> > {
+> > 	struct sock *meta_sk;
+> > 	const struct tcp_sock *tp =3D tcp_sk(sk);
+> > -	struct tcp_sock *tp_it;
+> > +	struct mptcp_tcp_sock *mptcp;
+> > 	struct sk_buff *skb_head;
+> > 	struct defsched_priv *dsp =3D defsched_get_priv(tp);
+> > =
+
+> > @@ -275,7 +280,9 @@ static struct sk_buff *mptcp_rcv_buf_optimization(s=
+truct sock *sk, int penal)
+> > 		goto retrans;
+> > =
+
+> > 	/* Half the cwnd of the slow flow */
+> > -	mptcp_for_each_tp(tp->mpcb, tp_it) {
+> > +	mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +		struct tcp_sock *tp_it =3D mptcp->tp;
+> > +
+> > 		if (tp_it !=3D tp &&
+> > 		    TCP_SKB_CB(skb_head)->path_mask & mptcp_pi_to_flag(tp_it->mptcp->=
+path_index)) {
+> > 			if (tp->srtt_us < tp_it->srtt_us && inet_csk((struct sock *)tp_it)->=
+icsk_ca_state =3D=3D TCP_CA_Open) {
+> > @@ -298,7 +305,9 @@ static struct sk_buff *mptcp_rcv_buf_optimization(s=
+truct sock *sk, int penal)
+> > 	/* Segment not yet injected into this path? Take it!!! */
+> > 	if (!(TCP_SKB_CB(skb_head)->path_mask & mptcp_pi_to_flag(tp->mptcp->pa=
+th_index))) {
+> > 		bool do_retrans =3D false;
+> > -		mptcp_for_each_tp(tp->mpcb, tp_it) {
+> > +		mptcp_for_each_sub(tp->mpcb, mptcp) {
+> > +			struct tcp_sock *tp_it =3D mptcp->tp;
+> > +
+> > 			if (tp_it !=3D tp &&
+> > 			    TCP_SKB_CB(skb_head)->path_mask & mptcp_pi_to_flag(tp_it->mptcp-=
+>path_index)) {
+> > 				if (tp_it->snd_cwnd <=3D 4) {
+> > -- =
+
+> > 2.16.2
+> > =
+
+> > =
+
+> =
+
+> --
+> Mat Martineau
+> Intel OTC
+
+--===============1491064707302180562==--
