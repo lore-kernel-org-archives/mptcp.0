@@ -1,91 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============9222306621153005259=="
+Content-Type: multipart/mixed; boundary="===============8223270830029163742=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 13th of June 2018
-Date: Wed, 13 Jun 2018 19:26:55 +0200
-Message-ID: <2a5cd561-4e70-968d-0923-f5d25da563d6@tessares.net>
+Subject: [MPTCP] Weekly meeting - 26 June 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Mon, 25 Jun 2018 15:47:23 +0200
+Message-ID: <922868d1-6741-1e2f-88d7-37f66ebd0c9a@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 670
+X-UID: 671
 
---===============9222306621153005259==
+--===============8223270830029163742==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-We just had our 13th meeting with Mat, Peter (Intel OTC), Christoph
-(Apple) and myself (Tessares).
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow, exceptionally on a Tuesday.
 
-Thanks again for this new good meeting!
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180626
+Feel free to add/modify topics!
 
+Meeting link: https://talky.io/mptcp_upstreaming
 
+Speak to you tomorrow!
 
-Here are the minutes of the meeting:
-
-
-
-Netconf:
-    - Some summaries are available, interesting reading:
-https://lwn.net/Articles/757204/
-
-
-
-Mat and Peter's patches:
-    - discussions started
-    - but we need more time to review them, sorry
-    - Feel free to review them!
-
-
-
-Netdev conf:
-    - The paper is almost finish, next to the end.
-    - (discussions about it continued on the paper directly)
-    - Feel free to read it and comment it!
-
-
-
-Linux Plumber conf:
-    - we will need to write a description for the end of this month if
-we want to participate.
-    - we first need to agree about what to present.
-    - in November: we should have more concrete code, current RFC code
-should be somewhere, we hope having more technical details to present.
-    - there, we could come with more technical ideas, maybe already
-mentioning them in the description.
-    - we should think about that the coming week to finalise something
-at the next meeting, ~300 words.
-    - deadline: just before Netdev (~11th July)
-
-
-
-Next steps:
-    - Netdev conf: slides + paper: we should have a first draft for the
-next meeting. Continue the discussions on the ML.
-    - Linux Plumber conf: discuss about the description in more details
-and hope to have ~300 words to send.
-    - Mat and Peter's patches: review and discussion should continue on
-the ML.
-    - As usual, update the wiki if there are new stuffs to put in!
-
-
-
-Next meeting:
-    - We propose to exceptionally switch to next Tuesday next time: the
-26th of June. Usual time 9am PDT - 16:00 UTC (9am PDT, 6pm CEST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20180626
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-
-Talk to you next week,
 Matthieu
 -- =
 
@@ -122,4 +63,4 @@ or taking any action in reliance on the contents of this information is =
 
 strictly prohibited.
 
---===============9222306621153005259==--
+--===============8223270830029163742==--
