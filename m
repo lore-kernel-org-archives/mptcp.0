@@ -1,32 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============6942025973114810821=="
+Content-Type: multipart/mixed; boundary="===============2192833464419204217=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 5 July 2018 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 04 Jul 2018 19:40:56 +0200
-Message-ID: <c87edf4f-298b-4e20-6330-a1aa1b7238fb@tessares.net>
+Subject: [MPTCP] [Weekly meetings] MoM - 5th of July 2018
+Date: Thu, 05 Jul 2018 19:54:34 +0200
+Message-ID: <672b26fd-ecf9-1a95-1235-5d10657c99b5@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 673
+X-UID: 674
 
---===============6942025973114810821==
+--===============2192833464419204217==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+We just had our 14th meeting with Mat, Ossama, Peter (Intel OTC),
+Christoph (Apple) and myself (Tessares).
 
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180705
-Feel free to add/modify topics!
+Thanks again for this new good meeting!
 
-Meeting link: https://talky.io/mptcp_upstreaming
 
-Speak to you tomorrow!
 
+Here are the minutes of the meeting:
+
+
+
+Netdev paper:
+    - We just fixed a few details about the phrasing
+    - Remaining topic: the introduction that Olivier would like to improve.
+    - Matthieu: will send a new version tomorrow (still possible to do
+some corrections, even next week, but just in case we forget!)
+
+
+
+Netdev Slides:
+    - We did some comments directly on the slides
+    - Matthieu: will send a new version on Monday, just in case we forget
+
+
+
+Netdev in Montreal:
+    - if you want to discuss about MPTCP, feel free to contact one of us
+going there or on the ML!
+
+
+
+Linux Plumber conf:
+    - we will focus on technical aspects, maybe focus in changes in TCP
+core (and struct skbuff?)
+    - Mat and Peter will look at producing a description this end of the
+week.
+
+
+
+Next steps:
+    - Matthieu:
+        - paper: improve the introduction with Olivier
+        - slides: removed last TODO in the slides
+        - re-check the timing with a dry-run
+    - Christoph & Matthieu: support Belgium soccer team tomorrow!
+    - Mat:
+        - slides: improve his part, maybe add some parts in the backup
+slides desk
+        - slides: dry-run and check the timing
+        - Linux Plumber Conf: prepare a description with Peter.
+    - Mat and Peter's patches: review and discussion should continue on
+the ML.
+    - As usual, update the wiki if there are new stuffs to put in!
+
+
+
+Next meeting:
+    - There will no be any meeting next week online but many on site
+    - It can change but next one should be the 19th of July. Usual time
+9am PDT - 16:00 UTC (9am PDT, 6pm CEST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20180719
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+
+Talk to you next week,
 Matthieu
 -- =
 
@@ -63,4 +123,4 @@ or taking any action in reliance on the contents of this information is =
 
 strictly prohibited.
 
---===============6942025973114810821==--
+--===============2192833464419204217==--
