@@ -1,83 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============6969711035158893354=="
+Content-Type: multipart/mixed; boundary="===============5825129334184405454=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/2] mptcp: Fix: Correct version-negotiation when
- SYN-cookies are set
-Date: Tue, 24 Jul 2018 16:49:39 -0700
-Message-ID: <20180724234940.62909-2-cpaasch@apple.com>
-In-Reply-To: 20180724234940.62909-1-cpaasch@apple.com
+Subject: [MPTCP] Weekly meeting - 26 July 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 25 Jul 2018 17:36:44 +0200
+Message-ID: <da214e9a-0afe-e8cf-a202-d879b5661aec@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 686
+X-UID: 687
 
---===============6969711035158893354==
+--===============5825129334184405454==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We need to check for the negotiated version when SYN-cookies are set.
+Hello,
 
-Fixes: c9b4b66a0e54 ("mptcp: Add MPTCP version control")
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit 8b053971270731059387a5f3cefb502800871d9b)
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- net/mptcp/mptcp_ctrl.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
-index 8c807c7681b6..7f7b4a0f2ee1 100644
---- a/net/mptcp/mptcp_ctrl.c
-+++ b/net/mptcp/mptcp_ctrl.c
-@@ -297,6 +297,7 @@ static void mptcp_reqsk_new_mptcp(struct request_sock *=
-req,
- 	const struct tcp_sock *tp =3D tcp_sk(sk);
- =
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180726
+Feel free to add/modify topics!
 
- 	inet_rsk(req)->saw_mpc =3D 1;
-+
- 	/* MPTCP version agreement */
- 	if (mopt->mptcp_ver >=3D tp->mptcp_ver)
- 		mtreq->mptcp_ver =3D tp->mptcp_ver;
-@@ -316,11 +317,18 @@ static void mptcp_reqsk_new_mptcp(struct request_sock=
- *req,
- }
- =
+Meeting link: https://talky.io/mptcp_upstreaming
 
- static int mptcp_reqsk_new_cookie(struct request_sock *req,
-+				  const struct sock *sk,
- 				  const struct mptcp_options_received *mopt,
- 				  const struct sk_buff *skb)
- {
- 	struct mptcp_request_sock *mtreq =3D mptcp_rsk(req);
- =
+Speak to you tomorrow!
 
-+	/* MPTCP version agreement */
-+	if (mopt->mptcp_ver >=3D tcp_sk(sk)->mptcp_ver)
-+		mtreq->mptcp_ver =3D tcp_sk(sk)->mptcp_ver;
-+	else
-+		mtreq->mptcp_ver =3D mopt->mptcp_ver;
-+
- 	rcu_read_lock_bh();
- 	spin_lock(&mptcp_tk_hashlock);
- =
-
-@@ -2397,7 +2405,7 @@ void mptcp_reqsk_init(struct request_sock *req, const=
- struct sock *sk,
- 	mtreq->dss_csum =3D mopt.dss_csum;
- =
-
- 	if (want_cookie) {
--		if (!mptcp_reqsk_new_cookie(req, &mopt, skb))
-+		if (!mptcp_reqsk_new_cookie(req, sk, &mopt, skb))
- 			/* No key available - back to regular TCP */
- 			inet_rsk(req)->mptcp_rqsk =3D 0;
- 		return;
+Matthieu
 -- =
 
-2.16.2
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+-- =
 
 
---===============6969711035158893354==--
+
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
+
+and intended solely for the use of the individual or entity to whom they =
+
+are addressed. If you have received this email in error please notify the =
+
+system manager. This message contains confidential information and is =
+
+intended only for the individual named. If you are not the named addressee =
+
+you should not disseminate, distribute or copy this e-mail. Please notify =
+
+the sender immediately by e-mail if you have received this e-mail by =
+
+mistake and delete this e-mail from your system. If you are not the =
+
+intended recipient you are notified that disclosing, copying, distributing =
+
+or taking any action in reliance on the contents of this information is =
+
+strictly prohibited.
+
+--===============5825129334184405454==--
