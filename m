@@ -1,66 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5825129334184405454=="
+Content-Type: multipart/mixed; boundary="===============6102521973163776148=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 26 July 2018 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 25 Jul 2018 17:36:44 +0200
-Message-ID: <da214e9a-0afe-e8cf-a202-d879b5661aec@tessares.net>
+Subject: Re: [MPTCP] [PATCH 0/2] Forward-ports from mptcp_trunk
+Date: Wed, 25 Jul 2018 15:56:37 -0700
+Message-ID: <alpine.OSX.2.21.1807251555450.39875@asadovni-mobl3.amr.corp.intel.com>
+In-Reply-To: 20180724234940.62909-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 687
+X-UID: 688
 
---===============5825129334184405454==
+--===============6102521973163776148==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+On Tue, 24 Jul 2018, Christoph Paasch wrote:
 
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180726
-Feel free to add/modify topics!
+> Two of the recent additions to mptcp_trunk.
+>
+> Christoph Paasch (2):
+>  mptcp: Fix: Correct version-negotiation when SYN-cookies are set
+>  mptcp: Disable MPTCP when interface is non-MPTCP
+>
+> include/net/mptcp.h    |  6 +++---
+> net/mptcp/mptcp_ctrl.c | 29 +++++++++++++++++++++--------
+> 2 files changed, 24 insertions(+), 11 deletions(-)
 
-Meeting link: https://talky.io/mptcp_upstreaming
-
-Speak to you tomorrow!
-
-Matthieu
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
--- =
+Both applied.
 
 
+Thanks,
 
-DISCLAIMER.
-This email and any files transmitted with it are confidential =
+--
+Mat Martineau
+Intel OTC
 
-and intended solely for the use of the individual or entity to whom they =
-
-are addressed. If you have received this email in error please notify the =
-
-system manager. This message contains confidential information and is =
-
-intended only for the individual named. If you are not the named addressee =
-
-you should not disseminate, distribute or copy this e-mail. Please notify =
-
-the sender immediately by e-mail if you have received this e-mail by =
-
-mistake and delete this e-mail from your system. If you are not the =
-
-intended recipient you are notified that disclosing, copying, distributing =
-
-or taking any action in reliance on the contents of this information is =
-
-strictly prohibited.
-
---===============5825129334184405454==--
+--===============6102521973163776148==--
