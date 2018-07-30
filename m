@@ -1,53 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============7458839208374560508=="
+Content-Type: multipart/mixed; boundary="===============8259478610445569774=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Naresh Kumar <nareshkumar12024 at gmail.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 26th of July 2018
-Date: Fri, 27 Jul 2018 17:15:33 -0700
-Message-ID: <alpine.OSX.2.21.1807271707040.6925@mmsebot-mobl.amr.corp.intel.com>
-In-Reply-To: a5dcf79f-e1b6-cdb2-59e2-8d8001ec16e7@tessares.net
+Subject: [MPTCP] Internet Draft regarding 5G Security
+Date: Mon, 30 Jul 2018 13:25:43 +0530
+Message-ID: <CAE2CNNBXUAoomD7NGv2rNdY3MEDsmwdZ7ypu5_kF29t6Kq4t0g@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 690
+X-UID: 691
 
---===============7458839208374560508==
+--===============8259478610445569774==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Sir,
 
-On Thu, 26 Jul 2018, Matthieu Baerts wrote:
+I have submitted an Internet-Draft regarding Security issues and resolving
+them. You can see the draft at the following link:
+https://datatracker.ietf.org/submit/status/97278/c98380e8f51866cdc271f87ce6=
+f448d4/
 
-> Netdev's debriefing:
->    - we got good feedbacks:
->        - people want to have MPTCP upstream and are supportive (Tom
-> Herbert and Eric Dumazet)
->        - some concerns about not modifying binaries and still use MPTCP
-> (without LD_PRELOAD), something possible with mptcp_trunk.
->        - there were some discussions/reminders about using per cgroups
-> ebpf hooks (e.g. for API extension):
->            - BPF/netdev background:
-> http://vger.kernel.org/netconf2018_files/AlexeiStarovoitov_netconf2018.pdf
+--===============8259478610445569774==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Regarding this BPF / cgroup idea (thank you, David Ahern), here's a link =
+PGRpdiBkaXI9Imx0ciI+U2lyLMKgPGRpdj48YnI+PC9kaXY+PGRpdj5JIGhhdmUgc3VibWl0dGVk
+IGFuIEludGVybmV0LURyYWZ0IHJlZ2FyZGluZyBTZWN1cml0eSBpc3N1ZXMgYW5kIHJlc29sdmlu
+ZyB0aGVtLiBZb3UgY2FuIHNlZSB0aGUgZHJhZnQgYXQgdGhlIGZvbGxvd2luZyBsaW5rOsKgPC9k
+aXY+PGRpdj48YSBocmVmPSJodHRwczovL2RhdGF0cmFja2VyLmlldGYub3JnL3N1Ym1pdC9zdGF0
+dXMvOTcyNzgvYzk4MzgwZThmNTE4NjZjZGMyNzFmODdjZTZmNDQ4ZDQvIj5odHRwczovL2RhdGF0
+cmFja2VyLmlldGYub3JnL3N1Ym1pdC9zdGF0dXMvOTcyNzgvYzk4MzgwZThmNTE4NjZjZGMyNzFm
+ODdjZTZmNDQ4ZDQvPC9hPjxicj48L2Rpdj48L2Rpdj4K
 
-to similar functionality implemented for the connect() call:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3Dd74bad4e74ee373787a9ae24197c17b7cdc428d5
-
-The equivalent would be something that could run early to override the =
-
-proto value (or any other parameters) for any socket() call in a =
-
-particular cgroup.
-
-BPF_CGROUP_INET_SOCK_CREATE exists, but it runs at the end of =
-
-inet_create() (too late to override the protocol).
-
---
-Mat Martineau
-Intel OTC
-
---===============7458839208374560508==--
+--===============8259478610445569774==--
