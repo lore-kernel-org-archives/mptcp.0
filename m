@@ -1,38 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============8259478610445569774=="
+Content-Type: multipart/mixed; boundary="===============2089163713775852954=="
 MIME-Version: 1.0
-From: Naresh Kumar <nareshkumar12024 at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Internet Draft regarding 5G Security
-Date: Mon, 30 Jul 2018 13:25:43 +0530
-Message-ID: <CAE2CNNBXUAoomD7NGv2rNdY3MEDsmwdZ7ypu5_kF29t6Kq4t0g@mail.gmail.com>
+Subject: [MPTCP] Weekly meeting - 1 August 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Tue, 31 Jul 2018 13:11:01 +0200
+Message-ID: <45a1c16f-db29-d7de-df11-9c0d2c37330f@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 691
+X-UID: 692
 
---===============8259478610445569774==
+--===============2089163713775852954==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Sir,
+Hello,
 
-I have submitted an Internet-Draft regarding Security issues and resolving
-them. You can see the draft at the following link:
-https://datatracker.ietf.org/submit/status/97278/c98380e8f51866cdc271f87ce6=
-f448d4/
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
---===============8259478610445569774==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180801
+Feel free to add/modify topics!
 
-PGRpdiBkaXI9Imx0ciI+U2lyLMKgPGRpdj48YnI+PC9kaXY+PGRpdj5JIGhhdmUgc3VibWl0dGVk
-IGFuIEludGVybmV0LURyYWZ0IHJlZ2FyZGluZyBTZWN1cml0eSBpc3N1ZXMgYW5kIHJlc29sdmlu
-ZyB0aGVtLiBZb3UgY2FuIHNlZSB0aGUgZHJhZnQgYXQgdGhlIGZvbGxvd2luZyBsaW5rOsKgPC9k
-aXY+PGRpdj48YSBocmVmPSJodHRwczovL2RhdGF0cmFja2VyLmlldGYub3JnL3N1Ym1pdC9zdGF0
-dXMvOTcyNzgvYzk4MzgwZThmNTE4NjZjZGMyNzFmODdjZTZmNDQ4ZDQvIj5odHRwczovL2RhdGF0
-cmFja2VyLmlldGYub3JnL3N1Ym1pdC9zdGF0dXMvOTcyNzgvYzk4MzgwZThmNTE4NjZjZGMyNzFm
-ODdjZTZmNDQ4ZDQvPC9hPjxicj48L2Rpdj48L2Rpdj4K
+Meeting link: https://talky.io/mptcp_upstreaming
 
---===============8259478610445569774==--
+Speak to you tomorrow!
+
+Matthieu
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+-- =
+
+
+
+DISCLAIMER.
+This email and any files transmitted with it are confidential =
+
+and intended solely for the use of the individual or entity to whom they =
+
+are addressed. If you have received this email in error please notify the =
+
+system manager. This message contains confidential information and is =
+
+intended only for the individual named. If you are not the named addressee =
+
+you should not disseminate, distribute or copy this e-mail. Please notify =
+
+the sender immediately by e-mail if you have received this e-mail by =
+
+mistake and delete this e-mail from your system. If you are not the =
+
+intended recipient you are notified that disclosing, copying, distributing =
+
+or taking any action in reliance on the contents of this information is =
+
+strictly prohibited.
+
+--===============2089163713775852954==--
