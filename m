@@ -1,32 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============2089163713775852954=="
+Content-Type: multipart/mixed; boundary="===============7653462749688019946=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 1 August 2018 16:00 UTC (9am PDT, 6pm CEST)
-Date: Tue, 31 Jul 2018 13:11:01 +0200
-Message-ID: <45a1c16f-db29-d7de-df11-9c0d2c37330f@tessares.net>
+Subject: [MPTCP] [Weekly meetings] MoM - 1st of August 2018
+Date: Wed, 01 Aug 2018 18:39:40 +0200
+Message-ID: <8467e52e-1c19-dc50-6c08-69c68b59a576@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 692
+X-UID: 693
 
---===============2089163713775852954==
+--===============7653462749688019946==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+We just had our 16th meeting with Mat, Ossama, Peter (Intel OTC),
+Christoph (Apple) and myself (Tessares).
 
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180801
-Feel free to add/modify topics!
+Thanks again for this new good meeting!
 
-Meeting link: https://talky.io/mptcp_upstreaming
 
-Speak to you tomorrow!
 
+Here are the minutes of the meeting:
+
+
+
+Netdev:
+    - we received notes that will be shared somewhere (LWN?)
+    - Mat will reply that it is OK, maybe with new comments from Peter
+(if we need to share more messages).
+
+
+
+Linux Plumbers:
+    - any news nor feedback (but deadline is on the 15th of August)
+
+
+
+RFC about a design/API:
+    - will be about: DSS mapping in/out + ADD_ADDR (and other
+asynchronous signaling) in/out =E2=86=92 related to skb
+    - note: all signaling options on ACK we have are async, and not
+reliable (even Fast close with the latest RFC6824bis)
+      @Christoph: even the RST after the Fast close?
+    - work in progress by Mat
+    - there are still some questions about using an additional queue but
+after more thoughts about that, the notes will be shared on the wiki.
+
+
+
+testing the latest mptcp_net-next:
+    - didn't have chance to do that but in progress for Matth, will
+continue this week
+
+
+
+Next steps:
+    - Mat: new design on the wiki
+    - Mat: send reply for Netdev notes
+    - Peter: working on MP_JOIN stuff
+    - Peter: check the Netdev notes with Mat
+    - Christoph: MPTCPv1 + bug fixes
+    - Ossama: more debugging on userspace code and sync with latest
+changes from Peter/Mat
+    - Matth: use recent kernel and maybe mptcp_net-next with our
+test-suite. + update netlink code after that.
+
+
+
+Next meeting:
+    - We propose to have it back on Thursday, the 9th of August then.
+Usual time 9am PDT - 16:00 UTC (9am PDT, 6pm CEST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20180809
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+
+Talk to you next week,
 Matthieu
 -- =
 
@@ -63,4 +120,4 @@ or taking any action in reliance on the contents of this information is =
 
 strictly prohibited.
 
---===============2089163713775852954==--
+--===============7653462749688019946==--
