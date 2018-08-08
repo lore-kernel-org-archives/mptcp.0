@@ -1,15 +1,15 @@
-Content-Type: multipart/mixed; boundary="===============4663222184514637861=="
+Content-Type: multipart/mixed; boundary="===============3322432681598284099=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 1 August 2018 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 08 Aug 2018 16:32:44 +0200
-Message-ID: <2395d17d-b9f9-389b-4473-0d21bce83868@tessares.net>
+Subject: [MPTCP] Weekly meeting - 9 August 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 08 Aug 2018 16:33:31 +0200
+Message-ID: <a9cb7fde-41c7-cad0-82f2-b42e053f3c84@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 696
+X-UID: 697
 
---===============4663222184514637861==
+--===============3322432681598284099==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -47,4 +47,4 @@ Disclaimer: https://www.tessares.net/mail-disclaimer/ =
 
 
 
---===============4663222184514637861==--
+--===============3322432681598284099==--
