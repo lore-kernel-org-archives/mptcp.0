@@ -1,40 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============2628878987053939404=="
+Content-Type: multipart/mixed; boundary="===============6428753161497469496=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 9th of August 2018
-Date: Thu, 09 Aug 2018 12:08:06 -0700
-Message-ID: <alpine.OSX.2.21.1808091203400.65836@xwu2-mobl2.amr.corp.intel.com>
-In-Reply-To: 776dae1f-b318-b06f-5966-274d704ad065@tessares.net
+Subject: [MPTCP] Weekly meeting - 9 August 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Sat, 18 Aug 2018 19:11:25 +0200
+Message-ID: <0167de36-483e-22b3-ba9e-fbc1c6996cd3@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 699
+X-UID: 700
 
---===============2628878987053939404==
+--===============6428753161497469496==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-On Thu, 9 Aug 2018, Matthieu Baerts wrote:
+Our public MPTCP upstreaming weekly web conference is exceptionally
+scheduled for *Monday*.
 
-> Linux Plumbers:
->    - no news nor feedback (but deadline is on the 15th of August)
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180820
+Feel free to add/modify topics!
 
-Dave tweeted this yesterday:
+Meeting link: https://talky.io/mptcp_upstreaming
 
-https://twitter.com/davem_dokebi/status/1027379839324409856
+Speak to you on Monday!
 
-I'm not sure if the intent is to say that =
+Matthieu
+-- =
 
-http://vger.kernel.org/lpc-networking.html is the finalized list of =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-accepted talks for this year, or that it's the talks accepted to date =
-
-(with more additions up to 15 August).
-
---
-Mat Martineau
-Intel OTC
-
---===============2628878987053939404==--
+--===============6428753161497469496==--
