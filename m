@@ -1,61 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============6535758238566801928=="
+Content-Type: multipart/mixed; boundary="===============0096343264950781946=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp:minisocks: fix refcnt when adding to backlog
-Date: Mon, 20 Aug 2018 08:52:19 -0700
-Message-ID: <20180820155219.16681-3-cpaasch@apple.com>
-In-Reply-To: 20180820155219.16681-1-cpaasch@apple.com
+Subject: [MPTCP] [Weekly meetings] MoM - 20th of August 2018 (fwd)
+Date: Mon, 20 Aug 2018 16:09:49 -0700
+Message-ID: <alpine.OSX.2.21.1808201608570.6886@sriyenga-mobl.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 704
+X-UID: 705
 
---===============6535758238566801928==
+--===============0096343264950781946==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+
+
+---------- Forwarded message ----------
 From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-It is the same as what we did in the parent commit: if the sock is hold
-by user we copy the sk inside the skb before putting the skb inside the
-backlog, the sk will be used after from mptcp_backlog_rcv. If the sk
-refcnt is not done properly the sk read from mptcp_backlog_rcv could
-point to another sk because it may have been freed and reused in the
-mean time.
+Hello,
 
-It seems to be very unlikely to arrive in this situation but in theory
-it is.
+We just had our 18th meeting with Mat, (Intel OTC), Christoph (Apple),
+Hoang (UCL) and myself (Tessares).
 
-Fixes: 952bd28cc5be (mptcp: correct refcnt for sk in tcp_v{4,6}_rcv)
-CC: Gregory Detal <gregory.detal(a)tessares.net>
-CC: Benjamin Hesmans <benjamin.hesmans(a)tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-(cherry picked from commit 98209f874fd93e95fd73e03e68be93ee157306dd)
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- net/ipv4/tcp_minisocks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks again for this new good meeting!
 
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index fafa4479d45f..781c68848f6e 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -913,7 +913,7 @@ int tcp_child_process(struct sock *parent, struct sock =
-*child,
- 		 * socket does not protect us more.
- 		 */
- 		if (mptcp(tcp_sk(child)))
--			skb->sk =3D child;
-+			mptcp_prepare_for_backlog(child, skb);
- 		__sk_add_backlog(meta_sk, skb);
- 	}
- =
+
+
+Here are the minutes of the meeting:
+
+
+
+New commits on mptcp_trunk:
+     - surprising we didn't see that before
+     - (that could have impact when accepting a lot of new connections,
+maybe we could act on the wrong sk)
+     - proposed to mptcp_net-next
+
+
+
+LPC:
+     - not selected
+     - but without any reason (many people asked to participate)
+     - but anyway, we should continue working on the patches and send stuff.
+     - if possible, that could be nice to participate and meet Eric and
+David to talk about the new design. (but they will certainly want to see
+code)
+
+
+
+Design:
+     - might be good at some points to send RFC for the design, now they
+know what we are trying to do.
+     - but Mat is also close to have a version meeting the design we
+agreed last time
+
+
+
+Next steps:
+     - Mat: update prototype
+     - Peter: working on MP_JOIN stuff + later managing non-DSS options
+     - Ossama: more debugging on userspace code
+     - Christoph: bug fixes
+     - Matth: use recent kernel and maybe mptcp_net-next with our
+test-suite. + update netlink code after that.
+
+
+
+Next meeting:
+     - We propose to have it back on Thursday, the 30th of August. Usual
+time: 9am PDT - 16:00 UTC (9am PDT, 6pm CEST)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20180830
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+
+Talk to you in two weeks,
+Matthieu
 
 -- =
 
-2.16.2
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============6535758238566801928==--
+--===============0096343264950781946==--
