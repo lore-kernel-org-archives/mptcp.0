@@ -1,39 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============3741426941449570991=="
+Content-Type: multipart/mixed; boundary="===============1177813835943316056=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 20 August 2018 16:00 UTC (9am PDT, 6pm CEST)
-Date: Sat, 18 Aug 2018 19:12:11 +0200
-Message-ID: <86670c89-de87-5b76-a3a7-c632697b1dfd@tessares.net>
+Subject: [MPTCP] [PATCH 0/2] Forward-ports from mptcp_trunk
+Date: Mon, 20 Aug 2018 08:52:17 -0700
+Message-ID: <20180820155219.16681-1-cpaasch@apple.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 701
+X-UID: 702
 
---===============3741426941449570991==
+--===============1177813835943316056==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Two forward-ports coming from mptcp_trunk.
 
-Our public MPTCP upstreaming weekly web conference is exceptionally
-scheduled for *Monday*.
+Gregory Detal (1):
+  mptcp: correct refcnt for sk in tcp_v{4,6}_rcv
 
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180820
-Feel free to add/modify topics!
+Matthieu Baerts (1):
+  mptcp:minisocks: fix refcnt when adding to backlog
 
-Meeting link: https://talky.io/mptcp_upstreaming
+ include/net/mptcp.h      |  2 ++
+ net/ipv4/tcp_ipv4.c      |  2 +-
+ net/ipv4/tcp_minisocks.c |  2 +-
+ net/ipv6/tcp_ipv6.c      |  2 +-
+ net/mptcp/mptcp_ctrl.c   | 18 ++++++++++++++++--
+ 5 files changed, 21 insertions(+), 5 deletions(-)
 
-Speak to you on Monday!
-
-Matthieu
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.16.2
 
---===============3741426941449570991==--
+
+--===============1177813835943316056==--
