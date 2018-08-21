@@ -1,95 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============0096343264950781946=="
+Content-Type: multipart/mixed; boundary="===============3713608551167649849=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 20th of August 2018 (fwd)
-Date: Mon, 20 Aug 2018 16:09:49 -0700
-Message-ID: <alpine.OSX.2.21.1808201608570.6886@sriyenga-mobl.amr.corp.intel.com>
+Subject: Re: [MPTCP] [PATCH 0/2] Forward-ports from mptcp_trunk
+Date: Mon, 20 Aug 2018 17:47:10 -0700
+Message-ID: <alpine.OSX.2.21.1808201744480.15643@sriyenga-mobl.amr.corp.intel.com>
+In-Reply-To: 20180820155219.16681-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 705
+X-UID: 706
 
---===============0096343264950781946==
+--===============3713608551167649849==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
+On Mon, 20 Aug 2018, Christoph Paasch wrote:
 
----------- Forwarded message ----------
-From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Two forward-ports coming from mptcp_trunk.
+>
+> Gregory Detal (1):
+>  mptcp: correct refcnt for sk in tcp_v{4,6}_rcv
+>
+> Matthieu Baerts (1):
+>  mptcp:minisocks: fix refcnt when adding to backlog
+>
+> include/net/mptcp.h      |  2 ++
+> net/ipv4/tcp_ipv4.c      |  2 +-
+> net/ipv4/tcp_minisocks.c |  2 +-
+> net/ipv6/tcp_ipv6.c      |  2 +-
+> net/mptcp/mptcp_ctrl.c   | 18 ++++++++++++++++--
+> 5 files changed, 21 insertions(+), 5 deletions(-)
 
-Hello,
+Both applied.
 
-We just had our 18th meeting with Mat, (Intel OTC), Christoph (Apple),
-Hoang (UCL) and myself (Tessares).
+Is =
 
-Thanks again for this new good meeting!
+https://github.com/multipath-tcp/mptcp_net-next/blob/master/net/ipv4/tcp_ip=
+v4.c#L1822 =
 
+another place that mptcp_prepare_for_backlog() should be used?
 
+--
+Mat Martineau
+Intel OTC
 
-Here are the minutes of the meeting:
-
-
-
-New commits on mptcp_trunk:
-     - surprising we didn't see that before
-     - (that could have impact when accepting a lot of new connections,
-maybe we could act on the wrong sk)
-     - proposed to mptcp_net-next
-
-
-
-LPC:
-     - not selected
-     - but without any reason (many people asked to participate)
-     - but anyway, we should continue working on the patches and send stuff.
-     - if possible, that could be nice to participate and meet Eric and
-David to talk about the new design. (but they will certainly want to see
-code)
-
-
-
-Design:
-     - might be good at some points to send RFC for the design, now they
-know what we are trying to do.
-     - but Mat is also close to have a version meeting the design we
-agreed last time
-
-
-
-Next steps:
-     - Mat: update prototype
-     - Peter: working on MP_JOIN stuff + later managing non-DSS options
-     - Ossama: more debugging on userspace code
-     - Christoph: bug fixes
-     - Matth: use recent kernel and maybe mptcp_net-next with our
-test-suite. + update netlink code after that.
-
-
-
-Next meeting:
-     - We propose to have it back on Thursday, the 30th of August. Usual
-time: 9am PDT - 16:00 UTC (9am PDT, 6pm CEST)
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20180830
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-
-Talk to you in two weeks,
-Matthieu
-
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============0096343264950781946==--
+--===============3713608551167649849==--
