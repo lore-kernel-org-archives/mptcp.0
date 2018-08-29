@@ -1,151 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============5317760331649910366=="
+Content-Type: multipart/mixed; boundary="===============3588785919197150035=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 0/2] Forward-ports from mptcp_trunk
-Date: Tue, 21 Aug 2018 07:55:19 +0200
-Message-ID: <7117F5CC-42D0-4DB0-90F0-A4C2B2EDE9D5@pretty.Easy.privacy>
-In-Reply-To: 20180820155219.16681-1-cpaasch@apple.com
+Subject: [MPTCP] Weekly meeting - 30 August 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 29 Aug 2018 15:31:38 +0200
+Message-ID: <9a9f6333-6e7b-5e41-4607-ac5de8e82dd5@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 708
+X-UID: 709
 
---===============5317760331649910366==
+--===============3588785919197150035==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello, =
+Hello,
 
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-On August 21, 2018 2:47:10 AM GMT+02:00, Mat Martineau wrote: =
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20180830
+Feel free to add/modify topics!
 
->On Mon, 20 Aug 2018, Christoph Paasch wrote: =
+Meeting link: https://talky.io/mptcp_upstreaming
 
-> =
+Speak to you tomorrow!
 
->> Two forward-ports coming from mptcp_trunk. =
+Matthieu
+-- =
 
->> =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
->> Gregory Detal (1): =
-
->> mptcp: correct refcnt for sk in tcp_v{4,6}_rcv =
-
->> =
-
->> Matthieu Baerts (1): =
-
->> mptcp:minisocks: fix refcnt when adding to backlog =
-
->> =
-
->> include/net/mptcp.h | 2 ++ =
-
->> net/ipv4/tcp_ipv4.c | 2 +- =
-
->> net/ipv4/tcp_minisocks.c | 2 +- =
-
->> net/ipv6/tcp_ipv6.c | 2 +- =
-
->> net/mptcp/mptcp_ctrl.c | 18 ++++++++++++++++-- =
-
->> 5 files changed, 21 insertions(+), 5 deletions(-) =
-
-> =
-
->Both applied. =
-
-> =
-
->Is =
-
->https://github.com/multipath-tcp/mptcp_net-next/blob/master/net/ipv4/tcp_i=
-pv4.c#L1822 =
-
->another place that mptcp_prepare_for_backlog() should be used? =
-
-
-Very good point. This part of the code is not in mptcp_trunk. Is it normal?=
- Maybe some commits are missing? =
-
-
-https://github.com/multipath-tcp/mptcp/blob/2e4ce385ada1bd7c3b91145dcd67b95=
-968fe7c3a/net/ipv4/tcp_ipv4.c#L1750
-
---===============5317760331649910366==
-Content-Type: application/pgp-keys
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="pEpkey.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUlOQkZzclRZb0JFQUM0UXpX
-T24wWUxaMXJadzdzM3B5c2M3MkI4OE9iMFBNcXpWRDk4Tjg3eGJwZEREQ2lECkN1bFByd2wxTi9p
-MzJreGJrclJkYUZQM1JJbFNjcFF0cy9ZVC9aV1kwUGNsUlpGN0g5RW9rallFU2hyelozaEoKVEhD
-ejVBcHUzMFBrV1N0UFp5N01sS2xFV0U5NjJQTTYyS1Awc2NQblViTVVMM3NhUkF5WUdLeUx1ZDdI
-bVllUwpSdENlYjRUSERkeDBnNHRYdGRKMWh4UERMSndNNUI0ekV4UTFGekxHblREVTFnTU9qNnVU
-Z0lLUTNISUxtbStyCjVOS3VBbGMvVmt3cldoUlQ0STJseGNUQTNFekk1N3RmZnJIS0xTb1hEVnho
-QXN3dDJoV05uSUZpY1d6Sk9VeEoKVDRmMDhYT0g4Vmc2V1A4WUpzQXBoV3FUY3djRUNwWW56cUxk
-UGl3R1RVWkYrMWJLVllMMC9SYXMyUTNvdGo2KwpHdE5lNGxwSEN5ZmVLZGp2V01FUnl3MmVpa0dY
-blpCVHg0Y1dlSXRwcmxQdGVXOXhlYVAra09seEkrM3poRWVVCm4yKzlRc2xaR01kWjM0RVhGcmZz
-RHd6dUltOWtwK04zVmx1dUxHVU5hMk5WWlRxbmsxZEs2RGYxNTJtS3gvWjAKTzZZSHZxZ01qUzFv
-Ym9aSE4xWVlRSE12cGkydzhRb3dMZHdNcllObVRqSjhsVzB3RlFJWWZ1RVZFV244WEY4cApPV2M2
-MnRQTm9obEtybHdUdHJOQmhSTG9MV05NV1dhTHIwUlJIb3pzV3pDVTFpM1NpSE1DYVByaGJWTGI2
-YUgrCnViNURPYzJRaDYwSi9TRXZoTlpwREwxQk1pcldadTlHME1BeURWbFdFdGJjaGpEc1pPN1Rn
-bXl3WVFBUkFRQUIKdEM1TllYUjBhR2xsZFNCQ1lXVnlkSE1nUEcxaGRIUm9hV1YxTG1KaFpYSjBj
-MEIwWlhOellYSmxjeTV1WlhRKwppUUkrQkJNQkNBQW9CUUpiSzAyS0Foc3ZCUWtCNFRPQUJ3c0pD
-QWNEQWdFR0ZRZ0NDUW9MQXhZQ0FRSWVBUUlYCmdBQUtDUkNCVkR6MnVQSmlVN0lmRC8wUXVTdm9m
-QTBFRWR5WDF3SEtob1RsaHptM0pOMG9tYWV4QWxwNCt0TTYKQmYreXpobG1Yd2VGZnl3MkJITFlV
-MHdqK2NHUWxlR3pEODF2TmZVMnR2UlpMa1l3dWlLY1JIMVhzRUVNQUJtUApnQk96S0xlUng3Q29N
-akMrYm53QW8yMFpQT1A1TCszSGNISDh4bStpNzdhc0JEclVUV3lValpYTzJoSC9iS1Y5CjQvNkVT
-dW9PYi9kS3lLUGZhbnhrNzBaUHh4bE1nS05WMmpvVk1rVjdjQzU5bDhKUU1kVTZ4cWtmVVVzRnZn
-ZUQKaU1UMGFkUVVmeFlmQVNka1ZST1UxbzNWbzg4akczMWpqak1rdEg3OFFOcE5RSk82VnZWRHN2
-bVJ1M3dOM0lrUgo3UXVLZGo3Zk5ZUlc1cHJuUW9EQWg3R25jVUwxR0IzQzE3NHRoS0lSK2QzN0JJ
-R1lQMGFyVzBrVmw5UitBVWhOCmwxZHEycy85RzJ6dzNsaFlHQXd2aXN0MXY1RGJJOWU0UmZBdnZH
-QjdDZERJTDIzSk5SWVZxSlZ4NzFobGtqbGoKL21KK0d1MHhQVUtNNHN1b0JwaGZFOVlxRWd6a2lN
-Z3NGaWJmaG1VM1ZSRi9LTGhuYlBETnhyZ1hHRDhZbk5UagoxbG1EbXQ1UVZqcDcza1pyVVpVTjM2
-cTZjSEJYQzNTTW5xMCtaWHRyd3RHUWw1NDZwRlZRZ1prUklwS0FlTWJ6ClNtempuWWRDQisvTHhQ
-clk1UmhPMzdRK0tHbFFZNzREOE14bmJsaVNCZkR3VHpJb09YZllIR2Vhc204TERTVjUKMkpNdXk4
-ZlQ5MWxoNWo0clo4bG5LZDBhRFlaNkRmb25VaU9hTG9mSWoxQWdwdU5ONUptOUpTUkNybDFrNU11
-RApOcmtDRFFSYkswMktBUkFBNTI5TW9PcStQcDJ3aHBvNFhiS1Q2TlZFRzFsNWhhMEJVZmN0dHdn
-enhkQjlMY25nCnR3QytlUXpZeWtSZm5QRHFlVDN5cklUd1d1dUc1clpwbjBnZXJEOVFqcnRrZVEy
-VkNQdzh4NTM0aWNXSkovbEsKQjZzNUgyaWJLMkpYN3M1R3RDRW1pQ0l6b3hDdnMyU3VYT09wNEFk
-RTNjQ1gyb1pRcjFuLzZpekN4OFRDcVg5dApRZUhCb1Q3RlhmZi94RkVRTmxVTjI1T0RURkxsTStU
-S29CSEdyRlRLcVhRR1FXVG9MeUpkdnNoN2xJQTliVWNZCmcvNUltNUYrOXAzaXRKd3VtRk5UaWty
-RnFEYis5bXNIRHNqMWNJZEd5ZFZJUG50VnQ4M2ZxWTM4a1piRWVuZGYKSnB2OEhtRW1SMTBVTmR6
-NzJFWGRoRW51ZGdYcEpTQUFpcHVZRlFZWURBb1htTERzdVA3N3BzSzlyQVdlVEFldwpNR1l2dFh3
-UDU2OUZvdWJ0WEhHV2ZOcG5qanBqazV3QVJORGo3d0hOM29zRGVVa012Vk9xOElDWi9QamJxTy9T
-ClJURDR2ZHJLL0ZLcFV3RVJZRGRNMlM0Y20wRXViemVCL1BSdXdPSjFBN0JwUVBDYkNtWk1iV1l5
-TXIwdG1nWVIKaE0zYXJSMVYvYi9XanRBVks4MlBqNVNGcjVKeUVhSFJSL1NEQW43WjdnclcxSWtJ
-L1EwY2ZCL2V2aDZCdGlaQQpVd0N1L2dEN0o0YVZmSGNhTHlMUnNpYjhRbEtBeFNJMjJXd3FVejN5
-UlBKUHpMZC94cWlnSjQ1eDBtVXhhZ0o0CmFSbFo4NUtCM2lXYS9HcytXcGJNTEU3U0Z2RXIyaTNL
-Z2pmSVhRZmV2d0NSZ0FhNE1QV1ZxYWxWRU9rQUVRRUEKQVlrRVJBUVlBUWdBRHdVQ1d5dE5pZ0li
-TGdVSkFlRXpnQUlwQ1JDQlZEejJ1UEppVThGZElBUVpBUWdBQmdVQwpXeXROaWdBS0NSRFU1ZGxQ
-enUranhYcWVFQURIcnZnOFdGNURpU1Y2aVZhSzdVUVE3SktCSUhQTG1wNU9vNXd6CktvYSsrNm1X
-TVR4NERWQU1LREgyU0dzRTZGZVhDZE5CbmgvTjljeTRFNWcrbjFHbkxMb2FHYkQvUHZVcS9QUmYK
-ditud1ZDajh0dVFla1F5TEcxUGdEN1U4L2pra0ZoWjE3MDNIcVVobkY1WDFQWVRXVC9SaGY0RHhW
-MWpVWHg4UApZUVZsSHAvNWg5dDZhZ0pXRDJKTTN1VTdrenEvZjZHbE1ZU21WUHJqRkNYOWZTYlVp
-RXNzejZHSTBVT2lFMXgrCkJNd0JQWXVreHRuZkRtTEYyWkZvZklrTklaa3dwdTZCd1VlcjRGNGEr
-UmNVaFpmTnJhZ0VqMU5zbSt1bGNJMjUKaEVRUGxybXZyM3NJdmtGMGdKdnlha2ZsUXhoMFRjUjBS
-enVXNmxxQkpFRi9Nd2drVDN5SHB6ZkdaTmZjMTBiNAovWmpiSmRwSlVjZ2luS3k3anJkMFFpOGh1
-dWROS2lTVUwwV1lxQS9nSHQzSXN4UkdqenZPNE9TYTYwSTJJaWViClBoaGREbmVNOVcwSlV6a1Zx
-bmJyS0szcEljZFFzVE5UM0VtOE94YzJBRlpwUmpPWUVKaVhMR1dHaDdQRHJBdmUKb3BzWWhQMXFo
-cU9UNzQ1clBkeWFQM1drVTdjVU1pMTZ4M2VKNjRkMHBISGM0KzhjZmpvb2QzZEJoa0VjS2R5OQo3
-eDBDQW4zM3BURGFiVVR3c1plcHJuM01Fa003OVhaMU5zS1l1dGt3UHVhcFBKZ0JjTk81WEtDaEpa
-bGFBUWFsClNqRGFqRnVMNlVMQjVuMDZRaFN3bjFoN0huT2p1SDF5VloxNU1QTXUwKzl1d1VaeXA4
-dG5vMGtTdW4rNlJpZFoKVjR3RVdCSjhELzl4eENhb3lsQ1dpWTcwVW5yTlVxWXk0UkEwNEg3bUYw
-cjU1ckdheUowZHg1NUMzTUwxY2UvQQpaVkt5eGd3RkNBYlU4VFlzbGZETE9DcW9OMUg5aXpHQlcv
-ZGNMRWVpaTR1K1Rrb1FhZ3ZoclowL1djZnZVOFBMCnAzRW1sS3M4TEpxZGhYNDBWMG1jVE1rcWFx
-Z1cxaVRvcFlIVFA4WDlvVFI0WTZxN3R1YlhaWEhFMTdCdzlwYmcKdjMwR3Y3N0xVbFlTbDFDQUd0
-YVc5eHV2cGNKa2F5ckkyS1lrOEpsWHBoR0RQdjVxYXU3WFdwS0kwNTBYTlpHYgpTc0J3Y1kvRnpl
-RDdrK1l6RnN0NlhmRDRGUlRIY1NCSW84WmhqOVl4djZ3a21VUzE5TWJzbVBjb3RQWjZUQ2xTCkZr
-Um12cUczTThFdndMRGhCcEh0OTVpcFd4VGxqaHg0YVRpSDJkUmtvejRhZjh3c09WY2Q3Mlcyd3Mr
-akUwWTAKY1N1bVJjRmdZWi9xc04zcit3M250NnRZZDdtWGdtU1U5OTNva2xZbDhDdUc4dTZFclNW
-VTNOekxGYy9JMlZpNwpRN2V6SzV5UVdYSTNuUnk5R2FBZTJmd0VhYkN4Qk40aEl5ZjViMElackE2
-NWhlbTRqRml4NTNGZ2F1V0FEL1NlCndDcWU5c3AxL2FLYmlyckpiaDZXdmtpOStMaW15Q09lNTM3
-bWNVZ3d0RElubzE0d3NBSVM3KzlPWHZnaXREUm4KZCtxNHdKenJLM29mSUJ5K3JxcXZ0M2twWWlW
-MDd2bDhnOEl4cHVuOWdteW84aUVYR2c4dUxSdjM5RUNTd3NsUAo1N3VRSlJ4TDRDNXVrRktGNGpw
-Y3BnZ2VMVW5zQlNvRDEyZkdUZVhmZTMrVEtaamhrMml5aUE9PQo9alU4MQotLS0tLUVORCBQR1Ag
-UFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
-
---===============5317760331649910366==--
+--===============3588785919197150035==--
