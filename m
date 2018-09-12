@@ -1,43 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============4779219629863119529=="
+Content-Type: multipart/mixed; boundary="===============6068901016490838446=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 6 September 2018 16:00 UTC (9am PDT,
- 6pm CEST) -- /!\ With WebEx!
-Date: Wed, 12 Sep 2018 13:11:18 +0200
-Message-ID: <c8ecad9a-852f-9f47-8032-2f0fef618742@tessares.net>
+Subject: [MPTCP] [PATCH 1/2] mptcp: avoid removing useful skbs from the
+ reinject queue.
+Date: Wed, 12 Sep 2018 11:16:39 -0700
+Message-ID: <20180912181640.6663-2-cpaasch@apple.com>
+In-Reply-To: 20180912181640.6663-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 715
+X-UID: 716
 
---===============4779219629863119529==
+--===============6068901016490838446==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+From: Patrick Havelange <patrick.havelange(a)tessares.net>
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+After inserting the skbs in the reinject queue, the code was checking
+if it could remove potentially existing segments that are now no
+longer necessary. One condition for being able to remove such skbs
+was missing, resulting in potentially useful skbs being removed
+(i.e. they were NON redundant by others skbs !) from the reinject queue.
+In fact this logic is similar to the one in tcp_data_queue_ofo().
 
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20180913
-Feel free to add/modify topics!
+Fixes: Zero-day-bug
+Signed-off-by: Patrick Havelange <patrick.havelange(a)tessares.net>
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+(cherry picked from commit 877fa7d1f02ac68ba74fc918c4ae214413f33466)
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+---
+ net/mptcp/mptcp_output.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Be careful, talky.io will not be used for this one, we are going to try
-WebEx:
+diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+index 3dd4c17c7681..293999037f4c 100644
+--- a/net/mptcp/mptcp_output.c
++++ b/net/mptcp/mptcp_output.c
+@@ -277,6 +277,9 @@ static void __mptcp_reinject_data(struct sk_buff *orig_=
+skb, struct sock *meta_sk
+ 		if (!after(end_seq, TCP_SKB_CB(skb1)->seq))
+ 			break;
+ =
 
-https://appleinc.webex.com/appleinc/j.php?MTID=3Dm32a13fb51f255ea1f2ff3760e=
-7b6b369
-
-Speak to you tomorrow!
-Matthieu
++		if (before(end_seq, TCP_SKB_CB(skb1)->end_seq))
++			break;
++
+ 		__skb_unlink(skb1, &mpcb->reinject_queue);
+ 		__kfree_skb(skb1);
+ 	}
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.16.2
 
---===============4779219629863119529==--
+
+--===============6068901016490838446==--
