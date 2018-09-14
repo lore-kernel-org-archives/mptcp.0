@@ -1,88 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============6396535492247266044=="
+Content-Type: multipart/mixed; boundary="===============3221673145332110012=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 18/20] mptcp: Restart subflow-selection when we force
- a re-evaluation
-Date: Fri, 14 Sep 2018 10:25:22 -0700
-Message-ID: <20180914172524.67961-21-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 19/20] mptcp: Don't free skb when tcp_transmit_skb
+ without cloning
+Date: Fri, 14 Sep 2018 10:25:23 -0700
+Message-ID: <20180914172524.67961-22-cpaasch@apple.com>
 In-Reply-To: 20180914172524.67961-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 742
+X-UID: 743
 
---===============6396535492247266044==
+--===============3221673145332110012==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After setting the path-mask to 0, all subflows become eligible again.
-At that point, we should re-evaluate the subflow selection.
+Because, tcp_transmit_skb will already take care of the free'ing.
 
-Fixes: f9ca33df8007 ("mptcp: sched: Improve active/backup subflow selection=
+Fixes: 17683a61dd6d ("mptcp: Don't clone empty DATA_FIN in tcp_transmit_skb=
 ")
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit 156956479ee100ef77bfc74f4caa1e8cbcc7a9ee)
+(cherry picked from commit db9347ff01f604e60f0199faa2847337c3f829cb)
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/mptcp_sched.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ net/mptcp/mptcp_output.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
-index b440df7aae71..3662bdf97c0d 100644
---- a/net/mptcp/mptcp_sched.c
-+++ b/net/mptcp/mptcp_sched.c
-@@ -215,7 +215,7 @@ static struct sock *get_available_subflow(struct sock *=
-meta_sk,
- {
- 	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
- 	struct sock *sk;
--	bool force;
-+	bool looping =3D false, force;
+diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+index c0b2c9ff8ca2..6bc27496c457 100644
+--- a/net/mptcp/mptcp_output.c
++++ b/net/mptcp/mptcp_output.c
+@@ -562,10 +562,8 @@ static bool mptcp_skb_entail(struct sock *sk, struct s=
+k_buff *skb, int reinject)
+ 		tcp_init_tso_segs(subskb, 1);
  =
 
- 	/* Answer data_fin on same subflow!!! */
- 	if (meta_sk->sk_shutdown & RCV_SHUTDOWN &&
-@@ -232,6 +232,7 @@ static struct sock *get_available_subflow(struct sock *=
-meta_sk,
+ 		/* Empty data-fins are sent immediatly on the subflow */
+-		if (tcp_transmit_skb(sk, subskb, 0, GFP_ATOMIC) !=3D 0) {
+-			kfree_skb(subskb);
++		if (tcp_transmit_skb(sk, subskb, 0, GFP_ATOMIC))
+ 			return false;
+-		}
  	}
  =
 
- 	/* Find the best subflow */
-+restart:
- 	sk =3D get_subflow_from_selectors(mpcb, skb, &subflow_is_active,
- 					zero_wnd_test, &force);
- 	if (force)
-@@ -242,7 +243,7 @@ static struct sock *get_available_subflow(struct sock *=
-meta_sk,
- =
-
- 	sk =3D get_subflow_from_selectors(mpcb, skb, &subflow_is_backup,
- 					zero_wnd_test, &force);
--	if (!force && skb)
-+	if (!force && skb) {
- 		/* one used backup sk or one NULL sk where there is no one
- 		 * temporally unavailable unused backup sk
- 		 *
-@@ -250,6 +251,12 @@ static struct sock *get_available_subflow(struct sock =
-*meta_sk,
- 		 * sks, so clean the path mask
- 		 */
- 		TCP_SKB_CB(skb)->path_mask =3D 0;
-+
-+		if (!looping) {
-+			looping =3D true;
-+			goto restart;
-+		}
-+	}
- 	return sk;
- }
- =
-
+ 	if (!tp->mptcp->fully_established) {
 -- =
 
 2.16.2
 
 
---===============6396535492247266044==--
+--===============3221673145332110012==--
