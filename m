@@ -1,55 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============3221673145332110012=="
+Content-Type: multipart/mixed; boundary="===============0094701663646927037=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 19/20] mptcp: Don't free skb when tcp_transmit_skb
- without cloning
-Date: Fri, 14 Sep 2018 10:25:23 -0700
-Message-ID: <20180914172524.67961-22-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 20/20] mptcp: Use spin_lock_bh where appropriate for
+ mpcb_list_lock
+Date: Fri, 14 Sep 2018 10:25:24 -0700
+Message-ID: <20180914172524.67961-23-cpaasch@apple.com>
 In-Reply-To: 20180914172524.67961-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 743
+X-UID: 744
 
---===============3221673145332110012==
+--===============0094701663646927037==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Because, tcp_transmit_skb will already take care of the free'ing.
+mptcp_add_sock/mptcp_del_sock can both be called from user- and
+bh-context. Thus, we need to do a spin_lock_bh().
 
-Fixes: 17683a61dd6d ("mptcp: Don't clone empty DATA_FIN in tcp_transmit_skb=
-")
+Fixes: 7a662b690069 ("mptcp: Make subflow-list an RCU-list")
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit db9347ff01f604e60f0199faa2847337c3f829cb)
+(cherry picked from commit c45c9521f503d8dcaac3f3ac5bc4628d83079891)
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/mptcp_output.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/mptcp/mptcp_ctrl.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index c0b2c9ff8ca2..6bc27496c457 100644
---- a/net/mptcp/mptcp_output.c
-+++ b/net/mptcp/mptcp_output.c
-@@ -562,10 +562,8 @@ static bool mptcp_skb_entail(struct sock *sk, struct s=
-k_buff *skb, int reinject)
- 		tcp_init_tso_segs(subskb, 1);
+diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+index ced1191d50d1..626ccedd0878 100644
+--- a/net/mptcp/mptcp_ctrl.c
++++ b/net/mptcp/mptcp_ctrl.c
+@@ -1399,11 +1399,9 @@ int mptcp_add_sock(struct sock *meta_sk, struct sock=
+ *sk, u8 loc_id, u8 rem_id,
+ 	sock_hold(meta_sk);
+ 	refcount_inc(&mpcb->mpcb_refcnt);
  =
 
- 		/* Empty data-fins are sent immediatly on the subflow */
--		if (tcp_transmit_skb(sk, subskb, 0, GFP_ATOMIC) !=3D 0) {
--			kfree_skb(subskb);
-+		if (tcp_transmit_skb(sk, subskb, 0, GFP_ATOMIC))
- 			return false;
--		}
- 	}
+-	local_bh_disable();
+-	spin_lock(&mpcb->mpcb_list_lock);
++	spin_lock_bh(&mpcb->mpcb_list_lock);
+ 	hlist_add_head_rcu(&tp->mptcp->node, &mpcb->conn_list);
+-	spin_unlock(&mpcb->mpcb_list_lock);
+-	local_bh_enable();
++	spin_unlock_bh(&mpcb->mpcb_list_lock);
  =
 
- 	if (!tp->mptcp->fully_established) {
+ 	tp->mptcp->attached =3D 1;
+ =
+
+@@ -1463,9 +1461,9 @@ void mptcp_del_sock(struct sock *sk)
+ 		    __func__, mpcb->mptcp_loc_token, tp->mptcp->path_index,
+ 		    sk->sk_state, is_meta_sk(sk));
+ =
+
+-	spin_lock(&mpcb->mpcb_list_lock);
++	spin_lock_bh(&mpcb->mpcb_list_lock);
+ 	hlist_del_init_rcu(&tp->mptcp->node);
+-	spin_unlock(&mpcb->mpcb_list_lock);
++	spin_unlock_bh(&mpcb->mpcb_list_lock);
+ =
+
+ 	tp->mptcp->attached =3D 0;
+ 	mpcb->path_index_bits &=3D ~(1 << tp->mptcp->path_index);
 -- =
 
 2.16.2
 
 
---===============3221673145332110012==--
+--===============0094701663646927037==--
