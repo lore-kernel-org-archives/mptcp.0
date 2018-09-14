@@ -1,62 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============8661217815699351621=="
+Content-Type: multipart/mixed; boundary="===============0924148013105870063=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 17/20] mptcp: Close remaining subflows when falling
- back in mptcp_verif_dss_csum
-Date: Fri, 14 Sep 2018 10:25:21 -0700
-Message-ID: <20180914172524.67961-20-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 13/20] mptcp: Reset tsorted_anchor after call to
+ tcp_fragment
+Date: Fri, 14 Sep 2018 10:25:17 -0700
+Message-ID: <20180914172524.67961-16-cpaasch@apple.com>
 In-Reply-To: 20180914172524.67961-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 745
+X-UID: 746
 
---===============8661217815699351621==
+--===============0924148013105870063==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Since commit b079a187260f ("mptcp: Remove cnt_subflows") subflows can
-actually be in non-fully established and we will still send an MP_FAIL.
+The reinject-queue is special in the sense that its segments get kfree'd
+right after sending. We need to make sure that the dst-pointer is NULL
+as otherwise during the freeing we will access garbage.
 
-Thus, there can be multiple subflows and we need to make sure that the
-other ones are getting closed in that case.
-
-Otherwise, we will hit the case where we have a TCP-subflow hanging
-around (potentially calling tcp_write_err()) when the meta is already
-closed and we will get a warning like:
-[  213.983095] ------------[ cut here ]------------
-[  213.984532] Meta already closed i_rcv 0 i_snd 0 send_i 1 flags 0x2000301
-[  213.986591] WARNING: CPU: 3 PID: 0 at /mnt/tmp/builder/builder_env/mptcp=
-/net/mptcp/mptcp_ctrl.c:626 mptcp_sock_def_error_report+0xe0/0xf0
-[...]
-
-Fixes: b079a187260f ("mptcp: Remove cnt_subflows")
+Fixes: 8a1051d977cf ("Merge tag 'v4.15' into mptcp_trunk")
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit 81a19657724700079c4c7e0eb93d9c93e7036722)
+(cherry picked from commit e4eeb8266879fd69407381751ddcd232d266d0b8)
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/mptcp_input.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mptcp/mptcp_output.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index 45d7c9273bbe..e82a6e16f68f 100644
---- a/net/mptcp/mptcp_input.c
-+++ b/net/mptcp/mptcp_input.c
-@@ -387,6 +387,8 @@ static int mptcp_verif_dss_csum(struct sock *sk)
- 				kfree_skb(tmp);
- 			}
+diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+index c4e204f5ad72..c0b2c9ff8ca2 100644
+--- a/net/mptcp/mptcp_output.c
++++ b/net/mptcp/mptcp_output.c
+@@ -637,6 +637,12 @@ static int mptcp_fragment(struct sock *meta_sk, enum t=
+cp_queue tcp_queue,
+ 			if (undo)
+ 				tcp_adjust_pcount(meta_sk, skb, -undo);
+ 		}
++
++		/* tcp_fragment's call to sk_stream_alloc_skb initializes the
++		 * tcp_tsorted_anchor. We need to revert this as it clashes
++		 * with the refdst pointer.
++		 */
++		tcp_skb_tsorted_anchor_cleanup(buff);
+ 	}
  =
 
-+			mptcp_sub_force_close_all(tp->mpcb, sk);
-+
- 			ans =3D 0;
- 		}
- 	}
+ 	return 0;
 -- =
 
 2.16.2
 
 
---===============8661217815699351621==--
+--===============0924148013105870063==--
