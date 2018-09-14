@@ -1,55 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============6622561876341441214=="
+Content-Type: multipart/mixed; boundary="===============6989435875973410210=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 16/20] mptcp: Reset sk_it to NULL as we keep on
- iterating
-Date: Fri, 14 Sep 2018 10:25:20 -0700
-Message-ID: <20180914172524.67961-19-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 15/20] mptcp: Build-Fix
+Date: Fri, 14 Sep 2018 10:25:19 -0700
+Message-ID: <20180914172524.67961-18-cpaasch@apple.com>
 In-Reply-To: 20180914172524.67961-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 740
+X-UID: 741
 
---===============6622561876341441214==
+--===============6989435875973410210==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The loop relies on ending with sk_it set to NULL to decide whether or
-not to send a RST.
-
-As we changed the loop-iteration with commit 7a662b690069 ("mptcp: Make sub=
-flow-list an RCU-list")
-to rather loop on the mptcp_tcp_sock, we need to make sure that at each
-iteration sk_it is set back to NULL.
+Need to declare a dummy-function when MPTCP is off.
 
 Fixes: 7a662b690069 ("mptcp: Make subflow-list an RCU-list")
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit 1696c1873d544ad4dab494bc7a380b30b1a64c44)
+(cherry picked from commit f92ca04d8af5225292e8a375804bcb56fab56f58)
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/mptcp_input.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/net/mptcp.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index 8a3f8dd764e6..45d7c9273bbe 100644
---- a/net/mptcp/mptcp_input.c
-+++ b/net/mptcp/mptcp_input.c
-@@ -371,6 +371,8 @@ static int mptcp_verif_dss_csum(struct sock *sk)
- 			if (sk_it !=3D sk &&
- 			    tcp_sk(sk_it)->mptcp->fully_established)
- 				break;
-+
-+			sk_it =3D NULL;
- 		}
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 864796b2395c..b8b750034a91 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -1292,6 +1292,11 @@ bool mptcp_prune_ofo_queue(struct sock *sk);
+ 	do {				\
+ 	} while (0)
  =
 
- 		if (sk_it) {
++static inline struct sock *mptcp_to_sock(const struct mptcp_tcp_sock *mptc=
+p)
++{
++	return NULL;
++}
++
+ #define mptcp_for_each_sub(__mpcb, __mptcp)					\
+ 	if (0)
+ =
+
 -- =
 
 2.16.2
 
 
---===============6622561876341441214==--
+--===============6989435875973410210==--
