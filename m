@@ -1,252 +1,131 @@
-Content-Type: multipart/mixed; boundary="===============6508923041704311743=="
+Content-Type: multipart/mixed; boundary="===============2878505584718199731=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 07/20] mptcp: Remove cnt_subflows
-Date: Fri, 14 Sep 2018 10:25:11 -0700
-Message-ID: <20180914172524.67961-10-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 09/20] mptcp: Rename tw_lock to mpcb_list_lock
+Date: Fri, 14 Sep 2018 10:25:13 -0700
+Message-ID: <20180914172524.67961-12-cpaasch@apple.com>
 In-Reply-To: 20180914172524.67961-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 728
+X-UID: 729
 
---===============6508923041704311743==
+--===============2878505584718199731==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Our goal is to make subflow establishment lockless. cnt_subflows would
-need to either become an atomic variable, or we can remove it.
-
-Well, let's remove it! In the general case it is not needed at all. Some
-exotic schedulers need cnt_subflows, but we don't care if we add
-complexity in these schedulers.
-
-Something special in mptcp_verif_dss_csum(). There the access was actually
-wrong. Simply because cnt_subflows > 1, it doesn't mean we have a
-working subflow. So, we fix that. I don't think this issue is big enough
-to backport it.
-
-Finally mptcp_sched.c was also using cnt_subflows but merely for
-speeding up things to avoid going through the whole scheduler code when
-there is only one subflow. So, we can remove it and trade performance
-for a better design.
+The lock is going to cover more than just the tw-list.
+Namely, the subflow-list stored in the mpcb.
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit b079a187260f0591ee292655f00526a5c8371cfe)
+(cherry picked from commit 411ffb5c2b2a42d578f11b800c97f23db1cb77ee)
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/net/mptcp.h          | 12 +++++++++++-
- net/mptcp/mptcp_ctrl.c       | 15 ++++++---------
- net/mptcp/mptcp_input.c      | 11 ++++++++++-
- net/mptcp/mptcp_ndiffports.c |  2 +-
- net/mptcp/mptcp_output.c     |  2 +-
- net/mptcp/mptcp_sched.c      | 11 -----------
- 6 files changed, 29 insertions(+), 24 deletions(-)
+ include/net/mptcp.h    |  4 +++-
+ net/mptcp/mptcp_ctrl.c | 14 +++++++-------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 62b06ed5520c..a1b9413689e3 100644
+index 3e6626fdfbd5..c96da5e30d51 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -277,7 +277,6 @@ struct mptcp_cb {
- 		rcv_hiseq_index:1; /* Index in rcv_high_order of rcv_nxt */
+@@ -258,6 +258,9 @@ struct mptcp_cb {
+ 	/* list of sockets that need a call to release_cb */
+ 	struct hlist_head callback_list;
  =
 
- 	/* socket count in this connection */
--	u8 cnt_subflows;
- 	u8 cnt_established;
++	/* Lock used for protecting the different rcu-lists of mptcp_cb */
++	spinlock_t mpcb_list_lock;
++
+ 	/* High-order bits of 64-bit sequence numbers */
+ 	u32 snd_high_order[2];
+ 	u32 rcv_high_order[2];
+@@ -289,7 +292,6 @@ struct mptcp_cb {
+ 	u64	infinite_rcv_seq;
  =
 
- #define MPTCP_SCHED_DATA_SIZE 8
-@@ -1267,6 +1266,17 @@ static inline bool mptcp_can_new_subflow(const struc=
-t sock *meta_sk)
- 	       !tcp_sk(meta_sk)->mpcb->send_infinite_mapping;
- }
+ 	/***** Start of fields, used for connection closure */
+-	spinlock_t	 tw_lock;
+ 	unsigned char	 mptw_state;
+ 	u8		 dfin_path_index;
  =
 
-+static inline int mptcp_subflow_count(const struct mptcp_cb *mpcb)
-+{
-+	struct sock *sk;
-+	int i =3D 0;
-+
-+	mptcp_for_each_sk(mpcb, sk)
-+		i++;
-+
-+	return i;
-+}
-+
- /* TCP and MPTCP mpc flag-depending functions */
- u16 mptcp_select_window(struct sock *sk);
- void mptcp_tcp_set_rto(struct sock *sk);
 diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
-index a329046f695d..5020724b4431 100644
+index 8db7c5bea1b4..ce098de43145 100644
 --- a/net/mptcp/mptcp_ctrl.c
 +++ b/net/mptcp/mptcp_ctrl.c
-@@ -1401,7 +1401,6 @@ int mptcp_add_sock(struct sock *meta_sk, struct sock =
-*sk, u8 loc_id, u8 rem_id,
- 	mpcb->connection_list =3D tp;
- 	tp->mptcp->attached =3D 1;
+@@ -673,14 +673,14 @@ void mptcp_sock_destruct(struct sock *sk)
+ 		 * update to the rcv_nxt of the time-wait-sock and remove
+ 		 * its reference to the mpcb.
+ 		 */
+-		spin_lock_bh(&mpcb->tw_lock);
++		spin_lock_bh(&mpcb->mpcb_list_lock);
+ 		list_for_each_entry_rcu(mptw, &mpcb->tw_list, list) {
+ 			list_del_rcu(&mptw->list);
+ 			mptw->in_list =3D 0;
+ 			mptcp_mpcb_put(mpcb);
+ 			rcu_assign_pointer(mptw->mpcb, NULL);
+ 		}
+-		spin_unlock_bh(&mpcb->tw_lock);
++		spin_unlock_bh(&mpcb->mpcb_list_lock);
  =
 
--	mpcb->cnt_subflows++;
- 	atomic_add(atomic_read(&((struct sock *)tp)->sk_rmem_alloc),
- 		   &meta_sk->sk_rmem_alloc);
+ 		mptcp_debug("%s destroying meta-sk token %#x\n", __func__,
+ 			    tcp_sk(sk)->mpcb->mptcp_loc_token);
+@@ -1301,9 +1301,9 @@ static int mptcp_alloc_mpcb(struct sock *meta_sk, __u=
+64 remote_key,
  =
 
-@@ -1421,23 +1420,21 @@ int mptcp_add_sock(struct sock *meta_sk, struct soc=
-k *sk, u8 loc_id, u8 rem_id,
- 	sk->sk_destruct =3D mptcp_sock_destruct;
+ 	/* Init time-wait stuff */
+ 	INIT_LIST_HEAD(&mpcb->tw_list);
+-	spin_lock_init(&mpcb->tw_lock);
  =
 
- 	if (sk->sk_family =3D=3D AF_INET)
--		mptcp_debug("%s: token %#x pi %d, src_addr:%pI4:%d dst_addr:%pI4:%d, cnt=
-_subflows now %d\n",
-+		mptcp_debug("%s: token %#x pi %d, src_addr:%pI4:%d dst_addr:%pI4:%d\n",
- 			    __func__ , mpcb->mptcp_loc_token,
- 			    tp->mptcp->path_index,
- 			    &((struct inet_sock *)tp)->inet_saddr,
- 			    ntohs(((struct inet_sock *)tp)->inet_sport),
- 			    &((struct inet_sock *)tp)->inet_daddr,
--			    ntohs(((struct inet_sock *)tp)->inet_dport),
--			    mpcb->cnt_subflows);
-+			    ntohs(((struct inet_sock *)tp)->inet_dport));
- #if IS_ENABLED(CONFIG_IPV6)
- 	else
--		mptcp_debug("%s: token %#x pi %d, src_addr:%pI6:%d dst_addr:%pI6:%d, cnt=
-_subflows now %d\n",
-+		mptcp_debug("%s: token %#x pi %d, src_addr:%pI6:%d dst_addr:%pI6:%d\n",
- 			    __func__ , mpcb->mptcp_loc_token,
- 			    tp->mptcp->path_index, &inet6_sk(sk)->saddr,
- 			    ntohs(((struct inet_sock *)tp)->inet_sport),
- 			    &sk->sk_v6_daddr,
--			    ntohs(((struct inet_sock *)tp)->inet_dport),
--			    mpcb->cnt_subflows);
-+			    ntohs(((struct inet_sock *)tp)->inet_dport));
- #endif
+ 	INIT_HLIST_HEAD(&mpcb->callback_list);
++	spin_lock_init(&mpcb->mpcb_list_lock);
+ =
+
+ 	mptcp_mpcb_inherit_sockopts(meta_sk, master_sk);
+ =
+
+@@ -2276,10 +2276,10 @@ int mptcp_init_tw_sock(struct sock *sk, struct tcp_=
+timewait_sock *tw)
+ 		mptw->rcv_nxt++;
+ 	rcu_assign_pointer(mptw->mpcb, mpcb);
+ =
+
+-	spin_lock_bh(&mpcb->tw_lock);
++	spin_lock_bh(&mpcb->mpcb_list_lock);
+ 	list_add_rcu(&mptw->list, &tp->mpcb->tw_list);
+ 	mptw->in_list =3D 1;
+-	spin_unlock_bh(&mpcb->tw_lock);
++	spin_unlock_bh(&mpcb->mpcb_list_lock);
  =
 
  	return 0;
-@@ -1471,7 +1468,6 @@ void mptcp_del_sock(struct sock *sk)
- 			}
+ }
+@@ -2295,12 +2295,12 @@ void mptcp_twsk_destructor(struct tcp_timewait_sock=
+ *tw)
+ 	 * from the list and drop the ref properly.
+ 	 */
+ 	if (mpcb && refcount_inc_not_zero(&mpcb->mpcb_refcnt)) {
+-		spin_lock_bh(&mpcb->tw_lock);
++		spin_lock_bh(&mpcb->mpcb_list_lock);
+ 		if (tw->mptcp_tw->in_list) {
+ 			list_del_rcu(&tw->mptcp_tw->list);
+ 			tw->mptcp_tw->in_list =3D 0;
  		}
- 	}
--	mpcb->cnt_subflows--;
- 	if (tp->mptcp->establish_increased)
- 		mpcb->cnt_established--;
+-		spin_unlock_bh(&mpcb->tw_lock);
++		spin_unlock_bh(&mpcb->mpcb_list_lock);
  =
 
-@@ -2840,8 +2836,9 @@ static int mptcp_pm_seq_show(struct seq_file *seq, vo=
-id *v)
- 					   ntohs(isk->inet_dport));
- #endif
- 			}
-+
- 			seq_printf(seq, " %02X %02X %08X:%08X %lu",
--				   meta_sk->sk_state, mpcb->cnt_subflows,
-+				   meta_sk->sk_state, mptcp_subflow_count(mpcb),
- 				   meta_tp->write_seq - meta_tp->snd_una,
- 				   max_t(int, meta_tp->rcv_nxt -
- 					 meta_tp->copied_seq, 0),
-diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index 3825bb90990e..0ef43f8da140 100644
---- a/net/mptcp/mptcp_input.c
-+++ b/net/mptcp/mptcp_input.c
-@@ -347,6 +347,8 @@ static int mptcp_verif_dss_csum(struct sock *sk)
- =
-
- 	/* Now, checksum must be 0 */
- 	if (unlikely(csum_fold(csum_tcp))) {
-+		struct sock *sk_it =3D NULL;
-+
- 		pr_err("%s csum is wrong: %#x tcp-seq %u dss_csum_added %d overflowed %d=
- iterations %d\n",
- 		       __func__, csum_fold(csum_tcp), TCP_SKB_CB(last)->seq,
- 		       dss_csum_added, overflowed, iter);
-@@ -359,7 +361,14 @@ static int mptcp_verif_dss_csum(struct sock *sk)
- 		 */
- 		tp->mpcb->csum_cutoff_seq =3D tp->mptcp->map_data_seq;
- =
-
--		if (tp->mpcb->cnt_subflows > 1) {
-+		/* Search for another subflow that is fully established */
-+		mptcp_for_each_sk(tp->mpcb, sk_it) {
-+			if (sk_it !=3D sk &&
-+			    tcp_sk(sk_it)->mptcp->fully_established)
-+				break;
-+		}
-+
-+		if (sk_it) {
- 			mptcp_send_reset(sk);
- 			ans =3D -1;
- 		} else {
-diff --git a/net/mptcp/mptcp_ndiffports.c b/net/mptcp/mptcp_ndiffports.c
-index 10147d5e3cca..58acf50df752 100644
---- a/net/mptcp/mptcp_ndiffports.c
-+++ b/net/mptcp/mptcp_ndiffports.c
-@@ -53,7 +53,7 @@ static void create_subflow_worker(struct work_struct *wor=
-k)
- 	    !tcp_sk(mpcb->master_sk)->mptcp->fully_established)
- 		goto exit;
- =
-
--	if (num_subflows > iter && num_subflows > mpcb->cnt_subflows) {
-+	if (num_subflows > iter && num_subflows > mptcp_subflow_count(mpcb)) {
- 		if (meta_sk->sk_family =3D=3D AF_INET ||
- 		    mptcp_v6_is_v4_mapped(meta_sk)) {
- 			struct mptcp_loc4 loc;
-diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index d50e49278e0d..81f5674f50c9 100644
---- a/net/mptcp/mptcp_output.c
-+++ b/net/mptcp/mptcp_output.c
-@@ -1353,7 +1353,7 @@ void mptcp_send_active_reset(struct sock *meta_sk, gf=
-p_t priority)
- 	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
- 	struct sock *sk;
- =
-
--	if (!mpcb->cnt_subflows)
-+	if (!mpcb->connection_list)
- 		return;
- =
-
- 	WARN_ON(meta_tp->send_mp_fclose);
-diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
-index 1881eaec4f3e..a2543c60bd31 100644
---- a/net/mptcp/mptcp_sched.c
-+++ b/net/mptcp/mptcp_sched.c
-@@ -216,14 +216,6 @@ static struct sock *get_available_subflow(struct sock =
-*meta_sk,
- 	struct sock *sk;
- 	bool force;
- =
-
--	/* if there is only one subflow, bypass the scheduling function */
--	if (mpcb->cnt_subflows =3D=3D 1) {
--		sk =3D (struct sock *)mpcb->connection_list;
--		if (!mptcp_is_available(sk, skb, zero_wnd_test))
--			sk =3D NULL;
--		return sk;
--	}
--
- 	/* Answer data_fin on same subflow!!! */
- 	if (meta_sk->sk_shutdown & RCV_SHUTDOWN &&
- 	    skb && mptcp_is_data_fin(skb)) {
-@@ -264,9 +256,6 @@ static struct sk_buff *mptcp_rcv_buf_optimization(struc=
-t sock *sk, int penal)
- 	struct sk_buff *skb_head;
- 	struct defsched_priv *dsp =3D defsched_get_priv(tp);
- =
-
--	if (tp->mpcb->cnt_subflows =3D=3D 1)
--		return NULL;
--
- 	meta_sk =3D mptcp_meta_sk(sk);
- 	skb_head =3D tcp_rtx_queue_head(meta_sk);
- =
-
+ 		/* Twice, because we increased it above */
+ 		mptcp_mpcb_put(mpcb);
 -- =
 
 2.16.2
 
 
---===============6508923041704311743==--
+--===============2878505584718199731==--
