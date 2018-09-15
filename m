@@ -1,56 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============0924148013105870063=="
+Content-Type: multipart/mixed; boundary="===============4773278180120079066=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 13/20] mptcp: Reset tsorted_anchor after call to
- tcp_fragment
-Date: Fri, 14 Sep 2018 10:25:17 -0700
-Message-ID: <20180914172524.67961-16-cpaasch@apple.com>
-In-Reply-To: 20180914172524.67961-1-cpaasch@apple.com
+Subject: Re: [MPTCP] [PATCH 09/20] mptcp: Rename tw_lock to mpcb_list_lock
+Date: Fri, 14 Sep 2018 17:21:11 -0700
+Message-ID: <alpine.OSX.2.21.1809141719040.12208@abuanzol-mobl1.amr.corp.intel.com>
+In-Reply-To: 20180914172524.67961-12-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 746
+X-UID: 747
 
---===============0924148013105870063==
+--===============4773278180120079066==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The reinject-queue is special in the sense that its segments get kfree'd
-right after sending. We need to make sure that the dst-pointer is NULL
-as otherwise during the freeing we will access garbage.
 
-Fixes: 8a1051d977cf ("Merge tag 'v4.15' into mptcp_trunk")
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-(cherry picked from commit e4eeb8266879fd69407381751ddcd232d266d0b8)
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- net/mptcp/mptcp_output.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Fri, 14 Sep 2018, Christoph Paasch wrote:
 
-diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index c4e204f5ad72..c0b2c9ff8ca2 100644
---- a/net/mptcp/mptcp_output.c
-+++ b/net/mptcp/mptcp_output.c
-@@ -637,6 +637,12 @@ static int mptcp_fragment(struct sock *meta_sk, enum t=
-cp_queue tcp_queue,
- 			if (undo)
- 				tcp_adjust_pcount(meta_sk, skb, -undo);
- 		}
-+
-+		/* tcp_fragment's call to sk_stream_alloc_skb initializes the
-+		 * tcp_tsorted_anchor. We need to revert this as it clashes
-+		 * with the refdst pointer.
-+		 */
-+		tcp_skb_tsorted_anchor_cleanup(buff);
- 	}
- =
+> The lock is going to cover more than just the tw-list.
+> Namely, the subflow-list stored in the mpcb.
+>
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> (cherry picked from commit 411ffb5c2b2a42d578f11b800c97f23db1cb77ee)
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> ---
+> include/net/mptcp.h    |  4 +++-
+> net/mptcp/mptcp_ctrl.c | 14 +++++++-------
+> 2 files changed, 10 insertions(+), 8 deletions(-)
+>
 
- 	return 0;
--- =
+I haven't found any issues with the patch set up to this point, and will =
 
-2.16.2
+continue reviewing on Monday.
 
+--
+Mat Martineau
+Intel OTC
 
---===============0924148013105870063==--
+--===============4773278180120079066==--
