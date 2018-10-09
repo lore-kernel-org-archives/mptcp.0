@@ -1,81 +1,211 @@
-Content-Type: multipart/mixed; boundary="===============9078848726009715058=="
+Content-Type: multipart/mixed; boundary="===============0999057868198568851=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] MPTCP layer processing overhead?!
-Date: Tue, 09 Oct 2018 15:44:16 -0700
-Message-ID: <20181009224416.GT36310@MacBook-Pro-19.local>
-In-Reply-To: CAG40BEKwSNDtYoo8Q-SVsRa-5Dd3UQcOvF-hB2UYnbvvfoSRVA@mail.gmail.com
+Subject: Re: [MPTCP] [RFC PATCH v3 12/16] skbuff: Add private data pointer
+Date: Tue, 09 Oct 2018 16:19:19 -0700
+Message-ID: <alpine.OSX.2.21.1810091458240.4669@suryakri-mssb.amr.corp.intel.com>
+In-Reply-To: 20181008203005.GC36310@MacBook-Pro-19.local
 X-Status: 
 X-Keywords:                  
-X-UID: 803
+X-UID: 804
 
---===============9078848726009715058==
+--===============0999057868198568851==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-(adding back the mailing-list in CC)
+On Mon, 8 Oct 2018, Christoph Paasch wrote:
 
-On 10/10/18 - 00:25:55, Dejene Boru wrote:
-> CPU does not seem to be the bottleneck because I have core i7 and is only
-> running iperf on the server and client. The throughput is 935 Mbps with
-> MPTCP disabled and 922Mbps with MPTCP enabled. By the way I have repeated
-> the same test setting the congestion control to Reno and obtained similar
-> result.  I compiled MPTCP from source v94 (kernel 4.14.73).
+> On 08/10/18 - 13:15:22, Mat Martineau wrote:
+>> On Mon, 8 Oct 2018, Christoph Paasch wrote:
+>>
+>>> On 05/10/18 - 15:59:14, Mat Martineau wrote:
+>>>> Allow struct sk_buff to be optionally extended when the control buffer
+>>>> space is insufficient. New pointers for the extended data and associat=
+ed
+>>>> destructor are placed at the end of the data structure and left
+>>>> uninitialized so cache behavior of struct sk_buff is unchanged when the
+>>>> new pointers are not accessed.
+>>>>
+>>>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>>>> ---
+>>>>  include/linux/skbuff.h | 16 +++++++++++++++-
+>>>>  net/core/skbuff.c      |  5 +++++
+>>>>  net/ipv4/tcp_output.c  |  3 +++
+>>>>  3 files changed, 23 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+>>>> index 17a13e4785fc..5b1f302b1b0f 100644
+>>>> --- a/include/linux/skbuff.h
+>>>> +++ b/include/linux/skbuff.h
+>>>> @@ -631,6 +631,7 @@ typedef unsigned char *sk_buff_data_t;
+>>>>   *	@queue_mapping: Queue mapping for multiqueue devices
+>>>>   *	@xmit_more: More SKBs are pending for this queue
+>>>>   *	@pfmemalloc: skbuff was allocated from PFMEMALLOC reserves
+>>>> + *	@priv_used: priv, priv_copy, and priv_destructor contain valid data
+>>>>   *	@ndisc_nodetype: router type (from link layer)
+>>>>   *	@ooo_okay: allow the mapping of a socket to a queue to be changed
+>>>>   *	@l4_hash: indicate hash is a canonical 4-tuple hash over transport
+>>>> @@ -660,6 +661,9 @@ typedef unsigned char *sk_buff_data_t;
+>>>>   *	@data: Data head pointer
+>>>>   *	@truesize: Buffer size
+>>>>   *	@users: User count - see {datagram,tcp}.c
+>>>> + *	@priv: Optional pointer to skb private data
+>>>> + *	@priv_copy: Private data copy function
+>>>> + *	@priv_destructor: Private data destruct function
+>>>>   */
+>>>>
+>>>>  struct sk_buff {
+>>>> @@ -741,7 +745,8 @@ struct sk_buff {
+>>>>  				peeked:1,
+>>>>  				head_frag:1,
+>>>>  				xmit_more:1,
+>>>> -				pfmemalloc:1;
+>>>> +				pfmemalloc:1,
+>>>> +				priv_used:1;
+>>>>
+>>>>  	/* fields enclosed in headers_start/headers_end are copied
+>>>>  	 * using a single memcpy() in __copy_skb_header()
+>>>> @@ -856,6 +861,15 @@ struct sk_buff {
+>>>>  				*data;
+>>>>  	unsigned int		truesize;
+>>>>  	refcount_t		users;
+>>>> +
+>>>> +	/* Uninitialized private pointers. At the very end so they do not
+>>>> +	 * affect cache behavior of the rest of struct sk_buff when left
+>>>> +	 * unused. All three must be initialized when priv_used is set.
+>>>> +	 */
+>>>> +	void			*priv;
+>>>> +	void			(*priv_copy)(const struct sk_buff *from,
+>>>> +					     struct sk_buff *to);
+>>>> +	void			(*priv_destructor)(struct sk_buff *skb);
+>>>>  };
+>>>>
+>>>>  #ifdef __KERNEL__
+>>>> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+>>>> index c996c09d095f..b508e9e5e855 100644
+>>>> --- a/net/core/skbuff.c
+>>>> +++ b/net/core/skbuff.c
+>>>> @@ -611,6 +611,10 @@ void skb_release_head_state(struct sk_buff *skb)
+>>>>  		WARN_ON(in_irq());
+>>>>  		skb->destructor(skb);
+>>>>  	}
+>>>> +	if (skb->priv_used && skb->priv_destructor) {
+>>>> +		WARN_ON(in_irq());
+>>>> +		skb->priv_destructor(skb);
+>>>> +	}
+>>>>  #if IS_ENABLED(CONFIG_NF_CONNTRACK)
+>>>>  	nf_conntrack_put(skb_nfct(skb));
+>>>>  #endif
+>>>> @@ -859,6 +863,7 @@ static struct sk_buff *__skb_clone(struct sk_buff =
+*n, struct sk_buff *skb)
+>>>>  	n->nohdr =3D 0;
+>>>>  	n->peeked =3D 0;
+>>>>  	C(pfmemalloc);
+>>>> +	n->priv_used =3D 0;
+>>>>  	n->destructor =3D NULL;
+>>>>  	C(tail);
+>>>>  	C(end);
+>>>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+>>>> index 780abb11dffd..9e07afd084c3 100644
+>>>> --- a/net/ipv4/tcp_output.c
+>>>> +++ b/net/ipv4/tcp_output.c
+>>>> @@ -1129,6 +1129,9 @@ static int __tcp_transmit_skb(struct sock *sk, s=
+truct sk_buff *skb,
+>>>>  				skb =3D pskb_copy(oskb, gfp_mask);
+>>>>  			else
+>>>>  				skb =3D skb_clone(oskb, gfp_mask);
+>>>> +
+>>>> +			if (oskb->priv_used && oskb->priv_copy)
+>>>> +				oskb->priv_copy(oskb, skb);
+>>>
+>>> Shouldn't this rather be called inside pskb_copy, skb_clone, and friend=
+s... ?
+>>
+>> I considered that - and thinking about it more, it may be necessary.
+>>
+>> For the initial implementation I wanted to regard this "private" data in=
+ a
+>> very restricted sense and have it belong only to one skb, with propagati=
+on
+>> to additional clones or copies only where the layer doing so knows what =
+that
+>> private data is for.
+>>
+>> In this case, the option writing code later in in __tcp_transmit_skb() n=
+eeds
+>> to see the private data, so the private data is shared with the clone.
+>> However, the private data wouldn't be needed except in this function and=
+ for
+>> skbs in the tcp_rtx_queue.
+>
+> Hmmm... Makes actually sense. As TCP is the only one who cares about the
+> private data, he should be the one doing the work. But, in that case we
+> don't even need the callback probably.
 
-Ok, that's not a 10% reduction but rather a 1.3% reduction :)
+Looking at it now, there's really no difference between keeping track of =
 
-MPTCP adds additional TCP-options in the header. These are consuming
-20 bytes. If you take a 1500 MTU, that means you are effectively adding a
-20 / 1500 =3D 1.3% overhead compared to the payload.
+what priv_data points to in order to use it (for MPTCP option population) =
 
-Thus, a 1.3% throughput reduction is expected here.
+or copy it. Makes sense to get rid of priv_copy.
+
+>
+> Thinking along those lines then: When transmitting the skb, we should cle=
+ar
+> priv_used, no ?
+
+Good idea, that would leave the priv pointers available for lower layers.
+
+>
+>> What I'm remembering now is that keeping MPTCP metadata across pskb_copy=
+()
+>> calls has been an issue before, so I'll take another look at that.
+>
+> The problem was that we were not sending the DSS-mapping on all segments.
+> However, MPTCP does not mandate that. And Linux & iOS support receiving a
+> DSS-mapping that spreads multiple segments but where the DSS-mapping TCP-=
+option
+> is not present in all those segments.
+>
+> So, the "old" issues about pskb_copy() with MPTCP are not a real issue.
+
+Ok, good to know.
+
+>
+> But, in general, the question is whether we want to make the priv_copy-th=
+ing
+> more of an opt-in for each layer where each layer handles the pointers or
+> whether it's handled by the "skb-subsystem".
+>
+> In the former case we probably don't need the callbacks. In the latter, we
+> do.
+
+I'm leaning toward the former, to get rid of the copy pointer. The =
+
+destructor is needed because it's harder to know when or where an skb will =
+
+get destroyed, but dereferencing the priv_data pointer for copying or =
+
+reading the memory requires keeping track of its contents much like we're =
+
+accustomed to doing for skb->cb[].
+
+Mat
 
 
-MPTCP's benefit is mostly visible when pooling resources across multiple
-interfaces (or paths) or when in mobility scenarios.
+>>
+>> (and I need to take a look at possible skb collapsing in the rtx queue)
 
+>>>
+>>>>  		} tcp_skb_tsorted_restore(oskb);
+>>>>
+>>>>  		if (unlikely(!skb))
+>>>> --
+>>>> 2.19.1
 
-Christoph
+--
+Mat Martineau
+Intel OTC
 
-
-> =
-
-> Dejene Boru
-> =
-
-> =
-
-> On Wed, Oct 10, 2018 at 12:17 AM Christoph Paasch <cpaasch(a)apple.com> w=
-rote:
-> =
-
-> > On 09/10/18 - 23:59:19, Dejene Boru wrote:
-> > > Hi all,
-> > >
-> > > My understanding from MPTCP protocol is that, if MPTCP has only one
-> > subflow
-> > > it behaves almost similar to regular TCP with Reno  congestion contro=
-l.
-> > > This means that if I enable MPTCP but set the  congestion control for
-> > > example to BBR or DCTCP configuring the parameters required for the
-> > > respective congestion control, it should be able to achieve the same
-> > > throughput as when MPTCP is disabled and the corresponding congestion
-> > > control is configured. I have tested MPTCP with  one subflow  using D=
-CTCP
-> > > congestion control and obtained a 10% reduced throughput compared with
-> > > MPTCP disabled.  Which part of the MPTCP code does result in this kin=
-d of
-> > > overhead?
-> >
-> > Are you CPU-limited here in this scenario?
-> >
-> > What throughput are you getting exactly?
-> >
-> >
-> > Christoph
-> >
-> >
-
---===============9078848726009715058==--
+--===============0999057868198568851==--
