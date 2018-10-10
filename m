@@ -1,264 +1,423 @@
-Content-Type: multipart/mixed; boundary="===============9073707729102768011=="
+Content-Type: multipart/mixed; boundary="===============2162484492875180343=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH v3 12/16] skbuff: Add private data pointer
-Date: Tue, 09 Oct 2018 16:42:27 -0700
-Message-ID: <20181009234227.GV36310@MacBook-Pro-19.local>
-In-Reply-To: alpine.OSX.2.21.1810091458240.4669@suryakri-mssb.amr.corp.intel.com
+Subject: Re: [MPTCP] [RFC PATCH v3 03/16] mptcp: Add MPTCP socket stubs
+Date: Tue, 09 Oct 2018 17:16:46 -0700
+Message-ID: <alpine.OSX.2.21.1810091631070.4669@suryakri-mssb.amr.corp.intel.com>
+In-Reply-To: 20181008204743.GE36310@MacBook-Pro-19.local
 X-Status: 
 X-Keywords:                  
-X-UID: 805
+X-UID: 806
 
---===============9073707729102768011==
+--===============2162484492875180343==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 09/10/18 - 16:19:19, Mat Martineau wrote:
-> On Mon, 8 Oct 2018, Christoph Paasch wrote:
-> =
+On Mon, 8 Oct 2018, Christoph Paasch wrote:
 
-> > On 08/10/18 - 13:15:22, Mat Martineau wrote:
-> > > On Mon, 8 Oct 2018, Christoph Paasch wrote:
-> > > =
+> On 08/10/18 - 12:48:48, Mat Martineau wrote:
+>>
+>> On Mon, 8 Oct 2018, Christoph Paasch wrote:
+>>
+>>> On 05/10/18 - 15:59:05, Mat Martineau wrote:
+>>>> From: Peter Krystad <peter.krystad(a)intel.com>
+>>>>
+>>>> Implements the infrastructure for MPTCP sockets.
+>>>>
+>>>> MPTCP sockets open one in-kernel TCP socket per subflow. These subflow
+>>>> sockets are only managed by the MPTCP socket that owns them and are not
+>>>> visible from userspace. This commit allows a userspace program to open
+>>>> an MPTCP socket with:
+>>>>
+>>>>   sock =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
+>>>
+>>> Have you considered AF_MULTIPATH instead?
+>>>
+>>> Because, MPTCP does not really care about IP-address family. Thus, it m=
+ight
+>>> make sense here.
+>>
+>> Yes - but it's been a while since we discussed it.
+>>
+>> My first attempt at implementing the socket infrastructure did take the
+>> AF_MULTIPATH approach, and I quickly learned a few things:
+>>
+>> 1. When I tried to write a test program using python's socket module, I
+>> found that a lot of TCP-like behavior depended on using AF_INET/AF_INET6=
+, so
+>> nothing worked with a non-standard address family. It did, however, hand=
+le a
+>> non-standard proto well. As I considered what this meant (just a python
+>> quirk, or something bigger?), it did seem that the IPPROTO_MPTCP approach
+>> would be easier to adapt to existing programs in general.
+>
+> That might be. We need to look into how a few programs are structured.
+>
+> The only one I really deeply looked at is ATS, and there I don't think it=
+ would be
+> a big deal.
+>
+>> 2. The generic functionality provided by the kernel's af_inet infrastruc=
+ture
+>> is useful for MPTCP
+>
+> What do you mean by that? I mean, having a separate AF_* does not prevent=
+ us
+> from using a separate struct proto_ops.
+>
+> Having AF_MULTIPATH even allows to have our own struct net_proto_family
+> which could be intersting if there are bits in inet_create that we don't
+> need.
 
-> > > > On 05/10/18 - 15:59:14, Mat Martineau wrote:
-> > > > > Allow struct sk_buff to be optionally extended when the control b=
-uffer
-> > > > > space is insufficient. New pointers for the extended data and ass=
-ociated
-> > > > > destructor are placed at the end of the data structure and left
-> > > > > uninitialized so cache behavior of struct sk_buff is unchanged wh=
-en the
-> > > > > new pointers are not accessed.
-> > > > > =
+After digging through some code and old email, I think there was some =
 
-> > > > > Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.co=
-m>
-> > > > > ---
-> > > > >  include/linux/skbuff.h | 16 +++++++++++++++-
-> > > > >  net/core/skbuff.c      |  5 +++++
-> > > > >  net/ipv4/tcp_output.c  |  3 +++
-> > > > >  3 files changed, 23 insertions(+), 1 deletion(-)
-> > > > > =
+quirk in the early implementations that allowed us to use IPPROTO_MPTCP =
 
-> > > > > diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> > > > > index 17a13e4785fc..5b1f302b1b0f 100644
-> > > > > --- a/include/linux/skbuff.h
-> > > > > +++ b/include/linux/skbuff.h
-> > > > > @@ -631,6 +631,7 @@ typedef unsigned char *sk_buff_data_t;
-> > > > >   *	@queue_mapping: Queue mapping for multiqueue devices
-> > > > >   *	@xmit_more: More SKBs are pending for this queue
-> > > > >   *	@pfmemalloc: skbuff was allocated from PFMEMALLOC reserves
-> > > > > + *	@priv_used: priv, priv_copy, and priv_destructor contain vali=
-d data
-> > > > >   *	@ndisc_nodetype: router type (from link layer)
-> > > > >   *	@ooo_okay: allow the mapping of a socket to a queue to be cha=
-nged
-> > > > >   *	@l4_hash: indicate hash is a canonical 4-tuple hash over tran=
-sport
-> > > > > @@ -660,6 +661,9 @@ typedef unsigned char *sk_buff_data_t;
-> > > > >   *	@data: Data head pointer
-> > > > >   *	@truesize: Buffer size
-> > > > >   *	@users: User count - see {datagram,tcp}.c
-> > > > > + *	@priv: Optional pointer to skb private data
-> > > > > + *	@priv_copy: Private data copy function
-> > > > > + *	@priv_destructor: Private data destruct function
-> > > > >   */
-> > > > > =
+for both the subflows and the MPTCP-level socket. As the code looks now, =
 
-> > > > >  struct sk_buff {
-> > > > > @@ -741,7 +745,8 @@ struct sk_buff {
-> > > > >  				peeked:1,
-> > > > >  				head_frag:1,
-> > > > >  				xmit_more:1,
-> > > > > -				pfmemalloc:1;
-> > > > > +				pfmemalloc:1,
-> > > > > +				priv_used:1;
-> > > > > =
+AF_INET doesn't buy us much any more. Please disregard :)
 
-> > > > >  	/* fields enclosed in headers_start/headers_end are copied
-> > > > >  	 * using a single memcpy() in __copy_skb_header()
-> > > > > @@ -856,6 +861,15 @@ struct sk_buff {
-> > > > >  				*data;
-> > > > >  	unsigned int		truesize;
-> > > > >  	refcount_t		users;
-> > > > > +
-> > > > > +	/* Uninitialized private pointers. At the very end so they do n=
-ot
-> > > > > +	 * affect cache behavior of the rest of struct sk_buff when left
-> > > > > +	 * unused. All three must be initialized when priv_used is set.
-> > > > > +	 */
-> > > > > +	void			*priv;
-> > > > > +	void			(*priv_copy)(const struct sk_buff *from,
-> > > > > +					     struct sk_buff *to);
-> > > > > +	void			(*priv_destructor)(struct sk_buff *skb);
-> > > > >  };
-> > > > > =
+Thinking of similarities between AF_MULTIPATH and AF_KCM, they can both be =
 
-> > > > >  #ifdef __KERNEL__
-> > > > > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> > > > > index c996c09d095f..b508e9e5e855 100644
-> > > > > --- a/net/core/skbuff.c
-> > > > > +++ b/net/core/skbuff.c
-> > > > > @@ -611,6 +611,10 @@ void skb_release_head_state(struct sk_buff *=
-skb)
-> > > > >  		WARN_ON(in_irq());
-> > > > >  		skb->destructor(skb);
-> > > > >  	}
-> > > > > +	if (skb->priv_used && skb->priv_destructor) {
-> > > > > +		WARN_ON(in_irq());
-> > > > > +		skb->priv_destructor(skb);
-> > > > > +	}
-> > > > >  #if IS_ENABLED(CONFIG_NF_CONNTRACK)
-> > > > >  	nf_conntrack_put(skb_nfct(skb));
-> > > > >  #endif
-> > > > > @@ -859,6 +863,7 @@ static struct sk_buff *__skb_clone(struct sk_=
-buff *n, struct sk_buff *skb)
-> > > > >  	n->nohdr =3D 0;
-> > > > >  	n->peeked =3D 0;
-> > > > >  	C(pfmemalloc);
-> > > > > +	n->priv_used =3D 0;
-> > > > >  	n->destructor =3D NULL;
-> > > > >  	C(tail);
-> > > > >  	C(end);
-> > > > > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> > > > > index 780abb11dffd..9e07afd084c3 100644
-> > > > > --- a/net/ipv4/tcp_output.c
-> > > > > +++ b/net/ipv4/tcp_output.c
-> > > > > @@ -1129,6 +1129,9 @@ static int __tcp_transmit_skb(struct sock *=
-sk, struct sk_buff *skb,
-> > > > >  				skb =3D pskb_copy(oskb, gfp_mask);
-> > > > >  			else
-> > > > >  				skb =3D skb_clone(oskb, gfp_mask);
-> > > > > +
-> > > > > +			if (oskb->priv_used && oskb->priv_copy)
-> > > > > +				oskb->priv_copy(oskb, skb);
-> > > > =
+thought of as socket types that are built on top of TCP sockets, but =
 
-> > > > Shouldn't this rather be called inside pskb_copy, skb_clone, and fr=
-iends... ?
-> > > =
+aren't directly layered on IP.
 
-> > > I considered that - and thinking about it more, it may be necessary.
-> > > =
+I did remember something else that works nicely with IPPROTO_MPTCP: that =
 
-> > > For the initial implementation I wanted to regard this "private" data=
- in a
-> > > very restricted sense and have it belong only to one skb, with propag=
-ation
-> > > to additional clones or copies only where the layer doing so knows wh=
-at that
-> > > private data is for.
-> > > =
+idea from the NetDev conference to add a BPF hook to make TCP connections =
 
-> > > In this case, the option writing code later in in __tcp_transmit_skb(=
-) needs
-> > > to see the private data, so the private data is shared with the clone.
-> > > However, the private data wouldn't be needed except in this function =
-and for
-> > > skbs in the tcp_rtx_queue.
-> > =
+in a given cgroup default to MPTCP.
 
-> > Hmmm... Makes actually sense. As TCP is the only one who cares about the
-> > private data, he should be the one doing the work. But, in that case we
-> > don't even need the callback probably.
-> =
+>
+>> 3. Various combinations of AF_INET, AF_INET6, and the IPV6_V6ONLY socket
+>> option provide a way to control v4/v6 selection for the initial subflow.
+>
+> v4/v6 selection is already driven through the connect() address-family
+> and/or bind() (on the listener side).
+>
+>> and whether later subflows may be mixed v4/v6.
+>>
+>> 4. MPTCP is a layer above IP and does have a natural place grouped with
+>> TCP/UDP/UDP-Lite/SCTP/etc. under AF_INET/AF_INET6.
+>
+> Fair enough.
+>
+>> Some time later I found this post with a paragraph about AF_SMC (vs AF_I=
+NET
+>> plus an option) that made some good points:
+>>
+>> https://lwn.net/Articles/723123/
+>
+> Yeah - seems like the biggest pain-point is that AF_SMC did not have
+> IPv6-support baked in and it's more an afterthought.
+>
+>
+> In the end, I think transitioning from AF_MULTIPATH to IPPROTO_MPTCP or t=
+he
+> other way around won't be a big deal and it's a thing we can leave fairly
+> open-ended. We should document the advantages/disadvantages of each.
 
-> Looking at it now, there's really no difference between keeping track of
-> what priv_data points to in order to use it (for MPTCP option population)=
+I agree.
+
+
+Thanks,
+
+Mat
+
+
+>
+>>
+>>
+>> I can update the wiki design page if we're in agreement about this aspec=
+t of
+>> the API. If we're not in agreement yet, let's work on that!
+>>
+>>
+>> Mat
+>>
+>>
+>>
+>>>
+>>>>
+>>>> The resulting socket is simply a wrapper around a single regular TCP
+>>>> socket, without any of the MPTCP protocol implemented over the wire.
+>>>>
+>>>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>>>> ---
+>>>>  include/net/mptcp.h  |  33 ++++++++++
+>>>>  net/Kconfig          |   1 +
+>>>>  net/Makefile         |   1 +
+>>>>  net/mptcp/Kconfig    |  10 ++++
+>>>>  net/mptcp/Makefile   |   3 +
+>>>>  net/mptcp/protocol.c | 139 +++++++++++++++++++++++++++++++++++++++++++
+>>>>  6 files changed, 187 insertions(+)
+>>>>  create mode 100644 include/net/mptcp.h
+>>>>  create mode 100644 net/mptcp/Kconfig
+>>>>  create mode 100644 net/mptcp/Makefile
+>>>>  create mode 100644 net/mptcp/protocol.c
+>>>>
+>>>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+>>>> new file mode 100644
+>>>> index 000000000000..7f7b18b000fe
+>>>> --- /dev/null
+>>>> +++ b/include/net/mptcp.h
+>>>> @@ -0,0 +1,33 @@
+>>>> +/*
+>>>> + * Multipath TCP
+>>>> + *
+>>>> + * Copyright (c) 2017, Intel Corporation.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modi=
+fy it
+>>>> + * under the terms and conditions of the GNU General Public License,
+>>>> + * version 2, as published by the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope it will be useful, but WIT=
+HOUT
+>>>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY=
  or
-> copy it. Makes sense to get rid of priv_copy.
-> =
+>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lice=
+nse for
+>>>> + * more details.
+>>>> + */
+>>>> +
+>>>> +#ifndef __NET_MPTCP_H
+>>>> +#define __NET_MPTCP_H
+>>>> +
+>>>> +#include <linux/tcp.h>
+>>>> +
+>>>> +/* MPTCP connection sock */
+>>>> +struct mptcp_sock {
+>>>> +	/* inet_connection_sock must be the first member */
+>>>> +	struct	inet_connection_sock sk;
+>>>> +	struct	socket *subflow;
+>>>> +};
+>>>> +
+>>>> +static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
+>>>> +{
+>>>> +	return (struct mptcp_sock *)sk;
+>>>> +}
+>>>> +
+>>>> +#endif /* __NET_MPTCP_H */
+>>>> diff --git a/net/Kconfig b/net/Kconfig
+>>>> index 228dfa382eec..274282e9b742 100644
+>>>> --- a/net/Kconfig
+>>>> +++ b/net/Kconfig
+>>>> @@ -89,6 +89,7 @@ if INET
+>>>>  source "net/ipv4/Kconfig"
+>>>>  source "net/ipv6/Kconfig"
+>>>>  source "net/netlabel/Kconfig"
+>>>> +source "net/mptcp/Kconfig"
+>>>>
+>>>>  endif # if INET
+>>>>
+>>>> diff --git a/net/Makefile b/net/Makefile
+>>>> index bdaf53925acd..1673aab222d8 100644
+>>>> --- a/net/Makefile
+>>>> +++ b/net/Makefile
+>>>> @@ -87,3 +87,4 @@ endif
+>>>>  obj-$(CONFIG_QRTR)		+=3D qrtr/
+>>>>  obj-$(CONFIG_NET_NCSI)		+=3D ncsi/
+>>>>  obj-$(CONFIG_XDP_SOCKETS)	+=3D xdp/
+>>>> +obj-$(CONFIG_MPTCP)		+=3D mptcp/
+>>>> diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+>>>> new file mode 100644
+>>>> index 000000000000..8e48190e5fed
+>>>> --- /dev/null
+>>>> +++ b/net/mptcp/Kconfig
+>>>> @@ -0,0 +1,10 @@
+>>>> +
+>>>> +config MPTCP
+>>>> +	bool "Multipath TCP"
+>>>> +	depends on INET
+>>>> +	---help---
+>>>> +	  Multipath TCP (MPTCP) connections send and receive data over multi=
+ple
+>>>> +	  subflows in order to utilize multiple network paths. Each subflow
+>>>> +	  uses the TCP protocol, and TCP options carry header information for
+>>>> +	  MPTCP.
+>>>> +
+>>>> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+>>>> new file mode 100644
+>>>> index 000000000000..5624e7d51d48
+>>>> --- /dev/null
+>>>> +++ b/net/mptcp/Makefile
+>>>> @@ -0,0 +1,3 @@
+>>>> +obj-$(CONFIG_MPTCP) +=3D mptcp.o
+>>>> +
+>>>> +mptcp-y :=3D protocol.o
+>>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>>> new file mode 100644
+>>>> index 000000000000..c1eb4afc3ca4
+>>>> --- /dev/null
+>>>> +++ b/net/mptcp/protocol.c
+>>>> @@ -0,0 +1,139 @@
+>>>> +/*
+>>>> + * Multipath TCP
+>>>> + *
+>>>> + * Copyright (c) 2017, Intel Corporation.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modi=
+fy it
+>>>> + * under the terms and conditions of the GNU General Public License,
+>>>> + * version 2, as published by the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope it will be useful, but WIT=
+HOUT
+>>>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY=
+ or
+>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lice=
+nse for
+>>>> + * more details.
+>>>> + */
+>>>> +
+>>>> +#include <linux/kernel.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/netdevice.h>
+>>>> +#include <net/sock.h>
+>>>> +#include <net/inet_common.h>
+>>>> +#include <net/inet_hashtables.h>
+>>>> +#include <net/protocol.h>
+>>>> +#include <net/tcp.h>
+>>>> +#include <net/mptcp.h>
+>>>> +
+>>>> +static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t =
+len)
+>>>> +{
+>>>> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>>> +	struct socket *subflow =3D msk->subflow;
+>>>> +
+>>>> +	pr_debug("subflow=3D%p", subflow->sk);
+>>>> +
+>>>> +	return sock_sendmsg(subflow, msg);
+>>>> +}
+>>>> +
+>>>> +static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t =
+len,
+>>>> +			 int nonblock, int flags, int *addr_len)
+>>>> +{
+>>>> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>>> +	struct socket *subflow =3D msk->subflow;
+>>>> +
+>>>> +	pr_debug("subflow=3D%p", subflow->sk);
+>>>> +
+>>>> +	return sock_recvmsg(subflow, msg, flags);
+>>>> +}
+>>>> +
+>>>> +static int mptcp_init_sock(struct sock *sk)
+>>>> +{
+>>>> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>>> +	struct socket *sf;
+>>>> +	int err;
+>>>> +
+>>>> +	pr_debug("msk=3D%p", msk);
+>>>> +
+>>>> +	err =3D sock_create_kern(&init_net, PF_INET, SOCK_STREAM, IPPROTO_TC=
+P,
+>>>> +			       &sf);
+>>>> +	if (!err) {
+>>>> +		pr_debug("subflow=3D%p", sf->sk);
+>>>> +		msk->subflow =3D sf;
+>>>> +	}
+>>>> +
+>>>> +	return err;
+>>>> +}
+>>>> +
+>>>> +static void mptcp_close(struct sock *sk, long timeout)
+>>>> +{
+>>>> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>>> +
+>>>> +	if (msk->subflow) {
+>>>> +		pr_debug("subflow=3D%p", msk->subflow->sk);
+>>>> +		sock_release(msk->subflow);
+>>>> +	}
+>>>> +}
+>>>> +
+>>>> +static int mptcp_connect(struct sock *sk, struct sockaddr *saddr, int=
+ len)
+>>>> +{
+>>>> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>>> +	int err;
+>>>> +
+>>>> +	saddr->sa_family =3D AF_INET;
+>>>> +
+>>>> +	pr_debug("msk=3D%p, subflow=3D%p", msk, msk->subflow->sk);
+>>>> +
+>>>> +	err =3D kernel_connect(msk->subflow, saddr, len, 0);
+>>>> +
+>>>> +	sk->sk_state =3D TCP_ESTABLISHED;
+>>>> +
+>>>> +	return err;
+>>>> +}
+>>>> +
+>>>> +static struct proto mptcp_prot =3D {
+>>>> +	.name		=3D "MPTCP",
+>>>> +	.owner		=3D THIS_MODULE,
+>>>> +	.init		=3D mptcp_init_sock,
+>>>> +	.close		=3D mptcp_close,
+>>>> +	.accept		=3D inet_csk_accept,
+>>>> +	.connect	=3D mptcp_connect,
+>>>> +	.shutdown	=3D tcp_shutdown,
+>>>> +	.sendmsg	=3D mptcp_sendmsg,
+>>>> +	.recvmsg	=3D mptcp_recvmsg,
+>>>> +	.hash		=3D inet_hash,
+>>>> +	.unhash		=3D inet_unhash,
+>>>> +	.get_port	=3D inet_csk_get_port,
+>>>> +	.obj_size	=3D sizeof(struct mptcp_sock),
+>>>> +	.no_autobind	=3D 1,
+>>>> +};
+>>>> +
+>>>> +static struct inet_protosw mptcp_protosw =3D {
+>>>> +	.type		=3D SOCK_STREAM,
+>>>> +	.protocol	=3D IPPROTO_MPTCP,
+>>>> +	.prot		=3D &mptcp_prot,
+>>>> +	.ops		=3D &inet_stream_ops,
+>>>> +};
+>>>> +
+>>>> +static int __init mptcp_init(void)
+>>>> +{
+>>>> +	int err;
+>>>> +
+>>>> +	err =3D proto_register(&mptcp_prot, 1);
+>>>> +	if (err)
+>>>> +		return err;
+>>>> +
+>>>> +	inet_register_protosw(&mptcp_protosw);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void __exit mptcp_exit(void)
+>>>> +{
+>>>> +	inet_unregister_protosw(&mptcp_protosw);
+>>>> +	proto_unregister(&mptcp_prot);
+>>>> +}
+>>>> +
+>>>> +module_init(mptcp_init);
+>>>> +module_exit(mptcp_exit);
+>>>> +
+>>>> +MODULE_LICENSE("GPL");
+>>>> +MODULE_ALIAS_NET_PF_PROTO(PF_INET, IPPROTO_MPTCP);
+>>>> +MODULE_ALIAS_NET_PF_PROTO(PF_INET6, IPPROTO_MPTCP);
+>>>> --
+>>>> 2.19.1
+>>>>
+>>>> _______________________________________________
+>>>> mptcp mailing list
+>>>> mptcp(a)lists.01.org
+>>>> https://lists.01.org/mailman/listinfo/mptcp
+>>>
+>>
+>> --
+>> Mat Martineau
+>> Intel OTC
+>
 
-> > =
+--
+Mat Martineau
+Intel OTC
 
-> > Thinking along those lines then: When transmitting the skb, we should c=
-lear
-> > priv_used, no ?
-> =
-
-> Good idea, that would leave the priv pointers available for lower layers.
-> =
-
-> > =
-
-> > > What I'm remembering now is that keeping MPTCP metadata across pskb_c=
-opy()
-> > > calls has been an issue before, so I'll take another look at that.
-> > =
-
-> > The problem was that we were not sending the DSS-mapping on all segment=
-s.
-> > However, MPTCP does not mandate that. And Linux & iOS support receiving=
- a
-> > DSS-mapping that spreads multiple segments but where the DSS-mapping TC=
-P-option
-> > is not present in all those segments.
-> > =
-
-> > So, the "old" issues about pskb_copy() with MPTCP are not a real issue.
-> =
-
-> Ok, good to know.
-> =
-
-> > =
-
-> > But, in general, the question is whether we want to make the priv_copy-=
-thing
-> > more of an opt-in for each layer where each layer handles the pointers =
-or
-> > whether it's handled by the "skb-subsystem".
-> > =
-
-> > In the former case we probably don't need the callbacks. In the latter,=
- we
-> > do.
-> =
-
-> I'm leaning toward the former, to get rid of the copy pointer. The
-> destructor is needed because it's harder to know when or where an skb will
-> get destroyed, but dereferencing the priv_data pointer for copying or
-> reading the memory requires keeping track of its contents much like we're
-> accustomed to doing for skb->cb[].
-
-Yes, makes sense to keep the destructor. Already just for safety as an skb
-could be freed anywhere.
-
-Just wondering: Do we need to "destruct" when we call ip_xmit in tcp_transm=
-it_skb() ?
-I think so, right? Because we want to set priv_used to 0 above.
-
-
-Christoph
-
-> =
-
-> Mat
-> =
-
-> =
-
-> > > =
-
-> > > (and I need to take a look at possible skb collapsing in the rtx queu=
-e)
-> =
-
-> > > > =
-
-> > > > >  		} tcp_skb_tsorted_restore(oskb);
-> > > > > =
-
-> > > > >  		if (unlikely(!skb))
-> > > > > --
-> > > > > 2.19.1
-> =
-
-> --
-> Mat Martineau
-> Intel OTC
-
---===============9073707729102768011==--
+--===============2162484492875180343==--
