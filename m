@@ -1,33 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============1369734972283804818=="
+Content-Type: multipart/mixed; boundary="===============4475908752958069733=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 11 October 2018 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 10 Oct 2018 12:44:53 +0200
-Message-ID: <fc02fc15-d07e-a1f9-8b4a-ceca4df73359@tessares.net>
+Subject: Re: [MPTCP] [RFC PATCH v3 10/16] mptcp: Add shutdown() socket
+ operation
+Date: Wed, 10 Oct 2018 14:43:54 +0200
+Message-ID: <dab89dd1-671b-32f5-c2fd-0127d9b2d16e@tessares.net>
+In-Reply-To: 20181005225918.9786-11-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 809
+X-UID: 810
 
---===============1369734972283804818==
+--===============4475908752958069733==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Peter,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+On 06/10/2018 00:59, Mat Martineau wrote:
+> From: Peter Krystad <peter.krystad(a)intel.com>
+> =
 
-The list of topics is here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20181011
-Feel free to add/modify topics!
+> Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
+> ---
+>  net/mptcp/protocol.c | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+> =
 
-As the three previous times, we will use Google Meet:
-https://meet.google.com/edk-rkrk-vaj
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 2fa9031a77ca..3d10ab287bd6 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -255,6 +255,25 @@ int mptcp_stream_accept(struct socket *sock, struct =
+socket *newsock, int flags,
+>  	return inet_accept(sock, newsock, flags, kern);
+>  }
+>  =
 
-Speak to you tomorrow!
+> +int mptcp_stream_shutdown(struct socket *sock, int how)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+> +	int ret =3D 0;
+> +
+> +	pr_debug("sk=3D%p, how=3D%d", msk, how);
+> +
+> +	if (msk->subflow) {
+> +		pr_debug("subflow=3D%p", msk->subflow->sk);
+> +		ret =3D kernel_sock_shutdown(msk->subflow, how);
+> +	}
+> +	if (msk->connection_list) {
+> +		pr_debug("conn_list->subflow=3D%p", msk->connection_list->sk);
+> +		ret =3D kernel_sock_shutdown(msk->connection_list, how);
+
+Just to be sure, can we have "subflow !=3D NULL" and "connection_list !=3D
+NULL"?
+Because I saw the possible override of "ret" here but it is not possible
+to have both a "subflow" and a "connection_list" (we could use a "else
+if" here I guess).
+
+Cheers,
 Matthieu
+
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static struct proto mptcp_prot =3D {
+>  	.name		=3D "MPTCP",
+>  	.owner		=3D THIS_MODULE,
+> @@ -284,7 +303,7 @@ const struct proto_ops mptcp_stream_ops =3D {
+>  	.poll		   =3D tcp_poll,
+>  	.ioctl		   =3D inet_ioctl,
+>  	.listen		   =3D mptcp_stream_listen,
+> -	.shutdown	   =3D inet_shutdown,
+> +	.shutdown	   =3D mptcp_stream_shutdown,
+>  	.setsockopt	   =3D sock_common_setsockopt,
+>  	.getsockopt	   =3D sock_common_getsockopt,
+>  	.sendmsg	   =3D inet_sendmsg,
+> =
+
+
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -36,4 +90,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============1369734972283804818==--
+--===============4475908752958069733==--
