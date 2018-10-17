@@ -1,34 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============8233156266399928749=="
+Content-Type: multipart/mixed; boundary="===============6625869878284770266=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Design wiki update - socket()
-Date: Tue, 16 Oct 2018 17:16:28 -0700
-Message-ID: <alpine.OSX.2.21.1810161711450.13307@rniessen-mobl3.amr.corp.intel.com>
+Subject: [MPTCP] Weekly meeting - 18 October 2018 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 17 Oct 2018 10:55:16 +0200
+Message-ID: <2052aec5-3bd1-1b7a-8829-7bbf0ceb2bad@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 827
+X-UID: 828
 
---===============8233156266399928749==
+--===============6625869878284770266==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello -
+Hello,
 
-I've updated the Design page to capture our IPPROTO_MPTCP vs AF_MULTIPATH =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-discussion:
+The list of topics is here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20181018
+Feel free to add/modify topics!
 
-https://github.com/multipath-tcp/mptcp_net-next/wiki/Design#api-design
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-If I missed anything, please point that out or edit the wiki directly.
+Speak to you tomorrow!
+Matthieu
+-- =
 
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-Thanks,
-
---
-Mat Martineau
-Intel OTC
-
---===============8233156266399928749==--
+--===============6625869878284770266==--
