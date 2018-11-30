@@ -1,16 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============0789982541180120716=="
+Content-Type: multipart/mixed; boundary="===============8397329335104457370=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v4 10/17] mptcp: Add shutdown() socket operation
-Date: Fri, 30 Nov 2018 12:11:05 -0800
-Message-ID: <20181130201112.21806-11-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH v4 11/17] mptcp: Add setsockopt()/getsockopt()
+ socket operations
+Date: Fri, 30 Nov 2018 12:11:06 -0800
+Message-ID: <20181130201112.21806-12-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20181130201112.21806-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 863
+X-UID: 864
 
---===============0789982541180120716==
+--===============8397329335104457370==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,53 +20,121 @@ From: Peter Krystad <peter.krystad(a)intel.com>
 
 Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
 ---
- net/mptcp/protocol.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 48 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c  | 22 ++++++++++++++++++++
+ 2 files changed, 70 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2fa9031a77ca..3d10ab287bd6 100644
+index 3d10ab287bd6..cbc93dd36588 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -255,6 +255,25 @@ int mptcp_stream_accept(struct socket *sock, struct so=
-cket *newsock, int flags,
- 	return inet_accept(sock, newsock, flags, kern);
+@@ -131,6 +131,52 @@ static void mptcp_destroy(struct sock *sk)
+ 	token_destroy(msk->token);
  }
  =
 
-+int mptcp_stream_shutdown(struct socket *sock, int how)
++static int mptcp_setsockopt(struct sock *sk, int level, int optname,
++			    char __user *uoptval, unsigned int optlen)
 +{
-+	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	int ret =3D 0;
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct socket *subflow;
++	char __kernel *optval;
 +
-+	pr_debug("sk=3D%p, how=3D%d", msk, how);
-+
-+	if (msk->subflow) {
-+		pr_debug("subflow=3D%p", msk->subflow->sk);
-+		ret =3D kernel_sock_shutdown(msk->subflow, how);
-+	}
++	pr_debug("msk=3D%p", msk);
 +	if (msk->connection_list) {
-+		pr_debug("conn_list->subflow=3D%p", msk->connection_list->sk);
-+		ret =3D kernel_sock_shutdown(msk->connection_list, how);
++		subflow =3D msk->connection_list;
++		pr_debug("conn_list->subflow=3D%p", subflow->sk);
++	} else {
++		subflow =3D msk->subflow;
++		pr_debug("subflow=3D%p", subflow->sk);
 +	}
 +
-+	return ret;
++	/* will be treated as __user in subflow_setsockopt */
++	optval =3D (char __kernel __force *) uoptval;
++
++	return kernel_setsockopt(subflow, level, optname, optval, optlen);
 +}
 +
- static struct proto mptcp_prot =3D {
- 	.name		=3D "MPTCP",
++static int mptcp_getsockopt(struct sock *sk, int level, int optname,
++			    char __user *uoptval, int __user *uoption)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct socket *subflow;
++	char __kernel *optval;
++	int __kernel *option;
++
++	pr_debug("msk=3D%p", msk);
++	if (msk->connection_list) {
++		subflow =3D msk->connection_list;
++		pr_debug("conn_list->subflow=3D%p", subflow->sk);
++	} else {
++		subflow =3D msk->subflow;
++		pr_debug("subflow=3D%p", subflow->sk);
++	}
++
++	/* will be treated as __user in subflow_getsockopt */
++	optval =3D (char __kernel __force *) uoptval;
++	option =3D (int __kernel __force *) uoption;
++
++	return kernel_getsockopt(subflow, level, optname, optval, option);
++}
++
+ static int mptcp_get_port(struct sock *sk, unsigned short snum)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -282,6 +328,8 @@ static struct proto mptcp_prot =3D {
+ 	.accept		=3D mptcp_accept,
+ 	.shutdown	=3D tcp_shutdown,
+ 	.destroy	=3D mptcp_destroy,
++	.setsockopt	=3D mptcp_setsockopt,
++	.getsockopt	=3D mptcp_getsockopt,
+ 	.sendmsg	=3D mptcp_sendmsg,
+ 	.recvmsg	=3D mptcp_recvmsg,
+ 	.hash		=3D inet_hash,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 7495e259ce5d..e0b4aa8fe51d 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -249,6 +249,26 @@ static void subflow_destroy(struct sock *sk)
+ 	tcp_v4_destroy_sock(sk);
+ }
+ =
+
++static int subflow_setsockopt(struct sock *sk, int level, int optname,
++			      char __user *optval, unsigned int optlen)
++{
++	struct subflow_sock *subflow =3D subflow_sk(sk);
++
++	pr_debug("subflow=3D%p", subflow);
++
++	return tcp_setsockopt(sk, level, optname, optval, optlen);
++}
++
++static int subflow_getsockopt(struct sock *sk, int level, int optname,
++			      char __user *optval, int __user *option)
++{
++	struct subflow_sock *subflow =3D subflow_sk(sk);
++
++	pr_debug("subflow=3D%p", subflow);
++
++	return tcp_getsockopt(sk, level, optname, optval, option);
++}
++
+ static struct proto subflow_prot =3D {
+ 	.name		=3D "SUBFLOW",
  	.owner		=3D THIS_MODULE,
-@@ -284,7 +303,7 @@ const struct proto_ops mptcp_stream_ops =3D {
- 	.poll		   =3D tcp_poll,
- 	.ioctl		   =3D inet_ioctl,
- 	.listen		   =3D mptcp_stream_listen,
--	.shutdown	   =3D inet_shutdown,
-+	.shutdown	   =3D mptcp_stream_shutdown,
- 	.setsockopt	   =3D sock_common_setsockopt,
- 	.getsockopt	   =3D sock_common_getsockopt,
- 	.sendmsg	   =3D inet_sendmsg,
+@@ -260,6 +280,8 @@ static struct proto subflow_prot =3D {
+ 	.init		=3D subflow_init_sock,
+ 	.destroy	=3D subflow_destroy,
+ 	.shutdown	=3D tcp_shutdown,
++	.setsockopt	=3D subflow_setsockopt,
++	.getsockopt	=3D subflow_getsockopt,
+ 	.keepalive	=3D tcp_set_keepalive,
+ 	.recvmsg	=3D subflow_recvmsg,
+ 	.sendmsg	=3D subflow_sendmsg,
 -- =
 
 2.19.1
 
 
---===============0789982541180120716==--
+--===============8397329335104457370==--
