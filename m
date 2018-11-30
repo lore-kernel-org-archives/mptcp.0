@@ -1,485 +1,166 @@
-Content-Type: multipart/mixed; boundary="===============6907801556688099847=="
+Content-Type: multipart/mixed; boundary="===============9092527615383281569=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v4 17/17] mptcp: Make connection_list a real list
- of subflows
-Date: Fri, 30 Nov 2018 12:11:12 -0800
-Message-ID: <20181130201112.21806-18-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20181130201112.21806-1-mathew.j.martineau@linux.intel.com
+Subject: Re: [MPTCP] [RFC PATCH v4 16/17] mptcp: Implement MPTCP receive path
+Date: Fri, 30 Nov 2018 14:33:54 -0800
+Message-ID: <alpine.OSX.2.21.1811301430470.50941@zyi1-mobl1.amr.corp.intel.com>
+In-Reply-To: 20181130201112.21806-17-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 870
+X-UID: 871
 
---===============6907801556688099847==
+--===============9092527615383281569==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Krystad <peter.krystad(a)intel.com>
 
-Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
----
- include/net/mptcp.h  |   8 +-
- net/mptcp/protocol.c | 195 ++++++++++++++++++++++++++++++-------------
- 2 files changed, 142 insertions(+), 61 deletions(-)
+On Fri, 30 Nov 2018, Mat Martineau wrote:
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index d3b7083859b7..8c0b21652b70 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -17,6 +17,7 @@
- #define __NET_MPTCP_H
- =
+> Parses incoming DSS options and populates outgoing MPTCP ACK
+> fields. Clone incoming skbs containing MPTCP headers and propagate them
+> to the MMPTCP socket using the error queue. This avoids the need for TCP
+> coalesce/collapse bypass for MPTCP, although cloning incoming skbs does
+> prevent some coalescing.
+>
+> Keeping DSS map handling separate from data reading makes it easier to
+> add multiple-subflow receiving, since the receive code can determine
+> which subflow contains relevant data or data that needs to be purged
+> without touching the subflow data queues.
+>
+> MPTCP ACK values are now populated from an atomic value stored in the
+> connection socket rather than carried in the extended control block,
+> which makes use of the most up-to-date sequence number and allows the
+> MPTCP ACK to be populated on TCP ACK packets that have no payload.
+>
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+> include/linux/tcp.h   |  12 ++
+> include/net/mptcp.h   |  43 ++++-
+> net/ipv4/tcp_input.c  |   4 +
+> net/ipv4/tcp_output.c | 120 +++++++-------
+> net/mptcp/options.c   |  98 +++++++++++-
+> net/mptcp/protocol.c  | 360 +++++++++++++++++++++++++++++++++++++++---
+> net/mptcp/subflow.c   |  29 +++-
+> 7 files changed, 574 insertions(+), 92 deletions(-)
+>
 
- #include <linux/tcp.h>
-+#include <linux/spinlock.h>
- =
+...
 
- /* MPTCP option subtypes */
- =
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index b7a392652aed..d3b7083859b7 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -38,14 +38,14 @@
+> /* MPTCP connection sock */
+> struct mptcp_sock {
+> 	/* inet_connection_sock must be the first member */
+> -	struct	inet_connection_sock sk;
+> -	u64	local_key;
+> -	u64	remote_key;
+> -	u64	write_seq;
+> -	u64	ack_seq;
+> -	u32	token;
+> -	struct	socket *connection_list; /* @@ needs to be a list */
+> -	struct	socket *subflow; /* outgoing connect, listener or !mp_capable */
+> +	struct inet_connection_sock sk;
+> +	u64		local_key;
+> +	u64		remote_key;
+> +	u64		write_seq;
+> +	atomic64_t	ack_seq;
+> +	u32		token;
+> +	struct socket	*connection_list; /* @@ needs to be a list */
+> +	struct socket	*subflow; /* outgoing connect, listener or !mp_capable */
+> };
+>
+> static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
+> @@ -81,16 +81,23 @@ struct subflow_sock {
+> 	/* tcp_sock must be the first member */
+> 	struct	tcp_sock sk;
+> 	u64	local_key;
+> +	u64	map_seq;
+> +	u32	map_subflow_seq;
+> 	u32	token;
+> 	u64	idsn;
+> 	u64	remote_key;
+> 	u32	rel_write_seq;
+> +	u32	ssn_offset;
+> +	u16	map_dll;
+> 	bool	request_mptcp;	// send MP_CAPABLE
+> 	bool	checksum;
+> 	bool	version;
+> 	bool	mp_capable;	// remote is MPTCP capable
+> 	bool	fourth_ack;	// send initial DSS
+> +	bool	conn_finished;
+> +	bool	map_valid;
+> 	struct	sock *conn;	// parent mptcp_sock
+> +	void	(*tcp_sk_data_ready)(struct sock *sk);
+> };
+>
+> static inline struct subflow_sock *subflow_sk(const struct sock *sk)
+> @@ -98,6 +105,16 @@ static inline struct subflow_sock *subflow_sk(const s=
+truct sock *sk)
+> 	return (struct subflow_sock *)sk;
+> }
+>
+> +static inline struct subflow_sock *subflow_tp(const struct tcp_sock *tp)
+> +{
+> +	return (struct subflow_sock *)tp;
+> +}
+> +
+> +static inline struct sock *sock_sk(const struct subflow_sock *sk)
+> +{
+> +	return (struct sock *)sk;
+> +}
+> +
+> struct subflow_request_sock {
+> 	struct	tcp_request_sock sk;
+> 	u8	mp_capable : 1,
+> @@ -109,6 +126,7 @@ struct subflow_request_sock {
+> 	u32	token;
+> 	u64	idsn;
+> 	u64	remote_key;
+> +	u32	ssn_offset;
+> };
+>
+> static inline
+> @@ -137,6 +155,10 @@ void mptcp_get_options(const struct sk_buff *skb,
+> 		       struct tcp_options_received *options);
+>
+> void mptcp_cb_copy(const struct sk_buff *from, struct sk_buff *to);
+> +void mptcp_cb_set(struct sk_buff *skb, struct mptcp_skb_cb *mcb);
+> +
+> +void mptcp_attach_dss(struct sock *sk, struct sk_buff *original_skb,
+> +		      struct tcp_options_received *opt_rx);
 
-@@ -44,10 +45,14 @@ struct mptcp_sock {
- 	u64		write_seq;
- 	atomic64_t	ack_seq;
- 	u32		token;
--	struct socket	*connection_list; /* @@ needs to be a list */
-+	spinlock_t	conn_list_lock;
-+	struct hlist_head conn_list;
- 	struct socket	*subflow; /* outgoing connect, listener or !mp_capable */
- };
- =
+I got an automated kbuild email - I didn't define a stub for this when =
 
-+#define mptcp_for_each_subflow(__msk, __subflow)			\
-+	hlist_for_each_entry_rcu(__subflow, &((__msk)->conn_list), node)
-+
- static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
- {
- 	return (struct mptcp_sock *)sk;
-@@ -80,6 +85,7 @@ static inline struct mptcp_skb_cb *mptcp_skb_priv_cb(stru=
-ct sk_buff *skb)
- struct subflow_sock {
- 	/* tcp_sock must be the first member */
- 	struct	tcp_sock sk;
-+	struct	hlist_node node;// conn_list of subflows
- 	u64	local_key;
- 	u64	map_seq;
- 	u32	map_subflow_seq;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 117c83eab584..32213102790b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -71,39 +71,53 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	int mss_now, size_goal, poffset, ret;
- 	struct mptcp_skb_cb *mcb =3D NULL;
-+	struct subflow_sock *subflow;
- 	struct page *page =3D NULL;
-+	struct hlist_node *node;
- 	struct sk_buff *skb;
- 	struct sock *ssk;
- 	size_t psize;
- =
+CONFIG_MPTCP is not set...
 
- 	pr_debug("msk=3D%p", msk);
--	if (!msk->connection_list && msk->subflow) {
-+	if (msk->subflow) {
- 		pr_debug("fallback passthrough");
- 		return sock_sendmsg(msk->subflow, msg);
- 	}
- =
+>
+> extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
+>
+> @@ -197,5 +219,10 @@ void mptcp_cb_copy(const struct sk_buff *from, struc=
+t sk_buff *to)
+> {
+> }
+>
+> +static inline void mptcp_queue_headers(struct sock *sk,
+> +				       struct sk_buff *original_skb)
+> +{
+> +}
+> +
 
-+	rcu_read_lock();
-+	node =3D rcu_dereference(hlist_first_rcu(&msk->conn_list));
-+	subflow =3D hlist_entry(node, struct subflow_sock, node);
-+	ssk =3D sock_sk(subflow);
-+	sock_hold(ssk);
-+	rcu_read_unlock();
-+
- 	if (!msg_data_left(msg)) {
- 		pr_debug("empty send");
--		return sock_sendmsg(msk->connection_list, msg);
-+		ret =3D sock_sendmsg(sock_sk(subflow)->sk_socket, msg);
-+		goto put_out;
- 	}
- =
+...because mptcp_attach_dss should replace this stub.
 
--	ssk =3D msk->connection_list->sk;
-+	pr_debug("conn_list->subflow=3D%p", subflow);
- =
+> #endif /* CONFIG_MPTCP */
+> #endif /* __NET_MPTCP_H */
 
--	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
--		return -ENOTSUPP;
-+	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL)) {
-+		ret =3D -ENOTSUPP;
-+		goto put_out;
-+	}
- =
+...
 
- 	/* Initial experiment: new page per send.  Real code will
- 	 * maintain list of active pages and DSS mappings, append to the
- 	 * end and honor zerocopy
- 	 */
- 	page =3D alloc_page(GFP_KERNEL);
--	if (!page)
--		return -ENOMEM;
-+	if (!page) {
-+		ret =3D -ENOMEM;
-+		goto put_out;
-+	}
- =
+--
+Mat Martineau
+Intel OTC
 
- 	mcb =3D kzalloc(sizeof(*mcb), GFP_KERNEL);
- 	if (!mcb) {
--		put_page(page);
--		return -ENOMEM;
-+		ret =3D -ENOMEM;
-+		goto put_out;
- 	}
- =
-
- 	/* Copy to page */
-@@ -115,9 +129,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
- 	pr_debug("left=3D%zu", msg_data_left(msg));
- =
-
- 	if (!psize) {
--		put_page(page);
--		kfree(mcb);
--		return -EINVAL;
-+		ret =3D -EINVAL;
-+		goto put_out;
- 	}
- =
-
- 	lock_sock(sk);
-@@ -134,9 +147,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
- =
-
- 	ret =3D do_tcp_sendpages(ssk, page, poffset, min_t(int, size_goal, psize),
- 			       msg->msg_flags | MSG_SENDPAGE_NOTLAST);
--	put_page(page);
- 	if (ret <=3D 0)
--		goto error_out;
-+		goto release_out;
- =
-
- 	if (skb =3D=3D tcp_write_queue_tail(ssk))
- 		pr_err("no new skb %p/%p", sk, ssk);
-@@ -169,10 +181,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- =
-
- 	tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle, size_goal);
- =
-
--error_out:
-+release_out:
- 	release_sock(ssk);
- 	release_sock(sk);
- =
-
-+put_out:
-+	if (page)
-+		put_page(page);
-+
-+	sock_put(ssk);
- 	kfree(mcb);
- 	return ret;
- }
-@@ -306,19 +323,25 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct subflow_sock *subflow;
- 	struct mptcp_read_arg arg;
-+	struct hlist_node *node;
- 	read_descriptor_t desc;
- 	struct tcp_sock *tp;
- 	struct sock *ssk;
- 	int copied =3D 0;
- 	long timeo;
- =
-
--	if (!msk->connection_list) {
-+	if (msk->subflow) {
- 		pr_debug("fallback-read subflow=3D%p", msk->subflow->sk);
- 		return sock_recvmsg(msk->subflow, msg, flags);
- 	}
- =
-
--	ssk =3D msk->connection_list->sk;
--	subflow =3D subflow_sk(ssk);
-+	rcu_read_lock();
-+	node =3D rcu_dereference(hlist_first_rcu(&msk->conn_list));
-+	subflow =3D hlist_entry(node, struct subflow_sock, node);
-+	ssk =3D sock_sk(subflow);
-+	sock_hold(ssk);
-+	rcu_read_unlock();
-+
- 	tp =3D tcp_sk(ssk);
- =
-
- 	desc.arg.data =3D &arg;
-@@ -474,6 +497,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
- 	release_sock(ssk);
- 	release_sock(sk);
- =
-
-+	sock_put(ssk);
-+
- 	return copied;
- }
- =
-
-@@ -483,22 +508,50 @@ static int mptcp_init_sock(struct sock *sk)
- =
-
- 	pr_debug("msk=3D%p", msk);
- =
-
-+	INIT_HLIST_HEAD(&msk->conn_list);
-+	spin_lock_init(&msk->conn_list_lock);
-+
- 	return 0;
- }
- =
-
- static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct hlist_node *node;
-+	struct socket *ssk =3D NULL;
-+	struct subflow_sock *subflow;
- =
-
-+	spin_lock_bh(&msk->conn_list_lock);
- 	if (msk->subflow) {
--		pr_debug("subflow=3D%p", msk->subflow->sk);
--		sock_release(msk->subflow);
-+		ssk =3D msk->subflow;
-+		msk->subflow =3D NULL;
- 	}
--
--	if (msk->connection_list) {
--		pr_debug("conn_list->subflow=3D%p", msk->connection_list->sk);
--		sock_release(msk->connection_list);
-+	spin_unlock_bh(&msk->conn_list_lock);
-+	if (ssk !=3D NULL) {
-+		pr_debug("subflow=3D%p", ssk->sk);
-+		sock_release(ssk);
- 	}
-+
-+	do {
-+		spin_lock_bh(&msk->conn_list_lock);
-+		/* The spin lock was just acquired, so tell
-+		 * rcu_dereference_check() this access to the list is properly
-+		 * protected even though the rcu_read_lock is not held.
-+		 */
-+		node =3D rcu_dereference_check(
-+			hlist_first_rcu(&msk->conn_list),
-+			spin_is_locked(&msk->conn_list_lock) ||
-+			!IS_ENABLED(CONFIG_SMP));
-+		if (node =3D=3D NULL)
-+			break;
-+		subflow =3D hlist_entry(node, struct subflow_sock, node);
-+		hlist_del_rcu(node);
-+		spin_unlock_bh(&msk->conn_list_lock);
-+		synchronize_rcu();
-+		pr_debug("conn_list->subflow=3D%p", subflow);
-+		sock_release(sock_sk(subflow)->sk_socket);
-+	} while (1);
-+	spin_unlock_bh(&msk->conn_list_lock);
- }
- =
-
- static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
-@@ -537,7 +590,10 @@ static struct sock *mptcp_accept(struct sock *sk, int =
-flags, int *err,
- 		msk->token =3D subflow->token;
- 		pr_debug("token=3D%u", msk->token);
- 		token_update_accept(new_sock->sk, mp->sk);
--		msk->connection_list =3D new_sock;
-+		spin_lock_bh(&msk->conn_list_lock);
-+		hlist_add_head_rcu(&subflow->node, &msk->conn_list);
-+		msk->subflow =3D NULL;
-+		spin_unlock_bh(&msk->conn_list_lock);
- =
-
- 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
- 		msk->write_seq =3D subflow->idsn + 1;
-@@ -568,46 +624,44 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- 			    char __user *uoptval, unsigned int optlen)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	struct socket *subflow;
- 	char __kernel *optval;
- =
-
--	pr_debug("msk=3D%p", msk);
--	if (msk->connection_list) {
--		subflow =3D msk->connection_list;
--		pr_debug("conn_list->subflow=3D%p", subflow->sk);
--	} else {
--		subflow =3D msk->subflow;
--		pr_debug("subflow=3D%p", subflow->sk);
--	}
--
- 	/* will be treated as __user in subflow_setsockopt */
- 	optval =3D (char __kernel __force *) uoptval;
- =
-
--	return kernel_setsockopt(subflow, level, optname, optval, optlen);
-+	pr_debug("msk=3D%p", msk);
-+	if (msk->subflow) {
-+		pr_debug("subflow=3D%p", msk->subflow->sk);
-+		return kernel_setsockopt(msk->subflow, level, optname, optval, optlen);
-+	}
-+
-+	/* @@ the meaning of setsockopt() when the socket is connected and
-+	 * there are multiple subflows is not defined.
-+	 */
-+	return 0;
- }
- =
-
- static int mptcp_getsockopt(struct sock *sk, int level, int optname,
- 			    char __user *uoptval, int __user *uoption)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	struct socket *subflow;
- 	char __kernel *optval;
- 	int __kernel *option;
- =
-
--	pr_debug("msk=3D%p", msk);
--	if (msk->connection_list) {
--		subflow =3D msk->connection_list;
--		pr_debug("conn_list->subflow=3D%p", subflow->sk);
--	} else {
--		subflow =3D msk->subflow;
--		pr_debug("subflow=3D%p", subflow->sk);
--	}
--
- 	/* will be treated as __user in subflow_getsockopt */
- 	optval =3D (char __kernel __force *) uoptval;
- 	option =3D (int __kernel __force *) uoption;
- =
-
--	return kernel_getsockopt(subflow, level, optname, optval, option);
-+	pr_debug("msk=3D%p", msk);
-+	if (msk->subflow) {
-+		pr_debug("subflow=3D%p", msk->subflow->sk);
-+		return kernel_getsockopt(msk->subflow, level, optname, optval, option);
-+	}
-+
-+	/* @@ the meaning of setsockopt() when the socket is connected and
-+	 * there are multiple subflows is not defined.
-+	 */
-+	return 0;
- }
- =
-
- static int mptcp_get_port(struct sock *sk, unsigned short snum)
-@@ -634,8 +688,10 @@ void mptcp_finish_connect(struct sock *sk, int mp_capa=
-ble)
- 		msk->local_key =3D subflow->local_key;
- 		msk->token =3D subflow->token;
- 		pr_debug("token=3D%u", msk->token);
--		msk->connection_list =3D msk->subflow;
-+		spin_lock_bh(&msk->conn_list_lock);
-+		hlist_add_head_rcu(&subflow->node, &msk->conn_list);
- 		msk->subflow =3D NULL;
-+		spin_unlock_bh(&msk->conn_list_lock);
- =
-
- 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
- 		msk->write_seq =3D subflow->idsn + 1;
-@@ -703,17 +759,32 @@ int mptcp_stream_connect(struct socket *sock, struct =
-sockaddr *uaddr,
- int mptcp_stream_getname(struct socket *sock, struct sockaddr *uaddr, int =
-peer)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
--	struct socket *subflow;
--	int err =3D -EPERM;
-+	struct subflow_sock *subflow;
-+	struct hlist_node *node;
-+	struct sock *ssk;
-+	int ret;
- =
-
--	if (msk->connection_list)
--		subflow =3D msk->connection_list;
--	else
--		subflow =3D msk->subflow;
-+	pr_debug("msk=3D%p", msk);
- =
-
--	err =3D inet_getname(subflow, uaddr, peer);
-+	if (msk->subflow) {
-+		pr_debug("subflow=3D%p", msk->subflow->sk);
-+		return inet_getname(msk->subflow, uaddr, peer);
-+	}
- =
-
--	return err;
-+	/* @@ the meaning of getname() for the remote peer when the socket
-+	 * is connected and there are multiple subflows is not defined.
-+	 * For now just use the first subflow on the list.
-+	 */
-+	rcu_read_lock();
-+	node =3D rcu_dereference(hlist_first_rcu(&msk->conn_list));
-+	subflow =3D hlist_entry(node, struct subflow_sock, node);
-+	ssk =3D sock_sk(subflow);
-+	sock_hold(ssk);
-+	rcu_read_unlock();
-+
-+	ret =3D inet_getname(sock_sk(subflow)->sk_socket, uaddr, peer);
-+	sock_put(ssk);
-+	return ret;
- }
- =
-
- int mptcp_stream_listen(struct socket *sock, int backlog)
-@@ -747,18 +818,22 @@ int mptcp_stream_accept(struct socket *sock, struct s=
-ocket *newsock, int flags,
- int mptcp_stream_shutdown(struct socket *sock, int how)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	struct subflow_sock *subflow;
- 	int ret =3D 0;
- =
-
- 	pr_debug("sk=3D%p, how=3D%d", msk, how);
- =
-
- 	if (msk->subflow) {
- 		pr_debug("subflow=3D%p", msk->subflow->sk);
--		ret =3D kernel_sock_shutdown(msk->subflow, how);
-+		return kernel_sock_shutdown(msk->subflow, how);
- 	}
--	if (msk->connection_list) {
--		pr_debug("conn_list->subflow=3D%p", msk->connection_list->sk);
--		ret =3D kernel_sock_shutdown(msk->connection_list, how);
-+
-+	rcu_read_lock();
-+	mptcp_for_each_subflow(msk, subflow) {
-+		pr_debug("conn_list->subflow=3D%p", subflow);
-+		ret =3D kernel_sock_shutdown(sock_sk(subflow)->sk_socket, how);
- 	}
-+	rcu_read_unlock();
- =
-
- 	return ret;
- }
--- =
-
-2.19.1
-
-
---===============6907801556688099847==--
+--===============9092527615383281569==--
