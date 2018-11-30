@@ -1,91 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============3532745257203366010=="
+Content-Type: multipart/mixed; boundary="===============7911481630452087062=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 29th of November 2018
-Date: Thu, 29 Nov 2018 18:58:33 +0100
-Message-ID: <4c375f47-44c4-1e88-8331-e2589d13f132@tessares.net>
+Subject: [MPTCP] [PATCH 0/5] Forward-ports for mptcp-net-next
+Date: Thu, 29 Nov 2018 17:05:09 -0800
+Message-ID: <20181130010514.18251-1-cpaasch@apple.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 846
+X-UID: 847
 
---===============3532745257203366010==
+--===============7911481630452087062==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-We just had our 30th meeting with Mat, Peter and Ossama (Intel OTC),
-Christoph (Apple), Florian (Redhat) and myself (Tessares).
-
-Thanks again for this new good meeting!
+here are some forward-ports for mptcp-net-next that come from
+mptcp_trunk.
 
 
+Cheers,
+Christoph
 
-Here are the minutes of the meeting:
+Christoph Paasch (3):
+  mptcp: Remove IPv6 duplicated address detection
+  mptcp: Always call sk_data_ready
+  mptcp: Correctly initialize IPv6 fields
 
+Kostas Peletidis (2):
+  Export tcp_send_ack symbol to fix build issue with mptcp_fullmesh
+    module (mptcp_trunk). This commit should make it possible to revert
+    64a80850.
+  Revert "Fix building mptcp_fullmesh as module"
 
+ net/ipv4/tcp_input.c       |  2 +-
+ net/ipv4/tcp_output.c      |  1 +
+ net/mptcp/mptcp_ctrl.c     | 30 ++++++++--------
+ net/mptcp/mptcp_fullmesh.c | 85 ++++++------------------------------------=
+----
+ 4 files changed, 29 insertions(+), 89 deletions(-)
 
-News from multipath-tcp.org:
-    - A few patches have been applied (mptcp_trunk, v0.93 and v0.94)
-    - Christoph updated mptcp_trunk to v4.19 (WIP)
-        Note: v4.19 introduces batch processing of network packets but
-it should be safe for MPTCP, done at the above layer
-        https://lwn.net/Articles/763056/
-
-
-
-skb extension:
-    - See the discussion on the ML:
-https://lists.01.org/pipermail/mptcp/2018-November/000840.html (and next
-messages on the same thread)
-    - Goal: Coalescing and extension data
-    - MPTCP needs something like that for the receive side
-    - patch by Florian, RFC, initially for ipsec/bridge
-    - coalescing: some changes have been proposed on netdev but, to be
-checked, only done if TCP options are all the same, not adapted for
-MPTCP case then
-        - note: with ktls, they disabled the coalescing
-        - note: with MPTCP, you don't need the DSS in all packets
-    - anyway, this RFC patch will also be very useful for MPTCP =E2=86=92 we
-know we should go in this direction as well
-
-
-
-Mat:
-    - looking at sharing a new version without the use of err queue.
-    - also rebase the work on Florian's patch-set.
-
-
-
-Matthieu:
-    - will send a new version of Netlink PM in the coming days/weeks:
-the goal is to have it in the MPTCP version based on v4.19
-
-
-
-Next meeting:
-    - We propose to have the next one on Thursday, the 6th of December.
-    - Usual time: 17:00 UTC (9am PST, 6pm CET)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20181206
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-
-Talk to you next week,
-Matthieu
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.16.2
 
---===============3532745257203366010==--
+
+--===============7911481630452087062==--
