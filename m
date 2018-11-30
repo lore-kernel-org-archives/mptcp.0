@@ -1,49 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============4170159064760190593=="
+Content-Type: multipart/mixed; boundary="===============9024563282631728413=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v4 05/17] tcp: Add IPPROTO_SUBFLOW
-Date: Fri, 30 Nov 2018 12:11:00 -0800
-Message-ID: <20181130201112.21806-6-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH v4 06/17] tcp: expose tcp routines and structs for
+ MPTCP
+Date: Fri, 30 Nov 2018 12:11:01 -0800
+Message-ID: <20181130201112.21806-7-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20181130201112.21806-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 858
+X-UID: 859
 
---===============4170159064760190593==
+--===============9024563282631728413==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Peter Krystad <peter.krystad(a)intel.com>
 
-IANA protocol numbers fit in a single byte, however the protocol field
-of struct inet_protosw is an unsigned short so defining IPPROTO_SUBFLOW
-as a 16-bit value greater than 0xFF with the same LSB as IPPROTO_TCP is
-convenient for registering a unique protocol with inet_register_protosw()
-that still transmits packets with IPPROTO_TCP as the protocol number.
+tcp_v4_init_sock(), inet_compat_ioctl()
+tcp_request_sock_ipv4_ops
+
+This function is needed for MPTCP subflow initialization.
 
 Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
 ---
- include/uapi/linux/in.h | 2 ++
- 1 file changed, 2 insertions(+)
+ include/net/inet_common.h | 3 +++
+ include/net/mptcp.h       | 2 ++
+ include/net/tcp.h         | 1 +
+ net/ipv4/af_inet.c        | 2 +-
+ net/ipv4/tcp_ipv4.c       | 4 ++--
+ 5 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
-index f65975c801e5..6986aecd0f46 100644
---- a/include/uapi/linux/in.h
-+++ b/include/uapi/linux/in.h
-@@ -78,6 +78,8 @@ enum {
- #define IPPROTO_MPLS		IPPROTO_MPLS
-   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-+  IPPROTO_SUBFLOW =3D 262,	/* Multipath TCP (IPPROTO_TCP | 0x100)	*/
-+#define IPPROTO_SUBFLOW		IPPROTO_SUBFLOW
-   IPPROTO_MAX
+diff --git a/include/net/inet_common.h b/include/net/inet_common.h
+index 3ca969cbd161..1782c0d2ec32 100644
+--- a/include/net/inet_common.h
++++ b/include/net/inet_common.h
+@@ -37,6 +37,9 @@ int __inet_bind(struct sock *sk, struct sockaddr *uaddr, =
+int addr_len,
+ int inet_getname(struct socket *sock, struct sockaddr *uaddr,
+ 		 int peer);
+ int inet_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++#ifdef CONFIG_COMPAT
++int inet_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long=
+ arg);
++#endif
+ int inet_ctl_sock_create(struct sock **sk, unsigned short family,
+ 			 unsigned short type, unsigned char protocol,
+ 			 struct net *net);
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index f88213e31fbe..79daad717275 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -55,6 +55,8 @@ void mptcp_parse_option(const unsigned char *ptr, int ops=
+ize,
+ void mptcp_get_options(const struct sk_buff *skb,
+ 		       struct tcp_options_received *options);
+ =
+
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
++
+ #else
+ =
+
+ static inline void mptcp_parse_option(const unsigned char *ptr, int opsize,
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 527ef5e5c8ef..63ce0e37724b 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -436,6 +436,7 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk=
+, struct sk_buff *skb,
+ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb);
+ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len);
+ int tcp_connect(struct sock *sk);
++int tcp_v4_init_sock(struct sock *sk);
+ enum tcp_synack_type {
+ 	TCP_SYNACK_NORMAL,
+ 	TCP_SYNACK_FASTOPEN,
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 326c422c22f8..c73fcda64aa8 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -965,7 +965,7 @@ int inet_ioctl(struct socket *sock, unsigned int cmd, u=
+nsigned long arg)
+ EXPORT_SYMBOL(inet_ioctl);
+ =
+
+ #ifdef CONFIG_COMPAT
+-static int inet_compat_ioctl(struct socket *sock, unsigned int cmd, unsign=
+ed long arg)
++int inet_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long=
+ arg)
+ {
+ 	struct sock *sk =3D sock->sk;
+ 	int err =3D -ENOIOCTLCMD;
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 795605a23275..0cfa8bbca2ef 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1360,7 +1360,7 @@ struct request_sock_ops tcp_request_sock_ops __read_m=
+ostly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
  };
- #endif
+ =
+
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
+ 	.mss_clamp	=3D	TCP_MSS_DEFAULT,
+ #ifdef CONFIG_TCP_MD5SIG
+ 	.req_md5_lookup	=3D	tcp_v4_md5_lookup,
+@@ -1955,7 +1955,7 @@ static const struct tcp_sock_af_ops tcp_sock_ipv4_spe=
+cific =3D {
+ /* NOTE: A lot of things set to zero explicitly by call to
+  *       sk_alloc() so need not be done here.
+  */
+-static int tcp_v4_init_sock(struct sock *sk)
++int tcp_v4_init_sock(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk =3D inet_csk(sk);
+ =
+
 -- =
 
 2.19.1
 
 
---===============4170159064760190593==--
+--===============9024563282631728413==--
