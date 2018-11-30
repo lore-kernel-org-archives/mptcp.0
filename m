@@ -1,140 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============8397329335104457370=="
+Content-Type: multipart/mixed; boundary="===============7536152104789827743=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v4 11/17] mptcp: Add setsockopt()/getsockopt()
- socket operations
-Date: Fri, 30 Nov 2018 12:11:06 -0800
-Message-ID: <20181130201112.21806-12-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH v4 12/17] skbuff: Add private data pointer
+Date: Fri, 30 Nov 2018 12:11:07 -0800
+Message-ID: <20181130201112.21806-13-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20181130201112.21806-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 864
+X-UID: 865
 
---===============8397329335104457370==
+--===============7536152104789827743==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Krystad <peter.krystad(a)intel.com>
+Allow struct sk_buff to be optionally extended when the control buffer
+space is insufficient. New pointers for the extended data and associated
+destructor are placed at the end of the data structure and left
+uninitialized so cache behavior of struct sk_buff is unchanged when the
+new pointers are not accessed.
 
-Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 48 ++++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/subflow.c  | 22 ++++++++++++++++++++
- 2 files changed, 70 insertions(+)
+ include/linux/skbuff.h | 13 ++++++++++++-
+ net/core/skbuff.c      |  5 +++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3d10ab287bd6..cbc93dd36588 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -131,6 +131,52 @@ static void mptcp_destroy(struct sock *sk)
- 	token_destroy(msk->token);
- }
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 73902acf2b71..0cf47059c4bf 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -633,6 +633,7 @@ typedef unsigned char *sk_buff_data_t;
+  *	@queue_mapping: Queue mapping for multiqueue devices
+  *	@xmit_more: More SKBs are pending for this queue
+  *	@pfmemalloc: skbuff was allocated from PFMEMALLOC reserves
++ *	@priv_used: priv and priv_destructor contain valid data
+  *	@ndisc_nodetype: router type (from link layer)
+  *	@ooo_okay: allow the mapping of a socket to a queue to be changed
+  *	@l4_hash: indicate hash is a canonical 4-tuple hash over transport
+@@ -662,6 +663,8 @@ typedef unsigned char *sk_buff_data_t;
+  *	@data: Data head pointer
+  *	@truesize: Buffer size
+  *	@users: User count - see {datagram,tcp}.c
++ *	@priv: Optional pointer to skb private data
++ *	@priv_destructor: Private data destruct function
+  */
  =
 
-+static int mptcp_setsockopt(struct sock *sk, int level, int optname,
-+			    char __user *uoptval, unsigned int optlen)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct socket *subflow;
-+	char __kernel *optval;
-+
-+	pr_debug("msk=3D%p", msk);
-+	if (msk->connection_list) {
-+		subflow =3D msk->connection_list;
-+		pr_debug("conn_list->subflow=3D%p", subflow->sk);
-+	} else {
-+		subflow =3D msk->subflow;
-+		pr_debug("subflow=3D%p", subflow->sk);
-+	}
-+
-+	/* will be treated as __user in subflow_setsockopt */
-+	optval =3D (char __kernel __force *) uoptval;
-+
-+	return kernel_setsockopt(subflow, level, optname, optval, optlen);
-+}
-+
-+static int mptcp_getsockopt(struct sock *sk, int level, int optname,
-+			    char __user *uoptval, int __user *uoption)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct socket *subflow;
-+	char __kernel *optval;
-+	int __kernel *option;
-+
-+	pr_debug("msk=3D%p", msk);
-+	if (msk->connection_list) {
-+		subflow =3D msk->connection_list;
-+		pr_debug("conn_list->subflow=3D%p", subflow->sk);
-+	} else {
-+		subflow =3D msk->subflow;
-+		pr_debug("subflow=3D%p", subflow->sk);
-+	}
-+
-+	/* will be treated as __user in subflow_getsockopt */
-+	optval =3D (char __kernel __force *) uoptval;
-+	option =3D (int __kernel __force *) uoption;
-+
-+	return kernel_getsockopt(subflow, level, optname, optval, option);
-+}
-+
- static int mptcp_get_port(struct sock *sk, unsigned short snum)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -282,6 +328,8 @@ static struct proto mptcp_prot =3D {
- 	.accept		=3D mptcp_accept,
- 	.shutdown	=3D tcp_shutdown,
- 	.destroy	=3D mptcp_destroy,
-+	.setsockopt	=3D mptcp_setsockopt,
-+	.getsockopt	=3D mptcp_getsockopt,
- 	.sendmsg	=3D mptcp_sendmsg,
- 	.recvmsg	=3D mptcp_recvmsg,
- 	.hash		=3D inet_hash,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7495e259ce5d..e0b4aa8fe51d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -249,6 +249,26 @@ static void subflow_destroy(struct sock *sk)
- 	tcp_v4_destroy_sock(sk);
- }
+ struct sk_buff {
+@@ -743,7 +746,8 @@ struct sk_buff {
+ 				peeked:1,
+ 				head_frag:1,
+ 				xmit_more:1,
+-				pfmemalloc:1;
++				pfmemalloc:1,
++				priv_used:1;
  =
 
-+static int subflow_setsockopt(struct sock *sk, int level, int optname,
-+			      char __user *optval, unsigned int optlen)
-+{
-+	struct subflow_sock *subflow =3D subflow_sk(sk);
+ 	/* fields enclosed in headers_start/headers_end are copied
+ 	 * using a single memcpy() in __copy_skb_header()
+@@ -866,6 +870,13 @@ struct sk_buff {
+ 				*data;
+ 	unsigned int		truesize;
+ 	refcount_t		users;
 +
-+	pr_debug("subflow=3D%p", subflow);
-+
-+	return tcp_setsockopt(sk, level, optname, optval, optlen);
-+}
-+
-+static int subflow_getsockopt(struct sock *sk, int level, int optname,
-+			      char __user *optval, int __user *option)
-+{
-+	struct subflow_sock *subflow =3D subflow_sk(sk);
-+
-+	pr_debug("subflow=3D%p", subflow);
-+
-+	return tcp_getsockopt(sk, level, optname, optval, option);
-+}
-+
- static struct proto subflow_prot =3D {
- 	.name		=3D "SUBFLOW",
- 	.owner		=3D THIS_MODULE,
-@@ -260,6 +280,8 @@ static struct proto subflow_prot =3D {
- 	.init		=3D subflow_init_sock,
- 	.destroy	=3D subflow_destroy,
- 	.shutdown	=3D tcp_shutdown,
-+	.setsockopt	=3D subflow_setsockopt,
-+	.getsockopt	=3D subflow_getsockopt,
- 	.keepalive	=3D tcp_set_keepalive,
- 	.recvmsg	=3D subflow_recvmsg,
- 	.sendmsg	=3D subflow_sendmsg,
++	/* Uninitialized private pointers. At the very end so they do not
++	 * affect cache behavior of the rest of struct sk_buff when left
++	 * unused. All three must be initialized when priv_used is set.
++	 */
++	void			*priv;
++	void			(*priv_destructor)(struct sk_buff *skb);
+ };
+ =
+
+ #ifdef __KERNEL__
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 3c814565ed7c..ccdb50708d72 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -611,6 +611,10 @@ void skb_release_head_state(struct sk_buff *skb)
+ 		WARN_ON(in_irq());
+ 		skb->destructor(skb);
+ 	}
++	if (skb->priv_used && skb->priv_destructor) {
++		WARN_ON(in_irq());
++		skb->priv_destructor(skb);
++	}
+ #if IS_ENABLED(CONFIG_NF_CONNTRACK)
+ 	nf_conntrack_put(skb_nfct(skb));
+ #endif
+@@ -859,6 +863,7 @@ static struct sk_buff *__skb_clone(struct sk_buff *n, s=
+truct sk_buff *skb)
+ 	n->nohdr =3D 0;
+ 	n->peeked =3D 0;
+ 	C(pfmemalloc);
++	n->priv_used =3D 0;
+ 	n->destructor =3D NULL;
+ 	C(tail);
+ 	C(end);
 -- =
 
 2.19.1
 
 
---===============8397329335104457370==--
+--===============7536152104789827743==--
