@@ -1,133 +1,109 @@
-Content-Type: multipart/mixed; boundary="===============6813555950858273990=="
+Content-Type: multipart/mixed; boundary="===============0373386841696570335=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v4 13/17] tcp: Prevent coalesce and collapse when
- skb->priv is used
-Date: Fri, 30 Nov 2018 12:11:08 -0800
-Message-ID: <20181130201112.21806-14-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH v4 14/17] tcp: Export low-level TCP functions
+Date: Fri, 30 Nov 2018 12:11:09 -0800
+Message-ID: <20181130201112.21806-15-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20181130201112.21806-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 866
+X-UID: 867
 
---===============6813555950858273990==
+--===============0373386841696570335==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The extended private data attached to an skb needs to be preserved as
-it passes through the TCP stack. Make sure that these skbs are not
-appended to others during coalesce or collapse, so the private data
-remains associated with the payload of the given skb.
-
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/tcp.h     |  6 ++++++
- net/ipv4/tcp_input.c  | 10 ++++++++--
- net/ipv4/tcp_output.c |  2 +-
- 3 files changed, 15 insertions(+), 3 deletions(-)
+ include/net/tcp.h |  4 ++++
+ net/ipv4/tcp.c    | 12 ++++++------
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 1fc6362fa778..eed2f9c54d0a 100644
+index eed2f9c54d0a..98ba2e2b84ed 100644
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -954,6 +954,12 @@ static inline bool tcp_skb_can_collapse_to(const struc=
-t sk_buff *skb)
- 	return likely(!TCP_SKB_CB(skb)->eor);
+@@ -333,6 +333,10 @@ int tcp_sendpage_locked(struct sock *sk, struct page *=
+page, int offset,
+ 			size_t size, int flags);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb);
++void tcp_push(struct sock *sk, int flags, int mss_now, int nonagle,
++	      int size_goal);
+ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 252048776dbb..d7eae54aac04 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -657,7 +657,7 @@ static inline bool forced_push(const struct tcp_sock *t=
+p)
+ 	return after(tp->write_seq, tp->pushed_seq + (tp->max_window >> 1));
  }
  =
 
-+static inline bool tcp_skb_can_collapse(const struct sk_buff *to,
-+					const struct sk_buff *from)
-+{
-+	return likely(tcp_skb_can_collapse_to(to) && !from->priv_used);
-+}
-+
- /* Events passed to congestion control interface */
- enum tcp_ca_event {
- 	CA_EVENT_TX_START,	/* first transmit when no packets in flight */
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 00f7a3d88d66..fca76bbaa5c1 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1396,7 +1396,7 @@ static struct sk_buff *tcp_shift_skb_data(struct sock=
- *sk, struct sk_buff *skb,
- 	if ((TCP_SKB_CB(prev)->sacked & TCPCB_TAGBITS) !=3D TCPCB_SACKED_ACKED)
- 		goto fallback;
+-static void skb_entail(struct sock *sk, struct sk_buff *skb)
++void tcp_skb_entail(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb);
+@@ -701,8 +701,8 @@ static bool tcp_should_autocork(struct sock *sk, struct=
+ sk_buff *skb,
+ 	       refcount_read(&sk->sk_wmem_alloc) > skb->truesize;
+ }
  =
 
--	if (!tcp_skb_can_collapse_to(prev))
-+	if (!tcp_skb_can_collapse(prev, skb))
- 		goto fallback;
+-static void tcp_push(struct sock *sk, int flags, int mss_now,
+-		     int nonagle, int size_goal)
++void tcp_push(struct sock *sk, int flags, int mss_now,
++	      int nonagle, int size_goal)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct sk_buff *skb;
+@@ -924,7 +924,7 @@ static unsigned int tcp_xmit_size_goal(struct sock *sk,=
+ u32 mss_now,
+ 	return max(size_goal, mss_now);
+ }
  =
 
- 	in_sack =3D !after(start_seq, TCP_SKB_CB(skb)->seq) &&
-@@ -4355,6 +4355,9 @@ static bool tcp_try_coalesce(struct sock *sk,
- 	if (TCP_SKB_CB(from)->seq !=3D TCP_SKB_CB(to)->end_seq)
- 		return false;
+-static int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
+ {
+ 	int mss_now;
  =
 
-+	if (from->priv_used)
-+		return false;
-+
- #ifdef CONFIG_TLS_DEVICE
- 	if (from->decrypted !=3D to->decrypted)
- 		return false;
-@@ -4872,10 +4875,12 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *=
-list, struct rb_root *root,
+@@ -979,7 +979,7 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct page *=
+page, int offset,
+ 			if (!skb)
+ 				goto wait_for_memory;
  =
 
- 		/* The first skb to collapse is:
- 		 * - not SYN/FIN and
-+		 * - does not use priv_data
- 		 * - bloated or contains data before "start" or
- 		 *   overlaps to the next one.
- 		 */
- 		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
-+		    !skb->priv_used &&
- 		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
- 		     before(TCP_SKB_CB(skb)->seq, start))) {
- 			end_of_skbs =3D false;
-@@ -4891,7 +4896,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 		/* Decided to skip this, advance start seq. */
- 		start =3D TCP_SKB_CB(skb)->end_seq;
- 	}
--	if (end_of_skbs ||
-+	if (end_of_skbs || skb->priv_used ||
- 	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
- 		return;
+-			skb_entail(sk, skb);
++			tcp_skb_entail(sk, skb);
+ 			copy =3D size_goal;
+ 		}
  =
 
-@@ -4934,6 +4939,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 				skb =3D tcp_collapse_one(sk, skb, list, root);
- 				if (!skb ||
- 				    skb =3D=3D tail ||
-+				    skb->priv_used ||
- 				    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
- 					goto end;
- #ifdef CONFIG_TLS_DEVICE
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 6f723cdb5c8e..7d838ae40a9c 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2883,7 +2883,7 @@ static void tcp_retrans_try_collapse(struct sock *sk,=
- struct sk_buff *to,
- 		if (!tcp_can_collapse(sk, skb))
- 			break;
+@@ -1291,7 +1291,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr=
+ *msg, size_t size)
+ 			process_backlog =3D true;
+ 			skb->ip_summed =3D CHECKSUM_PARTIAL;
  =
 
--		if (!tcp_skb_can_collapse_to(to))
-+		if (!tcp_skb_can_collapse(to, skb))
- 			break;
+-			skb_entail(sk, skb);
++			tcp_skb_entail(sk, skb);
+ 			copy =3D size_goal;
  =
 
- 		space -=3D skb->len;
+ 			/* All packets are restored as if they have
 -- =
 
 2.19.1
 
 
---===============6813555950858273990==--
+--===============0373386841696570335==--
