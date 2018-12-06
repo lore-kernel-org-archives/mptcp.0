@@ -1,762 +1,429 @@
-Content-Type: multipart/mixed; boundary="===============5499527309508305828=="
+Content-Type: multipart/mixed; boundary="===============3212411671625778990=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 06/12] mptcp: Remove reinjection of data across
- subflows
-Date: Wed, 05 Dec 2018 17:00:17 -0800
-Message-ID: <20181206010023.18819-7-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 07/12] mptcp: Remove support for TCP SYN-cookies
+Date: Wed, 05 Dec 2018 17:00:18 -0800
+Message-ID: <20181206010023.18819-8-cpaasch@apple.com>
 In-Reply-To: 20181206010023.18819-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 877
+X-UID: 878
 
---===============5499527309508305828==
+--===============3212411671625778990==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-It's an "optimisation" that we don't need in net-next.
-
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/linux/tcp.h        |   3 -
- include/net/mptcp.h        |   9 --
- net/mptcp/mptcp_ctrl.c     |  10 +-
- net/mptcp/mptcp_fullmesh.c |  12 --
- net/mptcp/mptcp_input.c    |  20 +--
- net/mptcp/mptcp_output.c   | 358 +----------------------------------------=
-----
- net/mptcp/mptcp_sched.c    |  32 ++--
- 7 files changed, 21 insertions(+), 423 deletions(-)
+ include/net/tcp.h      | 13 +++++--------
+ net/ipv4/syncookies.c  | 47 +++++++----------------------------------------
+ net/ipv4/tcp_input.c   |  2 +-
+ net/ipv6/syncookies.c  | 32 +++++++-------------------------
+ net/mptcp/mptcp_ipv4.c | 17 -----------------
+ net/mptcp/mptcp_ipv6.c | 17 -----------------
+ 6 files changed, 20 insertions(+), 108 deletions(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index cc896f842c31..6dd9c45c52d6 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -470,9 +470,6 @@ struct tcp_sock {
- 		request_mptcp:1, /* Did we send out an MP_CAPABLE?
- 				  * (this speeds up mptcp_doit() in tcp_recvmsg)
- 				  */
--		pf:1, /* Potentially Failed state: when this flag is set, we
--		       * stop using the subflow
--		       */
- 		mp_killed:1, /* Killed with a tcp_done in mptcp? */
- 		was_meta_sk:1,	/* This was a meta sk (in case of reuse) */
- 		is_master_sk:1,
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 914ab2fb3c89..721515ddb252 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -265,12 +265,6 @@ struct mptcp_cb {
- 	u8 mptcp_sched[MPTCP_SCHED_DATA_SIZE] __aligned(8);
- 	struct mptcp_sched_ops *sched_ops;
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index c4a9297da7a0..f206ea426018 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -644,8 +644,7 @@ static inline u32 tcp_cookie_time(void)
  =
 
--	struct sk_buff_head reinject_queue;
--	/* First cache-line boundary is here minus 8 bytes. But from the
--	 * reinject-queue only the next and prev pointers are regularly
--	 * accessed. Thus, the whole data-path is on a single cache-line.
--	 */
--
- 	u64	infinite_rcv_seq;
+ u32 __cookie_v4_init_sequence(const struct iphdr *iph, const struct tcphdr=
+ *th,
+ 			      u16 *mssp);
+-__u32 cookie_v4_init_sequence(struct request_sock *req, const struct sock =
+*sk,
+-			      const struct sk_buff *skb, __u16 *mss);
++__u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mss);
+ u64 cookie_init_timestamp(struct request_sock *req);
+ bool cookie_timestamp_decode(const struct net *net,
+ 			     struct tcp_options_received *opt);
+@@ -659,8 +658,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
+_buff *skb);
  =
 
- 	/***** Start of fields, used for connection closure */
-@@ -422,7 +416,6 @@ extern bool mptcp_init_failed;
- #define MPTCPHDR_SEQ64_OFO	0x20 /* Is it not in our circular array? */
- /* MPTCP flags: TX only */
- #define MPTCPHDR_INF		0x08
--#define MPTCP_REINJECT		0x10 /* Did we reinject this segment? */
+ u32 __cookie_v6_init_sequence(const struct ipv6hdr *iph,
+ 			      const struct tcphdr *th, u16 *mssp);
+-__u32 cookie_v6_init_sequence(struct request_sock *req, const struct sock =
+*sk,
+-			      const struct sk_buff *skb, __u16 *mss);
++__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mss);
+ #endif
+ /* tcp_output.c */
  =
 
- struct mptcp_option {
- 	__u8	kind;
-@@ -720,7 +713,6 @@ int mptcp_add_sock(struct sock *meta_sk, struct sock *s=
-k, u8 loc_id, u8 rem_id,
- 		   gfp_t flags);
- void mptcp_del_sock(struct sock *sk);
- void mptcp_update_metasocket(const struct sock *meta_sk);
--void mptcp_reinject_data(struct sock *orig_sk, int clone_it);
- void mptcp_update_sndbuf(const struct tcp_sock *tp);
- void mptcp_send_fin(struct sock *meta_sk);
- void mptcp_send_active_reset(struct sock *meta_sk, gfp_t priority);
-@@ -1257,7 +1249,6 @@ static inline int is_master_tp(const struct tcp_sock =
-*tp)
+@@ -2086,8 +2084,8 @@ struct tcp_request_sock_ops {
+ 			struct sk_buff *skb,
+ 			bool want_cookie);
+ #ifdef CONFIG_SYN_COOKIES
+-	__u32 (*cookie_init_seq)(struct request_sock *req, const struct sock *sk,
+-				 const struct sk_buff *skb, __u16 *mss);
++	__u32 (*cookie_init_seq)(const struct sk_buff *skb,
++				 __u16 *mss);
+ #endif
+ 	struct dst_entry *(*route_req)(const struct sock *sk, struct flowi *fl,
+ 				       const struct request_sock *req);
+@@ -2101,13 +2099,12 @@ struct tcp_request_sock_ops {
+ =
+
+ #ifdef CONFIG_SYN_COOKIES
+ static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
+ *ops,
+-					 struct request_sock *req,
+ 					 const struct sock *sk, struct sk_buff *skb,
+ 					 __u16 *mss)
+ {
+ 	tcp_synq_overflow(sk);
+ 	__NET_INC_STATS(sock_net(sk), LINUX_MIB_SYNCOOKIESSENT);
+-	return ops->cookie_init_seq(req, sk, skb, mss);
++	return ops->cookie_init_seq(skb, mss);
  }
- static inline void mptcp_del_sock(const struct sock *sk) {}
- static inline void mptcp_update_metasocket(const struct sock *meta_sk) {}
--static inline void mptcp_reinject_data(struct sock *orig_sk, int clone_it)=
- {}
- static inline void mptcp_update_sndbuf(const struct tcp_sock *tp) {}
- static inline void mptcp_clean_rtx_infinite(const struct sk_buff *skb,
- 					    const struct sock *sk) {}
-diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
-index 927f8c014c0b..910268a8ee8e 100644
---- a/net/mptcp/mptcp_ctrl.c
-+++ b/net/mptcp/mptcp_ctrl.c
-@@ -562,7 +562,7 @@ struct sock *mptcp_select_ack_sock(const struct sock *m=
-eta_sk)
- 		struct tcp_sock *tp =3D tcp_sk(sk);
- 		u32 elapsed;
+ #else
+ static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
+ *ops,
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index 514a37a63c24..5f2236d8d54a 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -16,8 +16,6 @@
+ #include <linux/siphash.h>
+ #include <linux/kernel.h>
+ #include <linux/export.h>
+-#include <net/mptcp.h>
+-#include <net/mptcp_v4.h>
+ #include <net/secure_seq.h>
+ #include <net/tcp.h>
+ #include <net/route.h>
+@@ -181,8 +179,7 @@ u32 __cookie_v4_init_sequence(const struct iphdr *iph, =
+const struct tcphdr *th,
+ }
+ EXPORT_SYMBOL_GPL(__cookie_v4_init_sequence);
  =
 
--		if (!mptcp_sk_can_send_ack(sk) || tp->pf)
-+		if (!mptcp_sk_can_send_ack(sk) || inet_csk(sk)->icsk_ca_state =3D=3D TCP=
-_CA_Loss)
- 			continue;
+-__u32 cookie_v4_init_sequence(struct request_sock *req, const struct sock =
+*sk,
+-			      const struct sk_buff *skb, __u16 *mssp)
++__u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mssp)
+ {
+ 	const struct iphdr *iph =3D ip_hdr(skb);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+@@ -212,27 +209,9 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, stru=
+ct sk_buff *skb,
+ 	struct inet_connection_sock *icsk =3D inet_csk(sk);
+ 	struct sock *child;
+ 	bool own_req;
+-#ifdef CONFIG_MPTCP
+-	int ret;
+-#endif
  =
 
- 		elapsed =3D keepalive_time_elapsed(tp);
-@@ -694,8 +694,6 @@ void mptcp_destroy_sock(struct sock *sk)
- 		struct mptcp_tcp_sock *mptcp;
- 		struct hlist_node *tmp;
- =
-
--		__skb_queue_purge(&tcp_sk(sk)->mpcb->reinject_queue);
+ 	child =3D icsk->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
+ 						 NULL, &own_req);
 -
- 		/* We have to close all remaining subflows. Normally, they
- 		 * should all be about to get closed. But, if the kernel is
- 		 * forcing a closure (e.g., tcp_write_err), the subflows might
-@@ -1231,7 +1229,6 @@ static int mptcp_alloc_mpcb(struct sock *meta_sk, __u=
-64 remote_key,
- 	meta_tp->was_meta_sk =3D 0;
- =
-
- 	/* Initialize the queues */
--	skb_queue_head_init(&mpcb->reinject_queue);
- 	master_tp->out_of_order_queue =3D RB_ROOT;
- 	master_sk->tcp_rtx_queue =3D RB_ROOT;
- 	INIT_LIST_HEAD(&master_tp->tsq_node);
-@@ -1462,9 +1459,6 @@ void mptcp_del_sock(struct sock *sk)
- 	tp->mptcp->attached =3D 0;
- 	mpcb->path_index_bits &=3D ~(1 << tp->mptcp->path_index);
- =
-
--	if (!tcp_write_queue_empty(sk) || !tcp_rtx_queue_empty(sk))
--		mptcp_reinject_data(sk, 0);
+-#ifdef CONFIG_MPTCP
+-	if (!child)
+-		goto listen_overflow;
 -
- 	if (is_master_tp(tp)) {
- 		struct sock *meta_sk =3D mptcp_meta_sk(sk);
- 		struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
-@@ -1922,8 +1916,6 @@ void mptcp_disconnect(struct sock *sk)
+-	ret =3D mptcp_check_req_master(sk, child, req, skb, 0);
+-	if (ret < 0)
+-		return NULL;
+-
+-	if (!ret)
+-		return tcp_sk(child)->mpcb->master_sk;
+-
+-listen_overflow:
+-#endif
+-
+ 	if (child) {
+ 		refcount_set(&req->rsk_refcnt, 1);
+ 		tcp_sk(child)->tsoffset =3D tsoff;
+@@ -305,7 +284,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ {
+ 	struct ip_options *opt =3D &TCP_SKB_CB(skb)->header.h4.opt;
+ 	struct tcp_options_received tcp_opt;
+-	struct mptcp_options_received mopt;
+ 	struct inet_request_sock *ireq;
+ 	struct tcp_request_sock *treq;
  	struct tcp_sock *tp =3D tcp_sk(sk);
- 	struct hlist_node *tmp;
+@@ -335,8 +313,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
  =
 
--	__skb_queue_purge(&tp->mpcb->reinject_queue);
--
- 	if (tp->inside_tk_table)
- 		mptcp_hash_remove_bh(tp);
+ 	/* check for timestamp cookie support */
+ 	memset(&tcp_opt, 0, sizeof(tcp_opt));
+-	mptcp_init_mp_opt(&mopt);
+-	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
++	tcp_parse_options(sock_net(sk), skb, &tcp_opt, NULL, 0, NULL, NULL);
  =
 
-diff --git a/net/mptcp/mptcp_fullmesh.c b/net/mptcp/mptcp_fullmesh.c
-index d7f3bba74050..3fff298cee86 100644
---- a/net/mptcp/mptcp_fullmesh.c
-+++ b/net/mptcp/mptcp_fullmesh.c
-@@ -923,12 +923,6 @@ static void mptcp_address_worker(struct work_struct *w=
-ork)
- 					    !ipv6_addr_equal(&inet6_sk(sk)->saddr, &event->addr.in6))
- 						continue;
+ 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
+ 		tsoff =3D secure_tcp_ts_off(sock_net(sk),
+@@ -349,12 +326,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct s=
+k_buff *skb)
+ 		goto out;
  =
 
--					/* Reinject, so that pf =3D 1 and so we
--					 * won't select this one as the
--					 * ack-sock.
--					 */
--					mptcp_reinject_data(sk, 0);
--
- 					/* We announce the removal of this id */
- 					announce_remove_addr(tcp_sk(sk)->mptcp->loc_id, meta_sk);
- =
-
-@@ -1438,12 +1432,6 @@ static void full_mesh_release_sock(struct sock *meta=
-_sk)
- 		}
- =
-
- 		if (shall_remove) {
--			/* Reinject, so that pf =3D 1 and so we
--			 * won't select this one as the
--			 * ack-sock.
--			 */
--			mptcp_reinject_data(sk, 0);
--
- 			announce_remove_addr(tcp_sk(sk)->mptcp->loc_id,
- 					     meta_sk);
- =
-
-diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index 652da0439644..f247e9ef2853 100644
---- a/net/mptcp/mptcp_input.c
-+++ b/net/mptcp/mptcp_input.c
-@@ -92,7 +92,7 @@ static inline int mptcp_tso_acked_reinject(const struct s=
-ock *meta_sk,
- /* Cleans the meta-socket retransmission queue and the reinject-queue. */
- static void mptcp_clean_rtx_queue(struct sock *meta_sk, u32 prior_snd_una)
- {
--	struct sk_buff *skb, *tmp, *next;
-+	struct sk_buff *skb, *next;
- 	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
- 	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
- 	bool acked =3D false;
-@@ -149,20 +149,6 @@ static void mptcp_clean_rtx_queue(struct sock *meta_sk=
-, u32 prior_snd_una)
- 		}
- 		sk_wmem_free_skb(meta_sk, skb);
- 	}
--	/* Remove acknowledged data from the reinject queue */
--	skb_queue_walk_safe(&mpcb->reinject_queue, skb, tmp) {
--		if (before(meta_tp->snd_una, TCP_SKB_CB(skb)->end_seq)) {
--			if (tcp_skb_pcount(skb) =3D=3D 1 ||
--			    !after(meta_tp->snd_una, TCP_SKB_CB(skb)->seq))
--				break;
--
--			mptcp_tso_acked_reinject(meta_sk, skb);
--			break;
--		}
--
--		__skb_unlink(skb, &mpcb->reinject_queue);
--		__kfree_skb(skb);
--	}
- =
-
- 	if (likely(between(meta_tp->snd_up, prior_snd_una, meta_tp->snd_una)))
- 		meta_tp->snd_up =3D meta_tp->snd_una;
-@@ -1242,9 +1228,6 @@ static void mptcp_data_ack(struct sock *sk, const str=
-uct sk_buff *skb)
- 	u32 nwin, data_ack, data_seq;
- 	u16 data_len =3D 0;
- =
-
--	/* A valid packet came in - subflow is operational again */
--	tp->pf =3D 0;
--
- 	/* Even if there is no data-ack, we stop retransmitting.
- 	 * Except if this is a SYN/ACK. Then it is just a retransmission
- 	 */
-@@ -1400,7 +1383,6 @@ static void mptcp_send_reset_rem_id(const struct mptc=
-p_cb *mpcb, u8 rem_id)
- 		struct sock *sk_it =3D mptcp_to_sock(mptcp);
- =
-
- 		if (tcp_sk(sk_it)->mptcp->rem_id =3D=3D rem_id) {
--			mptcp_reinject_data(sk_it, 0);
- 			mptcp_send_reset(sk_it);
- 		}
- 	}
-diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index af695fafaab2..26cf41f75922 100644
---- a/net/mptcp/mptcp_output.c
-+++ b/net/mptcp/mptcp_output.c
-@@ -54,309 +54,6 @@ int mptcp_sub_len_remove_addr_align(u16 bitfield)
- }
- EXPORT_SYMBOL(mptcp_sub_len_remove_addr_align);
- =
-
--/* get the data-seq and end-data-seq and store them again in the
-- * tcp_skb_cb
-- */
--static bool mptcp_reconstruct_mapping(struct sk_buff *skb)
--{
--	const struct mp_dss *mpdss =3D (struct mp_dss *)TCP_SKB_CB(skb)->dss;
--	u32 *p32;
--	u16 *p16;
--
--	if (!mptcp_is_data_seq(skb))
--		return false;
--
--	if (!mpdss->M)
--		return false;
--
--	/* Move the pointer to the data-seq */
--	p32 =3D (u32 *)mpdss;
--	p32++;
--	if (mpdss->A) {
--		p32++;
--		if (mpdss->a)
--			p32++;
--	}
--
--	TCP_SKB_CB(skb)->seq =3D ntohl(*p32);
--
--	/* Get the data_len to calculate the end_data_seq */
--	p32++;
--	p32++;
--	p16 =3D (u16 *)p32;
--	TCP_SKB_CB(skb)->end_seq =3D ntohs(*p16) + TCP_SKB_CB(skb)->seq;
--
--	return true;
--}
--
--static bool mptcp_is_reinjected(const struct sk_buff *skb)
--{
--	return TCP_SKB_CB(skb)->mptcp_flags & MPTCP_REINJECT;
--}
--
--static void mptcp_find_and_set_pathmask(struct sock *meta_sk, struct sk_bu=
-ff *skb)
--{
--	struct rb_node **p =3D &meta_sk->tcp_rtx_queue.rb_node;
--	struct rb_node *parent;
--	struct sk_buff *skb_it;
--
--	while (*p) {
--		parent =3D *p;
--		skb_it =3D rb_to_skb(parent);
--		if (before(TCP_SKB_CB(skb)->seq, TCP_SKB_CB(skb_it)->seq)) {
--			p =3D &parent->rb_left;
--			continue;
--		}
--		if (after(TCP_SKB_CB(skb)->seq, TCP_SKB_CB(skb_it)->seq)) {
--			p =3D &parent->rb_right;
--			continue;
--		}
--
--		TCP_SKB_CB(skb)->path_mask =3D TCP_SKB_CB(skb_it)->path_mask;
--		break;
--	}
--}
--
--/* Reinject data from one TCP subflow to the meta_sk. If sk =3D=3D NULL, w=
-e are
-- * coming from the meta-retransmit-timer
-- */
--static void __mptcp_reinject_data(struct sk_buff *orig_skb, struct sock *m=
-eta_sk,
--				  struct sock *sk, int clone_it,
--				  enum tcp_queue tcp_queue)
--{
--	struct sk_buff *skb, *skb1;
--	const struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
--	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
--	u32 seq, end_seq;
--
--	if (clone_it) {
--		/* pskb_copy is necessary here, because the TCP/IP-headers
--		 * will be changed when it's going to be reinjected on another
--		 * subflow.
--		 */
--		tcp_skb_tsorted_save(orig_skb) {
--			skb =3D pskb_copy_for_clone(orig_skb, GFP_ATOMIC);
--		} tcp_skb_tsorted_restore(orig_skb);
--	} else {
--		if (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
--			__skb_unlink(orig_skb, &sk->sk_write_queue);
--		else
--			rb_erase(&orig_skb->rbnode, &sk->tcp_rtx_queue);
--		sock_set_flag(sk, SOCK_QUEUE_SHRUNK);
--		sk->sk_wmem_queued -=3D orig_skb->truesize;
--		sk_mem_uncharge(sk, orig_skb->truesize);
--		skb =3D orig_skb;
--	}
--	if (unlikely(!skb))
--		return;
--
--	if (sk && !mptcp_reconstruct_mapping(skb)) {
--		__kfree_skb(skb);
--		return;
--	}
--
--	skb->sk =3D meta_sk;
--
--	/* Make sure that this list is clean */
--	tcp_skb_tsorted_anchor_cleanup(skb);
--
--	/* Reset subflow-specific TCP control-data */
--	TCP_SKB_CB(skb)->sacked =3D 0;
--	TCP_SKB_CB(skb)->tcp_flags &=3D (TCPHDR_ACK | TCPHDR_PSH);
--
--	/* If it reached already the destination, we don't have to reinject it */
--	if (!after(TCP_SKB_CB(skb)->end_seq, meta_tp->snd_una)) {
--		__kfree_skb(skb);
--		return;
--	}
--
--	/* Only reinject segments that are fully covered by the mapping */
--	if (skb->len + (mptcp_is_data_fin(skb) ? 1 : 0) !=3D
--	    TCP_SKB_CB(skb)->end_seq - TCP_SKB_CB(skb)->seq) {
--		struct rb_node *parent, **p =3D &meta_sk->tcp_rtx_queue.rb_node;
--		u32 end_seq =3D TCP_SKB_CB(skb)->end_seq;
--		u32 seq =3D TCP_SKB_CB(skb)->seq;
--
--		__kfree_skb(skb);
--
--		/* Ok, now we have to look for the full mapping in the meta
--		 * send-queue :S
--		 */
--
--		/* First, find the first skb that covers us */
--		while (*p) {
--			parent =3D *p;
--			skb =3D rb_to_skb(parent);
--
--			/* Not yet at the mapping? */
--			if (!after(end_seq, TCP_SKB_CB(skb)->seq)) {
--				p =3D &parent->rb_left;
--				continue;
--			}
--
--			if (!before(seq, TCP_SKB_CB(skb)->end_seq)) {
--				p =3D &parent->rb_right;
--				continue;
--			}
--
--			break;
--		}
--
--		if (*p) {
--			/* We found it, now let's reinject everything */
--			skb =3D rb_to_skb(*p);
--
--			skb_rbtree_walk_from(skb) {
--				if (after(TCP_SKB_CB(skb)->end_seq, end_seq))
--					return;
--				__mptcp_reinject_data(skb, meta_sk, NULL, 1,
--						      TCP_FRAG_IN_RTX_QUEUE);
--			}
--		}
--		return;
--	}
--
--	/* Segment goes back to the MPTCP-layer. So, we need to zero the
--	 * path_mask/dss.
--	 */
--	memset(TCP_SKB_CB(skb)->dss, 0 , mptcp_dss_len);
--
--	/* We need to find out the path-mask from the meta-write-queue
--	 * to properly select a subflow.
--	 */
--	mptcp_find_and_set_pathmask(meta_sk, skb);
--
--	/* If it's empty, just add */
--	if (skb_queue_empty(&mpcb->reinject_queue)) {
--		skb_queue_head(&mpcb->reinject_queue, skb);
--		return;
--	}
--
--	/* Find place to insert skb - or even we can 'drop' it, as the
--	 * data is already covered by other skb's in the reinject-queue.
--	 *
--	 * This is inspired by code from tcp_data_queue.
--	 */
--
--	skb1 =3D skb_peek_tail(&mpcb->reinject_queue);
--	seq =3D TCP_SKB_CB(skb)->seq;
--	while (1) {
--		if (!after(TCP_SKB_CB(skb1)->seq, seq))
--			break;
--		if (skb_queue_is_first(&mpcb->reinject_queue, skb1)) {
--			skb1 =3D NULL;
--			break;
--		}
--		skb1 =3D skb_queue_prev(&mpcb->reinject_queue, skb1);
--	}
--
--	/* Do skb overlap to previous one? */
--	end_seq =3D TCP_SKB_CB(skb)->end_seq;
--	if (skb1 && before(seq, TCP_SKB_CB(skb1)->end_seq)) {
--		if (!after(end_seq, TCP_SKB_CB(skb1)->end_seq)) {
--			/* All the bits are present. Don't reinject */
--			__kfree_skb(skb);
--			return;
--		}
--		if (seq =3D=3D TCP_SKB_CB(skb1)->seq) {
--			if (skb_queue_is_first(&mpcb->reinject_queue, skb1))
--				skb1 =3D NULL;
--			else
--				skb1 =3D skb_queue_prev(&mpcb->reinject_queue, skb1);
--		}
--	}
--	if (!skb1)
--		__skb_queue_head(&mpcb->reinject_queue, skb);
+ 	ret =3D NULL;
+-#ifdef CONFIG_MPTCP
+-	if (mopt.saw_mpc)
+-		req =3D inet_reqsk_alloc(&mptcp_request_sock_ops, sk, false); /* for saf=
+ety */
 -	else
--		__skb_queue_after(&mpcb->reinject_queue, skb1, skb);
--
--	/* And clean segments covered by new one as whole. */
--	while (!skb_queue_is_last(&mpcb->reinject_queue, skb)) {
--		skb1 =3D skb_queue_next(&mpcb->reinject_queue, skb);
--
--		if (!after(end_seq, TCP_SKB_CB(skb1)->seq))
--			break;
--
--		if (before(end_seq, TCP_SKB_CB(skb1)->end_seq))
--			break;
--
--		__skb_unlink(skb1, &mpcb->reinject_queue);
--		__kfree_skb(skb1);
--	}
--	return;
--}
--
--/* Inserts data into the reinject queue */
--void mptcp_reinject_data(struct sock *sk, int clone_it)
--{
--	struct sock *meta_sk =3D mptcp_meta_sk(sk);
--	struct sk_buff *skb_it, *tmp;
--	enum tcp_queue tcp_queue;
--
--	/* It has already been closed - there is really no point in reinjecting */
--	if (meta_sk->sk_state =3D=3D TCP_CLOSE)
--		return;
--
--	skb_queue_walk_safe(&sk->sk_write_queue, skb_it, tmp) {
--		struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb_it);
--		/* Subflow syn's and fin's are not reinjected.
--		 *
--		 * As well as empty subflow-fins with a data-fin.
--		 * They are reinjected below (without the subflow-fin-flag)
--		 */
--		if (tcb->tcp_flags & TCPHDR_SYN ||
--		    (tcb->tcp_flags & TCPHDR_FIN && !mptcp_is_data_fin(skb_it)) ||
--		    (tcb->tcp_flags & TCPHDR_FIN && mptcp_is_data_fin(skb_it) && !skb_it=
-->len))
--			continue;
--
--		if (mptcp_is_reinjected(skb_it))
--			continue;
--
--		tcb->mptcp_flags |=3D MPTCP_REINJECT;
--		__mptcp_reinject_data(skb_it, meta_sk, sk, clone_it,
--				      TCP_FRAG_IN_WRITE_QUEUE);
--	}
--
--	skb_rbtree_walk_safe(skb_it, &sk->tcp_rtx_queue, tmp) {
--		struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb_it);
--		/* Subflow syn's and fin's are not reinjected.
--		 *
--		 * As well as empty subflow-fins with a data-fin.
--		 * They are reinjected below (without the subflow-fin-flag)
--		 */
--		if (tcb->tcp_flags & TCPHDR_SYN ||
--		    (tcb->tcp_flags & TCPHDR_FIN && !mptcp_is_data_fin(skb_it)) ||
--		    (tcb->tcp_flags & TCPHDR_FIN && mptcp_is_data_fin(skb_it) && !skb_it=
-->len))
--			continue;
--
--		if (mptcp_is_reinjected(skb_it))
--			continue;
--
--		tcb->mptcp_flags |=3D MPTCP_REINJECT;
--		__mptcp_reinject_data(skb_it, meta_sk, sk, clone_it,
--				      TCP_FRAG_IN_RTX_QUEUE);
--	}
--
--	skb_it =3D tcp_write_queue_tail(meta_sk);
--	tcp_queue =3D TCP_FRAG_IN_WRITE_QUEUE;
--
--	if (!skb_it) {
--		skb_it =3D skb_rb_last(&meta_sk->tcp_rtx_queue);
--		tcp_queue =3D TCP_FRAG_IN_RTX_QUEUE;
--	}
--
--	/* If sk has sent the empty data-fin, we have to reinject it too. */
--	if (skb_it && mptcp_is_data_fin(skb_it) && skb_it->len =3D=3D 0 &&
--	    TCP_SKB_CB(skb_it)->path_mask & mptcp_pi_to_flag(tcp_sk(sk)->mptcp->p=
-ath_index)) {
--		__mptcp_reinject_data(skb_it, meta_sk, NULL, 1, tcp_queue);
--	}
--
--	tcp_sk(sk)->pf =3D 1;
--
--	mptcp_push_pending_frames(meta_sk);
--}
--EXPORT_SYMBOL(mptcp_reinject_data);
--
- static void mptcp_combine_dfin(const struct sk_buff *skb,
- 			       const struct sock *meta_sk,
- 			       struct sock *subsk)
-@@ -560,8 +257,7 @@ static bool mptcp_skb_entail(struct sock *sk, struct sk=
-_buff *skb, int reinject)
-  * - The reinject-queue (reinject =3D=3D -1)
-  */
- static int mptcp_fragment(struct sock *meta_sk, enum tcp_queue tcp_queue,
--			  struct sk_buff *skb, u32 len,
--			  gfp_t gfp, int reinject)
-+			  struct sk_buff *skb, u32 len, gfp_t gfp)
- {
- 	int ret, diff, old_factor;
- 	struct sk_buff *buff;
-@@ -592,34 +288,6 @@ static int mptcp_fragment(struct sock *meta_sk, enum t=
-cp_queue tcp_queue,
- 	TCP_SKB_CB(buff)->mptcp_flags =3D flags;
- 	TCP_SKB_CB(buff)->path_mask =3D TCP_SKB_CB(skb)->path_mask;
+-#endif
+-		req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safet=
+y */
++	req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety=
+ */
+ 	if (!req)
+ 		goto out;
  =
 
--	/* If reinject =3D=3D 1, the buff will be added to the reinject
--	 * queue, which is currently not part of memory accounting. So
--	 * undo the changes done by tcp_fragment and update the
--	 * reinject queue. Also, undo changes to the packet counters.
+@@ -374,8 +346,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	ireq->sack_ok		=3D tcp_opt.sack_ok;
+ 	ireq->wscale_ok		=3D tcp_opt.wscale_ok;
+ 	ireq->tstamp_ok		=3D tcp_opt.saw_tstamp;
+-	ireq->mptcp_rqsk	=3D 0;
+-	ireq->saw_mpc		=3D 0;
+ 	req->ts_recent		=3D tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
+ 	treq->snt_synack	=3D 0;
+ 	treq->tfo_listener	=3D false;
+@@ -384,9 +354,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ =
+
+ 	ireq->ir_iif =3D inet_request_bound_dev_if(sk, skb);
+ =
+
+-	if (mopt.saw_mpc)
+-		mptcp_cookies_reqsk_init(req, &mopt, skb);
+-
+ 	/* We throwed the options of the initial SYN away, so we hope
+ 	 * the ACK carries the same options again (see RFC1122 4.2.3.8)
+ 	 */
+@@ -420,10 +387,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct =
+sk_buff *skb)
+ 	/* Try to redo what tcp_v4_send_synack did. */
+ 	req->rsk_window_clamp =3D tp->window_clamp ? :dst_metric(&rt->dst, RTAX_W=
+INDOW);
+ =
+
+-	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
+-				       &req->rsk_rcv_wnd, &req->rsk_window_clamp,
+-				       ireq->wscale_ok, &rcv_wscale,
+-				       dst_metric(&rt->dst, RTAX_INITRWND));
++	tcp_select_initial_window(sk, tcp_full_space(sk), req->mss,
++				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
++				  ireq->wscale_ok, &rcv_wscale,
++				  dst_metric(&rt->dst, RTAX_INITRWND));
+ =
+
+ 	ireq->rcv_wscale  =3D rcv_wscale;
+ 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), &rt->dst);
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index c2d5fa27ee8d..ea36a23267cf 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6674,7 +6674,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ 	tcp_ecn_create_request(req, skb, sk, dst);
+ =
+
+ 	if (want_cookie) {
+-		isn =3D cookie_init_sequence(af_ops, req, sk, skb, &req->mss);
++		isn =3D cookie_init_sequence(af_ops, sk, skb, &req->mss);
+ 		req->cookie_ts =3D tmp_opt.tstamp_ok;
+ 		if (!tmp_opt.tstamp_ok)
+ 			inet_rsk(req)->ecn_ok =3D 0;
+diff --git a/net/ipv6/syncookies.c b/net/ipv6/syncookies.c
+index bb86437a7003..fa3739f6de48 100644
+--- a/net/ipv6/syncookies.c
++++ b/net/ipv6/syncookies.c
+@@ -20,8 +20,6 @@
+ #include <linux/kernel.h>
+ #include <net/secure_seq.h>
+ #include <net/ipv6.h>
+-#include <net/mptcp.h>
+-#include <net/mptcp_v6.h>
+ #include <net/tcp.h>
+ =
+
+ #define COOKIEBITS 24	/* Upper bits store count */
+@@ -113,8 +111,7 @@ u32 __cookie_v6_init_sequence(const struct ipv6hdr *iph,
+ }
+ EXPORT_SYMBOL_GPL(__cookie_v6_init_sequence);
+ =
+
+-__u32 cookie_v6_init_sequence(struct request_sock *req, const struct sock =
+*sk,
+-			      const struct sk_buff *skb, __u16 *mssp)
++__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mssp)
+ {
+ 	const struct ipv6hdr *iph =3D ipv6_hdr(skb);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+@@ -136,7 +133,6 @@ EXPORT_SYMBOL_GPL(__cookie_v6_check);
+ struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct tcp_options_received tcp_opt;
+-	struct mptcp_options_received mopt;
+ 	struct inet_request_sock *ireq;
+ 	struct tcp_request_sock *treq;
+ 	struct ipv6_pinfo *np =3D inet6_sk(sk);
+@@ -166,8 +162,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
+_buff *skb)
+ =
+
+ 	/* check for timestamp cookie support */
+ 	memset(&tcp_opt, 0, sizeof(tcp_opt));
+-	mptcp_init_mp_opt(&mopt);
+-	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
++	tcp_parse_options(sock_net(sk), skb, &tcp_opt, NULL, 0, NULL, NULL);
+ =
+
+ 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
+ 		tsoff =3D secure_tcpv6_ts_off(sock_net(sk),
+@@ -180,27 +175,14 @@ struct sock *cookie_v6_check(struct sock *sk, struct =
+sk_buff *skb)
+ 		goto out;
+ =
+
+ 	ret =3D NULL;
+-#ifdef CONFIG_MPTCP
+-	if (mopt.saw_mpc)
+-		req =3D inet_reqsk_alloc(&mptcp6_request_sock_ops, sk, false);
+-	else
+-#endif
+-		req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
++	req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
+ 	if (!req)
+ 		goto out;
+ =
+
+ 	ireq =3D inet_rsk(req);
+-	ireq->mptcp_rqsk =3D 0;
+-	ireq->saw_mpc =3D 0;
+ 	treq =3D tcp_rsk(req);
+ 	treq->tfo_listener =3D false;
+ =
+
+-	/* Must be done before anything else, as it initializes
+-	 * hash_entry of the MPTCP request-sock.
 -	 */
--	if (reinject =3D=3D 1) {
--		int undo =3D buff->truesize - diff;
--		meta_sk->sk_wmem_queued -=3D undo;
--		sk_mem_uncharge(meta_sk, undo);
+-	if (mopt.saw_mpc)
+-		mptcp_cookies_reqsk_init(req, &mopt, skb);
 -
--		tcp_sk(meta_sk)->mpcb->reinject_queue.qlen++;
--		if (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
--			meta_sk->sk_write_queue.qlen--;
--
--		if (!before(tcp_sk(meta_sk)->snd_nxt, TCP_SKB_CB(buff)->end_seq)) {
--			undo =3D old_factor - tcp_skb_pcount(skb) -
--				tcp_skb_pcount(buff);
--			if (undo)
--				tcp_adjust_pcount(meta_sk, skb, -undo);
--		}
--
--		/* tcp_fragment's call to sk_stream_alloc_skb initializes the
--		 * tcp_tsorted_anchor. We need to revert this as it clashes
--		 * with the refdst pointer.
--		 */
--		tcp_skb_tsorted_anchor_cleanup(buff);
--	}
--
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto out_free;
+ =
+
+@@ -264,10 +246,10 @@ struct sock *cookie_v6_check(struct sock *sk, struct =
+sk_buff *skb)
+ 	}
+ =
+
+ 	req->rsk_window_clamp =3D tp->window_clamp ? :dst_metric(dst, RTAX_WINDOW=
+);
+-	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
+-				       &req->rsk_rcv_wnd, &req->rsk_window_clamp,
+-				       ireq->wscale_ok, &rcv_wscale,
+-				       dst_metric(dst, RTAX_INITRWND));
++	tcp_select_initial_window(sk, tcp_full_space(sk), req->mss,
++				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
++				  ireq->wscale_ok, &rcv_wscale,
++				  dst_metric(dst, RTAX_INITRWND));
+ =
+
+ 	ireq->rcv_wscale =3D rcv_wscale;
+ 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), dst);
+diff --git a/net/mptcp/mptcp_ipv4.c b/net/mptcp/mptcp_ipv4.c
+index 00c54f421ba7..94bc1416af77 100644
+--- a/net/mptcp/mptcp_ipv4.c
++++ b/net/mptcp/mptcp_ipv4.c
+@@ -82,20 +82,6 @@ static int mptcp_v4_init_req(struct request_sock *req, c=
+onst struct sock *sk,
  	return 0;
  }
  =
 
-@@ -663,7 +331,7 @@ int mptcp_write_wakeup(struct sock *meta_sk, int mib)
- 			seg_size =3D min(seg_size, mss);
- 			TCP_SKB_CB(skb)->tcp_flags |=3D TCPHDR_PSH;
- 			if (mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE,
--					   skb, seg_size, GFP_ATOMIC, 0))
-+					   skb, seg_size, GFP_ATOMIC))
- 				return -1;
- 		} else if (!tcp_skb_pcount(skb)) {
- 			/* see mptcp_write_xmit on why we use UINT_MAX */
-@@ -738,14 +406,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned i=
-nt mss_now, int nonagle,
- 		subtp =3D tcp_sk(subsk);
- 		mss_now =3D tcp_current_mss(subsk);
- =
-
--		if (reinject =3D=3D 1) {
--			if (!after(TCP_SKB_CB(skb)->end_seq, meta_tp->snd_una)) {
--				/* Segment already reached the peer, take the next one */
--				__skb_unlink(skb, &mpcb->reinject_queue);
--				__kfree_skb(skb);
--				continue;
--			}
--		} else if (reinject =3D=3D -1) {
-+		if (reinject =3D=3D -1) {
- 			tcp_queue =3D TCP_FRAG_IN_RTX_QUEUE;
- 		}
- =
-
-@@ -810,7 +471,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned in=
-t mss_now, int nonagle,
- =
-
- 		if (skb->len > limit &&
- 		    unlikely(mptcp_fragment(meta_sk, tcp_queue,
--					    skb, limit, gfp, reinject)))
-+					    skb, limit, gfp)))
- 			break;
- =
-
- 		if (!mptcp_skb_entail(subsk, skb, reinject))
-@@ -833,11 +494,6 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned i=
-nt mss_now, int nonagle,
- =
-
- 		tcp_minshall_update(meta_tp, mss_now, skb);
- =
-
--		if (reinject > 0) {
--			__skb_unlink(skb, &mpcb->reinject_queue);
--			kfree_skb(skb);
--		}
+-#ifdef CONFIG_SYN_COOKIES
+-static u32 mptcp_v4_cookie_init_seq(struct request_sock *req, const struct=
+ sock *sk,
+-				    const struct sk_buff *skb, __u16 *mssp)
+-{
+-	__u32 isn =3D cookie_v4_init_sequence(req, sk, skb, mssp);
 -
- 		if (push_one)
- 			break;
- 	}
-@@ -1488,7 +1144,7 @@ int mptcp_retransmit_skb(struct sock *meta_sk, struct=
- sk_buff *skb)
+-	tcp_rsk(req)->snt_isn =3D isn;
+-
+-	mptcp_reqsk_init(req, sk, skb, true);
+-
+-	return isn;
+-}
+-#endif
+-
+ /* May be called without holding the meta-level lock */
+ static int mptcp_v4_join_init_req(struct request_sock *req, const struct s=
+ock *meta_sk,
+ 				  struct sk_buff *skb, bool want_cookie)
+@@ -381,9 +367,6 @@ int mptcp_pm_v4_init(void)
  =
 
- 	if (skb->len > limit &&
- 	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_RTX_QUEUE, skb,
--				    limit, GFP_ATOMIC, 0)))
-+				    limit, GFP_ATOMIC)))
- 		goto failed;
+ 	mptcp_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
+ 	mptcp_request_sock_ipv4_ops.init_req =3D mptcp_v4_init_req;
+-#ifdef CONFIG_SYN_COOKIES
+-	mptcp_request_sock_ipv4_ops.cookie_init_seq =3D mptcp_v4_cookie_init_seq;
+-#endif
+ 	mptcp_join_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
+ 	mptcp_join_request_sock_ipv4_ops.init_req =3D mptcp_v4_join_init_req;
  =
 
- 	if (!mptcp_skb_entail(subsk, skb, -1))
-@@ -1640,10 +1296,8 @@ void mptcp_sub_retransmit_timer(struct sock *sk)
- =
-
- 	tcp_retransmit_timer(sk);
- =
-
--	if (!tp->fastopen_rsk) {
--		mptcp_reinject_data(sk, 1);
-+	if (!tp->fastopen_rsk)
- 		mptcp_set_rto(sk);
--	}
+diff --git a/net/mptcp/mptcp_ipv6.c b/net/mptcp/mptcp_ipv6.c
+index 7249d171c9ef..297dd872fbfb 100644
+--- a/net/mptcp/mptcp_ipv6.c
++++ b/net/mptcp/mptcp_ipv6.c
+@@ -111,20 +111,6 @@ static int mptcp_v6_init_req(struct request_sock *req,=
+ const struct sock *sk,
+ 	return 0;
  }
  =
 
- /* Modify values to an mptcp-level for the initial window of new subflows =
-*/
-diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
-index 82ffe080cb5e..74d167e4689b 100644
---- a/net/mptcp/mptcp_sched.c
-+++ b/net/mptcp/mptcp_sched.c
-@@ -29,7 +29,7 @@ static bool mptcp_is_def_unavailable(struct sock *sk)
- 	if (tp->mptcp->pre_established)
- 		return true;
- =
-
--	if (tp->pf)
-+	if (inet_csk(sk)->icsk_ca_state =3D=3D TCP_CA_Loss)
- 		return true;
- =
-
- 	return false;
-@@ -338,25 +338,19 @@ static struct sk_buff *__mptcp_next_segment(struct so=
-ck *meta_sk, int *reinject)
- 	if (mpcb->infinite_mapping_snd || mpcb->send_infinite_mapping)
- 		return tcp_send_head(meta_sk);
- =
-
--	skb =3D skb_peek(&mpcb->reinject_queue);
-+	skb =3D tcp_send_head(meta_sk);
- =
-
--	if (skb) {
--		*reinject =3D 1;
--	} else {
--		skb =3D tcp_send_head(meta_sk);
+-#ifdef CONFIG_SYN_COOKIES
+-static u32 mptcp_v6_cookie_init_seq(struct request_sock *req, const struct=
+ sock *sk,
+-				    const struct sk_buff *skb, __u16 *mssp)
+-{
+-	__u32 isn =3D cookie_v6_init_sequence(req, sk, skb, mssp);
 -
--		if (!skb && meta_sk->sk_socket &&
--		    test_bit(SOCK_NOSPACE, &meta_sk->sk_socket->flags) &&
--		    sk_stream_wspace(meta_sk) < sk_stream_min_wspace(meta_sk)) {
--			struct sock *subsk =3D get_available_subflow(meta_sk, NULL,
--								   false);
--			if (!subsk)
--				return NULL;
+-	tcp_rsk(req)->snt_isn =3D isn;
 -
--			skb =3D mptcp_rcv_buf_optimization(subsk, 0);
--			if (skb)
--				*reinject =3D -1;
--		}
-+	if (!skb && meta_sk->sk_socket &&
-+	    test_bit(SOCK_NOSPACE, &meta_sk->sk_socket->flags) &&
-+	    sk_stream_wspace(meta_sk) < sk_stream_min_wspace(meta_sk)) {
-+		struct sock *subsk =3D get_available_subflow(meta_sk, NULL,
-+							   false);
-+		if (!subsk)
-+			return NULL;
-+
-+		skb =3D mptcp_rcv_buf_optimization(subsk, 0);
-+		if (skb)
-+			*reinject =3D -1;
- 	}
- 	return skb;
- }
+-	mptcp_reqsk_init(req, sk, skb, true);
+-
+-	return isn;
+-}
+-#endif
+-
+ /* May be called without holding the meta-level lock */
+ static int mptcp_v6_join_init_req(struct request_sock *req, const struct s=
+ock *meta_sk,
+ 				  struct sk_buff *skb, bool want_cookie)
+@@ -427,9 +413,6 @@ int mptcp_pm_v6_init(void)
+ =
+
+ 	mptcp_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
+ 	mptcp_request_sock_ipv6_ops.init_req =3D mptcp_v6_init_req;
+-#ifdef CONFIG_SYN_COOKIES
+-	mptcp_request_sock_ipv6_ops.cookie_init_seq =3D mptcp_v6_cookie_init_seq;
+-#endif
+ =
+
+ 	mptcp_join_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
+ 	mptcp_join_request_sock_ipv6_ops.init_req =3D mptcp_v6_join_init_req;
 -- =
 
 2.16.2
 
 
---===============5499527309508305828==--
+--===============3212411671625778990==--
