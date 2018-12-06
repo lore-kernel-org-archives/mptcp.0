@@ -1,267 +1,438 @@
-Content-Type: multipart/mixed; boundary="===============6730458430890014763=="
+Content-Type: multipart/mixed; boundary="===============7211572926167704877=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 11/12] mptcp: Remove ndiffports path manager
-Date: Wed, 05 Dec 2018 17:00:22 -0800
-Message-ID: <20181206010023.18819-12-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 08/12] mptcp: Remove support for TCP Fast Open
+Date: Wed, 05 Dec 2018 17:00:19 -0800
+Message-ID: <20181206010023.18819-9-cpaasch@apple.com>
 In-Reply-To: 20181206010023.18819-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 880
+X-UID: 881
 
---===============6730458430890014763==
+--===============7211572926167704877==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/Kconfig            |  12 ----
- net/mptcp/Makefile           |   1 -
- net/mptcp/mptcp_ndiffports.c | 167 ---------------------------------------=
+ include/linux/tcp.h      |  2 +-
+ include/net/mptcp.h      |  9 +-----
+ net/ipv4/tcp.c           |  7 ++---
+ net/ipv4/tcp_fastopen.c  | 16 +++--------
+ net/ipv4/tcp_input.c     | 23 ++--------------
+ net/mptcp/mptcp_ctrl.c   | 53 ------------------------------------
+ net/mptcp/mptcp_input.c  | 71 --------------------------------------------=
 ----
- 3 files changed, 180 deletions(-)
- delete mode 100644 net/mptcp/mptcp_ndiffports.c
+ net/mptcp/mptcp_output.c |  5 +---
+ 8 files changed, 13 insertions(+), 173 deletions(-)
 
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index 860e9e17f76f..60c07fde5dec 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -23,14 +23,6 @@ config MPTCP_FULLMESH
- 	---help---
- 	  This path-management module will create a full-mesh among all IP-addres=
-ses.
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 6dd9c45c52d6..01321044047c 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -58,7 +58,7 @@ static inline unsigned int tcp_optlen(const struct sk_buf=
+f *skb)
+ /* TCP Fast Open */
+ #define TCP_FASTOPEN_COOKIE_MIN	4	/* Min Fast Open Cookie size in bytes */
+ #define TCP_FASTOPEN_COOKIE_MAX	16	/* Max Fast Open Cookie size in bytes */
+-#define TCP_FASTOPEN_COOKIE_SIZE 4	/* the size employed by this impl. */
++#define TCP_FASTOPEN_COOKIE_SIZE 8	/* the size employed by this impl. */
  =
 
--config MPTCP_NDIFFPORTS
--	tristate "MPTCP ndiff-ports"
--	depends on MPTCP=3Dy
--	---help---
--	  This path-management module will create multiple subflows between the s=
-ame
--	  pair of IP-addresses, modifying the source-port. You can set the number
--	  of subflows via the mptcp_ndiffports-sysctl.
--
- choice
- 	prompt "Default MPTCP Path-Manager"
- 	default DEFAULT
-@@ -40,9 +32,6 @@ choice
- 	config DEFAULT_FULLMESH
- 		bool "Full mesh" if MPTCP_FULLMESH=3Dy
+ /* TCP Fast Open Cookie as stored in memory */
+ struct tcp_fastopen_cookie {
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 721515ddb252..e1e7619a85ca 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -738,7 +738,6 @@ void mptcp_close(struct sock *meta_sk, long timeout);
+ bool mptcp_doit(struct sock *sk);
+ int mptcp_create_master_sk(struct sock *meta_sk, __u64 remote_key,
+ 			   __u8 mptcp_ver, u32 window);
+-int mptcp_check_req_fastopen(struct sock *child, struct request_sock *req);
+ int mptcp_check_req_master(struct sock *sk, struct sock *child,
+ 			   struct request_sock *req, const struct sk_buff *skb,
+ 			   int drop);
+@@ -1054,8 +1053,7 @@ static inline void mptcp_check_rcvseq_wrap(struct tcp=
+_sock *meta_tp,
  =
 
--	config DEFAULT_NDIFFPORTS
--		bool "ndiff-ports" if MPTCP_NDIFFPORTS=3Dy
--
- 	config DEFAULT_DUMMY
- 		bool "Default"
+ static inline int mptcp_sk_can_send(const struct sock *sk)
+ {
+-	return tcp_passive_fastopen(sk) ||
+-	       ((1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT) &&
++	return ((1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT) &&
+ 		!tcp_sk(sk)->mptcp->pre_established);
+ }
  =
 
-@@ -54,6 +43,5 @@ config DEFAULT_MPTCP_PM
- 	string
- 	default "default" if DEFAULT_DUMMY
- 	default "fullmesh" if DEFAULT_FULLMESH
--	default "ndiffports" if DEFAULT_NDIFFPORTS
- 	default "default"
+@@ -1278,11 +1276,6 @@ static inline bool mptcp_doit(struct sock *sk)
+ {
+ 	return false;
+ }
+-static inline int mptcp_check_req_fastopen(struct sock *child,
+-					   struct request_sock *req)
+-{
+-	return 1;
+-}
+ static inline int mptcp_check_req_master(const struct sock *sk,
+ 					 const struct sock *child,
+ 					 const struct request_sock *req,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 87f7616aaf93..b2dac73903be 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1233,7 +1233,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr=
+ *msg, size_t size)
+ 	}
  =
 
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index 8e28132c6c2a..433fd17b2987 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -9,7 +9,6 @@ mptcp-y :=3D mptcp_ctrl.o mptcp_ipv4.o mptcp_pm.o \
- 	   mptcp_output.o mptcp_input.o mptcp_sched.o
+ 	if (unlikely(flags & MSG_FASTOPEN || inet_sk(sk)->defer_connect) &&
+-	    !tp->repair) {
++	    !tp->repair && !sock_flag(sk, SOCK_MPTCP)) {
+ 		err =3D tcp_sendmsg_fastopen(sk, msg, &copied_syn, size);
+ 		if (err =3D=3D -EINPROGRESS && copied_syn > 0)
+ 			goto out;
+@@ -1250,8 +1250,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr=
+ *msg, size_t size)
+ 	 * is fully established.
+ 	 */
+ 	if (((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) &&
+-	    !tcp_passive_fastopen(mptcp(tp) && tp->mpcb->master_sk ?
+-				  tp->mpcb->master_sk : sk)) {
++	    !tcp_passive_fastopen(sk)) {
+ 		err =3D sk_stream_wait_connect(sk, &timeo);
+ 		if (err !=3D 0)
+ 			goto do_error;
+@@ -3098,7 +3097,7 @@ static int do_tcp_setsockopt(struct sock *sk, int lev=
+el,
  =
 
- obj-$(CONFIG_MPTCP_FULLMESH) +=3D mptcp_fullmesh.o
--obj-$(CONFIG_MPTCP_NDIFFPORTS) +=3D mptcp_ndiffports.o
+ 	case TCP_FASTOPEN:
+ 		if (val >=3D 0 && ((1 << sk->sk_state) & (TCPF_CLOSE |
+-		    TCPF_LISTEN))) {
++		    TCPF_LISTEN)) && !sock_flag(sk, SOCK_MPTCP)) {
+ 			tcp_fastopen_init_key_once(net);
  =
 
- mptcp-$(subst m,y,$(CONFIG_IPV6)) +=3D mptcp_ipv6.o
- =
-
-diff --git a/net/mptcp/mptcp_ndiffports.c b/net/mptcp/mptcp_ndiffports.c
-deleted file mode 100644
-index 9faef10d8b64..000000000000
---- a/net/mptcp/mptcp_ndiffports.c
-+++ /dev/null
-@@ -1,167 +0,0 @@
--#include <linux/module.h>
--
+ 			fastopen_queue_tune(sk, val);
+diff --git a/net/ipv4/tcp_fastopen.c b/net/ipv4/tcp_fastopen.c
+index 370fe7d4b579..018a48477355 100644
+--- a/net/ipv4/tcp_fastopen.c
++++ b/net/ipv4/tcp_fastopen.c
+@@ -9,7 +9,6 @@
+ #include <linux/rculist.h>
+ #include <net/inetpeer.h>
+ #include <net/tcp.h>
 -#include <net/mptcp.h>
--#include <net/mptcp_v4.h>
+ =
+
+ void tcp_fastopen_init_key_once(struct net *net)
+ {
+@@ -219,7 +218,7 @@ static struct sock *tcp_fastopen_create_child(struct so=
+ck *sk,
+ {
+ 	struct tcp_sock *tp;
+ 	struct request_sock_queue *queue =3D &inet_csk(sk)->icsk_accept_queue;
+-	struct sock *child, *meta_sk;
++	struct sock *child;
+ 	bool own_req;
+ =
+
+ 	req->num_retrans =3D 0;
+@@ -259,22 +258,15 @@ static struct sock *tcp_fastopen_create_child(struct =
+sock *sk,
+ =
+
+ 	refcount_set(&req->rsk_refcnt, 2);
+ =
+
++	/* Now finish processing the fastopen child socket. */
++	tcp_init_transfer(child, BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB);
++
+ 	tp->rcv_nxt =3D TCP_SKB_CB(skb)->seq + 1;
+ =
+
+ 	tcp_fastopen_add_skb(child, skb);
+ =
+
+ 	tcp_rsk(req)->rcv_nxt =3D tp->rcv_nxt;
+ 	tp->rcv_wup =3D tp->rcv_nxt;
 -
--#if IS_ENABLED(CONFIG_IPV6)
--#include <net/mptcp_v6.h>
--#endif
--
--struct ndiffports_priv {
--	/* Worker struct for subflow establishment */
--	struct work_struct subflow_work;
--
--	struct mptcp_cb *mpcb;
--};
--
--static int num_subflows __read_mostly =3D 2;
--module_param(num_subflows, int, 0644);
--MODULE_PARM_DESC(num_subflows, "choose the number of subflows per MPTCP co=
-nnection");
--
--/**
-- * Create all new subflows, by doing calls to mptcp_initX_subsockets
-- *
-- * This function uses a goto next_subflow, to allow releasing the lock bet=
-ween
-- * new subflows and giving other processes a chance to do some work on the
-- * socket and potentially finishing the communication.
-- **/
--static void create_subflow_worker(struct work_struct *work)
--{
--	const struct ndiffports_priv *pm_priv =3D container_of(work,
--						     struct ndiffports_priv,
--						     subflow_work);
--	struct mptcp_cb *mpcb =3D pm_priv->mpcb;
--	struct sock *meta_sk =3D mpcb->meta_sk;
--	int iter =3D 0;
--
--next_subflow:
--	if (iter) {
--		release_sock(meta_sk);
--		mutex_unlock(&mpcb->mpcb_mutex);
--
--		cond_resched();
+-	meta_sk =3D child;
+-	if (!mptcp_check_req_fastopen(meta_sk, req)) {
+-		child =3D tcp_sk(meta_sk)->mpcb->master_sk;
+-		tp =3D tcp_sk(child);
 -	}
--	mutex_lock(&mpcb->mpcb_mutex);
--	lock_sock_nested(meta_sk, SINGLE_DEPTH_NESTING);
 -
--	iter++;
+-	/* Now finish processing the fastopen child socket. */
+-	tcp_init_transfer(child, BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB);
 -
--	if (sock_flag(meta_sk, SOCK_DEAD))
--		goto exit;
+ 	/* tcp_conn_request() is sending the SYNACK,
+ 	 * and queues the child into listener accept queue.
+ 	 */
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index ea36a23267cf..49ac1b821ac1 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -5784,17 +5784,10 @@ static bool tcp_rcv_fastopen_synack(struct sock *sk=
+, struct sk_buff *synack,
+ 				    struct tcp_fastopen_cookie *cookie)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+-	struct sk_buff *data =3D NULL;
++	struct sk_buff *data =3D tp->syn_data ? tcp_rtx_queue_head(sk) : NULL;
+ 	u16 mss =3D tp->rx_opt.mss_clamp, try_exp =3D 0;
+ 	bool syn_drop =3D false;
+ =
+
+-	if (tp->syn_data) {
+-		if (mptcp(tp))
+-			data =3D tcp_write_queue_head(mptcp_meta_sk(sk));
+-		else
+-			data =3D tcp_rtx_queue_head(sk);
+-	}
 -
--	if (mpcb->master_sk &&
--	    !tcp_sk(mpcb->master_sk)->mptcp->fully_established)
--		goto exit;
+ 	if (mss =3D=3D tp->rx_opt.user_mss) {
+ 		struct tcp_options_received opt;
+ =
+
+@@ -5825,11 +5818,7 @@ static bool tcp_rcv_fastopen_synack(struct sock *sk,=
+ struct sk_buff *synack,
+ =
+
+ 	tcp_fastopen_cache_set(sk, mss, cookie, syn_drop, try_exp);
+ =
+
+-	/* In mptcp case, we do not rely on "retransmit", but instead on
+-	 * "transmit", because if fastopen data is not acked, the retransmission
+-	 * becomes the first MPTCP data (see mptcp_rcv_synsent_fastopen).
+-	 */
+-	if (data && !mptcp(tp)) { /* Retransmit unacked data in SYN */
++	if (data) { /* Retransmit unacked data in SYN */
+ 		skb_rbtree_walk_from(data) {
+ 			if (__tcp_retransmit_skb(sk, data, 1))
+ 				break;
+@@ -6689,18 +6678,12 @@ int tcp_conn_request(struct request_sock_ops *rsk_o=
+ps,
+ 		fastopen_sk =3D tcp_try_fastopen(sk, skb, req, &foc, dst);
+ 	}
+ 	if (fastopen_sk) {
+-		struct sock *meta_sk =3D fastopen_sk;
 -
--	if (num_subflows > iter && num_subflows > mptcp_subflow_count(mpcb)) {
--		if (meta_sk->sk_family =3D=3D AF_INET ||
--		    mptcp_v6_is_v4_mapped(meta_sk)) {
--			struct mptcp_loc4 loc;
--			struct mptcp_rem4 rem;
+-		if (mptcp(tcp_sk(fastopen_sk)))
+-			meta_sk =3D mptcp_meta_sk(fastopen_sk);
+ 		af_ops->send_synack(fastopen_sk, dst, &fl, req,
+ 				    &foc, TCP_SYNACK_FASTOPEN);
+ 		/* Add the child socket directly into the accept queue */
+-		inet_csk_reqsk_queue_add(sk, req, meta_sk);
++		inet_csk_reqsk_queue_add(sk, req, fastopen_sk);
+ 		sk->sk_data_ready(sk);
+ 		bh_unlock_sock(fastopen_sk);
+-		if (meta_sk !=3D fastopen_sk)
+-			bh_unlock_sock(meta_sk);
+ 		sock_put(fastopen_sk);
+ 	} else {
+ 		tcp_rsk(req)->tfo_listener =3D false;
+diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+index 910268a8ee8e..eee86f84ba31 100644
+--- a/net/mptcp/mptcp_ctrl.c
++++ b/net/mptcp/mptcp_ctrl.c
+@@ -2075,59 +2075,6 @@ static int __mptcp_check_req_master(struct sock *chi=
+ld,
+ 	return 0;
+ }
+ =
+
+-int mptcp_check_req_fastopen(struct sock *child, struct request_sock *req)
+-{
+-	struct sock *meta_sk =3D child, *master_sk;
+-	struct sk_buff *skb;
+-	u32 new_mapping;
+-	int ret;
 -
--			loc.addr.s_addr =3D inet_sk(meta_sk)->inet_saddr;
--			loc.loc4_id =3D 0;
--			if (mpcb->master_sk)
--				loc.if_idx =3D mpcb->master_sk->sk_bound_dev_if;
--			else
--				loc.if_idx =3D 0;
+-	ret =3D __mptcp_check_req_master(child, req);
+-	if (ret)
+-		return ret;
 -
--			rem.addr.s_addr =3D inet_sk(meta_sk)->inet_daddr;
--			rem.port =3D inet_sk(meta_sk)->inet_dport;
--			rem.rem4_id =3D 0; /* Default 0 */
+-	master_sk =3D tcp_sk(meta_sk)->mpcb->master_sk;
 -
--			mptcp_init4_subsockets(meta_sk, &loc, &rem);
--		} else {
--#if IS_ENABLED(CONFIG_IPV6)
--			struct mptcp_loc6 loc;
--			struct mptcp_rem6 rem;
+-	/* We need to rewind copied_seq as it is set to IDSN + 1 and as we have
+-	 * pre-MPTCP data in the receive queue.
+-	 */
+-	tcp_sk(meta_sk)->copied_seq -=3D tcp_sk(master_sk)->rcv_nxt -
+-				       tcp_rsk(req)->rcv_isn - 1;
 -
--			loc.addr =3D inet6_sk(meta_sk)->saddr;
--			loc.loc6_id =3D 0;
--			if (mpcb->master_sk)
--				loc.if_idx =3D mpcb->master_sk->sk_bound_dev_if;
--			else
--				loc.if_idx =3D 0;
+-	/* Map subflow sequence number to data sequence numbers. We need to map
+-	 * these data to [IDSN - len - 1, IDSN[.
+-	 */
+-	new_mapping =3D tcp_sk(meta_sk)->copied_seq - tcp_rsk(req)->rcv_isn - 1;
 -
--			rem.addr =3D meta_sk->sk_v6_daddr;
--			rem.port =3D inet_sk(meta_sk)->inet_dport;
--			rem.rem6_id =3D 0; /* Default 0 */
+-	/* There should be only one skb: the SYN + data. */
+-	skb_queue_walk(&meta_sk->sk_receive_queue, skb) {
+-		TCP_SKB_CB(skb)->seq +=3D new_mapping;
+-		TCP_SKB_CB(skb)->end_seq +=3D new_mapping;
+-	}
 -
--			mptcp_init6_subsockets(meta_sk, &loc, &rem);
--#endif
+-	/* With fastopen we change the semantics of the relative subflow
+-	 * sequence numbers to deal with middleboxes that could add/remove
+-	 * multiple bytes in the SYN. We chose to start counting at rcv_nxt - 1
+-	 * instead of the regular TCP ISN.
+-	 */
+-	tcp_sk(master_sk)->mptcp->rcv_isn =3D tcp_sk(master_sk)->rcv_nxt - 1;
+-
+-	/* We need to update copied_seq of the master_sk to account for the
+-	 * already moved data to the meta receive queue.
+-	 */
+-	tcp_sk(master_sk)->copied_seq =3D tcp_sk(master_sk)->rcv_nxt;
+-
+-	/* Handled by the master_sk */
+-	tcp_sk(meta_sk)->fastopen_rsk =3D NULL;
+-
+-	/* Subflow establishment is now lockless, drop the lock here it will
+-	 * be taken again in tcp_child_process().
+-	 */
+-	bh_unlock_sock(meta_sk);
+-
+-	return 0;
+-}
+-
+ int mptcp_check_req_master(struct sock *sk, struct sock *child,
+ 			   struct request_sock *req, const struct sk_buff *skb,
+ 			   int drop)
+diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
+index f247e9ef2853..88c7a64ef26c 100644
+--- a/net/mptcp/mptcp_input.c
++++ b/net/mptcp/mptcp_input.c
+@@ -1934,63 +1934,6 @@ bool mptcp_handle_options(struct sock *sk, const str=
+uct tcphdr *th,
+ 	return false;
+ }
+ =
+
+-/* In case of fastopen, some data can already be in the write queue.
+- * We need to update the sequence number of the segments as they
+- * were initially TCP sequence numbers.
+- */
+-static void mptcp_rcv_synsent_fastopen(struct sock *meta_sk)
+-{
+-	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-	struct tcp_sock *master_tp =3D tcp_sk(meta_tp->mpcb->master_sk);
+-	struct sk_buff *skb, *tmp;
+-	u32 new_mapping =3D meta_tp->write_seq - master_tp->snd_una;
+-
+-	/* There should only be one skb in write queue: the data not
+-	 * acknowledged in the SYN+ACK. In this case, we need to map
+-	 * this data to data sequence numbers.
+-	 */
+-	skb_rbtree_walk_safe(skb, &meta_sk->tcp_rtx_queue, tmp) {
+-		/* If the server only acknowledges partially the data sent in
+-		 * the SYN, we need to trim the acknowledged part because
+-		 * we don't want to retransmit this already received data.
+-		 * When we reach this point, tcp_ack() has already cleaned up
+-		 * fully acked segments. However, tcp trims partially acked
+-		 * segments only when retransmitting. Since MPTCP comes into
+-		 * play only now, we will fake an initial transmit, and
+-		 * retransmit_skb() will not be called. The following fragment
+-		 * comes from __tcp_retransmit_skb().
+-		 */
+-		if (before(TCP_SKB_CB(skb)->seq, master_tp->snd_una)) {
+-			BUG_ON(before(TCP_SKB_CB(skb)->end_seq,
+-				      master_tp->snd_una));
+-			/* tcp_trim_head can only returns ENOMEM if skb is
+-			 * cloned. It is not the case here (see
+-			 * tcp_send_syn_data).
+-			 */
+-			BUG_ON(tcp_trim_head(meta_sk, skb, master_tp->snd_una -
+-					     TCP_SKB_CB(skb)->seq));
 -		}
--		goto next_subflow;
+-
+-		TCP_SKB_CB(skb)->seq +=3D new_mapping;
+-		TCP_SKB_CB(skb)->end_seq +=3D new_mapping;
+-
+-		tcp_rtx_queue_unlink(skb, meta_sk);
+-		tcp_add_write_queue_tail(meta_sk, skb);
 -	}
 -
--exit:
--	release_sock(meta_sk);
--	mutex_unlock(&mpcb->mpcb_mutex);
--	sock_put(meta_sk);
+-	/* We can advance write_seq by the number of bytes unacknowledged
+-	 * and that were mapped in the previous loop.
+-	 */
+-	meta_tp->write_seq +=3D master_tp->write_seq - master_tp->snd_una;
+-
+-	/* The packets from the master_sk will be entailed to it later
+-	 * Until that time, its write queue is empty, and
+-	 * write_seq must align with snd_una
+-	 */
+-	master_tp->snd_nxt =3D master_tp->write_seq =3D master_tp->snd_una;
+-	master_tp->packets_out =3D 0;
 -}
 -
--static void ndiffports_new_session(const struct sock *meta_sk)
--{
--	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
--	struct ndiffports_priv *fmp =3D (struct ndiffports_priv *)&mpcb->mptcp_pm=
-[0];
+ /* The skptr is needed, because if we become MPTCP-capable, we have to swi=
+tch
+  * from meta-socket to master-socket.
+  *
+@@ -2049,17 +1992,6 @@ int mptcp_rcv_synsent_state_process(struct sock *sk,=
+ struct sock **skptr,
+ 		*skptr =3D sk;
+ 		tp =3D tcp_sk(sk);
+ =
+
+-		/* If fastopen was used data might be in the send queue. We
+-		 * need to update their sequence number to MPTCP-level seqno.
+-		 * Note that it can happen in rare cases that fastopen_req is
+-		 * NULL and syn_data is 0 but fastopen indeed occurred and
+-		 * data has been queued in the write queue (but not sent).
+-		 * Example of such rare cases: connect is non-blocking and
+-		 * TFO is configured to work without cookies.
+-		 */
+-		if (tcp_rtx_queue_head(meta_sk))
+-			mptcp_rcv_synsent_fastopen(meta_sk);
 -
--	/* Initialize workqueue-struct */
--	INIT_WORK(&fmp->subflow_work, create_subflow_worker);
--	fmp->mpcb =3D mpcb;
--}
+ 		/* -1, because the SYN consumed 1 byte. In case of TFO, we
+ 		 * start the subflow-sequence number as if the data of the SYN
+ 		 * is not part of any mapping.
+@@ -2068,9 +2000,6 @@ int mptcp_rcv_synsent_state_process(struct sock *sk, =
+struct sock **skptr,
+ =
+
+ 		tp->mptcp->include_mpc =3D 1;
+ =
+
+-		/* Ensure that fastopen is handled at the meta-level. */
+-		tp->fastopen_req =3D NULL;
 -
--static void ndiffports_create_subflows(struct sock *meta_sk)
--{
--	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
--	struct ndiffports_priv *pm_priv =3D (struct ndiffports_priv *)&mpcb->mptc=
-p_pm[0];
+ 		sk_set_socket(sk, meta_sk->sk_socket);
+ 		sk->sk_wq =3D meta_sk->sk_wq;
+ =
+
+diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+index 26cf41f75922..2d84eb2edd97 100644
+--- a/net/mptcp/mptcp_output.c
++++ b/net/mptcp/mptcp_output.c
+@@ -1292,12 +1292,9 @@ void mptcp_meta_retransmit_timer(struct sock *meta_s=
+k)
+ =
+
+ void mptcp_sub_retransmit_timer(struct sock *sk)
+ {
+-	struct tcp_sock *tp =3D tcp_sk(sk);
 -
--	if (mpcb->infinite_mapping_snd || mpcb->infinite_mapping_rcv ||
--	    mpcb->send_infinite_mapping ||
--	    mpcb->server_side || sock_flag(meta_sk, SOCK_DEAD))
--		return;
--
--	if (!work_pending(&pm_priv->subflow_work)) {
--		sock_hold(meta_sk);
--		queue_work(mptcp_wq, &pm_priv->subflow_work);
--	}
--}
--
--static int ndiffports_get_local_id(sa_family_t family, union inet_addr *ad=
-dr,
--				   struct net *net)
--{
--	return 0;
--}
--
--static struct mptcp_pm_ops ndiffports __read_mostly =3D {
--	.new_session =3D ndiffports_new_session,
--	.fully_established =3D ndiffports_create_subflows,
--	.get_local_id =3D ndiffports_get_local_id,
--	.name =3D "ndiffports",
--	.owner =3D THIS_MODULE,
--};
--
--/* General initialization of MPTCP_PM */
--static int __init ndiffports_register(void)
--{
--	BUILD_BUG_ON(sizeof(struct ndiffports_priv) > MPTCP_PM_SIZE);
--
--	if (mptcp_register_path_manager(&ndiffports))
--		goto exit;
--
--	return 0;
--
--exit:
--	return -1;
--}
--
--static void ndiffports_unregister(void)
--{
--	mptcp_unregister_path_manager(&ndiffports);
--}
--
--module_init(ndiffports_register);
--module_exit(ndiffports_unregister);
--
--MODULE_AUTHOR("Christoph Paasch");
--MODULE_LICENSE("GPL");
--MODULE_DESCRIPTION("NDIFF-PORTS MPTCP");
--MODULE_VERSION("0.88");
+ 	tcp_retransmit_timer(sk);
+ =
+
+-	if (!tp->fastopen_rsk)
+-		mptcp_set_rto(sk);
++	mptcp_set_rto(sk);
+ }
+ =
+
+ /* Modify values to an mptcp-level for the initial window of new subflows =
+*/
 -- =
 
 2.16.2
 
 
---===============6730458430890014763==--
+--===============7211572926167704877==--
