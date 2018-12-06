@@ -1,766 +1,1012 @@
-Content-Type: multipart/mixed; boundary="===============7386109688065156234=="
+Content-Type: multipart/mixed; boundary="===============7054512833301738463=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 01/12] mptcp: Remove support for DSS-checksums
-Date: Wed, 05 Dec 2018 17:00:12 -0800
-Message-ID: <20181206010023.18819-2-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 04/12] mptcp: Remove support for subflow-priorities
+ (aka backup)
+Date: Wed, 05 Dec 2018 17:00:15 -0800
+Message-ID: <20181206010023.18819-5-cpaasch@apple.com>
 In-Reply-To: 20181206010023.18819-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 874
+X-UID: 875
 
---===============7386109688065156234==
+--===============7054512833301738463==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-To reduce the code-size and complexity, we remove support for
-DSS-checksums. If we receive a MP_CAPABLE with a DSS-checksum we simply
-fallback to regular TCP.
-
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/linux/tcp.h      |   3 +-
- include/net/mptcp.h      |  31 ++------
- net/mptcp/mptcp_ctrl.c   |  15 ----
- net/mptcp/mptcp_input.c  | 184 ++-----------------------------------------=
+ include/linux/tcp.h          |   1 -
+ include/net/mptcp.h          |  42 +------------
+ include/uapi/linux/if.h      |   1 -
+ net/core/dev.c               |   2 +-
+ net/mptcp/mptcp_ctrl.c       |   6 --
+ net/mptcp/mptcp_fullmesh.c   | 147 ++++++++++-----------------------------=
 ----
- net/mptcp/mptcp_output.c |  69 ++----------------
- 5 files changed, 17 insertions(+), 285 deletions(-)
+ net/mptcp/mptcp_input.c      |  36 -----------
+ net/mptcp/mptcp_ipv4.c       |   5 +-
+ net/mptcp/mptcp_ipv6.c       |   5 +-
+ net/mptcp/mptcp_ndiffports.c |   4 +-
+ net/mptcp/mptcp_output.c     |  27 +-------
+ net/mptcp/mptcp_pm.c         |   2 +-
+ net/mptcp/mptcp_sched.c      |  20 +-----
+ 13 files changed, 43 insertions(+), 255 deletions(-)
 
 diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 29f8ab30c7ed..f38bf1e18e58 100644
+index f38bf1e18e58..cc896f842c31 100644
 --- a/include/linux/tcp.h
 +++ b/include/linux/tcp.h
-@@ -94,8 +94,7 @@ struct tcp_out_options {
- 	struct tcp_fastopen_cookie *fastopen_cookie;	/* Fast open cookie */
- #ifdef CONFIG_MPTCP
- 	u16	mptcp_options;	/* bit field of MPTCP related OPTION_* */
--	u8	dss_csum:1,	/* dss-checksum required? */
--		add_addr_v4:1,
-+	u8	add_addr_v4:1,
- 		add_addr_v6:1,
- 		mptcp_ver:4;
+@@ -109,7 +109,6 @@ struct tcp_out_options {
+ 			__u32	sender_nonce;
+ 					/* random number of the sender */
+ 			__u32	token;	/* token for mptcp */
+-			u8	low_prio:1;
+ 		} mp_join_syns;
+ 	};
  =
 
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index b8b750034a91..a512e9386296 100644
+index a512e9386296..a4f46ac7051b 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -102,8 +102,7 @@ struct mptcp_request_sock {
+@@ -56,7 +56,6 @@
  =
 
+ struct mptcp_loc4 {
+ 	u8		loc4_id;
+-	u8		low_prio:1;
+ 	int		if_idx;
+ 	struct in_addr	addr;
+ };
+@@ -69,7 +68,6 @@ struct mptcp_rem4 {
+ =
+
+ struct mptcp_loc6 {
+ 	u8		loc6_id;
+-	u8		low_prio:1;
+ 	int		if_idx;
+ 	struct in6_addr	addr;
+ };
+@@ -103,8 +101,6 @@ struct mptcp_request_sock {
  	u8				loc_id;
  	u8				rem_id; /* Address-id in the MP_JOIN */
--	u8				dss_csum:1,
--					is_sub:1, /* Is this a new subflow? */
-+	u8				is_sub:1, /* Is this a new subflow? */
- 					low_prio:1, /* Interface set to low-prio? */
- 					rcv_low_prio:1,
+ 	u8				is_sub:1, /* Is this a new subflow? */
+-					low_prio:1, /* Interface set to low-prio? */
+-					rcv_low_prio:1,
  					mptcp_ver:4;
-@@ -111,7 +110,6 @@ struct mptcp_request_sock {
+ };
  =
 
- struct mptcp_options_received {
- 	u16	saw_mpc:1,
--		dss_csum:1,
- 		drop_me:1,
- =
-
+@@ -115,11 +111,6 @@ struct mptcp_options_received {
  		is_mp_join:1,
-@@ -168,7 +166,6 @@ struct mptcp_tcp_sock {
- 		fully_established:1,
- 		second_packet:1,
- 		attached:1,
--		send_mp_fail:1,
+ 		join_ack:1,
+ =
+
+-		saw_low_prio:2, /* 0x1 - low-prio set for this subflow
+-				 * 0x2 - low-prio set for another subflow
+-				 */
+-		low_prio:1,
+-
+ 		saw_add_addr:2, /* Saw at least one add_addr option:
+ 				 * 0x1: IPv4 - 0x2: IPv6
+ 				 */
+@@ -131,7 +122,6 @@ struct mptcp_options_received {
+ 		mp_fail:1,
+ 		mp_fclose:1;
+ 	u8	rem_id;		/* Address-id in the MP_JOIN */
+-	u8	prio_addr_id;	/* Address-id in the MP_PRIO */
+ =
+
+ 	const unsigned char *add_addr_ptr; /* Pointer to add-address option */
+ 	const unsigned char *rem_addr_ptr; /* Pointer to rem-address option */
+@@ -169,9 +159,6 @@ struct mptcp_tcp_sock {
  		include_mpc:1,
  		mapping_present:1,
  		map_data_fin:1,
-@@ -269,7 +266,6 @@ struct mptcp_cb {
- 		in_time_wait:1,
- 		list_rcvd:1, /* XXX TO REMOVE */
- 		addr_signal:1, /* Path-manager wants us to call addr_signal */
--		dss_csum:1,
- 		server_side:1,
- 		infinite_mapping_rcv:1,
- 		infinite_mapping_snd:1,
-@@ -288,7 +284,6 @@ struct mptcp_cb {
- 	 * accessed. Thus, the whole data-path is on a single cache-line.
- 	 */
+-		low_prio:1, /* use this socket as backup */
+-		rcv_low_prio:1, /* Peer sent low-prio option to us */
+-		send_mp_prio:1, /* Trigger to send mp_prio on this socket */
+ 		pre_established:1; /* State between sending 3rd ACK and
+ 				    * receiving the fourth ack of new subflows.
+ 				    */
+@@ -220,7 +207,7 @@ struct mptcp_pm_ops {
+ 	void (*new_remote_address)(struct sock *meta_sk);
+ 	void (*subflow_error)(struct sock *meta_sk, struct sock *sk);
+ 	int  (*get_local_id)(sa_family_t family, union inet_addr *addr,
+-			     struct net *net, bool *low_prio);
++			     struct net *net);
+ 	void (*addr_signal)(struct sock *sk, unsigned *size,
+ 			    struct tcp_out_options *opts, struct sk_buff *skb);
+ 	void (*add_raddr)(struct mptcp_cb *mpcb, const union inet_addr *addr,
+@@ -395,11 +382,6 @@ struct mptcp_cb {
+ #define MPTCP_SUB_REMOVE_ADDR	4
+ #define MPTCP_SUB_LEN_REMOVE_ADDR	4
  =
 
--	u64	csum_cutoff_seq;
- 	u64	infinite_rcv_seq;
- =
-
- 	/***** Start of fields, used for connection closure */
-@@ -364,11 +359,9 @@ struct mptcp_cb {
-  * To get the total length, just add the different options together.
-  */
- #define MPTCP_SUB_LEN_SEQ	10
--#define MPTCP_SUB_LEN_SEQ_CSUM	12
- #define MPTCP_SUB_LEN_SEQ_ALIGN	12
- =
-
- #define MPTCP_SUB_LEN_SEQ_64		14
--#define MPTCP_SUB_LEN_SEQ_CSUM_64	16
- #define MPTCP_SUB_LEN_SEQ_64_ALIGN	16
- =
-
- #define MPTCP_SUB_LEN_ACK	4
-@@ -434,10 +427,9 @@ extern bool mptcp_init_failed;
- #define OPTION_DATA_ACK		(1 << 4)
- #define OPTION_ADD_ADDR		(1 << 5)
+-#define MPTCP_SUB_PRIO		5
+-#define MPTCP_SUB_LEN_PRIO	3
+-#define MPTCP_SUB_LEN_PRIO_ADDR	4
+-#define MPTCP_SUB_LEN_PRIO_ALIGN	4
+-
+ #define MPTCP_SUB_FAIL		6
+ #define MPTCP_SUB_LEN_FAIL	12
+ #define MPTCP_SUB_LEN_FAIL_ALIGN	12
+@@ -429,7 +411,6 @@ extern bool mptcp_init_failed;
  #define OPTION_MP_JOIN		(1 << 6)
--#define OPTION_MP_FAIL		(1 << 7)
--#define OPTION_MP_FCLOSE	(1 << 8)
--#define OPTION_REMOVE_ADDR	(1 << 9)
--#define OPTION_MP_PRIO		(1 << 10)
-+#define OPTION_MP_FCLOSE	(1 << 7)
-+#define OPTION_REMOVE_ADDR	(1 << 8)
-+#define OPTION_MP_PRIO		(1 << 9)
+ #define OPTION_MP_FCLOSE	(1 << 7)
+ #define OPTION_REMOVE_ADDR	(1 << 8)
+-#define OPTION_MP_PRIO		(1 << 9)
  =
 
  /* MPTCP flags: both TX and RX */
  #define MPTCPHDR_SEQ		0x01 /* DSS.M option is present */
-@@ -447,7 +439,6 @@ extern bool mptcp_init_failed;
- #define MPTCPHDR_ACK		0x08
- #define MPTCPHDR_SEQ64_SET	0x10 /* Did we received a 64-bit seq number?  */
- #define MPTCPHDR_SEQ64_OFO	0x20 /* Is it not in our circular array? */
--#define MPTCPHDR_DSS_CSUM	0x40
- /* MPTCP flags: TX only */
- #define MPTCPHDR_INF		0x08
- #define MPTCP_REINJECT		0x10 /* Did we reinject this segment? */
-@@ -640,16 +631,15 @@ struct mp_prio {
- 	__u8	addr_id;
+@@ -614,23 +595,6 @@ struct mp_fclose {
+ 	__u64	key;
  } __attribute__((__packed__));
  =
 
--static inline int mptcp_sub_len_dss(const struct mp_dss *m, const int csum)
-+static inline int mptcp_sub_len_dss(const struct mp_dss *m)
- {
--	return 4 + m->A * (4 + m->a * 4) + m->M * (10 + m->m * 4 + csum * 2);
-+	return 4 + m->A * (4 + m->a * 4) + m->M * (10 + m->m * 4);
- }
- =
-
- #define MPTCP_SYSCTL	1
- =
-
- extern int sysctl_mptcp_enabled;
- extern int sysctl_mptcp_version;
--extern int sysctl_mptcp_checksum;
- extern int sysctl_mptcp_debug;
- extern int sysctl_mptcp_syn_retries;
- =
-
-@@ -693,10 +683,8 @@ enum
- 	MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK,/* Server-side fallback during 3-way h=
-andshake */
- 	MPTCP_MIB_MPCAPABLEACTIVEFALLBACK, /* Client-side fallback during 3-way h=
-andshake */
- 	MPTCP_MIB_MPCAPABLERETRANSFALLBACK,/* Client-side stopped sending MP_CAPA=
-BLE after too many SYN-retransmissions */
--	MPTCP_MIB_CSUMENABLED,		/* Created MPTCP-connection with DSS-checksum ena=
-bled */
- 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
- 	MPTCP_MIB_MPFAILRX,		/* Received an MP_FAIL */
--	MPTCP_MIB_CSUMFAIL,		/* Received segment with invalid checksum */
- 	MPTCP_MIB_FASTCLOSERX,		/* Recevied a FAST_CLOSE */
- 	MPTCP_MIB_FASTCLOSETX,		/* Sent a FAST_CLOSE */
- 	MPTCP_MIB_FBACKSUB,		/* Fallback upon ack without data-ack on new subflow=
- */
-@@ -921,9 +909,6 @@ static inline bool mptcp_can_sendpage(struct sock *sk)
- {
- 	struct mptcp_tcp_sock *mptcp;
- =
-
--	if (tcp_sk(sk)->mpcb->dss_csum)
--		return false;
+-struct mp_prio {
+-	__u8	kind;
+-	__u8	len;
+-#if defined(__LITTLE_ENDIAN_BITFIELD)
+-	__u8	b:1,
+-		rsv:3,
+-		sub:4;
+-#elif defined(__BIG_ENDIAN_BITFIELD)
+-	__u8	sub:4,
+-		rsv:3,
+-		b:1;
+-#else
+-#error	"Adjust your <asm/byteorder.h> defines"
+-#endif
+-	__u8	addr_id;
+-} __attribute__((__packed__));
 -
- 	mptcp_for_each_sub(tcp_sk(sk)->mpcb, mptcp) {
- 		struct sock *sk_it =3D mptcp_to_sock(mptcp);
- =
-
-@@ -1058,7 +1043,6 @@ static inline int is_master_tp(const struct tcp_sock =
-*tp)
- static inline void mptcp_init_mp_opt(struct mptcp_options_received *mopt)
+ static inline int mptcp_sub_len_dss(const struct mp_dss *m)
  {
- 	mopt->saw_mpc =3D 0;
--	mopt->dss_csum =3D 0;
- 	mopt->drop_me =3D 0;
- =
-
+ 	return 4 + m->A * (4 + m->a * 4) + m->M * (10 + m->m * 4);
+@@ -1048,9 +1012,6 @@ static inline void mptcp_init_mp_opt(struct mptcp_opt=
+ions_received *mopt)
  	mopt->is_mp_join =3D 0;
-@@ -1153,9 +1137,6 @@ static inline bool mptcp_can_sg(const struct sock *me=
-ta_sk)
- {
- 	struct mptcp_tcp_sock *mptcp;
+ 	mopt->join_ack =3D 0;
  =
 
--	if (tcp_sk(meta_sk)->mpcb->dss_csum)
--		return false;
+-	mopt->saw_low_prio =3D 0;
+-	mopt->low_prio =3D 0;
 -
- 	mptcp_for_each_sub(tcp_sk(meta_sk)->mpcb, mptcp) {
- 		struct sock *sk =3D mptcp_to_sock(mptcp);
+ 	mopt->saw_add_addr =3D 0;
+ 	mopt->more_add_addr =3D 0;
+ =
+
+@@ -1065,7 +1026,6 @@ static inline void mptcp_reset_mopt(struct tcp_sock *=
+tp)
+ {
+ 	struct mptcp_options_received *mopt =3D &tp->mptcp->rx_opt;
+ =
+
+-	mopt->saw_low_prio =3D 0;
+ 	mopt->saw_add_addr =3D 0;
+ 	mopt->more_add_addr =3D 0;
+ 	mopt->saw_rem_addr =3D 0;
+diff --git a/include/uapi/linux/if.h b/include/uapi/linux/if.h
+index 7255e08393db..51540df75bf8 100644
+--- a/include/uapi/linux/if.h
++++ b/include/uapi/linux/if.h
+@@ -133,7 +133,6 @@ enum net_device_flags {
+ #endif /* __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO */
+ =
+
+ #define IFF_NOMULTIPATH	0x80000		/* Disable for MPTCP 		*/
+-#define IFF_MPBACKUP	0x100000	/* Use as backup path for MPTCP */
+ =
+
+ #define IFF_VOLATILE	(IFF_LOOPBACK|IFF_POINTOPOINT|IFF_BROADCAST|IFF_ECHO|\
+ 		IFF_MASTER|IFF_SLAVE|IFF_RUNNING|IFF_LOWER_UP|IFF_DORMANT)
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 95cff2426ea1..c5cafaac7f58 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7487,7 +7487,7 @@ int __dev_change_flags(struct net_device *dev, unsign=
+ed int flags)
+ =
+
+ 	dev->flags =3D (flags & (IFF_DEBUG | IFF_NOTRAILERS | IFF_NOARP |
+ 			       IFF_DYNAMIC | IFF_MULTICAST | IFF_PORTSEL |
+-			       IFF_AUTOMEDIA | IFF_NOMULTIPATH | IFF_MPBACKUP)) |
++			       IFF_AUTOMEDIA | IFF_NOMULTIPATH)) |
+ 		     (dev->flags & (IFF_UP | IFF_VOLATILE | IFF_PROMISC |
+ 				    IFF_ALLMULTI));
  =
 
 diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
-index 916438e31b59..8061b934e0d5 100644
+index 8061b934e0d5..927f8c014c0b 100644
 --- a/net/mptcp/mptcp_ctrl.c
 +++ b/net/mptcp/mptcp_ctrl.c
-@@ -67,7 +67,6 @@ int sysctl_mptcp_enabled __read_mostly =3D 1;
- int sysctl_mptcp_version __read_mostly =3D 0;
- static int min_mptcp_version;
- static int max_mptcp_version =3D 1;
--int sysctl_mptcp_checksum __read_mostly =3D 1;
- int sysctl_mptcp_debug __read_mostly;
- EXPORT_SYMBOL(sysctl_mptcp_debug);
- int sysctl_mptcp_syn_retries __read_mostly =3D 3;
-@@ -132,13 +131,6 @@ static struct ctl_table mptcp_table[] =3D {
- 		.extra1 =3D &min_mptcp_version,
- 		.extra2 =3D &max_mptcp_version,
- 	},
--	{
--		.procname =3D "mptcp_checksum",
--		.data =3D &sysctl_mptcp_checksum,
--		.maxlen =3D sizeof(int),
--		.mode =3D 0644,
--		.proc_handler =3D &proc_dointvec
--	},
- 	{
- 		.procname =3D "mptcp_debug",
- 		.data =3D &sysctl_mptcp_debug,
-@@ -2078,7 +2070,6 @@ static int __mptcp_check_req_master(struct sock *chil=
-d,
- 	child_tp->mptcp->snt_isn =3D tcp_rsk(req)->snt_isn;
- 	child_tp->mptcp->rcv_isn =3D tcp_rsk(req)->rcv_isn;
+@@ -2218,11 +2218,6 @@ struct sock *mptcp_check_req_child(struct sock *meta=
+_sk,
+ 		goto teardown;
+ 	}
  =
 
--	mpcb->dss_csum =3D mtreq->dss_csum;
- 	mpcb->server_side =3D 1;
- =
-
- 	/* Needs to be done here additionally, because when accepting a
-@@ -2457,13 +2448,10 @@ void mptcp_reqsk_init(struct request_sock *req, con=
-st struct sock *sk,
- 		      const struct sk_buff *skb, bool want_cookie)
- {
- 	struct mptcp_options_received mopt;
--	struct mptcp_request_sock *mtreq =3D mptcp_rsk(req);
- =
-
- 	mptcp_init_mp_opt(&mopt);
- 	tcp_parse_mptcp_options(skb, &mopt);
- =
-
--	mtreq->dss_csum =3D mopt.dss_csum;
+-	/* The child is a clone of the meta socket, we must now reset
+-	 * some of the fields
+-	 */
+-	child_tp->mptcp->rcv_low_prio =3D mtreq->rcv_low_prio;
 -
- 	if (want_cookie) {
- 		if (!mptcp_reqsk_new_cookie(req, sk, &mopt, skb))
- 			/* No key available - back to regular TCP */
-@@ -2500,7 +2488,6 @@ void mptcp_cookies_reqsk_init(struct request_sock *re=
-q,
- 	inet_rsk(req)->saw_mpc =3D 1;
- 	mtreq->is_sub =3D 0;
- 	inet_rsk(req)->mptcp_rqsk =3D 1;
--	mtreq->dss_csum =3D mopt->dss_csum;
+ 	/* We should allow proper increase of the snd/rcv-buffers. Thus, we
+ 	 * use the original values instead of the bloated up ones from the
+ 	 * clone.
+@@ -2438,7 +2433,6 @@ void mptcp_join_reqsk_init(const struct mptcp_cb *mpc=
+b,
+ 	mtreq->mptcp_hash_tmac =3D *(u64 *)mptcp_hash_mac;
  =
 
- out:
- 	spin_unlock(&mptcp_tk_hashlock);
-@@ -2771,10 +2758,8 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
- 	SNMP_MIB_ITEM("MPCapableFallbackACK", MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK),
- 	SNMP_MIB_ITEM("MPCapableFallbackSYNACK", MPTCP_MIB_MPCAPABLEACTIVEFALLBAC=
-K),
- 	SNMP_MIB_ITEM("MPCapableRetransFallback", MPTCP_MIB_MPCAPABLERETRANSFALLB=
-ACK),
--	SNMP_MIB_ITEM("MPTCPCsumEnabled", MPTCP_MIB_CSUMENABLED),
- 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
- 	SNMP_MIB_ITEM("MPFailRX", MPTCP_MIB_MPFAILRX),
--	SNMP_MIB_ITEM("MPCsumFail", MPTCP_MIB_CSUMFAIL),
- 	SNMP_MIB_ITEM("MPFastcloseRX", MPTCP_MIB_FASTCLOSERX),
- 	SNMP_MIB_ITEM("MPFastcloseTX", MPTCP_MIB_FASTCLOSETX),
- 	SNMP_MIB_ITEM("MPFallbackAckSub", MPTCP_MIB_FBACKSUB),
+ 	mtreq->rem_id =3D mopt.rem_id;
+-	mtreq->rcv_low_prio =3D mopt.low_prio;
+ 	inet_rsk(req)->saw_mpc =3D 1;
+ =
+
+ 	MPTCP_INC_STATS(sock_net(mpcb->meta_sk), MPTCP_MIB_JOINSYNRX);
+diff --git a/net/mptcp/mptcp_fullmesh.c b/net/mptcp/mptcp_fullmesh.c
+index 23f42a06cc70..d7f3bba74050 100644
+--- a/net/mptcp/mptcp_fullmesh.c
++++ b/net/mptcp/mptcp_fullmesh.c
+@@ -12,7 +12,6 @@
+ enum {
+ 	MPTCP_EVENT_ADD =3D 1,
+ 	MPTCP_EVENT_DEL,
+-	MPTCP_EVENT_MOD,
+ };
+ =
+
+ #define MPTCP_SUBFLOW_RETRY_DELAY	1000
+@@ -52,8 +51,7 @@ struct mptcp_loc_addr {
+ struct mptcp_addr_event {
+ 	struct list_head list;
+ 	unsigned short	family;
+-	u8	code:7,
+-		low_prio:1;
++	u8	code:7;
+ 	int	if_idx;
+ 	union inet_addr addr;
+ };
+@@ -491,7 +489,6 @@ static void create_subflow_worker(struct work_struct *w=
+ork)
+ =
+
+ 		loc.addr.s_addr =3D inet_sk(meta_sk)->inet_saddr;
+ 		loc.loc4_id =3D 0;
+-		loc.low_prio =3D 0;
+ 		loc.if_idx =3D mpcb->master_sk->sk_bound_dev_if;
+ =
+
+ 		rem.addr.s_addr =3D inet_sk(meta_sk)->inet_daddr;
+@@ -541,7 +538,6 @@ static void create_subflow_worker(struct work_struct *w=
+ork)
+ =
+
+ 			loc.addr =3D inet6_sk(meta_sk)->saddr;
+ 			loc.loc6_id =3D 0;
+-			loc.low_prio =3D 0;
+ 			loc.if_idx =3D mpcb->master_sk->sk_bound_dev_if;
+ =
+
+ 			rem.addr =3D meta_sk->sk_v6_daddr;
+@@ -763,33 +759,25 @@ static void mptcp_address_worker(struct work_struct *=
+work)
+ 					   &event->addr, event->if_idx);
+ 		int j =3D i;
+ =
+
+-		if (j < 0) {
+-			/* Not in the list, so we have to find an empty slot */
+-			if (event->family =3D=3D AF_INET)
+-				i =3D __mptcp_find_free_index(mptcp_local->loc4_bits,
+-							    mptcp_local->next_v4_index);
+-			if (event->family =3D=3D AF_INET6)
+-				i =3D __mptcp_find_free_index(mptcp_local->loc6_bits,
+-							    mptcp_local->next_v6_index);
+-
+-			if (i < 0) {
+-				mptcp_debug("%s no more space\n", __func__);
+-				goto duno;
+-			}
++		/* Found the address and it's thus all the same */
++		if (j >=3D 0)
++			goto duno;
+ =
+
+-			/* It might have been a MOD-event. */
+-			event->code =3D MPTCP_EVENT_ADD;
+-		} else {
+-			/* Let's check if anything changes */
+-			if (event->family =3D=3D AF_INET &&
+-			    event->low_prio =3D=3D mptcp_local->locaddr4[i].low_prio)
+-				goto duno;
+-
+-			if (event->family =3D=3D AF_INET6 &&
+-			    event->low_prio =3D=3D mptcp_local->locaddr6[i].low_prio)
+-				goto duno;
++		/* Not in the list, so we have to find an empty slot */
++		if (event->family =3D=3D AF_INET)
++			i =3D __mptcp_find_free_index(mptcp_local->loc4_bits,
++						    mptcp_local->next_v4_index);
++		if (event->family =3D=3D AF_INET6)
++			i =3D __mptcp_find_free_index(mptcp_local->loc6_bits,
++						    mptcp_local->next_v6_index);
++
++		if (i < 0) {
++			mptcp_debug("%s no more space\n", __func__);
++			goto duno;
+ 		}
+ =
+
++		event->code =3D MPTCP_EVENT_ADD;
++
+ 		old =3D mptcp_local;
+ 		mptcp_local =3D kmemdup(mptcp_local, sizeof(*mptcp_local),
+ 				      GFP_ATOMIC);
+@@ -799,21 +787,19 @@ static void mptcp_address_worker(struct work_struct *=
+work)
+ 		if (event->family =3D=3D AF_INET) {
+ 			mptcp_local->locaddr4[i].addr.s_addr =3D event->addr.in.s_addr;
+ 			mptcp_local->locaddr4[i].loc4_id =3D i + 1;
+-			mptcp_local->locaddr4[i].low_prio =3D event->low_prio;
+ 			mptcp_local->locaddr4[i].if_idx =3D event->if_idx;
+ =
+
+-			mptcp_debug("%s updated IP %pI4 on ifidx %u prio %u id %u\n",
++			mptcp_debug("%s updated IP %pI4 on ifidx %u id %u\n",
+ 				    __func__, &event->addr.in.s_addr,
+-				    event->if_idx, event->low_prio, i + 1);
++				    event->if_idx, i + 1);
+ 		} else {
+ 			mptcp_local->locaddr6[i].addr =3D event->addr.in6;
+ 			mptcp_local->locaddr6[i].loc6_id =3D i + MPTCP_MAX_ADDR;
+-			mptcp_local->locaddr6[i].low_prio =3D event->low_prio;
+ 			mptcp_local->locaddr6[i].if_idx =3D event->if_idx;
+ =
+
+-			mptcp_debug("%s updated IP %pI6 on ifidx %u prio %u id %u\n",
++			mptcp_debug("%s updated IP %pI6 on ifidx %u id %u\n",
+ 				    __func__, &event->addr.in6,
+-				    event->if_idx, event->low_prio, i + MPTCP_MAX_ADDR);
++				    event->if_idx, i + MPTCP_MAX_ADDR);
+ 		}
+ =
+
+ 		if (j < 0) {
+@@ -965,37 +951,6 @@ static void mptcp_address_worker(struct work_struct *w=
+ork)
+ 					announce_remove_addr(loc_id, meta_sk);
+ 				}
+ 			}
+-
+-			if (event->code =3D=3D MPTCP_EVENT_MOD) {
+-				struct mptcp_tcp_sock *mptcp;
+-
+-				mptcp_for_each_sub(mpcb, mptcp) {
+-					struct sock *sk =3D mptcp_to_sock(mptcp);
+-					struct tcp_sock *tp =3D tcp_sk(sk);
+-					if (event->family =3D=3D AF_INET &&
+-					    (sk->sk_family =3D=3D AF_INET ||
+-					     mptcp_v6_is_v4_mapped(sk)) &&
+-					     inet_sk(sk)->inet_saddr =3D=3D event->addr.in.s_addr) {
+-						if (event->low_prio !=3D tp->mptcp->low_prio) {
+-							tp->mptcp->send_mp_prio =3D 1;
+-							tp->mptcp->low_prio =3D event->low_prio;
+-
+-							tcp_send_ack(sk);
+-						}
+-					}
+-
+-					if (event->family =3D=3D AF_INET6 &&
+-					    sk->sk_family =3D=3D AF_INET6 &&
+-					    !ipv6_addr_equal(&inet6_sk(sk)->saddr, &event->addr.in6)) {
+-						if (event->low_prio !=3D tp->mptcp->low_prio) {
+-							tp->mptcp->send_mp_prio =3D 1;
+-							tp->mptcp->low_prio =3D event->low_prio;
+-
+-							tcp_send_ack(sk);
+-						}
+-					}
+-				}
+-			}
+ next:
+ 			bh_unlock_sock(meta_sk);
+ 			sock_put(meta_sk);
+@@ -1042,14 +997,8 @@ static void add_pm_event(struct net *net, const struc=
+t mptcp_addr_event *event)
+ 			break;
+ 		case MPTCP_EVENT_ADD:
+ 			mptcp_debug("%s add old_code %u\n", __func__, eventq->code);
+-			eventq->low_prio =3D event->low_prio;
+ 			eventq->code =3D MPTCP_EVENT_ADD;
+ 			return;
+-		case MPTCP_EVENT_MOD:
+-			mptcp_debug("%s mod old_code %u\n", __func__, eventq->code);
+-			eventq->low_prio =3D event->low_prio;
+-			eventq->code =3D MPTCP_EVENT_MOD;
+-			return;
+ 		}
+ 	}
+ =
+
+@@ -1081,7 +1030,6 @@ static void addr4_event_handler(const struct in_ifadd=
+r *ifa, unsigned long event
+ =
+
+ 	mpevent.family =3D AF_INET;
+ 	mpevent.addr.in.s_addr =3D ifa->ifa_local;
+-	mpevent.low_prio =3D (netdev->flags & IFF_MPBACKUP) ? 1 : 0;
+ 	mpevent.if_idx  =3D netdev->ifindex;
+ =
+
+ 	if (event =3D=3D NETDEV_DOWN || !netif_running(netdev) ||
+@@ -1090,12 +1038,13 @@ static void addr4_event_handler(const struct in_ifa=
+ddr *ifa, unsigned long event
+ 	else if (event =3D=3D NETDEV_UP)
+ 		mpevent.code =3D MPTCP_EVENT_ADD;
+ 	else if (event =3D=3D NETDEV_CHANGE)
+-		mpevent.code =3D MPTCP_EVENT_MOD;
++		goto out;
+ =
+
+-	mptcp_debug("%s created event for %pI4, code %u prio %u idx %u\n", __func=
+__,
+-		    &ifa->ifa_local, mpevent.code, mpevent.low_prio, mpevent.if_idx);
++	mptcp_debug("%s created event for %pI4, code %u idx %u\n", __func__,
++		    &ifa->ifa_local, mpevent.code, mpevent.if_idx);
+ 	add_pm_event(net, &mpevent);
+ =
+
++out:
+ 	spin_unlock_bh(&fm_ns->local_lock);
+ 	return;
+ }
+@@ -1143,7 +1092,6 @@ static void addr6_event_handler(const struct inet6_if=
+addr *ifa, unsigned long ev
+ =
+
+ 	mpevent.family =3D AF_INET6;
+ 	mpevent.addr.in6 =3D ifa->addr;
+-	mpevent.low_prio =3D (netdev->flags & IFF_MPBACKUP) ? 1 : 0;
+ 	mpevent.if_idx =3D netdev->ifindex;
+ =
+
+ 	if (event =3D=3D NETDEV_DOWN || !netif_running(netdev) ||
+@@ -1152,12 +1100,13 @@ static void addr6_event_handler(const struct inet6_=
+ifaddr *ifa, unsigned long ev
+ 	else if (event =3D=3D NETDEV_UP)
+ 		mpevent.code =3D MPTCP_EVENT_ADD;
+ 	else if (event =3D=3D NETDEV_CHANGE)
+-		mpevent.code =3D MPTCP_EVENT_MOD;
++		goto out;
+ =
+
+-	mptcp_debug("%s created event for %pI6, code %u prio %u idx %u\n", __func=
+__,
+-		    &ifa->addr, mpevent.code, mpevent.low_prio, mpevent.if_idx);
++	mptcp_debug("%s created event for %pI6, code %u idx %u\n", __func__,
++		    &ifa->addr, mpevent.code, mpevent.if_idx);
+ 	add_pm_event(net, &mpevent);
+ =
+
++out:
+ 	spin_unlock_bh(&fm_ns->local_lock);
+ 	return;
+ }
+@@ -1241,7 +1190,6 @@ static void full_mesh_new_session(const struct sock *=
+meta_sk)
+ 	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	struct fullmesh_priv *fmp =3D fullmesh_get_priv(mpcb);
+ 	const struct mptcp_fm_ns *fm_ns =3D fm_get_ns(sock_net(meta_sk));
+-	struct tcp_sock *master_tp =3D tcp_sk(mpcb->master_sk);
+ 	int i, index, if_idx =3D 0;
+ 	union inet_addr saddr, daddr;
+ 	sa_family_t family =3D AF_INET;
+@@ -1275,12 +1223,6 @@ static void full_mesh_new_session(const struct sock =
+*meta_sk)
+ 	if (index < 0)
+ 		goto fallback;
+ =
+
+-	if (family =3D=3D AF_INET)
+-		master_tp->mptcp->low_prio =3D mptcp_local->locaddr4[index].low_prio;
+-	else
+-		master_tp->mptcp->low_prio =3D mptcp_local->locaddr6[index].low_prio;
+-	master_tp->mptcp->send_mp_prio =3D master_tp->mptcp->low_prio;
+-
+ 	full_mesh_add_raddr(mpcb, &daddr, family, 0, 0);
+ 	mptcp_set_init_addr_bit(mpcb, &daddr, family, index);
+ =
+
+@@ -1338,9 +1280,6 @@ static void full_mesh_new_session(const struct sock *=
+meta_sk)
+ 	for (i =3D fmp->add_addr; i && fmp->add_addr; i--)
+ 		tcp_send_ack(mpcb->master_sk);
+ =
+
+-	if (master_tp->mptcp->send_mp_prio)
+-		tcp_send_ack(mpcb->master_sk);
+-
+ 	return;
+ =
+
+ fallback:
+@@ -1414,7 +1353,6 @@ static void full_mesh_release_sock(struct sock *meta_=
+sk)
+ =
+
+ 		mptcp_for_each_sub(mpcb, mptcp) {
+ 			struct sock *sk =3D mptcp_to_sock(mptcp);
+-			struct tcp_sock *tp =3D tcp_sk(sk);
+ =
+
+ 			if (sk->sk_family =3D=3D AF_INET6 &&
+ 			    !mptcp_v6_is_v4_mapped(sk))
+@@ -1424,13 +1362,6 @@ static void full_mesh_release_sock(struct sock *meta=
+_sk)
+ 				continue;
+ =
+
+ 			found =3D true;
+-
+-			if (mptcp_local->locaddr4[i].low_prio !=3D tp->mptcp->low_prio) {
+-				tp->mptcp->send_mp_prio =3D 1;
+-				tp->mptcp->low_prio =3D mptcp_local->locaddr4[i].low_prio;
+-
+-				tcp_send_ack(sk);
+-			}
+ 		}
+ =
+
+ 		if (!found) {
+@@ -1458,7 +1389,6 @@ static void full_mesh_release_sock(struct sock *meta_=
+sk)
+ =
+
+ 		mptcp_for_each_sub(mpcb, mptcp) {
+ 			struct sock *sk =3D mptcp_to_sock(mptcp);
+-			struct tcp_sock *tp =3D tcp_sk(sk);
+ =
+
+ 			if (sk->sk_family =3D=3D AF_INET ||
+ 			    mptcp_v6_is_v4_mapped(sk))
+@@ -1468,13 +1398,6 @@ static void full_mesh_release_sock(struct sock *meta=
+_sk)
+ 				continue;
+ =
+
+ 			found =3D true;
+-
+-			if (mptcp_local->locaddr6[i].low_prio !=3D tp->mptcp->low_prio) {
+-				tp->mptcp->send_mp_prio =3D 1;
+-				tp->mptcp->low_prio =3D mptcp_local->locaddr6[i].low_prio;
+-
+-				tcp_send_ack(sk);
+-			}
+ 		}
+ =
+
+ 		if (!found) {
+@@ -1535,7 +1458,7 @@ static void full_mesh_release_sock(struct sock *meta_=
+sk)
+ }
+ =
+
+ static int full_mesh_get_local_id(sa_family_t family, union inet_addr *add=
+r,
+-				  struct net *net, bool *low_prio)
++				  struct net *net)
+ {
+ 	struct mptcp_loc_addr *mptcp_local;
+ 	const struct mptcp_fm_ns *fm_ns =3D fm_get_ns(net);
+@@ -1550,10 +1473,8 @@ static int full_mesh_get_local_id(sa_family_t family=
+, union inet_addr *addr,
+ 	if (index !=3D -1) {
+ 		if (family =3D=3D AF_INET) {
+ 			id =3D mptcp_local->locaddr4[index].loc4_id;
+-			*low_prio =3D mptcp_local->locaddr4[index].low_prio;
+ 		} else {
+ 			id =3D mptcp_local->locaddr6[index].loc6_id;
+-			*low_prio =3D mptcp_local->locaddr6[index].low_prio;
+ 		}
+ 	}
+ =
+
+@@ -1778,8 +1699,8 @@ static int mptcp_fm_seq_show(struct seq_file *seq, vo=
+id *v)
+ 	mptcp_for_each_bit_set(mptcp_local->loc4_bits, i) {
+ 		struct mptcp_loc4 *loc4 =3D &mptcp_local->locaddr4[i];
+ =
+
+-		seq_printf(seq, "%u, %u, %u, %pI4 %u\n", i, loc4->loc4_id,
+-			   loc4->low_prio, &loc4->addr, loc4->if_idx);
++		seq_printf(seq, "%u, %u, %pI4 %u\n", i, loc4->loc4_id,
++			   &loc4->addr, loc4->if_idx);
+ 	}
+ =
+
+ 	seq_printf(seq, "IPv6, next v6-index: %u\n", mptcp_local->next_v6_index);
+@@ -1787,8 +1708,8 @@ static int mptcp_fm_seq_show(struct seq_file *seq, vo=
+id *v)
+ 	mptcp_for_each_bit_set(mptcp_local->loc6_bits, i) {
+ 		struct mptcp_loc6 *loc6 =3D &mptcp_local->locaddr6[i];
+ =
+
+-		seq_printf(seq, "%u, %u, %u, %pI6 %u\n", i, loc6->loc6_id,
+-			   loc6->low_prio, &loc6->addr, loc6->if_idx);
++		seq_printf(seq, "%u, %u, %pI6 %u\n", i, loc6->loc6_id,
++			   &loc6->addr, loc6->if_idx);
+ 	}
+ 	rcu_read_unlock_bh();
+ =
+
 diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index d2a605cbdd04..9a4d1609b3b9 100644
+index 9a4d1609b3b9..652da0439644 100644
 --- a/net/mptcp/mptcp_input.c
 +++ b/net/mptcp/mptcp_input.c
-@@ -269,133 +269,6 @@ static int mptcp_rcv_state_process(struct sock *meta_=
-sk, struct sock *sk,
+@@ -1503,14 +1503,12 @@ void mptcp_parse_options(const uint8_t *ptr, int op=
+size,
+ 		case MPTCP_SUB_LEN_JOIN_SYN:
+ 			mopt->is_mp_join =3D 1;
+ 			mopt->saw_mpc =3D 1;
+-			mopt->low_prio =3D mpjoin->b;
+ 			mopt->rem_id =3D mpjoin->addr_id;
+ 			mopt->mptcp_rem_token =3D mpjoin->u.syn.token;
+ 			mopt->mptcp_recv_nonce =3D mpjoin->u.syn.nonce;
+ 			break;
+ 		case MPTCP_SUB_LEN_JOIN_SYNACK:
+ 			mopt->saw_mpc =3D 1;
+-			mopt->low_prio =3D mpjoin->b;
+ 			mopt->rem_id =3D mpjoin->addr_id;
+ 			mopt->mptcp_recv_tmac =3D mpjoin->u.synack.mac;
+ 			mopt->mptcp_recv_nonce =3D mpjoin->u.synack.nonce;
+@@ -1613,26 +1611,6 @@ void mptcp_parse_options(const uint8_t *ptr, int ops=
+ize,
+ 		mopt->saw_rem_addr =3D 1;
+ 		mopt->rem_addr_ptr =3D ptr;
+ 		break;
+-	case MPTCP_SUB_PRIO:
+-	{
+-		const struct mp_prio *mpprio =3D (struct mp_prio *)ptr;
+-
+-		if (opsize !=3D MPTCP_SUB_LEN_PRIO &&
+-		    opsize !=3D MPTCP_SUB_LEN_PRIO_ADDR) {
+-			mptcp_debug("%s: mp_prio: bad option size %d\n",
+-				    __func__, opsize);
+-			break;
+-		}
+-
+-		mopt->saw_low_prio =3D 1;
+-		mopt->low_prio =3D mpprio->b;
+-
+-		if (opsize =3D=3D MPTCP_SUB_LEN_PRIO_ADDR) {
+-			mopt->saw_low_prio =3D 2;
+-			mopt->prio_addr_id =3D mpprio->addr_id;
+-		}
+-		break;
+-	}
+ 	case MPTCP_SUB_FAIL:
+ 		if (opsize !=3D MPTCP_SUB_LEN_FAIL) {
+ 			mptcp_debug("%s: mp_fail: bad option size %d\n",
+@@ -1963,19 +1941,6 @@ bool mptcp_handle_options(struct sock *sk, const str=
+uct tcphdr *th,
+ 		mopt->more_rem_addr =3D 0;
+ 		mopt->saw_rem_addr =3D 0;
+ 	}
+-	if (mopt->saw_low_prio) {
+-		if (mopt->saw_low_prio =3D=3D 1) {
+-			tp->mptcp->rcv_low_prio =3D mopt->low_prio;
+-		} else {
+-			struct mptcp_tcp_sock *mptcp;
+-
+-			mptcp_for_each_sub(tp->mpcb, mptcp) {
+-				if (mptcp->rem_id =3D=3D mopt->prio_addr_id)
+-					mptcp->rcv_low_prio =3D mopt->low_prio;
+-			}
+-		}
+-		mopt->saw_low_prio =3D 0;
+-	}
+ =
+
+ 	mptcp_data_ack(sk, skb);
+ =
+
+@@ -2077,7 +2042,6 @@ int mptcp_rcv_synsent_state_process(struct sock *sk, =
+struct sock **skptr,
+ 		 * until the 4th ack arrives.
+ 		 */
+ 		tp->mptcp->pre_established =3D 1;
+-		tp->mptcp->rcv_low_prio =3D tp->mptcp->rx_opt.low_prio;
+ =
+
+ 		mptcp_hmac_sha1((u8 *)&mpcb->mptcp_loc_key,
+ 				(u8 *)&mpcb->mptcp_rem_key,
+diff --git a/net/mptcp/mptcp_ipv4.c b/net/mptcp/mptcp_ipv4.c
+index c808d10205f5..00c54f421ba7 100644
+--- a/net/mptcp/mptcp_ipv4.c
++++ b/net/mptcp/mptcp_ipv4.c
+@@ -104,7 +104,6 @@ static int mptcp_v4_join_init_req(struct request_sock *=
+req, const struct sock *m
+ 	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	union inet_addr addr;
+ 	int loc_id;
+-	bool low_prio =3D false;
+ =
+
+ 	/* We need to do this as early as possible. Because, if we fail later
+ 	 * (e.g., get_local_id), then reqsk_free tries to remove the
+@@ -120,11 +119,10 @@ static int mptcp_v4_join_init_req(struct request_sock=
+ *req, const struct sock *m
+ 						    tcp_hdr(skb)->source,
+ 						    tcp_hdr(skb)->dest);
+ 	addr.ip =3D inet_rsk(req)->ir_loc_addr;
+-	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET, &addr, sock_net(meta_sk), =
+&low_prio);
++	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET, &addr, sock_net(meta_sk));
+ 	if (loc_id =3D=3D -1)
+ 		return -1;
+ 	mtreq->loc_id =3D loc_id;
+-	mtreq->low_prio =3D low_prio;
+ =
+
+ 	mptcp_join_reqsk_init(mpcb, req, skb);
+ =
+
+@@ -292,7 +290,6 @@ int mptcp_init4_subsockets(struct sock *meta_sk, const =
+struct mptcp_loc4 *loc,
+ 	}
+ =
+
+ 	tp->mptcp->slave_sk =3D 1;
+-	tp->mptcp->low_prio =3D loc->low_prio;
+ =
+
+ 	/* Initializing the timer for an MPTCP subflow */
+ 	timer_setup(&tp->mptcp->mptcp_ack_timer, mptcp_ack_handler, 0);
+diff --git a/net/mptcp/mptcp_ipv6.c b/net/mptcp/mptcp_ipv6.c
+index 2d730379d5ed..7249d171c9ef 100644
+--- a/net/mptcp/mptcp_ipv6.c
++++ b/net/mptcp/mptcp_ipv6.c
+@@ -133,7 +133,6 @@ static int mptcp_v6_join_init_req(struct request_sock *=
+req, const struct sock *m
+ 	const struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	union inet_addr addr;
+ 	int loc_id;
+-	bool low_prio =3D false;
+ =
+
+ 	/* We need to do this as early as possible. Because, if we fail later
+ 	 * (e.g., get_local_id), then reqsk_free tries to remove the
+@@ -149,11 +148,10 @@ static int mptcp_v6_join_init_req(struct request_sock=
+ *req, const struct sock *m
+ 						    tcp_hdr(skb)->source,
+ 						    tcp_hdr(skb)->dest);
+ 	addr.in6 =3D inet_rsk(req)->ir_v6_loc_addr;
+-	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET6, &addr, sock_net(meta_sk),=
+ &low_prio);
++	loc_id =3D mpcb->pm_ops->get_local_id(AF_INET6, &addr, sock_net(meta_sk));
+ 	if (loc_id =3D=3D -1)
+ 		return -1;
+ 	mtreq->loc_id =3D loc_id;
+-	mtreq->low_prio =3D low_prio;
+ =
+
+ 	mptcp_join_reqsk_init(mpcb, req, skb);
+ =
+
+@@ -319,7 +317,6 @@ int mptcp_init6_subsockets(struct sock *meta_sk, const =
+struct mptcp_loc6 *loc,
+ 	}
+ =
+
+ 	tp->mptcp->slave_sk =3D 1;
+-	tp->mptcp->low_prio =3D loc->low_prio;
+ =
+
+ 	/* Initializing the timer for an MPTCP subflow */
+ 	timer_setup(&tp->mptcp->mptcp_ack_timer, mptcp_ack_handler, 0);
+diff --git a/net/mptcp/mptcp_ndiffports.c b/net/mptcp/mptcp_ndiffports.c
+index 58acf50df752..9faef10d8b64 100644
+--- a/net/mptcp/mptcp_ndiffports.c
++++ b/net/mptcp/mptcp_ndiffports.c
+@@ -61,7 +61,6 @@ static void create_subflow_worker(struct work_struct *wor=
+k)
+ =
+
+ 			loc.addr.s_addr =3D inet_sk(meta_sk)->inet_saddr;
+ 			loc.loc4_id =3D 0;
+-			loc.low_prio =3D 0;
+ 			if (mpcb->master_sk)
+ 				loc.if_idx =3D mpcb->master_sk->sk_bound_dev_if;
+ 			else
+@@ -79,7 +78,6 @@ static void create_subflow_worker(struct work_struct *wor=
+k)
+ =
+
+ 			loc.addr =3D inet6_sk(meta_sk)->saddr;
+ 			loc.loc6_id =3D 0;
+-			loc.low_prio =3D 0;
+ 			if (mpcb->master_sk)
+ 				loc.if_idx =3D mpcb->master_sk->sk_bound_dev_if;
+ 			else
+@@ -128,7 +126,7 @@ static void ndiffports_create_subflows(struct sock *met=
+a_sk)
+ }
+ =
+
+ static int ndiffports_get_local_id(sa_family_t family, union inet_addr *ad=
+dr,
+-				   struct net *net, bool *low_prio)
++				   struct net *net)
+ {
  	return 0;
  }
- =
-
--/**
-- * @return:
-- *  i) 1: Everything's fine.
-- *  ii) -1: A reset has been sent on the subflow - csum-failure
-- *  iii) 0: csum-failure but no reset sent, because it's the last subflow.
-- *	 Last packet should not be destroyed by the caller because it has
-- *	 been done here.
-- */
--static int mptcp_verif_dss_csum(struct sock *sk)
--{
--	struct tcp_sock *tp =3D tcp_sk(sk);
--	struct sk_buff *tmp, *tmp1, *last =3D NULL;
--	__wsum csum_tcp =3D 0; /* cumulative checksum of pld + mptcp-header */
--	int ans =3D 1, overflowed =3D 0, offset =3D 0, dss_csum_added =3D 0;
--	int iter =3D 0;
--
--	skb_queue_walk_safe(&sk->sk_receive_queue, tmp, tmp1) {
--		unsigned int csum_len;
--
--		if (before(tp->mptcp->map_subseq + tp->mptcp->map_data_len, TCP_SKB_CB(t=
-mp)->end_seq))
--			/* Mapping ends in the middle of the packet -
--			 * csum only these bytes
--			 */
--			csum_len =3D tp->mptcp->map_subseq + tp->mptcp->map_data_len - TCP_SKB_=
-CB(tmp)->seq;
--		else
--			csum_len =3D tmp->len;
--
--		offset =3D 0;
--		if (overflowed) {
--			char first_word[4];
--			first_word[0] =3D 0;
--			first_word[1] =3D 0;
--			first_word[2] =3D 0;
--			first_word[3] =3D *(tmp->data);
--			csum_tcp =3D csum_partial(first_word, 4, csum_tcp);
--			offset =3D 1;
--			csum_len--;
--			overflowed =3D 0;
--		}
--
--		csum_tcp =3D skb_checksum(tmp, offset, csum_len, csum_tcp);
--
--		/* Was it on an odd-length? Then we have to merge the next byte
--		 * correctly (see above)
--		 */
--		if (csum_len !=3D (csum_len & (~1)))
--			overflowed =3D 1;
--
--		if (mptcp_is_data_seq(tmp) && !dss_csum_added) {
--			__be32 data_seq =3D htonl((u32)(tp->mptcp->map_data_seq >> 32));
--
--			/* If a 64-bit dss is present, we increase the offset
--			 * by 4 bytes, as the high-order 64-bits will be added
--			 * in the final csum_partial-call.
--			 */
--			u32 offset =3D skb_transport_offset(tmp) +
--				     TCP_SKB_CB(tmp)->dss_off;
--			if (TCP_SKB_CB(tmp)->mptcp_flags & MPTCPHDR_SEQ64_SET)
--				offset +=3D 4;
--
--			csum_tcp =3D skb_checksum(tmp, offset,
--						MPTCP_SUB_LEN_SEQ_CSUM,
--						csum_tcp);
--
--			csum_tcp =3D csum_partial(&data_seq,
--						sizeof(data_seq), csum_tcp);
--
--			dss_csum_added =3D 1; /* Just do it once */
--		}
--		last =3D tmp;
--		iter++;
--
--		if (!skb_queue_is_last(&sk->sk_receive_queue, tmp) &&
--		    !before(TCP_SKB_CB(tmp1)->seq,
--			    tp->mptcp->map_subseq + tp->mptcp->map_data_len))
--			break;
--	}
--
--	/* Now, checksum must be 0 */
--	if (unlikely(csum_fold(csum_tcp))) {
--		struct mptcp_tcp_sock *mptcp;
--		struct sock *sk_it =3D NULL;
--
--		pr_err("%s csum is wrong: %#x tcp-seq %u dss_csum_added %d overflowed %d=
- iterations %d\n",
--		       __func__, csum_fold(csum_tcp), TCP_SKB_CB(last)->seq,
--		       dss_csum_added, overflowed, iter);
--
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CSUMFAIL);
--		tp->mptcp->send_mp_fail =3D 1;
--
--		/* map_data_seq is the data-seq number of the
--		 * mapping we are currently checking
--		 */
--		tp->mpcb->csum_cutoff_seq =3D tp->mptcp->map_data_seq;
--
--		/* Search for another subflow that is fully established */
--		mptcp_for_each_sub(tp->mpcb, mptcp) {
--			sk_it =3D mptcp_to_sock(mptcp);
--
--			if (sk_it !=3D sk &&
--			    tcp_sk(sk_it)->mptcp->fully_established)
--				break;
--
--			sk_it =3D NULL;
--		}
--
--		if (sk_it) {
--			mptcp_send_reset(sk);
--			ans =3D -1;
--		} else {
--			tp->mpcb->send_infinite_mapping =3D 1;
--
--			/* Need to purge the rcv-queue as it's no more valid */
--			while ((tmp =3D __skb_dequeue(&sk->sk_receive_queue)) !=3D NULL) {
--				tp->copied_seq =3D TCP_SKB_CB(tmp)->end_seq;
--				kfree_skb(tmp);
--			}
--
--			mptcp_sub_force_close_all(tp->mpcb, sk);
--
--			ans =3D 0;
--		}
--	}
--
--	return ans;
--}
--
- static inline void mptcp_prepare_skb(struct sk_buff *skb,
- 				     const struct sock *sk)
- {
-@@ -710,10 +583,6 @@ static int mptcp_detect_mapping(struct sock *sk, struc=
-t sk_buff *skb)
- 		mpcb->infinite_mapping_rcv =3D 1;
- 		mpcb->send_infinite_mapping =3D 1;
- 		tp->mptcp->fully_established =3D 1;
--		/* We need to repeat mp_fail's until the sender felt
--		 * back to infinite-mapping - here we stop repeating it.
--		 */
--		tp->mptcp->send_mp_fail =3D 0;
- =
-
- 		/* We have to fixup data_len - it must be the same as skb->len */
- 		data_len =3D skb->len + (mptcp_is_data_fin(skb) ? 1 : 0);
-@@ -735,17 +604,6 @@ static int mptcp_detect_mapping(struct sock *sk, struc=
-t sk_buff *skb)
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_INFINITEMAPRX);
- 	}
- =
-
--	/* We are sending mp-fail's and thus are in fallback mode.
--	 * Ignore packets which do not announce the fallback and still
--	 * want to provide a mapping.
--	 */
--	if (tp->mptcp->send_mp_fail) {
--		tp->copied_seq =3D TCP_SKB_CB(skb)->end_seq;
--		__skb_unlink(skb, &sk->sk_receive_queue);
--		__kfree_skb(skb);
--		return -1;
--	}
--
- 	/* FIN increased the mapping-length by 1 */
- 	if (mptcp_is_data_fin(skb))
- 		data_len--;
-@@ -957,16 +815,6 @@ static int mptcp_queue_skb(struct sock *sk)
- 		mpcb->dfin_combined =3D !!(sk->sk_shutdown & RCV_SHUTDOWN);
- 	}
- =
-
--	/* Verify the checksum */
--	if (mpcb->dss_csum && !mpcb->infinite_mapping_rcv) {
--		int ret =3D mptcp_verif_dss_csum(sk);
--
--		if (ret <=3D 0) {
--			mptcp_reset_mapping(tp, old_copied_seq);
--			return 1;
--		}
--	}
--
- 	if (before64(rcv_nxt64, tp->mptcp->map_data_seq)) {
- 		/* Seg's have to go to the meta-ofo-queue */
- 		skb_queue_walk_safe(&sk->sk_receive_queue, tmp1, tmp) {
-@@ -1605,6 +1453,10 @@ void mptcp_parse_options(const uint8_t *ptr, int ops=
-ize,
- 			break;
- 		}
- =
-
-+		/* We do not support DSS-checksums */
-+		if (mpcapable->a)
-+			break;
-+
- 		/* MPTCP-RFC 6824:
- 		 * "If receiving a message with the 'B' flag set to 1, and this
- 		 * is not understood, then this SYN MUST be silently ignored;
-@@ -1622,7 +1474,6 @@ void mptcp_parse_options(const uint8_t *ptr, int opsi=
-ze,
- 			break;
- =
-
- 		mopt->saw_mpc =3D 1;
--		mopt->dss_csum =3D sysctl_mptcp_checksum || mpcapable->a;
- =
-
- 		if (opsize >=3D MPTCP_SUB_LEN_CAPABLE_SYN)
- 			mopt->mptcp_sender_key =3D mpcapable->sender_key;
-@@ -1677,15 +1528,7 @@ void mptcp_parse_options(const uint8_t *ptr, int ops=
-ize,
- 		const struct mp_dss *mdss =3D (struct mp_dss *)ptr;
- 		struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb);
- =
-
--		/* We check opsize for the csum and non-csum case. We do this,
--		 * because the draft says that the csum SHOULD be ignored if
--		 * it has not been negotiated in the MP_CAPABLE but still is
--		 * present in the data.
--		 *
--		 * It will get ignored later in mptcp_queue_skb.
--		 */
--		if (opsize !=3D mptcp_sub_len_dss(mdss, 0) &&
--		    opsize !=3D mptcp_sub_len_dss(mdss, 1)) {
-+		if (opsize !=3D mptcp_sub_len_dss(mdss)) {
- 			mptcp_debug("%s: mp_dss: bad option size %d\n",
- 				    __func__, opsize);
- 			break;
-@@ -1723,10 +1566,6 @@ void mptcp_parse_options(const uint8_t *ptr, int ops=
-ize,
- =
-
- 			tcb->mptcp_flags |=3D MPTCPHDR_SEQ;
- =
-
--			/* Is a check-sum present? */
--			if (opsize =3D=3D mptcp_sub_len_dss(mdss, 1))
--				tcb->mptcp_flags |=3D MPTCPHDR_DSS_CSUM;
--
- 			/* DATA_FIN only possible with DSS-mapping */
- 			if (mdss->F)
- 				tcb->mptcp_flags |=3D MPTCPHDR_FIN;
-@@ -2101,16 +1940,6 @@ bool mptcp_handle_options(struct sock *sk, const str=
-uct tcphdr *th,
- 	if (unlikely(mopt->mp_fail))
- 		mptcp_mp_fail_rcvd(sk, th);
- =
-
--	/* RFC 6824, Section 3.3:
--	 * If a checksum is not present when its use has been negotiated, the
--	 * receiver MUST close the subflow with a RST as it is considered broken.
--	 */
--	if (mptcp_is_data_seq(skb) && tp->mpcb->dss_csum &&
--	    !(TCP_SKB_CB(skb)->mptcp_flags & MPTCPHDR_DSS_CSUM)) {
--		mptcp_send_reset(sk);
--		return true;
--	}
--
- 	/* We have to acknowledge retransmissions of the third
- 	 * ack.
- 	 */
-@@ -2290,9 +2119,6 @@ int mptcp_rcv_synsent_state_process(struct sock *sk, =
-struct sock **skptr,
- 		 * is not part of any mapping.
- 		 */
- 		tp->mptcp->snt_isn =3D tp->snd_una - 1;
--		tp->mpcb->dss_csum =3D mopt->dss_csum;
--		if (tp->mpcb->dss_csum)
--			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CSUMENABLED);
- =
-
- 		tp->mptcp->include_mpc =3D 1;
- =
-
 diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index 1de93c405c78..f9bce20259e9 100644
+index f9bce20259e9..af695fafaab2 100644
 --- a/net/mptcp/mptcp_output.c
 +++ b/net/mptcp/mptcp_output.c
-@@ -407,22 +407,7 @@ static int mptcp_write_dss_mapping(const struct tcp_so=
-ck *tp, const struct sk_bu
- 	else
- 		data_len =3D tcb->end_seq - tcb->seq;
- =
-
--	if (tp->mpcb->dss_csum && data_len) {
--		__be16 *p16 =3D (__be16 *)ptr;
--		__be32 hdseq =3D mptcp_get_highorder_sndbits(skb, tp->mpcb);
--		__wsum csum;
--
--		*ptr =3D htonl(((data_len) << 16) |
--			     (TCPOPT_EOL << 8) |
--			     (TCPOPT_EOL));
--		csum =3D csum_partial(ptr - 2, 12, skb->csum);
--		p16++;
--		*p16++ =3D csum_fold(csum_partial(&hdseq, sizeof(hdseq), csum));
--	} else {
--		*ptr++ =3D htonl(((data_len) << 16) |
--			       (TCPOPT_NOP << 8) |
--			       (TCPOPT_NOP));
--	}
-+	*ptr++ =3D htonl(((data_len) << 16) | (TCPOPT_NOP << 8) | (TCPOPT_NOP));
- =
-
- 	return ptr - start;
- }
-@@ -442,7 +427,7 @@ static int mptcp_write_dss_data_ack(const struct tcp_so=
-ck *tp, const struct sk_b
- 	mdss->M =3D mptcp_is_data_seq(skb) ? 1 : 0;
- 	mdss->a =3D 0;
- 	mdss->A =3D 1;
--	mdss->len =3D mptcp_sub_len_dss(mdss, tp->mpcb->dss_csum);
-+	mdss->len =3D mptcp_sub_len_dss(mdss);
- 	ptr++;
- =
-
- 	*ptr++ =3D htonl(mptcp_meta_tp(tp)->rcv_nxt);
-@@ -456,10 +441,6 @@ static int mptcp_write_dss_data_ack(const struct tcp_s=
-ock *tp, const struct sk_b
-  * arguably means that we would change the mapping (e.g. it splits it,
-  * our sends out a subset of the initial mapping).
-  *
-- * Furthermore, the skb checksum is not always preserved across splits
-- * (e.g. mptcp_fragment) which would mean that we need to recompute
-- * the DSS checksum in this case.
-- *
-  * To avoid this we save the initial DSS mapping which allows us to
-  * send the same DSS mapping even for fragmented retransmits.
-  */
-@@ -519,10 +500,6 @@ static bool mptcp_skb_entail(struct sock *sk, struct s=
-k_buff *skb, int reinject)
- =
-
- 	TCP_SKB_CB(skb)->path_mask |=3D mptcp_pi_to_flag(tp->mptcp->path_index);
- =
-
--	/* Compute checksum */
--	if (tp->mpcb->dss_csum)
--		subskb->csum =3D skb->csum =3D skb_checksum(skb, 0, skb->len, 0);
--
- 	tcb =3D TCP_SKB_CB(subskb);
- =
-
- 	if (tp->mpcb->send_infinite_mapping &&
-@@ -977,7 +954,6 @@ void mptcp_syn_options(const struct sock *sk, struct tc=
+@@ -960,7 +960,6 @@ void mptcp_syn_options(const struct sock *sk, struct tc=
 p_out_options *opts,
- 		opts->mptcp_ver =3D tcp_sk(sk)->mptcp_ver;
- 		*remaining -=3D MPTCP_SUB_LEN_CAPABLE_SYN_ALIGN;
- 		opts->mp_capable.sender_key =3D tp->mptcp_loc_key;
--		opts->dss_csum =3D !!sysctl_mptcp_checksum;
- 	} else {
- 		const struct mptcp_cb *mpcb =3D tp->mpcb;
- =
-
-@@ -1002,7 +978,6 @@ void mptcp_synack_options(struct request_sock *req,
- 		opts->mptcp_options |=3D OPTION_MP_CAPABLE | OPTION_TYPE_SYNACK;
- 		opts->mptcp_ver =3D mtreq->mptcp_ver;
- 		opts->mp_capable.sender_key =3D mtreq->mptcp_loc_key;
--		opts->dss_csum =3D !!sysctl_mptcp_checksum || mtreq->dss_csum;
- 		*remaining -=3D MPTCP_SUB_LEN_CAPABLE_SYN_ALIGN;
- 	} else {
- 		opts->mptcp_options |=3D OPTION_MP_JOIN | OPTION_TYPE_SYNACK;
-@@ -1070,7 +1045,6 @@ void mptcp_established_options(struct sock *sk, struc=
-t sk_buff *skb,
- 		opts->mptcp_ver =3D mpcb->mptcp_ver;
- 		opts->mp_capable.sender_key =3D mpcb->mptcp_loc_key;
- 		opts->mp_capable.receiver_key =3D mpcb->mptcp_rem_key;
--		opts->dss_csum =3D mpcb->dss_csum;
- =
-
- 		if (skb)
- 			tp->mptcp->include_mpc =3D 0;
-@@ -1100,9 +1074,6 @@ void mptcp_established_options(struct sock *sk, struc=
-t sk_buff *skb,
- 		if (skb && !mptcp_is_data_seq(skb)) {
- 			*size +=3D MPTCP_SUB_LEN_ACK_ALIGN;
- 		} else {
--			/* Doesn't matter, if csum included or not. It will be
--			 * either 10 or 12, and thus aligned =3D 12
--			 */
- 			*size +=3D MPTCP_SUB_LEN_ACK_ALIGN +
- 				 MPTCP_SUB_LEN_SEQ_ALIGN;
- 		}
-@@ -1110,16 +1081,6 @@ void mptcp_established_options(struct sock *sk, stru=
-ct sk_buff *skb,
- 		*size +=3D MPTCP_SUB_LEN_DSS_ALIGN;
+ 		opts->mptcp_options |=3D OPTION_MP_JOIN | OPTION_TYPE_SYN;
+ 		*remaining -=3D MPTCP_SUB_LEN_JOIN_SYN_ALIGN;
+ 		opts->mp_join_syns.token =3D mpcb->mptcp_rem_token;
+-		opts->mp_join_syns.low_prio  =3D tp->mptcp->low_prio;
+ 		opts->addr_id =3D tp->mptcp->loc_id;
+ 		opts->mp_join_syns.sender_nonce =3D tp->mptcp->mptcp_loc_nonce;
  	}
- =
-
--	/* In fallback mp_fail-mode, we have to repeat it until the fallback
--	 * has been done by the sender
--	 */
--	if (unlikely(tp->mptcp->send_mp_fail) && skb &&
--	    MAX_TCP_OPTION_SPACE - *size >=3D MPTCP_SUB_LEN_FAIL) {
--		opts->options |=3D OPTION_MPTCP;
--		opts->mptcp_options |=3D OPTION_MP_FAIL;
--		*size +=3D MPTCP_SUB_LEN_FAIL;
--	}
--
- 	if (unlikely(mpcb->addr_signal) && mpcb->pm_ops->addr_signal &&
+@@ -984,7 +983,6 @@ void mptcp_synack_options(struct request_sock *req,
+ 		opts->mp_join_syns.sender_truncated_mac =3D
+ 				mtreq->mptcp_hash_tmac;
+ 		opts->mp_join_syns.sender_nonce =3D mtreq->mptcp_loc_nonce;
+-		opts->mp_join_syns.low_prio =3D mtreq->low_prio;
+ 		opts->addr_id =3D mtreq->loc_id;
+ 		*remaining -=3D MPTCP_SUB_LEN_JOIN_SYNACK_ALIGN;
+ 	}
+@@ -1085,15 +1083,6 @@ void mptcp_established_options(struct sock *sk, stru=
+ct sk_buff *skb,
  	    mpcb->mptcp_ver < MPTCP_VERSION_1)
  		mpcb->pm_ops->addr_signal(sk, size, opts, skb);
-@@ -1172,7 +1133,7 @@ void mptcp_options_write(__be32 *ptr, struct tcp_sock=
- *tp,
- 		}
  =
 
- 		mpc->sub =3D MPTCP_SUB_CAPABLE;
--		mpc->a =3D opts->dss_csum;
-+		mpc->a =3D 0;
- 		mpc->b =3D 0;
- 		mpc->rsv =3D 0;
- 		mpc->h =3D 1;
-@@ -1272,18 +1233,6 @@ void mptcp_options_write(__be32 *ptr, struct tcp_soc=
-k *tp,
- =
-
- 		MPTCP_INC_STATS(sock_net((struct sock *)tp), MPTCP_MIB_REMADDRTX);
- 	}
--	if (unlikely(OPTION_MP_FAIL & opts->mptcp_options)) {
--		struct mp_fail *mpfail =3D (struct mp_fail *)ptr;
--
--		mpfail->kind =3D TCPOPT_MPTCP;
--		mpfail->len =3D MPTCP_SUB_LEN_FAIL;
--		mpfail->sub =3D MPTCP_SUB_FAIL;
--		mpfail->rsv1 =3D 0;
--		mpfail->rsv2 =3D 0;
--		mpfail->data_seq =3D htonll(tp->mpcb->csum_cutoff_seq);
--
--		ptr +=3D MPTCP_SUB_LEN_FAIL_ALIGN >> 2;
+-	if (unlikely(tp->mptcp->send_mp_prio) &&
+-	    MAX_TCP_OPTION_SPACE - *size >=3D MPTCP_SUB_LEN_PRIO_ALIGN) {
+-		opts->options |=3D OPTION_MPTCP;
+-		opts->mptcp_options |=3D OPTION_MP_PRIO;
+-		if (skb)
+-			tp->mptcp->send_mp_prio =3D 0;
+-		*size +=3D MPTCP_SUB_LEN_PRIO_ALIGN;
 -	}
- 	if (unlikely(OPTION_MP_FCLOSE & opts->mptcp_options)) {
- 		struct mp_fclose *mpfclose =3D (struct mp_fclose *)ptr;
- =
-
-@@ -1848,15 +1797,7 @@ int mptcp_select_size(const struct sock *meta_sk, bo=
-ol first_skb, bool zc)
- 		if (zc)
- 			return 0;
- =
-
--		if (!tcp_sk(meta_sk)->mpcb->dss_csum) {
--			mss =3D linear_payload_sz(first_skb);
--		} else {
--			int pgbreak =3D SKB_MAX_HEAD(MAX_TCP_HEADER);
 -
--			if (mss >=3D pgbreak &&
--			    mss <=3D pgbreak + (MAX_SKB_FRAGS - 1) * PAGE_SIZE)
--				mss =3D pgbreak;
--		}
-+		mss =3D linear_payload_sz(first_skb);
+ 	return;
+ }
+ =
+
+@@ -1149,7 +1138,7 @@ void mptcp_options_write(__be32 *ptr, struct tcp_sock=
+ *tp,
+ 			mpj->len =3D MPTCP_SUB_LEN_JOIN_SYN;
+ 			mpj->u.syn.token =3D opts->mp_join_syns.token;
+ 			mpj->u.syn.nonce =3D opts->mp_join_syns.sender_nonce;
+-			mpj->b =3D opts->mp_join_syns.low_prio;
++			mpj->b =3D 0;
+ 			mpj->addr_id =3D opts->addr_id;
+ 			ptr +=3D MPTCP_SUB_LEN_JOIN_SYN_ALIGN >> 2;
+ 		} else if (OPTION_TYPE_SYNACK & opts->mptcp_options) {
+@@ -1157,7 +1146,7 @@ void mptcp_options_write(__be32 *ptr, struct tcp_sock=
+ *tp,
+ 			mpj->u.synack.mac =3D
+ 				opts->mp_join_syns.sender_truncated_mac;
+ 			mpj->u.synack.nonce =3D opts->mp_join_syns.sender_nonce;
+-			mpj->b =3D opts->mp_join_syns.low_prio;
++			mpj->b =3D 0;
+ 			mpj->addr_id =3D opts->addr_id;
+ 			ptr +=3D MPTCP_SUB_LEN_JOIN_SYNACK_ALIGN >> 2;
+ 		} else if (OPTION_TYPE_ACK & opts->mptcp_options) {
+@@ -1252,18 +1241,6 @@ void mptcp_options_write(__be32 *ptr, struct tcp_soc=
+k *tp,
+ 		else
+ 			ptr +=3D mptcp_write_dss_data_seq(tp, skb, ptr);
  	}
+-	if (unlikely(OPTION_MP_PRIO & opts->mptcp_options)) {
+-		struct mp_prio *mpprio =3D (struct mp_prio *)ptr;
+-
+-		mpprio->kind =3D TCPOPT_MPTCP;
+-		mpprio->len =3D MPTCP_SUB_LEN_PRIO;
+-		mpprio->sub =3D MPTCP_SUB_PRIO;
+-		mpprio->rsv =3D 0;
+-		mpprio->b =3D tp->mptcp->low_prio;
+-		mpprio->addr_id =3D TCPOPT_NOP;
+-
+-		ptr +=3D MPTCP_SUB_LEN_PRIO_ALIGN >> 2;
+-	}
+ }
  =
 
- 	return !mss ? tcp_sk(meta_sk)->mss_cache : mss;
-@@ -1893,7 +1834,7 @@ unsigned int mptcp_xmit_size_goal(const struct sock *=
-meta_sk, u32 mss_now,
+ /* Sends the datafin */
+diff --git a/net/mptcp/mptcp_pm.c b/net/mptcp/mptcp_pm.c
+index 08e3f05a9e65..fbdf8eb58d17 100644
+--- a/net/mptcp/mptcp_pm.c
++++ b/net/mptcp/mptcp_pm.c
+@@ -35,7 +35,7 @@ static DEFINE_SPINLOCK(mptcp_pm_list_lock);
+ static LIST_HEAD(mptcp_pm_list);
+ =
+
+ static int mptcp_default_id(sa_family_t family, union inet_addr *addr,
+-			    struct net *net, bool *low_prio)
++			    struct net *net)
  {
- 	u32 xmit_size_goal =3D 0;
+ 	return 0;
+ }
+diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
+index 3662bdf97c0d..82ffe080cb5e 100644
+--- a/net/mptcp/mptcp_sched.c
++++ b/net/mptcp/mptcp_sched.c
+@@ -113,22 +113,11 @@ static int mptcp_dont_reinject_skb(const struct tcp_s=
+ock *tp, const struct sk_bu
+ 		mptcp_pi_to_flag(tp->mptcp->path_index) & TCP_SKB_CB(skb)->path_mask;
+ }
  =
 
--	if (large_allowed && !tcp_sk(meta_sk)->mpcb->dss_csum) {
-+	if (large_allowed) {
- 		struct mptcp_tcp_sock *mptcp;
+-static bool subflow_is_backup(const struct tcp_sock *tp)
+-{
+-	return tp->mptcp->rcv_low_prio || tp->mptcp->low_prio;
+-}
+-
+-static bool subflow_is_active(const struct tcp_sock *tp)
+-{
+-	return !tp->mptcp->rcv_low_prio && !tp->mptcp->low_prio;
+-}
+-
+ /* Generic function to iterate over used and unused subflows and to select=
+ the
+  * best one
+  */
+ static struct sock
+ *get_subflow_from_selectors(struct mptcp_cb *mpcb, struct sk_buff *skb,
+-			    bool (*selector)(const struct tcp_sock *),
+ 			    bool zero_wnd_test, bool *force)
+ {
+ 	struct sock *bestsk =3D NULL;
+@@ -142,10 +131,6 @@ static struct sock
+ 		struct tcp_sock *tp =3D tcp_sk(sk);
+ 		bool unused =3D false;
  =
 
- 		mptcp_for_each_sub(tcp_sk(meta_sk)->mpcb, mptcp) {
+-		/* First, we choose only the wanted sks */
+-		if (!(*selector)(tp))
+-			continue;
+-
+ 		if (!mptcp_dont_reinject_skb(tp, skb))
+ 			unused =3D true;
+ 		else if (found_unused)
+@@ -233,16 +218,13 @@ static struct sock *get_available_subflow(struct sock=
+ *meta_sk,
+ =
+
+ 	/* Find the best subflow */
+ restart:
+-	sk =3D get_subflow_from_selectors(mpcb, skb, &subflow_is_active,
+-					zero_wnd_test, &force);
++	sk =3D get_subflow_from_selectors(mpcb, skb, zero_wnd_test, &force);
+ 	if (force)
+ 		/* one unused active sk or one NULL sk when there is at least
+ 		 * one temporally unavailable unused active sk
+ 		 */
+ 		return sk;
+ =
+
+-	sk =3D get_subflow_from_selectors(mpcb, skb, &subflow_is_backup,
+-					zero_wnd_test, &force);
+ 	if (!force && skb) {
+ 		/* one used backup sk or one NULL sk where there is no one
+ 		 * temporally unavailable unused backup sk
 -- =
 
 2.16.2
 
 
---===============7386109688065156234==--
+--===============7054512833301738463==--
