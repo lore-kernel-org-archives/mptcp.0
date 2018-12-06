@@ -1,429 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============3212411671625778990=="
+Content-Type: multipart/mixed; boundary="===============5846449427501913554=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 07/12] mptcp: Remove support for TCP SYN-cookies
-Date: Wed, 05 Dec 2018 17:00:18 -0800
-Message-ID: <20181206010023.18819-8-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH 09/12] mptcp: Remove MPTCP-code out of do_ip_setsockopt
+Date: Wed, 05 Dec 2018 17:00:20 -0800
+Message-ID: <20181206010023.18819-10-cpaasch@apple.com>
 In-Reply-To: 20181206010023.18819-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 878
+X-UID: 879
 
---===============3212411671625778990==
+--===============5846449427501913554==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/net/tcp.h      | 13 +++++--------
- net/ipv4/syncookies.c  | 47 +++++++----------------------------------------
- net/ipv4/tcp_input.c   |  2 +-
- net/ipv6/syncookies.c  | 32 +++++++-------------------------
- net/mptcp/mptcp_ipv4.c | 17 -----------------
- net/mptcp/mptcp_ipv6.c | 17 -----------------
- 6 files changed, 20 insertions(+), 108 deletions(-)
+ net/ipv4/ip_sockglue.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index c4a9297da7a0..f206ea426018 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -644,8 +644,7 @@ static inline u32 tcp_cookie_time(void)
- =
-
- u32 __cookie_v4_init_sequence(const struct iphdr *iph, const struct tcphdr=
- *th,
- 			      u16 *mssp);
--__u32 cookie_v4_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mss);
-+__u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mss);
- u64 cookie_init_timestamp(struct request_sock *req);
- bool cookie_timestamp_decode(const struct net *net,
- 			     struct tcp_options_received *opt);
-@@ -659,8 +658,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
-_buff *skb);
- =
-
- u32 __cookie_v6_init_sequence(const struct ipv6hdr *iph,
- 			      const struct tcphdr *th, u16 *mssp);
--__u32 cookie_v6_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mss);
-+__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mss);
- #endif
- /* tcp_output.c */
- =
-
-@@ -2086,8 +2084,8 @@ struct tcp_request_sock_ops {
- 			struct sk_buff *skb,
- 			bool want_cookie);
- #ifdef CONFIG_SYN_COOKIES
--	__u32 (*cookie_init_seq)(struct request_sock *req, const struct sock *sk,
--				 const struct sk_buff *skb, __u16 *mss);
-+	__u32 (*cookie_init_seq)(const struct sk_buff *skb,
-+				 __u16 *mss);
- #endif
- 	struct dst_entry *(*route_req)(const struct sock *sk, struct flowi *fl,
- 				       const struct request_sock *req);
-@@ -2101,13 +2099,12 @@ struct tcp_request_sock_ops {
- =
-
- #ifdef CONFIG_SYN_COOKIES
- static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
- *ops,
--					 struct request_sock *req,
- 					 const struct sock *sk, struct sk_buff *skb,
- 					 __u16 *mss)
- {
- 	tcp_synq_overflow(sk);
- 	__NET_INC_STATS(sock_net(sk), LINUX_MIB_SYNCOOKIESSENT);
--	return ops->cookie_init_seq(req, sk, skb, mss);
-+	return ops->cookie_init_seq(skb, mss);
- }
- #else
- static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
- *ops,
-diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
-index 514a37a63c24..5f2236d8d54a 100644
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -16,8 +16,6 @@
- #include <linux/siphash.h>
- #include <linux/kernel.h>
- #include <linux/export.h>
--#include <net/mptcp.h>
--#include <net/mptcp_v4.h>
- #include <net/secure_seq.h>
- #include <net/tcp.h>
- #include <net/route.h>
-@@ -181,8 +179,7 @@ u32 __cookie_v4_init_sequence(const struct iphdr *iph, =
-const struct tcphdr *th,
- }
- EXPORT_SYMBOL_GPL(__cookie_v4_init_sequence);
- =
-
--__u32 cookie_v4_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mssp)
-+__u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mssp)
- {
- 	const struct iphdr *iph =3D ip_hdr(skb);
- 	const struct tcphdr *th =3D tcp_hdr(skb);
-@@ -212,27 +209,9 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, stru=
-ct sk_buff *skb,
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
- 	struct sock *child;
- 	bool own_req;
--#ifdef CONFIG_MPTCP
--	int ret;
--#endif
- =
-
- 	child =3D icsk->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
- 						 NULL, &own_req);
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 4760ebe590e1..7c864ad41e6d 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -753,20 +753,6 @@ static int do_ip_setsockopt(struct sock *sk, int level,
+ 			inet->tos =3D val;
+ 			sk->sk_priority =3D rt_tos2priority(val);
+ 			sk_dst_reset(sk);
+-			/* Update TOS on mptcp subflow */
+-			if (is_meta_sk(sk)) {
+-				struct mptcp_tcp_sock *mptcp;
 -
--#ifdef CONFIG_MPTCP
--	if (!child)
--		goto listen_overflow;
+-				mptcp_for_each_sub(tcp_sk(sk)->mpcb, mptcp) {
+-					struct sock *sk_it =3D mptcp_to_sock(mptcp);
 -
--	ret =3D mptcp_check_req_master(sk, child, req, skb, 0);
--	if (ret < 0)
--		return NULL;
--
--	if (!ret)
--		return tcp_sk(child)->mpcb->master_sk;
--
--listen_overflow:
--#endif
--
- 	if (child) {
- 		refcount_set(&req->rsk_refcnt, 1);
- 		tcp_sk(child)->tsoffset =3D tsoff;
-@@ -305,7 +284,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
- {
- 	struct ip_options *opt =3D &TCP_SKB_CB(skb)->header.h4.opt;
- 	struct tcp_options_received tcp_opt;
--	struct mptcp_options_received mopt;
- 	struct inet_request_sock *ireq;
- 	struct tcp_request_sock *treq;
- 	struct tcp_sock *tp =3D tcp_sk(sk);
-@@ -335,8 +313,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
- =
-
- 	/* check for timestamp cookie support */
- 	memset(&tcp_opt, 0, sizeof(tcp_opt));
--	mptcp_init_mp_opt(&mopt);
--	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
-+	tcp_parse_options(sock_net(sk), skb, &tcp_opt, NULL, 0, NULL, NULL);
- =
-
- 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
- 		tsoff =3D secure_tcp_ts_off(sock_net(sk),
-@@ -349,12 +326,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct s=
-k_buff *skb)
- 		goto out;
- =
-
- 	ret =3D NULL;
--#ifdef CONFIG_MPTCP
--	if (mopt.saw_mpc)
--		req =3D inet_reqsk_alloc(&mptcp_request_sock_ops, sk, false); /* for saf=
-ety */
--	else
--#endif
--		req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safet=
-y */
-+	req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety=
- */
- 	if (!req)
- 		goto out;
- =
-
-@@ -374,8 +346,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
- 	ireq->sack_ok		=3D tcp_opt.sack_ok;
- 	ireq->wscale_ok		=3D tcp_opt.wscale_ok;
- 	ireq->tstamp_ok		=3D tcp_opt.saw_tstamp;
--	ireq->mptcp_rqsk	=3D 0;
--	ireq->saw_mpc		=3D 0;
- 	req->ts_recent		=3D tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
- 	treq->snt_synack	=3D 0;
- 	treq->tfo_listener	=3D false;
-@@ -384,9 +354,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
- =
-
- 	ireq->ir_iif =3D inet_request_bound_dev_if(sk, skb);
- =
-
--	if (mopt.saw_mpc)
--		mptcp_cookies_reqsk_init(req, &mopt, skb);
--
- 	/* We throwed the options of the initial SYN away, so we hope
- 	 * the ACK carries the same options again (see RFC1122 4.2.3.8)
- 	 */
-@@ -420,10 +387,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct =
-sk_buff *skb)
- 	/* Try to redo what tcp_v4_send_synack did. */
- 	req->rsk_window_clamp =3D tp->window_clamp ? :dst_metric(&rt->dst, RTAX_W=
-INDOW);
- =
-
--	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
--				       &req->rsk_rcv_wnd, &req->rsk_window_clamp,
--				       ireq->wscale_ok, &rcv_wscale,
--				       dst_metric(&rt->dst, RTAX_INITRWND));
-+	tcp_select_initial_window(sk, tcp_full_space(sk), req->mss,
-+				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
-+				  ireq->wscale_ok, &rcv_wscale,
-+				  dst_metric(&rt->dst, RTAX_INITRWND));
- =
-
- 	ireq->rcv_wscale  =3D rcv_wscale;
- 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), &rt->dst);
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index c2d5fa27ee8d..ea36a23267cf 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6674,7 +6674,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
- 	tcp_ecn_create_request(req, skb, sk, dst);
- =
-
- 	if (want_cookie) {
--		isn =3D cookie_init_sequence(af_ops, req, sk, skb, &req->mss);
-+		isn =3D cookie_init_sequence(af_ops, sk, skb, &req->mss);
- 		req->cookie_ts =3D tmp_opt.tstamp_ok;
- 		if (!tmp_opt.tstamp_ok)
- 			inet_rsk(req)->ecn_ok =3D 0;
-diff --git a/net/ipv6/syncookies.c b/net/ipv6/syncookies.c
-index bb86437a7003..fa3739f6de48 100644
---- a/net/ipv6/syncookies.c
-+++ b/net/ipv6/syncookies.c
-@@ -20,8 +20,6 @@
- #include <linux/kernel.h>
- #include <net/secure_seq.h>
- #include <net/ipv6.h>
--#include <net/mptcp.h>
--#include <net/mptcp_v6.h>
- #include <net/tcp.h>
- =
-
- #define COOKIEBITS 24	/* Upper bits store count */
-@@ -113,8 +111,7 @@ u32 __cookie_v6_init_sequence(const struct ipv6hdr *iph,
- }
- EXPORT_SYMBOL_GPL(__cookie_v6_init_sequence);
- =
-
--__u32 cookie_v6_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mssp)
-+__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mssp)
- {
- 	const struct ipv6hdr *iph =3D ipv6_hdr(skb);
- 	const struct tcphdr *th =3D tcp_hdr(skb);
-@@ -136,7 +133,6 @@ EXPORT_SYMBOL_GPL(__cookie_v6_check);
- struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
- {
- 	struct tcp_options_received tcp_opt;
--	struct mptcp_options_received mopt;
- 	struct inet_request_sock *ireq;
- 	struct tcp_request_sock *treq;
- 	struct ipv6_pinfo *np =3D inet6_sk(sk);
-@@ -166,8 +162,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
-_buff *skb)
- =
-
- 	/* check for timestamp cookie support */
- 	memset(&tcp_opt, 0, sizeof(tcp_opt));
--	mptcp_init_mp_opt(&mopt);
--	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
-+	tcp_parse_options(sock_net(sk), skb, &tcp_opt, NULL, 0, NULL, NULL);
- =
-
- 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
- 		tsoff =3D secure_tcpv6_ts_off(sock_net(sk),
-@@ -180,27 +175,14 @@ struct sock *cookie_v6_check(struct sock *sk, struct =
-sk_buff *skb)
- 		goto out;
- =
-
- 	ret =3D NULL;
--#ifdef CONFIG_MPTCP
--	if (mopt.saw_mpc)
--		req =3D inet_reqsk_alloc(&mptcp6_request_sock_ops, sk, false);
--	else
--#endif
--		req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
-+	req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
- 	if (!req)
- 		goto out;
- =
-
- 	ireq =3D inet_rsk(req);
--	ireq->mptcp_rqsk =3D 0;
--	ireq->saw_mpc =3D 0;
- 	treq =3D tcp_rsk(req);
- 	treq->tfo_listener =3D false;
- =
-
--	/* Must be done before anything else, as it initializes
--	 * hash_entry of the MPTCP request-sock.
--	 */
--	if (mopt.saw_mpc)
--		mptcp_cookies_reqsk_init(req, &mopt, skb);
--
- 	if (security_inet_conn_request(sk, skb, req))
- 		goto out_free;
- =
-
-@@ -264,10 +246,10 @@ struct sock *cookie_v6_check(struct sock *sk, struct =
-sk_buff *skb)
- 	}
- =
-
- 	req->rsk_window_clamp =3D tp->window_clamp ? :dst_metric(dst, RTAX_WINDOW=
-);
--	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
--				       &req->rsk_rcv_wnd, &req->rsk_window_clamp,
--				       ireq->wscale_ok, &rcv_wscale,
--				       dst_metric(dst, RTAX_INITRWND));
-+	tcp_select_initial_window(sk, tcp_full_space(sk), req->mss,
-+				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
-+				  ireq->wscale_ok, &rcv_wscale,
-+				  dst_metric(dst, RTAX_INITRWND));
- =
-
- 	ireq->rcv_wscale =3D rcv_wscale;
- 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), dst);
-diff --git a/net/mptcp/mptcp_ipv4.c b/net/mptcp/mptcp_ipv4.c
-index 00c54f421ba7..94bc1416af77 100644
---- a/net/mptcp/mptcp_ipv4.c
-+++ b/net/mptcp/mptcp_ipv4.c
-@@ -82,20 +82,6 @@ static int mptcp_v4_init_req(struct request_sock *req, c=
-onst struct sock *sk,
- 	return 0;
- }
- =
-
--#ifdef CONFIG_SYN_COOKIES
--static u32 mptcp_v4_cookie_init_seq(struct request_sock *req, const struct=
- sock *sk,
--				    const struct sk_buff *skb, __u16 *mssp)
--{
--	__u32 isn =3D cookie_v4_init_sequence(req, sk, skb, mssp);
--
--	tcp_rsk(req)->snt_isn =3D isn;
--
--	mptcp_reqsk_init(req, sk, skb, true);
--
--	return isn;
--}
--#endif
--
- /* May be called without holding the meta-level lock */
- static int mptcp_v4_join_init_req(struct request_sock *req, const struct s=
-ock *meta_sk,
- 				  struct sk_buff *skb, bool want_cookie)
-@@ -381,9 +367,6 @@ int mptcp_pm_v4_init(void)
- =
-
- 	mptcp_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
- 	mptcp_request_sock_ipv4_ops.init_req =3D mptcp_v4_init_req;
--#ifdef CONFIG_SYN_COOKIES
--	mptcp_request_sock_ipv4_ops.cookie_init_seq =3D mptcp_v4_cookie_init_seq;
--#endif
- 	mptcp_join_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
- 	mptcp_join_request_sock_ipv4_ops.init_req =3D mptcp_v4_join_init_req;
- =
-
-diff --git a/net/mptcp/mptcp_ipv6.c b/net/mptcp/mptcp_ipv6.c
-index 7249d171c9ef..297dd872fbfb 100644
---- a/net/mptcp/mptcp_ipv6.c
-+++ b/net/mptcp/mptcp_ipv6.c
-@@ -111,20 +111,6 @@ static int mptcp_v6_init_req(struct request_sock *req,=
- const struct sock *sk,
- 	return 0;
- }
- =
-
--#ifdef CONFIG_SYN_COOKIES
--static u32 mptcp_v6_cookie_init_seq(struct request_sock *req, const struct=
- sock *sk,
--				    const struct sk_buff *skb, __u16 *mssp)
--{
--	__u32 isn =3D cookie_v6_init_sequence(req, sk, skb, mssp);
--
--	tcp_rsk(req)->snt_isn =3D isn;
--
--	mptcp_reqsk_init(req, sk, skb, true);
--
--	return isn;
--}
--#endif
--
- /* May be called without holding the meta-level lock */
- static int mptcp_v6_join_init_req(struct request_sock *req, const struct s=
-ock *meta_sk,
- 				  struct sk_buff *skb, bool want_cookie)
-@@ -427,9 +413,6 @@ int mptcp_pm_v6_init(void)
- =
-
- 	mptcp_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
- 	mptcp_request_sock_ipv6_ops.init_req =3D mptcp_v6_init_req;
--#ifdef CONFIG_SYN_COOKIES
--	mptcp_request_sock_ipv6_ops.cookie_init_seq =3D mptcp_v6_cookie_init_seq;
--#endif
- =
-
- 	mptcp_join_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
- 	mptcp_join_request_sock_ipv6_ops.init_req =3D mptcp_v6_join_init_req;
+-					if (inet_sk(sk_it)->tos !=3D inet_sk(sk)->tos) {
+-						inet_sk(sk_it)->tos =3D inet_sk(sk)->tos;
+-						sk_it->sk_priority =3D sk->sk_priority;
+-						sk_dst_reset(sk_it);
+-					}
+-				}
+-			}
+ 		}
+ 		break;
+ 	case IP_TTL:
 -- =
 
 2.16.2
 
 
---===============3212411671625778990==--
+--===============5846449427501913554==--
