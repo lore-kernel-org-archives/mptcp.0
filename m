@@ -1,148 +1,598 @@
-Content-Type: multipart/mixed; boundary="===============0485776184270440856=="
+Content-Type: multipart/mixed; boundary="===============4407894155342951830=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] One approach to indirect call optimization
-Date: Tue, 11 Dec 2018 16:30:33 -0800
-Message-ID: <alpine.OSX.2.21.1812111628350.20227@ibriano-mobl3.jf.intel.com>
-In-Reply-To: CAKuKrBn1N30Lmme8vjU4Kxd7UvTix6m0QO2HnMh-uC6VgqMTEA@mail.gmail.com
+Subject: Re: [MPTCP] [RFC PATCH v4 08/17] mptcp: Create SUBFLOW socket for
+ incoming connections
+Date: Tue, 11 Dec 2018 22:08:40 -0800
+Message-ID: <20181212060840.GP41383@MacBook-Pro-19.local>
+In-Reply-To: 20181130201112.21806-9-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 892
+X-UID: 893
 
---===============0485776184270440856==
+--===============4407894155342951830==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-Matthieu -
+On 30/11/18 - 12:11:03, Mat Martineau wrote:
+> From: Peter Krystad <peter.krystad(a)intel.com>
+> =
 
-Thanks for sharing that link. I'll be watching the thread to see how Paolo =
+> Add subflow_request_sock type that extends tcp_request_sock
+> and add an is_mptcp flag to tcp_request_sock distinguish them.
+> =
 
-fixes things up for modules.
+> Override the listen() and accept() methods of the MPTCP
+> socket proto_ops so they may act on the subflow socket.
+> =
+
+> Override the conn_request() and syn_recv_sock() handlers
+> in the inet_connection_sock to handle incoming MPTCP
+> SYNs and the ACK to the response SYN.
+
+I'm having quite a hard time to understand how it works. Can you give some
+more details?
+
+Because, the difficult part about MPTCP is that incoming subflows are no
+more matching on a listener but rather on a "established" MPTCP-socket based
+on the token that is present in the TCP-options.
+And, I don't see how this is being taken care of here.
+
+Is the expectation that the app will call "listen()" and "accept()" on the
+MPTCP-socket ?
 
 
-Mat
+Thanks,
+Christoph
 
+> =
 
-On Fri, 7 Dec 2018, Matthieu Baerts wrote:
+> Add handling in tcp_output.c to add MP_CAPABLE to an outgoing
+> SYN-ACK response for a subflow_request_sock.
+> =
 
-> Hello,
->
-> Here is another approach: https://lkml.org/lkml/2018/12/5/1206
->
-> Matt
-> On Wed, Apr 25, 2018 at 1:35 AM Mat Martineau
-> <mathew.j.martineau(a)linux.intel.com> wrote:
->>
->>
->> I noticed this patch on netdev to avoid an indirect call to md5_lookup,
->> which was accepted. It is mitigating the cost of an existing indirect ca=
-ll
->> rather than adding a new one, but shows how the maintainers are looking =
-at
->> the problem.
->>
->> --
->> Mat Martineau
->> Intel OTC
->>
->> ---------- Forwarded message ----------
->> Date: Mon, 23 Apr 2018 14:46:25
->> From: Eric Dumazet <edumazet(a)google.com>
->> To: David S . Miller <davem(a)davemloft.net>
->> Cc: netdev <netdev(a)vger.kernel.org>, Eric Dumazet <edumazet(a)google.c=
-om>,
->>      Eric Dumazet <eric.dumazet(a)gmail.com>
->> Subject: [PATCH net-next] tcp: md5: only call tp->af_specific->md5_looku=
-p() for
->>      md5 sockets
->>
->> RETPOLINE made calls to tp->af_specific->md5_lookup() quite expensive,
->> given they have no result.
->> We can omit the calls for sockets that have no md5 keys.
->>
->> Signed-off-by: Eric Dumazet <edumazet(a)google.com>
->> ---
->>   net/ipv4/tcp_output.c | 26 ++++++++++++++------------
->>   1 file changed, 14 insertions(+), 12 deletions(-)
->>
->> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->> index 383cac0ff0ec059ca7dbc1a6304cc7f8183e008d..95feffb6d53f8a9eadfb15a2=
-fffeec498d6e993a 100644
->> --- a/net/ipv4/tcp_output.c
->> +++ b/net/ipv4/tcp_output.c
->> @@ -585,14 +585,15 @@ static unsigned int tcp_syn_options(struct sock *s=
-k, struct sk_buff *skb,
->>         unsigned int remaining =3D MAX_TCP_OPTION_SPACE;
->>         struct tcp_fastopen_request *fastopen =3D tp->fastopen_req;
->>
->> +       *md5 =3D NULL;
->>   #ifdef CONFIG_TCP_MD5SIG
->> -       *md5 =3D tp->af_specific->md5_lookup(sk, sk);
->> -       if (*md5) {
->> -               opts->options |=3D OPTION_MD5;
->> -               remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
->> +       if (unlikely(rcu_access_pointer(tp->md5sig_info))) {
->> +               *md5 =3D tp->af_specific->md5_lookup(sk, sk);
->> +               if (*md5) {
->> +                       opts->options |=3D OPTION_MD5;
->> +                       remaining -=3D TCPOLEN_MD5SIG_ALIGNED;
->> +               }
->>         }
->> -#else
->> -       *md5 =3D NULL;
->>   #endif
->>
->>         /* We always get an MSS option.  The option bytes which will be =
-seen in
->> @@ -720,14 +721,15 @@ static unsigned int tcp_established_options(struct=
- sock *sk, struct sk_buff *skb
->>
->>         opts->options =3D 0;
->>
->> +       *md5 =3D NULL;
->>   #ifdef CONFIG_TCP_MD5SIG
->> -       *md5 =3D tp->af_specific->md5_lookup(sk, sk);
->> -       if (unlikely(*md5)) {
->> -               opts->options |=3D OPTION_MD5;
->> -               size +=3D TCPOLEN_MD5SIG_ALIGNED;
->> +       if (unlikely(rcu_access_pointer(tp->md5sig_info))) {
->> +               *md5 =3D tp->af_specific->md5_lookup(sk, sk);
->> +               if (*md5) {
->> +                       opts->options |=3D OPTION_MD5;
->> +                       size +=3D TCPOLEN_MD5SIG_ALIGNED;
->> +               }
->>         }
->> -#else
->> -       *md5 =3D NULL;
->>   #endif
->>
->>         if (likely(tp->rx_opt.tstamp_ok)) {
->> --
->> 2.17.0.484.g0c8726318c-goog
->>
->> _______________________________________________
->> mptcp mailing list
->> mptcp(a)lists.01.org
->> https://lists.01.org/mailman/listinfo/mptcp
->
->
->
+> Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
+> ---
+>  include/linux/tcp.h   |   1 +
+>  include/net/mptcp.h   |  26 ++++++++++
+>  include/net/tcp.h     |   1 +
+>  net/ipv4/tcp_input.c  |   1 +
+>  net/ipv4/tcp_output.c |  21 +++++++-
+>  net/mptcp/options.c   |  15 ++++++
+>  net/mptcp/protocol.c  | 102 ++++++++++++++++++++++++++++++++++---
+>  net/mptcp/subflow.c   | 115 ++++++++++++++++++++++++++++++++++++++++--
+>  8 files changed, 271 insertions(+), 11 deletions(-)
+> =
+
+> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+> index 2622817ecd6b..b54ab3b5546a 100644
+> --- a/include/linux/tcp.h
+> +++ b/include/linux/tcp.h
+> @@ -148,6 +148,7 @@ struct tcp_request_sock {
+>  						  * FastOpen it's the seq#
+>  						  * after data-in-SYN.
+>  						  */
+> +	bool				is_mptcp;
+>  };
+>  =
+
+>  static inline struct tcp_request_sock *tcp_rsk(const struct request_sock=
+ *req)
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index a5c2baeb688f..ced33f1c529e 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -69,6 +69,23 @@ static inline struct subflow_sock *subflow_sk(const st=
+ruct sock *sk)
+>  	return (struct subflow_sock *)sk;
+>  }
+>  =
+
+> +struct subflow_request_sock {
+> +	struct	tcp_request_sock sk;
+> +	u8	mp_capable : 1,
+> +		mp_join : 1,
+> +		checksum : 1,
+> +		backup : 1,
+> +		version : 4;
+> +	u64	local_key;
+> +	u64	remote_key;
+> +};
+> +
+> +static inline
+> +struct subflow_request_sock *subflow_rsk(const struct request_sock *rsk)
+> +{
+> +	return (struct subflow_request_sock *)rsk;
+> +}
+> +
+>  #ifdef CONFIG_MPTCP
+>  =
+
+>  void mptcp_parse_option(const unsigned char *ptr, int opsize,
+> @@ -77,6 +94,8 @@ unsigned int mptcp_syn_options(struct sock *sk, u64 *lo=
+cal_key);
+>  void mptcp_rcv_synsent(struct sock *sk);
+>  unsigned int mptcp_established_options(struct sock *sk, u64 *local_key,
+>  				       u64 *remote_key);
+> +unsigned int mptcp_synack_options(struct request_sock *req,
+> +				  u64 *local_key, u64 *remote_key);
+>  =
+
+>  void mptcp_finish_connect(struct sock *sk, int mp_capable);
+>  =
+
+> @@ -104,6 +123,13 @@ static inline void mptcp_rcv_synsent(struct sock *sk)
+>  {
+>  }
+>  =
+
+> +static inline unsigned int mptcp_synack_options(struct request_sock *sk,
+> +						u64 *local_key,
+> +						u64 *remote_key)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline unsigned int mptcp_established_options(struct sock *sk,
+>  						     u64 *local_key,
+>  						     u64 *remote_key)
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index 254cf82e2ec6..1fc6362fa778 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -216,6 +216,7 @@ void tcp_time_wait(struct sock *sk, int state, int ti=
+meo);
+>  #define TCPOLEN_MSS_ALIGNED		4
+>  #define TCPOLEN_EXP_SMC_BASE_ALIGNED	8
+>  #define TCPOLEN_MPTCP_MPC_SYN		12
+> +#define TCPOLEN_MPTCP_MPC_SYNACK	20
+>  #define TCPOLEN_MPTCP_MPC_ACK		20
+>  =
+
+>  /* Flags in tp->nonagle */
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index eda515b141fb..00f7a3d88d66 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -6445,6 +6445,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_o=
+ps,
+>  =
+
+>  	tcp_rsk(req)->af_specific =3D af_ops;
+>  	tcp_rsk(req)->ts_off =3D 0;
+> +	tcp_rsk(req)->is_mptcp =3D 0;
+>  =
+
+>  	tcp_clear_options(&tmp_opt);
+>  	tmp_opt.mss_clamp =3D af_ops->mss_clamp;
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index 4f284ed879ba..6f723cdb5c8e 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -416,6 +416,7 @@ static inline bool tcp_urg_mode(const struct tcp_sock=
+ *tp)
+>  =
+
+>  /* MPTCP option subtypes */
+>  #define OPTION_MPTCP_MPC_SYN	(1 << 0)
+> +#define OPTION_MPTCP_MPC_SYNACK	(1 << 1)
+>  #define OPTION_MPTCP_MPC_ACK	(1 << 2)
+>  =
+
+>  struct tcp_out_options {
+> @@ -439,12 +440,15 @@ static void mptcp_options_write(__be32 *ptr, struct=
+ tcp_out_options *opts)
+>  		return;
+>  =
+
+>  	if ((OPTION_MPTCP_MPC_SYN |
+> +	     OPTION_MPTCP_MPC_SYNACK |
+>  	     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
+>  		u8 len;
+>  		__be64 key;
+>  =
+
+>  		if (OPTION_MPTCP_MPC_SYN & opts->suboptions)
+>  			len =3D TCPOLEN_MPTCP_MPC_SYN;
+> +		else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
+> +			len =3D TCPOLEN_MPTCP_MPC_SYNACK;
+>  		else
+>  			len =3D TCPOLEN_MPTCP_MPC_ACK;
+>  =
+
+> @@ -455,7 +459,8 @@ static void mptcp_options_write(__be32 *ptr, struct t=
+cp_out_options *opts)
+>  		key =3D cpu_to_be64(opts->sndr_key);
+>  		memcpy((u8 *) ptr, (u8 *) &key, 8);
+>  		ptr +=3D 2;
+> -		if (OPTION_MPTCP_MPC_ACK & opts->suboptions) {
+> +		if ((OPTION_MPTCP_MPC_SYNACK |
+> +		     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
+>  			key =3D cpu_to_be64(opts->rcvr_key);
+>  			memcpy((u8 *) ptr, (u8 *) &key, 8);
+>  			ptr +=3D 2;
+> @@ -762,6 +767,20 @@ static unsigned int tcp_synack_options(const struct =
+sock *sk,
+>  			remaining -=3D need;
+>  		}
+>  	}
+> +	if (tcp_rsk(req)->is_mptcp) {
+> +		u64 local_key;
+> +		u64 remote_key;
+> +		if (mptcp_synack_options(req, &local_key, &remote_key)) {
+> +			if (remaining >=3D TCPOLEN_MPTCP_MPC_SYNACK) {
+> +				opts->options |=3D OPTION_MPTCP;
+> +				opts->suboptions =3D OPTION_MPTCP_MPC_SYNACK;
+> +				opts->sndr_key =3D local_key;
+> +				opts->rcvr_key =3D remote_key;
+> +				remaining -=3D TCPOLEN_MPTCP_MPC_SYNACK;
+> +			}
+> +		}
+> +	}
+> +
+>  	smc_set_option_cond(tcp_sk(sk), ireq, opts, &remaining);
+>  =
+
+>  	return MAX_TCP_OPTION_SPACE - remaining;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index b0616f520da0..266a9f7fed0d 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -189,3 +189,18 @@ unsigned int mptcp_established_options(struct sock *=
+sk, u64 *local_key,
+>  	}
+>  	return 0;
+>  }
+> +
+> +unsigned int mptcp_synack_options(struct request_sock *req, u64 *local_k=
+ey,
+> +				  u64 *remote_key)
+> +{
+> +	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
+> +
+> +	pr_debug("subflow_req=3D%p", subflow_req);
+> +	if (subflow_req->mp_capable) {
+> +		*local_key =3D subflow_req->local_key;
+> +		*remote_key =3D subflow_req->remote_key;
+> +		pr_debug("local_key=3D%llu", *local_key);
+> +		pr_debug("remote_key=3D%llu", *remote_key);
+> +	}
+> +	return subflow_req->mp_capable;
+> +}
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1a3412a742ea..9f802f69a528 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -80,6 +80,45 @@ static void mptcp_close(struct sock *sk, long timeout)
+>  	}
+>  }
+>  =
+
+> +static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+> +				 bool kern)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +	struct socket *listener =3D msk->subflow;
+> +	struct socket *new_sock;
+> +	struct socket *mp;
+> +	struct subflow_sock *subflow;
+> +
+> +	pr_debug("msk=3D%p, listener=3D%p", msk, listener->sk);
+> +	*err =3D kernel_accept(listener, &new_sock, flags);
+> +	if (*err < 0)
+> +		return NULL;
+> +
+> +	subflow =3D subflow_sk(new_sock->sk);
+> +	pr_debug("new_sock=3D%p", subflow);
+> +
+> +	*err =3D sock_create(PF_INET, SOCK_STREAM, IPPROTO_MPTCP, &mp);
+> +	if (*err < 0) {
+> +		kernel_sock_shutdown(new_sock, SHUT_RDWR);
+> +		sock_release(new_sock);
+> +		return NULL;
+> +	}
+> +
+> +	msk =3D mptcp_sk(mp->sk);
+> +	pr_debug("msk=3D%p", msk);
+> +	subflow->conn =3D mp->sk;
+> +
+> +	if (subflow->mp_capable) {
+> +		msk->remote_key =3D subflow->remote_key;
+> +		msk->local_key =3D subflow->local_key;
+> +		msk->connection_list =3D new_sock;
+> +	} else {
+> +		msk->subflow =3D new_sock;
+> +	}
+> +
+> +	return mp->sk;
+> +}
+> +
+>  static int mptcp_get_port(struct sock *sk, unsigned short snum)
+>  {
+>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> @@ -129,11 +168,16 @@ static int subflow_create(struct sock *sock)
+>  int mptcp_stream_bind(struct socket *sock, struct sockaddr *uaddr, int a=
+ddr_len)
+>  {
+>  	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+> -	struct socket *subflow =3D msk->subflow;
+> +	int err;
+>  =
+
+> -	pr_debug("msk=3D%p, subflow=3D%p", msk, subflow->sk);
+> +	pr_debug("msk=3D%p", msk);
+>  =
+
+> -	return inet_bind(subflow, uaddr, addr_len);
+> +	if (msk->subflow =3D=3D NULL) {
+> +		err =3D subflow_create(sock->sk);
+> +		if (err)
+> +			return err;
+> +	}
+> +	return inet_bind(msk->subflow, uaddr, addr_len);
+>  }
+>  =
+
+>  int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+> @@ -153,12 +197,56 @@ int mptcp_stream_connect(struct socket *sock, struc=
+t sockaddr *uaddr,
+>  	return inet_stream_connect(msk->subflow, uaddr, addr_len, flags);
+>  }
+>  =
+
+> +int mptcp_stream_getname(struct socket *sock, struct sockaddr *uaddr, in=
+t peer)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+> +	struct socket *subflow;
+> +	int err =3D -EPERM;
+> +
+> +	if (msk->connection_list)
+> +		subflow =3D msk->connection_list;
+> +	else
+> +		subflow =3D msk->subflow;
+> +
+> +	err =3D inet_getname(subflow, uaddr, peer);
+> +
+> +	return err;
+> +}
+> +
+> +int mptcp_stream_listen(struct socket *sock, int backlog)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+> +	int err;
+> +
+> +	pr_debug("msk=3D%p", msk);
+> +
+> +	if (msk->subflow =3D=3D NULL) {
+> +		err =3D subflow_create(sock->sk);
+> +		if (err)
+> +			return err;
+> +	}
+> +	return inet_listen(msk->subflow, backlog);
+> +}
+> +
+> +int mptcp_stream_accept(struct socket *sock, struct socket *newsock, int=
+ flags,
+> +			bool kern)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+> +
+> +	pr_debug("msk=3D%p", msk);
+> +
+> +	if (msk->subflow =3D=3D NULL) {
+> +		return -EINVAL;
+> +	}
+> +	return inet_accept(sock, newsock, flags, kern);
+> +}
+> +
+>  static struct proto mptcp_prot =3D {
+>  	.name		=3D "MPTCP",
+>  	.owner		=3D THIS_MODULE,
+>  	.init		=3D mptcp_init_sock,
+>  	.close		=3D mptcp_close,
+> -	.accept		=3D inet_csk_accept,
+> +	.accept		=3D mptcp_accept,
+>  	.shutdown	=3D tcp_shutdown,
+>  	.sendmsg	=3D mptcp_sendmsg,
+>  	.recvmsg	=3D mptcp_recvmsg,
+> @@ -176,11 +264,11 @@ const struct proto_ops mptcp_stream_ops =3D {
+>  	.bind		   =3D mptcp_stream_bind,
+>  	.connect	   =3D mptcp_stream_connect,
+>  	.socketpair	   =3D sock_no_socketpair,
+> -	.accept		   =3D inet_accept,
+> -	.getname	   =3D inet_getname,
+> +	.accept		   =3D mptcp_stream_accept,
+> +	.getname	   =3D mptcp_stream_getname,
+>  	.poll		   =3D tcp_poll,
+>  	.ioctl		   =3D inet_ioctl,
+> -	.listen		   =3D inet_listen,
+> +	.listen		   =3D mptcp_stream_listen,
+>  	.shutdown	   =3D inet_shutdown,
+>  	.setsockopt	   =3D sock_common_setsockopt,
+>  	.getsockopt	   =3D sock_common_getsockopt,
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 5e5fdcb3175f..89fcc3b746eb 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -53,6 +53,40 @@ static int subflow_recvmsg(struct sock *sk, struct msg=
+hdr *msg, size_t len,
+>  	return tcp_recvmsg(sk, msg, len, nonblock, flags, addr_len);
+>  }
+>  =
+
+> +static void subflow_v4_init_req(struct request_sock *req,
+> +				const struct sock *sk_listener,
+> +				struct sk_buff *skb)
+> +{
+> +	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
+> +	struct subflow_sock *listener =3D subflow_sk(sk_listener);
+> +	struct tcp_options_received rx_opt;
+> +
+> +	tcp_rsk(req)->is_mptcp =3D 1;
+> +	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
+> +
+> +	tcp_request_sock_ipv4_ops.init_req(req, sk_listener, skb);
+> +
+> +	rx_opt.mptcp.flags =3D 0;
+> +	rx_opt.mptcp.mp_capable =3D 0;
+> +	rx_opt.mptcp.mp_join =3D 0;
+> +	rx_opt.mptcp.dss =3D 0;
+> +	mptcp_get_options(skb, &rx_opt);
+> +
+> +	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
+> +		subflow_req->mp_capable =3D 1;
+> +		if (rx_opt.mptcp.version >=3D listener->version)
+> +			subflow_req->version =3D listener->version;
+> +		else
+> +			subflow_req->version =3D rx_opt.mptcp.version;
+> +		if ((rx_opt.mptcp.flags & MPTCP_CAP_CHECKSUM_REQD) ||
+> +		    listener->checksum)
+> +			subflow_req->checksum =3D 1;
+> +		subflow_req->remote_key =3D rx_opt.mptcp.sndr_key;
+> +	} else {
+> +		subflow_req->mp_capable =3D 0;
+> +	}
+> +}
+> +
+>  static void subflow_finish_connect(struct sock *sk, const struct sk_buff=
+ *skb)
+>  {
+>  	struct subflow_sock *subflow =3D subflow_sk(sk);
+> @@ -68,13 +102,66 @@ static void subflow_finish_connect(struct sock *sk, =
+const struct sk_buff *skb)
+>  	}
+>  }
+>  =
+
+> +static struct request_sock_ops subflow_request_sock_ops;
+> +static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops;
+> +
+> +static int subflow_conn_request(struct sock *sk, struct sk_buff *skb)
+> +{
+> +	struct subflow_sock *subflow =3D subflow_sk(sk);
+> +
+> +	pr_debug("subflow=3D%p", subflow);
+> +
+> +	/* Never answer to SYNs sent to broadcast or multicast */
+> +	if (skb_rtable(skb)->rt_flags & (RTCF_BROADCAST | RTCF_MULTICAST))
+> +		goto drop;
+> +
+> +	return tcp_conn_request(&subflow_request_sock_ops,
+> +				&subflow_request_sock_ipv4_ops,
+> +				sk, skb);
+> +drop:
+> +	tcp_listendrop(sk);
+> +	return 0;
+> +}
+> +
+> +static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+> +					  struct sk_buff *skb,
+> +					  struct request_sock *req,
+> +					  struct dst_entry *dst,
+> +					  struct request_sock *req_unhash,
+> +					  bool *own_req)
+> +{
+> +	struct subflow_sock *listener =3D subflow_sk(sk);
+> +	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
+> +	struct sock *child;
+> +
+> +	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", sk, req, listener->conn);
+> +
+> +	child =3D tcp_v4_syn_recv_sock(sk, skb, req, dst, req_unhash, own_req);
+> +
+> +	if (child) {
+> +		struct subflow_sock *subflow =3D subflow_sk(child);
+> +
+> +		pr_debug("child=3D%p", child);
+> +		if (subflow_req->mp_capable) {
+> +			subflow->mp_capable =3D 1;
+> +			subflow->fourth_ack =3D 1;
+> +			subflow->remote_key =3D subflow_req->remote_key;
+> +			subflow->local_key =3D subflow_req->local_key;
+> +		} else {
+> +			subflow->mp_capable =3D 0;
+> +		}
+> +	}
+> +
+> +	return child;
+> +}
+> +
+>  const struct inet_connection_sock_af_ops subflow_specific =3D {
+>  	.queue_xmit	   =3D ip_queue_xmit,
+>  	.send_check	   =3D tcp_v4_send_check,
+>  	.rebuild_header	   =3D inet_sk_rebuild_header,
+>  	.sk_rx_dst_set	   =3D subflow_finish_connect,
+> -	.conn_request	   =3D tcp_v4_conn_request,
+> -	.syn_recv_sock	   =3D tcp_v4_syn_recv_sock,
+> +	.conn_request	   =3D subflow_conn_request,
+> +	.syn_recv_sock	   =3D subflow_syn_recv_sock,
+>  	.net_header_len	   =3D sizeof(struct iphdr),
+>  	.setsockopt	   =3D ip_setsockopt,
+>  	.getsockopt	   =3D ip_getsockopt,
+> @@ -112,6 +199,21 @@ static void subflow_close(struct sock *sk, long time=
+out)
+>  	tcp_close(sk, timeout);
+>  }
+>  =
+
+> +static struct sock *subflow_accept(struct sock *sk, int flags, int *err,
+> +				   bool kern)
+> +{
+> +	struct subflow_sock *subflow =3D subflow_sk(sk);
+> +	struct sock *child;
+> +
+> +	pr_debug("subflow=3D%p, conn=3D%p", subflow, subflow->conn);
+> +
+> +	child =3D inet_csk_accept(sk, flags, err, kern);
+> +
+> +	pr_debug("child=3D%p", child);
+> +
+> +	return child;
+> +}
+> +
+>  static void subflow_destroy(struct sock *sk)
+>  {
+>  	pr_debug("subflow=3D%p", sk);
+> @@ -125,7 +227,7 @@ static struct proto subflow_prot =3D {
+>  	.close		=3D subflow_close,
+>  	.connect	=3D subflow_connect,
+>  	.disconnect	=3D tcp_disconnect,
+> -	.accept		=3D inet_csk_accept,
+> +	.accept		=3D subflow_accept,
+>  	.ioctl		=3D tcp_ioctl,
+>  	.init		=3D subflow_init_sock,
+>  	.destroy	=3D subflow_destroy,
+> @@ -169,7 +271,14 @@ int mptcp_subflow_init(void)
+>  =
+
+>  	/* TODO: Register path manager callbacks. */
+>  =
+
+> +	subflow_request_sock_ops =3D tcp_request_sock_ops;
+> +	subflow_request_sock_ops.obj_size =3D sizeof(struct subflow_request_soc=
+k),
+> +
+> +	subflow_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
+> +	subflow_request_sock_ipv4_ops.init_req =3D subflow_v4_init_req;
+> +
+>  	subflow_prot.twsk_prot		=3D tcp_prot.twsk_prot;
+> +	subflow_prot.rsk_prot		=3D &subflow_request_sock_ops;
+>  	subflow_prot.h.hashinfo		=3D tcp_prot.h.hashinfo;
+>  	err =3D proto_register(&subflow_prot, 1);
+>  	if (err)
 > -- =
 
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
->
-> Disclaimer: https://www.tessares.net/mail-disclaimer/
->
+> 2.19.1
+> =
 
---
-Mat Martineau
-Intel OTC
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
 
---===============0485776184270440856==--
+--===============4407894155342951830==--
