@@ -1,140 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============0839425008442729397=="
+Content-Type: multipart/mixed; boundary="===============2087648871434649050=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v5 11/17] mptcp: Add setsockopt()/getsockopt()
- socket operations
-Date: Fri, 14 Dec 2018 14:27:09 -0800
-Message-ID: <20181214222715.23766-12-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH v5 12/17] mptcp: Add MPTCP to skb extensions
+Date: Fri, 14 Dec 2018 14:27:10 -0800
+Message-ID: <20181214222715.23766-13-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20181214222715.23766-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 912
+X-UID: 913
 
---===============0839425008442729397==
+--===============2087648871434649050==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Krystad <peter.krystad(a)intel.com>
+Add enum value for MPTCP and update config dependencies
 
-Signed-off-by: Peter Krystad <peter.krystad(a)intel.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 48 ++++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/subflow.c  | 22 ++++++++++++++++++++
- 2 files changed, 70 insertions(+)
+ include/linux/skbuff.h |  3 +++
+ include/net/mptcp.h    | 17 +++++++++++++++++
+ net/core/skbuff.c      |  7 +++++++
+ net/mptcp/Kconfig      |  1 +
+ 4 files changed, 28 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3d10ab287bd6..cbc93dd36588 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -131,6 +131,52 @@ static void mptcp_destroy(struct sock *sk)
- 	token_destroy(msk->token);
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index b7195402c642..6574f089c8e7 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -3907,6 +3907,9 @@ enum skb_ext_id {
+ #endif
+ #ifdef CONFIG_XFRM
+ 	SKB_EXT_SEC_PATH,
++#endif
++#if IS_ENABLED(CONFIG_MPTCP)
++	SKB_EXT_MPTCP,
+ #endif
+ 	SKB_EXT_NUM, /* must be last */
+ };
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 16052d0b0f3b..cd041f409841 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -51,6 +51,23 @@ static inline struct mptcp_sock *mptcp_sk(const struct s=
+ock *sk)
+ 	return (struct mptcp_sock *)sk;
  }
  =
 
-+static int mptcp_setsockopt(struct sock *sk, int level, int optname,
-+			    char __user *uoptval, unsigned int optlen)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct socket *subflow;
-+	char __kernel *optval;
++/* MPTCP sk_buff private control buffer */
++struct mptcp_skb_cb {
++	refcount_t	refcnt;
++	u64		data_ack;
++	u64		data_seq;
++	u32		subflow_seq;
++	u16		dll;
++	__sum16		checksum;
++	u8		use_map:1,
++			dsn64:1,
++			use_checksum:1,
++			data_fin:1,
++			use_ack:1,
++			ack64:1,
++			__unused:2;
++};
 +
-+	pr_debug("msk=3D%p", msk);
-+	if (msk->connection_list) {
-+		subflow =3D msk->connection_list;
-+		pr_debug("conn_list->subflow=3D%p", subflow->sk);
-+	} else {
-+		subflow =3D msk->subflow;
-+		pr_debug("subflow=3D%p", subflow->sk);
-+	}
-+
-+	/* will be treated as __user in subflow_setsockopt */
-+	optval =3D (char __kernel __force *) uoptval;
-+
-+	return kernel_setsockopt(subflow, level, optname, optval, optlen);
-+}
-+
-+static int mptcp_getsockopt(struct sock *sk, int level, int optname,
-+			    char __user *uoptval, int __user *uoption)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct socket *subflow;
-+	char __kernel *optval;
-+	int __kernel *option;
-+
-+	pr_debug("msk=3D%p", msk);
-+	if (msk->connection_list) {
-+		subflow =3D msk->connection_list;
-+		pr_debug("conn_list->subflow=3D%p", subflow->sk);
-+	} else {
-+		subflow =3D msk->subflow;
-+		pr_debug("subflow=3D%p", subflow->sk);
-+	}
-+
-+	/* will be treated as __user in subflow_getsockopt */
-+	optval =3D (char __kernel __force *) uoptval;
-+	option =3D (int __kernel __force *) uoption;
-+
-+	return kernel_getsockopt(subflow, level, optname, optval, option);
-+}
-+
- static int mptcp_get_port(struct sock *sk, unsigned short snum)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -282,6 +328,8 @@ static struct proto mptcp_prot =3D {
- 	.accept		=3D mptcp_accept,
- 	.shutdown	=3D tcp_shutdown,
- 	.destroy	=3D mptcp_destroy,
-+	.setsockopt	=3D mptcp_setsockopt,
-+	.getsockopt	=3D mptcp_getsockopt,
- 	.sendmsg	=3D mptcp_sendmsg,
- 	.recvmsg	=3D mptcp_recvmsg,
- 	.hash		=3D inet_hash,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7495e259ce5d..e0b4aa8fe51d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -249,6 +249,26 @@ static void subflow_destroy(struct sock *sk)
- 	tcp_v4_destroy_sock(sk);
- }
+ /* MPTCP subflow sock structure */
+ struct subflow_sock {
+ 	/* tcp_sock must be the first member */
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 97c574919d26..615eede6fd07 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -70,6 +70,7 @@
+ #include <net/checksum.h>
+ #include <net/ip6_checksum.h>
+ #include <net/xfrm.h>
++#include <net/mptcp.h>
  =
 
-+static int subflow_setsockopt(struct sock *sk, int level, int optname,
-+			      char __user *optval, unsigned int optlen)
-+{
-+	struct subflow_sock *subflow =3D subflow_sk(sk);
-+
-+	pr_debug("subflow=3D%p", subflow);
-+
-+	return tcp_setsockopt(sk, level, optname, optval, optlen);
-+}
-+
-+static int subflow_getsockopt(struct sock *sk, int level, int optname,
-+			      char __user *optval, int __user *option)
-+{
-+	struct subflow_sock *subflow =3D subflow_sk(sk);
-+
-+	pr_debug("subflow=3D%p", subflow);
-+
-+	return tcp_getsockopt(sk, level, optname, optval, option);
-+}
-+
- static struct proto subflow_prot =3D {
- 	.name		=3D "SUBFLOW",
- 	.owner		=3D THIS_MODULE,
-@@ -260,6 +280,8 @@ static struct proto subflow_prot =3D {
- 	.init		=3D subflow_init_sock,
- 	.destroy	=3D subflow_destroy,
- 	.shutdown	=3D tcp_shutdown,
-+	.setsockopt	=3D subflow_setsockopt,
-+	.getsockopt	=3D subflow_getsockopt,
- 	.keepalive	=3D tcp_set_keepalive,
- 	.recvmsg	=3D subflow_recvmsg,
- 	.sendmsg	=3D subflow_sendmsg,
+ #include <linux/uaccess.h>
+ #include <trace/events/skb.h>
+@@ -5561,6 +5562,9 @@ static const u8 skb_ext_type_len[] =3D {
+ #ifdef CONFIG_XFRM
+ 	[SKB_EXT_SEC_PATH] =3D SKB_EXT_CHUNKSIZEOF(struct sec_path),
+ #endif
++#if IS_ENABLED(CONFIG_MPTCP)
++	[SKB_EXT_MPTCP] =3D sizeof(struct mptcp_skb_cb),
++#endif
+ };
+ =
+
+ static void *skb_ext_get_ptr(struct skb_ext *ext, enum skb_ext_id id)
+@@ -5607,6 +5611,9 @@ static __always_inline unsigned int skb_ext_total_len=
+gth(void)
+ #endif
+ #ifdef CONFIG_XFRM
+ 		skb_ext_type_len[SKB_EXT_SEC_PATH] +
++#endif
++#if IS_ENABLED(CONFIG_MPTCP)
++		skb_ext_type_len[SKB_EXT_MPTCP] +
+ #endif
+ 		0;
+ }
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index 8e48190e5fed..59f204a31c25 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -2,6 +2,7 @@
+ config MPTCP
+ 	bool "Multipath TCP"
+ 	depends on INET
++	select SKB_EXTENSIONS
+ 	---help---
+ 	  Multipath TCP (MPTCP) connections send and receive data over multiple
+ 	  subflows in order to utilize multiple network paths. Each subflow
 -- =
 
 2.20.0
 
 
---===============0839425008442729397==--
+--===============2087648871434649050==--
