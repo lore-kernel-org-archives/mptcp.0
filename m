@@ -1,124 +1,186 @@
-Content-Type: multipart/mixed; boundary="===============2087648871434649050=="
+Content-Type: multipart/mixed; boundary="===============8502714107985093182=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v5 12/17] mptcp: Add MPTCP to skb extensions
-Date: Fri, 14 Dec 2018 14:27:10 -0800
-Message-ID: <20181214222715.23766-13-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH v5 13/17] tcp: Prevent coalesce and collapse when
+ skb->priv is used
+Date: Fri, 14 Dec 2018 14:27:11 -0800
+Message-ID: <20181214222715.23766-14-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20181214222715.23766-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 913
+X-UID: 914
 
---===============2087648871434649050==
+--===============8502714107985093182==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add enum value for MPTCP and update config dependencies
+The extended private data attached to an skb needs to be preserved as
+it passes through the TCP stack. Make sure that these skbs are not
+appended to others during coalesce or collapse, so the private data
+remains associated with the payload of the given skb.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/linux/skbuff.h |  3 +++
- include/net/mptcp.h    | 17 +++++++++++++++++
- net/core/skbuff.c      |  7 +++++++
- net/mptcp/Kconfig      |  1 +
- 4 files changed, 28 insertions(+)
+ include/net/mptcp.h   | 12 ++++++++++--
+ include/net/tcp.h     |  8 ++++++++
+ net/ipv4/tcp_input.c  | 10 ++++++++--
+ net/ipv4/tcp_output.c |  2 +-
+ 4 files changed, 27 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index b7195402c642..6574f089c8e7 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3907,6 +3907,9 @@ enum skb_ext_id {
- #endif
- #ifdef CONFIG_XFRM
- 	SKB_EXT_SEC_PATH,
-+#endif
-+#if IS_ENABLED(CONFIG_MPTCP)
-+	SKB_EXT_MPTCP,
- #endif
- 	SKB_EXT_NUM, /* must be last */
- };
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 16052d0b0f3b..cd041f409841 100644
+index cd041f409841..3e6d9ddd5356 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -51,6 +51,23 @@ static inline struct mptcp_sock *mptcp_sk(const struct s=
-ock *sk)
- 	return (struct mptcp_sock *)sk;
+@@ -16,8 +16,6 @@
+ #ifndef __NET_MPTCP_H
+ #define __NET_MPTCP_H
+ =
+
+-#include <linux/tcp.h>
+-
+ /* MPTCP option subtypes */
+ =
+
+ #define MPTCPOPT_MP_CAPABLE	0
+@@ -125,6 +123,11 @@ void mptcp_subflow_exit(void);
+ void mptcp_get_options(const struct sk_buff *skb,
+ 		       struct tcp_options_received *options);
+ =
+
++static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
++{
++	return skb_ext_exist(skb, SKB_EXT_MPTCP);
++}
++
+ extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
+ =
+
+ void token_init(void);
+@@ -180,5 +183,10 @@ static inline unsigned int mptcp_established_options(s=
+truct sock *sk,
+ 	return 0;
  }
  =
 
-+/* MPTCP sk_buff private control buffer */
-+struct mptcp_skb_cb {
-+	refcount_t	refcnt;
-+	u64		data_ack;
-+	u64		data_seq;
-+	u32		subflow_seq;
-+	u16		dll;
-+	__sum16		checksum;
-+	u8		use_map:1,
-+			dsn64:1,
-+			use_checksum:1,
-+			data_fin:1,
-+			use_ack:1,
-+			ack64:1,
-+			__unused:2;
-+};
++static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
++{
++	return false;
++}
 +
- /* MPTCP subflow sock structure */
- struct subflow_sock {
- 	/* tcp_sock must be the first member */
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 97c574919d26..615eede6fd07 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -70,6 +70,7 @@
- #include <net/checksum.h>
- #include <net/ip6_checksum.h>
- #include <net/xfrm.h>
+ #endif /* CONFIG_MPTCP */
+ #endif /* __NET_MPTCP_H */
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 6122e8e36f01..7aff29916f2b 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -43,6 +43,7 @@
+ #include <net/tcp_states.h>
+ #include <net/inet_ecn.h>
+ #include <net/dst.h>
 +#include <net/mptcp.h>
  =
 
- #include <linux/uaccess.h>
- #include <trace/events/skb.h>
-@@ -5561,6 +5562,9 @@ static const u8 skb_ext_type_len[] =3D {
- #ifdef CONFIG_XFRM
- 	[SKB_EXT_SEC_PATH] =3D SKB_EXT_CHUNKSIZEOF(struct sec_path),
- #endif
-+#if IS_ENABLED(CONFIG_MPTCP)
-+	[SKB_EXT_MPTCP] =3D sizeof(struct mptcp_skb_cb),
-+#endif
- };
+ #include <linux/seq_file.h>
+ #include <linux/memcontrol.h>
+@@ -954,6 +955,13 @@ static inline bool tcp_skb_can_collapse_to(const struc=
+t sk_buff *skb)
+ 	return likely(!TCP_SKB_CB(skb)->eor);
+ }
  =
 
- static void *skb_ext_get_ptr(struct skb_ext *ext, enum skb_ext_id id)
-@@ -5607,6 +5611,9 @@ static __always_inline unsigned int skb_ext_total_len=
-gth(void)
- #endif
- #ifdef CONFIG_XFRM
- 		skb_ext_type_len[SKB_EXT_SEC_PATH] +
-+#endif
-+#if IS_ENABLED(CONFIG_MPTCP)
-+		skb_ext_type_len[SKB_EXT_MPTCP] +
- #endif
- 		0;
- }
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index 8e48190e5fed..59f204a31c25 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -2,6 +2,7 @@
- config MPTCP
- 	bool "Multipath TCP"
- 	depends on INET
-+	select SKB_EXTENSIONS
- 	---help---
- 	  Multipath TCP (MPTCP) connections send and receive data over multiple
- 	  subflows in order to utilize multiple network paths. Each subflow
++static inline bool tcp_skb_can_collapse(const struct sk_buff *to,
++					const struct sk_buff *from)
++{
++	return likely(tcp_skb_can_collapse_to(to) &&
++		      !mptcp_skb_ext_exist(from));
++}
++
+ /* Events passed to congestion control interface */
+ enum tcp_ca_event {
+ 	CA_EVENT_TX_START,	/* first transmit when no packets in flight */
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 9f0a759cff2a..4124c6b96f2b 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -1396,7 +1396,7 @@ static struct sk_buff *tcp_shift_skb_data(struct sock=
+ *sk, struct sk_buff *skb,
+ 	if ((TCP_SKB_CB(prev)->sacked & TCPCB_TAGBITS) !=3D TCPCB_SACKED_ACKED)
+ 		goto fallback;
+ =
+
+-	if (!tcp_skb_can_collapse_to(prev))
++	if (!tcp_skb_can_collapse(prev, skb))
+ 		goto fallback;
+ =
+
+ 	in_sack =3D !after(start_seq, TCP_SKB_CB(skb)->seq) &&
+@@ -4363,6 +4363,9 @@ static bool tcp_try_coalesce(struct sock *sk,
+ 	if (TCP_SKB_CB(from)->seq !=3D TCP_SKB_CB(to)->end_seq)
+ 		return false;
+ =
+
++	if (mptcp_skb_ext_exist(from))
++		return false;
++
+ #ifdef CONFIG_TLS_DEVICE
+ 	if (from->decrypted !=3D to->decrypted)
+ 		return false;
+@@ -4880,10 +4883,12 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *=
+list, struct rb_root *root,
+ =
+
+ 		/* The first skb to collapse is:
+ 		 * - not SYN/FIN and
++		 * - does not use priv_data
+ 		 * - bloated or contains data before "start" or
+ 		 *   overlaps to the next one.
+ 		 */
+ 		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
++		    !mptcp_skb_ext_exist(skb) &&
+ 		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
+ 		     before(TCP_SKB_CB(skb)->seq, start))) {
+ 			end_of_skbs =3D false;
+@@ -4899,7 +4904,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
+st, struct rb_root *root,
+ 		/* Decided to skip this, advance start seq. */
+ 		start =3D TCP_SKB_CB(skb)->end_seq;
+ 	}
+-	if (end_of_skbs ||
++	if (end_of_skbs || mptcp_skb_ext_exist(skb) ||
+ 	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
+ 		return;
+ =
+
+@@ -4942,6 +4947,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
+st, struct rb_root *root,
+ 				skb =3D tcp_collapse_one(sk, skb, list, root);
+ 				if (!skb ||
+ 				    skb =3D=3D tail ||
++				    mptcp_skb_ext_exist(skb) ||
+ 				    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
+ 					goto end;
+ #ifdef CONFIG_TLS_DEVICE
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 89b339c26f7b..48b03106231d 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2901,7 +2901,7 @@ static void tcp_retrans_try_collapse(struct sock *sk,=
+ struct sk_buff *to,
+ 		if (!tcp_can_collapse(sk, skb))
+ 			break;
+ =
+
+-		if (!tcp_skb_can_collapse_to(to))
++		if (!tcp_skb_can_collapse(to, skb))
+ 			break;
+ =
+
+ 		space -=3D skb->len;
 -- =
 
 2.20.0
 
 
---===============2087648871434649050==--
+--===============8502714107985093182==--
