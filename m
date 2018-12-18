@@ -1,430 +1,720 @@
-Content-Type: multipart/mixed; boundary="===============4737433251867838961=="
+Content-Type: multipart/mixed; boundary="===============0586156703058858686=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 mptcp-net-next 07/12] mptcp: Remove support for TCP
- SYN-cookies
-Date: Mon, 17 Dec 2018 17:38:03 -0800
-Message-ID: <20181218013808.4819-8-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH v2 mptcp-net-next 10/12] mptcp: Remove
+ scheduler-selection support
+Date: Mon, 17 Dec 2018 17:38:06 -0800
+Message-ID: <20181218013808.4819-11-cpaasch@apple.com>
 In-Reply-To: 20181218013808.4819-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 929
+X-UID: 930
 
---===============4737433251867838961==
+--===============0586156703058858686==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/net/tcp.h      | 13 +++++--------
- net/ipv4/syncookies.c  | 47 +++++++----------------------------------------
- net/ipv4/tcp_input.c   |  2 +-
- net/ipv6/syncookies.c  | 32 +++++++-------------------------
- net/mptcp/mptcp_ipv4.c | 17 -----------------
- net/mptcp/mptcp_ipv6.c | 17 -----------------
- 6 files changed, 20 insertions(+), 108 deletions(-)
+ include/linux/tcp.h      |   3 -
+ include/net/mptcp.h      |  41 ++-------
+ include/uapi/linux/tcp.h |   1 -
+ net/ipv4/tcp.c           |  46 ----------
+ net/mptcp/Kconfig        |  32 -------
+ net/mptcp/mptcp_ctrl.c   |  35 +-------
+ net/mptcp/mptcp_output.c |   7 +-
+ net/mptcp/mptcp_sched.c  | 223 ++++---------------------------------------=
+----
+ 8 files changed, 28 insertions(+), 360 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index c4a9297da7a0..f206ea426018 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -644,8 +644,7 @@ static inline u32 tcp_cookie_time(void)
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 01321044047c..02af5c56d2e6 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -476,17 +476,14 @@ struct tcp_sock {
+ 		close_it:1,	/* Must close socket in mptcp_data_ready? */
+ 		closing:1,
+ 		mptcp_ver:4,
+-		mptcp_sched_setsockopt:1,
+ 		mptcp_pm_setsockopt:1,
+ 		record_master_info:1;
+ 	struct mptcp_tcp_sock *mptcp;
+ #ifdef CONFIG_MPTCP
+-#define MPTCP_SCHED_NAME_MAX 16
+ #define MPTCP_PM_NAME_MAX 16
+ 	struct hlist_nulls_node tk_table;
+ 	u32		mptcp_loc_token;
+ 	u64		mptcp_loc_key;
+-	char		mptcp_sched_name[MPTCP_SCHED_NAME_MAX];
+ 	char		mptcp_pm_name[MPTCP_PM_NAME_MAX];
+ #endif /* CONFIG_MPTCP */
+ };
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index e1e7619a85ca..90a9e220702a 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -170,8 +170,7 @@ struct mptcp_tcp_sock {
+ 	u8	loc_id;
+ 	u8	rem_id;
  =
 
- u32 __cookie_v4_init_sequence(const struct iphdr *iph, const struct tcphdr=
- *th,
- 			      u16 *mssp);
--__u32 cookie_v4_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mss);
-+__u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mss);
- u64 cookie_init_timestamp(struct request_sock *req);
- bool cookie_timestamp_decode(const struct net *net,
- 			     struct tcp_options_received *opt);
-@@ -659,8 +658,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
-_buff *skb);
+-#define MPTCP_SCHED_SIZE 4
+-	u8	mptcp_sched[MPTCP_SCHED_SIZE] __aligned(8);
++	u32	last_rbuf_opti;
  =
 
- u32 __cookie_v6_init_sequence(const struct ipv6hdr *iph,
- 			      const struct tcphdr *th, u16 *mssp);
--__u32 cookie_v6_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mss);
-+__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mss);
- #endif
- /* tcp_output.c */
+ 	int	init_rcv_wnd;
+ 	u32	infinite_cutoff_seq;
+@@ -219,23 +218,6 @@ struct mptcp_pm_ops {
+ 	struct module	*owner;
+ };
  =
 
-@@ -2086,8 +2084,8 @@ struct tcp_request_sock_ops {
- 			struct sk_buff *skb,
- 			bool want_cookie);
- #ifdef CONFIG_SYN_COOKIES
--	__u32 (*cookie_init_seq)(struct request_sock *req, const struct sock *sk,
--				 const struct sk_buff *skb, __u16 *mss);
-+	__u32 (*cookie_init_seq)(const struct sk_buff *skb,
-+				 __u16 *mss);
- #endif
- 	struct dst_entry *(*route_req)(const struct sock *sk, struct flowi *fl,
- 				       const struct request_sock *req);
-@@ -2101,13 +2099,12 @@ struct tcp_request_sock_ops {
- =
-
- #ifdef CONFIG_SYN_COOKIES
- static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
- *ops,
--					 struct request_sock *req,
- 					 const struct sock *sk, struct sk_buff *skb,
- 					 __u16 *mss)
- {
- 	tcp_synq_overflow(sk);
- 	__NET_INC_STATS(sock_net(sk), LINUX_MIB_SYNCOOKIESSENT);
--	return ops->cookie_init_seq(req, sk, skb, mss);
-+	return ops->cookie_init_seq(skb, mss);
- }
- #else
- static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
- *ops,
-diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
-index 514a37a63c24..5f2236d8d54a 100644
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -16,8 +16,6 @@
- #include <linux/siphash.h>
- #include <linux/kernel.h>
- #include <linux/export.h>
--#include <net/mptcp.h>
--#include <net/mptcp_v4.h>
- #include <net/secure_seq.h>
- #include <net/tcp.h>
- #include <net/route.h>
-@@ -181,8 +179,7 @@ u32 __cookie_v4_init_sequence(const struct iphdr *iph, =
-const struct tcphdr *th,
- }
- EXPORT_SYMBOL_GPL(__cookie_v4_init_sequence);
- =
-
--__u32 cookie_v4_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mssp)
-+__u32 cookie_v4_init_sequence(const struct sk_buff *skb, __u16 *mssp)
- {
- 	const struct iphdr *iph =3D ip_hdr(skb);
- 	const struct tcphdr *th =3D tcp_hdr(skb);
-@@ -212,27 +209,9 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, stru=
-ct sk_buff *skb,
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
- 	struct sock *child;
- 	bool own_req;
--#ifdef CONFIG_MPTCP
--	int ret;
--#endif
- =
-
- 	child =3D icsk->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
- 						 NULL, &own_req);
+-#define MPTCP_SCHED_NAME_MAX 16
+-struct mptcp_sched_ops {
+-	struct list_head list;
 -
--#ifdef CONFIG_MPTCP
--	if (!child)
--		goto listen_overflow;
+-	struct sock *		(*get_subflow)(struct sock *meta_sk,
+-					       struct sk_buff *skb,
+-					       bool zero_wnd_test);
+-	struct sk_buff *	(*next_segment)(struct sock *meta_sk,
+-						int *reinject,
+-						struct sock **subsk,
+-						unsigned int *limit);
+-	void			(*init)(struct sock *sk);
 -
--	ret =3D mptcp_check_req_master(sk, child, req, skb, 0);
--	if (ret < 0)
--		return NULL;
+-	char			name[MPTCP_SCHED_NAME_MAX];
+-	struct module		*owner;
+-};
 -
--	if (!ret)
--		return tcp_sk(child)->mpcb->master_sk;
+ struct mptcp_cb {
+ 	/* list of sockets in this multipath connection */
+ 	struct hlist_head conn_list;
+@@ -261,10 +243,6 @@ struct mptcp_cb {
+ 		snd_hiseq_index:1, /* Index in snd_high_order of snd_nxt */
+ 		rcv_hiseq_index:1; /* Index in rcv_high_order of rcv_nxt */
+ =
+
+-#define MPTCP_SCHED_DATA_SIZE 8
+-	u8 mptcp_sched[MPTCP_SCHED_DATA_SIZE] __aligned(8);
+-	struct mptcp_sched_ops *sched_ops;
 -
--listen_overflow:
--#endif
--
- 	if (child) {
- 		refcount_set(&req->rsk_refcnt, 1);
- 		tcp_sk(child)->tsoffset =3D tsoff;
-@@ -305,7 +284,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
- {
- 	struct ip_options *opt =3D &TCP_SKB_CB(skb)->header.h4.opt;
- 	struct tcp_options_received tcp_opt;
--	struct mptcp_options_received mopt;
- 	struct inet_request_sock *ireq;
- 	struct tcp_request_sock *treq;
- 	struct tcp_sock *tp =3D tcp_sk(sk);
-@@ -335,8 +313,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
+ 	u64	infinite_rcv_seq;
  =
 
- 	/* check for timestamp cookie support */
- 	memset(&tcp_opt, 0, sizeof(tcp_opt));
--	mptcp_init_mp_opt(&mopt);
--	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
-+	tcp_parse_options(sock_net(sk), skb, &tcp_opt, NULL, 0, NULL, NULL);
+ 	/***** Start of fields, used for connection closure */
+@@ -822,19 +800,18 @@ void mptcp_init_path_manager(struct mptcp_cb *mpcb);
+ void mptcp_cleanup_path_manager(struct mptcp_cb *mpcb);
+ void mptcp_fallback_default(struct mptcp_cb *mpcb);
+ void mptcp_get_default_path_manager(char *name);
+-int mptcp_set_scheduler(struct sock *sk, const char *name);
+ int mptcp_set_path_manager(struct sock *sk, const char *name);
+ int mptcp_set_default_path_manager(const char *name);
+ extern struct mptcp_pm_ops mptcp_pm_default;
  =
 
- 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
- 		tsoff =3D secure_tcp_ts_off(sock_net(sk),
-@@ -349,12 +326,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct s=
-k_buff *skb)
- 		goto out;
+-/* MPTCP-scheduler registration/initialization functions */
+-int mptcp_register_scheduler(struct mptcp_sched_ops *sched);
+-void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
+-void mptcp_init_scheduler(struct mptcp_cb *mpcb);
+-void mptcp_cleanup_scheduler(struct mptcp_cb *mpcb);
+-void mptcp_get_default_scheduler(char *name);
+-int mptcp_set_default_scheduler(const char *name);
+-extern struct mptcp_sched_ops mptcp_sched_default;
++void mptcp_sched_init(struct sock *sk);
++struct sock *mptcp_get_available_subflow(struct sock *meta_sk,
++					 struct sk_buff *skb,
++					 bool zero_wnd_test);
++struct sk_buff *mptcp_next_segment(struct sock *meta_sk,
++				   int *reinject,
++				   struct sock **subsk,
++				   unsigned int *limit);
  =
 
- 	ret =3D NULL;
--#ifdef CONFIG_MPTCP
--	if (mopt.saw_mpc)
--		req =3D inet_reqsk_alloc(&mptcp_request_sock_ops, sk, false); /* for saf=
-ety */
--	else
--#endif
--		req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safet=
-y */
-+	req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety=
- */
- 	if (!req)
- 		goto out;
+ /* Initializes function-pointers and MPTCP-flags */
+ static inline void mptcp_init_tcp_sock(struct sock *sk)
+diff --git a/include/uapi/linux/tcp.h b/include/uapi/linux/tcp.h
+index 072ce786a0fd..2fcfa2257cc9 100644
+--- a/include/uapi/linux/tcp.h
++++ b/include/uapi/linux/tcp.h
+@@ -134,7 +134,6 @@ enum {
+ #define TCP_CM_INQ		TCP_INQ
  =
 
-@@ -374,8 +346,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
- 	ireq->sack_ok		=3D tcp_opt.sack_ok;
- 	ireq->wscale_ok		=3D tcp_opt.wscale_ok;
- 	ireq->tstamp_ok		=3D tcp_opt.saw_tstamp;
--	ireq->mptcp_rqsk	=3D 0;
--	ireq->saw_mpc		=3D 0;
- 	req->ts_recent		=3D tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
- 	treq->snt_synack	=3D 0;
- 	treq->tfo_listener	=3D false;
-@@ -384,9 +354,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
-_buff *skb)
+ #define MPTCP_ENABLED		42
+-#define MPTCP_SCHEDULER		43
+ #define MPTCP_PATH_MANAGER	44
+ #define MPTCP_INFO		45
  =
 
- 	ireq->ir_iif =3D inet_request_bound_dev_if(sk, skb);
- =
-
--	if (mopt.saw_mpc)
--		mptcp_cookies_reqsk_init(req, &mopt, skb);
--
- 	/* We throwed the options of the initial SYN away, so we hope
- 	 * the ACK carries the same options again (see RFC1122 4.2.3.8)
- 	 */
-@@ -420,10 +387,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct =
-sk_buff *skb)
- 	/* Try to redo what tcp_v4_send_synack did. */
- 	req->rsk_window_clamp =3D tp->window_clamp ? :dst_metric(&rt->dst, RTAX_W=
-INDOW);
- =
-
--	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
--				       &req->rsk_rcv_wnd, &req->rsk_window_clamp,
--				       ireq->wscale_ok, &rcv_wscale,
--				       dst_metric(&rt->dst, RTAX_INITRWND));
-+	tcp_select_initial_window(sk, tcp_full_space(sk), req->mss,
-+				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
-+				  ireq->wscale_ok, &rcv_wscale,
-+				  dst_metric(&rt->dst, RTAX_INITRWND));
- =
-
- 	ireq->rcv_wscale  =3D rcv_wscale;
- 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), &rt->dst);
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index c2d5fa27ee8d..ea36a23267cf 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6674,7 +6674,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
- 	tcp_ecn_create_request(req, skb, sk, dst);
- =
-
- 	if (want_cookie) {
--		isn =3D cookie_init_sequence(af_ops, req, sk, skb, &req->mss);
-+		isn =3D cookie_init_sequence(af_ops, sk, skb, &req->mss);
- 		req->cookie_ts =3D tmp_opt.tstamp_ok;
- 		if (!tmp_opt.tstamp_ok)
- 			inet_rsk(req)->ecn_ok =3D 0;
-diff --git a/net/ipv6/syncookies.c b/net/ipv6/syncookies.c
-index bb86437a7003..fa3739f6de48 100644
---- a/net/ipv6/syncookies.c
-+++ b/net/ipv6/syncookies.c
-@@ -20,8 +20,6 @@
- #include <linux/kernel.h>
- #include <net/secure_seq.h>
- #include <net/ipv6.h>
--#include <net/mptcp.h>
--#include <net/mptcp_v6.h>
- #include <net/tcp.h>
- =
-
- #define COOKIEBITS 24	/* Upper bits store count */
-@@ -113,8 +111,7 @@ u32 __cookie_v6_init_sequence(const struct ipv6hdr *iph,
- }
- EXPORT_SYMBOL_GPL(__cookie_v6_init_sequence);
- =
-
--__u32 cookie_v6_init_sequence(struct request_sock *req, const struct sock =
-*sk,
--			      const struct sk_buff *skb, __u16 *mssp)
-+__u32 cookie_v6_init_sequence(const struct sk_buff *skb, __u16 *mssp)
- {
- 	const struct ipv6hdr *iph =3D ipv6_hdr(skb);
- 	const struct tcphdr *th =3D tcp_hdr(skb);
-@@ -136,7 +133,6 @@ EXPORT_SYMBOL_GPL(__cookie_v6_check);
- struct sock *cookie_v6_check(struct sock *sk, struct sk_buff *skb)
- {
- 	struct tcp_options_received tcp_opt;
--	struct mptcp_options_received mopt;
- 	struct inet_request_sock *ireq;
- 	struct tcp_request_sock *treq;
- 	struct ipv6_pinfo *np =3D inet6_sk(sk);
-@@ -166,8 +162,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
-_buff *skb)
- =
-
- 	/* check for timestamp cookie support */
- 	memset(&tcp_opt, 0, sizeof(tcp_opt));
--	mptcp_init_mp_opt(&mopt);
--	tcp_parse_options(sock_net(sk), skb, &tcp_opt, &mopt, 0, NULL, NULL);
-+	tcp_parse_options(sock_net(sk), skb, &tcp_opt, NULL, 0, NULL, NULL);
- =
-
- 	if (tcp_opt.saw_tstamp && tcp_opt.rcv_tsecr) {
- 		tsoff =3D secure_tcpv6_ts_off(sock_net(sk),
-@@ -180,27 +175,14 @@ struct sock *cookie_v6_check(struct sock *sk, struct =
-sk_buff *skb)
- 		goto out;
- =
-
- 	ret =3D NULL;
--#ifdef CONFIG_MPTCP
--	if (mopt.saw_mpc)
--		req =3D inet_reqsk_alloc(&mptcp6_request_sock_ops, sk, false);
--	else
--#endif
--		req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
-+	req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
- 	if (!req)
- 		goto out;
- =
-
- 	ireq =3D inet_rsk(req);
--	ireq->mptcp_rqsk =3D 0;
--	ireq->saw_mpc =3D 0;
- 	treq =3D tcp_rsk(req);
- 	treq->tfo_listener =3D false;
- =
-
--	/* Must be done before anything else, as it initializes
--	 * hash_entry of the MPTCP request-sock.
--	 */
--	if (mopt.saw_mpc)
--		mptcp_cookies_reqsk_init(req, &mopt, skb);
--
- 	if (security_inet_conn_request(sk, skb, req))
- 		goto out_free;
- =
-
-@@ -264,10 +246,10 @@ struct sock *cookie_v6_check(struct sock *sk, struct =
-sk_buff *skb)
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index b2dac73903be..3f570b2c7eea 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2802,33 +2802,6 @@ static int do_tcp_setsockopt(struct sock *sk, int le=
+vel,
+ 		return tcp_fastopen_reset_cipher(net, sk, key, sizeof(key));
  	}
+ #ifdef CONFIG_MPTCP
+-	case MPTCP_SCHEDULER: {
+-		char name[MPTCP_SCHED_NAME_MAX];
+-
+-		if (optlen < 1)
+-			return -EINVAL;
+-
+-		/* Cannot be used if MPTCP is not used or we already have
+-		 * established an MPTCP-connection.
+-		 */
+-		if (mptcp_init_failed || !sysctl_mptcp_enabled ||
+-		    sk->sk_state !=3D TCP_CLOSE)
+-			return -EPERM;
+-
+-		val =3D strncpy_from_user(name, optval,
+-					min_t(long, MPTCP_SCHED_NAME_MAX - 1,
+-					      optlen));
+-
+-		if (val < 0)
+-			return -EFAULT;
+-		name[val] =3D 0;
+-
+-		lock_sock(sk);
+-		err =3D mptcp_set_scheduler(sk, name);
+-		release_sock(sk);
+-		return err;
+-	}
+-
+ 	case MPTCP_PATH_MANAGER: {
+ 		char name[MPTCP_PM_NAME_MAX];
  =
 
- 	req->rsk_window_clamp =3D tp->window_clamp ? :dst_metric(dst, RTAX_WINDOW=
-);
--	tp->ops->select_initial_window(sk, tcp_full_space(sk), req->mss,
--				       &req->rsk_rcv_wnd, &req->rsk_window_clamp,
--				       ireq->wscale_ok, &rcv_wscale,
--				       dst_metric(dst, RTAX_INITRWND));
-+	tcp_select_initial_window(sk, tcp_full_space(sk), req->mss,
-+				  &req->rsk_rcv_wnd, &req->rsk_window_clamp,
-+				  ireq->wscale_ok, &rcv_wscale,
-+				  dst_metric(dst, RTAX_INITRWND));
+@@ -3688,25 +3661,6 @@ static int do_tcp_getsockopt(struct sock *sk, int le=
+vel,
+ 	}
+ #endif
+ #ifdef CONFIG_MPTCP
+-	case MPTCP_SCHEDULER:
+-		if (get_user(len, optlen))
+-			return -EFAULT;
+-		len =3D min_t(unsigned int, len, MPTCP_SCHED_NAME_MAX);
+-		if (put_user(len, optlen))
+-			return -EFAULT;
+-
+-		if (mptcp(tcp_sk(sk))) {
+-			struct mptcp_cb *mpcb =3D tcp_sk(mptcp_meta_sk(sk))->mpcb;
+-
+-			if (copy_to_user(optval, mpcb->sched_ops->name, len))
+-				return -EFAULT;
+-		} else {
+-			if (copy_to_user(optval, tcp_sk(sk)->mptcp_sched_name,
+-					 len))
+-				return -EFAULT;
+-		}
+-		return 0;
+-
+ 	case MPTCP_PATH_MANAGER:
+ 		if (get_user(len, optlen))
+ 			return -EFAULT;
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index 9c490ec8fba8..860e9e17f76f 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -57,35 +57,3 @@ config DEFAULT_MPTCP_PM
+ 	default "ndiffports" if DEFAULT_NDIFFPORTS
+ 	default "default"
  =
 
- 	ireq->rcv_wscale =3D rcv_wscale;
- 	ireq->ecn_ok =3D cookie_ecn_ok(&tcp_opt, sock_net(sk), dst);
-diff --git a/net/mptcp/mptcp_ipv4.c b/net/mptcp/mptcp_ipv4.c
-index 00c54f421ba7..94bc1416af77 100644
---- a/net/mptcp/mptcp_ipv4.c
-+++ b/net/mptcp/mptcp_ipv4.c
-@@ -82,20 +82,6 @@ static int mptcp_v4_init_req(struct request_sock *req, c=
-onst struct sock *sk,
- 	return 0;
+-menuconfig MPTCP_SCHED_ADVANCED
+-	bool "MPTCP: advanced scheduler control"
+-	depends on MPTCP=3Dy
+-	---help---
+-	  Support for selection of different schedulers. You should choose 'Y' he=
+re,
+-	  if you want to choose a different scheduler than the default one.
+-
+-if MPTCP_SCHED_ADVANCED
+-
+-choice
+-	prompt "Default MPTCP Scheduler"
+-	default DEFAULT
+-	help
+-	  Select the Scheduler of your choice
+-
+-	config DEFAULT_SCHEDULER
+-		bool "Default"
+-		---help---
+-		  This is the default scheduler, sending first on the subflow
+-		  with the lowest RTT.
+-
+-endchoice
+-endif
+-
+-config DEFAULT_MPTCP_SCHED
+-	string
+-	depends on (MPTCP=3Dy)
+-	default "default" if DEFAULT_SCHEDULER
+-	default "roundrobin" if DEFAULT_ROUNDROBIN
+-	default "redundant" if DEFAULT_REDUNDANT
+-	default "default"
+-
+diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
+index eee86f84ba31..83639951c5a5 100644
+--- a/net/mptcp/mptcp_ctrl.c
++++ b/net/mptcp/mptcp_ctrl.c
+@@ -95,25 +95,6 @@ static int proc_mptcp_path_manager(struct ctl_table *ctl=
+, int write,
+ 	return ret;
  }
  =
 
--#ifdef CONFIG_SYN_COOKIES
--static u32 mptcp_v4_cookie_init_seq(struct request_sock *req, const struct=
- sock *sk,
--				    const struct sk_buff *skb, __u16 *mssp)
+-static int proc_mptcp_scheduler(struct ctl_table *ctl, int write,
+-				void __user *buffer, size_t *lenp,
+-				loff_t *ppos)
 -{
--	__u32 isn =3D cookie_v4_init_sequence(req, sk, skb, mssp);
+-	char val[MPTCP_SCHED_NAME_MAX];
+-	struct ctl_table tbl =3D {
+-		.data =3D val,
+-		.maxlen =3D MPTCP_SCHED_NAME_MAX,
+-	};
+-	int ret;
 -
--	tcp_rsk(req)->snt_isn =3D isn;
+-	mptcp_get_default_scheduler(val);
 -
--	mptcp_reqsk_init(req, sk, skb, true);
--
--	return isn;
+-	ret =3D proc_dostring(&tbl, write, buffer, lenp, ppos);
+-	if (write && ret =3D=3D 0)
+-		ret =3D mptcp_set_default_scheduler(val);
+-	return ret;
 -}
--#endif
 -
- /* May be called without holding the meta-level lock */
- static int mptcp_v4_join_init_req(struct request_sock *req, const struct s=
-ock *meta_sk,
- 				  struct sk_buff *skb, bool want_cookie)
-@@ -381,9 +367,6 @@ int mptcp_pm_v4_init(void)
+ static struct ctl_table mptcp_table[] =3D {
+ 	{
+ 		.procname =3D "mptcp_enabled",
+@@ -151,12 +132,6 @@ static struct ctl_table mptcp_table[] =3D {
+ 		.maxlen		=3D MPTCP_PM_NAME_MAX,
+ 		.proc_handler	=3D proc_mptcp_path_manager,
+ 	},
+-	{
+-		.procname	=3D "mptcp_scheduler",
+-		.mode		=3D 0644,
+-		.maxlen		=3D MPTCP_SCHED_NAME_MAX,
+-		.proc_handler	=3D proc_mptcp_scheduler,
+-	},
+ 	{ }
+ };
  =
 
- 	mptcp_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
- 	mptcp_request_sock_ipv4_ops.init_req =3D mptcp_v4_init_req;
--#ifdef CONFIG_SYN_COOKIES
--	mptcp_request_sock_ipv4_ops.cookie_init_seq =3D mptcp_v4_cookie_init_seq;
--#endif
- 	mptcp_join_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
- 	mptcp_join_request_sock_ipv4_ops.init_req =3D mptcp_v4_join_init_req;
+@@ -640,7 +615,6 @@ static void mptcp_mpcb_put(struct mptcp_cb *mpcb)
+ {
+ 	if (refcount_dec_and_test(&mpcb->mpcb_refcnt)) {
+ 		mptcp_cleanup_path_manager(mpcb);
+-		mptcp_cleanup_scheduler(mpcb);
+ 		kfree(mpcb->master_info);
+ 		kmem_cache_free(mptcp_cb_cache, mpcb);
+ 	}
+@@ -1312,7 +1286,6 @@ static int mptcp_alloc_mpcb(struct sock *meta_sk, __u=
+64 remote_key,
+ 	refcount_set(&mpcb->mpcb_refcnt, 1);
  =
 
-diff --git a/net/mptcp/mptcp_ipv6.c b/net/mptcp/mptcp_ipv6.c
-index 7249d171c9ef..297dd872fbfb 100644
---- a/net/mptcp/mptcp_ipv6.c
-+++ b/net/mptcp/mptcp_ipv6.c
-@@ -111,20 +111,6 @@ static int mptcp_v6_init_req(struct request_sock *req,=
- const struct sock *sk,
- 	return 0;
+ 	mptcp_init_path_manager(mpcb);
+-	mptcp_init_scheduler(mpcb);
+ =
+
+ 	if (!try_module_get(inet_csk(master_sk)->icsk_ca_ops->owner))
+ 		tcp_assign_congestion_control(master_sk);
+@@ -1380,8 +1353,7 @@ int mptcp_add_sock(struct sock *meta_sk, struct sock =
+*sk, u8 loc_id, u8 rem_id,
+ =
+
+ 	tp->mptcp->loc_id =3D loc_id;
+ 	tp->mptcp->rem_id =3D rem_id;
+-	if (mpcb->sched_ops->init)
+-		mpcb->sched_ops->init(sk);
++	mptcp_sched_init(sk);
+ =
+
+ 	/* The corresponding sock_put is in mptcp_sock_destruct(). It cannot be
+ 	 * included in mptcp_del_sock(), because the mpcb must remain alive
+@@ -2910,17 +2882,12 @@ void __init mptcp_init(void)
+ 	if (mptcp_register_path_manager(&mptcp_pm_default))
+ 		goto register_pm_failed;
+ =
+
+-	if (mptcp_register_scheduler(&mptcp_sched_default))
+-		goto register_sched_failed;
+-
+ 	pr_info("MPTCP: Unstable branch");
+ =
+
+ 	mptcp_init_failed =3D false;
+ =
+
+ 	return;
+ =
+
+-register_sched_failed:
+-	mptcp_unregister_path_manager(&mptcp_pm_default);
+ register_pm_failed:
+ 	unregister_net_sysctl_table(mptcp_sysctl);
+ register_sysctl_failed:
+diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
+index 2d84eb2edd97..00a3674ad693 100644
+--- a/net/mptcp/mptcp_output.c
++++ b/net/mptcp/mptcp_output.c
+@@ -306,7 +306,7 @@ int mptcp_write_wakeup(struct sock *meta_sk, int mib)
+ 	    before(TCP_SKB_CB(skb)->seq, tcp_wnd_end(meta_tp))) {
+ 		unsigned int mss;
+ 		unsigned int seg_size =3D tcp_wnd_end(meta_tp) - TCP_SKB_CB(skb)->seq;
+-		struct sock *subsk =3D meta_tp->mpcb->sched_ops->get_subflow(meta_sk, sk=
+b, true);
++		struct sock *subsk =3D mptcp_get_available_subflow(meta_sk, skb, true);
+ 		struct tcp_sock *subtp;
+ =
+
+ 		WARN_ON(TCP_SKB_CB(skb)->sacked);
+@@ -395,8 +395,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned in=
+t mss_now, int nonagle,
+ =
+
+ 	tcp_mstamp_refresh(meta_tp);
+ =
+
+-	while ((skb =3D mpcb->sched_ops->next_segment(meta_sk, &reinject, &subsk,
+-						    &sublimit))) {
++	while ((skb =3D mptcp_next_segment(meta_sk, &reinject, &subsk, &sublimit)=
+)) {
+ 		enum tcp_queue tcp_queue =3D TCP_FRAG_IN_WRITE_QUEUE;
+ 		unsigned int limit;
+ =
+
+@@ -1111,7 +1110,7 @@ int mptcp_retransmit_skb(struct sock *meta_sk, struct=
+ sk_buff *skb)
+ 	/* We need to make sure that the retransmitted segment can be sent on a
+ 	 * subflow right now. If it is too big, it needs to be fragmented.
+ 	 */
+-	subsk =3D meta_tp->mpcb->sched_ops->get_subflow(meta_sk, skb, false);
++	subsk =3D mptcp_get_available_subflow(meta_sk, skb, false);
+ 	if (!subsk) {
+ 		/* We want to increase icsk_retransmits, thus return 0, so that
+ 		 * mptcp_meta_retransmit_timer enters the desired branch.
+diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
+index 74d167e4689b..7beff6b762e1 100644
+--- a/net/mptcp/mptcp_sched.c
++++ b/net/mptcp/mptcp_sched.c
+@@ -1,20 +1,6 @@
+-/* MPTCP Scheduler module selector. Highly inspired by tcp_cong.c */
+-
+ #include <linux/module.h>
+ #include <net/mptcp.h>
+ =
+
+-static DEFINE_SPINLOCK(mptcp_sched_list_lock);
+-static LIST_HEAD(mptcp_sched_list);
+-
+-struct defsched_priv {
+-	u32	last_rbuf_opti;
+-};
+-
+-static struct defsched_priv *defsched_get_priv(const struct tcp_sock *tp)
+-{
+-	return (struct defsched_priv *)&tp->mptcp->mptcp_sched[0];
+-}
+-
+ static bool mptcp_is_def_unavailable(struct sock *sk)
+ {
+ 	const struct tcp_sock *tp =3D tcp_sk(sk);
+@@ -194,9 +180,9 @@ static struct sock
+  *
+  * Additionally, this function is aware of the backup-subflows.
+  */
+-static struct sock *get_available_subflow(struct sock *meta_sk,
+-					  struct sk_buff *skb,
+-					  bool zero_wnd_test)
++struct sock *mptcp_get_available_subflow(struct sock *meta_sk,
++					 struct sk_buff *skb,
++					 bool zero_wnd_test)
+ {
+ 	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	struct sock *sk;
+@@ -244,11 +230,10 @@ static struct sock *get_available_subflow(struct sock=
+ *meta_sk,
+ =
+
+ static struct sk_buff *mptcp_rcv_buf_optimization(struct sock *sk, int pen=
+al)
+ {
+-	struct sock *meta_sk;
+ 	const struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct mptcp_tcp_sock *mptcp;
+ 	struct sk_buff *skb_head;
+-	struct defsched_priv *dsp =3D defsched_get_priv(tp);
++	struct sock *meta_sk;
+ =
+
+ 	meta_sk =3D mptcp_meta_sk(sk);
+ 	skb_head =3D tcp_rtx_queue_head(meta_sk);
+@@ -265,7 +250,7 @@ static struct sk_buff *mptcp_rcv_buf_optimization(struc=
+t sock *sk, int penal)
+ 		goto retrans;
+ =
+
+ 	/* Only penalize again after an RTT has elapsed */
+-	if (tcp_jiffies32 - dsp->last_rbuf_opti < usecs_to_jiffies(tp->srtt_us >>=
+ 3))
++	if (tcp_jiffies32 - tp->mptcp->last_rbuf_opti < usecs_to_jiffies(tp->srtt=
+_us >> 3))
+ 		goto retrans;
+ =
+
+ 	/* Half the cwnd of the slow flow */
+@@ -283,7 +268,7 @@ static struct sk_buff *mptcp_rcv_buf_optimization(struc=
+t sock *sk, int penal)
+ 				if (prior_cwnd >=3D tp_it->snd_ssthresh)
+ 					tp_it->snd_ssthresh =3D max(tp_it->snd_ssthresh >> 1U, 2U);
+ =
+
+-				dsp->last_rbuf_opti =3D tcp_jiffies32;
++				tp->mptcp->last_rbuf_opti =3D tcp_jiffies32;
+ 			}
+ 			break;
+ 		}
+@@ -343,8 +328,8 @@ static struct sk_buff *__mptcp_next_segment(struct sock=
+ *meta_sk, int *reinject)
+ 	if (!skb && meta_sk->sk_socket &&
+ 	    test_bit(SOCK_NOSPACE, &meta_sk->sk_socket->flags) &&
+ 	    sk_stream_wspace(meta_sk) < sk_stream_min_wspace(meta_sk)) {
+-		struct sock *subsk =3D get_available_subflow(meta_sk, NULL,
+-							   false);
++		struct sock *subsk =3D mptcp_get_available_subflow(meta_sk, NULL,
++								 false);
+ 		if (!subsk)
+ 			return NULL;
+ =
+
+@@ -355,10 +340,10 @@ static struct sk_buff *__mptcp_next_segment(struct so=
+ck *meta_sk, int *reinject)
+ 	return skb;
  }
  =
 
--#ifdef CONFIG_SYN_COOKIES
--static u32 mptcp_v6_cookie_init_seq(struct request_sock *req, const struct=
- sock *sk,
--				    const struct sk_buff *skb, __u16 *mssp)
+-static struct sk_buff *mptcp_next_segment(struct sock *meta_sk,
+-					  int *reinject,
+-					  struct sock **subsk,
+-					  unsigned int *limit)
++struct sk_buff *mptcp_next_segment(struct sock *meta_sk,
++				   int *reinject,
++				   struct sock **subsk,
++				   unsigned int *limit)
+ {
+ 	struct sk_buff *skb =3D __mptcp_next_segment(meta_sk, reinject);
+ 	unsigned int mss_now;
+@@ -372,7 +357,7 @@ static struct sk_buff *mptcp_next_segment(struct sock *=
+meta_sk,
+ 	if (!skb)
+ 		return NULL;
+ =
+
+-	*subsk =3D get_available_subflow(meta_sk, skb, false);
++	*subsk =3D mptcp_get_available_subflow(meta_sk, skb, false);
+ 	if (!*subsk)
+ 		return NULL;
+ =
+
+@@ -420,185 +405,7 @@ static struct sk_buff *mptcp_next_segment(struct sock=
+ *meta_sk,
+ 	return skb;
+ }
+ =
+
+-static void defsched_init(struct sock *sk)
 -{
--	__u32 isn =3D cookie_v6_init_sequence(req, sk, skb, mssp);
+-	struct defsched_priv *dsp =3D defsched_get_priv(tcp_sk(sk));
 -
--	tcp_rsk(req)->snt_isn =3D isn;
--
--	mptcp_reqsk_init(req, sk, skb, true);
--
--	return isn;
+-	dsp->last_rbuf_opti =3D tcp_jiffies32;
 -}
+-
+-struct mptcp_sched_ops mptcp_sched_default =3D {
+-	.get_subflow =3D get_available_subflow,
+-	.next_segment =3D mptcp_next_segment,
+-	.init =3D defsched_init,
+-	.name =3D "default",
+-	.owner =3D THIS_MODULE,
+-};
+-
+-static struct mptcp_sched_ops *mptcp_sched_find(const char *name)
+-{
+-	struct mptcp_sched_ops *e;
+-
+-	list_for_each_entry_rcu(e, &mptcp_sched_list, list) {
+-		if (strcmp(e->name, name) =3D=3D 0)
+-			return e;
+-	}
+-
+-	return NULL;
+-}
+-
+-int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
+-{
+-	int ret =3D 0;
+-
+-	if (!sched->get_subflow || !sched->next_segment)
+-		return -EINVAL;
+-
+-	spin_lock(&mptcp_sched_list_lock);
+-	if (mptcp_sched_find(sched->name)) {
+-		pr_notice("%s already registered\n", sched->name);
+-		ret =3D -EEXIST;
+-	} else {
+-		list_add_tail_rcu(&sched->list, &mptcp_sched_list);
+-		pr_info("%s registered\n", sched->name);
+-	}
+-	spin_unlock(&mptcp_sched_list_lock);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(mptcp_register_scheduler);
+-
+-void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched)
+-{
+-	spin_lock(&mptcp_sched_list_lock);
+-	list_del_rcu(&sched->list);
+-	spin_unlock(&mptcp_sched_list_lock);
+-
+-	/* Wait for outstanding readers to complete before the
+-	 * module gets removed entirely.
+-	 *
+-	 * A try_module_get() should fail by now as our module is
+-	 * in "going" state since no refs are held anymore and
+-	 * module_exit() handler being called.
+-	 */
+-	synchronize_rcu();
+-}
+-EXPORT_SYMBOL_GPL(mptcp_unregister_scheduler);
+-
+-void mptcp_get_default_scheduler(char *name)
+-{
+-	struct mptcp_sched_ops *sched;
+-
+-	BUG_ON(list_empty(&mptcp_sched_list));
+-
+-	rcu_read_lock();
+-	sched =3D list_entry(mptcp_sched_list.next, struct mptcp_sched_ops, list);
+-	strncpy(name, sched->name, MPTCP_SCHED_NAME_MAX);
+-	rcu_read_unlock();
+-}
+-
+-int mptcp_set_default_scheduler(const char *name)
+-{
+-	struct mptcp_sched_ops *sched;
+-	int ret =3D -ENOENT;
+-
+-	spin_lock(&mptcp_sched_list_lock);
+-	sched =3D mptcp_sched_find(name);
+-#ifdef CONFIG_MODULES
+-	if (!sched && capable(CAP_NET_ADMIN)) {
+-		spin_unlock(&mptcp_sched_list_lock);
+-
+-		request_module("mptcp_%s", name);
+-		spin_lock(&mptcp_sched_list_lock);
+-		sched =3D mptcp_sched_find(name);
+-	}
 -#endif
 -
- /* May be called without holding the meta-level lock */
- static int mptcp_v6_join_init_req(struct request_sock *req, const struct s=
-ock *meta_sk,
- 				  struct sk_buff *skb, bool want_cookie)
-@@ -427,9 +413,6 @@ int mptcp_pm_v6_init(void)
- =
-
- 	mptcp_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
- 	mptcp_request_sock_ipv6_ops.init_req =3D mptcp_v6_init_req;
--#ifdef CONFIG_SYN_COOKIES
--	mptcp_request_sock_ipv6_ops.cookie_init_seq =3D mptcp_v6_cookie_init_seq;
+-	if (sched) {
+-		list_move(&sched->list, &mptcp_sched_list);
+-		ret =3D 0;
+-	} else {
+-		pr_info("%s is not available\n", name);
+-	}
+-	spin_unlock(&mptcp_sched_list_lock);
+-
+-	return ret;
+-}
+-
+-/* Must be called with rcu lock held */
+-static struct mptcp_sched_ops *__mptcp_sched_find_autoload(const char *nam=
+e)
+-{
+-	struct mptcp_sched_ops *sched =3D mptcp_sched_find(name);
+-#ifdef CONFIG_MODULES
+-	if (!sched && capable(CAP_NET_ADMIN)) {
+-		rcu_read_unlock();
+-		request_module("mptcp_%s", name);
+-		rcu_read_lock();
+-		sched =3D mptcp_sched_find(name);
+-	}
 -#endif
- =
-
- 	mptcp_join_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
- 	mptcp_join_request_sock_ipv6_ops.init_req =3D mptcp_v6_join_init_req;
+-	return sched;
+-}
+-
+-void mptcp_init_scheduler(struct mptcp_cb *mpcb)
+-{
+-	struct mptcp_sched_ops *sched;
+-	struct sock *meta_sk =3D mpcb->meta_sk;
+-	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-
+-	rcu_read_lock();
+-	/* if scheduler was set using socket option */
+-	if (meta_tp->mptcp_sched_setsockopt) {
+-		sched =3D __mptcp_sched_find_autoload(meta_tp->mptcp_sched_name);
+-		if (sched && try_module_get(sched->owner)) {
+-			mpcb->sched_ops =3D sched;
+-			goto out;
+-		}
+-	}
+-
+-	list_for_each_entry_rcu(sched, &mptcp_sched_list, list) {
+-		if (try_module_get(sched->owner)) {
+-			mpcb->sched_ops =3D sched;
+-			break;
+-		}
+-	}
+-out:
+-	rcu_read_unlock();
+-}
+-
+-/* Change scheduler for socket */
+-int mptcp_set_scheduler(struct sock *sk, const char *name)
+-{
+-	struct mptcp_sched_ops *sched;
+-	int err =3D 0;
+-
+-	rcu_read_lock();
+-	sched =3D __mptcp_sched_find_autoload(name);
+-
+-	if (!sched) {
+-		err =3D -ENOENT;
+-	} else if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN)) {
+-		err =3D -EPERM;
+-	} else {
+-		strcpy(tcp_sk(sk)->mptcp_sched_name, name);
+-		tcp_sk(sk)->mptcp_sched_setsockopt =3D 1;
+-	}
+-	rcu_read_unlock();
+-
+-	return err;
+-}
+-
+-/* Manage refcounts on socket close. */
+-void mptcp_cleanup_scheduler(struct mptcp_cb *mpcb)
++void mptcp_sched_init(struct sock *sk)
+ {
+-	module_put(mpcb->sched_ops->owner);
+-}
+-
+-/* Set default value from kernel configuration at bootup */
+-static int __init mptcp_scheduler_default(void)
+-{
+-	BUILD_BUG_ON(sizeof(struct defsched_priv) > MPTCP_SCHED_SIZE);
+-
+-	return mptcp_set_default_scheduler(CONFIG_DEFAULT_MPTCP_SCHED);
++	tcp_sk(sk)->mptcp->last_rbuf_opti =3D tcp_jiffies32;
+ }
+-late_initcall(mptcp_scheduler_default);
 -- =
 
 2.16.2
 
 
---===============4737433251867838961==--
+--===============0586156703058858686==--
