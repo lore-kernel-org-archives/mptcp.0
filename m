@@ -1,40 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============2522415321336364801=="
+Content-Type: multipart/mixed; boundary="===============1599066126613391785=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 20 December 2018 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 19 Dec 2018 18:45:56 +0100
-Message-ID: <65cc993b-84ed-c35c-f9bb-97900825cc70@tessares.net>
+Subject: Re: [MPTCP] Fwd: [PATCH net-next 0/13] sk_buff: add extension
+ infrastructure
+Date: Wed, 19 Dec 2018 13:49:29 -0800
+Message-ID: <alpine.OSX.2.21.1812191344110.39495@rkelton-mobl.amr.corp.intel.com>
+In-Reply-To: CAKuKrBkfiw6OEYCMd2rQfKCegoq5Uf6Nw8KwX7EsWc8aw=mH5Q@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 949
+X-UID: 950
 
---===============2522415321336364801==
+--===============1599066126613391785==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+On Tue, 18 Dec 2018, Matthieu Baerts wrote:
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20181220
+> Hello,
+>
+> FYI, Florian sent a new version of his patch-set on Netdev:
+> - https://lwn.net/ml/netdev/20181218161527.2760-1-fw(a)strlen.de/
+> - https://git.breakpoint.cc/cgit/fw/net-next.git/log/?h=3Dskb_ext_both_07
+> - @Mat: you might be interested in:
+> https://review.gerrithub.io/q/topic:%22fwestphal-skb_ext_both_07%22+(stat=
+us:open%20OR%20status:merged)
+>
+> Thanks Florian for this very good job! :)
 
-Feel free to add/modify topics!
+Florian's branch is now merged with high compliments:
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+https://lwn.net/ml/netdev/20181219.114725.724891178913615612.davem(a)daveml=
+oft.net/ =
 
-Speak to you tomorrow!
-Matthieu
--- =
+https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?=
+id=3D4a54877ee767fe70a6966352c788fc5f405aa3c6
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+So thank you very, very much Florian!
 
---===============2522415321336364801==--
+
+--
+Mat Martineau
+Intel OTC
+
+--===============1599066126613391785==--
