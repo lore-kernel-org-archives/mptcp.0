@@ -1,82 +1,129 @@
-Content-Type: multipart/mixed; boundary="===============3839979311818290595=="
+Content-Type: multipart/mixed; boundary="===============8185642213068659931=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Fwd: [PATCH net-next 0/13] sk_buff: add extension
- infrastructure
-Date: Wed, 19 Dec 2018 23:16:30 +0100
-Message-ID: <CAKuKrBk6tomrHrE2yuusDao94B+Lm-8NwMvBXD9qigBSKvqbGA@mail.gmail.com>
-In-Reply-To: 8A0C5CB1-8794-4C7C-A8F8-FE940764C855@apple.com
+Subject: [MPTCP] [Weekly meetings] MoM - 20th of December 2018
+Date: Thu, 20 Dec 2018 18:39:30 +0100
+Message-ID: <f6a1bda7-b5a6-2b77-9f3a-4f6dce3ab662@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 952
+X-UID: 953
 
---===============3839979311818290595==
+--===============8185642213068659931==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 19, 2018 at 11:10 PM Christoph Paasch <cpaasch(a)apple.com> wro=
-te:
->
-> > On Dec 19, 2018, at 1:49 PM, Mat Martineau <mathew.j.martineau(a)linux.=
-intel.com> wrote:
-> >
-> >
-> >> On Tue, 18 Dec 2018, Matthieu Baerts wrote:
-> >>
-> >> Hello,
-> >>
-> >> FYI, Florian sent a new version of his patch-set on Netdev:
-> >> - https://lwn.net/ml/netdev/20181218161527.2760-1-fw(a)strlen.de/
-> >> - https://git.breakpoint.cc/cgit/fw/net-next.git/log/?h=3Dskb_ext_both=
-_07
-> >> - @Mat: you might be interested in:
-> >> https://review.gerrithub.io/q/topic:%22fwestphal-skb_ext_both_07%22+(s=
-tatus:open%20OR%20status:merged)
-> >>
-> >> Thanks Florian for this very good job! :)
-> >
-> > Florian's branch is now merged with high compliments:
-> >
-> > https://lwn.net/ml/netdev/20181219.114725.724891178913615612.davem(a)da=
-vemloft.net/ https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next=
-.git/commit/?id=3D4a54877ee767fe70a6966352c788fc5f405aa3c6
-> >
-> > So thank you very, very much Florian!
->
-> That=E2=80=99s awesome!
+Hello,
 
-Excellent!
+We just had our 33rd meeting with Mat, Peter and Ossama (Intel OTC),
+Christoph (Apple), Florian (Redhat) and myself (Tessares).
 
-> Looking forward to plumbing MPTCP on top of it.
+Thanks again for this new good meeting!
 
-Me too!
-I just rebased Mat and Peter's patch-set on top of latest net-next to
-have a new preview:
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/437399/5
 
-Speak to you tomorrow!
+
+Here are the minutes of the meeting:
+
+
+
+Florian's patch-set: v2 had been sent and approved \o/
+    - https://lwn.net/ml/netdev/20181218161527.2760-1-fw(a)strlen.de/
+    - https://git.breakpoint.cc/cgit/fw/net-next.git/log/?h=3Dskb_ext_both_=
+07
+    -
+https://review.gerrithub.io/q/topic:%22fwestphal-skb_ext_both_07%22+(status=
+:open%20OR%20status:merged)
+    - one colleague found a problem but maybe not a problem
+    - and tiny problems, going to be fixed soon.
+
+
+
+- Mat and Peter's patch-set:
+    - now based on Florian's one, using the new feature
+    - Mat will send a new version on the ML
+
+
+
+- tcp option framework (from last year, proposed by Mat and Christoph):
+    - still too many indirect calls there
+    - we can live without it.
+
+
+
+- Christoph's patch-set:
+    - updated to a v3, one remaining question:
+https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/436377#message=
+-e0c5bccc5f6e54763b58b0f2068bce70f5c8419f
+    - will check if v4 is needed depending on =E2=86=91
+    - he is still able to test everything
+    - after that, Christoph will have a look at the changes in the skbuff.
+
+
+
+- Gerrit:
+    - Mat & Peter's patch-set added in Gerrit:
+https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/437404/3
+    - All changes:
+https://review.gerrithub.io/q/project:multipath-tcp%252Fmptcp_net-next+stat=
+us:open
+    - Christoph's patch-set updated in Gerrit:
+        -
+https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/436378/1..2
+        -
+https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/436386/1..2
+    - TopGit tree also setup: Matth can manage the tree
+    - Mat (and Matthieu) set as owner of the project (ability to change
+rights). Do you prefer having protections or not?
+    - Feel free to try ;-)
+    - We should certainly often update net-next =E2=86=92 Matth can setup a=
+ CI
+project to pull net-next and update the tree
+    - Mat: it is also interesting to see the changes that have been made
+    - Matth: can be interesting to create this CI project but including
+a build + test before pushing the merge
+
+
+
+- random:
+    - http://blog.multipath-tcp.org/blog/html/archive.html
+    - one article per day in December about MPTCP!
+    - by Olivier Bonaventure
+
+
+
+Userspace:
+    - got approval at Intel, still need to check how the code will be
+shared (repository) + review
+    - Matth: still working on the netlink PM in the kernel
+
+
+
+5G:
+    - MPTCP is part of the spec! As a proxy.
+    - we might got more interest!
+    - previous version but still valid:
+http://www.3gpp.org/ftp/tsg_sa/WG2_Arch/TSGS2_127_Sanya/Docs/S2-183622.zip
+
+
+
+Next meeting:
+    - We propose to skip the two next ones due to holiday period in many
+countries (OK, at least for us in the US, Belgium and Germany :-) ). We
+propose to have the next one on Thursday, the 10th of January.
+    - Usual time: 17:00 UTC (9am PST, 6pm CET)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190110
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+Enjoy Christmas and Happy New Year,
+Talk to you next year,
 Matthieu
-
->
->
-> Christoph
->
->
->
-> >
-> >
-> > --
-> > Mat Martineau
-> > Intel OTC
-> > _______________________________________________
-> > mptcp mailing list
-> > mptcp(a)lists.01.org
-> > https://lists.01.org/mailman/listinfo/mptcp
-
-
-
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -85,6 +132,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-Disclaimer: https://www.tessares.net/mail-disclaimer/
-
---===============3839979311818290595==--
+--===============8185642213068659931==--
