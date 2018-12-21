@@ -1,135 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============8185642213068659931=="
+Content-Type: multipart/mixed; boundary="===============5296576280099554822=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 20th of December 2018
-Date: Thu, 20 Dec 2018 18:39:30 +0100
-Message-ID: <f6a1bda7-b5a6-2b77-9f3a-4f6dce3ab662@tessares.net>
+Subject: [MPTCP] [PATCH v4 mptcp-net-next 00/12] Code-removal out of
+ mptcp-net-next
+Date: Fri, 21 Dec 2018 08:13:26 -0800
+Message-ID: <20181221161338.72325-1-cpaasch@apple.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 953
+X-UID: 954
 
---===============8185642213068659931==
+--===============5296576280099554822==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Series removing a lot of code out of mptcp-net-next.
 
-We just had our 33rd meeting with Mat, Peter and Ossama (Intel OTC),
-Christoph (Apple), Florian (Redhat) and myself (Tessares).
+Before:
+$ git diff --shortstat  1464193107da..mptcp-net-next/master
+ 54 files changed, 14663 insertions(+), 375 deletions(-)
 
-Thanks again for this new good meeting!
-
-
-
-Here are the minutes of the meeting:
-
+After:
+$ git diff --shortstat  1464193107da..HEAD
+ 50 files changed, 12213 insertions(+), 349 deletions(-)
 
 
-Florian's patch-set: v2 had been sent and approved \o/
-    - https://lwn.net/ml/netdev/20181218161527.2760-1-fw(a)strlen.de/
-    - https://git.breakpoint.cc/cgit/fw/net-next.git/log/?h=3Dskb_ext_both_=
-07
-    -
-https://review.gerrithub.io/q/topic:%22fwestphal-skb_ext_both_07%22+(status=
-:open%20OR%20status:merged)
-    - one colleague found a problem but maybe not a problem
-    - and tiny problems, going to be fixed soon.
+v4: Minor left-over removals that were missing - identified by Mat
+v3: Minor left-over removals that were missing - identified by Matthieu
+v2: Some minor fixes - see notes in the sub-patches 4/12 and 12/12
 
+Christoph Paasch (12):
+  mptcp: Remove support for DSS-checksums
+  mptcp: Remove some left-over cruft
+  mptcp: Remove RPS-recording for flow-steering in MPTCP
+  mptcp: Remove support for subflow-priorities (aka backup)
+  mptcp: Remove support for sendpage()
+  mptcp: Remove reinjection of data across subflows
+  mptcp: Remove support for TCP SYN-cookies
+  mptcp: Remove support for TCP Fast Open
+  mptcp: Remove MPTCP-code out of do_ip_setsockopt
+  mptcp: Remove scheduler-selection support
+  mptcp: Remove ndiffports path manager
+  mptcp: Make path-management no more a module nor selectable through
+    socketops
 
+ include/linux/tcp.h          |  15 +-
+ include/net/mptcp.h          | 250 +++++++---------------
+ include/net/netns/mptcp.h    |   8 +-
+ include/net/tcp.h            |  13 +-
+ include/uapi/linux/if.h      |   1 -
+ include/uapi/linux/tcp.h     |   2 -
+ net/core/dev.c               |   2 +-
+ net/ipv4/Kconfig             |  19 --
+ net/ipv4/af_inet.c           |   6 -
+ net/ipv4/ip_sockglue.c       |  14 --
+ net/ipv4/syncookies.c        |  47 +----
+ net/ipv4/tcp.c               | 155 +-------------
+ net/ipv4/tcp_fastopen.c      |  16 +-
+ net/ipv4/tcp_input.c         |  29 +--
+ net/ipv4/tcp_minisocks.c     |   2 +-
+ net/ipv4/tcp_output.c        |   3 +-
+ net/ipv6/syncookies.c        |  32 +--
+ net/mptcp/Kconfig            |  81 -------
+ net/mptcp/Makefile           |   5 +-
+ net/mptcp/mptcp_ctrl.c       | 264 +----------------------
+ net/mptcp/mptcp_fullmesh.c   | 488 ++++++++-------------------------------=
+----
+ net/mptcp/mptcp_input.c      | 343 ++----------------------------
+ net/mptcp/mptcp_ipv4.c       |  34 +--
+ net/mptcp/mptcp_ipv6.c       |  34 +--
+ net/mptcp/mptcp_ndiffports.c | 169 ---------------
+ net/mptcp/mptcp_output.c     | 472 ++-------------------------------------=
+--
+ net/mptcp/mptcp_pm.c         | 226 --------------------
+ net/mptcp/mptcp_sched.c      | 280 +++----------------------
+ 28 files changed, 293 insertions(+), 2717 deletions(-)
+ delete mode 100644 net/mptcp/mptcp_ndiffports.c
+ delete mode 100644 net/mptcp/mptcp_pm.c
 
-- Mat and Peter's patch-set:
-    - now based on Florian's one, using the new feature
-    - Mat will send a new version on the ML
-
-
-
-- tcp option framework (from last year, proposed by Mat and Christoph):
-    - still too many indirect calls there
-    - we can live without it.
-
-
-
-- Christoph's patch-set:
-    - updated to a v3, one remaining question:
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/436377#message=
--e0c5bccc5f6e54763b58b0f2068bce70f5c8419f
-    - will check if v4 is needed depending on =E2=86=91
-    - he is still able to test everything
-    - after that, Christoph will have a look at the changes in the skbuff.
-
-
-
-- Gerrit:
-    - Mat & Peter's patch-set added in Gerrit:
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/437404/3
-    - All changes:
-https://review.gerrithub.io/q/project:multipath-tcp%252Fmptcp_net-next+stat=
-us:open
-    - Christoph's patch-set updated in Gerrit:
-        -
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/436378/1..2
-        -
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/436386/1..2
-    - TopGit tree also setup: Matth can manage the tree
-    - Mat (and Matthieu) set as owner of the project (ability to change
-rights). Do you prefer having protections or not?
-    - Feel free to try ;-)
-    - We should certainly often update net-next =E2=86=92 Matth can setup a=
- CI
-project to pull net-next and update the tree
-    - Mat: it is also interesting to see the changes that have been made
-    - Matth: can be interesting to create this CI project but including
-a build + test before pushing the merge
-
-
-
-- random:
-    - http://blog.multipath-tcp.org/blog/html/archive.html
-    - one article per day in December about MPTCP!
-    - by Olivier Bonaventure
-
-
-
-Userspace:
-    - got approval at Intel, still need to check how the code will be
-shared (repository) + review
-    - Matth: still working on the netlink PM in the kernel
-
-
-
-5G:
-    - MPTCP is part of the spec! As a proxy.
-    - we might got more interest!
-    - previous version but still valid:
-http://www.3gpp.org/ftp/tsg_sa/WG2_Arch/TSGS2_127_Sanya/Docs/S2-183622.zip
-
-
-
-Next meeting:
-    - We propose to skip the two next ones due to holiday period in many
-countries (OK, at least for us in the US, Belgium and Germany :-) ). We
-propose to have the next one on Thursday, the 10th of January.
-    - Usual time: 17:00 UTC (9am PST, 6pm CET)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190110
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-Enjoy Christmas and Happy New Year,
-Talk to you next year,
-Matthieu
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.16.2
 
---===============8185642213068659931==--
+
+--===============5296576280099554822==--
