@@ -1,762 +1,720 @@
-Content-Type: multipart/mixed; boundary="===============0052027621677873607=="
+Content-Type: multipart/mixed; boundary="===============1287340542488881547=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v4 mptcp-net-next 06/12] mptcp: Remove reinjection of
- data across subflows
-Date: Fri, 21 Dec 2018 08:13:32 -0800
-Message-ID: <20181221161338.72325-7-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH v4 mptcp-net-next 10/12] mptcp: Remove
+ scheduler-selection support
+Date: Fri, 21 Dec 2018 08:13:36 -0800
+Message-ID: <20181221161338.72325-11-cpaasch@apple.com>
 In-Reply-To: 20181221161338.72325-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 960
+X-UID: 961
 
---===============0052027621677873607==
+--===============1287340542488881547==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-It's an "optimisation" that we don't need in net-next.
-
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/linux/tcp.h        |   3 -
- include/net/mptcp.h        |   9 --
- net/mptcp/mptcp_ctrl.c     |  10 +-
- net/mptcp/mptcp_fullmesh.c |  12 --
- net/mptcp/mptcp_input.c    |  20 +--
- net/mptcp/mptcp_output.c   | 358 +----------------------------------------=
+ include/linux/tcp.h      |   3 -
+ include/net/mptcp.h      |  41 ++-------
+ include/uapi/linux/tcp.h |   1 -
+ net/ipv4/tcp.c           |  46 ----------
+ net/mptcp/Kconfig        |  32 -------
+ net/mptcp/mptcp_ctrl.c   |  35 +-------
+ net/mptcp/mptcp_output.c |   7 +-
+ net/mptcp/mptcp_sched.c  | 223 ++++---------------------------------------=
 ----
- net/mptcp/mptcp_sched.c    |  32 ++--
- 7 files changed, 21 insertions(+), 423 deletions(-)
+ 8 files changed, 28 insertions(+), 360 deletions(-)
 
 diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index cc896f842c31..6dd9c45c52d6 100644
+index 01321044047c..02af5c56d2e6 100644
 --- a/include/linux/tcp.h
 +++ b/include/linux/tcp.h
-@@ -470,9 +470,6 @@ struct tcp_sock {
- 		request_mptcp:1, /* Did we send out an MP_CAPABLE?
- 				  * (this speeds up mptcp_doit() in tcp_recvmsg)
- 				  */
--		pf:1, /* Potentially Failed state: when this flag is set, we
--		       * stop using the subflow
--		       */
- 		mp_killed:1, /* Killed with a tcp_done in mptcp? */
- 		was_meta_sk:1,	/* This was a meta sk (in case of reuse) */
- 		is_master_sk:1,
+@@ -476,17 +476,14 @@ struct tcp_sock {
+ 		close_it:1,	/* Must close socket in mptcp_data_ready? */
+ 		closing:1,
+ 		mptcp_ver:4,
+-		mptcp_sched_setsockopt:1,
+ 		mptcp_pm_setsockopt:1,
+ 		record_master_info:1;
+ 	struct mptcp_tcp_sock *mptcp;
+ #ifdef CONFIG_MPTCP
+-#define MPTCP_SCHED_NAME_MAX 16
+ #define MPTCP_PM_NAME_MAX 16
+ 	struct hlist_nulls_node tk_table;
+ 	u32		mptcp_loc_token;
+ 	u64		mptcp_loc_key;
+-	char		mptcp_sched_name[MPTCP_SCHED_NAME_MAX];
+ 	char		mptcp_pm_name[MPTCP_PM_NAME_MAX];
+ #endif /* CONFIG_MPTCP */
+ };
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 9e7dd681fb71..5e3fc3e7adba 100644
+index 136f18ce1d8e..c863f6d48a4c 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -265,12 +265,6 @@ struct mptcp_cb {
- 	u8 mptcp_sched[MPTCP_SCHED_DATA_SIZE] __aligned(8);
- 	struct mptcp_sched_ops *sched_ops;
+@@ -170,8 +170,7 @@ struct mptcp_tcp_sock {
+ 	u8	loc_id;
+ 	u8	rem_id;
  =
 
--	struct sk_buff_head reinject_queue;
--	/* First cache-line boundary is here minus 8 bytes. But from the
--	 * reinject-queue only the next and prev pointers are regularly
--	 * accessed. Thus, the whole data-path is on a single cache-line.
--	 */
+-#define MPTCP_SCHED_SIZE 4
+-	u8	mptcp_sched[MPTCP_SCHED_SIZE] __aligned(8);
++	u32	last_rbuf_opti;
+ =
+
+ 	int	init_rcv_wnd;
+ 	u32	infinite_cutoff_seq;
+@@ -219,23 +218,6 @@ struct mptcp_pm_ops {
+ 	struct module	*owner;
+ };
+ =
+
+-#define MPTCP_SCHED_NAME_MAX 16
+-struct mptcp_sched_ops {
+-	struct list_head list;
+-
+-	struct sock *		(*get_subflow)(struct sock *meta_sk,
+-					       struct sk_buff *skb,
+-					       bool zero_wnd_test);
+-	struct sk_buff *	(*next_segment)(struct sock *meta_sk,
+-						int *reinject,
+-						struct sock **subsk,
+-						unsigned int *limit);
+-	void			(*init)(struct sock *sk);
+-
+-	char			name[MPTCP_SCHED_NAME_MAX];
+-	struct module		*owner;
+-};
+-
+ struct mptcp_cb {
+ 	/* list of sockets in this multipath connection */
+ 	struct hlist_head conn_list;
+@@ -261,10 +243,6 @@ struct mptcp_cb {
+ 		snd_hiseq_index:1, /* Index in snd_high_order of snd_nxt */
+ 		rcv_hiseq_index:1; /* Index in rcv_high_order of rcv_nxt */
+ =
+
+-#define MPTCP_SCHED_DATA_SIZE 8
+-	u8 mptcp_sched[MPTCP_SCHED_DATA_SIZE] __aligned(8);
+-	struct mptcp_sched_ops *sched_ops;
 -
  	u64	infinite_rcv_seq;
  =
 
  	/***** Start of fields, used for connection closure */
-@@ -421,7 +415,6 @@ extern bool mptcp_init_failed;
- #define MPTCPHDR_SEQ64_OFO	0x20 /* Is it not in our circular array? */
- /* MPTCP flags: TX only */
- #define MPTCPHDR_INF		0x08
--#define MPTCP_REINJECT		0x10 /* Did we reinject this segment? */
+@@ -817,19 +795,18 @@ void mptcp_init_path_manager(struct mptcp_cb *mpcb);
+ void mptcp_cleanup_path_manager(struct mptcp_cb *mpcb);
+ void mptcp_fallback_default(struct mptcp_cb *mpcb);
+ void mptcp_get_default_path_manager(char *name);
+-int mptcp_set_scheduler(struct sock *sk, const char *name);
+ int mptcp_set_path_manager(struct sock *sk, const char *name);
+ int mptcp_set_default_path_manager(const char *name);
+ extern struct mptcp_pm_ops mptcp_pm_default;
  =
 
- struct mptcp_option {
- 	__u8	kind;
-@@ -719,7 +712,6 @@ int mptcp_add_sock(struct sock *meta_sk, struct sock *s=
-k, u8 loc_id, u8 rem_id,
- 		   gfp_t flags);
- void mptcp_del_sock(struct sock *sk);
- void mptcp_update_metasocket(const struct sock *meta_sk);
--void mptcp_reinject_data(struct sock *orig_sk, int clone_it);
- void mptcp_update_sndbuf(const struct tcp_sock *tp);
- void mptcp_send_fin(struct sock *meta_sk);
- void mptcp_send_active_reset(struct sock *meta_sk, gfp_t priority);
-@@ -1256,7 +1248,6 @@ static inline int is_master_tp(const struct tcp_sock =
-*tp)
- }
- static inline void mptcp_del_sock(const struct sock *sk) {}
- static inline void mptcp_update_metasocket(const struct sock *meta_sk) {}
--static inline void mptcp_reinject_data(struct sock *orig_sk, int clone_it)=
- {}
- static inline void mptcp_update_sndbuf(const struct tcp_sock *tp) {}
- static inline void mptcp_clean_rtx_infinite(const struct sk_buff *skb,
- 					    const struct sock *sk) {}
+-/* MPTCP-scheduler registration/initialization functions */
+-int mptcp_register_scheduler(struct mptcp_sched_ops *sched);
+-void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
+-void mptcp_init_scheduler(struct mptcp_cb *mpcb);
+-void mptcp_cleanup_scheduler(struct mptcp_cb *mpcb);
+-void mptcp_get_default_scheduler(char *name);
+-int mptcp_set_default_scheduler(const char *name);
+-extern struct mptcp_sched_ops mptcp_sched_default;
++void mptcp_sched_init(struct sock *sk);
++struct sock *mptcp_get_available_subflow(struct sock *meta_sk,
++					 struct sk_buff *skb,
++					 bool zero_wnd_test);
++struct sk_buff *mptcp_next_segment(struct sock *meta_sk,
++				   int *reinject,
++				   struct sock **subsk,
++				   unsigned int *limit);
+ =
+
+ /* Initializes function-pointers and MPTCP-flags */
+ static inline void mptcp_init_tcp_sock(struct sock *sk)
+diff --git a/include/uapi/linux/tcp.h b/include/uapi/linux/tcp.h
+index 072ce786a0fd..2fcfa2257cc9 100644
+--- a/include/uapi/linux/tcp.h
++++ b/include/uapi/linux/tcp.h
+@@ -134,7 +134,6 @@ enum {
+ #define TCP_CM_INQ		TCP_INQ
+ =
+
+ #define MPTCP_ENABLED		42
+-#define MPTCP_SCHEDULER		43
+ #define MPTCP_PATH_MANAGER	44
+ #define MPTCP_INFO		45
+ =
+
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index b2dac73903be..3f570b2c7eea 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2802,33 +2802,6 @@ static int do_tcp_setsockopt(struct sock *sk, int le=
+vel,
+ 		return tcp_fastopen_reset_cipher(net, sk, key, sizeof(key));
+ 	}
+ #ifdef CONFIG_MPTCP
+-	case MPTCP_SCHEDULER: {
+-		char name[MPTCP_SCHED_NAME_MAX];
+-
+-		if (optlen < 1)
+-			return -EINVAL;
+-
+-		/* Cannot be used if MPTCP is not used or we already have
+-		 * established an MPTCP-connection.
+-		 */
+-		if (mptcp_init_failed || !sysctl_mptcp_enabled ||
+-		    sk->sk_state !=3D TCP_CLOSE)
+-			return -EPERM;
+-
+-		val =3D strncpy_from_user(name, optval,
+-					min_t(long, MPTCP_SCHED_NAME_MAX - 1,
+-					      optlen));
+-
+-		if (val < 0)
+-			return -EFAULT;
+-		name[val] =3D 0;
+-
+-		lock_sock(sk);
+-		err =3D mptcp_set_scheduler(sk, name);
+-		release_sock(sk);
+-		return err;
+-	}
+-
+ 	case MPTCP_PATH_MANAGER: {
+ 		char name[MPTCP_PM_NAME_MAX];
+ =
+
+@@ -3688,25 +3661,6 @@ static int do_tcp_getsockopt(struct sock *sk, int le=
+vel,
+ 	}
+ #endif
+ #ifdef CONFIG_MPTCP
+-	case MPTCP_SCHEDULER:
+-		if (get_user(len, optlen))
+-			return -EFAULT;
+-		len =3D min_t(unsigned int, len, MPTCP_SCHED_NAME_MAX);
+-		if (put_user(len, optlen))
+-			return -EFAULT;
+-
+-		if (mptcp(tcp_sk(sk))) {
+-			struct mptcp_cb *mpcb =3D tcp_sk(mptcp_meta_sk(sk))->mpcb;
+-
+-			if (copy_to_user(optval, mpcb->sched_ops->name, len))
+-				return -EFAULT;
+-		} else {
+-			if (copy_to_user(optval, tcp_sk(sk)->mptcp_sched_name,
+-					 len))
+-				return -EFAULT;
+-		}
+-		return 0;
+-
+ 	case MPTCP_PATH_MANAGER:
+ 		if (get_user(len, optlen))
+ 			return -EFAULT;
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index 9c490ec8fba8..860e9e17f76f 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -57,35 +57,3 @@ config DEFAULT_MPTCP_PM
+ 	default "ndiffports" if DEFAULT_NDIFFPORTS
+ 	default "default"
+ =
+
+-menuconfig MPTCP_SCHED_ADVANCED
+-	bool "MPTCP: advanced scheduler control"
+-	depends on MPTCP=3Dy
+-	---help---
+-	  Support for selection of different schedulers. You should choose 'Y' he=
+re,
+-	  if you want to choose a different scheduler than the default one.
+-
+-if MPTCP_SCHED_ADVANCED
+-
+-choice
+-	prompt "Default MPTCP Scheduler"
+-	default DEFAULT
+-	help
+-	  Select the Scheduler of your choice
+-
+-	config DEFAULT_SCHEDULER
+-		bool "Default"
+-		---help---
+-		  This is the default scheduler, sending first on the subflow
+-		  with the lowest RTT.
+-
+-endchoice
+-endif
+-
+-config DEFAULT_MPTCP_SCHED
+-	string
+-	depends on (MPTCP=3Dy)
+-	default "default" if DEFAULT_SCHEDULER
+-	default "roundrobin" if DEFAULT_ROUNDROBIN
+-	default "redundant" if DEFAULT_REDUNDANT
+-	default "default"
+-
 diff --git a/net/mptcp/mptcp_ctrl.c b/net/mptcp/mptcp_ctrl.c
-index 16d388fa9454..92c2bf6e6431 100644
+index cc07fbf00dbf..0dcccfe75092 100644
 --- a/net/mptcp/mptcp_ctrl.c
 +++ b/net/mptcp/mptcp_ctrl.c
-@@ -561,7 +561,7 @@ struct sock *mptcp_select_ack_sock(const struct sock *m=
-eta_sk)
- 		struct tcp_sock *tp =3D tcp_sk(sk);
- 		u32 elapsed;
+@@ -94,25 +94,6 @@ static int proc_mptcp_path_manager(struct ctl_table *ctl=
+, int write,
+ 	return ret;
+ }
  =
 
--		if (!mptcp_sk_can_send_ack(sk) || tp->pf)
-+		if (!mptcp_sk_can_send_ack(sk) || inet_csk(sk)->icsk_ca_state =3D=3D TCP=
-_CA_Loss)
- 			continue;
- =
-
- 		elapsed =3D keepalive_time_elapsed(tp);
-@@ -693,8 +693,6 @@ void mptcp_destroy_sock(struct sock *sk)
- 		struct mptcp_tcp_sock *mptcp;
- 		struct hlist_node *tmp;
- =
-
--		__skb_queue_purge(&tcp_sk(sk)->mpcb->reinject_queue);
+-static int proc_mptcp_scheduler(struct ctl_table *ctl, int write,
+-				void __user *buffer, size_t *lenp,
+-				loff_t *ppos)
+-{
+-	char val[MPTCP_SCHED_NAME_MAX];
+-	struct ctl_table tbl =3D {
+-		.data =3D val,
+-		.maxlen =3D MPTCP_SCHED_NAME_MAX,
+-	};
+-	int ret;
 -
- 		/* We have to close all remaining subflows. Normally, they
- 		 * should all be about to get closed. But, if the kernel is
- 		 * forcing a closure (e.g., tcp_write_err), the subflows might
-@@ -1230,7 +1228,6 @@ static int mptcp_alloc_mpcb(struct sock *meta_sk, __u=
-64 remote_key,
- 	meta_tp->was_meta_sk =3D 0;
- =
-
- 	/* Initialize the queues */
--	skb_queue_head_init(&mpcb->reinject_queue);
- 	master_tp->out_of_order_queue =3D RB_ROOT;
- 	master_sk->tcp_rtx_queue =3D RB_ROOT;
- 	INIT_LIST_HEAD(&master_tp->tsq_node);
-@@ -1461,9 +1458,6 @@ void mptcp_del_sock(struct sock *sk)
- 	tp->mptcp->attached =3D 0;
- 	mpcb->path_index_bits &=3D ~(1 << tp->mptcp->path_index);
- =
-
--	if (!tcp_write_queue_empty(sk) || !tcp_rtx_queue_empty(sk))
--		mptcp_reinject_data(sk, 0);
+-	mptcp_get_default_scheduler(val);
 -
- 	if (is_master_tp(tp)) {
- 		struct sock *meta_sk =3D mptcp_meta_sk(sk);
- 		struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
-@@ -1921,8 +1915,6 @@ void mptcp_disconnect(struct sock *sk)
- 	struct tcp_sock *tp =3D tcp_sk(sk);
- 	struct hlist_node *tmp;
- =
-
--	__skb_queue_purge(&tp->mpcb->reinject_queue);
+-	ret =3D proc_dostring(&tbl, write, buffer, lenp, ppos);
+-	if (write && ret =3D=3D 0)
+-		ret =3D mptcp_set_default_scheduler(val);
+-	return ret;
+-}
 -
- 	if (tp->inside_tk_table)
- 		mptcp_hash_remove_bh(tp);
+ static struct ctl_table mptcp_table[] =3D {
+ 	{
+ 		.procname =3D "mptcp_enabled",
+@@ -150,12 +131,6 @@ static struct ctl_table mptcp_table[] =3D {
+ 		.maxlen		=3D MPTCP_PM_NAME_MAX,
+ 		.proc_handler	=3D proc_mptcp_path_manager,
+ 	},
+-	{
+-		.procname	=3D "mptcp_scheduler",
+-		.mode		=3D 0644,
+-		.maxlen		=3D MPTCP_SCHED_NAME_MAX,
+-		.proc_handler	=3D proc_mptcp_scheduler,
+-	},
+ 	{ }
+ };
  =
 
-diff --git a/net/mptcp/mptcp_fullmesh.c b/net/mptcp/mptcp_fullmesh.c
-index 4dad457246b1..2446f75b0b2c 100644
---- a/net/mptcp/mptcp_fullmesh.c
-+++ b/net/mptcp/mptcp_fullmesh.c
-@@ -923,12 +923,6 @@ static void mptcp_address_worker(struct work_struct *w=
-ork)
- 					    !ipv6_addr_equal(&inet6_sk(sk)->saddr, &event->addr.in6))
- 						continue;
- =
-
--					/* Reinject, so that pf =3D 1 and so we
--					 * won't select this one as the
--					 * ack-sock.
--					 */
--					mptcp_reinject_data(sk, 0);
--
- 					/* We announce the removal of this id */
- 					announce_remove_addr(tcp_sk(sk)->mptcp->loc_id, meta_sk);
- =
-
-@@ -1440,12 +1434,6 @@ static void full_mesh_release_sock(struct sock *meta=
-_sk)
- 		}
- =
-
- 		if (shall_remove) {
--			/* Reinject, so that pf =3D 1 and so we
--			 * won't select this one as the
--			 * ack-sock.
--			 */
--			mptcp_reinject_data(sk, 0);
--
- 			announce_remove_addr(tcp_sk(sk)->mptcp->loc_id,
- 					     meta_sk);
- =
-
-diff --git a/net/mptcp/mptcp_input.c b/net/mptcp/mptcp_input.c
-index 652da0439644..f247e9ef2853 100644
---- a/net/mptcp/mptcp_input.c
-+++ b/net/mptcp/mptcp_input.c
-@@ -92,7 +92,7 @@ static inline int mptcp_tso_acked_reinject(const struct s=
-ock *meta_sk,
- /* Cleans the meta-socket retransmission queue and the reinject-queue. */
- static void mptcp_clean_rtx_queue(struct sock *meta_sk, u32 prior_snd_una)
+@@ -604,7 +579,6 @@ static void mptcp_mpcb_put(struct mptcp_cb *mpcb)
  {
--	struct sk_buff *skb, *tmp, *next;
-+	struct sk_buff *skb, *next;
- 	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
- 	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
- 	bool acked =3D false;
-@@ -149,20 +149,6 @@ static void mptcp_clean_rtx_queue(struct sock *meta_sk=
-, u32 prior_snd_una)
- 		}
- 		sk_wmem_free_skb(meta_sk, skb);
+ 	if (refcount_dec_and_test(&mpcb->mpcb_refcnt)) {
+ 		mptcp_cleanup_path_manager(mpcb);
+-		mptcp_cleanup_scheduler(mpcb);
+ 		kfree(mpcb->master_info);
+ 		kmem_cache_free(mptcp_cb_cache, mpcb);
  	}
--	/* Remove acknowledged data from the reinject queue */
--	skb_queue_walk_safe(&mpcb->reinject_queue, skb, tmp) {
--		if (before(meta_tp->snd_una, TCP_SKB_CB(skb)->end_seq)) {
--			if (tcp_skb_pcount(skb) =3D=3D 1 ||
--			    !after(meta_tp->snd_una, TCP_SKB_CB(skb)->seq))
--				break;
--
--			mptcp_tso_acked_reinject(meta_sk, skb);
--			break;
--		}
--
--		__skb_unlink(skb, &mpcb->reinject_queue);
--		__kfree_skb(skb);
--	}
+@@ -1276,7 +1250,6 @@ static int mptcp_alloc_mpcb(struct sock *meta_sk, __u=
+64 remote_key,
+ 	refcount_set(&mpcb->mpcb_refcnt, 1);
  =
 
- 	if (likely(between(meta_tp->snd_up, prior_snd_una, meta_tp->snd_una)))
- 		meta_tp->snd_up =3D meta_tp->snd_una;
-@@ -1242,9 +1228,6 @@ static void mptcp_data_ack(struct sock *sk, const str=
-uct sk_buff *skb)
- 	u32 nwin, data_ack, data_seq;
- 	u16 data_len =3D 0;
+ 	mptcp_init_path_manager(mpcb);
+-	mptcp_init_scheduler(mpcb);
  =
 
--	/* A valid packet came in - subflow is operational again */
--	tp->pf =3D 0;
+ 	if (!try_module_get(inet_csk(master_sk)->icsk_ca_ops->owner))
+ 		tcp_assign_congestion_control(master_sk);
+@@ -1344,8 +1317,7 @@ int mptcp_add_sock(struct sock *meta_sk, struct sock =
+*sk, u8 loc_id, u8 rem_id,
+ =
+
+ 	tp->mptcp->loc_id =3D loc_id;
+ 	tp->mptcp->rem_id =3D rem_id;
+-	if (mpcb->sched_ops->init)
+-		mpcb->sched_ops->init(sk);
++	mptcp_sched_init(sk);
+ =
+
+ 	/* The corresponding sock_put is in mptcp_sock_destruct(). It cannot be
+ 	 * included in mptcp_del_sock(), because the mpcb must remain alive
+@@ -2822,17 +2794,12 @@ void __init mptcp_init(void)
+ 	if (mptcp_register_path_manager(&mptcp_pm_default))
+ 		goto register_pm_failed;
+ =
+
+-	if (mptcp_register_scheduler(&mptcp_sched_default))
+-		goto register_sched_failed;
 -
- 	/* Even if there is no data-ack, we stop retransmitting.
- 	 * Except if this is a SYN/ACK. Then it is just a retransmission
- 	 */
-@@ -1400,7 +1383,6 @@ static void mptcp_send_reset_rem_id(const struct mptc=
-p_cb *mpcb, u8 rem_id)
- 		struct sock *sk_it =3D mptcp_to_sock(mptcp);
+ 	pr_info("MPTCP: Unstable branch");
  =
 
- 		if (tcp_sk(sk_it)->mptcp->rem_id =3D=3D rem_id) {
--			mptcp_reinject_data(sk_it, 0);
- 			mptcp_send_reset(sk_it);
- 		}
- 	}
+ 	mptcp_init_failed =3D false;
+ =
+
+ 	return;
+ =
+
+-register_sched_failed:
+-	mptcp_unregister_path_manager(&mptcp_pm_default);
+ register_pm_failed:
+ 	unregister_net_sysctl_table(mptcp_sysctl);
+ register_sysctl_failed:
 diff --git a/net/mptcp/mptcp_output.c b/net/mptcp/mptcp_output.c
-index af695fafaab2..26cf41f75922 100644
+index 2d84eb2edd97..00a3674ad693 100644
 --- a/net/mptcp/mptcp_output.c
 +++ b/net/mptcp/mptcp_output.c
-@@ -54,309 +54,6 @@ int mptcp_sub_len_remove_addr_align(u16 bitfield)
- }
- EXPORT_SYMBOL(mptcp_sub_len_remove_addr_align);
+@@ -306,7 +306,7 @@ int mptcp_write_wakeup(struct sock *meta_sk, int mib)
+ 	    before(TCP_SKB_CB(skb)->seq, tcp_wnd_end(meta_tp))) {
+ 		unsigned int mss;
+ 		unsigned int seg_size =3D tcp_wnd_end(meta_tp) - TCP_SKB_CB(skb)->seq;
+-		struct sock *subsk =3D meta_tp->mpcb->sched_ops->get_subflow(meta_sk, sk=
+b, true);
++		struct sock *subsk =3D mptcp_get_available_subflow(meta_sk, skb, true);
+ 		struct tcp_sock *subtp;
  =
 
--/* get the data-seq and end-data-seq and store them again in the
-- * tcp_skb_cb
-- */
--static bool mptcp_reconstruct_mapping(struct sk_buff *skb)
--{
--	const struct mp_dss *mpdss =3D (struct mp_dss *)TCP_SKB_CB(skb)->dss;
--	u32 *p32;
--	u16 *p16;
--
--	if (!mptcp_is_data_seq(skb))
--		return false;
--
--	if (!mpdss->M)
--		return false;
--
--	/* Move the pointer to the data-seq */
--	p32 =3D (u32 *)mpdss;
--	p32++;
--	if (mpdss->A) {
--		p32++;
--		if (mpdss->a)
--			p32++;
--	}
--
--	TCP_SKB_CB(skb)->seq =3D ntohl(*p32);
--
--	/* Get the data_len to calculate the end_data_seq */
--	p32++;
--	p32++;
--	p16 =3D (u16 *)p32;
--	TCP_SKB_CB(skb)->end_seq =3D ntohs(*p16) + TCP_SKB_CB(skb)->seq;
--
--	return true;
--}
--
--static bool mptcp_is_reinjected(const struct sk_buff *skb)
--{
--	return TCP_SKB_CB(skb)->mptcp_flags & MPTCP_REINJECT;
--}
--
--static void mptcp_find_and_set_pathmask(struct sock *meta_sk, struct sk_bu=
-ff *skb)
--{
--	struct rb_node **p =3D &meta_sk->tcp_rtx_queue.rb_node;
--	struct rb_node *parent;
--	struct sk_buff *skb_it;
--
--	while (*p) {
--		parent =3D *p;
--		skb_it =3D rb_to_skb(parent);
--		if (before(TCP_SKB_CB(skb)->seq, TCP_SKB_CB(skb_it)->seq)) {
--			p =3D &parent->rb_left;
--			continue;
--		}
--		if (after(TCP_SKB_CB(skb)->seq, TCP_SKB_CB(skb_it)->seq)) {
--			p =3D &parent->rb_right;
--			continue;
--		}
--
--		TCP_SKB_CB(skb)->path_mask =3D TCP_SKB_CB(skb_it)->path_mask;
--		break;
--	}
--}
--
--/* Reinject data from one TCP subflow to the meta_sk. If sk =3D=3D NULL, w=
-e are
-- * coming from the meta-retransmit-timer
-- */
--static void __mptcp_reinject_data(struct sk_buff *orig_skb, struct sock *m=
-eta_sk,
--				  struct sock *sk, int clone_it,
--				  enum tcp_queue tcp_queue)
--{
--	struct sk_buff *skb, *skb1;
--	const struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
--	struct mptcp_cb *mpcb =3D meta_tp->mpcb;
--	u32 seq, end_seq;
--
--	if (clone_it) {
--		/* pskb_copy is necessary here, because the TCP/IP-headers
--		 * will be changed when it's going to be reinjected on another
--		 * subflow.
--		 */
--		tcp_skb_tsorted_save(orig_skb) {
--			skb =3D pskb_copy_for_clone(orig_skb, GFP_ATOMIC);
--		} tcp_skb_tsorted_restore(orig_skb);
--	} else {
--		if (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
--			__skb_unlink(orig_skb, &sk->sk_write_queue);
--		else
--			rb_erase(&orig_skb->rbnode, &sk->tcp_rtx_queue);
--		sock_set_flag(sk, SOCK_QUEUE_SHRUNK);
--		sk->sk_wmem_queued -=3D orig_skb->truesize;
--		sk_mem_uncharge(sk, orig_skb->truesize);
--		skb =3D orig_skb;
--	}
--	if (unlikely(!skb))
--		return;
--
--	if (sk && !mptcp_reconstruct_mapping(skb)) {
--		__kfree_skb(skb);
--		return;
--	}
--
--	skb->sk =3D meta_sk;
--
--	/* Make sure that this list is clean */
--	tcp_skb_tsorted_anchor_cleanup(skb);
--
--	/* Reset subflow-specific TCP control-data */
--	TCP_SKB_CB(skb)->sacked =3D 0;
--	TCP_SKB_CB(skb)->tcp_flags &=3D (TCPHDR_ACK | TCPHDR_PSH);
--
--	/* If it reached already the destination, we don't have to reinject it */
--	if (!after(TCP_SKB_CB(skb)->end_seq, meta_tp->snd_una)) {
--		__kfree_skb(skb);
--		return;
--	}
--
--	/* Only reinject segments that are fully covered by the mapping */
--	if (skb->len + (mptcp_is_data_fin(skb) ? 1 : 0) !=3D
--	    TCP_SKB_CB(skb)->end_seq - TCP_SKB_CB(skb)->seq) {
--		struct rb_node *parent, **p =3D &meta_sk->tcp_rtx_queue.rb_node;
--		u32 end_seq =3D TCP_SKB_CB(skb)->end_seq;
--		u32 seq =3D TCP_SKB_CB(skb)->seq;
--
--		__kfree_skb(skb);
--
--		/* Ok, now we have to look for the full mapping in the meta
--		 * send-queue :S
--		 */
--
--		/* First, find the first skb that covers us */
--		while (*p) {
--			parent =3D *p;
--			skb =3D rb_to_skb(parent);
--
--			/* Not yet at the mapping? */
--			if (!after(end_seq, TCP_SKB_CB(skb)->seq)) {
--				p =3D &parent->rb_left;
--				continue;
--			}
--
--			if (!before(seq, TCP_SKB_CB(skb)->end_seq)) {
--				p =3D &parent->rb_right;
--				continue;
--			}
--
--			break;
--		}
--
--		if (*p) {
--			/* We found it, now let's reinject everything */
--			skb =3D rb_to_skb(*p);
--
--			skb_rbtree_walk_from(skb) {
--				if (after(TCP_SKB_CB(skb)->end_seq, end_seq))
--					return;
--				__mptcp_reinject_data(skb, meta_sk, NULL, 1,
--						      TCP_FRAG_IN_RTX_QUEUE);
--			}
--		}
--		return;
--	}
--
--	/* Segment goes back to the MPTCP-layer. So, we need to zero the
--	 * path_mask/dss.
--	 */
--	memset(TCP_SKB_CB(skb)->dss, 0 , mptcp_dss_len);
--
--	/* We need to find out the path-mask from the meta-write-queue
--	 * to properly select a subflow.
--	 */
--	mptcp_find_and_set_pathmask(meta_sk, skb);
--
--	/* If it's empty, just add */
--	if (skb_queue_empty(&mpcb->reinject_queue)) {
--		skb_queue_head(&mpcb->reinject_queue, skb);
--		return;
--	}
--
--	/* Find place to insert skb - or even we can 'drop' it, as the
--	 * data is already covered by other skb's in the reinject-queue.
--	 *
--	 * This is inspired by code from tcp_data_queue.
--	 */
--
--	skb1 =3D skb_peek_tail(&mpcb->reinject_queue);
--	seq =3D TCP_SKB_CB(skb)->seq;
--	while (1) {
--		if (!after(TCP_SKB_CB(skb1)->seq, seq))
--			break;
--		if (skb_queue_is_first(&mpcb->reinject_queue, skb1)) {
--			skb1 =3D NULL;
--			break;
--		}
--		skb1 =3D skb_queue_prev(&mpcb->reinject_queue, skb1);
--	}
--
--	/* Do skb overlap to previous one? */
--	end_seq =3D TCP_SKB_CB(skb)->end_seq;
--	if (skb1 && before(seq, TCP_SKB_CB(skb1)->end_seq)) {
--		if (!after(end_seq, TCP_SKB_CB(skb1)->end_seq)) {
--			/* All the bits are present. Don't reinject */
--			__kfree_skb(skb);
--			return;
--		}
--		if (seq =3D=3D TCP_SKB_CB(skb1)->seq) {
--			if (skb_queue_is_first(&mpcb->reinject_queue, skb1))
--				skb1 =3D NULL;
--			else
--				skb1 =3D skb_queue_prev(&mpcb->reinject_queue, skb1);
--		}
--	}
--	if (!skb1)
--		__skb_queue_head(&mpcb->reinject_queue, skb);
--	else
--		__skb_queue_after(&mpcb->reinject_queue, skb1, skb);
--
--	/* And clean segments covered by new one as whole. */
--	while (!skb_queue_is_last(&mpcb->reinject_queue, skb)) {
--		skb1 =3D skb_queue_next(&mpcb->reinject_queue, skb);
--
--		if (!after(end_seq, TCP_SKB_CB(skb1)->seq))
--			break;
--
--		if (before(end_seq, TCP_SKB_CB(skb1)->end_seq))
--			break;
--
--		__skb_unlink(skb1, &mpcb->reinject_queue);
--		__kfree_skb(skb1);
--	}
--	return;
--}
--
--/* Inserts data into the reinject queue */
--void mptcp_reinject_data(struct sock *sk, int clone_it)
--{
--	struct sock *meta_sk =3D mptcp_meta_sk(sk);
--	struct sk_buff *skb_it, *tmp;
--	enum tcp_queue tcp_queue;
--
--	/* It has already been closed - there is really no point in reinjecting */
--	if (meta_sk->sk_state =3D=3D TCP_CLOSE)
--		return;
--
--	skb_queue_walk_safe(&sk->sk_write_queue, skb_it, tmp) {
--		struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb_it);
--		/* Subflow syn's and fin's are not reinjected.
--		 *
--		 * As well as empty subflow-fins with a data-fin.
--		 * They are reinjected below (without the subflow-fin-flag)
--		 */
--		if (tcb->tcp_flags & TCPHDR_SYN ||
--		    (tcb->tcp_flags & TCPHDR_FIN && !mptcp_is_data_fin(skb_it)) ||
--		    (tcb->tcp_flags & TCPHDR_FIN && mptcp_is_data_fin(skb_it) && !skb_it=
-->len))
--			continue;
--
--		if (mptcp_is_reinjected(skb_it))
--			continue;
--
--		tcb->mptcp_flags |=3D MPTCP_REINJECT;
--		__mptcp_reinject_data(skb_it, meta_sk, sk, clone_it,
--				      TCP_FRAG_IN_WRITE_QUEUE);
--	}
--
--	skb_rbtree_walk_safe(skb_it, &sk->tcp_rtx_queue, tmp) {
--		struct tcp_skb_cb *tcb =3D TCP_SKB_CB(skb_it);
--		/* Subflow syn's and fin's are not reinjected.
--		 *
--		 * As well as empty subflow-fins with a data-fin.
--		 * They are reinjected below (without the subflow-fin-flag)
--		 */
--		if (tcb->tcp_flags & TCPHDR_SYN ||
--		    (tcb->tcp_flags & TCPHDR_FIN && !mptcp_is_data_fin(skb_it)) ||
--		    (tcb->tcp_flags & TCPHDR_FIN && mptcp_is_data_fin(skb_it) && !skb_it=
-->len))
--			continue;
--
--		if (mptcp_is_reinjected(skb_it))
--			continue;
--
--		tcb->mptcp_flags |=3D MPTCP_REINJECT;
--		__mptcp_reinject_data(skb_it, meta_sk, sk, clone_it,
--				      TCP_FRAG_IN_RTX_QUEUE);
--	}
--
--	skb_it =3D tcp_write_queue_tail(meta_sk);
--	tcp_queue =3D TCP_FRAG_IN_WRITE_QUEUE;
--
--	if (!skb_it) {
--		skb_it =3D skb_rb_last(&meta_sk->tcp_rtx_queue);
--		tcp_queue =3D TCP_FRAG_IN_RTX_QUEUE;
--	}
--
--	/* If sk has sent the empty data-fin, we have to reinject it too. */
--	if (skb_it && mptcp_is_data_fin(skb_it) && skb_it->len =3D=3D 0 &&
--	    TCP_SKB_CB(skb_it)->path_mask & mptcp_pi_to_flag(tcp_sk(sk)->mptcp->p=
-ath_index)) {
--		__mptcp_reinject_data(skb_it, meta_sk, NULL, 1, tcp_queue);
--	}
--
--	tcp_sk(sk)->pf =3D 1;
--
--	mptcp_push_pending_frames(meta_sk);
--}
--EXPORT_SYMBOL(mptcp_reinject_data);
--
- static void mptcp_combine_dfin(const struct sk_buff *skb,
- 			       const struct sock *meta_sk,
- 			       struct sock *subsk)
-@@ -560,8 +257,7 @@ static bool mptcp_skb_entail(struct sock *sk, struct sk=
-_buff *skb, int reinject)
-  * - The reinject-queue (reinject =3D=3D -1)
-  */
- static int mptcp_fragment(struct sock *meta_sk, enum tcp_queue tcp_queue,
--			  struct sk_buff *skb, u32 len,
--			  gfp_t gfp, int reinject)
-+			  struct sk_buff *skb, u32 len, gfp_t gfp)
- {
- 	int ret, diff, old_factor;
- 	struct sk_buff *buff;
-@@ -592,34 +288,6 @@ static int mptcp_fragment(struct sock *meta_sk, enum t=
-cp_queue tcp_queue,
- 	TCP_SKB_CB(buff)->mptcp_flags =3D flags;
- 	TCP_SKB_CB(buff)->path_mask =3D TCP_SKB_CB(skb)->path_mask;
- =
-
--	/* If reinject =3D=3D 1, the buff will be added to the reinject
--	 * queue, which is currently not part of memory accounting. So
--	 * undo the changes done by tcp_fragment and update the
--	 * reinject queue. Also, undo changes to the packet counters.
--	 */
--	if (reinject =3D=3D 1) {
--		int undo =3D buff->truesize - diff;
--		meta_sk->sk_wmem_queued -=3D undo;
--		sk_mem_uncharge(meta_sk, undo);
--
--		tcp_sk(meta_sk)->mpcb->reinject_queue.qlen++;
--		if (tcp_queue =3D=3D TCP_FRAG_IN_WRITE_QUEUE)
--			meta_sk->sk_write_queue.qlen--;
--
--		if (!before(tcp_sk(meta_sk)->snd_nxt, TCP_SKB_CB(buff)->end_seq)) {
--			undo =3D old_factor - tcp_skb_pcount(skb) -
--				tcp_skb_pcount(buff);
--			if (undo)
--				tcp_adjust_pcount(meta_sk, skb, -undo);
--		}
--
--		/* tcp_fragment's call to sk_stream_alloc_skb initializes the
--		 * tcp_tsorted_anchor. We need to revert this as it clashes
--		 * with the refdst pointer.
--		 */
--		tcp_skb_tsorted_anchor_cleanup(buff);
--	}
--
- 	return 0;
- }
- =
-
-@@ -663,7 +331,7 @@ int mptcp_write_wakeup(struct sock *meta_sk, int mib)
- 			seg_size =3D min(seg_size, mss);
- 			TCP_SKB_CB(skb)->tcp_flags |=3D TCPHDR_PSH;
- 			if (mptcp_fragment(meta_sk, TCP_FRAG_IN_WRITE_QUEUE,
--					   skb, seg_size, GFP_ATOMIC, 0))
-+					   skb, seg_size, GFP_ATOMIC))
- 				return -1;
- 		} else if (!tcp_skb_pcount(skb)) {
- 			/* see mptcp_write_xmit on why we use UINT_MAX */
-@@ -738,14 +406,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned i=
-nt mss_now, int nonagle,
- 		subtp =3D tcp_sk(subsk);
- 		mss_now =3D tcp_current_mss(subsk);
- =
-
--		if (reinject =3D=3D 1) {
--			if (!after(TCP_SKB_CB(skb)->end_seq, meta_tp->snd_una)) {
--				/* Segment already reached the peer, take the next one */
--				__skb_unlink(skb, &mpcb->reinject_queue);
--				__kfree_skb(skb);
--				continue;
--			}
--		} else if (reinject =3D=3D -1) {
-+		if (reinject =3D=3D -1) {
- 			tcp_queue =3D TCP_FRAG_IN_RTX_QUEUE;
- 		}
- =
-
-@@ -810,7 +471,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned in=
+ 		WARN_ON(TCP_SKB_CB(skb)->sacked);
+@@ -395,8 +395,7 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned in=
 t mss_now, int nonagle,
  =
 
- 		if (skb->len > limit &&
- 		    unlikely(mptcp_fragment(meta_sk, tcp_queue,
--					    skb, limit, gfp, reinject)))
-+					    skb, limit, gfp)))
- 			break;
+ 	tcp_mstamp_refresh(meta_tp);
  =
 
- 		if (!mptcp_skb_entail(subsk, skb, reinject))
-@@ -833,11 +494,6 @@ bool mptcp_write_xmit(struct sock *meta_sk, unsigned i=
-nt mss_now, int nonagle,
+-	while ((skb =3D mpcb->sched_ops->next_segment(meta_sk, &reinject, &subsk,
+-						    &sublimit))) {
++	while ((skb =3D mptcp_next_segment(meta_sk, &reinject, &subsk, &sublimit)=
+)) {
+ 		enum tcp_queue tcp_queue =3D TCP_FRAG_IN_WRITE_QUEUE;
+ 		unsigned int limit;
  =
 
- 		tcp_minshall_update(meta_tp, mss_now, skb);
- =
-
--		if (reinject > 0) {
--			__skb_unlink(skb, &mpcb->reinject_queue);
--			kfree_skb(skb);
--		}
--
- 		if (push_one)
- 			break;
- 	}
-@@ -1488,7 +1144,7 @@ int mptcp_retransmit_skb(struct sock *meta_sk, struct=
+@@ -1111,7 +1110,7 @@ int mptcp_retransmit_skb(struct sock *meta_sk, struct=
  sk_buff *skb)
- =
-
- 	if (skb->len > limit &&
- 	    unlikely(mptcp_fragment(meta_sk, TCP_FRAG_IN_RTX_QUEUE, skb,
--				    limit, GFP_ATOMIC, 0)))
-+				    limit, GFP_ATOMIC)))
- 		goto failed;
- =
-
- 	if (!mptcp_skb_entail(subsk, skb, -1))
-@@ -1640,10 +1296,8 @@ void mptcp_sub_retransmit_timer(struct sock *sk)
- =
-
- 	tcp_retransmit_timer(sk);
- =
-
--	if (!tp->fastopen_rsk) {
--		mptcp_reinject_data(sk, 1);
-+	if (!tp->fastopen_rsk)
- 		mptcp_set_rto(sk);
--	}
- }
- =
-
- /* Modify values to an mptcp-level for the initial window of new subflows =
-*/
+ 	/* We need to make sure that the retransmitted segment can be sent on a
+ 	 * subflow right now. If it is too big, it needs to be fragmented.
+ 	 */
+-	subsk =3D meta_tp->mpcb->sched_ops->get_subflow(meta_sk, skb, false);
++	subsk =3D mptcp_get_available_subflow(meta_sk, skb, false);
+ 	if (!subsk) {
+ 		/* We want to increase icsk_retransmits, thus return 0, so that
+ 		 * mptcp_meta_retransmit_timer enters the desired branch.
 diff --git a/net/mptcp/mptcp_sched.c b/net/mptcp/mptcp_sched.c
-index 7d4804f8ba91..7f19b4b4bea0 100644
+index 7f19b4b4bea0..1e26518e2b89 100644
 --- a/net/mptcp/mptcp_sched.c
 +++ b/net/mptcp/mptcp_sched.c
-@@ -29,7 +29,7 @@ static bool mptcp_is_def_unavailable(struct sock *sk)
- 	if (tp->mptcp->pre_established)
- 		return true;
+@@ -1,20 +1,6 @@
+-/* MPTCP Scheduler module selector. Highly inspired by tcp_cong.c */
+-
+ #include <linux/module.h>
+ #include <net/mptcp.h>
  =
 
--	if (tp->pf)
-+	if (inet_csk(sk)->icsk_ca_state =3D=3D TCP_CA_Loss)
- 		return true;
+-static DEFINE_SPINLOCK(mptcp_sched_list_lock);
+-static LIST_HEAD(mptcp_sched_list);
+-
+-struct defsched_priv {
+-	u32	last_rbuf_opti;
+-};
+-
+-static struct defsched_priv *defsched_get_priv(const struct tcp_sock *tp)
+-{
+-	return (struct defsched_priv *)&tp->mptcp->mptcp_sched[0];
+-}
+-
+ static bool mptcp_is_def_unavailable(struct sock *sk)
+ {
+ 	const struct tcp_sock *tp =3D tcp_sk(sk);
+@@ -192,9 +178,9 @@ static struct sock
+  * The flow is selected based on the shortest RTT.
+  * If all paths have full cong windows, we simply return NULL.
+  */
+-static struct sock *get_available_subflow(struct sock *meta_sk,
+-					  struct sk_buff *skb,
+-					  bool zero_wnd_test)
++struct sock *mptcp_get_available_subflow(struct sock *meta_sk,
++					 struct sk_buff *skb,
++					 bool zero_wnd_test)
+ {
+ 	struct mptcp_cb *mpcb =3D tcp_sk(meta_sk)->mpcb;
+ 	struct sock *sk;
+@@ -239,11 +225,10 @@ static struct sock *get_available_subflow(struct sock=
+ *meta_sk,
  =
 
- 	return false;
-@@ -333,25 +333,19 @@ static struct sk_buff *__mptcp_next_segment(struct so=
+ static struct sk_buff *mptcp_rcv_buf_optimization(struct sock *sk, int pen=
+al)
+ {
+-	struct sock *meta_sk;
+ 	const struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct mptcp_tcp_sock *mptcp;
+ 	struct sk_buff *skb_head;
+-	struct defsched_priv *dsp =3D defsched_get_priv(tp);
++	struct sock *meta_sk;
+ =
+
+ 	meta_sk =3D mptcp_meta_sk(sk);
+ 	skb_head =3D tcp_rtx_queue_head(meta_sk);
+@@ -260,7 +245,7 @@ static struct sk_buff *mptcp_rcv_buf_optimization(struc=
+t sock *sk, int penal)
+ 		goto retrans;
+ =
+
+ 	/* Only penalize again after an RTT has elapsed */
+-	if (tcp_jiffies32 - dsp->last_rbuf_opti < usecs_to_jiffies(tp->srtt_us >>=
+ 3))
++	if (tcp_jiffies32 - tp->mptcp->last_rbuf_opti < usecs_to_jiffies(tp->srtt=
+_us >> 3))
+ 		goto retrans;
+ =
+
+ 	/* Half the cwnd of the slow flow */
+@@ -278,7 +263,7 @@ static struct sk_buff *mptcp_rcv_buf_optimization(struc=
+t sock *sk, int penal)
+ 				if (prior_cwnd >=3D tp_it->snd_ssthresh)
+ 					tp_it->snd_ssthresh =3D max(tp_it->snd_ssthresh >> 1U, 2U);
+ =
+
+-				dsp->last_rbuf_opti =3D tcp_jiffies32;
++				tp->mptcp->last_rbuf_opti =3D tcp_jiffies32;
+ 			}
+ 			break;
+ 		}
+@@ -338,8 +323,8 @@ static struct sk_buff *__mptcp_next_segment(struct sock=
+ *meta_sk, int *reinject)
+ 	if (!skb && meta_sk->sk_socket &&
+ 	    test_bit(SOCK_NOSPACE, &meta_sk->sk_socket->flags) &&
+ 	    sk_stream_wspace(meta_sk) < sk_stream_min_wspace(meta_sk)) {
+-		struct sock *subsk =3D get_available_subflow(meta_sk, NULL,
+-							   false);
++		struct sock *subsk =3D mptcp_get_available_subflow(meta_sk, NULL,
++								 false);
+ 		if (!subsk)
+ 			return NULL;
+ =
+
+@@ -350,10 +335,10 @@ static struct sk_buff *__mptcp_next_segment(struct so=
 ck *meta_sk, int *reinject)
- 	if (mpcb->infinite_mapping_snd || mpcb->send_infinite_mapping)
- 		return tcp_send_head(meta_sk);
- =
-
--	skb =3D skb_peek(&mpcb->reinject_queue);
-+	skb =3D tcp_send_head(meta_sk);
- =
-
--	if (skb) {
--		*reinject =3D 1;
--	} else {
--		skb =3D tcp_send_head(meta_sk);
--
--		if (!skb && meta_sk->sk_socket &&
--		    test_bit(SOCK_NOSPACE, &meta_sk->sk_socket->flags) &&
--		    sk_stream_wspace(meta_sk) < sk_stream_min_wspace(meta_sk)) {
--			struct sock *subsk =3D get_available_subflow(meta_sk, NULL,
--								   false);
--			if (!subsk)
--				return NULL;
--
--			skb =3D mptcp_rcv_buf_optimization(subsk, 0);
--			if (skb)
--				*reinject =3D -1;
--		}
-+	if (!skb && meta_sk->sk_socket &&
-+	    test_bit(SOCK_NOSPACE, &meta_sk->sk_socket->flags) &&
-+	    sk_stream_wspace(meta_sk) < sk_stream_min_wspace(meta_sk)) {
-+		struct sock *subsk =3D get_available_subflow(meta_sk, NULL,
-+							   false);
-+		if (!subsk)
-+			return NULL;
-+
-+		skb =3D mptcp_rcv_buf_optimization(subsk, 0);
-+		if (skb)
-+			*reinject =3D -1;
- 	}
  	return skb;
  }
+ =
+
+-static struct sk_buff *mptcp_next_segment(struct sock *meta_sk,
+-					  int *reinject,
+-					  struct sock **subsk,
+-					  unsigned int *limit)
++struct sk_buff *mptcp_next_segment(struct sock *meta_sk,
++				   int *reinject,
++				   struct sock **subsk,
++				   unsigned int *limit)
+ {
+ 	struct sk_buff *skb =3D __mptcp_next_segment(meta_sk, reinject);
+ 	unsigned int mss_now;
+@@ -367,7 +352,7 @@ static struct sk_buff *mptcp_next_segment(struct sock *=
+meta_sk,
+ 	if (!skb)
+ 		return NULL;
+ =
+
+-	*subsk =3D get_available_subflow(meta_sk, skb, false);
++	*subsk =3D mptcp_get_available_subflow(meta_sk, skb, false);
+ 	if (!*subsk)
+ 		return NULL;
+ =
+
+@@ -415,185 +400,7 @@ static struct sk_buff *mptcp_next_segment(struct sock=
+ *meta_sk,
+ 	return skb;
+ }
+ =
+
+-static void defsched_init(struct sock *sk)
+-{
+-	struct defsched_priv *dsp =3D defsched_get_priv(tcp_sk(sk));
+-
+-	dsp->last_rbuf_opti =3D tcp_jiffies32;
+-}
+-
+-struct mptcp_sched_ops mptcp_sched_default =3D {
+-	.get_subflow =3D get_available_subflow,
+-	.next_segment =3D mptcp_next_segment,
+-	.init =3D defsched_init,
+-	.name =3D "default",
+-	.owner =3D THIS_MODULE,
+-};
+-
+-static struct mptcp_sched_ops *mptcp_sched_find(const char *name)
+-{
+-	struct mptcp_sched_ops *e;
+-
+-	list_for_each_entry_rcu(e, &mptcp_sched_list, list) {
+-		if (strcmp(e->name, name) =3D=3D 0)
+-			return e;
+-	}
+-
+-	return NULL;
+-}
+-
+-int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
+-{
+-	int ret =3D 0;
+-
+-	if (!sched->get_subflow || !sched->next_segment)
+-		return -EINVAL;
+-
+-	spin_lock(&mptcp_sched_list_lock);
+-	if (mptcp_sched_find(sched->name)) {
+-		pr_notice("%s already registered\n", sched->name);
+-		ret =3D -EEXIST;
+-	} else {
+-		list_add_tail_rcu(&sched->list, &mptcp_sched_list);
+-		pr_info("%s registered\n", sched->name);
+-	}
+-	spin_unlock(&mptcp_sched_list_lock);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(mptcp_register_scheduler);
+-
+-void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched)
+-{
+-	spin_lock(&mptcp_sched_list_lock);
+-	list_del_rcu(&sched->list);
+-	spin_unlock(&mptcp_sched_list_lock);
+-
+-	/* Wait for outstanding readers to complete before the
+-	 * module gets removed entirely.
+-	 *
+-	 * A try_module_get() should fail by now as our module is
+-	 * in "going" state since no refs are held anymore and
+-	 * module_exit() handler being called.
+-	 */
+-	synchronize_rcu();
+-}
+-EXPORT_SYMBOL_GPL(mptcp_unregister_scheduler);
+-
+-void mptcp_get_default_scheduler(char *name)
+-{
+-	struct mptcp_sched_ops *sched;
+-
+-	BUG_ON(list_empty(&mptcp_sched_list));
+-
+-	rcu_read_lock();
+-	sched =3D list_entry(mptcp_sched_list.next, struct mptcp_sched_ops, list);
+-	strncpy(name, sched->name, MPTCP_SCHED_NAME_MAX);
+-	rcu_read_unlock();
+-}
+-
+-int mptcp_set_default_scheduler(const char *name)
+-{
+-	struct mptcp_sched_ops *sched;
+-	int ret =3D -ENOENT;
+-
+-	spin_lock(&mptcp_sched_list_lock);
+-	sched =3D mptcp_sched_find(name);
+-#ifdef CONFIG_MODULES
+-	if (!sched && capable(CAP_NET_ADMIN)) {
+-		spin_unlock(&mptcp_sched_list_lock);
+-
+-		request_module("mptcp_%s", name);
+-		spin_lock(&mptcp_sched_list_lock);
+-		sched =3D mptcp_sched_find(name);
+-	}
+-#endif
+-
+-	if (sched) {
+-		list_move(&sched->list, &mptcp_sched_list);
+-		ret =3D 0;
+-	} else {
+-		pr_info("%s is not available\n", name);
+-	}
+-	spin_unlock(&mptcp_sched_list_lock);
+-
+-	return ret;
+-}
+-
+-/* Must be called with rcu lock held */
+-static struct mptcp_sched_ops *__mptcp_sched_find_autoload(const char *nam=
+e)
+-{
+-	struct mptcp_sched_ops *sched =3D mptcp_sched_find(name);
+-#ifdef CONFIG_MODULES
+-	if (!sched && capable(CAP_NET_ADMIN)) {
+-		rcu_read_unlock();
+-		request_module("mptcp_%s", name);
+-		rcu_read_lock();
+-		sched =3D mptcp_sched_find(name);
+-	}
+-#endif
+-	return sched;
+-}
+-
+-void mptcp_init_scheduler(struct mptcp_cb *mpcb)
+-{
+-	struct mptcp_sched_ops *sched;
+-	struct sock *meta_sk =3D mpcb->meta_sk;
+-	struct tcp_sock *meta_tp =3D tcp_sk(meta_sk);
+-
+-	rcu_read_lock();
+-	/* if scheduler was set using socket option */
+-	if (meta_tp->mptcp_sched_setsockopt) {
+-		sched =3D __mptcp_sched_find_autoload(meta_tp->mptcp_sched_name);
+-		if (sched && try_module_get(sched->owner)) {
+-			mpcb->sched_ops =3D sched;
+-			goto out;
+-		}
+-	}
+-
+-	list_for_each_entry_rcu(sched, &mptcp_sched_list, list) {
+-		if (try_module_get(sched->owner)) {
+-			mpcb->sched_ops =3D sched;
+-			break;
+-		}
+-	}
+-out:
+-	rcu_read_unlock();
+-}
+-
+-/* Change scheduler for socket */
+-int mptcp_set_scheduler(struct sock *sk, const char *name)
+-{
+-	struct mptcp_sched_ops *sched;
+-	int err =3D 0;
+-
+-	rcu_read_lock();
+-	sched =3D __mptcp_sched_find_autoload(name);
+-
+-	if (!sched) {
+-		err =3D -ENOENT;
+-	} else if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN)) {
+-		err =3D -EPERM;
+-	} else {
+-		strcpy(tcp_sk(sk)->mptcp_sched_name, name);
+-		tcp_sk(sk)->mptcp_sched_setsockopt =3D 1;
+-	}
+-	rcu_read_unlock();
+-
+-	return err;
+-}
+-
+-/* Manage refcounts on socket close. */
+-void mptcp_cleanup_scheduler(struct mptcp_cb *mpcb)
++void mptcp_sched_init(struct sock *sk)
+ {
+-	module_put(mpcb->sched_ops->owner);
+-}
+-
+-/* Set default value from kernel configuration at bootup */
+-static int __init mptcp_scheduler_default(void)
+-{
+-	BUILD_BUG_ON(sizeof(struct defsched_priv) > MPTCP_SCHED_SIZE);
+-
+-	return mptcp_set_default_scheduler(CONFIG_DEFAULT_MPTCP_SCHED);
++	tcp_sk(sk)->mptcp->last_rbuf_opti =3D tcp_jiffies32;
+ }
+-late_initcall(mptcp_scheduler_default);
 -- =
 
 2.16.2
 
 
---===============0052027621677873607==--
+--===============1287340542488881547==--
