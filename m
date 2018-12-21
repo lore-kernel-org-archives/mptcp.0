@@ -1,70 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============7995126705087119894=="
+Content-Type: multipart/mixed; boundary="===============5340280737708892197=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v4 mptcp-net-next 02/12] mptcp: Remove some left-over
- cruft
-Date: Fri, 21 Dec 2018 08:13:28 -0800
-Message-ID: <20181221161338.72325-3-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH v4 mptcp-net-next 05/12] mptcp: Remove support for
+ sendpage()
+Date: Fri, 21 Dec 2018 08:13:31 -0800
+Message-ID: <20181221161338.72325-6-cpaasch@apple.com>
 In-Reply-To: 20181221161338.72325-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 956
+X-UID: 957
 
---===============7995126705087119894==
+--===============5340280737708892197==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP-congestion controls have been removed. This here is a
-left-over.
-
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/ipv4/Kconfig | 19 -------------------
- 1 file changed, 19 deletions(-)
+ include/net/mptcp.h | 18 ------------------
+ net/ipv4/tcp.c      | 21 ++-------------------
+ 2 files changed, 2 insertions(+), 37 deletions(-)
 
-diff --git a/net/ipv4/Kconfig b/net/ipv4/Kconfig
-index 3620a29db1ef..32cae39cdff6 100644
---- a/net/ipv4/Kconfig
-+++ b/net/ipv4/Kconfig
-@@ -717,21 +717,6 @@ choice
- 	config DEFAULT_BBR
- 		bool "BBR" if TCP_CONG_BBR=3Dy
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index e01a642466c0..9e7dd681fb71 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -868,20 +868,6 @@ struct request_sock *rev_mptcp_rsk(const struct mptcp_=
+request_sock *req)
+ 	return (struct request_sock *)req;
+ }
  =
 
--	config DEFAULT_LIA
--		bool "Lia" if TCP_CONG_LIA=3Dy
+-static inline bool mptcp_can_sendpage(struct sock *sk)
+-{
+-	struct mptcp_tcp_sock *mptcp;
 -
--	config DEFAULT_OLIA
--		bool "Olia" if TCP_CONG_OLIA=3Dy
+-	mptcp_for_each_sub(tcp_sk(sk)->mpcb, mptcp) {
+-		struct sock *sk_it =3D mptcp_to_sock(mptcp);
 -
--	config DEFAULT_WVEGAS
--		bool "Wvegas" if TCP_CONG_WVEGAS=3Dy
+-		if (!(sk_it->sk_route_caps & NETIF_F_SG))
+-			return false;
+-	}
 -
--	config DEFAULT_BALIA
--		bool "Balia" if TCP_CONG_BALIA=3Dy
+-	return true;
+-}
 -
--	config DEFAULT_MCTCPDESYNC
--		bool "Mctcpdesync (EXPERIMENTAL)" if TCP_CONG_MCTCPDESYNC=3Dy
+ static inline void mptcp_push_pending_frames(struct sock *meta_sk)
+ {
+ 	/* We check packets out and send-head here. TCP only checks the
+@@ -1366,10 +1352,6 @@ static inline int mptcp_rcv_synsent_state_process(st=
+ruct sock *sk,
+ {
+ 	return 0;
+ }
+-static inline bool mptcp_can_sendpage(struct sock *sk)
+-{
+-	return false;
+-}
+ static inline int mptcp_init_tw_sock(struct sock *sk,
+ 				     struct tcp_timewait_sock *tw)
+ {
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 213be064adde..87f7616aaf93 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -977,28 +977,12 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct page=
+ *page, int offset,
+ 	 * is fully established.
+ 	 */
+ 	if (((1 << sk->sk_state) & ~(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)) &&
+-	    !tcp_passive_fastopen(mptcp(tp) && tp->mpcb->master_sk ?
+-				  tp->mpcb->master_sk : sk)) {
++	    !tcp_passive_fastopen(sk)) {
+ 		err =3D sk_stream_wait_connect(sk, &timeo);
+ 		if (err !=3D 0)
+ 			goto out_err;
+ 	}
+ =
+
+-	if (mptcp(tp)) {
+-		/* We must check this with socket-lock hold because we iterate
+-		 * over the subflows.
+-		 */
+-		if (!mptcp_can_sendpage(sk)) {
+-			ssize_t ret;
 -
- 	config DEFAULT_RENO
- 		bool "Reno"
- endchoice
-@@ -752,10 +737,6 @@ config DEFAULT_TCP_CONG
- 	default "vegas" if DEFAULT_VEGAS
- 	default "westwood" if DEFAULT_WESTWOOD
- 	default "veno" if DEFAULT_VENO
--	default "lia" if DEFAULT_LIA
--	default "olia" if DEFAULT_OLIA
--	default "wvegas" if DEFAULT_WVEGAS
--	default "balia" if DEFAULT_BALIA
- 	default "reno" if DEFAULT_RENO
- 	default "dctcp" if DEFAULT_DCTCP
- 	default "cdg" if DEFAULT_CDG
+-			release_sock(sk);
+-			ret =3D sock_no_sendpage(sk->sk_socket, page, offset,
+-					       size, flags);
+-			lock_sock(sk);
+-			return ret;
+-		}
+-	}
+-
+ 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+ =
+
+ 	mss_now =3D tcp_send_mss(sk, &size_goal, flags);
+@@ -1117,8 +1101,7 @@ EXPORT_SYMBOL_GPL(do_tcp_sendpages);
+ int tcp_sendpage_locked(struct sock *sk, struct page *page, int offset,
+ 			size_t size, int flags)
+ {
+-	/* If MPTCP is enabled, we check it later after establishment */
+-	if (!mptcp(tcp_sk(sk)) && !(sk->sk_route_caps & NETIF_F_SG))
++	if (!(sk->sk_route_caps & NETIF_F_SG) || mptcp(tcp_sk(sk)))
+ 		return sock_no_sendpage_locked(sk, page, offset, size, flags);
+ =
+
+ 	tcp_rate_check_app_limited(sk);  /* is sending application-limited? */
 -- =
 
 2.16.2
 
 
---===============7995126705087119894==--
+--===============5340280737708892197==--
