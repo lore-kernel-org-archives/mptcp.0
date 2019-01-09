@@ -1,32 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============6576305597680311143=="
+Content-Type: multipart/mixed; boundary="===============3479048074388819162=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] mptcp_net-next sync with net-next
-Date: Fri, 21 Dec 2018 11:41:17 -0800
-Message-ID: <alpine.OSX.2.21.1812211134560.53308@samaxfie-mobl1.amr.corp.intel.com>
+Subject: [MPTCP] Weekly meeting - 10 January 2019 17:00 UTC (9am PST, 6pm CET)
+Date: Wed, 09 Jan 2019 16:36:44 +0100
+Message-ID: <636595be-2007-ddaa-de7f-fcf190ff4790@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 969
+X-UID: 970
 
---===============6576305597680311143==
+--===============3479048074388819162==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello and Happy New Year!
 
-Hello everyone,
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-I've merged mptcp_net-next's master branch =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20190110
 
-(https://github.com/multipath-tcp/mptcp_net-next) with the current =
+Feel free to add/modify topics!
 
-net-next branch. This makes Florian's skb extensions and the new indirect =
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-call wrappers available.
+Speak to you tomorrow!
+Matthieu
+-- =
 
---
-Mat Martineau
-Intel OTC
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============6576305597680311143==--
+--===============3479048074388819162==--
