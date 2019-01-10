@@ -1,40 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============3479048074388819162=="
+Content-Type: multipart/mixed; boundary="===============1432134317557042484=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Tran Viet Hoang <tranviethoang.vn at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 10 January 2019 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 09 Jan 2019 16:36:44 +0100
-Message-ID: <636595be-2007-ddaa-de7f-fcf190ff4790@tessares.net>
+Subject: [MPTCP] eBPF support for user defined TCP options
+Date: Thu, 10 Jan 2019 15:52:43 +0100
+Message-ID: <CALjxPyqOp+JWwjn6tpkqh4Kz6DqrU3L99ReM3yJb_fjjqVvzDQ@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 970
+X-UID: 971
 
---===============3479048074388819162==
+--===============1432134317557042484==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello and Happy New Year!
+Hi all,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+This is our paper on extending TCP with eBPF:
+https://www.arxiv-vanity.com/papers/1901.01863/
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190110
+The implementation of kernel callbacks (based on TCP-BPF) and 4 use cases
+is at:
+https://github.com/hoang-tranviet/tcp-options-bpf
 
-Feel free to add/modify topics!
+Sorry for the delay,
+And stay tuned for the MPTCP extensions...
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Cheers,
+Hoang
 
-Speak to you tomorrow!
-Matthieu
--- =
+--===============1432134317557042484==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0
+ciI+SGkgYWxsLDxkaXY+PGJyPjxkaXY+VGhpcyBpcyBvdXIgcGFwZXIgb24gZXh0ZW5kaW5nIFRD
+UCB3aXRoIGVCUEY6PGJyPjwvZGl2PjxkaXY+PGEgaHJlZj0iaHR0cHM6Ly93d3cuYXJ4aXYtdmFu
+aXR5LmNvbS9wYXBlcnMvMTkwMS4wMTg2My8iPmh0dHBzOi8vd3d3LmFyeGl2LXZhbml0eS5jb20v
+cGFwZXJzLzE5MDEuMDE4NjMvPC9hPjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoZSBp
+bXBsZW1lbnRhdGlvbiBvZiBrZXJuZWwgY2FsbGJhY2tzIChiYXNlZCBvbiBUQ1AtQlBGKSBhbmQg
+NCB1c2UgY2FzZXMgaXMgYXQ6PC9kaXY+PGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20v
+aG9hbmctdHJhbnZpZXQvdGNwLW9wdGlvbnMtYnBmIj5odHRwczovL2dpdGh1Yi5jb20vaG9hbmct
+dHJhbnZpZXQvdGNwLW9wdGlvbnMtYnBmPC9hPjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2
+PlNvcnJ5IGZvciB0aGUgZGVsYXksPC9kaXY+PGRpdj5BbmQgc3RheSB0dW5lZCBmb3IgdGhlIE1Q
+VENQIGV4dGVuc2lvbnMuLi48L2Rpdj48ZGl2Pjxicj48L2Rpdj48L2Rpdj48ZGl2PkNoZWVycyw8
+L2Rpdj48ZGl2PkhvYW5nPC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
 
---===============3479048074388819162==--
+--===============1432134317557042484==--
