@@ -1,109 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============1726599311269864116=="
+Content-Type: multipart/mixed; boundary="===============6761587158962315969=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 10th of January 2019
-Date: Thu, 10 Jan 2019 18:45:12 +0100
-Message-ID: <859d101e-5fd3-3de8-578a-36081fcb3b04@tessares.net>
+Subject: [MPTCP] Change in ...mptcp_net-next[t/upstream]: test: Gerrit mail
+ notification
+Date: Fri, 11 Jan 2019 12:14:26 +0000
+Message-ID: <gerrit.1547208866000.I1e1b4173ce10db91a718a315caca3a2af5fbb004@review.gerrithub.io>
 X-Status: 
 X-Keywords:                  
-X-UID: 972
+X-UID: 973
 
---===============1726599311269864116==
+--===============6761587158962315969==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-We just had our 34rd meeting with Mat, Peter and Ossama (Intel OTC),
-Christoph (Apple), Florian (Redhat), Hoang (UCLouvain) and myself
-(Tessares).
-
-Thanks again for this new good meeting!
+Matthieu Baerts has uploaded this change for review. ( https://review.gerri=
+thub.io/c/multipath-tcp/mptcp_net-next/+/440024
 
 
+Change subject: test: Gerrit mail notification
+......................................................................
 
-Here are the minutes of the meeting:
+test: Gerrit mail notification
 
+Sorry for the noise.
 
-
-Mat did in December: mptcp_net-next/master sync with net-next:
-    - one small conflict with his patch-set (also seen by Matthieu,
-result is also on gerrit)
-    - will do a sync when window opened on net-next
+Change-Id: I1e1b4173ce10db91a718a315caca3a2af5fbb004
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+A test-mail-notification
+1 file changed, 0 insertions(+), 0 deletions(-)
 
 
 
-Gerrit:
-    - proposition to send notifications when a change is created.
-    - Matthieu: will have a look at that.
-
-
-
-code activity:
-    - Christoph added some patches on mptcp_trunk and backported it to
-mptcp_net-next/master, straightforward.
-    - Christoph is also working on another branch to remove even more
-than what has been done in December.
-
-
-
-netlink PM:
-    - new versions (last is v5) have been sent on mptcp-dev ML if you
-want more details
-    -
-https://sympa-2.sipr.ucl.ac.be/sympa/arc/mptcp-dev/2019-01/msg00039.html
-    - reviews are welcomed
-    - after this, we will branch to have a new stable (mptcp_v0.95) and
-sync mptcp_trunk with the next versions
-
-
-
-netdev:
-    - interesting talk:
-https://netdevconf.org/0x13/session.html?tcp-analytics
-    - Matthieu: will ask to go to the conference
-    - Hoang as well
-    - Mat will check (might have to decide with Linux Plumber where
-maybe more people from here could join)
-    - Linux plumber in September (Portugal)
-
-
-
-Beyond socket options: making the Linux TCP stack truly extensible:
-    - Hoang shared this paper:
-https://www.arxiv-vanity.com/papers/1901.01863/
-    - Repo: https://github.com/hoang-tranviet/tcp-options-bpf
-    - allow to add TCP option from eBPF with a very small overhead (1-2%
-per packet)
-    - there are some limitations with eBPF but it also demonstrates what
-we can do with it!
-    - eBPF is definitively something to look at for some tasks, e.g. the
-scheduler (linked to http://progmp.net/)
-
-
-
-Next meeting:
-    - We propose to have the next one on Thursday, the 17th of January.
-    - Usual time: 17:00 UTC (9am PST, 6pm CET)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190117
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-Talk to you next week,
-Matthieu
+  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
+s/changes/24/440024/1
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
+/440024
+To unsubscribe, or for help writing mail filters, visit https://review.gerr=
+ithub.io/settings
 
---===============1726599311269864116==--
+Gerrit-Project: multipath-tcp/mptcp_net-next
+Gerrit-Branch: t/upstream
+Gerrit-Change-Id: I1e1b4173ce10db91a718a315caca3a2af5fbb004
+Gerrit-Change-Number: 440024
+Gerrit-PatchSet: 1
+Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Gerrit-MessageType: newchange
+
+--===============6761587158962315969==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PHA+TWF0dGhpZXUgQmFlcnRzIGhhcyB1cGxvYWRlZCB0aGlzIGNoYW5nZSBmb3IgPHN0cm9uZz5y
+ZXZpZXc8L3N0cm9uZz4uPC9wPjxwPjxhIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5p
+by9jL211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQvKy80NDAwMjQiPlZpZXcgQ2hhbmdlPC9h
+PjwvcD48cHJlIHN0eWxlPSJmb250LWZhbWlseTogbW9ub3NwYWNlLG1vbm9zcGFjZTsgd2hpdGUt
+c3BhY2U6IHByZS13cmFwOyI+dGVzdDogR2Vycml0IG1haWwgbm90aWZpY2F0aW9uPGJyPjxicj5T
+b3JyeSBmb3IgdGhlIG5vaXNlLjxicj48YnI+Q2hhbmdlLUlkOiBJMWUxYjQxNzNjZTEwZGI5MWE3
+MThhMzE1Y2FjYTNhMmFmNWZiYjAwNDxicj5TaWduZWQtb2ZmLWJ5OiBNYXR0aGlldSBCYWVydHMg
+Jmx0O21hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQmZ3Q7PGJyPi0tLTxicj5BIHRlc3QtbWFp
+bC1ub3RpZmljYXRpb248YnI+MSBmaWxlIGNoYW5nZWQsIDAgaW5zZXJ0aW9ucygrKSwgMCBkZWxl
+dGlvbnMoLSk8YnI+PGJyPjwvcHJlPjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2Us
+bW9ub3NwYWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5naXQgcHVsbCBzc2g6Ly9yZXZpZXcu
+Z2Vycml0aHViLmlvOjI5NDE4L211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQgcmVmcy9jaGFu
+Z2VzLzI0LzQ0MDAyNC8xPC9wcmU+PHA+VG8gdmlldywgdmlzaXQgPGEgaHJlZj0iaHR0cHM6Ly9y
+ZXZpZXcuZ2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ0MDAy
+NCI+Y2hhbmdlIDQ0MDAyNDwvYT4uIFRvIHVuc3Vic2NyaWJlLCBvciBmb3IgaGVscCB3cml0aW5n
+IG1haWwgZmlsdGVycywgdmlzaXQgPGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlv
+L3NldHRpbmdzIj5zZXR0aW5nczwvYT4uPC9wPjxkaXYgaXRlbXNjb3BlIGl0ZW10eXBlPSJodHRw
+Oi8vc2NoZW1hLm9yZy9FbWFpbE1lc3NhZ2UiPjxkaXYgaXRlbXNjb3BlIGl0ZW1wcm9wPSJhY3Rp
+b24iIGl0ZW10eXBlPSJodHRwOi8vc2NoZW1hLm9yZy9WaWV3QWN0aW9uIj48bGluayBpdGVtcHJv
+cD0idXJsIiBocmVmPSJodHRwczovL3Jldmlldy5nZXJyaXRodWIuaW8vYy9tdWx0aXBhdGgtdGNw
+L21wdGNwX25ldC1uZXh0LysvNDQwMDI0Ii8+PG1ldGEgaXRlbXByb3A9Im5hbWUiIGNvbnRlbnQ9
+IlZpZXcgQ2hhbmdlIi8+PC9kaXY+PC9kaXY+Cgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBH
+ZXJyaXQtUHJvamVjdDogbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dCA8L2Rpdj4KPGRpdiBz
+dHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LUJyYW5jaDogdC91cHN0cmVhbSA8L2Rpdj4KPGRp
+diBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LUNoYW5nZS1JZDogSTFlMWI0MTczY2UxMGRi
+OTFhNzE4YTMxNWNhY2EzYTJhZjVmYmIwMDQgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9u
+ZSI+IEdlcnJpdC1DaGFuZ2UtTnVtYmVyOiA0NDAwMjQgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3Bs
+YXk6bm9uZSI+IEdlcnJpdC1QYXRjaFNldDogMSA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpu
+b25lIj4gR2Vycml0LU93bmVyOiBNYXR0aGlldSBCYWVydHMgJmx0O21hdHRoaWV1LmJhZXJ0c0B0
+ZXNzYXJlcy5uZXQmZ3Q7IDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQt
+TWVzc2FnZVR5cGU6IG5ld2NoYW5nZSA8L2Rpdj4KCg==
+
+--===============6761587158962315969==--
