@@ -1,109 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============9194767179707225764=="
+Content-Type: multipart/mixed; boundary="===============1651168589029464978=="
 MIME-Version: 1.0
-From: Dejene Boru <dejene.boru at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] MPTCP falling back to TCP
-Date: Mon, 14 Jan 2019 23:17:22 +0100
-Message-ID: <CAG40BEKJhva=JBx6eZHJ7Z5ZinLp_R0007VZe96oqDvd=Lx=rg@mail.gmail.com>
+Subject: Re: [MPTCP] MPTCP falling back to TCP
+Date: Tue, 15 Jan 2019 16:53:11 +0100
+Message-ID: <CAKuKrBmeeGdG97swHPJxmJV82R+3P43Xii-rjc6iMRSrzuaAxQ@mail.gmail.com>
+In-Reply-To: CAG40BEKJhva=JBx6eZHJ7Z5ZinLp_R0007VZe96oqDvd=Lx=rg@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 975
+X-UID: 976
 
---===============9194767179707225764==
+--===============1651168589029464978==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Dejene,
 
-While running an experiment in Mininet using MPTCP, MPTCP falls back to TCP
-after three SYN retransmissions. I have enabled MPTCP both on the host node
-and Mininet emulated hosts. The problem appears when multiple clients
-attempt to connect to the server, i.e., I have a client-server application,
-the servers listen on a given port and the clients connect to the servers
-at a certain time interval to download some file size (100KB, 30MB). A
-connection with a client closes after the desired file size transfer but
-the server continues to listen for new connections.  The problem happens
-after some number of clients are connected and irrespective of path
-managers and the number of sub flows used.
+On Mon, Jan 14, 2019 at 11:17 PM Dejene Boru <dejene.boru(a)gmail.com> wrot=
+e:
+>
+> Hi,
+>
+> While running an experiment in Mininet using MPTCP, MPTCP falls back to T=
+CP after three SYN retransmissions. I have enabled MPTCP both on the host n=
+ode and Mininet emulated hosts. The problem appears when multiple clients a=
+ttempt to connect to the server, i.e., I have a client-server application, =
+the servers listen on a given port and the clients connect to the servers a=
+t a certain time interval to download some file size (100KB, 30MB). A conne=
+ction with a client closes after the desired file size transfer but the ser=
+ver continues to listen for new connections.  The problem happens after som=
+e number of clients are connected and irrespective of path managers and the=
+ number of sub flows used.
+>
+> I have tried to enable MPTCP to debug flag and the following debug messag=
+e is printed.
+>
+> 'mptcp_do_join_short:mpcb not found'
+>
+> Host evnironment: Ubuntu 16.04, Linux version 4.14.79, MPTCP (v0.94)
 
-I have tried to enable MPTCP to debug flag and the following debug message
-is printed.
+It seems that you are using this version of the kernel:
+https://github.com/multipath-tcp/mptcp/
+Not the one for upstream and linked to this ML:
+https://github.com/multipath-tcp/mptcp_net-next
 
-'mptcp_do_join_short:mpcb not found'
+Could you then report your problem to this ML instead please?
+https://listes-2.sipr.ucl.ac.be/sympa/info/mptcp-dev
 
-Host evnironment: Ubuntu 16.04, Linux version 4.14.79, MPTCP (v0.94)
+Also it can be interesting to clearly state what's your problem:
+what's you expect and what's you saw instead? I guess it is because
+some connections fallback to TCP after 3 SYN retransmissions while it
+should not happen in your test env but it is not clear, at least for
+me ;-)
 
-Neither CPU nor memory seems to be part of the problem since during the
-test the CPU usage is less than 10% and memory usage is also negligible.
+Matthieu
 
-I would appreciate a suggestion for a workaround for this issue.\
+>
+> Neither CPU nor memory seems to be part of the problem since during the t=
+est the CPU usage is less than 10% and memory usage is also negligible.
+>
+> I would appreciate a suggestion for a workaround for this issue.\
+>
+>
+> Thanks,
+>
+> Dejene Boru
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
 
 
-Thanks,
 
-Dejene Boru
+-- =
 
---===============9194767179707225764==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBjbGFzcz0i
-Z21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsLGhlbHZldGljYSxzYW5zLXNl
-cmlmO2NvbG9yOnJnYigxMSw4MywxNDgpIj5IaSzCoDwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2Rl
-ZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTphcmlhbCxoZWx2ZXRpY2Esc2Fucy1zZXJpZjtjb2xv
-cjpyZ2IoMTEsODMsMTQ4KSI+PGJyPjwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2RlZmF1bHQiIHN0
-eWxlPSJmb250LWZhbWlseTphcmlhbCxoZWx2ZXRpY2Esc2Fucy1zZXJpZjtjb2xvcjpyZ2IoMTEs
-ODMsMTQ4KSI+V2hpbGUgcnVubmluZyBhbiBleHBlcmltZW50IGluIE1pbmluZXQgdXNpbmcgTVBU
-Q1AsIE1QVENQIGZhbGxzIGJhY2sgdG8gVENQIGFmdGVyIHRocmVlIFNZTiByZXRyYW5zbWlzc2lv
-bnMuIEkgaGF2ZSBlbmFibGVkIE1QVENQIGJvdGggb24gdGhlIGhvc3Qgbm9kZSBhbmQgTWluaW5l
-dCBlbXVsYXRlZCBob3N0cy4gVGhlIHByb2JsZW0gYXBwZWFycyB3aGVuIG11bHRpcGxlIGNsaWVu
-dHMgYXR0ZW1wdCB0byBjb25uZWN0IHRvIHRoZSBzZXJ2ZXIsIGkuZS4sIEkgaGF2ZSBhIGNsaWVu
-dC1zZXJ2ZXIgYXBwbGljYXRpb24sIHRoZSBzZXJ2ZXJzIGxpc3RlbiBvbiBhIGdpdmVuIHBvcnQg
-YW5kIHRoZSBjbGllbnRzIGNvbm5lY3QgdG8gdGhlIHNlcnZlcnMgYXQgYSBjZXJ0YWluIHRpbWUg
-aW50ZXJ2YWwgdG8gZG93bmxvYWQgc29tZSBmaWxlIHNpemUgKDEwMEtCLCAzME1CKS4gQSBjb25u
-ZWN0aW9uIHdpdGggYSBjbGllbnQgY2xvc2VzIGFmdGVyIHRoZSBkZXNpcmVkIGZpbGUgc2l6ZSB0
-cmFuc2ZlciBidXQgdGhlIHNlcnZlciBjb250aW51ZXMgdG8gbGlzdGVuIGZvciBuZXcgY29ubmVj
-dGlvbnMuwqAgVGhlIHByb2JsZW0gaGFwcGVucyBhZnRlciBzb21lIG51bWJlciBvZiBjbGllbnRz
-IGFyZSBjb25uZWN0ZWQgYW5kIGlycmVzcGVjdGl2ZSBvZiBwYXRoIG1hbmFnZXJzIGFuZCB0aGUg
-bnVtYmVyIG9mIHN1YiBmbG93c8KgdXNlZC7CoDwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2RlZmF1
-bHQiIHN0eWxlPSJmb250LWZhbWlseTphcmlhbCxoZWx2ZXRpY2Esc2Fucy1zZXJpZjtjb2xvcjpy
-Z2IoMTEsODMsMTQ4KSI+PGJyPjwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2RlZmF1bHQiIHN0eWxl
-PSJmb250LWZhbWlseTphcmlhbCxoZWx2ZXRpY2Esc2Fucy1zZXJpZjtjb2xvcjpyZ2IoMTEsODMs
-MTQ4KSI+SSBoYXZlIHRyaWVkIHRvIGVuYWJsZSBNUFRDUCB0byBkZWJ1ZyBmbGFnIGFuZCB0aGUg
-Zm9sbG93aW5nIGRlYnVnIG1lc3NhZ2UgaXMgcHJpbnRlZC7CoDwvZGl2PjxkaXYgY2xhc3M9Imdt
-YWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTphcmlhbCxoZWx2ZXRpY2Esc2Fucy1zZXJp
-Zjtjb2xvcjpyZ2IoMTEsODMsMTQ4KSI+PGJyPjwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2RlZmF1
-bHQiIHN0eWxlPSJmb250LWZhbWlseTphcmlhbCxoZWx2ZXRpY2Esc2Fucy1zZXJpZjtjb2xvcjpy
-Z2IoMTEsODMsMTQ4KSI+JiMzOTttcHRjcF9kb19qb2luX3Nob3J0Om1wY2Igbm90IGZvdW5kJiMz
-OTs8L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6YXJp
-YWwsaGVsdmV0aWNhLHNhbnMtc2VyaWY7Y29sb3I6cmdiKDExLDgzLDE0OCkiPjxicj48L2Rpdj48
-ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6YXJpYWwsaGVsdmV0
-aWNhLHNhbnMtc2VyaWY7Y29sb3I6cmdiKDExLDgzLDE0OCkiPkhvc3QgZXZuaXJvbm1lbnQ6IFVi
-dW50dSAxNi4wNCwgTGludXggdmVyc2lvbiA0LjE0Ljc5LCBNUFRDUCAodjAuOTQpPC9kaXY+PGRp
-diBjbGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsLGhlbHZldGlj
-YSxzYW5zLXNlcmlmO2NvbG9yOnJnYigxMSw4MywxNDgpIj48YnI+PC9kaXY+PGRpdiBjbGFzcz0i
-Z21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsLGhlbHZldGljYSxzYW5zLXNl
-cmlmO2NvbG9yOnJnYigxMSw4MywxNDgpIj5OZWl0aGVyIENQVSBub3IgbWVtb3J5IHNlZW1zIHRv
-IGJlIHBhcnQgb2YgdGhlIHByb2JsZW0gc2luY2UgZHVyaW5nIHRoZSB0ZXN0IHRoZSBDUFUgdXNh
-Z2UgaXMgbGVzcyB0aGFuIDEwJSBhbmQgbWVtb3J5IHVzYWdlIGlzIGFsc28gbmVnbGlnaWJsZS4g
-wqA8L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6YXJp
-YWwsaGVsdmV0aWNhLHNhbnMtc2VyaWY7Y29sb3I6cmdiKDExLDgzLDE0OCkiPjxicj48L2Rpdj48
-ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6YXJpYWwsaGVsdmV0
-aWNhLHNhbnMtc2VyaWY7Y29sb3I6cmdiKDExLDgzLDE0OCkiPkkgd291bGQgYXBwcmVjaWF0ZSBh
-IHN1Z2dlc3Rpb24gZm9yIGEgd29ya2Fyb3VuZCBmb3IgdGhpcyBpc3N1ZS5cPC9kaXY+PGRpdiBj
-bGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsLGhlbHZldGljYSxz
-YW5zLXNlcmlmO2NvbG9yOnJnYigxMSw4MywxNDgpIj48YnI+PC9kaXY+PGRpdiBjbGFzcz0iZ21h
-aWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsLGhlbHZldGljYSxzYW5zLXNlcmlm
-O2NvbG9yOnJnYigxMSw4MywxNDgpIj48YnI+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVs
-dCIgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsLGhlbHZldGljYSxzYW5zLXNlcmlmO2NvbG9yOnJn
-YigxMSw4MywxNDgpIj5UaGFua3MsPC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5
-bGU9ImZvbnQtZmFtaWx5OmFyaWFsLGhlbHZldGljYSxzYW5zLXNlcmlmO2NvbG9yOnJnYigxMSw4
-MywxNDgpIj48YnI+PC9kaXY+PGRpdj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfc2lnbmF0
-dXJlIj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGlyPSJsdHIiPjxmb250IGZhY2U9InRpbWVz
-IG5ldyByb21hbiwgc2VyaWYiIGNvbG9yPSIjNmZhOGRjIj5EZWplbmUgQm9ydTwvZm9udD48L2Rp
-dj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
-
---===============9194767179707225764==--
+--===============1651168589029464978==--
