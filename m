@@ -1,57 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============3017978950670800055=="
+Content-Type: multipart/mixed; boundary="===============1757431480232730243=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 31st of January 2019
-Date: Thu, 31 Jan 2019 19:19:18 +0100
-Message-ID: <20190131181918.ozgepblvdhdz353v@breakpoint.cc>
-In-Reply-To: fbf0f5b0-fc0c-a524-62f0-94158281b28d@tessares.net
+Subject: Re: [MPTCP] Questions/remarks wrt. mptcp layered prototype
+Date: Thu, 31 Jan 2019 12:54:07 -0800
+Message-ID: <alpine.OSX.2.21.1901311022360.38822@mwahl-mobl.amr.corp.intel.com>
+In-Reply-To: 20190131150242.e43t66aeklckmvw5@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 984
+X-UID: 985
 
---===============3017978950670800055==
+--===============1757431480232730243==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
 
-Thanks for the summary.
+Hi Florian -
 
-[..]
+On Thu, 31 Jan 2019, Florian Westphal wrote:
 
-> Mat and Peter's new patch-set:
->     - Florian mentioned that it could be nice to add a kselftest. We
-> need to check how other network protocols are doing their kselftests.
+> Hi.
+>
+> I had a look at the layered prototype, here are some questions/remarks.
+> 1) mptcp_close():
+>
+>                hlist_del_rcu(node);
+>                spin_unlock_bh(&msk->conn_list_lock);
+>                synchronize_rcu();
+>                pr_debug("conn_list->subflow=3D%p", subflow);
+>                sock_release(sock_sk(subflow)->sk_socket);
+>        } while (1);
+>
+> What is this synchronize_rcu() supposed to protect/do?
+> AFAICS it can be removed?
 
-Ok, I'll handle this, no problem.
+Readers of conn_list call sock_hold(subflow) while the rcu read lock is =
 
-> Florian. We report this discussion to next week. Here are the questions
-> to discuss:
->     - focus on the first patch-set and try to upstream this base?
+held, and can do so without any socket locks held. We want to make sure =
 
-Is that t/upstream / mmartineau-init-mptcp-v5?
-If so, +1 from me.
+they have adjusted the subflow socket reference count before calling =
 
-Only question from my side:
+sock_release() here, which can free the subflow socket.
 
->     - testing? (packetdrill?)
+>
+> 2) struct tcp_options_received should really have IS_ENABLED(CONFIG_MPTCP)
+> wrap for the mptcp struct; unlike smc it increases struct size.
+> So better appease those that have CONFIG_MPTCP=3Dn.
+>
+> 3) running scripts/checkpatch.pl spews out a gazillion of warnings,
+>   I would suggest fix those up rather sooner than later.
+>   Its annoting task for sure, but someone has to do it.
 
-I think the initial submission should come with a simple
-self-test, i.e. {client,server}.c + a shell script to glue those
-together.  Just to exercise most basic mptcp code paths.
+Matthieu also noted these in his gerrit review. I've fixed up the =
 
-They can be extended (like add/remove subflows) when those features
-are added.
+checkpatch issues this week but haven't pushed those changes yet.
 
-Getting mptcp packetdrill support would be great of course,
-but I think its something that should be focused on later on
-to handle/test/validate wire-protocol.
+>
+> 4) the networking maintainer enforces reverse-xmas tree for variable
+>   declarations, so
+>
+> 	if (tcp_rsk(req)->is_mptcp) {
+> 		u64 local_key;
+> 		u64 remote_key;
+>
+>   must become
+> 	if (tcp_rsk(req)->is_mptcp) {
+> 		u64 remote_key;
+> 		u64 local_key;
+>
+>   This might seems silly, but thats how things are.
 
->     - We propose to have the next one on Thursday, the 7th of February.
+Thanks for the reminder, I'm aware of the reverse xmas tree convention but =
 
-Good, I should be able to attend again (I'm barely functional due some
-virus).
+we were not rigorous about enforcing it.
 
---===============3017978950670800055==--
+>
+> 5) The line in skbuff.c adding the mptcp extension should look like this
+>    [SKB_EXT_MPTCP] =3D SKB_EXT_CHUNKSIZEOF(struct mptcp_skb_cb),
+>    Also, mptcp_skb_cb still contains obsolete reference count.
+>    (while at it, probably better to rename struct, mptcp_skb_cb makes
+>    me think its stored in skb->cb[]).
+
+Ok, will fix those issues.
+
+>
+> 6) I think it would help to add an mptcp kselftest; I can look at this ne=
+xt.
+>
+
+That will be very helpful, thank you!
+
+--
+Mat Martineau
+Intel
+
+--===============1757431480232730243==--
