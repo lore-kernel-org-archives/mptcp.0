@@ -1,105 +1,113 @@
-Content-Type: multipart/mixed; boundary="===============4044347950920289702=="
+Content-Type: multipart/mixed; boundary="===============3068510166544615842=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC mptcp 4/4] mptcp: add mptcp_poll
-Date: Thu, 07 Feb 2019 15:27:11 +0100
-Message-ID: <20190207142711.3475-5-fw@strlen.de>
-In-Reply-To: 20190207142711.3475-1-fw@strlen.de
+Subject: [MPTCP] [Weekly meetings] MoM - 7th of February 2019
+Date: Thu, 07 Feb 2019 19:10:22 +0100
+Message-ID: <56f662c4-023c-edef-7e4b-19cc1985cb66@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 993
+X-UID: 994
 
---===============4044347950920289702==
+--===============3068510166544615842==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Can't use tcp_poll directly:
+Hello,
 
-BUG: KASAN: slab-out-of-bounds in tcp_poll+0x17f/0x540
-Read of size 4 at addr ffff88806ac5e50c by task mptcp_connect/2085
-Call Trace:
- tcp_poll+0x17f/0x540
- sock_poll+0x152/0x180
+We just had our 38th meeting with Mat, Peter and Ossama (Intel OTC),
+Christoph (Apple), Florian (RedHat), Hoang (UCLouvain) and myself
+(Tessares).
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- Should perhaps stop walk early in case __poll_t ret has all
- possible events already set.
+Thanks again for this new good meeting!
 
- net/mptcp/protocol.c | 46 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 91db8a0c222d..f99d0dfabe18 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -782,6 +782,50 @@ int mptcp_stream_accept(struct socket *sock, struct so=
-cket *newsock, int flags,
- 	return inet_accept(sock, newsock, flags, kern);
- }
- =
 
-+static __poll_t mptcp_poll(struct file *file, struct socket *sock,
-+			   struct poll_table_struct *wait)
-+{
-+	struct subflow_sock *subflow, *tmp;
-+	const struct mptcp_sock *msk;
-+	struct sock *sk =3D sock->sk;
-+	__poll_t ret =3D 0;
-+	unsigned int i;
-+
-+	msk =3D mptcp_sk(sk);
-+	if (msk->subflow)
-+		return tcp_poll(file, msk->subflow, wait);
-+
-+	i =3D 0;
-+	for (;;) {
-+		int j =3D 0;
-+		tmp =3D NULL;
-+
-+		rcu_read_lock();
-+		mptcp_for_each_subflow(msk, subflow) {
-+			if (j < i) {
-+				j++;
-+				continue;
-+			}
-+
-+			if (!mptcp_subflow_hold(subflow))
-+				continue;
-+
-+			tmp =3D subflow;
-+			i++;
-+			break;
-+		}
-+		rcu_read_unlock();
-+
-+		if (!tmp)
-+			break;
-+
-+		ret |=3D tcp_poll(file, sock_sk(tmp)->sk_socket, wait);
-+		sock_put(sock_sk(tmp));
-+	}
-+
-+	return ret;
-+}
-+
- int mptcp_stream_shutdown(struct socket *sock, int how)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-@@ -833,7 +877,7 @@ const struct proto_ops mptcp_stream_ops =3D {
- 	.socketpair	   =3D sock_no_socketpair,
- 	.accept		   =3D mptcp_stream_accept,
- 	.getname	   =3D mptcp_stream_getname,
--	.poll		   =3D tcp_poll,
-+	.poll		   =3D mptcp_poll,
- 	.ioctl		   =3D inet_ioctl,
- 	.listen		   =3D mptcp_stream_listen,
- 	.shutdown	   =3D mptcp_stream_shutdown,
+Here are the minutes of the meeting:
+
+
+
+What's next (already discussed last time but without Peter and Florian)?
+
+    - focus on the first patch-set and try to upstream this base? What
+need to be done:
+        - handling data-fin
+        - sharing TCP windows across subflows
+        - IPv6 (or for later?):
+            =E2=86=92 could it be a problem for a RFC (keeping attraction on
+that instead of the rest)
+            =E2=86=92 on the other hand, it should not be that difficult / =
+lot
+of differences between v4 and v6
+            =E2=86=92 but not really blocking as long as it is written in t=
+he
+cover letter
+        - mptcp_sendmsg has some limitations for the moment (in case of
+buffer/memory pressure)
+
+
+    - integrate Mat and Peter's patch-set in our topgit tree? (or at
+least what we agreed on) not to have a lot of pending changes?
+        =E2=86=92 yes, can be done for the first accepted Changes.
+
+
+    - removing feature on mptcp_net-next/master?
+        =E2=86=92 can be done in parallel
+        =E2=86=92 we can check what we can take from there and adapt to the=
+ new
+architecture
+
+
+    - testing? (packetdrill?)
+        =E2=86=92 can still be interesting to have functional tests
+        =E2=86=92 we should be able to use the open-source version for the =
+first
+basic tests but it should be able to test specific code paths
+        =E2=86=92 https://github.com/ArnaudSchils/packetdrill_mptcp
+        =E2=86=92 Peter: quite some work to do to have an upstream-able ver=
+sion
+        =E2=86=92 Matthieu: Tessares did a few bug fixes that they can publ=
+ish,
+at least to be able to use it with more recent version (of the kernel)
+
+
+
+KSelfTest + fixes by Florian:
+    - https://lists.01.org/pipermail/mptcp/2019-February/thread.html#988
+    - create MPTCP connections
+    - a few minor fixes are also provided in this patch-set
+    - Mat: will have a look at that
+
+
+
+Matth, TODO:
+    - CI job to update TopGit tree
+    - CI job to export TopGit tree into a dedicated branch
+    - look at PacketDrill fixes
+
+
+
+Next meeting:
+    - We propose to have the next one on Thursday, the 14th of February.
+    - Usual time: 17:00 UTC (9am PST, 6pm CET)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190214
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+Talk to you next week,
+Matthieu
 -- =
 
-2.19.2
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============4044347950920289702==--
+--===============3068510166544615842==--
