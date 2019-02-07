@@ -1,40 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============1638824108088614537=="
+Content-Type: multipart/mixed; boundary="===============5012280372418474304=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 07 February 2019 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 06 Feb 2019 17:51:36 +0100
-Message-ID: <1eabb6b9-138e-73b6-2614-682f4f6f9ab3@tessares.net>
+Subject: [MPTCP] [PATCH RFC mptcp 0/4] mptcp: kselftest program and a few bugs
+Date: Thu, 07 Feb 2019 15:27:07 +0100
+Message-ID: <20190207142711.3475-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 988
+X-UID: 989
 
---===============1638824108088614537==
+--===============5012280372418474304==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+Hi.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+First patch adds a small mptcp test program, nothing fancy,
+just transmits stdin via mptcp connection and back out again.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190207
+Uncovers a few issues, the one unfixed is that
+read(mptcpfd, buf, buflen)
 
-Feel free to add/modify topics!
+can return cause data to be discarded.
+In that case, read() returns a value larger than "buflen".
+Did not investigate further so far.
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Other issues found are handled in the remaining patches.
 
-Speak to you tomorrow!
-Matthieu
--- =
+I'll be attending the conf call later today, so we can continue
+discussion there if needed.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============1638824108088614537==--
+
+--===============5012280372418474304==--
