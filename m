@@ -1,53 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============1854856973962545732=="
+Content-Type: multipart/mixed; boundary="===============1554974651878606868=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] MPTCP architecture proposal - RFCv6 changes pushed
-Date: Thu, 07 Feb 2019 16:54:33 -0800
-Message-ID: <alpine.OSX.2.21.1902071646530.2127@mjmartin-mac01.sea.intel.com>
+Subject: [MPTCP] Weekly meeting - 14 February 2019 17:00 UTC (9am PST, 6pm CET)
+Date: Wed, 13 Feb 2019 16:40:22 +0100
+Message-ID: <aee19068-a9f6-e03b-0ef8-b2f92113fa52@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 995
+X-UID: 996
 
---===============1854856973962545732==
+--===============1554974651878606868==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello everybody!
 
-Hello -
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-I've pushed the latest revision of the MPTCP kernel architecture proposal =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20190214
 
-to these locations:
+Feel free to add/modify topics!
 
-https://review.gerrithub.io/q/project:multipath-tcp%252Fmptcp_net-next+stat=
-us:open
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git/log/?h=
-=3Dmptcp-proposal
+Speak to you tomorrow!
+Matthieu
+-- =
 
-If anyone would like for me to continue posting the patches directly to =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-this mailing list, please let me know and I will do so.
-
-I've implemented the recommendations from various review comments on =
-
-gerrithub, cleaned up most of the checkpatch.pl issues, and fixed some of =
-
-the problems Florian identified in his review. I have not yet fixed up all =
-
-the reverse-xmas-tree declarations, or included Florian's changes from =
-
-earlier today. I'll be getting to those next but wanted to publish this =
-
-snapshot first.
-
-
-Thanks,
-
---
-Mat Martineau
-Intel
-
---===============1854856973962545732==--
+--===============1554974651878606868==--
