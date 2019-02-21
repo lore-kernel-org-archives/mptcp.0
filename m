@@ -1,40 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============5206799171950963481=="
+Content-Type: multipart/mixed; boundary="===============0263697179445701732=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 21 February 2019 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 20 Feb 2019 15:04:47 +0100
-Message-ID: <66f1b739-68db-1fa1-fecd-4c59ad3cb21a@tessares.net>
+Subject: Re: [MPTCP] Weekly meeting - 21 February 2019 17:00 UTC (9am PST,
+ 6pm CET)
+Date: Thu, 21 Feb 2019 08:28:07 -0800
+Message-ID: <5329B777-D192-4E44-AEEB-E3AA2C219C38@apple.com>
+In-Reply-To: 66f1b739-68db-1fa1-fecd-4c59ad3cb21a@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1008
+X-UID: 1009
 
---===============5206799171950963481==
+--===============0263697179445701732==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+I won=E2=80=99t be able to join the meeting today. Out sick.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190221
+Christoph
 
-Feel free to add/modify topics!
+> On Feb 20, 2019, at 6:04 AM, Matthieu Baerts <matthieu.baerts(a)tessares.=
+net> wrote:
+> =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+> Hello everybody!
+> =
 
-Speak to you tomorrow!
-Matthieu
--- =
+> Our public MPTCP upstreaming weekly web conference is scheduled for
+> tomorrow.
+> =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> The list of topics is available here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20190221
+> =
 
---===============5206799171950963481==--
+> Feel free to add/modify topics!
+> =
+
+> Anybody can join the meeting using Google Meet website/app/phone:
+> https://meet.google.com/edk-rkrk-vaj
+> =
+
+> Speak to you tomorrow!
+> Matthieu
+> -- =
+
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+
+--===============0263697179445701732==--
