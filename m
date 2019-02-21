@@ -1,69 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============2582261321356929580=="
+Content-Type: multipart/mixed; boundary="===============1314349002404211098=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC mptcp 0/4] mptcp: kselftest program and a few
- bugs
-Date: Thu, 21 Feb 2019 08:45:09 -0800
-Message-ID: <alpine.OSX.2.21.1902210840070.3866@anpatel-mobl2.amr.corp.intel.com>
-In-Reply-To: 20190207142711.3475-1-fw@strlen.de
+Subject: [MPTCP] [Weekly meetings] MoM - 28th of February 2019
+Date: Thu, 21 Feb 2019 18:34:01 +0100
+Message-ID: <1c4b96a3-2265-4eaa-8e00-d39b78fb67c2@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1011
+X-UID: 1012
 
---===============2582261321356929580==
+--===============1314349002404211098==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 7 Feb 2019, Florian Westphal wrote:
+Hello,
 
-> Hi.
->
-> First patch adds a small mptcp test program, nothing fancy,
-> just transmits stdin via mptcp connection and back out again.
->
-> Uncovers a few issues, the one unfixed is that
-> read(mptcpfd, buf, buflen)
->
-> can return cause data to be discarded.
-> In that case, read() returns a value larger than "buflen".
-> Did not investigate further so far.
+We just had our 40th meeting with Mat and Ossama (Intel OTC), and myself
+(Tessares).
 
-Florian -
+Thanks again for this new good meeting!
 
-Thanks for finding that read bug. This appears to fix it (I will update =
 
-the patch set to include this):
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index bed3be1c380b..46603af09b25 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -319,6 +319,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
-  	while (copied < len) {
-  		enum mapping_status status;
-  		size_t discard_len =3D 0;
-+		u32 map_remaining;
-  		int bytes_read;
-  		u64 ack_seq;
-  		u64 old_ack;
-@@ -411,7 +412,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
-  		}
+Here are the minutes of the meeting:
 
-  		/* Read mapped data */
--		desc.count =3D ssn - subflow->map_subflow_seq + subflow->map_dll;
-+		map_remaining =3D (ssn - subflow->map_subflow_seq +
-+				 subflow->map_dll);
-+		desc.count =3D min_t(size_t, len - copied, map_remaining);
-  		arg.msg =3D msg;
-  		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
-  		if (bytes_read < 0)
 
---
-Mat Martineau
-Intel
 
---===============2582261321356929580==--
+Packetdrill:
+    - now available: https://github.com/multipath-tcp/packetdrill_mptcp
+    - as said last week, there are some limitations (multi connections,
+etc.) but a good start for the first validations!
+    - there are examples in the same repo ;-)
+
+
+
+IETF RFC6824bis:
+    - v13 available:
+https://github.com/multipath-tcp/draft-ietf-mptcp-rfc6824bis/commit/a197ed9=
+35ef5570c70432e8b372ebc208d40ed64
+
+
+
+CI job to update TopGit tree:
+    - update the topgit tree and export it if no conflicts and
+validation (only the compilation with CONFIG_MPTCP=3Dy for the moment) is OK
+    - in review:
+https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/445591
+    - already running:
+https://github.com/multipath-tcp/mptcp_net-next/tree/export
+    - next steps:
+        - add topics in TG tree:
+            tcp: Add MPTCP option number =E2=86=92 +2
+            tcp: Define IPPROTO_MPTCP =E2=86=92 +2
+            mptcp: Add MPTCP socket stubs =E2=86=92 +1
+            mptcp: Handle MPTCP TCP options =E2=86=92 +1
+            =E2=86=92 Matth: will integrate the two first 2 patches in topg=
+it
+(and more once +2 will be given) next week (off tomorrow)
+        - add more validations:
+            kselftests once merged?
+            packetdrill, etc.
+
+
+
+Mat:
+    - will update the patches on Gerrit with Florian fixes and other
+changes.
+    - in the next version after =E2=86=91, there will be changes related to
+subflows (patch number 5 will be rewritten).
+
+
+
+Ossama:
+    - continuing on the reviews
+
+
+
+(Physical) meeting:
+    - Could be nice to meet each others at LPC 2019 (September 9-11,
+Lisbon, Portugal)
+
+
+
+multipath-tcp:
+    - we should have soon (no ETA) a new sync with upstream for v0.94
+    - a new branch v0.95 based on v4.19.x
+    - mptcp_trunk sync with last kernel
+
+
+
+Next meeting:
+    - We propose to have the next one on Thursday, the 28th of February.
+    - Usual time: 17:00 UTC (9am PST, 6pm CET)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190228
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+Talk to you next week,
+Matthieu
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+--===============1314349002404211098==--
