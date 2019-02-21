@@ -1,75 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============4789604269165734118=="
+Content-Type: multipart/mixed; boundary="===============2582261321356929580=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] Weekly meeting - 21 February 2019 17:00 UTC (9am PST,
- 6pm CET)
-Date: Thu, 21 Feb 2019 17:30:55 +0100
-Message-ID: <CAKuKrB=nB=PjZP59AGmMuUE-FgJD+7UzT6Y2sqt_zzO5OvQR6A@mail.gmail.com>
-In-Reply-To: 5329B777-D192-4E44-AEEB-E3AA2C219C38@apple.com
+Subject: Re: [MPTCP] [PATCH RFC mptcp 0/4] mptcp: kselftest program and a few
+ bugs
+Date: Thu, 21 Feb 2019 08:45:09 -0800
+Message-ID: <alpine.OSX.2.21.1902210840070.3866@anpatel-mobl2.amr.corp.intel.com>
+In-Reply-To: 20190207142711.3475-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1010
+X-UID: 1011
 
---===============4789604269165734118==
+--===============2582261321356929580==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
+On Thu, 7 Feb 2019, Florian Westphal wrote:
 
-Thank you for letting us know!
-
-Take care,
-Matt
-
-On Thu, Feb 21, 2019 at 5:28 PM Christoph Paasch <cpaasch(a)apple.com> wrot=
-e:
+> Hi.
 >
-> I won=E2=80=99t be able to join the meeting today. Out sick.
+> First patch adds a small mptcp test program, nothing fancy,
+> just transmits stdin via mptcp connection and back out again.
 >
+> Uncovers a few issues, the one unfixed is that
+> read(mptcpfd, buf, buflen)
 >
-> Christoph
->
-> > On Feb 20, 2019, at 6:04 AM, Matthieu Baerts <matthieu.baerts(a)tessare=
-s.net> wrote:
-> >
-> > Hello everybody!
-> >
-> > Our public MPTCP upstreaming weekly web conference is scheduled for
-> > tomorrow.
-> >
-> > The list of topics is available here:
-> > https://annuel2.framapad.org/p/mptcp_upstreaming_20190221
-> >
-> > Feel free to add/modify topics!
-> >
-> > Anybody can join the meeting using Google Meet website/app/phone:
-> > https://meet.google.com/edk-rkrk-vaj
-> >
-> > Speak to you tomorrow!
-> > Matthieu
-> > --
-> > Matthieu Baerts | R&D Engineer
-> > matthieu.baerts(a)tessares.net
-> > Tessares SA | Hybrid Access Solutions
-> > www.tessares.net
-> > 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-> > _______________________________________________
-> > mptcp mailing list
-> > mptcp(a)lists.01.org
-> > https://lists.01.org/mailman/listinfo/mptcp
+> can return cause data to be discarded.
+> In that case, read() returns a value larger than "buflen".
+> Did not investigate further so far.
 
+Florian -
 
+Thanks for finding that read bug. This appears to fix it (I will update =
 
--- =
+the patch set to include this):
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index bed3be1c380b..46603af09b25 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -319,6 +319,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+  	while (copied < len) {
+  		enum mapping_status status;
+  		size_t discard_len =3D 0;
++		u32 map_remaining;
+  		int bytes_read;
+  		u64 ack_seq;
+  		u64 old_ack;
+@@ -411,7 +412,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+  		}
 
-Disclaimer: https://www.tessares.net/mail-disclaimer/
+  		/* Read mapped data */
+-		desc.count =3D ssn - subflow->map_subflow_seq + subflow->map_dll;
++		map_remaining =3D (ssn - subflow->map_subflow_seq +
++				 subflow->map_dll);
++		desc.count =3D min_t(size_t, len - copied, map_remaining);
+  		arg.msg =3D msg;
+  		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
+  		if (bytes_read < 0)
 
---===============4789604269165734118==--
+--
+Mat Martineau
+Intel
+
+--===============2582261321356929580==--
