@@ -1,115 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============1314349002404211098=="
+Content-Type: multipart/mixed; boundary="===============2415410530537585084=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 28th of February 2019
-Date: Thu, 21 Feb 2019 18:34:01 +0100
-Message-ID: <1c4b96a3-2265-4eaa-8e00-d39b78fb67c2@tessares.net>
+Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:upd-tg: for TG to
+ use refs/top-bases
+Date: Tue, 26 Feb 2019 16:01:52 +0000
+Message-ID: <gerrit.1551196912000.I6bb61ee898228204eab8a1bc2072b58ba065d46c@review.gerrithub.io>
 X-Status: 
 X-Keywords:                  
-X-UID: 1012
+X-UID: 1013
 
---===============1314349002404211098==
+--===============2415410530537585084==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-We just had our 40th meeting with Mat and Ossama (Intel OTC), and myself
-(Tessares).
-
-Thanks again for this new good meeting!
+Matthieu Baerts has uploaded this change for review. ( https://review.gerri=
+thub.io/c/multipath-tcp/mptcp_net-next/+/446294
 
 
+Change subject: ci:upd-tg: for TG to use refs/top-bases
+......................................................................
 
-Here are the minutes of the meeting:
+ci:upd-tg: for TG to use refs/top-bases
 
+From: https://github.com/mackyle/topgit#tg-migrate-bases
 
+> Beginning with TopGit release 0.19.4, TopGit has the ability to store
+> the top-bases refs in either the old ref/top-bases/... location or the
+> new refs/heads/{top-bases}/... location. Starting with TopGit release
+> 0.20.0, the default is the new location.
 
-Packetdrill:
-    - now available: https://github.com/multipath-tcp/packetdrill_mptcp
-    - as said last week, there are some limitations (multi connections,
-etc.) but a good start for the first validations!
-    - there are examples in the same repo ;-)
+We force the 'old' location because Gerrit is configured for a use with
+these refs and in the script, we also use refs/top-bases.
 
-
-
-IETF RFC6824bis:
-    - v13 available:
-https://github.com/multipath-tcp/draft-ietf-mptcp-rfc6824bis/commit/a197ed9=
-35ef5570c70432e8b372ebc208d40ed64
-
-
-
-CI job to update TopGit tree:
-    - update the topgit tree and export it if no conflicts and
-validation (only the compilation with CONFIG_MPTCP=3Dy for the moment) is OK
-    - in review:
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/445591
-    - already running:
-https://github.com/multipath-tcp/mptcp_net-next/tree/export
-    - next steps:
-        - add topics in TG tree:
-            tcp: Add MPTCP option number =E2=86=92 +2
-            tcp: Define IPPROTO_MPTCP =E2=86=92 +2
-            mptcp: Add MPTCP socket stubs =E2=86=92 +1
-            mptcp: Handle MPTCP TCP options =E2=86=92 +1
-            =E2=86=92 Matth: will integrate the two first 2 patches in topg=
-it
-(and more once +2 will be given) next week (off tomorrow)
-        - add more validations:
-            kselftests once merged?
-            packetdrill, etc.
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Change-Id: I6bb61ee898228204eab8a1bc2072b58ba065d46c
+---
+M ci/update-tg-tree.sh
+1 file changed, 6 insertions(+), 0 deletions(-)
 
 
 
-Mat:
-    - will update the patches on Gerrit with Florian fixes and other
-changes.
-    - in the next version after =E2=86=91, there will be changes related to
-subflows (patch number 5 will be rewritten).
-
-
-
-Ossama:
-    - continuing on the reviews
-
-
-
-(Physical) meeting:
-    - Could be nice to meet each others at LPC 2019 (September 9-11,
-Lisbon, Portugal)
-
-
-
-multipath-tcp:
-    - we should have soon (no ETA) a new sync with upstream for v0.94
-    - a new branch v0.95 based on v4.19.x
-    - mptcp_trunk sync with last kernel
-
-
-
-Next meeting:
-    - We propose to have the next one on Thursday, the 28th of February.
-    - Usual time: 17:00 UTC (9am PST, 6pm CET)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190228
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-Talk to you next week,
-Matthieu
+  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
+s/changes/94/446294/1
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
+/446294
+To unsubscribe, or for help writing mail filters, visit https://review.gerr=
+ithub.io/settings
 
---===============1314349002404211098==--
+Gerrit-Project: multipath-tcp/mptcp_net-next
+Gerrit-Branch: scripts
+Gerrit-Change-Id: I6bb61ee898228204eab8a1bc2072b58ba065d46c
+Gerrit-Change-Number: 446294
+Gerrit-PatchSet: 1
+Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Gerrit-MessageType: newchange
+
+--===============2415410530537585084==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PHA+TWF0dGhpZXUgQmFlcnRzIGhhcyB1cGxvYWRlZCB0aGlzIGNoYW5nZSBmb3IgPHN0cm9uZz5y
+ZXZpZXc8L3N0cm9uZz4uPC9wPjxwPjxhIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5p
+by9jL211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQvKy80NDYyOTQiPlZpZXcgQ2hhbmdlPC9h
+PjwvcD48cHJlIHN0eWxlPSJmb250LWZhbWlseTogbW9ub3NwYWNlLG1vbm9zcGFjZTsgd2hpdGUt
+c3BhY2U6IHByZS13cmFwOyI+Y2k6dXBkLXRnOiBmb3IgVEcgdG8gdXNlIHJlZnMvdG9wLWJhc2Vz
+PGJyPjxicj5Gcm9tOiBodHRwczovL2dpdGh1Yi5jb20vbWFja3lsZS90b3BnaXQjdGctbWlncmF0
+ZS1iYXNlczxicj48YnI+Jmd0OyBCZWdpbm5pbmcgd2l0aCBUb3BHaXQgcmVsZWFzZSAwLjE5LjQs
+IFRvcEdpdCBoYXMgdGhlIGFiaWxpdHkgdG8gc3RvcmU8YnI+Jmd0OyB0aGUgdG9wLWJhc2VzIHJl
+ZnMgaW4gZWl0aGVyIHRoZSBvbGQgcmVmL3RvcC1iYXNlcy8uLi4gbG9jYXRpb24gb3IgdGhlPGJy
+PiZndDsgbmV3IHJlZnMvaGVhZHMve3RvcC1iYXNlc30vLi4uIGxvY2F0aW9uLiBTdGFydGluZyB3
+aXRoIFRvcEdpdCByZWxlYXNlPGJyPiZndDsgMC4yMC4wLCB0aGUgZGVmYXVsdCBpcyB0aGUgbmV3
+IGxvY2F0aW9uLjxicj48YnI+V2UgZm9yY2UgdGhlICYjMzk7b2xkJiMzOTsgbG9jYXRpb24gYmVj
+YXVzZSBHZXJyaXQgaXMgY29uZmlndXJlZCBmb3IgYSB1c2Ugd2l0aDxicj50aGVzZSByZWZzIGFu
+ZCBpbiB0aGUgc2NyaXB0LCB3ZSBhbHNvIHVzZSByZWZzL3RvcC1iYXNlcy48YnI+PGJyPlNpZ25l
+ZC1vZmYtYnk6IE1hdHRoaWV1IEJhZXJ0cyAmbHQ7bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5l
+dCZndDs8YnI+U3VnZ2VzdGVkLWJ5OiBNYXQgTWFydGluZWF1ICZsdDttYXRoZXcuai5tYXJ0aW5l
+YXVAbGludXguaW50ZWwuY29tJmd0Ozxicj5DaGFuZ2UtSWQ6IEk2YmI2MWVlODk4MjI4MjA0ZWFi
+OGExYmMyMDcyYjU4YmEwNjVkNDZjPGJyPi0tLTxicj5NIGNpL3VwZGF0ZS10Zy10cmVlLnNoPGJy
+PjEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pPGJyPjxicj48
+L3ByZT48cHJlIHN0eWxlPSJmb250LWZhbWlseTogbW9ub3NwYWNlLG1vbm9zcGFjZTsgd2hpdGUt
+c3BhY2U6IHByZS13cmFwOyI+Z2l0IHB1bGwgc3NoOi8vcmV2aWV3LmdlcnJpdGh1Yi5pbzoyOTQx
+OC9tdWx0aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0IHJlZnMvY2hhbmdlcy85NC80NDYyOTQvMTwv
+cHJlPjxwPlRvIHZpZXcsIHZpc2l0IDxhIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5p
+by9jL211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQvKy80NDYyOTQiPmNoYW5nZSA0NDYyOTQ8
+L2E+LiBUbyB1bnN1YnNjcmliZSwgb3IgZm9yIGhlbHAgd3JpdGluZyBtYWlsIGZpbHRlcnMsIHZp
+c2l0IDxhIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5pby9zZXR0aW5ncyI+c2V0dGlu
+Z3M8L2E+LjwvcD48ZGl2IGl0ZW1zY29wZSBpdGVtdHlwZT0iaHR0cDovL3NjaGVtYS5vcmcvRW1h
+aWxNZXNzYWdlIj48ZGl2IGl0ZW1zY29wZSBpdGVtcHJvcD0iYWN0aW9uIiBpdGVtdHlwZT0iaHR0
+cDovL3NjaGVtYS5vcmcvVmlld0FjdGlvbiI+PGxpbmsgaXRlbXByb3A9InVybCIgaHJlZj0iaHR0
+cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8r
+LzQ0NjI5NCIvPjxtZXRhIGl0ZW1wcm9wPSJuYW1lIiBjb250ZW50PSJWaWV3IENoYW5nZSIvPjwv
+ZGl2PjwvZGl2PgoKPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LVByb2plY3Q6IG11
+bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9u
+ZSI+IEdlcnJpdC1CcmFuY2g6IHNjcmlwdHMgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9u
+ZSI+IEdlcnJpdC1DaGFuZ2UtSWQ6IEk2YmI2MWVlODk4MjI4MjA0ZWFiOGExYmMyMDcyYjU4YmEw
+NjVkNDZjIDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQ2hhbmdlLU51
+bWJlcjogNDQ2Mjk0IDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtUGF0
+Y2hTZXQ6IDEgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1Pd25lcjog
+TWF0dGhpZXUgQmFlcnRzICZsdDttYXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0OyA8L2Rp
+dj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LU1lc3NhZ2VUeXBlOiBuZXdjaGFu
+Z2UgPC9kaXY+Cgo=
+
+--===============2415410530537585084==--
