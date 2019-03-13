@@ -1,18 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============1752146832650008592=="
+Content-Type: multipart/mixed; boundary="===============5628487536803732615=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 14 March 2019 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 13 Mar 2019 16:31:50 +0100
-Message-ID: <77242c9d-3684-85d0-fa5c-cd3799442067@tessares.net>
+Subject: [MPTCP] Weekly meeting - 14 March 2019 !! 16:00 UTC ! (9am PDT,
+ 5pm CET)
+Date: Wed, 13 Mar 2019 18:33:59 +0100
+Message-ID: <f2d6dc58-3842-7bab-b13f-c6ad7745cbe0@tessares.net>
+In-Reply-To: 77242c9d-3684-85d0-fa5c-cd3799442067@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1027
+X-UID: 1028
 
---===============1752146832650008592==
+--===============5628487536803732615==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+Hello everybody!
+
+I forgot to mention that the hour might be different if you are not in
+the US! The meeting will be at 4pm UTC which is for example 5pm in
+Central Europe! But still 9am in Pacific Time!
+
+Cheers,
+Matt
+
+
+-------- Forwarded Message --------
+Subject: Weekly meeting - 14 March 2019 17:00 UTC (9am PST, 6pm CET)
+Date: Wed, 13 Mar 2019 16:31:50 +0100
+From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+To: mptcp(a)lists.01.org
 
 Hello everybody!
 
@@ -37,4 +55,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============1752146832650008592==--
+--===============5628487536803732615==--
