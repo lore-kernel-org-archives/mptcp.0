@@ -1,43 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============0177083790604891484=="
+Content-Type: multipart/mixed; boundary="===============2197871898146931414=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 28 March 2019 !! 16:00 UTC ! (9am PDT,
- 5pm CET)
-Date: Wed, 27 Mar 2019 15:34:58 +0100
-Message-ID: <437ec9d7-751e-648a-4a12-738866ac7ff9@tessares.net>
+Subject: Re: [MPTCP] [mptcp-dev] [PATCH] mptcp: fix typo in
+ mptcp_options_write() stub
+Date: Wed, 27 Mar 2019 16:49:17 +0100
+Message-ID: <3e5f2038b1c4289d4f125ac97c64fbb8e0146099.camel@redhat.com>
+In-Reply-To: CAKuKrB=UHxybmhr1i7Cj+iPgKxfrgRuHBD52+NBE8-RW1KqQBA@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1035
+X-UID: 1036
 
---===============0177083790604891484==
+--===============2197871898146931414==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Wed, 2019-03-27 at 15:20 +0100, Matthieu Baerts wrote:
+> Hi Davide,
+> =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> On Wed, Mar 27, 2019 at 2:59 PM Davide Caratti <dcaratti(a)redhat.com> wr=
+ote:
+> > it causes build errors when CONFIG_MPTCP is unset
+> =
 
-/!\ Be careful that it is now planned at 4pm UTC (9am PDT, 5pm CET)
+> Thank you for the patch.
+> But I think you sent it to the wrong ML: mptcp-dev(a)listes.uclouvain.be
+> (current implementation) vs mptcp(a)lists.01.org (upstream project, now
+> in cc).
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190328
+woops. sorry for the noise.
 
-Feel free to add/modify topics!
+> Because what you want to fix has not been merged yet, feel free to
+> directly report this typo there:
+> https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/437402/9/inc=
+lude/net/mptcp.h#218
+> ;-)
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+... and thanks for the guidance :)
 
-Speak to you tomorrow!
-Matthieu
+I think the current review status includes all the build errors I'm
+getting now (and I see yesterday Mat already spotted the one in
+tcp_output.c (
+https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/437391/9 )
+
+Last time I worked with gerrit, years ago, we used to put negative reviews
+when we encountered  build issues and known bugs - hence my '-1' to the
+above patchsets. Is that correct?
+
+TIA,
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+davide
 
---===============0177083790604891484==--
+
+--===============2197871898146931414==--
