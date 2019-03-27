@@ -1,80 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============4386608957765665058=="
+Content-Type: multipart/mixed; boundary="===============3373858666198725540=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [mptcp-dev] [PATCH] mptcp: fix typo in
- mptcp_options_write() stub
-Date: Wed, 27 Mar 2019 16:50:49 +0100
-Message-ID: <CAKuKrBnyQAWw5SFen_h8xG_zdBDrL=tnmPa3kBywxi8X4rDbLA@mail.gmail.com>
-In-Reply-To: e1c758792f5da70cf83589bb181ceff92255f57b.camel@redhat.com
+Subject: Re: [MPTCP] Weekly meeting - 28 March 2019 !! 16:00 UTC ! (9am PDT,
+ 5pm CET)
+Date: Wed, 27 Mar 2019 16:55:08 +0100
+Message-ID: <20190327155508.GG88266@dhcp-9cbf.meeting.ietf.org>
+In-Reply-To: 437ec9d7-751e-648a-4a12-738866ac7ff9@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1037
+X-UID: 1038
 
---===============4386608957765665058==
+--===============3373858666198725540==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 27, 2019 at 4:44 PM Davide Caratti <dcaratti(a)redhat.com> wrot=
-e:
->
-> On Wed, 2019-03-27 at 15:20 +0100, Matthieu Baerts wrote:
-> > Hi Davide,
-> >
-> > On Wed, Mar 27, 2019 at 2:59 PM Davide Caratti <dcaratti(a)redhat.com> =
-wrote:
-> > > it causes build errors when CONFIG_MPTCP is unset
-> >
-> > Thank you for the patch.
-> > But I think you sent it to the wrong ML: mptcp-dev(a)listes.uclouvain.be
-> > (current implementation) vs mptcp(a)lists.01.org (upstream project, now
-> > in cc).
->
-> woops. sorry for the noise.
->
-> > Because what you want to fix has not been merged yet, feel free to
-> > directly report this typo there:
-> > https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/437402/9/i=
-nclude/net/mptcp.h#218
-> > ;-)
->
-> ... and thanks for the guidance :)
+Hello,
 
-You are welcome!
-
-> I think the current review status includes all the build errors I'm
-> getting now (and I see yesterday Mat already spotted the one in
-> tcp_output.c (
-> https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/437391/9 )
-
-Thank you for having tested this case!
-
-> Last time I worked with gerrit, years ago, we used to put negative reviews
-> when we encountered  build issues and known bugs - hence my '-1' to the
-> above patchsets. Is that correct?
-
-That looks correct to me!
-
-Cheers,
-Matt
-
-> TIA,
-> --
-> davide
->
->
->
+I won't be able to make it as I am at the IETF.
 
 
--- =
+Christoph
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+On 27/03/19 - 15:34:58, Matthieu Baerts wrote:
+> Hello everybody!
+> =
 
-Disclaimer: https://www.tessares.net/mail-disclaimer/
+> Our public MPTCP upstreaming weekly web conference is scheduled for
+> tomorrow.
+> =
 
---===============4386608957765665058==--
+> /!\ Be careful that it is now planned at 4pm UTC (9am PDT, 5pm CET)
+> =
+
+> The list of topics is available here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20190328
+> =
+
+> Feel free to add/modify topics!
+> =
+
+> Anybody can join the meeting using Google Meet website/app/phone:
+> https://meet.google.com/edk-rkrk-vaj
+> =
+
+> Speak to you tomorrow!
+> Matthieu
+> -- =
+
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+
+--===============3373858666198725540==--
