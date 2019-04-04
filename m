@@ -1,113 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============8173578691957801107=="
+Content-Type: multipart/mixed; boundary="===============5794313653014865613=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 4th of April 2019
-Date: Thu, 04 Apr 2019 18:33:06 +0200
-Message-ID: <82cdb6a5-60e3-9db9-2229-e2957513fa01@tessares.net>
+Subject: [MPTCP] memory accounting issue with current mptcp-proposal branch
+Date: Thu, 04 Apr 2019 18:33:18 +0200
+Message-ID: <5c6d99bb6d2861fcdba5d2fd05b4146fcc486050.camel@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1043
+X-UID: 1044
 
---===============8173578691957801107==
+--===============5794313653014865613==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi all,
 
-We just had our 45th meeting with Mat, Peter and Ossama (Intel OTC),
-Christoph (Apple), Paolo and Davide (Red Hat) and myself (Tessares).
+I just checked-out the mptcp-proposal and did some tests vs a debug build (=
+CONFIG_KASAN and several CONFIG_*DEBUG* enabled).
 
-Thanks again for this new good meeting!
+I also have the local change reported at the bottom, just to made the self-=
+test a little bit more stressing.
 
+Running:
 
+while true; do ./mptcp_connect.sh; done
 
-Here are the minutes of the meeting:
+I get the following splat after a few iterations:
 
+[  574.215874] WARNING: CPU: 2 PID: 3538 at net/core/stream.c:206 sk_stream=
+_kill_queues+0x370/0x510
+[  574.217403] Modules linked in: kvm_intel kvm irqbypass crct10dif_pclmul =
+crc32_pclmul ghash_clmulni_intel joydev pcspkr virtio_balloon i2c_piix4 sun=
+rpc ip_tables xfs libcrc32c crc32c_intel serio_raw ata_generic virtio_net v=
+irtio_blk net_failover failover virtio_console ata_piix libata
+[  574.221141] CPU: 2 PID: 3538 Comm: mptcp_connect Not tainted 5.0.0.mptcp=
+_dbg_b0afc0265a8b+ #10
+[  574.222219] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
+?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+[  574.223781] RIP: 0010:sk_stream_kill_queues+0x370/0x510
+[  574.224432] Code: 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 0f b6 =
+04 02 84 c0 74 04 3c 03 7e 43 8b b3 40 02 00 00 eb 92 0f 0b 85 f6 74 be <0f=
+> 0b 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f c3 0f 0b e9 ed fe
+[  574.226522] RSP: 0018:ffff8881033cfaf8 EFLAGS: 00010206
+[  574.227110] RAX: 0000000000000000 RBX: ffff88803581ee40 RCX: 00000000000=
+00020
+[  574.227968] RDX: 1ffff11006b03e19 RSI: 0000000000000b00 RDI: ffff8880358=
+1f0c8
+[  574.228779] RBP: ffff88803581f080 R08: ffffed1021e7db10 R09: ffffed1021e=
+7db0f
+[  574.229570] R10: ffffed1021e7db0f R11: ffff88810f3ed87b R12: ffffffff9ca=
+c4fa0
+[  574.230349] R13: ffff88803581efa8 R14: ffff88810b1a1700 R15: 00000000f8b=
+7605b
+[  574.231205] FS:  00007f6446d5c740(0000) GS:ffff88810f200000(0000) knlGS:=
+0000000000000000
+[  574.232219] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  574.232942] CR2: 00000000008b3ad0 CR3: 0000000108d20002 CR4: 00000000001=
+606e0
+[  574.233778] Call Trace:
+[  574.234093]  inet_csk_destroy_sock+0x15c/0x3a0
+[  574.234607]  tcp_rcv_state_process+0x1264/0x2391
+[  574.236230]  tcp_v4_do_rcv+0x2bc/0x790
+[  574.236680]  __release_sock+0x120/0x360
+[  574.237132]  tcp_close+0x540/0xeb0
+[  574.237590]  inet_release+0xdc/0x1c0
+[  574.238066]  __sock_release+0x1d2/0x2a0
+[  574.238578]  mptcp_close+0x182/0x380
+[  574.239066]  inet_release+0xdc/0x1c0
+[  574.239494]  __sock_release+0xc5/0x2a0
+[  574.239935]  sock_close+0x11/0x20
+[  574.240343]  __fput+0x261/0x800
+[  574.240734]  task_work_run+0x10e/0x190
+[  574.241196]  exit_to_usermode_loop+0x136/0x160
+[  574.241739]  do_syscall_64+0x3c3/0x480
+[  574.242196]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  574.242881] RIP: 0033:0x7f64468667a0
+[  574.243339] Code: 00 64 c7 00 0d 00 00 00 b8 ff ff ff ff eb 90 b8 ff ff =
+ff ff eb 89 0f 1f 40 00 83 3d fd c7 2d 00 00 75 10 b8 03 00 00 00 0f 05 <48=
+> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 9e c5 01 00 48 89 04 24
 
+The warning is triggered by:
 
-Mat and Peter's patch set:
-    - Changes:
-        * Peter has modified the internal subflow sockets to use ULP
+	WARN_ON(sk->sk_forward_alloc);
 
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/450099/1
-
-https://github.com/multipath-tcp/mptcp_net-next/commit/0500c9d7586e8fe73c41=
-5a89aa1a195da6b02546
-        * Fixed building without CONFIG_MPTCP
-        * Modified self-test commits to account for removal of
-IPPROTO_SUBFLOW
-
-    - Review on Gerrit: don't hesitate to review and give a score ;-)
-
-    - ULP:
-        - Mat mentioned that for the moment it is possible to register a
-subflow from userspace (setsockopt ULP).
-        - it was possible not to allow that before but this has been
-removed recently =E2=86=92 @Mat: feel free to share the link to this patch =
-;-)
-        - we should then re-add this support
-
-    - we should be able to share that with Eric soon:
-        - Mat want to do a last change not to send the SKB to the TCP
-stack too soon.
-        - Paolo is reviewing the code and he has some changes to propose
-related to mptcp_send_msg()
-        - there are maybe some memory allocating issues found by Paolo,
-the trace/log can be shared on the ML.
-
-    - For the kselftests, we can squash them: Paolo is OK / @Florian ?
-(it should be fine according to his colleagues :) )
-
-
-
-Next steps:
-    - Review the architecture design code (Mat & Peter's patch-set)
-        - ideally on Gerrit:
-https://review.gerrithub.io/q/project:multipath-tcp/mptcp_net-next+status:o=
-pen
-        - or on the ML if needed.
-
-    - Merge this code in our repo
-
-    - Prepare a cover-letter
-
-    - Send this to Eric for first review
-
-    - What is important and still need to be done: (and this would then
-not be part of what we will send to Eric)
-        - MP_JOIN
-        - coupled received window
-        - IPv6
-        - DATA-FIN handling
-
-        - Once a first version of the architecture design code is
-frozen, feel free to one of these items and share that on the ML ;-)
-
-
-
-Next meeting:
-    - We propose to have it next Thursday, the 11th of April.
-    - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-    - Paolo might not be there but ok for him not to be there
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190411
+so it looks like there is some memory accounting issue. =
 
 
+Cheers,
 
-Feel free to comment on these points and propose new ones for the next
-meeting!
+Paolo
+
+--
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index ec64e95a6d35..2f22f3ae0e2f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -36,6 +36,7 @@ SIZE=3D$((RANDOM % (1024 * 1024)))
+ if [ $SIZE -eq 0 ] ; then
+        SIZE=3D1
+ fi
++SIZE=3D$((SIZE * 100))
+ =
+
+ dd if=3D/dev/urandom of=3D"$tmpin" bs=3D1 count=3D$SIZE 2> /dev/null
 
 
-Talk to you next week,
-Matthieu
--- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============8173578691957801107==--
+--===============5794313653014865613==--
