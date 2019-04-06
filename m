@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============8808815989454952423=="
+Content-Type: multipart/mixed; boundary="===============5830491693866564534=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH 2/4] mptcp: sendmsg() do spool all the
- provided data
-Date: Fri, 05 Apr 2019 15:18:36 -0700
-Message-ID: <alpine.OSX.2.21.1904051518000.58453@aakhemka-mobl1.amr.corp.intel.com>
-In-Reply-To: 581abeeb1b6b8bdb99f2da484988a9a97fa80b96.1554473233.git.pabeni@redhat.com
+Subject: Re: [MPTCP] [RFC PATCH 3/4] mptcp: move tpext data_len initialization
+ at option creation time
+Date: Fri, 05 Apr 2019 17:00:55 -0700
+Message-ID: <alpine.OSX.2.21.1904051518550.58453@aakhemka-mobl1.amr.corp.intel.com>
+In-Reply-To: aa9f17441e53a1b1a44225f19533945fdf0784db.1554473233.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1051
+X-UID: 1052
 
---===============8808815989454952423==
+--===============5830491693866564534==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,159 +19,76 @@ Content-Transfer-Encoding: quoted-printable
 
 On Fri, 5 Apr 2019, Paolo Abeni wrote:
 
-> This makes mptcp sendmsg() behaviour more consistent and
-> improves xmit performances.
+> So that we can cope easily with skb coalescing
+>
 
-Thanks for improving this code.
+Paolo -
+
+It's not necessarily the case that one skb corresponds to one MPTCP =
+
+mapping (represented by the data_seq, subflow_seq, and data_len fields of =
+
+mpext). If a large chunk of data is available for the MPTCP-level socket =
+
+to send on a subflow, it might create one large mapping (covering up to =
+
+64k of the sequence space) that would cover a number of skbs. This =
+
+approach can reduce MPTCP's TCP option header overhead.
+
+It seems like the next patch tries to maintain the skb boundaries by =
+
+setting 'eor', aligning the skb with the intended MPTCP mapping. The =
+
+MPTCP-level socket needs to know where one mapping ends in order to set up =
+
+the next mapping, so I'm not sure we gain a lot by deferring the =
+
+mpext->data_len assignment until the header is written. Since skbs getting =
+
+coalesced would all be in the tcp write queue, couldn't the =
+
+mptcp_sendmsg_frag code update mpext->data_len on the coalesced skb before =
+
+calling tcp_push()?
 
 
 Mat
 
 
->
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> net/mptcp/protocol.c | 85 ++++++++++++++++++++++++++------------------
-> 1 file changed, 50 insertions(+), 35 deletions(-)
+> net/mptcp/options.c  | 2 ++
+> net/mptcp/protocol.c | 1 -
+> 2 files changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7fe8dff9f5f2..db7dcc687918 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -47,42 +47,16 @@ static struct sock *mptcp_subflow_get_ref(const struc=
-t mptcp_sock *msk)
-> 	return NULL;
-> }
->
-> -static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> +static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> +			      struct msghdr *msg)
-> {
-> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> 	int mss_now, size_goal, poffset, ret;
-> 	struct mptcp_ext *mpext =3D NULL;
-> 	struct page_frag *pfrag;
-> 	struct sk_buff *skb;
-> -	struct sock *ssk;
-> 	size_t psize;
->
-> -	pr_debug("msk=3D%p", msk);
-> -	if (msk->subflow) {
-> -		pr_debug("fallback passthrough");
-> -		return sock_sendmsg(msk->subflow, msg);
-> -	}
-> -
-> -	ssk =3D mptcp_subflow_get_ref(msk);
-> -	if (!ssk)
-> -		return -ENOTCONN;
-> -
-> -	if (!msg_data_left(msg)) {
-> -		pr_debug("empty send");
-> -		ret =3D sock_sendmsg(ssk->sk_socket, msg);
-> -		goto put_out;
-> -	}
-> -
-> -	pr_debug("conn_list->subflow=3D%p", ssk);
-> -
-> -	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL)) {
-> -		ret =3D -ENOTSUPP;
-> -		goto put_out;
-> -	}
-> -
-> -	lock_sock(sk);
-> -	lock_sock(ssk);
-> -
-> 	/* use the subflow page cache so that memory accounting is coherent */
-> 	pfrag =3D sk_page_frag(ssk);
-> 	if (!sk_page_frag_refill(ssk, pfrag)) {
-> @@ -90,7 +64,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
->
-> 		ret =3D sk_stream_wait_memory(sk, &timeo);
-> 		if (ret)
-> -			goto release_out;
-> +			return ret;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 1b6ac68c15ba..25a77e6dd5de 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -335,6 +335,8 @@ void mptcp_write_option_header(__be32 *ptr, struct sk=
+_buff *skb,
 > 	}
 >
-> 	/* Copy to page */
-> @@ -101,10 +75,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
-> 					  pfrag->size - poffset),
-> 				    &msg->msg_iter);
-> 	pr_debug("left=3D%zu", msg_data_left(msg));
-> -	if (!psize) {
-> -		ret =3D -EINVAL;
-> -		goto release_out;
-> -	}
-> +	if (!psize)
-> +		return -EINVAL;
+> 	mpext =3D mptcp_get_ext(skb);
+> +	if (mpext)
+> +		mpext->data_len =3D skb->len - tcp_hdrlen(skb);
 >
-> 	/* Mark the end of the previous write so the beginning of the
-> 	 * next write (with its own mptcp skb extension data) is not
-> @@ -119,7 +91,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
-> 	ret =3D do_tcp_sendpages(ssk, pfrag->page, poffset, psize,
-> 			       msg->msg_flags | MSG_SENDPAGE_NOTLAST);
-> 	if (ret <=3D 0)
-> -		goto release_out;
-> +		return ret;
->
-> 	if (skb =3D=3D tcp_write_queue_tail(ssk))
-> 		pr_err("no new skb %p/%p", sk, ssk);
-> @@ -147,8 +119,51 @@ static int mptcp_sendmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len)
-> 	subflow_ctx(ssk)->rel_write_seq +=3D ret;
->
-> 	tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle, size_goal);
-> +	return ret;
-> +}
-> +
-> +static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> +{
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	size_t copied =3D 0;
-> +	struct sock *ssk;
-> +	int ret =3D 0;
-> +
-> +	pr_debug("msk=3D%p", msk);
-> +	if (msk->subflow) {
-> +		pr_debug("fallback passthrough");
-> +		return sock_sendmsg(msk->subflow, msg);
-> +	}
-> +
-> +	ssk =3D mptcp_subflow_get_ref(msk);
-> +	if (!ssk)
-> +		return -ENOTCONN;
-> +
-> +	if (!msg_data_left(msg)) {
-> +		pr_debug("empty send");
-> +		ret =3D sock_sendmsg(ssk->sk_socket, msg);
-> +		goto put_out;
-> +	}
-> +
-> +	pr_debug("conn_list->subflow=3D%p", ssk);
-> +
-> +	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL)) {
-> +		ret =3D -ENOTSUPP;
-> +		goto put_out;
-> +	}
-> +
-> +	lock_sock(sk);
-> +	lock_sock(ssk);
-> +	while (msg_data_left(msg)) {
-> +		ret =3D mptcp_sendmsg_frag(sk, ssk, msg);
-> +		if (ret < 0)
-> +			break;
-> +
-> +		copied +=3D ret;
-> +	}
-> +	if (copied > 0)
-> +		ret =3D copied;
->
-> -release_out:
-> 	release_sock(ssk);
-> 	release_sock(sk);
->
+> 	if ((OPTION_MPTCP_DSS_MAP | OPTION_MPTCP_DSS_ACK) &
+> 	    opts->suboptions) {
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index db7dcc687918..2fbfe3e30630 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -104,7 +104,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+> 		memset(mpext, 0, sizeof(*mpext));
+> 		mpext->data_seq =3D msk->write_seq;
+> 		mpext->subflow_seq =3D subflow_ctx(ssk)->rel_write_seq;
+> -		mpext->data_len =3D ret;
+> 		mpext->checksum =3D 0xbeef;
+> 		mpext->use_map =3D 1;
+> 		mpext->dsn64 =3D 1;
 > -- =
 
 > 2.20.1
@@ -186,4 +103,4 @@ hdr *msg, size_t len)
 Mat Martineau
 Intel
 
---===============8808815989454952423==--
+--===============5830491693866564534==--
