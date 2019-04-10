@@ -1,63 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5899495031223907888=="
+Content-Type: multipart/mixed; boundary="===============0834908540005345831=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH 4/4] mptcp: allow collapsing consecutive
- sendpages on the same substream
-Date: Wed, 10 Apr 2019 10:05:56 +0200
-Message-ID: <91da8a97d57aeca139f08b7495bd56fe563d0b05.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1904051701080.58453@aakhemka-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Weekly meeting - 11 April 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 10 Apr 2019 17:56:23 +0200
+Message-ID: <09c65816-5852-1668-ea72-a724c81d4fc9@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1058
+X-UID: 1059
 
---===============5899495031223907888==
+--===============0834908540005345831==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-04-05 at 17:34 -0700, Mat Martineau wrote:
-> On Fri, 5 Apr 2019, Paolo Abeni wrote:
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 2fbfe3e30630..5df2283de488 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -47,11 +47,19 @@ static struct sock *mptcp_subflow_get_ref(const str=
-uct mptcp_sock *msk)
-> > 	return NULL;
-> > }
-> > =
+Hello everybody!
 
-> > +static inline bool mptcp_skb_can_collapse_to(const struct mptcp_sock *=
-msk,
-> > +					     const struct sock *ssk,
-> > +					     const struct sk_buff *skb)
-> > +{
-> > +	return tcp_skb_can_collapse_to(skb) && (msk->last =3D=3D ssk);
-> =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> Even if the last send was on a particular subflow, that doesn't guarantee =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20190411
 
-> the next send can be collapsed on that subflow. There are other cases lik=
-e =
+Feel free to add/modify topics!
 
-> MPTCP-level resends or sending duplicate data on different subflows.
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-uhmm... I thought a bit more about the above and the code in the patch
-still LGTM: msk->last references the last subflow we enqueued new data
-to, that is, the subflow with the higher/newer MPTCP write_seq...
+Speak to you tomorrow!
+Matthieu
+-- =
 
-> I think it would have to make sure the MPTCP-level sequence numbers are =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-> contiguous before collapsing.
-
-... so this condition always held, when (msk->last =3D=3D ssk).
-
-Am I missing something?
-
-Thanks,
-
-Paolo
-
-
---===============5899495031223907888==--
+--===============0834908540005345831==--
