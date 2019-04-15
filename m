@@ -1,41 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============1853530624265752524=="
+Content-Type: multipart/mixed; boundary="===============0891196408084643454=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH mptcp-next 0/2] mptcp: two minor improvements
-Date: Fri, 12 Apr 2019 15:28:10 -0700
-Message-ID: <alpine.OSX.2.21.1904121526180.54218@lipeng-mobl2.amr.corp.intel.com>
-In-Reply-To: 20190411114325.29375-1-fw@strlen.de
+Subject: [MPTCP] [PATCH 0/3] mptcp: refactor xmit path
+Date: Mon, 15 Apr 2019 17:30:46 +0200
+Message-ID: <cover.1555342070.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1066
+X-UID: 1067
 
---===============1853530624265752524==
+--===============0891196408084643454==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+his series refactor the mptcp xmit path trying to make sendmsg behavior
+more consistent, memory efficent and improve its performances.
 
-On Thu, 11 Apr 2019, Florian Westphal wrote:
+The code is also available here:
 
-> First patch makes it so CONFIG_MPTCP=3Dn build is same as
-> building a kernel with all mptcp patches reverted.
->
-> Second patch provides minor size reduction of tcp_sock struct
-> by closing a 6-byte hole in mptcp rx option struct.
->
-> As usual, feel free to squash them as needed.
+https://github.com/pabeni/mptcp/tree/mptcp-proposal-devel
 
-Thanks Florian.
+To support MP_JOIN and multiple subflows, the idea is adding, with later
+patches, an RB-tree structure containing references to the pending page
+fragments, their length and the associated mptcp write_seq number (is subfl=
+ow
+rel_write_seq needed, too?). RB-tree node can be allocated using the same
+page frag used in this series for skb data. Each RB-tree node will own a
+reference to the page frag.
 
-I squashed the second patch in to the MPTCP patch series. Peter mentioned =
+RFC -> v1:
+ - addressed Mat's feedback, dropping patch 3/4 and switching
+   to per msk page frag use, and checking mptcp seq number for coalescing
 
-that he has some overlapping changes with your first patch so I haven't =
+Paolo Abeni (3):
+  mptcp: use sk_page_frag() in sendmsg
+  mptcp: sendmsg() do spool all the provided data
+  mptcp: allow collapsing consecutive sendpages on the same substream
 
-applied that.
+ net/mptcp/protocol.c | 181 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 119 insertions(+), 62 deletions(-)
 
---
-Mat Martineau
-Intel
+-- =
 
---===============1853530624265752524==--
+2.20.1
+
+
+--===============0891196408084643454==--
