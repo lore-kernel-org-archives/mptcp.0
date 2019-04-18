@@ -1,159 +1,208 @@
-Content-Type: multipart/mixed; boundary="===============4150944140239272075=="
+Content-Type: multipart/mixed; boundary="===============5750458740144619590=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 18th of April 2019
-Date: Thu, 18 Apr 2019 19:43:46 +0200
-Message-ID: <044ce53e-3c9f-f095-0f99-3ac9fef29e8d@tessares.net>
+Subject: Re: [MPTCP] [PATCH 3/3] mptcp: allow collapsing consecutive sendpages
+ on the same substream
+Date: Thu, 18 Apr 2019 16:56:00 -0700
+Message-ID: <alpine.OSX.2.21.1904181637170.41859@scottgi-mobl.amr.corp.intel.com>
+In-Reply-To: dc523dc2ca06423b41b316c7770760322489e557.1555342070.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1077
+X-UID: 1078
 
---===============4150944140239272075==
+--===============5750458740144619590==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, 15 Apr 2019, Paolo Abeni wrote:
 
-We just had our 46th meeting with Mat, Peter and Ossama (Intel OTC),
-Christoph (Apple), Davide (Red Hat) and myself (Tessares).
+> If the current sendmsg() lands on the same subflow we used last, we
+> can try to collapse the data.
+>
+> RFC -> v1
+> - claried collasping schema
+> - update data_len for collapsed skb in mptcp_sendmsg_frag()
+> - fix collapsing decision on mptcp-level OoO
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 77 ++++++++++++++++++++++++++++++++++----------
+> 1 file changed, 60 insertions(+), 17 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 085d658af772..0a947f44f712 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -47,11 +47,24 @@ static struct sock *mptcp_subflow_get_ref(const struc=
+t mptcp_sock *msk)
+> 	return NULL;
+> }
+>
+> +static inline bool mptcp_skb_can_collapse_to(const struct mptcp_sock *ms=
+k,
+> +					     const struct sk_buff *skb,
+> +					     const struct mptcp_ext *mpext)
+> +{
+> +	if (!tcp_skb_can_collapse_to(skb))
+> +		return false;
+> +
+> +	/* can't collapse if there is a MPTCP level out-of-order */
+> +	return mpext->data_seq + mpext->data_len =3D=3D msk->write_seq;
 
-Thanks again for this new good meeting!
+Ok, looks like a good in-order check.
 
+> +}
+> +
+> static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> -			      struct msghdr *msg, long *timeo)
+> +			      struct msghdr *msg, long *timeo, int *pmss_now,
+> +			      int *ps_goal)
+> {
+> +	int mss_now, avail_size, size_goal, poffset, ret;
+> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> -	int mss_now, size_goal, poffset, ret;
+> +	bool collapsed, can_collapse =3D false;
+> 	struct mptcp_ext *mpext =3D NULL;
+> 	struct page_frag *pfrag;
+> 	struct sk_buff *skb;
+> @@ -78,25 +91,48 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+> 	if (!psize)
+> 		return -EINVAL;
+>
+> -	/* Mark the end of the previous write so the beginning of the
+> -	 * next write (with its own mptcp skb extension data) is not
+> -	 * collapsed.
+> -	 */
+> +	mss_now =3D tcp_send_mss(ssk, &size_goal, msg->msg_flags);
+> +	*pmss_now =3D mss_now;
+> +	*ps_goal =3D size_goal;
+> +	avail_size =3D size_goal;
+> 	skb =3D tcp_write_queue_tail(ssk);
+> -	if (skb)
+> -		TCP_SKB_CB(skb)->eor =3D 1;
+> +	if (skb) {
+> +		mpext =3D skb_ext_find(skb, SKB_EXT_MPTCP);
+> +		BUG_ON(!mpext);
+> +
+> +		/* Limit the write to the size available in the
+> +		 * current skb, if any, so that we create at most a new skb.
+> +		 * If we run out of space in the current skb (e.g. the window
+> +		 * size shrunk from last sent) a new skb will be allocated even
+> +		 * is collapsing was allowed: collapsing is effectively
+> +		 * disabled.
+> +		 */
+> +		can_collapse =3D mptcp_skb_can_collapse_to(msk, skb, mpext);
+> +		if (!can_collapse)
+> +			TCP_SKB_CB(skb)->eor =3D 1;
+> +		else if (size_goal - skb->len > 0)
+> +			avail_size =3D size_goal - skb->len;
+> +		else
+> +			can_collapse =3D false;
 
+In this final clause, should it set eor as well? If we're not expecting a =
 
-Here are the minutes of the meeting:
+collapse, it might be better to make sure it does not happen.
 
+> +	}
+>
+> -	mss_now =3D tcp_send_mss(ssk, &size_goal, msg->msg_flags);
+> -	psize =3D min_t(int, size_goal, psize);
+> +	/* tell the TCP stack to delay the push so that we can safely
+> +	 * access the skb after the sendpages call
+> +	 */
+> +	psize =3D min_t(int, avail_size, psize);
+> 	ret =3D do_tcp_sendpages(ssk, pfrag->page, poffset, psize,
+> 			       msg->msg_flags | MSG_SENDPAGE_NOTLAST);
+> 	if (ret <=3D 0)
+> 		return ret;
+>
+> -	if (skb =3D=3D tcp_write_queue_tail(ssk))
+> -		pr_err("no new skb %p/%p", sk, ssk);
+> +	collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
+> +	BUG_ON(collapsed && !can_collapse);
+>
+> 	skb =3D tcp_write_queue_tail(ssk);
 
+Minor: seems like this skb assignment is coupled with the mpext line below =
 
-Paolo's patch-sets:
-    - refactor xmit, new version:
-https://lists.01.org/pipermail/mptcp/2019-April/001066.html
+rather than the conditional to update mpext and exit, and could be moved =
 
-    - addressed Mat's feedback, dropping patch 3/4 and switching to per
-msk page frag use, and checking mptcp seq number for coalescing
+after the collapse check.
 
-    - Mat didn't have time to do a deeper review, will do it ASAP
-(hoping today) =E2=86=92 once reviewed (and accepted), Mat will squash this=
- in
-the commit introducing the xmit code
+Thanks,
 
-    - also a fix for mptcp_accept() =E2=86=92 Mat will integrate that in the
-commit introducing the bug
-
-    - https://lists.01.org/pipermail/mptcp/2019-April/001075.html
-
-    - Paolo is testing that.
-
-    - Found a bug in the substream (subflow) part. But when tracking the
-bug, the bug is not visible, playing hide and seek :)
-
-    - Mat also found a race condition in mptcp_accept() but seems
-different than what Paolo saw. For Mat, it might be related to the ULP
-stuff. Maybe a bug due to concurrency.
-
-    - Note that with ULP, it is currently not used with listening
-socket. Might have issues there.
-
-
-
-Davide:
-    - he is looking at extending the ULP structure to get info about
-MPTCP via ss.
-
-    - Mat: it might be good to also fix the fact the userspace can
-create MPTCP subflow via ULP
-
-    - Also a question about having MPTCP in a module: but certainly
-better to avoid this (lot of work to support this). We can also see if
-maintainers request it.
-
-
-
-questions about mptcp-level locking:
-    - https://lists.01.org/pipermail/mptcp/2019-April/001070.html
-
-    - simpler lock/release vs cmpxchg
-
-    - Mat's answer:
-        Right now, the mptcp-level socket lock is taken first when
-called from userspace for sendmsg/recvmsg because the MPTCP-level socket
-will need to be locked first to determine which subflow socket to work
-with, and then lock the subflow it needs to use.
-        I had been thinking that calling "up" from the subflow to the
-MPTCP-level socket would involve scheduling a worker that would be able
-to lock in the same order as sendmsg/recvmsg. That does introduce some
-latency, but I don't think MPTCP-level resends are as time-sensitive as
-TCP retransmission (but maybe others on the list have more data or
-experience on that topic).
-        As for the window size computation, I've been trying to think of
-ways to handle that without needing the msk lock but haven't found the
-right idea yet.
-
-    - in short, there was a missing lock (bug).
-
-    - worker vs using locks: worker seems fine for to manage regular
-data but not when we need a have an immediate response. Especially when
-there are middleboxes.
-
-    - adding a lock might reduces the race conditions issues but we need
-to check if it is OK to do that in Linux.
-
-    - we need to be careful with the contention, ddos attacks, etc.
-
-    - we might need to add a lock when doing "subflow_finish_connect()
--> mptcp_finish_connect()"
-
-    - (sorry I missed the beginning) according to Paolo's research, we
-might need 3 locks: one lock for the state structure)
-
-    - can be good to document that on the Wiki
-
-
-@Paolo: may you document that in the wiki please?
-I just checked and according to Github' settings: Any GitHub user can
-create and edit pages to use for documentation,  examples, support, or
-anything you wish. Please ping me if you cannot do that!
-
-
-
-Ossama:
-    - license in uapi: there should be a note mentioning that we can use
-this file in a non GPL project.
-
-
-
-Paolo:
-    - Pushing patches to Gerrit introduces some overheads.
-    - we all agreed it is OK to continue to use git send-email
-    - Matt just updated the wiki page to keep the essential. The goal,
-once 'git review' is setup is to keep the same workflow as before with
-'git send-email' but only this last command is replaced by 'git review'.
-
-
-
-Next meeting:
-    - We propose to have it next Thursday, the 25th of April.
-    - Paolo and Davide will not be there (Liberation Day in Italy).
-    - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190425
+Mat
 
 
+> +	if (collapsed) {
+> +		mpext->data_len +=3D ret;
+> +		goto out;
+> +	}
+>
+> 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
+>
+> @@ -112,22 +148,25 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
+ct sock *ssk,
+> 		pr_debug("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u checksum=3D%u,=
+ dsn64=3D%d",
+> 			 mpext->data_seq, mpext->subflow_seq, mpext->data_len,
+> 			 mpext->checksum, mpext->dsn64);
+> -	} /* TODO: else fallback */
+> +	}
+> +	/* TODO: else fallback; allocation can fail, but we can't easily retire
+> +	 * skbs from the write_queue, as we need to roll-back TCP status
+> +	 */
+>
+> +out:
+> 	pfrag->offset +=3D ret;
+> 	msk->write_seq +=3D ret;
+> 	subflow_ctx(ssk)->rel_write_seq +=3D ret;
+>
+> -	tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle, size_goal);
+> 	return ret;
+> }
+>
+> static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> {
+> +	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
+> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> 	size_t copied =3D 0;
+> 	struct sock *ssk;
+> -	int ret =3D 0;
+> 	long timeo;
+>
+> 	pr_debug("msk=3D%p", msk);
+> @@ -157,14 +196,18 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len)
+> 	lock_sock(ssk);
+> 	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+> 	while (msg_data_left(msg)) {
+> -		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, &timeo);
+> +		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, &timeo, &mss_now,
+> +					 &size_goal);
+> 		if (ret < 0)
+> 			break;
+>
+> 		copied +=3D ret;
+> 	}
+> -	if (copied > 0)
+> +	if (copied) {
+> 		ret =3D copied;
+> +		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
+> +			 size_goal);
+> +	}
+>
+> 	release_sock(ssk);
+> 	release_sock(sk);
+> -- =
 
-Feel free to comment on these points and propose new ones for the next
-meeting!
+> 2.20.1
 
+--
+Mat Martineau
+Intel
 
-Talk to you next week,
-Matthieu
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============4150944140239272075==--
+--===============5750458740144619590==--
