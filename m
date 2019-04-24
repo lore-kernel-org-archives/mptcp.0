@@ -1,95 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============6134106814343889085=="
+Content-Type: multipart/mixed; boundary="===============1745292432203842978=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: fix oops on accept
-Date: Wed, 24 Apr 2019 10:28:03 +0200
-Message-ID: <f97e711f1fb68c3b034a1ddaf1b612b068981aca.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1904231708570.13139@leejosex-mobl.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH] mptcp: mptcp option len must be skb independent
+Date: Wed, 24 Apr 2019 10:35:40 +0200
+Message-ID: <38ab22550d1347542bc7d85cbfe1d48230a06af7.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.1904191423420.55323@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 1084
+X-UID: 1085
 
---===============6134106814343889085==
+--===============1745292432203842978==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-04-23 at 17:17 -0700, Mat Martineau wrote:
-> On Thu, 18 Apr 2019, Paolo Abeni wrote:
+On Fri, 2019-04-19 at 15:28 -0700, Mat Martineau wrote:
+> On Fri, 19 Apr 2019, Paolo Abeni wrote:
 > =
 
-> > while running the self-test on a multi core VM, with a standard (non
-> > debug) kernel config, I hit the following oops:
+> > Otherwise the TCP stack can't compute correctly the mss and
+> > that will break segmentation. Note that we can't observe the
+> > issue with the self-test until we allow skb collapsing -
+> > loopback default MTU is pretty big and we dont build big enogh
+> > skb otherwise.
 > > =
 
-> > [  234.587877] BUG: unable to handle kernel NULL pointer dereference at=
- 0000000000000020
-> > [  234.591567] #PF error: [normal kernel read fault]
-> > [  234.593862] PGD 800000013a8ec067 P4D 800000013a8ec067 PUD 13a2ad067 =
-PMD 0
-> > [  234.596616] Oops: 0000 [#1] SMP PTI
-> > [  234.597173] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.1.0-rc4.mptc=
-p_xmit_07723d4+ #2139
-> > [  234.598363] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B=
-IOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-> > [  234.599847] RIP: 0010:mptcp_finish_connect+0x2a/0x160
+> > Fix the issue caching the use_map/use_checksum flags also at the
+> > substream ctx level, and using them in tcp_established_options().
+> > While at it, replace a bunch of magic numbers with the appropriate
+> > constants.
 > =
 
-> ...
+> Hi Paolo -
 > =
 
-> > The problem is in mptcp_accept(): the newly created subflow is
-> > already added to the mptcp subflow list, but conn_finished is not set.
-> > =
+> "use_checksum" isn't going to differ across packets, and is a subflow-wid=
+e =
 
-> > On next rx dst cache update we enter subflow_finish_connect()/mptcp_fin=
-ish_connect()
-> > and hit the crash due to NULL msk->subflow de-referncing.
-> > =
-
-> > Fix the above properly initializing the subflow at accept() time.
+> setting that can be in the subflow context.
 > =
 
-> Peter and I have been looking in to this crash. It could be due to a =
+> "use_map" is different. The MPTCP DSS option has two parts, with one or =
 
-> use-after-free bug, since conn_finished isn't expected to be used on the =
+> both of the MPTCP Data ACK and the MPTCP data sequence mapping. This =
 
-> accepting socket. The symptoms are similar to KASAN report I was seeing o=
-n =
+> varies by the packet. After the connection gets started (handshake plus a =
 
-> my multicore VM.
+> DSS ACK indicating the DSS options are getting passed through the =
 
-Uhmm... possibly there are some additional races, but the oops I'm
-seeing is pretty much deterministic, not due to a race.
+> network), the DSS option is not required on every packet.
+> =
 
-subflow_finish_connect() is invoked via:
+> ACK packets have the DSS option with the MPTCP Data ACK but no mapping.
+> =
 
-tcp_rcv_established() -> inet_csk(sk)->icsk_af_ops->sk_rx_dst_set() ->
-subflow_finish_connect()
+> Not every data packet needs to have DSS mapping information - our MPTCP =
 
-every time that the rx cache dst expires on the subflow socket created
-by the accept() syscall.
+> socket could get a sendmsg with 2800 bytes, and send one skb with the =
 
-When the relevant mptcp socket and the subflow are created at accept()
-time - in mptcp_accept(), we have:
+> first 1400 data bytes and the DSS mapping for the 2800 byte range, and a =
 
-	msk->subflow =3D NULL;
-	// ...	=
+> second skb with the last 1400 data bytes and no MPTCP option header.
+> =
 
-	subflow->conn =3D new_mptcp_sock->sk;
-	// subflow->conn_finished is memset to 0 at allocation time
+> One option is to have the MPTCP socket only send skbs with DSS mapping =
 
-so mptcp_finish_connect() is invoked. mptcp_finish_connect()
-unconditionally dereference mptcp_sk(subflow->conn)->subflow, and that
-causes the reported oops.
+> information, which might use TCP option bytes in more packets than is =
 
-So I think setting 'msk->conn_finished =3D 1' in mptcp_accept() is
-required to properly initialize the mptcp socket created on accept().
+> strictly necessary. =
+
+
+I'm unsure I read correctly the above?!? no mptcp ACK?!?
+
+> Another approach would be to assume the larger MPTCP =
+
+> DSS option size (both ack and map) when calculating the mss. =
+
+
+This is basically what the proposed patch does (as subflow->use_map
+can't be changed). AFACS it fixes the issue.
 
 Cheers,
 
 Paolo
 
 
---===============6134106814343889085==--
+--===============1745292432203842978==--
