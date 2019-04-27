@@ -1,70 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============1444821679898663724=="
+Content-Type: multipart/mixed; boundary="===============5419065141472887406=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: honor net namespace when creating subflow
- sk
-Date: Fri, 26 Apr 2019 17:18:01 -0700
-Message-ID: <alpine.OSX.2.21.1904261711410.50032@leejosex-mobl.amr.corp.intel.com>
-In-Reply-To: 20190426135318.8015-1-fw@strlen.de
+Subject: Re: [MPTCP] scheduling-while-atomic splat in mptcp_shutdown
+Date: Fri, 26 Apr 2019 17:26:58 -0700
+Message-ID: <alpine.OSX.2.21.1904261720430.50032@leejosex-mobl.amr.corp.intel.com>
+In-Reply-To: 1694c7b1f848a9b5759a082affac12b263297887.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1093
+X-UID: 1094
 
---===============1444821679898663724==
+--===============5419065141472887406==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Fri, 26 Apr 2019, Florian Westphal wrote:
+On Fri, 26 Apr 2019, Paolo Abeni wrote:
 
-> Otherwise, even loopback communication doesn't work
-> when program is run from non-init_netns.
+> On Fri, 2019-04-26 at 16:27 +0200, Florian Westphal wrote:
+>> Hi,
+>>
+>> I get following splat in mptcp_shutdown:
+>> -----
+>> BUG: sleeping function called from invalid context at net/core/sock.c:29=
+11
+>> in_atomic(): 0, irqs_disabled(): 0, pid: 2238, name: mptcp_connect
+>> [   61.599662] 1 lock held by mptcp_connect/2238:
+>> [   61.600395]  #0: 000000005d0e085e (rcu_read_lock){....}, at: mptcp_sh=
+utdown+0x91/0x2a0
+>> [   61.601754] Preemption disabled at:
+>> [   61.601780] [<ffffffff811a28ee>] rcu_lockdep_current_cpu_online+0x2e/=
+0xa0
+>> [   61.606184] Call Trace:
+>> [   61.607183]  ? rcu_lockdep_current_cpu_online+0x2e/0xa
+>> [   61.608047]  ___might_sleep.cold.73+0x129/0x13d
+>> [   61.608800]  lock_sock_nested+0x32/0xc0
+>> [   61.609447]  inet_shutdown+0x51/0x1c0
+>> [   61.609999]  mptcp_shutdown+0x13e/0x2a0
+>>
 >
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> Could be squashed with
-> 'mptcp: Make connection_list a real list of subflows'.
-
-Thanks Florian. I'll squash it earlier in the series, where the =
-
-sock_create_kern() call is added.
-
-Mat
-
-
+> This happens due to the RCU critical section around
+> kernel_sock_shutdown() in mptcp_shutdown().
 >
-> net/mptcp/protocol.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
+> To fix the above, I'd like to change conn_list type to list_head -
+> should also simplify a bit the code. Is there any argument against such
+> change?
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1e73e307a6d2..1fbddbcb1164 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -703,12 +703,12 @@ static struct proto mptcp_prot =3D {
-> static int mptcp_subflow_create(struct sock *sk)
-> {
-> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	struct net *net =3D sock_net(sk);
-> 	struct socket *sf;
-> 	int err;
->
-> 	pr_debug("msk=3D%p", msk);
-> -	err =3D sock_create_kern(&init_net, PF_INET, SOCK_STREAM, IPPROTO_TCP,
-> -			       &sf);
-> +	err =3D sock_create_kern(net, PF_INET, SOCK_STREAM, IPPROTO_TCP, &sf);
-> 	if (!err) {
-> 		lock_sock(sf->sk);
-> 		err =3D tcp_set_ulp(sf->sk, "mptcp");
-> -- =
 
-> 2.21.0
+That seems ok to me. I'd suggest waiting to do the work on that until we =
 
+push the next revision of the prototype, since there are several changes =
 
+coming (based on code review feedback) that will probably make it hard to =
+
+rebase your work.
 
 --
 Mat Martineau
 Intel
 
---===============1444821679898663724==--
+--===============5419065141472887406==--
