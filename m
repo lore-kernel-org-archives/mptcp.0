@@ -1,52 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============6704081206327401274=="
+Content-Type: multipart/mixed; boundary="===============4576333481270644670=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 25th of April 2019
-Date: Tue, 30 Apr 2019 16:18:31 -0700
-Message-ID: <alpine.OSX.2.21.1904301543190.11303@mjkendri-mobl1.amr.corp.intel.com>
-In-Reply-To: 9389e3991a4f5c600a6cb70724b2a4c3c1bc976b.camel@redhat.com
+Subject: [MPTCP] Weekly meeting - 2 May 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 01 May 2019 12:07:46 +0200
+Message-ID: <311cdc20-fb42-51af-2762-51790479a3ea@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1104
+X-UID: 1105
 
---===============6704081206327401274==
+--===============4576333481270644670==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello everybody!
 
-On Tue, 30 Apr 2019, Paolo Abeni wrote:
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> Hi,
->
-> On Mon, 2019-04-29 at 11:02 -0700, Mat Martineau wrote:
->> If we can merge the beginning of the patch set in our repo, I think it
->> will be much easier to coordinate our work by appending commits rather
->> than constantly revising the whole series. I think we're getting close to
->> that point, and after the pushing RFCv10 we may be in a good position to
->> merge the earlier patches and then focus on new commits (or commits that
->> can be easily squashed).
->
-> I agree with this kind of approach. I would take it to the extent of
-> accepting the patchset as is, and than handle whatever is needed with
-> incremental patches.
->
-> WDYT?
->
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20190502
 
-I'd like to know what others think too. Now that we have more people =
+Feel free to add/modify topics!
 
-modifying the kernel code, we need a process that gives more visibility =
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-and doesn't leave people waiting between RFC revisions. I agree that =
+Speak to you tomorrow!
+Matthieu
+-- =
 
-incremental patches would let us move forward better, even if we have to =
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-do some squashing and rearranging later.
-
---
-Mat Martineau
-Intel
-
---===============6704081206327401274==--
+--===============4576333481270644670==--
