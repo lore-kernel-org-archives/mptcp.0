@@ -1,139 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============2524204488322153373=="
+Content-Type: multipart/mixed; boundary="===============9164292243860186587=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 2nd of May 2019
-Date: Thu, 02 May 2019 18:46:03 +0200
-Message-ID: <05455aa5-7862-0fdd-ad5d-b65c379cb2fb@tessares.net>
+Subject: Re: [MPTCP] [Weekly meetings] MoM - 25th of April 2019
+Date: Thu, 02 May 2019 18:58:59 +0200
+Message-ID: <384e78ed-6307-d975-e5c7-0b9d6c149f0a@tessares.net>
+In-Reply-To: 20190502155303.er6eqhxw5n3libcs@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 1110
+X-UID: 1111
 
---===============2524204488322153373==
+--===============9164292243860186587==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Florian,
 
-We just had our 48th meeting with Mat, Peter and Ossama (Intel OTC),
-Christoph (Apple), Florian, Paolo, Davide (Red Hat) and myself (Tessares).
+On 02/05/2019 17:53, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+>> On Mon, 2019-04-29 at 11:02 -0700, Mat Martineau wrote:
+>>> If we can merge the beginning of the patch set in our repo, I think it =
 
-Thanks again for this new good meeting!
+>>> will be much easier to coordinate our work by appending commits rather =
 
+>>> than constantly revising the whole series. I think we're getting close =
+to =
 
+>>> that point, and after the pushing RFCv10 we may be in a good position t=
+o =
 
-Here are the minutes of the meeting:
+>>> merge the earlier patches and then focus on new commits (or commits tha=
+t =
 
+>>> can be easily squashed).
+>>
+>> I agree with this kind of approach. I would take it to the extent of
+>> accepting the patchset as is, and than handle whatever is needed with
+>> incremental patches.
+> =
 
+> Also agree.  Squashing simple changes (test case improvements, spelling
+> fixes and so on) is fine but for everything else I would prefer new commi=
+ts.
+> =
 
-Netlink PM client:
-    * we can follow the progression / contribute there:
-https://github.com/intel/mptcpd/pull/15
+> There can be one larger rebase/squash effort once its decided that a
+> netdev rfc submission is to be made.
+> =
 
-    * many attributes are the same
+> Until then, constant rebasing is just a waste of time imo.
+> =
 
-    * idea for the future:
-        * an application could set a strategy via a setsockopt
-        * netlink PM would give this info to the daemon
-
-
-
-MPTCP.org:
-    * MPTCP might suffer from a similar bug discovered in SCTP but
-already backported in most stable versions
-https://github.com/torvalds/linux/commit/66033f47ca60294a95fc85ec3a3cc909da=
-b7b765
-
-
-
-Architecture:
-    * new patch: mptcp: honor net namespace when creating subflow sk =E2=86=
-=92
-squashed in the series
-
-    * bug: scheduling-while-atomic splat in mptcp_shutdown =E2=86=92 change
-conn_list type to list_head (WIP by Paolo)
-
-    * mptcp: selftests: switch to netns+veth based tests =E2=86=92 not in R=
-FCv10
-but has been appended
-
-    * RFCv10:
-        * new patch in the series:
-https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/452480
-
-        * Changes:
-            1) Split the mptcp.h header file
-                internal header file
-            2) Refined handling CONFIG_MPTCP vs non-CONFIG_MPTCP builds
-                better for the compiler =E2=86=92 compiler can remove unused
-code "like it was before"
-            3) Refactored option writing code to minimize changes in
-tcp_output.c and avoid using magic numbers
-            4) Added ULP clone hook and modified MPTCP subflow cloning
-to use it
-            5) Florian's namespacing fix and conn_finished fix (rx dst
-update crash)
-            6) Fix locking in mptcp_recvmsg()
-
-    * remaining change: Paolo's fix about sendmsg()
+> New commits-on-top would make it easier to track development too.
+> =
 
 
+Sorry, I just saw your email now and understood what Paolo and Mat were
+saying about incremental patches: we can focus on new commits and rebase
+later.
 
-Code:
-    * keeping track of the pending patches is quite difficult
+Anyway I guess it is easier if one person does that to avoid working on
+a different base.
+As I use to work with TopGit, I think it is not an issue for me to
+maintain the code with this tool. If one fix is linked to one commit, I
+can cherry-pick/apply the fix in the right topic. If not, I can also add
+a new topic at the end. Except if you think using TopGit will create
+more issues for you guys than it will solve?
 
-    * merge the beginning of the patch set in our repo =E2=86=92 still using
-topgit? (Matth can manage that, nobody else would need to deal with it)
-
-    * What we just agreed on (as always, feel free to correct me if it
-is not correct ;-) ):
-
-        * We merge all the patch-set available on Gerrit in our repo
-
-        * We do that via TopGit (Matthieu will handle that):
-            * devs don't need to deal with TopGit, only Matthieu and the
-scripts will play with TG
-
-            * in case of issue with TopGit, we can still stop everything
-and maintain the "export" branch manually
-
-        * If corrections need to be done, we propose a patch (on top of
-"for-review" branch or "export" if you prefer):
-
-            * in the commit message, we mark if we want to amend it to
-another commit (also use the commit title: "export" branch is rebased
-once per day) or to append at the end of the series.
-
-            * we can of course add new commits at the end and still do
-the rebase job later, not to loose time doing a constant rebase. We can
-do this bigger job later, just before the submission to Netdev.
-
-            * we can use Gerrit or Mailing List:
-
-                * we "had to" use Gerrit because the patches were in
-review for a long time, that's was easier to follow.
-
-                * if the patch sent by mail are quickly reviewed and
-accepted, we can merge them and that should be OK to follow.
-
-
-
-Next meeting:
-    - We propose to have it next Thursday, the 9th of May.
-    - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190509
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-Talk to you next week,
-Matthieu
+Thanks,
+Matt
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -142,4 +78,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============2524204488322153373==--
+--===============9164292243860186587==--
