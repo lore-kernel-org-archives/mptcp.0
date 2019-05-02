@@ -1,77 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============4668227644200897341=="
+Content-Type: multipart/mixed; boundary="===============2827110215195308653=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] MPTCP architecture proposal - RFCv10 changes pushed
-Date: Wed, 01 May 2019 15:45:00 -0700
-Message-ID: <alpine.OSX.2.21.1905011543050.31178@mjkendri-mobl1.amr.corp.intel.com>
-In-Reply-To: alpine.OSX.2.21.1904291616570.5723@mjmartin-mac01.local
+Subject: Re: [MPTCP] [Weekly meetings] MoM - 25th of April 2019
+Date: Thu, 02 May 2019 17:53:03 +0200
+Message-ID: <20190502155303.er6eqhxw5n3libcs@breakpoint.cc>
+In-Reply-To: 9389e3991a4f5c600a6cb70724b2a4c3c1bc976b.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1108
+X-UID: 1109
 
---===============4668227644200897341==
+--===============2827110215195308653==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> On Mon, 2019-04-29 at 11:02 -0700, Mat Martineau wrote:
+> > If we can merge the beginning of the patch set in our repo, I think it =
 
-On Mon, 29 Apr 2019, Mat Martineau wrote:
+> > will be much easier to coordinate our work by appending commits rather =
 
->
-> Hello -
->
-> I have pushed an update to the MPTCP kernel architecture proposal:
->
-> https://review.gerrithub.io/q/project:multipath-tcp%252Fmptcp_net-next+st=
-atus:open
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git/log/?=
-h=3Dmptcp-proposal
->
->
-> The commit ID for RFCv10 is 6cfe3336cf01a64e45d66124f3ff768cab0df1bd
+> > than constantly revising the whole series. I think we're getting close =
+to =
 
-I pushed Florian's selftest-with-netns+veth commit to both repositories. =
+> > that point, and after the pushing RFCv10 we may be in a good position t=
+o =
 
-New head is c65dbcf9330297a4170fae4daf03aa5847b2955a
+> > merge the earlier patches and then focus on new commits (or commits tha=
+t =
 
+> > can be easily squashed).
+> =
 
-Mat
+> I agree with this kind of approach. I would take it to the extent of
+> accepting the patchset as is, and than handle whatever is needed with
+> incremental patches.
 
+Also agree.  Squashing simple changes (test case improvements, spelling
+fixes and so on) is fine but for everything else I would prefer new commits.
 
->
->
-> Changes:
->
-> 1) Split the mptcp.h header file
->
-> 2) Refined handling CONFIG_MPTCP vs non-CONFIG_MPTCP builds
->
-> 3) Refactored option writing code to minimize changes in tcp_output.c and =
+There can be one larger rebase/squash effort once its decided that a
+netdev rfc submission is to be made.
 
-> avoid using magic numbers
->
-> 4) Added ULP clone hook and modified MPTCP subflow cloning to use it
->
-> 5) Florian's namespacing fix and conn_finished fix (rx dst update crash)
->
-> 6) Fix locking in mptcp_recvmsg()
->
->
-> Regards,
->
-> --
-> Mat Martineau
-> Intel
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
->
+Until then, constant rebasing is just a waste of time imo.
 
---
-Mat Martineau
-Intel
+New commits-on-top would make it easier to track development too.
 
---===============4668227644200897341==--
+--===============2827110215195308653==--
