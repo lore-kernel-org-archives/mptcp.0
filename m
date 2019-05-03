@@ -1,93 +1,157 @@
-Content-Type: multipart/mixed; boundary="===============7385481732589698737=="
+Content-Type: multipart/mixed; boundary="===============3235341206232086445=="
 MIME-Version: 1.0
-From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:upd-tg: also check
- without CONFIG_MPTCP
-Date: Fri, 03 May 2019 14:43:58 +0000
-Message-ID: <gerrit.1556894636000.I0fe952c535f84c807a8ee9b665a638b0ee874c9b@review.gerrithub.io>
+Subject: [MPTCP] [PATCH] mptcp: selftests: Add capture option
+Date: Fri, 03 May 2019 16:16:40 -0700
+Message-ID: <20190503231640.26954-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1113
+X-UID: 1114
 
---===============7385481732589698737==
+--===============3235341206232086445==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts has uploaded this change for review. ( https://review.gerri=
-thub.io/c/multipath-tcp/mptcp_net-next/+/452987
+Added a "-c" command line option for mptcp_connect.sh to make it easier
+to capture packets from each test. The script will use tcpdump to create
+one .pcap file per test case, named according to the namespaces,
+protocols, and connect address in use. For example, the first test case
+writes the capture to ns1-ns1-MPTCP-MPTCP-10.0.1.1.pcap
 
+The stderr output from tcpdump is printed after the test completes to
+show tcpdump's "packets dropped by kernel" information.
 
-Change subject: ci:upd-tg: also check without CONFIG_MPTCP
-......................................................................
-
-ci:upd-tg: also check without CONFIG_MPTCP
-
-We should continue to be able to compile without CONFIG_MPTCP.
-
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Change-Id: I0fe952c535f84c807a8ee9b665a638b0ee874c9b
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
-M ci/update-tg-tree.sh
-1 file changed, 14 insertions(+), 3 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.sh      | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index 0f283cd37225..ee478e94d8a2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -6,6 +6,7 @@ sout=3D""
+ cin=3D""
+ cout=3D""
+ ksft_skip=3D4
++capture=3D0
+ =
 
+ TEST_COUNT=3D0
+ =
 
-  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
-s/changes/87/452987/1
+@@ -13,12 +14,19 @@ cleanup()
+ {
+ 	rm -f "$cin" "$cout"
+ 	rm -f "$sin" "$sout"
++	rm -f "$capout"
+ =
+
+ 	for i in 1 2 3 4; do
+ 		ip netns del ns$i
+ 	done
+ }
+ =
+
++for arg in "$@"; do
++    if [ "$arg" =3D "-c" ]; then
++	capture=3D1
++    fi
++done
++
+ ip -Version > /dev/null 2>&1
+ if [ $? -ne 0 ];then
+ 	echo "SKIP: Could not run test without ip tool"
+@@ -29,6 +37,7 @@ sin=3D$(mktemp)
+ sout=3D$(mktemp)
+ cin=3D$(mktemp)
+ cout=3D$(mktemp)
++capout=3D$(mktemp)
+ trap cleanup EXIT
+ =
+
+ for i in 1 2 3 4;do
+@@ -105,6 +114,7 @@ do_transfer()
+ =
+
+ 	:> "$cout"
+ 	:> "$sout"
++	:> "$capout"
+ 	ip netns exec ${connector_ns} ping -q -c 1 $connect_addr >/dev/null
+ 	if [ $? -ne 0 ] ; then
+ 		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
+@@ -113,6 +123,21 @@ do_transfer()
+ =
+
+ 	printf "%-4s %-5s -> %-4s (%s:%d) %-5s\t" ${connector_ns} ${cl_proto} ${l=
+istener_ns} ${connect_addr} ${port} ${srv_proto}
+ =
+
++	if [ $capture -eq 1 ]; then
++	    if [ -z $SUDO_USER ] ; then
++		capuser=3D""
++	    else
++		capuser=3D"-Z $SUDO_USER"
++	    fi
++
++	    capfile=3D"${listener_ns}-${connector_ns}-${cl_proto}-${srv_proto}-${=
+connect_addr}.pcap"
++
++	    ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuse=
+r -w $capfile > "$capout" 2>&1 &
++	    cappid=3D$!
++
++	    sleep 1
++	fi
++
+ 	ip netns exec ${listener_ns} ./mptcp_connect -t 10 -l -p $port -s ${srv_p=
+roto} 0.0.0.0 < "$sin" > "$sout" &
+ 	spid=3D$!
+ =
+
+@@ -126,6 +151,11 @@ do_transfer()
+ 	wait $spid
+ 	rets=3D$?
+ =
+
++	if [ $capture -eq 1 ]; then
++	    sleep 1
++	    kill $cappid
++	fi
++
+ 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+ 		echo "[ FAIL ] client exit code $retc, server $rets" 1>&2
+ 		echo "\nnetns ${listener_ns} socket stat for $port:" 1>&2
+@@ -133,6 +163,7 @@ do_transfer()
+ 		echo "\nnetns ${connector_ns} socket stat for $port:" 1>&2
+ 		ip netns exec ${connector_ns} ss -nita 1>&2 -o "dport =3D :$port"
+ =
+
++		cat "$capout"
+ 		ret=3D$rets
+ 		return 1
+ 	fi
+@@ -144,9 +175,11 @@ do_transfer()
+ =
+
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
+ 		echo "[ OK ]"
++		cat "$capout"
+ 		return 0
+ 	fi
+ =
+
++	cat "$capout"
+ 	return 1
+ }
+ =
+
 -- =
 
-To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
-/452987
-To unsubscribe, or for help writing mail filters, visit https://review.gerr=
-ithub.io/settings
+2.21.0
 
-Gerrit-Project: multipath-tcp/mptcp_net-next
-Gerrit-Branch: scripts
-Gerrit-Change-Id: I0fe952c535f84c807a8ee9b665a638b0ee874c9b
-Gerrit-Change-Number: 452987
-Gerrit-PatchSet: 1
-Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Gerrit-MessageType: newchange
 
---===============7385481732589698737==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PHA+TWF0dGhpZXUgQmFlcnRzIGhhcyB1cGxvYWRlZCB0aGlzIGNoYW5nZSBmb3IgPHN0cm9uZz5y
-ZXZpZXc8L3N0cm9uZz4uPC9wPjxwPjxhIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5p
-by9jL211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQvKy80NTI5ODciPlZpZXcgQ2hhbmdlPC9h
-PjwvcD48cHJlIHN0eWxlPSJmb250LWZhbWlseTogbW9ub3NwYWNlLG1vbm9zcGFjZTsgd2hpdGUt
-c3BhY2U6IHByZS13cmFwOyI+Y2k6dXBkLXRnOiBhbHNvIGNoZWNrIHdpdGhvdXQgQ09ORklHX01Q
-VENQPGJyPjxicj5XZSBzaG91bGQgY29udGludWUgdG8gYmUgYWJsZSB0byBjb21waWxlIHdpdGhv
-dXQgQ09ORklHX01QVENQLjxicj48YnI+U2lnbmVkLW9mZi1ieTogTWF0dGhpZXUgQmFlcnRzICZs
-dDttYXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0Ozxicj5DaGFuZ2UtSWQ6IEkwZmU5NTJj
-NTM1Zjg0YzgwN2E4ZWU5YjY2NWE2MzhiMGVlODc0YzliPGJyPi0tLTxicj5NIGNpL3VwZGF0ZS10
-Zy10cmVlLnNoPGJyPjEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9u
-cygtKTxicj48YnI+PC9wcmU+PHByZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSxtb25v
-c3BhY2U7IHdoaXRlLXNwYWNlOiBwcmUtd3JhcDsiPmdpdCBwdWxsIHNzaDovL3Jldmlldy5nZXJy
-aXRodWIuaW86Mjk0MTgvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dCByZWZzL2NoYW5nZXMv
-ODcvNDUyOTg3LzE8L3ByZT48cD5UbyB2aWV3LCB2aXNpdCA8YSBocmVmPSJodHRwczovL3Jldmll
-dy5nZXJyaXRodWIuaW8vYy9tdWx0aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0LysvNDUyOTg3Ij5j
-aGFuZ2UgNDUyOTg3PC9hPi4gVG8gdW5zdWJzY3JpYmUsIG9yIGZvciBoZWxwIHdyaXRpbmcgbWFp
-bCBmaWx0ZXJzLCB2aXNpdCA8YSBocmVmPSJodHRwczovL3Jldmlldy5nZXJyaXRodWIuaW8vc2V0
-dGluZ3MiPnNldHRpbmdzPC9hPi48L3A+PGRpdiBpdGVtc2NvcGUgaXRlbXR5cGU9Imh0dHA6Ly9z
-Y2hlbWEub3JnL0VtYWlsTWVzc2FnZSI+PGRpdiBpdGVtc2NvcGUgaXRlbXByb3A9ImFjdGlvbiIg
-aXRlbXR5cGU9Imh0dHA6Ly9zY2hlbWEub3JnL1ZpZXdBY3Rpb24iPjxsaW5rIGl0ZW1wcm9wPSJ1
-cmwiIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5pby9jL211bHRpcGF0aC10Y3AvbXB0
-Y3BfbmV0LW5leHQvKy80NTI5ODciLz48bWV0YSBpdGVtcHJvcD0ibmFtZSIgY29udGVudD0iVmll
-dyBDaGFuZ2UiLz48L2Rpdj48L2Rpdj4KCjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJp
-dC1Qcm9qZWN0OiBtdWx0aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0IDwvZGl2Pgo8ZGl2IHN0eWxl
-PSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQnJhbmNoOiBzY3JpcHRzIDwvZGl2Pgo8ZGl2IHN0eWxl
-PSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQ2hhbmdlLUlkOiBJMGZlOTUyYzUzNWY4NGM4MDdhOGVl
-OWI2NjVhNjM4YjBlZTg3NGM5YiA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vy
-cml0LUNoYW5nZS1OdW1iZXI6IDQ1Mjk4NyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25l
-Ij4gR2Vycml0LVBhdGNoU2V0OiAxIDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBH
-ZXJyaXQtT3duZXI6IE1hdHRoaWV1IEJhZXJ0cyAmbHQ7bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVz
-Lm5ldCZndDsgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1NZXNzYWdl
-VHlwZTogbmV3Y2hhbmdlIDwvZGl2PgoK
-
---===============7385481732589698737==--
+--===============3235341206232086445==--
