@@ -1,158 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============1800906447347575303=="
+Content-Type: multipart/mixed; boundary="===============6050922332403831880=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] mptcp: mptcp option len must be skb
- independent
-Date: Tue, 07 May 2019 15:07:33 +0200
-Message-ID: <e4e2f74ff6c4c2b5c434a5da01ae0756032bf22b.1557234439.git.pabeni@redhat.com>
+Subject: Re: [MPTCP] [PATCH] mptcp: selftests: Add capture option
+Date: Tue, 07 May 2019 15:10:06 +0200
+Message-ID: <09e51f30-4c26-292b-2a7a-99228bc0b4ae@tessares.net>
+In-Reply-To: e9c4f615d1119ade8b1ceed5d38c6057b53ad6b3.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1118
+X-UID: 1119
 
---===============1800906447347575303==
+--===============6050922332403831880==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Otherwise the TCP stack can't compute correctly the mss and
-that will break segmentation. Note that we can't observe the
-issue with the self-test until we allow skb collapsing -
-loopback default MTU is pretty big and we dont build big enogh
-skb otherwise.
+Hi Paolo, Florian,
 
-Fix the issue always reserving space for map in tcp_established_options().
-The map is effectively added according to skb extensions,
-if available.
-Overall we underestimate the MSS (always accounting for the map), but
-we emit the map only if needed.
+On 07/05/2019 15:01, Paolo Abeni wrote:
+> On Tue, 2019-05-07 at 14:47 +0200, Matthieu Baerts wrote:
+>> Does this patch look good to you?
+> =
 
-v1 -> v2:
- - rebased on top of current git
- - use slightly different way to compute the opt len
+> Yep! Thanks for doing this.
 
-Fixes: 9aaf99d52fc1 ("mptcp: Write MPTCP DSS headers to outgoing data packe=
-ts")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
---
-this can be squashed into the fixes commit
----
- net/mptcp/options.c  | 33 ++++++++++++++++++---------------
- net/mptcp/protocol.h |  4 +++-
- net/mptcp/subflow.c  |  2 ++
- 3 files changed, 23 insertions(+), 16 deletions(-)
+Thank you both for the quick review!
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b5f0914d01ba..870311f75d04 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -260,40 +260,43 @@ bool mptcp_established_options(struct sock *sk, unsig=
-ned int *size,
- }
- =
+> On a side note, running tcpdump in background usually hides most of the
+> existing races, at least in my experiments :(
 
- bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
--			unsigned int *size, unsigned int remaining,
--			struct mptcp_out_options *opts)
-+				   unsigned int *size, unsigned int remaining,
-+				   struct mptcp_out_options *opts)
- {
- 	unsigned int dss_size =3D 0;
- 	struct mptcp_ext *mpext;
- 	unsigned int ack_size;
-+	unsigned int map_size;
-+	bool use_csum;
- =
+Good to know! Thank you for sharing this!
 
--	if (!subflow_ctx(sk)->mp_capable || !skb)
-+	if (!subflow_ctx(sk)->mp_capable)
- 		return false;
- =
+>> If it is OK for you, can I append it at the end of the series or do you
+>> want me to squash it in another commit?
+> =
 
--	mpext =3D mptcp_get_ext(skb);
-+	map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
- =
+> I'm fine either way, too.
 
--	if (mpext && mpext->use_map) {
--		unsigned int map_size;
--		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
-+	use_csum =3D subflow_ctx(sk)->use_checksum;
-+	if (use_csum)
-+		map_size +=3D TCPOLEN_MPTCP_DSS_CHECKSUM;
- =
+Thank you. I just added the commit at the end of the series. Of course I
+can change that easily if needed.
 
--		if (mpext->use_checksum)
--			map_size +=3D TCPOLEN_MPTCP_DSS_CHECKSUM;
--
--		if (map_size <=3D remaining) {
--			remaining -=3D map_size;
--			dss_size =3D map_size;
-+	if (map_size <=3D remaining) {
-+		remaining -=3D map_size;
-+		dss_size =3D map_size;
- =
-
-+		mpext =3D skb ? mptcp_get_ext(skb) : NULL;
-+		if (mpext && mpext->use_map) {
- 			opts->ext_copy.data_seq =3D mpext->data_seq;
- 			opts->ext_copy.subflow_seq =3D mpext->subflow_seq;
- 			opts->ext_copy.data_len =3D mpext->data_len;
- 			opts->ext_copy.checksum =3D mpext->checksum;
- 			opts->ext_copy.use_map =3D 1;
- 			opts->ext_copy.dsn64 =3D mpext->dsn64;
--			opts->ext_copy.use_checksum =3D mpext->use_checksum;
-+			opts->ext_copy.use_checksum =3D use_csum;
- 		} else {
- 			opts->ext_copy.use_map =3D 0;
--			WARN(1, "MPTCP: Map dropped");
- 		}
-+	} else {
-+		opts->ext_copy.use_map =3D 0;
-+		WARN_ONCE(1, "MPTCP: Map dropped");
- 	}
- =
-
- 	ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 870249761c0e..d67c38a2198b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -87,7 +87,9 @@ struct subflow_context {
- 		fourth_ack : 1,     /* send initial DSS */
- 		version : 4,
- 		conn_finished : 1,
--		map_valid : 1;
-+		map_valid : 1,
-+		use_checksum : 1;
-+
- 	struct  sock *sk;       /* underlying tcp_sock */
- 	struct  sock *conn;     /* parent mptcp_sock */
- 	void	(*tcp_sk_data_ready)(struct sock *sk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index b503e13faf96..f88bc48ca997 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -210,6 +210,7 @@ static int subflow_ulp_init(struct sock *sk)
- 	tp->is_mptcp =3D 1;
- 	icsk->icsk_af_ops =3D &subflow_specific;
- 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
-+	ctx->use_checksum =3D 0;
- 	sk->sk_data_ready =3D subflow_data_ready;
- out:
- 	return err;
-@@ -241,6 +242,7 @@ static void subflow_ulp_clone(const struct request_sock=
- *req,
- 	new_ctx->conn =3D NULL;
- 	new_ctx->conn_finished =3D 1;
- 	new_ctx->tcp_sk_data_ready =3D old_ctx->tcp_sk_data_ready;
-+	new_ctx->use_checksum =3D old_ctx->use_checksum;
- =
-
- 	if (subflow_req->mp_capable) {
- 		new_ctx->mp_capable =3D 1;
+Cheers,
+Matthieu
 -- =
 
-2.20.1
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============1800906447347575303==--
+--===============6050922332403831880==--
