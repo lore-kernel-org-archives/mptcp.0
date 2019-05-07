@@ -1,53 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============6050922332403831880=="
+Content-Type: multipart/mixed; boundary="===============3403280367648680399=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: selftests: Add capture option
-Date: Tue, 07 May 2019 15:10:06 +0200
-Message-ID: <09e51f30-4c26-292b-2a7a-99228bc0b4ae@tessares.net>
-In-Reply-To: e9c4f615d1119ade8b1ceed5d38c6057b53ad6b3.camel@redhat.com
+Subject: [MPTCP] [PATCH 0/3] mptcp: refactor xmit path
+Date: Tue, 07 May 2019 15:15:06 +0200
+Message-ID: <cover.1557234490.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1119
+X-UID: 1120
 
---===============6050922332403831880==
+--===============3403280367648680399==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Florian,
+this series refactor the mptcp xmit path trying to make sendmsg behavior
+more consistent, memory efficent and improve its performances.
 
-On 07/05/2019 15:01, Paolo Abeni wrote:
-> On Tue, 2019-05-07 at 14:47 +0200, Matthieu Baerts wrote:
->> Does this patch look good to you?
-> =
+To support MP_JOIN and multiple subflows, the idea is adding, with later
+patches, an RB-tree structure containing references to the pending page
+fragments, their length and the associated mptcp write_seq number (is subfl=
+ow
+rel_write_seq needed, too?). RB-tree node can be allocated using the same
+page frag used in this series for skb data. Each RB-tree node will own a
+reference to the page frag.
 
-> Yep! Thanks for doing this.
+v1  -> v2:
+ - rebased on top of current git
+ - fix handling of some corner cases
 
-Thank you both for the quick review!
+RFC -> v1:
+ - addressed Mat's feedback, dropping patch 3/4 and switching
+   to per msk page frag use, and checking mptcp seq number for coalescing
 
-> On a side note, running tcpdump in background usually hides most of the
-> existing races, at least in my experiments :(
+Paolo Abeni (3):
+  mptcp: use sk_page_frag() in sendmsg
+  mptcp: sendmsg() do spool all the provided data
+  mptcp: allow collapsing consecutive sendpages on the same substream
 
-Good to know! Thank you for sharing this!
+ net/mptcp/protocol.c | 190 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 123 insertions(+), 67 deletions(-)
 
->> If it is OK for you, can I append it at the end of the series or do you
->> want me to squash it in another commit?
-> =
-
-> I'm fine either way, too.
-
-Thank you. I just added the commit at the end of the series. Of course I
-can change that easily if needed.
-
-Cheers,
-Matthieu
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.20.1
 
---===============6050922332403831880==--
+
+--===============3403280367648680399==--
