@@ -1,144 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============6341644684345178283=="
+Content-Type: multipart/mixed; boundary="===============6588296192393185860=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 9th of May 2019
-Date: Thu, 09 May 2019 19:20:02 +0200
-Message-ID: <e32b3f95-6bb0-e4c7-ec25-8fb4b27bc0c8@tessares.net>
+Subject: Re: [MPTCP] [PATCH] tcp: Check for filled TCP option space before SACK
+Date: Fri, 10 May 2019 11:46:04 +0200
+Message-ID: <3fda5a02-3ea9-688e-ac33-1b7b12309889@tessares.net>
+In-Reply-To: 20190509170652.25147-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1138
+X-UID: 1139
 
---===============6341644684345178283==
+--===============6588296192393185860==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Mat,
 
-We just had our 48th meeting with Mat, Peter and Ossama (Intel OTC),
-Christoph (Apple), Paolo, Davide (Red Hat) and myself (Tessares).
+Thank you for the patch!
 
-Thanks again for this new good meeting!
+On 09/05/2019 19:06, Mat Martineau wrote:
+> The SACK code would potentially add four bytes to the expected
+> TCP option size even if all option space was already used.
+> =
 
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+>  net/ipv4/tcp_output.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> =
 
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index 12c9e8ebc86d..1cd915890ce5 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -814,6 +814,9 @@ static unsigned int tcp_established_options(struct so=
+ck *sk, struct sk_buff *skb
+>  		}
+>  	}
+>  =
 
-Here are the minutes of the meeting:
+> +	if (size + TCPOLEN_SACK_BASE_ALIGNED >=3D MAX_TCP_OPTION_SPACE)
+> +		return size;
+> +
 
+Should we not add this check in the "if" block here below...
 
+>  	eff_sacks =3D tp->rx_opt.num_sacks + tp->rx_opt.dsack;
+>  	if (unlikely(eff_sacks)) {
+>  		const unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
 
-architecture:
-    - now in Github/Gerrit repos!
+... to use this "remaining" variable only if we want to add SACKS:
 
-    - feel free to create patches on top of "for-review" (or "export")
-branch
-
-    - if you want to drop TopGit support to have more people merging
-patches, don't hesitate to say it :)
-
-    - Matth will manage the TopGit tree. Simply add a note saying if a
-fix can be squashed in one commit (if clearly related to one commit) or
-to be appended. With TopGit we only add topic (no rewrite of the tree)
-so it can help to follow the changes that were made. We can do that to
-reduce a big rework of rebase later but we can also append at the end
-if it is easier for the moment.
-
-
-
-New patches:
-    - mptcp: mptcp option len must be skb independent =E2=86=92 by Paolo,
-accepted by Mat, merged
-
-    - mptcp: refactor xmit path =E2=86=92 by Paolo, new v2 available but a =
-v3 is
-needed. Will be sent later.
-
-    - mptcp: refactor shutdown/close =E2=86=92 by Paolo, a v2 is needed,  h=
-ope
-to send a new version soon. The simple way to fix the issue might not be
-good when we will want to support the MP JOIN but that can be modified
-later.
-
-    - Mat is preparing a commit to fix the MPTCP option len saw by Florian.
-
-    - Florian noticed memleak in accept. He is looking for a fix
+    if (TCPOLEN_SACK_BASE_ALIGNED >=3D remaining)
+        return size;
 
 
+Do you want me to squash this fix in Peter's commit (mptcp: Handle
+MP_CAPABLE options for outgoing connections) or to add it as a new
+commit just after Peter's one? (It's only to ease the "rebasing" task
+later by helping doing a maximum now as long as I can help :) )
 
-kselftests:
-    - new selftests change: Add capture option =E2=86=92 by Mat, merged
+Cheers,
+Matt
 
-    - comment by Paolo:
-        - On a side note, running tcpdump in background usually hides
-most of the existing races, at least in my experiments :(
-
-        - is it because it slows down the process (copy)
-
-    - Matth can run the kselftests after the daily rebase if needed:
-
-        - by chance, any script to share to compile the kernel + run in
-KVM + launch kselftests on a CI? :)
-
-        - don't hesitate to add scripts in the 'scripts' branch
-
-        - https://github.com/multipath-tcp/mptcp_net-next/tree/scripts
-
-    - MPTCP kselftests are unstable for the moment. If you are working
-on a fix, please share this info:
-
-        - Mat is currently looking at this
-
-
-
-Wiki:
-    - Mat has updated the status page:
-https://github.com/multipath-tcp/mptcp_net-next/wiki/Status
-
-
-
-Bug:
-    - Paolo found a bug when a download is running for a long(er) time
-(already discussed on the ML)
-
-    - DSN updated once the app got the data, receive window is
-progressing then
-
-    - in MPTCP.org if we receive an ACK for the subflow but the DataAck
-is not present, we fallback to TCP
-    https://tools.ietf.org/html/rfc6824#section-3.6
-
-    - Mat will try to reproduce that. It might be visible in the
-selftest if we change the file we want to transfer to ~50MB
-
-
-
-mptcp.org:
-    - Add MPTCP support in TCP Tracepoint?
-
-        - TCP: tcp:tcp_retransmit_skb, tcp:tcp_send_reset,
-tcp:tcp_receive_reset, tcp:tcp_destroy_sock, tcp:tcp_rcv_space_adjust,
-tcp:tcp_retransmit_synack, tcp:tcp_probe
-        - SOCK: sock:sock_rcvqueue_full, sock:sock_exceed_buf_limit,
-sock:inet_sock_set_state
-
-    =E2=86=92 could be good to have that, Matth will look at it
-
-
-
-Next meeting:
-    - We propose to have it next Thursday, the 16th of May.
-    - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190516
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-Talk to you next week,
-Matthieu
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -147,4 +72,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============6341644684345178283==--
+--===============6588296192393185860==--
