@@ -1,45 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============6279012809747986206=="
+Content-Type: multipart/mixed; boundary="===============5719369370110038057=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: fix state update on accept()
-Date: Fri, 10 May 2019 13:02:25 +0200
-Message-ID: <58e12b5a-7fcc-b157-e615-41a2f1d36cd0@tessares.net>
-In-Reply-To: bd845eebe7d58a27e8ff603d4aa4e1c9bbd9b9fe.1557420146.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v3 0/3] mptcp: refactor xmit path
+Date: Fri, 10 May 2019 17:59:18 +0200
+Message-ID: <cover.1557497920.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1141
+X-UID: 1142
 
---===============6279012809747986206==
+--===============5719369370110038057==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+this series refactor the mptcp xmit path trying to make sendmsg behavior
+more consistent, memory efficent and improve its performances.
 
-On 09/05/2019 18:43, Paolo Abeni wrote:
-> We must update the newly created socket status, not the listener
-> socket.
-> =
+Self-test results are not affected: tests fail in similar way before and
+after this series.
 
-> Fixes: cc0d09002896 ("mptcp: Implement MPTCP receive path")
+To support MP_JOIN and multiple subflows, the idea is adding, with later
+patches, an RB-tree structure containing references to the pending page
+fragments, their length and the associated mptcp write_seq number (is subfl=
+ow
+rel_write_seq needed, too?). RB-tree node can be allocated using the same
+page frag used in this series for skb data. Each RB-tree node will own a
+reference to the page frag.
 
-Good catch, thank you for the fix!
+v2 -> v3:
+ - rebased on top of "mptcp: refactor shutdown/close and conn_list handling"
+ - cope with egres pkt with NULL ext
 
-Just added in the repo!
+v1  -> v2:
+ - rebased on top of current git
+ - fix handling of some corner cases
 
-- fix: de8f56a9b08849ca7a1b86782de0dab9b1c959fd
-- sign-off added: 54cae76d4cfcc093bacc82830bb7c04a5c5a08ef
-- no conflicts
+RFC -> v1:
+ - addressed Mat's feedback, dropping patch 3/4 and switching
+   to per msk page frag use, and checking mptcp seq number for coalescing
 
-Cheers,
-Matt
+Paolo Abeni (3):
+  mptcp: use sk_page_frag() in sendmsg
+  mptcp: sendmsg() do spool all the provided data
+  mptcp: allow collapsing consecutive sendpages on the same substream
+
+ net/mptcp/protocol.c | 190 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 123 insertions(+), 67 deletions(-)
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.20.1
 
---===============6279012809747986206==--
+
+--===============5719369370110038057==--
