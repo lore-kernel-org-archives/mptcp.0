@@ -1,85 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============4502463279712080311=="
+Content-Type: multipart/mixed; boundary="===============2363397884301656398=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v3 0/3] mptcp: refactor xmit path
-Date: Fri, 10 May 2019 17:43:44 -0700
-Message-ID: <alpine.OSX.2.21.1905101738350.59728@julieann-mobl1.amr.corp.intel.com>
-In-Reply-To: cover.1557497920.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH mptcp 0/3] mptcp: plug mptcp_accept memory leaks
+Date: Mon, 13 May 2019 14:21:38 +0200
+Message-ID: <20190513122141.25396-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 1148
+X-UID: 1149
 
---===============4502463279712080311==
+--===============2363397884301656398==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-On Fri, 10 May 2019, Paolo Abeni wrote:
+This series resolves the memory leaks that occur when running
+mptcp_connect.sh.
 
-> this series refactor the mptcp xmit path trying to make sendmsg behavior
-> more consistent, memory efficent and improve its performances.
->
-> Self-test results are not affected: tests fail in similar way before and
-> after this series.
->
-> To support MP_JOIN and multiple subflows, the idea is adding, with later
-> patches, an RB-tree structure containing references to the pending page
-> fragments, their length and the associated mptcp write_seq number (is sub=
-flow
-> rel_write_seq needed, too?).
+I don't mind if they get squashed.
+I've decided to split this into 3 distinct changes to make it
+a bit clearer what is going on.
 
-rel_write_seq doesn't need to be stored for later, it will be different =
+Second patch is not a bug fix, i can resend and drop it if
+the consensus is to continue using the sk->sk_socket back reference.
 
-for every copy of the data that is sent.
+Third patch is a bit large due to the change in how the new mptcp
+socket is created.
 
-> RB-tree node can be allocated using the same
-> page frag used in this series for skb data. Each RB-tree node will own a
-> reference to the page frag.
+See the commit messages for more details.
+After these changes kmemleak doesn't report any leaks when the
+test script has completed.
 
-I think this is a nice improvement for the sendmsg code, the earlier =
-
-issues are resolved and we should merge the series to mptcp_net-next.
+Cheers,
+Florian
 
 
-Mat
 
-
->
-> v2 -> v3:
-> - rebased on top of "mptcp: refactor shutdown/close and conn_list handlin=
-g"
-> - cope with egres pkt with NULL ext
->
-> v1  -> v2:
-> - rebased on top of current git
-> - fix handling of some corner cases
->
-> RFC -> v1:
-> - addressed Mat's feedback, dropping patch 3/4 and switching
->   to per msk page frag use, and checking mptcp seq number for coalescing
->
-> Paolo Abeni (3):
->  mptcp: use sk_page_frag() in sendmsg
->  mptcp: sendmsg() do spool all the provided data
->  mptcp: allow collapsing consecutive sendpages on the same substream
->
-> net/mptcp/protocol.c | 190 ++++++++++++++++++++++++++++---------------
-> 1 file changed, 123 insertions(+), 67 deletions(-)
->
-> -- =
-
-> 2.20.1
->
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
->
-
---
-Mat Martineau
-Intel
-
---===============4502463279712080311==--
+--===============2363397884301656398==--
