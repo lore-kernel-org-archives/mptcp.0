@@ -1,80 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============4297848659591886201=="
+Content-Type: multipart/mixed; boundary="===============6995837002504971927=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Krystad, Peter <peter.krystad at intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH mptcp] net: mptcp: fix memory leak in case slab
- allocation fails
-Date: Mon, 13 May 2019 16:36:25 -0700
-Message-ID: <alpine.OSX.2.21.1905131632540.11725@mjmartin-mac01.local>
-In-Reply-To: c30f4ffaed7419c634a1eb733339f0e2fa36a936.1557766409.git.dcaratti@redhat.com
+Subject: Re: [MPTCP] [PATCH mptcp 0/3] mptcp: plug mptcp_accept memory leaks
+Date: Mon, 13 May 2019 23:47:59 +0000
+Message-ID: <afc4701d3b85b59693db097aa53b4ccac22c44c1.camel@intel.com>
+In-Reply-To: 20190513122141.25396-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1154
+X-UID: 1155
 
---===============4297848659591886201==
+--===============6995837002504971927==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Mon, 13 May 2019, Davide Caratti wrote:
+Hi Florian -
 
-> slab_name is allocated, but not freed, when slab allocation fails: ensure
-> it is freed in the error path of kmem_cache_create(...). While at it, fix
-> reverse christmas tree in subflow_ops-init() local variable declarations.
+Thanks for this, it looks good to me with just one small comment on #2.
 
-Davide -
-
-Thanks for the leak fix. Looks good to me.
+Peter.
 
 
-Mat
+On Mon, 2019-05-13 at 14:21 +0200, Florian Westphal wrote:
+> Hi,
+> =
 
+> This series resolves the memory leaks that occur when running
+> mptcp_connect.sh.
+> =
 
->
-> Fixes: aedec94346fb ("mptcp: Create SUBFLOW socket for incoming connectio=
-ns")
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> ---
-> net/mptcp/subflow.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index e72492bfb5a7..032424c61ba9 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -269,8 +269,8 @@ static struct tcp_ulp_ops subflow_ulp_ops __read_most=
-ly =3D {
-> static int subflow_ops_init(struct request_sock_ops *subflow_ops)
-> {
-> 	subflow_ops->obj_size =3D sizeof(struct subflow_request_sock);
-> -	subflow_ops->slab =3D NULL;
-> 	subflow_ops->slab_name =3D NULL;
-> +	subflow_ops->slab =3D NULL;
->
-> 	subflow_ops->slab_name =3D kasprintf(GFP_KERNEL, "request_sock_subflow");
-> 	if (!subflow_ops->slab_name)
-> @@ -283,6 +283,7 @@ static int subflow_ops_init(struct request_sock_ops *=
-subflow_ops)
-> 					      NULL);
->
-> 	if (!subflow_ops->slab) {
-> +		kfree(subflow_ops->slab_name);
-> 		return -ENOMEM;
-> 	}
->
-> -- =
+> I don't mind if they get squashed.
+> I've decided to split this into 3 distinct changes to make it
+> a bit clearer what is going on.
+> =
 
-> 2.20.1
->
+> Second patch is not a bug fix, i can resend and drop it if
+> the consensus is to continue using the sk->sk_socket back reference.
+> =
+
+> Third patch is a bit large due to the change in how the new mptcp
+> socket is created.
+> =
+
+> See the commit messages for more details.
+> After these changes kmemleak doesn't report any leaks when the
+> test script has completed.
+> =
+
+> Cheers,
+> Florian
+> =
+
+> =
+
 > _______________________________________________
 > mptcp mailing list
 > mptcp(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/mptcp
->
 
---
-Mat Martineau
-Intel
-
---===============4297848659591886201==--
+--===============6995837002504971927==--
