@@ -1,138 +1,207 @@
-Content-Type: multipart/mixed; boundary="===============7248409065013512252=="
+Content-Type: multipart/mixed; boundary="===============9074541500714589904=="
 MIME-Version: 1.0
 From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC mptcp 1/2] tcp: ulp: add functions to dump
- ulp-specific information
-Date: Tue, 14 May 2019 11:14:08 +0200
-Message-ID: <33f3fdfea7cef53c18e163feeb06168d2d6d11a2.1557824658.git.dcaratti@redhat.com>
+Subject: [MPTCP] [PATCH RFC mptcp 2/2] mptcp: allow dumping subflow context to
+ userspace
+Date: Tue, 14 May 2019 11:14:09 +0200
+Message-ID: <44355666d00f9f993af834352c5ada97d1748783.1557824658.git.dcaratti@redhat.com>
 In-Reply-To: cover.1557824658.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1160
+X-UID: 1161
 
---===============7248409065013512252==
+--===============9074541500714589904==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-currently, only getsockopt() can be invoked to know if a ULP is on top of
-a TCP socket. idiag_get_aux() and idiag_get_aux_size() are currently used
-only by TCP MD5 extension: extend them to dump ULP-related information to
-userspace tools like 'ss' when they query the kernel with INET_DIAG_INFO.
+add ulp-specific diagnostic functions, so that subflow information can be
+dumped to userspace programs like 'ss'.
 
 Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
 ---
- include/net/tcp.h              |  3 +++
- include/uapi/linux/inet_diag.h |  2 ++
- net/ipv4/tcp_diag.c            | 33 +++++++++++++++++++++++++++++++--
- 3 files changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 02df4f946c06..16161dbbdea0 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2100,6 +2100,9 @@ struct tcp_ulp_ops {
- 	/* clone ulp */
- 	void (*clone)(const struct request_sock *req, struct sock *newsk,
- 		      const gfp_t priority);
-+	/* diagnostic */
-+	int (*get_info)(struct sock *sk, struct sk_buff *skb);
-+	size_t (*get_info_size)(struct sock *sk);
- =
+Notes:
+     - this is a POC patch where I only dump few members of the subflow, and
+       put them in a nested attribute so that it's possible to read them in
+       a program regardless the value of 'subflow_ulp_ops.name'. Please let
+       me know if we should dump additional information, or if some of those
+       I included don't make sense.
 
- 	char		name[TCP_ULP_NAME_MAX];
- 	struct module	*owner;
+ include/uapi/linux/inet_diag.h |  5 +++
+ include/uapi/linux/mptcp.h     | 21 ++++++++++
+ net/mptcp/Makefile             |  2 +-
+ net/mptcp/diag.c               | 73 ++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h           |  3 ++
+ net/mptcp/subflow.c            |  2 +
+ 6 files changed, 105 insertions(+), 1 deletion(-)
+ create mode 100644 include/uapi/linux/mptcp.h
+ create mode 100644 net/mptcp/diag.c
+
 diff --git a/include/uapi/linux/inet_diag.h b/include/uapi/linux/inet_diag.h
-index e8baca85bac6..195e10550dc8 100644
+index 195e10550dc8..ae341c9bc4e6 100644
 --- a/include/uapi/linux/inet_diag.h
 +++ b/include/uapi/linux/inet_diag.h
-@@ -153,6 +153,8 @@ enum {
- 	INET_DIAG_BBRINFO,	/* request as INET_DIAG_VEGASINFO */
- 	INET_DIAG_CLASS_ID,	/* request as INET_DIAG_TCLASS */
- 	INET_DIAG_MD5SIG,
-+	INET_DIAG_ULPNAME,
-+	INET_DIAG_ULPINFO,
- 	__INET_DIAG_MAX,
+@@ -204,4 +204,9 @@ union tcp_cc_info {
+ 	struct tcp_dctcp_info	dctcp;
+ 	struct tcp_bbr_info	bbr;
+ };
++
++enum {
++	ULPINFO_MPTCP_SUBFLOW,
++	__ULPINFO_MAX
++};
+ #endif /* _UAPI_INET_DIAG_H_ */
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+new file mode 100644
+index 000000000000..bba74a97e6c2
+--- /dev/null
++++ b/include/uapi/linux/mptcp.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
++#ifndef _UAPI_MPTCP_H
++#define _UAPI_MPTCP_H
++
++#include <linux/types.h>
++
++#define SUBFLOW_FLAGS_MP_REMOTE BIT(0)
++#define SUBFLOW_FLAGS_MP_LOCAL  BIT(1)
++#define SUBFLOW_FLAGS_DSS_CSUM  BIT(2)
++
++enum {
++	MPTCP_SUBFLOW_LOCAL_KEY,
++	MPTCP_SUBFLOW_REMOTE_KEY,
++	MPTCP_SUBFLOW_FLAGS,
++	MPTCP_SUBFLOW_PAD,
++	__MPTCP_SUBFLOW_MAX
++};
++
++#define MPTCP_SUBFLOW_MAX (__MPTCP_SUBFLOW_MAX - 1)
++
++#endif /* _UAPI_MPTCP_H */
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index 178ae81d8b66..f93ac5bc1b90 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_MPTCP) +=3D mptcp.o
+ =
+
+-mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o
++mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o diag.o
+diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+new file mode 100644
+index 000000000000..27266192da88
+--- /dev/null
++++ b/net/mptcp/diag.c
+@@ -0,0 +1,73 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/module.h>
++#include <linux/net.h>
++#include <linux/sock_diag.h>
++#include <linux/inet_diag.h>
++#include <linux/tcp.h>
++
++#include <net/netlink.h>
++#include <net/tcp.h>
++#include <net/mptcp.h>
++
++#include <uapi/linux/mptcp.h>
++#include "protocol.h"
++
++int subflow_get_info(struct sock *sk, struct sk_buff *skb)
++{
++	struct mptcp_subflow_info *info;
++	struct subflow_context *subflow =3D subflow_ctx(sk);
++	struct nlattr *start =3D 0;
++	u32 flags =3D 0;
++	int ret =3D 0;
++
++	if (!subflow)
++		goto end;
++
++	start =3D nla_nest_start_noflag(skb, ULPINFO_MPTCP_SUBFLOW);
++	if (!start) {
++		ret =3D -EMSGSIZE;
++		goto nla_failure;
++	}
++	if (subflow->mp_capable)
++		flags |=3D SUBFLOW_FLAGS_MP_REMOTE;
++	if (subflow->request_mptcp)
++		flags |=3D SUBFLOW_FLAGS_MP_LOCAL;
++	if (subflow->request_cksum)
++		flags |=3D SUBFLOW_FLAGS_DSS_CSUM;
++
++	if (nla_put_be64(skb, MPTCP_SUBFLOW_LOCAL_KEY,
++			 cpu_to_be64(subflow->local_key),
++			 MPTCP_SUBFLOW_PAD) ||
++	    nla_put_be64(skb, MPTCP_SUBFLOW_REMOTE_KEY,
++			 cpu_to_be64(subflow->remote_key),
++			 MPTCP_SUBFLOW_PAD) ||
++	    nla_put_u32(skb, MPTCP_SUBFLOW_FLAGS, flags)) {
++		ret =3D -EMSGSIZE;
++		goto nla_failure;
++	}
++	nla_nest_end(skb, start);
++end:
++	return ret;
++
++nla_failure:
++	nla_nest_cancel(skb, start);
++	goto end;
++}
++
++size_t subflow_get_info_size(struct sock *sk)
++{
++	struct subflow_context *subflow =3D subflow_ctx(sk);
++	size_t size =3D 0;
++
++	if (!subflow)
++		goto end;
++
++	size +=3D nla_total_size(0) +  /* ULPINFO_MPTCP_SUBFLOW */
++		nla_total_size_64bit(8) + /* MPTCP_SUBFLOW_LOCAL_KEY */
++		nla_total_size_64bit(8) + /* MPTCP_SUBFLOW_REMOTE_KEY */
++		nla_total_size(4) + /* MPTCP_SUBFLOW_FLAGS */
++		0;
++end:
++	return size;
++}
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 81260c737046..721b28e26bbf 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -144,4 +144,7 @@ static inline struct mptcp_ext *mptcp_get_ext(struct sk=
+_buff *skb)
+ 	return (struct mptcp_ext *)skb_ext_find(skb, SKB_EXT_MPTCP);
+ }
+ =
+
++size_t subflow_get_info_size(struct sock *sk);
++int subflow_get_info(struct sock *sk, struct sk_buff *skb);
++
+ #endif /* __MPTCP_PROTOCOL_H */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index f88bc48ca997..2d4f810bc2d2 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -262,6 +262,8 @@ static struct tcp_ulp_ops subflow_ulp_ops __read_mostly=
+ =3D {
+ 	.init		=3D subflow_ulp_init,
+ 	.release	=3D subflow_ulp_release,
+ 	.clone		=3D subflow_ulp_clone,
++	.get_info	=3D subflow_get_info,
++	.get_info_size	=3D subflow_get_info_size,
  };
  =
 
-diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
-index 81148f7a2323..c37a0eb7a9b8 100644
---- a/net/ipv4/tcp_diag.c
-+++ b/net/ipv4/tcp_diag.c
-@@ -88,10 +88,12 @@ static int tcp_diag_put_md5sig(struct sk_buff *skb,
- static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
- 			    struct sk_buff *skb)
- {
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+	int err =3D 0;
-+
- #ifdef CONFIG_TCP_MD5SIG
- 	if (net_admin) {
- 		struct tcp_md5sig_info *md5sig;
--		int err =3D 0;
- =
-
- 		rcu_read_lock();
- 		md5sig =3D rcu_dereference(tcp_sk(sk)->md5sig_info);
-@@ -102,12 +104,33 @@ static int tcp_diag_get_aux(struct sock *sk, bool net=
-_admin,
- 			return err;
- 	}
- #endif
-+	if (net_admin && icsk->icsk_ulp_ops) {
-+		struct nlattr *nest;
- =
-
--	return 0;
-+		err =3D nla_put_string(skb, INET_DIAG_ULPNAME,
-+				     icsk->icsk_ulp_ops->name);
-+		if (err < 0 || !icsk->icsk_ulp_ops->get_info)
-+			return err;
-+
-+		nest =3D nla_nest_start_noflag(skb, INET_DIAG_ULPINFO);
-+		if (!nest) {
-+			err =3D -EMSGSIZE;
-+			goto nla_failure;
-+		}
-+		err =3D icsk->icsk_ulp_ops->get_info(sk, skb);
-+		if (err < 0) {
-+nla_failure:
-+			nla_nest_cancel(skb, nest);
-+			return err;
-+		}
-+		nla_nest_end(skb, nest);
-+	}
-+	return err;
- }
- =
-
- static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
- {
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
- 	size_t size =3D 0;
- =
-
- #ifdef CONFIG_TCP_MD5SIG
-@@ -127,6 +150,12 @@ static size_t tcp_diag_get_aux_size(struct sock *sk, b=
-ool net_admin)
- 				       sizeof(struct tcp_diag_md5sig));
- 	}
- #endif
-+	if (net_admin && icsk->icsk_ulp_ops) {
-+		size +=3D nla_total_size(TCP_ULP_NAME_MAX);
-+		if (icsk->icsk_ulp_ops->get_info_size)
-+			size +=3D nla_total_size(0) + /* INET_DIAG_ULPINFO */
-+				icsk->icsk_ulp_ops->get_info_size(sk);
-+	}
- =
-
- 	return size;
- }
+ static int subflow_ops_init(struct request_sock_ops *subflow_ops)
 -- =
 
 2.20.1
 
 
---===============7248409065013512252==--
+--===============9074541500714589904==--
