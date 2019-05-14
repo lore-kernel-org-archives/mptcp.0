@@ -1,204 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============8876964509888519087=="
+Content-Type: multipart/mixed; boundary="===============1021657560534480998=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp v2 3/3] mptcp: accept: don't leak mptcp socket
- structure
-Date: Tue, 14 May 2019 12:36:47 +0200
-Message-ID: <20190514103647.15994-4-fw@strlen.de>
-In-Reply-To: 20190514103647.15994-1-fw@strlen.de
+Subject: Re: [MPTCP] [PATCH v2] mptcp: refactor shutdown/close and conn_list
+ handling
+Date: Tue, 14 May 2019 18:10:11 +0200
+Message-ID: <379e9ea7-afa9-3b52-187b-8f8f02d74814@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1905101735420.59728@julieann-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1166
+X-UID: 1167
 
---===============8876964509888519087==
+--===============1021657560534480998==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-accept() is supposed to prepare and return a 'struct sock'.
+Hi Paolo, Mat,
 
-The caller holds a new inode/socket, and will associate the
-returned sock with it.
+On 11/05/2019 02:38, Mat Martineau wrote:
+> =
 
-mptcp_accept however will allocate it via 'struct socket', then
-returns socket->sk.
-This then leaks the outer socket struct inode returned by sock_create():
+> On Fri, 10 May 2019, Paolo Abeni wrote:
+> =
 
-unreferenced object 0xffff88810512e8c0 (size 936):
-  comm "mptcp_connect", [..]
-  backtrace:
-    [<00000000872561ba>] alloc_inode+0x35/0xe0
-    [<00000000646e04ed>] new_inode_pseudo+0x12/0x80
-    [<00000000e2e77036>] sock_alloc+0x26/0x100
-    [<00000000870a8688>] __sock_create+0x8f/0x3c0
-    [<000000000558b3fa>] mptcp_accept+0x140/0x530
-    [<0000000044718d60>] inet_accept+0xac/0x470
-    [<00000000da8f3979>] mptcp_stream_accept+0x62/0xa0
-    [<00000000c9010499>] __sys_accept4+0x228/0x3c0
+>> This change the conn_list to a plain list and use the mptcp socket
+>> lock to mutually exclude shutdown and close execution.
+>>
+>> Since mptcp_close() is the only code path that removes entries from
+>> conn_list, we can safely traverse the list while interrupting the
+>> he RCU critical section.
+>>
+>> This solves the scheduling while atomic splat on shutdown, but still
+>> retain the RCU sync on close.
+> =
 
-To fix this, make several (unfortunately, intrusive) changes:
+> Looks good to me.
+> =
 
-1. Instead of allocating a new mptcp socket, clone the
-   mptcp listen socket socket->sk.
+> =
 
-   This gives us a mptcp sock without the inode container.
-   We return this sock struct to the caller, the caller will then
-   complete creation of the mptcp socket.
+> Mat
+> =
 
-2. For the 'compat' (old tcp, not mp capable) case, return the
-   tcp socket directly and release the socket coming from
-   kernel_accept().
+> =
 
-   We can use mptcp_getname() to override the socket->ops to
-   tcp.  This will make mptcp_accept work like tcp accept, and
-   mptcp won't be involved anymore for the particular socket.
+>>
+>> v1 -> v2:
+>> - use the mptcp socket lock in shutdown and close
+>>
+>> Fixes: ed375420f78d ("mptcp: Make connection_list a real list of
+>> subflows")
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+>> ---
+>> Notes:
+>> - this can be squashed into the fixes commit
 
-v2: add mptcp_init_sock() that got lost during last rebase.
+Just squashed as requested:
+- Squash: b43d52fa72f672b26a53bded8e5b3caca7a18e0e
+- The sign-off and modification of the commit message:
+2c7a14b986f1e1671c2496365dbf6a4ddfc38597
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 65 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 46 insertions(+), 19 deletions(-)
+Cheers,
+Matt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e738bfad7430..a897f40bf966 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -613,9 +613,9 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
-lags, int *err,
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct socket *listener =3D msk->subflow;
--	struct socket *new_sock;
--	struct socket *new_mptcp_sock;
- 	struct subflow_context *subflow;
-+	struct socket *new_sock;
-+	struct sock *newsk;
- =
-
- 	pr_debug("msk=3D%p, listener=3D%p", msk, subflow_ctx(listener->sk));
- 	*err =3D kernel_accept(listener, &new_sock, flags);
-@@ -625,28 +625,34 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
- 	subflow =3D subflow_ctx(new_sock->sk);
- 	pr_debug("new subflow=3D%p", subflow);
- =
-
--	*err =3D sock_create(PF_INET, SOCK_STREAM, IPPROTO_MPTCP, &new_mptcp_sock=
-);
--	if (*err < 0) {
--		kernel_sock_shutdown(new_sock, SHUT_RDWR);
--		sock_release(new_sock);
--		return NULL;
--	}
--
--	msk =3D mptcp_sk(new_mptcp_sock->sk);
- 	pr_debug("new msk=3D%p", msk);
- =
-
- 	if (subflow->mp_capable) {
-+		struct sock *new_mptcp_sock;
- 		u64 ack_seq;
- =
-
-+		local_bh_disable();
-+		new_mptcp_sock =3D sk_clone_lock(sk, GFP_ATOMIC);
-+		if (!new_sock) {
-+			*err =3D -ENOBUFS;
-+			local_bh_enable();
-+			kernel_sock_shutdown(new_sock, SHUT_RDWR);
-+			sock_release(new_sock);
-+			return NULL;
-+		}
-+
-+		mptcp_init_sock(new_mptcp_sock);
-+
-+		msk =3D mptcp_sk(new_mptcp_sock);
- 		msk->remote_key =3D subflow->remote_key;
- 		msk->local_key =3D subflow->local_key;
- 		msk->token =3D subflow->token;
- 		pr_debug("token=3D%u", msk->token);
--		token_update_accept(new_sock->sk, new_mptcp_sock->sk);
--		spin_lock_bh(&msk->conn_list_lock);
-+		token_update_accept(new_sock->sk, new_mptcp_sock);
-+		spin_lock(&msk->conn_list_lock);
- 		list_add_rcu(&subflow->node, &msk->conn_list);
- 		msk->subflow =3D NULL;
--		spin_unlock_bh(&msk->conn_list_lock);
-+		spin_unlock(&msk->conn_list_lock);
- =
-
- 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
- 		msk->write_seq =3D subflow->idsn + 1;
-@@ -655,14 +661,20 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
- 		subflow->map_seq =3D ack_seq;
- 		subflow->map_subflow_seq =3D 1;
- 		subflow->rel_write_seq =3D 1;
--		subflow->conn =3D new_mptcp_sock->sk;
- 		subflow->tcp_sock =3D new_sock;
-+		newsk =3D new_mptcp_sock;
-+		subflow->conn =3D new_mptcp_sock;
-+		bh_unlock_sock(new_mptcp_sock);
-+		local_bh_enable();
-+		inet_sk_state_store(newsk, TCP_ESTABLISHED);
- 	} else {
--		msk->subflow =3D new_sock;
-+		newsk =3D new_sock->sk;
-+		tcp_sk(newsk)->is_mptcp =3D 0;
-+		new_sock->sk =3D NULL;
-+		sock_release(new_sock);
- 	}
--	inet_sk_state_store(new_mptcp_sock->sk, TCP_ESTABLISHED);
- =
-
--	return new_mptcp_sock->sk;
-+	return newsk;
- }
- =
-
- static void mptcp_destroy(struct sock *sk)
-@@ -852,6 +864,18 @@ static int mptcp_getname(struct socket *sock, struct s=
-ockaddr *uaddr,
- =
-
- 	pr_debug("msk=3D%p", msk);
- =
-
-+	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
-+		/* we are being invoked from __sys_accept4, after
-+		 * mptcp_accept() has just accepted a non-mp-capable
-+		 * flow: sk is a tcp_sk, not an mptcp one.
-+		 *
-+		 * Hand the socket over to tcp so all further socket ops
-+		 * bypass mptcp.
-+		 */
-+		sock->ops =3D &inet_stream_ops;
-+		return inet_getname(sock, uaddr, peer);
-+	}
-+
- 	if (msk->subflow) {
- 		pr_debug("subflow=3D%p", msk->subflow->sk);
- 		return inet_getname(msk->subflow, uaddr, peer);
-@@ -965,9 +989,12 @@ static int mptcp_shutdown(struct socket *sock, int how)
- 	lock_sock(sock->sk);
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(subflow, &msk->conn_list, node) {
--		pr_debug("conn_list->subflow=3D%p", subflow);
-+		struct socket *tcp_socket;
-+
-+		tcp_socket =3D mptcp_subflow_tcp_socket(subflow);
- 		rcu_read_unlock();
--		ret =3D kernel_sock_shutdown(mptcp_subflow_tcp_socket(subflow), how);
-+		pr_debug("conn_list->subflow=3D%p", subflow);
-+		ret =3D kernel_sock_shutdown(tcp_socket, how);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
 -- =
 
-2.21.0
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============8876964509888519087==--
+--===============1021657560534480998==--
