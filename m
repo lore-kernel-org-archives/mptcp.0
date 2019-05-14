@@ -1,46 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============4751757232039185881=="
+Content-Type: multipart/mixed; boundary="===============0480780767657673749=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH mptcp] net: mptcp: fix memory leak in case slab
- allocation fails
-Date: Tue, 14 May 2019 09:59:25 +0200
-Message-ID: <f0f987fd1ff1e04c24ecb0ef2043bb80900cb044.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1905131632540.11725@mjmartin-mac01.local
+Subject: [MPTCP] [PATCH] mptcp: DSS map overrun in recvmsg()
+Date: Tue, 14 May 2019 11:02:44 +0200
+Message-ID: <c49adb5448c7120981a2397c56016f1e45874b1d.1557821729.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1157
+X-UID: 1158
 
---===============4751757232039185881==
+--===============0480780767657673749==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-05-13 at 16:36 -0700, Mat Martineau wrote:
-> On Mon, 13 May 2019, Davide Caratti wrote:
-> =
+The code used to compute the remaning bytes in the current DSS
+mapping in recvmsg() looks wrong.
 
-> > slab_name is allocated, but not freed, when slab allocation fails: ensu=
-re
-> > it is freed in the error path of kmem_cache_create(...). While at it, f=
-ix
-> > reverse christmas tree in subflow_ops-init() local variable declaration=
-s.
-> =
+Since we compute map_offset in two different places, factor out
+an helper for that tasks and use it.
 
-> Davide -
-> =
+Fixes: 8dbe2f4c7f21 ("mptcp: Implement MPTCP receive path")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+notes:
+- This fixes some of the self-tests failures, but other issues are
+still there. Sending this early, as progress here looks slow and
+hard, and a complete solution could be not so near
+- This can be squashed into the 'fixes' commit
+---
+ net/mptcp/protocol.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Thanks for the leak fix. Looks good to me.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1c9b1e183d12..65f1df196657 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -230,13 +230,16 @@ static u64 expand_seq(u64 old_seq, u16 old_data_len, =
+u64 seq)
+ 	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63,32));
+ }
+ =
 
-hi Mat, thanks a lot for reviewing.
-I forgot to mention, this can be squashed into
-aedec94346fb ("mptcp: Create SUBFLOW socket for incoming connections").
+-static u64 get_mapped_dsn(struct subflow_context *subflow)
++static u64 get_map_offset(struct subflow_context *subflow)
+ {
+-	u32 map_offset =3D (tcp_sk(sock_sk(subflow))->copied_seq -
++	return tcp_sk(sock_sk(subflow))->copied_seq -
+ 			  subflow->ssn_offset -
+-			  subflow->map_subflow_seq);
++			  subflow->map_subflow_seq;
++}
+ =
 
-regards,
+-	return subflow->map_seq + map_offset;
++static u64 get_mapped_dsn(struct subflow_context *subflow)
++{
++	return subflow->map_seq + get_map_offset(subflow);
+ }
+ =
+
+ static int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
+@@ -481,8 +484,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 		}
+ =
+
+ 		/* Read mapped data */
+-		map_remaining =3D (ssn - subflow->map_subflow_seq +
+-				 subflow->map_data_len);
++		map_remaining =3D subflow->map_data_len - get_map_offset(subflow);
+ 		desc.count =3D min_t(size_t, len - copied, map_remaining);
+ 		arg.msg =3D msg;
+ 		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
 -- =
 
-davide
+2.20.1
 
 
---===============4751757232039185881==--
+--===============0480780767657673749==--
