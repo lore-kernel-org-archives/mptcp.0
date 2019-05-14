@@ -1,60 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============0975731055788984575=="
+Content-Type: multipart/mixed; boundary="===============8833874965485019612=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v3 0/3] mptcp: refactor xmit path
-Date: Tue, 14 May 2019 18:10:47 +0200
-Message-ID: <7a76b25f-3e0f-08f5-fde4-2df95f7e7789@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1905101738350.59728@julieann-mobl1.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH mptcp] net: mptcp: fix memory leak in case slab
+ allocation fails
+Date: Tue, 14 May 2019 18:10:52 +0200
+Message-ID: <d09fcfbf-977e-3b23-cf68-f718ac39c81c@tessares.net>
+In-Reply-To: f0f987fd1ff1e04c24ecb0ef2043bb80900cb044.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1168
+X-UID: 1169
 
---===============0975731055788984575==
+--===============8833874965485019612==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+Hi Davide, Mat,
 
-On 11/05/2019 02:43, Mat Martineau wrote:
-> =
+Thank you for the fix and the review!
 
-> On Fri, 10 May 2019, Paolo Abeni wrote:
-> =
-
->> this series refactor the mptcp xmit path trying to make sendmsg behavior
->> more consistent, memory efficent and improve its performances.
+On 14/05/2019 09:59, Davide Caratti wrote:
+> On Mon, 2019-05-13 at 16:36 -0700, Mat Martineau wrote:
+>> On Mon, 13 May 2019, Davide Caratti wrote:
 >>
->> Self-test results are not affected: tests fail in similar way before and
->> after this series.
+>>> slab_name is allocated, but not freed, when slab allocation fails: ensu=
+re
+>>> it is freed in the error path of kmem_cache_create(...). While at it, f=
+ix
+>>> reverse christmas tree in subflow_ops-init() local variable declaration=
+s.
 >>
->> To support MP_JOIN and multiple subflows, the idea is adding, with later
->> patches, an RB-tree structure containing references to the pending page
->> fragments, their length and the associated mptcp write_seq number (is
->> subflow
->> rel_write_seq needed, too?).
+>> Davide -
+>>
+> Thanks for the leak fix. Looks good to me.
 > =
 
-> rel_write_seq doesn't need to be stored for later, it will be different
-> for every copy of the data that is sent.
-> =
+> hi Mat, thanks a lot for reviewing.
+> I forgot to mention, this can be squashed into
+> aedec94346fb ("mptcp: Create SUBFLOW socket for incoming connections").
 
->> RB-tree node can be allocated using the same
->> page frag used in this series for skb data. Each RB-tree node will own a
->> reference to the page frag.
-> =
+Just did as requested:
 
-> I think this is a nice improvement for the sendmsg code, the earlier
-> issues are resolved and we should merge the series to mptcp_net-next.
-
-Thank you for the new version of the patches and the reviews. Just added
-at the end of the series.
-
-https://github.com/multipath-tcp/mptcp_net-next/commits/export
+- Squash: c45d94e6a43d81af6ebead98d9eaa070cbbeedc8
+- Signed-off: 959b71909d14072cf0bfbb38a642b7a87a53244a
 
 Cheers,
 Matt
+
+> regards,
+> =
+
+
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -63,4 +60,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============0975731055788984575==--
+--===============8833874965485019612==--
