@@ -1,101 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============4768142483706202039=="
+Content-Type: multipart/mixed; boundary="===============3679509276261319015=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: DSS map overrun in recvmsg()
-Date: Tue, 14 May 2019 17:47:37 -0700
-Message-ID: <alpine.OSX.2.21.1905141743570.17351@jdicke-mobl1.amr.corp.intel.com>
-In-Reply-To: c49adb5448c7120981a2397c56016f1e45874b1d.1557821729.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH] tcp: clean ext on tx recycle
+Date: Wed, 15 May 2019 12:22:30 +0200
+Message-ID: <3eba3c63b8dcecb873c7a6b4695a1283c63be164.1557915674.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1172
+X-UID: 1173
 
---===============4768142483706202039==
+--===============3679509276261319015==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Otherwise we will find stray/unexpected/old extensions
+value on next iteration.
 
-On Tue, 14 May 2019, Paolo Abeni wrote:
+On tcp_write_xmit() we can end-up splitting an already queued
+skb in two parts, via tso_fragment(). The newly created skb
+can be allocated via the tx cache and the mptcp stack will not
+be aware of it, so nobody set properly the MPTCP ext.
 
-> The code used to compute the remaning bytes in the current DSS
-> mapping in recvmsg() looks wrong.
->
-> Since we compute map_offset in two different places, factor out
-> an helper for that tasks and use it.
+End result, we transmit the skb using an hold MPTCP DSS map
+and that confuses the rx side/corrupt the stream. It requires
+some concurrent conditions, so it's not deterministic.
 
-Thanks for catching this Paolo. Your new map_remaining math is the correct =
+Resetting the ext on recycle fixes all the current mptcp self tests
+issues.
 
-calculation. I also tested against the multipath-tcp.org kernel (v0.94 =
+Apparently only MPTCP has issues with this kind of stray ext,
+so an alternative would be add an additional mptcp hook in
+tso_fragment() or in sk_stream_alloc_skb() to always init
+the ext.
 
-branch) and that worked fine.
+Note that setting/allocating the MPTCP ext in sk_stream_alloc_skb
+for MPTCP socket, we also resolve the fixme in mptcp_sendmsg_frag().
 
-
-Mat
-
-
->
-> Fixes: 8dbe2f4c7f21 ("mptcp: Implement MPTCP receive path")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> notes:
-> - This fixes some of the self-tests failures, but other issues are
-> still there. Sending this early, as progress here looks slow and
-> hard, and a complete solution could be not so near
-> - This can be squashed into the 'fixes' commit
-> ---
-> net/mptcp/protocol.c | 14 ++++++++------
-> 1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1c9b1e183d12..65f1df196657 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -230,13 +230,16 @@ static u64 expand_seq(u64 old_seq, u16 old_data_len=
-, u64 seq)
-> 	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63,32));
-> }
->
-> -static u64 get_mapped_dsn(struct subflow_context *subflow)
-> +static u64 get_map_offset(struct subflow_context *subflow)
-> {
-> -	u32 map_offset =3D (tcp_sk(sock_sk(subflow))->copied_seq -
-> +	return tcp_sk(sock_sk(subflow))->copied_seq -
-> 			  subflow->ssn_offset -
-> -			  subflow->map_subflow_seq);
-> +			  subflow->map_subflow_seq;
-> +}
->
-> -	return subflow->map_seq + map_offset;
-> +static u64 get_mapped_dsn(struct subflow_context *subflow)
-> +{
-> +	return subflow->map_seq + get_map_offset(subflow);
-> }
->
-> static int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
-> @@ -481,8 +484,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
-> 		}
->
-> 		/* Read mapped data */
-> -		map_remaining =3D (ssn - subflow->map_subflow_seq +
-> -				 subflow->map_data_len);
-> +		map_remaining =3D subflow->map_data_len - get_map_offset(subflow);
-> 		desc.count =3D min_t(size_t, len - copied, map_remaining);
-> 		arg.msg =3D msg;
-> 		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
-> -- =
-
-> 2.20.1
->
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
->
-
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 --
-Mat Martineau
-Intel
+Note: intentionally not adding fixes tags here. Even if small,
+I think it should not be squashed in other commits, other opinion
+welcome!
+---
+ include/linux/skbuff.h | 8 ++++++++
+ include/net/sock.h     | 1 +
+ 2 files changed, 9 insertions(+)
 
---===============4768142483706202039==--
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 0f6719d9a6bd..c6256eadf59a 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -4027,6 +4027,14 @@ static inline void skb_ext_put(struct sk_buff *skb)
+ 		__skb_ext_put(skb->extensions);
+ }
+ =
+
++static inline void skb_ext_clear(struct sk_buff *skb)
++{
++	if (skb->active_extensions) {
++		__skb_ext_put(skb->extensions);
++		skb->active_extensions =3D 0;
++	}
++}
++
+ static inline void __skb_ext_copy(struct sk_buff *dst,
+ 				  const struct sk_buff *src)
+ {
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 4d208c0f9c14..fd982f976925 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1474,6 +1474,7 @@ static inline void sk_wmem_free_skb(struct sock *sk, =
+struct sk_buff *skb)
+ 	sk->sk_wmem_queued -=3D skb->truesize;
+ 	sk_mem_uncharge(sk, skb->truesize);
+ 	if (!sk->sk_tx_skb_cache) {
++		skb_ext_clear(skb);
+ 		skb_zcopy_clear(skb, true);
+ 		sk->sk_tx_skb_cache =3D skb;
+ 		return;
+-- =
+
+2.20.1
+
+
+--===============3679509276261319015==--
