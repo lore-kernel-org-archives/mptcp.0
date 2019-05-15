@@ -1,119 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============2056544118572218162=="
+Content-Type: multipart/mixed; boundary="===============4768142483706202039=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] tcp: Check for filled TCP option space before SACK
-Date: Tue, 14 May 2019 09:59:01 -0700
-Message-ID: <alpine.OSX.2.21.1905140944270.17351@jdicke-mobl1.amr.corp.intel.com>
-In-Reply-To: 3c517247-2b9d-ad3d-4954-f1873004c1f2@tessares.net
+Subject: Re: [MPTCP] [PATCH] mptcp: DSS map overrun in recvmsg()
+Date: Tue, 14 May 2019 17:47:37 -0700
+Message-ID: <alpine.OSX.2.21.1905141743570.17351@jdicke-mobl1.amr.corp.intel.com>
+In-Reply-To: c49adb5448c7120981a2397c56016f1e45874b1d.1557821729.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1171
+X-UID: 1172
 
---===============2056544118572218162==
+--===============4768142483706202039==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Tue, 14 May 2019, Matthieu Baerts wrote:
+On Tue, 14 May 2019, Paolo Abeni wrote:
 
-> Hi Mat,
+> The code used to compute the remaning bytes in the current DSS
+> mapping in recvmsg() looks wrong.
 >
-> On 11/05/2019 01:59, Mat Martineau wrote:
->>
->> On Fri, 10 May 2019, Matthieu Baerts wrote:
->>
->>> Hi Mat,
->>>
->>> Thank you for the patch!
->>>
->>> On 09/05/2019 19:06, Mat Martineau wrote:
->>>> The SACK code would potentially add four bytes to the expected
->>>> TCP option size even if all option space was already used.
->>>>
->>>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->>>> ---
->>>> =C2=A0net/ipv4/tcp_output.c | 3 +++
->>>> =C2=A01 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->>>> index 12c9e8ebc86d..1cd915890ce5 100644
->>>> --- a/net/ipv4/tcp_output.c
->>>> +++ b/net/ipv4/tcp_output.c
->>>> @@ -814,6 +814,9 @@ static unsigned int
->>>> tcp_established_options(struct sock *sk, struct sk_buff *skb
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>
->>>> +=C2=A0=C2=A0=C2=A0 if (size + TCPOLEN_SACK_BASE_ALIGNED >=3D MAX_TCP_=
-OPTION_SPACE)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return size;
->>>> +
->>>
->>> Should we not add this check in the "if" block here below...
->>>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 eff_sacks =3D tp->rx_opt.num_sacks + tp->rx_o=
-pt.dsack;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 if (unlikely(eff_sacks)) {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const unsigned int re=
-maining =3D MAX_TCP_OPTION_SPACE - size;
->>>
->>> ... to use this "remaining" variable only if we want to add SACKS:
->>>
->>> =C2=A0=C2=A0 if (TCPOLEN_SACK_BASE_ALIGNED >=3D remaining)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return size;
->>
->> Florian had suggested the above location (#2 in
->> https://lists.01.org/pipermail/mptcp/2019-April/001097.html). Seemed
->> like adding the check there made sense because there's no need to
->> calculate eff_sacks if there's no option space.
+> Since we compute map_offset in two different places, factor out
+> an helper for that tasks and use it.
+
+Thanks for catching this Paolo. Your new map_remaining math is the correct =
+
+calculation. I also tested against the multipath-tcp.org kernel (v0.94 =
+
+branch) and that worked fine.
+
+
+Mat
+
+
 >
-> I thought Florian' suggestion was only to show the bug. But OK for me to
-> keep it there if you prefer.
+> Fixes: 8dbe2f4c7f21 ("mptcp: Implement MPTCP receive path")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> notes:
+> - This fixes some of the self-tests failures, but other issues are
+> still there. Sending this early, as progress here looks slow and
+> hard, and a complete solution could be not so near
+> - This can be squashed into the 'fixes' commit
+> ---
+> net/mptcp/protocol.c | 14 ++++++++------
+> 1 file changed, 8 insertions(+), 6 deletions(-)
 >
->>>
->>>
->>> Do you want me to squash this fix in Peter's commit (mptcp: Handle
->>> MP_CAPABLE options for outgoing connections) or to add it as a new
->>> commit just after Peter's one? (It's only to ease the "rebasing" task
->>> later by helping doing a maximum now as long as I can help :) )
->>
->> I'd prefer to add commits to the end so it's easier for everyone to see
->> what's changing over time.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1c9b1e183d12..65f1df196657 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -230,13 +230,16 @@ static u64 expand_seq(u64 old_seq, u16 old_data_len=
+, u64 seq)
+> 	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63,32));
+> }
 >
-> Do you mean for those who doesn't subscribe to this ML? Or for everybody
-> in general?
+> -static u64 get_mapped_dsn(struct subflow_context *subflow)
+> +static u64 get_map_offset(struct subflow_context *subflow)
+> {
+> -	u32 map_offset =3D (tcp_sk(sock_sk(subflow))->copied_seq -
+> +	return tcp_sk(sock_sk(subflow))->copied_seq -
+> 			  subflow->ssn_offset -
+> -			  subflow->map_subflow_seq);
+> +			  subflow->map_subflow_seq;
+> +}
 >
+> -	return subflow->map_seq + map_offset;
+> +static u64 get_mapped_dsn(struct subflow_context *subflow)
+> +{
+> +	return subflow->map_seq + get_map_offset(subflow);
+> }
+>
+> static int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
+> @@ -481,8 +484,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+> 		}
+>
+> 		/* Read mapped data */
+> -		map_remaining =3D (ssn - subflow->map_subflow_seq +
+> -				 subflow->map_data_len);
+> +		map_remaining =3D subflow->map_data_len - get_map_offset(subflow);
+> 		desc.count =3D min_t(size_t, len - copied, map_remaining);
+> 		arg.msg =3D msg;
+> 		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
+> -- =
 
-I was thinking in general - with various patch sets (and versions of those =
-
-patch sets) in stages of review and getting merged, it helps if it's easy =
-
-to see what's been merged and when.
-
-The new pattern seems to be to squash small fixes and append more =
-
-significant ones - that seems to be working for the group and not causing =
-
-problems.
-
-> If it is for everybody, I guess the best is also to stop the CI scripts
-> doing the automatic rebases once per day after validations then.
-
-The automatic rebase does make it harder to refer to existing commits by =
-
-id (for "fixes" information, squashing, etc) because the commit ids are =
-
-constantly changing, but we also don't want to fall too far behind =
-
-net-next. Seems to be going ok so far, we could talk about rebase =
-
-frequency at the meeting this week. I added it to the agenda.
-
+> 2.20.1
+>
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+>
 
 --
 Mat Martineau
 Intel
 
---===============2056544118572218162==--
+--===============4768142483706202039==--
