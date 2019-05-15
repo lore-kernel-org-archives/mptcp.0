@@ -1,37 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============5598463187969926631=="
+Content-Type: multipart/mixed; boundary="===============4009667920083809374=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH mptcp 0/3] mptcp: plug mptcp_accept memory leaks
-Date: Wed, 15 May 2019 16:02:59 +0200
-Message-ID: <c7e0a534-7dae-f9d2-1f4c-6ce9201c3f40@tessares.net>
-In-Reply-To: afc4701d3b85b59693db097aa53b4ccac22c44c1.camel@intel.com
+Subject: [MPTCP] Weekly meeting - 16 May 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 15 May 2019 16:14:24 +0200
+Message-ID: <b060b030-7afa-a5dc-8187-bf38d75b2bb1@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1182
+X-UID: 1183
 
---===============5598463187969926631==
+--===============4009667920083809374==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hello everybody!
 
-Thank you for the review! And thank you Florian for the patch-set!
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-On 14/05/2019 01:47, Krystad, Peter wrote:
-> =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20190516
 
-> Hi Florian -
-> =
+Feel free to add/modify topics!
 
-> Thanks for this, it looks good to me with just one small comment on #2.
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-Is the v2 OK for you?
-
-Thanks,
-Matt
-
+Speak to you tomorrow!
+Matthieu
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -40,4 +37,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============5598463187969926631==--
+--===============4009667920083809374==--
