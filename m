@@ -1,77 +1,210 @@
-Content-Type: multipart/mixed; boundary="===============0489323883167784779=="
+Content-Type: multipart/mixed; boundary="===============8248154477091259508=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp v3 1/3] mptcp: release mptcp socket in
- mptcp_close
-Date: Thu, 16 May 2019 11:23:49 +0200
-Message-ID: <20190516092351.9741-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp v3 2/3] mptcp: store tcp socket,
+ not tcp sock in subflow ctx
+Date: Thu, 16 May 2019 11:23:50 +0200
+Message-ID: <20190516092351.9741-3-fw@strlen.de>
 In-Reply-To: 20190516092351.9741-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1187
+X-UID: 1188
 
---===============0489323883167784779==
+--===============8248154477091259508==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-kmemleak reports several stray objects.
-This fixes following splats:
+Instead of using sk->sk_socket to get back the socket reference, store
+the 'socket' pointer that is coming from kernel_accept().
 
-  unreferenced object 0xffff88810e27f240 (size 2016):
-    comm "mptcp_connect", pid 2187, jiffies 4295218907 (age 1371.080s)
-    hex dump (first 32 bytes):
-      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-      02 00 01 41 00 00 00 00 00 00 00 00 00 00 00 00  ...A............
-    backtrace:
-      [<00000000298ae054>] sk_alloc+0x4c/0x600
-      [<000000001cd7d411>] inet_create+0x1f4/0x6a0
-      [<00000000ac4d1289>] __sock_create+0x1b4/0x3c0
-      [<00000000cf2663ed>] __sys_socket+0xb6/0x170
-      [<00000000b8efb3a9>] __x64_sys_socket+0x3d/0x50
-      [<000000006e83b432>] do_syscall_64+0x72/0x270
-      [<0000000007655965>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-      [<0000000073c2278e>] 0xffffffffffffffff
+This doesn't fix a bug, but it appears cleaner to me.
 
-This is because mptcp_close forgot to put the last reference.
-
-We also need to set the state to CLOSED and orphan the socket, else the
-put will trigger warning about 'alive' inet socket being torn down.
+v3: rebase
+v2: rename helper (Peter)
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mptcp/protocol.c | 23 ++++++++++++-----------
+ net/mptcp/protocol.h |  6 +++---
+ net/mptcp/subflow.c  | 10 +++++++---
+ 3 files changed, 22 insertions(+), 17 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e80b4a50a208..ad8b1dcd525e 100644
+index ad8b1dcd525e..ca8a0d799a11 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -592,6 +592,8 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	struct socket *ssk =3D NULL;
- 	struct list_head list;
+@@ -27,7 +27,7 @@ static inline bool before64(__u64 seq1, __u64 seq2)
  =
 
-+	inet_sk_state_store(sk, TCP_CLOSE);
-+
- 	spin_lock_bh(&msk->conn_list_lock);
- 	if (msk->subflow) {
- 		ssk =3D msk->subflow;
-@@ -615,6 +617,9 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		pr_debug("conn_list->subflow=3D%p", subflow);
- 		sock_release(sock_sk(subflow)->sk_socket);
- 	};
-+
-+	sock_orphan(sk);
-+	sock_put(sk);
+ static bool mptcp_subflow_hold(struct subflow_context *subflow)
+ {
+-	struct sock *sk =3D sock_sk(subflow);
++	struct sock *sk =3D mptcp_subflow_tcp_socket(subflow)->sk;
+ =
+
+ 	return refcount_inc_not_zero(&sk->sk_refcnt);
+ }
+@@ -40,7 +40,7 @@ static struct sock *mptcp_subflow_get_ref(const struct mp=
+tcp_sock *msk)
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		if (mptcp_subflow_hold(subflow)) {
+ 			rcu_read_unlock();
+-			return sock_sk(subflow);
++			return mptcp_subflow_tcp_socket(subflow)->sk;
+ 		}
+ 	}
+ =
+
+@@ -236,9 +236,9 @@ static u64 expand_seq(u64 old_seq, u16 old_data_len, u6=
+4 seq)
+ =
+
+ static u64 get_map_offset(struct subflow_context *subflow)
+ {
+-	return tcp_sk(sock_sk(subflow))->copied_seq -
+-			  subflow->ssn_offset -
+-			  subflow->map_subflow_seq;
++	return tcp_sk(mptcp_subflow_tcp_socket(subflow)->sk)->copied_seq -
++		      subflow->ssn_offset -
++		      subflow->map_subflow_seq;
  }
  =
 
- static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+ static u64 get_mapped_dsn(struct subflow_context *subflow)
+@@ -615,8 +615,8 @@ static void mptcp_close(struct sock *sk, long timeout)
+ =
+
+ 	list_for_each_entry_safe(subflow, tmp, &list, node) {
+ 		pr_debug("conn_list->subflow=3D%p", subflow);
+-		sock_release(sock_sk(subflow)->sk_socket);
+-	};
++		sock_release(mptcp_subflow_tcp_socket(subflow));
++	}
+ =
+
+ 	sock_orphan(sk);
+ 	sock_put(sk);
+@@ -670,6 +670,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ 		subflow->map_subflow_seq =3D 1;
+ 		subflow->rel_write_seq =3D 1;
+ 		subflow->conn =3D new_mptcp_sock->sk;
++		subflow->tcp_sock =3D new_sock;
+ 	} else {
+ 		msk->subflow =3D new_sock;
+ 	}
+@@ -948,8 +949,8 @@ static __poll_t mptcp_poll(struct file *file, struct so=
+cket *sock,
+ 		if (!tmp)
+ 			break;
+ =
+
+-		ret |=3D tcp_poll(file, sock_sk(tmp)->sk_socket, wait);
+-		sock_put(sock_sk(tmp));
++		ret |=3D tcp_poll(file, mptcp_subflow_tcp_socket(tmp), wait);
++		sock_put(mptcp_subflow_tcp_socket(tmp)->sk);
+ 	}
+ =
+
+ 	return ret;
+@@ -978,9 +979,9 @@ static int mptcp_shutdown(struct socket *sock, int how)
+ 	lock_sock(sock->sk);
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(subflow, &msk->conn_list, node) {
+-		rcu_read_unlock();
+ 		pr_debug("conn_list->subflow=3D%p", subflow);
+-		ret =3D kernel_sock_shutdown(sock_sk(subflow)->sk_socket, how);
++		rcu_read_unlock();
++		ret =3D kernel_sock_shutdown(mptcp_subflow_tcp_socket(subflow), how);
+ 		rcu_read_lock();
+ 	}
+ 	rcu_read_unlock();
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index de1131c543d0..3dfe15f42058 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -90,7 +90,7 @@ struct subflow_context {
+ 		map_valid : 1,
+ 		use_checksum : 1;
+ =
+
+-	struct  sock *sk;       /* underlying tcp_sock */
++	struct  socket *tcp_sock;/* underlying tcp_sock */
+ 	struct  sock *conn;     /* parent mptcp_sock */
+ 	void	(*tcp_sk_data_ready)(struct sock *sk);
+ };
+@@ -101,9 +101,9 @@ static inline struct subflow_context *subflow_ctx(const=
+ struct sock *sk)
+ 	return (struct subflow_context *)icsk->icsk_ulp_data;
+ }
+ =
+
+-static inline struct sock *sock_sk(const struct subflow_context *subflow)
++static inline struct socket *mptcp_subflow_tcp_socket(const struct subflow=
+_context *subflow)
+ {
+-	return subflow->sk;
++	return subflow->tcp_sock;
+ }
+ =
+
+ int subflow_init(void);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index d2ee65a98e30..bc8e1a0658ec 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -174,6 +174,7 @@ static void subflow_data_ready(struct sock *sk)
+ }
+ =
+
+ static struct subflow_context *subflow_create_ctx(struct sock *sk,
++						  struct socket *sock,
+ 						  gfp_t priority)
+ {
+ 	struct inet_connection_sock *icsk =3D inet_csk(sk);
+@@ -187,7 +188,8 @@ static struct subflow_context *subflow_create_ctx(struc=
+t sock *sk,
+ =
+
+ 	pr_debug("subflow=3D%p", ctx);
+ =
+
+-	ctx->sk =3D sk;
++	/* might be NULL */
++	ctx->tcp_sock =3D sock;
+ =
+
+ 	return ctx;
+ }
+@@ -199,7 +201,7 @@ static int subflow_ulp_init(struct sock *sk)
+ 	struct subflow_context *ctx;
+ 	int err =3D 0;
+ =
+
+-	ctx =3D subflow_create_ctx(sk, GFP_KERNEL);
++	ctx =3D subflow_create_ctx(sk, sk->sk_socket, GFP_KERNEL);
+ 	if (!ctx) {
+ 		err =3D -ENOMEM;
+ 		goto out;
+@@ -234,7 +236,9 @@ static void subflow_ulp_clone(const struct request_sock=
+ *req,
+ 	struct subflow_context *new_ctx;
+ =
+
+ 	old_ctx =3D inet_csk(newsk)->icsk_ulp_data;
+-	new_ctx =3D subflow_create_ctx(newsk, priority);
++
++	/* newsk->sk_socket is NULL at this point */
++	new_ctx =3D subflow_create_ctx(newsk, NULL, priority);
+ =
+
+ 	if (!new_ctx)
+ 		return;
 -- =
 
 2.21.0
 
 
---===============0489323883167784779==--
+--===============8248154477091259508==--
