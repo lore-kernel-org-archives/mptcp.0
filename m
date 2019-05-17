@@ -1,53 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============9041047094504018406=="
+Content-Type: multipart/mixed; boundary="===============8957276408822996640=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH RFC mptcp 2/2] mptcp: allow dumping subflow
  context to userspace
-Date: Thu, 16 May 2019 16:58:52 -0700
-Message-ID: <alpine.OSX.2.21.1905161652200.41252@mjmartin-mac01.local>
-In-Reply-To: 071168da3f5216a3a7729e69a34e29a43d9e89cb.camel@redhat.com
+Date: Fri, 17 May 2019 10:30:59 +0200
+Message-ID: <9776e7af-4007-c002-4ef5-01fc4a378309@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1905161632570.41252@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 1194
+X-UID: 1195
 
---===============9041047094504018406==
+--===============8957276408822996640==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Mat, Davide,
 
-On Tue, 14 May 2019, Paolo Abeni wrote:
+Thank you for the review and the patches!
 
-> Hi,
->
-> On Tue, 2019-05-14 at 11:14 +0200, Davide Caratti wrote:
->>      - this is a POC patch where I only dump few members of the subflow,=
- and
->>        put them in a nested attribute so that it's possible to read them=
- in
->>        a program regardless the value of 'subflow_ulp_ops.name'. Please =
-let
->>        me know if we should dump additional information, or if some of t=
-hose
->>        I included don't make sense.
->
-> I personally think that SSN and mapping related info would be useful
-> and worthy to add.
->
+On 17/05/2019 01:51, Mat Martineau wrote:
+> =
 
-As we implement multiple subflows and deal with MPTCP-level out-of-order =
+> On Tue, 14 May 2019, Davide Caratti wrote:
+> =
 
-reassembly, the mapping-related info will likely move in to the =
+>> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+>> new file mode 100644
+>> index 000000000000..bba74a97e6c2
+>> --- /dev/null
+>> +++ b/include/uapi/linux/mptcp.h
+>> @@ -0,0 +1,21 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+>> +#ifndef _UAPI_MPTCP_H
+>> +#define _UAPI_MPTCP_H
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +#define SUBFLOW_FLAGS_MP_REMOTE BIT(0)
+>> +#define SUBFLOW_FLAGS_MP_LOCAL=C2=A0 BIT(1)
+>> +#define SUBFLOW_FLAGS_DSS_CSUM=C2=A0 BIT(2)
+>> +
+>> +enum {
+>> +=C2=A0=C2=A0=C2=A0 MPTCP_SUBFLOW_LOCAL_KEY,
+>> +=C2=A0=C2=A0=C2=A0 MPTCP_SUBFLOW_REMOTE_KEY,
+>> +=C2=A0=C2=A0=C2=A0 MPTCP_SUBFLOW_FLAGS,
+>> +=C2=A0=C2=A0=C2=A0 MPTCP_SUBFLOW_PAD,
+>> +=C2=A0=C2=A0=C2=A0 __MPTCP_SUBFLOW_MAX
+>> +};
+> =
 
-MPTCP-level socket. If we expose information about mappings, I think we =
+> The 32-bit subflow->token is also useful, since that's what would be
+> relevant for future MP_JOIN attempts.
 
-would register a different inet_diag_handler for the MPTCP socket and =
+Just a small note to say that it is not recommended to expose this token
+to regular users for security reasons. Please see this (famous --
+Christoph would remember it :) ) commit from mptcp.org:
 
-report it there.
 
---
-Mat Martineau
-Intel
+https://github.com/multipath-tcp/mptcp/commit/e993b775d8abda232ceecbbed135b=
+40c546f5088
 
---===============9041047094504018406==--
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+--===============8957276408822996640==--
