@@ -1,127 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============7226547276833610967=="
+Content-Type: multipart/mixed; boundary="===============8725761921846354197=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH mptcp v3 0/3] mptcp: plug mptcp_accept memory leaks
-Date: Fri, 17 May 2019 18:23:06 +0200
-Message-ID: <4390b018-94f2-45f6-dcff-2d6c95eb46b1@tessares.net>
-In-Reply-To: 20190516092351.9741-1-fw@strlen.de
+Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:upd-tg: tag export
+ branch with date
+Date: Mon, 20 May 2019 08:37:13 +0000
+Message-ID: <gerrit.1558341430000.I172661673bb515687c07471289a857f80e06b0c1@review.gerrithub.io>
 X-Status: 
 X-Keywords:                  
-X-UID: 1197
+X-UID: 1198
 
---===============7226547276833610967==
+--===============8725761921846354197==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+Hello Mat Martineau,
 
-Thank you for the patches and the update.
-And thanks Peter and Mat for the reviews!
+I'd like you to do a code review. Please visit
 
-On 16/05/2019 11:23, Florian Westphal wrote:
-> v3: rebase & fix erroneous conditional in patch #3.
-> =
+    https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/455063
 
-> v2 cover letter:
-> v2:
-> - rename helper in patch 2
-> - add back crucial mptcp_init_sock() after clone in patch 3.
->   This was lost during rebase and broke the tests but i forgot
->   to refresh this patch when i sent v1.                     =
-
-> =
-
-> This series resolves the memory leaks that occur when running
-> mptcp_connect.sh.
-> =
-
-> I don't mind if they get squashed.
-> I've decided to split this into 3 distinct changes to make it
-> a bit clearer what is going on.  =
+to review the following change.
 
 
-Thank you for this!
+Change subject: ci:upd-tg: tag export branch with date
+......................................................................
 
-Because the 1st one was fixing a bug introduced in the patch series and
-the 2nd one change the architecture, I have squashed them in different
-commits. For the 3rd one, I guess it made more sense to create a
-specific commit to explain the decision that you took.
+ci:upd-tg: tag export branch with date
 
-Here are the details of the squashes if someone wants to see them:
+We might have references to commits from this 'export' branch. But this
+branch is regularly rebuilt. Git GC would them remove these old
+references.
 
+Adding a tag force Github (and other clones) to keep these references.
+All these tags will be like this:
 
-Patch 1: mptcp: release mptcp socket in mptcp_close:
-	2bb08839b911 =E2=86=92 squash in "mptcp: Add MPTCP socket stubs"
-	419b1ecc8760 =E2=86=92 sign-off
-	af1f253ddd49 =E2=86=92 conflict 1
-	5a85931b0875 =E2=86=92 conflict 2
-	14035afa54ce..e58d56c3bdb0 =E2=86=92 result patch 1
+    export/<date>
 
+Note that if working from 'export' is an issue for you because it forces
+you to use 'git rebase --onto', you can also work on top of 'for-review'
+branch: the code will be the same, the git history will not be rewritten
+for this branch.
 
-Patch 2: mptcp: store tcp socket, not tcp sock in subflow ctx
-	278ebcdf1fcd =E2=86=92 squash in "mptcp: Associate MPTCP context with TCP =
-socket"
-	1cf900c3d339 =E2=86=92 sign-off
-	e5fabdff04da =E2=86=92 conflict 1
-	0867ab696817 =E2=86=92 conflict 2
-	3f9772cce9fb =E2=86=92 squash in "mptcp: Create SUBFLOW socket for incoming
-connections"
-	fdf93ec159c6 =E2=86=92 sign-off
-	67fb09ba1e9f =E2=86=92 conflict 3
-	adb0b1e24c8e =E2=86=92 conflict 4
-	9127b8ba2843 + 5ca554150c60 =E2=86=92 squash in "mptcp: Make connection_li=
-st a
-real list of subflows" (use the new function instead of the old one +
-remove unneeded semi-colon)
-	b2f24974d1b2 =E2=86=92 conflict 5
-	5f525e95f57f + 907383369eab =E2=86=92 fix-up 1
-	e58d56c3bdb0..be0a3d56b3bb =E2=86=92 result patch 2
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Change-Id: I172661673bb515687c07471289a857f80e06b0c1
+---
+M ci/update-tg-tree.sh
+1 file changed, 8 insertions(+), 1 deletion(-)
 
 
-Patch 3: mptcp: accept: don't leak mptcp socket structure
-	a7bc3b13590e =E2=86=92 added at the end (without the updates notes, I hope=
- you
-don't mind)
-	be0a3d56b3bb..d90f77dd19c4 =E2=86=92 result patch 3
 
-
-Cheers,
-Matt
-
-> =
-
-> Second patch is not a bug fix, i can resend and drop it if
-> the consensus is to continue using the sk->sk_socket back reference.
-> =
-
-> Third patch is a bit large due to the change in how the new mptcp
-> socket is created.
-> =
-
-> See the commit messages for more details.                      =
-
-> After these changes kmemleak doesn't report any leaks when the  =
-
-> test script has completed.
-> =
-
-> =
-
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
-> =
-
-
+  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
+s/changes/63/455063/1
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
+/455063
+To unsubscribe, or for help writing mail filters, visit https://review.gerr=
+ithub.io/settings
 
---===============7226547276833610967==--
+Gerrit-Project: multipath-tcp/mptcp_net-next
+Gerrit-Branch: scripts
+Gerrit-Change-Id: I172661673bb515687c07471289a857f80e06b0c1
+Gerrit-Change-Number: 455063
+Gerrit-PatchSet: 1
+Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Gerrit-Reviewer: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Gerrit-MessageType: newchange
+
+--===============8725761921846354197==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PHA+TWF0dGhpZXUgQmFlcnRzIHdvdWxkIGxpa2UgTWF0IE1hcnRpbmVhdSB0byA8c3Ryb25nPnJl
+dmlldzwvc3Ryb25nPiB0aGlzIGNoYW5nZS48L3A+PHA+PGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcu
+Z2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NTA2MyI+Vmll
+dyBDaGFuZ2U8L2E+PC9wPjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3Nw
+YWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5jaTp1cGQtdGc6IHRhZyBleHBvcnQgYnJhbmNo
+IHdpdGggZGF0ZTxicj48YnI+V2UgbWlnaHQgaGF2ZSByZWZlcmVuY2VzIHRvIGNvbW1pdHMgZnJv
+bSB0aGlzICYjMzk7ZXhwb3J0JiMzOTsgYnJhbmNoLiBCdXQgdGhpczxicj5icmFuY2ggaXMgcmVn
+dWxhcmx5IHJlYnVpbHQuIEdpdCBHQyB3b3VsZCB0aGVtIHJlbW92ZSB0aGVzZSBvbGQ8YnI+cmVm
+ZXJlbmNlcy48YnI+PGJyPkFkZGluZyBhIHRhZyBmb3JjZSBHaXRodWIgKGFuZCBvdGhlciBjbG9u
+ZXMpIHRvIGtlZXAgdGhlc2UgcmVmZXJlbmNlcy48YnI+QWxsIHRoZXNlIHRhZ3Mgd2lsbCBiZSBs
+aWtlIHRoaXM6PGJyPjxicj4gICAgZXhwb3J0LyZsdDtkYXRlJmd0Ozxicj48YnI+Tm90ZSB0aGF0
+IGlmIHdvcmtpbmcgZnJvbSAmIzM5O2V4cG9ydCYjMzk7IGlzIGFuIGlzc3VlIGZvciB5b3UgYmVj
+YXVzZSBpdCBmb3JjZXM8YnI+eW91IHRvIHVzZSAmIzM5O2dpdCByZWJhc2UgLS1vbnRvJiMzOTss
+IHlvdSBjYW4gYWxzbyB3b3JrIG9uIHRvcCBvZiAmIzM5O2Zvci1yZXZpZXcmIzM5Ozxicj5icmFu
+Y2g6IHRoZSBjb2RlIHdpbGwgYmUgdGhlIHNhbWUsIHRoZSBnaXQgaGlzdG9yeSB3aWxsIG5vdCBi
+ZSByZXdyaXR0ZW48YnI+Zm9yIHRoaXMgYnJhbmNoLjxicj48YnI+U2lnbmVkLW9mZi1ieTogTWF0
+dGhpZXUgQmFlcnRzICZsdDttYXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0Ozxicj5TdWdn
+ZXN0ZWQtYnk6IE1hdCBNYXJ0aW5lYXUgJmx0O21hdGhldy5qLm1hcnRpbmVhdUBsaW51eC5pbnRl
+bC5jb20mZ3Q7PGJyPkNoYW5nZS1JZDogSTE3MjY2MTY3M2JiNTE1Njg3YzA3NDcxMjg5YTg1N2Y4
+MGUwNmIwYzE8YnI+LS0tPGJyPk0gY2kvdXBkYXRlLXRnLXRyZWUuc2g8YnI+MSBmaWxlIGNoYW5n
+ZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKTxicj48YnI+PC9wcmU+PHByZSBzdHls
+ZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSxtb25vc3BhY2U7IHdoaXRlLXNwYWNlOiBwcmUtd3Jh
+cDsiPmdpdCBwdWxsIHNzaDovL3Jldmlldy5nZXJyaXRodWIuaW86Mjk0MTgvbXVsdGlwYXRoLXRj
+cC9tcHRjcF9uZXQtbmV4dCByZWZzL2NoYW5nZXMvNjMvNDU1MDYzLzE8L3ByZT48cD5UbyB2aWV3
+LCB2aXNpdCA8YSBocmVmPSJodHRwczovL3Jldmlldy5nZXJyaXRodWIuaW8vYy9tdWx0aXBhdGgt
+dGNwL21wdGNwX25ldC1uZXh0LysvNDU1MDYzIj5jaGFuZ2UgNDU1MDYzPC9hPi4gVG8gdW5zdWJz
+Y3JpYmUsIG9yIGZvciBoZWxwIHdyaXRpbmcgbWFpbCBmaWx0ZXJzLCB2aXNpdCA8YSBocmVmPSJo
+dHRwczovL3Jldmlldy5nZXJyaXRodWIuaW8vc2V0dGluZ3MiPnNldHRpbmdzPC9hPi48L3A+PGRp
+diBpdGVtc2NvcGUgaXRlbXR5cGU9Imh0dHA6Ly9zY2hlbWEub3JnL0VtYWlsTWVzc2FnZSI+PGRp
+diBpdGVtc2NvcGUgaXRlbXByb3A9ImFjdGlvbiIgaXRlbXR5cGU9Imh0dHA6Ly9zY2hlbWEub3Jn
+L1ZpZXdBY3Rpb24iPjxsaW5rIGl0ZW1wcm9wPSJ1cmwiIGhyZWY9Imh0dHBzOi8vcmV2aWV3Lmdl
+cnJpdGh1Yi5pby9jL211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQvKy80NTUwNjMiLz48bWV0
+YSBpdGVtcHJvcD0ibmFtZSIgY29udGVudD0iVmlldyBDaGFuZ2UiLz48L2Rpdj48L2Rpdj4KCjxk
+aXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1Qcm9qZWN0OiBtdWx0aXBhdGgtdGNwL21w
+dGNwX25ldC1uZXh0IDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQnJh
+bmNoOiBzY3JpcHRzIDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQ2hh
+bmdlLUlkOiBJMTcyNjYxNjczYmI1MTU2ODdjMDc0NzEyODlhODU3ZjgwZTA2YjBjMSA8L2Rpdj4K
+PGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LUNoYW5nZS1OdW1iZXI6IDQ1NTA2MyA8
+L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LVBhdGNoU2V0OiAxIDwvZGl2
+Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtT3duZXI6IE1hdHRoaWV1IEJhZXJ0
+cyAmbHQ7bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5ldCZndDsgPC9kaXY+CjxkaXYgc3R5bGU9
+ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1SZXZpZXdlcjogTWF0IE1hcnRpbmVhdSAmbHQ7bWF0aGV3
+LmoubWFydGluZWF1QGxpbnV4LmludGVsLmNvbSZndDsgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3Bs
+YXk6bm9uZSI+IEdlcnJpdC1NZXNzYWdlVHlwZTogbmV3Y2hhbmdlIDwvZGl2PgoK
+
+--===============8725761921846354197==--
