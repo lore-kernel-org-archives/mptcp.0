@@ -1,62 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============7164365496090575289=="
+Content-Type: multipart/mixed; boundary="===============7429246962487220636=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: selftests: exercise GSO,
- retransmission and reorder code path
-Date: Tue, 21 May 2019 10:49:04 -0700
-Message-ID: <alpine.OSX.2.21.1905210912530.13454@cwhilton-mobl1.amr.corp.intel.com>
-In-Reply-To: 19f6daab-98e1-a4d3-e849-b51511d0960a@tessares.net
+Subject: [MPTCP] [PATCH] mptcp: Add explicit check for protocol version
+Date: Tue, 21 May 2019 11:15:46 -0700
+Message-ID: <20190521181546.2592-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1213
+X-UID: 1214
 
---===============7164365496090575289==
+--===============7429246962487220636==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Currently only MPTCP v0 is supported so ignore v1 MP_CAPABLE option.
 
-On Tue, 21 May 2019, Matthieu Baerts wrote:
+Also, make sure zeros are shifted to the correct position...
 
-> On 21/05/2019 15:55, Paolo Abeni wrote:
->> On Tue, 2019-05-21 at 15:28 +0200, Matthieu Baerts wrote:
->>> On 21/05/2019 12:51, Florian Westphal wrote:
->>>> Thats another option, but I don't have a preference, your change is fi=
-ne
->>>> as-is.
->>>
->>> Paolo, do you want to change something or can I apply this patch?
->>
->> If nobody opposes, I think it can go in as-is, thanks!
->
-> Great! If someone opposes, we can easily revert/modify later!
->
-> Just "squashed" into commit 40e8869bdd0f ("mptcp: selftests:
-> switch to netns+veth based tests")
->
-> - squash: 2707b30453da
-> - signed-off: b23efa13d890
-> - no conflict: /
-> - export commit: fb5407ead32f
->
+Squash to "Handle MPTCP TCP options".
 
-Thanks for the test updates, Paolo.
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/options.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-One thing to note: the packet reordering is only affecting TCP reassembly, =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index c71e40f6f06a..9b9b9c9390c1 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -30,8 +30,11 @@ void mptcp_parse_option(const unsigned char *ptr, int op=
+size,
+ 			break;
+ =
 
-and does not exercise reassembly at the MPTCP layer differently. The =
+ 		pr_debug("MP_CAPABLE");
+-		opt_rx->mptcp.mp_capable =3D 1;
+ 		opt_rx->mptcp.version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
++		if (opt_rx->mptcp.version !=3D 0)
++			break;
++
++		opt_rx->mptcp.mp_capable =3D 1;
+ 		pr_debug("flags=3D%02x", *ptr);
+ 		opt_rx->mptcp.flags =3D *ptr++;
+ 		opt_rx->mptcp.sndr_key =3D get_unaligned_be64(ptr);
+@@ -399,8 +402,8 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
+options *opts)
+ 			len =3D TCPOLEN_MPTCP_MPC_ACK;
+ =
 
-stream is still delivered to the MPTCP layer in-order.
+ 		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) | (len << 16) |
+-			       (MPTCPOPT_MP_CAPABLE << 20) |
+-			       ((MPTCPOPT_VERSION_MASK & 0) << 16) |
++			       (MPTCPOPT_MP_CAPABLE << 12) |
++			       ((MPTCPOPT_VERSION_MASK & 0) << 8) |
+ 			       MPTCP_CAP_HMAC_SHA1);
+ 		put_unaligned_be64(opts->sndr_key, ptr);
+ 		ptr +=3D 2;
+-- =
 
-MPTCP-level reassembly in the prototype implementation does not yet handle =
+2.17.2
 
-out-of-order mappings. That will get built in when updating =
 
-mptcp_recvmsg() for multiple subflows.
-
---
-Mat Martineau
-Intel
-
---===============7164365496090575289==--
+--===============7429246962487220636==--
