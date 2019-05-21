@@ -1,67 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============1602663923729704120=="
+Content-Type: multipart/mixed; boundary="===============7518444328121282025=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [GIT] Sync with net-next: conflict
-Date: Tue, 21 May 2019 16:09:09 +0200
-Message-ID: <19598e54-ed65-a32f-26ae-b2b06193dd58@tessares.net>
-In-Reply-To: f22b9f0c6f2ab53325570a0b2427279c7d04929b.camel@redhat.com
+Date: Tue, 21 May 2019 16:10:50 +0200
+Message-ID: <43510c949ddad0101165e31a7c6b37ad4cd3d1f3.camel@redhat.com>
+In-Reply-To: 19598e54-ed65-a32f-26ae-b2b06193dd58@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1209
+X-UID: 1210
 
---===============1602663923729704120==
+--===============7518444328121282025==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2019-05-21 at 16:09 +0200, Matthieu Baerts wrote:
+> On 21/05/2019 16:03, Paolo Abeni wrote:
+> > On Tue, 2019-05-21 at 14:26 +0200, Matthieu Baerts wrote:
+> > > The commit 8b2e02e94442 (tcp: clean ext on tx recycle) from Paolo was
+> > > conflicting with a new one from upstream:  (tcp: do not
+> > > recycle cloned skbs) from Eric Dumazet.
+> > > =
 
+> > > I simply added the new condition (&& !skb_cloned(skb)). I hope it is
+> > > alright: a73376082e4c6e3c9a48fd887f759ab1e4118477
+> > =
 
-On 21/05/2019 16:03, Paolo Abeni wrote:
-> Hi,
+> > The conflict resolution LGTM, thanks!
+> > =
+
+> > Not sure if the following actually makes any sense, if the merge commit
+> > could be squashed into "tcp: clean ext on tx recycle" that would
+> > =
+
+> Sorry, the commit I mentioned is one from the topgit tree. During the
+> export, it is "squashed" correctly:
 > =
 
-> On Tue, 2019-05-21 at 14:26 +0200, Matthieu Baerts wrote:
->>
->> The commit 8b2e02e94442 (tcp: clean ext on tx recycle) from Paolo was
->> conflicting with a new one from upstream:  (tcp: do not
->> recycle cloned skbs) from Eric Dumazet.
->>
->> I simply added the new condition (&& !skb_cloned(skb)). I hope it is
->> alright: a73376082e4c6e3c9a48fd887f759ab1e4118477
+> https://github.com/multipath-tcp/mptcp_net-next/commit/eddf1c63aa7f382376=
+638ab96082dc773c30eb50
 > =
 
-> The conflict resolution LGTM, thanks!
-> =
+> Is it fine for you?
 
-> Not sure if the following actually makes any sense, if the merge commit
-> could be squashed into "tcp: clean ext on tx recycle" that would
-> simplify/cleanup the git history.
+Yep, perfect, thanks!
 
-Sorry, the commit I mentioned is one from the topgit tree. During the
-export, it is "squashed" correctly:
-
-https://github.com/multipath-tcp/mptcp_net-next/commit/eddf1c63aa7f38237663=
-8ab96082dc773c30eb50
-
-Is it fine for you?
-
-Cheers,
-Matt
-
-> Cheers,
-> =
-
-> Paolo
-> =
+Paolo
 
 
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============1602663923729704120==--
+--===============7518444328121282025==--
