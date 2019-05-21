@@ -1,124 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============8725761921846354197=="
+Content-Type: multipart/mixed; boundary="===============4534864619052969404=="
 MIME-Version: 1.0
-From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:upd-tg: tag export
- branch with date
-Date: Mon, 20 May 2019 08:37:13 +0000
-Message-ID: <gerrit.1558341430000.I172661673bb515687c07471289a857f80e06b0c1@review.gerrithub.io>
+Subject: [MPTCP] [PATCH] mptcp: selftests: exercise GSO,
+ retransmission and reorder code path
+Date: Tue, 21 May 2019 10:41:20 +0200
+Message-ID: <cca394470989de199d076c6ea5667871f5e07b0d.1558427525.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1198
+X-UID: 1199
 
---===============8725761921846354197==
+--===============4534864619052969404==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Mat Martineau,
+This introduces a few artifacts on the virtual network topology
+via the netem scheduler and disabling features on some veth, so
+that we exercise the MTCP stack more.
 
-I'd like you to do a code review. Please visit
-
-    https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/455063
-
-to review the following change.
-
-
-Change subject: ci:upd-tg: tag export branch with date
-......................................................................
-
-ci:upd-tg: tag export branch with date
-
-We might have references to commits from this 'export' branch. But this
-branch is regularly rebuilt. Git GC would them remove these old
-references.
-
-Adding a tag force Github (and other clones) to keep these references.
-All these tags will be like this:
-
-    export/<date>
-
-Note that if working from 'export' is an issue for you because it forces
-you to use 'git rebase --onto', you can also work on top of 'for-review'
-branch: the code will be the same, the git history will not be rewritten
-for this branch.
-
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Change-Id: I172661673bb515687c07471289a857f80e06b0c1
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-M ci/update-tg-tree.sh
-1 file changed, 8 insertions(+), 1 deletion(-)
+notes:
+ - to my surprise, self-tests are still succesfull here, even if
+   some of them take considerably longer
+ - this can be squashed into commit 40e8869bdd0f ("mptcp: selftests:
+ switch to netns+veth based tests")
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index ee478e94d8a2..1ce5c85577fb 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -45,8 +45,10 @@ for i in 1 2 3 4;do
+ 	ip -net ns$i link set lo up
+ done
+ =
 
+-#  ns1            ns2                 ns3             ns4
+-# ns1eth2    ns2eth1 ns2eth3  ns3eth2   ns3eth4   ns4eth3
++#  ns1              ns2                    ns3                     ns4
++# ns1eth2    ns2eth1   ns2eth3      ns3eth2   ns3eth4       ns4eth3
++#                           - drop 1% ->            reorder 25%
++#                           <- TSO off -
+ =
 
-  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
-s/changes/63/455063/1
+ ip link add ns1eth2 netns ns1 type veth peer name ns2eth1 netns ns2
+ ip link add ns2eth3 netns ns2 type veth peer name ns3eth2 netns ns3
+@@ -62,6 +64,7 @@ ip -net ns2 link set ns2eth1 up
+ ip -net ns2 addr add 10.0.2.1/24 dev ns2eth3
+ ip -net ns2 link set ns2eth3 up
+ ip -net ns2 route add default via 10.0.2.2
++tc -net ns2 qdisc add dev ns2eth3 root netem loss random 1
+ ip netns exec ns2 sysctl -q net.ipv4.ip_forward=3D1
+ =
+
+ ip -net ns3 addr add 10.0.2.2/24 dev ns3eth2
+@@ -70,6 +73,8 @@ ip -net ns3 link set ns3eth2 up
+ ip -net ns3 addr add 10.0.3.2/24 dev ns3eth4
+ ip -net ns3 link set ns3eth4 up
+ ip -net ns3 route add default via 10.0.2.1
++tc -net ns3 qdisc add dev ns3eth4 root netem delay 10ms reorder 25% 50% ga=
+p 5
++ip netns exec ns3 ethtook -K ns3eth2 tso off
+ ip netns exec ns3 sysctl -q net.ipv4.ip_forward=3D1
+ =
+
+ ip -net ns4 addr add 10.0.3.1/24 dev ns4eth3
 -- =
 
-To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
-/455063
-To unsubscribe, or for help writing mail filters, visit https://review.gerr=
-ithub.io/settings
+2.20.1
 
-Gerrit-Project: multipath-tcp/mptcp_net-next
-Gerrit-Branch: scripts
-Gerrit-Change-Id: I172661673bb515687c07471289a857f80e06b0c1
-Gerrit-Change-Number: 455063
-Gerrit-PatchSet: 1
-Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Gerrit-Reviewer: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Gerrit-MessageType: newchange
 
---===============8725761921846354197==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PHA+TWF0dGhpZXUgQmFlcnRzIHdvdWxkIGxpa2UgTWF0IE1hcnRpbmVhdSB0byA8c3Ryb25nPnJl
-dmlldzwvc3Ryb25nPiB0aGlzIGNoYW5nZS48L3A+PHA+PGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcu
-Z2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NTA2MyI+Vmll
-dyBDaGFuZ2U8L2E+PC9wPjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3Nw
-YWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5jaTp1cGQtdGc6IHRhZyBleHBvcnQgYnJhbmNo
-IHdpdGggZGF0ZTxicj48YnI+V2UgbWlnaHQgaGF2ZSByZWZlcmVuY2VzIHRvIGNvbW1pdHMgZnJv
-bSB0aGlzICYjMzk7ZXhwb3J0JiMzOTsgYnJhbmNoLiBCdXQgdGhpczxicj5icmFuY2ggaXMgcmVn
-dWxhcmx5IHJlYnVpbHQuIEdpdCBHQyB3b3VsZCB0aGVtIHJlbW92ZSB0aGVzZSBvbGQ8YnI+cmVm
-ZXJlbmNlcy48YnI+PGJyPkFkZGluZyBhIHRhZyBmb3JjZSBHaXRodWIgKGFuZCBvdGhlciBjbG9u
-ZXMpIHRvIGtlZXAgdGhlc2UgcmVmZXJlbmNlcy48YnI+QWxsIHRoZXNlIHRhZ3Mgd2lsbCBiZSBs
-aWtlIHRoaXM6PGJyPjxicj4gICAgZXhwb3J0LyZsdDtkYXRlJmd0Ozxicj48YnI+Tm90ZSB0aGF0
-IGlmIHdvcmtpbmcgZnJvbSAmIzM5O2V4cG9ydCYjMzk7IGlzIGFuIGlzc3VlIGZvciB5b3UgYmVj
-YXVzZSBpdCBmb3JjZXM8YnI+eW91IHRvIHVzZSAmIzM5O2dpdCByZWJhc2UgLS1vbnRvJiMzOTss
-IHlvdSBjYW4gYWxzbyB3b3JrIG9uIHRvcCBvZiAmIzM5O2Zvci1yZXZpZXcmIzM5Ozxicj5icmFu
-Y2g6IHRoZSBjb2RlIHdpbGwgYmUgdGhlIHNhbWUsIHRoZSBnaXQgaGlzdG9yeSB3aWxsIG5vdCBi
-ZSByZXdyaXR0ZW48YnI+Zm9yIHRoaXMgYnJhbmNoLjxicj48YnI+U2lnbmVkLW9mZi1ieTogTWF0
-dGhpZXUgQmFlcnRzICZsdDttYXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0Ozxicj5TdWdn
-ZXN0ZWQtYnk6IE1hdCBNYXJ0aW5lYXUgJmx0O21hdGhldy5qLm1hcnRpbmVhdUBsaW51eC5pbnRl
-bC5jb20mZ3Q7PGJyPkNoYW5nZS1JZDogSTE3MjY2MTY3M2JiNTE1Njg3YzA3NDcxMjg5YTg1N2Y4
-MGUwNmIwYzE8YnI+LS0tPGJyPk0gY2kvdXBkYXRlLXRnLXRyZWUuc2g8YnI+MSBmaWxlIGNoYW5n
-ZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKTxicj48YnI+PC9wcmU+PHByZSBzdHls
-ZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSxtb25vc3BhY2U7IHdoaXRlLXNwYWNlOiBwcmUtd3Jh
-cDsiPmdpdCBwdWxsIHNzaDovL3Jldmlldy5nZXJyaXRodWIuaW86Mjk0MTgvbXVsdGlwYXRoLXRj
-cC9tcHRjcF9uZXQtbmV4dCByZWZzL2NoYW5nZXMvNjMvNDU1MDYzLzE8L3ByZT48cD5UbyB2aWV3
-LCB2aXNpdCA8YSBocmVmPSJodHRwczovL3Jldmlldy5nZXJyaXRodWIuaW8vYy9tdWx0aXBhdGgt
-dGNwL21wdGNwX25ldC1uZXh0LysvNDU1MDYzIj5jaGFuZ2UgNDU1MDYzPC9hPi4gVG8gdW5zdWJz
-Y3JpYmUsIG9yIGZvciBoZWxwIHdyaXRpbmcgbWFpbCBmaWx0ZXJzLCB2aXNpdCA8YSBocmVmPSJo
-dHRwczovL3Jldmlldy5nZXJyaXRodWIuaW8vc2V0dGluZ3MiPnNldHRpbmdzPC9hPi48L3A+PGRp
-diBpdGVtc2NvcGUgaXRlbXR5cGU9Imh0dHA6Ly9zY2hlbWEub3JnL0VtYWlsTWVzc2FnZSI+PGRp
-diBpdGVtc2NvcGUgaXRlbXByb3A9ImFjdGlvbiIgaXRlbXR5cGU9Imh0dHA6Ly9zY2hlbWEub3Jn
-L1ZpZXdBY3Rpb24iPjxsaW5rIGl0ZW1wcm9wPSJ1cmwiIGhyZWY9Imh0dHBzOi8vcmV2aWV3Lmdl
-cnJpdGh1Yi5pby9jL211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQvKy80NTUwNjMiLz48bWV0
-YSBpdGVtcHJvcD0ibmFtZSIgY29udGVudD0iVmlldyBDaGFuZ2UiLz48L2Rpdj48L2Rpdj4KCjxk
-aXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1Qcm9qZWN0OiBtdWx0aXBhdGgtdGNwL21w
-dGNwX25ldC1uZXh0IDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQnJh
-bmNoOiBzY3JpcHRzIDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQ2hh
-bmdlLUlkOiBJMTcyNjYxNjczYmI1MTU2ODdjMDc0NzEyODlhODU3ZjgwZTA2YjBjMSA8L2Rpdj4K
-PGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LUNoYW5nZS1OdW1iZXI6IDQ1NTA2MyA8
-L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LVBhdGNoU2V0OiAxIDwvZGl2
-Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtT3duZXI6IE1hdHRoaWV1IEJhZXJ0
-cyAmbHQ7bWF0dGhpZXUuYmFlcnRzQHRlc3NhcmVzLm5ldCZndDsgPC9kaXY+CjxkaXYgc3R5bGU9
-ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1SZXZpZXdlcjogTWF0IE1hcnRpbmVhdSAmbHQ7bWF0aGV3
-LmoubWFydGluZWF1QGxpbnV4LmludGVsLmNvbSZndDsgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3Bs
-YXk6bm9uZSI+IEdlcnJpdC1NZXNzYWdlVHlwZTogbmV3Y2hhbmdlIDwvZGl2PgoK
-
---===============8725761921846354197==--
+--===============4534864619052969404==--
