@@ -1,61 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============9054405061767618005=="
+Content-Type: multipart/mixed; boundary="===============9157195861312274251=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [GIT] Sync with net-next: conflict
-Date: Tue, 21 May 2019 16:03:02 +0200
-Message-ID: <f22b9f0c6f2ab53325570a0b2427279c7d04929b.camel@redhat.com>
-In-Reply-To: e0fff648-e14c-f815-9a02-4bb37687a6e1@tessares.net
+Subject: Re: [MPTCP] LPC 2019 Call for Microconferences and Refereed-Track
+ Proposals
+Date: Tue, 21 May 2019 16:08:29 +0200
+Message-ID: <87ab01c0f4ee924e1e20684d150c4eed6f0f41ac.camel@redhat.com>
+In-Reply-To: 9350bded-3576-0feb-9860-3ba56802aed2@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1207
+X-UID: 1208
 
---===============9054405061767618005==
+--===============9157195861312274251==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, 2019-05-21 at 13:44 +0200, Matthieu Baerts wrote:
+> A few weeks or months ago, we talked about (maybe) participating to LPC
+> 2019. The Linux Plumbers Conference for 2019 has been set for September
+> 9-11 at the Corinthia Hotel in Lisbon, Portugal.
 
-On Tue, 2019-05-21 at 14:26 +0200, Matthieu Baerts wrote:
-> diff --cc include/net/sock.h
-> index fd982f976925,0680fa988497..000000000000
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@@ -1473,8 -1473,7 +1473,12 @@@ static inline void sk_wmem_free_skb(str
->         sock_set_flag(sk, SOCK_QUEUE_SHRUNK);
->         sk->sk_wmem_queued -=3D skb->truesize;
->         sk_mem_uncharge(sk, skb->truesize);
-> ++<<<<<<< t/tcp-clean-ext-on-tx-recycle
->  +      if (!sk->sk_tx_sb_cache) {
->  +              skb_ext_clear(skb);
-> ++=3D=3D=3D=3D=3D=3D=3D
-> +       if (!sk->sk_tx_skb_cache && !skb_cloned(skb)) {
-> ++>>>>>>> top-bases/t/tcp-clean-ext-on-tx-recycle
->                 skb_zcopy_clear(skb, true);
->                 sk->sk_tx_skb_cache =3D skb;
->                 return;
+Indeed I agree that an MPTCP talk/paper there would be very nice.
+
+> One of my colleague just pointed me out that the Call for Proposals is
+> open and the submission deadline is scheduled for the 23rd of May at
+> 05:30 (my time I guess). Less than 48h from now then.
 > =
 
-> =
+> https://www.linuxplumbersconf.org/event/4/abstracts/
 
-> The commit 8b2e02e94442 (tcp: clean ext on tx recycle) from Paolo was
-> conflicting with a new one from upstream:  (tcp: do not
-> recycle cloned skbs) from Eric Dumazet.
-> =
-
-> I simply added the new condition (&& !skb_cloned(skb)). I hope it is
-> alright: a73376082e4c6e3c9a48fd887f759ab1e4118477
-
-The conflict resolution LGTM, thanks!
-
-Not sure if the following actually makes any sense, if the merge commit
-could be squashed into "tcp: clean ext on tx recycle" that would
-simplify/cleanup the git history.
+AFACIK the networking CfP is not yet out _and_ there will be a
+networking CfP. MPTCP could fit that too, so there is almost for sure a
+little more time (even if an undefined amount;)
 
 Cheers,
 
 Paolo
 
 
---===============9054405061767618005==--
+--===============9157195861312274251==--
