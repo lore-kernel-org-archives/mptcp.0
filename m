@@ -1,52 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============7518444328121282025=="
+Content-Type: multipart/mixed; boundary="===============5848291163374396451=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [GIT] Sync with net-next: conflict
-Date: Tue, 21 May 2019 16:10:50 +0200
-Message-ID: <43510c949ddad0101165e31a7c6b37ad4cd3d1f3.camel@redhat.com>
-In-Reply-To: 19598e54-ed65-a32f-26ae-b2b06193dd58@tessares.net
+Subject: Re: [MPTCP] LPC 2019 Call for Microconferences and Refereed-Track
+ Proposals
+Date: Tue, 21 May 2019 16:22:57 +0200
+Message-ID: <45d2ff9f-0555-1079-d6fc-7020e99ab303@tessares.net>
+In-Reply-To: 87ab01c0f4ee924e1e20684d150c4eed6f0f41ac.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1210
+X-UID: 1211
 
---===============7518444328121282025==
+--===============5848291163374396451==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-05-21 at 16:09 +0200, Matthieu Baerts wrote:
-> On 21/05/2019 16:03, Paolo Abeni wrote:
-> > On Tue, 2019-05-21 at 14:26 +0200, Matthieu Baerts wrote:
-> > > The commit 8b2e02e94442 (tcp: clean ext on tx recycle) from Paolo was
-> > > conflicting with a new one from upstream:  (tcp: do not
-> > > recycle cloned skbs) from Eric Dumazet.
-> > > =
+Hi Paolo,
 
-> > > I simply added the new condition (&& !skb_cloned(skb)). I hope it is
-> > > alright: a73376082e4c6e3c9a48fd887f759ab1e4118477
-> > =
-
-> > The conflict resolution LGTM, thanks!
-> > =
-
-> > Not sure if the following actually makes any sense, if the merge commit
-> > could be squashed into "tcp: clean ext on tx recycle" that would
-> > =
-
-> Sorry, the commit I mentioned is one from the topgit tree. During the
-> export, it is "squashed" correctly:
+On 21/05/2019 16:08, Paolo Abeni wrote:
+> On Tue, 2019-05-21 at 13:44 +0200, Matthieu Baerts wrote:
+>> A few weeks or months ago, we talked about (maybe) participating to LPC
+>> 2019. The Linux Plumbers Conference for 2019 has been set for September
+>> 9-11 at the Corinthia Hotel in Lisbon, Portugal.
 > =
 
-> https://github.com/multipath-tcp/mptcp_net-next/commit/eddf1c63aa7f382376=
-638ab96082dc773c30eb50
+> Indeed I agree that an MPTCP talk/paper there would be very nice.
+
+Great! Thank you for your support!
+
+>> One of my colleague just pointed me out that the Call for Proposals is
+>> open and the submission deadline is scheduled for the 23rd of May at
+>> 05:30 (my time I guess). Less than 48h from now then.
+>>
+>> https://www.linuxplumbersconf.org/event/4/abstracts/
 > =
 
-> Is it fine for you?
+> AFACIK the networking CfP is not yet out _and_ there will be a
+> networking CfP. MPTCP could fit that too, so there is almost for sure a
+> little more time (even if an undefined amount;)
 
-Yep, perfect, thanks!
+Good point!
 
-Paolo
+Just found this on Twitter that seems to confirm that:
+https://twitter.com/davem_dokebi/status/1130579316444549120
+
+> Assembling the most bad ass technical committee for the networking
+> track of LPC 2019 in Lisbon, Portugal. You won't want to miss this.
+> #lpc2019
+
+Followed by:
+
+> That track hasn't done their CFP either... Coincidence?!?!
+
+So the current CfP will not accept any networking talks, no need to send
+anything now, right?
+
+Cheers,
+Matt
+
+> Cheers,
+> =
+
+> Paolo
+> =
 
 
---===============7518444328121282025==--
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+--===============5848291163374396451==--
