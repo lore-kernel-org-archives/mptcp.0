@@ -1,79 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============3261834565266291335=="
+Content-Type: multipart/mixed; boundary="===============2342820172789772217=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] LPC 2019 Call for Microconferences and Refereed-Track
- Proposals
-Date: Tue, 21 May 2019 13:44:10 +0200
-Message-ID: <9350bded-3576-0feb-9860-3ba56802aed2@tessares.net>
+Subject: [MPTCP] [GIT] Sync with net-next: conflict
+Date: Tue, 21 May 2019 14:26:00 +0200
+Message-ID: <e0fff648-e14c-f815-9a02-4bb37687a6e1@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1203
+X-UID: 1204
 
---===============3261834565266291335==
+--===============2342820172789772217==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+Hello,
 
-A few weeks or months ago, we talked about (maybe) participating to LPC
-2019. The Linux Plumbers Conference for 2019 has been set for September
-9-11 at the Corinthia Hotel in Lisbon, Portugal.
+With the last sync with net-next, a conflict was found:
 
-One of my colleague just pointed me out that the Call for Proposals is
-open and the submission deadline is scheduled for the 23rd of May at
-05:30 (my time I guess). Less than 48h from now then.
 
-https://www.linuxplumbersconf.org/event/4/abstracts/
+diff --cc include/net/sock.h
+index fd982f976925,0680fa988497..000000000000
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@@ -1473,8 -1473,7 +1473,12 @@@ static inline void sk_wmem_free_skb(str
+        sock_set_flag(sk, SOCK_QUEUE_SHRUNK);
+        sk->sk_wmem_queued -=3D skb->truesize;
+        sk_mem_uncharge(sk, skb->truesize);
+++<<<<<<< t/tcp-clean-ext-on-tx-recycle
+ +      if (!sk->sk_tx_skb_cache) {
+ +              skb_ext_clear(skb);
+++=3D=3D=3D=3D=3D=3D=3D
++       if (!sk->sk_tx_skb_cache && !skb_cloned(skb)) {
+++>>>>>>> top-bases/t/tcp-clean-ext-on-tx-recycle
+                skb_zcopy_clear(skb, true);
+                sk->sk_tx_skb_cache =3D skb;
+                return;
 
-As already discussed, I think our project here would fit well with the
-theme:
 
-> Refereed track presentations are 45 minutes in length (which includes
-> time for questions and discussion) and should focus on a specific
-> aspect of the "plumbing" in the Linux system. Examples of Linux
-> plumbing include core kernel subsystems, core libraries, windowing
-> systems, management tools, device support, container run-times, media
-> creation/playback, and so on. The best presentations are not about
-> finished work, but rather problems, proposals, or proof-of-concept
-> solutions that require face-to-face discussions and debate.
+The commit 8b2e02e94442 (tcp: clean ext on tx recycle) from Paolo was
+conflicting with a new one from upstream: 858f50174467 (tcp: do not
+recycle cloned skbs) from Eric Dumazet.
 
-Do you think it could be possible to participate?
+I simply added the new condition (&& !skb_cloned(skb)). I hope it is
+alright: a73376082e4c6e3c9a48fd887f759ab1e4118477
 
-If yes, we will need to send an abstract (max 20k words, no minimum)
-tomorrow :)
-
-I think it is doable and I can help writing that tomorrow.
-
-Here are more info about the submission instructions:
-
-> To submit a refereed talk, please fill the Title field and Content
-> Field (this is the abstract). To enter Authors, you can either select
-> an author already registered with the website (using the search
-> button) or enter an author manually. You can add multiple authors. You
-> must choose "Refereed Talk" for the "Track" field.
-
-They also have "Microconference" but I don't think it is for us here:
-
-> A Microconference is a collection of collaborative sessions focused on
-> problems in a particular area of the Linux plumbing, which includes
-> the kernel, libraries, utilities, UI, and so forth, but can also focus
-> on cross-cutting concerns such as security, scaling, energy
-> efficiency, or a particular use case. Good microconferences result in
-> solutions to these problems and concerns, while the best
-> microconferences result in patches that implement those solutions.
-
-Feel free to react if it is a good idea or if it is not, if you have
-already participated to one previous LPC, if you have already planned to
-participate, etc.
-
-I think it is a good idea and I am ready to help but I cannot really do
-that alone or if you say it's a bad idea of course ;-)
+The new sync has just been pushed.
 
 Cheers,
 Matt
-
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -82,4 +57,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============3261834565266291335==--
+--===============2342820172789772217==--
