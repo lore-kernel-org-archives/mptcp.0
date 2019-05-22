@@ -1,40 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============3377836822252039324=="
+Content-Type: multipart/mixed; boundary="===============0921777520571432841=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 23 May 2019 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 22 May 2019 18:47:38 +0200
-Message-ID: <32078cf8-0144-3729-9e01-d31762063be9@tessares.net>
+Subject: [MPTCP] [PATCH mptcp] net: mptcp: don't leak 'slab' and 'slab_name'
+ on exit
+Date: Wed, 22 May 2019 22:47:57 +0200
+Message-ID: <6d0d38d80ff98b971af747a51f69bbb7748cf8dd.1558555611.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1220
+X-UID: 1221
 
---===============3377836822252039324==
+--===============0921777520571432841==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+fix leak of subflows' slab and slab_name in the (rare) case where
+proto_register(mptcp_prot, 1) returns -ENOBUFS.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+Fixes: e203b1359cf77 ("mptcp: Associate MPTCP context with TCP socket")
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/subflow.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190523
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index bc8e1a0658ec..f93c6d4d7172 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -318,6 +318,8 @@ int subflow_init(void)
+ void subflow_exit(void)
+ {
+ 	tcp_unregister_ulp(&subflow_ulp_ops);
++	kmem_cache_destroy(subflow_request_sock_ops.slab);
++	kfree(subflow_request_sock_ops.slab_name);
+ }
+ =
 
-Feel free to add/modify topics!
-
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
-
-Speak to you tomorrow!
-Matthieu
+ MODULE_LICENSE("GPL");
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.20.1
 
---===============3377836822252039324==--
+
+--===============0921777520571432841==--
