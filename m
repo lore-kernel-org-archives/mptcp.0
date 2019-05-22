@@ -1,46 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============0921777520571432841=="
+Content-Type: multipart/mixed; boundary="===============9168444942569675447=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp] net: mptcp: don't leak 'slab' and 'slab_name'
- on exit
-Date: Wed, 22 May 2019 22:47:57 +0200
-Message-ID: <6d0d38d80ff98b971af747a51f69bbb7748cf8dd.1558555611.git.dcaratti@redhat.com>
+Subject: Re: [MPTCP] Weekly meeting - 23 May 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 22 May 2019 22:16:03 +0100
+Message-ID: <20190522211603.GB41806@MacBook-Pro-64.local>
+In-Reply-To: 32078cf8-0144-3729-9e01-d31762063be9@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1221
+X-UID: 1222
 
---===============0921777520571432841==
+--===============9168444942569675447==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-fix leak of subflows' slab and slab_name in the (rare) case where
-proto_register(mptcp_prot, 1) returns -ENOBUFS.
+Hello,
 
-Fixes: e203b1359cf77 ("mptcp: Associate MPTCP context with TCP socket")
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/subflow.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index bc8e1a0658ec..f93c6d4d7172 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -318,6 +318,8 @@ int subflow_init(void)
- void subflow_exit(void)
- {
- 	tcp_unregister_ulp(&subflow_ulp_ops);
-+	kmem_cache_destroy(subflow_request_sock_ops.slab);
-+	kfree(subflow_request_sock_ops.slab_name);
- }
- =
-
- MODULE_LICENSE("GPL");
--- =
-
-2.20.1
+I won't be able to attend this week.
 
 
---===============0921777520571432841==--
+Cheers,
+Christoph
+
+On 22/05/19 - 18:47:38, Matthieu Baerts wrote:
+> Hello everybody!
+> =
+
+> Our public MPTCP upstreaming weekly web conference is scheduled for
+> tomorrow.
+> =
+
+> The list of topics is available here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20190523
+> =
+
+> Feel free to add/modify topics!
+> =
+
+> Anybody can join the meeting using Google Meet website/app/phone:
+> https://meet.google.com/edk-rkrk-vaj
+> =
+
+> Speak to you tomorrow!
+> Matthieu
+> -- =
+
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+
+--===============9168444942569675447==--
