@@ -1,42 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============8680775450116282739=="
+Content-Type: multipart/mixed; boundary="===============6109252253842534682=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH mptcp] net: mptcp: don't leak 'slab' and
- 'slab_name' on exit
-Date: Thu, 23 May 2019 14:03:28 +0200
-Message-ID: <ed9e82f7102cf723ed7791071573d6a28616814a.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1905221405110.28292@cwhilton-mobl1.amr.corp.intel.com
+Subject: Re: [MPTCP] Weekly meeting - 23 May 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Thu, 23 May 2019 14:37:58 +0200
+Message-ID: <CAKuKrB=VgWNsYdsz9xe3uKFYApeYN3ZzxkKNM4cTzX-7e0pXSA@mail.gmail.com>
+In-Reply-To: 20190522211603.GB41806@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 1230
+X-UID: 1231
 
---===============8680775450116282739==
+--===============6109252253842534682==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-hello Mat, thanks for looking at this!
+Hi Christoph,
 
-On Wed, 2019-05-22 at 14:57 -0700, Mat Martineau wrote:
-> On Wed, 22 May 2019, Davide Caratti wrote:
-> =
+On Wed, May 22, 2019 at 11:16 PM Christoph Paasch <cpaasch(a)apple.com> wro=
+te:
+>
+> Hello,
+>
+> I won't be able to attend this week.
 
-> Looking at where slab_name is allocated, kmem_cache_create() can take a =
+Thank you for letting us know!
 
-> pointer to an rodata string. If subflow_request_sock_ops.slab_name were =
+Cheers,
+Matt
 
-> set using a string literal instead of kasprintf(), we would save a couple =
+>
+>
+> Cheers,
+> Christoph
+>
+> On 22/05/19 - 18:47:38, Matthieu Baerts wrote:
+> > Hello everybody!
+> >
+> > Our public MPTCP upstreaming weekly web conference is scheduled for
+> > tomorrow.
+> >
+> > The list of topics is available here:
+> > https://annuel2.framapad.org/p/mptcp_upstreaming_20190523
+> >
+> > Feel free to add/modify topics!
+> >
+> > Anybody can join the meeting using Google Meet website/app/phone:
+> > https://meet.google.com/edk-rkrk-vaj
+> >
+> > Speak to you tomorrow!
+> > Matthieu
+> > --
+> > Matthieu Baerts | R&D Engineer
+> > matthieu.baerts(a)tessares.net
+> > Tessares SA | Hybrid Access Solutions
+> > www.tessares.net
+> > 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> > _______________________________________________
+> > mptcp mailing list
+> > mptcp(a)lists.01.org
+> > https://lists.01.org/mailman/listinfo/mptcp
 
-> of unnecessary allocations the new kfree() would not be needed.
-
-you are right, I will send a v2 in short time.
-
-regards,
 -- =
 
-davide
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
-
---===============8680775450116282739==--
+--===============6109252253842534682==--
