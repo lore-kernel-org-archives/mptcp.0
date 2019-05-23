@@ -1,58 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============0930964545812431727=="
+Content-Type: multipart/mixed; boundary="===============9022605489755837229=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 mptcp] mptcp: switch sublist to mptcp socket
- lock protection
-Date: Thu, 23 May 2019 19:20:31 +0200
-Message-ID: <77df80d334f48ec7cc44239a6fbbea15cd2b5675.camel@redhat.com>
-In-Reply-To: 20190522100424.20249-1-fw@strlen.de
+Subject: Re: [MPTCP] [PATCH mptcp v2] net: mptcp: don't leak 'slab' and
+ 'slab_name' on exit
+Date: Thu, 23 May 2019 15:26:15 -0700
+Message-ID: <alpine.OSX.2.21.1905231525190.41618@mjmartin-mac01.local>
+In-Reply-To: c0a1d64bcfa56d3c2942c7ae182acfb43dbf1d9b.1558628033.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1235
+X-UID: 1236
 
---===============0930964545812431727==
+--===============9022605489755837229==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-05-22 at 12:04 +0200, Florian Westphal wrote:
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 9a98c8e0c996..27f09ee9eaf1 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
 
-[...]
+On Thu, 23 May 2019, Davide Caratti wrote:
 
-> @@ -765,14 +751,34 @@ void mptcp_finish_connect(struct sock *sk, int mp_c=
-apable)
->  	if (mp_capable) {
->  		u64 ack_seq;
->  =
+> fix leak of subflows' slab and slab_name in the (rare) case where
+> proto_register(mptcp_prot, 1) returns -ENOBUFS.
+>
+> changes since v1:
+> - use string literal for slab_name rather than allocating it with
+>   kasprintf(), thanks to Mat Martineau
 
-> +		/* sk (new subflow socket) is already locked, but we need
-> +		 * to lock the parent (mptcp) socket now to add the tcp socket
-> +		 * to the subflow list.
-> +		 *
-> +		 * From lockdep point of view, this creates an ABBA type
-> +		 * deadlock: Normally (sendmsg, recvmsg, ..), we lock the mptcp
-> +		 * socket, then acquire a subflow lock.
-> +		 * Here we do the reverse: "subflow lock, then mptcp lock".
-> +		 *
-> +		 * Its alright to do this here, because this subflow is not yet
-> +		 * on the mptcp sockets subflow list.
-> +		 *
-> +		 * IOW, if another CPU has this mptcp socket locked, it cannot
-> +		 * acquire this particular subflow, because subflow->sk isn't
-> +		 * on msk->conn_list.
-> +		 */
-> +		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+Ok, patch looks good!
 
-For the record: I had some doubts about the above, as I think this code
-should be in BH context and lock_sock_nested() could sleep, but
-CONFIG_DEBUG_ATOMIC_SLEEP=3Dy did not complain about the above.
-
-Paolo
+Mat
 
 
---===============0930964545812431727==--
+>
+> Fixes: e203b1359cf77 ("mptcp: Associate MPTCP context with TCP socket")
+> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> ---
+> net/mptcp/subflow.c | 13 +++----------
+> 1 file changed, 3 insertions(+), 10 deletions(-)
+>
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index bc8e1a0658ec..80784443d1dd 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -271,23 +271,15 @@ static struct tcp_ulp_ops subflow_ulp_ops __read_mo=
+stly =3D {
+> static int subflow_ops_init(struct request_sock_ops *subflow_ops)
+> {
+> 	subflow_ops->obj_size =3D sizeof(struct subflow_request_sock);
+> -	subflow_ops->slab_name =3D NULL;
+> -	subflow_ops->slab =3D NULL;
+> -
+> -	subflow_ops->slab_name =3D kasprintf(GFP_KERNEL, "request_sock_subflow"=
+);
+> -	if (!subflow_ops->slab_name)
+> -		return -ENOMEM;
+> +	subflow_ops->slab_name =3D "request_sock_subflow";
+>
+> 	subflow_ops->slab =3D kmem_cache_create(subflow_ops->slab_name,
+> 					      subflow_ops->obj_size, 0,
+> 					      SLAB_ACCOUNT |
+> 					      SLAB_TYPESAFE_BY_RCU,
+> 					      NULL);
+> -
+> -	if (!subflow_ops->slab) {
+> -		kfree(subflow_ops->slab_name);
+> +	if (!subflow_ops->slab)
+> 		return -ENOMEM;
+> -	}
+>
+> 	subflow_ops->destructor =3D subflow_req_destructor;
+>
+> @@ -318,6 +310,7 @@ int subflow_init(void)
+> void subflow_exit(void)
+> {
+> 	tcp_unregister_ulp(&subflow_ulp_ops);
+> +	kmem_cache_destroy(subflow_request_sock_ops.slab);
+> }
+>
+> MODULE_LICENSE("GPL");
+> -- =
+
+> 2.20.1
+>
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+>
+
+--
+Mat Martineau
+Intel
+
+--===============9022605489755837229==--
