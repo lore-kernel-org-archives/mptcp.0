@@ -1,69 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============5383593216243581581=="
+Content-Type: multipart/mixed; boundary="===============3945457272165916064=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH mptcp] net: mptcp: don't leak 'slab' and
- 'slab_name' on exit
-Date: Wed, 22 May 2019 14:57:19 -0700
-Message-ID: <alpine.OSX.2.21.1905221405110.28292@cwhilton-mobl1.amr.corp.intel.com>
-In-Reply-To: 6d0d38d80ff98b971af747a51f69bbb7748cf8dd.1558555611.git.dcaratti@redhat.com
+Subject: Re: [MPTCP] [RFC 1/3] mptcp: Slightly refactor
+ mptcp_established_options_xxx()
+Date: Thu, 23 May 2019 11:00:00 +0200
+Message-ID: <2c913f4b58de8dd723f281226eac7741b8db2c42.camel@redhat.com>
+In-Reply-To: 20190522213825.4057-2-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1227
+X-UID: 1228
 
---===============5383593216243581581==
+--===============3945457272165916064==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-On Wed, 22 May 2019, Davide Caratti wrote:
+Thank you for doing this and sharing the code early, very appreciated!
 
-> fix leak of subflows' slab and slab_name in the (rare) case where
-> proto_register(mptcp_prot, 1) returns -ENOBUFS.
+On Wed, 2019-05-22 at 14:38 -0700, Peter Krystad wrote:
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index 1cd915890ce5..68a2311b56d4 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -797,20 +797,20 @@ static unsigned int tcp_established_options(struct =
+sock *sk, struct sk_buff *skb
+>  		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
+>  		unsigned int opt_size;
+>  =
 
-Thanks for fixing these leaks, Davide. One comment below:
+> -		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
+> -			if (remaining >=3D opt_size) {
+> -				opts->options |=3D OPTION_MPTCP;
+> -				size +=3D opt_size;
+> -			}
+> -		} else {
+> -			unsigned int dss_size;
+> +		if ((sk, skb, &opt_size,
+> +					      remaining, &opts->mptcp)) {
+> +			opts->options |=3D OPTION_MPTCP;
+> +			size +=3D opt_size;
+> +			remaining -=3D opt_size;
+> +		}
+> +
+> +		if (mptcp_established_options_dss(sk, skb, &opt_size,
+> +						  remaining, &opts->mptcp)) {
+> +			opts->options |=3D OPTION_MPTCP;
+> +			size +=3D opt_size;
+> +			remaining -=3D opt_size;
+> +		}
+>  =
 
->
-> Fixes: e203b1359cf77 ("mptcp: Associate MPTCP context with TCP socket")
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> ---
-> net/mptcp/subflow.c | 2 ++
-> 1 file changed, 2 insertions(+)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index bc8e1a0658ec..f93c6d4d7172 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -318,6 +318,8 @@ int subflow_init(void)
-> void subflow_exit(void)
-> {
-> 	tcp_unregister_ulp(&subflow_ulp_ops);
-> +	kmem_cache_destroy(subflow_request_sock_ops.slab);
-> +	kfree(subflow_request_sock_ops.slab_name);
-
-Looking at where slab_name is allocated, kmem_cache_create() can take a =
-
-pointer to an rodata string. If subflow_request_sock_ops.slab_name were =
-
-set using a string literal instead of kasprintf(), we would save a couple =
-
-of unnecessary allocations the new kfree() would not be needed.
+> -			if (mptcp_established_options_dss(sk, skb, &dss_size,
+> -							  remaining,
+> -							  &opts->mptcp)) {
+> -				opts->options |=3D OPTION_MPTCP;
+> -				size +=3D dss_size;
+> -			}
+>  		}
+>  	}
+> =
 
 
-Mat
+[Not strictly related to MP_JOIN] I think it could be possibly cleaner
+to expose to the TCP code a single mptcp_established_option() hook and
+handle there all the relevant cases ('plain', _dss() _addr() added by
+the next patch).
+
+The mptcp code should not change much, and possibly it would remove a
+bunch of duplicate checks (about subflow->mp_capable).
+
+Cheers,
+
+Paolo
 
 
-> }
->
-> MODULE_LICENSE("GPL");
-> -- =
-
-> 2.20.1
->
-
---
-Mat Martineau
-Intel
-
---===============5383593216243581581==--
+--===============3945457272165916064==--
