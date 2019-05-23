@@ -1,80 +1,126 @@
-Content-Type: multipart/mixed; boundary="===============3945457272165916064=="
+Content-Type: multipart/mixed; boundary="===============5798993862726899960=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 1/3] mptcp: Slightly refactor
- mptcp_established_options_xxx()
-Date: Thu, 23 May 2019 11:00:00 +0200
-Message-ID: <2c913f4b58de8dd723f281226eac7741b8db2c42.camel@redhat.com>
-In-Reply-To: 20190522213825.4057-2-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [RFC 3/3] mptcp: Add handling of incoming MP_JOIN requests
+Date: Thu, 23 May 2019 11:34:48 +0200
+Message-ID: <d128b17f0b507dca875f510eb257ee101422178a.camel@redhat.com>
+In-Reply-To: 20190522213825.4057-4-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1228
+X-UID: 1229
 
---===============3945457272165916064==
+--===============5798993862726899960==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Thank you for doing this and sharing the code early, very appreciated!
-
 On Wed, 2019-05-22 at 14:38 -0700, Peter Krystad wrote:
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index 1cd915890ce5..68a2311b56d4 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -797,20 +797,20 @@ static unsigned int tcp_established_options(struct =
-sock *sk, struct sk_buff *skb
->  		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
->  		unsigned int opt_size;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 6437434a7bd7..dc4ba418c963 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -45,24 +45,55 @@ void mptcp_parse_option(const unsigned char *ptr, int=
+ opsize,
+>  		break;
 >  =
 
-> -		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
-> -			if (remaining >=3D opt_size) {
-> -				opts->options |=3D OPTION_MPTCP;
-> -				size +=3D opt_size;
-> -			}
-> -		} else {
-> -			unsigned int dss_size;
-> +		if ((sk, skb, &opt_size,
-> +					      remaining, &opts->mptcp)) {
-> +			opts->options |=3D OPTION_MPTCP;
-> +			size +=3D opt_size;
-> +			remaining -=3D opt_size;
-> +		}
+>  	/* MPTCPOPT_MP_JOIN
+> -	 *
+>  	 * Initial SYN
+>  	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
+>  	 * 1: Address ID
+>  	 * 2-5: Receiver token
+>  	 * 6-9: Sender random number
+> -	 *
+>  	 * SYN/ACK response
+>  	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
+>  	 * 1: Address ID
+>  	 * 2-9: Sender truncated HMAC
+>  	 * 10-13: Sender random number
+> -	 *
+>  	 * Third ACK
+>  	 * 0: 4MSB=3Dsubtype, 0000
+>  	 * 1: 0 (Reserved)
+>  	 * 2-21: Sender HMAC
+>  	 */
+> +	case MPTCPOPT_MP_JOIN:
+> +		pr_debug("MP_JOIN");
+> +		opt_rx->mptcp.mp_join =3D 1;
+> +		if (opsize =3D=3D TCPOLEN_MPTCP_MPJ_SYN) {
+> +			opt_rx->mptcp.backup =3D *ptr++ & MPTCPOPT_BACKUP;
+> +			pr_debug("backup=3D%u", opt_rx->mptcp.backup);
+> +			opt_rx->mptcp.address_id =3D *ptr++;
+> +			pr_debug("address_id=3D%u", opt_rx->mptcp.address_id);
+> +			opt_rx->mptcp.token =3D get_unaligned_be32(ptr);
+> +			pr_debug("token=3D%u", opt_rx->mptcp.token);
+> +			ptr +=3D 4;
+> +			opt_rx->mptcp.nonce =3D get_unaligned_be32(ptr);
+> +			pr_debug("nonce=3D%u", opt_rx->mptcp.nonce);
+> +			ptr +=3D 4;
+
+Very minor note here: when I enable debugging on MPTCP, I'm flooded
+with possibly too many messages and it's sometime difficult for me to
+find the useful information.
+
+I think using a single pr_debug() with all the relevant info (nonce,
+token, address, backup) would help.
+
+The same applies to others places below, too.
+
+[...]
+> @@ -151,6 +171,18 @@ static struct sock *subflow_syn_recv_sock(const stru=
+ct sock *sk,
+>  			child =3D NULL;
+>  		} else if (ctx->mp_capable) {
+>  			token_new_accept(child);
+> +		} else if (ctx->mp_join) {
+> +			if (token_new_join(child)) {
+> +				inet_sk_set_state(child, TCP_CLOSE);
+> +				sock_set_flag(child, SOCK_DEAD);
+> +				inet_csk_destroy_sock(child);
+> +				child =3D NULL;
+
+There is a very similar block of code a few lines above. I think we can
+unify them in an error path reached via a 'goto' statement.
+
+> +			} else {
+> +				mptcp_finish_join(ctx->conn, child);
+> +			}
+> +		} else {
+> +			ctx->mp_capable =3D 0;
+> +			ctx->mp_join =3D 0;
+
+Why do we need to clear mp_capable and mp_join here ?
+
+[...]
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index 7f1cec957fa8..d4957deabcfd 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -55,6 +55,15 @@ static bool find_token(u32 token)
+>  	return (used !=3D NULL);
+>  }
+>  =
+
+> +static struct sock *lookup_token(u32 token)
+> +{
+> +	void *conn;
 > +
-> +		if (mptcp_established_options_dss(sk, skb, &opt_size,
-> +						  remaining, &opts->mptcp)) {
-> +			opts->options |=3D OPTION_MPTCP;
-> +			size +=3D opt_size;
-> +			remaining -=3D opt_size;
-> +		}
->  =
+> +	pr_debug("token=3D%u", token);
+> +	conn =3D radix_tree_lookup(&token_tree, token);
+> +	return (struct sock *) conn;
+> +}
+> +
 
-> -			if (mptcp_established_options_dss(sk, skb, &dss_size,
-> -							  remaining,
-> -							  &opts->mptcp)) {
-> -				opts->options |=3D OPTION_MPTCP;
-> -				size +=3D dss_size;
-> -			}
->  		}
->  	}
-> =
+Possibly out of the scope for this patch, but don't we need to take in
+account the netns, too, while doing the token lookup?
 
-
-[Not strictly related to MP_JOIN] I think it could be possibly cleaner
-to expose to the TCP code a single mptcp_established_option() hook and
-handle there all the relevant cases ('plain', _dss() _addr() added by
-the next patch).
-
-The mptcp code should not change much, and possibly it would remove a
-bunch of duplicate checks (about subflow->mp_capable).
-
-Cheers,
+Thanks,
 
 Paolo
 
 
---===============3945457272165916064==--
+--===============5798993862726899960==--
