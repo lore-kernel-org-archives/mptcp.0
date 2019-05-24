@@ -1,87 +1,543 @@
-Content-Type: multipart/mixed; boundary="===============8363160736611952605=="
+Content-Type: multipart/mixed; boundary="===============0572568530652894533=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 mptcp] mptcp: switch sublist to mptcp socket
- lock protection
-Date: Fri, 24 May 2019 15:47:13 +0200
-Message-ID: <714994315fda216c566d97e176cce14ebfc79c1e.camel@redhat.com>
-In-Reply-To: 20190524133939.peqnek4lrfwvkgjb@breakpoint.cc
+Subject: [MPTCP] [PATCH mptcp v3] mptcp: switch sublist to mptcp socket lock
+ protection
+Date: Fri, 24 May 2019 16:57:53 +0200
+Message-ID: <20190524145753.20219-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 1239
+X-UID: 1240
 
---===============8363160736611952605==
+--===============0572568530652894533==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-05-24 at 15:39 +0200, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Wed, 2019-05-22 at 12:04 +0200, Florian Westphal wrote:
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index 9a98c8e0c996..27f09ee9eaf1 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > =
+The mptcp sublist is currently guarded by rcu, but this comes with
+several artifacts that make little sense.
 
-> > [...]
-> > =
+1. There is a synchronize_rcu after stealing the subflow list on
+   each mptcp socket close.
 
-> > > @@ -765,14 +751,34 @@ void mptcp_finish_connect(struct sock *sk, int =
-mp_capable)
-> > >  	if (mp_capable) {
-> > >  		u64 ack_seq;
-> > >  =
+   synchronize_rcu() is a very expensive call, and should not be
+   needed.
 
-> > > +		/* sk (new subflow socket) is already locked, but we need
-> > > +		 * to lock the parent (mptcp) socket now to add the tcp socket
-> > > +		 * to the subflow list.
-> > > +		 *
-> > > +		 * From lockdep point of view, this creates an ABBA type
-> > > +		 * deadlock: Normally (sendmsg, recvmsg, ..), we lock the mptcp
-> > > +		 * socket, then acquire a subflow lock.
-> > > +		 * Here we do the reverse: "subflow lock, then mptcp lock".
-> > > +		 *
-> > > +		 * Its alright to do this here, because this subflow is not yet
-> > > +		 * on the mptcp sockets subflow list.
-> > > +		 *
-> > > +		 * IOW, if another CPU has this mptcp socket locked, it cannot
-> > > +		 * acquire this particular subflow, because subflow->sk isn't
-> > > +		 * on msk->conn_list.
-> > > +		 */
-> > > +		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
-> > =
+2. There is a extra spinlock to guard the list, ey we can't use
+   the lock in some cases because we need to call functions that
+   might sleep.
 
-> > For the record: I had some doubts about the above, as I think this code
-> > should be in BH context and lock_sock_nested() could sleep, but
-> > CONFIG_DEBUG_ATOMIC_SLEEP=3Dy did not complain about the above.
-> =
+3. There is a 'mptcp_subflow_hold()' function that uses
+   an 'atomic_inc_not_zero' call.  This wasn't needed even with
+   current code:  The owning mptcp socket holds references on its
+   subflows, so a subflow socket that is still found on the list
+   will always have a nonzero reference count.
 
-> Its wrong nontheless.
-> =
+This changes the subflow list to always be guarded by the owning
+mptcp socket lock.  This is safe as long as no code path that holds
+a mptcp subflow tcp socket lock will try to lock the owning mptcp
+sockets lock.
 
-> This must be changed to
-> =
+The inverse -- locking the tcp subflow lock while holding the
+mptcp lock -- is fine.
 
-> local_bh_disable();
-> bh_lock_sock_nested(sk);
-> =
+mptcp_subflow_get_ref() will have to be altered later when we
+support multiple subflows so it will pick a 'preferred' subflow
+rather than the first one in the list.
 
-> It works because in mptcp_connect.sh test cases the completion
-> occurs from backlog processing, but it could happen from bh context
-> directly.
+This also adds checks on the mptcp socket state to cope with
+following scenario:
 
-I additionally think that mptcp_finish_connect() should do nothing when
-racing with mptcp_close(), that is, when sk->sk_state =3D=3D TCP_CLOSE.
+mptcp_close()
+   reap sublist
+...
+mptcp_finish_connect
+   add to sublist
 
-Otherwise sock_release() will try to do lock_sock(sk) via tcp_close(),
-still possibly in bh context.
+As the mptcp socket has already been closed, the tcp_sock
+reference would be lost.
 
-Possibly mptcp_finish_connect() should use a return value to tell
-subflow_finish_connect() to do nothing when the above race is hit.
+From the callback check that the MPTCP socket is not closed.
+In order to allow to differentiate between a closed socket
+(mptcp_close was called) and a new socket, update the mptcp
+sockets state to SYN_SENT right before we start to create the
+outgoing connection.
 
-Paolo
+For the reverse case, update it in mptcp_listen so mptcp_accept
+can do the same/similar check: do not accept a new subflow if
+the mptcp socket has already been closed.
+
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ v3: changed locking to bh_lock_sock to handle non-backlog case.
+
+ I did NOT change mptcp_finish_connect yet, I suspect we will need to
+ rewrite/rethink this once we support multiple *active* subflows.
+
+ AFAIU, when userspace has called close() just when internal machinery
+ would complete the tcp connection, then we have to make sure that the
+ tcp socket is closed too.  Doing this from the current place isn't
+ possible as the tcp sockets lock is held.
+
+ There are alternatives of course, but this patch is already rather
+ large and this problem isn't related to spinlock/rcu vs. socket lock.
+
+ net/mptcp/protocol.c | 181 ++++++++++++++++++++++---------------------
+ net/mptcp/protocol.h |   3 +-
+ 2 files changed, 93 insertions(+), 91 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 9a98c8e0c996..f6375d18dc57 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -25,26 +25,20 @@ static inline bool before64(__u64 seq1, __u64 seq2)
+ =
+
+ #define after64(seq2, seq1)	before64(seq1, seq2)
+ =
+
+-static bool mptcp_subflow_hold(struct subflow_context *subflow)
+-{
+-	struct sock *sk =3D mptcp_subflow_tcp_socket(subflow)->sk;
+-
+-	return refcount_inc_not_zero(&sk->sk_refcnt);
+-}
+-
+ static struct sock *mptcp_subflow_get_ref(const struct mptcp_sock *msk)
+ {
+ 	struct subflow_context *subflow;
+ =
+
+-	rcu_read_lock();
++	sock_owned_by_me((const struct sock *)msk);
++
+ 	mptcp_for_each_subflow(msk, subflow) {
+-		if (mptcp_subflow_hold(subflow)) {
+-			rcu_read_unlock();
+-			return mptcp_subflow_tcp_socket(subflow)->sk;
+-		}
++		struct sock *sk;
++
++		sk =3D mptcp_subflow_tcp_socket(subflow)->sk;
++		sock_hold(sk);
++		return sk;
+ 	}
+ =
+
+-	rcu_read_unlock();
+ 	return NULL;
+ }
+ =
+
+@@ -179,9 +173,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
+r *msg, size_t len)
+ 		return sock_sendmsg(msk->subflow, msg);
+ 	}
+ =
+
++	lock_sock(sk);
+ 	ssk =3D mptcp_subflow_get_ref(msk);
+-	if (!ssk)
++	if (!ssk) {
++		release_sock(sk);
+ 		return -ENOTCONN;
++	}
+ =
+
+ 	if (!msg_data_left(msg)) {
+ 		pr_debug("empty send");
+@@ -196,7 +193,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 		goto put_out;
+ 	}
+ =
+
+-	lock_sock(sk);
+ 	lock_sock(ssk);
+ 	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+ 	while (msg_data_left(msg)) {
+@@ -214,9 +210,9 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 	}
+ =
+
+ 	release_sock(ssk);
+-	release_sock(sk);
+ =
+
+ put_out:
++	release_sock(sk);
+ 	sock_put(ssk);
+ 	return ret;
+ }
+@@ -381,14 +377,16 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ 		return sock_recvmsg(msk->subflow, msg, flags);
+ 	}
+ =
+
++	lock_sock(sk);
+ 	ssk =3D mptcp_subflow_get_ref(msk);
+-	if (!ssk)
++	if (!ssk) {
++		release_sock(sk);
+ 		return -ENOTCONN;
++	}
+ =
+
+ 	subflow =3D subflow_ctx(ssk);
+ 	tp =3D tcp_sk(ssk);
+ =
+
+-	lock_sock(sk);
+ 	lock_sock(ssk);
+ =
+
+ 	desc.arg.data =3D &arg;
+@@ -566,57 +564,36 @@ static int mptcp_init_sock(struct sock *sk)
+ =
+
+ 	pr_debug("msk=3D%p", msk);
+ =
+
+-	INIT_LIST_HEAD_RCU(&msk->conn_list);
+-	spin_lock_init(&msk->conn_list_lock);
++	INIT_LIST_HEAD(&msk->conn_list);
+ =
+
+ 	return 0;
+ }
+ =
+
+-static void mptcp_flush_conn_list(struct sock *sk, struct list_head *list)
+-{
+-	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-
+-	INIT_LIST_HEAD_RCU(list);
+-	spin_lock_bh(&msk->conn_list_lock);
+-	list_splice_init(&msk->conn_list, list);
+-	spin_unlock_bh(&msk->conn_list_lock);
+-
+-	if (!list_empty(list))
+-		synchronize_rcu();
+-}
+-
+ static void mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct subflow_context *subflow, *tmp;
+ 	struct socket *ssk =3D NULL;
+-	struct list_head list;
+ =
+
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ =
+
+-	spin_lock_bh(&msk->conn_list_lock);
++	lock_sock(sk);
++
+ 	if (msk->subflow) {
+ 		ssk =3D msk->subflow;
+ 		msk->subflow =3D NULL;
+ 	}
+-	spin_unlock_bh(&msk->conn_list_lock);
++
+ 	if (ssk !=3D NULL) {
+ 		pr_debug("subflow=3D%p", ssk->sk);
+ 		sock_release(ssk);
+ 	}
+ =
+
+-	/* this is the only place where we can remove any entry from the
+-	 * conn_list. Additionally acquiring the socket lock here
+-	 * allows for mutual exclusion with mptcp_shutdown().
+-	 */
+-	lock_sock(sk);
+-	mptcp_flush_conn_list(sk, &list);
+-	release_sock(sk);
+-
+-	list_for_each_entry_safe(subflow, tmp, &list, node) {
++	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		pr_debug("conn_list->subflow=3D%p", subflow);
+ 		sock_release(mptcp_subflow_tcp_socket(subflow));
+ 	}
++	release_sock(sk);
+ =
+
+ 	sock_orphan(sk);
+ 	sock_put(sk);
+@@ -645,11 +622,21 @@ static struct sock *mptcp_accept(struct sock *sk, int=
+ flags, int *err,
+ 		struct sock *new_mptcp_sock;
+ 		u64 ack_seq;
+ =
+
++		lock_sock(sk);
++
++		if (sk->sk_state =3D=3D TCP_CLOSE) {
++			kernel_sock_shutdown(new_sock, SHUT_RDWR);
++			sock_release(new_sock);
++			release_sock(sk);
++			return NULL;
++		}
++
+ 		local_bh_disable();
+ 		new_mptcp_sock =3D sk_clone_lock(sk, GFP_ATOMIC);
+ 		if (!new_mptcp_sock) {
+ 			*err =3D -ENOBUFS;
+ 			local_bh_enable();
++			release_sock(sk);
+ 			kernel_sock_shutdown(new_sock, SHUT_RDWR);
+ 			sock_release(new_sock);
+ 			return NULL;
+@@ -663,10 +650,7 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ 		msk->token =3D subflow->token;
+ 		pr_debug("token=3D%u", msk->token);
+ 		token_update_accept(new_sock->sk, new_mptcp_sock);
+-		spin_lock(&msk->conn_list_lock);
+-		list_add_rcu(&subflow->node, &msk->conn_list);
+ 		msk->subflow =3D NULL;
+-		spin_unlock(&msk->conn_list_lock);
+ =
+
+ 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+ 		msk->write_seq =3D subflow->idsn + 1;
+@@ -678,9 +662,11 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ 		subflow->tcp_sock =3D new_sock;
+ 		newsk =3D new_mptcp_sock;
+ 		subflow->conn =3D new_mptcp_sock;
++		list_add(&subflow->node, &msk->conn_list);
+ 		bh_unlock_sock(new_mptcp_sock);
+ 		local_bh_enable();
+ 		inet_sk_state_store(newsk, TCP_ESTABLISHED);
++		release_sock(sk);
+ 	} else {
+ 		newsk =3D new_sock->sk;
+ 		tcp_sk(newsk)->is_mptcp =3D 0;
+@@ -765,14 +751,38 @@ void mptcp_finish_connect(struct sock *sk, int mp_cap=
+able)
+ 	if (mp_capable) {
+ 		u64 ack_seq;
+ =
+
++		/* sk (new subflow socket) is already locked, but we need
++		 * to lock the parent (mptcp) socket now to add the tcp socket
++		 * to the subflow list.
++		 *
++		 * From lockdep point of view, this creates an ABBA type
++		 * deadlock: Normally (sendmsg, recvmsg, ..), we lock the mptcp
++		 * socket, then acquire a subflow lock.
++		 * Here we do the reverse: "subflow lock, then mptcp lock".
++		 *
++		 * Its alright to do this here, because this subflow is not yet
++		 * on the mptcp sockets subflow list.
++		 *
++		 * IOW, if another CPU has this mptcp socket locked, it cannot
++		 * acquire this particular subflow, because subflow->sk isn't
++		 * on msk->conn_list.
++		 *
++		 * This function can be called either from backlog processing
++		 * (BH will be enabled) or from softirq, so we need to use BH
++		 * locking scheme.
++		 */
++		local_bh_disable();
++		bh_lock_sock_nested(sk);
++
++		if (sk->sk_state =3D=3D TCP_CLOSE) {
++			bh_unlock_sock(sk);
++			local_bh_enable();
++			return;
++		}
+ 		msk->remote_key =3D subflow->remote_key;
+ 		msk->local_key =3D subflow->local_key;
+ 		msk->token =3D subflow->token;
+ 		pr_debug("token=3D%u", msk->token);
+-		spin_lock_bh(&msk->conn_list_lock);
+-		list_add_rcu(&subflow->node, &msk->conn_list);
+-		msk->subflow =3D NULL;
+-		spin_unlock_bh(&msk->conn_list_lock);
+ =
+
+ 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+ 		msk->write_seq =3D subflow->idsn + 1;
+@@ -781,6 +791,11 @@ void mptcp_finish_connect(struct sock *sk, int mp_capa=
+ble)
+ 		subflow->map_seq =3D ack_seq;
+ 		subflow->map_subflow_seq =3D 1;
+ 		subflow->rel_write_seq =3D 1;
++
++		list_add(&subflow->node, &msk->conn_list);
++		msk->subflow =3D NULL;
++		bh_unlock_sock(sk);
++		local_bh_enable();
+ 	}
+ 	inet_sk_state_store(sk, TCP_ESTABLISHED);
+ }
+@@ -866,6 +881,8 @@ static int mptcp_stream_connect(struct socket *sock, st=
+ruct sockaddr *uaddr,
+ 			return err;
+ 	}
+ =
+
++	if (sock->sk->sk_state =3D=3D TCP_CLOSE)
++		sock->sk->sk_state =3D TCP_SYN_SENT;
+ 	return inet_stream_connect(msk->subflow, uaddr, addr_len, flags);
+ }
+ =
+
+@@ -899,11 +916,15 @@ static int mptcp_getname(struct socket *sock, struct =
+sockaddr *uaddr,
+ 	 * is connected and there are multiple subflows is not defined.
+ 	 * For now just use the first subflow on the list.
+ 	 */
++	lock_sock(sock->sk);
+ 	ssk =3D mptcp_subflow_get_ref(msk);
+-	if (!ssk)
++	if (!ssk) {
++		release_sock(sock->sk);
+ 		return -ENOTCONN;
++	}
+ =
+
+ 	ret =3D inet_getname(ssk->sk_socket, uaddr, peer);
++	release_sock(sock->sk);
+ 	sock_put(ssk);
+ 	return ret;
+ }
+@@ -920,7 +941,11 @@ static int mptcp_listen(struct socket *sock, int backl=
+og)
+ 		if (err)
+ 			return err;
+ 	}
+-	return inet_listen(msk->subflow, backlog);
++
++	err =3D inet_listen(msk->subflow, backlog);
++	if (err =3D=3D 0)
++		sock->sk->sk_state =3D msk->subflow->sk->sk_state;
++	return err;
+ }
+ =
+
+ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+@@ -939,43 +964,25 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 			   struct poll_table_struct *wait)
+ {
+-	struct subflow_context *subflow, *tmp;
++	struct subflow_context *subflow;
+ 	const struct mptcp_sock *msk;
+ 	struct sock *sk =3D sock->sk;
+ 	__poll_t ret =3D 0;
+-	unsigned int i;
+ =
+
+ 	msk =3D mptcp_sk(sk);
+ 	if (msk->subflow)
+ 		return tcp_poll(file, msk->subflow, wait);
+ =
+
+-	i =3D 0;
+-	for (;;) {
+-		int j =3D 0;
+-		tmp =3D NULL;
+-
+-		rcu_read_lock();
+-		mptcp_for_each_subflow(msk, subflow) {
+-			if (j < i) {
+-				j++;
+-				continue;
+-			}
+-
+-			if (!mptcp_subflow_hold(subflow))
+-				continue;
+-
+-			tmp =3D subflow;
+-			i++;
+-			break;
+-		}
+-		rcu_read_unlock();
++	sock_poll_wait(file, sock, wait);
+ =
+
+-		if (!tmp)
+-			break;
++	lock_sock(sk);
++	mptcp_for_each_subflow(msk, subflow) {
++		struct socket *tcp_sock;
+ =
+
+-		ret |=3D tcp_poll(file, mptcp_subflow_tcp_socket(tmp), wait);
+-		sock_put(mptcp_subflow_tcp_socket(tmp)->sk);
++		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
++		ret |=3D tcp_poll(file, tcp_sock, wait);
+ 	}
++	release_sock(sk);
+ =
+
+ 	return ret;
+ }
+@@ -994,24 +1001,20 @@ static int mptcp_shutdown(struct socket *sock, int h=
+ow)
+ 	}
+ =
+
+ 	/* protect against concurrent mptcp_close(), so that nobody can
+-	 * remove entries from the conn list and walking the list breaking
+-	 * the RCU critical section is still safe. We need to release the
+-	 * RCU lock to call the blocking kernel_sock_shutdown() primitive
+-	 * Note: we can't use MPTCP socket lock to protect conn_list changes,
++	 * remove entries from the conn list and walking the list
++	 * is still safe.
++	 *
++	 * We can't use MPTCP socket lock to protect conn_list changes,
+ 	 * as we need to update it from the BH via the mptcp_finish_connect()
+ 	 */
+ 	lock_sock(sock->sk);
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(subflow, &msk->conn_list, node) {
++	list_for_each_entry(subflow, &msk->conn_list, node) {
+ 		struct socket *tcp_socket;
+ =
+
+ 		tcp_socket =3D mptcp_subflow_tcp_socket(subflow);
+-		rcu_read_unlock();
+ 		pr_debug("conn_list->subflow=3D%p", subflow);
+ 		ret =3D kernel_sock_shutdown(tcp_socket, how);
+-		rcu_read_lock();
+ 	}
+-	rcu_read_unlock();
+ 	release_sock(sock->sk);
+ =
+
+ 	return ret;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 6cfce8499656..d4b2aeb4c70f 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -36,13 +36,12 @@ struct mptcp_sock {
+ 	u64		write_seq;
+ 	atomic64_t	ack_seq;
+ 	u32		token;
+-	spinlock_t	conn_list_lock;
+ 	struct list_head conn_list;
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+ };
+ =
+
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+-	list_for_each_entry_rcu(__subflow, &((__msk)->conn_list), node)
++	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
+ =
+
+ static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
+ {
+-- =
+
+2.21.0
 
 
---===============8363160736611952605==--
+--===============0572568530652894533==--
