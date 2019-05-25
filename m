@@ -1,37 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============3653349837083807066=="
+Content-Type: multipart/mixed; boundary="===============4099374199165202551=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: Make mptcp initialization part of tcp
- initialization
-Date: Sat, 25 May 2019 11:14:56 +0200
-Message-ID: <20190525091456.ujuntink7e7sqs7u@breakpoint.cc>
-In-Reply-To: 20190524230521.4141-1-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [PATCH mptcp v3] mptcp: switch sublist to mptcp socket
+ lock protection
+Date: Sat, 25 May 2019 11:26:14 +0200
+Message-ID: <20190525092614.7wm44r6bwzeuagpa@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.21.1905241617460.51733@sabrinas-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1243
+X-UID: 1244
 
---===============3653349837083807066==
+--===============4099374199165202551==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Peter Krystad <peter.krystad(a)linux.intel.com> wrote:
->  static inline bool sk_is_mptcp(const struct sock *sk)
->  {
->  	return tcp_sk(sk)->is_mptcp;
-> @@ -84,6 +86,10 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out=
-_options *opts);
->  =
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> > +	if (sock->sk->sk_state =3D=3D TCP_CLOSE)
+> > +		sock->sk->sk_state =3D TCP_SYN_SENT;
+> =
 
->  #else
->  =
+> Should this use inet_sk_state_store()?
 
-> +void mptcp_init(void)
-> +{
-> +}
-> +
+I can change it.
 
-ITYM 'static inline void mptcp_init(void) {}'.
+> > 	return inet_stream_connect(msk->subflow, uaddr, addr_len, flags);
+> =
 
---===============3653349837083807066==--
+> Since this could return an error, the MPTCP socket state could be set to
+> TCP_SYN_SENT if the subflow connect call succeeded and ended up in the ri=
+ght
+> state.
+
+Yes.  I think we need to decide how to handle sk_state on the mptcp socket.
+E.g., should this match/mirror the state of the initial subflow?
+
+After this change, we have transition to TCP_SYN_SENT when the
+connection attempt on the first subflow is initiated, and instant
+transition to ESTABLISHED when that subflow finishes 3WHS.
+
+It should move back to TCP_CLOSE on failure, but at this time this will
+only happen on mptcp_close().
+
+> > @@ -994,24 +1001,20 @@ static int mptcp_shutdown(struct socket *sock, i=
+nt how)
+> > 	}
+> > =
+
+> > 	/* protect against concurrent mptcp_close(), so that nobody can
+> > -	 * remove entries from the conn list and walking the list breaking
+> > -	 * the RCU critical section is still safe. We need to release the
+> > -	 * RCU lock to call the blocking kernel_sock_shutdown() primitive
+> > -	 * Note: we can't use MPTCP socket lock to protect conn_list changes,
+> > +	 * remove entries from the conn list and walking the list
+> > +	 * is still safe.
+> > +	 *
+> > +	 * We can't use MPTCP socket lock to protect conn_list changes,
+> > 	 * as we need to update it from the BH via the mptcp_finish_connect()
+> > 	 */
+> > 	lock_sock(sock->sk);
+> > -	rcu_read_lock();
+> > -	list_for_each_entry_rcu(subflow, &msk->conn_list, node) {
+> > +	list_for_each_entry(subflow, &msk->conn_list, node) {
+> =
+
+> Minor: this could use mptcp_for_each_subflow()
+
+Yes, although I do wonder if we should just axe that macro, I think that
+it doesn't provide any added value vs. using list_for_each_entry directly.
+
+--===============4099374199165202551==--
