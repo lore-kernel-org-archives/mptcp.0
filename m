@@ -1,78 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============5090008096407070676=="
+Content-Type: multipart/mixed; boundary="===============8936300657978206004=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 3/3] mptcp: Add handling of incoming MP_JOIN requests
-Date: Tue, 28 May 2019 16:22:00 -0700
-Message-ID: <d2c2df4ea2982352980ce973dd5202d661ea3060.camel@linux.intel.com>
-In-Reply-To: efc387a96bddc542bd921a065048ab6005e294f2.camel@redhat.com
+Subject: Re: [MPTCP] [PATCH mptcp v4] mptcp: switch sublist to mptcp socket
+ lock protection
+Date: Tue, 28 May 2019 16:49:29 -0700
+Message-ID: <ce4256d7830e49e2e4bc0842457df164282b0751.camel@linux.intel.com>
+In-Reply-To: de8227f1-c274-52f1-52e8-546f95ccdf80@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1261
+X-UID: 1262
 
---===============5090008096407070676==
+--===============8936300657978206004==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-05-27 at 16:52 +0200, Paolo Abeni wrote:
-> Hi,
+On Tue, 2019-05-28 at 17:57 +0200, Matthieu Baerts wrote:
+> Hi Florian, Paolo,
 > =
 
-> I'm sorry for the late feedback, I'm still looking at this code...
+> Thank you for the new version of the patch and the review!
 > =
 
-> On Wed, 2019-05-22 at 14:38 -0700, Peter Krystad wrote:
-> > diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-> > index 9c2a0d36fb20..baf8b975fce6 100644
-> > --- a/net/ipv4/tcp_minisocks.c
-> > +++ b/net/ipv4/tcp_minisocks.c
-> > @@ -764,6 +764,12 @@ struct sock *tcp_check_req(struct sock *sk, struct=
- sk_buff *skb,
-> >  	if (!child)
-> >  		goto listen_overflow;
-> >  =
-
-> > +	if (own_req && sk_is_mptcp(child) && mptcp_sk_is_subflow(child)) {
-> > +		inet_csk_reqsk_queue_drop(sk, req);
-> > +		reqsk_queue_removed(&inet_csk(sk)->icsk_accept_queue, req);
-> > +		return child;
-> > +	}
-> > +
+> Hi Peter, Mat,
 > =
 
-> Don't we need to check this is not a fastopen before dropping the req?
+> I know you were interested by (re-)reviewing this patch. Is it also
+> looking good to you? If you don't have time to look at it now, maybe we
+> can already apply it in our repo as it is a consequent patch and propose
+> fixes later. WDYT?
 
-I was thinking we would initially not support fastopen for MPTCP connection=
-s,
-meaning we would ignore cookie requests in a SYN with MP_CAPABLE. I haven't
-added this check, what do others think about fastopen as a requirement for
-MPTCP?
-
-> =
-
-> Can't we avoid the above hunck anyway, handling the special MP_JOIN
-> scenario in mptcp_accept() ? so that we reduce hooking, the user-space
-> is notified of a new subflow - 'accept()' would probably return a
-> specific error code, not a new fd!!! - and we enforce some limits on
-> the number of pending/new subflows.
-
-I was not thinking of forcing a change to the typical user accept()
-handling so this is how that is avoided. In earlier discussions it seemed
-making the user use a new protocol value was enough of a hurdle.
+I'm fine with v4 of this change.
 
 Peter.
-  =
 
-> WDYT?
+> Cheers,
+> Matt
 > =
 
-> Thanks,
-> =
+> On 28/05/2019 11:38, Paolo Abeni wrote:
+> > Hi all,
+> > =
 
-> Paolo
-> =
+> > On Mon, 2019-05-27 at 00:24 +0200, Florian Westphal wrote:
+> > > The mptcp sublist is currently guarded by rcu, but this comes with
+> > > several artifacts that make little sense.
+> > > =
+
+> > > 1. There is a synchronize_rcu after stealing the subflow list on
+> > >    each mptcp socket close.
+> > > =
+
+> > >    synchronize_rcu() is a very expensive call, and should not be
+> > >    needed.
+> > > =
+
+> > > 2. There is a extra spinlock to guard the list, ey we can't use
+> > >    the lock in some cases because we need to call functions that
+> > >    might sleep.
+> > > =
+
+> > > 3. There is a 'mptcp_subflow_hold()' function that uses
+> > >    an 'atomic_inc_not_zero' call.  This wasn't needed even with
+> > >    current code:  The owning mptcp socket holds references on its
+> > >    subflows, so a subflow socket that is still found on the list
+> > >    will always have a nonzero reference count.
+> > > =
+
+> > > This changes the subflow list to always be guarded by the owning
+> > > mptcp socket lock.  This is safe as long as no code path that holds
+> > > a mptcp subflow tcp socket lock will try to lock the owning mptcp
+> > > sockets lock.
+> > > =
+
+> > > The inverse -- locking the tcp subflow lock while holding the
+> > > mptcp lock -- is fine.
+> > > =
+
+> > > mptcp_subflow_get_ref() will have to be altered later when we
+> > > support multiple subflows so it will pick a 'preferred' subflow
+> > > rather than the first one in the list.
+> > > =
+
+> > > v4: - remove all sk_state changes added in v2/v3, they do not
+> > >     belong here -- it should be done as a separate change.
+> > >     - prefer mptcp_for_each_subflow rather than list_for_each_entry.
+> > > =
+
+> > > v3: use BH locking scheme in mptcp_finish_connect, there is no
+> > >     guarantee we are always called from backlog processing.
+> > > =
+
+> > > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > =
+
+> > LGTM, thanks Florian.
+> > =
+
+> > Paolo
+> > =
+
+> > _______________________________________________
+> > mptcp mailing list
+> > mptcp(a)lists.01.org
+> > https://lists.01.org/mailman/listinfo/mptcp
+> > =
 
 
 
---===============5090008096407070676==--
+--===============8936300657978206004==--
