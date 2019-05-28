@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============9028521173330358627=="
+Content-Type: multipart/mixed; boundary="===============6473521847892948552=="
 MIME-Version: 1.0
 From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:upd-tg: stop in case
- of error
-Date: Tue, 28 May 2019 16:55:52 +0000
-Message-ID: <gerrit.1559062547000.I7086ff65cba9d1b6f98817aa51d18d1c0d6c54c7@review.gerrithub.io>
+Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:virtme: script to
+ launch kselftests
+Date: Tue, 28 May 2019 16:55:53 +0000
+Message-ID: <gerrit.1559062547000.I98cd158c2580ffefa6023e66894124319e1be819@review.gerrithub.io>
 X-Status: 
 X-Keywords:                  
-X-UID: 1255
+X-UID: 1256
 
---===============9028521173330358627==
+--===============6473521847892948552==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,45 +19,47 @@ Hello Mat Martineau,
 
 I'd like you to do a code review. Please visit
 
-    https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/456071
+    https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/456072
 
 to review the following change.
 
 
-Change subject: ci:upd-tg: stop in case of error
+Change subject: ci:virtme: script to launch kselftests
 ......................................................................
 
-ci:upd-tg: stop in case of error
+ci:virtme: script to launch kselftests
 
-by forcing 'set -e'.
+It uses Docker and VirtMe to start qEmu with a generated kernel and
+start MPTCP kselftests.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Change-Id: I7086ff65cba9d1b6f98817aa51d18d1c0d6c54c7
+Change-Id: I98cd158c2580ffefa6023e66894124319e1be819
 ---
-M ci/Dockerfile.update-tg-tree.sh
-1 file changed, 3 insertions(+), 0 deletions(-)
+A ci/Dockerfile.virtme.sh
+A ci/virtme.sh
+2 files changed, 121 insertions(+), 0 deletions(-)
 
 
 
   git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
-s/changes/71/456071/1
+s/changes/72/456072/1
 -- =
 
 To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
-/456071
+/456072
 To unsubscribe, or for help writing mail filters, visit https://review.gerr=
 ithub.io/settings
 
 Gerrit-Project: multipath-tcp/mptcp_net-next
 Gerrit-Branch: scripts
-Gerrit-Change-Id: I7086ff65cba9d1b6f98817aa51d18d1c0d6c54c7
-Gerrit-Change-Number: 456071
+Gerrit-Change-Id: I98cd158c2580ffefa6023e66894124319e1be819
+Gerrit-Change-Number: 456072
 Gerrit-PatchSet: 1
 Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Gerrit-Reviewer: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Gerrit-MessageType: newchange
 
---===============9028521173330358627==
+--===============6473521847892948552==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -65,36 +67,38 @@ Content-Disposition: attachment; filename="attachment.html"
 
 PHA+TWF0dGhpZXUgQmFlcnRzIHdvdWxkIGxpa2UgTWF0IE1hcnRpbmVhdSB0byA8c3Ryb25nPnJl
 dmlldzwvc3Ryb25nPiB0aGlzIGNoYW5nZS48L3A+PHA+PGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcu
-Z2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjA3MSI+Vmll
+Z2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjA3MiI+Vmll
 dyBDaGFuZ2U8L2E+PC9wPjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3Nw
-YWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5jaTp1cGQtdGc6IHN0b3AgaW4gY2FzZSBvZiBl
-cnJvcjxicj48YnI+YnkgZm9yY2luZyAmIzM5O3NldCAtZSYjMzk7Ljxicj48YnI+U2lnbmVkLW9m
-Zi1ieTogTWF0dGhpZXUgQmFlcnRzICZsdDttYXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0
-Ozxicj5DaGFuZ2UtSWQ6IEk3MDg2ZmY2NWNiYTlkMWI2Zjk4ODE3YWE1MWQxOGQxYzBkNmM1NGM3
-PGJyPi0tLTxicj5NIGNpL0RvY2tlcmZpbGUudXBkYXRlLXRnLXRyZWUuc2g8YnI+MSBmaWxlIGNo
-YW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSk8YnI+PGJyPjwvcHJlPjxwcmUg
-c3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3NwYWNlOyB3aGl0ZS1zcGFjZTogcHJl
-LXdyYXA7Ij5naXQgcHVsbCBzc2g6Ly9yZXZpZXcuZ2Vycml0aHViLmlvOjI5NDE4L211bHRpcGF0
-aC10Y3AvbXB0Y3BfbmV0LW5leHQgcmVmcy9jaGFuZ2VzLzcxLzQ1NjA3MS8xPC9wcmU+PHA+VG8g
-dmlldywgdmlzaXQgPGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlvL2MvbXVsdGlw
-YXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjA3MSI+Y2hhbmdlIDQ1NjA3MTwvYT4uIFRvIHVu
-c3Vic2NyaWJlLCBvciBmb3IgaGVscCB3cml0aW5nIG1haWwgZmlsdGVycywgdmlzaXQgPGEgaHJl
-Zj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlvL3NldHRpbmdzIj5zZXR0aW5nczwvYT4uPC9w
-PjxkaXYgaXRlbXNjb3BlIGl0ZW10eXBlPSJodHRwOi8vc2NoZW1hLm9yZy9FbWFpbE1lc3NhZ2Ui
-PjxkaXYgaXRlbXNjb3BlIGl0ZW1wcm9wPSJhY3Rpb24iIGl0ZW10eXBlPSJodHRwOi8vc2NoZW1h
-Lm9yZy9WaWV3QWN0aW9uIj48bGluayBpdGVtcHJvcD0idXJsIiBocmVmPSJodHRwczovL3Jldmll
-dy5nZXJyaXRodWIuaW8vYy9tdWx0aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0LysvNDU2MDcxIi8+
-PG1ldGEgaXRlbXByb3A9Im5hbWUiIGNvbnRlbnQ9IlZpZXcgQ2hhbmdlIi8+PC9kaXY+PC9kaXY+
-Cgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtUHJvamVjdDogbXVsdGlwYXRoLXRj
-cC9tcHRjcF9uZXQtbmV4dCA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0
-LUJyYW5jaDogc2NyaXB0cyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0
-LUNoYW5nZS1JZDogSTcwODZmZjY1Y2JhOWQxYjZmOTg4MTdhYTUxZDE4ZDFjMGQ2YzU0YzcgPC9k
-aXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1DaGFuZ2UtTnVtYmVyOiA0NTYw
-NzEgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1QYXRjaFNldDogMSA8
-L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LU93bmVyOiBNYXR0aGlldSBC
-YWVydHMgJmx0O21hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQmZ3Q7IDwvZGl2Pgo8ZGl2IHN0
-eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtUmV2aWV3ZXI6IE1hdCBNYXJ0aW5lYXUgJmx0O21h
-dGhldy5qLm1hcnRpbmVhdUBsaW51eC5pbnRlbC5jb20mZ3Q7IDwvZGl2Pgo8ZGl2IHN0eWxlPSJk
-aXNwbGF5Om5vbmUiPiBHZXJyaXQtTWVzc2FnZVR5cGU6IG5ld2NoYW5nZSA8L2Rpdj4KCg==
+YWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5jaTp2aXJ0bWU6IHNjcmlwdCB0byBsYXVuY2gg
+a3NlbGZ0ZXN0czxicj48YnI+SXQgdXNlcyBEb2NrZXIgYW5kIFZpcnRNZSB0byBzdGFydCBxRW11
+IHdpdGggYSBnZW5lcmF0ZWQga2VybmVsIGFuZDxicj5zdGFydCBNUFRDUCBrc2VsZnRlc3RzLjxi
+cj48YnI+U2lnbmVkLW9mZi1ieTogTWF0dGhpZXUgQmFlcnRzICZsdDttYXR0aGlldS5iYWVydHNA
+dGVzc2FyZXMubmV0Jmd0Ozxicj5DaGFuZ2UtSWQ6IEk5OGNkMTU4YzI1ODBmZmVmYTYwMjNlNjY4
+OTQxMjQzMTllMWJlODE5PGJyPi0tLTxicj5BIGNpL0RvY2tlcmZpbGUudmlydG1lLnNoPGJyPkEg
+Y2kvdmlydG1lLnNoPGJyPjIgZmlsZXMgY2hhbmdlZCwgMTIxIGluc2VydGlvbnMoKyksIDAgZGVs
+ZXRpb25zKC0pPGJyPjxicj48L3ByZT48cHJlIHN0eWxlPSJmb250LWZhbWlseTogbW9ub3NwYWNl
+LG1vbm9zcGFjZTsgd2hpdGUtc3BhY2U6IHByZS13cmFwOyI+Z2l0IHB1bGwgc3NoOi8vcmV2aWV3
+LmdlcnJpdGh1Yi5pbzoyOTQxOC9tdWx0aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0IHJlZnMvY2hh
+bmdlcy83Mi80NTYwNzIvMTwvcHJlPjxwPlRvIHZpZXcsIHZpc2l0IDxhIGhyZWY9Imh0dHBzOi8v
+cmV2aWV3LmdlcnJpdGh1Yi5pby9jL211bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQvKy80NTYw
+NzIiPmNoYW5nZSA0NTYwNzI8L2E+LiBUbyB1bnN1YnNjcmliZSwgb3IgZm9yIGhlbHAgd3JpdGlu
+ZyBtYWlsIGZpbHRlcnMsIHZpc2l0IDxhIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5p
+by9zZXR0aW5ncyI+c2V0dGluZ3M8L2E+LjwvcD48ZGl2IGl0ZW1zY29wZSBpdGVtdHlwZT0iaHR0
+cDovL3NjaGVtYS5vcmcvRW1haWxNZXNzYWdlIj48ZGl2IGl0ZW1zY29wZSBpdGVtcHJvcD0iYWN0
+aW9uIiBpdGVtdHlwZT0iaHR0cDovL3NjaGVtYS5vcmcvVmlld0FjdGlvbiI+PGxpbmsgaXRlbXBy
+b3A9InVybCIgaHJlZj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRj
+cC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjA3MiIvPjxtZXRhIGl0ZW1wcm9wPSJuYW1lIiBjb250ZW50
+PSJWaWV3IENoYW5nZSIvPjwvZGl2PjwvZGl2PgoKPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4g
+R2Vycml0LVByb2plY3Q6IG11bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQgPC9kaXY+CjxkaXYg
+c3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1CcmFuY2g6IHNjcmlwdHMgPC9kaXY+CjxkaXYg
+c3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1DaGFuZ2UtSWQ6IEk5OGNkMTU4YzI1ODBmZmVm
+YTYwMjNlNjY4OTQxMjQzMTllMWJlODE5IDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUi
+PiBHZXJyaXQtQ2hhbmdlLU51bWJlcjogNDU2MDcyIDwvZGl2Pgo8ZGl2IHN0eWxlPSJkaXNwbGF5
+Om5vbmUiPiBHZXJyaXQtUGF0Y2hTZXQ6IDEgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9u
+ZSI+IEdlcnJpdC1Pd25lcjogTWF0dGhpZXUgQmFlcnRzICZsdDttYXR0aGlldS5iYWVydHNAdGVz
+c2FyZXMubmV0Jmd0OyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LVJl
+dmlld2VyOiBNYXQgTWFydGluZWF1ICZsdDttYXRoZXcuai5tYXJ0aW5lYXVAbGludXguaW50ZWwu
+Y29tJmd0OyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LU1lc3NhZ2VU
+eXBlOiBuZXdjaGFuZ2UgPC9kaXY+Cgo=
 
---===============9028521173330358627==--
+--===============6473521847892948552==--
