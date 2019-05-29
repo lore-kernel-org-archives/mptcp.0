@@ -1,106 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============5894330702224084841=="
+Content-Type: multipart/mixed; boundary="===============2207821932949375715=="
 MIME-Version: 1.0
-From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:virtme: use expect
- to avoid 'sleep'
-Date: Wed, 29 May 2019 13:24:47 +0000
-Message-ID: <gerrit.1559136284000.Idded343f80cb432c0fc3bd91b07260a6d6abfaf0@review.gerrithub.io>
+Subject: Re: [MPTCP] [PATCH mptcp v4] mptcp: switch sublist to mptcp socket
+ lock protection
+Date: Wed, 29 May 2019 17:40:36 +0200
+Message-ID: <ceba6ece-fc88-d81b-4431-48cbafc64c58@tessares.net>
+In-Reply-To: ce4256d7830e49e2e4bc0842457df164282b0751.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1265
+X-UID: 1266
 
---===============5894330702224084841==
+--===============2207821932949375715==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Mat Martineau,
+Hi Florian, Paolo, Mat, Peter,
 
-I'd like you to do a code review. Please visit
+On 29/05/2019 01:49, Peter Krystad wrote:
+> On Tue, 2019-05-28 at 17:57 +0200, Matthieu Baerts wrote:
+>> Hi Florian, Paolo,
+>>
+>> Thank you for the new version of the patch and the review!
+>>
+>> Hi Peter, Mat,
+>>
+>> I know you were interested by (re-)reviewing this patch. Is it also
+>> looking good to you? If you don't have time to look at it now, maybe we
+>> can already apply it in our repo as it is a consequent patch and propose
+>> fixes later. WDYT?
+> =
 
-    https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/456218
+> I'm fine with v4 of this change.
 
-to review the following change.
+Again, thank you for the patch and the review.
+
+Just added at the end:
+
+https://github.com/multipath-tcp/mptcp_net-next/commits/export
+
+And kselftests are OK:
+
+	ok 1 selftests: mptcp: mptcp_connect.sh
+
+Cheers,
+Matt
+
+> Peter.
+> =
+
+>> Cheers,
+>> Matt
+>>
+>> On 28/05/2019 11:38, Paolo Abeni wrote:
+>>> Hi all,
+>>>
+>>> On Mon, 2019-05-27 at 00:24 +0200, Florian Westphal wrote:
+>>>> The mptcp sublist is currently guarded by rcu, but this comes with
+>>>> several artifacts that make little sense.
+>>>>
+>>>> 1. There is a synchronize_rcu after stealing the subflow list on
+>>>>    each mptcp socket close.
+>>>>
+>>>>    synchronize_rcu() is a very expensive call, and should not be
+>>>>    needed.
+>>>>
+>>>> 2. There is a extra spinlock to guard the list, ey we can't use
+>>>>    the lock in some cases because we need to call functions that
+>>>>    might sleep.
+>>>>
+>>>> 3. There is a 'mptcp_subflow_hold()' function that uses
+>>>>    an 'atomic_inc_not_zero' call.  This wasn't needed even with
+>>>>    current code:  The owning mptcp socket holds references on its
+>>>>    subflows, so a subflow socket that is still found on the list
+>>>>    will always have a nonzero reference count.
+>>>>
+>>>> This changes the subflow list to always be guarded by the owning
+>>>> mptcp socket lock.  This is safe as long as no code path that holds
+>>>> a mptcp subflow tcp socket lock will try to lock the owning mptcp
+>>>> sockets lock.
+>>>>
+>>>> The inverse -- locking the tcp subflow lock while holding the
+>>>> mptcp lock -- is fine.
+>>>>
+>>>> mptcp_subflow_get_ref() will have to be altered later when we
+>>>> support multiple subflows so it will pick a 'preferred' subflow
+>>>> rather than the first one in the list.
+>>>>
+>>>> v4: - remove all sk_state changes added in v2/v3, they do not
+>>>>     belong here -- it should be done as a separate change.
+>>>>     - prefer mptcp_for_each_subflow rather than list_for_each_entry.
+>>>>
+>>>> v3: use BH locking scheme in mptcp_finish_connect, there is no
+>>>>     guarantee we are always called from backlog processing.
+>>>>
+>>>> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+>>>
+>>> LGTM, thanks Florian.
+>>>
+>>> Paolo
+>>>
+>>> _______________________________________________
+>>> mptcp mailing list
+>>> mptcp(a)lists.01.org
+>>> https://lists.01.org/mailman/listinfo/mptcp
+>>>
+> =
 
 
-Change subject: ci:virtme: use expect to avoid 'sleep'
-......................................................................
-
-ci:virtme: use expect to avoid 'sleep'
-
-This change will be mandatory when debug kernel config will be turned ON
-as it will slowdown all the process, waiting with a fix time might be an
-issue.
-
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Change-Id: Idded343f80cb432c0fc3bd91b07260a6d6abfaf0
----
-M ci/Dockerfile.virtme.sh
-M ci/virtme.sh
-2 files changed, 36 insertions(+), 10 deletions(-)
-
-
-
-  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
-s/changes/18/456218/1
 -- =
 
-To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
-/456218
-To unsubscribe, or for help writing mail filters, visit https://review.gerr=
-ithub.io/settings
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-Gerrit-Project: multipath-tcp/mptcp_net-next
-Gerrit-Branch: scripts
-Gerrit-Change-Id: Idded343f80cb432c0fc3bd91b07260a6d6abfaf0
-Gerrit-Change-Number: 456218
-Gerrit-PatchSet: 1
-Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Gerrit-Reviewer: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Gerrit-MessageType: newchange
-
---===============5894330702224084841==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PHA+TWF0dGhpZXUgQmFlcnRzIHdvdWxkIGxpa2UgTWF0IE1hcnRpbmVhdSB0byA8c3Ryb25nPnJl
-dmlldzwvc3Ryb25nPiB0aGlzIGNoYW5nZS48L3A+PHA+PGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcu
-Z2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjIxOCI+Vmll
-dyBDaGFuZ2U8L2E+PC9wPjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3Nw
-YWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5jaTp2aXJ0bWU6IHVzZSBleHBlY3QgdG8gYXZv
-aWQgJiMzOTtzbGVlcCYjMzk7PGJyPjxicj5UaGlzIGNoYW5nZSB3aWxsIGJlIG1hbmRhdG9yeSB3
-aGVuIGRlYnVnIGtlcm5lbCBjb25maWcgd2lsbCBiZSB0dXJuZWQgT048YnI+YXMgaXQgd2lsbCBz
-bG93ZG93biBhbGwgdGhlIHByb2Nlc3MsIHdhaXRpbmcgd2l0aCBhIGZpeCB0aW1lIG1pZ2h0IGJl
-IGFuPGJyPmlzc3VlLjxicj48YnI+U2lnbmVkLW9mZi1ieTogTWF0dGhpZXUgQmFlcnRzICZsdDtt
-YXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0Ozxicj5DaGFuZ2UtSWQ6IElkZGVkMzQzZjgw
-Y2I0MzJjMGZjM2JkOTFiMDcyNjBhNmQ2YWJmYWYwPGJyPi0tLTxicj5NIGNpL0RvY2tlcmZpbGUu
-dmlydG1lLnNoPGJyPk0gY2kvdmlydG1lLnNoPGJyPjIgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0
-aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pPGJyPjxicj48L3ByZT48cHJlIHN0eWxlPSJmb250LWZh
-bWlseTogbW9ub3NwYWNlLG1vbm9zcGFjZTsgd2hpdGUtc3BhY2U6IHByZS13cmFwOyI+Z2l0IHB1
-bGwgc3NoOi8vcmV2aWV3LmdlcnJpdGh1Yi5pbzoyOTQxOC9tdWx0aXBhdGgtdGNwL21wdGNwX25l
-dC1uZXh0IHJlZnMvY2hhbmdlcy8xOC80NTYyMTgvMTwvcHJlPjxwPlRvIHZpZXcsIHZpc2l0IDxh
-IGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5pby9jL211bHRpcGF0aC10Y3AvbXB0Y3Bf
-bmV0LW5leHQvKy80NTYyMTgiPmNoYW5nZSA0NTYyMTg8L2E+LiBUbyB1bnN1YnNjcmliZSwgb3Ig
-Zm9yIGhlbHAgd3JpdGluZyBtYWlsIGZpbHRlcnMsIHZpc2l0IDxhIGhyZWY9Imh0dHBzOi8vcmV2
-aWV3LmdlcnJpdGh1Yi5pby9zZXR0aW5ncyI+c2V0dGluZ3M8L2E+LjwvcD48ZGl2IGl0ZW1zY29w
-ZSBpdGVtdHlwZT0iaHR0cDovL3NjaGVtYS5vcmcvRW1haWxNZXNzYWdlIj48ZGl2IGl0ZW1zY29w
-ZSBpdGVtcHJvcD0iYWN0aW9uIiBpdGVtdHlwZT0iaHR0cDovL3NjaGVtYS5vcmcvVmlld0FjdGlv
-biI+PGxpbmsgaXRlbXByb3A9InVybCIgaHJlZj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlv
-L2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjIxOCIvPjxtZXRhIGl0ZW1wcm9w
-PSJuYW1lIiBjb250ZW50PSJWaWV3IENoYW5nZSIvPjwvZGl2PjwvZGl2PgoKPGRpdiBzdHlsZT0i
-ZGlzcGxheTpub25lIj4gR2Vycml0LVByb2plY3Q6IG11bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5l
-eHQgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1CcmFuY2g6IHNjcmlw
-dHMgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1DaGFuZ2UtSWQ6IElk
-ZGVkMzQzZjgwY2I0MzJjMGZjM2JkOTFiMDcyNjBhNmQ2YWJmYWYwIDwvZGl2Pgo8ZGl2IHN0eWxl
-PSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQ2hhbmdlLU51bWJlcjogNDU2MjE4IDwvZGl2Pgo8ZGl2
-IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtUGF0Y2hTZXQ6IDEgPC9kaXY+CjxkaXYgc3R5
-bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1Pd25lcjogTWF0dGhpZXUgQmFlcnRzICZsdDttYXR0
-aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0OyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpu
-b25lIj4gR2Vycml0LVJldmlld2VyOiBNYXQgTWFydGluZWF1ICZsdDttYXRoZXcuai5tYXJ0aW5l
-YXVAbGludXguaW50ZWwuY29tJmd0OyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4g
-R2Vycml0LU1lc3NhZ2VUeXBlOiBuZXdjaGFuZ2UgPC9kaXY+Cgo=
-
---===============5894330702224084841==--
+--===============2207821932949375715==--
