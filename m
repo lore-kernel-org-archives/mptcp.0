@@ -1,79 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============5758670593419884150=="
+Content-Type: multipart/mixed; boundary="===============6127413528516543187=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC 3/3] mptcp: Add handling of incoming MP_JOIN requests
-Date: Wed, 29 May 2019 10:06:36 +0200
-Message-ID: <515713d691f3e3f9883149e86c293bcc9eb5652c.camel@redhat.com>
-In-Reply-To: d2c2df4ea2982352980ce973dd5202d661ea3060.camel@linux.intel.com
+Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:virtme: turn on
+ KASAN and PROVE_LOCKING
+Date: Wed, 29 May 2019 13:24:48 +0000
+Message-ID: <gerrit.1559136284000.I54868cc70c8ab994fea5f6926866913c133b108d@review.gerrithub.io>
 X-Status: 
 X-Keywords:                  
-X-UID: 1263
+X-UID: 1264
 
---===============5758670593419884150==
+--===============6127413528516543187==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello Mat Martineau,
 
-On Tue, 2019-05-28 at 16:22 -0700, Peter Krystad wrote:
-> On Mon, 2019-05-27 at 16:52 +0200, Paolo Abeni wrote:
-> > On Wed, 2019-05-22 at 14:38 -0700, Peter Krystad wrote:
-> > > diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-> > > index 9c2a0d36fb20..baf8b975fce6 100644
-> > > --- a/net/ipv4/tcp_minisocks.c
-> > > +++ b/net/ipv4/tcp_minisocks.c
-> > > @@ -764,6 +764,12 @@ struct sock *tcp_check_req(struct sock *sk, stru=
-ct sk_buff *skb,
-> > >  	if (!child)
-> > >  		goto listen_overflow;
-> > >  =
+I'd like you to do a code review. Please visit
 
-> > > +	if (own_req && sk_is_mptcp(child) && mptcp_sk_is_subflow(child)) {
-> > > +		inet_csk_reqsk_queue_drop(sk, req);
-> > > +		reqsk_queue_removed(&inet_csk(sk)->icsk_accept_queue, req);
-> > > +		return child;
-> > > +	}
-> > > +
-> > =
+    https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/456219
 
-> > Don't we need to check this is not a fastopen before dropping the req?
-> =
-
-> I was thinking we would initially not support fastopen for MPTCP connecti=
-ons,
-> meaning we would ignore cookie requests in a SYN with MP_CAPABLE. I haven=
-'t
-> added this check, what do others think about fastopen as a requirement for
-> MPTCP?
-
-I'm sorry, I was not clear enough. I think fastopen is _NOT_ a
-requirement for MPTCP. My doubt is: can we hit the above conditional
-with a fast-open socket? (regardless of MPTCP code implementing support
-for fast-open). If so, should we explicitly fail the MP_JOIN to avoid
-messing with the tcp socket status?
-
-Not sure if the above is now more clear ;)
-
-> > Can't we avoid the above hunck anyway, handling the special MP_JOIN
-> > scenario in mptcp_accept() ? so that we reduce hooking, the user-space
-> > is notified of a new subflow - 'accept()' would probably return a
-> > specific error code, not a new fd!!! - and we enforce some limits on
-> > the number of pending/new subflows.
-> =
-
-> I was not thinking of forcing a change to the typical user accept()
-> handling so this is how that is avoided. In earlier discussions it seemed
-> making the user use a new protocol value was enough of a hurdle.
-
-Ok, understood. I agree that we should avoid uAPI changes; before I did
-not consider such aspect. I'm fine with the current impl in this
-regard.
-
-Thanks,
-
-Paolo
+to review the following change.
 
 
---===============5758670593419884150==--
+Change subject: ci:virtme: turn on KASAN and PROVE_LOCKING
+......................................................................
+
+ci:virtme: turn on KASAN and PROVE_LOCKING
+
+To debug memory and locking issues. There is a tradeoff in speed, but it
+could alert us to problems the selftests alone don't catch.
+
+Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Change-Id: I54868cc70c8ab994fea5f6926866913c133b108d
+---
+M ci/virtme.sh
+1 file changed, 12 insertions(+), 5 deletions(-)
+
+
+
+  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
+s/changes/19/456219/1
+-- =
+
+To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
+/456219
+To unsubscribe, or for help writing mail filters, visit https://review.gerr=
+ithub.io/settings
+
+Gerrit-Project: multipath-tcp/mptcp_net-next
+Gerrit-Branch: scripts
+Gerrit-Change-Id: I54868cc70c8ab994fea5f6926866913c133b108d
+Gerrit-Change-Number: 456219
+Gerrit-PatchSet: 1
+Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Gerrit-Reviewer: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Gerrit-MessageType: newchange
+
+--===============6127413528516543187==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PHA+TWF0dGhpZXUgQmFlcnRzIHdvdWxkIGxpa2UgTWF0IE1hcnRpbmVhdSB0byA8c3Ryb25nPnJl
+dmlldzwvc3Ryb25nPiB0aGlzIGNoYW5nZS48L3A+PHA+PGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcu
+Z2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjIxOSI+Vmll
+dyBDaGFuZ2U8L2E+PC9wPjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3Nw
+YWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5jaTp2aXJ0bWU6IHR1cm4gb24gS0FTQU4gYW5k
+IFBST1ZFX0xPQ0tJTkc8YnI+PGJyPlRvIGRlYnVnIG1lbW9yeSBhbmQgbG9ja2luZyBpc3N1ZXMu
+IFRoZXJlIGlzIGEgdHJhZGVvZmYgaW4gc3BlZWQsIGJ1dCBpdDxicj5jb3VsZCBhbGVydCB1cyB0
+byBwcm9ibGVtcyB0aGUgc2VsZnRlc3RzIGFsb25lIGRvbiYjMzk7dCBjYXRjaC48YnI+PGJyPlN1
+Z2dlc3RlZC1ieTogTWF0IE1hcnRpbmVhdSAmbHQ7bWF0aGV3LmoubWFydGluZWF1QGxpbnV4Lmlu
+dGVsLmNvbSZndDs8YnI+U2lnbmVkLW9mZi1ieTogTWF0dGhpZXUgQmFlcnRzICZsdDttYXR0aGll
+dS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0Ozxicj5DaGFuZ2UtSWQ6IEk1NDg2OGNjNzBjOGFiOTk0
+ZmVhNWY2OTI2ODY2OTEzYzEzM2IxMDhkPGJyPi0tLTxicj5NIGNpL3ZpcnRtZS5zaDxicj4xIGZp
+bGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSk8YnI+PGJyPjwvcHJl
+PjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3NwYWNlOyB3aGl0ZS1zcGFj
+ZTogcHJlLXdyYXA7Ij5naXQgcHVsbCBzc2g6Ly9yZXZpZXcuZ2Vycml0aHViLmlvOjI5NDE4L211
+bHRpcGF0aC10Y3AvbXB0Y3BfbmV0LW5leHQgcmVmcy9jaGFuZ2VzLzE5LzQ1NjIxOS8xPC9wcmU+
+PHA+VG8gdmlldywgdmlzaXQgPGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlvL2Mv
+bXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjIxOSI+Y2hhbmdlIDQ1NjIxOTwvYT4u
+IFRvIHVuc3Vic2NyaWJlLCBvciBmb3IgaGVscCB3cml0aW5nIG1haWwgZmlsdGVycywgdmlzaXQg
+PGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHViLmlvL3NldHRpbmdzIj5zZXR0aW5nczwv
+YT4uPC9wPjxkaXYgaXRlbXNjb3BlIGl0ZW10eXBlPSJodHRwOi8vc2NoZW1hLm9yZy9FbWFpbE1l
+c3NhZ2UiPjxkaXYgaXRlbXNjb3BlIGl0ZW1wcm9wPSJhY3Rpb24iIGl0ZW10eXBlPSJodHRwOi8v
+c2NoZW1hLm9yZy9WaWV3QWN0aW9uIj48bGluayBpdGVtcHJvcD0idXJsIiBocmVmPSJodHRwczov
+L3Jldmlldy5nZXJyaXRodWIuaW8vYy9tdWx0aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0LysvNDU2
+MjE5Ii8+PG1ldGEgaXRlbXByb3A9Im5hbWUiIGNvbnRlbnQ9IlZpZXcgQ2hhbmdlIi8+PC9kaXY+
+PC9kaXY+Cgo8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtUHJvamVjdDogbXVsdGlw
+YXRoLXRjcC9tcHRjcF9uZXQtbmV4dCA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4g
+R2Vycml0LUJyYW5jaDogc2NyaXB0cyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4g
+R2Vycml0LUNoYW5nZS1JZDogSTU0ODY4Y2M3MGM4YWI5OTRmZWE1ZjY5MjY4NjY5MTNjMTMzYjEw
+OGQgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1DaGFuZ2UtTnVtYmVy
+OiA0NTYyMTkgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1QYXRjaFNl
+dDogMSA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIj4gR2Vycml0LU93bmVyOiBNYXR0
+aGlldSBCYWVydHMgJmx0O21hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQmZ3Q7IDwvZGl2Pgo8
+ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtUmV2aWV3ZXI6IE1hdCBNYXJ0aW5lYXUg
+Jmx0O21hdGhldy5qLm1hcnRpbmVhdUBsaW51eC5pbnRlbC5jb20mZ3Q7IDwvZGl2Pgo8ZGl2IHN0
+eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtTWVzc2FnZVR5cGU6IG5ld2NoYW5nZSA8L2Rpdj4K
+Cg==
+
+--===============6127413528516543187==--
