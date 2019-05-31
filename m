@@ -1,35 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============6431030568646848500=="
+Content-Type: multipart/mixed; boundary="===============3062136916796699935=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 31 May 2019 16:00 UTC (9am PDT,
- 6pm CEST) - /!\ Friday this time /!\
-Date: Wed, 29 May 2019 20:04:59 +0200
-Message-ID: <747eebc5-8866-1ed6-b389-5c52e454cb7d@tessares.net>
+Subject: Re: [MPTCP] [PATCH v3] mptcp: Make mptcp initialization part of tcp
+ initialization
+Date: Fri, 31 May 2019 11:10:43 +0200
+Message-ID: <fce1eee0-26e2-3883-c409-a4eca1162e07@tessares.net>
+In-Reply-To: 20190528203754.25462-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1267
+X-UID: 1268
 
---===============6431030568646848500==
+--===============3062136916796699935==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+Hi Peter, Florian,
 
-Our public MPTCP upstreaming weekly web conference is NOT scheduled for
-tomorrow but for Friday.
+On 28/05/2019 22:37, Peter Krystad wrote:
+> Remove remnant module initialization of MPTCP and make it
+> part of the inet/tcp initialization sequence.
+> =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190531
+> OK to squash but needs to be split up between
+> "mptcp: Add MPTCP socket stubs" and
+> "mptcp: Associate MPTCP context with TCP socket"
+> =
 
-Feel free to add/modify topics!
+> v2 - ignore
+> v3 - fix function declaration
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
 
-Speak to you tomorrow!
-Matthieu
+Thank you for the patch, the new version and the review.
+
+Florian: is this new version OK for you?
+
+Speak to you later,
+Matt
+
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -38,4 +47,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============6431030568646848500==--
+--===============3062136916796699935==--
