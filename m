@@ -1,42 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============3679979295097185632=="
+Content-Type: multipart/mixed; boundary="===============2238152389418353290=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] MPTCP and the LPC networking track - CFP is open
-Date: Tue, 04 Jun 2019 14:13:12 -0700
-Message-ID: <alpine.OSX.2.21.1906041400020.13961@slseaman-mobl1.amr.corp.intel.com>
+Subject: Re: [MPTCP] KSelftests: errors last night (20190604)
+Date: Wed, 05 Jun 2019 00:12:52 +0200
+Message-ID: <20190604221252.zb5fpsrumklsqyoa@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.21.1906041357030.13961@slseaman-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1281
+X-UID: 1282
 
---===============3679979295097185632==
+--===============2238152389418353290==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> > The same tests were running fine just before without KASAN and
+> > PROVE_LOCKING.
+> > =
 
-Hello -
+> > I just re-launched the tests and I no longer have this error.
+> > =
 
-David Miller sent out the CFP notice today:
+> > Anyone else saw this error?
+> =
 
-https://lore.kernel.org/netdev/20190604.110514.1990517575751465932.davem(a)=
-davemloft.net/
+> Before Paolo fixed the skb_ext copying problem, I used to see this poll
+> timeout regularly, but I haven't seen it in a while. I will keep a look o=
+ut
+> for the error and try to reproduce it if it comes up again.
 
-The submission deadline is 2019-08-02, and "Any kind of advanced =
+Paolo thinks its just because of the test script change that added
+qdiscs with random loss and delay/reordering.
 
-networking-related topic will be considered." Like our NetDev 0x12 MPTCP =
+I've started a test run now (a ton of test script repeats) and will
+test with just raising the timeout.
 
-talk, I think we have several community members interested in =
+If that fixes things then Paolo is right and i will submit a test script
+patch.
 
-collaborating. If you have a presentation idea you'd like to work together =
-
-on please share!
-
-
-Regards,
-
---
-Mat Martineau
-Intel
-
---===============3679979295097185632==--
+--===============2238152389418353290==--
