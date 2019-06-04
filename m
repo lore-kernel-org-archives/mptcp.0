@@ -1,105 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============4682997635673471386=="
+Content-Type: multipart/mixed; boundary="===============9128408545091529993=="
 MIME-Version: 1.0
-From: Matthieu Baerts (GerritHub) <gerrit at gerrithub.io>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Change in ...mptcp_net-next[scripts]: ci:virtme: run tests
- with/without error detectors
-Date: Mon, 03 Jun 2019 16:43:06 +0000
-Message-ID: <gerrit.1559580181000.I5b4bacdfae3c17f04f2891f4d2601765cf96404f@review.gerrithub.io>
+Subject: [MPTCP] KSelftests: errors last night (20190604)
+Date: Tue, 04 Jun 2019 14:18:08 +0200
+Message-ID: <c9534f99-6dbf-4065-602c-5dcc3b55ec64@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1278
+X-UID: 1279
 
---===============4682997635673471386==
+--===============9128408545091529993==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Mat Martineau,
+Hello,
 
-I'd like you to do a code review. Please visit
+Last night, I got an error with one test:
 
-    https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+/456654
+(...)
+# ns2  TCP   -> ns3  (10.0.2.2:10029) MPTCP	[ OK ]
+# ns2  MPTCP -> ns3  (10.0.3.2:10030) MPTCP	[ OK ]
+# ns2  MPTCP -> ns3  (10.0.3.2:10031) TCP  	[ OK ]
+# ns2  TCP   -> ns3  (10.0.3.2:10032) MPTCP	[ OK ]
+# ns2  MPTCP -> ns4  (10.0.3.1:10033) MPTCP	main_loop_s: timed out
+# copyfd_io: poll timed out (events: POLLIN 1, POLLOUT 4)
+# [ FAIL ] client exit code 2, server 2
+# \nnetns ns4 socket stat for 10033:
+# State     Recv-Q   Send-Q        Local Address:Port        Peer
+Address:Port
+# SYN-RECV  0        0                  10.0.3.1:10033
+10.0.2.1:37248    timer:(on,5.020ms,3) cwnd:2 retrans:3/0 reordering:0
+# \nnetns ns2 socket stat for 10033:
+# State       Recv-Q   Send-Q      Local Address:Port        Peer
+Address:Port
+# FIN-WAIT-1  0        49153            10.0.2.1:37248
+10.0.3.1:10033    timer:(on,3.280ms,5) rto:6.75 cwnd:1 ssthresh:7
+retrans:5/0 reordering:0
+# ns3  MPTCP -> ns1  (10.0.1.1:10034) MPTCP	[ OK ]
+# ns3  MPTCP -> ns1  (10.0.1.1:10035) TCP  	[ OK ]
+# ns3  TCP   -> ns1  (10.0.1.1:10036) MPTCP	[ OK ]
+# ns3  MPTCP -> ns2  (10.0.1.2:10037) MPTCP	[ OK ]
+(...)
 
-to review the following change.
+The same tests were running fine just before without KASAN and
+PROVE_LOCKING.
 
+I just re-launched the tests and I no longer have this error.
 
-Change subject: ci:virtme: run tests with/without error detectors
-......................................................................
+Anyone else saw this error?
 
-ci:virtme: run tests with/without error detectors
+Cheers,
+Matt
 
-Error detectors like KASAN and PROVE_LOCKING slow down the tests
-execution. This might hide bugs. It is then better to run these tests
-twice: with and without these extra kernel tools.
-
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Change-Id: I5b4bacdfae3c17f04f2891f4d2601765cf96404f
----
-M ci/virtme.sh
-1 file changed, 3 insertions(+), 0 deletions(-)
-
-
-
-  git pull ssh://review.gerrithub.io:29418/multipath-tcp/mptcp_net-next ref=
-s/changes/54/456654/1
 -- =
 
-To view, visit https://review.gerrithub.io/c/multipath-tcp/mptcp_net-next/+=
-/456654
-To unsubscribe, or for help writing mail filters, visit https://review.gerr=
-ithub.io/settings
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-Gerrit-Project: multipath-tcp/mptcp_net-next
-Gerrit-Branch: scripts
-Gerrit-Change-Id: I5b4bacdfae3c17f04f2891f4d2601765cf96404f
-Gerrit-Change-Number: 456654
-Gerrit-PatchSet: 1
-Gerrit-Owner: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Gerrit-Reviewer: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Gerrit-MessageType: newchange
-
---===============4682997635673471386==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PHA+TWF0dGhpZXUgQmFlcnRzIHdvdWxkIGxpa2UgTWF0IE1hcnRpbmVhdSB0byA8c3Ryb25nPnJl
-dmlldzwvc3Ryb25nPiB0aGlzIGNoYW5nZS48L3A+PHA+PGEgaHJlZj0iaHR0cHM6Ly9yZXZpZXcu
-Z2Vycml0aHViLmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjY1NCI+Vmll
-dyBDaGFuZ2U8L2E+PC9wPjxwcmUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UsbW9ub3Nw
-YWNlOyB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7Ij5jaTp2aXJ0bWU6IHJ1biB0ZXN0cyB3aXRoL3dp
-dGhvdXQgZXJyb3IgZGV0ZWN0b3JzPGJyPjxicj5FcnJvciBkZXRlY3RvcnMgbGlrZSBLQVNBTiBh
-bmQgUFJPVkVfTE9DS0lORyBzbG93IGRvd24gdGhlIHRlc3RzPGJyPmV4ZWN1dGlvbi4gVGhpcyBt
-aWdodCBoaWRlIGJ1Z3MuIEl0IGlzIHRoZW4gYmV0dGVyIHRvIHJ1biB0aGVzZSB0ZXN0czxicj50
-d2ljZTogd2l0aCBhbmQgd2l0aG91dCB0aGVzZSBleHRyYSBrZXJuZWwgdG9vbHMuPGJyPjxicj5T
-aWduZWQtb2ZmLWJ5OiBNYXR0aGlldSBCYWVydHMgJmx0O21hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJl
-cy5uZXQmZ3Q7PGJyPkNoYW5nZS1JZDogSTViNGJhY2RmYWUzYzE3ZjA0ZjI4OTFmNGQyNjAxNzY1
-Y2Y5NjQwNGY8YnI+LS0tPGJyPk0gY2kvdmlydG1lLnNoPGJyPjEgZmlsZSBjaGFuZ2VkLCAzIGlu
-c2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pPGJyPjxicj48L3ByZT48cHJlIHN0eWxlPSJmb250
-LWZhbWlseTogbW9ub3NwYWNlLG1vbm9zcGFjZTsgd2hpdGUtc3BhY2U6IHByZS13cmFwOyI+Z2l0
-IHB1bGwgc3NoOi8vcmV2aWV3LmdlcnJpdGh1Yi5pbzoyOTQxOC9tdWx0aXBhdGgtdGNwL21wdGNw
-X25ldC1uZXh0IHJlZnMvY2hhbmdlcy81NC80NTY2NTQvMTwvcHJlPjxwPlRvIHZpZXcsIHZpc2l0
-IDxhIGhyZWY9Imh0dHBzOi8vcmV2aWV3LmdlcnJpdGh1Yi5pby9jL211bHRpcGF0aC10Y3AvbXB0
-Y3BfbmV0LW5leHQvKy80NTY2NTQiPmNoYW5nZSA0NTY2NTQ8L2E+LiBUbyB1bnN1YnNjcmliZSwg
-b3IgZm9yIGhlbHAgd3JpdGluZyBtYWlsIGZpbHRlcnMsIHZpc2l0IDxhIGhyZWY9Imh0dHBzOi8v
-cmV2aWV3LmdlcnJpdGh1Yi5pby9zZXR0aW5ncyI+c2V0dGluZ3M8L2E+LjwvcD48ZGl2IGl0ZW1z
-Y29wZSBpdGVtdHlwZT0iaHR0cDovL3NjaGVtYS5vcmcvRW1haWxNZXNzYWdlIj48ZGl2IGl0ZW1z
-Y29wZSBpdGVtcHJvcD0iYWN0aW9uIiBpdGVtdHlwZT0iaHR0cDovL3NjaGVtYS5vcmcvVmlld0Fj
-dGlvbiI+PGxpbmsgaXRlbXByb3A9InVybCIgaHJlZj0iaHR0cHM6Ly9yZXZpZXcuZ2Vycml0aHVi
-LmlvL2MvbXVsdGlwYXRoLXRjcC9tcHRjcF9uZXQtbmV4dC8rLzQ1NjY1NCIvPjxtZXRhIGl0ZW1w
-cm9wPSJuYW1lIiBjb250ZW50PSJWaWV3IENoYW5nZSIvPjwvZGl2PjwvZGl2PgoKPGRpdiBzdHls
-ZT0iZGlzcGxheTpub25lIj4gR2Vycml0LVByb2plY3Q6IG11bHRpcGF0aC10Y3AvbXB0Y3BfbmV0
-LW5leHQgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1CcmFuY2g6IHNj
-cmlwdHMgPC9kaXY+CjxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1DaGFuZ2UtSWQ6
-IEk1YjRiYWNkZmFlM2MxN2YwNGYyODkxZjRkMjYwMTc2NWNmOTY0MDRmIDwvZGl2Pgo8ZGl2IHN0
-eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtQ2hhbmdlLU51bWJlcjogNDU2NjU0IDwvZGl2Pgo8
-ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiPiBHZXJyaXQtUGF0Y2hTZXQ6IDEgPC9kaXY+CjxkaXYg
-c3R5bGU9ImRpc3BsYXk6bm9uZSI+IEdlcnJpdC1Pd25lcjogTWF0dGhpZXUgQmFlcnRzICZsdDtt
-YXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Jmd0OyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxh
-eTpub25lIj4gR2Vycml0LVJldmlld2VyOiBNYXQgTWFydGluZWF1ICZsdDttYXRoZXcuai5tYXJ0
-aW5lYXVAbGludXguaW50ZWwuY29tJmd0OyA8L2Rpdj4KPGRpdiBzdHlsZT0iZGlzcGxheTpub25l
-Ij4gR2Vycml0LU1lc3NhZ2VUeXBlOiBuZXdjaGFuZ2UgPC9kaXY+Cgo=
-
---===============4682997635673471386==--
+--===============9128408545091529993==--
