@@ -1,130 +1,159 @@
-Content-Type: multipart/mixed; boundary="===============4004222023694545573=="
+Content-Type: multipart/mixed; boundary="===============6469439190137420249=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] KSelftests warnings: Replaced mapping before it was done
-Date: Wed, 05 Jun 2019 10:44:02 -0700
-Message-ID: <20190605174402.GS5495@MacBook-Pro-64.local>
-In-Reply-To: 94b092e24c7ba034f0388d4300dc35f6d83371d5.camel@redhat.com
+Subject: Re: [MPTCP] [PATCH] mptcp:init: panic in case of error
+Date: Wed, 05 Jun 2019 11:14:06 -0700
+Message-ID: <8e63b0163210cc5a63d7aa04142cce2fbb9c57eb.camel@linux.intel.com>
+In-Reply-To: 20190531151844.17972-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1292
+X-UID: 1293
 
---===============4004222023694545573==
+--===============6469439190137420249==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-On 05/06/19 - 10:13:37, Paolo Abeni wrote:
-> On Tue, 2019-06-04 at 21:28 -0700, Christoph Paasch wrote:
-> > On 04/06/19 - 18:21:18, Mat Martineau wrote:
-> > > On Fri, 31 May 2019, Matthieu Baerts wrote:
-> > > =
+Looks good to me Matthieu, thanks for the improvements.
 
-> > > > Hello,
-> > > > =
+Peter.
 
-> > > > As just discussed, I have this warning when launching kselftests:
-> > > > =
-
-> > > >    Replaced mapping before it was done
-> > > > =
-
-> > > > =
-
-> > > > Here are the logs when KASAN and PROVE_LOCKING are used:
-> > > > =
-
-> > > > TAP version 13
-> > > > 1..1
-> > > > # selftests: mptcp: mptcp_connect.sh
-> > > > [   40.042417] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth2: link becomes=
- ready
-> > > > [   40.258626] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth3: link becomes=
- ready
-> > > > [   40.488896] IPv6: ADDRCONF(NETDEV_CHANGE): ns3eth4: link becomes=
- ready
-> > > > # Created /tmp/tmp.GJv3xyPEgr (size 5220870) containing data sent b=
-y client
-> > > > # Created /tmp/tmp.qFsIUFmpRA (size 2720072) containing data sent b=
-y server
-> > > > # ns1  MPTCP -> ns1  (10.0.1.1:10000) MPTCP	[   40.852761] IPv6:
-> > > > ADDRCONF(NETDEV_CHANGE): ns2eth1: link becomes ready
-> > > > [ OK ]
-> > > > # ns1  MPTCP -> ns1  (10.0.1.1:10001) TCP  	[ OK ]
-> > > > # ns1  TCP   -> ns1  (10.0.1.1:10002) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns2  (10.0.1.2:10003) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns2  (10.0.1.2:10004) TCP  	[ OK ]
-> > > > # ns1  TCP   -> ns2  (10.0.1.2:10005) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns2  (10.0.2.1:10006) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns2  (10.0.2.1:10007) TCP  	[ OK ]
-> > > > # ns1  TCP   -> ns2  (10.0.2.1:10008) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns3  (10.0.2.2:10009) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns3  (10.0.2.2:10010) TCP  	[ OK ]
-> > > > # ns1  TCP   -> ns3  (10.0.2.2:10011) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns3  (10.0.3.2:10012) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns3  (10.0.3.2:10013) TCP  	[ OK ]
-> > > > # ns1  TCP   -> ns3  (10.0.3.2:10014) MPTCP	[ OK ]
-> > > > # ns1  MPTCP -> ns4  (10.0.3.1:10015) MPTCP	[   62.510172] Replaced
-> > > > mapping before it was done
-> > > > [   62.510714] Replaced mapping before it was done
-> > > > [   62.516202] Replaced mapping before it was done
-> > > > [   62.556681] Replaced mapping before it was done
-> > > > [   62.561805] Replaced mapping before it was done
-> > > > [   62.574194] Replaced mapping before it was done
-> > > > [   62.586401] Replaced mapping before it was done
-> > > =
-
-> > > ...
-> > > =
-
-> > > It looks like this is due to TSO & GSO duplicating the headers for la=
-rge
-> > > sends, so the same TCP options get sent on all the segments.
-> > > =
-
-> > > The RFC seems (?) to allow this.
-> > =
-
-> > Yes, it does.
-> > =
-
-> > > We're wasting bandwidth by sending
-> > > redundant mappings, but it doesn't hurt anything. It could be handled=
- better
-> > > by the receiving code, which could confirm that the entire mapping ma=
-tches
-> > > and only trigger an error when there is a mismatch. Or we could be mo=
-re
-> > > aggressive about rewriting or truncating the TCP options during
-> > > segmentation.
-> > =
-
-> > The receiver needs to support such kind of segment splitting as a middl=
-ebox
-> > might do it on its own. The receiver has to wait until the full mapping=
- has
-> > been received on the subflow before pushing it higher up to MPTCP.
+On Fri, 2019-05-31 at 17:18 +0200, Matthieu Baerts wrote:
+> The idea is to mimic what is done in tcp_init() and not ignore errors
+> from the init phase. It also simplifies the code as we don't have to
+> manage exit parts anymore.
 > =
 
-> AFAICS, currently such constraint is not enforced: we pass up to the
-> MTPCP socket and to user-space any skb as soon as the associated MPTCP
-> sequence number is in-order and inside the current mapping. Would that
-> break something?
+> Can be squashed in:
+> - "mptcp: Add MPTCP socket stubs" (mptcp_init())
+> - "mptcp: Associate MPTCP context with TCP socket" (subflow_init())
+> - "mptcp: Create SUBFLOW socket for incoming connections" (subflow_ops)
+> =
 
-It would break when DSS-checksums are being used, as the full mapping is
-needed to verify the checksum of the mapping.
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> ---
+>  net/mptcp/protocol.c | 20 ++++----------------
+>  net/mptcp/protocol.h |  3 +--
+>  net/mptcp/subflow.c  | 27 +++++----------------------
+>  3 files changed, 10 insertions(+), 40 deletions(-)
+> =
 
-When there is no DSS-checksum, I think it should be fine. On the
-multipath-tcp.org implementation we are currently waiting for the full
-mapping before pushing up higher.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 4e809719dcfd..b342cd4115da 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -992,10 +992,8 @@ static struct inet_protosw mptcp_protosw =3D {
+>  	.flags		=3D INET_PROTOSW_ICSK,
+>  };
+>  =
 
-Is it easier to be implemented by not waiting for the full mapping?
+> -void mptcp_init(void)
+> +void __init mptcp_init(void)
+>  {
+> -	int err;
+> -
+>  	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
+>  	mptcp_stream_ops =3D inet_stream_ops;
+>  	mptcp_stream_ops.bind =3D mptcp_bind;
+> @@ -1008,22 +1006,12 @@ void mptcp_init(void)
+>  =
+
+>  	token_init();
+>  	crypto_init();
+> +	subflow_init();
+>  =
+
+> -	err =3D subflow_init();
+> -	if (err)
+> -		goto subflow_failed;
+> -
+> -	err =3D proto_register(&mptcp_prot, 1);
+> -	if (err)
+> -		goto proto_failed;
+> +	if (proto_register(&mptcp_prot, 1) !=3D 0)
+> +		panic("Failed to register MPTCP proto.\n");
+>  =
+
+>  	inet_register_protosw(&mptcp_protosw);
+>  =
+
+>  	return;
+> -
+> -proto_failed:
+> -	subflow_exit();
+> -
+> -subflow_failed:
+> -	return;
+>  }
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 258325e42fa4..c1a39e31f641 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -105,8 +105,7 @@ static inline struct socket *mptcp_subflow_tcp_socket=
+(const struct subflow_conte
+>  	return subflow->tcp_sock;
+>  }
+>  =
+
+> -int subflow_init(void);
+> -void subflow_exit(void);
+> +void subflow_init(void);
+>  =
+
+>  extern const struct inet_connection_sock_af_ops ipv4_specific;
+>  =
+
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 1b8ec517c687..19f36ba6841f 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -286,19 +286,11 @@ static int subflow_ops_init(struct request_sock_ops=
+ *subflow_ops)
+>  	return 0;
+>  }
+>  =
+
+> -static void subflow_ops_exit(void)
+> +void subflow_init(void)
+>  {
+> -	kmem_cache_destroy(subflow_request_sock_ops.slab);
+> -}
+> -
+> -int subflow_init(void)
+> -{
+> -	int ret;
+> -
+>  	subflow_request_sock_ops =3D tcp_request_sock_ops;
+> -	ret =3D subflow_ops_init(&subflow_request_sock_ops);
+> -	if (ret !=3D 0)
+> -		return ret;
+> +	if (subflow_ops_init(&subflow_request_sock_ops) !=3D 0)
+> +		panic("MPTCP: failed to init subflow request sock ops");
+>  =
+
+>  	subflow_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
+>  	subflow_request_sock_ipv4_ops.init_req =3D subflow_v4_init_req;
+> @@ -309,15 +301,6 @@ int subflow_init(void)
+>  	subflow_specific.sk_rx_dst_set =3D subflow_finish_connect;
+>  	subflow_specific.rebuild_header =3D subflow_rebuild_header;
+>  =
+
+> -	ret =3D tcp_register_ulp(&subflow_ulp_ops);
+> -	if (ret !=3D 0)
+> -		subflow_ops_exit();
+> -
+> -	return ret;
+> -}
+> -
+> -void subflow_exit(void)
+> -{
+> -	tcp_unregister_ulp(&subflow_ulp_ops);
+> -	subflow_ops_exit();
+> +	if (tcp_register_ulp(&subflow_ulp_ops) !=3D 0)
+> +		panic("MPTCP: failed to register subflows to ULP");
+>  }
 
 
-Christoph
-
-
---===============4004222023694545573==--
+--===============6469439190137420249==--
