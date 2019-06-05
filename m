@@ -1,159 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============6469439190137420249=="
+Content-Type: multipart/mixed; boundary="===============0187782861624438012=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp:init: panic in case of error
-Date: Wed, 05 Jun 2019 11:14:06 -0700
-Message-ID: <8e63b0163210cc5a63d7aa04142cce2fbb9c57eb.camel@linux.intel.com>
-In-Reply-To: 20190531151844.17972-1-matthieu.baerts@tessares.net
+Subject: Re: [MPTCP] [PATCH] mptcp: do not warn when replacing an identical
+ mapping.
+Date: Wed, 05 Jun 2019 14:31:55 -0700
+Message-ID: <alpine.OSX.2.21.1906051426500.2787@dgenex-mobl.amr.corp.intel.com>
+In-Reply-To: 87926986ed8572ddad3c82230f0cf9b883fbbeb9.1559742173.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1293
+X-UID: 1294
 
---===============6469439190137420249==
+--===============0187782861624438012==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-Looks good to me Matthieu, thanks for the improvements.
+On Wed, 5 Jun 2019, Paolo Abeni wrote:
 
-Peter.
+> Said event can happen due GSO/TSO, do not warn then.
+>
+> Fixes: af798ed636e2 ("mptcp: Implement MPTCP receive path")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> --
+> Notes:
+> - I'm ok squashing this commit into the fixed one
+> - I can't reproduce the warn locally, need someone else to verify
+>  this one
 
-On Fri, 2019-05-31 at 17:18 +0200, Matthieu Baerts wrote:
-> The idea is to mimic what is done in tcp_init() and not ignore errors
-> from the init phase. It also simplifies the code as we don't have to
-> manage exit parts anymore.
-> =
+This patch eliminates the warnings for me. I think it's good to merge (and =
 
-> Can be squashed in:
-> - "mptcp: Add MPTCP socket stubs" (mptcp_init())
-> - "mptcp: Associate MPTCP context with TCP socket" (subflow_init())
-> - "mptcp: Create SUBFLOW socket for incoming connections" (subflow_ops)
-> =
+squash) for now.
 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Thanks for the fix, Paolo.
+
+
+Mat
+
+
 > ---
->  net/mptcp/protocol.c | 20 ++++----------------
->  net/mptcp/protocol.h |  3 +--
->  net/mptcp/subflow.c  | 27 +++++----------------------
->  3 files changed, 10 insertions(+), 40 deletions(-)
-> =
-
+> net/mptcp/protocol.c | 22 +++++++++++++++-------
+> 1 file changed, 15 insertions(+), 7 deletions(-)
+>
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4e809719dcfd..b342cd4115da 100644
+> index 4e809719dcfd..65ad881daf0d 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -992,10 +992,8 @@ static struct inet_protosw mptcp_protosw =3D {
->  	.flags		=3D INET_PROTOSW_ICSK,
->  };
->  =
-
-> -void mptcp_init(void)
-> +void __init mptcp_init(void)
->  {
-> -	int err;
+> @@ -291,6 +291,7 @@ static enum mapping_status mptcp_get_mapping(struct s=
+ock *ssk)
+> 	struct mptcp_ext *mpext;
+> 	enum mapping_status ret;
+> 	struct sk_buff *skb;
+> +	u64 map_seq;
+>
+> 	skb =3D skb_peek(&ssk->sk_receive_queue);
+> 	if (!skb) {
+> @@ -325,18 +326,25 @@ static enum mapping_status mptcp_get_mapping(struct=
+ sock *ssk)
+> 		goto del_out;
+> 	}
+>
+> -	if (subflow->map_valid)
+> -		pr_warn("Replaced mapping before it was done");
 > -
->  	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
->  	mptcp_stream_ops =3D inet_stream_ops;
->  	mptcp_stream_ops.bind =3D mptcp_bind;
-> @@ -1008,22 +1006,12 @@ void mptcp_init(void)
->  =
+> 	if (!mpext->dsn64) {
+> -		subflow->map_seq =3D expand_seq(subflow->map_seq,
+> -					      subflow->map_data_len,
+> -					      mpext->data_seq);
+> +		map_seq =3D expand_seq(subflow->map_seq, subflow->map_data_len,
+> +				     mpext->data_seq);
+> 		pr_debug("expanded seq=3D%llu", subflow->map_seq);
+> 	} else {
+> -		subflow->map_seq =3D mpext->data_seq;
+> +		map_seq =3D mpext->data_seq;
+> +	}
+> +
+> +	if (subflow->map_valid) {
+> +		/* due to GSO/TSO we can receive the same mapping multiple
+> +		 * times, before it's expiration.
+> +		 */
+> +		if (subflow->map_seq !=3D map_seq ||
+> +		    subflow->map_subflow_seq !=3D mpext->subflow_seq ||
+> +		    subflow->map_data_len !=3D mpext->data_len)
+> +			pr_warn("Replaced mapping before it was done");
+> 	}
+>
+> +	subflow->map_seq =3D map_seq;
+> 	subflow->map_subflow_seq =3D mpext->subflow_seq;
+> 	subflow->map_data_len =3D mpext->data_len;
+> 	subflow->map_valid =3D 1;
+> -- =
 
->  	token_init();
->  	crypto_init();
-> +	subflow_init();
->  =
+> 2.20.1
+>
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+>
 
-> -	err =3D subflow_init();
-> -	if (err)
-> -		goto subflow_failed;
-> -
-> -	err =3D proto_register(&mptcp_prot, 1);
-> -	if (err)
-> -		goto proto_failed;
-> +	if (proto_register(&mptcp_prot, 1) !=3D 0)
-> +		panic("Failed to register MPTCP proto.\n");
->  =
+--
+Mat Martineau
+Intel
 
->  	inet_register_protosw(&mptcp_protosw);
->  =
-
->  	return;
-> -
-> -proto_failed:
-> -	subflow_exit();
-> -
-> -subflow_failed:
-> -	return;
->  }
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 258325e42fa4..c1a39e31f641 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -105,8 +105,7 @@ static inline struct socket *mptcp_subflow_tcp_socket=
-(const struct subflow_conte
->  	return subflow->tcp_sock;
->  }
->  =
-
-> -int subflow_init(void);
-> -void subflow_exit(void);
-> +void subflow_init(void);
->  =
-
->  extern const struct inet_connection_sock_af_ops ipv4_specific;
->  =
-
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 1b8ec517c687..19f36ba6841f 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -286,19 +286,11 @@ static int subflow_ops_init(struct request_sock_ops=
- *subflow_ops)
->  	return 0;
->  }
->  =
-
-> -static void subflow_ops_exit(void)
-> +void subflow_init(void)
->  {
-> -	kmem_cache_destroy(subflow_request_sock_ops.slab);
-> -}
-> -
-> -int subflow_init(void)
-> -{
-> -	int ret;
-> -
->  	subflow_request_sock_ops =3D tcp_request_sock_ops;
-> -	ret =3D subflow_ops_init(&subflow_request_sock_ops);
-> -	if (ret !=3D 0)
-> -		return ret;
-> +	if (subflow_ops_init(&subflow_request_sock_ops) !=3D 0)
-> +		panic("MPTCP: failed to init subflow request sock ops");
->  =
-
->  	subflow_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
->  	subflow_request_sock_ipv4_ops.init_req =3D subflow_v4_init_req;
-> @@ -309,15 +301,6 @@ int subflow_init(void)
->  	subflow_specific.sk_rx_dst_set =3D subflow_finish_connect;
->  	subflow_specific.rebuild_header =3D subflow_rebuild_header;
->  =
-
-> -	ret =3D tcp_register_ulp(&subflow_ulp_ops);
-> -	if (ret !=3D 0)
-> -		subflow_ops_exit();
-> -
-> -	return ret;
-> -}
-> -
-> -void subflow_exit(void)
-> -{
-> -	tcp_unregister_ulp(&subflow_ulp_ops);
-> -	subflow_ops_exit();
-> +	if (tcp_register_ulp(&subflow_ulp_ops) !=3D 0)
-> +		panic("MPTCP: failed to register subflows to ULP");
->  }
-
-
---===============6469439190137420249==--
+--===============0187782861624438012==--
