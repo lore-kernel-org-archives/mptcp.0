@@ -1,23 +1,21 @@
-Content-Type: multipart/mixed; boundary="===============6907660637154615634=="
+Content-Type: multipart/mixed; boundary="===============8233965097631293634=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] KSelftests warnings: Replaced mapping before it was done
-Date: Tue, 04 Jun 2019 21:28:00 -0700
-Message-ID: <20190605042800.GQ5495@MacBook-Pro-64.local>
+Date: Wed, 05 Jun 2019 10:10:39 +0200
+Message-ID: <816049940b02daee347ef984e05d3a2dc2157ead.camel@redhat.com>
 In-Reply-To: alpine.OSX.2.21.1906041803530.13961@slseaman-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1284
+X-UID: 1285
 
---===============6907660637154615634==
+--===============8233965097631293634==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 04/06/19 - 18:21:18, Mat Martineau wrote:
-> =
-
+On Tue, 2019-06-04 at 18:21 -0700, Mat Martineau wrote:
 > On Fri, 31 May 2019, Matthieu Baerts wrote:
 > =
 
@@ -78,28 +76,34 @@ rver
 > ...
 > =
 
-> It looks like this is due to TSO & GSO duplicating the headers for large
+> It looks like this is due to TSO & GSO duplicating the headers for large =
+
 > sends, so the same TCP options get sent on all the segments.
 > =
 
-> The RFC seems (?) to allow this.
+> The RFC seems (?) to allow this. We're wasting bandwidth by sending =
 
-Yes, it does.
+> redundant mappings, but it doesn't hurt anything. It could be handled =
 
-> We're wasting bandwidth by sending
-> redundant mappings, but it doesn't hurt anything. It could be handled bet=
-ter
-> by the receiving code, which could confirm that the entire mapping matches
-> and only trigger an error when there is a mismatch. Or we could be more
-> aggressive about rewriting or truncating the TCP options during
+> better by the receiving code, which could confirm that the entire mapping =
+
+> matches and only trigger an error when there is a mismatch. =
+
+
+I think this is the best option, I'll cook a patch.
+
+> Or we could be =
+
+> more aggressive about rewriting or truncating the TCP options during =
+
 > segmentation.
 
-The receiver needs to support such kind of segment splitting as a middlebox
-might do it on its own. The receiver has to wait until the full mapping has
-been received on the subflow before pushing it higher up to MPTCP.
+I think this will create a lot of complexity in the GSO code and will
+forbit TSO.
+
+Thanks,
+
+Paolo
 
 
-Christoph
-
-
---===============6907660637154615634==--
+--===============8233965097631293634==--
