@@ -1,38 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============0010379819423432262=="
+Content-Type: multipart/mixed; boundary="===============8444838434797293594=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 23rd of May 2019
-Date: Wed, 05 Jun 2019 18:31:03 +0200
-Message-ID: <a39f62185b8aab6c036ae8736e71aa10b96ef0b0.camel@redhat.com>
-In-Reply-To: ba21353d-402b-a267-0310-94a408505280@tessares.net
+Subject: Re: [MPTCP] [PATCH] mptcp: do not warn when replacing an identical
+ mapping.
+Date: Wed, 05 Jun 2019 19:42:16 +0200
+Message-ID: <243078b8-e0d3-f7f1-e021-68bec0ffdd34@tessares.net>
+In-Reply-To: 87926986ed8572ddad3c82230f0cf9b883fbbeb9.1559742173.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1290
+X-UID: 1291
 
---===============0010379819423432262==
+--===============8444838434797293594==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-05-23 at 19:17 +0200, Matthieu Baerts wrote:
->     =E2=86=92 will propose that to net-next to have comments from ULP
-> community and maybe already have it in net-next (useful only for kTLS
-> for the moment)
+Hi Paolo,
 
-hi,
+On 05/06/2019 15:53, Paolo Abeni wrote:
+> Said event can happen due GSO/TSO, do not warn then.
+> =
 
-RFC patch posted:
+> Fixes: af798ed636e2 ("mptcp: Implement MPTCP receive path")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> --
+> Notes:
+> - I'm ok squashing this commit into the fixed one
+> - I can't reproduce the warn locally, need someone else to verify =
 
-https://lore.kernel.org/netdev/cover.1559747691.git.dcaratti(a)redhat.com/
+>   this one
 
-(with an additional nest level in the netlink message, so that parsing
-from userspace is easier). Any feedback appreciated!
+Thank you for the patch! It looks good to me but I would prefer to wait
+for Mat's review on that as he identified the cause.
 
-thank you in advance,
+I tested it locally with the virtme' script and I no longer have the
+warning in dmesg!
+
+Cheers,
+Matt
 -- =
 
-davide
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============0010379819423432262==--
+--===============8444838434797293594==--
