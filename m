@@ -1,77 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============2187089528160711336=="
+Content-Type: multipart/mixed; boundary="===============3667910429439229938=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 7/7] mptcp: Refactor mptcp_established_options()
- to single hook
-Date: Thu, 06 Jun 2019 09:34:23 +0200
-Message-ID: <c9236f57cb352ca229e2af1386bd788d13b63427.camel@redhat.com>
-In-Reply-To: 20190606003632.2863-8-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [PATCH] mptcp: do not warn when replacing an identical
+ mapping.
+Date: Thu, 06 Jun 2019 14:05:23 +0200
+Message-ID: <84993dc1-86dc-7126-3f3f-d0c732fd5f0a@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1906051426500.2787@dgenex-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1304
+X-UID: 1305
 
---===============2187089528160711336==
+--===============3667910429439229938==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Paolo, Mat,
 
-I have a couple of very minor comments here, please see below.
+On 05/06/2019 23:31, Mat Martineau wrote:
+> =
 
-On Wed, 2019-06-05 at 17:36 -0700, Peter Krystad wrote:
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index 0b4865c55e4e..6ad88b70de6c 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/
-> @@ -443,6 +443,7 @@ struct tcp_out_options {
->  =
+> On Wed, 5 Jun 2019, Paolo Abeni wrote:
+> =
 
->  static void mptcp_options_write(__be32 *ptr, struct tcp_out_options *opt=
-s)
->  {
-> +	pr_debug("entered");
+>> Said event can happen due GSO/TSO, do not warn then.
+>>
+>> Fixes: af798ed636e2 ("mptcp: Implement MPTCP receive path")
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+>> -- =
 
-I think the above debug message could be moved under the CONFIG_MPTCP
-conditional, or possibly even dropped.
+>> Notes:
+>> - I'm ok squashing this commit into the fixed one
+>> - I can't reproduce the warn locally, need someone else to verify
+>> =C2=A0this one
+> =
 
->  #if IS_ENABLED(CONFIG_MPTCP)
->  	if (unlikely(OPTION_MPTCP & opts->options))
->  		mptcp_write_options(ptr, &opts->mptcp);
+> This patch eliminates the warnings for me. I think it's good to merge
+> (and squash) for now.
+> =
 
-[...]
+> Thanks for the fix, Paolo.
 
-> @@ -338,6 +341,27 @@ bool mptcp_established_options_dss(struct sock *sk, =
-struct sk_buff *skb,
->  	return true;
->  }
->  =
+Thank you again for the patch and thank you for the review.
 
-> +bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-> +			       unsigned int *size, unsigned int remaining,
-> +			       struct mptcp_out_options *opts)
-> +{
-> +	unsigned int opt_size =3D 0;
-> +
-> +	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
-> +		*size +=3D opt_size;
-> +		remaining -=3D opt_size;
-> +		return true;
-> +	}
-> +	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
-> +					       opts)) {
+I just added it in our repo:
+- 5c7c220aae31: "squash"
+- 54cae76d4cfc: the Signed-Off was already there
+- da94dd36fcab..78190143f7fb: result
 
-I think the preferred kernel style is: '} else if ('...
+Builds are OK, tests are OK, no more warnings!
 
-Perhpas moving here the 'if (subflow->mp_capable' test from both
-mptcp_established_options_dss() and mptcp_established_options_mp()
-would simplify the code?
+Cheers,
+Matt
+-- =
 
-Thanks!
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-Paolo
-
-
-
---===============2187089528160711336==--
+--===============3667910429439229938==--
