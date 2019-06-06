@@ -1,99 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============3401824889801750290=="
+Content-Type: multipart/mixed; boundary="===============2187089528160711336=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 1/7] mptcp: reduce number of pr_debug() calls.
-Date: Thu, 06 Jun 2019 09:11:25 +0200
-Message-ID: <67805a2bb3dd3cc47fbd40f6650a47d7bb2de298.camel@redhat.com>
-In-Reply-To: 20190606003632.2863-2-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [PATCH 7/7] mptcp: Refactor mptcp_established_options()
+ to single hook
+Date: Thu, 06 Jun 2019 09:34:23 +0200
+Message-ID: <c9236f57cb352ca229e2af1386bd788d13b63427.camel@redhat.com>
+In-Reply-To: 20190606003632.2863-8-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1303
+X-UID: 1304
 
---===============3401824889801750290==
+--===============2187089528160711336==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hi,
 
-Thank you for the great effort!
-
-I have a few comments, see below...
+I have a couple of very minor comments here, please see below.
 
 On Wed, 2019-06-05 at 17:36 -0700, Peter Krystad wrote:
-> squash to: Handle MPTCP TCP options
-> =
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index 0b4865c55e4e..6ad88b70de6c 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/
+> @@ -443,6 +443,7 @@ struct tcp_out_options {
+>  =
 
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> ---
->  net/mptcp/options.c | 36 +++++++++++++++++++-----------------
->  1 file changed, 19 insertions(+), 17 deletions(-)
-> =
-
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 9b9b9c9390c1..964e73b6b48b 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -13,7 +13,7 @@
->  void mptcp_parse_option(const unsigned char *ptr, int opsize,
->  			struct tcp_options_received *opt_rx)
+>  static void mptcp_options_write(__be32 *ptr, struct tcp_out_options *opt=
+s)
 >  {
-> -	struct mptcp_options_received *mp_opt;
-> +	struct mptcp_options_received *mp_opt =3D &opt_rx->mptcp;
->  	u8 subtype =3D *ptr >> 4;
->  	int expected_opsize;
+> +	pr_debug("entered");
+
+I think the above debug message could be moved under the CONFIG_MPTCP
+conditional, or possibly even dropped.
+
+>  #if IS_ENABLED(CONFIG_MPTCP)
+>  	if (unlikely(OPTION_MPTCP & opts->options))
+>  		mptcp_write_options(ptr, &opts->mptcp);
+
+[...]
+
+> @@ -338,6 +341,27 @@ bool mptcp_established_options_dss(struct sock *sk, =
+struct sk_buff *skb,
+>  	return true;
+>  }
 >  =
 
-> @@ -25,25 +25,28 @@ void mptcp_parse_option(const unsigned char *ptr, int=
- opsize,
->  	 * 10-17: Receiver key (optional)
->  	 */
->  	case MPTCPOPT_MP_CAPABLE:
-> -		if (opsize !=3D TCPOLEN_MPTCP_MPC_SYN &&
-> -		    opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
-> -			break;
-> -
-> -		pr_debug("MP_CAPABLE");
-> -		opt_rx->mptcp.version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
-> -		if (opt_rx->mptcp.version !=3D 0)
-> +		mp_opt->version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
-> +		if (mp_opt->version !=3D 0)
->  			break;
-
-I think we need to check the optsize before accessiong the option data,
-or we could end-up reading after the packet end, for
-malformed/malicious pkts.
-
->  =
-
-> -		opt_rx->mptcp.mp_capable =3D 1;
-> -		pr_debug("flags=3D%02x", *ptr);
-> -		opt_rx->mptcp.flags =3D *ptr++;
-> -		opt_rx->mptcp.sndr_key =3D get_unaligned_be64(ptr);
-> -		pr_debug("sndr_key=3D%llu", opt_rx->mptcp.sndr_key);
-> +		mp_opt->mp_capable =3D 1;
-> +		mp_opt->flags =3D *ptr++;
-> +		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
->  		ptr +=3D 8;
-> -		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
-> -			opt_rx->mptcp.rcvr_key =3D get_unaligned_be64(ptr);
-> -			pr_debug("rcvr_key=3D%llu", opt_rx->mptcp.rcvr_key);
+> +bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> +			       unsigned int *size, unsigned int remaining,
+> +			       struct mptcp_out_options *opts)
+> +{
+> +	unsigned int opt_size =3D 0;
 > +
-> +		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYN) {
-> +			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu",
-> +				 mp_opt->flags, mp_opt->sndr_key);
-> +		} else if ((opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) ||
-> +			   (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK)) {
+> +	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
+> +		*size +=3D opt_size;
+> +		remaining -=3D opt_size;
+> +		return true;
+> +	}
+> +	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
+> +					       opts)) {
 
-Since TCPOLEN_MPTCP_MPC_ACK =3D=3D TCPOLEN_MPTCP_MPC_SYNACK, possibly some
-compilers may emit a warning here?!? perhpas we can just drop the
-second comparison, with a comment.
- =
+I think the preferred kernel style is: '} else if ('...
 
-Thanks,
+Perhpas moving here the 'if (subflow->mp_capable' test from both
+mptcp_established_options_dss() and mptcp_established_options_mp()
+would simplify the code?
+
+Thanks!
 
 Paolo
 
 
---===============3401824889801750290==--
+
+--===============2187089528160711336==--
