@@ -1,116 +1,208 @@
-Content-Type: multipart/mixed; boundary="===============1705887902633507833=="
+Content-Type: multipart/mixed; boundary="===============7618766080743054879=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 5/7] mptcp: parsing DSS option should use own flags
- field.
-Date: Wed, 05 Jun 2019 17:36:30 -0700
-Message-ID: <20190606003632.2863-6-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH 7/7] mptcp: Refactor mptcp_established_options() to
+ single hook
+Date: Wed, 05 Jun 2019 17:36:32 -0700
+Message-ID: <20190606003632.2863-8-peter.krystad@linux.intel.com>
 In-Reply-To: 20190606003632.2863-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1300
+X-UID: 1301
 
---===============1705887902633507833==
+--===============7618766080743054879==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-It is possible that both MP_CAPABLE and DSS options are
-received in the same header, so they cannot share fields.
+Make there only be one callout from tcp_output.c for this.
+Includes refactoring from the first patch in the MP_JOIN RFC.
 
-squashto: Implement MPTCP reveive path.
+squash to: Write MPTCP DSS headers
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- include/linux/tcp.h  |  1 +
- include/net/mptcp.h  |  9 ---------
- net/mptcp/options.c  | 12 ++++++------
- net/mptcp/protocol.h |  8 ++++++++
- 4 files changed, 15 insertions(+), 15 deletions(-)
+ include/net/mptcp.h   | 21 ++++++---------------
+ net/ipv4/tcp_output.c | 21 ++++++---------------
+ net/mptcp/options.c   | 36 ++++++++++++++++++++++++++++++------
+ 3 files changed, 42 insertions(+), 36 deletions(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index db0297daa33c..d68e0f39650b 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -118,6 +118,7 @@ struct tcp_options_received {
- 			dss : 1,
- 			version : 4;
- 		u8      flags;
-+		u8	dss_flags;
- 		u8	use_map:1,
- 			dsn64:1,
- 			use_checksum:1,
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 65dd7f052e94..d84489adbd86 100644
+index d84489adbd86..ec3d7f7e5f45 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
-@@ -8,15 +8,6 @@
- #ifndef __NET_MPTCP_H
- #define __NET_MPTCP_H
+@@ -57,13 +57,11 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+ bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+ 			       struct mptcp_out_options* opts);
+ void mptcp_rcv_synsent(struct sock *sk);
+-bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+-				   unsigned int *size, unsigned int remaining,
+-				   struct mptcp_out_options* opts);
+ bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
+ze,
+ 			  struct mptcp_out_options *opts);
+-bool mptcp_established_options(struct sock *sk, unsigned int *size,
+-				       struct mptcp_out_options *opts);
++bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
++			       unsigned int *size, unsigned int remaining,
++			       struct mptcp_out_options* opts);
  =
 
--/* MPTCP DSS flags */
+ void mptcp_attach_dss(struct sock *sk, struct sk_buff *skb,
+ 		      struct tcp_options_received *opt_rx);
+@@ -106,15 +104,6 @@ static inline void mptcp_rcv_synsent(struct sock *sk)
+ {
+ }
+ =
+
+-static inline bool mptcp_established_options_dss(struct sock *sk,
+-						 struct sk_buff *skb,
+-						 unsigned int *size,
+-						 unsigned int remaining,
+-						 struct mptcp_out_options* opts)
+-{
+-	return false;
+-}
 -
--#define MPTCP_DSS_DATA_FIN	BIT(4)
--#define MPTCP_DSS_DSN64		BIT(3)
--#define MPTCP_DSS_HAS_MAP	BIT(2)
--#define MPTCP_DSS_ACK64		BIT(1)
--#define MPTCP_DSS_HAS_ACK	BIT(0)
--#define MPTCP_DSS_FLAG_MASK	(0x1F)
+ static inline bool mptcp_synack_options(const struct request_sock *req,
+ 					unsigned int *size,
+ 					struct mptcp_out_options *opts)
+@@ -123,8 +112,10 @@ static inline bool mptcp_synack_options(const struct r=
+equest_sock *req,
+ }
+ =
+
+ static inline bool mptcp_established_options(struct sock *sk,
++					     struct sk_buff *skb,
+ 					     unsigned int *size,
+-					     struct mptcp_out_options *opts)
++					     unsigned int remaining,
++					     struct mptcp_out_options* opts);
+ {
+ 	return false;
+ }
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 0b4865c55e4e..6ad88b70de6c 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -443,6 +443,7 @@ struct tcp_out_options {
+ =
+
+ static void mptcp_options_write(__be32 *ptr, struct tcp_out_options *opts)
+ {
++	pr_debug("entered");
+ #if IS_ENABLED(CONFIG_MPTCP)
+ 	if (unlikely(OPTION_MPTCP & opts->options))
+ 		mptcp_write_options(ptr, &opts->mptcp);
+@@ -796,22 +797,12 @@ static unsigned int tcp_established_options(struct so=
+ck *sk, struct sk_buff *skb
+ 	 */
+ 	if (sk_is_mptcp(sk)) {
+ 		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
+-		unsigned int opt_size;
++		unsigned int opt_size =3D 0;
+ =
+
+-		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
+-			if (remaining >=3D opt_size) {
+-				opts->options |=3D OPTION_MPTCP;
+-				size +=3D opt_size;
+-			}
+-		} else {
+-			unsigned int dss_size;
 -
- /* MPTCP sk_buff extension data */
- struct mptcp_ext {
- 	u64		data_ack;
+-			if (mptcp_established_options_dss(sk, skb, &dss_size,
+-							  remaining,
+-							  &opts->mptcp)) {
+-				opts->options |=3D OPTION_MPTCP;
+-				size +=3D dss_size;
+-			}
++		if (mptcp_established_options(sk, skb, &opt_size, remaining,
++					      &opts->mptcp)) {
++			opts->options |=3D OPTION_MPTCP;
++			size +=3D opt_size;
+ 		}
+ 	}
+ =
+
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b259c4343f36..df4405d268f0 100644
+index 98d582207cb0..f06ca0c48e57 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -85,12 +85,12 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- 		mp_opt->dss =3D 1;
- 		ptr++;
+@@ -249,12 +249,14 @@ void mptcp_rcv_synsent(struct sock *sk)
+ 	}
+ }
  =
 
--		mp_opt->flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
--		mp_opt->data_fin =3D (mp_opt->flags & MPTCP_DSS_DATA_FIN) !=3D 0;
--		mp_opt->dsn64 =3D (mp_opt->flags & MPTCP_DSS_DSN64) !=3D 0;
--		mp_opt->use_map =3D (mp_opt->flags & MPTCP_DSS_HAS_MAP) !=3D 0;
--		mp_opt->ack64 =3D (mp_opt->flags & MPTCP_DSS_ACK64) !=3D 0;
--		mp_opt->use_ack =3D (mp_opt->flags & MPTCP_DSS_HAS_ACK);
-+		mp_opt->dss_flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
-+		mp_opt->data_fin =3D (mp_opt->dss_flags & MPTCP_DSS_DATA_FIN) !=3D 0;
-+		mp_opt->dsn64 =3D (mp_opt->dss_flags & MPTCP_DSS_DSN64) !=3D 0;
-+		mp_opt->use_map =3D (mp_opt->dss_flags & MPTCP_DSS_HAS_MAP) !=3D 0;
-+		mp_opt->ack64 =3D (mp_opt->dss_flags & MPTCP_DSS_ACK64) !=3D 0;
-+		mp_opt->use_ack =3D (mp_opt->dss_flags & MPTCP_DSS_HAS_ACK);
+-bool mptcp_established_options(struct sock *sk, unsigned int *size,
+-			       struct mptcp_out_options *opts)
++static bool mptcp_established_options_mp(struct sock *sk, unsigned int *si=
+ze,
++					 unsigned int remaining,
++					 struct mptcp_out_options *opts)
+ {
+ 	struct subflow_context *subflow =3D subflow_ctx(sk);
  =
 
- 		pr_debug("data_fin=3D%d dsn64=3D%d use_map=3D%d ack64=3D%d use_ack=3D%d",
- 			 mp_opt->data_fin, mp_opt->dsn64,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 258325e42fa4..6498e68e1030 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -27,6 +27,14 @@
- #define MPTCP_CAP_EXTENSIBILITY	(1 << 6)
- #define MPTCP_CAP_HMAC_SHA1	(1 << 0)
+-	if (subflow->mp_capable && !subflow->fourth_ack) {
++	if (subflow->mp_capable && !subflow->fourth_ack &&
++	    remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
+ 		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
+ 		opts->sndr_key =3D subflow->local_key;
+ 		opts->rcvr_key =3D subflow->remote_key;
+@@ -267,9 +269,10 @@ bool mptcp_established_options(struct sock *sk, unsign=
+ed int *size,
+ 	return false;
+ }
  =
 
-+/* MPTCP DSS flags */
-+#define MPTCP_DSS_DATA_FIN	BIT(4)
-+#define MPTCP_DSS_DSN64		BIT(3)
-+#define MPTCP_DSS_HAS_MAP	BIT(2)
-+#define MPTCP_DSS_ACK64		BIT(1)
-+#define MPTCP_DSS_HAS_ACK	BIT(0)
-+#define MPTCP_DSS_FLAG_MASK	(0x1F)
+-bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+-				   unsigned int *size, unsigned int remaining,
+-				   struct mptcp_out_options *opts)
++static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff =
+*skb,
++					  unsigned int *size,
++					  unsigned int remaining,
++					  struct mptcp_out_options *opts)
+ {
+ 	unsigned int dss_size =3D 0;
+ 	struct mptcp_ext *mpext;
+@@ -338,6 +341,27 @@ bool mptcp_established_options_dss(struct sock *sk, st=
+ruct sk_buff *skb,
+ 	return true;
+ }
+ =
+
++bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
++			       unsigned int *size, unsigned int remaining,
++			       struct mptcp_out_options *opts)
++{
++	unsigned int opt_size =3D 0;
 +
- /* MPTCP connection sock */
- struct mptcp_sock {
- 	/* inet_connection_sock must be the first member */
++	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
++		*size +=3D opt_size;
++		remaining -=3D opt_size;
++		return true;
++	}
++	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
++					       opts)) {
++		*size +=3D opt_size;
++		remaining -=3D opt_size;
++		return true;
++	}
++
++	return false;
++}
++
+ bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
+ze,
+ 			  struct mptcp_out_options *opts)
+ {
 -- =
 
 2.17.2
 
 
---===============1705887902633507833==--
+--===============7618766080743054879==--
