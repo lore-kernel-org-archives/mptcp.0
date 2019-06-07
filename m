@@ -1,68 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============4803514103240737685=="
+Content-Type: multipart/mixed; boundary="===============3244707393601104607=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] LPC networking CfP: abstract: draft
-Date: Fri, 07 Jun 2019 16:53:52 +0200
-Message-ID: <7aff5fc8-b7b1-cca1-190c-cc0af053238f@tessares.net>
+Subject: Re: [MPTCP] [PATCH 7/7] mptcp: Refactor mptcp_established_options()
+ to single hook
+Date: Fri, 07 Jun 2019 14:42:32 -0700
+Message-ID: <alpine.OSX.2.21.1906071427180.31255@prwest-mobl2.amr.corp.intel.com>
+In-Reply-To: 20190606003632.2863-8-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1314
+X-UID: 1315
 
---===============4803514103240737685==
+--===============3244707393601104607==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-Yesterday, we discussed options for a Linux Plumber's Conference
-networking track talk.
+On Wed, 5 Jun 2019, Peter Krystad wrote:
 
-Here is a first draft of an abstract. Feel free to comment and react:
+> Make there only be one callout from tcp_output.c for this.
+> Includes refactoring from the first patch in the MP_JOIN RFC.
+>
+> squash to: Write MPTCP DSS headers
+>
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+> include/net/mptcp.h   | 21 ++++++---------------
+> net/ipv4/tcp_output.c | 21 ++++++---------------
+> net/mptcp/options.c   | 36 ++++++++++++++++++++++++++++++------
+> 3 files changed, 42 insertions(+), 36 deletions(-)
+>
 
-=3D=3D=3D
+...
 
-Multipath TCP (MPTCP) is more and more popular these days but it is not
-in the upstream Linux kernel yet. A fork is still being maintained on
-the side and has been since March 2009. But it cannot be upstreamed as
-it is because this implementation is designed for MPTCP and the TCP
-stack is too heavily impacted in term of maintainability but also a bit
-regarding the performances.
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 98d582207cb0..f06ca0c48e57 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
 
-In this presentation, we would like to present the challenges we are
-facing. Some are introduced by this MPTCP protocol, others by objectives
-we defined: limit at the maximum the impact on the existing TCP stack.
-We would like to have no performance regression, a maintainable and
-configurable solution and an MPTCP implementation that can be used in a
-variety of deployments.
+...
 
-The MPTCP upstreaming community is working on a RFC patch set for
-net-next. We should be able to send it before the next LPC in September.
-In the current situation, a socket can be created with IPPROTO_MPTCP to
-initiate and accept an MPTCP connection. This socket remains compatible
-with regular TCP and IPPROTO_TCP socket behavior is unchanged. This
-implementation makes use of ULP between the userspace-facing MPTCP
-socket and the set of in-kernel TCP sockets it controls to limit the
-minimum impact on the current TCP stack. ULP has been extended for use
-with listening sockets. skb_ext is used to carry MPTCP metadata.
+> @@ -338,6 +341,27 @@ bool mptcp_established_options_dss(struct sock *sk, =
+struct sk_buff *skb,
+> 	return true;
+> }
+>
+> +bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> +			       unsigned int *size, unsigned int remaining,
+> +			       struct mptcp_out_options *opts)
+> +{
+> +	unsigned int opt_size =3D 0;
+> +
+> +	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
+> +		*size +=3D opt_size;
+> +		remaining -=3D opt_size;
+> +		return true;
+> +	}
+> +	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
+> +					       opts)) {
+> +		*size +=3D opt_size;
+> +		remaining -=3D opt_size;
+> +		return true;
+> +	}
 
-Both the communication and the code are public and opened. You can find
-us at mptcp(a)lists.01.org and https://is.gd/mptcp_upstream
+Given that the code for both clauses is the same, maybe
 
-=3D=3D=3D
+if (mptcp_established_options_mp(...) ||
+     mptcp_established_options_dss(...)) {
+     *size +=3D opt_size;
+     remaining -=3D opt_size;
+     return true;
+}
 
-Do not hesitate to improve it, fix typo or restart from scratch if
-needed, I don't mind!
+would reduce duplication.
 
-Cheers,
-Matt
--- =
+Since the DSS variant is the common case, I was tempted to suggest =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+collapsing all the MP and DSS code in to this one function. I don't think =
 
---===============4803514103240737685==--
+that makes a real difference since the compiler will probably inline =
+
+everything anyway.
+
+I agree with Paolo's suggestion to do a single, early mp_capable check.
+
+> +
+> +	return false;
+> +}
+> +
+> bool mptcp_synack_options(const struct request_sock *req, unsigned int *s=
+ize,
+> 			  struct mptcp_out_options *opts)
+> {
+
+
+--
+Mat Martineau
+Intel
+
+--===============3244707393601104607==--
