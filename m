@@ -1,210 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============2069247633022208982=="
+Content-Type: multipart/mixed; boundary="===============3826309718285559917=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp: Refactor mptcp_established_options() to
- single hook
-Date: Fri, 07 Jun 2019 17:40:40 -0700
-Message-ID: <20190608004040.3426-3-peter.krystad@linux.intel.com>
-In-Reply-To: 20190608004040.3426-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] patch set: checkpatch.pl warnings/errors
+Date: Sat, 08 Jun 2019 09:08:33 +0200
+Message-ID: <3500f3bf-303c-17e6-2dc0-48f18f93aa39@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1319
+X-UID: 1320
 
---===============2069247633022208982==
+--===============3826309718285559917==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Make there be only one callout from tcp_output.c for this hook.
-Includes refactoring from the first patch of the MP_JOIN RFC.
+Hello,
 
-squashto: Write MPTCP DSS headers
+Yesterday I was quickly looking at the checkpatch warnings/errors as we
+said that we should look at them before any submission.
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- include/net/mptcp.h   | 21 ++++++---------------
- net/ipv4/tcp_output.c | 20 +++++---------------
- net/mptcp/options.c   | 40 +++++++++++++++++++++++++++++++---------
- 3 files changed, 42 insertions(+), 39 deletions(-)
+Some are easy to fix and have to be fixed at some points, e.g. mix of
+tabs/spaces, where the '*' is set, 'const' missing, etc. I already
+started to fix some of them.
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index d84489adbd86..ec3d7f7e5f45 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -57,13 +57,11 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- bool mptcp_syn_options(struct sock *sk, unsigned int *size,
- 			       struct mptcp_out_options* opts);
- void mptcp_rcv_synsent(struct sock *sk);
--bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
--				   unsigned int *size, unsigned int remaining,
--				   struct mptcp_out_options* opts);
- bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
-ze,
- 			  struct mptcp_out_options *opts);
--bool mptcp_established_options(struct sock *sk, unsigned int *size,
--				       struct mptcp_out_options *opts);
-+bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-+			       unsigned int *size, unsigned int remaining,
-+			       struct mptcp_out_options* opts);
- =
+Some warnings can be ignored, e.g. we add an entry in an "old" file like
+in.h and we keep the same style as the previous lines.
 
- void mptcp_attach_dss(struct sock *sk, struct sk_buff *skb,
- 		      struct tcp_options_received *opt_rx);
-@@ -106,15 +104,6 @@ static inline void mptcp_rcv_synsent(struct sock *sk)
- {
- }
- =
+But for the rest, I have a few questions:
 
--static inline bool mptcp_established_options_dss(struct sock *sk,
--						 struct sk_buff *skb,
--						 unsigned int *size,
--						 unsigned int remaining,
--						 struct mptcp_out_options* opts)
--{
--	return false;
--}
--
- static inline bool mptcp_synack_options(const struct request_sock *req,
- 					unsigned int *size,
- 					struct mptcp_out_options *opts)
-@@ -123,8 +112,10 @@ static inline bool mptcp_synack_options(const struct r=
-equest_sock *req,
- }
- =
+- line over 80 characters: do we have to be strict? Some lines are easy
+to cut, I can fix that. But what about some lines like:
 
- static inline bool mptcp_established_options(struct sock *sk,
-+					     struct sk_buff *skb,
- 					     unsigned int *size,
--					     struct mptcp_out_options *opts)
-+					     unsigned int remaining,
-+					     struct mptcp_out_options* opts);
- {
- 	return false;
- }
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 0b4865c55e4e..08675fd0f070 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -796,22 +796,12 @@ static unsigned int tcp_established_options(struct so=
-ck *sk, struct sk_buff *skb
- 	 */
- 	if (sk_is_mptcp(sk)) {
- 		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
--		unsigned int opt_size;
-+		unsigned int opt_size =3D 0;
- =
+    if (!((opt_rx->mptcp.flags & MPTCP_CAP_FLAG_MASK) =3D=3D
+MPTCP_CAP_HMAC_SHA1) ||
 
--		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
--			if (remaining >=3D opt_size) {
--				opts->options |=3D OPTION_MPTCP;
--				size +=3D opt_size;
--			}
--		} else {
--			unsigned int dss_size;
--
--			if (mptcp_established_options_dss(sk, skb, &dss_size,
--							  remaining,
--							  &opts->mptcp)) {
--				opts->options |=3D OPTION_MPTCP;
--				size +=3D dss_size;
--			}
-+		if (mptcp_established_options(sk, skb, &opt_size, remaining,
-+					      &opts->mptcp)) {
-+			opts->options |=3D OPTION_MPTCP;
-+			size +=3D opt_size;
- 		}
- 	}
- =
+    static inline struct socket *mptcp_subflow_tcp_socket(const struct
+subflow_context *subflow)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index cad1702323a3..a5a6772f1268 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -250,12 +250,13 @@ void mptcp_rcv_synsent(struct sock *sk)
- 	}
- }
- =
+- Unnecessary parentheses around 'X': can we ignore them if the author
+kept them to improve readability / reduce ambiguity?
 
--bool mptcp_established_options(struct sock *sk, unsigned int *size,
--			       struct mptcp_out_options *opts)
-+static bool mptcp_established_options_mp(struct sock *sk, unsigned int *si=
-ze,
-+					 unsigned int remaining,
-+					 struct mptcp_out_options *opts)
- {
- 	struct subflow_context *subflow =3D subflow_ctx(sk);
- =
+- Comparison to NULL could be written "X": same here: ignore or fix?
+Maybe these ones make more sense for the maintainers to fix?
 
--	if (subflow->mp_capable && !subflow->fourth_ack) {
-+	if (!subflow->fourth_ack && remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
- 		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
- 		opts->sndr_key =3D subflow->local_key;
- 		opts->rcvr_key =3D subflow->remote_key;
-@@ -268,17 +269,15 @@ bool mptcp_established_options(struct sock *sk, unsig=
-ned int *size,
- 	return false;
- }
- =
+- kselftests: do we have to keep the same style as the rest of the code?
+There are quite a few warnings there. Do we have to be strict? Maybe
+better to fix the most obvious ones not to distract reviewers with these
+details? I also guess we can accept longer lines in the bash scripts.
 
--bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
--				   unsigned int *size, unsigned int remaining,
--				   struct mptcp_out_options *opts)
-+static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff =
-*skb,
-+					  unsigned int *size,
-+					  unsigned int remaining,
-+					  struct mptcp_out_options *opts)
- {
- 	unsigned int dss_size =3D 0;
- 	struct mptcp_ext *mpext;
- 	unsigned int ack_size;
- =
+- what about the MAINTAINERS file? Can we delay this modification for later?
 
--	if (!subflow_ctx(sk)->mp_capable)
--		return false;
--
- 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
- =
+- header of the new files: what do we want to do with them? Do we need
+to update the info (description, copyright, etc.)? checkpatch complains
+about: "networking block comments don't use an empty /* line, use /*
+Comment...". Because we have:
 
- 	if (!skb || (mpext && mpext->use_map)) {
-@@ -339,6 +338,29 @@ bool mptcp_established_options_dss(struct sock *sk, st=
-ruct sk_buff *skb,
- 	return true;
- }
- =
+    +/*
+    + * Multipath TCP
 
-+bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-+			       unsigned int *size, unsigned int remaining,
-+			       struct mptcp_out_options *opts)
-+{
-+	unsigned int opt_size =3D 0;
-+
-+	if (!subflow_ctx(sk)->mp_capable)
-+		return false;
-+
-+	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
-+		*size +=3D opt_size;
-+		remaining -=3D opt_size;
-+		return true;
-+	} else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
-+					       opts)) {
-+		*size +=3D opt_size;
-+		remaining -=3D opt_size;
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
-ze,
- 			  struct mptcp_out_options *opts)
- {
+- not related to checkpatch but could we squash "tcp: Check for filled
+TCP option space before SACK" in "mptcp: Handle MP_CAPABLE options for
+outgoing" or move it just after the patch adding this MP_CAPABLE support?
+
+
+I don't know what the net-next maintainers/devs find important? I know
+that the "reversed Xmas tree variable declaration" is important but not
+sure about the others. Any feedback welcome :-)
+
+Cheers,
+Matt
 -- =
 
-2.17.2
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============2069247633022208982==--
+--===============3826309718285559917==--
