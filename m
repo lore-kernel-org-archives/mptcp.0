@@ -1,32 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============4019447500161252057=="
+Content-Type: multipart/mixed; boundary="===============7360306436141643493=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] patch set: checkpatch.pl warnings/errors
-Date: Sat, 08 Jun 2019 23:24:59 +0200
-Message-ID: <20190608212459.ugdlodcf3i36kw6p@breakpoint.cc>
-In-Reply-To: b84c1dd0-bbc6-e8d1-1c0c-76103bef01d3@tessares.net
+Subject: Re: [MPTCP] [PATCH 0/2] Minor patches [Remaining two]
+Date: Mon, 10 Jun 2019 10:02:10 +0200
+Message-ID: <c642fa32373ab8753f88bc237a833228f0ec01c7.camel@redhat.com>
+In-Reply-To: 20190608004040.3426-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1323
+X-UID: 1324
 
---===============4019447500161252057==
+--===============7360306436141643493==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> I will then try to do the appropriated changes next week by following
-> your recommendations!
-> I am sure Eric would not mind reading the current patches, there are not
->
-> so many warnings/errors but certainly better to show him that we do care
-> about checkpatch and maybe better if he is not distracted by these
-> warnings/errors.
+Hi,
 
-I'm sure he doesn't mind, but it still might be worth do "fix" it up
-anyway.
+On Fri, 2019-06-07 at 17:40 -0700, Peter Krystad wrote:
+> Responding to comments and rebase.
+> =
 
-So, thanks for doing this!
+> Peter Krystad (2):
+>   mptcp: reduce number of pr_debug() calls.
+>   mptcp: Refactor mptcp_established_options() to single hook
+> =
 
---===============4019447500161252057==--
+>  include/net/mptcp.h   | 21 ++++---------
+>  net/ipv4/tcp_output.c | 20 +++---------
+>  net/mptcp/options.c   | 73 ++++++++++++++++++++++++++++---------------
+>  3 files changed, 59 insertions(+), 55 deletions(-)
+> =
+
+Thanks Peter for following up with this, LGTM! =
+
+
+I think there are still a couple of checkpatch issues, but they could
+be handled separatelly, as per Matthieu email.
+
+Cheers,
+
+Paolo
+
+
+--===============7360306436141643493==--
