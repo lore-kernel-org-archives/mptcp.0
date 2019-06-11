@@ -1,153 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============3672913860932083372=="
+Content-Type: multipart/mixed; boundary="===============3182819233986565166=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 1/2] mptcp: reduce number of pr_debug() calls.
-Date: Tue, 11 Jun 2019 13:48:35 +0200
-Message-ID: <de5c6d2f-b7df-c1c1-27d9-62c1f2cefb52@tessares.net>
-In-Reply-To: 20190608004040.3426-2-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [PATCH 2/2] mptcp: Refactor mptcp_established_options()
+ to single hook
+Date: Tue, 11 Jun 2019 14:59:16 +0200
+Message-ID: <9a0cdb47-2e5c-b230-5034-7c54e6aa6108@tessares.net>
+In-Reply-To: 20190608004040.3426-3-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1330
+X-UID: 1331
 
---===============3672913860932083372==
+--===============3182819233986565166==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hi Peter, Paolo, Mat,
 
 On 08/06/2019 02:40, Peter Krystad wrote:
-> squashto: Handle MPTCP TCP options
+> Make there be only one callout from tcp_output.c for this hook.
+> Includes refactoring from the first patch of the MP_JOIN RFC.
+> =
 
-Thank you for the new patch!
+> squashto: Write MPTCP DSS headers
 
-I have two questions, please see below.
+Thank you for the new version of the patch and the reviews!
+
+- 98555b04a8d9: "squashed" in "mptcp: Write MPTCP DSS headers to
+outgoing data packets"
+- da0f223d5698: signed-off
+- no conflicts
+- 7311dd424a7e..fc816436135c: result
+
+Note that I had to do an extra modification to fix a compilation issue
+when CONFIG_MPTCP is not set, see 6e78ea220386 (mptcp: fix compilation
+without CONFIG_MPTCP) or below:
+
+> =
 
 > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 > ---
->  net/mptcp/options.c | 33 +++++++++++++++++----------------
->  1 file changed, 17 insertions(+), 16 deletions(-)
+>  include/net/mptcp.h   | 21 ++++++---------------
+>  net/ipv4/tcp_output.c | 20 +++++---------------
+>  net/mptcp/options.c   | 40 +++++++++++++++++++++++++++++++---------
+>  3 files changed, 42 insertions(+), 39 deletions(-)
 > =
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1bee4a267fd8..cad1702323a3 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -13,7 +13,7 @@
->  void mptcp_parse_option(const unsigned char *ptr, int opsize,
->  			struct tcp_options_received *opt_rx)
->  {
-> -	struct mptcp_options_received *mp_opt;
-> +	struct mptcp_options_received *mp_opt =3D &opt_rx->mptcp;
->  	u8 subtype =3D *ptr >> 4;
->  	int expected_opsize;
->  =
-
-> @@ -29,25 +29,29 @@ void mptcp_parse_option(const unsigned char *ptr, int=
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index d84489adbd86..ec3d7f7e5f45 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -57,13 +57,11 @@ void mptcp_parse_option(const unsigned char *ptr, int=
  opsize,
->  		    opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
->  			break;
+>  bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+>  			       struct mptcp_out_options* opts);
+>  void mptcp_rcv_synsent(struct sock *sk);
+> -bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+> -				   unsigned int *size, unsigned int remaining,
+> -				   struct mptcp_out_options* opts);
+>  bool mptcp_synack_options(const struct request_sock *req, unsigned int *=
+size,
+>  			  struct mptcp_out_options *opts);
+> -bool mptcp_established_options(struct sock *sk, unsigned int *size,
+> -				       struct mptcp_out_options *opts);
+> +bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> +			       unsigned int *size, unsigned int remaining,
+> +			       struct mptcp_out_options* opts);
 >  =
 
-> -		pr_debug("MP_CAPABLE");
-> -		opt_rx->mptcp.version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
-> -		if (opt_rx->mptcp.version !=3D 0)
-> +		mp_opt->version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
-> +		if (mp_opt->version !=3D 0)
->  			break;
+>  void mptcp_attach_dss(struct sock *sk, struct sk_buff *skb,
+>  		      struct tcp_options_received *opt_rx);
+> @@ -106,15 +104,6 @@ static inline void mptcp_rcv_synsent(struct sock *sk)
+>  {
+>  }
 >  =
 
-> -		pr_debug("flags=3D%02x", *ptr);
-> -		opt_rx->mptcp.flags =3D *ptr++;
-> -		if (!((opt_rx->mptcp.flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMA=
-C_SHA1) ||
-> +		mp_opt->flags =3D *ptr++;
-> +		if (!((opt_rx->mptcp.flags & MPTCP_CAP_FLAG_MASK) =3D=3D
-> +		    MPTCP_CAP_HMAC_SHA1) ||
->  		    (opt_rx->mptcp.flags & MPTCP_CAP_EXTENSIBILITY))
->  			break;
-
-detail: could we use "mp_opt->flags" here instead of
-"opt_rx->mptcp.flags" used twice here above.
-
+> -static inline bool mptcp_established_options_dss(struct sock *sk,
+> -						 struct sk_buff *skb,
+> -						 unsigned int *size,
+> -						 unsigned int remaining,
+> -						 struct mptcp_out_options* opts)
+> -{
+> -	return false;
+> -}
+> -
+>  static inline bool mptcp_synack_options(const struct request_sock *req,
+>  					unsigned int *size,
+>  					struct mptcp_out_options *opts)
+> @@ -123,8 +112,10 @@ static inline bool mptcp_synack_options(const struct=
+ request_sock *req,
+>  }
 >  =
 
-> -		opt_rx->mptcp.mp_capable =3D 1;
-> -		opt_rx->mptcp.sndr_key =3D get_unaligned_be64(ptr);
-> -		pr_debug("sndr_key=3D%llu", opt_rx->mptcp.sndr_key);
-> +		mp_opt->mp_capable =3D 1;
-> +		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
->  		ptr +=3D 8;
-> +
->  		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
-> -			opt_rx->mptcp.rcvr_key =3D get_unaligned_be64(ptr);
-> -			pr_debug("rcvr_key=3D%llu", opt_rx->mptcp.rcvr_key);
-> +			mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
->  			ptr +=3D 8;
-> +			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu, rcvr=3D%llu",
-> +				 mp_opt->flags, mp_opt->sndr_key,
-> +				 mp_opt->rcvr_key);
-> +		} else {
-> +			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu",
-> +				 mp_opt->flags, mp_opt->sndr_key);
->  		}
->  		break;
->  =
+>  static inline bool mptcp_established_options(struct sock *sk,
+> +					     struct sk_buff *skb,
+>  					     unsigned int *size,
+> -					     struct mptcp_out_options *opts)
+> +					     unsigned int remaining,
+> +					     struct mptcp_out_options* opts);
 
-> @@ -83,7 +87,6 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
->  	 */
->  	case MPTCPOPT_DSS:
->  		pr_debug("DSS");
-> -		mp_opt =3D &opt_rx->mptcp;
->  		mp_opt->dss =3D 1;
->  		ptr++;
->  =
+I had to remove the semi-colon at the end of this line to fix a
+compilation issue.
 
-> @@ -399,10 +402,8 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_o=
-ut_options *opts)
->  =
+Please also note that I saw checkpatch.pl forces us to place the star
+next to the variable name:
 
->  		if (OPTION_MPTCP_MPC_SYN & opts->suboptions)
->  			len =3D TCPOLEN_MPTCP_MPC_SYN;
-> -		else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
-> -			len =3D TCPOLEN_MPTCP_MPC_SYNACK;
->  		else
-> -			len =3D TCPOLEN_MPTCP_MPC_ACK;
-> +			len =3D TCPOLEN_MPTCP_MPC_SYNACK;
+   struct mptcp_out_options *opts
 
-I am not sure to follow why you did this change. It doesn't seem to be
-related to the pr_debug() calls. Are you doing that because
-TCPOLEN_MPTCP_MPC_ACK =3D=3D TCPOLEN_MPTCP_MPC_SYNACK =3D=3D 20?
+instead of
 
-3 commits are modifying this first block in mptcp_write_options():
-- 47168d901887 (mptcp: Handle MPTCP TCP options)
-- 5e4c2881c7c9 (mptcp: Handle MP_CAPABLE options for outgoing connections)
-- 447773e0cd92 (mptcp: Create SUBFLOW socket for incoming connections)
+   struct mptcp_out_options* opts
 
-The first one introduces this block (with "OPTION_MPTCP_MPC_SYNACK").
-The second one removes "OPTION_MPTCP_MPC_SYNACK" condition.
-The third one re-adds "OPTION_MPTCP_MPC_SYNACK".
-
-Should we not introduce "OPTION_MPTCP_MPC_SYNACK" condition only at the
-3rd patch and keep:
-
-    else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
-
-for clarity purposes?
-
-It's a detail but it is blocking me to know how to apply this patch
-correctly and avoid this add/remove/re-add :)
+I will try to fix a maximum of these checkpatch.pl issues once the
+MP_JOIN support is added in our repo and before sending patches to Eric.
 
 Cheers,
 Matt
-
->  		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) | (len << 16) |
->  			       (MPTCPOPT_MP_CAPABLE << 12) |
-> =
-
-
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -156,4 +125,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============3672913860932083372==--
+--===============3182819233986565166==--
