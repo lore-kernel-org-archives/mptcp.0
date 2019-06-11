@@ -1,86 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============8407889313767832598=="
+Content-Type: multipart/mixed; boundary="===============6549098649172508706=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 2/2] mptcp: Refactor mptcp_established_options()
- to single hook
-Date: Mon, 10 Jun 2019 16:24:55 -0700
-Message-ID: <alpine.OSX.2.21.1906101621110.6965@mjmartin-mac01.local>
-In-Reply-To: 20190608004040.3426-3-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [PATCH] mptcp: selftests: increase timeout and return
+ error on ping failure
+Date: Tue, 11 Jun 2019 10:32:30 +0200
+Message-ID: <465721ff-f803-b900-6b29-5afe890f30af@tessares.net>
+In-Reply-To: 20190605093658.623-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1325
+X-UID: 1326
 
---===============8407889313767832598==
+--===============6549098649172508706==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Florian, Paolo,
 
-On Fri, 7 Jun 2019, Peter Krystad wrote:
+On 05/06/2019 11:36, Florian Westphal wrote:
+> Now that we add a qdisc that does random drop, there is a small chance
+> for the ping to be dropped, so this triggers:
+> ns2 -> 10.0.1.2 connectivity [ FAIL ]
+> =
 
-> Make there be only one callout from tcp_output.c for this hook.
-> Includes refactoring from the first patch of the MP_JOIN RFC.
->
-> squashto: Write MPTCP DSS headers
->
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> ---
-> include/net/mptcp.h   | 21 ++++++---------------
-> net/ipv4/tcp_output.c | 20 +++++---------------
-> net/mptcp/options.c   | 40 +++++++++++++++++++++++++++++++---------
-> 3 files changed, 42 insertions(+), 39 deletions(-)
+> To fix this, split the ping test part to its own loop and only
+> add the qdiscs after the ping tests have completed.
+> =
 
-...
+> Also, the script would still exit with 0 status in this case, so update
+> run_tests to check the return value of do_transfer() rather than rely on
+> that function to set the global exit state in all cases.
+> =
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index cad1702323a3..a5a6772f1268 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
+> Last, increase the timeout: with qdiscs present, 10 seconds is too low:
+> in some rare cases sender or receiver exited too early.
 
-...
+The patch looks good to me!
 
-> @@ -339,6 +338,29 @@ bool mptcp_established_options_dss(struct sock *sk, =
-struct sk_buff *skb,
-> 	return true;
-> }
->
-> +bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-> +			       unsigned int *size, unsigned int remaining,
-> +			       struct mptcp_out_options *opts)
-> +{
-> +	unsigned int opt_size =3D 0;
-> +
-> +	if (!subflow_ctx(sk)->mp_capable)
-> +		return false;
-> +
-> +	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
-> +		*size +=3D opt_size;
-> +		remaining -=3D opt_size;
-> +		return true;
-> +	} else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
-> +					       opts)) {
-> +		*size +=3D opt_size;
-> +		remaining -=3D opt_size;
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> bool mptcp_synack_options(const struct request_sock *req, unsigned int *s=
-ize,
-> 			  struct mptcp_out_options *opts)
-> {
+@Paolo: as a major contributor to this shell script, is this patch also
+looks good to you?
 
-Given that you're thinking of introducing changes in the mp vs. dss code =
+Thank you for having also cleaned the mix of spaces and tabs!
 
-blocks above, and have consolidated the mp_capable check, this looks ready =
+Just one question for later: should we print something when we start
+adding delays, losses and reordering?
 
-to merge. Thanks, Peter.
+Cheers,
+Matt
+-- =
 
---
-Mat Martineau
-Intel
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============8407889313767832598==--
+--===============6549098649172508706==--
