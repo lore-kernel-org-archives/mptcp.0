@@ -1,69 +1,153 @@
-Content-Type: multipart/mixed; boundary="===============5623818913832483703=="
+Content-Type: multipart/mixed; boundary="===============3672913860932083372=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: selftests: increase timeout and return
- error on ping failure
-Date: Tue, 11 Jun 2019 12:22:23 +0200
-Message-ID: <4715aec3-dfc0-c47a-f52b-51a4cdbe3ded@tessares.net>
-In-Reply-To: dcaf9fda-9321-8940-120d-a28b19644154@tessares.net
+Subject: Re: [MPTCP] [PATCH 1/2] mptcp: reduce number of pr_debug() calls.
+Date: Tue, 11 Jun 2019 13:48:35 +0200
+Message-ID: <de5c6d2f-b7df-c1c1-27d9-62c1f2cefb52@tessares.net>
+In-Reply-To: 20190608004040.3426-2-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1329
+X-UID: 1330
 
---===============5623818913832483703==
+--===============3672913860932083372==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Paolo,
+Hi Peter,
 
-On 11/06/2019 10:49, Matthieu Baerts wrote:
-> Hi Paolo,
+On 08/06/2019 02:40, Peter Krystad wrote:
+> squashto: Handle MPTCP TCP options
+
+Thank you for the new patch!
+
+I have two questions, please see below.
+
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+>  net/mptcp/options.c | 33 +++++++++++++++++----------------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
 > =
 
-> On 11/06/2019 10:43, Paolo Abeni wrote:
->> Hi,
->>
->> Sorry for lagging behind ...
->> On Tue, 2019-06-11 at 10:32 +0200, Matthieu Baerts wrote:
->>> Hi Florian, Paolo,
->>>
->>> On 05/06/2019 11:36, Florian Westphal wrote:
->>>> Now that we add a qdisc that does random drop, there is a small chance
->>>> for the ping to be dropped, so this triggers:
->>>> ns2 -> 10.0.1.2 connectivity [ FAIL ]
->>>>
->>>> To fix this, split the ping test part to its own loop and only
->>>> add the qdiscs after the ping tests have completed.
->>>>
->>>> Also, the script would still exit with 0 status in this case, so update
->>>> run_tests to check the return value of do_transfer() rather than rely =
-on
->>>> that function to set the global exit state in all cases.
->>>>
->>>> Last, increase the timeout: with qdiscs present, 10 seconds is too low:
->>>> in some rare cases sender or receiver exited too early.
->>>
->>> The patch looks good to me!
->>>
->>> @Paolo: as a major contributor to this shell script, is this patch also
->>> looks good to you?
->>
->> Just reviewed. Yes, the patch LGTM, too.
-> =
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 1bee4a267fd8..cad1702323a3 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -13,7 +13,7 @@
+>  void mptcp_parse_option(const unsigned char *ptr, int opsize,
+>  			struct tcp_options_received *opt_rx)
+>  {
+> -	struct mptcp_options_received *mp_opt;
+> +	struct mptcp_options_received *mp_opt =3D &opt_rx->mptcp;
+>  	u8 subtype =3D *ptr >> 4;
+>  	int expected_opsize;
+>  =
 
-> Thank you for the quick reply!
+> @@ -29,25 +29,29 @@ void mptcp_parse_option(const unsigned char *ptr, int=
+ opsize,
+>  		    opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
+>  			break;
+>  =
 
-Thank you for the patch and the review!
+> -		pr_debug("MP_CAPABLE");
+> -		opt_rx->mptcp.version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
+> -		if (opt_rx->mptcp.version !=3D 0)
+> +		mp_opt->version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
+> +		if (mp_opt->version !=3D 0)
+>  			break;
+>  =
 
-- e9d3a8a4a460: "squashed" in "mptcp: selftests: switch to netns+veth
-based tests"
-- 9d00b70dbd94: conflict
-- c088591c7178..7311dd424a7e: result
+> -		pr_debug("flags=3D%02x", *ptr);
+> -		opt_rx->mptcp.flags =3D *ptr++;
+> -		if (!((opt_rx->mptcp.flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMA=
+C_SHA1) ||
+> +		mp_opt->flags =3D *ptr++;
+> +		if (!((opt_rx->mptcp.flags & MPTCP_CAP_FLAG_MASK) =3D=3D
+> +		    MPTCP_CAP_HMAC_SHA1) ||
+>  		    (opt_rx->mptcp.flags & MPTCP_CAP_EXTENSIBILITY))
+>  			break;
+
+detail: could we use "mp_opt->flags" here instead of
+"opt_rx->mptcp.flags" used twice here above.
+
+>  =
+
+> -		opt_rx->mptcp.mp_capable =3D 1;
+> -		opt_rx->mptcp.sndr_key =3D get_unaligned_be64(ptr);
+> -		pr_debug("sndr_key=3D%llu", opt_rx->mptcp.sndr_key);
+> +		mp_opt->mp_capable =3D 1;
+> +		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
+>  		ptr +=3D 8;
+> +
+>  		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
+> -			opt_rx->mptcp.rcvr_key =3D get_unaligned_be64(ptr);
+> -			pr_debug("rcvr_key=3D%llu", opt_rx->mptcp.rcvr_key);
+> +			mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
+>  			ptr +=3D 8;
+> +			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu, rcvr=3D%llu",
+> +				 mp_opt->flags, mp_opt->sndr_key,
+> +				 mp_opt->rcvr_key);
+> +		} else {
+> +			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu",
+> +				 mp_opt->flags, mp_opt->sndr_key);
+>  		}
+>  		break;
+>  =
+
+> @@ -83,7 +87,6 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+>  	 */
+>  	case MPTCPOPT_DSS:
+>  		pr_debug("DSS");
+> -		mp_opt =3D &opt_rx->mptcp;
+>  		mp_opt->dss =3D 1;
+>  		ptr++;
+>  =
+
+> @@ -399,10 +402,8 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_o=
+ut_options *opts)
+>  =
+
+>  		if (OPTION_MPTCP_MPC_SYN & opts->suboptions)
+>  			len =3D TCPOLEN_MPTCP_MPC_SYN;
+> -		else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
+> -			len =3D TCPOLEN_MPTCP_MPC_SYNACK;
+>  		else
+> -			len =3D TCPOLEN_MPTCP_MPC_ACK;
+> +			len =3D TCPOLEN_MPTCP_MPC_SYNACK;
+
+I am not sure to follow why you did this change. It doesn't seem to be
+related to the pr_debug() calls. Are you doing that because
+TCPOLEN_MPTCP_MPC_ACK =3D=3D TCPOLEN_MPTCP_MPC_SYNACK =3D=3D 20?
+
+3 commits are modifying this first block in mptcp_write_options():
+- 47168d901887 (mptcp: Handle MPTCP TCP options)
+- 5e4c2881c7c9 (mptcp: Handle MP_CAPABLE options for outgoing connections)
+- 447773e0cd92 (mptcp: Create SUBFLOW socket for incoming connections)
+
+The first one introduces this block (with "OPTION_MPTCP_MPC_SYNACK").
+The second one removes "OPTION_MPTCP_MPC_SYNACK" condition.
+The third one re-adds "OPTION_MPTCP_MPC_SYNACK".
+
+Should we not introduce "OPTION_MPTCP_MPC_SYNACK" condition only at the
+3rd patch and keep:
+
+    else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
+
+for clarity purposes?
+
+It's a detail but it is blocking me to know how to apply this patch
+correctly and avoid this add/remove/re-add :)
 
 Cheers,
 Matt
+
+>  		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) | (len << 16) |
+>  			       (MPTCPOPT_MP_CAPABLE << 12) |
+> =
+
+
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -72,4 +156,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============5623818913832483703==--
+--===============3672913860932083372==--
