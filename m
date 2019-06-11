@@ -1,210 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============2586650376352100735=="
+Content-Type: multipart/mixed; boundary="===============9041198011259892144=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 2/2] mptcp: Refactor mptcp_established_options() to
- single hook
-Date: Tue, 11 Jun 2019 10:51:48 -0700
-Message-ID: <20190611175148.11832-3-peter.krystad@linux.intel.com>
+Subject: Re: [MPTCP] [PATCH v2 0/2] Minor patches [Remaining two]
+Date: Tue, 11 Jun 2019 21:52:01 +0200
+Message-ID: <a8112ed1-d797-acc3-268c-fecb8e694128@tessares.net>
 In-Reply-To: 20190611175148.11832-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1336
+X-UID: 1337
 
---===============2586650376352100735==
+--===============9041198011259892144==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Make there be only one callout from tcp_output.c for this hook.
-Includes refactoring from the first patch of the MP_JOIN RFC.
+Hi Peter,
 
-squashto: Write MPTCP DSS headers
+On 11/06/2019 19:51, Peter Krystad wrote:
+> Responding to comments and rebase.
+> =
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- include/net/mptcp.h   | 21 ++++++---------------
- net/ipv4/tcp_output.c | 20 +++++---------------
- net/mptcp/options.c   | 40 +++++++++++++++++++++++++++++++---------
- 3 files changed, 42 insertions(+), 39 deletions(-)
+> v2 - fix mp_opt usage and remove changes to mptcp_write_options logic.
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index d84489adbd86..ec3d7f7e5f45 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -57,13 +57,11 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- bool mptcp_syn_options(struct sock *sk, unsigned int *size,
- 			       struct mptcp_out_options* opts);
- void mptcp_rcv_synsent(struct sock *sk);
--bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
--				   unsigned int *size, unsigned int remaining,
--				   struct mptcp_out_options* opts);
- bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
-ze,
- 			  struct mptcp_out_options *opts);
--bool mptcp_established_options(struct sock *sk, unsigned int *size,
--				       struct mptcp_out_options *opts);
-+bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-+			       unsigned int *size, unsigned int remaining,
-+			       struct mptcp_out_options* opts);
- =
+Thank you for this new version!
+Is the second patch the exact same one as the previous version I applied
+in commit 98555b04a8d9?
 
- void mptcp_attach_dss(struct sock *sk, struct sk_buff *skb,
- 		      struct tcp_options_received *opt_rx);
-@@ -106,15 +104,6 @@ static inline void mptcp_rcv_synsent(struct sock *sk)
- {
- }
- =
+https://github.com/multipath-tcp/mptcp_net-next/commit/98555b04a8d9
 
--static inline bool mptcp_established_options_dss(struct sock *sk,
--						 struct sk_buff *skb,
--						 unsigned int *size,
--						 unsigned int remaining,
--						 struct mptcp_out_options* opts)
--{
--	return false;
--}
--
- static inline bool mptcp_synack_options(const struct request_sock *req,
- 					unsigned int *size,
- 					struct mptcp_out_options *opts)
-@@ -123,8 +112,10 @@ static inline bool mptcp_synack_options(const struct r=
-equest_sock *req,
- }
- =
+Best regards,
+Matt
 
- static inline bool mptcp_established_options(struct sock *sk,
-+					     struct sk_buff *skb,
- 					     unsigned int *size,
--					     struct mptcp_out_options *opts)
-+					     unsigned int remaining,
-+					     struct mptcp_out_options* opts);
- {
- 	return false;
- }
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 0b4865c55e4e..08675fd0f070 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -796,22 +796,12 @@ static unsigned int tcp_established_options(struct so=
-ck *sk, struct sk_buff *skb
- 	 */
- 	if (sk_is_mptcp(sk)) {
- 		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
--		unsigned int opt_size;
-+		unsigned int opt_size =3D 0;
- =
+> Peter Krystad (2):
+>   mptcp: reduce number of pr_debug() calls.
+>   mptcp: Refactor mptcp_established_options() to single hook
+> =
 
--		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
--			if (remaining >=3D opt_size) {
--				opts->options |=3D OPTION_MPTCP;
--				size +=3D opt_size;
--			}
--		} else {
--			unsigned int dss_size;
--
--			if (mptcp_established_options_dss(sk, skb, &dss_size,
--							  remaining,
--							  &opts->mptcp)) {
--				opts->options |=3D OPTION_MPTCP;
--				size +=3D dss_size;
--			}
-+		if (mptcp_established_options(sk, skb, &opt_size, remaining,
-+					      &opts->mptcp)) {
-+			opts->options |=3D OPTION_MPTCP;
-+			size +=3D opt_size;
- 		}
- 	}
- =
+>  include/net/mptcp.h   | 21 ++++---------
+>  net/ipv4/tcp_output.c | 20 ++++---------
+>  net/mptcp/options.c   | 70 +++++++++++++++++++++++++++++--------------
+>  3 files changed, 58 insertions(+), 53 deletions(-)
+> =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index a6ab6cef4a44..d285a33cd480 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -249,12 +249,13 @@ void mptcp_rcv_synsent(struct sock *sk)
- 	}
- }
- =
 
--bool mptcp_established_options(struct sock *sk, unsigned int *size,
--			       struct mptcp_out_options *opts)
-+static bool mptcp_established_options_mp(struct sock *sk, unsigned int *si=
-ze,
-+					 unsigned int remaining,
-+					 struct mptcp_out_options *opts)
- {
- 	struct subflow_context *subflow =3D subflow_ctx(sk);
- =
-
--	if (subflow->mp_capable && !subflow->fourth_ack) {
-+	if (!subflow->fourth_ack && remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
- 		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
- 		opts->sndr_key =3D subflow->local_key;
- 		opts->rcvr_key =3D subflow->remote_key;
-@@ -267,17 +268,15 @@ bool mptcp_established_options(struct sock *sk, unsig=
-ned int *size,
- 	return false;
- }
- =
-
--bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
--				   unsigned int *size, unsigned int remaining,
--				   struct mptcp_out_options *opts)
-+static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff =
-*skb,
-+					  unsigned int *size,
-+					  unsigned int remaining,
-+					  struct mptcp_out_options *opts)
- {
- 	unsigned int dss_size =3D 0;
- 	struct mptcp_ext *mpext;
- 	unsigned int ack_size;
- =
-
--	if (!subflow_ctx(sk)->mp_capable)
--		return false;
--
- 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
- =
-
- 	if (!skb || (mpext && mpext->use_map)) {
-@@ -338,6 +337,29 @@ bool mptcp_established_options_dss(struct sock *sk, st=
-ruct sk_buff *skb,
- 	return true;
- }
- =
-
-+bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-+			       unsigned int *size, unsigned int remaining,
-+			       struct mptcp_out_options *opts)
-+{
-+	unsigned int opt_size =3D 0;
-+
-+	if (!subflow_ctx(sk)->mp_capable)
-+		return false;
-+
-+	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
-+		*size +=3D opt_size;
-+		remaining -=3D opt_size;
-+		return true;
-+	} else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
-+					       opts)) {
-+		*size +=3D opt_size;
-+		remaining -=3D opt_size;
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
-ze,
- 			  struct mptcp_out_options *opts)
- {
 -- =
 
-2.17.2
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============2586650376352100735==--
+--===============9041198011259892144==--
