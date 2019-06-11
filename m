@@ -1,43 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============4764203277844921224=="
+Content-Type: multipart/mixed; boundary="===============0227840169884920077=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 1/2] mptcp: reduce number of pr_debug() calls.
-Date: Tue, 11 Jun 2019 22:56:45 +0200
-Message-ID: <ada46b1d-379f-3b30-a18f-a5678727e873@tessares.net>
-In-Reply-To: 20190611175148.11832-2-peter.krystad@linux.intel.com
+Subject: [MPTCP] MPTCP-API
+Date: Tue, 11 Jun 2019 14:13:40 -0700
+Message-ID: <20190611211340.GS5495@MacBook-Pro-64.local>
 X-Status: 
 X-Keywords:                  
-X-UID: 1339
+X-UID: 1340
 
---===============4764203277844921224==
+--===============0227840169884920077==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hello everyone,
 
-On 11/06/2019 19:51, Peter Krystad wrote:
-> squashto: Handle MPTCP TCP options
 
-Thank you for this v2!
+I am bringing up something that we already once discussed quite a while
+back. Apache Traffic Server has an option to enable MPTCP (currently,
+through the socket-option MPTCP_ENABLED that is exposed on the
+multipath-tcp.org kernel). Leif (in CC) is the main contributor & maintainer
+of ATS.
 
-- 8c31f2a73c52: "squashed" in "mptcp: Handle MPTCP TCP options"
-- f435387d7a74: conflict
-- 3dbe13718918: conflict
-- 6614ebdd54b7..076a9a1a7cc8: result
+Now, ATS will be doing a 9.0.0-release soon that will be the first release
+with this MPTCP-option in the ATS-config.
 
-Tests are good, Belgium won, it seems everything is good to finish
-preparing these patches for Eric!
+We want to make sure that it would also work with the upcoming upstream MPT=
+CP
+implementation. So, we can easily make this use IPPROTO_MPTCP. However,
+there currently isn't a 100% guarantee that the API is stable (as upstream
+might request changes).
 
-Cheers,
-Matt
--- =
+So, we are wondering how we can do binary compatibility without having to
+wait for MPTCP to land upstream. Could the MPTCP-code expose maybe a sysctl
+that indicates the "API-version" ? That way, upon startup ATS can simply
+check the API-version and if it doesn't match, just disable MPTCP.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============4764203277844921224==--
+What are your thoughts?
+
+
+Thanks,
+Christoph
+
+
+--===============0227840169884920077==--
