@@ -1,102 +1,210 @@
-Content-Type: multipart/mixed; boundary="===============7855271964554104754=="
+Content-Type: multipart/mixed; boundary="===============2586650376352100735=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 1/2] mptcp: reduce number of pr_debug() calls.
-Date: Tue, 11 Jun 2019 10:51:47 -0700
-Message-ID: <20190611175148.11832-2-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH v2 2/2] mptcp: Refactor mptcp_established_options() to
+ single hook
+Date: Tue, 11 Jun 2019 10:51:48 -0700
+Message-ID: <20190611175148.11832-3-peter.krystad@linux.intel.com>
 In-Reply-To: 20190611175148.11832-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1335
+X-UID: 1336
 
---===============7855271964554104754==
+--===============2586650376352100735==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Handle MPTCP TCP options
+Make there be only one callout from tcp_output.c for this hook.
+Includes refactoring from the first patch of the MP_JOIN RFC.
+
+squashto: Write MPTCP DSS headers
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/options.c | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ include/net/mptcp.h   | 21 ++++++---------------
+ net/ipv4/tcp_output.c | 20 +++++---------------
+ net/mptcp/options.c   | 40 +++++++++++++++++++++++++++++++---------
+ 3 files changed, 42 insertions(+), 39 deletions(-)
+
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index d84489adbd86..ec3d7f7e5f45 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -57,13 +57,11 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+ bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+ 			       struct mptcp_out_options* opts);
+ void mptcp_rcv_synsent(struct sock *sk);
+-bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+-				   unsigned int *size, unsigned int remaining,
+-				   struct mptcp_out_options* opts);
+ bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
+ze,
+ 			  struct mptcp_out_options *opts);
+-bool mptcp_established_options(struct sock *sk, unsigned int *size,
+-				       struct mptcp_out_options *opts);
++bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
++			       unsigned int *size, unsigned int remaining,
++			       struct mptcp_out_options* opts);
+ =
+
+ void mptcp_attach_dss(struct sock *sk, struct sk_buff *skb,
+ 		      struct tcp_options_received *opt_rx);
+@@ -106,15 +104,6 @@ static inline void mptcp_rcv_synsent(struct sock *sk)
+ {
+ }
+ =
+
+-static inline bool mptcp_established_options_dss(struct sock *sk,
+-						 struct sk_buff *skb,
+-						 unsigned int *size,
+-						 unsigned int remaining,
+-						 struct mptcp_out_options* opts)
+-{
+-	return false;
+-}
+-
+ static inline bool mptcp_synack_options(const struct request_sock *req,
+ 					unsigned int *size,
+ 					struct mptcp_out_options *opts)
+@@ -123,8 +112,10 @@ static inline bool mptcp_synack_options(const struct r=
+equest_sock *req,
+ }
+ =
+
+ static inline bool mptcp_established_options(struct sock *sk,
++					     struct sk_buff *skb,
+ 					     unsigned int *size,
+-					     struct mptcp_out_options *opts)
++					     unsigned int remaining,
++					     struct mptcp_out_options* opts);
+ {
+ 	return false;
+ }
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 0b4865c55e4e..08675fd0f070 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -796,22 +796,12 @@ static unsigned int tcp_established_options(struct so=
+ck *sk, struct sk_buff *skb
+ 	 */
+ 	if (sk_is_mptcp(sk)) {
+ 		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
+-		unsigned int opt_size;
++		unsigned int opt_size =3D 0;
+ =
+
+-		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
+-			if (remaining >=3D opt_size) {
+-				opts->options |=3D OPTION_MPTCP;
+-				size +=3D opt_size;
+-			}
+-		} else {
+-			unsigned int dss_size;
+-
+-			if (mptcp_established_options_dss(sk, skb, &dss_size,
+-							  remaining,
+-							  &opts->mptcp)) {
+-				opts->options |=3D OPTION_MPTCP;
+-				size +=3D dss_size;
+-			}
++		if (mptcp_established_options(sk, skb, &opt_size, remaining,
++					      &opts->mptcp)) {
++			opts->options |=3D OPTION_MPTCP;
++			size +=3D opt_size;
+ 		}
+ 	}
+ =
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1bee4a267fd8..a6ab6cef4a44 100644
+index a6ab6cef4a44..d285a33cd480 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -13,7 +13,7 @@
- void mptcp_parse_option(const unsigned char *ptr, int opsize,
- 			struct tcp_options_received *opt_rx)
+@@ -249,12 +249,13 @@ void mptcp_rcv_synsent(struct sock *sk)
+ 	}
+ }
+ =
+
+-bool mptcp_established_options(struct sock *sk, unsigned int *size,
+-			       struct mptcp_out_options *opts)
++static bool mptcp_established_options_mp(struct sock *sk, unsigned int *si=
+ze,
++					 unsigned int remaining,
++					 struct mptcp_out_options *opts)
  {
--	struct mptcp_options_received *mp_opt;
-+	struct mptcp_options_received *mp_opt =3D &opt_rx->mptcp;
- 	u8 subtype =3D *ptr >> 4;
- 	int expected_opsize;
+ 	struct subflow_context *subflow =3D subflow_ctx(sk);
  =
 
-@@ -29,25 +29,28 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- 		    opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
- 			break;
+-	if (subflow->mp_capable && !subflow->fourth_ack) {
++	if (!subflow->fourth_ack && remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
+ 		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
+ 		opts->sndr_key =3D subflow->local_key;
+ 		opts->rcvr_key =3D subflow->remote_key;
+@@ -267,17 +268,15 @@ bool mptcp_established_options(struct sock *sk, unsig=
+ned int *size,
+ 	return false;
+ }
  =
 
--		pr_debug("MP_CAPABLE");
--		opt_rx->mptcp.version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
--		if (opt_rx->mptcp.version !=3D 0)
-+		mp_opt->version =3D *ptr++ & MPTCPOPT_VERSION_MASK;
-+		if (mp_opt->version !=3D 0)
- 			break;
+-bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+-				   unsigned int *size, unsigned int remaining,
+-				   struct mptcp_out_options *opts)
++static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff =
+*skb,
++					  unsigned int *size,
++					  unsigned int remaining,
++					  struct mptcp_out_options *opts)
+ {
+ 	unsigned int dss_size =3D 0;
+ 	struct mptcp_ext *mpext;
+ 	unsigned int ack_size;
  =
 
--		pr_debug("flags=3D%02x", *ptr);
--		opt_rx->mptcp.flags =3D *ptr++;
--		if (!((opt_rx->mptcp.flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMAC_=
-SHA1) ||
--		    (opt_rx->mptcp.flags & MPTCP_CAP_EXTENSIBILITY))
-+		mp_opt->flags =3D *ptr++;
-+		if (!((mp_opt->flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMAC_SHA1) =
-||
-+		    (mp_opt->flags & MPTCP_CAP_EXTENSIBILITY))
- 			break;
+-	if (!subflow_ctx(sk)->mp_capable)
+-		return false;
+-
+ 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
  =
 
--		opt_rx->mptcp.mp_capable =3D 1;
--		opt_rx->mptcp.sndr_key =3D get_unaligned_be64(ptr);
--		pr_debug("sndr_key=3D%llu", opt_rx->mptcp.sndr_key);
-+		mp_opt->mp_capable =3D 1;
-+		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
- 		ptr +=3D 8;
+ 	if (!skb || (mpext && mpext->use_map)) {
+@@ -338,6 +337,29 @@ bool mptcp_established_options_dss(struct sock *sk, st=
+ruct sk_buff *skb,
+ 	return true;
+ }
+ =
+
++bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
++			       unsigned int *size, unsigned int remaining,
++			       struct mptcp_out_options *opts)
++{
++	unsigned int opt_size =3D 0;
 +
- 		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
--			opt_rx->mptcp.rcvr_key =3D get_unaligned_be64(ptr);
--			pr_debug("rcvr_key=3D%llu", opt_rx->mptcp.rcvr_key);
-+			mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
- 			ptr +=3D 8;
-+			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu, rcvr=3D%llu",
-+				 mp_opt->flags, mp_opt->sndr_key,
-+				 mp_opt->rcvr_key);
-+		} else {
-+			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu",
-+				 mp_opt->flags, mp_opt->sndr_key);
- 		}
- 		break;
- =
-
-@@ -83,7 +86,6 @@ void mptcp_parse_option(const unsigned char *ptr, int ops=
-ize,
- 	 */
- 	case MPTCPOPT_DSS:
- 		pr_debug("DSS");
--		mp_opt =3D &opt_rx->mptcp;
- 		mp_opt->dss =3D 1;
- 		ptr++;
- =
-
++	if (!subflow_ctx(sk)->mp_capable)
++		return false;
++
++	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
++		*size +=3D opt_size;
++		remaining -=3D opt_size;
++		return true;
++	} else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
++					       opts)) {
++		*size +=3D opt_size;
++		remaining -=3D opt_size;
++		return true;
++	}
++
++	return false;
++}
++
+ bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
+ze,
+ 			  struct mptcp_out_options *opts)
+ {
 -- =
 
 2.17.2
 
 
---===============7855271964554104754==--
+--===============2586650376352100735==--
