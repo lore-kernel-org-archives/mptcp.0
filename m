@@ -1,40 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============8660612546559837653=="
+Content-Type: multipart/mixed; boundary="===============7387686802568298535=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 13 June 2019 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 12 Jun 2019 12:42:37 +0200
-Message-ID: <60d5dfff-107c-ca00-8027-0bf7ba17ae4c@tessares.net>
+Subject: Re: [MPTCP] MPTCP-API
+Date: Wed, 12 Jun 2019 14:52:39 +0200
+Message-ID: <4a3390e3d110ea0e69755cddbfe9261d9958b555.camel@redhat.com>
+In-Reply-To: 20190611211340.GS5495@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 1344
+X-UID: 1345
 
---===============8660612546559837653==
+--===============7387686802568298535==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+Hi again,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+On Tue, 2019-06-11 at 14:13 -0700, Christoph Paasch wrote:
+> So, we are wondering how we can do binary compatibility without having to
+> wait for MPTCP to land upstream. Could the MPTCP-code expose maybe a sysc=
+tl
+> that indicates the "API-version" ? That way, upon startup ATS can simply
+> check the API-version and if it doesn't match, just disable MPTCP.
+> =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190613
+> =
 
-Feel free to add/modify topics!
+> What are your thoughts?
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Reporting some additional thoughts from Florian. He can't reply
+directly ATM, but told me his opinion:
 
-Speak to you tomorrow!
-Matthieu
--- =
+As far as upstream is concerned api should not change, so he is not
+sure why any of the proposals would fly.  =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============8660612546559837653==--
+AF_PACKET is really a special case, we should not take inspiration from
+it, and there is no no abi version in nftables as far as he knows.
+
+Paolo (voicing Florian ;)
+
+
+--===============7387686802568298535==--
