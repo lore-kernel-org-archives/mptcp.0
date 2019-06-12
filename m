@@ -1,58 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============8651956753598623092=="
+Content-Type: multipart/mixed; boundary="===============8660612546559837653=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] MPTCP-API
-Date: Wed, 12 Jun 2019 10:38:12 +0200
-Message-ID: <9c7eb1996dfcdcc1ffa2a7ada3781d7a1b19b5e6.camel@redhat.com>
-In-Reply-To: 20190611211340.GS5495@MacBook-Pro-64.local
+Subject: [MPTCP] Weekly meeting - 13 June 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 12 Jun 2019 12:42:37 +0200
+Message-ID: <60d5dfff-107c-ca00-8027-0bf7ba17ae4c@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1343
+X-UID: 1344
 
---===============8651956753598623092==
+--===============8660612546559837653==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-06-11 at 14:13 -0700, Christoph Paasch wrote:
-> Now, ATS will be doing a 9.0.0-release soon that will be the first
-> release with this MPTCP-option in the ATS-config.
+Hello everybody!
 
-This is probably a question more for Leif, how far/near is such
-release?
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> So, we are wondering how we can do binary compatibility without having to
-> wait for MPTCP to land upstream. Could the MPTCP-code expose maybe a sysc=
-tl
-> that indicates the "API-version" ? That way, upon startup ATS can simply
-> check the API-version and if it doesn't match, just disable MPTCP.
-> =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20190613
 
-> What are your thoughts?
+Feel free to add/modify topics!
 
-I think we may look at other pieces of the kernel/networking stack that
-alreday implement "versioning"
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-- AF_PACKET. A getsockopt() is used to retrieve the API version
-(specifying e.g. the metadata layout). There is an additional possible
-difference: packet sockets allow user space to set the API version via
-setsockopt().
+Speak to you tomorrow!
+Matthieu
+-- =
 
-- nftables exposes an API version number via netlink (@Florian can you
-give more details?)
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-- schedstat exposes the stats layout version number via a field in the
-same procfs entry
-
-- Others?!?
-
-First 2 approaches look viable to me.
-
-Cheers,
-
-Paolo
-
-
-
---===============8651956753598623092==--
+--===============8660612546559837653==--
