@@ -1,128 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============4778948975007387050=="
+Content-Type: multipart/mixed; boundary="===============4493361434749283437=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Othman, Ossama <ossama.othman at intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] squash-to: mptcp: Implement MPTCP receive path
-Date: Thu, 13 Jun 2019 11:23:29 -0700
-Message-ID: <alpine.OSX.2.21.1906131008520.36402@skshiu-mobl1.amr.corp.intel.com>
-In-Reply-To: 3e99fc39ff57c97d9596c627c85a15f14b86560f.1560439435.git.pabeni@redhat.com
+Subject: [MPTCP] mptcpd 0.2a released
+Date: Thu, 13 Jun 2019 14:11:06 -0700
+Message-ID: <CAPyD+=AHPBgwp8hq23N8ow+zzd+tYOueOgy0CfJ1vGFmdNkHnQ@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1364
+X-UID: 1365
 
---===============4778948975007387050==
+--===============4493361434749283437==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+The mptcpd 0.2a alpha release is now available on GitHub at:
 
+    https://github.com/intel/mptcpd/releases/tag/v0.2a
 
-On Thu, 13 Jun 2019, Paolo Abeni wrote:
+This Multipath TCP Daemon alpha release replaces support for the
+deprecated MPTCP generic netlink API with the one found in the
+multipath-tcp.org kernel (0.95+), and has been verified to work with
+that kernel.
 
-> The usage of an atomic type for such field does not really protect
-> vs concurrent read/modify/update cycles, and makes the code less
-> readable, move to plain u64.
->
-> We already held the required lock in the relevant context
+Work is ongoing to leverage some of the features in the MPTCP generic
+netlink API, such as availability of subflow network interface
+indices, to help simplify path management plugin implementations.  See
+the list of mptcpd issues for further details:
 
-Thanks for removing the extra complexity, Paolo. This looks ready to =
+    https://github.com/intel/mptcpd/issues
 
-merge.
+--===============4493361434749283437==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Mat
+PGRpdiBkaXI9Imx0ciI+VGhlIG1wdGNwZCAwLjJhIGFscGhhIHJlbGVhc2UgaXMgbm93IGF2YWls
+YWJsZSBvbiBHaXRIdWIgYXQ6PGJyPjxicj7CoCDCoCA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5j
+b20vaW50ZWwvbXB0Y3BkL3JlbGVhc2VzL3RhZy92MC4yYSI+aHR0cHM6Ly9naXRodWIuY29tL2lu
+dGVsL21wdGNwZC9yZWxlYXNlcy90YWcvdjAuMmE8L2E+PGJyPjxicj5UaGlzIE11bHRpcGF0aCBU
+Q1AgRGFlbW9uIGFscGhhIHJlbGVhc2UgcmVwbGFjZXMgc3VwcG9ydCBmb3IgdGhlPGJyPmRlcHJl
+Y2F0ZWQgTVBUQ1AgZ2VuZXJpYyBuZXRsaW5rIEFQSSB3aXRoIHRoZSBvbmUgZm91bmQgaW4gdGhl
+PGJyPjxhIGhyZWY9Imh0dHA6Ly9tdWx0aXBhdGgtdGNwLm9yZyI+bXVsdGlwYXRoLXRjcC5vcmc8
+L2E+IGtlcm5lbCAoMC45NSspLCBhbmQgaGFzIGJlZW4gdmVyaWZpZWQgdG8gd29yayB3aXRoPGJy
+PnRoYXQga2VybmVsLjxicj48YnI+V29yayBpcyBvbmdvaW5nIHRvIGxldmVyYWdlIHNvbWUgb2Yg
+dGhlIGZlYXR1cmVzIGluIHRoZSBNUFRDUCBnZW5lcmljPGJyPm5ldGxpbmsgQVBJLCBzdWNoIGFz
+IGF2YWlsYWJpbGl0eSBvZiBzdWJmbG93IG5ldHdvcmsgaW50ZXJmYWNlPGJyPmluZGljZXMsIHRv
+IGhlbHAgc2ltcGxpZnkgcGF0aCBtYW5hZ2VtZW50IHBsdWdpbiBpbXBsZW1lbnRhdGlvbnMuwqAg
+U2VlPGJyPnRoZSBsaXN0IG9mIG1wdGNwZCBpc3N1ZXMgZm9yIGZ1cnRoZXIgZGV0YWlsczo8YnI+
+PGJyPsKgIMKgIDxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9pbnRlbC9tcHRjcGQvaXNzdWVz
+Ij5odHRwczovL2dpdGh1Yi5jb20vaW50ZWwvbXB0Y3BkL2lzc3VlczwvYT48YnI+PGRpdj48YnI+
+PC9kaXY+PC9kaXY+Cg==
 
-
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/options.c  | 2 +-
-> net/mptcp/protocol.c | 8 ++++----
-> net/mptcp/protocol.h | 2 +-
-> 3 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index d285a33cd480..92cb0cb48f0c 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -319,7 +319,7 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
->
-> 		msk =3D mptcp_sk(subflow_ctx(sk)->conn);
-> 		if (msk) {
-> -			opts->ext_copy.data_ack =3D atomic64_read(&msk->ack_seq);
-> +			opts->ext_copy.data_ack =3D msk->ack_seq;
-> 		} else {
-> 			crypto_key_sha1(subflow_ctx(sk)->remote_key, NULL,
-> 					&opts->ext_copy.data_ack);
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 941988387ea0..91e913636c45 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -435,7 +435,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
-> 		}
->
-> 		ssn =3D tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-> -		old_ack =3D atomic64_read(&msk->ack_seq);
-> +		old_ack =3D msk->ack_seq;
->
-> 		if (unlikely(before(ssn, subflow->map_subflow_seq))) {
-> 			/* Mapping covers data later in the subflow stream,
-> @@ -501,7 +501,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
-> 		ack_seq =3D get_mapped_dsn(subflow);
->
-> 		if (before64(old_ack, ack_seq))
-> -			atomic64_set(&msk->ack_seq, ack_seq);
-> +			msk->ack_seq =3D ack_seq;
->
-> 		if (!before(tcp_sk(ssk)->copied_seq - subflow->ssn_offset,
-> 			    subflow->map_subflow_seq + subflow->map_data_len)) {
-> @@ -635,7 +635,7 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
-> 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
-> 		msk->write_seq =3D subflow->idsn + 1;
-> 		ack_seq++;
-> -		atomic64_set(&msk->ack_seq, ack_seq);
-> +		msk->ack_seq =3D ack_seq;
-> 		subflow->map_seq =3D ack_seq;
-> 		subflow->map_subflow_seq =3D 1;
-> 		subflow->rel_write_seq =3D 1;
-> @@ -760,7 +760,7 @@ void mptcp_finish_connect(struct sock *sk, int mp_cap=
-able)
-> 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
-> 		msk->write_seq =3D subflow->idsn + 1;
-> 		ack_seq++;
-> -		atomic64_set(&msk->ack_seq, ack_seq);
-> +		msk->ack_seq =3D ack_seq;
-> 		subflow->map_seq =3D ack_seq;
-> 		subflow->map_subflow_seq =3D 1;
-> 		subflow->rel_write_seq =3D 1;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index a4f0e7d3bd62..4bc1a094aad6 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -43,7 +43,7 @@ struct mptcp_sock {
-> 	u64		local_key;
-> 	u64		remote_key;
-> 	u64		write_seq;
-> -	atomic64_t	ack_seq;
-> +	u64		ack_seq;
-> 	u32		token;
-> 	struct list_head conn_list;
-> 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
-> -- =
-
-> 2.20.1
->
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
->
-
---
-Mat Martineau
-Intel
-
---===============4778948975007387050==--
+--===============4493361434749283437==--
