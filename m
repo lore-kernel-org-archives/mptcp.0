@@ -1,112 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============4197513366919887324=="
+Content-Type: multipart/mixed; boundary="===============1679663862398335446=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] MPTCP-API
-Date: Thu, 13 Jun 2019 17:11:11 +0200
-Message-ID: <2611b5bc-f8a1-7a61-7aca-e376d2228e2a@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1906130752540.36402@skshiu-mobl1.amr.corp.intel.com
+Subject: [MPTCP] [PATCH] squash-to: mptcp: Implement MPTCP receive path
+Date: Thu, 13 Jun 2019 17:25:46 +0200
+Message-ID: <3e99fc39ff57c97d9596c627c85a15f14b86560f.1560439435.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1361
+X-UID: 1362
 
---===============4197513366919887324==
+--===============1679663862398335446==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+The usage of an atomic type for such field does not really protect
+vs concurrent read/modify/update cycles, and makes the code less
+readable, move to plain u64.
 
-On 13/06/2019 17:02, Mat Martineau wrote:
-> =
+We already held the required lock in the relevant context
 
-> On Thu, 13 Jun 2019, Matthieu Baerts wrote:
-> =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c  | 2 +-
+ net/mptcp/protocol.c | 8 ++++----
+ net/mptcp/protocol.h | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
->> Hi Mat,
->>
->> On 12/06/2019 18:21, Mat Martineau wrote:
->>>
->>> On Tue, 11 Jun 2019, Christoph Paasch wrote:
->>>
->>>> Hello,
->>>>
->>>>> On Jun 11, 2019, at 3:24 PM, Mat Martineau
->>>>> <mathew.j.martineau(a)linux.intel.com> wrote:
->>>>>
->>>>>
->>>>> Hi Christoph and Leif,
->>>>>
->>>>> On Tue, 11 Jun 2019, Christoph Paasch wrote:
->>>>>
->>>>>> So, we are wondering how we can do binary compatibility without
->>>>>> having to wait for MPTCP to land upstream. Could the MPTCP-code
->>>>>> expose maybe a sysctl that indicates the "API-version" ? That way,
->>>>>> upon startup ATS can simply check the API-version and if it
->>>>>> doesn't match, just disable MPTCP.
->>>>>>
->>>>>>
->>>>>> What are your thoughts?
->>>>>
->>>>> There are a couple of approaches we could use to help ATS and other
->>>>> projects as upstream MPTCP evolves.
->>>>>
->>>>> One is that we should pick a likely-to-get-merged value for
->>>>> IPPROTO_MPTCP. The current prototype uses 99, but the IANA defines
->>>>> that as "any private encryption scheme). We had earlier prototypes
->>>>> with 262 (IPPROTO_TCP | 0x100) since the socket API uses 'int proto'
->>>>> instead of a single byte. ATS could consider a runtime-configurable
->>>>> proto value for MPTCP to help with this.
->>>>
->>>> Yes, let's pick a "likely-to-get-merged" value ASAP. Do you think 262
->>>> could work out?
->>>>
->>>
->>> I'll test it out and send the patches, so they're ready to merge if we
->>> have a consensus.
->>
->> Should we not request an official protocol number from the IANA? It
->> seems that all the other ones in the upstream Linux kernel are official.
->> Why not having one for MPTCP then. Especially if this will need to be
->> added later in the different libC.
->>
->> I can check what to do and ask around how our TCP option official number
->> for MPTCP (30) was requested and assigned.
-> =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index d285a33cd480..92cb0cb48f0c 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -319,7 +319,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ =
 
-> I think the IANA would expect a new protocol number to be used
-> over-the-wire, which would dramatically affect MPTCP's ability to
-> pretend to be TCP as far as middleboxes and firewalls are concerned!
-> =
+ 		msk =3D mptcp_sk(subflow_ctx(sk)->conn);
+ 		if (msk) {
+-			opts->ext_copy.data_ack =3D atomic64_read(&msk->ack_seq);
++			opts->ext_copy.data_ack =3D msk->ack_seq;
+ 		} else {
+ 			crypto_key_sha1(subflow_ctx(sk)->remote_key, NULL,
+ 					&opts->ext_copy.data_ack);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 941988387ea0..91e913636c45 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -435,7 +435,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 		}
+ =
 
-> The Linux definitions already deviate somewhat from the IANA list (for
-> example, IPPROTO_IP), which leads me to believe there is some
-> flexibility in future definitions.
+ 		ssn =3D tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
+-		old_ack =3D atomic64_read(&msk->ack_seq);
++		old_ack =3D msk->ack_seq;
+ =
 
-I agree with you, I didn't want to set a new protocol number visible on
-the wire. I guess we cannot do that regarding the RFC6824 anyway.
+ 		if (unlikely(before(ssn, subflow->map_subflow_seq))) {
+ 			/* Mapping covers data later in the subflow stream,
+@@ -501,7 +501,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 		ack_seq =3D get_mapped_dsn(subflow);
+ =
 
-My point is more to get an official number for this IPPROTO_MPTCP only
-for libc and keep the same between the different OS.
-For example, we have IPPROTO_RAW (255) which is marked as "Reserved" by
-IANA.
+ 		if (before64(old_ack, ack_seq))
+-			atomic64_set(&msk->ack_seq, ack_seq);
++			msk->ack_seq =3D ack_seq;
+ =
 
-We can discuss about that at our weekly meeting if you want to.
-
-Cheers,
-Matt
-
-> -- =
-
-> Mat Martineau
-> Intel
-
+ 		if (!before(tcp_sk(ssk)->copied_seq - subflow->ssn_offset,
+ 			    subflow->map_subflow_seq + subflow->map_data_len)) {
+@@ -635,7 +635,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+ 		msk->write_seq =3D subflow->idsn + 1;
+ 		ack_seq++;
+-		atomic64_set(&msk->ack_seq, ack_seq);
++		msk->ack_seq =3D ack_seq;
+ 		subflow->map_seq =3D ack_seq;
+ 		subflow->map_subflow_seq =3D 1;
+ 		subflow->rel_write_seq =3D 1;
+@@ -760,7 +760,7 @@ void mptcp_finish_connect(struct sock *sk, int mp_capab=
+le)
+ 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+ 		msk->write_seq =3D subflow->idsn + 1;
+ 		ack_seq++;
+-		atomic64_set(&msk->ack_seq, ack_seq);
++		msk->ack_seq =3D ack_seq;
+ 		subflow->map_seq =3D ack_seq;
+ 		subflow->map_subflow_seq =3D 1;
+ 		subflow->rel_write_seq =3D 1;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a4f0e7d3bd62..4bc1a094aad6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -43,7 +43,7 @@ struct mptcp_sock {
+ 	u64		local_key;
+ 	u64		remote_key;
+ 	u64		write_seq;
+-	atomic64_t	ack_seq;
++	u64		ack_seq;
+ 	u32		token;
+ 	struct list_head conn_list;
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.20.1
 
---===============4197513366919887324==--
+
+--===============1679663862398335446==--
