@@ -1,185 +1,206 @@
-Content-Type: multipart/mixed; boundary="===============4432997740076360410=="
+Content-Type: multipart/mixed; boundary="===============4053491924750770870=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC v2 2/3] mptcp: Add ADD_ADDR handling
-Date: Thu, 13 Jun 2019 14:53:06 +0200
-Message-ID: <6dc0d86f0e276deffda1d23b0a9f033f91906d69.camel@redhat.com>
-In-Reply-To: 20190612232127.3647-3-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [RFC v2 3/3] mptcp: Add handling of incoming MP_JOIN
+ requests
+Date: Thu, 13 Jun 2019 15:29:57 +0200
+Message-ID: <5695b306e6973d27de3fe69400c4891abe70271a.camel@redhat.com>
+In-Reply-To: 20190612232127.3647-4-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1356
+X-UID: 1357
 
---===============4432997740076360410==
+--===============4053491924750770870==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-Thank you for following up on this!
-
-On Wed, 2019-06-12 at 16:21 -0700, Peter Krystad wrote:
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 5f3784989d85..393e9be41c8e 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -122,6 +122,12 @@ struct tcp_options_received {
->  			use_ack:1,
->  			ack64:1,
->  			__unused:2;
-> +		u8	add_addr : 1,
-> +			rm_addr : 1,
-> +			family : 4;
-> +		u8	addr_id;
-> +		struct	in_addr	addr;
-> +		struct	in6_addr addr6;
-
-I'm unsure if it's too early for ipv6 bit ?!? =
-
-What about an union for addr and addr6? Or perhaps use directly 'struct
-inetpeer_addr'? The same consideration for mptcp_out_options below.
-
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index 0e939724b22c..6de16196d4aa 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -221,6 +221,9 @@ void tcp_time_wait(struct sock *sk, int state, int ti=
-meo);
->  #define TCPOLEN_MPTCP_DSS_MAP32		10
->  #define TCPOLEN_MPTCP_DSS_MAP64		14
->  #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
-> +#define TCPOLEN_MPTCP_ADD_ADDR		8
-> +#define TCPOLEN_MPTCP_ADD_ADDR6		20
-> +#define TCPOLEN_MPTCP_RM_ADDR		4
-
-Not related to this patch, but possibly we can move this definition to
-net/mptcp/protocol.h ? tcp core code shold not need to be aware of
-them.
-
->  =
-
->  /* Flags in tp->nonagle */
->  #define TCP_NAGLE_OFF		1	/* Nagle's algo is disabled */
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index d285a33cd480..469f384ff108 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -161,12 +161,41 @@ void mptcp_parse_option(const unsigned char *ptr, i=
-nt opsize,
->  	 * 4 or 16 bytes of address (depending on ip version)
->  	 * 0 or 2 bytes of port (depending on length)
->  	 */
-> +	case MPTCPOPT_ADD_ADDR:
-> +		if (opsize !=3D TCPOLEN_MPTCP_ADD_ADDR &&
-> +		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
-> +			break;
-> +
-> +		mp_opt->family =3D *ptr++ & MPTCP_ADDR_FAMILY_MASK;
-> +		if (mp_opt->family !=3D MPTCP_ADDR_IPVERSION_4 &&
-> +		    mp_opt->family !=3D MPTCP_ADDR_IPVERSION_6)
-> +			break;
->  =
-
-> -	/* MPTCPOPT_REMOVE_ADDR
-> +		mp_opt->add_addr =3D 1;
-> +		mp_opt->addr_id =3D *ptr++;
-> +		if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR) {
-> +			mp_opt->addr.s_addr =3D get_unaligned_be32(ptr);
-> +			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
-> +				 mp_opt->addr.s_addr, mp_opt->addr_id);
-> +		} else {
-> +			memcpy(mp_opt->addr6.s6_addr, (u8 *) ptr, 16);
-> +			pr_debug("ADD_ADDR: addr6=3D, id=3D%d", mp_opt->addr_id);
-> +		}
-> +		break;
-
-I think we should also check that mp_opt->family matches opsize, or we
-could end-up with e.g. mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6 and
-only mp_opt->addr set.
+Hi again,
 
 [...]
-> @@ -441,6 +490,34 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_o=
-ut_options *opts)
+On Wed, 2019-06-12 at 16:21 -0700, Peter Krystad wrote:
+> @@ -419,11 +448,23 @@ bool mptcp_synack_options(const struct request_sock=
+ *req, unsigned int *size,
+>  		opts->sndr_key =3D subflow_req->local_key;
+>  		opts->rcvr_key =3D subflow_req->remote_key;
+>  		*size =3D TCPOLEN_MPTCP_MPC_SYNACK;
+> -		pr_debug("subflow_req=3D%p, local_key=3D%llu, remote_key=3D%llu",
+> +		pr_debug("req=3D%p, local_key=3D%llu, remote_key=3D%llu",
+>  			 subflow_req, subflow_req->local_key,
+>  			 subflow_req->remote_key);
+>  		return true;
+>  	}
+> +	if (subflow_req->mp_join) {
+
+Here I'm a bit lost... I think we should always enter the previos block
+statement. The current relevant code will become:
+
+     if (subflow_req->mp_capable) {
+                opts->suboptions =3D OPTION_MPTCP_MPC_SYNACK;
+                opts->sndr_key =3D subflow_req->local_key;
+                opts->rcvr_key =3D subflow_req->remote_key;
+                *size =3D TCPOLEN_MPTCP_MPC_SYNACK;
+                pr_debug("local_key=3D%llu", subflow_req->local_key);
+                pr_debug("remote_key=3D%llu", subflow_req->remote_key);
+                return true;
+     }
+     if (subflow_req->mp_join) {
+
+and mp_capable should be set, so we should never enter the 'if
+(subflow_req->mp_join) {' branch, right? What I'm missing here?!?
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index a1a42ed7810a..6468f0d8ef04 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -777,6 +777,27 @@ void mptcp_finish_connect(struct sock *sk, int mp_ca=
+pable)
+>  	inet_sk_state_store(sk, TCP_ESTABLISHED);
+>  }
+>  =
+
+> +void mptcp_finish_join(struct sock *conn, struct sock *sk)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(conn);
+> +	struct subflow_context *subflow =3D subflow_ctx(sk);
+
+Very minor thing: we should apply the reverse X-mass tree order to
+variable declaration.
+
+
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index a31f58990c86..9a475f83d446 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -69,8 +69,21 @@ static void subflow_v4_init_req(struct request_sock *r=
+eq,
+>  		token_new_request(req, skb);
+>  		pr_debug("syn seq=3D%u", TCP_SKB_CB(skb)->seq);
+>  		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
+> +	} else if (rx_opt.mptcp.mp_join && listener->request_mptcp) {
+
+Here I'm lost again, aren't we always going to enter only the previous
+block statement? I expect to have MP_CAPABLE and MP_JOIN option in the
+same packet?!?
+
+> +		subflow_req->mp_join =3D 1;
+> +		subflow_req->backup =3D rx_opt.mptcp.backup;
+> +		subflow_req->remote_id =3D rx_opt.mptcp.join_id;
+> +		subflow_req->token =3D rx_opt.mptcp.token;
+> +		subflow_req->remote_nonce =3D rx_opt.mptcp.nonce;
+> +		pr_debug("token=3D%u, remote_nonce=3D%u", subflow_req->token,
+> +			 subflow_req->remote_nonce);
+> +		if (token_join_request(req, skb)) {
+> +			subflow_req->mp_join =3D 0;
+> +			// @@ need to trigger RST
+> +		}
+>  	} else {
+>  		subflow_req->mp_capable =3D 0;
+> +		subflow_req->mp_join =3D 0;
+>  	}
+>  }
+>  =
+
+> @@ -135,6 +148,13 @@ static struct sock *subflow_syn_recv_sock(const stru=
+ct sock *sk,
+>  		    (subflow_req->local_key !=3D opt_rx.mptcp.rcvr_key) ||
+>  		    (subflow_req->remote_key !=3D opt_rx.mptcp.sndr_key))
+>  			return NULL;
+> +	} else if (subflow_req->mp_join) {
+
+Here similar situation... shouldn't we have a single invocation to
+mptcp_get_options()?!?
+
+> +		opt_rx.mptcp.mp_join =3D 0;
+> +		mptcp_get_options(skb, &opt_rx);
+> +		if ((!opt_rx.mptcp.mp_join) ||
+> +		    (token_join_valid(req, &opt_rx))) {
+> +			return NULL;
+> +		}
+>  	}
+>  =
+
+>  	child =3D tcp_v4_syn_recv_sock(sk, skb, req, dst, req_unhash, own_req);
+> @@ -142,18 +162,28 @@ static struct sock *subflow_syn_recv_sock(const str=
+uct sock *sk,
+>  	if (child && *own_req) {
+>  		struct subflow_context *ctx =3D subflow_ctx(child);
+>  =
+
+> -		if (!ctx) {
+> -			pr_debug("Closing child socket");
+> -			inet_sk_set_state(child, TCP_CLOSE);
+> -			sock_set_flag(child, SOCK_DEAD);
+> -			inet_csk_destroy_sock(child);
+> -			child =3D NULL;
+> -		} else if (ctx->mp_capable) {
+> +		if (!ctx)
+> +			goto close_child;
+> +
+> +		if (ctx->mp_capable) {
+>  			token_new_accept(child);
+> +		} else if (ctx->mp_join) {
+> +			if (token_new_join(child)) {
+> +				goto close_child;
+> +			} else {
+> +				mptcp_finish_join(ctx->conn, child);
+> +			}
 >  		}
 >  	}
 >  =
 
-> +	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> +		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) |
-> +			       (TCPOLEN_MPTCP_ADD_ADDR << 16) |
-> +			       (MPTCPOPT_ADD_ADDR << 12) |
-> +			       (MPTCP_ADDR_IPVERSION_4 <<  8) |
-> +			       (opts->addr_id));
-
-Perhaps add a macro/inline function for the above?
-
-> +		*ptr++ =3D htonl(opts->addr.s_addr);
-> +	}
+>  	return child;
 > +
-> +#if IS_ENABLED(CONFIG_MPTCP)
+> +close_child:
+> +	pr_debug("closing child socket");
+> +	inet_sk_set_state(child, TCP_CLOSE);
+> +	sock_set_flag(child, SOCK_DEAD);
+> +	inet_csk_destroy_sock(child);
+> +	return NULL;
+>  }
+>  =
 
-IS_ENABLED(CONFIG_MPTCP) should be always 1 here, right ? :-P
+>  static struct inet_connection_sock_af_ops subflow_specific;
+> @@ -223,6 +253,8 @@ static void subflow_ulp_release(struct sock *sk)
+>  =
 
-> +	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
-> +		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) |
-> +			       (TCPOLEN_MPTCP_ADD_ADDR6 << 16) |
-> +			       (MPTCPOPT_ADD_ADDR << 12) |
-> +			       (MPTCP_ADDR_IPVERSION_6 <<  8) |
-> +			       (opts->addr_id));
-> +		memcpy((u8 *) ptr, opts->addr6.s6_addr, 16);
-> +		ptr +=3D 4;
-> +	}
-> +#endif
+>  	pr_debug("subflow=3D%p", ctx);
+>  =
+
+> +	token_release(ctx->token);
 > +
-> +	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
-> +		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) |
-> +			       (TCPOLEN_MPTCP_RM_ADDR << 16) |
-> +			       (MPTCPOPT_RM_ADDR << 12) |
-> +			       (opts->addr_id));
-> +	}
-> +
->  	if (opts->ext_copy.use_ack || opts->ext_copy.use_map) {
->  		struct mptcp_ext *mpext =3D &opts->ext_copy;
->  		u8 len =3D TCPOLEN_MPTCP_DSS_BASE;
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 954360a3af2f..9458ced2c9f4 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -51,7 +51,17 @@ void pm_rm_addr(struct mptcp_sock *msk, u8 id)
->  bool pm_addr_signal(struct mptcp_sock *msk, unsigned *size,
->  		    unsigned int remaining, struct mptcp_out_options *opts)
->  {
-> -	pr_debug("msk=3D%p", msk);
-> +	if (msk && msk->addr_signal) {
-> +		pr_debug("msk=3D%p", msk);
-> +		if (msk->pm.family =3D=3D AF_INET &&
-> +		    remaining >=3D TCPOLEN_MPTCP_ADD_ADDR) {
-> +			msk->addr_signal =3D 0;
-> +			opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> +			opts->addr_id =3D msk->pm.addr_id;
-> +			opts->addr.s_addr =3D msk->pm.addr.s_addr;
-> +			return true;
+>  	kfree(ctx);
+>  }
+>  =
 
-I think upstream prefers keeping the expected/main code path with no
-indentation; something alike:
+> @@ -256,6 +288,14 @@ static void subflow_ulp_clone(const struct request_s=
+ock *req,
+>  		new_ctx->ssn_offset =3D subflow_req->ssn_offset;
+>  		new_ctx->idsn =3D subflow_req->idsn;
+>  		pr_debug("token=3D%u", new_ctx->token);
+> +	} else if (subflow_req->mp_join) {
 
-    if (!msk || !msk->addr_signal)
-	return false
+Possibly 'else' is not required here ?!? Something alike:
 
-    if (msk->pm.family !=3D AF_INET ||
-        remaining < TCPOLEN_MPTCP_ADD_ADDR)
-	return false
+ 		pr_debug("token=3D%u", new_ctx->token);
++	}
++	if (subflow_req->mp_join) {
 
-    msk->addr_signal =3D 0;
-    opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-    opts->addr_id =3D msk->pm.addr_id;
-    opts->addr.s_addr =3D msk->pm.addr.s_addr;
-    return true;
+
+> +		new_ctx->mp_join =3D 1;
+> +		new_ctx->fourth_ack =3D 1;
+> +		new_ctx->backup =3D subflow_req->backup;
+> +		new_ctx->local_id =3D subflow_req->local_id;
+> +		new_ctx->token =3D subflow_req->token;
+> +		new_ctx->thmac =3D subflow_req->thmac;
+> +		pr_debug("token=3D%u", new_ctx->token);
+>  	}
+>  }
 
 Cheers,
 
 Paolo
 
 
---===============4432997740076360410==--
+--===============4053491924750770870==--
