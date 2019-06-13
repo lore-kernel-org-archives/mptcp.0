@@ -1,51 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============7449261833974903802=="
+Content-Type: multipart/mixed; boundary="===============6139525493551579897=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] squash-to: Implement MPTCP receive path
-Date: Thu, 13 Jun 2019 16:28:36 +0200
-Message-ID: <62346a14-01c7-12e9-2268-505293a3a6e8@tessares.net>
-In-Reply-To: e9d081c2-03cd-58d9-b6e6-bb5517ba1a46@tessares.net
+Subject: Re: [MPTCP] MPTCP-API
+Date: Thu, 13 Jun 2019 08:02:23 -0700
+Message-ID: <alpine.OSX.2.21.1906130752540.36402@skshiu-mobl1.amr.corp.intel.com>
+In-Reply-To: e51b8fae-3d8c-0841-3faa-31b495bff96e@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1359
+X-UID: 1360
 
---===============7449261833974903802==
+--===============6139525493551579897==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
 
-On 13/06/2019 15:44, Matthieu Baerts wrote:
+On Thu, 13 Jun 2019, Matthieu Baerts wrote:
+
 > Hi Mat,
-> =
+>
+> On 12/06/2019 18:21, Mat Martineau wrote:
+>>
+>> On Tue, 11 Jun 2019, Christoph Paasch wrote:
+>>
+>>> Hello,
+>>>
+>>>> On Jun 11, 2019, at 3:24 PM, Mat Martineau
+>>>> <mathew.j.martineau(a)linux.intel.com> wrote:
+>>>>
+>>>>
+>>>> Hi Christoph and Leif,
+>>>>
+>>>> On Tue, 11 Jun 2019, Christoph Paasch wrote:
+>>>>
+>>>>> So, we are wondering how we can do binary compatibility without =
 
-> On 13/06/2019 01:32, Mat Martineau wrote:
->> This MPTCP debug print is an unnecessary change to common TCP code, and
->> it's best to get rid of it before upstream review.
-> =
+>>>>> having to wait for MPTCP to land upstream. Could the MPTCP-code =
 
-> Good idea and good catch!
-> =
+>>>>> expose maybe a sysctl that indicates the "API-version" ? That way, =
 
-> It looks good to me.
+>>>>> upon startup ATS can simply check the API-version and if it doesn't =
 
-Thank you for the patch!
+>>>>> match, just disable MPTCP.
+>>>>>
+>>>>>
+>>>>> What are your thoughts?
+>>>>
+>>>> There are a couple of approaches we could use to help ATS and other
+>>>> projects as upstream MPTCP evolves.
+>>>>
+>>>> One is that we should pick a likely-to-get-merged value for
+>>>> IPPROTO_MPTCP. The current prototype uses 99, but the IANA defines
+>>>> that as "any private encryption scheme). We had earlier prototypes
+>>>> with 262 (IPPROTO_TCP | 0x100) since the socket API uses 'int proto'
+>>>> instead of a single byte. ATS could consider a runtime-configurable
+>>>> proto value for MPTCP to help with this.
+>>>
+>>> Yes, let's pick a "likely-to-get-merged" value ASAP. Do you think 262
+>>> could work out?
+>>>
+>>
+>> I'll test it out and send the patches, so they're ready to merge if we
+>> have a consensus.
+>
+> Should we not request an official protocol number from the IANA? It
+> seems that all the other ones in the upstream Linux kernel are official.
+> Why not having one for MPTCP then. Especially if this will need to be
+> added later in the different libC.
+>
+> I can check what to do and ask around how our TCP option official number
+> for MPTCP (30) was requested and assigned.
 
-- c0b5193e7959: "squashed" in "mptcp: Implement MPTCP receive path"
-- signed-off was already there
-- no conflict
-- 1229232b4dcc..f39a7eb3a829: result
+I think the IANA would expect a new protocol number to be used =
 
-Cheers,
-Matt
--- =
+over-the-wire, which would dramatically affect MPTCP's ability to pretend =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+to be TCP as far as middleboxes and firewalls are concerned!
 
---===============7449261833974903802==--
+The Linux definitions already deviate somewhat from the IANA list (for =
+
+example, IPPROTO_IP), which leads me to believe there is some flexibility =
+
+in future definitions.
+
+--
+Mat Martineau
+Intel
+
+--===============6139525493551579897==--
