@@ -1,229 +1,123 @@
-Content-Type: multipart/mixed; boundary="===============7700487022722085808=="
+Content-Type: multipart/mixed; boundary="===============4868096370494924305=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC v2 2/3] mptcp: Add ADD_ADDR handling
-Date: Fri, 14 Jun 2019 15:42:29 -0700
-Message-ID: <b3b00312c5b4fecd313abb3da7164ac102980eb9.camel@linux.intel.com>
-In-Reply-To: 6dc0d86f0e276deffda1d23b0a9f033f91906d69.camel@redhat.com
+Subject: Re: [MPTCP] [PATCH RFC 1/2] net: mptcp: randomness improvements for
+ crypto.c
+Date: Fri, 14 Jun 2019 16:20:04 -0700
+Message-ID: <alpine.OSX.2.21.1906141507120.48543@skshiu-mobl1.amr.corp.intel.com>
+In-Reply-To: fa10c90788df7e31a8c79a1e7c6683c9c3a2f5d6.1560544900.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1382
+X-UID: 1383
 
---===============7700487022722085808==
+--===============4868096370494924305==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-Hi Paolo -
+On Fri, 14 Jun 2019, Davide Caratti wrote:
 
-Thank-you for your comments. Please see below.
+> - use net_get_random_once() to defer initialization of the crypto secret,
+>  instead of computing it at boot time, and remove 'crypto_init()'.
+>
+> - don't use siphash for nonces, and also remove crypto_get_nonce_v{4,6}.
+>  They are not used on current MPTCP, and future users should suffice
+>
+>     get_random_bytes(&nonce, sizeof(u32));
+>
+>  like it's done by other protocols in the Linux kernel (like SCTP).
+>
+> - use tcp_cookie_time() instead of 'seed', like it's done in syncookies,
+>  so that the initial value of 'seed' is time-dependent (not always 0).
+>
+> CC: Florian Westphal <fwestpha(a)redhat.com>
+> CC: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> ---
+> net/mptcp/crypto.c   | 47 +++++---------------------------------------
+> net/mptcp/protocol.c |  1 -
+> net/mptcp/protocol.h |  6 ------
+> 3 files changed, 5 insertions(+), 49 deletions(-)
+>
+> diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
+> index 2dc453d1d5ab..48b6748a8d25 100644
+> --- a/net/mptcp/crypto.c
+> +++ b/net/mptcp/crypto.c
+> @@ -29,47 +29,18 @@
+> #include <linux/cryptohash.h>
+> #include <linux/random.h>
+> #include <linux/siphash.h>
+> +#include <net/tcp.h>
+> #include <asm/unaligned.h>
+>
+> static siphash_key_t crypto_key_secret __read_mostly;
+> -static hsiphash_key_t crypto_nonce_secret __read_mostly;
+> -static u32 crypto_seed;
+> -
+> -u32 crypto_v4_get_nonce(__be32 saddr, __be32 daddr, __be16 sport, __be16=
+ dport)
+> -{
+> -	return hsiphash_4u32((__force u32)saddr, (__force u32)daddr,
+> -			    (__force u32)sport << 16 | (__force u32)dport,
+> -			    crypto_seed++, &crypto_nonce_secret);
+> -}
+>
+> u64 crypto_v4_get_key(__be32 saddr, __be32 daddr, __be16 sport, __be16 dp=
+ort)
+> {
+> 	pr_debug("src=3D%x:%d, dst=3D%x:%d", saddr, sport, daddr, dport);
+> +	net_get_random_once(&crypto_key_secret, sizeof(crypto_key_secret));
 
-On Thu, 2019-06-13 at 14:53 +0200, Paolo Abeni wrote:
-> Hi,
-> =
+Thanks for this fix, initializing this later also gives more time for =
 
-> Thank you for following up on this!
-> =
+get_random_bytes() to get properly seeded.
 
-> On Wed, 2019-06-12 at 16:21 -0700, Peter Krystad wrote:
-> > diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> > index 5f3784989d85..393e9be41c8e 100644
-> > --- a/include/linux/tcp.h
-> > +++ b/include/linux/tcp.h
-> > @@ -122,6 +122,12 @@ struct tcp_options_received {
-> >  			use_ack:1,
-> >  			ack64:1,
-> >  			__unused:2;
-> > +		u8	add_addr : 1,
-> > +			rm_addr : 1,
-> > +			family : 4;
-> > +		u8	addr_id;
-> > +		struct	in_addr	addr;
-> > +		struct	in6_addr addr6;
-> =
+> 	return siphash_4u32((__force u32)saddr, (__force u32)daddr,
+> 			    (__force u32)sport << 16 | (__force u32)dport,
+> -			    crypto_seed++, &crypto_key_secret);
+> -}
+> -
+> -u32 crypto_v6_get_nonce(const struct in6_addr *saddr,
+> -			const struct in6_addr *daddr,
+> -			__be16 sport, __be16 dport)
+> -{
+> -	const struct {
+> -		struct in6_addr saddr;
+> -		struct in6_addr daddr;
+> -		u32 seed;
+> -		__be16 sport;
+> -		__be16 dport;
+> -	} __aligned(SIPHASH_ALIGNMENT) combined =3D {
+> -		.saddr =3D *saddr,
+> -		.daddr =3D *daddr,
+> -		.seed =3D crypto_seed++,
+> -		.sport =3D sport,
+> -		.dport =3D dport,
+> -	};
+> -
+> -	return hsiphash(&combined, offsetofend(typeof(combined), dport),
+> -			&crypto_nonce_secret);
+> +			    tcp_cookie_time(), &crypto_key_secret);
 
-> I'm unsure if it's too early for ipv6 bit ?!? =
+tcp_cookie_time() adds a dependency on CONFIG_SYN_COOKIES. It also looks =
 
-> What about an union for addr and addr6? Or perhaps use directly 'struct
-> inetpeer_addr'? The same consideration for mptcp_out_options below.
+like tcp_cookie_time() only increments once per second, so the uniqueness =
 
-I'm inclined to include ipv6 here because this is capturing incoming options
-so it may arrive even though we do not support. I'll make them both a union.
+of the key (within a 1-second interval) becomes totally dependent on the =
 
-> =
+uniqueness of the 4-tuple. I think a different seed source is needed that =
 
-> > diff --git a/include/net/tcp.h b/include/net/tcp.h
-> > index 0e939724b22c..6de16196d4aa 100644
-> > --- a/include/net/tcp.h
-> > +++ b/include/net/tcp.h
-> > @@ -221,6 +221,9 @@ void tcp_time_wait(struct sock *sk, int state, int =
-timeo);
-> >  #define TCPOLEN_MPTCP_DSS_MAP32		10
-> >  #define TCPOLEN_MPTCP_DSS_MAP64		14
-> >  #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
-> > +#define TCPOLEN_MPTCP_ADD_ADDR		8
-> > +#define TCPOLEN_MPTCP_ADD_ADDR6		20
-> > +#define TCPOLEN_MPTCP_RM_ADDR		4
-> =
+won't repeat so predictably.
 
-> Not related to this patch, but possibly we can move this definition to
-> net/mptcp/protocol.h ? tcp core code shold not need to be aware of
-> them.
+> }
+>
 
-Sure, I submitted a seperate patchset for this.
+Thanks,
 
-> >  =
+--
+Mat Martineau
+Intel
 
-> >  /* Flags in tp->nonagle */
-> >  #define TCP_NAGLE_OFF		1	/* Nagle's algo is disabled */
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index d285a33cd480..469f384ff108 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -161,12 +161,41 @@ void mptcp_parse_option(const unsigned char *ptr,=
- int opsize,
-> >  	 * 4 or 16 bytes of address (depending on ip version)
-> >  	 * 0 or 2 bytes of port (depending on length)
-> >  	 */
-> > +	case MPTCPOPT_ADD_ADDR:
-> > +		if (opsize !=3D TCPOLEN_MPTCP_ADD_ADDR &&
-> > +		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
-> > +			break;
-> > +
-> > +		mp_opt->family =3D *ptr++ & MPTCP_ADDR_FAMILY_MASK;
-> > +		if (mp_opt->family !=3D MPTCP_ADDR_IPVERSION_4 &&
-> > +		    mp_opt->family !=3D MPTCP_ADDR_IPVERSION_6)
-> > +			break;
-> >  =
-
-> > -	/* MPTCPOPT_REMOVE_ADDR
-> > +		mp_opt->add_addr =3D 1;
-> > +		mp_opt->addr_id =3D *ptr++;
-> > +		if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR) {
-> > +			mp_opt->addr.s_addr =3D get_unaligned_be32(ptr);
-> > +			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
-> > +				 mp_opt->addr.s_addr, mp_opt->addr_id);
-> > +		} else {
-> > +			memcpy(mp_opt->addr6.s6_addr, (u8 *) ptr, 16);
-> > +			pr_debug("ADD_ADDR: addr6=3D, id=3D%d", mp_opt->addr_id);
-> > +		}
-> > +		break;
-> =
-
-> I think we should also check that mp_opt->family matches opsize, or we
-> could end-up with e.g. mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6 and
-> only mp_opt->addr set.
-
-Will revise.
-
-> =
-
-> [...]
-> > @@ -441,6 +490,34 @@ void mptcp_write_options(__be32 *ptr, struct mptcp=
-_out_options *opts)
-> >  		}
-> >  	}
-> >  =
-
-> > +	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> > +		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) |
-> > +			       (TCPOLEN_MPTCP_ADD_ADDR << 16) |
-> > +			       (MPTCPOPT_ADD_ADDR << 12) |
-> > +			       (MPTCP_ADDR_IPVERSION_4 <<  8) |
-> > +			       (opts->addr_id));
-> =
-
-> Perhaps add a macro/inline function for the above?
-
-Good idea, will add.
-
-> =
-
-> > +		*ptr++ =3D htonl(opts->addr.s_addr);
-> > +	}
-> > +
-> > +#if IS_ENABLED(CONFIG_MPTCP)
-> =
-
-> IS_ENABLED(CONFIG_MPTCP) should be always 1 here, right ? :-P
-
-Hah!
-
-> > +	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
-> > +		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) |
-> > +			       (TCPOLEN_MPTCP_ADD_ADDR6 << 16) |
-> > +			       (MPTCPOPT_ADD_ADDR << 12) |
-> > +			       (MPTCP_ADDR_IPVERSION_6 <<  8) |
-> > +			       (opts->addr_id));
-> > +		memcpy((u8 *) ptr, opts->addr6.s6_addr, 16);
-> > +		ptr +=3D 4;
-> > +	}
-> > +#endif
-> > +
-> > +	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
-> > +		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) |
-> > +			       (TCPOLEN_MPTCP_RM_ADDR << 16) |
-> > +			       (MPTCPOPT_RM_ADDR << 12) |
-> > +			       (opts->addr_id));
-> > +	}
-> > +
-> >  	if (opts->ext_copy.use_ack || opts->ext_copy.use_map) {
-> >  		struct mptcp_ext *mpext =3D &opts->ext_copy;
-> >  		u8 len =3D TCPOLEN_MPTCP_DSS_BASE;
-> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> > index 954360a3af2f..9458ced2c9f4 100644
-> > --- a/net/mptcp/pm.c
-> > +++ b/net/mptcp/pm.c
-> > @@ -51,7 +51,17 @@ void pm_rm_addr(struct mptcp_sock *msk, u8 id)
-> >  bool pm_addr_signal(struct mptcp_sock *msk, unsigned *size,
-> >  		    unsigned int remaining, struct mptcp_out_options *opts)
-> >  {
-> > -	pr_debug("msk=3D%p", msk);
-> > +	if (msk && msk->addr_signal) {
-> > +		pr_debug("msk=3D%p", msk);
-> > +		if (msk->pm.family =3D=3D AF_INET &&
-> > +		    remaining >=3D TCPOLEN_MPTCP_ADD_ADDR) {
-> > +			msk->addr_signal =3D 0;
-> > +			opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> > +			opts->addr_id =3D msk->pm.addr_id;
-> > +			opts->addr.s_addr =3D msk->pm.addr.s_addr;
-> > +			return true;
-> =
-
-> I think upstream prefers keeping the expected/main code path with no
-> indentation; something alike:
-
-OK. =
-
-
-I will include all of these in v3 patchset.
-
-Peter.
-
->     if (!msk || !msk->addr_signal)
-> 	return false
-> =
-
->     if (msk->pm.family !=3D AF_INET ||
->         remaining < TCPOLEN_MPTCP_ADD_ADDR)
-> 	return false
-> =
-
->     msk->addr_signal =3D 0;
->     opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
->     opts->addr_id =3D msk->pm.addr_id;
->     opts->addr.s_addr =3D msk->pm.addr.s_addr;
->     return true;
-> =
-
-> Cheers,
-> =
-
-> Paolo
-> =
-
-
-
---===============7700487022722085808==--
+--===============4868096370494924305==--
