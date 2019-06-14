@@ -1,46 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============1141220168744538023=="
+Content-Type: multipart/mixed; boundary="===============8693798221841285249=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 0/4] Move MPTCP #defines to internal header
-Date: Fri, 14 Jun 2019 10:56:26 +0200
-Message-ID: <7a3947b756a10fca743dbaeafe06e5a66477eafb.camel@redhat.com>
-In-Reply-To: 20190613222454.10728-1-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [PATCH 0/2] Change IPPROTO_MPTCP
+Date: Fri, 14 Jun 2019 14:46:37 +0200
+Message-ID: <66927244-eb25-b56a-742c-ea7535e1aa9e@tessares.net>
+In-Reply-To: 20190612171643.21861-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1371
+X-UID: 1372
 
---===============1141220168744538023==
+--===============8693798221841285249==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Mat,
 
-On Thu, 2019-06-13 at 15:24 -0700, Peter Krystad wrote:
-> Like it says...
+On 12/06/2019 19:16, Mat Martineau wrote:
+> Instead of using 99 for IPPROTO_MPTCP (which IANA defines as "any
+> private encryption scheme"), use 262 (0x100 | IPPROTO_TCP). The MPTCP
+> self tests continue to run successfully with these changes.
 > =
 
-> Peter Krystad (4):
->   mptcp: Move TCPOLEN #defines to protocol.h
->   mptcp: Move TCPOLEN #defines to protocol.h
->   mptcp: Move TCPOLEN #defines to protocol.h
->   mptcp: make flag field naming consistent
+> Earlier in development we used 262 for IPPROTO_SUBFLOW as it would get
+> truncated to 0x06 (IPPROTO_TCP) in the IP header. Now that
+> IPPROTO_SUBFLOW has been removed in favor of using ULP, 262 is freed up
+> for MPTCP.
 > =
 
->  include/net/tcp.h    |  9 ---------
->  net/mptcp/options.c  |  4 ++--
->  net/mptcp/protocol.h | 16 +++++++++++++---
->  3 files changed, 15 insertions(+), 14 deletions(-)
+> Note that this does change the value of IPPROTO_MAX, and in reviewing
+> the occurrences of that around the kernel most uses look fine.
+> net/sunrpc/xprtrdma/svc_rdma_recvfrom.c has one instance of IPPROTO_MAX
+> where its meaning is not immediately obvious.
+> =
 
-Thank you for following-up so fastly! I like how you split the changes
-to hopefully simplify the merge.
+> Mat Martineau (2):
+>   squash-to: Define IPPROTO_MPTCP
+>   squash-to: add basic kselftest program
 
-LGTM,
+Thank you for the patch.
 
-Thanks!
+- b2727bb697b3: "squash" of the first patch in "tcp: Define IPPROTO_MPTCP"
+- signed-off was already there
+- e993d4b99859: "squash" of the second patch in "mptcp: add basic
+kselftest program"
+- no conflict
+- d44c2b144d8a..532214a3e83e: result
 
-Paolo
+Cheers,
+Matt
 
+-- =
 
---===============1141220168744538023==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+--===============8693798221841285249==--
