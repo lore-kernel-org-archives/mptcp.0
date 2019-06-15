@@ -1,108 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============7992947843540507388=="
+Content-Type: multipart/mixed; boundary="===============7619145272795687443=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/16] mptcp: fix checkpatch issues
-Date: Sat, 15 Jun 2019 12:52:46 +0200
-Message-ID: <20190615105259.15151-4-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 4/16] mptcp: fix checkpatch issues
+Date: Sat, 15 Jun 2019 12:52:47 +0200
+Message-ID: <20190615105259.15151-5-matthieu.baerts@tessares.net>
 In-Reply-To: 20190615105259.15151-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1388
+X-UID: 1389
 
---===============7992947843540507388==
+--===============7619145272795687443==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 What has been fixed:
 
- - code indent should use tabs where possible
- - struct proto_ops should normally be const
- - missing a blank line after declarations
- - line over 80 characters
- - networking block comments don't use an empty /* line, use /*
-   Comment...
+ - Alignment should match open parenthesis (2)
+ - "foo* bar" should be "foo *bar" (3)
 
 What has not been fixed:
 
- - added, moved or deleted file(s), does MAINTAINERS need updating?
-   > TBD later
+ - /
 
-Fixes: f34ac55969b5 (mptcp: Associate MPTCP context with TCP socket)
+Fixes: 56a31199744c (mptcp: Handle MP_CAPABLE options for outgoing connecti=
+ons)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/protocol.c | 8 ++++----
- net/mptcp/protocol.h | 4 +++-
- net/mptcp/subflow.c  | 3 +--
- 3 files changed, 8 insertions(+), 7 deletions(-)
+ include/net/mptcp.h | 6 +++---
+ net/mptcp/options.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 06970e6ec282..73baff1675e4 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -132,9 +132,9 @@ static int mptcp_bind(struct socket *sock, struct socka=
-ddr *uaddr, int addr_len)
- 		return err;
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 0ca51497328b..5c511f52e8e6 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -33,10 +33,10 @@ static inline bool sk_is_mptcp(const struct sock *sk)
+ void mptcp_parse_option(const unsigned char *ptr, int opsize,
+ 			struct tcp_options_received *opt_rx);
+ bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+-			       struct mptcp_out_options* opts);
++		       struct mptcp_out_options *opts);
+ void mptcp_rcv_synsent(struct sock *sk);
+ bool mptcp_established_options(struct sock *sk, unsigned int *size,
+-				       struct mptcp_out_options *opts);
++			       struct mptcp_out_options *opts);
  =
 
- 	if (!msk->subflow) {
--	        err =3D mptcp_subflow_create(sock->sk);
--	        if (err)
--	                return err;
-+		err =3D mptcp_subflow_create(sock->sk);
-+		if (err)
-+			return err;
- 	}
- 	return inet_bind(msk->subflow, uaddr, addr_len);
- }
-@@ -159,7 +159,7 @@ static int mptcp_stream_connect(struct socket *sock, st=
-ruct sockaddr *uaddr,
- 	return inet_stream_connect(msk->subflow, uaddr, addr_len, flags);
+ void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts);
+ =
+
+@@ -57,7 +57,7 @@ static inline void mptcp_parse_option(const unsigned char=
+ *ptr, int opsize,
  }
  =
 
--static struct proto_ops mptcp_stream_ops;
-+static const struct proto_ops mptcp_stream_ops;
- =
-
- static struct inet_protosw mptcp_protosw =3D {
- 	.type		=3D SOCK_STREAM,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 8b6588f65146..1b695a503d83 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -54,10 +54,12 @@ struct subflow_context {
- static inline struct subflow_context *subflow_ctx(const struct sock *sk)
+ static inline bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+-				     struct mptcp_out_options* opts)
++				     struct mptcp_out_optionsi *opts)
  {
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+
- 	return (struct subflow_context *)icsk->icsk_ulp_data;
+ 	return false;
+ }
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 2d3d1835183e..4ba908f1d9e8 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -123,7 +123,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
  }
  =
 
--static inline struct socket *mptcp_subflow_tcp_socket(const struct subflow=
-_context *subflow)
-+static inline struct socket *
-+mptcp_subflow_tcp_socket(const struct subflow_context *subflow)
+ bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+-		       struct mptcp_out_options* opts)
++		       struct mptcp_out_options *opts)
  {
- 	return subflow->tcp_sock;
- }
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 91ab2673fadd..8d13713ee159 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * Multipath TCP
-+/* Multipath TCP
-  *
-  * Copyright (c) 2017 - 2019, Intel Corporation.
-  */
+ 	struct subflow_context *subflow =3D subflow_ctx(sk);
+ =
+
 -- =
 
 2.20.1
 
 
---===============7992947843540507388==--
+--===============7619145272795687443==--
