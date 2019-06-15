@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============4954393025902725670=="
+Content-Type: multipart/mixed; boundary="===============4484609360676881569=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/16] mptcp: fix checkpatch issues
-Date: Sat, 15 Jun 2019 12:52:44 +0200
-Message-ID: <20190615105259.15151-2-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 2/16] mptcp: fix checkpatch issues
+Date: Sat, 15 Jun 2019 12:52:45 +0200
+Message-ID: <20190615105259.15151-3-matthieu.baerts@tessares.net>
 In-Reply-To: 20190615105259.15151-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1386
+X-UID: 1387
 
---===============4954393025902725670==
+--===============4484609360676881569==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -22,34 +22,27 @@ What has been fixed:
 
 What has not been fixed:
 
+ - multiple assignments should be avoided in include/linux/tcp.h:124
+   > Did just above for other TCP options
+ - Prefer using the BIT macro in net/ipv4/tcp_output.c:415
+   > Done like that just above
  - added, moved or deleted file(s), does MAINTAINERS need updating?
    > TBD later
+ - line over 80 characters in net/mptcp/options.c:36
+   > Florian is OK with that.
 
-Fixes: 5eced96906af (mptcp: Add MPTCP socket stubs)
+Fixes: 4ef12a2d401e (mptcp: Handle MPTCP TCP options)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/protocol.c | 3 +--
- net/mptcp/protocol.h | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ net/mptcp/options.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 20f84dc8af9a..86db17af8c05 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index a643a3c966c0..42626cd0a9f7 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
 @@ -1,6 +1,5 @@
  // SPDX-License-Identifier: GPL-2.0
--/*
-- * Multipath TCP
-+/* Multipath TCP
-  *
-  * Copyright (c) 2017 - 2019, Intel Corporation.
-  */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 795b7a6a899e..972204835421 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1,6 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
 -/*
 - * Multipath TCP
 +/* Multipath TCP
@@ -61,4 +54,4 @@ index 795b7a6a899e..972204835421 100644
 2.20.1
 
 
---===============4954393025902725670==--
+--===============4484609360676881569==--
