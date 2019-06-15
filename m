@@ -1,27 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============0009054267120060607=="
+Content-Type: multipart/mixed; boundary="===============5723564967480314264=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 4/16] mptcp: fix checkpatch issues
-Date: Sat, 15 Jun 2019 21:37:54 +0200
-Message-ID: <20190615193754.hmqmi6u7ik4lh2qn@breakpoint.cc>
-In-Reply-To: 20190615105259.15151-5-matthieu.baerts@tessares.net
+Subject: Re: [MPTCP] [PATCH 0/16] mptcp: fix checkpatch issues
+Date: Sat, 15 Jun 2019 21:40:02 +0200
+Message-ID: <20190615194002.vksura32ei64vgmb@breakpoint.cc>
+In-Reply-To: 20190615105259.15151-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1402
+X-UID: 1403
 
---===============0009054267120060607==
+--===============5723564967480314264==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-  =
+> These patches simply fix code style reported by checkpatch.pl without
+> modifying the behaviour of the code.
 
->  static inline bool mptcp_syn_options(struct sock *sk, unsigned int *size,
-> -				     struct mptcp_out_options* opts)
-> +				     struct mptcp_out_optionsi *opts)
+Thanks for doing this, aside from one nit this looks good, feel free
+to squash as needed.
 
-I don't think you wanted to append that 'i' here :-)
-
---===============0009054267120060607==--
+--===============5723564967480314264==--
