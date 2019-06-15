@@ -1,78 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============4443961973834582850=="
+Content-Type: multipart/mixed; boundary="===============1413077729561143342=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 8/16] mptcp: fix checkpatch issues
-Date: Sat, 15 Jun 2019 12:52:51 +0200
-Message-ID: <20190615105259.15151-9-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 9/16] mptcp: fix checkpatch issues
+Date: Sat, 15 Jun 2019 12:52:52 +0200
+Message-ID: <20190615105259.15151-10-matthieu.baerts@tessares.net>
 In-Reply-To: 20190615105259.15151-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1393
+X-UID: 1394
 
---===============4443961973834582850==
+--===============1413077729561143342==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 What has been fixed:
 
- - "foo* bar" should be "foo *bar" (2)
+ - space required after that ',' (ctx:VxV)
+ - Statements terminations use 1 semicolon
  - line over 80 characters
 
 What has not been fixed:
 
- - /
+ - line over 80 characters
+   > only one char over and hard to split:
 
-Fixes: 4916eb951361 (mptcp: Write MPTCP DSS headers to outgoing data packet=
-s)
+   mp_opt->data_fin =3D (mp_opt->dss_flags & MPTCP_DSS_DATA_FIN) !=3D 0;
+
+Fixes: 76d3e3f81f61 (mptcp: Implement MPTCP receive path)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- include/net/mptcp.h | 4 ++--
- net/mptcp/options.c | 4 +++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 3cf81a34d41c..12f378e37e8d 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -69,7 +69,7 @@ bool mptcp_synack_options(const struct request_sock *req,=
- unsigned int *size,
- 			  struct mptcp_out_options *opts);
- bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
- 			       unsigned int *size, unsigned int remaining,
--			       struct mptcp_out_options* opts);
-+			       struct mptcp_out_options *opts);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a6f1d18e8cc7..04eb5c6cbf76 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -135,7 +135,7 @@ static u64 expand_seq(u64 old_seq, u16 old_data_len, u6=
+4 seq)
+ 		return old_seq;
  =
 
- static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
- {
-@@ -120,7 +120,7 @@ static inline bool mptcp_established_options(struct soc=
-k *sk,
- 					     struct sk_buff *skb,
- 					     unsigned int *size,
- 					     unsigned int remaining,
--					     struct mptcp_out_options* opts)
-+					     struct mptcp_out_options *opts)
- {
- 	return false;
+ 	/* Assume map covers data not mapped yet. */
+-	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63,32));
++	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63, 32));
  }
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 249ecfe965a2..49c9de0bea91 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -242,7 +242,9 @@ static bool mptcp_established_options_dss(struct sock *=
-sk, struct sk_buff *skb,
- 	if (mpext && mpext->use_ack) {
- 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
  =
 
--		/* Add kind/length/subtype/flag overhead if mapping not populated */
-+		/* Add kind/lenght/subtype/flag overhead if mapping is not
-+		 * populated
-+		 */
- 		if (dss_size =3D=3D 0)
- 			ack_size +=3D TCPOLEN_MPTCP_DSS_BASE;
+ static u64 get_map_offset(struct subflow_context *subflow)
+@@ -267,7 +267,7 @@ static enum mapping_status mptcp_get_mapping(struct soc=
+k *ssk)
+ =
+
+ del_out:
+ 	__skb_ext_del(skb, SKB_EXT_MPTCP);
+-	return ret;;
++	return ret;
+ }
+ =
+
+ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+@@ -283,7 +283,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 	long timeo;
+ =
+
+ 	if (!msk->connection_list) {
+-		pr_debug("fallback-read subflow=3D%p", subflow_ctx(msk->subflow->sk));
++		pr_debug("fallback-read subflow=3D%p",
++			 subflow_ctx(msk->subflow->sk));
+ 		return sock_recvmsg(msk->subflow, msg, flags);
+ 	}
  =
 
 -- =
@@ -80,4 +80,4 @@ sk, struct sk_buff *skb,
 2.20.1
 
 
---===============4443961973834582850==--
+--===============1413077729561143342==--
