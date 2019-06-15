@@ -1,54 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============6086913439099157963=="
+Content-Type: multipart/mixed; boundary="===============1536679723988979781=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 4/16] mptcp: fix checkpatch issues
-Date: Sat, 15 Jun 2019 22:01:49 +0200
-Message-ID: <987d8986-e3b7-b24f-f2b7-7fac58520a8b@tessares.net>
-In-Reply-To: 20190615193754.hmqmi6u7ik4lh2qn@breakpoint.cc
+Subject: [MPTCP] [PATCH 4/16] mptcp: fix checkpatch issues
+Date: Sat, 15 Jun 2019 22:12:04 +0200
+Message-ID: <20190615201204.20163-1-matthieu.baerts@tessares.net>
+In-Reply-To: 20190615105259.15151-5-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1404
+X-UID: 1405
 
---===============6086913439099157963==
+--===============1536679723988979781==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+What has been fixed:
 
-On 15/06/2019 21:37, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->   =
+ - Alignment should match open parenthesis (2)
+ - "foo* bar" should be "foo *bar" (3)
 
->>  static inline bool mptcp_syn_options(struct sock *sk, unsigned int *siz=
-e,
->> -				     struct mptcp_out_options* opts)
->> +				     struct mptcp_out_optionsi *opts)
-> =
+What has not been fixed:
 
-> I don't think you wanted to append that 'i' here :-)
+ - /
 
-Wow, good catch!
+Fixes: 56a31199744c (mptcp: Handle MP_CAPABLE options for outgoing connecti=
+ons)
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-I have to admit that I didn't check each patch individually. I created
-one modification from each topic/commit to ease the application later.
-Then I sent everything in one.
+Notes:
+    v2: fix typo spotted by Florian
 
-Now everybody will know which editor I used! And yes, people will say it
-would not have happened with emacs :-D
+ include/net/mptcp.h | 6 +++---
+ net/mptcp/options.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-I am going to resend this individual patch only, not the rest to avoid
-spamming people :-)
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 0ca51497328b..81255b0f57d7 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -33,10 +33,10 @@ static inline bool sk_is_mptcp(const struct sock *sk)
+ void mptcp_parse_option(const unsigned char *ptr, int opsize,
+ 			struct tcp_options_received *opt_rx);
+ bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+-			       struct mptcp_out_options* opts);
++		       struct mptcp_out_options *opts);
+ void mptcp_rcv_synsent(struct sock *sk);
+ bool mptcp_established_options(struct sock *sk, unsigned int *size,
+-				       struct mptcp_out_options *opts);
++			       struct mptcp_out_options *opts);
+ =
 
-Cheers,
-Matt
+ void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts);
+ =
+
+@@ -57,7 +57,7 @@ static inline void mptcp_parse_option(const unsigned char=
+ *ptr, int opsize,
+ }
+ =
+
+ static inline bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+-				     struct mptcp_out_options* opts)
++				     struct mptcp_out_options *opts)
+ {
+ 	return false;
+ }
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 2d3d1835183e..4ba908f1d9e8 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -123,7 +123,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+ }
+ =
+
+ bool mptcp_syn_options(struct sock *sk, unsigned int *size,
+-		       struct mptcp_out_options* opts)
++		       struct mptcp_out_options *opts)
+ {
+ 	struct subflow_context *subflow =3D subflow_ctx(sk);
+ =
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.20.1
 
---===============6086913439099157963==--
+
+--===============1536679723988979781==--
