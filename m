@@ -1,69 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============4398089398784517399=="
+Content-Type: multipart/mixed; boundary="===============7355941040004651452=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 14/16] mptcp: fix checkpatch issues
-Date: Sat, 15 Jun 2019 12:52:57 +0200
-Message-ID: <20190615105259.15151-15-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 15/16] mptcp: fix checkpatch issues
+Date: Sat, 15 Jun 2019 12:52:58 +0200
+Message-ID: <20190615105259.15151-16-matthieu.baerts@tessares.net>
 In-Reply-To: 20190615105259.15151-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1399
+X-UID: 1400
 
---===============4398089398784517399==
+--===============7355941040004651452==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 What has been fixed:
 
- - Prefer 'unsigned int *' to bare use of 'unsigned *' (2)
+ - No space is necessary after a cast (2)
+ - braces {} are not necessary for single statement blocks
 
 What has not been fixed:
 
- - added, moved or deleted file(s), does MAINTAINERS need updating?
-   > TBD later
+ - /
 
-Fixes: 63989ae59543 (mptcp: Add path manager interface)
+Fixes: 3daf18dd31c1 (mptcp: Add ADD_ADDR handling)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/pm.c       | 2 +-
- net/mptcp/protocol.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/options.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 954360a3af2f..512dc110098a 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -48,7 +48,7 @@ void pm_rm_addr(struct mptcp_sock *msk, u8 id)
- 	pr_debug("msk=3D%p", msk);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index d0795015b848..503f0d110494 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -178,7 +178,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+ 			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
+ 				 mp_opt->addr.s_addr, mp_opt->addr_id);
+ 		} else {
+-			memcpy(mp_opt->addr6.s6_addr, (u8 *) ptr, 16);
++			memcpy(mp_opt->addr6.s6_addr, (u8 *)ptr, 16);
+ 			pr_debug("ADD_ADDR: addr6=3D, id=3D%d", mp_opt->addr_id);
+ 		}
+ 		break;
+@@ -374,9 +374,9 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 	struct subflow_context *subflow =3D subflow_ctx(sk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+ =
+
+-	if (subflow->fourth_ack) {
++	if (subflow->fourth_ack)
+ 		return pm_addr_signal(msk, size, remaining, opts);
+-	}
++
+ 	return false;
  }
  =
 
--bool pm_addr_signal(struct mptcp_sock *msk, unsigned *size,
-+bool pm_addr_signal(struct mptcp_sock *msk, unsigned int *size,
- 		    unsigned int remaining, struct mptcp_out_options *opts)
- {
- 	pr_debug("msk=3D%p", msk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 257fdfec705e..3b15e56dc9e0 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -174,7 +174,7 @@ void pm_subflow_closed(struct mptcp_sock *msk, u8 id);
- void pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr, u8 id=
-);
- void pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *addr, u8 =
-id);
- void pm_rm_addr(struct mptcp_sock *msk, u8 id);
--bool pm_addr_signal(struct mptcp_sock *msk, unsigned *size,
-+bool pm_addr_signal(struct mptcp_sock *msk, unsigned int *size,
- 		    unsigned int remaining, struct mptcp_out_options *opts);
- =
-
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
+@@ -506,7 +506,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
+options *opts)
+ 			       (MPTCPOPT_ADD_ADDR << 12) |
+ 			       (MPTCP_ADDR_IPVERSION_6 <<  8) |
+ 			       (opts->addr_id));
+-		memcpy((u8 *) ptr, opts->addr6.s6_addr, 16);
++		memcpy((u8 *)ptr, opts->addr6.s6_addr, 16);
+ 		ptr +=3D 4;
+ 	}
+ #endif
 -- =
 
 2.20.1
 
 
---===============4398089398784517399==--
+--===============7355941040004651452==--
