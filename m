@@ -1,60 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============5673464072861826999=="
+Content-Type: multipart/mixed; boundary="===============4443961973834582850=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 7/16] mptcp: fix checkpatch issues
-Date: Sat, 15 Jun 2019 12:52:50 +0200
-Message-ID: <20190615105259.15151-8-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 8/16] mptcp: fix checkpatch issues
+Date: Sat, 15 Jun 2019 12:52:51 +0200
+Message-ID: <20190615105259.15151-9-matthieu.baerts@tessares.net>
 In-Reply-To: 20190615105259.15151-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1392
+X-UID: 1393
 
---===============5673464072861826999==
+--===============4443961973834582850==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 What has been fixed:
 
- - Possible unwrapped commit description (prefer a maximum 75 chars per
-   line)
+ - "foo* bar" should be "foo *bar" (2)
+ - line over 80 characters
 
 What has not been fixed:
 
  - /
 
-Fixes: b806ddc89578 (tcp: Prevent coalesce/collapse when skb has MPTCP exte=
-nsions)
+Fixes: 4916eb951361 (mptcp: Write MPTCP DSS headers to outgoing data packet=
+s)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- .topmsg | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/net/mptcp.h | 4 ++--
+ net/mptcp/options.c | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/.topmsg b/.topmsg
-index 033cbc06077c..6f250b71a2e1 100644
---- a/.topmsg
-+++ b/.topmsg
-@@ -1,8 +1,9 @@
- From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
- Subject: [PATCH] tcp: Prevent coalesce/collapse when skb has MPTCP extensi=
-ons
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 3cf81a34d41c..12f378e37e8d 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -69,7 +69,7 @@ bool mptcp_synack_options(const struct request_sock *req,=
+ unsigned int *size,
+ 			  struct mptcp_out_options *opts);
+ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 			       unsigned int *size, unsigned int remaining,
+-			       struct mptcp_out_options* opts);
++			       struct mptcp_out_options *opts);
  =
 
--The MPTCP extension data needs to be preserved as it passes through the TCP
--stack. Make sure that these skbs are not appended to others during coalesc=
-e or
--collapse, so the data remains associated with the payload of the given skb.
-+The MPTCP extension data needs to be preserved as it passes through the
-+TCP stack. Make sure that these skbs are not appended to others during
-+coalesce or collapse, so the data remains associated with the payload of
-+the given skb.
+ static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
+ {
+@@ -120,7 +120,7 @@ static inline bool mptcp_established_options(struct soc=
+k *sk,
+ 					     struct sk_buff *skb,
+ 					     unsigned int *size,
+ 					     unsigned int remaining,
+-					     struct mptcp_out_options* opts)
++					     struct mptcp_out_options *opts)
+ {
+ 	return false;
+ }
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 249ecfe965a2..49c9de0bea91 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -242,7 +242,9 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ 	if (mpext && mpext->use_ack) {
+ 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
  =
 
- Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+-		/* Add kind/length/subtype/flag overhead if mapping not populated */
++		/* Add kind/lenght/subtype/flag overhead if mapping is not
++		 * populated
++		 */
+ 		if (dss_size =3D=3D 0)
+ 			ack_size +=3D TCPOLEN_MPTCP_DSS_BASE;
+ =
+
 -- =
 
 2.20.1
 
 
---===============5673464072861826999==--
+--===============4443961973834582850==--
