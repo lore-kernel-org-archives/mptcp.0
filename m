@@ -1,72 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1505917510248390495=="
+Content-Type: multipart/mixed; boundary="===============0593252934383203391=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v3] mptcp: proto_ops cannot be const
-Date: Mon, 17 Jun 2019 15:32:00 +0200
-Message-ID: <eedd293d-c30f-2dad-6626-ba10c33749aa@tessares.net>
-In-Reply-To: 20190617130224.21141-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] [PATCH 0/3] MP_JOIN handling: v3 from Peter
+Date: Mon, 17 Jun 2019 16:11:39 +0200
+Message-ID: <20190617141142.6782-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1414
+X-UID: 1415
 
---===============1505917510248390495==
+--===============0593252934383203391==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Peter recently sent a v3 of his patch-set but I had already applied it in t=
+he
+repo. Here is what I extracted from the v3 using diff.
 
-On 17/06/2019 15:02, Matthieu Baerts wrote:
-> This partially reverts 2cb651944bde (mptcp: fix checkpatch issues).
-> =
+If Paolo (or others) is OK, I can include this in what we are going to send=
+ to
+Eric.
 
-> The proto_ops cannot be const as recommended by checkpatch because we
-> start from inet_stream_ops and we modify only what we need to modify.
-> =
+Peter Krystad (3):
+  squash to: mptcp: Add path manager interface
+  squash to: mptcp: Add ADD_ADDR handling
+  squash to: mptcp: Add handling of incoming MP_JOIN requests
 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
->  net/mptcp/protocol.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> =
-
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f3bb7646ac07..ce2374ea7871 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -158,7 +158,7 @@ static int mptcp_stream_connect(struct socket *sock, =
-struct sockaddr *uaddr,
->  	return inet_stream_connect(msk->subflow, uaddr, addr_len, flags);
->  }
->  =
-
-> -static const struct proto_ops mptcp_stream_ops;
-> +static struct proto_ops mptcp_stream_ops;
->  =
-
->  static struct inet_protosw mptcp_protosw =3D {
->  	.type		=3D SOCK_STREAM,
-> =
-
-
-I had to apply this patch after having applied all the other ones
-
-- 98bdade702b1: "squashed" in "mptcp: Associate MPTCP context with TCP
-socket"
-- de4dbb2c0a8e: conflict in t/mptcp-add-mptcp_poll
-- 1c436e0370c2: conflict in t/mptcp-Add-shutdown-socket-operation
-- a083a2836977..8ea5282ba8cf: result
-
-Cheers,
-Matt
+ include/linux/tcp.h  |  9 +++++--
+ include/net/mptcp.h  |  6 +++--
+ net/mptcp/options.c  | 56 +++++++++++++++++++++-----------------------
+ net/mptcp/pm.c       | 23 +++++++++---------
+ net/mptcp/protocol.c |  2 +-
+ net/mptcp/protocol.h |  9 +++++++
+ net/mptcp/subflow.c  |  9 ++++---
+ 7 files changed, 65 insertions(+), 49 deletions(-)
 
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.20.1
 
---===============1505917510248390495==--
+
+--===============0593252934383203391==--
