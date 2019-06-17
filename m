@@ -1,44 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============0593252934383203391=="
+Content-Type: multipart/mixed; boundary="===============7724709850853462861=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 0/3] MP_JOIN handling: v3 from Peter
-Date: Mon, 17 Jun 2019 16:11:39 +0200
-Message-ID: <20190617141142.6782-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 1/3] squash to: mptcp: Add path manager interface
+Date: Mon, 17 Jun 2019 16:11:40 +0200
+Message-ID: <20190617141142.6782-2-matthieu.baerts@tessares.net>
+In-Reply-To: 20190617141142.6782-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1415
+X-UID: 1416
 
---===============0593252934383203391==
+--===============7724709850853462861==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Peter recently sent a v3 of his patch-set but I had already applied it in t=
-he
-repo. Here is what I extracted from the v3 using diff.
+From: Peter Krystad <peter.krystad(a)linux.intel.com>
 
-If Paolo (or others) is OK, I can include this in what we are going to send=
- to
-Eric.
+This is extracted from MP_JOIN handling WIP v3 by Peter.
 
-Peter Krystad (3):
-  squash to: mptcp: Add path manager interface
-  squash to: mptcp: Add ADD_ADDR handling
-  squash to: mptcp: Add handling of incoming MP_JOIN requests
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ net/mptcp/protocol.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
- include/linux/tcp.h  |  9 +++++--
- include/net/mptcp.h  |  6 +++--
- net/mptcp/options.c  | 56 +++++++++++++++++++++-----------------------
- net/mptcp/pm.c       | 23 +++++++++---------
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h |  9 +++++++
- net/mptcp/subflow.c  |  9 ++++---
- 7 files changed, 65 insertions(+), 49 deletions(-)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 1f94c99ac897..1358f3231fca 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -64,7 +64,9 @@ struct pm_data {
+ 	sa_family_t family;
+ 	union {
+ 		struct in_addr addr;
++#if IS_ENABLED(CONFIG_IPV6)
+ 		struct in6_addr addr6;
++#endif
+ 	};
+ };
+ =
 
 -- =
 
 2.20.1
 
 
---===============0593252934383203391==--
+--===============7724709850853462861==--
