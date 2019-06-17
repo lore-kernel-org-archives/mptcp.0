@@ -1,73 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============4954536129271834573=="
+Content-Type: multipart/mixed; boundary="===============2981734269230225913=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 0/3] MP_JOIN handling: v3 from Peter
-Date: Mon, 17 Jun 2019 17:05:19 +0200
-Message-ID: <0dcf10a3-2279-d5b6-b719-f31e0cfb90ba@tessares.net>
-In-Reply-To: 20190617141142.6782-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] RFC for Eric/Net-Next
+Date: Mon, 17 Jun 2019 17:12:55 +0200
+Message-ID: <a1e690d7-5ab0-2d93-f17d-5b09108f36b8@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1419
+X-UID: 1420
 
---===============4954536129271834573==
+--===============2981734269230225913==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On 17/06/2019 16:11, Matthieu Baerts wrote:
-> Peter recently sent a v3 of his patch-set but I had already applied it in=
- the
-> repo. Here is what I extracted from the v3 using diff.
-> =
+I just included the last changes I had in the pipe.
 
-> If Paolo (or others) is OK, I can include this in what we are going to se=
-nd to
-> Eric.
-> =
+We can then send all commits between the last net-next and the last
+"export" branch. Just to be sure, we can use the tags that have been
+created:
 
-> Peter Krystad (3):
->   squash to: mptcp: Add path manager interface
->   squash to: mptcp: Add ADD_ADDR handling
->   squash to: mptcp: Add handling of incoming MP_JOIN requests
+    f464100f5766..export/20190617T150733
 
-I just added these three patches in the repo:
+https://github.com/multipath-tcp/mptcp_net-next/commits/export/20190617T150=
+733
 
-- f2631ec64309: "squash" in "mptcp: Add path manager interface"
-- cc3a76e86281: "squash" in "mptcp: Add ADD_ADDR handling"
-- f9740e55ea8f: "squash" in "mptcp: Add handling of incoming MP_JOIN
-requests"
-- no conflicts
-- no signed-off modified.
-- 8ea5282ba8cf..e29c0bc9c0c1: result
-
-I can revert them if needed. Don't hesitate to tell me if I merged them
-too soon.
-
-They looked good to me and I guess we wanted to have them before sending
-everything for review.
-
-Thanks Peter for the new version, I hope I correctly extracted your last
-changes.
+Note that if we don't want to include the last changes by Peter that I
+extracted from the v3 but I didn't have any reviews, we can use the
+previous tag (20190617T131300). But I guess it is fine to take the last one.
 
 Cheers,
 Matt
-
-> =
-
->  include/linux/tcp.h  |  9 +++++--
->  include/net/mptcp.h  |  6 +++--
->  net/mptcp/options.c  | 56 +++++++++++++++++++++-----------------------
->  net/mptcp/pm.c       | 23 +++++++++---------
->  net/mptcp/protocol.c |  2 +-
->  net/mptcp/protocol.h |  9 +++++++
->  net/mptcp/subflow.c  |  9 ++++---
->  7 files changed, 65 insertions(+), 49 deletions(-)
-> =
-
-
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -76,4 +41,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============4954536129271834573==--
+--===============2981734269230225913==--
