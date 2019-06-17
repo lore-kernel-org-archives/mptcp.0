@@ -1,114 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============7573058894318219115=="
+Content-Type: multipart/mixed; boundary="===============4954536129271834573=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/3] squash to: mptcp: Add handling of incoming
- MP_JOIN requests
-Date: Mon, 17 Jun 2019 16:11:42 +0200
-Message-ID: <20190617141142.6782-4-matthieu.baerts@tessares.net>
+Subject: Re: [MPTCP] [PATCH 0/3] MP_JOIN handling: v3 from Peter
+Date: Mon, 17 Jun 2019 17:05:19 +0200
+Message-ID: <0dcf10a3-2279-d5b6-b719-f31e0cfb90ba@tessares.net>
 In-Reply-To: 20190617141142.6782-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1418
+X-UID: 1419
 
---===============7573058894318219115==
+--===============4954536129271834573==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Krystad <peter.krystad(a)linux.intel.com>
+Hello,
 
-This is extracted from MP_JOIN handling WIP v3 by Peter.
+On 17/06/2019 16:11, Matthieu Baerts wrote:
+> Peter recently sent a v3 of his patch-set but I had already applied it in=
+ the
+> repo. Here is what I extracted from the v3 using diff.
+> =
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
- net/mptcp/options.c  | 11 ++++-------
- net/mptcp/protocol.c |  2 +-
- net/mptcp/subflow.c  |  9 ++++++---
- 3 files changed, 11 insertions(+), 11 deletions(-)
+> If Paolo (or others) is OK, I can include this in what we are going to se=
+nd to
+> Eric.
+> =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index a73b7ad7388e..58215f19829a 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -461,8 +461,7 @@ bool mptcp_synack_options(const struct request_sock *re=
-q, unsigned int *size,
- 			 subflow_req, subflow_req->local_key,
- 			 subflow_req->remote_key);
- 		return true;
--	}
--	if (subflow_req->mp_join) {
-+	} else if (subflow_req->mp_join) {
- 		opts->suboptions =3D OPTION_MPTCP_MPJ_SYNACK;
- 		opts->backup =3D subflow_req->backup;
- 		opts->join_id =3D subflow_req->local_id;
-@@ -560,11 +559,9 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out=
-_options *opts)
- 	}
- =
+> Peter Krystad (3):
+>   squash to: mptcp: Add path manager interface
+>   squash to: mptcp: Add ADD_ADDR handling
+>   squash to: mptcp: Add handling of incoming MP_JOIN requests
 
- 	if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
--		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) |
--			       (TCPOLEN_MPTCP_MPJ_SYNACK << 16) |
--			       (MPTCPOPT_MP_JOIN << 12) |
--			       (opts->backup << 8) |
--			       opts->join_id);
-+		*ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
-+				      TCPOLEN_MPTCP_MPJ_SYNACK,
-+				      opts->backup, opts->join_id);
- 		put_unaligned_be64(opts->thmac, ptr);
- 		ptr +=3D 2;
- 		put_unaligned_be32(opts->nonce, ptr);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1ff5a7e5b65d..042811a1e01b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -779,8 +779,8 @@ void mptcp_finish_connect(struct sock *sk, int mp_capab=
-le)
- =
+I just added these three patches in the repo:
 
- void mptcp_finish_join(struct sock *conn, struct sock *sk)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(conn);
- 	struct subflow_context *subflow =3D subflow_ctx(sk);
-+	struct mptcp_sock *msk =3D mptcp_sk(conn);
- =
+- f2631ec64309: "squash" in "mptcp: Add path manager interface"
+- cc3a76e86281: "squash" in "mptcp: Add ADD_ADDR handling"
+- f9740e55ea8f: "squash" in "mptcp: Add handling of incoming MP_JOIN
+requests"
+- no conflicts
+- no signed-off modified.
+- 8ea5282ba8cf..e29c0bc9c0c1: result
 
- 	pr_debug("msk=3D%p, subflow=3D%p", msk, subflow);
- =
+I can revert them if needed. Don't hesitate to tell me if I merged them
+too soon.
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e7f4f826da33..a858cc966724 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -54,6 +54,12 @@ static void subflow_v4_init_req(struct request_sock *req,
- 	memset(&rx_opt.mptcp, 0, sizeof(rx_opt.mptcp));
- 	mptcp_get_options(skb, &rx_opt);
- =
+They looked good to me and I guess we wanted to have them before sending
+everything for review.
 
-+	subflow_req->mp_capable =3D 0;
-+	subflow_req->mp_join =3D 0;
-+
-+	if (rx_opt.mptcp.mp_capable && rx_opt.mptcp.mp_join)
-+		return;
-+
- 	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
- 		subflow_req->mp_capable =3D 1;
- 		if (rx_opt.mptcp.version >=3D listener->version)
-@@ -80,9 +86,6 @@ static void subflow_v4_init_req(struct request_sock *req,
- 			subflow_req->mp_join =3D 0;
- 			// @@ need to trigger RST
- 		}
--	} else {
--		subflow_req->mp_capable =3D 0;
--		subflow_req->mp_join =3D 0;
- 	}
- }
- =
+Thanks Peter for the new version, I hope I correctly extracted your last
+changes.
+
+Cheers,
+Matt
+
+> =
+
+>  include/linux/tcp.h  |  9 +++++--
+>  include/net/mptcp.h  |  6 +++--
+>  net/mptcp/options.c  | 56 +++++++++++++++++++++-----------------------
+>  net/mptcp/pm.c       | 23 +++++++++---------
+>  net/mptcp/protocol.c |  2 +-
+>  net/mptcp/protocol.h |  9 +++++++
+>  net/mptcp/subflow.c  |  9 ++++---
+>  7 files changed, 65 insertions(+), 49 deletions(-)
+> =
+
 
 -- =
 
-2.20.1
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============7573058894318219115==--
+--===============4954536129271834573==--
