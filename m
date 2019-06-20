@@ -1,16 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============2403018534189634328=="
+Content-Type: multipart/mixed; boundary="===============1088034266895688466=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: fix remaining checkpatch issue
-Date: Thu, 20 Jun 2019 09:45:47 -0700
-Message-ID: <alpine.OSX.2.21.1906200945271.44348@kdmease-mobl.amr.corp.intel.com>
-In-Reply-To: 20190620131107.14035-1-matthieu.baerts@tessares.net
+Subject: Re: [MPTCP] [PATCH 0/3] mptcp: move MPTCP option bits to internal
+ header
+Date: Thu, 20 Jun 2019 09:47:30 -0700
+Message-ID: <alpine.OSX.2.21.1906200946330.44348@kdmease-mobl.amr.corp.intel.com>
+In-Reply-To: 20190620141355.17923-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1434
+X-UID: 1435
 
---===============2403018534189634328==
+--===============1088034266895688466==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,48 +19,29 @@ Content-Transfer-Encoding: quoted-printable
 
 On Thu, 20 Jun 2019, Matthieu Baerts wrote:
 
-> A typo (with 'length') was introduced when fixing another issue.
+> All these OPTION_MPTCP_* are only used in files from net/mptcp.
 >
-> Fixes: 233967ed7653 (mptcp: fix checkpatch issues)
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-Looks good, please squash.
-
-> ---
+> There are 3 commits to ease the squash.
 >
-> Notes:
->    Can be squashed in:
->      mptcp: Write MPTCP DSS headers to outgoing data packets
+> Matthieu Baerts (3):
+>  mptcp: move MPTCP option bits to internal header
+>  mptcp: move MPTCP option bits to internal header
+>  mptcp: move MPTCP option bits to internal header
 >
-> net/mptcp/options.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 625cd93fb9a8..532482bbbc2a 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -241,7 +241,7 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
-> 	if (mpext && mpext->use_ack) {
-> 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
->
-> -		/* Add kind/lenght/subtype/flag overhead if mapping is not
-> +		/* Add kind/length/subtype/flag overhead if mapping is not
-> 		 * populated
-> 		 */
-> 		if (dss_size =3D=3D 0)
+> include/net/mptcp.h  | 11 -----------
+> net/mptcp/protocol.h | 12 ++++++++++++
+> 2 files changed, 12 insertions(+), 11 deletions(-)
 > -- =
 
 > 2.20.1
 >
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
->
+
+I'm fine with moving all of these.
+
+Thanks,
 
 --
 Mat Martineau
 Intel
 
---===============2403018534189634328==--
+--===============1088034266895688466==--
