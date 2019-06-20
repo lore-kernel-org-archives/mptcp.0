@@ -1,67 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============6835338586469611488=="
+Content-Type: multipart/mixed; boundary="===============5531713467221275315=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/3] mptcp: move MPTCP option bits to internal header
-Date: Thu, 20 Jun 2019 16:13:55 +0200
-Message-ID: <20190620141355.17923-4-matthieu.baerts@tessares.net>
-In-Reply-To: 20190620141355.17923-1-matthieu.baerts@tessares.net
+Subject: Re: [MPTCP] [PATCH RFC 1/2] net: mptcp: randomness improvements for
+ crypto.c
+Date: Thu, 20 Jun 2019 09:45:16 -0700
+Message-ID: <alpine.OSX.2.21.1906200858270.44348@kdmease-mobl.amr.corp.intel.com>
+In-Reply-To: 20190615090709.wy5545fcybav4cav@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 1432
+X-UID: 1433
 
---===============6835338586469611488==
+--===============5531713467221275315==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-OPTION_MPTCP_MPJ_* are only used in files from net/mptcp.
 
-Fixes: mptcp: Add handling of incoming MP_JOIN requests
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+On Sat, 15 Jun 2019, Florian Westphal wrote:
 
-Notes:
-    Can be squashed in:
-      mptcp: Add handling of incoming MP_JOIN requests
+> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+>>> -	return hsiphash(&combined, offsetofend(typeof(combined), dport),
+>>> -			&crypto_nonce_secret);
+>>> +			    tcp_cookie_time(), &crypto_key_secret);
+>>
+>> tcp_cookie_time() adds a dependency on CONFIG_SYN_COOKIES. It also looks
+>> like tcp_cookie_time() only increments once per second, so the uniquenes=
+s of
+>> the key (within a 1-second interval) becomes totally dependent on the
+>> uniqueness of the 4-tuple. I think a different seed source is needed that
+>> won't repeat so predictably.
+>
+> Thats a good point, this means we will also need to include
+> net_hash_mix() into the input so we won't create same keys for identical
+> tuples in different network namespaces.
+>
+> But, I wonder, if the key doesn't need to be recomputeable at all, then
+> this is just a random value to send, so two alternatives might be:
+>
+> 1. just use get_random_bytes
+> 2. use prandom_u32() as additional input key instead of increment++.
 
- include/net/mptcp.h  | 4 ----
- net/mptcp/protocol.h | 3 +++
- 2 files changed, 3 insertions(+), 4 deletions(-)
+We talked about this in the meeting today. Right now there's no =
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 6b4b789b21a2..6cd650838ddf 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -24,10 +24,6 @@ struct mptcp_ext {
- 			__unused:2;
- };
- =
+recomputing of the key, so a random key would be simplest. I'm not sure if =
 
--#define OPTION_MPTCP_MPJ_SYN		BIT(3)
--#define OPTION_MPTCP_MPJ_SYNACK		BIT(4)
--#define OPTION_MPTCP_MPJ_ACK		BIT(5)
--
- struct mptcp_out_options {
- #if IS_ENABLED(CONFIG_MPTCP)
- 	u16 suboptions;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2b52e31e709f..be5cdec85997 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -14,6 +14,9 @@
- #define OPTION_MPTCP_MPC_SYN	BIT(0)
- #define OPTION_MPTCP_MPC_SYNACK	BIT(1)
- #define OPTION_MPTCP_MPC_ACK	BIT(2)
-+#define OPTION_MPTCP_MPJ_SYN	BIT(3)
-+#define OPTION_MPTCP_MPJ_SYNACK	BIT(4)
-+#define OPTION_MPTCP_MPJ_ACK	BIT(5)
- #define OPTION_MPTCP_ADD_ADDR	BIT(6)
- #define OPTION_MPTCP_ADD_ADDR6	BIT(7)
- #define OPTION_MPTCP_RM_ADDR	BIT(8)
--- =
+that's more expensive to compute, but we are not locking ourselves in to =
 
-2.20.1
+anything with our key generation choice now.
 
+--
+Mat Martineau
+Intel
 
---===============6835338586469611488==--
+--===============5531713467221275315==--
