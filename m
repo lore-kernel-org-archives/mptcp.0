@@ -1,80 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============3955982306007775570=="
+Content-Type: multipart/mixed; boundary="===============5249930804188627594=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 1/3] net: Make sock protocol value checks more
- specific
-Date: Fri, 21 Jun 2019 16:55:32 -0700
-Message-ID: <20190621235534.19690-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [RFC PATCH 3/3] net: Add IPPROTO_MPTCP to inet_sock_set_state
+ tracepoint output
+Date: Fri, 21 Jun 2019 16:55:34 -0700
+Message-ID: <20190621235534.19690-4-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20190621235534.19690-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1441
+X-UID: 1442
 
---===============3955982306007775570==
+--===============5249930804188627594==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-SK_PROTOCOL_MAX is only used in two places, for DECNet and AX.25. The
-limits have more to do with the those protocol definitions than they do
-with the data type of sk_protocol, so remove SK_PROTOCOL_MAX and use
-U8_MAX directly.
+Add MPTCP to the list of protocols that socket state change tracepoints
+can output in symbolic form.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/sock.h     | 1 -
- net/ax25/af_ax25.c     | 2 +-
- net/decnet/af_decnet.c | 2 +-
- 3 files changed, 2 insertions(+), 3 deletions(-)
+ include/trace/events/sock.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index c6a0fc4151bc..fc6308773d18 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -459,7 +459,6 @@ struct sock {
- 				sk_userlocks : 4,
- 				sk_protocol  : 8,
- 				sk_type      : 16;
--#define SK_PROTOCOL_MAX U8_MAX
- 	u16			sk_gso_max_segs;
- 	u8			sk_pacing_shift;
- 	unsigned long	        sk_lingertime;
-diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-index ca5207767dc2..d880e941f1a6 100644
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -808,7 +808,7 @@ static int ax25_create(struct net *net, struct socket *=
-sock, int protocol,
- 	struct sock *sk;
- 	ax25_cb *ax25;
+diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
+index dc749c651318..bfbcba315a12 100644
+--- a/include/trace/events/sock.h
++++ b/include/trace/events/sock.h
+@@ -19,7 +19,8 @@
+ #define inet_protocol_names		\
+ 		EM(IPPROTO_TCP)			\
+ 		EM(IPPROTO_DCCP)		\
+-		EMe(IPPROTO_SCTP)
++		EM(IPPROTO_SCTP)		\
++		EMe(IPPROTO_MPTCP)
  =
 
--	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
-+	if (protocol < 0 || protocol > U8_MAX)
- 		return -EINVAL;
- =
-
- 	if (!net_eq(net, &init_net))
-diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
-index 0ea75286abf4..7c0c769a8b26 100644
---- a/net/decnet/af_decnet.c
-+++ b/net/decnet/af_decnet.c
-@@ -670,7 +670,7 @@ static int dn_create(struct net *net, struct socket *so=
-ck, int protocol,
- {
- 	struct sock *sk;
- =
-
--	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
-+	if (protocol < 0 || protocol > U8_MAX)
- 		return -EINVAL;
- =
-
- 	if (!net_eq(net, &init_net))
+ #define tcp_state_names			\
+ 		EM(TCP_ESTABLISHED)		\
 -- =
 
 2.22.0
 
 
---===============3955982306007775570==--
+--===============5249930804188627594==--
