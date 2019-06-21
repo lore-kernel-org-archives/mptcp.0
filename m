@@ -1,82 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============3962545060049506919=="
+Content-Type: multipart/mixed; boundary="===============7531630243857879791=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 0/3] mptcp: move MPTCP option bits to internal
- header
-Date: Fri, 21 Jun 2019 11:43:24 +0200
-Message-ID: <d165915e-7ec7-ace6-e08d-cccb197917d8@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1906200946330.44348@kdmease-mobl.amr.corp.intel.com
+Subject: [MPTCP] [RFC PATCH 0/3] Change sock->sk_protocol to a 16-bit value
+Date: Fri, 21 Jun 2019 16:55:31 -0700
+Message-ID: <20190621235534.19690-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1438
+X-UID: 1439
 
---===============3962545060049506919==
+--===============7531630243857879791==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+While debugging socket state transitions in MPTCP sockets, I found that
+MPTCP sockets were listing IPPROTO_TCP as their protocol in
+/sys/kernel/debug/tracing/trace. sock->sk_protocol was only 8 bits wide,
+truncating the new value of IPPROTO_MPTCP (0x0106) to IPPROTO_TCP
+(0x06).
 
-On 20/06/2019 18:47, Mat Martineau wrote:
-> =
+The networking code has varying integer widths for 'protocol' at
+different layers:
 
-> On Thu, 20 Jun 2019, Matthieu Baerts wrote:
-> =
+ * POSIX socket API: 32 bits
+ * sk_buff->protocol: 16 bits
+ * IP header (on the wire): 8 bits
 
->> All these OPTION_MPTCP_* are only used in files from net/mptcp.
->>
->> There are 3 commits to ease the squash.
->>
->> Matthieu Baerts (3):
->> =C2=A0mptcp: move MPTCP option bits to internal header
->> =C2=A0mptcp: move MPTCP option bits to internal header
->> =C2=A0mptcp: move MPTCP option bits to internal header
->>
->> include/net/mptcp.h=C2=A0 | 11 -----------
->> net/mptcp/protocol.h | 12 ++++++++++++
->> 2 files changed, 12 insertions(+), 11 deletions(-)
->> --=C2=A0
->> 2.20.1
->>
-> =
+MPTCP shows a use for protocol values outside those that fit in an IP
+header. The change to struct sock fills an 8-bit hole, so there is no
+change in the size of the structure.
 
-> I'm fine with moving all of these.
+Given that we are currently discussing the appropriate value for
+IPPROTO_MPTCP, I'm sending this as an RFC to inform those discussions. I
+had previously thought that the 16-bit value for IPPROTO_MPTCP was
+compatible with the existing code base.
 
-Thank you for your review!
+Mat Martineau (3):
+  net: Make sock protocol value checks more specific
+  sock: Make sk_protocol a 16-bit value
+  net: Add IPPROTO_MPTCP to inet_sock_set_state tracepoint output
 
-- 72e69070c069: "squashed" 1st patch in "mptcp: Handle MPTCP TCP options"
-- da16677a71a3: conflict in t/mptcp-Add-MPTCP-to-skb-extensions
-- 8c2710489adb: conflict in
-t/mptcp-Make-connection_list-a-real-list-of-subflows
-- c5ab047d1760: conflict in t/mptcp-Add-ADD_ADDR-handling
-- 6f0546582f94 + d589ed1f7d35: "squashed" 2nd patch in "mptcp: Add
-ADD_ADDR handling"
-- 90e85b0d709c: conflict in
-t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-- 9395816292b8: "squashed" 3rd patch in "mptcp: Add handling of incoming
-MP_JOIN requests"
-- eefaf0b9e6f7..2c024529510e: result
-
-Compilation is still OK.
-
-Cheers,
-Matt
-
-> Thanks,
-> =
-
-> -- =
-
-> Mat Martineau
-> Intel
+ include/net/sock.h          | 5 ++---
+ include/trace/events/sock.h | 5 +++--
+ net/ax25/af_ax25.c          | 2 +-
+ net/decnet/af_decnet.c      | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.22.0
 
---===============3962545060049506919==--
+
+--===============7531630243857879791==--
