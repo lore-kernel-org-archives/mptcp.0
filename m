@@ -1,84 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============1576914561448042833=="
+Content-Type: multipart/mixed; boundary="===============3962545060049506919=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: fix remaining checkpatch issue
-Date: Fri, 21 Jun 2019 11:09:17 +0200
-Message-ID: <c37f94df-5599-1775-fa46-b7ddc5f388b7@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1906200945271.44348@kdmease-mobl.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH 0/3] mptcp: move MPTCP option bits to internal
+ header
+Date: Fri, 21 Jun 2019 11:43:24 +0200
+Message-ID: <d165915e-7ec7-ace6-e08d-cccb197917d8@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1906200946330.44348@kdmease-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1437
+X-UID: 1438
 
---===============1576914561448042833==
+--===============3962545060049506919==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Mat,
 
-On 20/06/2019 18:45, Mat Martineau wrote:
+On 20/06/2019 18:47, Mat Martineau wrote:
 > =
 
 > On Thu, 20 Jun 2019, Matthieu Baerts wrote:
 > =
 
->> A typo (with 'length') was introduced when fixing another issue.
+>> All these OPTION_MPTCP_* are only used in files from net/mptcp.
 >>
->> Fixes: 233967ed7653 (mptcp: fix checkpatch issues)
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>> There are 3 commits to ease the squash.
+>>
+>> Matthieu Baerts (3):
+>> =C2=A0mptcp: move MPTCP option bits to internal header
+>> =C2=A0mptcp: move MPTCP option bits to internal header
+>> =C2=A0mptcp: move MPTCP option bits to internal header
+>>
+>> include/net/mptcp.h=C2=A0 | 11 -----------
+>> net/mptcp/protocol.h | 12 ++++++++++++
+>> 2 files changed, 12 insertions(+), 11 deletions(-)
+>> --=C2=A0
+>> 2.20.1
+>>
 > =
 
-> Looks good, please squash.
+> I'm fine with moving all of these.
 
-Thank you for this review!
+Thank you for your review!
 
-- 52083ddbf0bc: "squashed" in "mptcp: Write MPTCP DSS headers to
-outgoing data packets"
-- no signed-off added
-- 894e99705150: conflict in t/mptcp-Implement-MPTCP-receive-path
-- 841e81cf55fc..eefaf0b9e6f7: results (no diff)
+- 72e69070c069: "squashed" 1st patch in "mptcp: Handle MPTCP TCP options"
+- da16677a71a3: conflict in t/mptcp-Add-MPTCP-to-skb-extensions
+- 8c2710489adb: conflict in
+t/mptcp-Make-connection_list-a-real-list-of-subflows
+- c5ab047d1760: conflict in t/mptcp-Add-ADD_ADDR-handling
+- 6f0546582f94 + d589ed1f7d35: "squashed" 2nd patch in "mptcp: Add
+ADD_ADDR handling"
+- 90e85b0d709c: conflict in
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- 9395816292b8: "squashed" 3rd patch in "mptcp: Add handling of incoming
+MP_JOIN requests"
+- eefaf0b9e6f7..2c024529510e: result
+
+Compilation is still OK.
 
 Cheers,
 Matt
 
-> =
-
->> ---
->>
->> Notes:
->> =C2=A0=C2=A0 Can be squashed in:
->> =C2=A0=C2=A0=C2=A0=C2=A0 mptcp: Write MPTCP DSS headers to outgoing data=
- packets
->>
->> net/mptcp/options.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 625cd93fb9a8..532482bbbc2a 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -241,7 +241,7 @@ static bool mptcp_established_options_dss(struct
->> sock *sk, struct sk_buff *skb,
->> =C2=A0=C2=A0=C2=A0=C2=A0if (mpext && mpext->use_ack) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ack_size =3D TCPOLEN_MPTCP_DS=
-S_ACK64;
->>
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Add kind/lenght/subtype/f=
-lag overhead if mapping is not
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Add kind/length/subtype/f=
-lag overhead if mapping is not
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * populated
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dss_size =3D=3D 0)
->> --=C2=A0
->> 2.20.1
->>
->> _______________________________________________
->> mptcp mailing list
->> mptcp(a)lists.01.org
->> https://lists.01.org/mailman/listinfo/mptcp
->>
+> Thanks,
 > =
 
 > -- =
@@ -94,4 +79,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============1576914561448042833==--
+--===============3962545060049506919==--
