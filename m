@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============4001325122483175092=="
+Content-Type: multipart/mixed; boundary="===============6645356188216557465=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH] mptcp: Re-factor mptcp_create_subflow()
-Date: Tue, 25 Jun 2019 14:32:37 +0200
-Message-ID: <9cb24894-ed60-294a-330c-a5eeec1c70a4@tessares.net>
+Date: Tue, 25 Jun 2019 14:54:54 +0200
+Message-ID: <e3c6c48a-27f2-5fb3-df48-725ac2dd69f3@tessares.net>
 In-Reply-To: 20190624230636.3513-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1444
+X-UID: 1445
 
---===============4001325122483175092==
+--===============6645356188216557465==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -21,14 +21,7 @@ On 25/06/2019 01:06, Peter Krystad wrote:
 > Move to subflow.c (because it belongs there) and rename.
 > Outgoing MP_JOIN requests will use this routine to create
 > subflow sockets.
-
-Good idea and thank you for the patch!
-
-I can apply it later today if nobody is against that. (it is easy to
-revert anyway).
-
-Cheers,
-Matt
+> =
 
 > squashto: Associate MPTCP context with TCP socket
 > =
@@ -161,6 +154,23 @@ log)
 > +			subflow->version =3D 0;
 > +		}
 > +	}
+
+When applying this, I remember what Paolo recently said: upstream
+prefers keeping the expected/main code path with no indentation.
+
+I hope you don't mind if I slightly change this when applying the patch.
+We would then have:
+
+    err =3D sock_create_kern(net, PF_INET, SOCK_STREAM, IPPROTO_TCP, &sf);
+    if (err)
+        return err;
+
+   lock_sock(sf->sk);
+   (...)
+
+Cheers,
+Matt
+
 > +	return err;
 > +}
 > +
@@ -178,4 +188,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============4001325122483175092==--
+--===============6645356188216557465==--
