@@ -1,160 +1,159 @@
-Content-Type: multipart/mixed; boundary="===============3676608379901386744=="
+Content-Type: multipart/mixed; boundary="===============3988403217000483560=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: Make MPTCP socket block/wakeup ignore
- sk_receive_queue
-Date: Wed, 26 Jun 2019 16:11:44 -0700
-Message-ID: <20190626231144.30117-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [Weekly meetings] MoM - 27th of June 2019
+Date: Thu, 27 Jun 2019 18:47:02 +0200
+Message-ID: <587ab98c-a5e5-9c2c-c160-5737d50ef470@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1450
+X-UID: 1451
 
---===============3676608379901386744==
+--===============3988403217000483560==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP-level socket doesn't use sk_receive_queue, so it was possible
-for mptcp_recvmsg() to remain blocked when there was data ready for it
-to read. When the MPTCP socket is waiting for additional data and it
-releases the subflow socket lock, the subflow may have incoming packets
-ready to process and it sometimes called subflow_data_ready() before the
-MPTCP socket called sk_wait_data().
+Hello,
 
-This change adds new functions for the MPTCP socket to use to wait and
-to signal that data is ready. Atomic bitops are used to set, test, and
-clear a MPTCP socket flag that indicates waiting subflow data. This flag
-replaces the sk_receive_queue checks used by other socket types.
+We just had our 56th meeting with Mat, Peter and Ossama (Intel OTC),
+Christoph (Apple), Davide and Florian (Red Hat) and myself (Tessares).
 
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
+Thanks again for this new good meeting!
 
-Squashing this into "mptcp: Implement MPTCP receive path" has a few
-conflicts with later commits that also fix up the receive code. It's
-fine to add this to the end of the commit chain.
 
- net/mptcp/protocol.c | 40 +++++++++++++++++++++++++++++++++++++++-
- net/mptcp/protocol.h |  4 ++++
- 2 files changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 774ed25d3b6d..5555ee1529bb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -357,6 +357,26 @@ static enum mapping_status mptcp_get_mapping(struct so=
-ck *ssk)
- 	return ret;
- }
- =
+Here are the minutes of the meeting:
 
-+static void mptcp_wait_data(struct sock *sk, long *timeo)
-+{
-+	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	add_wait_queue(sk_sleep(sk), &wait);
-+	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
-+
-+	release_sock(sk);
-+
-+	if (!test_and_clear_bit(MPTCP_DATA_READY, &msk->flags))
-+		*timeo =3D wait_woken(&wait, TASK_INTERRUPTIBLE, *timeo);
-+
-+	sched_annotate_sleep();
-+	lock_sock(sk);
-+
-+	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
-+	remove_wait_queue(sk_sleep(sk), &wait);
-+}
-+
- static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 			 int nonblock, int flags, int *addr_len)
- {
-@@ -403,6 +423,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
- 		u64 old_ack;
- 		u32 ssn;
- =
 
-+		clear_bit(MPTCP_DATA_READY, &msk->flags);
- 		status =3D mptcp_get_mapping(ssk);
- =
 
- 		if (status =3D=3D MAPPING_ADDED) {
-@@ -536,7 +557,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
- =
+Accepted patches:
+    - mptcp: fix remaining checkpatch issue:
+        - by Matth
+        - reviewed by Mat
+        - "squashed" in "mptcp: Write MPTCP DSS headers to outgoing data
+packets"
+        - no signed-off added for this fix
 
- 		pr_debug("block");
- 		release_sock(ssk);
--		sk_wait_data(sk, &timeo, NULL);
-+		mptcp_wait_data(sk, &timeo);
- 		lock_sock(ssk);
- 	}
- =
+    - mptcp: move MPTCP option bits to internal header:
+        - by Matth
+        - reviewed by Mat
+        - "squashed" in 3 different commits, no signed-off
 
-@@ -548,6 +569,22 @@ static int mptcp_recvmsg(struct sock *sk, struct msghd=
-r *msg, size_t len,
- 	return copied;
- }
- =
+    - mptcp: Re-factor mptcp_create_subflow():
+        - by Peter
+        - reviewed by Matth
+        - "squashed" in "mptcp: Associate MPTCP context with TCP socket"
 
-+static void mptcp_data_ready(struct sock *sk)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct socket_wq *wq;
-+
-+	set_bit(MPTCP_DATA_READY, &msk->flags);
-+
-+	rcu_read_lock();
-+	wq =3D rcu_dereference(sk->sk_wq);
-+	if (skwq_has_sleeper(wq))
-+		wake_up_interruptible_sync_poll(&wq->wait, EPOLLIN | EPOLLPRI |
-+						EPOLLRDNORM | EPOLLRDBAND);
-+	sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
-+	rcu_read_unlock();
-+}
-+
- static int mptcp_init_sock(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -555,6 +592,7 @@ static int mptcp_init_sock(struct sock *sk)
- 	pr_debug("msk=3D%p", msk);
- =
 
- 	INIT_LIST_HEAD(&msk->conn_list);
-+	sk->sk_data_ready =3D mptcp_data_ready;
- =
 
- 	return 0;
- }
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7f15f6aab93d..ca5e6d839575 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -71,6 +71,9 @@
- #define MPTCP_ADDR_IPVERSION_4	4
- #define MPTCP_ADDR_IPVERSION_6	6
- =
+Pending patches:
+    - mptcp: simplify crypto.c:
+        - by Davide
+        - reviewed by Mat, Florian and Christoph
+        - we can have something just random
+        - maybe later we can switch to a hash as an optimisation
 
-+/* MPTCP socket flags */
-+#define MPTCP_DATA_READY	BIT(0)
-+
- static inline u32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
- {
- 	return htonl((TCPOPT_MPTCP << 24) | (len << 16) | (subopt << 12) |
-@@ -97,6 +100,7 @@ struct mptcp_sock {
- 	u64		write_seq;
- 	u64		ack_seq;
- 	u32		token;
-+	unsigned long	flags;
- 	struct list_head conn_list;
- 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
- 	struct pm_data	pm;
+    - Change sock->sk_protocol to a 16-bit value:
+        - by Mat
+        - for the discussions with IPPROTO_MPTCP, see below
+        - decision: we apply this
+
+    - mptcp: Make MPTCP socket block/wakeup ignore sk_receive_queue:
+        - by Mat
+        - linked to Mat's work on the Data FIN.
+        - it was blocked while it should not be.
+        - we cannot simply check the end of the received queue with
+MPTCP. That's why the behaviour needs to be different with MPTCP
+        - feel free to review
+        - can be squashed or added at the end:
+            - if it is a fix for a bug introduced in a previous commit,
+better to squash (except if it is to explicitly show something
+particular to MPTCP of course)
+            - we can squash
+
+
+
+IPPROTO_MPTCP:
+    - Mat: sock->sk_protocol to a 16-bit value (increases a handful of
+array sizes)
+
+    - Hoang: #define SOL_X25 262
+
+    - Mat: we might want to set SOL_MPTCP at some points:
+        - could be good to avoid collisions.
+        - Maybe good to merge the patch and wait for feedback later.
+
+
+
+Feedback from netconf:
+    - slides at http://vger.kernel.org/netconf2019.html
+
+    - no show stopper foreseen by anyone
+
+    - got one question wrt. using kTLS with MPTCP (both use ULP
+infrastructure), we should have a look at this but not a major issue for
+now (stacked ulp...?)
+
+    - Eric asked about diag support, Davide already working on this
+
+    - diag ulp infra should be upstreamed independently (for ktls)
+
+    - one question was about path management, no objections to us adding
+something very simple plus the genetlink based one to place decision
+making in userspace
+
+    - one concern is wrt. local security holes, we can ask syzkaller
+people to start also running on the mptcp tree once we get ready to
+upstream, or initially restrict IPPROTO_MPTCP to init_user root to limit
+impact (or both).
+
+    - no need to implement mptcp-level (coupled) congestion control on
+top of subflows (i.e., its fine to use more bandwidth than one standard
+tcp flow)
+
+
+
+Send LPC proposal:
+    - maybe going more in initial feature and roadmap, comparison with
+mptcp.org, client/server view, etc.
+
+    - could be good to send it early next week.
+
+    - Mat will look at the draft
+
+
+
+mptcp.org:
+    - support MPTCP v1 seems problematic (when using v0, default
+behaviour) but almost there
+
+
+
+Next meeting:
+    - We propose to *skip* the next one (4th of July). Next one would
+then be the 11th of July.
+
+    - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
+
+    - Still open to everyone!
+
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190711
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+Talk to you next week,
+Matthieu
 -- =
 
-2.22.0
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============3676608379901386744==--
+--===============3988403217000483560==--
