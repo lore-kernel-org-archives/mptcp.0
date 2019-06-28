@@ -1,71 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============0550818715199707972=="
+Content-Type: multipart/mixed; boundary="===============3405813621386998511=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH 0/3] Change sock->sk_protocol to a 16-bit value
-Date: Fri, 28 Jun 2019 11:59:30 +0200
-Message-ID: <14ea07f9-bcf4-b6d2-7d21-ede5356d0682@tessares.net>
-In-Reply-To: 20190621235534.19690-1-mathew.j.martineau@linux.intel.com
+Subject: Re: [MPTCP] KSelftests: errors last night (20190604)
+Date: Fri, 28 Jun 2019 15:47:18 +0200
+Message-ID: <27752ad1-323b-4469-6502-06036d0cec3e@tessares.net>
+In-Reply-To: c9534f99-6dbf-4065-602c-5dcc3b55ec64@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1452
+X-UID: 1453
 
---===============0550818715199707972==
+--===============3405813621386998511==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hello
 
-On 22/06/2019 01:55, Mat Martineau wrote:
-> While debugging socket state transitions in MPTCP sockets, I found that
-> MPTCP sockets were listing IPPROTO_TCP as their protocol in
-> /sys/kernel/debug/tracing/trace. sock->sk_protocol was only 8 bits wide,
-> truncating the new value of IPPROTO_MPTCP (0x0106) to IPPROTO_TCP
-> (0x06).
-> =
+Last night I also got a similar issue:
 
-> The networking code has varying integer widths for 'protocol' at
-> different layers:
-> =
+(...)
+00:13:23.223 # ns1  TCP   -> ns2  (10.0.1.2:10005) MPTCP	[ OK ]
+00:13:24.256 # ns1  MPTCP -> ns2  (10.0.2.1:10006) MPTCP	[ OK ]
+00:13:25.292 # ns1  MPTCP -> ns2  (10.0.2.1:10007) TCP  	[ OK ]
+00:13:26.338 # ns1  TCP   -> ns2  (10.0.2.1:10008) MPTCP	[ OK ]
+00:13:27.374 # ns1  MPTCP -> ns3  (10.0.2.2:10009) MPTCP	main_loop_s:
+timed out
+00:13:58.414 # copyfd_io: poll timed out (events: POLLIN 1, POLLOUT 4)
+00:13:58.415 # [ FAIL ] client exit code 2, server 2
+00:13:58.415 # \nnetns ns3 socket stat for 10009:
+00:13:58.441 # State     Recv-Q   Send-Q        Local Address:Port
+  Peer Address:Port
+00:13:58.441 # SYN-RECV  0        0                  10.0.2.2:10009
+      10.0.1.1:32774    timer:(on,1.270ms,4) cwnd:2 retrans:4/0 reordering:0
+00:13:58.443 # \nnetns ns1 socket stat for 10009:
+00:13:58.455 # State       Recv-Q   Send-Q      Local Address:Port
+  Peer Address:Port
+00:13:58.456 # FIN-WAIT-1  0        49153            10.0.1.1:32774
+      10.0.2.2:10009    timer:(on,22sec,7) rto:25.72 cwnd:1 ssthresh:7
+retrans:7/0 reordering:0
+00:13:58.460 # ns1  MPTCP -> ns3  (10.0.3.2:10010) MPTCP	[ OK ]
+00:13:59.502 # ns1  MPTCP -> ns3  (10.0.3.2:10011) TCP  	[ OK ]
+00:14:00.543 # ns1  TCP   -> ns3  (10.0.3.2:10012) MPTCP	[ OK ]
+00:14:01.585 # ns1  MPTCP -> ns4  (10.0.3.1:10013) MPTCP	[ OK ]
+(...)
 
->  * POSIX socket API: 32 bits
->  * sk_buff->protocol: 16 bits
->  * IP header (on the wire): 8 bits
-> =
-
-> MPTCP shows a use for protocol values outside those that fit in an IP
-> header. The change to struct sock fills an 8-bit hole, so there is no
-> change in the size of the structure.
-> =
-
-> Given that we are currently discussing the appropriate value for
-> IPPROTO_MPTCP, I'm sending this as an RFC to inform those discussions. I
-> had previously thought that the 16-bit value for IPPROTO_MPTCP was
-> compatible with the existing code base.
-> =
-
-> Mat Martineau (3):
->   net: Make sock protocol value checks more specific
->   sock: Make sk_protocol a 16-bit value
->   net: Add IPPROTO_MPTCP to inet_sock_set_state tracepoint output
-
-Thank you for the patches!
-
-As discussed yesterday, we said it is OK to add them in our repo and
-wait for feedback from maintainers later.
-
-I added the 2 firsts ones just before "tcp: Define IPPROTO_MPTCP" and
-"squashed" the last one in "tcp: Define IPPROTO_MPTCP", see
-a4ed239bad09. The result is visible there: 7312e2219900..78d9680a7731
-
-I hope it is what you had in mind, I can of course change that later if
-needed.
-
-Tests are still OK!
+But I was not able to reproduce it today.
 
 Cheers,
 Matt
+
+On 04/06/2019 14:18, Matthieu Baerts wrote:
+> Hello,
+> =
+
+> Last night, I got an error with one test:
+> =
+
+> (...)
+> # ns2  TCP   -> ns3  (10.0.2.2:10029) MPTCP	[ OK ]
+> # ns2  MPTCP -> ns3  (10.0.3.2:10030) MPTCP	[ OK ]
+> # ns2  MPTCP -> ns3  (10.0.3.2:10031) TCP  	[ OK ]
+> # ns2  TCP   -> ns3  (10.0.3.2:10032) MPTCP	[ OK ]
+> # ns2  MPTCP -> ns4  (10.0.3.1:10033) MPTCP	main_loop_s: timed out
+> # copyfd_io: poll timed out (events: POLLIN 1, POLLOUT 4)
+> # [ FAIL ] client exit code 2, server 2
+> # \nnetns ns4 socket stat for 10033:
+> # State     Recv-Q   Send-Q        Local Address:Port        Peer
+> Address:Port
+> # SYN-RECV  0        0                  10.0.3.1:10033
+> 10.0.2.1:37248    timer:(on,5.020ms,3) cwnd:2 retrans:3/0 reordering:0
+> # \nnetns ns2 socket stat for 10033:
+> # State       Recv-Q   Send-Q      Local Address:Port        Peer
+> Address:Port
+> # FIN-WAIT-1  0        49153            10.0.2.1:37248
+> 10.0.3.1:10033    timer:(on,3.280ms,5) rto:6.75 cwnd:1 ssthresh:7
+> retrans:5/0 reordering:0
+> # ns3  MPTCP -> ns1  (10.0.1.1:10034) MPTCP	[ OK ]
+> # ns3  MPTCP -> ns1  (10.0.1.1:10035) TCP  	[ OK ]
+> # ns3  TCP   -> ns1  (10.0.1.1:10036) MPTCP	[ OK ]
+> # ns3  MPTCP -> ns2  (10.0.1.2:10037) MPTCP	[ OK ]
+> (...)
+> =
+
+> The same tests were running fine just before without KASAN and
+> PROVE_LOCKING.
+> =
+
+> I just re-launched the tests and I no longer have this error.
+> =
+
+> Anyone else saw this error?
+> =
+
+> Cheers,
+> Matt
+> =
+
 
 -- =
 
@@ -75,4 +106,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============0550818715199707972==--
+--===============3405813621386998511==--
