@@ -1,55 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============3718982497459407804=="
+Content-Type: multipart/mixed; boundary="===============1501369288334551838=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] LPC: Registration will re-open June 30th
-Date: Mon, 01 Jul 2019 11:13:26 +0200
-Message-ID: <5063780e-7327-6087-7ef9-741ca6546e6b@tessares.net>
-In-Reply-To: 68ad854c-5818-50fa-32b0-28f1cbb86aa3@tessares.net
+Subject: Re: [MPTCP] LPC networking CfP: abstract: draft
+Date: Mon, 01 Jul 2019 13:31:35 +0200
+Message-ID: <c53470cc-cd63-5016-4d52-3c7349434f03@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1906281628420.54524@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 1456
+X-UID: 1457
 
---===============3718982497459407804==
+--===============1501369288334551838==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Mat,
 
-On 28/06/2019 15:49, Matthieu Baerts wrote:
-> Hello,
+On 29/06/2019 01:36, Mat Martineau wrote:
 > =
 
-> As we previously discussed that it could be nice to go to LPC to present
-> the current status and have face to face meetings, don't forget that the
-> registration will re-open in a few days:
+> On Fri, 7 Jun 2019, Matthieu Baerts wrote:
 > =
 
->     http://www.cvent.com/d/s6q3j2/4W
+>> Hello,
+>>
+>> Yesterday, we discussed options for a Linux Plumber's Conference
+>> networking track talk.
+>>
+>> Here is a first draft of an abstract. Feel free to comment and react:
+>>
+>> =3D=3D=3D
+> ...
+>> =3D=3D=3D
+>>
+>> Do not hesitate to improve it, fix typo or restart from scratch if
+>> needed, I don't mind!
+>>
+> =
 
-Just a side note to say that I just received this message via a colleague:
+> I edited and rewrote part of the draft to focus on the long-term roadmap
+> and how we phase in features. The main audiences I'm thinking of are the
+> maintainers and present users of the multipath-tcp.org kernel.
+> =
 
-    As Plumbers will likely sell out, we recommend that you purchase a
-ticket now and if you are accepted as a speaker and given a free pass,
-you will receive a refund. Otherwise, you risk not being able to
-purchase a ticket due to the limited supply.
+> It's not ready for submission yet, but given our plan to submit
+> mid-next-week I wanted to share a draft before the weekend:
 
-So don't hesitate to register if you plan to come. Note that you can
-cancel up to 15 days before the beginning of the conference with a fee
-of 3.5% if I remember well.
+Thank you for this updated version.
+
+It looks ready to me :-)
+
+I don't think we really need to improve it, the main idea is there and
+people can easily find more about this project by looking at the ML,
+wiki, code, previous presentations at netdev and netconf.
+
+What do you think? Or what do you want to improve?
 
 Cheers,
 Matt
-
-
-> =
-
-> Cheers,
-> Matt
-> =
-
-
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -58,4 +67,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============3718982497459407804==--
+--===============1501369288334551838==--
