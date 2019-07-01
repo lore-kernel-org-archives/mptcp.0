@@ -1,70 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============1501369288334551838=="
+Content-Type: multipart/mixed; boundary="===============8771081778120114948=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] LPC networking CfP: abstract: draft
-Date: Mon, 01 Jul 2019 13:31:35 +0200
-Message-ID: <c53470cc-cd63-5016-4d52-3c7349434f03@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1906281628420.54524@mjmartin-mac01.local
+Subject: Re: [MPTCP] KSelftests: errors last night (20190604)
+Date: Mon, 01 Jul 2019 19:24:17 +0200
+Message-ID: <6166cccb438d5e34ec4b1051e9dba43cf5a9fba3.camel@redhat.com>
+In-Reply-To: 27752ad1-323b-4469-6502-06036d0cec3e@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1457
+X-UID: 1458
 
---===============1501369288334551838==
+--===============8771081778120114948==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+On Fri, 2019-06-28 at 15:47 +0200, Matthieu Baerts wrote:
+> (...)
+> 00:13:23.223 # ns1  TCP   -> ns2  (10.0.1.2:10005) MPTCP	[ OK ]
+> 00:13:24.256 # ns1  MPTCP -> ns2  (10.0.2.1:10006) MPTCP	[ OK ]
+> 00:13:25.292 # ns1  MPTCP -> ns2  (10.0.2.1:10007) TCP  	[ OK ]
+> 00:13:26.338 # ns1  TCP   -> ns2  (10.0.2.1:10008) MPTCP	[ OK ]
+> 00:13:27.374 # ns1  MPTCP -> ns3  (10.0.2.2:10009) MPTCP	main_loop_s:
+> timed out
+> 00:13:58.414 # copyfd_io: poll timed out (events: POLLIN 1, POLLOUT 4)
+> 00:13:58.415 # [ FAIL ] client exit code 2, server 2
+> 00:13:58.415 # \nnetns ns3 socket stat for 10009:
+> 00:13:58.441 # State     Recv-Q   Send-Q        Local Address:Port
+>   Peer Address:Port
+> 00:13:58.441 # SYN-RECV  0        0                  10.0.2.2:10009
+>       10.0.1.1:32774    timer:(on,1.270ms,4) cwnd:2 retrans:4/0 reorderin=
+g:0
+> 00:13:58.443 # \nnetns ns1 socket stat for 10009:
+> 00:13:58.455 # State       Recv-Q   Send-Q      Local Address:Port
+>   Peer Address:Port
+> 00:13:58.456 # FIN-WAIT-1  0        49153            10.0.1.1:32774
+>       10.0.2.2:10009    timer:(on,22sec,7) rto:25.72 cwnd:1 ssthresh:7
+> retrans:7/0 reordering:0
+> 00:13:58.460 # ns1  MPTCP -> ns3  (10.0.3.2:10010) MPTCP	[ OK ]
+> 00:13:59.502 # ns1  MPTCP -> ns3  (10.0.3.2:10011) TCP  	[ OK ]
+> 00:14:00.543 # ns1  TCP   -> ns3  (10.0.3.2:10012) MPTCP	[ OK ]
+> 00:14:01.585 # ns1  MPTCP -> ns4  (10.0.3.1:10013) MPTCP	[ OK ]
+> (...)
 
-On 29/06/2019 01:36, Mat Martineau wrote:
-> =
+I'm (/was) able to reproduce the issue locally, but not reliably. =
 
-> On Fri, 7 Jun 2019, Matthieu Baerts wrote:
-> =
 
->> Hello,
->>
->> Yesterday, we discussed options for a Linux Plumber's Conference
->> networking track talk.
->>
->> Here is a first draft of an abstract. Feel free to comment and react:
->>
->> =3D=3D=3D
-> ...
->> =3D=3D=3D
->>
->> Do not hesitate to improve it, fix typo or restart from scratch if
->> needed, I don't mind!
->>
-> =
+@Mat: is "mptcp: Make MPTCP socket block/wakeup ignore
+sk_receive_queue" somehow related to this issue ? (e.g. an attempt to
+fix it)
 
-> I edited and rewrote part of the draft to focus on the long-term roadmap
-> and how we phase in features. The main audiences I'm thinking of are the
-> maintainers and present users of the multipath-tcp.org kernel.
-> =
+Thanks,
 
-> It's not ready for submission yet, but given our plan to submit
-> mid-next-week I wanted to share a draft before the weekend:
+Paolo
 
-Thank you for this updated version.
 
-It looks ready to me :-)
-
-I don't think we really need to improve it, the main idea is there and
-people can easily find more about this project by looking at the ML,
-wiki, code, previous presentations at netdev and netconf.
-
-What do you think? Or what do you want to improve?
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============1501369288334551838==--
+--===============8771081778120114948==--
