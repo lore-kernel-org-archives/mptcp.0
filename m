@@ -1,251 +1,322 @@
-Content-Type: multipart/mixed; boundary="===============3891202054014923323=="
+Content-Type: multipart/mixed; boundary="===============8837028801784868379=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] net: mptcp: randomness improvements for crypto.c
-Date: Thu, 11 Jul 2019 19:12:20 +0200
-Message-ID: <d63c624fd94a9a11cd65b7f9a0705f1371f8d054.1562864862.git.dcaratti@redhat.com>
-In-Reply-To: cover.1562864862.git.dcaratti@redhat.com
+Subject: [MPTCP] [RFC PATCH] mptcp: new sysctl to control the activation per NS
+Date: Thu, 11 Jul 2019 21:00:07 +0200
+Message-ID: <20190711190007.20106-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1488
+X-UID: 1489
 
---===============3891202054014923323==
+--===============8837028801784868379==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-use get_random_bytes(), instead of siphash, for MPTCP keys and nonces.
-This should improve MPTCP key/nonce randomness, because seeds are no
-more initialized at a fixed time during the boot process, and we also
-get rid of 'static u32 crypto_seed' (that can theoretically clash in
-case sockets were requesting the key from different namespaces).
+New MPTCP sockets will return -ENOPROTOOPT if MPTCP support is disabled
+for the current net namespace.
 
-CC: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-CC: Florian Westphal <fwestpha(a)redhat.com>
-CC: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+For security reasons, it is interesting to have a global switch for
+MPTCP. To start, MPTCP will be disabled by default and only privileged
+users will be able to modify this. The reason is that because MPTCP is
+new, it will not be tested and reviewed by many and security issues can
+then take time to be discovered and fixed.
+
+The value of this new sysctl can be different per namespace. We can then
+restrict the usage of MPTCP to the selected NS. In case of serious
+issues with MPTCP, administrators can now easily turn MPTCP off.
+
+MPTCP' kselftest has been modified to validate that the correct error is
+reported when creating a socket while MPTCP support is disabled.
+
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/crypto.c   | 73 +-------------------------------------------
- net/mptcp/protocol.c |  1 -
- net/mptcp/protocol.h | 11 -------
- net/mptcp/token.c    | 49 +++--------------------------
- 4 files changed, 5 insertions(+), 129 deletions(-)
 
-diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
-index e8644590690f..843bf1b5c4d9 100644
---- a/net/mptcp/crypto.c
-+++ b/net/mptcp/crypto.c
-@@ -24,71 +24,9 @@
- #include <linux/cryptohash.h>
- #include <linux/random.h>
- #include <linux/siphash.h>
-+#include <net/tcp.h>
- #include <asm/unaligned.h>
+Notes:
+    As just discussed at the meeting we just had, here is a RFC patch to
+    add a new sysctl for MPTCP.
+    =
+
+    Because it is not linked to the protocol itself, I simply created a new
+    file, ctrl.c like in mptcp.org.
+    =
+
+    A few questions:
+    - Is it OK to reserve space per ns via the "pernet_operations"
+      structure? Because MPTCP would not be compiled as a module, we could
+      directly store stuff in the net structure as other parts of the code
+      do but maybe better to keep MPTCP code on the side as done here.
+    - In mptcp.org, all sysctls are prepended with 'mptcp_', e.g.
+      'net.mptcp.mptcp_enabled'. Do we need this? Is it better to keep the
+      same names if possible or better to differentiate? In this version,
+      'mptcp_' is not prepended.
+    - This sysctl will only block new sockets to be created. Is it enough?
+    - ENOPROTOOPT is returned, maybe something else to return? EPERM is
+      maybe too generic? ENOTSUPP is not translated by perror().
+    - Should we start the documentation now for the sysctl?
+    - A simple test has been added, because it is not linked to the rest, I
+      put separeted as first test.
+    - Of course do not hesitate to comment. Even on the idea of having a
+      sysctl for this purpose.
+
+ net/mptcp/Makefile                            |   2 +-
+ net/mptcp/ctrl.c                              | 109 ++++++++++++++++++
+ net/mptcp/protocol.c                          |  12 +-
+ net/mptcp/protocol.h                          |   4 +
+ .../selftests/net/mptcp/mptcp_connect.sh      |  24 ++++
+ 5 files changed, 148 insertions(+), 3 deletions(-)
+ create mode 100644 net/mptcp/ctrl.c
+
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index 7fe7aa64eda0..289fdf4339c1 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_MPTCP) +=3D mptcp.o
  =
 
--static siphash_key_t crypto_key_secret __read_mostly;
--static hsiphash_key_t crypto_nonce_secret __read_mostly;
--static u32 crypto_seed;
--
--u32 crypto_v4_get_nonce(__be32 saddr, __be32 daddr, __be16 sport, __be16 d=
-port)
--{
--	return hsiphash_4u32((__force u32)saddr, (__force u32)daddr,
--			    (__force u32)sport << 16 | (__force u32)dport,
--			    crypto_seed++, &crypto_nonce_secret);
--}
--
--u64 crypto_v4_get_key(__be32 saddr, __be32 daddr, __be16 sport, __be16 dpo=
-rt)
--{
--	pr_debug("src=3D%x:%d, dst=3D%x:%d", saddr, sport, daddr, dport);
--	return siphash_4u32((__force u32)saddr, (__force u32)daddr,
--			    (__force u32)sport << 16 | (__force u32)dport,
--			    crypto_seed++, &crypto_key_secret);
--}
--
--u32 crypto_v6_get_nonce(const struct in6_addr *saddr,
--			const struct in6_addr *daddr,
--			__be16 sport, __be16 dport)
--{
--	const struct {
--		struct in6_addr saddr;
--		struct in6_addr daddr;
--		u32 seed;
--		__be16 sport;
--		__be16 dport;
--	} __aligned(SIPHASH_ALIGNMENT) combined =3D {
--		.saddr =3D *saddr,
--		.daddr =3D *daddr,
--		.seed =3D crypto_seed++,
--		.sport =3D sport,
--		.dport =3D dport,
--	};
--
--	return hsiphash(&combined, offsetofend(typeof(combined), dport),
--			&crypto_nonce_secret);
--}
--
--u64 crypto_v6_get_key(const struct in6_addr *saddr,
--		      const struct in6_addr *daddr,
--		      __be16 sport, __be16 dport)
--{
--	const struct {
--		struct in6_addr saddr;
--		struct in6_addr daddr;
--		u32 seed;
--		__be16 sport;
--		__be16 dport;
--	} __aligned(SIPHASH_ALIGNMENT) combined =3D {
--		.saddr =3D *saddr,
--		.daddr =3D *daddr,
--		.seed =3D crypto_seed++,
--		.sport =3D sport,
--		.dport =3D dport,
--	};
--
--	return siphash(&combined, offsetofend(typeof(combined), dport),
--		       &crypto_key_secret);
--}
--
- void crypto_key_sha1(u64 key, u32 *token, u64 *idsn)
- {
- 	u32 workspace[SHA_WORKSPACE_WORDS];
-@@ -191,12 +129,3 @@ void crypto_hmac_sha1(u64 key1, u64 key2, u32 *hash_ou=
-t,
- 	for (i =3D 0; i < 5; i++)
- 		hash_out[i] =3D (__force u32)cpu_to_be32(hash_out[i]);
- }
--
--void crypto_init(void)
--{
--	get_random_bytes((void *)&crypto_key_secret,
--			 sizeof(crypto_key_secret));
--	get_random_bytes((void *)&crypto_nonce_secret,
--			 sizeof(crypto_nonce_secret));
--	crypto_seed =3D 0;
--}
+-mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o pm.o
++mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o pm.o ctrl.o
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+new file mode 100644
+index 000000000000..4c9a6a2cfeb3
+--- /dev/null
++++ b/net/mptcp/ctrl.c
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Multipath TCP
++ *
++ * Copyright (c) 2019, Tessares SA.
++ */
++
++#include <linux/sysctl.h>
++
++#include <net/net_namespace.h>
++#include <net/netns/generic.h>
++
++#include "protocol.h"
++
++#define MPTCP_SYSCTL_PATH "net/mptcp"
++
++static int mptcp_pernet_id;
++struct mptcp_pernet {
++	struct ctl_table_header *ctl_table_hdr;
++
++	int mptcp_enabled;
++};
++
++static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
++{
++	return net_generic(net, mptcp_pernet_id);
++}
++
++int mptcp_is_enabled(struct net *net)
++{
++	return mptcp_get_pernet(net)->mptcp_enabled;
++}
++
++static struct ctl_table mptcp_sysctl_table[] =3D {
++	{
++		.procname =3D "enabled",
++		.maxlen =3D sizeof(int),
++		.mode =3D 0644,
++		.proc_handler =3D proc_dointvec,
++	},
++	{}
++};
++
++static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pe=
+rnet)
++{
++	struct ctl_table_header *hdr;
++	struct ctl_table *table;
++
++	table =3D mptcp_sysctl_table;
++	if (!net_eq(net, &init_net)) {
++		table =3D kmemdup(table, sizeof(mptcp_sysctl_table), GFP_KERNEL);
++		if (!table)
++			goto err_alloc;
++	}
++
++	table[0].data =3D &pernet->mptcp_enabled;
++
++	hdr =3D register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
++	if (!hdr)
++		goto err_reg;
++
++	pernet->ctl_table_hdr =3D hdr;
++
++	return 0;
++
++err_reg:
++	if (!net_eq(net, &init_net))
++		kfree(table);
++err_alloc:
++	return -ENOMEM;
++}
++
++static void mptcp_pernet_del_table(struct mptcp_pernet *pernet)
++{
++	struct ctl_table *table =3D pernet->ctl_table_hdr->ctl_table_arg;
++
++	unregister_net_sysctl_table(pernet->ctl_table_hdr);
++
++	kfree(table);
++}
++
++static int __net_init mptcp_net_init(struct net *net)
++{
++	struct mptcp_pernet *pernet =3D mptcp_get_pernet(net);
++
++	return mptcp_pernet_new_table(net, pernet);
++}
++
++/* Note: the callback will only be called per extra netns */
++static void __net_exit mptcp_net_exit(struct net *net)
++{
++	struct mptcp_pernet *pernet =3D mptcp_get_pernet(net);
++
++	mptcp_pernet_del_table(pernet);
++}
++
++static struct pernet_operations mptcp_pernet_ops =3D {
++	.init =3D mptcp_net_init,
++	.exit =3D mptcp_net_exit,
++	.id =3D &mptcp_pernet_id,
++	.size =3D sizeof(struct mptcp_pernet),
++};
++
++void __init mptcp_init(void)
++{
++	mptcp_proto_init();
++
++	if (register_pernet_subsys(&mptcp_pernet_ops) < 0)
++		panic("Failed to register MPTCP pernet subsystem.\n");
++}
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 774ed25d3b6d..7347da1e7a39 100644
+index 774ed25d3b6d..18399cb63f35 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1006,7 +1006,6 @@ void __init mptcp_init(void)
- 	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
+@@ -559,6 +559,14 @@ static int mptcp_init_sock(struct sock *sk)
+ 	return 0;
+ }
  =
 
- 	token_init();
--	crypto_init();
- 	subflow_init();
++static int mptcp_init_sock_cb(struct sock *sk)
++{
++	if (!mptcp_is_enabled(sock_net(sk)))
++		return -ENOPROTOOPT;
++
++	return mptcp_init_sock(sk);
++}
++
+ static void mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -801,7 +809,7 @@ bool mptcp_sk_is_subflow(const struct sock *sk)
+ static struct proto mptcp_prot =3D {
+ 	.name		=3D "MPTCP",
+ 	.owner		=3D THIS_MODULE,
+-	.init		=3D mptcp_init_sock,
++	.init		=3D mptcp_init_sock_cb,
+ 	.close		=3D mptcp_close,
+ 	.accept		=3D mptcp_accept,
+ 	.setsockopt	=3D mptcp_setsockopt,
+@@ -993,7 +1001,7 @@ static struct inet_protosw mptcp_protosw =3D {
+ 	.flags		=3D INET_PROTOSW_ICSK,
+ };
  =
 
- 	if (proto_register(&mptcp_prot, 1) !=3D 0)
+-void __init mptcp_init(void)
++void mptcp_proto_init(void)
+ {
+ 	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
+ 	mptcp_stream_ops =3D inet_stream_ops;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7f15f6aab93d..1997fa69981f 100644
+index 7f15f6aab93d..715ce80d0ae1 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -207,17 +207,6 @@ void token_update_accept(struct sock *sk, struct sock =
-*conn);
- void token_release(u32 token);
- void token_destroy(u32 token);
+@@ -183,11 +183,15 @@ mptcp_subflow_tcp_socket(const struct subflow_context=
+ *subflow)
+ 	return subflow->tcp_sock;
+ }
  =
 
--void crypto_init(void);
--u32 crypto_v4_get_nonce(__be32 saddr, __be32 daddr,
--			__be16 sport, __be16 dport);
--u64 crypto_v4_get_key(__be32 saddr, __be32 daddr,
--		      __be16 sport, __be16 dport);
--u64 crypto_v6_get_key(const struct in6_addr *saddr,
--		      const struct in6_addr *daddr,
--		      __be16 sport, __be16 dport);
--u32 crypto_v6_get_nonce(const struct in6_addr *saddr,
--			const struct in6_addr *daddr,
--			__be16 sport, __be16 dport);
- void crypto_key_sha1(u64 key, u32 *token, u64 *idsn);
- void crypto_hmac_sha1(u64 key1, u64 key2, u32 *hash_out,
- 		      int arg_num, ...);
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index c2f4fcb37566..9c0fe5caaf1e 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -68,22 +68,8 @@ static void new_req_token(struct request_sock *req,
- {
- 	const struct inet_request_sock *ireq =3D inet_rsk(req);
- 	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
--	u64 local_key;
--
--	if (!IS_ENABLED(CONFIG_IPV6) || skb->protocol =3D=3D htons(ETH_P_IP)) {
--		local_key =3D crypto_v4_get_key(ip_hdr(skb)->saddr,
--					      ip_hdr(skb)->daddr,
--					      htons(ireq->ir_num),
--					      ireq->ir_rmt_port);
--#if IS_ENABLED(CONFIG_IPV6)
--	} else {
--		local_key =3D crypto_v6_get_key(&ipv6_hdr(skb)->saddr,
--					      &ipv6_hdr(skb)->daddr,
--					      htons(ireq->ir_num),
--					      ireq->ir_rmt_port);
--#endif
--	}
--	subflow_req->local_key =3D local_key;
++int mptcp_is_enabled(struct net *net);
 +
-+	get_random_bytes(&subflow_req->local_key, sizeof(u64));
- 	crypto_key_sha1(subflow_req->local_key, &subflow_req->token,
- 			&subflow_req->idsn);
- 	pr_debug("local_key=3D%llu, token=3D%u, idsn=3D%llu", subflow_req->local_=
-key,
-@@ -97,23 +83,8 @@ static void new_req_join(struct request_sock *req, struc=
-t sock *sk,
- 	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	u8 hmac[MPTCPOPT_HMAC_LEN];
--	u32 nonce;
--
--	if (skb->protocol =3D=3D htons(ETH_P_IP)) {
--		nonce =3D crypto_v4_get_nonce(ip_hdr(skb)->saddr,
--					    ip_hdr(skb)->daddr,
--					    htons(ireq->ir_num),
--					    ireq->ir_rmt_port);
--#if IS_ENABLED(CONFIG_IPV6)
--	} else {
--		nonce =3D crypto_v6_get_nonce(&ipv6_hdr(skb)->saddr,
--					    &ipv6_hdr(skb)->daddr,
--					    htons(ireq->ir_num),
--					    ireq->ir_rmt_port);
--#endif
--	}
--	subflow_req->local_nonce =3D nonce;
+ void subflow_init(void);
+ int subflow_create_socket(struct sock *sk, struct socket **new_sock);
  =
 
-+	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
- 	crypto_hmac_sha1(msk->local_key,
- 			 msk->remote_key,
- 			 (u32 *)hmac, 2,
-@@ -145,19 +116,7 @@ static void new_token(const struct sock *sk)
- 	struct subflow_context *subflow =3D subflow_ctx(sk);
- 	const struct inet_sock *isk =3D inet_sk(sk);
+ extern const struct inet_connection_sock_af_ops ipv4_specific;
  =
 
--	if (sk->sk_family =3D=3D AF_INET) {
--		subflow->local_key =3D crypto_v4_get_key(isk->inet_saddr,
--						       isk->inet_daddr,
--						       isk->inet_sport,
--						       isk->inet_dport);
--#if IS_ENABLED(CONFIG_IPV6)
--	} else {
--		subflow->local_key =3D crypto_v6_get_key(&inet6_sk(sk)->saddr,
--						       &sk->sk_v6_daddr,
--						       isk->inet_sport,
--						       isk->inet_dport);
--#endif
--	}
-+	get_random_bytes(&subflow->local_key, sizeof(u64));
- 	crypto_key_sha1(subflow->local_key, &subflow->token, &subflow->idsn);
- 	pr_debug("local_key=3D%llu, token=3D%u, idsn=3D%llu", subflow->local_key,
- 		 subflow->token, subflow->idsn);
++void mptcp_proto_init(void);
++
+ void mptcp_get_options(const struct sk_buff *skb,
+ 		       struct tcp_options_received *opt_rx);
+ =
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index 4418163af001..d029bdc5946d 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -45,6 +45,7 @@ trap cleanup EXIT
+ for i in 1 2 3 4;do
+ 	ip netns add ns$i || exit $ksft_skip
+ 	ip -net ns$i link set lo up
++	ip netns exec ns$i sysctl -q net.mptcp.enabled=3D1
+ done
+ =
+
+ #  ns1              ns2                    ns3                     ns4
+@@ -106,6 +107,27 @@ check_transfer()
+ 	return 0
+ }
+ =
+
++check_mptcp_disabled()
++{
++	disabled_ns=3D"ns_disabled"
++	ip netns add ${disabled_ns} || exit $ksft_skip
++	# by default: sysctl net.mptcp.enabled=3D0
++
++	local err=3D0
++	LANG=3DC ip netns exec ${disabled_ns} ./mptcp_connect -t $timeout -p 1000=
+0 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
++		grep -q "^socket: Protocol not available$" && err=3D1
++	ip netns delete ${disabled_ns}
++
++	if [ ${err} -eq 0 ]; then
++		echo -e "MPTCP is not disabled by default as expected\t[ FAIL ]"
++		ret=3D1
++		return 1
++	fi
++
++	echo -e "MPTCP is disabled by default as expected\t[ OK ]"
++	return 0
++}
++
+ do_ping()
+ {
+ 	listener_ns=3D"$1"
+@@ -241,6 +263,8 @@ run_tests()
+ make_file "$cin" "client"
+ make_file "$sin" "server"
+ =
+
++check_mptcp_disabled
++
+ for sender in 1 2 3 4;do
+ 	do_ping ns1 ns$sender 10.0.1.1
+ =
+
 -- =
 
 2.20.1
 
 
---===============3891202054014923323==--
+--===============8837028801784868379==--
