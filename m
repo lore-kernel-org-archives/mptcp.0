@@ -1,150 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============1442690723914292909=="
+Content-Type: multipart/mixed; boundary="===============8635229961564529436=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 27th of June 2019
-Date: Fri, 12 Jul 2019 10:00:30 +0200
-Message-ID: <f58692f9-380f-0117-7231-30b53dbd2b94@tessares.net>
+Subject: Re: [MPTCP] [PATCH] mptcp: selftests: fix .gitignore for mptcp
+ selftests
+Date: Fri, 12 Jul 2019 10:33:26 +0200
+Message-ID: <edd40a2d-b5d4-504e-41e7-6741addf6064@tessares.net>
+In-Reply-To: a36b8c52f786894a6595e214a6449ffa021e34b2.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1490
+X-UID: 1491
 
---===============1442690723914292909==
+--===============8635229961564529436==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Davide,
 
-Yesterday, we had our 57th meeting with Peter (Intel OTC), Paolo and
-Davide (Red Hat) and myself (Tessares).
+On 11/07/2019 18:49, Davide Caratti wrote:
+> On Thu, 2019-07-11 at 18:44 +0200, Davide Caratti wrote:
+>> since mptcp_connect.sh can generate pcap traces when the '-c' argument is
+>> used, add *.pcap to .gitignore, to avoid untracked files in the output of
+>> "git status".
+>>
+>>  [root(a)rhel7 mptcp]# git status
+>>  # HEAD detached at origin/mptcp-prova
+>>  # Untracked files:
+>>  #   (use "git add <file>..." to include in what will be committed)
+>>  #
+>>  #       ns1-ns1-MPTCP-MPTCP-10.0.1.1.pcap
+>>  #       ns1-ns1-MPTCP-TCP-10.0.1.1.pcap
+>>  #       ns1-ns1-TCP-MPTCP-10.0.1.1.pcap
+>>  [...]
+>>
+>> Fixes: 4dc10c542166 ("mptcp: selftests: Add capture option")
+> =
 
-Thanks again for this new good meeting!
+> I forgot to mention the proposal to squash this in the above commit :)
 
+Thank you for the patch, good catch!
 
+Just applied:
+- f695b6271a17: "squashed" in "mptcp: selftests: Add capture option"
+- a42e1d875914: signed-off
+- 22126216e094..427cd6baacec: results
 
-Here are the minutes of the meeting:
+Tests are in progress... just for the fun :)
 
-
-
-Accepted patches:
-    - Change sock->sk_protocol to a 16-bit value:
-        - by Mat
-        - accepted at the last meeting
-        - 2 new topic, 1 "squashed" commit.
-
-
-
-Pending patches:
-    - mptcp: Make MPTCP socket block/wakeup ignore sk_receive_queue :
-        - by Mat
-        - commented by Paolo
-        - Paolo is looking at the different other possibilities, hard to
-reuse the existing helpers, maybe use the wait event API. Paolo is
-investigating that. Paolo will reply later on the ML.
-
-    - mptcp: harmonize locking on all socket operations:
-        - by Paolo
-        - RFC and v1 sent
-        - commented by Mat, Peter and Florian
-        - v2 has been sent just after the meeting
-
-    - mptcp: simplify crypto.c:
-        - by Davide
-        - reviewed by Mat, Florian and Christoph
-        - a new version has been sent just after the meeting
-
-
-
-Error kselftest:
-    - looks similar to the previous ones we had:
-        - Paolo was testing with the pending patches but it seems the
-problem is somewhere else (not fixed with these patches)
-
-
-
-Sync with net-next:
-    - got a conflict
-    - easy to resolve
-    - tests are still OK
-
-
-
-Feedback from netdev:
-    - nobody at the meeting receives any feedback
-
-
-
-Feedback from LPC:
-    - abstract has been sent by Mat
-
-    - who would like to participate (if we are selected)?
-        - Peter would be glad to help (presentation and/or paper)
-        - Paolo would be able to help for the paper, not sure yet if he
-will be able to go on site.
-
-    - no feedback yet.
-
-
-
-sysctl to disable MPTCP:
-    - for security reason
-    - could be turned off by default, only admin can turn on MPTCP
-    - Matth has a prototype
-    - Matth has sent that just after the meeting
-
-
-
-icsk->icsk_ulp_data is probably going to be RCU-ified:
-    - some (small) fix to annotation will probably be needed to fix
-sparse warning
-
-    - affect only kTLS because it can be compiled as a module
-
-    - Jakub Kicinski from  Netronome has a patch for that
-
-    - after that, we will need to add an annotation in MPTCP code (ULP)
-to avoid sparse warning
-
-    - could be good to execute sparse on the CI job =E2=86=92 *@Matth*
-        - anybody can propose updates for the scripts in the "scripts"
-branch ;-)
-
-    - anybody is testing MPTCP with Sparse?
-        - Not from someone at the meeting
-        - *@Davide* will do that this week
-
-
-
-About complex patches:
-    - recreating them from scratch will be complex (to re-create the
-"natural" evolution)
-
-    - rebasing/squashing should be the way to go
-
-    - when to do that?:
-        - We can do that "just" before the submission
-        - If the refs are set in the commit message, Matth can do this
-job sooner, especially if we already know where it needs to go.
-        - but in some cases, that might be good to dedicate a commit to
-show an important decision we took.
-
-
-
-Next meeting:
-    - We propose to have it next Thursday, the 18th of July.
-    - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190718
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-Talk to you next week,
-Matthieu
+Cheers,
+Matt
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -153,4 +58,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============1442690723914292909==--
+--===============8635229961564529436==--
