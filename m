@@ -1,61 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============8635229961564529436=="
+Content-Type: multipart/mixed; boundary="===============7165962446943893136=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Othman, Ossama <ossama.othman at intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: selftests: fix .gitignore for mptcp
- selftests
-Date: Fri, 12 Jul 2019 10:33:26 +0200
-Message-ID: <edd40a2d-b5d4-504e-41e7-6741addf6064@tessares.net>
-In-Reply-To: a36b8c52f786894a6595e214a6449ffa021e34b2.camel@redhat.com
+Subject: Re: [MPTCP] [RFC PATCH] mptcp: new sysctl to control the activation
+ per NS
+Date: Mon, 15 Jul 2019 11:17:55 -0700
+Message-ID: <CAPyD+=AL30XmZKiCLFhCV6wm9HDv0pmz_HE7paLcLpAkeXd2CA@mail.gmail.com>
+In-Reply-To: 20190711190007.20106-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1491
+X-UID: 1492
 
---===============8635229961564529436==
+--===============7165962446943893136==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+Hi Matthieu,
 
-On 11/07/2019 18:49, Davide Caratti wrote:
-> On Thu, 2019-07-11 at 18:44 +0200, Davide Caratti wrote:
->> since mptcp_connect.sh can generate pcap traces when the '-c' argument is
->> used, add *.pcap to .gitignore, to avoid untracked files in the output of
->> "git status".
->>
->>  [root(a)rhel7 mptcp]# git status
->>  # HEAD detached at origin/mptcp-prova
->>  # Untracked files:
->>  #   (use "git add <file>..." to include in what will be committed)
->>  #
->>  #       ns1-ns1-MPTCP-MPTCP-10.0.1.1.pcap
->>  #       ns1-ns1-MPTCP-TCP-10.0.1.1.pcap
->>  #       ns1-ns1-TCP-MPTCP-10.0.1.1.pcap
->>  [...]
->>
->> Fixes: 4dc10c542166 ("mptcp: selftests: Add capture option")
-> =
+On Thu, Jul 11, 2019 at 12:01 PM Matthieu Baerts
+<matthieu.baerts(a)tessares.net> wrote:
+> For security reasons, it is interesting to have a global switch for
+> MPTCP. To start, MPTCP will be disabled by default and only privileged
+> users will be able to modify this. The reason is that because MPTCP is
+> new, it will not be tested and reviewed by many and security issues can
+> then take time to be discovered and fixed.
 
-> I forgot to mention the proposal to squash this in the above commit :)
+Do we need to be concerned about this new sysctl variable being used
+to maliciously enable or disable MPTCP?
 
-Thank you for the patch, good catch!
+>     - In mptcp.org, all sysctls are prepended with 'mptcp_', e.g.
+>       'net.mptcp.mptcp_enabled'. Do we need this? Is it better to keep the
+>       same names if possible or better to differentiate? In this version,
+>       'mptcp_' is not prepended.
 
-Just applied:
-- f695b6271a17: "squashed" in "mptcp: selftests: Add capture option"
-- a42e1d875914: signed-off
-- 22126216e094..427cd6baacec: results
+The "mptcpd_" prefix seems redundant since the variable is already
+part of the "net.mptcp" namespace.  If we're going to differentiate
+sysctl interfaces between the two kernels, now is a good time to do so
+given where we are in the upstream kernel development.
 
-Tests are in progress... just for the fun :)
+>     - ENOPROTOOPT is returned, maybe something else to return? EPERM is
+>       maybe too generic? ENOTSUPP is not translated by perror().
 
-Cheers,
-Matt
--- =
+ENOPROTOOPT appears to be more relevant to socket options, e.g. the
+setsockopt(2) man page states the following:
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+       ENOPROTOOPT
+                The option is unknown at the level indicated.
 
---===============8635229961564529436==--
+According to the socket(2) man page, EINVAL might be the better errno:
+
+       EINVAL Unknown protocol, or protocol family not available.
+
+> +static struct ctl_table mptcp_sysctl_table[] =3D {
+> +       {
+> +               .procname =3D "enabled",
+> +               .maxlen =3D sizeof(int),
+> +               .mode =3D 0644,
+> +               .proc_handler =3D proc_dointvec,
+> +       },
+> +       {}
+> +};
+
+Should we prevent root processes that don't have the CAP_NET_ADMIN
+capability from setting net.mptcp.enabled, e.g. something like the
+following proc_dointvec() wrapper:
+
+static int mptcp_proc_dointvec(struct ctl_table *table, int write,
+                                void __user *buffer, size_t *lenp, loff_t *=
+ppos)
+{
+        if (write && !capable(CAP_NET_ADMIN))
+                return -EPERM;
+
+        return proc_dointvec(table, write, buffer, lenp, ppos);
+}
+
+I don't know if this works well for net namespaces, however.
+
+Thanks,
+-Ossama
+
+--===============7165962446943893136==--
