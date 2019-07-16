@@ -1,215 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============8917790164670471181=="
+Content-Type: multipart/mixed; boundary="===============5282969088098055533=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH] mptcp: explicitly retransmit MP_CAPABLE 3whs ack
-Date: Tue, 16 Jul 2019 17:49:55 +0200
-Message-ID: <e3893ca9ee345053bda15d7cc19bda9c96977faa.1563291391.git.pabeni@redhat.com>
+Subject: Re: [MPTCP] [RFC PATCH] mptcp: new sysctl to control the activation
+ per NS
+Date: Tue, 16 Jul 2019 17:51:30 +0200
+Message-ID: <ac257f7c-b297-2127-d19c-32606be13620@tessares.net>
+In-Reply-To: CAPyD+=BAxk=qHKJ8nNHSwPeUshUxomizPpTGhNREHUjLFKn=QQ@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1496
+X-UID: 1497
 
---===============8917790164670471181==
+--===============5282969088098055533==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If the ack concluding the 3way handshake is lost (e.g. due to
-lossy network connection), the mptcp listener will hang on accept.
-That happens because the client does not provide the required
-rcvr_key/sndr_key info via the MP_CAPABLE option in the following
-packets.
+Hi Ossama,
 
-From client perspective the socket is already into established status:
-later pkts will carry a DSS option instead.
+On 15/07/2019 22:18, Othman, Ossama wrote:
+> Hi Matthieu,
+> =
 
-This patch addresses the issue, forcing the transmission of a forged,
-duplicated, 3way handshake ack with MP_CAPABLE option if the retransmission
-of a data packet is detected before the peer send back any MPTCP-related
-data packet - demonstrating that the MPTCP handshake is completed
-successfully.
+> On Mon, Jul 15, 2019 at 11:44 AM Matthieu Baerts
+> <matthieu.baerts(a)tessares.net> wrote:
+>> On 15/07/2019 20:17, Othman, Ossama wrote:
+>>> Hi Matthieu,
+>>>
+>>> On Thu, Jul 11, 2019 at 12:01 PM Matthieu Baerts
+>>> <matthieu.baerts(a)tessares.net> wrote:
+>>>> For security reasons, it is interesting to have a global switch for
+>>>> MPTCP. To start, MPTCP will be disabled by default and only privileged
+>>>> users will be able to modify this. The reason is that because MPTCP is
+>>>> new, it will not be tested and reviewed by many and security issues can
+>>>> then take time to be discovered and fixed.
+>>>
+>>> Do we need to be concerned about this new sysctl variable being used
+>>> to maliciously enable or disable MPTCP?
+>>
+>> I am sorry, I don't understand your question?
+>>
+>> The goal would be to add a new sysctl variable as a global "safeguard".
+>> The application will continue to explicitly ask for MPTCP using
+>> IPPROTO_MPTCP.
+> =
 
-This apprently fixes the pending self-tests issue in my setup.
+> I understand the safeguard purpose of the net.mptcp.enabled sysctl
+> variable.  It would indeed be useful as a means for a system
+> administrator to disable MPTCP without a reboot in the event a
+> security issue in MPTCP is identified.
+> =
 
-Fixes: af061d2af1c2 ("mptcp: Write MPTCP DSS headers to outgoing data packe=
-ts")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-This can possibly looks like a nasty hack and likelly it is ;)
+> My point was that it also introduces a way for compromised privileged
+> processes to potentially (and possibly inadvertently) disable MPTCP at
+> run-time without involving system administrators.  Admittedly, there
+> doesn't appear to be much reason for such compromised processes to do
+> that.   At the very least, I think it might be useful to verify that
+> the process in question has the CAP_NET_ADMIN capability when
+> modifying this variable.
 
-I'd like to share the code to demostrate the issue and discuss possible sol=
-utions
+With the current version, I think that this compromised privileged
+process would need the root/full permissions to modify this new sysctl.
+It would need more than one capability I think, no?
+If it is "root", it can then also block MPTCP with NF/IPTables rules,
+remove files, burn the device, become the president of the US, etc.
+Maybe a process with CAP_NET_ADMIN can already block MPTCP sockets.
 
-Note that the self test failure can be reproduce in a deterministic way add=
-ing:
+Maybe I am wrong but I thought that using capabilities was a way to give
+extra permissions to a process to do a bit more (e.g. to create a RAW
+socket) without requiring the full/root rights. To change most sysctl
+(except the ones that check for some specific capabilities), you need
+the full rights, no? And if you have the full rights, you have the
+CAP_NET_ADMIN capability, no?
 
-ip netns exec ns2 iptables -I OUTPUT -o ns2eth3 -p tcp --dport 10000 -m con=
-nbytes \
-        --connbytes-mode packets --connbytes-dir original --connbytes 2:3 -=
-j DROP
+> Perhaps I'm being overly paranoid.  :)
+> =
 
-at setup time.
+>>> According to the socket(2) man page, EINVAL might be the better errno:
+>>>
+>>>        EINVAL Unknown protocol, or protocol family not available.
+>>
+>> I didn't read the socket manpage, I should have done that :)
+>>
+>> I would prefer not to return EINVAL as it is already returned if the
+>> protocol is unknown, e.g. if the kernel does not support MPTCP.
+>> From an application point of view, I think it could be interesting to
+>> know if the kernel supports MPTCP or if MPTCP is "not allowed". I would
+>> like to say that this new error is reported not because "the protocol
+>> family is not available" but somehow, "not allowed" (EPERM?) to use it
+>> if you see what I mean :)
+> =
 
-Other alternative approaches would be:
-- let the server reset the connection if detect the lack of MP_CAPABLE in t=
-he 3th
-  pkts (ack lost, received a later data packet)
-- let the server fall back to plain TCP in the above conditions
+> Yes, I see what you mean now. :)
+> =
 
-Both should have a simpler/cleaner implementation but both would make mptcp=
- behavior
-less deterministic.
+>> But maybe this is not needed? Or recommended to anyway return EINVAL.
+> =
 
-Othewise, is there any other better way to check for the 'this is a 3way HS=
- ack rentransmission'
-condition? Any better way to push ack pkts?
----
- net/mptcp/options.c  | 41 ++++++++++++++++++++++++++++++++++++++---
- net/mptcp/protocol.h |  3 +++
- net/mptcp/subflow.c  |  3 +++
- 3 files changed, 44 insertions(+), 3 deletions(-)
+> Based on your intent, EPERM seems like a better fit, but either errno
+> works for me.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 58215f19829a..d3a890e842e1 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -316,13 +316,46 @@ void mptcp_rcv_synsent(struct sock *sk)
- 	}
- }
- =
+Great! I can change to EPERM if it is not an issue!
 
--static bool mptcp_established_options_mp(struct sock *sk, unsigned int *si=
-ze,
-+static bool mptcp_is_twhs_ack(struct sock *sk,
-+			      const struct sk_buff *skb)
-+{
-+	struct subflow_context *subflow =3D subflow_ctx(sk);
-+
-+	if (!subflow->fourth_ack) {
-+		if (skb) {
-+			subflow->twhs_seq =3D TCP_SKB_CB(skb)->seq;
-+			subflow->twhs_ack =3D TCP_SKB_CB(skb)->ack_seq;
-+		}
-+		return true;
-+	}
-+
-+	if (!skb)
-+		return false;
-+
-+	if (!subflow->fourth_ack_received &&
-+	    subflow->twhs_ack =3D=3D TCP_SKB_CB(skb)->ack_seq &&
-+	    !after(TCP_SKB_CB(skb)->end_seq, tcp_sk(sk)->snd_nxt)) {
-+		/* this is a retransmission and no prof MP_CAPABLE landed
-+		 * on the peer, force an ack for it
-+		 */
-+		if (skb->len) {
-+			tcp_send_ack(sk);
-+			return false;
-+		}
-+		return true;
-+	}
-+	return false;
-+}
-+
-+static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *=
-skb,
-+					 unsigned int *size,
- 					 unsigned int remaining,
- 					 struct mptcp_out_options *opts)
- {
- 	struct subflow_context *subflow =3D subflow_ctx(sk);
- =
+>>> Should we prevent root processes that don't have the CAP_NET_ADMIN
+>>> capability from setting net.mptcp.enabled, e.g. something like the
+>>> following proc_dointvec() wrapper:
+>>
+>> I don't know what are the best practices for that. But I am happy to
+>> change if needed.
+> =
 
--	if (!subflow->fourth_ack && remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
-+	if (mptcp_is_twhs_ack(sk, skb) &&
-+	    remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
- 		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
- 		opts->sndr_key =3D subflow->local_key;
- 		opts->rcvr_key =3D subflow->remote_key;
-@@ -429,7 +462,7 @@ bool mptcp_established_options(struct sock *sk, struct =
-sk_buff *skb,
- 		return false;
- =
+> I guess it really depends on how paranoid we want to be.
 
- 	opts->suboptions =3D 0;
--	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
-+	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining, opts)) {
- 		*size +=3D opt_size;
- 		remaining -=3D opt_size;
- 		ret =3D true;
-@@ -479,6 +512,7 @@ bool mptcp_synack_options(const struct request_sock *re=
-q, unsigned int *size,
- void mptcp_attach_dss(struct sock *sk, struct sk_buff *skb,
- 		      struct tcp_options_received *opt_rx)
- {
-+	struct subflow_context *subflow =3D subflow_ctx(sk);
- 	struct mptcp_options_received *mp_opt;
- 	struct mptcp_ext *mpext;
- =
+Is it possible to have "root" processes without CAP_NET_ADMIN
+capability? Or maybe somehow with SELinux?
 
-@@ -487,6 +521,7 @@ void mptcp_attach_dss(struct sock *sk, struct sk_buff *=
-skb,
- 	if (!mp_opt->dss)
- 		return;
- =
+Cheers,
+Matt
 
-+	subflow->fourth_ack_received =3D 1;
- 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
- 	if (!mpext)
- 		return;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7f15f6aab93d..bd9540515334 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -147,12 +147,15 @@ struct subflow_context {
- 	u64	map_seq;
- 	u32	map_subflow_seq;
- 	u32	ssn_offset;
-+	u32	twhs_seq;
-+	u32	twhs_ack;
- 	u16	map_data_len;
- 	u16	request_mptcp : 1,  /* send MP_CAPABLE */
- 		request_cksum : 1,
- 		mp_capable : 1,     /* remote is MPTCP capable */
- 		mp_join : 1,        /* remote is JOINing */
- 		fourth_ack : 1,     /* send initial DSS */
-+		fourth_ack_received : 1,
- 		version : 4,
- 		conn_finished : 1,
- 		use_checksum : 1,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index fdc5aecab897..ccbf77f7a451 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -271,6 +271,7 @@ static int subflow_ulp_init(struct sock *sk)
- 	icsk->icsk_af_ops =3D &subflow_specific;
- 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
- 	ctx->use_checksum =3D 0;
-+	ctx->fourth_ack_received =3D 0;
- 	sk->sk_data_ready =3D subflow_data_ready;
- out:
- 	return err;
-@@ -311,6 +312,7 @@ static void subflow_ulp_clone(const struct request_sock=
- *req,
- 	if (subflow_req->mp_capable) {
- 		new_ctx->mp_capable =3D 1;
- 		new_ctx->fourth_ack =3D 1;
-+		new_ctx->fourth_ack_received =3D 1;
- 		new_ctx->remote_key =3D subflow_req->remote_key;
- 		new_ctx->local_key =3D subflow_req->local_key;
- 		new_ctx->token =3D subflow_req->token;
-@@ -320,6 +322,7 @@ static void subflow_ulp_clone(const struct request_sock=
- *req,
- 	} else if (subflow_req->mp_join) {
- 		new_ctx->mp_join =3D 1;
- 		new_ctx->fourth_ack =3D 1;
-+		new_ctx->fourth_ack_received =3D 1;
- 		new_ctx->backup =3D subflow_req->backup;
- 		new_ctx->local_id =3D subflow_req->local_id;
- 		new_ctx->token =3D subflow_req->token;
+> =
+
+> -Ossama
+> =
+
+
 -- =
 
-2.20.1
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============8917790164670471181==--
+--===============5282969088098055533==--
