@@ -1,90 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============3728722508965545911=="
+Content-Type: multipart/mixed; boundary="===============5847129898851503246=="
 MIME-Version: 1.0
-From: Othman, Ossama <ossama.othman at intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH] mptcp: new sysctl to control the activation
- per NS
-Date: Mon, 15 Jul 2019 13:18:29 -0700
-Message-ID: <CAPyD+=BAxk=qHKJ8nNHSwPeUshUxomizPpTGhNREHUjLFKn=QQ@mail.gmail.com>
-In-Reply-To: 178bac59-10f1-8e1a-63a3-97286aca37ae@tessares.net
+Subject: [MPTCP] about self-tests failures
+Date: Tue, 16 Jul 2019 15:21:48 +0200
+Message-ID: <590f30b41103f8b1096afafe7865966a215a6506.camel@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1494
+X-UID: 1495
 
---===============3728722508965545911==
+--===============5847129898851503246==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matthieu,
+Hi all,
 
-On Mon, Jul 15, 2019 at 11:44 AM Matthieu Baerts
-<matthieu.baerts(a)tessares.net> wrote:
-> On 15/07/2019 20:17, Othman, Ossama wrote:
-> > Hi Matthieu,
-> >
-> > On Thu, Jul 11, 2019 at 12:01 PM Matthieu Baerts
-> > <matthieu.baerts(a)tessares.net> wrote:
-> >> For security reasons, it is interesting to have a global switch for
-> >> MPTCP. To start, MPTCP will be disabled by default and only privileged
-> >> users will be able to modify this. The reason is that because MPTCP is
-> >> new, it will not be tested and reviewed by many and security issues can
-> >> then take time to be discovered and fixed.
-> >
-> > Do we need to be concerned about this new sysctl variable being used
-> > to maliciously enable or disable MPTCP?
->
-> I am sorry, I don't understand your question?
->
-> The goal would be to add a new sysctl variable as a global "safeguard".
-> The application will continue to explicitly ask for MPTCP using
-> IPPROTO_MPTCP.
+I spent some time debugging the self-test failures, and I think I got
+the root cause.
 
-I understand the safeguard purpose of the net.mptcp.enabled sysctl
-variable.  It would indeed be useful as a means for a system
-administrator to disable MPTCP without a reboot in the event a
-security issue in MPTCP is identified.
+The tests fails when, due to netem, the 3 way handshake final ack
+packet is dropped.
 
-My point was that it also introduces a way for compromised privileged
-processes to potentially (and possibly inadvertently) disable MPTCP at
-run-time without involving system administrators.  Admittedly, there
-doesn't appear to be much reason for such compromised processes to do
-that.   At the very least, I think it might be useful to verify that
-the process in question has the CAP_NET_ADMIN capability when
-modifying this variable.
+When that happen, the sender never emit the MP_CAPABLE option in later
+retrasmission (has the '!subflow->fourth_ack' condition in
+mptcp_established_options_mp() is always false).
 
-Perhaps I'm being overly paranoid.  :)
+As a result, on the server side, subflow_syn_recv_sock() always returns
+NULL - the session keys check fails - the connection is never
+established, and the server's select() never returns.
 
-> > According to the socket(2) man page, EINVAL might be the better errno:
-> >
-> >        EINVAL Unknown protocol, or protocol family not available.
->
-> I didn't read the socket manpage, I should have done that :)
->
-> I would prefer not to return EINVAL as it is already returned if the
-> protocol is unknown, e.g. if the kernel does not support MPTCP.
-> From an application point of view, I think it could be interesting to
-> know if the kernel supports MPTCP or if MPTCP is "not allowed". I would
-> like to say that this new error is reported not because "the protocol
-> family is not available" but somehow, "not allowed" (EPERM?) to use it
-> if you see what I mean :)
+I'm trying to address the issue forcing MP_CAPABLE option in
+retransmitted 3 way handshake ack packets, but I'm facing several
+issues, as the TCP stack tries hard to avoid retransmitting 'pure ack',
+preferring the following data packet, instead.
 
-Yes, I see what you mean now. :)
+We can't attach the MP_CAPABLE opt to the next data segment, or such
+segment will lack the require DSS - unless we place both DSS and
+MP_CAPABLE in the same pkt.
 
-> But maybe this is not needed? Or recommended to anyway return EINVAL.
+@Christoph: can you please describe how this issue (3way hs ack drop)
+is handled from the mptcp.org implementation?
 
-Based on your intent, EPERM seems like a better fit, but either errno
-works for me.
+Thanks,
 
-> > Should we prevent root processes that don't have the CAP_NET_ADMIN
-> > capability from setting net.mptcp.enabled, e.g. something like the
-> > following proc_dointvec() wrapper:
->
-> I don't know what are the best practices for that. But I am happy to
-> change if needed.
+Paolo
 
-I guess it really depends on how paranoid we want to be.
 
--Ossama
-
---===============3728722508965545911==--
+--===============5847129898851503246==--
