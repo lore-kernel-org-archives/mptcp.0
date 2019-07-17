@@ -1,56 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============7662003059244557216=="
+Content-Type: multipart/mixed; boundary="===============7153197425561920681=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: Make MPTCP socket block/wakeup ignore
- sk_receive_queue
-Date: Wed, 17 Jul 2019 15:07:04 +0200
-Message-ID: <0d1770b4273b833cb2c305439bf3fca3b5af17b2.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1907081419590.6674@sksandee-mobl2.amr.corp.intel.com
+Subject: [MPTCP] roadmap proposal/discussion
+Date: Wed, 17 Jul 2019 19:00:59 +0200
+Message-ID: <0220bc31c1297158107e87df9198635c2acdbb07.camel@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1505
+X-UID: 1506
 
---===============7662003059244557216==
+--===============7153197425561920681==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi all,
 
-On Mon, 2019-07-08 at 16:54 -0700, Mat Martineau wrote:
-> Can we get anywhere by using bh_lock_sock() to protect the flag? Might be =
+I spent some time reviewing the current code-base looking for missing
+pieces required for multiple subflow support, and I think there are a
+bunch of things that would be needed no matter what.
 
-> worthwhile to do a slow-but-correct fix and then figure out something mor=
-e =
+I'd like to share the list, with some random implementation details, to
+possibly avoid duplicate effort and/or large misunderstanding on my
+side. Here it goes:
 
-> efficient.
+* Update msk data_ack:
+  - hook in mptcp_attach_dss() - possibly rename the function to    =
 
-I'm sorry for lagging behind this. I think it should work. Also the
-sk_stream_write_space()/sk_stream_wait_memory() functions are possibly
-a good reference code (even if it acquires/relies on the full socket
-lock).
+      mptcp_data_ready()
+  - cope with 32bit ack =
 
-Another (crazy???) alternative I'm wondering about is changing a bit
-the overall locking schema using an intermediate work/timer/whatever
-between subflow->data_ready() and the msk recvmsg(). This new function
-can and will acquire the msk and subflow locks in the correct order
-(msk lock -> subflow lock) and really enqueue the skb into msk receive
-queue, so that finally we could use the plain sk_data_ready() function
-to wake-up the reader.
+  - possibly some additional msk-level [spin-]lock would be required to
+    protect from concurrent updates when multiple sub-flows are running
+    - while at this, eventually re-consider (again!) conn_list
+      locking ?!?
 
-I *think* the above implementation, even if more convoluted than the
-present one and possibly with some latency problem, could help dealing
-in the future with multiple subflows.
+* Store in msk pending data, to allow retransmissions
+  - in sendmsg(), queue pending (unacked) xmit msg on msk rtx_queue
+    - does it need to be a rb tree?
+      - sort by mptcp seq
+        - cope with 32bit seq
+  - allocate the node element from the msk page frag's allocator
+    - each node must contains: all the data frag, mptcp seq, =
 
-WDYT?
+      [mptcp seq_end?]
+  - NO need to check vs mptcp window before tcp_push()
+        unless we want to update the window size as per RFC
+          (max of subflow's window size)
+        because msk ws is greater equal than subflows ws
+  - free acked nodes (and data) still in sendmsg(),
+    just after acquiring msk lock, before doing any real
+    sendmsg related work
 
-Cheers,
+* Implement msk-level retransmission
+  - add msk-level [hr-]timer
+  - schedule it in sendmsg, after tcp_push()
+    - e.g. if msk ack !=3D msk seq =
+
+    - which timeout? subflow's rtt based ?
+  - when the timer expires, trigger retransmit if msk ack is not
+    changed (increased) since the timer's scheduling
+    - reuse/factor-out part of current sendmsg_frag() retransmit
+      a bunch of already-in-kernel page frags.
+
+I hope the all above can be quite independent from e.g. path management
+implementation.
+
+If there is agreement on that, my plan would be to work on the listed
+items, in order. As usual, any feedback more than welcome!
+
+Thanks,
 
 Paolo
 
 
-
-
-
---===============7662003059244557216==--
+--===============7153197425561920681==--
