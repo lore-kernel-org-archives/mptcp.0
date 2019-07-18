@@ -1,145 +1,129 @@
-Content-Type: multipart/mixed; boundary="===============3062245067186729919=="
+Content-Type: multipart/mixed; boundary="===============7298870205733158391=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH] mptcp: new sysctl to control the activation
- per NS
-Date: Thu, 18 Jul 2019 11:57:57 +0200
-Message-ID: <fbd2e767-db0c-7301-2921-4c1fa6f916a0@tessares.net>
-In-Reply-To: CAPyD+=CSPxUj_hg7rhTKAw6x36n3OWfe-MpXPj9y_+uQ0ZVdTg@mail.gmail.com
+Subject: Re: [MPTCP] [PATCH 1/9] Extend path manager interface
+Date: Thu, 18 Jul 2019 10:45:36 -0700
+Message-ID: <416760388618f4309b66df55e1adcbb6311467b6.camel@linux.intel.com>
+In-Reply-To: 52407635dbbe55fba3639ae76c3126decdaafe43.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1530
+X-UID: 1531
 
---===============3062245067186729919==
+--===============7298870205733158391==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ossama,
-
-On 16/07/2019 19:45, Othman, Ossama wrote:
-> Hi Matthieu,
+On Thu, 2019-07-18 at 09:29 +0200, Paolo Abeni wrote:
+> Hi,
 > =
 
-> On Tue, Jul 16, 2019 at 8:51 AM Matthieu Baerts
-> <matthieu.baerts(a)tessares.net> wrote:
->> On 15/07/2019 22:18, Othman, Ossama wrote:
->>> My point was that it also introduces a way for compromised privileged
->>> processes to potentially (and possibly inadvertently) disable MPTCP at
->>> run-time without involving system administrators.  Admittedly, there
->>> doesn't appear to be much reason for such compromised processes to do
->>> that.   At the very least, I think it might be useful to verify that
->>> the process in question has the CAP_NET_ADMIN capability when
->>> modifying this variable.
->>
->> With the current version, I think that this compromised privileged
->> process would need the root/full permissions to modify this new sysctl.
->> It would need more than one capability I think, no?
->> If it is "root", it can then also block MPTCP with NF/IPTables rules,
->> remove files, burn the device, become the president of the US, etc.
->> Maybe a process with CAP_NET_ADMIN can already block MPTCP sockets.
->>
->> Maybe I am wrong but I thought that using capabilities was a way to give
->> extra permissions to a process to do a bit more (e.g. to create a RAW
->> socket) without requiring the full/root rights. To change most sysctl
->> (except the ones that check for some specific capabilities), you need
->> the full rights, no?
+> I have some questions out of sheer ignorance on my side, please see
+> below ;)
 > =
 
-> I think it's more accurate to say that the effective user ID needs to
-> be root in those cases, regardless of which capabilities are granted
-> or removed.  Since capabilities are not checked in the kernel for
-> those sysctl variables, a root process without full capabilities could
-> conceivably alter them, at least as I understand it.  Please correct
-> me if I am wrong.
+> On Wed, 2019-07-17 at 15:12 -0700, Peter Krystad wrote:
+> > @@ -48,19 +82,48 @@ void pm_rm_addr(struct mptcp_sock *msk, u8 id)
+> >  	pr_debug("msk=3D%p", msk);
+> >  }
+> >  =
 
-Thank you for this note!
-From what I see in the code, the check for the permissions is done in 2
-steps from sysctl_perm()[1]:
-- first it gets the mode, that's done in net_ctl_permissions()[2]
-because we are in the net root table. So:
-  - either the caller has CAP_NET_ADMIN capability and it will get the
-same access as root: if the root user can read and write, the user will
-be able to do the same.
-  - or we take the mode specified in the table, e.g. 644 here, where
-only root (id=3D0) can write.
-- then it tests which mode is valid for the current user, see test_perm()[3]
+> > +/* path manager helpers */
+> > +
+> >  bool pm_addr_signal(struct mptcp_sock *msk, unsigned int *size,
+> >  		    unsigned int remaining, struct mptcp_out_options *opts)
+> >  {
+> > -	if (!msk || !msk->addr_signal)
+> > +	if (!msk->pm.fully_established || !msk->addr_signal)
+> >  		return false;
+> >  =
 
-[1]
-https://elixir.bootlin.com/linux/latest/source/fs/proc/proc_sysctl.c#L446
-[2] https://elixir.bootlin.com/linux/latest/source/net/sysctl_net.c#L42
-[3]
-https://elixir.bootlin.com/linux/latest/source/fs/proc/proc_sysctl.c#L435
+> > -	if (msk->pm.family =3D=3D AF_INET && remaining < TCPOLEN_MPTCP_ADD_AD=
+DR)
+> > +	if (!msk->pm.local_valid)
+> >  		return false;
+> >  =
 
-So from what I see, you can modify the value of this new sysctl if you
-have CAP_NET_ADMIN capability or you are the root user.
-
-So it seems OK, no? Or do you want that only root with net admin
-capability can do that? Not one or the other like most of the "net" sysctl?
-Or did I miss something? :)
-
-> Yes, capabilities can be used to grant specific privileges to a
-> non-root process.  However, capabilities can also be used to restrict
-> what a root process can do.  This is evident in "pscap" command
-> output:
+> > -	pr_debug("msk=3D%p", msk);
+> > +	if (msk->pm.local_family =3D=3D AF_INET &&
+> > +	    remaining < TCPOLEN_MPTCP_ADD_ADDR)
+> > +		return false;
+> > +
+> > +	pr_debug("msk=3D%p, addr_id=3D%d", msk, msk->pm.local_id);
+> >  	opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+> > -	opts->addr_id =3D msk->pm.addr_id;
+> > -	opts->addr.s_addr =3D msk->pm.addr.s_addr;
+> > +	opts->addr_id =3D msk->pm.local_id;
+> > +	opts->addr.s_addr =3D msk->pm.local_addr.s_addr;
+> > +	*size =3D TCPOLEN_MPTCP_ADD_ADDR;
+> > +	msk->addr_signal =3D 0;
 > =
 
-> $ pscap
-> ppid  pid   name        command           capabilities
-> 1     220   root        systemd-journal   chown, dac_override,
-> dac_read_search, fowner, setgid, setuid, sys_ptrace, sys_admin,
-> audit_control, mac_override, syslog, audit_read
-> 1     261   root        systemd-udevd     full
-> 1     513   root        haveged           sys_admin
-> 1     521   mptcp       mptcpd            net_admin
-> 1     532   root        accounts-daemon   full
-> ...
-> =
+> Strictly speaking not related to this patch, but more to the existing
+> code... perhaps 'opts' updating belong to
+> options.c/mptcp_established_options_addr() more than the path manager?
 
-> Only some of the root processes listed above have "full" capabilties.
-
-That's interesting!
-From what I see, systemd-journal might still be able to modify the "net"
-sysctls then, no?
-Maybe that's not seen as a security issue?
-
->> And if you have the full rights, you have the
->> CAP_NET_ADMIN capability, no?
-> =
-
-> Yes.  You can't do anything about processes with full capabilities but
-> you can restrict sysctl variable write access to root processes that
-> do not have the desired capabilities.
-
-OK I see.
-So now the question is to know if we can trust processes with
-CAP_NET_ADMIN capability, right? :)
-
->> Is it possible to have "root" processes without CAP_NET_ADMIN
->> capability? Or maybe somehow with SELinux?
-> =
-
-> Sure.  See above.  :)
-
-Thank you for the review!
-
-Cheers,
-Matt
+Agreed, I'll revise.
 
 > =
 
-> HTH,
-> -Ossama
+> > index 7f15f6aab93d..8c04774ea2ec 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -77,15 +77,33 @@ static inline u32 mptcp_option(u8 subopt, u8 len, u=
+8 nib, u8 field)
+> >  		     ((nib & 0xF) << 8) | field);
+> >  }
+> >  =
+
+> > -struct pm_data {
+> > -	u8 addr_id;
+> > -	sa_family_t family;
+> > +struct mptcp_pm_data {
+> > +	u8	local_valid;
+> > +	u8	local_id;
+> > +	sa_family_t local_family;
+> > +	union {
+> > +		struct in_addr local_addr;
+> > +#if IS_ENABLED(CONFIG_IPV6)
+> > +		struct in6_addr local_addr6;
+> > +#endif
+> > +	};
+> > +	u8	remote_valid;
+> > +	u8	remote_id;
+> > +	sa_family_t remote_family;
+> >  	union {
+> > -		struct in_addr addr;
+> > +		struct in_addr remote_addr;
+> >  #if IS_ENABLED(CONFIG_IPV6)
+> > -		struct in6_addr addr6;
+> > +		struct in6_addr remote_addr6;
+> >  #endif
+> >  	};
+> =
+
+> Are we going to need a list/container here? (to handle multiples addrs)
+> I see is likely too early to cope with the extra complexity, just to
+> have a clearer picture of the road ahead ;)
 > =
 
 
--- =
+Indeed. For now this is a list of length one. :) =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============3062245067186729919==--
+Although you night argue for some of our primary use cases this is probably
+enough...
+
+Peter.
+
+
+> Cheers,
+> =
+
+> Paolo
+> =
+
+
+
+--===============7298870205733158391==--
