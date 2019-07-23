@@ -1,67 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============2140406822449423799=="
+Content-Type: multipart/mixed; boundary="===============7329141931044864754=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: avoid validating MP_CAPABLE keys on 3way
- HS handling
-Date: Tue, 23 Jul 2019 19:22:50 +0200
-Message-ID: <a7f732c8-58e5-15a7-603c-0474eb4887bb@tessares.net>
-In-Reply-To: 7d182ff726cb95e049fd92e3d45eff23d89ed150.camel@linux.intel.com
+Subject: [MPTCP] [PATCH v2 0/2] mptcp: simplify crypto.c
+Date: Tue, 23 Jul 2019 19:47:18 +0200
+Message-ID: <cover.1563903620.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1545
+X-UID: 1546
 
---===============2140406822449423799==
+--===============7329141931044864754==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Peter, Mat, Christoph,
+his series wants to simplify, and hopefully improve, random generation
+of keys and nonces in crypto.c, While at it, I removed some unneeded
+#includes on top of the file. Any feedbacks are welcome!
 
-On 17/07/2019 19:22, Peter Krystad wrote:
-> =
+Note:
+ in case you think the code is ok, I will propose to squash it into
+ commit a564283a1e38 ("mptcp: Add key generation and token tree")
 
-> Looks good to me.
-> =
+Changes since v1:
+ - add a comment that suggests use of hash to improve performance,
+   thanks to Matthieu
+ - remove useless #include <tcp.h>, thanks Mat =
 
-> On Wed, 2019-07-17 at 10:57 +0200, Paolo Abeni wrote:
->> The server side already stored the key on syn, and 3way HS ack
->> reception is fragile: the ack can be lost, and the following
->> data pkts processed instead.
->>
->> This fixes the pending self-test issue in my testbed.
->>
->> Suggested-by: Peter Krystad <peter.krystad(a)linux.intel.com>
->> Suggested-by: Christoph Paasch <cpaasch(a)apple.com>
->> Fixes: af550dd282ca ("mptcp: Create SUBFLOW socket for incoming connecti=
-ons")
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-Thank you for the patch, the reviews and the suggestions!
+Changes since RFC:
+ - use get_random_bytes() instead of siphash, thanks to Florian / Mat =
 
-- 7f07e3f76561: "squashed" in "mptcp: Create SUBFLOW socket for incoming
-connections"
-- 17ba3a852c83: add Paolo Abeni' signed-off
-- 1d55bee52791: conflict in
-t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-- 3e0f02bac2b3..57b73d36a000: result
 
-Compilations is OK but tests are in progress. I has to relaunch them,
-see [1] for more details. I will notify you if there are some issues
-with the tests but I am sure they will be green ;-)
 
-Cheers,
-Matt
+Davide Caratti (2):
+  net: mptcp: remove useless #includes in crypto.c
+  net: mptcp: randomness improvements for crypto.c
 
-[1]
-https://github.com/multipath-tcp/mptcp_net-next/commit/c53c4283cae29e73e262=
-2d11c37cd05e90d90605
+ net/mptcp/crypto.c   | 76 --------------------------------------------
+ net/mptcp/protocol.c |  1 -
+ net/mptcp/protocol.h | 24 +++++++-------
+ net/mptcp/token.c    | 54 ++++---------------------------
+ 4 files changed, 19 insertions(+), 136 deletions(-)
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.20.1
 
---===============2140406822449423799==--
+
+--===============7329141931044864754==--
