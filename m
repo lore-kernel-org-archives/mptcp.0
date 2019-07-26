@@ -1,98 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============4225941628297712133=="
+Content-Type: multipart/mixed; boundary="===============4315224847416634816=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 02/10] Fix locking in mptcp_finish_join.
-Date: Thu, 25 Jul 2019 18:58:19 -0700
-Message-ID: <20190726015827.10637-3-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH v2 03/10] Fix parsing MP_JOIN third ACK.
+Date: Thu, 25 Jul 2019 18:58:20 -0700
+Message-ID: <20190726015827.10637-4-peter.krystad@linux.intel.com>
 In-Reply-To: 20190726015827.10637-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1558
+X-UID: 1559
 
---===============4225941628297712133==
+--===============4315224847416634816==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Lock was being taken on the subflow sock, not mptcp_sock.
+There is a reserved byte of zero's in there.
 
-squashto:  Add handling of incoming MP_JOIN requests
+squashto: Add handling of incoming MP_JOIN requests
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 9 +++++----
- net/mptcp/protocol.h | 2 +-
- net/mptcp/subflow.c  | 2 +-
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ net/mptcp/options.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5501c405c6e0..8a841d489b52 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -816,18 +816,19 @@ void mptcp_finish_connect(struct sock *sk, int mp_cap=
-able)
- 	inet_sk_state_store(sk, TCP_ESTABLISHED);
- }
- =
-
--void mptcp_finish_join(struct sock *conn, struct sock *sk)
-+void mptcp_finish_join(struct sock *sk)
- {
- 	struct subflow_context *subflow =3D subflow_ctx(sk);
--	struct mptcp_sock *msk =3D mptcp_sk(conn);
-+	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
- =
-
- 	pr_debug("msk=3D%p, subflow=3D%p", msk, subflow);
- =
-
- 	local_bh_disable();
--	bh_lock_sock_nested(sk);
-+	bh_lock_sock_nested(subflow->conn);
- 	list_add_tail(&subflow->node, &msk->conn_list);
--	bh_unlock_sock(sk);
-+	bh_unlock_sock(subflow->conn);
- 	local_bh_enable();
-+	inet_sk_state_store(sk, TCP_ESTABLISHED);
- }
- =
-
- bool mptcp_sk_is_subflow(const struct sock *sk)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6e6cf37799ef..90e11d28fad8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -211,7 +211,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 		       struct tcp_options_received *opt_rx);
- =
-
- void mptcp_finish_connect(struct sock *sk, int mp_capable);
--void mptcp_finish_join(struct sock *conn, struct sock *sk);
-+void mptcp_finish_join(struct sock *sk);
- =
-
- void token_init(void);
- void token_new_request(struct request_sock *req, const struct sk_buff *skb=
-);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index d91d817b8779..9d91014c0d1b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -165,7 +165,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 			if (token_new_join(child))
- 				goto close_child;
- 			else
--				mptcp_finish_join(ctx->conn, child);
-+				mptcp_finish_join(child);
- 		}
- 	}
- =
-
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 62a46b75ba62..cafc51dcbfb2 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -92,7 +92,7 @@ void mptcp_parse_option(const unsigned char *ptr, int ops=
+ize,
+ 				 mp_opt->backup, mp_opt->join_id,
+ 				 mp_opt->thmac, mp_opt->nonce);
+ 		} else if (opsize =3D=3D TCPOLEN_MPTCP_MPJ_ACK) {
+-			ptr++;
++			ptr +=3D 2;
+ 			memcpy(mp_opt->hmac, ptr, MPTCPOPT_HMAC_LEN);
+ 			pr_debug("MP_JOIN hmac");
+ 		} else {
 -- =
 
 2.17.2
 
 
---===============4225941628297712133==--
+--===============4315224847416634816==--
