@@ -1,159 +1,324 @@
-Content-Type: multipart/mixed; boundary="===============2867350402827289578=="
+Content-Type: multipart/mixed; boundary="===============4128090133850194935=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] roadmap proposal/discussion
-Date: Fri, 26 Jul 2019 15:46:59 -0700
-Message-ID: <alpine.OSX.2.21.1907261012060.28553@wjohns3x-mobl.amr.corp.intel.com>
-In-Reply-To: 0220bc31c1297158107e87df9198635c2acdbb07.camel@redhat.com
+Subject: Re: [MPTCP] [RFC PATCH] mptcp: new sysctl to control the activation
+ per NS
+Date: Wed, 31 Jul 2019 09:04:18 -0700
+Message-ID: <fdac05ee439a82e9664b1fbd5e9ee4d6c3c4751a.camel@linux.intel.com>
+In-Reply-To: dadf73ac-7e39-7581-365f-e70d2ff28d9f@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1567
+X-UID: 1568
 
---===============2867350402827289578==
+--===============4128090133850194935==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 17 Jul 2019, Paolo Abeni wrote:
 
-> Hi all,
->
-> I spent some time reviewing the current code-base looking for missing
-> pieces required for multiple subflow support, and I think there are a
-> bunch of things that would be needed no matter what.
->
-> I'd like to share the list, with some random implementation details, to
-> possibly avoid duplicate effort and/or large misunderstanding on my
-> side. Here it goes:
->
-> * Update msk data_ack:
->  - hook in mptcp_attach_dss() - possibly rename the function to
->      mptcp_data_ready()
+Hi again Matthieu!
 
-That's a good place for a hook. Peter's current MP_JOIN patch set has a =
+On Thu, 2019-07-18 at 08:37 +0200, Matthieu Baerts wrote:
+> Hi Peter,
+> =
 
-rename already.
+> Thank you for your reply!
+> =
 
->  - cope with 32bit ack
+> On 18/07/2019 00:42, Peter Krystad wrote:
+> > On Wed, 2019-07-17 at 23:08 +0200, Matthieu Baerts wrote:
+> > > Hi Peter,
+> > > =
 
-The current prototype cheats by ignoring the incoming acks. With the =
+> > > On 17/07/2019 01:12, Peter Krystad wrote:
+> > > > Thanks for this patch Matthieu, I have a few tardy comments.
+> > > =
 
-single-subflow assumption, the MPTCP-level socket isn't yet keeping a copy =
+> > > Thank you for your review!
+> > > =
 
-of the transmitted data and there's no action to take with incoming acks. =
+> > > > As a general comment another approach would be to use this enabled =
+flag to
+> > > > control whether MP_CAPABLE options are sent when establishing/accep=
+ting an
+> > > > MPTCP connection. You can see my "/* @@ if MTPCP enabled */" commen=
+ts where
+> > > > subflow->request_mptcp is being set in protocol.c. This would be th=
+e similiar
+> > > > behaviour to the mptcp.org version, you just get a (inefficient) TC=
+P socket
+> > > > when requesting MPTCP. You get the benefit of not surprising applic=
+ations
+> > > > coded to use MPTCP at the drawback of some security exposure, as th=
+e new MPTCP
+> > > > fallback layer would still be used. But this is a pretty thin layer.
+> > > =
 
-The peer may send 32-bit acks so we do need to handle both ack lengths =
+> > > That's an interesting point of view, I didn't have the same one when
+> > > creating this patch. For me and compared to the mptcp.org
+> > > implementation, an application that explicitly asks for IPPROTO_MPTCP
+> > > wants to have MPTCP. It should be ready to face the possibility that
+> > > MPTCP is not available or not supported by the kernel. Note that we
+> > > should certainly add a way for an app to know if a fallback to TCP has
+> > > been done but that's another topic.
+> > > =
 
-when we add ack handling.
+> > > My point is that if MPTCP is disabled, it seems interesting to me to
+> > > directly tell that to the app and then not transparency fallback to T=
+CP.
+> > > =
 
->  - possibly some additional msk-level [spin-]lock would be required to
->    protect from concurrent updates when multiple sub-flows are running
+> > > But if we think that it might be interesting to transparently fallback
+> > > to TCP, we can do that. We can also use several values (1, 2, ...)
+> > > linked to different behaviours.
+> > =
 
-Possibly. cmpxchg (with appropriate barriers) might work well for updating =
+> > The code we have so far transparently falls back to TCP if the other end
+> > does not support/rejects MPTCP connection, so we should definitely disc=
+uss
+> > which approach we want to support. We will be removing code if we go as
+> > you suggest.
+> =
 
-the ack since it keeps moving forward. If there was a concurrent update it =
+> I think it is still important to transparently fall back to TCP if the
+> other end or any other device on the network does not support or does
+> not allow MPTCP. Because we don't necessarily want to stop and
+> re-establish a new TCP connection once a fall back to TCP is done.
 
-would get detected and it would be clear whether the update should be =
+OK I think I may have mis-understood, we can stay as is.
 
-attempted again. The mptcp-level transmit buffer could be trimmed later =
+> =
 
-when the mptcp socket can be properly locked.
+> But here, nothing has been sent to the wire, we can tell the app before
+> that MPTCP will not be used. And we can even tell it that it is due to a
+> "configuration issue".
+> =
 
->    - while at this, eventually re-consider (again!) conn_list
->      locking ?!?
->
-> * Store in msk pending data, to allow retransmissions
->  - in sendmsg(), queue pending (unacked) xmit msg on msk rtx_queue
->    - does it need to be a rb tree?
->      - sort by mptcp seq
->        - cope with 32bit seq
+> If we do a transparent fall back to TCP, that could be nice to notify
+> the app. POLLPRI? sockopt?
 
-I don't think we need an rb tree. Most of the usage will be appending new =
+That could be a nice feature. Patches accepted. :)
 
-data and trimming the head of the list as acks arrive. If we need to =
+> =
 
-retransmit, we start from the first non-acked byte, which is the head of =
+> > > > See my comments to this specific patch below.
+> > > > =
 
-the list. Since we don't have SACK functionality, it doesn't seem like we =
+> > > > On Thu, 2019-07-11 at 21:00 +0200, Matthieu Baerts wrote:
+> > > > > New MPTCP sockets will return -ENOPROTOOPT if MPTCP support is di=
+sabled
+> > > > > for the current net namespace.
+> > > > > =
 
-will attempt to retransmit from the middle of the unacked data unless =
+> > > > > For security reasons, it is interesting to have a global switch f=
+or
+> > > > > MPTCP. To start, MPTCP will be disabled by default and only privi=
+leged
+> > > > > users will be able to modify this. The reason is that because MPT=
+CP is
+> > > > > new, it will not be tested and reviewed by many and security issu=
+es can
+> > > > > then take time to be discovered and fixed.
+> > > > > =
 
-there's a subflow failure we're trying to recover from - and that's a rare =
+> > > > > The value of this new sysctl can be different per namespace. We c=
+an then
+> > > > > restrict the usage of MPTCP to the selected NS. In case of serious
+> > > > > issues with MPTCP, administrators can now easily turn MPTCP off.
+> > > > > =
 
-enough event we can just go through the pending data linearly. Maybe the =
+> > > > > MPTCP' kselftest has been modified to validate that the correct e=
+rror is
+> > > > > reported when creating a socket while MPTCP support is disabled.
+> > > > > =
 
-multipath-tcp.org kernel has some lessons for us here :)
+> > > > > Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> > > > > ---
+> > > > > =
 
->  - allocate the node element from the msk page frag's allocator
->    - each node must contains: all the data frag, mptcp seq,
->      [mptcp seq_end?]
+> > > > > Notes:
+> > > > >     As just discussed at the meeting we just had, here is a RFC p=
+atch to
+> > > > >     add a new sysctl for MPTCP.
+> > > > >     =
 
-Do we need much beyond a list of page frags, the mptcp seq for the =
+> > > > >     Because it is not linked to the protocol itself, I simply cre=
+ated a new
+> > > > >     file, ctrl.c like in mptcp.org.
+> > > > >     =
 
-beginning byte, and the length?
+> > > > >     A few questions:
+> > > > >     - Is it OK to reserve space per ns via the "pernet_operations"
+> > > > >       structure? Because MPTCP would not be compiled as a module,=
+ we could
+> > > > >       directly store stuff in the net structure as other parts of=
+ the code
+> > > > >       do but maybe better to keep MPTCP code on the side as done =
+here.
+> > > > >     - In mptcp.org, all sysctls are prepended with 'mptcp_', e.g.
+> > > > >       'net.mptcp.mptcp_enabled'. Do we need this? Is it better to=
+ keep the
+> > > > >       same names if possible or better to differentiate? In this =
+version,
+> > > > >       'mptcp_' is not prepended.
+> > > > =
 
-If we get fancy about handling retransmissions we could keep track of =
+> > > > Differentiate, as you have done.
+> > > =
 
-which subflow the data was already sent on, but it looks like we don't =
+> > > Good thank you!
+> > > =
 
-need that to get basic functionality up and running.
+> > > > >     - This sysctl will only block new sockets to be created. Is i=
+t enough?
+> > > > >     - ENOPROTOOPT is returned, maybe something else to return? EP=
+ERM is
+> > > > >       maybe too generic? ENOTSUPP is not translated by perror().
+> > > > >     - Should we start the documentation now for the sysctl?
+> > > > >     - A simple test has been added, because it is not linked to t=
+he rest, I
+> > > > >       put separeted as first test.
+> > > > >     - Of course do not hesitate to comment. Even on the idea of h=
+aving a
+> > > > >       sysctl for this purpose.
+> > > > > =
 
->  - NO need to check vs mptcp window before tcp_push()
->        unless we want to update the window size as per RFC
->          (max of subflow's window size)
->        because msk ws is greater equal than subflows ws
->  - free acked nodes (and data) still in sendmsg(),
->    just after acquiring msk lock, before doing any real
->    sendmsg related work
+> > > > >  net/mptcp/Makefile                            |   2 +-
+> > > > >  net/mptcp/ctrl.c                              | 109 ++++++++++++=
+++++++
+> > > > >  net/mptcp/protocol.c                          |  12 +-
+> > > > >  net/mptcp/protocol.h                          |   4 +
+> > > > >  .../selftests/net/mptcp/mptcp_connect.sh      |  24 ++++
+> > > > >  5 files changed, 148 insertions(+), 3 deletions(-)
+> > > > >  create mode 100644 net/mptcp/ctrl.c
+> > > > > =
 
-We can also check on the recvmsg side and in a workqueue (maybe shared =
+> > > > > diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+> > > > > index 7fe7aa64eda0..289fdf4339c1 100644
+> > > > > --- a/net/mptcp/Makefile
+> > > > > +++ b/net/mptcp/Makefile
+> > > > > @@ -1,4 +1,4 @@
+> > > > >  # SPDX-License-Identifier: GPL-2.0
+> > > > >  obj-$(CONFIG_MPTCP) +=3D mptcp.o
+> > > > >  =
 
-with the retransmit check?) so memory gets freed up even when the socket =
+> > > > > -mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o pm.o
+> > > > > +mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o pm.=
+o ctrl.o
+> > > > > diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> > > > =
 
-isn't sending all the time.
+> > > > The prefix 'ctl' is used in this file a bunch, so maybe ctl.c is a =
+better
+> > > > name, or even 'sysctl.c'. That it is named this is mptcp.org versio=
+n isn't
+> > > > much of a reason IMHO. :)
+> > > =
 
->
-> * Implement msk-level retransmission
->  - add msk-level [hr-]timer
->  - schedule it in sendmsg, after tcp_push()
->    - e.g. if msk ack !=3D msk seq
->    - which timeout? subflow's rtt based ?
+> > > My goal was to use this new file for everything not directly linked to
+> > > the protocol but to change different behaviours: sysctl, sockopts,
+> > > selection of the PMs or the packet schedulers, etc.
+> > > =
 
-The RFC mentions "a few subflow-level retransmission timeouts" as a =
+> > > What do you think? But we can also create different files if you think
+> > > that would be better.
 
-conservative policy (section 3.3.6).
+PMs or packet schedulers (if there is a choice at all) would be selected by
+sysctl value, and MPTCP sockopt handling would go in protocol.c, so I would
+still suggest the different name.
 
->  - when the timer expires, trigger retransmit if msk ack is not
->    changed (increased) since the timer's scheduling
->    - reuse/factor-out part of current sendmsg_frag() retransmit
->      a bunch of already-in-kernel page frags.
+> > > =
 
-That's what I've been thinking. Whether a first-time transmission or a =
+> > > > > new file mode 100644
+> > > > > index 000000000000..4c9a6a2cfeb3
+> > > > > --- /dev/null
+> > > > > +++ b/net/mptcp/ctrl.c
+> > > =
 
-retransmission, we'll take the data from a list of page frags and =
+> > > (...)
+> > > =
 
-do_tcp_sendpages().
+> > > > > +
+> > > > > +static struct pernet_operations mptcp_pernet_ops =3D {
+> > > > > +	.init =3D mptcp_net_init,
+> > > > > +	.exit =3D mptcp_net_exit,
+> > > > > +	.id =3D &mptcp_pernet_id,
+> > > > > +	.size =3D sizeof(struct mptcp_pernet),
+> > > > > +};
+> > > > > +
+> > > > > +void __init mptcp_init(void)
+> > > > =
 
->
-> I hope the all above can be quite independent from e.g. path management
-> implementation.
+> > > > I would prefer that the mptcp_init() in protocol.c remain the top-l=
+evel init
+> > > > routine and that it call a sub-level routine in this file the same =
+as other
+> > > > files in "module". When TCP is calling mptcp_init() it is registeri=
+ng
+> > > > protocols, so the protocol routine should be at the top I think.
+> > > =
 
-Yes, it should be.
+> > > Sure I can do that.
+> > > =
 
->
-> If there is agreement on that, my plan would be to work on the listed
-> items, in order. As usual, any feedback more than welcome!
+> > > I created this new file to be the central point to control the differ=
+ent
+> > > parts in MPTCP (sysctl, sockopt, PM selection, etc.) including the
+> > > protocol. But if we think it is better to init the protocol part, I am
+> > > fine with that.
+> > =
 
-Ok. I've been planning to work on these tasks too, but am not ready to =
+> > I'm not too strong on this either way, what do others think?
 
-start on them today. You should dive in. After I get a couple of other =
+After considering this more I'm fine with the init organization you have in
+this patchset.
 
-tasks out of the way I can coordinate with you.
+Peter.
+
+> > =
+
+> > > > > +{
+> > > > > +	mptcp_proto_init();
+> > > > > +
+> > > > > +	if (register_pernet_subsys(&mptcp_pernet_ops) < 0)
+> > > > > +		panic("Failed to register MPTCP pernet subsystem.\n");
+> > > > > +}
+> > > > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > > > > index 774ed25d3b6d..18399cb63f35 100644
+> > > > > --- a/net/mptcp/protocol.c
+> > > > > +++ b/net/mptcp/protocol.c
+> > > > > @@ -559,6 +559,14 @@ static int mptcp_init_sock(struct sock *sk)
+> > > > >  	return 0;
+> > > > >  }
+> > > > >  =
+
+> > > > > +static int mptcp_init_sock_cb(struct sock *sk)
+> > > > > +{
+> > > > > +	if (!mptcp_is_enabled(sock_net(sk)))
+> > > > > +		return -ENOPROTOOPT;
+> > > > =
+
+> > > > Can we just add this check to mptcp_init_sock() and not add the ext=
+ra routine?
+> > > =
+
+> > > I created a new routine because mptcp_init_sock() is also called from
+> > > mptcp_accept(). The (initial) goal of this sysctl is not to allow
+> > > creation of new socket and not alter existing ones. We can also change
+> > > the definition if needed.
+> > =
+
+> > OK. I would still prefer the name of the callback in 'struct proto' to =
+be
+> > mptcp_init_sock, and call a "__mptcp_init_sock" from mptcp_accept.
+> =
+
+> Sure I can do that!
+> =
+
+> Cheers,
+> Matt
 
 
---
-Mat Martineau
-Intel
-
---===============2867350402827289578==--
+--===============4128090133850194935==--
