@@ -1,42 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============6577769903378983595=="
+Content-Type: multipart/mixed; boundary="===============8590982751314567362=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] Remove unused variable, causes compile warning
-Date: Wed, 31 Jul 2019 09:42:49 -0700
-Message-ID: <20190731164249.14383-2-peter.krystad@linux.intel.com>
-In-Reply-To: 20190731164249.14383-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Weekly meeting - 1 August 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Thu, 01 Aug 2019 10:45:39 +0200
+Message-ID: <52707c92-cf78-83a2-8920-d67d5595c2e3@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1570
+X-UID: 1571
 
---===============6577769903378983595==
+--===============8590982751314567362==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Add handling of incoming MP_JOIN requests
+Hello everybody!
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/token.c | 1 -
- 1 file changed, 1 deletion(-)
+Our public MPTCP upstreaming weekly web conference is scheduled for
+today.
 
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 2324a477d513..d5ae77446590 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -77,7 +77,6 @@ static void new_req_token(struct request_sock *req,
- static void new_req_join(struct request_sock *req, struct sock *sk,
- 			 const struct sk_buff *skb)
- {
--	const struct inet_request_sock *ireq =3D inet_rsk(req);
- 	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	u8 hmac[MPTCPOPT_HMAC_LEN];
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20190801
+
+Feel free to add/modify topics!
+
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
+
+Speak to you later!
+Matthieu
 -- =
 
-2.17.2
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============6577769903378983595==--
+--===============8590982751314567362==--
