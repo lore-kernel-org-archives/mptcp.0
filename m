@@ -1,40 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============8590982751314567362=="
+Content-Type: multipart/mixed; boundary="===============2614585431664599107=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 1 August 2019 16:00 UTC (9am PDT, 6pm CEST)
-Date: Thu, 01 Aug 2019 10:45:39 +0200
-Message-ID: <52707c92-cf78-83a2-8920-d67d5595c2e3@tessares.net>
+Subject: Re: [MPTCP] [PATCH 2/2] Remove unused variable, causes compile warning
+Date: Thu, 01 Aug 2019 09:04:11 -0700
+Message-ID: <alpine.OSX.2.21.1908010903570.37892@aindraka-mobl.amr.corp.intel.com>
+In-Reply-To: 20190731164249.14383-2-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1571
+X-UID: 1572
 
---===============8590982751314567362==
+--===============2614585431664599107==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Wed, 31 Jul 2019, Peter Krystad wrote:
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-today.
+> squashto: Add handling of incoming MP_JOIN requests
+>
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+> net/mptcp/token.c | 1 -
+> 1 file changed, 1 deletion(-)
+>
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index 2324a477d513..d5ae77446590 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -77,7 +77,6 @@ static void new_req_token(struct request_sock *req,
+> static void new_req_join(struct request_sock *req, struct sock *sk,
+> 			 const struct sk_buff *skb)
+> {
+> -	const struct inet_request_sock *ireq =3D inet_rsk(req);
+> 	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
+> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> 	u8 hmac[MPTCPOPT_HMAC_LEN];
+> -- =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190801
+> 2.17.2
+>
 
-Feel free to add/modify topics!
+Both patches look good to me, thanks!
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+--
+Mat Martineau
+Intel
 
-Speak to you later!
-Matthieu
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============8590982751314567362==--
+--===============2614585431664599107==--
