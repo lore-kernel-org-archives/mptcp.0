@@ -1,58 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============6312905038234831421=="
+Content-Type: multipart/mixed; boundary="===============6662941050632242769=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH v2 09/10] Use pm_get_local_id() to get the real
  local address id.
-Date: Fri, 02 Aug 2019 16:42:51 +0200
-Message-ID: <85a5ecdc57fdf6ec3dc2f1bf3ff3eaf405408327.camel@redhat.com>
-In-Reply-To: 20190726015827.10637-10-peter.krystad@linux.intel.com
+Date: Fri, 02 Aug 2019 16:50:19 +0200
+Message-ID: <06203b401e199bb57d9623828414a3be5bda3206.camel@redhat.com>
+In-Reply-To: 85a5ecdc57fdf6ec3dc2f1bf3ff3eaf405408327.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1580
+X-UID: 1581
 
---===============6312905038234831421==
+--===============6662941050632242769==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-07-25 at 18:58 -0700, Peter Krystad wrote:
-> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-> index b31d98ba5c0d..8e4da2d05f45 100644
-> --- a/net/mptcp/token.c
-> +++ b/net/mptcp/token.c
-> @@ -223,13 +223,15 @@ int token_join_request(struct request_sock *req, co=
-nst struct sk_buff *skb)
->  	spin_lock_bh(&token_tree_lock);
->  	conn =3D lookup_token(subflow_req->token);
->  	spin_unlock_bh(&token_tree_lock);
-> -	if (conn) {
-> -		// @@ get real local address id for this skb->saddr
-> -		subflow_req->local_id =3D 0;
-> -		new_req_join(req, conn, skb);
-> -		return 0;
-> -	}
-> -	return -1;
-> +	if (!conn)
-> +		return -1;
-> +
-> +	if (pm_get_local_id(req, conn, skb))
-> +		return -1;
-> +
-> +	new_req_join(req, conn, skb);
-> +
-> +	return 0;
->  }
+On Fri, 2019-08-02 at 16:42 +0200, Paolo Abeni wrote:
+> Perhaps adding a new helper, alike 'token_lookup_get()' would help.
 
-I'm sorry for the late doubt, but I think we should acquire a refcnt to
-conn while holding the token_tree_lock to protect vs cuncurrent
-shutdown of the 'conn' socket after the lookup.
+I should have looked first at the last patch in the series.
 
-Perhaps adding a new helper, alike 'token_lookup_get()' would help.
+The function 'token_lookup()' implemented in 10/10 would do.
 
-token_join_valid() has possibly the same issue.
+My personal taste - notoriously not good, still - is that functions
+name is a little confusing. How about:
 
-/P
+s/lookup_token/__token_lookup/
+
+because requires leave to the caller acquiring the needed locking
+
+s/token_lookup/token_lookup_get/
+
+because also get a reference to the returned sock
+
+?
 
 
---===============6312905038234831421==--
+
+--===============6662941050632242769==--
