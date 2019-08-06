@@ -1,150 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============0345423743684724806=="
+Content-Type: multipart/mixed; boundary="===============0553179239781753547=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 07/10] Move setting request_ fields of subflow
- to MPTCP layer helper
-Date: Mon, 05 Aug 2019 16:15:29 -0700
-Message-ID: <0aa9d740e98891fac644c8b2192c4b4698a16697.camel@linux.intel.com>
-In-Reply-To: alpine.OSX.2.21.1908011756370.6574@tmdiggs-mobl2.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH v2 08/10] mptcp: Add handling of outgoing MP_JOIN
+ requests
+Date: Mon, 05 Aug 2019 18:18:35 -0700
+Message-ID: <e7fd282ac3f06909092144b6298249160ee3fe7a.camel@linux.intel.com>
+In-Reply-To: 8dadaa287dce26df89ffe445cbfd4ca2378eead6.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1584
+X-UID: 1585
 
---===============0345423743684724806==
+--===============0553179239781753547==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-08-01 at 17:57 -0700, Mat Martineau wrote:
-> On Thu, 25 Jul 2019, Peter Krystad wrote:
+On Fri, 2019-08-02 at 16:32 +0200, Paolo Abeni wrote:
+> Hi,
 > =
 
-> > For secondary subflows different request_ fields will
-> > be added that will be set differently based on subflow type
-> > (initial vs secondary).
-> > =
+> I have a couple of minor comments below.
+> =
 
-> > squashto: Associate MPTCP context with TCP socket
-> > =
-
-> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> > ---
-> > net/mptcp/protocol.c | 6 ++++++
-> > net/mptcp/protocol.h | 2 +-
-> > net/mptcp/subflow.c  | 7 ++-----
-> > 3 files changed, 9 insertions(+), 6 deletions(-)
-> > =
-
+> On Thu, 2019-07-25 at 18:58 -0700, Peter Krystad wrote:
 > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 8a841d489b52..4d4a9c3d25c4 100644
+> > index 4d4a9c3d25c4..67a93ab709f1 100644
 > > --- a/net/mptcp/protocol.c
 > > +++ b/net/mptcp/protocol.c
-> > @@ -860,6 +860,7 @@ static struct proto mptcp_prot =3D {
-> > static struct socket *mptcp_socket_create_get(struct mptcp_sock *msk)
-> > {
-> > 	struct sock *sk =3D (struct sock *)msk;
+> > @@ -797,6 +797,8 @@ void mptcp_finish_connect(struct sock *sk, int mp_c=
+apable)
+> >  		msk->local_key =3D subflow->local_key;
+> >  		msk->token =3D subflow->token;
+> >  		pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
+> > +		msk->dport =3D ntohs(inet_sk(msk->subflow->sk)->inet_dport);
+> > +		pr_debug("dport=3D%d", msk->dport);
+> =
+
+> Very minor nit, I think that the previous debug message can be merged
+> into this one.
+
+I'll just remove it.
+
+> =
+
+> > @@ -195,6 +212,50 @@ static void subflow_data_ready(struct sock *sk)
+> >  	}
+> >  }
+> >  =
+
+> > +int subflow_connect(struct sock *sk, struct sockaddr_in *local,
+> > +		    struct sockaddr_in *remote, u8 remote_id)
+> > +{
+> > +	struct mptcp_sock *msk =3D mptcp_sk(sk);
 > > +	struct subflow_context *subflow;
-> > 	struct socket *ssock;
-> > 	int err;
-> > =
-
-> > @@ -875,6 +876,11 @@ static struct socket *mptcp_socket_create_get(stru=
-ct mptcp_sock *msk)
-> > 	}
-> > =
-
-> > 	msk->subflow =3D ssock;
-> > +	subflow =3D subflow_ctx(msk->subflow->sk);
-> > +	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
-> > +	subflow->request_cksum =3D 1; /* @@ if checksum enabled */
+> > +	struct socket *sf;
+> > +	u32 token;
+> > +	int err;
+> > +
+> > +	err =3D subflow_create_socket(sk, &sf);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	err =3D kernel_bind(sf, (struct sockaddr *)local,
+> > +			  sizeof(struct sockaddr_in));
+> > +	if (err) {
+> > +		pr_debug("bind err=3D%d", err);
+> > +		goto failed;
+> > +	}
+> > +
+> > +	subflow =3D subflow_ctx(sf->sk);
+> > +	subflow->remote_key =3D msk->remote_key;
+> > +	subflow->local_key =3D msk->local_key;
+> > +	crypto_key_sha1(msk->remote_key, &token, NULL);
+> > +	pr_debug("msk=3D%p token=3D%u", msk, token);
+> > +	subflow->token =3D token;
+> > +	subflow->remote_id =3D remote_id;
+> > +	subflow->request_join =3D 1;
+> > +	subflow->request_bkup =3D 1;
+> > +
+> > +	err =3D kernel_connect(sf, (struct sockaddr *)remote,
+> > +			     sizeof(struct sockaddr_in), O_NONBLOCK);
+> > +	if (err && err !=3D -EINPROGRESS) {
 > =
 
-> request_cksum should be 0 since we don't support it.
+> AFAICS, the 'sf' should not have the nonblocking flag set, to we should
+> not ever hit the EINPROGRESS condition. I think we should avoid this
+> check. =
+
+
+We're passing the NONBLOCK flag right here in the call to kernel_connect().
+Maybe there is something I don't understand, what is the reason not to use
+non-blocking?
+ =
+
+> =
+
+> If we are going to support non blocking connect, should we return the
+> INPROGRESS code instead ? =
+
+
+That makes sense, will do, pending discussion of support non-blocking.
+
+> > +		pr_debug("connect err=3D%d", err);
+> > +		goto failed;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +failed:
+> > +	/* @@ cleanup the socket */
+> =
+
+> Yep ;)
 > =
 
 
-Nor do we bother looking at this field when we send the option, so I'll cle=
-an
-this up.
+Ok, Ok.
 
 Peter.
 
+> /P
 > =
 
-> Mat
-> =
-
-> =
-
-> > +	subflow->request_version =3D 0; /* only v0 supported */
-> > +
-> > 	sock_hold(ssock->sk);
-> > =
-
-> > release:
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 591cebcf1bfa..2891715a82f0 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -169,10 +169,10 @@ struct subflow_context {
-> > 	u16	map_data_len;
-> > 	u16	request_mptcp : 1,  /* send MP_CAPABLE */
-> > 		request_cksum : 1,
-> > +		request_version : 4,
-> > 		mp_capable : 1,     /* remote is MPTCP capable */
-> > 		mp_join : 1,        /* remote is JOINing */
-> > 		fourth_ack : 1,     /* send initial DSS */
-> > -		version : 4,
-> > 		conn_finished : 1,
-> > 		use_checksum : 1,
-> > 		map_valid : 1,
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index 9d91014c0d1b..678fca99c23a 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -62,8 +62,8 @@ static void subflow_v4_init_req(struct request_sock *=
-req,
-> > =
-
-> > 	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
-> > 		subflow_req->mp_capable =3D 1;
-> > -		if (rx_opt.mptcp.version >=3D listener->version)
-> > -			subflow_req->version =3D listener->version;
-> > +		if (rx_opt.mptcp.version >=3D listener->request_version)
-> > +			subflow_req->version =3D listener->request_version;
-> > 		else
-> > 			subflow_req->version =3D rx_opt.mptcp.version;
-> > 		if ((rx_opt.mptcp.flags & MPTCP_CAP_CHECKSUM_REQD) ||
-> > @@ -218,9 +218,6 @@ int subflow_create_socket(struct sock *sk, struct s=
-ocket **new_sock)
-> > =
-
-> > 	*new_sock =3D sf;
-> > 	subflow->conn =3D sk;
-> > -	subflow->request_mptcp =3D 1; // @@ if MPTCP enabled
-> > -	subflow->request_cksum =3D 1; // @@ if checksum enabled
-> > -	subflow->version =3D 0;
-> > =
-
-> > 	return 0;
-> > }
-> > -- =
-
-> > 2.17.2
-> > =
-
-> > _______________________________________________
-> > mptcp mailing list
-> > mptcp(a)lists.01.org
-> > https://lists.01.org/mailman/listinfo/mptcp
-> > =
-
-> =
-
-> --
-> Mat Martineau
-> Intel
 
 
---===============0345423743684724806==--
+--===============0553179239781753547==--
