@@ -1,89 +1,164 @@
-Content-Type: multipart/mixed; boundary="===============4124609529915643933=="
+Content-Type: multipart/mixed; boundary="===============0377850755661013369=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 00/10] Implement outgoing MP_JOIN
-Date: Wed, 07 Aug 2019 15:44:24 -0700
-Message-ID: <20190807224434.2829-1-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH v3 04/10] Re-factor and fixes for crypto_hmac_sha1()
+Date: Wed, 07 Aug 2019 15:44:28 -0700
+Message-ID: <20190807224434.2829-5-peter.krystad@linux.intel.com>
+In-Reply-To: 20190807224434.2829-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1594
+X-UID: 1595
 
---===============4124609529915643933==
+--===============0377850755661013369==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is several accumulated fixes that are required for MP_JOIN
-(secondary subflows) plus the outgoing code.
+Re-factor to use parameters specific to MPTCP use case similar to
+crypto_key_sha1() and get rid of var args. Also fix endianness issues.
 
-Both outgoing and incoming MP_JOIN now inter-operate
-with the multipath.org implementation although there is
-still a deadlock when incoming is fully established.
-Since the incoming direction did not work at all before
-this is an improvement. I have not yet tested running our
-implmentation against itself.
+squash to: Add key generation and token tree
+and: Add handling of incoming MP_JOIN requests
 
-The final patch in the set is an "interim path manager", this
-is throw-away code that I include for testing purposes. For an
-incoming connection it is necessary for the server to advertise
-a secondary address and for my testing I have been hard-coding the IP
-address of my secondary interface when I build the kernel.
-Obviously not the final solution but we need to discuss what
-approach to use for the self tests. I also think we may not want
-to publish this patch on our net-next branch.
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/crypto.c   | 23 +++++++++--------------
+ net/mptcp/protocol.h |  4 ++--
+ net/mptcp/token.c    | 19 ++++++++-----------
+ 3 files changed, 19 insertions(+), 27 deletions(-)
 
-v2:
-  - move mptcp_options_received formatting to options.c
-  - resolve conflicts with Davide's crypto commit
-  - make helper for setting request fields
-  - fix locking in token_lookup()
-  - move token_lookup() to "Implement path manager interface commands:
-    (where it belongs)
-  - split interim path manager out of final commit, will submit seperately
-  - remove use of local_id in pm_create_subflow
-  - restrict announcing addresses to server side only
-  - add one more commit with get_local_id fix for incoming MP_JOIN
+diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
+index 5b764798c536..8b67b11e626c 100644
+--- a/net/mptcp/crypto.c
++++ b/net/mptcp/crypto.c
+@@ -51,23 +51,23 @@ void crypto_key_sha1(u64 key, u32 *token, u64 *idsn)
+ 		*idsn =3D ((u64)mptcp_hashed_key[3] << 32) + mptcp_hashed_key[4];
+ }
+ =
 
-v3:
-  - Revise nested if logic in options.c
-  - set subflow->request_cksum correctly (do not support)
-  - lock mptcp_sock in subflow_connect() and take ref
-  - return EINPROGRESS from subflow_connect() in normal case
-  - cleanup socket when bind()/connect() fails in subflow_connect()
-  - take reference to mptcp_sock in token_join_request() and
-    token_join_valid()
-  - rename token_lookup() to token_lookup_get()
-  - track remote token seperately in subflow (previously
-    local token field was being overwritten, preventing cleanup)
-  - take long-lived reference to mptcp_sock in token_new_subflow
+-void crypto_hmac_sha1(u64 key1, u64 key2, u32 *hash_out,
+-		      int arg_num, ...)
++void crypto_hmac_sha1(u64 key1, u64 key2, u32 nonce1, u32 nonce2, u32 *has=
+h_out)
+ {
+ 	u32 workspace[SHA_WORKSPACE_WORDS];
+ 	u8 input[128]; /* 2 512-bit blocks */
+ 	int i;
+ 	int index;
+-	int length;
+-	u8 *msg;
+-	va_list list;
+ 	u8 key_1[8];
+ 	u8 key_2[8];
++	u8 nonce_1[4];
++	u8 nonce_2[4];
+ =
 
-Peter Krystad (10):
-  Extend path manager interface
-  Fix locking in mptcp_finish_join.
-  Fix parsing MP_JOIN third ACK.
-  Re-factor and fixes for crypto_hmac_sha1()
-  Rename mptcp_attach_dss()
-  Fix return value if no DSS option is created.
-  Move setting request_ fields of subflow to MPTCP layer helper
-  mptcp: Add handling of outgoing MP_JOIN requests
-  Use pm_get_local_id() to get the real local address id.
-  mptcp: Implement path manager interface commands
+ 	memset(workspace, 0, sizeof(workspace));
+ =
 
- include/net/mptcp.h  |  12 ++--
- net/ipv4/tcp_input.c |   4 +-
- net/mptcp/crypto.c   |  23 +++----
- net/mptcp/options.c  |  98 +++++++++++++++++++++++++++---
- net/mptcp/pm.c       | 140 +++++++++++++++++++++++++++++++++++++++----
- net/mptcp/protocol.c |  21 +++++--
- net/mptcp/protocol.h |  58 ++++++++++++++----
- net/mptcp/subflow.c  |  77 +++++++++++++++++++++---
- net/mptcp/token.c    | 111 +++++++++++++++++++++++++++-------
- 9 files changed, 455 insertions(+), 89 deletions(-)
+ 	put_unaligned_be64(key1, key_1);
+ 	put_unaligned_be64(key2, key_2);
++	put_unaligned_be32(nonce1, nonce_1);
++	put_unaligned_be32(nonce2, nonce_2);
+ =
 
+ 	/* Generate key xored with ipad */
+ 	memset(input, 0x36, 64);
+@@ -76,16 +76,11 @@ void crypto_hmac_sha1(u64 key1, u64 key2, u32 *hash_out,
+ 	for (i =3D 0; i < 8; i++)
+ 		input[i + 8] ^=3D key_2[i];
+ =
+
+-	va_start(list, arg_num);
+ 	index =3D 64;
+-	for (i =3D 0; i < arg_num; i++) {
+-		length =3D va_arg(list, int);
+-		msg =3D va_arg(list, u8 *);
+-		WARN_ON(index + length > 125); /* Message is too long */
+-		memcpy(&input[index], msg, length);
+-		index +=3D length;
+-	}
+-	va_end(list);
++	memcpy(&input[index], nonce_1, 4);
++	index =3D 68;
++	memcpy(&input[index], nonce_2, 4);
++	index =3D 72;
+ =
+
+ 	input[index] =3D 0x80; /* Padding: First bit after message =3D 1 */
+ 	memset(&input[index + 1], 0, (126 - index));
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index dedd3524e4a2..1d1e89109e98 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -226,8 +226,6 @@ void token_release(u32 token);
+ void token_destroy(u32 token);
+ =
+
+ void crypto_key_sha1(u64 key, u32 *token, u64 *idsn);
+-void crypto_hmac_sha1(u64 key1, u64 key2, u32 *hash_out, int arg_num, ...);
+-
+ static inline void crypto_key_gen_sha1(u64 *key, u32 *token, u64 *idsn)
+ {
+ 	/* we might consider a faster version that computes the key as a
+@@ -239,6 +237,8 @@ static inline void crypto_key_gen_sha1(u64 *key, u32 *t=
+oken, u64 *idsn)
+ 	get_random_bytes(key, sizeof(u64));
+ 	crypto_key_sha1(*key, token, idsn);
+ }
++void crypto_hmac_sha1(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
++		      u32 *hash_out);
+ =
+
+ void pm_init(void);
+ void pm_new_connection(struct mptcp_sock *msk, int server_side);
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index e5e0c9689e3a..ef03ef19af98 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -84,12 +84,11 @@ static void new_req_join(struct request_sock *req, stru=
+ct sock *sk,
+ 	u8 hmac[MPTCPOPT_HMAC_LEN];
+ =
+
+ 	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
+-	crypto_hmac_sha1(msk->local_key,
+-			 msk->remote_key,
+-			 (u32 *)hmac, 2,
+-			 4, (u8 *)&subflow_req->local_nonce,
+-			 4, (u8 *)&subflow_req->remote_nonce);
+-	subflow_req->thmac =3D *(u64 *)hmac;
++	crypto_hmac_sha1(msk->local_key, msk->remote_key,
++			 subflow_req->local_nonce, subflow_req->remote_nonce,
++			 (u32 *)hmac);
++
++	subflow_req->thmac =3D get_unaligned_be64(hmac);
+ 	pr_debug("local_nonce=3D%u, thmac=3D%llu", subflow_req->local_nonce,
+ 		 subflow_req->thmac);
+ }
+@@ -101,11 +100,9 @@ static int new_join_valid(struct request_sock *req, st=
+ruct sock *sk,
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	u8 hmac[MPTCPOPT_HMAC_LEN];
+ =
+
+-	crypto_hmac_sha1(msk->remote_key,
+-			 msk->local_key,
+-			 (u32 *)hmac, 2,
+-			 4, (u8 *)&subflow_req->remote_nonce,
+-			 4, (u8 *)&subflow_req->local_nonce);
++	crypto_hmac_sha1(msk->remote_key, msk->local_key,
++			 subflow_req->remote_nonce, subflow_req->local_nonce,
++			 (u32 *)hmac);
+ =
+
+ 	return memcmp(hmac, (char *)rx_opt->mptcp.hmac, MPTCPOPT_HMAC_LEN);
+ }
 -- =
 
 2.17.2
 
 
---===============4124609529915643933==--
+--===============0377850755661013369==--
