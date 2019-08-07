@@ -1,95 +1,146 @@
-Content-Type: multipart/mixed; boundary="===============3321070761523692044=="
+Content-Type: multipart/mixed; boundary="===============6312869760969734444=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 09/10] Use pm_get_local_id() to get the real local
- address id.
-Date: Wed, 07 Aug 2019 15:44:33 -0700
-Message-ID: <20190807224434.2829-10-peter.krystad@linux.intel.com>
-In-Reply-To: 20190807224434.2829-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] [RFC] mptcp: Implement interim path manager
+Date: Wed, 07 Aug 2019 15:54:43 -0700
+Message-ID: <20190807225443.3051-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1601
+X-UID: 1602
 
---===============3321070761523692044==
+--===============6312869760969734444==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Also, take reference to mptcp sock while using it
+Two features: 1) When an incoming connection is received
+announce a local address and 2) When an outgoing connection
+is fully established and a remote address has been received
+initiate a secondary subflow.
 
-squashto: Add handling of incoming MP_JOIN requests
+The second local address must be hard-coded for now.
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/token.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ net/mptcp/pm.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 53 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index d7cf40b40beb..80acb6c6657f 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -222,14 +222,22 @@ int token_join_request(struct request_sock *req, cons=
-t struct sk_buff *skb)
- 	pr_debug("subflow_req=3D%p, token=3D%u", subflow_req, subflow_req->token);
- 	spin_lock_bh(&token_tree_lock);
- 	conn =3D lookup_token(subflow_req->token);
-+	if (conn)
-+		sock_hold(conn);
- 	spin_unlock_bh(&token_tree_lock);
--	if (conn) {
--		// @@ get real local address id for this skb->saddr
--		subflow_req->local_id =3D 0;
--		new_req_join(req, conn, skb);
--		return 0;
-+
-+	if (!conn)
-+		return -1;
-+
-+	if (pm_get_local_id(req, conn, skb)) {
-+		sock_put(conn);
-+		return -1;
- 	}
--	return -1;
-+
-+	new_req_join(req, conn, skb);
-+
-+	sock_put(conn);
-+	return 0;
- }
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index c98b92512adf..d43d05511e69 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -8,6 +8,10 @@
+ #include <net/mptcp.h>
+ #include "protocol.h"
  =
 
- /* validate received truncated hmac and create hmac for third ACK */
-@@ -247,15 +255,20 @@ int token_join_valid(struct request_sock *req,
++struct workqueue_struct *mptcp_wq;
++static void announce_addr_worker(struct work_struct *work);
++static void create_subflow_worker(struct work_struct *work);
++
+ /* path manager command handlers */
+ =
+
+ int pm_announce_addr(u32 token, sa_family_t family, u8 local_id,
+@@ -91,16 +95,32 @@ int pm_remove_subflow(u32 token, u8 remote_id)
+ =
+
+ void pm_new_connection(struct mptcp_sock *msk, int server_side)
  {
- 	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
- 	struct sock *conn;
-+	int err;
+-	pr_debug("msk=3D%p", msk);
++	struct mptcp_pm_data *pm =3D &msk->pm;
++
++	pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
  =
 
- 	pr_debug("subflow_req=3D%p, token=3D%u", subflow_req, subflow_req->token);
- 	spin_lock_bh(&token_tree_lock);
- 	conn =3D lookup_token(subflow_req->token);
--	spin_unlock_bh(&token_tree_lock);
- 	if (conn)
--		return new_join_valid(req, conn, rx_opt);
-+		sock_hold(conn);
-+	spin_unlock_bh(&token_tree_lock);
-+	if (!conn)
-+		return -1;
- =
-
--	return -1;
-+	err =3D new_join_valid(req, conn, rx_opt);
-+	sock_put(conn);
-+	return err;
+-	msk->pm.server_side =3D server_side;
++	pm->server_side =3D server_side;
++	pm->token =3D msk->token;
++
++	/* trigger announce address in interim local path manager */
++	if (pm->server_side) {
++		INIT_WORK(&pm->addr_work, announce_addr_worker);
++		queue_work(mptcp_wq, &pm->addr_work);
++	}
  }
  =
 
- /* create new local key, idsn, and token for subflow */
+ void pm_fully_established(struct mptcp_sock *msk)
+ {
++	struct mptcp_pm_data *pm =3D &msk->pm;
++
+ 	pr_debug("msk=3D%p", msk);
+ =
+
+-	msk->pm.fully_established =3D 1;
++	/* trigger create subflow in interim local path manager */
++	if (!pm->server_side && !pm->fully_established && pm->remote_valid) {
++		INIT_WORK(&pm->subflow_work, create_subflow_worker);
++		queue_work(mptcp_wq, &pm->subflow_work);
++	}
++	pm->fully_established =3D 1;
+ }
+ =
+
+ void pm_connection_closed(struct mptcp_sock *msk)
+@@ -120,12 +140,20 @@ void pm_subflow_closed(struct mptcp_sock *msk, u8 id)
+ =
+
+ void pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr, u8 id)
+ {
++	struct mptcp_pm_data *pm =3D &msk->pm;
++
+ 	pr_debug("msk=3D%p, addr=3D%x, remote_id=3D%d", msk, addr->s_addr, id);
+ =
+
+ 	msk->pm.remote_addr.s_addr =3D addr->s_addr;
+ 	msk->pm.remote_id =3D id;
+ 	msk->pm.remote_family =3D AF_INET;
+-	msk->pm.remote_valid =3D 1;
++
++	/* trigger create subflow in interim local path manager */
++	if (!pm->server_side && !pm->remote_valid && pm->fully_established) {
++		INIT_WORK(&pm->subflow_work, create_subflow_worker);
++		queue_work(mptcp_wq, &pm->subflow_work);
++	}
++	pm->remote_valid =3D 1;
+ }
+ =
+
+ void pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *addr, u8 =
+id)
+@@ -177,4 +205,25 @@ int pm_get_local_id(struct request_sock *req, struct s=
+ock *sk,
+ =
+
+ void pm_init(void)
+ {
++	mptcp_wq =3D alloc_workqueue("mptcp_wq", WQ_UNBOUND | WQ_MEM_RECLAIM, 8);
++	if (!mptcp_wq)
++		panic("Failed to allocate workqueue");
++}
++
++static void announce_addr_worker(struct work_struct *work)
++{
++	struct mptcp_pm_data *pm =3D container_of(work, struct mptcp_pm_data,
++						addr_work);
++	struct in_addr addr;
++
++	/* @@ hard-code address to announce here... */
++	pm_announce_addr(pm->token, AF_INET, 1, &addr);
++}
++
++static void create_subflow_worker(struct work_struct *work)
++{
++	struct mptcp_pm_data *pm =3D container_of(work, struct mptcp_pm_data,
++						subflow_work);
++
++	pm_create_subflow(pm->token, pm->remote_id);
+ }
 -- =
 
 2.17.2
 
 
---===============3321070761523692044==--
+--===============6312869760969734444==--
