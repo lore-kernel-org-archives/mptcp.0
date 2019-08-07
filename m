@@ -1,64 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============8164036155826719731=="
+Content-Type: multipart/mixed; boundary="===============3237650929157387056=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 09/10] Use pm_get_local_id() to get the real
- local address id.
-Date: Wed, 07 Aug 2019 15:12:04 -0700
-Message-ID: <0c0038cdf5bd37bdc729dee2b4b7b002ca5ff031.camel@linux.intel.com>
-In-Reply-To: 06203b401e199bb57d9623828414a3be5bda3206.camel@redhat.com
+Subject: [MPTCP] [PATCH 0/3] Rename lookup_token() to __token_lookup
+Date: Wed, 07 Aug 2019 16:44:23 -0700
+Message-ID: <20190807234426.13691-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1604
+X-UID: 1605
 
---===============8164036155826719731==
+--===============3237650929157387056==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-08-02 at 16:50 +0200, Paolo Abeni wrote:
-> On Fri, 2019-08-02 at 16:42 +0200, Paolo Abeni wrote:
-> > Perhaps adding a new helper, alike 'token_lookup_get()' would help.
-> =
+Already split for squashing
 
-> I should have looked first at the last patch in the series.
-> =
+Peter Krystad (3):
+  Rename lookup_token() to __token_lookup
+  Rename lookup_token() to __token_lookup
+  Rename lookup_token() to __token_lookup
 
-> The function 'token_lookup()' implemented in 10/10 would do.
-> =
+ net/mptcp/token.c | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-> My personal taste - notoriously not good, still - is that functions
-> name is a little confusing. How about:
-> =
+-- =
 
-> s/lookup_token/__token_lookup/
-> =
-
-> because requires leave to the caller acquiring the needed locking
-> =
-
-> s/token_lookup/token_lookup_get/
-> =
-
-> because also get a reference to the returned sock
-> =
-
-> ?
-
-I will rename token_lookup() from patch 10 to token_lookup_get() to reflect
-that it takes a reference.
-
-I will rename the static helper 'lookup_token' to '__token_lookup' (swapping
-words really was a horrible bit of naming). However since this change will
-need to be several commits that can be squashed to different places I will
-submit it as a separate patchset.
-
-Peter.
-
-> =
-
-> =
+2.17.2
 
 
-
---===============8164036155826719731==--
+--===============3237650929157387056==--
