@@ -1,146 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============6312869760969734444=="
+Content-Type: multipart/mixed; boundary="===============5615944127322754017=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC] mptcp: Implement interim path manager
-Date: Wed, 07 Aug 2019 15:54:43 -0700
-Message-ID: <20190807225443.3051-1-peter.krystad@linux.intel.com>
+Subject: Re: [MPTCP] [PATCH v2 09/10] Use pm_get_local_id() to get the real
+ local address id.
+Date: Wed, 07 Aug 2019 15:08:55 -0700
+Message-ID: <6f1a546e48c6c0bc7e2042a526077688bf74697c.camel@linux.intel.com>
+In-Reply-To: 85a5ecdc57fdf6ec3dc2f1bf3ff3eaf405408327.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1602
+X-UID: 1603
 
---===============6312869760969734444==
+--===============5615944127322754017==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Two features: 1) When an incoming connection is received
-announce a local address and 2) When an outgoing connection
-is fully established and a remote address has been received
-initiate a secondary subflow.
+On Fri, 2019-08-02 at 16:42 +0200, Paolo Abeni wrote:
+> On Thu, 2019-07-25 at 18:58 -0700, Peter Krystad wrote:
+> > diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> > index b31d98ba5c0d..8e4da2d05f45 100644
+> > --- a/net/mptcp/token.c
+> > +++ b/net/mptcp/token.c
+> > @@ -223,13 +223,15 @@ int token_join_request(struct request_sock *req, =
+const struct sk_buff *skb)
+> >  	spin_lock_bh(&token_tree_lock);
+> >  	conn =3D lookup_token(subflow_req->token);
+> >  	spin_unlock_bh(&token_tree_lock);
+> > -	if (conn) {
+> > -		// @@ get real local address id for this skb->saddr
+> > -		subflow_req->local_id =3D 0;
+> > -		new_req_join(req, conn, skb);
+> > -		return 0;
+> > -	}
+> > -	return -1;
+> > +	if (!conn)
+> > +		return -1;
+> > +
+> > +	if (pm_get_local_id(req, conn, skb))
+> > +		return -1;
+> > +
+> > +	new_req_join(req, conn, skb);
+> > +
+> > +	return 0;
+> >  }
+> =
 
-The second local address must be hard-coded for now.
+> I'm sorry for the late doubt, but I think we should acquire a refcnt to
+> conn while holding the token_tree_lock to protect vs cuncurrent
+> shutdown of the 'conn' socket after the lookup.
+> =
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/pm.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 53 insertions(+), 4 deletions(-)
+> Perhaps adding a new helper, alike 'token_lookup_get()' would help.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c98b92512adf..d43d05511e69 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -8,6 +8,10 @@
- #include <net/mptcp.h>
- #include "protocol.h"
- =
+Agreed will add taking this reference.
 
-+struct workqueue_struct *mptcp_wq;
-+static void announce_addr_worker(struct work_struct *work);
-+static void create_subflow_worker(struct work_struct *work);
-+
- /* path manager command handlers */
- =
+> token_join_valid() has possibly the same issue.
 
- int pm_announce_addr(u32 token, sa_family_t family, u8 local_id,
-@@ -91,16 +95,32 @@ int pm_remove_subflow(u32 token, u8 remote_id)
- =
+Agreed will do it here too.
 
- void pm_new_connection(struct mptcp_sock *msk, int server_side)
- {
--	pr_debug("msk=3D%p", msk);
-+	struct mptcp_pm_data *pm =3D &msk->pm;
-+
-+	pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
- =
+Peter.
 
--	msk->pm.server_side =3D server_side;
-+	pm->server_side =3D server_side;
-+	pm->token =3D msk->token;
-+
-+	/* trigger announce address in interim local path manager */
-+	if (pm->server_side) {
-+		INIT_WORK(&pm->addr_work, announce_addr_worker);
-+		queue_work(mptcp_wq, &pm->addr_work);
-+	}
- }
- =
+> =
 
- void pm_fully_established(struct mptcp_sock *msk)
- {
-+	struct mptcp_pm_data *pm =3D &msk->pm;
-+
- 	pr_debug("msk=3D%p", msk);
- =
-
--	msk->pm.fully_established =3D 1;
-+	/* trigger create subflow in interim local path manager */
-+	if (!pm->server_side && !pm->fully_established && pm->remote_valid) {
-+		INIT_WORK(&pm->subflow_work, create_subflow_worker);
-+		queue_work(mptcp_wq, &pm->subflow_work);
-+	}
-+	pm->fully_established =3D 1;
- }
- =
-
- void pm_connection_closed(struct mptcp_sock *msk)
-@@ -120,12 +140,20 @@ void pm_subflow_closed(struct mptcp_sock *msk, u8 id)
- =
-
- void pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr, u8 id)
- {
-+	struct mptcp_pm_data *pm =3D &msk->pm;
-+
- 	pr_debug("msk=3D%p, addr=3D%x, remote_id=3D%d", msk, addr->s_addr, id);
- =
-
- 	msk->pm.remote_addr.s_addr =3D addr->s_addr;
- 	msk->pm.remote_id =3D id;
- 	msk->pm.remote_family =3D AF_INET;
--	msk->pm.remote_valid =3D 1;
-+
-+	/* trigger create subflow in interim local path manager */
-+	if (!pm->server_side && !pm->remote_valid && pm->fully_established) {
-+		INIT_WORK(&pm->subflow_work, create_subflow_worker);
-+		queue_work(mptcp_wq, &pm->subflow_work);
-+	}
-+	pm->remote_valid =3D 1;
- }
- =
-
- void pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *addr, u8 =
-id)
-@@ -177,4 +205,25 @@ int pm_get_local_id(struct request_sock *req, struct s=
-ock *sk,
- =
-
- void pm_init(void)
- {
-+	mptcp_wq =3D alloc_workqueue("mptcp_wq", WQ_UNBOUND | WQ_MEM_RECLAIM, 8);
-+	if (!mptcp_wq)
-+		panic("Failed to allocate workqueue");
-+}
-+
-+static void announce_addr_worker(struct work_struct *work)
-+{
-+	struct mptcp_pm_data *pm =3D container_of(work, struct mptcp_pm_data,
-+						addr_work);
-+	struct in_addr addr;
-+
-+	/* @@ hard-code address to announce here... */
-+	pm_announce_addr(pm->token, AF_INET, 1, &addr);
-+}
-+
-+static void create_subflow_worker(struct work_struct *work)
-+{
-+	struct mptcp_pm_data *pm =3D container_of(work, struct mptcp_pm_data,
-+						subflow_work);
-+
-+	pm_create_subflow(pm->token, pm->remote_id);
- }
--- =
-
-2.17.2
+> /P
+> =
 
 
---===============6312869760969734444==--
+
+--===============5615944127322754017==--
