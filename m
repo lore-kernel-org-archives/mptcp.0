@@ -1,158 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============7233255798394707450=="
+Content-Type: multipart/mixed; boundary="===============4124609529915643933=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 10/10] mptcp: Implement path manager interface
- commands
-Date: Wed, 07 Aug 2019 15:44:34 -0700
-Message-ID: <20190807224434.2829-11-peter.krystad@linux.intel.com>
-In-Reply-To: 20190807224434.2829-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] [PATCH v3 00/10] Implement outgoing MP_JOIN
+Date: Wed, 07 Aug 2019 15:44:24 -0700
+Message-ID: <20190807224434.2829-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1593
+X-UID: 1594
 
---===============7233255798394707450==
+--===============4124609529915643933==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use the addr_signal flag to indicate to the subflow layer
-that a local address may be announced, and call subflow_connect()
-to initiate a secondary subflow.
+This is several accumulated fixes that are required for MP_JOIN
+(secondary subflows) plus the outgoing code.
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/pm.c       | 62 +++++++++++++++++++++++++++++++++++++++++---
- net/mptcp/protocol.h |  1 +
- net/mptcp/token.c    | 13 ++++++++++
- 3 files changed, 73 insertions(+), 3 deletions(-)
+Both outgoing and incoming MP_JOIN now inter-operate
+with the multipath.org implementation although there is
+still a deadlock when incoming is fully established.
+Since the incoming direction did not work at all before
+this is an improvement. I have not yet tested running our
+implmentation against itself.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index e81475a337b7..c98b92512adf 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -13,17 +13,73 @@
- int pm_announce_addr(u32 token, sa_family_t family, u8 local_id,
- 		     struct in_addr *addr)
- {
--	return -ENOTSUPP;
-+	struct mptcp_sock *msk =3D mptcp_sk(token_lookup_get(token));
-+	int err =3D 0;
-+
-+	if (!msk)
-+		return -EINVAL;
-+
-+	if (msk->pm.local_valid) {
-+		err =3D -EBADR;
-+		goto announce_put;
-+	}
-+
-+	pr_debug("msk=3D%p, local_id=3D%d, addr=3D%x", msk, local_id, addr->s_add=
-r);
-+	msk->pm.local_valid =3D 1;
-+	msk->pm.local_id =3D local_id;
-+	msk->pm.local_family =3D family;
-+	msk->pm.local_addr.s_addr =3D addr->s_addr;
-+	msk->addr_signal =3D 1;
-+
-+announce_put:
-+	sock_put((struct sock *)msk);
-+	return err;
- }
- =
+The final patch in the set is an "interim path manager", this
+is throw-away code that I include for testing purposes. For an
+incoming connection it is necessary for the server to advertise
+a secondary address and for my testing I have been hard-coding the IP
+address of my secondary interface when I build the kernel.
+Obviously not the final solution but we need to discuss what
+approach to use for the self tests. I also think we may not want
+to publish this patch on our net-next branch.
 
- int pm_remove_addr(u32 token, u8 local_id)
- {
--	return -ENOTSUPP;
-+	struct mptcp_sock *msk =3D mptcp_sk(token_lookup_get(token));
-+
-+	if (!msk)
-+		return -EINVAL;
-+
-+	pr_debug("msk=3D%p", msk);
-+	msk->pm.local_valid =3D 0;
-+
-+	sock_put((struct sock *)msk);
-+	return 0;
- }
- =
+v2:
+  - move mptcp_options_received formatting to options.c
+  - resolve conflicts with Davide's crypto commit
+  - make helper for setting request fields
+  - fix locking in token_lookup()
+  - move token_lookup() to "Implement path manager interface commands:
+    (where it belongs)
+  - split interim path manager out of final commit, will submit seperately
+  - remove use of local_id in pm_create_subflow
+  - restrict announcing addresses to server side only
+  - add one more commit with get_local_id fix for incoming MP_JOIN
 
- int pm_create_subflow(u32 token, u8 remote_id)
- {
--	return -ENOTSUPP;
-+	struct mptcp_sock *msk =3D mptcp_sk(token_lookup_get(token));
-+	struct sockaddr_in remote;
-+	struct sockaddr_in local;
-+	int err;
-+
-+	if (!msk)
-+		return -EINVAL;
-+
-+	pr_debug("msk=3D%p", msk);
-+
-+	if (!msk->pm.remote_valid || remote_id !=3D msk->pm.remote_id) {
-+		err =3D -EBADR;
-+		goto create_put;
-+	}
-+
-+	local.sin_family =3D AF_INET;
-+	local.sin_port =3D 0;
-+	local.sin_addr.s_addr =3D INADDR_ANY;
-+
-+	remote.sin_family =3D msk->pm.remote_family;
-+	remote.sin_port =3D htons(msk->dport);
-+	remote.sin_addr.s_addr =3D htonl(msk->pm.remote_addr.s_addr);
-+
-+	err =3D subflow_connect((struct sock *)msk, &local, &remote, remote_id);
-+
-+create_put:
-+	sock_put((struct sock *)msk);
-+	return err;
- }
- =
+v3:
+  - Revise nested if logic in options.c
+  - set subflow->request_cksum correctly (do not support)
+  - lock mptcp_sock in subflow_connect() and take ref
+  - return EINPROGRESS from subflow_connect() in normal case
+  - cleanup socket when bind()/connect() fails in subflow_connect()
+  - take reference to mptcp_sock in token_join_request() and
+    token_join_valid()
+  - rename token_lookup() to token_lookup_get()
+  - track remote token seperately in subflow (previously
+    local token field was being overwritten, preventing cleanup)
+  - take long-lived reference to mptcp_sock in token_new_subflow
 
- int pm_remove_subflow(u32 token, u8 remote_id)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 243d896d9e42..bc1fbd3827a6 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -233,6 +233,7 @@ void token_new_subflow(struct sock *sk);
- void token_new_accept(struct sock *sk);
- int token_new_join(struct sock *sk);
- void token_update_accept(struct sock *sk, struct sock *conn);
-+struct sock *token_lookup_get(u32 token);
- void token_release(u32 token);
- void token_destroy(u32 token);
- =
+Peter Krystad (10):
+  Extend path manager interface
+  Fix locking in mptcp_finish_join.
+  Fix parsing MP_JOIN third ACK.
+  Re-factor and fixes for crypto_hmac_sha1()
+  Rename mptcp_attach_dss()
+  Fix return value if no DSS option is created.
+  Move setting request_ fields of subflow to MPTCP layer helper
+  mptcp: Add handling of outgoing MP_JOIN requests
+  Use pm_get_local_id() to get the real local address id.
+  mptcp: Implement path manager interface commands
 
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 80acb6c6657f..b54f617d4c26 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -348,6 +348,19 @@ int token_new_join(struct sock *sk)
- 	return -1;
- }
- =
+ include/net/mptcp.h  |  12 ++--
+ net/ipv4/tcp_input.c |   4 +-
+ net/mptcp/crypto.c   |  23 +++----
+ net/mptcp/options.c  |  98 +++++++++++++++++++++++++++---
+ net/mptcp/pm.c       | 140 +++++++++++++++++++++++++++++++++++++++----
+ net/mptcp/protocol.c |  21 +++++--
+ net/mptcp/protocol.h |  58 ++++++++++++++----
+ net/mptcp/subflow.c  |  77 +++++++++++++++++++++---
+ net/mptcp/token.c    | 111 +++++++++++++++++++++++++++-------
+ 9 files changed, 455 insertions(+), 89 deletions(-)
 
-+struct sock *token_lookup_get(u32 token)
-+{
-+	struct sock *conn;
-+
-+	spin_lock_bh(&token_tree_lock);
-+	conn =3D lookup_token(token);
-+	if (conn)
-+		sock_hold(conn);
-+
-+	spin_unlock_bh(&token_tree_lock);
-+	return conn;
-+}
-+
- void token_destroy_request(u32 token)
- {
- 	pr_debug("token=3D%u", token);
 -- =
 
 2.17.2
 
 
---===============7233255798394707450==--
+--===============4124609529915643933==--
