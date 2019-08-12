@@ -1,375 +1,462 @@
-Content-Type: multipart/mixed; boundary="===============7389276900313920958=="
+Content-Type: multipart/mixed; boundary="===============8320407275971910340=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: new sysctl to control the activation per NS
-Date: Mon, 12 Aug 2019 17:28:48 +0200
-Message-ID: <644d5ed8-05d5-1563-ca5c-3bd23e91aae0@tessares.net>
-In-Reply-To: 20190808165303.7516-1-matthieu.baerts@tessares.net
+Subject: Re: [MPTCP] [PATCH v3 08/10] mptcp: Add handling of outgoing MP_JOIN
+ requests
+Date: Mon, 12 Aug 2019 11:33:18 -0700
+Message-ID: <alpine.OSX.2.21.1908121116420.4973@mjmartin-mac01.local>
+In-Reply-To: 20190807224434.2829-9-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1614
+X-UID: 1615
 
---===============7389276900313920958==
+--===============8320407275971910340==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+On Wed, 7 Aug 2019, Peter Krystad wrote:
 
-On 08/08/2019 18:53, Matthieu Baerts wrote:
-> New MPTCP sockets will return -ENOPROTOOPT if MPTCP support is disabled
-> for the current net namespace.
-> =
-
-> For security reasons, it is interesting to have a global switch for
-> MPTCP. To start, MPTCP will be disabled by default and only privileged
-> users will be able to modify this. The reason is that because MPTCP is
-> new, it will not be tested and reviewed by many and security issues can
-> then take time to be discovered and fixed.
-> =
-
-> The value of this new sysctl can be different per namespace. We can then
-> restrict the usage of MPTCP to the selected NS. In case of serious
-> issues with MPTCP, administrators can now easily turn MPTCP off.
-> =
-
-> MPTCP' kselftest has been modified to validate that the correct error is
-> reported when creating a socket while MPTCP support is disabled.
-> =
-
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-Thank you for the previous review. I just added this patch at the end of
-the series.
-
-https://github.com/multipath-tcp/mptcp_net-next/commits/export
-
-Tests are still OK.
-
-Cheers,
-Matt
-
+> Subflow creation may be initiated by the path manager when
+> the primary connection is fully established and a remote
+> address has been received via ADD_ADDR.
+>
+> Create an in-kernel sock and use kernel_connect() to
+> initiate connection. When a valid SYN-ACK is received the
+> new sock is added to the tail of the mptcp sock conn_list
+> where it will not interfere with data flow on the original
+> connection.
+>
+> Data flow and connection failover not addressed by this commit.
+>
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 > ---
-> =
-
-> Notes:
->     As just discussed at the meeting we just had, here is a RFC patch to
->     add a new sysctl for MPTCP.
->     =
-
->     Because it is not linked to the protocol itself, I simply created a n=
-ew
->     file, ctrl.c like in mptcp.org.
->     =
-
->     A few questions:
->     - Is it OK to reserve space per ns via the "pernet_operations"
->       structure? Because MPTCP would not be compiled as a module, we could
->       directly store stuff in the net structure as other parts of the code
->       do but maybe better to keep MPTCP code on the side as done here.
->     - In mptcp.org, all sysctls are prepended with 'mptcp_', e.g.
->       'net.mptcp.mptcp_enabled'. Do we need this? Is it better to keep the
->       same names if possible or better to differentiate? In this version,
->       'mptcp_' is not prepended.
->     - This sysctl will only block new sockets to be created. Is it enough?
->     - ENOPROTOOPT is returned, maybe something else to return? EPERM is
->       maybe too generic? ENOTSUPP is not translated by perror().
->     - Should we start the documentation now for the sysctl?
->     - A simple test has been added, because it is not linked to the rest,=
- I
->       put separeted as first test.
->     - Of course do not hesitate to comment. Even on the idea of having a
->       sysctl for this purpose.
->     =
-
->     RFC -> v1:
->      - mptcp_init_sock_cb() -> mptcp_init_sock() (Peter)
->      - add comments about who can change the sysctl (Ossama)
-> =
-
->  net/mptcp/Makefile                            |   2 +-
->  net/mptcp/ctrl.c                              | 112 ++++++++++++++++++
->  net/mptcp/protocol.c                          |  14 ++-
->  net/mptcp/protocol.h                          |   4 +
->  .../selftests/net/mptcp/mptcp_connect.sh      |  24 ++++
->  5 files changed, 152 insertions(+), 4 deletions(-)
->  create mode 100644 net/mptcp/ctrl.c
-> =
-
-> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-> index 7fe7aa64eda0..289fdf4339c1 100644
-> --- a/net/mptcp/Makefile
-> +++ b/net/mptcp/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_MPTCP) +=3D mptcp.o
->  =
-
-> -mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o pm.o
-> +mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o pm.o ctrl.o
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> new file mode 100644
-> index 000000000000..8d9f15f02369
-> --- /dev/null
-> +++ b/net/mptcp/ctrl.c
-> @@ -0,0 +1,112 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Multipath TCP
-> + *
-> + * Copyright (c) 2019, Tessares SA.
-> + */
-> +
-> +#include <linux/sysctl.h>
-> +
-> +#include <net/net_namespace.h>
-> +#include <net/netns/generic.h>
-> +
-> +#include "protocol.h"
-> +
-> +#define MPTCP_SYSCTL_PATH "net/mptcp"
-> +
-> +static int mptcp_pernet_id;
-> +struct mptcp_pernet {
-> +	struct ctl_table_header *ctl_table_hdr;
-> +
-> +	int mptcp_enabled;
-> +};
-> +
-> +static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
-> +{
-> +	return net_generic(net, mptcp_pernet_id);
-> +}
-> +
-> +int mptcp_is_enabled(struct net *net)
-> +{
-> +	return mptcp_get_pernet(net)->mptcp_enabled;
-> +}
-> +
-> +static struct ctl_table mptcp_sysctl_table[] =3D {
-> +	{
-> +		.procname =3D "enabled",
-> +		.maxlen =3D sizeof(int),
-> +		.mode =3D 0644,
-> +		/* users with CAP_NET_ADMIN or root (not and) can change thi
-> +		 * value, same as other sysctl or the 'net' tree.
-> +		 */
-> +		.proc_handler =3D proc_dointvec,
-> +	},
-> +	{}
-> +};
-> +
-> +static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *=
-pernet)
-> +{
-> +	struct ctl_table_header *hdr;
-> +	struct ctl_table *table;
-> +
-> +	table =3D mptcp_sysctl_table;
-> +	if (!net_eq(net, &init_net)) {
-> +		table =3D kmemdup(table, sizeof(mptcp_sysctl_table), GFP_KERNEL);
-> +		if (!table)
-> +			goto err_alloc;
+> include/net/mptcp.h  |  2 ++
+> net/mptcp/options.c  | 51 ++++++++++++++++++++++++++++++---
+> net/mptcp/protocol.c |  1 +
+> net/mptcp/protocol.h | 11 +++++++
+> net/mptcp/subflow.c  | 68 +++++++++++++++++++++++++++++++++++++++++++-
+> net/mptcp/token.c    | 48 +++++++++++++++++++++++++++++++
+> 6 files changed, 176 insertions(+), 5 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index bb2dd193c0c5..50cd1b31ebdd 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -40,6 +40,8 @@ struct mptcp_out_options {
+> 	u8 backup;
+> 	u32 nonce;
+> 	u64 thmac;
+> +	u32 token;
+> +	u8 hmac[20];
+> 	struct mptcp_ext ext_copy;
+> #endif
+> };
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 01f59ad629e5..be7afa5aac6a 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -300,6 +300,16 @@ bool mptcp_syn_options(struct sock *sk, unsigned int=
+ *size,
+> 		opts->sndr_key =3D subflow->local_key;
+> 		*size =3D TCPOLEN_MPTCP_MPC_SYN;
+> 		return true;
+> +	} else if (subflow->request_join) {
+> +		pr_debug("remote_token=3D%u, nonce=3D%u", subflow->remote_token,
+> +			 subflow->local_nonce);
+> +		opts->suboptions =3D OPTION_MPTCP_MPJ_SYN;
+> +		opts->join_id =3D subflow->remote_id;
+> +		opts->token =3D subflow->remote_token;
+> +		opts->nonce =3D subflow->local_nonce;
+> +		opts->backup =3D subflow->request_bkup;
+> +		*size =3D TCPOLEN_MPTCP_MPJ_SYN;
+> +		return true;
+> 	}
+> 	return false;
+> }
+> @@ -309,10 +319,17 @@ void mptcp_rcv_synsent(struct sock *sk)
+> 	struct tcp_sock *tp =3D tcp_sk(sk);
+> 	struct subflow_context *subflow =3D subflow_ctx(sk);
+>
+> -	pr_debug("subflow=3D%p", subflow);
+> 	if (subflow->request_mptcp && tp->rx_opt.mptcp.mp_capable) {
+> 		subflow->mp_capable =3D 1;
+> 		subflow->remote_key =3D tp->rx_opt.mptcp.sndr_key;
+> +		pr_debug("subflow=3D%p, remote_key=3D%llu", subflow,
+> +			 subflow->remote_key);
+> +	} else if (subflow->request_join && tp->rx_opt.mptcp.mp_join) {
+> +		subflow->mp_join =3D 1;
+> +		subflow->thmac =3D tp->rx_opt.mptcp.thmac;
+> +		subflow->remote_nonce =3D tp->rx_opt.mptcp.nonce;
+> +		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u", subflow,
+> +			 subflow->thmac, subflow->remote_nonce);
+> 	}
+> }
+>
+> @@ -322,7 +339,8 @@ static bool mptcp_established_options_mp(struct sock =
+*sk, unsigned int *size,
+> {
+> 	struct subflow_context *subflow =3D subflow_ctx(sk);
+>
+> -	if (!subflow->fourth_ack && remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
+> +	if (subflow->mp_capable && !subflow->fourth_ack &&
+> +	    remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
+> 		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
+> 		opts->sndr_key =3D subflow->local_key;
+> 		opts->rcvr_key =3D subflow->remote_key;
+> @@ -331,6 +349,14 @@ static bool mptcp_established_options_mp(struct sock=
+ *sk, unsigned int *size,
+> 		pr_debug("subflow=3D%p, local_key=3D%llu, remote_key=3D%llu",
+> 			 subflow, subflow->local_key, subflow->remote_key);
+> 		return true;
+> +	} else if (subflow->mp_join && !subflow->fourth_ack &&
+> +		   remaining >=3D TCPOLEN_MPTCP_MPJ_ACK) {
+> +		opts->suboptions =3D OPTION_MPTCP_MPJ_ACK;
+> +		memcpy(opts->hmac, subflow->hmac, MPTCPOPT_HMAC_LEN);
+> +		*size =3D TCPOLEN_MPTCP_MPJ_ACK;
+> +		subflow->fourth_ack =3D 1;
+> +		pr_debug("subflow=3D%p", subflow);
+> +		return true;
+> 	}
+> 	return false;
+> }
+> @@ -443,10 +469,11 @@ bool mptcp_established_options(struct sock *sk, str=
+uct sk_buff *skb,
+> 			       unsigned int *size, unsigned int remaining,
+> 			       struct mptcp_out_options *opts)
+> {
+> +	struct subflow_context *subflow =3D subflow_ctx(sk);
+> 	unsigned int opt_size =3D 0;
+> 	bool ret =3D false;
+>
+> -	if (!subflow_ctx(sk)->mp_capable)
+> +	if (!subflow->mp_capable && !subflow->mp_join)
+> 		return false;
+>
+> 	opts->suboptions =3D 0;
+> @@ -546,7 +573,6 @@ void mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb,
+>
+> 	if (msk)
+> 		pm_fully_established(msk);
+> -
+> }
+>
+> void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
+> @@ -595,6 +621,16 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_o=
+ut_options *opts)
+> 				      0, opts->addr_id);
+> 	}
+>
+> +	if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
+> +		*ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
+> +				      TCPOLEN_MPTCP_MPJ_SYN,
+> +				      opts->backup, opts->join_id);
+> +		put_unaligned_be32(opts->token, ptr);
+> +		ptr +=3D 1;
+> +		put_unaligned_be32(opts->nonce, ptr);
+> +		ptr +=3D 1;
 > +	}
 > +
-> +	table[0].data =3D &pernet->mptcp_enabled;
+> 	if (OPTION_MPTCP_MPJ_SYNACK & opts->suboptions) {
+> 		*ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
+> 				      TCPOLEN_MPTCP_MPJ_SYNACK,
+> @@ -605,6 +641,13 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_o=
+ut_options *opts)
+> 		ptr +=3D 1;
+> 	}
+>
+> +	if (OPTION_MPTCP_MPJ_ACK & opts->suboptions) {
+> +		*ptr++ =3D mptcp_option(MPTCPOPT_MP_JOIN,
+> +				      TCPOLEN_MPTCP_MPJ_ACK, 0, 0);
+> +		memcpy(ptr, opts->hmac, MPTCPOPT_HMAC_LEN);
+> +		ptr +=3D 5;
+> +	}
 > +
-> +	hdr =3D register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
-> +	if (!hdr)
-> +		goto err_reg;
-> +
-> +	pernet->ctl_table_hdr =3D hdr;
-> +
-> +	return 0;
-> +
-> +err_reg:
-> +	if (!net_eq(net, &init_net))
-> +		kfree(table);
-> +err_alloc:
-> +	return -ENOMEM;
-> +}
-> +
-> +static void mptcp_pernet_del_table(struct mptcp_pernet *pernet)
-> +{
-> +	struct ctl_table *table =3D pernet->ctl_table_hdr->ctl_table_arg;
-> +
-> +	unregister_net_sysctl_table(pernet->ctl_table_hdr);
-> +
-> +	kfree(table);
-> +}
-> +
-> +static int __net_init mptcp_net_init(struct net *net)
-> +{
-> +	struct mptcp_pernet *pernet =3D mptcp_get_pernet(net);
-> +
-> +	return mptcp_pernet_new_table(net, pernet);
-> +}
-> +
-> +/* Note: the callback will only be called per extra netns */
-> +static void __net_exit mptcp_net_exit(struct net *net)
-> +{
-> +	struct mptcp_pernet *pernet =3D mptcp_get_pernet(net);
-> +
-> +	mptcp_pernet_del_table(pernet);
-> +}
-> +
-> +static struct pernet_operations mptcp_pernet_ops =3D {
-> +	.init =3D mptcp_net_init,
-> +	.exit =3D mptcp_net_exit,
-> +	.id =3D &mptcp_pernet_id,
-> +	.size =3D sizeof(struct mptcp_pernet),
-> +};
-> +
-> +void __init mptcp_init(void)
-> +{
-> +	mptcp_proto_init();
-> +
-> +	if (register_pernet_subsys(&mptcp_pernet_ops) < 0)
-> +		panic("Failed to register MPTCP pernet subsystem.\n");
-> +}
+> 	if (opts->ext_copy.use_ack || opts->ext_copy.use_map) {
+> 		struct mptcp_ext *mpext =3D &opts->ext_copy;
+> 		u8 len =3D TCPOLEN_MPTCP_DSS_BASE;
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4d2844bff36f..6a4337c631f7 100644
+> index fce5eea729ba..80a8c7e5a3e7 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -579,7 +579,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
->  	return copied;
->  }
->  =
-
-> -static int mptcp_init_sock(struct sock *sk)
-> +static int __mptcp_init_sock(struct sock *sk)
->  {
->  	struct mptcp_sock *msk =3D mptcp_sk(sk);
->  =
-
-> @@ -590,6 +590,14 @@ static int mptcp_init_sock(struct sock *sk)
->  	return 0;
->  }
->  =
-
-> +static int mptcp_init_sock(struct sock *sk)
-> +{
-> +	if (!mptcp_is_enabled(sock_net(sk)))
-> +		return -ENOPROTOOPT;
-> +
-> +	return __mptcp_init_sock(sk);
-> +}
-> +
->  static void mptcp_close(struct sock *sk, long timeout)
->  {
->  	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> @@ -654,7 +662,7 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
->  			return NULL;
->  		}
->  =
-
-> -		mptcp_init_sock(new_mptcp_sock);
-> +		__mptcp_init_sock(new_mptcp_sock);
->  =
-
->  		msk =3D mptcp_sk(new_mptcp_sock);
->  		msk->remote_key =3D subflow->remote_key;
-> @@ -1076,7 +1084,7 @@ static struct inet_protosw mptcp_protosw =3D {
->  	.flags		=3D INET_PROTOSW_ICSK,
->  };
->  =
-
-> -void __init mptcp_init(void)
-> +void mptcp_proto_init(void)
->  {
->  	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
->  	mptcp_stream_ops =3D inet_stream_ops;
+> @@ -797,6 +797,7 @@ void mptcp_finish_connect(struct sock *sk, int mp_cap=
+able)
+> 		msk->local_key =3D subflow->local_key;
+> 		msk->token =3D subflow->token;
+> 		pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
+> +		msk->dport =3D ntohs(inet_sk(msk->subflow->sk)->inet_dport);
+>
+> 		pm_new_connection(msk, 0);
+>
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 4c098acf4170..cfcae781de23 100644
+> index 9774ff5a5481..243d896d9e42 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -184,11 +184,15 @@ mptcp_subflow_tcp_socket(const struct subflow_conte=
-xt *subflow)
->  	return subflow->tcp_sock;
->  }
->  =
-
-> +int mptcp_is_enabled(struct net *net);
+> @@ -49,8 +49,10 @@
+> #define TCPOLEN_MPTCP_ADD_ADDR6		20
+> #define TCPOLEN_MPTCP_RM_ADDR		4
+>
+> +/* MPTCP MP_JOIN flags */
+> #define MPTCPOPT_BACKUP		BIT(0)
+> #define MPTCPOPT_HMAC_LEN	20
+> +#define MPTCPOPT_THMAC_LEN	8
+>
+> /* MPTCP MP_CAPABLE flags */
+> #define MPTCP_VERSION_MASK	(0x0F)
+> @@ -115,6 +117,7 @@ struct mptcp_sock {
+> 	u64		write_seq;
+> 	u64		ack_seq;
+> 	u32		token;
+> +	u16		dport;
+> 	struct list_head conn_list;
+> 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+> 	struct mptcp_pm_data	pm;
+> @@ -167,7 +170,9 @@ struct subflow_context {
+> 	u32	ssn_offset;
+> 	u16	map_data_len;
+> 	u16	request_mptcp : 1,  /* send MP_CAPABLE */
+> +		request_join : 1,   /* send MP_JOIN */
+> 		request_cksum : 1,
+> +		request_bkup : 1,
+> 		request_version : 4,
+> 		mp_capable : 1,     /* remote is MPTCP capable */
+> 		mp_join : 1,        /* remote is JOINing */
+> @@ -179,6 +184,8 @@ struct subflow_context {
+> 	u32	remote_nonce;
+> 	u64	thmac;
+> 	u32	local_nonce;
+> +	u32	remote_token;
+> +	u8	hmac[MPTCPOPT_HMAC_LEN];
+> 	u8	local_id;
+> 	u8	remote_id;
+>
+> @@ -202,6 +209,8 @@ mptcp_subflow_tcp_socket(const struct subflow_context=
+ *subflow)
+> }
+>
+> void subflow_init(void);
+> +int subflow_connect(struct sock *sk, struct sockaddr_in *local,
+> +		    struct sockaddr_in *remote, u8 remote_id);
+> int subflow_create_socket(struct sock *sk, struct socket **new_sock);
+>
+> extern const struct inet_connection_sock_af_ops ipv4_specific;
+> @@ -215,10 +224,12 @@ void mptcp_finish_join(struct sock *sk);
+> void token_init(void);
+> void token_new_request(struct request_sock *req, const struct sk_buff *sk=
+b);
+> int token_join_request(struct request_sock *req, const struct sk_buff *sk=
+b);
+> +int token_join_response(struct sock *sk);
+> int token_join_valid(struct request_sock *req,
+> 		     struct tcp_options_received *rx_opt);
+> void token_destroy_request(u32 token);
+> void token_new_connect(struct sock *sk);
+> +void token_new_subflow(struct sock *sk);
+> void token_new_accept(struct sock *sk);
+> int token_new_join(struct sock *sk);
+> void token_update_accept(struct sock *sk, struct sock *conn);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 678fca99c23a..448c9e7f567a 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -22,6 +22,9 @@ static int subflow_rebuild_header(struct sock *sk)
+> 	if (subflow->request_mptcp && !subflow->token) {
+> 		pr_debug("subflow=3D%p", sk);
+> 		token_new_connect(sk);
+> +	} else if (subflow->request_join && !subflow->local_nonce) {
+> +		pr_debug("subflow=3D%p", sk);
+> +		token_new_subflow(sk);
+> 	}
+>
+> 	return inet_sk_rebuild_header(sk);
+> @@ -95,7 +98,10 @@ static void subflow_finish_connect(struct sock *sk, co=
+nst struct sk_buff *skb)
+>
+> 	inet_sk_rx_dst_set(sk, skb);
+>
+> -	if (subflow->conn && !subflow->conn_finished) {
+> +	if (!subflow->conn)
+> +		return;
 > +
->  void subflow_init(void);
->  int subflow_create_socket(struct sock *sk, struct socket **new_sock);
->  =
-
->  extern const struct inet_connection_sock_af_ops ipv4_specific;
->  =
-
-> +void mptcp_proto_init(void);
-> +
->  void mptcp_get_options(const struct sk_buff *skb,
->  		       struct tcp_options_received *opt_rx);
->  =
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index 4418163af001..d029bdc5946d 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -45,6 +45,7 @@ trap cleanup EXIT
->  for i in 1 2 3 4;do
->  	ip netns add ns$i || exit $ksft_skip
->  	ip -net ns$i link set lo up
-> +	ip netns exec ns$i sysctl -q net.mptcp.enabled=3D1
->  done
->  =
-
->  #  ns1              ns2                    ns3                     ns4
-> @@ -106,6 +107,27 @@ check_transfer()
->  	return 0
->  }
->  =
-
-> +check_mptcp_disabled()
+> +	if (subflow->mp_capable && !subflow->conn_finished) {
+> 		pr_debug("subflow=3D%p, remote_key=3D%llu", subflow_ctx(sk),
+> 			 subflow->remote_key);
+> 		mptcp_finish_connect(subflow->conn, subflow->mp_capable);
+> @@ -105,6 +111,17 @@ static void subflow_finish_connect(struct sock *sk, =
+const struct sk_buff *skb)
+> 			pr_debug("synack seq=3D%u", TCP_SKB_CB(skb)->seq);
+> 			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
+> 		}
+> +	} else if (subflow->mp_join && !subflow->conn_finished) {
+> +		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u",
+> +			 subflow_ctx(sk), subflow->thmac,
+> +			 subflow->remote_nonce);
+> +		if (token_join_response(sk)) {
+> +			subflow->mp_join =3D 0;
+> +			// @@ need to trigger RST
+> +		} else {
+> +			mptcp_finish_join(sk);
+> +			subflow->conn_finished =3D 1;
+> +		}
+> 	}
+> }
+>
+> @@ -195,6 +212,55 @@ static void subflow_data_ready(struct sock *sk)
+> 	}
+> }
+>
+> +int subflow_connect(struct sock *sk, struct sockaddr_in *local,
+> +		    struct sockaddr_in *remote, u8 remote_id)
 > +{
-> +	disabled_ns=3D"ns_disabled"
-> +	ip netns add ${disabled_ns} || exit $ksft_skip
-> +	# by default: sysctl net.mptcp.enabled=3D0
+> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +	struct subflow_context *subflow;
+> +	struct socket *sf;
+> +	u32 remote_token;
+> +	int err;
 > +
-> +	local err=3D0
-> +	LANG=3DC ip netns exec ${disabled_ns} ./mptcp_connect -t $timeout -p 10=
-000 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
-> +		grep -q "^socket: Protocol not available$" && err=3D1
-> +	ip netns delete ${disabled_ns}
+> +	lock_sock(sk);
+> +	err =3D subflow_create_socket(sk, &sf);
+> +	if (err) {
+> +		release_sock(sk);
+> +		return err;
+> +	}
 > +
-> +	if [ ${err} -eq 0 ]; then
-> +		echo -e "MPTCP is not disabled by default as expected\t[ FAIL ]"
-> +		ret=3D1
-> +		return 1
-> +	fi
+> +	subflow =3D subflow_ctx(sf->sk);
+> +	subflow->remote_key =3D msk->remote_key;
+> +	subflow->local_key =3D msk->local_key;
+> +	subflow->token =3D msk->token;
 > +
-> +	echo -e "MPTCP is disabled by default as expected\t[ OK ]"
-> +	return 0
+> +	sock_hold(sf->sk);
+> +	release_sock(sk);
+> +
+> +	err =3D kernel_bind(sf, (struct sockaddr *)local,
+> +			  sizeof(struct sockaddr_in));
+> +	if (err)
+> +		goto failed;
+> +
+> +	crypto_key_sha1(subflow->remote_key, &remote_token, NULL);
+> +	pr_debug("msk=3D%p remote_token=3D%u", msk, remote_token);
+> +	subflow->remote_token =3D remote_token;
+> +	subflow->remote_id =3D remote_id;
+> +	subflow->request_join =3D 1;
+> +	subflow->request_bkup =3D 1;
+> +
+> +	err =3D kernel_connect(sf, (struct sockaddr *)remote,
+> +			     sizeof(struct sockaddr_in), O_NONBLOCK);
+> +	if (err && err !=3D -EINPROGRESS)
+> +		goto failed;
+> +
+> +	sock_put(sf->sk);
+> +	return err;
+> +
+> +failed:
+> +	sock_release(sf);
+
+Should there be a sock_put(sf->sk) on this path too? Looks like =
+
+sock_release() will free the subflow context but not the struct sock =
+
+itself.
+
+
+Mat
+
+
+> +	return err;
 > +}
 > +
->  do_ping()
->  {
->  	listener_ns=3D"$1"
-> @@ -241,6 +263,8 @@ run_tests()
->  make_file "$cin" "client"
->  make_file "$sin" "server"
->  =
-
-> +check_mptcp_disabled
+> int subflow_create_socket(struct sock *sk, struct socket **new_sock)
+> {
+> 	struct subflow_context *subflow;
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index ef03ef19af98..d7cf40b40beb 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -93,6 +93,28 @@ static void new_req_join(struct request_sock *req, str=
+uct sock *sk,
+> 		 subflow_req->thmac);
+> }
+>
+> +static int new_rsp_join(struct sock *sk)
+> +{
+> +	struct subflow_context *subflow =3D subflow_ctx(sk);
+> +	u8 hmac[MPTCPOPT_HMAC_LEN];
+> +	u64 thmac;
 > +
->  for sender in 1 2 3 4;do
->  	do_ping ns1 ns$sender 10.0.1.1
->  =
+> +	crypto_hmac_sha1(subflow->remote_key, subflow->local_key,
+> +			 subflow->remote_nonce, subflow->local_nonce,
+> +			 (u32 *)hmac);
+> +
+> +	thmac =3D get_unaligned_be64(hmac);
+> +	pr_debug("thmac=3D%llu", thmac);
+> +	if (thmac !=3D subflow->thmac)
+> +		return -1;
+> +
+> +	crypto_hmac_sha1(subflow->local_key, subflow->remote_key,
+> +			 subflow->local_nonce, subflow->remote_nonce,
+> +			 (u32 *)subflow->hmac);
+> +
+> +	return 0;
+> +}
+> +
+> static int new_join_valid(struct request_sock *req, struct sock *sk,
+> 			  struct tcp_options_received *rx_opt)
+> {
+> @@ -210,6 +232,15 @@ int token_join_request(struct request_sock *req, con=
+st struct sk_buff *skb)
+> 	return -1;
+> }
+>
+> +/* validate received truncated hmac and create hmac for third ACK */
+> +int token_join_response(struct sock *sk)
+> +{
+> +	struct subflow_context *subflow =3D subflow_ctx(sk);
+> +
+> +	pr_debug("subflow=3D%p, token=3D%u", subflow, subflow->token);
+> +	return new_rsp_join(sk);
+> +}
+> +
+> /* validate hmac received in third ACK */
+> int token_join_valid(struct request_sock *req,
+> 		     struct tcp_options_received *rx_opt)
+> @@ -247,6 +278,23 @@ void token_new_connect(struct sock *sk)
+> 	spin_unlock_bh(&token_tree_lock);
+> }
+>
+> +/* take reference to connection and create nonce for secondary subflow */
+> +void token_new_subflow(struct sock *sk)
+> +{
+> +	struct subflow_context *subflow =3D subflow_ctx(sk);
+> +	struct sock *conn;
+> +
+> +	pr_debug("subflow=3D%p", subflow);
+> +
+> +	spin_lock_bh(&token_tree_lock);
+> +	conn =3D lookup_token(subflow->token);
+> +	if (conn)
+> +		sock_hold(conn);
+> +	spin_unlock_bh(&token_tree_lock);
+> +
+> +	get_random_bytes(&subflow->local_nonce, sizeof(u32));
+> +}
+> +
+> void token_new_accept(struct sock *sk)
+> {
+> 	struct subflow_context *subflow =3D subflow_ctx(sk);
+> -- =
 
-> =
+> 2.17.2
+>
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+>
 
+--
+Mat Martineau
+Intel
 
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============7389276900313920958==--
+--===============8320407275971910340==--
