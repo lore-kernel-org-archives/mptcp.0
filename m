@@ -1,45 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============8769995699322842362=="
+Content-Type: multipart/mixed; boundary="===============4338493838033163877=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: Add sock_put() call on error path
-Date: Mon, 12 Aug 2019 16:57:58 -0700
-Message-ID: <20190812235758.8530-1-peter.krystad@linux.intel.com>
+Subject: Re: [MPTCP] [PATCH 1/3] Rename lookup_token() to __token_lookup
+Date: Tue, 13 Aug 2019 16:24:38 +0200
+Message-ID: <64d11d48-9023-4f84-360c-597477e5c8d2@tessares.net>
+In-Reply-To: 20190807234426.13691-2-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1630
+X-UID: 1631
 
---===============8769995699322842362==
+--===============4338493838033163877==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Per final review comment
+Hi Peter, Mat,
 
-squashto: Add handling of outgoing MP_JOIN requests
+On 08/08/2019 01:44, Peter Krystad wrote:
+> Naming better aligns with token_lookup_get().
+> =
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/subflow.c | 1 +
- 1 file changed, 1 insertion(+)
+> squashto: Add handling of incoming MP_JOIN requests
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 448c9e7f567a..27afc64d377f 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -257,6 +257,7 @@ int subflow_connect(struct sock *sk, struct sockaddr_in=
- *local,
- 	return err;
- =
+Thank you for the patch and the review!
 
- failed:
-+	sock_put(sf->sk);
- 	sock_release(sf);
- 	return err;
- }
+I had to split this in two parts:
+- 65afe9b86a32: part 1: "squashed" in "mptcp: Add handling of incoming
+MP_JOIN requests"
+- 049f8ef19750: part 2: "squashed" in "mptcp: Implement path manager
+interface commands"
+
+Cheers,
+Matt
 -- =
 
-2.17.2
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============8769995699322842362==--
+--===============4338493838033163877==--
