@@ -1,47 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============4815705516715588812=="
+Content-Type: multipart/mixed; boundary="===============6661359721516115901=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 0/3] Rename lookup_token() to __token_lookup
-Date: Tue, 13 Aug 2019 16:49:05 +0200
-Message-ID: <b0229ddf-cc60-8175-ff25-811ba83bad57@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1908121305380.4973@mjmartin-mac01.local
+Subject: Re: [MPTCP] [PATCH] mptcp: Add sock_put() call on error path
+Date: Tue, 13 Aug 2019 17:16:08 +0200
+Message-ID: <403d4547-4d93-33e7-d821-255112d43ebf@tessares.net>
+In-Reply-To: 20190812235758.8530-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1634
+X-UID: 1635
 
---===============4815705516715588812==
+--===============6661359721516115901==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Mat,
+Hi Mat, Peter,
 
-On 12/08/2019 22:05, Mat Martineau wrote:
-> On Wed, 7 Aug 2019, Peter Krystad wrote:
+On 13/08/2019 01:57, Peter Krystad wrote:
+> Per final review comment
 > =
 
->> Already split for squashing
->>
->> Peter Krystad (3):
->> =C2=A0Rename lookup_token() to __token_lookup
->> =C2=A0Rename lookup_token() to __token_lookup
->> =C2=A0Rename lookup_token() to __token_lookup
->>
->> net/mptcp/token.c | 30 ++++++++++++++++--------------
->> 1 file changed, 16 insertions(+), 14 deletions(-)
->>
->> --=C2=A0
->> 2.17.2
->>
-> =
+> squashto: Add handling of outgoing MP_JOIN requests
 
-> Patch set looks good to me.
+Thank you for finding the issue and fixing it!
 
-Thank you for the patches and the review.
-
-Everything is now in the repo:
-- 2038a22e9690..6e195bff312b: result
+- 527d1a3ee6a8: "squashed" in "mptcp: Add handling of outgoing MP_JOIN
+requests"
+- 6e195bff312b..a873cedf4afa: result
 
 Tests are still OK.
 
@@ -55,4 +41,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============4815705516715588812==--
+--===============6661359721516115901==--
