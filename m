@@ -1,47 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============5720745344674757386=="
+Content-Type: multipart/mixed; boundary="===============2786206244898108370=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PRE-RFC 6/6] mptcp: implement memory accounting for
- mptcp rtx queue
-Date: Mon, 19 Aug 2019 14:53:25 +0200
-Message-ID: <e2829f6caef0e7f6c315c3a96f56e8caaabb45c7.camel@redhat.com>
-In-Reply-To: 20190819114742.GG2588@breakpoint.cc
+Subject: Re: [MPTCP] [PRE-RFC 0/6] mptcp: implement retransmit infrastructure
+Date: Mon, 19 Aug 2019 15:02:47 +0200
+Message-ID: <848b15465394deaa1ca7d5237dea15ff776e2b80.camel@redhat.com>
+In-Reply-To: 20190819110654.GC2588@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 1658
+X-UID: 1659
 
---===============5720745344674757386==
+--===============2786206244898108370==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-08-19 at 13:47 +0200, Florian Westphal wrote:
+Hi,
+
+On Mon, 2019-08-19 at 13:06 +0200, Florian Westphal wrote:
 > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > Charge the data on the rtx queue to the master MPTCP socket, too.
-> > Such memory in uncharged when the data is acked/dequeued.
+> > As suggested by the subj prefix, this is a very early draft, mainly to
+> > discuss design decisions and/or architectural issues. This is only
+> > compile-tested so far.
+> > =
+
+> > In the current status:
+> > - updates the MPTCP unacked sequence number (patches 1-3) on sendmsg()
+> >   - also try to cope with 32 bit sequence number
+> > - queue data (page frags) in MPTCP retransmission queue (patch 4)
+> > - cleanup acked data from retransmission queue and schedule a timeout to
+> >    update MPTCP unacked sequence number (patch 5)
+> > - do memory accounting for the MPTCP rtx queue (patch 6)
 > =
 
-> Could you briefly explain why this is needed?
-> The data is already accounted on the subflows.
+> Can you explain how this rtx queue is expected to be used?
 > =
 
-> Under what circumstances is the data un-charged from a subflow,
-> but still retained on the mptcp retrans list?
+> At this time, we only use one tcp connection for sending data, so
+> we can rely on tcp level retransmits.
+> =
 
-With the proposed patches and the current MPTCP code, that happens
-quite often, even with a single stream and no loss.
+> Is this for future failover case?
 
-The MPTCP-level acks arrives later than TCP-level ones, as we send
-(MPTCP) ack when the user space really read the data. Most/every
-fragment stays in the MPTCP RTX queue for a while, after that the
-corresponding skb has been removed for the TCP transmission queue.
+Yes, with a single subflow, we should not use MPTCP-level
+retransmission, it should be triggered by scenarios using failover
+and/or multiple concurrent substream.
 
-Please let me know if the above is somehow human-parsable ;)
+Well, to be 110% honest, I think that with a wrong/less than perfect
+MPTCP-level retransmission heuristic we could end-up retransmitting
+even with a single flow: since the receiver sends MPTCP-level ack only
+after that the user-space read the data, a slow receiver user-space
+could trigger the timeout on the sender (and now that I have wrote it
+down, it looks a quite bad thing to me :(
+
+[If I'm not completely lost, this is the only question left without an
+answer right???]
 
 Cheers,
 
 Paolo
 
 
---===============5720745344674757386==--
+--===============2786206244898108370==--
