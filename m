@@ -1,132 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============7270398350586577836=="
+Content-Type: multipart/mixed; boundary="===============7960495604158128158=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PRE-RFC 6/6] mptcp: implement memory accounting for mptcp
- rtx queue
-Date: Fri, 16 Aug 2019 18:48:04 +0200
-Message-ID: <e885fa778a668e8ef842ec18cb922f8a0edabbb1.1565970525.git.pabeni@redhat.com>
+Subject: Re: [MPTCP] [PRE-RFC 0/6] mptcp: implement retransmit infrastructure
+Date: Mon, 19 Aug 2019 13:06:54 +0200
+Message-ID: <20190819110654.GC2588@breakpoint.cc>
 In-Reply-To: cover.1565970525.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1651
+X-UID: 1652
 
---===============7270398350586577836==
+--===============7960495604158128158==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Charge the data on the rtx queue to the master MPTCP socket, too.
-Such memory in uncharged when the data is acked/dequeued.
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> As suggested by the subj prefix, this is a very early draft, mainly to
+> discuss design decisions and/or architectural issues. This is only
+> compile-tested so far.
+> =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 18 +++++++++++++++---
- net/mptcp/protocol.h |  1 +
- 2 files changed, 16 insertions(+), 3 deletions(-)
+> In the current status:
+> - updates the MPTCP unacked sequence number (patches 1-3) on sendmsg()
+>   - also try to cope with 32 bit sequence number
+> - queue data (page frags) in MPTCP retransmission queue (patch 4)
+> - cleanup acked data from retransmission queue and schedule a timeout to
+>    update MPTCP unacked sequence number (patch 5)
+> - do memory accounting for the MPTCP rtx queue (patch 6)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5eba4e65ca93..2776a408f3e5 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -121,8 +121,10 @@ static u64 mptcp_update_msk_una(struct sock *sk)
- 			break;
- =
+Can you explain how this rtx queue is expected to be used?
 
- 		list_del(&dfrag->list);
-+		sk_mem_uncharge(sk, dfrag->data_len + dfrag->overhead);
- 		put_page(dfrag->page);
- 	}
-+	sk_mem_reclaim_partial(sk);
- =
+At this time, we only use one tcp connection for sending data, so
+we can rely on tcp level retransmits.
 
- 	if (msk->snd_una !=3D snd_una) {
- 		msk->snd_una =3D snd_una;
-@@ -172,14 +174,15 @@ bool mptcp_page_frag_refill(struct sock *sk, struct p=
-age_frag *pfrag)
- =
+Is this for future failover case?
 
- static inline struct mptcp_data_frag *
- mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfra=
-g,
--		      int offset)
-+		      int orig_offset)
- {
-+	int offset =3D ALIGN(orig_offset, BITS_PER_LONG / 8);
- 	struct mptcp_data_frag *dfrag;
- =
+> Open points:
+> - what about the current seq_una update schema (patch 2-3)? too much comp=
+lex?
+>    too much loose? too much generic?
+> - is it too early to plug any heuristic inside the code? (as done in patc=
+h 3)
 
--	offset =3D ALIGN(offset, BITS_PER_LONG / 8);
- 	dfrag =3D (struct mptcp_data_frag *)(pfrag->page + offset);
- 	dfrag->data_len =3D 0;
- 	dfrag->data_seq =3D msk->write_seq;
-+	dfrag->overhead =3D offset - orig_offset + sizeof(struct mptcp_data_frag);
- 	dfrag->offset =3D offset + sizeof(struct mptcp_data_frag);
- 	dfrag->page =3D pfrag->page;
- =
+As long as they don't expose a particular behaviour i think its fine, it
+can be tweaked/refined later.
 
-@@ -190,8 +193,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
-ock *ssk,
- 			      struct msghdr *msg, long *timeo, int *pmss_now,
- 			      int *ps_goal)
- {
-+	int mss_now, avail_size, size_goal, offset, ret, frag_truesize =3D 0;
- 	bool dfrag_collapsed, collapsed, can_collapse =3D false;
--	int mss_now, avail_size, size_goal, offset, ret;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_ext *mpext =3D NULL;
- 	struct mptcp_data_frag *dfrag;
-@@ -243,6 +246,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
-ock *ssk,
- 	if (!dfrag_collapsed) {
- 		dfrag =3D mptcp_carve_data_frag(msk, pfrag, offset);
- 		offset =3D dfrag->offset;
-+		frag_truesize =3D dfrag->overhead;
- 	}
- 	psize =3D min_t(size_t, pfrag->size - offset, avail_size);
- =
+> - do we really need a timer to update the unacked sequence?
+>   - we can avoid it with an additional atomic operation in
+>     mptcp_incoming_options() - either using an atomic type for 'snd_una' =
+or
+>     use an additional spin lock to protect it (and possibly other fields)=
+[2]
 
-@@ -274,6 +278,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
-sock *ssk,
- 		list_add_tail(&dfrag->list, &msk->rtx_queue);
- 	}
- =
+I think that using a timer is very strange.  I will comment in the patch
+itself.
 
-+	/* charge data on mptcp rtx queue to the master socket
-+	 * Note: we charge such data both to sk and ssk
-+	 */
-+	frag_truesize +=3D ret;
-+	sk_wmem_schedule(sk, frag_truesize);
-+	sk->sk_forward_alloc -=3D frag_truesize;
-+
- 	collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
- 	BUG_ON(collapsed && !can_collapse);
- 	if (collapsed) {
-@@ -888,6 +899,7 @@ static void mptcp_destroy(struct sock *sk)
- =
+>   - still we will likely need a timer to detect that a subflow has become
+>     unusable e.g. due to link down event on the peer side. Should we rely=
+ on
+>     explicit MPTCP notification only (e.g. DEL_ADDR sub-option)?
 
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
- 		list_del(&dfrag->list);
-+		sk_mem_uncharge(sk, dfrag->data_len + dfrag->overhead);
- 		put_page(dfrag->page);
- 	}
- }
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0a6c7c39fc8b..3a0d266576f2 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -113,6 +113,7 @@ struct mptcp_data_frag {
- 	u64 data_seq;
- 	int data_len;
- 	int offset;
-+	int overhead;
- 	struct page *page;
- };
- =
+Ah, that answers my question above.  I don't think we can rely on
+on-wire notifications only.  Client can e.g. move outside of wifi range
+for example, so we would only notice that the tcp connection is
+"blocked" (e.g. outstanding data with no further acks coming in).
 
--- =
+> - retransmission code needs to run in process context, as we will need to
+>   acquire msk socket lock and ssh socket lock in order.
+>   - As MPTCP-level retransmission should be considerably less frequent th=
+an
+>     TCP-level retransmission-timeout, we could use/schedule a workqueue f=
+or
+>     that.
 
-2.20.1
+Agree, workqueue seems right for this.
 
-
---===============7270398350586577836==--
+--===============7960495604158128158==--
