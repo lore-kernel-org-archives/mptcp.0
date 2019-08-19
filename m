@@ -1,35 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============0806506625797856710=="
+Content-Type: multipart/mixed; boundary="===============3831146472990342814=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PRE-RFC 3/6] mptcp: update msk unacked sequence in
- sendmsg()
-Date: Mon, 19 Aug 2019 13:09:27 +0200
-Message-ID: <20190819110927.GD2588@breakpoint.cc>
-In-Reply-To: 165e8c8bb1924963f285a6025e7582487758c561.1565970525.git.pabeni@redhat.com
+Subject: Re: [MPTCP] [PRE-RFC 4/6] mptcp: queue data for mptcp level
+ retransmission
+Date: Mon, 19 Aug 2019 13:12:28 +0200
+Message-ID: <20190819111228.GE2588@breakpoint.cc>
+In-Reply-To: 666fcde927e49fe2e51ebf38e8b6b7d2c3da13d2.1565970525.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1653
+X-UID: 1654
 
---===============0806506625797856710==
+--===============3831146472990342814==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Paolo Abeni <pabeni(a)redhat.com> wrote:
-> +	/* heuristic to avoid doing the expensive data ack update frequently */
-> +	if (snd_una + tcp_sk(sk)->snd_cwnd <=3D msk->write_seq)
-> +		snd_una =3D mptcp_update_msk_una(sk);
+> keep the send page fragment on an MPTCP level retransmission queue.
+> the queue entries are allocated inside the page frag allocator,
+> acquiring an additional reference to the page for each list entry.
+> =
 
-I think this will need to protect against sequence wraparound.
+> Also switch to a custom page frag refill function, to ensure that
+> the current page fragment can always host an MPTCP rtx queue entry.
+> =
 
-> +	/* if we msk just switched to this subflow, update subflow's una
-> +	 * to allow 32 bit ack update to be more accurate
-> +	 */
-> +	subflow =3D subflow_ctx(ssk);
-> +	if (after64(snd_una, subflow->snd_una))
-> +		subflow->snd_una =3D snd_una;
+> The MPTCP rtx queue is flushed at socket destroy() time.
 
-... like you did here.
+> +/* ensure we get enough memory for the frag hdr, beyond some minimal amo=
+unt of
+> + * data
+> + */
+> +bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
+> +{
+> +	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
+> +					pfrag, sk->sk_allocation)))
 
---===============0806506625797856710==--
+Where is that 32U coming from?
+
+> +static inline struct mptcp_data_frag *
+> +mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pf=
+rag,
+> +		      int offset)
+> +{
+> +	struct mptcp_data_frag *dfrag;
+> +
+> +	offset =3D ALIGN(offset, BITS_PER_LONG / 8);
+
+sizeof(long)?
+
+The concept of keeping page frags for rexmit looks good to me, thanks Paolo
+for working on this.
+
+--===============3831146472990342814==--
