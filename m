@@ -1,57 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============1699719265541102608=="
+Content-Type: multipart/mixed; boundary="===============5720745344674757386=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PRE-RFC 4/6] mptcp: queue data for mptcp level
- retransmission
-Date: Mon, 19 Aug 2019 14:46:39 +0200
-Message-ID: <0ab99aa43c716d09d5fc34259e311ab935e759f5.camel@redhat.com>
-In-Reply-To: 20190819111228.GE2588@breakpoint.cc
+Subject: Re: [MPTCP] [PRE-RFC 6/6] mptcp: implement memory accounting for
+ mptcp rtx queue
+Date: Mon, 19 Aug 2019 14:53:25 +0200
+Message-ID: <e2829f6caef0e7f6c315c3a96f56e8caaabb45c7.camel@redhat.com>
+In-Reply-To: 20190819114742.GG2588@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 1657
+X-UID: 1658
 
---===============1699719265541102608==
+--===============5720745344674757386==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-08-19 at 13:12 +0200, Florian Westphal wrote:
+On Mon, 2019-08-19 at 13:47 +0200, Florian Westphal wrote:
 > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > keep the send page fragment on an MPTCP level retransmission queue.
-> > the queue entries are allocated inside the page frag allocator,
-> > acquiring an additional reference to the page for each list entry.
-> > =
-
-> > Also switch to a custom page frag refill function, to ensure that
-> > the current page fragment can always host an MPTCP rtx queue entry.
-> > =
-
-> > The MPTCP rtx queue is flushed at socket destroy() time.
-> > +/* ensure we get enough memory for the frag hdr, beyond some minimal a=
-mount of
-> > + * data
-> > + */
-> > +bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
-> > +{
-> > +	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
-> > +					pfrag, sk->sk_allocation)))
+> > Charge the data on the rtx queue to the master MPTCP socket, too.
+> > Such memory in uncharged when the data is acked/dequeued.
 > =
 
-> Where is that 32U coming from?
+> Could you briefly explain why this is needed?
+> The data is already accounted on the subflows.
+> =
 
-From sk_page_frag_refill(). mptcp_page_frag_refill() is almost the
-same, it just changes the amount of memory reserved.
+> Under what circumstances is the data un-charged from a subflow,
+> but still retained on the mptcp retrans list?
 
-Another option would have renaming sk_page_frag_refill() to
-__sk_page_frag_refill() adding an additional argument for the reserved
-memory, and implement sk_page_frag_refill() and
-mptcp_page_frag_refill() on top of that.
+With the proposed patches and the current MPTCP code, that happens
+quite often, even with a single stream and no loss.
 
-I can't recall why I explicitly avoided such option ;) (possibly to
-avoid touching the ntworking core more)
+The MPTCP-level acks arrives later than TCP-level ones, as we send
+(MPTCP) ack when the user space really read the data. Most/every
+fragment stays in the MPTCP RTX queue for a while, after that the
+corresponding skb has been removed for the TCP transmission queue.
 
-/P
+Please let me know if the above is somehow human-parsable ;)
+
+Cheers,
+
+Paolo
 
 
---===============1699719265541102608==--
+--===============5720745344674757386==--
