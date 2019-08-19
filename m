@@ -1,48 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============2885915104029408675=="
+Content-Type: multipart/mixed; boundary="===============8771692024721491963=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PRE-RFC 6/6] mptcp: implement memory accounting for
- mptcp rtx queue
-Date: Mon, 19 Aug 2019 16:31:03 +0200
-Message-ID: <20190819143103.GI2588@breakpoint.cc>
-In-Reply-To: e2829f6caef0e7f6c315c3a96f56e8caaabb45c7.camel@redhat.com
+Subject: Re: [MPTCP] [PRE-RFC 0/6] mptcp: implement retransmit infrastructure
+Date: Mon, 19 Aug 2019 16:35:33 +0200
+Message-ID: <20190819143533.GJ2588@breakpoint.cc>
+In-Reply-To: 848b15465394deaa1ca7d5237dea15ff776e2b80.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1660
+X-UID: 1661
 
---===============2885915104029408675==
+--===============8771692024721491963==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2019-08-19 at 13:47 +0200, Florian Westphal wrote:
-> > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > > Charge the data on the rtx queue to the master MPTCP socket, too.
-> > > Such memory in uncharged when the data is acked/dequeued.
-> > =
-
-> > Could you briefly explain why this is needed?
-> > The data is already accounted on the subflows.
-> > =
-
-> > Under what circumstances is the data un-charged from a subflow,
-> > but still retained on the mptcp retrans list?
+> On Mon, 2019-08-19 at 13:06 +0200, Florian Westphal wrote:
+> > Is this for future failover case?
 > =
 
-> With the proposed patches and the current MPTCP code, that happens
-> quite often, even with a single stream and no loss.
+> Yes, with a single subflow, we should not use MPTCP-level
+> retransmission, it should be triggered by scenarios using failover
+> and/or multiple concurrent substream.
 > =
 
-> The MPTCP-level acks arrives later than TCP-level ones, as we send
-> (MPTCP) ack when the user space really read the data. Most/every
-> fragment stays in the MPTCP RTX queue for a while, after that the
-> corresponding skb has been removed for the TCP transmission queue.
-> =
+> Well, to be 110% honest, I think that with a wrong/less than perfect
+> MPTCP-level retransmission heuristic we could end-up retransmitting
+> even with a single flow: since the receiver sends MPTCP-level ack only
+> after that the user-space read the data, a slow receiver user-space
+> could trigger the timeout on the sender (and now that I have wrote it
+> down, it looks a quite bad thing to me :(
 
-> Please let me know if the above is somehow human-parsable ;)
+Its not ideal, but I don't think its something that needs
+to be addressed *right now*.
 
-Yes, make sense, thanks for explaining.
+> [If I'm not completely lost, this is the only question left without an
+> answer right???]
 
---===============2885915104029408675==--
+Yes, thanks.
+
+--===============8771692024721491963==--
