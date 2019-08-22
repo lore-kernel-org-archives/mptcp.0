@@ -1,39 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============6714932923965621916=="
+Content-Type: multipart/mixed; boundary="===============3109970053009774761=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH] mptcp: extends interim path manager
-Date: Thu, 22 Aug 2019 15:29:01 +0200
-Message-ID: <48c1899b-19a2-065e-571c-7cd4d6a6cc71@tessares.net>
-In-Reply-To: 17d0a5dddb69889affd14ac77fdbe8f278ddac77.1566479918.git.pabeni@redhat.com
+Subject: [MPTCP] [RFC PATCH v2 0/8] mptcp: implement retransmit infrastructure
+Date: Thu, 22 Aug 2019 15:47:37 +0200
+Message-ID: <cover.1566481012.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1665
+X-UID: 1666
 
---===============6714932923965621916==
+--===============3109970053009774761==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Note this is still early draft, only lightly tested. It builds and somtimes
+it passes the selftests
 
-On 22/08/2019 15:19, Paolo Abeni wrote:
-> This is on top of "mptcp: Implement interim path manager" and extends
-> the infrastructure there so that local address is configurable per ns
-> via sysctl.
+In addition to the first iteration now:
+- implement actual retransmission infrastructure and trigger it when MPTCP
+  timer expires (patches 7,8)
+- fixes several bugs in many patches - but others are still there
 
-I guess you have missed this other patch:
-https://lists.01.org/pipermail/mptcp/2019-August/001661.html
-Or is it to replace it? :)
+RFC v1:
+- updates the MPTCP unacked sequence number (patches 1-3) on sendmsg()
+  - also try to cope with 32 bit sequence number
+- queue data (page frags) in MPTCP retransmission queue
+- cleanup acked data from retransmission queue and schedule a timeout to
+   update MPTCP unacked sequence number (patch 5)
 
-Cheers,
-Matt
+Open points:
+- IIRC, the RFC mandate to always retransmit even on the failing subflow (?=
+!?)
+  why? Should we preserve the original subflow seq number, so that
+  retransmission there will get the same mapping as the original packet?
+
+Paolo Abeni (8):
+  mptcp: move before/after64 into the header file
+  mptcp: update per subflow unacked sequence on pkt reception
+  mptcp: update msk unacked sequence in sendmsg()
+  mptcp: queue data for mptcp level retransmission
+  mptcp: use retransmission timer to update msk una
+  mptcp: implement memory accounting for mptcp rtx queue
+  mptcp: rework mptcp_sendmsg_frag to accept optional dfrag
+  mptcp: implement and use MPTCP-level retransmission
+
+ net/mptcp/options.c  |  31 +++-
+ net/mptcp/protocol.c | 405 +++++++++++++++++++++++++++++++++++++++----
+ net/mptcp/protocol.h |  41 +++++
+ 3 files changed, 437 insertions(+), 40 deletions(-)
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.21.0
 
---===============6714932923965621916==--
+
+--===============3109970053009774761==--
