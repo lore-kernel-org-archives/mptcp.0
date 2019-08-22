@@ -1,48 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============8697628236176441350=="
+Content-Type: multipart/mixed; boundary="===============3767498463354050258=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2] mptcp: Make MPTCP socket block/wakeup ignore
- sk_receive_queue
-Date: Thu, 22 Aug 2019 19:00:26 +0200
-Message-ID: <942c5b1801d6ffc6afa07cc52bbcefa6b03b5983.camel@redhat.com>
-In-Reply-To: 20190803001637.25724-1-mathew.j.martineau@linux.intel.com
+Subject: Re: [MPTCP] [RFC PATCH v2 8/8] mptcp: implement and use MPTCP-level
+ retransmission
+Date: Thu, 22 Aug 2019 20:39:23 +0200
+Message-ID: <b6d423b5f08e03d080dc7f02a8d5415dd8f2864d.camel@redhat.com>
+In-Reply-To: b98c2da44e68a642bc4500297e48ea636cd9fd54.1566481012.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1677
+X-UID: 1678
 
---===============8697628236176441350==
+--===============3767498463354050258==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-08-02 at 17:16 -0700, Mat Martineau wrote:
-> The MPTCP-level socket doesn't use sk_receive_queue, so it was possible
-> for mptcp_recvmsg() to remain blocked when there was data ready for it
-> to read. When the MPTCP socket is waiting for additional data and it
-> releases the subflow socket lock, the subflow may have incoming packets
-> ready to process and it sometimes called subflow_data_ready() before the
-> MPTCP socket called sk_wait_data().
-> =
+On Thu, 2019-08-22 at 15:47 +0200, Paolo Abeni wrote: =
 
-> This change adds a new function for the MPTCP socket to use when waiting
-> for a data ready signal. Atomic bitops with memory barriers are used to
-> set, test, and clear a MPTCP socket flag that indicates waiting subflow
-> data. This flag replaces the sk_receive_queue checks used by other
-> socket types.
-> =
+> +static void mptcp_retransmit(struct work_struct *work)
+> +{
+> +	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, rtx_wo=
+rk);
+> +	struct sock *ssk, *sk =3D &msk->sk.icsk_inet.sk;
+> +	int orig_len, orig_offset, orig_write_seq;
+        ^^^^                       ^^^^^^^^^^^^^^
 
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+For the records, the above is broken, 'orig_write_seq' must be an u64.
 
-(sorry for lagging behind so much)
+It looks like there is still some other issue, self-tests still fail,
+sometime.
 
-The patch LGTM, but I have some related questions: how do you reproduce
-the issue fixed here? can we add that to the self-tests? (I assume/sort
-of recall the patch fix the issue in your scenario).
-
-Thanks,
+Regards,
 
 Paolo
 
 
---===============8697628236176441350==--
+--===============3767498463354050258==--
