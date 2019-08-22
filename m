@@ -1,58 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============3109970053009774761=="
+Content-Type: multipart/mixed; boundary="===============7315031871576521175=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH v2 0/8] mptcp: implement retransmit infrastructure
-Date: Thu, 22 Aug 2019 15:47:37 +0200
-Message-ID: <cover.1566481012.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH v2 1/8] mptcp: move before/after64 into the header
+ file
+Date: Thu, 22 Aug 2019 15:47:38 +0200
+Message-ID: <3e5d99820b25d968e1cd83275a8bf9e53274b523.1566481012.git.pabeni@redhat.com>
+In-Reply-To: cover.1566481012.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1666
+X-UID: 1667
 
---===============3109970053009774761==
+--===============7315031871576521175==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Note this is still early draft, only lightly tested. It builds and somtimes
-it passes the selftests
+So that we can reuse in multiple files
 
-In addition to the first iteration now:
-- implement actual retransmission infrastructure and trigger it when MPTCP
-  timer expires (patches 7,8)
-- fixes several bugs in many patches - but others are still there
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+--
+Squash to "mptcp: Implement MPTCP receive path"
+---
+ net/mptcp/protocol.c | 7 -------
+ net/mptcp/protocol.h | 7 +++++++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-RFC v1:
-- updates the MPTCP unacked sequence number (patches 1-3) on sendmsg()
-  - also try to cope with 32 bit sequence number
-- queue data (page frags) in MPTCP retransmission queue
-- cleanup acked data from retransmission queue and schedule a timeout to
-   update MPTCP unacked sequence number (patch 5)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index aaa71b161c1a..5b7ddbe64e4b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -17,13 +17,6 @@
+ #include <net/mptcp.h>
+ #include "protocol.h"
+ =
 
-Open points:
-- IIRC, the RFC mandate to always retransmit even on the failing subflow (?=
-!?)
-  why? Should we preserve the original subflow seq number, so that
-  retransmission there will get the same mapping as the original packet?
+-static inline bool before64(__u64 seq1, __u64 seq2)
+-{
+-	return (__s64)(seq1 - seq2) < 0;
+-}
+-
+-#define after64(seq2, seq1)	before64(seq1, seq2)
+-
+ static struct socket *__mptcp_fallback_get_ref(const struct mptcp_sock *ms=
+k)
+ {
+ 	sock_owned_by_me((const struct sock *)msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 68877e952780..9f261ee31917 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -275,4 +275,11 @@ static inline struct mptcp_ext *mptcp_get_ext(struct s=
+k_buff *skb)
+ 	return (struct mptcp_ext *)skb_ext_find(skb, SKB_EXT_MPTCP);
+ }
+ =
 
-Paolo Abeni (8):
-  mptcp: move before/after64 into the header file
-  mptcp: update per subflow unacked sequence on pkt reception
-  mptcp: update msk unacked sequence in sendmsg()
-  mptcp: queue data for mptcp level retransmission
-  mptcp: use retransmission timer to update msk una
-  mptcp: implement memory accounting for mptcp rtx queue
-  mptcp: rework mptcp_sendmsg_frag to accept optional dfrag
-  mptcp: implement and use MPTCP-level retransmission
-
- net/mptcp/options.c  |  31 +++-
- net/mptcp/protocol.c | 405 +++++++++++++++++++++++++++++++++++++++----
- net/mptcp/protocol.h |  41 +++++
- 3 files changed, 437 insertions(+), 40 deletions(-)
-
++static inline bool before64(__u64 seq1, __u64 seq2)
++{
++	return (__s64)(seq1 - seq2) < 0;
++}
++
++#define after64(seq2, seq1)	before64(seq1, seq2)
++
+ #endif /* __MPTCP_PROTOCOL_H */
 -- =
 
 2.21.0
 
 
---===============3109970053009774761==--
+--===============7315031871576521175==--
