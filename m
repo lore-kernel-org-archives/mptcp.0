@@ -1,39 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============3767498463354050258=="
+Content-Type: multipart/mixed; boundary="===============7114191749561329115=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH v2 8/8] mptcp: implement and use MPTCP-level
- retransmission
-Date: Thu, 22 Aug 2019 20:39:23 +0200
-Message-ID: <b6d423b5f08e03d080dc7f02a8d5415dd8f2864d.camel@redhat.com>
-In-Reply-To: b98c2da44e68a642bc4500297e48ea636cd9fd54.1566481012.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH] mptcp: remove msk->subflow->sk dereference in
+ pr_debug statement
+Date: Thu, 22 Aug 2019 11:41:10 -0700
+Message-ID: <20190822184110.2456-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1678
+X-UID: 1679
 
---===============3767498463354050258==
+--===============7114191749561329115==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-08-22 at 15:47 +0200, Paolo Abeni wrote: =
+msk->subflow may be NULL when creation of an mptcp_sock fails due
+to the protocol not being enabled.
 
-> +static void mptcp_retransmit(struct work_struct *work)
-> +{
-> +	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, rtx_wo=
-rk);
-> +	struct sock *ssk, *sk =3D &msk->sk.icsk_inet.sk;
-> +	int orig_len, orig_offset, orig_write_seq;
-        ^^^^                       ^^^^^^^^^^^^^^
+squashto: Add key generation and token tree
 
-For the records, the above is broken, 'orig_write_seq' must be an u64.
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It looks like there is still some other issue, self-tests still fail,
-sometime.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index aaa71b161c1a..a58211d8568c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -702,7 +702,7 @@ static void mptcp_destroy(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
 
-Regards,
+-	pr_debug("msk=3D%p, subflow=3D%p", sk, msk->subflow->sk);
++	pr_debug("msk=3D%p", sk);
+ =
 
-Paolo
+ 	token_destroy(msk->token);
+ }
+-- =
+
+2.17.2
 
 
---===============3767498463354050258==--
+--===============7114191749561329115==--
