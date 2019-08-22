@@ -1,71 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============6670395901818771407=="
+Content-Type: multipart/mixed; boundary="===============8697628236176441350=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH] mptcp: extends interim path manager
-Date: Thu, 22 Aug 2019 16:11:15 +0200
-Message-ID: <437bd7a3-8da9-776c-d06a-6c328b74dbb6@tessares.net>
-In-Reply-To: d543c918560e61e4c8318898f58b44a878dd07eb.camel@redhat.com
+Subject: Re: [MPTCP] [PATCH v2] mptcp: Make MPTCP socket block/wakeup ignore
+ sk_receive_queue
+Date: Thu, 22 Aug 2019 19:00:26 +0200
+Message-ID: <942c5b1801d6ffc6afa07cc52bbcefa6b03b5983.camel@redhat.com>
+In-Reply-To: 20190803001637.25724-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1676
+X-UID: 1677
 
---===============6670395901818771407==
+--===============8697628236176441350==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-On 22/08/2019 15:57, Paolo Abeni wrote:
-> On Thu, 2019-08-22 at 15:29 +0200, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 22/08/2019 15:19, Paolo Abeni wrote:
->>> This is on top of "mptcp: Implement interim path manager" and extends
->>> the infrastructure there so that local address is configurable per ns
->>> via sysctl.
->>
->> I guess you have missed this other patch:
->> https://lists.01.org/pipermail/mptcp/2019-August/001661.html
->> Or is it to replace it? :)
+On Fri, 2019-08-02 at 17:16 -0700, Mat Martineau wrote:
+> The MPTCP-level socket doesn't use sk_receive_queue, so it was possible
+> for mptcp_recvmsg() to remain blocked when there was data ready for it
+> to read. When the MPTCP socket is waiting for additional data and it
+> releases the subflow socket lock, the subflow may have incoming packets
+> ready to process and it sometimes called subflow_data_ready() before the
+> MPTCP socket called sk_wait_data().
 > =
 
-> Oops - almost mid-air collision! I looked at the ML after sending out
-> my patch, sorry.
+> This change adds a new function for the MPTCP socket to use when waiting
+> for a data ready signal. Atomic bitops with memory barriers are used to
+> set, test, and clear a MPTCP socket flag that indicates waiting subflow
+> data. This flag replaces the sk_receive_queue checks used by other
+> socket types.
 > =
 
-> I'm fine with your as I missed *pton helpers availability inside the
-> kernel and I likely abused the sysctl table already there.
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-All good, thank you for having looked at the other patch!
+(sorry for lagging behind so much)
 
-> I'd like to retain the ability to additionally bind the 2nd subflow on
-> the specified local address, so that we could do another step towards a
-> working active backup implementation (Should not be that far on top of
-> all pending bugs, modulo pending bugs ;)
+The patch LGTM, but I have some related questions: how do you reproduce
+the issue fixed here? can we add that to the self-tests? (I assume/sort
+of recall the patch fix the issue in your scenario).
 
-Good idea! I only did the modification for the server side but it sounds
-good to modify create_subflow_worker() as well!
-Yeah, it would just be an RFC on top of an RFC, also on top of an RFC
-that would be included in a whole RFC patch-set :-D
+Thanks,
 
-Cheers,
-Matt
-
-> Cheers,
-> =
-
-> Paolo
-> =
+Paolo
 
 
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============6670395901818771407==--
+--===============8697628236176441350==--
