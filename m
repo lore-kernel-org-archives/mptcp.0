@@ -1,85 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============5949019801345524438=="
+Content-Type: multipart/mixed; boundary="===============4767393772566089754=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH] mptcp: extends interim path manager
-Date: Thu, 22 Aug 2019 13:28:34 -0700
-Message-ID: <e3e8e0249172c4a5759047db184d8fc60e8a6bed.camel@linux.intel.com>
-In-Reply-To: 437bd7a3-8da9-776c-d06a-6c328b74dbb6@tessares.net
+Subject: Re: [MPTCP] [PATCH v2] mptcp: Make MPTCP socket block/wakeup ignore
+ sk_receive_queue
+Date: Thu, 22 Aug 2019 14:14:09 -0700
+Message-ID: <alpine.OSX.2.21.1908221405400.27597@gargpiyu-mobl1.amr.corp.intel.com>
+In-Reply-To: 942c5b1801d6ffc6afa07cc52bbcefa6b03b5983.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1681
+X-UID: 1682
 
---===============5949019801345524438==
+--===============4767393772566089754==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-08-22 at 16:11 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
 
-> On 22/08/2019 15:57, Paolo Abeni wrote:
-> > On Thu, 2019-08-22 at 15:29 +0200, Matthieu Baerts wrote:
-> > > Hi Paolo,
-> > > =
+On Thu, 22 Aug 2019, Paolo Abeni wrote:
 
-> > > On 22/08/2019 15:19, Paolo Abeni wrote:
-> > > > This is on top of "mptcp: Implement interim path manager" and exten=
-ds
-> > > > the infrastructure there so that local address is configurable per =
-ns
-> > > > via sysctl.
-> > > =
+> On Fri, 2019-08-02 at 17:16 -0700, Mat Martineau wrote:
+>> The MPTCP-level socket doesn't use sk_receive_queue, so it was possible
+>> for mptcp_recvmsg() to remain blocked when there was data ready for it
+>> to read. When the MPTCP socket is waiting for additional data and it
+>> releases the subflow socket lock, the subflow may have incoming packets
+>> ready to process and it sometimes called subflow_data_ready() before the
+>> MPTCP socket called sk_wait_data().
+>>
+>> This change adds a new function for the MPTCP socket to use when waiting
+>> for a data ready signal. Atomic bitops with memory barriers are used to
+>> set, test, and clear a MPTCP socket flag that indicates waiting subflow
+>> data. This flag replaces the sk_receive_queue checks used by other
+>> socket types.
+>>
+>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>
+> (sorry for lagging behind so much)
+>
+> The patch LGTM, but I have some related questions: how do you reproduce
+> the issue fixed here? can we add that to the self-tests? (I assume/sort
+> of recall the patch fix the issue in your scenario).
+>
 
-> > > I guess you have missed this other patch:
-> > > https://lists.01.org/pipermail/mptcp/2019-August/001661.html
-> > > Or is it to replace it? :)
-> > =
+I was seeing the issue between the multipath-tcp.org kernel and ours, with =
 
-> > Oops - almost mid-air collision! I looked at the ML after sending out
-> > my patch, sorry.
-> > =
+a couple of simple test programs. The multipath-tcp.org system had a =
 
-> > I'm fine with your as I missed *pton helpers availability inside the
-> > kernel and I likely abused the sysctl table already there.
-> =
+program running that would do a recvmsg() and then immediately send =
 
-> All good, thank you for having looked at the other patch!
-> =
+anything it received, and the prototype system would send data and then =
 
-> > I'd like to retain the ability to additionally bind the 2nd subflow on
-> > the specified local address, so that we could do another step towards a
-> > working active backup implementation (Should not be that far on top of
-> > all pending bugs, modulo pending bugs ;)
-> =
+try to read it back. The prototype system could get stuck waiting for a =
 
-> Good idea! I only did the modification for the server side but it sounds
-> good to modify create_subflow_worker() as well!
-> Yeah, it would just be an RFC on top of an RFC, also on top of an RFC
-> that would be included in a whole RFC patch-set :-D
+blocked recvmsg() to return even though the peer had sent the data.
 
-I concur that using the address value for bind() in the outgoing direction =
-is
-a good idea. Probably need to use 'net.mptcp.pm.local_address' (or possibly =
+It may have been timing-dependent, I'll see if I can make it happen in a =
 
-net.mptcp.pm.second_address?) since it would no longer be just the
-'announce_addr' as in Matthieu's patch.
+self test.
 
-Peter.
+--
+Mat Martineau
+Intel
 
-
-
-> Cheers,
-> Matt
-> =
-
-> > Cheers,
-> > =
-
-> > Paolo
-> > =
-
-
-
---===============5949019801345524438==--
+--===============4767393772566089754==--
