@@ -1,56 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============7432403036030657931=="
+Content-Type: multipart/mixed; boundary="===============1457712170990769019=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/2] mptcp: Change options handling so in_addr are in
+Subject: [MPTCP] [PATCH 2/2] mptcp: Modify pm_create_subflow to use in_addr in
  network byte order
-Date: Fri, 23 Aug 2019 18:56:32 -0700
-Message-ID: <20190824015633.3070-1-peter.krystad@linux.intel.com>
+Date: Fri, 23 Aug 2019 18:56:33 -0700
+Message-ID: <20190824015633.3070-2-peter.krystad@linux.intel.com>
+In-Reply-To: 20190824015633.3070-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1695
+X-UID: 1696
 
---===============7432403036030657931==
+--===============1457712170990769019==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Add ADD_ADDR handling
+squashto: Implement path manager interface commands
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/options.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/mptcp/pm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0e7abcea5bae..63ae21e573ef 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -209,7 +209,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- 		mp_opt->addr_id =3D *ptr++;
- 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
- 			mp_opt->add_addr =3D 1;
--			mp_opt->addr.s_addr =3D get_unaligned_be32(ptr);
-+			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
- 			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
- 				 mp_opt->addr.s_addr, mp_opt->addr_id);
- #if IS_ENABLED(CONFIG_IPV6)
-@@ -593,7 +593,8 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
-options *opts)
- 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
- 		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR, TCPOLEN_MPTCP_ADD_ADDR,
- 				      MPTCP_ADDR_IPVERSION_4, opts->addr_id);
--		*ptr++ =3D htonl(opts->addr.s_addr);
-+		memcpy((u8 *)ptr, (u8 *)&opts->addr.s_addr, 4);
-+		ptr +=3D 1;
- 	}
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index c98b92512adf..bc07376a823b 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -73,7 +73,7 @@ int pm_create_subflow(u32 token, u8 remote_id)
  =
 
- #if IS_ENABLED(CONFIG_IPV6)
+ 	remote.sin_family =3D msk->pm.remote_family;
+ 	remote.sin_port =3D htons(msk->dport);
+-	remote.sin_addr.s_addr =3D htonl(msk->pm.remote_addr.s_addr);
++	remote.sin_addr.s_addr =3D msk->pm.remote_addr.s_addr;
+ =
+
+ 	err =3D subflow_connect((struct sock *)msk, &local, &remote, remote_id);
+ =
+
 -- =
 
 2.17.2
 
 
---===============7432403036030657931==--
+--===============1457712170990769019==--
