@@ -1,65 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============6931763108688537397=="
+Content-Type: multipart/mixed; boundary="===============7432403036030657931=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC PATCH v2 4/8] mptcp: queue data for mptcp level
- retransmission
-Date: Fri, 23 Aug 2019 17:34:40 -0700
-Message-ID: <alpine.OSX.2.21.1908231718530.37311@gargpiyu-mobl1.amr.corp.intel.com>
-In-Reply-To: 40a2dd6778b9e83fbf7c34d40d765dc436f97b97.1566481012.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH 1/2] mptcp: Change options handling so in_addr are in
+ network byte order
+Date: Fri, 23 Aug 2019 18:56:32 -0700
+Message-ID: <20190824015633.3070-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1694
+X-UID: 1695
 
---===============6931763108688537397==
+--===============7432403036030657931==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+squashto: Add ADD_ADDR handling
 
-On Thu, 22 Aug 2019, Paolo Abeni wrote:
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/options.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> keep the send page fragment on an MPTCP level retransmission queue.
-> the queue entries are allocated inside the page frag allocator,
-> acquiring an additional reference to the page for each list entry.
->
-> Also switch to a custom page frag refill function, to ensure that
-> the current page fragment can always host an MPTCP rtx queue entry.
->
-> The MPTCP rtx queue is flushed at disconnect() and close() time
->
-> Note that now we need to call __mptcp_init_sock() regarless of mptcp
-> enable status, as the destructor will try to walk the rtx_queue.
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> rfc v1 -> rfc v2:
-> - rtx_queue_tail is now static inline (fix link issue)
-> - simpler ALIGN() usage (Florian)
-> - fix pfrag accounting, adding rtx entry overhead when allocating
->   a new one
-> - fixed page -> virt conversion
-> - always init mptcp data structs
-> - move rtx queue flushing into both disconnect() and close()
-> ---
-> net/mptcp/protocol.c | 106 +++++++++++++++++++++++++++++++++++++++----
-> net/mptcp/protocol.h |  20 ++++++++
-> 2 files changed, 118 insertions(+), 8 deletions(-)
->
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 0e7abcea5bae..63ae21e573ef 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -209,7 +209,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+ 		mp_opt->addr_id =3D *ptr++;
+ 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+ 			mp_opt->add_addr =3D 1;
+-			mp_opt->addr.s_addr =3D get_unaligned_be32(ptr);
++			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
+ 			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
+ 				 mp_opt->addr.s_addr, mp_opt->addr_id);
+ #if IS_ENABLED(CONFIG_IPV6)
+@@ -593,7 +593,8 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
+options *opts)
+ 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+ 		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR, TCPOLEN_MPTCP_ADD_ADDR,
+ 				      MPTCP_ADDR_IPVERSION_4, opts->addr_id);
+-		*ptr++ =3D htonl(opts->addr.s_addr);
++		memcpy((u8 *)ptr, (u8 *)&opts->addr.s_addr, 4);
++		ptr +=3D 1;
+ 	}
+ =
 
-This looks like a good approach to me, including the mptcp_data_frag =
+ #if IS_ENABLED(CONFIG_IPV6)
+-- =
 
-structure in the page frag works well.
-
-I started to think about possible adjustments to make it easier to =
-
-introduce zerocopy later, but quickly realized that would be premature.
+2.17.2
 
 
-Thanks,
-
---
-Mat Martineau
-Intel
-
---===============6931763108688537397==--
+--===============7432403036030657931==--
