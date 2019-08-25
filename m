@@ -1,44 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============5781005158928454515=="
+Content-Type: multipart/mixed; boundary="===============8034700780504660023=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 00/10] mptcp: refactor token code
-Date: Sun, 25 Aug 2019 20:59:29 +0200
-Message-ID: <20190825185939.21596-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH RFC 01/10] mptcp: token: remove token_init
+Date: Sun, 25 Aug 2019 20:59:30 +0200
+Message-ID: <20190825185939.21596-2-fw@strlen.de>
+In-Reply-To: 20190825185939.21596-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1697
+X-UID: 1698
 
---===============5781005158928454515==
+--===============8034700780504660023==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series is intentionally marked RFC so noone bothers
-to squash all of this into the mptcp tree.
+Its not needed, just use the static initialisers.
 
-The idea is to first do a review-friendly series, with
-each change done in an individual patch.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c |  1 -
+ net/mptcp/protocol.h |  1 -
+ net/mptcp/token.c    | 15 ++++-----------
+ 3 files changed, 4 insertions(+), 13 deletions(-)
 
-Then, once consensus is reached (maybe over several iterations),
-I would send a few larger patches suitable for squashing (rather
-than being review friendly...).
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7c12920bed48..847e5c3133ba 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1146,7 +1146,6 @@ void mptcp_proto_init(void)
+ 	mptcp_stream_ops.listen =3D mptcp_listen;
+ 	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
+ =
 
-The patches remove unneeded small helpers, add 'mptcp' prefix
-to non-static functions, add error handling to those that may
-fail and adds a few comments.
+-	token_init();
+ 	subflow_init();
+ 	pm_init();
+ =
 
-Feedback welcome.
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 68877e952780..e97ac14115a2 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -225,7 +225,6 @@ void mptcp_get_options(const struct sk_buff *skb,
+ void mptcp_finish_connect(struct sock *sk, int mp_capable);
+ void mptcp_finish_join(struct sock *sk);
+ =
 
- pm.c       |    6 =
+-void token_init(void);
+ void token_new_request(struct request_sock *req, const struct sk_buff *skb=
+);
+ int token_join_request(struct request_sock *req, const struct sk_buff *skb=
+);
+ int token_join_response(struct sock *sk);
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 506665da8b2d..10d0c2341792 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -31,10 +31,10 @@
+ #include <net/mptcp.h>
+ #include "protocol.h"
+ =
 
- protocol.c |    5 =
+-static struct radix_tree_root token_tree;
+-static struct radix_tree_root token_req_tree;
+-static spinlock_t token_tree_lock;
+-static int token_used;
++static RADIX_TREE(token_tree, GFP_ATOMIC);
++static RADIX_TREE(token_req_tree, GFP_ATOMIC);
++static DEFINE_SPINLOCK(token_tree_lock);
++static int token_used __read_mostly;
+ =
 
- protocol.h |   27 +--
- subflow.c  |   76 ++++++++--
- token.c    |  447 +++++++++++++++++++++++++++-----------------------------=
------
- 5 files changed, 278 insertions(+), 283 deletions(-)
+ static bool find_req_token(u32 token)
+ {
+@@ -392,10 +392,3 @@ void token_destroy(u32 token)
+ 		sock_put(conn);
+ 	spin_unlock_bh(&token_tree_lock);
+ }
+-
+-void token_init(void)
+-{
+-	INIT_RADIX_TREE(&token_tree, GFP_ATOMIC);
+-	INIT_RADIX_TREE(&token_req_tree, GFP_ATOMIC);
+-	spin_lock_init(&token_tree_lock);
+-}
+-- =
+
+2.21.0
 
 
---===============5781005158928454515==--
+--===============8034700780504660023==--
