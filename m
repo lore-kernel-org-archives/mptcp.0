@@ -1,47 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1457712170990769019=="
+Content-Type: multipart/mixed; boundary="===============5781005158928454515=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp: Modify pm_create_subflow to use in_addr in
- network byte order
-Date: Fri, 23 Aug 2019 18:56:33 -0700
-Message-ID: <20190824015633.3070-2-peter.krystad@linux.intel.com>
-In-Reply-To: 20190824015633.3070-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] [PATCH RFC 00/10] mptcp: refactor token code
+Date: Sun, 25 Aug 2019 20:59:29 +0200
+Message-ID: <20190825185939.21596-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 1696
+X-UID: 1697
 
---===============1457712170990769019==
+--===============5781005158928454515==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Implement path manager interface commands
+This series is intentionally marked RFC so noone bothers
+to squash all of this into the mptcp tree.
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/pm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The idea is to first do a review-friendly series, with
+each change done in an individual patch.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c98b92512adf..bc07376a823b 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -73,7 +73,7 @@ int pm_create_subflow(u32 token, u8 remote_id)
- =
+Then, once consensus is reached (maybe over several iterations),
+I would send a few larger patches suitable for squashing (rather
+than being review friendly...).
 
- 	remote.sin_family =3D msk->pm.remote_family;
- 	remote.sin_port =3D htons(msk->dport);
--	remote.sin_addr.s_addr =3D htonl(msk->pm.remote_addr.s_addr);
-+	remote.sin_addr.s_addr =3D msk->pm.remote_addr.s_addr;
- =
+The patches remove unneeded small helpers, add 'mptcp' prefix
+to non-static functions, add error handling to those that may
+fail and adds a few comments.
 
- 	err =3D subflow_connect((struct sock *)msk, &local, &remote, remote_id);
- =
+Feedback welcome.
 
--- =
+ pm.c       |    6 =
 
-2.17.2
+ protocol.c |    5 =
+
+ protocol.h |   27 +--
+ subflow.c  |   76 ++++++++--
+ token.c    |  447 +++++++++++++++++++++++++++-----------------------------=
+-----
+ 5 files changed, 278 insertions(+), 283 deletions(-)
 
 
---===============1457712170990769019==--
+--===============5781005158928454515==--
