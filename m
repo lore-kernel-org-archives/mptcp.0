@@ -1,224 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============2059271186069282095=="
+Content-Type: multipart/mixed; boundary="===============4857639578517714768=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 02/10] mptcp: token: remove two unneeded helpers
-Date: Sun, 25 Aug 2019 20:59:31 +0200
-Message-ID: <20190825185939.21596-3-fw@strlen.de>
+Subject: [MPTCP] [PATCH RFC 03/10] mptcp: token: rename token_join_response
+Date: Sun, 25 Aug 2019 20:59:32 +0200
+Message-ID: <20190825185939.21596-4-fw@strlen.de>
 In-Reply-To: 20190825185939.21596-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1699
+X-UID: 1700
 
---===============2059271186069282095==
+--===============4857639578517714768==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-There were three flavours of almost the same function:
-
-token_lookup_get, the base function that takes a token value and
-looks up the mptcp socket associated with it.
-
-token_new_subflow, same function, but will also set
-subflow->local_nonce.
-
-token_new_join, just like lookup_get, but assigns the
-looked-up socket to subflow->conn.
-
-This renames token_lookup_get to mptcp_token_get_sock to avoid
-make it clear this belongs to mptcp namespace, and then
-changes the callers of token_new_subflow to also init the nonce
-and token_new_join to do the assignment in the caller.
+This function validates the truncated hmac and computes a hmac for use
+in the ack packet.  Rename it and place it where its used.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/pm.c       |  6 +++---
- net/mptcp/protocol.h |  4 +---
- net/mptcp/subflow.c  | 16 ++++++++++----
- net/mptcp/token.c    | 51 +++++++++++---------------------------------
- 4 files changed, 29 insertions(+), 48 deletions(-)
+ net/mptcp/protocol.h |  1 -
+ net/mptcp/subflow.c  | 28 +++++++++++++++++++++++++++-
+ net/mptcp/token.c    | 31 -------------------------------
+ 3 files changed, 27 insertions(+), 33 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 32be34a5f951..559a004c597d 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -33,7 +33,7 @@ static int pm_pernet_id;
- int pm_announce_addr(u32 token, sa_family_t family, u8 local_id,
- 		     struct in_addr *addr)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(token_lookup_get(token));
-+	struct mptcp_sock *msk =3D mptcp_token_get_sock(token);
- 	int err =3D 0;
- =
-
- 	if (!msk)
-@@ -58,7 +58,7 @@ int pm_announce_addr(u32 token, sa_family_t family, u8 lo=
-cal_id,
- =
-
- int pm_remove_addr(u32 token, u8 local_id)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(token_lookup_get(token));
-+	struct mptcp_sock *msk =3D mptcp_token_get_sock(token);
- =
-
- 	if (!msk)
- 		return -EINVAL;
-@@ -72,7 +72,7 @@ int pm_remove_addr(u32 token, u8 local_id)
- =
-
- int pm_create_subflow(u32 token, u8 remote_id)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(token_lookup_get(token));
-+	struct mptcp_sock *msk =3D mptcp_token_get_sock(token);
- 	struct sockaddr_in remote;
- 	struct sockaddr_in local;
- 	int err;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e97ac14115a2..1655283dbd6a 100644
+index 1655283dbd6a..89bd68f85856 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -232,11 +232,9 @@ int token_join_valid(struct request_sock *req,
+@@ -227,7 +227,6 @@ void mptcp_finish_join(struct sock *sk);
+ =
+
+ void token_new_request(struct request_sock *req, const struct sk_buff *skb=
+);
+ int token_join_request(struct request_sock *req, const struct sk_buff *skb=
+);
+-int token_join_response(struct sock *sk);
+ int token_join_valid(struct request_sock *req,
  		     struct tcp_options_received *rx_opt);
  void token_destroy_request(u32 token);
- void token_new_connect(struct sock *sk);
--void token_new_subflow(struct sock *sk);
- void token_new_accept(struct sock *sk);
--int token_new_join(struct sock *sk);
- void token_update_accept(struct sock *sk, struct sock *conn);
--struct sock *token_lookup_get(u32 token);
-+struct mptcp_sock *mptcp_token_get_sock(u32 token);
- void token_release(u32 token);
- void token_destroy(u32 token);
- =
-
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 27afc64d377f..fc507e091cf5 100644
+index fc507e091cf5..72ad9a324677 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -24,7 +24,11 @@ static int subflow_rebuild_header(struct sock *sk)
- 		token_new_connect(sk);
- 	} else if (subflow->request_join && !subflow->local_nonce) {
- 		pr_debug("subflow=3D%p", sk);
--		token_new_subflow(sk);
-+		mptcp_token_get_sock(subflow->token);
-+
-+		do {
-+			get_random_bytes(&subflow->local_nonce, sizeof(u32));
-+		} while (!subflow->local_nonce);
+@@ -96,6 +96,32 @@ static void subflow_v4_init_req(struct request_sock *req,
  	}
- =
-
- 	return inet_sk_rebuild_header(sk);
-@@ -179,10 +183,14 @@ static struct sock *subflow_syn_recv_sock(const struc=
-t sock *sk,
- 		if (ctx->mp_capable) {
- 			token_new_accept(child);
- 		} else if (ctx->mp_join) {
--			if (token_new_join(child))
-+			struct mptcp_sock *owner;
-+
-+			owner =3D mptcp_token_get_sock(ctx->token);
-+			if (!owner)
- 				goto close_child;
--			else
--				mptcp_finish_join(child);
-+
-+			ctx->conn =3D (struct sock *)owner;
-+			mptcp_finish_join(child);
- 		}
- 	}
- =
-
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 10d0c2341792..329ea407adf2 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -288,23 +288,6 @@ void token_new_connect(struct sock *sk)
- 	spin_unlock_bh(&token_tree_lock);
  }
  =
 
--/* take reference to connection and create nonce for secondary subflow */
--void token_new_subflow(struct sock *sk)
--{
--	struct subflow_context *subflow =3D subflow_ctx(sk);
--	struct sock *conn;
--
--	pr_debug("subflow=3D%p", subflow);
--
--	spin_lock_bh(&token_tree_lock);
--	conn =3D __token_lookup(subflow->token);
--	if (conn)
--		sock_hold(conn);
--	spin_unlock_bh(&token_tree_lock);
--
--	get_random_bytes(&subflow->local_nonce, sizeof(u32));
--}
--
- void token_new_accept(struct sock *sk)
++/* validate received truncated hmac and create hmac for third ACK */
++static bool subflow_hmac_ok(struct subflow_context *subflow)
++{
++	u8 hmac[MPTCPOPT_HMAC_LEN];
++	u64 thmac;
++
++	pr_debug("subflow=3D%p, token=3D%u", subflow, subflow->token);
++
++	crypto_hmac_sha1(subflow->remote_key, subflow->local_key,
++			 subflow->remote_nonce, subflow->local_nonce,
++			 (u32 *)hmac);
++
++	thmac =3D get_unaligned_be64(hmac);
++	pr_debug("thmac=3D%llu", thmac);
++
++	if (thmac !=3D subflow->thmac) {
++		pr_info("HMAC FAILURE: %llx vs %llx\n", thmac, subflow->thmac);
++		return false;
++	}
++
++	crypto_hmac_sha1(subflow->local_key, subflow->remote_key,
++			 subflow->local_nonce, subflow->remote_nonce,
++			 (u32 *)subflow->hmac);
++	return true;
++}
++
+ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
+skb)
  {
  	struct subflow_context *subflow =3D subflow_ctx(sk);
-@@ -328,36 +311,28 @@ void token_update_accept(struct sock *sk, struct sock=
- *conn)
- 	spin_unlock_bh(&token_tree_lock);
+@@ -119,7 +145,7 @@ static void subflow_finish_connect(struct sock *sk, con=
+st struct sk_buff *skb)
+ 		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u",
+ 			 subflow_ctx(sk), subflow->thmac,
+ 			 subflow->remote_nonce);
+-		if (token_join_response(sk)) {
++		if (!subflow_hmac_ok(subflow)) {
+ 			subflow->mp_join =3D 0;
+ 			// @@ need to trigger RST
+ 		} else {
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 329ea407adf2..fc0cbd76d7a1 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -91,28 +91,6 @@ static void new_req_join(struct request_sock *req, struc=
+t sock *sk,
+ 		 subflow_req->thmac);
  }
  =
 
--int token_new_join(struct sock *sk)
+-static int new_rsp_join(struct sock *sk)
 -{
 -	struct subflow_context *subflow =3D subflow_ctx(sk);
--	struct sock *conn;
+-	u8 hmac[MPTCPOPT_HMAC_LEN];
+-	u64 thmac;
 -
--	spin_lock_bh(&token_tree_lock);
--	conn =3D __token_lookup(subflow->token);
--	if (conn)
--		sock_hold(conn);
--	spin_unlock_bh(&token_tree_lock);
+-	crypto_hmac_sha1(subflow->remote_key, subflow->local_key,
+-			 subflow->remote_nonce, subflow->local_nonce,
+-			 (u32 *)hmac);
 -
--	if (!conn)
+-	thmac =3D get_unaligned_be64(hmac);
+-	pr_debug("thmac=3D%llu", thmac);
+-	if (thmac !=3D subflow->thmac)
 -		return -1;
 -
--	subflow->conn =3D conn;
+-	crypto_hmac_sha1(subflow->local_key, subflow->remote_key,
+-			 subflow->local_nonce, subflow->remote_nonce,
+-			 (u32 *)subflow->hmac);
 -
 -	return 0;
 -}
 -
--struct sock *token_lookup_get(u32 token)
-+/**
-+ * mptcp_token_get_sock - retrieve mptcp connection sock using its token
-+ * @token - token of the mptcp connection to retrieve
-+ *
-+ * This function returns the mptcp connection structure with the given tok=
-en.
-+ * A reference count on the mptcp socket returned is taken.
-+ *
-+ * returns NULL if no connection with the given token value exists.
-+ */
-+struct mptcp_sock *mptcp_token_get_sock(u32 token)
+ static int new_join_valid(struct request_sock *req, struct sock *sk,
+ 			  struct tcp_options_received *rx_opt)
  {
- 	struct sock *conn;
- =
-
- 	spin_lock_bh(&token_tree_lock);
- 	conn =3D __token_lookup(token);
-+	if (conn && WARN_ON_ONCE(conn =3D=3D (struct sock *)&token_used))
-+		conn =3DNULL;
- 	if (conn)
- 		sock_hold(conn);
- 	spin_unlock_bh(&token_tree_lock);
- =
-
--	return conn;
-+	return mptcp_sk(conn);
+@@ -237,15 +215,6 @@ int token_join_request(struct request_sock *req, const=
+ struct sk_buff *skb)
+ 	return 0;
  }
  =
 
- void token_destroy_request(u32 token)
+-/* validate received truncated hmac and create hmac for third ACK */
+-int token_join_response(struct sock *sk)
+-{
+-	struct subflow_context *subflow =3D subflow_ctx(sk);
+-
+-	pr_debug("subflow=3D%p, token=3D%u", subflow, subflow->token);
+-	return new_rsp_join(sk);
+-}
+-
+ /* validate hmac received in third ACK */
+ int token_join_valid(struct request_sock *req,
+ 		     struct tcp_options_received *rx_opt)
 -- =
 
 2.21.0
 
 
---===============2059271186069282095==--
+--===============4857639578517714768==--
