@@ -1,63 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============3049718232217626381=="
+Content-Type: multipart/mixed; boundary="===============6995669624461033907=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: fall back to tcp when dss checksum are
- requested
-Date: Mon, 26 Aug 2019 14:48:12 +0200
-Message-ID: <20190826124812.17481-1-fw@strlen.de>
+Subject: Re: [MPTCP] [RFC] mptcp: Implement interim path manager
+Date: Mon, 26 Aug 2019 17:20:28 +0200
+Message-ID: <73e8a5be4a72c404d0d2b956c361f0743594face.camel@redhat.com>
+In-Reply-To: 20190807225443.3051-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1708
+X-UID: 1709
 
---===============3049718232217626381==
+--===============6995669624461033907==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-No other choice.  Without this, peer that requested DSS checksum will reset
-the connection as soon as DSS options without checksums arrive.
+On Wed, 2019-08-07 at 15:54 -0700, Peter Krystad wrote:
+> @@ -91,16 +95,32 @@ int pm_remove_subflow(u32 token, u8 remote_id)
+>  =
 
-squashto: mptcp: Handle MPTCP TCP options
+>  void pm_new_connection(struct mptcp_sock *msk, int server_side)
+>  {
+> -	pr_debug("msk=3D%p", msk);
+> +	struct mptcp_pm_data *pm =3D &msk->pm;
+> +
+> +	pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
+>  =
 
-Cc: Peter Krystad <peter.krystad(a)linux.intel.com>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/options.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> -	msk->pm.server_side =3D server_side;
+> +	pm->server_side =3D server_side;
+> +	pm->token =3D msk->token;
+> +
+> +	/* trigger announce address in interim local path manager */
+> +	if (pm->server_side) {
+> +		INIT_WORK(&pm->addr_work, announce_addr_worker);
+> +		queue_work(mptcp_wq, &pm->addr_work);
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 9f892478d336..deee4394c4c5 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -37,6 +37,22 @@ void mptcp_parse_option(const unsigned char *ptr, int op=
-size,
- 		    (mp_opt->flags & MPTCP_CAP_EXTENSIBILITY))
- 			break;
- =
+I think that here we need to acquire a reference to the related msk
+socket, or we can get use-after-free depending on socket shutdown and
+workqueue scheduling.
 
-+		/* RFC 6824, Section 3.1:
-+		 * "For the Checksum Required bit (labeled "A"), if either
-+		 * host requires the use of checksums, checksums MUST be used.
-+		 * In other words, the only way for checksums not to be used
-+		 * is if both hosts in their SYNs set A=3D0."
-+		 *
-+		 * Section 3.3.0:
-+		 * "If a checksum is not present when its use has been
-+		 * negotiated, the receiver MUST close the subflow with a RST as it is
-+		 * considered broken."
-+		 *
-+		 * We don't implement DSS checksum - fall back to TCP.
-+		 */
-+		if (mp_opt->flags & MPTCP_CAP_CHECKSUM_REQD)
-+			break;
-+
- 		mp_opt->mp_capable =3D 1;
- 		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
- 		ptr +=3D 8;
--- =
+Such reference should be releases by the worker itself.
 
-2.21.0
+Other workqueue usage below should need a similar change.
+
+Cheers,
+
+Paolo
 
 
---===============3049718232217626381==--
+--===============6995669624461033907==--
