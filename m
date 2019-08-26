@@ -1,76 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============2501126468698593524=="
+Content-Type: multipart/mixed; boundary="===============0010466716353772028=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH] mptcp: fall back to tcp when dss checksum are
  requested
-Date: Mon, 26 Aug 2019 10:35:24 -0700
-Message-ID: <f08c3a3f262768ef4ce96849900b027cf15e7f8d.camel@linux.intel.com>
-In-Reply-To: 20190826124812.17481-1-fw@strlen.de
+Date: Mon, 26 Aug 2019 20:11:32 +0200
+Message-ID: <20190826181132.GX20113@breakpoint.cc>
+In-Reply-To: f08c3a3f262768ef4ce96849900b027cf15e7f8d.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1710
+X-UID: 1711
 
---===============2501126468698593524==
+--===============0010466716353772028==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
-Hi Florian -
-
-My thinking here was that code in mptcp_parse_options() just parses the
-options without having knowledge about configuration. There is existing log=
-ic
-for peer requesting checksums in subflow_v4_init_req().
-
-Peter.
-
-On Mon, 2019-08-26 at 14:48 +0200, Florian Westphal wrote:
-> No other choice.  Without this, peer that requested DSS checksum will res=
-et
-> the connection as soon as DSS options without checksums arrive.
+Peter Krystad <peter.krystad(a)linux.intel.com> wrote:
 > =
 
-> squashto: mptcp: Handle MPTCP TCP options
+> Hi Florian -
 > =
 
-> Cc: Peter Krystad <peter.krystad(a)linux.intel.com>
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/options.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> =
+> My thinking here was that code in mptcp_parse_options() just parses the
+> options without having knowledge about configuration. There is existing l=
+ogic
+> for peer requesting checksums in subflow_v4_init_req().
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 9f892478d336..deee4394c4c5 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -37,6 +37,22 @@ void mptcp_parse_option(const unsigned char *ptr, int =
-opsize,
->  		    (mp_opt->flags & MPTCP_CAP_EXTENSIBILITY))
->  			break;
->  =
+Uh, I don't understand this then.  Can you fix this?
 
-> +		/* RFC 6824, Section 3.1:
-> +		 * "For the Checksum Required bit (labeled "A"), if either
-> +		 * host requires the use of checksums, checksums MUST be used.
-> +		 * In other words, the only way for checksums not to be used
-> +		 * is if both hosts in their SYNs set A=3D0."
-> +		 *
-> +		 * Section 3.3.0:
-> +		 * "If a checksum is not present when its use has been
-> +		 * negotiated, the receiver MUST close the subflow with a RST as it is
-> +		 * considered broken."
-> +		 *
-> +		 * We don't implement DSS checksum - fall back to TCP.
-> +		 */
-> +		if (mp_opt->flags & MPTCP_CAP_CHECKSUM_REQD)
-> +			break;
-> +
->  		mp_opt->mp_capable =3D 1;
->  		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
->  		ptr +=3D 8;
+mptcp-next can't talk to mptcp kernel unless one disables checksums on
+the mptcp kernel.
 
+mptcp (out of tree) excepts checksums in default settings and will reset
+the connection quickly.  I don't see how to fallback to tcp in that case
+except with the patch I sent (not setting mp capable).
 
---===============2501126468698593524==--
+Thanks.
+
+--===============0010466716353772028==--
