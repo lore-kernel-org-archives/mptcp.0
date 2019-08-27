@@ -1,113 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============2424361398380968548=="
+Content-Type: multipart/mixed; boundary="===============5272733566906220201=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC 02/10] mptcp: token: remove two unneeded
- helpers
-Date: Tue, 27 Aug 2019 18:59:28 +0200
-Message-ID: <56c025d7-b7ec-c34b-8b7f-30784c661f5f@tessares.net>
-In-Reply-To: 20190825185939.21596-3-fw@strlen.de
+Subject: Re: [MPTCP] [PATCH RFC 08/10] mptcp: token: add error handling for
+ token_new_accept
+Date: Tue, 27 Aug 2019 18:59:45 +0200
+Message-ID: <90a07742-4a1a-a3b7-56fd-9fbaf884e944@tessares.net>
+In-Reply-To: 20190825185939.21596-9-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1715
+X-UID: 1716
 
---===============2424361398380968548==
+--===============5272733566906220201==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Florian,
 
+Just a detail :)
+
 On 25/08/2019 20:59, Florian Westphal wrote:
-> There were three flavours of almost the same function:
+> Insertion into radix tree might fail, so add error handling for this.
 > =
-
-> token_lookup_get, the base function that takes a token value and
-> looks up the mptcp socket associated with it.
-> =
-
-> token_new_subflow, same function, but will also set
-> subflow->local_nonce.
-> =
-
-> token_new_join, just like lookup_get, but assigns the
-> looked-up socket to subflow->conn.
-> =
-
-> This renames token_lookup_get to mptcp_token_get_sock to avoid
-> make it clear this belongs to mptcp namespace, and then
-> changes the callers of token_new_subflow to also init the nonce
-> and token_new_join to do the assignment in the caller.
-
-Good idea!
 
 > Signed-off-by: Florian Westphal <fw(a)strlen.de>
 > ---
->  net/mptcp/pm.c       |  6 +++---
->  net/mptcp/protocol.h |  4 +---
->  net/mptcp/subflow.c  | 16 ++++++++++----
->  net/mptcp/token.c    | 51 +++++++++++---------------------------------
->  4 files changed, 29 insertions(+), 48 deletions(-)
+>  net/mptcp/protocol.h |  2 +-
+>  net/mptcp/subflow.c  |  5 ++++-
+>  net/mptcp/token.c    | 31 +++++++++++++++----------------
+>  3 files changed, 20 insertions(+), 18 deletions(-)
+> =
 
-(...)
-
-> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-> index 10d0c2341792..329ea407adf2 100644
-> --- a/net/mptcp/token.c
-> +++ b/net/mptcp/token.c
-
-(...)
-
-> @@ -328,36 +311,28 @@ void token_update_accept(struct sock *sk, struct so=
-ck *conn)
->  	spin_unlock_bh(&token_tree_lock);
->  }
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 7db59830a02a..a1e207db6703 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -232,7 +232,7 @@ bool mptcp_token_join_valid(const struct request_sock=
+ *req,
+>  			    const struct tcp_options_received *rx_opt);
+>  void token_destroy_request(u32 token);
+>  int mptcp_token_new_connect(struct sock *sk);
+> -void token_new_accept(struct sock *sk);
+> +int mptcp_token_new_accept(u32 token);
+>  void mptcp_token_update_accept(struct sock *sk, struct sock *conn);
+>  struct mptcp_sock *mptcp_token_get_sock(u32 token);
+>  void token_release(u32 token);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index a57bb6546261..85fb7a52e274 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -217,7 +217,10 @@ static struct sock *subflow_syn_recv_sock(const stru=
+ct sock *sk,
+>  			goto close_child;
 >  =
 
-> -int token_new_join(struct sock *sk)
-> -{
-> -	struct subflow_context *subflow =3D subflow_ctx(sk);
-> -	struct sock *conn;
-> -
-> -	spin_lock_bh(&token_tree_lock);
-> -	conn =3D __token_lookup(subflow->token);
-> -	if (conn)
-> -		sock_hold(conn);
-> -	spin_unlock_bh(&token_tree_lock);
-> -
-> -	if (!conn)
-> -		return -1;
-> -
-> -	subflow->conn =3D conn;
-> -
-> -	return 0;
-> -}
-> -
-> -struct sock *token_lookup_get(u32 token)
-> +/**
-> + * mptcp_token_get_sock - retrieve mptcp connection sock using its token
-> + * @token - token of the mptcp connection to retrieve
-> + *
-> + * This function returns the mptcp connection structure with the given t=
-oken.
-> + * A reference count on the mptcp socket returned is taken.
-> + *
-> + * returns NULL if no connection with the given token value exists.
-> + */
-> +struct mptcp_sock *mptcp_token_get_sock(u32 token)
->  {
->  	struct sock *conn;
->  =
+>  		if (ctx->mp_capable) {
+> -			token_new_accept(child);
+> +			int ret =3D mptcp_token_new_accept(ctx->token);
+> +
+> +			if (ret)
 
->  	spin_lock_bh(&token_tree_lock);
->  	conn =3D __token_lookup(token);
-> +	if (conn && WARN_ON_ONCE(conn =3D=3D (struct sock *)&token_used))
-
-Why do we need to do this check after each lookup?
-
-> +		conn =3DNULL;
-
-(detail: a space is missing here).
+Detail: do we really need "ret" here? I mean maybe you added the
+variable to use it somewhere else?
 
 Cheers,
 Matt
@@ -119,4 +74,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============2424361398380968548==--
+--===============5272733566906220201==--
