@@ -1,44 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============4176954719756650035=="
+Content-Type: multipart/mixed; boundary="===============4081636234480480019=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC 00/10] mptcp: refactor token code
-Date: Tue, 27 Aug 2019 20:06:45 +0200
-Message-ID: <20190827180645.GC20113@breakpoint.cc>
-In-Reply-To: cbd96f1d-056b-200c-105b-6c7cd746902c@tessares.net
+Subject: Re: [MPTCP] [PATCH RFC 09/10] mptcp: token: fold destroy_token helper
+Date: Tue, 27 Aug 2019 20:08:38 +0200
+Message-ID: <20190827180838.GD20113@breakpoint.cc>
+In-Reply-To: ebf2bdc7-8133-664e-c4d0-bb68c33e566c@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1720
+X-UID: 1721
 
---===============4176954719756650035==
+--===============4081636234480480019==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> For the 'mptcp_' prefix, we made sure to add them to all functions
-> exposed outside net/mptcp and Peter got the excellent idea to move all
-> functions only needed in net/mptcp into net/mptcp/protocol.h. We didn't
-> add 'mptcp_' prefix for all these "internal" functions but it certainly
-> makes sense to do that. I guess it is useful when debugging if you see
-> these functions in a call trace or in the list of functions available
-> for tracing.
+> > -void token_destroy_request(u32 token)
+> > +/**
+> > + * mptcp_token_destroy_request - remove mptcp connection/token
+> > + * @token - token of mptcp connection to remove
+> > + *
+> > + * Remove the not-yey-fully-established incoming connection identified
 > =
 
-> Do you think we should do the same for "crypto" and "subflow" and "pm"?
-> I guess "pm" and "subflow" are keywords mainly used in "mptcp" but it is
-> maybe not clear for everybody.
+> yey? or "yay!!!"? maybe more "yet" I guess :-D
 
-Yes.  Subflow is maybe fine though.
+Right.  I'll run aspell on the series next time.
 
-pm is 'power mangement', so I think it makes sense to prefix mptcp_
-there.
+> > + * by @token. If the connection isn't found, no action is taken.
+> =
 
-> The patches look very good to me, just a few questions and one or two
-> typos, nothing important. I guess other people will also have a look at
-> them :)
+> Is it to explain why we don't do anything with *cur?
 
-Thanks a lot for the review, I will respin a new version later this
-week.
+Right, I'll remove cur.
 
---===============4176954719756650035==--
+> >  	spin_lock_bh(&token_tree_lock);
+> > -	conn =3D destroy_token(token);
+> > +	conn =3D radix_tree_delete(&token_tree, token);
+> >  	if (conn)
+> =
+
+> Is it no longer needed to check "conn !=3D &token_used" here?
+
+Right, I'll add it back -- thanks!
+
+--===============4081636234480480019==--
