@@ -1,52 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============2324593250680375923=="
+Content-Type: multipart/mixed; boundary="===============1355319590537834014=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 2/2] mptcp: Modify pm_create_subflow to use
- in_addr in network byte order
-Date: Tue, 27 Aug 2019 11:37:51 -0700
-Message-ID: <alpine.OSX.2.21.1908271137300.10328@aaggar2-mobl.amr.corp.intel.com>
-In-Reply-To: 20190824015633.3070-2-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [RFC] mptcp: Implement interim path manager
+Date: Tue, 27 Aug 2019 12:56:24 -0700
+Message-ID: <664398745630274fd811f0704d299635002653fa.camel@linux.intel.com>
+In-Reply-To: 73e8a5be4a72c404d0d2b956c361f0743594face.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1723
+X-UID: 1724
 
---===============2324593250680375923==
+--===============1355319590537834014==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Fri, 23 Aug 2019, Peter Krystad wrote:
+Hi Paolo -
 
-> squashto: Implement path manager interface commands
->
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> ---
-> net/mptcp/pm.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index c98b92512adf..bc07376a823b 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -73,7 +73,7 @@ int pm_create_subflow(u32 token, u8 remote_id)
->
-> 	remote.sin_family =3D msk->pm.remote_family;
-> 	remote.sin_port =3D htons(msk->dport);
-> -	remote.sin_addr.s_addr =3D htonl(msk->pm.remote_addr.s_addr);
-> +	remote.sin_addr.s_addr =3D msk->pm.remote_addr.s_addr;
->
-> 	err =3D subflow_connect((struct sock *)msk, &local, &remote, remote_id);
->
-> -- =
+On Mon, 2019-08-26 at 17:20 +0200, Paolo Abeni wrote:
+> On Wed, 2019-08-07 at 15:54 -0700, Peter Krystad wrote:
+> > @@ -91,16 +95,32 @@ int pm_remove_subflow(u32 token, u8 remote_id)
+> >  =
 
-> 2.17.2
+> >  void pm_new_connection(struct mptcp_sock *msk, int server_side)
+> >  {
+> > -	pr_debug("msk=3D%p", msk);
+> > +	struct mptcp_pm_data *pm =3D &msk->pm;
+> > +
+> > +	pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
+> >  =
 
-Both patches look good. Thanks.
+> > -	msk->pm.server_side =3D server_side;
+> > +	pm->server_side =3D server_side;
+> > +	pm->token =3D msk->token;
+> > +
+> > +	/* trigger announce address in interim local path manager */
+> > +	if (pm->server_side) {
+> > +		INIT_WORK(&pm->addr_work, announce_addr_worker);
+> > +		queue_work(mptcp_wq, &pm->addr_work);
+> =
 
---
-Mat Martineau
-Intel
+> I think that here we need to acquire a reference to the related msk
+> socket, or we can get use-after-free depending on socket shutdown and
+> workqueue scheduling.
 
---===============2324593250680375923==--
+Thanks for the review, I'll add this and submit a v2.
+
+Peter.
+
+> Such reference should be releases by the worker itself.
+> =
+
+> Other workqueue usage below should need a similar change.
+> =
+
+> Cheers,
+> =
+
+> Paolo
+> =
+
+
+
+--===============1355319590537834014==--
