@@ -1,56 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============6936348274008590710=="
+Content-Type: multipart/mixed; boundary="===============2324593250680375923=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: remove msk->subflow->sk dereference in
- pr_debug statement
-Date: Tue, 27 Aug 2019 11:09:36 -0700
-Message-ID: <alpine.OSX.2.21.1908271108420.10328@aaggar2-mobl.amr.corp.intel.com>
-In-Reply-To: 20190822184110.2456-1-peter.krystad@linux.intel.com
+Subject: Re: [MPTCP] [PATCH 2/2] mptcp: Modify pm_create_subflow to use
+ in_addr in network byte order
+Date: Tue, 27 Aug 2019 11:37:51 -0700
+Message-ID: <alpine.OSX.2.21.1908271137300.10328@aaggar2-mobl.amr.corp.intel.com>
+In-Reply-To: 20190824015633.3070-2-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1722
+X-UID: 1723
 
---===============6936348274008590710==
+--===============2324593250680375923==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Thu, 22 Aug 2019, Peter Krystad wrote:
+On Fri, 23 Aug 2019, Peter Krystad wrote:
 
-> msk->subflow may be NULL when creation of an mptcp_sock fails due
-> to the protocol not being enabled.
->
-> squashto: Add key generation and token tree
+> squashto: Implement path manager interface commands
 >
 > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 > ---
-> net/mptcp/protocol.c | 2 +-
+> net/mptcp/pm.c | 2 +-
 > 1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index aaa71b161c1a..a58211d8568c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -702,7 +702,7 @@ static void mptcp_destroy(struct sock *sk)
-> {
-> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index c98b92512adf..bc07376a823b 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -73,7 +73,7 @@ int pm_create_subflow(u32 token, u8 remote_id)
 >
-> -	pr_debug("msk=3D%p, subflow=3D%p", sk, msk->subflow->sk);
-> +	pr_debug("msk=3D%p", sk);
+> 	remote.sin_family =3D msk->pm.remote_family;
+> 	remote.sin_port =3D htons(msk->dport);
+> -	remote.sin_addr.s_addr =3D htonl(msk->pm.remote_addr.s_addr);
+> +	remote.sin_addr.s_addr =3D msk->pm.remote_addr.s_addr;
 >
-> 	token_destroy(msk->token);
-> }
+> 	err =3D subflow_connect((struct sock *)msk, &local, &remote, remote_id);
+>
 > -- =
 
 > 2.17.2
->
 
-Looks good to merge, thanks for the fix.
+Both patches look good. Thanks.
 
 --
 Mat Martineau
 Intel
 
---===============6936348274008590710==--
+--===============2324593250680375923==--
