@@ -1,100 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============8785477343908536942=="
+Content-Type: multipart/mixed; boundary="===============6719511763309387322=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] tcp: fix hooking for mptcp_incoming_options()
-Date: Wed, 28 Aug 2019 09:55:15 -0700
-Message-ID: <alpine.OSX.2.21.1908280947490.21729@aaggar2-mobl.amr.corp.intel.com>
-In-Reply-To: 742d71b4208c8252c434fe0e34d4429b77c3da70.1566923129.git.pabeni@redhat.com
+Subject: Re: [MPTCP] [PATCH v2] mptcp: Implement interim path manager
+Date: Wed, 28 Aug 2019 12:10:18 -0700
+Message-ID: <25dbcf71792922f89bad73354d79db6112c18dd0.camel@linux.intel.com>
+In-Reply-To: 7b26de17efcbb57a0bccb49f8497b1ab61f000ad.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1739
+X-UID: 1740
 
---===============8785477343908536942==
+--===============6719511763309387322==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 28 Aug 2019, Paolo Abeni wrote:
+On Wed, 2019-08-28 at 10:18 +0200, Paolo Abeni wrote:
+> Hi Peter,
+> =
 
-> Currently we don't process mptcp options for half-open sockets, e.g.
-> for packet with payload delivered to the rx queue via
-> tcp_rcv_state_process(), and for pure ack landing in the same code path.
->
-> We can deal with the first code path moving the existing
-> mptcp_incoming_options() hook inside tcp_data_queue(), but we need
-> to add an additional hook to deal with the specified pure acks
->
-> Fixes: d2d58ff48665 ("mptcp: Implement MPTCP receive path")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> I'm ok with squashing this one into the fixed patch
-> Any other option not needing an additional hook more than welcome
-> The reported issue does not affect the existing code base,
-> but as soon as we start tracking the MPTCP level unacked sequence
-> number it become apparent, as we can't track it for
-> half-open sockets
+> On Tue, 2019-08-27 at 13:23 -0700, Peter Krystad wrote:
+> > Two features: 1) When an incoming connection is received
+> > announce a local address and 2) When an outgoing connection
+> > is fully established and a remote address has been received
+> > initiate a secondary subflow.
+> > =
 
-I think this is the right fix, and tcp_data_queue seems like a good place =
+> > The second local address must be hard-coded for now.
+> > =
 
-to move the mptcp_incoming_options call.
+> > v2: take a reference on the mptcp_sock while work is queued.
+> > =
 
-Would be good to squash this as Paolo mentions.
+> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> > ---
+> >  net/mptcp/pm.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 60 insertions(+), 4 deletions(-)
+> > =
 
-> ---
-> net/ipv4/tcp_input.c | 12 +++++++-----
-> 1 file changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 1c06cfb06374..cf2cf09d7d3d 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -4763,6 +4763,9 @@ static void tcp_data_queue(struct sock *sk, struct =
-sk_buff *skb)
-> 	bool fragstolen;
-> 	int eaten;
->
-> +	if (sk_is_mptcp(sk))
-> +		mptcp_incoming_options(sk, skb, &tp->rx_opt);
-> +
-> 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
-> 		__kfree_skb(skb);
-> 		return;
-> @@ -5711,10 +5714,6 @@ void tcp_rcv_established(struct sock *sk, struct s=
-k_buff *skb)
-> 	/* Process urgent data. */
-> 	tcp_urg(sk, skb, th);
->
-> -	/* Process MPTCP options */
-> -	if (sk_is_mptcp(sk))
-> -		mptcp_incoming_options(sk, skb, &tp->rx_opt);
-> -
-> 	/* step 7: process the segment text */
-> 	tcp_data_queue(sk, skb);
->
-> @@ -6335,8 +6334,11 @@ int tcp_rcv_state_process(struct sock *sk, struct =
-sk_buff *skb)
-> 	case TCP_CLOSE_WAIT:
-> 	case TCP_CLOSING:
-> 	case TCP_LAST_ACK:
-> -		if (!before(TCP_SKB_CB(skb)->seq, tp->rcv_nxt))
-> +		if (!before(TCP_SKB_CB(skb)->seq, tp->rcv_nxt)) {
-> +			if (sk_is_mptcp(sk))
-> +				mptcp_incoming_options(sk, skb, &tp->rx_opt);
-> 			break;
-> +		}
-> 		/* fall through */
-> 	case TCP_FIN_WAIT1:
-> 	case TCP_FIN_WAIT2:
+> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> > index bc07376a823b..449351921c0e 100644
+> > --- a/net/mptcp/pm.c
+> > +++ b/net/mptcp/pm.c
+> > @@ -8,6 +8,10 @@
+> >  #include <net/mptcp.h>
+> >  #include "protocol.h"
+> >  =
 
-Some additional context for other reviewers: this fall through path does =
+> > +struct workqueue_struct *mptcp_wq;
+> > +static void announce_addr_worker(struct work_struct *work);
+> > +static void create_subflow_worker(struct work_struct *work);
+> > +
+> >  /* path manager command handlers */
+> >  =
 
-end up calling tcp_data_queue (unless the socket is shut down already), so =
+> >  int pm_announce_addr(u32 token, sa_family_t family, u8 local_id,
+> > @@ -91,16 +95,34 @@ int pm_remove_subflow(u32 token, u8 remote_id)
+> >  =
 
-mptcp_incoming_options will get called on that path too.
+> >  void pm_new_connection(struct mptcp_sock *msk, int server_side)
+> >  {
+> > -	pr_debug("msk=3D%p", msk);
+> > +	struct mptcp_pm_data *pm =3D &msk->pm;
+> > +
+> > +	pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
+> >  =
 
---
-Mat Martineau
-Intel
+> > -	msk->pm.server_side =3D server_side;
+> > +	pm->server_side =3D server_side;
+> > +	pm->token =3D msk->token;
+> > +
+> > +	/* trigger announce address in interim local path manager */
+> > +	if (pm->server_side) {
+> > +		sock_hold((struct sock *)msk);
+> > +		INIT_WORK(&pm->addr_work, announce_addr_worker);
+> > +		queue_work(mptcp_wq, &pm->addr_work);
+> =
 
---===============8785477343908536942==--
+> I'm sorry to keep adding things, I missed some details when I did my
+> previous comment.
+> =
+
+> It looks like the above code is called with only ssk lock held. =
+
+
+Are you sure? pm_new_connection() is called in two places:
+mptcp_finish_connect() and mptcp_accept(). These are the two places where t=
+he
+subflow and msk locks are taken in reverse order, but they are held. =
+
+
+> To be safe in case of multiple subflows, we would need some additional
+> locking (e.g. a pm-level spinlock) and perhaps something alike:
+> =
+
+> 	if (queue_work(...))
+> 		sock_hold(...)
+
+I'll submit a v3 with this change, it is correct.
+
+Peter.
+
+
+> If there is agreement, I think we can take the patch as is, and then
+> clean it up with incremental changes - we would touch it anyway to add
+> the sysctl interface.
+> =
+
+> Paolo
+> =
+
+
+
+--===============6719511763309387322==--
