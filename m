@@ -1,183 +1,172 @@
-Content-Type: multipart/mixed; boundary="===============3220662826982931710=="
+Content-Type: multipart/mixed; boundary="===============0911399005763305136=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC 09/10] mptcp: token: fold destroy_token helper
-Date: Tue, 27 Aug 2019 17:13:58 -0700
-Message-ID: <ed018bb6679ca32d82f9df985a697e9c031113bf.camel@linux.intel.com>
-In-Reply-To: 20190825185939.21596-10-fw@strlen.de
+Subject: Re: [MPTCP] [PATCH RFC 05/10] mptcp: token: fold new_req_join into
+ its caller
+Date: Tue, 27 Aug 2019 17:14:05 -0700
+Message-ID: <7acba77aabc4175c9919673d3dbd393d0099a686.camel@linux.intel.com>
+In-Reply-To: 20190825185939.21596-6-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1727
+X-UID: 1728
 
---===============3220662826982931710==
+--===============0911399005763305136==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+
+Same comment as previous patch, this could also be moved to subflow.c
+and token_lookup_get() used.
+
+Peter.
+
 On Sun, 2019-08-25 at 20:59 +0200, Florian Westphal wrote:
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/protocol.c |  2 +-
->  net/mptcp/protocol.h |  4 ++--
->  net/mptcp/subflow.c  |  2 +-
->  net/mptcp/token.c    | 50 +++++++++++++++++++-------------------------
->  4 files changed, 25 insertions(+), 33 deletions(-)
+> similar to the previous change.  Fold the (small) helper, then
+> rename the function to carry an mptcp prefix.
 > =
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f900303a1531..6a2dc2111316 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -704,7 +704,7 @@ static void mptcp_destroy(struct sock *sk)
->  =
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  net/mptcp/protocol.h |  3 ++-
+>  net/mptcp/subflow.c  |  2 +-
+>  net/mptcp/token.c    | 52 ++++++++++++++++++++++++--------------------
+>  3 files changed, 32 insertions(+), 25 deletions(-)
+> =
 
->  	pr_debug("msk=3D%p, subflow=3D%p", sk, msk->subflow->sk);
->  =
-
-> -	token_destroy(msk->token);
-> +	mptcp_token_destroy(msk->token);
->  }
->  =
-
->  /* Only pass a small subset of level/optnames that are considered safe.
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index a1e207db6703..94b06ec168ff 100644
+> index 19dcc49202ba..4754cf456759 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -230,13 +230,13 @@ bool mptcp_token_join_request(struct request_sock *=
-req,
->  			      const struct sk_buff *skb);
+> @@ -226,7 +226,8 @@ void mptcp_finish_connect(struct sock *sk, int mp_cap=
+able);
+>  void mptcp_finish_join(struct sock *sk);
+>  =
+
+>  void token_new_request(struct request_sock *req, const struct sk_buff *s=
+kb);
+> -int token_join_request(struct request_sock *req, const struct sk_buff *s=
+kb);
+> +bool mptcp_token_join_request(struct request_sock *req,
+> +			      const struct sk_buff *skb);
 >  bool mptcp_token_join_valid(const struct request_sock *req,
 >  			    const struct tcp_options_received *rx_opt);
-> -void token_destroy_request(u32 token);
-> +void mptcp_token_destroy_request(u32 token);
->  int mptcp_token_new_connect(struct sock *sk);
->  int mptcp_token_new_accept(u32 token);
->  void mptcp_token_update_accept(struct sock *sk, struct sock *conn);
->  struct mptcp_sock *mptcp_token_get_sock(u32 token);
->  void token_release(u32 token);
-> -void token_destroy(u32 token);
-> +void mptcp_token_destroy(u32 token);
->  =
-
->  void crypto_key_sha1(u64 key, u32 *token, u64 *idsn);
->  static inline void crypto_key_gen_sha1(u64 *key, u32 *token, u64 *idsn)
+>  void token_destroy_request(u32 token);
 > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 85fb7a52e274..1cfd18e74486 100644
+> index 7e479c95e3e5..e30bd54adb1b 100644
 > --- a/net/mptcp/subflow.c
 > +++ b/net/mptcp/subflow.c
-> @@ -45,7 +45,7 @@ static void subflow_req_destructor(struct request_sock =
-*req)
->  	pr_debug("subflow_req=3D%p", subflow_req);
->  =
-
->  	if (subflow_req->mp_capable)
-> -		token_destroy_request(subflow_req->token);
-> +		mptcp_token_destroy_request(subflow_req->token);
->  	tcp_request_sock_ops.destructor(req);
+> @@ -89,7 +89,7 @@ static void subflow_v4_init_req(struct request_sock *re=
+q,
+>  		subflow_req->remote_nonce =3D rx_opt.mptcp.nonce;
+>  		pr_debug("token=3D%u, remote_nonce=3D%u", subflow_req->token,
+>  			 subflow_req->remote_nonce);
+> -		if (token_join_request(req, skb)) {
+> +		if (!mptcp_token_join_request(req, skb)) {
+>  			subflow_req->mp_join =3D 0;
+>  			// @@ need to trigger RST
+>  		}
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index 946a53496d47..def65cac5e63 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -75,23 +75,6 @@ static void new_req_token(struct request_sock *req,
+>  		 subflow_req->token, subflow_req->idsn);
 >  }
 >  =
 
-> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-> index a0779fd0ae7c..3c1f43542e1e 100644
-> --- a/net/mptcp/token.c
-> +++ b/net/mptcp/token.c
-> @@ -39,31 +39,7 @@ static int token_used __read_mostly;
+> -static void new_req_join(struct request_sock *req, struct sock *sk,
+> -			 const struct sk_buff *skb)
+> -{
+> -	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
+> -	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> -	u8 hmac[MPTCPOPT_HMAC_LEN];
+> -
+> -	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
+> -	crypto_hmac_sha1(msk->local_key, msk->remote_key,
+> -			 subflow_req->local_nonce, subflow_req->remote_nonce,
+> -			 (u32 *)hmac);
+> -
+> -	subflow_req->thmac =3D get_unaligned_be64(hmac);
+> -	pr_debug("local_nonce=3D%u, thmac=3D%llu", subflow_req->local_nonce,
+> -		 subflow_req->thmac);
+> -}
+> -
+>  static void new_token(const struct sock *sk)
+>  {
+>  	struct subflow_context *subflow =3D subflow_ctx(sk);
+> @@ -175,10 +158,24 @@ void token_new_request(struct request_sock *req,
+>  	spin_unlock_bh(&token_tree_lock);
+>  }
 >  =
 
->  static struct sock *__token_lookup(u32 token)
+> -/* validate received token and create truncated hmac and nonce for SYN-A=
+CK */
+> -int token_join_request(struct request_sock *req, const struct sk_buff *s=
+kb)
+> +/**
+> + * mptcp_token_join_request - validate received token and create hmac
+> + * @req - the request socket that received the ACK
+> + * @skb - the syn packet received
+> + *
+> + * This function is called when a new SYN is received that indicates a
+> + * join with an existing MPTCP flow.
+> + * It will compute the HMAC and nonce that will be included in the SYN/A=
+CK.
+> + *
+> + * Returns true on success and false if the join request indicated an in=
+valid
+> + * MPTCP connection (i.e., the mptcp token is not known to us).
+> + */
+> +bool mptcp_token_join_request(struct request_sock *req,
+> +			      const struct sk_buff *skb)
 >  {
-> -	void *conn;
-> -
-> -	pr_debug("token=3D%u", token);
-> -	conn =3D radix_tree_lookup(&token_tree, token);
-> -	return (struct sock *)conn;
-> -}
-> -
-> -static void destroy_req_token(u32 token)
-> -{
-> -	void *cur;
-> -
-> -	cur =3D radix_tree_delete(&token_req_tree, token);
-> -	if (!cur)
-> -		pr_warn("token NOT FOUND!");
-> -}
-> -
-> -static struct sock *destroy_token(u32 token)
-> -{
-> -	void *conn;
-> -
-> -	pr_debug("token=3D%u", token);
-> -	conn =3D radix_tree_delete(&token_tree, token);
-> -	if (conn && conn !=3D &token_used)
-> -		return (struct sock *)conn;
-> -	return NULL;
-> +	return radix_tree_lookup(&token_tree, token);
+>  	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
+> +	u8 hmac[MPTCPOPT_HMAC_LEN];
+> +	struct mptcp_sock *msk;
+>  	struct sock *conn;
+>  =
+
+>  	pr_debug("subflow_req=3D%p, token=3D%u", subflow_req, subflow_req->toke=
+n);
+> @@ -189,17 +186,26 @@ int token_join_request(struct request_sock *req, co=
+nst struct sk_buff *skb)
+>  	spin_unlock_bh(&token_tree_lock);
+>  =
+
+>  	if (!conn)
+> -		return -1;
+> +		return false;
+>  =
+
+>  	if (pm_get_local_id(req, conn, skb)) {
+>  		sock_put(conn);
+> -		return -1;
+> +		return false;
+>  	}
+>  =
+
+> -	new_req_join(req, conn, skb);
+> +	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
+> +
+> +	msk =3D mptcp_sk(conn);
+> +	crypto_hmac_sha1(msk->local_key, msk->remote_key,
+> +			 subflow_req->local_nonce, subflow_req->remote_nonce,
+> +			 (u32 *)hmac);
+> +
+> +	subflow_req->thmac =3D get_unaligned_be64(hmac);
+> +	pr_debug("local_nonce=3D%u, thmac=3D%llu", subflow_req->local_nonce,
+> +		 subflow_req->thmac);
+>  =
+
+>  	sock_put(conn);
+> -	return 0;
+> +	return true;
 >  }
 >  =
 
 >  /**
-> @@ -321,12 +297,21 @@ struct mptcp_sock *mptcp_token_get_sock(u32 token)
->  	return mptcp_sk(conn);
->  }
->  =
-
-> -void token_destroy_request(u32 token)
-> +/**
-> + * mptcp_token_destroy_request - remove mptcp connection/token
-> + * @token - token of mptcp connection to remove
-> + *
-> + * Remove the not-yey-fully-established incoming connection identified
-> + * by @token. If the connection isn't found, no action is taken.
-> + */
-
-I would reword these comments to refer to a "connection request", there isn=
-'t
-a connection to remove.
-
-Peter.
 
 
-> +void mptcp_token_destroy_request(u32 token)
->  {
-> +	const void *cur;
-> +
->  	pr_debug("token=3D%u", token);
->  =
-
->  	spin_lock_bh(&token_tree_lock);
-> -	destroy_req_token(token);
-> +	cur =3D radix_tree_delete(&token_req_tree, token);
->  	spin_unlock_bh(&token_tree_lock);
->  }
->  =
-
-> @@ -342,13 +327,20 @@ void token_release(u32 token)
->  	spin_unlock_bh(&token_tree_lock);
->  }
->  =
-
-> -void token_destroy(u32 token)
-> +/**
-> + * mptcp_token_destroy - remove mptcp connection/token
-> + * @token - token of mptcp connection to remove
-> + *
-> + * Remove the connection identified by @token.
-> + * If the connection isn't found, no action is taken.
-> + */
-> +void mptcp_token_destroy(u32 token)
->  {
->  	struct sock *conn;
->  =
-
->  	pr_debug("token=3D%u", token);
->  	spin_lock_bh(&token_tree_lock);
-> -	conn =3D destroy_token(token);
-> +	conn =3D radix_tree_delete(&token_tree, token);
->  	if (conn)
->  		sock_put(conn);
->  	spin_unlock_bh(&token_tree_lock);
-
-
---===============3220662826982931710==--
+--===============0911399005763305136==--
