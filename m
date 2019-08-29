@@ -1,55 +1,164 @@
-Content-Type: multipart/mixed; boundary="===============0334448692420200361=="
+Content-Type: multipart/mixed; boundary="===============4631802410991218315=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC v2 00/10] mptcp: cleanup token code
-Date: Thu, 29 Aug 2019 11:26:39 -0700
-Message-ID: <353bb6b63e51866a3fc236aca7b8a973cb90739f.camel@linux.intel.com>
-In-Reply-To: 20190829090659.766-1-fw@strlen.de
+Subject: Re: [MPTCP] [PATCH v2] mptcp: sockopt: pass whitelisted setsockopt to
+ subflows
+Date: Thu, 29 Aug 2019 15:33:09 -0700
+Message-ID: <alpine.OSX.2.21.1908291520520.34555@mjmartin-mac01.local>
+In-Reply-To: 20190815221449.13210-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1763
+X-UID: 1764
 
---===============0334448692420200361==
+--===============4631802410991218315==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Fri, 16 Aug 2019, Florian Westphal wrote:
 
-LGTM. I like the debug formatting too.
+> This allows to set tcp congestion control algorithm on all subflows.
+>
+> In the future we could keep a record of sockopts so we can "replay"
+> them when another subflow is added at a later point in time.
+>
+> Only TCP_CONGESTION is allowed at the moment, as some available
+> TCP knobs either have undesireable behaviour or should be later
+> implemented at the mptcp level rather than passing them through to
+> the subflows (TCP_CORK for example).
+>
+> getsockopt is disabled for the time being to not expose a particular
+> behaviour ("first subflow on list") at this time.
+>
+> v2: disable getsockopt, restrict setsockopt via whitelist.
 
-Peter.
+As Florian mentioned on the call today, we definitely want to merge the =
 
-On Thu, 2019-08-29 at 11:06 +0200, Florian Westphal wrote:
-> This series again marked RFC so noone bothers to squash all of
-> this into the mptcp tree.
-> =
+getsockopt fix.
 
-> In this second round, I've addressed all comments from Matthieu
-> and Peter.  As a result, even more code was pruned from token.c
-> and placed as static helper in subflow.c.
-> =
+As for the setsockopt part, if TCP_CONGESTION is sufficiently useful to =
 
-> I've added a 'v2' mini-changelog to all affected patches.
-> =
+enough users, we could consider merging it. My slight hesitation is that =
 
->  pm.c       |    6 =
+the potential "replay" behavior change in the future could come as a =
 
->  protocol.c |    5 =
+surprise, and if we start out with this ability to set options on all =
 
->  protocol.h |   23 +--
->  subflow.c  |  152 +++++++++++++++++++--
->  token.c    |  426 +++++++++++++++++++-----------------------------------=
--------
->  5 files changed, 277 insertions(+), 333 deletions(-)
-> =
+subflows then we have to be careful and consistent about how it interacts =
 
-> =
+with per-subflow options later. Anyone know if TCP_CONGESTION is a =
 
+priority?
+
+Mat
+
+
+>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+> net/mptcp/protocol.c | 51 ++++++++++++++++++++++++++++++++++++++++----
+> 1 file changed, 47 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index aaa71b161c1a..a8cbd9741c32 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -707,13 +707,31 @@ static void mptcp_destroy(struct sock *sk)
+> 	token_destroy(msk->token);
+> }
+>
+> +
+> +/* Only pass a small subset of level/optnames that are considered safe.
+> + * We e.g. don't want MD5SIG (option space too limited) or TCP_CORK
+> + * (meaning not entirely clear from mptcp point of view).
+> + */
+> +static bool pass_to_subflows(int level, int optname)
+> +{
+> +	if (level !=3D SOL_TCP)
+> +		return false;
+> +
+> +	switch (optname) {
+> +	case TCP_CONGESTION: return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> static int mptcp_setsockopt(struct sock *sk, int level, int optname,
+> 			    char __user *uoptval, unsigned int optlen)
+> {
+> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +	const struct subflow_context *subflow;
+> 	char __kernel *optval;
+> 	struct socket *ssock;
+> -	int ret;
+> +	int ret, err, subflows;
+>
+> 	/* will be treated as __user in tcp_setsockopt */
+> 	optval =3D (char __kernel __force *)uoptval;
+> @@ -729,8 +747,33 @@ static int mptcp_setsockopt(struct sock *sk, int lev=
+el, int optname,
+>
+> 	/* @@ the meaning of setsockopt() when the socket is connected and
+> 	 * there are multiple subflows is not defined.
+> +	 *
+> +	 * We attempt to perfom the operation on all current subflows, but
+> +	 * only return error if all subflow setsockopt failed.
+> 	 */
+> -	return 0;
+> +	if (!pass_to_subflows(level, optname))
+> +		return -EOPNOTSUPP;
+> +
+> +	ret =3D 0;
+> +	err =3D 0;
+> +	subflows =3D 0;
+> +	lock_sock(sk);
+> +	list_for_each_entry(subflow, &msk->conn_list, node) {
+> +		struct socket *tcp_sk =3D mptcp_subflow_tcp_socket(subflow);
+> +		int tmp;
+> +
+> +		tmp =3D kernel_setsockopt(tcp_sk, level, optname, optval, optlen);
+> +		if (tmp =3D=3D 0)
+> +			subflows++;
+> +		else if (err =3D=3D 0)
+> +			err =3D tmp;
+> +	}
+> +	release_sock(sk);
+> +
+> +	if (subflows =3D=3D 0 && err)
+> +		ret =3D err;
+> +
+> +	return ret;
+> }
+>
+> static int mptcp_getsockopt(struct sock *sk, int level, int optname,
+> @@ -755,10 +798,10 @@ static int mptcp_getsockopt(struct sock *sk, int le=
+vel, int optname,
+> 		return ret;
+> 	}
+>
+> -	/* @@ the meaning of setsockopt() when the socket is connected and
+> +	/* @@ the meaning of getsockopt() when the socket is connected and
+> 	 * there are multiple subflows is not defined.
+> 	 */
+> -	return 0;
+> +	return -EOPNOTSUPP;
+> }
+>
+> static int mptcp_get_port(struct sock *sk, unsigned short snum)
+> -- =
+
+> 2.21.0
+>
 > _______________________________________________
 > mptcp mailing list
 > mptcp(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/mptcp
+>
 
+--
+Mat Martineau
+Intel
 
---===============0334448692420200361==--
+--===============4631802410991218315==--
