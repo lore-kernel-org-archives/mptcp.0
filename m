@@ -1,73 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============5486289013519975616=="
+Content-Type: multipart/mixed; boundary="===============7351505152601831222=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 2/2] mptcp: Modify pm_create_subflow to use
- in_addr in network byte order
-Date: Thu, 29 Aug 2019 15:39:28 +0200
-Message-ID: <9cafd0cb-4878-9466-7cd2-2d96005ae6b8@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1908271137300.10328@aaggar2-mobl.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH] tcp: fix hooking for mptcp_incoming_options()
+Date: Thu, 29 Aug 2019 16:00:05 +0200
+Message-ID: <74ae6e8a-7dd0-012a-b900-282c84005914@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1908280947490.21729@aaggar2-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1760
+X-UID: 1761
 
---===============5486289013519975616==
+--===============7351505152601831222==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Mat,
+Hi Paolo, Mat,
 
-On 27/08/2019 20:37, Mat Martineau wrote:
+On 28/08/2019 18:55, Mat Martineau wrote:
+> On Wed, 28 Aug 2019, Paolo Abeni wrote:
 > =
 
-> On Fri, 23 Aug 2019, Peter Krystad wrote:
-> =
-
->> squashto: Implement path manager interface commands
+>> Currently we don't process mptcp options for half-open sockets, e.g.
+>> for packet with payload delivered to the rx queue via
+>> tcp_rcv_state_process(), and for pure ack landing in the same code path.
 >>
->> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+>> We can deal with the first code path moving the existing
+>> mptcp_incoming_options() hook inside tcp_data_queue(), but we need
+>> to add an additional hook to deal with the specified pure acks
+>>
+>> Fixes: d2d58ff48665 ("mptcp: Implement MPTCP receive path")
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 >> ---
->> net/mptcp/pm.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index c98b92512adf..bc07376a823b 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -73,7 +73,7 @@ int pm_create_subflow(u32 token, u8 remote_id)
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0remote.sin_family =3D msk->pm.remote_family;
->> =C2=A0=C2=A0=C2=A0=C2=A0remote.sin_port =3D htons(msk->dport);
->> -=C2=A0=C2=A0=C2=A0 remote.sin_addr.s_addr =3D htonl(msk->pm.remote_addr=
-.s_addr);
->> +=C2=A0=C2=A0=C2=A0 remote.sin_addr.s_addr =3D msk->pm.remote_addr.s_add=
-r;
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0err =3D subflow_connect((struct sock *)msk, &loc=
-al, &remote,
->> remote_id);
->>
->> --=C2=A0
->> 2.17.2
+>> I'm ok with squashing this one into the fixed patch
+>> Any other option not needing an additional hook more than welcome
+>> The reported issue does not affect the existing code base,
+>> but as soon as we start tracking the MPTCP level unacked sequence
+>> number it become apparent, as we can't track it for
+>> half-open sockets
 > =
 
-> Both patches look good. Thanks.
+> I think this is the right fix, and tcp_data_queue seems like a good
+> place to move the mptcp_incoming_options call.
 
-Thank you for the patches and the reviews!
+Thank you for the patch and the review!
 
-- 773d308c2033: "squashed" the first patch in "mptcp: Add ADD_ADDR handling"
-- 722d13a45004: "squashed" the second one in "mptcp: Implement path
-manager interface commands"
-- "signed-off" were already there.
-- b94f6125bd9a..695f625aa913: result
+> Would be good to squash this as Paolo mentions.
 
-Tests are still OK!
+Just did!
+- d39bdd4e1249: "squashed" in "mptcp: Implement MPTCP receive path"
+- signed-off was already there
+- 695f625aa913..a9b6b4ccd61e: result
 
 Cheers,
 Matt
 
+>> ---
+>> net/ipv4/tcp_input.c | 12 +++++++-----
+>> 1 file changed, 7 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+>> index 1c06cfb06374..cf2cf09d7d3d 100644
+>> --- a/net/ipv4/tcp_input.c
+>> +++ b/net/ipv4/tcp_input.c
+>> @@ -4763,6 +4763,9 @@ static void tcp_data_queue(struct sock *sk,
+>> struct sk_buff *skb)
+>> =C2=A0=C2=A0=C2=A0=C2=A0bool fragstolen;
+>> =C2=A0=C2=A0=C2=A0=C2=A0int eaten;
+>>
+>> +=C2=A0=C2=A0=C2=A0 if (sk_is_mptcp(sk))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_incoming_options(sk, s=
+kb, &tp->rx_opt);
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)-=
+>end_seq) {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __kfree_skb(skb);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> @@ -5711,10 +5714,6 @@ void tcp_rcv_established(struct sock *sk,
+>> struct sk_buff *skb)
+>> =C2=A0=C2=A0=C2=A0=C2=A0/* Process urgent data. */
+>> =C2=A0=C2=A0=C2=A0=C2=A0tcp_urg(sk, skb, th);
+>>
+>> -=C2=A0=C2=A0=C2=A0 /* Process MPTCP options */
+>> -=C2=A0=C2=A0=C2=A0 if (sk_is_mptcp(sk))
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_incoming_options(sk, s=
+kb, &tp->rx_opt);
+>> -
+>> =C2=A0=C2=A0=C2=A0=C2=A0/* step 7: process the segment text */
+>> =C2=A0=C2=A0=C2=A0=C2=A0tcp_data_queue(sk, skb);
+>>
+>> @@ -6335,8 +6334,11 @@ int tcp_rcv_state_process(struct sock *sk,
+>> struct sk_buff *skb)
+>> =C2=A0=C2=A0=C2=A0=C2=A0case TCP_CLOSE_WAIT:
+>> =C2=A0=C2=A0=C2=A0=C2=A0case TCP_CLOSING:
+>> =C2=A0=C2=A0=C2=A0=C2=A0case TCP_LAST_ACK:
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!before(TCP_SKB_CB(skb)-=
+>seq, tp->rcv_nxt))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!before(TCP_SKB_CB(skb)-=
+>seq, tp->rcv_nxt)) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (=
+sk_is_mptcp(sk))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 mptcp_incoming_options(sk, skb, &tp->rx_opt);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* fall through */
+>> =C2=A0=C2=A0=C2=A0=C2=A0case TCP_FIN_WAIT1:
+>> =C2=A0=C2=A0=C2=A0=C2=A0case TCP_FIN_WAIT2:
 > =
+
+> Some additional context for other reviewers: this fall through path does
+> end up calling tcp_data_queue (unless the socket is shut down already),
+> so mptcp_incoming_options will get called on that path too.
+
+Thank you for this extra note!
+
+Cheers,
+Matt
 
 > -- =
 
@@ -86,4 +135,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============5486289013519975616==--
+--===============7351505152601831222==--
