@@ -1,43 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============6237577511879078866=="
+Content-Type: multipart/mixed; boundary="===============1194963262304167061=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: fall back to tcp when dss checksum are
- requested
-Date: Thu, 29 Aug 2019 15:11:48 +0200
-Message-ID: <dee26a37-e6b9-c472-b33b-0cfffbd6d31d@tessares.net>
-In-Reply-To: 4196b86e8b48e6357f486fbed2c5d7e03a6189b8.camel@linux.intel.com
+Subject: Re: [MPTCP] [PATCH] mptcp: remove msk->subflow->sk dereference in
+ pr_debug statement
+Date: Thu, 29 Aug 2019 15:11:55 +0200
+Message-ID: <2770671d-d18a-4161-fdf4-3b217418a635@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1908271108420.10328@aaggar2-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1757
+X-UID: 1758
 
---===============6237577511879078866==
+--===============1194963262304167061==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Peter, Christoph,
+Hi Peter, Mat,
 
-On 27/08/2019 19:57, Peter Krystad wrote:
+On 27/08/2019 20:09, Mat Martineau wrote:
 > =
 
-> Hi Florian - =
-
+> On Thu, 22 Aug 2019, Peter Krystad wrote:
 > =
 
-> Yeah, this isn't great, I am OK with your original patch. I'll take a to-=
-do to
-> remove the 'request_cksum' logic, since it doesn't have any purpose until
-> checksums are implemented.
+>> msk->subflow may be NULL when creation of an mptcp_sock fails due
+>> to the protocol not being enabled.
+>>
+>> squashto: Add key generation and token tree
+>>
+>> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+>> ---
+>> net/mptcp/protocol.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index aaa71b161c1a..a58211d8568c 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -702,7 +702,7 @@ static void mptcp_destroy(struct sock *sk)
+>> {
+>> =C2=A0=C2=A0=C2=A0=C2=A0struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>
+>> -=C2=A0=C2=A0=C2=A0 pr_debug("msk=3D%p, subflow=3D%p", sk, msk->subflow-=
+>sk);
+>> +=C2=A0=C2=A0=C2=A0 pr_debug("msk=3D%p", sk);
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0token_destroy(msk->token);
+>> }
+>> --=C2=A0
+>> 2.17.2
+>>
+> =
 
-Thank you for the patch and the reviews!
+> Looks good to merge, thanks for the fix.
 
-Just applied in the repo:
-- 87fd3fd5c2fc: "squashed" in "mptcp: Handle MPTCP TCP options"
-- 16c36ea3d8e9: signed-off
-- 0a3de10b90d9..ca4c26db67e0: result
+Thank you for the patch and the review!
 
-Tests are still OK!
+- 9425f0c9f15c: "squashed" in "mptcp: Add key generation and token tree"
+- signed-off already there
+- f704ab46b414..b94f6125bd9a: result
+
+Export in progress.
 
 Cheers,
 Matt
@@ -49,4 +73,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============6237577511879078866==--
+--===============1194963262304167061==--
