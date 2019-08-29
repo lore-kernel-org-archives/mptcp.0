@@ -1,171 +1,291 @@
-Content-Type: multipart/mixed; boundary="===============9149856201149920890=="
+Content-Type: multipart/mixed; boundary="===============5891021698037780452=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC v2 05/10] mptcp: token: remove token_join_request
-Date: Thu, 29 Aug 2019 11:06:54 +0200
-Message-ID: <20190829090659.766-6-fw@strlen.de>
+Subject: [MPTCP] [RFC v2 06/10] mptcp: token: fold helpers into token
+ connect/request functions
+Date: Thu, 29 Aug 2019 11:06:55 +0200
+Message-ID: <20190829090659.766-7-fw@strlen.de>
 In-Reply-To: 20190829090659.766-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1747
+X-UID: 1748
 
---===============9149856201149920890==
+--===============5891021698037780452==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Place the function where needed, we can use existing helper to fetch
-the mptcp sk.
-
-v2: move the helper entirely (Peter)
+This also adds error handling -- adding an object to the radix tree
+might require dynamic memory allocation, so insertions can fail.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.h |  1 -
- net/mptcp/subflow.c  | 34 +++++++++++++++++++++++++++++++++-
- net/mptcp/token.c    | 44 --------------------------------------------
- 3 files changed, 33 insertions(+), 46 deletions(-)
+ net/mptcp/protocol.h |   4 +-
+ net/mptcp/subflow.c  |  15 ++++--
+ net/mptcp/token.c    | 126 ++++++++++++++++++++++---------------------
+ 3 files changed, 78 insertions(+), 67 deletions(-)
 
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 5f33d3729bfd..8514c41e3a6b 100644
+index 8514c41e3a6b..e35dca76fdb3 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -226,7 +226,6 @@ void mptcp_finish_connect(struct sock *sk, int mp_capab=
-le);
+@@ -225,9 +225,9 @@ void mptcp_get_options(const struct sk_buff *skb,
+ void mptcp_finish_connect(struct sock *sk, int mp_capable);
  void mptcp_finish_join(struct sock *sk);
  =
 
- void token_new_request(struct request_sock *req, const struct sk_buff *skb=
+-void token_new_request(struct request_sock *req, const struct sk_buff *skb=
 );
--int token_join_request(struct request_sock *req, const struct sk_buff *skb=
-);
++int mptcp_token_new_request(struct request_sock *req);
  void token_destroy_request(u32 token);
- void token_new_connect(struct sock *sk);
+-void token_new_connect(struct sock *sk);
++int mptcp_token_new_connect(struct sock *sk);
  void token_new_accept(struct sock *sk);
+ void token_update_accept(struct sock *sk, struct sock *conn);
+ struct mptcp_sock *mptcp_token_get_sock(u32 token);
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f604e189126b..33bfee514350 100644
+index 33bfee514350..16d5df54c533 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -48,6 +48,38 @@ static void subflow_req_destructor(struct request_sock *=
-req)
- 	tcp_request_sock_ops.destructor(req);
- }
- =
-
-+/* validate received token and create truncated hmac and nonce for SYN-ACK=
- */
-+static bool subflow_token_join_request(struct request_sock *req,
-+				       const struct sk_buff *skb)
-+{
-+	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
-+	u8 hmac[MPTCPOPT_HMAC_LEN];
-+	struct mptcp_sock *msk;
-+
-+	msk =3D mptcp_token_get_sock(subflow_req->token);
-+	if (!msk) {
-+		pr_debug("subflow_req=3D%p, token=3D%u - not found\n",
-+			 subflow_req, subflow_req->token);
-+		return false;
-+	}
-+
-+	if (pm_get_local_id(req, (struct sock *)msk, skb)) {
-+		sock_put((struct sock *)msk);
-+		return false;
-+	}
-+
-+	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
-+
-+	crypto_hmac_sha1(msk->local_key, msk->remote_key,
-+			 subflow_req->local_nonce, subflow_req->remote_nonce,
-+			 (u32 *)hmac);
-+
-+	subflow_req->thmac =3D get_unaligned_be64(hmac);
-+
-+	sock_put((struct sock *)msk);
-+	return true;
-+}
-+
- static void subflow_v4_init_req(struct request_sock *req,
- 				const struct sock *sk_listener,
- 				struct sk_buff *skb)
-@@ -92,7 +124,7 @@ static void subflow_v4_init_req(struct request_sock *req,
- 		subflow_req->remote_nonce =3D rx_opt.mptcp.nonce;
- 		pr_debug("token=3D%u, remote_nonce=3D%u", subflow_req->token,
- 			 subflow_req->remote_nonce);
--		if (token_join_request(req, skb)) {
-+		if (!subflow_token_join_request(req, skb)) {
- 			subflow_req->mp_join =3D 0;
- 			// @@ need to trigger RST
- 		}
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 8de7d9d83e96..233034001561 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -76,23 +76,6 @@ static void new_req_token(struct request_sock *req,
- 		 subflow_req->token, subflow_req->idsn);
- }
- =
-
--static void new_req_join(struct request_sock *req, struct sock *sk,
--			 const struct sk_buff *skb)
--{
--	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
--	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	u8 hmac[MPTCPOPT_HMAC_LEN];
--
--	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
--	crypto_hmac_sha1(msk->local_key, msk->remote_key,
--			 subflow_req->local_nonce, subflow_req->remote_nonce,
--			 (u32 *)hmac);
--
--	subflow_req->thmac =3D get_unaligned_be64(hmac);
--	pr_debug("local_nonce=3D%u, thmac=3D%llu", subflow_req->local_nonce,
--		 subflow_req->thmac);
--}
--
- static void new_token(const struct sock *sk)
+@@ -21,10 +21,11 @@
+ static int subflow_rebuild_header(struct sock *sk)
  {
  	struct subflow_context *subflow =3D subflow_ctx(sk);
-@@ -176,33 +159,6 @@ void token_new_request(struct request_sock *req,
- 	spin_unlock_bh(&token_tree_lock);
++	int err =3D 0;
+ =
+
+ 	if (subflow->request_mptcp && !subflow->token) {
+ 		pr_debug("subflow=3D%p", sk);
+-		token_new_connect(sk);
++		err =3D mptcp_token_new_connect(sk);
+ 	} else if (subflow->request_join && !subflow->local_nonce) {
+ 		pr_debug("subflow=3D%p", sk);
+ 		mptcp_token_get_sock(subflow->token);
+@@ -34,6 +35,9 @@ static int subflow_rebuild_header(struct sock *sk)
+ 		} while (!subflow->local_nonce);
+ 	}
+ =
+
++	if (err)
++		return err;
++
+ 	return inet_sk_rebuild_header(sk);
  }
  =
 
--/* validate received token and create truncated hmac and nonce for SYN-ACK=
- */
--int token_join_request(struct request_sock *req, const struct sk_buff *skb)
+@@ -103,7 +107,12 @@ static void subflow_v4_init_req(struct request_sock *r=
+eq,
+ 		return;
+ =
+
+ 	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
+-		subflow_req->mp_capable =3D 1;
++		int err;
++
++		err =3D mptcp_token_new_request(req);
++		if (err =3D=3D 0)
++			subflow_req->mp_capable =3D 1;
++
+ 		if (rx_opt.mptcp.version >=3D listener->request_version)
+ 			subflow_req->version =3D listener->request_version;
+ 		else
+@@ -112,8 +121,6 @@ static void subflow_v4_init_req(struct request_sock *re=
+q,
+ 		    listener->request_cksum)
+ 			subflow_req->checksum =3D 1;
+ 		subflow_req->remote_key =3D rx_opt.mptcp.sndr_key;
+-		pr_debug("remote_key=3D%llu", subflow_req->remote_key);
+-		token_new_request(req, skb);
+ 		pr_debug("syn seq=3D%u", TCP_SKB_CB(skb)->seq);
+ 		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
+ 	} else if (rx_opt.mptcp.mp_join && listener->request_mptcp) {
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 233034001561..7d6a5c4e8176 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -38,24 +38,6 @@ static RADIX_TREE(token_req_tree, GFP_ATOMIC);
+ static DEFINE_SPINLOCK(token_tree_lock);
+ static int token_used __read_mostly;
+ =
+
+-static bool find_req_token(u32 token)
 -{
--	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
--	struct sock *conn;
+-	void *used;
 -
--	pr_debug("subflow_req=3D%p, token=3D%u", subflow_req, subflow_req->token);
--	spin_lock_bh(&token_tree_lock);
--	conn =3D __token_lookup(subflow_req->token);
--	if (conn)
--		sock_hold(conn);
--	spin_unlock_bh(&token_tree_lock);
--
--	if (!conn)
--		return -1;
--
--	if (pm_get_local_id(req, conn, skb)) {
--		sock_put(conn);
--		return -1;
--	}
--
--	new_req_join(req, conn, skb);
--
--	sock_put(conn);
--	return 0;
+-	pr_debug("token=3D%u", token);
+-	used =3D radix_tree_lookup(&token_req_tree, token);
+-	return used;
 -}
 -
- /* create new local key, idsn, and token for subflow */
- void token_new_connect(struct sock *sk)
+-static bool find_token(u32 token)
+-{
+-	void *used;
+-
+-	pr_debug("token=3D%u", token);
+-	used =3D radix_tree_lookup(&token_tree, token);
+-	return used;
+-}
+-
+ static struct sock *__token_lookup(u32 token)
  {
+ 	void *conn;
+@@ -65,35 +47,6 @@ static struct sock *__token_lookup(u32 token)
+ 	return (struct sock *)conn;
+ }
+ =
+
+-static void new_req_token(struct request_sock *req,
+-			  const struct sk_buff *skb)
+-{
+-	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
+-
+-	crypto_key_gen_sha1(&subflow_req->local_key, &subflow_req->token,
+-			    &subflow_req->idsn);
+-	pr_debug("local_key=3D%llu, token=3D%u, idsn=3D%llu", subflow_req->local_=
+key,
+-		 subflow_req->token, subflow_req->idsn);
+-}
+-
+-static void new_token(const struct sock *sk)
+-{
+-	struct subflow_context *subflow =3D subflow_ctx(sk);
+-
+-	crypto_key_gen_sha1(&subflow->local_key, &subflow->token,
+-			    &subflow->idsn);
+-	pr_debug("local_key=3D%llu, token=3D%u, idsn=3D%llu", subflow->local_key,
+-		 subflow->token, subflow->idsn);
+-}
+-
+-static int insert_req_token(u32 token)
+-{
+-	void *used =3D &token_used;
+-
+-	pr_debug("token=3D%u", token);
+-	return radix_tree_insert(&token_req_tree, token, used);
+-}
+-
+ static int insert_token(u32 token, void *conn)
+ {
+ 	void *used =3D &token_used;
+@@ -140,43 +93,94 @@ static struct sock *destroy_token(u32 token)
+ 	return NULL;
+ }
+ =
+
+-/* create new local key, idsn, and token for subflow_request */
+-void token_new_request(struct request_sock *req,
+-		       const struct sk_buff *skb)
++/**
++ * mptcp_token_new_request - create new key/idsn/token for subflow_request
++ * @req - the request socket
++ *
++ * This function is called when a new mptcp connection is coming in.
++ *
++ * It creates a unique token to identify the new mptcp connection,
++ * a secret local key and the initial data sequence number (idsn).
++ *
++ * Returns 0 on success.
++ */
++int mptcp_token_new_request(struct request_sock *req)
+ {
+ 	struct subflow_request_sock *subflow_req =3D subflow_rsk(req);
++	int err;
+ =
+
+ 	pr_debug("subflow_req=3D%p", req);
+ 	while (1) {
+-		new_req_token(req, skb);
++		u32 token;
++
++		crypto_key_gen_sha1(&subflow_req->local_key,
++				    &subflow_req->token,
++				    &subflow_req->idsn);
++		pr_debug("local_key=3D%llu, token=3D%u, idsn=3D%llu\n",
++			 subflow_req->local_key,
++			 subflow_req->token, subflow_req->idsn);
++
++		token =3D subflow_req->token;
+ 		spin_lock_bh(&token_tree_lock);
+-		if (!find_req_token(subflow_req->token) &&
+-		    !find_token(subflow_req->token))
++		if (!radix_tree_lookup(&token_req_tree, token) &&
++		    !radix_tree_lookup(&token_tree, token))
+ 			break;
+ 		spin_unlock_bh(&token_tree_lock);
+ 	}
+-	insert_req_token(subflow_req->token);
++
++	err =3D radix_tree_insert(&token_req_tree,
++				subflow_req->token, &token_used);
+ 	spin_unlock_bh(&token_tree_lock);
++	return err;
+ }
+ =
+
+-/* create new local key, idsn, and token for subflow */
+-void token_new_connect(struct sock *sk)
++/**
++ * mptcp_token_new_connect - create new key/idsn/token for subflow
++ * @sk - the socket that will initiate a connection
++ *
++ * This function is called when a new outgoing mptcp connection is
++ * initiated.
++ *
++ * It creates a unique token to identify the new mptcp connection,
++ * a secret local key and the initial data sequence number (idsn).
++ *
++ * On success, the mptcp connection can be found again using
++ * the computed token at a later time, this is needed to process
++ * join requests.
++ *
++ * returns 0 on success.
++ */
++int mptcp_token_new_connect(struct sock *sk)
+ {
+ 	struct subflow_context *subflow =3D subflow_ctx(sk);
++	struct sock *mptcp_sock =3D subflow->conn;
++	int err;
+ =
+
+ 	pr_debug("subflow=3D%p", sk);
+ =
+
+ 	while (1) {
+-		new_token(sk);
++		u32 token;
++
++		crypto_key_gen_sha1(&subflow->local_key, &subflow->token,
++				    &subflow->idsn);
++
++		pr_debug("local_key=3D%llu, token=3D%u, idsn=3D%llu\n",
++			 subflow->local_key,
++			 subflow->token, subflow->idsn);
++
++		token =3D subflow->token;
+ 		spin_lock_bh(&token_tree_lock);
+-		if (!find_req_token(subflow->token) &&
+-		    !find_token(subflow->token))
++		if (!radix_tree_lookup(&token_req_tree, token) &&
++		    !radix_tree_lookup(&token_tree, token))
+ 			break;
+ 		spin_unlock_bh(&token_tree_lock);
+ 	}
+-	insert_token(subflow->token, subflow->conn);
+-	sock_hold(subflow->conn);
++	err =3D radix_tree_insert(&token_tree, subflow->token, mptcp_sock);
++	if (err =3D=3D 0)
++		sock_hold(mptcp_sock);
+ 	spin_unlock_bh(&token_tree_lock);
++
++	return err;
+ }
+ =
+
+ void token_new_accept(struct sock *sk)
 -- =
 
 2.21.0
 
 
---===============9149856201149920890==--
+--===============5891021698037780452==--
