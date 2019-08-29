@@ -1,49 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============4168760758606050553=="
+Content-Type: multipart/mixed; boundary="===============3524670813429956287=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [RFC v2 00/10] mptcp: cleanup token code
-Date: Thu, 29 Aug 2019 12:11:53 +0200
-Message-ID: <26441ef6-3f8e-0c11-0c24-afc19609a0bc@tessares.net>
-In-Reply-To: 20190829090659.766-1-fw@strlen.de
+Subject: Re: [MPTCP] [RFC v2 03/10] mptcp: token: rename token_join_response
+Date: Thu, 29 Aug 2019 12:19:23 +0200
+Message-ID: <20190829101923.GJ20113@breakpoint.cc>
+In-Reply-To: db56ea7a-4d43-2766-7017-36552e2c62a2@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1754
+X-UID: 1755
 
---===============4168760758606050553==
+--===============3524670813429956287==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
-
-On 29/08/2019 11:06, Florian Westphal wrote:
-> This series again marked RFC so noone bothers to squash all of
-> this into the mptcp tree.
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+> A small detail: should we also add "subflow:" (or "sf:")?
 > =
 
-> In this second round, I've addressed all comments from Matthieu
-> and Peter.  As a result, even more code was pruned from token.c
-> and placed as static helper in subflow.c.
-> =
+>     "MPTCP:sf: "
 
-> I've added a 'v2' mini-changelog to all affected patches.
+I modeled it after what is done for builtin code in net/, e.g.:
 
-Thank you for this new v2!
+net/ipv4/ip_fragment.c:#define pr_fmt(fmt) "IPv4: " fmt
+net/ipv4/ip_input.c:#define pr_fmt(fmt) "IPv4: " fmt
+net/ipv4/ip_options.c:#define pr_fmt(fmt) "IPv4: " fmt
+net/ipv4/route.c:#define pr_fmt(fmt) "IPv4: " fmt
+net/ipv4/tcp.c:#define pr_fmt(fmt) "TCP: " fmt
+net/ipv4/tcp_cong.c:#define pr_fmt(fmt) "TCP: " fmt
+net/ipv4/tcp_input.c:#define pr_fmt(fmt) "TCP: " fmt
+net/ipv4/tcp_ipv4.c:#define pr_fmt(fmt) "TCP: " fmt
+net/ipv4/tcp_output.c:#define pr_fmt(fmt) "TCP: " fmt
+net/ipv4/udp.c:#define pr_fmt(fmt) "UDP: " fmt
+net/ipv4/udplite.c:#define pr_fmt(fmt) "UDPLite: " fmt
+net/ipv4/xfrm4_tunnel.c:#define pr_fmt(fmt) "IPsec: " fmt
+net/ipv6/addrconf.c:#define pr_fmt(fmt) "IPv6: " fmt
+net/ipv6/af_inet6.c:#define pr_fmt(fmt) "IPv6: " fmt
+net/ipv6/ah6.c:#define pr_fmt(fmt) "IPv6: " fmt
+net/ipv6/esp6.c:#define pr_fmt(fmt) "IPv6: " fmt
+...
 
-After a quick review, it looks good to me. Just a small detail, maybe
-not relevant but no need to send a new version just for that.
+So single "MPTCP: " seems more consistent with rest of kernel.
+I have no strong opinion though, if others want more detailed
+prefix too I can change it of course.
 
-I guess Peter will do another pass on this patch set.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============4168760758606050553==--
+--===============3524670813429956287==--
