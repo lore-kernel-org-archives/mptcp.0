@@ -1,36 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============7919235672037531072=="
+Content-Type: multipart/mixed; boundary="===============6311176643121617911=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: fix mptcp socket cleanup
-Date: Fri, 30 Aug 2019 14:29:21 +0200
-Message-ID: <20190830122921.GP20113@breakpoint.cc>
-In-Reply-To: e88e1256082439491fbfb0b92e254a692b32af7f.1567167420.git.pabeni@redhat.com
+Subject: Re: [MPTCP] [PATCH v2] mptcp: sockopt: pass whitelisted setsockopt to
+ subflows
+Date: Fri, 30 Aug 2019 14:59:12 +0200
+Message-ID: <a65452c1-9abd-ae33-0f40-6ea0024aace6@tessares.net>
+In-Reply-To: 20190829224451.GN20113@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 1768
+X-UID: 1769
 
---===============7919235672037531072==
+--===============6311176643121617911==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> +		/* when assiging the token to the msk, we need to held
-> +		 * an additional reference, will be released at msk token
-> +		 * destruction time
-> +		 */
+Hi Florian, Mat,
 
-Unrelated to your patch, but I think this is wrong.
-We should have implicit reference for the token.
+On 30/08/2019 00:44, Florian Westphal wrote:
+> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+>> On Fri, 16 Aug 2019, Florian Westphal wrote:
+>>
+>>> This allows to set tcp congestion control algorithm on all subflows.
+>>>
+>>> In the future we could keep a record of sockopts so we can "replay"
+>>> them when another subflow is added at a later point in time.
+>>>
+>>> Only TCP_CONGESTION is allowed at the moment, as some available
+>>> TCP knobs either have undesireable behaviour or should be later
+>>> implemented at the mptcp level rather than passing them through to
+>>> the subflows (TCP_CORK for example).
+>>>
+>>> getsockopt is disabled for the time being to not expose a particular
+>>> behaviour ("first subflow on list") at this time.
+>>>
+>>> v2: disable getsockopt, restrict setsockopt via whitelist.
+>>
+>> As Florian mentioned on the call today, we definitely want to merge the
+>> getsockopt fix.
 
-Taking a reference makes no sense because the token lifetime is limited by
-the mptcp socket -- if the mptcp socket is closing, we remove the token too.
+Thank you for the patch and the review!
 
-token_release() function makes no sense to me -- afaics all callers
-have a pointer to the msk they want to put the reference for.
+>> As for the setsockopt part, if TCP_CONGESTION is sufficiently useful to
+>> enough users, we could consider merging it. My slight hesitation is that=
+ the
+>> potential "replay" behavior change in the future could come as a surpris=
+e,
+>> and if we start out with this ability to set options on all subflows the=
+n we
+>> have to be careful and consistent about how it interacts with per-subflow
+>> options later. Anyone know if TCP_CONGESTION is a priority?
+> =
 
-I'll have a look into cleaning that up after respinning a squashable
-version of the token refactoring.
+> Its not.
+> =
 
---===============7919235672037531072==--
+> Lets drop this, I will respin with the getsockopt fix only.
+> =
+
+> Alternatively, Matthieu -- if you can just apply the getsockopt part
+> of this patch that works for me too.
+
+Sure, just did:
+- 8d057956303c: "squashed" in "mptcp: Make connection_list a real list
+of subflows"
+- 6090eb26ae22: signed-off
+- 72da334cdf7c..732bbb964f61: result
+
+Just exported, tests in progress.
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+--===============6311176643121617911==--
