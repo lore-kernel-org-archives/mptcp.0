@@ -1,74 +1,132 @@
-Content-Type: multipart/mixed; boundary="===============6311176643121617911=="
+Content-Type: multipart/mixed; boundary="===============3318058922210862929=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2] mptcp: sockopt: pass whitelisted setsockopt to
- subflows
-Date: Fri, 30 Aug 2019 14:59:12 +0200
-Message-ID: <a65452c1-9abd-ae33-0f40-6ea0024aace6@tessares.net>
-In-Reply-To: 20190829224451.GN20113@breakpoint.cc
+Subject: Re: [MPTCP] [PATCH v2] mptcp: Make MPTCP socket block/wakeup ignore
+ sk_receive_queue
+Date: Fri, 30 Aug 2019 15:37:12 +0200
+Message-ID: <373429e5-bb3b-05c0-4a7a-1af38a98de7e@tessares.net>
+In-Reply-To: 41b88dcf7d0234302d36ef958c3eb93ef110f208.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1769
+X-UID: 1770
 
---===============6311176643121617911==
+--===============3318058922210862929==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Mat,
+Hi Mat, Paolo,
 
-On 30/08/2019 00:44, Florian Westphal wrote:
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
->> On Fri, 16 Aug 2019, Florian Westphal wrote:
+On 29/08/2019 18:30, Paolo Abeni wrote:
+> On Thu, 2019-08-22 at 14:14 -0700, Mat Martineau wrote:
+>> On Thu, 22 Aug 2019, Paolo Abeni wrote:
 >>
->>> This allows to set tcp congestion control algorithm on all subflows.
+>>> On Fri, 2019-08-02 at 17:16 -0700, Mat Martineau wrote:
+>>>> The MPTCP-level socket doesn't use sk_receive_queue, so it was possible
+>>>> for mptcp_recvmsg() to remain blocked when there was data ready for it
+>>>> to read. When the MPTCP socket is waiting for additional data and it
+>>>> releases the subflow socket lock, the subflow may have incoming packets
+>>>> ready to process and it sometimes called subflow_data_ready() before t=
+he
+>>>> MPTCP socket called sk_wait_data().
+>>>>
+>>>> This change adds a new function for the MPTCP socket to use when waiti=
+ng
+>>>> for a data ready signal. Atomic bitops with memory barriers are used to
+>>>> set, test, and clear a MPTCP socket flag that indicates waiting subflow
+>>>> data. This flag replaces the sk_receive_queue checks used by other
+>>>> socket types.
+>>>>
+>>>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 >>>
->>> In the future we could keep a record of sockopts so we can "replay"
->>> them when another subflow is added at a later point in time.
+>>> (sorry for lagging behind so much)
 >>>
->>> Only TCP_CONGESTION is allowed at the moment, as some available
->>> TCP knobs either have undesireable behaviour or should be later
->>> implemented at the mptcp level rather than passing them through to
->>> the subflows (TCP_CORK for example).
+>>> The patch LGTM, but I have some related questions: how do you reproduce
+>>> the issue fixed here? can we add that to the self-tests? (I assume/sort
+>>> of recall the patch fix the issue in your scenario).
 >>>
->>> getsockopt is disabled for the time being to not expose a particular
->>> behaviour ("first subflow on list") at this time.
->>>
->>> v2: disable getsockopt, restrict setsockopt via whitelist.
 >>
->> As Florian mentioned on the call today, we definitely want to merge the
->> getsockopt fix.
+>> I was seeing the issue between the multipath-tcp.org kernel and ours, wi=
+th =
+
+>> a couple of simple test programs. The multipath-tcp.org system had a =
+
+>> program running that would do a recvmsg() and then immediately send =
+
+>> anything it received, and the prototype system would send data and then =
+
+>> try to read it back. The prototype system could get stuck waiting for a =
+
+>> blocked recvmsg() to return even though the peer had sent the data.
+>>
+>> It may have been timing-dependent, I'll see if I can make it happen in a =
+
+>> self test.
+> =
+
+> Ok, I think that a self-test here is not strictly required. =
+
+> =
+
+> I think we can merge this patch as is.
 
 Thank you for the patch and the review!
 
->> As for the setsockopt part, if TCP_CONGESTION is sufficiently useful to
->> enough users, we could consider merging it. My slight hesitation is that=
- the
->> potential "replay" behavior change in the future could come as a surpris=
-e,
->> and if we start out with this ability to set options on all subflows the=
-n we
->> have to be careful and consistent about how it interacts with per-subflow
->> options later. Anyone know if TCP_CONGESTION is a priority?
-> =
+Just added at the end of the series.
 
-> Its not.
-> =
+https://github.com/multipath-tcp/mptcp_net-next/commits/export
 
-> Lets drop this, I will respin with the getsockopt fix only.
-> =
+I had a minor conflicts:
 
-> Alternatively, Matthieu -- if you can just apply the getsockopt part
-> of this patch that works for me too.
 
-Sure, just did:
-- 8d057956303c: "squashed" in "mptcp: Make connection_list a real list
-of subflows"
-- 6090eb26ae22: signed-off
-- 72da334cdf7c..732bbb964f61: result
+diff --cc net/mptcp/protocol.h
+index 68877e952780,7a515d8e99d0..000000000000
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@@ -117,10 -101,10 +120,14 @@@ struct mptcp_sock
+        u64             write_seq;
+        u64             ack_seq;
+        u32             token;
+++<<<<<<< HEAD
+ +      u16             dport;
+++=3D=3D=3D=3D=3D=3D=3D
++       unsigned long   flags;
+++>>>>>>> mptcp: Make MPTCP socket block/wakeup ignore sk_receive_queue
+        struct list_head conn_list;
+        struct socket   *subflow; /* outgoing
+connect/listener/!mp_capable */
+ -      struct pm_data  pm;
+ +      struct mptcp_pm_data    pm;
+        u8              addr_signal;
+  };
 
-Just exported, tests in progress.
+
+Fixed with:
+
+
+diff --cc net/mptcp/protocol.h
+index 68877e952780,7a515d8e99d0..000000000000
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@@ -117,10 -101,10 +120,11 @@@ struct mptcp_sock
+        u64             write_seq;
+        u64             ack_seq;
+        u32             token;
++       unsigned long   flags;
+ +      u16             dport;
+        struct list_head conn_list;
+        struct socket   *subflow; /* outgoing
+connect/listener/!mp_capable */
+
+ -      struct pm_data  pm;
+ +      struct mptcp_pm_data    pm;
+        u8              addr_signal;
+  };
+
+
+
+Tests are still OK!
 
 Cheers,
 Matt
@@ -80,4 +138,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============6311176643121617911==--
+--===============3318058922210862929==--
