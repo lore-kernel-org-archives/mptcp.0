@@ -1,77 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============5107460842242290015=="
+Content-Type: multipart/mixed; boundary="===============7919235672037531072=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: fix mptcp socket cleanup
-Date: Fri, 30 Aug 2019 14:17:33 +0200
-Message-ID: <e88e1256082439491fbfb0b92e254a692b32af7f.1567167420.git.pabeni@redhat.com>
+Subject: Re: [MPTCP] [PATCH] mptcp: fix mptcp socket cleanup
+Date: Fri, 30 Aug 2019 14:29:21 +0200
+Message-ID: <20190830122921.GP20113@breakpoint.cc>
+In-Reply-To: e88e1256082439491fbfb0b92e254a692b32af7f.1567167420.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1767
+X-UID: 1768
 
---===============5107460842242290015==
+--===============7919235672037531072==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently the mptcp proto ->destruct() is never called.
-With token accounting this causes a msk refcount leak.
-Kmemleak can't detect that, due to msk <-> sk circular
-pointer references.
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> +		/* when assiging the token to the msk, we need to held
+> +		 * an additional reference, will be released at msk token
+> +		 * destruction time
+> +		 */
 
-Invoke the distructor via sk_common_release(), and reduce a
-bit code duplication.
+Unrelated to your patch, but I think this is wrong.
+We should have implicit reference for the token.
 
-Additionally we need to acquire a msk refcount when we initialize
-the msk token in mptcp_finish_connect(): not the destructor
-is correctly called and the client sock will release the msk a
-reference to self at close() time.
+Taking a reference makes no sense because the token lifetime is limited by
+the mptcp socket -- if the mptcp socket is closing, we remove the token too.
 
-Fixes: cd2d4eeca99b ("ptcp: Add key generation and token tree")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
---
-I'm ok with squashing this one in the fixes commit
----
- net/mptcp/protocol.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+token_release() function makes no sense to me -- afaics all callers
+have a pointer to the msk they want to put the reference for.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 52376b1fe64b..c862630897a6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -653,8 +653,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	}
- 	release_sock(sk);
- =
+I'll have a look into cleaning that up after respinning a squashable
+version of the token refactoring.
 
--	sock_orphan(sk);
--	sock_put(sk);
-+	sk_common_release(sk);
- }
- =
-
- static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
-@@ -830,9 +829,14 @@ void mptcp_finish_connect(struct sock *sk, int mp_capa=
-ble)
- 		local_bh_disable();
- 		bh_lock_sock_nested(sk);
- =
-
-+		/* when assiging the token to the msk, we need to held
-+		 * an additional reference, will be released at msk token
-+		 * destruction time
-+		 */
- 		msk->remote_key =3D subflow->remote_key;
- 		msk->local_key =3D subflow->local_key;
- 		msk->token =3D subflow->token;
-+		sock_hold(sk);
- 		pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
- 		msk->dport =3D ntohs(inet_sk(msk->subflow->sk)->inet_dport);
- =
-
--- =
-
-2.21.0
-
-
---===============5107460842242290015==--
+--===============7919235672037531072==--
