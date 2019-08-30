@@ -1,71 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============4353378077059246466=="
+Content-Type: multipart/mixed; boundary="===============9157352683758691547=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/7] mptcp: move before/after64 into the header file
-Date: Fri, 30 Aug 2019 17:03:56 +0200
-Message-ID: <506ed101cd1236c0f587b6f1d4cfae3a534e9859.1567177394.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 2/7] mptcp: update per unacked sequence on pkt
+ reception
+Date: Fri, 30 Aug 2019 17:03:57 +0200
+Message-ID: <f76a221454e358abb9fdb29f7396638b1ca8b149.1567177394.git.pabeni@redhat.com>
 In-Reply-To: cover.1567177393.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1772
+X-UID: 1773
 
---===============4353378077059246466==
+--===============9157352683758691547==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-So that we can reuse in multiple files
+So that we keep per unacked sequence number consistent; since
+we update per msk data, use an atomic64 cmpxcgh() to protect
+against concurrent updates from multiple subflows.
+
+Initialize the snd_una at connect()/accept() time.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
---
-Squash to "mptcp: Implement MPTCP receive path"
 ---
- net/mptcp/protocol.c | 7 -------
- net/mptcp/protocol.h | 7 +++++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+rfc v2 -> v1:
+ - do msk-level accounting, using atomic64_t
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c082a2731a66..15bd54f43d4b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -17,13 +17,6 @@
- #include <net/mptcp.h>
- #include "protocol.h"
- =
+rfc v1 -> rfc v2:
+ - initialize subflow snd_una on subflow connect()/accept()
+---
+ net/mptcp/options.c  | 39 +++++++++++++++++++++++++++++++++------
+ net/mptcp/protocol.c |  2 ++
+ net/mptcp/protocol.h |  1 +
+ 3 files changed, 36 insertions(+), 6 deletions(-)
 
--static inline bool before64(__u64 seq1, __u64 seq2)
--{
--	return (__s64)(seq1 - seq2) < 0;
--}
--
--#define after64(seq2, seq1)	before64(seq1, seq2)
--
- static struct socket *__mptcp_fallback_get_ref(const struct mptcp_sock *ms=
-k)
- {
- 	sock_owned_by_me((const struct sock *)msk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 991ad288b892..8c36a379f67d 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -279,4 +279,11 @@ static inline struct mptcp_ext *mptcp_get_ext(struct s=
-k_buff *skb)
- 	return (struct mptcp_ext *)skb_ext_find(skb, SKB_EXT_MPTCP);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index be7afa5aac6a..854dc050c1da 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -524,6 +524,26 @@ bool mptcp_synack_options(const struct request_sock *r=
+eq, unsigned int *size,
+ 	return false;
  }
  =
 
-+static inline bool before64(__u64 seq1, __u64 seq2)
++static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
 +{
-+	return (__s64)(seq1 - seq2) < 0;
++	u32 old_ack32, cur_ack32;
++
++	if (use_64bit)
++		return cur_ack;
++
++	old_ack32 =3D (u32)old_ack;
++	cur_ack32 =3D (u32)cur_ack;
++	cur_ack =3D (old_ack & GENMASK_ULL(63, 32)) + cur_ack32;
++	if (unlikely(before(cur_ack32, old_ack32)))
++		return cur_ack + (1LL << 32);
++	return cur_ack;
 +}
 +
-+#define after64(seq2, seq1)	before64(seq1, seq2)
++void update_una(struct mptcp_sock *msk, u64 old_una, u64 new_una)
++{
++	atomic64_cmpxchg(&msk->snd_una, old_una, new_una);
++}
 +
- #endif /* __MPTCP_PROTOCOL_H */
+ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
+ 			    struct tcp_options_received *opt_rx)
+ {
+@@ -547,6 +567,19 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb,
+ 	if (!mp_opt->dss)
+ 		return;
+ =
+
++	/* we can't wait for recvmsg() to update the ack_seq, otherwise
++	 * monodirectional flows will stuck
++	 */
++	if (msk && mp_opt->use_ack) {
++		u64 snd_una =3D atomic64_read(&msk->snd_una);
++		u64 new_snd_una;
++
++		new_snd_una =3D expand_ack(snd_una, mp_opt->data_ack,
++					 mp_opt->ack64);
++		if (after64(new_snd_una, snd_una))
++			update_una(msk, snd_una, new_snd_una);
++	}
++
+ 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
+ 	if (!mpext)
+ 		return;
+@@ -563,12 +596,6 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb,
+ 		mpext->use_checksum =3D mp_opt->use_checksum;
+ 	}
+ =
+
+-	if (mp_opt->use_ack) {
+-		mpext->data_ack =3D mp_opt->data_ack;
+-		mpext->use_ack =3D 1;
+-		mpext->ack64 =3D mp_opt->ack64;
+-	}
+-
+ 	mpext->data_fin =3D mp_opt->data_fin;
+ =
+
+ 	if (msk)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 15bd54f43d4b..52e39fbb217d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -696,6 +696,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ =
+
+ 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+ 		msk->write_seq =3D subflow->idsn + 1;
++		atomic64_set(&msk->snd_una, msk->write_seq);
+ 		ack_seq++;
+ 		msk->ack_seq =3D ack_seq;
+ 		subflow->map_seq =3D ack_seq;
+@@ -833,6 +834,7 @@ void mptcp_finish_connect(struct sock *sk, int mp_capab=
+le)
+ =
+
+ 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+ 		msk->write_seq =3D subflow->idsn + 1;
++		atomic64_set(&msk->snd_una, msk->write_seq);
+ 		ack_seq++;
+ 		msk->ack_seq =3D ack_seq;
+ 		subflow->map_seq =3D ack_seq;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 8c36a379f67d..e7c29007f0fe 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -119,6 +119,7 @@ struct mptcp_sock {
+ 	u64		remote_key;
+ 	u64		write_seq;
+ 	u64		ack_seq;
++	atomic64_t	snd_una;
+ 	u32		token;
+ 	unsigned long	flags;
+ 	u16		dport;
 -- =
 
 2.21.0
 
 
---===============4353378077059246466==--
+--===============9157352683758691547==--
