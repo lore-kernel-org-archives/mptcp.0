@@ -1,217 +1,207 @@
-Content-Type: multipart/mixed; boundary="===============6536226878958605514=="
+Content-Type: multipart/mixed; boundary="===============1236897795306514735=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 7/7] mptcp: implement and use MPTCP-level
- retransmission
-Date: Fri, 30 Aug 2019 17:04:02 +0200
-Message-ID: <d32e7947c5f9e2abfcc780b9235b48e6e9f7b9d7.1567177394.git.pabeni@redhat.com>
-In-Reply-To: cover.1567177393.git.pabeni@redhat.com
+Subject: Re: [MPTCP] [PATCH 2/7] mptcp: update per unacked sequence on pkt
+ reception
+Date: Fri, 30 Aug 2019 17:46:21 -0700
+Message-ID: <alpine.OSX.2.21.1908301714400.48146@dfoote-mobl.amr.corp.intel.com>
+In-Reply-To: f76a221454e358abb9fdb29f7396638b1ca8b149.1567177394.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1778
+X-UID: 1779
 
---===============6536226878958605514==
+--===============1236897795306514735==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On timeout event, schedule a work queue to do the retransmission.
-Retransmission code resemple closely sendmsg() implementation and
-re-uses mptcp_sendmsg_frag, providing a dummy msghdr - for flags'
-sake - and peeking the relevant dfrag from the rtx head.
+On Fri, 30 Aug 2019, Paolo Abeni wrote:
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-rfc v2 -> v1:
-- really preserve dfrag seq across retransmission using u64 store instead o=
-f int
-- update timer management according to new schema
-- fix issues in mptcp_retransmit() cleanup code
-- do cleanup the rtx queue before starting the retransmission
-- cancel the rtx work outside the socket lock (avoid deadlock)
+> So that we keep per unacked sequence number consistent; since
+> we update per msk data, use an atomic64 cmpxcgh() to protect
+> against concurrent updates from multiple subflows.
+>
+> Initialize the snd_una at connect()/accept() time.
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> rfc v2 -> v1:
+> - do msk-level accounting, using atomic64_t
+>
+> rfc v1 -> rfc v2:
+> - initialize subflow snd_una on subflow connect()/accept()
+> ---
+> net/mptcp/options.c  | 39 +++++++++++++++++++++++++++++++++------
+> net/mptcp/protocol.c |  2 ++
+> net/mptcp/protocol.h |  1 +
+> 3 files changed, 36 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index be7afa5aac6a..854dc050c1da 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -524,6 +524,26 @@ bool mptcp_synack_options(const struct request_sock =
+*req, unsigned int *size,
+> 	return false;
+> }
+>
+> +static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
+> +{
+> +	u32 old_ack32, cur_ack32;
+> +
+> +	if (use_64bit)
+> +		return cur_ack;
+> +
+> +	old_ack32 =3D (u32)old_ack;
+> +	cur_ack32 =3D (u32)cur_ack;
+> +	cur_ack =3D (old_ack & GENMASK_ULL(63, 32)) + cur_ack32;
+> +	if (unlikely(before(cur_ack32, old_ack32)))
+> +		return cur_ack + (1LL << 32);
+> +	return cur_ack;
+> +}
+> +
+> +void update_una(struct mptcp_sock *msk, u64 old_una, u64 new_una)
+> +{
+> +	atomic64_cmpxchg(&msk->snd_una, old_una, new_una);
 
-rfc v1 -> rfc v2:
-- rtx_queue_head is now static inline (fix link issue)
-- cancel on mptcp_clear_xmit
-- (hopefully) fix msk refcnt
----
- net/mptcp/protocol.c | 81 ++++++++++++++++++++++++++++++++++++++++++--
- net/mptcp/protocol.h | 11 ++++++
- 2 files changed, 89 insertions(+), 3 deletions(-)
+Do we want to silently skip the update if the old_una does not match?
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index dd671c62cf3e..4ab72e6fd748 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -771,10 +771,12 @@ static void mptcp_retransmit_handler(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
+Skipping the update is certainly the right thing if msk->snd_una was =
 
--	if (atomic64_read(&msk->snd_una) =3D=3D msk->write_seq)
-+	if (atomic64_read(&msk->snd_una) =3D=3D msk->write_seq) {
- 		mptcp_stop_timer(sk);
--	else
--		mptcp_reset_timer(sk);
-+	} else {
-+		if (schedule_work(&msk->rtx_work))
-+			sock_hold(sk);
-+	}
- }
- =
+changed to be a value after new_una. If msk->snd_una is still behind =
 
- static void mptcp_retransmit_timer(struct timer_list *t)
-@@ -796,6 +798,66 @@ static void mptcp_retransmit_timer(struct timer_list *=
-t)
- 	sock_put(sk);
- }
- =
+new_una, then we're ignoring a valid ack.
 
-+static void mptcp_retransmit(struct work_struct *work)
-+{
-+	int orig_len, orig_offset, ret, mss_now =3D 0, size_goal =3D 0;
-+	struct mptcp_data_frag *dfrag;
-+	struct sock *ssk, *sk;
-+	struct mptcp_sock *msk;
-+	u64 orig_write_seq;
-+	size_t copied =3D 0;
-+	struct msghdr msg;
-+	long timeo =3D 0;
-+
-+	msk =3D container_of(work, struct mptcp_sock, rtx_work);
-+	sk =3D &msk->sk.icsk_inet.sk;
-+
-+	lock_sock(sk);
-+	mptcp_clean_una(sk);
-+	dfrag =3D mptcp_rtx_head(sk);
-+	if (!dfrag)
-+		goto unlock;
-+
-+	ssk =3D mptcp_subflow_get_ref(msk);
-+	if (!ssk)
-+		goto reset_unlock;
-+
-+	lock_sock(ssk);
-+
-+	msg.msg_flags =3D MSG_DONTWAIT;
-+	orig_len =3D dfrag->data_len;
-+	orig_offset =3D dfrag->offset;
-+	orig_write_seq =3D dfrag->data_seq;
-+	while (dfrag->data_len > 0) {
-+		ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &timeo, &mss_now,
-+					 &size_goal);
-+		if (ret < 0)
-+			break;
-+
-+		copied +=3D ret;
-+		dfrag->data_len -=3D ret;
-+	}
-+	if (copied)
-+		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
-+			 size_goal);
-+
-+	dfrag->data_seq =3D orig_write_seq;
-+	dfrag->offset =3D orig_offset;
-+	dfrag->data_len =3D orig_len;
-+
-+	release_sock(ssk);
-+	sock_put(ssk);
-+
-+reset_unlock:
-+	mptcp_set_timeout(sk, ssk);
-+	if (!mptcp_timer_pending(sk))
-+		mptcp_reset_timer(sk);
-+
-+unlock:
-+	release_sock(sk);
-+	sock_put(sk);
-+}
-+
- static int __mptcp_init_sock(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -805,6 +867,8 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->conn_list);
- 	INIT_LIST_HEAD(&msk->rtx_queue);
- =
+Back when I was (mistakenly) using cmpxchg with msk->ack_seq, I had this =
 
-+	INIT_WORK(&msk->rtx_work, mptcp_retransmit);
-+
- 	/* re-use the csk retrans timer for MPTCP-level retrans */
- 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
- =
+chunk of code:
 
-@@ -837,6 +901,14 @@ static void __mptcp_clear_xmit(struct sock *sk)
- 		dfrag_clear(sk, dfrag);
- }
- =
++       do {
++               if (!before64(old_ack, ack_seq)) {
++                       pr_debug("skipping ack update");
++                       break;
++               }
++               pr_debug("old_ack=3D%llu new_ack=3D%llu", old_ack, ack_seq);
++       } while (!atomic64_try_cmpxchg(&arg->msk->ack_seq, &old_ack, =
 
-+static void mptcp_cancel_rtx_work(struct sock *sk)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	if (cancel_work_sync(&msk->rtx_work))
-+		sock_put(sk);
-+}
-+
- static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -865,6 +937,8 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	__mptcp_clear_xmit(sk);
- 	release_sock(sk);
- =
+ack_seq));
 
-+	mptcp_cancel_rtx_work(sk);
-+
- 	sk_common_release(sk);
- }
- =
+Seems like it would be good to use something similar here, maybe limiting =
 
-@@ -873,6 +947,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	lock_sock(sk);
- 	__mptcp_clear_xmit(sk);
- 	release_sock(sk);
-+	mptcp_cancel_rtx_work(sk);
- 	return tcp_disconnect(sk, flags);
- }
- =
+the retries.
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a14fdc161813..b9d136b01165 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -133,6 +133,7 @@ struct mptcp_sock {
- 	u32		token;
- 	unsigned long	flags;
- 	u16		dport;
-+	struct work_struct rtx_work;
- 	struct list_head conn_list;
- 	struct list_head rtx_queue;
- 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
-@@ -158,6 +159,16 @@ static inline struct mptcp_data_frag *mptcp_rtx_tail(c=
-onst struct sock *sk)
- 	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
- }
- =
+> +}
+> +
+> void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
+> 			    struct tcp_options_received *opt_rx)
+> {
+> @@ -547,6 +567,19 @@ void mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb,
+> 	if (!mp_opt->dss)
+> 		return;
+>
+> +	/* we can't wait for recvmsg() to update the ack_seq, otherwise
+> +	 * monodirectional flows will stuck
+> +	 */
+> +	if (msk && mp_opt->use_ack) {
+> +		u64 snd_una =3D atomic64_read(&msk->snd_una);
 
-+static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	if (list_empty(&msk->rtx_queue))
-+		return NULL;
-+
-+	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
-+}
-+
- struct subflow_request_sock {
- 	struct	tcp_request_sock sk;
- 	u8	mp_capable : 1,
--- =
+After our discussion of memory barriers in the "Make MPTCP socket =
 
-2.21.0
+block/wakeup ignore sk_receive_queue" patch, I wanted to double-check this =
+
+use. Documentation/atomic_t.txt says that "non-RMW" operations like this =
+
+read are unordered, and need smp_mb__before_atomic() or =
+
+smp_mb__after_atomic(). It seems like we need to worry about ordering =
+
+because we have a locked subflow here and an msk lock is not held by this =
+
+thread, and there may be other subflows trying to update snd_una on other =
+
+CPUs.
+
+> +		u64 new_snd_una;
+> +
+> +		new_snd_una =3D expand_ack(snd_una, mp_opt->data_ack,
+> +					 mp_opt->ack64);
+> +		if (after64(new_snd_una, snd_una))
+> +			update_una(msk, snd_una, new_snd_una);
+> +	}
+> +
+> 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
+> 	if (!mpext)
+> 		return;
+> @@ -563,12 +596,6 @@ void mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb,
+> 		mpext->use_checksum =3D mp_opt->use_checksum;
+> 	}
+>
+> -	if (mp_opt->use_ack) {
+> -		mpext->data_ack =3D mp_opt->data_ack;
+> -		mpext->use_ack =3D 1;
+> -		mpext->ack64 =3D mp_opt->ack64;
+> -	}
+> -
+> 	mpext->data_fin =3D mp_opt->data_fin;
+>
+> 	if (msk)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 15bd54f43d4b..52e39fbb217d 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -696,6 +696,7 @@ static struct sock *mptcp_accept(struct sock *sk, int=
+ flags, int *err,
+>
+> 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+> 		msk->write_seq =3D subflow->idsn + 1;
+> +		atomic64_set(&msk->snd_una, msk->write_seq);
+
+Does the msk lock give us the ordering we need here?
 
 
---===============6536226878958605514==--
+Thanks,
+Mat
+
+
+> 		ack_seq++;
+> 		msk->ack_seq =3D ack_seq;
+> 		subflow->map_seq =3D ack_seq;
+> @@ -833,6 +834,7 @@ void mptcp_finish_connect(struct sock *sk, int mp_cap=
+able)
+>
+> 		crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
+> 		msk->write_seq =3D subflow->idsn + 1;
+> +		atomic64_set(&msk->snd_una, msk->write_seq);
+> 		ack_seq++;
+> 		msk->ack_seq =3D ack_seq;
+> 		subflow->map_seq =3D ack_seq;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 8c36a379f67d..e7c29007f0fe 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -119,6 +119,7 @@ struct mptcp_sock {
+> 	u64		remote_key;
+> 	u64		write_seq;
+> 	u64		ack_seq;
+> +	atomic64_t	snd_una;
+> 	u32		token;
+> 	unsigned long	flags;
+> 	u16		dport;
+> -- =
+
+> 2.21.0
+>
+> _______________________________________________
+> mptcp mailing list
+> mptcp(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/mptcp
+>
+
+--
+Mat Martineau
+Intel
+
+--===============1236897795306514735==--
