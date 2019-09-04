@@ -1,92 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============2066994068471767169=="
+Content-Type: multipart/mixed; boundary="===============6691944874940021528=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH MPTCP 0/2] mptcp: token api refactoring/cleanup
-Date: Wed, 04 Sep 2019 13:16:55 +0200
-Message-ID: <9c4b2989-2944-b58d-7f47-29c9eab03700@tessares.net>
-In-Reply-To: 20190902110909.3724-1-fw@strlen.de
+Date: Wed, 04 Sep 2019 13:43:37 +0200
+Message-ID: <20190904114337.GH13660@breakpoint.cc>
+In-Reply-To: 9c4b2989-2944-b58d-7f47-29c9eab03700@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1788
+X-UID: 1789
 
---===============2066994068471767169==
+--===============6691944874940021528==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+> I only propose to squash commits to ease the work for later and still
+> have a patch-set that can be easy to read, not ending with a lot of "to
+> squash" patches. But here I understand that there are conflicts everywher=
+e.
 
-On 02/09/2019 13:09, Florian Westphal wrote:
-> I tried to fold the earlier 'RFC v2' in a way so that it allows
-> easy squashing.
+I have no problem with squashing the 'obvious' patches.
+
+> Another possibility is to do the "rebase" directly in the TopGit tree if
+> you prefer. I have no issue to give you the "push" permissions and you
+> have experience with TopGit. But I can also understand that you prefer
+> to postpone the rebase for later (or you don't like TopGit :) )
+
+I would have to take a look at topgit again.  I used it for a short
+period but that was more than 6 years ago.
+
+> > The export tree already has a few patches
+> > that need to be squashed anyway before sending a formal series.
 > =
 
-> Patch #1 is the only one where this is painless.
-> For all others, things are not easy because conflicts exist all
-> over the place.
+> That's true. If we want to change that before, simply tell me which
+> patches have to be squashed and I can already do the work :)
 > =
 
-> So I see two ways forward:
-> 1. I rebase this myself and offer a pull request for the resulting series
-> 2. Only squash the first patch and keep the rest as extra patch.
+> > Also, the export branch is currently not bisectable, I get build
+> > errors mid-series.
 > =
 
-> I suggest we go with #2.
+> That has to happen :/
 
-Sounds good to me. Is it OK for others if we do that?
+Why?
 
-I only propose to squash commits to ease the work for later and still
-have a patch-set that can be easy to read, not ending with a lot of "to
-squash" patches. But here I understand that there are conflicts everywhere.
+> Is it something very important if we send the whole patch-set upstream?
 
-Another possibility is to do the "rebase" directly in the TopGit tree if
-you prefer. I have no issue to give you the "push" permissions and you
-have experience with TopGit. But I can also understand that you prefer
-to postpone the rebase for later (or you don't like TopGit :) )
+Yes, each step on the way needs to result in a compileable tree.
+Otherwise, other developers doing 'git bisect' on the kernel later will
+may hit this.
 
-> The export tree already has a few patches
-> that need to be squashed anyway before sending a formal series.
+> I guess it is better to have "consistent" patches and we will certainly
+> fix that but the goal is to merge the whole series.
 
-That's true. If we want to change that before, simply tell me which
-patches have to be squashed and I can already do the work :)
+Of course.  Note that its not a problem to add a function in patch n
+and then only add a user in patch n+1 later in the series.
 
-> Also, the export branch is currently not bisectable, I get build
-> errors mid-series.
+> > Once another patch series is to be submitted to netdev, the export
+> > branch can be renamed/archived and a reorganisation can be done at that
+> > point (and the result diff'd versus the old export branch to make sure
+> > there is no difference in resulting code).
+> =
 
-That has to happen :/
+> Sounds good to me!
+> We can even re-create another TopGit tree in parallel after the rebase
+> if we think that it will take some times before being accepted upstream.
 
-Is it something very important if we send the whole patch-set upstream?
-I guess it is better to have "consistent" patches and we will certainly
-fix that but the goal is to merge the whole series.
+Thats good to know.
 
-> I don't think this is a problem for now, I think it makes sense to
-> not squash the larger patches for the time being.
+> Another question linked to that: do you think it could be possible and a
+> good idea to push our code upstream ASAP with known limitations and
+> continue our work directly in a dedicated repo from git.kernel.org with
+> "regular" merge request for net-next?
 
-I am fine with that.
+I think its good to merge early, but it needs to be well
+understood/described where the limits are.
 
-> Once another patch series is to be submitted to netdev, the export
-> branch can be renamed/archived and a reorganisation can be done at that
-> point (and the result diff'd versus the old export branch to make sure
-> there is no difference in resulting code).
+At the moment I don't think we're there yet.
 
-Sounds good to me!
-We can even re-create another TopGit tree in parallel after the rebase
-if we think that it will take some times before being accepted upstream.
+Once mptcp_poll is a bit saner (I added a note to the pad and will be
+working on this), we've sorted out token refcounting (also working on
+this), Paolos retrans patches are in *and* we can deal with data
+arriving on multiple subflows I think we'd be good for a non-rfc
+patchset.
 
-Another question linked to that: do you think it could be possible and a
-good idea to push our code upstream ASAP with known limitations and
-continue our work directly in a dedicated repo from git.kernel.org with
-"regular" merge request for net-next?
+IPv6 would be nice but I don't think its a deal-breaker if we'd
+place it on the immediate post-merge todo list.
 
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============2066994068471767169==--
+--===============6691944874940021528==--
