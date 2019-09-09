@@ -1,49 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============2906381358474156402=="
+Content-Type: multipart/mixed; boundary="===============8995538020851122641=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/4] protocol: avoid sparse endian warning
-Date: Tue, 10 Sep 2019 01:17:22 +0200
-Message-ID: <20190909231725.4952-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH 2/4] options: fix __sum16 degrades to integer sparse
+ warning
+Date: Tue, 10 Sep 2019 01:17:23 +0200
+Message-ID: <20190909231725.4952-3-fw@strlen.de>
 In-Reply-To: 20190909231725.4952-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1808
+X-UID: 1809
 
---===============2906381358474156402==
+--===============8995538020851122641==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-protocol.h:82:16: warning: incorrect type in return expression (different b=
-ase types)
-protocol.h:82:16:    expected unsigned int
-protocol.h:82:16:    got restricted __be32 [usertype]
+options.c:714:42: warning: incorrect type in assignment (different base typ=
+es)
+options.c:714:42:    expected restricted __sum16 [assigned] [usertype] chec=
+ksum
+options.c:714:42:    got int
+options.c:715:32: warning: restricted __sum16 degrades to integer
+options.c:715:32: warning: restricted __sum16 degrades to integer
 
-squashto: mptcp: Add ADD_ADDR handling
+squashto: mptcp: Write MPTCP DSS headers to outgoing data packets
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/options.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index bd7b3b107fe0..49ac7c842a3c 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -77,7 +77,7 @@
- /* MPTCP socket flags */
- #define MPTCP_DATA_READY	BIT(0)
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index b82557af3fae..1645006d59c4 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -701,7 +701,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
+options *opts)
+ 		}
  =
 
--static inline u32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
-+static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
- {
- 	return htonl((TCPOPT_MPTCP << 24) | (len << 16) | (subopt << 12) |
- 		     ((nib & 0xF) << 8) | field);
+ 		if (mpext->use_map) {
+-			__sum16 checksum;
++			__u16 checksum;
+ =
+
+ 			pr_debug("Writing map values");
+ 			put_unaligned_be64(mpext->data_seq, ptr);
+@@ -709,7 +709,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
+options *opts)
+ 			*ptr++ =3D htonl(mpext->subflow_seq);
+ =
+
+ 			if (mpext->use_checksum)
+-				checksum =3D mpext->checksum;
++				checksum =3D (u16 __force)mpext->checksum;
+ 			else
+ 				checksum =3D TCPOPT_NOP << 8 | TCPOPT_NOP;
+ 			*ptr =3D htonl(mpext->data_len << 16 | checksum);
 -- =
 
 2.21.0
 
 
---===============2906381358474156402==--
+--===============8995538020851122641==--
