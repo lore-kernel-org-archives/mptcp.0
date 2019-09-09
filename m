@@ -1,51 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1773047030473642033=="
+Content-Type: multipart/mixed; boundary="===============1047757763991598763=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 6/6] mptcp: use __tcp_poll instead of tcp_poll
-Date: Mon, 09 Sep 2019 17:53:18 +0200
-Message-ID: <20190909155317.31119-7-fw@strlen.de>
-In-Reply-To: 20190909155317.31119-1-fw@strlen.de
+Subject: [MPTCP] Brief news from LPC2019
+Date: Mon, 09 Sep 2019 18:53:37 +0100
+Message-ID: <CAKuKrB=F0x=N4toWuP5MfNmO=4VYPygMHXktMVuNGO4iBCmzbQ@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1805
+X-UID: 1806
 
---===============1773047030473642033==
+--===============1047757763991598763==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tcp_poll places current task on a wait queue.  This can cause us to block
-forever -- some subflows might be backup/failover and never receive any
-data.
+Hello,
 
-Use __tcp_poll instead to avoid blocking current task again after parent
-mptcp socket has been woken up from the subflow layer.
+Just to say that the presentation went well, we got some answers to
+the questions we asked.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://twitter.com/davem_dokebi/status/1171024374373244930
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2a91fff1f385..533fe2c50d3a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1182,7 +1182,7 @@ static __poll_t mptcp_poll(struct file *file, struct =
-socket *sock,
- 		struct socket *tcp_sock;
- =
+Briefly:
+ - IPv6 support will be required for the initial patch-set
+ - Supporting only MPTCPv1 is to good way to go
+ - Creating MPTCP socket can be done by any app as long as we have a
+way to block the creation of new sockets in case of issues (CGroup,
+etc.)
+ - I certainly forget things, maybe Peter took some notes when we were spea=
+king.
+ - Recording should be available "soon"
 
- 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
--		ret |=3D tcp_poll(file, tcp_sock, wait);
-+		ret |=3D __tcp_poll(tcp_sock->sk);
- 	}
- 	release_sock(sk);
- =
-
+Cheers,
+Matt
 -- =
 
-2.21.0
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============1773047030473642033==--
+--===============1047757763991598763==--
