@@ -1,74 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============4220358688408149233=="
+Content-Type: multipart/mixed; boundary="===============2522778412417384802=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 1/6] protocol: add discard_one_skb helper
-Date: Mon, 09 Sep 2019 17:53:13 +0200
-Message-ID: <20190909155317.31119-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH RFC 2/6] mptcp: add and use subflow_write_space
+Date: Mon, 09 Sep 2019 17:53:14 +0200
+Message-ID: <20190909155317.31119-3-fw@strlen.de>
 In-Reply-To: 20190909155317.31119-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1800
+X-UID: 1801
 
---===============4220358688408149233==
+--===============2522778412417384802==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This can be re-used in followup patch.
+This will be used to unblock tasks waiting for POLLOUT event
+once mptcp_poll is altered to not wait for each subflow anymore.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ net/mptcp/subflow.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 266a1028c9fd..3eecd9ae0c77 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -384,6 +384,15 @@ static enum mapping_status mptcp_get_mapping(struct so=
-ck *ssk)
- 	return ret;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 468f9b2aeb30..5635e4c73e15 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -318,6 +318,16 @@ static void subflow_data_ready(struct sock *sk)
+ 	}
  }
  =
 
-+static bool mptcp_discard_one_skb(struct sock *sk)
++static void subflow_write_space(struct sock *sk)
 +{
-+	read_descriptor_t rd =3D {
-+		.count =3D SIZE_MAX,
-+	};
++	struct subflow_context *subflow =3D subflow_ctx(sk);
++	struct sock *parent =3D subflow->conn;
 +
-+	return tcp_read_sock(sk, &rd, mptcp_flush_actor) >=3D 0;
++	sk_stream_write_space(sk);
++	if (parent)
++		parent->sk_write_space(parent);
 +}
 +
- static void mptcp_wait_data(struct sock *sk, long *timeo)
+ int subflow_connect(struct sock *sk, struct sockaddr_in *local,
+ 		    struct sockaddr_in *remote, u8 remote_id)
  {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-@@ -471,16 +480,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghd=
-r *msg, size_t len,
- 			if (!subflow->map_valid) {
- 				pr_debug("Mapping missing, trying next skb");
- =
-
--				arg.msg =3D NULL;
--				desc.count =3D SIZE_MAX;
--
--				bytes_read =3D tcp_read_sock(ssk, &desc,
--							   mptcp_flush_actor);
--
--				if (bytes_read < 0)
--					break;
--
--				continue;
-+				if (mptcp_discard_one_skb(ssk))
-+					continue;
-+				break;
- 			}
- 		} else if (status =3D=3D MAPPING_EMPTY) {
- 			goto wait_for_data;
+@@ -436,6 +446,7 @@ static int subflow_ulp_init(struct sock *sk)
+ 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
+ 	ctx->use_checksum =3D 0;
+ 	sk->sk_data_ready =3D subflow_data_ready;
++	sk->sk_write_space =3D subflow_write_space;
+ out:
+ 	return err;
+ }
 -- =
 
 2.21.0
 
 
---===============4220358688408149233==--
+--===============2522778412417384802==--
