@@ -1,50 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============2339640054113045880=="
+Content-Type: multipart/mixed; boundary="===============6122697832708167228=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/4] crypto: include protocol.h to get function
- prototypes
-Date: Tue, 10 Sep 2019 01:17:24 +0200
-Message-ID: <20190909231725.4952-4-fw@strlen.de>
+Subject: [MPTCP] [PATCH 4/4] pm: avoid endianness conversion warning
+Date: Tue, 10 Sep 2019 01:17:25 +0200
+Message-ID: <20190909231725.4952-5-fw@strlen.de>
 In-Reply-To: 20190909231725.4952-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1810
+X-UID: 1811
 
---===============2339640054113045880==
+--===============6122697832708167228==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-crypto.c:29:6: warning: symbol 'crypto_key_sha1' was not declared. Should i=
-t be static?
-crypto.c:54:6: warning: symbol 'crypto_hmac_sha1' was not declared. Should =
-it be static?
+pm.c:72:31: warning: incorrect type in assignment (different base types)
+pm.c:72:31:    expected restricted __be32 [assigned] [usertype] s_addr
+pm.c:72:31:    got unsigned long
 
-squashto: mptcp: Add key generation and token tree
+squashto: mptcp: Implement path manager interface commands
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/crypto.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mptcp/pm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
-index 8b67b11e626c..2cd988b9a312 100644
---- a/net/mptcp/crypto.c
-+++ b/net/mptcp/crypto.c
-@@ -26,6 +26,8 @@
- #include <linux/siphash.h>
- #include <asm/unaligned.h>
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 57e13837ee22..c8d6341c9683 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -69,7 +69,7 @@ int pm_create_subflow(u32 token, u8 remote_id)
  =
 
-+#include "protocol.h"
-+
- void crypto_key_sha1(u64 key, u32 *token, u64 *idsn)
- {
- 	u32 workspace[SHA_WORKSPACE_WORDS];
+ 	local.sin_family =3D AF_INET;
+ 	local.sin_port =3D 0;
+-	local.sin_addr.s_addr =3D INADDR_ANY;
++	local.sin_addr.s_addr =3D htonl(INADDR_ANY);
+ =
+
+ 	remote.sin_family =3D msk->pm.remote_family;
+ 	remote.sin_port =3D htons(msk->dport);
 -- =
 
 2.21.0
 
 
---===============2339640054113045880==--
+--===============6122697832708167228==--
