@@ -1,44 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1047757763991598763=="
+Content-Type: multipart/mixed; boundary="===============2110162289968841579=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Brief news from LPC2019
-Date: Mon, 09 Sep 2019 18:53:37 +0100
-Message-ID: <CAKuKrB=F0x=N4toWuP5MfNmO=4VYPygMHXktMVuNGO4iBCmzbQ@mail.gmail.com>
+Subject: [MPTCP] [PATCH 0/4] mptcp sparse "fixes"
+Date: Tue, 10 Sep 2019 01:17:21 +0200
+Message-ID: <20190909231725.4952-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 1806
+X-UID: 1807
 
---===============1047757763991598763==
+--===============2110162289968841579==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+NB: these patches don't fix anything because nothing is broken.
 
-Just to say that the presentation went well, we got some answers to
-the questions we asked.
+The "sparse" checker complains about various constructs, this fixes
+some of those.  All of these can be squashed, I've
+placed the name of the target commit in the change logs.
 
-https://twitter.com/davem_dokebi/status/1171024374373244930
+There are more sparse warnings in the code base, I am intentionally
+skipping those for now as its in code that is still "in flux".
 
-Briefly:
- - IPv6 support will be required for the initial patch-set
- - Supporting only MPTCPv1 is to good way to go
- - Creating MPTCP socket can be done by any app as long as we have a
-way to block the creation of new sockets in case of issues (CGroup,
-etc.)
- - I certainly forget things, maybe Peter took some notes when we were spea=
-king.
- - Recording should be available "soon"
+For example the icsk ulp data pointer now has an __rcu annotation upstream
+so sparse complains because we don't use rcu_dereference() or similar.
 
-Cheers,
-Matt
--- =
+In any case, I think those can be fixed once the code has stabilized more.
+I am sending these now because they are in more "mature" areas and it
+reduces the delta between my working tree and the "export" branch.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+Thanks,
+Florian
 
---===============1047757763991598763==--
+ crypto.c   |    2 ++
+ options.c  |    4 ++--
+ pm.c       |    2 +-
+ protocol.h |    2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+
+
+--===============2110162289968841579==--
