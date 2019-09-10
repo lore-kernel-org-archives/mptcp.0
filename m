@@ -1,220 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============6981021952997743841=="
+Content-Type: multipart/mixed; boundary="===============2806242928429653048=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: remove token_release
-Date: Tue, 10 Sep 2019 17:53:47 +0200
-Message-ID: <20190910155348.23244-1-fw@strlen.de>
+Subject: Re: [MPTCP] Brief news from LPC2019
+Date: Tue, 10 Sep 2019 18:24:53 +0100
+Message-ID: <CAKuKrBk-u-ReHFpd3vtfqdoF1O6f73OwuCZCwB4YjF8H8-td6w@mail.gmail.com>
+In-Reply-To: 20190909232141.GB2066@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 1813
+X-UID: 1814
 
---===============6981021952997743841==
+--===============2806242928429653048==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch removes token_release and gets rid of the extra sock_put/hold
-calls in token.c.
+Hi Florian,
 
-Instead its the responsibility of the subflow to make sure that the master
-mptcp socket (referenced via subflow_ctx->conn) can't go away and is
-released once the subflow is being destroyed.
+On Tue, Sep 10, 2019 at 12:21 AM Florian Westphal <fw(a)strlen.de> wrote:
+>
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+> > Briefly:
+> >  - IPv6 support will be required for the initial patch-set
+>
+> Shouldn't be too hard, I think we can add it once we can deal
+> with multiple subflows without problems.
 
-Also, switch mptcp_shutdown to sk_common_release to plug a reference leak,
-this part is taken from Paolos early patch
-"mptcp: fix mptcp socket cleanup", this proposal is an alternative.
+Indeed, should not be a problem and better to work on other important
+topics for this initial patch set first.
 
-Token destruction is moved to mptcp_close -- the rationale is that
-we want to remove the token as soon as we know we can't accept any more
-subflows.
+> >  - Creating MPTCP socket can be done by any app as long as we have a
+> > way to block the creation of new sockets in case of issues (CGroup,
+> > etc.)
+>
+> I assume that means the sysctl is acceptable?
 
-NB: I suspect we eventually need to extend join operations to check
-that the mptcp socket obtained from looking up has following properties:
- - nonzero refcount (refcount_inc_not_zero instead of sock_hold)
- - is still in established state.
+To be honest, I will have to refresh my mind by watching the recording
+because a few different people jumped into the discussion :)
+- It should not be disabled by default (if compiled) because the goal
+is to have people testing it: no sysctl needed
+- But we should be able to block the creation of new MPTCP sockets in
+case of problem: yes for the sysctl but enabled by default
+- But for Android, each app is launched in a netns and for them the
+sysctl is not a good protection
+- But there are others ways to block it: cgroup and (...), I don't
+remember the second way.
 
- But at this time I feel its better to wait until we support DATA_FIN
- before worrying about this.
+So I don't know what we should do with this sysctl :-D
+If it is there, it should be "on" by default.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c |  9 ++-------
- net/mptcp/protocol.h |  1 -
- net/mptcp/subflow.c  |  6 +++---
- net/mptcp/token.c    | 30 ++----------------------------
- 4 files changed, 7 insertions(+), 39 deletions(-)
+Cheers,
+Matt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 266a1028c9fd..d5b0c801e78f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -633,6 +633,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	struct subflow_context *subflow, *tmp;
- 	struct socket *ssk =3D NULL;
- =
+PS: oh and also my colleagues pointed me to this article:
+https://www.heise.de/newsticker/meldung/Multipath-TCP-Unterstuetzung-soll-e=
+ndlich-in-Linux-einziehen-4518447.html
+More something for you or Christoph to read :-)
 
-+	mptcp_token_destroy(msk->token);
- 	inet_sk_state_store(sk, TCP_CLOSE);
- =
-
- 	lock_sock(sk);
-@@ -652,9 +653,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		sock_release(mptcp_subflow_tcp_socket(subflow));
- 	}
- 	release_sock(sk);
--
--	sock_orphan(sk);
--	sock_put(sk);
-+	sk_common_release(sk);
- }
- =
-
- static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
-@@ -729,11 +728,7 @@ static struct sock *mptcp_accept(struct sock *sk, int =
-flags, int *err,
- =
-
- static void mptcp_destroy(struct sock *sk)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
-
--	pr_debug("msk=3D%p", sk);
--
--	mptcp_token_destroy(msk->token);
- }
- =
-
- static int mptcp_setsockopt(struct sock *sk, int level, int optname,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 49ac7c842a3c..38d3f5bdf926 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -235,7 +235,6 @@ int mptcp_token_new_connect(struct sock *sk);
- int mptcp_token_new_accept(u32 token);
- void mptcp_token_update_accept(struct sock *sk, struct sock *conn);
- struct mptcp_sock *mptcp_token_get_sock(u32 token);
--void token_release(u32 token);
- void mptcp_token_destroy(u32 token);
- =
-
- void crypto_key_sha1(u64 key, u32 *token, u64 *idsn);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 468f9b2aeb30..a49cc5ed1b27 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -390,6 +390,7 @@ int subflow_create_socket(struct sock *sk, struct socke=
-t **new_sock)
- 	pr_debug("subflow=3D%p", subflow);
- =
-
- 	*new_sock =3D sf;
-+	sock_hold(sk);
- 	subflow->conn =3D sk;
- =
-
- 	return 0;
-@@ -444,9 +445,8 @@ static void subflow_ulp_release(struct sock *sk)
- {
- 	struct subflow_context *ctx =3D subflow_ctx(sk);
- =
-
--	pr_debug("subflow=3D%p", ctx);
--
--	token_release(ctx->token);
-+	if (ctx->conn)
-+		sock_put(ctx->conn);
- =
-
- 	kfree(ctx);
- }
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 5bd3d0c78d04..f493ebb4c2d8 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -38,11 +38,6 @@ static RADIX_TREE(token_req_tree, GFP_ATOMIC);
- static DEFINE_SPINLOCK(token_tree_lock);
- static int token_used __read_mostly;
- =
-
--static struct sock *__token_lookup(u32 token)
--{
--	return radix_tree_lookup(&token_tree, token);
--}
--
- /**
-  * mptcp_token_new_request - create new key/idsn/token for subflow_request
-  * @req - the request socket
-@@ -126,8 +121,6 @@ int mptcp_token_new_connect(struct sock *sk)
- 		spin_unlock_bh(&token_tree_lock);
- 	}
- 	err =3D radix_tree_insert(&token_tree, subflow->token, mptcp_sock);
--	if (err =3D=3D 0)
--		sock_hold(mptcp_sock);
- 	spin_unlock_bh(&token_tree_lock);
- =
-
- 	return err;
-@@ -174,7 +167,6 @@ void mptcp_token_update_accept(struct sock *sk, struct =
-sock *conn)
- 	if (slot) {
- 		WARN_ON_ONCE(*slot !=3D &token_used);
- 		*slot =3D conn;
--		sock_hold(conn);
- 	}
- 	spin_unlock_bh(&token_tree_lock);
- }
-@@ -193,7 +185,7 @@ struct mptcp_sock *mptcp_token_get_sock(u32 token)
- 	struct sock *conn;
- =
-
- 	spin_lock_bh(&token_tree_lock);
--	conn =3D __token_lookup(token);
-+	conn =3D radix_tree_lookup(&token_tree, token);
- 	if (conn)
- 		sock_hold(conn);
- 	spin_unlock_bh(&token_tree_lock);
-@@ -215,33 +207,15 @@ void mptcp_token_destroy_request(u32 token)
- 	spin_unlock_bh(&token_tree_lock);
- }
- =
-
--void token_release(u32 token)
--{
--	struct sock *conn;
--
--	pr_debug("token=3D%u", token);
--	spin_lock_bh(&token_tree_lock);
--	conn =3D __token_lookup(token);
--	if (conn)
--		sock_put(conn);
--	spin_unlock_bh(&token_tree_lock);
--}
--
- /**
-  * mptcp_token_destroy - remove mptcp connection/token
-  * @token - token of mptcp connection to remove
-  *
-  * Remove the connection identified by @token.
-- * If the connection isn't found, no action is taken.
-  */
- void mptcp_token_destroy(u32 token)
- {
--	struct sock *conn;
--
- 	spin_lock_bh(&token_tree_lock);
--	conn =3D radix_tree_delete(&token_tree, token);
-+	radix_tree_delete(&token_tree, token);
- 	spin_unlock_bh(&token_tree_lock);
--
--	if (conn && (int *)conn !=3D &token_used)
--		sock_put(conn);
- }
 -- =
 
-2.21.0
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============6981021952997743841==--
+--===============2806242928429653048==--
