@@ -1,41 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============6561688717376201604=="
+Content-Type: multipart/mixed; boundary="===============0350347681730650298=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 12 September 2019 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Wed, 11 Sep 2019 17:11:02 +0100
-Message-ID: <d8c14414-15a2-9326-64a2-2b76c9e0b063@tessares.net>
+Subject: Re: [MPTCP] [PATCH 1/2] mptcp: Minor changes to path manager interface
+Date: Wed, 11 Sep 2019 22:57:41 +0200
+Message-ID: <75f64b5dad7a90eeec8a09072507fae53e178f19.camel@redhat.com>
+In-Reply-To: 20190907013002.2759-2-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1826
+X-UID: 1827
 
---===============6561688717376201604==
+--===============0350347681730650298==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Fri, 2019-09-06 at 18:30 -0700, Peter Krystad wrote:
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3c678d52ae1e..06a1cea45efe 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1135,7 +1135,6 @@ void mptcp_proto_init(void)
+>  =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+>  	token_init();
+>  	subflow_init();
+> -	pm_init();
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190912
+I guess we should also remove pm_init() definition, but that can go
+with a later clean-up patch. I think this patch can be merged as-is.
 
-Feel free to add/modify topics!
+Paolo
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
 
-Speak to you tomorrow!
-Matthieu
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============6561688717376201604==--
+--===============0350347681730650298==--
