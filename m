@@ -1,117 +1,187 @@
-Content-Type: multipart/mixed; boundary="===============0787398802110961935=="
+Content-Type: multipart/mixed; boundary="===============7183111051325627682=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH selftests 2/5] selftests: mptcp: extend mptcp_connect
- tool for ipv6 family
-Date: Fri, 13 Sep 2019 11:45:25 +0200
-Message-ID: <20190913094528.3163-3-fw@strlen.de>
+Subject: [MPTCP] [PATCH selftests 3/5] selftests: mptcp: add
+ accept/getpeername checks
+Date: Fri, 13 Sep 2019 11:45:26 +0200
+Message-ID: <20190913094528.3163-4-fw@strlen.de>
 In-Reply-To: 20190913094528.3163-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1839
+X-UID: 1840
 
---===============0787398802110961935==
+--===============7183111051325627682==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-At this time socket() will fail when requesting an ipv6 mptcp socket.
-This is ok for now, as the test script won't request ipv6 tests yet.
+Check that the result coming from accept matches that of getpeername.
+For initiator side, check getpeername matches address passed to connect().
 
-Tested with a tcp <-> tcp connection.
+At this time, kernel returns the address of the first subflow in the
+list.  Right now, we do not yet implement fate-sharing, i.e. if the
+original subflow goes away, the result of getpeername would change.
+
+There are different ways to fix that.  One would be to copy the
+quadruple from the first subflow socket to the mptcp socket.
+If we do that, this test should catch a possible bug (such as
+accidental reversal of saddr/daddr).
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- .../testing/selftests/net/mptcp/mptcp_connect.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.c       | 106 ++++++++++++++++++
+ 1 file changed, 106 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
 ing/selftests/net/mptcp/mptcp_connect.c
-index cac71f0ac8f8..32a1630b7fa3 100644
+index 32a1630b7fa3..f8e357a19ed5 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -32,11 +32,11 @@ static int  poll_timeout;
- static const char *cfg_host;
- static const char *cfg_port	=3D "12000";
- static int cfg_sock_proto	=3D IPPROTO_MPTCP;
--
-+static int pf =3D AF_INET;
- =
-
- static void die_usage(void)
- {
--	fprintf(stderr, "Usage: mptcp_connect [-s MPTCP|TCP] [-p port] "
-+	fprintf(stderr, "Usage: mptcp_connect [ -6 ] [-s MPTCP|TCP] [-p port] "
- 		"[ -l ] [ -t timeout ] connect_address\n");
- 	exit(1);
+@@ -49,6 +49,21 @@ static const char *getxinfo_strerr(int err)
+ 	return gai_strerror(err);
  }
-@@ -74,12 +74,13 @@ static int sock_listen_mptcp(const char * const listena=
-ddr,
- 		.ai_flags =3D AI_PASSIVE | AI_NUMERICHOST
- 	};
  =
 
--	hints.ai_family =3D AF_INET;
-+	hints.ai_family =3D pf;
- =
-
- 	struct addrinfo *a, *addr;
- 	int one =3D 1;
- =
-
- 	xgetaddrinfo(listenaddr, port, &hints, &addr);
-+	hints.ai_family =3D pf;
- =
-
- 	for (a =3D addr; a; a =3D a->ai_next) {
- 		sock =3D socket(a->ai_family, a->ai_socktype, cfg_sock_proto);
-@@ -124,7 +125,7 @@ static int sock_connect_mptcp(const char * const remote=
-addr,
- 	struct addrinfo *a, *addr;
- 	int sock =3D -1;
- =
-
--	hints.ai_family =3D AF_INET;
-+	hints.ai_family =3D pf;
- =
-
- 	xgetaddrinfo(remoteaddr, port, &hints, &addr);
- 	for (a =3D addr; a; a =3D a->ai_next) {
-@@ -362,7 +363,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- =
-
--	while ((c =3D getopt(argc, argv, "lp:s:ht:")) !=3D -1) {
-+	while ((c =3D getopt(argc, argv, "6lp:s:ht:")) !=3D -1) {
- 		switch (c) {
- 		case 'l':
- 			listen_mode =3D true;
-@@ -376,6 +377,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'h':
- 			die_usage();
- 			break;
-+		case '6':
-+			pf =3D AF_INET6;
-+			break;
- 		case 't':
- 			poll_timeout =3D atoi(optarg) * 1000;
- 			if (poll_timeout <=3D 0)
-@@ -387,6 +391,9 @@ static void parse_opts(int argc, char **argv)
- 	if (optind + 1 !=3D argc)
- 		die_usage();
- 	cfg_host =3D argv[optind];
++static void xgetnameinfo(const struct sockaddr *addr, socklen_t addrlen,
++			 char *host, socklen_t hostlen,
++			 char *serv, socklen_t servlen)
++{
++	int flags =3D NI_NUMERICHOST | NI_NUMERICSERV;
++	int err =3D getnameinfo(addr, addrlen, host, hostlen, serv, servlen, flag=
+s);
 +
-+	if (strchr(cfg_host, ':'))
-+		pf =3D AF_INET6;
++	if (err) {
++		const char *errstr =3D getxinfo_strerr(err);
++
++		fprintf(stderr, "Fatal: getnameinfo: %s\n", errstr);
++		exit(1);
++	}
++}
++
+ static void xgetaddrinfo(const char *node, const char *service,
+ 			 const struct addrinfo *hints,
+ 			 struct addrinfo **res)
+@@ -285,6 +300,93 @@ static int copyfd_io(int infd, int peerfd, int outfd)
+ 	return 0;
  }
  =
 
- int main(int argc, char *argv[])
++static void check_sockaddr(int pf, struct sockaddr_storage *ss,
++			   socklen_t salen)
++{
++	char addr[INET6_ADDRSTRLEN];
++	char serv[INET6_ADDRSTRLEN];
++	struct sockaddr_in6 *sin6;
++	struct sockaddr_in *sin;
++	int wanted_size =3D 0;
++
++	switch (pf) {
++	case AF_INET:
++		wanted_size =3D sizeof(*sin);
++		sin =3D (void *)ss;
++		if (!sin->sin_port)
++			fprintf(stderr, "accept: something wrong: ip connection from port 0");
++		break;
++	case AF_INET6:
++		wanted_size =3D sizeof(*sin6);
++		sin6 =3D (void *)ss;
++		if (!sin6->sin6_port)
++			fprintf(stderr, "accept: something wrong: ipv6 connection from port 0");
++		break;
++	default:
++		fprintf(stderr, "accept: Unknown pf %d, salen %u\n", pf, salen);
++		return;
++	}
++
++	if (salen !=3D wanted_size)
++		fprintf(stderr, "accept: size mismatch, got %d expected %d\n",
++				(int)salen, wanted_size);
++
++	if (ss->ss_family !=3D pf)
++		fprintf(stderr, "accept: pf mismatch, expect %d, ss_family is %d\n",
++				(int)ss->ss_family, pf);
++}
++
++static void check_getpeername(int fd, struct sockaddr_storage *ss, socklen=
+_t salen)
++{
++	struct sockaddr_storage peerss;
++	socklen_t peersalen =3D sizeof(peerss);
++
++	if (getpeername(fd, (struct sockaddr *)&peerss, &peersalen)) {
++		perror("getpeername");
++		return;
++	}
++
++	if (peersalen !=3D salen) {
++		fprintf(stderr, "%s: %d vs %d\n", __func__, peersalen, salen);
++		return;
++	}
++
++	if (memcmp(ss, &peerss, peersalen)) {
++		char a[INET6_ADDRSTRLEN];
++		char b[INET6_ADDRSTRLEN];
++		char c[INET6_ADDRSTRLEN];
++		char d[INET6_ADDRSTRLEN];
++
++		xgetnameinfo((struct sockaddr *)ss, salen,
++			     a, sizeof(a), b, sizeof(b));
++
++		xgetnameinfo((struct sockaddr *)&peerss, peersalen,
++			     c, sizeof(c), d, sizeof(d));
++
++		fprintf(stderr, "%s: memcmp failure: accept %s vs peername %s, %s vs %s =
+salen %d vs %d\n",
++			__func__, a, c, b, d, peersalen, salen);
++	}
++}
++
++static void check_getpeername_connect(int fd)
++{
++	struct sockaddr_storage ss;
++	socklen_t salen =3D sizeof(ss);
++
++	if (getpeername(fd, (struct sockaddr *)&ss, &salen)) {
++		char a[INET6_ADDRSTRLEN];
++		char b[INET6_ADDRSTRLEN];
++
++		xgetnameinfo((struct sockaddr *)&ss, salen,
++			     a, sizeof(a), b, sizeof(b));
++
++		if (strcmp(cfg_host, a) || strcmp(cfg_port, b))
++			fprintf(stderr, "%s: %s vs %s, %s vs %s\n",
++					__func__,
++					cfg_host, a, cfg_port, b);
++	}
++}
++
+ int main_loop_s(int listensock)
+ {
+ 	struct sockaddr_storage ss;
+@@ -308,6 +410,9 @@ int main_loop_s(int listensock)
+ 	salen =3D sizeof(ss);
+ 	remotesock =3D accept(listensock, (struct sockaddr *)&ss, &salen);
+ 	if (remotesock >=3D 0) {
++		check_sockaddr(pf, &ss, salen);
++		check_getpeername(remotesock, &ss, salen);
++
+ 		copyfd_io(0, remotesock, 1);
+ 		return 0;
+ 	}
+@@ -342,6 +447,7 @@ int main_loop(void)
+ 	if (fd < 0)
+ 		return 2;
+ =
+
++	check_getpeername_connect(fd);
+ 	return copyfd_io(0, fd, 1);
+ }
+ =
+
 -- =
 
 2.21.0
 
 
---===============0787398802110961935==--
+--===============7183111051325627682==--
