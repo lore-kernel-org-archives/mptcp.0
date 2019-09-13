@@ -1,78 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============5407665894571564299=="
+Content-Type: multipart/mixed; boundary="===============0787398802110961935=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH selftests 1/5] selftests: mptcp: make tc delays random
-Date: Fri, 13 Sep 2019 11:45:24 +0200
-Message-ID: <20190913094528.3163-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH selftests 2/5] selftests: mptcp: extend mptcp_connect
+ tool for ipv6 family
+Date: Fri, 13 Sep 2019 11:45:25 +0200
+Message-ID: <20190913094528.3163-3-fw@strlen.de>
 In-Reply-To: 20190913094528.3163-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1838
+X-UID: 1839
 
---===============5407665894571564299==
+--===============0787398802110961935==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-test with less predictable setups:
-tc qdisc delay is now random, same for reordering and loss.
-Main motivation is to cover more scenarious without a large
-increase in test-time.
+At this time socket() will fail when requesting an ipv6 mptcp socket.
+This is ok for now, as the test script won't request ipv6 tests yet.
+
+Tested with a tcp <-> tcp connection.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- .../selftests/net/mptcp/mptcp_connect.sh      | 28 +++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_connect.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index d029bdc5946d..fb9bf9f4fc8b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -277,8 +277,32 @@ for sender in 1 2 3 4;do
- 	do_ping ns4 ns$sender 10.0.3.1
- done
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+index cac71f0ac8f8..32a1630b7fa3 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -32,11 +32,11 @@ static int  poll_timeout;
+ static const char *cfg_host;
+ static const char *cfg_port	=3D "12000";
+ static int cfg_sock_proto	=3D IPPROTO_MPTCP;
+-
++static int pf =3D AF_INET;
  =
 
--tc -net ns2 qdisc add dev ns2eth3 root netem loss random 1
--tc -net ns3 qdisc add dev ns3eth4 root netem delay 10ms reorder 25% 50% ga=
-p 5
-+loss=3D$((RANDOM%101))
-+if [ $loss -eq 100 ] ;then
-+	loss=3D1%
-+	tc -net ns2 qdisc add dev ns2eth3 root netem loss random $loss
-+elif [ $loss -ge 10 ]; then
-+	loss=3D0.$loss%
-+	tc -net ns2 qdisc add dev ns2eth3 root netem loss random $loss
-+elif [ $loss -ge 1 ]; then
-+	loss=3D0.0$loss%
-+	tc -net ns2 qdisc add dev ns2eth3 root netem loss random $loss
-+fi
-+
-+delay=3D$((RANDOM%1200))
-+reorder1=3D$((RANDOM%25))
-+reorder2=3D$((RANDOM%50))
-+gap=3D$((RANDOM%100))
-+if [ $gap -gt 0 ]; then
-+	gap=3D"gap $gap"
-+else
-+	gap=3D""
-+fi
-+
-+if [ $reorder1 -gt 0 ] && [ $reorder2 -gt 0 ]; then
-+  tc -net ns3 qdisc add dev ns3eth4 root netem delay ${delay}ms reorder ${=
-reorder1}% ${reorder2}% $gap
-+fi
-+echo "INFO: Using loss of $loss, delay $delay ms, reorder: $reorder1, $reo=
-rder2 $gap on ns3eth4"
+ static void die_usage(void)
+ {
+-	fprintf(stderr, "Usage: mptcp_connect [-s MPTCP|TCP] [-p port] "
++	fprintf(stderr, "Usage: mptcp_connect [ -6 ] [-s MPTCP|TCP] [-p port] "
+ 		"[ -l ] [ -t timeout ] connect_address\n");
+ 	exit(1);
+ }
+@@ -74,12 +74,13 @@ static int sock_listen_mptcp(const char * const listena=
+ddr,
+ 		.ai_flags =3D AI_PASSIVE | AI_NUMERICHOST
+ 	};
  =
 
- for sender in 1 2 3 4;do
- 	run_tests ns1 ns$sender 10.0.1.1
+-	hints.ai_family =3D AF_INET;
++	hints.ai_family =3D pf;
+ =
+
+ 	struct addrinfo *a, *addr;
+ 	int one =3D 1;
+ =
+
+ 	xgetaddrinfo(listenaddr, port, &hints, &addr);
++	hints.ai_family =3D pf;
+ =
+
+ 	for (a =3D addr; a; a =3D a->ai_next) {
+ 		sock =3D socket(a->ai_family, a->ai_socktype, cfg_sock_proto);
+@@ -124,7 +125,7 @@ static int sock_connect_mptcp(const char * const remote=
+addr,
+ 	struct addrinfo *a, *addr;
+ 	int sock =3D -1;
+ =
+
+-	hints.ai_family =3D AF_INET;
++	hints.ai_family =3D pf;
+ =
+
+ 	xgetaddrinfo(remoteaddr, port, &hints, &addr);
+ 	for (a =3D addr; a; a =3D a->ai_next) {
+@@ -362,7 +363,7 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ =
+
+-	while ((c =3D getopt(argc, argv, "lp:s:ht:")) !=3D -1) {
++	while ((c =3D getopt(argc, argv, "6lp:s:ht:")) !=3D -1) {
+ 		switch (c) {
+ 		case 'l':
+ 			listen_mode =3D true;
+@@ -376,6 +377,9 @@ static void parse_opts(int argc, char **argv)
+ 		case 'h':
+ 			die_usage();
+ 			break;
++		case '6':
++			pf =3D AF_INET6;
++			break;
+ 		case 't':
+ 			poll_timeout =3D atoi(optarg) * 1000;
+ 			if (poll_timeout <=3D 0)
+@@ -387,6 +391,9 @@ static void parse_opts(int argc, char **argv)
+ 	if (optind + 1 !=3D argc)
+ 		die_usage();
+ 	cfg_host =3D argv[optind];
++
++	if (strchr(cfg_host, ':'))
++		pf =3D AF_INET6;
+ }
+ =
+
+ int main(int argc, char *argv[])
 -- =
 
 2.21.0
 
 
---===============5407665894571564299==--
+--===============0787398802110961935==--
