@@ -1,59 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============2858071793706047958=="
+Content-Type: multipart/mixed; boundary="===============6481442327428768711=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH net-next] mptcp: really try to read as much bytes
- as requested
-Date: Fri, 13 Sep 2019 10:50:09 +0200
-Message-ID: <a73ebd1fafe34fdb3b92bfd4a948c4d18ea75cef.camel@redhat.com>
-In-Reply-To: 61cfdb1b116824c24e8dd6d42f375ee3358008e5.1558370826.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH selftests 0/5] selftests: prepare for mptcp ipv6
+ support
+Date: Fri, 13 Sep 2019 11:45:23 +0200
+Message-ID: <20190913094528.3163-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 1836
+X-UID: 1837
 
---===============2858071793706047958==
+--===============6481442327428768711==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-09-13 at 10:47 +0200, Paolo Abeni wrote:
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  net/mptcp/protocol.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> =
+This patch series inceases self test coverage:
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 06312efc0b90..335a13bfc43e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -506,11 +506,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len,
->  		}
->  =
+1. ipv6 support.  So all someone needs to do is actually implement ipv6
+   support in mptcp.  Then, set ipv6=3Dtrue in the selftest script and it
+   should 'just work'.
+2. Check accept/getpeername.  In case of connect side, we also check
+   that getpeername returned addresses are the ones we connected to.
+3. less predictable topology: tso/gso/gro and tc parameters are more
+   random.
 
->  		copied +=3D bytes_read;
-> +		continue;
->  =
+I suggest to apply them with no squashing, once we go for another RFC
+tests/selftest can be a single patch and all commits can be squashed.
 
->  wait_for_data:
-> -		if (copied)
-> -			break;
-> -
->  		if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
->  			pr_err("Urgent data present, cannot proceed");
->  			break;
+If you disagree, I don't mind if this gets squashed right away.
 
-oops, this patch is pure noise, I'm sorry. =
+No changes to mptcp stack itself here.
 
 
-I unitentionally flushed an old and broken version of 2/2 in "mptcp:
-partial recvmsg() refactor" togethar with the current series. =
 
-
-Please drop/ignore this one.
-
-Paolo
-
-
---===============2858071793706047958==--
+--===============6481442327428768711==--
