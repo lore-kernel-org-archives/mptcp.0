@@ -1,40 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============2988756500177601830=="
+Content-Type: multipart/mixed; boundary="===============8320767316272151112=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 0/2] mptcp: partial recvmsg() refactor
-Date: Fri, 13 Sep 2019 10:47:26 +0200
-Message-ID: <cover.1568363662.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next] mptcp: really try to read as much bytes as
+ requested
+Date: Fri, 13 Sep 2019 10:47:27 +0200
+Message-ID: <61cfdb1b116824c24e8dd6d42f375ee3358008e5.1558370826.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1832
+X-UID: 1833
 
---===============2988756500177601830==
+--===============8320767316272151112==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This 2 patches start the recvmsg() refactor discussed in last mtg.
-The explicit 'duplicate data' handling in 1/2 fix some stream corruption I
-observe with re-injection, and the 2nd one fix another stream corruption at
-the end of the stream, still triggered  by re-injection.
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-With the above 2 patches I still stream corruptions with re-injection, are
-almost gone - even if I can still hit them with in at least a very rare cor=
-ner
-case.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 06312efc0b90..335a13bfc43e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -506,11 +506,9 @@ static int mptcp_recvmsg(struct sock *sk, struct msghd=
+r *msg, size_t len,
+ 		}
+ =
 
-Paolo Abeni (2):
-  mptcp: refactor recvmsg()
-  mptcp: recvmsg() should really try to deliver 'len' bytes to
-    user-space
+ 		copied +=3D bytes_read;
++		continue;
+ =
 
- net/mptcp/protocol.c | 119 +++++++++++++++++++------------------------
- 1 file changed, 53 insertions(+), 66 deletions(-)
-
+ wait_for_data:
+-		if (copied)
+-			break;
+-
+ 		if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
+ 			pr_err("Urgent data present, cannot proceed");
+ 			break;
 -- =
 
-2.21.0
+2.20.1
 
 
---===============2988756500177601830==--
+--===============8320767316272151112==--
