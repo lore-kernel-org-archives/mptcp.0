@@ -1,85 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============6642982799905938785=="
+Content-Type: multipart/mixed; boundary="===============3682194690567558601=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC] net/mptcp: rcu-ify the subflow context
-Date: Fri, 13 Sep 2019 17:54:13 +0200
-Message-ID: <529de6ddb5b240acb2c62067e1ea93a8b6188ef2.camel@redhat.com>
-In-Reply-To: 424f2707dffedc2a74abfb5d15bc0a1f6f01e477.1567437714.git.dcaratti@redhat.com
+Subject: Re: [MPTCP] [PATCH RFC] mptcp: allow dumping subflow context to
+ userspace
+Date: Sat, 14 Sep 2019 12:09:02 +0200
+Message-ID: <20190914100902.GH10656@breakpoint.cc>
+In-Reply-To: c2abb5d4494fb687eb394f7e5b90c35ee01060e2.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1846
+X-UID: 1847
 
---===============6642982799905938785==
+--===============3682194690567558601==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-09-02 at 17:24 +0200, Davide Caratti wrote:
-> make sure to wait a grace period before freeing the subflow context. See
-> also net-next commit 72f21c741e86 ("net/tls: use RCU protection on
-> icsk->icsk_ulp_data")
+Davide Caratti <dcaratti(a)redhat.com> wrote:
+> On Thu, 2019-09-12 at 18:50 +0200, Davide Caratti wrote:
+> > add ulp-specific diagnostic functions, so that subflow information can =
+be
+> > dumped to userspace programs like 'ss'.
 > =
 
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> ---
-> =
+> for the record: iproute2 support is also on the way, but also in this case
+> the first step will be in ktls. This patch exposes token, local/remote
+> keys, and some of the bitfield members. What do you think it's reasonable
+> exposing to users of 'ss -i' ?
 
-> Notes:
->     proposal: we can squash this in
->     =
+The MPTCP (parent/meta) socket data, e.g. the DSS would be good.
 
->     commit d636603cad37 ("mptcp: Implement MPTCP receive path")
->     =
+Once Paolo retrans is in, we could also extend that to expose
+information about MPTCP-Level events (rather than subflow stats).
 
->     and the last hunk can go into
->     =
+This is a great start though.  I guess it might be good to expose
+how much more data the current mapping expects.
 
->     commit 0e0b608d46c5 ("mptcp: Associate MPTCP context with TCP socket")
-> =
+Wrt. local/remote keys, what is the use case?
 
->  net/mptcp/protocol.h |  5 +++--
->  net/mptcp/subflow.c  | 10 +++++-----
->  2 files changed, 8 insertions(+), 7 deletions(-)
-> =
+I'm asking because some people get nervous when you add an api to
+expose 'secret keys'.
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 991ad288b892..b201e1410219 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -197,13 +197,14 @@ struct subflow_context {
->  	struct  sock *conn;        /* parent mptcp_sock */
->  =
+If there is no clear use-case i'd rather not expose them for now,
+it can be added later if needed.
 
->  	void	(*tcp_sk_data_ready)(struct sock *sk);
-> +	struct	rcu_head rcu;
->  };
->  =
-
->  static inline struct subflow_context *subflow_ctx(const struct sock *sk)
->  {
->  	struct inet_connection_sock *icsk =3D inet_csk(sk);
-> -
-> -	return (struct subflow_context *)icsk->icsk_ulp_data;
-> +	/* Use RCU on icsk_ulp_data only for sock diag code */
-> +	return (__force struct subflow_context *)icsk->icsk_ulp_data;
->  }
->  =
-
->  static inline struct socket *
-
-The patch looks fine, but I'm still wondering if we should try to be
-more conservative here, using something alike:
-
-	return rcu_dereference_protected(icsk->icsk_ulp_data,
-		lockdep_sock_is_held((struct sock *)icsk))
-
-and fixing the eventual lockdep splat explcitily
-
-(possibly we may need a different/additional condition for
-rcu_dereference_protected() based  on icsk refcnt)
-
-Paolo
-
-
---===============6642982799905938785==--
+--===============3682194690567558601==--
