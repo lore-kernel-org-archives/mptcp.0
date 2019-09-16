@@ -1,58 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============6829676539815815761=="
+Content-Type: multipart/mixed; boundary="===============5698055179280584378=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 0/4] mptcp sparse "fixes"
-Date: Mon, 16 Sep 2019 13:43:45 -0700
-Message-ID: <6fdfba964c0e7455f3992ec2bfdcd3680c8e9665.camel@linux.intel.com>
-In-Reply-To: 20190909231725.4952-1-fw@strlen.de
+Subject: Re: [MPTCP] [PATCH selftests 0/5] selftests: prepare for mptcp ipv6
+ support
+Date: Mon, 16 Sep 2019 13:50:49 -0700
+Message-ID: <95584517a1ec13f9319d13e12d0214d80b4c6e3e.camel@linux.intel.com>
+In-Reply-To: 20190913094528.3163-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 1854
+X-UID: 1855
 
---===============6829676539815815761==
+--===============5698055179280584378==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Fri, 2019-09-13 at 11:45 +0200, Florian Westphal wrote:
+> This patch series inceases self test coverage:
+> =
 
-Hi Florian -
+> 1. ipv6 support.  So all someone needs to do is actually implement ipv6
+>    support in mptcp.  Then, set ipv6=3Dtrue in the selftest script and it
+>    should 'just work'.
 
-This all looks good to me, thanks.
+I am planning to begin work on IPv6 support, unless someone else wants to
+arm-wrestle me for it....
 
 Peter.
 
-On Tue, 2019-09-10 at 01:17 +0200, Florian Westphal wrote:
-> NB: these patches don't fix anything because nothing is broken.
+> 2. Check accept/getpeername.  In case of connect side, we also check
+>    that getpeername returned addresses are the ones we connected to.
+> 3. less predictable topology: tso/gso/gro and tc parameters are more
+>    random.
 > =
 
-> The "sparse" checker complains about various constructs, this fixes
-> some of those.  All of these can be squashed, I've
-> placed the name of the target commit in the change logs.
+> I suggest to apply them with no squashing, once we go for another RFC
+> tests/selftest can be a single patch and all commits can be squashed.
 > =
 
-> There are more sparse warnings in the code base, I am intentionally
-> skipping those for now as its in code that is still "in flux".
+> If you disagree, I don't mind if this gets squashed right away.
 > =
 
-> For example the icsk ulp data pointer now has an __rcu annotation upstream
-> so sparse complains because we don't use rcu_dereference() or similar.
-> =
-
-> In any case, I think those can be fixed once the code has stabilized more.
-> I am sending these now because they are in more "mature" areas and it
-> reduces the delta between my working tree and the "export" branch.
-> =
-
-> Thanks,
-> Florian
-> =
-
->  crypto.c   |    2 ++
->  options.c  |    4 ++--
->  pm.c       |    2 +-
->  protocol.h |    2 +-
->  4 files changed, 6 insertions(+), 4 deletions(-)
+> No changes to mptcp stack itself here.
 > =
 
 > =
@@ -63,4 +53,4 @@ On Tue, 2019-09-10 at 01:17 +0200, Florian Westphal wrote:
 > https://lists.01.org/mailman/listinfo/mptcp
 
 
---===============6829676539815815761==--
+--===============5698055179280584378==--
