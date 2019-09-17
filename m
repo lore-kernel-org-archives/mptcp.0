@@ -1,54 +1,99 @@
-Content-Type: multipart/mixed; boundary="===============3892372081293502453=="
+Content-Type: multipart/mixed; boundary="===============0749654570092613985=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC 0/6] mptcp_poll rework preview
-Date: Tue, 17 Sep 2019 08:42:07 +0200
-Message-ID: <20190917064207.GB6961@breakpoint.cc>
-In-Reply-To: 90fe1f1df1eb0d88beaae8e9305ee3db27b53428.camel@redhat.com
+Subject: Re: [MPTCP] [PATCH] mptcp: Remove all traces of checksum support
+Date: Tue, 17 Sep 2019 11:24:00 +0200
+Message-ID: <1c2be7cec0d1e181117102a51ee43a3f053a1975.camel@redhat.com>
+In-Reply-To: 20190916221016.16210-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1858
+X-UID: 1859
 
---===============3892372081293502453==
+--===============0749654570092613985==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2019-09-09 at 17:53 +0200, Florian Westphal wrote:
-> > This patch series is in need of a bit more work, f.e. there is too much
-> > copypastry in patch 3.
-> > =
+Hi,
 
-> > However, it is functional as-is so I am sharing it to get earlier revie=
-ws.
-> > =
+On Mon, 2019-09-16 at 15:10 -0700, Peter Krystad wrote:
+> @@ -152,10 +151,27 @@ void mptcp_parse_option(const unsigned char *ptr, i=
+nt opsize,
+>  				expected_opsize +=3D TCPOLEN_MPTCP_DSS_ACK64;
+>  			else
+>  				expected_opsize +=3D TCPOLEN_MPTCP_DSS_ACK32;
+> +		}
+> +
+> +		if (mp_opt->use_map) {
+> +			if (mp_opt->dsn64)
+> +				expected_opsize +=3D TCPOLEN_MPTCP_DSS_MAP64;
+> +			else
+> +				expected_opsize +=3D TCPOLEN_MPTCP_DSS_MAP32;
+> +		}
+>  =
 
-> > Problem with current mptcp_poll() is that we can't block the task on ea=
-ch
-> > subflow: subflow we're polling on might be idle while another one has d=
-ata
-> > ready for processing.
-> =
+> -			if (opsize < expected_opsize)
+> -				break;
+> +		/* RFC 6824, Section 3.3:
+> +		 * If a checksum is present, but its use had
+> +		 * not been negotiated in the MP_CAPABLE handshake,
+> +		 * the checksum field MUST be ignored.
+> +		 */
+> +		if (opsize !=3D expected_opsize &&
+> +		    opsize !=3D expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM)
+> +			break;
 
-> If I read the series correctly, patch 3 is not strictly needed for the
-> above goal: AFAICS it should help to avoid empty/blocking recvmsg()
-> after successful poll(), right?
+My understanding is that we should look for RFC 6824 bis compliance -
+is that correct? =
 
-Thats right.  EPOLLIN means next recv won't block, which isn't the case
-at this time because we do mptcp processing in recv only.
 
-> I think we should rework a bit recvmsg() before going on with this -
-> see "mptcp: partial recvmsg() refactor".
+If so, than we should reset the subflow connection if opsize =3D=3D
+expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM, and just ignore other bad
+len. Is that correct? (looks a bit weird to me)
 
-Agree.
+I'm unsure we can reset the stream from mptcp_parse_option() even
+providing it the relevant sock variable (and that would be a quite
+invasive change).
 
-> Perhaps even something more
-> drastic e.g. subflow could try move skbs from ssk->sk_receive_queue to
-> a per msk queue, ordered by mptcp seq in subflow_data_ready(). WDYT?
+Perhaps we can mark the pkts/DSS/MPTCP ext as 'bad' using an additional
+flag and send the reset later? (even at rcvmsg time) =
 
-Yes, that might be a good idea/needed.
-We shouldn't depend on regular recv calls for mptcp processing.
 
---===============3892372081293502453==--
+> @@ -701,18 +691,11 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_=
+out_options *opts)
+>  		}
+>  =
+
+>  		if (mpext->use_map) {
+> -			__sum16 checksum;
+> -
+> -			pr_debug("Writing map values");
+>  			put_unaligned_be64(mpext->data_seq, ptr);
+>  			ptr +=3D 2;
+> -			*ptr++ =3D htonl(mpext->subflow_seq);
+> -
+> -			if (mpext->use_checksum)
+> -				checksum =3D mpext->checksum;
+> -			else
+> -				checksum =3D TCPOPT_NOP << 8 | TCPOPT_NOP;
+> -			*ptr =3D htonl(mpext->data_len << 16 | checksum);
+> +			put_unaligned_be32(mpext->subflow_seq, ptr);
+> +			ptr +=3D 1;
+> +			put_unaligned_be16(mpext->data_len, ptr);
+
+I think we should still set 4 bytes here:
+
+	put_unaligned_be32(mpext->subflow_seq << 16 | TCPOPT_NOP << 8 |
+TCPOPT_NOP, ptr);
+	=
+
+or we can hit some 'uninit value used' error triggered by syzbot or the
+like.
+
+Cheers,
+
+Paolo
+
+
+--===============0749654570092613985==--
