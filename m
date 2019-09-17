@@ -1,75 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============5940148993434177041=="
+Content-Type: multipart/mixed; boundary="===============5315819986761775156=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] [PATCH RFC 6/6] mptcp: use __tcp_poll instead of tcp_poll
-Date: Tue, 17 Sep 2019 18:38:34 +0200
-Message-ID: <23f0c3793e3aa80f090b0660c9fd8c8bef9b01b7.camel@redhat.com>
-In-Reply-To: 20190909155317.31119-7-fw@strlen.de
+Date: Tue, 17 Sep 2019 18:42:24 +0200
+Message-ID: <20190917164224.GG6961@breakpoint.cc>
+In-Reply-To: 23f0c3793e3aa80f090b0660c9fd8c8bef9b01b7.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1863
+X-UID: 1864
 
---===============5940148993434177041==
+--===============5315819986761775156==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-09-09 at 17:53 +0200, Florian Westphal wrote:
-> tcp_poll places current task on a wait queue.  This can cause us to block
-> forever -- some subflows might be backup/failover and never receive any
-> data.
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> >  		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
+> > -		ret |=3D tcp_poll(file, tcp_sock, wait);
+> > +		ret |=3D __tcp_poll(tcp_sock->sk);
+> >  	}
+> >  	release_sock(sk);
 > =
 
-> Use __tcp_poll instead to avoid blocking current task again after parent
-> mptcp socket has been woken up from the subflow layer.
+> This allows mptcp_poll working even without a 'struct socket'. we still
+> relies on such struct presence for:
+
+Thats what I though as well, but tcp_poll assumes sk->sk_socket points
+to the userspace-facing socket structure.
+
+> kernel_accept
+> kernel_sock_shutdown
+> kernel_setsockopt
+> kernel_getsockopt
+> kernel_bind
+> kernel_connect
 > =
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/protocol.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> =
+> I'm wondering if we should try to get rid completely of any depenency
+> on 'struct socket'? That will fix the current issue with MP_JOIN, will
+> reduce the memory usage and likely will improve accept time.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 2a91fff1f385..533fe2c50d3a 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1182,7 +1182,7 @@ static __poll_t mptcp_poll(struct file *file, struc=
-t socket *sock,
->  		struct socket *tcp_sock;
->  =
+It will require careful audit of the stack, afaics Tcp assumes that for
+anythig incoming tcp sk might have been detached from usersapce already
+(i.e., application called close()).  But for anything coming from
+syscalls that doesn't seem to be the case.
 
->  		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
-> -		ret |=3D tcp_poll(file, tcp_sock, wait);
-> +		ret |=3D __tcp_poll(tcp_sock->sk);
->  	}
->  	release_sock(sk);
+I started to hack up an MP_JOIN patch that uses a per-sk workqueue
+to defer incoming joins so that a socket can be allocated for it.
 
-This allows mptcp_poll working even without a 'struct socket'. we still
-relies on such struct presence for:
-
-kernel_accept
-kernel_sock_shutdown
-kernel_setsockopt
-kernel_getsockopt
-kernel_bind
-kernel_connect
-
-I'm wondering if we should try to get rid completely of any depenency
-on 'struct socket'? That will fix the current issue with MP_JOIN, will
-reduce the memory usage and likely will improve accept time.
-
-A quick look makes me think that the most problematic call to be
-addressed without using any 'struct socket' are kernel_bind() and
-kernel_connect(), perhaps we can use a transient 'struct socket' just
-for subflow_connect() ? WDYT?
-
-Thanks,
-
-Paolo
+I don't like it, but it seems easier to go with that route.
 
 
-
-
---===============5940148993434177041==--
+--===============5315819986761775156==--
