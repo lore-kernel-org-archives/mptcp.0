@@ -1,85 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============2645331509522115570=="
+Content-Type: multipart/mixed; boundary="===============4961959112822496282=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 2/2] mptcp: recvmsg() should really try to deliver
- 'len' bytes to user-space
-Date: Tue, 17 Sep 2019 16:06:04 -0700
-Message-ID: <alpine.OSX.2.21.1909171605280.32589@mjmartin-mac01.local>
-In-Reply-To: 2fd9006000f14b1ec3091562bc90c499bc5374fb.1568363662.git.pabeni@redhat.com
+Subject: Re: [MPTCP] [PATCH 1/2] mptcp: refactor recvmsg()
+Date: Wed, 18 Sep 2019 11:27:00 +0200
+Message-ID: <8722cc5a3e24820317a0e39bc02be900482fe347.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.1909171600520.32589@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 1873
+X-UID: 1874
 
---===============2645331509522115570==
+--===============4961959112822496282==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2019-09-17 at 16:05 -0700, Mat Martineau wrote:
+> @@ -658,60 +653,44 @@ static int mptcp_recvmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len,
+> > =
 
-On Fri, 13 Sep 2019, Paolo Abeni wrote:
+> > 		if (unlikely(before(ssn, subflow->map_subflow_seq))) {
+> > 			/* Mapping covers data later in the subflow stream,
+> > -			 * discard unmapped data.
+> > +			 * currently unsupported.
+> > 			 */
+> > -			pr_debug("Mapping covers data later in stream");
+> > -			discard_len =3D subflow->map_subflow_seq - ssn;
+> > +			WARN_ONCE(1, "Mapping covers data later in stream");
+> > +			copied =3D -EBADFD;
+> > +			break;
+> > 		} else if (unlikely(!before(ssn, (subflow->map_subflow_seq +
+> > 						  subflow->map_data_len)))) {
+> > 			/* Mapping ends earlier in the subflow stream.
+> > -			 * Invalidate the mapping and try again.
+> > +			 * Invalid
+> > 			 */
+> > -			subflow->map_valid =3D 0;
+> > -			pr_debug("Invalid mapping ssn=3D%d map_seq=3D%d map_data_len=3D%d",
+> > -				 ssn, subflow->map_subflow_seq,
+> > -				 subflow->map_data_len);
+> > -			continue;
+> > -		} else {
+> > -			ack_seq =3D get_mapped_dsn(subflow);
+> > -
+> > -			if (before64(ack_seq, old_ack)) {
+> > -				/* Mapping covers data already received,
+> > -				 * discard data in the current mapping
+> > -				 * and invalidate the map
+> > -				 */
+> > -				u64 map_end_dsn =3D subflow->map_seq +
+> > -					subflow->map_data_len;
+> > -				discard_len =3D min(map_end_dsn - ack_seq,
+> > -						  old_ack - ack_seq);
+> > -				subflow->map_valid =3D 0;
+> > -				pr_debug("Duplicate MPTCP data found");
+> > -			}
+> > +			WARN_ONCE(1, "Mapping covers old data ssn=3D%d "
+> > +				  "map_seq=3D%d map_data_len=3D%d", ssn,
+> =
 
-> Currently we break the recvmsg() main loop as soon as we have copied any
-> amount of data or the ssk is closed.
->
-> With reinjection we can receive duplicate data and reach the 'wait_for_da=
-ta'
-> label with 'copied =3D=3D 0'.
-> The subflow sk could be already in closed status, if the local socket
-> has already received all the data from the peer (and the data is sitting
-> into the receive queue).
->
-> When we meet the above scenario, currently recvmsg() terminates with
-> return code '0' and the user space interpret that as EoF, even if
-> there is potentially a lot of data pending.
->
-> This change addresses the issue checking for pending data before
-> going through the 'wait_for_data' code path.
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> --
-> I'm ok with squashing to commit 786f07cf97f1 ("mptcp: Implement MPTCP rec=
-eive path")
-> ---
-> net/mptcp/protocol.c | 7 +++++++
-> 1 file changed, 7 insertions(+)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4fa4e07df17c..402a43d5dac5 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -712,6 +712,13 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len,
-> 		if (arg.msg)
-> 			copied +=3D bytes_read;
->
-> +		/* The 'wait_for_data' code path can terminte the receive loop
+> Checkpatch will complain about concatenating string constants like this - =
 
-terminte->terminate
+> it allows long lines when string constants are involved.
 
-Everything else looks good to me.
+Thank you for the review.
 
-> +		 * in a number of scenarios: check if more data is pending
-> +		 * before giving up.
-> +		 */
-> +		if (!skb_queue_empty(&ssk->sk_receive_queue))
-> +			continue;
-> +
-> wait_for_data:
-> 		if (copied)
-> 			break;
-> -- =
+I was unable to compress the message in a single line fitting 80 chars,
+so I opted for splitting it (checkpatch would complain anyway)
 
-> 2.21.0
->
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
->
+I'll mangle the messages and re-submit (fixing the typo in 2/2, too)
 
---
-Mat Martineau
-Intel
+Thanks,
 
---===============2645331509522115570==--
+Paolo
+
+
+
+--===============4961959112822496282==--
