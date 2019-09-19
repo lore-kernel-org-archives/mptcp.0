@@ -1,56 +1,82 @@
-Content-Type: multipart/mixed; boundary="===============5422920440995168855=="
+Content-Type: multipart/mixed; boundary="===============1022728493637103148=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 7/7] mptcp: implement and use MPTCP-level
- retransmission
-Date: Thu, 19 Sep 2019 10:43:23 +0200
-Message-ID: <8785f845f807cdee5425b7d36588016c42ee1bec.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1909182138400.40632@tvtrimel-mobl5.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH RFC] net/mptcp: rcu-ify the subflow context
+Date: Thu, 19 Sep 2019 18:08:00 +0200
+Message-ID: <2ae1030d601a904f1484c3a384845866ff589845.camel@redhat.com>
+In-Reply-To: 529de6ddb5b240acb2c62067e1ea93a8b6188ef2.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1885
+X-UID: 1886
 
---===============5422920440995168855==
+--===============1022728493637103148==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, 2019-09-13 at 17:54 +0200, Paolo Abeni wrote:
+> On Mon, 2019-09-02 at 17:24 +0200, Davide Caratti wrote:
+> > make sure to wait a grace period before freeing the subflow context. See
+> > also net-next commit 72f21c741e86 ("net/tls: use RCU protection on
+> > icsk->icsk_ulp_data")
+> > =
 
-On Wed, 2019-09-18 at 21:44 -0700, Mat Martineau wrote:
-> On Wed, 11 Sep 2019, Paolo Abeni wrote:
+> > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> > --
+
 [...]
-> > +	release_sock(ssk);
-> > +	sock_put(ssk);
-> > +
-> > +reset_unlock:
-> > +	mptcp_set_timeout(sk, ssk);
+
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index 991ad288b892..b201e1410219 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -197,13 +197,14 @@ struct subflow_context {
+> >  	struct  sock *conn;        /* parent mptcp_sock */
+> >  =
+
+> >  	void	(*tcp_sk_data_ready)(struct sock *sk);
+> > +	struct	rcu_head rcu;
+> >  };
+> >  =
+
+> >  static inline struct subflow_context *subflow_ctx(const struct sock *s=
+k)
+> >  {
+> >  	struct inet_connection_sock *icsk =3D inet_csk(sk);
+> > -
+> > -	return (struct subflow_context *)icsk->icsk_ulp_data;
+> > +	/* Use RCU on icsk_ulp_data only for sock diag code */
+> > +	return (__force struct subflow_context *)icsk->icsk_ulp_data;
+> >  }
+> >  =
+
+> >  static inline struct socket *
 > =
 
-> mptcp_set_timeout() accesses a few members of ssk (icsk_pending and =
+> The patch looks fine, but I'm still wondering if we should try to be
+> more conservative here, using something alike:
+> =
 
-> icsk_timeout) when ssk is not NULL, and it looks like ssk should be locke=
-d =
+> 	return rcu_dereference_protected(icsk->icsk_ulp_data,
+> 		lockdep_sock_is_held((struct sock *)icsk))
+> =
 
-> when accessing those.
+> and fixing the eventual lockdep splat explcitily
+> =
 
-Thank you for the review.
+> (possibly we may need a different/additional condition for
+> rcu_dereference_protected() based  on icsk refcnt)
 
-You are right. I think it can be fixed simply moving the call a few
-lines above.
-
-Hopefully we can't get any really bad side effect here: UAF should not
-be possible, as the last ssk reference should be released by
-mptcp_close() under the msk lock. Btw if this last statemet helds we
-can likely omit a good bunch of suck_hold() sock_put() in mptcp ops.
-
-I'll send a patch after this is merged - hopefully simpler than resent
-the whole series.
-
-Cheers,
-
-Paolo
+this is for sure, because the socket lock for icsk is often not held when
+subflow_ctx() is called. Nevertheless, icsk_ulp_data is a valid pointer in
+all the traffic path of MPTCP (and it keeps the same value until it's
+freed at the enf of the grace period). Should we do a function that does
+the atomic read of sk_refcnt when lockdep is on? =
 
 
---===============5422920440995168855==--
+--
+davide
+
+
+--===============1022728493637103148==--
