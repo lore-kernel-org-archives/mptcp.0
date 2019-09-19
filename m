@@ -1,82 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============1022728493637103148=="
+Content-Type: multipart/mixed; boundary="===============4978763754916233875=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC] net/mptcp: rcu-ify the subflow context
-Date: Thu, 19 Sep 2019 18:08:00 +0200
-Message-ID: <2ae1030d601a904f1484c3a384845866ff589845.camel@redhat.com>
-In-Reply-To: 529de6ddb5b240acb2c62067e1ea93a8b6188ef2.camel@redhat.com
+Subject: [MPTCP] Patent-question
+Date: Thu, 19 Sep 2019 13:38:37 -0700
+Message-ID: <20190919203837.GF32434@MacBook-Pro-64.local>
 X-Status: 
 X-Keywords:                  
-X-UID: 1886
+X-UID: 1887
 
---===============1022728493637103148==
+--===============4978763754916233875==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-09-13 at 17:54 +0200, Paolo Abeni wrote:
-> On Mon, 2019-09-02 at 17:24 +0200, Davide Caratti wrote:
-> > make sure to wait a grace period before freeing the subflow context. See
-> > also net-next commit 72f21c741e86 ("net/tls: use RCU protection on
-> > icsk->icsk_ulp_data")
-> > =
+Hello,
 
-> > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> > --
+regarding the patent-question. From https://lwn.net/Articles/783673/, I see:
 
-[...]
+"
+   It looks like a fairly typical battle between a protocol pushed by the
+   largest Internet service providers, and one with a rather more grass-roo=
+ts
+   origin. There is, however, another important thing to know about L4S:
+   Alcatel-Lucent claims a patent on the dual-queue algorithm. The company =
+has
+   generously offered to make that patent available under "fair, reasonable,
+   and non-discriminatory" terms; such terms are, of course, highly
+   discriminatory against free software implementations. They make it
+   impossible to merge the affected code into a GPL-licensed kernel.
+"
 
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 991ad288b892..b201e1410219 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -197,13 +197,14 @@ struct subflow_context {
-> >  	struct  sock *conn;        /* parent mptcp_sock */
-> >  =
-
-> >  	void	(*tcp_sk_data_ready)(struct sock *sk);
-> > +	struct	rcu_head rcu;
-> >  };
-> >  =
-
-> >  static inline struct subflow_context *subflow_ctx(const struct sock *s=
-k)
-> >  {
-> >  	struct inet_connection_sock *icsk =3D inet_csk(sk);
-> > -
-> > -	return (struct subflow_context *)icsk->icsk_ulp_data;
-> > +	/* Use RCU on icsk_ulp_data only for sock diag code */
-> > +	return (__force struct subflow_context *)icsk->icsk_ulp_data;
-> >  }
-> >  =
-
-> >  static inline struct socket *
-> =
-
-> The patch looks fine, but I'm still wondering if we should try to be
-> more conservative here, using something alike:
-> =
-
-> 	return rcu_dereference_protected(icsk->icsk_ulp_data,
-> 		lockdep_sock_is_held((struct sock *)icsk))
-> =
-
-> and fixing the eventual lockdep splat explcitily
-> =
-
-> (possibly we may need a different/additional condition for
-> rcu_dereference_protected() based  on icsk refcnt)
-
-this is for sure, because the socket lock for icsk is often not held when
-subflow_ctx() is called. Nevertheless, icsk_ulp_data is a valid pointer in
-all the traffic path of MPTCP (and it keeps the same value until it's
-freed at the enf of the grace period). Should we do a function that does
-the atomic read of sk_refcnt when lockdep is on? =
+Is that true?
 
 
---
-davide
+Christoph
 
 
---===============1022728493637103148==--
+
+
+--===============4978763754916233875==--
