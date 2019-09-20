@@ -1,42 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============4978763754916233875=="
+Content-Type: multipart/mixed; boundary="===============1852821206873348100=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Patent-question
-Date: Thu, 19 Sep 2019 13:38:37 -0700
-Message-ID: <20190919203837.GF32434@MacBook-Pro-64.local>
+Subject: [MPTCP] [PATCH 0/2] mptcp: add MIB counter infrastructure
+Date: Fri, 20 Sep 2019 17:05:12 +0200
+Message-ID: <20190920150514.1878-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 1887
+X-UID: 1888
 
---===============4978763754916233875==
+--===============1852821206873348100==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+This patch adds MIB counters for MPTCP, see patch #1 for more information.
 
-regarding the patent-question. From https://lwn.net/Articles/783673/, I see:
+Bottom line is that I tried to follow the advice given earlier by
+Eric, i.e. this adds a new mptcp specific pointer to the netns_mib
+struct (which is embedded into struct net).
 
-"
-   It looks like a fairly typical battle between a protocol pushed by the
-   largest Internet service providers, and one with a rather more grass-roo=
-ts
-   origin. There is, however, another important thing to know about L4S:
-   Alcatel-Lucent claims a patent on the dual-queue algorithm. The company =
-has
-   generously offered to make that patent available under "fair, reasonable,
-   and non-discriminatory" terms; such terms are, of course, highly
-   discriminatory against free software implementations. They make it
-   impossible to merge the affected code into a GPL-licensed kernel.
-"
+Allocation is deferred until first MPTCP socket is opened.
 
-Is that true?
-
-
-Christoph
+Comments welcome.
 
 
 
-
---===============4978763754916233875==--
+--===============1852821206873348100==--
