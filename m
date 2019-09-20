@@ -1,146 +1,174 @@
-Content-Type: multipart/mixed; boundary="===============2517507617467499119=="
+Content-Type: multipart/mixed; boundary="===============2111859788238555413=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp: add mib examples
-Date: Fri, 20 Sep 2019 17:05:14 +0200
-Message-ID: <20190920150514.1878-3-fw@strlen.de>
-In-Reply-To: 20190920150514.1878-1-fw@strlen.de
+Subject: [MPTCP] [Weekly meetings] MoM - 19th of September 2019
+Date: Fri, 20 Sep 2019 17:09:37 +0200
+Message-ID: <4189ea3b-b81d-009a-44aa-9829b3f74ff1@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1890
+X-UID: 1891
 
---===============2517507617467499119==
+--===============2111859788238555413==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Just for testing, no need to apply this at the moment.
+Hello,
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 12 +++++++++++-
- net/mptcp/subflow.c  | 21 +++++++++++++++++----
- 2 files changed, 28 insertions(+), 5 deletions(-)
+Yesterday, we had our 67th meeting with Mat and Ossama (Intel OTC),
+Christoph (Apple), Paolo, Florian and Davide (RedHat) and myself (Tessares).
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 66ac7dafe388..31ee19f867f4 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -367,8 +367,10 @@ static enum mapping_status mptcp_get_mapping(struct so=
-ck *ssk)
- 		 */
- 		if (subflow->map_seq !=3D map_seq ||
- 		    subflow->map_subflow_seq !=3D mpext->subflow_seq ||
--		    subflow->map_data_len !=3D mpext->data_len)
-+		    subflow->map_data_len !=3D mpext->data_len) {
-+			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSNOMATCH);
- 			pr_warn("Replaced mapping before it was done");
-+		}
- 	}
- =
+Thanks again for this new good meeting!
 
- 	subflow->map_seq =3D map_seq;
-@@ -720,7 +722,10 @@ static struct sock *mptcp_accept(struct sock *sk, int =
-flags, int *err,
- 		subflow->conn =3D new_mptcp_sock;
- 		list_add(&subflow->node, &msk->conn_list);
- 		bh_unlock_sock(new_mptcp_sock);
-+
-+		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
- 		local_bh_enable();
-+
- 		inet_sk_state_store(newsk, TCP_ESTABLISHED);
- 		release_sock(sk);
- 	} else {
-@@ -728,6 +733,8 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
-lags, int *err,
- 		tcp_sk(newsk)->is_mptcp =3D 0;
- 		new_sock->sk =3D NULL;
- 		sock_release(new_sock);
-+
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
- 	}
- =
 
- 	return newsk;
-@@ -852,7 +859,10 @@ void mptcp_finish_connect(struct sock *sk, int mp_capa=
-ble)
- 		msk->subflow =3D NULL;
- 		bh_unlock_sock(sk);
- 		local_bh_enable();
-+	} else {
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
- 	}
-+
- 	inet_sk_state_store(sk, TCP_ESTABLISHED);
- }
- =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index a49cc5ed1b27..1cffde9b95ed 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -17,6 +17,13 @@
- #include <net/tcp.h>
- #include <net/mptcp.h>
- #include "protocol.h"
-+#include "mib.h"
-+
-+static inline void SUBFLOW_REQ_INC_STATS(struct request_sock *req,
-+					 enum linux_mptcp_mib_field field)
-+{
-+	MPTCP_INC_STATS(sock_net(req_to_sk(req)), field);
-+}
- =
+Here are the minutes of the meeting:
 
- static int subflow_rebuild_header(struct sock *sk)
- {
-@@ -62,8 +69,7 @@ static bool subflow_token_join_request(struct request_soc=
-k *req,
- =
 
- 	msk =3D mptcp_token_get_sock(subflow_req->token);
- 	if (!msk) {
--		pr_debug("subflow_req=3D%p, token=3D%u - not found\n",
--			 subflow_req, subflow_req->token);
-+		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINNOTOKEN);
- 		return false;
- 	}
- =
 
-@@ -103,8 +109,14 @@ static void subflow_v4_init_req(struct request_sock *r=
-eq,
- 	subflow_req->mp_capable =3D 0;
- 	subflow_req->mp_join =3D 0;
- =
+Accepted patches:
+    - mptcp: remove token_release:
+        - by Florian
+        - Waiting for application
+        - Reviewed by Paolo
 
--	if (rx_opt.mptcp.mp_capable && rx_opt.mptcp.mp_join)
--		return;
-+	if (rx_opt.mptcp.mp_capable) {
-+		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
-+
-+		if (rx_opt.mptcp.mp_join)
-+			return;
-+	} else if (rx_opt.mptcp.mp_join) {
-+		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNRX);
-+	}
- =
 
- 	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
- 		int err;
-@@ -181,6 +193,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 			 subflow_ctx(sk), subflow->thmac,
- 			 subflow->remote_nonce);
- 		if (!subflow_thmac_valid(subflow)) {
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINACKMAC);
- 			subflow->mp_join =3D 0;
- 			// @@ need to trigger RST
- 			return;
+
+Pending patches:
+    - mptcp: Implement interim path manager:
+        - by Peter
+        - v2 sent
+        - Waiting for accept
+
+    - mptcp: implement retransmit infrastructure:
+        - 7 patches
+        - by Paolo
+        - RFC =E2=86=92 v1 =E2=86=92 v2
+        - Waiting for application
+
+    - net/mptcp: rcu-ify the subflow context:
+        - by Davide
+        - v1 (no more an RFC) should arrive soon
+
+    - mptcp_poll rework preview:
+        - by Florian
+        - RFC
+        - should be rebased on top of the recvmsg refactor commits
+(should be applied today)
+
+    - mptcp sparse "fixes":
+        - by Florian
+        - accepted by Peter
+        - Waiting for application
+
+    - mptcp: allow dumping subflow context to userspace:
+        - by Davide
+        - RFC (with questions about what to expose + "sensitive" info)
+        - commented by Florian and Matt
+        - currently all these info are linked to the subflow, not the
+MPTCP socket. And everything needs CAP_NET_ADMIN (ss -i)
+
+    - mptcp: partial recvmsg() refactor:
+        - by Paolo
+        - v2 sent
+        - accepted by Mat
+        - Waiting for application
+
+    - selftests: prepare for mptcp ipv6 support:
+        - by Florian
+        - commented by Paolo and Peter (+ who can do what) and Alexander
+
+    - mptcp: Remove all traces of checksum support:
+        - by Peter
+        - mptcp_write_options() needs to be updated, v2 needed
+        - Reviewed by Paolo and Mat
+
+
+
+Prepare RFC for next week:
+    - we should do that yes
+    - with everything we have next week
+    - idea is to get real feedback with real code
+    - RFCv2 with explanation about what is missing (IPv6, DATA_FIN,
+MPTCPv1, etc.)
+    - we can send it after next week meeting
+
+
+
+Remaining tasks (not including bug-fix) for the initial patch set:
+    - IPv6 support:
+        - Peter is interested by looking at that.
+        - simple implementation should be preferred
+        - we can force the userspace not to do some stuff but we can
+have a subflow using v4, another v6, that's quite common in fact.
+        - but for the initial submission, let's keep it simple.
+
+    - And MPTCP v1 support:
+        - note that there is a patent on that
+        - would it be a problem?
+        - the code on mptcp.org is published under GPLv2
+        - Maybe Christoph can help? If you have idea :)
+        - ref to the patent
+https://patents.google.com/patent/US20160261722A1/en
+
+    - DATA_FIN:
+        - Mat started the work, the base
+        - Needs to continue
+
+    - Shared recv window:
+        - be careful that it is the recv side, our "server" can receive
+from multiple SF
+        - should we implement the full support (code change in TCP code)?
+        - Or should we try to avoid severe consequences?:
+            - maybe more interesting to go that way for the initial
+submission
+            - but we should consider that as a temporary situation:
+                - scheduler might avoid bad consequences
+                - if there is no more space at MPTCP level (because the
+application is blocked), TCP SF might announce space but that will be
+drop between TCP and MPTCP
+                - BUT we don't have windows at the MPTCP level
+                - It should be fine with the current recvmsg() implem (?)
+                - we can have "out-of-order" when we have reinjection at
+MPTCP level (even retransmission on the same SF triggered by MPTCP timer)
+                - Idea from Paolo: when moving the data from the SF to
+the MPTCP socket (recv side), we might want to keep a ref (still
+charged/accounted into) on the subflow =E2=86=92 *less invasive solution*
+
+    - Active backup support:
+        - We use the backup subflow only if no other no other non backup
+SF are up
+        - The idea would be to stop using the 2nd address.
+        - Could be simulated by nftables?
+        - But then we need a "scheduler" that starts looking at what's
+happening on 1 SF, etc.
+        - sysctl for the PM might be easier
+        - (we will not upstream the "interim" PM but the code to allow
+the switch will be)
+
+
+
+Next meeting:
+    - We propose to have it next Thursday, the 26th of September.
+    - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20190926
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+Talk to you next week,
+Matt
 -- =
 
-2.21.0
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-
---===============2517507617467499119==--
+--===============2111859788238555413==--
