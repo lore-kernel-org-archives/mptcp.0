@@ -1,70 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============0606328810497277778=="
+Content-Type: multipart/mixed; boundary="===============8990769790421009094=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [Weekly meetings] MoM - 19th of September 2019
-Date: Fri, 20 Sep 2019 17:27:52 +0200
-Message-ID: <4cabd2ac-20f3-3d71-9231-89cc0f1952f4@tessares.net>
-In-Reply-To: 4189ea3b-b81d-009a-44aa-9829b3f74ff1@tessares.net
+Subject: [MPTCP] [PATCH] mptcp: sendmsg: fix stream corrution
+Date: Fri, 20 Sep 2019 18:58:19 +0200
+Message-ID: <f2691051949e480e3c4c5ca28b38a2005238de10.1568998504.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1893
+X-UID: 1894
 
---===============0606328810497277778==
+--===============8990769790421009094==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 20/09/2019 17:09, Matthieu Baerts wrote:
+Currently we can hit a stream's corruption with the following sequence:
+- sendmsg_frag is invoked while the write_queue tail skb's len is equal to
+  the current size_goal.
+  sendmsg_frag sets can_collapse to false, even if mptcp data are in sequen=
+ce.
+  Anyway it does not set eor in the write_queue skb.
+- sendmsg_frag invokes do_tcp_sendmsg(), which tries to allocate a new skb -
+  as the 'size_goal - skb->len <=3D 0' condition is true.
+  But it hits memory limit and/or such allocation fails, so do_tcp_sendmsg()
+  jumps to the 'wait_for_memory:' label and invokes tcp_push()
+- tcp_push() tries to transmit the write queue tail skb, but due to window =
+size
+  limit, split it, send the first half and leave in the write queue a small=
+er
+  skb - without any ext attached
+- do_tcp_sendmsg() invokes sk_stream_wait_memory and than checks again for =
+skb
+  allocation, this time skb->len is less than size_goal and do_tcp_sendmsg()
+  collapse the data on the existing skb
+- sendmsg_frag adds a new ext to the tail skb in write queue, but due to th=
+e above
+  it is associated with a wrong/unexpected subflow sequence number: it maps
+  a future ssn -> stream corruption
 
-[...]
+This change addresses the above issue explicitly setting the 'eor' when hit=
+ting
+the initial condition so that tcp will not collapse the data after tcp_push=
+().
 
-> Remaining tasks (not including bug-fix) for the initial patch set:
+Fixes: 6c80a73a33c2 ("mptcp: allow collapsing consecutive sendpages on the =
+same substream")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+--
+Notes:
+- based on top of "mptcp: implement retransmit infrastructure",
+- the issue is present even without that series, but it become somewhat
+  reproducible with both the above triggering MP_JOIN.
+- I guess squashing to the specific commit may cause a bit of rebase confli=
+ct, =
 
-[...]
+  otherwise it may be squashed to "mptcp: rework mptcp_sendmsg_frag to acce=
+pt optional dfrag"
+---
+ net/mptcp/protocol.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
->     - And MPTCP v1 support:
->         - note that there is a patent on that
->         - would it be a problem?
->         - the code on mptcp.org is published under GPLv2
->         - Maybe Christoph can help? If you have idea :)
->         - ref to the patent
-> https://patents.google.com/patent/US20160261722A1/en
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 308ced6955a8..e91f761d0da6 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -217,19 +217,16 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+ =
 
-Regarding this, there are a few interesting notes on the IETF website:
-https://datatracker.ietf.org/ipr/3242/
+ 		/* Limit the write to the size available in the
+ 		 * current skb, if any, so that we create at most a new skb.
+-		 * If we run out of space in the current skb (e.g. the window
+-		 * size shrunk from last sent) a new skb will be allocated even
+-		 * is collapsing was allowed: collapsing is effectively
+-		 * disabled.
++		 * Explicitly tells TCP internals to avoid collapsing on later
++		 * queue management operation, to avoid breaking the ext <->
++		 * SSN association set here
+ 		 */
+-		can_collapse =3D mptcp_skb_can_collapse_to(*write_seq, skb,
+-							 mpext);
++		can_collapse =3D (size_goal - skb->len > 0) &&
++			      mptcp_skb_can_collapse_to(*write_seq, skb, mpext);
+ 		if (!can_collapse)
+ 			TCP_SKB_CB(skb)->eor =3D 1;
+-		else if (size_goal - skb->len > 0)
+-			avail_size =3D size_goal - skb->len;
+ 		else
+-			can_collapse =3D false;
++			avail_size =3D size_goal - skb->len;
+ 	}
+ =
 
-> If the Standard is adopted by IETF, Apple will not assert the Subject
-> Claims against any party for making, using, selling, importing or
-> offering for sale a product that implements and fully complies with
-> the Standard, provided, however that Apple retains the right to assert
-> the Subject Claims (including the right to claim past royalties)
-> against any party that asserts a patent it owns or controls (either
-> directly or indirectly) against Apple or any of Apple's affiliates or
-> successors in title; and Apple retains the right to assert the Subject
-> Claims against any product or portion thereof that is not necessary
-> for compliance with the Standard.
-> Royalty-bearing licenses will be available to anyone who prefers that
-> option.
-
-Everything looks good... until:
-
-> however that Apple retains the right to assert the Subject Claims
-against any party that asserts a patent it owns or controls against
-Apple or any of Apple's affiliates or successors in title
-
-I guess the rest of the sentence is not linked with that. So from my
-understanding, Apple cannot use it to "attack", only to "defend" (but by
-attacking somehow...). But certainly better to ask specialists :-)
-
-Cheers,
-Matth
+ 	if (!retransmission) {
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.21.0
 
---===============0606328810497277778==--
+
+--===============8990769790421009094==--
