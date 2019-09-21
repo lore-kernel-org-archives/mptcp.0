@@ -1,68 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============5093684805971631299=="
+Content-Type: multipart/mixed; boundary="===============5730975066802839874=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2 0/2] mptcp: partial recvmsg() refactor
-Date: Sat, 21 Sep 2019 13:16:29 +0200
-Message-ID: <653214bc-1499-18e3-c36b-1b3d8bb9342f@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1909181541490.40632@tvtrimel-mobl5.amr.corp.intel.com
+Subject: Re: [MPTCP] [PATCH 0/4] mptcp sparse "fixes"
+Date: Sat, 21 Sep 2019 13:19:08 +0200
+Message-ID: <8055e426-0e17-c04c-d3ed-1c5eb9068599@tessares.net>
+In-Reply-To: 6fdfba964c0e7455f3992ec2bfdcd3680c8e9665.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1900
+X-UID: 1901
 
---===============5093684805971631299==
+--===============5730975066802839874==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+Hi Florian, Peter,
 
-On 19/09/2019 00:42, Mat Martineau wrote:
-> On Wed, 18 Sep 2019, Paolo Abeni wrote:
+On 16/09/2019 22:43, Peter Krystad wrote:
 > =
 
->> This 2 patches start the recvmsg() refactor discussed in last mtg.
->> The explicit 'duplicate data' handling in 1/2 fix some stream
->> corruption I
->> observe with re-injection, and the 2nd one fix another stream
->> corruption at
->> the end of the stream, still triggered=C2=A0 by re-injection.
->>
->> With the above 2 patches I still stream corruptions with re-injection,
->> are
->> almost gone - even if I can still hit them with in at least a very
->> rare corner
->> case.
->>
->> Only minor changes since v1, to address Mat's feedback, details in the
->> individual changelog
->>
->> Paolo Abeni (2):
->> =C2=A0mptcp: refactor recvmsg()
->> =C2=A0mptcp: recvmsg() should really try to deliver 'len' bytes to
->> =C2=A0=C2=A0 user-space
->>
->> net/mptcp/protocol.c | 120 +++++++++++++++++++------------------------
->> 1 file changed, 54 insertions(+), 66 deletions(-)
->>
->> --=C2=A0
->> 2.21.0
+> Hi Florian -
 > =
 
-> Thanks for the v2. These look good to merge.
+> This all looks good to me, thanks.
+> =
+
+> Peter.
+> =
+
+> On Tue, 2019-09-10 at 01:17 +0200, Florian Westphal wrote:
+>> NB: these patches don't fix anything because nothing is broken.
+>>
+>> The "sparse" checker complains about various constructs, this fixes
+>> some of those.  All of these can be squashed, I've
+>> placed the name of the target commit in the change logs.
+>>
+>> There are more sparse warnings in the code base, I am intentionally
+>> skipping those for now as its in code that is still "in flux".
+>>
+>> For example the icsk ulp data pointer now has an __rcu annotation upstre=
+am
+>> so sparse complains because we don't use rcu_dereference() or similar.
+>>
+>> In any case, I think those can be fixed once the code has stabilized mor=
+e.
+>> I am sending these now because they are in more "mature" areas and it
+>> reduces the delta between my working tree and the "export" branch.
 
 Thank you for the patches and the reviews!
 
-- ae3e015a67e3: "squashed" the first one in "mptcp: Implement MPTCP
-receive path"
-- signed off was already there
-- eebee22fe45e: "squashed" the second one in "mptcp: Implement MPTCP
-receive path" as well.
-- 380876e851ad: conflict in
+- ca9e24a3fc4b: "squashed" the 1st one in "mptcp: Add ADD_ADDR handling"
+- 8e734cf08528: conflict in
 t/mptcp-Make-MPTCP-socket-block-wakeup-ignore-sk_receive_queue
-- 782be479bf43..0341ab0068b3: result
+- signed-off was already there
+- 0341ab0068b3..9281f9e12829: result
+- f89dfa25b401: "squashed" the 2nd one in "mptcp: Write MPTCP DSS
+headers to outgoing data packets"
+- b93110fbba4a: add signed-off
+- 9281f9e12829..e27f63c56155: result
+- 22387add4faa: "squashed" the 3rd one in "mptcp: Add key generation and
+token tree"
+- signed-off was already there
+- e27f63c56155..f51ca08dd4f3: result
+- e0ce97687b36: "squashed" in "mptcp: Implement path manager interface
+commands"
+- cbb100c6570d: signed-off
+- f51ca08dd4f3..4c186ad4f312: result
 
-This fixed all the previous failed tests, that's good :)
+Tests are running now but I guess everything should still be OK!
 
 Cheers,
 Matt
@@ -74,4 +80,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============5093684805971631299==--
+--===============5730975066802839874==--
