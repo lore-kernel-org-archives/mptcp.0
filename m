@@ -1,83 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============5730975066802839874=="
+Content-Type: multipart/mixed; boundary="===============5581761859327472770=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH 0/4] mptcp sparse "fixes"
-Date: Sat, 21 Sep 2019 13:19:08 +0200
-Message-ID: <8055e426-0e17-c04c-d3ed-1c5eb9068599@tessares.net>
-In-Reply-To: 6fdfba964c0e7455f3992ec2bfdcd3680c8e9665.camel@linux.intel.com
+Subject: Re: [MPTCP] [PATCH] mptcp: sendmsg: fix stream corrution
+Date: Mon, 23 Sep 2019 09:46:52 +0200
+Message-ID: <8d138cb8c6bc48942ec2238f145a10227e7850e2.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.1909201543300.79505@tvtrimel-mobl5.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1901
+X-UID: 1902
 
---===============5730975066802839874==
+--===============5581761859327472770==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Peter,
-
-On 16/09/2019 22:43, Peter Krystad wrote:
+On Fri, 2019-09-20 at 15:45 -0700, Mat Martineau wrote:
+> On Fri, 20 Sep 2019, Paolo Abeni wrote:
 > =
 
-> Hi Florian -
+> > Currently we can hit a stream's corruption with the following sequence:
+> > - sendmsg_frag is invoked while the write_queue tail skb's len is equal=
+ to
+> >  the current size_goal.
+> >  sendmsg_frag sets can_collapse to false, even if mptcp data are in seq=
+uence.
+> >  Anyway it does not set eor in the write_queue skb.
+> > - sendmsg_frag invokes do_tcp_sendmsg(), which tries to allocate a new =
+skb -
+> >  as the 'size_goal - skb->len <=3D 0' condition is true.
+> >  But it hits memory limit and/or such allocation fails, so do_tcp_sendm=
+sg()
+> >  jumps to the 'wait_for_memory:' label and invokes tcp_push()
+> > - tcp_push() tries to transmit the write queue tail skb, but due to win=
+dow size
+> >  limit, split it, send the first half and leave in the write queue a sm=
+aller
+> >  skb - without any ext attached
+> > - do_tcp_sendmsg() invokes sk_stream_wait_memory and than checks again =
+for skb
+> >  allocation, this time skb->len is less than size_goal and do_tcp_sendm=
+sg()
+> >  collapse the data on the existing skb
+> > - sendmsg_frag adds a new ext to the tail skb in write queue, but due t=
+o the above
+> >  it is associated with a wrong/unexpected subflow sequence number: it m=
+aps
+> >  a future ssn -> stream corruption
+> > =
+
+> > This change addresses the above issue explicitly setting the 'eor' when=
+ hitting
+> > the initial condition so that tcp will not collapse the data after tcp_=
+push().
 > =
 
-> This all looks good to me, thanks.
-> =
+> Thanks for the detailed description. Code looks good to me and tested fin=
+e =
 
-> Peter.
-> =
+> (although failures remain, but I don't think this was intended to fix =
 
-> On Tue, 2019-09-10 at 01:17 +0200, Florian Westphal wrote:
->> NB: these patches don't fix anything because nothing is broken.
->>
->> The "sparse" checker complains about various constructs, this fixes
->> some of those.  All of these can be squashed, I've
->> placed the name of the target commit in the change logs.
->>
->> There are more sparse warnings in the code base, I am intentionally
->> skipping those for now as its in code that is still "in flux".
->>
->> For example the icsk ulp data pointer now has an __rcu annotation upstre=
-am
->> so sparse complains because we don't use rcu_dereference() or similar.
->>
->> In any case, I think those can be fixed once the code has stabilized mor=
-e.
->> I am sending these now because they are in more "mature" areas and it
->> reduces the delta between my working tree and the "export" branch.
+> everything).
 
-Thank you for the patches and the reviews!
+I haven't seen any failure on top of this patch (plus recvmsg
+refactor), could you share debug enabled dmsg and/or pcap trace for
+failure you see?
 
-- ca9e24a3fc4b: "squashed" the 1st one in "mptcp: Add ADD_ADDR handling"
-- 8e734cf08528: conflict in
-t/mptcp-Make-MPTCP-socket-block-wakeup-ignore-sk_receive_queue
-- signed-off was already there
-- 0341ab0068b3..9281f9e12829: result
-- f89dfa25b401: "squashed" the 2nd one in "mptcp: Write MPTCP DSS
-headers to outgoing data packets"
-- b93110fbba4a: add signed-off
-- 9281f9e12829..e27f63c56155: result
-- 22387add4faa: "squashed" the 3rd one in "mptcp: Add key generation and
-token tree"
-- signed-off was already there
-- e27f63c56155..f51ca08dd4f3: result
-- e0ce97687b36: "squashed" in "mptcp: Implement path manager interface
-commands"
-- cbb100c6570d: signed-off
-- f51ca08dd4f3..4c186ad4f312: result
+There is still at least a possible known bad scenario: it's quite alike
+the above, but additionally the window size shrinks at
+sk_stream_wait_memory() invocation time so that on next iterations
+do_tcp_sendpages() ends-up creating multiple skbs. All except the last
+one are sent without any DSS attached and that will corrupt the stream.
 
-Tests are running now but I guess everything should still be OK!
+AFAICS there is no way of fixing the above, except replacing
+do_tcp_sendpages() call with a chunk of almost duplicate code in mptcp,
+that handles such corner case explicitly.
 
-Cheers,
-Matt
--- =
+Thanks,
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+Paolo
 
---===============5730975066802839874==--
+
+--===============5581761859327472770==--
