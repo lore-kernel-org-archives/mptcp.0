@@ -1,117 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============1664854798224873227=="
+Content-Type: multipart/mixed; boundary="===============6343564715592160988=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH RFC] net/mptcp: rcu-ify the subflow context
-Date: Tue, 24 Sep 2019 18:23:45 +0200
-Message-ID: <de6b05cf-a976-0d2f-dbf6-948a02504bbe@tessares.net>
-In-Reply-To: d8f6a1ff7934e99311c8d7851e691d803da272a8.camel@redhat.com
+Subject: Re: [MPTCP] [PATCH] mptcp: Remove all traces of checksum support
+Date: Tue, 24 Sep 2019 11:44:50 -0700
+Message-ID: <b7d8ade679e9e5132def8d0169d3696871838734.camel@linux.intel.com>
+In-Reply-To: 1c2be7cec0d1e181117102a51ee43a3f053a1975.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1918
+X-UID: 1919
 
---===============1664854798224873227==
+--===============6343564715592160988==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide, Paolo,
-
-On 24/09/2019 17:42, Davide Caratti wrote:
-> On Tue, 2019-09-24 at 14:18 +0200, Matthieu Baerts wrote:
->> Hi Davide, Paolo,
->>
->> On 20/09/2019 17:22, Paolo Abeni wrote:
->>> On Thu, 2019-09-19 at 18:08 +0200, Davide Caratti wrote:
->>>> On Fri, 2019-09-13 at 17:54 +0200, Paolo Abeni wrote:
->>>>> The patch looks fine, but I'm still wondering if we should try to be
->>>>> more conservative here, using something alike:
->>>>>
->>>>> 	return rcu_dereference_protected(icsk->icsk_ulp_data,
->>>>> 		lockdep_sock_is_held((struct sock *)icsk))
->>>>>
->>>>> and fixing the eventual lockdep splat explcitily
->>>>>
->>>>> (possibly we may need a different/additional condition for
->>>>> rcu_dereference_protected() based  on icsk refcnt)
->>>>
->>>> this is for sure, because the socket lock for icsk is often not held w=
-hen
->>>> subflow_ctx() is called. Nevertheless, icsk_ulp_data is a valid pointe=
-r in
->>>> all the traffic path of MPTCP (and it keeps the same value until it's
->>>> freed at the enf of the grace period). Should we do a function that do=
-es
->>>> the atomic read of sk_refcnt when lockdep is on? =
-
->>>
->>> I re-read the relevant code, and I changed a bit my mind: the usage of
->>> rcu_dereference_protected() without a condition not based on a lock is
->>> a bit ackward. =
-
->>>
->>> Other similar use-case do force the correct annotation, as in this
->>> patch.
->>>
->>> So I'm fine with the posted code.
->>>
->>> I'm sorry for useless delay/blocking.
->>
->> Sorry this time the delay was on my side. Because of the "RFC" tag, I
->> didn't put the patch on my list. But can you just confirm that I can
->> apply this patch, nothing else is coming?
+On Tue, 2019-09-17 at 11:24 +0200, Paolo Abeni wrote:
+> Hi,
 > =
 
-> Hello Matthieu,
+> On Mon, 2019-09-16 at 15:10 -0700, Peter Krystad wrote:
+> > @@ -152,10 +151,27 @@ void mptcp_parse_option(const unsigned char *ptr,=
+ int opsize,
+> >  				expected_opsize +=3D TCPOLEN_MPTCP_DSS_ACK64;
+> > =
+
+
+...
+
 > =
 
-> I have no plans to improve the current code w.r.t. this patch. Unless
-> anybody disagrees, I'm for applying it as-is (and squashing it into
-> "mptcp: Implement MPTCP receive path" ).
+> > @@ -701,18 +691,11 @@ void mptcp_write_options(__be32 *ptr, struct mptc=
+p_out_options *opts)
+> >  		}
+> >  =
 
-Great!
+> >  		if (mpext->use_map) {
+> > -			__sum16 checksum;
+> > -
+> > -			pr_debug("Writing map values");
+> >  			put_unaligned_be64(mpext->data_seq, ptr);
+> >  			ptr +=3D 2;
+> > -			*ptr++ =3D htonl(mpext->subflow_seq);
+> > -
+> > -			if (mpext->use_checksum)
+> > -				checksum =3D mpext->checksum;
+> > -			else
+> > -				checksum =3D TCPOPT_NOP << 8 | TCPOPT_NOP;
+> > -			*ptr =3D htonl(mpext->data_len << 16 | checksum);
+> > +			put_unaligned_be32(mpext->subflow_seq, ptr);
+> > +			ptr +=3D 1;
+> > +			put_unaligned_be16(mpext->data_len, ptr);
+> =
 
-Thank you for the patch and the review!
+> I think we should still set 4 bytes here:
+> =
 
-- ae79303bf919: "squashed" in "mptcp: Implement MPTCP receive path"
-- 5c3ebb640609: "signed-off"
-- 4c186ad4f312..549f7224b7cd: result
+> 	put_unaligned_be32(mpext->subflow_seq << 16 | TCPOPT_NOP << 8 |
+> TCPOPT_NOP, ptr);
+> 	=
 
-Note: because of other changes made by Florian and Paolo, my diff in
-subflow_ulp_release() is slightly different than yours:
+> or we can hit some 'uninit value used' error triggered by syzbot or the
+> like.
 
-=3D=3D=3D=3D
-@@ -445,10 +444,13 @@ static void subflow_ulp_release(struct sock *sk)
- {
-        struct subflow_context *ctx =3D subflow_ctx(sk);
+Sorry Paolo I missed this comment before. I'll send a v2.
 
-+       if (!ctx)
-+               return;
-+
-        if (ctx->conn)
-                sock_put(ctx->conn);
+Peter.
 
--       kfree(ctx);
-+       kfree_rcu(ctx, rcu);
- }
+> Cheers,
+> =
 
- static void subflow_ulp_clone(const struct request_sock *req,
-=3D=3D=3D=3D
+> Paolo
+> =
 
-token_release() has been removed, sock_put() has been added. Just to be
-sure, does it still make sense to check if ctx is not NULL?
 
-You can see 5ee88b657e3f (mptcp: remove token_release) for example for
-more details about the other modifications that were made recently.
 
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-
---===============1664854798224873227==--
+--===============6343564715592160988==--
