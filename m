@@ -1,42 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============9178094401901852511=="
+Content-Type: multipart/mixed; boundary="===============6223692523063058941=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] protocol questions
-Date: Tue, 24 Sep 2019 09:03:38 +0200
-Message-ID: <0d0552da75d1cdea03ac789df684b50a5fd96b54.camel@redhat.com>
+Subject: Re: [MPTCP] [PATCH] mptcp: sendmsg: fix stream corrution
+Date: Tue, 24 Sep 2019 11:12:48 +0200
+Message-ID: <17c3ca78-ded4-45f1-a71e-37dc6323733b@tessares.net>
+In-Reply-To: 793afb461fa8a3ed9a0dbcf2bef400449ae8e8cd.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1910
+X-UID: 1911
 
---===============9178094401901852511==
+--===============6223692523063058941==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Paolo,
 
-there are a few DSS related corner cases I don't understand well:
+On 24/09/2019 08:55, Paolo Abeni wrote:
+> On Mon, 2019-09-23 at 16:35 -0700, Mat Martineau wrote:
+>> On Mon, 23 Sep 2019, Matthieu Baerts wrote:
+>> On 23/09/2019 09:46, Paolo Abeni wrote:
+>>>> On Fri, 2019-09-20 at 15:45 -0700, Mat Martineau wrote:
+>>>>> Thanks for the detailed description. Code looks good to me and tested=
+ fine
+>>>>> (although failures remain, but I don't think this was intended to fix
+>>>>> everything).
+>>>>
+>>>> I haven't seen any failure on top of this patch (plus recvmsg
+>>>> refactor), could you share debug enabled dmsg and/or pcap trace for
+>>>> failure you see?
+>>>
+>>> I also saw failed tests but everything was fixed once "recvmsg refactor"
+>>> was applied too!
+>>
+>> I re-ran the tests with both patch sets, and all pass. Sorry for the =
 
-* is support for 'delayed DSS' optional? e.g. pkt 1 with no DSS, pkt 2
-with DSS for pkt 1 and 2. Can we ignore/consider such scenario evil
-(and ev close the subflow if we hit it)?
+>> false alarm - I had simply grabbed the export branch and applied the =
 
-* are out-of-order DSS allowed? I mean pkt 1 contans a DSS for pkt 2
-and vice-versa? If I read correctly, the RFC does not explicitly forbit
-them. Can we consider such scenario evil (and ev close the subflow if
-we hit it)?
+>> series.
+> =
 
-* what if we receive a different DSS before the old one is completed?
-If I read the RFC correctly, that should be allowed only if the new DSS
-don't change the existing mapping - e.g. the DSS lenght grow and
-anything else is unchanged. How we should handle other scenario? ignore
-the DSS? close the subflow? as MPTCP processing happens after TCP
-validation, I suppose TCP reset should fit here.
+> Nice! thank you for the confirm! =
 
-Thanks,
+> =
 
-Paolo
+> Note: I think/I'm pretty sure there is still at least another possible
+> stream/data corruption pending into the current code base - see my
+> previous email for the details - but so far I was unable to
+> programmatically trigger it - likely pktdrill should help there.
+> =
 
+> Anyhow, given the difficulty to trigger it and amount of pending tasks,
+> I don't plan to try to address such issue in the short term.
 
---===============9178094401901852511==--
+I think that's a good idea not to address such issue now but should we
+log the analyse you did and the possible bug somewhere? e.g.
+
+  https://github.com/multipath-tcp/mptcp_net-next/issues
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+--===============6223692523063058941==--
