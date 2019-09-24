@@ -1,139 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============1572897572816600504=="
+Content-Type: multipart/mixed; boundary="===============5195232762340381888=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: Re: [MPTCP] protocol questions
-Date: Tue, 24 Sep 2019 15:13:14 +0200
-Message-ID: <61f2235a9daec416f4d0b4d270ae9b22434a1bc7.camel@redhat.com>
-In-Reply-To: 549866c4-ddd9-6703-90b4-814660e9b0b2@tessares.net
+Date: Tue, 24 Sep 2019 16:56:22 +0200
+Message-ID: <d69770b3-8106-a928-9795-8bababd1be72@tessares.net>
+In-Reply-To: 61f2235a9daec416f4d0b4d270ae9b22434a1bc7.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1914
+X-UID: 1915
 
---===============1572897572816600504==
+--===============5195232762340381888==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-09-24 at 13:57 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
+On 24/09/2019 15:13, Paolo Abeni wrote:
+> On Tue, 2019-09-24 at 13:57 +0200, Matthieu Baerts wrote:
+>> On 24/09/2019 09:03, Paolo Abeni wrote:
+
+[...]
+
+>>> * are out-of-order DSS allowed? I mean pkt 1 contans a DSS for pkt 2
+>>> and vice-versa? If I read correctly, the RFC does not explicitly forbit
+>>> them. Can we consider such scenario evil (and ev close the subflow if
+>>> we hit it)?
+>>
+>> I am not sure to understand how you could get this situation where a
+>> packet contains a DSS for another one. May you give more details about t=
+hat?
 > =
 
-> On 24/09/2019 09:03, Paolo Abeni wrote:
-> > there are a few DSS related corner cases I don't understand well:
-> > =
-
-> > * is support for 'delayed DSS' optional? e.g. pkt 1 with no DSS, pkt 2
-> > with DSS for pkt 1 and 2. Can we ignore/consider such scenario evil
-> > (and ev close the subflow if we hit it)?
+> AFAICS our export branch can't produce that result, but theoretically
+> it's possible, I think - at least with something like pktdrill.
 > =
 
-> It is possible to have this scenario but we don't have to support it
-> now. I think the out-of-tree kernel support[1] it but I am sure some
-> smaller stacks don't support it.
+> I'm trying to redesign the recvmsg() path as per last mtg, and I would
+> like to understand the possible scenarios - and explicitly bails on
+> anything unsupported.
+
+I guess we can then say we don't want to support this case :)
+
+>>> * what if we receive a different DSS before the old one is completed?
+>>
+>> Do you mean:
+>> - We receive the DSS A covering packets 1, 2, 3 ; then DSS B covering 4,
+>> 5, 6 but packet 3 is lost. (packets 1 =E2=86=92 6 are following each oth=
+er when
+>> looking at the TCP seq num)
+>> - Or: we receive the DSS A covering packets 1, 2, 3, 7 ; then DSS B
+>> covering 4, 5, 6 ; packets 4 follows 3 regarding the TCP seq num, 7 will
+>> arrive later.
+>>
+>> I guess you are talking about the second one, right?
 > =
 
-> [1]
-> https://github.com/multipath-tcp/mptcp/blob/mptcp_trunk/net/mptcp/mptcp_i=
-nput.c#L642
+> I think the 2nd scenario is not possible ?!? DSS mapping should be
+> continuous inside the TCP sequence numbers space, right?
 
-good! :)
+I guess indeed it is not possible. Maybe in this case the pkt 4 will be
+associated to DSS A.
 
-> > * are out-of-order DSS allowed? I mean pkt 1 contans a DSS for pkt 2
-> > and vice-versa? If I read correctly, the RFC does not explicitly forbit
-> > them. Can we consider such scenario evil (and ev close the subflow if
-> > we hit it)?
+> I was wondering something alike:
 > =
 
-> I am not sure to understand how you could get this situation where a
-> packet contains a DSS for another one. May you give more details about th=
-at?
-
-AFAICS our export branch can't produce that result, but theoretically
-it's possible, I think - at least with something like pktdrill.
-
-I'm trying to redesign the recvmsg() path as per last mtg, and I would
-like to understand the possible scenarios - and explicitly bails on
-anything unsupported.
-
-> > * what if we receive a different DSS before the old one is completed?
+> pkt 1 carries DSS A which covers also pkt 2.
+> pkt 2 carries DSS B (with B !=3D A, for some field at least).
 > =
 
-> Do you mean:
-> - We receive the DSS A covering packets 1, 2, 3 ; then DSS B covering 4,
-> 5, 6 but packet 3 is lost. (packets 1 =E2=86=92 6 are following each othe=
-r when
-> looking at the TCP seq num)
-> - Or: we receive the DSS A covering packets 1, 2, 3, 7 ; then DSS B
-> covering 4, 5, 6 ; packets 4 follows 3 regarding the TCP seq num, 7 will
-> arrive later.
+> Can we accept pkt2/DSS B? The current recvmsg() 'export branch' code
+> just emits a warning in such scenario. Reading the RFC I think it
+> allows that if the only difference between DSS B and DSS A is
+> B.data_len > A.data_len
+
+To which section are you referring to? :)
+
+I think that it is an acceptable situation. Not sure we have to support it.
+
+>>> If I read the RFC correctly, that should be allowed only if the new DSS
+>>> don't change the existing mapping - e.g. the DSS lenght grow and
+>>> anything else is unchanged. How we should handle other scenario? ignore
+>>> the DSS? close the subflow? as MPTCP processing happens after TCP
+>>> validation, I suppose TCP reset should fit here.
+>>
+>> Can we not fallback? (and send an MP_FAIL)
+>>
+>> From my point of view, I think the only "tricky" case we should support
+>> is to have the same DSS for a few packets (due to TSO). I don't think we
+>> should support now the other corner cases you mentioned.
 > =
 
-> I guess you are talking about the second one, right?
+> Easier then what I feared, then ;)
 
-I think the 2nd scenario is not possible ?!? DSS mapping should be
-continuous inside the TCP sequence numbers space, right?
+The other corner cases are there to support multiple kind of
+middleboxes. I don't know if this is common on Internet. Maybe Christoph
+can help us for that :)
 
-I was wondering something alike:
-
-pkt 1 carries DSS A which covers also pkt 2.
-pkt 2 carries DSS B (with B !=3D A, for some field at least).
-
-Can we accept pkt2/DSS B? The current recvmsg() 'export branch' code
-just emits a warning in such scenario. Reading the RFC I think it
-allows that if the only difference between DSS B and DSS A is
-B.data_len > A.data_len
-
-> > If I read the RFC correctly, that should be allowed only if the new DSS
-> > don't change the existing mapping - e.g. the DSS lenght grow and
-> > anything else is unchanged. How we should handle other scenario? ignore
-> > the DSS? close the subflow? as MPTCP processing happens after TCP
-> > validation, I suppose TCP reset should fit here.
+>> I think the case where there is no DSS in some packets (but only a
+>> DATA-ACK?) can happen if the sender is doing some optimisation to reduce
+>> the size of MPTCP options. For the rest, if it happens, it is more due
+>> to some middleboxes and we can fallback to TCP.
+>>
+>> Regarding the case where the DSS is "missing" in some packets, my
+>> colleague Benjamin pointed me to this text from the RFC:
+>>
+>>    A sender MUST include a DSS option with data sequence mapping in
+>>    every segment *until* one of the sent segments has been acknowledged
+>>    with a DSS option containing a Data ACK.  Upon reception of the
+>>    acknowledgment, the sender has the confirmation that the DSS option
+>>    passes in both directions and *may* choose to send fewer DSS options
+>>    than once per segment.
 > =
 
-> Can we not fallback? (and send an MP_FAIL)
+> Note the the 'export branch' can (and actually does) send data pkts
+> without DSS due the internal TCP machinery and without tacking in
+> account any MPTCP related logic.
 > =
 
-> From my point of view, I think the only "tricky" case we should support
-> is to have the same DSS for a few packets (due to TSO). I don't think we
-> should support now the other corner cases you mentioned.
+> e.g. we enqueue a pkt with proper DSS mapping, but later it's splitted-
+> up by tso_fragment() and/or tcp_fragment() on retransmit or even normal
+> tcp_push(). =
 
-Easier then what I feared, then ;)
-
-> I think the case where there is no DSS in some packets (but only a
-> DATA-ACK?) can happen if the sender is doing some optimisation to reduce
-> the size of MPTCP options. For the rest, if it happens, it is more due
-> to some middleboxes and we can fallback to TCP.
 > =
 
-> Regarding the case where the DSS is "missing" in some packets, my
-> colleague Benjamin pointed me to this text from the RFC:
+> Nor tcp_fragment nor tso_fragment() copy the skb ext to the newly
+> allocated skb header.
 > =
 
->    A sender MUST include a DSS option with data sequence mapping in
->    every segment *until* one of the sent segments has been acknowledged
->    with a DSS option containing a Data ACK.  Upon reception of the
->    acknowledgment, the sender has the confirmation that the DSS option
->    passes in both directions and *may* choose to send fewer DSS options
->    than once per segment.
+> Such packet will be xmitted without mapping.
 
-Note the the 'export branch' can (and actually does) send data pkts
-without DSS due the internal TCP machinery and without tacking in
-account any MPTCP related logic.
+Thank you for this note!
 
-e.g. we enqueue a pkt with proper DSS mapping, but later it's splitted-
-up by tso_fragment() and/or tcp_fragment() on retransmit or even normal
-tcp_push(). =
+I think that in the out-of-tree kernel, the same header is copied in all
+packets to allow the receiver (more the NIC) to aggregate packets (GRO).
+But that's clearly an optimisation!
 
+Cheers,
+Matt
+-- =
 
-Nor tcp_fragment nor tso_fragment() copy the skb ext to the newly
-allocated skb header.
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
-Such packet will be xmitted without mapping.
-
-Thank you,
-
-Paolo
-
-
---===============1572897572816600504==--
+--===============5195232762340381888==--
