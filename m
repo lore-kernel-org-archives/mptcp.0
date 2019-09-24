@@ -1,63 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============6223692523063058941=="
+Content-Type: multipart/mixed; boundary="===============2352371298617644966=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH] mptcp: sendmsg: fix stream corrution
-Date: Tue, 24 Sep 2019 11:12:48 +0200
-Message-ID: <17c3ca78-ded4-45f1-a71e-37dc6323733b@tessares.net>
-In-Reply-To: 793afb461fa8a3ed9a0dbcf2bef400449ae8e8cd.camel@redhat.com
+Subject: Re: [MPTCP] protocol questions
+Date: Tue, 24 Sep 2019 13:57:44 +0200
+Message-ID: <549866c4-ddd9-6703-90b4-814660e9b0b2@tessares.net>
+In-Reply-To: 0d0552da75d1cdea03ac789df684b50a5fd96b54.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1911
+X-UID: 1912
 
---===============6223692523063058941==
+--===============2352371298617644966==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo,
 
-On 24/09/2019 08:55, Paolo Abeni wrote:
-> On Mon, 2019-09-23 at 16:35 -0700, Mat Martineau wrote:
->> On Mon, 23 Sep 2019, Matthieu Baerts wrote:
->> On 23/09/2019 09:46, Paolo Abeni wrote:
->>>> On Fri, 2019-09-20 at 15:45 -0700, Mat Martineau wrote:
->>>>> Thanks for the detailed description. Code looks good to me and tested=
- fine
->>>>> (although failures remain, but I don't think this was intended to fix
->>>>> everything).
->>>>
->>>> I haven't seen any failure on top of this patch (plus recvmsg
->>>> refactor), could you share debug enabled dmsg and/or pcap trace for
->>>> failure you see?
->>>
->>> I also saw failed tests but everything was fixed once "recvmsg refactor"
->>> was applied too!
->>
->> I re-ran the tests with both patch sets, and all pass. Sorry for the =
-
->> false alarm - I had simply grabbed the export branch and applied the =
-
->> series.
+On 24/09/2019 09:03, Paolo Abeni wrote:
+> there are a few DSS related corner cases I don't understand well:
 > =
 
-> Nice! thank you for the confirm! =
+> * is support for 'delayed DSS' optional? e.g. pkt 1 with no DSS, pkt 2
+> with DSS for pkt 1 and 2. Can we ignore/consider such scenario evil
+> (and ev close the subflow if we hit it)?
 
-> =
+It is possible to have this scenario but we don't have to support it
+now. I think the out-of-tree kernel support[1] it but I am sure some
+smaller stacks don't support it.
 
-> Note: I think/I'm pretty sure there is still at least another possible
-> stream/data corruption pending into the current code base - see my
-> previous email for the details - but so far I was unable to
-> programmatically trigger it - likely pktdrill should help there.
-> =
+[1]
+https://github.com/multipath-tcp/mptcp/blob/mptcp_trunk/net/mptcp/mptcp_inp=
+ut.c#L642
 
-> Anyhow, given the difficulty to trigger it and amount of pending tasks,
-> I don't plan to try to address such issue in the short term.
+> * are out-of-order DSS allowed? I mean pkt 1 contans a DSS for pkt 2
+> and vice-versa? If I read correctly, the RFC does not explicitly forbit
+> them. Can we consider such scenario evil (and ev close the subflow if
+> we hit it)?
 
-I think that's a good idea not to address such issue now but should we
-log the analyse you did and the possible bug somewhere? e.g.
+I am not sure to understand how you could get this situation where a
+packet contains a DSS for another one. May you give more details about that?
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues
+> * what if we receive a different DSS before the old one is completed?
+
+Do you mean:
+- We receive the DSS A covering packets 1, 2, 3 ; then DSS B covering 4,
+5, 6 but packet 3 is lost. (packets 1 =E2=86=92 6 are following each other =
+when
+looking at the TCP seq num)
+- Or: we receive the DSS A covering packets 1, 2, 3, 7 ; then DSS B
+covering 4, 5, 6 ; packets 4 follows 3 regarding the TCP seq num, 7 will
+arrive later.
+
+I guess you are talking about the second one, right?
+
+> If I read the RFC correctly, that should be allowed only if the new DSS
+> don't change the existing mapping - e.g. the DSS lenght grow and
+> anything else is unchanged. How we should handle other scenario? ignore
+> the DSS? close the subflow? as MPTCP processing happens after TCP
+> validation, I suppose TCP reset should fit here.
+
+Can we not fallback? (and send an MP_FAIL)
+
+From my point of view, I think the only "tricky" case we should support
+is to have the same DSS for a few packets (due to TSO). I don't think we
+should support now the other corner cases you mentioned.
+
+I think the case where there is no DSS in some packets (but only a
+DATA-ACK?) can happen if the sender is doing some optimisation to reduce
+the size of MPTCP options. For the rest, if it happens, it is more due
+to some middleboxes and we can fallback to TCP.
+
+Regarding the case where the DSS is "missing" in some packets, my
+colleague Benjamin pointed me to this text from the RFC:
+
+   A sender MUST include a DSS option with data sequence mapping in
+   every segment *until* one of the sent segments has been acknowledged
+   with a DSS option containing a Data ACK.  Upon reception of the
+   acknowledgment, the sender has the confirmation that the DSS option
+   passes in both directions and *may* choose to send fewer DSS options
+   than once per segment.
+
+And the link with the code (fully_established):
+-
+https://github.com/multipath-tcp/mptcp/blob/mptcp_trunk/net/mptcp/mptcp_inp=
+ut.c#L582
+-
+https://github.com/multipath-tcp/mptcp/blob/mptcp_trunk/net/mptcp/mptcp_inp=
+ut.c#L1430
+
+I am sure Christoph will soon share a useful notes about all of this :-)
 
 Cheers,
 Matt
@@ -69,4 +101,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============6223692523063058941==--
+--===============2352371298617644966==--
