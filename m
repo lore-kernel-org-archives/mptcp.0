@@ -1,161 +1,231 @@
-Content-Type: multipart/mixed; boundary="===============4709365541073606600=="
+Content-Type: multipart/mixed; boundary="===============7660913367588680595=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] [PATCH v2] mptcp: allow MPTCP sockets by default
-Date: Wed, 25 Sep 2019 11:28:11 -0700
-Message-ID: <alpine.OSX.2.21.1909251123400.26111@leoliu1-mobl.amr.corp.intel.com>
-In-Reply-To: 20190925130259.12715-1-matthieu.baerts@tessares.net
+Subject: Re: [MPTCP] protocol questions
+Date: Wed, 25 Sep 2019 12:06:55 -0700
+Message-ID: <alpine.OSX.2.21.1909251128430.26111@leoliu1-mobl.amr.corp.intel.com>
+In-Reply-To: 1E3698C5-C685-4977-8F04-D751C94701DB@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1931
+X-UID: 1932
 
---===============4709365541073606600==
+--===============7660913367588680595==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Wed, 25 Sep 2019, Matthieu Baerts wrote:
+On Tue, 24 Sep 2019, Christoph Paasch wrote:
 
-> At LPC2019, the feedback was that it should be easy to create MPTCP
-> sockets to have testers. But still important to have ways to disable the
-> creation of new MPTCP sockets. It can be easily done via this new
-> sysctl, CGroups or SELinux. Netfilter can also be used to close existing
-> MPTCP connections if needed.
+> Hello,
 >
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
+>       On Sep 24, 2019, at 4:30 PM, Mat Martineau <mathew.j.martineau(a)li=
+nux.intel.com> wrote:
+> =
+
+> =
+
+> On Tue, 24 Sep 2019, Matthieu Baerts wrote:
 >
-> Notes:
->    To be squashed in "mptcp: new sysctl to control the activation per NS"
->
->    v2:
->     - fix typo spotted by Mat ("static int" instead of "static void")
->
-> .topmsg                                            |  7 +++----
-> net/mptcp/ctrl.c                                   |  7 +++++++
-> tools/testing/selftests/net/mptcp/mptcp_connect.sh | 14 ++++++++++----
-> 3 files changed, 20 insertions(+), 8 deletions(-)
->
-> diff --git a/.topmsg b/.topmsg
-> index 7ff9f3c96ff3..373f94c4b4bd 100644
-> --- a/.topmsg
-> +++ b/.topmsg
-> @@ -5,10 +5,9 @@ New MPTCP sockets will return -ENOPROTOOPT if MPTCP supp=
-ort is disabled
-> for the current net namespace.
->
-> For security reasons, it is interesting to have a global switch for
-> -MPTCP. To start, MPTCP will be disabled by default and only privileged
-> -users will be able to modify this. The reason is that because MPTCP is
-> -new, it will not be tested and reviewed by many and security issues can
-> -then take time to be discovered and fixed.
-> +MPTCP. The reason is that because MPTCP is new, it will not be tested
-> +and reviewed by many and security issues can then take time to be
-> +discovered and fixed.
-
-One more thing, I would simply say that we are providing a way to control =
-
-access to the feature for those that need to turn it on or off for any =
-
-reason. The point about code review and security is true of any new code =
-
-:)
-
-You are welcome to merge with or without this suggested change.
-
-Mat
-
-
+>       On 24/09/2019 15:13, Paolo Abeni wrote:
+>             On Tue, 2019-09-24 at 13:57 +0200, Matthieu Baerts wrote:
+>                   On 24/09/2019 09:03, Paolo Abeni wrote:
+> =
 
 >
-> The value of this new sysctl can be different per namespace. We can then
-> restrict the usage of MPTCP to the selected NS. In case of serious
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index 8d9f15f02369..33de3ced2ba7 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
-> @@ -43,6 +43,11 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
-> 	{}
-> };
+>       [...]
 >
-> +static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
-> +{
-> +	pernet->mptcp_enabled =3D 1;
-> +}
-> +
-> static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *p=
-ernet)
-> {
-> 	struct ctl_table_header *hdr;
-> @@ -85,6 +90,8 @@ static int __net_init mptcp_net_init(struct net *net)
-> {
-> 	struct mptcp_pernet *pernet =3D mptcp_get_pernet(net);
->
-> +	mptcp_pernet_set_defaults(pernet);
-> +
-> 	return mptcp_pernet_new_table(net, pernet);
-> }
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index d029bdc5946d..7d312bd9ac77 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -45,7 +45,6 @@ trap cleanup EXIT
-> for i in 1 2 3 4;do
-> 	ip netns add ns$i || exit $ksft_skip
-> 	ip -net ns$i link set lo up
-> -	ip netns exec ns$i sysctl -q net.mptcp.enabled=3D1
-> done
->
-> #  ns1              ns2                    ns3                     ns4
-> @@ -111,7 +110,14 @@ check_mptcp_disabled()
-> {
-> 	disabled_ns=3D"ns_disabled"
-> 	ip netns add ${disabled_ns} || exit $ksft_skip
-> -	# by default: sysctl net.mptcp.enabled=3D0
-> +
-> +	# net.mptcp.enabled should be enabled by default
-> +	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ =
-print $3 }')" -ne 1 ]; then
-> +		echo -e "net.mptcp.enabled sysctl is not 1 by default\t[ FAIL ]"
-> +		ret=3D1
-> +		return 1
-> +	fi
-> +	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=3D0
->
-> 	local err=3D0
-> 	LANG=3DC ip netns exec ${disabled_ns} ./mptcp_connect -t $timeout -p 100=
-00 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
-> @@ -119,12 +125,12 @@ check_mptcp_disabled()
-> 	ip netns delete ${disabled_ns}
->
-> 	if [ ${err} -eq 0 ]; then
-> -		echo -e "MPTCP is not disabled by default as expected\t[ FAIL ]"
-> +		echo -e "New MPTCP socket cannot be blocked via sysctl\t[ FAIL ]"
-> 		ret=3D1
-> 		return 1
-> 	fi
->
-> -	echo -e "MPTCP is disabled by default as expected\t[ OK ]"
-> +	echo -e "New MPTCP socket can be blocked via sysctl\t[ OK ]"
-> 	return 0
-> }
->
-> -- =
+>                         * are out-of-order DSS allowed? I mean pkt 1 cont=
+ans a DSS for pkt 2
+>                         and vice-versa? If I read correctly, the RFC does=
+ not explicitly forbit
+>                         them. Can we consider such scenario evil (and ev =
+close the subflow if
+>                         we hit it)?
+> =
 
-> 2.20.1
 >
-> _______________________________________________
-> mptcp mailing list
-> mptcp(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/mptcp
+>                   I am not sure to understand how you could get this situ=
+ation where a
+>                   packet contains a DSS for another one. May you give mor=
+e details about that?
 >
+>             AFAICS our export branch can't produce that result, but theor=
+etically
+>             it's possible, I think - at least with something like pktdril=
+l.
+>             I'm trying to redesign the recvmsg() path as per last mtg, an=
+d I would
+>             like to understand the possible scenarios - and explicitly ba=
+ils on
+>             anything unsupported.
+> =
+
+>
+>       I guess we can then say we don't want to support this case :)
+> =
+
+> =
+
+> It's within the MPTCP spec for unmapped packets to arrive and get stored =
+for MPTCP-level reassembly when the DSS arrives on a
+> later packet. But we are not required to keep unmapped packets, it's opti=
+onal to keep them for some period of time. If the
+> DSS shows up later, then we can rely on MPTCP-level reinjection by the pe=
+er to fill in the data we thought was unmapped and
+> we discarded.
+> =
+
+> It's also within the MPTCP spec for a DSS to arrive "early", while still =
+reassembling data mapped by an earlier DSS.
+> =
+
+> =
+
+> Indeed - the spec is unfortunately a bit too permissive here. It allows m=
+appings to arrive early, late, or mixed in any imaginable
+> way.
+> =
+
+> Implementation-wise, out-of-tree Linux MPTCP only supports a DSS-mapping =
+that is covering a TCP-sequence space of the packet that
+> it is being sent on. If the mapping covers a sequence in the future or in=
+ the "past", then we reset the flow.
+>
+>       While we can discard packets when we don't have a mapping for them,=
+ I think we should store "early" DSS mappings.
+> =
+
+> =
+
+> Storing early mappings is kind of tricky because we need to limit the amo=
+unt of mappings we store (otherwise, an attacker could
+> simply fill our memory with mappings :-))
+>
+>       What I don't know is if any existing MPTCP implementations send the=
+se early mappings. If no one is sending them then it
+>       does seem kind of pointless.
+> =
+
+> =
+
+> In practice, I don't know of an implementation that sends early or late m=
+appings. The only thing that happens is a missing mapping
+> because of the scenario that Paolo described (aka., tcp_fragment,...). As=
+ long as the mapping is on one of the segments, it's fine.
+
+Thanks Christoph. It sounds like handling all those corner cases is =
+
+overkill.
+
+>
+>       Seems like these two things could happen on consecutive packets, I =
+don't remember a requirement that DSS mappings must
+>       be in-order. But I can't think of a reason an MPTCP implementation =
+would send them out-of-order.
+> =
+
+>
+>                               * what if we receive a different DSS before=
+ the old one is completed?
+> =
+
+>
+>                         Do you mean:
+>                         - We receive the DSS A covering packets 1, 2, 3 ;=
+ then DSS B covering 4,
+>                         5, 6 but packet 3 is lost. (packets 1 =E2=86=92 6=
+ are following each other when
+>                         looking at the TCP seq num)
+>                         - Or: we receive the DSS A covering packets 1, 2,=
+ 3, 7 ; then DSS B
+>                         covering 4, 5, 6 ; packets 4 follows 3 regarding =
+the TCP seq num, 7 will
+>                         arrive later.
+>
+>                         I guess you are talking about the second one, rig=
+ht?
+>
+>                   I think the 2nd scenario is not possible ?!? DSS mappin=
+g should be
+>                   continuous inside the TCP sequence numbers space, right?
+> =
+
+>
+>             I guess indeed it is not possible. Maybe in this case the pkt=
+ 4 will be
+>             associated to DSS A.
+> =
+
+>
+>       I agree that the second scenario isn't possible.
+>
+>       What I do think is possible is this:
+>
+>       Packet 1 (Data, and DSS A that maps packets 1,2,3)
+>       Packet 2 (Data)
+>       Packet 3 (Data, and DSS B that maps packets 4,5,6)
+>       Packet 4 (Data)
+>       Packet 5 (Data)
+>       Packet 6 (Data)
+>
+>       This is the "early DSS" situation I describe above.
+> =
+
+> =
+
+> I think it is fine to kill the TCP-subflow for early mappings.
+
+Ok.
+
+> =
+
+> =
+
+> One interesting scenario (currently not supported by any known implementa=
+tion) is the following though:
+> =
+
+> Packet 1, Seq 1:1501 (Data, DSS A MPTCP-seq 1 maps TCP-sequence 1 -> 2001)
+> Packet 2, Seq 1501:2001 (Data, DSS A MPTCP-seq 1 maps TCP-sequence 1 -> 2=
+001)
+> Packet 3, Seq 2001:2501 (Data, DSS B MPTCP-seq 2001 maps TCP-sequence 200=
+1 -> 2501)
+> =
+
+> Now, let's imagine Packet 2 & 3 are lost.
+> =
+
+> Ideally, I would be able to retransmit a single packet:
+> =
+
+> Packet 4 (retransmission), Seq 1501:2501 (Data, DSS C MPTCP-seq 1501 maps=
+ TCP-sequence 1501:2001)
+> =
+
+> Packet 1 should be pushed up to the MPTCP-layer (even though the mapping =
+is incomplete) and Packet 4 will also be pushed higher. =
+
+> =
+
+> If that is not supported, the retransmission needs to maintain the Packet=
+ 2 & Packet 3 mappings and thus actually retransmit 2
+> packets instead of 1.
+>
+
+Ah, right. I had been thinking in terms of the reassembled TCP-level =
+
+stream that's passed up to MPTCP, but TCP-level retransmissions could lead =
+
+to this kind of situation with the DSS. For our retransmission code, it =
+
+seems safer and simpler to keep the same mappings when retransmitting =
+
+(packets could have been delayed rather than lost?).
 
 --
 Mat Martineau
 Intel
 
---===============4709365541073606600==--
+--===============7660913367588680595==--
