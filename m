@@ -1,35 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============4067358864495819877=="
+Content-Type: multipart/mixed; boundary="===============2046928352573999706=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 25 September 2019 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Wed, 25 Sep 2019 17:37:12 +0200
-Message-ID: <2f5f3d4e-c3b6-382f-d4bf-c840f41fab00@tessares.net>
+Subject: Re: [MPTCP] Weekly meeting - 26 (not 25) September 2019 16:00 UTC
+ (9am PDT, 6pm CEST)
+Date: Wed, 25 Sep 2019 17:38:07 +0200
+Message-ID: <87ed30de-6a16-ab6d-1161-737ed0460ae3@tessares.net>
+In-Reply-To: 2f5f3d4e-c3b6-382f-d4bf-c840f41fab00@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1926
+X-UID: 1927
 
---===============4067358864495819877==
+--===============2046928352573999706==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+Re,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+On 25/09/2019 17:37, Matthieu Baerts wrote:
+> Hello everybody!
+> =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20190925
+> Our public MPTCP upstreaming weekly web conference is scheduled for
+> tomorrow.
+> =
 
-Feel free to add/modify topics!
+> The list of topics is available here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20190926
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Yes, of course it is the 26, not the 25 :)
 
-Speak to you tomorrow!
-Matthieu
+Cheers,
+Matt
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -38,4 +41,4 @@ Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
 
---===============4067358864495819877==--
+--===============2046928352573999706==--
