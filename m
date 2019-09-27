@@ -1,66 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============2184011300525702175=="
+Content-Type: multipart/mixed; boundary="===============1765122857034227535=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: Re: [MPTCP] some squashing needed?
-Date: Fri, 27 Sep 2019 23:11:11 +0200
-Message-ID: <20190927211111.GI9938@breakpoint.cc>
-In-Reply-To: 0290621d-11de-6515-baf9-429ed9582783@tessares.net
+Subject: [MPTCP] [PATCH 0/2] Add prefix to path management routines
+Date: Fri, 27 Sep 2019 16:42:08 -0700
+Message-ID: <20190927234210.3000-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 1942
+X-UID: 1943
 
---===============2184011300525702175==
+--===============1765122857034227535==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> On 27/09/2019 17:51, Florian Westphal wrote:
-> > I can fold Peters mptcp prefix patch for crypto where needed and push a
-> > v2, let me know.
-> =
+Make minor changes as proposed in Interim Path Manager patchset,
+and then add mptcp_ prefix to all path management api routines.
 
-> I just pushed a new tree on mptcp_net-next repo on Github based on your
-> branch :)
+squashto: Implement path manager interface commands
 
-Awesome.
+Peter Krystad (2):
+  mptcp: Minor changes to path manager interface
+  mptcp: Prefix path management routines with mptcp_
 
-> I didn't want to block anybody but I can re-create a new one again later
-> if needed!
+ net/mptcp/options.c  | 10 ++++---
+ net/mptcp/pm.c       | 63 ++++++++++++++++++++++++++------------------
+ net/mptcp/protocol.c |  5 ++--
+ net/mptcp/protocol.h | 35 +++++++++++++++---------
+ net/mptcp/subflow.c  |  2 +-
+ 5 files changed, 69 insertions(+), 46 deletions(-)
 
-Great.
+-- =
 
-> Also I don't mind squashing this patch and also do the same for the
-> remaining functions (subflow_ ones I guess). I can do that on Monday if
-> it is OK for you.
+2.17.2
 
-Sure.
-
-I squashed Peters patch, you can get a branch with it folded by pulling
-git://git.breakpoint.cc/fw/mptcp-next.git export_squash_11
-
-The diff between current export and this branch is Peters patch, nothing
-else.
-
-If you could prefix the path management api that would be great (to avoid
-confusion with 'power management') subflow would be good too.
-
-> Also, before recreating the new tree, I remove all (Git) refs to the
-> previous ones. If someone uses our repo with Topgit (we never know :) ),
-> please do the same on your side!
-
-Sorry, not following.  What would you like me to do?
-
-I plan to work on a v2 of the snmp counters on Monday, esp. dropping all
-the unused/dubious counters.
-
-If there is anything else please let me know.
-
-I still need to do v2 of the 'poll' patch set, I will do that next after
-the snmp counters are done.
-
-Thanks,
-Florian
-
---===============2184011300525702175==--
+--===============1765122857034227535==--
