@@ -1,44 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============1191722348609415642=="
+Content-Type: multipart/mixed; boundary="===============3824874151545195262=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: Remove all traces of checksum support
-Date: Mon, 30 Sep 2019 16:08:33 +0200
-Message-ID: <a60dc7d1c6a6b010292340a47a437b9cb0e55007.camel@redhat.com>
-In-Reply-To: 20190925234411.2617-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH] mptcp: fix retransmit timer update
+Date: Mon, 30 Sep 2019 16:26:58 +0200
+Message-ID: <97a892f7-41c4-873f-01a5-202199b9174c@tessares.net>
+In-Reply-To: 21b1af7b421981a219b64ae92da798e489010118.1569239317.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1962
+X-UID: 1963
 
---===============1191722348609415642==
+--===============3824874151545195262==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Paolo, Mat,
 
-On Wed, 2019-09-25 at 16:44 -0700, Peter Krystad wrote:
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index f1f5ab3990ab..400fbb0060f3 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -173,7 +173,7 @@ struct subflow_request_sock {
->  	struct	tcp_request_sock sk;
->  	u8	mp_capable : 1,
->  		mp_join : 1,
-> -		checksum : 1,
-> +		unused : 1,
->  		backup : 1,
->  		version : 4;
->  	u8	local_id;
+On 23/09/2019 13:49, Paolo Abeni wrote:
+> Mat noted the current code access ssk data outside the relevant
+> socket lock. Fix that moving the update in such scope
+> =
 
-Sorry I did not notice this beforehand. It looks a little strange to me
-creating a new struct with some 'unused' field. But I think is not
-blocking: we can merge the patch as-is and ev. drop the field later -
-if there is agreement on that.
+> Fixes: 28d2e02041c9 ("mptcp: implement and use MPTCP-level retransmission=
+")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> I'm ok with squashing this into the fixed commit
+
+Thank you for the patch and the review!
+
+- 88052ece1aff: "squashed" in "mptcp: implement and use MPTCP-level
+retransmission"
+- signoff was already there
+- 22f1e768622b..08867957be0e: result
+
+Tests are still OK!
 
 Cheers,
+Matt
+-- =
 
-Paolo
-
---===============1191722348609415642==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3824874151545195262==--
