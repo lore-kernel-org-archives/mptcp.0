@@ -1,35 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============0733740841612060423=="
+Content-Type: multipart/mixed; boundary="===============3278559672420536621=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/2] mptcp: add MIB counters
-Date: Tue, 01 Oct 2019 10:26:55 -0700
-Message-ID: <alpine.OSX.2.21.1910011026270.22340@syitbare-mobl.amr.corp.intel.com>
-In-Reply-To: 20190930145158.5331-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v2] mptcp: Remove all traces of checksum support
+Date: Mon, 30 Sep 2019 15:33:15 +0200
+Message-ID: <6c9fa1e3-30bb-f91c-8d6c-fa192c4f08c5@tessares.net>
+In-Reply-To: 20190925234411.2617-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1960
+X-UID: 1961
 
---===============0733740841612060423==
+--===============3278559672420536621==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Paolo, Mat,
 
-On Mon, 30 Sep 2019, Florian Westphal wrote:
+On 26/09/2019 01:44, Peter Krystad wrote:
+> Since checksum support is not planned remove any references
+> that look it may be supported.
+> =
 
-> As mentioned earlier, here is v2 of the MIB counter patch set.
->
-> I've tossed all counters that aren't used (=3D have no spot that
-> increments them).
->
-> Tests still pass, counters get incremented, you can show them
-> via 'nstat' or "netststat -s".
->
+> Also re-factor DSS option size calculation and make
+> DSS option size check for exactly correct lengths.
 
-Thanks for the updated patches, Florian. v2 looks good to me.
+Is this new version OK for you? :)
 
---
-Mat Martineau
-Intel
---===============0733740841612060423==--
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3278559672420536621==--
