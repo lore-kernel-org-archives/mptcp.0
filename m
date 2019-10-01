@@ -1,53 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============5078795146406516922=="
+Content-Type: multipart/mixed; boundary="===============4323351135076412488=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] RFCv2 for netdev: what's missing?
-Date: Tue, 01 Oct 2019 16:37:45 +0200
-Message-ID: <0af3b2f0-48cc-ccba-7d50-dd98e2009257@tessares.net>
+Subject: [MPTCP] Re: RFCv2 for netdev: what's missing?
+Date: Tue, 01 Oct 2019 16:58:42 +0200
+Message-ID: <933b5545ffbbf3c207c4880953b01cc7302fb4c4.camel@redhat.com>
+In-Reply-To: 0af3b2f0-48cc-ccba-7d50-dd98e2009257@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1949
+X-UID: 1950
 
---===============5078795146406516922==
+--===============4323351135076412488==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-At the last meeting, we said it would be good to send a new RFCv2 to
-netdev before the next meeting while windows are closed. I guess today
-would be good, no?
+Thank you for raising this topic!
 
-What do we still need to do?
-- the cover letter: Mat is it still OK to do it on your side?
-- any other patches to apply before this?
+On Tue, 2019-10-01 at 16:37 +0200, Matthieu Baerts wrote:
+> At the last meeting, we said it would be good to send a new RFCv2 to
+> netdev before the next meeting while windows are closed. I guess today
+> would be good, no?
 
-Here are the pending patches:
-- mptcp: Interim Path Manager: Waiting for accept (last review)
-- mptcp_poll should not block on each subflow: Waiting for review
-- mptcp: allow dumping subflow context to userspace: can be applied
-- selftests: prepare for mptcp ipv6 support: Waiting for accept (last
-review)
-- mptcp: Remove all traces of checksum support: do we want it?
-- mptcp: add MIB counter infrastructure: Waiting for accept (last review)
-- mptcp: allow MPTCP sockets by default: can be applied
-- mptcp: prefix mptcp_ to exposed pm_ routines.
+Agreed ;)
 
-For the moment, I am blocked with "mptcp: Remove all traces of checksum
-support" but I can drop this rebase to work on other patches if others
-are required for the RFCv2.
+> What do we still need to do?
+> - the cover letter: Mat is it still OK to do it on your side?
+> - any other patches to apply before this?
 
-What's your point of view on this?
+I personally think we can go even with the current git tree.
+If we want to flush part of the pending backlog I would go only for
+already accepted patches:
+
+[...]
+> - mptcp: allow dumping subflow context to userspace: can be applied
+> - mptcp: allow MPTCP sockets by default: can be applied
+
+The above ones: ^^^
+
+The above to avoid possible last minute issues.
+
+Other opinions more than welcome!
 
 Cheers,
-Matt
--- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5078795146406516922==--
+Paolo
+
+--===============4323351135076412488==--
