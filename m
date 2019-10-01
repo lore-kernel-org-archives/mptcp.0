@@ -1,53 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============4627525550283324105=="
+Content-Type: multipart/mixed; boundary="===============9028939941293135354=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: RFCv2 for netdev: what's missing?
-Date: Tue, 01 Oct 2019 17:34:24 +0200
-Message-ID: <20191001153424.GF14819@breakpoint.cc>
-In-Reply-To: 4a7f4996-eac5-2601-2a8f-ff720b9bec4f@tessares.net
+Date: Tue, 01 Oct 2019 18:07:14 +0200
+Message-ID: <f0c3bf7a670c367beeda1ba8a79f8646730a52bb.camel@redhat.com>
+In-Reply-To: 405a1158-e814-af18-80da-59fc7369070f@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1954
+X-UID: 1955
 
---===============4627525550283324105==
+--===============9028939941293135354==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> > For RFC I think it depends on how much work you want to
-> > get yourself into right now, as it would need to be squashed, sending
-> > it as extra patch is strange.
+On Tue, 2019-10-01 at 17:07 +0200, Matthieu Baerts wrote:
+> On 01/10/2019 16:58, Paolo Abeni wrote:
+> > Hi,
+> > =
+
+> > Thank you for raising this topic!
+> > =
+
+> > On Tue, 2019-10-01 at 16:37 +0200, Matthieu Baerts wrote:
+> > > At the last meeting, we said it would be good to send a new RFCv2 to
+> > > netdev before the next meeting while windows are closed. I guess today
+> > > would be good, no?
+> > =
+
+> > Agreed ;)
+> > =
+
+> > > What do we still need to do?
+> > > - the cover letter: Mat is it still OK to do it on your side?
+> > > - any other patches to apply before this?
+> > =
+
+> > I personally think we can go even with the current git tree.
+> > If we want to flush part of the pending backlog I would go only for
+> > already accepted patches:
+> > =
+
+> > [...]
+> > > - mptcp: allow dumping subflow context to userspace: can be applied
+> > > - mptcp: allow MPTCP sockets by default: can be applied
+> > =
+
+> > The above ones: ^^^
+> > =
+
+> > The above to avoid possible last minute issues.
 > =
 
-> In general. It is linked to my message I sent on the thread linked to
-> the patch:
+> Make sense, thank you!
+> So better for you to wait before removing traces of the Checksum then?
 
-Ah, thanks for the pointer.
+No strong opinion on this point, I'm ok either way. Likely, if are not
+going to include csum support in the short term, it would be better
+drop it down.
 
-> > The main part of this patch is removing the parsing of the checksum
-> > option. But in the commits where this is introduced, we also parse
-> > other possible options we could have and we act differently if one
-> > option is not supported. And in these commits, it makes sense to do
-> > that.
-> >
-> > We could see that as "we are parsing stuff we don't need". But we are
-> > already doing that for the "backup" bit for example. Or for the
-> > "MP_JOIN" while we don't support it when subflow_request_sock
-> > structure is introduced, etc.
-> >
-> > In other words, do we really need to remove this code linked to the
-> > checksum? If we plan never to support it, it makes sense. But I guess
-> > in the near future, we will want to support it, no?
-> >
-> > So should I continue applying this patch?
+Cheers,
 
-Oh, OK. I thought the consensus was to not support checksums.
-If we're going to add it for the initial mptcp v1 submission, the code
-should be kept.
+Paolo
 
-OTOH, if we're going to add checksums later on -- after initial
-upstreaming -- I think its better to remove it now and resurrect it later
-once someone adds the feature.
---===============4627525550283324105==--
+--===============9028939941293135354==--
