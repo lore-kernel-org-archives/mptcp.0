@@ -1,128 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============9159192541752813531=="
+Content-Type: multipart/mixed; boundary="===============6018287664684313246=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 3/3] mptcp: switch mptcp_poll to mptcp
- socket wait queue
-Date: Tue, 01 Oct 2019 13:57:43 +0200
-Message-ID: <20191001115743.2807-4-fw@strlen.de>
-In-Reply-To: 20191001115743.2807-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v2] mptcp: Remove all traces of checksum support
+Date: Tue, 01 Oct 2019 14:14:36 +0200
+Message-ID: <6fa56a27-10f0-fe52-fde2-2a2472780e4c@tessares.net>
+In-Reply-To: a60dc7d1c6a6b010292340a47a437b9cb0e55007.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 1974
+X-UID: 1975
 
---===============9159192541752813531==
+--===============6018287664684313246==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tcp_poll places current task on a wait queue.  This can cause us to block
-forever -- some subflows might never receive any data because they're
-used as a backup/fallback path.
+Hi Paolo, Peter,
 
-This makes mptcp_poll wait on the mptcp socket wait queue instead.
-__tcp_poll is used instead to avoid blocking current task again after
-parent mptcp socket has been woken from the subflow layer.
+On 30/09/2019 16:08, Paolo Abeni wrote:
+> Hi,
+> =
 
-The series is incomplete, mptcp_should_wake_parent() should be extended
-to take packets off the subflow queue and add them to the mptcp socket
-queue, i.e. move most of the work currently done at recvmsg time into
-the wakeup function.
+> On Wed, 2019-09-25 at 16:44 -0700, Peter Krystad wrote:
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index f1f5ab3990ab..400fbb0060f3 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -173,7 +173,7 @@ struct subflow_request_sock {
+>>  	struct	tcp_request_sock sk;
+>>  	u8	mp_capable : 1,
+>>  		mp_join : 1,
+>> -		checksum : 1,
+>> +		unused : 1,
+>>  		backup : 1,
+>>  		version : 4;
+>>  	u8	local_id;
+> =
 
-This is also needed to not wake userspace in case the subflow tcp data
-was stale (e.g. because of too early mptcp-level retransmit).
+> Sorry I did not notice this beforehand. It looks a little strange to me
+> creating a new struct with some 'unused' field. But I think is not
+> blocking: we can merge the patch as-is and ev. drop the field later -
+> if there is agreement on that.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c |  9 ++++++++-
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 12 +++++++++---
- 3 files changed, 18 insertions(+), 4 deletions(-)
+I agree that it is certainly better to remove it in this context.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b54fecf528b9..908146b7f300 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -531,6 +531,11 @@ static enum mapping_status mptcp_get_mapping(struct so=
-ck *ssk)
- 	return ret;
- }
- =
+On my side, I was looking at applying this patch. And after having split
+it in 5 smaller patches and starting applying half of them, I don't know
+if it is a good idea to fully drop the checksum (partial) support.
 
-+bool mptcp_should_wake_parent(struct mptcp_subflow_context *subflow)
-+{
-+	return true;
-+}
-+
- static void mptcp_wait_data(struct sock *sk, long *timeo)
- {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-@@ -1378,11 +1383,13 @@ static __poll_t mptcp_poll(struct file *file, struc=
-t socket *sock,
- 		return ret;
- 	}
- =
+The main part of this patch is removing the parsing of the checksum
+option. But in the commits where this is introduced, we also parse other
+possible options we could have and we act differently if one option is
+not supported. And in these commits, it makes sense to do that.
 
-+	sock_poll_wait(file, sock, wait);
-+
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct socket *tcp_sock;
- =
+We could see that as "we are parsing stuff we don't need". But we are
+already doing that for the "backup" bit for example. Or for the
+"MP_JOIN" while we don't support it when subflow_request_sock structure
+is introduced, etc.
 
- 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
--		ret |=3D tcp_poll(file, tcp_sock, wait);
-+		ret |=3D __tcp_poll(tcp_sock->sk);
- 	}
- 	release_sock(sk);
- =
+In other words, do we really need to remove this code linked to the
+checksum? If we plan never to support it, it makes sense. But I guess in
+the near future, we will want to support it, no?
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0c6bc8617cf4..eaa48fe90629 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -265,6 +265,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- void mptcp_finish_connect(struct sock *sk, int mp_capable);
- void mptcp_finish_join(struct sock *sk);
- void mptcp_reset_timer(struct sock *sk);
-+bool mptcp_should_wake_parent(struct mptcp_subflow_context *ctx);
- =
+So should I continue applying this patch? :)
 
- int mptcp_token_new_request(struct request_sock *req);
- void mptcp_token_destroy_request(u32 token);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index fdec4f6208b7..2db2529ad323 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -310,14 +310,20 @@ static void subflow_data_ready(struct sock *sk)
- 	subflow->tcp_sk_data_ready(sk);
- =
-
- 	if (parent) {
--		pr_debug("parent=3D%p", parent);
-+		struct socket_wq *wq;
- =
-
- 		smp_mb__before_atomic();
- 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
- 		smp_mb__after_atomic();
- =
-
--		parent->sk_data_ready(parent);
--	}
-+		rcu_read_lock();
-+		wq =3D rcu_dereference(parent->sk_wq);
-+		if (skwq_has_sleeper(wq) &&
-+		    mptcp_should_wake_parent(subflow)) {
-+			wake_up_interruptible_all(&wq->wait);
-+		}
-+		rcu_read_unlock();
-+	}
- }
- =
-
- static void subflow_write_space(struct sock *sk)
+Cheers,
+Matt
 -- =
 
-2.21.0
-
---===============9159192541752813531==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6018287664684313246==--
