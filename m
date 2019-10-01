@@ -1,55 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============2019344064509244495=="
+Content-Type: multipart/mixed; boundary="===============0242016588988331675=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: prefix subflow routines with mptcp_
-Date: Tue, 01 Oct 2019 10:16:21 +0200
-Message-ID: <278aabfa-6ee3-995a-7bd4-5618fd6796f0@tessares.net>
-In-Reply-To: 20190930214336.GC14819@breakpoint.cc
+Subject: [MPTCP] [PATCH mptcp-next 0/3] mptcp_poll should not block on each
+ subflow
+Date: Tue, 01 Oct 2019 13:57:40 +0200
+Message-ID: <20191001115743.2807-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 1970
+X-UID: 1971
 
---===============2019344064509244495==
+--===============0242016588988331675==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+This is a (very simplified) version of the mptcp poll refactoring.
 
-On 30/09/2019 23:43, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->> Hello,
->>
->> As planned, I looked at prefixing with mptcp_ all exposed subflow_xxx()
->> routines (functions and structures).
-> =
+I've removed all of the code from mptcp_should_wake_parent(), the reason
+is that Paolo is working on moving more code from mptcp_recvmsg to the
+subflow data_ready callback so we can weed out duplicate data before
+waking up userspace.
 
-> [..]
-> =
+So this only contains the new 'subflow_write_space' callback to notify
+mptcp layer when a subflow isn't blocked anymore on write-side, plus the
+__tcp_poll split so we can call the tcp layer from mptcp without placing
+the subflow socket on a wait list.
 
->> It is quite big but I only renamed functions and structures and
->> sometimes moved functions to keep the reversed Xmas tree.
-> =
+Comments welcome.
 
-> Yes, can't be avoided.  Thanks for keeping xmas tree formatting.
-> =
 
-> Looks good to me, thank you for doing this.
-
-Thank you for your quick review!
-
-result: 08867957be0e..3d566a4b1ebc
-
-Tests are still OK!
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2019344064509244495==--
+--===============0242016588988331675==--
