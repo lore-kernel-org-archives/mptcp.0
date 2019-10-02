@@ -1,204 +1,138 @@
-Content-Type: multipart/mixed; boundary="===============2248630114210688530=="
+Content-Type: multipart/mixed; boundary="===============4867928579702811651=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: allow MPTCP sockets by default
-Date: Wed, 02 Oct 2019 23:02:27 +0200
-Message-ID: <25fd6f87-7f68-da8e-429d-07122d186cb1@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1909251123400.26111@leoliu1-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: RFCv2 for netdev: what's missing?
+Date: Wed, 02 Oct 2019 23:11:36 +0200
+Message-ID: <30ea2ce8-5890-0bda-f44b-82748d1dfabe@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1910011558310.22340@syitbare-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2002
+X-UID: 2003
 
---===============2248630114210688530==
+--===============4867928579702811651==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Mat,
 
-On 25/09/2019 20:28, Mat Martineau wrote:
+On 02/10/2019 01:07, Mat Martineau wrote:
 > =
 
-> On Wed, 25 Sep 2019, Matthieu Baerts wrote:
+> On Tue, 1 Oct 2019, Paolo Abeni wrote:
 > =
 
->> At LPC2019, the feedback was that it should be easy to create MPTCP
->> sockets to have testers. But still important to have ways to disable the
->> creation of new MPTCP sockets. It can be easily done via this new
->> sysctl, CGroups or SELinux. Netfilter can also be used to close existing
->> MPTCP connections if needed.
+>> On Tue, 2019-10-01 at 21:40 +0200, Matthieu Baerts wrote:
+>>> On 01/10/2019 19:21, Mat Martineau wrote:
+>>>> On Tue, 1 Oct 2019, Matthieu Baerts wrote:
+>>>>
+>>>>> What do we still need to do?
+>>>>> - the cover letter: Mat is it still OK to do it on your side?
+>>>>
+>>>> Here's the cover letter draft:
+>>>
+>>> Thank you for having prepared the new draft!
+>>
+>> +1! ;)
+>>
+>>>> """
+>>>> The MPTCP upstreaming community has prepared a net-next RFCv2 patch set
+>>>> for review.
+>>>>
+>>>> Clone/fetch:
+>>>> https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-rfcv2)
+>>>>
+>>>> Browse:
+>>>> https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-rfcv2
+>>>>
+>>>> With CONFIG_MPTCP=3Dy, a socket created with IPPROTO_MPTCP will
+>>>> attempt to
+>>>> create an MPTCP connection but remains compatible with regular
+>>>> TCP. IPPROTO_TCP socket behavior is unchanged.
+>>>>
+>>>> This implementation makes use of ULP between the userspace-facing MPTCP
+>>>> socket and the set of in-kernel TCP sockets it controls. ULP has been
+>>>> extended for use with listening sockets. skb_ext is used to carry MPTCP
+>>>> metadata.
+>>>>
+>>>> The patch set includes self-tests to exercise MPTCP in various
+>>>> connection and routing scenarios.
+>>>>
+>>>> We have more work planned to reach the initial feature set for merging,
+>>>> notably:
+>>>>
+>>>> * IPv6
+>>>>
+>>>> * Comply with MPTCPv1 (RFC6824bis). This patch set supports only
+>>>> =C2=A0 MPTCPv0 (RFC 6824 / experimental)
+>>>>
+>>>> * Proper MPTCP-level connection closing with DATA_FIN
+>>>>
+>>>> * Couple receive windows across sibling subflow TCP sockets as required
+>>>> =C2=A0 by RFC 6824
+>>>>
+>>>> * Limit subflow ULP visibility to kernel space
+>>>>
+>>>> * Simple transmit scheduler that respects subflow 'backup' flags
+>>>
+>>> If we want to push a smaller patch upstream, will we implement all of
+>>> these features?
+>>>
+>>> Should we also mention that in this potential first part, if OK for
+>>> upstream, we would expect to have everything up to commit introducing
+>>> the kselftests + a new one introducing IPv6 support?
+>>
+>> I think it would be a very good idea to try split all the above in 2 or
+>> more slices. If there is agreement about that plan we could rephrase
+>> with something alike:
+>>
+>> """
+>> We have more work planned to reach the initial feature set notably:
+>> """
+>>
+>> [same list as above]
+>>
+>> """
+>> In order to simplify both the code review and the develpment process we
+>> propose to split the above in smaller chunks, the first one including
+>> everything presented here up to selftest, with the addition of basic
+>> IPv6 support.
+>> """
+>>
+>> WDYT?
+> =
 
-Thank you for the review!
+> I think that's a good way to frame it, I'd adjust it a little bit:
+> =
 
-- bdccc294628e: "squashed" in "mptcp: new sysctl to control the
-activation per NS"
-- 4a6a27ba8515: "squashed" in "mptcp: add basic kselftest for mptcp"
-- d612190690a9..008467ef92e5: result
+> """
+> In order to simplify both code review and the development process, we
+> propose splitting the patch set in to smaller chunks. The first patch
+> set for merging would include patches 1 to (TBD) and basic IPv6 support.
+> """
+
+Sounds good to me. I guess we can mention the commit introducing the
+selftest support as a first idea.
+
+We can still change the target or the order of the commits later. I
+added a topic about that in the list of topics to discuss tomorrow. But
+that would be good to have some feedbacks from the maintainers about
+this target :)
+
+
+On my side, I think our last "export" branch is ready: all the patches
+we previously mentioned are merged, it is rebased on latest net-next,
+tests are all good. I think it is ready to be sent! I just tagged
+netdev-rfcv2 but feel free to modify it if it is not OK :)
+
+With a bit of luck, if you have time to send it and if nothing is
+missing, we might have the first feedbacks before the meeting tomorrow!
+Or yeah, more likely for the week after. But we never know :)
+
 
 Cheers,
 Matt
-
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> ---
->>
->> Notes:
->> =C2=A0=C2=A0 To be squashed in "mptcp: new sysctl to control the activat=
-ion per NS"
->>
->> =C2=A0=C2=A0 v2:
->> =C2=A0=C2=A0=C2=A0 - fix typo spotted by Mat ("static int" instead of "s=
-tatic void")
->>
->> .topmsg=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 7 +++----
->> net/mptcp/ctrl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 7 +++++++
->> tools/testing/selftests/net/mptcp/mptcp_connect.sh | 14 ++++++++++----
->> 3 files changed, 20 insertions(+), 8 deletions(-)
->>
->> diff --git a/.topmsg b/.topmsg
->> index 7ff9f3c96ff3..373f94c4b4bd 100644
->> --- a/.topmsg
->> +++ b/.topmsg
->> @@ -5,10 +5,9 @@ New MPTCP sockets will return -ENOPROTOOPT if MPTCP
->> support is disabled
->> for the current net namespace.
->>
->> For security reasons, it is interesting to have a global switch for
->> -MPTCP. To start, MPTCP will be disabled by default and only privileged
->> -users will be able to modify this. The reason is that because MPTCP is
->> -new, it will not be tested and reviewed by many and security issues can
->> -then take time to be discovered and fixed.
->> +MPTCP. The reason is that because MPTCP is new, it will not be tested
->> +and reviewed by many and security issues can then take time to be
->> +discovered and fixed.
-> =
-
-> One more thing, I would simply say that we are providing a way to
-> control access to the feature for those that need to turn it on or off
-> for any reason. The point about code review and security is true of any
-> new code :)
-> =
-
-> You are welcome to merge with or without this suggested change.
-> =
-
-> Mat
-> =
-
-> =
-
-> =
-
->>
->> The value of this new sysctl can be different per namespace. We can then
->> restrict the usage of MPTCP to the selected NS. In case of serious
->> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
->> index 8d9f15f02369..33de3ced2ba7 100644
->> --- a/net/mptcp/ctrl.c
->> +++ b/net/mptcp/ctrl.c
->> @@ -43,6 +43,11 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0{}
->> };
->>
->> +static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
->> +{
->> +=C2=A0=C2=A0=C2=A0 pernet->mptcp_enabled =3D 1;
->> +}
->> +
->> static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet
->> *pernet)
->> {
->> =C2=A0=C2=A0=C2=A0=C2=A0struct ctl_table_header *hdr;
->> @@ -85,6 +90,8 @@ static int __net_init mptcp_net_init(struct net *net)
->> {
->> =C2=A0=C2=A0=C2=A0=C2=A0struct mptcp_pernet *pernet =3D mptcp_get_pernet=
-(net);
->>
->> +=C2=A0=C2=A0=C2=A0 mptcp_pernet_set_defaults(pernet);
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0return mptcp_pernet_new_table(net, pernet);
->> }
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->> index d029bdc5946d..7d312bd9ac77 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->> @@ -45,7 +45,6 @@ trap cleanup EXIT
->> for i in 1 2 3 4;do
->> =C2=A0=C2=A0=C2=A0=C2=A0ip netns add ns$i || exit $ksft_skip
->> =C2=A0=C2=A0=C2=A0=C2=A0ip -net ns$i link set lo up
->> -=C2=A0=C2=A0=C2=A0 ip netns exec ns$i sysctl -q net.mptcp.enabled=3D1
->> done
->>
->> #=C2=A0 ns1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 ns2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ns3=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ns4
->> @@ -111,7 +110,14 @@ check_mptcp_disabled()
->> {
->> =C2=A0=C2=A0=C2=A0=C2=A0disabled_ns=3D"ns_disabled"
->> =C2=A0=C2=A0=C2=A0=C2=A0ip netns add ${disabled_ns} || exit $ksft_skip
->> -=C2=A0=C2=A0=C2=A0 # by default: sysctl net.mptcp.enabled=3D0
->> +
->> +=C2=A0=C2=A0=C2=A0 # net.mptcp.enabled should be enabled by default
->> +=C2=A0=C2=A0=C2=A0 if [ "$(ip netns exec ${disabled_ns} sysctl net.mptc=
-p.enabled |
->> awk '{ print $3 }')" -ne 1 ]; then
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 echo -e "net.mptcp.enabled s=
-ysctl is not 1 by default\t[ FAIL ]"
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=3D1
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 1
->> +=C2=A0=C2=A0=C2=A0 fi
->> +=C2=A0=C2=A0=C2=A0 ip netns exec ${disabled_ns} sysctl -q net.mptcp.ena=
-bled=3D0
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0local err=3D0
->> =C2=A0=C2=A0=C2=A0=C2=A0LANG=3DC ip netns exec ${disabled_ns} ./mptcp_co=
-nnect -t $timeout -p
->> 10000 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
->> @@ -119,12 +125,12 @@ check_mptcp_disabled()
->> =C2=A0=C2=A0=C2=A0=C2=A0ip netns delete ${disabled_ns}
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0if [ ${err} -eq 0 ]; then
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 echo -e "MPTCP is not disabl=
-ed by default as expected\t[ FAIL ]"
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 echo -e "New MPTCP socket ca=
-nnot be blocked via sysctl\t[
->> FAIL ]"
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=3D1
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 1
->> =C2=A0=C2=A0=C2=A0=C2=A0fi
->>
->> -=C2=A0=C2=A0=C2=A0 echo -e "MPTCP is disabled by default as expected\t[=
- OK ]"
->> +=C2=A0=C2=A0=C2=A0 echo -e "New MPTCP socket can be blocked via sysctl\=
-t[ OK ]"
->> =C2=A0=C2=A0=C2=A0=C2=A0return 0
->> }
->>
->> --=C2=A0
->> 2.20.1
->>
->> _______________________________________________
->> mptcp mailing list
->> mptcp(a)lists.01.org
->> https://lists.01.org/mailman/listinfo/mptcp
->>
-> =
-
-> -- =
-
-> Mat Martineau
-> Intel
-
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -206,4 +140,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2248630114210688530==--
+--===============4867928579702811651==--
