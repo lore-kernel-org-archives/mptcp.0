@@ -1,114 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============5003434830576196530=="
+Content-Type: multipart/mixed; boundary="===============5963735448848074734=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: RFCv2 for netdev: what's missing?
-Date: Tue, 01 Oct 2019 16:07:11 -0700
-Message-ID: <alpine.OSX.2.21.1910011558310.22340@syitbare-mobl.amr.corp.intel.com>
-In-Reply-To: 084dc8aa2f8cc66257f78dddea9fb3f1e5188710.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2] mptcp: Remove all traces of checksum support
+Date: Wed, 02 Oct 2019 11:33:56 +0200
+Message-ID: <c1ea0ccb-aa7f-24de-8903-be2f6218300d@tessares.net>
+In-Reply-To: 6fa56a27-10f0-fe52-fde2-2a2472780e4c@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1980
+X-UID: 1981
 
---===============5003434830576196530==
+--===============5963735448848074734==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Peter,
 
-On Tue, 1 Oct 2019, Paolo Abeni wrote:
+On 01/10/2019 14:14, Matthieu Baerts wrote:
+> Hi Paolo, Peter,
+> =
 
-> On Tue, 2019-10-01 at 21:40 +0200, Matthieu Baerts wrote:
->> On 01/10/2019 19:21, Mat Martineau wrote:
->>> On Tue, 1 Oct 2019, Matthieu Baerts wrote:
->>>
->>>> What do we still need to do?
->>>> - the cover letter: Mat is it still OK to do it on your side?
->>>
->>> Here's the cover letter draft:
+> On 30/09/2019 16:08, Paolo Abeni wrote:
+>> Hi,
 >>
->> Thank you for having prepared the new draft!
->
-> +1! ;)
->
->>> """
->>> The MPTCP upstreaming community has prepared a net-next RFCv2 patch set
->>> for review.
->>>
->>> Clone/fetch:
->>> https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-rfcv2)
->>>
->>> Browse:
->>> https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-rfcv2
->>>
->>> With CONFIG_MPTCP=3Dy, a socket created with IPPROTO_MPTCP will attempt=
- to
->>> create an MPTCP connection but remains compatible with regular
->>> TCP. IPPROTO_TCP socket behavior is unchanged.
->>>
->>> This implementation makes use of ULP between the userspace-facing MPTCP
->>> socket and the set of in-kernel TCP sockets it controls. ULP has been
->>> extended for use with listening sockets. skb_ext is used to carry MPTCP
->>> metadata.
->>>
->>> The patch set includes self-tests to exercise MPTCP in various
->>> connection and routing scenarios.
->>>
->>> We have more work planned to reach the initial feature set for merging,
->>> notably:
->>>
->>> * IPv6
->>>
->>> * Comply with MPTCPv1 (RFC6824bis). This patch set supports only
->>>   MPTCPv0 (RFC 6824 / experimental)
->>>
->>> * Proper MPTCP-level connection closing with DATA_FIN
->>>
->>> * Couple receive windows across sibling subflow TCP sockets as required
->>>   by RFC 6824
->>>
->>> * Limit subflow ULP visibility to kernel space
->>>
->>> * Simple transmit scheduler that respects subflow 'backup' flags
+>> On Wed, 2019-09-25 at 16:44 -0700, Peter Krystad wrote:
+>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>>> index f1f5ab3990ab..400fbb0060f3 100644
+>>> --- a/net/mptcp/protocol.h
+>>> +++ b/net/mptcp/protocol.h
+>>> @@ -173,7 +173,7 @@ struct subflow_request_sock {
+>>>  	struct	tcp_request_sock sk;
+>>>  	u8	mp_capable : 1,
+>>>  		mp_join : 1,
+>>> -		checksum : 1,
+>>> +		unused : 1,
+>>>  		backup : 1,
+>>>  		version : 4;
+>>>  	u8	local_id;
 >>
->> If we want to push a smaller patch upstream, will we implement all of
->> these features?
->>
->> Should we also mention that in this potential first part, if OK for
->> upstream, we would expect to have everything up to commit introducing
->> the kselftests + a new one introducing IPv6 support?
->
-> I think it would be a very good idea to try split all the above in 2 or
-> more slices. If there is agreement about that plan we could rephrase
-> with something alike:
->
-> """
-> We have more work planned to reach the initial feature set notably:
-> """
->
-> [same list as above]
->
-> """
-> In order to simplify both the code review and the develpment process we
-> propose to split the above in smaller chunks, the first one including
-> everything presented here up to selftest, with the addition of basic
-> IPv6 support.
-> """
->
-> WDYT?
+>> Sorry I did not notice this beforehand. It looks a little strange to me
+>> creating a new struct with some 'unused' field. But I think is not
+>> blocking: we can merge the patch as-is and ev. drop the field later -
+>> if there is agreement on that.
+> =
 
-I think that's a good way to frame it, I'd adjust it a little bit:
+> I agree that it is certainly better to remove it in this context.
 
-"""
-In order to simplify both code review and the development process, we =
+I hope you don't mind if I remove this "unused" field when applying your
+patch. I had to apply this bit manually anyway and I guess if we need an
+"unused" field, it would be better at the end.
 
-propose splitting the patch set in to smaller chunks. The first patch set =
+I can of course still change that again later if needed!
 
-for merging would include patches 1 to (TBD) and basic IPv6 support.
-"""
+Cheers,
+Matt
+-- =
 
-
---
-Mat Martineau
-Intel
---===============5003434830576196530==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5963735448848074734==--
