@@ -1,311 +1,209 @@
-Content-Type: multipart/mixed; boundary="===============2062210687822199571=="
+Content-Type: multipart/mixed; boundary="===============2248630114210688530=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: prefix pm routines with mptcp_
-Date: Wed, 02 Oct 2019 22:50:27 +0200
-Message-ID: <20191002205027.17633-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH v2] mptcp: allow MPTCP sockets by default
+Date: Wed, 02 Oct 2019 23:02:27 +0200
+Message-ID: <25fd6f87-7f68-da8e-429d-07122d186cb1@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1909251123400.26111@leoliu1-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2001
+X-UID: 2002
 
---===============2062210687822199571==
+--===============2248630114210688530==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-"pm" is currently used for Power Manager in the kernel. Better not to
-pollute this namespace.
+Hi Mat,
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+On 25/09/2019 20:28, Mat Martineau wrote:
+> =
 
-Notes:
-    Here is the patch I applied directly + follow-up. I made sure each comm=
-it
-    compiles:
-      - 49825d3998b9: "squashed" in "mptcp: Add path manager interface"
-      - 398e8a1c8bb5: build-fix in "mptcp: Add ADD_ADDR handling"
-      - d74222a10684: build-fix in "mptcp: Add handling of incoming MP_JOIN=
- requests"
-      - 9f39c3681b37: conflict in t/mptcp-Add-handling-of-outgoing-MP_JOIN-=
-requests
-      - 0f837758795a: mptcp: fix style typo (extra line added in one commit=
-, removed in another one later)
-      - 008467ef92e5..eeb324e54935: result
+> On Wed, 25 Sep 2019, Matthieu Baerts wrote:
+> =
 
- net/mptcp/options.c  |  7 ++++---
- net/mptcp/pm.c       | 38 ++++++++++++++++++++------------------
- net/mptcp/protocol.c |  6 +++---
- net/mptcp/protocol.h | 28 +++++++++++++++-------------
- 4 files changed, 42 insertions(+), 37 deletions(-)
+>> At LPC2019, the feedback was that it should be easy to create MPTCP
+>> sockets to have testers. But still important to have ways to disable the
+>> creation of new MPTCP sockets. It can be easily done via this new
+>> sysctl, CGroups or SELinux. Netfilter can also be used to close existing
+>> MPTCP connections if needed.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 602cf40f72a6..ee53f9d356f9 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -405,10 +405,11 @@ void mptcp_incoming_options(struct sock *sk, struct s=
-k_buff *skb,
- =
+Thank you for the review!
 
- 	if (msk && mp_opt->add_addr) {
- 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
--			pm_add_addr(msk, &mp_opt->addr, mp_opt->addr_id);
-+			mptcp_pm_add_addr(msk, &mp_opt->addr, mp_opt->addr_id);
- #if IS_ENABLED(CONFIG_IPV6)
- 		else if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6)
--			pm_add_addr6(msk, &mp_opt->addr6, mp_opt->addr_id);
-+			mptcp_pm_add_addr6(msk, &mp_opt->addr6,
-+					   mp_opt->addr_id);
- #endif
- 		mp_opt->add_addr =3D 0;
- 	}
-@@ -439,7 +440,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- 	mpext->data_fin =3D mp_opt->data_fin;
- =
+- bdccc294628e: "squashed" in "mptcp: new sysctl to control the
+activation per NS"
+- 4a6a27ba8515: "squashed" in "mptcp: add basic kselftest for mptcp"
+- d612190690a9..008467ef92e5: result
 
- 	if (msk)
--		pm_fully_established(msk);
-+		mptcp_pm_fully_established(msk);
- =
+Cheers,
+Matt
 
- }
- =
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>> ---
+>>
+>> Notes:
+>> =C2=A0=C2=A0 To be squashed in "mptcp: new sysctl to control the activat=
+ion per NS"
+>>
+>> =C2=A0=C2=A0 v2:
+>> =C2=A0=C2=A0=C2=A0 - fix typo spotted by Mat ("static int" instead of "s=
+tatic void")
+>>
+>> .topmsg=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 7 +++----
+>> net/mptcp/ctrl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0 7 +++++++
+>> tools/testing/selftests/net/mptcp/mptcp_connect.sh | 14 ++++++++++----
+>> 3 files changed, 20 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/.topmsg b/.topmsg
+>> index 7ff9f3c96ff3..373f94c4b4bd 100644
+>> --- a/.topmsg
+>> +++ b/.topmsg
+>> @@ -5,10 +5,9 @@ New MPTCP sockets will return -ENOPROTOOPT if MPTCP
+>> support is disabled
+>> for the current net namespace.
+>>
+>> For security reasons, it is interesting to have a global switch for
+>> -MPTCP. To start, MPTCP will be disabled by default and only privileged
+>> -users will be able to modify this. The reason is that because MPTCP is
+>> -new, it will not be tested and reviewed by many and security issues can
+>> -then take time to be discovered and fixed.
+>> +MPTCP. The reason is that because MPTCP is new, it will not be tested
+>> +and reviewed by many and security issues can then take time to be
+>> +discovered and fixed.
+> =
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 933dd805c9b2..9fa000c3abdc 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -10,59 +10,60 @@
- =
+> One more thing, I would simply say that we are providing a way to
+> control access to the feature for those that need to turn it on or off
+> for any reason. The point about code review and security is true of any
+> new code :)
+> =
 
- /* path manager command handlers */
- =
+> You are welcome to merge with or without this suggested change.
+> =
 
--int pm_announce_addr(u32 token, sa_family_t family, u8 local_id,
--		     struct in_addr *addr)
-+int mptcp_pm_announce_addr(u32 token, sa_family_t family, u8 local_id,
-+			   struct in_addr *addr)
- {
- 	return -ENOTSUPP;
- }
- =
+> Mat
+> =
 
--int pm_remove_addr(u32 token, u8 local_id)
-+int mptcp_pm_remove_addr(u32 token, u8 local_id)
- {
- 	return -ENOTSUPP;
- }
- =
+> =
 
--int pm_create_subflow(u32 token, u8 remote_id)
-+int mptcp_pm_create_subflow(u32 token, u8 remote_id)
- {
- 	return -ENOTSUPP;
- }
- =
+> =
 
--int pm_remove_subflow(u32 token, u8 remote_id)
-+int mptcp_pm_remove_subflow(u32 token, u8 remote_id)
- {
- 	return -ENOTSUPP;
- }
- =
+>>
+>> The value of this new sysctl can be different per namespace. We can then
+>> restrict the usage of MPTCP to the selected NS. In case of serious
+>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+>> index 8d9f15f02369..33de3ced2ba7 100644
+>> --- a/net/mptcp/ctrl.c
+>> +++ b/net/mptcp/ctrl.c
+>> @@ -43,6 +43,11 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0{}
+>> };
+>>
+>> +static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 pernet->mptcp_enabled =3D 1;
+>> +}
+>> +
+>> static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet
+>> *pernet)
+>> {
+>> =C2=A0=C2=A0=C2=A0=C2=A0struct ctl_table_header *hdr;
+>> @@ -85,6 +90,8 @@ static int __net_init mptcp_net_init(struct net *net)
+>> {
+>> =C2=A0=C2=A0=C2=A0=C2=A0struct mptcp_pernet *pernet =3D mptcp_get_pernet=
+(net);
+>>
+>> +=C2=A0=C2=A0=C2=A0 mptcp_pernet_set_defaults(pernet);
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0return mptcp_pernet_new_table(net, pernet);
+>> }
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>> index d029bdc5946d..7d312bd9ac77 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>> @@ -45,7 +45,6 @@ trap cleanup EXIT
+>> for i in 1 2 3 4;do
+>> =C2=A0=C2=A0=C2=A0=C2=A0ip netns add ns$i || exit $ksft_skip
+>> =C2=A0=C2=A0=C2=A0=C2=A0ip -net ns$i link set lo up
+>> -=C2=A0=C2=A0=C2=A0 ip netns exec ns$i sysctl -q net.mptcp.enabled=3D1
+>> done
+>>
+>> #=C2=A0 ns1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 ns2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ns3=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ns4
+>> @@ -111,7 +110,14 @@ check_mptcp_disabled()
+>> {
+>> =C2=A0=C2=A0=C2=A0=C2=A0disabled_ns=3D"ns_disabled"
+>> =C2=A0=C2=A0=C2=A0=C2=A0ip netns add ${disabled_ns} || exit $ksft_skip
+>> -=C2=A0=C2=A0=C2=A0 # by default: sysctl net.mptcp.enabled=3D0
+>> +
+>> +=C2=A0=C2=A0=C2=A0 # net.mptcp.enabled should be enabled by default
+>> +=C2=A0=C2=A0=C2=A0 if [ "$(ip netns exec ${disabled_ns} sysctl net.mptc=
+p.enabled |
+>> awk '{ print $3 }')" -ne 1 ]; then
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 echo -e "net.mptcp.enabled s=
+ysctl is not 1 by default\t[ FAIL ]"
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=3D1
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 1
+>> +=C2=A0=C2=A0=C2=A0 fi
+>> +=C2=A0=C2=A0=C2=A0 ip netns exec ${disabled_ns} sysctl -q net.mptcp.ena=
+bled=3D0
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0local err=3D0
+>> =C2=A0=C2=A0=C2=A0=C2=A0LANG=3DC ip netns exec ${disabled_ns} ./mptcp_co=
+nnect -t $timeout -p
+>> 10000 -s MPTCP 127.0.0.1 < "$cin" 2>&1 | \
+>> @@ -119,12 +125,12 @@ check_mptcp_disabled()
+>> =C2=A0=C2=A0=C2=A0=C2=A0ip netns delete ${disabled_ns}
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0if [ ${err} -eq 0 ]; then
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 echo -e "MPTCP is not disabl=
+ed by default as expected\t[ FAIL ]"
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 echo -e "New MPTCP socket ca=
+nnot be blocked via sysctl\t[
+>> FAIL ]"
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=3D1
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 1
+>> =C2=A0=C2=A0=C2=A0=C2=A0fi
+>>
+>> -=C2=A0=C2=A0=C2=A0 echo -e "MPTCP is disabled by default as expected\t[=
+ OK ]"
+>> +=C2=A0=C2=A0=C2=A0 echo -e "New MPTCP socket can be blocked via sysctl\=
+t[ OK ]"
+>> =C2=A0=C2=A0=C2=A0=C2=A0return 0
+>> }
+>>
+>> --=C2=A0
+>> 2.20.1
+>>
+>> _______________________________________________
+>> mptcp mailing list
+>> mptcp(a)lists.01.org
+>> https://lists.01.org/mailman/listinfo/mptcp
+>>
+> =
 
- /* path manager event handlers */
- =
+> -- =
 
--void pm_new_connection(struct mptcp_sock *msk, int server_side)
-+void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side)
- {
- 	pr_debug("msk=3D%p", msk);
- =
+> Mat Martineau
+> Intel
 
- 	msk->pm.server_side =3D server_side;
- }
- =
-
--void pm_fully_established(struct mptcp_sock *msk)
-+void mptcp_pm_fully_established(struct mptcp_sock *msk)
- {
- 	pr_debug("msk=3D%p", msk);
- =
-
- 	msk->pm.fully_established =3D 1;
- }
- =
-
--void pm_connection_closed(struct mptcp_sock *msk)
-+void mptcp_pm_connection_closed(struct mptcp_sock *msk)
- {
- 	pr_debug("msk=3D%p", msk);
- }
- =
-
--void pm_subflow_established(struct mptcp_sock *msk, u8 id)
-+void mptcp_pm_subflow_established(struct mptcp_sock *msk, u8 id)
- {
- 	pr_debug("msk=3D%p", msk);
- }
- =
-
--void pm_subflow_closed(struct mptcp_sock *msk, u8 id)
-+void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
- {
- 	pr_debug("msk=3D%p", msk);
- }
- =
-
--void pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr, u8 id)
-+void mptcp_pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr,
-+		       u8 id)
- {
- 	pr_debug("msk=3D%p, addr=3D%x, remote_id=3D%d", msk, addr->s_addr, id);
- =
-
-@@ -72,20 +73,21 @@ void pm_add_addr(struct mptcp_sock *msk, const struct i=
-n_addr *addr, u8 id)
- 	msk->pm.remote_valid =3D 1;
- }
- =
-
--void pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *addr, u8 =
-id)
-+void mptcp_pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *add=
-r,
-+			u8 id)
- {
- 	pr_debug("msk=3D%p", msk);
- }
- =
-
--void pm_rm_addr(struct mptcp_sock *msk, u8 id)
-+void mptcp_pm_rm_addr(struct mptcp_sock *msk, u8 id)
- {
- 	pr_debug("msk=3D%p", msk);
- }
- =
-
- /* path manager helpers */
- =
-
--int pm_addr_signal(struct mptcp_sock *msk, u8 *id,
--		   struct sockaddr_storage *saddr)
-+int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
-+			 struct sockaddr_storage *saddr)
- {
- 	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
- =
-
-@@ -102,8 +104,8 @@ int pm_addr_signal(struct mptcp_sock *msk, u8 *id,
- 	return 0;
- }
- =
-
--int pm_get_local_id(struct request_sock *req, struct sock *sk,
--		    const struct sk_buff *skb)
-+int mptcp_pm_get_local_id(struct request_sock *req, struct sock *sk,
-+			  const struct sk_buff *skb)
- {
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -119,6 +121,6 @@ int pm_get_local_id(struct request_sock *req, struct so=
-ck *sk,
- 	return 0;
- }
- =
-
--void pm_init(void)
-+void mptcp_pm_init(void)
- {
- }
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 754172af8748..b03b88c5a75a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -653,7 +653,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
-lags, int *err,
- 		mptcp_token_update_accept(new_sock->sk, new_mptcp_sock);
- 		msk->subflow =3D NULL;
- =
-
--		pm_new_connection(msk, 1);
-+		mptcp_pm_new_connection(msk, 1);
- =
-
- 		mptcp_crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
- 		msk->write_seq =3D subflow->idsn + 1;
-@@ -786,7 +786,7 @@ void mptcp_finish_connect(struct sock *sk, int mp_capab=
-le)
- 		msk->token =3D subflow->token;
- 		pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
- =
-
--		pm_new_connection(msk, 0);
-+		mptcp_pm_new_connection(msk, 0);
- =
-
- 		mptcp_crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
- 		msk->write_seq =3D subflow->idsn + 1;
-@@ -1014,7 +1014,7 @@ void __init mptcp_init(void)
- 	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
- =
-
- 	mptcp_subflow_init();
--	pm_init();
-+	mptcp_pm_init();
- =
-
- 	if (proto_register(&mptcp_prot, 1) !=3D 0)
- 		panic("Failed to register MPTCP proto.\n");
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 32fc273eb60d..b3f2e2382a93 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -199,19 +199,21 @@ static inline void mptcp_crypto_key_gen_sha1(u64 *key=
-, u32 *token, u64 *idsn)
- void mptcp_crypto_hmac_sha1(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
- 			    u32 *hash_out);
- =
-
--void pm_init(void);
--void pm_new_connection(struct mptcp_sock *msk, int server_side);
--void pm_fully_established(struct mptcp_sock *msk);
--void pm_connection_closed(struct mptcp_sock *msk);
--void pm_subflow_established(struct mptcp_sock *msk, u8 id);
--void pm_subflow_closed(struct mptcp_sock *msk, u8 id);
--void pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr, u8 id=
-);
--void pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *addr, u8 =
-id);
--void pm_rm_addr(struct mptcp_sock *msk, u8 id);
--int pm_addr_signal(struct mptcp_sock *msk, u8 *id,
--		   struct sockaddr_storage *saddr);
--int pm_get_local_id(struct request_sock *req, struct sock *sk,
--		    const struct sk_buff *skb);
-+void mptcp_pm_init(void);
-+void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side);
-+void mptcp_pm_fully_established(struct mptcp_sock *msk);
-+void mptcp_pm_connection_closed(struct mptcp_sock *msk);
-+void mptcp_pm_subflow_established(struct mptcp_sock *msk, u8 id);
-+void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
-+void mptcp_pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr,
-+		       u8 id);
-+void mptcp_pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *add=
-r,
-+			u8 id);
-+void mptcp_pm_rm_addr(struct mptcp_sock *msk, u8 id);
-+int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
-+			 struct sockaddr_storage *saddr);
-+int mptcp_pm_get_local_id(struct request_sock *req, struct sock *sk,
-+			  const struct sk_buff *skb);
- =
-
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
- {
 -- =
 
-2.20.1
-
---===============2062210687822199571==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============2248630114210688530==--
