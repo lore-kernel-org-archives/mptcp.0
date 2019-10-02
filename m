@@ -1,31 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============3765515211733761654=="
+Content-Type: multipart/mixed; boundary="===============2283429238501678121=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/3] mptcp: removed unused fields in structure:
- tcp.h
-Date: Wed, 02 Oct 2019 19:23:54 +0200
-Message-ID: <689b2ec6-5dc0-4add-4f16-677ce9ab1e78@tessares.net>
-In-Reply-To: 20191002164032.11111-3-matthieu.baerts@tessares.net
+Subject: [MPTCP] Weekly meeting - 3 October 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 02 Oct 2019 19:25:01 +0200
+Message-ID: <e07caa0b-e6cb-dbae-4b00-ba9c8f374cb6@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 1994
+X-UID: 1995
 
---===============3765515211733761654==
+--===============2283429238501678121==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 02/10/2019 18:40, Matthieu Baerts wrote:
-> checksum feature is no longer (partly) supported, we can remove them as
-> well.
+Hello everybody!
 
-- 208981409983: "squashed" in "mptcp: Implement MPTCP receive path"
-- dad5142360e2: conflict in t/mptcp-Add-path-manager-interface
-- a5e7eb36f8f9..e6c9cd5834d5: result
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-Cheers,
-Matt
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20191003
+
+Feel free to add/modify topics!
+
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
+
+Speak to you tomorrow!
+Matthieu
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -33,4 +36,5 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3765515211733761654==--
+
+--===============2283429238501678121==--
