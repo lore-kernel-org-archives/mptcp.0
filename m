@@ -1,109 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============9131153442988663950=="
+Content-Type: multipart/mixed; boundary="===============2708753533144529878=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH v2] mptcp: Remove all traces of checksum support
-Date: Wed, 02 Oct 2019 09:50:19 -0700
-Message-ID: <5c7f326bfbbf92b2212963a8f04087086a5c6f4e.camel@linux.intel.com>
-In-Reply-To: 47140e5b-8b50-115a-51d8-292c2ef68130@tessares.net
+Date: Wed, 02 Oct 2019 09:51:24 -0700
+Message-ID: <325df870ab39050f1673894d610d952c121ecaa3.camel@linux.intel.com>
+In-Reply-To: c1ea0ccb-aa7f-24de-8903-be2f6218300d@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 1987
+X-UID: 1988
 
---===============9131153442988663950==
+--===============2708753533144529878==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-10-02 at 17:39 +0200, Matthieu Baerts wrote:
-> Hi Peter, Paolo, Mat,
+On Wed, 2019-10-02 at 11:33 +0200, Matthieu Baerts wrote:
+> Hi Peter,
 > =
 
-> On 26/09/2019 01:44, Peter Krystad wrote:
-> > Since checksum support is not planned remove any references
-> > that look it may be supported.
+> On 01/10/2019 14:14, Matthieu Baerts wrote:
+> > Hi Paolo, Peter,
 > > =
 
-> > Also re-factor DSS option size calculation and make
-> > DSS option size check for exactly correct lengths.
+> > On 30/09/2019 16:08, Paolo Abeni wrote:
+> > > Hi,
+> > > =
+
+> > > On Wed, 2019-09-25 at 16:44 -0700, Peter Krystad wrote:
+> > > > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > > > index f1f5ab3990ab..400fbb0060f3 100644
+> > > > --- a/net/mptcp/protocol.h
+> > > > +++ b/net/mptcp/protocol.h
+> > > > @@ -173,7 +173,7 @@ struct subflow_request_sock {
+> > > >  	struct	tcp_request_sock sk;
+> > > >  	u8	mp_capable : 1,
+> > > >  		mp_join : 1,
+> > > > -		checksum : 1,
+> > > > +		unused : 1,
+> > > >  		backup : 1,
+> > > >  		version : 4;
+> > > >  	u8	local_id;
+> > > =
+
+> > > Sorry I did not notice this beforehand. It looks a little strange to =
+me
+> > > creating a new struct with some 'unused' field. But I think is not
+> > > blocking: we can merge the patch as-is and ev. drop the field later -
+> > > if there is agreement on that.
 > > =
 
-> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> > I agree that it is certainly better to remove it in this context.
 > =
 
-> Thank you for this patch and the reviews!
-> =
+> I hope you don't mind if I remove this "unused" field when applying your
+> patch. I had to apply this bit manually anyway and I guess if we need an
+> "unused" field, it would be better at the end.
 
-> - a03d15e6a899: "squashed" in "mptcp: Associate MPTCP context with TCP
-> socket"
-> - 5120702d34e9: conflict in
-> t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections
-> - fa25b3cfa037: build-fix in "mptcp: Create SUBFLOW socket for incoming
-> connections"
-> - 7704ceb50e99: "squashed" in "mptcp: Create SUBFLOW socket for incoming
-> connections" (note: I removed the "unused" field)
-> - 4f11988a5b9e: "squashed" in "mptcp: Write MPTCP DSS headers to
-> outgoing data packets"
-> - 5b8a09821448: conflict in t/mptcp-Implement-MPTCP-receive-path
-> - 4e656f41fa2e: "squashed" (part 2) in "mptcp: Write MPTCP DSS headers
-> to outgoing data packets"
-> - c1090854bf0c: conflict in t/mptcp-Implement-MPTCP-receive-path
-> - d50aa0ccca60: "squashed" in "mptcp: Implement MPTCP receive path"
-> - 8dc529a9be69: conflict in
-> t/mptcp-allow-collapsing-consecutive-sendpages-on-the-same-substream
-> - c94ba96b727c: "squashed" in "mptcp: Add ADD_ADDR handling"
-> - 5261fb90316d: conflict in t/mptcp-Add-handling-of-incoming-MP_JOIN-requ=
-est
-> - ca58392a1268: conflict in
-> t/mptcp-harmonize-locking-on-all-socket-operations
-> - 868fc953e348: conflict in
-> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-> - 3d566a4b1ebc..6e3f43237e22: result
-> =
-
-> Tests are still OK!
-> =
-
-> Note: I still see some refs to "checksum" fields in include/net/mptcp.h
-> and include/linux/tcp.h. I will do a follow-up patch for that :)
-> =
-
-> Also, I have one comment below:
-> =
-
-> > ---
-> >  net/mptcp/options.c  | 70 +++++++++++++++++---------------------------
-> >  net/mptcp/pm.c       |  1 -
-> >  net/mptcp/protocol.c | 13 ++++----
-> >  net/mptcp/protocol.h |  4 +--
-> >  net/mptcp/subflow.c  |  5 ----
-> >  5 files changed, 33 insertions(+), 60 deletions(-)
-> > =
-
-> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> > index b02e3c0253f5..2e0b6650be63 100644
-> > --- a/net/mptcp/pm.c
-> > +++ b/net/mptcp/pm.c
-> > @@ -74,7 +74,6 @@ int pm_create_subflow(u32 token, u8 remote_id, sa_fam=
-ily_t family,
-> >  	if (family =3D=3D AF_INET)
-> >  		local.sin_addr.s_addr =3D addr->s_addr;
-> >  	else
-> > -		local.sin_addr.s_addr =3D INADDR_ANY;
-> >  		local.sin_addr.s_addr =3D htonl(INADDR_ANY);
-> >  =
-
-> >  	remote.sin_family =3D msk->pm.remote_family;
-> =
-
-> I guess this part was not supposed to be here, right?
-
-Right.
+No problem.
 
 Peter.
+
+> I can of course still change that again later if needed!
 > =
 
 > Cheers,
 > Matt
 
---===============9131153442988663950==--
+--===============2708753533144529878==--
