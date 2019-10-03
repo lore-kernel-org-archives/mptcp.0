@@ -1,72 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============0850576256095668938=="
+Content-Type: multipart/mixed; boundary="===============9171939476443529473=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: RFCv2 for netdev: what's missing?
-Date: Wed, 02 Oct 2019 17:39:10 -0700
-Message-ID: <alpine.OSX.2.21.1910021737190.33041@syitbare-mobl.amr.corp.intel.com>
-In-Reply-To: alpine.OSX.2.21.1910021653250.33041@syitbare-mobl.amr.corp.intel.com
+Date: Thu, 03 Oct 2019 09:46:27 +0200
+Message-ID: <20191003074627.GD13866@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.21.1910021737190.33041@syitbare-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2006
+X-UID: 2007
 
---===============0850576256095668938==
+--===============9171939476443529473==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> > Regenerating those and resending. Sorry!
+> > =
 
-On Wed, 2 Oct 2019, Mat Martineau wrote:
+> =
 
-> On Wed, 2 Oct 2019, Mat Martineau wrote:
->
->> =
+> Based on Dave's feedback, it looked like a bad idea to repost the correct=
+ 43
+> patches today.
 
->> On Wed, 2 Oct 2019, Matthieu Baerts wrote:
->> =
+Yes, I agree it was good to not send it.
 
->>> On my side, I think our last "export" branch is ready: all the patches
->>> we previously mentioned are merged, it is rebased on latest net-next,
->>> tests are all good. I think it is ready to be sent! I just tagged
->>> netdev-rfcv2 but feel free to modify it if it is not OK :)
->>> =
+> Sorry again about the error on my part, we can discuss how to
+> partition the patch series (and possibly squash some more patches) at the
+> meeting tomorrow.
 
->>> With a bit of luck, if you have time to send it and if nothing is
->>> missing, we might have the first feedbacks before the meeting tomorrow!
->>> Or yeah, more likely for the week after. But we never know :)
->> =
+Unfortunately I won't make the meeting today.
 
->> =
+I would suggest to make another RFC submission on Friday or Monday,
+consisting only of the non-mptcp patches, i.e.:
 
->> I just sent the 45 (!) patch series to netdev. Thanks for all of your wo=
-rk =
+      net: Make sock protocol value checks more specific
+      sock: Make sk_protocol a 16-bit value
+      tcp: Define IPPROTO_MPTCP
+      tcp, ulp: Add clone operation to tcp_ulp_ops
+      tcp: Prevent coalesce/collapse when skb has MPTCP extensions
+      tcp: Export low-level TCP functions
+      tcp: Check for filled TCP option space before SACK
+      tcp: clean ext on tx recycle
+      tcp: Expose tcp struct and routine for MPTCP
 
->> to prepare the branch, Matthieu.
->> =
 
->> I will also push the branch to my git.kernel.org repo to trigger a =
+Wrt to =
 
->> LKP/0-day automated build.
->> =
+      tcp: clean ext on tx recycle
 
->
-> ...and I just figured out that I generated the .patch files from the wron=
-g =
+I think this is in fact a bug fix, I think this should
+call both skb_ext_reset+nf_reset_ct.
 
-> commits :(
->
-> Regenerating those and resending. Sorry!
->
+(I am not 100% sure the nf_ct pointer is always cleared already
+ on skbs that we put back on per sk cache).
 
-Based on Dave's feedback, it looked like a bad idea to repost the correct =
+Same for secpath.
 
-43 patches today. Sorry again about the error on my part, we can discuss =
-
-how to partition the patch series (and possibly squash some more patches) =
-
-at the meeting tomorrow.
-
---
-Mat Martineau
-Intel
---===============0850576256095668938==--
+Cheers,
+Florian
+--===============9171939476443529473==--
