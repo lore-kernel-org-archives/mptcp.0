@@ -1,53 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============1993827902235846904=="
+Content-Type: multipart/mixed; boundary="===============8482255400174138357=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp] options: copy entire extension area to option
- struct
-Date: Fri, 04 Oct 2019 13:21:24 +0200
-Message-ID: <20191004112124.20726-1-fw@strlen.de>
+Subject: [MPTCP] Re: RFCv2 for netdev: what's missing?
+Date: Fri, 04 Oct 2019 13:25:34 +0200
+Message-ID: <4d1890a8-fd21-f9a1-f4e8-0ee9234831ed@tessares.net>
+In-Reply-To: 20191003192158.GE13866@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2014
+X-UID: 2015
 
---===============1993827902235846904==
+--===============8482255400174138357==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-No reason to copy each member individually, just copy everything.
-This means we will also copy ext->data_fin which was not done before.
+Hi Florian,
 
-squashto: "mptcp: Write MPTCP DSS headers to outgoing data packets"
+On 03/10/2019 21:21, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+>> I think that:
+>>
+>>        tcp: clean ext on tx recycle
+>>
+>> does have some minimal mptcp dependencies that can't be removed without
+>> making such patch a no-op, so perhaps we should also include some very
+>> minimal MPTCP stub definitions:
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/options.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+> Why?  It doesn't have any MPTCP dep.  Just zap all the extension space
+> and netfilter conntrack entry.
+> =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index a33c202db009..d00e86550d8b 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -402,13 +402,8 @@ static bool mptcp_established_options_dss(struct sock =
-*sk, struct sk_buff *skb,
- 		if (map_size <=3D remaining) {
- 			remaining -=3D map_size;
- 			dss_size =3D map_size;
--			if (mpext) {
--				opts->ext_copy.data_seq =3D mpext->data_seq;
--				opts->ext_copy.subflow_seq =3D mpext->subflow_seq;
--				opts->ext_copy.data_len =3D mpext->data_len;
--				opts->ext_copy.use_map =3D 1;
--				opts->ext_copy.dsn64 =3D mpext->dsn64;
--			}
-+			if (mpext)
-+				opts->ext_copy =3D *mpext;
- 		} else {
- 			opts->ext_copy.use_map =3D 0;
- 			WARN_ONCE(1, "MPTCP: Map dropped");
+> AFAICS things might already go wrong in case we get recycle skb that
+> has an ipsec secpath assigned, or am I missing something?
+> =
+
+> And unless there is something in place that removes skb->nfct before
+> the skb is placed on the socket cache, rmmod nf_conntrack can block
+> forever as such queued skb holds a reference on conntrack struct.
+> =
+
+>> I *think* we can also do a bolder step and send this next iteration as
+>> _NOT_ RFC, aiming at inclusion. My [mis]understanding is that we
+>> should post later chunks after the first one is merged, easily.
+> =
+
+> Hmm, we can try but I am not sure upstream would accept exposure of
+> some tcp core functions without a in-tree user.
+
+We discussed a bit about these two topics at yesterday's meeting. May
+you have a look at the minutes I sent this morning please? I guess the
+list we established yesterday can be reduced, right?
+
+Cheers,
+Matt
 -- =
 
-2.21.0
-
---===============1993827902235846904==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8482255400174138357==--
