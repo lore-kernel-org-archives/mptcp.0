@@ -1,89 +1,196 @@
-Content-Type: multipart/mixed; boundary="===============1274059954361476866=="
+Content-Type: multipart/mixed; boundary="===============7143384249188470778=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 3rd of October 2019
-Date: Sat, 05 Oct 2019 11:28:55 +0200
-Message-ID: <20191005092855.GJ13866@breakpoint.cc>
-In-Reply-To: 7ebb42f3-b7cc-eca3-ba0f-9469a5ad63e0@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp:diag: prefix exposed items
+Date: Sat, 05 Oct 2019 10:41:52 +0200
+Message-ID: <0ce440cb-e5eb-2a1d-1590-8907f8a92844@tessares.net>
+In-Reply-To: 2c9a6fc9af5a110fec21d20aaf4e7b35a6f3edb6.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2021
+X-UID: 2022
 
---===============1274059954361476866==
+--===============7143384249188470778==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> So the idea would be still to send the list we wrote above but as an
-> RFC. In the cover-letter, we would say that we would like to know:
-> - if there are any objections on the changes made in the TCP core.
-> - the goal is to send this patch-set as a non RFC one when we are ready
-> with our initial patch-set that we called "part 2".
+Hi Davide,
+
+Thank you for this message!
+
+On 04/10/2019 19:02, Davide Caratti wrote:
+> On Thu, 2019-10-03 at 11:41 +0200, Matthieu Baerts wrote:
+>> Hi Davide,
+>>
+>> Thank you for your review!
+>>
+>> On 03/10/2019 10:56, Davide Caratti wrote:
+>>> On Wed, 2019-10-02 at 21:08 +0200, Matthieu Baerts wrote:
+>>>> To conform with the rest.
+>>>>
+>>>> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>>>
+>>> yes, this makes sense. Minor nits below:
+>>>
+>>>> ---
+>>>>  include/uapi/linux/mptcp.h | 18 +++++++++---------
+>>>>  net/mptcp/diag.c           | 22 +++++++++++-----------
+>>>>  net/mptcp/protocol.h       |  4 ++--
+>>>>  net/mptcp/subflow.c        |  4 ++--
+>>>>  4 files changed, 24 insertions(+), 24 deletions(-)
+>>>>
+>>>> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+>>>> index 2856b89cc36e..04bd134c1807 100644
+>>>> --- a/include/uapi/linux/mptcp.h
+>>>> +++ b/include/uapi/linux/mptcp.h
+>>>> @@ -4,15 +4,15 @@
 > =
 
-> Is this correct?
-
-Yes.
-
-> >> Second part of the "initial" submission:
-> >>     - Squash "mptcp: Make MPTCP socket block/wakeup ignore
-> >> sk_receive_queue" earlier in the series? (Question by Mat)
-> > =
-
-> > Makes sense to me to squash it.
+> [...]
 > =
 
-> Great, I can do that when Mat sends the confirmation where I can squash i=
-t.
-
-Thanks!
-
-> >> Another idea of squash:
-> >>     - the ones related to sendmsg():
-> >>         - mptcp: use sk_page_frag() in sendmsg
-> >>         - mptcp: sendmsg() do spool all the provided data
-> >>         - mptcp: allow collapsing consecutive sendpages on the same
-> >> substream
-> >>
-> >>     - they modified incrementally the code made by the previous one
-> >>     - It might be easier for the reviewers to have everything in one
-> >>     - Maybe we can rework them in 1, 2 patches: one introducing helpers
-> >>     - Paolo can look at that (in the near future)
-> > =
-
-> > Seems like a good idea as well -- one with helpers, one using them.
-
-I discussed squashing the sendmsg refactor ("spool all the data" and so on)
-with Paolo yesterday and will have a stab at this.
-
-No need to stop working on the export branch/freeze things for now.
-
-> >> Remaining items for the initial submission:
-> >>     - IPv6 support:
-> >>         - Peter is working on it
-> > =
-
-> > One thing that we could try is to have initial submission (if set is too
-> > large) not support ipv6, instead creating and ipv6 mptcp socket just
-> > creates a tcp socket internally.
-> > =
-
-> > Userspace doesn't notice because its just the same as if we would
-> > do full mptcp but all peers (initiators and responders) are not mp_capa=
-ble.
-> > =
-
-> > We could then add mp_capable to ipv6 in a followup set.
+>>>> +#define MPTCP_SUBFLOW_FLAGS_4THACK	BIT(6)
+>>>> +#define MPTCP_SUBFLOW_FLAGS_CONNECTED	BIT(7)
+>>>> +#define MPTCP_SUBFLOW_FLAGS_MAPVALID	BIT(8)
+>>>
+>>> but then names may become too long and might hurt eyes that read misc/s=
+s.c
+>>> . Maybe the word 'FLAG' is pleonastic, since we are talking about BIT(x)
+>>> of a netlink attribute whose name is MPTCP_SUBFLOW_FLAGS.
+>>>
+>>> What about MPTCP_SUBFLOW_F_<...> ?
+>>
+>> I can understand that names can be too long. For me, that's fine, at
+>> least it is clear :-)
 > =
 
-> That's a good alternative. I don't know if upstream would accept that :)
->
-> If the follow-up patch-set comes soon after, I guess that's fine. It
-> depends from who we want to have some feedback from.
+> uAPI bits are going to stay forever, so it's worth finding a good
+> compromise.
 
-Well, davem can't have it both ways :-)
-And yes, I assumed that ipv6 support would be ready at this time, and
-was only omitted to keep size of the batch down.
---===============1274059954361476866==--
+That's true!
+
+>> Regarding "FLAG", as you said it is useless here, we can clearly see it
+>> is a flag with BIT(x). But I think it makes sense to have it where we
+>> will use it. I guess we can at least remove the S from "_FLAGS_" :)
+>> But "_F_" is maybe not clear enough. People might think it is a variable
+>> just for Florian :-/
+> =
+
+> now I understand what that 'fw' means in net/sched/cls_fw.c :)
+
+:)
+
+>> Another idea could be to use "_SF_" instead of subflow. But still, I
+>> think the best is to have something clear for everybody and only remove
+>> the useless "S". But I am happy to short them more if it is needed!
+> =
+
+> just did a friday experiment with uAPI #defines:
+> =
+
+> $ while read -r a b _; do c=3D`echo $b | wc -c`; echo $c; done >data.txt =
+<<-EOF
+> `grep -r '#define' include/uapi/linux/*`
+> EOF
+> =
+
+> roughly 95% of the values of $c are below 29 characters, which is the
+> length of MPTCP_SUBFLOW_FLAGS_CONNECTED. So, if we remove the useless 'S',
+> we can safely say that MPTCP is not a statistic anomaly.
+> =
+
+> then, I'm ok with MPTCP_SUBFLOW_FLAG_<xxx>.
+
+Thank you for having check that! Going to fix that in a v2 then!
+
+>>> [...]
+>>>
+>>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>>>> index 25f62679903e..452e873dc722 100644
+>>>> --- a/net/mptcp/protocol.h
+>>>> +++ b/net/mptcp/protocol.h
+>>>> @@ -313,7 +313,7 @@ static inline bool before64(__u64 seq1, __u64 seq2)
+>>>>  =
+
+>>>>  #define after64(seq2, seq1)	before64(seq1, seq2)
+>>>>  =
+
+>>>> -size_t subflow_get_info_size(const struct sock *sk);
+>>>> -int subflow_get_info(const struct sock *sk, struct sk_buff *skb);
+>>>> +size_t mptcp_diag_subflow_get_info_size(const struct sock *sk);
+>>>> +int mptcp_diag_subflow_get_info(const struct sock *sk, struct sk_buff=
+ *skb);
+>>>>  =
+
+>>>>  #endif /* __MPTCP_PROTOCOL_H */
+>>>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>>>> index 0f4a2a19d246..99cbb8351584 100644
+>>>> --- a/net/mptcp/subflow.c
+>>>> +++ b/net/mptcp/subflow.c
+>>>> @@ -492,8 +492,8 @@ static struct tcp_ulp_ops subflow_ulp_ops __read_m=
+ostly =3D {
+>>>>  	.init		=3D subflow_ulp_init,
+>>>>  	.release	=3D subflow_ulp_release,
+>>>>  	.clone		=3D subflow_ulp_clone,
+>>>> -	.get_info	=3D subflow_get_info,
+>>>> -	.get_info_size	=3D subflow_get_info_size,
+>>>> +	.get_info	=3D mptcp_diag_subflow_get_info,
+>>>> +	.get_info_size	=3D mptcp_diag_subflow_get_info_size,
+>>>>  };
+>>>
+>>> and here we can shorten the name of these two functions, getting rid of =
+
+>>> _get, since it's implicit for sock_diags.
+>>>
+>>> WDYT?
+>>
+>> I think longer is better. I mean here in this context of course!!
+>> At least it is clear it is designed to be used with "get_info" and
+>> "get_info_size" callbacks. It could also make sense to call them
+>> "mptcp_diag_subflow_ulp_get_info" and
+>> "mptcp_diag_subflow_ulp_get_info_size". We have room for that here ;-)
+> =
+
+> nevertheless, other members of subflow_ulp_ops don't have any mptcp prefix
+> (and don't need that, because they are declared static). =
+
+> =
+
+> Speaking of this, I exported these 2 functions in protocol.h, but maybe we
+> don't need this. Nobody is going to call them, unless he/she does indirect
+> call through subflow_ops. Then (thanks @Paolo for the suggestion) the two
+> functions can be made static in diag.c, and a single function like
+> =
+
+> void mtcp_diag_subflow_init(truct tcp_ulp_ops * ops);
+> =
+
+> that does:
+> =
+
+> void mtcp_diag_subflow_init(truct tcp_ulp_ops * ops)
+> {
+> 	ops->get_info =3D subflow_get_info;
+> 	ops->get_info_size =3D subflow_get_info_size;
+> }
+> =
+
+> can be exported from diag,c, and called in mptcp_subflow_init(), before
+> registering the ULP.
+> =
+
+> how does that sound?
+
+That sounds very good, thank you both for the suggestion!
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7143384249188470778==--
