@@ -1,70 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============3514781417713824984=="
+Content-Type: multipart/mixed; boundary="===============3228569530231706110=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp] options: copy entire extension area to
- option struct
-Date: Fri, 04 Oct 2019 15:46:36 -0700
-Message-ID: <alpine.OSX.2.21.1910041545330.58686@syitbare-mobl.amr.corp.intel.com>
-In-Reply-To: 20191004112124.20726-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH] mptcp:diag: prefix exposed items
+Date: Sat, 05 Oct 2019 10:46:07 +0200
+Message-ID: <e1500d58-80c2-891c-20c0-c8bb9b677302@tessares.net>
+In-Reply-To: 20191004173529.GI13866@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2019
+X-UID: 2020
 
---===============3514781417713824984==
+--===============3228569530231706110==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Florian,
 
-On Fri, 4 Oct 2019, Florian Westphal wrote:
+On 04/10/2019 19:35, Florian Westphal wrote:
+> Davide Caratti <dcaratti(a)redhat.com> wrote:
+>>>>> +#define MPTCP_SUBFLOW_FLAGS_4THACK	BIT(6)
+>>>>> +#define MPTCP_SUBFLOW_FLAGS_CONNECTED	BIT(7)
+>>>>> +#define MPTCP_SUBFLOW_FLAGS_MAPVALID	BIT(8)
+>>>>
+>>>> but then names may become too long and might hurt eyes that read misc/=
+ss.c
+>>>> . Maybe the word 'FLAG' is pleonastic, since we are talking about BIT(=
+x)
+>>>> of a netlink attribute whose name is MPTCP_SUBFLOW_FLAGS.
+>>>>
+>>>> What about MPTCP_SUBFLOW_F_<...> ?
+>>>
+>>> I can understand that names can be too long. For me, that's fine, at
+>>> least it is clear :-)
+>>
+>>> Another idea could be to use "_SF_" instead of subflow. But still, I
+>>> think the best is to have something clear for everybody and only remove
+>>> the useless "S". But I am happy to short them more if it is needed!
+>>
+>> just did a friday experiment with uAPI #defines:
+>>
+>> $ while read -r a b _; do c=3D`echo $b | wc -c`; echo $c; done >data.txt=
+ <<-EOF
+>> `grep -r '#define' include/uapi/linux/*`
+>> EOF
+>>
+>> roughly 95% of the values of $c are below 29 characters, which is the
+>> length of MPTCP_SUBFLOW_FLAGS_CONNECTED. So, if we remove the useless 'S=
+',
+>> we can safely say that MPTCP is not a statistic anomaly.
+>>
+>> then, I'm ok with MPTCP_SUBFLOW_FLAG_<xxx>.
+> =
 
-> No reason to copy each member individually, just copy everything.
-> This means we will also copy ext->data_fin which was not done before.
+> I'm fine with that as well.  Another alternative is to drop the _FLAG
+> and append _BIT, i.e.  MPTCP_SUBFLOW_CONNECTED_BIT, and so on.
 
-Looks good to me. I think the missing data_fin copy was a bug.
+Good idea!
+I just checked what is usually used and it seems _FLAG is more common:
 
-Mat
+$ git grep "^#define" include/uapi/linux/ | grep "_BIT" | grep -v BITRATE -c
+147
+$ git grep "^#define" include/uapi/linux/ | grep -c _FLAG
+543
 
+But I am happy to change if we prefer _BIT.
 
->
-> squashto: "mptcp: Write MPTCP DSS headers to outgoing data packets"
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> net/mptcp/options.c | 9 ++-------
-> 1 file changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index a33c202db009..d00e86550d8b 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -402,13 +402,8 @@ static bool mptcp_established_options_dss(struct soc=
-k *sk, struct sk_buff *skb,
-> 		if (map_size <=3D remaining) {
-> 			remaining -=3D map_size;
-> 			dss_size =3D map_size;
-> -			if (mpext) {
-> -				opts->ext_copy.data_seq =3D mpext->data_seq;
-> -				opts->ext_copy.subflow_seq =3D mpext->subflow_seq;
-> -				opts->ext_copy.data_len =3D mpext->data_len;
-> -				opts->ext_copy.use_map =3D 1;
-> -				opts->ext_copy.dsn64 =3D mpext->dsn64;
-> -			}
-> +			if (mpext)
-> +				opts->ext_copy =3D *mpext;
-> 		} else {
-> 			opts->ext_copy.use_map =3D 0;
-> 			WARN_ONCE(1, "MPTCP: Map dropped");
-> -- =
+>> void mtcp_diag_subflow_init(truct tcp_ulp_ops * ops);
+>>
+>> that does:
+>>
+>> void mtcp_diag_subflow_init(truct tcp_ulp_ops * ops)
+>> {
+>> 	ops->get_info =3D subflow_get_info;
+>> 	ops->get_info_size =3D subflow_get_info_size;
+>> }
+>>
+>> can be exported from diag,c, and called in mptcp_subflow_init(), before
+>> registering the ULP.
+>>
+>> how does that sound?
+> =
 
-> 2.21.0
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
+> Sounds good to me, thanks.
 
---
-Mat Martineau
-Intel
---===============3514781417713824984==--
+Thank you, that will be part of the v2 then!
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3228569530231706110==--
