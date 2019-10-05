@@ -1,98 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============3228569530231706110=="
+Content-Type: multipart/mixed; boundary="===============1274059954361476866=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp:diag: prefix exposed items
-Date: Sat, 05 Oct 2019 10:46:07 +0200
-Message-ID: <e1500d58-80c2-891c-20c0-c8bb9b677302@tessares.net>
-In-Reply-To: 20191004173529.GI13866@breakpoint.cc
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 3rd of October 2019
+Date: Sat, 05 Oct 2019 11:28:55 +0200
+Message-ID: <20191005092855.GJ13866@breakpoint.cc>
+In-Reply-To: 7ebb42f3-b7cc-eca3-ba0f-9469a5ad63e0@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2020
+X-UID: 2021
 
---===============3228569530231706110==
+--===============1274059954361476866==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
-
-On 04/10/2019 19:35, Florian Westphal wrote:
-> Davide Caratti <dcaratti(a)redhat.com> wrote:
->>>>> +#define MPTCP_SUBFLOW_FLAGS_4THACK	BIT(6)
->>>>> +#define MPTCP_SUBFLOW_FLAGS_CONNECTED	BIT(7)
->>>>> +#define MPTCP_SUBFLOW_FLAGS_MAPVALID	BIT(8)
->>>>
->>>> but then names may become too long and might hurt eyes that read misc/=
-ss.c
->>>> . Maybe the word 'FLAG' is pleonastic, since we are talking about BIT(=
-x)
->>>> of a netlink attribute whose name is MPTCP_SUBFLOW_FLAGS.
->>>>
->>>> What about MPTCP_SUBFLOW_F_<...> ?
->>>
->>> I can understand that names can be too long. For me, that's fine, at
->>> least it is clear :-)
->>
->>> Another idea could be to use "_SF_" instead of subflow. But still, I
->>> think the best is to have something clear for everybody and only remove
->>> the useless "S". But I am happy to short them more if it is needed!
->>
->> just did a friday experiment with uAPI #defines:
->>
->> $ while read -r a b _; do c=3D`echo $b | wc -c`; echo $c; done >data.txt=
- <<-EOF
->> `grep -r '#define' include/uapi/linux/*`
->> EOF
->>
->> roughly 95% of the values of $c are below 29 characters, which is the
->> length of MPTCP_SUBFLOW_FLAGS_CONNECTED. So, if we remove the useless 'S=
-',
->> we can safely say that MPTCP is not a statistic anomaly.
->>
->> then, I'm ok with MPTCP_SUBFLOW_FLAG_<xxx>.
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+> So the idea would be still to send the list we wrote above but as an
+> RFC. In the cover-letter, we would say that we would like to know:
+> - if there are any objections on the changes made in the TCP core.
+> - the goal is to send this patch-set as a non RFC one when we are ready
+> with our initial patch-set that we called "part 2".
 > =
 
-> I'm fine with that as well.  Another alternative is to drop the _FLAG
-> and append _BIT, i.e.  MPTCP_SUBFLOW_CONNECTED_BIT, and so on.
+> Is this correct?
 
-Good idea!
-I just checked what is usually used and it seems _FLAG is more common:
+Yes.
 
-$ git grep "^#define" include/uapi/linux/ | grep "_BIT" | grep -v BITRATE -c
-147
-$ git grep "^#define" include/uapi/linux/ | grep -c _FLAG
-543
+> >> Second part of the "initial" submission:
+> >>     - Squash "mptcp: Make MPTCP socket block/wakeup ignore
+> >> sk_receive_queue" earlier in the series? (Question by Mat)
+> > =
 
-But I am happy to change if we prefer _BIT.
-
->> void mtcp_diag_subflow_init(truct tcp_ulp_ops * ops);
->>
->> that does:
->>
->> void mtcp_diag_subflow_init(truct tcp_ulp_ops * ops)
->> {
->> 	ops->get_info =3D subflow_get_info;
->> 	ops->get_info_size =3D subflow_get_info_size;
->> }
->>
->> can be exported from diag,c, and called in mptcp_subflow_init(), before
->> registering the ULP.
->>
->> how does that sound?
+> > Makes sense to me to squash it.
 > =
 
-> Sounds good to me, thanks.
+> Great, I can do that when Mat sends the confirmation where I can squash i=
+t.
 
-Thank you, that will be part of the v2 then!
+Thanks!
 
-Cheers,
-Matt
--- =
+> >> Another idea of squash:
+> >>     - the ones related to sendmsg():
+> >>         - mptcp: use sk_page_frag() in sendmsg
+> >>         - mptcp: sendmsg() do spool all the provided data
+> >>         - mptcp: allow collapsing consecutive sendpages on the same
+> >> substream
+> >>
+> >>     - they modified incrementally the code made by the previous one
+> >>     - It might be easier for the reviewers to have everything in one
+> >>     - Maybe we can rework them in 1, 2 patches: one introducing helpers
+> >>     - Paolo can look at that (in the near future)
+> > =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3228569530231706110==--
+> > Seems like a good idea as well -- one with helpers, one using them.
+
+I discussed squashing the sendmsg refactor ("spool all the data" and so on)
+with Paolo yesterday and will have a stab at this.
+
+No need to stop working on the export branch/freeze things for now.
+
+> >> Remaining items for the initial submission:
+> >>     - IPv6 support:
+> >>         - Peter is working on it
+> > =
+
+> > One thing that we could try is to have initial submission (if set is too
+> > large) not support ipv6, instead creating and ipv6 mptcp socket just
+> > creates a tcp socket internally.
+> > =
+
+> > Userspace doesn't notice because its just the same as if we would
+> > do full mptcp but all peers (initiators and responders) are not mp_capa=
+ble.
+> > =
+
+> > We could then add mp_capable to ipv6 in a followup set.
+> =
+
+> That's a good alternative. I don't know if upstream would accept that :)
+>
+> If the follow-up patch-set comes soon after, I guess that's fine. It
+> depends from who we want to have some feedback from.
+
+Well, davem can't have it both ways :-)
+And yes, I assumed that ipv6 support would be ready at this time, and
+was only omitted to keep size of the batch down.
+--===============1274059954361476866==--
