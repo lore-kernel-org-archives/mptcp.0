@@ -1,55 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============8892074068389746854=="
+Content-Type: multipart/mixed; boundary="===============6327062772340595276=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [GIT] move TCP-related commits to the beginning
-Date: Mon, 07 Oct 2019 18:03:26 +0200
-Message-ID: <c2c03bb1-ba2d-759f-2ad2-d8d4d74fb939@tessares.net>
-In-Reply-To: 20191007152359.GM13866@breakpoint.cc
+Subject: [MPTCP] Re: RFCv3 for netdev: todo list
+Date: Mon, 07 Oct 2019 18:16:46 +0200
+Message-ID: <262fc8999ff60d58579f2a2c8ccd584e163698f7.camel@redhat.com>
+In-Reply-To: aa523928-008c-b642-b094-e0be545ac45b@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2037
+X-UID: 2038
 
---===============8892074068389746854==
+--===============6327062772340595276==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 07/10/2019 17:23, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->> On 07/10/2019 17:00, Florian Westphal wrote:
->>> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->>>>> ... this turns 'tcp: clean ext on tx recycle' into a one-line change.
->>>>
->>>> Good idea! Just applied this diff and added your signed-off to the pat=
-ch.
->>>
->>> Thanks!
->>
->> Just in case you want to check, here is the diff between my two branches:
-> =
+On Mon, 2019-10-07 at 17:58 +0200, Matthieu Baerts wrote:
+> At the last meeting, we agreed on this planning for the RFCv3 for netdev:
+[...]
+>   - Paolo sends coffee to Mat =E2=86=92 *In preparation*
 
-> [..]
-> =
+                        (
+                          )     (
+                   ___...(-------)-....___
+               .-""       )    (          ""-.
+         .-'``'|-._             )         _.-|
+        /  .--.|   `""---...........---""`   |
+       /  /    |                             |
+       |  |    |                             |
+        \  \   |                             |
+         `\ `\ |                             |
+           `\ `|                             |
+           _/ /\                             /
+          (__/  \                           /
+       _..---""` \                         /`""---.._
+    .-'           \                       /          '-.
+   :               `-.__             __.-'              :
+   :                  ) ""---...---"" (                 :
+    '._               `"--...___...--"`              _.'
+  jgs \""--..__                              __..--""/
+       '._     """----.....______.....----"""     _.'
+          `""--..,,_____            _____,,..--""`
+                        `"""----"""`
 
->> If there is no objection, I am going to re-create the TopGit tree with t=
-his
->> new branch then!
-> =
+[sent]
 
-> Looks good, go ahead.
+Sorry, I could not resist ;)
 
-TopGit tree re-created, export branch has been recreated, tests are =
+/P
 
-still OK.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8892074068389746854==--
+--===============6327062772340595276==--
