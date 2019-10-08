@@ -1,69 +1,108 @@
-Content-Type: multipart/mixed; boundary="===============5756179109026088556=="
+Content-Type: multipart/mixed; boundary="===============4358915324108711663=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/2] mptcp: subflow: disallow setsockopt(...
- TCP_ULP, "mptcp")
-Date: Tue, 08 Oct 2019 10:09:55 -0700
-Message-ID: <alpine.OSX.2.21.1910081008460.27878@thross-mobl.amr.corp.intel.com>
-In-Reply-To: ae8e4d5132a8882ae4ae558d31f200a8ef8bef96.1570545679.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH 2/2] selftests: test setsockopt(..., TCP_ULP,
+ "mptcp", ...)
+Date: Tue, 08 Oct 2019 22:21:27 +0200
+Message-ID: <7cec08b00730e72fba12eb7839f1d3a075b96a4e.camel@redhat.com>
+In-Reply-To: 8a320766-d38e-8073-b0e8-cc08ba256be3@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2059
+X-UID: 2060
 
---===============5756179109026088556==
+--===============4358915324108711663==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2019-10-08 at 17:00 +0200, Matthieu Baerts wrote:
+> Hi Davide,
+> =
 
-On Tue, 8 Oct 2019, Davide Caratti wrote:
+> On 08/10/2019 16:43, Davide Caratti wrote:
+> > add a selftest to verify that the kernel forbids attaching MPTCP subflo=
+ws
+> > to userspace TCP sockets with setsockopt(..., IPPROTO_TCP, TCP_ULP, ...=
+).
+> =
 
-> the MPTCP ULP can be attached to a TCP socket only if the socket has been
-> created with sock_create_kern(): ensure that the value of sk->sk_kern_sock
-> is 1 in the MPTCP subflow init() function, and let it return -EOPNOTSUPP
-> otherwise.
->
+> Good idea to have a test for that!
+> =
 
-Looks good to me (with Matthieu's whitespace suggestion). Nice that this =
+> > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> > ---
+> >  .../selftests/net/mptcp/mptcp_connect.c       | 49 +++++++++++++++++--
+> >  .../selftests/net/mptcp/mptcp_connect.sh      | 19 +++++++
+> >  2 files changed, 65 insertions(+), 3 deletions(-)
+> > =
 
-method doesn't require ULP infrastructure changes!
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/=
+testing/selftests/net/mptcp/mptcp_connect.c
+> > index cac71f0ac8f8..12a722e0c527 100644
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> =
 
-Mat
+> [...]
+> =
 
+> > @@ -114,6 +116,41 @@ static int sock_listen_mptcp(const char * const li=
+stenaddr,
+> >  	return sock;
+> >  }
+> >  =
 
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> ---
-> net/mptcp/subflow.c | 7 +++++++
-> 1 file changed, 7 insertions(+)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index ebe93525b0aa..b40d927e71ca 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -435,6 +435,13 @@ static int subflow_ulp_init(struct sock *sk)
-> 	struct tcp_sock *tp =3D tcp_sk(sk);
-> 	int err =3D 0;
->
-> +	/* disallow attaching ULP to a socket unless it has been
-> +	 * created with sock_create_kern()
-> +	 */
-> +	if (!sk->sk_kern_sock) {
-> +		err =3D -EOPNOTSUPP;
-> +		goto out;
-> +	}
-> 	ctx =3D subflow_create_ctx(sk, sk->sk_socket, GFP_KERNEL);
-> 	if (!ctx) {
-> 		err =3D -ENOMEM;
-> -- =
+> > +static bool sock_test_tcpulp(const char * const remoteaddr,
+> > +			     const char * const port)
+> > +{
+> > +
+> > +	struct addrinfo hints =3D {
+> > +		.ai_protocol =3D IPPROTO_TCP,
+> > +		.ai_socktype =3D SOCK_STREAM,
+> > +	};
+> > +	struct addrinfo *a, *addr;
+> > +	int sock =3D -1, ret =3D 0;
+> > +	bool test_pass =3D false;
+> > +
+> > +	hints.ai_family =3D AF_INET;
+> > +
+> > +	xgetaddrinfo(remoteaddr, port, &hints, &addr);
+> > +	for (a =3D addr; a; a =3D a->ai_next) {
+> > +		sock =3D socket(a->ai_family, a->ai_socktype, IPPROTO_TCP);
+> > +		if (sock < 0) {
+> > +			perror("socket");
+> =
 
-> 2.21.0
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
+> Why could we have an error here? It is just to avoid error message in
+> the output for something we don't consider as an error.
 
---
-Mat Martineau
-Intel
---===============5756179109026088556==--
+It can fail e.g. due to memory pressure, or ulimits. Should never
+happen in normal circumstances, but I think it's better to catch this
+up, as this patch does.
+
+> > +			continue;
+> > +		}
+> > +
+> > +		ret =3D setsockopt(sock, IPPROTO_TCP, TCP_ULP, "mptcp",
+> > +				 sizeof("mptcp"));
+> > +		close(sock);
+> > +		if (ret =3D=3D -1) {
+> =
+
+> Should we check errno as well? Just to be sure we are not "blocked" for
+> another reason.
+
+I agree additionally checking errno =3D=3D -EOPNOTSUPP would be better.
+
+Otherwise LGTM.
+
+In the longer run we may consider moving this test and ev. diag, MIB,
+etc to a separate, functional-test binary/script, but I think this is
+good for now.
+
+Cheers,
+
+Paolo
+
+--===============4358915324108711663==--
