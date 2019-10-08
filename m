@@ -1,113 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============2571814907684412293=="
+Content-Type: multipart/mixed; boundary="===============5756179109026088556=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: RFCv3 for netdev: todo list
-Date: Tue, 08 Oct 2019 10:06:07 -0700
-Message-ID: <alpine.OSX.2.21.1910081002160.27878@thross-mobl.amr.corp.intel.com>
-In-Reply-To: 966a0d4f-bd0d-0723-219f-fa31fc4c79cb@tessares.net
+Subject: [MPTCP] Re: [PATCH 1/2] mptcp: subflow: disallow setsockopt(...
+ TCP_ULP, "mptcp")
+Date: Tue, 08 Oct 2019 10:09:55 -0700
+Message-ID: <alpine.OSX.2.21.1910081008460.27878@thross-mobl.amr.corp.intel.com>
+In-Reply-To: ae8e4d5132a8882ae4ae558d31f200a8ef8bef96.1570545679.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2058
+X-UID: 2059
 
---===============2571814907684412293==
+--===============5756179109026088556==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 8 Oct 2019, Matthieu Baerts wrote:
 
-> Hi Mat,
->
-> On 08/10/2019 01:28, Mat Martineau wrote:
->> =
+On Tue, 8 Oct 2019, Davide Caratti wrote:
 
->> On Mon, 7 Oct 2019, Matthieu Baerts wrote:
->> =
-
->>> - (maybe: Mat, may you already send a new draft for the
->>> cover-letter for this first batch?)
->>> =
-
->>> I guess for the last one, if Mat, you have the opportunity to start it, =
-
->>> feel free to already share it.
->>> =
-
->>> Regarding the cover-letter, here is what we said after the meeting:
->>> =
-
->>>> In the cover-letter, we would say that we would like to know:
->>>> =C2=A0- if there are any objections on the changes made in the TCP cor=
-e.
->>>> =C2=A0- the goal is to send this patch-set as a non RFC one when we are
->>>> =C2=A0=C2=A0 ready with our initial patch-set that we called "part 2".
->>> =
-
->> =
-
->> Here's my proposed v3 cover letter.
->
-> Thank you for the new draft!
->
->> Did I correctly understand the end of the quoted message above regarding=
- a =
-
->> non-RFC posting when part 2 is ready?
->
-> Yes, I think you do, the message is perfect for me!
->
-> I just have two questions below:
->
->> """
->> Subject: [RFC PATCH v3 00/xx] Multipath TCP prerequisites
->> =
-
->> =
-
->> The MPTCP upstreaming community has prepared a net-next RFCv3 patch
->> set for review. The scope of this patch set is limited to prerequisite
->> TCP core changes so we can get focused feedback in these areas.
->> =
-
->> In this patch set we introduce some MPTCP definitions, additional ULP
->> and skb extension features, TCP option space checking, and a few
->> exported symbols.
->> =
-
->> =
-
->> Our intent is to send this as a non-RFC series when the next phase of
->> changes are ready to post. That second patch set will add CONFIG_MPTCP
->> in Kconfig, introduce the MPTCP socket type, implement the protocol,
->
-> (maybe: implement an initial set of the protocol? Or setup the base?)
+> the MPTCP ULP can be attached to a TCP socket only if the socket has been
+> created with sock_create_kern(): ensure that the value of sk->sk_kern_sock
+> is 1 in the MPTCP subflow init() function, and let it return -EOPNOTSUPP
+> otherwise.
 >
 
-I could change "implement the protocol" to "implement the basic features =
+Looks good to me (with Matthieu's whitespace suggestion). Nice that this =
 
-of the protocol".
+method doesn't require ULP infrastructure changes!
+
+Mat
 
 
->> and add self tests.
->> =
-
->> =
-
->> Clone/fetch:
->> https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-rfcv3)
+> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> ---
+> net/mptcp/subflow.c | 7 +++++++
+> 1 file changed, 7 insertions(+)
 >
-> A detail but where should we do the tag? At the end of the patches we are =
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index ebe93525b0aa..b40d927e71ca 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -435,6 +435,13 @@ static int subflow_ulp_init(struct sock *sk)
+> 	struct tcp_sock *tp =3D tcp_sk(sk);
+> 	int err =3D 0;
+>
+> +	/* disallow attaching ULP to a socket unless it has been
+> +	 * created with sock_create_kern()
+> +	 */
+> +	if (!sk->sk_kern_sock) {
+> +		err =3D -EOPNOTSUPP;
+> +		goto out;
+> +	}
+> 	ctx =3D subflow_create_ctx(sk, sk->sk_socket, GFP_KERNEL);
+> 	if (!ctx) {
+> 		err =3D -ENOMEM;
+> -- =
 
-> going to send or at the end of the series? (or both)
-
-I vote for "both" - and within the cover letter, it's the tag matching the =
-
-email series that is important to link to.
-
+> 2.21.0
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
 --
 Mat Martineau
 Intel
-
---===============2571814907684412293==--
+--===============5756179109026088556==--
