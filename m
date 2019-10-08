@@ -1,81 +1,113 @@
-Content-Type: multipart/mixed; boundary="===============6854394647433562457=="
+Content-Type: multipart/mixed; boundary="===============2571814907684412293=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Yet another rebase/squash/cleanup proposal
-Date: Tue, 08 Oct 2019 17:30:26 +0200
-Message-ID: <4ee4e59d-d3b2-0e7c-2eb6-4c0c79ec15af@tessares.net>
-In-Reply-To: 20191008152742.GF25052@breakpoint.cc
+Subject: [MPTCP] Re: RFCv3 for netdev: todo list
+Date: Tue, 08 Oct 2019 10:06:07 -0700
+Message-ID: <alpine.OSX.2.21.1910081002160.27878@thross-mobl.amr.corp.intel.com>
+In-Reply-To: 966a0d4f-bd0d-0723-219f-fa31fc4c79cb@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2057
+X-UID: 2058
 
---===============6854394647433562457==
+--===============2571814907684412293==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Paolo,
+On Tue, 8 Oct 2019, Matthieu Baerts wrote:
 
-On 08/10/2019 17:27, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->> On 08/10/2019 16:48, Florian Westphal wrote:
->>> Here is yet another rebase proposal, I've pushed it here:
->>> https://git.breakpoint.cc/cgit/fw/mptcp-next.git/log/?h=3Dexport_sendms=
-g_rebase_13
->>>
->>> Its also accessible via
->>> git fetch git://git.breakpoint.cc/fw/mptcp-next.git export_sendmsg_reba=
-se_13
->>>
->>> In short:
->>> - folds two commits
->>> - fixes the kbuild warnings we got with rfcv2
->>> - gets rid of refcounting in mptcp_subflow_get_ref
->>
->> Wow, thanks for the work!
->>
->> Can I re-create the TopGit tree with that? I guess Paolo has already
->> reviewed the changes, right?
-> =
+> Hi Mat,
+>
+> On 08/10/2019 01:28, Mat Martineau wrote:
+>> =
 
-> No, Paolo hasn't reviewed them. He suggested the refcount change
-> and to check if it helps to squash sendmsg refactor patches,
-> but he did not review this yet.
+>> On Mon, 7 Oct 2019, Matthieu Baerts wrote:
+>> =
 
-OK thank you for the clarification.
-I will recreate the tree after Paolo's ACK.
+>>> - (maybe: Mat, may you already send a new draft for the
+>>> cover-letter for this first batch?)
+>>> =
 
->> [...]
->>
->>> Full diff of current export (ab35f6c5d8e3ed7a3c9603028d3b67c931af51b0)
->>> and this branch:
->>
->> I guess you mean 0c6f4f183e22dcd15d76ae5779f42e1737c26ddd (tag:
->> export/20191008T114531). The one you mention (tag:
->> export/20191008T010618) is the version from last night, before my rebase
->> I did today.
-> =
+>>> I guess for the last one, if Mat, you have the opportunity to start it, =
 
-> Oh, indeed, its 0c6f4f183e22dcd15d76ae5779f42e1737c26ddd.
-> =
+>>> feel free to already share it.
+>>> =
 
->> I just checked and I don't see "tcp: Expose tcp struct and routine for
->> MPTCP" and your version of "tcp: Export TCP functions and ops struct"
->> seems OK! All good then :)
-> =
+>>> Regarding the cover-letter, here is what we said after the meeting:
+>>> =
 
-> Yes, I forgot to update the sha1 in my email template.
+>>>> In the cover-letter, we would say that we would like to know:
+>>>> =C2=A0- if there are any objections on the changes made in the TCP cor=
+e.
+>>>> =C2=A0- the goal is to send this patch-set as a non RFC one when we are
+>>>> =C2=A0=C2=A0 ready with our initial patch-set that we called "part 2".
+>>> =
 
-All good, thank you for having checked!
+>> =
 
-Cheers,
-Matt
--- =
+>> Here's my proposed v3 cover letter.
+>
+> Thank you for the new draft!
+>
+>> Did I correctly understand the end of the quoted message above regarding=
+ a =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6854394647433562457==--
+>> non-RFC posting when part 2 is ready?
+>
+> Yes, I think you do, the message is perfect for me!
+>
+> I just have two questions below:
+>
+>> """
+>> Subject: [RFC PATCH v3 00/xx] Multipath TCP prerequisites
+>> =
+
+>> =
+
+>> The MPTCP upstreaming community has prepared a net-next RFCv3 patch
+>> set for review. The scope of this patch set is limited to prerequisite
+>> TCP core changes so we can get focused feedback in these areas.
+>> =
+
+>> In this patch set we introduce some MPTCP definitions, additional ULP
+>> and skb extension features, TCP option space checking, and a few
+>> exported symbols.
+>> =
+
+>> =
+
+>> Our intent is to send this as a non-RFC series when the next phase of
+>> changes are ready to post. That second patch set will add CONFIG_MPTCP
+>> in Kconfig, introduce the MPTCP socket type, implement the protocol,
+>
+> (maybe: implement an initial set of the protocol? Or setup the base?)
+>
+
+I could change "implement the protocol" to "implement the basic features =
+
+of the protocol".
+
+
+>> and add self tests.
+>> =
+
+>> =
+
+>> Clone/fetch:
+>> https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-rfcv3)
+>
+> A detail but where should we do the tag? At the end of the patches we are =
+
+> going to send or at the end of the series? (or both)
+
+I vote for "both" - and within the cover letter, it's the tag matching the =
+
+email series that is important to link to.
+
+
+--
+Mat Martineau
+Intel
+
+--===============2571814907684412293==--
