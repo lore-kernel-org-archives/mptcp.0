@@ -1,186 +1,306 @@
-Content-Type: multipart/mixed; boundary="===============0597630949353622438=="
+Content-Type: multipart/mixed; boundary="===============7342106721972976338=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] selftests: test setsockopt(..., TCP_ULP, "mptcp",
- ...)
-Date: Tue, 08 Oct 2019 16:43:13 +0200
-Message-ID: <bcf0f12a631a334f98e59a5b9302695db4854066.1570545679.git.dcaratti@redhat.com>
-In-Reply-To: cover.1570545679.git.dcaratti@redhat.com
+Subject: [MPTCP] Yet another rebase/squash/cleanup proposal
+Date: Tue, 08 Oct 2019 16:48:27 +0200
+Message-ID: <20191008144827.GA12731@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2049
+X-UID: 2050
 
---===============0597630949353622438==
+--===============7342106721972976338==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-add a selftest to verify that the kernel forbids attaching MPTCP subflows
-to userspace TCP sockets with setsockopt(..., IPPROTO_TCP, TCP_ULP, ...).
+Hi.
 
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 49 +++++++++++++++++--
- .../selftests/net/mptcp/mptcp_connect.sh      | 19 +++++++
- 2 files changed, 65 insertions(+), 3 deletions(-)
+Here is yet another rebase proposal, I've pushed it here:
+https://git.breakpoint.cc/cgit/fw/mptcp-next.git/log/?h=3Dexport_sendmsg_re=
+base_13
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
-ing/selftests/net/mptcp/mptcp_connect.c
-index cac71f0ac8f8..12a722e0c527 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -18,7 +18,8 @@
+Its also accessible via
+git fetch git://git.breakpoint.cc/fw/mptcp-next.git export_sendmsg_rebase_13
+
+In short:
+- folds two commits
+- fixes the kbuild warnings we got with rfcv2
+- gets rid of refcounting in mptcp_subflow_get_ref
+
+A full diff between export and this new branch is below.
+
+I have no more suggestions for rebases/squashes with the current patches
+we have.
+
+Here is a walkthrough of those patches that have been altered and
+a changelog:
+
+mptcp: Add MPTCP to skb extensions
+  ... gains a #include linux/types.h
+  I added this include because the header uses u16, u64 and so on.
+  Without this, one can see
+
+  include/net/mptcp.h:13:2: error: unknown type name 'u16'
+
+  error when HEADER_TEST is enabled in .config.
+
+tcp: Prevent coalesce/collapse when skb has MPTCP extensions
+
+  adds skbuff.h include to avoid:
+  include/net/mptcp.h:36:53: warning: 'struct sk_buff' declared inside para=
+meter list will not be visible outside of this definition or declaration
+
+mptcp: Add MPTCP socket stubs:
+
+  adds ...
++       if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
++               return -EOPNOTSUPP;
+
+ It makes sense to do it here as part of the boilerplate change.
+
+ The current export branch did this check after lock_sock, so we also avoid
+ the exta unlock if we test the flags first.
+
+mptcp: Handle MPTCP TCP options
+
+  adds linux/tcp.h include to avoid
+ 'struct tcp_options_received' declared inside parameter list... warning.
+
+  While a forward declaration is enough, followup patches add more
+  warnings such as
+
+  struct sock' declared inside parameter list ..
+
+  As we later use tcp_sk() helper here anyway, just add such include now.
+
+mptcp: Handle MP_CAPABLE options for outgoing.
+  In tcp_output.c, 'opt_size' is now inited to 0 to avoid changing
+  this line in a followup patch, i.e. this change isn't visible in the
+  final diff.
+
+  The major change in this patch however is
+  mptcp_subflow_get_ref -> mptcp_subflow_get.
+
+  This helper will not increment sk reference count anymore.
+  As Paolo pointed out, the mptcp socket lock is held in all cases (we even
+  have an assertion inside the helper already) and we never keep the ssk
+  around after we've released the ssk lock.  So, simplify this:
+
+  no sock_hold, no more sock_put(ssk).
+
+This results in several followup changes because of this, e.g.
+in mptcp: Create SUBFLOW socket for incoming connections
+
+... to account for the changed name and dropping sock_put(ssk).
+
+mptcp: Write MPTCP DSS headers to outgoing data packets
+
+  ... now folds both
+  mptcp: use sk_page_frag() in sendmsg and
+  mptcp: sendmsg() do spool all the provided data
+  ... with only a *tiny* increase in patch size.
+
+  Old was: 257 inserts, 12 deletions
+  After:   267 inserts, 11 deletions
+
+  I think thats a pretty good hint that the squashing is good
+  and reduces code churn (addition of code in patch x only to remove
+  it in y).  I've modified the commit message to mention this folding.
+
+The only other change is a 'seq_file' forward declaration in the MIB
+skeleton patch, again because of a kbuild robot report:
+
+'warning: 'struct seq_file' declared inside parameter list will not be visi=
+ble
+outside of this definition or declaration'.
+
+mib.c has the needed seq_file.h include, so adding a forward declaration is
+enough to silence gcc for other .c files that include mptcp.h.
+
+Full diff of current export (ab35f6c5d8e3ed7a3c9603028d3b67c931af51b0)
+and this branch:
+
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 8b0d062912d2..eba39a881767 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -8,6 +8,12 @@
+ #ifndef __NET_MPTCP_H
+ #define __NET_MPTCP_H
  =
 
- #include <netdb.h>
- #include <netinet/in.h>
--#include <netinet/tcp.h>
-+
++#include <linux/skbuff.h>
 +#include <linux/tcp.h>
- =
-
- extern int optind;
- =
-
-@@ -32,11 +33,12 @@ static int  poll_timeout;
- static const char *cfg_host;
- static const char *cfg_port	=3D "12000";
- static int cfg_sock_proto	=3D IPPROTO_MPTCP;
-+static bool tcpulp_audit;
- =
-
- =
-
- static void die_usage(void)
- {
--	fprintf(stderr, "Usage: mptcp_connect [-s MPTCP|TCP] [-p port] "
-+	fprintf(stderr, "Usage: mptcp_connect [-u] [-s MPTCP|TCP] [-p port] "
- 		"[ -l ] [ -t timeout ] connect_address\n");
- 	exit(1);
- }
-@@ -114,6 +116,41 @@ static int sock_listen_mptcp(const char * const listen=
-addr,
- 	return sock;
++#include <linux/types.h>
++
++struct seq_file;
++
+ /* MPTCP sk_buff extension data */
+ struct mptcp_ext {
+ 	u64		data_ack;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 14543aaa29bd..272fe90adfbb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -79,18 +79,14 @@ static struct socket *mptcp_fallback_get_ref(const stru=
+ct mptcp_sock *msk)
+ 	return ssock;
  }
  =
 
-+static bool sock_test_tcpulp(const char * const remoteaddr,
-+			     const char * const port)
-+{
-+
-+	struct addrinfo hints =3D {
-+		.ai_protocol =3D IPPROTO_TCP,
-+		.ai_socktype =3D SOCK_STREAM,
-+	};
-+	struct addrinfo *a, *addr;
-+	int sock =3D -1, ret =3D 0;
-+	bool test_pass =3D false;
-+
-+	hints.ai_family =3D AF_INET;
-+
-+	xgetaddrinfo(remoteaddr, port, &hints, &addr);
-+	for (a =3D addr; a; a =3D a->ai_next) {
-+		sock =3D socket(a->ai_family, a->ai_socktype, IPPROTO_TCP);
-+		if (sock < 0) {
-+			perror("socket");
-+			continue;
-+		}
-+
-+		ret =3D setsockopt(sock, IPPROTO_TCP, TCP_ULP, "mptcp",
-+				 sizeof("mptcp"));
-+		close(sock);
-+		if (ret =3D=3D -1) {
-+			test_pass =3D true;
-+			break;
-+		}
-+
-+		perror("setsockopt(TCP_ULP)");
-+	}
-+	return test_pass;
-+}
-+
- static int sock_connect_mptcp(const char * const remoteaddr,
- 			      const char * const port, int proto)
+-static struct sock *mptcp_subflow_get_ref(const struct mptcp_sock *msk)
++static struct sock *mptcp_subflow_get(const struct mptcp_sock *msk)
  {
-@@ -362,7 +399,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
+ 	struct mptcp_subflow_context *subflow;
  =
 
--	while ((c =3D getopt(argc, argv, "lp:s:ht:")) !=3D -1) {
-+	while ((c =3D getopt(argc, argv, "lp:s:hut:")) !=3D -1) {
- 		switch (c) {
- 		case 'l':
- 			listen_mode =3D true;
-@@ -376,6 +413,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'h':
- 			die_usage();
- 			break;
-+		case 'u':
-+			tcpulp_audit =3D true;
-+			break;
- 		case 't':
- 			poll_timeout =3D atoi(optarg) * 1000;
- 			if (poll_timeout <=3D 0)
-@@ -395,6 +435,9 @@ int main(int argc, char *argv[])
+ 	sock_owned_by_me((const struct sock *)msk);
  =
 
- 	parse_opts(argc, argv);
+ 	mptcp_for_each_subflow(msk, subflow) {
+-		struct sock *sk;
+-
+-		sk =3D mptcp_subflow_tcp_socket(subflow)->sk;
+-		sock_hold(sk);
+-		return sk;
++		return mptcp_subflow_tcp_socket(subflow)->sk;
+ 	}
  =
 
-+	if (tcpulp_audit)
-+		return sock_test_tcpulp(cfg_host, cfg_port) ? 0 : 1;
+ 	return NULL;
+@@ -336,7 +332,9 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 	struct sock *ssk;
+ 	long timeo;
+ =
+
+-	pr_debug("msk=3D%p", msk);
++	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
++		return -EOPNOTSUPP;
 +
- 	if (listen_mode) {
- 		int fd =3D sock_listen_mptcp(cfg_host, cfg_port);
+ 	lock_sock(sk);
+ 	ssock =3D __mptcp_fallback_get_ref(msk);
+ 	if (ssock) {
+@@ -347,7 +345,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 		return ret;
+ 	}
  =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 7d312bd9ac77..25f1a181c73e 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -134,6 +134,23 @@ check_mptcp_disabled()
- 	return 0
+-	ssk =3D mptcp_subflow_get_ref(msk);
++	ssk =3D mptcp_subflow_get(msk);
+ 	if (!ssk) {
+ 		release_sock(sk);
+ 		return -ENOTCONN;
+@@ -356,16 +354,11 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 	if (!msg_data_left(msg)) {
+ 		pr_debug("empty send");
+ 		ret =3D sock_sendmsg(ssk->sk_socket, msg);
+-		goto put_out;
++		goto out;
+ 	}
+ =
+
+ 	pr_debug("conn_list->subflow=3D%p", ssk);
+ =
+
+-	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL)) {
+-		ret =3D -ENOTSUPP;
+-		goto put_out;
+-	}
+-
+ 	lock_sock(ssk);
+ 	mptcp_clean_una(sk);
+ 	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+@@ -391,9 +384,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ =
+
+ 	release_sock(ssk);
+ =
+
+-put_out:
++out:
+ 	release_sock(sk);
+-	sock_put(ssk);
+ 	return ret;
  }
  =
 
-+check_mptcp_ulp_setsockopt()
-+{
-+	local t=3D"ns_ulp" retval=3D
-+
-+	ip netns add ${t} || exit $ksft_skip
-+	if ! ip netns exec ${t} ./mptcp_connect -u -p 10000 -s TCP 127.0.0.1 >/de=
-v/null 2>&1; then
-+		printf "setsockopt(..., TCP_ULP, \"mptcp\", ...) allowed\t[ FAIL ]\n"
-+		retval=3D1
-+		ret=3D$retval
-+	else
-+		printf "setsockopt(..., TCP_ULP, \"mptcp\", ...) blocked\t[ OK ]\n"
-+		retval=3D0
-+	fi
-+	ip netns del ${t}
-+	return $retval
-+}
-+
- do_ping()
- {
- 	listener_ns=3D"$1"
-@@ -271,6 +288,8 @@ make_file "$sin" "server"
+@@ -588,7 +580,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 		return copied;
+ 	}
  =
 
- check_mptcp_disabled
+-	ssk =3D mptcp_subflow_get_ref(msk);
++	ssk =3D mptcp_subflow_get(msk);
+ 	if (!ssk) {
+ 		release_sock(sk);
+ 		return -ENOTCONN;
+@@ -752,8 +744,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 	release_sock(ssk);
+ 	release_sock(sk);
  =
 
-+check_mptcp_ulp_setsockopt
-+
- for sender in 1 2 3 4;do
- 	do_ping ns1 ns$sender 10.0.1.1
+-	sock_put(ssk);
+-
+ 	return copied;
+ }
  =
 
--- =
+@@ -808,7 +798,7 @@ static void mptcp_retransmit(struct work_struct *work)
+ 	if (!dfrag)
+ 		goto unlock;
+ =
 
-2.21.0
+-	ssk =3D mptcp_subflow_get_ref(msk);
++	ssk =3D mptcp_subflow_get(msk);
+ 	if (!ssk)
+ 		goto reset_unlock;
+ =
 
---===============0597630949353622438==--
+@@ -838,7 +828,6 @@ static void mptcp_retransmit(struct work_struct *work)
+ =
+
+ 	mptcp_set_timeout(sk, ssk);
+ 	release_sock(ssk);
+-	sock_put(ssk);
+ =
+
+ reset_unlock:
+ 	if (!mptcp_timer_pending(sk))
+@@ -1010,7 +999,6 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ =
+
+ 		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
+ 		local_bh_enable();
+-
+ 		inet_sk_state_store(newsk, TCP_ESTABLISHED);
+ 		release_sock(sk);
+ 	} else {
+@@ -1326,7 +1314,7 @@ static int mptcp_getname(struct socket *sock, struct =
+sockaddr *uaddr,
+ 	 * is connected and there are multiple subflows is not defined.
+ 	 * For now just use the first subflow on the list.
+ 	 */
+-	ssk =3D mptcp_subflow_get_ref(msk);
++	ssk =3D mptcp_subflow_get(msk);
+ 	if (!ssk) {
+ 		release_sock(sock->sk);
+ 		return -ENOTCONN;
+@@ -1334,7 +1322,6 @@ static int mptcp_getname(struct socket *sock, struct =
+sockaddr *uaddr,
+ =
+
+ 	ret =3D inet_getname(ssk->sk_socket, uaddr, peer);
+ 	release_sock(sock->sk);
+-	sock_put(ssk);
+ 	return ret;
+ }
+=20
+--===============7342106721972976338==--
