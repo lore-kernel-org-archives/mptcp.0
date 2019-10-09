@@ -1,80 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============7511640199090593680=="
+Content-Type: multipart/mixed; boundary="===============4907217020768557189=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: RFCv3 for netdev: todo list
-Date: Wed, 09 Oct 2019 19:49:27 +0200
-Message-ID: <fc861ca3-f8b0-9ef1-b0f6-7c26515c0e6d@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1910081002160.27878@thross-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH 2/2] selftests: test setsockopt(..., TCP_ULP,
+ "mptcp", ...)
+Date: Wed, 09 Oct 2019 19:58:08 +0200
+Message-ID: <b2cbc6d5-f16a-e877-5a6b-8f1fbbd8d008@tessares.net>
+In-Reply-To: dc66438b337cbb36b4b13625ef514aa8475c05b2.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2077
+X-UID: 2078
 
---===============7511640199090593680==
+--===============4907217020768557189==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Davide,
 
-On 08/10/2019 19:06, Mat Martineau wrote:
-> On Tue, 8 Oct 2019, Matthieu Baerts wrote:
->> On 08/10/2019 01:28, Mat Martineau wrote:
+On 09/10/2019 18:07, Davide Caratti wrote:
+> On Wed, 2019-10-09 at 09:52 +0200, Matthieu Baerts wrote:
+>> On 08/10/2019 22:21, Paolo Abeni wrote:
+>>> On Tue, 2019-10-08 at 17:00 +0200, Matthieu Baerts wrote:
+>>>> On 08/10/2019 16:43, Davide Caratti wrote:
 
 [...]
 
->>> Our intent is to send this as a non-RFC series when the next phase of
->>> changes are ready to post. That second patch set will add CONFIG_MPTCP
->>> in Kconfig, introduce the MPTCP socket type, implement the protocol,
+>>>>> +	xgetaddrinfo(remoteaddr, port, &hints, &addr);
+>>>>> +	for (a =3D addr; a; a =3D a->ai_next) {
+>>>>> +		sock =3D socket(a->ai_family, a->ai_socktype, IPPROTO_TCP);
+>>>>> +		if (sock < 0) {
+>>>>> +			perror("socket");
+>>>>
+>>>> Why could we have an error here? It is just to avoid error message in
+>>>> the output for something we don't consider as an error.
+>>>
+>>> It can fail e.g. due to memory pressure, or ulimits. Should never
+>>> happen in normal circumstances, but I think it's better to catch this
+>>> up, as this patch does.
 >>
->> (maybe: implement an initial set of the protocol? Or setup the base?)
->>
+>> Sorry, I should have added my comment at the next line. My question was
+>> also: should we not "break" here in case of error?
+>> But if should never fail, I guess we can still go to the next address.
+>> As long as we don't have "useless" error messages each time we execute
+>> the tests, I am then fine with both "break" and "continue" here.
 > =
 
-> I could change "implement the protocol" to "implement the basic features
-> of the protocol".
+> speaking of this, I see that I redirected the standard error of the test
+> to /dev/null. This makes both "perror()" useless. Unless you object,
+> I will remove redirections from the shellscript.
 
-Sounds good to me!
+Good catch and good idea!
 
->>> and add self tests.
+>>>>> +			continue;
+>>>>> +		}
+>>>>> +
+>>>>> +		ret =3D setsockopt(sock, IPPROTO_TCP, TCP_ULP, "mptcp",
+>>>>> +				 sizeof("mptcp"));
+>>>>> +		close(sock);
+>>>>> +		if (ret =3D=3D -1) {
+>>>>
+>>>> Should we check errno as well? Just to be sure we are not "blocked" for
+>>>> another reason.
 >>>
->>>
->>> Clone/fetch:
->>> https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-rfcv3)
->>
->> A detail but where should we do the tag? At the end of the patches we
->> are going to send or at the end of the series? (or both)
+>>> I agree additionally checking errno =3D=3D -EOPNOTSUPP would be better.
 > =
 
-> I vote for "both" - and within the cover letter, it's the tag matching
-> the email series that is important to link to.
+> sure, will do that in v2.
 
-Good!
-
-I just sent 2 new tags on Github:
-
-- netdev-rfcv3 =E2=86=92 the 10 patches we want to send to netdev
-- netdev-rfcv3-full =E2=86=92 the whole series
-
-So for me, it is good to send:
-
-  bacb7e1855969bba78b32302453d2cc8ba0bc403..netdev-rfcv3
-
-10 patches:
-
-  7ed0efc126c7 net: Make sock protocol value checks more specific
-  2438cd20c160 sock: Make sk_protocol a 16-bit value
-  51f02eaf9b97 tcp: Define IPPROTO_MPTCP
-  92842ca4e0a7 tcp: Add MPTCP option number
-  7760a37ca110 tcp, ulp: Add clone operation to tcp_ulp_ops
-  6b7cf8faca4e mptcp: Add MPTCP to skb extensions
-  dfe193e1a115 tcp: Prevent coalesce/collapse when skb has MPTCP
-               extensions
-  abf0c1235aa7 tcp: Export TCP functions and ops struct
-  f19334075ead tcp: Check for filled TCP option space before SACK
-  a477869c544e (tag: netdev-rfcv3) tcp: clean ext on tx recycle
-
-Looking forward to read reviews from upstream :-)
+Thank you!
 
 Cheers,
 Matt
@@ -85,4 +79,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7511640199090593680==--
+--===============4907217020768557189==--
