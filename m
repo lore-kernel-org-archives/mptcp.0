@@ -1,82 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============4907217020768557189=="
+Content-Type: multipart/mixed; boundary="===============8560551135937471705=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] selftests: test setsockopt(..., TCP_ULP,
- "mptcp", ...)
-Date: Wed, 09 Oct 2019 19:58:08 +0200
-Message-ID: <b2cbc6d5-f16a-e877-5a6b-8f1fbbd8d008@tessares.net>
-In-Reply-To: dc66438b337cbb36b4b13625ef514aa8475c05b2.camel@redhat.com
+Subject: [MPTCP] [PATCH kbuild] mptcp: update_una() can be static
+Date: Wed, 09 Oct 2019 11:06:44 -0700
+Message-ID: <alpine.OSX.2.21.1910091105480.48251@crpeter1-mobl.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2078
+X-UID: 2079
 
---===============4907217020768557189==
+--===============8560551135937471705==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
 
-On 09/10/2019 18:07, Davide Caratti wrote:
-> On Wed, 2019-10-09 at 09:52 +0200, Matthieu Baerts wrote:
->> On 08/10/2019 22:21, Paolo Abeni wrote:
->>> On Tue, 2019-10-08 at 17:00 +0200, Matthieu Baerts wrote:
->>>> On 08/10/2019 16:43, Davide Caratti wrote:
 
-[...]
+Fixes: e0c0e8d7b6cd ("mptcp: update per unacked sequence on pkt reception")
+Signed-off-by: kbuild test robot <lkp(a)intel.com>
+---
 
->>>>> +	xgetaddrinfo(remoteaddr, port, &hints, &addr);
->>>>> +	for (a =3D addr; a; a =3D a->ai_next) {
->>>>> +		sock =3D socket(a->ai_family, a->ai_socktype, IPPROTO_TCP);
->>>>> +		if (sock < 0) {
->>>>> +			perror("socket");
->>>>
->>>> Why could we have an error here? It is just to avoid error message in
->>>> the output for something we don't consider as an error.
->>>
->>> It can fail e.g. due to memory pressure, or ulimits. Should never
->>> happen in normal circumstances, but I think it's better to catch this
->>> up, as this patch does.
->>
->> Sorry, I should have added my comment at the next line. My question was
->> also: should we not "break" here in case of error?
->> But if should never fail, I guess we can still go to the next address.
->> As long as we don't have "useless" error messages each time we execute
->> the tests, I am then fine with both "break" and "continue" here.
-> =
+Forwarding additional kbuild suggestions that were not sent to everyone.
 
-> speaking of this, I see that I redirected the standard error of the test
-> to /dev/null. This makes both "perror()" useless. Unless you object,
-> I will remove redirections from the shellscript.
+  options.c |    2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Good catch and good idea!
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index be05d99e6bfa5..ef53f5ddb7325 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -550,7 +550,7 @@ static u64 expand_ack(u64 old_ack, u64 cur_ack, bool us=
+e_64bit)
+  	return cur_ack;
+  }
 
->>>>> +			continue;
->>>>> +		}
->>>>> +
->>>>> +		ret =3D setsockopt(sock, IPPROTO_TCP, TCP_ULP, "mptcp",
->>>>> +				 sizeof("mptcp"));
->>>>> +		close(sock);
->>>>> +		if (ret =3D=3D -1) {
->>>>
->>>> Should we check errno as well? Just to be sure we are not "blocked" for
->>>> another reason.
->>>
->>> I agree additionally checking errno =3D=3D -EOPNOTSUPP would be better.
-> =
+-void update_una(struct mptcp_sock *msk, struct mptcp_options_received *mp_=
+opt)
++static void update_una(struct mptcp_sock *msk, struct mptcp_options_receiv=
+ed *mp_opt)
+  {
+  	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
 
-> sure, will do that in v2.
-
-Thank you!
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4907217020768557189==--
+--===============8560551135937471705==--
