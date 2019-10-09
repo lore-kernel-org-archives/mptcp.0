@@ -1,54 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============8901915959690584139=="
+Content-Type: multipart/mixed; boundary="===============1256655501445927631=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: timout delta must be signed
-Date: Wed, 09 Oct 2019 15:34:48 +0200
-Message-ID: <938ec02702e513154846b2dc9ea9fd9377e26de1.1570628019.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH mptcp] mptcp: mib: fix sparse warnings
+Date: Wed, 09 Oct 2019 16:47:03 +0200
+Message-ID: <20191009144703.30196-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2070
+X-UID: 2071
 
---===============8901915959690584139==
+--===============1256655501445927631==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-otherwise later 'tout <=3D 0' check will give unexpected results
+squashto: mptcp: add MIB counter infrastructure
 
-Squash-to "mptcp: introduce MPTCP retransmission timer"
+get rid of:
+mib.c:31:33: sparse: warning: incorrect type in initializer (different addr=
+ess spaces)
+mib.c:31:33: sparse:    expected struct mptcp_mib *mib
+mib.c:31:33: sparse:    got struct mptcp_mib [noderef] <asn:3> *
+mib.c:36:13: sparse: warning: incorrect type in initializer (different addr=
+ess spaces)
+mib.c:36:13: sparse:    expected struct mptcp_mib [noderef] <asn:3> *__new
+mib.c:36:13: sparse:    got struct mptcp_mib *mib
+mib.c:37:29: sparse: warning: incorrect type in argument 1 (different addre=
+ss spaces)
+mib.c:37:29: sparse:    expected void [noderef] <asn:3> *__pdata
+mib.c:37:29: sparse:    got struct mptcp_mib *mib
+mib.c:42:6: sparse: warning: symbol 'mptcp_seq_show' was not declared. Shou=
+ld it be static?
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/mptcp/mib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 12a9051f3922..b5287bc40c59 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -24,12 +24,12 @@ static struct percpu_counter mptcp_sockets_allocated;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 38f6e63335bf..4ab627e877d1 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -2,6 +2,7 @@
  =
 
- static void mptcp_set_timeout(const struct sock *sk, const struct sock *ss=
-k)
+ #include <linux/seq_file.h>
+ #include <net/ip.h>
++#include <net/mptcp.h>
+ #include <net/snmp.h>
+ #include <net/net_namespace.h>
+ =
+
+@@ -28,7 +29,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
+  */
+ bool mptcp_mib_alloc(struct net *net)
  {
--	unsigned long tout =3D ssk && inet_csk(ssk)->icsk_pending ?
--			     inet_csk(ssk)->icsk_timeout - jiffies : 0;
-+	long tout =3D ssk && inet_csk(ssk)->icsk_pending ?
-+				      inet_csk(ssk)->icsk_timeout - jiffies : 0;
+-	struct mptcp_mib *mib =3D alloc_percpu(struct mptcp_mib);
++	struct mptcp_mib __percpu *mib =3D alloc_percpu(struct mptcp_mib);
  =
 
- 	if (tout <=3D 0)
- 		tout =3D mptcp_sk(sk)->timer_ival;
--	mptcp_sk(sk)->timer_ival =3D  tout > 0 ? tout : TCP_RTO_MIN;
-+	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
- }
- =
-
- bool mptcp_timer_pending(struct sock *sk)
+ 	if (!mib)
+ 		return false;
 -- =
 
 2.21.0
 
---===============8901915959690584139==--
+--===============1256655501445927631==--
