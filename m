@@ -1,121 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============3384206351050132318=="
+Content-Type: multipart/mixed; boundary="===============3353718759901409258=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] selftests: test setsockopt(..., TCP_ULP,
- "mptcp", ...)
-Date: Wed, 09 Oct 2019 09:52:44 +0200
-Message-ID: <80aa086a-a1bd-7c26-65df-af3b26a35801@tessares.net>
-In-Reply-To: 7cec08b00730e72fba12eb7839f1d3a075b96a4e.camel@redhat.com
+Subject: [MPTCP] Re: Patent-question
+Date: Wed, 09 Oct 2019 13:13:02 +0200
+Message-ID: <222d913760299f0f8acf6881819b696b5c67e90e.camel@redhat.com>
+In-Reply-To: 47A900F1-55E0-489E-8A2C-BC915E03A61C@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2067
+X-UID: 2068
 
---===============3384206351050132318==
+--===============3353718759901409258==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-On 08/10/2019 22:21, Paolo Abeni wrote:
-> On Tue, 2019-10-08 at 17:00 +0200, Matthieu Baerts wrote:
->> Hi Davide,
->>
->> On 08/10/2019 16:43, Davide Caratti wrote:
->>> add a selftest to verify that the kernel forbids attaching MPTCP subflo=
-ws
->>> to userspace TCP sockets with setsockopt(..., IPPROTO_TCP, TCP_ULP, ...=
-).
->>
->> Good idea to have a test for that!
->>
->>> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
->>> ---
->>>  .../selftests/net/mptcp/mptcp_connect.c       | 49 +++++++++++++++++--
->>>  .../selftests/net/mptcp/mptcp_connect.sh      | 19 +++++++
->>>  2 files changed, 65 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/=
-testing/selftests/net/mptcp/mptcp_connect.c
->>> index cac71f0ac8f8..12a722e0c527 100644
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>
->> [...]
->>
->>> @@ -114,6 +116,41 @@ static int sock_listen_mptcp(const char * const li=
-stenaddr,
->>>  	return sock;
->>>  }
->>>  =
-
->>> +static bool sock_test_tcpulp(const char * const remoteaddr,
->>> +			     const char * const port)
->>> +{
->>> +
->>> +	struct addrinfo hints =3D {
->>> +		.ai_protocol =3D IPPROTO_TCP,
->>> +		.ai_socktype =3D SOCK_STREAM,
->>> +	};
->>> +	struct addrinfo *a, *addr;
->>> +	int sock =3D -1, ret =3D 0;
->>> +	bool test_pass =3D false;
->>> +
->>> +	hints.ai_family =3D AF_INET;
->>> +
->>> +	xgetaddrinfo(remoteaddr, port, &hints, &addr);
->>> +	for (a =3D addr; a; a =3D a->ai_next) {
->>> +		sock =3D socket(a->ai_family, a->ai_socktype, IPPROTO_TCP);
->>> +		if (sock < 0) {
->>> +			perror("socket");
->>
->> Why could we have an error here? It is just to avoid error message in
->> the output for something we don't consider as an error.
+On Mon, 2019-10-07 at 09:35 -0700, Christoph Paasch wrote:
+> I just got off the phone with the lawyers regarding the patent.
 > =
 
-> It can fail e.g. due to memory pressure, or ulimits. Should never
-> happen in normal circumstances, but I think it's better to catch this
-> up, as this patch does.
-
-Sorry, I should have added my comment at the next line. My question was
-also: should we not "break" here in case of error?
-But if should never fail, I guess we can still go to the next address.
-As long as we don't have "useless" error messages each time we execute
-the tests, I am then fine with both "break" and "continue" here.
-
->>> +			continue;
->>> +		}
->>> +
->>> +		ret =3D setsockopt(sock, IPPROTO_TCP, TCP_ULP, "mptcp",
->>> +				 sizeof("mptcp"));
->>> +		close(sock);
->>> +		if (ret =3D=3D -1) {
->>
->> Should we check errno as well? Just to be sure we are not "blocked" for
->> another reason.
+> In order to get something started regarding the claims on the patent,
+> I need confirmation on what exactly are the restrictions and/or
+> wording required by the Linux community.
 > =
 
-> I agree additionally checking errno =3D=3D -EOPNOTSUPP would be better.
+> So, in that sense my question becomes: What made DaveM change his
+> mind on https://lists.openwall.net/netdev/2014/05/13/96 ?
 > =
 
-> Otherwise LGTM.
-> =
+> Is there anyone who can find this out?
 
-> In the longer run we may consider moving this test and ev. diag, MIB,
-> etc to a separate, functional-test binary/script, but I think this is
-> good for now.
+We discussed this topic with our corporate lawyer.
 
-Good idea, I was thinking about the same thing yesterday. I can have a
-look at this in the future if needed.
+It appears its best that the implementation submitted for mainline
+kernel inclusion of the detail that appears to be the subject of the
+patent be done with code authored by you as and Apple employee.
 
-Cheers,
-Matt
--- =
+It should be apparent from the written records (e.g. mailing list
+archives) that you've consulted with others at Apple who are aware of
+the relationship between the patent and the implementation.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3384206351050132318==--
+Failing that, a Signed-off-by from you -- using your @apple.com address
+on the patch implementing the relevant V1 bits.
+
+Thanks
+
+--===============3353718759901409258==--
