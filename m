@@ -1,87 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============7820504248526419355=="
+Content-Type: multipart/mixed; boundary="===============5632088481623665936=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Checkpatch: questions about what is reported
-Date: Thu, 10 Oct 2019 16:31:18 +0200
-Message-ID: <747f60a9-c4ac-e1a5-a5b2-e20fe7546fef@tessares.net>
+Subject: [MPTCP] [PATCH net-next] mptcp: fix 'assignment from incompatible
+ pointer type' warning
+Date: Thu, 10 Oct 2019 17:27:07 +0200
+Message-ID: <88e6d785c72e7d5591ae29dc8395162b306140ac.1570721199.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2090
+X-UID: 2091
 
---===============7820504248526419355==
+--===============5632088481623665936==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+when building vs 32 bits arches pfrag->offset is 16bits , otherwise 32.
+Instead of using conditional definitions in multiple places, let's
+drop 'poffset' variable altogether.
 
-This afternoon, I was quickly looking at the output of checkpatch.pl for
-each patch. Everything was already OK for the 10 first ones we sent to
-netdev.
+sendmsg_frag() updates only the pfrag offset, if pfrag is available,
+while dfrag offset update is up to the caller.
 
-I just sent the different patches I have, nothing important but we have
-to fix these warnings one day I guess :)
+Squash-to: "mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-I also have a few questions:
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b5287bc40c59..46a67f9da9c3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -179,7 +179,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 	struct page *page;
+ 	u64 *write_seq;
+ 	size_t psize;
+-	int *poffset;
+ =
 
-mptcp: Implement MPTCP receive path
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ 	/* use the mptcp page cache so that we can easily move the data
+ 	 * from one substream to another, but do per subflow memory accounting
+@@ -240,7 +239,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 			offset =3D dfrag->offset;
+ 			frag_truesize =3D dfrag->overhead;
+ 		}
+-		poffset =3D &pfrag->offset;
+ 		psize =3D min_t(size_t, pfrag->size - offset, avail_size);
+ =
 
-I got these warnings:
+ 		/* Copy to page */
+@@ -257,7 +255,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 			return -ENOMEM;
+ 	} else {
+ 		offset =3D dfrag->offset;
+-		poffset =3D &dfrag->offset;
+ 		psize =3D min_t(size_t, dfrag->data_len, avail_size);
+ 	}
+ =
 
-  WARNING: line over 80 characters
-  #134: FILE: net/mptcp/options.c:104:
-  +               mp_opt->data_fin =3D (mp_opt->dss_flags &
-  MPTCP_DSS_DATA_FIN) !=3D 0;
+@@ -316,7 +313,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 	 */
+ =
 
-  WARNING: memory barrier without comment
-  #470: FILE: net/mptcp/protocol.c:327:
-  +       smp_mb__before_atomic();
+ out:
+-	*poffset +=3D frag_truesize;
++	if (!retransmission)
++		pfrag->offset +=3D frag_truesize;
+ 	*write_seq +=3D ret;
+ 	mptcp_subflow_ctx(ssk)->rel_write_seq +=3D ret;
+ =
 
-  WARNING: memory barrier without comment
-  #472: FILE: net/mptcp/protocol.c:329:
-  +       smp_mb__after_atomic();
-
-  WARNING: memory barrier without comment
-  #530: FILE: net/mptcp/protocol.c:397:
-  +               smp_mb__before_atomic();
-
-  WARNING: memory barrier without comment
-  #532: FILE: net/mptcp/protocol.c:399:
-  +               smp_mb__after_atomic();
-
-  WARNING: memory barrier without comment
-  #838: FILE: net/mptcp/subflow.c:172:
-  +               smp_mb__before_atomic();
-
-  WARNING: memory barrier without comment
-  #840: FILE: net/mptcp/subflow.c:174:
-  +               smp_mb__after_atomic();
-
-
-For the first one, maybe clearer to keep the line like this even if it
-has more than 80 chars (81 in fact...).
-
-But for the rest, should we add comments?
-
-
-General
-=3D=3D=3D=3D=3D=3D=3D
-
-At some points, we will have to fix this one:
-
-  WARNING: added, moved or deleted file(s), does MAINTAINERS need
-  updating?
-
-Cheers,
-Matt
+@@ -820,6 +818,7 @@ static void mptcp_retransmit(struct work_struct *work)
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RETRANSSEGS);
+ 		copied +=3D ret;
+ 		dfrag->data_len -=3D ret;
++		dfrag->offset +=3D ret;
+ 	}
+ 	if (copied)
+ 		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7820504248526419355==--
+2.21.0
+
+--===============5632088481623665936==--
