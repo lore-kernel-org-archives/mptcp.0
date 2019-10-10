@@ -1,48 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============2912565160523185503=="
+Content-Type: multipart/mixed; boundary="===============0966286282841979609=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] [PATCH] mptcp: fix warnings reported by checkpatch
-Date: Thu, 10 Oct 2019 16:27:42 +0200
-Message-ID: <20191010142745.6436-2-matthieu.baerts@tessares.net>
+Date: Thu, 10 Oct 2019 16:27:43 +0200
+Message-ID: <20191010142745.6436-3-matthieu.baerts@tessares.net>
 In-Reply-To: 20191010142745.6436-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2086
+X-UID: 2087
 
---===============2912565160523185503==
+--===============0966286282841979609==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-WARNING: 'thi' may be misspelled - perhaps 'the'?
-#77: FILE: net/mptcp/ctrl.c:38:
-+               /* users with CAP_NET_ADMIN or root (not and) can change thi
+WARNING: 'regarless' may be misspelled - perhaps 'regardless'?
+#13:
+Note that now we need to call __mptcp_init_sock() regarless of mptcp
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
 
 Notes:
-    to be squashed in "mptcp: new sysctl to control the activation per NS"
+    to be squashed in "mptcp: queue data for mptcp level retransmission"
 
- net/mptcp/ctrl.c | 2 +-
+ .topmsg | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 33de3ced2ba7..6023c9f722ea 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -35,7 +35,7 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
- 		.procname =3D "enabled",
- 		.maxlen =3D sizeof(int),
- 		.mode =3D 0644,
--		/* users with CAP_NET_ADMIN or root (not and) can change thi
-+		/* users with CAP_NET_ADMIN or root (not and) can change this
- 		 * value, same as other sysctl or the 'net' tree.
- 		 */
- 		.proc_handler =3D proc_dointvec,
+diff --git a/.topmsg b/.topmsg
+index 7e583db6e3ab..ab57e824a32c 100644
+--- a/.topmsg
++++ b/.topmsg
+@@ -10,7 +10,7 @@ the current page fragment can always host an MPTCP rtx qu=
+eue entry.
+ =
+
+ The MPTCP rtx queue is flushed at disconnect() and close() time
+ =
+
+-Note that now we need to call __mptcp_init_sock() regarless of mptcp
++Note that now we need to call __mptcp_init_sock() regardless of mptcp
+ enable status, as the destructor will try to walk the rtx_queue.
+ =
+
+ Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 -- =
 
 2.20.1
 
---===============2912565160523185503==--
+--===============0966286282841979609==--
