@@ -1,69 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============7560532431048155359=="
+Content-Type: multipart/mixed; boundary="===============7820504248526419355=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: fix warnings reported by checkpatch
-Date: Thu, 10 Oct 2019 16:27:45 +0200
-Message-ID: <20191010142745.6436-5-matthieu.baerts@tessares.net>
-In-Reply-To: 20191010142745.6436-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Checkpatch: questions about what is reported
+Date: Thu, 10 Oct 2019 16:31:18 +0200
+Message-ID: <747f60a9-c4ac-e1a5-a5b2-e20fe7546fef@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2089
+X-UID: 2090
 
---===============7560532431048155359==
+--===============7820504248526419355==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-WARNING: line over 80 characters
-#60: FILE: net/mptcp/protocol.c:1010:
-+               MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEFAL=
-LBACK);
+Hi,
 
-WARNING: line over 80 characters
-#69: FILE: net/mptcp/protocol.c:1163:
-+               MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEFALL=
-BACK);
+This afternoon, I was quickly looking at the output of checkpatch.pl for
+each patch. Everything was already OK for the 10 first ones we sent to
+netdev.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+I just sent the different patches I have, nothing important but we have
+to fix these warnings one day I guess :)
 
-Notes:
-    to be squashed in "mptcp: increment MIB counters in a few places"
+I also have a few questions:
 
- net/mptcp/protocol.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+mptcp: Implement MPTCP receive path
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e6ffab07d6ab..47f4c0aa37f8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1007,7 +1007,8 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
- 		new_sock->sk =3D NULL;
- 		sock_release(new_sock);
- =
+I got these warnings:
 
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
-+		MPTCP_INC_STATS(sock_net(sk),
-+				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
- 	}
- =
+  WARNING: line over 80 characters
+  #134: FILE: net/mptcp/options.c:104:
+  +               mp_opt->data_fin =3D (mp_opt->dss_flags &
+  MPTCP_DSS_DATA_FIN) !=3D 0;
 
- 	return newsk;
-@@ -1160,7 +1161,8 @@ void mptcp_finish_connect(struct sock *sk, int mp_cap=
-able)
- 		bh_unlock_sock(sk);
- 		local_bh_enable();
- 	} else {
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
-+		MPTCP_INC_STATS(sock_net(sk),
-+				MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
- 	}
- 	inet_sk_state_store(sk, TCP_ESTABLISHED);
- }
+  WARNING: memory barrier without comment
+  #470: FILE: net/mptcp/protocol.c:327:
+  +       smp_mb__before_atomic();
+
+  WARNING: memory barrier without comment
+  #472: FILE: net/mptcp/protocol.c:329:
+  +       smp_mb__after_atomic();
+
+  WARNING: memory barrier without comment
+  #530: FILE: net/mptcp/protocol.c:397:
+  +               smp_mb__before_atomic();
+
+  WARNING: memory barrier without comment
+  #532: FILE: net/mptcp/protocol.c:399:
+  +               smp_mb__after_atomic();
+
+  WARNING: memory barrier without comment
+  #838: FILE: net/mptcp/subflow.c:172:
+  +               smp_mb__before_atomic();
+
+  WARNING: memory barrier without comment
+  #840: FILE: net/mptcp/subflow.c:174:
+  +               smp_mb__after_atomic();
+
+
+For the first one, maybe clearer to keep the line like this even if it
+has more than 80 chars (81 in fact...).
+
+But for the rest, should we add comments?
+
+
+General
+=3D=3D=3D=3D=3D=3D=3D
+
+At some points, we will have to fix this one:
+
+  WARNING: added, moved or deleted file(s), does MAINTAINERS need
+  updating?
+
+Cheers,
+Matt
 -- =
 
-2.20.1
-
---===============7560532431048155359==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7820504248526419355==--
