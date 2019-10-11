@@ -1,296 +1,138 @@
-Content-Type: multipart/mixed; boundary="===============7461286366393315461=="
+Content-Type: multipart/mixed; boundary="===============2266829681726682605=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 10th of October 2019
-Date: Thu, 10 Oct 2019 19:04:37 +0200
-Message-ID: <a450bc77-03b5-13d5-cf0f-5928d0c03884@tessares.net>
+Subject: [MPTCP] Re: [PATCH mptcp-next 3/3] mptcp: switch mptcp_poll to mptcp
+ socket wait queue
+Date: Thu, 10 Oct 2019 17:13:40 -0700
+Message-ID: <alpine.OSX.2.21.1910101702400.68386@crpeter1-mobl.amr.corp.intel.com>
+In-Reply-To: 20191001115743.2807-4-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2093
+X-UID: 2094
 
---===============7461286366393315461==
+--===============2266829681726682605==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, 1 Oct 2019, Florian Westphal wrote:
+
+> tcp_poll places current task on a wait queue.  This can cause us to block
+> forever -- some subflows might never receive any data because they're
+> used as a backup/fallback path.
+>
+> This makes mptcp_poll wait on the mptcp socket wait queue instead.
+> __tcp_poll is used instead to avoid blocking current task again after
+> parent mptcp socket has been woken from the subflow layer.
+>
+> The series is incomplete, mptcp_should_wake_parent() should be extended
+> to take packets off the subflow queue and add them to the mptcp socket
+> queue, i.e. move most of the work currently done at recvmsg time into
+> the wakeup function.
+>
+> This is also needed to not wake userspace in case the subflow tcp data
+> was stale (e.g. because of too early mptcp-level retransmit).
+>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+> net/mptcp/protocol.c |  9 ++++++++-
+> net/mptcp/protocol.h |  1 +
+> net/mptcp/subflow.c  | 12 +++++++++---
+> 3 files changed, 18 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index b54fecf528b9..908146b7f300 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -531,6 +531,11 @@ static enum mapping_status mptcp_get_mapping(struct =
+sock *ssk)
+> 	return ret;
+> }
+>
+> +bool mptcp_should_wake_parent(struct mptcp_subflow_context *subflow)
+> +{
+> +	return true;
+> +}
+> +
+> static void mptcp_wait_data(struct sock *sk, long *timeo)
+> {
+> 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+> @@ -1378,11 +1383,13 @@ static __poll_t mptcp_poll(struct file *file, str=
+uct socket *sock,
+> 		return ret;
+> 	}
+>
+> +	sock_poll_wait(file, sock, wait);
+> +
+> 	mptcp_for_each_subflow(msk, subflow) {
+> 		struct socket *tcp_sock;
+>
+> 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
+> -		ret |=3D tcp_poll(file, tcp_sock, wait);
+> +		ret |=3D __tcp_poll(tcp_sock->sk);
+> 	}
+> 	release_sock(sk);
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 0c6bc8617cf4..eaa48fe90629 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -265,6 +265,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+> void mptcp_finish_connect(struct sock *sk, int mp_capable);
+> void mptcp_finish_join(struct sock *sk);
+> void mptcp_reset_timer(struct sock *sk);
+> +bool mptcp_should_wake_parent(struct mptcp_subflow_context *ctx);
+>
+> int mptcp_token_new_request(struct request_sock *req);
+> void mptcp_token_destroy_request(u32 token);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index fdec4f6208b7..2db2529ad323 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -310,14 +310,20 @@ static void subflow_data_ready(struct sock *sk)
+> 	subflow->tcp_sk_data_ready(sk);
+>
+> 	if (parent) {
+> -		pr_debug("parent=3D%p", parent);
+> +		struct socket_wq *wq;
+>
+> 		smp_mb__before_atomic();
+> 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
+> 		smp_mb__after_atomic();
+>
+> -		parent->sk_data_ready(parent);
+> -	}
+> +		rcu_read_lock();
+> +		wq =3D rcu_dereference(parent->sk_wq);
+> +		if (skwq_has_sleeper(wq) &&
+> +		    mptcp_should_wake_parent(subflow)) {
+> +			wake_up_interruptible_all(&wq->wait);
+> +		}
+> +		rcu_read_unlock();
+
+Compared to sock_def_readable, this wakeup code doesn't call =
+
+sk_wake_async. Is SOCK_FASYNC irrelevant here (sk_wake_async doesn't do =
+
+anything without that sock flag)?
+
+Mat
 
-Today, we just had our 70th meeting with Mat (Intel OTC), Christoph =
 
-(Apple), Paolo, Florian and Davide (RedHat) and myself (Tessares).
+> +	}
+> }
+>
+> static void subflow_write_space(struct sock *sk)
+> -- =
 
-Thanks again for this new good meeting!
+> 2.21.0
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
-
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-     - mptcp:diag: prefix exposed items:
-         - by Matth
-         - v1 commented by Davide & Florian
-         - v2 sent
-
-     - Squashed "tcp: Expose tcp struct and routine for MPTCP" into =
-
-"tcp: Export TCP functions and ops struct":
-         - proposed by Mat
-
-     - Yet another rebase/squash/cleanup proposal:
-         - by Florian
-         - Reviewed by Paolo, Mat, Matth
-         - Summary:
-             - folds two commits
-             - fixes the kbuild warnings we got with rfcv2
-             - gets rid of refcounting in mptcp_subflow_get_ref
-
-     - squash "mptcp: Make MPTCP socket block/wakeup ignore =
-
-sk_receive_queue" into "MPTCP receive path":
-         - by Mat
-
-     - mptcp: timout delta must be signed:
-         - by Paolo
-         - Accepted by Matth
-
-     - mptcp: mib: fix sparse warnings:
-         - by Florian
-         - Accepted by Matth
-
-     - mptcp: fix kbuild warning:
-         - by Matth
-         - Accepted by Matth
-
-     - PATCH kbuild:
-         - by Mat
-         - 3 patches
-         - Accepted by Matth
-
-
-
-Pending patches:
-     - mptcp: Interim Path Manager:
-         - by Peter
-         - v2 sent
-         - *Waiting for a last review*
-
-     - mptcp_poll should not block on each subflow:
-         - by Florian
-         - no longer an RFC
-         - *Waiting for a last review*
-
-     - selftests: prepare for mptcp ipv6 support:
-         - by Florian
-         - commented by Paolo and Peter (+ who can do what) and Alexander
-         - *Waiting for a last review*
-
-     - mptcp: disallow setting the MPTCP ULP from userspace:
-         - by Davide
-         - Commented by Matth, Paolo
-         - v2 expected
-
-     - mptcp: fix warnings reported by checkpatch:
-         - by Matth
-         - 5 patches
-         - *Waiting for review*
-         - questions about remaining warnings:
-             - no need to cut if just above 80 chars if hard to read =
-
-after the cut
-             - warnings: memory barrier without comment. Paolo has =
-
-proposed a new comment
-             - MAINTAINERS file
-
-     - mptcp: fix 'assignment from incompatible pointer type' warning:
-         - By Paolo
-         - *Waiting for review*
-
-
-
-Commit message:
-     - According to the doc, we should have a pair of "Co-developed-by: =
-
-<xxx>"  immediately followed by  "Signed-off-by: <xxx>"
-
-     - Then a "Signed-off-by" for the one sending the patches
-
-     - checkpatch.pl will not complain if "Co-developed-by: <xxx>" is =
-
-not added, only if the following signed-off is not OK
-
-     - =
-
-https://elixir.bootlin.com/linux/v5.4-rc2/source/Documentation/process/subm=
-itting-patches.rst#L548
-
-     - > Checkpatch has "Check Co-developed-by: immediately followed by =
-
-Signed-off-by: with same name and email"
-
-     - *@Matth* can look at that
-
-
-
-Remaining items for the initial submission:
-     - IPv6 support:
-         - Peter is working on it
-         - Simple test cases working, will post an RFC patch soon
-
-     - MPTCP v1 support:
-         - To be done
-         - Do we need also the support in mptcp.org (out-of-tree)
-         - patches that had been shared were working, at least v1 =E2=86=92=
- v1
-
-     - DATA_FIN:
-         - Mat is working on it
-         - working fine with a single subflow, WIP for multiple ones
-         - Mat hopes to prepare a RFC patch soon
-         - It seems there are work to do on MPTCP shutdown side.
-
-     - Shared recv window:
-         - we at least need protections again "deadlocks" if we accept =
-
-having multiple subflows
-         - work to be done, e.g. drop out of order MPTCP data
-
-     - Active backup support:
-         - Paolo is working on it
-         - Florian plans to work on a basic scheduler.
-
-     - Limit subflow ULP visibility to kernel space:
-         - Davide is working on it
-         - should be closed soon
-
-     - optimisation of options in TCP "struct mptcp_options_received":
-         - work to be done
-
-     - MP_FAST_CLOSE, seems not implemented:
-         - Do we want to add it now?
-         - We might be able to live without it *for the moment*
-         - implementation is easier with MPTCPv1
-         - worst case if we don't support it:
-             - one end with MPTCPv1 but using the old method: sending an =
-
-ACK with FC
-             - the other end with MPTCPv1 upstream: we don't react to =
-
-this ACK
-             - RST not sent
-             - but initiator should anyway drop the connections
-
-
-
-RFCv3:
-     - sent by Mat yesterday (20191009)
-     - no feedback yet
-
-
-
-KBuild:
-     - possible to cc warnings/errors to the ML?
-     - Mat will check if:
-         - the system can monitor the mailing
-         - the system can continue to monitor Mat's repo but send =
-
-messages to our ML (not only the people listed in the commit message)
-
-
-
-Patent question:
-     - By Paolo:
-         - It appears its best that the implementation submitted for =
-
-mainline kernel inclusion of the detail that appears to be the subject =
-
-of the patent be done with code authored by you as and Apple employee.
-         - It should be apparent from the written records (e.g. mailing =
-
-list archives) that you've consulted with others at Apple who are aware =
-
-of the relationship between the patent and the implementation.
-         - Failing that, a Signed-off-by from you -- using your =
-
-@apple.com address on the patch implementing the relevant V1 bits.
-
-     - Signed-off-by from Christoph is enough?:
-         - the best would be to have Christoph writing the code covered =
-
-by the patent
-
-
-
-CI:
-     - now checking that each commit can compile
-
-
-
-selftests:
-     - new functionality tests?:
-         - diag, mib, etc.
-
-     - packetdrill:
-         - 2 lines to add the new socket support
-         - Davide will have a look at this to know what is possible to =
-
-do with the existing implementation
-         - (ideally we should re-implement MPTCP support on top of the =
-
-last version of packetdrill)
-
-
-
-lwn:
-     - https://lwn.net/Articles/800501/
-     - now public
-
-
-
-for the next chunk of patches:
-     - we hope to have feedback from David Miller
-
-     - could be good to send a new RFC of the second chunk later
-
-     - for IPv6, we could implement the workaround proposed by Florian =
-
-last week
-
-     - (also hard to comply with the other request: smaller patch-set)
-
-
-
-RFC6824bis:
-     - progressing
-     - there were new comments from IESG
-     - For the moment at the RFC Editor state, checking typo
-     - https://datatracker.ietf.org/doc/draft-ietf-mptcp-rfc6824bis/
-     - hard to give a date
-
-
-
-Next meeting:
-     - We propose to have it next Thursday, the 17th of October.
-     - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20191017
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-
-Talk to you next week,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7461286366393315461==--
+--
+Mat Martineau
+Intel
+--===============2266829681726682605==--
