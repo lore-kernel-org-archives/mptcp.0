@@ -1,129 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============2266829681726682605=="
+Content-Type: multipart/mixed; boundary="===============8353574385225512485=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 3/3] mptcp: switch mptcp_poll to mptcp
- socket wait queue
-Date: Thu, 10 Oct 2019 17:13:40 -0700
-Message-ID: <alpine.OSX.2.21.1910101702400.68386@crpeter1-mobl.amr.corp.intel.com>
-In-Reply-To: 20191001115743.2807-4-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: fix 'assignment from incompatible
+ pointer type' warning
+Date: Thu, 10 Oct 2019 17:28:40 -0700
+Message-ID: <alpine.OSX.2.21.1910101722160.68386@crpeter1-mobl.amr.corp.intel.com>
+In-Reply-To: 88e6d785c72e7d5591ae29dc8395162b306140ac.1570721199.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2094
+X-UID: 2095
 
---===============2266829681726682605==
+--===============8353574385225512485==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 1 Oct 2019, Florian Westphal wrote:
+On Thu, 10 Oct 2019, Paolo Abeni wrote:
 
-> tcp_poll places current task on a wait queue.  This can cause us to block
-> forever -- some subflows might never receive any data because they're
-> used as a backup/fallback path.
+> when building vs 32 bits arches pfrag->offset is 16bits , otherwise 32.
+> Instead of using conditional definitions in multiple places, let's
+> drop 'poffset' variable altogether.
 >
-> This makes mptcp_poll wait on the mptcp socket wait queue instead.
-> __tcp_poll is used instead to avoid blocking current task again after
-> parent mptcp socket has been woken from the subflow layer.
+> sendmsg_frag() updates only the pfrag offset, if pfrag is available,
+> while dfrag offset update is up to the caller.
 >
-> The series is incomplete, mptcp_should_wake_parent() should be extended
-> to take packets off the subflow queue and add them to the mptcp socket
-> queue, i.e. move most of the work currently done at recvmsg time into
-> the wakeup function.
->
-> This is also needed to not wake userspace in case the subflow tcp data
-> was stale (e.g. because of too early mptcp-level retransmit).
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> net/mptcp/protocol.c |  9 ++++++++-
-> net/mptcp/protocol.h |  1 +
-> net/mptcp/subflow.c  | 12 +++++++++---
-> 3 files changed, 18 insertions(+), 4 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index b54fecf528b9..908146b7f300 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -531,6 +531,11 @@ static enum mapping_status mptcp_get_mapping(struct =
-sock *ssk)
-> 	return ret;
-> }
->
-> +bool mptcp_should_wake_parent(struct mptcp_subflow_context *subflow)
-> +{
-> +	return true;
-> +}
-> +
-> static void mptcp_wait_data(struct sock *sk, long *timeo)
-> {
-> 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-> @@ -1378,11 +1383,13 @@ static __poll_t mptcp_poll(struct file *file, str=
-uct socket *sock,
-> 		return ret;
-> 	}
->
-> +	sock_poll_wait(file, sock, wait);
-> +
-> 	mptcp_for_each_subflow(msk, subflow) {
-> 		struct socket *tcp_sock;
->
-> 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
-> -		ret |=3D tcp_poll(file, tcp_sock, wait);
-> +		ret |=3D __tcp_poll(tcp_sock->sk);
-> 	}
-> 	release_sock(sk);
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 0c6bc8617cf4..eaa48fe90629 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -265,6 +265,7 @@ void mptcp_get_options(const struct sk_buff *skb,
-> void mptcp_finish_connect(struct sock *sk, int mp_capable);
-> void mptcp_finish_join(struct sock *sk);
-> void mptcp_reset_timer(struct sock *sk);
-> +bool mptcp_should_wake_parent(struct mptcp_subflow_context *ctx);
->
-> int mptcp_token_new_request(struct request_sock *req);
-> void mptcp_token_destroy_request(u32 token);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index fdec4f6208b7..2db2529ad323 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -310,14 +310,20 @@ static void subflow_data_ready(struct sock *sk)
-> 	subflow->tcp_sk_data_ready(sk);
->
-> 	if (parent) {
-> -		pr_debug("parent=3D%p", parent);
-> +		struct socket_wq *wq;
->
-> 		smp_mb__before_atomic();
-> 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
-> 		smp_mb__after_atomic();
->
-> -		parent->sk_data_ready(parent);
-> -	}
-> +		rcu_read_lock();
-> +		wq =3D rcu_dereference(parent->sk_wq);
-> +		if (skwq_has_sleeper(wq) &&
-> +		    mptcp_should_wake_parent(subflow)) {
-> +			wake_up_interruptible_all(&wq->wait);
-> +		}
-> +		rcu_read_unlock();
 
-Compared to sock_def_readable, this wakeup code doesn't call =
+Looks good to me. Thanks for the fix and remembering to check the 32-bit =
 
-sk_wake_async. Is SOCK_FASYNC irrelevant here (sk_wake_async doesn't do =
+build.
 
-anything without that sock flag)?
+Matthieu, you were asking about build automation suggestions. A 32-bit =
+
+build could be helpful!
 
 Mat
 
 
-> +	}
-> }
+> Squash-to: "mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 7 +++----
+> 1 file changed, 3 insertions(+), 4 deletions(-)
 >
-> static void subflow_write_space(struct sock *sk)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index b5287bc40c59..46a67f9da9c3 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -179,7 +179,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+> 	struct page *page;
+> 	u64 *write_seq;
+> 	size_t psize;
+> -	int *poffset;
+>
+> 	/* use the mptcp page cache so that we can easily move the data
+> 	 * from one substream to another, but do per subflow memory accounting
+> @@ -240,7 +239,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+> 			offset =3D dfrag->offset;
+> 			frag_truesize =3D dfrag->overhead;
+> 		}
+> -		poffset =3D &pfrag->offset;
+> 		psize =3D min_t(size_t, pfrag->size - offset, avail_size);
+>
+> 		/* Copy to page */
+> @@ -257,7 +255,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+> 			return -ENOMEM;
+> 	} else {
+> 		offset =3D dfrag->offset;
+> -		poffset =3D &dfrag->offset;
+> 		psize =3D min_t(size_t, dfrag->data_len, avail_size);
+> 	}
+>
+> @@ -316,7 +313,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+> 	 */
+>
+> out:
+> -	*poffset +=3D frag_truesize;
+> +	if (!retransmission)
+> +		pfrag->offset +=3D frag_truesize;
+> 	*write_seq +=3D ret;
+> 	mptcp_subflow_ctx(ssk)->rel_write_seq +=3D ret;
+>
+> @@ -820,6 +818,7 @@ static void mptcp_retransmit(struct work_struct *work)
+> 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RETRANSSEGS);
+> 		copied +=3D ret;
+> 		dfrag->data_len -=3D ret;
+> +		dfrag->offset +=3D ret;
+> 	}
+> 	if (copied)
+> 		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
 > -- =
 
 > 2.21.0
@@ -135,4 +104,4 @@ Mat
 --
 Mat Martineau
 Intel
---===============2266829681726682605==--
+--===============8353574385225512485==--
