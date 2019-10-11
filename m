@@ -1,105 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============2031532014760058382=="
+Content-Type: multipart/mixed; boundary="===============2890140630646079540=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [GIT] add Co-developed-by tag
-Date: Fri, 11 Oct 2019 17:46:29 +0200
-Message-ID: <f2eae9f6-762a-303a-901b-2df193473b18@tessares.net>
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: fix 'assignment from incompatible
+ pointer type' warning
+Date: Fri, 11 Oct 2019 18:08:47 +0200
+Message-ID: <d9d38839-fe44-f6b9-17ed-323f5bef997e@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1910101722160.68386@crpeter1-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2097
+X-UID: 2098
 
---===============2031532014760058382==
+--===============2890140630646079540==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Paolo, Mat,
 
-As requested by our new layer Paolo (OK, now it is your turn to be =
+On 11/10/2019 02:28, Mat Martineau wrote:
+> On Thu, 10 Oct 2019, Paolo Abeni wrote:
+> =
 
-authorized to hate me!), I just added Co-developed-by tags using a =
+>> when building vs 32 bits arches pfrag->offset is 16bits , otherwise 32.
+>> Instead of using conditional definitions in multiple places, let's
+>> drop 'poffset' variable altogether.
+>>
+>> sendmsg_frag() updates only the pfrag offset, if pfrag is available,
+>> while dfrag offset update is up to the caller.
+>>
+> =
 
-script [1]. Here is an example of the modification that has been applied =
+> Looks good to me. Thanks for the fix and remembering to check the 32-bit =
 
-for "mptcp: add basic kselftest for mptcp":
+> build.
 
+Thank you for the patch and the review!
 
-   From Matthieu Baerts: Add sysctl test
-   From Paolo Abeni: Use tc/ethtool to test more skb handling code paths
+It seems I add to apply it in 2 parts:
 
-  -Signed-off-by: Florian Westphal <fw(a)strlen.de>
-  +Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
-   Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-  +Co-developed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-   Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-  +Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-   Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-  +Co-developed-by: Davide Caratti <dcaratti(a)redhat.com>
-   Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-  +Signed-off-by: Florian Westphal <fw(a)strlen.de>
+- 2d04d60715f3: "squashed" (part 1) in "mptcp: rework mptcp_sendmsg_frag =
 
-I hope I correctly understood the doc[2]. Here are the modifications I did:
+to accept optional dfrag"
+- 134ba5eb5cc1: "squashed" (part 2) in "mptcp: implement and use =
 
+MPTCP-level retransmission"
+- 9692b7db4cfb..c4908614f7c5: result
 
-- bd7e711d2a32: added Co-developed-by in t/mptcp-Add-MPTCP-to-skb-extensions
-- 4af61fb78bb5: added Co-developed-by in =
+> Matthieu, you were asking about build automation suggestions. A 32-bit =
 
-t/tcp-Export-TCP-functions-and-ops-struct
-- 1585f0f743cc: added Co-developed-by in t/tcp-clean-ext-on-tx-recycle
-- cc24553aa9c8: added Co-developed-by in t/mptcp-Add-MPTCP-socket-stubs
-- b40d1790eef7: added Co-developed-by in t/mptcp-Handle-MPTCP-TCP-options
-- f96e8008e96c: added Co-developed-by in =
+> build could be helpful!
 
-t/mptcp-Associate-MPTCP-context-with-TCP-socket
-- 23ddd0d11365: added Co-developed-by in =
+Good idea, just added in the list of ideas! (I guess I will also have to =
 
-t/mptcp-Create-SUBFLOW-socket-for-incoming-connections
-- 862a3b653fbe: added Co-developed-by in =
+catch warnings, I don't think I do that for the moment).
 
-t/mptcp-Add-key-generation-and-token-tree
-- bda17a63d162: added Co-developed-by in =
-
-t/mptcp-Add-setsockopt-getsockopt-socket-operations
-- 2e8e4c744388: added Co-developed-by in =
-
-t/mptcp-Write-MPTCP-DSS-headers-to-outgoing-data-packets
-- 0c71387abf95: added Co-developed-by in =
-
-t/mptcp-Implement-MPTCP-receive-path
-- 6e6feed018bf: added Co-developed-by in t/mptcp-Add-path-manager-interface
-- f6937fc624d7: added Co-developed-by in =
-
-t/mptcp-harmonize-locking-on-all-socket-operations
-- 26dbeddb01c4: added Co-developed-by in =
-
-t/mptcp-add-basic-kselftest-for-mptcp
-- ff04a4e0c349: added Co-developed-by in =
-
-t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-- 6f36e3956483: added Co-developed-by in =
-
-t/mptcp-Implement-path-manager-interface-commands
-- 0e9ca364b916: added Co-developed-by in =
-
-t/mptcp-allow-dumping-subflow-context-to-userspace
-
-
-Next time we have signed-off to add, Co-developed-by will be added =
-
-automatically as well.
+Tests are in progress.
 
 Cheers,
 Matt
-
-[1] =
-
-https://github.com/multipath-tcp/mptcp_net-next/blob/scripts/utils/add_co_d=
-ev.py
-[2] =
-
-https://elixir.bootlin.com/linux/v5.4-rc2/source/Documentation/process/subm=
-itting-patches.rst#L548
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -107,4 +66,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2031532014760058382==--
+--===============2890140630646079540==--
