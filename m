@@ -1,107 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============8353574385225512485=="
+Content-Type: multipart/mixed; boundary="===============8367859576447490264=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: fix 'assignment from incompatible
- pointer type' warning
-Date: Thu, 10 Oct 2019 17:28:40 -0700
-Message-ID: <alpine.OSX.2.21.1910101722160.68386@crpeter1-mobl.amr.corp.intel.com>
-In-Reply-To: 88e6d785c72e7d5591ae29dc8395162b306140ac.1570721199.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next 3/3] mptcp: switch mptcp_poll to mptcp
+ socket wait queue
+Date: Fri, 11 Oct 2019 12:06:40 +0200
+Message-ID: <20191011100640.GM25052@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.21.1910101702400.68386@crpeter1-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2095
+X-UID: 2096
 
---===============8353574385225512485==
+--===============8367859576447490264==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 10 Oct 2019, Paolo Abeni wrote:
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> > -		pr_debug("parent=3D%p", parent);
+> > +		struct socket_wq *wq;
+> > =
 
-> when building vs 32 bits arches pfrag->offset is 16bits , otherwise 32.
-> Instead of using conditional definitions in multiple places, let's
-> drop 'poffset' variable altogether.
->
-> sendmsg_frag() updates only the pfrag offset, if pfrag is available,
-> while dfrag offset update is up to the caller.
->
+> > 		smp_mb__before_atomic();
+> > 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
+> > 		smp_mb__after_atomic();
+> > =
 
-Looks good to me. Thanks for the fix and remembering to check the 32-bit =
+> > -		parent->sk_data_ready(parent);
+> > -	}
+> > +		rcu_read_lock();
+> > +		wq =3D rcu_dereference(parent->sk_wq);
+> > +		if (skwq_has_sleeper(wq) &&
+> > +		    mptcp_should_wake_parent(subflow)) {
+> > +			wake_up_interruptible_all(&wq->wait);
+> > +		}
+> > +		rcu_read_unlock();
+> =
 
-build.
+> Compared to sock_def_readable, this wakeup code doesn't call sk_wake_asyn=
+c.
+> Is SOCK_FASYNC irrelevant here (sk_wake_async doesn't do anything without
+> that sock flag)?
 
-Matthieu, you were asking about build automation suggestions. A 32-bit =
+Its not.  Perhaps best to make this a simpler
 
-build could be helpful!
+if (mptcp_should_wake_parent(subflow))
+	parent->sk_data_ready(parent);
 
-Mat
-
-
-> Squash-to: "mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/protocol.c | 7 +++----
-> 1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index b5287bc40c59..46a67f9da9c3 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -179,7 +179,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
-> 	struct page *page;
-> 	u64 *write_seq;
-> 	size_t psize;
-> -	int *poffset;
->
-> 	/* use the mptcp page cache so that we can easily move the data
-> 	 * from one substream to another, but do per subflow memory accounting
-> @@ -240,7 +239,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
-> 			offset =3D dfrag->offset;
-> 			frag_truesize =3D dfrag->overhead;
-> 		}
-> -		poffset =3D &pfrag->offset;
-> 		psize =3D min_t(size_t, pfrag->size - offset, avail_size);
->
-> 		/* Copy to page */
-> @@ -257,7 +255,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
-> 			return -ENOMEM;
-> 	} else {
-> 		offset =3D dfrag->offset;
-> -		poffset =3D &dfrag->offset;
-> 		psize =3D min_t(size_t, dfrag->data_len, avail_size);
-> 	}
->
-> @@ -316,7 +313,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
-> 	 */
->
-> out:
-> -	*poffset +=3D frag_truesize;
-> +	if (!retransmission)
-> +		pfrag->offset +=3D frag_truesize;
-> 	*write_seq +=3D ret;
-> 	mptcp_subflow_ctx(ssk)->rel_write_seq +=3D ret;
->
-> @@ -820,6 +818,7 @@ static void mptcp_retransmit(struct work_struct *work)
-> 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RETRANSSEGS);
-> 		copied +=3D ret;
-> 		dfrag->data_len -=3D ret;
-> +		dfrag->offset +=3D ret;
-> 	}
-> 	if (copied)
-> 		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
-> -- =
-
-> 2.21.0
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
-
---
-Mat Martineau
-Intel
---===============8353574385225512485==--
+I will make this change in the next iteration.
+--===============8367859576447490264==--
