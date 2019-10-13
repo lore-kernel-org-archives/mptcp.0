@@ -1,197 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============2075350107796024128=="
+Content-Type: multipart/mixed; boundary="===============1790163554556373643=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 2/3] mptcp: flush duplicate data at data_ready()
- time
-Date: Sun, 13 Oct 2019 18:28:45 +0200
-Message-ID: <25e34d82a98e9b9dc325a9408912d5c0cc1fe95c.1570834035.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 3/3] mptcp: recvmsg() can drain data from multiple
+ subflows
+Date: Sun, 13 Oct 2019 18:28:46 +0200
+Message-ID: <861c7c76c198b5d1f9bb2e587b072c1e030e961d.1570834035.git.pabeni@redhat.com>
 In-Reply-To: cover.1570834035.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2102
+X-UID: 2103
 
---===============2075350107796024128==
+--===============1790163554556373643==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Move subflow mapping related function to subflow.c - I think
-they belong there.
+With the previous patch in place, the msk can detect which subflow
+has the current map with a simple walk, let's update the main
+loop to always select the 'current' subflow.
 
-Refactor slightly get_mapping() to additionally validate the
-current mapping, moving some code from mptcp_recvmsg().
-
-mptcp_data_ready() drops any skb which does not match exactly
-the current MPTCP seq number.
-
-Old seqs are likely spurious retransmit we really want to ignore
-"future" seq may really happen in case of active backup switch-over,
-but we should converge to the current seq via 'correct' MPTCP-level
-retransmissions.
+Additionally:
+- changes the exit conditions to mirror closely tcp_recvmsg() this should
+  fix unexpected behavior with timeout and signals.
+- brings in MSG_WAITALL && lowlatency support. This is actually required
+  to avoid deadlock in the selftests once we switch to the above end of
+  main loop conditions
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 187 +-----------------------------
- net/mptcp/protocol.h |  10 +-
- net/mptcp/subflow.c  | 270 ++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 279 insertions(+), 188 deletions(-)
+ net/mptcp/protocol.c | 174 +++++++++++++++++++++++++++----------------
+ 1 file changed, 111 insertions(+), 63 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 45cea5edf9a5..da2d749d69f4 100644
+index da2d749d69f4..21743afd935c 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -387,17 +387,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- 	return ret;
+@@ -92,6 +92,29 @@ static struct sock *mptcp_subflow_get(const struct mptcp=
+_sock *msk)
+ 	return NULL;
  }
  =
 
--static u64 expand_seq(u64 old_seq, u16 old_data_len, u64 seq)
--{
--	if ((u32)seq =3D=3D (u32)old_seq)
--		return old_seq;
--
--	/* Assume map covers data not mapped yet. */
--	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63, 32));
--}
--
- int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
--			    unsigned int offset, size_t len)
-+		     unsigned int offset, size_t len)
- {
- 	struct mptcp_read_arg *arg =3D desc->arg.data;
- 	size_t copy_len;
-@@ -425,88 +416,6 @@ int mptcp_read_actor(read_descriptor_t *desc, struct s=
-k_buff *skb,
- 	return copy_len;
- }
- =
-
--enum mapping_status {
--	MAPPING_ADDED,
--	MAPPING_MISSING,
--	MAPPING_EMPTY,
--	MAPPING_DATA_FIN
--};
--
--static enum mapping_status mptcp_get_mapping(struct sock *ssk)
--{
--	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
--	struct mptcp_ext *mpext;
--	enum mapping_status ret;
--	struct sk_buff *skb;
--	u64 map_seq;
--
--	skb =3D skb_peek(&ssk->sk_receive_queue);
--	if (!skb) {
--		pr_debug("Empty queue");
--		return MAPPING_EMPTY;
--	}
--
--	mpext =3D mptcp_get_ext(skb);
--
--	if (!mpext) {
--		/* This is expected for non-DSS data packets */
--		return MAPPING_MISSING;
--	}
--
--	if (!mpext->use_map) {
--		ret =3D MAPPING_MISSING;
--		goto del_out;
--	}
--
--	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u", mpext->data_seq,
--		 mpext->dsn64, mpext->subflow_seq, mpext->data_len);
--
--	if (mpext->data_len =3D=3D 0) {
--		pr_err("Infinite mapping not handled");
--		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
--		ret =3D MAPPING_MISSING;
--		goto del_out;
--	} else if (mpext->subflow_seq =3D=3D 0 &&
--		   mpext->data_fin =3D=3D 1) {
--		pr_debug("DATA_FIN with no payload");
--		ret =3D MAPPING_DATA_FIN;
--		goto del_out;
--	}
--
--	if (!mpext->dsn64) {
--		map_seq =3D expand_seq(subflow->map_seq, subflow->map_data_len,
--				     mpext->data_seq);
--		pr_debug("expanded seq=3D%llu", subflow->map_seq);
--	} else {
--		map_seq =3D mpext->data_seq;
--	}
--
--	if (subflow->map_valid) {
--		/* due to GSO/TSO we can receive the same mapping multiple
--		 * times, before it's expiration.
--		 */
--		if (subflow->map_seq !=3D map_seq ||
--		    subflow->map_subflow_seq !=3D mpext->subflow_seq ||
--		    subflow->map_data_len !=3D mpext->data_len) {
--			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSNOMATCH);
--			pr_warn("Replaced mapping before it was done");
--		}
--	}
--
--	subflow->map_seq =3D map_seq;
--	subflow->map_subflow_seq =3D mpext->subflow_seq;
--	subflow->map_data_len =3D mpext->data_len;
--	subflow->map_valid =3D 1;
--	ret =3D MAPPING_ADDED;
--	pr_debug("new map seq=3D%llu subflow_seq=3D%u data_len=3D%u",
--		 subflow->map_seq, subflow->map_subflow_seq,
--		 subflow->map_data_len);
--
--del_out:
--	__skb_ext_del(skb, SKB_EXT_MPTCP);
--	return ret;
--}
--
- static void mptcp_wait_data(struct sock *sk, long *timeo)
- {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-@@ -532,12 +441,6 @@ static void mptcp_wait_data(struct sock *sk, long *tim=
-eo)
- 	remove_wait_queue(sk_sleep(sk), &wait);
- }
- =
-
--static void warn_bad_map(struct mptcp_subflow_context *subflow, u32 ssn)
--{
--	WARN_ONCE(1, "Bad mapping: ssn=3D%d map_seq=3D%d map_data_len=3D%d",
--		  ssn, subflow->map_subflow_seq, subflow->map_data_len);
--}
--
- static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 			 int nonblock, int flags, int *addr_len)
- {
-@@ -573,6 +476,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
++static struct sock *mptcp_subflow_recv_lookup(const struct mptcp_sock *msk)
++{
++	struct sock *sk =3D (struct sock *)msk;
++	struct mptcp_subflow_context *subflow;
++	int receivers =3D 0;
++
++	sock_owned_by_me(sk);
++
++	mptcp_for_each_subflow(msk, subflow) {
++		if (subflow->data_avail)
++			return mptcp_subflow_tcp_socket(subflow)->sk;
++
++		receivers +=3D !subflow->rx_eof;
++	}
++
++	/* hopefully temporary hack: propagate shutdown status from subflow
++	 * to msk, when all subflows agree on it
++	 */
++	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN))
++		sk->sk_shutdown |=3D RCV_SHUTDOWN;
++	return NULL;
++}
++
+ static inline bool mptcp_skb_can_collapse_to(u64 write_seq,
+ 					     const struct sk_buff *skb,
+ 					     const struct mptcp_ext *mpext)
+@@ -452,6 +475,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
  *msg, size_t len,
+ 	struct tcp_sock *tp;
+ 	struct sock *ssk;
+ 	int copied =3D 0;
++	int target;
+ 	long timeo;
  =
 
- 	lock_sock(ssk);
+ 	lock_sock(sk);
+@@ -465,17 +489,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghd=
+r *msg, size_t len,
+ 		return copied;
+ 	}
  =
 
-+	arg.msg =3D msg;
+-	ssk =3D mptcp_subflow_get(msk);
+-	if (!ssk) {
+-		release_sock(sk);
+-		return -ENOTCONN;
+-	}
+-
+-	subflow =3D mptcp_subflow_ctx(ssk);
+-	tp =3D tcp_sk(ssk);
+-
+-	lock_sock(ssk);
+-
+ 	arg.msg =3D msg;
  	desc.arg.data =3D &arg;
  	desc.error =3D 0;
+@@ -483,75 +496,102 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
+hdr *msg, size_t len,
+ 	timeo =3D sock_rcvtimeo(sk, nonblock);
  =
 
-@@ -581,120 +485,41 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len,
  	len =3D min_t(size_t, len, INT_MAX);
++	target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
  =
 
  	while (copied < len) {
--		enum mapping_status status;
  		u32 map_remaining;
  		int bytes_read;
- 		u64 ack_seq;
- 		u64 old_ack;
--		u32 ssn;
+-		u64 ack_seq;
+-		u64 old_ack;
  =
 
  		smp_mb__before_atomic();
@@ -199,456 +119,185 @@ hdr *msg, size_t len,
  		smp_mb__after_atomic();
  =
 
--		status =3D mptcp_get_mapping(ssk);
--
--		if (status =3D=3D MAPPING_ADDED) {
--			/* Common case, but nothing to do here */
--		} else if (status =3D=3D MAPPING_MISSING) {
--			struct sk_buff *skb =3D skb_peek(&ssk->sk_receive_queue);
--
--			if (!skb->len) {
--				/* the TCP stack deliver 0 len FIN pkt
--				 * to the receive queue, that is the only
--				 * 0len pkts ever expected here, and we can
--				 * admit no mapping only for 0 len pkts
--				 */
--				if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN))
--					WARN_ONCE(1, "0len seq %d:%d flags %x",
--						  TCP_SKB_CB(skb)->seq,
--						  TCP_SKB_CB(skb)->end_seq,
--						  TCP_SKB_CB(skb)->tcp_flags);
--				sk_eat_skb(sk, skb);
--				continue;
--			}
--			if (!subflow->map_valid) {
--				WARN_ONCE(1, "corrupted stream: missing mapping");
--				copied =3D -EBADFD;
--				break;
--			}
--		} else if (status =3D=3D MAPPING_EMPTY) {
-+		if (!mptcp_subflow_data_available(ssk))
+-		if (!mptcp_subflow_data_available(ssk))
++		ssk =3D mptcp_subflow_recv_lookup(msk);
++		pr_debug("msk=3D%p ssk=3D%p", msk, ssk);
++		if (!ssk)
  			goto wait_for_data;
--		} else if (status =3D=3D MAPPING_DATA_FIN) {
--			/* TODO: Handle according to RFC 6824 */
--			if (!copied) {
--				pr_err("Can't read after DATA_FIN");
--				copied =3D -ENOTCONN;
--			}
+ =
+
+-		old_ack =3D msk->ack_seq;
+-		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
+-		map_remaining =3D subflow->map_data_len -
+-				mptcp_subflow_get_map_offset(subflow);
 -
+-		/* Read mapped data */
+-		desc.count =3D min_t(size_t, len - copied, map_remaining);
+-		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
+-		if (bytes_read < 0)
 -			break;
--		}
++		subflow =3D mptcp_subflow_ctx(ssk);
++		tp =3D tcp_sk(ssk);
  =
 
--		ssn =3D tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
- 		old_ack =3D msk->ack_seq;
+-		/* Refresh current MPTCP sequence number based on subflow seq */
+-		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
+-		if (before64(old_ack, ack_seq))
+-			msk->ack_seq =3D ack_seq;
 -
--		if (unlikely(before(ssn, subflow->map_subflow_seq))) {
--			/* Mapping covers data later in the subflow stream,
--			 * currently unsupported.
--			 */
--			warn_bad_map(subflow, ssn);
--			copied =3D -EBADFD;
--			break;
--		} else if (unlikely(!before(ssn, (subflow->map_subflow_seq +
--						  subflow->map_data_len)))) {
--			/* Mapping ends earlier in the subflow stream.
--			 * Invalid
--			 */
--			warn_bad_map(subflow, ssn);
--			copied =3D -EBADFD;
--			break;
--		}
+-		copied +=3D bytes_read;
 -
- 		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
- 		map_remaining =3D subflow->map_data_len -
- 				mptcp_subflow_get_map_offset(subflow);
- =
-
--		if (before64(ack_seq, old_ack)) {
--			/* Mapping covers data already received, discard data
--			 * in the current mapping
--			 */
--			arg.msg =3D NULL;
--			desc.count =3D min_t(size_t, old_ack - ack_seq,
--					   map_remaining);
--			pr_debug("Dup data, map len=3D%d acked=3D%lld dropped=3D%zu",
--				 map_remaining, old_ack - ack_seq, desc.count);
--		} else {
--			arg.msg =3D msg;
--			desc.count =3D min_t(size_t, len - copied, map_remaining);
--		}
--
- 		/* Read mapped data */
-+		desc.count =3D min_t(size_t, len - copied, map_remaining);
- 		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
- 		if (bytes_read < 0)
- 			break;
- =
-
- 		/* Refresh current MPTCP sequence number based on subflow seq */
- 		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
--
- 		if (before64(old_ack, ack_seq))
- 			msk->ack_seq =3D ack_seq;
- =
-
--		if (!before(tcp_sk(ssk)->copied_seq - subflow->ssn_offset,
--			    subflow->map_subflow_seq + subflow->map_data_len)) {
--			subflow->map_valid =3D 0;
--			pr_debug("Done with mapping: seq=3D%u data_len=3D%u",
--				 subflow->map_subflow_seq,
--				 subflow->map_data_len);
--		}
--
--		if (arg.msg)
--			copied +=3D bytes_read;
-+		copied +=3D bytes_read;
- =
-
- 		/* The 'wait_for_data' code path can terminate the receive loop
- 		 * in a number of scenarios: check if more data is pending
- 		 * before giving up.
- 		 */
--		if (!skb_queue_empty(&ssk->sk_receive_queue))
-+		if (mptcp_subflow_data_available(ssk))
- 			continue;
+-		/* The 'wait_for_data' code path can terminate the receive loop
+-		 * in a number of scenarios: check if more data is pending
+-		 * before giving up.
+-		 */
+-		if (mptcp_subflow_data_available(ssk))
+-			continue;
++		lock_sock(ssk);
++		while (mptcp_subflow_data_available(ssk)) {
++			/* try to read as much data as available */
++			map_remaining =3D subflow->map_data_len -
++					mptcp_subflow_get_map_offset(subflow);
++			desc.count =3D min_t(size_t, len - copied, map_remaining);
++			pr_debug("reading %ld bytes, copied %d", desc.count,
++				 copied);
++			bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
++			if (bytes_read < 0) {
++				if (!copied)
++					copied =3D bytes_read;
++				release_sock(ssk);
++				goto out;
++			}
++
++			pr_debug("msk ack_seq=3D%llx -> %llx", msk->ack_seq,
++				 msk->ack_seq + bytes_read);
++			msk->ack_seq +=3D bytes_read;
++			copied +=3D bytes_read;
++			if (copied >=3D len) {
++				release_sock(ssk);
++				goto out;
++			}
++			if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
++				pr_err("Urgent data present, cannot proceed");
++				release_sock(ssk);
++				goto out;
++			}
++		}
++		release_sock(ssk);
++		continue;
  =
 
  wait_for_data:
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 98080d9f72fd..6e36207d9800 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -204,8 +204,8 @@ struct mptcp_subflow_context {
- 	u32     rel_write_seq;
- 	u32	map_subflow_seq;
- 	u32	ssn_offset;
--	u16	map_data_len;
--	u16	request_mptcp : 1,  /* send MP_CAPABLE */
-+	u32	map_data_len;
-+	u32	request_mptcp : 1,  /* send MP_CAPABLE */
- 		request_join : 1,   /* send MP_JOIN */
- 		request_bkup : 1,
- 		request_version : 4,
-@@ -214,7 +214,9 @@ struct mptcp_subflow_context {
- 		fourth_ack : 1,     /* send initial DSS */
- 		conn_finished : 1,
- 		map_valid : 1,
--		backup : 1;
-+		backup : 1,
-+		data_avail : 1,
-+		rx_eof : 1;
- 	u32	remote_nonce;
- 	u64	thmac;
- 	u32	local_nonce;
-@@ -260,7 +262,7 @@ mptcp_subflow_get_mapped_dsn(struct mptcp_subflow_conte=
-xt *subflow)
+-		if (copied)
+-			break;
+-
+-		if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
+-			pr_err("Urgent data present, cannot proceed");
++		/* only the master socket status is relevant here. The exit
++		 * conditions mirror closely tcp_recvmsg()
++		 */
++		if (copied >=3D target)
+ 			break;
+-		}
+ =
+
+-		if (ssk->sk_err || ssk->sk_state =3D=3D TCP_CLOSE ||
+-		    (ssk->sk_shutdown & RCV_SHUTDOWN) || !timeo ||
+-		    signal_pending(current)) {
+-			pr_debug("nonblock or error");
+-			break;
++		if (copied) {
++			if (sk->sk_err ||
++			    sk->sk_state =3D=3D TCP_CLOSE ||
++			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
++			    !timeo ||
++			    signal_pending(current))
++				break;
++		} else {
++			if (sk->sk_err) {
++				copied =3D sock_error(sk);
++				break;
++			}
++
++			if (sk->sk_shutdown & RCV_SHUTDOWN)
++				break;
++
++			if (sk->sk_state =3D=3D TCP_CLOSE) {
++				copied =3D -ENOTCONN;
++				break;
++			}
++
++			if (!timeo) {
++				copied =3D -EAGAIN;
++				break;
++			}
++
++			if (signal_pending(current)) {
++				copied =3D sock_intr_errno(timeo);
++				break;
++			}
+ 		}
+ =
+
+-		/* Handle blocking and retry read if needed.
+-		 *
+-		 * Wait on MPTCP sock, the subflow will notify via data ready.
+-		 */
+-
+-		pr_debug("block");
+-		release_sock(ssk);
++		pr_debug("block timeout %ld", timeo);
+ 		mptcp_wait_data(sk, &timeo);
+-		lock_sock(ssk);
+ 	}
+ =
+
+-	release_sock(ssk);
++out:
+ 	release_sock(sk);
+-
+ 	return copied;
  }
  =
 
- int mptcp_is_enabled(struct net *net);
--
-+bool mptcp_subflow_data_available(struct sock *sk);
- void mptcp_subflow_init(void);
- int mptcp_subflow_connect(struct sock *sk, struct sockaddr_in *local,
- 			  struct sockaddr_in *remote, u8 remote_id);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index ebe93525b0aa..e5ea2eba6537 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -311,17 +311,281 @@ static struct sock *subflow_syn_recv_sock(const stru=
-ct sock *sk,
+@@ -800,12 +840,7 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ 		atomic64_set(&msk->snd_una, msk->write_seq);
+ 		ack_seq++;
+ 		msk->ack_seq =3D ack_seq;
+-		subflow->map_seq =3D ack_seq;
+-		subflow->map_subflow_seq =3D 1;
+-		subflow->rel_write_seq =3D 1;
+-		subflow->tcp_sock =3D new_sock;
+ 		newsk =3D new_mptcp_sock;
+-		subflow->conn =3D new_mptcp_sock;
+ 		list_add(&subflow->node, &msk->conn_list);
+ 		bh_unlock_sock(new_mptcp_sock);
  =
 
- static struct inet_connection_sock_af_ops subflow_specific;
- =
-
-+enum mapping_status {
-+	MAPPING_OK,
-+	MAPPING_INVALID,
-+	MAPPING_EMPTY,
-+	MAPPING_DATA_FIN
-+};
+@@ -813,6 +848,19 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ 		local_bh_enable();
+ 		inet_sk_state_store(newsk, TCP_ESTABLISHED);
+ 		release_sock(sk);
 +
-+static u64 expand_seq(u64 old_seq, u16 old_data_len, u64 seq)
-+{
-+	if ((u32)seq =3D=3D (u32)old_seq)
-+		return old_seq;
-+
-+	/* Assume map covers data not mapped yet. */
-+	return seq | ((old_seq + old_data_len + 1) & GENMASK_ULL(63, 32));
-+}
-+
-+static void warn_bad_map(struct mptcp_subflow_context *subflow, u32 ssn)
-+{
-+	WARN_ONCE(1, "Bad mapping: ssn=3D%d map_seq=3D%d map_data_len=3D%d",
-+		  ssn, subflow->map_subflow_seq, subflow->map_data_len);
-+}
-+
-+static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-+	u32 ssn =3D tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-+
-+	if (unlikely(before(ssn, subflow->map_subflow_seq))) {
-+		/* Mapping covers data later in the subflow stream,
-+		 * currently unsupported.
++		/* the subflow can already receive packet, avoid racing with
++		 * the receive path and process the pending ones
 +		 */
-+		warn_bad_map(subflow, ssn);
-+		return false;
-+	}
-+	if (unlikely(!before(ssn, (subflow->map_subflow_seq +
-+					  subflow->map_data_len)))) {
-+		/* Mapping ends earlier in the subflow stream. Invalid */
-+		warn_bad_map(subflow, ssn);
-+		return false;
-+	}
-+	return true;
-+}
-+
-+static enum mapping_status get_mapping_status(struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-+	struct mptcp_ext *mpext;
-+	struct sk_buff *skb;
-+	u64 map_seq;
-+
-+	skb =3D skb_peek(&ssk->sk_receive_queue);
-+	if (!skb)
-+		return MAPPING_EMPTY;
-+
-+	mpext =3D mptcp_get_ext(skb);
-+	if (!mpext || !mpext->use_map) {
-+		if (!subflow->map_valid && !skb->len) {
-+			/* the TCP stack deliver 0 len FIN pkt to the receive
-+			* queue, that is the only 0len pkts ever expected here,
-+			* and we can admit no mapping only for 0 len pkts
-+			*/
-+			if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN))
-+				WARN_ONCE(1, "0len seq %d:%d flags %x",
-+					  TCP_SKB_CB(skb)->seq,
-+					  TCP_SKB_CB(skb)->end_seq,
-+					  TCP_SKB_CB(skb)->tcp_flags);
-+			sk_eat_skb(ssk, skb);
-+			return MAPPING_EMPTY;
-+		}
-+
-+		if (!subflow->map_valid)
-+			return MAPPING_INVALID;
-+		goto validate_seq;
-+	}
-+
-+	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u", mpext->data_seq,
-+		 mpext->dsn64, mpext->subflow_seq, mpext->data_len);
-+
-+	if (mpext->data_len =3D=3D 0) {
-+		pr_err("Infinite mapping not handled");
-+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
-+		return MAPPING_INVALID;
-+	} else if (mpext->subflow_seq =3D=3D 0 &&
-+		   mpext->data_fin =3D=3D 1) {
-+		if (WARN_ON_ONCE(mpext->data_len !=3D 1))
-+			return false;
-+
-+		pr_debug("DATA_FIN with no payload");
-+		return MAPPING_OK;
-+	}
-+
-+	if (!mpext->dsn64) {
-+		map_seq =3D expand_seq(subflow->map_seq, subflow->map_data_len,
-+				     mpext->data_seq);
-+		pr_debug("expanded seq=3D%llu", subflow->map_seq);
-+	} else {
-+		map_seq =3D mpext->data_seq;
-+	}
-+
-+	if (subflow->map_valid) {
-+		/* check for in-sequence new map; since the current mapping
-+		 * still valid, we can't replace it yet; instead increase the
-+		 * current mapping size
-+		 */
-+		if (subflow->map_seq + subflow->map_data_len =3D=3D mpext->data_seq) {
-+			subflow->map_data_len +=3D mpext->data_len;
-+			goto validate_seq;
-+		}
-+
-+		/* Allow replacing only with a map extending the current one */
-+		if (subflow->map_seq !=3D mpext->data_seq ||
-+		    subflow->map_subflow_seq !=3D mpext->subflow_seq ||
-+		    subflow->map_data_len < mpext->data_len) {
-+			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSNOMATCH);
-+			return MAPPING_INVALID;
-+		}
-+
-+		subflow->map_data_len =3D mpext->data_len;
-+		return MAPPING_OK;
-+	}
-+
-+	subflow->map_seq =3D map_seq;
-+	subflow->map_subflow_seq =3D mpext->subflow_seq;
-+	subflow->map_data_len =3D mpext->data_len;
-+	subflow->map_valid =3D 1;
-+	pr_debug("new map seq=3D%llu subflow_seq=3D%u data_len=3D%u",
-+		 subflow->map_seq, subflow->map_subflow_seq,
-+		 subflow->map_data_len);
-+
-+validate_seq:
-+	if (!validate_mapping(ssk, skb))
-+		return MAPPING_INVALID;
-+
-+	skb_ext_del(skb, SKB_EXT_MPTCP);
-+	return MAPPING_OK;
-+}
-+
-+static bool subflow_check_data_avail(struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-+	enum mapping_status status;
-+	struct mptcp_sock *msk;
-+	struct sk_buff *skb;
-+
-+	pr_debug("msk=3D%p ssk=3D%p data_avail=3D%d skb=3D%p", subflow->conn, ssk,
-+		 subflow->data_avail, skb_peek(&ssk->sk_receive_queue));
-+	if (subflow->data_avail)
-+		return true;
-+
-+	if (!subflow->conn)
-+		return false;
-+
-+	msk =3D mptcp_sk(subflow->conn);
-+	for (;;) {
-+		u32 map_remaining;
-+		size_t delta;
-+		u64 ack_seq;
-+		u64 old_ack;
-+
-+		status =3D get_mapping_status(ssk);
-+		pr_debug("msk=3D%p ssk=3D%p status=3D%d", msk, ssk, status);
-+		if (status =3D=3D MAPPING_INVALID) {
-+			ssk->sk_err =3D EBADMSG;
-+			goto fatal;
-+		}
-+
-+		if (status !=3D MAPPING_OK)
-+			return false;
-+
-+		skb =3D skb_peek(&ssk->sk_receive_queue);
-+		if (WARN_ON_ONCE(!skb))
-+			return false;
-+
-+		old_ack =3D READ_ONCE(msk->ack_seq);
-+		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
-+		pr_debug("msk ack_seq=3D%llx subflow ack_seq=3D%llx", old_ack,
-+			 ack_seq);
-+		if (ack_seq =3D=3D old_ack)
-+			break;
-+
-+		/* only accept in-sequence mapping. Old values are spurious
-+		 * retransmission; we can hit "future" values on active backup
-+		 * subflow switch, we relay on retransmissions to get
-+		 * in-sequence data.
-+		 * Cuncurrent subflows support will require subflow data
-+		 * reordering
-+		 */
-+		map_remaining =3D subflow->map_data_len -
-+				mptcp_subflow_get_map_offset(subflow);
-+		if (before64(ack_seq, old_ack))
-+			delta =3D min_t(size_t, old_ack - ack_seq, map_remaining);
-+		else
-+			delta =3D min_t(size_t, ack_seq - old_ack, map_remaining);
-+
-+		/* discard mapping data */
-+		pr_debug("discarding %ld bytes, current map len=3D%d", delta,
-+			 map_remaining);
-+		if (delta) {
-+			struct mptcp_read_arg arg =3D {
-+				.msg =3D NULL,
-+			};
-+			read_descriptor_t desc =3D {
-+				.count =3D delta,
-+				.arg.data =3D &arg,
-+			};
-+			int ret;
-+
-+			ret =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
-+			if (ret < 0) {
-+				ssk->sk_err =3D -ret;
-+				goto fatal;
-+			}
-+			if (ret < delta)
-+				return false;
-+			if (delta =3D=3D map_remaining)
-+				subflow->map_valid =3D 0;
-+		}
-+	}
-+	return true;
-+
-+fatal:
-+	/* fatal protocol error, close the socket */
-+	/* This barrier is coupled with smp_rmb() in tcp_poll() */
-+	smp_wmb();
-+	ssk->sk_error_report(ssk);
-+	tcp_set_state(ssk, TCP_CLOSE);
-+	tcp_send_active_reset(ssk, GFP_ATOMIC);
-+	return false;
-+}
-+
-+bool mptcp_subflow_data_available(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct sk_buff *skb;
-+
-+	/* check if current mapping is still valid */
-+	if (subflow->map_valid &&
-+	    mptcp_subflow_get_map_offset(subflow) >=3D subflow->map_data_len) {
-+		subflow->map_valid =3D 0;
-+		subflow->data_avail =3D 0;
-+
-+		pr_debug("Done with mapping: seq=3D%u data_len=3D%u",
-+			 subflow->map_subflow_seq,
-+			 subflow->map_data_len);
-+	}
-+
-+	if (!subflow_check_data_avail(sk)) {
-+		/* set EoF only there is no data available - we already spooled
-+		 * all the pending skbs
-+		 */
-+		if (sk->sk_shutdown & RCV_SHUTDOWN || sk->sk_state =3D=3D TCP_CLOSE)
-+			subflow->rx_eof =3D 1;
-+		return false;
-+	}
-+
-+	skb =3D skb_peek(&sk->sk_receive_queue);
-+	if (!skb)
-+		return false;
-+
-+	subflow->data_avail =3D tcp_sk(sk)->copied_seq < TCP_SKB_CB(skb)->end_seq;
-+	return subflow->data_avail;
-+}
-+
- static void subflow_data_ready(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct sock *parent =3D subflow->conn;
- =
-
--	pr_debug("sk=3D%p", sk);
- 	subflow->tcp_sk_data_ready(sk);
- =
-
--	if (parent) {
--		pr_debug("parent=3D%p", parent);
-+	if (!parent || !(subflow->mp_capable || subflow->mp_join))
-+		return;
- =
-
-+	/* always propagate the EoF */
-+	if (mptcp_subflow_data_available(sk) || subflow->rx_eof) {
- 		smp_mb__before_atomic();
- 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
- 		smp_mb__after_atomic();
++		lock_sock(new_sock->sk);
++		subflow->map_seq =3D ack_seq;
++		subflow->map_subflow_seq =3D 1;
++		subflow->rel_write_seq =3D 1;
++		subflow->tcp_sock =3D new_sock;
++		subflow->conn =3D new_mptcp_sock;
++		if (unlikely(!skb_queue_empty(&new_sock->sk->sk_receive_queue)))
++			mptcp_subflow_data_available(new_sock->sk);
++		release_sock(new_sock->sk);
+ 	} else {
+ 		newsk =3D new_sock->sk;
+ 		tcp_sk(newsk)->is_mptcp =3D 0;
 -- =
 
 2.21.0
 
---===============2075350107796024128==--
+--===============1790163554556373643==--
