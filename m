@@ -1,44 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============1466852032177821668=="
+Content-Type: multipart/mixed; boundary="===============1350148165540100194=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] mptcp: Implement basic path manager
-Date: Mon, 14 Oct 2019 17:21:08 +0200
-Message-ID: <1e2994c4-9fa8-0367-2336-577780c8fae5@tessares.net>
-In-Reply-To: 20190917183750.2693-3-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH v2 0/2] Interim Path Manager
+Date: Mon, 14 Oct 2019 18:36:08 +0200
+Message-ID: <7d7d6eae-f038-27d0-427e-571b0811e5f2@tessares.net>
+In-Reply-To: fa075b41d8c5ddc20037031633dc3396989c4cbe.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2111
+X-UID: 2112
 
---===============1466852032177821668==
+--===============1350148165540100194==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hi Peter, Paolo,
 
-On 17/09/2019 20:37, Peter Krystad wrote:
-> Two features: 1) After an incoming connection is fully established
-> announce a second local address and 2) When an outgoing connection
-> is fully established, and an ADD_ADDR option has been received,
-> initiate a secondary subflow to that address.
+On 14/10/2019 13:29, Paolo Abeni wrote:
+> Hi,
 > =
 
-> The second local address may be configured through the
-> net.mptcp.pm.announce_addr sysctl variable. If configured
-> then for listeners this address will be announced with the
-> ADD_ADDR option, and for clients the local socket will be bound
-> to this address (or INADDR_ANY if not specified).
+> On Tue, 2019-09-17 at 11:37 -0700, Peter Krystad wrote:
+>> Patchset includes the interim path manager plus sysctl setting of
+>> the announce address and binding local address when creating subflows.
+>> I also split the path manager into a seperate file.
+>>
+>> v2:
+>>    rename to 'basic' path manager
+>>    remove pm_init definition
+>>      =
 
-Just to sure: is the goal still not to upstream this patch? Just for our =
+>> Peter Krystad (2):
+>>    mptcp: Minor changes to path manager interface
+>>    mptcp: Implement basic path manager
+>>
+>>   net/mptcp/Makefile   |   2 +-
+>>   net/mptcp/basic.c    | 247 +++++++++++++++++++++++++++++++++++++++++++
+>>   net/mptcp/pm.c       |  38 +++++--
+>>   net/mptcp/protocol.c |   2 +-
+>>   net/mptcp/protocol.h |  14 ++-
+>>   5 files changed, 290 insertions(+), 13 deletions(-)
+>>   create mode 100644 net/mptcp/basic.c
+> =
 
-tests?
+> I'm sorry for lagging behind so much.
+> =
 
-(If we want to upstream it, I would propose a few modifications, e.g. =
+> I'm ok with the patches in the current status - even if I fear some
+> rebasing will be now need, perhaps good Matt can take that bourden, too
+>   - since he called me 'lawyer' I feel less guilty asking that ;)
 
-call the file pm_basic.c, add "pm_" in the name of the exported =
+Yes my Lord!
 
-functions, etc.)
+Thank you for the patch and the plea (review?)!
+
+- e3c637f02e45: "squashed" (including a rebase) the first part of the =
+
+first patch in "mptcp: Add path manager interface"
+- 232953cffb3b: "squashed" (including a rebase) the second part of the =
+
+first patch in "mptcp: Implement path manager interface commands". Note =
+
+I had a conflict: addr->s_addr is stored in network bytes order.
+- 250376a152f7: added (including a rebase) the second patch at the end =
+
+(should I move it somewhere else?)
+- 5cfa9c11a52f: fix compilation errors (due to changes made since the =
+
+patch has been sent here)
+
+Tests are still OK!
 
 Cheers,
 Matt
@@ -49,4 +81,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1466852032177821668==--
+--===============1350148165540100194==--
