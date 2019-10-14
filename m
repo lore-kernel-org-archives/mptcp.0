@@ -1,79 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============1350148165540100194=="
+Content-Type: multipart/mixed; boundary="===============3714839479847202825=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/2] Interim Path Manager
-Date: Mon, 14 Oct 2019 18:36:08 +0200
-Message-ID: <7d7d6eae-f038-27d0-427e-571b0811e5f2@tessares.net>
-In-Reply-To: fa075b41d8c5ddc20037031633dc3396989c4cbe.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 0/2] mptcp: disallow setting the MPTCP ULP from
+ userspace
+Date: Mon, 14 Oct 2019 19:22:26 +0200
+Message-ID: <9714682a-e757-d674-a0f9-201a5d2325b0@tessares.net>
+In-Reply-To: 522a00033466da18009813089ad908f86fdf0466.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2112
+X-UID: 2113
 
---===============1350148165540100194==
+--===============3714839479847202825==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Paolo,
+Hi Davide, Paolo,
 
-On 14/10/2019 13:29, Paolo Abeni wrote:
-> Hi,
-> =
-
-> On Tue, 2019-09-17 at 11:37 -0700, Peter Krystad wrote:
->> Patchset includes the interim path manager plus sysctl setting of
->> the announce address and binding local address when creating subflows.
->> I also split the path manager into a seperate file.
+On 14/10/2019 16:56, Paolo Abeni wrote:
+> On Mon, 2019-10-14 at 16:46 +0200, Davide Caratti wrote:
+>> with this series we make
 >>
->> v2:
->>    rename to 'basic' path manager
->>    remove pm_init definition
->>      =
-
->> Peter Krystad (2):
->>    mptcp: Minor changes to path manager interface
->>    mptcp: Implement basic path manager
+>> setscokopt(..., IPPROTO_TCP, TCP_ULP, "mptcp", sizeof("mptcp"));
 >>
->>   net/mptcp/Makefile   |   2 +-
->>   net/mptcp/basic.c    | 247 +++++++++++++++++++++++++++++++++++++++++++
->>   net/mptcp/pm.c       |  38 +++++--
->>   net/mptcp/protocol.c |   2 +-
->>   net/mptcp/protocol.h |  14 ++-
->>   5 files changed, 290 insertions(+), 13 deletions(-)
->>   create mode 100644 net/mptcp/basic.c
+>> return -1 and set errno to -EOPNOPSUPPORT.
+>>
+>> this allows attaching MPTCP ULP only to a TCP socket that has been
+>> created through sock_create_kern().
+>>
+>> - Patch 1/2 lets subflow_init() fail with -EOPNOTSUPPORT in case users
+>>    try to setsockopt(..., TCP_ULP) on a TCP socket that has been created
+>>    by a userspace program. I suggest squashing this patch in "mptcp:
+>>    Associate MPTCP context with TCP socket".
+>> - Patch 2/2 includes kselftest code. I suggest squashing it with "mptcp:
+>>    add basic kselftest for mptcp".
+>>
+>> Changes since v1:
+>>   - don't redirect the selftest output to /dev/null
+>>   - test output depends on the value of 'errno', to avoid false negative
+>>     in case kernel is built without CONFIG_MPTCP
+>>
+>> Davide Caratti (2):
+>>    mptcp: subflow: disallow setsockopt(... TCP_ULP, "mptcp")
+>>    selftests: test setsockopt(..., TCP_ULP, "mptcp", ...)
+>>
+>>   net/mptcp/subflow.c                           |  7 +++
+>>   .../selftests/net/mptcp/mptcp_connect.c       | 52 +++++++++++++++++--
+>>   .../selftests/net/mptcp/mptcp_connect.sh      | 19 +++++++
+>>   3 files changed, 75 insertions(+), 3 deletions(-)
 > =
 
-> I'm sorry for lagging behind so much.
-> =
+> The patches LGTM, thanks Davide!
 
-> I'm ok with the patches in the current status - even if I fear some
-> rebasing will be now need, perhaps good Matt can take that bourden, too
->   - since he called me 'lawyer' I feel less guilty asking that ;)
+Thank you for the patches and the review!
 
-Yes my Lord!
+- 87df9026e7cc: "squashed" the first patch in "mptcp: Associate MPTCP =
 
-Thank you for the patch and the plea (review?)!
+context with TCP socket"
+- 8c907c48da5c: "Signed-off-by" + "Co-developed-by"
+- a8a756ed4dbc: conflict in =
 
-- e3c637f02e45: "squashed" (including a rebase) the first part of the =
+t/mptcp-Create-SUBFLOW-socket-for-incoming-connections
+- 2057bcf6bf5e: "squashed" the second patch in "mptcp: add basic =
 
-first patch in "mptcp: Add path manager interface"
-- 232953cffb3b: "squashed" (including a rebase) the second part of the =
-
-first patch in "mptcp: Implement path manager interface commands". Note =
-
-I had a conflict: addr->s_addr is stored in network bytes order.
-- 250376a152f7: added (including a rebase) the second patch at the end =
-
-(should I move it somewhere else?)
-- 5cfa9c11a52f: fix compilation errors (due to changes made since the =
-
-patch has been sent here)
+kselftest for mptcp"
+- be20e32cf37d..c7557e1f213a: result
 
 Tests are still OK!
 
 Cheers,
 Matt
+
+> =
+
+> /P
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+> =
+
+
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -81,4 +88,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1350148165540100194==--
+--===============3714839479847202825==--
