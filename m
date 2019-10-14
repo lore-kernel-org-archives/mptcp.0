@@ -1,58 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============1026594440533600778=="
+Content-Type: multipart/mixed; boundary="===============4565973878121183645=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 0/6] mptcp: sendmsg scheduler skeleton
-Date: Tue, 15 Oct 2019 01:19:13 +0200
-Message-ID: <20191014231919.2454-1-fw@strlen.de>
+Subject: [MPTCP] [RFC PATCH 1/6] mptcp: add and use subflow_write_space
+Date: Tue, 15 Oct 2019 01:19:14 +0200
+Message-ID: <20191014231919.2454-2-fw@strlen.de>
+In-Reply-To: 20191014231919.2454-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2122
+X-UID: 2123
 
---===============1026594440533600778==
+--===============4565973878121183645==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch series adds minimal support for multiple subflows on
-the writer side.
+This will be used to unblock tasks waiting for POLLOUT event
+once mptcp_poll is altered to not wait for each subflow anymore.
 
-Instead of always picking the first ssk (and reliance on tcp to block
-the mptcp sendmsg in case the subflows write buffer is full),
-grab a suitable/writeable subflow from the list.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/subflow.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-The main point here isn't the 'chose the right subflow' strategy,
-we will likely want to adapt/change it later -- but the handling
-of the 'no suitable subflows present' case.
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b0cda95fbe20..2920fe01b264 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -330,6 +330,16 @@ static void subflow_data_ready(struct sock *sk)
+ 	}
+ }
+ =
 
-See patch #6 for details on how userspace is blocked/unblocked.
++static void subflow_write_space(struct sock *sk)
++{
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
++	struct sock *parent =3D subflow->conn;
++
++	sk_stream_write_space(sk);
++	if (parent)
++		sk_stream_write_space(parent);
++}
++
+ int mptcp_subflow_connect(struct sock *sk, struct sockaddr_in *local,
+ 			  struct sockaddr_in *remote, u8 remote_id)
+ {
+@@ -455,6 +465,7 @@ static int subflow_ulp_init(struct sock *sk)
+ 	icsk->icsk_af_ops =3D &subflow_specific;
+ 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
+ 	sk->sk_data_ready =3D subflow_data_ready;
++	sk->sk_write_space =3D subflow_write_space;
+ out:
+ 	return err;
+ }
+-- =
 
-Patch #2 is silly but needed until subflows are expected to close
-the connection on the mptcp level rather than relying on tcp fin.
+2.21.0
 
-Paolo, please also have a closr look at patch 5 since it impacts the
-retransmission strategy: no more mptcp-level retransmissions if
-ssk still has skbs in its write queue.
-
-At this time, there is a theoretical problem remaining:
-
-1. userspace calls poll(POLLOUT), one subflow available -> POLLOUT revent
-2. retransmission kicks in and fills subflow
-3. userspace calls write(), which might block even though poll() said
-   otherwise
-
-This is unlikely because most programs will not mix blocking IO with
-event driven (select/poll/epoll) models.
-
-But still, its something to keep in mind -- might be enough to
-prevent retrans from using up the entire write queue for instance.
-
- include/net/tcp.h    |    1
- net/ipv4/tcp.c       |   12 ++-
- net/mptcp/protocol.c |  154 ++++++++++++++++++++++++++++++++++++++++++++++=
-+----
- net/mptcp/protocol.h |    2
- net/mptcp/subflow.c  |   46 +++++++++++++--
- 5 files changed, 197 insertions(+), 18 deletions(-)
-
---===============1026594440533600778==--
+--===============4565973878121183645==--
