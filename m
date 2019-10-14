@@ -1,62 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============5467548017386740969=="
+Content-Type: multipart/mixed; boundary="===============1466852032177821668=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/2] mptcp: disallow setting the MPTCP ULP from
- userspace
-Date: Mon, 14 Oct 2019 16:56:11 +0200
-Message-ID: <522a00033466da18009813089ad908f86fdf0466.camel@redhat.com>
-In-Reply-To: cover.1571061853.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH 2/2] mptcp: Implement basic path manager
+Date: Mon, 14 Oct 2019 17:21:08 +0200
+Message-ID: <1e2994c4-9fa8-0367-2336-577780c8fae5@tessares.net>
+In-Reply-To: 20190917183750.2693-3-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2110
+X-UID: 2111
 
---===============5467548017386740969==
+--===============1466852032177821668==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-10-14 at 16:46 +0200, Davide Caratti wrote:
-> with this series we make
+Hi Peter,
+
+On 17/09/2019 20:37, Peter Krystad wrote:
+> Two features: 1) After an incoming connection is fully established
+> announce a second local address and 2) When an outgoing connection
+> is fully established, and an ADD_ADDR option has been received,
+> initiate a secondary subflow to that address.
 > =
 
-> setscokopt(..., IPPROTO_TCP, TCP_ULP, "mptcp", sizeof("mptcp"));
-> =
+> The second local address may be configured through the
+> net.mptcp.pm.announce_addr sysctl variable. If configured
+> then for listeners this address will be announced with the
+> ADD_ADDR option, and for clients the local socket will be bound
+> to this address (or INADDR_ANY if not specified).
 
-> return -1 and set errno to -EOPNOPSUPPORT.
-> =
+Just to sure: is the goal still not to upstream this patch? Just for our =
 
-> this allows attaching MPTCP ULP only to a TCP socket that has been
-> created through sock_create_kern().
-> =
+tests?
 
-> - Patch 1/2 lets subflow_init() fail with -EOPNOTSUPPORT in case users
->   try to setsockopt(..., TCP_ULP) on a TCP socket that has been created
->   by a userspace program. I suggest squashing this patch in "mptcp:
->   Associate MPTCP context with TCP socket".
-> - Patch 2/2 includes kselftest code. I suggest squashing it with "mptcp:
->   add basic kselftest for mptcp".
-> =
+(If we want to upstream it, I would propose a few modifications, e.g. =
 
-> Changes since v1:
->  - don't redirect the selftest output to /dev/null =
+call the file pm_basic.c, add "pm_" in the name of the exported =
 
->  - test output depends on the value of 'errno', to avoid false negative
->    in case kernel is built without CONFIG_MPTCP
-> =
+functions, etc.)
 
-> Davide Caratti (2):
->   mptcp: subflow: disallow setsockopt(... TCP_ULP, "mptcp")
->   selftests: test setsockopt(..., TCP_ULP, "mptcp", ...)
-> =
+Cheers,
+Matt
+-- =
 
->  net/mptcp/subflow.c                           |  7 +++
->  .../selftests/net/mptcp/mptcp_connect.c       | 52 +++++++++++++++++--
->  .../selftests/net/mptcp/mptcp_connect.sh      | 19 +++++++
->  3 files changed, 75 insertions(+), 3 deletions(-)
-
-The patches LGTM, thanks Davide!
-
-/P
-
---===============5467548017386740969==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============1466852032177821668==--
