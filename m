@@ -1,146 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============4636176638275733296=="
+Content-Type: multipart/mixed; boundary="===============1026594440533600778=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 6/6] selftests: fix spurious deadlock
-Date: Tue, 15 Oct 2019 01:04:11 +0200
-Message-ID: <20191014230411.1630-7-fw@strlen.de>
-In-Reply-To: 20191014230411.1630-1-fw@strlen.de
+Subject: [MPTCP] [RFC 0/6] mptcp: sendmsg scheduler skeleton
+Date: Tue, 15 Oct 2019 01:19:13 +0200
+Message-ID: <20191014231919.2454-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2121
+X-UID: 2122
 
---===============4636176638275733296==
+--===============1026594440533600778==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-do_rnd_write() may call write on the mptcp socket repeatedly.
-As the peerfd is blocking, this prevents the process from draining the
-receive buffer.
+This patch series adds minimal support for multiple subflows on
+the writer side.
 
-Its unlikely but possible that both sides are blocked in write()
-on the tcp socket, with both ends announcing a zero window,
-waiting for read() to drain the socket receive buffer.
+Instead of always picking the first ssk (and reliance on tcp to block
+the mptcp sendmsg in case the subflows write buffer is full),
+grab a suitable/writeable subflow from the list.
 
-An alternative fix would be to make the peerfds nonblocking.
-This change instead makes it so we call write at most once after
-poll revents has the POLLOUT bit set.
+The main point here isn't the 'chose the right subflow' strategy,
+we will likely want to adapt/change it later -- but the handling
+of the 'no suitable subflows present' case.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 53 ++++++++++---------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+See patch #6 for details on how userspace is blocked/unblocked.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
-ing/selftests/net/mptcp/mptcp_connect.c
-index d81c94448686..65514bd4a203 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -207,27 +207,18 @@ static int sock_connect_mptcp(const char * const remo=
-teaddr,
- =
+Patch #2 is silly but needed until subflows are expected to close
+the connection on the mptcp level rather than relying on tcp fin.
 
- static size_t do_rnd_write(const int fd, char *buf, const size_t len)
- {
--	size_t offset =3D 0;
--
--	while (offset < len) {
--		unsigned int do_w;
--		size_t written;
--		ssize_t bw;
-+	unsigned int do_w;
-+	ssize_t bw;
- =
+Paolo, please also have a closr look at patch 5 since it impacts the
+retransmission strategy: no more mptcp-level retransmissions if
+ssk still has skbs in its write queue.
 
--		do_w =3D rand() & 0xffff;
--		if (do_w =3D=3D 0 || do_w > (len - offset))
--			do_w =3D len - offset;
-+	do_w =3D rand() & 0xffff;
-+	if (do_w =3D=3D 0 || do_w > len)
-+		do_w =3D len;
- =
+At this time, there is a theoretical problem remaining:
 
--		bw =3D write(fd, buf + offset, do_w);
--		if (bw < 0) {
--			perror("write");
--			return 0;
--		}
-+	bw =3D write(fd, buf, do_w);
-+	if (bw < 0)
-+		perror("write");
- =
+1. userspace calls poll(POLLOUT), one subflow available -> POLLOUT revent
+2. retransmission kicks in and fills subflow
+3. userspace calls write(), which might block even though poll() said
+   otherwise
 
--		written =3D (size_t)bw;
--		offset +=3D written;
--	}
--	return offset;
-+	return bw;
- }
- =
+This is unlikely because most programs will not mix blocking IO with
+event driven (select/poll/epoll) models.
 
- static size_t do_write(const int fd, char *buf, const size_t len)
-@@ -271,9 +262,11 @@ static int copyfd_io(int infd, int peerfd, int outfd)
- 		.fd =3D peerfd,
- 		.events =3D POLLIN | POLLOUT,
- 	};
-+	unsigned int woff =3D 0, wlen =3D 0;
-+	char wbuf[8192];
- =
+But still, its something to keep in mind -- might be enough to
+prevent retrans from using up the entire write queue for instance.
 
- 	for (;;) {
--		char buf[8192];
-+		char rbuf[8192];
- 		ssize_t len;
- =
+ include/net/tcp.h    |    1
+ net/ipv4/tcp.c       |   12 ++-
+ net/mptcp/protocol.c |  154 ++++++++++++++++++++++++++++++++++++++++++++++=
++----
+ net/mptcp/protocol.h |    2
+ net/mptcp/subflow.c  |   46 +++++++++++++--
+ 5 files changed, 197 insertions(+), 18 deletions(-)
 
- 		if (fds.events =3D=3D 0)
-@@ -293,7 +286,7 @@ static int copyfd_io(int infd, int peerfd, int outfd)
- 		}
- =
-
- 		if (fds.revents & POLLIN) {
--			len =3D do_rnd_read(peerfd, buf, sizeof(buf));
-+			len =3D do_rnd_read(peerfd, rbuf, sizeof(rbuf));
- 			if (len =3D=3D 0) {
- 				/* no more data to receive:
- 				 * peer has closed its write side
-@@ -310,15 +303,25 @@ static int copyfd_io(int infd, int peerfd, int outfd)
- 				return 3;
- 			}
- =
-
--			do_write(outfd, buf, len);
-+			do_write(outfd, rbuf, len);
- 		}
- =
-
- 		if (fds.revents & POLLOUT) {
--			len =3D do_rnd_read(infd, buf, sizeof(buf));
--			if (len > 0) {
--				if (!do_rnd_write(peerfd, buf, len))
-+			if (wlen =3D=3D 0) {
-+				woff =3D 0;
-+				wlen =3D read(infd, wbuf, sizeof(wbuf));
-+			}
-+
-+			if (wlen > 0) {
-+				ssize_t bw;
-+
-+				bw =3D do_rnd_write(peerfd, wbuf + woff, wlen);
-+				if (bw < 0)
- 					return 111;
--			} else if (len =3D=3D 0) {
-+
-+				woff +=3D bw;
-+				wlen -=3D bw;
-+			} else if (wlen =3D=3D 0) {
- 				/* We have no more data to send. */
- 				fds.events &=3D ~POLLOUT;
- =
-
--- =
-
-2.21.0
-
---===============4636176638275733296==--
+--===============1026594440533600778==--
