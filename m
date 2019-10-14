@@ -1,86 +1,119 @@
-Content-Type: multipart/mixed; boundary="===============4228931016451978036=="
+Content-Type: multipart/mixed; boundary="===============8286899088807335932=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 3/6] net: tcp: add __tcp_poll helper
-Date: Tue, 15 Oct 2019 01:19:16 +0200
-Message-ID: <20191014231919.2454-4-fw@strlen.de>
+Subject: [MPTCP] [RFC PATCH 4/6] mptcp: switch mptcp_poll to mptcp socket wait
+ queue
+Date: Tue, 15 Oct 2019 01:19:17 +0200
+Message-ID: <20191014231919.2454-5-fw@strlen.de>
 In-Reply-To: 20191014231919.2454-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2125
+X-UID: 2126
 
---===============4228931016451978036==
+--===============8286899088807335932==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-MPTCP will need to be able to call tcp_poll to check if the tcp socket is
-available for reading/writing, but without adding the task to the waitlist.
+tcp_poll places current task on a wait queue.  This can cause us to block
+forever -- some subflows might never receive any data because they're
+used as a backup/fallback path.
 
-This splits tcp_poll into two functions so __tcp_poll can be called by
-mptcp in followup patch.
+This makes mptcp_poll wait on the mptcp socket wait queue instead.
+__tcp_poll is used instead to avoid blocking current task again after
+parent mptcp socket has been woken from the subflow layer.
+
+The series is incomplete, mptcp_should_wake_parent() should be extended
+to take packets off the subflow queue and add them to the mptcp socket
+queue, i.e. move most of the work currently done at recvmsg time into
+the wakeup function.
+
+This is also needed to not wake userspace in case the subflow tcp data
+was stale (e.g. because of too early mptcp-level retransmit).
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- include/net/tcp.h |  1 +
- net/ipv4/tcp.c    | 12 ++++++++----
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 9 ++++++++-
+ net/mptcp/protocol.h | 1 +
+ net/mptcp/subflow.c  | 5 ++---
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 7f254765074f..e9dcf6806877 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -396,6 +396,7 @@ void tcp_init_sock(struct sock *sk);
- void tcp_init_transfer(struct sock *sk, int bpf_op);
- __poll_t tcp_poll(struct file *file, struct socket *sock,
- 		      struct poll_table_struct *wait);
-+__poll_t __tcp_poll(struct sock *sk);
- int tcp_getsockopt(struct sock *sk, int level, int optname,
- 		   char __user *optval, int __user *optlen);
- int tcp_setsockopt(struct sock *sk, int level, int optname,
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 70402e5882fa..d149fcb2dcc9 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -490,15 +490,12 @@ static inline bool tcp_stream_is_readable(const struc=
-t tcp_sock *tp,
-  *	take care of normal races (between the test and the event) and we don't
-  *	go look at any of the socket buffers directly.
-  */
--__poll_t tcp_poll(struct file *file, struct socket *sock, poll_table *wait)
-+__poll_t __tcp_poll(struct sock *sk)
- {
- 	__poll_t mask;
--	struct sock *sk =3D sock->sk;
- 	const struct tcp_sock *tp =3D tcp_sk(sk);
- 	int state;
- =
-
--	sock_poll_wait(file, sock, wait);
--
- 	state =3D inet_sk_state_load(sk);
- 	if (state =3D=3D TCP_LISTEN)
- 		return inet_csk_listen_poll(sk);
-@@ -590,6 +587,13 @@ __poll_t tcp_poll(struct file *file, struct socket *so=
-ck, poll_table *wait)
- =
-
- 	return mask;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c4be647a8057..259a2743db91 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -523,6 +523,11 @@ static enum mapping_status mptcp_get_mapping(struct so=
+ck *ssk)
+ 	return ret;
  }
-+
-+__poll_t tcp_poll(struct file *file, struct socket *sock, poll_table *wait)
+ =
+
++bool mptcp_should_wake_parent(struct mptcp_subflow_context *subflow)
 +{
++	return true;
++}
++
+ static void mptcp_wait_data(struct sock *sk, long *timeo)
+ {
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+@@ -1378,11 +1383,13 @@ static __poll_t mptcp_poll(struct file *file, struc=
+t socket *sock,
+ 		return ret;
+ 	}
+ =
+
 +	sock_poll_wait(file, sock, wait);
 +
-+	return __tcp_poll(sock->sk);
-+}
- EXPORT_SYMBOL(tcp_poll);
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct socket *tcp_sock;
  =
 
- int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
+-		ret |=3D tcp_poll(file, tcp_sock, wait);
++		ret |=3D __tcp_poll(tcp_sock->sk);
+ 	}
+ 	release_sock(sk);
+ =
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 991182578b22..73f79d82f76e 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -262,6 +262,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ void mptcp_finish_connect(struct sock *sk, int mp_capable);
+ void mptcp_finish_join(struct sock *sk);
+ void mptcp_reset_timer(struct sock *sk);
++bool mptcp_should_wake_parent(struct mptcp_subflow_context *ctx);
+ =
+
+ int mptcp_token_new_request(struct request_sock *req);
+ void mptcp_token_destroy_request(u32 token);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 2db2857a1ec6..c3429f8eca6e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -320,13 +320,12 @@ static void subflow_data_ready(struct sock *sk)
+ 	subflow->tcp_sk_data_ready(sk);
+ =
+
+ 	if (parent) {
+-		pr_debug("parent=3D%p", parent);
+-
+ 		smp_mb__before_atomic();
+ 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
+ 		smp_mb__after_atomic();
+ =
+
+-		parent->sk_data_ready(parent);
++		if (mptcp_should_wake_parent(subflow))
++			parent->sk_data_ready(parent);
+ 	}
+ }
+ =
+
 -- =
 
 2.21.0
 
---===============4228931016451978036==--
+--===============8286899088807335932==--
