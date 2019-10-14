@@ -1,46 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============2850965586860847999=="
+Content-Type: multipart/mixed; boundary="===============2738415732229607548=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] selftests: allow compilation on older systems
-Date: Mon, 14 Oct 2019 23:17:34 +0200
-Message-ID: <20191014211734.29681-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2] selftests: fixes and improvements
+Date: Tue, 15 Oct 2019 01:04:05 +0200
+Message-ID: <20191014230411.1630-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2114
+X-UID: 2115
 
---===============2850965586860847999==
+--===============2738415732229607548==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: mptcp: add basic kselftest for mptcp
+First a couple of resends, rebased on top of current export
+branch.  All commits may be squashed at your discretion.
 
-An older VM image i was using lacks TCP_ULP define, add a workaround.
+The last two are new and were not included before.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 3 +++
- 1 file changed, 3 insertions(+)
+The commits build on one-another so its possible to take
+the resends and defer or drop the last ones.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
-ing/selftests/net/mptcp/mptcp_connect.c
-index a472e056fae6..987a8411756e 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -26,6 +26,9 @@ extern int optind;
- #ifndef IPPROTO_MPTCP
- #define IPPROTO_MPTCP 262
- #endif
-+#ifndef TCP_ULP
-+#define TCP_ULP 31
-+#endif
- =
+1. increase tc delay variation to cover more scenarios.
+3. check accept/getpeername provide expected sockaddr info.
+3. add ipv6 support (disabled via ipv6=3Dfalse in script)
+4. randomly disable any combination of gro/tso/gso.
+5. allow to run multiple instances of mptcp_connect.sh in parallel.
+6. Fix a possible deadlock in the test program where both ends block in
+   write(mptcp_sk, ..).
 
- static bool listen_mode;
- static int  poll_timeout;
--- =
+Comments welcome.
 
-2.21.0
+These patches are currently queued in
+https://git.breakpoint.cc/cgit/fw/mptcp-next.git/log/?h=3Dsendmsg_refactor_=
+12
 
---===============2850965586860847999==--
+and can be fetched via
+
+git://git.breakpoint.cc/fw/mptcp-next.git sendmsg_refactor_12
+
+Beware, it contains further changes -- you will need to toss the
+extra baggage.
+
+--===============2738415732229607548==--
