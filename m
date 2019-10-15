@@ -1,78 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============6802272415472400673=="
+Content-Type: multipart/mixed; boundary="===============6525514067726618202=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp:pm: use mptcp_pm_init
-Date: Tue, 15 Oct 2019 16:55:04 +0200
-Message-ID: <3c470d07-0539-317e-c890-0fd8b627e71d@tessares.net>
-In-Reply-To: fe1ed75afe43826752372f406bbd7d0b135f4d11.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] mptcp:pm: limit changes for basic in pm.c
+Date: Tue, 15 Oct 2019 17:02:36 +0200
+Message-ID: <f18ed679708fd60814d0e7a02c573f34432688ad.camel@redhat.com>
+In-Reply-To: 20191015140655.16427-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2149
+X-UID: 2150
 
---===============6802272415472400673==
+--===============6525514067726618202==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-On 15/10/2019 16:49, Paolo Abeni wrote:
-> On Tue, 2019-10-15 at 16:06 +0200, Matthieu Baerts wrote:
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 3cef22193035..00ab1e7674eb 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -1033,6 +1033,7 @@ void __init mptcp_init(void)
->>   	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
->>   =
-
->>   	mptcp_subflow_init();
->> +	mptcp_pm_init();
+On Tue, 2019-10-15 at 16:06 +0200, Matthieu Baerts wrote:
+> Seems better to use mptcp_pm_init() and remove specifc changes for
+> 'basic' PM in protocol.c.
 > =
 
-> uhmm.. it looks like this chunk will conflict ?!? I see:
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> ---
 > =
 
-> 	mptcp_subflow_init();
-> 	mptcp_basic_init();
+> Notes:
+>     to be squashed in "mptcp: Implement basic path manager"
 > =
 
-> in the current git tree.
-
-This patch is based on top of "mptcp: Add path manager interface" to =
-
-avoid a conflict when applying it. I will indeed have a conflict when =
-
-propagating this but I prefer not to have conflicts when applying the =
-
-patch :)
-
-> Otherwise LGTM
-
-Thank you for the review!
-
-Because I did patches from different bases, I didn't group these 3 =
-
-patches. I will then wait for the review of the other patches to apply =
-
-them all in one :)
-
-Cheers,
-Matt
-
-> Thanks,
+>  net/mptcp/pm.c       | 1 +
+>  net/mptcp/protocol.c | 1 -
+>  2 files changed, 1 insertion(+), 1 deletion(-)
 > =
 
-> Paolo
-> =
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 9c1e3e631ade..d2b56fb8b47f 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -198,4 +198,5 @@ int mptcp_pm_get_local_id(struct request_sock *req, s=
+truct sock *sk,
+>  =
 
+>  void mptcp_pm_init(void)
+>  {
+> +	mptcp_basic_init();
+>  }
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 9f89095ac438..df5455c3719a 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1447,7 +1447,6 @@ void mptcp_proto_init(void)
+>  =
 
--- =
+>  	mptcp_subflow_init();
+>  	mptcp_pm_init();
+> -	mptcp_basic_init();
+>  =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6802272415472400673==--
+>  	if (proto_register(&mptcp_prot, 1) !=3D 0)
+>  		panic("Failed to register MPTCP proto.\n");
+
+LGTM.
+
+Paolo
+
+--===============6525514067726618202==--
