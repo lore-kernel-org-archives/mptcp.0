@@ -1,65 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============2697921450773158322=="
+Content-Type: multipart/mixed; boundary="===============3252494281853043628=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp:pm: use mptcp_pm_init
-Date: Tue, 15 Oct 2019 16:06:30 +0200
-Message-ID: <20191015140630.15863-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH] mptcp:pm: limit changes for basic in pm.c
+Date: Tue, 15 Oct 2019 16:06:55 +0200
+Message-ID: <20191015140655.16427-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2143
+X-UID: 2144
 
---===============2697921450773158322==
+--===============3252494281853043628==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Since e3c637f02e45 (mptcp: Minor changes to path manager interface),
-mptcp_pm_init() is no longer declared in protocol.h but still declared
-as non static in pm.c. I would propose here to continue to use it but
-declare mptcp_basic_init() in mptcp_pm_init() to limit the modified .c
-files for 'basic' features to pm.c only.
+Seems better to use mptcp_pm_init() and remove specifc changes for
+'basic' PM in protocol.c.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
 
 Notes:
-    to be squashed in "mptcp: Add path manager interface"
+    to be squashed in "mptcp: Implement basic path manager"
 
- net/mptcp/protocol.c | 1 +
- net/mptcp/protocol.h | 1 +
- 2 files changed, 2 insertions(+)
+ net/mptcp/pm.c       | 1 +
+ net/mptcp/protocol.c | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 9c1e3e631ade..d2b56fb8b47f 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -198,4 +198,5 @@ int mptcp_pm_get_local_id(struct request_sock *req, str=
+uct sock *sk,
+ =
+
+ void mptcp_pm_init(void)
+ {
++	mptcp_basic_init();
+ }
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3cef22193035..00ab1e7674eb 100644
+index 9f89095ac438..df5455c3719a 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1033,6 +1033,7 @@ void __init mptcp_init(void)
- 	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
+@@ -1447,7 +1447,6 @@ void mptcp_proto_init(void)
  =
 
  	mptcp_subflow_init();
-+	mptcp_pm_init();
+ 	mptcp_pm_init();
+-	mptcp_basic_init();
  =
 
  	if (proto_register(&mptcp_prot, 1) !=3D 0)
  		panic("Failed to register MPTCP proto.\n");
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b3cb54efe724..b0ee4010c0c0 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -203,6 +203,7 @@ static inline void mptcp_crypto_key_gen_sha1(u64 *key, =
-u32 *token, u64 *idsn)
- void mptcp_crypto_hmac_sha1(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
- 			    u32 *hash_out);
- =
-
-+void mptcp_pm_init(void);
- void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side);
- void mptcp_pm_fully_established(struct mptcp_sock *msk);
- void mptcp_pm_connection_closed(struct mptcp_sock *msk);
 -- =
 
 2.20.1
 
---===============2697921450773158322==--
+--===============3252494281853043628==--
