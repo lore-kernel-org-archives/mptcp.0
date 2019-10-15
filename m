@@ -1,68 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============7558156500156688838=="
+Content-Type: multipart/mixed; boundary="===============2697921450773158322=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] selftests: allow compilation on older systems
-Date: Tue, 15 Oct 2019 15:29:45 +0200
-Message-ID: <9fb5e141-2b43-e4b5-d978-1ddba59900a6@tessares.net>
-In-Reply-To: fc0e8602-ea24-5558-f455-7f5ecd2420a3@tessares.net
+Subject: [MPTCP] [PATCH] mptcp:pm: use mptcp_pm_init
+Date: Tue, 15 Oct 2019 16:06:30 +0200
+Message-ID: <20191015140630.15863-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2142
+X-UID: 2143
 
---===============7558156500156688838==
+--===============2697921450773158322==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Davide,
+Since e3c637f02e45 (mptcp: Minor changes to path manager interface),
+mptcp_pm_init() is no longer declared in protocol.h but still declared
+as non static in pm.c. I would propose here to continue to use it but
+declare mptcp_basic_init() in mptcp_pm_init() to limit the modified .c
+files for 'basic' features to pm.c only.
 
-On 15/10/2019 14:17, Matthieu Baerts wrote:
-> Hi Florian, Davide,
-> =
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> On 15/10/2019 12:26, Florian Westphal wrote:
->> Davide Caratti <dcaratti(a)redhat.com> wrote:
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>> @@ -18,7 +18,8 @@
->>> =C2=A0 #include <netdb.h>
->>> =C2=A0 #include <netinet/in.h>
->>> -#include <netinet/tcp.h>
->>> +
->>> +#include <linux/tcp.h>
->>>
->>> ^^ this ensures that TCP_ULP is defined, if the 'kernel-headers' package
->>> is newer than 4.13.
->>
->> ii=C2=A0 linux-libc-dev:amd64=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 4.9.168-1+deb9u5=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 amd64
->> Linux support headers for userspace development
->>
->> I don't care though, I can carry this patch in my private branch.
-> =
+Notes:
+    to be squashed in "mptcp: Add path manager interface"
 
-> Thank you for the patch and the review.
-> I would prefer to apply the patch, it doesn't cost anything to have this =
+ net/mptcp/protocol.c | 1 +
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-> in the code.
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3cef22193035..00ab1e7674eb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1033,6 +1033,7 @@ void __init mptcp_init(void)
+ 	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
+ =
 
-> If there is no objection from Davide, I am going to apply it. We can =
+ 	mptcp_subflow_init();
++	mptcp_pm_init();
+ =
 
-> still revert later if needed.
+ 	if (proto_register(&mptcp_prot, 1) !=3D 0)
+ 		panic("Failed to register MPTCP proto.\n");
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index b3cb54efe724..b0ee4010c0c0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -203,6 +203,7 @@ static inline void mptcp_crypto_key_gen_sha1(u64 *key, =
+u32 *token, u64 *idsn)
+ void mptcp_crypto_hmac_sha1(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
+ 			    u32 *hash_out);
+ =
 
-- 29950008bd42: "squashed" in "mptcp: add basic kselftest for mptcp"
-- a6ac152c2671..d7c09401756b: results
-
-Cheers,
-Matt
++void mptcp_pm_init(void);
+ void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side);
+ void mptcp_pm_fully_established(struct mptcp_sock *msk);
+ void mptcp_pm_connection_closed(struct mptcp_sock *msk);
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7558156500156688838==--
+2.20.1
+
+--===============2697921450773158322==--
