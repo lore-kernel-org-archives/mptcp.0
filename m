@@ -1,66 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============0543713649069569298=="
+Content-Type: multipart/mixed; boundary="===============1750655605613056881=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp:pm: remove duplicated RM addr
-Date: Tue, 15 Oct 2019 16:07:53 +0200
-Message-ID: <20191015140753.18058-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [RFC PATCH 2/3] mptcp: flush duplicate data at
+ data_ready() time
+Date: Tue, 15 Oct 2019 16:08:15 +0200
+Message-ID: <f6ac039349454cd3669a75b00cde9a7a924d9989.camel@redhat.com>
+In-Reply-To: cdc98748c1bcea2201f626496205b68aa53d6bde.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2145
+X-UID: 2146
 
---===============0543713649069569298==
+--===============1750655605613056881==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We already have mptcp_pm_remove_addr() and this one is implemented.
+On Tue, 2019-10-15 at 12:47 +0200, Paolo Abeni wrote:
+> On Mon, 2019-10-14 at 16:28 -0700, Mat Martineau wrote:
+> > > +		if (subflow->map_seq !=3D mpext->data_seq ||
+> > > +		    subflow->map_subflow_seq !=3D mpext->subflow_seq ||
+> > > +		    subflow->map_data_len < mpext->data_len) {
+> > =
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+> > Should this instead invalidate the mapping when subflow->map_data_len > =
 
-Notes:
-    to be squashed in "mptcp: Implement basic path manager"
+> > mpext->data_len ?
+> =
 
- net/mptcp/pm.c       | 5 -----
- net/mptcp/protocol.h | 1 -
- 2 files changed, 6 deletions(-)
+> uhmm... this code followed some discussion on the ML and a few mtgs
+> ago.  My [mis]understanding is that we can[/want] be quite strict about
+> map replacing: allowing it only if the old and the new maps are
+> identical.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index d2b56fb8b47f..f20377c869ad 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -154,11 +154,6 @@ void mptcp_pm_add_addr6(struct mptcp_sock *msk, const =
-struct in6_addr *addr,
- 	pr_debug("msk=3D%p", msk);
- }
- =
+I'm sorry, I misread your comment. Please ignore my previous answer.
 
--void mptcp_pm_rm_addr(struct mptcp_sock *msk, u8 id)
--{
--	pr_debug("msk=3D%p", msk);
--}
--
- /* path manager helpers */
- =
+Yep, I agree invalidating the mapping even with subflow->map_data_len >
+mpext->data_len, I'll do in the next iteration.
 
- int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 245833f438ee..d81d6bf18a65 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -297,7 +297,6 @@ void mptcp_pm_add_addr(struct mptcp_sock *msk, const st=
-ruct in_addr *addr,
- 		       u8 id);
- void mptcp_pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *add=
-r,
- 			u8 id);
--void mptcp_pm_rm_addr(struct mptcp_sock *msk, u8 id);
- int mptcp_pm_announce_addr(u32 token, u8 local_id, sa_family_t family,
- 			   struct in_addr *addr);
- int mptcp_pm_create_subflow(u32 token, u8 remote_id, sa_family_t family,
--- =
+Thanks!
 
-2.20.1
+/P
 
---===============0543713649069569298==--
+--===============1750655605613056881==--
