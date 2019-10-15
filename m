@@ -1,45 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============1750655605613056881=="
+Content-Type: multipart/mixed; boundary="===============8713749962849001548=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 2/3] mptcp: flush duplicate data at
- data_ready() time
-Date: Tue, 15 Oct 2019 16:08:15 +0200
-Message-ID: <f6ac039349454cd3669a75b00cde9a7a924d9989.camel@redhat.com>
-In-Reply-To: cdc98748c1bcea2201f626496205b68aa53d6bde.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] mptcp:pm: use mptcp_pm_init
+Date: Tue, 15 Oct 2019 16:49:40 +0200
+Message-ID: <fe1ed75afe43826752372f406bbd7d0b135f4d11.camel@redhat.com>
+In-Reply-To: 20191015140630.15863-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2146
+X-UID: 2147
 
---===============1750655605613056881==
+--===============8713749962849001548==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-10-15 at 12:47 +0200, Paolo Abeni wrote:
-> On Mon, 2019-10-14 at 16:28 -0700, Mat Martineau wrote:
-> > > +		if (subflow->map_seq !=3D mpext->data_seq ||
-> > > +		    subflow->map_subflow_seq !=3D mpext->subflow_seq ||
-> > > +		    subflow->map_data_len < mpext->data_len) {
-> > =
+On Tue, 2019-10-15 at 16:06 +0200, Matthieu Baerts wrote:
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3cef22193035..00ab1e7674eb 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1033,6 +1033,7 @@ void __init mptcp_init(void)
+>  	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
+>  =
 
-> > Should this instead invalidate the mapping when subflow->map_data_len > =
+>  	mptcp_subflow_init();
+> +	mptcp_pm_init();
 
-> > mpext->data_len ?
-> =
+uhmm.. it looks like this chunk will conflict ?!? I see:
 
-> uhmm... this code followed some discussion on the ML and a few mtgs
-> ago.  My [mis]understanding is that we can[/want] be quite strict about
-> map replacing: allowing it only if the old and the new maps are
-> identical.
+	mptcp_subflow_init(); =
 
-I'm sorry, I misread your comment. Please ignore my previous answer.
+	mptcp_basic_init();
 
-Yep, I agree invalidating the mapping even with subflow->map_data_len >
-mpext->data_len, I'll do in the next iteration.
+in the current git tree. Otherwise LGTM
 
-Thanks!
+Thanks,
 
-/P
+Paolo
 
---===============1750655605613056881==--
+--===============8713749962849001548==--
