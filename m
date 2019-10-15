@@ -1,70 +1,160 @@
-Content-Type: multipart/mixed; boundary="===============3659261829973837532=="
+Content-Type: multipart/mixed; boundary="===============2716983598971809421=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] selftests: allow compilation on older systems
-Date: Tue, 15 Oct 2019 14:36:36 +0200
-Message-ID: <a0dca57f-de6c-86a4-04b0-6eadb13e607e@tessares.net>
-In-Reply-To: 5fab2cfe5c72b0188770363c4657c7e1ccbfd560.camel@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH 5/6] mptcp: add and use
+ mptcp_subflow_get_retrans
+Date: Tue, 15 Oct 2019 15:20:21 +0200
+Message-ID: <4719dfb073174d7c381f9e9efc01626ff4fef7b2.camel@redhat.com>
+In-Reply-To: 20191015121322.GQ25052@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2140
+X-UID: 2141
 
---===============3659261829973837532==
+--===============2716983598971809421==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+On Tue, 2019-10-15 at 14:13 +0200, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > On Tue, 2019-10-15 at 01:19 +0200, Florian Westphal wrote:
+> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > > index 259a2743db91..e003608af237 100644
+> > > --- a/net/mptcp/protocol.c
+> > > +++ b/net/mptcp/protocol.c
+> > > @@ -781,6 +781,35 @@ static void mptcp_retransmit_timer(struct timer_=
+list *t)
+> > >  	sock_put(sk);
+> > >  }
+> > >  =
 
-On 15/10/2019 14:31, Davide Caratti wrote:
-> On Tue, 2019-10-15 at 12:26 +0200, Florian Westphal wrote:
->> Davide Caratti <dcaratti(a)redhat.com> wrote:
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
->>> @@ -18,7 +18,8 @@
->>>   =
+> > > +/* return first subflow that has no data outstanding at tcp level.
+> > > + *
+> > > + * Never return a backup subflow unless thats the only kind left.
+> > > + */
+> > > +static struct sock *mptcp_subflow_get_retrans(const struct mptcp_soc=
+k *msk)
+> > > +{
+> > > +	struct mptcp_subflow_context *subflow;
+> > > +	struct sock *backup =3D NULL;
+> > > +	bool use_backup =3D true;
+> > > +
+> > > +	sock_owned_by_me((const struct sock *)msk);
+> > > +
+> > > +	mptcp_for_each_subflow(msk, subflow) {
+> > > +		struct sock *ssk =3D mptcp_subflow_tcp_socket(subflow)->sk;
+> > > +
+> > > +		if (!subflow->backup)
+> > > +			use_backup =3D false;
+> > > +
+> > > +		if (tcp_write_queue_empty(ssk)) {
+> > > +			if (!subflow->backup)
+> > > +				return ssk;
+> > =
 
->>>   #include <netdb.h>
->>>   #include <netinet/in.h>
->>> -#include <netinet/tcp.h>
->>> +
->>> +#include <linux/tcp.h>
->>>
->>> ^^ this ensures that TCP_ULP is defined, if the 'kernel-headers' package
->>> is newer than 4.13.
->>
->> ii  linux-libc-dev:amd64            4.9.168-1+deb9u5               amd64
->> Linux support headers for userspace development
->>
->> I don't care though, I can carry this patch in my private branch.
+> > I think that to be as accurate as possible we could try to check only
+> > vs the write queue of the subflow used to send the current dfrag -
+> > otherwise we could end-up with spurious/unneded retransmissions on some
+> > corner cases.
 > =
 
-> we can also keep this patch merged until the whole thing is addressed
-> entirely (because the same argument also applies to the definition of
-> IPPROTO_MPTCP)-
+> I'm not following, sorry.
+> =
 
-There is already something for IPPROTO_MPTCP:
+> So I think that what you'd like is something like this:
+> =
 
-   #ifndef IPPROTO_MPTCP
-   #define IPPROTO_MPTCP 262
-   #endif
+> > Additionally we may want to explicitly exclude/penalize such subflow
+> > from the selection here.
+> =
 
-> the patch LGTM and probably it also fixes a build failure on some system,
-> like Florian's Debian, that has been introduced with "selftests: test
-> setsockopt(..., TCP_ULP, "mptcp", ...)".
+> static struct sock *
+> mptcp_subflow_get_retrans(const struct mptcp_sock *msk, struct sock *dfra=
+g_origsk)
+> {
+> 	[..]
+> =
 
-Did you introduce this on purpose to make sure Florian would be forced =
+> 	if (ssk =3D=3D dfrag_origsk)
+> 		continue; /* never retrans on same subflow */
+> =
 
-not to use Debian but RHEL/Fedora??? Sneaky!!
+> 	if (!subflow->backup)
+> 		use_backup =3D false;
+> =
 
-Cheers,
-Matt
--- =
+> 	if (!best || compare_sk(ssk, best))
+> 		best =3D ssk;
+> ...
+> =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3659261829973837532==--
+> Is that right?
+
+Yes, exactly!
+
+> Rationale for the approach done in patch 5 was that MPTCP-Level retransmi=
+ts
+> are useless in virtually all cases.
+> =
+
+> The retransmit would only be needed in case we sent data on ssk x
+> but peer went dead after xmit started.
+
+uhmm... I think that it will suffice if peer goes dead after we
+create/enqueue the skb (mptcp_sendmsg() completes). Could/should happen
+quite consistently e.g. when the client switches from wifi to 4G, and
+the flow is almost unidirectional from the server.
+
+> I wanted to make sure we only retransmit on ssks that have no
+> inflight packets, under the assumption that the dfrag has been acked
+> by the next time the retransmit timer kicks in.
+> =
+
+> What we could do is re-use mptcp_subflow_get_send() from patch 6,
+> adding a 'struct sock *ignore' argument, which would be NULL for normal
+> case and dfrag->orig_sk for retransmit case.
+
+I was in the act of suggesting the above on patch 6 :) I think it would
+simplify the code having a single algorithm to pick-up the next
+subflow.
+
+Apropos: another thing I would eventually consider for patch 6 is [try
+to] reuse the subflow we used last, if it has a non empty window. If we
+can't, we do the full lookup. That should allow the peer to reconstruct
+more easily the MPTCP level data sequence, with possibly less switches
+from one subflow to another.
+
+> That would make retransmits more aggressive for active/active
+> scenarios when one subflow is 'stuck' and the other has pending
+> packets (but the subflow can accept more data).
+
+I think we can mitigate/optimize out the unneeded retransmissions some
+way. e.g. no need to retransmit if the relevant ssn increased since
+last check/enqueue time.
+
+In some scenarios retransmitting the data on a different subflow could
+possibly inprove the tput/latency even if the first transmission has
+not been lost - e.g. if the subflow we used first is experiencing
+congestion.
+
+> > Storing the subflow ptr into a new/additional dfrag field at
+> > transmission time should allow the above.
+> =
+
+> Yes, we can store the ssk that was used for orig transmission,
+> question I have is why :-)
+
+I think having relevant subflow handy will help with the above
+heuristics. =
+
+
+I can agree we can do this kind of tuning/optimization/heuristic[/over-
+design???] later, I'm wondering if we should consider some room for
+them now?
+
+Thanks,
+
+Paolo
+
+--===============2716983598971809421==--
