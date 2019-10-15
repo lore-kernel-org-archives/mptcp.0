@@ -1,90 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============5335150453060299849=="
+Content-Type: multipart/mixed; boundary="===============5795639958246805097=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp:pm: use mptcp_pm_init
-Date: Tue, 15 Oct 2019 17:14:13 +0200
-Message-ID: <1c57796d-bca1-093c-457f-53a963802c06@tessares.net>
-In-Reply-To: 3c470d07-0539-317e-c890-0fd8b627e71d@tessares.net
+Subject: [MPTCP] [PATCH 0/3] mptcp: just another recvmsg refactor
+Date: Tue, 15 Oct 2019 17:44:41 +0200
+Message-ID: <cover.1571152990.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2151
+X-UID: 2152
 
---===============5335150453060299849==
+--===============5795639958246805097==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+This start constructing the instrucutre to support pulling data from =
 
-On 15/10/2019 16:55, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+multiple subflow. At the current stage uses a very simply approach, dropping
+any out-of-order data and reading from any subflow with valid data.
 
-> On 15/10/2019 16:49, Paolo Abeni wrote:
->> On Tue, 2019-10-15 at 16:06 +0200, Matthieu Baerts wrote:
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 3cef22193035..00ab1e7674eb 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -1033,6 +1033,7 @@ void __init mptcp_init(void)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_stream_ops.shutdown =3D mptcp_shut=
-down;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_subflow_init();
->>> +=C2=A0=C2=A0=C2=A0 mptcp_pm_init();
->>
->> uhmm.. it looks like this chunk will conflict ?!? I see:
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0mptcp_subflow_init();
->> =C2=A0=C2=A0=C2=A0=C2=A0mptcp_basic_init();
->>
->> in the current git tree.
-> =
+The above should work quite nicely in active backup scenario and possibly
+even with multiple subflows sending data concurrently - with a low bwidth a=
+nd
+a huge number of retransmissions.
 
-> This patch is based on top of "mptcp: Add path manager interface" to =
+Note that this rewrite completely the recvmsg() main loop to mirror more cl=
+osely
+the TCP recvmsg() main loop, likely fixing some bug in respect to signal and
+error condition handling.
 
-> avoid a conflict when applying it. I will indeed have a conflict when =
+I think this 3 patches should be squashed into
+"mptcp: Implement MPTCP receive path", but the resulting one will be likely
+too huge; possibly splitting the resulting code in 2 different patches would
+be nicer. Additionally "mptcp: Implement MPTCP receive path" has some chunks
+that should be likely moved to some other patches (e.g. ULP RCU fixes).
 
-> propagating this but I prefer not to have conflicts when applying the =
+What if - after the eventuall accept - I publish the resulting code of the =
 
-> patch :)
-> =
+above squashing somewhere?
 
->> Otherwise LGTM
-> =
 
-> Thank you for the review!
-> =
+RFC -> v1
+ - address Mat's comment on patch 2/3, see individual changelog for the det=
+ails
 
-> Because I did patches from different bases, I didn't group these 3 =
+Paolo Abeni (3):
+  mptcp: move some helper into the header file
+  mptcp: flush duplicate data at data_ready() time
+  mptcp: recvmsg() can drain data from multiple subflows
 
-> patches. I will then wait for the review of the other patches to apply =
+ net/mptcp/protocol.c | 360 +++++++++++++------------------------------
+ net/mptcp/protocol.h |  31 +++-
+ net/mptcp/subflow.c  | 289 +++++++++++++++++++++++++++++++++-
+ 3 files changed, 422 insertions(+), 258 deletions(-)
 
-> them all in one :)
-
-Thank you for the quick reviews!
-
-- 46824bb16aa2: "squashed" the first patch (mptcp:pm: use mptcp_pm_init) =
-
-in "mptcp: Add path manager interface"
-- 300bf7cd9e1a: conflict in t/mptcp-Implement-basic-path-manager
-- f97c5e2d0487: "squashed" the second patch (mptcp:pm: limit changes for =
-
-basic in pm.c) in "mptcp: Implement basic path manager"
-- e56cfd119d02: "squashed" the third patch (mptcp:pm: remove duplicated =
-
-RM addr) in "mptcp: Add path manager interface"
-- d7c09401756b..80df51ea7f87: result
-
-Tests are in progress.
-
-Cheers,
-Matt
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5335150453060299849==--
+2.21.0
+
+--===============5795639958246805097==--
