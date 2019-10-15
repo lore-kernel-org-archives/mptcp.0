@@ -1,301 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============6769560802843156867=="
+Content-Type: multipart/mixed; boundary="===============7099670653118767650=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/3] mptcp: recvmsg() can drain data from multiple
- subflows
-Date: Tue, 15 Oct 2019 17:44:44 +0200
-Message-ID: <d4bc32eeeef9d197c6e4aec88a2eef9519b2b7ad.1571152990.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH 0/3] mptcp: just another recvmsg refactor
+Date: Tue, 15 Oct 2019 22:39:55 +0200
+Message-ID: <009d27af4eb0b39293a215013596e2c445a0be7b.camel@redhat.com>
 In-Reply-To: cover.1571152990.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2155
+X-UID: 2156
 
---===============6769560802843156867==
+--===============7099670653118767650==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-With the previous patch in place, the msk can detect which subflow
-has the current map with a simple walk, let's update the main
-loop to always select the 'current' subflow.
+On Tue, 2019-10-15 at 17:44 +0200, Paolo Abeni wrote:
+> I think this 3 patches should be squashed into
+> "mptcp: Implement MPTCP receive path", but the resulting one will be like=
+ly
+> too huge; possibly splitting the resulting code in 2 different patches wo=
+uld
+> be nicer. Additionally "mptcp: Implement MPTCP receive path" has some chu=
+nks
+> that should be likely moved to some other patches (e.g. ULP RCU fixes).
+> =
 
-Additionally:
-- changes the exit conditions to mirror closely tcp_recvmsg()
-this should fix unexpected behavior with timeout and signals.
-- avoid unneeded refcounting on ssk
+> What if - after the eventuall accept - I publish the resulting code of th=
+e =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> above squashing somewhere?
+
+Since I'm an incurable optimist, I went ahead and pushed the rebase
+here:
+
+https://github.com/pabeni/mptcp/tree/mptcp-proposal-recvmsg_rebase_7
+
+Squashed:
+"mptcp: flush duplicate data at data_ready() time"
+and
+"mptcp: move some helper into the header file"
+  into "mptcp: Implement MPTCP receive path"
+    (and rewrote the commit message)
+
+"mptcp: harmonize locking on all socket operations."
+  partially in =
+
+    "mptcp: Associate MPTCP context with TCP socket"
+  and partially in
+    "mptcp: Create SUBFLOW socket for incoming connections"
+
+Moved the RCU bits from "mptcp: Implement MPTCP receive path"
+into:
+  "mptcp: Associate MPTCP context with TCP socket"
+
+Moved the options/ack_seq bits from "mptcp: Implement MPTCP receive
+path" into:
+  "mptcp: Write MPTCP DSS headers to outgoing data packets"
+
+Rebased "mptcp: recvmsg() can drain data from multiple subflows" on top
+of "mptcp: Implement MPTCP receive path"
+
+Removed a few intentation issue.
+
+I checked for build issue only on the modified patches.
+
+The overall diff from current export branch plus the pending patches is
+reported below.
+
 ---
- net/mptcp/protocol.c | 174 +++++++++++++++++++++++++++----------------
- 1 file changed, 111 insertions(+), 63 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index af06fc8f05f0..4869d619e547 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -92,6 +92,29 @@ static struct sock *mptcp_subflow_get(const struct mptcp=
-_sock *msk)
- 	return NULL;
- }
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 6b11a908cca7..3ebf3ece6d85 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -201,7 +201,7 @@ struct mptcp_subflow_context {
+ 	u64	idsn;
+ 	u64	map_seq;
+ 	u32	token;
+-	u32     rel_write_seq;
++	u32	rel_write_seq;
+ 	u32	map_subflow_seq;
+ 	u32	ssn_offset;
+ 	u32	map_data_len;
+@@ -209,9 +209,9 @@ struct mptcp_subflow_context {
+ 		request_join : 1,   /* send MP_JOIN */
+ 		request_bkup : 1,
+ 		request_version : 4,
+-		mp_capable : 1,     /* remote is MPTCP capable */
+-		mp_join : 1,        /* remote is JOINing */
+-		fourth_ack : 1,     /* send initial DSS */
++		mp_capable : 1,	    /* remote is MPTCP capable */
++		mp_join : 1,	    /* remote is JOINing */
++		fourth_ack : 1,	    /* send initial DSS */
+ 		conn_finished : 1,
+ 		map_valid : 1,
+ 		backup : 1,
+@@ -225,9 +225,8 @@ struct mptcp_subflow_context {
+ 	u8	local_id;
+ 	u8	remote_id;
  =
 
-+static struct sock *mptcp_subflow_recv_lookup(const struct mptcp_sock *msk)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct mptcp_subflow_context *subflow;
-+	int receivers =3D 0;
-+
-+	sock_owned_by_me(sk);
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		if (subflow->data_avail)
-+			return mptcp_subflow_tcp_socket(subflow)->sk;
-+
-+		receivers +=3D !subflow->rx_eof;
-+	}
-+
-+	/* hopefully temporary hack: propagate shutdown status from subflow
-+	 * to msk, when all subflows agree on it
-+	 */
-+	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN))
-+		sk->sk_shutdown |=3D RCV_SHUTDOWN;
-+	return NULL;
-+}
-+
- static inline bool mptcp_skb_can_collapse_to(u64 write_seq,
- 					     const struct sk_buff *skb,
- 					     const struct mptcp_ext *mpext)
-@@ -452,6 +475,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
- 	struct tcp_sock *tp;
- 	struct sock *ssk;
- 	int copied =3D 0;
-+	int target;
- 	long timeo;
- =
-
- 	lock_sock(sk);
-@@ -465,17 +489,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghd=
-r *msg, size_t len,
- 		return copied;
- 	}
- =
-
--	ssk =3D mptcp_subflow_get(msk);
--	if (!ssk) {
--		release_sock(sk);
--		return -ENOTCONN;
--	}
+-	struct  socket *tcp_sock;  /* underlying tcp_sock */
+-	struct  sock *conn;        /* parent mptcp_sock */
 -
--	subflow =3D mptcp_subflow_ctx(ssk);
--	tp =3D tcp_sk(ssk);
--
--	lock_sock(ssk);
--
- 	arg.msg =3D msg;
- 	desc.arg.data =3D &arg;
- 	desc.error =3D 0;
-@@ -483,75 +496,102 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len,
- 	timeo =3D sock_rcvtimeo(sk, nonblock);
- =
++	struct	socket *tcp_sock;   /* underlying tcp_sock */
++	struct	sock *conn;	    /* parent mptcp_sock */
+ 	void	(*tcp_sk_data_ready)(struct sock *sk);
+ 	struct	rcu_head rcu;
+ };
 
- 	len =3D min_t(size_t, len, INT_MAX);
-+	target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
- =
-
- 	while (copied < len) {
- 		u32 map_remaining;
- 		int bytes_read;
--		u64 ack_seq;
--		u64 old_ack;
- =
-
- 		smp_mb__before_atomic();
- 		clear_bit(MPTCP_DATA_READY, &msk->flags);
- 		smp_mb__after_atomic();
- =
-
--		if (!mptcp_subflow_data_available(ssk))
-+		ssk =3D mptcp_subflow_recv_lookup(msk);
-+		pr_debug("msk=3D%p ssk=3D%p", msk, ssk);
-+		if (!ssk)
- 			goto wait_for_data;
- =
-
--		old_ack =3D msk->ack_seq;
--		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
--		map_remaining =3D subflow->map_data_len -
--				mptcp_subflow_get_map_offset(subflow);
--
--		/* Read mapped data */
--		desc.count =3D min_t(size_t, len - copied, map_remaining);
--		bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
--		if (bytes_read < 0)
--			break;
-+		subflow =3D mptcp_subflow_ctx(ssk);
-+		tp =3D tcp_sk(ssk);
- =
-
--		/* Refresh current MPTCP sequence number based on subflow seq */
--		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
--		if (before64(old_ack, ack_seq))
--			msk->ack_seq =3D ack_seq;
--
--		copied +=3D bytes_read;
--
--		/* The 'wait_for_data' code path can terminate the receive loop
--		 * in a number of scenarios: check if more data is pending
--		 * before giving up.
--		 */
--		if (mptcp_subflow_data_available(ssk))
--			continue;
-+		lock_sock(ssk);
-+		while (mptcp_subflow_data_available(ssk)) {
-+			/* try to read as much data as available */
-+			map_remaining =3D subflow->map_data_len -
-+					mptcp_subflow_get_map_offset(subflow);
-+			desc.count =3D min_t(size_t, len - copied, map_remaining);
-+			pr_debug("reading %ld bytes, copied %d", desc.count,
-+				 copied);
-+			bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
-+			if (bytes_read < 0) {
-+				if (!copied)
-+					copied =3D bytes_read;
-+				release_sock(ssk);
-+				goto out;
-+			}
-+
-+			pr_debug("msk ack_seq=3D%llx -> %llx", msk->ack_seq,
-+				 msk->ack_seq + bytes_read);
-+			msk->ack_seq +=3D bytes_read;
-+			copied +=3D bytes_read;
-+			if (copied >=3D len) {
-+				release_sock(ssk);
-+				goto out;
-+			}
-+			if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
-+				pr_err("Urgent data present, cannot proceed");
-+				release_sock(ssk);
-+				goto out;
-+			}
-+		}
-+		release_sock(ssk);
-+		continue;
- =
-
- wait_for_data:
--		if (copied)
--			break;
--
--		if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
--			pr_err("Urgent data present, cannot proceed");
-+		/* only the master socket status is relevant here. The exit
-+		 * conditions mirror closely tcp_recvmsg()
-+		 */
-+		if (copied >=3D target)
- 			break;
--		}
- =
-
--		if (ssk->sk_err || ssk->sk_state =3D=3D TCP_CLOSE ||
--		    (ssk->sk_shutdown & RCV_SHUTDOWN) || !timeo ||
--		    signal_pending(current)) {
--			pr_debug("nonblock or error");
--			break;
-+		if (copied) {
-+			if (sk->sk_err ||
-+			    sk->sk_state =3D=3D TCP_CLOSE ||
-+			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
-+			    !timeo ||
-+			    signal_pending(current))
-+				break;
-+		} else {
-+			if (sk->sk_err) {
-+				copied =3D sock_error(sk);
-+				break;
-+			}
-+
-+			if (sk->sk_shutdown & RCV_SHUTDOWN)
-+				break;
-+
-+			if (sk->sk_state =3D=3D TCP_CLOSE) {
-+				copied =3D -ENOTCONN;
-+				break;
-+			}
-+
-+			if (!timeo) {
-+				copied =3D -EAGAIN;
-+				break;
-+			}
-+
-+			if (signal_pending(current)) {
-+				copied =3D sock_intr_errno(timeo);
-+				break;
-+			}
- 		}
- =
-
--		/* Handle blocking and retry read if needed.
--		 *
--		 * Wait on MPTCP sock, the subflow will notify via data ready.
--		 */
--
--		pr_debug("block");
--		release_sock(ssk);
-+		pr_debug("block timeout %ld", timeo);
- 		mptcp_wait_data(sk, &timeo);
--		lock_sock(ssk);
- 	}
- =
-
--	release_sock(ssk);
-+out:
- 	release_sock(sk);
--
- 	return copied;
- }
- =
-
-@@ -800,12 +840,7 @@ static struct sock *mptcp_accept(struct sock *sk, int =
-flags, int *err,
- 		atomic64_set(&msk->snd_una, msk->write_seq);
- 		ack_seq++;
- 		msk->ack_seq =3D ack_seq;
--		subflow->map_seq =3D ack_seq;
--		subflow->map_subflow_seq =3D 1;
--		subflow->rel_write_seq =3D 1;
--		subflow->tcp_sock =3D new_sock;
- 		newsk =3D new_mptcp_sock;
--		subflow->conn =3D new_mptcp_sock;
- 		list_add(&subflow->node, &msk->conn_list);
- 		bh_unlock_sock(new_mptcp_sock);
- =
-
-@@ -813,6 +848,19 @@ static struct sock *mptcp_accept(struct sock *sk, int =
-flags, int *err,
- 		local_bh_enable();
- 		inet_sk_state_store(newsk, TCP_ESTABLISHED);
- 		release_sock(sk);
-+
-+		/* the subflow can already receive packet, avoid racing with
-+		 * the receive path and process the pending ones
-+		 */
-+		lock_sock(new_sock->sk);
-+		subflow->map_seq =3D ack_seq;
-+		subflow->map_subflow_seq =3D 1;
-+		subflow->rel_write_seq =3D 1;
-+		subflow->tcp_sock =3D new_sock;
-+		subflow->conn =3D new_mptcp_sock;
-+		if (unlikely(!skb_queue_empty(&new_sock->sk->sk_receive_queue)))
-+			mptcp_subflow_data_available(new_sock->sk);
-+		release_sock(new_sock->sk);
- 	} else {
- 		newsk =3D new_sock->sk;
- 		tcp_sk(newsk)->is_mptcp =3D 0;
--- =
-
-2.21.0
-
---===============6769560802843156867==--
+--===============7099670653118767650==--
