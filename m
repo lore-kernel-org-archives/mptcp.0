@@ -1,21 +1,20 @@
-Content-Type: multipart/mixed; boundary="===============3252494281853043628=="
+Content-Type: multipart/mixed; boundary="===============0543713649069569298=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp:pm: limit changes for basic in pm.c
-Date: Tue, 15 Oct 2019 16:06:55 +0200
-Message-ID: <20191015140655.16427-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH] mptcp:pm: remove duplicated RM addr
+Date: Tue, 15 Oct 2019 16:07:53 +0200
+Message-ID: <20191015140753.18058-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2144
+X-UID: 2145
 
---===============3252494281853043628==
+--===============0543713649069569298==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Seems better to use mptcp_pm_init() and remove specifc changes for
-'basic' PM in protocol.c.
+We already have mptcp_pm_remove_addr() and this one is implemented.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
@@ -23,38 +22,45 @@ Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Notes:
     to be squashed in "mptcp: Implement basic path manager"
 
- net/mptcp/pm.c       | 1 +
- net/mptcp/protocol.c | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/pm.c       | 5 -----
+ net/mptcp/protocol.h | 1 -
+ 2 files changed, 6 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 9c1e3e631ade..d2b56fb8b47f 100644
+index d2b56fb8b47f..f20377c869ad 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -198,4 +198,5 @@ int mptcp_pm_get_local_id(struct request_sock *req, str=
-uct sock *sk,
- =
-
- void mptcp_pm_init(void)
- {
-+	mptcp_basic_init();
+@@ -154,11 +154,6 @@ void mptcp_pm_add_addr6(struct mptcp_sock *msk, const =
+struct in6_addr *addr,
+ 	pr_debug("msk=3D%p", msk);
  }
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9f89095ac438..df5455c3719a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1447,7 +1447,6 @@ void mptcp_proto_init(void)
  =
 
- 	mptcp_subflow_init();
- 	mptcp_pm_init();
--	mptcp_basic_init();
+-void mptcp_pm_rm_addr(struct mptcp_sock *msk, u8 id)
+-{
+-	pr_debug("msk=3D%p", msk);
+-}
+-
+ /* path manager helpers */
  =
 
- 	if (proto_register(&mptcp_prot, 1) !=3D 0)
- 		panic("Failed to register MPTCP proto.\n");
+ int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 245833f438ee..d81d6bf18a65 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -297,7 +297,6 @@ void mptcp_pm_add_addr(struct mptcp_sock *msk, const st=
+ruct in_addr *addr,
+ 		       u8 id);
+ void mptcp_pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *add=
+r,
+ 			u8 id);
+-void mptcp_pm_rm_addr(struct mptcp_sock *msk, u8 id);
+ int mptcp_pm_announce_addr(u32 token, u8 local_id, sa_family_t family,
+ 			   struct in_addr *addr);
+ int mptcp_pm_create_subflow(u32 token, u8 remote_id, sa_family_t family,
 -- =
 
 2.20.1
 
---===============3252494281853043628==--
+--===============0543713649069569298==--
