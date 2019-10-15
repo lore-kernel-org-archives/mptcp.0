@@ -1,67 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============6525514067726618202=="
+Content-Type: multipart/mixed; boundary="===============5335150453060299849=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp:pm: limit changes for basic in pm.c
-Date: Tue, 15 Oct 2019 17:02:36 +0200
-Message-ID: <f18ed679708fd60814d0e7a02c573f34432688ad.camel@redhat.com>
-In-Reply-To: 20191015140655.16427-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp:pm: use mptcp_pm_init
+Date: Tue, 15 Oct 2019 17:14:13 +0200
+Message-ID: <1c57796d-bca1-093c-457f-53a963802c06@tessares.net>
+In-Reply-To: 3c470d07-0539-317e-c890-0fd8b627e71d@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2150
+X-UID: 2151
 
---===============6525514067726618202==
+--===============5335150453060299849==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-10-15 at 16:06 +0200, Matthieu Baerts wrote:
-> Seems better to use mptcp_pm_init() and remove specifc changes for
-> 'basic' PM in protocol.c.
+Hi Paolo,
+
+On 15/10/2019 16:55, Matthieu Baerts wrote:
+> Hi Paolo,
 > =
 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
+> On 15/10/2019 16:49, Paolo Abeni wrote:
+>> On Tue, 2019-10-15 at 16:06 +0200, Matthieu Baerts wrote:
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 3cef22193035..00ab1e7674eb 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -1033,6 +1033,7 @@ void __init mptcp_init(void)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_stream_ops.shutdown =3D mptcp_shut=
+down;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_subflow_init();
+>>> +=C2=A0=C2=A0=C2=A0 mptcp_pm_init();
+>>
+>> uhmm.. it looks like this chunk will conflict ?!? I see:
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0mptcp_subflow_init();
+>> =C2=A0=C2=A0=C2=A0=C2=A0mptcp_basic_init();
+>>
+>> in the current git tree.
 > =
 
-> Notes:
->     to be squashed in "mptcp: Implement basic path manager"
+> This patch is based on top of "mptcp: Add path manager interface" to =
+
+> avoid a conflict when applying it. I will indeed have a conflict when =
+
+> propagating this but I prefer not to have conflicts when applying the =
+
+> patch :)
 > =
 
->  net/mptcp/pm.c       | 1 +
->  net/mptcp/protocol.c | 1 -
->  2 files changed, 1 insertion(+), 1 deletion(-)
+>> Otherwise LGTM
 > =
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9c1e3e631ade..d2b56fb8b47f 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -198,4 +198,5 @@ int mptcp_pm_get_local_id(struct request_sock *req, s=
-truct sock *sk,
->  =
+> Thank you for the review!
+> =
 
->  void mptcp_pm_init(void)
->  {
-> +	mptcp_basic_init();
->  }
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 9f89095ac438..df5455c3719a 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1447,7 +1447,6 @@ void mptcp_proto_init(void)
->  =
+> Because I did patches from different bases, I didn't group these 3 =
 
->  	mptcp_subflow_init();
->  	mptcp_pm_init();
-> -	mptcp_basic_init();
->  =
+> patches. I will then wait for the review of the other patches to apply =
 
->  	if (proto_register(&mptcp_prot, 1) !=3D 0)
->  		panic("Failed to register MPTCP proto.\n");
+> them all in one :)
 
-LGTM.
+Thank you for the quick reviews!
 
-Paolo
+- 46824bb16aa2: "squashed" the first patch (mptcp:pm: use mptcp_pm_init) =
 
---===============6525514067726618202==--
+in "mptcp: Add path manager interface"
+- 300bf7cd9e1a: conflict in t/mptcp-Implement-basic-path-manager
+- f97c5e2d0487: "squashed" the second patch (mptcp:pm: limit changes for =
+
+basic in pm.c) in "mptcp: Implement basic path manager"
+- e56cfd119d02: "squashed" the third patch (mptcp:pm: remove duplicated =
+
+RM addr) in "mptcp: Add path manager interface"
+- d7c09401756b..80df51ea7f87: result
+
+Tests are in progress.
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5335150453060299849==--
