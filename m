@@ -1,54 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============5747399030436600038=="
+Content-Type: multipart/mixed; boundary="===============3229921830672087530=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/3] mptcp: fix compilation warning without IPV6
-Date: Wed, 16 Oct 2019 18:15:26 +0200
-Message-ID: <20191016161528.4336-2-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 2/3] mptcp: fix compilation error without IPV6
+Date: Wed, 16 Oct 2019 18:15:27 +0200
+Message-ID: <20191016161528.4336-3-matthieu.baerts@tessares.net>
 In-Reply-To: 20191016161528.4336-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2182
+X-UID: 2183
 
---===============5747399030436600038==
+--===============3229921830672087530==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  net/mptcp/pm.c:228:23: warning: unused variable =E2=80=98addr6=E2=80=99 [=
--Wunused-variable]
-    228 |  struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)saddr;
-        |                       ^~~~~
+  net/mptcp/options.c: In function =E2=80=98mptcp_established_options_addr=
+=E2=80=99:
+  net/mptcp/options.c:478:9: error: =E2=80=98struct mptcp_out_options=E2=80=
+=99 has no member named =E2=80=98addr6=E2=80=99; did you mean =E2=80=98addr=
+=E2=80=99?
+    478 |   opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_addr;
+        |         ^~~~~
+        |         addr
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
 
 Notes:
-    To squash in "mptcp: Add path manager interface"
+    To squash in "mptcp: Add ADD_ADDR handling"
 
- net/mptcp/pm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/mptcp/options.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index b14308ad11a3..f521bf0c5f69 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -224,8 +224,10 @@ void mptcp_pm_add_addr6(struct mptcp_sock *msk, const =
-struct in6_addr *addr,
- int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
- 			 struct sockaddr_storage *saddr)
- {
--	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index c948951509e1..6cfcf2ce44fe 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -470,6 +470,7 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 		opts->addr_id =3D id;
+ 		opts->addr =3D ((struct sockaddr_in *)&saddr)->sin_addr;
+ 		*size =3D TCPOLEN_MPTCP_ADD_ADDR;
 +#if IS_ENABLED(CONFIG_IPV6)
- 	struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)saddr;
+ 	} else if (saddr.ss_family =3D=3D AF_INET6) {
+ 		if (remaining < TCPOLEN_MPTCP_ADD_ADDR6)
+ 			return false;
+@@ -477,6 +478,7 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 		opts->addr_id =3D id;
+ 		opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_addr;
+ 		*size =3D TCPOLEN_MPTCP_ADD_ADDR6;
 +#endif
-+	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
+ 	}
  =
 
- 	if (!msk->pm.local_valid)
- 		return -1;
+ 	msk->addr_signal =3D 0;
 -- =
 
 2.20.1
 
---===============5747399030436600038==--
+--===============3229921830672087530==--
