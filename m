@@ -1,27 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============6615335410525915382=="
+Content-Type: multipart/mixed; boundary="===============6062902410387989610=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/3] mptcp: fix compilation warning without IPV6
-Date: Wed, 16 Oct 2019 18:17:38 +0200
-Message-ID: <cf035507-04b4-d215-4d14-4393c26a94da@tessares.net>
-In-Reply-To: 20191016161528.4336-2-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH 3/3] mptcp:basic: check for v6 family
+Date: Wed, 16 Oct 2019 09:28:28 -0700
+Message-ID: <d0182187ade8c29785e14115465146280842f420.camel@linux.intel.com>
+In-Reply-To: 20191016161528.4336-4-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2185
+X-UID: 2186
 
---===============6615335410525915382==
+--===============6062902410387989610==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, 2019-10-16 at 18:15 +0200, Matthieu Baerts wrote:
+> Instead of by default taking IPv6 if it is not v4.
+> =
 
-On 16/10/2019 18:15, Matthieu Baerts wrote:
->    net/mptcp/pm.c:228:23: warning: unused variable =E2=80=98addr6=E2=80=
-=99 [-Wunused-variable]
->      228 |  struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)saddr;
->          |                       ^~~~~
+> I don't know exactly what are the recommendations about that but it
+> seems we can often see code checking 'if v4' then 'else if v6', not
+> checking 'if v4' then 'else it is v6'.
+
+In this situation I think it is OK to use 'else it is v6' because this code=
+ is
+within the module and we know the field is set correctly (i.e. if local_val=
+id
+is set then local_family is set to one or the other). That has been my
+approach: use "else if v6" when the value comes from elsewhere. But YMMV.
+
+Peter.
+
+
+> Anyway, that's a detail, more to know what we should do next time in
+> this situation :)
 > =
 
 > Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
@@ -29,37 +42,26 @@ On 16/10/2019 18:15, Matthieu Baerts wrote:
 > =
 
 > Notes:
->      To squash in "mptcp: Add path manager interface"
+>     To squash in "mptcp: Implement basic path manager"
 > =
 
->   net/mptcp/pm.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+>  net/mptcp/basic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > =
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index b14308ad11a3..f521bf0c5f69 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -224,8 +224,10 @@ void mptcp_pm_add_addr6(struct mptcp_sock *msk, cons=
-t struct in6_addr *addr,
->   int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
->   			 struct sockaddr_storage *saddr)
->   {
-> -	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
-> +#if IS_ENABLED(CONFIG_IPV6)
->   	struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)saddr;
-> +#endif
-> +	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
+> diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
+> index 5520aae3a6e7..4710607a3fc2 100644
+> --- a/net/mptcp/basic.c
+> +++ b/net/mptcp/basic.c
+> @@ -218,7 +218,7 @@ static void create_subflow_worker(struct work_struct =
+*work)
+>  	else if (pm->local_family =3D=3D AF_INET)
+>  		mptcp_pm_create_subflow(pm->token, pm->remote_id, NULL);
+>  #if IS_ENABLED(CONFIG_IPV6)
+> -	else
+> +	else if (pm->local_family =3D=3D AF_INET6)
+>  		mptcp_pm_create_subflow6(pm->token, pm->remote_id, NULL);
+>  #endif
+> =20
 
-I forgot to say that I also fixed the "reversed Christmas tree" order.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6615335410525915382==--
+--===============6062902410387989610==--
