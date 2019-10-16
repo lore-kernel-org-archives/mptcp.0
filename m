@@ -1,129 +1,143 @@
-Content-Type: multipart/mixed; boundary="===============0721484512536191214=="
+Content-Type: multipart/mixed; boundary="===============2647472963778101710=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH 0/3] mptcp: just another recvmsg refactor
-Date: Wed, 16 Oct 2019 10:37:13 +0200
-Message-ID: <38674e3a-37b1-9b08-b86b-9c8e35c5fd14@tessares.net>
-In-Reply-To: 87fd8b8115c48d4b2472bea06df4ccef5830d3de.camel@redhat.com
+Date: Wed, 16 Oct 2019 10:58:17 +0200
+Message-ID: <b5f1f0fcc2063a30c6ff9fe73d16a81643ac24ac.camel@redhat.com>
+In-Reply-To: 38674e3a-37b1-9b08-b86b-9c8e35c5fd14@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2167
+X-UID: 2168
 
---===============0721484512536191214==
+--===============2647472963778101710==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 16/10/2019 10:22, Paolo Abeni wrote:
-> On Wed, 2019-10-16 at 09:39 +0200, Matthieu Baerts wrote:
->> On 15/10/2019 22:39, Paolo Abeni wrote:
->>> On Tue, 2019-10-15 at 17:44 +0200, Paolo Abeni wrote:
->>>> I think this 3 patches should be squashed into
->>>> "mptcp: Implement MPTCP receive path", but the resulting one will be l=
-ikely
->>>> too huge; possibly splitting the resulting code in 2 different patches=
- would
->>>> be nicer. Additionally "mptcp: Implement MPTCP receive path" has some =
-chunks
->>>> that should be likely moved to some other patches (e.g. ULP RCU fixes).
->>>>
->>>> What if - after the eventuall accept - I publish the resulting code of=
- the
->>>> above squashing somewhere?
->>>
->>> Since I'm an incurable optimist, I went ahead and pushed the rebase
->>> here:
->>
->> Thank you for this work!
->>
->>> https://github.com/pabeni/mptcp/tree/mptcp-proposal-recvmsg_rebase_7
->>>
->>> Squashed:
->>> "mptcp: flush duplicate data at data_ready() time"
->>> and
->>> "mptcp: move some helper into the header file"
->>>     into "mptcp: Implement MPTCP receive path"
->>>       (and rewrote the commit message)
->>>
->>> "mptcp: harmonize locking on all socket operations."
->>>     partially in
->>>       "mptcp: Associate MPTCP context with TCP socket"
->>>     and partially in
->>>       "mptcp: Create SUBFLOW socket for incoming connections"
->>>
->>> Moved the RCU bits from "mptcp: Implement MPTCP receive path"
->>> into:
->>>     "mptcp: Associate MPTCP context with TCP socket"
->>>
->>> Moved the options/ack_seq bits from "mptcp: Implement MPTCP receive
->>> path" into:
->>>     "mptcp: Write MPTCP DSS headers to outgoing data packets"
->>>
->>> Rebased "mptcp: recvmsg() can drain data from multiple subflows" on top
->>> of "mptcp: Implement MPTCP receive path"
->>>
->>> Removed a few intentation issue.
->>>
->>> I checked for build issue only on the modified patches.
->>>
->>> The overall diff from current export branch plus the pending patches is
->>> reported below.
->>
->> Which ref of the "export" branch did you use? This branch has been
->> overridden 3 times yesterday:
->> - around 3.52am: a rebase on latest net-next
->> - around 2.42pm: to include "selftests: allow compilation on older syste=
-ms"
->> - around 5.23pm: to include "mptcp:pm: some cleanup"
+On Wed, 2019-10-16 at 10:37 +0200, Matthieu Baerts wrote:
+> On 16/10/2019 10:22, Paolo Abeni wrote:
+> > Yes, I'm cooking patch && rebase right now. I hopefully will send soon
+> > v2 of the patches with a reference to the rebase branch in the cover
+> > letter.
 > =
 
-> It looks I luckly included all the above.
+> If you only adds the line mentioned by Mat, I am fine if you update your =
 
-Great!
+> branch directly, no need to send new patches that we will not use =
 
->> Note that a rebase on latest net-next was done this night by the CI but
->> that's easy to re-do.
-> =
+> directly
 
-> But not this one.
+The new rebase branch is:
 
-Not a big deal for me!
+https://github.com/pabeni/mptcp/tree/mptcp-proposal-recvmsg_rebase_8
 
->> Will you include the change proposed by Mat in a new rebase?
-> =
+It still includes the additional cleanups mentioned yday:
 
-> Yes, I'm cooking patch && rebase right now. I hopefully will send soon
-> v2 of the patches with a reference to the rebase branch in the cover
-> letter.
+* Squashed:
+"mptcp: flush duplicate data at data_ready() time"
+and
+"mptcp: move some helper into the header file"
+  into "mptcp: Implement MPTCP receive path"
+    (and rewrote the commit message)
 
-If you only adds the line mentioned by Mat, I am fine if you update your =
+* Squashed:
+"mptcp: harmonize locking on all socket operations."
+  partially in =
 
-branch directly, no need to send new patches that we will not use =
+    "mptcp: Associate MPTCP context with TCP socket"
+  and partially in
+    "mptcp: Create SUBFLOW socket for incoming connections"
 
-directly, a diff is fine :-)
+* Moved the RCU bits from "mptcp: Implement MPTCP receive path"
+into:
+  "mptcp: Associate MPTCP context with TCP socket"
 
-> I'll rebase on top of net-next commit:
-> =
+* Moved the options/ack_seq bits from "mptcp: Implement MPTCP receive
+path" into:
+  "mptcp: Write MPTCP DSS headers to outgoing data packets"
 
-> 77ffe33363c0 ("hv_sock: use HV_HYP_PAGE_SIZE for Hyper-V communication")
-> =
+* Rebased "mptcp: recvmsg() can drain data from multiple subflows" on
+top of "mptcp: Implement MPTCP receive path"
 
-> to be in sync with the current export branch. Would that help?
+* Removed a few intentation/whitespace issue.
 
-It's the same for me. I will re-create the tree based on the net-next =
+It's based on top of net-next commit 77ffe33363c0 ("hv_sock: use
+HV_HYP_PAGE_SIZE for Hyper-V communication")
 
-base you used. As long as it includes all the modifications linked to =
+I checked for build issue only on the modified patches.
 
-MPTCP and it does :-)
+> , a diff is fine :-)
 
-Cheers,
-Matt
--- =
+I'm sorry, I'm unsure what I should diff !?!
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0721484512536191214==--
+Anyhow, this is the diff vs. yday rebase branch/patches:
+
+---
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b2fd57341889..b13548a0df1a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -402,7 +402,7 @@ static enum mapping_status
+get_mapping_status(struct sock *ssk)
+                 * real data_fin support
+                 */
+                pr_debug("DATA_FIN with no payload");
+-               return MAPPING_OK;
++               return MAPPING_DATA_FIN;
+        }
+
+        if (!mpext->dsn64) {
+---
+
+And this is the diff vs the current export branch with the current
+recevmsg refactor changes applied - only whitespaces to tabs
+modifications:
+---
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 871711940419..3ebf3ece6d85 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -201,7 +201,7 @@ struct mptcp_subflow_context {
+ 	u64	idsn;
+ 	u64	map_seq;
+ 	u32	token;
+-	u32     rel_write_seq;
++	u32	rel_write_seq;
+ 	u32	map_subflow_seq;
+ 	u32	ssn_offset;
+ 	u32	map_data_len;
+@@ -209,9 +209,9 @@ struct mptcp_subflow_context {
+ 		request_join : 1,   /* send MP_JOIN */
+ 		request_bkup : 1,
+ 		request_version : 4,
+-		mp_capable : 1,     /* remote is MPTCP capable */
+-		mp_join : 1,        /* remote is JOINing */
+-		fourth_ack : 1,     /* send initial DSS */
++		mp_capable : 1,	    /* remote is MPTCP capable */
++		mp_join : 1,	    /* remote is JOINing */
++		fourth_ack : 1,	    /* send initial DSS */
+ 		conn_finished : 1,
+ 		map_valid : 1,
+ 		backup : 1,
+@@ -225,9 +225,8 @@ struct mptcp_subflow_context {
+ 	u8	local_id;
+ 	u8	remote_id;
+ =
+
+-	struct  socket *tcp_sock;  /* underlying tcp_sock */
+-	struct  sock *conn;        /* parent mptcp_sock */
+-
++	struct	socket *tcp_sock;   /* underlying tcp_sock */
++	struct	sock *conn;	    /* parent mptcp_sock */
+ 	void	(*tcp_sk_data_ready)(struct sock *sk);
+ 	struct	rcu_head rcu;
+ };
+---
+
+Please let me know if something different is preferred and/or needed,
+thanks!
+
+Paolo
+
+--===============2647472963778101710==--
