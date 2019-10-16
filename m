@@ -1,96 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============3263053835338325447=="
+Content-Type: multipart/mixed; boundary="===============5251658394640683595=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 4/5] mptcp: Update path manager interface commands
- for IPv6
-Date: Wed, 16 Oct 2019 16:35:53 +0200
-Message-ID: <cf4861aef4bdd4ef6eee230ecf579022510262ec.camel@redhat.com>
-In-Reply-To: 8718e478-911c-a542-3784-738fdacac3c2@tessares.net
+Subject: [MPTCP] Re: [PATCH 2/5] mptcp: Add missing ADD_ADDR handling
+Date: Wed, 16 Oct 2019 17:20:25 +0200
+Message-ID: <cd8bbd3b-031b-3dc8-3af0-ff244d356d43@tessares.net>
+In-Reply-To: 20191015230613.16981-3-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2177
+X-UID: 2178
 
---===============3263053835338325447==
+--===============5251658394640683595==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-10-16 at 16:21 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
+Hi Peter,
+
+On 16/10/2019 01:06, Peter Krystad wrote:
+> Add missing piece that copies IPv6 address into TCP option
 > =
 
-> On 16/10/2019 13:00, Paolo Abeni wrote:
-> > Hi,
-> > =
-
-> > On Tue, 2019-10-15 at 16:06 -0700, Peter Krystad wrote:
-> > > squashto: Implement path manager interface commands
-> > > =
-
-> > > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> > > ---
-> > >   net/mptcp/pm.c | 75 ++++++++++++++++++++++++++++++++++++++++++-----=
----
-> > >   1 file changed, 64 insertions(+), 11 deletions(-)
-> > > =
-
-> > > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> > > index bc46a0ddd396..b14308ad11a3 100644
-> > > --- a/net/mptcp/pm.c
-> > > +++ b/net/mptcp/pm.c
-> > > @@ -23,11 +23,11 @@ int mptcp_pm_announce_addr(u32 token, u8 local_id=
-, struct in_addr *addr)
-> > >   		goto announce_put;
-> > >   	}
-> > >   =
-
-> > > -	pr_debug("msk=3D%p, local_id=3D%d, addr=3D%x", msk, local_id, addr-=
->s_addr);
-> > > +	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
-> > >   	msk->pm.local_valid =3D 1;
-> > >   	msk->pm.local_id =3D local_id;
-> > > -	msk->pm.local_family =3D family;
-> > > -	msk->pm.local_addr.s_addr =3D addr->s_addr;
-> > > +	msk->pm.local_family =3D AF_INET;
-> > > +	msk->pm.local_addr =3D *addr;
-> > >   	msk->addr_signal =3D 1;
-> > =
-
-> > I think a part of the above chunk belong to patch 1/5. Specifically:
-> >   =
-
-> > -	msk->pm.local_family =3D family;
-> > +	msk->pm.local_family =3D AF_INET;
-> > =
-
-> > I think it should be squashed into "mptcp: Add path manager interface",
-> > otherwise the build will break, as mptcp_pm_announce_addr() lacks the
-> > 'family' argument after applying 1/5
+> squashto: Add ADD_ADDR handling
 > =
 
-> In "mptcp: Add path manager interface", mptcp_pm_announce_addr() is not =
-
-> implemented:
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+>   net/mptcp/options.c | 24 ++++++++++++++++--------
+>   1 file changed, 16 insertions(+), 8 deletions(-)
 > =
 
->   int mptcp_pm_announce_addr(u32 token, u8 local_id, sa_family_t family,
->                              struct in_addr *addr)
->   {
->          return -ENOTSUPP;
->   }
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 4bb3766fce5e..a63137b73557 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -463,14 +463,22 @@ static bool mptcp_established_options_addr(struct s=
+ock *sk,
+>   	if (mptcp_pm_addr_signal(msk, &id, &saddr))
+>   		return false;
+>   =
 
-whoops, I got lost in the series, sorry!
+> -	if (saddr.ss_family =3D=3D AF_INET && remaining < TCPOLEN_MPTCP_ADD_ADD=
+R)
+> -		return false;
+> -
+> -	opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+> -	opts->addr_id =3D id;
+> -	opts->addr.s_addr =3D ((struct sockaddr_in *)&saddr)->sin_addr.s_addr;
+> -	*size =3D TCPOLEN_MPTCP_ADD_ADDR;
+> -
+> +	if (saddr.ss_family =3D=3D AF_INET) {
+> +		if (remaining < TCPOLEN_MPTCP_ADD_ADDR)
+> +			return false;
+> +		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+> +		opts->addr_id =3D id;
+> +		opts->addr =3D ((struct sockaddr_in *)&saddr)->sin_addr;
+> +		*size =3D TCPOLEN_MPTCP_ADD_ADDR;
+> +	}
+> +	if (saddr.ss_family =3D=3D AF_INET6) {
 
-> > Otherwise looks good to me, thanks!
-> =
+I hope you don't mind if I use a "else if" here when applying the patch.
 
-> Is this patch OK for you or the whole series? :)
+> +		if (remaining < TCPOLEN_MPTCP_ADD_ADDR6)
+> +			return false;
+> +		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
+> +		opts->addr_id =3D id;
+> +		opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_addr;
+> +		*size =3D TCPOLEN_MPTCP_ADD_ADDR6;
+> +	}
 
-With the whole series, actually!
+and if I add a new line here like before.
 
-Thanks,
+>   	msk->addr_signal =3D 0;
+>   =
 
-Paolo
+>   	return true;
 
---===============3263053835338325447==--
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5251658394640683595==--
