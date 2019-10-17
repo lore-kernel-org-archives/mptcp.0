@@ -1,44 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============4713276143469223188=="
+Content-Type: multipart/mixed; boundary="===============7500513686574686663=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 5/6] mptcp: add and use
- mptcp_subflow_get_retrans
-Date: Thu, 17 Oct 2019 15:12:57 +0200
-Message-ID: <3087acbf87d2e052c42e2e3cc0b94dbb6f32d8e6.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1910161621460.4400@jodiswax-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH 0/2] mptcp: fix compilation warnings with i386
+Date: Thu, 17 Oct 2019 15:21:06 +0200
+Message-ID: <f0893b2e7c1b8df2d9cfc7a926f2408b0f178ec2.camel@redhat.com>
+In-Reply-To: 20191016163449.25895-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2209
+X-UID: 2210
 
---===============4713276143469223188==
+--===============7500513686574686663==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-10-16 at 17:26 -0700, Mat Martineau wrote:
-> As this email thread shows, there are a lot of potential inputs for makin=
-g =
-
-> a scheduling decision and there isn't a one-size-fits all scheduling =
-
-> algorithm. The multipath-tcp.org kernel handles this with different =
-
-> scheduler modules, and we do have configurable schedulers later in the =
-
-> roadmap.
+On Wed, 2019-10-16 at 18:34 +0200, Matthieu Baerts wrote:
+> To be squashed in two different commits.
 > =
 
-> My suggestion is to keep it very, very simple for now!
+> Matthieu Baerts (2):
+>   mptcp: fix compilation warning with i386
+>   mptcp: fix compilation warning with i386
+> =
 
-Agreed.
+>  net/mptcp/protocol.c | 2 +-
+>  net/mptcp/subflow.c  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-I really should fight harder my tendency to overdesign ;)
 
-Let's go the this path and ev. we can adjust later, if needed.
+The patches LGTM, thank you for fixing my mistakes ! =
 
-Thanks,
 
 Paolo
 
---===============4713276143469223188==--
+--===============7500513686574686663==--
