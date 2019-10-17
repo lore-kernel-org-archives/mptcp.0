@@ -1,57 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============1228342433822690666=="
+Content-Type: multipart/mixed; boundary="===============0503338920561452445=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/2] mptcp: fix compilation warnings with i386
-Date: Thu, 17 Oct 2019 16:26:45 +0200
-Message-ID: <b739a189-b66d-da40-aa55-abce8f3be0b6@tessares.net>
-In-Reply-To: f0893b2e7c1b8df2d9cfc7a926f2408b0f178ec2.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH 2/3] mptcp: fix compilation error without IPV6
+Date: Thu, 17 Oct 2019 16:32:10 +0200
+Message-ID: <e022e39329e0cca69094282c8440d3cd1c918e53.camel@redhat.com>
+In-Reply-To: 6d7cce99-6352-261c-f26b-c1bf21058a7b@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2228
+X-UID: 2229
 
---===============1228342433822690666==
+--===============0503338920561452445==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-On 17/10/2019 15:21, Paolo Abeni wrote:
-> On Wed, 2019-10-16 at 18:34 +0200, Matthieu Baerts wrote:
->> To be squashed in two different commits.
->>
->> Matthieu Baerts (2):
->>    mptcp: fix compilation warning with i386
->>    mptcp: fix compilation warning with i386
->>
->>   net/mptcp/protocol.c | 2 +-
->>   net/mptcp/subflow.c  | 2 +-
->>   2 files changed, 2 insertions(+), 2 deletions(-)
+On Thu, 2019-10-17 at 16:22 +0200, Matthieu Baerts wrote:
+> Hi Paolo,
 > =
 
+> Thank you for the review!
 > =
 
-> The patches LGTM, thank you for fixing my mistakes !
+> On 17/10/2019 16:18, Paolo Abeni wrote:
+> > On Wed, 2019-10-16 at 18:15 +0200, Matthieu Baerts wrote:
+> > >    net/mptcp/options.c: In function =E2=80=98mptcp_established_option=
+s_addr=E2=80=99:
+> > >    net/mptcp/options.c:478:9: error: =E2=80=98struct mptcp_out_option=
+s=E2=80=99 has no member named =E2=80=98addr6=E2=80=99; did you mean =E2=80=
+=98addr=E2=80=99?
+> > >      478 |   opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_ad=
+dr;
+> > >          |         ^~~~~
+> > >          |         addr
+> > > =
 
-My pleasure. Thank you for the review.
-Now the CI will notify me if there are new issues with i386.
+> > > Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> > > ---
+> > > =
 
-- 970070f070a2: "squashed" patch 1/2 in "mptcp: recvmsg() can drain data =
+> > > Notes:
+> > >      To squash in "mptcp: Add ADD_ADDR handling"
+> > > =
 
-from multiple subflows"
-- f5ca38cb0a11: "squashed" patch 2/2 in "mptcp: Implement MPTCP receive =
+> > >   net/mptcp/options.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > =
 
-path"
-- 4c046ac001b8..f3397e47be58: result
+> > > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > > index c948951509e1..6cfcf2ce44fe 100644
+> > > --- a/net/mptcp/options.c
+> > > +++ b/net/mptcp/options.c
+> > > @@ -470,6 +470,7 @@ static bool mptcp_established_options_addr(struct=
+ sock *sk,
+> > >   		opts->addr_id =3D id;
+> > >   		opts->addr =3D ((struct sockaddr_in *)&saddr)->sin_addr;
+> > >   		*size =3D TCPOLEN_MPTCP_ADD_ADDR;
+> > > +#if IS_ENABLED(CONFIG_IPV6)
+> > >   	} else if (saddr.ss_family =3D=3D AF_INET6) {
+> > >   		if (remaining < TCPOLEN_MPTCP_ADD_ADDR6)
+> > >   			return false;
+> > > @@ -477,6 +478,7 @@ static bool mptcp_established_options_addr(struct=
+ sock *sk,
+> > >   		opts->addr_id =3D id;
+> > >   		opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_addr;
+> > >   		*size =3D TCPOLEN_MPTCP_ADD_ADDR6;
+> > > +#endif
+> > =
+
+> > I think that the preferred codying style here is something alike:
+> > =
+
+> > 		// ipv4 branch
+> > 	}
+> > #if IS_ENABLED(CONFIG_IPV6)
+> > 	else if (/* ... */) {
+> > 		// ...
+> > 	}
+> > #endif
+> > =
+
+> > yep, without the preprocess conditional that would be against the
+> > codying rules, but looks like checkpatch would be happy here.
+> > =
+
+> > The rationale is that is more clear in both the patch and the resulting
+> > code what is protected by the conditional.
+> =
+
+> Fine for me! I copied what was done in net/mptcp/basic.c:75
+> Do you want me to apply the same change there as well?
+
+Oops... I missed that - and net/mptcp/options.c:587, too. =
+
+
+I personally would go with what I mentioned above. Since there is a
+build to fix, I think we can merge as is for speed's sake, and update
+all the places later.
 
 Cheers,
-Matt
--- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1228342433822690666==--
+Paolo
+
+--===============0503338920561452445==--
