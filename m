@@ -1,59 +1,194 @@
-Content-Type: multipart/mixed; boundary="===============5506295506543498756=="
+Content-Type: multipart/mixed; boundary="===============1776661403537363203=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 1/2] mptcp: Export low-level routines for IPv6
-Date: Thu, 17 Oct 2019 12:11:42 +0200
-Message-ID: <9a6e5452111c5480e3b38af37e61b36fcbe82f59.camel@redhat.com>
-In-Reply-To: 20191017094047.GW25052@breakpoint.cc
+Subject: [MPTCP] Re: [RFC 2/2] mptcp: Add IPv6 support
+Date: Thu, 17 Oct 2019 12:36:50 +0200
+Message-ID: <cb02668f5df930fa78cd276d7a31f862a361e1e5.camel@redhat.com>
+In-Reply-To: 20191017000206.10559-3-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2206
+X-UID: 2207
 
---===============5506295506543498756==
+--===============1776661403537363203==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-10-17 at 11:40 +0200, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > > -static void inet6_sk_rx_dst_set(struct sock *sk, const struct sk_buf=
-f *skb)
-> > > +void inet6_sk_rx_dst_set(struct sock *sk, const struct sk_buff *skb)
-> > >  {
-> > >  	struct dst_entry *dst =3D skb_dst(skb);
-> > >  =
+Hi,
 
-> > > @@ -111,6 +111,7 @@ static void inet6_sk_rx_dst_set(struct sock *sk, =
-const struct sk_buff *skb)
-> > >  		tcp_inet6_sk(sk)->rx_dst_cookie =3D rt6_get_cookie(rt);
-> > >  	}
-> > >  }
-> > > +EXPORT_SYMBOL(inet6_sk_rx_dst_set);
-> > =
+On Wed, 2019-10-16 at 17:02 -0700, Peter Krystad wrote:
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 4fdcbb0f4285..bc38527209c9 100644
+> @@ -1182,6 +1214,53 @@ static int mptcp_getname(struct socket *sock, stru=
+ct sockaddr *uaddr,
+>  	return ret;
+>  }
+>  =
 
-> > I think this is not needed, as we don't build mptcp as a module.
-> > Dropping the 'static' scope should suffice. This should apply also to
-> > tcp_request_sock_ipv6_ops, tcp_v6_syn_recv_sock and ipv6_specific
-> > below.
-> =
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +static int mptcp_v6_getname(struct socket *sock, struct sockaddr *uaddr,
+> +			    int peer)
+> +{
+> +	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+> +	struct socket *ssock;
+> +	struct sock *ssk;
+> +	int ret;
+> +
+> +	if (sock->sk->sk_prot =3D=3D &tcpv6_prot) {
+> +		/* we are being invoked from __sys_accept4, after
+> +		 * mptcp_accept() has just accepted a non-mp-capable
+> +		 * flow: sk is a tcp_sk, not an mptcp one.
+> +		 *
+> +		 * Hand the socket over to tcp so all further socket ops
+> +		 * bypass mptcp.
+> +		 */
+> +		sock->ops =3D &inet_stream_ops;
 
-> Yes, but ipv6 can be built as a module, i.e. mptcp cannot call any ipv6
-> related symbol directly.
+Should we have &inet6_stream_ops  here ^^^^^^ ???
+Possibly the comments should be adjusted as well.
 
-whoops, I always forgot about that :(
+[...]
 
-On the plus side, we don't actually need to touch the scope of
-tcp_v6_syn_recv_sock and inet6_sk_rx_dst_set, as we can access them via
-'ipv6_specific', which we need to access no-matter-what.
+> @@ -1311,3 +1409,33 @@ void mptcp_proto_init(void)
+>  =
 
-On the flip side, hooking mptcpv6_init() in the next patch looks even
-more messy :(
+>  	inet_register_protosw(&mptcp_protosw);
+>  }
+> +
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +static struct proto_ops mptcp_v6_stream_ops;
+> +
+> +static struct inet_protosw mptcp_v6_protosw =3D {
+> +	.type		=3D SOCK_STREAM,
+> +	.protocol	=3D IPPROTO_MPTCP,
+> +	.prot		=3D &mptcp_prot,
+> +	.ops		=3D &mptcp_v6_stream_ops,
+> +	.flags		=3D INET_PROTOSW_ICSK,
+> +};
+> +
+> +int mptcp_proto_v6_init(void)
+> +{
+> +	int err;
+> +
+> +	mptcp_v6_stream_ops =3D inet6_stream_ops;
+> +	mptcp_v6_stream_ops.bind =3D mptcp_v6_bind;
+> +	mptcp_v6_stream_ops.connect =3D mptcp_v6_stream_connect;
+> +	mptcp_v6_stream_ops.poll =3D mptcp_poll;
+> +	mptcp_v6_stream_ops.accept =3D mptcp_stream_accept;
+> +	mptcp_v6_stream_ops.getname =3D mptcp_v6_getname;
+> +	mptcp_v6_stream_ops.listen =3D mptcp_v6_listen;
+> +	mptcp_v6_stream_ops.shutdown =3D mptcp_shutdown;
+> +
+> +	err =3D inet6_register_protosw(&mptcp_v6_protosw);
 
-What if we make MPTCP IPv6 support depending on IPV6 =3D y ?
+For IPv4 we currently do panic, if we can't register the protosw
+struct, possibly we could explicitly handle the failure even there?
 
-Cheers,
+Overall this looks nice and clean! What about moving the ipv6
+protocol.c support into a separate file, to reduce the preprocessor
+conditionals?
+
+[...]
+
+> @@ -226,6 +290,26 @@ static int subflow_conn_request(struct sock *sk, str=
+uct sk_buff *skb)
+>  	return 0;
+>  }
+>  =
+
+> +static int subflow_v6_conn_request(struct sock *sk, struct sk_buff *skb)
+> +{
+> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> +
+> +	pr_debug("subflow=3D%p", subflow);
+
+Just to avoid duplicate debug messages for IPv4 packets, what about
+moving this one below the next if?
+
+[...]
+
+> @@ -309,7 +393,70 @@ static struct sock *subflow_syn_recv_sock(const stru=
+ct sock *sk,
+>  	return NULL;
+>  }
+>  =
+
+> -static struct inet_connection_sock_af_ops subflow_specific;
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +static struct sock *subflow_v6_syn_recv_sock(const struct sock *sk,
+> +					     struct sk_buff *skb,
+> +					     struct request_sock *req,
+> +					     struct dst_entry *dst,
+> +					     struct request_sock *req_unhash,
+> +					     bool *own_req)
+> +{
+> +	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
+> +	struct mptcp_subflow_request_sock *subflow_req;
+> +	struct tcp_options_received opt_rx;
+> +	struct sock *child;
+> +
+> +	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener-=
+>conn);
+> +
+> +	/* if the sk is MP_CAPABLE, we already received the client key */
+> +	subflow_req =3D mptcp_subflow_rsk(req);
+> +	if (!subflow_req->mp_capable && subflow_req->mp_join) {
+> +		opt_rx.mptcp.mp_join =3D 0;
+> +		mptcp_get_options(skb, &opt_rx);
+> +		if (!opt_rx.mptcp.mp_join ||
+> +		    !subflow_hmac_valid(req, &opt_rx))
+> +			return NULL;
+> +	}
+> +
+> +	child =3D tcp_v6_syn_recv_sock(sk, skb, req, dst, req_unhash, own_req);
+> +
+> +	if (child && *own_req) {
+> +		struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(child);
+> +
+> +		if (!ctx)
+> +			goto close_child;
+> +
+> +		if (ctx->mp_capable) {
+> +			if (mptcp_token_new_accept(ctx->token))
+> +				goto close_child;
+> +		} else if (ctx->mp_join) {
+> +			struct mptcp_sock *owner;
+> +
+> +			owner =3D mptcp_token_get_sock(ctx->token);
+> +			if (!owner)
+> +				goto close_child;
+> +
+> +			ctx->conn =3D (struct sock *)owner;
+> +			mptcp_finish_join(child);
+> +		}
+> +	}
+> +
+> +	return child;
+> +
+> +close_child:
+> +	pr_debug("closing child socket");
+> +	inet_sk_set_state(child, TCP_CLOSE);
+> +	sock_set_flag(child, SOCK_DEAD);
+> +	inet_csk_destroy_sock(child);
+> +	return NULL;
+> +}
+
+As this looks quite alike the ipv4 counter part, except for the
+tcp_v4_syn_recv_sock() call, replaced here by tcp_v6_syn_recv_sock(),
+what about using a function pointer and the same overall code? =
+
+
+If the additional indirect call overhead is a concern, we can leverage
+the indirect call infrastructure ;) [shameless self-promotion;)]
+
+How about moving even the subflow ipv6 code to a separate, ipv6
+specific file ? (possibly the same used for ipv6 protocol.c code)
+
+Overall this looks much more clean and self-contained than expected!
+
+Thank you,
 
 Paolo
 
---===============5506295506543498756==--
+--===============1776661403537363203==--
