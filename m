@@ -1,75 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============7645666319707623331=="
+Content-Type: multipart/mixed; boundary="===============4979789387206213952=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 3/4] mptcp:ipv6: fix code style
-Date: Thu, 17 Oct 2019 17:15:33 +0200
-Message-ID: <d032b976-2cc2-40f0-64be-a0f6e330b5f4@tessares.net>
-In-Reply-To: f825b9931d1306dc8db57e2153be6301478e70cf.camel@redhat.com
+Subject: [MPTCP] [PATCH v2 1/4] mptcp: fix compilation warning without IPV6
+Date: Thu, 17 Oct 2019 16:50:44 +0200
+Message-ID: <20191017145047.8900-2-matthieu.baerts@tessares.net>
+In-Reply-To: 20191017145047.8900-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2218
+X-UID: 2219
 
---===============7645666319707623331==
+--===============4979789387206213952==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+  net/mptcp/pm.c:228:23: warning: unused variable =E2=80=98addr6=E2=80=99 [=
+-Wunused-variable]
+    228 |  struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)saddr;
+        |                       ^~~~~
 
-On 17/10/2019 16:58, Paolo Abeni wrote:
-> On Thu, 2019-10-17 at 16:50 +0200, Matthieu Baerts wrote:
->> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> ---
->>
->> Notes:
->>      To squash in "mptcp: Add ADD_ADDR handling"
->>
->>   net/mptcp/options.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 0b5fd3985e86..a3bf62a6620a 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -234,13 +234,14 @@ void mptcp_parse_option(const unsigned char *ptr, =
-int opsize,
->>   			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
->>   			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
->>   				 mp_opt->addr.s_addr, mp_opt->addr_id);
->> +		}
->>   #if IS_ENABLED(CONFIG_IPV6)
->> -		} else {
->> +		else {
->>   			mp_opt->add_addr =3D 1;
->>   			memcpy(mp_opt->addr6.s6_addr, (u8 *)ptr, 16);
->>   			pr_debug("ADD_ADDR: addr6=3D, id=3D%d", mp_opt->addr_id);
->> -#endif
->>   		}
->> +#endif
->>   		break;
->>   =
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
->>   	/* MPTCPOPT_RM_ADDR
-> =
+Notes:
+    To squash in "mptcp: Add path manager interface"
 
-> I referred to this one, sorry for providing the wrong reference in the
-> previous email. LGTM, thanks
+ net/mptcp/pm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thank you for the review!
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index b14308ad11a3..f521bf0c5f69 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -224,8 +224,10 @@ void mptcp_pm_add_addr6(struct mptcp_sock *msk, const =
+struct in6_addr *addr,
+ int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
+ 			 struct sockaddr_storage *saddr)
+ {
+-	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
++#if IS_ENABLED(CONFIG_IPV6)
+ 	struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)saddr;
++#endif
++	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
+ =
 
-- 0dbee5f41001: patch 3/4
-- c8c058e39359: patch 4/4
-- 54d4db3445c8: fix alignment
-
-Cheers,
-Matt
+ 	if (!msk->pm.local_valid)
+ 		return -1;
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7645666319707623331==--
+2.20.1
+
+--===============4979789387206213952==--
