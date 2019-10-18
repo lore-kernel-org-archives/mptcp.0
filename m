@@ -1,50 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============4871554510046282241=="
+Content-Type: multipart/mixed; boundary="===============6531434035951203779=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] token: fix rcu ptr manipulatation.
-Date: Fri, 18 Oct 2019 12:02:51 +0200
-Message-ID: <c60cf402-fd3a-20b5-c1f0-2f21d7baf82a@tessares.net>
-In-Reply-To: 73846495d8826b1b1ec820d6206dfaa1c2e5b9a0.1571326920.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH 0/4] mptcp: recvmsg refactor follow-up
+Date: Fri, 18 Oct 2019 12:22:16 +0200
+Message-ID: <c57522143bb133d68fb75d1e3b5425858294563e.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.1910171529130.17779@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 2235
+X-UID: 2236
 
---===============4871554510046282241==
+--===============6531434035951203779==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Thu, 2019-10-17 at 15:31 -0700, Mat Martineau wrote:
+> This looks good for merging, based on patch review and some testing.
 
-On 17/10/2019 17:43, Paolo Abeni wrote:
-> the radix tree slot manipulation needs some extra care to fit
-> the RCU annotation. Also replace raw *slot assignment with
-> the related radix tree helper - elsewhere sparse will lament there, too.
-> =
+Thank you for testing!
 
-> Squash-to: "mptcp: Add key generation and token tree"
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->   net/mptcp/token.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> I did see some KASAN problems (not associated with these patches, I =
 
-Good catch!
-Thank you for the patch.
+> think), =
 
-- a82b36982240: "squashed" in "mptcp: Add key generation and token tree"
-- signed-off already there
-- f112b4fbab2a..164ffcf0299c: result
 
-Tests are still OK!
+Can you please share the kasan report? I'm not seeing them on top of
+current git.
 
-Cheers,
-Matt
--- =
+> and lots of flushing of duplicate recv data when testing with =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4871554510046282241==--
+> multipath-tcp.org v0.95. =
+
+
+Who is flushing ?!? mptcp.org or net-next impl? if it's the latter .org
+is likely too aggressive in sending retransmission (or we looks too
+'lazy' as we ack at MPTCP level only after recvmsg().
+
+Thank you,
+
+Paolo
+
+--===============6531434035951203779==--
