@@ -1,45 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============1860464614825763353=="
+Content-Type: multipart/mixed; boundary="===============1979621140115739571=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: Patchwork: "maintainer status"
-Date: Mon, 21 Oct 2019 22:06:38 +0200
-Message-ID: <20191021200638.GG25052@breakpoint.cc>
+Date: Mon, 21 Oct 2019 13:12:38 -0700
+Message-ID: <alpine.OSX.2.21.1910211302440.7138@mjmartin-mac01.local>
 In-Reply-To: b9eff5ae-88ed-8759-f08c-ed6e7499917d@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2241
+X-UID: 2242
 
---===============1860464614825763353==
+--===============1979621140115739571==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> I contacted Patchwork maintainers and it seems they are OK to add MPTCP to
-> the list of projects.
+On Mon, 21 Oct 2019, Matthieu Baerts wrote:
 
-Thanks Matthieu.
+> Hi,
+>
+> After the last meeting, we said it would be interesting to have patchwork=
+ to =
 
-> But they are asking 2 questions:
-> =
+> easily list pending patches with their status and not having to maintain =
+the =
 
-> > - do you want all of your team to have maintainer status in patchwork?
-> (ie, should they all be able to update patch states?)
-> =
+> list manually.
+>
+> I contacted Patchwork maintainers and it seems they are OK to add MPTCP t=
+o =
 
+> the list of projects. But they are asking 2 questions:
+>
+>> - do you want all of your team to have maintainer status in patchwork? (=
+ie, =
+
+> should they all be able to update patch states?)
+>
 > I don't know exactly who would need to have this. I guess everybody who d=
-id
-> a review with an "accept" ("LGTM") should be able to directly change the
+id a =
+
+> review with an "accept" ("LGTM") should be able to directly change the =
+
 > status, no?
+>
 
-Note that anyone who has a patchwork account can change patch status of
-changes they submitted themselves.
+Sure, that sounds reasonable. I think people will be responsible :)
 
-> Patchwork maintainers are asking me to give them a list of usernames. With
-> the web interface, I can only get your user ID and email address but not
-> your username. May you reply to me in private (or to the list) with your
-> username?
+> Patchwork maintainers are asking me to give them a list of usernames. Wit=
+h =
 
-Mine is "strlen".
---===============1860464614825763353==--
+> the web interface, I can only get your user ID and email address but not =
+your =
+
+> username. May you reply to me in private (or to the list) with your usern=
+ame?
+>
+> (The username you used to log-in: https://patchwork.ozlabs.org )
+>
+> I didn't find any user account for Peter and Ossama. I don't know if you =
+
+> would like to be added to the list of people who can change the status of=
+ the =
+
+> pending patches for the kernel but if yes, you can create an account on t=
+he =
+
+> website:
+>
+>  https://patchwork.ozlabs.org/register/
+>
+>>   - are you able to subscribe <email> to your mailing list, without =
+
+> requiring a confirmation step?
+>
+> I guess that's a question for Mat :)
+
+The mailing list is currently configured to send a subscription =
+
+confirmation message with a URL, but I can turn that off if needed =
+
+(temporarily maybe?). I think the confirmation step is helpful for =
+
+preventing abuse.
+
+--
+Mat Martineau
+Intel
+--===============1979621140115739571==--
