@@ -1,90 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============1979621140115739571=="
+Content-Type: multipart/mixed; boundary="===============5683485539367571832=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Patchwork: "maintainer status"
-Date: Mon, 21 Oct 2019 13:12:38 -0700
-Message-ID: <alpine.OSX.2.21.1910211302440.7138@mjmartin-mac01.local>
-In-Reply-To: b9eff5ae-88ed-8759-f08c-ed6e7499917d@tessares.net
+Subject: [MPTCP] [PATCH 0/3] Fix issues in prerequisite patches
+Date: Mon, 21 Oct 2019 16:41:49 -0700
+Message-ID: <20191021234152.3091-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2242
+X-UID: 2243
 
---===============1979621140115739571==
+--===============5683485539367571832==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 21 Oct 2019, Matthieu Baerts wrote:
+Fix issues found by Mat in the "IPv6 prerequisite" patch series
+when running against the multipath.org implementation.
 
-> Hi,
->
-> After the last meeting, we said it would be interesting to have patchwork=
- to =
+Peter Krystad (3):
+  mptcp: fix mistake in path manager interface
+  mptcp: Save address family when creating socket
+  mptcp: Use correct address family when creating subflows
 
-> easily list pending patches with their status and not having to maintain =
-the =
+ net/mptcp/basic.c    | 28 ++++++++++++++++------------
+ net/mptcp/pm.c       |  4 ++--
+ net/mptcp/protocol.c |  1 +
+ net/mptcp/protocol.h |  1 +
+ 4 files changed, 20 insertions(+), 14 deletions(-)
 
-> list manually.
->
-> I contacted Patchwork maintainers and it seems they are OK to add MPTCP t=
-o =
+-- =
 
-> the list of projects. But they are asking 2 questions:
->
->> - do you want all of your team to have maintainer status in patchwork? (=
-ie, =
+2.17.2
 
-> should they all be able to update patch states?)
->
-> I don't know exactly who would need to have this. I guess everybody who d=
-id a =
-
-> review with an "accept" ("LGTM") should be able to directly change the =
-
-> status, no?
->
-
-Sure, that sounds reasonable. I think people will be responsible :)
-
-> Patchwork maintainers are asking me to give them a list of usernames. Wit=
-h =
-
-> the web interface, I can only get your user ID and email address but not =
-your =
-
-> username. May you reply to me in private (or to the list) with your usern=
-ame?
->
-> (The username you used to log-in: https://patchwork.ozlabs.org )
->
-> I didn't find any user account for Peter and Ossama. I don't know if you =
-
-> would like to be added to the list of people who can change the status of=
- the =
-
-> pending patches for the kernel but if yes, you can create an account on t=
-he =
-
-> website:
->
->  https://patchwork.ozlabs.org/register/
->
->>   - are you able to subscribe <email> to your mailing list, without =
-
-> requiring a confirmation step?
->
-> I guess that's a question for Mat :)
-
-The mailing list is currently configured to send a subscription =
-
-confirmation message with a URL, but I can turn that off if needed =
-
-(temporarily maybe?). I think the confirmation step is helpful for =
-
-preventing abuse.
-
---
-Mat Martineau
-Intel
---===============1979621140115739571==--
+--===============5683485539367571832==--
