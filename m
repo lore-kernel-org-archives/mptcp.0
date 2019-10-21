@@ -1,58 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============6692347069714722963=="
+Content-Type: multipart/mixed; boundary="===============5814067233779012708=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/3] mptcp: fix mistake in path manager interface
-Date: Mon, 21 Oct 2019 16:41:50 -0700
-Message-ID: <20191021234152.3091-2-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH 2/3] mptcp: Save address family when creating socket
+Date: Mon, 21 Oct 2019 16:41:51 -0700
+Message-ID: <20191021234152.3091-3-peter.krystad@linux.intel.com>
 In-Reply-To: 20191021234152.3091-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2244
+X-UID: 2245
 
---===============6692347069714722963==
+--===============5814067233779012708==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Do not de-reference NULL pointer immediately after confirming it
-is NULL.
+For IPv6 the family will be needed when creating additional
+subflow sockets.
 
-squashto:  Implement path manager interface commands
+squashto: mptcp: Associate MPTCP context with TCP socket
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/pm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 1 +
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index f521bf0c5f69..d45406bc3f6c 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -95,7 +95,7 @@ int mptcp_pm_create_subflow(u32 token, u8 remote_id, stru=
-ct in_addr *addr)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c7755cde9810..e7b40987d1b6 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1091,6 +1091,7 @@ static struct socket *mptcp_socket_create_get(struct =
+mptcp_sock *msk)
+ 	}
  =
 
- 	local.sin_family =3D AF_INET;
- 	local.sin_port =3D 0;
--	if (!addr)
-+	if (addr)
- 		local.sin_addr =3D *addr;
- 	else
- 		local.sin_addr.s_addr =3D htonl(INADDR_ANY);
-@@ -133,7 +133,7 @@ int mptcp_pm_create_subflow6(u32 token, u8 remote_id, s=
-truct in6_addr *addr)
- =
-
- 	local.sin6_family =3D AF_INET6;
- 	local.sin6_port =3D 0;
--	if (!addr)
-+	if (addr)
- 		local.sin6_addr =3D *addr;
- 	else
- 		local.sin6_addr =3D in6addr_any;
+ 	msk->subflow =3D ssock;
++	msk->family =3D ssock->sk->sk_family;
+ 	subflow =3D mptcp_subflow_ctx(msk->subflow->sk);
+ 	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
+ 	subflow->request_version =3D 0; /* currently only v0 supported */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 791f2c19cfb8..8fe5f9383d38 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -133,6 +133,7 @@ struct mptcp_sock {
+ 	u32		token;
+ 	unsigned long	flags;
+ 	u16		dport;
++	sa_family_t	family;
+ 	struct work_struct rtx_work;
+ 	struct list_head conn_list;
+ 	struct list_head rtx_queue;
 -- =
 
 2.17.2
 
---===============6692347069714722963==--
+--===============5814067233779012708==--
