@@ -1,58 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============7952231120931276412=="
+Content-Type: multipart/mixed; boundary="===============3238878176414271923=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/3] mptcp: fix mistake in path manager interface
-Date: Tue, 22 Oct 2019 13:57:17 +0200
-Message-ID: <ffbe1b22-3d87-33b6-9ed6-7481754ca5c9@tessares.net>
-In-Reply-To: 20191021234152.3091-2-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: Selftests: 1 error last night 20191022
+Date: Tue, 22 Oct 2019 14:14:02 +0200
+Message-ID: <ed196678-4f7f-1c58-d7e4-a26548bbbf8e@tessares.net>
+In-Reply-To: a517e2f1-dad0-42e4-0740-f9e10b4ad508@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2255
+X-UID: 2256
 
---===============7952231120931276412==
+--===============3238878176414271923==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hi,
 
-On 22/10/2019 01:41, Peter Krystad wrote:
-> Do not de-reference NULL pointer immediately after confirming it
-> is NULL.
-> =
+On 22/10/2019 13:20, Matthieu Baerts wrote:
+> Last night I got an error with selftests without KASAN, etc.:
 
-> squashto:  Implement path manager interface commands
+I also saw the same type of error with a new build.
 
-Thank you for the patch! I just applied this one but not the other ones =
+Last night, we move net-next from ebcd670d05d5 to 985fd98ab5cc.
 
-due to the other discussions started on the last one.
+I don't see one specific commit that could cause these new timeout but I =
 
-- 166607d720d7: "squashed" patch 1/3 in "mptcp: Implement path manager =
+saw a few commits from Eric, mainly to annotate variables for lockless =
 
-interface commands"
-- 088eb1a59555..ecb276617e3b: results
+read, we might have to do the same in MPTCP I guess:
 
-Tests have the same issue as what has been saw this night:
+- ab4e846a82d0 (tcp: annotate sk->sk_wmem_queued lockless reads)
+- e292f05e0df7 (tcp: annotate sk->sk_sndbuf lockless reads)
+- ebb3b78db7bf (tcp: annotate sk->sk_rcvbuf lockless reads)
+- d9b55bf7b678 (tcp: annotate tp->urg_seq lockless reads)
+- e0d694d638db (tcp: annotate tp->snd_nxt lockless reads)
+- 0f31746452e6 (tcp: annotate tp->write_seq lockless reads)
+- 7db48e983930 (tcp: annotate tp->copied_seq lockless reads)
+- dba7d9b8c739 (tcp: annotate tp->rcv_nxt lockless reads)
+- eac66402d1c3 (net: annotate sk->sk_rcvlowat lockless reads)
+- 8265792bf887 (net: silence KCSAN warnings around sk_add_backlog() calls)
+- 1f142c17d19a (tcp: annotate lockless access to tcp_memory_pressure)
+- 60b173ca3d1c (net: add {READ|WRITE}_ONCE() annotations on =
 
-
-   00:06:43.648 # ns2  MPTCP -> ns3  (10.0.2.2:10027) MPTCP	[ OK ]
-   00:06:44.698 # ns2  MPTCP -> ns3  (10.0.2.2:10028) TCP  	[ OK ]
-   00:06:45.940 # ns2  TCP   -> ns3  (10.0.2.2:10029) MPTCP	[ OK ]
-   00:06:46.992 # ns2  MPTCP -> ns3  (10.0.3.2:10030) MPTCP =
-
-./mptcp_connect.sh: line 16:   797 Terminated              ip netns exec =
-
-${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s ${srv_proto} =
-
-0.0.0.0 < "$sin" > "$sout"
-   00:06:47.076 # ./mptcp_connect.sh: line 16:   798 Terminated =
-
-     sleep 1
-   00:06:47.108 not ok 1 selftests: mptcp: mptcp_connect.sh # TIMEOUT
-
-
-Maybe due to a modification in net-next.
+->rskq_accept_head)
+- 9669fffc1415 (net: ensure correct skb->tstamp in various fragmenters)
 
 Cheers,
 Matt
@@ -63,4 +55,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7952231120931276412==--
+--===============3238878176414271923==--
