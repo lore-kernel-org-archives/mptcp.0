@@ -1,69 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============7916648449445075635=="
+Content-Type: multipart/mixed; boundary="===============2386985029959610623=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/2] selftests: settings: tests can be in subsubdirs
-Date: Tue, 22 Oct 2019 19:06:56 +0200
-Message-ID: <20191022170657.20129-2-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 2/2] selftests:mptcp: increase timeout
+Date: Tue, 22 Oct 2019 19:06:57 +0200
+Message-ID: <20191022170657.20129-3-matthieu.baerts@tessares.net>
 In-Reply-To: 20191022170657.20129-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2264
+X-UID: 2265
 
---===============7916648449445075635==
+--===============2386985029959610623==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Commit 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second
-timeout per test) adds support for a new per-test-directory "settings"
-file. But this only works for tests not in a sub-subdirectories, e.g.
+Instead of 45s, we switch to 450s.
 
- - tools/testing/selftests/rtc (rtc) is OK,
- - tools/testing/selftests/net/mptcp (net/mptcp) is not.
+In my tests, on a few years old machines with KASAN, etc. it took up to
+3 minutes and 30 seconds. I then doubled the value and rounded it to 7.5
+minutes.
 
-We have to increase the timeout for net/mptcp tests which are not
-upstreamed yet but this fix is valid for other tests if they need to add
-a "settings" file, see the full list with:
-
-  tools/testing/selftests/*/*/**/Makefile
-
-Note that this patch changes the text header message printed at the end
-of the execution but this text is modified only for the tests that are
-in sub-subdirectories, e.g.
-
-  ok 1 selftests: net/mptcp: mptcp_connect.sh
-
-Before we had:
-
-  ok 1 selftests: mptcp: mptcp_connect.sh
-
-But showing the full target name is probably better, just in case a
-subsubdir has the same name as another one in another subdirectory.
-
-Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout p=
-er test)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- tools/testing/selftests/kselftest/runner.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 7 +++++++
+ tools/testing/selftests/net/mptcp/settings         | 1 +
+ 2 files changed, 8 insertions(+)
+ create mode 100644 tools/testing/selftests/net/mptcp/settings
 
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/se=
-lftests/kselftest/runner.sh
-index 84de7bc74f2c..0d7a89901ef7 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -90,7 +90,7 @@ run_one()
- run_many()
- {
- 	echo "TAP version 13"
--	DIR=3D$(basename "$PWD")
-+	DIR=3D"${PWD#${BASE_DIR}/}"
- 	test_num=3D0
- 	total=3D$(echo "$@" | wc -w)
- 	echo "1..$total"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index f0528df9ac31..4a29b3284a8b 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -1,6 +1,8 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ =
+
++time_start=3D$(date +%s)
++
+ ret=3D0
+ sin=3D""
+ sout=3D""
+@@ -317,4 +319,9 @@ for sender in 1 2 3 4;do
+ 	run_tests ns4 ns$sender 10.0.3.1
+ done
+ =
+
++time_end=3D$(date +%s)
++tiem_run=3D$((time_end-time_start))
++
++echo "Time: ${time_run} seconds"
++
+ exit $ret
+diff --git a/tools/testing/selftests/net/mptcp/settings b/tools/testing/sel=
+ftests/net/mptcp/settings
+new file mode 100644
+index 000000000000..026384c189c9
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/settings
+@@ -0,0 +1 @@
++timeout=3D450
 -- =
 
 2.20.1
 
---===============7916648449445075635==--
+--===============2386985029959610623==--
