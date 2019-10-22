@@ -1,58 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============6724065120487592579=="
+Content-Type: multipart/mixed; boundary="===============6194776051502321811=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: Patchwork: "maintainer status"
-Date: Tue, 22 Oct 2019 09:55:26 +0200
-Message-ID: <d410899a930c974fe6e8ba2cc4e59b48dda50b6e.camel@redhat.com>
-In-Reply-To: b9eff5ae-88ed-8759-f08c-ed6e7499917d@tessares.net
+Date: Tue, 22 Oct 2019 10:25:49 +0200
+Message-ID: <ea3cf87c-6017-6ffe-b155-15ab5d00804d@tessares.net>
+In-Reply-To: 20191021200638.GG25052@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2247
+X-UID: 2248
 
---===============6724065120487592579==
+--===============6194776051502321811==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-10-21 at 15:13 +0200, Matthieu Baerts wrote:
-> After the last meeting, we said it would be interesting to have =
+Hi Florian,
 
-> patchwork to easily list pending patches with their status and not =
-
-> having to maintain the list manually.
+On 21/10/2019 22:06, Florian Westphal wrote:
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+>> I contacted Patchwork maintainers and it seems they are OK to add MPTCP =
+to
+>> the list of projects.
 > =
 
-> I contacted Patchwork maintainers and it seems they are OK to add MPTCP =
-
-> to the list of projects. But they are asking 2 questions:
+> Thanks Matthieu.
 > =
 
->  > - do you want all of your team to have maintainer status in =
-
-> patchwork? (ie, should they all be able to update patch states?)
+>> But they are asking 2 questions:
+>>
+>>> - do you want all of your team to have maintainer status in patchwork?
+>> (ie, should they all be able to update patch states?)
+>>
+>> I don't know exactly who would need to have this. I guess everybody who =
+did
+>> a review with an "accept" ("LGTM") should be able to directly change the
+>> status, no?
 > =
 
-> I don't know exactly who would need to have this. I guess everybody who =
+> Note that anyone who has a patchwork account can change patch status of
+> changes they submitted themselves.
 
-> did a review with an "accept" ("LGTM") should be able to directly change =
+Good to know, that's a useful feature!
 
-> the status, no?
+>> Patchwork maintainers are asking me to give them a list of usernames. Wi=
+th
+>> the web interface, I can only get your user ID and email address but not
+>> your username. May you reply to me in private (or to the list) with your
+>> username?
+> =
 
-I think that should be the preferred course of actions.
+> Mine is "strlen".
 
-> Patchwork maintainers are asking me to give them a list of usernames. =
+Thank you, added to the list!
 
-> With the web interface, I can only get your user ID and email address =
+Cheers,
+Matt
+-- =
 
-> but not your username. May you reply to me in private (or to the list) =
-
-> with your username?
-
-In a quite original fashion, mine is 'pabeni'
-
-Thank you for tacking care of this!
-
-Paolo
-
---===============6724065120487592579==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6194776051502321811==--
