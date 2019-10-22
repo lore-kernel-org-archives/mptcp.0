@@ -1,107 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============5671114976661549063=="
+Content-Type: multipart/mixed; boundary="===============8620254808114330466=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Patchwork: "maintainer status"
-Date: Tue, 22 Oct 2019 10:34:13 +0200
-Message-ID: <8fccefbb-c5f3-a047-04ff-1ea23835c9c3@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1910211302440.7138@mjmartin-mac01.local
+Subject: [MPTCP] Re: [PATCH 3/3] mptcp: Use correct address family when
+ creating subflows
+Date: Tue, 22 Oct 2019 10:35:25 +0200
+Message-ID: <f33db1bea7a54ffca10c58e3b552fd75e86b20e6.camel@redhat.com>
+In-Reply-To: 20191021234152.3091-4-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2249
+X-UID: 2250
 
---===============5671114976661549063==
+--===============8620254808114330466==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi,
 
-On 21/10/2019 22:12, Mat Martineau wrote:
-> On Mon, 21 Oct 2019, Matthieu Baerts wrote:
+On Mon, 2019-10-21 at 16:41 -0700, Peter Krystad wrote:
+> Use the address family used when the initial MPTCP socket
+> was created when making additional subflow sockets.
 > =
 
->> Hi,
->>
->> After the last meeting, we said it would be interesting to have =
-
->> patchwork to easily list pending patches with their status and not =
-
->> having to maintain the list manually.
->>
->> I contacted Patchwork maintainers and it seems they are OK to add =
-
->> MPTCP to the list of projects. But they are asking 2 questions:
->>
->>> - do you want all of your team to have maintainer status in =
-
->>> patchwork? (ie, =
-
->> should they all be able to update patch states?)
->>
->> I don't know exactly who would need to have this. I guess everybody =
-
->> who did a review with an "accept" ("LGTM") should be able to directly =
-
->> change the status, no?
->>
+> squashto: Implement basic path manager
 > =
 
-> Sure, that sounds reasonable. I think people will be responsible :)
-
-Me too!
-
->> Patchwork maintainers are asking me to give them a list of usernames. =
-
->> With the web interface, I can only get your user ID and email address =
-
->> but not your username. May you reply to me in private (or to the list) =
-
->> with your username?
->>
->> (The username you used to log-in: https://patchwork.ozlabs.org )
->>
->> I didn't find any user account for Peter and Ossama. I don't know if =
-
->> you would like to be added to the list of people who can change the =
-
->> status of the pending patches for the kernel but if yes, you can =
-
->> create an account on the website:
->>
->> =C2=A0https://patchwork.ozlabs.org/register/
->>
->>> =C2=A0 - are you able to subscribe <email> to your mailing list, withou=
-t =
-
->> requiring a confirmation step?
->>
->> I guess that's a question for Mat :)
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+>  net/mptcp/basic.c | 28 ++++++++++++++++------------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
 > =
 
-> The mailing list is currently configured to send a subscription =
+> diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
+> index d2fd0560c136..2557cb63fd61 100644
+> --- a/net/mptcp/basic.c
+> +++ b/net/mptcp/basic.c
+> @@ -209,19 +209,23 @@ static void create_subflow_worker(struct work_struc=
+t *work)
+>  =
 
-> confirmation message with a URL, but I can turn that off if needed =
+>  	pernet =3D net_generic(sock_net((struct sock *)msk), basic_pernet_id);
+>  =
 
-> (temporarily maybe?). I think the confirmation step is helpful for =
+> -	if (pernet->has_announce_v4)
+> -		mptcp_pm_create_subflow(pm->token, pm->remote_id,
+> -					&pernet->announce_v4_addr);
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -	else if (pernet->has_announce_v6)
+> -		mptcp_pm_create_subflow6(pm->token, pm->remote_id,
+> -					 &pernet->announce_v6_addr);
+> -#endif
+> -	else if (pm->local_family =3D=3D AF_INET)
+> -		mptcp_pm_create_subflow(pm->token, pm->remote_id, NULL);
+> +	if (msk->family =3D=3D AF_INET) {
+> +		if (pernet->has_announce_v4)
+> +			mptcp_pm_create_subflow(pm->token, pm->remote_id,
+> +						&pernet->announce_v4_addr);
+> +		else
+> +			mptcp_pm_create_subflow(pm->token, pm->remote_id,
+> +						NULL);
+> +	}
 
-> preventing abuse.
+Here I'm likely a bit lost, but what if the peer sends an ADD_ADDR v4,
+and the local msk socket is a v6 (or vice versa)?
 
-Is it not possible to force someone to be subscribed?
+I think checking vs the msk family is possibly not required here (IIRC
+the RFC code, it looks like an MPTCP client could manage correctly
+subflows with different inet families - but we need to check/match the
+local address family (has_announce_v4/has_announce_v6) vs the remote
+address/ADD_ADDR family. Otherwise we could try to connect to a
+corrupted/truncated/uncomplete address.
 
-If you disable the option you mentioned, I guess Patchwork maintainer =
+Additionally, I think we need to check/match the local additional =
 
-will need to send an email with a specific message to our ML, right? (I =
+address family (has_announce_v4/has_announce_v6) vs the msk family in
+announce_addr_worker(), so that the sever always announce addresses
+that is able to accept[1].
 
-don't know if what you mentioned is enough)
+Thanks,
 
-Cheers,
-Matt
--- =
+Paolo
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5671114976661549063==--
+[1] for IPv6 listener such check could be fairly more complex - unbound
+listener could accept any ipv4 address, bound ones could check for
+ipv4-mapped ipv6 address, etc... I think is better use to the simpler
+approach here.
+
+--===============8620254808114330466==--
