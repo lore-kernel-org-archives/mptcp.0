@@ -1,77 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============0386656008375485310=="
+Content-Type: multipart/mixed; boundary="===============6724065120487592579=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/3] mptcp: Use correct address family when creating
- subflows
-Date: Mon, 21 Oct 2019 16:41:52 -0700
-Message-ID: <20191021234152.3091-4-peter.krystad@linux.intel.com>
-In-Reply-To: 20191021234152.3091-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: Patchwork: "maintainer status"
+Date: Tue, 22 Oct 2019 09:55:26 +0200
+Message-ID: <d410899a930c974fe6e8ba2cc4e59b48dda50b6e.camel@redhat.com>
+In-Reply-To: b9eff5ae-88ed-8759-f08c-ed6e7499917d@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2246
+X-UID: 2247
 
---===============0386656008375485310==
+--===============6724065120487592579==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use the address family used when the initial MPTCP socket
-was created when making additional subflow sockets.
+On Mon, 2019-10-21 at 15:13 +0200, Matthieu Baerts wrote:
+> After the last meeting, we said it would be interesting to have =
 
-squashto: Implement basic path manager
+> patchwork to easily list pending patches with their status and not =
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/basic.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+> having to maintain the list manually.
+> =
 
-diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
-index d2fd0560c136..2557cb63fd61 100644
---- a/net/mptcp/basic.c
-+++ b/net/mptcp/basic.c
-@@ -209,19 +209,23 @@ static void create_subflow_worker(struct work_struct =
-*work)
- =
+> I contacted Patchwork maintainers and it seems they are OK to add MPTCP =
 
- 	pernet =3D net_generic(sock_net((struct sock *)msk), basic_pernet_id);
- =
+> to the list of projects. But they are asking 2 questions:
+> =
 
--	if (pernet->has_announce_v4)
--		mptcp_pm_create_subflow(pm->token, pm->remote_id,
--					&pernet->announce_v4_addr);
--#if IS_ENABLED(CONFIG_IPV6)
--	else if (pernet->has_announce_v6)
--		mptcp_pm_create_subflow6(pm->token, pm->remote_id,
--					 &pernet->announce_v6_addr);
--#endif
--	else if (pm->local_family =3D=3D AF_INET)
--		mptcp_pm_create_subflow(pm->token, pm->remote_id, NULL);
-+	if (msk->family =3D=3D AF_INET) {
-+		if (pernet->has_announce_v4)
-+			mptcp_pm_create_subflow(pm->token, pm->remote_id,
-+						&pernet->announce_v4_addr);
-+		else
-+			mptcp_pm_create_subflow(pm->token, pm->remote_id,
-+						NULL);
-+	}
- #if IS_ENABLED(CONFIG_IPV6)
--	else
--		mptcp_pm_create_subflow6(pm->token, pm->remote_id, NULL);
-+	else if (msk->family =3D=3D AF_INET6) {
-+		if (pernet->has_announce_v6)
-+			mptcp_pm_create_subflow6(pm->token, pm->remote_id,
-+						 &pernet->announce_v6_addr);
-+		else
-+			mptcp_pm_create_subflow6(pm->token, pm->remote_id,
-+						 NULL);
-+	}
- #endif
- =
+>  > - do you want all of your team to have maintainer status in =
 
- 	sock_put((struct sock *)msk);
--- =
+> patchwork? (ie, should they all be able to update patch states?)
+> =
 
-2.17.2
+> I don't know exactly who would need to have this. I guess everybody who =
 
---===============0386656008375485310==--
+> did a review with an "accept" ("LGTM") should be able to directly change =
+
+> the status, no?
+
+I think that should be the preferred course of actions.
+
+> Patchwork maintainers are asking me to give them a list of usernames. =
+
+> With the web interface, I can only get your user ID and email address =
+
+> but not your username. May you reply to me in private (or to the list) =
+
+> with your username?
+
+In a quite original fashion, mine is 'pabeni'
+
+Thank you for tacking care of this!
+
+Paolo
+
+--===============6724065120487592579==--
