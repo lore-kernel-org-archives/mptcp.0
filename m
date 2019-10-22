@@ -1,90 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============8620254808114330466=="
+Content-Type: multipart/mixed; boundary="===============8250563212918525494=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/3] mptcp: Use correct address family when
- creating subflows
-Date: Tue, 22 Oct 2019 10:35:25 +0200
-Message-ID: <f33db1bea7a54ffca10c58e3b552fd75e86b20e6.camel@redhat.com>
-In-Reply-To: 20191021234152.3091-4-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: Patchwork: "maintainer status"
+Date: Tue, 22 Oct 2019 10:36:17 +0200
+Message-ID: <cc7f8539-ec90-c06c-c796-563428db326c@tessares.net>
+In-Reply-To: d410899a930c974fe6e8ba2cc4e59b48dda50b6e.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2250
+X-UID: 2251
 
---===============8620254808114330466==
+--===============8250563212918525494==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Paolo,
 
-On Mon, 2019-10-21 at 16:41 -0700, Peter Krystad wrote:
-> Use the address family used when the initial MPTCP socket
-> was created when making additional subflow sockets.
+On 22/10/2019 09:55, Paolo Abeni wrote:
+> On Mon, 2019-10-21 at 15:13 +0200, Matthieu Baerts wrote:
+>> After the last meeting, we said it would be interesting to have
+>> patchwork to easily list pending patches with their status and not
+>> having to maintain the list manually.
+>>
+>> I contacted Patchwork maintainers and it seems they are OK to add MPTCP
+>> to the list of projects. But they are asking 2 questions:
+>>
+>>   > - do you want all of your team to have maintainer status in
+>> patchwork? (ie, should they all be able to update patch states?)
+>>
+>> I don't know exactly who would need to have this. I guess everybody who
+>> did a review with an "accept" ("LGTM") should be able to directly change
+>> the status, no?
 > =
 
-> squashto: Implement basic path manager
+> I think that should be the preferred course of actions.
+
+That would be great :)
+
+>> Patchwork maintainers are asking me to give them a list of usernames.
+>> With the web interface, I can only get your user ID and email address
+>> but not your username. May you reply to me in private (or to the list)
+>> with your username?
 > =
 
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> ---
->  net/mptcp/basic.c | 28 ++++++++++++++++------------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> =
+> In a quite original fashion, mine is 'pabeni'
 
-> diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
-> index d2fd0560c136..2557cb63fd61 100644
-> --- a/net/mptcp/basic.c
-> +++ b/net/mptcp/basic.c
-> @@ -209,19 +209,23 @@ static void create_subflow_worker(struct work_struc=
-t *work)
->  =
+:)
 
->  	pernet =3D net_generic(sock_net((struct sock *)msk), basic_pernet_id);
->  =
+Added to the list!
 
-> -	if (pernet->has_announce_v4)
-> -		mptcp_pm_create_subflow(pm->token, pm->remote_id,
-> -					&pernet->announce_v4_addr);
-> -#if IS_ENABLED(CONFIG_IPV6)
-> -	else if (pernet->has_announce_v6)
-> -		mptcp_pm_create_subflow6(pm->token, pm->remote_id,
-> -					 &pernet->announce_v6_addr);
-> -#endif
-> -	else if (pm->local_family =3D=3D AF_INET)
-> -		mptcp_pm_create_subflow(pm->token, pm->remote_id, NULL);
-> +	if (msk->family =3D=3D AF_INET) {
-> +		if (pernet->has_announce_v4)
-> +			mptcp_pm_create_subflow(pm->token, pm->remote_id,
-> +						&pernet->announce_v4_addr);
-> +		else
-> +			mptcp_pm_create_subflow(pm->token, pm->remote_id,
-> +						NULL);
-> +	}
+> Thank you for tacking care of this!
 
-Here I'm likely a bit lost, but what if the peer sends an ADD_ADDR v4,
-and the local msk socket is a v6 (or vice versa)?
+My pleasure!
 
-I think checking vs the msk family is possibly not required here (IIRC
-the RFC code, it looks like an MPTCP client could manage correctly
-subflows with different inet families - but we need to check/match the
-local address family (has_announce_v4/has_announce_v6) vs the remote
-address/ADD_ADDR family. Otherwise we could try to connect to a
-corrupted/truncated/uncomplete address.
+Cheers,
+Matt
+-- =
 
-Additionally, I think we need to check/match the local additional =
-
-address family (has_announce_v4/has_announce_v6) vs the msk family in
-announce_addr_worker(), so that the sever always announce addresses
-that is able to accept[1].
-
-Thanks,
-
-Paolo
-
-[1] for IPv6 listener such check could be fairly more complex - unbound
-listener could accept any ipv4 address, bound ones could check for
-ipv4-mapped ipv6 address, etc... I think is better use to the simpler
-approach here.
-
---===============8620254808114330466==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8250563212918525494==--
