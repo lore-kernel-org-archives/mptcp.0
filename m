@@ -1,81 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============6375831183960525326=="
+Content-Type: multipart/mixed; boundary="===============8137440072916395100=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Patchwork: "maintainer status"
-Date: Tue, 22 Oct 2019 10:45:58 +0200
-Message-ID: <7008290a-3d12-93da-2f9c-478f4e6f33ac@tessares.net>
-In-Reply-To: 8fccefbb-c5f3-a047-04ff-1ea23835c9c3@tessares.net
+Subject: [MPTCP] Re: [PATCH 3/3] mptcp: Use correct address family when
+ creating subflows
+Date: Tue, 22 Oct 2019 13:12:55 +0200
+Message-ID: <2734366d-ad01-1bb8-cd65-17861a35102b@tessares.net>
+In-Reply-To: f33db1bea7a54ffca10c58e3b552fd75e86b20e6.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2252
+X-UID: 2253
 
---===============6375831183960525326==
+--===============8137440072916395100==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Paolo, Peter,
 
-On 22/10/2019 10:34, Matthieu Baerts wrote:
-> On 21/10/2019 22:12, Mat Martineau wrote:
->> On Mon, 21 Oct 2019, Matthieu Baerts wrote:
+On 22/10/2019 10:35, Paolo Abeni wrote:
+> Hi,
+> =
 
-[...]
-
->>> Patchwork maintainers are asking me to give them a list of usernames. =
-
->>> With the web interface, I can only get your user ID and email address =
-
->>> but not your username. May you reply to me in private (or to the =
-
->>> list) with your username?
->>>
->>> (The username you used to log-in: https://patchwork.ozlabs.org )
->>>
->>> I didn't find any user account for Peter and Ossama. I don't know if =
-
->>> you would like to be added to the list of people who can change the =
-
->>> status of the pending patches for the kernel but if yes, you can =
-
->>> create an account on the website:
->>>
->>> =C2=A0https://patchwork.ozlabs.org/register/
->>>
->>>> =C2=A0 - are you able to subscribe <email> to your mailing list, witho=
-ut =
-
->>> requiring a confirmation step?
->>>
->>> I guess that's a question for Mat :)
+> On Mon, 2019-10-21 at 16:41 -0700, Peter Krystad wrote:
+>> Use the address family used when the initial MPTCP socket
+>> was created when making additional subflow sockets.
 >>
->> The mailing list is currently configured to send a subscription =
+>> squashto: Implement basic path manager
+>>
+>> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+>> ---
+>>   net/mptcp/basic.c | 28 ++++++++++++++++------------
+>>   1 file changed, 16 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
+>> index d2fd0560c136..2557cb63fd61 100644
+>> --- a/net/mptcp/basic.c
+>> +++ b/net/mptcp/basic.c
+>> @@ -209,19 +209,23 @@ static void create_subflow_worker(struct work_stru=
+ct *work)
+>>   =
 
->> confirmation message with a URL, but I can turn that off if needed =
+>>   	pernet =3D net_generic(sock_net((struct sock *)msk), basic_pernet_id);
+>>   =
 
->> (temporarily maybe?). I think the confirmation step is helpful for =
-
->> preventing abuse.
+>> -	if (pernet->has_announce_v4)
+>> -		mptcp_pm_create_subflow(pm->token, pm->remote_id,
+>> -					&pernet->announce_v4_addr);
+>> -#if IS_ENABLED(CONFIG_IPV6)
+>> -	else if (pernet->has_announce_v6)
+>> -		mptcp_pm_create_subflow6(pm->token, pm->remote_id,
+>> -					 &pernet->announce_v6_addr);
+>> -#endif
+>> -	else if (pm->local_family =3D=3D AF_INET)
+>> -		mptcp_pm_create_subflow(pm->token, pm->remote_id, NULL);
+>> +	if (msk->family =3D=3D AF_INET) {
+>> +		if (pernet->has_announce_v4)
+>> +			mptcp_pm_create_subflow(pm->token, pm->remote_id,
+>> +						&pernet->announce_v4_addr);
+>> +		else
+>> +			mptcp_pm_create_subflow(pm->token, pm->remote_id,
+>> +						NULL);
+>> +	}
 > =
 
-> Is it not possible to force someone to be subscribed?
+> Here I'm likely a bit lost, but what if the peer sends an ADD_ADDR v4,
+> and the local msk socket is a v6 (or vice versa)?
+
+On one hand, if the socket is v6 only, it would make sense not to =
+
+establish a v4 subflow or announce a v4 IP. Same if the socket is v4 only.
+
+But on the other hand, when an app creates both v4-only and v6-only =
+
+sockets (like many webservers do), it is annoying because you cannot =
+
+combine v4 and v6. In this case the PM doesn't announce the addresses =
+
+for the other family because it will not accept addresses from this =
+
+other family. We respect what the app asked but I don't know if we want =
+
+to "ignore" v4-only/v6-only for other subflows.
+
+> I think checking vs the msk family is possibly not required here (IIRC
+> the RFC code, it looks like an MPTCP client could manage correctly
+> subflows with different inet families - but we need to check/match the
+> local address family (has_announce_v4/has_announce_v6) vs the remote
+> address/ADD_ADDR family. Otherwise we could try to connect to a
+> corrupted/truncated/uncomplete address.
+
+Regarding the code here, I guess we should check for sockets allowing =
+
+both v4 and v6. And possibly use the v4 addressed mapped in v6.
+
+> Additionally, I think we need to check/match the local additional
+> address family (has_announce_v4/has_announce_v6) vs the msk family in
+> announce_addr_worker(), so that the sever always announce addresses
+> that is able to accept[1].
+
+Yes but only if the socket is v4-only or v6-only.
+
+> Thanks,
 > =
 
-> If you disable the option you mentioned, I guess Patchwork maintainer =
+> Paolo
+> =
 
-> will need to send an email with a specific message to our ML, right? (I =
+> [1] for IPv6 listener such check could be fairly more complex - unbound
+> listener could accept any ipv4 address, bound ones could check for
+> ipv4-mapped ipv6 address, etc... I think is better use to the simpler
+> approach here.
 
-> don't know if what you mentioned is enough)
+So accept a mix of v4 and v6 later? It would make sense but it will need =
 
-I guess that if you turn that off, you can then subscribe anybody using =
-
-this form: https://lists.01.org/postorius/lists/mptcp.lists.01.org/
-
-Then no need to have manual interaction from their side, right?
+to be documented somewhere with a TODO I guess :)
 
 Cheers,
 Matt
+
+PS: Paolo: is it OK for you if I apply the first patch of the series?
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -83,4 +127,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6375831183960525326==--
+--===============8137440072916395100==--
