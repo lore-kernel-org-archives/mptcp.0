@@ -1,81 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============5723384362079032298=="
+Content-Type: multipart/mixed; boundary="===============8485933101864312173=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/3] mptcp: Use correct address family when
- creating subflows
-Date: Tue, 22 Oct 2019 14:52:54 +0200
-Message-ID: <c2f9e44e-9dd8-0b28-ffa6-44d7659aea86@tessares.net>
-In-Reply-To: 4a33621a6b7dfc1ed11064d9f771463c45e4814d.camel@redhat.com
+Subject: [MPTCP] Re: Selftests: 1 error last night 20191022
+Date: Tue, 22 Oct 2019 14:56:42 +0200
+Message-ID: <9e06c4068331d54776b9079e81b35dfbabe2723b.camel@redhat.com>
+In-Reply-To: ed196678-4f7f-1c58-d7e4-a26548bbbf8e@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2258
+X-UID: 2259
 
---===============5723384362079032298==
+--===============8485933101864312173==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-On 22/10/2019 14:35, Paolo Abeni wrote:
-> On Tue, 2019-10-22 at 13:12 +0200, Matthieu Baerts wrote:
->> On 22/10/2019 10:35, Paolo Abeni wrote:
->>> but what if the peer sends an ADD_ADDR v4,
->>> and the local msk socket is a v6 (or vice versa)?
+On Tue, 2019-10-22 at 14:14 +0200, Matthieu Baerts wrote:
+> Hi,
 > =
 
-> Sorry, I was not clear enough. With the posted code, when msk is v6,
-> pernet->has_announce_v6 is 1 and ADD_ADDR is ipv4 (pm->remote_family =3D=
-=3D
-> AF_INET), I think mptcp_pm_create_subflow6() will end-up using
-> uninitialized bytes for mptcp_subflow_connect().
+> On 22/10/2019 13:20, Matthieu Baerts wrote:
+> > Last night I got an error with selftests without KASAN, etc.:
 > =
 
-> To avoid that, we should check that the local and the remote address
-> used to establish the connection belong to the same family.
-
-I see, thank you for the clarification! Indeed, there is no check when =
-
-doing this, good catch!
-
-   remote.sin_family =3D msk->pm.remote_family
-   remote.sin6_family =3D msk->pm.remote_family
-
->> So accept a mix of v4 and v6 later?
+> I also saw the same type of error with a new build.
 > =
 
-> The idea would be to keep the code as simple as possible. The listening
-> socket in the current status can't accept easily a mix of ipv4 and ipv6
-> subflow, I think.
+> Last night, we move net-next from ebcd670d05d5 to 985fd98ab5cc.
 > =
 
-> On the flip side, should be quite straigh-forward support mixed family
-> for client sockets; that was my overall proposal here.
+> I don't see one specific commit that could cause these new timeout but I =
 
-Sounds like a good idea!
+> saw a few commits from Eric, mainly to annotate variables for lockless =
 
->> It would make sense but it will need
->> to be documented somewhere with a TODO I guess :)
-> =
+> read, we might have to do the same in MPTCP I guess:
 
-> Agreed.
-> =
+Yep we should. But we also should be almost done there ;)
 
->> PS: Paolo: is it OK for you if I apply the first patch of the series?
-> =
+Anyhow such change should not responsible of the timeout
 
-> too late, but... "yes"
+> - ab4e846a82d0 (tcp: annotate sk->sk_wmem_queued lockless reads)
+> - e292f05e0df7 (tcp: annotate sk->sk_sndbuf lockless reads)
+> - ebb3b78db7bf (tcp: annotate sk->sk_rcvbuf lockless reads)
+> - d9b55bf7b678 (tcp: annotate tp->urg_seq lockless reads)
+> - e0d694d638db (tcp: annotate tp->snd_nxt lockless reads)
+> - 0f31746452e6 (tcp: annotate tp->write_seq lockless reads)
+> - 7db48e983930 (tcp: annotate tp->copied_seq lockless reads)
+> - dba7d9b8c739 (tcp: annotate tp->rcv_nxt lockless reads)
+> - eac66402d1c3 (net: annotate sk->sk_rcvlowat lockless reads)
+> - 8265792bf887 (net: silence KCSAN warnings around sk_add_backlog() calls)
+> - 1f142c17d19a (tcp: annotate lockless access to tcp_memory_pressure)
+> - 60b173ca3d1c (net: add {READ|WRITE}_ONCE() annotations on =
 
-Sorry, the fix was straightforward, I went ahead without waiting :)
+> ->rskq_accept_head)
+> - 9669fffc1415 (net: ensure correct skb->tstamp in various fragmenters)
 
-Cheers,
-Matt
--- =
+This one possibly could, even if it's quite unlikely, I think.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5723384362079032298==--
+Is this failure easily reproducible or it happens once in a lot of
+runs?
+
+Thanks,
+
+Paolo
+
+
+
+--===============8485933101864312173==--
