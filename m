@@ -1,84 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============2821317187163808839=="
+Content-Type: multipart/mixed; boundary="===============8961178953281728637=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 7/7] selftests: mptcp: track duration of each test
-Date: Wed, 23 Oct 2019 15:13:25 +0200
-Message-ID: <20191023131325.18895-8-fw@strlen.de>
-In-Reply-To: 20191023131325.18895-1-fw@strlen.de
+Subject: [MPTCP] [PATCH v2 0/4] mptcp: switch mptcp_poll to use parent sock
+ wait queue
+Date: Wed, 23 Oct 2019 16:23:51 +0200
+Message-ID: <20191023142355.31599-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2284
+X-UID: 2285
 
---===============2821317187163808839==
+--===============8961178953281728637==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This allows to detect discrepancies, e.g.
-MPTCP -> TCP   1s
-TCP   -> MPTCP 0s
-MPTCP -> MPTCP 41s
+No major changes, except the rebase on current export branch.
+Selftest still passes.
 
-The expecation of course is that test duration is pretty similar
-for tests between the same network namespaces, regardless of wheter
-MPTCP or TCP fallback is used.
+This series is needed for sendmsg refactor, without it we can't
+make mptcp sendmsg wait on the mptcp socket wait queue because we don't
+get the needed wakeup events from the subflow layer.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+The following changes since commit 85c93de446d3fd90e47605ba8ff161bef7558f09:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index b3ccf3dc9bb1..9c40a7e64d83 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -256,6 +256,7 @@ do_transfer()
- =
+  mptcp: Implement basic path manager (2019-10-23 01:31:04 +0000)
 
- 	sleep 1
- =
+are available in the Git repository at:
 
-+	start=3D$(date +%s)
- 	ip netns exec ${connector_ns} ./mptcp_connect -t $timeout -p $port -s ${c=
-l_proto} $connect_addr < "$cin" > "$cout" &
- 	cpid=3D$!
- =
+  git://git.breakpoint.cc/fw/mptcp-next.git mptcp_poll_07
 
-@@ -264,13 +265,17 @@ do_transfer()
- 	wait $spid
- 	rets=3D$?
- =
+for you to fetch changes up to 864dd47df1293e4b8bfc70be0d459286b6dddc3a:
 
-+	stop=3D$(date +%s)
-+
- 	if [ $capture -eq 1 ]; then
- 	    sleep 1
- 	    kill $cappid
- 	fi
- =
+  mptcp: switch mptcp_poll to mptcp socket wait queue (2019-10-23 15:20:28 =
++0200)
 
-+	duration=3D$((stop-start))
-+	duration=3D$(printf "(duration %03ss)" $duration)
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
--		echo "[ FAIL ] client exit code $retc, server $rets" 1>&2
-+		echo "$duration [ FAIL ] client exit code $retc, server $rets" 1>&2
- 		echo "\nnetns ${listener_ns} socket stat for $port:" 1>&2
- 		ip netns exec ${listener_ns} ss -nita 1>&2 -o "sport =3D :$port"
- 		echo "\nnetns ${connector_ns} socket stat for $port:" 1>&2
-@@ -286,7 +291,7 @@ do_transfer()
- 	rets=3D$?
- =
+----------------------------------------------------------------
+Florian Westphal (4):
+      mptcp: add and use subflow_write_space
+      subflow: wake parent mptcp socket on subflow state change
+      net: tcp: add __tcp_poll helper
+      mptcp: switch mptcp_poll to mptcp socket wait queue
 
- 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
--		echo "[ OK ]"
-+		echo "$duration [ OK ]"
- 		cat "$capout"
- 		return 0
- 	fi
--- =
+ include/net/tcp.h    |  1 +
+ net/ipv4/tcp.c       | 12 ++++++++----
+ net/mptcp/protocol.c |  4 +++-
+ net/mptcp/subflow.c  | 34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 46 insertions(+), 5 deletions(-)
 
-2.21.0
 
---===============2821317187163808839==--
+--===============8961178953281728637==--
