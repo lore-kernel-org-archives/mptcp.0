@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============1888554429242988887=="
+Content-Type: multipart/mixed; boundary="===============7130000540962018162=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 2/7] selftests: mptcp: add accept/getpeer checks
-Date: Wed, 23 Oct 2019 15:15:16 -0700
-Message-ID: <alpine.OSX.2.21.1910231503070.37761@rjszuste-mobl.amr.corp.intel.com>
-In-Reply-To: 20191023131325.18895-3-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v3 1/7] selftests: mptcp: make tc delays random
+Date: Wed, 23 Oct 2019 16:17:34 -0700
+Message-ID: <alpine.OSX.2.21.1910231515230.37761@rjszuste-mobl.amr.corp.intel.com>
+In-Reply-To: 20191023131325.18895-2-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2299
+X-UID: 2300
 
---===============1888554429242988887==
+--===============7130000540962018162==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,67 +18,69 @@ Content-Transfer-Encoding: quoted-printable
 
 On Wed, 23 Oct 2019, Florian Westphal wrote:
 
-> Check that the result coming from accept matches that of getpeername.
-> For initiator side, check getpeername matches address passed to connect().
->
-> At this time, kernel returns the address of the first subflow in the list.
-> Right now, we do not yet implement fate-sharing, i.e. if the original
-> subflow goes away, the result of getpeername would change.
->
-> There are different ways to fix that.  One would be to copy the quadruple
-> from the first subflow socket to the mptcp socket.
->
-> If we do that, this test should catch a possible bug (such as accidental
-> reversal of saddr/daddr).
+> test with less predictable setups:
+> tc qdisc delay is now random, same for reordering and loss.
+> Motivation is to cover more scenarios without a increase in test-time.
 >
 > Signed-off-by: Florian Westphal <fw(a)strlen.de>
 > ---
-> .../selftests/net/mptcp/mptcp_connect.c       | 107 ++++++++++++++++++
-> 1 file changed, 107 insertions(+)
+> .../selftests/net/mptcp/mptcp_connect.sh      | 26 +++++++++++++++++--
+> 1 file changed, 24 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> index 987a8411756e..c9738a8dcc7f 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -54,6 +54,21 @@ static const char *getxinfo_strerr(int err)
-> 	return gai_strerror(err);
-> }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
+esting/selftests/net/mptcp/mptcp_connect.sh
+> index f0528df9ac31..96be39a476ee 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -302,8 +302,30 @@ for sender in 1 2 3 4;do
+> 	do_ping ns4 ns$sender 10.0.3.1
+> done
 >
-> +static void xgetnameinfo(const struct sockaddr *addr, socklen_t addrlen,
-> +			 char *host, socklen_t hostlen,
-> +			 char *serv, socklen_t servlen)
-> +{
-> +	int flags =3D NI_NUMERICHOST | NI_NUMERICSERV;
-> +	int err =3D getnameinfo(addr, addrlen, host, hostlen, serv, servlen, fl=
-ags);
+> -tc -net ns2 qdisc add dev ns2eth3 root netem loss random 1
+> -tc -net ns3 qdisc add dev ns3eth4 root netem delay 10ms reorder 25% 50% =
+gap 5
+> +loss=3D$((RANDOM%101))
+> +if [ $loss -eq 100 ] ;then
+> +	loss=3D1%
+> +	tc -net ns2 qdisc add dev ns2eth3 root netem loss random $loss
+> +elif [ $loss -ge 10 ]; then
+> +	loss=3D0.$loss%
+> +	tc -net ns2 qdisc add dev ns2eth3 root netem loss random $loss
+> +elif [ $loss -ge 1 ]; then
+> +	loss=3D0.0$loss%
+> +	tc -net ns2 qdisc add dev ns2eth3 root netem loss random $loss
+> +fi
 > +
-> +	if (err) {
-> +		const char *errstr =3D getxinfo_strerr(err);
+> +delay=3D$((RANDOM%1000))
+> +reorder1=3D$((RANDOM%10))
+> +reorder1=3D$((100 - reorder1))
+> +reorder2=3D$((RANDOM%100))
 > +
-> +		fprintf(stderr, "Fatal: getnameinfo: %s\n", errstr);
-> +		exit(1);
-> +	}
-> +}
-> +
-> static void xgetaddrinfo(const char *node, const char *service,
-> 			 const struct addrinfo *hints,
-> 			 struct addrinfo **res)
-> @@ -327,6 +342,94 @@ static int copyfd_io(int infd, int peerfd, int outfd)
-> 	return 0;
-> }
->
-> +static void check_sockaddr(int pf, struct sockaddr_storage *ss,
-> +			   socklen_t salen)
-> +{
-> +	char addr[INET6_ADDRSTRLEN];
-> +	char serv[INET6_ADDRSTRLEN];
+> +if [ $reorder1 -lt 100 ] && [ $reorder2 -gt 0 ]; then
+> +  tc -net ns3 qdisc add dev ns3eth4 root netem delay ${delay}ms reorder =
+${reorder1}% ${reorder2}%
+> +  echo "INFO: Using loss of $loss, delay $delay ms, reorder: $reorder1, =
+$reorder2 on ns3eth4"
+> +elif [ $delay -gt 0 ]; then
+> +  tc -net ns3 qdisc add dev ns3eth4 root netem delay ${delay}ms
+> +  echo "INFO: Using loss of $loss, delay $delay ms on ns3eth4"
+> +fi
 
-addr and serv are not used and cause a compile warning.
+I think it's ok to merge this patch, but randomly configuring with/without =
 
-The rest of the patch looks good to me.
+reordering does seem like a significant difference in test cases (and =
+
+maybe the gso/tso/gro changes in patch 4 reach that threshold too).
+
+There are situations where execution time is less of a concern than =
+
+coverage. What do you think about randomizing the netem and ethtool =
+
+settings by default, but having a command line option to run a larger set =
+
+of test cases?
 
 --
 Mat Martineau
 Intel
---===============1888554429242988887==--
+--===============7130000540962018162==--
