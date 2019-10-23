@@ -1,187 +1,339 @@
-Content-Type: multipart/mixed; boundary="===============2586416025515943646=="
+Content-Type: multipart/mixed; boundary="===============0898618411340251802=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 2/7] selftests: mptcp: add accept/getpeer checks
-Date: Wed, 23 Oct 2019 15:13:20 +0200
-Message-ID: <20191023131325.18895-3-fw@strlen.de>
+Subject: [MPTCP] [PATCH v3 3/7] selftests: mptcp: extend mptcp_connect tool
+ for ipv6 family
+Date: Wed, 23 Oct 2019 15:13:21 +0200
+Message-ID: <20191023131325.18895-4-fw@strlen.de>
 In-Reply-To: 20191023131325.18895-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2279
+X-UID: 2280
 
---===============2586416025515943646==
+--===============0898618411340251802==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Check that the result coming from accept matches that of getpeername.
-For initiator side, check getpeername matches address passed to connect().
+At this time socket() will fail when requesting an ipv6 mptcp socket.
+This is ok for now, as the test script won't request ipv6 tests yet.
 
-At this time, kernel returns the address of the first subflow in the list.
-Right now, we do not yet implement fate-sharing, i.e. if the original
-subflow goes away, the result of getpeername would change.
+Once someone starts to implement mptcp v6 support, just set ipv6=3Dtrue in
+the script and the selftest will attempt to connect via ipv6.
 
-There are different ways to fix that.  One would be to copy the quadruple
-from the first subflow socket to the mptcp socket.
-
-If we do that, this test should catch a possible bug (such as accidental
-reversal of saddr/daddr).
+Tested with a tcp <-> tcp connection.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       | 107 ++++++++++++++++++
- 1 file changed, 107 insertions(+)
+ .../selftests/net/mptcp/mptcp_connect.c       | 16 ++--
+ .../selftests/net/mptcp/mptcp_connect.sh      | 77 ++++++++++++++++---
+ 2 files changed, 77 insertions(+), 16 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
 ing/selftests/net/mptcp/mptcp_connect.c
-index 987a8411756e..c9738a8dcc7f 100644
+index c9738a8dcc7f..d81c94448686 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -54,6 +54,21 @@ static const char *getxinfo_strerr(int err)
- 	return gai_strerror(err);
- }
+@@ -37,11 +37,11 @@ static const char *cfg_host;
+ static const char *cfg_port	=3D "12000";
+ static int cfg_sock_proto	=3D IPPROTO_MPTCP;
+ static bool tcpulp_audit;
+-
++static int pf =3D AF_INET;
  =
 
-+static void xgetnameinfo(const struct sockaddr *addr, socklen_t addrlen,
-+			 char *host, socklen_t hostlen,
-+			 char *serv, socklen_t servlen)
-+{
-+	int flags =3D NI_NUMERICHOST | NI_NUMERICSERV;
-+	int err =3D getnameinfo(addr, addrlen, host, hostlen, serv, servlen, flag=
-s);
-+
-+	if (err) {
-+		const char *errstr =3D getxinfo_strerr(err);
-+
-+		fprintf(stderr, "Fatal: getnameinfo: %s\n", errstr);
-+		exit(1);
-+	}
-+}
-+
- static void xgetaddrinfo(const char *node, const char *service,
- 			 const struct addrinfo *hints,
- 			 struct addrinfo **res)
-@@ -327,6 +342,94 @@ static int copyfd_io(int infd, int peerfd, int outfd)
- 	return 0;
- }
- =
-
-+static void check_sockaddr(int pf, struct sockaddr_storage *ss,
-+			   socklen_t salen)
-+{
-+	char addr[INET6_ADDRSTRLEN];
-+	char serv[INET6_ADDRSTRLEN];
-+	struct sockaddr_in6 *sin6;
-+	struct sockaddr_in *sin;
-+	int wanted_size =3D 0;
-+
-+	switch (pf) {
-+	case AF_INET:
-+		wanted_size =3D sizeof(*sin);
-+		sin =3D (void *)ss;
-+		if (!sin->sin_port)
-+			fprintf(stderr, "accept: something wrong: ip connection from port 0");
-+		break;
-+	case AF_INET6:
-+		wanted_size =3D sizeof(*sin6);
-+		sin6 =3D (void *)ss;
-+		if (!sin6->sin6_port)
-+			fprintf(stderr, "accept: something wrong: ipv6 connection from port 0");
-+		break;
-+	default:
-+		fprintf(stderr, "accept: Unknown pf %d, salen %u\n", pf, salen);
-+		return;
-+	}
-+
-+	if (salen !=3D wanted_size)
-+		fprintf(stderr, "accept: size mismatch, got %d expected %d\n",
-+				(int)salen, wanted_size);
-+
-+	if (ss->ss_family !=3D pf)
-+		fprintf(stderr, "accept: pf mismatch, expect %d, ss_family is %d\n",
-+				(int)ss->ss_family, pf);
-+}
-+
-+static void check_getpeername(int fd, struct sockaddr_storage *ss, socklen=
-_t salen)
-+{
-+	struct sockaddr_storage peerss;
-+	socklen_t peersalen =3D sizeof(peerss);
-+
-+	if (getpeername(fd, (struct sockaddr *)&peerss, &peersalen) < 0) {
-+		perror("getpeername");
-+		return;
-+	}
-+
-+	if (peersalen !=3D salen) {
-+		fprintf(stderr, "%s: %d vs %d\n", __func__, peersalen, salen);
-+		return;
-+	}
-+
-+	if (memcmp(ss, &peerss, peersalen)) {
-+		char a[INET6_ADDRSTRLEN];
-+		char b[INET6_ADDRSTRLEN];
-+		char c[INET6_ADDRSTRLEN];
-+		char d[INET6_ADDRSTRLEN];
-+
-+		xgetnameinfo((struct sockaddr *)ss, salen,
-+			     a, sizeof(a), b, sizeof(b));
-+
-+		xgetnameinfo((struct sockaddr *)&peerss, peersalen,
-+			     c, sizeof(c), d, sizeof(d));
-+
-+		fprintf(stderr, "%s: memcmp failure: accept %s vs peername %s, %s vs %s =
-salen %d vs %d\n",
-+			__func__, a, c, b, d, peersalen, salen);
-+	}
-+}
-+
-+static void check_getpeername_connect(int fd)
-+{
-+	struct sockaddr_storage ss;
-+	socklen_t salen =3D sizeof(ss);
-+	char a[INET6_ADDRSTRLEN];
-+	char b[INET6_ADDRSTRLEN];
-+
-+	if (getpeername(fd, (struct sockaddr *)&ss, &salen) < 0) {
-+		perror("getpeername");
-+		return;
-+	}
-+
-+	xgetnameinfo((struct sockaddr *)&ss, salen,
-+		     a, sizeof(a), b, sizeof(b));
-+
-+	if (strcmp(cfg_host, a) || strcmp(cfg_port, b))
-+		fprintf(stderr, "%s: %s vs %s, %s vs %s\n", __func__,
-+			cfg_host, a, cfg_port, b);
-+}
-+
- int main_loop_s(int listensock)
+ static void die_usage(void)
  {
- 	struct sockaddr_storage ss;
-@@ -350,6 +453,9 @@ int main_loop_s(int listensock)
- 	salen =3D sizeof(ss);
- 	remotesock =3D accept(listensock, (struct sockaddr *)&ss, &salen);
- 	if (remotesock >=3D 0) {
-+		check_sockaddr(pf, &ss, salen);
-+		check_getpeername(remotesock, &ss, salen);
-+
- 		copyfd_io(0, remotesock, 1);
- 		return 0;
- 	}
-@@ -384,6 +490,7 @@ int main_loop(void)
- 	if (fd < 0)
- 		return 2;
+-	fprintf(stderr, "Usage: mptcp_connect [-u] [-s MPTCP|TCP] [-p port] "
++	fprintf(stderr, "Usage: mptcp_connect [-6] [-u] [-s MPTCP|TCP] [-p port] "
+ 		"[ -l ] [ -t timeout ] connect_address\n");
+ 	exit(1);
+ }
+@@ -94,12 +94,13 @@ static int sock_listen_mptcp(const char * const listena=
+ddr,
+ 		.ai_flags =3D AI_PASSIVE | AI_NUMERICHOST
+ 	};
  =
 
-+	check_getpeername_connect(fd);
- 	return copyfd_io(0, fd, 1);
+-	hints.ai_family =3D AF_INET;
++	hints.ai_family =3D pf;
+ =
+
+ 	struct addrinfo *a, *addr;
+ 	int one =3D 1;
+ =
+
+ 	xgetaddrinfo(listenaddr, port, &hints, &addr);
++	hints.ai_family =3D pf;
+ =
+
+ 	for (a =3D addr; a; a =3D a->ai_next) {
+ 		sock =3D socket(a->ai_family, a->ai_socktype, cfg_sock_proto);
+@@ -182,7 +183,7 @@ static int sock_connect_mptcp(const char * const remote=
+addr,
+ 	struct addrinfo *a, *addr;
+ 	int sock =3D -1;
+ =
+
+-	hints.ai_family =3D AF_INET;
++	hints.ai_family =3D pf;
+ =
+
+ 	xgetaddrinfo(remoteaddr, port, &hints, &addr);
+ 	for (a =3D addr; a; a =3D a->ai_next) {
+@@ -512,7 +513,7 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ =
+
+-	while ((c =3D getopt(argc, argv, "lp:s:hut:")) !=3D -1) {
++	while ((c =3D getopt(argc, argv, "6lp:s:hut:")) !=3D -1) {
+ 		switch (c) {
+ 		case 'l':
+ 			listen_mode =3D true;
+@@ -528,6 +529,8 @@ static void parse_opts(int argc, char **argv)
+ 			break;
+ 		case 'u':
+ 			tcpulp_audit =3D true;
++		case '6':
++			pf =3D AF_INET6;
+ 			break;
+ 		case 't':
+ 			poll_timeout =3D atoi(optarg) * 1000;
+@@ -540,6 +543,9 @@ static void parse_opts(int argc, char **argv)
+ 	if (optind + 1 !=3D argc)
+ 		die_usage();
+ 	cfg_host =3D argv[optind];
++
++	if (strchr(cfg_host, ':'))
++		pf =3D AF_INET6;
  }
  =
 
+ int main(int argc, char *argv[])
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index 96be39a476ee..48fde36abf3f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -9,6 +9,7 @@ cout=3D""
+ ksft_skip=3D4
+ capture=3D0
+ timeout=3D30
++ipv6=3Dfalse
+ =
+
+ TEST_COUNT=3D0
+ =
+
+@@ -57,29 +58,48 @@ ip link add ns2eth3 netns ns2 type veth peer name ns3et=
+h2 netns ns3
+ ip link add ns3eth4 netns ns3 type veth peer name ns4eth3 netns ns4
+ =
+
+ ip -net ns1 addr add 10.0.1.1/24 dev ns1eth2
++if $ipv6 ; then
++	ip -net ns1 addr add dead:beef:1::1/64 dev ns1eth2
++	if [ $? -ne 0 ] ;then
++		echo "SKIP: Can't add ipv6 address, skip ipv6 tests" 1>&2
++		ipv6=3Dfalse
++	fi
++fi
++
+ ip -net ns1 link set ns1eth2 up
+ ip -net ns1 route add default via 10.0.1.2
++$ipv6 && ip -net ns1 route add default via dead:beef:1::2
+ =
+
+ ip -net ns2 addr add 10.0.1.2/24 dev ns2eth1
++$ipv6 && ip -net ns2 addr add dead:beef:1::2/64 dev ns2eth1
+ ip -net ns2 link set ns2eth1 up
+ =
+
+ ip -net ns2 addr add 10.0.2.1/24 dev ns2eth3
++$ipv6 && ip -net ns2 addr add dead:beef:2::1/64 dev ns2eth3
+ ip -net ns2 link set ns2eth3 up
+ ip -net ns2 route add default via 10.0.2.2
++$ipv6 && ip -net ns2 route add default via dead:beef:2::2
+ ip netns exec ns2 sysctl -q net.ipv4.ip_forward=3D1
++$ipv6 && ip netns exec ns2 sysctl -q net.ipv6.conf.all.forwarding=3D1
+ =
+
+ ip -net ns3 addr add 10.0.2.2/24 dev ns3eth2
++$ipv6 && ip -net ns3 addr add dead:beef:2::2/64 dev ns3eth2
+ ip -net ns3 link set ns3eth2 up
+ =
+
+ ip -net ns3 addr add 10.0.3.2/24 dev ns3eth4
++$ipv6 && ip -net ns3 addr add dead:beef:3::2/64 dev ns3eth4
+ ip -net ns3 link set ns3eth4 up
+ ip -net ns3 route add default via 10.0.2.1
++$ipv6 && ip -net ns3 route add default via dead:beef:2::1
+ ip netns exec ns3 ethtool -K ns3eth2 tso off 2>/dev/null
+ ip netns exec ns3 sysctl -q net.ipv4.ip_forward=3D1
++$ipv6 && ip netns exec ns3 sysctl -q net.ipv6.conf.all.forwarding=3D1
+ =
+
+ ip -net ns4 addr add 10.0.3.1/24 dev ns4eth3
++$ipv6 && ip -net ns4 addr add dead:beef:3::1/64 dev ns4eth3
+ ip -net ns4 link set ns4eth3 up
+ ip -net ns4 route add default via 10.0.3.2
++$ipv6 && ip -net ns4 route add default via dead:beef:3::2
+ =
+
+ print_file_err()
+ {
+@@ -161,7 +181,11 @@ do_ping()
+ 	if [ $? -ne 0 ] ; then
+ 		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
+ 		ret=3D1
++
++		return 1
+ 	fi
++
++	return 0
+ }
+ =
+
+ do_transfer()
+@@ -171,6 +195,7 @@ do_transfer()
+ 	cl_proto=3D"$3"
+ 	srv_proto=3D"$4"
+ 	connect_addr=3D"$5"
++	local_addr=3D"$6"
+ =
+
+ 	port=3D$((10000+$TEST_COUNT))
+ 	TEST_COUNT=3D$((TEST_COUNT+1))
+@@ -196,7 +221,7 @@ do_transfer()
+ 	    sleep 1
+ 	fi
+ =
+
+-	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s $=
+{srv_proto} 0.0.0.0 < "$sin" > "$sout" &
++	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s $=
+{srv_proto} $local_addr < "$sin" > "$sout" &
+ 	spid=3D$!
+ =
+
+ 	sleep 1
+@@ -264,23 +289,26 @@ run_tests()
+ 	listener_ns=3D"$1"
+ 	connector_ns=3D"$2"
+ 	connect_addr=3D"$3"
++	local_addr=3D"$4"
+ 	lret=3D0
+ =
+
+ 	for proto in MPTCP TCP;do
+-		do_transfer ${listener_ns} ${connector_ns} MPTCP "$proto" ${connect_addr}
++		do_transfer ${listener_ns} ${connector_ns} MPTCP "$proto" ${connect_addr=
+} ${local_addr}
+ 		lret=3D$?
+ 		if [ $lret -ne 0 ]; then
+ 			ret=3D$lret
+-			return
++			return 1
+ 		fi
+ 	done
+ =
+
+-	do_transfer ${listener_ns} ${connector_ns} TCP MPTCP ${connect_addr}
++	do_transfer ${listener_ns} ${connector_ns} TCP MPTCP ${connect_addr} ${lo=
+cal_addr}
+ 	lret=3D$?
+ 	if [ $lret -ne 0 ]; then
+ 		ret=3D$lret
+-		return
++		return 1
+ 	fi
++
++	return 0
+ }
+ =
+
+ make_file "$cin" "client"
+@@ -290,16 +318,31 @@ check_mptcp_disabled
+ =
+
+ check_mptcp_ulp_setsockopt
+ =
+
++# Allow DAD to finish
++$ipv6 && sleep 2
++
+ for sender in 1 2 3 4;do
+ 	do_ping ns1 ns$sender 10.0.1.1
++	if $ipv6;then
++		do_ping ns1 ns$sender dead:beef:1::1
++		if [ $? -ne 0 ]; then
++			echo "SKIP: IPv6 tests" 2>&1
++			ipv6=3Dfalse
++		fi
++	fi
+ =
+
+ 	do_ping ns2 ns$sender 10.0.1.2
++	$ipv6 && do_ping ns2 ns$sender dead:beef:1::2
+ 	do_ping ns2 ns$sender 10.0.2.1
++	$ipv6 && do_ping ns2 ns$sender dead:beef:2::1
+ =
+
+ 	do_ping ns3 ns$sender 10.0.2.2
++	$ipv6 && do_ping ns3 ns$sender dead:beef:2::2
+ 	do_ping ns3 ns$sender 10.0.3.2
++	$ipv6 && do_ping ns3 ns$sender dead:beef:3::2
+ =
+
+ 	do_ping ns4 ns$sender 10.0.3.1
++	$ipv6 && do_ping ns4 ns$sender dead:beef:3::1
+ done
+ =
+
+ loss=3D$((RANDOM%101))
+@@ -328,15 +371,27 @@ elif [ $delay -gt 0 ]; then
+ fi
+ =
+
+ for sender in 1 2 3 4;do
+-	run_tests ns1 ns$sender 10.0.1.1
++	run_tests ns1 ns$sender 10.0.1.1 0.0.0.0
++	if $ipv6;then
++		run_tests ns1 ns$sender dead:beef:1::1 ::
++		if [ $? -ne 0 ] ;then
++			echo "SKIP: IPv6 tests" 2>&1
++			ipv6=3Dfalse
++		fi
++	fi
+ =
+
+-	run_tests ns2 ns$sender 10.0.1.2
+-	run_tests ns2 ns$sender 10.0.2.1
++	run_tests ns2 ns$sender 10.0.1.2 0.0.0.0
++	$ipv6 && run_tests ns2 ns$sender dead:beef:1::2 ::
++	run_tests ns2 ns$sender 10.0.2.1 0.0.0.0
++	$ipv6 && run_tests ns2 ns$sender dead:beef:2::1 ::
+ =
+
+-	run_tests ns3 ns$sender 10.0.2.2
+-	run_tests ns3 ns$sender 10.0.3.2
++	run_tests ns3 ns$sender 10.0.2.2 0.0.0.0
++	$ipv6 && run_tests ns3 ns$sender dead:beef:2::2 ::
++	run_tests ns3 ns$sender 10.0.3.2 0.0.0.0
++	$ipv6 && run_tests ns3 ns$sender dead:beef:3::2 ::
+ =
+
+-	run_tests ns4 ns$sender 10.0.3.1
++	run_tests ns4 ns$sender 10.0.3.1 0.0.0.0
++	$ipv6 && run_tests ns4 ns$sender dead:beef:3::1 ::
+ done
+ =
+
+ exit $ret
 -- =
 
 2.21.0
 
---===============2586416025515943646==--
+--===============0898618411340251802==--
