@@ -1,81 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============7384666123750002795=="
+Content-Type: multipart/mixed; boundary="===============3846011797522068947=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: switch mptcp_poll to use parent
- sock wait queue
-Date: Wed, 23 Oct 2019 17:42:26 +0200
-Message-ID: <20191023154226.GN25052@breakpoint.cc>
-In-Reply-To: 9fd089732e9ef39b26301488141f5785edb7a4f8.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 2/4] subflow: wake parent mptcp socket on
+ subflow state change
+Date: Wed, 23 Oct 2019 10:58:03 -0700
+Message-ID: <alpine.OSX.2.21.1910231054070.37761@rjszuste-mobl.amr.corp.intel.com>
+In-Reply-To: 20191023142355.31599-3-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2291
+X-UID: 2292
 
---===============7384666123750002795==
+--===============3846011797522068947==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Wed, 2019-10-23 at 16:23 +0200, Florian Westphal wrote:
-> > No major changes, except the rebase on current export branch.
-> > Selftest still passes.
-> > =
 
-> > This series is needed for sendmsg refactor, without it we can't
-> > make mptcp sendmsg wait on the mptcp socket wait queue because we don't
-> > get the needed wakeup events from the subflow layer.
-> > =
+Hi Florian,
 
-> > The following changes since commit 85c93de446d3fd90e47605ba8ff161bef755=
-8f09:
-> > =
+On Wed, 23 Oct 2019, Florian Westphal wrote:
 
-> >   mptcp: Implement basic path manager (2019-10-23 01:31:04 +0000)
-> > =
+> We need to wakeup readers blocking for POLLIN, as no
+> more data will arrive they will never be awoken otherwise.
+>
+> This is needed at least until proper MPTCP-Level fin/reset
+> signalling gets added.
+>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+> net/mptcp/subflow.c | 23 +++++++++++++++++++++++
+> 1 file changed, 23 insertions(+)
+>
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 1f27a96d0439..7bae7c35ea6b 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -722,6 +722,28 @@ static struct mptcp_subflow_context *subflow_create_=
+ctx(struct sock *sk,
+> 	return ctx;
+> }
+>
+> +static void __subflow_state_change(struct sock *sk)
+> +{
+> +	struct socket_wq *wq;
+> +
+> +	rcu_read_lock();
+> +	wq =3D rcu_dereference(sk->sk_wq);
+> +	if (skwq_has_sleeper(wq))
+> +		wake_up_interruptible_all(&wq->wait);
+> +	rcu_read_unlock();
+> +}
+> +
+> +static void subflow_state_change(struct sock *sk)
+> +{
+> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> +	struct sock *parent =3D subflow->conn;
+> +
+> +	__subflow_state_change(sk);
+> +
+> +	if (parent)
+> +		__subflow_state_change(parent);
 
-> > are available in the Git repository at:
-> > =
+In the v1 patch I asked about the missing sk_wake_async() for the parent =
 
-> >   git://git.breakpoint.cc/fw/mptcp-next.git mptcp_poll_07
-> > =
+socket - you proposed calling parent->sk_data_ready(parent) here. Can you =
 
-> > for you to fetch changes up to 864dd47df1293e4b8bfc70be0d459286b6dddc3a:
-> > =
+confirm which is intended?
 
-> >   mptcp: switch mptcp_poll to mptcp socket wait queue (2019-10-23 15:20=
-:28 +0200)
-> > =
+https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/message/EMGGJL4WI=
+I7NYOVGY7VM7DAVYDGXSVJO/
 
-> > ----------------------------------------------------------------
-> > Florian Westphal (4):
-> >       mptcp: add and use subflow_write_space
-> >       subflow: wake parent mptcp socket on subflow state change
-> >       net: tcp: add __tcp_poll helper
-> >       mptcp: switch mptcp_poll to mptcp socket wait queue
-> > =
 
-> >  include/net/tcp.h    |  1 +
-> >  net/ipv4/tcp.c       | 12 ++++++++----
-> >  net/mptcp/protocol.c |  4 +++-
-> >  net/mptcp/subflow.c  | 34 ++++++++++++++++++++++++++++++++++
-> >  4 files changed, 46 insertions(+), 5 deletions(-)
-> > =
+Thanks,
+Mat
 
-> > _______________________________________________
-> > mptcp mailing list -- mptcp(a)lists.01.org
-> > To unsubscribe send an email to mptcp-leave(a)lists.01.org
-> =
 
-> Series LGTM
-> =
+> +}
+> +
+> static int subflow_ulp_init(struct sock *sk)
+> {
+> 	struct inet_connection_sock *icsk =3D inet_csk(sk);
+> @@ -750,6 +772,7 @@ static int subflow_ulp_init(struct sock *sk)
+> 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
+> 	sk->sk_data_ready =3D subflow_data_ready;
+> 	sk->sk_write_space =3D subflow_write_space;
+> +	sk->sk_state_change =3D subflow_state_change;
+> out:
+> 	return err;
+> }
+> -- =
 
-> I think we could include patch 3/4 in the "first chunk"/preparatory
-> patches - e.g. apply just after "tcp, ulp: Add clone operation to
-> tcp_ulp_ops" - and squash 4/4 in "mptcp: add mptcp_poll"
-> =
+> 2.21.0
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
-> WDYT?
-
-Seems good, yes.
---===============7384666123750002795==--
+--
+Mat Martineau
+Intel
+--===============3846011797522068947==--
