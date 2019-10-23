@@ -1,59 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============1255973700381217470=="
+Content-Type: multipart/mixed; boundary="===============3470824056056438520=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 4/4] mptcp: switch mptcp_poll to mptcp socket wait
- queue
-Date: Wed, 23 Oct 2019 16:23:55 +0200
-Message-ID: <20191023142355.31599-5-fw@strlen.de>
+Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: switch mptcp_poll to use parent
+ sock wait queue
+Date: Wed, 23 Oct 2019 17:07:04 +0200
+Message-ID: <9fd089732e9ef39b26301488141f5785edb7a4f8.camel@redhat.com>
 In-Reply-To: 20191023142355.31599-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2289
+X-UID: 2290
 
---===============1255973700381217470==
+--===============3470824056056438520==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tcp_poll places current task on a wait queue.  This can cause us to block
-forever -- some subflows might never receive any data because they're
-used as a backup/fallback path.
+On Wed, 2019-10-23 at 16:23 +0200, Florian Westphal wrote:
+> No major changes, except the rebase on current export branch.
+> Selftest still passes.
+> =
 
-This makes mptcp_poll wait on the mptcp socket wait queue instead.
-__tcp_poll is used instead to tcp_poll so current task won't wait
-again after mptcp socket has been woken from the subflow layer.
+> This series is needed for sendmsg refactor, without it we can't
+> make mptcp sendmsg wait on the mptcp socket wait queue because we don't
+> get the needed wakeup events from the subflow layer.
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> The following changes since commit 85c93de446d3fd90e47605ba8ff161bef7558f=
+09:
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c7755cde9810..c2b29f8d0377 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1238,11 +1238,13 @@ static __poll_t mptcp_poll(struct file *file, struc=
-t socket *sock,
- 		return ret;
- 	}
- =
+>   mptcp: Implement basic path manager (2019-10-23 01:31:04 +0000)
+> =
 
-+	sock_poll_wait(file, sock, wait);
-+
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct socket *tcp_sock;
- =
+> are available in the Git repository at:
+> =
 
- 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
--		ret |=3D tcp_poll(file, tcp_sock, wait);
-+		ret |=3D __tcp_poll(tcp_sock->sk);
- 	}
- 	release_sock(sk);
- =
+>   git://git.breakpoint.cc/fw/mptcp-next.git mptcp_poll_07
+> =
 
--- =
+> for you to fetch changes up to 864dd47df1293e4b8bfc70be0d459286b6dddc3a:
+> =
 
-2.21.0
+>   mptcp: switch mptcp_poll to mptcp socket wait queue (2019-10-23 15:20:2=
+8 +0200)
+> =
 
---===============1255973700381217470==--
+> ----------------------------------------------------------------
+> Florian Westphal (4):
+>       mptcp: add and use subflow_write_space
+>       subflow: wake parent mptcp socket on subflow state change
+>       net: tcp: add __tcp_poll helper
+>       mptcp: switch mptcp_poll to mptcp socket wait queue
+> =
+
+>  include/net/tcp.h    |  1 +
+>  net/ipv4/tcp.c       | 12 ++++++++----
+>  net/mptcp/protocol.c |  4 +++-
+>  net/mptcp/subflow.c  | 34 ++++++++++++++++++++++++++++++++++
+>  4 files changed, 46 insertions(+), 5 deletions(-)
+> =
+
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+
+Series LGTM
+
+I think we could include patch 3/4 in the "first chunk"/preparatory
+patches - e.g. apply just after "tcp, ulp: Add clone operation to
+tcp_ulp_ops" - and squash 4/4 in "mptcp: add mptcp_poll"
+
+WDYT?
+
+Thanks,
+
+Paolo
+
+--===============3470824056056438520==--
