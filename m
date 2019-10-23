@@ -1,45 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============7117130074360730803=="
+Content-Type: multipart/mixed; boundary="===============5478257956679280945=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] selftests:mptcp: increase timeout
-Date: Wed, 23 Oct 2019 08:21:06 +0200
-Message-ID: <376d3ac3-6be1-9632-1a0d-e607fb116dce@tessares.net>
-In-Reply-To: 20191022202419.GK25052@breakpoint.cc
+Subject: [MPTCP] [PATCH v2 0/2] selftests: increase the new default timeout
+Date: Wed, 23 Oct 2019 08:48:52 +0200
+Message-ID: <20191023064854.20453-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2271
+X-UID: 2272
 
---===============7117130074360730803==
+--===============5478257956679280945==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+A new commit from upstream now sets a timeout of 45 seconds per test. That's
+too low for MPTCP. We need more.
 
-On 22/10/2019 22:24, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->> +time_end=3D$(date +%s)
->> +tiem_run=3D$((time_end-time_start))
->     ^^^^^^^
-> =
+But increasing the timeout was not working because selftests scripts were
+looking for this new 'settings' file in the wrong directory. I am going to =
+send
+the first patch upstream as it might be required for other selftests and not
+specific to MPTCP.
 
-> Ahem...  Other than that, this looks good, thanks.
+v2: fix typo in the second patch.
 
-Thank you for your review!
-My bad, I hesitated to keep this "feature", then I renamed the variables =
+Matthieu Baerts (2):
+  selftests: settings: tests can be in subsubdirs
+  selftests:mptcp: increase timeout
 
-just before sending the patch, in a hurry already thinking about what I =
+ tools/testing/selftests/kselftest/runner.sh        | 2 +-
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 7 +++++++
+ tools/testing/selftests/net/mptcp/settings         | 1 +
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/net/mptcp/settings
 
-would put on my pizza... I will avoid redoing that next time!
-
-Cheers,
-Matt
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7117130074360730803==--
+2.20.1
+
+--===============5478257956679280945==--
