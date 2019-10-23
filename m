@@ -1,52 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============8961178953281728637=="
+Content-Type: multipart/mixed; boundary="===============8837022991019979686=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/4] mptcp: switch mptcp_poll to use parent sock
- wait queue
-Date: Wed, 23 Oct 2019 16:23:51 +0200
-Message-ID: <20191023142355.31599-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 1/4] mptcp: add and use subflow_write_space
+Date: Wed, 23 Oct 2019 16:23:52 +0200
+Message-ID: <20191023142355.31599-2-fw@strlen.de>
+In-Reply-To: 20191023142355.31599-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2285
+X-UID: 2286
 
---===============8961178953281728637==
+--===============8837022991019979686==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-No major changes, except the rebase on current export branch.
-Selftest still passes.
+This will be used to unblock tasks waiting for POLLOUT event
+once mptcp_poll is altered to not wait for each subflow anymore.
 
-This series is needed for sendmsg refactor, without it we can't
-make mptcp sendmsg wait on the mptcp socket wait queue because we don't
-get the needed wakeup events from the subflow layer.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/subflow.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-The following changes since commit 85c93de446d3fd90e47605ba8ff161bef7558f09:
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 991198466c13..1f27a96d0439 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -610,6 +610,16 @@ static void subflow_data_ready(struct sock *sk)
+ 	}
+ }
+ =
 
-  mptcp: Implement basic path manager (2019-10-23 01:31:04 +0000)
++static void subflow_write_space(struct sock *sk)
++{
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
++	struct sock *parent =3D subflow->conn;
++
++	sk_stream_write_space(sk);
++	if (parent)
++		sk_stream_write_space(parent);
++}
++
+ int mptcp_subflow_connect(struct sock *sk, struct sockaddr *local,
+ 			  struct sockaddr *remote, u8 remote_id)
+ {
+@@ -739,6 +749,7 @@ static int subflow_ulp_init(struct sock *sk)
+ 	icsk->icsk_af_ops =3D &subflow_specific;
+ 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
+ 	sk->sk_data_ready =3D subflow_data_ready;
++	sk->sk_write_space =3D subflow_write_space;
+ out:
+ 	return err;
+ }
+-- =
 
-are available in the Git repository at:
+2.21.0
 
-  git://git.breakpoint.cc/fw/mptcp-next.git mptcp_poll_07
-
-for you to fetch changes up to 864dd47df1293e4b8bfc70be0d459286b6dddc3a:
-
-  mptcp: switch mptcp_poll to mptcp socket wait queue (2019-10-23 15:20:28 =
-+0200)
-
-----------------------------------------------------------------
-Florian Westphal (4):
-      mptcp: add and use subflow_write_space
-      subflow: wake parent mptcp socket on subflow state change
-      net: tcp: add __tcp_poll helper
-      mptcp: switch mptcp_poll to mptcp socket wait queue
-
- include/net/tcp.h    |  1 +
- net/ipv4/tcp.c       | 12 ++++++++----
- net/mptcp/protocol.c |  4 +++-
- net/mptcp/subflow.c  | 34 ++++++++++++++++++++++++++++++++++
- 4 files changed, 46 insertions(+), 5 deletions(-)
-
-
---===============8961178953281728637==--
+--===============8837022991019979686==--
