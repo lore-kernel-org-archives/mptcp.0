@@ -1,48 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============6225743337294665230=="
+Content-Type: multipart/mixed; boundary="===============7117130074360730803=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp: Ignore incoming MPTCP options when not
- MP_CAPABLE
-Date: Tue, 22 Oct 2019 15:54:59 -0700
-Message-ID: <20191022225459.15312-3-peter.krystad@linux.intel.com>
-In-Reply-To: 20191022225459.15312-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH 2/2] selftests:mptcp: increase timeout
+Date: Wed, 23 Oct 2019 08:21:06 +0200
+Message-ID: <376d3ac3-6be1-9632-1a0d-e607fb116dce@tessares.net>
+In-Reply-To: 20191022202419.GK25052@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2270
+X-UID: 2271
 
---===============6225743337294665230==
+--===============7117130074360730803==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Any options received on a fallback subflow should be ignored.
+Hi Florian,
 
-squashto: Add handling of incoming MP_JOIN requests
+On 22/10/2019 22:24, Florian Westphal wrote:
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+>> +time_end=3D$(date +%s)
+>> +tiem_run=3D$((time_end-time_start))
+>     ^^^^^^^
+> =
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/options.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Ahem...  Other than that, this looks good, thanks.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index dcd7273e488c..1b08e1193991 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -591,7 +591,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- 	struct mptcp_options_received *mp_opt;
- 	struct mptcp_ext *mpext;
- =
+Thank you for your review!
+My bad, I hesitated to keep this "feature", then I renamed the variables =
 
--	if (!subflow->mp_capable)
-+	if (!subflow->mp_capable && !subflow->mp_join)
- 		return;
- =
+just before sending the patch, in a hurry already thinking about what I =
 
- 	mp_opt =3D &opt_rx->mptcp;
+would put on my pizza... I will avoid redoing that next time!
+
+Cheers,
+Matt
 -- =
 
-2.17.2
-
---===============6225743337294665230==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7117130074360730803==--
