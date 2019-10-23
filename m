@@ -1,146 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============3284485201719260315=="
+Content-Type: multipart/mixed; boundary="===============2821317187163808839=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 6/7] selftests: fix spurious deadlock
-Date: Wed, 23 Oct 2019 15:13:24 +0200
-Message-ID: <20191023131325.18895-7-fw@strlen.de>
+Subject: [MPTCP] [PATCH v3 7/7] selftests: mptcp: track duration of each test
+Date: Wed, 23 Oct 2019 15:13:25 +0200
+Message-ID: <20191023131325.18895-8-fw@strlen.de>
 In-Reply-To: 20191023131325.18895-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2283
+X-UID: 2284
 
---===============3284485201719260315==
+--===============2821317187163808839==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-do_rnd_write() may call write on the mptcp socket repeatedly.
-As the peerfd is blocking, this prevents the process from draining the
-receive buffer.
+This allows to detect discrepancies, e.g.
+MPTCP -> TCP   1s
+TCP   -> MPTCP 0s
+MPTCP -> MPTCP 41s
 
-Its unlikely but possible that both sides are blocked in write()
-on the tcp socket, with both ends announcing a zero window,
-waiting for read() to drain the socket receive buffer.
-
-An alternative fix would be to make the peerfds nonblocking.
-This change instead makes it so we call write at most once after
-poll revents has the POLLOUT bit set.
+The expecation of course is that test duration is pretty similar
+for tests between the same network namespaces, regardless of wheter
+MPTCP or TCP fallback is used.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       | 53 ++++++++++---------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
-ing/selftests/net/mptcp/mptcp_connect.c
-index d81c94448686..65514bd4a203 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -207,27 +207,18 @@ static int sock_connect_mptcp(const char * const remo=
-teaddr,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index b3ccf3dc9bb1..9c40a7e64d83 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -256,6 +256,7 @@ do_transfer()
  =
 
- static size_t do_rnd_write(const int fd, char *buf, const size_t len)
- {
--	size_t offset =3D 0;
--
--	while (offset < len) {
--		unsigned int do_w;
--		size_t written;
--		ssize_t bw;
-+	unsigned int do_w;
-+	ssize_t bw;
+ 	sleep 1
  =
 
--		do_w =3D rand() & 0xffff;
--		if (do_w =3D=3D 0 || do_w > (len - offset))
--			do_w =3D len - offset;
-+	do_w =3D rand() & 0xffff;
-+	if (do_w =3D=3D 0 || do_w > len)
-+		do_w =3D len;
++	start=3D$(date +%s)
+ 	ip netns exec ${connector_ns} ./mptcp_connect -t $timeout -p $port -s ${c=
+l_proto} $connect_addr < "$cin" > "$cout" &
+ 	cpid=3D$!
  =
 
--		bw =3D write(fd, buf + offset, do_w);
--		if (bw < 0) {
--			perror("write");
--			return 0;
--		}
-+	bw =3D write(fd, buf, do_w);
-+	if (bw < 0)
-+		perror("write");
+@@ -264,13 +265,17 @@ do_transfer()
+ 	wait $spid
+ 	rets=3D$?
  =
 
--		written =3D (size_t)bw;
--		offset +=3D written;
--	}
--	return offset;
-+	return bw;
- }
- =
-
- static size_t do_write(const int fd, char *buf, const size_t len)
-@@ -271,9 +262,11 @@ static int copyfd_io(int infd, int peerfd, int outfd)
- 		.fd =3D peerfd,
- 		.events =3D POLLIN | POLLOUT,
- 	};
-+	unsigned int woff =3D 0, wlen =3D 0;
-+	char wbuf[8192];
- =
-
- 	for (;;) {
--		char buf[8192];
-+		char rbuf[8192];
- 		ssize_t len;
- =
-
- 		if (fds.events =3D=3D 0)
-@@ -293,7 +286,7 @@ static int copyfd_io(int infd, int peerfd, int outfd)
- 		}
- =
-
- 		if (fds.revents & POLLIN) {
--			len =3D do_rnd_read(peerfd, buf, sizeof(buf));
-+			len =3D do_rnd_read(peerfd, rbuf, sizeof(rbuf));
- 			if (len =3D=3D 0) {
- 				/* no more data to receive:
- 				 * peer has closed its write side
-@@ -310,15 +303,25 @@ static int copyfd_io(int infd, int peerfd, int outfd)
- 				return 3;
- 			}
- =
-
--			do_write(outfd, buf, len);
-+			do_write(outfd, rbuf, len);
- 		}
- =
-
- 		if (fds.revents & POLLOUT) {
--			len =3D do_rnd_read(infd, buf, sizeof(buf));
--			if (len > 0) {
--				if (!do_rnd_write(peerfd, buf, len))
-+			if (wlen =3D=3D 0) {
-+				woff =3D 0;
-+				wlen =3D read(infd, wbuf, sizeof(wbuf));
-+			}
++	stop=3D$(date +%s)
 +
-+			if (wlen > 0) {
-+				ssize_t bw;
-+
-+				bw =3D do_rnd_write(peerfd, wbuf + woff, wlen);
-+				if (bw < 0)
- 					return 111;
--			} else if (len =3D=3D 0) {
-+
-+				woff +=3D bw;
-+				wlen -=3D bw;
-+			} else if (wlen =3D=3D 0) {
- 				/* We have no more data to send. */
- 				fds.events &=3D ~POLLOUT;
+ 	if [ $capture -eq 1 ]; then
+ 	    sleep 1
+ 	    kill $cappid
+ 	fi
  =
 
++	duration=3D$((stop-start))
++	duration=3D$(printf "(duration %03ss)" $duration)
+ 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+-		echo "[ FAIL ] client exit code $retc, server $rets" 1>&2
++		echo "$duration [ FAIL ] client exit code $retc, server $rets" 1>&2
+ 		echo "\nnetns ${listener_ns} socket stat for $port:" 1>&2
+ 		ip netns exec ${listener_ns} ss -nita 1>&2 -o "sport =3D :$port"
+ 		echo "\nnetns ${connector_ns} socket stat for $port:" 1>&2
+@@ -286,7 +291,7 @@ do_transfer()
+ 	rets=3D$?
+ =
+
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
+-		echo "[ OK ]"
++		echo "$duration [ OK ]"
+ 		cat "$capout"
+ 		return 0
+ 	fi
 -- =
 
 2.21.0
 
---===============3284485201719260315==--
+--===============2821317187163808839==--
