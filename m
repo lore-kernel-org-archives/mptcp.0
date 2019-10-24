@@ -1,69 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============1396960027133409628=="
+Content-Type: multipart/mixed; boundary="===============6726919199859328888=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 1/7] selftests: mptcp: make tc delays random
-Date: Wed, 23 Oct 2019 17:37:04 -0700
-Message-ID: <alpine.OSX.2.21.1910231659010.37761@rjszuste-mobl.amr.corp.intel.com>
-In-Reply-To: 20191023235538.GR25052@breakpoint.cc
+Subject: [MPTCP] Re: Patchwork: "maintainer status"
+Date: Thu, 24 Oct 2019 03:59:24 +0000
+Message-ID: <ae2909d9-e0c0-42d3-b9e3-aaee441b9168@localhost>
+In-Reply-To: 5745a12ffb6b52fa028b946df2ff163c8ccc68d9.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2304
+X-UID: 2305
 
---===============1396960027133409628==
+--===============6726919199859328888==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Thu, 24 Oct 2019, Florian Westphal wrote:
+Hi Peter,
+ =
 
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
->>> +delay=3D$((RANDOM%1000))
->>> +reorder1=3D$((RANDOM%10))
->>> +reorder1=3D$((100 - reorder1))
->>> +reorder2=3D$((RANDOM%100))
->>> +
->>> +if [ $reorder1 -lt 100 ] && [ $reorder2 -gt 0 ]; then
->>> +  tc -net ns3 qdisc add dev ns3eth4 root netem delay ${delay}ms reorde=
-r ${reorder1}% ${reorder2}%
->>> +  echo "INFO: Using loss of $loss, delay $delay ms, reorder: $reorder1=
-, $reorder2 on ns3eth4"
->>> +elif [ $delay -gt 0 ]; then
->>> +  tc -net ns3 qdisc add dev ns3eth4 root netem delay ${delay}ms
->>> +  echo "INFO: Using loss of $loss, delay $delay ms on ns3eth4"
->>> +fi
->>
->> I think it's ok to merge this patch, but randomly configuring with/witho=
-ut
->> reordering does seem like a significant difference in test cases (and ma=
-ybe
->> the gso/tso/gro changes in patch 4 reach that threshold too).
->>
->> There are situations where execution time is less of a concern than
->> coverage. What do you think about randomizing the netem and ethtool sett=
-ings
->> by default, but having a command line option to run a larger set of test
->> cases?
->
-> Thats a good idea, I'll think about what kind of settings would be useful
-> to have.
->
-> We can also reduce test time by not testing the fallback case anymore exc=
-ept
-> for the loopback, i.e. ns1 <-> ns1 with tcp -> mptcp, mptcp -> tcp, and
-> mptcp -> mptcp, but for everything else just do the mptcp <-> mptcp
-> tests.
->
-> What do you think?
+Wed Oct 23 22:38:47 GMT+02:00 2019 Peter Krystad :
+ =
 
-That would be a good way to save time. I don't think the combinations =
+> On Tue, 2019-10-22 at 10:36 +0200, Matthieu Baerts wrote:
+> =
 
-other than ns1 <-> ns1 do anything meaningfully different when everything =
+>> =
 
-from SYNACK onward is regular TCP.
+>>>> Patchwork maintainers are asking me to give them a list of usernames.
+>>>> With the web interface, I can only get your user ID and email address
+>>>> but not your username. May you reply to me in private (or to the list)
+>>>> with your username?
+>>>> =
 
---
-Mat Martineau
-Intel
---===============1396960027133409628==--
+>>> =
+
+>>> In a quite original fashion, mine is 'pabeni'
+>>> =
+
+>> =
+
+> =
+
+> For the first time in my life 'pkrystad' was already taken, so I am
+> 'steve515'. Don't ask.
+ =
+
+It seems that you have two accounts: one with your @intel.com email address=
+ and one with your @linux.intel.com one. You can see that using the search =
+feature, type "Krystad" and wait for the list to appear.
+ =
+
+https://patchwork.ozlabs.org/project/netdev/list/?submitter=3D77742 [https:=
+//patchwork.ozlabs.org/project/netdev/list/?series=3D&submitter=3D77742&sta=
+te=3D*&q=3D&archive=3Dboth&delegate=3D] =
+
+https://patchwork.ozlabs.org/project/netdev/list/?submitter=3D77730 [https:=
+//patchwork.ozlabs.org/project/netdev/list/?series=3D&submitter=3D77730&sta=
+te=3D*&q=3D&archive=3Dboth&delegate=3D] =
+
+ =
+
+Because patchwork works with usernames, do you think we can use pkrystad an=
+d change the email address? Just to avoid delegating to "Steve" :)
+ =
+
+Cheers,
+Matt
+
+--===============6726919199859328888==--
