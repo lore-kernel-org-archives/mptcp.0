@@ -1,71 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============6726919199859328888=="
+Content-Type: multipart/mixed; boundary="===============4028369471804234979=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Patchwork: "maintainer status"
-Date: Thu, 24 Oct 2019 03:59:24 +0000
-Message-ID: <ae2909d9-e0c0-42d3-b9e3-aaee441b9168@localhost>
-In-Reply-To: 5745a12ffb6b52fa028b946df2ff163c8ccc68d9.camel@linux.intel.com
+Subject: [MPTCP] Weekly meeting - 17 October 2019 16:00 UTC (9am PDT, 6pm CEST)
+Date: Thu, 24 Oct 2019 04:04:13 +0000
+Message-ID: <775b845f-4275-4158-bafc-ad6b76227d18@localhost>
 X-Status: 
 X-Keywords:                  
-X-UID: 2305
+X-UID: 2306
 
---===============6726919199859328888==
+--===============4028369471804234979==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-Hi Peter,
+Hello everybody!
  =
 
-Wed Oct 23 22:38:47 GMT+02:00 2019 Peter Krystad :
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow/today.
  =
 
-> On Tue, 2019-10-22 at 10:36 +0200, Matthieu Baerts wrote:
-> =
-
->> =
-
->>>> Patchwork maintainers are asking me to give them a list of usernames.
->>>> With the web interface, I can only get your user ID and email address
->>>> but not your username. May you reply to me in private (or to the list)
->>>> with your username?
->>>> =
-
->>> =
-
->>> In a quite original fashion, mine is 'pabeni'
->>> =
-
->> =
-
-> =
-
-> For the first time in my life 'pkrystad' was already taken, so I am
-> 'steve515'. Don't ask.
- =
-
-It seems that you have two accounts: one with your @intel.com email address=
- and one with your @linux.intel.com one. You can see that using the search =
-feature, type "Krystad" and wait for the list to appear.
- =
-
-https://patchwork.ozlabs.org/project/netdev/list/?submitter=3D77742 [https:=
-//patchwork.ozlabs.org/project/netdev/list/?series=3D&submitter=3D77742&sta=
-te=3D*&q=3D&archive=3Dboth&delegate=3D] =
-
-https://patchwork.ozlabs.org/project/netdev/list/?submitter=3D77730 [https:=
-//patchwork.ozlabs.org/project/netdev/list/?series=3D&submitter=3D77730&sta=
-te=3D*&q=3D&archive=3Dboth&delegate=3D] =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20191017 [https://annuel2.=
+framapad.org/p/mptcp_upstreaming_20191017] =
 
  =
 
-Because patchwork works with usernames, do you think we can use pkrystad an=
-d change the email address? Just to avoid delegating to "Steve" :)
+Feel free to add/modify topics!
  =
 
-Cheers,
-Matt
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj [https://meet.google.com/edk-rkrk-vaj] =
 
---===============6726919199859328888==--
+ =
+
+Speak to you tomorrow!
+Matthieu
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net [mailto:matthieu.baerts(a)tessares.net] =
+
+Tessares SA | Hybrid Access Solutions
+www.tessares.net [www.tessares.net] =
+
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+
+--===============4028369471804234979==--
