@@ -1,68 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============6538267140685989724=="
+Content-Type: multipart/mixed; boundary="===============5355557864261011037=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: Weekly meeting - 17 October 2019 16:00 UTC (9am PDT,
  6pm CEST)
-Date: Wed, 23 Oct 2019 22:46:57 -0700
-Message-ID: <F4A03081-2099-41B1-8F16-BF1C131D8F30@apple.com>
-In-Reply-To: 775b845f-4275-4158-bafc-ad6b76227d18@localhost
+Date: Thu, 24 Oct 2019 14:51:08 +0200
+Message-ID: <d2114f9d12535a997bf04a96aea5e1dbb9826c42.camel@redhat.com>
+In-Reply-To: F4A03081-2099-41B1-8F16-BF1C131D8F30@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2307
+X-UID: 2308
 
---===============6538267140685989724==
+--===============5355557864261011037==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-I have a conflict tomorrow and can=E2=80=99t attend the meeting.
+On Wed, 2019-10-23 at 22:46 -0700, Christoph Paasch wrote:
+> I have a conflict tomorrow and can=E2=80=99t attend the meeting.
 
-Christoph
+Can you please give us an a brief update WRT mptcp.org support for
+MPTCP v1 via email?
 
-> On Oct 23, 2019, at 9:04 PM, Matthieu Baerts <matthieu.baerts(a)tessares.=
-net> wrote:
-> =
+I'm especially interested in understanding when we can expect to test
+v1 vs mptcp.org.
 
-> =EF=BB=BF
-> Hello everybody!
-> =
+Thanks,
 
-> Our public MPTCP upstreaming weekly web conference is scheduled for
-> tomorrow/today.
-> =
+Paolo
 
-> The list of topics is available here:
-> https://annuel2.framapad.org/p/mptcp_upstreaming_20191017 [https://annuel=
-2.framapad.org/p/mptcp_upstreaming_20191017] =
 
-> =
 
-> Feel free to add/modify topics!
-> =
 
-> Anybody can join the meeting using Google Meet website/app/phone:
-> https://meet.google.com/edk-rkrk-vaj [https://meet.google.com/edk-rkrk-va=
-j] =
-
-> =
-
-> Speak to you tomorrow!
-> Matthieu
-> -- =
-
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net [mailto:matthieu.baerts(a)tessares.net] =
-
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net [www.tessares.net] =
-
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-> =
-
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
---===============6538267140685989724==--
+--===============5355557864261011037==--
