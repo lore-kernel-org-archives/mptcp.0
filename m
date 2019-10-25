@@ -1,72 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============0050973975248837474=="
+Content-Type: multipart/mixed; boundary="===============6205760480850576317=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: switch mptcp_poll to use parent
- sock wait queue
-Date: Fri, 25 Oct 2019 17:55:43 +0200
-Message-ID: <86e42e1a-6510-f9fd-8595-6f825647f975@tessares.net>
-In-Reply-To: 20191025153444.GY25052@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH v2 0/2] selftests: increase the new default timeout
+Date: Fri, 25 Oct 2019 13:25:50 -0700
+Message-ID: <alpine.OSX.2.21.1910251325130.64627@srpullel-mobl.amr.corp.intel.com>
+In-Reply-To: 7d1fc384-6da9-c3a2-c36c-36e925a04228@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2324
+X-UID: 2325
 
---===============0050973975248837474==
+--===============6205760480850576317==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
 
-On 25/10/2019 17:34, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->>>>
->>>> I think we could include patch 3/4 in the "first chunk"/preparatory
->>>> patches - e.g. apply just after "tcp, ulp: Add clone operation to
->>>> tcp_ulp_ops" - and squash 4/4 in "mptcp: add mptcp_poll"
->>>>
->>>> WDYT?
->>>
->>> Seems good, yes.
->>
->> Where can I apply patch 1/4 and 2/4? At the end?
-> =
+On Fri, 25 Oct 2019, Matthieu Baerts wrote:
 
-> 1 could probably be squashed with "mptcp: Implement MPTCP receive path",
-> given that patch adds sk_data_ready for subflows.
-> =
+> Hi,
+>
+> On 23/10/2019 08:48, Matthieu Baerts wrote:
+>> A new commit from upstream now sets a timeout of 45 seconds per test. =
 
-> Patch 2 I'd add at the end, we might be able to revert it eventually.
+>> That's
+>> too low for MPTCP. We need more.
+>> =
 
-Thank you for the patches and the quick reply!
-And thank you Paolo and Mat for the reviews!
+>> But increasing the timeout was not working because selftests scripts were
+>> looking for this new 'settings' file in the wrong directory. I am going =
+to =
 
-- af383a1b6937: "squashed" patch 1/4 in "mptcp: Implement MPTCP receive =
+>> send
+>> the first patch upstream as it might be required for other selftests and =
 
-path"
-- 8e678a61f7b7: "Signed-off-by" + "Co-developed-by"
-- 77cf55a4b1f1: conflict in =
+>> not
+>> specific to MPTCP.
+>
+> I hope you don't mind if I apply these 2 patches to be able to run the =
 
-t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-- 789fc73cc101..c9ae282e1e87: result
-- f0d0353bc148: patch 2 added at the end
-- c9ae282e1e87..590467e30328: result
-- 67590165a990: patch 3 added between "tcp, ulp: Add clone operation to =
+> selftests with the latest net-next. I propose to decrease the timeout val=
+ue =
 
-tcp_ulp_ops" and "mptcp: Add MPTCP to skb extensions"
-- 590467e30328..555678057b0c: result
-- b52d7b74d906: "squashed" patch 4/4 in "mptcp: add mptcp_poll"
-- 555678057b0c..460e610b3ca4: result
+> later on when the new enhancements from Florian are applied.
+>
+> - ef0a0e4954b3: "squashed" patch 1/2 in "mptcp: add basic kselftest for =
 
-Tests are in progress, verifying that each commit can still compile.
+> mptcp"
+> - 3adea0746236: "squashed" patch 2/2 in "mptcp: add basic kselftest for =
 
-Cheers,
-Matt
--- =
+> mptcp"
+> - e2c9d4cc70f9..789fc73cc101: result
+>
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0050973975248837474==--
+That plan sounds good, thanks for merging these.
+
+--
+Mat Martineau
+Intel
+--===============6205760480850576317==--
