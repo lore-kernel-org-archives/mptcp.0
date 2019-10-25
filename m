@@ -1,39 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============1837196092690180931=="
+Content-Type: multipart/mixed; boundary="===============6156481531023478476=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: switch mptcp_poll to use parent
- sock wait queue
-Date: Fri, 25 Oct 2019 17:34:44 +0200
-Message-ID: <20191025153444.GY25052@breakpoint.cc>
-In-Reply-To: 21a80919-4765-c8dd-cdc2-8535bf0b6198@tessares.net
+Subject: [MPTCP] Re: [PATCH v2 0/2] selftests: increase the new default timeout
+Date: Fri, 25 Oct 2019 17:36:17 +0200
+Message-ID: <7d1fc384-6da9-c3a2-c36c-36e925a04228@tessares.net>
+In-Reply-To: 20191023064854.20453-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2322
+X-UID: 2323
 
---===============1837196092690180931==
+--===============6156481531023478476==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> > > =
+Hi,
 
-> > > I think we could include patch 3/4 in the "first chunk"/preparatory
-> > > patches - e.g. apply just after "tcp, ulp: Add clone operation to
-> > > tcp_ulp_ops" - and squash 4/4 in "mptcp: add mptcp_poll"
-> > > =
-
-> > > WDYT?
-> > =
-
-> > Seems good, yes.
+On 23/10/2019 08:48, Matthieu Baerts wrote:
+> A new commit from upstream now sets a timeout of 45 seconds per test. Tha=
+t's
+> too low for MPTCP. We need more.
 > =
 
-> Where can I apply patch 1/4 and 2/4? At the end?
+> But increasing the timeout was not working because selftests scripts were
+> looking for this new 'settings' file in the wrong directory. I am going t=
+o send
+> the first patch upstream as it might be required for other selftests and =
+not
+> specific to MPTCP.
 
-1 could probably be squashed with "mptcp: Implement MPTCP receive path",
-given that patch adds sk_data_ready for subflows.
+I hope you don't mind if I apply these 2 patches to be able to run the =
 
-Patch 2 I'd add at the end, we might be able to revert it eventually.
---===============1837196092690180931==--
+selftests with the latest net-next. I propose to decrease the timeout =
+
+value later on when the new enhancements from Florian are applied.
+
+- ef0a0e4954b3: "squashed" patch 1/2 in "mptcp: add basic kselftest for =
+
+mptcp"
+- 3adea0746236: "squashed" patch 2/2 in "mptcp: add basic kselftest for =
+
+mptcp"
+- e2c9d4cc70f9..789fc73cc101: result
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6156481531023478476==--
