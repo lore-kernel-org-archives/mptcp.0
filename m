@@ -1,39 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============1197805566446559214=="
+Content-Type: multipart/mixed; boundary="===============0076602869886482375=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/2] Fix bug processing options
-Date: Fri, 25 Oct 2019 16:40:40 -0700
-Message-ID: <alpine.OSX.2.21.1910251640160.66912@srpullel-mobl.amr.corp.intel.com>
-In-Reply-To: 20191022225459.15312-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: Weekly meeting - 17 October 2019 16:00 UTC (9am PDT,
+ 6pm CEST)
+Date: Fri, 25 Oct 2019 16:46:38 -0700
+Message-ID: <20191025234638.GG62618@MacBook-Pro-64.local>
+In-Reply-To: d2114f9d12535a997bf04a96aea5e1dbb9826c42.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2329
+X-UID: 2330
 
---===============1197805566446559214==
+--===============0076602869886482375==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-On Tue, 22 Oct 2019, Peter Krystad wrote:
+On 24/10/19 - 14:51:08, Paolo Abeni wrote:
+> Hi,
+> =
 
-> Do not process incoming options if the subflow is not MPTCP.
->
-> Observed crash when running against out-of-tree kernel with
-> mis-matched checksum options.
->
-> Peter Krystad (2):
->  mptcp: Ignore incoming MPTCP options when not MP_CAPABLE
->  mptcp: Ignore incoming MPTCP options when not MP_CAPABLE
->
-> net/mptcp/options.c | 3 +++
-> 1 file changed, 3 insertions(+)
->
+> On Wed, 2019-10-23 at 22:46 -0700, Christoph Paasch wrote:
+> > I have a conflict tomorrow and can=E2=80=99t attend the meeting.
+> =
 
-Both changes look good to me. Thanks, Peter!
+> Can you please give us an a brief update WRT mptcp.org support for
+> MPTCP v1 via email?
 
---
-Mat Martineau
-Intel
---===============1197805566446559214==--
+I see in the minutes that you already discussed that and that Matthieu made
+a branch with v1. I guess that unblocks you for now, right?
+
+
+I am trying to find time to spend on Linux, but it's difficult at the
+moment.
+
+
+Christoph
+
+> =
+
+> I'm especially interested in understanding when we can expect to test
+> v1 vs mptcp.org.
+> =
+
+> Thanks,
+> =
+
+> Paolo
+> =
+
+> =
+
+> =
+
+>=20
+--===============0076602869886482375==--
