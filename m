@@ -1,78 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============5778054105878431497=="
+Content-Type: multipart/mixed; boundary="===============3857790036813446465=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] selftests: mptcp: fix alignment 2 first tests
-Date: Sat, 26 Oct 2019 09:47:44 +0200
-Message-ID: <20191026074744.24352-3-matthieu.baerts@tessares.net>
-In-Reply-To: 20191026074744.24352-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH 0/2] Fix bug processing options
+Date: Sat, 26 Oct 2019 10:04:29 +0200
+Message-ID: <c8b8201f-765a-74c2-be31-0ca4b23c7537@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1910251640160.66912@srpullel-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2335
+X-UID: 2336
 
---===============5778054105878431497==
+--===============3857790036813446465==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Instead of:
+Hi Peter, Mat,
 
- New MPTCP socket can be blocked via sysctl    [ OK ]
- setsockopt(..., TCP_ULP, "mptcp", ...) blocked        [ OK ]
+On 26/10/2019 01:40, Mat Martineau wrote:
+> =
 
-We now have:
+> On Tue, 22 Oct 2019, Peter Krystad wrote:
+> =
 
- New MPTCP socket can be blocked via sysctl            [ OK ]
- setsockopt(..., TCP_ULP, "mptcp", ...) blocked        [ OK ]
+>> Do not process incoming options if the subflow is not MPTCP.
+>>
+>> Observed crash when running against out-of-tree kernel with
+>> mis-matched checksum options.
+>>
+>> Peter Krystad (2):
+>> =C2=A0mptcp: Ignore incoming MPTCP options when not MP_CAPABLE
+>> =C2=A0mptcp: Ignore incoming MPTCP options when not MP_CAPABLE
+>>
+>> net/mptcp/options.c | 3 +++
+>> 1 file changed, 3 insertions(+)
+>>
+> =
 
-Yes, a detail but it is more visible that there are two tests at the
-beginning.
+> Both changes look good to me. Thanks, Peter!
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+Thank you for the patches and the reviews!
 
-Notes:
-    To squash in "mptcp: add basic kselftest for mptcp"
+- 6eb607af7475: "squashed" patch 1/2 in "mptcp: Implement MPTCP receive =
 
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+path"
+- ea443b296417: "squashed" patch 2/2 in "mptcp: Add handling of outgoing =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 71073408e63b..b5367fe2c6ea 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -231,7 +231,7 @@ check_mptcp_disabled()
- =
+MP_JOIN requests"
+- 22b6803a0c48..a89f2feb5b90: result
 
- 	# net.mptcp.enabled should be enabled by default
- 	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ pr=
-int $3 }')" -ne 1 ]; then
--		echo -e "net.mptcp.enabled sysctl is not 1 by default\t[ FAIL ]"
-+		echo -e "net.mptcp.enabled sysctl is not 1 by default\t\t[ FAIL ]"
- 		ret=3D1
- 		return 1
- 	fi
-@@ -243,12 +243,12 @@ check_mptcp_disabled()
- 	ip netns delete ${disabled_ns}
- =
+Tests are still OK!
 
- 	if [ ${err} -eq 0 ]; then
--		echo -e "New MPTCP socket cannot be blocked via sysctl\t[ FAIL ]"
-+		echo -e "New MPTCP socket cannot be blocked via sysctl\t\t[ FAIL ]"
- 		ret=3D1
- 		return 1
- 	fi
- =
-
--	echo -e "New MPTCP socket can be blocked via sysctl\t[ OK ]"
-+	echo -e "New MPTCP socket can be blocked via sysctl\t\t[ OK ]"
- 	return 0
- }
- =
-
+Cheers,
+Matt
 -- =
 
-2.20.1
-
---===============5778054105878431497==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3857790036813446465==--
