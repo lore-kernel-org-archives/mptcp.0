@@ -1,84 +1,100 @@
-Content-Type: multipart/mixed; boundary="===============5091966344123354987=="
+Content-Type: multipart/mixed; boundary="===============3177251851248438797=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] selftests: mptcp: Restore capture option
-Date: Sat, 26 Oct 2019 08:46:34 +0200
-Message-ID: <15887a04-e39e-8d2a-7712-c09a8e4222f3@tessares.net>
-In-Reply-To: 20191025231957.7937-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH v4 0/9] selftests: add ipv6 support and reduce run
+ time
+Date: Sat, 26 Oct 2019 09:33:56 +0200
+Message-ID: <56fa4737-63ad-e6c2-d3f4-bdfdaef3b130@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1910251635380.66912@srpullel-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2331
+X-UID: 2332
 
---===============5091966344123354987==
+--===============3177251851248438797==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Florian, Mat,
 
-On 26/10/2019 01:19, Mat Martineau wrote:
-> The addition of other command line parameter handling made "-c" show the
-> usage message rather than allow packet capture with tcpdump. Integrate
-> "-c" with getops handling and make sure the usage message covers all
-> options.
-
-Good catch! Thanks for the patch!
-
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> ---
->   .../selftests/net/mptcp/mptcp_connect.sh      | 19 +++++++++----------
->   1 file changed, 9 insertions(+), 10 deletions(-)
+On 26/10/2019 01:38, Mat Martineau wrote:
 > =
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index 2cd62b041e70..b207ec12612e 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> On Fri, 25 Oct 2019, Florian Westphal wrote:
+> =
 
-[...]
+>> This is the 4th iteration of the selftest patchset.
+>>
+>> Changes since v3:
+>> - get rid of unused variable warnings in patch 2
+>> - get rid of bogus fallthrough in patch 4
+>> - add patch 8: Get rid of redundant test cases, no need to
+>> =C2=A0 test tcp fallback for all netns combinations.
+>> - add patch 9: allow to set delay/loss/reordering etc. to use.
+>> =C2=A0 Default is random so selftests expose wider combinations.
+>>
+>> All changes can be squashed into "mptcp: add basic kselftest for mptcp".
+>>
+> =
 
-> @@ -32,6 +32,8 @@ usage() {
->   	echo -e "\t-l: tc/netem loss percentage, e.g. \"-l 0.02\" (default ran=
-dom)"
->   	echo -e "\t-r: tc/netem reorder mode, e.g. \"-r 25% 50% gap 5\", use "=
--r 0" to disable reordering (default random)"
->   	echo -e "\t-e: ethtool features to disable, e.g.: \"-e tso -e gso\" (d=
-efault: randomly disable any of tso/gso/gro)"
-> +	echo -e "\t-6: enable IPv6 tests (default: only test IPv4)"
+> I think 1-8 are ready to merge, and patch 9 in combination with my =
 
-Good catch!
+> capture fix - if that works for Matthieu & Florian.
 
-> +	echo -e "\t-c: capture packets for each test using tcpdump (default: no=
- capture)"
->   }
->   =
+Thank you for the patches, the reviews and the fix!
 
->   while getopts "$optstring" option;do
+Florian's patches:
 
-[...]
+- ccd8bd7d2946: "squashed" patch 1/9 in "mptcp: add basic kselftest for =
 
-> @@ -334,7 +333,7 @@ do_transfer()
->   =
+mptcp"
+- ba7f2390a07b: "squashed" patch 2/9 in "mptcp: add basic kselftest for =
 
->   	stop=3D$(date +%s)
->   =
+mptcp"
+- 9558b127f5e2: "squashed" patch 3/9 in "mptcp: add basic kselftest for =
 
-> -	if [ $capture -eq 1 ]; then
-> +	if $capture; then
+mptcp"
+- 36d6878d373c: "squashed" patch 4/9 in "mptcp: add basic kselftest for =
 
-It's maybe just me but I usually prefer to avoid having to execute a =
+mptcp"
+- b78662240af1: "squashed" patch 5/9 in "mptcp: add basic kselftest for =
 
-binary hidden in a variable to return 0 or 1. ${capture} could be set to =
+mptcp"
+- c81c93c3b292: "squashed" patch 6/9 in "mptcp: add basic kselftest for =
 
-another binary/function, we will fork (except with some shells), etc.
+mptcp"
+- 088e08b5cc4d: "squashed" patch 7/9 in "mptcp: add basic kselftest for =
 
-But that's just for the tests, we will not launch that on a low end =
+mptcp"
+- bf62f70fceaa: "squashed" patch 8/9 in "mptcp: add basic kselftest for =
 
-device and we are already doing that with ipv6, random, etc. so it looks =
+mptcp"
+- fcd6f5fe56e1: "squashed" patch 9/9 in "mptcp: add basic kselftest for =
 
-good to me to apply this! :)
+mptcp"
+- all signed-off already there
+
+Mat's patch:
+
+- 847d38757173: "squashed" in "mptcp: add basic kselftest for mptcp"
+- signed-off already there
+
+460e610b3ca4..22b6803a0c48: result
+
+Now in my quick tests, it took me max 44 seconds with the slowest env I =
+
+have and the default options. But I guess the time is variable depending =
+
+on the delays/losses/reorders that have been randomly picked.
+
+Do you have a suggestion of new default timeout to set?
+
+Also another question, when you use:
+
+   make -C tools/testing/selftests TARGETS=3Dnet/mptcp run_tests
+
+how do you pass arguments to mptcp_connect.sh script?
 
 Cheers,
 Matt
@@ -89,4 +105,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5091966344123354987==--
+--===============3177251851248438797==--
