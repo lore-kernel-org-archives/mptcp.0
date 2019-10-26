@@ -1,43 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============3858579822531931332=="
+Content-Type: multipart/mixed; boundary="===============5778054105878431497=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/2] selftests: mptcp: track duration in ms
-Date: Sat, 26 Oct 2019 09:47:43 +0200
-Message-ID: <20191026074744.24352-2-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 2/2] selftests: mptcp: fix alignment 2 first tests
+Date: Sat, 26 Oct 2019 09:47:44 +0200
+Message-ID: <20191026074744.24352-3-matthieu.baerts@tessares.net>
 In-Reply-To: 20191026074744.24352-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2334
+X-UID: 2335
 
---===============3858579822531931332==
+--===============5778054105878431497==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I was mostly seeing 0/1s. Now it is in ms, 5 digits (up to 99 seconds).
+Instead of:
 
- (10.0.1.1:10000) MPTCP       (duration   201ms) [ OK ]
- (10.0.1.1:10001) TCP         (duration   161ms) [ OK ]
- (10.0.1.1:10002) MPTCP       (duration   174ms) [ OK ]
- (10.0.1.2:10003) MPTCP       (duration   178ms) [ OK ]
- (10.0.2.1:10004) MPTCP       (duration   162ms) [ OK ]
- (10.0.2.2:10005) MPTCP       (duration   174ms) [ OK ]
- (10.0.3.2:10006) MPTCP       (duration   172ms) [ OK ]
- (10.0.3.1:10007) MPTCP       (duration   201ms) [ OK ]
- (10.0.1.1:10008) MPTCP       (duration   170ms) [ OK ]
- (10.0.2.2:10009) MPTCP       (duration   170ms) [ OK ]
- (10.0.3.2:10010) MPTCP       (duration   371ms) [ OK ]
- (10.0.3.1:10011) MPTCP       (duration   178ms) [ OK ]
- (10.0.1.1:10012) MPTCP       (duration   170ms) [ OK ]
- (10.0.1.2:10013) MPTCP       (duration  1201ms) [ OK ]
- (10.0.2.1:10014) MPTCP       (duration   168ms) [ OK ]
- (10.0.3.1:10015) MPTCP       (duration   166ms) [ OK ]
- (10.0.1.1:10016) MPTCP       (duration   177ms) [ OK ]
- (10.0.1.2:10017) MPTCP       (duration   180ms) [ OK ]
- (10.0.2.1:10018) MPTCP       (duration   169ms) [ OK ]
- (10.0.2.2:10019) MPTCP       (duration   166ms) [ OK ]
- (10.0.3.2:10020) MPTCP       (duration   166ms) [ OK ]
+ New MPTCP socket can be blocked via sysctl    [ OK ]
+ setsockopt(..., TCP_ULP, "mptcp", ...) blocked        [ OK ]
+
+We now have:
+
+ New MPTCP socket can be blocked via sysctl            [ OK ]
+ setsockopt(..., TCP_ULP, "mptcp", ...) blocked        [ OK ]
+
+Yes, a detail but it is more visible that there are two tests at the
+beginning.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
@@ -50,45 +39,40 @@ Notes:
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
 ting/selftests/net/mptcp/mptcp_connect.sh
-index fbebb4cbd3fa..71073408e63b 100755
+index 71073408e63b..b5367fe2c6ea 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -324,7 +324,7 @@ do_transfer()
+@@ -231,7 +231,7 @@ check_mptcp_disabled()
  =
 
- 	sleep 1
+ 	# net.mptcp.enabled should be enabled by default
+ 	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ pr=
+int $3 }')" -ne 1 ]; then
+-		echo -e "net.mptcp.enabled sysctl is not 1 by default\t[ FAIL ]"
++		echo -e "net.mptcp.enabled sysctl is not 1 by default\t\t[ FAIL ]"
+ 		ret=3D1
+ 		return 1
+ 	fi
+@@ -243,12 +243,12 @@ check_mptcp_disabled()
+ 	ip netns delete ${disabled_ns}
  =
 
--	start=3D$(date +%s)
-+	start=3D$(date +%s%3N)
- 	ip netns exec ${connector_ns} ./mptcp_connect -t $timeout -p $port -s ${c=
-l_proto} $connect_addr < "$cin" > "$cout" &
- 	cpid=3D$!
- =
-
-@@ -333,7 +333,7 @@ do_transfer()
- 	wait $spid
- 	rets=3D$?
- =
-
--	stop=3D$(date +%s)
-+	stop=3D$(date +%s%3N)
- =
-
- 	if $capture; then
- 	    sleep 1
-@@ -341,7 +341,7 @@ do_transfer()
+ 	if [ ${err} -eq 0 ]; then
+-		echo -e "New MPTCP socket cannot be blocked via sysctl\t[ FAIL ]"
++		echo -e "New MPTCP socket cannot be blocked via sysctl\t\t[ FAIL ]"
+ 		ret=3D1
+ 		return 1
  	fi
  =
 
- 	duration=3D$((stop-start))
--	duration=3D$(printf "(duration %03ss)" $duration)
-+	duration=3D$(printf "(duration %05sms)" $duration)
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		echo "$duration [ FAIL ] client exit code $retc, server $rets" 1>&2
- 		echo "\nnetns ${listener_ns} socket stat for $port:" 1>&2
+-	echo -e "New MPTCP socket can be blocked via sysctl\t[ OK ]"
++	echo -e "New MPTCP socket can be blocked via sysctl\t\t[ OK ]"
+ 	return 0
+ }
+ =
+
 -- =
 
 2.20.1
 
---===============3858579822531931332==--
+--===============5778054105878431497==--
