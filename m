@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============2421108532016921974=="
+Content-Type: multipart/mixed; boundary="===============4804271998825372509=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 2/2] mptcp: Add IPv6 support
-Date: Mon, 28 Oct 2019 16:37:44 -0700
-Message-ID: <774e1784ee86e7e33753ccbc693dffc50225ec7c.camel@linux.intel.com>
-In-Reply-To: cb02668f5df930fa78cd276d7a31f862a361e1e5.camel@redhat.com
+Subject: [MPTCP] Re: [RFC 1/2] mptcp: Export low-level routines for IPv6
+Date: Mon, 28 Oct 2019 16:46:34 -0700
+Message-ID: <50123b1e298480f7c09d2de8694b90588ef9e7b0.camel@linux.intel.com>
+In-Reply-To: 6d88a1f22660614c3b22f2cb892386af6244e76f.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2340
+X-UID: 2341
 
---===============2421108532016921974==
+--===============4804271998825372509==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,215 +18,108 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo -
 
-Thanks for the review, sorry for the slow response.
-
-On Thu, 2019-10-17 at 12:36 +0200, Paolo Abeni wrote:
+On Thu, 2019-10-17 at 11:12 +0200, Paolo Abeni wrote:
 > Hi,
 > =
 
 > On Wed, 2019-10-16 at 17:02 -0700, Peter Krystad wrote:
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 4fdcbb0f4285..bc38527209c9 100644
-> > @@ -1182,6 +1214,53 @@ static int mptcp_getname(struct socket *sock, st=
-ruct sockaddr *uaddr,
-> >  	return ret;
-> >  }
-> >  =
+> > All routines exported already have their IPv4 counterparts exported.
+> > tcp_request_sock_ipv6_ops will be referenced during TCP subflow
+> > creation.
+> > =
 
-> > +#if IS_ENABLED(CONFIG_IPV6)
-> > +static int mptcp_v6_getname(struct socket *sock, struct sockaddr *uadd=
-r,
-> > +			    int peer)
-> > +{
-> > +	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-> > +	struct socket *ssock;
-> > +	struct sock *ssk;
-> > +	int ret;
-> > +
-> > +	if (sock->sk->sk_prot =3D=3D &tcpv6_prot) {
-> > +		/* we are being invoked from __sys_accept4, after
-> > +		 * mptcp_accept() has just accepted a non-mp-capable
-> > +		 * flow: sk is a tcp_sk, not an mptcp one.
-> > +		 *
-> > +		 * Hand the socket over to tcp so all further socket ops
-> > +		 * bypass mptcp.
-> > +		 */
-> > +		sock->ops =3D &inet_stream_ops;
+> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 > =
 
-> Should we have &inet6_stream_ops  here ^^^^^^ ???
-> Possibly the comments should be adjusted as well.
+> I guess this could be squashed into "tcp: Export TCP functions and ops
+> struct", right?
 
-Yes, nice catch. Comment, at least the __sys_accept4 part, is OK, I think t=
-he
-4 refers to a version of accept, not the protocol.
+Maybe, see my last comment.
 
 > [...]
 > =
 
-> > @@ -1311,3 +1409,33 @@ void mptcp_proto_init(void)
+> > diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+> > index e3d9f4559c99..1f3a87f4867e 100644
+> > --- a/net/ipv6/tcp_ipv6.c
+> > +++ b/net/ipv6/tcp_ipv6.c
+> > @@ -75,7 +75,7 @@ static void	tcp_v6_reqsk_send_ack(const struct sock *=
+sk, struct sk_buff *skb,
+> >  static int	tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb);
 > >  =
 
-> >  	inet_register_protosw(&mptcp_protosw);
+> >  static const struct inet_connection_sock_af_ops ipv6_mapped;
+> > -static const struct inet_connection_sock_af_ops ipv6_specific;
+> > +const struct inet_connection_sock_af_ops ipv6_specific;
+> >  #ifdef CONFIG_TCP_MD5SIG
+> >  static const struct tcp_sock_af_ops tcp_sock_ipv6_specific;
+> >  static const struct tcp_sock_af_ops tcp_sock_ipv6_mapped_specific;
+> > @@ -99,7 +99,7 @@ static struct ipv6_pinfo *tcp_inet6_sk(const struct s=
+ock *sk)
+> >  	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
 > >  }
-> > +
-> > +#if IS_ENABLED(CONFIG_IPV6)
-> > +static struct proto_ops mptcp_v6_stream_ops;
-> > +
-> > +static struct inet_protosw mptcp_v6_protosw =3D {
-> > +	.type		=3D SOCK_STREAM,
-> > +	.protocol	=3D IPPROTO_MPTCP,
-> > +	.prot		=3D &mptcp_prot,
-> > +	.ops		=3D &mptcp_v6_stream_ops,
-> > +	.flags		=3D INET_PROTOSW_ICSK,
-> > +};
-> > +
-> > +int mptcp_proto_v6_init(void)
-> > +{
-> > +	int err;
-> > +
-> > +	mptcp_v6_stream_ops =3D inet6_stream_ops;
-> > +	mptcp_v6_stream_ops.bind =3D mptcp_v6_bind;
-> > +	mptcp_v6_stream_ops.connect =3D mptcp_v6_stream_connect;
-> > +	mptcp_v6_stream_ops.poll =3D mptcp_poll;
-> > +	mptcp_v6_stream_ops.accept =3D mptcp_stream_accept;
-> > +	mptcp_v6_stream_ops.getname =3D mptcp_v6_getname;
-> > +	mptcp_v6_stream_ops.listen =3D mptcp_v6_listen;
-> > +	mptcp_v6_stream_ops.shutdown =3D mptcp_shutdown;
-> > +
-> > +	err =3D inet6_register_protosw(&mptcp_v6_protosw);
+> >  =
+
+> > -static void inet6_sk_rx_dst_set(struct sock *sk, const struct sk_buff =
+*skb)
+> > +void inet6_sk_rx_dst_set(struct sock *sk, const struct sk_buff *skb)
+> >  {
+> >  	struct dst_entry *dst =3D skb_dst(skb);
+> >  =
+
+> > @@ -111,6 +111,7 @@ static void inet6_sk_rx_dst_set(struct sock *sk, co=
+nst struct sk_buff *skb)
+> >  		tcp_inet6_sk(sk)->rx_dst_cookie =3D rt6_get_cookie(rt);
+> >  	}
+> >  }
+> > +EXPORT_SYMBOL(inet6_sk_rx_dst_set);
 > =
 
-> For IPv4 we currently do panic, if we can't register the protosw
-> struct, possibly we could explicitly handle the failure even there?
+> I think this is not needed, as we don't build mptcp as a module.
+> Dropping the 'static' scope should suffice. This should apply also to
+> tcp_request_sock_ipv6_ops, tcp_v6_syn_recv_sock and ipv6_specific
+> below.
 
-Sorry, are suggesting getting rid of the panic()'s in IPv4? Or adding them
-here?
- =
+Correct, and I'll do the same for the others.
 
-> Overall this looks nice and clean! What about moving the ipv6
-> protocol.c support into a separate file, to reduce the preprocessor
-> conditionals?
+> [...]
+> =
 
-Thanks. Next step to is split the IPv6 into a seperate file, then I'll subm=
-it
-as a PATCH.
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index 791f2c19cfb8..6f09fdfdd523 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -268,6 +268,9 @@ int mptcp_subflow_connect(struct sock *sk, struct s=
+ockaddr *local,
+> >  int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_s=
+ock);
+> >  =
+
+> >  extern const struct inet_connection_sock_af_ops ipv4_specific;
+> > +#if IS_ENABLED(CONFIG_IPV6)
+> > +extern const struct inet_connection_sock_af_ops ipv6_specific;
+> > +#endif
+> >  =
+
+> >  void mptcp_proto_init(void);
+> > =
+
+> uhmm.. _if_ we want to squash these patches, this chunk should likely
+> go to a different patch than all the above - possibly "mptcp: Handle
+> MP_CAPABLE options for outgoing connections". Perhaps squashing is not
+> a good idea in this case.
+
+Squashing depends on if we want the patch sequence to look like we did v6 at
+the same time as v4, i.e. as each feature is introduced it has both v4 and =
+v6.
+I'm in favor of not squashing this patch.
 
 Peter.
 
-> [...]
-> =
-
-> > @@ -226,6 +290,26 @@ static int subflow_conn_request(struct sock *sk, s=
-truct sk_buff *skb)
-> >  	return 0;
-> >  }
-> >  =
-
-> > +static int subflow_v6_conn_request(struct sock *sk, struct sk_buff *sk=
-b)
-> > +{
-> > +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-> > +
-> > +	pr_debug("subflow=3D%p", subflow);
-> =
-
-> Just to avoid duplicate debug messages for IPv4 packets, what about
-> moving this one below the next if?
-> =
-
-> [...]
-> =
-
-> > @@ -309,7 +393,70 @@ static struct sock *subflow_syn_recv_sock(const st=
-ruct sock *sk,
-> >  	return NULL;
-> >  }
-> >  =
-
-> > -static struct inet_connection_sock_af_ops subflow_specific;
-> > +#if IS_ENABLED(CONFIG_IPV6)
-> > +static struct sock *subflow_v6_syn_recv_sock(const struct sock *sk,
-> > +					     struct sk_buff *skb,
-> > +					     struct request_sock *req,
-> > +					     struct dst_entry *dst,
-> > +					     struct request_sock *req_unhash,
-> > +					     bool *own_req)
-> > +{
-> > +	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
-> > +	struct mptcp_subflow_request_sock *subflow_req;
-> > +	struct tcp_options_received opt_rx;
-> > +	struct sock *child;
-> > +
-> > +	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listene=
-r->conn);
-> > +
-> > +	/* if the sk is MP_CAPABLE, we already received the client key */
-> > +	subflow_req =3D mptcp_subflow_rsk(req);
-> > +	if (!subflow_req->mp_capable && subflow_req->mp_join) {
-> > +		opt_rx.mptcp.mp_join =3D 0;
-> > +		mptcp_get_options(skb, &opt_rx);
-> > +		if (!opt_rx.mptcp.mp_join ||
-> > +		    !subflow_hmac_valid(req, &opt_rx))
-> > +			return NULL;
-> > +	}
-> > +
-> > +	child =3D tcp_v6_syn_recv_sock(sk, skb, req, dst, req_unhash, own_req=
-);
-> > +
-> > +	if (child && *own_req) {
-> > +		struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(child);
-> > +
-> > +		if (!ctx)
-> > +			goto close_child;
-> > +
-> > +		if (ctx->mp_capable) {
-> > +			if (mptcp_token_new_accept(ctx->token))
-> > +				goto close_child;
-> > +		} else if (ctx->mp_join) {
-> > +			struct mptcp_sock *owner;
-> > +
-> > +			owner =3D mptcp_token_get_sock(ctx->token);
-> > +			if (!owner)
-> > +				goto close_child;
-> > +
-> > +			ctx->conn =3D (struct sock *)owner;
-> > +			mptcp_finish_join(child);
-> > +		}
-> > +	}
-> > +
-> > +	return child;
-> > +
-> > +close_child:
-> > +	pr_debug("closing child socket");
-> > +	inet_sk_set_state(child, TCP_CLOSE);
-> > +	sock_set_flag(child, SOCK_DEAD);
-> > +	inet_csk_destroy_sock(child);
-> > +	return NULL;
-> > +}
-> =
-
-> As this looks quite alike the ipv4 counter part, except for the
-> tcp_v4_syn_recv_sock() call, replaced here by tcp_v6_syn_recv_sock(),
-> what about using a function pointer and the same overall code? =
-
-> =
-
-> If the additional indirect call overhead is a concern, we can leverage
-> the indirect call infrastructure ;) [shameless self-promotion;)]
-> =
-
-> How about moving even the subflow ipv6 code to a separate, ipv6
-> specific file ? (possibly the same used for ipv6 protocol.c code)
-> =
-
-> Overall this looks much more clean and self-contained than expected!
-> =
-
-> Thank you,
+> Cheers,
 > =
 
 > Paolo
 >=20
 
---===============2421108532016921974==--
+--===============4804271998825372509==--
