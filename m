@@ -1,37 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============0562267357446647520=="
+Content-Type: multipart/mixed; boundary="===============9206683722848742260=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/2] Fix issues in prerequisite patches
-Date: Tue, 29 Oct 2019 09:55:55 -0700
-Message-ID: <20191029165557.7029-1-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH v2 1/2] mptcp: Save address family when creating socket
+Date: Tue, 29 Oct 2019 09:55:56 -0700
+Message-ID: <20191029165557.7029-2-peter.krystad@linux.intel.com>
+In-Reply-To: 20191029165557.7029-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2344
+X-UID: 2345
 
---===============0562267357446647520==
+--===============9206683722848742260==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Fix issues found by Mat in the "IPv6 prerequisite" patch series
-when running against the multipath.org implementation.
+For IPv6 the family will be needed when creating additional
+subflow sockets.
 
-v2: Only announce address if same family as listener
-    Only bind local address if same family as remote
-    Patch 1 of v1 set already merged.
+squashto: mptcp: Associate MPTCP context with TCP socket
 
-Peter Krystad (2):
-  mptcp: Save address family when creating socket
-  mptcp: Use correct address family when creating subflows
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/protocol.c | 1 +
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 2 insertions(+)
 
- net/mptcp/basic.c    | 36 ++++++++++++++++++++++--------------
- net/mptcp/protocol.c |  1 +
- net/mptcp/protocol.h |  1 +
- 3 files changed, 24 insertions(+), 14 deletions(-)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c2b29f8d0377..3af5f121af9e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1091,6 +1091,7 @@ static struct socket *mptcp_socket_create_get(struct =
+mptcp_sock *msk)
+ 	}
+ =
 
+ 	msk->subflow =3D ssock;
++	msk->family =3D ssock->sk->sk_family;
+ 	subflow =3D mptcp_subflow_ctx(msk->subflow->sk);
+ 	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
+ 	subflow->request_version =3D 0; /* currently only v0 supported */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 791f2c19cfb8..8fe5f9383d38 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -133,6 +133,7 @@ struct mptcp_sock {
+ 	u32		token;
+ 	unsigned long	flags;
+ 	u16		dport;
++	sa_family_t	family;
+ 	struct work_struct rtx_work;
+ 	struct list_head conn_list;
+ 	struct list_head rtx_queue;
 -- =
 
 2.17.2
 
---===============0562267357446647520==--
+--===============9206683722848742260==--
