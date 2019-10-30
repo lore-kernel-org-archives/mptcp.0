@@ -1,48 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============3328113832304780715=="
+Content-Type: multipart/mixed; boundary="===============7808338197570174634=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 31 October 2019 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 30 Oct 2019 08:56:56 +0000
-Message-ID: <157de54c-6ca9-4dbd-b873-6285d3d02f9b@localhost>
+Subject: [MPTCP] [PATCH] self-tests: catch poll errors
+Date: Wed, 30 Oct 2019 11:32:00 +0100
+Message-ID: <b2c3293ab707db2325b308d366541d3a9b221f08.1572430917.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2347
+X-UID: 2348
 
---===============3328113832304780715==
+--===============7808338197570174634==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Otherwise in case of a poll error, we end-up looping forever.
 
+Squash-to: "mptcp: add basic kselftest for mptcp"
 
-Hello everybody!
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+index 5aaf7690dc10..689ea8c8eedc 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -340,6 +340,11 @@ static int copyfd_io(int infd, int peerfd, int outfd)
+ 				return 4;
+ 			}
+ 		}
++
++		if (fds.revents & (POLLERR | POLLNVAL)) {
++			perror("poll");
++			return 5;
++		}
+ 	}
  =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
- =
-
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20191031
- =
-
-Feel free to add/modify topics!
- =
-
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
- =
-
-Speak to you tomorrow!
-Matthieu
+ 	close(peerfd);
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+2.21.0
 
-
---===============3328113832304780715==--
+--===============7808338197570174634==--
