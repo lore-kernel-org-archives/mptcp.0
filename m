@@ -1,232 +1,118 @@
-Content-Type: multipart/mixed; boundary="===============5154131751113780811=="
+Content-Type: multipart/mixed; boundary="===============5922575947714486350=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 4/6] mptcp: Re-factor subflow routines to be
- af-agnostic
-Date: Wed, 30 Oct 2019 16:38:42 -0700
-Message-ID: <20191030233844.4790-5-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH 5/6] mptcp: Export low-level routines for IPv6
+Date: Wed, 30 Oct 2019 16:38:43 -0700
+Message-ID: <20191030233844.4790-6-peter.krystad@linux.intel.com>
 In-Reply-To: 20191030233844.4790-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2368
+X-UID: 2369
 
---===============5154131751113780811==
+--===============5922575947714486350==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Re-factor subflow_rebuild_header, init_req, conn_request,
-syn_recv_sock, and finish_connect to separate af-specific
-and functional parts.
+ipv6_specific and tcp_request_sock_ipv6_ops will be referenced
+during TCP subflow creation.
 
-squash unfortunately is complicated:
-subflow_v4_finish_connect: Handle MP_CAPABLE options for outgoing...
-subflow_v4_rebuild_header: Add key generation and token tree
-subflow_v4_conn_request,
-subflow_v4_syn_recv_sock,
-subflow_v4_init_req: Create SUBFLOW socket for incoming connections
+squashto: tcp: Export TCP functions and ops
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/subflow.c | 76 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 56 insertions(+), 20 deletions(-)
+ include/net/tcp.h    | 3 +++
+ net/ipv6/tcp_ipv6.c  | 9 +++++----
+ net/mptcp/protocol.h | 3 +++
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 13e207458e0b..758b4b36644a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -25,7 +25,7 @@ static inline void SUBFLOW_REQ_INC_STATS(struct request_s=
-ock *req,
- 	MPTCP_INC_STATS(sock_net(req_to_sk(req)), field);
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index f1a0bdb7d1b1..74840bb2a4f3 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1990,6 +1990,9 @@ struct tcp_request_sock_ops {
+ };
+ =
+
+ extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
++#if IS_ENABLED(CONFIG_IPV6)
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops;
++#endif
+ =
+
+ #ifdef CONFIG_SYN_COOKIES
+ static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
+ *ops,
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 4804b6dc5e65..50f6f21bbdb1 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -75,7 +75,7 @@ static void	tcp_v6_reqsk_send_ack(const struct sock *sk, =
+struct sk_buff *skb,
+ static int	tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb);
+ =
+
+ static const struct inet_connection_sock_af_ops ipv6_mapped;
+-static const struct inet_connection_sock_af_ops ipv6_specific;
++const struct inet_connection_sock_af_ops ipv6_specific;
+ #ifdef CONFIG_TCP_MD5SIG
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_specific;
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_mapped_specific;
+@@ -785,7 +785,7 @@ struct request_sock_ops tcp6_request_sock_ops __read_mo=
+stly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
+ };
+ =
+
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
+ 	.mss_clamp	=3D	IPV6_MIN_MTU - sizeof(struct tcphdr) -
+ 				sizeof(struct ipv6hdr),
+ #ifdef CONFIG_TCP_MD5SIG
+@@ -1111,7 +1111,8 @@ static void tcp_v6_restore_cb(struct sk_buff *skb)
+ 		sizeof(struct inet6_skb_parm));
  }
  =
 
--static struct inet_connection_sock_af_ops subflow_specific;
-+static struct inet_connection_sock_af_ops subflow_v4_specific;
+-static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct sk_=
+buff *skb,
++static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk,
++					 struct sk_buff *skb,
+ 					 struct request_sock *req,
+ 					 struct dst_entry *dst,
+ 					 struct request_sock *req_unhash,
+@@ -1739,7 +1740,7 @@ static struct timewait_sock_ops tcp6_timewait_sock_op=
+s =3D {
+ 	.twsk_destructor =3D tcp_twsk_destructor,
+ };
  =
 
- static int subflow_rebuild_header(struct sock *sk)
- {
-@@ -44,6 +44,14 @@ static int subflow_rebuild_header(struct sock *sk)
- 		} while (!subflow->local_nonce);
- 	}
+-static const struct inet_connection_sock_af_ops ipv6_specific =3D {
++const struct inet_connection_sock_af_ops ipv6_specific =3D {
+ 	.queue_xmit	   =3D inet6_csk_xmit,
+ 	.send_check	   =3D tcp_v6_send_check,
+ 	.rebuild_header	   =3D inet6_sk_rebuild_header,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 2635d68e58a0..71967bac03c0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -270,6 +270,9 @@ int mptcp_subflow_create_socket(struct sock *sk, sa_fam=
+ily_t family,
+ 				struct socket **new_sock);
  =
 
-+	return err;
-+}
-+
-+static int subflow_v4_rebuild_header(struct sock *sk)
-+{
-+	int err;
-+
-+	err =3D subflow_rebuild_header(sk);
- 	if (err)
- 		return err;
+ extern const struct inet_connection_sock_af_ops ipv4_specific;
++#if IS_ENABLED(CONFIG_IPV6)
++extern const struct inet_connection_sock_af_ops ipv6_specific;
++#endif
  =
 
-@@ -92,19 +100,14 @@ static bool subflow_token_join_request(struct request_=
-sock *req,
- 	return true;
- }
- =
-
--static void subflow_v4_init_req(struct request_sock *req,
--				const struct sock *sk_listener,
--				struct sk_buff *skb)
-+static void subflow_init_req(struct request_sock *req,
-+			     const struct sock *sk_listener,
-+			     struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
- 	struct tcp_options_received rx_opt;
- =
-
--	tcp_rsk(req)->is_mptcp =3D 1;
--	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
--
--	tcp_request_sock_ipv4_ops.init_req(req, sk_listener, skb);
--
- 	memset(&rx_opt.mptcp, 0, sizeof(rx_opt.mptcp));
- 	mptcp_get_options(skb, &rx_opt);
- =
-
-@@ -148,6 +151,17 @@ static void subflow_v4_init_req(struct request_sock *r=
-eq,
- 	}
- }
- =
-
-+static void subflow_v4_init_req(struct request_sock *req,
-+				const struct sock *sk_listener,
-+				struct sk_buff *skb)
-+{
-+	tcp_rsk(req)->is_mptcp =3D 1;
-+
-+	tcp_request_sock_ipv4_ops.init_req(req, sk_listener, skb);
-+
-+	subflow_init_req(req, sk_listener, skb);
-+}
-+
- /* validate received truncated hmac and create hmac for third ACK */
- static bool subflow_thmac_valid(struct mptcp_subflow_context *subflow)
- {
-@@ -171,8 +185,6 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- =
-
--	ipv4_specific.sk_rx_dst_set(sk, skb);
--
- 	if (!subflow->conn)
- 		return;
- =
-
-@@ -207,10 +219,18 @@ static void subflow_finish_connect(struct sock *sk, c=
-onst struct sk_buff *skb)
- 	}
- }
- =
-
-+static void subflow_v4_finish_connect(struct sock *sk,
-+				      const struct sk_buff *skb)
-+{
-+	ipv4_specific.sk_rx_dst_set(sk, skb);
-+
-+	subflow_finish_connect(sk, skb);
-+}
-+
- static struct request_sock_ops subflow_request_sock_ops;
- static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops;
- =
-
--static int subflow_conn_request(struct sock *sk, struct sk_buff *skb)
-+static int subflow_v4_conn_request(struct sock *sk, struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- =
-
-@@ -259,7 +279,8 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 					  struct request_sock *req,
- 					  struct dst_entry *dst,
- 					  struct request_sock *req_unhash,
--					  bool *own_req)
-+					  bool *own_req,
-+					  const struct inet_connection_sock_af_ops *af_ops)
- {
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_subflow_request_sock *subflow_req;
-@@ -278,7 +299,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 			return NULL;
- 	}
- =
-
--	child =3D ipv4_specific.syn_recv_sock(sk, skb, req, dst, req_unhash,
-+	child =3D af_ops->syn_recv_sock(sk, skb, req, dst, req_unhash,
- 					    own_req);
- =
-
- 	if (child && *own_req) {
-@@ -312,6 +333,21 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- 	return NULL;
- }
- =
-
-+static struct sock *subflow_v4_syn_recv_sock(const struct sock *sk,
-+					     struct sk_buff *skb,
-+					     struct request_sock *req,
-+					     struct dst_entry *dst,
-+					     struct request_sock *req_unhash,
-+					     bool *own_req)
-+{
-+	struct sock *child;
-+
-+	child =3D subflow_syn_recv_sock(sk, skb, req, dst, req_unhash, own_req,
-+				      &ipv4_specific);
-+
-+	return child;
-+}
-+
- enum mapping_status {
- 	MAPPING_OK,
- 	MAPPING_INVALID,
-@@ -770,7 +806,7 @@ static int subflow_ulp_init(struct sock *sk)
- 	pr_debug("subflow=3D%p", ctx);
- =
-
- 	tp->is_mptcp =3D 1;
--	icsk->icsk_af_ops =3D &subflow_specific;
-+	icsk->icsk_af_ops =3D &subflow_v4_specific;
- 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
- 	sk->sk_data_ready =3D subflow_data_ready;
- 	sk->sk_write_space =3D subflow_write_space;
-@@ -862,11 +898,11 @@ void mptcp_subflow_init(void)
- 	subflow_request_sock_ipv4_ops =3D tcp_request_sock_ipv4_ops;
- 	subflow_request_sock_ipv4_ops.init_req =3D subflow_v4_init_req;
- =
-
--	subflow_specific =3D ipv4_specific;
--	subflow_specific.conn_request =3D subflow_conn_request;
--	subflow_specific.syn_recv_sock =3D subflow_syn_recv_sock;
--	subflow_specific.sk_rx_dst_set =3D subflow_finish_connect;
--	subflow_specific.rebuild_header =3D subflow_rebuild_header;
-+	subflow_v4_specific =3D ipv4_specific;
-+	subflow_v4_specific.conn_request =3D subflow_v4_conn_request;
-+	subflow_v4_specific.syn_recv_sock =3D subflow_v4_syn_recv_sock;
-+	subflow_v4_specific.sk_rx_dst_set =3D subflow_v4_finish_connect;
-+	subflow_v4_specific.rebuild_header =3D subflow_v4_rebuild_header;
- =
-
- 	mptcp_diag_subflow_init(&subflow_ulp_ops);
+ void mptcp_proto_init(void);
  =
 
 -- =
 
 2.17.2
 
---===============5154131751113780811==--
+--===============5922575947714486350==--
