@@ -1,50 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============8796469030611067610=="
+Content-Type: multipart/mixed; boundary="===============5709107661815914572=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 24th of October 2019
-Date: Wed, 30 Oct 2019 15:18:50 +0100
-Message-ID: <ae52d435a4f266c6eb458dfdeac511db4af9073e.camel@redhat.com>
-In-Reply-To: a5596c73-8153-cc96-ed4e-c997201b2b20@tessares.net
+Subject: [MPTCP] Re: [PATCH v2 2/2] mptcp: sendmsg: transmit on backup if
+ other subflows have been closed
+Date: Wed, 30 Oct 2019 16:14:03 +0100
+Message-ID: <6a4d6f0bef7b05292e77ec1b7998837cc988c793.camel@redhat.com>
+In-Reply-To: 20191030140357.11880-3-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2355
+X-UID: 2356
 
---===============8796469030611067610==
+--===============5709107661815914572==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-10-25 at 17:20 +0200, Matthieu Baerts wrote:
-> On 25/10/2019 09:53, Matthieu Baerts wrote:
-> >      - MPTCP v1 support =E2=86=92 part 2:
-> >          - Paolo started to look at the RFC to support Christoph
-> >          - Christoph will be the submitter of the patch
-> >          - *Matth*: publish a branch with mptcp.org + MPTCPv1
-> =
+Hi,
 
-> I didn't have a lot of time to look at it but you can find mptcp.org =
+On Wed, 2019-10-30 at 15:03 +0100, Florian Westphal wrote:
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d15d64d16136..2b847e079619 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -344,6 +344,38 @@ static int mptcp_sendmsg_frag(struct sock *sk, struc=
+t sock *ssk,
+>  	return ret;
+>  }
+>  =
 
-> kernel with Christoph patches (and a small fix) to support MPTCPv1 on my =
+> +static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *backup =3D NULL;
+> +
+> +	sock_owned_by_me((const struct sock *)msk);
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk =3D mptcp_subflow_tcp_socket(subflow)->sk;
+> +
+> +		if (!sk_stream_is_writeable(ssk)) {
+> +			struct socket *sock =3D ssk->sk_socket;
+> +
+> +			if (sock)
+> +				set_bit(SOCK_NOSPACE, &sock->flags);
 
-> Github account:
-> =
+Out of sheer ignorance, why is this required? I thought setting NOSPACE
+was required only before waiting for memory.
 
->      https://github.com/matttbe/mptcp_net-next/tree/mptcp_v0.95_mptcp_v1
->      https://github.com/matttbe/mptcp_net-next/tree/mptcp_trunk_mptcp_v1
-> =
+[...]
+> @@ -366,23 +398,36 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len)
+>  		return ret;
+>  	}
+>  =
 
-> I would recommend to use the branch based on mptcp_v0.95 (last upstream =
+> -	ssk =3D mptcp_subflow_get(msk);
+> -	if (!ssk) {
+> -		release_sock(sk);
+> -		return -ENOTCONN;
+> -	}
+> -
+> -	if (!msg_data_left(msg)) {
+> +	if (unlikely(!msg_data_left(msg))) {
+> +		ssk =3D mptcp_subflow_get(msk);
+>  		pr_debug("empty send");
+>  		ret =3D sock_sendmsg(ssk->sk_socket, msg);
+>  		goto out;
+>  	}
+>  =
 
-> LTS, v4.19.55).
+> +	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+> +
+> +	smp_mb__before_atomic();
+> +	clear_bit(MPTCP_SEND_SPACE, &msk->flags);
+> +	smp_mb__after_atomic();
 
-Looking at the code, it seams to me the abve does not implement/use
-sha256, but it still relies on sha1 hmac.
+Perhaps the above lines could be moved just before the
+sk_stream_wait_memory() call below?
 
-Is the above expected? or are some patches missing?
+Cheers,
 
-Thanks,
+Paolo
 
-Paolo=20
-
---===============8796469030611067610==--
+--===============5709107661815914572==--
