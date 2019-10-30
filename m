@@ -1,151 +1,214 @@
-Content-Type: multipart/mixed; boundary="===============1029887652388721013=="
+Content-Type: multipart/mixed; boundary="===============1878107344305640088=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/6] mptcp: Re-factor create socket/subflow routines
- to be af-agnostic
-Date: Wed, 30 Oct 2019 16:38:40 -0700
-Message-ID: <20191030233844.4790-3-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH 3/6] mptcp: Re-factor mptcp_stream_ops routines to be
+ af-agnostic
+Date: Wed, 30 Oct 2019 16:38:41 -0700
+Message-ID: <20191030233844.4790-4-peter.krystad@linux.intel.com>
 In-Reply-To: 20191030233844.4790-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2366
+X-UID: 2367
 
---===============1029887652388721013==
+--===============1878107344305640088==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Re-factor mptcp_subflow_create_socket() and
-mptcp_socket_create_get() to work for both IPv4 and IPv6.
+Split mptcp_bind/getname/listen into two parts: af-specific
+part and functional part.
 
-squashto: Associate MPTCP context with TCP socket
+squashto: Associate MPTCP context with TCP socket (mptcp_bind)
+and Create SUBFLOW socket for incoming connections (rest)
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 11 ++++++-----
- net/mptcp/protocol.h |  3 ++-
- net/mptcp/subflow.c  |  7 ++++---
- 3 files changed, 12 insertions(+), 9 deletions(-)
+ net/mptcp/protocol.c | 84 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 56 insertions(+), 28 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3af5f121af9e..ee108e246dcf 100644
+index ee108e246dcf..9659afc9b444 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1072,7 +1072,8 @@ static struct proto mptcp_prot =3D {
- 	.no_autobind	=3D 1,
- };
+@@ -1104,24 +1104,32 @@ static struct socket *mptcp_socket_create_get(struc=
+t mptcp_sock *msk,
+ 	return ssock;
+ }
  =
 
--static struct socket *mptcp_socket_create_get(struct mptcp_sock *msk)
-+static struct socket *mptcp_socket_create_get(struct mptcp_sock *msk,
-+					      sa_family_t family)
+-static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int add=
+r_len)
++static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int add=
+r_len,
++		      sa_family_t family, const struct proto_ops *ops)
  {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk =3D (struct sock *)msk;
-@@ -1084,7 +1085,7 @@ static struct socket *mptcp_socket_create_get(struct =
-mptcp_sock *msk)
- 	if (ssock)
- 		goto release;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+ 	struct socket *ssock;
+-	int err =3D -ENOTSUPP;
+-
+-	if (uaddr->sa_family !=3D AF_INET) // @@ allow only IPv4 for now
+-		return err;
++	int err;
  =
 
--	err =3D mptcp_subflow_create_socket(sk, &ssock);
-+	err =3D mptcp_subflow_create_socket(sk, family, &ssock);
- 	if (err) {
- 		ssock =3D ERR_PTR(err);
- 		goto release;
-@@ -1112,7 +1113,7 @@ static int mptcp_bind(struct socket *sock, struct soc=
-kaddr *uaddr, int addr_len)
- 	if (uaddr->sa_family !=3D AF_INET) // @@ allow only IPv4 for now
- 		return err;
- =
-
--	ssock =3D mptcp_socket_create_get(msk);
-+	ssock =3D mptcp_socket_create_get(msk, AF_INET);
+-	ssock =3D mptcp_socket_create_get(msk, AF_INET);
++	ssock =3D mptcp_socket_create_get(msk, family);
  	if (IS_ERR(ssock))
  		return PTR_ERR(ssock);
  =
 
-@@ -1131,7 +1132,7 @@ static int mptcp_stream_connect(struct socket *sock, =
-struct sockaddr *uaddr,
- 	if (uaddr->sa_family !=3D AF_INET) // @@ allow only IPv4 for now
- 		return err;
+-	err =3D inet_bind(ssock, uaddr, addr_len);
++	err =3D ops->bind(ssock, uaddr, addr_len);
+ 	sock_put(ssock->sk);
+ 	return err;
+ }
  =
 
--	ssock =3D mptcp_socket_create_get(msk);
-+	ssock =3D mptcp_socket_create_get(msk, AF_INET);
- 	if (IS_ERR(ssock))
- 		return PTR_ERR(ssock);
++static int mptcp_v4_bind(struct socket *sock, struct sockaddr *uaddr,
++			 int addr_len)
++{
++	int err;
++
++	err =3D mptcp_bind(sock, uaddr, addr_len, AF_INET, &inet_stream_ops);
++
++	return err;
++}
++
+ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uadd=
+r,
+ 				int addr_len, int flags)
+ {
+@@ -1142,31 +1150,19 @@ static int mptcp_stream_connect(struct socket *sock=
+, struct sockaddr *uaddr,
+ }
  =
 
-@@ -1193,7 +1194,7 @@ static int mptcp_listen(struct socket *sock, int back=
-log)
+ static int mptcp_getname(struct socket *sock, struct sockaddr *uaddr,
+-			 int peer)
++			 int peer, const struct proto_ops *ops)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+ 	struct socket *ssock;
+ 	struct sock *ssk;
+ 	int ret;
+ =
+
+-	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
+-		/* we are being invoked from __sys_accept4, after
+-		 * mptcp_accept() has just accepted a non-mp-capable
+-		 * flow: sk is a tcp_sk, not an mptcp one.
+-		 *
+-		 * Hand the socket over to tcp so all further socket ops
+-		 * bypass mptcp.
+-		 */
+-		sock->ops =3D &inet_stream_ops;
+-		return inet_getname(sock, uaddr, peer);
+-	}
+-
+ 	lock_sock(sock->sk);
+ 	ssock =3D __mptcp_fallback_get_ref(msk);
+ 	if (ssock) {
+ 		release_sock(sock->sk);
+ 		pr_debug("subflow=3D%p", ssock->sk);
+-		ret =3D inet_getname(ssock, uaddr, peer);
++		ret =3D ops->getname(ssock, uaddr, peer);
+ 		sock_put(ssock->sk);
+ 		return ret;
+ 	}
+@@ -1181,12 +1177,35 @@ static int mptcp_getname(struct socket *sock, struc=
+t sockaddr *uaddr,
+ 		return -ENOTCONN;
+ 	}
+ =
+
+-	ret =3D inet_getname(ssk->sk_socket, uaddr, peer);
++	ret =3D ops->getname(ssk->sk_socket, uaddr, peer);
+ 	release_sock(sock->sk);
+ 	return ret;
+ }
+ =
+
+-static int mptcp_listen(struct socket *sock, int backlog)
++static int mptcp_v4_getname(struct socket *sock, struct sockaddr *uaddr,
++			    int peer)
++{
++	int ret;
++
++	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
++		/* we are being invoked from __sys_accept4 after
++		 * mptcp_accept() has accepted a non-mp-capable
++		 * subflow: sk is a tcp_sk, not mptcp.
++		 *
++		 * Hand the socket over to tcp so all further
++		 * socket ops bypass mptcp.
++		 */
++		sock->ops =3D &inet_stream_ops;
++		return sock->ops->getname(sock, uaddr, peer);
++	}
++
++	ret =3D mptcp_getname(sock, uaddr, peer, &inet_stream_ops);
++
++	return ret;
++}
++
++static int mptcp_listen(struct socket *sock, int backlog, sa_family_t fami=
+ly,
++			const struct proto_ops *ops)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+ 	struct socket *ssock;
+@@ -1194,15 +1213,24 @@ static int mptcp_listen(struct socket *sock, int ba=
+cklog)
  =
 
  	pr_debug("msk=3D%p", msk);
  =
 
--	ssock =3D mptcp_socket_create_get(msk);
-+	ssock =3D mptcp_socket_create_get(msk, AF_INET);
+-	ssock =3D mptcp_socket_create_get(msk, AF_INET);
++	ssock =3D mptcp_socket_create_get(msk, family);
  	if (IS_ERR(ssock))
  		return PTR_ERR(ssock);
  =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 8fe5f9383d38..2635d68e58a0 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -266,7 +266,8 @@ bool mptcp_subflow_data_available(struct sock *sk);
- void mptcp_subflow_init(void);
- int mptcp_subflow_connect(struct sock *sk, struct sockaddr *local,
- 			  struct sockaddr *remote, u8 remote_id);
--int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
-+int mptcp_subflow_create_socket(struct sock *sk, sa_family_t family,
-+				struct socket **new_sock);
- =
-
- extern const struct inet_connection_sock_af_ops ipv4_specific;
- =
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e6bb68e1c292..13e207458e0b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -632,7 +632,7 @@ int mptcp_subflow_connect(struct sock *sk, struct socka=
-ddr *local,
- 	int err;
- =
-
- 	lock_sock(sk);
--	err =3D mptcp_subflow_create_socket(sk, &sf);
-+	err =3D mptcp_subflow_create_socket(sk, local->sa_family, &sf);
- 	if (err) {
- 		release_sock(sk);
- 		return err;
-@@ -675,14 +675,15 @@ int mptcp_subflow_connect(struct sock *sk, struct soc=
-kaddr *local,
+-	err =3D inet_listen(ssock, backlog);
++	err =3D ops->listen(ssock, backlog);
+ 	sock_put(ssock->sk);
  	return err;
  }
  =
 
--int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
-+int mptcp_subflow_create_socket(struct sock *sk, sa_family_t family,
-+				struct socket **new_sock)
++static int mptcp_v4_listen(struct socket *sock, int backlog)
++{
++	int ret;
++
++	ret =3D mptcp_listen(sock, backlog, AF_INET, &inet_stream_ops);
++
++	return ret;
++}
++
+ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 			       int flags, bool kern)
  {
- 	struct mptcp_subflow_context *subflow;
- 	struct net *net =3D sock_net(sk);
- 	struct socket *sf;
- 	int err;
+@@ -1298,12 +1326,12 @@ void mptcp_proto_init(void)
+ {
+ 	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
+ 	mptcp_stream_ops =3D inet_stream_ops;
+-	mptcp_stream_ops.bind =3D mptcp_bind;
++	mptcp_stream_ops.bind =3D mptcp_v4_bind;
+ 	mptcp_stream_ops.connect =3D mptcp_stream_connect;
+ 	mptcp_stream_ops.poll =3D mptcp_poll;
+ 	mptcp_stream_ops.accept =3D mptcp_stream_accept;
+-	mptcp_stream_ops.getname =3D mptcp_getname;
+-	mptcp_stream_ops.listen =3D mptcp_listen;
++	mptcp_stream_ops.getname =3D mptcp_v4_getname;
++	mptcp_stream_ops.listen =3D mptcp_v4_listen;
+ 	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
  =
 
--	err =3D sock_create_kern(net, PF_INET, SOCK_STREAM, IPPROTO_TCP, &sf);
-+	err =3D sock_create_kern(net, family, SOCK_STREAM, IPPROTO_TCP, &sf);
- 	if (err)
- 		return err;
- =
-
+ 	if (percpu_counter_init(&mptcp_sockets_allocated, 0, GFP_KERNEL))
 -- =
 
 2.17.2
 
---===============1029887652388721013==--
+--===============1878107344305640088==--
