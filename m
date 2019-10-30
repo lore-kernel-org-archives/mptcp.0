@@ -1,61 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============2744267960345300606=="
+Content-Type: multipart/mixed; boundary="===============0467316538498756159=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/2] mptcp: add primitive scheduler
-Date: Wed, 30 Oct 2019 15:03:55 +0100
-Message-ID: <20191030140357.11880-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 1/2] mptcp: add and use mptcp_subflow_get_retrans
+Date: Wed, 30 Oct 2019 15:03:56 +0100
+Message-ID: <20191030140357.11880-2-fw@strlen.de>
+In-Reply-To: 20191030140357.11880-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2352
+X-UID: 2353
 
---===============2744267960345300606==
+--===============0467316538498756159==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is a simplified version of a sendmsg ssk selection strategy,
-so sendmsg or retransmit could also occur on a backup subflow.
+Instead of having retransmit worker grab first subflow on the list,
+make it always return NULL, unless either the first non-backup subflow
+on the list is idle or all normal subflows have already been removed.
 
-In the initial submission it was pointed out that we should not
-send more data when a retransmission is happening.
+In the latter case, the first idle backup subflow is used.
 
-As this isn't directly related to this I've decided to send those two
-patches now and work on sendmsg moderation next.
+Rationale is that it makes no sense to attempt to retransmit
+at mptcp level if there is still unsent data in its write queue.
 
-The plan is to add wmem_queued accounting to the mptcp socket and
-then make sendmsg/mptcp_poll consider mptcp socket wmem limits to
-avoid sending more data if there are no mptcp-level acknowledgements.
+V2: always return NULL when first non-idle ssk is seen.
 
-This however might take some time because msk->ack_seq update occurs only
-at recvmsg time and not during mptcp ack processing.
-For this to work properly, mptcp-level ack update should not depend on
-a recvmsg call.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
-The following changes since commit dcb69525165804b78e07ed7875d33463a3fde7c8:
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c2b29f8d0377..d15d64d16136 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -626,6 +626,37 @@ static void mptcp_retransmit_timer(struct timer_list *=
+t)
+ 	sock_put(sk);
+ }
+ =
 
-  subflow: wake parent mptcp socket on subflow state change (2019-10-30 02:=
-24:34 +0000)
++/* Find an idle subflow.  Return NULL if there is unacked data at tcp
++ * level.
++ *
++ * A backup subflow is returned only if thats the only kind available.
++ */
++static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *backup =3D NULL;
++
++	sock_owned_by_me((const struct sock *)msk);
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk =3D mptcp_subflow_tcp_socket(subflow)->sk;
++
++		/* still data outstanding at TCP level?  Don't retransmit. */
++		if (!tcp_write_queue_empty(ssk))
++			return NULL;
++
++		if (subflow->backup) {
++			if (!backup)
++				backup =3D ssk;
++			continue;
++		}
++
++		return ssk;
++	}
++
++	return backup;
++}
++
+ static void mptcp_retransmit(struct work_struct *work)
+ {
+ 	int orig_len, orig_offset, ret, mss_now =3D 0, size_goal =3D 0;
+@@ -646,7 +677,7 @@ static void mptcp_retransmit(struct work_struct *work)
+ 	if (!dfrag)
+ 		goto unlock;
+ =
 
-are available in the Git repository at:
+-	ssk =3D mptcp_subflow_get(msk);
++	ssk =3D mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+ 		goto reset_unlock;
+ =
 
-  git://git.breakpoint.cc/fw/mptcp-next.git sendmsg_refactor_19
+-- =
 
-for you to fetch changes up to a1cb9992e1f55156914dc0e6727f92463fb96938:
+2.23.0
 
-  mptcp: sendmsg: transmit on backup if other subflows have been closed (20=
-19-10-30 14:42:48 +0100)
-
-----------------------------------------------------------------
-Florian Westphal (2):
-      mptcp: add and use mptcp_subflow_get_retrans
-      mptcp: sendmsg: transmit on backup if other subflows have been closed
-
- net/mptcp/protocol.c | 102 ++++++++++++++++++++++++++++++++++++++++++++++-=
-----
- net/mptcp/protocol.h |   1 +
- net/mptcp/subflow.c  |   7 +++-
- 3 files changed, 100 insertions(+), 10 deletions(-)
-
-
---===============2744267960345300606==--
+--===============0467316538498756159==--
