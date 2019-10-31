@@ -1,38 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============3316831110622986616=="
+Content-Type: multipart/mixed; boundary="===============3897850420642080373=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] self-tests: catch poll errors
-Date: Thu, 31 Oct 2019 16:53:27 +0100
-Message-ID: <3fe85210-f7f1-4291-507c-4436cec2817e@tessares.net>
-In-Reply-To: 20191030160750.GF876@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH 0/2] Small improvement in kselftests
+Date: Thu, 31 Oct 2019 16:53:32 +0100
+Message-ID: <895d6f94-33ab-fd86-43f8-1c081e7e0ce7@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1910281122100.5208@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 2376
+X-UID: 2377
 
---===============3316831110622986616==
+--===============3897850420642080373==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Florian,
+Hi Mat,
 
-On 30/10/2019 17:07, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
->> Otherwise in case of a poll error, we end-up looping forever.
->>
->> Squash-to: "mptcp: add basic kselftest for mptcp"
+On 28/10/2019 19:23, Mat Martineau wrote:
 > =
 
-> Looks good, thanks Paolo.
+> On Sat, 26 Oct 2019, Matthieu Baerts wrote:
+> =
 
-Thank you for the patch and the review, just applied:
+>> Just to improve a bit what is displayed, nothing important but this is =
 
-- 166eae7a8b48: "squashed" in "mptcp: add basic kselftest for mptcp"
+>> tested
+>> with the last version, variables names have not changed :)
+>>
+>> Matthieu Baerts (2):
+>> =C2=A0selftests: mptcp: track duration in ms
+>> =C2=A0selftests: mptcp: fix alignment 2 first tests
+>>
+>> tools/testing/selftests/net/mptcp/mptcp_connect.sh | 12 ++++++------
+>> 1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+> =
+
+> I like the formatting tweaks, patches look good.
+
+Thank you for the review:
+
+- 10af3650daf3: "squashed" patch 1/2 in "mptcp: add basic kselftest for =
+
+mptcp"
+- e797ffe3c22e: "squashed" patch 2/2 in "mptcp: add basic kselftest for =
+
+mptcp"
 - already has signed-off
-- 7e53f6ec6dd0..663eb10b8a4f: result
+- 663eb10b8a4f..46bbb9476623: result
 
-Cheers
+Cheers,
 Matt
 -- =
 
@@ -41,4 +59,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3316831110622986616==--
+--===============3897850420642080373==--
