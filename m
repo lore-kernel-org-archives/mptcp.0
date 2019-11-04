@@ -1,67 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============9045673716977170272=="
+Content-Type: multipart/mixed; boundary="===============7238252689445265107=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Patchwork: "maintainer status"
-Date: Mon, 04 Nov 2019 14:56:34 +0100
-Message-ID: <5bfcd32d-9213-0bb9-3117-d3bd67d1e143@tessares.net>
-In-Reply-To: b9eff5ae-88ed-8759-f08c-ed6e7499917d@tessares.net
+Subject: [MPTCP] [PATCH] mptcp: fix stray wake-up event
+Date: Mon, 04 Nov 2019 17:48:57 +0100
+Message-ID: <26c4e00e82eae25d5497a24e8712b64f52cb3bbc.1572886095.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2384
+X-UID: 2385
 
---===============9045673716977170272==
+--===============7238252689445265107==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+We always need to set subflow->data_avail after each tcp_read_sock()
+or mptcp_subflow_recv_lookup() may pick the wrong sock.
 
-On 21/10/2019 15:13, Matthieu Baerts wrote:
-> I contacted Patchwork maintainers and it seems they are OK to add MPTCP =
+Squash-to: "mptcp: recvmsg() can drain data from multiple subflows"
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 18 +++++++++---------
+ net/mptcp/subflow.c  |  1 +
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
-> to the list of projects.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3af5f121af9e..696f1d03a61d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -473,6 +473,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 	read_descriptor_t desc;
+ 	struct socket *ssock;
+ 	struct tcp_sock *tp;
++	bool done =3D false;
+ 	struct sock *ssk;
+ 	int copied =3D 0;
+ 	int target;
+@@ -498,7 +499,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 	len =3D min_t(size_t, len, INT_MAX);
+ 	target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
+ =
 
-Thanks to Jeremy from ozlabs.org, a new project has been created for us!
+-	while (copied < len) {
++	while (!done) {
+ 		u32 map_remaining;
+ 		int bytes_read;
+ =
 
-   https://patchwork.ozlabs.org/project/mptcp/
+@@ -515,7 +516,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 		tp =3D tcp_sk(ssk);
+ =
 
-In theory, everything is setup, we should see all new patches listed there:
+ 		lock_sock(ssk);
+-		while (mptcp_subflow_data_available(ssk)) {
++		while (mptcp_subflow_data_available(ssk) && !done) {
+ 			/* try to read as much data as available */
+ 			map_remaining =3D subflow->map_data_len -
+ 					mptcp_subflow_get_map_offset(subflow);
+@@ -526,8 +527,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 			if (bytes_read < 0) {
+ 				if (!copied)
+ 					copied =3D bytes_read;
+-				release_sock(ssk);
+-				goto out;
++				done =3D true;
++				continue;
+ 			}
+ =
 
-   https://patchwork.ozlabs.org/project/mptcp/list/
+ 			pr_debug("msk ack_seq=3D%llx -> %llx", msk->ack_seq,
+@@ -535,13 +536,13 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ 			msk->ack_seq +=3D bytes_read;
+ 			copied +=3D bytes_read;
+ 			if (copied >=3D len) {
+-				release_sock(ssk);
+-				goto out;
++				done =3D true;
++				continue;
+ 			}
+ 			if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
+ 				pr_err("Urgent data present, cannot proceed");
+-				release_sock(ssk);
+-				goto out;
++				done =3D true;
++				continue;
+ 			}
+ 		}
+ 		release_sock(ssk);
+@@ -590,7 +591,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 		mptcp_wait_data(sk, &timeo);
+ 	}
+ =
 
-Everybody who answered to my previous message have been added to the =
+-out:
+ 	release_sock(sk);
+ 	return copied;
+ }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 7bae7c35ea6b..f08c4b713978 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -576,6 +576,7 @@ bool mptcp_subflow_data_available(struct sock *sk)
+ 	}
+ =
 
-maintainer list.
-
-@Peter: It seems your email address is the @intel.com one. I guess it =
-
-should be the @linux.intel.com one. Do not hesitate to contact Jeremy =
-
-Kerr <jk(a)ozlabs.org> if there is an issue. Feel free to add me in cc if =
-
-needed ;-)
-
-Jeremy also asked me to forward this to the maintainers:
-
- > We have some tools that allow you to interact with patchwork from the
- > command-line (or automate through your preferred workflow). Check out
- > the git-pw, pwclient and pwnm-sync tools, at:
- >
- >      https://patchwork.readthedocs.io/en/latest/usage/clients/
- >
- > Please let your other maintainers know about that too. Keep me posted
- > if you need anything else set up for your patchwork instance.
-
-Happy patchworking!
-
-Cheers,
-Matt
+ 	if (!subflow_check_data_avail(sk)) {
++		subflow->data_avail =3D 0;
+ 		/* set EoF only there is no data available - we already spooled
+ 		 * all the pending skbs
+ 		 */
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============9045673716977170272==--
+2.21.0
+
+--===============7238252689445265107==--
