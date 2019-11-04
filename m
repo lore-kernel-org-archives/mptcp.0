@@ -1,65 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============7988572845384258833=="
+Content-Type: multipart/mixed; boundary="===============9045673716977170272=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: stray code chunks in current export branch
-Date: Thu, 31 Oct 2019 18:26:13 +0100
-Message-ID: <8668305d-e56e-60e4-abc7-1127a8b74059@tessares.net>
-In-Reply-To: 259f95245ea4bb1edcf6f2da46611d63839c74c3.camel@redhat.com
+Subject: [MPTCP] Re: Patchwork: "maintainer status"
+Date: Mon, 04 Nov 2019 14:56:34 +0100
+Message-ID: <5bfcd32d-9213-0bb9-3117-d3bd67d1e143@tessares.net>
+In-Reply-To: b9eff5ae-88ed-8759-f08c-ed6e7499917d@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2383
+X-UID: 2384
 
---===============7988572845384258833==
+--===============9045673716977170272==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi,
 
-On 31/10/2019 17:55, Paolo Abeni wrote:
-> Hi,
-> =
+On 21/10/2019 15:13, Matthieu Baerts wrote:
+> I contacted Patchwork maintainers and it seems they are OK to add MPTCP =
 
-> as per last mtg discussion, patch "mptcp: Write MPTCP DSS headers to
-> outgoing data packets", includes:
-> =
+> to the list of projects.
 
-> @@ -208,6 +303,14 @@ static struct sock *mptcp_accept(struct sock *sk, in=
-t flags, int *err,
->   =
+Thanks to Jeremy from ozlabs.org, a new project has been created for us!
 
->                  mptcp_token_update_accept(new_sock->sk, new_mptcp_sock);
->                  msk->subflow =3D NULL;
-> +
-> +               mptcp_crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
-> +               msk->write_seq =3D subflow->idsn + 1;
-> +               ack_seq++;
-> +               msk->ack_seq =3D ack_seq;
-> +               msk->remote_key =3D subflow->remote_key;
-> +               msk->ack_seq++;
-> =
+   https://patchwork.ozlabs.org/project/mptcp/
 
-> 'remote_key' is set a few lines above, and the 2nd ack_seq increment is
-> wrong, we just incr it once.
+In theory, everything is setup, we should see all new patches listed there:
 
-Good catch!
+   https://patchwork.ozlabs.org/project/mptcp/list/
 
-> The 2 bottom lines are deleted by "mptcp: Implement MPTCP receive
-> path". We should avoid inserting them at all. @Matt, can you do that
-> with git surgery, or do you prefer a patch?
+Everybody who answered to my previous message have been added to the =
 
-Thank you for this email!
+maintainer list.
 
-I just did the fix:
+@Peter: It seems your email address is the @intel.com one. I guess it =
 
-- a40c05d7dc64: squashed in "mptcp: Write MPTCP DSS headers to outgoing =
+should be the @linux.intel.com one. Do not hesitate to contact Jeremy =
 
-data packets"
-- 0530ee00fb46: conflict in t/mptcp-Implement-MPTCP-receive-path
-- 3a4c8696fb26..0a282f50587a: no diff
+Kerr <jk(a)ozlabs.org> if there is an issue. Feel free to add me in cc if =
 
-Tests are in progress.
+needed ;-)
+
+Jeremy also asked me to forward this to the maintainers:
+
+ > We have some tools that allow you to interact with patchwork from the
+ > command-line (or automate through your preferred workflow). Check out
+ > the git-pw, pwclient and pwnm-sync tools, at:
+ >
+ >      https://patchwork.readthedocs.io/en/latest/usage/clients/
+ >
+ > Please let your other maintainers know about that too. Keep me posted
+ > if you need anything else set up for your patchwork instance.
+
+Happy patchworking!
 
 Cheers,
 Matt
@@ -70,4 +64,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7988572845384258833==--
+--===============9045673716977170272==--
