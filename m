@@ -1,87 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============6611169150709087079=="
+Content-Type: multipart/mixed; boundary="===============3829666335857413920=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/6] IPv6 support
-Date: Mon, 04 Nov 2019 16:52:15 -0800
-Message-ID: <202dae18a2f0e594d468772c874107fac0ddccdd.camel@linux.intel.com>
-In-Reply-To: 89ee912f38069b1a757de76b71fcf5f8a8eb6caa.camel@redhat.com
+Subject: [MPTCP] [PATCH] mptcp: Use sk_family field in the mptcp_sock for
+ address family.
+Date: Mon, 04 Nov 2019 21:26:24 -0800
+Message-ID: <20191105052624.3269-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2387
+X-UID: 2388
 
---===============6611169150709087079==
+--===============3829666335857413920==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+It was not necessary to add a family field to mptcp_sock as it is
+a wrapper around a struct sock, and sk_family is set correctly when
+the msk is created as a result of a socket() call.
 
-Hi Paolo -
+squashto: Associate MPTCP context with TCP socket
+          mptcp: Implement basic path manager
 
-On Thu, 2019-10-31 at 10:02 +0100, Paolo Abeni wrote:
-> On Wed, 2019-10-30 at 16:38 -0700, Peter Krystad wrote:
-> > Implemented support for IPv6. selftests pass with ipv6=3Dtrue, =
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/basic.c    | 5 +++--
+ net/mptcp/protocol.c | 1 -
+ net/mptcp/protocol.h | 1 -
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-> =
-
-> Nice! =
-
-> =
-
-> > but they take twice as long to run...
-> =
-
-> Yep, that is expected, right? ;)
-
-Right.
-
-> =
-
-> > With re-factoring the addition of IPv6 is very clean but I did not
-> > split files yet as it will be hard to squash any changes after the
-> > such a split.
-> =
-
-> We still need the Kconfig boilerplate, right? something alike:
->
-> ---
-> diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-> index f21190a4f7e9..3fa6d91f57ee 100644
-> --- a/net/mptcp/Kconfig
-> +++ b/net/mptcp/Kconfig
-> @@ -9,3 +9,8 @@ config MPTCP
->           uses the TCP protocol, and TCP options carry header
-> information for
->           MPTCP.
->  =
-
-> +config MPTCP_IPV6
-> +       bool "IPv6 support form Multipath TCP"
-> +       depends on MPTCP
-> +       select IPV6
-> +       default y
-> ---
-> =
-
-> and than replace IS_ENABLED(IPV6) with CONFIG_MPTCP_IPV6.
-
-Indeed we do, I will submit a patchset that does that will need to
-be merged before the v2 IPv6 patchset (coming tomorrow).
-
-> Additinal question: what happens if ipv6 is disabled at boot time
-> (ipv6.disable=3D1 on the kernel command line)?
-
-I believe the initialization in inet6_init() will not run and it will
-not be possible to create a socket in the AF_INET6 domain.
-
-Peter.
-
+diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
+index 67a93aff500e..03afb1263f3d 100644
+--- a/net/mptcp/basic.c
++++ b/net/mptcp/basic.c
+@@ -185,6 +185,7 @@ static void announce_addr_worker(struct work_struct *wo=
+rk)
+ 	struct mptcp_pm_data *pm =3D container_of(work, struct mptcp_pm_data,
+ 						addr_work);
+ 	struct mptcp_sock *msk =3D container_of(pm, struct mptcp_sock, pm);
++	struct sock *sk =3D (struct sock *)msk;
+ 	struct basic_pernet *pernet;
  =
 
-> Thanks,
-> =
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), basic_pernet_id);
+@@ -193,11 +194,11 @@ static void announce_addr_worker(struct work_struct *=
+work)
+ 	 * When the listening socket can accept connections from both
+ 	 * families this restriction may be removed.
+ 	 */
+-	if (pernet->has_announce_v4 && msk->family =3D=3D AF_INET)
++	if (pernet->has_announce_v4 && sk->sk_family =3D=3D AF_INET)
+ 		mptcp_pm_announce_addr(pm->token, 1,
+ 				       &pernet->announce_v4_addr);
+ #if IS_ENABLED(CONFIG_IPV6)
+-	else if (pernet->has_announce_v6 && msk->family =3D=3D AF_INET6)
++	else if (pernet->has_announce_v6 && sk->sk_family =3D=3D AF_INET6)
+ 		mptcp_pm_announce_addr6(pm->token, 1,
+ 					&pernet->announce_v6_addr);
+ #endif
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3af5f121af9e..c2b29f8d0377 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1091,7 +1091,6 @@ static struct socket *mptcp_socket_create_get(struct =
+mptcp_sock *msk)
+ 	}
+ =
 
-> Paolo
->=20
+ 	msk->subflow =3D ssock;
+-	msk->family =3D ssock->sk->sk_family;
+ 	subflow =3D mptcp_subflow_ctx(msk->subflow->sk);
+ 	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
+ 	subflow->request_version =3D 0; /* currently only v0 supported */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 8fe5f9383d38..791f2c19cfb8 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -133,7 +133,6 @@ struct mptcp_sock {
+ 	u32		token;
+ 	unsigned long	flags;
+ 	u16		dport;
+-	sa_family_t	family;
+ 	struct work_struct rtx_work;
+ 	struct list_head conn_list;
+ 	struct list_head rtx_queue;
+-- =
 
---===============6611169150709087079==--
+2.17.2
+
+--===============3829666335857413920==--
