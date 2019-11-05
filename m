@@ -1,56 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============1156999131285422123=="
+Content-Type: multipart/mixed; boundary="===============1207185862307585881=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] question on MP_CAPABLE v1 handshake
-Date: Tue, 05 Nov 2019 13:18:33 +0100
-Message-ID: <22911f4932b5cfcfe75a4a3f93af2305c46434c9.camel@redhat.com>
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 24th of October 2019
+Date: Tue, 05 Nov 2019 16:13:50 +0100
+Message-ID: <2b3914f0ba8ec5c217a9d0b894fe2c8916034350.camel@redhat.com>
+In-Reply-To: d07eef2e-66dc-4f0b-8c40-12700fe01cc9@localhost
 X-Status: 
 X-Keywords:                  
-X-UID: 2390
+X-UID: 2391
 
---===============1156999131285422123==
+--===============1207185862307585881==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-hi,
+On Sat, 2019-10-26 at 10:52 +0000, Matthieu Baerts wrote:
+> Hi Paolo,
+>  =
 
-while testing the v1 MP_CAPABLE handshake, I stumbled upon the
-following scenario:
+> Sat Oct 26 11:59:07 GMT+02:00 2019 Paolo Abeni :
+>  =
 
-syn + MP_CAPABLE ->
+> > On Fri, 2019-10-25 at 17:20 +0200, Matthieu Baerts wrote:
+> > =
 
-	<- syn + ack + MP_CAPABLE(sndr key)
+> > > Hi Paolo,
+> > > =
 
-ack + MP_CAPABLE(sndr key, rcvr key)
+> > > On 25/10/2019 09:53, Matthieu Baerts wrote:
+>  =
 
-	<- ack + DSS(map,data_ack)
+> [...]
+>  =
 
-At this point, is the client still supposed to send MP_CAPABLE(sndr
-key, rcvr key, data_len)? or should it send a plain DSS? Since it
-received a DSS from the peer, the client knows that the MP_CAPABLE
-options has been successfully received, but reading =
+> > > So far, I *think* the establishment of the connection is OK (SYN, =
 
+> > > SYN+ACK, ACK) but not after: it seems the first data packet has bad =
 
-https://datatracker.ietf.org/doc/draft-ietf-mptcp-rfc6824bis/?include_text=
-=3D1
+> > > options. I would need to look more to understand why.
+> > > =
 
-from section 3.1.:
+> > =
 
-"""
-   If A does not
-   immediately have data to send, it MUST include the MP_CAPABLE on the
-   third ACK, but without the additional data parameters.  When A does
-   have data to send, it must repeat the sending of the MP_CAPABLE
-   option from the third ACK, with additional data parameters.
-"""
+> > Do you see connection/test failures, or is just the wireshark dissector
+> > output? Note that wireshark can't currently correctly dissect mptcp v1
+> > MP_CAPABLE ACK option with data_len and/or checksum - it's a wireshark
+> > bug/missing feature
+>  =
 
-it looks like the client should always use MP_CAPABLE+data for the
-first data packet, is that right?
+> The transfer blocks then it fallbacks to TCP but with some errors because=
+ it doesn't finish properly.
 
-Thanks,
+I finally had time to test the .org implementation, and I also can't
+move after MP_CAPABLE, even when mptcp.org kernel is talking with .org
+peer. I see TCP reset and/or timeouts, even when both peers use v0
+protocol.
+
+I guess the 'ptcp_v0.95_mptcp_v1' branch needs some additional love ;)
 
 Paolo
 
---===============1156999131285422123==--
+--===============1207185862307585881==--
