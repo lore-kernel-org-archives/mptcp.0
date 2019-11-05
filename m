@@ -1,56 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============7222459769801395628=="
+Content-Type: multipart/mixed; boundary="===============3075454776118173911=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp 1/4] protocol.h: mptcp_subflow_get_map_offset
- arg can be const
-Date: Tue, 05 Nov 2019 18:05:28 +0100
-Message-ID: <20191105170531.30407-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp 2/4] options: ignore mptcp-level ack that is
+ ahead of write_seq
+Date: Tue, 05 Nov 2019 18:05:29 +0100
+Message-ID: <20191105170531.30407-3-fw@strlen.de>
 In-Reply-To: 20191105170531.30407-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2394
+X-UID: 2395
 
---===============7222459769801395628==
+--===============3075454776118173911==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: mptcp: Implement MPTCP receive path
+We should not allow a peer to ack data that we haven't even sent yet,
+so test incoming una vs. write_seq.
+
+squashto:  mptcp: update per unacked sequence on pkt reception
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/options.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 8fe5f9383d38..46f7becd9a45 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -248,7 +248,7 @@ mptcp_subflow_tcp_socket(const struct mptcp_subflow_con=
-text *subflow)
- }
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 1b08e1193991..80dbe7662cea 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -566,12 +566,18 @@ static void update_una(struct mptcp_sock *msk,
+ 		       struct mptcp_options_received *mp_opt)
+ {
+ 	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
++	u64 write_seq =3D READ_ONCE(msk->write_seq);
  =
 
- static inline u64
--mptcp_subflow_get_map_offset(struct mptcp_subflow_context *subflow)
-+mptcp_subflow_get_map_offset(const struct mptcp_subflow_context *subflow)
- {
- 	return tcp_sk(mptcp_subflow_tcp_socket(subflow)->sk)->copied_seq -
- 		      subflow->ssn_offset -
-@@ -256,7 +256,7 @@ mptcp_subflow_get_map_offset(struct mptcp_subflow_conte=
-xt *subflow)
- }
- =
-
- static inline u64
--mptcp_subflow_get_mapped_dsn(struct mptcp_subflow_context *subflow)
-+mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow_context *subflow)
- {
- 	return subflow->map_seq + mptcp_subflow_get_map_offset(subflow);
- }
+ 	/* avoid ack expansion on update conflict, to reduce the risk of
+ 	 * wrongly expanding to a future ack sequence number, which is way
+ 	 * more dangerous than missing an ack
+ 	 */
+ 	new_snd_una =3D expand_ack(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
++
++	/* ACK for data not even sent yet? Ignore. */
++	if (after64(new_snd_una, write_seq))
++		new_snd_una =3D old_snd_una;
++
+ 	while (after64(new_snd_una, old_snd_una)) {
+ 		snd_una =3D old_snd_una;
+ 		old_snd_una =3D atomic64_cmpxchg(&msk->snd_una, snd_una,
 -- =
 
 2.23.0
 
---===============7222459769801395628==--
+--===============3075454776118173911==--
