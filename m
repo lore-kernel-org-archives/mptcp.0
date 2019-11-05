@@ -1,83 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============5642014985716105755=="
+Content-Type: multipart/mixed; boundary="===============2495729754278909715=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 5/5] mptcp: Switch to CONFIG_MPTCP_IPV6
-Date: Tue, 05 Nov 2019 11:05:57 -0800
-Message-ID: <20191105190557.6405-5-peter.krystad@linux.intel.com>
-In-Reply-To: 20191105190557.6405-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp 3/4] protocol: use sk_wait_event helper
+Date: Tue, 05 Nov 2019 11:53:46 -0800
+Message-ID: <alpine.OSX.2.21.1911051123570.27697@cavianch-mobl1.amr.corp.intel.com>
+In-Reply-To: 4619f9f4b5a0329e388a8761f45e2b14de0f253c.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2405
+X-UID: 2406
 
---===============5642014985716105755==
+--===============2495729754278909715==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Implement Basic Path Manager
+On Tue, 5 Nov 2019, Paolo Abeni wrote:
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/basic.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> On Tue, 2019-11-05 at 18:05 +0100, Florian Westphal wrote:
+>> Avoids a bit of copy&paste code.
+>> squashto:  mptcp: recvmsg() can drain data from multiple subflows
+>>
+>> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+>> ---
+>>  net/mptcp/protocol.c | 14 ++------------
+>>  1 file changed, 2 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 3af5f121af9e..8cc9cc5675c2 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -443,22 +443,12 @@ static void mptcp_wait_data(struct sock *sk, long =
+*timeo)
+>>  {
+>>  	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+>>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>> -	int data_ready;
+>>
+>>  	add_wait_queue(sk_sleep(sk), &wait);
+>>  	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+>>
+>> -	release_sock(sk);
+>> -
+>> -	smp_mb__before_atomic();
+>> -	data_ready =3D test_and_clear_bit(MPTCP_DATA_READY, &msk->flags);
+>> -	smp_mb__after_atomic();
+>> -
+>> -	if (!data_ready)
+>> -		*timeo =3D wait_woken(&wait, TASK_INTERRUPTIBLE, *timeo);
+>> -
+>> -	sched_annotate_sleep();
+>> -	lock_sock(sk);
+>> +	sk_wait_event(sk, timeo,
+>> +		      test_and_clear_bit(MPTCP_DATA_READY, &msk->flags), &wait);
+>>
+>>  	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+>>  	remove_wait_queue(sk_sleep(sk), &wait);
+>
+> IIRC, sk_wait_event() was intentionally avoided to allow placing the
+> smp_mb__{before,after}_atomic() pair around test_and_clear_bit(), which
+> I thought was required.
+>
+> Reading again the relevant documentation:
+>
+> https://elixir.bootlin.com/linux/latest/source/Documentation/core-api/ato=
+mic_ops.rst#L485
+>
+> it looks like test_and_clear_bit() provides already the required
+> barriers (also grepping inside the kernel sources suggests that).
+>
+> So the above should be correct, I'm sorry for being cyclothymic ;)
 
-diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
-index 67a93aff500e..86e0d8862c19 100644
---- a/net/mptcp/basic.c
-+++ b/net/mptcp/basic.c
-@@ -17,7 +17,7 @@ struct basic_pernet {
- =
+I agree that the barriers can be removed.
 
- 	union {
- 		struct in_addr announce_v4_addr;
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		struct in6_addr announce_v6_addr;
- #endif
- 	};
-@@ -37,7 +37,7 @@ static int parse_addr(struct basic_pernet *pernet, const =
-char *addr)
- 		pernet->has_announce_v6 =3D 0;
- 		return 0;
- 	}
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	if (in6_pton(addr, -1, (u8 *)&pernet->announce_v6_addr.s6_addr, '\0',
- 		     NULL) > 0) {
- 		pernet->has_announce_v4 =3D 0;
-@@ -73,7 +73,7 @@ static int proc_parse_addr(struct ctl_table *ctl, int wri=
-te,
- 				 &pernet->announce_v4_addr);
- 			tbl.data =3D tmp;
- 		}
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		else if (pernet->has_announce_v6) {
- 			snprintf(tmp, INET6_ADDRSTRLEN, "%pI6c",
- 				 &pernet->announce_v6_addr);
-@@ -196,7 +196,7 @@ static void announce_addr_worker(struct work_struct *wo=
-rk)
- 	if (pernet->has_announce_v4 && msk->family =3D=3D AF_INET)
- 		mptcp_pm_announce_addr(pm->token, 1,
- 				       &pernet->announce_v4_addr);
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	else if (pernet->has_announce_v6 && msk->family =3D=3D AF_INET6)
- 		mptcp_pm_announce_addr6(pm->token, 1,
- 					&pernet->announce_v6_addr);
-@@ -221,7 +221,7 @@ static void create_subflow_worker(struct work_struct *w=
-ork)
- 			mptcp_pm_create_subflow(pm->token, pm->remote_id,
- 						NULL);
- 	}
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	else if (pm->remote_family =3D=3D AF_INET6) {
- 		if (pernet->has_announce_v6)
- 			mptcp_pm_create_subflow6(pm->token, pm->remote_id,
--- =
+sk_wait_event is a macro that evaluates its third arg twice (but we've =
 
-2.17.2
+discussed this before: =
 
---===============5642014985716105755==--
+https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/thread/7HAWM43BLQ=
+VRBNIPV5II7C2WGTARAMDR/#7S54V7TAZUXZEUXVANQZ3OETQMPQGK6J), =
+
+but in this case the second check of the flag is likely to be an =
+
+inexpensive READ_ONCE() on a hot cache line. So, the extra code was there =
+
+a reason but I'm ok with merging this for maintainability purposes.
+
+
+--
+Mat Martineau
+Intel
+--===============2495729754278909715==--
