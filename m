@@ -1,56 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============1265621998605845241=="
+Content-Type: multipart/mixed; boundary="===============8026062569828174817=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: fix stray wake-up event
-Date: Tue, 05 Nov 2019 18:39:12 +0100
-Message-ID: <d0350d7d-82c7-3f4b-1d84-aea92210508c@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1911041546340.10632@mjmartin-mac01.local
+Subject: [MPTCP] Re: [PATCH mptcp 3/4] protocol: use sk_wait_event helper
+Date: Tue, 05 Nov 2019 18:43:47 +0100
+Message-ID: <4619f9f4b5a0329e388a8761f45e2b14de0f253c.camel@redhat.com>
+In-Reply-To: 20191105170531.30407-4-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2398
+X-UID: 2399
 
---===============1265621998605845241==
+--===============8026062569828174817==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
-
-On 05/11/2019 00:49, Mat Martineau wrote:
+On Tue, 2019-11-05 at 18:05 +0100, Florian Westphal wrote:
+> Avoids a bit of copy&paste code.
+> squashto:  mptcp: recvmsg() can drain data from multiple subflows
 > =
 
-> Hi Paolo -
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  net/mptcp/protocol.c | 14 ++------------
+>  1 file changed, 2 insertions(+), 12 deletions(-)
 > =
 
-> On Mon, 4 Nov 2019, Paolo Abeni wrote:
-> =
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3af5f121af9e..8cc9cc5675c2 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -443,22 +443,12 @@ static void mptcp_wait_data(struct sock *sk, long *=
+timeo)
+>  {
+>  	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> -	int data_ready;
+>  =
 
->> We always need to set subflow->data_avail after each tcp_read_sock()
->> or mptcp_subflow_recv_lookup() may pick the wrong sock.
-> =
+>  	add_wait_queue(sk_sleep(sk), &wait);
+>  	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+>  =
 
-> The patch looks good to me, thanks Paolo.
+> -	release_sock(sk);
+> -
+> -	smp_mb__before_atomic();
+> -	data_ready =3D test_and_clear_bit(MPTCP_DATA_READY, &msk->flags);
+> -	smp_mb__after_atomic();
+> -
+> -	if (!data_ready)
+> -		*timeo =3D wait_woken(&wait, TASK_INTERRUPTIBLE, *timeo);
+> -
+> -	sched_annotate_sleep();
+> -	lock_sock(sk);
+> +	sk_wait_event(sk, timeo,
+> +		      test_and_clear_bit(MPTCP_DATA_READY, &msk->flags), &wait);
+>  =
 
-Thank you for the patch and the review!
+>  	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+>  	remove_wait_queue(sk_sleep(sk), &wait);
 
-I just updated the status in https://patchwork.ozlabs.org/patch/1189048/
+IIRC, sk_wait_event() was intentionally avoided to allow placing the
+smp_mb__{before,after}_atomic() pair around test_and_clear_bit(), which
+I thought was required.
 
-- e781d6709b06: "squashed" in "mptcp: recvmsg() can drain data from =
+Reading again the relevant documentation:
 
-multiple subflows"
-- signed-off already there
-- bb8b1566ac6d..846b30bd664b: results
+https://elixir.bootlin.com/linux/latest/source/Documentation/core-api/atomi=
+c_ops.rst#L485
 
-Tests are in progress.
+it looks like test_and_clear_bit() provides already the required
+barriers (also grepping inside the kernel sources suggests that).
 
-Cheers,
-Matt
--- =
+So the above should be correct, I'm sorry for being cyclothymic ;)
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1265621998605845241==--
+/P
+
+--===============8026062569828174817==--
