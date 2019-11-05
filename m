@@ -1,51 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============7149035959305012898=="
+Content-Type: multipart/mixed; boundary="===============3989673421351874461=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 5/6] mptcp: Export low-level routines for IPv6
-Date: Tue, 05 Nov 2019 15:36:17 -0800
-Message-ID: <56f4ce8172a30a2d20d6d6cd781442667ac967ab.camel@linux.intel.com>
-In-Reply-To: 3b89f10dd6a661921b1757a1b2d5346f29ba398c.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH 6/6] mptcp: Add IPv6 support
+Date: Tue, 05 Nov 2019 15:37:02 -0800
+Message-ID: <0d99f9580346a0d65d35602afcad14cfb6299501.camel@linux.intel.com>
+In-Reply-To: 1ac6f933dbbd1f27b190adb9e8b78bc268c6f44f.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2409
+X-UID: 2410
 
---===============7149035959305012898==
+--===============3989673421351874461==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-10-31 at 09:26 +0100, Paolo Abeni wrote:
-> Hi,
+On Thu, 2019-10-31 at 13:32 +0100, Davide Caratti wrote:
+> hello Peter!
 > =
 
 > On Wed, 2019-10-30 at 16:38 -0700, Peter Krystad wrote:
-> > @@ -1111,7 +1111,8 @@ static void tcp_v6_restore_cb(struct sk_buff *skb)
-> >  		sizeof(struct inet6_skb_parm));
-> >  }
+> > Mimic hooks and option handling for IPv6 as was done for
+> > IPv4 MPTCP sockets.
+> > =
+
+> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> > ---
+> >  include/net/mptcp.h  |   3 ++
+> >  net/ipv6/tcp_ipv6.c  |   7 +++
+> >  net/mptcp/ctrl.c     |  11 +++++
+> >  net/mptcp/protocol.c |  85 ++++++++++++++++++++++++++++++++--
+> >  net/mptcp/protocol.h |   3 ++
+> >  net/mptcp/subflow.c  | 107 ++++++++++++++++++++++++++++++++++++++++++-
+> >  6 files changed, 209 insertions(+), 7 deletions(-)
+> > =
+
+> > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> > index eba39a881767..41225c50aebb 100644
+> > --- a/include/net/mptcp.h
+> > +++ b/include/net/mptcp.h
+> > @@ -53,6 +53,9 @@ struct mptcp_out_options {
+> >  #ifdef CONFIG_MPTCP
 > >  =
 
-> > -static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct=
- sk_buff *skb,
-> > +static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk,
-> > +					 struct sk_buff *skb,
-> >  					 struct request_sock *req,
-> >  					 struct dst_entry *dst,
-> >  					 struct request_sock *req_unhash,
+> >  void mptcp_init(void);
+> > +#if IS_ENABLED(CONFIG_IPV6)
+> > +int mptcpv6_init(void);
+> > +#endif
 > =
 
-> Minor nit: it looks like this chunk is not needed ?
+> I didn't see a stub version of mptcpv6_init(),
+>  =
 
-It seemed like since I was in the neighborhood I would fix this over-80 char
-line. If that's not appropriate we can drop this chunk.
+> >  static inline bool sk_is_mptcp(const struct sock *sk)
+> >  {
+> > diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+> > index 50f6f21bbdb1..10d1c033d458 100644
+> > --- a/net/ipv6/tcp_ipv6.c
+> > +++ b/net/ipv6/tcp_ipv6.c
+> > @@ -2109,9 +2109,16 @@ int __init tcpv6_init(void)
+> >  	ret =3D register_pernet_subsys(&tcpv6_net_ops);
+> >  	if (ret)
+> >  		goto out_tcpv6_protosw;
+> > +
+> > +	ret =3D mptcpv6_init();
+> > +	if (ret)
+> > +		goto out_tcpv6_pernet_subsys;
+> > +
+> >  out:
+> >  	return ret;
+> =
+
+> so probably the above hunk will cause build problems when CONFIG_MPTCP is
+> unset. Am I missing something?
+
+Nope, you are right. I will fix this in v2.
 
 Peter.
 
-
-> Cheers,
 > =
 
-> Paolo
->=20
+> thanks!
 
---===============7149035959305012898==--
+--===============3989673421351874461==--
