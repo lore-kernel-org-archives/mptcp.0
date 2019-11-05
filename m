@@ -1,88 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============5765671135176150654=="
+Content-Type: multipart/mixed; boundary="===============5642014985716105755=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 4/5] mptcp: Switch to CONFIG_MPTCP_IPV6
-Date: Tue, 05 Nov 2019 11:05:56 -0800
-Message-ID: <20191105190557.6405-4-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH 5/5] mptcp: Switch to CONFIG_MPTCP_IPV6
+Date: Tue, 05 Nov 2019 11:05:57 -0800
+Message-ID: <20191105190557.6405-5-peter.krystad@linux.intel.com>
 In-Reply-To: 20191105190557.6405-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2404
+X-UID: 2405
 
---===============5765671135176150654==
+--===============5642014985716105755==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Add ADD_ADDR handling
+squashto: Implement Basic Path Manager
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- include/net/mptcp.h | 2 +-
- net/mptcp/options.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ net/mptcp/basic.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index eba39a881767..1196a5588ce1 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -35,7 +35,7 @@ struct mptcp_out_options {
- 	u64 rcvr_key;
+diff --git a/net/mptcp/basic.c b/net/mptcp/basic.c
+index 67a93aff500e..86e0d8862c19 100644
+--- a/net/mptcp/basic.c
++++ b/net/mptcp/basic.c
+@@ -17,7 +17,7 @@ struct basic_pernet {
+ =
+
  	union {
- 		struct in_addr addr;
+ 		struct in_addr announce_v4_addr;
 -#if IS_ENABLED(CONFIG_IPV6)
 +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		struct in6_addr addr6;
+ 		struct in6_addr announce_v6_addr;
  #endif
  	};
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 5b6df7aead1d..e050a3966280 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -223,7 +223,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4 &&
- 		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR)
- 			break;
+@@ -37,7 +37,7 @@ static int parse_addr(struct basic_pernet *pernet, const =
+char *addr)
+ 		pernet->has_announce_v6 =3D 0;
+ 		return 0;
+ 	}
 -#if IS_ENABLED(CONFIG_IPV6)
 +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6 &&
- 		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
- 			break;
-@@ -235,7 +235,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- 			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
- 				 mp_opt->addr.s_addr, mp_opt->addr_id);
+ 	if (in6_pton(addr, -1, (u8 *)&pernet->announce_v6_addr.s6_addr, '\0',
+ 		     NULL) > 0) {
+ 		pernet->has_announce_v4 =3D 0;
+@@ -73,7 +73,7 @@ static int proc_parse_addr(struct ctl_table *ctl, int wri=
+te,
+ 				 &pernet->announce_v4_addr);
+ 			tbl.data =3D tmp;
  		}
 -#if IS_ENABLED(CONFIG_IPV6)
 +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		else {
- 			mp_opt->add_addr =3D 1;
- 			memcpy(mp_opt->addr6.s6_addr, (u8 *)ptr, 16);
-@@ -472,7 +472,7 @@ static bool mptcp_established_options_addr(struct sock =
-*sk,
- 		opts->addr =3D ((struct sockaddr_in *)&saddr)->sin_addr;
- 		*size =3D TCPOLEN_MPTCP_ADD_ADDR;
+ 		else if (pernet->has_announce_v6) {
+ 			snprintf(tmp, INET6_ADDRSTRLEN, "%pI6c",
+ 				 &pernet->announce_v6_addr);
+@@ -196,7 +196,7 @@ static void announce_addr_worker(struct work_struct *wo=
+rk)
+ 	if (pernet->has_announce_v4 && msk->family =3D=3D AF_INET)
+ 		mptcp_pm_announce_addr(pm->token, 1,
+ 				       &pernet->announce_v4_addr);
+-#if IS_ENABLED(CONFIG_IPV6)
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	else if (pernet->has_announce_v6 && msk->family =3D=3D AF_INET6)
+ 		mptcp_pm_announce_addr6(pm->token, 1,
+ 					&pernet->announce_v6_addr);
+@@ -221,7 +221,7 @@ static void create_subflow_worker(struct work_struct *w=
+ork)
+ 			mptcp_pm_create_subflow(pm->token, pm->remote_id,
+ 						NULL);
  	}
 -#if IS_ENABLED(CONFIG_IPV6)
 +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	else if (saddr.ss_family =3D=3D AF_INET6) {
- 		if (remaining < TCPOLEN_MPTCP_ADD_ADDR6)
- 			return false;
-@@ -668,7 +668,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
-options *opts)
- 		ptr +=3D 1;
- 	}
- =
-
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
- 		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
- 				      TCPOLEN_MPTCP_ADD_ADDR6,
+ 	else if (pm->remote_family =3D=3D AF_INET6) {
+ 		if (pernet->has_announce_v6)
+ 			mptcp_pm_create_subflow6(pm->token, pm->remote_id,
 -- =
 
 2.17.2
 
---===============5765671135176150654==--
+--===============5642014985716105755==--
