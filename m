@@ -1,47 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============4848173217847714288=="
+Content-Type: multipart/mixed; boundary="===============6807797122295376027=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Use sk_family field in the mptcp_sock for
- address family.
-Date: Tue, 05 Nov 2019 13:57:54 -0800
-Message-ID: <alpine.OSX.2.21.1911051344520.27697@cavianch-mobl1.amr.corp.intel.com>
-In-Reply-To: 56f99f8699f42ae8f0cb61e30db157cd12c2eb06.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH 1/6] mptcp: Reference af_ops routines through
+ struct ipv4_specific
+Date: Tue, 05 Nov 2019 14:29:05 -0800
+Message-ID: <0bb8bde41198b0c5ead5bfba5b031917ba1408dd.camel@linux.intel.com>
+In-Reply-To: ff27752250167ac9a3b609ad604c4b565c38bc3a.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2407
+X-UID: 2408
 
---===============4848173217847714288==
+--===============6807797122295376027==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, 2019-10-31 at 09:33 +0100, Paolo Abeni wrote:
+> On Wed, 2019-10-30 at 16:38 -0700, Peter Krystad wrote:
+> > Make this look similar to how it will have to be done for IPv6,
+> > as the IPv6 routines are declared static and thus not visible.
+> > =
 
-On Tue, 5 Nov 2019, Paolo Abeni wrote:
+> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> =
 
-> On Mon, 2019-11-04 at 21:26 -0800, Peter Krystad wrote:
->> It was not necessary to add a family field to mptcp_sock as it is
->> a wrapper around a struct sock, and sk_family is set correctly when
->> the msk is created as a result of a socket() call.
->>
->> squashto: Associate MPTCP context with TCP socket
->>           mptcp: Implement basic path manager
->>
->> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
->
-> LGTM, nice cleanup, thanks!
->
-> It's unclear to me if I should update patchwork status, too ("Under
-> review"? would that help?)
->
+> I think:
+> =
 
-Looks good to me, too.
+> - 'subflow_finish_connect()' and 'inet_connection_sock_af_ops
+> subflow_specific;' changes should be squashed into "mptcp: Handle
+> MP_CAPABLE options for outgoing connections"
+> =
 
-For handling patchwork status, I went to the upcoming meeting page to =
+> - 'subflow_syn_recv_sock()' into "mptcp: Create SUBFLOW socket for
+> incoming connections"
+> =
 
-create a proposal - and found that Matthieu has already done it :)
+> - 'inet_sk_rebuild_head()' into "mptcp: Add key generation and token
+> tree"
+> =
 
---
-Mat Martineau
-Intel
---===============4848173217847714288==--
+> right?
+> =
+
+> /P
+> =
+
+
+In the v2 patchset I am going to modify this change. We will save a pointer
+to the original af_icsk_ops structure and call the inet_xxx routines through
+it. This will save a lot of code duplication for IPv6.
+
+The change will squash to the same commits you identify above.
+
+Peter.=20
+
+--===============6807797122295376027==--
