@@ -1,60 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============1402198628515005916=="
+Content-Type: multipart/mixed; boundary="===============3453125162924707884=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp 1/4] protocol.h:
- mptcp_subflow_get_map_offset arg can be const
-Date: Tue, 05 Nov 2019 18:46:19 +0100
-Message-ID: <b5c430c133f342ece192d1a3cfd07fe5bb196758.camel@redhat.com>
-In-Reply-To: 20191105170531.30407-2-fw@strlen.de
+Subject: [MPTCP] [PATCH 1/5] mptcp: Make MPTCP IPv6 support depend on
+ CONFIG_IPV6=y
+Date: Tue, 05 Nov 2019 11:05:53 -0800
+Message-ID: <20191105190557.6405-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2400
+X-UID: 2401
 
---===============1402198628515005916==
+--===============3453125162924707884==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-11-05 at 18:05 +0100, Florian Westphal wrote:
-> squashto: mptcp: Implement MPTCP receive path
-> =
+Do not allow MPTCP IPv6 support if IPv6 is included as a module.
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/protocol.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> =
+squashto: Add MPTCP socket stubs
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 8fe5f9383d38..46f7becd9a45 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -248,7 +248,7 @@ mptcp_subflow_tcp_socket(const struct mptcp_subflow_c=
-ontext *subflow)
->  }
->  =
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/Kconfig | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
->  static inline u64
-> -mptcp_subflow_get_map_offset(struct mptcp_subflow_context *subflow)
-> +mptcp_subflow_get_map_offset(const struct mptcp_subflow_context *subflow)
->  {
->  	return tcp_sk(mptcp_subflow_tcp_socket(subflow)->sk)->copied_seq -
->  		      subflow->ssn_offset -
-> @@ -256,7 +256,7 @@ mptcp_subflow_get_map_offset(struct mptcp_subflow_con=
-text *subflow)
->  }
->  =
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index f21190a4f7e9..c1a99f07a4cd 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -1,6 +1,6 @@
+ =
 
->  static inline u64
-> -mptcp_subflow_get_mapped_dsn(struct mptcp_subflow_context *subflow)
-> +mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow_context *subflow)
->  {
->  	return subflow->map_seq + mptcp_subflow_get_map_offset(subflow);
->  }
+ config MPTCP
+-	bool "Multipath TCP"
++	bool "MPTCP: Multipath TCP"
+ 	depends on INET
+ 	select SKB_EXTENSIONS
+ 	help
+@@ -9,3 +9,8 @@ config MPTCP
+ 	  uses the TCP protocol, and TCP options carry header information for
+ 	  MPTCP.
+ =
 
-All the 4 patches LGTM, thanks Florian!
++config MPTCP_IPV6
++	bool "MPTCP: IPv6 support for Multipath TCP"
++	depends on MPTCP
++	select IPV6
++	default y
+-- =
 
-/P
+2.17.2
 
---===============1402198628515005916==--
+--===============3453125162924707884==--
