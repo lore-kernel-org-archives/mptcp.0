@@ -1,39 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============7171054719098878130=="
+Content-Type: multipart/mixed; boundary="===============8801188300738194794=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 7 November 2019 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 06 Nov 2019 21:37:27 +0100
-Message-ID: <c4d2e7b4-8675-54ce-de03-76852c0ccf59@tessares.net>
+Subject: [MPTCP] Re: Weekly meeting - 7 November 2019 17:00 UTC (9am PST,
+ 6pm CET)
+Date: Wed, 06 Nov 2019 21:26:32 +0000
+Message-ID: <48c7fa24-a3a4-4e3d-8948-9d8a9693b1ef@localhost>
+In-Reply-To: CAPyD+=B38howFMwhm7avu=250t94i5HK7sBDuXkB9TK5BGPrGg@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2430
+X-UID: 2431
 
---===============7171054719098878130==
+--===============8801188300738194794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+Hi Ossama,
+ =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20191107
+Wed Nov 06 22:18:51 GMT+01:00 2019 Othman, Ossama :
+ =
 
-Feel free to add/modify topics!
+> Hi Matthieu,
+> =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+> Daylight Savings Time is over in the US. s/PDT/PST/ in the subject line. =
+:)
+ =
 
-Speak to you tomorrow!
-Matthieu
--- =
+Good catch!
+I simply copy-pasted a previous email. The meeting will be at 5pm UTC, not =
+4pm, which is 9am PST or 6pm CET.
+ =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7171054719098878130==--
+Cheers,
+Matt
+
+--===============8801188300738194794==--
