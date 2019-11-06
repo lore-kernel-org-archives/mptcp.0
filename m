@@ -1,85 +1,99 @@
-Content-Type: multipart/mixed; boundary="===============0902982790036985737=="
+Content-Type: multipart/mixed; boundary="===============3266901794001340417=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 4/6] mptcp: Re-factor subflow_v4_conn_request to be
+Subject: [MPTCP] [PATCH v2 3/6] mptcp: Re-factor mptcp_getname routine to be
  af-agnostic
-Date: Tue, 05 Nov 2019 20:41:31 -0800
-Message-ID: <20191106044133.14418-5-peter.krystad@linux.intel.com>
+Date: Tue, 05 Nov 2019 20:41:30 -0800
+Message-ID: <20191106044133.14418-4-peter.krystad@linux.intel.com>
 In-Reply-To: 20191106044133.14418-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2414
+X-UID: 2415
 
---===============0902982790036985737==
+--===============3266901794001340417==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Split subflow_v4_init_req into separate af-specific
-and functional parts.
+Split mptcp_getname into two parts: af-specific
+part and functional part.
 
 squashto: Create SUBFLOW socket for incoming connections
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/subflow.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ net/mptcp/protocol.c | 36 +++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6aa02001a06d..586713537124 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -90,19 +90,16 @@ static bool subflow_token_join_request(struct request_s=
-ock *req,
- 	return true;
- }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b3263a7f6458..323b3e65dba2 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1147,18 +1147,6 @@ static int mptcp_getname(struct socket *sock, struct=
+ sockaddr *uaddr,
+ 	struct sock *ssk;
+ 	int ret;
  =
 
--static void subflow_v4_init_req(struct request_sock *req,
--				const struct sock *sk_listener,
--				struct sk_buff *skb)
-+static void subflow_init_req(struct request_sock *req,
-+			     const struct sock *sk_listener,
-+			     struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
- 	struct tcp_options_received rx_opt;
- =
-
--	tcp_rsk(req)->is_mptcp =3D 1;
- 	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
- =
-
--	tcp_request_sock_ipv4_ops.init_req(req, sk_listener, skb);
+-	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
+-		/* we are being invoked from __sys_accept4, after
+-		 * mptcp_accept() has just accepted a non-mp-capable
+-		 * flow: sk is a tcp_sk, not an mptcp one.
+-		 *
+-		 * Hand the socket over to tcp so all further socket ops
+-		 * bypass mptcp.
+-		 */
+-		sock->ops =3D &inet_stream_ops;
+-		return sock->ops->getname(sock, uaddr, peer);
+-	}
 -
- 	memset(&rx_opt.mptcp, 0, sizeof(rx_opt.mptcp));
- 	mptcp_get_options(skb, &rx_opt);
- =
-
-@@ -146,6 +143,17 @@ static void subflow_v4_init_req(struct request_sock *r=
-eq,
- 	}
+ 	lock_sock(sock->sk);
+ 	ssock =3D __mptcp_fallback_get_ref(msk);
+ 	if (ssock) {
+@@ -1184,6 +1172,28 @@ static int mptcp_getname(struct socket *sock, struct=
+ sockaddr *uaddr,
+ 	return ret;
  }
  =
 
-+static void subflow_v4_init_req(struct request_sock *req,
-+				const struct sock *sk_listener,
-+				struct sk_buff *skb)
++static int mptcp_v4_getname(struct socket *sock, struct sockaddr *uaddr,
++			    int peer)
 +{
-+	tcp_rsk(req)->is_mptcp =3D 1;
++	int ret;
 +
-+	tcp_request_sock_ipv4_ops.init_req(req, sk_listener, skb);
++	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
++		/* we are being invoked from __sys_accept4, after
++		 * mptcp_accept() has just accepted a non-mp-capable
++		 * flow: sk is a tcp_sk, not an mptcp one.
++		 *
++		 * Hand the socket over to tcp so all further socket ops
++		 * bypass mptcp.
++		 */
++		sock->ops =3D &inet_stream_ops;
++		return sock->ops->getname(sock, uaddr, peer);
++	}
 +
-+	subflow_init_req(req, sk_listener, skb);
++	ret =3D mptcp_getname(sock, uaddr, peer);
++
++	return ret;
 +}
 +
- /* validate received truncated hmac and create hmac for third ACK */
- static bool subflow_thmac_valid(struct mptcp_subflow_context *subflow)
+ static int mptcp_listen(struct socket *sock, int backlog)
  {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+@@ -1300,7 +1310,7 @@ void mptcp_proto_init(void)
+ 	mptcp_stream_ops.connect =3D mptcp_stream_connect;
+ 	mptcp_stream_ops.poll =3D mptcp_poll;
+ 	mptcp_stream_ops.accept =3D mptcp_stream_accept;
+-	mptcp_stream_ops.getname =3D mptcp_getname;
++	mptcp_stream_ops.getname =3D mptcp_v4_getname;
+ 	mptcp_stream_ops.listen =3D mptcp_listen;
+ 	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
+ =
+
 -- =
 
 2.17.2
 
---===============0902982790036985737==--
+--===============3266901794001340417==--
