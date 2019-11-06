@@ -1,40 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============0393722791776022266=="
+Content-Type: multipart/mixed; boundary="===============7475144389288358097=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/6] IPv6 support
-Date: Wed, 06 Nov 2019 10:04:49 +0100
-Message-ID: <0a844a87aa4f8a2e214ba7e6c76092c98fd434a0.camel@redhat.com>
-In-Reply-To: 20191106044133.14418-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH] mptcp: Add DATA_FIN transmission and handling
+Date: Wed, 06 Nov 2019 10:29:23 +0100
+Message-ID: <20191106092923.GN876@breakpoint.cc>
+In-Reply-To: 20191106045011.10071-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2421
+X-UID: 2422
 
---===============0393722791776022266==
+--===============7475144389288358097==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-11-05 at 20:41 -0800, Peter Krystad wrote:
-> Implemented support for IPv6. selftests pass with ipv6=3Dtrue, but
-> they take twice as long to run...
-> =
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+>  * A DATA_FIN that arrives on a packet without data payload (unless it's
+>    a TCP FIN) are discarded by tcp_data_queue() and not propagated to
+>    the MPTCP socket. This is detected in mptcp_incoming_options() but
+>    not yet handled. The skb with the DATA_FIN could be cloned and
+>    placed in the subflow error queue, or a workqueue could handle it.
 
-> With re-factoring the addition of IPv6 is very clean =
+I have a pending patch that adds an ack workqueue to deal with the
+case where we get an mptcp ack for an mptcp socket that has exceeded
+its wmem limit, it can be reused for this too.
 
-
-Indeed.
-
-> but I did not
-> split files yet as it will be hard to squash any changes after the
-> such a split.
-
-I think this is ok.
-
-The series looks great, with a minor comment on patch 5.
-
-Cheers,
-
-Paolo
-
---===============0393722791776022266==--
+I'll send it soon.
+--===============7475144389288358097==--
