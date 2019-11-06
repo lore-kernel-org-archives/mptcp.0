@@ -1,85 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============3989673421351874461=="
+Content-Type: multipart/mixed; boundary="===============4820774395608362953=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 6/6] mptcp: Add IPv6 support
-Date: Tue, 05 Nov 2019 15:37:02 -0800
-Message-ID: <0d99f9580346a0d65d35602afcad14cfb6299501.camel@linux.intel.com>
-In-Reply-To: 1ac6f933dbbd1f27b190adb9e8b78bc268c6f44f.camel@redhat.com
+Subject: [MPTCP] [PATCH v2 0/6] IPv6 support
+Date: Tue, 05 Nov 2019 20:41:27 -0800
+Message-ID: <20191106044133.14418-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2410
+X-UID: 2411
 
---===============3989673421351874461==
+--===============4820774395608362953==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-10-31 at 13:32 +0100, Davide Caratti wrote:
-> hello Peter!
-> =
+Implemented support for IPv6. selftests pass with ipv6=3Dtrue, but
+they take twice as long to run...
 
-> On Wed, 2019-10-30 at 16:38 -0700, Peter Krystad wrote:
-> > Mimic hooks and option handling for IPv6 as was done for
-> > IPv4 MPTCP sockets.
-> > =
+With re-factoring the addition of IPv6 is very clean but I did not
+split files yet as it will be hard to squash any changes after the
+such a split.
 
-> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> > ---
-> >  include/net/mptcp.h  |   3 ++
-> >  net/ipv6/tcp_ipv6.c  |   7 +++
-> >  net/mptcp/ctrl.c     |  11 +++++
-> >  net/mptcp/protocol.c |  85 ++++++++++++++++++++++++++++++++--
-> >  net/mptcp/protocol.h |   3 ++
-> >  net/mptcp/subflow.c  | 107 ++++++++++++++++++++++++++++++++++++++++++-
-> >  6 files changed, 209 insertions(+), 7 deletions(-)
-> > =
+Still to do: multiple subflows, handling IPv4-mapped connections.
 
-> > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> > index eba39a881767..41225c50aebb 100644
-> > --- a/include/net/mptcp.h
-> > +++ b/include/net/mptcp.h
-> > @@ -53,6 +53,9 @@ struct mptcp_out_options {
-> >  #ifdef CONFIG_MPTCP
-> >  =
+v2: Added further re-factoring that makes IPv6 change even smaller
+    Add mptcpv6_init() stub and verified build with IPv6=3Dn and m
 
-> >  void mptcp_init(void);
-> > +#if IS_ENABLED(CONFIG_IPV6)
-> > +int mptcpv6_init(void);
-> > +#endif
-> =
+    Kconfig changes submitted in earlier patch set, this set depends
+    on those changes being merged.
 
-> I didn't see a stub version of mptcpv6_init(),
->  =
+    Squashing the final patch (6/6) so that IPv6 support occurs before
+    the kselftests commit will be complicated.
 
-> >  static inline bool sk_is_mptcp(const struct sock *sk)
-> >  {
-> > diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-> > index 50f6f21bbdb1..10d1c033d458 100644
-> > --- a/net/ipv6/tcp_ipv6.c
-> > +++ b/net/ipv6/tcp_ipv6.c
-> > @@ -2109,9 +2109,16 @@ int __init tcpv6_init(void)
-> >  	ret =3D register_pernet_subsys(&tcpv6_net_ops);
-> >  	if (ret)
-> >  		goto out_tcpv6_protosw;
-> > +
-> > +	ret =3D mptcpv6_init();
-> > +	if (ret)
-> > +		goto out_tcpv6_pernet_subsys;
-> > +
-> >  out:
-> >  	return ret;
-> =
+Peter Krystad (6):
+  mptcp: Reference icsk_af_ops routines through saved pointer
+  mptcp: Reference inet_stream_ops routines through socket->ops
+  mptcp: Re-factor mptcp_getname routine to be af-agnostic
+  mptcp: Re-factor subflow_v4_conn_request to be af-agnostic
+  mptcp: Export low-level routines for IPv6
+  mptcp: Add IPv6 support
 
-> so probably the above hunk will cause build problems when CONFIG_MPTCP is
-> unset. Am I missing something?
+ include/net/mptcp.h  |  10 ++++
+ include/net/tcp.h    |   3 ++
+ net/ipv6/tcp_ipv6.c  |  16 ++++--
+ net/mptcp/ctrl.c     |  11 ++++
+ net/mptcp/protocol.c | 117 ++++++++++++++++++++++++++++++++-----------
+ net/mptcp/protocol.h |   7 +++
+ net/mptcp/subflow.c  |  94 +++++++++++++++++++++++++++++-----
+ 7 files changed, 213 insertions(+), 45 deletions(-)
 
-Nope, you are right. I will fix this in v2.
+-- =
 
-Peter.
+2.17.2
 
-> =
-
-> thanks!
-
---===============3989673421351874461==--
+--===============4820774395608362953==--
