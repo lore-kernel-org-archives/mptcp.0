@@ -1,41 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============8801188300738194794=="
+Content-Type: multipart/mixed; boundary="===============0609804339596241915=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Weekly meeting - 7 November 2019 17:00 UTC (9am PST,
- 6pm CET)
-Date: Wed, 06 Nov 2019 21:26:32 +0000
-Message-ID: <48c7fa24-a3a4-4e3d-8948-9d8a9693b1ef@localhost>
-In-Reply-To: CAPyD+=B38howFMwhm7avu=250t94i5HK7sBDuXkB9TK5BGPrGg@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp 3/4] protocol: use sk_wait_event helper
+Date: Thu, 07 Nov 2019 00:14:51 +0100
+Message-ID: <20191106231451.GB31295@breakpoint.cc>
+In-Reply-To: dbc2fc20-dd83-a62b-421f-29c649246b00@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2431
+X-UID: 2432
 
---===============8801188300738194794==
+--===============0609804339596241915==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+> Thank you for the patches and the reviews.
+> Is it then OK if I apply this series as it is?
 
-Hi Ossama,
- =
-
-Wed Nov 06 22:18:51 GMT+01:00 2019 Othman, Ossama :
- =
-
-> Hi Matthieu,
-> =
-
-> Daylight Savings Time is over in the US. s/PDT/PST/ in the subject line. =
-:)
- =
-
-Good catch!
-I simply copy-pasted a previous email. The meeting will be at 5pm UTC, not =
-4pm, which is 9am PST or 6pm CET.
- =
-
-Cheers,
-Matt
-
---===============8801188300738194794==--
+I think so.
+--===============0609804339596241915==--
