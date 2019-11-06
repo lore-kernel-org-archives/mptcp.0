@@ -1,46 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============9092891899301992710=="
+Content-Type: multipart/mixed; boundary="===============1734384376925215892=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp 3/4] protocol: use sk_wait_event helper
-Date: Wed, 06 Nov 2019 16:09:09 +0100
-Message-ID: <20191106150909.GA31295@breakpoint.cc>
-In-Reply-To: alpine.OSX.2.21.1911051123570.27697@cavianch-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH v2 5/6] mptcp: Export low-level routines for IPv6
+Date: Wed, 06 Nov 2019 16:18:10 +0100
+Message-ID: <fe22874c-b4ba-1227-ac1b-b4b3aa7b2d48@tessares.net>
+In-Reply-To: 5288e89a08eb3d3d6f8054511e8bc029f8469f3a.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2426
+X-UID: 2427
 
---===============9092891899301992710==
+--===============1734384376925215892==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
-> sk_wait_event is a macro that evaluates its third arg twice (but we've
-> discussed this before: https://lists.01.org/hyperkitty/list/mptcp(a)lists=
-.01.org/thread/7HAWM43BLQVRBNIPV5II7C2WGTARAMDR/#7S54V7TAZUXZEUXVANQZ3OETQM=
-PQGK6J),
-> but in this case the second check of the flag is likely to be an inexpens=
-ive
-> READ_ONCE() on a hot cache line. So, the extra code was there a reason but
-> I'm ok with merging this for maintainability purposes.
+Hi Peter,
 
-We can also drop it.  Its likely this needs to be rewritten again in
-the future.
+On 06/11/2019 16:16, Peter Krystad wrote:
+> =
 
-I'd like to get rid of __tcp_poll() and make mptcp_poll standalone.
+> Matthieu -
+> =
 
-For that to work reliably its needed that the mptcp sk has a reliable
-indicator that there is data available.
+> On Wed, 2019-11-06 at 11:09 +0100, Paolo Abeni wrote:
+>> On Wed, 2019-11-06 at 10:37 +0100, Matthieu Baerts wrote:
+>>> Hi Paolo,
+>>>
+>>> On 06/11/2019 10:03, Paolo Abeni wrote:
+>>>> On Tue, 2019-11-05 at 20:41 -0800, Peter Krystad wrote:
+>>>>> @@ -1111,7 +1111,8 @@ static void tcp_v6_restore_cb(struct sk_buff *s=
+kb)
+>>>>>    		sizeof(struct inet6_skb_parm));
+>>>>>    }
+>>>>>    =
 
-Right now this isn't the case because the bit is cleared immediately
-on mptcp_recvmsg entry.
+>>>>> -static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, stru=
+ct sk_buff *skb,
+>>>>> +static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk,
+>>>>> +					 struct sk_buff *skb,
+>>>>>    					 struct request_sock *req,
+>>>>>    					 struct dst_entry *dst,
+>>>>>    					 struct request_sock *req_unhash,
+>>>>
+>>>> Minor nit: it looks like this chunk is not needed[1].
+>>>
+>>> Peter replied this in the previous version of the patch:
+>>>
+>>>   > It seemed like since I was in the neighborhood I would fix this
+>>>   > over-80 char line. If that's not appropriate we can drop this chunk.
+>>
+>> whoops, I missed that, sorry! And thank you for the head-up!
+>>
+>>> I guess we should not modify the style of non MPTCP code. Then better to
+>>> drop this change, right?
+>>
+>> Yes, exactly. The above change should be in a separate, non mptcp-
+>> related patch.
+> =
 
-Removing the clear_bit could get us in a state where the bit is still
-set, but the last recvmsg did drain the last byte.
+> Can you just drop this when you squash it?
 
-Checking the ssk read queue and clearing the bit on revmsg exit doesn't
-work either because we could have data available in another subflow,
-but walking the subflow list isn't exactly ideal.
+Sure, I can do that!
 
---===============9092891899301992710==--
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============1734384376925215892==--
