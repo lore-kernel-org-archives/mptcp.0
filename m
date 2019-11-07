@@ -1,86 +1,126 @@
-Content-Type: multipart/mixed; boundary="===============8446449094343907218=="
+Content-Type: multipart/mixed; boundary="===============4864354745966221212=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/2] mptcp: parse and emit MP_CAPABLE option
- according to v1 spec.
-Date: Thu, 07 Nov 2019 16:54:34 +0100
-Message-ID: <d18c4fe0322f7f7bdc302a30bdca4a920b019dda.camel@redhat.com>
-In-Reply-To: 20191107152827.54549-2-cpaasch@apple.com
+Subject: [MPTCP] Re: [PATCH v2 0/6] IPv6 support
+Date: Thu, 07 Nov 2019 18:03:36 +0100
+Message-ID: <56deed43-bfc7-fbac-dc49-3c055cc23c33@tessares.net>
+In-Reply-To: 0a844a87aa4f8a2e214ba7e6c76092c98fd434a0.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2439
+X-UID: 2440
 
---===============8446449094343907218==
+--===============4864354745966221212==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Peter, Paolo,
 
-On Thu, 2019-11-07 at 07:28 -0800, Christoph Paasch wrote:
-> @@ -356,28 +387,66 @@ void mptcp_rcv_synsent(struct sock *sk)
->  	}
->  }
->  =
+On 06/11/2019 10:04, Paolo Abeni wrote:
+> On Tue, 2019-11-05 at 20:41 -0800, Peter Krystad wrote:
+>> Implemented support for IPv6. selftests pass with ipv6=3Dtrue, but
+>> they take twice as long to run...
+>>
+>> With re-factoring the addition of IPv6 is very clean
+> =
 
-> -static bool mptcp_established_options_mp(struct sock *sk, unsigned int *=
-size,
-> +static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff=
- *skb,
-> +					 unsigned int *size,
->  					 unsigned int remaining,
->  					 struct mptcp_out_options *opts)
->  {
->  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-> +	struct mptcp_ext *mpext;
-> +	unsigned int data_len;
-> +
-> +	pr_debug("subflow=3D%p fourth_ack=3D%d seq=3D%x:%x remaining=3D%d", sub=
-flow,
-> +		 subflow->fourth_ack, subflow->snd_isn,
-> +		 skb ? TCP_SKB_CB(skb)->seq : 0, remaining);
-> +
-> +	if (subflow->mp_capable && !subflow->fourth_ack && skb &&
-> +	    subflow->snd_isn =3D=3D TCP_SKB_CB(skb)->seq) {
-> +		/* When skb is not available, we better over-estimate the
-> +		 * emitted options len. A full DSS option is longer than
-> +		 * TCPOLEN_MPTCP_MPC_ACK_DATA, so let's the caller try to fit
-> +		 * that.
-> +		 */
->  =
+> Indeed.
 
-> -	if (subflow->mp_capable && !subflow->fourth_ack &&
-> -	    remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
-> -		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
-> -		opts->sndr_key =3D subflow->local_key;
-> -		opts->rcvr_key =3D subflow->remote_key;
-> -		*size =3D TCPOLEN_MPTCP_MPC_ACK;
-> -		subflow->fourth_ack =3D 1;
-> -		pr_debug("subflow=3D%p, local_key=3D%llu, remote_key=3D%llu",
-> -			 subflow, subflow->local_key, subflow->remote_key);
-> -		return true;
-> +		mpext =3D mptcp_get_ext(skb);
-> +		data_len =3D mpext ? mpext->data_len : 0;
-> +		/* Section 3.1.
-> +		 * The MP_CAPABLE option is carried on the SYN, SYN/ACK, and ACK
-> +		 * packets that start the first subflow of an MPTCP connection,
-> +		 * as well as the first packet that carries data
-> +		 */
-> +		if (data_len > 0 && remaining >=3D TCPOLEN_MPTCP_MPC_ACK_DATA) {
+Thanks for the good work and the reviews!
 
-It's not clear to me which is the expected behavior when we can't fit
-MPTCP options inside the TCP header. As the maximum MP_CAPABLE/MP_JOIN
-opt len is 24 bytes, and we have at most 16 bytes in the previous opt
-(tstamp, md5) it looks like this can't ever happen, so could emit a
-WARN_ON_ONCE() here?
+>> but I did not
+>> split files yet as it will be hard to squash any changes after the
+>> such a split.
+> =
 
-BTW we currently emit a warn if DSS exceeds the TCP option space, and
-that can actually happen (max DSS without csum is 26 bytes, with csum
-28). Perhaps we could switch to 32 bits seq if we hit such condition?
+> I think this is ok.
+> =
+
+> The series looks great, with a minor comment on patch 5.
+
+Now in the repo!
+
+patch 1/6:
+
+- 43a479b6ae30: "squashed" part 1 in "mptcp: Handle MP_CAPABLE options =
+
+for outgoing connections"
+- 930dabfdf09d: "squashed" part 2 in "mptcp: Create SUBFLOW socket for =
+
+incoming connections"
+- 4f561ba867fb: "squashed" part 3 in "mptcp: Add key generation and =
+
+token tree"
+- 9d8b388097f8: conflict in t/mptcp-Implement-MPTCP-receive-path
+- 580421d52995..eac1e244ac31: result
+
+patch 2/6:
+
+- 0da98dd8d6bb: "squashed" part 1 in "mptcp: Associate MPTCP context =
+
+with TCP socket"
+- cff7f9dac059: "squashed" part 2 in "mptcp: Create SUBFLOW socket for =
+
+incoming connections"
+- b545a42175be: "squashed" part 3 in "mptcp: add mptcp_poll"
+- b74f268dd118: "Signed-off-by" + "Co-developed-by"
+- eac1e244ac31..3373244a8bf8: result
+
+patch 3/6:
+
+- 85c57d519a60: "squashed" in "mptcp: Create SUBFLOW socket for incoming =
+
+connections"
+- 3373244a8bf8..9861cce0e086: result
+
+patch 4/6:
+
+- b12b955e0bfb: "squashed" in "mptcp: Create SUBFLOW socket for incoming =
+
+connections"
+- dc4f6f7ae3f4: conflict in t/mptcp-Add-key-generation-and-token-tree
+- cdc85f221f44: conflict in =
+
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- 11899f111b38: conflict in =
+
+t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+- 9861cce0e086..262129eadf29: result
+
+patch 5/6:
+- 8b158237c6dc: "squashed" part 1 in "tcp: Export TCP functions and ops =
+
+struct"
+=E2=86=92 without the chunk discussed on the ML
+=E2=86=92 AND without "extern const struct inet_connection_sock_af_ops =
+
+ipv6_specific;"
+- 262129eadf29..619461df7b41: result
+
+patch 6/6:
+- new topic/commit added just before KSleftests
+- AND with "extern const struct inet_connection_sock_af_ops ipv6_specific;"
+- 3bf456c9250a: conflict in =
+
+t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+- 46e50b50b072: conflict in =
+
+t/mptcp-allow-dumping-subflow-context-to-userspace
+
+Tests not launched yet.
+
+I am rebooting my machine, coming in 2 minutes :)
 
 Cheers,
+Matt
 
-Paolo
 
---===============8446449094343907218==--
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============4864354745966221212==--
