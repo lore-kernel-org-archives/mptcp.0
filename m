@@ -1,65 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============8040941029461656198=="
+Content-Type: multipart/mixed; boundary="===============3839874953097790071=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 0/6] mptcp: add and use wmem accounting for rtx
- queue
-Date: Fri, 08 Nov 2019 23:09:47 +0100
-Message-ID: <20191108220953.30904-1-fw@strlen.de>
+Subject: [MPTCP] [RFC PATCH 1/6] mptcp: add wmem_queued accounting
+Date: Fri, 08 Nov 2019 23:09:48 +0100
+Message-ID: <20191108220953.30904-2-fw@strlen.de>
+In-Reply-To: 20191108220953.30904-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2449
+X-UID: 2450
 
---===============8040941029461656198==
+--===============3839874953097790071==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series adds wmem accounting and makes mptcp sockets block once
-the sndbuf size is reached.  rtx cleanup is changed to wakeup any
-blocked mptcp socket once enough wmem is available again.
+Peer could ack data at TCP level but refrain from sending mptcp-level ACKs.
+This could result in a growing the mptcp socket backlog indefinitely.
 
-sndbuf is set to the maximum allowed size of the tcp wmem.
-There is no auto-tuning, I think we can add that later on as an
-enhancement.
+We should thus block mptcp_sendmsg until the peer has acked some of the
+sent data.
 
-This is an RFC series in order to prevent the patches from getting
-applied, I will send a v2 as soon as the open questions are sorted
-out.  Everthing continues to work for me.
+In order to be able to do so, increment the mptcp socket wmem_queued
+counter on memory allocation and decrement it when releasing the memory
+on mptcp-level ack reception.
 
-I've tested these patches with an 4k-sized sndbuf, which results
-in frequent wmem blocks and mptcp connection recovers once the acks
-come in.
+Because TCP performns sndbuf auto-tuning up to tcp_wmem_max[2], make
+this the mptcp sk_sndbuf limit.
 
-1.  (see patch 5): add a new work queue or re-use existing one?
-2.  Should all patches get squashed or should there be a
-    "add wmem accouting" patch?  A mix of both?
+In the future we could add experiment with autotuning as TCP does in
+tcp_sndbuf_expand().
 
-2, 3 and 4 would be squash candidates for example even if we add
-a extra "wmem patch".
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-I will send the next iteration of the scheduler patches after the above
-is sorted out.
-The scheduler patches have no major changes aside from addressing a
-comment from Paolo.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7bea6b62f66e..65f10bb372aa 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -139,8 +139,11 @@ static inline bool mptcp_frag_can_collapse_to(const st=
+ruct mptcp_sock *msk,
+ =
 
-Meanwhile I am working on removal of __tcp_poll and on make the mptcp
-socket conn list store tcp_sk structs rather than require a 'struct socket'.
+ static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
+ {
++	int len =3D dfrag->data_len + dfrag->overhead;
++
+ 	list_del(&dfrag->list);
+-	sk_mem_uncharge(sk, dfrag->data_len + dfrag->overhead);
++	sk_mem_uncharge(sk, len);
++	sk_wmem_queued_add(sk, -len);
+ 	put_page(dfrag->page);
+ }
+ =
 
-Florian Westphal (6):
-      mptcp: add wmem_queued accounting
-      mptcp: allow partial cleaning of rtx head dfrag
-      subflow: store known available bytes in subflow
-      options: ack pending sequence
-      mptcp: add ack work queue
-      sendmsg: block until mptcp sk is writeable
+@@ -304,6 +307,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 		if (!dfrag_collapsed) {
+ 			get_page(dfrag->page);
+ 			list_add_tail(&dfrag->list, &msk->rtx_queue);
++			sk_wmem_queued_add(sk, frag_truesize);
++		} else {
++			sk_wmem_queued_add(sk, ret);
+ 		}
+ =
 
- net/mptcp/options.c  | 13 ++++++--
- net/mptcp/protocol.c | 86 +++++++++++++++++++++++++++++++++++++++++++++++-=
-----
- net/mptcp/protocol.h |  5 +--
- net/mptcp/subflow.c  | 18 ++++++++---
- 4 files changed, 105 insertions(+), 17 deletions(-)
+ 		/* charge data on mptcp rtx queue to the master socket
+@@ -711,6 +717,7 @@ static int mptcp_init_sock(struct sock *sk)
+ 		return ret;
+ =
 
+ 	sk_sockets_allocated_inc(sk);
++	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[2];
+ =
 
---===============8040941029461656198==--
+ 	return 0;
+ }
+-- =
+
+2.23.0
+
+--===============3839874953097790071==--
