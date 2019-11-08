@@ -1,106 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============3774366989212141571=="
+Content-Type: multipart/mixed; boundary="===============8054624654946098546=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 2/6] mptcp: allow partial cleaning of rtx head
- dfrag
-Date: Fri, 08 Nov 2019 23:09:49 +0100
-Message-ID: <20191108220953.30904-3-fw@strlen.de>
+Subject: [MPTCP] [RFC PATCH 3/6] subflow: store known available bytes in
+ subflow
+Date: Fri, 08 Nov 2019 23:09:50 +0100
+Message-ID: <20191108220953.30904-4-fw@strlen.de>
 In-Reply-To: 20191108220953.30904-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2451
+X-UID: 2452
 
---===============3774366989212141571==
+--===============8054624654946098546==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After adding wmem accouting for the mptcp socket we could get
-into a situation where the mptcp socket can't transmit more data,
-and mptcp_clean_una doesn't reduce wmem even if snd_una has advanced
-because it currently will only remove entire dfrags.
+Instead of just a flag, store the number of bytes that are known to be
+available for reading.
 
-Allow advancing the dfrag head sequence and reduce wmem,
-even though this isn't correct (as we can't release the page).
+This will allow a followup patch to include this number in the dss ack.
+At this time, we can only ack up to msk->ack_seq, but that number is
+only updated when userspace reads from the socket.
 
-Because we will soon block on mptcp sk in case wmem is too large,
-call sk_stream_write_space() in case we reduced the backlog so
-userspace task blocked in sendmsg or poll will be woken up.
+This could lead to a needless retransmission if userspace doesn't
+read fast enough.
+
+Ideally we could update this number to include all the pending data,
+i.e. tp->rcv_nxt - tp->copied_seq, but there is no guarantee that the
+next skb in sk_receive_queue contains the next packet in logical mptcp
+sequence space.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.h |  2 +-
+ net/mptcp/subflow.c  | 18 ++++++++++++++----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 65f10bb372aa..b93050056195 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -137,13 +137,18 @@ static inline bool mptcp_frag_can_collapse_to(const s=
-truct mptcp_sock *msk,
- 		df->data_seq + df->data_len =3D=3D msk->write_seq;
- }
- =
-
-+static void dfrag_uncharge(struct sock *sk, int len)
-+{
-+	sk_mem_uncharge(sk, len);
-+	sk_wmem_queued_add(sk, -len);
-+}
-+
- static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 83b06382e56a..bc7e8fa54afa 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -215,8 +215,8 @@ struct mptcp_subflow_context {
+ 		conn_finished : 1,
+ 		map_valid : 1,
+ 		backup : 1,
+-		data_avail : 1,
+ 		rx_eof : 1;
++	u32	data_avail;
+ 	u32	remote_nonce;
+ 	u64	thmac;
+ 	u32	local_nonce;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 76156a7aaea8..0d686f91e0b4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -612,7 +612,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ bool mptcp_subflow_data_available(struct sock *sk)
  {
- 	int len =3D dfrag->data_len + dfrag->overhead;
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-	struct sk_buff *skb;
++	const struct sk_buff *skb;
++	u32 data_avail =3D 0;
  =
 
- 	list_del(&dfrag->list);
--	sk_mem_uncharge(sk, len);
--	sk_wmem_queued_add(sk, -len);
-+	dfrag_uncharge(sk, len);
- 	put_page(dfrag->page);
- }
- =
-
-@@ -152,14 +157,31 @@ static void mptcp_clean_una(struct sock *sk)
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_data_frag *dtmp, *dfrag;
- 	u64 snd_una =3D atomic64_read(&msk->snd_una);
-+	bool cleaned =3D false;
- =
-
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
- 		if (after64(dfrag->data_seq + dfrag->data_len, snd_una))
- 			break;
- =
-
- 		dfrag_clear(sk, dfrag);
-+		cleaned =3D true;
-+	}
-+
-+	dfrag =3D mptcp_rtx_head(sk);
-+	if (dfrag && after64(snd_una, dfrag->data_seq)) {
-+		u64 delta =3D dfrag->data_seq + dfrag->data_len - snd_una;
-+
-+		dfrag->data_seq +=3D delta;
-+		dfrag->data_len -=3D delta;
-+
-+		dfrag_uncharge(sk, delta);
-+		cleaned =3D true;
-+	}
-+
-+	if (cleaned) {
-+		sk_mem_reclaim_partial(sk);
-+		sk_stream_write_space(sk);
+ 	/* check if current mapping is still valid */
+ 	if (subflow->map_valid &&
+@@ -636,9 +637,18 @@ bool mptcp_subflow_data_available(struct sock *sk)
  	}
--	sk_mem_reclaim_partial(sk);
+ =
+
+ 	skb =3D skb_peek(&sk->sk_receive_queue);
+-	subflow->data_avail =3D skb &&
+-		       before(tcp_sk(sk)->copied_seq, TCP_SKB_CB(skb)->end_seq);
+-	return subflow->data_avail;
++	if (skb) {
++		const struct tcp_sock *tp =3D tcp_sk(sk);
++		u32 map_remaining =3D subflow->map_data_len -
++				    mptcp_subflow_get_map_offset(subflow);
++
++		data_avail =3D TCP_SKB_CB(skb)->end_seq - tp->copied_seq;
++		data_avail =3D min_t(u32, data_avail, map_remaining);
++	}
++
++	subflow->data_avail =3D data_avail;
++
++	return subflow->data_avail > 0;
  }
  =
 
- /* ensure we get enough memory for the frag hdr, beyond some minimal amoun=
-t of
+ static void subflow_data_ready(struct sock *sk)
 -- =
 
 2.23.0
 
---===============3774366989212141571==--
+--===============8054624654946098546==--
