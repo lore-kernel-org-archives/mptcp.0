@@ -1,85 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============3839874953097790071=="
+Content-Type: multipart/mixed; boundary="===============3774366989212141571=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 1/6] mptcp: add wmem_queued accounting
-Date: Fri, 08 Nov 2019 23:09:48 +0100
-Message-ID: <20191108220953.30904-2-fw@strlen.de>
+Subject: [MPTCP] [RFC PATCH 2/6] mptcp: allow partial cleaning of rtx head
+ dfrag
+Date: Fri, 08 Nov 2019 23:09:49 +0100
+Message-ID: <20191108220953.30904-3-fw@strlen.de>
 In-Reply-To: 20191108220953.30904-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2450
+X-UID: 2451
 
---===============3839874953097790071==
+--===============3774366989212141571==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Peer could ack data at TCP level but refrain from sending mptcp-level ACKs.
-This could result in a growing the mptcp socket backlog indefinitely.
+After adding wmem accouting for the mptcp socket we could get
+into a situation where the mptcp socket can't transmit more data,
+and mptcp_clean_una doesn't reduce wmem even if snd_una has advanced
+because it currently will only remove entire dfrags.
 
-We should thus block mptcp_sendmsg until the peer has acked some of the
-sent data.
+Allow advancing the dfrag head sequence and reduce wmem,
+even though this isn't correct (as we can't release the page).
 
-In order to be able to do so, increment the mptcp socket wmem_queued
-counter on memory allocation and decrement it when releasing the memory
-on mptcp-level ack reception.
-
-Because TCP performns sndbuf auto-tuning up to tcp_wmem_max[2], make
-this the mptcp sk_sndbuf limit.
-
-In the future we could add experiment with autotuning as TCP does in
-tcp_sndbuf_expand().
+Because we will soon block on mptcp sk in case wmem is too large,
+call sk_stream_write_space() in case we reduced the backlog so
+userspace task blocked in sendmsg or poll will be woken up.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7bea6b62f66e..65f10bb372aa 100644
+index 65f10bb372aa..b93050056195 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -139,8 +139,11 @@ static inline bool mptcp_frag_can_collapse_to(const st=
-ruct mptcp_sock *msk,
+@@ -137,13 +137,18 @@ static inline bool mptcp_frag_can_collapse_to(const s=
+truct mptcp_sock *msk,
+ 		df->data_seq + df->data_len =3D=3D msk->write_seq;
+ }
  =
 
- static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
- {
-+	int len =3D dfrag->data_len + dfrag->overhead;
-+
- 	list_del(&dfrag->list);
--	sk_mem_uncharge(sk, dfrag->data_len + dfrag->overhead);
++static void dfrag_uncharge(struct sock *sk, int len)
++{
 +	sk_mem_uncharge(sk, len);
 +	sk_wmem_queued_add(sk, -len);
++}
++
+ static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
+ {
+ 	int len =3D dfrag->data_len + dfrag->overhead;
+ =
+
+ 	list_del(&dfrag->list);
+-	sk_mem_uncharge(sk, len);
+-	sk_wmem_queued_add(sk, -len);
++	dfrag_uncharge(sk, len);
  	put_page(dfrag->page);
  }
  =
 
-@@ -304,6 +307,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
-ock *ssk,
- 		if (!dfrag_collapsed) {
- 			get_page(dfrag->page);
- 			list_add_tail(&dfrag->list, &msk->rtx_queue);
-+			sk_wmem_queued_add(sk, frag_truesize);
-+		} else {
-+			sk_wmem_queued_add(sk, ret);
- 		}
+@@ -152,14 +157,31 @@ static void mptcp_clean_una(struct sock *sk)
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_data_frag *dtmp, *dfrag;
+ 	u64 snd_una =3D atomic64_read(&msk->snd_una);
++	bool cleaned =3D false;
  =
 
- 		/* charge data on mptcp rtx queue to the master socket
-@@ -711,6 +717,7 @@ static int mptcp_init_sock(struct sock *sk)
- 		return ret;
+ 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
+ 		if (after64(dfrag->data_seq + dfrag->data_len, snd_una))
+ 			break;
  =
 
- 	sk_sockets_allocated_inc(sk);
-+	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[2];
- =
-
- 	return 0;
+ 		dfrag_clear(sk, dfrag);
++		cleaned =3D true;
++	}
++
++	dfrag =3D mptcp_rtx_head(sk);
++	if (dfrag && after64(snd_una, dfrag->data_seq)) {
++		u64 delta =3D dfrag->data_seq + dfrag->data_len - snd_una;
++
++		dfrag->data_seq +=3D delta;
++		dfrag->data_len -=3D delta;
++
++		dfrag_uncharge(sk, delta);
++		cleaned =3D true;
++	}
++
++	if (cleaned) {
++		sk_mem_reclaim_partial(sk);
++		sk_stream_write_space(sk);
+ 	}
+-	sk_mem_reclaim_partial(sk);
  }
+ =
+
+ /* ensure we get enough memory for the frag hdr, beyond some minimal amoun=
+t of
 -- =
 
 2.23.0
 
---===============3839874953097790071==--
+--===============3774366989212141571==--
