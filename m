@@ -1,187 +1,289 @@
-Content-Type: multipart/mixed; boundary="===============0986083121941581307=="
+Content-Type: multipart/mixed; boundary="===============2303241759062599080=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: question on MP_CAPABLE v1 handshake
-Date: Thu, 07 Nov 2019 09:11:33 -0800
-Message-ID: <AA4DA599-3C56-4A27-A550-1C8B917BC8D3@apple.com>
-In-Reply-To: 22911f4932b5cfcfe75a4a3f93af2305c46434c9.camel@redhat.com
+Subject: [MPTCP] [Weekly meetings] MoM - 7th of November 2019
+Date: Fri, 08 Nov 2019 15:59:23 +0100
+Message-ID: <d34ff789-6b5f-a2dc-f791-ccd0f03b3a98@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2441
+X-UID: 2442
 
---===============0986083121941581307==
+--===============2303241759062599080==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-> On Nov 5, 2019, at 4:18 AM, Paolo Abeni <pabeni(a)redhat.com> wrote:
-> =
+Yesterday, we had our 74rd meeting with Peter and Ossama (Intel OTC), =
 
-> hi,
-> =
+Christoph (Apple), Paolo, Florian and Davide (RedHat) and myself (Tessares).
 
-> while testing the v1 MP_CAPABLE handshake, I stumbled upon the
-> following scenario:
-> =
-
-> syn + MP_CAPABLE ->
-> =
-
-> 	<- syn + ack + MP_CAPABLE(sndr key)
-> =
-
-> ack + MP_CAPABLE(sndr key, rcvr key)
-> =
-
-> 	<- ack + DSS(map,data_ack)
-> =
-
-> At this point, is the client still supposed to send MP_CAPABLE(sndr
-> key, rcvr key, data_len)? or should it send a plain DSS? Since it
-> received a DSS from the peer, the client knows that the MP_CAPABLE
-> options has been successfully received, but reading =
-
-> =
-
-> https://datatracker.ietf.org/doc/draft-ietf-mptcp-rfc6824bis/?include_tex=
-t=3D1
-> =
-
-> from section 3.1.:
-> =
-
-> """
->   If A does not
->   immediately have data to send, it MUST include the MP_CAPABLE on the
->   third ACK, but without the additional data parameters.  When A does
->   have data to send, it must repeat the sending of the MP_CAPABLE
->   option from the third ACK, with additional data parameters.
-> """
-> =
-
-> it looks like the client should always use MP_CAPABLE+data for the
-> first data packet, is that right?
-
-no, not always. Once the client receives a valid DATA_ACK from the server i=
-t knows that the server did receive the keys. This is somehow mentioned at:
-
-If B has data to send first, then the reliable delivery of the
-ACK+MP_CAPABLE can be inferred by the receipt of this data with a
-MPTCP Data Sequence Signal (DSS) option (Section 3.3 <https://tools.ietf.or=
-g/html/draft-ietf-mptcp-rfc6824bis-18#section-3.3>).
-
-The draft  says that the delivery can be inferred by the receipt of this da=
-ta with a DSS-option, but it should actually read "by the receipt of a DATA=
-_ACK". I actually mentioned that to Alan (https://mailarchive.ietf.org/arch=
-/msg/multipathtcp/Mo-bvEcMEodPph8rTpylFMQ85IE <https://mailarchive.ietf.org=
-/arch/msg/multipathtcp/Mo-bvEcMEodPph8rTpylFMQ85IE>) and suggested text to =
-him in private, but that text never made it into the draft.
-
-Do you want to send an e-mail to the IETF mailing-list to correct this?
-
-The text I suggest would be:
-
-"If B has data to send first, then the reliable delivery of the ACK
-can be inferred by the receipt of this data with an MPTCP
-DATA_ACK inside the DSS option (Section 3.3)."
-
-Christoph
-
-
-> =
-
-> Thanks,
-> =
-
-> Paolo
-> =
+Thanks again for this new good meeting!
 
 
 
---===============0986083121941581307==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Here are the minutes of the meeting:
 
-PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
-L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPjwvaGVhZD48Ym9keSBzdHlsZT0id29yZC13cmFwOiBi
-cmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdo
-aXRlLXNwYWNlOyIgY2xhc3M9IiI+SGVsbG8sPGJyIGNsYXNzPSIiPjxkaXY+PGJyIGNsYXNzPSIi
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPjxkaXYgY2xhc3M9IiI+T24gTm92IDUs
-IDIwMTksIGF0IDQ6MTggQU0sIFBhb2xvIEFiZW5pICZsdDs8YSBocmVmPSJtYWlsdG86cGFiZW5p
-QHJlZGhhdC5jb20iIGNsYXNzPSIiPnBhYmVuaUByZWRoYXQuY29tPC9hPiZndDsgd3JvdGU6PC9k
-aXY+PGJyIGNsYXNzPSJBcHBsZS1pbnRlcmNoYW5nZS1uZXdsaW5lIj48ZGl2IGNsYXNzPSIiPjxk
-aXYgY2xhc3M9IiI+aGksPGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj53aGlsZSB0ZXN0aW5nIHRo
-ZSB2MSBNUF9DQVBBQkxFIGhhbmRzaGFrZSwgSSBzdHVtYmxlZCB1cG9uIHRoZTxiciBjbGFzcz0i
-Ij5mb2xsb3dpbmcgc2NlbmFyaW86PGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj5zeW4gKyBNUF9D
-QVBBQkxFIC0mZ3Q7PGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj48c3BhbiBjbGFzcz0iQXBwbGUt
-dGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTpwcmUiPgk8L3NwYW4+Jmx0Oy0gc3luICsgYWNr
-ICsgTVBfQ0FQQUJMRShzbmRyIGtleSk8YnIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPmFjayArIE1Q
-X0NBUEFCTEUoc25kciBrZXksIHJjdnIga2V5KTxiciBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PHNw
-YW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hpdGUtc3BhY2U6cHJlIj4JPC9zcGFu
-PiZsdDstIGFjayArIERTUyhtYXAsZGF0YV9hY2spPGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj5B
-dCB0aGlzIHBvaW50LCBpcyB0aGUgY2xpZW50IHN0aWxsIHN1cHBvc2VkIHRvIHNlbmQgTVBfQ0FQ
-QUJMRShzbmRyPGJyIGNsYXNzPSIiPmtleSwgcmN2ciBrZXksIGRhdGFfbGVuKT8gb3Igc2hvdWxk
-IGl0IHNlbmQgYSBwbGFpbiBEU1M/IFNpbmNlIGl0PGJyIGNsYXNzPSIiPnJlY2VpdmVkIGEgRFNT
-IGZyb20gdGhlIHBlZXIsIHRoZSBjbGllbnQga25vd3MgdGhhdCB0aGUgTVBfQ0FQQUJMRTxiciBj
-bGFzcz0iIj5vcHRpb25zIGhhcyBiZWVuIHN1Y2Nlc3NmdWxseSByZWNlaXZlZCwgYnV0IHJlYWRp
-bmcgPGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj48YSBocmVmPSJodHRwczovL2RhdGF0cmFja2Vy
-LmlldGYub3JnL2RvYy9kcmFmdC1pZXRmLW1wdGNwLXJmYzY4MjRiaXMvP2luY2x1ZGVfdGV4dD0x
-IiBjbGFzcz0iIj5odHRwczovL2RhdGF0cmFja2VyLmlldGYub3JnL2RvYy9kcmFmdC1pZXRmLW1w
-dGNwLXJmYzY4MjRiaXMvP2luY2x1ZGVfdGV4dD0xPC9hPjxiciBjbGFzcz0iIj48YnIgY2xhc3M9
-IiI+ZnJvbSBzZWN0aW9uIDMuMS46PGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj4iIiI8YnIgY2xh
-c3M9IiI+ICZuYnNwOyZuYnNwO0lmIEEgZG9lcyBub3Q8YnIgY2xhc3M9IiI+ICZuYnNwOyZuYnNw
-O2ltbWVkaWF0ZWx5IGhhdmUgZGF0YSB0byBzZW5kLCBpdCBNVVNUIGluY2x1ZGUgdGhlIE1QX0NB
-UEFCTEUgb24gdGhlPGJyIGNsYXNzPSIiPiAmbmJzcDsmbmJzcDt0aGlyZCBBQ0ssIGJ1dCB3aXRo
-b3V0IHRoZSBhZGRpdGlvbmFsIGRhdGEgcGFyYW1ldGVycy4gJm5ic3A7V2hlbiBBIGRvZXM8YnIg
-Y2xhc3M9IiI+ICZuYnNwOyZuYnNwO2hhdmUgZGF0YSB0byBzZW5kLCBpdCBtdXN0IHJlcGVhdCB0
-aGUgc2VuZGluZyBvZiB0aGUgTVBfQ0FQQUJMRTxiciBjbGFzcz0iIj4gJm5ic3A7Jm5ic3A7b3B0
-aW9uIGZyb20gdGhlIHRoaXJkIEFDSywgd2l0aCBhZGRpdGlvbmFsIGRhdGEgcGFyYW1ldGVycy48
-YnIgY2xhc3M9IiI+IiIiPGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj5pdCBsb29rcyBsaWtlIHRo
-ZSBjbGllbnQgc2hvdWxkIGFsd2F5cyB1c2UgTVBfQ0FQQUJMRStkYXRhIGZvciB0aGU8YnIgY2xh
-c3M9IiI+Zmlyc3QgZGF0YSBwYWNrZXQsIGlzIHRoYXQgcmlnaHQ/PGJyIGNsYXNzPSIiPjwvZGl2
-PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2Pm5vLCBub3Qg
-YWx3YXlzLiBPbmNlIHRoZSBjbGllbnQgcmVjZWl2ZXMgYSB2YWxpZCBEQVRBX0FDSyBmcm9tIHRo
-ZSBzZXJ2ZXIgaXQga25vd3MgdGhhdCB0aGUgc2VydmVyIGRpZCByZWNlaXZlIHRoZSBrZXlzLiBU
-aGlzIGlzIHNvbWVob3cgbWVudGlvbmVkIGF0OjwvZGl2PjxkaXY+PGJyIGNsYXNzPSIiPjwvZGl2
-PjxkaXY+PHByZSBjbGFzcz0ibmV3cGFnZSIgc3R5bGU9ImZvbnQtc2l6ZTogMTMuMzMzMzMzMDE1
-NDQxODk1cHg7IG1hcmdpbi10b3A6IDBweDsgbWFyZ2luLWJvdHRvbTogMHB4OyBicmVhay1iZWZv
-cmU6IHBhZ2U7Ij5JZiBCIGhhcyBkYXRhIHRvIHNlbmQgZmlyc3QsIHRoZW4gdGhlIHJlbGlhYmxl
-IGRlbGl2ZXJ5IG9mIHRoZTwvcHJlPjxwcmUgY2xhc3M9Im5ld3BhZ2UiIHN0eWxlPSJmb250LXNp
-emU6IDEzLjMzMzMzMzAxNTQ0MTg5NXB4OyBtYXJnaW4tdG9wOiAwcHg7IG1hcmdpbi1ib3R0b206
-IDBweDsgYnJlYWstYmVmb3JlOiBwYWdlOyI+QUNLK01QX0NBUEFCTEUgY2FuIGJlIGluZmVycmVk
-IGJ5IHRoZSByZWNlaXB0IG9mIHRoaXMgZGF0YSB3aXRoIGEKTVBUQ1AgRGF0YSBTZXF1ZW5jZSBT
-aWduYWwgKERTUykgb3B0aW9uICg8YSBocmVmPSJodHRwczovL3Rvb2xzLmlldGYub3JnL2h0bWwv
-ZHJhZnQtaWV0Zi1tcHRjcC1yZmM2ODI0YmlzLTE4I3NlY3Rpb24tMy4zIiBjbGFzcz0iIj5TZWN0
-aW9uIDMuMzwvYT4pLjwvcHJlPjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjwvZGl2
-PjxkaXY+VGhlIGRyYWZ0ICZuYnNwO3NheXMgdGhhdCB0aGUgZGVsaXZlcnkgY2FuIGJlIGluZmVy
-cmVkIGJ5IHRoZSByZWNlaXB0IG9mIHRoaXMgZGF0YSB3aXRoIGEgRFNTLW9wdGlvbiwgYnV0IGl0
-IHNob3VsZCBhY3R1YWxseSByZWFkICJieSB0aGUgcmVjZWlwdCBvZiBhIERBVEFfQUNLIi4gSSBh
-Y3R1YWxseSBtZW50aW9uZWQgdGhhdCB0byBBbGFuICg8YSBocmVmPSJodHRwczovL21haWxhcmNo
-aXZlLmlldGYub3JnL2FyY2gvbXNnL211bHRpcGF0aHRjcC9Nby1idkVjTUVvZFBwaDhyVHB5bEZN
-UTg1SUUiIGNsYXNzPSIiPmh0dHBzOi8vbWFpbGFyY2hpdmUuaWV0Zi5vcmcvYXJjaC9tc2cvbXVs
-dGlwYXRodGNwL01vLWJ2RWNNRW9kUHBoOHJUcHlsRk1RODVJRTwvYT4pIGFuZCBzdWdnZXN0ZWQg
-dGV4dCB0byBoaW0gaW4gcHJpdmF0ZSwgYnV0IHRoYXQgdGV4dCBuZXZlciBtYWRlIGl0IGludG8g
-dGhlIGRyYWZ0LjwvZGl2PjxkaXY+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXY+RG8geW91IHdhbnQg
-dG8gc2VuZCBhbiBlLW1haWwgdG8gdGhlIElFVEYgbWFpbGluZy1saXN0IHRvIGNvcnJlY3QgdGhp
-cz88L2Rpdj48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2PlRoZSB0ZXh0IEkgc3VnZ2VzdCB3
-b3VsZCBiZTo8L2Rpdj48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJm
-b250LWZhbWlseTogTWVubG8tUmVndWxhcjsiIGNsYXNzPSIiPiJJZiBCIGhhcyBkYXRhIHRvIHNl
-bmQgZmlyc3QsIHRoZW4gdGhlIHJlbGlhYmxlIGRlbGl2ZXJ5IG9mIHRoZSBBQ0s8L3NwYW4+PGJy
-IHN0eWxlPSJmb250LWZhbWlseTogTWVubG8tUmVndWxhcjsiIGNsYXNzPSIiPjxzcGFuIHN0eWxl
-PSJmb250LWZhbWlseTogTWVubG8tUmVndWxhcjsiIGNsYXNzPSIiPmNhbiBiZSBpbmZlcnJlZCBi
-eSB0aGUgcmVjZWlwdCBvZiB0aGlzIGRhdGEgd2l0aCBhbiBNUFRDUDwvc3Bhbj48YnIgc3R5bGU9
-ImZvbnQtZmFtaWx5OiBNZW5sby1SZWd1bGFyOyIgY2xhc3M9IiI+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBNZW5sby1SZWd1bGFyOyIgY2xhc3M9IiI+REFUQV9BQ0sgaW5zaWRlIHRoZSBEU1Mg
-b3B0aW9uIChTZWN0aW9uIDMuMykuIjwvc3Bhbj48YnIgc3R5bGU9ImZvbnQtZmFtaWx5OiBNZW5s
-by1SZWd1bGFyOyIgY2xhc3M9IiI+PC9kaXY+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+Q2hyaXN0
-b3BoPC9kaXY+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdj48YnIgY2xhc3M9IiI+PGJsb2Nr
-cXVvdGUgdHlwZT0iY2l0ZSIgY2xhc3M9IiI+PGRpdiBjbGFzcz0iIj48ZGl2IGNsYXNzPSIiPjxi
-ciBjbGFzcz0iIj5UaGFua3MsPGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj5QYW9sbzxiciBjbGFz
-cz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PC9kaXY+PC9ibG9ja3F1b3RlPjwvZGl2PjxiciBjbGFz
-cz0iIj48L2JvZHk+PC9odG1sPg==
---===============0986083121941581307==--
+
+
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/
+
+ID      State        Name
+--      -----        ----
+1189048 Accepted     mptcp: fix stray wake-up event
+1189317 Accepted     mptcp: Use sk_family field in the mptcp_sock for =
+
+address family.
+1190120 Accepted     [v2,1/6] mptcp: Reference icsk_af_ops routines =
+
+through saved pointer
+1190118 Accepted     [v2,2/6] mptcp: Reference inet_stream_ops routines =
+
+through socket->ops
+1190116 Accepted     [v2,3/6] mptcp: Re-factor mptcp_getname routine to =
+
+be af-agnostic
+1190119 Accepted     [v2,4/6] mptcp: Re-factor subflow_v4_conn_request =
+
+to be af-agnostic
+1190122 Accepted     [v2,5/6] mptcp: Export low-level routines for IPv6
+1190121 Accepted     [v2,6/6] mptcp: Add IPv6 support
+
+
+
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/
+
+ID      State        Name
+--      -----        ----
+1189850 Awaiting Upstream [0/4] four small cleanups and fixes
+1189851 Awaiting Upstream [1/4] protocol.h: mptcp_subflow_get_map_offset =
+
+arg can be const
+1189852 Awaiting Upstream [2/4] options: ignore mptcp-level ack that is =
+
+ahead of write_seq
+1189853 Awaiting Upstream [3/4] protocol: use sk_wait_event helper
+1189854 Awaiting Upstream [4/4] poll: release lock before waiting
+1189894 Awaiting Upstream [1/5] mptcp: Make MPTCP IPv6 support depend on =
+
+CONFIG_IPV6=3Dy
+1189893 Awaiting Upstream [2/5] mptcp: Switch to CONFIG_MPTCP_IPV6
+1189895 Awaiting Upstream [3/5] mptcp: Switch to CONFIG_MPTCP_IPV6
+1189897 Awaiting Upstream [4/5] mptcp: Switch to CONFIG_MPTCP_IPV6
+1189896 Awaiting Upstream [5/5] mptcp: Switch to CONFIG_MPTCP_IPV6
+1190123 Changes Requested mptcp: Add DATA_FIN transmission and handling
+1191205 New          [1/2] mptcp: parse and emit MP_CAPABLE option =
+
+according to v1 spec.
+1191206 New          [2/2] mptcp: process MP_CAPABLE data option.
+
+
+
+Remaining items for the initial submission: Update:
+     - IPv6 support:
+         - Peter is working on it
+         - everything seems OK for the initial submission
+         - Peter will look at supported v6mapped but that's not needed =
+
+for the 1st patch set
+         - We should squash the last one
+         =E2=86=92 *@Peter* to give instructions to Matt to know where to s=
+quash =
+
+it in multiple commits
+
+     - MPTCP v1 support:
+         - Christoph is working on it
+         - First patches shared on the ML
+
+         - one question also asked by Paolo on the ML:
+             - not enough room to send MPTCP options
+             - should be always OK with MP_CAPABLE
+             - we might have issues even with MP_CAPABLE, e.g. MD5 =
+
+because it can use 18 bytes
+             - if we don't have enough space in MP_CAPABLE, we fallback =
+
+to TCP
+             - in mptcp.org, we don't try to use MPTCP if TCP_MD5 is =
+
+configured.
+             - but independent to MPTCPv1 support so Paolo will be able =
+
+to look at that
+
+         - question about 3rd packets with MP_CAPABLE. Christoph replied =
+
+on a separated email:
+             - if the draft is not very clear, we should not hesitate to =
+
+send an email on the IETF ML
+
+         - the first patch-set sent by Christoph is using SHA1. But it =
+
+should use SHA256:
+             - but how to apply it?
+             - As we plan to put v1 patches just after having introduced v0
+             - But if we squash, it means v0 will use SHA256 (even if we =
+
+drop it in the next patch)
+             - Or could be part of the patch introducing v1, but quite =
+
+"big" (3 patches)
+             - or as a new part 3, just after kselftests, would be sent =
+
+immediately after
+             - maybe difficult to review if it is in one big patch.
+
+             - or move other patches from before the kselftests (related =
+
+to multiple subflows support =E2=86=92 MP_JOIN support, PM, ADD_ADDR handli=
+ng):
+                 =E2=86=92 maybe the only solution to keep the number of pa=
+tches =
+
+under 20
+                 =E2=86=92 seems to make sense
+                 =E2=86=92 *@Matth*: move these commits just after the =
+
+introduction of the kselftests
+
+             - Wireshark support for v1 has just been merged
+             - TCPDump support is not planned yet
+
+     - DATA_FIN:
+         - Mat is working on it
+         - It seems still to be too big for the "initial submission" =
+
+with the minimal feature
+         - because sending the DATA_FIN might be required for some =
+
+implementations (not closing the MPTCP connections), it could be good to =
+
+at least send the DATA_FIN, without the full support.
+
+         - *@Mat*: maybe for the initial submission, part 2, where only =
+
+1 subflow is supported, could we send the DATA_FIN just before closing =
+
+the connection? With the minimal support.
+
+     - Shared recv window:
+         - work to be done
+
+     - Active backup support:
+         - Florian is working on it
+         - Patches (and winter) are coming
+
+     - optimisation of options in TCP "struct mptcp_options_received":
+         - Peter is working on it
+         - Note: in some code of .h files, some spaces/tabs are used =
+
+while it should be the opposite
+         - Peter will send patches soon
+
+     - if the peer never sends MPTCP-level ACK, a lot of memory will be =
+
+used:
+         - Florian is working on that
+
+     - MAINTAINERS file
+
+
+
+kselftests:
+     - should we modify the default timeout (instead of 450s)?
+     - When you use --  make -C tools/testing/selftests =
+
+TARGETS=3Dnet/mptcp run_tests   -- how do you pass arguments to =
+
+mptcp_connect.sh script?:
+         =E2=86=92 we need to run the script manually
+         =E2=86=92 or maybe env vars? Never tried
+         =E2=86=92 if ran manually, we don't depend on the timeout
+
+     - *TODO* IPv6 should be enabled by default
+     - *TODO* Timeout could be decreased but not under 45 seconds: we =
+
+still need to setup a different timeout
+
+
+
+Patchwork:
+     - https://patchwork.ozlabs.org/project/mptcp/
+
+     - which status to use?:
+         - New =E2=86=92 Waiting for review for anybody
+         - Under review =E2=86=92 In review or waiting for precisions?
+         - Accepted =E2=86=92 =3D applied? Or waiting to be applied? (but t=
+hen no =
+
+longer visible)
+         - Rejected =E2=86=92 we don't want that (at all)
+         - RFC
+         - Not applicable =E2=86=92 to be rebased?
+         - Changes requested =E2=86=92 we need a new version (no more an "A=
+ction =
+
+Required" state)
+         - Awaiting Upstream =E2=86=92 waiting to be applied (more visible =
+than =
+
+Accepted since it's an "Action Required" state, included by default in =
+
+the patch list)
+         - Superseded =E2=86=92 replaced by another one? Very similar to =
+
+"Changes requested", we don't have to use it
+         - Deferred =E2=86=92 for later?
+         - Needs review/ACKs =E2=86=92 When assigned to something but the r=
+eview =
+
+didn't start =E2=86=92 we can also keep the "Under review" status
+
+     - When do we archive?:
+         - After each weekly meeting =E2=86=92 yes to be able to discuss ab=
+out =
+
+what has recently been changed
+         - Once it is applied? =E2=86=92 then no
+
+
+
+TODO Matth:
+     - CI: Check Kselftest in the commit where it is introduced
+     - Apply accepted patches
+     - test IPv6 in kselftests
+     - reduce timeout kselftests
+     - put on the wiki the meaning of patchwork status
+
+
+
+Next meeting:
+     - We propose to have it next Thursday, the 14th of November.
+     - Usual time: 17:00 UTC (9am PST, 6pm CET)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20191114
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+
+Talk to you next week,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============2303241759062599080==--
