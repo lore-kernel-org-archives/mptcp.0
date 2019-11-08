@@ -1,85 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============3251149748731913050=="
+Content-Type: multipart/mixed; boundary="===============8040941029461656198=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Add DATA_FIN transmission and handling
-Date: Fri, 08 Nov 2019 11:08:15 -0800
-Message-ID: <alpine.OSX.2.21.1911081058200.66972@cavianch-mobl1.amr.corp.intel.com>
-In-Reply-To: 7fcd5297-be1f-03a4-0118-5dd498fd6b71@tessares.net
+Subject: [MPTCP] [RFC PATCH 0/6] mptcp: add and use wmem accounting for rtx
+ queue
+Date: Fri, 08 Nov 2019 23:09:47 +0100
+Message-ID: <20191108220953.30904-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2448
+X-UID: 2449
 
---===============3251149748731913050==
+--===============8040941029461656198==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 8 Nov 2019, Matthieu Baerts wrote:
+This series adds wmem accounting and makes mptcp sockets block once
+the sndbuf size is reached.  rtx cleanup is changed to wakeup any
+blocked mptcp socket once enough wmem is available again.
 
-> Hi Mat,
->
-> On 06/11/2019 05:50, Mat Martineau wrote:
->> Send and process received DATA_FIN options. This requires addition of a
->> state machine to the MPTCP socket to handle the closing process. DATA_FIN
->> is sent along with a DSS mapping for the final data transmitted, or on a
->> bare ACK if there is no data to transmit.
->> =
+sndbuf is set to the maximum allowed size of the tcp wmem.
+There is no auto-tuning, I think we can add that later on as an
+enhancement.
 
->> This is still a work in progress, including these areas:
->>
->>   * Need to finish handling of DSS_ACKs for the state machine.
->>
->>   * Need to double-check whether it's correct to bypass inet_shutdown
->>     as the current code does.
->>
->>   * A DATA_FIN that arrives on a packet without data payload (unless it's
->>     a TCP FIN) are discarded by tcp_data_queue() and not propagated to
->>     the MPTCP socket. This is detected in mptcp_incoming_options() but
->>     not yet handled. The skb with the DATA_FIN could be cloned and
->>     placed in the subflow error queue, or a workqueue could handle it.
->> =
+This is an RFC series in order to prevent the patches from getting
+applied, I will send a v2 as soon as the open questions are sorted
+out.  Everthing continues to work for me.
 
->> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->
-> Yesterday at the meeting we talked a bit about this patch. Here is what w=
-e =
+I've tested these patches with an 4k-sized sndbuf, which results
+in frequent wmem blocks and mptcp connection recovers once the acks
+come in.
 
-> said:
->
->
->    - DATA_FIN:
->        - Mat is working on it
->        - It seems still to be too big for the "initial submission" with t=
-he =
+1.  (see patch 5): add a new work queue or re-use existing one?
+2.  Should all patches get squashed or should there be a
+    "add wmem accouting" patch?  A mix of both?
 
-> minimal feature
->        - because sending the DATA_FIN might be required for some =
+2, 3 and 4 would be squash candidates for example even if we add
+a extra "wmem patch".
 
-> implementations (not closing the MPTCP connections), it could be good to =
-at =
+I will send the next iteration of the scheduler patches after the above
+is sorted out.
+The scheduler patches have no major changes aside from addressing a
+comment from Paolo.
 
-> least send the DATA_FIN, without the full support.
->
->        - *Mat*: maybe for the initial submission, part 2, where only 1 =
+Meanwhile I am working on removal of __tcp_poll and on make the mptcp
+socket conn list store tcp_sk structs rather than require a 'struct socket'.
 
-> subflow is supported, could we send the DATA_FIN just before closing the =
+Florian Westphal (6):
+      mptcp: add wmem_queued accounting
+      mptcp: allow partial cleaning of rtx head dfrag
+      subflow: store known available bytes in subflow
+      options: ack pending sequence
+      mptcp: add ack work queue
+      sendmsg: block until mptcp sk is writeable
 
-> connection? With the minimal support.
->
->
-> What do you think about that?
->
+ net/mptcp/options.c  | 13 ++++++--
+ net/mptcp/protocol.c | 86 +++++++++++++++++++++++++++++++++++++++++++++++-=
+----
+ net/mptcp/protocol.h |  5 +--
+ net/mptcp/subflow.c  | 18 ++++++++---
+ 4 files changed, 105 insertions(+), 17 deletions(-)
 
-For the single-subflow case, that's a good point. It will probably work =
 
-well enough to set DATA_FIN whenever FIN is sent. I'll focus on that first =
-
-and then see if there's also a single-subflow shortcut for acking the =
-
-peer's DATA_FIN.
-
---
-Mat Martineau
-Intel
---===============3251149748731913050==--
+--===============8040941029461656198==--
