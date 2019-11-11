@@ -1,89 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============5158372760159048154=="
+Content-Type: multipart/mixed; boundary="===============8523964829737988036=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 6/6] sendmsg: block until mptcp sk is writeable
-Date: Fri, 08 Nov 2019 23:09:53 +0100
-Message-ID: <20191108220953.30904-7-fw@strlen.de>
-In-Reply-To: 20191108220953.30904-1-fw@strlen.de
+Subject: [MPTCP] Re: [RFC PATCH 5/6] mptcp: add ack work queue
+Date: Mon, 11 Nov 2019 10:19:41 +0100
+Message-ID: <ab80d76332d747c1b44ae39bc46503826b7b5b27.camel@redhat.com>
+In-Reply-To: 20191108220953.30904-6-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2455
+X-UID: 2456
 
---===============5158372760159048154==
+--===============8523964829737988036==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This disables transmit of new data until the peer has acked
-enough mptcp data to get below the wspace write threshold (more than
-half of wspace upperlimit is available again).
+On Fri, 2019-11-08 at 23:09 +0100, Florian Westphal wrote:
+> This is needed in the (unlikely) case that userspace is blocked in
+> mptcp_sendmsg because wmem is exhausted.
+> =
 
-Also have poll not report EPOLLOUT in this case, its not relevant if a
-subflow is writeable.
+> In that case, only the rtx work queue will clean the rtx backlog, but it
+> could take several milliseconds until it runs next, so add a dedicated
+> work queue that will run as soon as possible.
+> =
 
-The latter is a temporary workaround that is needed because mptcp_poll
-walks the subflows and calls __tcp_poll on each of them.
-Because subflow ssk is usually writable, we will have to undo-that
-if the mptcp sndbuf is exhausted.  This won't be needed anymore once
-__tcp_poll is removed, I am working on this.
+> We can avoid scheduling the work if the mptcp socket is writeable, next
+> send/recv call will also clean acked dfrags.
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+> An alternative approach is to add a new mptcp flag and re-use the
+> existing retrans worker, let me know if this is the preferred solution.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5c6948085ef4..db0261abe4df 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -406,6 +406,18 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- 		return ret;
- 	}
- =
+It looks like core TCP uses both approach for timers (overloading a
+timer with multiple duties, and using multiple timers for different
+activities).
 
-+	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
-+
-+	mptcp_clean_una(sk);
-+
-+	while (!sk_stream_is_writeable(sk)) {
-+		ret =3D sk_stream_wait_memory(sk, &timeo);
-+		if (ret)
-+			goto out;
-+
-+		mptcp_clean_una(sk);
-+	}
-+
- 	ssk =3D mptcp_subflow_get(msk);
- 	if (!ssk) {
- 		release_sock(sk);
-@@ -421,8 +433,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
- 	pr_debug("conn_list->subflow=3D%p", ssk);
- =
+Since mptcp_ack_work() matches closely the initial bits of
+mptcp_retransmit(), In this specific scenario I think reusing the
+existing worker (plus flag) would be better.
 
- 	lock_sock(ssk);
--	mptcp_clean_una(sk);
--	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- 	while (msg_data_left(msg)) {
- 		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
- 					 &size_goal);
-@@ -1328,6 +1338,10 @@ static __poll_t mptcp_poll(struct file *file, struct=
- socket *sock,
- 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
- 		ret |=3D __tcp_poll(tcp_sock->sk);
- 	}
-+
-+	if (!sk_stream_is_writeable(sk))
-+		ret &=3D ~(EPOLLOUT|EPOLLWRNORM);
-+
- 	release_sock(sk);
- =
+Cheers,
 
- 	return ret;
--- =
+Paolo
 
-2.23.0
-
---===============5158372760159048154==--
+--===============8523964829737988036==--
