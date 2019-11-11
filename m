@@ -1,44 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============1780386579792086692=="
+Content-Type: multipart/mixed; boundary="===============3034220752623399910=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/4] mptcp: init ctx->icsk_af_ops in subflow_ulp_init()
-Date: Mon, 11 Nov 2019 12:29:00 +0100
-Message-ID: <ffcc774eaf1f11ce57bbee484bed6d8116dc8585.1573471449.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 4/4] mptcp: init new_ctx->icsk_af_ops() in
+ subflow_ulp_clone()
+Date: Mon, 11 Nov 2019 12:29:01 +0100
+Message-ID: <7b21ca56785decb50da4b6432009bf039add80fb.1573471458.git.pabeni@redhat.com>
 In-Reply-To: cover.1573471403.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2461
+X-UID: 2462
 
---===============1780386579792086692==
+--===============3034220752623399910==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently inited in "mptcp: Add key generation and token tree", better
-move initializiation here, where we already init icsk->icsk_af_ops
+Currently inited in "mptcp: Add key generation and token tree",
+causing transient build failure, move here for consistency
+and fix build issue
 
-Squash-to: "mptcp: Handle MP_CAPABLE options for outgoing connections"
+Squash-to: "mptcp: Create SUBFLOW socket for incoming connections"
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/subflow.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/mptcp/subflow.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 10ec2bcb9807..de10f7f9740c 100644
+index 5c0594d09cc5..869010587df4 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -101,6 +101,7 @@ static int subflow_ulp_init(struct sock *sk)
- 	pr_debug("subflow=3D%p", ctx);
+@@ -212,6 +212,7 @@ static void subflow_ulp_clone(const struct request_sock=
+ *req,
+ 			      const gfp_t priority)
+ {
+ 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
++	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
+ 	struct mptcp_subflow_context *new_ctx;
  =
 
- 	tp->is_mptcp =3D 1;
-+	ctx->icsk_af_ops =3D icsk->icsk_af_ops;
- 	icsk->icsk_af_ops =3D &subflow_specific;
- out:
- 	return err;
+ 	/* newsk->sk_socket is NULL at this point */
+@@ -221,6 +222,7 @@ static void subflow_ulp_clone(const struct request_sock=
+ *req,
+ =
+
+ 	new_ctx->conn =3D NULL;
+ 	new_ctx->conn_finished =3D 1;
++	new_ctx->icsk_af_ops =3D old_ctx->icsk_af_ops;
+ =
+
+ 	if (subflow_req->mp_capable) {
+ 		new_ctx->mp_capable =3D 1;
 -- =
 
 2.21.0
 
---===============1780386579792086692==--
+--===============3034220752623399910==--
