@@ -1,27 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============1034859915561936797=="
+Content-Type: multipart/mixed; boundary="===============2402728620710362253=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 5/6] mptcp: add ack work queue
-Date: Mon, 11 Nov 2019 16:21:02 +0100
-Message-ID: <20191111152102.GA19558@breakpoint.cc>
-In-Reply-To: ab80d76332d747c1b44ae39bc46503826b7b5b27.camel@redhat.com
+Subject: [MPTCP] [PATCH 1/4] mptcp: move mp_capable initialization at
+ subflow_init_req() start
+Date: Mon, 11 Nov 2019 17:53:50 +0100
+Message-ID: <a1364a4a7515883497bb0b99db81eb1ca7dd73f1.1573488686.git.pabeni@redhat.com>
+In-Reply-To: cover.1573488686.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2463
+X-UID: 2464
 
---===============1034859915561936797==
+--===============2402728620710362253==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> Since mptcp_ack_work() matches closely the initial bits of
-> mptcp_retransmit(), In this specific scenario I think reusing the
-> existing worker (plus flag) would be better.
+This will avoid moving the code in later patch and makes disabling
+with md5 easier
 
-Done: https://git.breakpoint.cc/cgit/fw/mptcp-next.git/commit/?h=3Dwmem_acc=
-t_05&id=3Dfea55d959e29da51c605dad9c5e84544622d1b49
+Squash-to: "mptcp: Create SUBFLOW socket for incoming connections"
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/subflow.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'll resend once others had a chance to look at this series as well.
---===============1034859915561936797==--
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 869010587df4..9b56fe9a83f2 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -28,6 +28,8 @@ static void subflow_init_req(struct request_sock *req,
+ 	memset(&rx_opt.mptcp, 0, sizeof(rx_opt.mptcp));
+ 	mptcp_get_options(skb, &rx_opt);
+ =
+
++	subflow_req->mp_capable =3D 0;
++
+ 	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
+ 		subflow_req->mp_capable =3D 1;
+ 		if (rx_opt.mptcp.version >=3D listener->request_version)
+@@ -35,8 +37,6 @@ static void subflow_init_req(struct request_sock *req,
+ 		else
+ 			subflow_req->version =3D rx_opt.mptcp.version;
+ 		subflow_req->remote_key =3D rx_opt.mptcp.sndr_key;
+-	} else {
+-		subflow_req->mp_capable =3D 0;
+ 	}
+ }
+ =
+
+-- =
+
+2.21.0
+
+--===============2402728620710362253==--
