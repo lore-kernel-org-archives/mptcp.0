@@ -1,46 +1,27 @@
-Content-Type: multipart/mixed; boundary="===============2004855286413505954=="
+Content-Type: multipart/mixed; boundary="===============6393975214361449215=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 4/4] mptcp: remove unneeded check in
- mptcp_established_options_mp()
-Date: Mon, 11 Nov 2019 17:53:53 +0100
-Message-ID: <befdcd3abbcf4457e782ffec0fd594100f736394.1573488760.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH 1/4] mptcp: disable mptcp when md5sig is set on
+ socket
+Date: Mon, 11 Nov 2019 17:58:02 +0100
+Message-ID: <20191111165802.GB19558@breakpoint.cc>
 In-Reply-To: cover.1573488686.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2468
+X-UID: 2469
 
---===============2004855286413505954==
+--===============6393975214361449215==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-we now have centralized check in mptcp_established_options()
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> As per last public mtg discussion, md5sig will cause TCP option space
+> exaustion. Without md5sig we can't exhaust the TCP option space.
 
-Squash-to: "mptcp: Add handling of outgoing MP_JOIN requests"
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/options.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+How can you enable MD5SIG on an mptcp socket? I don't think its
+possible, as we don't expose the subflow tcp sockets to userspace and
+we don't allow setsockotps anymore.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index e0c6a3b98544..9080a5fed918 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -371,8 +371,7 @@ static bool mptcp_established_options_mp(struct sock *s=
-k, unsigned int *size,
- 		pr_debug("subflow=3D%p, local_key=3D%llu, remote_key=3D%llu",
- 			 subflow, subflow->local_key, subflow->remote_key);
- 		return true;
--	} else if (subflow->mp_join && !subflow->fourth_ack &&
--		   remaining >=3D TCPOLEN_MPTCP_MPJ_ACK) {
-+	} else if (subflow->mp_join && !subflow->fourth_ack) {
- 		opts->suboptions =3D OPTION_MPTCP_MPJ_ACK;
- 		memcpy(opts->hmac, subflow->hmac, MPTCPOPT_HMAC_LEN);
- 		*size =3D TCPOLEN_MPTCP_MPJ_ACK;
--- =
-
-2.21.0
-
---===============2004855286413505954==--
+--===============6393975214361449215==--
