@@ -1,67 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============8463067316381436942=="
+Content-Type: multipart/mixed; boundary="===============6780296289245883741=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/4] mptcp: add and use wmem_queued accounting
-Date: Tue, 12 Nov 2019 15:10:34 +0100
-Message-ID: <20191112141038.19213-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 1/4] mptcp: add wmem_queued accounting
+Date: Tue, 12 Nov 2019 15:10:35 +0100
+Message-ID: <20191112141038.19213-2-fw@strlen.de>
+In-Reply-To: 20191112141038.19213-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2483
+X-UID: 2484
 
---===============8463067316381436942==
+--===============6780296289245883741==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is v2 of the wmem accouting patch set.
+Peer could ack data at TCP level but refrain from sending mptcp-level ACKs.
+This could result in a growing the mptcp socket backlog indefinitely.
 
-I've dropped the ack_seq patches, we can resurrect them later on if needed.
+We should thus block mptcp_sendmsg until the peer has acked some of the
+sent data.
 
-After adding wmem thresholds, mptcp can deadlock at connection level when
-both sides call write() at the same time and sndbuf is exhausted.
+In order to be able to do so, increment the mptcp socket wmem_queued
+counter on memory allocation and decrement it when releasing the memory
+on mptcp-level ack reception.
 
-This won't happen in the selftests because it only sends small amounts
-of data at a time and will always call read() if data is available.
-It could happen with code that sends large amount of data at once
-though, or when sndbuf is reduced via setsockopt:
+Because TCP performns sndbuf auto-tuning up to tcp_wmem_max[2], make
+this the mptcp sk_sndbuf limit.
 
-Unlike TCP, which acknowledges in-sequence bytes queued to the socket, MPTCP
-updates its ack_seq only when recv() is called.
+In the future we could add experiment with autotuning as TCP does in
+tcp_sndbuf_expand().
 
-In case both peers are blocked in write, no updates of the mptcp ack
-sequence space occurs.  This in turn can prevent both peers from making
-any progress: even if all data is queued on the peer, it will look like no
-data arrived and thus no wmem can be freed up for the write() to complete.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Resolving this will need more work to get pushed into the data_ready
-callback, which is hard because of need to synchronize with other subflows
-used by same mptcp socket.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7bea6b62f66e..65f10bb372aa 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -139,8 +139,11 @@ static inline bool mptcp_frag_can_collapse_to(const st=
+ruct mptcp_sock *msk,
+ =
 
-The following changes since commit 6e61dd3c078fe69ac2e442a9251d771a61dcc62f:
+ static void dfrag_clear(struct sock *sk, struct mptcp_data_frag *dfrag)
+ {
++	int len =3D dfrag->data_len + dfrag->overhead;
++
+ 	list_del(&dfrag->list);
+-	sk_mem_uncharge(sk, dfrag->data_len + dfrag->overhead);
++	sk_mem_uncharge(sk, len);
++	sk_wmem_queued_add(sk, -len);
+ 	put_page(dfrag->page);
+ }
+ =
 
-  subflow: wake parent mptcp socket on subflow state change (2019-11-08 15:=
-22:58 +0000)
+@@ -304,6 +307,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 		if (!dfrag_collapsed) {
+ 			get_page(dfrag->page);
+ 			list_add_tail(&dfrag->list, &msk->rtx_queue);
++			sk_wmem_queued_add(sk, frag_truesize);
++		} else {
++			sk_wmem_queued_add(sk, ret);
+ 		}
+ =
 
-are available in the Git repository at:
+ 		/* charge data on mptcp rtx queue to the master socket
+@@ -711,6 +717,7 @@ static int mptcp_init_sock(struct sock *sk)
+ 		return ret;
+ =
 
-  git://git.breakpoint.cc/fw/mptcp-next.git wmem_acct_06
+ 	sk_sockets_allocated_inc(sk);
++	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[2];
+ =
 
-for you to fetch changes up to eea081f8828bbe2c503873319374a7666c6b6af2:
+ 	return 0;
+ }
+-- =
 
-  sendmsg: block until mptcp sk is writeable (2019-11-12 14:53:29 +0100)
+2.23.0
 
-----------------------------------------------------------------
-Florian Westphal (4):
-      mptcp: add wmem_queued accounting
-      mptcp: allow partial cleaning of rtx head dfrag
-      mptcp: add and use mptcp RTX flag
-      sendmsg: block until mptcp sk is writeable
-
- net/mptcp/options.c  |  2 +-
- net/mptcp/protocol.c | 77 +++++++++++++++++++++++++++++++++++++++++++++---=
-----
- net/mptcp/protocol.h |  3 +-
- 3 files changed, 70 insertions(+), 12 deletions(-)
-
---===============8463067316381436942==--
+--===============6780296289245883741==--
