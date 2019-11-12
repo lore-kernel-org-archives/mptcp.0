@@ -1,59 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============1840918490740138737=="
+Content-Type: multipart/mixed; boundary="===============8463067316381436942=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 4/6] options: ack pending sequence
-Date: Tue, 12 Nov 2019 14:13:11 +0100
-Message-ID: <20191112131311.GF19558@breakpoint.cc>
-In-Reply-To: alpine.OSX.2.21.1911111646501.7818@mjmartin-mac01.local
+Subject: [MPTCP] [PATCH v2 0/4] mptcp: add and use wmem_queued accounting
+Date: Tue, 12 Nov 2019 15:10:34 +0100
+Message-ID: <20191112141038.19213-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2482
+X-UID: 2483
 
---===============1840918490740138737==
+--===============8463067316381436942==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index 80dbe7662cea..b488bf07ada5 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -418,13 +418,20 @@ static bool mptcp_established_options_dss(struct =
-sock *sk, struct sk_buff *skb,
-> > 		ack_size +=3D TCPOLEN_MPTCP_DSS_BASE;
-> > =
+This is v2 of the wmem accouting patch set.
 
-> > 	if (ack_size <=3D remaining) {
-> > +		const struct mptcp_subflow_context *subflow;
-> > 		struct mptcp_sock *msk;
-> > =
+I've dropped the ack_seq patches, we can resurrect them later on if needed.
 
-> > 		dss_size +=3D ack_size;
-> > =
+After adding wmem thresholds, mptcp can deadlock at connection level when
+both sides call write() at the same time and sndbuf is exhausted.
 
-> > -		msk =3D mptcp_sk(mptcp_subflow_ctx(sk)->conn);
-> > +		subflow =3D mptcp_subflow_ctx(sk);
-> > +		msk =3D mptcp_sk(subflow->conn);
-> > 		if (msk) {
-> > -			opts->ext_copy.data_ack =3D msk->ack_seq;
-> > +			u64 ack_seq =3D READ_ONCE(msk->ack_seq);
-> > +
-> > +			if (subflow->map_valid)
-> > +				ack_seq +=3D subflow->data_avail;
-> =
+This won't happen in the selftests because it only sends small amounts
+of data at a time and will always call read() if data is available.
+It could happen with code that sends large amount of data at once
+though, or when sndbuf is reduced via setsockopt:
 
-> I'm not sure this works well with multiple subflows. It could ack a later
-> sequence number on this subflow, then send an earlier sequence number in a
-> bare ack on another subflow. They should be close enough that the earlier
-> seq would be ignored, but it would be better to send consistent acks.
+Unlike TCP, which acknowledges in-sequence bytes queued to the socket, MPTCP
+updates its ack_seq only when recv() is called.
 
-That would require far more changes since this means we need to move
-msk->ack_seq update away from recvmsg.
+In case both peers are blocked in write, no updates of the mptcp ack
+sequence space occurs.  This in turn can prevent both peers from making
+any progress: even if all data is queued on the peer, it will look like no
+data arrived and thus no wmem can be freed up for the write() to complete.
 
-I think its best to drop this patch for now, its annoying to have this
-behaviour of acking data that was consumed by userspace rather than what
-was received but I don't see a simple solution nor is it related to wmem
-accouting.
---===============1840918490740138737==--
+Resolving this will need more work to get pushed into the data_ready
+callback, which is hard because of need to synchronize with other subflows
+used by same mptcp socket.
+
+The following changes since commit 6e61dd3c078fe69ac2e442a9251d771a61dcc62f:
+
+  subflow: wake parent mptcp socket on subflow state change (2019-11-08 15:=
+22:58 +0000)
+
+are available in the Git repository at:
+
+  git://git.breakpoint.cc/fw/mptcp-next.git wmem_acct_06
+
+for you to fetch changes up to eea081f8828bbe2c503873319374a7666c6b6af2:
+
+  sendmsg: block until mptcp sk is writeable (2019-11-12 14:53:29 +0100)
+
+----------------------------------------------------------------
+Florian Westphal (4):
+      mptcp: add wmem_queued accounting
+      mptcp: allow partial cleaning of rtx head dfrag
+      mptcp: add and use mptcp RTX flag
+      sendmsg: block until mptcp sk is writeable
+
+ net/mptcp/options.c  |  2 +-
+ net/mptcp/protocol.c | 77 +++++++++++++++++++++++++++++++++++++++++++++---=
+----
+ net/mptcp/protocol.h |  3 +-
+ 3 files changed, 70 insertions(+), 12 deletions(-)
+
+--===============8463067316381436942==--
