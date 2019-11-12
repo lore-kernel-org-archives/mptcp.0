@@ -1,38 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============2913965928627202996=="
+Content-Type: multipart/mixed; boundary="===============3107311490073663770=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 5/6] mptcp: add ack work queue
-Date: Mon, 11 Nov 2019 17:04:16 -0800
-Message-ID: <alpine.OSX.2.21.1911111700590.7818@mjmartin-mac01.local>
-In-Reply-To: 20191111152102.GA19558@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
+ for dss/mp_capable
+Date: Tue, 12 Nov 2019 09:21:19 +0100
+Message-ID: <728e24cae8748a2a2f2622cff018446650f88150.camel@redhat.com>
+In-Reply-To: 93158d7788e55c71ff95b741257923df9518772e.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2479
+X-UID: 2480
 
---===============2913965928627202996==
+--===============3107311490073663770==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2019-11-11 at 13:50 -0800, Peter Krystad wrote:
+> Hi Paolo -
+> =
 
-On Mon, 11 Nov 2019, Florian Westphal wrote:
+> On Mon, 2019-11-11 at 17:53 +0100, Paolo Abeni wrote:
+> > since such option will always fit the tcp header, module bugs.
+> =
 
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
->> Since mptcp_ack_work() matches closely the initial bits of
->> mptcp_retransmit(), In this specific scenario I think reusing the
->> existing worker (plus flag) would be better.
->
-> Done: https://git.breakpoint.cc/cgit/fw/mptcp-next.git/commit/?h=3Dwmem_a=
-cct_05&id=3Dfea55d959e29da51c605dad9c5e84544622d1b49
->
-> I'll resend once others had a chance to look at this series as well.
+> "modulo"
 
-I think the combined worker should be ok for DATA_FIN too (which Florian =
+thnx! Hopefully comment should be dropped when squashing ;)
 
-had mentioned sharing the ack workqueue with).
+> How is it guaranteed that it will always fit, now and in the future?
 
---
-Mat Martineau
-Intel
---===============2913965928627202996==--
+TCP option space must accomodate tstamp (12 bytes) and MPTCP options.
+
+AFAICS DSS, MP_CAPABLE and MP_JOIN are mutually esclusive, and the
+bigger is DSS with 64 bytes ack/seq and csum with a total of 28 bytes -
+which fit the TCP option space.
+
+Additional MPTCP options (ADD/DEL_ADDR/PRIO/FAIL/FASTCLOSE/...) can
+indeed run out of space, but that failure is not fatal (do not break
+the connection nor causes fallback) and is handled gracefully - no
+WARN, just omit the option. Additionally we could increment some MIB
+counter.
+
+Thanks,
+
+Paolo
+
+--===============3107311490073663770==--
