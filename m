@@ -1,183 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============3893818372775750668=="
+Content-Type: multipart/mixed; boundary="===============0194675510401486207=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 3/4] mptcp: add and use mptcp RTX flag
-Date: Tue, 12 Nov 2019 15:10:37 +0100
-Message-ID: <20191112141038.19213-4-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 4/4] sendmsg: block until mptcp sk is writeable
+Date: Tue, 12 Nov 2019 15:10:38 +0100
+Message-ID: <20191112141038.19213-5-fw@strlen.de>
 In-Reply-To: 20191112141038.19213-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2486
+X-UID: 2487
 
---===============3893818372775750668==
+--===============0194675510401486207==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is needed in the (unlikely) case that userspace is blocked in
-mptcp_sendmsg because wmem is exhausted.
+This disables transmit of new data until the peer has acked
+enough mptcp data to get below the wspace write threshold (more than
+half of wspace upperlimit is available again).
 
-In that case, only the rtx work queue will clean the rtx backlog, but it
-could take several milliseconds until it runs next.  So, allow it to get
-scheduled as soon as possible so wmem can be reclaimed if the mptcp
-socket sndbuf is exhausted.
+Also have poll not report EPOLLOUT in this case, its not relevant if a
+subflow is writeable.
 
-Because such quick-schedule should not cause retransmits, add a flag
-that indicates when the work queue has been scheduled on behalf of the
-retransmit timer.
+The latter is a temporary workaround that is needed because mptcp_poll
+walks the subflows and calls __tcp_poll on each of them.
+Because subflow ssk is usually writable, we will have to undo-that
+if the mptcp sndbuf is exhausted.  This won't be needed anymore once
+__tcp_poll is removed, I am working on this.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/options.c  |  2 +-
- net/mptcp/protocol.c | 26 ++++++++++++++++++++------
- net/mptcp/protocol.h |  3 ++-
- 3 files changed, 23 insertions(+), 8 deletions(-)
+ net/mptcp/protocol.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 80dbe7662cea..b64fb5dbc2a1 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -583,7 +583,7 @@ static void update_una(struct mptcp_sock *msk,
- 		old_snd_una =3D atomic64_cmpxchg(&msk->snd_una, snd_una,
- 					       new_snd_una);
- 		if (old_snd_una =3D=3D snd_una) {
--			mptcp_reset_timer((struct sock *)msk);
-+			mptcp_data_acked((struct sock *)msk);
- 			break;
- 		}
- 	}
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b93050056195..68171a539a02 100644
+index 68171a539a02..4da4c702b1a5 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -40,7 +40,7 @@ static bool mptcp_timer_pending(struct sock *sk)
- 	return timer_pending(&inet_csk(sk)->icsk_retransmit_timer);
- }
- =
-
--void mptcp_reset_timer(struct sock *sk)
-+static void mptcp_reset_timer(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
- 	unsigned long tout;
-@@ -52,6 +52,15 @@ void mptcp_reset_timer(struct sock *sk)
- 	sk_reset_timer(sk, &icsk->icsk_retransmit_timer, jiffies + tout);
- }
- =
-
-+void mptcp_data_acked(struct sock *sk)
-+{
-+	mptcp_reset_timer(sk);
-+
-+	if (!sk_stream_is_writeable(sk) &&
-+	    schedule_work(&mptcp_sk(sk)->rtx_work))
-+		sock_hold(sk);
-+}
-+
- static void mptcp_stop_timer(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
-@@ -623,6 +632,7 @@ static void mptcp_retransmit_handler(struct sock *sk)
- 	if (atomic64_read(&msk->snd_una) =3D=3D msk->write_seq) {
- 		mptcp_stop_timer(sk);
- 	} else {
-+		set_bit(MPTCP_WORK_RTX, &msk->flags);
- 		if (schedule_work(&msk->rtx_work))
- 			sock_hold(sk);
+@@ -406,6 +406,18 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
+r *msg, size_t len)
+ 		return ret;
  	}
-@@ -647,7 +657,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
- 	sock_put(sk);
- }
  =
 
--static void mptcp_retransmit(struct work_struct *work)
-+static void mptcp_worker(struct work_struct *work)
- {
- 	int orig_len, orig_offset, ret, mss_now =3D 0, size_goal =3D 0;
- 	struct mptcp_data_frag *dfrag;
-@@ -663,6 +673,10 @@ static void mptcp_retransmit(struct work_struct *work)
- =
-
- 	lock_sock(sk);
- 	mptcp_clean_una(sk);
++	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
 +
-+	if (!test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
-+		goto unlock;
++	mptcp_clean_una(sk);
 +
- 	dfrag =3D mptcp_rtx_head(sk);
- 	if (!dfrag)
- 		goto unlock;
-@@ -715,7 +729,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->conn_list);
- 	INIT_LIST_HEAD(&msk->rtx_queue);
++	while (!sk_stream_is_writeable(sk)) {
++		ret =3D sk_stream_wait_memory(sk, &timeo);
++		if (ret)
++			goto out;
++
++		mptcp_clean_una(sk);
++	}
++
+ 	ssk =3D mptcp_subflow_get(msk);
+ 	if (!ssk) {
+ 		release_sock(sk);
+@@ -421,8 +433,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 	pr_debug("conn_list->subflow=3D%p", ssk);
  =
 
--	INIT_WORK(&msk->rtx_work, mptcp_retransmit);
-+	INIT_WORK(&msk->rtx_work, mptcp_worker);
- =
-
- 	/* re-use the csk retrans timer for MPTCP-level retrans */
- 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
-@@ -755,7 +769,7 @@ static void __mptcp_clear_xmit(struct sock *sk)
- 		dfrag_clear(sk, dfrag);
- }
- =
-
--static void mptcp_cancel_rtx_work(struct sock *sk)
-+static void mptcp_cancel_work(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
-
-@@ -792,7 +806,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	__mptcp_clear_xmit(sk);
+ 	lock_sock(ssk);
+-	mptcp_clean_una(sk);
+-	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+ 	while (msg_data_left(msg)) {
+ 		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
+ 					 &size_goal);
+@@ -1315,6 +1325,10 @@ static __poll_t mptcp_poll(struct file *file, struct=
+ socket *sock,
+ 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
+ 		ret |=3D __tcp_poll(tcp_sock->sk);
+ 	}
++
++	if (!sk_stream_is_writeable(sk))
++		ret &=3D ~(EPOLLOUT|EPOLLWRNORM);
++
  	release_sock(sk);
  =
 
--	mptcp_cancel_rtx_work(sk);
-+	mptcp_cancel_work(sk);
- =
-
- 	sk_common_release(sk);
- }
-@@ -802,7 +816,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	lock_sock(sk);
- 	__mptcp_clear_xmit(sk);
- 	release_sock(sk);
--	mptcp_cancel_rtx_work(sk);
-+	mptcp_cancel_work(sk);
- 	return tcp_disconnect(sk, flags);
- }
- =
-
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 83b06382e56a..bb599cd3a738 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -76,6 +76,7 @@
- =
-
- /* MPTCP socket flags */
- #define MPTCP_DATA_READY	BIT(0)
-+#define MPTCP_WORK_RTX		BIT(1)
- =
-
- static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
- {
-@@ -290,7 +291,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- =
-
- void mptcp_finish_connect(struct sock *sk, int mp_capable);
- void mptcp_finish_join(struct sock *sk);
--void mptcp_reset_timer(struct sock *sk);
-+void mptcp_data_acked(struct sock *sk);
- =
-
- int mptcp_token_new_request(struct request_sock *req);
- void mptcp_token_destroy_request(u32 token);
+ 	return ret;
 -- =
 
 2.23.0
 
---===============3893818372775750668==--
+--===============0194675510401486207==--
