@@ -1,40 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============8734766416308880811=="
+Content-Type: multipart/mixed; boundary="===============2391377755553774968=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 14 November 2019 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Wed, 13 Nov 2019 21:50:39 +0100
-Message-ID: <080ef0f2-5c7d-29a7-b4a1-1fc203c8813b@tessares.net>
+Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
+ for dss/mp_capable
+Date: Wed, 13 Nov 2019 15:43:50 -0800
+Message-ID: <18306f745c356048335f1196515db0d6ea28022e.camel@linux.intel.com>
+In-Reply-To: 728e24cae8748a2a2f2622cff018446650f88150.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2521
+X-UID: 2522
 
---===============8734766416308880811==
+--===============2391377755553774968==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Tue, 2019-11-12 at 09:21 +0100, Paolo Abeni wrote:
+> On Mon, 2019-11-11 at 13:50 -0800, Peter Krystad wrote:
+> > Hi Paolo -
+> > =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> > On Mon, 2019-11-11 at 17:53 +0100, Paolo Abeni wrote:
+> > > since such option will always fit the tcp header, module bugs.
+> > =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20191114
+> > "modulo"
+> =
 
-Feel free to add/modify topics!
+> thnx! Hopefully comment should be dropped when squashing ;)
+> =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+> > How is it guaranteed that it will always fit, now and in the future?
+> =
 
-Speak to you tomorrow!
-Matthieu
--- =
+> TCP option space must accomodate tstamp (12 bytes) and MPTCP options.
+> =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8734766416308880811==--
+> AFAICS DSS, MP_CAPABLE and MP_JOIN are mutually esclusive, and the
+> bigger is DSS with 64 bytes ack/seq and csum with a total of 28 bytes -
+> which fit the TCP option space.
+
+Just FYI, I should have mentioned this earlier, I have observed the mptcp.o=
+rg
+kernel sending 32-bit DSS ack-only in the same header as final MP_CAPABLE A=
+CK
+so this statement isn't completely true.
+
+Peter.
+ =
+
+> =
+
+> Additional MPTCP options (ADD/DEL_ADDR/PRIO/FAIL/FASTCLOSE/...) can
+> indeed run out of space, but that failure is not fatal (do not break
+> the connection nor causes fallback) and is handled gracefully - no
+> WARN, just omit the option. Additionally we could increment some MIB
+> counter.
+> =
+
+> Thanks,
+> =
+
+> Paolo
+>=20
+
+--===============2391377755553774968==--
