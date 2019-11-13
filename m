@@ -1,60 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============5310284816047381266=="
+Content-Type: multipart/mixed; boundary="===============3828381194333154000=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
- for dss/mp_capable
-Date: Wed, 13 Nov 2019 17:35:31 +0100
-Message-ID: <50b21bc2-1d6f-0c3e-5fed-a2cf4997a727@tessares.net>
-In-Reply-To: 30fb471931a483bec09036b21b83c91ef0afb135.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH 0/4] mptcp: some cleanups
+Date: Wed, 13 Nov 2019 18:27:52 +0100
+Message-ID: <794ef70d-d47c-cdf2-c05b-7f08a0c17c1c@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1911111449010.7818@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 2511
+X-UID: 2512
 
---===============5310284816047381266==
+--===============3828381194333154000==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 13/11/2019 17:18, Paolo Abeni wrote:
-> On Wed, 2019-11-13 at 16:48 +0100, Matthieu Baerts wrote:
->> <On 12/11/2019 09:21, Paolo Abeni wrote:
->>> AFAICS DSS, MP_CAPABLE and MP_JOIN are mutually esclusive, and the
->>> bigger is DSS with 64 bytes ack/seq and csum with a total of 28 bytes -
->>> which fit the TCP option space.
->>>
->>> Additional MPTCP options (ADD/DEL_ADDR/PRIO/FAIL/FASTCLOSE/...) can
->>> indeed run out of space, but that failure is not fatal (do not break
->>> the connection nor causes fallback) and is handled gracefully - no
->>> WARN, just omit the option. Additionally we could increment some MIB
->>> counter.
->>
->> When you say that the option is omitted, do you mean that the option is
->> sent in the new (dedicated?) ACK packet or dropped/never sent? :)
+On 11/11/2019 23:49, Mat Martineau wrote:
 > =
 
-> With the current code, prior to this series, the ADD/DEL_ADDR option
-> exceeding the TCP option space is dropped/never sent. This series do
-> not change such behavior.
+> On Mon, 11 Nov 2019, Paolo Abeni wrote:
+> =
 
-Indeed, it was already the case. Thank you for your quick reply!
+>> This address the build issue we currently have on patch
+>> "mptcp: Add key generation and token tree", plus move around some related
+>> code for consistency.
+>>
+>> No differences in the resulting code vs current git tree.
+>> The tree should build on each patch now.
+>>
+>> Paolo Abeni (1):
+>> =C2=A01/4 mptcp: drop most of mptcp_init_sock() impl
+>> =C2=A02/4 mptcp: use customary name for tcp_sock variable
+>> =C2=A03/4 mptcp: init ctx->icsk_af_ops in subflow_ulp_init()
+>> =C2=A04/4 mptcp: init new_ctx->icsk_af_ops() in subflow_ulp_clone()
+>>
+>> net/mptcp/protocol.c | 13 +------------
+>> 1 file changed, 1 insertion(+), 12 deletions(-)
+>>
+> =
 
-Should we already add the MIB counter? And/or add a TODO in the code?
+> Paolo -
+> =
 
-We are not there yet but missing an ADD_ADDR can have bad consequences. =
+> The series looks good to me. Thank you.
 
-And it would be unexpected for the userspace to drop it, especially with =
+Thank you for the patches and the review!
 
-MPTCPv1 which should make it reliable :)
+- cc05c38b4573: "squashed" patch 1/4 in "mptcp: Add MPTCP socket stubs"
+- ecede607a17a: "Signed-off-by" + "Co-developed-by"
+- 7c82356afd6f: "squashed" patch 2/4 in "mptcp: Associate MPTCP context =
 
-> Inserting a (duplicate) ack to try to fit such option looks doable, but
-> also out-of-scope for this change.
+with TCP socket"
+- 202c54a08e5e: "Signed-off-by" + "Co-developed-by"
+- 5d2b86be05bb: conflict in =
 
-Agreed. We should add this in a TODO list of "things for later" :) (or a =
+t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections
+- c7525f68d8a7: "squashed" patch 3/4 in "mptcp: Handle MP_CAPABLE =
 
-TODO in the code?)
+options for outgoing connections"
+- 929b8bea462e: "Signed-off-by" + "Co-developed-by"
+- 66b67498f31c: "squashed" patch 4/4 in "mptcp: Create SUBFLOW socket =
+
+for incoming connections"
+- 21a15201f708: conflict in =
+
+t/mptcp-new-sysctl-to-control-the-activation-per-NS
+- ca62776f7f0d..e225da73a467: result (empty, as expected)
+
+Please see the different conflict resolutions.
+
+Tests are in progress.
 
 Cheers,
 Matt
@@ -65,4 +82,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5310284816047381266==--
+--===============3828381194333154000==--
