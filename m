@@ -1,109 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============6975027704086979804=="
+Content-Type: multipart/mixed; boundary="===============2104601326566126324=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/8] mptcp: Add IPV6 support for outgoing connections
-Date: Tue, 12 Nov 2019 22:45:13 -0800
-Message-ID: <20191113064518.4823-4-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH 8/8] mptcp: Add IPv6 support for new sysctl
+ initialization
+Date: Tue, 12 Nov 2019 22:45:18 -0800
+Message-ID: <20191113064518.4823-9-peter.krystad@linux.intel.com>
 In-Reply-To: 20191113064518.4823-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2494
+X-UID: 2495
 
---===============6975027704086979804==
+--===============2104601326566126324==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Handle MP_CAPABLE options for outgoing connections
+squashto: new sysctl to control the activation per NS
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
+ net/mptcp/ctrl.c     | 11 +++++++++++
+ net/mptcp/protocol.c |  2 +-
  net/mptcp/protocol.h |  3 +++
- net/mptcp/subflow.c  | 18 ++++++++++++++++--
- 2 files changed, 19 insertions(+), 2 deletions(-)
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0c5586f14e6a..2566858ea272 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -227,6 +227,9 @@ void mptcp_subflow_init(void);
- int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
- =
-
- extern const struct inet_connection_sock_af_ops ipv4_specific;
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+extern const struct inet_connection_sock_af_ops ipv6_specific;
-+#endif
- =
-
- void mptcp_proto_init(void);
- =
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 12daebe16f5d..cf53729929bd 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -175,6 +175,10 @@ static int subflow_v4_conn_request(struct sock *sk, st=
-ruct sk_buff *skb)
- 	return 0;
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 6023c9f722ea..8e39585d37f3 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -117,3 +117,14 @@ void __init mptcp_init(void)
+ 	if (register_pernet_subsys(&mptcp_pernet_ops) < 0)
+ 		panic("Failed to register MPTCP pernet subsystem.\n");
  }
++
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++int __init mptcpv6_init(void)
++{
++	int err;
++
++	err =3D mptcp_proto_v6_init();
++
++	return err;
++}
++#endif
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a831e7fdb90f..564a6204649e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -999,7 +999,7 @@ static struct inet_protosw mptcp_v6_protosw =3D {
+ 	.flags		=3D INET_PROTOSW_ICSK,
+ };
  =
 
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+static struct inet_connection_sock_af_ops subflow_v6_specific;
-+#endif
-+
- /* validate hmac received in third ACK */
- static bool subflow_hmac_valid(const struct request_sock *req,
- 			       const struct tcp_options_received *rx_opt)
-@@ -575,7 +579,8 @@ int mptcp_subflow_create_socket(struct sock *sk, struct=
- socket **new_sock)
- 	struct socket *sf;
+-int mptcpv6_init(void)
++int mptcp_proto_v6_init(void)
+ {
  	int err;
  =
 
--	err =3D sock_create_kern(net, PF_INET, SOCK_STREAM, IPPROTO_TCP, &sf);
-+	err =3D sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
-+			       &sf);
- 	if (err)
- 		return err;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 2566858ea272..80e4cbfc389a 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -232,6 +232,9 @@ extern const struct inet_connection_sock_af_ops ipv6_sp=
+ecific;
+ #endif
  =
 
-@@ -637,11 +642,15 @@ static int subflow_ulp_init(struct sock *sk)
- 		goto out;
- 	}
- =
-
--	pr_debug("subflow=3D%p", ctx);
-+	pr_debug("subflow=3D%p, family=3D%d", ctx, sk->sk_family);
- =
-
- 	tp->is_mptcp =3D 1;
- 	ctx->icsk_af_ops =3D icsk->icsk_af_ops;
- 	icsk->icsk_af_ops =3D &subflow_specific;
+ void mptcp_proto_init(void);
 +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (sk->sk_family =3D=3D AF_INET6)
-+		icsk->icsk_af_ops =3D &subflow_v6_specific;
++int mptcp_proto_v6_init(void);
 +#endif
- 	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
- 	sk->sk_data_ready =3D subflow_data_ready;
- 	sk->sk_write_space =3D subflow_write_space;
-@@ -739,6 +748,11 @@ void mptcp_subflow_init(void)
- 	subflow_specific.sk_rx_dst_set =3D subflow_finish_connect;
- 	subflow_specific.rebuild_header =3D subflow_rebuild_header;
  =
 
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	subflow_v6_specific =3D ipv6_specific;
-+	subflow_v6_specific.sk_rx_dst_set =3D subflow_finish_connect;
-+#endif
-+
- 	if (tcp_register_ulp(&subflow_ulp_ops) !=3D 0)
- 		panic("MPTCP: failed to register subflows to ULP\n");
- }
+ struct mptcp_read_arg {
+ 	struct msghdr *msg;
 -- =
 
 2.17.2
 
---===============6975027704086979804==--
+--===============2104601326566126324==--
