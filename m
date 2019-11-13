@@ -1,85 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============3828381194333154000=="
+Content-Type: multipart/mixed; boundary="===============8133624070098913667=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/4] mptcp: some cleanups
-Date: Wed, 13 Nov 2019 18:27:52 +0100
-Message-ID: <794ef70d-d47c-cdf2-c05b-7f08a0c17c1c@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1911111449010.7818@mjmartin-mac01.local
+Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
+ for dss/mp_capable
+Date: Wed, 13 Nov 2019 18:37:59 +0100
+Message-ID: <5a2041da0daebb86182ecc3c6134aa3a4c4ec03d.camel@redhat.com>
+In-Reply-To: 50b21bc2-1d6f-0c3e-5fed-a2cf4997a727@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2512
+X-UID: 2513
 
---===============3828381194333154000==
+--===============8133624070098913667==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+On Wed, 2019-11-13 at 17:35 +0100, Matthieu Baerts wrote:
+> Should we already add the MIB counter? And/or add a TODO in the code?
 
-On 11/11/2019 23:49, Mat Martineau wrote:
-> =
+I think adding more MIB counter is a later tasks.
 
-> On Mon, 11 Nov 2019, Paolo Abeni wrote:
-> =
+> We are not there yet but missing an ADD_ADDR can have bad consequences. =
 
->> This address the build issue we currently have on patch
->> "mptcp: Add key generation and token tree", plus move around some related
->> code for consistency.
->>
->> No differences in the resulting code vs current git tree.
->> The tree should build on each patch now.
->>
->> Paolo Abeni (1):
->> =C2=A01/4 mptcp: drop most of mptcp_init_sock() impl
->> =C2=A02/4 mptcp: use customary name for tcp_sock variable
->> =C2=A03/4 mptcp: init ctx->icsk_af_ops in subflow_ulp_init()
->> =C2=A04/4 mptcp: init new_ctx->icsk_af_ops() in subflow_ulp_clone()
->>
->> net/mptcp/protocol.c | 13 +------------
->> 1 file changed, 1 insertion(+), 12 deletions(-)
->>
-> =
+> And it would be unexpected for the userspace to drop it, especially with =
 
-> Paolo -
-> =
+> MPTCPv1 which should make it reliable :)
 
-> The series looks good to me. Thank you.
+whoops... I missed that difference between v0 and v1. That opens a full
+can of worms, I think/fear:
 
-Thank you for the patches and the review!
+ADD_ADDR6 echo (30 bytes) can't fit TCP option space easily, without
+dropping also the tstamp option. Why does echo includes the IP address
+itself ?!? why is the address ID not enough?
 
-- cc05c38b4573: "squashed" patch 1/4 in "mptcp: Add MPTCP socket stubs"
-- ecede607a17a: "Signed-off-by" + "Co-developed-by"
-- 7c82356afd6f: "squashed" patch 2/4 in "mptcp: Associate MPTCP context =
+bold/stupid question: is still possible change v1 specs in that regard?
+(e.g. removing the address from ADD_ADDR echo option)
 
-with TCP socket"
-- 202c54a08e5e: "Signed-off-by" + "Co-developed-by"
-- 5d2b86be05bb: conflict in =
+> > Inserting a (duplicate) ack to try to fit such option looks doable, but
+> > also out-of-scope for this change.
 
-t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections
-- c7525f68d8a7: "squashed" patch 3/4 in "mptcp: Handle MP_CAPABLE =
+Here I missed the side effects of duplicate acks on CC. We can't easily
+plug there MPTCP specific behavior and if we start sending TCP dup ack
+to carry MPTCP info we may end-up needing hook to avoid interference on
+CC.
 
-options for outgoing connections"
-- 929b8bea462e: "Signed-off-by" + "Co-developed-by"
-- 66b67498f31c: "squashed" patch 4/4 in "mptcp: Create SUBFLOW socket =
+> Agreed. We should add this in a TODO list of "things for later" :) (or a =
 
-for incoming connections"
-- 21a15201f708: conflict in =
+> TODO in the code?)
 
-t/mptcp-new-sysctl-to-control-the-activation-per-NS
-- ca62776f7f0d..e225da73a467: result (empty, as expected)
-
-Please see the different conflict resolutions.
-
-Tests are in progress.
+I think tracking this on the framepad is the better option.
 
 Cheers,
-Matt
--- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3828381194333154000==--
+Paolo
+
+--===============8133624070098913667==--
