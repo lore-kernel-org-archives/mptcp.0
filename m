@@ -1,43 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============4394456071408147884=="
+Content-Type: multipart/mixed; boundary="===============0889727391458933471=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
- for dss/mp_capable
-Date: Wed, 13 Nov 2019 19:32:46 +0100
-Message-ID: <4583b5c2b716c15d2ebc9398537f7899760be121.camel@redhat.com>
-In-Reply-To: 7ef4b901-57b7-4d0b-c599-ada67ea7a4f9@tessares.net
+Subject: [MPTCP] Re: [PATCH 0/8] Add IPv6 Support
+Date: Wed, 13 Nov 2019 19:36:06 +0100
+Message-ID: <9256d3c468cb189953e30b8c0efe829e77ef4220.camel@redhat.com>
+In-Reply-To: 20191113064518.4823-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2517
+X-UID: 2518
 
---===============4394456071408147884==
+--===============0889727391458933471==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-11-13 at 19:13 +0100, Matthieu Baerts wrote:
-> Hi Paolo, Christoph,
+On Tue, 2019-11-12 at 22:45 -0800, Peter Krystad wrote:
+> This patchset is a replacement for the single "Add IPv6 Support"
+> commit, with the chunks broken into seperate squash-able commits.
 > =
 
-> On 13/11/2019 18:37, Paolo Abeni wrote:
-> > On Wed, 2019-11-13 at 17:35 +0100, Matthieu Baerts wrote:
-> > > Should we already add the MIB counter? And/or add a TODO in the code?
-> > =
-
-> > I think adding more MIB counter is a later tasks.
+> Peter Krystad (8):
+>   mptcp: Add IPv6 support for MPTCP socket stubs
+>   mptcp: Add IPv6 support for Associate MPTCP context
+>   mptcp: Add IPV6 support for outgoing connections
+>   mptcp: Add IPv6 support for mptcp_poll
+>   mptcp: Add IPV6 support for incoming connections
+>   mptcp: Add IPv6 support for key generation
+>   mptcp: Add IPv6 support for shutdown()
+>   mptcp: Add IPv6 support for new sysctl initialization
 > =
 
-> Should we add a comment in the code is it useless when there are =
+>  include/net/mptcp.h  | 10 +++++++
+>  net/ipv6/tcp_ipv6.c  |  7 +++++
+>  net/mptcp/ctrl.c     | 11 ++++++++
+>  net/mptcp/protocol.c | 62 +++++++++++++++++++++++++++++++++++++++++---
+>  net/mptcp/protocol.h |  6 +++++
+>  net/mptcp/subflow.c  | 61 +++++++++++++++++++++++++++++++++++++++++--
+>  6 files changed, 151 insertions(+), 6 deletions(-)
 
-> thousands of lines around? :)
+it's hard to verify it without doing the full squash exercise, but the
+split LGTM.
 
-At this point, I would like to avoid adding todos inside comments for
-the first 2 chunks patches - to avoid additional complex rebases
-squashing even later.
-
-Cheers,
+Thanks!
 
 Paolo
 
---===============4394456071408147884==--
+--===============0889727391458933471==--
