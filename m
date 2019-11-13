@@ -1,46 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============2723343936035288629=="
+Content-Type: multipart/mixed; boundary="===============2090620536079573498=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH] mptcp: move from sha1 (v0) to sha256 (v1)
-Date: Wed, 13 Nov 2019 14:24:27 +0100
-Message-ID: <20191113132427.GH19558@breakpoint.cc>
-In-Reply-To: 5c03bb048a837097d1846d00985c8215a9d62399.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] mptcp: Missing chunk from "Add IPv6 support"
+Date: Wed, 13 Nov 2019 16:17:43 +0100
+Message-ID: <54ffd2b7-d096-b79e-bb48-cece04dc124f@tessares.net>
+In-Reply-To: 20191108173012.13597-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2506
+X-UID: 2507
 
---===============2723343936035288629==
+--===============2090620536079573498==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2019-11-11 at 10:41 +0100, Paolo Abeni wrote:
-> > For simplicity's sake use directly sha256 primitives (and pull
-> > them as a required build dep).
-> > While extracting the data from the hash results, take in account
-> > that sha256_final() swaps to be32.
-> > Also rename functions and macro accordingly and fix some checkpatch
-> > issue (long lines).
+Hi Peter,
+
+On 08/11/2019 18:30, Peter Krystad wrote:
+> This chunk appears to have been dropped from the IPv6 commit.
 > =
 
-> Note: the hmac changes are not trivial, and can't be trivially
-> validated vs RFC 4231 test vectors, as the code poses several
-> restriction on the input size.
-> =
+> squashto: Add IPv6 support
 
-> I build the following ad-hoc test code (uses some of the rfc4231 test
-> vector, trimmed to fit the mptcp keys/nonces and got the expected
-> result from https://codebeautify.org/hmac-generator).
+Sorry for the delay, I was off for a few days.
 
-Thanks for doing this.
+Thank you for the patch, good catch! I checked all applied patches... =
 
-> It can't be included in a self-tests, as it's all in-kernel. I don't
-> thing we want to include this kind of code, but any options welcome!
+except the one I added in the series instead of squashing it in other =
 
-I think we can include it and add a Kconfig option for it.
+patches :)
 
-(MPTCP_HMAC_SELFTEST or whatever), it can default to off.
+- f72ac7b550c2: "squashed" in "mptcp: Add IPv6 support"
+- 3b751e51cfb1..ca62776f7f0d: result
 
---===============2723343936035288629==--
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============2090620536079573498==--
