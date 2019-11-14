@@ -1,58 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============2770570106427102276=="
+Content-Type: multipart/mixed; boundary="===============8023843276954461294=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 07/14] subflow: sk_data_ready: make wakeup on tcp sock
- conditional
-Date: Thu, 14 Nov 2019 18:32:18 +0100
-Message-ID: <20191114173225.21199-8-fw@strlen.de>
+Subject: [MPTCP] [RFC 08/14] mptcp: add and use mptcp_subflow_get_retrans
+Date: Thu, 14 Nov 2019 18:32:19 +0100
+Message-ID: <20191114173225.21199-9-fw@strlen.de>
 In-Reply-To: 20191114173225.21199-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2535
+X-UID: 2536
 
---===============2770570106427102276==
+--===============8023843276954461294==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-No need for this unless we don't have a parent or the socket is not
-mp capable.
+Instead of having retransmit worker grab first subflow on the list,
+make it always return NULL, unless either the first non-backup subflow
+on the list is idle or all normal subflows have already been removed.
 
-Only the mptcp socket will be waiting for events.  In case the mptcp
-socket connected to a tcp-only peer, we're in fallback mode and need
-to wakeup the parent too.
+In the latter case, the first idle backup subflow is used.
+
+Rationale is that it makes no sense to attempt to retransmit
+at mptcp level if there is still unsent data in its write queue.
+
+V2: always return NULL when first non-idle ssk is seen.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/subflow.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index ff38d54392cd..976e49349276 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -646,10 +646,13 @@ static void subflow_data_ready(struct sock *sk)
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct sock *parent =3D subflow->conn;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 83be407e1dd6..c5cf19a4b9f0 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -667,6 +667,37 @@ static void mptcp_retransmit_timer(struct timer_list *=
+t)
+ 	sock_put(sk);
+ }
  =
 
--	subflow->tcp_sk_data_ready(sk);
-+	if (!parent || !(subflow->mp_capable || subflow->mp_join)) {
-+		subflow->tcp_sk_data_ready(sk);
- =
-
--	if (!parent || !(subflow->mp_capable || subflow->mp_join))
-+		if (parent)
-+			parent->sk_data_ready(parent);
- 		return;
++/* Find an idle subflow.  Return NULL if there is unacked data at tcp
++ * level.
++ *
++ * A backup subflow is returned only if thats the only kind available.
++ */
++static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *backup =3D NULL;
++
++	sock_owned_by_me((const struct sock *)msk);
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk =3D mptcp_subflow_tcp_socket(subflow)->sk;
++
++		/* still data outstanding at TCP level?  Don't retransmit. */
++		if (!tcp_write_queue_empty(ssk))
++			return NULL;
++
++		if (subflow->backup) {
++			if (!backup)
++				backup =3D ssk;
++			continue;
++		}
++
++		return ssk;
 +	}
++
++	return backup;
++}
++
+ static void mptcp_worker(struct work_struct *work)
+ {
+ 	int orig_len, orig_offset, ret, mss_now =3D 0, size_goal =3D 0;
+@@ -691,7 +722,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (!dfrag)
+ 		goto unlock;
  =
 
- 	/* always propagate the EoF */
- 	if (mptcp_subflow_data_available(sk) || subflow->rx_eof) {
+-	ssk =3D mptcp_subflow_get(msk);
++	ssk =3D mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+ 		goto reset_unlock;
+ =
+
 -- =
 
 2.23.0
 
---===============2770570106427102276==--
+--===============8023843276954461294==--
