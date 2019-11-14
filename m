@@ -1,44 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============4729480623600267493=="
+Content-Type: multipart/mixed; boundary="===============6573146493435261099=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
- for dss/mp_capable
-Date: Thu, 14 Nov 2019 09:56:02 +0100
-Message-ID: <1daf18505cf014c889bb182f9cc50940e9cee3ed.camel@redhat.com>
-In-Reply-To: 18306f745c356048335f1196515db0d6ea28022e.camel@linux.intel.com
+Subject: [MPTCP] Re: [PATCH 0/8] Add IPv6 Support
+Date: Thu, 14 Nov 2019 10:46:23 +0100
+Message-ID: <532c3e9d-e01b-ca06-0d5a-b089484bf57d@tessares.net>
+In-Reply-To: 16bf2154cb9b88171a6790e5f95f59e9bc345348.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2526
+X-UID: 2527
 
---===============4729480623600267493==
+--===============6573146493435261099==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-11-13 at 15:43 -0800, Peter Krystad wrote:
-> On Tue, 2019-11-12 at 09:21 +0100, Paolo Abeni wrote:
-> > AFAICS DSS, MP_CAPABLE and MP_JOIN are mutually esclusive, and the
-> > bigger is DSS with 64 bytes ack/seq and csum with a total of 28 bytes -
-> > which fit the TCP option space.
+Hi Peter,
+
+On 13/11/2019 21:49, Peter Krystad wrote:
+> On Wed, 2019-11-13 at 21:44 +0100, Matthieu Baerts wrote:
+
+[...]
+
+>> After this, "mptcp: Add IPv6 support" is almost empty:
+>>
+>> =3D=3D=3D
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index c7e6b9dd14df..564a6204649e 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -751,10 +751,7 @@ static int mptcp_bind(struct socket *sock, struct
+>> sockaddr *uaddr, int addr_len)
+>>    {
+>>           struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+>>           struct socket *ssock;
+>> -       int err =3D -ENOTSUPP;
+>> -
+>> -       if (uaddr->sa_family !=3D AF_INET) // @@ allow only IPv4 for now
+>> -               return err;
+>> +       int err;
+>>
+>>           ssock =3D mptcp_socket_create_get(msk);
+>>           if (IS_ERR(ssock))
+>>
+>> =3D=3D=3D
+>>
+>> Can I move this to "mptcp: Create SUBFLOW socket for incoming connection=
+s"?
 > =
 
-> Just FYI, I should have mentioned this earlier, I have observed the mptcp=
-.org
-> kernel sending 32-bit DSS ack-only in the same header as final MP_CAPABLE=
- ACK
-> so this statement isn't completely true.
+> That's the "missing chunk", yes merge this change.
 
-Thank you for the info.
+Thank you, just did:
 
-It looks like a .org bug to me ?!? the sender should not send DSS
-before receiving the MP_CAPABLE ack, and the client should not send ack
-before receving a DSS ?!?
+- 8c31a5e1339b: "squashed" in "mptcp: Create SUBFLOW socket for incoming =
 
-Back to this series, do you prefer I'll revert to the existing checks?
+connections"
+- add0d83fe78e..253efd541209: result (empty as expected)
+- t/mptcp-Add-IPv6-support is now empty (no longer exported)
 
-Thanks,
+Tests are in progress.
 
-Paolo
+Cheers,
+Matt
+-- =
 
---===============4729480623600267493==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6573146493435261099==--
