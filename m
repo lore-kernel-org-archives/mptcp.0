@@ -1,74 +1,174 @@
-Content-Type: multipart/mixed; boundary="===============0965782411971481769=="
+Content-Type: multipart/mixed; boundary="===============6964780576322591441=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 2/4] mptcp: disable on req sk if MD5SIG is enabled
-Date: Thu, 14 Nov 2019 19:15:50 +0100
-Message-ID: <595f646e1de81c99ff3ed6393ff632366539f9db.1573738685.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt space
+ for dss/mp_capable
+Date: Thu, 14 Nov 2019 19:15:51 +0100
+Message-ID: <002345ed30765f5a65a86e12a0b5b8f5bc023ead.1573738696.git.pabeni@redhat.com>
 In-Reply-To: cover.1573738652.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2546
+X-UID: 2547
 
---===============0965782411971481769==
+--===============6964780576322591441==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Squash-to: mptcp: Create SUBFLOW socket for incoming connections
+since such option will always fit the tcp header, modulo bugs
+
+Squash-to: "mptcp: Write MPTCP DSS headers to outgoing data packets"
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-v1 -> v2
- - fix comment typo
+v2 -> v3:
+ - fix mptcp_established_options() return value
+v1 -> v2:
+ - fix typo in commit message
 ---
- net/mptcp/protocol.c | 8 ++++++++
- net/mptcp/subflow.c  | 8 ++++++++
- 2 files changed, 16 insertions(+)
+ net/mptcp/options.c | 71 ++++++++++++++++++++-------------------------
+ 1 file changed, 31 insertions(+), 40 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4d74cc601d35..b2d6555117de 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -339,6 +339,14 @@ static int mptcp_stream_connect(struct socket *sock, s=
-truct sockaddr *uaddr,
- 	if (IS_ERR(ssock))
- 		return PTR_ERR(ssock);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index fa10086b5b74..202514088067 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -200,7 +200,7 @@ static bool mptcp_established_options_mp(struct sock *s=
+k, unsigned int *size,
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
  =
 
-+#ifdef CONFIG_TCP_MD5SIG
-+	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-+	 * TCP option space.
+-	if (!subflow->fourth_ack && remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
++	if (!subflow->fourth_ack) {
+ 		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
+ 		opts->sndr_key =3D subflow->local_key;
+ 		opts->rcvr_key =3D subflow->remote_key;
+@@ -220,6 +220,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ {
+ 	unsigned int dss_size =3D 0;
+ 	struct mptcp_ext *mpext;
++	struct mptcp_sock *msk;
+ 	unsigned int ack_size;
+ =
+
+ 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+@@ -229,15 +230,10 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ =
+
+ 		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+ =
+
+-		if (map_size <=3D remaining) {
+-			remaining -=3D map_size;
+-			dss_size =3D map_size;
+-			if (mpext)
+-				opts->ext_copy =3D *mpext;
+-		} else {
+-			opts->ext_copy.use_map =3D 0;
+-			WARN_ONCE(1, "MPTCP: Map dropped");
+-		}
++		remaining -=3D map_size;
++		dss_size =3D map_size;
++		if (mpext)
++			opts->ext_copy =3D *mpext;
+ 	}
+ =
+
+ 	ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
+@@ -246,29 +242,19 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ 	if (dss_size =3D=3D 0)
+ 		ack_size +=3D TCPOLEN_MPTCP_DSS_BASE;
+ =
+
+-	if (ack_size <=3D remaining) {
+-		struct mptcp_sock *msk;
+-
+-		dss_size +=3D ack_size;
+-
+-		msk =3D mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+-		if (msk) {
+-			opts->ext_copy.data_ack =3D msk->ack_seq;
+-		} else {
+-			mptcp_crypto_key_sha1(mptcp_subflow_ctx(sk)->remote_key,
+-					      NULL, &opts->ext_copy.data_ack);
+-			opts->ext_copy.data_ack++;
+-		}
++	dss_size +=3D ack_size;
+ =
+
+-		opts->ext_copy.ack64 =3D 1;
+-		opts->ext_copy.use_ack =3D 1;
++	msk =3D mptcp_sk(mptcp_subflow_ctx(sk)->conn);
++	if (msk) {
++		opts->ext_copy.data_ack =3D msk->ack_seq;
+ 	} else {
+-		opts->ext_copy.use_ack =3D 0;
+-		WARN(1, "MPTCP: Ack dropped");
++		mptcp_crypto_key_sha1(mptcp_subflow_ctx(sk)->remote_key,
++				      NULL, &opts->ext_copy.data_ack);
++		opts->ext_copy.data_ack++;
+ 	}
+ =
+
+-	if (!dss_size)
+-		return false;
++	opts->ext_copy.ack64 =3D 1;
++	opts->ext_copy.use_ack =3D 1;
+ =
+
+ 	*size =3D ALIGN(dss_size, 4);
+ 	return true;
+@@ -279,22 +265,27 @@ bool mptcp_established_options(struct sock *sk, struc=
+t sk_buff *skb,
+ 			       struct mptcp_out_options *opts)
+ {
+ 	unsigned int opt_size =3D 0;
++	bool ret =3D false;
+ =
+
+ 	if (!mptcp_subflow_ctx(sk)->mp_capable)
+ 		return false;
+ =
+
+-	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
+-		*size +=3D opt_size;
+-		remaining -=3D opt_size;
+-		return true;
+-	} else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
+-						 opts)) {
+-		*size +=3D opt_size;
+-		remaining -=3D opt_size;
+-		return true;
+-	}
++	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts))
++		ret =3D true;
++	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
++						 opts))
++		ret =3D true;
+ =
+
+-	return false;
++	/* we reserved enough space for the above options, and exceeding the
++	 * TCP option space would be fatal
 +	 */
-+	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
-+		mptcp_subflow_ctx(ssock->sk)->request_mptcp =3D 0;
-+#endif
++	if (WARN_ON_ONCE(opt_size > remaining))
++		return false;
 +
- 	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
- 	sock_put(ssock->sk);
- 	return err;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c21a12600ab7..c3aec2c003e5 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -33,6 +33,14 @@ static void subflow_init_req(struct request_sock *req,
++	*size +=3D opt_size;
++	remaining -=3D opt_size;
++
++	return ret;
+ }
  =
 
- 	subflow_req->mp_capable =3D 0;
- =
-
-+#ifdef CONFIG_TCP_MD5SIG
-+	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-+	 * TCP option space.
-+	 */
-+	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
-+		return;
-+#endif
-+
- 	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
- 		subflow_req->mp_capable =3D 1;
- 		if (rx_opt.mptcp.version >=3D listener->request_version)
+ bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
+ze,
 -- =
 
 2.21.0
 
---===============0965782411971481769==--
+--===============6964780576322591441==--
