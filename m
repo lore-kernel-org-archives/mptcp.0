@@ -1,122 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============4663962414956248749=="
+Content-Type: multipart/mixed; boundary="===============5343739388073931002=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 12/14] mptcp_poll: don't consider subflow socket state
- anymore
-Date: Thu, 14 Nov 2019 18:32:23 +0100
-Message-ID: <20191114173225.21199-13-fw@strlen.de>
+Subject: [MPTCP] [RFC 13/14] sendmsg: don't restart mptcp_sendmsg_frag
+Date: Thu, 14 Nov 2019 18:32:24 +0100
+Message-ID: <20191114173225.21199-14-fw@strlen.de>
 In-Reply-To: 20191114173225.21199-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2540
+X-UID: 2541
 
---===============4663962414956248749==
+--===============5343739388073931002==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After previous patch, we do not need to call __tcp_poll anymore, we
-can use msk->flags instead to see if we have data available on a socket.
+This function calls do_tcp_sendpages which already has such a loop.
 
-SEND_SPACE flag indicates when a subflow has enough space to accept
-more data, it gets cleared on mptcp_sendmsg() return in case ssk runs
-below the free watermark.
+When tcp sendbuffer runs out of space and non-blocking io is used,
+do_tcp_sendpages will return early because it can't sleep.
+No -EAGAIN is returned, as some data was sent.
 
-"net: tcp: add __tcp_poll helper" can now be removed.
+When mptcp_sendmsg_frag is called again, next call will either return
+-EAGAIN immediately or it will only send a few more bytes.
+
+Simplify this and leave all 'allocate another skb?' logic to tcp.
+
+This would need to be spread over multiple changes, I'd propose
+I do the squash myself and send a pull request for the updated branch
+if thats fine with you.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ net/mptcp/protocol.c | 25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 201e256a3221..7d3bf189b407 100644
+index 7d3bf189b407..fbbff667e07a 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -189,7 +189,10 @@ static void mptcp_clean_una(struct sock *sk)
+@@ -499,14 +499,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 	pr_debug("conn_list->subflow=3D%p", ssk);
  =
 
- 	if (cleaned) {
- 		sk_mem_reclaim_partial(sk);
--		sk_stream_write_space(sk);
-+
-+		/* Only wake up writers if a subflow is ready */
-+		if (test_bit(MPTCP_SEND_SPACE, &msk->flags))
-+			sk_stream_write_space(sk);
- 	}
- }
- =
-
-@@ -852,6 +855,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->rtx_queue);
- =
-
- 	INIT_WORK(&msk->rtx_work, mptcp_worker);
-+	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
- =
-
- 	/* re-use the csk retrans timer for MPTCP-level retrans */
- 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
-@@ -1416,39 +1420,35 @@ static int mptcp_stream_accept(struct socket *sock,=
- struct socket *newsock,
- static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 			   struct poll_table_struct *wait)
- {
--	struct mptcp_subflow_context *subflow;
- 	const struct mptcp_sock *msk;
- 	struct sock *sk =3D sock->sk;
- 	struct socket *ssock;
--	__poll_t ret =3D 0;
-+	__poll_t mask =3D 0;
- =
-
- 	msk =3D mptcp_sk(sk);
- 	lock_sock(sk);
- 	ssock =3D __mptcp_fallback_get_ref(msk);
- 	if (ssock) {
- 		release_sock(sk);
--		ret =3D ssock->ops->poll(file, ssock, wait);
-+		mask =3D ssock->ops->poll(file, ssock, wait);
- 		sock_put(ssock->sk);
--		return ret;
-+		return mask;
- 	}
- =
-
- 	release_sock(sk);
- 	sock_poll_wait(file, sock, wait);
- 	lock_sock(sk);
- =
-
--	mptcp_for_each_subflow(msk, subflow) {
--		struct socket *tcp_sock;
+ 	lock_sock(ssk);
+-	while (msg_data_left(msg)) {
+-		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
+-					 &size_goal);
+-		if (ret < 0)
+-			break;
 -
--		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
--		ret |=3D __tcp_poll(tcp_sock->sk);
+-		copied +=3D ret;
 -	}
--
--	if (!sk_stream_is_writeable(sk))
--		ret &=3D ~(EPOLLOUT|EPOLLWRNORM);
-+	if (test_bit(MPTCP_DATA_READY, &msk->flags))
-+		mask =3D EPOLLIN | EPOLLRDNORM;
-+	if (sk_stream_is_writeable(sk) && test_bit(MPTCP_SEND_SPACE, &msk->flags))
-+		mask |=3D EPOLLOUT | EPOLLWRNORM;
-+	if (sk->sk_shutdown & RCV_SHUTDOWN)
-+		mask |=3D EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
++	ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
++				 &size_goal);
++	if (ret > 0)
++		copied =3D ret;
  =
 
- 	release_sock(sk);
+ 	mptcp_set_timeout(sk, ssk);
+ 	if (copied) {
+@@ -789,7 +785,6 @@ static void mptcp_worker(struct work_struct *work)
+ 	struct sock *ssk, *sk;
+ 	struct mptcp_sock *msk;
+ 	u64 orig_write_seq;
+-	size_t copied =3D 0;
+ 	struct msghdr msg;
+ 	long timeo =3D 0;
  =
 
--	return ret;
-+	return mask;
- }
+@@ -816,20 +811,16 @@ static void mptcp_worker(struct work_struct *work)
+ 	orig_len =3D dfrag->data_len;
+ 	orig_offset =3D dfrag->offset;
+ 	orig_write_seq =3D dfrag->data_seq;
+-	while (dfrag->data_len > 0) {
+-		ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &timeo, &mss_now,
+-					 &size_goal);
+-		if (ret < 0)
+-			break;
  =
 
- static int mptcp_shutdown(struct socket *sock, int how)
++	ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &timeo, &mss_now,
++				 &size_goal);
++	if (ret > 0) {
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RETRANSSEGS);
+-		copied +=3D ret;
+ 		dfrag->data_len -=3D ret;
+ 		dfrag->offset +=3D ret;
+-	}
+-	if (copied)
+ 		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
+ 			 size_goal);
++	}
+ =
+
+ 	dfrag->data_seq =3D orig_write_seq;
+ 	dfrag->offset =3D orig_offset;
 -- =
 
 2.23.0
 
---===============4663962414956248749==--
+--===============5343739388073931002==--
