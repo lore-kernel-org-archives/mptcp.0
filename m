@@ -1,74 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============6573146493435261099=="
+Content-Type: multipart/mixed; boundary="===============4570054396475310189=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/8] Add IPv6 Support
-Date: Thu, 14 Nov 2019 10:46:23 +0100
-Message-ID: <532c3e9d-e01b-ca06-0d5a-b089484bf57d@tessares.net>
-In-Reply-To: 16bf2154cb9b88171a6790e5f95f59e9bc345348.camel@linux.intel.com
+Subject: [MPTCP] [RFC] mptcp: wmem accounting and nonblocking io support
+Date: Thu, 14 Nov 2019 18:32:11 +0100
+Message-ID: <20191114173225.21199-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2527
+X-UID: 2528
 
---===============6573146493435261099==
+--===============4570054396475310189==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+This (large, sigh) series fixes poll handling in mptcp.
 
-On 13/11/2019 21:49, Peter Krystad wrote:
-> On Wed, 2019-11-13 at 21:44 +0100, Matthieu Baerts wrote:
+The first patch extends the test suite with a mmap-based mode to
+check large, blocking writes.  This uncovered a minor problem with the
+earlier v2 wmem accounting patch series -- we would happily take a lot
+more data than sndbuf allowed, as we only limited based on what the subflow
+could accept.  So with a 4k sndbuf we could easily accept 256kb or even mor=
+e.
 
-[...]
+This patch doesn't change anything in the test suite behaviour however,
+you need to use "-b 4096" and/or "-m mmap" to enable this mode.
 
->> After this, "mptcp: Add IPv6 support" is almost empty:
->>
->> =3D=3D=3D
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index c7e6b9dd14df..564a6204649e 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -751,10 +751,7 @@ static int mptcp_bind(struct socket *sock, struct
->> sockaddr *uaddr, int addr_len)
->>    {
->>           struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
->>           struct socket *ssock;
->> -       int err =3D -ENOTSUPP;
->> -
->> -       if (uaddr->sa_family !=3D AF_INET) // @@ allow only IPv4 for now
->> -               return err;
->> +       int err;
->>
->>           ssock =3D mptcp_socket_create_get(msk);
->>           if (IS_ERR(ssock))
->>
->> =3D=3D=3D
->>
->> Can I move this to "mptcp: Create SUBFLOW socket for incoming connection=
-s"?
-> =
+Second patch changes test suite to move to nonblocking io, this breaks mptcp
+because mptcp_poll can signal EPOLLIN when it shouldn't, so userspace gets
+-EAGAIN even though poll told it otherwise.
 
-> That's the "missing chunk", yes merge this change.
+Patches 3/4/5/6 are an update vs. last wmem accounting series.
+Remaining patches fix the nonblocking io behaviour.
 
-Thank you, just did:
+mptcp_poll is made to be stand-alone, i.e. it no longer calls
+__tcp_poll on the subflow sockets and only considers mptcp_sk state.
 
-- 8c31a5e1339b: "squashed" in "mptcp: Create SUBFLOW socket for incoming =
+After this series the selftest works again and mptcp sk rtx queue is
+limited by msk wmem.
 
-connections"
-- add0d83fe78e..253efd541209: result (empty as expected)
-- t/mptcp-Add-IPv6-support is now empty (no longer exported)
+The patches can't easily be rebased/merged so I propose that I would
+squash this myself and send a pull request when done.
 
-Tests are in progress.
+The following changes since commit d1dbb32dc58df543e89f4004c1a0b96fe8acf99b:
 
-Cheers,
-Matt
--- =
+  subflow: wake parent mptcp socket on subflow state change (2019-11-14 13:=
+03:44 +0000)
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6573146493435261099==--
+are available in the Git repository at:
+
+  git://git.breakpoint.cc/fw/mptcp-next.git tcp_poll_removal_06
+
+for you to fetch changes up to fa583a84bcf9550783ac6a229ab584d68764659e:
+
+  sendmsg: truncate source buffer if mptcp sndbuf size was set from userspa=
+ce (2019-11-14 17:56:13 +0100)
+
+----------------------------------------------------------------
+Florian Westphal (14):
+      selftest: add mmap-write support
+      selftests: make sockets non-blocking for default poll mode
+      mptcp: add wmem_queued accounting
+      mptcp: allow partial cleaning of rtx head dfrag
+      mptcp: add and use mptcp RTX flag
+      sendmsg: block until mptcp sk is writeable
+      subflow: sk_data_ready: make wakeup on tcp sock conditional
+      mptcp: add and use mptcp_subflow_get_retrans
+      mptcp: sendmsg: transmit on backup if other subflows have been closed
+      recv: make DATA_READY reflect ssk in-sequence state
+      sendmsg: clear SEND_SPACE if write caused wmem to grow too large
+      mptcp_poll: don't consider subflow socket state anymore
+      sendmsg: don't restart mptcp_sendmsg_frag
+      sendmsg: truncate source buffer if mptcp sndbuf size was set from use=
+rspace
+
+ net/mptcp/options.c                                |   2 +-
+ net/mptcp/protocol.c                               | 295 ++++++++++++++++-=
+----
+ net/mptcp/protocol.h                               |   4 +-
+ net/mptcp/subflow.c                                |  12 +-
+ tools/testing/selftests/net/mptcp/mptcp_connect.c  | 268 +++++++++++++++++=
++-
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  36 ++-
+ 6 files changed, 544 insertions(+), 73 deletions(-)
+
+--===============4570054396475310189==--
