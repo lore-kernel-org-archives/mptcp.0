@@ -1,61 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============0841365692106833147=="
+Content-Type: multipart/mixed; boundary="===============4318178640278094681=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 14/14] sendmsg: truncate source buffer if mptcp sndbuf
- size was set from userspace
-Date: Thu, 14 Nov 2019 18:32:25 +0100
-Message-ID: <20191114173225.21199-15-fw@strlen.de>
-In-Reply-To: 20191114173225.21199-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
+ for dss/mp_capable
+Date: Thu, 14 Nov 2019 19:14:11 +0100
+Message-ID: <3e5ec70d4ae95b0e1261ab0649aefd08bccc5c75.camel@redhat.com>
+In-Reply-To: 5a6b5f4f58d6bf3bd425ed0162ac177643d734f3.1573488751.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2542
+X-UID: 2543
 
---===============0841365692106833147==
+--===============4318178640278094681==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If userspace uses SO_SNDBUF to set a value, then truncate the buffer
-according to remaining wmem.
+On Mon, 2019-11-11 at 17:53 +0100, Paolo Abeni wrote:
+> @@ -279,22 +265,27 @@ bool mptcp_established_options(struct sock *sk, str=
+uct sk_buff *skb,
+>  			       struct mptcp_out_options *opts)
+>  {
+>  	unsigned int opt_size =3D 0;
+> +	bool ret =3D true;
+	           ^^^^
+this is wrong (should be false). I'll send a v3 rebased, including that
+change
 
-Otherwise, running selftest script with "-m mmap -b 4096" shows very
-large sucessful write() calls, as we're only limited by how much data
-the underlying tcp flow is willing to accept.
+Cheers,
 
-NB: It might make sense to carry SO_SNDBUF down to the subflows,
-but thats left out for now.
+Paolo
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index fbbff667e07a..eb3499ca4f36 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -498,6 +498,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- =
-
- 	pr_debug("conn_list->subflow=3D%p", ssk);
- =
-
-+	if (unlikely(sk->sk_userlocks & SOCK_SNDBUF_LOCK)) {
-+		int limit =3D sk_stream_wspace(sk);
-+
-+		if (WARN_ON_ONCE(limit <=3D 0))
-+			limit =3D 1;
-+
-+		iov_iter_truncate(&msg->msg_iter, limit);
-+	}
-+
- 	lock_sock(ssk);
- 	ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
- 				 &size_goal);
--- =
-
-2.23.0
-
---===============0841365692106833147==--
+--===============4318178640278094681==--
