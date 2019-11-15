@@ -1,92 +1,200 @@
-Content-Type: multipart/mixed; boundary="===============0714397048580304859=="
+Content-Type: multipart/mixed; boundary="===============5793491883629616641=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/4] mptcp: warn once if exceeding tcp opt space
- for dss/mp_capable
-Date: Thu, 14 Nov 2019 10:36:58 -0800
-Message-ID: <9244783E-C909-4115-A1DE-E9DC8033FDCF@apple.com>
-In-Reply-To: 5a2041da0daebb86182ecc3c6134aa3a4c4ec03d.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
+ space for dss/mp_capable
+Date: Thu, 14 Nov 2019 22:43:12 -0800
+Message-ID: <29159a1b50d0bff06933324da4c47afa0b0ed177.camel@linux.intel.com>
+In-Reply-To: 002345ed30765f5a65a86e12a0b5b8f5bc023ead.1573738696.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2549
+X-UID: 2550
 
---===============0714397048580304859==
+--===============5793491883629616641==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
+Hi Paolo -
 
-> On Nov 13, 2019, at 9:37 AM, Paolo Abeni <pabeni(a)redhat.com> wrote:
+On Thu, 2019-11-14 at 19:15 +0100, Paolo Abeni wrote:
+> since such option will always fit the tcp header, modulo bugs
 > =
 
-> On Wed, 2019-11-13 at 17:35 +0100, Matthieu Baerts wrote:
->> Should we already add the MIB counter? And/or add a TODO in the code?
+> Squash-to: "mptcp: Write MPTCP DSS headers to outgoing data packets"
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> v2 -> v3:
+>  - fix mptcp_established_options() return value
+> v1 -> v2:
+>  - fix typo in commit message
+> ---
+>  net/mptcp/options.c | 71 ++++++++++++++++++++-------------------------
+>  1 file changed, 31 insertions(+), 40 deletions(-)
 > =
 
-> I think adding more MIB counter is a later tasks.
-> =
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index fa10086b5b74..202514088067 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -200,7 +200,7 @@ static bool mptcp_established_options_mp(struct sock =
+*sk, unsigned int *size,
+>  {
+>  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+>  =
 
->> We are not there yet but missing an ADD_ADDR can have bad consequences. =
+> -	if (!subflow->fourth_ack && remaining >=3D TCPOLEN_MPTCP_MPC_ACK) {
+> +	if (!subflow->fourth_ack) {
+>  		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
+>  		opts->sndr_key =3D subflow->local_key;
+>  		opts->rcvr_key =3D subflow->remote_key;
 
->> And it would be unexpected for the userspace to drop it, especially with =
+Or add =
 
->> MPTCPv1 which should make it reliable :)
-> =
+	else  {
+		WARN_ON_ONCE()
+	}
+here, see final comment below.
 
-> whoops... I missed that difference between v0 and v1. That opens a full
-> can of worms, I think/fear:
-> =
+> @@ -220,6 +220,7 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+>  {
+>  	unsigned int dss_size =3D 0;
+>  	struct mptcp_ext *mpext;
+> +	struct mptcp_sock *msk;
+>  	unsigned int ack_size;
+>  =
 
-> ADD_ADDR6 echo (30 bytes) can't fit TCP option space easily, without
-> dropping also the tstamp option. Why does echo includes the IP address
-> itself ?!? why is the address ID not enough?
-> =
+>  	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+> @@ -229,15 +230,10 @@ static bool mptcp_established_options_dss(struct so=
+ck *sk, struct sk_buff *skb,
+>  =
 
-> bold/stupid question: is still possible change v1 specs in that regard?
-> (e.g. removing the address from ADD_ADDR echo option)
+>  		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+>  =
 
-To clarify: When the echo-bit is set the HMAC is not present int the option=
-. That means the ADD_ADDR option is at most 4 + 16 + 2 =3D 22 bytes on the =
-echo.
+> -		if (map_size <=3D remaining) {
+> -			remaining -=3D map_size;
+> -			dss_size =3D map_size;
+> -			if (mpext)
+> -				opts->ext_copy =3D *mpext;
+> -		} else {
+> -			opts->ext_copy.use_map =3D 0;
+> -			WARN_ONCE(1, "MPTCP: Map dropped");
+> -		}
+> +		remaining -=3D map_size;
+> +		dss_size =3D map_size;
+> +		if (mpext)
+> +			opts->ext_copy =3D *mpext;
+>  	}
+>  =
 
-However, on the initial ADD_ADDR (the one with echo =3D=3D 0), the maximum =
-is indeed 30 bytes. That is only the case when it includes a port as well. =
-And in that scenario I don't see another solution than to remove the TCP Ti=
-mestamp option on that packet (it is not necessary to have the Timestamp op=
-tion on each packet).
+>  	ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
+> @@ -246,29 +242,19 @@ static bool mptcp_established_options_dss(struct so=
+ck *sk, struct sk_buff *skb,
+>  	if (dss_size =3D=3D 0)
+>  		ack_size +=3D TCPOLEN_MPTCP_DSS_BASE;
+>  =
 
-Does that work?
+> -	if (ack_size <=3D remaining) {
+> -		struct mptcp_sock *msk;
+> -
+> -		dss_size +=3D ack_size;
+> -
+> -		msk =3D mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+> -		if (msk) {
+> -			opts->ext_copy.data_ack =3D msk->ack_seq;
+> -		} else {
+> -			mptcp_crypto_key_sha1(mptcp_subflow_ctx(sk)->remote_key,
+> -					      NULL, &opts->ext_copy.data_ack);
+> -			opts->ext_copy.data_ack++;
+> -		}
+> +	dss_size +=3D ack_size;
+>  =
+
+> -		opts->ext_copy.ack64 =3D 1;
+> -		opts->ext_copy.use_ack =3D 1;
+> +	msk =3D mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+> +	if (msk) {
+> +		opts->ext_copy.data_ack =3D msk->ack_seq;
+>  	} else {
+> -		opts->ext_copy.use_ack =3D 0;
+> -		WARN(1, "MPTCP: Ack dropped");
+> +		mptcp_crypto_key_sha1(mptcp_subflow_ctx(sk)->remote_key,
+> +				      NULL, &opts->ext_copy.data_ack);
+> +		opts->ext_copy.data_ack++;
+>  	}
+>  =
+
+> -	if (!dss_size)
+> -		return false;
+> +	opts->ext_copy.ack64 =3D 1;
+> +	opts->ext_copy.use_ack =3D 1;
+>  =
+
+>  	*size =3D ALIGN(dss_size, 4);
+>  	return true;
+> @@ -279,22 +265,27 @@ bool mptcp_established_options(struct sock *sk, str=
+uct sk_buff *skb,
+>  			       struct mptcp_out_options *opts)
+>  {
+>  	unsigned int opt_size =3D 0;
+> +	bool ret =3D false;
+>  =
+
+>  	if (!mptcp_subflow_ctx(sk)->mp_capable)
+>  		return false;
+>  =
+
+> -	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
+> -		*size +=3D opt_size;
+> -		remaining -=3D opt_size;
+> -		return true;
+> -	} else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
+> -						 opts)) {
+> -		*size +=3D opt_size;
+> -		remaining -=3D opt_size;
+> -		return true;
+> -	}
+> +	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts))
+> +		ret =3D true;
+> +	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
+> +						 opts))
+> +		ret =3D true;
+>  =
+
+> -	return false;
+> +	/* we reserved enough space for the above options, and exceeding the
+> +	 * TCP option space would be fatal
+> +	 */
+> +	if (WARN_ON_ONCE(opt_size > remaining))
+> +		return false;
+
+It seems to me, and maybe I am missing something, but all this change adds =
+to
+existing functionality is showing this warning when
+mptcp_established_options_mp() fails due to lack of remaining option space.
+The small change I propose above does the same, yes?
+
+I also think the logic here needs to be re-visited, since in both solutions=
+ if
+we want to send MP_CAPABLE and there isn't room we should fallback to TCP a=
+nd
+not 'else if' the dss option.
+
+Peter.
 
 
-Christopbh
+> +	*size +=3D opt_size;
+> +	remaining -=3D opt_size;
+> +
+> +	return ret;
+>  }
+>  =
 
+>  bool mptcp_synack_options(const struct request_sock *req, unsigned int *=
+size,
 
-> =
-
->>> Inserting a (duplicate) ack to try to fit such option looks doable, but
->>> also out-of-scope for this change.
-> =
-
-> Here I missed the side effects of duplicate acks on CC. We can't easily
-> plug there MPTCP specific behavior and if we start sending TCP dup ack
-> to carry MPTCP info we may end-up needing hook to avoid interference on
-> CC.
-> =
-
->> Agreed. We should add this in a TODO list of "things for later" :) (or a =
-
->> TODO in the code?)
-> =
-
-> I think tracking this on the framepad is the better option.
-> =
-
-> Cheers,
-> =
-
-> Paolo
->=20
-
---===============0714397048580304859==--
+--===============5793491883629616641==--
