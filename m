@@ -1,261 +1,285 @@
-Content-Type: multipart/mixed; boundary="===============5447739214621738722=="
+Content-Type: multipart/mixed; boundary="===============4287931408175168723=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Basic single-subflow DATA_FIN
-Date: Fri, 15 Nov 2019 11:27:53 -0800
-Message-ID: <alpine.OSX.2.21.1911151037580.57916@chiulam-mobl.amr.corp.intel.com>
-In-Reply-To: 2431e83e-6184-95e8-295a-3baa7b629126@tessares.net
+Subject: [MPTCP] Warn + crash in mptcp_sendmsg_frag()
+Date: Fri, 15 Nov 2019 22:06:34 +0100
+Message-ID: <6b5f90c3-aa06-baa1-15a0-29b69204e659@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2554
+X-UID: 2555
 
---===============5447739214621738722==
+--===============4287931408175168723==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-On Fri, 15 Nov 2019, Matthieu Baerts wrote:
+When testing some changes in the kselftests area, I initially saw the =
 
-> Hi Mat,
->
-> On 14/11/2019 07:06, Mat Martineau wrote:
->> Send a DATA_FIN along with any subflow TCP FIN flag.
->> =
+message:
 
->> This seems to expose a bug in either the receive side disconnect
->> handling or the mptcp_connect test program. The self test has
->> intermittent problems with the receive temp file being truncated.
->> =
+   main_loop_s: timed out
 
->> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->
-> Thank you for the patch!
->
->> ---
->> =
+in the middle of the tests. But just after, there was a "[ OK ]".
+Anybody saw that?
 
->> I've tested this commit when applied to the end of the export branch,
->> but I have not yet applied or tested it earlier in the history with the
->> "initial feature set" patches.
->
-> Good point :)
->
->> net/mptcp/options.c | 38 +++++++++++++++++++++++++++++++++++---
->>   net/mptcp/subflow.c | 32 ++++++++++++++++++--------------
->>   2 files changed, 53 insertions(+), 17 deletions(-)
->> =
+I tried to understand why because the binary should returns 2 if the =
 
->> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->> index 9a18a3670cdf..79890b96afeb 100644
->> --- a/net/mptcp/options.c
->> +++ b/net/mptcp/options.c
->> @@ -384,18 +384,47 @@ static bool mptcp_established_options_mp(struct so=
-ck =
+message is printed and the shell script should catch the error. Then I =
 
->> *sk, unsigned int *size,
->>   	return false;
->>   }
->>   +static void mptcp_write_data_fin(struct mptcp_subflow_context *subflo=
-w,
->> +				 struct mptcp_ext *ext)
->> +{
->> +	WARN_ONCE(!subflow->conn, "MPTCP: Missing MPTCP socket information");
->
-> I guess that if you think the WARN is needed, maybe safer to also return =
+added debug in the script and launched it in a while-loop. I didn't get =
 
-> earlier, not to use "subflow->conn" later on if !ext->use_map.
+the initial error I was looking for but instead I got a WARN followed by =
 
-I had this included as a paranoid debugging check for development. I =
+an OOPS:
 
-should have dropped it, and looking around at other code it looks like =
 
-subflow->conn is always set.
++ addr_port=3D10.0.3.1:10030
++ printf '%-4s %-5s -> %-4s (%-20s) %-5s\t' ns3-5dcee2db-MqSsUi MPTCP =
 
->
->> +	/* Only send DATA_FIN if all data has been sent or this is the last
->> +	 * mapping.
->
-> Maybe it is just me but the comment looks confusing when placed here: for=
- me, =
+ns4-5dcee2db-MqSsUi 10.0.3.1:10030 MPTCP
+ns3-5dcee2db-MqSsUi MPTCP -> ns4-5dcee2db-MqSsUi (10.0.3.1:10030      ) =
 
-> starting it with "Only" means that we have a "if" statement just after.
+MPTCP
++ false
++ spid=3D28842
++ ip netns exec ns4-5dcee2db-MqSsUi ./mptcp_connect -t 30 -l -p 10030 -s =
 
-Good point, this carried over from some code that did have that 'if'. Will =
+MPTCP 0.0.0.0
++ sleep 1
+++ date +%s%3N
++ start=3D1573839651723
++ cpid=3D28845
++ ip netns exec ns3-5dcee2db-MqSsUi ./mptcp_connect -t 30 -p 10030 -s =
 
-fix.
+MPTCP 10.0.3.1
++ wait 28845
+[90317.510635] ------------[ cut here ]------------
+[90317.511028] WARNING: CPU: 0 PID: 28845 at net/mptcp/protocol.c:317 =
 
->
->> +	 */
->> +	ext->data_fin =3D 1;
->> +
->> +	if (!ext->use_map) {
->> +		ext->use_map =3D 1;
->> +		ext->dsn64 =3D 1;
->> +		ext->data_seq =3D mptcp_sk(subflow->conn)->write_seq;
->> +		ext->subflow_seq =3D 0;
->> +		ext->data_len =3D 1;
->> +	} else {
->> +		ext->data_len++;
->> +	}
->> +}
->> +
->>   static bool mptcp_established_options_dss(struct sock *sk, struct sk_b=
-uff =
+mptcp_sendmsg_frag+0x51b/0x570
+[90317.511028] Modules linked in:
+[90317.511028] CPU: 0 PID: 28845 Comm: mptcp_connect Not tainted =
 
->> *skb,
->>   					  unsigned int *size,
->>   					  unsigned int remaining,
->>   					  struct mptcp_out_options *opts)
->>   {
->> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
->>   	unsigned int dss_size =3D 0;
->>   	struct mptcp_ext *mpext;
->>   	unsigned int ack_size;
->> +	u8 tcp_fin;
->
-> Detail: could we use a "boolean" type here?
+5.4.0-rc6+ #316
+[90317.511028] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), =
 
-I did consider that when writing it. With bool, I'd want to use "tcp_fin =
-=3D =
+BIOS 1.10.2-1ubuntu1 04/01/2014
+[90317.511028] RIP: 0010:mptcp_sendmsg_frag+0x51b/0x570
+[90317.511028] Code: fc ff ff 49 63 53 18 49 03 53 10 48 3b 95 58 05 00 =
 
-!!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)" below. It seemed cleaner to =
+00 0f 85 0c fe ff ff c6 44 24 3f 01 c7 44 24 38 00 00 00 00 e9 5a fe ff =
 
-match the type of tcp_flags and skip the !! stuff.
+ff <0f> 0b eb b0 48 8b 7c 24 48 4c 89 ce 44 89 44 24 30 48 29 ce 4c 89
+[90317.511028] RSP: 0018:ffff979e40287cc8 EFLAGS: 00010246
+[90317.511028] RAX: ffff921f1de56200 RBX: ffff921f1d430900 RCX: =
 
-(it does happen that TCPHDR_FIN is 0x01 so there's not much difference to =
+0000000000001fa0
+[90317.511028] RDX: 0000000000001fa0 RSI: 0000000000000000 RDI: =
 
-the compiler)
+ffff921f1d430900
+[90317.511028] RBP: ffff921f1d451380 R08: 0000000000001fa0 R09: =
 
->
->>   -	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
->> +	if (skb) {
->> +		mpext =3D mptcp_get_ext(skb);
->> +		tcp_fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
->> +	} else {
->> +		mpext =3D NULL;
->> +		tcp_fin =3D 0;
->> +	}
->>   -	if (!skb || (mpext && mpext->use_map)) {
->> +	if (!skb || (mpext && mpext->use_map) || tcp_fin) {
->>   		unsigned int map_size;
->>     		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
->> @@ -405,6 +434,9 @@ static bool mptcp_established_options_dss(struct soc=
-k =
+0000000000001fa0
+[90317.511028] R10: ffff921f1dc8eec0 R11: ffff921f1de58000 R12: =
 
->> *sk, struct sk_buff *skb,
->>   			dss_size =3D map_size;
->>   			if (mpext)
->>   				opts->ext_copy =3D *mpext;
->> +
->> +			if (skb && tcp_fin)
->
-> As discussed at the meeting yesterday, may you also check that it is the =
-last =
+ffff921f1d4518d8
+[90317.511028] R13: ffff921f1de56200 R14: ffff921f1edcf6d0 R15: =
 
-> subflow please?
+0000000000001fa0
+[90317.511028] FS:  00007f53fa681500(0000) GS:ffff921f1f200000(0000) =
 
-Yes - although I think determining the "last subflow" is more complicated =
+knlGS:0000000000000000
+[90317.511028] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[90317.511028] CR2: 00007f049c5dfe60 CR3: 000000001dc30000 CR4: =
 
-than looking at the length of the conn list. We don't want DATA_FIN if one =
+00000000003406f0
+[90317.511028] Call Trace:
+[90317.511028]  mptcp_sendmsg+0x15b/0x230
+[90317.511028]  sock_sendmsg+0x4f/0x60
+[90317.511028]  sock_write_iter+0x8a/0xf0
+[90317.511028]  new_sync_write+0x116/0x1b0
+[90317.511028]  vfs_write+0xa8/0x1a0
+[90317.511028]  ksys_write+0x9c/0xd0
+[90317.511028]  do_syscall_64+0x43/0x120
+[90317.511028]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[90317.511028] RIP: 0033:0x7f53fa180154
+[90317.511028] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 =
 
-subflow is closing and others are staying open, but DATA_FIN is desired of =
+00 00 00 66 90 48 8d 05 b1 07 2e 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f =
 
-all subflows are closing at the same time.
+05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
+[90317.511028] RSP: 002b:00007ffd5f71be78 EFLAGS: 00000246 ORIG_RAX: =
 
->
->> +				mptcp_write_data_fin(subflow, =
+0000000000000001
+[90317.511028] RAX: ffffffffffffffda RBX: 00007ffd5f71bea8 RCX: =
 
->> &opts->ext_copy);
->>   		} else {
->>   			opts->ext_copy.use_map =3D 0;
->>   			WARN_ONCE(1, "MPTCP: Map dropped");
->> @@ -422,7 +454,7 @@ static bool mptcp_established_options_dss(struct soc=
-k =
+00007f53fa180154
+[90317.511028] RDX: 0000000000002000 RSI: 00007ffd5f71beb0 RDI: =
 
->> *sk, struct sk_buff *skb,
->>     		dss_size +=3D ack_size;
->>   -		msk =3D mptcp_sk(mptcp_subflow_ctx(sk)->conn);
->> +		msk =3D mptcp_sk(subflow->conn);
->>   		if (msk) {
->>   			opts->ext_copy.data_ack =3D msk->ack_seq;
->>   		} else {
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index ff38d54392cd..f6f4dbf2dbab 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -422,6 +422,7 @@ static enum mapping_status get_mapping_status(struct =
+0000000000000003
+[90317.511028] RBP: 0000000000000003 R08: 00007f53fa45b1d0 R09: =
 
->> sock *ssk)
->>   	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
->>   	struct mptcp_ext *mpext;
->>   	struct sk_buff *skb;
->> +	u16 data_len;
->>   	u64 map_seq;
->>     	skb =3D skb_peek(&ssk->sk_receive_queue);
->> @@ -446,26 +447,29 @@ static enum mapping_status get_mapping_status(stru=
-ct =
+00007f53fa45b240
+[90317.511028] R10: 00007f53fa1dad30 R11: 0000000000000246 R12: =
 
->> sock *ssk)
->>     		if (!subflow->map_valid)
->>   			return MAPPING_INVALID;
->> +
->>   		goto validate_seq;
->>   	}
->>   -	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u", mpext->data_=
-seq,
->> -		 mpext->dsn64, mpext->subflow_seq, mpext->data_len);
->> +	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u data_fin=3D%d",
->> +		 mpext->data_seq, mpext->dsn64, mpext->subflow_seq,
->> +		 mpext->data_len, mpext->data_fin);
->>   -	if (mpext->data_len =3D=3D 0) {
->> +	data_len =3D mpext->data_len;
->> +	if (data_len =3D=3D 0) {
->>   		pr_err("Infinite mapping not handled");
->>   		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
->>   		return MAPPING_INVALID;
->> -	} else if (mpext->subflow_seq =3D=3D 0 &&
->> -		   mpext->data_fin =3D=3D 1) {
->> -		if (WARN_ON_ONCE(mpext->data_len !=3D 1))
->> -			return false;
->> +	}
->>   -		/* do not try hard to handle this any better, till we have
->> -		 * real data_fin support
->> -		 */
->> -		pr_debug("DATA_FIN with no payload");
->> -		return MAPPING_DATA_FIN;
->> +	if (mpext->data_fin =3D=3D 1) {
->> +		if (data_len =3D=3D 1) {
->> +			pr_debug("DATA_FIN with no payload"); > + =
+00007ffd5f71deb0
+[90317.511028] R13: 0000000000002000 R14: 0000000000002000 R15: =
 
->> return MAPPING_DATA_FIN;> +		}
->> +
->> +		/* Adjust for DATA_FIN using 1 byte of sequence space */
->> +		data_len--;
->
-> Is it because here we cannot add the DATA_FIN bit yet, still more data to =
+0000000000002000
+[90317.511028] ---[ end trace 6d6ab3e3a5c67aed ]---
+[90318.041976] BUG: kernel NULL pointer dereference, address: =
 
-> send?
->
+0000000000000014
+[90318.042798] #PF: supervisor write access in kernel mode
+[90318.042798] #PF: error_code(0x0002) - not-present page
+[90318.042798] PGD 0 P4D 0
+[90318.042798] Oops: 0002 [#1] SMP NOPTI
+[90318.042798] CPU: 0 PID: 28845 Comm: mptcp_connect Tainted: G        W =
 
-This is on the receive side to adjust the mapping to reflect the actual =
+         5.4.0-rc6+ #316
+[90318.042798] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), =
 
-data payload that is in the skbs. The DATA_FIN received from the peer =
+BIOS 1.10.2-1ubuntu1 04/01/2014
+[90318.042798] RIP: 0010:mptcp_sendmsg_frag+0x4d4/0x570
+[90318.042798] Code: 00 e9 72 fc ff ff 48 c7 44 24 20 00 00 00 00 41 80 =
 
-consumes a byte of MPTCP-level sequence space even though there is no =
+4d 37 02 c6 44 24 1c 00 e9 0f fc ff ff 80 7c 24 1c 00 74 4c 48 8b 44 24 =
 
-corresponding skb data payload for the reassembly code to look for.
+20 <66> 44 01 78 14 48 83 3c 24 00 0f 85 d4 fc ff ff 45 01 46 08 e9 cb
+[90318.042798] RSP: 0018:ffff979e40287cc8 EFLAGS: 00010246
+[90318.042798] RAX: 0000000000000000 RBX: ffff921f1d430900 RCX: =
 
-When DATA_FIN is sent in a packet with data payload, the DSS =
+0000000000001fa0
+[90318.042798] RDX: 0000000000001fa0 RSI: 0000000000000000 RDI: =
 
-mapping is extended by 1 in mptcp_write_data_fin() (look for =
+ffff921f1d430900
+[90318.042798] RBP: ffff921f1d451380 R08: 0000000000001fa0 R09: =
 
-"ext->data_len++" above), so this line of code is restoring the original =
+0000000000001fa0
+[90318.042798] R10: ffff921f1dc8eec0 R11: ffff921f1de58000 R12: =
 
-mapping for reassembly purposes.
+ffff921f1d4518d8
+[90318.042798] R13: ffff921f1de56200 R14: ffff921f1edcf6d0 R15: =
 
---
-Mat Martineau
-Intel
---===============5447739214621738722==--
+0000000000001fa0
+[90318.042798] FS:  00007f53fa681500(0000) GS:ffff921f1f200000(0000) =
+
+knlGS:0000000000000000
+[90318.042798] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[90318.042798] CR2: 0000000000000014 CR3: 000000001dc30000 CR4: =
+
+00000000003406f0
+[90318.042798] Call Trace:
+[90318.042798]  mptcp_sendmsg+0x15b/0x230
+[90318.042798]  sock_sendmsg+0x4f/0x60
+[90318.042798]  sock_write_iter+0x8a/0xf0
+[90318.042798]  new_sync_write+0x116/0x1b0
+[90318.042798]  vfs_write+0xa8/0x1a0
+[90318.042798]  ksys_write+0x9c/0xd0
+[90318.042798]  do_syscall_64+0x43/0x120
+[90318.042798]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[90318.042798] RIP: 0033:0x7f53fa180154
+[90318.042798] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 =
+
+00 00 00 66 90 48 8d 05 b1 07 2e 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f =
+
+05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
+[90318.042798] RSP: 002b:00007ffd5f71be78 EFLAGS: 00000246 ORIG_RAX: =
+
+0000000000000001
+[90318.042798] RAX: ffffffffffffffda RBX: 00007ffd5f71bea8 RCX: =
+
+00007f53fa180154
+[90318.042798] RDX: 0000000000002000 RSI: 00007ffd5f71beb0 RDI: =
+
+0000000000000003
+[90318.042798] RBP: 0000000000000003 R08: 00007f53fa45b1d0 R09: =
+
+00007f53fa45b240
+[90318.042798] R10: 00007f53fa1dad30 R11: 0000000000000246 R12: =
+
+00007ffd5f71deb0
+[90318.042798] R13: 0000000000002000 R14: 0000000000002000 R15: =
+
+0000000000002000
+[90318.042798] Modules linked in:
+[90318.042798] CR2: 0000000000000014
+[90318.042798] ---[ end trace 6d6ab3e3a5c67aee ]---
+[90318.042798] RIP: 0010:mptcp_sendmsg_frag+0x4d4/0x570
+[90318.042798] Code: 00 e9 72 fc ff ff 48 c7 44 24 20 00 00 00 00 41 80 =
+
+4d 37 02 c6 44 24 1c 00 e9 0f fc ff ff 80 7c 24 1c 00 74 4c 48 8b 44 24 =
+
+20 <66> 44 01 78 14 48 83 3c 24 00 0f 85 d4 fc ff ff 45 01 46 08 e9 cb
+[90318.042798] RSP: 0018:ffff979e40287cc8 EFLAGS: 00010246
+[90318.042798] RAX: 0000000000000000 RBX: ffff921f1d430900 RCX: =
+
+0000000000001fa0
+[90318.042798] RDX: 0000000000001fa0 RSI: 0000000000000000 RDI: =
+
+ffff921f1d430900
+[90318.042798] RBP: ffff921f1d451380 R08: 0000000000001fa0 R09: =
+
+0000000000001fa0
+[90318.042798] R10: ffff921f1dc8eec0 R11: ffff921f1de58000 R12: =
+
+ffff921f1d4518d8
+[90318.042798] R13: ffff921f1de56200 R14: ffff921f1edcf6d0 R15: =
+
+0000000000001fa0
+[90318.042798] FS:  00007f53fa681500(0000) GS:ffff921f1f200000(0000) =
+
+knlGS:0000000000000000
+[90318.042798] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[90318.042798] CR2: 0000000000000014 CR3: 000000001dc30000 CR4: =
+
+00000000003406f0
+
+
+Of course, in parallel I did other stuffs, I no longer have the proper =
+
+vmlinux and my MPTCP VM was not recent...
+
+I suspect that "skb" is NULL and we then have an issue with this chunk:
+
+
+         collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
+         if (collapsed) {
+                 WARN_ON_ONCE(!can_collapse);
+                 /* when collapsing mpext always exists */
+                 mpext->data_len +=3D ret;
+                 goto out;
+         }
+
+
+Please also note that earlier in the function, skb is initialised with:
+
+     skb =3D tcp_write_queue_tail(ssk);
+
+So I guess collapsed is always true, no?
+
+If skb is NULL, mpext is NULL too (even if it could unlikely also be =
+
+even if skb is no NULL but sounds more like a bug I guess) and =
+
+can_collapse is False.
+
+I prefer to share this now as I might not be able to look at this before =
+
+a few days, being off for a few days from now. Does someone interested =
+
+by looking at this? :)
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============4287931408175168723==--
