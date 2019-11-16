@@ -1,106 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============3018127930828506176=="
+Content-Type: multipart/mixed; boundary="===============3274696347789508140=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
- space for dss/mp_capable
-Date: Fri, 15 Nov 2019 15:41:35 -0800
-Message-ID: <7460b4baec916e0cf895c57c10affec362703932.camel@linux.intel.com>
-In-Reply-To: a7516d29575754eeacd475033630599fba46f445.camel@redhat.com
+Subject: [MPTCP] selftests: no re-ordering makes tests very slow
+Date: Sat, 16 Nov 2019 13:41:07 +0100
+Message-ID: <5e2d899e-852d-b213-afc2-1dce2fb80305@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2558
+X-UID: 2559
 
---===============3018127930828506176==
+--===============3274696347789508140==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-11-15 at 13:35 +0100, Paolo Abeni wrote:
-> On Thu, 2019-11-14 at 22:43 -0800, Peter Krystad wrote:
-> > > @@ -279,22 +265,27 @@ bool mptcp_established_options(struct sock *sk,=
- struct sk_buff *skb,
-> > >  			       struct mptcp_out_options *opts)
-> > >  {
-> > >  	unsigned int opt_size =3D 0;
-> > > +	bool ret =3D false;
-> > >  =
+Hello,
 
-> > >  	if (!mptcp_subflow_ctx(sk)->mp_capable)
-> > >  		return false;
-> > >  =
+When trying to reproduce the crash I had, I saw that most of the time =
 
-> > > -	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts)) {
-> > > -		*size +=3D opt_size;
-> > > -		remaining -=3D opt_size;
-> > > -		return true;
-> > > -	} else if (mptcp_established_options_dss(sk, skb, &opt_size, remain=
-ing,
-> > > -						 opts)) {
-> > > -		*size +=3D opt_size;
-> > > -		remaining -=3D opt_size;
-> > > -		return true;
-> > > -	}
-> > > +	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts))
-> > > +		ret =3D true;
-> > > +	else if (mptcp_established_options_dss(sk, skb, &opt_size, remainin=
-g,
-> > > +						 opts))
-> > > +		ret =3D true;
-> > >  =
+when there is no re-ordering set (which can happen even with the default =
 
-> > > -	return false;
-> > > +	/* we reserved enough space for the above options, and exceeding the
-> > > +	 * TCP option space would be fatal
-> > > +	 */
-> > > +	if (WARN_ON_ONCE(opt_size > remaining))
-> > > +		return false;
-> > =
+options) but with loss and delay, the tests can be very slow with the ns4:
 
-> > It seems to me, and maybe I am missing something, but all this change a=
-dds to
-> > existing functionality is showing this warning when
-> > mptcp_established_options_mp() fails due to lack of remaining option sp=
-ace.
-> > The small change I propose above does the same, yes?
-> =
 
-> This change has a few goals:
-> - consolidating the check vs TCP option space exhaustion: there is a
-> single warn_on(). Currently we have already one, and we need to add
-> another one in mptcp_established_options_mp(), plus v1 support will
-> require adding at least one more.
-> - documenting that we don't actually expect to exhaust TCP option space
-> with MP_CAPABLE/MP_JOIN or DSS (as we don't send DSS and MP_CAPABLE
-> together)
-> - the assumption that DSS will never exhaust TCP option space allow to
-> simplify the code a bit.
-> =
+ns1 MPTCP -> ns3 (dead:beef:3::2:10013) MPTCP  (duration   157ms) [ OK ]
+ns1 MPTCP -> ns4 (10.0.3.1:10014      ) MPTCP  (duration 33023ms) [ OK ]
+ns1 MPTCP -> ns4 (dead:beef:3::1:10015) MPTCP  (duration 36485ms) [ OK ]
+ns2 MPTCP -> ns1 (10.0.1.1:10016      ) MPTCP  (duration   118ms) [ OK ]
+(...)
+ns2 MPTCP -> ns3 (dead:beef:3::2:10021) MPTCP  (duration   126ms) [ OK ]
+ns2 MPTCP -> ns4 (10.0.3.1:10022      ) MPTCP  (duration 15036ms) [ OK ]
+ns2 MPTCP -> ns4 (dead:beef:3::1:10023) MPTCP  (duration 11507ms) [ OK ]
+ns3 MPTCP -> ns1 (10.0.1.1:10024      ) MPTCP  (duration   129ms) [ OK ]
+(...)
+ns3 MPTCP -> ns2 (dead:beef:2::1:10029) MPTCP  (duration   139ms) [ OK ]
+ns3 MPTCP -> ns4 (10.0.3.1:10030      ) MPTCP  (duration  4317ms) [ OK ]
+ns3 MPTCP -> ns4 (dead:beef:3::1:10031) MPTCP  (duration  4321ms) [ OK ]
+ns4 MPTCP -> ns1 (10.0.1.1:10032      ) MPTCP  (duration 48538ms) [ OK ]
+ns4 MPTCP -> ns1 (dead:beef:1::1:10033) MPTCP  (duration 39943ms) [ OK ]
+ns4 MPTCP -> ns2 (10.0.1.2:10034      ) MPTCP  (duration 24599ms) [ OK ]
+ns4 MPTCP -> ns2 (dead:beef:1::2:10035) MPTCP  (duration 23126ms) [ OK ]
+ns4 MPTCP -> ns2 (10.0.2.1:10036      ) MPTCP  (duration 64512ms) [ OK ]
+ns4 MPTCP -> ns2 (dead:beef:2::1:10037) MPTCP  (duration 37747ms) [ OK ]
+ns4 MPTCP -> ns3 (10.0.2.2:10038      ) MPTCP  (duration  4766ms) [ OK ]
+ns4 MPTCP -> ns3 (dead:beef:2::2:10039) MPTCP  (duration  4772ms) [ OK ]
+ns4 MPTCP -> ns3 (10.0.3.2:10040      ) MPTCP  (duration  4699ms) [ OK ]
+ns4 MPTCP -> ns3 (dead:beef:3::2:10041) MPTCP  (duration  4324ms) [ OK ]
+Time: 425 seconds
 
-> yes, alternatively we can add more warn_on(). That will uglify a bit
-> the v1 code.
 
-I guess I'm OK with a single WARN_ON. This patchset LGTM.
+This can be easily reproduced by using:
 
-Peter.
+   ./mptcp_connect.sh -r 0
 
-> =
 
-> > I also think the logic here needs to be re-visited, since in both solut=
-ions if
-> > we want to send MP_CAPABLE and there isn't room we should fallback to T=
-CP and
-> > not 'else if' the dss option.
-> =
+When there is re-ordering, the tests are not ~95% of the time that slow. =
 
-> TCP option exhaustion with MP_CAPABLE should only happen in case of
-> bugs, I think WARN_ON() is enough.
-> =
+I guess it depends how much re-ordering we have.
 
-> Cheers,
-> =
+Did you also see this in your tests?
 
-> Paolo
->=20
+Cheers,
+Matt
+-- =
 
---===============3018127930828506176==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3274696347789508140==--
