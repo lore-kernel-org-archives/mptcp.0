@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============6059534318049878139=="
+Content-Type: multipart/mixed; boundary="===============8589676930109964527=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 04/10] selftests:mptcp: reduce wait time for the listen
-Date: Sat, 16 Nov 2019 13:59:30 +0100
-Message-ID: <20191116125936.3563275-5-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 05/10] selftests:mptcp: reduce time to wait for DAD
+Date: Sat, 16 Nov 2019 13:59:31 +0100
+Message-ID: <20191116125936.3563275-6-matthieu.baerts@tessares.net>
 In-Reply-To: 20191116125936.3563275-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2565
+X-UID: 2566
 
---===============6059534318049878139==
+--===============8589676930109964527==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I noticed that we were spending a lot of time waiting with the sleep
-command. Now we poll the socket status and we reduce the exec time by
-maybe ~30 seconds.
+We can use 'ip addr' to know if everything is setup.
+
+In my test, DAD has already finished when checking the first time.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
@@ -25,55 +25,44 @@ Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Notes:
     to be squashed in "mptcp: add basic kselftest for mptcp"
 
- .../selftests/net/mptcp/mptcp_connect.sh      | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ .../testing/selftests/net/mptcp/mptcp_connect.sh | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
 ting/selftests/net/mptcp/mptcp_connect.sh
-index 74d62a69b6e9..3274cc1fd145 100755
+index 3274cc1fd145..f413a7f3379c 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -286,6 +286,23 @@ do_ping()
- 	return 0
- }
+@@ -461,9 +461,23 @@ check_mptcp_disabled
  =
 
-+# $1: ns, $2: port
-+wait_local_port_listen()
+ check_mptcp_ulp_setsockopt
+ =
+
++show_all_ipv6()
 +{
-+	local listener_ns=3D"${1}"
-+	local port=3D"${2}"
-+
-+	local port_hex i
-+
-+	port_hex=3D"$(printf "%04X" "${port}")"
-+	for i in $(seq 10); do
-+		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
-+			awk "BEGIN {rc=3D1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=3D0;=
- exit}} END {exit rc}" &&
-+			break
-+		sleep 0.1
++	local ns
++	for ns in "$ns1" "$ns2" "$ns3" "$ns4"; do
++		ip -net "${ns}" -6 addr show scope global
 +	done
 +}
 +
- do_transfer()
- {
- 	listener_ns=3D"$1"
-@@ -323,7 +340,7 @@ do_transfer()
- 	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s $=
-{srv_proto} $local_addr < "$sin" > "$sout" &
- 	spid=3D$!
+ # Allow DAD to finish
+-$ipv6 && sleep 2
++if $ipv6; then
++	for dad in $(seq 20); do
++		show_all_ipv6 | grep -q -e tentative -e temporary || break
++		sleep 0.1
++	done
++fi
  =
 
--	sleep 1
-+	wait_local_port_listen "${listener_ns}" "${port}"
- =
-
- 	start=3D$(date +%s%3N)
- 	ip netns exec ${connector_ns} ./mptcp_connect -t $timeout -p $port -s ${c=
-l_proto} $connect_addr < "$cin" > "$cout" &
++echo "INFO: validating network environment with pings"
+ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
+ 	do_ping "$ns1" $sender 10.0.1.1
+ 	if $ipv6;then
 -- =
 
 2.24.0
 
---===============6059534318049878139==--
+--===============8589676930109964527==--
