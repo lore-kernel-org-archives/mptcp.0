@@ -1,64 +1,160 @@
-Content-Type: multipart/mixed; boundary="===============3274696347789508140=="
+Content-Type: multipart/mixed; boundary="===============4724507377433419169=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] selftests: no re-ordering makes tests very slow
-Date: Sat, 16 Nov 2019 13:41:07 +0100
-Message-ID: <5e2d899e-852d-b213-afc2-1dce2fb80305@tessares.net>
+Subject: [MPTCP] Re: Warn + crash in mptcp_sendmsg_frag()
+Date: Sat, 16 Nov 2019 13:59:28 +0100
+Message-ID: <39fd64d6-5fd5-ec15-3ed5-c123edb94f39@tessares.net>
+In-Reply-To: 23c393ac68f8ae8857b2eb3e71b7685083ebeaca.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2559
+X-UID: 2560
 
---===============3274696347789508140==
+--===============4724507377433419169==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Paolo,
 
-When trying to reproduce the crash I had, I saw that most of the time =
+Thank you for your answer!
 
-when there is no re-ordering set (which can happen even with the default =
+On 15/11/2019 23:39, Paolo Abeni wrote:
+> On Fri, 2019-11-15 at 22:06 +0100, Matthieu Baerts wrote:
+>> Hello,
+>>
+>> When testing some changes in the kselftests area, I initially saw the
+>> message:
+>>
+>>     main_loop_s: timed out
+>>
+>> in the middle of the tests. But just after, there was a "[ OK ]".
+>> Anybody saw that?
+> =
 
-options) but with loss and delay, the tests can be very slow with the ns4:
+> Yes. It happens when you kill the script via ctrl-c while the server
+> program is running (in background). The server is not killed, and so it
+> time-out in the background.
+> =
 
+> Meanwhile you run another iteration of the self-tests and you see the
+> timeout from the previous iteration just in the middle of the current
+> output.
 
-ns1 MPTCP -> ns3 (dead:beef:3::2:10013) MPTCP  (duration   157ms) [ OK ]
-ns1 MPTCP -> ns4 (10.0.3.1:10014      ) MPTCP  (duration 33023ms) [ OK ]
-ns1 MPTCP -> ns4 (dead:beef:3::1:10015) MPTCP  (duration 36485ms) [ OK ]
-ns2 MPTCP -> ns1 (10.0.1.1:10016      ) MPTCP  (duration   118ms) [ OK ]
-(...)
-ns2 MPTCP -> ns3 (dead:beef:3::2:10021) MPTCP  (duration   126ms) [ OK ]
-ns2 MPTCP -> ns4 (10.0.3.1:10022      ) MPTCP  (duration 15036ms) [ OK ]
-ns2 MPTCP -> ns4 (dead:beef:3::1:10023) MPTCP  (duration 11507ms) [ OK ]
-ns3 MPTCP -> ns1 (10.0.1.1:10024      ) MPTCP  (duration   129ms) [ OK ]
-(...)
-ns3 MPTCP -> ns2 (dead:beef:2::1:10029) MPTCP  (duration   139ms) [ OK ]
-ns3 MPTCP -> ns4 (10.0.3.1:10030      ) MPTCP  (duration  4317ms) [ OK ]
-ns3 MPTCP -> ns4 (dead:beef:3::1:10031) MPTCP  (duration  4321ms) [ OK ]
-ns4 MPTCP -> ns1 (10.0.1.1:10032      ) MPTCP  (duration 48538ms) [ OK ]
-ns4 MPTCP -> ns1 (dead:beef:1::1:10033) MPTCP  (duration 39943ms) [ OK ]
-ns4 MPTCP -> ns2 (10.0.1.2:10034      ) MPTCP  (duration 24599ms) [ OK ]
-ns4 MPTCP -> ns2 (dead:beef:1::2:10035) MPTCP  (duration 23126ms) [ OK ]
-ns4 MPTCP -> ns2 (10.0.2.1:10036      ) MPTCP  (duration 64512ms) [ OK ]
-ns4 MPTCP -> ns2 (dead:beef:2::1:10037) MPTCP  (duration 37747ms) [ OK ]
-ns4 MPTCP -> ns3 (10.0.2.2:10038      ) MPTCP  (duration  4766ms) [ OK ]
-ns4 MPTCP -> ns3 (dead:beef:2::2:10039) MPTCP  (duration  4772ms) [ OK ]
-ns4 MPTCP -> ns3 (10.0.3.2:10040      ) MPTCP  (duration  4699ms) [ OK ]
-ns4 MPTCP -> ns3 (dead:beef:3::2:10041) MPTCP  (duration  4324ms) [ OK ]
-Time: 425 seconds
+Oh it makes sense! That's probably what I had!
 
+>> I tried to understand why because the binary should returns 2 if the
+>> message is printed and the shell script should catch the error. Then I
+>> added debug in the script and launched it in a while-loop. I didn't get
+>> the initial error I was looking for but instead I got a WARN followed by
+>> an OOPS:
+> =
 
-This can be easily reproduced by using:
+> That is way worse :(
+> =
 
-   ./mptcp_connect.sh -r 0
+>> Of course, in parallel I did other stuffs, I no longer have the proper
+>> vmlinux and my MPTCP VM was not recent...
+> =
 
+> uhm... that's a pity... a decoded stack trace would help
 
-When there is re-ordering, the tests are not ~95% of the time that slow. =
+The tests are running in a loop, I don't have any issue so far. Maybe =
 
-I guess it depends how much re-ordering we have.
+because I was using a VM build last week.
 
-Did you also see this in your tests?
+>> I suspect that "skb" is NULL and we then have an issue with this chunk:
+>>
+>>
+>>           collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
+>>           if (collapsed) {
+>>                   WARN_ON_ONCE(!can_collapse);
+>>                   /* when collapsing mpext always exists */
+>>                   mpext->data_len +=3D ret;
+>>                   goto out;
+>>           }
+>>
+>>
+>> Please also note that earlier in the function, skb is initialised with:
+>>
+>>       skb =3D tcp_write_queue_tail(ssk);
+>>
+>> So I guess collapsed is always true, no?
+> =
+
+> No. 'collapsed' is true only if do_tcp_sendpages() did not allocated a
+> new skb - that is, collapsed the new data to the tail one. It should
+> happen only when the 'can_collapse' variable is true.
+
+OK, I missed that the queue could be modified by this function.
+
+> I just notice that there is a very unlikely scenario where
+> =
+
+> 'collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);'
+> =
+
+> is true, but do_tcp_sendpages() did not actually collapsed the data:
+> =
+
+> - do_tcp_sendpages() is called with 'can_collapse' =3D=3D false.
+> - do_tcp_sendpages() tries to create a new skb but hits memory limits
+> and calls sk_stream_wait_memory()
+> - sk_stream_wait_memory() release the socket lock and goes to sleep.
+> - the tail skb is transmitted and freed, than do_tcp_sendpages() is
+> woken again
+> - do_tcp_sendpages() allocates a new skb and get a ptr to the last
+> freed skb - that is, the 'old' tail just freed.
+> - do_tcp_sendpages() complete successfully and mptcp_sendmsg_frag()
+> sees skb =3D=3D tcp_write_queue_tail(ssk), even if there was no collapsin=
+g.
+> - havoc happens
+> =
+
+> All the above is very unlikely - after all I never observed that in
+> practice - but still possible I think.
+
+Thank you for your analysis!
+
+I will let the tests running in a while loop for a few days and check if =
+
+I get an issue.
+
+>> If skb is NULL, mpext is NULL too (even if it could unlikely also be
+>> even if skb is no NULL but sounds more like a bug I guess) and
+>> can_collapse is False.
+> =
+
+> Uhm... I don't think this is the case. mpext is NULL even when
+> do_tcp_sendpages() did not collapsed the data - that is in the above
+> scenario.
+
+I get the OOPS I got was because mpext was NULL, no?
+
+BUG: kernel NULL pointer dereference, address: 0000000000000014
+
+I didn't check with pahole but maybe linked to this instruction:
+
+   mpext->data_len +=3D ret;
+
+> A possible solution would be let mptcp_sendmsg_frag() allocate the skb
+> and do the memory scheduling for the subflow before calling
+> do_tcp_sendpages(), so that it would never block.
+> =
+
+> Some/a lot of code duplication vs do_tcp_sendpages(), but that would
+> allow us also to take care of the pending todo in
+> mptcp_sendmsg_frag()[1] e.g. handle mptcp ext allocation failure
+> gracefully.
+> =
+
+> Any better ideas?!?
+
+#BPF? I thought it was the solution to all problems...
+
+Maybe when MPTCP will be published, it will be possible to modify =
+
+do_tcp_sendpages() :)
 
 Cheers,
 Matt
@@ -69,4 +165,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3274696347789508140==--
+--===============4724507377433419169==--
