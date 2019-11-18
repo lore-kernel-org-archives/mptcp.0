@@ -1,52 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============5907199164149558234=="
+Content-Type: multipart/mixed; boundary="===============8307575691765439850=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Warn + crash in mptcp_sendmsg_frag()
-Date: Mon, 18 Nov 2019 12:07:05 +0100
-Message-ID: <4b863b915dcd0dd1f3421888e781fb16d308fd18.camel@redhat.com>
-In-Reply-To: 39fd64d6-5fd5-ec15-3ed5-c123edb94f39@tessares.net
+Subject: [MPTCP] Re: [RFC 06/14] sendmsg: block until mptcp sk is writeable
+Date: Mon, 18 Nov 2019 12:29:57 +0100
+Message-ID: <c5c49589a929e651f957fee74b1eb264cdc35104.camel@redhat.com>
+In-Reply-To: 20191114173225.21199-7-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2573
+X-UID: 2574
 
---===============5907199164149558234==
+--===============8307575691765439850==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2019-11-16 at 13:59 +0100, Matthieu Baerts wrote:
-> On 15/11/2019 23:39, Paolo Abeni wrote:
-> > On Fri, 2019-11-15 at 22:06 +0100, Matthieu Baerts wrote:
-> > > If skb is NULL, mpext is NULL too (even if it could unlikely also be
-> > > even if skb is no NULL but sounds more like a bug I guess) and
-> > > can_collapse is False.
-> > =
-
-> > Uhm... I don't think this is the case. mpext is NULL even when
-> > do_tcp_sendpages() did not collapsed the data - that is in the above
-> > scenario.
+On Thu, 2019-11-14 at 18:32 +0100, Florian Westphal wrote:
+> This disables transmit of new data until the peer has acked
+> enough mptcp data to get below the wspace write threshold (more than
+> half of wspace upperlimit is available again).
 > =
 
-> I get the OOPS I got was because mpext was NULL, no?
+> Also have poll not report EPOLLOUT in this case, its not relevant if a
+> subflow is writeable.
 > =
 
-> BUG: kernel NULL pointer dereference, address: 0000000000000014
+> The latter is a temporary workaround that is needed because mptcp_poll
+> walks the subflows and calls __tcp_poll on each of them.
+> Because subflow ssk is usually writable, we will have to undo-that
+> if the mptcp sndbuf is exhausted.  This won't be needed anymore once
+> __tcp_poll is removed, I am working on this.
 > =
 
-> I didn't check with pahole but maybe linked to this instruction:
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  net/mptcp/protocol.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
 > =
 
->    mpext->data_len +=3D ret;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 2144e80b8704..83be407e1dd6 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -406,6 +406,18 @@ static int mptcp_sendmsg(struct sock *sk, struct msg=
+hdr *msg, size_t len)
+>  		return ret;
+>  	}
+>  =
 
-Sorry, I was not clear.
+> +	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+> +
+> +	mptcp_clean_una(sk);
+> +
+> +	while (!sk_stream_memory_free(sk)) {
+> +		ret =3D sk_stream_wait_memory(sk, &timeo);
+> +		if (ret)
+> +			goto out;
+> +
+> +		mptcp_clean_una(sk);
+> +	}
+> +
 
-yes, very likely the crash is due to mpext, but I don't think mpext is
-NULL because skb is NULL. I think it's NULL because there was no
-coalescing on skb (and thus no prior mpext in place).
+Can we move the above loop to the non fallback case only ? e.g. after
+the below !mptcp_subflow_get(msk) checks?
+
+If so, we could have a single loop checking for:
+
+!sk_stream_memory_free(sk) || !mptcp_subflow_get_send()
+
+(together with the next patch)
 
 Cheers,
 
 Paolo
 
---===============5907199164149558234==--
+--===============8307575691765439850==--
