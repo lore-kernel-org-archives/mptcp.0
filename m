@@ -1,101 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============5702865643264116531=="
+Content-Type: multipart/mixed; boundary="===============1276395713108212177=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 06/13] sendmsg: block until mptcp sk is writeable
-Date: Mon, 18 Nov 2019 22:45:31 +0100
-Message-ID: <20191118214538.21931-7-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 07/13] subflow: sk_data_ready: make wakeup on tcp
+ sock conditional
+Date: Mon, 18 Nov 2019 22:45:32 +0100
+Message-ID: <20191118214538.21931-8-fw@strlen.de>
 In-Reply-To: 20191118214538.21931-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2591
+X-UID: 2592
 
---===============5702865643264116531==
+--===============1276395713108212177==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This disables transmit of new data until the peer has acked
-enough mptcp data to get below the wspace write threshold (more than
-half of wspace upperlimit is available again).
+No need for this unless we don't have a parent or the socket is not
+mp capable.
 
-Also have poll not report EPOLLOUT in this case, its not relevant if a
-subflow is writeable.
-
-The latter is a temporary workaround that is needed because mptcp_poll
-walks the subflows and calls __tcp_poll on each of them.
-
-Because subflow ssk is usually writable, the EPOLLOUT needs to be
-removed if the mptcp sndbuf is exhausted.
-
-This is only needed until __tcp_poll is removed later in the series.
-
-v2: drop the "empty send" part as per comments from Paolo and Mat.
+Only the mptcp socket will be waiting for events.  In case the mptcp
+socket connected to a tcp-only peer, we're in fallback mode and need
+to wakeup the parent too.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ net/mptcp/subflow.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2144e80b8704..1515c3bad751 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -406,23 +406,27 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		return ret;
- 	}
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index ff38d54392cd..976e49349276 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -646,10 +646,13 @@ static void subflow_data_ready(struct sock *sk)
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	struct sock *parent =3D subflow->conn;
  =
 
-+	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
-+
-+	mptcp_clean_una(sk);
-+
-+	while (!sk_stream_memory_free(sk)) {
-+		ret =3D sk_stream_wait_memory(sk, &timeo);
-+		if (ret)
-+			goto out;
-+
-+		mptcp_clean_una(sk);
+-	subflow->tcp_sk_data_ready(sk);
++	if (!parent || !(subflow->mp_capable || subflow->mp_join)) {
++		subflow->tcp_sk_data_ready(sk);
+ =
+
+-	if (!parent || !(subflow->mp_capable || subflow->mp_join))
++		if (parent)
++			parent->sk_data_ready(parent);
+ 		return;
 +	}
-+
- 	ssk =3D mptcp_subflow_get(msk);
- 	if (!ssk) {
- 		release_sock(sk);
- 		return -ENOTCONN;
- 	}
  =
 
--	if (!msg_data_left(msg)) {
--		pr_debug("empty send");
--		ret =3D sock_sendmsg(ssk->sk_socket, msg);
--		goto out;
--	}
--
- 	pr_debug("conn_list->subflow=3D%p", ssk);
- =
-
- 	lock_sock(ssk);
--	mptcp_clean_una(sk);
--	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- 	while (msg_data_left(msg)) {
- 		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
- 					 &size_goal);
-@@ -1312,6 +1316,10 @@ static __poll_t mptcp_poll(struct file *file, struct=
- socket *sock,
- 		tcp_sock =3D mptcp_subflow_tcp_socket(subflow);
- 		ret |=3D __tcp_poll(tcp_sock->sk);
- 	}
-+
-+	if (!sk_stream_is_writeable(sk))
-+		ret &=3D ~(EPOLLOUT|EPOLLWRNORM);
-+
- 	release_sock(sk);
- =
-
- 	return ret;
+ 	/* always propagate the EoF */
+ 	if (mptcp_subflow_data_available(sk) || subflow->rx_eof) {
 -- =
 
 2.23.0
 
---===============5702865643264116531==--
+--===============1276395713108212177==--
