@@ -1,43 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============8343431945523639509=="
+Content-Type: multipart/mixed; boundary="===============5907199164149558234=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 00/10] selftests: IPv6 by default and time
- reduction
-Date: Sat, 16 Nov 2019 14:41:40 +0100
-Message-ID: <20191116134140.GL19558@breakpoint.cc>
-In-Reply-To: 20191116125936.3563275-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: Warn + crash in mptcp_sendmsg_frag()
+Date: Mon, 18 Nov 2019 12:07:05 +0100
+Message-ID: <4b863b915dcd0dd1f3421888e781fb16d308fd18.camel@redhat.com>
+In-Reply-To: 39fd64d6-5fd5-ec15-3ed5-c123edb94f39@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2572
+X-UID: 2573
 
---===============8343431945523639509==
+--===============5907199164149558234==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> Here are a few improvements in the selftests. Nothing complex, some
-> details to have the results more readable (I think), IPv6 enabled by
-> default, the time of the execution is reduced (around 30 seconds now
-> with the same launched tests), and the script is more robust for the
-> future.
+On Sat, 2019-11-16 at 13:59 +0100, Matthieu Baerts wrote:
+> On 15/11/2019 23:39, Paolo Abeni wrote:
+> > On Fri, 2019-11-15 at 22:06 +0100, Matthieu Baerts wrote:
+> > > If skb is NULL, mpext is NULL too (even if it could unlikely also be
+> > > even if skb is no NULL but sounds more like a bug I guess) and
+> > > can_collapse is False.
+> > =
+
+> > Uhm... I don't think this is the case. mpext is NULL even when
+> > do_tcp_sendpages() did not collapsed the data - that is in the above
+> > scenario.
 > =
 
-> I hope we can apply the one before the last one: IPV6 is now forced in
-> the config, we can then always apply the IPv6 network config and remove
-> a lot of 'if $ipv6' in the code.
+> I get the OOPS I got was because mpext was NULL, no?
 > =
 
-> For the last one, I guess we should not apply it now because some tests
-> are really slow in some conditions. More details in the patch and a
-> separated email has been sent.
+> BUG: kernel NULL pointer dereference, address: 0000000000000014
 > =
 
-> All the patches can be squashed in the commit introducing the selftests:
+> I didn't check with pahole but maybe linked to this instruction:
 > =
 
->   mptcp: add basic kselftest for mptcp
+>    mpext->data_len +=3D ret;
 
-These look good, thanks Matthieu.
---===============8343431945523639509==--
+Sorry, I was not clear.
+
+yes, very likely the crash is due to mpext, but I don't think mpext is
+NULL because skb is NULL. I think it's NULL because there was no
+coalescing on skb (and thus no prior mpext in place).
+
+Cheers,
+
+Paolo
+
+--===============5907199164149558234==--
