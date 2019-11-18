@@ -1,98 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============8545830365434153300=="
+Content-Type: multipart/mixed; boundary="===============7995631477713965596=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 06/14] sendmsg: block until mptcp sk is writeable
-Date: Mon, 18 Nov 2019 13:19:55 +0100
-Message-ID: <7ee9c0619340aae4a93b19501f9f5ae1d7459bbe.camel@redhat.com>
-In-Reply-To: 20191118121125.GA2284@breakpoint.cc
+Subject: [MPTCP] Re: [RFC 10/14] recv: make DATA_READY reflect ssk in-sequence
+ state
+Date: Mon, 18 Nov 2019 13:36:01 +0100
+Message-ID: <20191118123601.GC2284@breakpoint.cc>
+In-Reply-To: 525d25169a7a800ca7a3775fbf2ec09e47ecb8fd.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2580
+X-UID: 2581
 
---===============8545830365434153300==
+--===============7995631477713965596==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-11-18 at 13:11 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Thu, 2019-11-14 at 18:32 +0100, Florian Westphal wrote:
-> > > This disables transmit of new data until the peer has acked
-> > > enough mptcp data to get below the wspace write threshold (more than
-> > > half of wspace upperlimit is available again).
-> > > =
-
-> > > Also have poll not report EPOLLOUT in this case, its not relevant if a
-> > > subflow is writeable.
-> > > =
-
-> > > The latter is a temporary workaround that is needed because mptcp_poll
-> > > walks the subflows and calls __tcp_poll on each of them.
-> > > Because subflow ssk is usually writable, we will have to undo-that
-> > > if the mptcp sndbuf is exhausted.  This won't be needed anymore once
-> > > __tcp_poll is removed, I am working on this.
-> > > =
-
-> > > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > > ---
-> > >  net/mptcp/protocol.c | 18 ++++++++++++++++--
-> > >  1 file changed, 16 insertions(+), 2 deletions(-)
-> > > =
-
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index 2144e80b8704..83be407e1dd6 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -406,6 +406,18 @@ static int mptcp_sendmsg(struct sock *sk, struct=
- msghdr *msg, size_t len)
-> > >  		return ret;
-> > >  	}
-> > >  =
-
-> > > +	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
-> > > +
-> > > +	mptcp_clean_una(sk);
-> > > +
-> > > +	while (!sk_stream_memory_free(sk)) {
-> > > +		ret =3D sk_stream_wait_memory(sk, &timeo);
-> > > +		if (ret)
-> > > +			goto out;
-> > > +
-> > > +		mptcp_clean_una(sk);
-> > > +	}
-> > > +
-> > =
-
-> > Can we move the above loop to the non fallback case only ? e.g. after
-> > the below !mptcp_subflow_get(msk) checks?
-> > =
-
-> > If so, we could have a single loop checking for:
-> > =
-
-> > !sk_stream_memory_free(sk) || !mptcp_subflow_get_send()
-> > =
-
-> > (together with the next patch)
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> On Thu, 2019-11-14 at 18:32 +0100, Florian Westphal wrote:
+> > @@ -614,8 +612,7 @@ static int mptcp_recvmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len,
+> >  			if (bytes_read < 0) {
+> >  				if (!copied)
+> >  					copied =3D bytes_read;
+> > -				done =3D true;
 > =
 
-> It would be easy to do if I remove
+> Why 'done' is not set here anymore? I think we want to quit the
+> recvmsg() loop on socket error ?!?
+
+Right, I'll add it back.
+
+> >  		/* only the master socket status is relevant here. The exit
+> >  		 * conditions mirror closely tcp_recvmsg()
+> >  		 */
+> >  		if (copied >=3D target)
+> > -			break;
+> > +			goto out;
 > =
 
->        if (!msg_data_left(msg)) {
-> 	       pr_debug("empty send");
-> 	       ret =3D sock_sendmsg(ssk->sk_socket, msg);
+> Double checking I'm following correctly the patch: 'goto out' and
+> 'break;' jump to the same position right? - just after the main
+> recvmsg() loop.
+
+I'll re-add the 'break' statements adn remove the out label.
 > =
 
-> any idea why this is there in the first place?
+> The same in several places below.
+> =
 
-Uhmm... that looks like a left-over from the initial implementation ?!?
-possibly trying to deal with fastopen?!? =
+> [...]
+> > +out:
+> > +	if (more_data_avail) {
+> > +		if (!test_bit(MPTCP_DATA_READY, &msk->flags))
+> > +			set_bit(MPTCP_DATA_READY, &msk->flags);
+> =
+
+> Can we use test_and_set_bit() here? Othewise, don't we need some smp
+> barriers?
+
+Yes, but why?  We would not use its return value.
+Its only purpose is to avoid usless set_bit in case its already
+set  -- which it is in most cases.
+
+We don't need barriers here in any case (the check is on same memory
+address and there is no depencency to any other memory address here).
+
+> > +	} else if (!wait_data) {
+> > +		clear_bit(MPTCP_DATA_READY, &msk->flags);
+> > +
+> > +		/* .. race-breaker: ssk might get new data after last
+> > +		 * data_available() returns false.
+> > +		 */
+> > +		ssk =3D mptcp_subflow_recv_lookup(msk);
+> > +		if (unlikely(ssk))
+> > +			set_bit(MPTCP_DATA_READY, &msk->flags);
+> =
+
+> Don't we need smp barriers around the bit operations here?
+
+Why?  What sequence would result in a problem?
+
+Cpu0                                  Cpu1
+  clear_bit()
+  ssk =3D recv_lookup()                 data_ready()
+  if (NULL)...                        -> set_bit()
 
 
-I think it can be dropped. @Peter / @Mat do you know better?
+Result: DATA_READY is set.
 
-/P
+I can't come up with a sequence where we'd do:
 
---===============8545830365434153300==--
+data_ready()
+  ->set_bit()
+clear_bit()
+... and then have mptcp_subflow_recv_lookup() come
+up with a NULL ssk if the subflow has data available.
+
+(Which would mean DATA_READY is unset instead of set).
+--===============7995631477713965596==--
