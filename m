@@ -1,56 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============2439212122506355459=="
+Content-Type: multipart/mixed; boundary="===============7781049017467350147=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [RFC 13/14] sendmsg: don't restart mptcp_sendmsg_frag
-Date: Mon, 18 Nov 2019 22:35:26 +0100
-Message-ID: <d93aafe7ca2a65d0e0ebaafc0e0d76eb917d6068.camel@redhat.com>
-In-Reply-To: 20191118121733.GB2284@breakpoint.cc
+Date: Mon, 18 Nov 2019 22:44:39 +0100
+Message-ID: <20191118214439.GD2284@breakpoint.cc>
+In-Reply-To: d93aafe7ca2a65d0e0ebaafc0e0d76eb917d6068.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2583
+X-UID: 2584
 
---===============2439212122506355459==
+--===============7781049017467350147==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-11-18 at 13:17 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Thu, 2019-11-14 at 18:32 +0100, Florian Westphal wrote:
-> > > This function calls do_tcp_sendpages which already has such a loop.
-> > > =
-
-> > > When tcp sendbuffer runs out of space and non-blocking io is used,
-> > > do_tcp_sendpages will return early because it can't sleep.
-> > > No -EAGAIN is returned, as some data was sent.
-> > > =
-
-> > > When mptcp_sendmsg_frag is called again, next call will either return
-> > > -EAGAIN immediately or it will only send a few more bytes.
-> > =
-
-> > If I understand correctly, the goal here is setting the appropriate
-> > return value when overall sendmsg() spooled a few bytes and than would
-> > block, right? currently we can return erroneously  -EAGAIN instead of
-> > the number of written bytes on some scenarios.
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> I have no objections on this change.
 > =
 
-> No, the goal is to remove useless code.  The other solution would be
-> to teach mptcp_send_frag to be able to tell when it did hit EGAIN to
-> exit the loop earlier, for that it would need to be able to return
-> both errno and the number of queued bytes.  I didn't like adding
-> another int *err argument.
+> Cheers,
+> =
 
-I see.
+> Paolo
+> =
 
-I have no objections on this change.
+> p.s. we will likely have to touch sendmsg_frag() again to fix the issue
+> reported by Matt.
 
-Cheers,
+Ok, I will submit a v2 *without* this change.  We
+can then probably better figure out how to handle this.
 
-Paolo
-
-p.s. we will likely have to touch sendmsg_frag() again to fix the issue
-reported by Matt.
-
---===============2439212122506355459==--
+(We can also keep requirements for future .sendpage in mind).
+--===============7781049017467350147==--
