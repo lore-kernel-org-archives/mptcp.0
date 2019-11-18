@@ -1,69 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============6340576781069063044=="
+Content-Type: multipart/mixed; boundary="===============6846396082754954148=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 10/14] recv: make DATA_READY reflect ssk in-sequence
- state
-Date: Mon, 18 Nov 2019 12:46:33 +0100
-Message-ID: <525d25169a7a800ca7a3775fbf2ec09e47ecb8fd.camel@redhat.com>
-In-Reply-To: 20191114173225.21199-11-fw@strlen.de
+Subject: [MPTCP] Re: [RFC 13/14] sendmsg: don't restart mptcp_sendmsg_frag
+Date: Mon, 18 Nov 2019 13:11:11 +0100
+Message-ID: <2fc61169c91b89ff9e096f18dc27f38ac53cb25b.camel@redhat.com>
+In-Reply-To: 20191114173225.21199-14-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2576
+X-UID: 2577
 
---===============6340576781069063044==
+--===============6846396082754954148==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2019-11-14 at 18:32 +0100, Florian Westphal wrote:
-> @@ -614,8 +612,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
->  			if (bytes_read < 0) {
->  				if (!copied)
->  					copied =3D bytes_read;
-> -				done =3D true;
+> This function calls do_tcp_sendpages which already has such a loop.
+> =
 
-Why 'done' is not set here anymore? I think we want to quit the
-recvmsg() loop on socket error ?!?
+> When tcp sendbuffer runs out of space and non-blocking io is used,
+> do_tcp_sendpages will return early because it can't sleep.
+> No -EAGAIN is returned, as some data was sent.
+> =
 
-[...]
->  		/* only the master socket status is relevant here. The exit
->  		 * conditions mirror closely tcp_recvmsg()
->  		 */
->  		if (copied >=3D target)
-> -			break;
-> +			goto out;
+> When mptcp_sendmsg_frag is called again, next call will either return
+> -EAGAIN immediately or it will only send a few more bytes.
 
-Double checking I'm following correctly the patch: 'goto out' and
-'break;' jump to the same position right? - just after the main
-recvmsg() loop.
+If I understand correctly, the goal here is setting the appropriate
+return value when overall sendmsg() spooled a few bytes and than would
+block, right? currently we can return erroneously  -EAGAIN instead of
+the number of written bytes on some scenarios.
 
-The same in several places below.
+I think that there is a side effect with this change: before a
+blocking, successful, write(<large val>) would always return <large
+val>,
 
-[...]
-> +out:
-> +	if (more_data_avail) {
-> +		if (!test_bit(MPTCP_DATA_READY, &msk->flags))
-> +			set_bit(MPTCP_DATA_READY, &msk->flags);
+After this patch it will return min(<large val>, <max skb size>), as
+mptcp_sendmsg_frag() is limited to a single skb.
 
-Can we use test_and_set_bit() here? Othewise, don't we need some smp
-barriers?
-
-> +	} else if (!wait_data) {
-> +		clear_bit(MPTCP_DATA_READY, &msk->flags);
-> +
-> +		/* .. race-breaker: ssk might get new data after last
-> +		 * data_available() returns false.
-> +		 */
-> +		ssk =3D mptcp_subflow_recv_lookup(msk);
-> +		if (unlikely(ssk))
-> +			set_bit(MPTCP_DATA_READY, &msk->flags);
-
-Don't we need smp barriers around the bit operations here?
+Do we want to preserve the old behavior?
 
 Cheers,
 
 Paolo
 
---===============6340576781069063044==--
+--===============6846396082754954148==--
