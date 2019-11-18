@@ -1,50 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============0121514748088897854=="
+Content-Type: multipart/mixed; boundary="===============5191505706300535255=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 08/13] mptcp: add and use mptcp_subflow_get_retrans
-Date: Mon, 18 Nov 2019 22:45:33 +0100
-Message-ID: <20191118214538.21931-9-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 09/13] mptcp: sendmsg: transmit on backup if other
+ subflows have been closed
+Date: Mon, 18 Nov 2019 22:45:34 +0100
+Message-ID: <20191118214538.21931-10-fw@strlen.de>
 In-Reply-To: 20191118214538.21931-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2593
+X-UID: 2594
 
---===============0121514748088897854==
+--===============5191505706300535255==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Instead of having retransmit worker grab first subflow on the list,
-make it always return NULL, unless either the first non-backup subflow
-on the list is idle or all normal subflows have already been removed.
+Currently we always pick the first ssk on the list and then have
+mptcp_sendmsg_frag wait until more space becomes available in case that
+ssk has no write space available.
 
-In the latter case, the first idle backup subflow is used.
+Instead check the first subflow on the list.  If no more write space
+is available, then we need to either return -EAGAIN to userspace (nonblock
+case), or we need to wait until a subflow becomes available.
 
-Rationale is that it makes no sense to attempt to retransmit
-at mptcp level if there is still unsent data in its write queue.
+This is done by blocking the current thread via sk_stream_wait_memory()
+and then make the subflow sk_write_space() unblock the parent mptcp socket.
+
+We can't acquire the mptcp socket lock from the subflow callbacks, but
+we can use the mptcp_sk->flags -- MPTCP_SEND_SPACE flag is added for this
+purpose.  If it gets set, then at least one subflow has become available for
+writing.
+
+v1: dumb-down the selection: just pick the first ssk on the list and make
+mptcp socket block if it has no wspace.
+Backup is only used if no non-backup subflow exists.
+
+v2: avoid another while loop and fold !ssk condition with wmem check
+    on parent mptcp socket (Paolo).
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 58 +++++++++++++++++++++++++++++++++++++++-----
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/subflow.c  |  5 +++-
+ 3 files changed, 57 insertions(+), 7 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1515c3bad751..d0b050f6611e 100644
+index d0b050f6611e..be927f456a18 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -661,6 +661,37 @@ static void mptcp_retransmit_timer(struct timer_list *=
-t)
- 	sock_put(sk);
+@@ -384,6 +384,43 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ 	return ret;
  }
  =
 
-+/* Find an idle subflow.  Return NULL if there is unacked data at tcp
-+ * level.
-+ *
-+ * A backup subflow is returned only if thats the only kind available.
-+ */
-+static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
++static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
 +{
 +	struct mptcp_subflow_context *subflow;
 +	struct sock *backup =3D NULL;
@@ -54,13 +66,24 @@ t)
 +	mptcp_for_each_subflow(msk, subflow) {
 +		struct sock *ssk =3D mptcp_subflow_tcp_socket(subflow)->sk;
 +
-+		/* still data outstanding at TCP level?  Don't retransmit. */
-+		if (!tcp_write_queue_empty(ssk))
++		if (!sk_stream_memory_free(ssk)) {
++			struct socket *sock =3D ssk->sk_socket;
++
++			if (sock) {
++				clear_bit(MPTCP_SEND_SPACE, &msk->flags);
++				smp_mb__after_atomic();
++
++				/* enables sk->write_space() callbacks */
++				set_bit(SOCK_NOSPACE, &sock->flags);
++			}
++
 +			return NULL;
++		}
 +
 +		if (subflow->backup) {
 +			if (!backup)
 +				backup =3D ssk;
++
 +			continue;
 +		}
 +
@@ -70,22 +93,98 @@ t)
 +	return backup;
 +}
 +
- static void mptcp_worker(struct work_struct *work)
+ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  {
- 	int orig_len, orig_offset, ret, mss_now =3D 0, size_goal =3D 0;
-@@ -685,7 +716,7 @@ static void mptcp_worker(struct work_struct *work)
- 	if (!dfrag)
- 		goto unlock;
+ 	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
+@@ -410,18 +447,19 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ =
+
+ 	mptcp_clean_una(sk);
+ =
+
+-	while (!sk_stream_memory_free(sk)) {
++	ssk =3D mptcp_subflow_get_send(msk);
++	while (!sk_stream_memory_free(sk) || !ssk) {
+ 		ret =3D sk_stream_wait_memory(sk, &timeo);
+ 		if (ret)
+ 			goto out;
+ =
+
+ 		mptcp_clean_una(sk);
+-	}
  =
 
 -	ssk =3D mptcp_subflow_get(msk);
-+	ssk =3D mptcp_subflow_get_retrans(msk);
- 	if (!ssk)
- 		goto reset_unlock;
+-	if (!ssk) {
+-		release_sock(sk);
+-		return -ENOTCONN;
++		ssk =3D mptcp_subflow_get_send(msk);
++		if (list_empty(&msk->conn_list)) {
++			ret =3D -ENOTCONN;
++			goto out;
++		}
+ 	}
  =
 
+ 	pr_debug("conn_list->subflow=3D%p", ssk);
+@@ -1117,6 +1155,13 @@ bool mptcp_sk_is_subflow(const struct sock *sk)
+ 	return subflow->mp_join =3D=3D 1;
+ }
+ =
+
++static bool mptcp_memory_free(const struct sock *sk, int wake)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	return wake ? test_bit(MPTCP_SEND_SPACE, &msk->flags) : true;
++}
++
+ static struct proto mptcp_prot =3D {
+ 	.name		=3D "MPTCP",
+ 	.owner		=3D THIS_MODULE,
+@@ -1137,6 +1182,7 @@ static struct proto mptcp_prot =3D {
+ 	.sockets_allocated	=3D &mptcp_sockets_allocated,
+ 	.memory_allocated	=3D &tcp_memory_allocated,
+ 	.memory_pressure	=3D &tcp_memory_pressure,
++	.stream_memory_free	=3D mptcp_memory_free,
+ 	.sysctl_wmem_offset	=3D offsetof(struct net, ipv4.sysctl_tcp_wmem),
+ 	.sysctl_mem	=3D sysctl_tcp_mem,
+ 	.obj_size	=3D sizeof(struct mptcp_sock),
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 6e23da8c5024..ce5c5de6a5eb 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -77,6 +77,7 @@
+ /* MPTCP socket flags */
+ #define MPTCP_DATA_READY	BIT(0)
+ #define MPTCP_WORK_RTX		BIT(1)
++#define MPTCP_SEND_SPACE	BIT(2)
+ =
+
+ static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
+ {
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 976e49349276..32082c6e8552 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -670,8 +670,11 @@ static void subflow_write_space(struct sock *sk)
+ 	struct sock *parent =3D subflow->conn;
+ =
+
+ 	sk_stream_write_space(sk);
+-	if (parent)
++	if (parent && sk_stream_is_writeable(sk)) {
++		set_bit(MPTCP_SEND_SPACE, &mptcp_sk(parent)->flags);
++		smp_mb__after_atomic();
+ 		sk_stream_write_space(parent);
++	}
+ }
+ =
+
+ int mptcp_subflow_connect(struct sock *sk, struct sockaddr *local,
 -- =
 
 2.23.0
 
---===============0121514748088897854==--
+--===============5191505706300535255==--
