@@ -1,99 +1,159 @@
-Content-Type: multipart/mixed; boundary="===============7993915508806783639=="
+Content-Type: multipart/mixed; boundary="===============4443879268185816008=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: wmem accounting and nonblocking io
- support
-Date: Tue, 19 Nov 2019 12:38:51 +0100
-Message-ID: <cb7cf2fc9f377b667e8267ecf47b3806b92b27d5.camel@redhat.com>
-In-Reply-To: 20191118214538.21931-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v2] mptcp: Basic single-subflow DATA_FIN
+Date: Tue, 19 Nov 2019 10:35:52 -0800
+Message-ID: <alpine.OSX.2.21.1911190955270.15309@gpmelz-mobl1.amr.corp.intel.com>
+In-Reply-To: 5e039794348488bfe1d6206efde86bddcc449e0c.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2601
+X-UID: 2602
 
---===============7993915508806783639==
+--===============4443879268185816008==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-11-18 at 22:45 +0100, Florian Westphal wrote:
-> This is the second iteration of the mptcp poll rework.
-> =
 
-> Most patches have no changes, the ones with changes have these
-> highlighted in the changelog (6/9/10).
-> =
+On Tue, 19 Nov 2019, Paolo Abeni wrote:
 
-> This addresses comments from Paolo.  I've also axed the 'empty send'
-> part as per comments from Paolo and Mat.
-> =
+> Hi,
+>
+> I'm sorry for lagging behind with the reviews...
+>
+> On Mon, 2019-11-18 at 16:31 -0800, Mat Martineau wrote:
+>> @@ -405,6 +435,10 @@ static bool mptcp_established_options_dss(struct so=
+ck *sk, struct sk_buff *skb,
+>>  			dss_size =3D map_size;
+>>  			if (mpext)
+>>  				opts->ext_copy =3D *mpext;
+>> +
+>> +			if (skb && tcp_fin &&
+>> +			    subflow->conn->sk_state !=3D TCP_ESTABLISHED)
+>> +				mptcp_write_data_fin(subflow, &opts->ext_copy);
+>>  		} else {
+>>  			opts->ext_copy.use_map =3D 0;
+>>  			WARN_ONCE(1, "MPTCP: Map dropped");
+>
+> Don't we need some additional check to avoid sending multiple DATA_FIN
+> on all subflows ?!? e.g. fiddling with some bit status bit on msk.
 
-> There were doubts as to the repeated invocations of mptcp_send_frag()
-> (RFC patch 13/14, "sendmsg: don't restart mptcp_sendmsg_frag"), I have
-> dropped it from this iteration -- mptcp_sendmsg_frag needs rework which
-> isn't related to this patch series.
-> =
+Sending DATA_FIN on multiple subflows is deliberate - what if one of them =
 
-> Old covert letter:
-> =
+is not behaving well?
 
-> The first patch extends the test suite with a mmap-based mode to
-> check large, blocking writes.  This uncovered a minor problem with the
-> earlier v2 wmem accounting patch series -- we would happily take a lot
-> more data than sndbuf allowed, as we only limited based on what the subfl=
-ow
-> could accept.  So with a 4k sndbuf we could easily accept 256kb or even m=
-ore.
-> =
+I ran a test between two multipath-tcp.org v0.95 kernels (VM A: 2 =
 
-> This patch doesn't change anything in the test suite behaviour however,
-> you need to use "-b 4096" and/or "-m mmap" to enable this mode.
-> =
+interfaces, VM B: 1 interface, "fullmesh" path manager on both), and it =
 
-> Second patch changes test suite to move to nonblocking io, this breaks mp=
-tcp
-> because mptcp_poll can signal EPOLLIN when it shouldn't, so userspace gets
-> -EAGAIN even though poll told it otherwise.
-> =
+sent DATA_FIN only on one subflow. Sending on multiple subflows should be =
 
-> Patches 3/4/5/6 are an update vs. last wmem accounting series.
-> Remaining patches fix the nonblocking io behaviour.
-> =
+fine, right? The first DATA_FIN received will modify the MPTCP connection =
 
-> mptcp_poll is made to be stand-alone, i.e. it no longer calls
-> __tcp_poll on the subflow sockets and only considers mptcp_sk state.
-> =
+state (when that's implemented) so duplicate DATA_FINs can be ignored.
 
-> After this series the selftest works again and mptcp sk rtx queue is
-> limited by msk wmem.
-> =
+>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 1a432abfb176..910cf26037b7 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -1284,6 +1284,10 @@ static int mptcp_shutdown(struct socket *sock, in=
+t how)
+>>  	pr_debug("sk=3D%p, how=3D%d", msk, how);
+>>
+>>  	lock_sock(sock->sk);
+>> +
+>> +	if (how =3D=3D SHUT_WR || how =3D=3D SHUT_RDWR)
+>> +		inet_sk_state_store(sock->sk, TCP_FIN_WAIT1);
+>> +
+>>  	ssock =3D __mptcp_fallback_get_ref(msk);
+>>  	if (ssock) {
+>>  		release_sock(sock->sk);
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index ff38d54392cd..89e6533c97b6 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -422,6 +422,7 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk)
+>>  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+>>  	struct mptcp_ext *mpext;
+>>  	struct sk_buff *skb;
+>> +	u16 data_len;
+>>  	u64 map_seq;
+>>
+>>  	skb =3D skb_peek(&ssk->sk_receive_queue);
+>> @@ -446,26 +447,39 @@ static enum mapping_status get_mapping_status(stru=
+ct sock *ssk)
+>>
+>>  		if (!subflow->map_valid)
+>>  			return MAPPING_INVALID;
+>> +
+>>  		goto validate_seq;
+>>  	}
+>>
+>> -	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u", mpext->data_se=
+q,
+>> -		 mpext->dsn64, mpext->subflow_seq, mpext->data_len);
+>> +	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u data_fin=3D%d",
+>> +		 mpext->data_seq, mpext->dsn64, mpext->subflow_seq,
+>> +		 mpext->data_len, mpext->data_fin);
+>>
+>> -	if (mpext->data_len =3D=3D 0) {
+>> +	data_len =3D mpext->data_len;
+>> +	if (data_len =3D=3D 0) {
+>>  		pr_err("Infinite mapping not handled");
+>>  		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
+>>  		return MAPPING_INVALID;
+>> -	} else if (mpext->subflow_seq =3D=3D 0 &&
+>> -		   mpext->data_fin =3D=3D 1) {
+>> -		if (WARN_ON_ONCE(mpext->data_len !=3D 1))
+>> -			return false;
+>> +	}
+>>
+>> -		/* do not try hard to handle this any better, till we have
+>> -		 * real data_fin support
+>> -		 */
+>> -		pr_debug("DATA_FIN with no payload");
+>> -		return MAPPING_DATA_FIN;
+>> +	if (mpext->data_fin =3D=3D 1) {
+>> +		if (data_len =3D=3D 1) {
+>> +			pr_debug("DATA_FIN with no payload");
+>> +			if (subflow->map_valid) {
+>> +				/* A DATA_FIN might arrive in a DSS
+>> +				 * option before the previous mapping
+>> +				 * has been fully consumed. Continue
+>> +				 * handling the existing mapping.
+>> +				 */
+>> +				skb_ext_del(skb, SKB_EXT_MPTCP);
+>> +				return MAPPING_OK;
+>> +			} else {
+>> +				return MAPPING_DATA_FIN;
+>> +			}
+>
+> Can we instead:
+> 	data_len--;
+> 	WRITE_ONCE(msk->data_fin_set, 1);
+> 	WRITE_ONCE(msk->data_fin_seq, mpext->data_seq + data_len);
+>
+> and than in mptcp_recvmsg():
+>
+> 	if (READ_ONCE(msk->data_fin_seq) &&
+> 	    msk->ack_seq =3D=3D msk->data_fin_seq)
+> 		msk->ack_seq++;
+>
+> (or something along these lines)
+>
+> ?
+>
 
-> The patches can't easily be rebased/merged so I propose that I would
-> squash this myself and send a pull request when done.
-> =
+In an earlier thread I mentioned I would get the DATA_FIN sending part =
 
-> The following changes since commit c925affd3fa9dd18e6c326cff510bd30087f0a=
-c8:
-> =
+finished first, then approach the ack as a second step. As you point out, =
 
->   subflow: wake parent mptcp socket on subflow state change (2019-11-18 0=
-2:44:11 +0000)
-> =
+it may be a small step!
 
-> are available in the Git repository at:
-> =
-
->   git://git.breakpoint.cc/fw/mptcp-next.git tcp_poll_removal_08
-> =
-
-> for you to fetch changes up to 2bbcfcd464c6ff1626800cc2e7c02085e02f35e8:
-> =
-
->   sendmsg: truncate source buffer if mptcp sndbuf size was set from users=
-pace (2019-11-18 17:45:44 +0100)
-
-The series LGTM, thanks Florian!
-
-/P
-
---===============7993915508806783639==--
+--
+Mat Martineau
+Intel
+--===============4443879268185816008==--
