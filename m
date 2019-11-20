@@ -1,135 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============2507411134857275757=="
+Content-Type: multipart/mixed; boundary="===============5290448968515179217=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
- space for dss/mp_capable
-Date: Wed, 20 Nov 2019 20:13:19 +0100
-Message-ID: <eceb6d48-f6e4-cdb0-af56-64d388c40365@tessares.net>
-In-Reply-To: e4312b055430fb8f8a03a7ade120eb026645423d.camel@redhat.com
+Subject: [MPTCP] [GIT] reduce patchset 2 (up to kselftests)
+Date: Wed, 20 Nov 2019 20:48:36 +0100
+Message-ID: <3aa1e2d0-847f-7f53-c486-5a9445125877@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2627
+X-UID: 2628
 
---===============2507411134857275757==
+--===============5290448968515179217==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hello,
 
-On 20/11/2019 18:52, Paolo Abeni wrote:
-> On Wed, 2019-11-20 at 18:38 +0100, Paolo Abeni wrote:
->> On Wed, 2019-11-20 at 18:27 +0100, Matthieu Baerts wrote:
->>> @Paolo: I *think* that the first patches of this series were not based
->>> at the end of the series but at the end of part 2 (kselftest
->>> introduction).
->>
->> Every patch was based/applied locally just after the related 'squash-
->> to' patch, hoping to minimize the resulting conflicts, I see that did
->> not work very well, sorry.
+As discussed at a previous meeting, I just moved some commits linked to =
 
-That's alright, thank you for the effort!
+the manipulation of multiple subflows after the one introducing the =
 
-I think it is easier for me to "backport" patches. When I have =
+kselftests.
 
-conflicts, I can check the history and also verify at the end that I =
+Just to keep a trace and to allow a review, I did this operation with =
 
-applied it correctly (at least at the end of the series).
+TopGit. But for this kind of operation, if we don't need a "review", =
 
-Of course if the code we want to patch has been refactored after, it is =
+that's a bit quicker with "git rebase" :)
 
-easier (and maybe the only possibility) if the patches are based on =
+- 3e77653ecb5f: cut (empty) t/mptcp-Add-path-manager-interface
+- 1cb01298549d: cut (empty) t/mptcp-Add-ADD_ADDR-handling
+- 25c9462ee09f: cut (empty) =
 
-previous commits. If you do that, please add a note in the commit =
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- 2a1ef2512c28: conflict (Makefile) in =
 
-message ;-)
+t/mptcp-new-sysctl-to-control-the-activation-per-NS
+- 152ef156123f: tg create t/mptcp-Add-path-manager-interface-v2
+- 4569c65e2c58: paste (recreate) t/mptcp-Add-path-manager-interface
+- 3cc80d22d759: tg create t/mptcp-Add-ADD_ADDR-handling-v2
+- 7928974b360d: paste (recreate) t/mptcp-Add-ADD_ADDR-handling
+- 5d24692b5191: tg create =
 
->>> I had to add some extra code and resolve some conflicts
->>> with what I hope would be what you had in mind :-)
->>> Please see the different conflict resolution and the extra commit here
->>> below, especially 7d8b4fe573fb which I guess there are better ways to do
->>> but I hope the code is OK.
->>>
->>> - 3ce88efe9902: "squashed" patch 1/4 (or 1/1 :) ) in "mptcp: Create
->>> SUBFLOW socket for incoming connections"
->>> - 9c58989db059: "squashed" patch 2/4 in "mptcp: Create SUBFLOW socket
->>> for incoming connections"
->>> - 946c99f17805: "squashed" patch 3/4 in "mptcp: Write MPTCP DSS headers
->>> to outgoing data packets"
->>> - 27a10380b320: conflict in t/mptcp-Implement-MPTCP-receive-path
->>> - a17134e4116a: conflict in t/mptcp-Add-ADD_ADDR-handling
->>> - 7d8b4fe573fb: extra code: take extra established options into account
->>> - 34c0738e7ed4: conflict in
->>> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
->>> - 63e57f2facbc: conflict in
->>> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
->>> - 0f2c93ad449d: "squashed" patch 4/4 in "mptcp: Add handling of outgoing
->>> MP_JOIN requests"
->>> - 84cd31e06aaa: "Signed-off-by" + "Co-developed-by"
->>> - aad61f16b421: conflict in t/mptcp-increment-MIB-counters-in-a-few-pla=
-ces
->>> - 84af4075aa4f..e73eef882a05: result
->>>
->>> Tests are still all passing!
->>
->> Ok, will review and report here.
-> =
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests-v2
+- faf79ec33f1e: paste (recreate) =
 
-> it looks like the extra code is not needed:
-> mptcp_established_options_addr() already check for tcp option space
-> exhaustion. The pr_debug() should never be reached.
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- d4fd5437d11b: t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests is now =
 
-Oh yes, sorry, I missed that piece. Thank you for the patch!
+on top of t/mptcp-Add-handling-of-incoming-MP_JOIN-requests-v2
+- a4c1cf31bee5: conflict (Makefile) in =
 
-> Could you please squash the following into "mptcp: Add ADD_ADDR
-> handling"?
-> =
+t/mptcp-allow-dumping-subflow-context-to-userspace
+- abe60f261c3d: conflict (Makefile) in =
 
-> Thanks.
-> =
+t/mptcp-add-MIB-counter-infrastructure
+- f1e5ff4a68a1: conflict (Makefile) in t/mptcp-Implement-basic-path-manager
+- e73eef882a05..eaa68661fa8c: result (only the order in the Makefile)
 
-> Paolo
-> ---
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 38c0cbd4c77b..bf43d61f792b 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -499,16 +499,10 @@ bool mptcp_established_options(struct sock *sk, str=
-uct sk_buff *skb,
-> =
+The only issue is that now the kselftests with IPv6 no longer works when =
 
->          *size +=3D opt_size;
->          remaining -=3D opt_size;
-> -
+we launch them in the commit that introduces the kselftests :'(
 
-I had to manually apply the patch and I see I didn't remove this line. =
+It is easy to reproduce and I have a calltrace but I will send a =
 
-Do you want me to remove it?
+separated email for that.
 
->          if (mptcp_established_options_addr(sk, &opt_size, remaining, opt=
-s)) {
-> -               if (opt_size > remaining) {
-> -                       pr_debug("est opt: not enough space for addr: %u =
-> %u",
-> -                                opt_size, remaining);
-> -               } else {
-> -                       *size +=3D opt_size;
-> -                       remaining -=3D opt_size;
-> -                       ret =3D true;
-> -               }
-> +               *size +=3D opt_size;
-> +               remaining -=3D opt_size;
-> +               ret =3D true;
->          }
-> =
-
->          return ret;
-
-The rest is done in commit d66315ad0dff
-- 82c94b8ce828..4566f787483d: result
-
-Cheers
+Cheers,
 Matt
 -- =
 
@@ -138,4 +75,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2507411134857275757==--
+--===============5290448968515179217==--
