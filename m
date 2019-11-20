@@ -1,75 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============7703203574178680720=="
+Content-Type: multipart/mixed; boundary="===============4337570847701566672=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 01/13] selftest: add mmap-write support
-Date: Wed, 20 Nov 2019 21:05:20 +0100
-Message-ID: <1bee3b71-df45-26ce-2afb-3d862d4f40d4@tessares.net>
-In-Reply-To: 20191118214538.21931-2-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v2] mptcp: wmem accounting and nonblocking io
+ support
+Date: Wed, 20 Nov 2019 21:10:08 +0100
+Message-ID: <7a090e24-6c69-065a-1575-6dcf3ff8bfc6@tessares.net>
+In-Reply-To: 20191120161252.GE20235@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2630
+X-UID: 2631
 
---===============7703203574178680720==
+--===============4337570847701566672==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Florian,
 
-On 18/11/2019 22:45, Florian Westphal wrote:
-> No changes on default options.  New option -b allows to set a lower
-> send buffer size.
+On 20/11/2019 17:12, Florian Westphal wrote:
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+>> Great, I am then going to:
+>>
+>> - apply the two series that are waiting to be applied
+>> - then move these 3 commits after "mptcp: add basic kselftest for mptcp":
+>>
+>>    mptcp: Add handling of incoming MP_JOIN requests
+>>    mptcp: Add ADD_ADDR handling
+>>    mptcp: Add path manager interface
+>>
+>> - then can I add Florian' series at the end?
 > =
 
-> New option "-m mmap" allows to use a mode where the sender transmits the
-> entire file in very large chunks (using mmap + write) instead of the
-> default poll+read/write.
+> Works for me.  If you like you can also ping me once
+> you're done with the pending series and I can send you a pull request
+> with my patches applied on top.
 > =
 
-> This is mainly useful to make sure we cope with large writes.
-> I also added sendfile() support (as its easy), but it won't work yet
-> for mptcp sockets.
+> Whatever makes your life easier.  Let me know.
 
-Thank you for the patch!
+Thank you for the offer!
 
-[...]
+I only had some conflicts with mptcp_connect.sh due to the modifications =
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index b5367fe2c6ea..478bc47c3d60 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -3,7 +3,7 @@
->   =
+I recently did and applied. It was then easy for me to resolve this.
 
->   time_start=3D$(date +%s)
->   =
+I added all the 13 patches at the end of the series. Please tell me if I =
 
-> -optstring=3D"d:e:l:r:h6c"
-> +optstring=3D"b:d:e:l:r:h6c:m:"
+can do more (squash some commits in others) and/or stop the CI to sync =
 
-Just a small detail but the capture (-c) option doesn't any argument. I =
-
-guess we should also apply this:
-
-=3D=3D=3D=3D
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh =
-
-b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 1f840c87be5d..61b9e2a9c891 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -3,7 +3,7 @@
-
-  time_start=3D$(date +%s)
-
--optstring=3D"b:d:e:l:r:h4c:m:"
-+optstring=3D"b:d:e:l:r:h4cm:"
-  ret=3D0
-  sin=3D""
-  sout=3D""
-=3D=3D=3D=3D
+with the latest net-next.
 
 Cheers,
 Matt
@@ -80,4 +60,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7703203574178680720==--
+--===============4337570847701566672==--
