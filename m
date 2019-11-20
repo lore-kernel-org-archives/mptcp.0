@@ -1,89 +1,118 @@
-Content-Type: multipart/mixed; boundary="===============5664644238901807185=="
+Content-Type: multipart/mixed; boundary="===============4473778348261671737=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Feedback to the IETF
-Date: Wed, 20 Nov 2019 09:49:27 -0800
-Message-ID: <alpine.OSX.2.21.1911200903300.15309@gpmelz-mobl1.amr.corp.intel.com>
-In-Reply-To: 9DF9C238-3239-496B-A229-423477DD767A@apple.com
+Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
+ space for dss/mp_capable
+Date: Wed, 20 Nov 2019 18:52:05 +0100
+Message-ID: <e4312b055430fb8f8a03a7ade120eb026645423d.camel@redhat.com>
+In-Reply-To: 48a7b32a32fe9efdfbfdef7b5622ab23828a039f.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2625
+X-UID: 2626
 
---===============5664644238901807185==
+--===============4473778348261671737==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Wed, 2019-11-20 at 18:38 +0100, Paolo Abeni wrote:
+> On Wed, 2019-11-20 at 18:27 +0100, Matthieu Baerts wrote:
+> > @Paolo: I *think* that the first patches of this series were not based =
 
-On Wed, 20 Nov 2019, Christoph Paasch wrote:
+> > at the end of the series but at the end of part 2 (kselftest =
 
-> Hello,
-> I have mentioned to the IETF that the upstreaming effort brought forward =
-some feedback,... to the IETF-draft.
-> =
-
-> Now, the draft is about to become an RFC very soon. Currently it is in th=
-e "RFC-Editor" stage, which is the last stage before
-> official publication.
-> =
-
-> Ideally, we should get feedback to the IETF as soon as possible so that t=
-he working-group can make adjustements before
-> publication. Otherwise, it would need to got through an "Errata" process =
-which means to correct the published RFC.
-> =
+> > introduction). =
 
 > =
 
-> So, let me try to compile a list of things that came up. Please correct o=
-r add anything:
->
->  *  Clarifying that the reception of a DATA_ACK means that the server suc=
-cessfully received the MP_CAPABLE (Text "If B has data
->     to send first, then the reliable delivery of the ACK can be inferred =
-by the receipt of this data with an MPTCP DATA_ACK
->     inside the DSS option (Section 3.3).)
->
->  *  Should we vouch to disallow early or late DSS mappings that are cover=
-ing a TCP-sequence space different than the packet they
->     are being sent on (cfr., our discussion on/around September 25th)
+> Every patch was based/applied locally just after the related 'squash-
+> to' patch, hoping to minimize the resulting conflicts, I see that did
+> not work very well, sorry.
+> =
 
-I think late DSS mappings should be disallowed. This would make it clear =
+> > I had to add some extra code and resolve some conflicts =
 
-that unmapped data is to be discarded.
+> > with what I hope would be what you had in mind :-)
+> > Please see the different conflict resolution and the extra commit here =
 
-Allowing at most one early mapping would limit the implementation =
+> > below, especially 7d8b4fe573fb which I guess there are better ways to d=
+o =
 
-complexity and handle any coalescing of consecutive packets where the =
+> > but I hope the code is OK.
+> > =
 
-early part of the coalesced payload is covered by a previous mapping. If =
+> > - 3ce88efe9902: "squashed" patch 1/4 (or 1/1 :) ) in "mptcp: Create =
 
-this coalescing is not something that actually happens in practice, then =
+> > SUBFLOW socket for incoming connections"
+> > - 9c58989db059: "squashed" patch 2/4 in "mptcp: Create SUBFLOW socket =
 
-get rid of early mappings! Also, it would be a headache to have some =
+> > for incoming connections"
+> > - 946c99f17805: "squashed" patch 3/4 in "mptcp: Write MPTCP DSS headers =
 
-implementations that allow one early mapping and some that ignore them.
+> > to outgoing data packets"
+> > - 27a10380b320: conflict in t/mptcp-Implement-MPTCP-receive-path
+> > - a17134e4116a: conflict in t/mptcp-Add-ADD_ADDR-handling
+> > - 7d8b4fe573fb: extra code: take extra established options into account
+> > - 34c0738e7ed4: conflict in =
 
-It's also important that a DATA_FIN with a length-1 mapping (not covering =
+> > t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+> > - 63e57f2facbc: conflict in =
 
-any data payload) is not discarded when it arrives on a packet with an =
+> > t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+> > - 0f2c93ad449d: "squashed" patch 4/4 in "mptcp: Add handling of outgoin=
+g =
 
-already-mapped TCP sequence space. While this isn't really an "early" =
+> > MP_JOIN requests"
+> > - 84cd31e06aaa: "Signed-off-by" + "Co-developed-by"
+> > - aad61f16b421: conflict in t/mptcp-increment-MIB-counters-in-a-few-pla=
+ces
+> > - 84af4075aa4f..e73eef882a05: result
+> > =
 
-mapping, it is a corner case to be aware of when processing mapping =
+> > Tests are still all passing!
+> =
 
-headers.
+> Ok, will review and report here.
 
->
->  *  ADD_ADDR-option size - last =C2=A0week we discussed this briefly and =
-I replied by mail that the size-problem is actually for the
->     non-Echo option. In that one there is no way to get around it and all=
- the bits need to be presented. Do you agree on that?
->
+it looks like the extra code is not needed:
+mptcp_established_options_addr() already check for tcp option space
+exhaustion. The pr_debug() should never be reached.
 
---
-Mat Martineau
-Intel
+Could you please squash the following into "mptcp: Add ADD_ADDR
+handling"? =
 
---===============5664644238901807185==--
+
+Thanks.
+
+Paolo
+---
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 38c0cbd4c77b..bf43d61f792b 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -499,16 +499,10 @@ bool mptcp_established_options(struct sock *sk, struc=
+t sk_buff *skb,
+
+        *size +=3D opt_size;
+        remaining -=3D opt_size;
+-
+        if (mptcp_established_options_addr(sk, &opt_size, remaining, opts))=
+ {
+-               if (opt_size > remaining) {
+-                       pr_debug("est opt: not enough space for addr: %u > =
+%u",
+-                                opt_size, remaining);
+-               } else {
+-                       *size +=3D opt_size;
+-                       remaining -=3D opt_size;
+-                       ret =3D true;
+-               }
++               *size +=3D opt_size;
++               remaining -=3D opt_size;
++               ret =3D true;
+        }
+
+        return ret;
+
+--===============4473778348261671737==--
