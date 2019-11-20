@@ -1,39 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============4437942232198427228=="
+Content-Type: multipart/mixed; boundary="===============1469479524087249881=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
- space for dss/mp_capable
-Date: Wed, 20 Nov 2019 21:30:30 +0100
-Message-ID: <213bb7e7df0bcf3691eb8848a268a862a0af2ca4.camel@redhat.com>
-In-Reply-To: eceb6d48-f6e4-cdb0-af56-64d388c40365@tessares.net
+Subject: [MPTCP] Re: [PATCH v2 01/13] selftest: add mmap-write support
+Date: Wed, 20 Nov 2019 21:39:35 +0100
+Message-ID: <20191120203935.GG20235@breakpoint.cc>
+In-Reply-To: 1bee3b71-df45-26ce-2afb-3d862d4f40d4@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2633
+X-UID: 2634
 
---===============4437942232198427228==
+--===============1469479524087249881==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-11-20 at 20:13 +0100, Matthieu Baerts wrote:
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index 38c0cbd4c77b..bf43d61f792b 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -499,16 +499,10 @@ bool mptcp_established_options(struct sock *sk, s=
-truct sk_buff *skb,
-> > =
-
-> >          *size +=3D opt_size;
-> >          remaining -=3D opt_size;
-> > -
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools=
+/testing/selftests/net/mptcp/mptcp_connect.sh
+> > index b5367fe2c6ea..478bc47c3d60 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> > @@ -3,7 +3,7 @@
+> >   time_start=3D$(date +%s)
+> > -optstring=3D"d:e:l:r:h6c"
+> > +optstring=3D"b:d:e:l:r:h6c:m:"
 > =
 
-> I had to manually apply the patch and I see I didn't remove this line. =
+> Just a small detail but the capture (-c) option doesn't any argument. I
+> guess we should also apply this:
 
-> Do you want me to remove it?
+> -optstring=3D"b:d:e:l:r:h4c:m:"
+> +optstring=3D"b:d:e:l:r:h4cm:"
+>  ret=3D0
+>  sin=3D""
+>  sout=3D""
 
-whoops... yes, it would be better, thanks1
+Oh, absolutely.
 
---===============4437942232198427228==--
+Can you also apply this fixlet that Mat pointed out?
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -391,7 +391,7 @@ static int do_recvfile(int infd, int outfd)
+        ssize_t r;
+ =
+
+        do {
+-               char buf[16536];
++               char buf[16384];
+
+Thanks!
+--===============1469479524087249881==--
