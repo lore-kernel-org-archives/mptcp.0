@@ -1,101 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============0793908266368794356=="
+Content-Type: multipart/mixed; boundary="===============7336124788230348363=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/2] mptcp: parse and emit MP_CAPABLE option
- according to v1 spec.
-Date: Wed, 20 Nov 2019 15:56:04 +0100
-Message-ID: <64565434-92a6-b298-dd24-bde57ecb5c5d@tessares.net>
-In-Reply-To: 20191107152827.54549-2-cpaasch@apple.com
+Subject: [MPTCP] Re: [PATCH v2] mptcp: wmem accounting and nonblocking io
+ support
+Date: Wed, 20 Nov 2019 16:10:16 +0100
+Message-ID: <20191120151016.GC20235@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.21.1911191451510.15309@gpmelz-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2613
+X-UID: 2614
 
---===============0793908266368794356==
+--===============7336124788230348363==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
-
-On 07/11/2019 16:28, Christoph Paasch wrote:
-> Local key is sent on syn/ack, and both keys are sent on 3rd ack.
-> MP_CAPABLE messages len are updated accordingly.
-> We need the skbuff to emit correctly the above, so we push the skbuff
-> struct as an argument all the way from tcp code to the relevant mptcp
-> callbacks.
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> > There were doubts as to the repeated invocations of mptcp_send_frag()
+> > (RFC patch 13/14, "sendmsg: don't restart mptcp_sendmsg_frag"), I have
+> > dropped it from this iteration -- mptcp_sendmsg_frag needs rework which
+> > isn't related to this patch series.
 > =
 
-> When processing incoming MP_CAPABLE + data, build a full blown DSS-like
-> map info, to simplify later processing.
-> On child socket creation, we need to record the remote key, if available.
-> =
+> The series looks good to me, with one minor comment on patch 1.
 
-> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+Thanks, I can fix that up.
 
-Thank you for sharing this! It looks very nice!
+How to proceed?  There are several patches in-flight.  I think it might
+make sense to apply this series as-is, with no squashing.
 
-I just have a small question, please see below:
+We can then do another squash-marathon later on before next upstream
+submission.
 
-[...]
+Otherwise, I could start to squash this series here locally and then
+send a pull request.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1b08e1193991..9cdbd617c49a 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
+What do you think?
 
-[...]
-
-> @@ -24,12 +24,24 @@ void mptcp_parse_option(const unsigned char *ptr, int=
- opsize,
->   	 * 10-17: Receiver key (optional)
->   	 */
->   	case MPTCPOPT_MP_CAPABLE:
-> -		if (opsize !=3D TCPOLEN_MPTCP_MPC_SYN &&
-> -		    opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
-> +		/* strict size checking */
-> +		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)) {
-> +			if (skb->len > tcp_hdr(skb)->doff << 2)
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK_DATA;
-> +			else
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK;
-> +		} else {
-> +			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK)
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_SYNACK;
-> +			else
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_SYN;
-> +		}
-> +		if (opsize !=3D expected_opsize)
->   			break;
->   =
-
-> +		/* only support V1 of the protocol */
->   		mp_opt->version =3D *ptr++ & MPTCP_VERSION_MASK;
-> -		if (mp_opt->version !=3D 0)
-> +		if (mp_opt->version !=3D 1)
-
-Should we not only "break" here is the version is < 1? To be compatible =
-
-with possible newer versions.
-
-It seems confirmed by the RFC, section 3.1:
-
-    If a host supports multiple versions of MPTCP,
-    the sender of the MP_CAPABLE option SHOULD signal the highest version
-    number it supports.  In return, in its MP_CAPABLE option, the
-    receiver will signal the version number it wishes to use, which MUST
-    be equal to or lower than the version number indicated in the initial
-    MP_CAPABLE.
-
-detail: maybe we need a #define for this minimal version that we support?
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0793908266368794356==--
+Thanks!
+--===============7336124788230348363==--
