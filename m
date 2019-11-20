@@ -1,75 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============3193324156426395629=="
+Content-Type: multipart/mixed; boundary="===============5664644238901807185=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
- space for dss/mp_capable
-Date: Wed, 20 Nov 2019 18:38:02 +0100
-Message-ID: <48a7b32a32fe9efdfbfdef7b5622ab23828a039f.camel@redhat.com>
-In-Reply-To: 9bde8b1c-d71b-c826-9e83-0db1602035cd@tessares.net
+Subject: [MPTCP] Re: Feedback to the IETF
+Date: Wed, 20 Nov 2019 09:49:27 -0800
+Message-ID: <alpine.OSX.2.21.1911200903300.15309@gpmelz-mobl1.amr.corp.intel.com>
+In-Reply-To: 9DF9C238-3239-496B-A229-423477DD767A@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2624
+X-UID: 2625
 
---===============3193324156426395629==
+--===============5664644238901807185==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-11-20 at 18:27 +0100, Matthieu Baerts wrote:
-> @Paolo: I *think* that the first patches of this series were not based =
 
-> at the end of the series but at the end of part 2 (kselftest =
+On Wed, 20 Nov 2019, Christoph Paasch wrote:
 
-> introduction). =
-
-
-Every patch was based/applied locally just after the related 'squash-
-to' patch, hoping to minimize the resulting conflicts, I see that did
-not work very well, sorry.
-
-> I had to add some extra code and resolve some conflicts =
-
-> with what I hope would be what you had in mind :-)
-> Please see the different conflict resolution and the extra commit here =
-
-> below, especially 7d8b4fe573fb which I guess there are better ways to do =
-
-> but I hope the code is OK.
+> Hello,
+> I have mentioned to the IETF that the upstreaming effort brought forward =
+some feedback,... to the IETF-draft.
 > =
 
-> - 3ce88efe9902: "squashed" patch 1/4 (or 1/1 :) ) in "mptcp: Create =
-
-> SUBFLOW socket for incoming connections"
-> - 9c58989db059: "squashed" patch 2/4 in "mptcp: Create SUBFLOW socket =
-
-> for incoming connections"
-> - 946c99f17805: "squashed" patch 3/4 in "mptcp: Write MPTCP DSS headers =
-
-> to outgoing data packets"
-> - 27a10380b320: conflict in t/mptcp-Implement-MPTCP-receive-path
-> - a17134e4116a: conflict in t/mptcp-Add-ADD_ADDR-handling
-> - 7d8b4fe573fb: extra code: take extra established options into account
-> - 34c0738e7ed4: conflict in =
-
-> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-> - 63e57f2facbc: conflict in =
-
-> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-> - 0f2c93ad449d: "squashed" patch 4/4 in "mptcp: Add handling of outgoing =
-
-> MP_JOIN requests"
-> - 84cd31e06aaa: "Signed-off-by" + "Co-developed-by"
-> - aad61f16b421: conflict in t/mptcp-increment-MIB-counters-in-a-few-places
-> - 84af4075aa4f..e73eef882a05: result
+> Now, the draft is about to become an RFC very soon. Currently it is in th=
+e "RFC-Editor" stage, which is the last stage before
+> official publication.
 > =
 
-> Tests are still all passing!
+> Ideally, we should get feedback to the IETF as soon as possible so that t=
+he working-group can make adjustements before
+> publication. Otherwise, it would need to got through an "Errata" process =
+which means to correct the published RFC.
+> =
 
-Ok, will review and report here.
+> =
 
-Thank you,
+> So, let me try to compile a list of things that came up. Please correct o=
+r add anything:
+>
+>  *  Clarifying that the reception of a DATA_ACK means that the server suc=
+cessfully received the MP_CAPABLE (Text "If B has data
+>     to send first, then the reliable delivery of the ACK can be inferred =
+by the receipt of this data with an MPTCP DATA_ACK
+>     inside the DSS option (Section 3.3).)
+>
+>  *  Should we vouch to disallow early or late DSS mappings that are cover=
+ing a TCP-sequence space different than the packet they
+>     are being sent on (cfr., our discussion on/around September 25th)
 
-Paolo
+I think late DSS mappings should be disallowed. This would make it clear =
 
---===============3193324156426395629==--
+that unmapped data is to be discarded.
+
+Allowing at most one early mapping would limit the implementation =
+
+complexity and handle any coalescing of consecutive packets where the =
+
+early part of the coalesced payload is covered by a previous mapping. If =
+
+this coalescing is not something that actually happens in practice, then =
+
+get rid of early mappings! Also, it would be a headache to have some =
+
+implementations that allow one early mapping and some that ignore them.
+
+It's also important that a DATA_FIN with a length-1 mapping (not covering =
+
+any data payload) is not discarded when it arrives on a packet with an =
+
+already-mapped TCP sequence space. While this isn't really an "early" =
+
+mapping, it is a corner case to be aware of when processing mapping =
+
+headers.
+
+>
+>  *  ADD_ADDR-option size - last =C2=A0week we discussed this briefly and =
+I replied by mail that the size-problem is actually for the
+>     non-Echo option. In that one there is no way to get around it and all=
+ the bits need to be presented. Do you agree on that?
+>
+
+--
+Mat Martineau
+Intel
+
+--===============5664644238901807185==--
