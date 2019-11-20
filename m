@@ -1,56 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============2676284153213035344=="
+Content-Type: multipart/mixed; boundary="===============6752416094231919830=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: wmem accounting and nonblocking io
- support
-Date: Wed, 20 Nov 2019 16:25:35 +0100
-Message-ID: <c420dc6ea000ee8fa951ab89689b63785a4df0f7.camel@redhat.com>
-In-Reply-To: 20191120151016.GC20235@breakpoint.cc
+Subject: [MPTCP] Re: Warn + crash in mptcp_sendmsg_frag()
+Date: Wed, 20 Nov 2019 16:26:40 +0100
+Message-ID: <527335624c27e60fe5456e0adae54348b7bb0067.camel@redhat.com>
+In-Reply-To: 11db3e0f-1ac1-ddf2-55ab-7160b1aa40f6@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2615
+X-UID: 2616
 
---===============2676284153213035344==
+--===============6752416094231919830==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-11-20 at 16:10 +0100, Florian Westphal wrote:
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
-> > > There were doubts as to the repeated invocations of mptcp_send_frag()
-> > > (RFC patch 13/14, "sendmsg: don't restart mptcp_sendmsg_frag"), I have
-> > > dropped it from this iteration -- mptcp_sendmsg_frag needs rework whi=
-ch
-> > > isn't related to this patch series.
+On Wed, 2019-11-20 at 11:57 +0100, Matthieu Baerts wrote:
+> Hi Paolo,
+> =
+
+> On 20/11/2019 11:18, Paolo Abeni wrote:
+> > On Wed, 2019-11-20 at 10:51 +0100, Matthieu Baerts wrote:
+> > > Hi Paolo,
+> > > =
+
+> > > On 18/11/2019 12:07, Paolo Abeni wrote:
+> > > > On Sat, 2019-11-16 at 13:59 +0100, Matthieu Baerts wrote:
+> > > > > On 15/11/2019 23:39, Paolo Abeni wrote:
+> > > > > > On Fri, 2019-11-15 at 22:06 +0100, Matthieu Baerts wrote:
+> > > > > > > If skb is NULL, mpext is NULL too (even if it could unlikely =
+also be
+> > > > > > > even if skb is no NULL but sounds more like a bug I guess) and
+> > > > > > > can_collapse is False.
+> > > > > > =
+
+> > > > > > Uhm... I don't think this is the case. mpext is NULL even when
+> > > > > > do_tcp_sendpages() did not collapsed the data - that is in the =
+above
+> > > > > > scenario.
+> > > > > =
+
+> > > > > I get the OOPS I got was because mpext was NULL, no?
+> > > > > =
+
+> > > > > BUG: kernel NULL pointer dereference, address: 0000000000000014
+> > > > > =
+
+> > > > > I didn't check with pahole but maybe linked to this instruction:
+> > > > > =
+
+> > > > >      mpext->data_len +=3D ret;
+> > > > =
+
+> > > > Sorry, I was not clear.
+> > > > =
+
+> > > > yes, very likely the crash is due to mpext, but I don't think mpext=
+ is
+> > > > NULL because skb is NULL. I think it's NULL because there was no
+> > > > coalescing on skb (and thus no prior mpext in place).
+> > > =
+
+> > > Thank you, it is clearer!
+> > > =
+
+> > > I was not able to reproduce this bug by running the selftests for a f=
+ew
+> > > days so I guess this bug has been fixed. Sorry for the noise!
 > > =
 
-> > The series looks good to me, with one minor comment on patch 1.
+> > Uhm... if the diagnosys is correct, the bug is still there. It's just
+> > very difficult to trigger... expecially without pktdrill ;)
 > =
 
-> Thanks, I can fix that up.
-> =
+> Indeed, sorry.
+> If it is very difficult to trigger, should we simply add a return/goto =
 
-> How to proceed?  There are several patches in-flight.  I think it might
-> make sense to apply this series as-is, with no squashing.
+> if the WARN condition is valid? We can fix it properly later if it =
 
-I'm personally ok with that. =
+> really seen somewhere?
 
+I have a tentative fix - but I can't test it ;)
 
-Can we wait for the series 'Awaiting Upstream' being applied, before
-going with this one?
-
-Than v1 support can be rebased on top of the resulting tree (still to
-be applied just before self-tests).
-
-> We can then do another squash-marathon later on before next upstream
-> submission.
-
-Yep, we will likely need some kind of "code-freeze", and squash/bugfix
-only before the submission.
+Will try to push soon.
 
 Cheers,
 
 Paolo
 
---===============2676284153213035344==--
+--===============6752416094231919830==--
