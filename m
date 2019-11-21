@@ -1,93 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============3069224104681653572=="
+Content-Type: multipart/mixed; boundary="===============8424623515622807909=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/3] mptcp: use ipv6-specific proto struct
-Date: Thu, 21 Nov 2019 16:41:51 +0100
-Message-ID: <7f57db9cee657a20464b978c056f797dc2febc17.1574350681.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH 0/3] mptcp: fix for ipv6-related oops
+Date: Thu, 21 Nov 2019 16:58:12 +0100
+Message-ID: <a73f71ce-248f-5b31-fc3e-dee1a7866b08@tessares.net>
 In-Reply-To: cover.1574350681.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2654
+X-UID: 2655
 
---===============3069224104681653572==
+--===============8424623515622807909==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Because it needs a different (greater) obj_size.
+Hi Paolo,
 
-v1 -> v2:
- - TCPv6 -> MPTCPv6 (Matt)
- - need to cleat slab and do proper proto_register()
+On 21/11/2019 16:41, Paolo Abeni wrote:
+> We need to allocate a larger struct sock for mptcp v6 master sockets,
+> otherwise inet6_sk() will access mptcp related data instead of
+> struct ipv6_pinfo.
+> =
 
-Squash-to: "mptcp: Add MPTCP socket stubs"
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+> This should fix the crash reported by Matt.
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 40da2fae65ac..3ae136f9e35c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -689,7 +689,7 @@ static struct proto mptcp_prot =3D {
- 	.unhash		=3D inet_unhash,
- 	.get_port	=3D mptcp_get_port,
- 	.obj_size	=3D sizeof(struct mptcp_sock),
--	.no_autobind	=3D 1,
-+	.no_autobind	=3D true,
- };
- =
+> The protocol.c code changes are split in 2 patches to simplify the
+> squashing.
+> (yep, I know we somewhat agreed to big giant rebase, but this specific
+> should be trivial).
+> =
 
- static struct socket *mptcp_socket_create_get(struct mptcp_sock *msk)
-@@ -972,11 +972,12 @@ void mptcp_proto_init(void)
- =
+> Additionally adds some fixlet for the ipv6 tests
+> =
 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- static struct proto_ops mptcp_v6_stream_ops;
-+static struct proto mptcp_v6_prot;
- =
+> v1 -> v2:
+>   - address Matt feedback on patches 1 && 2
+>   - add missing mptcp_v6 proto registration (I don't know why the previous
+>     iteration of these patches did not explode without that!!! :(((
 
- static struct inet_protosw mptcp_v6_protosw =3D {
- 	.type		=3D SOCK_STREAM,
- 	.protocol	=3D IPPROTO_MPTCP,
--	.prot		=3D &mptcp_prot,
-+	.prot		=3D &mptcp_v6_prot,
- 	.ops		=3D &mptcp_v6_stream_ops,
- 	.flags		=3D INET_PROTOSW_ICSK,
- };
-@@ -985,6 +986,16 @@ int mptcp_proto_v6_init(void)
- {
- 	int err;
- =
+Thank you for the new version and good catch for the proto registration!
 
-+	mptcp_v6_prot =3D mptcp_prot;
-+	strcpy(mptcp_v6_prot.name, "MPTCPv6");
-+	mptcp_v6_prot.slab =3D NULL;
-+	mptcp_v6_prot.obj_size =3D sizeof(struct mptcp_sock) +
-+				 sizeof(struct ipv6_pinfo);
-+
-+	err =3D proto_register(&mptcp_v6_prot, 1);
-+	if (err)
-+		return err;
-+
- 	mptcp_v6_stream_ops =3D inet6_stream_ops;
- 	mptcp_v6_stream_ops.bind =3D mptcp_bind;
- 	mptcp_v6_stream_ops.connect =3D mptcp_stream_connect;
-@@ -995,6 +1006,8 @@ int mptcp_proto_v6_init(void)
- 	mptcp_v6_stream_ops.shutdown =3D mptcp_shutdown;
- =
+The new version looks good to me. I am going to apply it if there is no =
 
- 	err =3D inet6_register_protosw(&mptcp_v6_protosw);
-+	if (err)
-+		proto_unregister(&mptcp_v6_prot);
- =
+objections (post fixes are still possible of course).
 
- 	return err;
- }
+Cheers,
+Matt
 -- =
 
-2.21.0
-
---===============3069224104681653572==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8424623515622807909==--
