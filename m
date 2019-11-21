@@ -1,69 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============0560029095642738721=="
+Content-Type: multipart/mixed; boundary="===============3510182211550561267=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 3/3] mptcp: properly detect skb collapsing
-Date: Thu, 21 Nov 2019 11:31:40 +0100
-Message-ID: <a44066180cf6cc548de8ad76c51be116dee1073e.1574331014.git.pabeni@redhat.com>
-In-Reply-To: cover.1574331014.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH 0/3] mptcp: fix for ipv6-related oops
+Date: Thu, 21 Nov 2019 13:25:15 +0100
+Message-ID: <cover.1574338647.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2639
+X-UID: 2640
 
---===============0560029095642738721==
+--===============3510182211550561267==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we can misdetect skb collapsing, which will lead
-to a kernel warning and crash.
+We need to allocate a larger struct sock for mptcp v6 master sockets,
+otherwise inet6_sk() will access mptcp related data instead of
+struct ipv6_pinfo.
 
-Changing a bit the detection logic for skb collapsing we
-can address the issue.
+This should fix the crash reported by Matt.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+The protocol.c code changes are split in 2 patches to simplify the
+squashing.
+(yep, I know we somewhat agreed to big giant rebase, but this specific
+should be trivial).
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 38259a8a5df3..6a59ca249f59 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -321,15 +321,24 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 		sk->sk_forward_alloc -=3D frag_truesize;
- 	}
- =
+Additionally adds some fixlet for the ipv6 tests
 
--	collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
-+	skb =3D tcp_write_queue_tail(ssk);
-+	if (WARN_ON_ONCE(!skb)) {
-+		ret =3D -EBADFD;
-+		goto out;
-+	}
-+
-+	/* if the tail skb extension is still the cached one, collapsing
-+	 * really happened. Note: we can't check for 'same skb' as the sk_buff
-+	 * hdr on tail can be transmitted, freed and re-allocated by the
-+	 * do_tcp_sendpages() call
-+	 */
-+	collapsed =3D mpext && mpext =3D=3D skb_ext_find(skb, SKB_EXT_MPTCP);
- 	if (collapsed) {
- 		WARN_ON_ONCE(!can_collapse);
--		/* when collapsing mpext always exists */
- 		mpext->data_len +=3D ret;
- 		goto out;
- 	}
- =
+Paolo Abeni (3):
+  selftests: fixup for IPv6 tests
+  mptcp: use ipv6-specific proto struct
+  mptcp/ipv6: mptcp_v6_prot needs costom destroy.
 
--	skb =3D tcp_write_queue_tail(ssk);
- 	mpext =3D __skb_ext_add(skb, SKB_EXT_MPTCP, msk->cached_ext);
- 	msk->cached_ext =3D NULL;
- =
+ net/mptcp/protocol.c                          | 17 ++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.sh      | 27 +++++++++----------
+ 2 files changed, 27 insertions(+), 17 deletions(-)
 
 -- =
 
 2.21.0
 
---===============0560029095642738721==--
+--===============3510182211550561267==--
