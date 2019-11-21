@@ -1,56 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============1469479524087249881=="
+Content-Type: multipart/mixed; boundary="===============4656961656011166074=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 01/13] selftest: add mmap-write support
-Date: Wed, 20 Nov 2019 21:39:35 +0100
-Message-ID: <20191120203935.GG20235@breakpoint.cc>
-In-Reply-To: 1bee3b71-df45-26ce-2afb-3d862d4f40d4@tessares.net
+Subject: [MPTCP] Re: Weekly meeting - 21 November 2019 16:00 UTC (9am PDT,
+ 6pm CEST)
+Date: Thu, 21 Nov 2019 08:49:03 +0800
+Message-ID: <539BFFA2-9F46-40E0-BF6E-2396D487837D@apple.com>
+In-Reply-To: 27bc0d55-7168-86e0-1ee6-13186eee9f89@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2634
+X-UID: 2635
 
---===============1469479524087249881==
+--===============4656961656011166074==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools=
-/testing/selftests/net/mptcp/mptcp_connect.sh
-> > index b5367fe2c6ea..478bc47c3d60 100755
-> > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> > @@ -3,7 +3,7 @@
-> >   time_start=3D$(date +%s)
-> > -optstring=3D"d:e:l:r:h6c"
-> > +optstring=3D"b:d:e:l:r:h6c:m:"
+As I'm at the IETF I won't be able to attend this week's call.
+
+
+Christoph
+
+> On Nov 21, 2019, at 4:16 AM, Matthieu Baerts <matthieu.baerts(a)tessares.=
+net> wrote:
 > =
 
-> Just a small detail but the capture (-c) option doesn't any argument. I
-> guess we should also apply this:
+> Hello everybody!
+> =
 
-> -optstring=3D"b:d:e:l:r:h4c:m:"
-> +optstring=3D"b:d:e:l:r:h4cm:"
->  ret=3D0
->  sin=3D""
->  sout=3D""
+> Our public MPTCP upstreaming weekly web conference is scheduled for
+> tomorrow.
+> =
 
-Oh, absolutely.
+> The list of topics is available here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20191121
+> =
 
-Can you also apply this fixlet that Mat pointed out?
+> Feel free to add/modify topics!
+> =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
-ing/selftests/net/mptcp/mptcp_connect.c
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -391,7 +391,7 @@ static int do_recvfile(int infd, int outfd)
-        ssize_t r;
- =
+> Anybody can join the meeting using Google Meet website/app/phone:
+> https://meet.google.com/edk-rkrk-vaj
+> =
 
-        do {
--               char buf[16536];
-+               char buf[16384];
+> Speak to you tomorrow!
+> Matthieu
+> -- =
 
-Thanks!
---===============1469479524087249881==--
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+
+--===============4656961656011166074==--
