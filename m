@@ -1,48 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============6266371143287087802=="
+Content-Type: multipart/mixed; boundary="===============2544342442707456517=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
- space for dss/mp_capable
-Date: Thu, 21 Nov 2019 13:35:22 +0100
-Message-ID: <340c5026-1f12-e1d8-62aa-f5b4e69b4e16@tessares.net>
-In-Reply-To: 213bb7e7df0bcf3691eb8848a268a862a0af2ca4.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 01/13] selftest: add mmap-write support
+Date: Thu, 21 Nov 2019 13:41:48 +0100
+Message-ID: <47ca473b-b2a3-7495-d6b7-d660ec08ff0f@tessares.net>
+In-Reply-To: 20191120203935.GG20235@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2644
+X-UID: 2645
 
---===============6266371143287087802==
+--===============2544342442707456517==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Florian,
 
-On 20/11/2019 21:30, Paolo Abeni wrote:
-> On Wed, 2019-11-20 at 20:13 +0100, Matthieu Baerts wrote:
->>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>> index 38c0cbd4c77b..bf43d61f792b 100644
->>> --- a/net/mptcp/options.c
->>> +++ b/net/mptcp/options.c
->>> @@ -499,16 +499,10 @@ bool mptcp_established_options(struct sock *sk, s=
-truct sk_buff *skb,
->>>
->>>           *size +=3D opt_size;
->>>           remaining -=3D opt_size;
->>> -
+On 20/11/2019 21:39, Florian Westphal wrote:
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools=
+/testing/selftests/net/mptcp/mptcp_connect.sh
+>>> index b5367fe2c6ea..478bc47c3d60 100755
+>>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>>> @@ -3,7 +3,7 @@
+>>>    time_start=3D$(date +%s)
+>>> -optstring=3D"d:e:l:r:h6c"
+>>> +optstring=3D"b:d:e:l:r:h6c:m:"
 >>
->> I had to manually apply the patch and I see I didn't remove this line.
->> Do you want me to remove it?
+>> Just a small detail but the capture (-c) option doesn't any argument. I
+>> guess we should also apply this:
 > =
 
-> whoops... yes, it would be better, thanks1
+>> -optstring=3D"b:d:e:l:r:h4c:m:"
+>> +optstring=3D"b:d:e:l:r:h4cm:"
+>>   ret=3D0
+>>   sin=3D""
+>>   sout=3D""
 > =
 
+> Oh, absolutely.
 
-I just removed this line:
+Great!
 
-- 1c9961c4aa88: line removed
-- 32fda6a17c47..c35e69234be2: result
+- 8c39e2086d0f: selftests:mptcp: fix typo in opts
+
+> Can you also apply this fixlet that Mat pointed out?
+> =
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
+sting/selftests/net/mptcp/mptcp_connect.c
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -391,7 +391,7 @@ static int do_recvfile(int infd, int outfd)
+>          ssize_t r;
+>   =
+
+>          do {
+> -               char buf[16536];
+> +               char buf[16384];
+
+Just did:
+
+- 2acf87c192a7: selftests:mptcp: buf with a power 2 size
+- c35e69234be2..39d0ec7ab1eb: result
+
+Tests + export are in progress.
 
 Cheers,
 Matt
@@ -53,4 +77,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6266371143287087802==--
+--===============2544342442707456517==--
