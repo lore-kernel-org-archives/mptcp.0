@@ -1,59 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============4656961656011166074=="
+Content-Type: multipart/mixed; boundary="===============6914999295792848733=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Weekly meeting - 21 November 2019 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Thu, 21 Nov 2019 08:49:03 +0800
-Message-ID: <539BFFA2-9F46-40E0-BF6E-2396D487837D@apple.com>
-In-Reply-To: 27bc0d55-7168-86e0-1ee6-13186eee9f89@tessares.net
+Subject: [MPTCP] [RFC PATCH 0/3] sendmsg: fix pending issues.
+Date: Thu, 21 Nov 2019 11:30:57 +0100
+Message-ID: <cover.1574331014.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2635
+X-UID: 2636
 
---===============4656961656011166074==
+--===============6914999295792848733==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-As I'm at the IETF I won't be able to attend this week's call.
+This series addresses the known pending issue in mptcp_sendmsg,
+specifically:
 
+* the crash repored by matt (patch 3/3)
+* the possible data corruption on ext allocation failure - the "TODO"" in
+  sendmsg_frag (patches 1,2/3)
 
-Christoph
+uunfortunately none of the above is actually tested, since I can't
+reproduce the issues - still the problems look real.
 
-> On Nov 21, 2019, at 4:16 AM, Matthieu Baerts <matthieu.baerts(a)tessares.=
-net> wrote:
-> =
+This is not squashed yet, as it will conflict with most patches, I'm just
+trying to collect feedback.
 
-> Hello everybody!
-> =
+Open points:
 
-> Our public MPTCP upstreaming weekly web conference is scheduled for
-> tomorrow.
-> =
+The patch 2/3 introduces a per socket cache of a single skb_ext. As per
+recent upstream changes related to TCP rx/tx skb cache, that is debatable,
+could have subtle performance and memory usage implications.
+We could avoid such cache allways allocating the extension for each
+sendmsg_frag() call, and than free it if unused. Both options looks
+sub-optiomal to me do you have any preference? - I do have some for the
+selected impl ;)
 
-> The list of topics is available here:
-> https://annuel2.framapad.org/p/mptcp_upstreaming_20191121
-> =
+The new API exposed by patch 1/3 is open to misusage. e.g. the caller could
+allocate a skb_ext, set arbitrary ext->offset[id] values and than call
+__skb_ext_add(). That will lead to memory leak or GPF. I did no try to
+address the issue, the '__' prefix should guide the users to extra care.
+Can we do any better?
 
-> Feel free to add/modify topics!
-> =
+(this is a pre-existing topic) the sk_stream_wait_memory() calls in
+sk_stream_wait_memory(), waits on the subflow. Should we wait on the mptcp
+socket instead? Otherwise should we release the mptcp socket lock, before s=
+uch
+call?
 
-> Anybody can join the meeting using Google Meet website/app/phone:
-> https://meet.google.com/edk-rkrk-vaj
-> =
+Paolo Abeni (3):
+  skb: add helpers to allocate ext independently from sk_buff
+  mptcp: avoid data stream corruption on allocation failure.
+  mptcp: properly detect skb collapsing
 
-> Speak to you tomorrow!
-> Matthieu
-> -- =
+ include/linux/skbuff.h |  3 ++
+ net/core/skbuff.c      | 16 ++++++++-
+ net/mptcp/protocol.c   | 79 ++++++++++++++++++++++++++----------------
+ net/mptcp/protocol.h   |  1 +
+ 4 files changed, 68 insertions(+), 31 deletions(-)
 
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+-- =
 
---===============4656961656011166074==--
+2.21.0
+
+--===============6914999295792848733==--
