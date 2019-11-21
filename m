@@ -1,63 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============7943816673961888512=="
+Content-Type: multipart/mixed; boundary="===============6266371143287087802=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/3] mptcp/ipv6: mptcp_v6_prot needs costom destroy.
-Date: Thu, 21 Nov 2019 13:25:18 +0100
-Message-ID: <be463256e44214e5372eba9fa8aa60d8872c2869.1574338647.git.pabeni@redhat.com>
-In-Reply-To: cover.1574338647.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v3 3/4] mptcp: warn once if exceeding tcp opt
+ space for dss/mp_capable
+Date: Thu, 21 Nov 2019 13:35:22 +0100
+Message-ID: <340c5026-1f12-e1d8-62aa-f5b4e69b4e16@tessares.net>
+In-Reply-To: 213bb7e7df0bcf3691eb8848a268a862a0af2ca4.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2643
+X-UID: 2644
 
---===============7943816673961888512==
+--===============6266371143287087802==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Otherwise we can leak memory on close, if user space
-does some setsockopt before connectiong/accepting.
+Hi Paolo,
 
-Note: the squash tag points to the commit currently
-introducing mptcp_destroy, but we likely want to move
-such function in another one - it's currently added as empty
+On 20/11/2019 21:30, Paolo Abeni wrote:
+> On Wed, 2019-11-20 at 20:13 +0100, Matthieu Baerts wrote:
+>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>> index 38c0cbd4c77b..bf43d61f792b 100644
+>>> --- a/net/mptcp/options.c
+>>> +++ b/net/mptcp/options.c
+>>> @@ -499,16 +499,10 @@ bool mptcp_established_options(struct sock *sk, s=
+truct sk_buff *skb,
+>>>
+>>>           *size +=3D opt_size;
+>>>           remaining -=3D opt_size;
+>>> -
+>>
+>> I had to manually apply the patch and I see I didn't remove this line.
+>> Do you want me to remove it?
+> =
 
-Squash-to: "mptcp: Add key generation and token tree"
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> whoops... yes, it would be better, thanks1
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 128822e54672..d1ea0ba480ed 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -974,6 +974,12 @@ void mptcp_proto_init(void)
- static struct proto_ops mptcp_v6_stream_ops;
- static struct proto mptcp_v6_prot;
- =
 
-+static void mptcp_v6_destroy(struct sock *sk)
-+{
-+	mptcp_destroy(sk);
-+	inet6_destroy_sock(sk);
-+}
-+
- static struct inet_protosw mptcp_v6_protosw =3D {
- 	.type		=3D SOCK_STREAM,
- 	.protocol	=3D IPPROTO_MPTCP,
-@@ -988,6 +994,7 @@ int mptcp_proto_v6_init(void)
- =
+I just removed this line:
 
- 	mptcp_v6_prot =3D mptcp_prot;
- 	strcpy(mptcp_v6_prot.name, "TCPv6");
-+	mptcp_v6_prot.destroy =3D mptcp_v6_destroy;
- 	mptcp_v6_prot.obj_size =3D sizeof(struct mptcp_sock) +
- 				 sizeof(struct ipv6_pinfo);
- =
+- 1c9961c4aa88: line removed
+- 32fda6a17c47..c35e69234be2: result
 
+Cheers,
+Matt
 -- =
 
-2.21.0
-
---===============7943816673961888512==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6266371143287087802==--
