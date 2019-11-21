@@ -1,70 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============3600826128507245814=="
+Content-Type: multipart/mixed; boundary="===============7581796681956991827=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/3] mptcp: use ipv6-specific proto struct
-Date: Thu, 21 Nov 2019 15:23:57 +0100
-Message-ID: <be0f5441b6e22429cedc3fa4bbd9ef2089972caa.camel@redhat.com>
-In-Reply-To: 3e9f3743-2c9e-7c88-5940-77ae1f80157f@tessares.net
+Subject: [MPTCP] [PATCH 0/3] mptcp: fix for ipv6-related oops
+Date: Thu, 21 Nov 2019 16:41:49 +0100
+Message-ID: <cover.1574350681.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2650
+X-UID: 2651
 
---===============3600826128507245814==
+--===============7581796681956991827==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-11-21 at 15:14 +0100, Matthieu Baerts wrote:
-> On 21/11/2019 13:25, Paolo Abeni wrote:
-> > Because it needs a different (greater) obj_size.
-> > =
+We need to allocate a larger struct sock for mptcp v6 master sockets,
+otherwise inet6_sk() will access mptcp related data instead of
+struct ipv6_pinfo.
 
-> > Squash-to: "mptcp: Add MPTCP socket stubs"
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> =
+This should fix the crash reported by Matt.
 
-> [...]
-> =
+The protocol.c code changes are split in 2 patches to simplify the
+squashing.
+(yep, I know we somewhat agreed to big giant rebase, but this specific
+should be trivial).
 
-> > @@ -985,6 +986,11 @@ int mptcp_proto_v6_init(void)
-> >   {
-> >   	int err;
-> >   =
+Additionally adds some fixlet for the ipv6 tests
 
-> > +	mptcp_v6_prot =3D mptcp_prot;
-> > +	strcpy(mptcp_v6_prot.name, "TCPv6");
-> =
+v1 -> v2:
+ - address Matt feedback on patches 1 && 2
+ - add missing mptcp_v6 proto registration (I don't know why the previous
+   iteration of these patches did not explode without that!!! :(((
 
-> Should we call it "MPTCPv6" (mptcp_prot is called "MPTCP")
+Paolo Abeni (3):
+  selftests: fixup for IPv6 tests
+  mptcp: use ipv6-specific proto struct
+  mptcp/ipv6: mptcp_v6_prot needs costom destroy.
 
-Indeed! I rushed too much to assemble this patches, sorry.
-> =
+ net/mptcp/protocol.c                          | 24 +++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.sh      | 34 ++++++-------------
+ 2 files changed, 33 insertions(+), 25 deletions(-)
 
-> > +	mptcp_v6_prot.obj_size =3D sizeof(struct mptcp_sock) +
-> > +				 sizeof(struct ipv6_pinfo);
-> =
+-- =
 
-> Very good catch!
-> =
+2.21.0
 
-> Why did we not have the crash before?
-
-Just a matter of luck !?! It depends on how the trailing part of =
-
-mptcp_sock struct overlap with ipv6_pinfo. If we have NULL values at
-the 'correct' places, we can't observe the issue without setsockopt()
-
-Possibly mptcp_struct layout changed a bit with the rebase (e.g. fields
-swapped)??? I haven't double checked that.
-
-Will send v2 soon.
-
-Paolo
-
-p.s. we likely want to add some more self-tests doing [almost random]
-setsockopt on the mptcp socket before the transfer...
-
-
-
---===============3600826128507245814==--
+--===============7581796681956991827==--
