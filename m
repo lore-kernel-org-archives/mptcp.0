@@ -1,72 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============2544342442707456517=="
+Content-Type: multipart/mixed; boundary="===============6796462522181768833=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 01/13] selftest: add mmap-write support
-Date: Thu, 21 Nov 2019 13:41:48 +0100
-Message-ID: <47ca473b-b2a3-7495-d6b7-d660ec08ff0f@tessares.net>
-In-Reply-To: 20191120203935.GG20235@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH 1/3] selftests: fixup for IPv6 tests
+Date: Thu, 21 Nov 2019 15:14:38 +0100
+Message-ID: <ea96e132-5ec6-a2c3-06b6-5710e3c7b18c@tessares.net>
+In-Reply-To: abee356494d0503186864f13681287aa77ffbba2.1574338647.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2645
+X-UID: 2646
 
---===============2544342442707456517==
+--===============6796462522181768833==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+Hi Paolo,
 
-On 20/11/2019 21:39, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools=
-/testing/selftests/net/mptcp/mptcp_connect.sh
->>> index b5367fe2c6ea..478bc47c3d60 100755
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->>> @@ -3,7 +3,7 @@
->>>    time_start=3D$(date +%s)
->>> -optstring=3D"d:e:l:r:h6c"
->>> +optstring=3D"b:d:e:l:r:h6c:m:"
->>
->> Just a small detail but the capture (-c) option doesn't any argument. I
->> guess we should also apply this:
+On 21/11/2019 13:25, Paolo Abeni wrote:
+> Some distros still have the 'ping6' command, take care of that.
+> Addiotnally, setting 'noadad' on ipv6 addresses will avoid
+> explicit waits later
 > =
 
->> -optstring=3D"b:d:e:l:r:h4c:m:"
->> +optstring=3D"b:d:e:l:r:h4cm:"
->>   ret=3D0
->>   sin=3D""
->>   sout=3D""
+> Squash-to: "mptcp: add basic kselftest for mptcp"
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>   .../selftests/net/mptcp/mptcp_connect.sh      | 27 +++++++++----------
+>   1 file changed, 12 insertions(+), 15 deletions(-)
 > =
 
-> Oh, absolutely.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
+esting/selftests/net/mptcp/mptcp_connect.sh
+> index a03760d12eff..9a065183545c 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -17,6 +17,7 @@ ethtool_random_on=3Dtrue
+>   tc_delay=3D"$((RANDOM%400))"
+>   tc_loss=3D$((RANDOM%101))
+>   tc_reorder=3D""
+> +which ping6 > /dev/null 2>&1 && ping6=3D$(which ping6) || ping6=3D$(whic=
+h ping)
 
-Great!
+Just out of curiosity: why is it not OK to use 'ping -6' on these distro?
 
-- 8c39e2086d0f: selftests:mptcp: fix typo in opts
+Note that you can also use:
 
-> Can you also apply this fixlet that Mat pointed out?
-> =
+   ping6=3D$(which ping6 || which ping)
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -391,7 +391,7 @@ static int do_recvfile(int infd, int outfd)
->          ssize_t r;
+(I don't think 'which' is supposed to print something if the program is =
+
+not available)
+
+>   if [ $tc_loss -eq 100 ];then
+>   	tc_loss=3D1%
+> @@ -124,18 +125,18 @@ ip link add ns2eth3 netns "$ns2" type veth peer nam=
+e ns3eth2 netns "$ns3"
+>   ip link add ns3eth4 netns "$ns3" type veth peer name ns4eth3 netns "$ns=
+4"
 >   =
 
->          do {
-> -               char buf[16536];
-> +               char buf[16384];
+>   ip -net "$ns1" addr add 10.0.1.1/24 dev ns1eth2
+> -ip -net "$ns1" addr add dead:beef:1::1/64 dev ns1eth2
+> +ip -net "$ns1" addr add dead:beef:1::1/64 dev ns1eth2 nodad
 
-Just did:
+What a sad option :'(
 
-- 2acf87c192a7: selftests:mptcp: buf with a power 2 size
-- c35e69234be2..39d0ec7ab1eb: result
+But good idea (Luke)!
 
-Tests + export are in progress.
+[...]
+
+> @@ -493,12 +496,6 @@ show_all_ipv6()
+>   	done
+>   }
+>   =
+
+> -# Allow DAD to finish
+> -for dad in $(seq 20); do
+> -	show_all_ipv6 | grep -q -e tentative -e temporary || break
+
+A detail but I guess we can also remove the show_all_ipv6() function =
+
+declared just above that.
 
 Cheers,
 Matt
@@ -77,4 +92,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2544342442707456517==--
+--===============6796462522181768833==--
