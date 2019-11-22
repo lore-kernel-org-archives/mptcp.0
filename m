@@ -1,70 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============7143051701384753556=="
+Content-Type: multipart/mixed; boundary="===============7494137725581811063=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/4] squash-to "mptcp: Write MPTCP DSS headers to
- outgoing data packets"
-Date: Fri, 22 Nov 2019 15:26:13 +0100
-Message-ID: <670301e582611f8472c9b46c4ac3f2e733ea6c82.1574432371.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH 0/4] crypto: refactor sha code
+Date: Fri, 22 Nov 2019 15:30:42 +0100
+Message-ID: <34a3db383cb02ac6a81a1edb2afde5f432f18651.camel@redhat.com>
 In-Reply-To: cover.1574432261.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2664
+X-UID: 2665
 
---===============7143051701384753556==
+--===============7494137725581811063==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
----
- net/mptcp/options.c  | 4 ++--
- net/mptcp/protocol.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+On Fri, 2019-11-22 at 15:26 +0100, Paolo Abeni wrote:
+> patch 1/4 refactor the crypto code to make it easier transitioning to
+> sha256. It includes feedback from Peter about helper renaming.
+> =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 202514088067..dc1d578f4e08 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -248,8 +248,8 @@ static bool mptcp_established_options_dss(struct sock *=
-sk, struct sk_buff *skb,
- 	if (msk) {
- 		opts->ext_copy.data_ack =3D msk->ack_seq;
- 	} else {
--		mptcp_crypto_key_sha1(mptcp_subflow_ctx(sk)->remote_key,
--				      NULL, &opts->ext_copy.data_ack);
-+		mptcp_crypto_key_sha(mptcp_subflow_ctx(sk)->remote_key,
-+				     NULL, &opts->ext_copy.data_ack);
- 		opts->ext_copy.data_ack++;
- 	}
- =
+> The following patches update the rest of the tree to the new helper name.
+> Overall this should generate 3 conflicts along the rebase.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3eaffb8bcc14..4541a0cb11cd 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -298,7 +298,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
-lags, int *err,
- 		mptcp_token_update_accept(new_sock->sk, new_mptcp_sock);
- 		msk->subflow =3D NULL;
- =
+Addendum:
 
--		mptcp_crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
-+		mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
- 		msk->write_seq =3D subflow->idsn + 1;
- 		ack_seq++;
- 		msk->ack_seq =3D ack_seq;
-@@ -426,7 +426,7 @@ void mptcp_finish_connect(struct sock *sk, int mp_capab=
-le)
- 		msk->token =3D subflow->token;
- 		msk->write_seq =3D subflow->idsn + 1;
- 		subflow->rel_write_seq =3D 1;
--		mptcp_crypto_key_sha1(msk->remote_key, NULL, &ack_seq);
-+		mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
- 		ack_seq++;
- 		msk->ack_seq =3D ack_seq;
- 		list_add(&subflow->node, &msk->conn_list);
--- =
+The squashed tree is avaialble here:
 
-2.21.0
+https://github.com/pabeni/mptcp/tree/sha_cleanup_2
 
---===============7143051701384753556==--
+I verified the new code ensuring that the genrated seq number matched
+the expectation of the wireshark dissector.
+
+Cheers,
+
+Paolo
+
+--===============7494137725581811063==--
