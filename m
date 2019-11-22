@@ -1,97 +1,239 @@
-Content-Type: multipart/mixed; boundary="===============4958738224011289162=="
+Content-Type: multipart/mixed; boundary="===============4273111700214270715=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/4] crypto: refactor sha code
-Date: Fri, 22 Nov 2019 10:16:32 -0800
-Message-ID: <38edc6d00633c8617240d1e2c099339ff3e576be.camel@linux.intel.com>
-In-Reply-To: bad06b40-dd69-3f76-fa29-63408fe5d33f@tessares.net
+Subject: [MPTCP] [PATCH v3] mptcp: Basic single-subflow DATA_FIN
+Date: Fri, 22 Nov 2019 15:01:30 -0800
+Message-ID: <20191122230130.11594-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2669
+X-UID: 2670
 
---===============4958738224011289162==
+--===============4273111700214270715==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Send a DATA_FIN along with any subflow TCP FIN flag when the MPTCP
+socket is closing or shutting down writes.
 
-Hi Paolo & Matt -
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
 
-On Fri, 2019-11-22 at 17:47 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+The DATA_FIN ack patch (would have been a 2nd patch after this) isn't
+quite working yet, but I wanted to share the sending patch since there
+was a minor conflict after some recent squashing. I also confirmed that
+this applies cleanly after the kselftest patch for "part 1", and that
+the self tests pass.
 
-> On 22/11/2019 17:41, Paolo Abeni wrote:
-> > On Fri, 2019-11-22 at 17:26 +0100, Matthieu Baerts wrote:
-> > > Hi Paolo,
-> > > =
+Changes from v2:
+* Rebased and confirmed selftests when cherry-picked to the end of the "par=
+t 1"
+  (single-subflow) chunk of the patch series.
 
-> > > On 22/11/2019 15:30, Paolo Abeni wrote:
-> > > > On Fri, 2019-11-22 at 15:26 +0100, Paolo Abeni wrote:
-> > > > > patch 1/4 refactor the crypto code to make it easier transitionin=
-g to
-> > > > > sha256. It includes feedback from Peter about helper renaming.
-> > > =
+Changes from v1:
 
-> > > Thank you for this new version!
-> > > =
+* Fixed problem with the receive side truncating data. The issue happened
+  when a DSS mapping for DATA_FIN was found on a data segment, where the
+  data in the packet was already covered by an earlier mapping.
 
-> > > It looks good to me after a very very quick review (but the first pat=
-ch
-> > > is hard to read).
-> > > =
+* Only send DATA_FIN when the subflow is sending a FIN and the MPTCP
+  socket is no longer in the TCP_ESTABLISHED state. This prevents sending
+  DATA_FIN when an individual subflow is removed but the MPTCP-level
+  connection is kept alive.
 
-> > > > > The following patches update the rest of the tree to the new help=
-er name.
-> > > > > Overall this should generate 3 conflicts along the rebase.
-> > > > =
+* Changes to warnings and comments suggested in code review.
 
-> > > > Addendum:
-> > > > =
+ net/mptcp/options.c  | 38 ++++++++++++++++++++++++++++++++++++--
+ net/mptcp/protocol.c |  4 ++++
+ net/mptcp/subflow.c  | 42 ++++++++++++++++++++++++++++--------------
+ 3 files changed, 68 insertions(+), 16 deletions(-)
 
-> > > > The squashed tree is avaialble here:
-> > > > =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 644c30d46922..be180c4f71a4 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -286,19 +286,49 @@ static bool mptcp_established_options_mp(struct sock =
+*sk, unsigned int *size,
+ 	return false;
+ }
+ =
 
-> > > > https://github.com/pabeni/mptcp/tree/sha_cleanup_2
-> > > > =
++static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
++				 struct mptcp_ext *ext)
++{
++	ext->data_fin =3D 1;
++
++	if (!ext->use_map) {
++		/* RFC6824 requires a DSS mapping with specific values
++		 * if DATA_FIN is set but no data payload is mapped
++		 */
++		ext->use_map =3D 1;
++		ext->dsn64 =3D 1;
++		ext->data_seq =3D mptcp_sk(subflow->conn)->write_seq;
++		ext->subflow_seq =3D 0;
++		ext->data_len =3D 1;
++	} else {
++		/* If there's an existing DSS mapping, DATA_FIN consumes
++		 * 1 additional byte of mapping space.
++		 */
++		ext->data_len++;
++	}
++}
++
+ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff =
+*skb,
+ 					  unsigned int *size,
+ 					  unsigned int remaining,
+ 					  struct mptcp_out_options *opts)
+ {
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	unsigned int dss_size =3D 0;
+ 	struct mptcp_ext *mpext;
+ 	struct mptcp_sock *msk;
+ 	unsigned int ack_size;
++	u8 tcp_fin;
+ =
 
-> > > > I verified the new code ensuring that the genrated seq number match=
-ed
-> > > > the expectation of the wireshark dissector.
-> > > =
+-	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
++	if (skb) {
++		mpext =3D mptcp_get_ext(skb);
++		tcp_fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
++	} else {
++		mpext =3D NULL;
++		tcp_fin =3D 0;
++	}
+ =
 
-> > > Great!
-> > > =
+-	if (!skb || (mpext && mpext->use_map)) {
++	if (!skb || (mpext && mpext->use_map) || tcp_fin) {
+ 		unsigned int map_size;
+ =
 
-> > > Because it looks OK and you checked different stuffs, do you want me =
-to:
-> > > - replace the tree with the commits from your branch? (if needed, we =
-can
-> > > of course do other fixes later)
-> > > - stop the CI job, wait for a proper review and then replace the tree?
-> > > - or wait for a proper review and then I apply the changes, looking at
-> > > your branch in case of conflict but doing all of that with TopGit to
-> > > ease the review? :)
-> > =
+ 		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+@@ -307,6 +337,10 @@ static bool mptcp_established_options_dss(struct sock =
+*sk, struct sk_buff *skb,
+ 		dss_size =3D map_size;
+ 		if (mpext)
+ 			opts->ext_copy =3D *mpext;
++
++		if (skb && tcp_fin &&
++		    subflow->conn->sk_state !=3D TCP_ESTABLISHED)
++			mptcp_write_data_fin(subflow, &opts->ext_copy);
+ 	}
+ =
 
-> > I think the first 2 options are the better ones.
-> > =
+ 	ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 9b384da910ce..f95a3f824a18 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -919,6 +919,10 @@ static int mptcp_shutdown(struct socket *sock, int how)
+ 	pr_debug("sk=3D%p, how=3D%d", msk, how);
+ =
 
-> > It would be nice if someone give this an additional review ;)
-> =
+ 	lock_sock(sock->sk);
++
++	if (how =3D=3D SHUT_WR || how =3D=3D SHUT_RDWR)
++		inet_sk_state_store(sock->sk, TCP_FIN_WAIT1);
++
+ 	ssock =3D __mptcp_fallback_get_ref(msk);
+ 	if (ssock) {
+ 		release_sock(sock->sk);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 998fc6066ea5..ee29281d4570 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -277,6 +277,7 @@ static enum mapping_status get_mapping_status(struct so=
+ck *ssk)
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+ 	struct mptcp_ext *mpext;
+ 	struct sk_buff *skb;
++	u16 data_len;
+ 	u64 map_seq;
+ =
 
-> OK for me!
-> =
+ 	skb =3D skb_peek(&ssk->sk_receive_queue);
+@@ -301,25 +302,38 @@ static enum mapping_status get_mapping_status(struct =
+sock *ssk)
+ =
 
-> I just paused the CI job then. I hope not for too long :-)
+ 		if (!subflow->map_valid)
+ 			return MAPPING_INVALID;
++
+ 		goto validate_seq;
+ 	}
+ =
 
-This looks good to me. I'll double-check interop with mptcp.org after it is
-merged.
+-	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u", mpext->data_seq,
+-		 mpext->dsn64, mpext->subflow_seq, mpext->data_len);
++	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u data_fin=3D%d",
++		 mpext->data_seq, mpext->dsn64, mpext->subflow_seq,
++		 mpext->data_len, mpext->data_fin);
+ =
 
-Peter.
+-	if (mpext->data_len =3D=3D 0) {
++	data_len =3D mpext->data_len;
++	if (data_len =3D=3D 0) {
+ 		pr_err("Infinite mapping not handled");
+ 		return MAPPING_INVALID;
+-	} else if (mpext->subflow_seq =3D=3D 0 &&
+-		   mpext->data_fin =3D=3D 1) {
+-		if (WARN_ON_ONCE(mpext->data_len !=3D 1))
+-			return false;
++	}
+ =
 
-> Cheers,
-> Matt
+-		/* do not try hard to handle this any better, till we have
+-		 * real data_fin support
+-		 */
+-		pr_debug("DATA_FIN with no payload");
+-		return MAPPING_DATA_FIN;
++	if (mpext->data_fin =3D=3D 1) {
++		if (data_len =3D=3D 1) {
++			pr_debug("DATA_FIN with no payload");
++			if (subflow->map_valid) {
++				/* A DATA_FIN might arrive in a DSS
++				 * option before the previous mapping
++				 * has been fully consumed. Continue
++				 * handling the existing mapping.
++				 */
++				skb_ext_del(skb, SKB_EXT_MPTCP);
++				return MAPPING_OK;
++			} else {
++				return MAPPING_DATA_FIN;
++			}
++		}
++
++		/* Adjust for DATA_FIN using 1 byte of sequence space */
++		data_len--;
+ 	}
+ =
 
---===============4958738224011289162==--
+ 	if (!mpext->dsn64) {
+@@ -334,7 +348,7 @@ static enum mapping_status get_mapping_status(struct so=
+ck *ssk)
+ 		/* Allow replacing only with an identical map */
+ 		if (subflow->map_seq =3D=3D map_seq &&
+ 		    subflow->map_subflow_seq =3D=3D mpext->subflow_seq &&
+-		    subflow->map_data_len =3D=3D mpext->data_len) {
++		    subflow->map_data_len =3D=3D data_len) {
+ 			skb_ext_del(skb, SKB_EXT_MPTCP);
+ 			return MAPPING_OK;
+ 		}
+@@ -351,7 +365,7 @@ static enum mapping_status get_mapping_status(struct so=
+ck *ssk)
+ =
+
+ 	subflow->map_seq =3D map_seq;
+ 	subflow->map_subflow_seq =3D mpext->subflow_seq;
+-	subflow->map_data_len =3D mpext->data_len;
++	subflow->map_data_len =3D data_len;
+ 	subflow->map_valid =3D 1;
+ 	pr_debug("new map seq=3D%llu subflow_seq=3D%u data_len=3D%u",
+ 		 subflow->map_seq, subflow->map_subflow_seq,
+-- =
+
+2.24.0
+
+--===============4273111700214270715==--
