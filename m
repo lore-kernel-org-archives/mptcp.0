@@ -1,67 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============1240304142869671368=="
+Content-Type: multipart/mixed; boundary="===============6375119558470956525=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 7/7] make accept not allocate kernel socket struct
-Date: Mon, 25 Nov 2019 13:37:58 +0100
-Message-ID: <20191125123758.GB795@breakpoint.cc>
-In-Reply-To: 8521f5a18bb86408469be4b83e7ae200a8d81e42.camel@redhat.com
+Subject: [MPTCP] Re: [RFC 6/7] add mptcp_subflow_shutdown
+Date: Mon, 25 Nov 2019 15:58:00 +0100
+Message-ID: <cf51f973cc359df224bef67a1d0468503934d4fc.camel@redhat.com>
+In-Reply-To: 20191125122323.GA795@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 2684
+X-UID: 2685
 
---===============1240304142869671368==
+--===============6375119558470956525==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2019-11-25 at 03:15 +0100, Florian Westphal wrote:
-> > @@ -924,10 +924,17 @@ static void mptcp_close(struct sock *sk, long tim=
-eout)
-> >  =
+On Mon, 2019-11-25 at 13:23 +0100, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > On Mon, 2019-11-25 at 03:15 +0100, Florian Westphal wrote:
+> > > +static void mptcp_subflow_shutdown(struct sock *ssk, int how)
+> > > +{
+> > > +	lock_sock(ssk);
+> > > +
+> > > +	switch (ssk->sk_state) {
+> > > +	case TCP_LISTEN:
+> > > +		if (!(how & RCV_SHUTDOWN))
+> > > +			break;
+> > > +		/* fall through */
+> > > +	case TCP_SYN_SENT:
+> > > +		tcp_disconnect(ssk, O_NONBLOCK);
+> > > +		break;
+> > > +	default:
+> > > +		ssk->sk_shutdown |=3D how;
+> > > +		tcp_shutdown(ssk, how);
+> > > +		break;
+> > > +	}
+> > > +
+> > > +	/* Wake up anyone sleeping in poll. */
+> > > +	ssk->sk_state_change(ssk);
+> > > +	release_sock(ssk);
+> > > +}
+> > =
 
-> >  	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> >  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> > +		struct socket *sock =3D READ_ONCE(ssk->sk_socket);
-> >  =
+> > I think we can move this one can be moved to subflow.c.
+> > =
 
-> >  		pr_debug("conn_list->subflow=3D%p", subflow);
-> >  		list_del(&subflow->node);
-> > -		sock_release(ssk->sk_socket);
-> > +
-> > +		if (sock && sock !=3D sk->sk_socket) {
-> > +			sock_release(sock);
+> > Yep, it will lose the 'static' scope, but protocol.c is becoming quite
+> > big...
 > =
 
-> Double checking I read the above correctly: the condition 'sock && sock
-> !=3D sk->sk_socket' only for the first subflow of a client socket, right?
-> If so, can we use the msk socket even for that one?
-
-No, its also for outgoing connections, we use in kernel sockets for
-those.
-
-> > @@ -1443,6 +1470,20 @@ static int mptcp_stream_accept(struct socket *so=
-ck, struct socket *newsock,
-> >  		return -EINVAL;
-> >  =
-
-> >  	err =3D ssock->ops->accept(sock, newsock, flags, kern);
-> > +	if (err =3D=3D 0 && (newsock->sk->sk_prot =3D=3D &mptcp_prot ||
-> > +			 is_mptcp_v6(newsock))) {
+> Yes, but its still small compared to e.g. tcp_input.c.
 > =
 
-> Is not clear to me why/how we can hit the condition '!(newsock->sk-
-> >sk_prot =3D=3D &mptcp_prot || is_mptcp_v6(newsock))' ... Can you please
-> explain?
+> > WDYT?
+> =
 
-We will hit it when we get connection from non-mptcp peer, i.e. the
-!mp_capable part of mptcp_accept().
+> I like static scope. For every visible symbol one needs to check where
+> else it might be used before making changes to it...
 
-In that case sk_prot is &tcp_prot.
+Oks, no objections on my side.
 
-It might make sense to change this to
-    err =3D=3D 0 && newsock->sk->sk_prot !=3D &tcp_prot
+Cheers,
 
-perhaps that would clarify this a bit.  WDYT?
---===============1240304142869671368==--
+Paolo
+
+--===============6375119558470956525==--
