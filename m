@@ -1,85 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============7440630028257492812=="
+Content-Type: multipart/mixed; boundary="===============7420053487346011255=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH/RFC 0/7] improve subflow join handling
-Date: Mon, 25 Nov 2019 13:06:53 +0100
-Message-ID: <6fc6a45b9d42fa6196cc85943f922149c9008029.camel@redhat.com>
-In-Reply-To: 20191125021508.29153-1-fw@strlen.de
+Subject: [MPTCP] Re: [RFC 6/7] add mptcp_subflow_shutdown
+Date: Mon, 25 Nov 2019 13:09:10 +0100
+Message-ID: <f10b15f98f58b168624f3a2366ea5e9cae4975c8.camel@redhat.com>
+In-Reply-To: 20191125021508.29153-7-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2680
+X-UID: 2681
 
---===============7440630028257492812==
+--===============7420053487346011255==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 2019-11-25 at 03:15 +0100, Florian Westphal wrote:
-> This set aims to improve handling of multiple subflows.
-> There are multiple remaining problems, see below, but I wanted to send wh=
-at
-> I have now rather than keep this back.
-> =
+> +static void mptcp_subflow_shutdown(struct sock *ssk, int how)
+> +{
+> +	lock_sock(ssk);
+> +
+> +	switch (ssk->sk_state) {
+> +	case TCP_LISTEN:
+> +		if (!(how & RCV_SHUTDOWN))
+> +			break;
+> +		/* fall through */
+> +	case TCP_SYN_SENT:
+> +		tcp_disconnect(ssk, O_NONBLOCK);
+> +		break;
+> +	default:
+> +		ssk->sk_shutdown |=3D how;
+> +		tcp_shutdown(ssk, how);
+> +		break;
+> +	}
+> +
+> +	/* Wake up anyone sleeping in poll. */
+> +	ssk->sk_state_change(ssk);
+> +	release_sock(ssk);
+> +}
 
-> The first 3 patches are fixes to handle refcount leaks found while working
-> on this, I've added the commit name of where they could be squashed to.
-> =
+I think we can move this one can be moved to subflow.c.
 
-> The remaining part of this work is to make the msk->conn_list contain
-> tcp_sock structs without an outer 'struct socket'.
-> =
+Yep, it will lose the 'static' scope, but protocol.c is becoming quite
+big...
 
-> The problem is that for incoming join requests (which are not subject
-> to accept/request socket queue), there is no 'struct socket', i.e.
-> sk->sk_socket is NULL.
-> =
-
-> As tcp stack will assume that such tcp sk is already detached from
-> userspace, SOCK_NOSPACE wakeups do not work for them.
-> =
-
-> The solution here (suggested by Paolo) is to have sk->sk_socket refer
-> to the mptcp parent socket structure.  This assignment is done by
-> a private function similar to sock_graft().
-> =
-
-> For incoming connects, tcp-level connectivity works, i.e. mptcp-next can
-> accept a few subflows from the peer and on exit of the test program
-> all resources are cleaned up correctly.
-> =
-
-> MPTCP-Level connectivity will probably not work, as nothing sets up
-> ssn_offset for joins (both incoming or outgoing).
-> =
-
-> mptcp.org kernel will not consider the joins as established, as the
-> "4th Ack" is missing.
-> A simple "tcp_send_ack" is enough, but there are two problems with this:
-> 1. It can be lost
-> 2. Given we are not expecting to receive any data on such flows this
->    doesn't seem to be a problem.
-> =
-
-> During testing I saw that sometimes mptcp.org kernel will emit further
-> join requests to mptcp-next but those trigger no response (and those
-> packets do not even show up in perfs network drop monitor, sigh).
-> =
-
-> For outgoing connects, there is one remaining memory leak that I have
-> not located so far.
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
-
-LGTM! I think the firs 3 patches can be squashed as-is. I have only a
-couple of minor question on the last 2 patches, see later individual
-replies...
-
-Great work, BTW ;)
+WDYT?
 
 Thanks,
 
 Paolo
 
---===============7440630028257492812==--
+--===============7420053487346011255==--
