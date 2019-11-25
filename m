@@ -1,67 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============6375119558470956525=="
+Content-Type: multipart/mixed; boundary="===============5633538318808020298=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 6/7] add mptcp_subflow_shutdown
-Date: Mon, 25 Nov 2019 15:58:00 +0100
-Message-ID: <cf51f973cc359df224bef67a1d0468503934d4fc.camel@redhat.com>
-In-Reply-To: 20191125122323.GA795@breakpoint.cc
+Subject: [MPTCP] [PATCH] subflow: don't increment msk refcount on join connect
+ completion
+Date: Mon, 25 Nov 2019 16:01:33 +0100
+Message-ID: <20191125150133.13185-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2685
+X-UID: 2686
 
---===============6375119558470956525==
+--===============5633538318808020298==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-11-25 at 13:23 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Mon, 2019-11-25 at 03:15 +0100, Florian Westphal wrote:
-> > > +static void mptcp_subflow_shutdown(struct sock *ssk, int how)
-> > > +{
-> > > +	lock_sock(ssk);
-> > > +
-> > > +	switch (ssk->sk_state) {
-> > > +	case TCP_LISTEN:
-> > > +		if (!(how & RCV_SHUTDOWN))
-> > > +			break;
-> > > +		/* fall through */
-> > > +	case TCP_SYN_SENT:
-> > > +		tcp_disconnect(ssk, O_NONBLOCK);
-> > > +		break;
-> > > +	default:
-> > > +		ssk->sk_shutdown |=3D how;
-> > > +		tcp_shutdown(ssk, how);
-> > > +		break;
-> > > +	}
-> > > +
-> > > +	/* Wake up anyone sleeping in poll. */
-> > > +	ssk->sk_state_change(ssk);
-> > > +	release_sock(ssk);
-> > > +}
-> > =
+squashto: mptcp: Add handling of outgoing MP_JOIN requests
 
-> > I think we can move this one can be moved to subflow.c.
-> > =
+The connecting socket already has a refcount, this additional
+increase is never decremented, resulting in the mptcp socket to never get f=
+reed.
 
-> > Yep, it will lose the 'static' scope, but protocol.c is becoming quite
-> > big...
-> =
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/subflow.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> Yes, but its still small compared to e.g. tcp_input.c.
-> =
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e6a512bf6230..ba46c0b3a6d7 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -38,7 +38,6 @@ static int subflow_rebuild_header(struct sock *sk)
+ 		err =3D mptcp_token_new_connect(sk);
+ 	} else if (subflow->request_join && !subflow->local_nonce) {
+ 		pr_debug("subflow=3D%p", sk);
+-		mptcp_token_get_sock(subflow->token);
+ =
 
-> > WDYT?
-> =
+ 		do {
+ 			get_random_bytes(&subflow->local_nonce, sizeof(u32));
+-- =
 
-> I like static scope. For every visible symbol one needs to check where
-> else it might be used before making changes to it...
+2.23.0
 
-Oks, no objections on my side.
-
-Cheers,
-
-Paolo
-
---===============6375119558470956525==--
+--===============5633538318808020298==--
