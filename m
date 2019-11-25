@@ -1,50 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============3265586395831365149=="
+Content-Type: multipart/mixed; boundary="===============6658688789863385555=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/7] mptcp: must drop reqsk as well
-Date: Mon, 25 Nov 2019 03:15:03 +0100
-Message-ID: <20191125021508.29153-3-fw@strlen.de>
+Subject: [MPTCP] [PATCH 3/7] remove second conditional
+Date: Mon, 25 Nov 2019 03:15:04 +0100
+Message-ID: <20191125021508.29153-4-fw@strlen.de>
 In-Reply-To: 20191125021508.29153-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2674
+X-UID: 2675
 
---===============3265586395831365149==
+--===============6658688789863385555==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: mptcp: Add handling of incoming MP_JOIN requests
+squashto: mptcp: Handle MP_CAPABLE options for outgoing connections
 
-For incoming join requests we need to also drop the request socket,
-it holds a reference on the listener sk.
+... there is no reason for this second conditional, one is enough.
 
-Without this, each sucessful join causes a refcount leak on
-mptcp->subflow listener socket.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/ipv4/tcp_minisocks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index c2d9a47da9c2..65c41894f3dd 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -773,8 +773,8 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_b=
-uff *skb,
- 		goto listen_overflow;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f65c48a0069a..72e6950fbbc2 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -901,7 +901,6 @@ static void mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-	struct socket *ssk =3D NULL;
  =
 
- 	if (own_req && sk_is_mptcp(child) && mptcp_sk_is_subflow(child)) {
--		inet_csk_reqsk_queue_drop(sk, req);
- 		reqsk_queue_removed(&inet_csk(sk)->icsk_accept_queue, req);
-+		inet_csk_reqsk_queue_drop_and_put(sk, req);
- 		return child;
+ 	mptcp_token_destroy(msk->token);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+@@ -909,15 +908,10 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	lock_sock(sk);
+ =
+
+ 	if (msk->subflow) {
+-		ssk =3D msk->subflow;
++		sock_release(msk->subflow);
+ 		msk->subflow =3D NULL;
  	}
  =
 
+-	if (ssk) {
+-		pr_debug("subflow=3D%p", ssk->sk);
+-		sock_release(ssk);
+-	}
+-
+ 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		pr_debug("conn_list->subflow=3D%p", subflow);
+ 		sock_release(mptcp_subflow_tcp_socket(subflow));
 -- =
 
 2.23.0
 
---===============3265586395831365149==--
+--===============6658688789863385555==--
