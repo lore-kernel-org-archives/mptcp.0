@@ -1,98 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============3481051864457379296=="
+Content-Type: multipart/mixed; boundary="===============6322075924278258565=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/4] crypto: refactor sha code
-Date: Sat, 23 Nov 2019 09:25:44 +0100
-Message-ID: <3fccdf1a-1b4f-a52c-f362-c4e0105d2a5f@tessares.net>
-In-Reply-To: 38edc6d00633c8617240d1e2c099339ff3e576be.camel@linux.intel.com
+Subject: [MPTCP] [PATCH/RFC 0/7] improve subflow join handling
+Date: Mon, 25 Nov 2019 03:15:01 +0100
+Message-ID: <20191125021508.29153-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 2671
+X-UID: 2672
 
---===============3481051864457379296==
+--===============6322075924278258565==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Paolo,
+This set aims to improve handling of multiple subflows.
+There are multiple remaining problems, see below, but I wanted to send what
+I have now rather than keep this back.
 
-On 22/11/2019 19:16, Peter Krystad wrote:
-> =
+The first 3 patches are fixes to handle refcount leaks found while working
+on this, I've added the commit name of where they could be squashed to.
 
-> Hi Paolo & Matt -
-> =
+The remaining part of this work is to make the msk->conn_list contain
+tcp_sock structs without an outer 'struct socket'.
 
-> On Fri, 2019-11-22 at 17:47 +0100, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 22/11/2019 17:41, Paolo Abeni wrote:
->>> On Fri, 2019-11-22 at 17:26 +0100, Matthieu Baerts wrote:
->>>> Hi Paolo,
->>>>
->>>> On 22/11/2019 15:30, Paolo Abeni wrote:
->>>>> On Fri, 2019-11-22 at 15:26 +0100, Paolo Abeni wrote:
->>>>>> patch 1/4 refactor the crypto code to make it easier transitioning to
->>>>>> sha256. It includes feedback from Peter about helper renaming.
->>>>
->>>> Thank you for this new version!
->>>>
->>>> It looks good to me after a very very quick review (but the first patch
->>>> is hard to read).
->>>>
->>>>>> The following patches update the rest of the tree to the new helper =
-name.
->>>>>> Overall this should generate 3 conflicts along the rebase.
->>>>>
->>>>> Addendum:
->>>>>
->>>>> The squashed tree is avaialble here:
->>>>>
->>>>> https://github.com/pabeni/mptcp/tree/sha_cleanup_2
->>>>>
->>>>> I verified the new code ensuring that the genrated seq number matched
->>>>> the expectation of the wireshark dissector.
->>>>
->>>> Great!
->>>>
->>>> Because it looks OK and you checked different stuffs, do you want me t=
-o:
->>>> - replace the tree with the commits from your branch? (if needed, we c=
-an
->>>> of course do other fixes later)
->>>> - stop the CI job, wait for a proper review and then replace the tree?
->>>> - or wait for a proper review and then I apply the changes, looking at
->>>> your branch in case of conflict but doing all of that with TopGit to
->>>> ease the review? :)
->>>
->>> I think the first 2 options are the better ones.
->>>
->>> It would be nice if someone give this an additional review ;)
->>
->> OK for me!
->>
->> I just paused the CI job then. I hope not for too long :-)
-> =
+The problem is that for incoming join requests (which are not subject
+to accept/request socket queue), there is no 'struct socket', i.e.
+sk->sk_socket is NULL.
 
-> This looks good to me. I'll double-check interop with mptcp.org after it =
-is
-> merged.
+As tcp stack will assume that such tcp sk is already detached from
+userspace, SOCK_NOSPACE wakeups do not work for them.
 
-Great, thank you for the patches and the reviews!
+The solution here (suggested by Paolo) is to have sk->sk_socket refer
+to the mptcp parent socket structure.  This assignment is done by
+a private function similar to sock_graft().
 
-I just recreated the tree using Paolo's branch. Tests are still OK!
+For incoming connects, tcp-level connectivity works, i.e. mptcp-next can
+accept a few subflows from the peer and on exit of the test program
+all resources are cleaned up correctly.
 
-Syncing with the latest net-next now and checking that all commits can =
+MPTCP-Level connectivity will probably not work, as nothing sets up
+ssn_offset for joins (both incoming or outgoing).
 
-still compile.
+mptcp.org kernel will not consider the joins as established, as the
+"4th Ack" is missing.
+A simple "tcp_send_ack" is enough, but there are two problems with this:
+1. It can be lost
+2. Given we are not expecting to receive any data on such flows this
+   doesn't seem to be a problem.
 
-Cheers,
-Matt
--- =
+During testing I saw that sometimes mptcp.org kernel will emit further
+join requests to mptcp-next but those trigger no response (and those
+packets do not even show up in perfs network drop monitor, sigh).
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3481051864457379296==--
+For outgoing connects, there is one remaining memory leak that I have
+not located so far.
+
+--===============6322075924278258565==--
