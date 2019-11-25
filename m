@@ -1,235 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============3996054244608625419=="
+Content-Type: multipart/mixed; boundary="===============7440630028257492812=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 7/7] make accept not allocate kernel socket struct
-Date: Mon, 25 Nov 2019 03:15:08 +0100
-Message-ID: <20191125021508.29153-8-fw@strlen.de>
+Subject: [MPTCP] Re: [PATCH/RFC 0/7] improve subflow join handling
+Date: Mon, 25 Nov 2019 13:06:53 +0100
+Message-ID: <6fc6a45b9d42fa6196cc85943f922149c9008029.camel@redhat.com>
 In-Reply-To: 20191125021508.29153-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2679
+X-UID: 2680
 
---===============3996054244608625419==
+--===============7440630028257492812==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Once lower-level accept returns, walk the subflow list (there should
-be one subflow) and make sk->sk_socket point to the new mptcp socket.
+On Mon, 2019-11-25 at 03:15 +0100, Florian Westphal wrote:
+> This set aims to improve handling of multiple subflows.
+> There are multiple remaining problems, see below, but I wanted to send wh=
+at
+> I have now rather than keep this back.
+> =
 
-This is needed to make NOSPACE flag work: tcp stack can't signal
-availability of new data unless ->sk_socket points to a "struct socket".
+> The first 3 patches are fixes to handle refcount leaks found while working
+> on this, I've added the commit name of where they could be squashed to.
+> =
 
-If sk_socket is NULL, then from TCP stack p.o.v.  the socket has been
-detached from the userspace program already, so nothing to wake up in
-first place.
+> The remaining part of this work is to make the msk->conn_list contain
+> tcp_sock structs without an outer 'struct socket'.
+> =
 
-mptcp_close needs to handle both cases: connect()ing sockets have a
-'struct socket' allocated, while incoming ones do not.
+> The problem is that for incoming join requests (which are not subject
+> to accept/request socket queue), there is no 'struct socket', i.e.
+> sk->sk_socket is NULL.
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 66 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 53 insertions(+), 13 deletions(-)
+> As tcp stack will assume that such tcp sk is already detached from
+> userspace, SOCK_NOSPACE wakeups do not work for them.
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 924e63b354ef..bd96d58beccc 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -924,10 +924,17 @@ static void mptcp_close(struct sock *sk, long timeout)
- =
+> The solution here (suggested by Paolo) is to have sk->sk_socket refer
+> to the mptcp parent socket structure.  This assignment is done by
+> a private function similar to sock_graft().
+> =
 
- 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+		struct socket *sock =3D READ_ONCE(ssk->sk_socket);
- =
+> For incoming connects, tcp-level connectivity works, i.e. mptcp-next can
+> accept a few subflows from the peer and on exit of the test program
+> all resources are cleaned up correctly.
+> =
 
- 		pr_debug("conn_list->subflow=3D%p", subflow);
- 		list_del(&subflow->node);
--		sock_release(ssk->sk_socket);
-+
-+		if (sock && sock !=3D sk->sk_socket) {
-+			sock_release(sock);
-+		} else {
-+			sock_orphan(ssk);
-+			tcp_close(ssk, timeout);
-+		}
- 	}
- =
+> MPTCP-Level connectivity will probably not work, as nothing sets up
+> ssn_offset for joins (both incoming or outgoing).
+> =
 
- 	__mptcp_clear_xmit(sk);
-@@ -975,23 +982,22 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_subflow_context *subflow;
--	struct socket *new_sock;
- 	struct socket *listener;
- 	struct sock *newsk;
- =
+> mptcp.org kernel will not consider the joins as established, as the
+> "4th Ack" is missing.
+> A simple "tcp_send_ack" is enough, but there are two problems with this:
+> 1. It can be lost
+> 2. Given we are not expecting to receive any data on such flows this
+>    doesn't seem to be a problem.
+> =
 
- 	listener =3D msk->subflow;
- =
+> During testing I saw that sometimes mptcp.org kernel will emit further
+> join requests to mptcp-next but those trigger no response (and those
+> packets do not even show up in perfs network drop monitor, sigh).
+> =
 
- 	pr_debug("msk=3D%p, listener=3D%p", msk, mptcp_subflow_ctx(listener->sk));
--	*err =3D kernel_accept(listener, &new_sock, flags);
--	if (*err < 0)
-+	newsk =3D inet_csk_accept(listener->sk, flags, err, kern);
-+	if (!newsk)
- 		return NULL;
- =
+> For outgoing connects, there is one remaining memory leak that I have
+> not located so far.
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
 
--	subflow =3D mptcp_subflow_ctx(new_sock->sk);
-+	subflow =3D mptcp_subflow_ctx(newsk);
- 	pr_debug("msk=3D%p, new subflow=3D%p, ", msk, subflow);
- =
+LGTM! I think the firs 3 patches can be squashed as-is. I have only a
+couple of minor question on the last 2 patches, see later individual
+replies...
 
- 	if (subflow->mp_capable) {
--		struct sock *ssk =3D new_sock->sk;
- 		struct sock *new_mptcp_sock;
-+		struct sock *ssk =3D newsk;
- 		u64 ack_seq;
- =
+Great work, BTW ;)
 
- 		lock_sock(sk);
-@@ -1002,8 +1008,8 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
- 			*err =3D -ENOBUFS;
- 			local_bh_enable();
- 			release_sock(sk);
--			kernel_sock_shutdown(new_sock, SHUT_RDWR);
--			sock_release(new_sock);
-+			mptcp_subflow_shutdown(newsk, SHUT_RDWR + 1);
-+			tcp_close(newsk, 0);
- 			return NULL;
- 		}
- =
+Thanks,
 
-@@ -1014,7 +1020,7 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
- 		msk->local_key =3D subflow->local_key;
- 		msk->token =3D subflow->token;
- =
+Paolo
 
--		mptcp_token_update_accept(new_sock->sk, new_mptcp_sock);
-+		mptcp_token_update_accept(newsk, new_mptcp_sock);
- 		msk->subflow =3D NULL;
- =
-
- 		mptcp_pm_new_connection(msk, 1);
-@@ -1047,10 +1053,7 @@ static struct sock *mptcp_accept(struct sock *sk, in=
-t flags, int *err,
- 			mptcp_subflow_data_available(ssk);
- 		release_sock(ssk);
- 	} else {
--		newsk =3D new_sock->sk;
- 		tcp_sk(newsk)->is_mptcp =3D 0;
--		new_sock->sk =3D NULL;
--		sock_release(new_sock);
- =
-
- 		MPTCP_INC_STATS(sock_net(sk),
- 				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
-@@ -1213,15 +1216,27 @@ void mptcp_finish_connect(struct sock *sk, int mp_c=
-apable)
- 	inet_sk_state_store(sk, TCP_ESTABLISHED);
- }
- =
-
-+static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
-+{
-+	write_lock_bh(&sk->sk_callback_lock);
-+	rcu_assign_pointer(sk->sk_wq, &parent->wq);
-+	sk_set_socket(sk, parent);
-+	sk->sk_uid =3D SOCK_INODE(parent)->i_uid;
-+	write_unlock_bh(&sk->sk_callback_lock);
-+}
-+
- void mptcp_finish_join(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-+	struct sock *parent =3D (void *)msk;
- =
-
- 	pr_debug("msk=3D%p, subflow=3D%p", msk, subflow);
- =
-
- 	local_bh_disable();
- 	bh_lock_sock_nested(subflow->conn);
-+	if (!sk->sk_socket)
-+		mptcp_sock_graft(sk, parent->sk_socket);
- 	list_add_tail(&subflow->node, &msk->conn_list);
- 	bh_unlock_sock(subflow->conn);
- 	local_bh_enable();
-@@ -1393,6 +1408,8 @@ static int mptcp_v4_getname(struct socket *sock, stru=
-ct sockaddr *uaddr,
- }
- =
-
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+static struct proto mptcp_v6_prot;
-+
- static int mptcp_v6_getname(struct socket *sock, struct sockaddr *uaddr,
- 			    int peer)
- {
-@@ -1410,6 +1427,16 @@ static int mptcp_v6_getname(struct socket *sock, str=
-uct sockaddr *uaddr,
- =
-
- 	return mptcp_getname(sock, uaddr, peer, AF_INET6);
- }
-+
-+static bool is_mptcp_v6(const struct socket *sock)
-+{
-+	return sock->sk->sk_prot =3D=3D &mptcp_v6_prot;
-+}
-+#else
-+static bool is_mptcp_v6(const struct socket *sock)
-+{
-+	return false;
-+}
- #endif
- =
-
- static int mptcp_listen(struct socket *sock, int backlog)
-@@ -1443,6 +1470,20 @@ static int mptcp_stream_accept(struct socket *sock, =
-struct socket *newsock,
- 		return -EINVAL;
- =
-
- 	err =3D ssock->ops->accept(sock, newsock, flags, kern);
-+	if (err =3D=3D 0 && (newsock->sk->sk_prot =3D=3D &mptcp_prot ||
-+			 is_mptcp_v6(newsock))) {
-+		struct mptcp_sock *msk =3D mptcp_sk(newsock->sk);
-+		struct mptcp_subflow_context *subflow;
-+
-+		/* Hack: Need to set ssk->sk_socket of accept()ed flows to mptcp socket.=
- */
-+		list_for_each_entry(subflow, &msk->conn_list, node) {
-+			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+			if (!ssk->sk_socket)
-+				mptcp_sock_graft(ssk, newsock);
-+		}
-+	}
-+
- 	sock_put(ssock->sk);
- 	return err;
- }
-@@ -1563,7 +1604,6 @@ void mptcp_proto_init(void)
- =
-
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- static struct proto_ops mptcp_v6_stream_ops;
--static struct proto mptcp_v6_prot;
- =
-
- static void mptcp_v6_destroy(struct sock *sk)
- {
--- =
-
-2.23.0
-
---===============3996054244608625419==--
+--===============7440630028257492812==--
