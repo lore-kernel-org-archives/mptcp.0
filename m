@@ -1,52 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============7410322541088019114=="
+Content-Type: multipart/mixed; boundary="===============4122702179770777385=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] subflow: don't increment msk refcount on join
- connect completion
-Date: Mon, 25 Nov 2019 18:19:52 +0100
-Message-ID: <ac92da450617b7fb9e59b3e9b508e339f87fd3da.camel@redhat.com>
-In-Reply-To: 20191125150133.13185-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH 0/4] crypto: refactor sha code
+Date: Mon, 25 Nov 2019 17:40:27 -0800
+Message-ID: <34770161d5294b5244b8a8b64e57f4507aa72c01.camel@linux.intel.com>
+In-Reply-To: 3fccdf1a-1b4f-a52c-f362-c4e0105d2a5f@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2690
+X-UID: 2691
 
---===============7410322541088019114==
+--===============4122702179770777385==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-11-25 at 16:01 +0100, Florian Westphal wrote:
-> squashto: mptcp: Add handling of outgoing MP_JOIN requests
+
+Hi Paolo, Matt - =
+
+
+On Sat, 2019-11-23 at 09:25 +0100, Matthieu Baerts wrote:
+> Hi Peter, Paolo,
 > =
 
-> The connecting socket already has a refcount, this additional
-> increase is never decremented, resulting in the mptcp socket to never get=
- freed.
+> On 22/11/2019 19:16, Peter Krystad wrote:
+> > Hi Paolo & Matt -
+> > =
+
+> > On Fri, 2019-11-22 at 17:47 +0100, Matthieu Baerts wrote:
+> > > Hi Paolo,
+> > > =
+
+> > > On 22/11/2019 17:41, Paolo Abeni wrote:
+> > > > On Fri, 2019-11-22 at 17:26 +0100, Matthieu Baerts wrote:
+> > > > > Hi Paolo,
+> > > > > =
+
+> > > > > On 22/11/2019 15:30, Paolo Abeni wrote:
+> > > > > > On Fri, 2019-11-22 at 15:26 +0100, Paolo Abeni wrote:
+> > > > > > > patch 1/4 refactor the crypto code to make it easier transiti=
+oning to
+> > > > > > > sha256. It includes feedback from Peter about helper renaming.
+> > > > > =
+
+> > > > > Thank you for this new version!
+> > > > > =
+
+> > > > > It looks good to me after a very very quick review (but the first=
+ patch
+> > > > > is hard to read).
+> > > > > =
+
+> > > > > > > The following patches update the rest of the tree to the new =
+helper name.
+> > > > > > > Overall this should generate 3 conflicts along the rebase.
+> > > > > > =
+
+> > > > > > Addendum:
+> > > > > > =
+
+> > > > > > The squashed tree is avaialble here:
+> > > > > > =
+
+> > > > > > https://github.com/pabeni/mptcp/tree/sha_cleanup_2
+> > > > > > =
+
+> > > > > > I verified the new code ensuring that the genrated seq number m=
+atched
+> > > > > > the expectation of the wireshark dissector.
+> > > > > =
+
+> > > > > Great!
+> > > > > =
+
+> > > > > Because it looks OK and you checked different stuffs, do you want=
+ me to:
+> > > > > - replace the tree with the commits from your branch? (if needed,=
+ we can
+> > > > > of course do other fixes later)
+> > > > > - stop the CI job, wait for a proper review and then replace the =
+tree?
+> > > > > - or wait for a proper review and then I apply the changes, looki=
+ng at
+> > > > > your branch in case of conflict but doing all of that with TopGit=
+ to
+> > > > > ease the review? :)
+> > > > =
+
+> > > > I think the first 2 options are the better ones.
+> > > > =
+
+> > > > It would be nice if someone give this an additional review ;)
+> > > =
+
+> > > OK for me!
+> > > =
+
+> > > I just paused the CI job then. I hope not for too long :-)
+> > =
+
+> > This looks good to me. I'll double-check interop with mptcp.org after i=
+t is
+> > merged.
+
+mptcp.org interop is OK.
+
+Peter.
+
+> Great, thank you for the patches and the reviews!
 > =
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/subflow.c | 1 -
->  1 file changed, 1 deletion(-)
+> I just recreated the tree using Paolo's branch. Tests are still OK!
 > =
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index e6a512bf6230..ba46c0b3a6d7 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -38,7 +38,6 @@ static int subflow_rebuild_header(struct sock *sk)
->  		err =3D mptcp_token_new_connect(sk);
->  	} else if (subflow->request_join && !subflow->local_nonce) {
->  		pr_debug("subflow=3D%p", sk);
-> -		mptcp_token_get_sock(subflow->token);
->  =
+> Syncing with the latest net-next now and checking that all commits can =
 
->  		do {
->  			get_random_bytes(&subflow->local_nonce, sizeof(u32));
+> still compile.
+> =
 
-yep, it looks like this refcnt is really leaked, ACK!
+> Cheers,
+> Matt
 
-Paolo
-
---===============7410322541088019114==--
+--===============4122702179770777385==--
