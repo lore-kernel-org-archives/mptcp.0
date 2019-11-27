@@ -1,85 +1,167 @@
-Content-Type: multipart/mixed; boundary="===============4811821832909633962=="
+Content-Type: multipart/mixed; boundary="===============8180716422853460315=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH MPTCP] init ssn_offset for incoming/outgoing join
- requests
-Date: Wed, 27 Nov 2019 19:08:18 +0100
-Message-ID: <808c4962-6b81-065c-d10a-530d8b98e73e@tessares.net>
-In-Reply-To: ce898106cb828295fc72f9af63249f69e46a5589.camel@redhat.com
+Subject: [MPTCP] MPTCP implementation feedback for RFC6824bis
+Date: Wed, 27 Nov 2019 11:29:41 -0800
+Message-ID: <17233788-D98B-4484-B785-2F58D43EA7CA@apple.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2703
+X-UID: 2704
 
---===============4811821832909633962==
+--===============8180716422853460315==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Paolo,
+Hello,
 
-On 27/11/2019 16:37, Paolo Abeni wrote:
-> On Wed, 2019-11-27 at 13:18 +0100, Florian Westphal wrote:
->> squashto: mptcp: Add handling of outgoing MP_JOIN requests
->>
->> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->> ---
->>   net/mptcp/subflow.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index ba46c0b3a6d7..45ceb9a955a8 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -139,6 +139,7 @@ static void subflow_init_req(struct request_sock *re=
-q,
->>   		subflow_req->remote_key =3D rx_opt.mptcp.sndr_key;
->>   		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
->>   	} else if (rx_opt.mptcp.mp_join && listener->request_mptcp) {
->> +		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
->>   		subflow_req->mp_join =3D 1;
->>   		subflow_req->backup =3D rx_opt.mptcp.backup;
->>   		subflow_req->remote_id =3D rx_opt.mptcp.join_id;
->> @@ -231,6 +232,8 @@ static void subflow_finish_connect(struct sock *sk, =
-const struct sk_buff *skb)
->>   				      subflow->remote_nonce,
->>   				      (u32 *)subflow->hmac);
->>   =
+as I mentioned during the meeting last week in Singapore, the team working =
+on upstreaming MPTCP into the Linux Kernel has some feedback on RFC6824bis =
+that would be good to be factored into the RFC before publication.
 
->> +		if (skb)
->> +			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
->>   		mptcp_finish_join(sk);
->>   		subflow->conn_finished =3D 1;
->>   	}
->> @@ -885,6 +888,7 @@ static void subflow_ulp_clone(const struct request_s=
-ock *req,
->>   		new_ctx->ssn_offset =3D subflow_req->ssn_offset;
->>   		new_ctx->idsn =3D subflow_req->idsn;
->>   	} else if (subflow_req->mp_join) {
->> +		new_ctx->ssn_offset =3D subflow_req->ssn_offset;
->>   		new_ctx->mp_join =3D 1;
->>   		new_ctx->fourth_ack =3D 1;
->>   		new_ctx->backup =3D subflow_req->backup;
-> =
+Here is the list of comments/changes the team is suggesting:
 
-> LGTM!
+Section 3.1, page 19, "If B has data to send first,..."
 
-Thank you for the patch and the review!
+The first phrase states that when A receives a DSS from B it indicates succ=
+essful delivery of the MP_CAPABLE. However, it is not the DSS but rather th=
+e DATA_ACK that indicates this. Digging through some past e-mail exchanges =
+I had with Alan I see that that was indeed the intention.
 
-- d950276fff5d: "squashed" in "mptcp: Add handling of outgoing MP_JOIN =
+We are thus suggesting to change this text to:
+If B has data to send first, then the reliable delivery of the ACK+MP_CAPAB=
+LE can be inferred by the receipt of this data with a MPTCP Data Sequence S=
+ignal (DSS) option that includes a DATA_ACK (Section 3.3). Further, wheneve=
+r A receives a DATA_ACK from B it is a signal of the reliable delivery of A=
+'s MP_CAPABLE. After this, A can send data to B with a regular DSS option.
 
-requests"
-- 9503bde4eead..4bd50dcab84a: result
 
-Tests are still OK!
+Section 3.3.1, page 32 & 33, "A data sequence mapping does not need..."
 
-Cheers,
-Matt
--- =
+This paragraph states that it is permissive to send a mapping in advance. L=
+ate-mapping is specified a bit higher around the sentence =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4811821832909633962==--
+"Implementations MAY hold onto such unmapped data for a short while in the =
+expectation that a mapping will arrive shortly"
+
+This kind of early/late mapping announcements are difficult to handle in an=
+ implementation. The Linux Kernel implementation of multipath-tcp.org <http=
+://multipath-tcp.org/> has always disallowed such kind of mappings. Meaning=
+, whenever a DSS-option is received such that the range specified by the re=
+lative subflow-sequence number in the DSS-option and the data-length does n=
+ot (partially) cover the TCP sequence number of the packet itself, the subf=
+low will be killed with a TCP-RST. The problem around handling such early/l=
+ate mappings is that it is unclear for how long the stack needs to remember=
+ these mappings (in the early-mapping case), or for how long he needs to ho=
+ld on to the data (in the late-mapping case).
+
+We thus suggest to change this to the following:
+Whenever a DSS-option is received on a packet such that the mapping of the =
+subflow-sequence space does not partially cover the TCP-sequence number of =
+ the packet itself, the host MUST discard this mapping and MAY destroy the =
+subflow with a TCP-RST. It should be noted that a DATA_FIN that does not co=
+me with data has a relative subflow-sequence number of 0 and thus should be=
+ handled separately.
+
+
+Would it be possible to make these adjustments to the RFC?
+
+Regards,
+Christoph (on behalf of the MPTCP upstreaming community)
+
+--===============8180716422853460315==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
+L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPjwvaGVhZD48Ym9keSBzdHlsZT0id29yZC13cmFwOiBi
+cmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdo
+aXRlLXNwYWNlOyIgY2xhc3M9IiI+SGVsbG8sPGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9k
+aXY+PGRpdiBjbGFzcz0iIj5hcyBJIG1lbnRpb25lZCBkdXJpbmcgdGhlIG1lZXRpbmcgbGFzdCB3
+ZWVrIGluIFNpbmdhcG9yZSwgdGhlIHRlYW0gd29ya2luZyBvbiB1cHN0cmVhbWluZyBNUFRDUCBp
+bnRvIHRoZSBMaW51eCBLZXJuZWwgaGFzIHNvbWUgZmVlZGJhY2sgb24gUkZDNjgyNGJpcyB0aGF0
+IHdvdWxkIGJlIGdvb2QgdG8gYmUgZmFjdG9yZWQgaW50byB0aGUgUkZDIGJlZm9yZSBwdWJsaWNh
+dGlvbi48L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIi
+PkhlcmUgaXMgdGhlIGxpc3Qgb2YgY29tbWVudHMvY2hhbmdlcyB0aGUgdGVhbSBpcyBzdWdnZXN0
+aW5nOjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+
+PGIgY2xhc3M9IiI+U2VjdGlvbiAzLjE8L2I+LCBwYWdlIDE5LCA8aSBjbGFzcz0iIj4iPC9pPjxz
+cGFuIHN0eWxlPSJmb250LXNpemU6IDEzLjMzMzMzMzAxNTQ0MTg5NXB4OyIgY2xhc3M9IiI+PGkg
+Y2xhc3M9IiI+SWYgQiBoYXMgZGF0YSB0byBzZW5kIGZpcnN0LC4uLiI8L2k+PC9zcGFuPjwvZGl2
+PjxkaXYgY2xhc3M9IiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMTMuMzMzMzMzMDE1NDQxODk1
+cHg7IiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9zcGFuPjwvZGl2PjxkaXYgY2xhc3M9IiI+PHNw
+YW4gc3R5bGU9ImZvbnQtc2l6ZTogMTMuMzMzMzMzMDE1NDQxODk1cHg7IiBjbGFzcz0iIj5UaGUg
+Zmlyc3QgcGhyYXNlIHN0YXRlcyB0aGF0IHdoZW4gQSByZWNlaXZlcyBhIERTUyBmcm9tIEIgaXQg
+aW5kaWNhdGVzIHN1Y2Nlc3NmdWwgZGVsaXZlcnkgb2YgdGhlIE1QX0NBUEFCTEUuIEhvd2V2ZXIs
+IGl0IGlzIG5vdCB0aGUgRFNTIGJ1dCByYXRoZXIgdGhlIERBVEFfQUNLIHRoYXQgaW5kaWNhdGVz
+IHRoaXMuIERpZ2dpbmcgdGhyb3VnaCBzb21lIHBhc3QgZS1tYWlsIGV4Y2hhbmdlcyBJIGhhZCB3
+aXRoIEFsYW4gSSBzZWUgdGhhdCB0aGF0IHdhcyBpbmRlZWQgdGhlIGludGVudGlvbi48L3NwYW4+
+PC9kaXY+PGRpdiBjbGFzcz0iIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOiAxMy4zMzMzMzMwMTU0
+NDE4OTVweDsiIGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L3NwYW4+PC9kaXY+PGRpdiBjbGFzcz0i
+Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOiAxMy4zMzMzMzMwMTU0NDE4OTVweDsiIGNsYXNzPSIi
+PldlIGFyZSB0aHVzIHN1Z2dlc3RpbmcgdG8gY2hhbmdlIHRoaXMgdGV4dCB0bzo8L3NwYW4+PC9k
+aXY+PGRpdiBjbGFzcz0iIj48ZGl2IGNsYXNzPSIiPjxpIGNsYXNzPSIiPjxmb250IHNpemU9IjIi
+IGNsYXNzPSIiPklmIEIgaGFzIGRhdGEgdG8gc2VuZCBmaXJzdCwgdGhlbiB0aGUgcmVsaWFibGUg
+ZGVsaXZlcnkgb2YgdGhlJm5ic3A7PC9mb250PjxzcGFuIHN0eWxlPSJmb250LXNpemU6IHNtYWxs
+OyIgY2xhc3M9IiI+QUNLK01QX0NBUEFCTEUgY2FuIGJlIGluZmVycmVkIGJ5IHRoZSByZWNlaXB0
+IG9mIHRoaXMgZGF0YSB3aXRoIGEmbmJzcDs8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTog
+c21hbGw7IiBjbGFzcz0iIj5NUFRDUCBEYXRhIFNlcXVlbmNlIFNpZ25hbCAoRFNTKSBvcHRpb24g
+PGZvbnQgY29sb3I9IiM3N2JiNDAiIGNsYXNzPSIiPnRoYXQgaW5jbHVkZXMgYSBEQVRBX0FDSzwv
+Zm9udD4gKDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOiBzbWFsbDsiIGNsYXNzPSIiPlNl
+Y3Rpb24gMy4zKS4gPGZvbnQgY29sb3I9IiM3N2JiNDAiIGNsYXNzPSIiPkZ1cnRoZXIsIHdoZW5l
+dmVyIEEgcmVjZWl2ZXMgYSBEQVRBX0FDSyBmcm9tIEIgaXQgaXMgYSBzaWduYWwgb2YgdGhlIHJl
+bGlhYmxlIGRlbGl2ZXJ5IG9mIEEncyBNUF9DQVBBQkxFLiBBZnRlciB0aGlzLCBBIGNhbiBzZW5k
+IGRhdGEgdG8gQiB3aXRoIGEgcmVndWxhciBEU1Mgb3B0aW9uLjwvZm9udD48L3NwYW4+PC9pPjwv
+ZGl2PjwvZGl2PjxkaXYgY2xhc3M9IiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogc21hbGw7IiBj
+bGFzcz0iIj48YnIgY2xhc3M9IiI+PC9zcGFuPjwvZGl2PjxkaXYgY2xhc3M9IiI+PHNwYW4gc3R5
+bGU9ImZvbnQtc2l6ZTogc21hbGw7IiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9zcGFuPjwvZGl2
+PjxkaXYgY2xhc3M9IiI+PGZvbnQgc2l6ZT0iMiIgY2xhc3M9IiI+PGIgY2xhc3M9IiI+U2VjdGlv
+biAzLjMuMTwvYj4sIHBhZ2UgMzIgJmFtcDsgMzMsIDxpIGNsYXNzPSIiPiI8L2k+PC9mb250Pjxz
+cGFuIHN0eWxlPSJmb250LXNpemU6IDEzLjMzMzMzMzAxNTQ0MTg5NXB4OyIgY2xhc3M9IiI+PGkg
+Y2xhc3M9IiI+QSBkYXRhIHNlcXVlbmNlIG1hcHBpbmcgZG9lcyBub3QgbmVlZC4uLiI8L2k+PC9z
+cGFuPjwvZGl2PjxkaXYgY2xhc3M9IiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMTMuMzMzMzMz
+MDE1NDQxODk1cHg7IiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9zcGFuPjwvZGl2PjxkaXYgY2xh
+c3M9IiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMTMuMzMzMzMzMDE1NDQxODk1cHg7IiBjbGFz
+cz0iIj5UaGlzIHBhcmFncmFwaCBzdGF0ZXMgdGhhdCBpdCBpcyBwZXJtaXNzaXZlIHRvIHNlbmQg
+YSBtYXBwaW5nIGluIGFkdmFuY2UuIExhdGUtbWFwcGluZyBpcyBzcGVjaWZpZWQgYSBiaXQgaGln
+aGVyIGFyb3VuZCB0aGUgc2VudGVuY2UmbmJzcDs8L3NwYW4+PC9kaXY+PGRpdiBjbGFzcz0iIj48
+aSBjbGFzcz0iIj4iSW1wbGVtZW50YXRpb25zIE1BWSBob2xkIG9udG8gc3VjaCB1bm1hcHBlZCBk
+YXRhIGZvciBhIHNob3J0IHdoaWxlIGluIHRoZSBleHBlY3RhdGlvbiB0aGF0IGEgbWFwcGluZyB3
+aWxsIGFycml2ZSBzaG9ydGx5IjwvaT48L2Rpdj48ZGl2IGNsYXNzPSIiPjxpIGNsYXNzPSIiPjxi
+ciBjbGFzcz0iIj48L2k+PC9kaXY+PGRpdiBjbGFzcz0iIj48c3BhbiBzdHlsZT0iZm9udC1zdHls
+ZTogbm9ybWFsOyIgY2xhc3M9IiI+VGhpcyBraW5kIG9mIGVhcmx5L2xhdGUgbWFwcGluZyBhbm5v
+dW5jZW1lbnRzIGFyZSBkaWZmaWN1bHQgdG8gaGFuZGxlIGluIGFuIGltcGxlbWVudGF0aW9uLiBU
+aGUgTGludXggS2VybmVsIGltcGxlbWVudGF0aW9uIG9mIDxhIGhyZWY9Imh0dHA6Ly9tdWx0aXBh
+dGgtdGNwLm9yZyIgY2xhc3M9IiI+bXVsdGlwYXRoLXRjcC5vcmc8L2E+Jm5ic3A7aGFzIGFsd2F5
+cyBkaXNhbGxvd2VkIHN1Y2gga2luZCBvZiBtYXBwaW5ncy4gTWVhbmluZywgd2hlbmV2ZXIgYSBE
+U1Mtb3B0aW9uIGlzIHJlY2VpdmVkIHN1Y2ggdGhhdCB0aGUgcmFuZ2Ugc3BlY2lmaWVkIGJ5IHRo
+ZSByZWxhdGl2ZSBzdWJmbG93LXNlcXVlbmNlIG51bWJlciBpbiB0aGUgRFNTLW9wdGlvbiBhbmQg
+dGhlIGRhdGEtbGVuZ3RoIGRvZXMgbm90IChwYXJ0aWFsbHkpIGNvdmVyIHRoZSBUQ1Agc2VxdWVu
+Y2UgbnVtYmVyIG9mIHRoZSBwYWNrZXQgaXRzZWxmLCB0aGUgc3ViZmxvdyB3aWxsIGJlIGtpbGxl
+ZCB3aXRoIGEgVENQLVJTVC4gVGhlIHByb2JsZW0gYXJvdW5kIGhhbmRsaW5nIHN1Y2ggZWFybHkv
+bGF0ZSBtYXBwaW5ncyBpcyB0aGF0IGl0IGlzIHVuY2xlYXIgZm9yIGhvdyBsb25nIHRoZSBzdGFj
+ayBuZWVkcyB0byByZW1lbWJlciB0aGVzZSBtYXBwaW5ncyAoaW4gdGhlIGVhcmx5LW1hcHBpbmcg
+Y2FzZSksIG9yIGZvciBob3cgbG9uZyBoZSBuZWVkcyB0byBob2xkIG9uIHRvIHRoZSBkYXRhIChp
+biB0aGUgbGF0ZS1tYXBwaW5nIGNhc2UpLjwvc3Bhbj48L2Rpdj48ZGl2IGNsYXNzPSIiPjxzcGFu
+IHN0eWxlPSJmb250LXN0eWxlOiBub3JtYWw7IiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9zcGFu
+PjwvZGl2PjxkaXYgY2xhc3M9IiI+PHNwYW4gc3R5bGU9ImZvbnQtc3R5bGU6IG5vcm1hbDsiIGNs
+YXNzPSIiPldlIHRodXMgc3VnZ2VzdCB0byBjaGFuZ2UgdGhpcyB0byB0aGUgZm9sbG93aW5nOjwv
+c3Bhbj48L2Rpdj48ZGl2IGNsYXNzPSIiPjxpIGNsYXNzPSIiPjxmb250IGNvbG9yPSIjNzdiYjQw
+IiBjbGFzcz0iIj5XaGVuZXZlciBhIERTUy1vcHRpb24gaXMgcmVjZWl2ZWQgb24gYSBwYWNrZXQg
+c3VjaCB0aGF0IHRoZSBtYXBwaW5nIG9mIHRoZSBzdWJmbG93LXNlcXVlbmNlIHNwYWNlIGRvZXMg
+bm90IHBhcnRpYWxseSBjb3ZlciB0aGUgVENQLXNlcXVlbmNlIG51bWJlciBvZiAmbmJzcDt0aGUg
+cGFja2V0IGl0c2VsZiwgdGhlIGhvc3QgTVVTVCBkaXNjYXJkIHRoaXMgbWFwcGluZyBhbmQgTUFZ
+IGRlc3Ryb3kgdGhlIHN1YmZsb3cgd2l0aCBhIFRDUC1SU1QuIEl0IHNob3VsZCBiZSBub3RlZCB0
+aGF0IGEgREFUQV9GSU4gdGhhdCBkb2VzIG5vdCBjb21lIHdpdGggZGF0YSBoYXMgYSByZWxhdGl2
+ZSBzdWJmbG93LXNlcXVlbmNlIG51bWJlciBvZiAwIGFuZCB0aHVzIHNob3VsZCBiZSBoYW5kbGVk
+IHNlcGFyYXRlbHkuPC9mb250PjwvaT48L2Rpdj48ZGl2IGNsYXNzPSIiPjxzcGFuIHN0eWxlPSJm
+b250LXN0eWxlOiBub3JtYWw7IiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9zcGFuPjwvZGl2Pjxk
+aXYgY2xhc3M9IiI+PHNwYW4gc3R5bGU9ImZvbnQtc3R5bGU6IG5vcm1hbDsiIGNsYXNzPSIiPjxi
+ciBjbGFzcz0iIj48L3NwYW4+PC9kaXY+PGRpdiBjbGFzcz0iIj5Xb3VsZCBpdCBiZSBwb3NzaWJs
+ZSB0byBtYWtlIHRoZXNlIGFkanVzdG1lbnRzIHRvIHRoZSBSRkM/PC9kaXY+PGRpdiBjbGFzcz0i
+Ij48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj5SZWdhcmRzLDwvZGl2PjxkaXYgY2xh
+c3M9IiI+Q2hyaXN0b3BoIChvbiBiZWhhbGYgb2YgdGhlIE1QVENQIHVwc3RyZWFtaW5nIGNvbW11
+bml0eSk8L2Rpdj48L2JvZHk+PC9odG1sPg==
+--===============8180716422853460315==--
