@@ -1,56 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============4191534187328742257=="
+Content-Type: multipart/mixed; boundary="===============5484215716144419718=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH/RFC 0/7] improve subflow join handling
-Date: Tue, 26 Nov 2019 18:51:54 +0100
-Message-ID: <ac0391d7-3f28-32c7-4b85-90614f29a5ab@tessares.net>
-In-Reply-To: 6948f62b38443f7f737463d9e7fd915db09d058d.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v3] mptcp: Basic single-subflow DATA_FIN
+Date: Tue, 26 Nov 2019 19:39:19 -0800
+Message-ID: <0ffcef214516d5478455cd6745e312352b498fd5.camel@linux.intel.com>
+In-Reply-To: 00b46db3-f865-c18d-2d13-13b4986a9d86@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2698
+X-UID: 2699
 
---===============4191534187328742257==
+--===============5484215716144419718==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Florian,
 
-On 26/11/2019 17:56, Paolo Abeni wrote:
-> On Tue, 2019-11-26 at 17:45 +0100, Florian Westphal wrote:
->> Florian Westphal <fw(a)strlen.de> wrote:
->>> This set aims to improve handling of multiple subflows.
->>> There are multiple remaining problems, see below, but I wanted to send =
-what
->>> I have now rather than keep this back.
->>>
->>> The first 3 patches are fixes to handle refcount leaks found while work=
-ing
->>> on this, I've added the commit name of where they could be squashed to.
->>
->> I see those have been marked 'awaiting upstream', what does that mean in
->> mptcp context?
+Hi Matt -
+
+On Tue, 2019-11-26 at 10:07 +0100, Matthieu Baerts wrote:
+> Hi Mat, Paolo,
 > =
 
-> It means the patches are ready to be merged, waiting for someone
-> (Matt?) to merge them.
+> On 25/11/2019 18:00, Paolo Abeni wrote:
+> > On Fri, 2019-11-22 at 15:01 -0800, Mat Martineau wrote:
+> > > Send a DATA_FIN along with any subflow TCP FIN flag when the MPTCP
+> > > socket is closing or shutting down writes.
+> > > =
+
+> > > Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> > =
+
+> > The patch LGTM, thanks!
 > =
 
-> It looks correct to me for the first 3 patches.
+> Thank you for the new version and the review!
+> =
 
-Sorry, I already merged them this afternoon but I was waiting for the CI =
+> Where can I apply it? I would like to apply it just before the =
 
-to finish validating the new changes to send the email.
-Everything done now, the "export" branch contains the 3 patches.
+> introduction of the kselftests but please tell me if it is better to =
 
-Cheers,
-Matt
--- =
+> squash it / apply it somewhere else.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4191534187328742257==--
+Mat is out this week. I've checked that the changes to options.c and
+protocol.c can be squashed to 'Write MPTCP DSS headers to outgoing data
+packets' and the changes to subflow.c squash to 'Implement MPTCP receive
+path'.
+
+Peter.
+
+
+
+> Cheers,
+> Matt
+
+--===============5484215716144419718==--
