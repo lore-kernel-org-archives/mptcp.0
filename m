@@ -1,112 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============5048346237592426495=="
+Content-Type: multipart/mixed; boundary="===============8439524403670265338=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: fix option length of mp_capable syn/ack
-Date: Fri, 29 Nov 2019 20:02:07 +0100
-Message-ID: <600ab80529ae9abbc860e7bbf4a8e945cd130fd3.1575054127.git.dcaratti@redhat.com>
+Subject: [MPTCP] Re: [PATCH 1/2] mptcp: parse and emit MP_CAPABLE option
+ according to v1 spec.
+Date: Sat, 30 Nov 2019 09:46:53 +0100
+Message-ID: <3226339a-e80d-2773-b5ff-c07f8d9c2f25@tessares.net>
+In-Reply-To: cca37990d2ee8aff73340cc96ec02b17f459c786.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2709
+X-UID: 2710
 
---===============5048346237592426495==
+--===============8439524403670265338==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-in current MPTCP, the server sends the client's key back in the syn/ack
-packet. Because of that, both tcpdump and packetdrill refuse to parse
-the mp_capable option in the syn/ack. Both RFC6824 and RFC6824bis don't
-require this in section 3.1, only the server's key should be sent in
-the syn/ack.
+Hi Davide,
 
-- change TCPOLEN_MPTCP_MPC_SYNACK from 20 (4+8+8) to 12 (4+8)
-- don't write the client's key in mp_capable syn/ack
+I prepared this email yesterday but it seems I put my laptop to sleep =
 
-3-way handshakes obtained with
+too quickly :)
 
- # ./mptcp_connect.sh -4 -c -e tx
- [...]
- # tcpdump -c3 -tnnr ns1-5de04ec0-TGs4tf-ns1-5de04ec0-TGs4tf-MPTCP-MPTCP-10=
-.0.1.1.pcap tcp
+On 29/11/2019 15:44, Davide Caratti wrote:
+> hello Matthieu, thanks a lot for looking at this!
 
-unpatched kernel:
+That's the least I can do :-)
 
- IP 10.0.1.1.49752 > 10.0.1.1.10000: Flags [S], seq 2594718977, win 65535, =
-options [mss 65495,sackOK,TS val 3944347269 ecr 0,nop,wscale 8,mptcp capabl=
-e {0xf931b304deb39a42}], length 0
- IP 10.0.1.1.10000 > 10.0.1.1.49752: Flags [S.], seq 3996234497, ack 259471=
-8978, win 65535, options [mss 65495,sackOK,TS val 3944347270 ecr 3944347269=
-,nop,wscale 8,mptcp capable[bad opt]>
-^^^ bad option
- IP 10.0.1.1.49752 > 10.0.1.1.10000: Flags [.], ack 1, win 256, options [no=
-p,nop,TS val 3944347270 ecr 3944347270,mptcp capable {0xf931b304deb39a42,0x=
-96614f185e633ce}], length 0
+> On Fri, 2019-11-29 at 14:33 +0100, Matthieu Baerts wrote:
 
-patched kernel:
+[...]
 
- IP 10.0.1.1.50850 > 10.0.1.1.10000: Flags [S], seq 626898452, win 65495, o=
-ptions [mss 65495,sackOK,TS val 2266878231 ecr 0,nop,wscale 7,mptcp capable=
- {0x7fe37bfd872b9f9f}], length 0
- IP 10.0.1.1.10000 > 10.0.1.1.50850: Flags [S.], seq 3966041155, ack 626898=
-453, win 65483, options [mss 65495,sackOK,TS val 2266878232 ecr 2266878231,=
-nop,wscale 7,mptcp capable {0x8a167e3af39b5fc1}], length 0
-^^^ no more bad option
- IP 10.0.1.1.50850 > 10.0.1.1.10000: Flags [.], ack 1, win 512, options [no=
-p,nop,TS val 2266878232 ecr 2266878232,mptcp capable {0x7fe37bfd872b9f9f,0x=
-8a167e3af39b5fc1}], length 0
+>> May you send a "proper patch"? If there is no objection (and an
+>> additional review?), I can apply it.
+> =
 
-v2: more conservative behavior when parsing received options
+> I'm doubtful of what should we do with the first hunk, i.e.
 
-Fixes: 8fa520f034ed ("mptcp: Handle MPTCP TCP options")
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/options.c  | 5 ++---
- net/mptcp/protocol.h | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+Sorry, I misunderstood this. I guess here the code below is valid if you =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 98eb0281d196..cee5c3968741 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -57,7 +57,7 @@ void mptcp_parse_option(const unsigned char *ptr, int ops=
-ize,
- 		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
- 		ptr +=3D 8;
- =
+simply replace TCPOLEN_MPTCP_MPC_SYNACK by TCPOLEN_MPTCP_MPC_ACK.
 
--		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
-+		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK) {
- 			mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
- 			ptr +=3D 8;
- 			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu, rcvr=3D%llu",
-@@ -650,8 +650,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_=
-options *opts)
- 				      MPTCP_CAP_HMAC_SHA1);
- 		put_unaligned_be64(opts->sndr_key, ptr);
- 		ptr +=3D 2;
--		if ((OPTION_MPTCP_MPC_SYNACK |
--		     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-+		if (OPTION_MPTCP_MPC_ACK & opts->suboptions) {
- 			put_unaligned_be64(opts->rcvr_key, ptr);
- 			ptr +=3D 2;
- 		}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index acad61c70de9..10347c9b4dff 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -34,7 +34,7 @@
- =
+And I see it is what you propose below.
 
- /* MPTCP suboption lengths */
- #define TCPOLEN_MPTCP_MPC_SYN		12
--#define TCPOLEN_MPTCP_MPC_SYNACK	20
-+#define TCPOLEN_MPTCP_MPC_SYNACK	12
- #define TCPOLEN_MPTCP_MPC_ACK		20
- #define TCPOLEN_MPTCP_MPJ_SYN		12
- #define TCPOLEN_MPTCP_MPJ_SYNACK	16
+When we parse the SYN. we should parse the sender key (first line) and =
+
+in the 3rd ACK both key (the if-statement).
+
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -57,16 +57,8 @@ void mptcp_parse_option(const unsigned char *ptr, int
+> opsize,
+>                  mp_opt->sndr_key =3D get_unaligned_be64(ptr);
+>                  ptr +=3D 8;
+>   =
+
+> -               if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
+> -                       mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
+> -                       ptr +=3D 8;
+> -                       pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu,
+> rcvr=3D%llu",
+> -                                mp_opt->flags, mp_opt->sndr_key,
+> -                                mp_opt->rcvr_key);
+> -               } else {
+> -                       pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu",
+> -                                mp_opt->flags, mp_opt->sndr_key);
+> -               }
+> +               pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu",
+> +                        mp_opt->flags, mp_opt->sndr_key);
+>                  break;
+>   =
+
+>          /* MPTCPOPT_MP_JOIN
+> =
+
+> here the kernel stores in mp_opt->rcvr_key the value received on the
+> "longer" mp_capable option (that is, the 3rd packet in the 3-way
+> handshake). I don't really get what the server should do with the echoed
+> key received by the client, and a grep over the code didn't help:
+I think you need it to send a MPTCP Fast Close which is not implemented =
+
+yet. I don't think we really need it somewhere else. Could it be used =
+
+with ADD_ADDR in MPTCPv1? I would need to re-read this.
+
+> $ grep -r rcvr_key net/* include/*
+
+We can see who has a SSD with NVME and can use "grep" instead of "git =
+
+grep" or others :-=C3=BE
+
+> net/mptcp/options.c:            opts->rcvr_key =3D subflow->remote_key;
+> net/mptcp/options.c:            opts->rcvr_key =3D subflow_req->remote_ke=
+y;
+> net/mptcp/options.c:                    put_unaligned_be64(opts->rcvr_key=
+, ptr);
+> include/linux/tcp.h:            u64     rcvr_key;
+> include/net/mptcp.h:    u64 rcvr_key;
+> =
+
+> I take as a friday activity (when packetdrill will be in a decent
+> shape... so, not not this friday :) ) to understand what happens to a
+> mptcp-net-next server when the client echoes back a wrong key.
+> To be as much conservative as possible (and preserve the debug printout),
+> we could just replace the above hunk with the following one:
+> =
+
+> --- >8 ---
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -57,7 +57,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+>                  mp_opt->sndr_key =3D get_unaligned_be64(ptr);
+>                  ptr +=3D 8;
+>   =
+
+> -               if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
+> +               if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK) {
+>                          mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
+>                          ptr +=3D 8;
+>                          pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu, rc=
+vr=3D%llu",
+> --- >8 ---
+> =
+
+> that will also create less troubles to Christian when he rebases his v1
+> mp_capable patch on top of this.
+> =
+
+> WDYT?
+
+Indeed, it seems to be the good fix to do: we should replace the two =
+
+TCPOLEN_MPTCP_MPC_SYNACK by TCPOLEN_MPTCP_MPC_ACK in mptcp_parse_option().
+
+Thank you for looking at that!
+
+Cheers,
+Matt
 -- =
 
-2.23.0
-
---===============5048346237592426495==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8439524403670265338==--
