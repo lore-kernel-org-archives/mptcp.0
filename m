@@ -1,105 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============0232171201905576741=="
+Content-Type: multipart/mixed; boundary="===============2423023911439757704=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 0/9] mptcp: support mptcp joins
-Date: Sat, 30 Nov 2019 23:48:51 +0100
-Message-ID: <20191130224900.8694-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH 1/9] token: handle join-before-accept-completion case
+Date: Sat, 30 Nov 2019 23:48:52 +0100
+Message-ID: <20191130224900.8694-2-fw@strlen.de>
+In-Reply-To: 20191130224900.8694-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2713
+X-UID: 2714
 
---===============0232171201905576741==
+--===============2423023911439757704==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This set aims to improve handling of multiple subflows.
+squashto: mptcp: Add handling of incoming MP_JOIN requests
 
-There are a few remaining problems, see below, but I wanted to send what
-I have now rather than keep this back.
+If we get a join request while the socket hasn't been accepted yet,
+the tree still contains the dummy reserved value.  Return NULL in
+this case, the token is still invalid.
 
-The first two patches are new, following few patches are a resend of the
-earlier RFC series, I think they're good for acceptance now.
-Patch 6 had a few changes since the RFC based on Paolos feedback, please
-see patch description for details.
+Only alternative would be to serialize such request into a work queue
+to replay it at a future data when the address might have become
+available.
 
-The last two patches are there to allow cancellation/teardown of
-not-yet completed join requests.  The connecting subflow flows
-are placed on a 'join_list' so mptcp_shutdown can close these sockets
-as well.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/token.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Last patch moves the 'eof hack' to a work queue so we don't set EOF on the
-mptcp socket until all subflows have closed.  Maybe this isn't needed, I
-would be fine with dropping it in favor of mptcp-level DATA_FIN and
-reset handling.
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 56f1bd2641f6..15cd71a33205 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -182,8 +182,13 @@ struct mptcp_sock *mptcp_token_get_sock(u32 token)
+ =
 
-The rest of this work is to have msk->conn_list contain tcp_sock structs
-without an outer 'struct socket'.
+ 	spin_lock_bh(&token_tree_lock);
+ 	conn =3D radix_tree_lookup(&token_tree, token);
+-	if (conn)
+-		sock_hold(conn);
++	if (conn) {
++		/* token still reserved? */
++		if (conn =3D=3D (struct sock *)&token_used)
++			conn =3D NULL;
++		else
++			sock_hold(conn);
++	}
+ 	spin_unlock_bh(&token_tree_lock);
+ =
 
-The problem is that for incoming join requests (which are not subject
-to accept/request socket queue), there is no 'struct socket', so the kernel
-will crash.  Even when fixing those up, a NULL sk->sk_socket is problematic
-as tcp stack will assume that such tcp sk is already detached from userspac=
-e,
-i.e. NOSPACE wakeups do not work for them.
+ 	return mptcp_sk(conn);
+-- =
 
-The solution here (suggested by Paolo) is to have sk->sk_socket refer
-to the mptcp parent socket structure.  This assignment is done by
-a private function similar to sock_graft().
+2.23.0
 
-mptcp.org kernel will be able to establish multiple connections per
-mptcp socket but does not consider those extra joins as established, as the
-"4th ack" is missing.
-
-A simple "tcp_send_ack" is enough, but there are two problems with this:
-1. It can be lost
-2. Given we are not expecting to receive any data on such flows this
-   doesn't seem to be a problem.
-
-During testing I saw that sometimes mptcp.org kernel will emit further
-join requests to mptcp-next but those trigger no response (and those
-packets do not even show up in perfs network drop monitor, sigh).
-
-I also saw a UAF at mptcp_close where a sock_hold() in tcp_close()
-caused a 0->1 recount transition, but  i've been unable to reproduce it so =
-far
-(might have been caused by a bug that has been fixed in the mean time).
-
-The following changes since commit dd25ff04840135581b833762571aac08a2a94c6c:
-
-  sendmsg: truncate source buffer if mptcp sndbuf size was set from userspa=
-ce (2019-11-30 02:47:59 +0000)
-
-are available in the Git repository at:
-
-  git://git.breakpoint.cc/fw/mptcp-next.git mptcp_multijoin_11
-
-for you to fetch changes up to 010c2e19c2d643a87c991bf1e7d4bfc140dfdba5:
-
-  don't flag parent socket as RCV_SHUTDOWN if one one subflow has closed (2=
-019-11-30 23:21:25 +0100)
-
-----------------------------------------------------------------
-Florian Westphal (9):
-      token: handle join-before-accept-completion case
-      mptcp: fix race from mptcp_close/mptcp join
-      copy connection id from first subflow to mptcp socket
-      store tcp_sk, not socket
-      add mptcp_subflow_shutdown
-      make accept not allocate kernel socket struct
-      pass subflow socket to mptcp_finish_connect
-      subflow: place further subflows on new 'join_list'
-      don't flag parent socket as RCV_SHUTDOWN if one one subflow has closed
-
- net/mptcp/pm.c       |  18 +--
- net/mptcp/protocol.c | 313 +++++++++++++++++++++++++++++++++++++----------=
-----
- net/mptcp/protocol.h |  16 +--
- net/mptcp/subflow.c  |  56 +++++----
- net/mptcp/token.c    |   9 +-
- 5 files changed, 292 insertions(+), 120 deletions(-)
-
-
-
---===============0232171201905576741==--
+--===============2423023911439757704==--
