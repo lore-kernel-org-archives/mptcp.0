@@ -1,103 +1,209 @@
-Content-Type: multipart/mixed; boundary="===============6297680943809089062=="
+Content-Type: multipart/mixed; boundary="===============9156696101588750658=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: fix option length of mp_capable syn/ack
-Date: Sat, 30 Nov 2019 09:55:00 +0100
-Message-ID: <312a6bb7-4ae4-7fb8-7d99-7765099bd5d6@tessares.net>
-In-Reply-To: 600ab80529ae9abbc860e7bbf4a8e945cd130fd3.1575054127.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: selftests: no re-ordering makes tests very slow
+Date: Sat, 30 Nov 2019 10:22:04 +0100
+Message-ID: <5af23246-cd21-6651-f016-7e9b2a4d908e@tessares.net>
+In-Reply-To: e99c3dd8-1b7a-d84d-eee4-6fbce409dbdd@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2711
+X-UID: 2712
 
---===============6297680943809089062==
+--===============9156696101588750658==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+Hello,
 
-Thank you for the patch!
+On 20/11/2019 17:12, Matthieu Baerts wrote:
+> Hello,
+> =
 
-On 29/11/2019 20:02, Davide Caratti wrote:
+> On 16/11/2019 13:41, Matthieu Baerts wrote:
+>> Hello,
+>>
+>> When trying to reproduce the crash I had, I saw that most of the time =
 
-[...]
+>> when there is no re-ordering set (which can happen even with the =
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 98eb0281d196..cee5c3968741 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -57,7 +57,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
+>> default options) but with loss and delay, the tests can be very slow =
 
-Here above, you also need to replace TCPOLEN_MPTCP_MPC_SYNACK by =
+>> with the ns4:
+> =
 
-TCPOLEN_MPTCP_MPC_ACK:
+> In my previous tests, I forgot to mention that I was testing "mptcp: add =
 
-=3D=3D=3D
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 98eb0281d196..9163fddf16b9 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -25,7 +25,7 @@ void mptcp_parse_option(const unsigned char *ptr, int =
+> basic kselftest for mptcp" commit.
+> =
 
-opsize,
-          */
-         case MPTCPOPT_MP_CAPABLE:
-                 if (opsize !=3D TCPOLEN_MPTCP_MPC_SYN &&
--                   opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
-+                   opsize !=3D TCPOLEN_MPTCP_MPC_ACK)
-                         break;
+> Here are the results I just got when asking the CI to test the latest =
 
-                 mp_opt->version =3D *ptr++ & MPTCP_VERSION_MASK;
-=3D=3D=3D
+> origin/export branch:
 
-(or check that the size is not one of the three: I guess (but to be =
+FYI, selftests from last night's CI job failed. But it doesn't look =
 
-confirmed) that the compiler will remove one check if we compare exactly =
+critical as they failed due to a timeout, probably because of this issue =
 
-the same thing: opsize !=3D 12 && opsize !=3D 12 && opsize !=3D 20)
+(no re-ordering set):
 
-Otherwise you will never match the if-statement here below.
 
-Note that this code is very similar to what is done in mptcp.org in =
+01:12:17.147 TAP version 13
+01:12:17.160 1..1
+01:12:17.211 # selftests: net/mptcp: mptcp_connect.sh
+01:12:18.149 [   53.654519] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth2: link =
 
-mptcp_parse_option().
+becomes ready
+01:12:18.434 [   53.938877] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth3: link =
 
->   		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
->   		ptr +=3D 8;
->   =
+becomes ready
+01:12:18.714 [   54.219094] IPv6: ADDRCONF(NETDEV_CHANGE): ns3eth4: link =
 
-> -		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
-> +		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK) {
->   			mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
->   			ptr +=3D 8;
->   			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu, rcvr=3D%llu",
-> @@ -650,8 +650,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_ou=
-t_options *opts)
->   				      MPTCP_CAP_HMAC_SHA1);
->   		put_unaligned_be64(opts->sndr_key, ptr);
->   		ptr +=3D 2;
-> -		if ((OPTION_MPTCP_MPC_SYNACK |
-> -		     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-> +		if (OPTION_MPTCP_MPC_ACK & opts->suboptions) {
->   			put_unaligned_be64(opts->rcvr_key, ptr);
->   			ptr +=3D 2;
->   		}
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index acad61c70de9..10347c9b4dff 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -34,7 +34,7 @@
->   =
+becomes ready
+01:12:18.814 # INFO: set ns3-5de1ddd4-0j9d6N dev ns3eth2: ethtool -K =
 
->   /* MPTCP suboption lengths */
->   #define TCPOLEN_MPTCP_MPC_SYN		12
-> -#define TCPOLEN_MPTCP_MPC_SYNACK	20
-> +#define TCPOLEN_MPTCP_MPC_SYNACK	12
+gso off
+01:12:18.877 [   54.382317] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth1: link =
 
-Should we remove it if we don't use it?
-Or rename 'TCPOLEN_MPTCP_MPC_SYN' to 'TCPOLEN_MPTCP_MPC_SYN_AND_SYNACK'?
+becomes ready
+01:12:18.939 # Created /tmp/tmp.Cr7KGLuarg (size 4403797) containing =
+
+data sent by client
+01:12:19.101 # Created /tmp/tmp.sU9xWEO4c7 (size 7175996) containing =
+
+data sent by server
+01:12:19.318 # New MPTCP socket can be blocked via sysctl		[ OK ]
+01:12:19.419 # setsockopt(..., TCP_ULP, "mptcp", ...) blocked	[ OK ]
+01:12:19.446 # INFO: validating network environment with pings
+01:12:22.687 # INFO: Using loss of 0.99% delay 218 ms on ns3eth4
+01:12:22.716 # ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP	(duration =
+
+171ms) [ OK ]
+01:12:23.068 # ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP  	(duration =
+
+163ms) [ OK ]
+01:12:23.404 # ns1 TCP   -> ns1 (10.0.1.1:10002      ) MPTCP	(duration =
+
+121ms) [ OK ]
+01:12:23.700 # ns1 MPTCP -> ns1 (dead:beef:1::1:10003) MPTCP	(duration =
+
+169ms) [ OK ]
+01:12:24.039 # ns1 MPTCP -> ns1 (dead:beef:1::1:10004) TCP  	(duration =
+
+127ms) [ OK ]
+01:12:24.343 # ns1 TCP   -> ns1 (dead:beef:1::1:10005) MPTCP	(duration =
+
+131ms) [ OK ]
+01:12:24.659 # ns1 MPTCP -> ns2 (10.0.1.2:10006      ) MPTCP	(duration =
+
+307ms) [ OK ]
+01:12:25.155 # ns1 MPTCP -> ns2 (dead:beef:1::2:10007) MPTCP	(duration =
+
+312ms) [ OK ]
+01:12:25.655 # ns1 MPTCP -> ns2 (10.0.2.1:10008      ) MPTCP	(duration =
+
+312ms) [ OK ]
+01:12:26.154 # ns1 MPTCP -> ns2 (dead:beef:2::1:10009) MPTCP	(duration =
+
+297ms) [ OK ]
+01:12:26.623 # ns1 MPTCP -> ns3 (10.0.2.2:10010      ) MPTCP	(duration =
+
+466ms) [ OK ]
+01:12:27.267 # ns1 MPTCP -> ns3 (dead:beef:2::2:10011) MPTCP	(duration =
+
+366ms) [ OK ]
+01:12:27.813 # ns1 MPTCP -> ns3 (10.0.3.2:10012      ) MPTCP	(duration =
+
+458ms) [ OK ]
+01:12:28.445 # ns1 MPTCP -> ns3 (dead:beef:3::2:10013) MPTCP	(duration =
+
+428ms) [ OK ]
+01:12:29.062 # ns1 MPTCP -> ns4 (10.0.3.1:10014      ) MPTCP	(duration =
+
+34112ms) [ OK ]
+01:13:03.333 # ns1 MPTCP -> ns4 (dead:beef:3::1:10015) MPTCP	(duration =
+
+16252ms) [ OK ]
+01:13:19.755 # ns2 MPTCP -> ns1 (10.0.1.1:10016      ) MPTCP	(duration =
+
+305ms) [ OK ]
+01:13:20.253 # ns2 MPTCP -> ns1 (dead:beef:1::1:10017) MPTCP	(duration =
+
+328ms) [ OK ]
+01:13:20.731 # ns2 MPTCP -> ns3 (10.0.2.2:10018      ) MPTCP	(duration =
+
+430ms) [ OK ]
+01:13:21.342 # ns2 MPTCP -> ns3 (dead:beef:2::2:10019) MPTCP	(duration =
+
+325ms) [ OK ]
+01:13:21.845 # ns2 MPTCP -> ns3 (10.0.3.2:10020      ) MPTCP	(duration =
+
+361ms) [ OK ]
+01:13:22.384 # ns2 MPTCP -> ns3 (dead:beef:3::2:10021) MPTCP	(duration =
+
+332ms) [ OK ]
+01:13:22.902 # ns2 MPTCP -> ns4 (10.0.3.1:10022      ) MPTCP	(duration =
+
+35082ms) [ OK ]
+01:13:58.156 # ns2 MPTCP -> ns4 (dead:beef:3::1:10023) MPTCP	(duration =
+
+39069ms) [ OK ]
+01:14:37.397 # ns3 MPTCP -> ns1 (10.0.1.1:10024      ) MPTCP	(duration =
+
+405ms) [ OK ]
+01:14:37.975 # ns3 MPTCP -> ns1 (dead:beef:1::1:10025) MPTCP	(duration =
+
+434ms) [ OK ]
+01:14:38.595 # ns3 MPTCP -> ns2 (10.0.1.2:10026      ) MPTCP	(duration =
+
+346ms) [ OK ]
+01:14:39.118 # ns3 MPTCP -> ns2 (dead:beef:1::2:10027) MPTCP	(duration =
+
+351ms) [ OK ]
+01:14:39.654 # ns3 MPTCP -> ns2 (10.0.2.1:10028      ) MPTCP	(duration =
+
+363ms) [ OK ]
+01:14:40.195 # ns3 MPTCP -> ns2 (dead:beef:2::1:10029) MPTCP	(duration =
+
+395ms) [ OK ]
+01:14:40.770 # ns3 MPTCP -> ns4 (10.0.3.1:10030      ) MPTCP	(duration =
+
+2908ms) [ OK ]
+01:14:43.867 # ns3 MPTCP -> ns4 (dead:beef:3::1:10031) MPTCP	(duration =
+
+2919ms) [ OK ]
+01:14:46.976 # ns4 MPTCP -> ns1 (10.0.1.1:10032      ) MPTCP	(duration =
+
+52371ms) [ OK ]
+01:15:39.533 # ns4 MPTCP -> ns1 (dead:beef:1::1:10033) MPTCP	(duration =
+
+70078ms) [ OK ]
+01:16:49.781 # ns4 MPTCP -> ns2 (10.0.1.2:10034      ) MPTCP	(duration =
+
+34180ms) [ OK ]
+01:17:24.135 # ns4 MPTCP -> ns2 (dead:beef:1::2:10035) MPTCP	(duration =
+
+46360ms) [ OK ]
+01:18:10.673 # ns4 MPTCP -> ns2 (10.0.2.1:10036      ) MPTCP	(duration =
+
+63281ms) [ OK ]
+01:19:14.119 # ns4 MPTCP -> ns2 (dead:beef:2::1:10037) MPTCP =
+
+./mptcp_connect.sh: line 104:  1144 Terminated              ip netns =
+
+exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s =
+
+${srv_proto} $extra_args $local_addr < "$sin" > "$sout"
+01:19:47.280 # ./mptcp_connect.sh: line 104:  1150 Terminated =
+
+   ip netns exec ${connector_ns} ./mptcp_connect -t $timeout -p $port -s =
+
+${cl_proto} $extra_args $connect_addr < "$cin" > "$cout"
+01:19:47.498 not ok 1 selftests: net/mptcp: mptcp_connect.sh # TIMEOUT
+
+
+The current timeout is 450.
 
 Cheers,
 Matt
@@ -108,4 +214,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6297680943809089062==--
+--===============9156696101588750658==--
