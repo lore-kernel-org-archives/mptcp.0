@@ -1,36 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============0933361590213268398=="
+Content-Type: multipart/mixed; boundary="===============8667608668456492673=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/9] token: handle join-before-accept-completion
- case
-Date: Mon, 02 Dec 2019 17:57:44 +0100
-Message-ID: <20191202165744.GQ795@breakpoint.cc>
-In-Reply-To: 09c7e48261b8c9040eb8d8864e42257b03894939.camel@redhat.com
+Subject: [MPTCP] [PATCH 0/3] mptcp: support for rfc6824 MP CAPABLE hanshake
+Date: Mon, 02 Dec 2019 09:15:01 -0800
+Message-ID: <20191202171504.88739-1-cpaasch@apple.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2744
+X-UID: 2745
 
---===============0933361590213268398==
+--===============8667608668456492673==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2019-12-02 at 14:31 +0100, Florian Westphal wrote:
-> > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > > Note, with MPTCP v1, we will probably have to add additional checks
-> > > here (e.g. con->fourth_ack must be true). Perhaps we can add that
-> > > already?
-> > =
+Second iteration of the v1 MP_CAPABLE handshake, adding the handling of
+the option-space issue.
 
-> > I'm not sure this is the right location.  Should that check not
-> > be done where we add the ssk to the conn_list?
-> =
+The patches apply just before "mptcp: add basic kselftest for mptcp".
 
-> My [mis?]understanding is that MP_JOIN should not be attemped before
-> the msk is fully established (fourth_ack), so I thought it would be
-> nice to catch that erroneous condition ASAP.
+Christoph Paasch (2):
+  mptcp: parse and emit MP_CAPABLE option according to v1 spec.
+  mptcp: process MP_CAPABLE data option.
 
-I see.  What would that buy us though wrt. error handling?
---===============0933361590213268398==--
+Paolo Abeni (1):
+  mptcp: move from sha1 (v0) to sha256 (v1)
+
+ include/linux/tcp.h   |   3 +-
+ include/net/mptcp.h   |  11 +-
+ net/ipv4/tcp_input.c  |   2 +-
+ net/ipv4/tcp_output.c |   2 +-
+ net/mptcp/Kconfig     |  10 ++
+ net/mptcp/crypto.c    | 139 +++++++++++++++----------
+ net/mptcp/options.c   | 229 ++++++++++++++++++++++++++++++++----------
+ net/mptcp/protocol.c  |  22 ++--
+ net/mptcp/protocol.h  |  18 ++--
+ net/mptcp/subflow.c   |  43 +++++++-
+ 10 files changed, 349 insertions(+), 130 deletions(-)
+
+-- =
+
+2.23.0
+
+--===============8667608668456492673==--
