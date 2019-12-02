@@ -1,38 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============4179573268195118967=="
+Content-Type: multipart/mixed; boundary="===============8341035039996532074=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/9] token: handle join-before-accept-completion
- case
-Date: Mon, 02 Dec 2019 16:00:44 +0100
-Message-ID: <09c7e48261b8c9040eb8d8864e42257b03894939.camel@redhat.com>
-In-Reply-To: 20191202133137.GN795@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH 0/3] sendmsg: fix pending issues.
+Date: Mon, 02 Dec 2019 16:30:06 +0100
+Message-ID: <6425f277f105b20357fd975c79b5fb87b35cb129.camel@redhat.com>
+In-Reply-To: b995fb4b-fb96-dd8d-b27e-dd9bcdd66194@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2741
+X-UID: 2742
 
---===============4179573268195118967==
+--===============8341035039996532074==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-12-02 at 14:31 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > Note, with MPTCP v1, we will probably have to add additional checks
-> > here (e.g. con->fourth_ack must be true). Perhaps we can add that
-> > already?
+On Mon, 2019-12-02 at 13:57 +0100, Matthieu Baerts wrote:
+> Hi Paolo,
 > =
 
-> I'm not sure this is the right location.  Should that check not
-> be done where we add the ssk to the conn_list?
+> On 02/12/2019 11:24, Paolo Abeni wrote:
+> > This is just a rebase of the initial RFC post.
+> =
 
-My [mis?]understanding is that MP_JOIN should not be attemped before
-the msk is fully established (fourth_ack), so I thought it would be
-nice to catch that erroneous condition ASAP. =
+> Thank you for the rebase!
+> =
 
+> > The patch 1 should be inserted just after "tcp: clean ext on tx recycle"
+> > =
 
-Cheers,
+> > The patches 2 and 3 have explicit individual squash-to tags, but will c=
+asue a
+> > lot of conflicts, the uneasy ones to solve are on patch
+> > "mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
+> > =
+
+> > A tree rebased with the above patches applied is available at:
+> > =
+
+> > https://github.com/pabeni/mptcp/tree/sendmsg_fix_2
+> =
+
+> I hope you don't mind if I don't use your branch directly. I was going =
+
+> to apply Mat's data-FIN patch. And look at the code on your branch in =
+
+> case of conflicts.
+
+WFM :)
+
+Whatever is easier for you.
+
+It looks like we have some pending conflicting patches - I hope v1
+support should land soon, too... - so really whatever works best for
+you will work for me, too.
+
+Thanks,
 
 Paolo
 
---===============4179573268195118967==--
+--===============8341035039996532074==--
