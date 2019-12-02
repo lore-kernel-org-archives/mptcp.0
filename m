@@ -1,55 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============7773446633714623720=="
+Content-Type: multipart/mixed; boundary="===============2071408434211408915=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3] mptcp: fix option length of mp_capable syn/ack
-Date: Mon, 02 Dec 2019 11:25:27 +0100
-Message-ID: <d3bf330f-4c55-4018-9797-fa4a0e50a177@tessares.net>
-In-Reply-To: 6941c970fd9ce038972887af590fc685746f4427.1575279172.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH 1/9] token: handle join-before-accept-completion
+ case
+Date: Mon, 02 Dec 2019 13:04:34 +0100
+Message-ID: <fb50431e6af8c7dd09131420268068fa48b6882f.camel@redhat.com>
+In-Reply-To: 20191130224900.8694-2-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2732
+X-UID: 2733
 
---===============7773446633714623720==
+--===============2071408434211408915==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
-
-On 02/12/2019 11:04, Davide Caratti wrote:
-> in current MPTCP, the server sends the client's key back in the syn/ack
-> packet. Because of that, both tcpdump and packetdrill refuse to parse
-> the mp_capable option in the syn/ack. Both RFC6824 and RFC6824bis don't
-> require this in section 3.1, only the server's key should be sent in
-> the syn/ack.
+On Sat, 2019-11-30 at 23:48 +0100, Florian Westphal wrote:
+> squashto: mptcp: Add handling of incoming MP_JOIN requests
 > =
 
-> - change TCPOLEN_MPTCP_MPC_SYNACK from 20 (4+8+8) to 12 (4+8)
-> - don't write the client's key in mp_capable syn/ack
-> - adjust tests in mptcp_parse_option() to cope with the changed
->    value of TCPOLEN_MPTCP_MPC_SYNACK
+> If we get a join request while the socket hasn't been accepted yet,
+> the tree still contains the dummy reserved value.  Return NULL in
+> this case, the token is still invalid.
+> =
 
-[...]
+> Only alternative would be to serialize such request into a work queue
+> to replay it at a future data when the address might have become
+> available.
+> =
 
-> v2: more conservative behavior when parsing received options
-> v3: adjust tests in mptcp_parse_option() to catch all possible
->      values of MP_CAPABLE option length specified by v0 protocol,
->      thanks Matthieu Baerts.
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  net/mptcp/token.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> =
 
-Thank you for this new version! It looks good to me.
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index 56f1bd2641f6..15cd71a33205 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -182,8 +182,13 @@ struct mptcp_sock *mptcp_token_get_sock(u32 token)
+>  =
 
-I will wait for Paolo and/or Christoph's ACK as you added them in cc =
+>  	spin_lock_bh(&token_tree_lock);
+>  	conn =3D radix_tree_lookup(&token_tree, token);
+> -	if (conn)
+> -		sock_hold(conn);
+> +	if (conn) {
+> +		/* token still reserved? */
+> +		if (conn =3D=3D (struct sock *)&token_used)
+> +			conn =3D NULL;
+> +		else
+> +			sock_hold(conn);
+> +	}
+>  	spin_unlock_bh(&token_tree_lock);
+>  =
 
-(for the discussion in the MPTCPv1 patches).
+>  	return mptcp_sk(conn);
 
-Cheers,
-Matt
--- =
+LGTM.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7773446633714623720==--
+Note, with MPTCP v1, we will probably have to add additional checks
+here (e.g. con->fourth_ack must be true). Perhaps we can add that
+already?
+
+/P
+
+--===============2071408434211408915==--
