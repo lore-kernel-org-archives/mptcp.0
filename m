@@ -1,59 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============3789923662678779083=="
+Content-Type: multipart/mixed; boundary="===============1272877957855384404=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 9/9] don't flag parent socket as RCV_SHUTDOWN if
- one one subflow has closed
-Date: Mon, 02 Dec 2019 13:43:12 +0100
-Message-ID: <9fecd7952e5f37bf025d368143f15f1cb69964c5.camel@redhat.com>
-In-Reply-To: 20191130224900.8694-10-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH 0/3] sendmsg: fix pending issues.
+Date: Mon, 02 Dec 2019 13:57:18 +0100
+Message-ID: <b995fb4b-fb96-dd8d-b27e-dd9bcdd66194@tessares.net>
+In-Reply-To: cover.1575281285.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2736
+X-UID: 2737
 
---===============3789923662678779083==
+--===============1272877957855384404==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2019-11-30 at 23:49 +0100, Florian Westphal wrote:
-> @@ -642,7 +647,7 @@ bool mptcp_subflow_data_available(struct sock *sk)
->  		/* set EoF only there is no data available - we already spooled
->  		 * all the pending skbs
->  		 */
-> -		if (sk->sk_shutdown & RCV_SHUTDOWN || sk->sk_state =3D=3D TCP_CLOSE)
-> +		if (subflow_is_done(sk))
->  			subflow->rx_eof =3D 1;
->  		return false;
->  	}
-> @@ -666,13 +671,15 @@ static void subflow_data_ready(struct sock *sk)
->  		return;
->  	}
->  =
+Hi Paolo,
 
-> -	/* always propagate the EoF */
-> -	if (mptcp_subflow_data_available(sk) || subflow->rx_eof) {
-> +	if (mptcp_subflow_data_available(sk)) {
->  		smp_mb__before_atomic();
->  		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
->  		smp_mb__after_atomic();
->  =
+On 02/12/2019 11:24, Paolo Abeni wrote:
+> This is just a rebase of the initial RFC post.
 
->  		parent->sk_data_ready(parent);
-> +	} else if (subflow->rx_eof) {
-> +		/* tell parent to (re-)check eof on all subflows */
-> +		mptcp_subflow_eof(parent);
->  	}
->  }
+Thank you for the rebase!
+
+> The patch 1 should be inserted just after "tcp: clean ext on tx recycle"
 > =
 
+> The patches 2 and 3 have explicit individual squash-to tags, but will cas=
+ue a
+> lot of conflicts, the uneasy ones to solve are on patch
+> "mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
+> =
 
-With subflow_state_change() in place, do we still need the above
-chunks?!? e.g. why is not subflow_state_change() enough to catch the
-subflow eof condition?
+> A tree rebased with the above patches applied is available at:
+> =
 
-Thanks!
+> https://github.com/pabeni/mptcp/tree/sendmsg_fix_2
 
-Paolo
+I hope you don't mind if I don't use your branch directly. I was going =
 
---===============3789923662678779083==--
+to apply Mat's data-FIN patch. And look at the code on your branch in =
+
+case of conflicts.
+
+Or I can re-create the tree now using your branch if you prefer. If some =
+
+fixes are needed, they can be done in follow-up patches (if any). I only =
+
+have to re-apply Davide's patch from this morning, that's easy to do.
+
+WDYT?
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============1272877957855384404==--
