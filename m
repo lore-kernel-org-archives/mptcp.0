@@ -1,40 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============1765629135148137761=="
+Content-Type: multipart/mixed; boundary="===============2994354168587323716=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] selftests: remove pcap captures with 'make clean'
-Date: Mon, 02 Dec 2019 11:19:49 +0100
-Message-ID: <063d242c-f303-5c21-f910-75d234f6ca7e@tessares.net>
-In-Reply-To: f1d3c918c854ade4978b423865d253899297f372.1575155865.git.dcaratti@redhat.com
+Subject: [MPTCP] [PATCH 0/3] sendmsg: fix pending issues.
+Date: Mon, 02 Dec 2019 11:24:20 +0100
+Message-ID: <cover.1575281285.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2727
+X-UID: 2728
 
---===============1765629135148137761==
+--===============2994354168587323716==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+This is just a rebase of the initial RFC post.
 
-On 01/12/2019 00:21, Davide Caratti wrote:
-> use EXTRA_CLEAN variable to ensure that pcap captures are removed with
-> 'make clean'
+The patch 1 should be inserted just after "tcp: clean ext on tx recycle"
 
-Good idea! Just applied:
+The patches 2 and 3 have explicit individual squash-to tags, but will casue=
+ a
+lot of conflicts, the uneasy ones to solve are on patch
+"mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
 
-- bf5bea6a4d55: "squashed" in "mptcp: add basic kselftest for mptcp"
-- 04af7732a5cc..55423f0702b6: result
+A tree rebased with the above patches applied is available at:
 
-Tests/export in progress.
+https://github.com/pabeni/mptcp/tree/sendmsg_fix_2
 
-Cheers,
-Matt
+The original cover letter was as follow (TL;DR: patch 1 and 2 can be
+controversial, feedback needed!!!)
+---
+
+This series addresses the known pending issue in mptcp_sendmsg,
+specifically:
+
+* the crash repored by matt (patch 3/3)
+* the possible data corruption on ext allocation failure - the "TODO"" in
+  sendmsg_frag (patches 1,2/3)
+
+uunfortunately none of the above is actually tested, since I can't
+reproduce the issues - still the problems look real.
+
+This is not squashed yet, as it will conflict with most patches, I'm just
+trying to collect feedback.
+
+Open points:
+
+The patch 2/3 introduces a per socket cache of a single skb_ext. As per
+recent upstream changes related to TCP rx/tx skb cache, that is debatable,
+could have subtle performance and memory usage implications.
+We could avoid such cache allways allocating the extension for each
+sendmsg_frag() call, and than free it if unused. Both options looks
+sub-optiomal to me do you have any preference? - I do have some for the
+selected impl ;)
+
+The new API exposed by patch 1/3 is open to misusage. e.g. the caller could
+allocate a skb_ext, set arbitrary ext->offset[id] values and than call
+__skb_ext_add(). That will lead to memory leak or GPF. I did no try to
+address the issue, the '__' prefix should guide the users to extra care.
+Can we do any better?
+
+(this is a pre-existing topic) the sk_stream_wait_memory() calls in
+sk_stream_wait_memory(), waits on the subflow. Should we wait on the mptcp
+socket instead? Otherwise should we release the mptcp socket lock, before s=
+uch
+call?
+
+Paolo Abeni (1):
+  skb: add helpers to allocate ext independently from sk_buff
+
+ include/linux/skbuff.h |  3 +++
+ net/core/skbuff.c      | 16 +++++++++++++++-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1765629135148137761==--
+2.21.0
+
+--===============2994354168587323716==--
