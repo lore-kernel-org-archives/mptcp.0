@@ -1,131 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============2757097518274865478=="
+Content-Type: multipart/mixed; boundary="===============7379134018341201522=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/3] mptcp: avoid data stream corruption on allocation
- failure.
-Date: Mon, 02 Dec 2019 11:24:22 +0100
-Message-ID: <72975862a8d9c77313a512a29a91e62165e0c984.1575281341.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 3/3] imptcp: properly detect skb collapsing
+Date: Mon, 02 Dec 2019 11:24:23 +0100
+Message-ID: <0848ecdf13d13ee6614d98095a573d5e87543334.1575281351.git.pabeni@redhat.com>
 In-Reply-To: cover.1575281285.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2730
+X-UID: 2731
 
---===============2757097518274865478==
+--===============7379134018341201522==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently, when if mpext allocation fails, the data stream
-is corrupted, as we can add the required DSS nor roll-back
-the TCP status.
+Currently we can misdetect skb collapsing, which will lead
+to a kernel warning and crash.
 
-Allocate a skb_ext before the actuall skb_buff creation/TCP
-status update: in case of memory allocation failure we can
-bail early, avoiding the above condition.
+Changing a bit the detection logic for skb collapsing we
+can address the issue.
 
-Additionally, if the ext is unused to to skb collapsing,
-cache the ext in the msk for the next send.
-
-Squash-to: "mptcp: Write MPTCP DSS headers to outgoing data packets"
+Squash-to: "mptcp: allow collapsing consecutive sendpages on the same subst=
+ream"
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 39 +++++++++++++++++++++++++--------------
- net/mptcp/protocol.h |  1 +
- 2 files changed, 26 insertions(+), 14 deletions(-)
+ net/mptcp/protocol.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3180202e56b4..ae158ab08101 100644
+index 1c489eccdb58..ba918c4fdcc8 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -55,6 +55,14 @@ static struct sock *mptcp_subflow_get(const struct mptcp=
-_sock *msk)
- 	return NULL;
- }
+@@ -107,8 +107,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	bool collapsed, can_collapse =3D false;
+ 	struct mptcp_ext *mpext =3D NULL;
++	struct sk_buff *skb, *tail;
+ 	struct page_frag *pfrag;
+-	struct sk_buff *skb;
+ 	size_t psize;
  =
 
-+static bool mptcp_ext_cache_refill(struct mptcp_sock *msk)
-+{
-+	if (!msk->cached_ext)
-+		msk->cached_ext =3D skb_ext_alloc();
-+
-+	return msk->cached_ext;
-+}
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct msghdr *msg, long *timeo)
- {
-@@ -69,7 +77,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct soc=
-k *ssk,
- 	 * from one substream to another, but do per subflow memory accounting
- 	 */
- 	pfrag =3D sk_page_frag(sk);
--	while (!sk_page_frag_refill(ssk, pfrag)) {
-+	while (!sk_page_frag_refill(ssk, pfrag) ||
-+	       !mptcp_ext_cache_refill(msk)) {
- 		ret =3D sk_stream_wait_memory(ssk, timeo);
- 		if (ret)
- 			return ret;
-@@ -103,19 +112,19 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ 	/* use the mptcp page cache so that we can easily move the data
+@@ -165,10 +165,16 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
  sock *ssk,
+ 	if (unlikely(ret < psize))
  		iov_iter_revert(&msg->msg_iter, psize - ret);
  =
 
- 	skb =3D tcp_write_queue_tail(ssk);
--	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
--	if (mpext) {
--		memset(mpext, 0, sizeof(*mpext));
--		mpext->data_seq =3D msk->write_seq;
--		mpext->subflow_seq =3D mptcp_subflow_ctx(ssk)->rel_write_seq;
--		mpext->data_len =3D ret;
--		mpext->use_map =3D 1;
--		mpext->dsn64 =3D 1;
--
--		pr_debug("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u dsn64=3D%d",
--			 mpext->data_seq, mpext->subflow_seq, mpext->data_len,
--			 mpext->dsn64);
--	} /* TODO: else fallback */
-+	mpext =3D __skb_ext_add(skb, SKB_EXT_MPTCP, msk->cached_ext);
-+	msk->cached_ext =3D NULL;
-+
-+	memset(mpext, 0, sizeof(*mpext));
-+	mpext->data_seq =3D msk->write_seq;
-+	mpext->subflow_seq =3D mptcp_subflow_ctx(ssk)->rel_write_seq;
-+	mpext->data_len =3D ret;
-+	mpext->use_map =3D 1;
-+	mpext->dsn64 =3D 1;
-+
-+	pr_debug("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u dsn64=3D%d",
-+		 mpext->data_seq, mpext->subflow_seq, mpext->data_len,
-+		 mpext->dsn64);
- =
-
- 	pfrag->offset +=3D ret;
- 	msk->write_seq +=3D ret;
-@@ -242,6 +251,8 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		sock_release(mptcp_subflow_tcp_socket(subflow));
+-	collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
++	/* if the tail skb extension is still the cached one, collapsing
++	 * really happened. Note: we can't check for 'same skb' as the sk_buff
++	 * hdr on tail can be transmitted, freed and re-allocated by the
++	 * do_tcp_sendpages() call
++	 */
++	tail =3D tcp_write_queue_tail(ssk);
++	collapsed =3D mpext &&
++		    mpext =3D=3D (tail ? skb_ext_find(tail, SKB_EXT_MPTCP) : NULL);
+ 	if (collapsed) {
+ 		WARN_ON_ONCE(!can_collapse);
+-		/* when collapsing mpext always exists */
+ 		mpext->data_len +=3D ret;
+ 		goto out;
  	}
- =
-
-+	if (msk->cached_ext)
-+		__skb_ext_put(msk->cached_ext);
- 	release_sock(sk);
- 	sk_common_release(sk);
- }
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 412718c1ae5c..3b8d1548dda1 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -58,6 +58,7 @@ struct mptcp_sock {
- 	u64		write_seq;
- 	u64		ack_seq;
- 	u32		token;
-+	struct	skb_ext *cached_ext;	/* for the next sendmsg */
- 	struct list_head conn_list;
- 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
- };
 -- =
 
 2.21.0
 
---===============2757097518274865478==--
+--===============7379134018341201522==--
