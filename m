@@ -1,62 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============8341035039996532074=="
+Content-Type: multipart/mixed; boundary="===============5004657441967885040=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/3] sendmsg: fix pending issues.
-Date: Mon, 02 Dec 2019 16:30:06 +0100
-Message-ID: <6425f277f105b20357fd975c79b5fb87b35cb129.camel@redhat.com>
-In-Reply-To: b995fb4b-fb96-dd8d-b27e-dd9bcdd66194@tessares.net
+Subject: [MPTCP] Re: [PATCH 8/9] subflow: place further subflows on new
+ 'join_list'
+Date: Mon, 02 Dec 2019 17:56:31 +0100
+Message-ID: <20191202165631.GP795@breakpoint.cc>
+In-Reply-To: ef99ffecef8739ab5b90e6cec093547e86206887.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2742
+X-UID: 2743
 
---===============8341035039996532074==
+--===============5004657441967885040==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-12-02 at 13:57 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > Not done yet:
+> > 1. extend mptcp worker to collect timed-out entries
+> > 2. prevent arbitrary growth of pending ssks.
 > =
 
-> On 02/12/2019 11:24, Paolo Abeni wrote:
-> > This is just a rebase of the initial RFC post.
-> =
+> Uhm... am I correct, the above will always happen if the client send
+> [multiple] MP_JOIN at synack reception time? what can we do to prevent
+> that? scheduling a cleanup workqueue on error?
 
-> Thank you for the rebase!
-> =
+We can't prevent it, client could flood us with hundreds of joins.
 
-> > The patch 1 should be inserted just after "tcp: clean ext on tx recycle"
-> > =
+I think its best if we just add a upper ceiling on both
+join and conn lists.
 
-> > The patches 2 and 3 have explicit individual squash-to tags, but will c=
-asue a
-> > lot of conflicts, the uneasy ones to solve are on patch
-> > "mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
-> > =
+As for cleanup, I think we could have the rtx worker scan the
+list for timed-out/"dead" joins.
 
-> > A tree rebased with the above patches applied is available at:
-> > =
-
-> > https://github.com/pabeni/mptcp/tree/sendmsg_fix_2
-> =
-
-> I hope you don't mind if I don't use your branch directly. I was going =
-
-> to apply Mat's data-FIN patch. And look at the code on your branch in =
-
-> case of conflicts.
-
-WFM :)
-
-Whatever is easier for you.
-
-It looks like we have some pending conflicting patches - I hope v1
-support should land soon, too... - so really whatever works best for
-you will work for me, too.
-
-Thanks,
-
-Paolo
-
---===============8341035039996532074==--
+--===============5004657441967885040==--
