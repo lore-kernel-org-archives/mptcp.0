@@ -1,140 +1,210 @@
-Content-Type: multipart/mixed; boundary="===============1907193429971431967=="
+Content-Type: multipart/mixed; boundary="===============0680502487167603201=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/9] mptcp: support mptcp joins
-Date: Mon, 02 Dec 2019 19:10:28 +0100
-Message-ID: <8c88c7463ff33610ca4e94915aff388b33a24fd1.camel@redhat.com>
+Subject: [MPTCP] [PATCH v2 9/9] don't flag parent socket as RCV_SHUTDOWN if
+ one one subflow has closed
+Date: Mon, 02 Dec 2019 20:10:05 +0100
+Message-ID: <20191202191005.30879-1-fw@strlen.de>
 In-Reply-To: 20191130224900.8694-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 2751
+X-UID: 2752
 
---===============1907193429971431967==
+--===============0680502487167603201==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2019-11-30 at 23:48 +0100, Florian Westphal wrote:
-> This set aims to improve handling of multiple subflows.
-> =
+instead schedule the mptcp worker and tell it to check eof state on all
+subflows.  If all have closed, then also flag the mptcp socket as closed
+and wake up userspace process blocking in poll().
 
-> There are a few remaining problems, see below, but I wanted to send what
-> I have now rather than keep this back.
-> =
+v2: move eof checks to subflow_state_change() (Paolo)
 
-> The first two patches are new, following few patches are a resend of the
-> earlier RFC series, I think they're good for acceptance now.
-> Patch 6 had a few changes since the RFC based on Paolos feedback, please
-> see patch description for details.
-> =
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 41 +++++++++++++++++++++++++++++++++--------
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 22 ++++++++++++----------
+ 3 files changed, 47 insertions(+), 18 deletions(-)
 
-> The last two patches are there to allow cancellation/teardown of
-> not-yet completed join requests.  The connecting subflow flows
-> are placed on a 'join_list' so mptcp_shutdown can close these sockets
-> as well.
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 36097008dd4a..feb4658b13a8 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -61,6 +61,15 @@ void mptcp_data_acked(struct sock *sk)
+ 		sock_hold(sk);
+ }
+ =
 
-> Last patch moves the 'eof hack' to a work queue so we don't set EOF on the
-> mptcp socket until all subflows have closed.  Maybe this isn't needed, I
-> would be fine with dropping it in favor of mptcp-level DATA_FIN and
-> reset handling.
-> =
++void mptcp_subflow_eof(struct sock *sk)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	if (!test_and_set_bit(MPTCP_WORK_EOF, &msk->flags) &&
++	    schedule_work(&msk->rtx_work))
++		sock_hold(sk);
++}
++
+ static void mptcp_stop_timer(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk =3D inet_csk(sk);
+@@ -95,22 +104,14 @@ static struct sock *mptcp_subflow_recv_lookup(const st=
+ruct mptcp_sock *msk)
+ {
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	struct mptcp_subflow_context *subflow;
+-	int receivers =3D 0;
+ =
 
-> The rest of this work is to have msk->conn_list contain tcp_sock structs
-> without an outer 'struct socket'.
-> =
+ 	sock_owned_by_me(sk);
+ =
 
-> The problem is that for incoming join requests (which are not subject
-> to accept/request socket queue), there is no 'struct socket', so the kern=
-el
-> will crash.  Even when fixing those up, a NULL sk->sk_socket is problemat=
-ic
-> as tcp stack will assume that such tcp sk is already detached from usersp=
-ace,
-> i.e. NOSPACE wakeups do not work for them.
-> =
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		if (subflow->data_avail)
+ 			return mptcp_subflow_tcp_sock(subflow);
+-
+-		receivers +=3D !subflow->rx_eof;
+ 	}
+ =
 
-> The solution here (suggested by Paolo) is to have sk->sk_socket refer
-> to the mptcp parent socket structure.  This assignment is done by
-> a private function similar to sock_graft().
-> =
+-	/* hopefully temporary hack: propagate shutdown status from subflow
+-	 * to msk, when all subflows agree on it
+-	 */
+-	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN))
+-		sk->sk_shutdown |=3D RCV_SHUTDOWN;
+ 	return NULL;
+ }
+ =
 
-> mptcp.org kernel will be able to establish multiple connections per
-> mptcp socket but does not consider those extra joins as established, as t=
-he
-> "4th ack" is missing.
-> =
+@@ -789,6 +790,27 @@ static void __mptcp_close_ssk(struct sock *sk, struct =
+sock *ssk,
+ 	}
+ }
+ =
 
-> A simple "tcp_send_ack" is enough, but there are two problems with this:
-> 1. It can be lost
-> 2. Given we are not expecting to receive any data on such flows this
->    doesn't seem to be a problem.
-> =
++static void mptcp_check_for_eof(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk =3D (struct sock *)msk;
++	int receivers =3D 0;
++
++	mptcp_for_each_subflow(msk, subflow)
++		receivers +=3D !subflow->rx_eof;
++
++	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
++		/* hopefully temporary hack: propagate shutdown status
++		 * to msk, when all subflows agree on it
++		 */
++		sk->sk_shutdown |=3D RCV_SHUTDOWN;
++
++		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
++		set_bit(MPTCP_DATA_READY, &msk->flags);
++		sk->sk_data_ready(sk);
++	}
++}
++
+ static void mptcp_worker(struct work_struct *work)
+ {
+ 	int orig_len, orig_offset, ret, mss_now =3D 0, size_goal =3D 0;
+@@ -806,6 +828,9 @@ static void mptcp_worker(struct work_struct *work)
+ 	lock_sock(sk);
+ 	mptcp_clean_una(sk);
+ =
 
-> During testing I saw that sometimes mptcp.org kernel will emit further
-> join requests to mptcp-next but those trigger no response (and those
-> packets do not even show up in perfs network drop monitor, sigh).
-> =
++	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
++		mptcp_check_for_eof(msk);
++
+ 	if (!test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
+ 		goto unlock;
+ =
 
-> I also saw a UAF at mptcp_close where a sock_hold() in tcp_close()
-> caused a 0->1 recount transition, but  i've been unable to reproduce it s=
-o far
-> (might have been caused by a bug that has been fixed in the mean time).
-> =
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 990da61fa51b..cf3b4ce483d9 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -78,6 +78,7 @@
+ #define MPTCP_DATA_READY	BIT(0)
+ #define MPTCP_WORK_RTX		BIT(1)
+ #define MPTCP_SEND_SPACE	BIT(2)
++#define MPTCP_WORK_EOF		BIT(3)
+ =
 
-> The following changes since commit dd25ff04840135581b833762571aac08a2a94c=
-6c:
-> =
+ static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
+ {
+@@ -291,6 +292,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ 		       struct tcp_options_received *opt_rx);
+ =
 
->   sendmsg: truncate source buffer if mptcp sndbuf size was set from users=
-pace (2019-11-30 02:47:59 +0000)
-> =
+ void mptcp_finish_connect(struct sock *sk);
++void mptcp_subflow_eof(struct sock *sk);
+ bool mptcp_finish_join(struct sock *sk);
+ void mptcp_data_acked(struct sock *sk);
+ =
 
-> are available in the Git repository at:
-> =
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8c13e9a145d5..fe6c61367bd7 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -639,11 +639,6 @@ bool mptcp_subflow_data_available(struct sock *sk)
+ =
 
->   git://git.breakpoint.cc/fw/mptcp-next.git mptcp_multijoin_11
-> =
+ 	if (!subflow_check_data_avail(sk)) {
+ 		subflow->data_avail =3D 0;
+-		/* set EoF only there is no data available - we already spooled
+-		 * all the pending skbs
+-		 */
+-		if (sk->sk_shutdown & RCV_SHUTDOWN || sk->sk_state =3D=3D TCP_CLOSE)
+-			subflow->rx_eof =3D 1;
+ 		return false;
+ 	}
+ =
 
-> for you to fetch changes up to 010c2e19c2d643a87c991bf1e7d4bfc140dfdba5:
-> =
+@@ -666,8 +661,7 @@ static void subflow_data_ready(struct sock *sk)
+ 		return;
+ 	}
+ =
 
->   don't flag parent socket as RCV_SHUTDOWN if one one subflow has closed =
-(2019-11-30 23:21:25 +0100)
-> =
+-	/* always propagate the EoF */
+-	if (mptcp_subflow_data_available(sk) || subflow->rx_eof) {
++	if (mptcp_subflow_data_available(sk)) {
+ 		smp_mb__before_atomic();
+ 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
+ 		smp_mb__after_atomic();
+@@ -807,15 +801,23 @@ static void __subflow_state_change(struct sock *sk)
+ 	rcu_read_unlock();
+ }
+ =
 
-> ----------------------------------------------------------------
-> Florian Westphal (9):
->       token: handle join-before-accept-completion case
->       mptcp: fix race from mptcp_close/mptcp join
->       copy connection id from first subflow to mptcp socket
->       store tcp_sk, not socket
->       add mptcp_subflow_shutdown
->       make accept not allocate kernel socket struct
->       pass subflow socket to mptcp_finish_connect
->       subflow: place further subflows on new 'join_list'
->       don't flag parent socket as RCV_SHUTDOWN if one one subflow has clo=
-sed
-> =
++static bool subflow_is_done(const struct sock *sk)
++{
++	return sk->sk_shutdown & RCV_SHUTDOWN || sk->sk_state =3D=3D TCP_CLOSE;
++}
++
+ static void subflow_state_change(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-	struct sock *parent =3D subflow->conn;
++	struct sock *parent =3D READ_ONCE(subflow->conn);
+ =
 
->  net/mptcp/pm.c       |  18 +--
->  net/mptcp/protocol.c | 313 +++++++++++++++++++++++++++++++++++++--------=
-------
->  net/mptcp/protocol.h |  16 +--
->  net/mptcp/subflow.c  |  56 +++++----
->  net/mptcp/token.c    |   9 +-
->  5 files changed, 292 insertions(+), 120 deletions(-)
+ 	__subflow_state_change(sk);
+ =
 
-As per mtg discussion, the series LGTM. There is a small change
-possible on patch 9/9, but I think it should not block the series. We
-can either merge up to 8/9 and have the last one later, or even merge
-as-is and refine the code touched by the last patch later.
+-	if (parent)
+-		__subflow_state_change(parent);
++	if (parent && !(parent->sk_shutdown & RCV_SHUTDOWN) &&
++	    !subflow->rx_eof && subflow_is_done(sk)) {
++		subflow->rx_eof =3D 1;
++		mptcp_subflow_eof(parent);
++	}
+ }
+ =
 
-Cheers,
+ static int subflow_ulp_init(struct sock *sk)
+-- =
 
-Paolo
+2.23.0
 
-
-
---===============1907193429971431967==--
+--===============0680502487167603201==--
