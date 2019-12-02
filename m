@@ -1,72 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============7379134018341201522=="
+Content-Type: multipart/mixed; boundary="===============7773446633714623720=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/3] imptcp: properly detect skb collapsing
-Date: Mon, 02 Dec 2019 11:24:23 +0100
-Message-ID: <0848ecdf13d13ee6614d98095a573d5e87543334.1575281351.git.pabeni@redhat.com>
-In-Reply-To: cover.1575281285.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v3] mptcp: fix option length of mp_capable syn/ack
+Date: Mon, 02 Dec 2019 11:25:27 +0100
+Message-ID: <d3bf330f-4c55-4018-9797-fa4a0e50a177@tessares.net>
+In-Reply-To: 6941c970fd9ce038972887af590fc685746f4427.1575279172.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2731
+X-UID: 2732
 
---===============7379134018341201522==
+--===============7773446633714623720==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we can misdetect skb collapsing, which will lead
-to a kernel warning and crash.
+Hi Davide,
 
-Changing a bit the detection logic for skb collapsing we
-can address the issue.
+On 02/12/2019 11:04, Davide Caratti wrote:
+> in current MPTCP, the server sends the client's key back in the syn/ack
+> packet. Because of that, both tcpdump and packetdrill refuse to parse
+> the mp_capable option in the syn/ack. Both RFC6824 and RFC6824bis don't
+> require this in section 3.1, only the server's key should be sent in
+> the syn/ack.
+> =
 
-Squash-to: "mptcp: allow collapsing consecutive sendpages on the same subst=
-ream"
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+> - change TCPOLEN_MPTCP_MPC_SYNACK from 20 (4+8+8) to 12 (4+8)
+> - don't write the client's key in mp_capable syn/ack
+> - adjust tests in mptcp_parse_option() to cope with the changed
+>    value of TCPOLEN_MPTCP_MPC_SYNACK
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1c489eccdb58..ba918c4fdcc8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -107,8 +107,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
-ock *ssk,
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	bool collapsed, can_collapse =3D false;
- 	struct mptcp_ext *mpext =3D NULL;
-+	struct sk_buff *skb, *tail;
- 	struct page_frag *pfrag;
--	struct sk_buff *skb;
- 	size_t psize;
- =
+[...]
 
- 	/* use the mptcp page cache so that we can easily move the data
-@@ -165,10 +165,16 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 	if (unlikely(ret < psize))
- 		iov_iter_revert(&msg->msg_iter, psize - ret);
- =
+> v2: more conservative behavior when parsing received options
+> v3: adjust tests in mptcp_parse_option() to catch all possible
+>      values of MP_CAPABLE option length specified by v0 protocol,
+>      thanks Matthieu Baerts.
 
--	collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
-+	/* if the tail skb extension is still the cached one, collapsing
-+	 * really happened. Note: we can't check for 'same skb' as the sk_buff
-+	 * hdr on tail can be transmitted, freed and re-allocated by the
-+	 * do_tcp_sendpages() call
-+	 */
-+	tail =3D tcp_write_queue_tail(ssk);
-+	collapsed =3D mpext &&
-+		    mpext =3D=3D (tail ? skb_ext_find(tail, SKB_EXT_MPTCP) : NULL);
- 	if (collapsed) {
- 		WARN_ON_ONCE(!can_collapse);
--		/* when collapsing mpext always exists */
- 		mpext->data_len +=3D ret;
- 		goto out;
- 	}
+Thank you for this new version! It looks good to me.
+
+I will wait for Paolo and/or Christoph's ACK as you added them in cc =
+
+(for the discussion in the MPTCPv1 patches).
+
+Cheers,
+Matt
 -- =
 
-2.21.0
-
---===============7379134018341201522==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7773446633714623720==--
