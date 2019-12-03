@@ -1,86 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============2533862599532996426=="
+Content-Type: multipart/mixed; boundary="===============8195153134581496846=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/3] mptcp: move from sha1 (v0) to sha256 (v1)
-Date: Tue, 03 Dec 2019 12:06:09 +0100
-Message-ID: <d6031f0abaebb276f6e6dbc28b3e997844a469d9.camel@redhat.com>
-In-Reply-To: 5a3e7828-b09c-90cf-4c83-484ff1447e1b@tessares.net
+Subject: [MPTCP] Re: [RFC PATCH 2/3] mptcp: avoid data stream corruption on
+ allocation failure.
+Date: Tue, 03 Dec 2019 12:17:45 +0100
+Message-ID: <605b0d917d34c013556e6d735e1af4d80211230f.camel@redhat.com>
+In-Reply-To: 379cb7e6d48b763a8d09b57dc0d42a94599bf085.1574331014.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2766
+X-UID: 2767
 
---===============2533862599532996426==
+--===============8195153134581496846==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-12-03 at 11:45 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
+On Thu, 2019-11-21 at 11:31 +0100, Paolo Abeni wrote:
+> Currently, when if mpext allocation fails, the data stream
+> is corrupted, as we can add the required DSS nor roll-back
+> the TCP status.
 > =
 
-> On 03/12/2019 10:09, Paolo Abeni wrote:
-> > On Tue, 2019-12-03 at 08:54 +0100, Matthieu Baerts wrote:
-> > > Hi Christoph, Paolo,
-> > > =
-
-> > > On 02/12/2019 18:15, Christoph Paasch wrote:
-> > > > From: Paolo Abeni <pabeni(a)redhat.com>
-> > > > =
-
-> > > > For simplicity's sake use directly sha256 primitives (and pull them
-> > > > as a required build dep).
-> > > > Add optional, boot-time self-tests for the hmac function.
-> > > > =
-
-> > > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > > > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-> > > =
-
-> > > Sorry for this detail but regarding the Signed-off-by, should I write
-> > > this instead?
-> > > =
-
-> > >     Co-developed-by: Christoph Paasch <cpaasch(a)apple.com>
-> > >     Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-> > >     Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > > =
-
-> > > Or do we have a "Signed-off-by" here from Christoph because you
-> > > (Christoph) are the sender of this patch here?
-> > =
-
-> > Likely the 2nd option ;)
-> > =
-
-> > > But can we keep it if you
-> > > are not the one who will send this patch to netdev? :)
-> > =
-
-> > Not a big deal to me, but strictly speaking I think keeping it for
-> > netdev submission would be correct only if Christoph will do the netdev
-> > submission, too.
+> Allocate a skb_ext before the actuall skb_buff creation/TCP
+> status update: in case of memory allocation failure we can
+> bail early, avoiding the above condition.
 > =
 
-> So for you, when we apply this, better to only keep one your signed-off =
-
-> and add the signed-off of the submitter (probably Mat)?
-
-Exactly!
-
-> > Note: before the submission it would be good to review once again the
-> > tag correctness.
+> Additionally, if the ext is unused to to skb collapsing,
+> cache the ext in the msk for the next send.
 > =
 
-> Good idea!
-> I think we should also review the whole commit messages in general. =
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>  net/mptcp/protocol.c | 64 +++++++++++++++++++++++++-------------------
+>  net/mptcp/protocol.h |  1 +
+>  2 files changed, 38 insertions(+), 27 deletions(-)
+> =
 
-> Maybe some are no longer up to date after all the squashes we did :)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1a432abfb176..38259a8a5df3 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -190,6 +190,14 @@ mptcp_carve_data_frag(const struct mptcp_sock *msk, =
+struct page_frag *pfrag,
+>  	return dfrag;
+>  }
+>  =
 
-+1!
+> +static bool mptcp_ext_cache_refill(struct mptcp_sock *msk)
+> +{
+> +	if (!msk->cached_ext)
+> +		msk->cached_ext =3D skb_ext_alloc();
+> +
+> +	return msk->cached_ext;
 
-Cheers,
+nit: maybe it's better to make an explicit conversion to bool, like done
+elsewhere, e.g.:
 
-Paolo
+	return !!msk->cached_ext;
 
---===============2533862599532996426==--
+WDYT?
+-- =
+
+davide
+
+--===============8195153134581496846==--
