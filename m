@@ -1,67 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============3449444499288431770=="
+Content-Type: multipart/mixed; boundary="===============5532458745028604029=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/3] mptcp: move from sha1 (v0) to sha256 (v1)
-Date: Tue, 03 Dec 2019 10:09:56 +0100
-Message-ID: <864b0fbf6edf30973dc7be562f77eccf18efc6d0.camel@redhat.com>
-In-Reply-To: 54e7bf46-cc9d-0372-b9d5-0e8bb45b4a70@tessares.net
+Subject: [MPTCP] Re: [PATCH v2 9/9] don't flag parent socket as RCV_SHUTDOWN
+ if one one subflow has closed
+Date: Tue, 03 Dec 2019 10:13:03 +0100
+Message-ID: <7ffecd01-f428-b74b-4cc9-4ae9c642a788@tessares.net>
+In-Reply-To: 096263668b065156c0b198a8e05790ab6b00530e.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2761
+X-UID: 2762
 
---===============3449444499288431770==
+--===============5532458745028604029==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-12-03 at 08:54 +0100, Matthieu Baerts wrote:
-> Hi Christoph, Paolo,
+Hi Paolo,
+
+On 03/12/2019 10:05, Paolo Abeni wrote:
+> On Tue, 2019-12-03 at 08:44 +0100, Matthieu Baerts wrote:
+>> Hi Florian, Paolo, Mat,
+>>
+>> On 02/12/2019 22:21, Paolo Abeni wrote:
+>>> On Mon, 2019-12-02 at 20:10 +0100, Florian Westphal wrote:
+>>
+>> [...]
+>>
+>>> Thanks for addressing my comments.
+>>>
+>>> With 9/9 v2 the series is IMHO ready to me merged.
+>>
+>> Thank you for the nice patch series and the reviews!
+>> Related to what we discussed yesterday, is it OK if I merge this after:
+>>
+>>    1) DATA_FIN
+>>    2) MPTCPv1 =E2=86=92 wait a bit for a review
+>>    3) SendMsg "refactor" =E2=86=92 if reviewed
+>>
+>> Or can I do that after the patches for MPTCPv1 if the patches to fix
+>> sendmsg() have not been reviewed yet?
 > =
 
-> On 02/12/2019 18:15, Christoph Paasch wrote:
-> > From: Paolo Abeni <pabeni(a)redhat.com>
-> > =
-
-> > For simplicity's sake use directly sha256 primitives (and pull them
-> > as a required build dep).
-> > Add optional, boot-time self-tests for the hmac function.
-> > =
-
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> I think/hope this and sendmsg patches should not conflict much - but
+> sendmsg patches do create quite of conflict with the following patches.
 > =
 
-> Sorry for this detail but regarding the Signed-off-by, should I write =
+> I think that appling this series after v1 could be a good option, will
+> give extra time to review the sendmsg() patches, and I can rebase my
+> tree to help the merging.
 
-> this instead?
-> =
+Thank you for your reply!
 
->    Co-developed-by: Christoph Paasch <cpaasch(a)apple.com>
->    Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
->    Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> =
+Sounds good to me. If there is nothing to change in sendmsg() patches =
 
-> Or do we have a "Signed-off-by" here from Christoph because you =
+after the review, I can also start applying them. If I am blocked, I can =
 
-> (Christoph) are the sender of this patch here? =
-
-
-Likely the 2nd option ;)
-
-> But can we keep it if you =
-
-> are not the one who will send this patch to netdev? :)
-
-Not a big deal to me, but strictly speaking I think keeping it for
-netdev submission would be correct only if Christoph will do the netdev
-submission, too.
-
-Note: before the submission it would be good to review once again the
-tag correctness.
+ask for help.
 
 Cheers,
+Matt
+-- =
 
-Paolo
-
---===============3449444499288431770==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5532458745028604029==--
