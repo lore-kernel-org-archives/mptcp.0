@@ -1,47 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============7670307699390856812=="
+Content-Type: multipart/mixed; boundary="===============5712108299306989482=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 9/9] don't flag parent socket as RCV_SHUTDOWN
- if one one subflow has closed
-Date: Tue, 03 Dec 2019 08:44:52 +0100
-Message-ID: <9684c074-f270-cafc-79c4-232cc94bd4f0@tessares.net>
-In-Reply-To: f1841522df592649acb43542ac41fcbdf3da618d.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH 1/3] mptcp: move from sha1 (v0) to sha256 (v1)
+Date: Tue, 03 Dec 2019 08:54:17 +0100
+Message-ID: <54e7bf46-cc9d-0372-b9d5-0e8bb45b4a70@tessares.net>
+In-Reply-To: 20191202171504.88739-2-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2757
+X-UID: 2758
 
---===============7670307699390856812==
+--===============5712108299306989482==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Paolo, Mat,
+Hi Christoph, Paolo,
 
-On 02/12/2019 22:21, Paolo Abeni wrote:
-> On Mon, 2019-12-02 at 20:10 +0100, Florian Westphal wrote:
-
-[...]
-
-> Thanks for addressing my comments.
+On 02/12/2019 18:15, Christoph Paasch wrote:
+> From: Paolo Abeni <pabeni(a)redhat.com>
 > =
 
-> With 9/9 v2 the series is IMHO ready to me merged.
+> For simplicity's sake use directly sha256 primitives (and pull them
+> as a required build dep).
+> Add optional, boot-time self-tests for the hmac function.
+> =
 
-Thank you for the nice patch series and the reviews!
-Related to what we discussed yesterday, is it OK if I merge this after:
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 
-  1) DATA_FIN
-  2) MPTCPv1 =E2=86=92 wait a bit for a review
-  3) SendMsg "refactor" =E2=86=92 if reviewed
+Sorry for this detail but regarding the Signed-off-by, should I write =
 
-Or can I do that after the patches for MPTCPv1 if the patches to fix =
+this instead?
 
-sendmsg() have not been reviewed yet?
+   Co-developed-by: Christoph Paasch <cpaasch(a)apple.com>
+   Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+   Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-Also just to be sure: do I squash the 2 first ones and then I add the =
+Or do we have a "Signed-off-by" here from Christoph because you =
 
-rest at the end of the series?
+(Christoph) are the sender of this patch here? But can we keep it if you =
+
+are not the one who will send this patch to netdev? :)
+
+The rest looks good to me!
 
 Cheers,
 Matt
@@ -52,4 +54,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7670307699390856812==--
+--===============5712108299306989482==--
