@@ -1,120 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============7479929494065205411=="
+Content-Type: multipart/mixed; boundary="===============8989431917586021489=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 1/3] skb: add helpers to allocate ext independently
- from sk_buff
-Date: Wed, 04 Dec 2019 15:18:10 +0100
-Message-ID: <6492cd55627c8f53ca8909b69d95d6f6b9e8a9c6.1575468474.git.pabeni@redhat.com>
-In-Reply-To: cover.1575468474.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v3 0/3] sendmsg: fix pending issues.
+Date: Wed, 04 Dec 2019 15:18:09 +0100
+Message-ID: <cover.1575468474.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2778
+X-UID: 2779
 
---===============7479929494065205411==
+--===============8989431917586021489==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we can allocate the extension only after the skb,
-this change allows the user to do the opposite, will simplify
-allocation failure handling from MPTCP.
+This includes the change suggested by Mat. Bumped revision 3 to avoid
+confusion with intermediated 2/3 v2.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+The patch 1 should be inserted just after "tcp: clean ext on tx recycle"
+
+The patches 2 and 3 have explicit individual squash-to tags, but will casue
+a lot of conflicts, the uneasy ones to solve are on patch
+"mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
+
+A tree rebased with the above patches applied is available at:
+
+https://github.com/pabeni/mptcp/tree/mptcp_net-next-FIN_v1_recvmsg_2
+
+The original cover letter was as follow
 ---
-v1 -> v3:
- - renamed the helpers, add comment, set explicitly =
 
-   the active_extensions mask (Mat)
----
- include/linux/skbuff.h |  3 +++
- net/core/skbuff.c      | 35 +++++++++++++++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 2 deletions(-)
+This series addresses the known pending issue in mptcp_sendmsg,
+specifically:
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index b4ef8b758828..bf2eee2b2b02 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4114,6 +4114,9 @@ struct skb_ext {
- 	char data[0] __aligned(8);
- };
- =
+* the crash repored by matt (patch 3/3)
+* the possible data corruption on ext allocation failure - the "TODO"" in
+  sendmsg_frag (patches 1,2/3)
 
-+struct skb_ext *__skb_ext_alloc(void);
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext);
- void *skb_ext_add(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_del(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_put(struct skb_ext *ext);
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 0aba2cd69881..2218d700e371 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5981,7 +5981,14 @@ static void *skb_ext_get_ptr(struct skb_ext *ext, en=
-um skb_ext_id id)
- 	return (void *)ext + (ext->offset[id] * SKB_EXT_ALIGN_VALUE);
- }
- =
+uunfortunately none of the above is actually tested, since I can't
+reproduce the issues - still the problems look real.
 
--static struct skb_ext *skb_ext_alloc(void)
-+/**
-+ * __skb_ext_alloc - allocate a new skb extensions storage
-+ *
-+ * Returns the newly allocated pointer. The pointer can later attached to a
-+ * skb via __skb_ext_set().
-+ * Note: caller must handle the skb_ext as an opaque data.
-+ */
-+struct skb_ext *__skb_ext_alloc(void)
- {
- 	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, GFP_ATOMIC);
- =
+This is not squashed yet, as it will conflict with most patches, I'm just
+trying to collect feedback.
 
-@@ -6021,6 +6028,30 @@ static struct skb_ext *skb_ext_maybe_cow(struct skb_=
-ext *old,
- 	return new;
- }
- =
+Open points:
 
-+/**
-+ * __skb_ext_set - attach the specified extension storage to this skb
-+ * @skb: buffer
-+ * @id: extension id
-+ * @ext: extension storage previously allocated via __skb_ext_alloc()
-+ *
-+ * Existing extensions, if any, are cleared.
-+ *
-+ * Returns the pointer to the extension.
-+ */
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext)
-+{
-+	unsigned int newlen, newoff =3D SKB_EXT_CHUNKSIZEOF(*ext);
-+
-+	skb_ext_put(skb);
-+	newlen =3D newoff + skb_ext_type_len[id];
-+	ext->chunks =3D newlen;
-+	ext->offset[id] =3D newoff;
-+	skb->extensions =3D ext;
-+	skb->active_extensions =3D 1 << id;
-+	return skb_ext_get_ptr(ext, id);
-+}
-+
- /**
-  * skb_ext_add - allocate space for given extension, COW if needed
-  * @skb: buffer
-@@ -6054,7 +6085,7 @@ void *skb_ext_add(struct sk_buff *skb, enum skb_ext_i=
-d id)
- 	} else {
- 		newoff =3D SKB_EXT_CHUNKSIZEOF(*new);
- =
+The patch 2/3 introduces a per socket cache of a single skb_ext. As per
+recent upstream changes related to TCP rx/tx skb cache, that is debatable,
+could have subtle performance and memory usage implications.
+We could avoid such cache allways allocating the extension for each
+sendmsg_frag() call, and than free it if unused. Both options looks
+sub-optiomal to me do you have any preference? - I do have some for the
+selected impl ;)
 
--		new =3D skb_ext_alloc();
-+		new =3D __skb_ext_alloc();
- 		if (!new)
- 			return NULL;
- 	}
+The new API exposed by patch 1/3 is open to misusage. e.g. the caller could
+allocate a skb_ext, set arbitrary ext->offset[id] values and than call
+__skb_ext_add(). That will lead to memory leak or GPF. I did no try to
+address the issue, the '__' prefix should guide the users to extra care.
+Can we do any better?
+
+(this is a pre-existing topic) the sk_stream_wait_memory() calls in
+sk_stream_wait_memory(), waits on the subflow. Should we wait on the mptcp
+socket instead? Otherwise should we release the mptcp socket lock, before s=
+uch
+call?
+
+Paolo Abeni (1):
+  skb: add helpers to allocate ext independently from sk_buff
+  mptcp: avoid data stream corruption on allocation failure.
+  mptcp: properly detect skb collapsing
+
+ include/linux/skbuff.h |    3 ++
+ net/core/skbuff.c      |   35 ++++++++++++++++++++++++++++++--
+ net/mptcp/protocol.c   |   53 +++++++++++++++++++++++++++++++-------------=
+-----
+ net/mptcp/protocol.h   |    1 =
+
+ 4 files changed, 71 insertions(+), 21 deletions(-)
+
 -- =
 
 2.21.0
 
---===============7479929494065205411==--
+--===============8989431917586021489==--
