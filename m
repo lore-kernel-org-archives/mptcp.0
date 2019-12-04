@@ -1,77 +1,335 @@
-Content-Type: multipart/mixed; boundary="===============8591416869959343828=="
+Content-Type: multipart/mixed; boundary="===============6176393264620298579=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3] mptcp: Basic single-subflow DATA_FIN
-Date: Wed, 04 Dec 2019 22:25:56 +0100
-Message-ID: <41795da8-33bd-8bc0-f73a-bf043fe104e5@tessares.net>
-In-Reply-To: 0ffcef214516d5478455cd6745e312352b498fd5.camel@linux.intel.com
+Subject: [MPTCP] Re: [PATCH 1/3] mptcp: move from sha1 (v0) to sha256 (v1)
+Date: Wed, 04 Dec 2019 13:26:55 -0800
+Message-ID: <9f77f31f2814da4a82cb1181c7d58ab5a36f0c57.camel@linux.intel.com>
+In-Reply-To: 20191202171504.88739-2-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2785
+X-UID: 2786
 
---===============8591416869959343828==
+--===============6176393264620298579==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Paolo, Peter,
 
-On 27/11/2019 04:39, Peter Krystad wrote:
+Hi -
+
+This patch 1/3 looks good to me. Farewell mptcp.org interop!
+
+Peter.
+
+
+On Mon, 2019-12-02 at 09:15 -0800, Christoph Paasch wrote:
+> From: Paolo Abeni <pabeni(a)redhat.com>
 > =
 
-> Hi Matt -
+> For simplicity's sake use directly sha256 primitives (and pull them
+> as a required build dep).
+> Add optional, boot-time self-tests for the hmac function.
 > =
 
-> On Tue, 2019-11-26 at 10:07 +0100, Matthieu Baerts wrote:
->> Hi Mat, Paolo,
->>
->> On 25/11/2019 18:00, Paolo Abeni wrote:
->>> On Fri, 2019-11-22 at 15:01 -0800, Mat Martineau wrote:
->>>> Send a DATA_FIN along with any subflow TCP FIN flag when the MPTCP
->>>> socket is closing or shutting down writes.
->>>>
->>>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->>>
->>> The patch LGTM, thanks!
->>
->> Thank you for the new version and the review!
->>
->> Where can I apply it? I would like to apply it just before the
->> introduction of the kselftests but please tell me if it is better to
->> squash it / apply it somewhere else.
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> ---
+>  net/mptcp/Kconfig    |  10 ++++
+>  net/mptcp/crypto.c   | 139 ++++++++++++++++++++++++++-----------------
+>  net/mptcp/options.c  |   9 ++-
+>  net/mptcp/protocol.h |   4 +-
+>  4 files changed, 103 insertions(+), 59 deletions(-)
 > =
 
-> Mat is out this week. I've checked that the changes to options.c and
-> protocol.c can be squashed to 'Write MPTCP DSS headers to outgoing data
-> packets' and the changes to subflow.c squash to 'Implement MPTCP receive
-> path'.
+> diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+> index c1a99f07a4cd..5db56d2218c5 100644
+> --- a/net/mptcp/Kconfig
+> +++ b/net/mptcp/Kconfig
+> @@ -3,6 +3,7 @@ config MPTCP
+>  	bool "MPTCP: Multipath TCP"
+>  	depends on INET
+>  	select SKB_EXTENSIONS
+> +	select CRYPTO_LIB_SHA256
+>  	help
+>  	  Multipath TCP (MPTCP) connections send and receive data over multiple
+>  	  subflows in order to utilize multiple network paths. Each subflow
+> @@ -14,3 +15,12 @@ config MPTCP_IPV6
+>  	depends on MPTCP
+>  	select IPV6
+>  	default y
+> +
+> +config MPTCP_HMAC_TEST
+> +	bool "Tests for MPTCP HMAC implementation"
+> +	default n
+> +	help
+> +	  This option enable boot time self-test for the HMAC implementation
+> +	  used by the MPTCP code
+> +
+> +	  Say N if you are unsure.
+> diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
+> index ccb9f7effdcd..68f1758b96c2 100644
+> --- a/net/mptcp/crypto.c
+> +++ b/net/mptcp/crypto.c
+> @@ -21,67 +21,36 @@
+>   */
+>  =
 
-Thank you again for the patch, the reviews and the instructions!
+>  #include <linux/kernel.h>
+> -#include <linux/cryptohash.h>
+> +#include <crypto/sha.h>
+>  #include <asm/unaligned.h>
+>  =
 
-Sorry for the delay. I feel bad because I was suspecting conflicts with =
+>  #include "protocol.h"
+>  =
 
-other commits of the series but there was no conflict at all!
+> -struct sha1_state {
+> -	u32 workspace[SHA_WORKSPACE_WORDS];
+> -	u32 digest[SHA_DIGEST_WORDS];
+> -	unsigned int count;
+> -};
+> -
+> -static void sha1_init(struct sha1_state *state)
+> -{
+> -	sha_init(state->digest);
+> -	state->count =3D 0;
+> -}
+> -
+> -static void sha1_update(struct sha1_state *state, u8 *input)
+> -{
+> -	sha_transform(state->digest, input, state->workspace);
+> -	state->count +=3D SHA_MESSAGE_BYTES;
+> -}
+> -
+> -static void sha1_pad_final(struct sha1_state *state, u8 *input, unsigned=
+ length,
+> -			   __be32 *mptcp_hashed_key)
+> -{
+> -	int i;
+> -
+> -	input[length] =3D 0x80;
+> -	memset(&input[length + 1], 0, SHA_MESSAGE_BYTES - length - 9);
+> -	put_unaligned_be64((length + state->count) << 3,
+> -			   &input[SHA_MESSAGE_BYTES - 8]);
+> -
+> -	sha_transform(state->digest, input, state->workspace);
+> -	for (i =3D 0; i < SHA_DIGEST_WORDS; ++i)
+> -		put_unaligned_be32(state->digest[i], &mptcp_hashed_key[i]);
+> -
+> -	memzero_explicit(state->workspace, SHA_WORKSPACE_WORDS << 2);
+> -}
+> +#define SHA256_DIGEST_WORDS (SHA256_DIGEST_SIZE / 4)
+>  =
 
-- 825f10f90667: "squashed" in "mptcp: Write MPTCP DSS headers to =
+>  void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
+>  {
+> -	__be32 mptcp_hashed_key[SHA_DIGEST_WORDS];
+> -	u8 input[SHA_MESSAGE_BYTES];
+> -	struct sha1_state state;
+> +	__be32 mptcp_hashed_key[SHA256_DIGEST_WORDS];
+> +	__be64 input =3D cpu_to_be64(key);
+> +	struct sha256_state state;
+>  =
 
-outgoing data packets"
-- 7a9b711a86ee: "squashed" in "mptcp: Implement MPTCP receive path"
-- bcf60b29e527..b887804d061e: result
+> -	sha1_init(&state);
+> -	put_unaligned_be64(key, input);
+> -	sha1_pad_final(&state, input, 8, mptcp_hashed_key);
+> +	sha256_init(&state);
+> +	sha256_update(&state, (__force u8 *)&input, sizeof(input));
+> +	sha256_final(&state, (u8 *)mptcp_hashed_key);
+>  =
 
-Each commit still compiles and tests are still passing!
+>  	if (token)
+>  		*token =3D be32_to_cpu(mptcp_hashed_key[0]);
+>  	if (idsn)
+> -		*idsn =3D be64_to_cpu(*((__be64 *)&mptcp_hashed_key[3]));
+> +		*idsn =3D be64_to_cpu(*((__be64 *)&mptcp_hashed_key[6]));
+>  }
+>  =
 
-Hopefully tomorrow, I can apply MPTCPv1 patches and all others waiting =
+>  void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
+> -			    u32 *hash_out)
+> +			   void *hmac)
+>  {
+> -	u8 input[SHA_MESSAGE_BYTES * 2];
+> -	struct sha1_state state;
+> +	u8 input[SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE];
+> +	__be32 mptcp_hashed_key[SHA256_DIGEST_WORDS];
+> +	__be32 *hash_out =3D (__force __be32 *)hmac;
+> +	struct sha256_state state;
+>  	u8 key1be[8];
+>  	u8 key2be[8];
+>  	int i;
+> @@ -96,17 +65,16 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 no=
+nce1, u32 nonce2,
+>  	for (i =3D 0; i < 8; i++)
+>  		input[i + 8] ^=3D key2be[i];
+>  =
 
-to be applied :)
+> -	put_unaligned_be32(nonce1, &input[SHA_MESSAGE_BYTES]);
+> -	put_unaligned_be32(nonce2, &input[SHA_MESSAGE_BYTES + 4]);
+> +	put_unaligned_be32(nonce1, &input[SHA256_BLOCK_SIZE]);
+> +	put_unaligned_be32(nonce2, &input[SHA256_BLOCK_SIZE + 4]);
+>  =
 
-Cheers,
-Matt
--- =
+> -	sha1_init(&state);
+> -	sha1_update(&state, input);
+> +	sha256_init(&state);
+> +	sha256_update(&state, input, SHA256_BLOCK_SIZE + 8);
+>  =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8591416869959343828==--
+>  	/* emit sha256(K1 || msg) on the second input block, so we can
+>  	 * reuse 'input' for the last hashing
+>  	 */
+> -	sha1_pad_final(&state, &input[SHA_MESSAGE_BYTES], 8,
+> -		       (__force __be32 *)&input[SHA_MESSAGE_BYTES]);
+> +	sha256_final(&state, &input[SHA256_BLOCK_SIZE]);
+>  =
+
+>  	/* Prepare second part of hmac */
+>  	memset(input, 0x5C, SHA_MESSAGE_BYTES);
+> @@ -115,8 +83,69 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 no=
+nce1, u32 nonce2,
+>  	for (i =3D 0; i < 8; i++)
+>  		input[i + 8] ^=3D key2be[i];
+>  =
+
+> -	sha1_init(&state);
+> -	sha1_update(&state, input);
+> -	sha1_pad_final(&state, &input[SHA_MESSAGE_BYTES], SHA_DIGEST_WORDS << 2,
+> -		      (__be32*)hash_out);
+> +	sha256_init(&state);
+> +	sha256_update(&state, input, SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE);
+> +	sha256_final(&state, (u8 *)mptcp_hashed_key);
+> +
+> +	/* takes only first 160 bits */
+> +	for (i =3D 0; i < 5; i++)
+> +		hash_out[i] =3D mptcp_hashed_key[i];
+> +}
+> +
+> +#ifdef CONFIG_MPTCP_HMAC_TEST
+> +struct test_cast {
+> +	char *key;
+> +	char *msg;
+> +	char *result;
+> +};
+> +
+> +/* we can't reuse RFC 4231 test vectors, as we have constraint on the
+> + * input and key size, and we truncate the output.
+> + */
+> +static struct test_cast tests[] =3D {
+> +	{
+> +		.key =3D "0b0b0b0b0b0b0b0b",
+> +		.msg =3D "48692054",
+> +		.result =3D "8385e24fb4235ac37556b6b886db106284a1da67",
+> +	},
+> +	{
+> +		.key =3D "aaaaaaaaaaaaaaaa",
+> +		.msg =3D "dddddddd",
+> +		.result =3D "2c5e219164ff1dca1c4a92318d847bb6b9d44492",
+> +	},
+> +	{
+> +		.key =3D "0102030405060708",
+> +		.msg =3D "cdcdcdcd",
+> +		.result =3D "e73b9ba9969969cefb04aa0d6df18ec2fcc075b6",
+> +	},
+> +};
+> +
+> +static void __init crypto_test(void)
+> +{
+> +	char hmac[20], hmac_hex[41];
+> +	u32 nonce1, nonce2;
+> +	u64 key1, key2;
+> +	int i, j;
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(tests); ++i) {
+> +		/* mptcp hmap will convert to be before computing the hmac */
+> +		key1 =3D be64_to_cpu(*((__be64 *)&tests[i].key[0]));
+> +		key2 =3D be64_to_cpu(*((__be64 *)&tests[i].key[8]));
+> +		nonce1 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[0]));
+> +		nonce2 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[4]));
+> +
+> +		mptcp_crypto_hmac_sha(key1, key2, nonce1, nonce2, hmac);
+> +		for (j =3D 0; j < 20; ++j)
+> +			sprintf(&hmac_hex[j << 1], "%02x", hmac[j] & 0xff);
+> +		hmac_hex[40] =3D 0;
+> +
+> +		if (memcmp(hmac_hex, tests[i].result, 40))
+> +			pr_err("test %d failed, got %s expected %s", i,
+> +			       hmac_hex, tests[i].result);
+> +		else
+> +			pr_info("test %d [ ok ]", i);
+> +	}
+>  }
+> +
+> +late_initcall(crypto_test);
+> +#endif
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 2f014332cdef..1cb0bd687b6b 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -9,6 +9,11 @@
+>  #include <net/mptcp.h>
+>  #include "protocol.h"
+>  =
+
+> +static bool mptcp_cap_flag_sha256(u8 flags)
+> +{
+> +	return (flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMAC_SHA256;
+> +}
+> +
+>  void mptcp_parse_option(const unsigned char *ptr, int opsize,
+>  			struct tcp_options_received *opt_rx)
+>  {
+> @@ -33,7 +38,7 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+>  			break;
+>  =
+
+>  		mp_opt->flags =3D *ptr++;
+> -		if (!((mp_opt->flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMAC_SHA1=
+) ||
+> +		if (!mptcp_cap_flag_sha256(mp_opt->flags) ||
+>  		    (mp_opt->flags & MPTCP_CAP_EXTENSIBILITY))
+>  			break;
+>  =
+
+> @@ -434,7 +439,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_ou=
+t_options *opts)
+>  		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) | (len << 16) |
+>  			       (MPTCPOPT_MP_CAPABLE << 12) |
+>  			       ((MPTCP_VERSION_MASK & 0) << 8) |
+> -			       MPTCP_CAP_HMAC_SHA1);
+> +			       MPTCP_CAP_HMAC_SHA256);
+>  		put_unaligned_be64(opts->sndr_key, ptr);
+>  		ptr +=3D 2;
+>  		if ((OPTION_MPTCP_MPC_SYNACK |
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 542aa9b67a60..dcdd3dcd19c6 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -41,7 +41,7 @@
+>  #define MPTCP_VERSION_MASK	(0x0F)
+>  #define MPTCP_CAP_CHECKSUM_REQD	BIT(7)
+>  #define MPTCP_CAP_EXTENSIBILITY	BIT(6)
+> -#define MPTCP_CAP_HMAC_SHA1	BIT(0)
+> +#define MPTCP_CAP_HMAC_SHA256	BIT(0)
+>  #define MPTCP_CAP_FLAG_MASK	(0x3F)
+>  =
+
+>  /* MPTCP DSS flags */
+> @@ -201,7 +201,7 @@ static inline void mptcp_crypto_key_gen_sha(u64 *key,=
+ u32 *token, u64 *idsn)
+>  }
+>  =
+
+>  void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
+> -			   u32 *hash_out);
+> +			   void *hash_out);
+>  =
+
+>  static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
+>  {
+
+--===============6176393264620298579==--
