@@ -1,102 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============6297991873646956853=="
+Content-Type: multipart/mixed; boundary="===============6003205796249649811=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/3] skb: add helpers to allocate ext
- independently from sk_buff
-Date: Tue, 03 Dec 2019 23:05:11 -0800
-Message-ID: <alpine.OSX.2.21.1912032257180.38586@pminglan-mobl.amr.corp.intel.com>
-In-Reply-To: 1b7884633059302ca77fddfaab9155ec8e75cf0c.1575281285.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH 3/3] imptcp: properly detect skb collapsing
+Date: Tue, 03 Dec 2019 23:19:52 -0800
+Message-ID: <alpine.OSX.2.21.1912032306181.38586@pminglan-mobl.amr.corp.intel.com>
+In-Reply-To: 0848ecdf13d13ee6614d98095a573d5e87543334.1575281351.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2774
+X-UID: 2775
 
---===============6297991873646956853==
+--===============6003205796249649811==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 2 Dec 2019, Paolo Abeni wrote:
 
-> Currently we can allocate the extension only after the skb,
-> this change allow the user to do the opposite, will simplify
-> allocation failure handling from MPTCP.
+> Currently we can misdetect skb collapsing, which will lead
+> to a kernel warning and crash.
 >
+> Changing a bit the detection logic for skb collapsing we
+> can address the issue.
+>
+> Squash-to: "mptcp: allow collapsing consecutive sendpages on the same sub=
+stream"
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> include/linux/skbuff.h |  3 +++
-> net/core/skbuff.c      | 16 +++++++++++++++-
-> 2 files changed, 18 insertions(+), 1 deletion(-)
+> net/mptcp/protocol.c | 12 +++++++++---
+> 1 file changed, 9 insertions(+), 3 deletions(-)
 >
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index f641fc76f47e..1bbb77640045 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -4111,6 +4111,9 @@ struct skb_ext {
-> 	char data[0] __aligned(8);
-> };
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1c489eccdb58..ba918c4fdcc8 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -107,8 +107,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> 	bool collapsed, can_collapse =3D false;
+> 	struct mptcp_ext *mpext =3D NULL;
+> +	struct sk_buff *skb, *tail;
+> 	struct page_frag *pfrag;
+> -	struct sk_buff *skb;
+> 	size_t psize;
 >
-> +struct skb_ext *skb_ext_alloc(void);
-> +void *__skb_ext_add(struct sk_buff *skb, enum skb_ext_id id,
-> +		    struct skb_ext *ext);
-> void *skb_ext_add(struct sk_buff *skb, enum skb_ext_id id);
-> void __skb_ext_del(struct sk_buff *skb, enum skb_ext_id id);
-> void __skb_ext_put(struct skb_ext *ext);
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 0aba2cd69881..e8ed6d28fba8 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -5981,7 +5981,7 @@ static void *skb_ext_get_ptr(struct skb_ext *ext, e=
-num skb_ext_id id)
-> 	return (void *)ext + (ext->offset[id] * SKB_EXT_ALIGN_VALUE);
-> }
+> 	/* use the mptcp page cache so that we can easily move the data
+> @@ -165,10 +165,16 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
+ct sock *ssk,
+> 	if (unlikely(ret < psize))
+> 		iov_iter_revert(&msg->msg_iter, psize - ret);
 >
-> -static struct skb_ext *skb_ext_alloc(void)
-> +struct skb_ext *skb_ext_alloc(void)
-> {
-> 	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, GFP_ATOMIC);
->
-> @@ -6021,6 +6021,20 @@ static struct skb_ext *skb_ext_maybe_cow(struct sk=
-b_ext *old,
-> 	return new;
-> }
->
+> -	collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
+> +	/* if the tail skb extension is still the cached one, collapsing
+> +	 * really happened. Note: we can't check for 'same skb' as the sk_buff
+> +	 * hdr on tail can be transmitted, freed and re-allocated by the
+> +	 * do_tcp_sendpages() call
+> +	 */
+> +	tail =3D tcp_write_queue_tail(ssk);
+> +	collapsed =3D mpext &&
+> +		    mpext =3D=3D (tail ? skb_ext_find(tail, SKB_EXT_MPTCP) : NULL);
+> 	if (collapsed) {
 
-A comment similar to the one before skb_ext_add would be helpful, =
+I would find this a little easier to read:
 
-especially given the extra rules for the "__" version of the function, and =
+if (mpext && tail && mpext =3D=3D skb_ext_find(tail, SKB_EXT_MPTCP))
 
-as you mentioned in the cover letter wanting to make sure the struct =
+This also lets you remove the 'collapsed' variable.
 
-skb_ext is newly alloced.
-
-> +void *__skb_ext_add(struct sk_buff *skb, enum skb_ext_id id,
-> +		    struct skb_ext *ext)
-> +{
-> +	unsigned int newlen, newoff =3D SKB_EXT_CHUNKSIZEOF(*ext);
-> +
-> +	skb_ext_put(skb);
-> +	newlen =3D newoff + skb_ext_type_len[id];
-> +	ext->chunks =3D newlen;
-> +	ext->offset[id] =3D newoff;
-> +	skb->extensions =3D ext;
-> +	skb->active_extensions |=3D 1 << id;
-
-Since this isn't doing a copy-on-write, need to use "=3D" instead of "|=3D"=
- so =
-
-active_extensions doesn't have old bits set from the previous skb_ext =
-
-struct (if there was one).
-
-> +	return skb_ext_get_ptr(ext, id);
-> +}
-> +
-> /**
->  * skb_ext_add - allocate space for given extension, COW if needed
->  * @skb: buffer
+> 		WARN_ON_ONCE(!can_collapse);
+> -		/* when collapsing mpext always exists */
+> 		mpext->data_len +=3D ret;
+> 		goto out;
+> 	}
 
 --
 Mat Martineau
 Intel
---===============6297991873646956853==--
+--===============6003205796249649811==--
