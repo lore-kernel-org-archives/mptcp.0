@@ -1,87 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============6976138518756269413=="
+Content-Type: multipart/mixed; boundary="===============7479929494065205411=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/3] imptcp: properly detect skb collapsing
-Date: Wed, 04 Dec 2019 10:18:36 +0100
-Message-ID: <08346a95bdf3eeb549a8092440d121185a222d14.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1912032306181.38586@pminglan-mobl.amr.corp.intel.com
+Subject: [MPTCP] [PATCH v3 1/3] skb: add helpers to allocate ext independently
+ from sk_buff
+Date: Wed, 04 Dec 2019 15:18:10 +0100
+Message-ID: <6492cd55627c8f53ca8909b69d95d6f6b9e8a9c6.1575468474.git.pabeni@redhat.com>
+In-Reply-To: cover.1575468474.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2777
+X-UID: 2778
 
---===============6976138518756269413==
+--===============7479929494065205411==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-12-03 at 23:19 -0800, Mat Martineau wrote:
-> On Mon, 2 Dec 2019, Paolo Abeni wrote:
-> =
+Currently we can allocate the extension only after the skb,
+this change allows the user to do the opposite, will simplify
+allocation failure handling from MPTCP.
 
-> > Currently we can misdetect skb collapsing, which will lead
-> > to a kernel warning and crash.
-> > =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+v1 -> v3:
+ - renamed the helpers, add comment, set explicitly =
 
-> > Changing a bit the detection logic for skb collapsing we
-> > can address the issue.
-> > =
+   the active_extensions mask (Mat)
+---
+ include/linux/skbuff.h |  3 +++
+ net/core/skbuff.c      | 35 +++++++++++++++++++++++++++++++++--
+ 2 files changed, 36 insertions(+), 2 deletions(-)
 
-> > Squash-to: "mptcp: allow collapsing consecutive sendpages on the same s=
-ubstream"
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> > net/mptcp/protocol.c | 12 +++++++++---
-> > 1 file changed, 9 insertions(+), 3 deletions(-)
-> > =
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index b4ef8b758828..bf2eee2b2b02 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -4114,6 +4114,9 @@ struct skb_ext {
+ 	char data[0] __aligned(8);
+ };
+ =
 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 1c489eccdb58..ba918c4fdcc8 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -107,8 +107,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
-ct sock *ssk,
-> > 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> > 	bool collapsed, can_collapse =3D false;
-> > 	struct mptcp_ext *mpext =3D NULL;
-> > +	struct sk_buff *skb, *tail;
-> > 	struct page_frag *pfrag;
-> > -	struct sk_buff *skb;
-> > 	size_t psize;
-> > =
++struct skb_ext *__skb_ext_alloc(void);
++void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
++		    struct skb_ext *ext);
+ void *skb_ext_add(struct sk_buff *skb, enum skb_ext_id id);
+ void __skb_ext_del(struct sk_buff *skb, enum skb_ext_id id);
+ void __skb_ext_put(struct skb_ext *ext);
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 0aba2cd69881..2218d700e371 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5981,7 +5981,14 @@ static void *skb_ext_get_ptr(struct skb_ext *ext, en=
+um skb_ext_id id)
+ 	return (void *)ext + (ext->offset[id] * SKB_EXT_ALIGN_VALUE);
+ }
+ =
 
-> > 	/* use the mptcp page cache so that we can easily move the data
-> > @@ -165,10 +165,16 @@ static int mptcp_sendmsg_frag(struct sock *sk, st=
-ruct sock *ssk,
-> > 	if (unlikely(ret < psize))
-> > 		iov_iter_revert(&msg->msg_iter, psize - ret);
-> > =
+-static struct skb_ext *skb_ext_alloc(void)
++/**
++ * __skb_ext_alloc - allocate a new skb extensions storage
++ *
++ * Returns the newly allocated pointer. The pointer can later attached to a
++ * skb via __skb_ext_set().
++ * Note: caller must handle the skb_ext as an opaque data.
++ */
++struct skb_ext *__skb_ext_alloc(void)
+ {
+ 	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, GFP_ATOMIC);
+ =
 
-> > -	collapsed =3D skb =3D=3D tcp_write_queue_tail(ssk);
-> > +	/* if the tail skb extension is still the cached one, collapsing
-> > +	 * really happened. Note: we can't check for 'same skb' as the sk_buff
-> > +	 * hdr on tail can be transmitted, freed and re-allocated by the
-> > +	 * do_tcp_sendpages() call
-> > +	 */
-> > +	tail =3D tcp_write_queue_tail(ssk);
-> > +	collapsed =3D mpext &&
-> > +		    mpext =3D=3D (tail ? skb_ext_find(tail, SKB_EXT_MPTCP) : NULL);
-> > 	if (collapsed) {
-> =
+@@ -6021,6 +6028,30 @@ static struct skb_ext *skb_ext_maybe_cow(struct skb_=
+ext *old,
+ 	return new;
+ }
+ =
 
-> I would find this a little easier to read:
-> =
++/**
++ * __skb_ext_set - attach the specified extension storage to this skb
++ * @skb: buffer
++ * @id: extension id
++ * @ext: extension storage previously allocated via __skb_ext_alloc()
++ *
++ * Existing extensions, if any, are cleared.
++ *
++ * Returns the pointer to the extension.
++ */
++void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
++		    struct skb_ext *ext)
++{
++	unsigned int newlen, newoff =3D SKB_EXT_CHUNKSIZEOF(*ext);
++
++	skb_ext_put(skb);
++	newlen =3D newoff + skb_ext_type_len[id];
++	ext->chunks =3D newlen;
++	ext->offset[id] =3D newoff;
++	skb->extensions =3D ext;
++	skb->active_extensions =3D 1 << id;
++	return skb_ext_get_ptr(ext, id);
++}
++
+ /**
+  * skb_ext_add - allocate space for given extension, COW if needed
+  * @skb: buffer
+@@ -6054,7 +6085,7 @@ void *skb_ext_add(struct sk_buff *skb, enum skb_ext_i=
+d id)
+ 	} else {
+ 		newoff =3D SKB_EXT_CHUNKSIZEOF(*new);
+ =
 
-> if (mpext && tail && mpext =3D=3D skb_ext_find(tail, SKB_EXT_MPTCP))
+-		new =3D skb_ext_alloc();
++		new =3D __skb_ext_alloc();
+ 		if (!new)
+ 			return NULL;
+ 	}
+-- =
 
-Agreed, will send v2 with the above.
+2.21.0
 
-> This also lets you remove the 'collapsed' variable.
-
-Yup! The flip side is an extra bunch of conflicts :( Poor Matt ;)))
-
-Thanks,
-
-Paolo
-
---===============6976138518756269413==--
+--===============7479929494065205411==--
