@@ -1,539 +1,288 @@
-Content-Type: multipart/mixed; boundary="===============8034970417154586610=="
+Content-Type: multipart/mixed; boundary="===============8740760199853818937=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH 2/3] mptcp: parse and emit MP_CAPABLE option
  according to v1 spec.
-Date: Wed, 04 Dec 2019 18:08:18 -0800
-Message-ID: <5668486a1726eca53f6f1a53e647735b65ac72d0.camel@linux.intel.com>
-In-Reply-To: 20191202171504.88739-3-cpaasch@apple.com
+Date: Wed, 04 Dec 2019 18:27:43 -0800
+Message-ID: <alpine.OSX.2.21.1912041803341.46683@pminglan-mobl.amr.corp.intel.com>
+In-Reply-To: 66c479a3-14c4-fcbf-25a6-b04aa995db4b@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2790
+X-UID: 2791
 
---===============8034970417154586610==
+--===============8740760199853818937==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-12-02 at 09:15 -0800, Christoph Paasch wrote:
-> This implements MP_CAPABLE options parsing and writing according
-> the the RFC 6824 bis - MPTCP v1.
-> Local key is sent on syn/ack, and both keys are sent on 3rd ack.
-> MP_CAPABLE messages len are updated accordingly.
-> We need the skbuff to emit correctly the above, so we push the skbuff
-> struct as an argument all the way from tcp code to the relevant mptcp
-> callbacks.
-> =
+On Tue, 3 Dec 2019, Matthieu Baerts wrote:
 
-> When processing incoming MP_CAPABLE + data, build a full blown DSS-like
-> map info, to simplify later processing.
-> On child socket creation, we need to record the remote key, if available.
-> =
+> On 03/12/2019 17:49, Paolo Abeni wrote:
+>> On Tue, 2019-12-03 at 16:50 +0100, Matthieu Baerts wrote:
+>>> Hi Paolo,
+>>> =
 
-> RFC -> v1:
->  - rebase on top of "mptcp: Add IPv6 support"
->  - explicitly assumes TCP option space is not exhausted
-> =
+>>> On 03/12/2019 12:05, Paolo Abeni wrote:
+>>>> On Tue, 2019-12-03 at 11:39 +0100, Matthieu Baerts wrote:
+>>> =
 
-> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-> ---
->  include/linux/tcp.h   |   3 +-
->  include/net/mptcp.h   |  11 +--
->  net/ipv4/tcp_input.c  |   2 +-
->  net/ipv4/tcp_output.c |   2 +-
->  net/mptcp/options.c   | 172 ++++++++++++++++++++++++++++++++----------
->  net/mptcp/protocol.c  |   2 +-
->  net/mptcp/protocol.h  |   6 +-
->  net/mptcp/subflow.c   |  14 +++-
->  8 files changed, 159 insertions(+), 53 deletions(-)
-> =
+>>> [...]
+>>> =
 
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 4b3ab4226ba8..5760f16823c8 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -114,7 +114,8 @@ struct tcp_options_received {
->  			data_fin:1,
->  			use_ack:1,
->  			ack64:1,
-> -			__unused:3;
-> +			mp_capable_map:1,
+>>>>>> @@ -29,12 +29,24 @@ void mptcp_parse_option(const unsigned char *ptr=
+, =
 
-My only comment for this patch is can we use shorter name for this field li=
-ke
-all the others? Maybe mpc_map? But don't redo patchset for just this change.
+>>>>>> int opsize,
+>>>>>>     	 * 10-17: Receiver key (optional)
+>>>>>>     	 */
+>>>>>>     	case MPTCPOPT_MP_CAPABLE:
+>>>>>> -		if (opsize !=3D TCPOLEN_MPTCP_MPC_SYN &&
+>>>>>> -		    opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
+>>>>>> +		/* strict size checking */
+>>>>> =
 
-Peter.
+>>>>> Good idea, even for a v0 (but no need to change the patches v0 of =
 
-> +			__unused:2;
->  	} mptcp;
->  #endif
->  };
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 6349c68e380b..6d82ff9b6a0b 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -23,7 +23,8 @@ struct mptcp_ext {
->  			data_fin:1,
->  			use_ack:1,
->  			ack64:1,
-> -			__unused:2;
-> +			mp_capable_map:1,
-> +			__unused:1;
->  };
->  =
+>>>>> course)
+>>>>> =
 
->  struct mptcp_out_options {
-> @@ -49,10 +50,10 @@ static inline bool rsk_is_mptcp(const struct request_=
-sock *req)
->  	return tcp_rsk(req)->is_mptcp;
->  }
->  =
+>>>>>> +		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)) {
+>>>>>> +			if (skb->len > tcp_hdr(skb)->doff << 2)
+>>>>>> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK_DATA;
+>>>>>> +			else
+>>>>>> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK;
+>>>>>> +		} else {
+>>>>>> +			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK)
+>>>>>> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_SYNACK;
+>>>>>> +			else
+>>>>>> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_SYN;
+>>>>>> +		}
+>>>>>> +		if (opsize !=3D expected_opsize)
+>>>>>>     			break;
+>>>>>>     +		/* only support V1 of the protocol */
+>>>>>>     		mp_opt->version =3D *ptr++ & MPTCP_VERSION_MASK;
+>>>>>> -		if (mp_opt->version !=3D 0)
+>>>>>> +		if (mp_opt->version !=3D 1)
+>>>>> =
 
-> -void mptcp_parse_option(const unsigned char *ptr, int opsize,
-> -			struct tcp_options_received *opt_rx);
-> -bool mptcp_syn_options(struct sock *sk, unsigned int *size,
-> -		       struct mptcp_out_options *opts);
-> +void mptcp_parse_option(const struct sk_buff *skb, const unsigned char *=
-ptr,
-> +			int opsize, struct tcp_options_received *opt_rx);
-> +bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
-> +		       unsigned int *size, struct mptcp_out_options *opts);
->  void mptcp_rcv_synsent(struct sock *sk);
->  bool mptcp_synack_options(const struct request_sock *req, unsigned int *=
-size,
->  			  struct mptcp_out_options *opts);
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index d1ab9edfb764..16bd46a097d5 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -3922,7 +3922,7 @@ void tcp_parse_options(const struct net *net,
->  				break;
->  #endif
->  			case TCPOPT_MPTCP:
-> -				mptcp_parse_option(ptr, opsize, opt_rx);
-> +				mptcp_parse_option(skb, ptr, opsize, opt_rx);
->  				break;
->  =
+>>>>> I don't know if you saw my previous comment but if we are parsing a S=
+YN
+>>>>> here, should we not accept all versions > 0 and reply that the highest
+>>>>> version we support is v1?
+>>>> =
 
->  			case TCPOPT_FASTOPEN:
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index 8b2f2a8b9a23..82ebb1a4d669 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -682,7 +682,7 @@ static unsigned int tcp_syn_options(struct sock *sk, =
-struct sk_buff *skb,
->  	if (sk_is_mptcp(sk)) {
->  		unsigned int size;
->  =
+>>>> Yep, sorry for the missing answer, so far. I think we can add easily
+>>>> that later, if/when newer/experimental version will surface. This code
+>>>> preserve the behaviour we already have with v0, I think we can keep as-
+>>>> is.
+>>> =
 
-> -		if (mptcp_syn_options(sk, &size, &opts->mptcp)) {
-> +		if (mptcp_syn_options(sk, skb, &size, &opts->mptcp)) {
->  			opts->options |=3D OPTION_MPTCP;
->  			remaining -=3D size;
->  		}
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1cb0bd687b6b..299af8e5456d 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -14,8 +14,8 @@ static bool mptcp_cap_flag_sha256(u8 flags)
->  	return (flags & MPTCP_CAP_FLAG_MASK) =3D=3D MPTCP_CAP_HMAC_SHA256;
->  }
->  =
+>>> The problem with this code is that if someone develops a version higher
+>>> than 1, it will not be compatible with our MPTCP upstream one, not
+>>> because he/she didn't implement a fallback to an older version or the
+>>> new version isn't backward compatible but because the Linux upstream
+>>> version doesn't allow that:
+>>>
+>>>      C                              S (MPTCP upstream)
+>>>      |---- SYN(MP_CAPABLE v2) ----> |
+>>>      |                              |
+>>>      | <--- SYN (without MPTCP) --- |
+>>> =
 
-> -void mptcp_parse_option(const unsigned char *ptr, int opsize,
-> -			struct tcp_options_received *opt_rx)
-> +void mptcp_parse_option(const struct sk_buff *skb, const unsigned char *=
-ptr,
-> +			int opsize, struct tcp_options_received *opt_rx)
->  {
->  	struct mptcp_options_received *mp_opt =3D &opt_rx->mptcp;
->  	u8 subtype =3D *ptr >> 4;
-> @@ -29,12 +29,24 @@ void mptcp_parse_option(const unsigned char *ptr, int=
- opsize,
->  	 * 10-17: Receiver key (optional)
->  	 */
->  	case MPTCPOPT_MP_CAPABLE:
-> -		if (opsize !=3D TCPOLEN_MPTCP_MPC_SYN &&
-> -		    opsize !=3D TCPOLEN_MPTCP_MPC_SYNACK)
-> +		/* strict size checking */
-> +		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)) {
-> +			if (skb->len > tcp_hdr(skb)->doff << 2)
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK_DATA;
-> +			else
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_ACK;
-> +		} else {
-> +			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK)
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_SYNACK;
-> +			else
-> +				expected_opsize =3D TCPOLEN_MPTCP_MPC_SYN;
-> +		}
-> +		if (opsize !=3D expected_opsize)
->  			break;
->  =
+>>> I am sure we can fix that later but better to do that as soon as possib=
+le =
 
-> +		/* only support V1 of the protocol */
->  		mp_opt->version =3D *ptr++ & MPTCP_VERSION_MASK;
-> -		if (mp_opt->version !=3D 0)
-> +		if (mp_opt->version !=3D 1)
->  			break;
->  =
+>>> :)
+>>> (I can propose a patch after it is applied if it is OK for you)
+>> =
 
->  		mp_opt->flags =3D *ptr++;
-> @@ -59,19 +71,29 @@ void mptcp_parse_option(const unsigned char *ptr, int=
- opsize,
->  			break;
->  =
+>> Ok, but I would wait at least for a v2 RFC to surface!!!
+>
+> OK, no problem for me!
 
->  		mp_opt->mp_capable =3D 1;
-> -		mp_opt->sndr_key =3D get_unaligned_be64(ptr);
-> -		ptr +=3D 8;
-> -
-> -		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_SYNACK) {
-> +		if (opsize >=3D TCPOLEN_MPTCP_MPC_SYNACK) {
-> +			mp_opt->sndr_key =3D get_unaligned_be64(ptr);
-> +			ptr +=3D 8;
-> +		}
-> +		if (opsize >=3D TCPOLEN_MPTCP_MPC_ACK) {
->  			mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
->  			ptr +=3D 8;
-> -			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu, rcvr=3D%llu",
-> -				 mp_opt->flags, mp_opt->sndr_key,
-> -				 mp_opt->rcvr_key);
-> -		} else {
-> -			pr_debug("MP_CAPABLE flags=3D%x, sndr=3D%llu",
-> -				 mp_opt->flags, mp_opt->sndr_key);
->  		}
-> +		if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK_DATA) {
-> +			/* Section 3.1.:
-> +			 * "the data parameters in a MP_CAPABLE are semantically
-> +			 * equivalent to those in a DSS option and can be used
-> +			 * interchangeably."
-> +			 */
-> +			mp_opt->dss =3D 1;
-> +			mp_opt->use_map =3D 1;
-> +			mp_opt->mp_capable_map =3D 1;
-> +			mp_opt->data_len =3D get_unaligned_be16(ptr);
-> +			ptr +=3D 2;
-> +		}
-> +		pr_debug("MP_CAPABLE flags=3D%x, optlen=3D%d sndr=3D%llu, rcvr=3D%llu =
-len=3D%d",
-> +			 mp_opt->flags, opsize, mp_opt->sndr_key,
-> +			 mp_opt->rcvr_key, mp_opt->data_len);
->  		break;
->  =
+Section 3.1 of RFC6824bis does say to send the SYNACK with the highest =
 
->  	/* MPTCPOPT_MP_JOIN
-> @@ -105,6 +127,11 @@ void mptcp_parse_option(const unsigned char *ptr, in=
-t opsize,
->  		pr_debug("DSS");
->  		ptr++;
->  =
+number supported (as long as the SYN specifies MPTCP v1 or later), which =
 
-> +		/* we must clear 'mp_capable_map' be able to detect MP_CAPABLE
-> +		 * map vs DSS map in mptcp_incoming_options(), and reconstruct
-> +		 * map info accordingly
-> +		 */
-> +		mp_opt->mp_capable_map =3D 0;
->  		mp_opt->dss_flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
->  		mp_opt->data_fin =3D (mp_opt->dss_flags & MPTCP_DSS_DATA_FIN) !=3D 0;
->  		mp_opt->dsn64 =3D (mp_opt->dss_flags & MPTCP_DSS_DSN64) !=3D 0;
-> @@ -238,18 +265,22 @@ void mptcp_get_options(const struct sk_buff *skb,
->  			if (opsize > length)
->  				return;	/* don't parse partial options */
->  			if (opcode =3D=3D TCPOPT_MPTCP)
-> -				mptcp_parse_option(ptr, opsize, opt_rx);
-> +				mptcp_parse_option(skb, ptr, opsize, opt_rx);
->  			ptr +=3D opsize - 2;
->  			length -=3D opsize;
->  		}
->  	}
->  }
->  =
+puts all of the compatibility work on the peer. Since that seems to have =
 
-> -bool mptcp_syn_options(struct sock *sk, unsigned int *size,
-> -		       struct mptcp_out_options *opts)
-> +bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
-> +		       unsigned int *size, struct mptcp_out_options *opts)
->  {
->  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
->  =
+been added with version negotiation and future compatibility in mind, I =
 
-> +	/* we will use snd_isn to detect first pkt [re]transmission
-> +	 * in mptcp_established_options_mp()
-> +	 */
-> +	subflow->snd_isn =3D TCP_SKB_CB(skb)->end_seq;
->  	if (subflow->request_mptcp) {
->  		pr_debug("local_key=3D%llu", subflow->local_key);
->  		opts->suboptions =3D OPTION_MPTCP_MPC_SYN;
-> @@ -272,20 +303,58 @@ void mptcp_rcv_synsent(struct sock *sk)
->  	}
->  }
->  =
+think it makes sense to only break here if mp_opt->version =3D=3D 0. Any =
 
-> -static bool mptcp_established_options_mp(struct sock *sk, unsigned int *=
-size,
-> +static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff=
- *skb,
-> +					 unsigned int *size,
->  					 unsigned int remaining,
->  					 struct mptcp_out_options *opts)
->  {
->  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-> -
-> -	if (!subflow->fourth_ack) {
-> -		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
-> +	struct mptcp_ext *mpext;
-> +	unsigned int data_len;
-> +
-> +	pr_debug("subflow=3D%p fourth_ack=3D%d seq=3D%x:%x remaining=3D%d", sub=
-flow,
-> +		 subflow->fourth_ack, subflow->snd_isn,
-> +		 skb ? TCP_SKB_CB(skb)->seq : 0, remaining);
-> +
-> +	if (subflow->mp_capable && !subflow->fourth_ack && skb &&
-> +	    subflow->snd_isn =3D=3D TCP_SKB_CB(skb)->seq) {
-> +		/* When skb is not available, we better over-estimate the
-> +		 * emitted options len. A full DSS option is longer than
-> +		 * TCPOLEN_MPTCP_MPC_ACK_DATA, so let's the caller try to fit
-> +		 * that.
-> +		 */
-> +		mpext =3D mptcp_get_ext(skb);
-> +		data_len =3D mpext ? mpext->data_len : 0;
->  		opts->sndr_key =3D subflow->local_key;
->  		opts->rcvr_key =3D subflow->remote_key;
-> +
-> +		/* Section 3.1.
-> +		 * The MP_CAPABLE option is carried on the SYN, SYN/ACK, and ACK
-> +		 * packets that start the first subflow of an MPTCP connection,
-> +		 * as well as the first packet that carries data
-> +		 */
-> +		if (data_len > 0) {
-> +			opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
-> +
-> +			/* we will check ext_copy.data_len in
-> +			 * mptcp_write_options() to discriminate between
-> +			 * TCPOLEN_MPTCP_MPC_ACK_DATA and TCPOLEN_MPTCP_MPC_ACK
-> +			 */
-> +			opts->ext_copy.data_len =3D data_len;
-> +			*size =3D ALIGN(TCPOLEN_MPTCP_MPC_ACK_DATA, 4);
-> +			pr_debug("subflow=3D%p, local_key=3D%llu, remote_key=3D%llu map_len=
-=3D%d",
-> +				 subflow, subflow->local_key,
-> +				 subflow->remote_key, opts->ext_copy.data_len);
-> +			return true;
-> +		}
-> +
-> +		/* plain MP_CAPABLE + ack */
-> +		opts->suboptions =3D OPTION_MPTCP_MPC_ACK;
-> +		opts->ext_copy.data_len =3D 0;
->  		*size =3D TCPOLEN_MPTCP_MPC_ACK;
-> -		subflow->fourth_ack =3D 1;
->  		pr_debug("subflow=3D%p, local_key=3D%llu, remote_key=3D%llu",
-> -			 subflow, subflow->local_key, subflow->remote_key);
-> +			 subflow, subflow->local_key,
-> +			 subflow->remote_key);
->  		return true;
->  	}
->  	return false;
-> @@ -348,7 +417,7 @@ bool mptcp_established_options(struct sock *sk, struc=
-t sk_buff *skb,
->  	if (!mptcp_subflow_ctx(sk)->mp_capable)
->  		return false;
->  =
+potential future MPTCP RFCs will be assuming a v1 server will respond =
 
-> -	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts))
-> +	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining, opts))
->  		ret =3D true;
->  	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
->  						 opts))
-> @@ -374,11 +443,9 @@ bool mptcp_synack_options(const struct request_sock =
-*req, unsigned int *size,
->  	if (subflow_req->mp_capable) {
->  		opts->suboptions =3D OPTION_MPTCP_MPC_SYNACK;
->  		opts->sndr_key =3D subflow_req->local_key;
-> -		opts->rcvr_key =3D subflow_req->remote_key;
->  		*size =3D TCPOLEN_MPTCP_MPC_SYNACK;
-> -		pr_debug("subflow_req=3D%p, local_key=3D%llu, remote_key=3D%llu",
-> -			 subflow_req, subflow_req->local_key,
-> -			 subflow_req->remote_key);
-> +		pr_debug("req=3D%p, local_key=3D%llu",
-> +			 subflow_req, subflow_req->local_key);
->  		return true;
->  	}
->  	return false;
-> @@ -406,11 +473,23 @@ void mptcp_incoming_options(struct sock *sk, struct=
- sk_buff *skb,
->  	memset(mpext, 0, sizeof(*mpext));
->  =
+with a MPTCPv1 SYNACK.
 
->  	if (mp_opt->use_map) {
-> -		mpext->data_seq =3D mp_opt->data_seq;
-> -		mpext->subflow_seq =3D mp_opt->subflow_seq;
-> +		if (mp_opt->mp_capable_map) {
-> +			/* this is an MP_CAPABLE carrying MPTCP data
-> +			 * we know this map the first chunk of data
-> +			 */
-> +			mptcp_crypto_key_sha(subflow->remote_key, NULL,
-> +					     &mpext->data_seq);
-> +			mpext->data_seq++;
-> +			mpext->subflow_seq =3D 1;
-> +			mpext->dsn64 =3D 1;
-> +			mpext->mp_capable_map =3D 1;
-> +		} else {
-> +			mpext->data_seq =3D mp_opt->data_seq;
-> +			mpext->subflow_seq =3D mp_opt->subflow_seq;
-> +			mpext->dsn64 =3D mp_opt->dsn64;
-> +		}
->  		mpext->data_len =3D mp_opt->data_len;
->  		mpext->use_map =3D 1;
-> -		mpext->dsn64 =3D mp_opt->dsn64;
->  	}
->  =
+That said, forcing a fallback with v2+ would still let two hosts connect =
 
->  	if (mp_opt->use_ack) {
-> @@ -424,8 +503,7 @@ void mptcp_incoming_options(struct sock *sk, struct s=
-k_buff *skb,
->  =
+with regular TCP, so we're not breaking the RFC. But this seems to be a =
 
->  void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
->  {
-> -	if ((OPTION_MPTCP_MPC_SYN |
-> -	     OPTION_MPTCP_MPC_SYNACK |
-> +	if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
->  	     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
->  		u8 len;
->  =
+one-line change for us, we can let the peer from the future figure out if =
 
-> @@ -433,22 +511,36 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_=
-out_options *opts)
->  			len =3D TCPOLEN_MPTCP_MPC_SYN;
->  		else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
->  			len =3D TCPOLEN_MPTCP_MPC_SYNACK;
-> +		else if (opts->ext_copy.data_len)
-> +			len =3D TCPOLEN_MPTCP_MPC_ACK_DATA;
->  		else
->  			len =3D TCPOLEN_MPTCP_MPC_ACK;
->  =
+it wants to fall back to MPTCPv1 or TCP.
 
->  		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) | (len << 16) |
->  			       (MPTCPOPT_MP_CAPABLE << 12) |
-> -			       ((MPTCP_VERSION_MASK & 0) << 8) |
-> +			       ((MPTCP_VERSION_MASK & 1) << 8) |
->  			       MPTCP_CAP_HMAC_SHA256);
-> +
-> +		if (!((OPTION_MPTCP_MPC_SYNACK | OPTION_MPTCP_MPC_ACK) &
-> +		    opts->suboptions))
-> +			goto mp_capable_done;
-> +
->  		put_unaligned_be64(opts->sndr_key, ptr);
->  		ptr +=3D 2;
-> -		if ((OPTION_MPTCP_MPC_SYNACK |
-> -		     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-> -			put_unaligned_be64(opts->rcvr_key, ptr);
-> -			ptr +=3D 2;
-> -		}
-> +		if (!((OPTION_MPTCP_MPC_ACK) & opts->suboptions))
-> +			goto mp_capable_done;
-> +
-> +		put_unaligned_be64(opts->rcvr_key, ptr);
-> +		ptr +=3D 2;
-> +		if (!opts->ext_copy.data_len)
-> +			goto mp_capable_done;
-> +
-> +		put_unaligned_be32(opts->ext_copy.data_len << 16 |
-> +				   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
-> +		ptr +=3D 1;
->  	}
->  =
 
-> +mp_capable_done:
->  	if (opts->ext_copy.use_ack || opts->ext_copy.use_map) {
->  		struct mptcp_ext *mpext =3D &opts->ext_copy;
->  		u8 len =3D TCPOLEN_MPTCP_DSS_BASE;
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6d959559aa1a..4b000f842d6b 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -707,7 +707,7 @@ static struct socket *mptcp_socket_create_get(struct =
-mptcp_sock *msk)
->  	msk->subflow =3D ssock;
->  	subflow =3D mptcp_subflow_ctx(msk->subflow->sk);
->  	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
-> -	subflow->request_version =3D 0; /* currently only v0 supported */
-> +	subflow->request_version =3D 1; /* only v1 supported */
->  =
+Mat
 
->  	sock_hold(ssock->sk);
->  =
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index dcdd3dcd19c6..bdff743cf2b3 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -27,9 +27,10 @@
->  #define MPTCPOPT_MP_FASTCLOSE	7
->  =
+>
+>>> =
 
->  /* MPTCP suboption lengths */
-> -#define TCPOLEN_MPTCP_MPC_SYN		12
-> -#define TCPOLEN_MPTCP_MPC_SYNACK	20
-> +#define TCPOLEN_MPTCP_MPC_SYN		4
-> +#define TCPOLEN_MPTCP_MPC_SYNACK	12
->  #define TCPOLEN_MPTCP_MPC_ACK		20
-> +#define TCPOLEN_MPTCP_MPC_ACK_DATA	22
->  #define TCPOLEN_MPTCP_DSS_BASE		4
->  #define TCPOLEN_MPTCP_DSS_ACK32		4
->  #define TCPOLEN_MPTCP_DSS_ACK64		8
-> @@ -103,6 +104,7 @@ struct mptcp_subflow_context {
->  	u64	remote_key;
->  	u64	idsn;
->  	u64	map_seq;
-> +	u32	snd_isn;
->  	u32	token;
->  	u32	rel_write_seq;
->  	u32	map_subflow_seq;
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 37b3ae10c042..96cc80f8d751 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -81,7 +81,6 @@ static void subflow_init_req(struct request_sock *req,
->  			subflow_req->version =3D listener->request_version;
->  		else
->  			subflow_req->version =3D rx_opt.mptcp.version;
-> -		subflow_req->remote_key =3D rx_opt.mptcp.sndr_key;
->  		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
->  	}
->  }
-> @@ -183,11 +182,22 @@ static struct sock *subflow_syn_recv_sock(const str=
-uct sock *sk,
->  					  bool *own_req)
->  {
->  	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
-> +	struct mptcp_subflow_request_sock *subflow_req;
-> +	struct tcp_options_received opt_rx;
->  	struct sock *child;
->  =
+>>>>>> @@ -433,22 +511,36 @@>
+>>>> Paolo
+>>>>   void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
+>>>>>>     			len =3D TCPOLEN_MPTCP_MPC_SYN;
+>>>>>>     		else if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
+>>>>>>     			len =3D TCPOLEN_MPTCP_MPC_SYNACK;
+>>>>>> +		else if (opts->ext_copy.data_len)
+>>>>>> +			len =3D TCPOLEN_MPTCP_MPC_ACK_DATA;
+>>>>>>     		else
+>>>>>>     			len =3D TCPOLEN_MPTCP_MPC_ACK;
+>>>>>>         		*ptr++ =3D htonl((TCPOPT_MPTCP << 24) | (len << 16) |
+>>>>>>     			       (MPTCPOPT_MP_CAPABLE << 12) |
+>>>>>> -			       ((MPTCP_VERSION_MASK & 0) << 8) |
+>>>>>> +			       ((MPTCP_VERSION_MASK & 1) << 8) |
+>>>>> =
 
->  	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener-=
->conn);
->  =
+>>>>> Why do you have to change the bit we need from the mask here?
+>>>> =
 
-> -	/* if the sk is MP_CAPABLE, we already received the client key */
-> +	/* if the sk is MP_CAPABLE, we need to fetch the client key */
-> +	subflow_req =3D mptcp_subflow_rsk(req);
-> +	if (subflow_req->mp_capable) {
-> +		opt_rx.mptcp.mp_capable =3D 0;
-> +		mptcp_get_options(skb, &opt_rx);
-> +		if (!opt_rx.mptcp.mp_capable)
-> +			subflow_req->mp_capable =3D 0;
-> +		else
-> +			subflow_req->remote_key =3D opt_rx.mptcp.sndr_key;
-> +	}
->  =
+>>>> I guess the above is clearer after rebasing patch "mptcp: Add ADD_ADDR
+>>>> handling", which introduces the mptcp_option() helper.
+>>>> =
 
->  	child =3D listener->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
->  						     req_unhash, own_req);
+>>>> The above statement set the version number inside the MP_CAPABLE option
+>>>> to 1 (the mask is unchanged, the code changes the version value to 1)
+>>> =
 
---===============8034970417154586610==--
+>>> Oh yes, sorry, I was expecting to find "subflow->request_version" where
+>>> we set the version 1.
+>>> =
+
+>>> Maybe clearer with a "#define MPTCP_VERSION 0x1" but a detail :)
+>>>
+>>>>>>     			       MPTCP_CAP_HMAC_SHA256);
+>>>>>> +
+>>>>>> +		if (!((OP>
+>>>> Paolo
+>>>> TION_MPTCP_MPC_SYNACK | OPTION_MPTCP_MPC_ACK) &
+>>>>>> +		    opts->suboptions))
+>>>>> =
+
+>>>>> (a detail but why not checking only for SYN?)
+>>>> =
+
+>>>> Yep, that would be equivalent. I guess the logic above is checking for
+>>>> whatever options need to process more data.
+>>>> =
+
+>>>>>> +			goto mp_capable_done;
+>>>>>> +
+>>>>>>     		put_unaligned_be64(opts->sndr_key, ptr);
+>>>>>>     		ptr +=3D 2;
+>>>>>> -		if ((OPTION_MPTCP_MPC_SYNACK |
+>>>>>> -		     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
+>>>>>> -			put_unaligned_be64(opts->rcvr_key, ptr);
+>>>>>> -			ptr +=3D 2;
+>>>>>> -		}
+>>>>>> +		if (!((OPTION_MPTCP_MPC_ACK) & opts->suboptions))
+>>>>> =
+
+>>>>> (a detail but here as well, can we not check only for SYNACK?)
+>>>> =
+
+>>>> I'm sorry I did not get it. Could you please re-phrase?
+>>> =
+
+>>> sorry, it is just that here, we are looking if we don't have a SYN_ACK
+>>> if I am not mistaken. So instead of:
+>>>
+>>>     if (!((OPTION_MPTCP_MPC_ACK) & opts->suboptions))
+>>> =
+
+>>> we could have:
+>>>
+>>>     if (OPTION_MPTCP_MPC_SYNACK & opts->suboptions)
+>>> =
+
+>>> no? The result is the same, maybe just clearer.
+>> =
+
+>> Yep, the check is equivalent.
+>> =
+
+>> To be honest it's not clearer to me, because the protocol says we need
+>> to fetch more data if this is a MPC_ACK (and we don't have anything
+>> todo if it's not).
+>
+> OK, maybe Christoph had something else in mind when he wrote this!
+> Fine to keep it but if we do some other modifications later, maybe better=
+ and =
+
+> clearer to simplify these if-statements :)
+>
+>>>>>> @@ -183,11 +182,22 @@ static struct sock *subflow_syn_recv_sock(cons=
+t =
+
+>>>>>> struct sock *sk,
+>>>>>>     					  bool *own_req)
+>>>>>>     {
+>>>>>>     	struct mptcp_subflow_context *listener =3D =
+
+>>>>>> mptcp_subflow_ctx(sk);
+>>>>>> +	struct mptcp_subflow_request_sock *subflow_req;
+>>>>>> +	struct tcp_options_received opt_rx;
+>>>>>>     	struct sock *child;
+>>>>>>         	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, re=
+q, =
+
+>>>>>> listener->conn);
+>>>>>>     -	/* if the sk is MP_CAPABLE, we already received the client =
+
+>>>>>> key */
+>>>>>> +	/* if the sk is MP_CAPABLE, we need to fetch the client key */
+>>>>>> +	subflow_req =3D mptcp_subflow_rsk(req);
+>>>>>> +	if (subflow_req->mp_capable) {
+>>>>>> +		opt_rx.mptcp.mp_capable =3D 0;
+>>>>>> +		mptcp_get_options(skb, &opt_rx);
+>>>>>> +		if (!opt_rx.mptcp.mp_capable)
+>>>>>> +			subflow_req->mp_capable =3D 0;
+>>>>> =
+
+>>>>> Does that mean that syn_recv_sock() will do a fallback to TCP?
+>>>> =
+
+>>>> AFAICS, yes. I guess pktdrill will help testing this code ;)
+>>> =
+
+>>> Could be good to test because it is not clear what will happen :-)
+>>> =
+
+>>>> Thank you for the in-depth review!
+>>> =
+
+>>> You are welcome.
+>>> =
+
+>>> Do you know if anybody else would like to review it? I will wait a bit
+>>> before applying it :)
+>> =
+
+>> I think it would be nice to squash/flush the pending patches soon,
+>> because I think it would be nice to have as much time as possible to
+>> polish the series. (e.g. I think we may want to squash somt part of the
+>> recent Florian's patches into the 2nd chunk part)
+>
+> OK! I propose to wait until tomorrow (afternoon for us) for additional =
+
+> reviews and squash this + Mat (Data FIN) and Florian (joins) patches + =
+
+> hopefully Davide (fix for v0) and yours (sendmsg)!
+>
+
+--
+Mat Martineau
+Intel
+--===============8740760199853818937==--
