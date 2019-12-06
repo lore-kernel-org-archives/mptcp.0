@@ -1,37 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============5768753283240739497=="
+Content-Type: multipart/mixed; boundary="===============4432492425850561611=="
 MIME-Version: 1.0
 From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Remove dss_flags field from struct
- mptcp_options_received
-Date: Fri, 06 Dec 2019 09:33:18 +0100
-Message-ID: <24d18761a7d6bcd40ee9dcaa1672d182d01cc454.camel@redhat.com>
-In-Reply-To: 20191205234358.27455-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH 1/3] MAINTAINERS: Add MPTCP maintainer
+Date: Fri, 06 Dec 2019 09:37:45 +0100
+Message-ID: <7a92d4d9679f268eefc3189675ca76a0e27c9143.camel@redhat.com>
+In-Reply-To: 20191205230601.21396-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2809
+X-UID: 2810
 
---===============5768753283240739497==
+--===============4432492425850561611==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-12-05 at 15:43 -0800, Peter Krystad wrote:
-> This field is used only temporarily while parsing options,
-> use a local variable instead.
+On Thu, 2019-12-05 at 15:05 -0800, Mat Martineau wrote:
+> When we discussed maintainership in an earlier meeting
+> (https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/thread/HCII262=
+2GWZCOMQCBOMQBJKZI247YIH5/)
+> there was a loose consensus that it would be best to have multiple
+> maintainers. I nominate Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> as a co-maintainer, what do you think?
 > =
 
-> Formatted to apply directly to Implement MPTCP receive path.
-> =
+> squashto: mptcp: Add MPTCP to skb extensions
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-> squashto: Implement MPTCP receive path
-> =
+hello Mat,
 
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+I think that the "maintainership" also applies to the UAPI bits, so
+probably we should add
 
-LGTM.
+include/uapi/linux/mptcp.h
 
-Acked-by: Davide Caratti <dcaratti(a)redhat.com>
+correct?
+
+thanks!
+-- =
+
+davide
 
 
---===============5768753283240739497==--
+--===============4432492425850561611==--
