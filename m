@@ -1,73 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============8316922112609680266=="
+Content-Type: multipart/mixed; boundary="===============6683801497850148447=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: Remove dss_flags field from struct
- mptcp_options_received
-Date: Thu, 05 Dec 2019 15:43:58 -0800
-Message-ID: <20191205234358.27455-1-peter.krystad@linux.intel.com>
+Subject: [MPTCP] Cover letters for part1/part2 netdev patchsets
+Date: Thu, 05 Dec 2019 16:41:59 -0800
+Message-ID: <alpine.OSX.2.21.1912051635040.57359@pminglan-mobl.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2806
+X-UID: 2807
 
---===============8316922112609680266==
+--===============6683801497850148447==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This field is used only temporarily while parsing options,
-use a local variable instead.
 
-Formatted to apply directly to Implement MPTCP receive path.
+Hello everyone -
 
-squashto: Implement MPTCP receive path
+As we discussed earlier today, here are draft cover letters for patch set =
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- include/linux/tcp.h |  1 -
- net/mptcp/options.c | 12 ++++++------
- 2 files changed, 6 insertions(+), 7 deletions(-)
+parts 1 & 2. Feedback appreciated!
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 184fc88a140b..a6d6438b27b1 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -107,7 +107,6 @@ struct tcp_options_received {
- 			mp_join : 1,
- 			dss : 1,
- 			version : 4;
--		u8	dss_flags;
- 		u8	use_map:1,
- 			dsn64:1,
- 			data_fin:1,
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c5c770d2e711..e69d56bfabc4 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -99,12 +99,12 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
-psize,
- 		pr_debug("DSS");
- 		ptr++;
- =
 
--		mp_opt->dss_flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
--		mp_opt->data_fin =3D (mp_opt->dss_flags & MPTCP_DSS_DATA_FIN) !=3D 0;
--		mp_opt->dsn64 =3D (mp_opt->dss_flags & MPTCP_DSS_DSN64) !=3D 0;
--		mp_opt->use_map =3D (mp_opt->dss_flags & MPTCP_DSS_HAS_MAP) !=3D 0;
--		mp_opt->ack64 =3D (mp_opt->dss_flags & MPTCP_DSS_ACK64) !=3D 0;
--		mp_opt->use_ack =3D (mp_opt->dss_flags & MPTCP_DSS_HAS_ACK);
-+		flags =3D (*ptr++) & MPTCP_DSS_FLAG_MASK;
-+		mp_opt->data_fin =3D (flags & MPTCP_DSS_DATA_FIN) !=3D 0;
-+		mp_opt->dsn64 =3D (flags & MPTCP_DSS_DSN64) !=3D 0;
-+		mp_opt->use_map =3D (flags & MPTCP_DSS_HAS_MAP) !=3D 0;
-+		mp_opt->ack64 =3D (flags & MPTCP_DSS_ACK64) !=3D 0;
-+		mp_opt->use_ack =3D (flags & MPTCP_DSS_HAS_ACK);
- =
+------
+Part 1
 
- 		pr_debug("data_fin=3D%d dsn64=3D%d use_map=3D%d ack64=3D%d use_ack=3D%d",
- 			 mp_opt->data_fin, mp_opt->dsn64,
--- =
+Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
 
-2.17.2
+The MPTCP upstreaming community has been collaborating on an
+upstreamable MPTCP implementation. David requested that we split this
+work in to multiple, smaller patch sets to build up MPTCP
+infrastructure. The scope of this first patch set is limited to
+prerequisite TCP core changes so we can get focused feedback in these
+areas.
 
---===============8316922112609680266==--
+In this patch set we introduce some MPTCP definitions, additional ULP
+and skb extension features, TCP option space checking, and a few
+exported symbols.
+
+<git tree references at github>
+
+Thank you for your review. You can find us at mptcp(a)lists.01.org and
+https://is.gd/mptcp_upstream
+
+
+------
+Part 2
+
+Subject: [PATCH net-next 0/0] Multipath TCP part 2: Single subflow
+
+These patches depend on the "Multipath TCP part 1: Prerequisites" patch
+set sent earlier.
+
+This set adds MPTCP connection establishment, writing & reading MPTCP
+options on data packets, a sysctl to allow MPTCP per-namespace, and self
+tests. This is sufficient to establish and maintain a connection with a
+MPTCP peer, but will not yet allow or initiate establishment of
+additional MPTCP subflows.
+
+<git tree references at github>
+
+Thank you for your review. You can find us at mptcp(a)lists.01.org and
+https://is.gd/mptcp_upstream
+
+
+--
+Mat Martineau
+Intel
+--===============6683801497850148447==--
