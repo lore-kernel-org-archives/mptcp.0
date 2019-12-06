@@ -1,152 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============6250226464852142746=="
+Content-Type: multipart/mixed; boundary="===============6138234468868995205=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 1/1] mptcp: Optimize struct mptcp_received_options.
-Date: Fri, 06 Dec 2019 17:32:21 +0100
-Message-ID: <a39ab2d4-9be2-2879-20a2-a544002e1459@tessares.net>
-In-Reply-To: 20191114060154.3451-2-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH v2 9/9] don't flag parent socket as RCV_SHUTDOWN
+ if one one subflow has closed
+Date: Fri, 06 Dec 2019 17:37:32 +0100
+Message-ID: <20191206163732.GA795@breakpoint.cc>
+In-Reply-To: a0204fbd-6678-c9ce-1273-9f6183892615@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2825
+X-UID: 2826
 
---===============6250226464852142746==
+--===============6138234468868995205==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+> 00:07:58.688 [   14.025780] #PF: supervisor read access in kernel mode
+> 00:07:58.689 [   14.026588] #PF: error_code(0x0000) - not-present page
+> 00:07:58.690 [   14.027394] PGD 0 P4D 0
+> 00:07:58.690 [   14.027801] Oops: 0000 [#1] SMP PTI
+> 00:07:58.691 [   14.028355] CPU: 0 PID: 731 Comm: mptcp_connect Not taint=
+ed
+> 5.4.0+ #5
+> 00:07:58.692 [   14.029365] Hardware name: QEMU Standard PC (i440FX + PII=
+X,
+> 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+> 00:07:58.693 [   14.030752] RIP: 0010:mptcp_stream_accept+0x8d/0x160
+> 00:07:58.694 [   14.031533] Code: 8b 9c 24 b0 05 00 00 49 81 c4 b0 05 00 =
+00
+> 4c 39 e3 74 71 49 8d 76 40 48 89 74 24 08 eb 08 48 8b 1b 4c 39 e3 74 5e 48
+> 8b 6b 78 <48> 83 bd 78 02 00 00 00 75 ea 4c 8d bd 28 02 00 00 89 44 24 04=
+ 4c
+> 00:07:58.697 [   14.034405] RSP: 0018:ffffad8d8044bdf0 EFLAGS: 00010283
+> 00:07:58.698 [   14.035218] RAX: 0000000000000000 RBX: ffff96f35d0d9928 R=
+CX:
+> 0000000000000001
 
-On 14/11/2019 07:01, Peter Krystad wrote:
-> Re-organize struct mptcp_received_options to be more efficient
-> with space, reducing size impact to struct tcp_sock.
-> =
+The faulty commit is
 
-> Remove unneeded flags fields, make version a bit field. Use unions
-> to reflect that available option space is limited to 28 bytes, not
-> all options may be received at once. Options that may be received
-> at the same time are MP_CAPABLE and DSS ack-only or DSS ack-only and
-> IPv4 ADD_ADDR.
+    make accept not allocate kernel socket struct
 
-Thank you for the patch!
 
-I was looking at applying it but I have a few comments here below and in =
+When doing the last version I broke tcp-ipv6 fallback.  This fixes
+things:
 
-the source code.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1512,6 +1512,15 @@ static int mptcp_listen(struct socket *sock, int bac=
+klog)
+ 	return err;
+ }
+ =
 
-I see that the two recent patches you sent are part of this RFC one. I =
++static bool is_tcp_proto(const struct proto *p)
++{
++#ifdef CONFIG_MPTCP_IPV6
++	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
++#else
++	return p =3D=3D &tcp_prot;
++#endif
++}
++
+ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 			       int flags, bool kern)
+ {
+@@ -1526,7 +1535,7 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ 		return -EINVAL;
+ =
 
-guess the best is to these patches first while they are still "fresh", =
-
-should be easier to apply. Then a rebase/split will be needed but from a =
-
-smaller patch
-
-Because we decided to send patches in one week, I will not rush to apply =
-
-the rest. I will then wait for your reply and possible other reviews to =
-
-do anything. Of course, do not hesitate to continue the rebase and split :-D
-(but I can also help next week.)
-
-(please see other questions below)
-
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> ---
->   include/linux/tcp.h  |  97 ++++++++++++++++++++++++----------------
->   net/mptcp/options.c  | 102 ++++++++++++++++++++++++-------------------
->   net/mptcp/pm.c       |   2 +-
->   net/mptcp/protocol.h |   2 +-
->   4 files changed, 118 insertions(+), 85 deletions(-)
-> =
-
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 41730d9bcb32..88245483ce11 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -78,6 +78,62 @@ struct tcp_sack_block {
->   #define TCP_SACK_SEEN     (1 << 0)   /*1 =3D peer is SACK capable, */
->   #define TCP_DSACK_SEEN    (1 << 2)   /*1 =3D DSACK was received from pe=
-er*/
->   =
-
-> +#if IS_ENABLED(CONFIG_MPTCP)
-> +struct mptcp_options_received {
-> +	union {
-> +		struct {
-> +			u32	data_ack32;
-> +			u32	data_seq32;
-> +			union {
-> +				struct {
-> +					u64	sndr_key;
-> +					u64	rcvr_key;
-> +				};
-> +				struct {
-> +					struct in_addr	addr;
-> +					u8	addr_id;
-> +				};
-> +			};
-> +		};
-> +		struct {
-> +			u64	data_ack;
-> +			u64	data_seq;
-> +		};
-> +		union {
-> +			struct {
-> +				u64	thmac;
-> +				u32	token;
-> +				u32	nonce;
-> +				u8	join_id;
-> +			};
-> +			u8	hmac[20];
-> +		};
-> +#if IS_ENABLED(CONFIG_IPV6)
-
-Should we use the MPTCP one? I mean: CONFIG_MPTCP_IPV6
-
-> +		struct in6_addr	addr6;
-> +#endif
-> +	};
-> +	u32	subflow_seq;
-> +	union {
-> +		u16	data_len;
-> +		u8	addr6_id;
-
-Why these two? Why not addr6_id and addr_id?
-Should we not add "#if IS_ENABLED(CONFIG_IPV6)" around "addr6_id" to =
-
-save 8 bits if we never use it in the code?
-
-> +	};
-> +	u8	mp_capable : 1,
-> +		mp_join : 1,
-> +		dss : 1,
-> +		add_addr : 1,
-> +		add_addr6 : 1,
-> +		rm_addr : 1,
-> +		backup : 1,
-> +		version : 1;
-> +	u8	use_map : 1,
-> +		dsn64 : 1,
-> +		use_ack : 1,
-> +		ack64 : 1,
-> +		data_fin : 1,
-> +		__unused : 3;
-> +};
-> +#endif
-
-Should we not move this structure to mptcp.h file? Or better there =
-
-because it directly impact TCP header size?
-(or maybe not possible to include mptcp.h?)
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6250226464852142746==--
+ 	err =3D ssock->ops->accept(sock, newsock, flags, kern);
+-	if (err =3D=3D 0 && newsock->sk->sk_prot !=3D &tcp_prot) {
++	if (err =3D=3D 0 && !is_tcp_proto(newsock->sk->sk_prot)) {
+ 		struct mptcp_sock *msk =3D mptcp_sk(newsock->sk);
+ 		struct mptcp_subflow_context *subflow;
+=20
+--===============6138234468868995205==--
