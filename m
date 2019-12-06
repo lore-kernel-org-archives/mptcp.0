@@ -1,87 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============8251083446452704350=="
+Content-Type: multipart/mixed; boundary="===============8664021619541960196=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 0/3] mptcp: support for rfc6824 MP CAPABLE
- hanshake
-Date: Fri, 06 Dec 2019 15:24:19 +0100
-Message-ID: <91f6a63527c41be46931cfe952007ec90deb006a.camel@redhat.com>
-In-Reply-To: a7d7fb0d-8966-978f-82a7-4a4d90ca6b47@tessares.net
+Subject: [MPTCP] Re: [PATCH v3 0/3] sendmsg: fix pending issues.
+Date: Fri, 06 Dec 2019 15:36:47 +0100
+Message-ID: <acd3c7fb-58c7-0f5a-168d-1a9dbc8b9e3e@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1912041054450.44605@pminglan-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2818
+X-UID: 2819
 
---===============8251083446452704350==
+--===============8664021619541960196==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-12-06 at 14:07 +0100, Matthieu Baerts wrote:
-> Hi Christoph, Paolo, Peter,
+Hi Paolo, Mat,
+
+On 04/12/2019 19:55, Mat Martineau wrote:
 > =
 
-> On 05/12/2019 20:36, Christoph Paasch wrote:
-> > Third iteration of the v1 MP_CAPABLE handshake, incorporating the
-> > feedback we got from Peter & Matt.
-> > =
-
-> > The patches apply just before "mptcp: add basic kselftest for mptcp".
+> On Wed, 4 Dec 2019, Paolo Abeni wrote:
 > =
 
-> Thank you for the patches, reviews and support!
+>> This includes the change suggested by Mat. Bumped revision 3 to avoid
+>> confusion with intermediated 2/3 v2.
 > =
 
-> As discussed yesterday, I applied the 3 new patches just *after* "mptcp: =
+> Thanks, Paolo. v3 looks good to me.
 
-> add basic kselftest for mptcp".
-> =
+Thank you for the patches and the review!
 
-> - eb5a8192c95b: conflict in t/mptcp-Add-path-manager-interface
-> - 275bbf5f90ad: conflict in t/mptcp-Add-ADD_ADDR-handling
-> - 0bc741b10045: conflict in =
+- patch 1/3 has been added just before: "mptcp: Add MPTCP socket stubs"
+- no conflicts
+- 14eb86607211: "squashed" patch 2/3 in "mptcp: Write MPTCP DSS headers =
 
-> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-> - 6b6db9f31531: conflict in =
+to outgoing data packets"
+- 6e357ac6f397: mptcp: fix alignement in protocol.h (tab/space)
+- 59a474684481: conflict in =
 
-> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-> - bf2741a34a46: conflict in =
+t/mptcp-recvmsg-can-drain-data-from-multiple-subflows
+- dd7d2904f7c4: conflict in =
 
-> t/mptcp-update-per-unacked-sequence-on-pkt-reception
-> - 66f4bf4e2ebd: conflict in =
+t/mptcp-allow-collapsing-consecutive-sendpages-on-the-same-substream
+- d41ac2e4911d: "squashed" patch 3/3 in "mptcp: allow collapsing =
 
-> t/recv-make-DATA_READY-reflect-ssk-in-sequence-state
-> - b887804d061e..219f243dcb66: result
-> - 84384f90c00d: small fix suggested by Paolo, saw when doing the rebase, =
+consecutive sendpages on the same substream"
+- 67b1e688acac: conflict in =
 
-> "squashed" in "mptcp: parse and emit MP_CAPABLE option according to v1 =
+t/mptcp-queue-data-for-mptcp-level-retransmission (note: compared to the =
 
-> spec."
-> - 219f243dcb66..f254fde6968b: 2nd result (empty, normal)
-> - ba5637b5c223: fix compilation error without CONFIG_MPTCP, "squashed" =
+ref branch, I had to remove 'collapse' variable, not used ; and =
 
-> in "mptcp: parse and emit MP_CAPABLE option according to v1 spec."
-> - f254fde6968b..048a73890db7: 3rd result
-> - 09dc9b79c639: avoid code duplication when validating MPC. After the =
+"can_collapse" was declared twice)
+- 47890b23de5d: conflict in =
 
-> small fix from above, we had a value potentially set two times.
-> - 048a73890db7..343c06fe2029: result
+t/mptcp-implement-memory-accounting-for-mptcp-rtx-queue
+- 46d9c6a121dc: conflict in =
 
-Thank you for the great effort! conflict resolution LGTM!
+t/mptcp-rework-mptcp_sendmsg_frag-to-accept-optional-dfrag
+- 1cc43731a90d..d6c1939a16c5: result
 
-I like quite a bit 09dc9b79c639!
+Tests are still the same. They all passed except the one without packets =
 
-> I just checked the compilations with and without MPTCP, selftests at the =
-
-> end of part 2 and at the end of the series. I didn't check that each =
-
-> commit compiles. Will do that when I have applied everything.
-
-I just tested rebuilding net/mptcp/ on every commit and that works
-fine.
+re-ordering due to a timeout (known issue).
 
 Cheers,
+Matt
+-- =
 
-Paolo
-
-
---===============8251083446452704350==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8664021619541960196==--
