@@ -1,42 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============5472300771272334463=="
+Content-Type: multipart/mixed; boundary="===============5658682418906736537=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 4/4] MAINTAINERS: Add uapi header to MPTCP section
-Date: Fri, 06 Dec 2019 16:12:44 -0800
-Message-ID: <20191207001244.20339-4-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20191207001244.20339-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [RFC PATCH 5/5] mptcp: avoid acquiring the msk lock in
+ mptcp_finisch_connect()
+Date: Sat, 07 Dec 2019 18:03:55 +0000
+Message-ID: <cd1f9cb4-74d7-46f5-8ecd-97ca35aacd54@localhost>
+In-Reply-To: 27996D55-DD9F-4C0F-B4E1-A22123369975@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2843
+X-UID: 2844
 
---===============5472300771272334463==
+--===============5658682418906736537==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: mptcp: allow dumping subflow context to userspace
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4e33511d1d78..a0eaff0c8bbc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11546,6 +11546,7 @@ W:	https://github.com/multipath-tcp/mptcp_net-next/=
-wiki
- B:	https://github.com/multipath-tcp/mptcp_net-next/issues
- S:	Maintained
- F:	include/net/mptcp.h
-+F:	include/uapi/linux/mptcp.h
- F:	net/mptcp/
- F:	tools/testing/selftests/net/mptcp/
- =
+Dec 6, 2019 16:16:32 Christoph Paasch :
 
--- =
+> "[MPTCP] [RFC PATCH 5/5] mptcp: avoid acquiring the msk lock in mptcp_ fi=
+nisch _connect()"
+> I know there are two native German speakers here on this list, but let's =
+not push it too far ?
 
-2.24.0
+Good catch! This definitely needs to be polished! (FYI, it's "wyko?czenie" =
+in Polish...)
 
---===============5472300771272334463==--
+Next challenge: discreetly insert "Donaudampfschifffahrtsgesellschaftskapit=
+=EF=BF=BDn" in a commit message!
+
+--===============5658682418906736537==--
