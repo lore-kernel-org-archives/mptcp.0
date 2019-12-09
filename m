@@ -1,51 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============2244926626370640807=="
+Content-Type: multipart/mixed; boundary="===============8355480639151983709=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/1] proposed export branch rebase
-Date: Mon, 09 Dec 2019 13:33:51 +0100
-Message-ID: <231a2fa522f7713fc8d8b0a5069153b2a40a1293.camel@redhat.com>
-In-Reply-To: 20191208182417.16789-1-fw@strlen.de
+Subject: [MPTCP] [PATCH v1 0/4] mptcp: fallback socket cleanup
+Date: Tue, 10 Dec 2019 00:52:06 +0100
+Message-ID: <cover.1575934525.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2847
+X-UID: 2848
 
---===============2244926626370640807==
+--===============8355480639151983709==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+This is a rebase on top of last rebased by Florian.
+The old patch 2/5 has been dropped - obsoleted by Florian's patches - and t=
+he
+following patches has been reworked a bit, due to mptcp_subflow_tcp_socket(=
+) ->
+mptcp_subflow_tcp_sock() change. =
 
-On Sun, 2019-12-08 at 19:24 +0100, Florian Westphal wrote:
-> It includes 48 patches (down from 66), I will refrain from patch-bombing
-> the list with it.  There is one patch as followup here because its
-> "almost new" in the sense that its an amalgamation of different patches
-> that I placed in that commit because the others seemed quite large alread=
-y.
-> =
+Last patch now also deal with mptcp_copy_inaddrs() in order to remove the l=
+ock
+from mptcp_finish_connect() we must move that to connect() and calling it a=
+lso
+from bind(), listen() allows simplifying mptcp_getname(), too.
 
-> The __tcp_poll patch is gone.  Later patches, in particular the changes to
-> only store 'tcp_sock' rather than 'struct socket' on the conn_list, have
-> been brought forward and squashed into the relevant commits, would thus
-> be implicitly part of basic mptcp submission.  I've amemded commit
-> messages where appropriate.
+From the original cover letter:
+---
 
-Thank you Florian for the great work!
+After all the above, performance for connection fallen back to plain TCP sh=
+ould
+be almost the same of TCP connection on unpacked kernel.
 
-I went through the patches up to v1 support, and LGTM.
+Addittionally 'nc' and 'netperf' now run successfully when forced to MPTCP.
+The latter still report a non fatal error at connection closing time as it
+performs:
 
-> There are more opportunities for squashing after the kselftest commit,
-> but I did not do this.  Unless there is a need to do so I would prefer
-> to add smaller patches after basic functionality is working.
+getsockopt(4, SOL_TCP, TCP_MAXSEG, //...);
+getsockopt(4, SOL_TCP, TCP_INFO, //...);
 
-Agreed!
+which is still unsupported after that the mp capable handshake is started.
 
-I'll try to rebase and squash the fallback cleanup patches on top of
-this.
+For the records on the debug build I'm using netperf scores better result
+with MPTCP that with plain TCP ;) [agreed, completely irrelevant, still nic=
+e]
 
-Thanks,
+The series applies at selftests and is unsquashed - will require quite a bit
+of work there and more work to rebase/adjust the patches after kselftest.
+I'll start that after the pending patches are in.
 
-Paolo
+_Any_ feedback _very_ welcome!
 
---===============2244926626370640807==--
+
+Paolo Abeni (4):
+  mptcp: clear 'is_tcp' socket flag when the MP_CAPABLE handshake fails
+  imptcp: cleanup fallback handling
+  mptcp: add subflow to conn_list early
+  mptcp: avoid acquiring the msk lock in mptcp_finisch_connect()
+
+ net/mptcp/options.c  |   3 +
+ net/mptcp/protocol.c | 320 +++++++++++++++++++++----------------------
+ net/mptcp/subflow.c  |   2 +
+ 3 files changed, 163 insertions(+), 162 deletions(-)
+
+-- =
+
+2.21.0
+
+--===============8355480639151983709==--
