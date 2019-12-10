@@ -1,63 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============1980495462653280006=="
+Content-Type: multipart/mixed; boundary="===============4479870576132756008=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 2/4] imptcp: cleanup fallback handling
-Date: Tue, 10 Dec 2019 18:25:11 +0100
-Message-ID: <f7fcdb006e614e5e43458f5c7994ebf3e29a2fb7.camel@redhat.com>
-In-Reply-To: 20191210143016.GL795@breakpoint.cc
+Subject: [MPTCP] [PATCH v2 0/4] mptcp: fallback socket cleanup
+Date: Tue, 10 Dec 2019 19:00:55 +0100
+Message-ID: <cover.1575999260.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2860
+X-UID: 2861
 
---===============1980495462653280006==
+--===============4479870576132756008==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2019-12-10 at 15:30 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Mon, 2019-12-09 at 18:28 -0800, Mat Martineau wrote:
-> > > I did just say "locking looks ok", but just below this is some iterat=
-ion =
+This addresses feedback from Mat on v1	=
 
-> > > over msk->conn_list without the msk lock held. The locking there is =
 
-> > > unaffected by your patch, but this might be a good chance to take a l=
-ook =
+From the original cover letter:
+---
 
-> > > at the locking around that list iteration!
-> > =
+After all the above, performance for connection fallen back to plain TCP sh=
+ould
+be almost the same of TCP connection on unpacked kernel.
 
-> > Thank you for the feedback! I'll cope in the next iteration.
-> > =
+Addittionally 'nc' and 'netperf' now run successfully when forced to MPTCP.
+The latter still report a non fatal error at connection closing time as it
+performs:
 
-> > The lockless access to msk->conn_list requires a bit more changes, I'm
-> > unsure I can deal with that in a timely manner. I'll try. =
+getsockopt(4, SOL_TCP, TCP_MAXSEG, //...);
+getsockopt(4, SOL_TCP, TCP_INFO, //...);
 
-> > =
+which is still unsupported after that the mp capable handshake is started.
 
-> > Idea would be  dropping the intermendiate inet_accept() call and open-
-> > code part of it, so we don't have to acquire and release the locks
-> > multiple times.
-> =
+For the records on the debug build I'm using netperf scores better result
+with MPTCP that with plain TCP ;) [agreed, completely irrelevant, still nic=
+e]
 
-> What about delaying
-> =
+The series applies at selftests and is unsquashed - will require quite a bit
+of work there and more work to rebase/adjust the patches after kselftest.
+I'll start that after the pending patches are in.
 
-> inet_sk_state_store(newsk, TCP_ESTABLISHED);
-> =
+_Any_ feedback _very_ welcome!
 
-> until after this unlocked list iteration?
-> =
+Paolo Abeni (4):
+  mptcp: clear 'is_tcp' socket flag when the MP_CAPABLE handshake fails
+  mptcp: cleanup fallback handling
+  mptcp: add subflow to conn_list early
+  mptcp: avoid acquiring the msk lock in mptcp_finisch_connect()
 
-> This would/should prevent any concurrent joins and thus any
-> list modifications.
+ net/mptcp/options.c  |   3 +
+ net/mptcp/protocol.c | 353 ++++++++++++++++++++-----------------------
+ net/mptcp/subflow.c  |   2 +
+ 3 files changed, 169 insertions(+), 189 deletions(-)
 
-Agreed, code will be much simpler.
+-- =
 
-Thanks,
+2.21.0
 
-Paolo
-
---===============1980495462653280006==--
+--===============4479870576132756008==--
