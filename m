@@ -1,50 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============7714824229250040037=="
+Content-Type: multipart/mixed; boundary="===============8372181073619965239=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 2/4] imptcp: cleanup fallback handling
-Date: Tue, 10 Dec 2019 15:30:16 +0100
-Message-ID: <20191210143016.GL795@breakpoint.cc>
-In-Reply-To: b6a7eee20776b33615a39b2607919e4e019b4ba6.camel@redhat.com
+Subject: [MPTCP] [PATCH] subflow: process pending data on state changes, too
+Date: Tue, 10 Dec 2019 16:48:23 +0100
+Message-ID: <62b2f929fdf3c17a05a5dd6ec632aba00e69c5d7.1575992767.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2858
+X-UID: 2859
 
---===============7714824229250040037==
+--===============8372181073619965239==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2019-12-09 at 18:28 -0800, Mat Martineau wrote:
-> > I did just say "locking looks ok", but just below this is some iteratio=
-n =
+Otherwise we can miss the data carried by the data fin.
+An alternative solution would calling __subflow_state_change
+on the parent socket only when we process the data fin in
+mptcp_subflow_data_available.
 
-> > over msk->conn_list without the msk lock held. The locking there is =
+Currently, on the squashed tree, we have sporadic data stream
+corrution near EoS, triggered by the lossy self-tests every a
+few iteration.
 
-> > unaffected by your patch, but this might be a good chance to take a loo=
-k =
+This change addresses them.
 
-> > at the locking around that list iteration!
-> =
+Squash-to: "mptcp: Implement MPTCP receive path"
+Suggested-by: Florian Festphal <fwestpha(a)redhat.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+this is on top of Florians's rebase tree
+---
+ net/mptcp/subflow.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> Thank you for the feedback! I'll cope in the next iteration.
-> =
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index d6540f0a5be9..26cf2e435af4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -645,6 +645,18 @@ static void subflow_state_change(struct sock *sk)
+ =
 
-> The lockless access to msk->conn_list requires a bit more changes, I'm
-> unsure I can deal with that in a timely manner. I'll try. =
+ 	__subflow_state_change(sk);
+ =
 
->
-> Idea would be  dropping the intermendiate inet_accept() call and open-
-> code part of it, so we don't have to acquire and release the locks
-> multiple times.
++	/* as recvmsg() does not acquire the subflow socket for ssk selection
++	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
++	 * the data available machinery here.
++	 */
++	if (parent && subflow->mp_capable && mptcp_subflow_data_available(sk)) {
++		smp_mb__before_atomic();
++		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
++		smp_mb__after_atomic();
++
++		parent->sk_data_ready(parent);
++	}
++
+ 	if (parent && !(parent->sk_shutdown & RCV_SHUTDOWN) &&
+ 	    !subflow->rx_eof && subflow_is_done(sk)) {
+ 		subflow->rx_eof =3D 1;
+-- =
 
-What about delaying
+2.21.0
 
-inet_sk_state_store(newsk, TCP_ESTABLISHED);
-
-until after this unlocked list iteration?
-
-This would/should prevent any concurrent joins and thus any
-list modifications.
---===============7714824229250040037==--
+--===============8372181073619965239==--
