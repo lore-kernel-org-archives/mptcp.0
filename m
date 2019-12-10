@@ -1,74 +1,100 @@
-Content-Type: multipart/mixed; boundary="===============4847585438502311767=="
+Content-Type: multipart/mixed; boundary="===============1201763208992969794=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 1/4] mptcp: clear 'is_tcp' socket flag when the
- MP_CAPABLE handshake fails
-Date: Tue, 10 Dec 2019 19:00:56 +0100
-Message-ID: <2ec10d56f2478b51653bf028d2c84522b843107a.1575999260.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 3/4] mptcp: add subflow to conn_list early
+Date: Tue, 10 Dec 2019 19:00:58 +0100
+Message-ID: <90b06ab037fef3e65b155ab8dd6da15478dea477.1575999260.git.pabeni@redhat.com>
 In-Reply-To: cover.1575999260.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2862
+X-UID: 2863
 
---===============4847585438502311767==
+--===============1201763208992969794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we don't have a single flag for 'mp capable handshake
-failed', but we can clear the is_tcp flag to record such info.
+After the previous commit we can move the subflow into
+conn_list at creation time, using the msk 'can_ack' field
+to track the fallaback status of such subflow.
 
-This will make also processing for fallback socket almost as fast
-as native ones, and will help cleaning 'fallback' fields usage
-in later patches.
+Note that we still need to keep the subflow field around,
+as we can't easily access the non MP capable socket otherwise.
+
+RFC -> v1:
+ - keep 'subflow' field around, after mptcp_subflow_tcp_sock()
+   conversion we need some way to track such socket around
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c | 3 +++
- net/mptcp/subflow.c | 2 ++
- 2 files changed, 5 insertions(+)
+ net/mptcp/protocol.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index bce5b6ad2829..9ed86e2187d5 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -306,6 +306,8 @@ void mptcp_rcv_synsent(struct sock *sk)
- 		subflow->mp_capable =3D 1;
- 		subflow->can_ack =3D 1;
- 		subflow->remote_key =3D tp->rx_opt.mptcp.sndr_key;
-+	} else {
-+		tcp_sk(sk)->is_mptcp =3D 0;
- 	}
- }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 65300b555b3b..41c2e18c1321 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -31,7 +31,7 @@
+  */
+ static struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
+ {
+-	if (!msk->subflow)
++	if (!msk->subflow || READ_ONCE(msk->can_ack))
+ 		return NULL;
  =
 
-@@ -508,6 +510,7 @@ static bool check_fourth_ack(struct mptcp_subflow_conte=
-xt *subflow,
- 	 */
- 	if (!mp_opt->mp_capable) {
- 		subflow->mp_capable =3D 0;
-+		tcp_sk(mptcp_subflow_tcp_sock(subflow))->is_mptcp =3D 0;
- 		return false;
+ 	return msk->subflow;
+@@ -96,7 +96,8 @@ static struct socket *mptcp_socket_create_get(struct mptc=
+p_sock *msk, int state)
  	}
- 	subflow->remote_key =3D mp_opt->sndr_key;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f934683950bb..5444b85244c6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -745,6 +745,8 @@ static void subflow_ulp_clone(const struct request_sock=
- *req,
- 		new_ctx->token =3D subflow_req->token;
- 		new_ctx->ssn_offset =3D subflow_req->ssn_offset;
- 		new_ctx->idsn =3D subflow_req->idsn;
-+	} else {
-+		tcp_sk(newsk)->is_mptcp =3D 0;
- 	}
- }
  =
 
+ 	msk->subflow =3D ssock;
+-	subflow =3D mptcp_subflow_ctx(msk->subflow->sk);
++	subflow =3D mptcp_subflow_ctx(ssock->sk);
++	list_add(&subflow->node, &msk->conn_list);
+ 	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
+ 	subflow->request_version =3D 1; /* only v1 supported */
+ =
+
+@@ -584,11 +585,6 @@ static void mptcp_close(struct sock *sk, long timeout)
+ =
+
+ 	lock_sock(sk);
+ =
+
+-	if (msk->subflow) {
+-		sock_release(msk->subflow);
+-		msk->subflow =3D NULL;
+-	}
+-
+ 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+ =
+
+@@ -671,7 +667,6 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ 		msk->token =3D subflow->token;
+ =
+
+ 		mptcp_token_update_accept(newsk, new_mptcp_sock);
+-		msk->subflow =3D NULL;
+ =
+
+ 		msk->write_seq =3D subflow->idsn + 1;
+ 		if (subflow->can_ack) {
+@@ -827,8 +822,6 @@ void mptcp_finish_connect(struct sock *ssk)
+ 		subflow->map_seq =3D ack_seq;
+ 		subflow->map_subflow_seq =3D 1;
+ 		subflow->rel_write_seq =3D 1;
+-		list_add(&subflow->node, &msk->conn_list);
+-		msk->subflow =3D NULL;
+ 		bh_unlock_sock(sk);
+ 		local_bh_enable();
+ 	}
 -- =
 
 2.21.0
 
---===============4847585438502311767==--
+--===============1201763208992969794==--
