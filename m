@@ -1,503 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============4594923940150818938=="
+Content-Type: multipart/mixed; boundary="===============3484530828176885050=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 4/4] mptcp: avoid acquiring the msk lock in
- mptcp_finisch_connect()
-Date: Tue, 10 Dec 2019 00:52:10 +0100
-Message-ID: <ed8c7ad0df1e4a085a37ebf1021172cd4419999c.1575934525.git.pabeni@redhat.com>
-In-Reply-To: cover.1575934525.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v1 1/4] mptcp: clear 'is_tcp' socket flag when the
+ MP_CAPABLE handshake fails
+Date: Mon, 09 Dec 2019 17:52:18 -0800
+Message-ID: <alpine.OSX.2.21.1912091746570.11558@mjmartin-mac01.local>
+In-Reply-To: 8ff10214eb760d9ce40bba774eea93ef0318441c.1575934525.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2852
+X-UID: 2853
 
---===============4594923940150818938==
+--===============3484530828176885050==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Move the mptcp_copy_inaddrs() into mptcp_finish_connect(), so that
-the mks lock is no longer required. Just document the unlocked access
-with WRITE_ONCE().
 
-Since we now always acquire msk -> ssk lock in order, we can also
-avoid the msk lock/subflow lookup()/get()/ msk unlock()/ subflow op/ subflo=
-w put
-dance in most ops - simply keep the msk lock held the whole time.
+On Tue, 10 Dec 2019, Paolo Abeni wrote:
 
-Additionally we can simplify mptcp_getname(), as now the address information
-are always available in the msk.
+> Currently we don't have a single flag for 'mp capable handshake
+> failed', but we can clear the is_tcp flag to record such info.
 
-RFC -> v1:
- - move mptcp_copy_inaddrs() into finish_connect()
+Hi Paolo -
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 211 +++++++++++++++++--------------------------
- 1 file changed, 83 insertions(+), 128 deletions(-)
+Minor commit message issue, says 'is_tcp' instead of 'is_mptcp' in subject =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a11352e5e322..70090366adae 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -36,10 +36,10 @@ static struct socket *__mptcp_nmpc_socket(const struct =
-mptcp_sock *msk)
- }
- =
+line and first sentence.
 
- /* if msk has a single subflow, and the mp_capable handshake is failed,
-- * get a reference and return it.
-+ * return it.
-  * Otherwise returns NULL
-  */
--static struct socket *__mptcp_tcp_fallback_get(const struct mptcp_sock *ms=
-k)
-+static struct socket *__mptcp_tcp_fallback(const struct mptcp_sock *msk)
- {
- 	struct socket *ssock =3D __mptcp_nmpc_socket(msk);
- =
+Code looks fine.
 
-@@ -48,7 +48,6 @@ static struct socket *__mptcp_tcp_fallback_get(const stru=
-ct mptcp_sock *msk)
- 	if (!ssock || tcp_sk(ssock->sk)->is_mptcp)
- 		return NULL;
- =
 
--	sock_hold(ssock->sk);
- 	return ssock;
- }
- =
+Mat
 
-@@ -70,28 +69,23 @@ static bool __mptcp_can_create_subflow(const struct mpt=
-cp_sock *msk)
- 	return ((struct sock *)msk)->sk_state =3D=3D TCP_CLOSE;
- }
- =
 
--static struct socket *mptcp_socket_create_get(struct mptcp_sock *msk, int =
-state)
-+static struct socket *__mptcp_socket_create(struct mptcp_sock *msk, int st=
-ate)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk =3D (struct sock *)msk;
- 	struct socket *ssock;
- 	int err;
- =
+>
+> This will make also processing for fallback socket almost as fast
+> as native ones, and will help cleaning 'fallback' fields usage
+> in later patches.
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/options.c | 3 +++
+> net/mptcp/subflow.c | 2 ++
+> 2 files changed, 5 insertions(+)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index bce5b6ad2829..9ed86e2187d5 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -306,6 +306,8 @@ void mptcp_rcv_synsent(struct sock *sk)
+> 		subflow->mp_capable =3D 1;
+> 		subflow->can_ack =3D 1;
+> 		subflow->remote_key =3D tp->rx_opt.mptcp.sndr_key;
+> +	} else {
+> +		tcp_sk(sk)->is_mptcp =3D 0;
+> 	}
+> }
+>
+> @@ -508,6 +510,7 @@ static bool check_fourth_ack(struct mptcp_subflow_con=
+text *subflow,
+> 	 */
+> 	if (!mp_opt->mp_capable) {
+> 		subflow->mp_capable =3D 0;
+> +		tcp_sk(mptcp_subflow_tcp_sock(subflow))->is_mptcp =3D 0;
+> 		return false;
+> 	}
+> 	subflow->remote_key =3D mp_opt->sndr_key;
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index e276c9cbf0e8..3726fce5868a 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -733,6 +733,8 @@ static void subflow_ulp_clone(const struct request_so=
+ck *req,
+> 		new_ctx->token =3D subflow_req->token;
+> 		new_ctx->ssn_offset =3D subflow_req->ssn_offset;
+> 		new_ctx->idsn =3D subflow_req->idsn;
+> +	} else {
+> +		tcp_sk(newsk)->is_mptcp =3D 0;
+> 	}
+> }
+>
+> -- =
 
--	lock_sock(sk);
- 	ssock =3D __mptcp_nmpc_socket(msk);
- 	if (ssock)
- 		goto set_state;
- =
+> 2.21.0
 
--	if (!__mptcp_can_create_subflow(msk)) {
--		ssock =3D ERR_PTR(-EINVAL);
--		goto release;
--	}
-+	if (!__mptcp_can_create_subflow(msk))
-+		return ERR_PTR(-EINVAL);
- =
-
- 	err =3D mptcp_subflow_create_socket(sk, &ssock);
--	if (err) {
--		ssock =3D ERR_PTR(err);
--		goto release;
--	}
-+	if (err)
-+		return ERR_PTR(err);
- =
-
- 	msk->subflow =3D ssock;
- 	subflow =3D mptcp_subflow_ctx(ssock->sk);
-@@ -100,12 +94,8 @@ static struct socket *mptcp_socket_create_get(struct mp=
-tcp_sock *msk, int state)
- 	subflow->request_version =3D 1; /* only v1 supported */
- =
-
- set_state:
--	sock_hold(ssock->sk);
- 	if (state !=3D TCP_MAX_STATES)
- 		inet_sk_state_store(sk, state);
--
--release:
--	release_sock(sk);
- 	return ssock;
- }
- =
-
-@@ -273,12 +263,11 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		return -EOPNOTSUPP;
- =
-
- 	lock_sock(sk);
--	ssock =3D __mptcp_tcp_fallback_get(msk);
-+	ssock =3D __mptcp_tcp_fallback(msk);
- 	if (ssock) {
--		release_sock(sk);
- 		pr_debug("fallback passthrough");
- 		ret =3D sock_sendmsg(ssock, msg);
--		sock_put(ssock->sk);
-+		release_sock(sk);
- 		return ret;
- 	}
- =
-
-@@ -376,13 +365,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
- 	long timeo;
- =
-
- 	lock_sock(sk);
--	ssock =3D __mptcp_tcp_fallback_get(msk);
-+	ssock =3D __mptcp_tcp_fallback(msk);
- 	if (ssock) {
--		release_sock(sk);
- 		pr_debug("fallback-read subflow=3D%p",
- 			 mptcp_subflow_ctx(ssock->sk));
- 		copied =3D sock_recvmsg(ssock, msg, flags);
--		sock_put(ssock->sk);
-+		release_sock(sk);
- 		return copied;
- 	}
- =
-
-@@ -708,25 +696,26 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	char __kernel *optval;
-+	int ret =3D -EOPNOTSUPP;
- 	struct socket *ssock;
--	int ret;
- =
-
- 	/* will be treated as __user in tcp_setsockopt */
- 	optval =3D (char __kernel __force *)uoptval;
- =
-
- 	pr_debug("msk=3D%p", msk);
--	ssock =3D mptcp_socket_create_get(msk, TCP_MAX_STATES);
-+
-+	/* @@ the meaning of setsockopt() when the socket is connected and
-+	 * there are multiple subflows is not defined.
-+	 */
-+	lock_sock(sk);
-+	ssock =3D __mptcp_socket_create(msk, TCP_MAX_STATES);
- 	if (!IS_ERR(ssock)) {
- 		pr_debug("subflow=3D%p", ssock->sk);
- 		ret =3D kernel_setsockopt(ssock, level, optname, optval, optlen);
--		sock_put(ssock->sk);
--		return ret;
- 	}
-+	release_sock(sk);
- =
-
--	/* @@ the meaning of setsockopt() when the socket is connected and
--	 * there are multiple subflows is not defined.
--	 */
--	return -EOPNOTSUPP;
-+	return ret;
- }
- =
-
- static int mptcp_getsockopt(struct sock *sk, int level, int optname,
-@@ -734,27 +723,28 @@ static int mptcp_getsockopt(struct sock *sk, int leve=
-l, int optname,
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	char __kernel *optval;
-+	int ret =3D -EOPNOTSUPP;
- 	int __kernel *option;
- 	struct socket *ssock;
--	int ret;
- =
-
- 	/* will be treated as __user in tcp_getsockopt */
- 	optval =3D (char __kernel __force *)uoptval;
- 	option =3D (int __kernel __force *)uoption;
- =
-
- 	pr_debug("msk=3D%p", msk);
--	ssock =3D mptcp_socket_create_get(msk, TCP_MAX_STATES);
-+	lock_sock(sk);
-+
-+	/* @@ the meaning of getsockopt() when the socket is connected and
-+	 * there are multiple subflows is not defined.
-+	 */
-+	ssock =3D __mptcp_socket_create(msk, TCP_MAX_STATES);
- 	if (!IS_ERR(ssock)) {
- 		pr_debug("subflow=3D%p", ssock->sk);
- 		ret =3D kernel_getsockopt(ssock, level, optname, optval, option);
--		sock_put(ssock->sk);
--		return ret;
- 	}
-+	release_sock(sk);
- =
-
--	/* @@ the meaning of getsockopt() when the socket is connected and
--	 * there are multiple subflows is not defined.
--	 */
--	return -EOPNOTSUPP;
-+	return ret;
- }
- =
-
- static int mptcp_get_port(struct sock *sk, unsigned short snum)
-@@ -773,57 +763,34 @@ static int mptcp_get_port(struct sock *sk, unsigned s=
-hort snum)
- void mptcp_finish_connect(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk;
- 	struct sock *sk;
-+	u64 ack_seq;
- =
-
- 	subflow =3D mptcp_subflow_ctx(ssk);
--	sk =3D subflow->conn;
--
--	if (subflow->mp_capable) {
--		struct mptcp_sock *msk =3D mptcp_sk(sk);
--		u64 ack_seq;
-+	if (!subflow->mp_capable)
-+		return;
- =
-
--		/* sk (new subflow socket) is already locked, but we need
--		 * to lock the parent (mptcp) socket now to add the tcp socket
--		 * to the subflow list.
--		 *
--		 * From lockdep point of view, this creates an ABBA type
--		 * deadlock: Normally (sendmsg, recvmsg, ..), we lock the mptcp
--		 * socket, then acquire a subflow lock.
--		 * Here we do the reverse: "subflow lock, then mptcp lock".
--		 *
--		 * Its alright to do this here, because this subflow is not yet
--		 * on the mptcp sockets subflow list.
--		 *
--		 * IOW, if another CPU has this mptcp socket locked, it cannot
--		 * acquire this particular subflow, because subflow->sk isn't
--		 * on msk->conn_list.
--		 *
--		 * This function can be called either from backlog processing
--		 * (BH will be enabled) or from softirq, so we need to use BH
--		 * locking scheme.
--		 */
--		local_bh_disable();
--		bh_lock_sock_nested(sk);
-+	sk =3D subflow->conn;
-+	msk =3D mptcp_sk(sk);
- =
-
--		msk->remote_key =3D subflow->remote_key;
--		msk->local_key =3D subflow->local_key;
--		msk->token =3D subflow->token;
--		mptcp_copy_inaddrs(sk, ssk);
-+	pr_debug("msk=3D%p, token=3D%u", sk, subflow->token);
- =
-
--		pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
-+	mptcp_crypto_key_sha(subflow->remote_key, NULL, &ack_seq);
-+	ack_seq++;
-+	subflow->map_seq =3D ack_seq;
-+	subflow->map_subflow_seq =3D 1;
-+	subflow->rel_write_seq =3D 1;
- =
-
--		mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
--		msk->write_seq =3D subflow->idsn + 1;
--		ack_seq++;
--		msk->ack_seq =3D ack_seq;
--		msk->can_ack =3D 1;
--		subflow->map_seq =3D ack_seq;
--		subflow->map_subflow_seq =3D 1;
--		subflow->rel_write_seq =3D 1;
--		bh_unlock_sock(sk);
--		local_bh_enable();
--	}
--	inet_sk_state_store(sk, TCP_ESTABLISHED);
-+	/* the socket is not connected yet, no msk/subflow ops can access/race
-+	 * accessing the field below
-+	 */
-+	WRITE_ONCE(msk->remote_key, subflow->remote_key);
-+	WRITE_ONCE(msk->local_key, subflow->local_key);
-+	WRITE_ONCE(msk->token, subflow->token);
-+	WRITE_ONCE(msk->write_seq, subflow->idsn + 1);
-+	WRITE_ONCE(msk->ack_seq, ack_seq);
-+	WRITE_ONCE(msk->can_ack, 1);
- }
- =
-
- static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
-@@ -868,12 +835,19 @@ static int mptcp_bind(struct socket *sock, struct soc=
-kaddr *uaddr, int addr_len)
- 	struct socket *ssock;
- 	int err;
- =
-
--	ssock =3D mptcp_socket_create_get(msk, TCP_MAX_STATES);
--	if (IS_ERR(ssock))
--		return PTR_ERR(ssock);
-+	lock_sock(sock->sk);
-+	ssock =3D __mptcp_socket_create(msk, TCP_MAX_STATES);
-+	if (IS_ERR(ssock)) {
-+		err =3D PTR_ERR(ssock);
-+		goto unlock;
-+	}
- =
-
- 	err =3D ssock->ops->bind(ssock, uaddr, addr_len);
--	sock_put(ssock->sk);
-+	if (!err)
-+		mptcp_copy_inaddrs(sock->sk, ssock->sk);
-+
-+unlock:
-+	release_sock(sock->sk);
- 	return err;
- }
- =
-
-@@ -884,9 +858,12 @@ static int mptcp_stream_connect(struct socket *sock, s=
-truct sockaddr *uaddr,
- 	struct socket *ssock;
- 	int err;
- =
-
--	ssock =3D mptcp_socket_create_get(msk, TCP_SYN_SENT);
--	if (IS_ERR(ssock))
--		return PTR_ERR(ssock);
-+	lock_sock(sock->sk);
-+	ssock =3D __mptcp_socket_create(msk, TCP_SYN_SENT);
-+	if (IS_ERR(ssock)) {
-+		err =3D PTR_ERR(ssock);
-+		goto unlock;
-+	}
- =
-
- #ifdef CONFIG_TCP_MD5SIG
- 	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-@@ -897,33 +874,19 @@ static int mptcp_stream_connect(struct socket *sock, =
-struct sockaddr *uaddr,
- #endif
- =
-
- 	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
--
--	/* should we keep msk socket lock instead? and release it this
--	 * latter state update */
- 	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
--	sock_put(ssock->sk);
-+	mptcp_copy_inaddrs(sock->sk, ssock->sk);
-+
-+unlock:
-+	release_sock(sock->sk);
- 	return err;
- }
- =
-
- static int mptcp_getname(struct socket *sock, struct sockaddr *uaddr,
- 			 int peer, int af)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
--	struct socket *ssock;
- 	int ret;
- =
-
--	lock_sock(sock->sk);
--	ssock =3D __mptcp_nmpc_socket(msk);
--	if (ssock)
--		sock_hold(ssock->sk);
--	release_sock(sock->sk);
--	if (ssock) {
--		pr_debug("subflow=3D%p", ssock->sk);
--		ret =3D ssock->ops->getname(ssock, uaddr, peer);
--		sock_put(ssock->sk);
--		return ret;
--	}
--
- 	switch (af) {
- 	case AF_INET:
- 		ret =3D inet_getname(sock, uaddr, peer);
-@@ -987,16 +950,20 @@ static int mptcp_listen(struct socket *sock, int back=
-log)
- =
-
- 	pr_debug("msk=3D%p", msk);
- =
-
--	ssock =3D mptcp_socket_create_get(msk, TCP_LISTEN);
--	if (IS_ERR(ssock))
--		return PTR_ERR(ssock);
-+	lock_sock(sock->sk);
-+	ssock =3D __mptcp_socket_create(msk, TCP_LISTEN);
-+	if (IS_ERR(ssock)) {
-+		err =3D PTR_ERR(ssock);
-+		goto unlock;
-+	}
- =
-
- 	err =3D ssock->ops->listen(ssock, backlog);
--
--	/* should we keep msk socket lock instead? and release it this
--	 * latter state update */
- 	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
--	sock_put(ssock->sk);
-+	if (!err)
-+		mptcp_copy_inaddrs(sock->sk, ssock->sk);
-+
-+unlock:
-+	release_sock(sock->sk);
- 	return err;
- }
- =
-
-@@ -1065,10 +1032,8 @@ static __poll_t mptcp_poll(struct file *file, struct=
- socket *sock,
- 	lock_sock(sk);
- 	ssock =3D __mptcp_nmpc_socket(msk);
- 	if (ssock) {
--		sock_hold(ssock->sk);
--		release_sock(sk);
- 		mask =3D ssock->ops->poll(file, ssock, wait);
--		sock_put(ssock->sk);
-+		release_sock(sk);
- 		return mask;
- 	}
- =
-
-@@ -1092,7 +1057,6 @@ static int mptcp_shutdown(struct socket *sock, int ho=
-w)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
- 	struct mptcp_subflow_context *subflow;
--	struct socket *ssock;
- 	int ret =3D 0;
- =
-
- 	pr_debug("sk=3D%p, how=3D%d", msk, how);
-@@ -1102,15 +1066,6 @@ static int mptcp_shutdown(struct socket *sock, int h=
-ow)
- 	if (how =3D=3D SHUT_WR || how =3D=3D SHUT_RDWR)
- 		inet_sk_state_store(sock->sk, TCP_FIN_WAIT1);
- =
-
--	ssock =3D __mptcp_tcp_fallback_get(msk);
--	if (ssock) {
--		release_sock(sock->sk);
--		pr_debug("subflow=3D%p", ssock->sk);
--		ret =3D kernel_sock_shutdown(ssock, how);
--		sock_put(ssock->sk);
--		return ret;
--	}
--
- 	how++;
- =
-
- 	if ((how & ~SHUTDOWN_MASK) || !how) {
--- =
-
-2.21.0
-
---===============4594923940150818938==--
+--
+Mat Martineau
+Intel
+--===============3484530828176885050==--
