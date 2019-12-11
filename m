@@ -1,73 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============1223840637839790038=="
+Content-Type: multipart/mixed; boundary="===============1139486131792806193=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/1] proposed export branch rebase
-Date: Tue, 10 Dec 2019 22:27:36 +0100
-Message-ID: <6c28e243-afe5-ba23-5788-67a409f9706e@tessares.net>
-In-Reply-To: c5fff733-ae59-57cd-de57-3958cd49df9f@tessares.net
+Subject: [MPTCP] Re: [PATCH v2 2/4] mptcp: cleanup fallback handling
+Date: Tue, 10 Dec 2019 17:29:16 -0800
+Message-ID: <alpine.OSX.2.21.1912101708280.2679@mmazumd1-mobl.amr.corp.intel.com>
+In-Reply-To: ce07ef989e196a098b4eb81822b350db3a346325.1575999260.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2868
+X-UID: 2869
 
---===============1223840637839790038==
+--===============1139486131792806193==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, 10 Dec 2019, Paolo Abeni wrote:
 
-On 10/12/2019 19:24, Matthieu Baerts wrote:
-> Hi Florian, Paolo,
-> =
+> The 'fallback' field has many different meanings:
+> tcp fallback socket, first subflow, listening socket.
+> Enforcing the correct usage is not easy - currently we have
+> several problems:
+>
+> 1) this will fail, but it should not:
+> fd =3D socket(AF_INET{,6}, SOCK_STREAM, MPTCP_PROTO);
+> setsockopt(fd, SOL_IP{,V6}, //...) =3D -1 EOPNOTSUPP (Operation not suppo=
+rted)
+>
+> 2) this will report success, but it should not:
+> fd =3D socket(AF_INET{,6}, SOCK_STREAM, MPTCP_PROTO);
+> connect(fd, //)
+> bind(fd, //) =3D 0
+>
+> 3) this will report success, but it should not:
+> fd =3D socket(AF_INET{,6}, SOCK_STREAM, MPTCP_PROTO);
+> listen(fd, // )
+> s =3D accept(fd, )
+> bind(s, ...) =3D 0
+>
 
-> On 09/12/2019 13:33, Paolo Abeni wrote:
->> Hi,
->>
->> On Sun, 2019-12-08 at 19:24 +0100, Florian Westphal wrote:
->>> It includes 48 patches (down from 66), I will refrain from patch-bombing
->>> the list with it.=C2=A0 There is one patch as followup here because its
->>> "almost new" in the sense that its an amalgamation of different patches
->>> that I placed in that commit because the others seemed quite large =
+It would be good to add these problems to the self tests! Not considering =
 
->>> already.
->>>
->>> The __tcp_poll patch is gone.=C2=A0 Later patches, in particular the =
+that a blocker for merging this patch, though.
 
->>> changes to
->>> only store 'tcp_sock' rather than 'struct socket' on the conn_list, have
->>> been brought forward and squashed into the relevant commits, would thus
->>> be implicitly part of basic mptcp submission.=C2=A0 I've amemded commit
->>> messages where appropriate.
->>
->> Thank you Florian for the great work!
->>
->> I went through the patches up to v1 support, and LGTM.
-> =
+Patch otherwise looks good, thanks for the readability fixes.
 
-> It is also good to me! Thank you very much for the very big work! The =
+Mat
 
-> kind of work where even you you have to sit down to do it! ...=C2=A0 O:-D
-> =
 
-> I just re-created the tree using your branch. I am also checking now =
+> This patch:
+>
+> - explicitly handle the msk socket status in some missing places
+> - wrap msk->subflow access with helpers describing the expected
+>  semantic
+> - use the above to enforce correct syscall behavior
+> - create on demand the subflow socket for setsockopt(), if possible
+>
+> v1 -> v2:
+> - use MPTCP_SAME_STATE macro (Mat)
+> - drop dumb comment (Mat)
+>
+> RFC -> v1:
+> - drop __mptcp_first_socket() helper, always use __mptcp_nmpc_socket()
+>   instead
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 178 +++++++++++++++++++++++++++----------------
+> 1 file changed, 111 insertions(+), 67 deletions(-)
+>
 
-> that all commits are OK, with and without MPTCP. Also the usual =
-
-> compilation tests with i386 and without IPv6.
-
-FYI, all tests are green!
-I didn't re-enable the automatic sync with net-next. I will do that =
-
-after having applied recent Paolo's changes.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1223840637839790038==--
+--
+Mat Martineau
+Intel
+--===============1139486131792806193==--
