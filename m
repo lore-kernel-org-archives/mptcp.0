@@ -1,80 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============1028013921969600743=="
+Content-Type: multipart/mixed; boundary="===============8872327604383671324=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: fallback socket cleanup
-Date: Tue, 10 Dec 2019 17:47:07 -0800
-Message-ID: <alpine.OSX.2.21.1912101736200.2679@mmazumd1-mobl.amr.corp.intel.com>
-In-Reply-To: cover.1575999260.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH 0/1] proposed export branch rebase
+Date: Wed, 11 Dec 2019 17:32:59 +0100
+Message-ID: <b4d68d34218e40cefaf811a81514ef7afae17b84.camel@redhat.com>
+In-Reply-To: 6c28e243-afe5-ba23-5788-67a409f9706e@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2870
+X-UID: 2871
 
---===============1028013921969600743==
+--===============8872327604383671324==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Dec 2019, Paolo Abeni wrote:
+On Tue, 2019-12-10 at 22:27 +0100, Matthieu Baerts wrote:
+> Hi,
+> =
 
-> This addresses feedback from Mat on v1
->
-> From the original cover letter:
-> ---
->
-> After all the above, performance for connection fallen back to plain TCP =
-should
-> be almost the same of TCP connection on unpacked kernel.
->
-> Addittionally 'nc' and 'netperf' now run successfully when forced to MPTC=
-P.
-> The latter still report a non fatal error at connection closing time as it
-> performs:
->
-> getsockopt(4, SOL_TCP, TCP_MAXSEG, //...);
-> getsockopt(4, SOL_TCP, TCP_INFO, //...);
->
-> which is still unsupported after that the mp capable handshake is started.
->
-> For the records on the debug build I'm using netperf scores better result
-> with MPTCP that with plain TCP ;) [agreed, completely irrelevant, still n=
-ice]
->
+> On 10/12/2019 19:24, Matthieu Baerts wrote:
+> > Hi Florian, Paolo,
+> > =
 
-Hi Paolo -
+> > On 09/12/2019 13:33, Paolo Abeni wrote:
+> > > Hi,
+> > > =
 
-The series looks good to me, and tests out ok on my side too when applied =
+> > > On Sun, 2019-12-08 at 19:24 +0100, Florian Westphal wrote:
+> > > > It includes 48 patches (down from 66), I will refrain from patch-bo=
+mbing
+> > > > the list with it.  There is one patch as followup here because its
+> > > > "almost new" in the sense that its an amalgamation of different pat=
+ches
+> > > > that I placed in that commit because the others seemed quite large =
 
-to today's export branch. Given the locking changes I think it would be =
+> > > > already.
+> > > > =
 
-helpful to have more than one reviewer.
+> > > > The __tcp_poll patch is gone.  Later patches, in particular the =
 
-> The series applies at selftests and is unsquashed - will require quite a =
-bit
-> of work there and more work to rebase/adjust the patches after kselftest.
-> I'll start that after the pending patches are in.
+> > > > changes to
+> > > > only store 'tcp_sock' rather than 'struct socket' on the conn_list,=
+ have
+> > > > been brought forward and squashed into the relevant commits, would =
+thus
+> > > > be implicitly part of basic mptcp submission.  I've amemded commit
+> > > > messages where appropriate.
+> > > =
 
-That was going to be my next question! Thanks for starting on that.
+> > > Thank you Florian for the great work!
+> > > =
 
+> > > I went through the patches up to v1 support, and LGTM.
+> > =
 
-Mat
+> > It is also good to me! Thank you very much for the very big work! The =
 
+> > kind of work where even you you have to sit down to do it! ...  O:-D
+> > =
 
->
-> _Any_ feedback _very_ welcome!
->
-> Paolo Abeni (4):
->  mptcp: clear 'is_tcp' socket flag when the MP_CAPABLE handshake fails
->  mptcp: cleanup fallback handling
->  mptcp: add subflow to conn_list early
->  mptcp: avoid acquiring the msk lock in mptcp_finisch_connect()
->
-> net/mptcp/options.c  |   3 +
-> net/mptcp/protocol.c | 353 ++++++++++++++++++++-----------------------
-> net/mptcp/subflow.c  |   2 +
-> 3 files changed, 169 insertions(+), 189 deletions(-)
+> > I just re-created the tree using your branch. I am also checking now =
 
---
-Mat Martineau
-Intel
---===============1028013921969600743==--
+> > that all commits are OK, with and without MPTCP. Also the usual =
+
+> > compilation tests with i386 and without IPv6.
+> =
+
+> FYI, all tests are green!
+> I didn't re-enable the automatic sync with net-next. I will do that =
+
+> after having applied recent Paolo's changes.
+
+The rebased and amost squashed thing is available here:
+
+https://github.com/pabeni/mptcp/tree/fwestpha-mptcp_export_rebase_19_fallba=
+ck_cleanup_2
+
+It build on each commit. Not tested yet, sent-out early for review's
+sake.
+
+Note that some patches after MP_JOIN required some relevant rework,
+see:
+
+https://github.com/pabeni/mptcp/commit/0a84b5b3547cba0bea6186402d0eed4981b6=
+174a
+https://github.com/pabeni/mptcp/commit/481d3137ce456df2dc93f4b64f0204201d6f=
+ee7f
+
+@Florian, WDYT?
+
+Thanks,
+
+Paolo
+
+--===============8872327604383671324==--
