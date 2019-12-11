@@ -1,32 +1,335 @@
-Content-Type: multipart/mixed; boundary="===============7461200699643122926=="
+Content-Type: multipart/mixed; boundary="===============2017209504697283190=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/1] proposed export branch rebase
-Date: Wed, 11 Dec 2019 20:22:09 +0100
-Message-ID: <20191211192209.GM795@breakpoint.cc>
-In-Reply-To: afc3068e9c228b78ab384be40da1152ba5bfc6a0.camel@redhat.com
+Subject: [MPTCP] Re: [multipathtcp] MPTCP implementation feedback for
+ RFC6824bis
+Date: Wed, 11 Dec 2019 11:22:31 -0800
+Message-ID: <49ED222B-9E71-4A8F-A280-2521ED650454@apple.com>
+In-Reply-To: fa671a2f315e.5df04794@nic.in
 X-Status: 
 X-Keywords:                  
-X-UID: 2874
+X-UID: 2875
 
---===============7461200699643122926==
+--===============2017209504697283190==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> @Florian: I tested the whole tree vs self-tests - so MP_JOIN is not
-> really tested. Are you ok to merge as-is and then look after eventual
-> bug introduced by me here?
+Hello,
 
-Maybe, can you explain __mptcp_flush_join_list() usage?
+> On Dec 10, 2019, at 12:04 PM, V Anil Kumar <anil(a)csir4pi.in> wrote:
+> =
 
-AFAICS subflow on join list can be moved to conn_list at 'random'
-point in time, even if its not fully established yet?
+> Hi Alan,
+> =
 
-(there are calls to __mptcp_flush_join_list in recv/sendmsg path...)
+> Please see inline.
+> =
 
-Given MP_JOIN isn't in the 1st/2nd batch i would be ok with merging
-now though.
---===============7461200699643122926==--
+> On 12/06/19 09:28 PM, Alan Ford <alan.ford(a)gmail.com <mailto:alan.ford(=
+a)gmail.com>> wrote:
+>> =
+
+>> Hi all,
+>> =
+
+>> =
+
+>> Following on from the discussion of implementation feedback with Christo=
+ph, I propose the following edits to RFC6824bis - which is currently in AUT=
+H48 - as clarifications.
+>> =
+
+>> ADs, please can you confirm you consider these edits sufficiently editor=
+ial to fit into AUTH48.
+>> =
+
+>> WG participants, please speak up if you have any concerns.
+>> =
+
+>> =
+
+>> Edit 1, clarifying reliability of MP_CAPABLE
+>> =
+
+>> Change the sentence reading:
+>> =
+
+>>    The SYN with MP_CAPABLE occupies the first octet of data sequence spa=
+ce, although this does not need to be acknowledged at the connection level =
+until the first data is sent (see Section 3.3).
+>> =
+
+>> To:
+>> =
+
+>>    The SYN with MP_CAPABLE occupies the first octet of data sequence spa=
+ce, and this MUST be acknowledged at the connection level at or before the =
+time the first data is sent or received (see Section 3.3).
+>> =
+
+>> =
+
+>> Change the sentence reading:
+>> =
+
+>>    If B has data to send first, then the reliable delivery of the ACK + =
+MP_CAPABLE can be inferred by the receipt of this data with an MPTCP Data S=
+equence Signal (DSS) option (Section 3.3). =
+
+>> =
+
+>> To:
+>> =
+
+>>    If B has data to send first, then the reliable delivery of the ACK + =
+MP_CAPABLE is ensured by the receipt of this data with an MPTCP Data Sequen=
+ce Signal (DSS) option (Section 3.3) containing a DATA_ACK for the MP_CAPAB=
+LE (which is the first octet of the data sequence space).
+>> =
+
+>> =
+
+>> In my personal opinion either one of these edits would be sufficient for=
+ making the point, however clearly this has caused some confusion amongst t=
+he implementor community so making both these changes should make it absolu=
+tely clear as to the expected behaviour here.
+>> =
+
+>> =
+
+>> Edit 2, mapping constraint
+>> =
+
+>> Change the sentence reading:
+>> =
+
+>>    A Data Sequence Mapping does not need to be included in every MPTCP p=
+acket, as long as the subflow sequence space in that packet is covered by a=
+ mapping known at the receiver.
+>> =
+
+>> To:
+>> =
+
+>>    A Data Sequence Mapping MUST appear on a TCP segment which is covered=
+ by the mapping. It does not need to be included in every MPTCP packet, as =
+long as the subflow sequence space in that packet is covered by a mapping k=
+nown at the receiver.
+>> =
+
+> As far as I understand, the proposed change introduces a =E2=80=9CMUST=E2=
+=80=9D to insist that the map in a segment must cover at least some data in=
+ the segment. But the document does not talk anything about the rational be=
+hind it. I guess it is purely an =
+
+> ease of implementation?
+
+For two reasons:
+
+1. Ease of implementation
+2. If an implementation tries to "remember" early mappings, it is not clear=
+ how many of these an implementation can hold. Thus, the sender does not kn=
+ow how many early mappings he can send. So, it is hard for a sender to do t=
+he right thing.
+
+> I think the design/format of the Data Sequence Mapping permits the map to=
+ stand independent of the data being carried in a segment. So, as long as a=
+n implementation is willing to deal with the complexity of storing and proc=
+essing late and early mappings (with respect to the data arrival), it could=
+ be permitted provided that the received map is for an in-window data.
+
+What is the concrete use-case for such early mappings? What are the benefit=
+s of it? I think that if we want to enable such implementation-complexity, =
+we need a compelling use-case with a big benefit.
+
+That's the reason why we (the MPTCP-upstreaming community) vouch to have th=
+is case restricted.
+
+
+Cheers,
+Christoph
+
+
+
+
+> =
+
+> Anil =
+
+>> =
+
+>> =
+
+>> =
+
+>> Best regards,
+>> Alan
+>> =
+
+
+
+--===============2017209504697283190==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
+L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPjwvaGVhZD48Ym9keSBzdHlsZT0id29yZC13cmFwOiBicmVh
+ay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdoaXRl
+LXNwYWNlOyIgY2xhc3M9IiI+SGVsbG8sPGJyIGNsYXNzPSIiPjxkaXY+PGJyIGNsYXNzPSIiPjxi
+bG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPjxkaXYgY2xhc3M9IiI+T24gRGVjIDEwLCAy
+MDE5LCBhdCAxMjowNCBQTSwgViBBbmlsIEt1bWFyICZsdDs8YSBocmVmPSJtYWlsdG86YW5pbEBj
+c2lyNHBpLmluIiBjbGFzcz0iIj5hbmlsQGNzaXI0cGkuaW48L2E+Jmd0OyB3cm90ZTo8L2Rpdj48
+YnIgY2xhc3M9IkFwcGxlLWludGVyY2hhbmdlLW5ld2xpbmUiPjxkaXYgY2xhc3M9IiI+PHNwYW4g
+c3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7
+IGZvbnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczog
+bm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0
+LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdo
+aXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tl
+LXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgZmxvYXQ6IG5vbmU7IGRpc3BsYXk6
+IGlubGluZSAhaW1wb3J0YW50OyIgY2xhc3M9IiI+SGkgQWxhbiw8L3NwYW4+PGRpdiBzdHlsZT0i
+Y2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1z
+aXplOiAxM3B4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7
+IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246
+IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3Bh
+Y2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6
+IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2
+PjxkaXYgc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2
+ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQt
+Y2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFs
+OyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5v
+bmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQt
+c3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPlBsZWFz
+ZSBzZWUgaW5saW5lLjxiciBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PHNwYW4gY2xhc3M9IiI+T24g
+MTIvMDYvMTkgMDk6MjggUE0sPHNwYW4gY2xhc3M9IkFwcGxlLWNvbnZlcnRlZC1zcGFjZSI+Jm5i
+c3A7PC9zcGFuPjxiIGNsYXNzPSJuYW1lIj5BbGFuIEZvcmQ8c3BhbiBjbGFzcz0iQXBwbGUtY29u
+dmVydGVkLXNwYWNlIj4mbmJzcDs8L3NwYW4+PC9iPiZsdDs8YSBocmVmPSJtYWlsdG86YWxhbi5m
+b3JkQGdtYWlsLmNvbSIgY2xhc3M9IiI+YWxhbi5mb3JkQGdtYWlsLmNvbTwvYT4mZ3Q7IHdyb3Rl
+Ojwvc3Bhbj48YmxvY2txdW90ZSBjaXRlPSJtaWQ6Njk3OEM5N0YtMjRENS00Q0YwLThDRUItMkY1
+OEJFMjZEMTc0QGdtYWlsLmNvbSIgY2xhc3M9Iml3Y1F1b3RlIiB0eXBlPSJjaXRlIiBzdHlsZT0i
+Ym9yZGVyLWxlZnQtd2lkdGg6IDFweDsgYm9yZGVyLWxlZnQtc3R5bGU6IHNvbGlkOyBib3JkZXIt
+bGVmdC1jb2xvcjogcmdiKDAsIDAsIDI1NSk7IHBhZGRpbmctbGVmdDogMTNweDsgbWFyZ2luLWxl
+ZnQ6IDBweDsiPjxkaXYgY2xhc3M9Im1pbWV0eXBlLXRleHQtaHRtbCI+PHNwYW4gY2xhc3M9IiI+
+PHAgY2xhc3M9IiI+PHRhYmxlIGNsYXNzPSIiPjx0Ym9keSBjbGFzcz0iIj48dHIgY2xhc3M9IiI+
+PHRkIGNsYXNzPSIiIHN0eWxlPSJ3b3JkLXdyYXA6IGJyZWFrLXdvcmQ7IC13ZWJraXQtbmJzcC1t
+b2RlOiBzcGFjZTsgbGluZS1icmVhazogYWZ0ZXItd2hpdGUtc3BhY2U7Ij48cCBjbGFzcz0iIj5I
+aSBhbGwsPC9wPjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+
+Rm9sbG93aW5nIG9uIGZyb20gdGhlIGRpc2N1c3Npb24gb2YgaW1wbGVtZW50YXRpb24gZmVlZGJh
+Y2sgd2l0aCBDaHJpc3RvcGgsIEkgcHJvcG9zZSB0aGUgZm9sbG93aW5nIGVkaXRzIHRvIFJGQzY4
+MjRiaXMgLSB3aGljaCBpcyBjdXJyZW50bHkgaW4gQVVUSDQ4IC0gYXMgY2xhcmlmaWNhdGlvbnMu
+PC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj5BRHMs
+IHBsZWFzZSBjYW4geW91IGNvbmZpcm0geW91IGNvbnNpZGVyIHRoZXNlIGVkaXRzIHN1ZmZpY2ll
+bnRseSBlZGl0b3JpYWwgdG8gZml0IGludG8gQVVUSDQ4LjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJy
+IGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+V0cgcGFydGljaXBhbnRzLCBwbGVhc2Ugc3Bl
+YWsgdXAgaWYgeW91IGhhdmUgYW55IGNvbmNlcm5zLjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNs
+YXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9
+IiI+PGIgY2xhc3M9IiI+RWRpdCAxLCBjbGFyaWZ5aW5nIHJlbGlhYmlsaXR5IG9mIE1QX0NBUEFC
+TEU8L2I+PC9kaXY+PGRpdiBjbGFzcz0iIj48YiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9iPjwv
+ZGl2PjxkaXYgY2xhc3M9IiI+Q2hhbmdlIHRoZSBzZW50ZW5jZSByZWFkaW5nOjwvZGl2PjxkaXYg
+Y2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+Jm5ic3A7ICZuYnNwO1Ro
+ZSBTWU4gd2l0aCBNUF9DQVBBQkxFIG9jY3VwaWVzIHRoZSBmaXJzdCBvY3RldCBvZiBkYXRhIHNl
+cXVlbmNlIHNwYWNlLCBhbHRob3VnaCB0aGlzIGRvZXMgbm90IG5lZWQgdG8gYmUgYWNrbm93bGVk
+Z2VkIGF0IHRoZSBjb25uZWN0aW9uIGxldmVsIHVudGlsIHRoZSBmaXJzdCBkYXRhIGlzIHNlbnQg
+KHNlZSBTZWN0aW9uIDMuMykuPC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+
+PGRpdiBjbGFzcz0iIj5Ubzo8L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48
+ZGl2IGNsYXNzPSIiPiZuYnNwOyAmbmJzcDtUaGUgU1lOIHdpdGggTVBfQ0FQQUJMRSBvY2N1cGll
+cyB0aGUgZmlyc3Qgb2N0ZXQgb2YgZGF0YSBzZXF1ZW5jZSBzcGFjZSwgYW5kIHRoaXMgTVVTVCBi
+ZSBhY2tub3dsZWRnZWQgYXQgdGhlIGNvbm5lY3Rpb24gbGV2ZWwgYXQgb3IgYmVmb3JlIHRoZSB0
+aW1lIHRoZSBmaXJzdCBkYXRhIGlzIHNlbnQgb3IgcmVjZWl2ZWQgKHNlZSBTZWN0aW9uIDMuMyku
+PC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj48YiBj
+bGFzcz0iIj48YnIgY2xhc3M9IiI+PC9iPjwvZGl2PjxkaXYgY2xhc3M9IiI+Q2hhbmdlIHRoZSBz
+ZW50ZW5jZSByZWFkaW5nOjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2Pjxk
+aXYgY2xhc3M9IiI+Jm5ic3A7ICZuYnNwO0lmIEIgaGFzIGRhdGEgdG8gc2VuZCBmaXJzdCwgdGhl
+biB0aGUgcmVsaWFibGUgZGVsaXZlcnkgb2YgdGhlIEFDSyArIE1QX0NBUEFCTEUgY2FuIGJlIGlu
+ZmVycmVkIGJ5IHRoZSByZWNlaXB0IG9mIHRoaXMgZGF0YSB3aXRoIGFuIE1QVENQIERhdGEgU2Vx
+dWVuY2UgU2lnbmFsIChEU1MpIG9wdGlvbiAoU2VjdGlvbiAzLjMpLiZuYnNwOzwvZGl2PjxkaXYg
+Y2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+VG86PC9kaXY+PGRpdiBj
+bGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj4mbmJzcDsgJm5ic3A7SWYg
+QiBoYXMgZGF0YSB0byBzZW5kIGZpcnN0LCB0aGVuIHRoZSByZWxpYWJsZSBkZWxpdmVyeSBvZiB0
+aGUgQUNLICsgTVBfQ0FQQUJMRSBpcyBlbnN1cmVkIGJ5IHRoZSByZWNlaXB0IG9mIHRoaXMgZGF0
+YSB3aXRoIGFuIE1QVENQIERhdGEgU2VxdWVuY2UgU2lnbmFsIChEU1MpIG9wdGlvbiAoU2VjdGlv
+biAzLjMpIGNvbnRhaW5pbmcgYSBEQVRBX0FDSyBmb3IgdGhlIE1QX0NBUEFCTEUmbmJzcDsod2hp
+Y2ggaXMgdGhlIGZpcnN0IG9jdGV0IG9mIHRoZSBkYXRhIHNlcXVlbmNlIHNwYWNlKS48L2Rpdj48
+ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0i
+Ij48L2Rpdj48ZGl2IGNsYXNzPSIiPkluIG15IHBlcnNvbmFsIG9waW5pb24gZWl0aGVyIG9uZSBv
+ZiB0aGVzZSBlZGl0cyB3b3VsZCBiZSBzdWZmaWNpZW50IGZvciBtYWtpbmcgdGhlIHBvaW50LCBo
+b3dldmVyIGNsZWFybHkgdGhpcyBoYXMgY2F1c2VkIHNvbWUgY29uZnVzaW9uIGFtb25nc3QgdGhl
+IGltcGxlbWVudG9yIGNvbW11bml0eSBzbyBtYWtpbmcgYm90aCB0aGVzZSBjaGFuZ2VzIHNob3Vs
+ZCBtYWtlIGl0IGFic29sdXRlbHkgY2xlYXIgYXMgdG8gdGhlIGV4cGVjdGVkIGJlaGF2aW91ciBo
+ZXJlLjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+
+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+PGIgY2xhc3M9IiI+RWRpdCAyLCBtYXBw
+aW5nIGNvbnN0cmFpbnQ8L2I+PC9kaXY+PGRpdiBjbGFzcz0iIj48YiBjbGFzcz0iIj48YnIgY2xh
+c3M9IiI+PC9iPjwvZGl2PjxkaXYgY2xhc3M9IiI+Q2hhbmdlIHRoZSBzZW50ZW5jZSByZWFkaW5n
+OjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+Jm5i
+c3A7ICZuYnNwO0EgRGF0YSBTZXF1ZW5jZSBNYXBwaW5nIGRvZXMgbm90IG5lZWQgdG8gYmUgaW5j
+bHVkZWQgaW4gZXZlcnkgTVBUQ1AmbmJzcDtwYWNrZXQsIGFzIGxvbmcgYXMgdGhlIHN1YmZsb3cg
+c2VxdWVuY2Ugc3BhY2UgaW4gdGhhdCBwYWNrZXQgaXMmbmJzcDtjb3ZlcmVkIGJ5IGEgbWFwcGlu
+ZyBrbm93biBhdCB0aGUgcmVjZWl2ZXIuPC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+
+PC9kaXY+PGRpdiBjbGFzcz0iIj5Ubzo8L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48
+L2Rpdj48ZGl2IGNsYXNzPSIiPiZuYnNwOyAmbmJzcDtBIERhdGEgU2VxdWVuY2UgTWFwcGluZyBN
+VVNUIGFwcGVhciBvbiBhIFRDUCBzZWdtZW50IHdoaWNoIGlzIGNvdmVyZWQgYnkgdGhlIG1hcHBp
+bmcuIEl0IGRvZXMgbm90IG5lZWQgdG8gYmUgaW5jbHVkZWQgaW4gZXZlcnkgTVBUQ1AmbmJzcDtw
+YWNrZXQsIGFzIGxvbmcgYXMgdGhlIHN1YmZsb3cgc2VxdWVuY2Ugc3BhY2UgaW4gdGhhdCBwYWNr
+ZXQgaXMmbmJzcDtjb3ZlcmVkIGJ5IGEgbWFwcGluZyBrbm93biBhdCB0aGUgcmVjZWl2ZXIuPC9k
+aXY+PGRpdiBjbGFzcz0iIj48YiBjbGFzcz0iIj48L2I+PC9kaXY+PC90ZD48L3RyPjwvdGJvZHk+
+PC90YWJsZT48L3A+PC9zcGFuPjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2IGNsYXNzPSIiPkFzIGZh
+ciBhcyBJIHVuZGVyc3RhbmQsIHRoZSBwcm9wb3NlZCBjaGFuZ2UgaW50cm9kdWNlcyBhIOKAnE1V
+U1TigJ0gdG8gaW5zaXN0IHRoYXQgdGhlIG1hcCBpbiBhIHNlZ21lbnQgbXVzdCBjb3ZlciBhdCBs
+ZWFzdCBzb21lIGRhdGEgaW4gdGhlIHNlZ21lbnQuIEJ1dCB0aGUgZG9jdW1lbnQgZG9lcyBub3Qg
+dGFsayBhbnl0aGluZyBhYm91dCB0aGUgcmF0aW9uYWwgYmVoaW5kIGl0LiBJIGd1ZXNzIGl0IGlz
+IHB1cmVseSBhbiZuYnNwOzwvZGl2PjxkaXYgY2xhc3M9IiI+ZWFzZSBvZiBpbXBsZW1lbnRhdGlv
+bj88L2Rpdj48L2Rpdj48L2Rpdj48L2Jsb2NrcXVvdGU+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+
+PGRpdj5Gb3IgdHdvIHJlYXNvbnM6PC9kaXY+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdj4x
+LiBFYXNlIG9mIGltcGxlbWVudGF0aW9uPC9kaXY+PGRpdj4yLiBJZiBhbiBpbXBsZW1lbnRhdGlv
+biB0cmllcyB0byAicmVtZW1iZXIiIGVhcmx5IG1hcHBpbmdzLCBpdCBpcyBub3QgY2xlYXIgaG93
+IG1hbnkgb2YgdGhlc2UgYW4gaW1wbGVtZW50YXRpb24gY2FuIGhvbGQuIFRodXMsIHRoZSBzZW5k
+ZXIgZG9lcyBub3Qga25vdyBob3cgbWFueSBlYXJseSBtYXBwaW5ncyBoZSBjYW4gc2VuZC4gU28s
+IGl0IGlzIGhhcmQgZm9yIGEgc2VuZGVyIHRvIGRvIHRoZSByaWdodCB0aGluZy48L2Rpdj48YnIg
+Y2xhc3M9IiI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIgY2xhc3M9IiI+PGRpdiBjbGFzcz0iIj48
+ZGl2IHN0eWxlPSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0
+aWNhOyBmb250LXNpemU6IDEzcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNh
+cHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsg
+dGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25l
+OyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0
+cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFzcz0iIj48ZGl2IGNs
+YXNzPSIiPkkgdGhpbmsgdGhlIGRlc2lnbi9mb3JtYXQgb2YgdGhlIERhdGEgU2VxdWVuY2UgTWFw
+cGluZyBwZXJtaXRzIHRoZSBtYXAgdG8gc3RhbmQgaW5kZXBlbmRlbnQgb2YgdGhlIGRhdGEgYmVp
+bmcgY2FycmllZCBpbiBhIHNlZ21lbnQuIFNvLCBhcyBsb25nIGFzIGFuIGltcGxlbWVudGF0aW9u
+IGlzIHdpbGxpbmcgdG8gZGVhbCB3aXRoIHRoZSBjb21wbGV4aXR5IG9mIHN0b3JpbmcgYW5kIHBy
+b2Nlc3NpbmcgbGF0ZSBhbmQgZWFybHkgbWFwcGluZ3MgKHdpdGggcmVzcGVjdCB0byB0aGUgZGF0
+YSBhcnJpdmFsKSwgaXQgY291bGQgYmUgcGVybWl0dGVkIHByb3ZpZGVkIHRoYXQgdGhlIHJlY2Vp
+dmVkIG1hcCBpcyBmb3IgYW4gaW4td2luZG93IGRhdGEuPC9kaXY+PC9kaXY+PC9kaXY+PC9ibG9j
+a3F1b3RlPjxkaXY+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXY+V2hhdCBpcyB0aGUgY29uY3JldGUg
+dXNlLWNhc2UgZm9yIHN1Y2ggZWFybHkgbWFwcGluZ3M/IFdoYXQgYXJlIHRoZSBiZW5lZml0cyBv
+ZiBpdD8gSSB0aGluayB0aGF0IGlmIHdlIHdhbnQgdG8gZW5hYmxlIHN1Y2ggaW1wbGVtZW50YXRp
+b24tY29tcGxleGl0eSwgd2UgbmVlZCBhIGNvbXBlbGxpbmcgdXNlLWNhc2Ugd2l0aCBhIGJpZyBi
+ZW5lZml0LjwvZGl2PjxkaXY+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXY+VGhhdCdzIHRoZSByZWFz
+b24gd2h5IHdlICh0aGUgTVBUQ1AtdXBzdHJlYW1pbmcgY29tbXVuaXR5KSB2b3VjaCB0byBoYXZl
+IHRoaXMgY2FzZSByZXN0cmljdGVkLjwvZGl2PjxkaXY+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXY+
+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXY+Q2hlZXJzLDwvZGl2PjxkaXY+Q2hyaXN0b3BoPC9kaXY+
+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdj48YnIg
+Y2xhc3M9IiI+PC9kaXY+PGJyIGNsYXNzPSIiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNz
+PSIiPjxkaXYgY2xhc3M9IiI+PGRpdiBzdHlsZT0iY2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsg
+Zm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1zaXplOiAxM3B4OyBmb250LXN0eWxlOiBub3Jt
+YWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRl
+ci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0
+ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAw
+cHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25l
+OyIgY2xhc3M9IiI+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0i
+Ij5BbmlsJm5ic3A7PC9kaXY+PGJsb2NrcXVvdGUgY2l0ZT0ibWlkOjY5NzhDOTdGLTI0RDUtNENG
+MC04Q0VCLTJGNThCRTI2RDE3NEBnbWFpbC5jb20iIGNsYXNzPSJpd2NRdW90ZSIgdHlwZT0iY2l0
+ZSIgc3R5bGU9ImJvcmRlci1sZWZ0LXdpZHRoOiAxcHg7IGJvcmRlci1sZWZ0LXN0eWxlOiBzb2xp
+ZDsgYm9yZGVyLWxlZnQtY29sb3I6IHJnYigwLCAwLCAyNTUpOyBwYWRkaW5nLWxlZnQ6IDEzcHg7
+IG1hcmdpbi1sZWZ0OiAwcHg7Ij48ZGl2IGNsYXNzPSJtaW1ldHlwZS10ZXh0LWh0bWwiPjxzcGFu
+IGNsYXNzPSIiPjxwIGNsYXNzPSIiPjx0YWJsZSBjbGFzcz0iIj48dGJvZHkgY2xhc3M9IiI+PHRy
+IGNsYXNzPSIiPjx0ZCBjbGFzcz0iIiBzdHlsZT0id29yZC13cmFwOiBicmVhay13b3JkOyAtd2Vi
+a2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdoaXRlLXNwYWNlOyI+PGRp
+diBjbGFzcz0iIj48YiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9iPjwvZGl2PjxkaXYgY2xhc3M9
+IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+QmVzdCByZWdhcmRzLDwvZGl2Pjxk
+aXYgY2xhc3M9IiI+QWxhbjwvZGl2PjwvdGQ+PC90cj48L3Rib2R5PjwvdGFibGU+PC9wPjwvc3Bh
+bj48L2Rpdj48L2Jsb2NrcXVvdGU+PC9kaXY+PC9kaXY+PC9ibG9ja3F1b3RlPjwvZGl2PjxiciBj
+bGFzcz0iIj48L2JvZHk+PC9odG1sPg==
+--===============2017209504697283190==--
