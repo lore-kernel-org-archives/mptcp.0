@@ -1,76 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============1139486131792806193=="
+Content-Type: multipart/mixed; boundary="===============1028013921969600743=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 2/4] mptcp: cleanup fallback handling
-Date: Tue, 10 Dec 2019 17:29:16 -0800
-Message-ID: <alpine.OSX.2.21.1912101708280.2679@mmazumd1-mobl.amr.corp.intel.com>
-In-Reply-To: ce07ef989e196a098b4eb81822b350db3a346325.1575999260.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: fallback socket cleanup
+Date: Tue, 10 Dec 2019 17:47:07 -0800
+Message-ID: <alpine.OSX.2.21.1912101736200.2679@mmazumd1-mobl.amr.corp.intel.com>
+In-Reply-To: cover.1575999260.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2869
+X-UID: 2870
 
---===============1139486131792806193==
+--===============1028013921969600743==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 10 Dec 2019, Paolo Abeni wrote:
 
-> The 'fallback' field has many different meanings:
-> tcp fallback socket, first subflow, listening socket.
-> Enforcing the correct usage is not easy - currently we have
-> several problems:
+> This addresses feedback from Mat on v1
 >
-> 1) this will fail, but it should not:
-> fd =3D socket(AF_INET{,6}, SOCK_STREAM, MPTCP_PROTO);
-> setsockopt(fd, SOL_IP{,V6}, //...) =3D -1 EOPNOTSUPP (Operation not suppo=
-rted)
+> From the original cover letter:
+> ---
 >
-> 2) this will report success, but it should not:
-> fd =3D socket(AF_INET{,6}, SOCK_STREAM, MPTCP_PROTO);
-> connect(fd, //)
-> bind(fd, //) =3D 0
+> After all the above, performance for connection fallen back to plain TCP =
+should
+> be almost the same of TCP connection on unpacked kernel.
 >
-> 3) this will report success, but it should not:
-> fd =3D socket(AF_INET{,6}, SOCK_STREAM, MPTCP_PROTO);
-> listen(fd, // )
-> s =3D accept(fd, )
-> bind(s, ...) =3D 0
+> Addittionally 'nc' and 'netperf' now run successfully when forced to MPTC=
+P.
+> The latter still report a non fatal error at connection closing time as it
+> performs:
+>
+> getsockopt(4, SOL_TCP, TCP_MAXSEG, //...);
+> getsockopt(4, SOL_TCP, TCP_INFO, //...);
+>
+> which is still unsupported after that the mp capable handshake is started.
+>
+> For the records on the debug build I'm using netperf scores better result
+> with MPTCP that with plain TCP ;) [agreed, completely irrelevant, still n=
+ice]
 >
 
-It would be good to add these problems to the self tests! Not considering =
+Hi Paolo -
 
-that a blocker for merging this patch, though.
+The series looks good to me, and tests out ok on my side too when applied =
 
-Patch otherwise looks good, thanks for the readability fixes.
+to today's export branch. Given the locking changes I think it would be =
+
+helpful to have more than one reviewer.
+
+> The series applies at selftests and is unsquashed - will require quite a =
+bit
+> of work there and more work to rebase/adjust the patches after kselftest.
+> I'll start that after the pending patches are in.
+
+That was going to be my next question! Thanks for starting on that.
+
 
 Mat
 
 
-> This patch:
 >
-> - explicitly handle the msk socket status in some missing places
-> - wrap msk->subflow access with helpers describing the expected
->  semantic
-> - use the above to enforce correct syscall behavior
-> - create on demand the subflow socket for setsockopt(), if possible
+> _Any_ feedback _very_ welcome!
 >
-> v1 -> v2:
-> - use MPTCP_SAME_STATE macro (Mat)
-> - drop dumb comment (Mat)
+> Paolo Abeni (4):
+>  mptcp: clear 'is_tcp' socket flag when the MP_CAPABLE handshake fails
+>  mptcp: cleanup fallback handling
+>  mptcp: add subflow to conn_list early
+>  mptcp: avoid acquiring the msk lock in mptcp_finisch_connect()
 >
-> RFC -> v1:
-> - drop __mptcp_first_socket() helper, always use __mptcp_nmpc_socket()
->   instead
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/protocol.c | 178 +++++++++++++++++++++++++++----------------
-> 1 file changed, 111 insertions(+), 67 deletions(-)
->
+> net/mptcp/options.c  |   3 +
+> net/mptcp/protocol.c | 353 ++++++++++++++++++++-----------------------
+> net/mptcp/subflow.c  |   2 +
+> 3 files changed, 169 insertions(+), 189 deletions(-)
 
 --
 Mat Martineau
 Intel
---===============1139486131792806193==--
+--===============1028013921969600743==--
