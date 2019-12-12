@@ -1,52 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============0653154393381287928=="
+Content-Type: multipart/mixed; boundary="===============1504014240819013411=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Fix dd command line option
-Date: Thu, 12 Dec 2019 22:23:28 +0100
-Message-ID: <ecaec2a8-cb09-0a34-0ec3-acacc059567e@tessares.net>
-In-Reply-To: 12e000ed-44a7-a00a-30bd-a448371696a9@tessares.net
+Subject: [MPTCP] Re: [PATCH] subflow: process pending data on state changes,
+ too
+Date: Thu, 12 Dec 2019 22:52:39 +0100
+Message-ID: <aa8178be-fca0-45b8-72b6-da5fa2d809e6@tessares.net>
+In-Reply-To: 62b2f929fdf3c17a05a5dd6ec632aba00e69c5d7.1575992767.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2894
+X-UID: 2895
 
---===============0653154393381287928==
+--===============1504014240819013411==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Paolo, Florian,
 
-On 12/12/2019 17:34, Matthieu Baerts wrote:
-> Hi Mat,
+On 10/12/2019 16:48, Paolo Abeni wrote:
+> Otherwise we can miss the data carried by the data fin.
+> An alternative solution would calling __subflow_state_change
+> on the parent socket only when we process the data fin in
+> mptcp_subflow_data_available.
 > =
 
-> On 07/12/2019 01:10, Mat Martineau wrote:
->> "conv=3D" is a valid command line parameter, but "conf=3D" is not. The e=
-rror
->> message is redirected to /dev/null so it is not obvious when running
->> tests. The tests seem to pass either way, so it's not clear that even
->> the "conv=3D" is really needed.
+> Currently, on the squashed tree, we have sporadic data stream
+> corrution near EoS, triggered by the lossy self-tests every a
+> few iteration.
 > =
 
-> Good catch!
-> =
+> This change addresses them.
 
-> It looks good to me!
-> =
+Thank you for the patch and the suggestion!
 
-> I will apply it once we sort out what we can do with Paolo and Davide's =
+@Paolo: I didn't see this patch was already in your branch :)
+I added the patch and removed it in the TopGit tree.
 
-> modifications. Let's discuss that at the meeting.
-
-Just applied:
-
-- a245ffca5256: "squashed" in "mptcp: add basic kselftest for mptcp"
-- 4b28d355242e..a3f47d5cab03: result
-
-I didn't relaunch the tests for this one, going to launch them soon with =
-
-the next applied patches.
+- a3f47d5cab03..d2dba972de89: result is empty, normal
 
 Cheers,
 Matt
@@ -57,4 +48,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0653154393381287928==--
+--===============1504014240819013411==--
