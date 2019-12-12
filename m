@@ -1,68 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============0162444235347019038=="
+Content-Type: multipart/mixed; boundary="===============2447995683121206701=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] mptcp: Remove version field from
- mptcp_options_received
-Date: Thu, 12 Dec 2019 23:58:26 +0100
-Message-ID: <52005db2-c05d-7e3b-b15c-4636d80ea06b@tessares.net>
-In-Reply-To: 20191212050820.29792-3-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH 0/2] Optimize struct mptcp_options_received
+Date: Fri, 13 Dec 2019 00:07:13 +0100
+Message-ID: <1e00aad1-614e-ae0a-725a-d89d6c3967fc@tessares.net>
+In-Reply-To: 4a226bd78f9a7404c938c463ebda9a1f7bc88237.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2901
+X-UID: 2902
 
---===============0162444235347019038==
+--===============2447995683121206701==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Peter, Paolo,
 
-On 12/12/2019 06:08, Peter Krystad wrote:
-> This field is not necessary, all version logic is performed
-> in mptcp_parse_options().
+On 12/12/2019 16:31, Paolo Abeni wrote:
+> Hi,
 > =
 
-> squashto: Handle MPTCP TCP options
+> On Wed, 2019-12-11 at 21:08 -0800, Peter Krystad wrote:
+>> Changes for part 1 commits. Conflicts are straightforward
+>> when squashed.
+>>
+>> Peter Krystad (2):
+>>    mptcp: Move struct mptcp_options_received
+>>    mptcp: Remove version field from mptcp_options_received
+>>
+>>   include/linux/tcp.h  | 19 +++++++++++--------
+>>   net/mptcp/options.c  |  7 ++++---
+>>   net/mptcp/protocol.h |  2 ++
+>>   3 files changed, 17 insertions(+), 11 deletions(-)
 > =
 
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> ---
->   include/linux/tcp.h  | 3 +--
->   net/mptcp/options.c  | 7 ++++---
->   net/mptcp/protocol.h | 2 ++
->   3 files changed, 7 insertions(+), 5 deletions(-)
-> =
+> LGTM!
 
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 36f5d8e53e25..e5859d671111 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -84,8 +84,7 @@ struct mptcp_options_received {
->   	u64	rcvr_key;
->   	u8	mp_capable : 1,
->   		mp_join : 1,
-> -		dss : 1,
-> -		version : 4;
-> +		dss : 1;
+Thank you for the patches and the reviews!
 
-I am finishing the application of this patch but now I am wondering: do =
 
-we really need to remove "version" field from there?
+Because there are a few conflicts and these patches were created on top =
 
-I understand that we only set and read it in mptcp_parse_option() but we =
+of "mptcp: Handle MPTCP TCP options" (and it is late for me :) ), may =
 
-now have a hole of 4 bits :)
+you check that at least the "result" is OK for you?
 
-Potentially later, we might want to keep the version we got to act =
 
-differently. But this should not happen before years.
+- ca28c8b4337c: "squashed" patch 1/2 in "mptcp: Handle MPTCP TCP options"
+- 29ddc320cce4: "squashed" patch 2/2 in "mptcp: Handle MPTCP TCP options"
+- cadaa98e433f: conflict in t/mptcp-Add-key-generation-and-token-tree
+- 92e51f00d505: conflict in t/mptcp-Implement-MPTCP-receive-path
+- 651f0bfd3c50: conflict in t/mptcp-move-from-sha1-v0-to-sha256-v1
+- eca85f157716: conflict in =
 
-Anyway I am going to finish the application of this patch and we can see =
+t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
+- 93ae416aea97: conflict in t/mptcp-Add-path-manager-interface
+- 3466814d0772: conflict in t/mptcp-Add-ADD_ADDR-handling
+- b3ce6ad38226: conflict in =
 
-tomorrow if we have to put it back but I guess we don't.
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- e000e15dedfd: fix how the conflict was solved in =
 
-Cheers,
+t/mptcp-Implement-MPTCP-receive-path
+- 62e097f0112b: conflict in =
+
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- c5b8ad49fc3a..3549fa17fbd3: result
+
+Cheers;
 Matt
 -- =
 
@@ -71,4 +77,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0162444235347019038==--
+--===============2447995683121206701==--
