@@ -1,101 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============6187700679502495244=="
+Content-Type: multipart/mixed; boundary="===============0184616782339974909=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Checklist before sending to netdev
-Date: Thu, 12 Dec 2019 15:47:35 -0800
-Message-ID: <alpine.OSX.2.21.1912121545440.22800@amhui-mobl1.amr.corp.intel.com>
-In-Reply-To: 9f9c8b54-b0fb-2768-da42-958d58ad35fe@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp: Remove version field from
+ subflow_request_sock
+Date: Fri, 13 Dec 2019 00:48:26 +0100
+Message-ID: <745efdd1-84b1-8b50-4b72-391576c91669@tessares.net>
+In-Reply-To: 20191212045521.13499-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2905
+X-UID: 2906
 
---===============6187700679502495244==
+--===============0184616782339974909==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Peter,
 
-On Fri, 13 Dec 2019, Matthieu Baerts wrote:
+On 12/12/2019 05:55, Peter Krystad wrote:
+> This field is not used. Version checking is performed in
+> mptcp_parse_options().
+> =
 
-> Hello,
->
-> A few hours ago, I recreated the TopGit tree using Paolo's branch.
->
-> Now I just applied all pending patches except the ones adding the MAINTAI=
-NERS =
+> squashto: Create SUBFLOW socket for incoming connections
+> =
 
-> file (because it is late and not affecting tests :) )
->
-> My CI detected that when running the kselftests on the latest "mptcp: add =
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+>   net/mptcp/protocol.h | 3 +--
+>   net/mptcp/subflow.c  | 4 ----
+>   2 files changed, 1 insertion(+), 6 deletions(-)
+> =
 
-> basic kselftest for mptcp" commit (MPTCPv0), we have an issue. Not when =
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 3ac8cb7f38fd..b43fa3ec5d23 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -56,8 +56,7 @@ struct mptcp_subflow_request_sock {
+>   	struct	tcp_request_sock sk;
+>   	u8	mp_capable : 1,
+>   		mp_join : 1,
+> -		backup : 1,
+> -		version : 4;
+> +		backup : 1;
+>   	u64	local_key;
+>   	u64	remote_key;
+>   };
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 9f148d19ee10..1874e41066bb 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -43,10 +43,6 @@ static void subflow_init_req(struct request_sock *req,
+>   =
 
-> running them on "mptcp: process MP_CAPABLE data option." (MPTCPv1) or at =
-the =
+>   	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
+>   		subflow_req->mp_capable =3D 1;
+> -		if (rx_opt.mptcp.version >=3D listener->request_version)
+> -			subflow_req->version =3D listener->request_version;
+> -		else
+> -			subflow_req->version =3D rx_opt.mptcp.version; >   		subflow_req->rem=
+ote_key =3D rx_opt.mptcp.sndr_key;
+>   	}
+>   }
+> =
 
-> end of the series.
-> It seems that the issue has been introduced after having applied patches =
 
-> cleaning the fallback handling.
-> Paolo is already looking at that in cave mode.
->
-> Please also note that now the CI is testing the kselftests with 3 differe=
-nt =
+It seems that this code was introduced in the parent commit: "mptcp: =
 
-> version:
->
-> - on "mptcp: add basic kselftest for mptcp" commit
-> - on "mptcp: process MP_CAPABLE data option." commit (new)
-> - at the end of the series ("export" branch)
->
->
->
-> Here are the items we need to do before this Friday evening (US time):
->
-> - Test patches =E2=86=92 *all*
->
-> - Share cover-letter for part 3 =E2=86=92 *Christoph*
-> - Review cover-letters =E2=86=92 *all*
->
-> - Remove the fix in KSelftest framework =E2=86=92 *Matth*
-> - Apply the fix in KSelftest framework only for CI =E2=86=92 *Matth*
->
-> - Apply patches related to the MAINTAINERS file =E2=86=92 *Matth*
-> - Add our mailing-list in the MAINTAINERS file =E2=86=92 *Matth*
->
-> - Share patch(es) fixing kselftests when introduced =E2=86=92 *Paolo*
-> - Review this/these patch(es) =E2=86=92 *EU-based people* (and others lat=
-er)
-> - Apply these patches =E2=86=92 *Matth*
->
-> - Share patches fixing remaining checkpatch issues =E2=86=92 *Davide*
-> - Review these patches =E2=86=92 *EU-based people* (and others later)
-> - Apply these patches =E2=86=92 *Matth*
->
-> - Add Mat (part 1 & 2) and Christoph' (part 3) signed-off =E2=86=92 *Matt=
-h*
->
-> - Share patches like we are going to send =E2=86=92 *Matth*
-> - Review these patches =E2=86=92 *all*
->
-> - Send Part 1 =E2=86=92 *Mat*
-> - Send Part 2 =E2=86=92 *Mat*
-> - Send Part 3 =E2=86=92 *Christoph*
->
-> Did I miss anything? Anything wrong?
->
+Handle MP_CAPABLE options for outgoing connections". So I re-apply your =
 
-Addition:
+patch, this time on the right (I think, it's late :) ) commit:
 
-  - Tag part1/part2/part3 and push to github
+- 2c12cadbe9c9: "squashed" in "mptcp: Handle MP_CAPABLE options for =
 
-It's fine if you leave that for me in case there are last-minute tweaks =
+outgoing connections"
+- 1cb1c55ccee7..357e47f49334: result
 
-affecting commit hashes.
+Relaunching the tests.
 
---
-Mat Martineau
-Intel
+Cheers,
+Matt
+-- =
 
---===============6187700679502495244==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============0184616782339974909==--
