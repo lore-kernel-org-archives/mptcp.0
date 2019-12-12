@@ -1,43 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============1504014240819013411=="
+Content-Type: multipart/mixed; boundary="===============5592249909586828379=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] subflow: process pending data on state changes,
- too
-Date: Thu, 12 Dec 2019 22:52:39 +0100
-Message-ID: <aa8178be-fca0-45b8-72b6-da5fa2d809e6@tessares.net>
-In-Reply-To: 62b2f929fdf3c17a05a5dd6ec632aba00e69c5d7.1575992767.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] mptcp: Remove request_version field from
+ subflow_request_sock
+Date: Thu, 12 Dec 2019 23:11:00 +0100
+Message-ID: <330403f5-48da-bdcb-cae7-027773d25982@tessares.net>
+In-Reply-To: 20191212045448.13439-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2895
+X-UID: 2896
 
---===============1504014240819013411==
+--===============5592249909586828379==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Florian,
+Hi Peter, Paolo,
 
-On 10/12/2019 16:48, Paolo Abeni wrote:
-> Otherwise we can miss the data carried by the data fin.
-> An alternative solution would calling __subflow_state_change
-> on the parent socket only when we process the data fin in
-> mptcp_subflow_data_available.
+On 12/12/2019 05:54, Peter Krystad wrote:
+> Since only a single version is supported this fields presence
+> is misleading, it dates from when it was thought the version would
+> be configurable. The actual requested version is hard-coded in
+> mptcp_write_options().
 > =
 
-> Currently, on the squashed tree, we have sporadic data stream
-> corrution near EoS, triggered by the lossy self-tests every a
-> few iteration.
-> =
+> squashto: Associate MPTCP context with TCP socket
 
-> This change addresses them.
+Thank you for the patch and the review!
 
-Thank you for the patch and the suggestion!
+I just have a question below:
 
-@Paolo: I didn't see this patch was already in your branch :)
-I added the patch and removed it in the TopGit tree.
+[...]
 
-- a3f47d5cab03..d2dba972de89: result is empty, normal
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index ddb3a7581d41..93d6c41b76d5 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -48,8 +48,7 @@ static inline struct mptcp_sock *mptcp_sk(const struct =
+sock *sk)
+>   =
+
+>   /* MPTCP subflow context */
+>   struct mptcp_subflow_context {
+> -	u32	request_mptcp : 1,  /* send MP_CAPABLE */
+> -		request_version : 4;
+> +	u32	request_mptcp : 1;  /* send MP_CAPABLE */
+
+When removing these 4 bits, at the end of the series, we now only use 13 =
+
+bits. Should we switch to u16? I didn't check with pahole if it would =
+
+really reduce the size of the structure, I don't think so and maybe we =
+
+don't really need to reduce this bit field but I prefer to ask :)
 
 Cheers,
 Matt
@@ -48,4 +64,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1504014240819013411==--
+--===============5592249909586828379==--
