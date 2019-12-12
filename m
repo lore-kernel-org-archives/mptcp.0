@@ -1,66 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============5404026047036707245=="
+Content-Type: multipart/mixed; boundary="===============3442079439896480306=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: Remove request_version field from
- subflow_request_sock
-Date: Wed, 11 Dec 2019 20:54:48 -0800
-Message-ID: <20191212045448.13439-1-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH] mptcp: Remove version field from subflow_request_sock
+Date: Wed, 11 Dec 2019 20:55:21 -0800
+Message-ID: <20191212045521.13499-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2880
+X-UID: 2881
 
---===============5404026047036707245==
+--===============3442079439896480306==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Since only a single version is supported this fields presence
-is misleading, it dates from when it was thought the version would
-be configurable. The actual requested version is hard-coded in
-mptcp_write_options().
+This field is not used. Version checking is performed in
+mptcp_parse_options().
 
-squashto: Associate MPTCP context with TCP socket
+squashto: Create SUBFLOW socket for incoming connections
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 1 -
  net/mptcp/protocol.h | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 502c464f3d69..bbd6c58154fd 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -123,7 +123,6 @@ static struct socket *mptcp_socket_create_get(struct mp=
-tcp_sock *msk)
- 	msk->subflow =3D ssock;
- 	subflow =3D mptcp_subflow_ctx(msk->subflow->sk);
- 	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
--	subflow->request_version =3D 0; /* currently only v0 supported */
- =
-
- 	sock_hold(ssock->sk);
- =
+ net/mptcp/subflow.c  | 4 ----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ddb3a7581d41..93d6c41b76d5 100644
+index 3ac8cb7f38fd..b43fa3ec5d23 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -48,8 +48,7 @@ static inline struct mptcp_sock *mptcp_sk(const struct so=
-ck *sk)
+@@ -56,8 +56,7 @@ struct mptcp_subflow_request_sock {
+ 	struct	tcp_request_sock sk;
+ 	u8	mp_capable : 1,
+ 		mp_join : 1,
+-		backup : 1,
+-		version : 4;
++		backup : 1;
+ 	u64	local_key;
+ 	u64	remote_key;
+ };
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 9f148d19ee10..1874e41066bb 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -43,10 +43,6 @@ static void subflow_init_req(struct request_sock *req,
  =
 
- /* MPTCP subflow context */
- struct mptcp_subflow_context {
--	u32	request_mptcp : 1,  /* send MP_CAPABLE */
--		request_version : 4;
-+	u32	request_mptcp : 1;  /* send MP_CAPABLE */
- 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
- 	struct	sock *conn;	    /* parent mptcp_sock */
- 	struct	rcu_head rcu;
+ 	if (rx_opt.mptcp.mp_capable && listener->request_mptcp) {
+ 		subflow_req->mp_capable =3D 1;
+-		if (rx_opt.mptcp.version >=3D listener->request_version)
+-			subflow_req->version =3D listener->request_version;
+-		else
+-			subflow_req->version =3D rx_opt.mptcp.version;
+ 		subflow_req->remote_key =3D rx_opt.mptcp.sndr_key;
+ 	}
+ }
 -- =
 
 2.17.2
 
---===============5404026047036707245==--
+--===============3442079439896480306==--
