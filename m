@@ -1,74 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============2447995683121206701=="
+Content-Type: multipart/mixed; boundary="===============5416017399748864027=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/2] Optimize struct mptcp_options_received
-Date: Fri, 13 Dec 2019 00:07:13 +0100
-Message-ID: <1e00aad1-614e-ae0a-725a-d89d6c3967fc@tessares.net>
-In-Reply-To: 4a226bd78f9a7404c938c463ebda9a1f7bc88237.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2] mptcp: do not orphan the ssk before tcp_close()
+Date: Fri, 13 Dec 2019 00:10:46 +0100
+Message-ID: <c313911a-23ce-cb27-ec30-820d0ff74dbf@tessares.net>
+In-Reply-To: 7a04a30700ceefe9dfb77646d203e9b2c6e4de23.1576173332.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2902
+X-UID: 2903
 
---===============2447995683121206701==
+--===============5416017399748864027==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Paolo,
+Hi Paolo, Florian,
 
-On 12/12/2019 16:31, Paolo Abeni wrote:
-> Hi,
+On 12/12/2019 18:57, Paolo Abeni wrote:
+> This close the following race
 > =
 
-> On Wed, 2019-12-11 at 21:08 -0800, Peter Krystad wrote:
->> Changes for part 1 commits. Conflicts are straightforward
->> when squashed.
->>
->> Peter Krystad (2):
->>    mptcp: Move struct mptcp_options_received
->>    mptcp: Remove version field from mptcp_options_received
->>
->>   include/linux/tcp.h  | 19 +++++++++++--------
->>   net/mptcp/options.c  |  7 ++++---
->>   net/mptcp/protocol.h |  2 ++
->>   3 files changed, 17 insertions(+), 11 deletions(-)
+> CPU 0				CPU 1
+> sock_orphan()
+> 	// SOCK_DEAD
+> 				tcp_done()
+> 					inet_csk_destroy_sock()
+> 						sock_put()
 > =
 
-> LGTM!
+> tcp_close()
+> 	// UAF
+> =
 
-Thank you for the patches and the reviews!
+> Note that we can't acquire an additional ref to the
+> sock before sock_orphan() and releasing it after close,
+> such ref will be consumed by inet_csk_destroy_sock when
+> the race is triggered.
+> =
 
+> Squash-to: "mptcp: Handle MP_CAPABLE options for outgoing connections"
 
-Because there are a few conflicts and these patches were created on top =
+Good catch! Thank you for the patch, the review and the suggestion!
 
-of "mptcp: Handle MPTCP TCP options" (and it is late for me :) ), may =
+- 5d1ef098aee9: "squashed" in "mptcp: Handle MP_CAPABLE options for =
 
-you check that at least the "result" is OK for you?
+outgoing connections"
+- 3549fa17fbd3..1cb1c55ccee7: result
 
+I am going to run tests now.
 
-- ca28c8b4337c: "squashed" patch 1/2 in "mptcp: Handle MPTCP TCP options"
-- 29ddc320cce4: "squashed" patch 2/2 in "mptcp: Handle MPTCP TCP options"
-- cadaa98e433f: conflict in t/mptcp-Add-key-generation-and-token-tree
-- 92e51f00d505: conflict in t/mptcp-Implement-MPTCP-receive-path
-- 651f0bfd3c50: conflict in t/mptcp-move-from-sha1-v0-to-sha256-v1
-- eca85f157716: conflict in =
-
-t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
-- 93ae416aea97: conflict in t/mptcp-Add-path-manager-interface
-- 3466814d0772: conflict in t/mptcp-Add-ADD_ADDR-handling
-- b3ce6ad38226: conflict in =
-
-t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-- e000e15dedfd: fix how the conflict was solved in =
-
-t/mptcp-Implement-MPTCP-receive-path
-- 62e097f0112b: conflict in =
-
-t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-- c5b8ad49fc3a..3549fa17fbd3: result
-
-Cheers;
+Cheers,
 Matt
 -- =
 
@@ -77,4 +59,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2447995683121206701==--
+--===============5416017399748864027==--
