@@ -1,54 +1,82 @@
-Content-Type: multipart/mixed; boundary="===============5416017399748864027=="
+Content-Type: multipart/mixed; boundary="===============3438953711239291311=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: do not orphan the ssk before tcp_close()
-Date: Fri, 13 Dec 2019 00:10:46 +0100
-Message-ID: <c313911a-23ce-cb27-ec30-820d0ff74dbf@tessares.net>
-In-Reply-To: 7a04a30700ceefe9dfb77646d203e9b2c6e4de23.1576173332.git.pabeni@redhat.com
+Subject: [MPTCP] Checklist before sending to netdev
+Date: Fri, 13 Dec 2019 00:36:44 +0100
+Message-ID: <9f9c8b54-b0fb-2768-da42-958d58ad35fe@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 2903
+X-UID: 2904
 
---===============5416017399748864027==
+--===============3438953711239291311==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Florian,
+Hello,
 
-On 12/12/2019 18:57, Paolo Abeni wrote:
-> This close the following race
-> =
+A few hours ago, I recreated the TopGit tree using Paolo's branch.
 
-> CPU 0				CPU 1
-> sock_orphan()
-> 	// SOCK_DEAD
-> 				tcp_done()
-> 					inet_csk_destroy_sock()
-> 						sock_put()
-> =
+Now I just applied all pending patches except the ones adding the =
 
-> tcp_close()
-> 	// UAF
-> =
+MAINTAINERS file (because it is late and not affecting tests :) )
 
-> Note that we can't acquire an additional ref to the
-> sock before sock_orphan() and releasing it after close,
-> such ref will be consumed by inet_csk_destroy_sock when
-> the race is triggered.
-> =
+My CI detected that when running the kselftests on the latest "mptcp: =
 
-> Squash-to: "mptcp: Handle MP_CAPABLE options for outgoing connections"
+add basic kselftest for mptcp" commit (MPTCPv0), we have an issue. Not =
 
-Good catch! Thank you for the patch, the review and the suggestion!
+when running them on "mptcp: process MP_CAPABLE data option." (MPTCPv1) =
 
-- 5d1ef098aee9: "squashed" in "mptcp: Handle MP_CAPABLE options for =
+or at the end of the series.
+It seems that the issue has been introduced after having applied patches =
 
-outgoing connections"
-- 3549fa17fbd3..1cb1c55ccee7: result
+cleaning the fallback handling.
+Paolo is already looking at that in cave mode.
 
-I am going to run tests now.
+Please also note that now the CI is testing the kselftests with 3 =
+
+different version:
+
+- on "mptcp: add basic kselftest for mptcp" commit
+- on "mptcp: process MP_CAPABLE data option." commit (new)
+- at the end of the series ("export" branch)
+
+
+
+Here are the items we need to do before this Friday evening (US time):
+
+- Test patches =E2=86=92 *all*
+
+- Share cover-letter for part 3 =E2=86=92 *Christoph*
+- Review cover-letters =E2=86=92 *all*
+
+- Remove the fix in KSelftest framework =E2=86=92 *Matth*
+- Apply the fix in KSelftest framework only for CI =E2=86=92 *Matth*
+
+- Apply patches related to the MAINTAINERS file =E2=86=92 *Matth*
+- Add our mailing-list in the MAINTAINERS file =E2=86=92 *Matth*
+
+- Share patch(es) fixing kselftests when introduced =E2=86=92 *Paolo*
+- Review this/these patch(es) =E2=86=92 *EU-based people* (and others later)
+- Apply these patches =E2=86=92 *Matth*
+
+- Share patches fixing remaining checkpatch issues =E2=86=92 *Davide*
+- Review these patches =E2=86=92 *EU-based people* (and others later)
+- Apply these patches =E2=86=92 *Matth*
+
+- Add Mat (part 1 & 2) and Christoph' (part 3) signed-off =E2=86=92 *Matth*
+
+- Share patches like we are going to send =E2=86=92 *Matth*
+- Review these patches =E2=86=92 *all*
+
+- Send Part 1 =E2=86=92 *Mat*
+- Send Part 2 =E2=86=92 *Mat*
+- Send Part 3 =E2=86=92 *Christoph*
+
+Did I miss anything? Anything wrong?
+
+Keep up the good work, we are almost there! :-)
 
 Cheers,
 Matt
@@ -59,4 +87,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5416017399748864027==--
+--===============3438953711239291311==--
