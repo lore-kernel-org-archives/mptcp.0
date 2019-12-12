@@ -1,66 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============6295401212610487333=="
+Content-Type: multipart/mixed; boundary="===============3656364802204804160=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/1] proposed export branch rebase
-Date: Thu, 12 Dec 2019 16:27:52 +0100
-Message-ID: <c4142b7ad1ca1e383217a58841a27e9eb6c36236.camel@redhat.com>
-In-Reply-To: afc3068e9c228b78ab384be40da1152ba5bfc6a0.camel@redhat.com
+Subject: [MPTCP] [PATCH] mptcp: only orphan partially subflow at close time
+Date: Thu, 12 Dec 2019 16:29:12 +0100
+Message-ID: <a4d28a295c187d20e3b6a9d345597eac474b6e59.1576164482.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2886
+X-UID: 2887
 
---===============6295401212610487333==
+--===============3656364802204804160==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-12-11 at 20:00 +0100, Paolo Abeni wrote:
-> On Wed, 2019-12-11 at 17:32 +0100, Paolo Abeni wrote:
-> > On Tue, 2019-12-10 at 22:27 +0100, Matthieu Baerts wrote:
-> > > =
+This close the following race
 
-> This one had a couple of gross mistake, just cooked a less bugged
-> version. The new tree is here:
-> =
+CPU 0				CPU 1
+sock_orphan()
+	// SOCK_DEAD
+				tcp_done()
+					inet_csk_destroy_sock()
+						sock_put()
 
-> https://github.com/pabeni/mptcp/commits/fwestpha-mptcp_export_rebase_19_f=
-allback_cleanup_3
-> =
+tcp_close()
+	// UAF
 
-> The only updated patch is the last one:
+Note that we can't simply acquire an additional ref to the
+sock before sock_orphan() and releasing it after close,
+such ref will be consumed by inet_csk_destroy_sock when
+the race is triggered.
 
-FYI, Paolo did a newer version at
+Squash-to: "mptcp: Handle MP_CAPABLE options for outgoing connections"
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-https://github.com/pabeni/mptcp/commits/fwestpha-mptcp_export_rebase_19_fal=
-lback_cleanup_4
-
-that has squashed the fixes. Over that tree, I fixed most of checkpatch iss=
-ues
-on the first 26 patches (up to kselftests), rebuilt, retested and pushed at
-
-https://github.com/dcaratti/mptcp/tree/fwestpha-mptcp_export_rebase_19_fall=
-back_cleanup_5
-
-Please find below the list of patches where the code actually changed:
-
-0003-tcp-Define-IPPROTO_MPTCP.patch  =
-
-0013-mptcp-Handle-MPTCP-TCP-options.patch
-0017-mptcp-Add-key-generation-and-token-tree.patch
-0020-mptcp-Write-MPTCP-DSS-headers-to-outgoing-data-packe.patch
-0021-mptcp-Implement-MPTCP-receive-path.patch
-0022-mptcp-add-subflow-write-space-signalling-and-mptcp_p.patch
-0023-mptcp-recvmsg-can-drain-data-from-multiple-subflows.patch
-0026-mptcp-add-basic-kselftest-for-mptcp.patch
-0027-mptcp-move-from-sha1-v0-to-sha256-v1.patch
-0028-mptcp-parse-and-emit-MP_CAPABLE-option-according-to-.patch
-0031-mptcp-Add-ADD_ADDR-handling.patch
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 9506e04a2010..24d68e504e9c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -178,8 +178,16 @@ static void __mptcp_close_ssk(struct sock *sk, struct =
+sock *ssk,
+ 		/* outgoing subflow */
+ 		sock_release(sock);
+ 	} else {
+-		/* incoming subflow */
+-		sock_orphan(ssk);
++		/* This is an incoming subflow. We almost orphan it,
++		 * but do not mark has death, otherwise inet_csk_destroy_sock
++		 * may kick-in via tcp_done() and steal one reference
++		 * before tcp_close below.
++		 */
++		write_lock_bh(&sk->sk_callback_lock);
++		sk_set_socket(sk, NULL);
++		sk->sk_wq  =3D NULL;
++		write_unlock_bh(&sk->sk_callback_lock);
++
+ 		tcp_close(ssk, timeout);
+ 	}
+ }
 -- =
 
-davide
+2.21.0
 
-
-
---===============6295401212610487333==--
+--===============3656364802204804160==--
