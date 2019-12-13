@@ -1,116 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============6791583856432091107=="
+Content-Type: multipart/mixed; boundary="===============3779618711909943175=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: cope with later TCP fallback.
-Date: Fri, 13 Dec 2019 19:53:38 +0100
-Message-ID: <ff7ef19f-5e1d-20d0-dd63-0a0c0c2ce3d2@tessares.net>
-In-Reply-To: e3ecdf5f274343f2d0501a327b9ae4dc8d48a9e7.1576254709.git.pabeni@redhat.com
+Subject: [MPTCP] Re: Cover letters for part1/part2 netdev patchsets
+Date: Fri, 13 Dec 2019 11:19:19 -0800
+Message-ID: <alpine.OSX.2.21.1912130913330.33632@amhui-mobl1.amr.corp.intel.com>
+In-Reply-To: 7a65d607-1a6f-1b01-7a18-3b830f97eebf@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2977
+X-UID: 2978
 
---===============6791583856432091107==
+--===============3779618711909943175==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Florian, Mat,
 
-On 13/12/2019 17:31, Paolo Abeni wrote:
-> With V1 passive connections can fallback TCP after that the
-> subflow become established:
-> =
+On Fri, 13 Dec 2019, Matthieu Baerts wrote:
 
-> syn+ MP_CAPABLE ->
->                 <- syn, ack + MP_CAPABLE
-> =
+> Hi Mat,
+>
+> On 06/12/2019 01:41, Mat Martineau wrote:
+>> =
 
-> ack, seq =3D 3    ->
->          // OoO packet is accepted because in-sequence
->          // passive socket is created, is in ESTABLISHED
-> 	// status and tentatively as MP_CAPABLE
-> =
+>> Hello everyone -
+>> =
 
-> ack, seq =3D 2     ->
->          // no MP_CAPABLE opt, subflow should fallback to TCP
-> =
+>> As we discussed earlier today, here are draft cover letters for patch se=
+t =
 
-> We can't use the 'subflow' socket fallback, as we don't have
-> it available for passive connection.
-> =
+>> parts 1 & 2. Feedback appreciated!
+>> =
 
-> Instead, when the fallback is detected, replace the mptcp
-> socket with the underlining TCP subflow. Beyond covering
-> the above scenario, it makes TCP fallback socket as efficient
-> as plain TCP ones.
-> =
+>> =
 
-> Co-developed-by: Florian Westphal <fw(a)strlen.de>
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> RFC -> v1:
->   - fixed WARN_ON splat on fallback
->   - added a few more comments about locking
->   - tested on both of v1 patches and top of current export
->     branch
-> =
+>> ------
+>> Part 1
+>> =
 
-> Note: should be applied just after "mptcp: process MP_CAPABLE data option=
-."
+>> Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
+>> =
 
-I just applied this patch just after "mptcp: process MP_CAPABLE data =
+>> The MPTCP upstreaming community has been collaborating on an
+>> upstreamable MPTCP implementation. David requested that we split this
+>> work in to multiple, smaller patch sets to build up MPTCP
+>> infrastructure. The scope of this first patch set is limited to
+>> prerequisite TCP core changes so we can get focused feedback in these
+>> areas.
+>
+> Related to why I proposed on "Checklist before sending to netdev" ML, sho=
+uld =
 
-option". Please review at least the resolution of the second conflict:
+> we already introduce here the fact that we are going to send 3 different =
 
-=3D=3D=3D=3D=3D
-diff --cc net/mptcp/protocol.c
-index 9970487a855d,08d686c5f614..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -202,11 -189,8 +249,16 @@@ static int mptcp_sendmsg_frag(struct so
-                 ret =3D sk_stream_wait_memory(ssk, timeo);
-                 if (ret)
-                         return ret;
-++<<<<<<< t/mptcp-queue-data-for-mptcp-level-retransmission
-  +
-  +              /* id sk_stream_wait_memory() sleeps snd_una can change
-  +               * significantly, refresh the rtx queue
-  +               */
-  +              mptcp_clean_una(sk);
-++=3D=3D=3D=3D=3D=3D=3D
-+               if (unlikely(__mptcp_needs_tcp_fallback(msk)))
-+                       return 0;
-++>>>>>>> top-bases/t/mptcp-queue-data-for-mptcp-level-retransmission
-         }
+> patch sets and why we cannot send all in one or less patches?
+>
+> Something like:
+>
+>    - The protocol is what it is and having a minimal set of features alre=
+ady =
 
-         /* compute copy limit */
-=3D=3D=3D=3D=3D
+> signifies a lot of code.
+>    - This minimal set of features includes: the possibility for the =
+
+> userspace to establish and properly terminate MPTCP connections but limit=
+ed =
+
+> to one subflow while still being able to transfer data in both directions
+>    - We decided to split everything in 3 parts to ease the reviews:
+>        - Part 1: Prerequisite TCP core changes
+>        - Part 2: MPTCP minimal set of features including selftests
+>        - Part 3: a switch from MPTCPv0 (RFC 6824) to MPTCPv1 (new RFC 868=
+4 =
+
+> going to obsolete the previous one in the coming days)
+>    - The idea would be to apply everything in the same "merge window".
+>
+> Feel free to improve this of course :)
+
+Thanks Matthieu, good suggestion. Am I correct in thinking the plan is to =
+
+have part 4 in this window as well, just in January sometime?
+
+Updated draft:
+
+----
+Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
+
+The MPTCP upstreaming community has been collaborating on an upstreamable =
+
+MPTCP implementation that complies with RFC 8684. A minimal set of =
+
+features to comply with the specification involves a sizeable set of code =
+
+changes, so David requested that we split this work in to multiple, =
+
+smaller patch sets to build up MPTCP infrastructure.
+
+The minimal MPTCP feature set we are proposing for the v5.6 timeframe is =
+
+split in to these parts for review:
+
+Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP =
+
+definitions, additional ULP and skb extension features, TCP option space =
+
+checking, and a few exported symbols.
+
+Part 2: Single subflow implementation and self tests.
+
+Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684, =
+
+publication expected in the next few days).
+
+Part 4: Multiple subflow support.
+
+<git tree references at github>
+
+Thank you for your review. You can find us at mptcp(a)lists.01.org and
+https://is.gd/mptcp_upstream
 
 
-- be009e4990f8: conflict in t/mptcp-Add-path-manager-interface
-- 6aa8c2826aa9: conflict in =
 
-t/mptcp-queue-data-for-mptcp-level-retransmission
-- 1afa4a73e9a9: conflict in t/mptcp-introduce-MPTCP-retransmission-timer
-- 61ff4269f0bb: conflict in =
-
-t/mptcp-implement-memory-accounting-for-mptcp-rtx-queue
-- d63f402c1c53: conflict in =
-
-t/subflow-place-further-subflows-on-new-join_list
-- bc663afcd33e..956fb00125d4: result
-
-Tests + export are in progress!
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6791583856432091107==--
+--
+Mat Martineau
+Intel
+--===============3779618711909943175==--
