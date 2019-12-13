@@ -1,88 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============2461874990895363293=="
+Content-Type: multipart/mixed; boundary="===============5304997581070253842=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 1/4] MAINTAINERS: Add MPTCP maintainers
-Date: Fri, 13 Dec 2019 15:30:29 +0100
-Message-ID: <47f4034c-4625-7784-c364-fe8d79c23399@tessares.net>
-In-Reply-To: 20191207001244.20339-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [RFC PATCH 1/4] mptcp: add helper to forcefully fallback the
+ msk socket to TCP
+Date: Fri, 13 Dec 2019 15:33:49 +0100
+Message-ID: <8599ff8e65531ddfa8d0cd110e89b2e82bd9368c.1576247361.git.pabeni@redhat.com>
+In-Reply-To: cover.1576247361.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2935
+X-UID: 2936
 
---===============2461874990895363293==
+--===============5304997581070253842==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+will be used in later patch
 
-On 07/12/2019 01:12, Mat Martineau wrote:
-> Possible other lines include:
-> =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
-> L:	mptcp(a)lists.01.org
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c15232461a61..b6d753ed8397 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -24,6 +24,38 @@
+ =
 
-> The issue with including this ML is that it currently rejects messages
-> from non-subscribers. I can reconfigure the ML, the tradeoff is in
-> forwarding spam to subscribers.
-> =
+ #define MPTCP_SAME_STATE TCP_MAX_STATES
+ =
 
-> Q:	https://patchwork.ozlabs.org/project/mptcp/list/
-> =
++static void __mptcp_close(struct sock *sk, long timeout);
++
++/* MP_CAPABLE handshake failed, convert msk to plain tcp, replacing
++ * socket->sk and stream ops and destroying msk
++ * return the msk socket, as we can't access msk anymore after this functi=
+on
++ * completes
++ */
++static struct socket *__mptcp_fallback_to_tcp(struct mptcp_sock *msk,
++					      struct sock *ssk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct socket *sock;
++	struct sock *sk;
++
++	sk =3D (struct sock *)msk;
++	sock =3D sk->sk_socket;
++	subflow =3D mptcp_subflow_ctx(ssk);
++
++	/* detach the msk socket */
++	list_del_init(&subflow->node);
++	sock_orphan(sk);
++
++	/* socket is now TCP */
++	sock_graft(ssk, sock);
++	sock->ops =3D sk->sk_family =3D=3D AF_INET6 ? &inet6_stream_ops :
++						&inet_stream_ops;
++
++	/* destroy the left-over msk sock */
++	__mptcp_close(sk, 0);
++	return sock;
++}
++
+ /* if msk has a single subflow socket, and the mp_capable handshake is not
+  * completed yet or has failed - that is, the socket is Not MP Capable,
+  * returns it.
+@@ -561,7 +593,7 @@ static void mptcp_subflow_shutdown(struct sock *ssk, in=
+t how)
+ 	release_sock(ssk);
+ }
+ =
 
-> It might be confusing for patches to end up in two patchworks (netdev
-> and mptcp).
-> =
+-static void mptcp_close(struct sock *sk, long timeout)
++static void __mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -569,8 +601,6 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	mptcp_token_destroy(msk->token);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ =
 
-> T:	git git://github.com/multipath-tcp/mptcp_net-next.git
-> =
+-	lock_sock(sk);
+-
+ 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+ =
 
-> I've seen two main models for net subsystem management:
-> =
+@@ -583,6 +613,12 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	sk_common_release(sk);
+ }
+ =
 
-> netdev-based (TCP, TLS): Patches are sent to netdev, approved by
-> subsystem maintainers, and approved and applied by David Miller.
-> =
-
-> subtree (netfilter, BPF, bluetooth, wireless): Messages are sent to
-> netdev (netfilter/BPF) or a separate ML (bluetooth, wireless) and are
-> approved and merged to separate git repositories by subsystem
-> maintainers. Those maintainers then send pull requests for batches of
-> commits to netdev for David Miller to merge directly in git.
-> =
-
-> The scope of MPTCP seems more like the other netdev-based projects, so
-> for changes going directly upstream I've proposed MAINTAINERS entries
-> that match that development model. If we opt to use our own git repo to
-> merge upstream changes and then send pull requests, then we would
-> include the "T:" entry for our github repo.
-> =
-
-> squashto: mptcp: Add MPTCP to skb extensions
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-
-Thank you for the patches!
-
-- 85cadeef7913: "squashed" patch 1/4 in "mptcp: Add MPTCP to skb extensions"
-- 174e3a78b692: MAINTAINERS: add mptcp mailing list
-- d02679c02f0f: "squashed" patch 2/4 in "mptcp: Add MPTCP socket stubs"
-- 924ae04a4a8d: "squashed" patch 3/4 in "mptcp: add basic kselftest for =
-
-mptcp"
-- 2b43fcb3011c: "squashed" patch 4/4 in "mptcp: allow dumping subflow =
-
-context to userspace"
-- 3c324d81df61..3c65e8cb3ba6: results
-
-Cheers,
-Matt
++static void mptcp_close(struct sock *sk, long timeout)
++{
++	lock_sock(sk);
++	__mptcp_close(sk, timeout);
++}
++
+ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+ {
+ 	const struct ipv6_pinfo *ssk6 =3D inet6_sk(ssk);
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2461874990895363293==--
+2.21.0
+
+--===============5304997581070253842==--
