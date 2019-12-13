@@ -1,96 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============8259401457279177776=="
+Content-Type: multipart/mixed; boundary="===============5745897439906647491=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Checklist before sending to netdev
-Date: Fri, 13 Dec 2019 10:49:59 +0100
-Message-ID: <aa2afe5d-8c3a-b496-3267-e1b133ee8ce7@tessares.net>
-In-Reply-To: 8bd831cc9ffe53a43b4ff3c9fa2e82e667a76db2.camel@redhat.com
+Subject: [MPTCP] Re: Cover letters for part1/part2 netdev patchsets
+Date: Fri, 13 Dec 2019 11:43:12 +0100
+Message-ID: <7a65d607-1a6f-1b01-7a18-3b830f97eebf@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1912051635040.57359@pminglan-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2925
+X-UID: 2926
 
---===============8259401457279177776==
+--===============5745897439906647491==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 13/12/2019 10:41, Paolo Abeni wrote:
-> On Fri, 2019-12-13 at 10:34 +0100, Matthieu Baerts wrote:
->> On 13/12/2019 00:36, Matthieu Baerts wrote:
->>> Here are the items we need to do before this Friday evening (US time):
->>>
->>> - Test patches =E2=86=92 *all*
->>
->>       - Compilations: [ OK ]
->>           - each commit with/without MPTCP, x86_64
->>           - i386
->>           - with/without IPv6
->>       - kselftests, with and without KASAN + PROVE_LOCKING: [ OK ]
->>           - on "mptcp: add basic kselftest for mptcp" commit
->>           - on "mptcp: process MP_CAPABLE data option." commit (new)
->>           - at the end of the series ("export" branch)
+Hi Mat,
+
+On 06/12/2019 01:41, Mat Martineau wrote:
 > =
 
-> Thank you for all the effort!
-
-Thank you for all the work you did too!
-Same for all of you guys :-)
-
->>
->>> - Share cover-letter for part 3 =E2=86=92 *Christoph*
->>
->> Done! Thank you!
->>
->>> - Review cover-letters =E2=86=92 *all*
->>
->> I just added 2 new items on the list, please see:
->>
->>     https://annuel2.framapad.org/p/mptcp_upstreaming_20191220
->>
->>
->> [ ] Review commit messages =E2=86=92 *all*:
->>       [X] Mat: sent some patches modifying the .topmsg
->>       [ ] Review patches
->>       [ ] Apply patches
->>
->>
->> [ ] Do we need a cover-letter for the cover-letters?:
->>       - I mean: a short introduction to explain what we are going to sen=
-d:
->>           - The protocol is what it is and having a minimal set of
->> features already signifies a lot of code.
->>           - This minimal set of features includes: the possibility for
->> the userspace to establish and properly terminate MPTCP connections but
->> limited to one subflow while still being able to transfer data in both
->> directions
->>           - We decided to split everything in 3 parts to ease the review=
-s:
->>               - Part 1: Prerequisite TCP core changes
->>               - Part 2: MPTCP minimal set of features including selftests
->>               - Part 3: a switch from MPTCPv0 (RFC 6824) to MPTCPv1 (new
->> RFC 8684 going to obsolete the previous one in the coming days)
->>           - The idea would be to apply everything in once (?)
->>       - we can also include that in the cover letter of Part 1
+> Hello everyone -
 > =
 
-> Sounds good to me! I agree we could add this kind of info to the cover
-> letter for part 1. Applying at once is not requried, I think. I mean:
-> part 1 can be applied first, part 2 and 3 later on.
+> As we discussed earlier today, here are draft cover letters for patch =
 
-Sorry, what I mean is: should we ask that everything is applied in the =
+> set parts 1 & 2. Feedback appreciated!
+> =
 
-same "merge window"?
+> =
 
-Maybe in the cover letter of part 3, we should give more details about =
+> ------
+> Part 1
+> =
 
-MPTCPv1: what it is, why we want to support it on drop the previous =
+> Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
+> =
 
-support, why we did it like that (some deployments only support MPTCPv0 =
+> The MPTCP upstreaming community has been collaborating on an
+> upstreamable MPTCP implementation. David requested that we split this
+> work in to multiple, smaller patch sets to build up MPTCP
+> infrastructure. The scope of this first patch set is limited to
+> prerequisite TCP core changes so we can get focused feedback in these
+> areas.
 
-and didn't switch to the new version yet). I can comment about that on =
+Related to why I proposed on "Checklist before sending to netdev" ML, =
 
-the dedicated email thread.
+should we already introduce here the fact that we are going to send 3 =
+
+different patch sets and why we cannot send all in one or less patches?
+
+Something like:
+
+     - The protocol is what it is and having a minimal set of features =
+
+already signifies a lot of code.
+     - This minimal set of features includes: the possibility for the =
+
+userspace to establish and properly terminate MPTCP connections but =
+
+limited to one subflow while still being able to transfer data in both =
+
+directions
+     - We decided to split everything in 3 parts to ease the reviews:
+         - Part 1: Prerequisite TCP core changes
+         - Part 2: MPTCP minimal set of features including selftests
+         - Part 3: a switch from MPTCPv0 (RFC 6824) to MPTCPv1 (new RFC =
+
+8684 going to obsolete the previous one in the coming days)
+     - The idea would be to apply everything in the same "merge window".
+
+Feel free to improve this of course :)
+
+For the rest, it looks good to me!
 
 Cheers,
 Matt
@@ -101,4 +83,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8259401457279177776==--
+--===============5745897439906647491==--
