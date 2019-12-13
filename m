@@ -1,105 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============8826223688583662512=="
+Content-Type: multipart/mixed; boundary="===============5761039809173125822=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 05/11] tcp,
- ulp: Add clone operation to tcp_ulp_ops
-Date: Fri, 13 Dec 2019 15:00:16 -0800
-Message-ID: <20191213230022.28144-6-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20191213230022.28144-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH net-next 00/11] Multipath TCP: Prerequisites
+Date: Fri, 13 Dec 2019 15:00:11 -0800
+Message-ID: <20191213230022.28144-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3029
+X-UID: 3030
 
---===============8826223688583662512==
+--===============5761039809173125822==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If ULP is used on a listening socket, icsk_ulp_ops and icsk_ulp_data are
-copied when the listener is cloned. Sometimes the clone is immediately
-deleted, which will invoke the release op on the clone and likely
-corrupt the listening socket's icsk_ulp_data.
+The MPTCP upstreaming community has been collaborating on an
+upstreamable MPTCP implementation that complies with RFC 8684. A minimal
+set of features to comply with the specification involves a sizeable set
+of code changes, so David requested that we split this work in to
+multiple, smaller patch sets to build up MPTCP infrastructure.
 
-The clone operation is invoked immediately after the clone is copied and
-gives the ULP type an opportunity to set up the clone socket and its
-icsk_ulp_data.
+The minimal MPTCP feature set we are proposing for review in the v5.6
+timeframe begins with these three parts:
 
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- include/net/tcp.h               |  5 +++++
+Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP
+definitions, additional ULP and skb extension features, TCP option space
+checking, and a few exported symbols.
+
+Part 2: Single subflow implementation and self tests.
+
+Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684,
+publication expected in the next few days).
+
+We plan to send those over the next week. Additional patches for
+multiple subflow support, path management, active backup, and other
+features are in the pipeline for submission after making progress with
+the above reviews.
+
+Clone/fetch:
+https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v1-part1)
+
+Browse:
+https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v1-part1
+
+Thank you for your review. You can find us at mptcp(a)lists.01.org and
+https://is.gd/mptcp_upstream
+
+
+Mat Martineau (9):
+  net: Make sock protocol value checks more specific
+  sock: Make sk_protocol a 16-bit value
+  tcp: Define IPPROTO_MPTCP
+  tcp: Add MPTCP option number
+  tcp, ulp: Add clone operation to tcp_ulp_ops
+  mptcp: Add MPTCP to skb extensions
+  tcp: Prevent coalesce/collapse when skb has MPTCP extensions
+  tcp: Export TCP functions and ops struct
+  tcp: Check for filled TCP option space before SACK
+
+Paolo Abeni (2):
+  tcp: clean ext on tx recycle
+  skb: add helpers to allocate ext independently from sk_buff
+
+ MAINTAINERS                     | 10 ++++++++
+ include/linux/skbuff.h          |  6 +++++
+ include/net/mptcp.h             | 43 +++++++++++++++++++++++++++++++++
+ include/net/sock.h              |  6 ++---
+ include/net/tcp.h               | 22 +++++++++++++++++
+ include/trace/events/sock.h     |  5 ++--
+ include/uapi/linux/in.h         |  2 ++
+ net/ax25/af_ax25.c              |  2 +-
+ net/core/skbuff.c               | 42 ++++++++++++++++++++++++++++++--
+ net/decnet/af_decnet.c          |  2 +-
  net/ipv4/inet_connection_sock.c |  2 ++
- net/ipv4/tcp_ulp.c              | 12 ++++++++++++
- 3 files changed, 19 insertions(+)
+ net/ipv4/tcp.c                  |  6 ++---
+ net/ipv4/tcp_input.c            | 10 ++++++--
+ net/ipv4/tcp_ipv4.c             |  2 +-
+ net/ipv4/tcp_output.c           |  5 +++-
+ net/ipv4/tcp_ulp.c              | 12 +++++++++
+ net/ipv6/tcp_ipv6.c             |  6 ++---
+ tools/include/uapi/linux/in.h   |  2 ++
+ 18 files changed, 166 insertions(+), 19 deletions(-)
+ create mode 100644 include/net/mptcp.h
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d4b6bf2c5d3c..c82b2f75d024 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2145,6 +2145,9 @@ struct tcp_ulp_ops {
- 	/* diagnostic */
- 	int (*get_info)(const struct sock *sk, struct sk_buff *skb);
- 	size_t (*get_info_size)(const struct sock *sk);
-+	/* clone ulp */
-+	void (*clone)(const struct request_sock *req, struct sock *newsk,
-+		      const gfp_t priority);
- =
-
- 	char		name[TCP_ULP_NAME_MAX];
- 	struct module	*owner;
-@@ -2155,6 +2158,8 @@ int tcp_set_ulp(struct sock *sk, const char *name);
- void tcp_get_available_ulp(char *buf, size_t len);
- void tcp_cleanup_ulp(struct sock *sk);
- void tcp_update_ulp(struct sock *sk, struct proto *p);
-+void tcp_clone_ulp(const struct request_sock *req,
-+		   struct sock *newsk, const gfp_t priority);
- =
-
- #define MODULE_ALIAS_TCP_ULP(name)				\
- 	__MODULE_INFO(alias, alias_userspace, name);		\
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_soc=
-k.c
-index e4c6e8b40490..d667f2569f8e 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -810,6 +810,8 @@ struct sock *inet_csk_clone_lock(const struct sock *sk,
- 		/* Deinitialize accept_queue to trap illegal accesses. */
- 		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_queue=
-));
- =
-
-+		tcp_clone_ulp(req, newsk, priority);
-+
- 		security_inet_csk_clone(newsk, req);
- 	}
- 	return newsk;
-diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
-index 12ab5db2b71c..e7a2589d69ee 100644
---- a/net/ipv4/tcp_ulp.c
-+++ b/net/ipv4/tcp_ulp.c
-@@ -130,6 +130,18 @@ void tcp_cleanup_ulp(struct sock *sk)
- 	icsk->icsk_ulp_ops =3D NULL;
- }
- =
-
-+void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
-+		   const gfp_t priority)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(newsk);
-+
-+	if (!icsk->icsk_ulp_ops)
-+		return;
-+
-+	if (icsk->icsk_ulp_ops->clone)
-+		icsk->icsk_ulp_ops->clone(req, newsk, priority);
-+}
-+
- static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_op=
-s)
- {
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
 -- =
 
 2.24.1
 
---===============8826223688583662512==--
+--===============5761039809173125822==--
