@@ -1,55 +1,138 @@
-Content-Type: multipart/mixed; boundary="===============0058471351979115527=="
+Content-Type: multipart/mixed; boundary="===============8179146421654152084=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] .topmsg: tcp: clean ext on tx recycle
-Date: Fri, 13 Dec 2019 17:38:03 +0100
-Message-ID: <4e788142-3dff-ac91-a634-35e2e3df3fac@tessares.net>
-In-Reply-To: 20191213005822.29791-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH v2] squash-to: "mptcp: add basic kselftest for mptcp"
+Date: Fri, 13 Dec 2019 17:38:24 +0100
+Message-ID: <7e3bd531e4e10878c9fb009595a4721d77c6993c.1576255051.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2965
+X-UID: 2966
 
---===============0058471351979115527==
+--===============8179146421654152084==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 13/12/2019 01:58, Mat Martineau wrote:
-> Reworded since the tree contains very little MPTCP code at this point
-> in the series.
+checkpatch fixes
 
-Thank you for all the patches. I just applied all but I didn't modify =
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ .../selftests/net/mptcp/mptcp_connect.c       | 26 +++++++++----------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-the Signed-Off as I already did that. If I am not wrong, as a sender, =
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+index 8b8718e150d1..a3dccd816ae4 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -71,7 +71,8 @@ static void xgetnameinfo(const struct sockaddr *addr, soc=
+klen_t addrlen,
+ 			 char *serv, socklen_t servlen)
+ {
+ 	int flags =3D NI_NUMERICHOST | NI_NUMERICSERV;
+-	int err =3D getnameinfo(addr, addrlen, host, hostlen, serv, servlen, flag=
+s);
++	int err =3D getnameinfo(addr, addrlen, host, hostlen, serv, servlen,
++			      flags);
+ =
 
-your signed-off should be the last one, no?
+ 	if (err) {
+ 		const char *errstr =3D getxinfo_strerr(err);
+@@ -161,7 +162,6 @@ static int sock_listen_mptcp(const char * const listena=
+ddr,
+ static bool sock_test_tcpulp(const char * const remoteaddr,
+ 			     const char * const port)
+ {
+-
+ 	struct addrinfo hints =3D {
+ 		.ai_protocol =3D IPPROTO_TCP,
+ 		.ai_socktype =3D SOCK_STREAM,
+@@ -281,11 +281,12 @@ static ssize_t do_rnd_read(const int fd, char *buf, c=
+onst size_t len)
+ =
 
-- c7cb9c040948: "squahsed" patch 1/7 in "tcp: clean ext on tx recycle"
-- 6719fc6e867d: "squashed" patch 2/7 in "mptcp: Handle MPTCP TCP options"
-- d6a69af948b7: "squashed" patch 3/7 in "mptcp: Associate MPTCP context =
+ static void set_nonblock(int fd)
+ {
+-        int flags =3D fcntl(fd, F_GETFL);
+-        if (flags =3D=3D -1)
+-                return;
++	int flags =3D fcntl(fd, F_GETFL);
++
++	if (flags =3D=3D -1)
++		return;
+ =
 
-with TCP socket"
-- 9e4d893cb81f: "squashed" patch 4/7 in "mptcp: Write MPTCP DSS headers =
+-        fcntl(fd, F_SETFL, flags | O_NONBLOCK);
++	fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+ }
+ =
 
-to outgoing data packets"
-- ae428c460335: "squashed" patch 5/7 in "mptcp: recvmsg() can drain data =
+ static int copyfd_io_poll(int infd, int peerfd, int outfd)
+@@ -478,7 +479,7 @@ static int do_sendfile(int infd, int outfd, unsigned in=
+t count)
+ }
+ =
 
-from multiple subflows"
-- 0d182fc96c0b: "squashed" patch 6/7 in "mptcp: parse and emit =
+ static int copyfd_io_mmap(int infd, int peerfd, int outfd,
+-			      unsigned int size)
++			  unsigned int size)
+ {
+ 	int err;
+ =
 
-MP_CAPABLE option according to v1 spec"
-- 8d7da78ad705: "squashed" patch 7/7 in "mptcp: process MP_CAPABLE data =
+@@ -501,7 +502,6 @@ static int copyfd_io_mmap(int infd, int peerfd, int out=
+fd,
+ 	return err;
+ }
+ =
 
-option"
+-
+ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
+ 			      unsigned int size)
+ {
+@@ -575,11 +575,11 @@ static void check_sockaddr(int pf, struct sockaddr_st=
+orage *ss,
+ =
 
-Cheers,
-Matthieu
+ 	if (salen !=3D wanted_size)
+ 		fprintf(stderr, "accept: size mismatch, got %d expected %d\n",
+-				(int)salen, wanted_size);
++			(int)salen, wanted_size);
+ =
+
+ 	if (ss->ss_family !=3D pf)
+ 		fprintf(stderr, "accept: pf mismatch, expect %d, ss_family is %d\n",
+-				(int)ss->ss_family, pf);
++			(int)ss->ss_family, pf);
+ }
+ =
+
+ static void check_getpeername(int fd, struct sockaddr_storage *ss, socklen=
+_t salen)
+@@ -746,15 +746,13 @@ int parse_sndbuf(const char *size)
+ =
+
+ 	if (errno) {
+ 		fprintf(stderr, "Invalid sndbuf size %s (%s)\n",
+-				size,
+-				strerror(errno));
++			size, strerror(errno));
+ 		die_usage();
+ 	}
+ =
+
+ 	if (s > INT_MAX) {
+ 		fprintf(stderr, "Invalid sndbuf size %s (%s)\n",
+-				size,
+-				strerror(ERANGE));
++			size, strerror(ERANGE));
+ 		die_usage();
+ 	}
+ =
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0058471351979115527==--
+2.23.0
+
+--===============8179146421654152084==--
