@@ -1,44 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============6866106524150994097=="
+Content-Type: multipart/mixed; boundary="===============6021247229410292764=="
 MIME-Version: 1.0
 From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] squash-to: "mptcp: recvmsg() can drain data from
- multiple subflows"
-Date: Fri, 13 Dec 2019 17:05:59 +0100
-Message-ID: <6d836e5d6b44489f59f9dedfe7743c4b2b6f08d5.1576252967.git.dcaratti@redhat.com>
+Subject: [MPTCP] [PATCH] squash-to: "mptcp: add subflow write space signalling
+ and mptcp_poll"
+Date: Fri, 13 Dec 2019 17:05:57 +0100
+Message-ID: <509ec2d23608193d8f9958b9f3744d1d263de779.1576252967.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2948
+X-UID: 2949
 
---===============6866106524150994097==
+--===============6021247229410292764==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 checkpatch fixes
 
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+Signed-off-by: Davide Caratti<dcaratti(a)redhat.com>
 ---
  net/mptcp/protocol.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b9eed120913f..fd89075bd1c9 100644
+index 71a305f391c4..44e6f0d1070c 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -359,7 +359,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
- 			desc.count =3D min_t(size_t, len - copied, map_remaining);
- 			pr_debug("reading %zu bytes, copied %d", desc.count,
- 				 copied);
--			bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
-+			bytes_read =3D tcp_read_sock(ssk, &desc,
-+						   mptcp_read_actor);
- 			if (bytes_read < 0) {
- 				if (!copied)
- 					copied =3D bytes_read;
+@@ -817,7 +817,8 @@ static __poll_t mptcp_poll(struct file *file, struct so=
+cket *sock,
+ =
+
+ 	if (test_bit(MPTCP_DATA_READY, &msk->flags))
+ 		mask =3D EPOLLIN | EPOLLRDNORM;
+-	if (sk_stream_is_writeable(sk) && test_bit(MPTCP_SEND_SPACE, &msk->flags))
++	if (sk_stream_is_writeable(sk) &&
++	    test_bit(MPTCP_SEND_SPACE, &msk->flags))
+ 		mask |=3D EPOLLOUT | EPOLLWRNORM;
+ 	if (sk->sk_shutdown & RCV_SHUTDOWN)
+ 		mask |=3D EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
 -- =
 
 2.23.0
 
---===============6866106524150994097==--
+--===============6021247229410292764==--
