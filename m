@@ -1,16 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============2149458433299895543=="
+Content-Type: multipart/mixed; boundary="===============0216859814879759337=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] squash-to: "tcp: Define IPPROTO_MPTCP"
-Date: Fri, 13 Dec 2019 17:08:17 +0100
-Message-ID: <21edfe97b84a943b68a1ce2da0f214402caae372.camel@redhat.com>
-In-Reply-To: fd9848c19b14b56061bdf660e55b9f3ddb443736.1576252967.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH] squash-to: "mptcp: Write MPTCP DSS headers to
+ outgoing data packets"
+Date: Fri, 13 Dec 2019 17:08:37 +0100
+Message-ID: <057d9ad23d5831a2cbf85ea4d08abfc926db1ddf.camel@redhat.com>
+In-Reply-To: b9c0b3366d312b75cdc4f840dab49f8ab21d71fc.1576252967.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2952
+X-UID: 2953
 
---===============2149458433299895543==
+--===============0216859814879759337==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,43 +20,28 @@ On Fri, 2019-12-13 at 17:06 +0100, Davide Caratti wrote:
 > checkpatch fixes
 > =
 
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> Signed-off-by_ Davide Caratti <dcaratti(a)redhat.com>
 > ---
->  include/uapi/linux/in.h       | 2 +-
->  tools/include/uapi/linux/in.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  net/mptcp/options.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > =
 
-> diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
-> index 44df6dc1ff1d..1521073b6348 100644
-> --- a/include/uapi/linux/in.h
-> +++ b/include/uapi/linux/in.h
-> @@ -76,7 +76,7 @@ enum {
->  #define IPPROTO_MPLS		IPPROTO_MPLS
->    IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
->  #define IPPROTO_RAW		IPPROTO_RAW
-> -  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection 		*/
-> +  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
->  #define IPPROTO_MPTCP		IPPROTO_MPTCP
->    IPPROTO_MAX
->  };
-> diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
-> index 44df6dc1ff1d..1521073b6348 100644
-> --- a/tools/include/uapi/linux/in.h
-> +++ b/tools/include/uapi/linux/in.h
-> @@ -76,7 +76,7 @@ enum {
->  #define IPPROTO_MPLS		IPPROTO_MPLS
->    IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
->  #define IPPROTO_RAW		IPPROTO_RAW
-> -  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection 		*/
-> +  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
->  #define IPPROTO_MPTCP		IPPROTO_MPTCP
->    IPPROTO_MAX
->  };
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 672f7f1288f8..c9b5f37db63b 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -309,7 +309,7 @@ bool mptcp_established_options(struct sock *sk, struc=
+t sk_buff *skb,
+>  	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts))
+>  		ret =3D true;
+>  	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
+> -						 opts))
+> +					       opts))
+>  		ret =3D true;
+>  =
 
-Since is not ovious without hexdifd, this replaces \s\t with \t just
-after 'Multipath TCP connection'
+>  	/* we reserved enough space for the above options, and exceeding the
 
-ACK.
+ACK
 
---===============2149458433299895543==--
+--===============0216859814879759337==--
