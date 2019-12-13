@@ -1,53 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============6272013622562785092=="
+Content-Type: multipart/mixed; boundary="===============7554421342859002596=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Remove version field from
- subflow_request_sock
-Date: Fri, 13 Dec 2019 01:21:23 +0100
-Message-ID: <b4349852-1fee-6cdd-612e-a4ba695c7e18@tessares.net>
-In-Reply-To: 436ce10c-a798-7994-98f5-afc297b56c90@tessares.net
+Subject: [MPTCP] Re: [PATCH]
+ Squash-to-mptcp-Create-SUBFLOW-socket-for-incoming-connections
+Date: Fri, 13 Dec 2019 01:25:34 +0100
+Message-ID: <884b514f-2728-0d9d-9d50-409203e7e17c@tessares.net>
+In-Reply-To: 500c372287d2af8bbbe0dc811e5566b07ce2160e.1576196206.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2910
+X-UID: 2911
 
---===============6272013622562785092==
+--===============7554421342859002596==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Paolo,
+Hi Paolo,
 
-On 12/12/2019 23:29, Matthieu Baerts wrote:
-> Hi Peter, Paolo,
+On 13/12/2019 01:18, Paolo Abeni wrote:
+> Need to explicitly clear msk->subflow on passive connection, or
+> it will inherit the listener msk value, which is uncorrect
 > =
 
-> On 12/12/2019 05:55, Peter Krystad wrote:
->> This field is not used. Version checking is performed in
->> mptcp_parse_options().
->>
->> squashto: Create SUBFLOW socket for incoming connections
+> This fixes hang-up pre-v1 patches.
 > =
 
-> Thank you for the patch and the review!
-> =
+> Still investigating why the v1 code did non hang without this.
 
-> - 24201a067136: "squashed" in "mptcp: Create SUBFLOW socket for incoming =
+Thank you for the patch, that was quick!
 
-> connections"
-> - 222ce475568a: conflict in t/mptcp-Add-key-generation-and-token-tree
-> - 3f97d6a7010d: conflict in =
+I already applied it to let the CI running during the night. If needed, =
 
-> t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
-> - bc5f2367d3e2: conflict in t/mptcp-process-MP_CAPABLE-data-option
-> - bc5f2367d3e2: conflict in t/mptcp-process-MP_CAPABLE-data-option
-> - 55f1d621d32b..c5b8ad49fc3a: result
+we can still easily revert/improve it later.
 
-I went a bit too fast on this one:
+- 9029651dddd7: "squashed" in "mptcp: Create SUBFLOW socket for incoming =
 
-- 78b5742651e0: mptcp: fix wrong merge conflict resolution
-- 0b89eccbe98a: conflict in t/mptcp-Add-path-manager-interface
-- 357e47f49334..45cba5f6b369: result
+connections"
+- d71e217c05ae: conflict in t/mptcp-Add-key-generation-and-token-tree
+- 45cba5f6b369..3b3ffeb26480: result
+
+Tests + export in progress.
 
 Cheers,
 Matt
@@ -58,4 +51,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6272013622562785092==--
+--===============7554421342859002596==--
