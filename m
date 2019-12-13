@@ -1,53 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============8890512512690637548=="
+Content-Type: multipart/mixed; boundary="===============0058471351979115527=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] squash-to: "mptcp: add basic kselftest for mptcp"
-Date: Fri, 13 Dec 2019 17:36:08 +0100
-Message-ID: <63dce84a00eee7a89472188ec17f7ab0b68cf5e9.camel@redhat.com>
-In-Reply-To: 38e178e5be44697a6168b72c6ef25f59cd0ddcd2.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] .topmsg: tcp: clean ext on tx recycle
+Date: Fri, 13 Dec 2019 17:38:03 +0100
+Message-ID: <4e788142-3dff-ac91-a634-35e2e3df3fac@tessares.net>
+In-Reply-To: 20191213005822.29791-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2964
+X-UID: 2965
 
---===============8890512512690637548==
+--===============0058471351979115527==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-12-13 at 17:15 +0100, Paolo Abeni wrote:
-> On Fri, 2019-12-13 at 17:05 +0100, Davide Caratti wrote:
-> > checkpatch fixes
-> > =
+On 13/12/2019 01:58, Mat Martineau wrote:
+> Reworded since the tree contains very little MPTCP code at this point
+> in the series.
 
-> > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> > ---
-> >  .../selftests/net/mptcp/mptcp_connect.c       | 28 +++++++++----------
-> >  1 file changed, 14 insertions(+), 14 deletions(-)
-> > =
+Thank you for all the patches. I just applied all but I didn't modify =
 
+the Signed-Off as I already did that. If I am not wrong, as a sender, =
 
-[...]
+your signed-off should be the last one, no?
 
-> >  =
+- c7cb9c040948: "squahsed" patch 1/7 in "tcp: clean ext on tx recycle"
+- 6719fc6e867d: "squashed" patch 2/7 in "mptcp: Handle MPTCP TCP options"
+- d6a69af948b7: "squashed" patch 3/7 in "mptcp: Associate MPTCP context =
 
-> >  static void check_getpeername(int fd, struct sockaddr_storage *ss, soc=
-klen_t salen)
-> > @@ -746,15 +746,15 @@ int parse_sndbuf(const char *size)
-> >  =
+with TCP socket"
+- 9e4d893cb81f: "squashed" patch 4/7 in "mptcp: Write MPTCP DSS headers =
 
-> >  	if (errno) {
-> >  		fprintf(stderr, "Invalid sndbuf size %s (%s)\n",
-> > -				size,
-> > -				strerror(errno));
-> > +			size,
-> > +			strerror(errno));
-> =
+to outgoing data packets"
+- ae428c460335: "squashed" patch 5/7 in "mptcp: recvmsg() can drain data =
 
-> I think here we can have:
-> 			size, strerror(errno));
+from multiple subflows"
+- 0d182fc96c0b: "squashed" patch 6/7 in "mptcp: parse and emit =
 
-sure, will resend a v2 in minutes!
+MP_CAPABLE option according to v1 spec"
+- 8d7da78ad705: "squashed" patch 7/7 in "mptcp: process MP_CAPABLE data =
 
+option"
 
---===============8890512512690637548==--
+Cheers,
+Matthieu
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============0058471351979115527==--
