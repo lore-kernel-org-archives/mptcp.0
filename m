@@ -1,15 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============1083294667279815050=="
+Content-Type: multipart/mixed; boundary="===============6866106524150994097=="
 MIME-Version: 1.0
 From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] squash-to: "mptcp: Handle MPTCP TCP options"
-Date: Fri, 13 Dec 2019 17:05:58 +0100
-Message-ID: <5c5db07440151ba4d26bbbda2a49290e5a8fe9f9.1576252967.git.dcaratti@redhat.com>
+Subject: [MPTCP] [PATCH] squash-to: "mptcp: recvmsg() can drain data from
+ multiple subflows"
+Date: Fri, 13 Dec 2019 17:05:59 +0100
+Message-ID: <6d836e5d6b44489f59f9dedfe7743c4b2b6f08d5.1576252967.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2947
+X-UID: 2948
 
---===============1083294667279815050==
+--===============6866106524150994097==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,26 +19,26 @@ checkpatch fixes
 
 Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
 ---
- include/linux/tcp.h | 3 ++-
+ net/mptcp/protocol.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index e5859d671111..52798ab00394 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -118,7 +118,8 @@ static inline void tcp_clear_options(struct tcp_options=
-_received *rx_opt)
- 	rx_opt->smc_ok =3D 0;
- #endif
- #if IS_ENABLED(CONFIG_MPTCP)
--	rx_opt->mptcp.mp_capable =3D rx_opt->mptcp.mp_join =3D 0;
-+	rx_opt->mptcp.mp_capable =3D 0;
-+	rx_opt->mptcp.mp_join =3D 0;
- 	rx_opt->mptcp.dss =3D 0;
- #endif
- }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b9eed120913f..fd89075bd1c9 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -359,7 +359,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 			desc.count =3D min_t(size_t, len - copied, map_remaining);
+ 			pr_debug("reading %zu bytes, copied %d", desc.count,
+ 				 copied);
+-			bytes_read =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
++			bytes_read =3D tcp_read_sock(ssk, &desc,
++						   mptcp_read_actor);
+ 			if (bytes_read < 0) {
+ 				if (!copied)
+ 					copied =3D bytes_read;
 -- =
 
 2.23.0
 
---===============1083294667279815050==--
+--===============6866106524150994097==--
