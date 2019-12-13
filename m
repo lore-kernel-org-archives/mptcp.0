@@ -1,295 +1,207 @@
-Content-Type: multipart/mixed; boundary="===============8567482139493877742=="
+Content-Type: multipart/mixed; boundary="===============7943446293357398027=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 12/15] mptcp: recvmsg() can drain data from multiple
- subflows
-Date: Fri, 13 Dec 2019 21:51:03 +0100
-Message-ID: <20191213205106.2467313-13-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 13/15] mptcp: allow collapsing consecutive sendpages
+ on the same substream
+Date: Fri, 13 Dec 2019 21:51:04 +0100
+Message-ID: <20191213205106.2467313-14-matthieu.baerts@tessares.net>
 In-Reply-To: 20191213205106.2467313-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3005
+X-UID: 3006
 
---===============8567482139493877742==
+--===============7943446293357398027==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Paolo Abeni <pabeni(a)redhat.com>
 
-With the previous patch in place, the msk can detect which subflow
-has the current map with a simple walk, let's update the main
-loop to always select the 'current' subflow. The exit conditions now
-closely mirror tcp_recvmsg() to get expected timeout and signal
-behavior.
+If the current sendmsg() lands on the same subflow we used last, we
+can try to collapse the data.
 
-Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-Co-developed-by: Davide Caratti <dcaratti(a)redhat.com>
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Co-developed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Co-developed-by: Florian Westphal <fw(a)strlen.de>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/protocol.c | 178 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 168 insertions(+), 10 deletions(-)
+ net/mptcp/protocol.c | 75 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 60 insertions(+), 15 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 44e6f0d1070c..fd89075bd1c9 100644
+index fd89075bd1c9..7dc27a4f0403 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -9,6 +9,8 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
-+#include <linux/sched/signal.h>
-+#include <linux/atomic.h>
- #include <net/sock.h>
- #include <net/inet_common.h>
- #include <net/inet_hashtables.h>
-@@ -106,6 +108,21 @@ static bool mptcp_ext_cache_refill(struct mptcp_sock *=
-msk)
- 	return !!msk->cached_ext;
+@@ -123,14 +123,27 @@ static struct sock *mptcp_subflow_recv_lookup(const s=
+truct mptcp_sock *msk)
+ 	return NULL;
  }
  =
 
-+static struct sock *mptcp_subflow_recv_lookup(const struct mptcp_sock *msk)
++static inline bool mptcp_skb_can_collapse_to(const struct mptcp_sock *msk,
++					     const struct sk_buff *skb,
++					     const struct mptcp_ext *mpext)
 +{
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct mptcp_subflow_context *subflow;
++	if (!tcp_skb_can_collapse_to(skb))
++		return false;
 +
-+	sock_owned_by_me(sk);
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		if (subflow->data_avail)
-+			return mptcp_subflow_tcp_sock(subflow);
-+	}
-+
-+	return NULL;
++	/* can collapse only if MPTCP level sequence is in order */
++	return mpext && mpext->data_seq + mpext->data_len =3D=3D msk->write_seq;
 +}
 +
  static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct msghdr *msg, long *timeo)
+-			      struct msghdr *msg, long *timeo)
++			      struct msghdr *msg, long *timeo, int *pmss_now,
++			      int *ps_goal)
  {
-@@ -271,13 +288,37 @@ int mptcp_read_actor(read_descriptor_t *desc, struct =
-sk_buff *skb,
- 	return copy_len;
+-	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
++	int mss_now, avail_size, size_goal, ret;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_ext *mpext =3D NULL;
++	struct sk_buff *skb, *tail;
++	bool can_collapse =3D false;
+ 	struct page_frag *pfrag;
+-	struct sk_buff *skb;
+ 	size_t psize;
+ =
+
+ 	/* use the mptcp page cache so that we can easily move the data
+@@ -146,8 +159,29 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ =
+
+ 	/* compute copy limit */
+ 	mss_now =3D tcp_send_mss(ssk, &size_goal, msg->msg_flags);
+-	psize =3D min_t(int, pfrag->size - pfrag->offset, size_goal);
++	*pmss_now =3D mss_now;
++	*ps_goal =3D size_goal;
++	avail_size =3D size_goal;
++	skb =3D tcp_write_queue_tail(ssk);
++	if (skb) {
++		mpext =3D skb_ext_find(skb, SKB_EXT_MPTCP);
++
++		/* Limit the write to the size available in the
++		 * current skb, if any, so that we create at most a new skb.
++		 * Explicitly tells TCP internals to avoid collapsing on later
++		 * queue management operation, to avoid breaking the ext <->
++		 * SSN association set here
++		 */
++		can_collapse =3D (size_goal - skb->len > 0) &&
++			      mptcp_skb_can_collapse_to(msk, skb, mpext);
++		if (!can_collapse)
++			TCP_SKB_CB(skb)->eor =3D 1;
++		else
++			avail_size =3D size_goal - skb->len;
++	}
++	psize =3D min_t(size_t, pfrag->size - pfrag->offset, avail_size);
+ =
+
++	/* Copy to page */
+ 	pr_debug("left=3D%zu", msg_data_left(msg));
+ 	psize =3D copy_page_from_iter(pfrag->page, pfrag->offset,
+ 				    min_t(size_t, msg_data_left(msg), psize),
+@@ -156,14 +190,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ 	if (!psize)
+ 		return -EINVAL;
+ =
+
+-	/* Mark the end of the previous write so the beginning of the
+-	 * next write (with its own mptcp skb extension data) is not
+-	 * collapsed.
++	/* tell the TCP stack to delay the push so that we can safely
++	 * access the skb after the sendpages call
+ 	 */
+-	skb =3D tcp_write_queue_tail(ssk);
+-	if (skb)
+-		TCP_SKB_CB(skb)->eor =3D 1;
+-
+ 	ret =3D do_tcp_sendpages(ssk, pfrag->page, pfrag->offset, psize,
+ 			       msg->msg_flags | MSG_SENDPAGE_NOTLAST);
+ 	if (ret <=3D 0)
+@@ -171,6 +200,18 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ 	if (unlikely(ret < psize))
+ 		iov_iter_revert(&msg->msg_iter, psize - ret);
+ =
+
++	/* if the tail skb extension is still the cached one, collapsing
++	 * really happened. Note: we can't check for 'same skb' as the sk_buff
++	 * hdr on tail can be transmitted, freed and re-allocated by the
++	 * do_tcp_sendpages() call
++	 */
++	tail =3D tcp_write_queue_tail(ssk);
++	if (mpext && tail && mpext =3D=3D skb_ext_find(tail, SKB_EXT_MPTCP)) {
++		WARN_ON_ONCE(!can_collapse);
++		mpext->data_len +=3D ret;
++		goto out;
++	}
++
+ 	skb =3D tcp_write_queue_tail(ssk);
+ 	mpext =3D __skb_ext_set(skb, SKB_EXT_MPTCP, msk->cached_ext);
+ 	msk->cached_ext =3D NULL;
+@@ -186,11 +227,11 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+ 		 mpext->data_seq, mpext->subflow_seq, mpext->data_len,
+ 		 mpext->dsn64);
+ =
+
++out:
+ 	pfrag->offset +=3D ret;
+ 	msk->write_seq +=3D ret;
+ 	mptcp_subflow_ctx(ssk)->rel_write_seq +=3D ret;
+ =
+
+-	tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle, size_goal);
+ 	return ret;
  }
  =
 
-+static void mptcp_wait_data(struct sock *sk, long *timeo)
-+{
-+	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	add_wait_queue(sk_sleep(sk), &wait);
-+	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
-+
-+	sk_wait_event(sk, timeo,
-+		      test_and_clear_bit(MPTCP_DATA_READY, &msk->flags), &wait);
-+
-+	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
-+	remove_wait_queue(sk_sleep(sk), &wait);
-+}
-+
- static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 			 int nonblock, int flags, int *addr_len)
+@@ -212,11 +253,11 @@ static void ssk_check_wmem(struct mptcp_sock *msk, st=
+ruct sock *ssk)
+ =
+
+ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  {
++	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
  	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct mptcp_subflow_context *subflow;
-+	bool more_data_avail =3D false;
-+	struct mptcp_read_arg arg;
-+	read_descriptor_t desc;
-+	bool wait_data =3D false;
  	struct socket *ssock;
-+	struct tcp_sock *tp;
-+	bool done =3D false;
+ 	size_t copied =3D 0;
  	struct sock *ssk;
- 	int copied =3D 0;
-+	int target;
-+	long timeo;
+-	int ret =3D 0;
+ 	long timeo;
  =
 
- 	lock_sock(sk);
- 	ssock =3D __mptcp_tcp_fallback(msk);
-@@ -289,16 +330,124 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len,
- 		return copied;
+ 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+@@ -243,15 +284,19 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ =
+
+ 	lock_sock(ssk);
+ 	while (msg_data_left(msg)) {
+-		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, &timeo);
++		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, &timeo, &mss_now,
++					 &size_goal);
+ 		if (ret < 0)
+ 			break;
+ =
+
+ 		copied +=3D ret;
  	}
  =
 
--	ssk =3D mptcp_subflow_get(msk);
--	if (!ssk) {
--		release_sock(sk);
--		return -ENOTCONN;
-+	arg.msg =3D msg;
-+	desc.arg.data =3D &arg;
-+	desc.error =3D 0;
-+
-+	timeo =3D sock_rcvtimeo(sk, nonblock);
-+
-+	len =3D min_t(size_t, len, INT_MAX);
-+	target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
-+
-+	while (!done) {
-+		u32 map_remaining;
-+		int bytes_read;
-+
-+		ssk =3D mptcp_subflow_recv_lookup(msk);
-+		pr_debug("msk=3D%p ssk=3D%p", msk, ssk);
-+		if (!ssk)
-+			goto wait_for_data;
-+
-+		subflow =3D mptcp_subflow_ctx(ssk);
-+		tp =3D tcp_sk(ssk);
-+
-+		lock_sock(ssk);
-+		do {
-+			/* try to read as much data as available */
-+			map_remaining =3D subflow->map_data_len -
-+					mptcp_subflow_get_map_offset(subflow);
-+			desc.count =3D min_t(size_t, len - copied, map_remaining);
-+			pr_debug("reading %zu bytes, copied %d", desc.count,
-+				 copied);
-+			bytes_read =3D tcp_read_sock(ssk, &desc,
-+						   mptcp_read_actor);
-+			if (bytes_read < 0) {
-+				if (!copied)
-+					copied =3D bytes_read;
-+				done =3D true;
-+				goto next;
-+			}
-+
-+			pr_debug("msk ack_seq=3D%llx -> %llx", msk->ack_seq,
-+				 msk->ack_seq + bytes_read);
-+			msk->ack_seq +=3D bytes_read;
-+			copied +=3D bytes_read;
-+			if (copied >=3D len) {
-+				done =3D true;
-+				goto next;
-+			}
-+			if (tp->urg_data && tp->urg_seq =3D=3D tp->copied_seq) {
-+				pr_err("Urgent data present, cannot proceed");
-+				done =3D true;
-+				goto next;
-+			}
-+next:
-+			more_data_avail =3D mptcp_subflow_data_available(ssk);
-+		} while (more_data_avail && !done);
-+		release_sock(ssk);
-+		continue;
-+
-+wait_for_data:
-+		more_data_avail =3D false;
-+
-+		/* only the master socket status is relevant here. The exit
-+		 * conditions mirror closely tcp_recvmsg()
-+		 */
-+		if (copied >=3D target)
-+			break;
-+
-+		if (copied) {
-+			if (sk->sk_err ||
-+			    sk->sk_state =3D=3D TCP_CLOSE ||
-+			    (sk->sk_shutdown & RCV_SHUTDOWN) ||
-+			    !timeo ||
-+			    signal_pending(current))
-+				break;
-+		} else {
-+			if (sk->sk_err) {
-+				copied =3D sock_error(sk);
-+				break;
-+			}
-+
-+			if (sk->sk_shutdown & RCV_SHUTDOWN)
-+				break;
-+
-+			if (sk->sk_state =3D=3D TCP_CLOSE) {
-+				copied =3D -ENOTCONN;
-+				break;
-+			}
-+
-+			if (!timeo) {
-+				copied =3D -EAGAIN;
-+				break;
-+			}
-+
-+			if (signal_pending(current)) {
-+				copied =3D sock_intr_errno(timeo);
-+				break;
-+			}
-+		}
-+
-+		pr_debug("block timeout %ld", timeo);
-+		wait_data =3D true;
-+		mptcp_wait_data(sk, &timeo);
- 	}
- =
-
--	copied =3D sock_recvmsg(ssk->sk_socket, msg, flags);
-+	if (more_data_avail) {
-+		if (!test_bit(MPTCP_DATA_READY, &msk->flags))
-+			set_bit(MPTCP_DATA_READY, &msk->flags);
-+	} else if (!wait_data) {
-+		clear_bit(MPTCP_DATA_READY, &msk->flags);
- =
-
--	release_sock(sk);
-+		/* .. race-breaker: ssk might get new data after last
-+		 * data_available() returns false.
-+		 */
-+		ssk =3D mptcp_subflow_recv_lookup(msk);
-+		if (unlikely(ssk))
-+			set_bit(MPTCP_DATA_READY, &msk->flags);
+-	if (copied > 0)
++	if (copied) {
+ 		ret =3D copied;
++		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
++			 size_goal);
 +	}
  =
 
-+	release_sock(sk);
- 	return copied;
- }
- =
-
-@@ -459,10 +608,6 @@ static struct sock *mptcp_accept(struct sock *sk, int =
-flags, int *err,
- 		msk->write_seq =3D subflow->idsn + 1;
- 		ack_seq++;
- 		msk->ack_seq =3D ack_seq;
--		subflow->map_seq =3D ack_seq;
--		subflow->map_subflow_seq =3D 1;
--		subflow->rel_write_seq =3D 1;
--		subflow->tcp_sock =3D ssk;
- 		newsk =3D new_mptcp_sock;
- 		mptcp_copy_inaddrs(newsk, ssk);
- 		list_add(&subflow->node, &msk->conn_list);
-@@ -474,6 +619,19 @@ static struct sock *mptcp_accept(struct sock *sk, int =
-flags, int *err,
- 		bh_unlock_sock(new_mptcp_sock);
- 		local_bh_enable();
- 		release_sock(sk);
-+
-+		/* the subflow can already receive packet, avoid racing with
-+		 * the receive path and process the pending ones
-+		 */
-+		lock_sock(ssk);
-+		subflow->map_seq =3D ack_seq;
-+		subflow->map_subflow_seq =3D 1;
-+		subflow->rel_write_seq =3D 1;
-+		subflow->tcp_sock =3D ssk;
-+		subflow->conn =3D new_mptcp_sock;
-+		if (unlikely(!skb_queue_empty(&ssk->sk_receive_queue)))
-+			mptcp_subflow_data_available(ssk);
-+		release_sock(ssk);
- 	} else {
- 		tcp_sk(newsk)->is_mptcp =3D 0;
- 	}
+ 	ssk_check_wmem(msk, ssk);
+ 	release_sock(ssk);
 -- =
 
 2.24.0
 
---===============8567482139493877742==--
+--===============7943446293357398027==--
