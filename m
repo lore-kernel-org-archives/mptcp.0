@@ -1,90 +1,149 @@
-Content-Type: multipart/mixed; boundary="===============5761039809173125822=="
+Content-Type: multipart/mixed; boundary="===============3448064613049993536=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 00/11] Multipath TCP: Prerequisites
-Date: Fri, 13 Dec 2019 15:00:11 -0800
-Message-ID: <20191213230022.28144-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 08/11] tcp: Export TCP functions and ops
+ struct
+Date: Fri, 13 Dec 2019 15:00:19 -0800
+Message-ID: <20191213230022.28144-9-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20191213230022.28144-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3030
+X-UID: 3031
 
---===============5761039809173125822==
+--===============3448064613049993536==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP upstreaming community has been collaborating on an
-upstreamable MPTCP implementation that complies with RFC 8684. A minimal
-set of features to comply with the specification involves a sizeable set
-of code changes, so David requested that we split this work in to
-multiple, smaller patch sets to build up MPTCP infrastructure.
+MPTCP will make use of tcp_send_mss() and tcp_push() when sending
+data to specific TCP subflows.
 
-The minimal MPTCP feature set we are proposing for review in the v5.6
-timeframe begins with these three parts:
+tcp_request_sock_ipvX_ops and ipvX_specific will be referenced
+during TCP subflow creation.
 
-Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP
-definitions, additional ULP and skb extension features, TCP option space
-checking, and a few exported symbols.
+Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ include/net/tcp.h   | 8 ++++++++
+ net/ipv4/tcp.c      | 6 +++---
+ net/ipv4/tcp_ipv4.c | 2 +-
+ net/ipv6/tcp_ipv6.c | 6 +++---
+ 4 files changed, 15 insertions(+), 7 deletions(-)
 
-Part 2: Single subflow implementation and self tests.
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index c483c73b8d41..921288afa11b 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -330,6 +330,9 @@ int tcp_sendpage_locked(struct sock *sk, struct page *p=
+age, int offset,
+ 			size_t size, int flags);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
++void tcp_push(struct sock *sk, int flags, int mss_now, int nonagle,
++	      int size_goal);
+ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+@@ -2002,6 +2005,11 @@ struct tcp_request_sock_ops {
+ 			   enum tcp_synack_type synack_type);
+ };
+ =
 
-Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684,
-publication expected in the next few days).
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
++#if IS_ENABLED(CONFIG_IPV6)
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops;
++#endif
++
+ #ifdef CONFIG_SYN_COOKIES
+ static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
+ *ops,
+ 					 const struct sock *sk, struct sk_buff *skb,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 09e2cae92956..932834eb467d 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -690,8 +690,8 @@ static bool tcp_should_autocork(struct sock *sk, struct=
+ sk_buff *skb,
+ 	       refcount_read(&sk->sk_wmem_alloc) > skb->truesize;
+ }
+ =
 
-We plan to send those over the next week. Additional patches for
-multiple subflow support, path management, active backup, and other
-features are in the pipeline for submission after making progress with
-the above reviews.
+-static void tcp_push(struct sock *sk, int flags, int mss_now,
+-		     int nonagle, int size_goal)
++void tcp_push(struct sock *sk, int flags, int mss_now,
++	      int nonagle, int size_goal)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct sk_buff *skb;
+@@ -925,7 +925,7 @@ static unsigned int tcp_xmit_size_goal(struct sock *sk,=
+ u32 mss_now,
+ 	return max(size_goal, mss_now);
+ }
+ =
 
-Clone/fetch:
-https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v1-part1)
+-static int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
+ {
+ 	int mss_now;
+ =
 
-Browse:
-https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v1-part1
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 26637fce324d..c3b91789de65 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1372,7 +1372,7 @@ struct request_sock_ops tcp_request_sock_ops __read_m=
+ostly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
+ };
+ =
 
-Thank you for your review. You can find us at mptcp(a)lists.01.org and
-https://is.gd/mptcp_upstream
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
+ 	.mss_clamp	=3D	TCP_MSS_DEFAULT,
+ #ifdef CONFIG_TCP_MD5SIG
+ 	.req_md5_lookup	=3D	tcp_v4_md5_lookup,
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index df5fd9109696..30dceac8a608 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -75,7 +75,7 @@ static void	tcp_v6_reqsk_send_ack(const struct sock *sk, =
+struct sk_buff *skb,
+ static int	tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb);
+ =
 
+ static const struct inet_connection_sock_af_ops ipv6_mapped;
+-static const struct inet_connection_sock_af_ops ipv6_specific;
++const struct inet_connection_sock_af_ops ipv6_specific;
+ #ifdef CONFIG_TCP_MD5SIG
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_specific;
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_mapped_specific;
+@@ -785,7 +785,7 @@ struct request_sock_ops tcp6_request_sock_ops __read_mo=
+stly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
+ };
+ =
 
-Mat Martineau (9):
-  net: Make sock protocol value checks more specific
-  sock: Make sk_protocol a 16-bit value
-  tcp: Define IPPROTO_MPTCP
-  tcp: Add MPTCP option number
-  tcp, ulp: Add clone operation to tcp_ulp_ops
-  mptcp: Add MPTCP to skb extensions
-  tcp: Prevent coalesce/collapse when skb has MPTCP extensions
-  tcp: Export TCP functions and ops struct
-  tcp: Check for filled TCP option space before SACK
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
+ 	.mss_clamp	=3D	IPV6_MIN_MTU - sizeof(struct tcphdr) -
+ 				sizeof(struct ipv6hdr),
+ #ifdef CONFIG_TCP_MD5SIG
+@@ -1739,7 +1739,7 @@ static struct timewait_sock_ops tcp6_timewait_sock_op=
+s =3D {
+ 	.twsk_destructor =3D tcp_twsk_destructor,
+ };
+ =
 
-Paolo Abeni (2):
-  tcp: clean ext on tx recycle
-  skb: add helpers to allocate ext independently from sk_buff
-
- MAINTAINERS                     | 10 ++++++++
- include/linux/skbuff.h          |  6 +++++
- include/net/mptcp.h             | 43 +++++++++++++++++++++++++++++++++
- include/net/sock.h              |  6 ++---
- include/net/tcp.h               | 22 +++++++++++++++++
- include/trace/events/sock.h     |  5 ++--
- include/uapi/linux/in.h         |  2 ++
- net/ax25/af_ax25.c              |  2 +-
- net/core/skbuff.c               | 42 ++++++++++++++++++++++++++++++--
- net/decnet/af_decnet.c          |  2 +-
- net/ipv4/inet_connection_sock.c |  2 ++
- net/ipv4/tcp.c                  |  6 ++---
- net/ipv4/tcp_input.c            | 10 ++++++--
- net/ipv4/tcp_ipv4.c             |  2 +-
- net/ipv4/tcp_output.c           |  5 +++-
- net/ipv4/tcp_ulp.c              | 12 +++++++++
- net/ipv6/tcp_ipv6.c             |  6 ++---
- tools/include/uapi/linux/in.h   |  2 ++
- 18 files changed, 166 insertions(+), 19 deletions(-)
- create mode 100644 include/net/mptcp.h
-
+-static const struct inet_connection_sock_af_ops ipv6_specific =3D {
++const struct inet_connection_sock_af_ops ipv6_specific =3D {
+ 	.queue_xmit	   =3D inet6_csk_xmit,
+ 	.send_check	   =3D tcp_v6_send_check,
+ 	.rebuild_header	   =3D inet6_sk_rebuild_header,
 -- =
 
 2.24.1
 
---===============5761039809173125822==--
+--===============3448064613049993536==--
