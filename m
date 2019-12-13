@@ -1,128 +1,143 @@
-Content-Type: multipart/mixed; boundary="===============3779618711909943175=="
+Content-Type: multipart/mixed; boundary="===============3555417110511853689=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: Cover letters for part1/part2 netdev patchsets
-Date: Fri, 13 Dec 2019 11:19:19 -0800
-Message-ID: <alpine.OSX.2.21.1912130913330.33632@amhui-mobl1.amr.corp.intel.com>
-In-Reply-To: 7a65d607-1a6f-1b01-7a18-3b830f97eebf@tessares.net
+Date: Fri, 13 Dec 2019 21:27:19 +0100
+Message-ID: <6f63cd7b-6325-b933-8df8-97ceef9a6e37@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1912130913330.33632@amhui-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2978
+X-UID: 2979
 
---===============3779618711909943175==
+--===============3555417110511853689==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Mat,
 
-On Fri, 13 Dec 2019, Matthieu Baerts wrote:
+On 13/12/2019 20:19, Mat Martineau wrote:
+> =
 
-> Hi Mat,
->
-> On 06/12/2019 01:41, Mat Martineau wrote:
->> =
+> On Fri, 13 Dec 2019, Matthieu Baerts wrote:
+> =
 
->> Hello everyone -
->> =
+>> Hi Mat,
+>>
+>> On 06/12/2019 01:41, Mat Martineau wrote:
+>>>
+>>> Hello everyone -
+>>>
+>>> As we discussed earlier today, here are draft cover letters for patch =
 
->> As we discussed earlier today, here are draft cover letters for patch se=
-t =
+>>> set parts 1 & 2. Feedback appreciated!
+>>>
+>>>
+>>> ------
+>>> Part 1
+>>>
+>>> Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
+>>>
+>>> The MPTCP upstreaming community has been collaborating on an
+>>> upstreamable MPTCP implementation. David requested that we split this
+>>> work in to multiple, smaller patch sets to build up MPTCP
+>>> infrastructure. The scope of this first patch set is limited to
+>>> prerequisite TCP core changes so we can get focused feedback in these
+>>> areas.
+>>
+>> Related to why I proposed on "Checklist before sending to netdev" ML, =
 
->> parts 1 & 2. Feedback appreciated!
->> =
+>> should we already introduce here the fact that we are going to send 3 =
 
->> =
+>> different patch sets and why we cannot send all in one or less patches?
+>>
+>> Something like:
+>>
+>> =C2=A0=C2=A0 - The protocol is what it is and having a minimal set of fe=
+atures =
 
->> ------
->> Part 1
->> =
+>> already signifies a lot of code.
+>> =C2=A0=C2=A0 - This minimal set of features includes: the possibility fo=
+r the =
 
->> Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
->> =
+>> userspace to establish and properly terminate MPTCP connections but =
 
->> The MPTCP upstreaming community has been collaborating on an
->> upstreamable MPTCP implementation. David requested that we split this
->> work in to multiple, smaller patch sets to build up MPTCP
->> infrastructure. The scope of this first patch set is limited to
->> prerequisite TCP core changes so we can get focused feedback in these
->> areas.
->
-> Related to why I proposed on "Checklist before sending to netdev" ML, sho=
-uld =
+>> limited to one subflow while still being able to transfer data in both =
 
-> we already introduce here the fact that we are going to send 3 different =
+>> directions
+>> =C2=A0=C2=A0 - We decided to split everything in 3 parts to ease the rev=
+iews:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Part 1: Prerequisite TCP core cha=
+nges
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Part 2: MPTCP minimal set of feat=
+ures including selftests
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Part 3: a switch from MPTCPv0 (RF=
+C 6824) to MPTCPv1 (new RFC =
 
-> patch sets and why we cannot send all in one or less patches?
->
-> Something like:
->
->    - The protocol is what it is and having a minimal set of features alre=
-ady =
+>> 8684 going to obsolete the previous one in the coming days)
+>> =C2=A0=C2=A0 - The idea would be to apply everything in the same "merge =
+window".
+>>
+>> Feel free to improve this of course :)
+> =
 
-> signifies a lot of code.
->    - This minimal set of features includes: the possibility for the =
+> Thanks Matthieu, good suggestion. Am I correct in thinking the plan is =
 
-> userspace to establish and properly terminate MPTCP connections but limit=
-ed =
+> to have part 4 in this window as well, just in January sometime?
+> =
 
-> to one subflow while still being able to transfer data in both directions
->    - We decided to split everything in 3 parts to ease the reviews:
->        - Part 1: Prerequisite TCP core changes
->        - Part 2: MPTCP minimal set of features including selftests
->        - Part 3: a switch from MPTCPv0 (RFC 6824) to MPTCPv1 (new RFC 868=
-4 =
+> Updated draft:
+> =
 
-> going to obsolete the previous one in the coming days)
->    - The idea would be to apply everything in the same "merge window".
->
-> Feel free to improve this of course :)
+> ----
+> Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
+> =
 
-Thanks Matthieu, good suggestion. Am I correct in thinking the plan is to =
+> The MPTCP upstreaming community has been collaborating on an =
 
-have part 4 in this window as well, just in January sometime?
+> upstreamable MPTCP implementation that complies with RFC 8684. A minimal =
 
-Updated draft:
+> set of features to comply with the specification involves a sizeable set =
 
-----
-Subject: [PATCH net-next 0/0] Multipath TCP part 1: Prerequisites
+> of code changes, so David requested that we split this work in to =
 
-The MPTCP upstreaming community has been collaborating on an upstreamable =
+> multiple, smaller patch sets to build up MPTCP infrastructure.
+> =
 
-MPTCP implementation that complies with RFC 8684. A minimal set of =
+> The minimal MPTCP feature set we are proposing for the v5.6 timeframe is =
 
-features to comply with the specification involves a sizeable set of code =
+> split in to these parts for review:
+> =
 
-changes, so David requested that we split this work in to multiple, =
+> Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP =
 
-smaller patch sets to build up MPTCP infrastructure.
+> definitions, additional ULP and skb extension features, TCP option space =
 
-The minimal MPTCP feature set we are proposing for the v5.6 timeframe is =
+> checking, and a few exported symbols.
+> =
 
-split in to these parts for review:
+> Part 2: Single subflow implementation and self tests.
+> =
 
-Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP =
+> Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684, =
 
-definitions, additional ULP and skb extension features, TCP option space =
+> publication expected in the next few days).
+> =
 
-checking, and a few exported symbols.
+> Part 4: Multiple subflow support.
 
-Part 2: Single subflow implementation and self tests.
+I would not mention Part 4 for the moment. Maybe better to wait and see =
 
-Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684, =
+how the other patches will be welcomed, no?
 
-publication expected in the next few days).
+Cheers,
+Matt
+-- =
 
-Part 4: Multiple subflow support.
-
-<git tree references at github>
-
-Thank you for your review. You can find us at mptcp(a)lists.01.org and
-https://is.gd/mptcp_upstream
-
-
-
---
-Mat Martineau
-Intel
---===============3779618711909943175==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3555417110511853689==--
