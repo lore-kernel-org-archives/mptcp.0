@@ -1,55 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============4054596965604103913=="
+Content-Type: multipart/mixed; boundary="===============1145988923697726768=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] .topmsg mptcp: Associate MPTCP context with TCP socket
-Date: Thu, 12 Dec 2019 16:58:18 -0800
-Message-ID: <20191213005822.29791-3-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH] .topmsg: mptcp: Write MPTCP DSS headers to outgoing
+ data packets
+Date: Thu, 12 Dec 2019 16:58:19 -0800
+Message-ID: <20191213005822.29791-4-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191213005822.29791-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2915
+X-UID: 2916
 
---===============4054596965604103913==
+--===============1145988923697726768==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Clarify that the added bind and connect functions are related to the
-MPTCP subflow context code.
+Update information about DSS options appearing in segmented packets.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- .topmsg | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .topmsg | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/.topmsg b/.topmsg
-index 067bd9748a64..ac9e3fe89fef 100644
+index bb759658a0ec..424db4f06d5f 100644
 --- a/.topmsg
 +++ b/.topmsg
-@@ -1,8 +1,10 @@
- From: Peter Krystad <peter.krystad(a)linux.intel.com>
- Subject: [PATCH] mptcp: Associate MPTCP context with TCP socket
+@@ -3,11 +3,12 @@ Subject: [PATCH] mptcp: Write MPTCP DSS headers to outgoi=
+ng data packets
  =
 
--Use ULP to associate a subflow_context structure with each TCP
--subflow socket.
-+Use ULP to associate a subflow_context structure with each TCP subflow
-+socket. Creating these sockets requires new bind and connect functions
-+to make sure ULP is set up immediately when the subflow sockets are
-+created.
+ Per-packet metadata required to write the MPTCP DSS option is written to
+ the skb_ext area. One write to the socket may contain more than one
+-packet of data, in which case the DSS option in the first packet will
+-have a mapping covering all of the data in that write. Packets after the
+-first do not have a DSS option. This is complicated to handle under
+-memory pressure, since the first packet (with the DSS mapping) is pushed
+-to the TCP core before the remaining skbs are allocated.
++packet of data, which is copied to page fragments and mapped in to MPTCP
++DSS segments with size determined by the available page fragments and
++the maximum mapping length allowed by the MPTCP specification. If
++do_tcp_sendpages() splits a DSS segment in to multiple skbs, that's ok -
++the later skbs can either have duplicated DSS mapping information or
++none at all, and the receiver can handle that.
  =
 
- Co-developed-by: Florian Westphal <fw(a)strlen.de>
- Signed-off-by: Florian Westphal <fw(a)strlen.de>
-@@ -12,4 +14,5 @@ Co-developed-by: Davide Caratti <dcaratti(a)redhat.com>
- Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
- Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
- Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
- Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+ The current implementation uses the subflow frag cache and tcp
+ sendpages to avoid excessive code duplication. More work is required to
 -- =
 
 2.24.1
 
---===============4054596965604103913==--
+--===============1145988923697726768==--
