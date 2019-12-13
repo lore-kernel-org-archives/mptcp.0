@@ -1,76 +1,178 @@
-Content-Type: multipart/mixed; boundary="===============2786660431028809582=="
+Content-Type: multipart/mixed; boundary="===============0925246496668510486=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 03/11] tcp: Define IPPROTO_MPTCP
-Date: Fri, 13 Dec 2019 15:00:14 -0800
-Message-ID: <20191213230022.28144-4-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 07/11] tcp: Prevent coalesce/collapse when
+ skb has MPTCP extensions
+Date: Fri, 13 Dec 2019 15:00:18 -0800
+Message-ID: <20191213230022.28144-8-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191213230022.28144-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3036
+X-UID: 3037
 
---===============2786660431028809582==
+--===============0925246496668510486==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-To open a MPTCP socket with socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP),
-IPPROTO_MPTCP needs a value that differs from IPPROTO_TCP. The existing
-IPPROTO numbers mostly map directly to IANA-specified protocol numbers.
-MPTCP does not have a protocol number allocated because MPTCP packets
-use the TCP protocol number. Use private number not used OTA.
+The MPTCP extension data needs to be preserved as it passes through the
+TCP stack. Make sure that these skbs are not appended to others during
+coalesce or collapse, so the data remains associated with the payload of
+the given skb.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/trace/events/sock.h   | 3 ++-
- include/uapi/linux/in.h       | 2 ++
- tools/include/uapi/linux/in.h | 2 ++
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ include/net/mptcp.h   | 16 ++++++++++++++++
+ include/net/tcp.h     |  8 ++++++++
+ net/ipv4/tcp_input.c  | 10 ++++++++--
+ net/ipv4/tcp_output.c |  2 +-
+ 4 files changed, 33 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
-index 3ff12b90048d..a966d4b5ab37 100644
---- a/include/trace/events/sock.h
-+++ b/include/trace/events/sock.h
-@@ -19,7 +19,8 @@
- #define inet_protocol_names		\
- 		EM(IPPROTO_TCP)			\
- 		EM(IPPROTO_DCCP)		\
--		EMe(IPPROTO_SCTP)
-+		EM(IPPROTO_SCTP)		\
-+		EMe(IPPROTO_MPTCP)
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index f9f668ac4339..43ddfdf9e4a3 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -8,6 +8,7 @@
+ #ifndef __NET_MPTCP_H
+ #define __NET_MPTCP_H
  =
 
- #define tcp_state_names			\
- 		EM(TCP_ESTABLISHED)		\
-diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
-index e7ad9d350a28..1521073b6348 100644
---- a/include/uapi/linux/in.h
-+++ b/include/uapi/linux/in.h
-@@ -76,6 +76,8 @@ enum {
- #define IPPROTO_MPLS		IPPROTO_MPLS
-   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-+  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
-+#define IPPROTO_MPTCP		IPPROTO_MPTCP
-   IPPROTO_MAX
++#include <linux/skbuff.h>
+ #include <linux/types.h>
+ =
+
+ /* MPTCP sk_buff extension data */
+@@ -24,4 +25,19 @@ struct mptcp_ext {
+ 			__unused:2;
  };
- #endif
-diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
-index e7ad9d350a28..1521073b6348 100644
---- a/tools/include/uapi/linux/in.h
-+++ b/tools/include/uapi/linux/in.h
-@@ -76,6 +76,8 @@ enum {
- #define IPPROTO_MPLS		IPPROTO_MPLS
-   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-+  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
-+#define IPPROTO_MPTCP		IPPROTO_MPTCP
-   IPPROTO_MAX
- };
- #endif
+ =
+
++#ifdef CONFIG_MPTCP
++
++static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
++{
++	return skb_ext_exist(skb, SKB_EXT_MPTCP);
++}
++
++#else
++
++static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
++{
++	return false;
++}
++
++#endif /* CONFIG_MPTCP */
+ #endif /* __NET_MPTCP_H */
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index c82b2f75d024..c483c73b8d41 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -39,6 +39,7 @@
+ #include <net/tcp_states.h>
+ #include <net/inet_ecn.h>
+ #include <net/dst.h>
++#include <net/mptcp.h>
+ =
+
+ #include <linux/seq_file.h>
+ #include <linux/memcontrol.h>
+@@ -978,6 +979,13 @@ static inline bool tcp_skb_can_collapse_to(const struc=
+t sk_buff *skb)
+ 	return likely(!TCP_SKB_CB(skb)->eor);
+ }
+ =
+
++static inline bool tcp_skb_can_collapse(const struct sk_buff *to,
++					const struct sk_buff *from)
++{
++	return likely(tcp_skb_can_collapse_to(to) &&
++		      !mptcp_skb_ext_exist(from));
++}
++
+ /* Events passed to congestion control interface */
+ enum tcp_ca_event {
+ 	CA_EVENT_TX_START,	/* first transmit when no packets in flight */
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 88b987ca9ebb..55b460a2ece2 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -1422,7 +1422,7 @@ static struct sk_buff *tcp_shift_skb_data(struct sock=
+ *sk, struct sk_buff *skb,
+ 	if ((TCP_SKB_CB(prev)->sacked & TCPCB_TAGBITS) !=3D TCPCB_SACKED_ACKED)
+ 		goto fallback;
+ =
+
+-	if (!tcp_skb_can_collapse_to(prev))
++	if (!tcp_skb_can_collapse(prev, skb))
+ 		goto fallback;
+ =
+
+ 	in_sack =3D !after(start_seq, TCP_SKB_CB(skb)->seq) &&
+@@ -4420,6 +4420,9 @@ static bool tcp_try_coalesce(struct sock *sk,
+ 	if (TCP_SKB_CB(from)->seq !=3D TCP_SKB_CB(to)->end_seq)
+ 		return false;
+ =
+
++	if (mptcp_skb_ext_exist(from))
++		return false;
++
+ #ifdef CONFIG_TLS_DEVICE
+ 	if (from->decrypted !=3D to->decrypted)
+ 		return false;
+@@ -4928,10 +4931,12 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *=
+list, struct rb_root *root,
+ =
+
+ 		/* The first skb to collapse is:
+ 		 * - not SYN/FIN and
++		 * - does not include a MPTCP skb extension
+ 		 * - bloated or contains data before "start" or
+ 		 *   overlaps to the next one.
+ 		 */
+ 		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
++		    !mptcp_skb_ext_exist(skb) &&
+ 		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
+ 		     before(TCP_SKB_CB(skb)->seq, start))) {
+ 			end_of_skbs =3D false;
+@@ -4947,7 +4952,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
+st, struct rb_root *root,
+ 		/* Decided to skip this, advance start seq. */
+ 		start =3D TCP_SKB_CB(skb)->end_seq;
+ 	}
+-	if (end_of_skbs ||
++	if (end_of_skbs || mptcp_skb_ext_exist(skb) ||
+ 	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
+ 		return;
+ =
+
+@@ -4990,6 +4995,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
+st, struct rb_root *root,
+ 				skb =3D tcp_collapse_one(sk, skb, list, root);
+ 				if (!skb ||
+ 				    skb =3D=3D tail ||
++				    mptcp_skb_ext_exist(skb) ||
+ 				    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
+ 					goto end;
+ #ifdef CONFIG_TLS_DEVICE
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index b184f03d7437..9e04d45bc0e4 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2854,7 +2854,7 @@ static void tcp_retrans_try_collapse(struct sock *sk,=
+ struct sk_buff *to,
+ 		if (!tcp_can_collapse(sk, skb))
+ 			break;
+ =
+
+-		if (!tcp_skb_can_collapse_to(to))
++		if (!tcp_skb_can_collapse(to, skb))
+ 			break;
+ =
+
+ 		space -=3D skb->len;
 -- =
 
 2.24.1
 
---===============2786660431028809582==--
+--===============0925246496668510486==--
