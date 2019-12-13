@@ -1,548 +1,336 @@
-Content-Type: multipart/mixed; boundary="===============6097523253621236396=="
+Content-Type: multipart/mixed; boundary="===============4371055450691276509=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [multipathtcp] MPTCP implementation feedback for
- RFC6824bis
-Date: Fri, 13 Dec 2019 08:29:25 -0800
-Message-ID: <42684CE4-7B3E-4899-9706-7E3AAB39A9F7@apple.com>
-In-Reply-To: f97420243acd.5df3748a@nic.in
+Subject: [MPTCP] [PATCH] mptcp: cope with later TCP fallback.
+Date: Fri, 13 Dec 2019 17:31:57 +0100
+Message-ID: <e3ecdf5f274343f2d0501a327b9ae4dc8d48a9e7.1576254709.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 2960
+X-UID: 2961
 
---===============6097523253621236396==
+--===============4371055450691276509==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-> On Dec 12, 2019, at 9:53 PM, V Anil Kumar <anil(a)csir4pi.in> wrote:
-> =
-
-> =EF=BB=BFHi Christoph,
-> =
-
-> Thanks for your reply. Please see inline.
-> =
-
->> On 12/12/19 12:52 AM, Christoph Paasch <cpaasch(a)apple.com> wrote:
->> =
-
->> Hello,
->> =
-
->> =
-
->>> On Dec 10, 2019, at 12:04 PM, V Anil Kumar <anil(a)csir4pi.in> wrote:
->>> =
-
->>> Hi Alan,
->>> =
-
->>> Please see inline.
->>> =
-
->>>> On 12/06/19 09:28 PM,Alan Ford<alan.ford(a)gmail.com> wrote:
->>>> =
-
->>>> Hi all,
->>>> =
-
->>>> =
-
->>>> Following on from the discussion of implementation feedback with Chris=
-toph, I propose the following edits to RFC6824bis - which is currently in A=
-UTH48 - as clarifications.
->>>> =
-
->>>> ADs, please can you confirm you consider these edits sufficiently edit=
-orial to fit into AUTH48.
->>>> =
-
->>>> WG participants, please speak up if you have any concerns.
->>>> =
-
->>>> =
-
->>>> Edit 1, clarifying reliability of MP_CAPABLE
->>>> =
-
->>>> Change the sentence reading:
->>>> =
-
->>>>    The SYN with MP_CAPABLE occupies the first octet of data sequence s=
-pace, although this does not need to be acknowledged at the connection leve=
-l until the first data is sent (see Section 3.3).
->>>> =
-
->>>> To:
->>>> =
-
->>>>    The SYN with MP_CAPABLE occupies the first octet of data sequence s=
-pace, and this MUST be acknowledged at the connection level at or before th=
-e time the first data is sent or received (see Section 3.3).
->>>> =
-
->>>> =
-
->>>> Change the sentence reading:
->>>> =
-
->>>>    If B has data to send first, then the reliable delivery of the ACK =
-+ MP_CAPABLE can be inferred by the receipt of this data with an MPTCP Data=
- Sequence Signal (DSS) option (Section 3.3). =
-
->>>> =
-
->>>> To:
->>>> =
-
->>>>    If B has data to send first, then the reliable delivery of the ACK =
-+ MP_CAPABLE is ensured by the receipt of this data with an MPTCP Data Sequ=
-ence Signal (DSS) option (Section 3.3) containing a DATA_ACK for the MP_CAP=
-ABLE (which is the first octet of the data sequence space).
->>>> =
-
->>>> =
-
->>>> In my personal opinion either one of these edits would be sufficient f=
-or making the point, however clearly this has caused some confusion amongst=
- the implementor community so making both these changes should make it abso=
-lutely clear as to the expected behaviour here.
->>>> =
-
->>>> =
-
->>>> Edit 2, mapping constraint
->>>> =
-
->>>> Change the sentence reading:
->>>> =
-
->>>>    A Data Sequence Mapping does not need to be included in every MPTCP=
- packet, as long as the subflow sequence space in that packet is covered by=
- a mapping known at the receiver.
->>>> =
-
->>>> To:
->>>> =
-
->>>>    A Data Sequence Mapping MUST appear on a TCP segment which is cover=
-ed by the mapping. It does not need to be included in every MPTCP packet, a=
-s long as the subflow sequence space in that packet is covered by a mapping=
- known at the receiver.
->>>> =
-
->>> As far as I understand, the proposed change introduces a =E2=80=9CMUST=
-=E2=80=9D to insist that the map in a segment must cover at least some data=
- in the segment. But the document does not talk anything about the rational=
- behind it. I guess it is purely an =
-
->>> ease of implementation?
->> =
-
->> For two reasons:
->> =
-
->> 1. Ease of implementation
->> 2. If an implementation tries to "remember" early mappings, it is not cl=
-ear how many of these an implementation can hold. Thus, the sender does not=
- know how many early mappings he can send. So, it is hard for a sender to d=
-o the right thing.
->> =
-
->>> I think the design/format of the Data Sequence Mapping permits the map =
-to stand independent of the data being carried in a segment. So, as long as=
- an implementation is willing to deal with the complexity of storing and pr=
-ocessing late and early mappings (with respect to the data arrival), it cou=
-ld be permitted provided that the received map is for an in-window data.
->> =
-
->> What is the concrete use-case for such early mappings? What are the bene=
-fits of it? I think that if we want to enable such implementation-complexit=
-y, we need a compelling use-case with a big benefit.
->> =
-
-> Consider a case where a MPTCP connection consists of two subflows, and th=
-e data segments are scheduled for transmission in the order shown below bel=
-ow. =
-
-> =
-
-> Subflow-1:      segment-1                   segment-3                    =
-segment-5                       segment-6
->                            bytes:1-100                bytes:201-300      =
-      bytes:401-500                bytes:501-600
->                            no map                         map for 1-100  =
-          map for 401-600            no map
-> =
-
-> =
-
-> Subflow-2:       segment-2                  segment-4                    =
-   segment-7                     segment-8
->                            bytes: 101-200         bytes:301-400          =
-     bytes: 601-700             bytes:701-800   =
-
->                            map for 101-200     map for 301-400           =
-map for 601-800         no map
->                  =
-
-> In the above case, the map for data in segment-1 is included in segment-3.
-
-The question here is why would the stack not put the mapping for segment 1 =
-on segment 1 itself. And what is the benefit of doing so?
-
-
-Christoph
-
-> Further, segment-3 cannot combine/cover the data in segment-1 and segment=
--3 in a "single map", as the data sequence space is not continuous, i.e., s=
-ome in between data (segment-2) is mapped and transmitted through subflow-2=
-. Here,  the map in segment-3 does not even partially cover the data it car=
-ries.
-> =
-
-> Both RFC 6824 and the 6824-bis do not restrict the above scenario, and I =
-guess the change proposed now does not permit this to happen.
-> =
-
-> Best regards,
-> =
-
-> Anil
-> =
-
->> =
-
->> =
-
->> =
-
->> That's the reason why we (the MPTCP-upstreaming community) vouch to have=
- this case restricted.
->> =
-
->> =
-
->> Cheers,
->> Christoph
->> =
-
->> =
-
->> =
-
->> =
-
->>> =
-
->>> Anil =
-
->>>> =
-
->>>> =
-
->>>> =
-
->>>> Best regards,
->>>> Alan
->>>> =
-
->>=20
-
---===============6097523253621236396==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250ZW50PSJ0ZXh0
-L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPjwvaGVhZD48Ym9keSBkaXI9ImF1dG8iPjxkaXYgZGlyPSJs
-dHIiPkhlbGxvLDwvZGl2PjxkaXYgZGlyPSJsdHIiPjxicj48YmxvY2txdW90ZSB0eXBlPSJjaXRl
-Ij5PbiBEZWMgMTIsIDIwMTksIGF0IDk6NTMgUE0sIFYgQW5pbCBLdW1hciAmbHQ7YW5pbEBjc2ly
-NHBpLmluJmd0OyB3cm90ZTo8YnI+PGJyPjwvYmxvY2txdW90ZT48L2Rpdj48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj48ZGl2IGRpcj0ibHRyIj7vu79IaSBDaHJpc3RvcGgsPGRpdj48YnI+PC9kaXY+
-PGRpdj5UaGFua3MgZm9yIHlvdXIgcmVwbHkuIFBsZWFzZSBzZWUgaW5saW5lLjxicj48YnI+PHNw
-YW4+T24gMTIvMTIvMTkgMTI6NTIgQU0sIDxiIGNsYXNzPSJuYW1lIj5DaHJpc3RvcGggUGFhc2No
-IDwvYj4gJmx0O2NwYWFzY2hAYXBwbGUuY29tJmd0OyB3cm90ZTo8L3NwYW4+PGJsb2NrcXVvdGUg
-Y2l0ZT0ibWlkOjQ5RUQyMjJCLTlFNzEtNEE4Ri1BMjgwLTI1MjFFRDY1MDQ1NEBhcHBsZS5jb20i
-IGNsYXNzPSJpd2NRdW90ZSIgc3R5bGU9ImJvcmRlci1sZWZ0OiAxcHggc29saWQgIzAwRjsgcGFk
-ZGluZy1sZWZ0OiAxM3B4OyBtYXJnaW4tbGVmdDogMDsiIHR5cGU9ImNpdGUiPjxkaXYgY2xhc3M9
-Im1pbWV0eXBlLXRleHQtaHRtbCI+PHNwYW4+PHA+PG1ldGEgY29udGVudD0idGV4dC9odG1sOyBj
-aGFyc2V0PXV0Zi04IiBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiPjx0YWJsZT48dGJvZHk+PHRy
-Pjx0ZCBjbGFzcz0iIiBzdHlsZT0id29yZC13cmFwOiBicmVhay13b3JkOyAtd2Via2l0LW5ic3At
-bW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdoaXRlLXNwYWNlOyI+PHA+SGVsbG8sPGJy
-IGNsYXNzPSIiPjwvcD48ZGl2PjxiciBjbGFzcz0iIj48YmxvY2txdW90ZSBjbGFzcz0iIiB0eXBl
-PSJjaXRlIj48ZGl2IGNsYXNzPSIiPk9uIERlYyAxMCwgMjAxOSwgYXQgMTI6MDQgUE0sIFYgQW5p
-bCBLdW1hciAmbHQ7PGEgY2xhc3M9IiIgaHJlZj0ibWFpbHRvOmFuaWxAY3NpcjRwaS5pbiI+YW5p
-bEBjc2lyNHBpLmluPC9hPiZndDsgd3JvdGU6PC9kaXY+PGJyIGNsYXNzPSJBcHBsZS1pbnRlcmNo
-YW5nZS1uZXdsaW5lIj48ZGl2IGNsYXNzPSIiPjxzcGFuIGNsYXNzPSIiIHN0eWxlPSJjYXJldC1j
-b2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEz
-cHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13
-ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7
-IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9y
-bWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0
-ZXh0LWRlY29yYXRpb246IG5vbmU7IGZsb2F0OiBub25lOyBkaXNwbGF5OiBpbmxpbmUgIWltcG9y
-dGFudDsiPkhpIEFsYW4sPC9zcGFuPjxkaXYgY2xhc3M9IiIgc3R5bGU9ImNhcmV0LWNvbG9yOiBy
-Z2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsgZm9u
-dC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDog
-bm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1p
-bmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdv
-cmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVj
-b3JhdGlvbjogbm9uZTsiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIiIHN0eWxlPSJj
-YXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNp
-emU6IDEzcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsg
-Zm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjog
-c3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFj
-ZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDog
-MHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7Ij5QbGVhc2Ugc2VlIGlubGluZS48YnIgY2xhc3M9
-IiI+PGJyIGNsYXNzPSIiPjxzcGFuIGNsYXNzPSIiPk9uIDEyLzA2LzE5IDA5OjI4IFBNLDxiIGNs
-YXNzPSJuYW1lIj5BbGFuIEZvcmQ8L2I+Jmx0OzxhIGNsYXNzPSIiIGhyZWY9Im1haWx0bzphbGFu
-LmZvcmRAZ21haWwuY29tIj5hbGFuLmZvcmRAZ21haWwuY29tPC9hPiZndDsgd3JvdGU6PC9zcGFu
-PjxibG9ja3F1b3RlIGNpdGU9Im1pZDo2OTc4Qzk3Ri0yNEQ1LTRDRjAtOENFQi0yRjU4QkUyNkQx
-NzRAZ21haWwuY29tIiBjbGFzcz0iaXdjUXVvdGUiIHN0eWxlPSJib3JkZXItbGVmdC13aWR0aDog
-MXB4OyBib3JkZXItbGVmdC1zdHlsZTogc29saWQ7IGJvcmRlci1sZWZ0LWNvbG9yOiByZ2IoMCwg
-MCwgMjU1KTsgcGFkZGluZy1sZWZ0OiAxM3B4OyBtYXJnaW4tbGVmdDogMHB4OyIgdHlwZT0iY2l0
-ZSI+PGRpdiBjbGFzcz0ibWltZXR5cGUtdGV4dC1odG1sIj48c3BhbiBjbGFzcz0iIj48cCBjbGFz
-cz0iIj48dGFibGUgY2xhc3M9IiI+PHRib2R5IGNsYXNzPSIiPjx0ciBjbGFzcz0iIj48dGQgY2xh
-c3M9IiIgc3R5bGU9IndvcmQtd3JhcDogYnJlYWstd29yZDsgLXdlYmtpdC1uYnNwLW1vZGU6IHNw
-YWNlOyBsaW5lLWJyZWFrOiBhZnRlci13aGl0ZS1zcGFjZTsiPjxwIGNsYXNzPSIiPkhpIGFsbCw8
-L3A+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj5Gb2xsb3dp
-bmcgb24gZnJvbSB0aGUgZGlzY3Vzc2lvbiBvZiBpbXBsZW1lbnRhdGlvbiBmZWVkYmFjayB3aXRo
-IENocmlzdG9waCwgSSBwcm9wb3NlIHRoZSBmb2xsb3dpbmcgZWRpdHMgdG8gUkZDNjgyNGJpcyAt
-IHdoaWNoIGlzIGN1cnJlbnRseSBpbiBBVVRINDggLSBhcyBjbGFyaWZpY2F0aW9ucy48L2Rpdj48
-ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIiPkFEcywgcGxlYXNl
-IGNhbiB5b3UgY29uZmlybSB5b3UgY29uc2lkZXIgdGhlc2UgZWRpdHMgc3VmZmljaWVudGx5IGVk
-aXRvcmlhbCB0byBmaXQgaW50byBBVVRINDguPC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9
-IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj5XRyBwYXJ0aWNpcGFudHMsIHBsZWFzZSBzcGVhayB1cCBp
-ZiB5b3UgaGF2ZSBhbnkgY29uY2VybnMuPC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+
-PC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj48YiBj
-bGFzcz0iIj5FZGl0IDEsIGNsYXJpZnlpbmcgcmVsaWFiaWxpdHkgb2YgTVBfQ0FQQUJMRTwvYj48
-L2Rpdj48ZGl2IGNsYXNzPSIiPjxiIGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2I+PC9kaXY+PGRp
-diBjbGFzcz0iIj5DaGFuZ2UgdGhlIHNlbnRlbmNlIHJlYWRpbmc6PC9kaXY+PGRpdiBjbGFzcz0i
-Ij48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj4mbmJzcDsgJm5ic3A7VGhlIFNZTiB3
-aXRoIE1QX0NBUEFCTEUgb2NjdXBpZXMgdGhlIGZpcnN0IG9jdGV0IG9mIGRhdGEgc2VxdWVuY2Ug
-c3BhY2UsIGFsdGhvdWdoIHRoaXMgZG9lcyBub3QgbmVlZCB0byBiZSBhY2tub3dsZWRnZWQgYXQg
-dGhlIGNvbm5lY3Rpb24gbGV2ZWwgdW50aWwgdGhlIGZpcnN0IGRhdGEgaXMgc2VudCAoc2VlIFNl
-Y3Rpb24gMy4zKS48L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNs
-YXNzPSIiPlRvOjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xh
-c3M9IiI+Jm5ic3A7ICZuYnNwO1RoZSBTWU4gd2l0aCBNUF9DQVBBQkxFIG9jY3VwaWVzIHRoZSBm
-aXJzdCBvY3RldCBvZiBkYXRhIHNlcXVlbmNlIHNwYWNlLCBhbmQgdGhpcyBNVVNUIGJlIGFja25v
-d2xlZGdlZCBhdCB0aGUgY29ubmVjdGlvbiBsZXZlbCBhdCBvciBiZWZvcmUgdGhlIHRpbWUgdGhl
-IGZpcnN0IGRhdGEgaXMgc2VudCBvciByZWNlaXZlZCAoc2VlIFNlY3Rpb24gMy4zKS48L2Rpdj48
-ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIiPjxiIGNsYXNzPSIi
-PjxiciBjbGFzcz0iIj48L2I+PC9kaXY+PGRpdiBjbGFzcz0iIj5DaGFuZ2UgdGhlIHNlbnRlbmNl
-IHJlYWRpbmc6PC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFz
-cz0iIj4mbmJzcDsgJm5ic3A7SWYgQiBoYXMgZGF0YSB0byBzZW5kIGZpcnN0LCB0aGVuIHRoZSBy
-ZWxpYWJsZSBkZWxpdmVyeSBvZiB0aGUgQUNLICsgTVBfQ0FQQUJMRSBjYW4gYmUgaW5mZXJyZWQg
-YnkgdGhlIHJlY2VpcHQgb2YgdGhpcyBkYXRhIHdpdGggYW4gTVBUQ1AgRGF0YSBTZXF1ZW5jZSBT
-aWduYWwgKERTUykgb3B0aW9uIChTZWN0aW9uIDMuMykuJm5ic3A7PC9kaXY+PGRpdiBjbGFzcz0i
-Ij48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj5Ubzo8L2Rpdj48ZGl2IGNsYXNzPSIi
-PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIiPiZuYnNwOyAmbmJzcDtJZiBCIGhhcyBk
-YXRhIHRvIHNlbmQgZmlyc3QsIHRoZW4gdGhlIHJlbGlhYmxlIGRlbGl2ZXJ5IG9mIHRoZSBBQ0sg
-KyBNUF9DQVBBQkxFIGlzIGVuc3VyZWQgYnkgdGhlIHJlY2VpcHQgb2YgdGhpcyBkYXRhIHdpdGgg
-YW4gTVBUQ1AgRGF0YSBTZXF1ZW5jZSBTaWduYWwgKERTUykgb3B0aW9uIChTZWN0aW9uIDMuMykg
-Y29udGFpbmluZyBhIERBVEFfQUNLIGZvciB0aGUgTVBfQ0FQQUJMRSZuYnNwOyh3aGljaCBpcyB0
-aGUgZmlyc3Qgb2N0ZXQgb2YgdGhlIGRhdGEgc2VxdWVuY2Ugc3BhY2UpLjwvZGl2PjxkaXYgY2xh
-c3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2
-PjxkaXYgY2xhc3M9IiI+SW4gbXkgcGVyc29uYWwgb3BpbmlvbiBlaXRoZXIgb25lIG9mIHRoZXNl
-IGVkaXRzIHdvdWxkIGJlIHN1ZmZpY2llbnQgZm9yIG1ha2luZyB0aGUgcG9pbnQsIGhvd2V2ZXIg
-Y2xlYXJseSB0aGlzIGhhcyBjYXVzZWQgc29tZSBjb25mdXNpb24gYW1vbmdzdCB0aGUgaW1wbGVt
-ZW50b3IgY29tbXVuaXR5IHNvIG1ha2luZyBib3RoIHRoZXNlIGNoYW5nZXMgc2hvdWxkIG1ha2Ug
-aXQgYWJzb2x1dGVseSBjbGVhciBhcyB0byB0aGUgZXhwZWN0ZWQgYmVoYXZpb3VyIGhlcmUuPC9k
-aXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xh
-c3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj48YiBjbGFzcz0iIj5FZGl0IDIsIG1hcHBpbmcgY29u
-c3RyYWludDwvYj48L2Rpdj48ZGl2IGNsYXNzPSIiPjxiIGNsYXNzPSIiPjxiciBjbGFzcz0iIj48
-L2I+PC9kaXY+PGRpdiBjbGFzcz0iIj5DaGFuZ2UgdGhlIHNlbnRlbmNlIHJlYWRpbmc6PC9kaXY+
-PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj4mbmJzcDsgJm5i
-c3A7QSBEYXRhIFNlcXVlbmNlIE1hcHBpbmcgZG9lcyBub3QgbmVlZCB0byBiZSBpbmNsdWRlZCBp
-biBldmVyeSBNUFRDUCZuYnNwO3BhY2tldCwgYXMgbG9uZyBhcyB0aGUgc3ViZmxvdyBzZXF1ZW5j
-ZSBzcGFjZSBpbiB0aGF0IHBhY2tldCBpcyZuYnNwO2NvdmVyZWQgYnkgYSBtYXBwaW5nIGtub3du
-IGF0IHRoZSByZWNlaXZlci48L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48
-ZGl2IGNsYXNzPSIiPlRvOjwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2Pjxk
-aXYgY2xhc3M9IiI+Jm5ic3A7ICZuYnNwO0EgRGF0YSBTZXF1ZW5jZSBNYXBwaW5nIE1VU1QgYXBw
-ZWFyIG9uIGEgVENQIHNlZ21lbnQgd2hpY2ggaXMgY292ZXJlZCBieSB0aGUgbWFwcGluZy4gSXQg
-ZG9lcyBub3QgbmVlZCB0byBiZSBpbmNsdWRlZCBpbiBldmVyeSBNUFRDUCZuYnNwO3BhY2tldCwg
-YXMgbG9uZyBhcyB0aGUgc3ViZmxvdyBzZXF1ZW5jZSBzcGFjZSBpbiB0aGF0IHBhY2tldCBpcyZu
-YnNwO2NvdmVyZWQgYnkgYSBtYXBwaW5nIGtub3duIGF0IHRoZSByZWNlaXZlci48L2Rpdj48ZGl2
-IGNsYXNzPSIiPjxiIGNsYXNzPSIiPjwvYj48L2Rpdj48L3RkPjwvdHI+PC90Ym9keT48L3RhYmxl
-PjwvcD48L3NwYW4+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXYgY2xhc3M9IiI+QXMgZmFyIGFzIEkg
-dW5kZXJzdGFuZCwgdGhlIHByb3Bvc2VkIGNoYW5nZSBpbnRyb2R1Y2VzIGEg4oCcTVVTVOKAnSB0
-byBpbnNpc3QgdGhhdCB0aGUgbWFwIGluIGEgc2VnbWVudCBtdXN0IGNvdmVyIGF0IGxlYXN0IHNv
-bWUgZGF0YSBpbiB0aGUgc2VnbWVudC4gQnV0IHRoZSBkb2N1bWVudCBkb2VzIG5vdCB0YWxrIGFu
-eXRoaW5nIGFib3V0IHRoZSByYXRpb25hbCBiZWhpbmQgaXQuIEkgZ3Vlc3MgaXQgaXMgcHVyZWx5
-IGFuJm5ic3A7PC9kaXY+PGRpdiBjbGFzcz0iIj5lYXNlIG9mIGltcGxlbWVudGF0aW9uPzwvZGl2
-PjwvZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2PkZv
-ciB0d28gcmVhc29uczo8L2Rpdj48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2PjEuIEVhc2Ug
-b2YgaW1wbGVtZW50YXRpb248L2Rpdj48ZGl2PjIuIElmIGFuIGltcGxlbWVudGF0aW9uIHRyaWVz
-IHRvICJyZW1lbWJlciIgZWFybHkgbWFwcGluZ3MsIGl0IGlzIG5vdCBjbGVhciBob3cgbWFueSBv
-ZiB0aGVzZSBhbiBpbXBsZW1lbnRhdGlvbiBjYW4gaG9sZC4gVGh1cywgdGhlIHNlbmRlciBkb2Vz
-IG5vdCBrbm93IGhvdyBtYW55IGVhcmx5IG1hcHBpbmdzIGhlIGNhbiBzZW5kLiBTbywgaXQgaXMg
-aGFyZCBmb3IgYSBzZW5kZXIgdG8gZG8gdGhlIHJpZ2h0IHRoaW5nLjwvZGl2PjxiciBjbGFzcz0i
-Ij48YmxvY2txdW90ZSBjbGFzcz0iIiB0eXBlPSJjaXRlIj48ZGl2IGNsYXNzPSIiPjxkaXYgY2xh
-c3M9IiIgc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2
-ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQt
-Y2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFs
-OyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5v
-bmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQt
-c3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiPjxkaXYgY2xhc3M9IiI+
-SSB0aGluayB0aGUgZGVzaWduL2Zvcm1hdCBvZiB0aGUgRGF0YSBTZXF1ZW5jZSBNYXBwaW5nIHBl
-cm1pdHMgdGhlIG1hcCB0byBzdGFuZCBpbmRlcGVuZGVudCBvZiB0aGUgZGF0YSBiZWluZyBjYXJy
-aWVkIGluIGEgc2VnbWVudC4gU28sIGFzIGxvbmcgYXMgYW4gaW1wbGVtZW50YXRpb24gaXMgd2ls
-bGluZyB0byBkZWFsIHdpdGggdGhlIGNvbXBsZXhpdHkgb2Ygc3RvcmluZyBhbmQgcHJvY2Vzc2lu
-ZyBsYXRlIGFuZCBlYXJseSBtYXBwaW5ncyAod2l0aCByZXNwZWN0IHRvIHRoZSBkYXRhIGFycml2
-YWwpLCBpdCBjb3VsZCBiZSBwZXJtaXR0ZWQgcHJvdmlkZWQgdGhhdCB0aGUgcmVjZWl2ZWQgbWFw
-IGlzIGZvciBhbiBpbi13aW5kb3cgZGF0YS48L2Rpdj48L2Rpdj48L2Rpdj48L2Jsb2NrcXVvdGU+
-PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdj5XaGF0IGlzIHRoZSBjb25jcmV0ZSB1c2UtY2Fz
-ZSBmb3Igc3VjaCBlYXJseSBtYXBwaW5ncz8gV2hhdCBhcmUgdGhlIGJlbmVmaXRzIG9mIGl0PyBJ
-IHRoaW5rIHRoYXQgaWYgd2Ugd2FudCB0byBlbmFibGUgc3VjaCBpbXBsZW1lbnRhdGlvbi1jb21w
-bGV4aXR5LCB3ZSBuZWVkIGEgY29tcGVsbGluZyB1c2UtY2FzZSB3aXRoIGEgYmlnIGJlbmVmaXQu
-PC9kaXY+PC9kaXY+PC90ZD48L3RyPjwvdGJvZHk+PC90YWJsZT48L3A+PC9zcGFuPjwvZGl2Pjwv
-YmxvY2txdW90ZT48ZGl2PjxzcGFuIHN0eWxlPSJmb250LXNpemU6IDEwcHQ7IGZvbnQtZmFtaWx5
-OiBDYW1icmlhOyI+Q29uc2lkZXIgYSBjYXNlIHdoZXJlIGEgTVBUQ1AgY29ubmVjdGlvbiBjb25z
-aXN0cyBvZiB0d28gc3ViZmxvd3MsIGFuZCB0aGUgZGF0YSBzZWdtZW50cyBhcmUgc2NoZWR1bGVk
-IGZvciB0cmFuc21pc3Npb24gaW4gdGhlIG9yZGVyIHNob3duIGJlbG93IGJlbG93LiZuYnNwOzwv
-c3Bhbj48L2Rpdj48ZGl2PjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46IDBjbSAw
-Y20gMC4wMDAxcHQ7IGZvbnQtc2l6ZTogMTJwdDsgZm9udC1mYW1pbHk6IENhbWJyaWE7Ij48c3Bh
-biBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTogMTBwdDsiPjxicj48L3NwYW4+PC9wPjxw
-IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46IDBjbSAwY20gMC4wMDAxcHQ7IGZvbnQt
-c2l6ZTogMTJwdDsgZm9udC1mYW1pbHk6IENhbWJyaWE7Ij48L3A+PHAgY2xhc3M9Ik1zb05vcm1h
-bCIgc3R5bGU9Im1hcmdpbjogMGNtIDBjbSAwLjAwMDFwdDsgZm9udC1zaXplOiAxMnB0OyBmb250
-LWZhbWlseTogQ2FtYnJpYTsiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOiAx
-MHB0OyI+U3ViZmxvdy0xOiZuYnNwOyAmbmJzcDsgJm5ic3A7IHNlZ21lbnQtMSZuYnNwOyZuYnNw
-OyZuYnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgc2VnbWVudC0zJm5ic3A7ICZuYnNw
-OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-IHNlZ21lbnQtNSZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
-OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7c2VnbWVudC02PG86cD48L286cD48
-L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46IDBjbSAwY20gMC4w
-MDAxcHQ7IGZvbnQtc2l6ZTogMTJwdDsgZm9udC1mYW1pbHk6IENhbWJyaWE7Ij48c3BhbiBsYW5n
-PSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTogMTBwdDsiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsgYnl0ZXM6MS0xMDAgJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGJ5
-dGVzOjIwMS0zMDAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBieXRl
-czo0MDEtNTAwJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGJ5dGVzOjUwMS02MDA8
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjog
-MGNtIDBjbSAwLjAwMDFwdDsgZm9udC1zaXplOiAxMnB0OyBmb250LWZhbWlseTogQ2FtYnJpYTsi
-PjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOiAxMHB0OyI+Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBubyBtYXAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
-cDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
-OyAmbmJzcDttYXAgZm9yIDEtMTAwJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
-bmJzcDsgbWFwIGZvciA0MDEtNjAwJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
-bmJzcDsgbm8gbWFwPG86cD48L286cD48L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
-eWxlPSJtYXJnaW46IDBjbSAwY20gMC4wMDAxcHQ7IGZvbnQtc2l6ZTogMTJwdDsgZm9udC1mYW1p
-bHk6IENhbWJyaWE7Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTogMTBwdDsi
-Pjxicj48L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46IDBjbSAw
-Y20gMC4wMDAxcHQ7IGZvbnQtc2l6ZTogMTJwdDsgZm9udC1mYW1pbHk6IENhbWJyaWE7Ij48c3Bh
-biBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTogMTBwdDsiPjxicj48L3NwYW4+PC9wPjxw
-IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46IDBjbSAwY20gMC4wMDAxcHQ7IGZvbnQt
-c2l6ZTogMTJwdDsgZm9udC1mYW1pbHk6IENhbWJyaWE7Ij48L3A+PHAgY2xhc3M9Ik1zb05vcm1h
-bCIgc3R5bGU9Im1hcmdpbjogMGNtIDBjbSAwLjAwMDFwdDsgZm9udC1zaXplOiAxMnB0OyBmb250
-LWZhbWlseTogQ2FtYnJpYTsiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOiAx
-MHB0OyI+U3ViZmxvdy0yOiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO3NlZ21lbnQtMiZuYnNw
-OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-IHNlZ21lbnQtNCZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
-OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7c2VnbWVudC03Jm5ic3A7ICZuYnNw
-OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICZuYnNwO3NlZ21lbnQtODxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9ybWFs
-IiBzdHlsZT0ibWFyZ2luOiAwY20gMGNtIDAuMDAwMXB0OyBmb250LXNpemU6IDEycHQ7IGZvbnQt
-ZmFtaWx5OiBDYW1icmlhOyI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6IDEw
-cHQ7Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGJ5dGVzOiAxMDEtMjAw
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGJ5dGVzOjMw
-MS00MDAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGJ5dGVzOiA2MDEtNzAwJm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-IGJ5dGVzOjcwMS04MDAmbmJzcDsmbmJzcDsmbmJzcDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+PHAg
-Y2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjogMGNtIDBjbSAwLjAwMDFwdDsgZm9udC1z
-aXplOiAxMnB0OyBmb250LWZhbWlseTogQ2FtYnJpYTsiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHls
-ZT0iZm9udC1zaXplOiAxMHB0OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyBtYXAgZm9yIDEwMS0yMDAmbmJzcDsgJm5ic3A7ICZuYnNwO21hcCBmb3IgMzAxLTQwMCZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDtt
-YXAgZm9yIDYwMS04MDAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7bm8gbWFwPG86
-cD48L286cD48L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46IDBj
-bSAwY20gMC4wMDAxcHQ7IGZvbnQtc2l6ZTogMTJwdDsgZm9udC1mYW1pbHk6IENhbWJyaWE7Ij48
-c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTogMTBwdDsiPiZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBj
-bGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOiAwY20gMGNtIDAuMDAwMXB0OyBmb250LXNp
-emU6IDEycHQ7IGZvbnQtZmFtaWx5OiBDYW1icmlhOyI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxl
-PSJmb250LXNpemU6IDEwcHQ7Ij5JbiB0aGUgYWJvdmUgY2FzZSwgdGhlIG1hcCBmb3IgZGF0YSBp
-biBzZWdtZW50LTEgaXMgaW5jbHVkZWQgaW4gc2VnbWVudC0zLjwvc3Bhbj48L3A+PC9kaXY+PC9k
-aXY+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhlIHF1ZXN0aW9uIGhl
-cmUgaXMgd2h5IHdvdWxkIHRoZSBzdGFjayBub3QgcHV0IHRoZSBtYXBwaW5nIGZvciBzZWdtZW50
-IDEgb24gc2VnbWVudCAxIGl0c2VsZi4gQW5kIHdoYXQgaXMgdGhlIGJlbmVmaXQgb2YgZG9pbmcg
-c28/PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5DaHJpc3RvcGg8L2Rp
-dj48YnI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2Pjxw
-IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46IDBjbSAwY20gMC4wMDAxcHQ7IGZvbnQt
-c2l6ZTogMTJwdDsgZm9udC1mYW1pbHk6IENhbWJyaWE7Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5
-bGU9ImZvbnQtc2l6ZTogMTBwdDsiPkZ1cnRoZXIsIHNlZ21lbnQtMyBjYW5ub3QgY29tYmluZS9j
-b3ZlciB0aGUgZGF0YSBpbiBzZWdtZW50LTEgYW5kIHNlZ21lbnQtMyBpbiBhICJzaW5nbGUgbWFw
-IiwgYXMgdGhlIGRhdGEgc2VxdWVuY2Ugc3BhY2UgaXMgbm90IGNvbnRpbnVvdXMsIGkuZS4sIHNv
-bWUgaW4gYmV0d2VlbiBkYXRhIChzZWdtZW50LTIpIGlzIG1hcHBlZCBhbmQgdHJhbnNtaXR0ZWQg
-dGhyb3VnaCBzdWJmbG93LTIuIEhlcmUsJm5ic3A7IHRoZSBtYXAgaW4gc2VnbWVudC0zIGRvZXMg
-bm90IGV2ZW4gcGFydGlhbGx5IGNvdmVyIHRoZSBkYXRhIGl0IGNhcnJpZXMuPC9zcGFuPjwvcD48
-cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOiAwY20gMGNtIDAuMDAwMXB0OyBmb250
-LXNpemU6IDEycHQ7IGZvbnQtZmFtaWx5OiBDYW1icmlhOyI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0
-eWxlPSJmb250LXNpemU6IDEwcHQ7Ij48YnI+PC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9ybWFs
-IiBzdHlsZT0ibWFyZ2luOiAwY20gMGNtIDAuMDAwMXB0OyBmb250LXNpemU6IDEycHQ7IGZvbnQt
-ZmFtaWx5OiBDYW1icmlhOyI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6IDEw
-cHQ7Ij5Cb3RoIFJGQyA2ODI0IGFuZCB0aGUgNjgyNC1iaXMgZG8gbm90IHJlc3RyaWN0IHRoZSBh
-Ym92ZSBzY2VuYXJpbywgYW5kIEkgZ3Vlc3MgdGhlIGNoYW5nZSBwcm9wb3NlZCBub3cgZG9lcyBu
-b3QgcGVybWl0IHRoaXMgdG8gaGFwcGVuLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD48cCBjbGFzcz0i
-TXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOiAwY20gMGNtIDAuMDAwMXB0OyBmb250LXNpemU6IDEy
-cHQ7IGZvbnQtZmFtaWx5OiBDYW1icmlhOyI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250
-LXNpemU6IDEwcHQ7Ij48YnI+PC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0i
-bWFyZ2luOiAwY20gMGNtIDAuMDAwMXB0OyBmb250LXNpemU6IDEycHQ7IGZvbnQtZmFtaWx5OiBD
-YW1icmlhOyI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6IDEwcHQ7Ij5CZXN0
-IHJlZ2FyZHMsPC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOiAw
-Y20gMGNtIDAuMDAwMXB0OyBmb250LXNpemU6IDEycHQ7IGZvbnQtZmFtaWx5OiBDYW1icmlhOyI+
-PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6IDEwcHQ7Ij48YnI+PC9zcGFuPjwv
-cD48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOiAwY20gMGNtIDAuMDAwMXB0OyBm
-b250LXNpemU6IDEycHQ7IGZvbnQtZmFtaWx5OiBDYW1icmlhOyI+PHNwYW4gbGFuZz0iRU4tVVMi
-IHN0eWxlPSJmb250LXNpemU6IDEwcHQ7Ij5BbmlsPC9zcGFuPjwvcD48ZGl2Pjxicj48L2Rpdj48
-L2Rpdj48YmxvY2txdW90ZSBjaXRlPSJtaWQ6NDlFRDIyMkItOUU3MS00QThGLUEyODAtMjUyMUVE
-NjUwNDU0QGFwcGxlLmNvbSIgY2xhc3M9Iml3Y1F1b3RlIiBzdHlsZT0iYm9yZGVyLWxlZnQ6IDFw
-eCBzb2xpZCAjMDBGOyBwYWRkaW5nLWxlZnQ6IDEzcHg7IG1hcmdpbi1sZWZ0OiAwOyIgdHlwZT0i
-Y2l0ZSI+PGRpdiBjbGFzcz0ibWltZXR5cGUtdGV4dC1odG1sIj48c3Bhbj48cD48dGFibGU+PHRi
-b2R5Pjx0cj48dGQgY2xhc3M9IiIgc3R5bGU9IndvcmQtd3JhcDogYnJlYWstd29yZDsgLXdlYmtp
-dC1uYnNwLW1vZGU6IHNwYWNlOyBsaW5lLWJyZWFrOiBhZnRlci13aGl0ZS1zcGFjZTsiPjxkaXY+
-PGRpdj48YnI+PC9kaXY+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdj5UaGF0J3MgdGhlIHJl
-YXNvbiB3aHkgd2UgKHRoZSBNUFRDUC11cHN0cmVhbWluZyBjb21tdW5pdHkpIHZvdWNoIHRvIGhh
-dmUgdGhpcyBjYXNlIHJlc3RyaWN0ZWQuPC9kaXY+PGRpdj48YnIgY2xhc3M9IiI+PC9kaXY+PGRp
-dj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdj5DaGVlcnMsPC9kaXY+PGRpdj5DaHJpc3RvcGg8L2Rp
-dj48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2Pjxi
-ciBjbGFzcz0iIj48L2Rpdj48YnIgY2xhc3M9IiI+PGJsb2NrcXVvdGUgY2xhc3M9IiIgdHlwZT0i
-Y2l0ZSI+PGRpdiBjbGFzcz0iIj48ZGl2IGNsYXNzPSIiIHN0eWxlPSJjYXJldC1jb2xvcjogcmdi
-KDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEzcHg7IGZvbnQt
-c3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5v
-cm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5k
-ZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3Jk
-LXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29y
-YXRpb246IG5vbmU7Ij48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNz
-PSIiPkFuaWwmbmJzcDs8L2Rpdj48YmxvY2txdW90ZSBjaXRlPSJtaWQ6Njk3OEM5N0YtMjRENS00
-Q0YwLThDRUItMkY1OEJFMjZEMTc0QGdtYWlsLmNvbSIgY2xhc3M9Iml3Y1F1b3RlIiBzdHlsZT0i
-Ym9yZGVyLWxlZnQtd2lkdGg6IDFweDsgYm9yZGVyLWxlZnQtc3R5bGU6IHNvbGlkOyBib3JkZXIt
-bGVmdC1jb2xvcjogcmdiKDAsIDAsIDI1NSk7IHBhZGRpbmctbGVmdDogMTNweDsgbWFyZ2luLWxl
-ZnQ6IDBweDsiIHR5cGU9ImNpdGUiPjxkaXYgY2xhc3M9Im1pbWV0eXBlLXRleHQtaHRtbCI+PHNw
-YW4gY2xhc3M9IiI+PHAgY2xhc3M9IiI+PHRhYmxlIGNsYXNzPSIiPjx0Ym9keSBjbGFzcz0iIj48
-dHIgY2xhc3M9IiI+PHRkIGNsYXNzPSIiIHN0eWxlPSJ3b3JkLXdyYXA6IGJyZWFrLXdvcmQ7IC13
-ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgbGluZS1icmVhazogYWZ0ZXItd2hpdGUtc3BhY2U7Ij48
-ZGl2IGNsYXNzPSIiPjxiIGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2I+PC9kaXY+PGRpdiBjbGFz
-cz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj5CZXN0IHJlZ2FyZHMsPC9kaXY+
-PGRpdiBjbGFzcz0iIj5BbGFuPC9kaXY+PC90ZD48L3RyPjwvdGJvZHk+PC90YWJsZT48L3A+PC9z
-cGFuPjwvZGl2PjwvYmxvY2txdW90ZT48L2Rpdj48L2Rpdj48L2Jsb2NrcXVvdGU+PC9kaXY+PGJy
-IGNsYXNzPSIiPjwvdGQ+PC90cj48L3Rib2R5PjwvdGFibGU+PC9wPjwvc3Bhbj48L2Rpdj48L2Js
-b2NrcXVvdGU+PC9kaXY+CjwvZGl2PjwvYmxvY2txdW90ZT48L2JvZHk+PC9odG1sPg==
---===============6097523253621236396==--
+With V1 passive connections can fallback TCP after that the
+subflow become established:
+
+syn+ MP_CAPABLE ->
+               <- syn, ack + MP_CAPABLE
+
+ack, seq =3D 3    ->
+        // OoO packet is accepted because in-sequence
+        // passive socket is created, is in ESTABLISHED
+	// status and tentatively as MP_CAPABLE
+
+ack, seq =3D 2     ->
+        // no MP_CAPABLE opt, subflow should fallback to TCP
+
+We can't use the 'subflow' socket fallback, as we don't have
+it available for passive connection.
+
+Instead, when the fallback is detected, replace the mptcp
+socket with the underlining TCP subflow. Beyond covering
+the above scenario, it makes TCP fallback socket as efficient
+as plain TCP ones.
+
+Co-developed-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+RFC -> v1:
+ - fixed WARN_ON splat on fallback
+ - added a few more comments about locking
+ - tested on both of v1 patches and top of current export
+   branch
+
+Note: should be applied just after "mptcp: process MP_CAPABLE data option."
+---
+ net/mptcp/protocol.c | 99 +++++++++++++++++++++++++++++++++++++-------
+ net/mptcp/protocol.h |  1 +
+ 2 files changed, 84 insertions(+), 16 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c15232461a61..4f591f3d74ec 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -24,6 +24,40 @@
+ =
+
+ #define MPTCP_SAME_STATE TCP_MAX_STATES
+ =
+
++static void __mptcp_close(struct sock *sk, long timeout);
++
++/* MP_CAPABLE handshake failed, convert msk to plain tcp, replacing
++ * socket->sk and stream ops and destroying msk
++ * return the msk socket, as we can't access msk anymore after this functi=
+on
++ * completes
++ * Called with msk lock held, releases such lock before returning
++ */
++static struct socket *__mptcp_fallback_to_tcp(struct mptcp_sock *msk,
++					      struct sock *ssk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct socket *sock;
++	struct sock *sk;
++
++	sk =3D (struct sock *)msk;
++	sock =3D sk->sk_socket;
++	subflow =3D mptcp_subflow_ctx(ssk);
++
++	/* detach the msk socket */
++	list_del_init(&subflow->node);
++	sock_orphan(sk);
++	sock->sk =3D NULL;
++
++	/* socket is now TCP */
++	sock_graft(ssk, sock);
++	sock->ops =3D sk->sk_family =3D=3D AF_INET6 ? &inet6_stream_ops :
++						&inet_stream_ops;
++
++	/* destroy the left-over msk sock */
++	__mptcp_close(sk, 0);
++	return sock;
++}
++
+ /* if msk has a single subflow socket, and the mp_capable handshake is not
+  * completed yet or has failed - that is, the socket is Not MP Capable,
+  * returns it.
+@@ -37,25 +71,37 @@ static struct socket *__mptcp_nmpc_socket(const struct =
+mptcp_sock *msk)
+ 	return msk->subflow;
+ }
+ =
+
+-/* if msk has a single subflow, and the mp_capable handshake is failed,
++static bool __mptcp_needs_tcp_fallback(const struct mptcp_sock *msk)
++{
++	return msk->first && !tcp_sk(msk->first)->is_mptcp;
++}
++
++/* if the mp_capable handshake is failed, return a tcp socket
+  * return it.
+  * Otherwise returns NULL
+  */
+-static struct socket *__mptcp_tcp_fallback(const struct mptcp_sock *msk)
++static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ {
+-	struct socket *ssock =3D __mptcp_nmpc_socket(msk);
+-
+ 	sock_owned_by_me((const struct sock *)msk);
+ =
+
+-	if (!ssock || tcp_sk(ssock->sk)->is_mptcp)
++	if (likely(!__mptcp_needs_tcp_fallback(msk)))
+ 		return NULL;
+ =
+
+-	return ssock;
++	if (msk->subflow) {
++		/* the first subflow is an active connection, discart the
++		 * paired socket
++		 */
++		msk->subflow->sk =3D NULL;
++		sock_release(msk->subflow);
++		msk->subflow =3D NULL;
++	}
++
++	return __mptcp_fallback_to_tcp(msk, msk->first);
+ }
+ =
+
+ static bool __mptcp_can_create_subflow(const struct mptcp_sock *msk)
+ {
+-	return ((struct sock *)msk)->sk_state =3D=3D TCP_CLOSE;
++	return !msk->first;
+ }
+ =
+
+ static struct socket *__mptcp_socket_create(struct mptcp_sock *msk, int st=
+ate)
+@@ -76,6 +122,7 @@ static struct socket *__mptcp_socket_create(struct mptcp=
+_sock *msk, int state)
+ 	if (err)
+ 		return ERR_PTR(err);
+ =
+
++	msk->first =3D ssock->sk;
+ 	msk->subflow =3D ssock;
+ 	subflow =3D mptcp_subflow_ctx(ssock->sk);
+ 	list_add(&subflow->node, &msk->conn_list);
+@@ -155,6 +202,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 		ret =3D sk_stream_wait_memory(ssk, timeo);
+ 		if (ret)
+ 			return ret;
++		if (unlikely(__mptcp_needs_tcp_fallback(msk)))
++			return 0;
+ 	}
+ =
+
+ 	/* compute copy limit */
+@@ -265,11 +314,11 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ =
+
+ 	lock_sock(sk);
+ 	ssock =3D __mptcp_tcp_fallback(msk);
+-	if (ssock) {
++	if (unlikely(ssock)) {
++fallback:
+ 		pr_debug("fallback passthrough");
+ 		ret =3D sock_sendmsg(ssock, msg);
+-		release_sock(sk);
+-		return ret;
++		return ret >=3D 0 ? ret + copied : (copied ? copied : ret);
+ 	}
+ =
+
+ 	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+@@ -288,6 +337,11 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
+r *msg, size_t len)
+ 					 &size_goal);
+ 		if (ret < 0)
+ 			break;
++		if (ret =3D=3D 0 && unlikely(__mptcp_needs_tcp_fallback(msk))) {
++			release_sock(ssk);
++			ssock =3D __mptcp_tcp_fallback(msk);
++			goto fallback;
++		}
+ =
+
+ 		copied +=3D ret;
+ 	}
+@@ -367,11 +421,11 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ =
+
+ 	lock_sock(sk);
+ 	ssock =3D __mptcp_tcp_fallback(msk);
+-	if (ssock) {
++	if (unlikely(ssock)) {
++fallback:
+ 		pr_debug("fallback-read subflow=3D%p",
+ 			 mptcp_subflow_ctx(ssock->sk));
+ 		copied =3D sock_recvmsg(ssock, msg, flags);
+-		release_sock(sk);
+ 		return copied;
+ 	}
+ =
+
+@@ -475,6 +529,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ 		pr_debug("block timeout %ld", timeo);
+ 		wait_data =3D true;
+ 		mptcp_wait_data(sk, &timeo);
++		if (unlikely(__mptcp_tcp_fallback(msk)))
++			goto fallback;
+ 	}
+ =
+
+ 	if (more_data_avail) {
+@@ -527,6 +583,8 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	INIT_LIST_HEAD(&msk->conn_list);
+ 	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
+ =
+
++	msk->first =3D NULL;
++
+ 	return 0;
+ }
+ =
+
+@@ -561,7 +619,8 @@ static void mptcp_subflow_shutdown(struct sock *ssk, in=
+t how)
+ 	release_sock(ssk);
+ }
+ =
+
+-static void mptcp_close(struct sock *sk, long timeout)
++/* Called with msk lock held, releases such lock before returning */
++static void __mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -569,8 +628,6 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	mptcp_token_destroy(msk->token);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ =
+
+-	lock_sock(sk);
+-
+ 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+ =
+
+@@ -583,6 +640,12 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 	sk_common_release(sk);
+ }
+ =
+
++static void mptcp_close(struct sock *sk, long timeout)
++{
++	lock_sock(sk);
++	__mptcp_close(sk, timeout);
++}
++
+ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+ {
+ 	const struct ipv6_pinfo *ssk6 =3D inet6_sk(ssk);
+@@ -652,6 +715,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ 		msk->local_key =3D subflow->local_key;
+ 		msk->token =3D subflow->token;
+ 		msk->subflow =3D NULL;
++		msk->first =3D newsk;
+ =
+
+ 		mptcp_token_update_accept(newsk, new_mptcp_sock);
+ =
+
+@@ -1007,8 +1071,8 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 			   struct poll_table_struct *wait)
+ {
+-	const struct mptcp_sock *msk;
+ 	struct sock *sk =3D sock->sk;
++	struct mptcp_sock *msk;
+ 	struct socket *ssock;
+ 	__poll_t mask =3D 0;
+ =
+
+@@ -1024,6 +1088,9 @@ static __poll_t mptcp_poll(struct file *file, struct =
+socket *sock,
+ 	release_sock(sk);
+ 	sock_poll_wait(file, sock, wait);
+ 	lock_sock(sk);
++	ssock =3D __mptcp_tcp_fallback(msk);
++	if (unlikely(ssock))
++		return ssock->ops->poll(file, ssock, NULL);
+ =
+
+ 	if (test_bit(MPTCP_DATA_READY, &msk->flags))
+ 		mask =3D EPOLLIN | EPOLLRDNORM;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0e5ba5ac1443..b4cf88258b6b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -73,6 +73,7 @@ struct mptcp_sock {
+ 	struct list_head conn_list;
+ 	struct skb_ext	*cached_ext;	/* for the next sendmsg */
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
++	struct sock	*first;
+ };
+ =
+
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+-- =
+
+2.21.0
+
+--===============4371055450691276509==--
