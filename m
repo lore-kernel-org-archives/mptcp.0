@@ -1,65 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============1730174817559276449=="
+Content-Type: multipart/mixed; boundary="===============3375360743347614412=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Cover letters for part1/part2 netdev patchsets
-Date: Fri, 13 Dec 2019 12:04:24 +0100
-Message-ID: <99dcfe95-7358-226d-54ba-12284edd5ba8@tessares.net>
-In-Reply-To: 7E333AF6-9EBB-4809-B3B2-EE633A5A89C6@apple.com
+Subject: [MPTCP] Re: Checklist before sending to netdev
+Date: Fri, 13 Dec 2019 12:38:57 +0100
+Message-ID: <ff3cb167736133e1747300219d9d1400d6376dec.camel@redhat.com>
+In-Reply-To: 9f9c8b54-b0fb-2768-da42-958d58ad35fe@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2927
+X-UID: 2928
 
---===============1730174817559276449==
+--===============3375360743347614412==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
-
-On 13/12/2019 02:19, Christoph Paasch wrote:
-> for part 3:
-
-Thank you for sharing this!
-
-> Subject: [PATCH net-next 0/0] Multipath TCP part 3: MP_CAPABLE handshake
-
-Should we call it:
-
-   Multipath TCP part 3: MPTCPv1 (RFC 8684) support
-
-> These patches depend on the "Multipath TCP part 2: Single subflow"
-> patch set sent earlier.
+On Fri, 2019-12-13 at 00:36 +0100, Matthieu Baerts wrote:
+> Hello,
 > =
 
-> In this set we add the necessary code for the MP_CAPABLE exchange,
-> negotiating the MPTCP-version, keys and some flags. The handshake
-> has been specified such that it works reliably with servers using TCP =
+> A few hours ago, I recreated the TopGit tree using Paolo's branch.
+> =
 
-> SYN-cookies
-> although the current implementation does not yet support SYN cookies.
-Should we give more details about MPTCPv1?
-- What it is: RFC 8684, obsoleting RFC 6824
-- Why we want to support it on drop the previous support: ease the code, =
+> Now I just applied all pending patches except the ones adding the =
 
-RFC 6824 is obsolete and should not be used in new deployment, e.g. 5G, =
+> MAINTAINERS file (because it is late and not affecting tests :) )
+> =
 
-link to the 3GPP document
-- Why we did it like that: some deployments only support MPTCPv0 and =
+> My CI detected that when running the kselftests on the latest "mptcp: =
 
-didn't switch to the new version yet. If really needed, with this =
+> add basic kselftest for mptcp" commit (MPTCPv0), we have an issue. Not =
 
-history it would be easier to re-add MPTCPv0 support in addition to the v1.
+> when running them on "mptcp: process MP_CAPABLE data option." (MPTCPv1) =
 
-What do you think?
+> or at the end of the series.
+> It seems that the issue has been introduced after having applied patches =
 
-Cheers,
-Matt
--- =
+> cleaning the fallback handling.
+> Paolo is already looking at that in cave mode.
+> =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1730174817559276449==--
+> Please also note that now the CI is testing the kselftests with 3 =
+
+> different version:
+> =
+
+> - on "mptcp: add basic kselftest for mptcp" commit
+> - on "mptcp: process MP_CAPABLE data option." commit (new)
+> - at the end of the series ("export" branch)
+> =
+
+> =
+
+> =
+
+> Here are the items we need to do before this Friday evening (US time):
+> =
+
+> - Test patches =E2=86=92 *all*
+> =
+
+> - Share cover-letter for part 3 =E2=86=92 *Christoph*
+> - Review cover-letters =E2=86=92 *all*
+> =
+
+> - Remove the fix in KSelftest framework =E2=86=92 *Matth*
+> - Apply the fix in KSelftest framework only for CI =E2=86=92 *Matth*
+> =
+
+> - Apply patches related to the MAINTAINERS file =E2=86=92 *Matth*
+> - Add our mailing-list in the MAINTAINERS file =E2=86=92 *Matth*
+> =
+
+> - Share patch(es) fixing kselftests when introduced =E2=86=92 *Paolo*
+> - Review this/these patch(es) =E2=86=92 *EU-based people* (and others lat=
+er)
+> - Apply these patches =E2=86=92 *Matth*
+> =
+
+> - Share patches fixing remaining checkpatch issues =E2=86=92 *Davide*
+> - Review these patches =E2=86=92 *EU-based people* (and others later)
+> - Apply these patches =E2=86=92 *Matth*
+> =
+
+> - Add Mat (part 1 & 2) and Christoph' (part 3) signed-off =E2=86=92 *Matt=
+h*
+> =
+
+> - Share patches like we are going to send =E2=86=92 *Matth*
+> - Review these patches =E2=86=92 *all*
+> =
+
+> - Send Part 1 =E2=86=92 *Mat*
+> - Send Part 2 =E2=86=92 *Mat*
+> - Send Part 3 =E2=86=92 *Christoph*
+> =
+
+> Did I miss anything? Anything wrong?
+
+I know all of you will love the following, but we have a not so nice at
+all issue with v1 support when falling back to tcp after the tcp
+subflow goes into established status:
+
+syn+ MP_CAPABLE ->
+               <- syn, ack + MP_CAPABLE
+
+ack, seq =3D 3    -> =
+
+	// OoO packet is accepted because in-sequence
+	// passive socket is created, tentatively as MP_CAPABLE
+	// and user space does e.g. recvmsg() -> mptcp_recevmsg
+	//  no fallback
+
+ack, seq =3D 2     ->
+	// no MP_CAPABLE, subflow should fallback to TCP
+	// but msk->fallback =3D=3D NULL (we don't have a fallback
+	// struct socket at all)
+
+	// disaster :((( deadlock, and/or stream corruption.
+
+Thanks to Florian's help we have a tentative idea to address the above,
+will keep you posted.
+
+@Davide: packtdrill here would save our day to test!!!
+
+Thanks,
+
+Paolo
+
+
+
+
+
+--===============3375360743347614412==--
