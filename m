@@ -1,79 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============4857712053431009631=="
+Content-Type: multipart/mixed; boundary="===============8826223688583662512=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 01/11] net: Make sock protocol value checks
- more specific
-Date: Fri, 13 Dec 2019 15:00:12 -0800
-Message-ID: <20191213230022.28144-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 05/11] tcp,
+ ulp: Add clone operation to tcp_ulp_ops
+Date: Fri, 13 Dec 2019 15:00:16 -0800
+Message-ID: <20191213230022.28144-6-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191213230022.28144-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3028
+X-UID: 3029
 
---===============4857712053431009631==
+--===============8826223688583662512==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-SK_PROTOCOL_MAX is only used in two places, for DECNet and AX.25. The
-limits have more to do with the those protocol definitions than they do
-with the data type of sk_protocol, so remove SK_PROTOCOL_MAX and use
-U8_MAX directly.
+If ULP is used on a listening socket, icsk_ulp_ops and icsk_ulp_data are
+copied when the listener is cloned. Sometimes the clone is immediately
+deleted, which will invoke the release op on the clone and likely
+corrupt the listening socket's icsk_ulp_data.
+
+The clone operation is invoked immediately after the clone is copied and
+gives the ULP type an opportunity to set up the clone socket and its
+icsk_ulp_data.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/sock.h     | 1 -
- net/ax25/af_ax25.c     | 2 +-
- net/decnet/af_decnet.c | 2 +-
- 3 files changed, 2 insertions(+), 3 deletions(-)
+ include/net/tcp.h               |  5 +++++
+ net/ipv4/inet_connection_sock.c |  2 ++
+ net/ipv4/tcp_ulp.c              | 12 ++++++++++++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 87d54ef57f00..81dc811aad2e 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -458,7 +458,6 @@ struct sock {
- 				sk_userlocks : 4,
- 				sk_protocol  : 8,
- 				sk_type      : 16;
--#define SK_PROTOCOL_MAX U8_MAX
- 	u16			sk_gso_max_segs;
- 	u8			sk_pacing_shift;
- 	unsigned long	        sk_lingertime;
-diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-index 324306d6fde0..ff57ea89c27e 100644
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -808,7 +808,7 @@ static int ax25_create(struct net *net, struct socket *=
-sock, int protocol,
- 	struct sock *sk;
- 	ax25_cb *ax25;
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index d4b6bf2c5d3c..c82b2f75d024 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2145,6 +2145,9 @@ struct tcp_ulp_ops {
+ 	/* diagnostic */
+ 	int (*get_info)(const struct sock *sk, struct sk_buff *skb);
+ 	size_t (*get_info_size)(const struct sock *sk);
++	/* clone ulp */
++	void (*clone)(const struct request_sock *req, struct sock *newsk,
++		      const gfp_t priority);
  =
 
--	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
-+	if (protocol < 0 || protocol > U8_MAX)
- 		return -EINVAL;
+ 	char		name[TCP_ULP_NAME_MAX];
+ 	struct module	*owner;
+@@ -2155,6 +2158,8 @@ int tcp_set_ulp(struct sock *sk, const char *name);
+ void tcp_get_available_ulp(char *buf, size_t len);
+ void tcp_cleanup_ulp(struct sock *sk);
+ void tcp_update_ulp(struct sock *sk, struct proto *p);
++void tcp_clone_ulp(const struct request_sock *req,
++		   struct sock *newsk, const gfp_t priority);
  =
 
- 	if (!net_eq(net, &init_net))
-diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
-index e19a92a62e14..0a46ea3bddd5 100644
---- a/net/decnet/af_decnet.c
-+++ b/net/decnet/af_decnet.c
-@@ -670,7 +670,7 @@ static int dn_create(struct net *net, struct socket *so=
-ck, int protocol,
+ #define MODULE_ALIAS_TCP_ULP(name)				\
+ 	__MODULE_INFO(alias, alias_userspace, name);		\
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_soc=
+k.c
+index e4c6e8b40490..d667f2569f8e 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -810,6 +810,8 @@ struct sock *inet_csk_clone_lock(const struct sock *sk,
+ 		/* Deinitialize accept_queue to trap illegal accesses. */
+ 		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_queue=
+));
+ =
+
++		tcp_clone_ulp(req, newsk, priority);
++
+ 		security_inet_csk_clone(newsk, req);
+ 	}
+ 	return newsk;
+diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+index 12ab5db2b71c..e7a2589d69ee 100644
+--- a/net/ipv4/tcp_ulp.c
++++ b/net/ipv4/tcp_ulp.c
+@@ -130,6 +130,18 @@ void tcp_cleanup_ulp(struct sock *sk)
+ 	icsk->icsk_ulp_ops =3D NULL;
+ }
+ =
+
++void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
++		   const gfp_t priority)
++{
++	struct inet_connection_sock *icsk =3D inet_csk(newsk);
++
++	if (!icsk->icsk_ulp_ops)
++		return;
++
++	if (icsk->icsk_ulp_ops->clone)
++		icsk->icsk_ulp_ops->clone(req, newsk, priority);
++}
++
+ static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_op=
+s)
  {
- 	struct sock *sk;
- =
-
--	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
-+	if (protocol < 0 || protocol > U8_MAX)
- 		return -EINVAL;
- =
-
- 	if (!net_eq(net, &init_net))
+ 	struct inet_connection_sock *icsk =3D inet_csk(sk);
 -- =
 
 2.24.1
 
---===============4857712053431009631==--
+--===============8826223688583662512==--
