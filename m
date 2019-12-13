@@ -1,65 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============5515924964715111606=="
+Content-Type: multipart/mixed; boundary="===============4437115231687997821=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 00/11] Multipath TCP part 1: Prerequisites
-Date: Fri, 13 Dec 2019 22:11:34 +0100
-Message-ID: <b24ec1dd-82ee-ca0d-2e37-d086c95e2590@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1912131252280.33632@amhui-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH 01/11] net: Make sock protocol value checks more
+ specific
+Date: Fri, 13 Dec 2019 22:29:13 +0100
+Message-ID: <de5d1de9-86fd-5538-f2e4-1c628ede7b6a@tessares.net>
+In-Reply-To: 20191213204824.2464461-2-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3016
+X-UID: 3017
 
---===============5515924964715111606==
+--===============4437115231687997821==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
-
-On 13/12/2019 21:53, Mat Martineau wrote:
+On 13/12/2019 21:48, Matthieu Baerts wrote:
+> From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 > =
 
-> On Fri, 13 Dec 2019, Matthieu Baerts wrote:
+> SK_PROTOCOL_MAX is only used in two places, for DECNet and AX.25. The
+> limits have more to do with the those protocol definitions than they do
+> with the data type of sk_protocol, so remove SK_PROTOCOL_MAX and use
+> U8_MAX directly.
 > =
 
->> The MPTCP upstreaming community has been collaborating on an
->> upstreamable MPTCP implementation that complies with RFC 8684. A minimal
->> set of features to comply with the specification involves a sizeable set
->> of code changes, so David requested that we split this work in to
->> multiple, smaller patch sets to build up MPTCP infrastructure.
->>
->> The minimal MPTCP feature set we are proposing for the v5.6 timeframe is
->> split in to these parts for review:
-> =
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-> For sending to netdev, I plan to tag as [PATCH net-next x/y] and replace =
+Oh, I just noticed my signed-off was added everywhere. That was not =
 
-> the above sentence with "The minimal MPTCP feature set we are proposing =
+added on purpose. I didn't use any specific option for that but it's =
 
-> for review in the v5.6 timeframe begins with these parts:"
+maybe due to my git config:
 
-Good idea to add net-next!
+     [format]
+             signoff =3D true
 
-For the sentence, I was suggesting this on another thread but better to =
-
-continue here:
-
-Yes, sounds good but what about keeping this sentence and add this at =
-
-the end instead of part 3:
-
-   More commits are in preparation to add multiple subflow support, path =
-
-management, active backup support and more but this will come later when =
-
-these 3 previous parts are reviewed and applied.
-
-I hope it is clear that we don't have to wait for any part 4
-
-And also:
-
-   The part 2 is coming later today and part 3 over the next week.
+So please ignore my signed-off's :)
 
 Cheers,
 Matt
@@ -70,4 +49,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5515924964715111606==--
+--===============4437115231687997821==--
