@@ -1,64 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============5715194989453607039=="
+Content-Type: multipart/mixed; boundary="===============4638679993490011726=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] .topmsg: mptcp: parse and emit MP_CAPABLE option
- according to v1 spec
-Date: Thu, 12 Dec 2019 16:58:21 -0800
-Message-ID: <20191213005822.29791-6-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH] .topmsg: mptcp: process MP_CAPABLE data option
+Date: Thu, 12 Dec 2019 16:58:22 -0800
+Message-ID: <20191213005822.29791-7-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191213005822.29791-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 2918
+X-UID: 2919
 
---===============5715194989453607039==
+--===============4638679993490011726==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use newly assigned RFC number, fix up line wrapping.
+Mention RFC 8684, minor spelling fixes and stuff.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- .topmsg | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ .topmsg | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/.topmsg b/.topmsg
-index 74ccce6fb301..dfa69fc7582d 100644
+index 405b188083ea..0f79c41044b2 100644
 --- a/.topmsg
 +++ b/.topmsg
-@@ -1,16 +1,16 @@
+@@ -1,12 +1,12 @@
  From: Christoph Paasch <cpaasch(a)apple.com>
--Subject: [PATCH] mptcp: parse and emit MP_CAPABLE option according to v1 s=
-pec.
-+Subject: [PATCH] mptcp: parse and emit MP_CAPABLE option according to v1 s=
-pec
+-Subject: [PATCH] mptcp: process MP_CAPABLE data option.
++Subject: [PATCH] mptcp: process MP_CAPABLE data option
  =
 
- This implements MP_CAPABLE options parsing and writing according
--to the RFC 6824 bis - MPTCP v1.
-+to RFC 6824 bis / RFC 8684: MPTCP v1.
-+
- Local key is sent on syn/ack, and both keys are sent on 3rd ack.
--MP_CAPABLE messages len are updated accordingly.
--We need the skbuff to emit correctly the above, so we push the skbuff
--struct as an argument all the way from tcp code to the relevant mptcp
--callbacks.
-+MP_CAPABLE messages len are updated accordingly. We need the skbuff to
-+correctly emit the above, so we push the skbuff struct as an argument
-+all the way from tcp code to the relevant mptcp callbacks.
+-This patch implement the handling of MP_CAPABLE + data option, as
+-per RFC 6824 bis - MPTCP v1.
++This patch implements the handling of MP_CAPABLE + data option, as per
++RFC 6824 bis / RFC 8684: MPTCP v1.
  =
 
- When processing incoming MP_CAPABLE + data, build a full blown DSS-like
--map info, to simplify later processing.
--On child socket creation, we need to record the remote key, if available.
-+map info, to simplify later processing.  On child socket creation, we
-+need to record the remote key, if available.
+ On the server side we can receive the remote key after that the connection
+ is established. We need to explicitly track the 'missing remote key'
+-status and avoid emtting mptcp ack till we get such info.
++status and avoid emitting a mptcp ack until we get such info.
  =
 
- Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+ When a late/retransmitted/OoO pkt carrying MP_CAPABLE[+data] option
+ is received, we have to propagate the mptcp seq number info to
+@@ -16,8 +16,8 @@ that in recvmsg(), where we own msk and subflow sock lock=
+s.
+ The above also means that an established mp_capable subflow - still
+ waiting for the remote key - can be 'downgraded' to plain TCP.
+ =
+
+-Such change could potentially block forever reader waiting for new
+-data - as they hook to msk, while later wake-up after the downgrade
++Such change could potentially block a reader waiting for new data
++forever - as they hook to msk, while later wake-up after the downgrade
+ will be on subflow only.
+ =
+
+ The above issue is not handled here, we likely have to get rid of
 -- =
 
 2.24.1
 
---===============5715194989453607039==--
+--===============4638679993490011726==--
