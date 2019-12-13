@@ -1,101 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============4825163853109628919=="
+Content-Type: multipart/mixed; boundary="===============8148262230666317276=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 00/11] Multipath TCP part 1: Prerequisites
-Date: Fri, 13 Dec 2019 22:58:32 +0100
-Message-ID: <cdc0c6fa-f530-9e18-8c7c-5e8ec94ffe10@tessares.net>
-In-Reply-To: alpine.OSX.2.21.1912131346210.33632@amhui-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH 0/4] Multipath TCP part 3: MPTCPv1 (RFC 8684)
+ support
+Date: Fri, 13 Dec 2019 14:28:19 -0800
+Message-ID: <alpine.OSX.2.21.1912131424480.33632@amhui-mobl1.amr.corp.intel.com>
+In-Reply-To: 20191213205145.2468578-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3024
+X-UID: 3025
 
---===============4825163853109628919==
+--===============8148262230666317276==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
 
-On 13/12/2019 22:54, Mat Martineau wrote:
-> On Fri, 13 Dec 2019, Matthieu Baerts wrote:
-> =
+On Fri, 13 Dec 2019, Matthieu Baerts wrote:
 
->> Hi Mat,
->>
->> On 13/12/2019 21:53, Mat Martineau wrote:
->>>
->>> On Fri, 13 Dec 2019, Matthieu Baerts wrote:
->>>
->>>> The MPTCP upstreaming community has been collaborating on an
->>>> upstreamable MPTCP implementation that complies with RFC 8684. A =
+> These patches depend on the "Multipath TCP part 2: Single subflow"
+> patch set sent earlier.
+>
+> In this set we add the necessary code for the RFC8684-style handshake.
+> RFC8684 obsoletes the experimental RFC6824 and makes MPTCP move-on to
+> version 1.
+>
+> The MPTCP patchset exclusively supports RFC 8684. Although all MPTCP
+> deployments are currently based on RFC 6824, future deployments will be
+> migrating to MPTCP version 1. 3GPP's 5G standardization also solely suppo=
+rts
+> RFC 8684. Also, we believe that this initial submission of MPTCP will be
+> cleaner by solely supporting RFC 8684. If later on support for the old
+> MPTCP-version is required it can always be added in the future.
+>
+> The major difference between RFC 8684 and RFC 6824 is that it has a better
+> support for servers using TCP SYN-cookies by reliably retransmitting the
+> MP_CAPABLE option.
+>
+> Clone/fetch:
+> https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v1-part3)
+>
+> Browse:
+> https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v1-part3
+>
+> Thank your for your review. You can find us at mptcp(a)lists.01.org and
+> https://is.gd/mptcp_upstream.
+>
+> Christoph Paasch (2):
+>  mptcp: parse and emit MP_CAPABLE option according to v1 spec
+>  mptcp: process MP_CAPABLE data option
+>
+> Paolo Abeni (2):
+>  mptcp: move from sha1 (v0) to sha256 (v1)
+>  mptcp: cope with later TCP fallback
+>
+> include/linux/tcp.h   |   3 +-
+> include/net/mptcp.h   |  17 ++--
+> net/ipv4/tcp_input.c  |   2 +-
+> net/ipv4/tcp_output.c |   2 +-
+> net/mptcp/Kconfig     |  10 ++
+> net/mptcp/crypto.c    | 139 +++++++++++++++-----------
+> net/mptcp/options.c   | 220 +++++++++++++++++++++++++++++++++---------
+> net/mptcp/protocol.c  | 117 +++++++++++++++++-----
+> net/mptcp/protocol.h  |  21 ++--
+> net/mptcp/subflow.c   |  46 ++++++++-
+> 10 files changed, 434 insertions(+), 143 deletions(-)
+>
+> -- =
 
->>>> minimal
->>>> set of features to comply with the specification involves a sizeable =
+> 2.24.0
 
->>>> set
->>>> of code changes, so David requested that we split this work in to
->>>> multiple, smaller patch sets to build up MPTCP infrastructure.
->>>>
->>>> The minimal MPTCP feature set we are proposing for the v5.6 =
+Christoph -
 
->>>> timeframe is
->>>> split in to these parts for review:
->>>
->>> For sending to netdev, I plan to tag as [PATCH net-next x/y] and =
+Note that due to issues with patch 4 in this series, we aren't planning to =
 
->>> replace the above sentence with "The minimal MPTCP feature set we are =
+send this "part 3" patch set to netdev until Monday.
 
->>> proposing for review in the v5.6 timeframe begins with these parts:"
->>
->> Good idea to add net-next!
->>
->> For the sentence, I was suggesting this on another thread but better =
+(see =
 
->> to continue here:
->>
->> Yes, sounds good but what about keeping this sentence and add this at =
+https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/message/MW2VG3SOI=
+C7B2M7ZSUHXD7AEZJ2MN4A6/ =
 
->> the end instead of part 3:
->>
->> =C2=A0More commits are in preparation to add multiple subflow support, p=
-ath =
+)
 
->> management, active backup support and more but this will come later =
 
->> when these 3 previous parts are reviewed and applied.
->>
->> I hope it is clear that we don't have to wait for any part 4
-> =
-
-> Ok, I'll add something to that effect.
-> =
-
->>
->> And also:
->>
->> =C2=A0The part 2 is coming later today and part 3 over the next week.
->>
-> =
-
-> I was trying to not get too specific about the timing for two reasons: =
-
-> in case something unexpected arises, and so that people go ahead and =
-
-> review earlier parts without worrying about what comes after.
-
-Good point but I think it is still good to say that they are coming soon =
-
-I think :)
-Especially for part 2 because it is hard to judge part 1 without it :)
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4825163853109628919==--
+--
+Mat Martineau
+Intel
+--===============8148262230666317276==--
