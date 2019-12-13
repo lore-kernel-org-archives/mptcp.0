@@ -1,106 +1,388 @@
-Content-Type: multipart/mixed; boundary="===============8729430643217410999=="
+Content-Type: multipart/mixed; boundary="===============5071979664717397254=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 00/15] Multipath TCP part 2: Single subflow
-Date: Fri, 13 Dec 2019 21:50:51 +0100
-Message-ID: <20191213205106.2467313-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 01/15] mptcp: Add MPTCP socket stubs
+Date: Fri, 13 Dec 2019 21:50:52 +0100
+Message-ID: <20191213205106.2467313-2-matthieu.baerts@tessares.net>
+In-Reply-To: 20191213205106.2467313-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2993
+X-UID: 2994
 
---===============8729430643217410999==
+--===============5071979664717397254==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-These patches depend on the "Multipath TCP part 1: Prerequisites" patch
-set sent earlier.
+From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-This set adds MPTCP connection establishment, writing & reading MPTCP
-options on data packets, a sysctl to allow MPTCP per-namespace, and self
-tests. This is sufficient to establish and maintain a connection with a
-MPTCP peer, but will not yet allow or initiate establishment of
-additional MPTCP subflows.
+Implements the infrastructure for MPTCP sockets.
 
-Clone/fetch:
-https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v1-part2)
+MPTCP sockets open one in-kernel TCP socket per subflow. These subflow
+sockets are only managed by the MPTCP socket that owns them and are not
+visible from userspace. This commit allows a userspace program to open
+an MPTCP socket with:
 
-Browse:
-https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v1-part2
+  sock =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
 
-Thank your for your review. You can find us at mptcp(a)lists.01.org and
-https://is.gd/mptcp_upstream
+The resulting socket is simply a wrapper around a single regular TCP
+socket, without any of the MPTCP protocol implemented over the wire.
 
-Florian Westphal (2):
-  mptcp: add subflow write space signalling and mptcp_poll
-  mptcp: add basic kselftest for mptcp
-
-Mat Martineau (3):
-  mptcp: Add MPTCP socket stubs
-  mptcp: Write MPTCP DSS headers to outgoing data packets
-  mptcp: Implement MPTCP receive path
-
-Matthieu Baerts (1):
-  mptcp: new sysctl to control the activation per NS
-
-Paolo Abeni (2):
-  mptcp: recvmsg() can drain data from multiple subflows
-  mptcp: allow collapsing consecutive sendpages on the same substream
-
-Peter Krystad (7):
-  mptcp: Handle MPTCP TCP options
-  mptcp: Associate MPTCP context with TCP socket
-  mptcp: Handle MP_CAPABLE options for outgoing connections
-  mptcp: Create SUBFLOW socket for incoming connections
-  mptcp: Add key generation and token tree
-  mptcp: Add shutdown() socket operation
-  mptcp: Add setsockopt()/getsockopt() socket operations
-
- MAINTAINERS                                   |    2 +
- include/linux/tcp.h                           |   34 +
- include/net/mptcp.h                           |   98 ++
- net/Kconfig                                   |    1 +
- net/Makefile                                  |    1 +
- net/ipv4/tcp.c                                |    2 +
- net/ipv4/tcp_input.c                          |   19 +-
- net/ipv4/tcp_output.c                         |   57 +
- net/ipv6/tcp_ipv6.c                           |    7 +
- net/mptcp/Kconfig                             |   16 +
- net/mptcp/Makefile                            |    4 +
- net/mptcp/crypto.c                            |  122 ++
- net/mptcp/ctrl.c                              |  130 ++
- net/mptcp/options.c                           |  520 ++++++++
- net/mptcp/protocol.c                          | 1160 +++++++++++++++++
- net/mptcp/protocol.h                          |  220 ++++
- net/mptcp/subflow.c                           |  763 +++++++++++
- net/mptcp/token.c                             |  195 +++
- tools/testing/selftests/Makefile              |    1 +
- tools/testing/selftests/net/mptcp/.gitignore  |    2 +
- tools/testing/selftests/net/mptcp/Makefile    |   13 +
- tools/testing/selftests/net/mptcp/config      |    2 +
- .../selftests/net/mptcp/mptcp_connect.c       |  832 ++++++++++++
- .../selftests/net/mptcp/mptcp_connect.sh      |  595 +++++++++
- tools/testing/selftests/net/mptcp/settings    |    1 +
- 25 files changed, 4796 insertions(+), 1 deletion(-)
+Co-developed-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ MAINTAINERS          |   1 +
+ include/net/mptcp.h  |  16 +++++
+ net/Kconfig          |   1 +
+ net/Makefile         |   1 +
+ net/ipv4/tcp.c       |   2 +
+ net/ipv6/tcp_ipv6.c  |   7 +++
+ net/mptcp/Kconfig    |  16 +++++
+ net/mptcp/Makefile   |   4 ++
+ net/mptcp/protocol.c | 139 +++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  22 +++++++
+ 10 files changed, 209 insertions(+)
  create mode 100644 net/mptcp/Kconfig
  create mode 100644 net/mptcp/Makefile
- create mode 100644 net/mptcp/crypto.c
- create mode 100644 net/mptcp/ctrl.c
- create mode 100644 net/mptcp/options.c
  create mode 100644 net/mptcp/protocol.c
  create mode 100644 net/mptcp/protocol.h
- create mode 100644 net/mptcp/subflow.c
- create mode 100644 net/mptcp/token.c
- create mode 100644 tools/testing/selftests/net/mptcp/.gitignore
- create mode 100644 tools/testing/selftests/net/mptcp/Makefile
- create mode 100644 tools/testing/selftests/net/mptcp/config
- create mode 100644 tools/testing/selftests/net/mptcp/mptcp_connect.c
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect.sh
- create mode 100644 tools/testing/selftests/net/mptcp/settings
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 132eb3f9fbb7..b11e234dc833 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11577,6 +11577,7 @@ W:	https://github.com/multipath-tcp/mptcp_net-next/=
+wiki
+ B:	https://github.com/multipath-tcp/mptcp_net-next/issues
+ S:	Maintained
+ F:	include/net/mptcp.h
++F:	net/mptcp/
+ =
+
+ NETWORKING [TCP]
+ M:	Eric Dumazet <edumazet(a)google.com>
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 43ddfdf9e4a3..4113e063f728 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -27,6 +27,8 @@ struct mptcp_ext {
+ =
+
+ #ifdef CONFIG_MPTCP
+ =
+
++void mptcp_init(void);
++
+ static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
+ {
+ 	return skb_ext_exist(skb, SKB_EXT_MPTCP);
+@@ -34,10 +36,24 @@ static inline bool mptcp_skb_ext_exist(const struct sk_=
+buff *skb)
+ =
+
+ #else
+ =
+
++static inline void mptcp_init(void)
++{
++}
++
+ static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
+ {
+ 	return false;
+ }
+ =
+
+ #endif /* CONFIG_MPTCP */
++
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++int mptcpv6_init(void);
++#elif IS_ENABLED(CONFIG_IPV6)
++static inline int mptcpv6_init(void)
++{
++	return 0;
++}
++#endif
++
+ #endif /* __NET_MPTCP_H */
+diff --git a/net/Kconfig b/net/Kconfig
+index bd191f978a23..6648779f184b 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -91,6 +91,7 @@ if INET
+ source "net/ipv4/Kconfig"
+ source "net/ipv6/Kconfig"
+ source "net/netlabel/Kconfig"
++source "net/mptcp/Kconfig"
+ =
+
+ endif # if INET
+ =
+
+diff --git a/net/Makefile b/net/Makefile
+index 848303d98d3d..07ea48160874 100644
+--- a/net/Makefile
++++ b/net/Makefile
+@@ -87,3 +87,4 @@ endif
+ obj-$(CONFIG_QRTR)		+=3D qrtr/
+ obj-$(CONFIG_NET_NCSI)		+=3D ncsi/
+ obj-$(CONFIG_XDP_SOCKETS)	+=3D xdp/
++obj-$(CONFIG_MPTCP)		+=3D mptcp/
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 932834eb467d..32b7c3d3041f 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -271,6 +271,7 @@
+ #include <net/icmp.h>
+ #include <net/inet_common.h>
+ #include <net/tcp.h>
++#include <net/mptcp.h>
+ #include <net/xfrm.h>
+ #include <net/ip.h>
+ #include <net/sock.h>
+@@ -4021,4 +4022,5 @@ void __init tcp_init(void)
+ 	tcp_metrics_init();
+ 	BUG_ON(tcp_register_congestion_control(&tcp_reno) !=3D 0);
+ 	tcp_tasklet_init();
++	mptcp_init();
+ }
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 30dceac8a608..e1cae9770788 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -2108,9 +2108,16 @@ int __init tcpv6_init(void)
+ 	ret =3D register_pernet_subsys(&tcpv6_net_ops);
+ 	if (ret)
+ 		goto out_tcpv6_protosw;
++
++	ret =3D mptcpv6_init();
++	if (ret)
++		goto out_tcpv6_pernet_subsys;
++
+ out:
+ 	return ret;
+ =
+
++out_tcpv6_pernet_subsys:
++	unregister_pernet_subsys(&tcpv6_net_ops);
+ out_tcpv6_protosw:
+ 	inet6_unregister_protosw(&tcpv6_protosw);
+ out_tcpv6_protocol:
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+new file mode 100644
+index 000000000000..c1a99f07a4cd
+--- /dev/null
++++ b/net/mptcp/Kconfig
+@@ -0,0 +1,16 @@
++
++config MPTCP
++	bool "MPTCP: Multipath TCP"
++	depends on INET
++	select SKB_EXTENSIONS
++	help
++	  Multipath TCP (MPTCP) connections send and receive data over multiple
++	  subflows in order to utilize multiple network paths. Each subflow
++	  uses the TCP protocol, and TCP options carry header information for
++	  MPTCP.
++
++config MPTCP_IPV6
++	bool "MPTCP: IPv6 support for Multipath TCP"
++	depends on MPTCP
++	select IPV6
++	default y
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+new file mode 100644
+index 000000000000..659129d1fcbf
+--- /dev/null
++++ b/net/mptcp/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_MPTCP) +=3D mptcp.o
++
++mptcp-y :=3D protocol.o
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+new file mode 100644
+index 000000000000..2e0a3266725a
+--- /dev/null
++++ b/net/mptcp/protocol.c
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Multipath TCP
++ *
++ * Copyright (c) 2017 - 2019, Intel Corporation.
++ */
++
++#define pr_fmt(fmt) "MPTCP: " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/netdevice.h>
++#include <net/sock.h>
++#include <net/inet_common.h>
++#include <net/inet_hashtables.h>
++#include <net/protocol.h>
++#include <net/tcp.h>
++#include <net/mptcp.h>
++#include "protocol.h"
++
++static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct socket *subflow =3D msk->subflow;
++
++	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
++		return -EOPNOTSUPP;
++
++	return sock_sendmsg(subflow, msg);
++}
++
++static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
++			 int nonblock, int flags, int *addr_len)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct socket *subflow =3D msk->subflow;
++
++	return sock_recvmsg(subflow, msg, flags);
++}
++
++static int mptcp_init_sock(struct sock *sk)
++{
++	return 0;
++}
++
++static void mptcp_close(struct sock *sk, long timeout)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	inet_sk_state_store(sk, TCP_CLOSE);
++
++	if (msk->subflow) {
++		pr_debug("subflow=3D%p", msk->subflow->sk);
++		sock_release(msk->subflow);
++	}
++
++	sock_orphan(sk);
++	sock_put(sk);
++}
++
++static int mptcp_connect(struct sock *sk, struct sockaddr *saddr, int len)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	int err;
++
++	saddr->sa_family =3D AF_INET;
++
++	pr_debug("msk=3D%p, subflow=3D%p", msk, msk->subflow->sk);
++
++	err =3D kernel_connect(msk->subflow, saddr, len, 0);
++
++	sk->sk_state =3D TCP_ESTABLISHED;
++
++	return err;
++}
++
++static struct proto mptcp_prot =3D {
++	.name		=3D "MPTCP",
++	.owner		=3D THIS_MODULE,
++	.init		=3D mptcp_init_sock,
++	.close		=3D mptcp_close,
++	.accept		=3D inet_csk_accept,
++	.connect	=3D mptcp_connect,
++	.shutdown	=3D tcp_shutdown,
++	.sendmsg	=3D mptcp_sendmsg,
++	.recvmsg	=3D mptcp_recvmsg,
++	.hash		=3D inet_hash,
++	.unhash		=3D inet_unhash,
++	.get_port	=3D inet_csk_get_port,
++	.obj_size	=3D sizeof(struct mptcp_sock),
++	.no_autobind	=3D true,
++};
++
++static struct inet_protosw mptcp_protosw =3D {
++	.type		=3D SOCK_STREAM,
++	.protocol	=3D IPPROTO_MPTCP,
++	.prot		=3D &mptcp_prot,
++	.ops		=3D &inet_stream_ops,
++};
++
++void __init mptcp_init(void)
++{
++	if (proto_register(&mptcp_prot, 1) !=3D 0)
++		panic("Failed to register MPTCP proto.\n");
++
++	inet_register_protosw(&mptcp_protosw);
++}
++
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++static struct proto mptcp_v6_prot;
++
++static struct inet_protosw mptcp_v6_protosw =3D {
++	.type		=3D SOCK_STREAM,
++	.protocol	=3D IPPROTO_MPTCP,
++	.prot		=3D &mptcp_v6_prot,
++	.ops		=3D &inet6_stream_ops,
++	.flags		=3D INET_PROTOSW_ICSK,
++};
++
++int mptcpv6_init(void)
++{
++	int err;
++
++	mptcp_v6_prot =3D mptcp_prot;
++	strcpy(mptcp_v6_prot.name, "MPTCPv6");
++	mptcp_v6_prot.slab =3D NULL;
++	mptcp_v6_prot.obj_size =3D sizeof(struct mptcp_sock) +
++				 sizeof(struct ipv6_pinfo);
++
++	err =3D proto_register(&mptcp_v6_prot, 1);
++	if (err)
++		return err;
++
++	err =3D inet6_register_protosw(&mptcp_v6_protosw);
++	if (err)
++		proto_unregister(&mptcp_v6_prot);
++
++	return err;
++}
++#endif
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+new file mode 100644
+index 000000000000..ee04a01bffd3
+--- /dev/null
++++ b/net/mptcp/protocol.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Multipath TCP
++ *
++ * Copyright (c) 2017 - 2019, Intel Corporation.
++ */
++
++#ifndef __MPTCP_PROTOCOL_H
++#define __MPTCP_PROTOCOL_H
++
++/* MPTCP connection sock */
++struct mptcp_sock {
++	/* inet_connection_sock must be the first member */
++	struct inet_connection_sock sk;
++	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
++};
++
++static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
++{
++	return (struct mptcp_sock *)sk;
++}
++
++#endif /* __MPTCP_PROTOCOL_H */
 -- =
 
 2.24.0
 
---===============8729430643217410999==--
+--===============5071979664717397254==--
