@@ -1,84 +1,82 @@
-Content-Type: multipart/mixed; boundary="===============0431995597779140170=="
+Content-Type: multipart/mixed; boundary="===============6086915004942046618=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 00/11] Multipath TCP part 1: Prerequisites
-Date: Fri, 13 Dec 2019 21:48:13 +0100
-Message-ID: <20191213204824.2464461-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 01/11] net: Make sock protocol value checks more
+ specific
+Date: Fri, 13 Dec 2019 21:48:14 +0100
+Message-ID: <20191213204824.2464461-2-matthieu.baerts@tessares.net>
+In-Reply-To: 20191213204824.2464461-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 2981
+X-UID: 2982
 
---===============0431995597779140170==
+--===============6086915004942046618==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP upstreaming community has been collaborating on an
-upstreamable MPTCP implementation that complies with RFC 8684. A minimal
-set of features to comply with the specification involves a sizeable set
-of code changes, so David requested that we split this work in to
-multiple, smaller patch sets to build up MPTCP infrastructure.
+From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-The minimal MPTCP feature set we are proposing for the v5.6 timeframe is
-split in to these parts for review:
+SK_PROTOCOL_MAX is only used in two places, for DECNet and AX.25. The
+limits have more to do with the those protocol definitions than they do
+with the data type of sk_protocol, so remove SK_PROTOCOL_MAX and use
+U8_MAX directly.
 
-Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP
-definitions, additional ULP and skb extension features, TCP option space
-checking, and a few exported symbols.
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ include/net/sock.h     | 1 -
+ net/ax25/af_ax25.c     | 2 +-
+ net/decnet/af_decnet.c | 2 +-
+ 3 files changed, 2 insertions(+), 3 deletions(-)
 
-Part 2: Single subflow implementation and self tests.
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 87d54ef57f00..81dc811aad2e 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -458,7 +458,6 @@ struct sock {
+ 				sk_userlocks : 4,
+ 				sk_protocol  : 8,
+ 				sk_type      : 16;
+-#define SK_PROTOCOL_MAX U8_MAX
+ 	u16			sk_gso_max_segs;
+ 	u8			sk_pacing_shift;
+ 	unsigned long	        sk_lingertime;
+diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
+index 324306d6fde0..ff57ea89c27e 100644
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -808,7 +808,7 @@ static int ax25_create(struct net *net, struct socket *=
+sock, int protocol,
+ 	struct sock *sk;
+ 	ax25_cb *ax25;
+ =
 
-Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684,
-publication expected in the next few days).
+-	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
++	if (protocol < 0 || protocol > U8_MAX)
+ 		return -EINVAL;
+ =
 
-Clone/fetch:
-https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v1-part1)
+ 	if (!net_eq(net, &init_net))
+diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
+index e19a92a62e14..0a46ea3bddd5 100644
+--- a/net/decnet/af_decnet.c
++++ b/net/decnet/af_decnet.c
+@@ -670,7 +670,7 @@ static int dn_create(struct net *net, struct socket *so=
+ck, int protocol,
+ {
+ 	struct sock *sk;
+ =
 
-Browse:
-https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v1-part1
+-	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
++	if (protocol < 0 || protocol > U8_MAX)
+ 		return -EINVAL;
+ =
 
-Thank your for your review. You can find us at mptcp(a)lists.01.org and
-https://is.gd/mptcp_upstream
-
-Mat Martineau (9):
-  net: Make sock protocol value checks more specific
-  sock: Make sk_protocol a 16-bit value
-  tcp: Define IPPROTO_MPTCP
-  tcp: Add MPTCP option number
-  tcp, ulp: Add clone operation to tcp_ulp_ops
-  mptcp: Add MPTCP to skb extensions
-  tcp: Prevent coalesce/collapse when skb has MPTCP extensions
-  tcp: Export TCP functions and ops struct
-  tcp: Check for filled TCP option space before SACK
-
-Paolo Abeni (2):
-  tcp: clean ext on tx recycle
-  skb: add helpers to allocate ext independently from sk_buff
-
- MAINTAINERS                     | 10 ++++++++
- include/linux/skbuff.h          |  6 +++++
- include/net/mptcp.h             | 43 +++++++++++++++++++++++++++++++++
- include/net/sock.h              |  6 ++---
- include/net/tcp.h               | 22 +++++++++++++++++
- include/trace/events/sock.h     |  5 ++--
- include/uapi/linux/in.h         |  2 ++
- net/ax25/af_ax25.c              |  2 +-
- net/core/skbuff.c               | 42 ++++++++++++++++++++++++++++++--
- net/decnet/af_decnet.c          |  2 +-
- net/ipv4/inet_connection_sock.c |  2 ++
- net/ipv4/tcp.c                  |  6 ++---
- net/ipv4/tcp_input.c            | 10 ++++++--
- net/ipv4/tcp_ipv4.c             |  2 +-
- net/ipv4/tcp_output.c           |  5 +++-
- net/ipv4/tcp_ulp.c              | 12 +++++++++
- net/ipv6/tcp_ipv6.c             |  6 ++---
- tools/include/uapi/linux/in.h   |  2 ++
- 18 files changed, 166 insertions(+), 19 deletions(-)
- create mode 100644 include/net/mptcp.h
-
+ 	if (!net_eq(net, &init_net))
 -- =
 
 2.24.0
 
---===============0431995597779140170==--
+--===============6086915004942046618==--
