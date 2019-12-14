@@ -1,60 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============8804649541193066090=="
+Content-Type: multipart/mixed; boundary="===============4516432875552508012=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 02/11] sock: Make sk_protocol a 16-bit
- value
-Date: Fri, 13 Dec 2019 16:06:19 -0800
-Message-ID: <alpine.OSX.2.21.1912131555280.38100@amhui-mobl1.amr.corp.intel.com>
-In-Reply-To: 9a83715c-92c3-7e3e-304d-34b1d9285138@gmail.com
+Subject: [MPTCP] Re: [PATCH net-next 09/11] tcp: Check for filled TCP option
+ space before SACK
+Date: Fri, 13 Dec 2019 16:28:46 -0800
+Message-ID: <alpine.OSX.2.21.1912131607000.38100@amhui-mobl1.amr.corp.intel.com>
+In-Reply-To: 47545b88-94db-e9cd-2f9f-2c6d665246e2@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3041
+X-UID: 3042
 
---===============8804649541193066090==
+--===============4516432875552508012==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-
 
 On Fri, 13 Dec 2019, Eric Dumazet wrote:
 
 >
 >
 > On 12/13/19 3:00 PM, Mat Martineau wrote:
->> Match the 16-bit width of skbuff->protocol. Fills an 8-bit hole so
->> sizeof(struct sock) does not change.
+>> The SACK code would potentially add four bytes to the expected
+>> TCP option size even if all option space was already used.
 >>
 >> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 >> ---
->>  include/net/sock.h          | 4 ++--
->>  include/trace/events/sock.h | 2 +-
->>  2 files changed, 3 insertions(+), 3 deletions(-)
+>>  net/ipv4/tcp_output.c | 3 +++
+>>  1 file changed, 3 insertions(+)
 >>
->> diff --git a/include/net/sock.h b/include/net/sock.h
->> index 81dc811aad2e..9dd225f62012 100644
->> --- a/include/net/sock.h
->> +++ b/include/net/sock.h
->> @@ -456,10 +456,10 @@ struct sock {
->>  				sk_no_check_tx : 1,
->>  				sk_no_check_rx : 1,
->>  				sk_userlocks : 4,
->> -				sk_protocol  : 8,
->> +				sk_pacing_shift : 8,
->>  				sk_type      : 16;
->> +	u16			sk_protocol;
->>  	u16			sk_gso_max_segs;
->> -	u8			sk_pacing_shift;
+>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+>> index 9e04d45bc0e4..710ab45badfa 100644
+>> --- a/net/ipv4/tcp_output.c
+>> +++ b/net/ipv4/tcp_output.c
+>> @@ -748,6 +748,9 @@ static unsigned int tcp_established_options(struct s=
+ock *sk, struct sk_buff *skb
+>>  		size +=3D TCPOLEN_TSTAMP_ALIGNED;
+>>  	}
+>>
+>> +	if (size + TCPOLEN_SACK_BASE_ALIGNED >=3D MAX_TCP_OPTION_SPACE)
+>> +		return size;
+>> +
+>>  	eff_sacks =3D tp->rx_opt.num_sacks + tp->rx_opt.dsack;
+>>  	if (unlikely(eff_sacks)) {
+>>  		const unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
+>>
 >
-> Unfortunately sk_pacing_shift must not be a bit field.
 >
-> I have a patch to add proper READ_ONCE()/WRITE_ONCE() on it,
-> since an update can be done from a lockless context ( sk_pacing_shift_upd=
-ate())
+> Hmmm... I thought I already fixed this issue ?
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3D9424e2e7ad93ffffa88f882c9bc5023570904b55
+>
+> Please do not mix fixes (targeting net tree) in a patch series targeting =
+net-next
 
-Ok, thanks for noting this. I'll remove the change to sk_pacing_shift.
+Ok, good that it is already fixed. We have tried to upstream generic fixes =
+
+when they're identified but obviously misclassified this one.
 
 --
 Mat Martineau
 Intel
---===============8804649541193066090==--
+--===============4516432875552508012==--
