@@ -1,277 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============2068550657245323351=="
+Content-Type: multipart/mixed; boundary="===============5771244924009374430=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 14/15] mptcp: new sysctl to control the
- activation per NS
-Date: Fri, 13 Dec 2019 22:04:16 -0800
-Message-ID: <20191214060417.2870-15-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20191214060417.2870-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH 00/15] Multipath TCP part 2: Single subflow
+Date: Fri, 13 Dec 2019 23:38:11 -0800
+Message-ID: <alpine.OSX.2.21.1912132330360.40703@amhui-mobl1.amr.corp.intel.com>
+In-Reply-To: 20191213205106.2467313-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3064
+X-UID: 3065
 
---===============2068550657245323351==
+--===============5771244924009374430==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-New MPTCP sockets will return -ENOPROTOOPT if MPTCP support is disabled
-for the current net namespace.
+On Fri, 13 Dec 2019, Matthieu Baerts wrote:
 
-We are providing here a way to control access to the feature for those
-that need to turn it on or off.
+> These patches depend on the "Multipath TCP part 1: Prerequisites" patch
+> set sent earlier.
+>
+> This set adds MPTCP connection establishment, writing & reading MPTCP
+> options on data packets, a sysctl to allow MPTCP per-namespace, and self
+> tests. This is sufficient to establish and maintain a connection with a
+> MPTCP peer, but will not yet allow or initiate establishment of
+> additional MPTCP subflows.
+>
+> Clone/fetch:
+> https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v1-part2)
+>
+> Browse:
+> https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v1-part2
+>
+> Thank your for your review. You can find us at mptcp(a)lists.01.org and
+> https://is.gd/mptcp_upstream
+>
 
-The value of this new sysctl can be different per namespace. We can then
-restrict the usage of MPTCP to the selected NS. In case of serious
-issues with MPTCP, administrators can now easily turn MPTCP off.
+Matthieu -
 
-Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- net/mptcp/Makefile   |   2 +-
- net/mptcp/ctrl.c     | 130 +++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c |  16 ++++--
- net/mptcp/protocol.h |   3 +
- 4 files changed, 146 insertions(+), 5 deletions(-)
- create mode 100644 net/mptcp/ctrl.c
+Here are the three commits that we modified for the netdev-v1-part2 =
 
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index 178ae81d8b66..4e98d9edfd0a 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_MPTCP) +=3D mptcp.o
- =
+submission:
 
--mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o
-+mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-new file mode 100644
-index 000000000000..8e39585d37f3
---- /dev/null
-+++ b/net/mptcp/ctrl.c
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Multipath TCP
-+ *
-+ * Copyright (c) 2019, Tessares SA.
-+ */
-+
-+#include <linux/sysctl.h>
-+
-+#include <net/net_namespace.h>
-+#include <net/netns/generic.h>
-+
-+#include "protocol.h"
-+
-+#define MPTCP_SYSCTL_PATH "net/mptcp"
-+
-+static int mptcp_pernet_id;
-+struct mptcp_pernet {
-+	struct ctl_table_header *ctl_table_hdr;
-+
-+	int mptcp_enabled;
-+};
-+
-+static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
-+{
-+	return net_generic(net, mptcp_pernet_id);
-+}
-+
-+int mptcp_is_enabled(struct net *net)
-+{
-+	return mptcp_get_pernet(net)->mptcp_enabled;
-+}
-+
-+static struct ctl_table mptcp_sysctl_table[] =3D {
-+	{
-+		.procname =3D "enabled",
-+		.maxlen =3D sizeof(int),
-+		.mode =3D 0644,
-+		/* users with CAP_NET_ADMIN or root (not and) can change this
-+		 * value, same as other sysctl or the 'net' tree.
-+		 */
-+		.proc_handler =3D proc_dointvec,
-+	},
-+	{}
-+};
-+
-+static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
-+{
-+	pernet->mptcp_enabled =3D 1;
-+}
-+
-+static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pe=
-rnet)
-+{
-+	struct ctl_table_header *hdr;
-+	struct ctl_table *table;
-+
-+	table =3D mptcp_sysctl_table;
-+	if (!net_eq(net, &init_net)) {
-+		table =3D kmemdup(table, sizeof(mptcp_sysctl_table), GFP_KERNEL);
-+		if (!table)
-+			goto err_alloc;
-+	}
-+
-+	table[0].data =3D &pernet->mptcp_enabled;
-+
-+	hdr =3D register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
-+	if (!hdr)
-+		goto err_reg;
-+
-+	pernet->ctl_table_hdr =3D hdr;
-+
-+	return 0;
-+
-+err_reg:
-+	if (!net_eq(net, &init_net))
-+		kfree(table);
-+err_alloc:
-+	return -ENOMEM;
-+}
-+
-+static void mptcp_pernet_del_table(struct mptcp_pernet *pernet)
-+{
-+	struct ctl_table *table =3D pernet->ctl_table_hdr->ctl_table_arg;
-+
-+	unregister_net_sysctl_table(pernet->ctl_table_hdr);
-+
-+	kfree(table);
-+}
-+
-+static int __net_init mptcp_net_init(struct net *net)
-+{
-+	struct mptcp_pernet *pernet =3D mptcp_get_pernet(net);
-+
-+	mptcp_pernet_set_defaults(pernet);
-+
-+	return mptcp_pernet_new_table(net, pernet);
-+}
-+
-+/* Note: the callback will only be called per extra netns */
-+static void __net_exit mptcp_net_exit(struct net *net)
-+{
-+	struct mptcp_pernet *pernet =3D mptcp_get_pernet(net);
-+
-+	mptcp_pernet_del_table(pernet);
-+}
-+
-+static struct pernet_operations mptcp_pernet_ops =3D {
-+	.init =3D mptcp_net_init,
-+	.exit =3D mptcp_net_exit,
-+	.id =3D &mptcp_pernet_id,
-+	.size =3D sizeof(struct mptcp_pernet),
-+};
-+
-+void __init mptcp_init(void)
-+{
-+	mptcp_proto_init();
-+
-+	if (register_pernet_subsys(&mptcp_pernet_ops) < 0)
-+		panic("Failed to register MPTCP pernet subsystem.\n");
-+}
-+
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+int __init mptcpv6_init(void)
-+{
-+	int err;
-+
-+	err =3D mptcp_proto_v6_init();
-+
-+	return err;
-+}
-+#endif
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7dc27a4f0403..7cc7a3bdbdbc 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -521,7 +521,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct s=
-ock *ssk,
- 	}
- }
- =
 
--static int mptcp_init_sock(struct sock *sk)
-+static int __mptcp_init_sock(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
+https://github.com/multipath-tcp/mptcp_net-next/commit/1d9cd488687c4fcb7255=
+f2a6428980e6f0bfb68f
 
-@@ -531,6 +531,14 @@ static int mptcp_init_sock(struct sock *sk)
- 	return 0;
- }
- =
+https://github.com/multipath-tcp/mptcp_net-next/commit/eb7be7fa655c8fd49106=
+c2e83edc1d24b50d73be
 
-+static int mptcp_init_sock(struct sock *sk)
-+{
-+	if (!mptcp_is_enabled(sock_net(sk)))
-+		return -ENOPROTOOPT;
-+
-+	return __mptcp_init_sock(sk);
-+}
-+
- static void mptcp_subflow_shutdown(struct sock *ssk, int how)
- {
- 	lock_sock(ssk);
-@@ -639,7 +647,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
-lags, int *err,
- 			return NULL;
- 		}
- =
+https://github.com/multipath-tcp/mptcp_net-next/commit/519412484946e9eb807d=
+6b486a72b0d26f49daec
 
--		mptcp_init_sock(new_mptcp_sock);
-+		__mptcp_init_sock(new_mptcp_sock);
- =
 
- 		msk =3D mptcp_sk(new_mptcp_sock);
- 		msk->remote_key =3D subflow->remote_key;
-@@ -1081,7 +1089,7 @@ static struct inet_protosw mptcp_protosw =3D {
- 	.flags		=3D INET_PROTOSW_ICSK,
- };
- =
+I also recreated three tags:
 
--void __init mptcp_init(void)
-+void mptcp_proto_init(void)
- {
- 	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
- 	mptcp_stream_ops =3D inet_stream_ops;
-@@ -1119,7 +1127,7 @@ static struct inet_protosw mptcp_v6_protosw =3D {
- 	.flags		=3D INET_PROTOSW_ICSK,
- };
- =
+netdev-v1-part2 21e30402537066e81732e00f06f58d3b1489d6a7
 
--int mptcpv6_init(void)
-+int mptcp_proto_v6_init(void)
- {
- 	int err;
- =
+netdev-v1-part3 95f4f3cf36331a752562659a038a68cf8ce09108
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f02dd5c35ec9..f61b197023e2 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -166,6 +166,9 @@ extern const struct inet_connection_sock_af_ops ipv6_sp=
-ecific;
- #endif
- =
+netdev-v1-full 2afd1babd9ce15224792ee254407d79df5cd2241
 
- void mptcp_proto_init(void);
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+int mptcp_proto_v6_init(void);
-+#endif
- =
-
- struct mptcp_read_arg {
- 	struct msghdr *msg;
--- =
-
-2.24.1
-
---===============2068550657245323351==--
+--
+Mat Martineau
+Intel
+--===============5771244924009374430==--
