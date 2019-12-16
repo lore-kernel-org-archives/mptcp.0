@@ -1,60 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============0262351901358789945=="
+Content-Type: multipart/mixed; boundary="===============0468447983088359115=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 09/11] tcp: Check for filled TCP option
- space before SACK
-Date: Mon, 16 Dec 2019 18:28:13 +0100
-Message-ID: <efc70920e3dcdb694ad5791b845f4cf05478b07f.camel@redhat.com>
-In-Reply-To: d5b3a6ed-fb57-e74d-ef63-ebc4ce49e4b7@gmail.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "sock: Make sk_protocol a 16-bit value"
+Date: Mon, 16 Dec 2019 18:47:39 +0100
+Message-ID: <338c1468cc8a8b6be920804b13f5f9568937554f.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.1912160837330.6806@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 3083
+X-UID: 3084
 
---===============0262351901358789945==
+--===============0468447983088359115==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-12-16 at 08:55 -0800, Eric Dumazet wrote:
-> On 12/16/19 4:52 AM, Paolo Abeni wrote:
-> > Thank you for the feedback!
-> > =
-
-> > Unfortunatelly, the above commit is not enough when MPTCP is enabled,
-> > as, without this patch, we can reach the following code:
-> > =
-
-> > 		const unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
-> > 		opts->num_sack_blocks =3D
-> > 			min_t(unsigned int, eff_sacks,
-> > 			      (remaining - TCPOLEN_SACK_BASE_ALIGNED) /
-> > 			      TCPOLEN_SACK_PERBLOCK);
-> > =
-
-> > with 'size =3D=3D MAX_TCP_OPTION_SPACE' and num_sack_blocks will be
-> > miscalculated. So we need 'fix' but only for MPTCP/when MPTCP is
-> > enabled. Still ok for a -net commit?
-> > =
-
+On Mon, 2019-12-16 at 08:51 -0800, Mat Martineau wrote:
+> On Mon, 16 Dec 2019, Paolo Abeni wrote:
 > =
 
-> Does it means MPTCP flows can not use SACK at all ? That would be very ba=
-d.
+> > move sk_pacing_shift to a separate field, so we can READ_ONCE() it.
+> > =
+
+> > Binary layout of struct sock dose not change (except for the
+> > sk_pacing_shift position)
+> > ---
+> > This addresses Eric's upstream feedback on v1
+> > ---
+> > include/net/sock.h | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > =
+
+> > diff --git a/include/net/sock.h b/include/net/sock.h
+> > index 9dd225f62012..0930f46c600c 100644
+> > --- a/include/net/sock.h
+> > +++ b/include/net/sock.h
+> > @@ -456,8 +456,8 @@ struct sock {
+> > 				sk_no_check_tx : 1,
+> > 				sk_no_check_rx : 1,
+> > 				sk_userlocks : 4,
+> > -				sk_pacing_shift : 8,
+> > 				sk_type      : 16;
+> > +	u8			sk_pacing_shift;
+> > 	u16			sk_protocol;
+> > 	u16			sk_gso_max_segs;
 > =
 
-> What is the size of MPTCP options ?
+> sk_pacing_shift was here (between sk_gso_max_segs and sk_lingertime) =
 
-MPTCP DSS+ACK+csum is up to 28 bytes, but an MPTCP stream does not need
-to attach such option to each packet.
+> before, would be good to put it back where it was for a clean diff.
 
-Bare MPTCP ACK are at most 12 bytes, so there is enough room for sack.
+But we can't move back there, otherwise the 'struct sock' will grow
+quite a bit (we will have 7 bytes hole on 64 bits arch).
 
-The MPTCP specs allow for different opt sizes, because e.g. sequence
-numbers can be either 32 or 64 bits. Currently we only implement 64
-bits seq.
+With the proposed patch 'struct sock' size does not change.
+
+Cheers,
 
 Paolo
 
-
---===============0262351901358789945==--
+--===============0468447983088359115==--
