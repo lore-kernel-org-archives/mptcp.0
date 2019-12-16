@@ -1,43 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============2129364873675198628=="
+Content-Type: multipart/mixed; boundary="===============3751315224549952765=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: tcp: Check for filled TCP option space
- before SACK
-Date: Mon, 16 Dec 2019 14:05:26 +0100
-Message-ID: <3cf172bb-fd16-5934-6160-21436c2b4669@tessares.net>
-In-Reply-To: 7ad85d0d66f3dcbebbd9d2ee6896cfedd1620812.1576499809.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "sock: Make sk_protocol a 16-bit value"
+Date: Mon, 16 Dec 2019 14:13:30 +0100
+Message-ID: <d3bfb7e6-387c-378b-b013-08096e19ae9a@tessares.net>
+In-Reply-To: a9ebee974914c23cc68877a188908d1a8fa07a5f.1576499362.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3077
+X-UID: 3078
 
---===============2129364873675198628==
+--===============3751315224549952765==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo,
 
-On 16/12/2019 13:37, Paolo Abeni wrote:
-> Less invasive checks, so that the number of branchs when hitting
-> the sack code path decreses compared to the current vanilla tree.
-> --
-> Some addictional check in tcp_established_options() is needed, otherwise
-> the tcp header will be corrupted when mptcp_established_options() fully
-> consumes the TCP option space. This condition can be reached without
-> MPTCP, so not sure if the result patch is still worthy for -net ?!?
+On 16/12/2019 13:31, Paolo Abeni wrote:
+> move sk_pacing_shift to a separate field, so we can READ_ONCE() it.
 
+Thank you addressing Eric's comments!
 
-Thank you for the patch!
+> Binary layout of struct sock dose not change (except for the
+> sk_pacing_shift position)
 
-It looks good to me!
+Just to be sure, does the compiler will optimize the structure to remove =
 
-I guess we will need to update the commit message for "tcp: Check for =
+the "hole" we have here? We use 24/32 bits of the "unsigned int" and =
 
-filled TCP option space before SACK" :)
+then we declare the u8. But because we don't declare the "__packed__" =
+
+attribute, the compiler will do his job and we don't increase the size. =
+
+Right? :)
+
+> ---
+> This addresses Eric's upstream feedback on v1
+
+I guess we should add this in the commit message.
+
+Or:
+
+   v1:
+   - move sk_pacing_shift to a separate field, so we can READ_ONCE() it =
+
+(Eric Dumazet)
 
 Cheers,
-Matth
+Matt
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -45,4 +56,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2129364873675198628==--
+--===============3751315224549952765==--
