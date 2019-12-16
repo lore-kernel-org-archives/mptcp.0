@@ -1,25 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1267136869572226403=="
+Content-Type: multipart/mixed; boundary="===============6861100008640482905=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: Handle MP_CAPABLE options for
- outgoing connections"
-Date: Mon, 16 Dec 2019 22:30:03 +0100
-Message-ID: <20191216213003.GU795@breakpoint.cc>
-In-Reply-To: 5bc1ab81d4c3eed1a2ad8b5b83069bacc980a8ee.1576531578.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: Implement MPTCP receive path"
+Date: Mon, 16 Dec 2019 22:29:56 +0100
+Message-ID: <6c8a763ddc3d9110354a197ab9b1f0f2aace020e.1576531786.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3092
+X-UID: 3093
 
---===============1267136869572226403==
+--===============6861100008640482905==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> mptcp_established_options() definition will be changed in a couple of pat=
-ches,
-> let's introduce early it's final form
+drop duplicate line indroduced by the 'Squash-to' commit.
 
-ACK, I think this is preferrable.
---===============1267136869572226403==--
+Note: this will cause some conflict in v1 patches. Resolution
+is trivial, howver the patches must be rebased on top of this
+one.
+---
+ net/mptcp/protocol.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1ede654057ba..5b73a1ae0da9 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -559,8 +559,6 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	subflow->map_subflow_seq =3D 1;
+ 	subflow->rel_write_seq =3D 1;
+ =
+
+-	subflow->rel_write_seq =3D 1;
+-
+ 	/* the socket is not connected yet, no msk/subflow ops can access/race
+ 	 * accessing the field below
+ 	 */
+-- =
+
+2.21.0
+
+--===============6861100008640482905==--
