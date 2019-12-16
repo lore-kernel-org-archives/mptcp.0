@@ -1,73 +1,100 @@
-Content-Type: multipart/mixed; boundary="===============0602227019173634697=="
+Content-Type: multipart/mixed; boundary="===============1875734186460033228=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "sock: Make sk_protocol a 16-bit value"
-Date: Mon, 16 Dec 2019 10:41:57 -0800
-Message-ID: <alpine.OSX.2.21.1912161021280.6806@mjmartin-mac01.local>
-In-Reply-To: 338c1468cc8a8b6be920804b13f5f9568937554f.camel@redhat.com
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: Handle MP_CAPABLE options for
+ outgoing connections"
+Date: Mon, 16 Dec 2019 22:26:53 +0100
+Message-ID: <5bc1ab81d4c3eed1a2ad8b5b83069bacc980a8ee.1576531578.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3090
+X-UID: 3091
 
---===============0602227019173634697==
+--===============1875734186460033228==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+mptcp_established_options() definition will be changed in a couple of patch=
+es,
+let's introduce early it's final form
 
-On Mon, 16 Dec 2019, Paolo Abeni wrote:
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/net/mptcp.h   | 5 ++++-
+ net/ipv4/tcp_output.c | 9 ++++-----
+ net/mptcp/options.c   | 3 ++-
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-> On Mon, 2019-12-16 at 08:51 -0800, Mat Martineau wrote:
->> On Mon, 16 Dec 2019, Paolo Abeni wrote:
->>
->>> move sk_pacing_shift to a separate field, so we can READ_ONCE() it.
->>>
->>> Binary layout of struct sock dose not change (except for the
->>> sk_pacing_shift position)
->>> ---
->>> This addresses Eric's upstream feedback on v1
->>> ---
->>> include/net/sock.h | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/include/net/sock.h b/include/net/sock.h
->>> index 9dd225f62012..0930f46c600c 100644
->>> --- a/include/net/sock.h
->>> +++ b/include/net/sock.h
->>> @@ -456,8 +456,8 @@ struct sock {
->>> 				sk_no_check_tx : 1,
->>> 				sk_no_check_rx : 1,
->>> 				sk_userlocks : 4,
->>> -				sk_pacing_shift : 8,
->>> 				sk_type      : 16;
->>> +	u8			sk_pacing_shift;
->>> 	u16			sk_protocol;
->>> 	u16			sk_gso_max_segs;
->>
->> sk_pacing_shift was here (between sk_gso_max_segs and sk_lingertime)
->> before, would be good to put it back where it was for a clean diff.
->
-> But we can't move back there, otherwise the 'struct sock' will grow
-> quite a bit (we will have 7 bytes hole on 64 bits arch).
->
-> With the proposed patch 'struct sock' size does not change.
->
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index d7af03848f5a..588abcb76da3 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -55,7 +55,8 @@ bool mptcp_syn_options(struct sock *sk, unsigned int *siz=
+e,
+ void mptcp_rcv_synsent(struct sock *sk);
+ bool mptcp_synack_options(const struct request_sock *req, unsigned int *si=
+ze,
+ 			  struct mptcp_out_options *opts);
+-bool mptcp_established_options(struct sock *sk, unsigned int *size,
++bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
++			       unsigned int *size, unsigned int remaining,
+ 			       struct mptcp_out_options *opts);
+ =
 
-I didn't know gcc was smart enough to pack the u8 in with the previous =
+ void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts);
+@@ -104,7 +105,9 @@ static inline bool mptcp_synack_options(const struct re=
+quest_sock *req,
+ }
+ =
 
-bitfield! Learned something new.
+ static inline bool mptcp_established_options(struct sock *sk,
++					     struct sk_buff *skb,
+ 					     unsigned int *size,
++					     unsigned int remaining,
+ 					     struct mptcp_out_options *opts)
+ {
+ 	return false;
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index a4bf1197f577..d123d67026d5 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -798,11 +798,10 @@ static unsigned int tcp_established_options(struct so=
+ck *sk, struct sk_buff *skb
+ 		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
+ 		unsigned int opt_size =3D 0;
+ =
 
-I think Paolo's fix is ok as-is, unless it makes sense to worry about =
+-		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
+-			if (remaining >=3D opt_size) {
+-				opts->options |=3D OPTION_MPTCP;
+-				size +=3D opt_size;
+-			}
++		if (mptcp_established_options(sk, skb, &opt_size, remaining,
++					      &opts->mptcp)) {
++			opts->options |=3D OPTION_MPTCP;
++			size +=3D opt_size;
+ 		}
+ 	}
+ =
 
-2-byte alignment of sk_type. It does appear to land on an odd byte now =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 26203dfb6be6..89aef0d0beb1 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -196,7 +196,8 @@ void mptcp_rcv_synsent(struct sock *sk)
+ 	}
+ }
+ =
 
-(checked with objdump).
+-bool mptcp_established_options(struct sock *sk, unsigned int *size,
++bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
++			       unsigned int *size, unsigned int remaining,
+ 			       struct mptcp_out_options *opts)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-- =
 
+2.21.0
 
-Thanks
-
---
-Mat Martineau
-Intel
---===============0602227019173634697==--
+--===============1875734186460033228==--
