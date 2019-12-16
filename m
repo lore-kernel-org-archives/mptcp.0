@@ -1,68 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============5365954714201609913=="
+Content-Type: multipart/mixed; boundary="===============7116247211416172517=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: tcp: Check for filled TCP option space
- before SACK
-Date: Mon, 16 Dec 2019 19:28:01 +0100
-Message-ID: <3f57b43a-b547-c2b0-cc36-b40eff022939@tessares.net>
-In-Reply-To: 3cf172bb-fd16-5934-6160-21436c2b4669@tessares.net
+Subject: [MPTCP] Re: [PATCH] Squash-to: "sock: Make sk_protocol a 16-bit value"
+Date: Mon, 16 Dec 2019 19:29:57 +0100
+Message-ID: <13651369-c87c-4e81-4fa9-8c8ac6ab6db3@tessares.net>
+In-Reply-To: 338c1468cc8a8b6be920804b13f5f9568937554f.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3086
+X-UID: 3087
 
---===============5365954714201609913==
+--===============7116247211416172517==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 16/12/2019 14:05, Matthieu Baerts wrote:
-> Hi Paolo,
+On 16/12/2019 18:47, Paolo Abeni wrote:
+> On Mon, 2019-12-16 at 08:51 -0800, Mat Martineau wrote:
+>> On Mon, 16 Dec 2019, Paolo Abeni wrote:
+>>
+>>> move sk_pacing_shift to a separate field, so we can READ_ONCE() it.
+>>>
+>>> Binary layout of struct sock dose not change (except for the
+>>> sk_pacing_shift position)
+>>> ---
+>>> This addresses Eric's upstream feedback on v1
+>>> ---
+>>> include/net/sock.h | 2 +-
+>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/include/net/sock.h b/include/net/sock.h
+>>> index 9dd225f62012..0930f46c600c 100644
+>>> --- a/include/net/sock.h
+>>> +++ b/include/net/sock.h
+>>> @@ -456,8 +456,8 @@ struct sock {
+>>> 				sk_no_check_tx : 1,
+>>> 				sk_no_check_rx : 1,
+>>> 				sk_userlocks : 4,
+>>> -				sk_pacing_shift : 8,
+>>> 				sk_type      : 16;
+>>> +	u8			sk_pacing_shift;
+>>> 	u16			sk_protocol;
+>>> 	u16			sk_gso_max_segs;
+>>
+>> sk_pacing_shift was here (between sk_gso_max_segs and sk_lingertime)
+>> before, would be good to put it back where it was for a clean diff.
 > =
 
-> On 16/12/2019 13:37, Paolo Abeni wrote:
->> Less invasive checks, so that the number of branchs when hitting
->> the sack code path decreses compared to the current vanilla tree.
->> -- =
-
->> Some addictional check in tcp_established_options() is needed, otherwise
->> the tcp header will be corrupted when mptcp_established_options() fully
->> consumes the TCP option space. This condition can be reached without
->> MPTCP, so not sure if the result patch is still worthy for -net ?!?
+> But we can't move back there, otherwise the 'struct sock' will grow
+> quite a bit (we will have 7 bytes hole on 64 bits arch).
 > =
 
-> =
+> With the proposed patch 'struct sock' size does not change.
 
-> Thank you for the patch!
-> =
+- 548181045475: "squashed" in "sock: Make sk_protocol a 16-bit value"
+- 4d09491bafaf: "Signed-off-by" + "Co-developed-by"
+- 66880827b48f..e999bb17232e: result
 
-> It looks good to me!
-
-- b474fba77e6f: "squashed" in "tcp: Check for filled TCP option space =
-
-before SACK"
-- 5920a223da80: "Signed-off-by" + "Co-developed-by"
-- 7ed2a1728574: conflict in =
-
-t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections
-- b8aff0a1a12d..66880827b48f: result
-
-> I guess we will need to update the commit message for "tcp: Check for =
-
-> filled TCP option space before SACK" :)
-
-What can I put here? :)
-
-   v1:
-     - less invasive checks (Eric Dumazet)
-
-Should we also mention that with MPTCP and TS, we can use all the option =
-
-space?
-
-I will launch the tests + export soon.
+Tests + export will be launched soon.
 
 Cheers,
 Matt
@@ -73,4 +70,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5365954714201609913==--
+--===============7116247211416172517==--
