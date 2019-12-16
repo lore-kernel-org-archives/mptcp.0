@@ -1,62 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============0468447983088359115=="
+Content-Type: multipart/mixed; boundary="===============9190934078265952718=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "sock: Make sk_protocol a 16-bit value"
-Date: Mon, 16 Dec 2019 18:47:39 +0100
-Message-ID: <338c1468cc8a8b6be920804b13f5f9568937554f.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1912160837330.6806@mjmartin-mac01.local
+Subject: [MPTCP] [PATCH v2] Squash-to: "mptcp: cope with later TCP fallback"
+Date: Mon, 16 Dec 2019 18:55:12 +0100
+Message-ID: <23d83c427a276680e731ec50541e7599ecc80b9a.1576518799.git.pabeni@redhat.com>
+In-Reply-To: 91571e18e2a8945349d6d84fdc5324a8e76f8637.1576498821.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3084
+X-UID: 3085
 
---===============0468447983088359115==
+--===============9190934078265952718==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-12-16 at 08:51 -0800, Mat Martineau wrote:
-> On Mon, 16 Dec 2019, Paolo Abeni wrote:
-> =
+Clean subflow->conn, under the ssk socket lock, and make
+__mptcp_tcp_fallback() less unreadable.
 
-> > move sk_pacing_shift to a separate field, so we can READ_ONCE() it.
-> > =
+v1 -> v2:
+ - fix more typos (Matt)
 
-> > Binary layout of struct sock dose not change (except for the
-> > sk_pacing_shift position)
-> > ---
-> > This addresses Eric's upstream feedback on v1
-> > ---
-> > include/net/sock.h | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-> > diff --git a/include/net/sock.h b/include/net/sock.h
-> > index 9dd225f62012..0930f46c600c 100644
-> > --- a/include/net/sock.h
-> > +++ b/include/net/sock.h
-> > @@ -456,8 +456,8 @@ struct sock {
-> > 				sk_no_check_tx : 1,
-> > 				sk_no_check_rx : 1,
-> > 				sk_userlocks : 4,
-> > -				sk_pacing_shift : 8,
-> > 				sk_type      : 16;
-> > +	u8			sk_pacing_shift;
-> > 	u16			sk_protocol;
-> > 	u16			sk_gso_max_segs;
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2b20f4d3e179..5ebc34750da4 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -49,7 +49,17 @@ static struct socket *__mptcp_fallback_to_tcp(struct mpt=
+cp_sock *msk,
+ 	sock->sk =3D NULL;
+ =
 
-> sk_pacing_shift was here (between sk_gso_max_segs and sk_lingertime) =
+ 	/* socket is now TCP */
++	lock_sock(ssk);
+ 	sock_graft(ssk, sock);
++	if (subflow->conn) {
++		/* Clearing the 'conn' field will make the ULP-overriden
++		 * ops behaving like plain TCP ones.
++		 * Note: we can't release the ULP data on a live socket.
++		 */
++		sock_put(subflow->conn);
++		subflow->conn =3D NULL;
++	}
++	release_sock(ssk);
+ 	sock->ops =3D sk->sk_family =3D=3D AF_INET6 ? &inet6_stream_ops :
+ 						&inet_stream_ops;
+ =
 
-> before, would be good to put it back where it was for a clean diff.
+@@ -76,8 +86,8 @@ static bool __mptcp_needs_tcp_fallback(const struct mptcp=
+_sock *msk)
+ 	return msk->first && !tcp_sk(msk->first)->is_mptcp;
+ }
+ =
 
-But we can't move back there, otherwise the 'struct sock' will grow
-quite a bit (we will have 7 bytes hole on 64 bits arch).
+-/* if the mp_capable handshake is failed, return a tcp socket
+- * return it.
++/* if the mp_capable handshake has failed, it fallbacks msk to plain TCP,
++ * releases the socket lock and returns a reference to the now TCP socket.
+  * Otherwise returns NULL
+  */
+ static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+-- =
 
-With the proposed patch 'struct sock' size does not change.
+2.21.0
 
-Cheers,
-
-Paolo
-
---===============0468447983088359115==--
+--===============9190934078265952718==--
