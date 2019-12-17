@@ -1,118 +1,149 @@
-Content-Type: multipart/mixed; boundary="===============6927287349439278884=="
+Content-Type: multipart/mixed; boundary="===============3863681785102473736=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v3 11/11] skb: add helpers to allocate ext
- independently from sk_buff
-Date: Tue, 17 Dec 2019 12:38:07 -0800
-Message-ID: <20191217203807.12579-12-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v3 08/11] tcp: Export TCP functions and ops
+ struct
+Date: Tue, 17 Dec 2019 12:38:04 -0800
+Message-ID: <20191217203807.12579-9-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191217203807.12579-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3131
+X-UID: 3132
 
---===============6927287349439278884==
+--===============3863681785102473736==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+MPTCP will make use of tcp_send_mss() and tcp_push() when sending
+data to specific TCP subflows.
 
-Currently we can allocate the extension only after the skb,
-this change allows the user to do the opposite, will simplify
-allocation failure handling from MPTCP.
+tcp_request_sock_ipvX_ops and ipvX_specific will be referenced
+during TCP subflow creation.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/linux/skbuff.h |  3 +++
- net/core/skbuff.c      | 35 +++++++++++++++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 2 deletions(-)
+ include/net/tcp.h   | 8 ++++++++
+ net/ipv4/tcp.c      | 6 +++---
+ net/ipv4/tcp_ipv4.c | 2 +-
+ net/ipv6/tcp_ipv6.c | 6 +++---
+ 4 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 1a261c3ee074..af9b6cf79a65 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4115,6 +4115,9 @@ struct skb_ext {
- 	char data[0] __aligned(8);
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index c483c73b8d41..921288afa11b 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -330,6 +330,9 @@ int tcp_sendpage_locked(struct sock *sk, struct page *p=
+age, int offset,
+ 			size_t size, int flags);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
++void tcp_push(struct sock *sk, int flags, int mss_now, int nonagle,
++	      int size_goal);
+ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+@@ -2002,6 +2005,11 @@ struct tcp_request_sock_ops {
+ 			   enum tcp_synack_type synack_type);
  };
  =
 
-+struct skb_ext *__skb_ext_alloc(void);
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext);
- void *skb_ext_add(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_del(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_put(struct skb_ext *ext);
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index fa67036dd928..504e9bd5ebce 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5983,7 +5983,14 @@ static void *skb_ext_get_ptr(struct skb_ext *ext, en=
-um skb_ext_id id)
- 	return (void *)ext + (ext->offset[id] * SKB_EXT_ALIGN_VALUE);
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
++#if IS_ENABLED(CONFIG_IPV6)
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops;
++#endif
++
+ #ifdef CONFIG_SYN_COOKIES
+ static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
+ *ops,
+ 					 const struct sock *sk, struct sk_buff *skb,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 93fe77c5b02d..dc9bd27f4222 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -690,8 +690,8 @@ static bool tcp_should_autocork(struct sock *sk, struct=
+ sk_buff *skb,
+ 	       refcount_read(&sk->sk_wmem_alloc) > skb->truesize;
  }
  =
 
--static struct skb_ext *skb_ext_alloc(void)
-+/**
-+ * __skb_ext_alloc - allocate a new skb extensions storage
-+ *
-+ * Returns the newly allocated pointer. The pointer can later attached to a
-+ * skb via __skb_ext_set().
-+ * Note: caller must handle the skb_ext as an opaque data.
-+ */
-+struct skb_ext *__skb_ext_alloc(void)
+-static void tcp_push(struct sock *sk, int flags, int mss_now,
+-		     int nonagle, int size_goal)
++void tcp_push(struct sock *sk, int flags, int mss_now,
++	      int nonagle, int size_goal)
  {
- 	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, GFP_ATOMIC);
- =
-
-@@ -6023,6 +6030,30 @@ static struct skb_ext *skb_ext_maybe_cow(struct skb_=
-ext *old,
- 	return new;
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct sk_buff *skb;
+@@ -925,7 +925,7 @@ static unsigned int tcp_xmit_size_goal(struct sock *sk,=
+ u32 mss_now,
+ 	return max(size_goal, mss_now);
  }
  =
 
-+/**
-+ * __skb_ext_set - attach the specified extension storage to this skb
-+ * @skb: buffer
-+ * @id: extension id
-+ * @ext: extension storage previously allocated via __skb_ext_alloc()
-+ *
-+ * Existing extensions, if any, are cleared.
-+ *
-+ * Returns the pointer to the extension.
-+ */
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext)
-+{
-+	unsigned int newlen, newoff =3D SKB_EXT_CHUNKSIZEOF(*ext);
-+
-+	skb_ext_put(skb);
-+	newlen =3D newoff + skb_ext_type_len[id];
-+	ext->chunks =3D newlen;
-+	ext->offset[id] =3D newoff;
-+	skb->extensions =3D ext;
-+	skb->active_extensions =3D 1 << id;
-+	return skb_ext_get_ptr(ext, id);
-+}
-+
- /**
-  * skb_ext_add - allocate space for given extension, COW if needed
-  * @skb: buffer
-@@ -6056,7 +6087,7 @@ void *skb_ext_add(struct sk_buff *skb, enum skb_ext_i=
-d id)
- 	} else {
- 		newoff =3D SKB_EXT_CHUNKSIZEOF(*new);
+-static int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
+ {
+ 	int mss_now;
  =
 
--		new =3D skb_ext_alloc();
-+		new =3D __skb_ext_alloc();
- 		if (!new)
- 			return NULL;
- 	}
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 26637fce324d..c3b91789de65 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1372,7 +1372,7 @@ struct request_sock_ops tcp_request_sock_ops __read_m=
+ostly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
+ };
+ =
+
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
+ 	.mss_clamp	=3D	TCP_MSS_DEFAULT,
+ #ifdef CONFIG_TCP_MD5SIG
+ 	.req_md5_lookup	=3D	tcp_v4_md5_lookup,
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index df5fd9109696..30dceac8a608 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -75,7 +75,7 @@ static void	tcp_v6_reqsk_send_ack(const struct sock *sk, =
+struct sk_buff *skb,
+ static int	tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb);
+ =
+
+ static const struct inet_connection_sock_af_ops ipv6_mapped;
+-static const struct inet_connection_sock_af_ops ipv6_specific;
++const struct inet_connection_sock_af_ops ipv6_specific;
+ #ifdef CONFIG_TCP_MD5SIG
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_specific;
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_mapped_specific;
+@@ -785,7 +785,7 @@ struct request_sock_ops tcp6_request_sock_ops __read_mo=
+stly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
+ };
+ =
+
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
+ 	.mss_clamp	=3D	IPV6_MIN_MTU - sizeof(struct tcphdr) -
+ 				sizeof(struct ipv6hdr),
+ #ifdef CONFIG_TCP_MD5SIG
+@@ -1739,7 +1739,7 @@ static struct timewait_sock_ops tcp6_timewait_sock_op=
+s =3D {
+ 	.twsk_destructor =3D tcp_twsk_destructor,
+ };
+ =
+
+-static const struct inet_connection_sock_af_ops ipv6_specific =3D {
++const struct inet_connection_sock_af_ops ipv6_specific =3D {
+ 	.queue_xmit	   =3D inet6_csk_xmit,
+ 	.send_check	   =3D tcp_v6_send_check,
+ 	.rebuild_header	   =3D inet6_sk_rebuild_header,
 -- =
 
 2.24.1
 
---===============6927287349439278884==--
+--===============3863681785102473736==--
