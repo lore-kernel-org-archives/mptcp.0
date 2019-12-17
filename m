@@ -1,70 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============0342715526084449469=="
+Content-Type: multipart/mixed; boundary="===============2178206004421907156=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v3 09/11] tcp: Check for filled TCP option
- space before SACK
-Date: Tue, 17 Dec 2019 12:38:05 -0800
-Message-ID: <20191217203807.12579-10-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v3 10/11] tcp: clean ext on tx recycle
+Date: Tue, 17 Dec 2019 12:38:06 -0800
+Message-ID: <20191217203807.12579-11-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191217203807.12579-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3129
+X-UID: 3130
 
---===============0342715526084449469==
+--===============2178206004421907156==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Update the SACK check to work with zero option space available, a case
-that's possible with MPTCP but not MD5+TS. Maintained only one
-conditional branch for insufficient SACK space.
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-v1 -> v2:
-- Moves the check inside the SACK branch by taking recent SACK fix:
+Otherwise we will find stray/unexpected/old extensions value on next
+iteration.
 
-    9424e2e7ad93 (tcp: md5: fix potential overestimation of TCP option spac=
-e)
+On tcp_write_xmit() we can end-up splitting an already queued skb in two
+parts, via tso_fragment(). The newly created skb can be allocated via
+the tx cache and an upper layer will not be aware of it, so that upper
+layer cannot set the ext properly.
 
-  in to account, but modifies it to work in MPTCP scenarios beyond the
-  MD5+TS corner case.
+Resetting the ext on recycle ensures that stale data is not propagated
+in to packet headers or elsewhere.
 
-Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+An alternative would be add an additional hook in tso_fragment() or in
+sk_stream_alloc_skb() to init the ext for upper layers that need it.
+
+Co-developed-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/ipv4/tcp_output.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ include/net/sock.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 9e04d45bc0e4..e797ca6c6d7d 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -751,13 +751,17 @@ static unsigned int tcp_established_options(struct so=
-ck *sk, struct sk_buff *skb
- 	eff_sacks =3D tp->rx_opt.num_sacks + tp->rx_opt.dsack;
- 	if (unlikely(eff_sacks)) {
- 		const unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
-+		if (unlikely(remaining < TCPOLEN_SACK_BASE_ALIGNED +
-+					 TCPOLEN_SACK_PERBLOCK))
-+			return size;
-+
- 		opts->num_sack_blocks =3D
- 			min_t(unsigned int, eff_sacks,
- 			      (remaining - TCPOLEN_SACK_BASE_ALIGNED) /
- 			      TCPOLEN_SACK_PERBLOCK);
--		if (likely(opts->num_sack_blocks))
--			size +=3D TCPOLEN_SACK_BASE_ALIGNED +
--				opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
-+
-+		size +=3D TCPOLEN_SACK_BASE_ALIGNED +
-+			opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
- 	}
- =
-
- 	return size;
+diff --git a/include/net/sock.h b/include/net/sock.h
+index b93cadba1a3b..23efed7f4e70 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1474,6 +1474,7 @@ static inline void sk_wmem_free_skb(struct sock *sk, =
+struct sk_buff *skb)
+ 	sk_mem_uncharge(sk, skb->truesize);
+ 	if (static_branch_unlikely(&tcp_tx_skb_cache_key) &&
+ 	    !sk->sk_tx_skb_cache && !skb_cloned(skb)) {
++		skb_ext_reset(skb);
+ 		skb_zcopy_clear(skb, true);
+ 		sk->sk_tx_skb_cache =3D skb;
+ 		return;
 -- =
 
 2.24.1
 
---===============0342715526084449469==--
+--===============2178206004421907156==--
