@@ -1,105 +1,139 @@
-Content-Type: multipart/mixed; boundary="===============9020035702759602681=="
+Content-Type: multipart/mixed; boundary="===============5554000301929764355=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 05/11] tcp,
- ulp: Add clone operation to tcp_ulp_ops
-Date: Mon, 16 Dec 2019 16:24:49 -0800
-Message-ID: <20191217002455.24849-6-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v2 06/11] mptcp: Add MPTCP to skb extensions
+Date: Mon, 16 Dec 2019 16:24:50 -0800
+Message-ID: <20191217002455.24849-7-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191217002455.24849-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3101
+X-UID: 3102
 
---===============9020035702759602681==
+--===============5554000301929764355==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If ULP is used on a listening socket, icsk_ulp_ops and icsk_ulp_data are
-copied when the listener is cloned. Sometimes the clone is immediately
-deleted, which will invoke the release op on the clone and likely
-corrupt the listening socket's icsk_ulp_data.
+Add enum value for MPTCP and update config dependencies
 
-The clone operation is invoked immediately after the clone is copied and
-gives the ULP type an opportunity to set up the clone socket and its
-icsk_ulp_data.
-
+Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/tcp.h               |  5 +++++
- net/ipv4/inet_connection_sock.c |  2 ++
- net/ipv4/tcp_ulp.c              | 12 ++++++++++++
- 3 files changed, 19 insertions(+)
+ MAINTAINERS            | 10 ++++++++++
+ include/linux/skbuff.h |  3 +++
+ include/net/mptcp.h    | 27 +++++++++++++++++++++++++++
+ net/core/skbuff.c      |  7 +++++++
+ 4 files changed, 47 insertions(+)
+ create mode 100644 include/net/mptcp.h
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d4b6bf2c5d3c..c82b2f75d024 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2145,6 +2145,9 @@ struct tcp_ulp_ops {
- 	/* diagnostic */
- 	int (*get_info)(const struct sock *sk, struct sk_buff *skb);
- 	size_t (*get_info_size)(const struct sock *sk);
-+	/* clone ulp */
-+	void (*clone)(const struct request_sock *req, struct sock *newsk,
-+		      const gfp_t priority);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a28c77ee6b0d..132eb3f9fbb7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11568,6 +11568,16 @@ F:	net/ipv6/calipso.c
+ F:	net/netfilter/xt_CONNSECMARK.c
+ F:	net/netfilter/xt_SECMARK.c
  =
 
- 	char		name[TCP_ULP_NAME_MAX];
- 	struct module	*owner;
-@@ -2155,6 +2158,8 @@ int tcp_set_ulp(struct sock *sk, const char *name);
- void tcp_get_available_ulp(char *buf, size_t len);
- void tcp_cleanup_ulp(struct sock *sk);
- void tcp_update_ulp(struct sock *sk, struct proto *p);
-+void tcp_clone_ulp(const struct request_sock *req,
-+		   struct sock *newsk, const gfp_t priority);
- =
-
- #define MODULE_ALIAS_TCP_ULP(name)				\
- 	__MODULE_INFO(alias, alias_userspace, name);		\
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_soc=
-k.c
-index e4c6e8b40490..d667f2569f8e 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -810,6 +810,8 @@ struct sock *inet_csk_clone_lock(const struct sock *sk,
- 		/* Deinitialize accept_queue to trap illegal accesses. */
- 		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_queue=
-));
- =
-
-+		tcp_clone_ulp(req, newsk, priority);
++NETWORKING [MPTCP]
++M:	Mat Martineau <mathew.j.martineau(a)linux.intel.com>
++M:	Matthieu Baerts <matthieu.baerts(a)tessares.net>
++L:	netdev(a)vger.kernel.org
++L:	mptcp(a)lists.01.org
++W:	https://github.com/multipath-tcp/mptcp_net-next/wiki
++B:	https://github.com/multipath-tcp/mptcp_net-next/issues
++S:	Maintained
++F:	include/net/mptcp.h
 +
- 		security_inet_csk_clone(newsk, req);
- 	}
- 	return newsk;
-diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
-index 12ab5db2b71c..e7a2589d69ee 100644
---- a/net/ipv4/tcp_ulp.c
-+++ b/net/ipv4/tcp_ulp.c
-@@ -130,6 +130,18 @@ void tcp_cleanup_ulp(struct sock *sk)
- 	icsk->icsk_ulp_ops =3D NULL;
+ NETWORKING [TCP]
+ M:	Eric Dumazet <edumazet(a)google.com>
+ L:	netdev(a)vger.kernel.org
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index e9133bcf0544..1a261c3ee074 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -4091,6 +4091,9 @@ enum skb_ext_id {
+ #endif
+ #if IS_ENABLED(CONFIG_NET_TC_SKB_EXT)
+ 	TC_SKB_EXT,
++#endif
++#if IS_ENABLED(CONFIG_MPTCP)
++	SKB_EXT_MPTCP,
+ #endif
+ 	SKB_EXT_NUM, /* must be last */
+ };
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+new file mode 100644
+index 000000000000..f9f668ac4339
+--- /dev/null
++++ b/include/net/mptcp.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Multipath TCP
++ *
++ * Copyright (c) 2017 - 2019, Intel Corporation.
++ */
++
++#ifndef __NET_MPTCP_H
++#define __NET_MPTCP_H
++
++#include <linux/types.h>
++
++/* MPTCP sk_buff extension data */
++struct mptcp_ext {
++	u64		data_ack;
++	u64		data_seq;
++	u32		subflow_seq;
++	u16		data_len;
++	u8		use_map:1,
++			dsn64:1,
++			data_fin:1,
++			use_ack:1,
++			ack64:1,
++			__unused:2;
++};
++
++#endif /* __NET_MPTCP_H */
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 973a71f4bc89..fa67036dd928 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -68,6 +68,7 @@
+ #include <net/ip6_checksum.h>
+ #include <net/xfrm.h>
+ #include <net/mpls.h>
++#include <net/mptcp.h>
+ =
+
+ #include <linux/uaccess.h>
+ #include <trace/events/skb.h>
+@@ -4109,6 +4110,9 @@ static const u8 skb_ext_type_len[] =3D {
+ #if IS_ENABLED(CONFIG_NET_TC_SKB_EXT)
+ 	[TC_SKB_EXT] =3D SKB_EXT_CHUNKSIZEOF(struct tc_skb_ext),
+ #endif
++#if IS_ENABLED(CONFIG_MPTCP)
++	[SKB_EXT_MPTCP] =3D SKB_EXT_CHUNKSIZEOF(struct mptcp_ext),
++#endif
+ };
+ =
+
+ static __always_inline unsigned int skb_ext_total_length(void)
+@@ -4122,6 +4126,9 @@ static __always_inline unsigned int skb_ext_total_len=
+gth(void)
+ #endif
+ #if IS_ENABLED(CONFIG_NET_TC_SKB_EXT)
+ 		skb_ext_type_len[TC_SKB_EXT] +
++#endif
++#if IS_ENABLED(CONFIG_MPTCP)
++		skb_ext_type_len[SKB_EXT_MPTCP] +
+ #endif
+ 		0;
  }
- =
-
-+void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
-+		   const gfp_t priority)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(newsk);
-+
-+	if (!icsk->icsk_ulp_ops)
-+		return;
-+
-+	if (icsk->icsk_ulp_ops->clone)
-+		icsk->icsk_ulp_ops->clone(req, newsk, priority);
-+}
-+
- static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_op=
-s)
- {
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
 -- =
 
 2.24.1
 
---===============9020035702759602681==--
+--===============5554000301929764355==--
