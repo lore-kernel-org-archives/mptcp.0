@@ -1,88 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============4845137993420847586=="
+Content-Type: multipart/mixed; boundary="===============8872470064194402252=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "mptcp: cope with later TCP
- fallback"
-Date: Mon, 16 Dec 2019 14:49:56 -0800
-Message-ID: <alpine.OSX.2.21.1912161444010.6806@mjmartin-mac01.local>
-In-Reply-To: 23d83c427a276680e731ec50541e7599ecc80b9a.1576518799.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH net-next v2 02/11] sock: Make sk_protocol a 16-bit
+ value
+Date: Mon, 16 Dec 2019 16:24:46 -0800
+Message-ID: <20191217002455.24849-3-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20191217002455.24849-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3095
+X-UID: 3096
 
---===============4845137993420847586==
+--===============8872470064194402252==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Dec 2019, Paolo Abeni wrote:
+Match the 16-bit width of skbuff->protocol. Fills an 8-bit hole so
+sizeof(struct sock) does not change.
 
-> Clean subflow->conn, under the ssk socket lock, and make
-> __mptcp_tcp_fallback() less unreadable.
->
-> v1 -> v2:
-> - fix more typos (Matt)
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/protocol.c | 14 ++++++++++++--
-> 1 file changed, 12 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 2b20f4d3e179..5ebc34750da4 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -49,7 +49,17 @@ static struct socket *__mptcp_fallback_to_tcp(struct m=
-ptcp_sock *msk,
-> 	sock->sk =3D NULL;
->
-> 	/* socket is now TCP */
-> +	lock_sock(ssk);
-> 	sock_graft(ssk, sock);
-> +	if (subflow->conn) {
-> +		/* Clearing the 'conn' field will make the ULP-overriden
-> +		 * ops behaving like plain TCP ones.
-> +		 * Note: we can't release the ULP data on a live socket.
-> +		 */
-> +		sock_put(subflow->conn);
-> +		subflow->conn =3D NULL;
-> +	}
-> +	release_sock(ssk);
+Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
 
-I looked through all of the callbacks that subflow_ulp_init() modifies for =
+Changes for v2:
 
-a subflow struct sock, and everything I looked at reverted to regular TCP =
-
-behavior if subflow->conn is NULL. So I *think* it's ok - still trying to =
-
-keep an eye open for corner cases.
+Moved sk_pacing_shift back to a regular struct member, adjacent to the
+bitfield. gcc then packs the bitfield and the u8 in a single 32-bit word.
 
 
-Mat
+ include/net/sock.h          | 4 ++--
+ include/trace/events/sock.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 81dc811aad2e..0930f46c600c 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -456,10 +456,10 @@ struct sock {
+ 				sk_no_check_tx : 1,
+ 				sk_no_check_rx : 1,
+ 				sk_userlocks : 4,
+-				sk_protocol  : 8,
+ 				sk_type      : 16;
+-	u16			sk_gso_max_segs;
+ 	u8			sk_pacing_shift;
++	u16			sk_protocol;
++	u16			sk_gso_max_segs;
+ 	unsigned long	        sk_lingertime;
+ 	struct proto		*sk_prot_creator;
+ 	rwlock_t		sk_callback_lock;
+diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
+index 51fe9f6719eb..3ff12b90048d 100644
+--- a/include/trace/events/sock.h
++++ b/include/trace/events/sock.h
+@@ -147,7 +147,7 @@ TRACE_EVENT(inet_sock_set_state,
+ 		__field(__u16, sport)
+ 		__field(__u16, dport)
+ 		__field(__u16, family)
+-		__field(__u8, protocol)
++		__field(__u16, protocol)
+ 		__array(__u8, saddr, 4)
+ 		__array(__u8, daddr, 4)
+ 		__array(__u8, saddr_v6, 16)
+-- =
 
-> 	sock->ops =3D sk->sk_family =3D=3D AF_INET6 ? &inet6_stream_ops :
-> 						&inet_stream_ops;
->
-> @@ -76,8 +86,8 @@ static bool __mptcp_needs_tcp_fallback(const struct mpt=
-cp_sock *msk)
-> 	return msk->first && !tcp_sk(msk->first)->is_mptcp;
-> }
->
-> -/* if the mp_capable handshake is failed, return a tcp socket
-> - * return it.
-> +/* if the mp_capable handshake has failed, it fallbacks msk to plain TCP,
-> + * releases the socket lock and returns a reference to the now TCP socke=
-t.
->  * Otherwise returns NULL
->  */
-> static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
-> -- =
+2.24.1
 
-> 2.21.0
-
---
-Mat Martineau
-Intel
---===============4845137993420847586==--
+--===============8872470064194402252==--
