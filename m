@@ -1,76 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============1596853358640107396=="
+Content-Type: multipart/mixed; boundary="===============3588173677120343103=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v3 03/11] tcp: Define IPPROTO_MPTCP
-Date: Tue, 17 Dec 2019 12:37:59 -0800
-Message-ID: <20191217203807.12579-4-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v3 04/11] tcp: Add MPTCP option number
+Date: Tue, 17 Dec 2019 12:38:00 -0800
+Message-ID: <20191217203807.12579-5-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191217203807.12579-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3124
+X-UID: 3125
 
---===============1596853358640107396==
+--===============3588173677120343103==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-To open a MPTCP socket with socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP),
-IPPROTO_MPTCP needs a value that differs from IPPROTO_TCP. The existing
-IPPROTO numbers mostly map directly to IANA-specified protocol numbers.
-MPTCP does not have a protocol number allocated because MPTCP packets
-use the TCP protocol number. Use private number not used OTA.
+TCP option 30 is allocated for MPTCP by the IANA.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/trace/events/sock.h   | 3 ++-
- include/uapi/linux/in.h       | 2 ++
- tools/include/uapi/linux/in.h | 2 ++
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ include/net/tcp.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
-index 3ff12b90048d..a966d4b5ab37 100644
---- a/include/trace/events/sock.h
-+++ b/include/trace/events/sock.h
-@@ -19,7 +19,8 @@
- #define inet_protocol_names		\
- 		EM(IPPROTO_TCP)			\
- 		EM(IPPROTO_DCCP)		\
--		EMe(IPPROTO_SCTP)
-+		EM(IPPROTO_SCTP)		\
-+		EMe(IPPROTO_MPTCP)
- =
-
- #define tcp_state_names			\
- 		EM(TCP_ESTABLISHED)		\
-diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
-index e7ad9d350a28..1521073b6348 100644
---- a/include/uapi/linux/in.h
-+++ b/include/uapi/linux/in.h
-@@ -76,6 +76,8 @@ enum {
- #define IPPROTO_MPLS		IPPROTO_MPLS
-   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-+  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
-+#define IPPROTO_MPTCP		IPPROTO_MPTCP
-   IPPROTO_MAX
- };
- #endif
-diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
-index e7ad9d350a28..1521073b6348 100644
---- a/tools/include/uapi/linux/in.h
-+++ b/tools/include/uapi/linux/in.h
-@@ -76,6 +76,8 @@ enum {
- #define IPPROTO_MPLS		IPPROTO_MPLS
-   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-+  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
-+#define IPPROTO_MPTCP		IPPROTO_MPTCP
-   IPPROTO_MAX
- };
- #endif
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 86b9a8766648..d4b6bf2c5d3c 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -182,6 +182,7 @@ void tcp_time_wait(struct sock *sk, int state, int time=
+o);
+ #define TCPOPT_SACK             5       /* SACK Block */
+ #define TCPOPT_TIMESTAMP	8	/* Better RTT estimations/PAWS */
+ #define TCPOPT_MD5SIG		19	/* MD5 Signature (RFC2385) */
++#define TCPOPT_MPTCP		30	/* Multipath TCP (RFC6824) */
+ #define TCPOPT_FASTOPEN		34	/* Fast open (RFC7413) */
+ #define TCPOPT_EXP		254	/* Experimental */
+ /* Magic number to be after the option value for sharing TCP
 -- =
 
 2.24.1
 
---===============1596853358640107396==--
+--===============3588173677120343103==--
