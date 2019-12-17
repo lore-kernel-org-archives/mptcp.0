@@ -1,71 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============8872470064194402252=="
+Content-Type: multipart/mixed; boundary="===============3426763504377273563=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 02/11] sock: Make sk_protocol a 16-bit
- value
-Date: Mon, 16 Dec 2019 16:24:46 -0800
-Message-ID: <20191217002455.24849-3-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v2 01/11] net: Make sock protocol value
+ checks more specific
+Date: Mon, 16 Dec 2019 16:24:45 -0800
+Message-ID: <20191217002455.24849-2-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191217002455.24849-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3096
+X-UID: 3097
 
---===============8872470064194402252==
+--===============3426763504377273563==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Match the 16-bit width of skbuff->protocol. Fills an 8-bit hole so
-sizeof(struct sock) does not change.
+SK_PROTOCOL_MAX is only used in two places, for DECNet and AX.25. The
+limits have more to do with the those protocol definitions than they do
+with the data type of sk_protocol, so remove SK_PROTOCOL_MAX and use
+U8_MAX directly.
 
-Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
-
-Changes for v2:
-
-Moved sk_pacing_shift back to a regular struct member, adjacent to the
-bitfield. gcc then packs the bitfield and the u8 in a single 32-bit word.
-
-
- include/net/sock.h          | 4 ++--
- include/trace/events/sock.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/net/sock.h     | 1 -
+ net/ax25/af_ax25.c     | 2 +-
+ net/decnet/af_decnet.c | 2 +-
+ 3 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/include/net/sock.h b/include/net/sock.h
-index 81dc811aad2e..0930f46c600c 100644
+index 87d54ef57f00..81dc811aad2e 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -456,10 +456,10 @@ struct sock {
- 				sk_no_check_tx : 1,
- 				sk_no_check_rx : 1,
+@@ -458,7 +458,6 @@ struct sock {
  				sk_userlocks : 4,
--				sk_protocol  : 8,
+ 				sk_protocol  : 8,
  				sk_type      : 16;
--	u16			sk_gso_max_segs;
+-#define SK_PROTOCOL_MAX U8_MAX
+ 	u16			sk_gso_max_segs;
  	u8			sk_pacing_shift;
-+	u16			sk_protocol;
-+	u16			sk_gso_max_segs;
  	unsigned long	        sk_lingertime;
- 	struct proto		*sk_prot_creator;
- 	rwlock_t		sk_callback_lock;
-diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
-index 51fe9f6719eb..3ff12b90048d 100644
---- a/include/trace/events/sock.h
-+++ b/include/trace/events/sock.h
-@@ -147,7 +147,7 @@ TRACE_EVENT(inet_sock_set_state,
- 		__field(__u16, sport)
- 		__field(__u16, dport)
- 		__field(__u16, family)
--		__field(__u8, protocol)
-+		__field(__u16, protocol)
- 		__array(__u8, saddr, 4)
- 		__array(__u8, daddr, 4)
- 		__array(__u8, saddr_v6, 16)
+diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
+index 324306d6fde0..ff57ea89c27e 100644
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -808,7 +808,7 @@ static int ax25_create(struct net *net, struct socket *=
+sock, int protocol,
+ 	struct sock *sk;
+ 	ax25_cb *ax25;
+ =
+
+-	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
++	if (protocol < 0 || protocol > U8_MAX)
+ 		return -EINVAL;
+ =
+
+ 	if (!net_eq(net, &init_net))
+diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
+index e19a92a62e14..0a46ea3bddd5 100644
+--- a/net/decnet/af_decnet.c
++++ b/net/decnet/af_decnet.c
+@@ -670,7 +670,7 @@ static int dn_create(struct net *net, struct socket *so=
+ck, int protocol,
+ {
+ 	struct sock *sk;
+ =
+
+-	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
++	if (protocol < 0 || protocol > U8_MAX)
+ 		return -EINVAL;
+ =
+
+ 	if (!net_eq(net, &init_net))
 -- =
 
 2.24.1
 
---===============8872470064194402252==--
+--===============3426763504377273563==--
