@@ -1,72 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============2120082860455151731=="
+Content-Type: multipart/mixed; boundary="===============6257817702051842769=="
 MIME-Version: 1.0
-From: Eric Dumazet <eric.dumazet at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 02/11] sock: Make sk_protocol a 16-bit
- value
-Date: Mon, 16 Dec 2019 18:25:55 -0800
-Message-ID: <03207138-4067-d3dc-c904-e9ff4a8ed197@gmail.com>
-In-Reply-To: 20191217002455.24849-3-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH] Squash-to: "sock: Make sk_protocol a 16-bit value"
+Date: Tue, 17 Dec 2019 11:02:29 +0100
+Message-ID: <20191217100229.3541844-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3109
+X-UID: 3110
 
---===============2120082860455151731==
+--===============6257817702051842769==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+move sk_type to a separate field to:
+- avoid extra operations to fetch sk->sk_type on some arches (Eric)
+- allow compilers to emit better code to access/manipulate native types
+  compared to bitfields. (Paolo)
 
+Suggested-by: Eric Dumazet <edumazet(a)google.com>
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-On 12/16/19 4:24 PM, Mat Martineau wrote:
-> Match the 16-bit width of skbuff->protocol. Fills an 8-bit hole so
-> sizeof(struct sock) does not change.
-> =
+Notes:
+    to be squashed in "sock: Make sk_protocol a 16-bit value"
 
-> Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> ---
-> =
+ include/net/sock.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> Changes for v2:
-> =
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 0930f46c600c..b93cadba1a3b 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -451,13 +451,13 @@ struct sock {
+ #define SK_FL_TYPE_MASK    0xffff0000
+ #endif
+ =
 
-> Moved sk_pacing_shift back to a regular struct member, adjacent to the
-> bitfield. gcc then packs the bitfield and the u8 in a single 32-bit word.
-> =
+-	unsigned int		sk_padding : 1,
++	u8			sk_padding : 1,
+ 				sk_kern_sock : 1,
+ 				sk_no_check_tx : 1,
+ 				sk_no_check_rx : 1,
+-				sk_userlocks : 4,
+-				sk_type      : 16;
++				sk_userlocks : 4;
+ 	u8			sk_pacing_shift;
++	u16			sk_type;
+ 	u16			sk_protocol;
+ 	u16			sk_gso_max_segs;
+ 	unsigned long	        sk_lingertime;
+-- =
 
-> =
+2.24.0
 
->  include/net/sock.h          | 4 ++--
->  include/trace/events/sock.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> =
-
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 81dc811aad2e..0930f46c600c 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -456,10 +456,10 @@ struct sock {
->  				sk_no_check_tx : 1,
->  				sk_no_check_rx : 1,
->  				sk_userlocks : 4,
-> -				sk_protocol  : 8,
->  				sk_type      : 16;
-> -	u16			sk_gso_max_segs;
->  	u8			sk_pacing_shift;
-> +	u16			sk_protocol;
-> +	u16			sk_gso_max_segs;
->  	unsigned long	        sk_lingertime;
->  	struct proto		*sk_prot_creator;
->  	rwlock_t		sk_callback_lock;
-
-
-sk_type is no longer at a 16bit (u16) aligned location, which might force t=
-he compiler
-to do extra operations to fetch sk->sk_type on some arches.
-
-Note that I do not even know why sk_type is a 16bit field, we might be able=
- to convert it to 8bit.
-
---===============2120082860455151731==--
+--===============6257817702051842769==--
