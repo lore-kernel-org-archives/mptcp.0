@@ -1,88 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============7572387991814431878=="
+Content-Type: multipart/mixed; boundary="===============2270356835251441626=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "sock: Make sk_protocol a 16-bit value"
-Date: Tue, 17 Dec 2019 12:55:10 +0100
-Message-ID: <f7220b4a-8777-d5cb-4f93-61abb3c7b273@tessares.net>
-In-Reply-To: d5cedcefb8b96be1dc1835e5b5a0b0afc33eca03.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: Handle MP_CAPABLE options for
+ outgoing connections"
+Date: Tue, 17 Dec 2019 16:00:15 +0100
+Message-ID: <d9a73ff679f554c12b2980ad527f2aa420eb3be5.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.1912161358400.6806@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 3112
+X-UID: 3113
 
---===============7572387991814431878==
+--===============2270356835251441626==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-On 17/12/2019 12:08, Paolo Abeni wrote:
-> On Tue, 2019-12-17 at 11:02 +0100, Matthieu Baerts wrote:
->> move sk_type to a separate field to:
->> - avoid extra operations to fetch sk->sk_type on some arches (Eric)
->> - allow compilers to emit better code to access/manipulate native types
->>    compared to bitfields. (Paolo)
->>
->> Suggested-by: Eric Dumazet <edumazet(a)google.com>
->> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> ---
->>
->> Notes:
->>      to be squashed in "sock: Make sk_protocol a 16-bit value"
->>
->>   include/net/sock.h | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/net/sock.h b/include/net/sock.h
->> index 0930f46c600c..b93cadba1a3b 100644
->> --- a/include/net/sock.h
->> +++ b/include/net/sock.h
->> @@ -451,13 +451,13 @@ struct sock {
->>   #define SK_FL_TYPE_MASK    0xffff0000
->>   #endif
->>   =
-
->> -	unsigned int		sk_padding : 1,
->> +	u8			sk_padding : 1,
->>   				sk_kern_sock : 1,
->>   				sk_no_check_tx : 1,
->>   				sk_no_check_rx : 1,
->> -				sk_userlocks : 4,
->> -				sk_type      : 16;
->> +				sk_userlocks : 4;
->>   	u8			sk_pacing_shift;
->> +	u16			sk_type;
->>   	u16			sk_protocol;
->>   	u16			sk_gso_max_segs;
->>   	unsigned long	        sk_lingertime;
+On Mon, 2019-12-16 at 14:05 -0800, Mat Martineau wrote:
+> On Mon, 16 Dec 2019, Paolo Abeni wrote:
 > =
 
-> LGTM.
+> > mptcp_established_options() definition will be changed in a couple of p=
+atches,
+> > let's introduce early it's final form
+> > =
 
-Thank you for the review and the suggestion not to simply move it to the =
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > ---
+> > include/net/mptcp.h   | 5 ++++-
+> > net/ipv4/tcp_output.c | 9 ++++-----
+> > net/mptcp/options.c   | 3 ++-
+> > 3 files changed, 10 insertions(+), 7 deletions(-)
+> > =
 
-beginning of the 'unsigned int' but to move it to a separated field.
+> > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> > index d7af03848f5a..588abcb76da3 100644
+> > --- a/include/net/mptcp.h
+> > +++ b/include/net/mptcp.h
+> > @@ -55,7 +55,8 @@ bool mptcp_syn_options(struct sock *sk, unsigned int =
+*size,
+> > void mptcp_rcv_synsent(struct sock *sk);
+> > bool mptcp_synack_options(const struct request_sock *req, unsigned int =
+*size,
+> > 			  struct mptcp_out_options *opts);
+> > -bool mptcp_established_options(struct sock *sk, unsigned int *size,
+> > +bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> > +			       unsigned int *size, unsigned int remaining,
+> > 			       struct mptcp_out_options *opts);
+> > =
 
-- 32121b5387c7: "squashed" in "sock: Make sk_protocol a 16-bit value"
-- 1e3599433335: "Signed-off-by" + "Co-developed-by"
-- 3a1b579608d1..bf07050cd31b: result
+> > void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts);
+> > @@ -104,7 +105,9 @@ static inline bool mptcp_synack_options(const struc=
+t request_sock *req,
+> > }
+> > =
 
-Tests are still OK!
+> > static inline bool mptcp_established_options(struct sock *sk,
+> > +					     struct sk_buff *skb,
+> > 					     unsigned int *size,
+> > +					     unsigned int remaining,
+> > 					     struct mptcp_out_options *opts)
+> > {
+> > 	return false;
+> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > index a4bf1197f577..d123d67026d5 100644
+> > --- a/net/ipv4/tcp_output.c
+> > +++ b/net/ipv4/tcp_output.c
+> > @@ -798,11 +798,10 @@ static unsigned int tcp_established_options(struc=
+t sock *sk, struct sk_buff *skb
+> > 		unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
+> > 		unsigned int opt_size =3D 0;
+> > =
 
-> @list, please do not reply directly to the orig messages, or trim the
-> recipients list, as eric email address unintentionally slipped into it.
+> > -		if (mptcp_established_options(sk, &opt_size, &opts->mptcp)) {
+> > -			if (remaining >=3D opt_size) {
+> =
 
-Sorry for that :(
+> This length check goes away... (see below)
+> =
+
+> > -				opts->options |=3D OPTION_MPTCP;
+> > -				size +=3D opt_size;
+> > -			}
+> > +		if (mptcp_established_options(sk, skb, &opt_size, remaining,
+> > +					      &opts->mptcp)) {
+> > +			opts->options |=3D OPTION_MPTCP;
+> > +			size +=3D opt_size;
+> > 		}
+> > 	}
+> > =
+
+> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > index 26203dfb6be6..89aef0d0beb1 100644
+> > --- a/net/mptcp/options.c
+> > +++ b/net/mptcp/options.c
+> > @@ -196,7 +196,8 @@ void mptcp_rcv_synsent(struct sock *sk)
+> > 	}
+> > }
+> > =
+
+> > -bool mptcp_established_options(struct sock *sk, unsigned int *size,
+> > +bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+> > +			       unsigned int *size, unsigned int remaining,
+> > 			       struct mptcp_out_options *opts)
+> > {
+> > 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> =
+
+> ...but doesn't get added to mptcp_established_options() until 5 patches =
+
+> later. At this point the function only handles MP_CAPABLE, so maybe =
+
+> there's not much risk of overrunning the option space anyway.
+
+Yep, additionally my understanding is that intermediate status for this
+kind of patchset is expected to be 'non functional', at least WRT the
+to-be-implemented feature.
+
+IIRC, with DSS, MP_CAPABLE or MP_JOIN we can't overrun the option
+space.
 
 Cheers,
-Matt
--- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7572387991814431878==--
+Paolo
+
+--===============2270356835251441626==--
