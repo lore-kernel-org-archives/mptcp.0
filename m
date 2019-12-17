@@ -1,43 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============3341048934637187250=="
+Content-Type: multipart/mixed; boundary="===============7656515306673529159=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 09/11] tcp: Check for filled TCP
- option space before SACK
-Date: Tue, 17 Dec 2019 19:06:43 +0100
-Message-ID: <c3afdd5d-05eb-d03a-306f-01371b0967a9@tessares.net>
-In-Reply-To: 20191217002455.24849-10-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] more performance figures
+Date: Tue, 17 Dec 2019 19:18:34 +0100
+Message-ID: <b3109bbee289b65cb743393e56f696a339bdc03d.camel@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3116
+X-UID: 3117
 
---===============3341048934637187250==
+--===============7656515306673529159==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi all,
 
--netdev
+I was finally able to collect some performance figures on a MPTCP non
+debug build (using a plain config from a somewhat notorious distro)
 
-On 17/12/2019 01:24, Mat Martineau wrote:
-> Update the SACK check to work with zero option space available, a case
-> that's possible with MPTCP but not MD5+TS. Maintained only one
-> conditional branch for insufficient SACK space.
+		TCP		MPTCP
+ab 		86529.19	71504.38	(higher is better)
+(100 concurrent connections)
 
-FYI, I just updated the commit message including Mat and Paolo' =
+ab		12076.22	11983.72	(higher is better)
+(10000 concurrent connections)
 
-suggestions (from here and IRC).
+netperf		41895.41	53244.68	(higher is better!!!)
 
-- 0e5b90d11876: tg:msg: include Mat's new message + changelog
+'ab' is apache-bench, vs ngnix web server.
+
+not sure why on plain stream transfer MPTCP apparently perform better
+than plain TCP. This is for sure a test artifact, but still:
+
+- at least we don't have tragic delta
+- it's nice ;)
+
+On a more serious side, the mesurable delta will a little number of
+connection hints at the room for improvement we currently have in
+mptcp_{stream_}accept().
 
 Cheers,
-Matt
--- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3341048934637187250==--
+Paolo
+
+
+
+--===============7656515306673529159==--
