@@ -1,34 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============6428943703014708380=="
+Content-Type: multipart/mixed; boundary="===============8270834715766831604=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: Implement MPTCP receive path"
-Date: Tue, 17 Dec 2019 19:35:14 +0100
-Message-ID: <da266238-eea2-c787-ccde-aaea959e2716@tessares.net>
-In-Reply-To: 6c8a763ddc3d9110354a197ab9b1f0f2aace020e.1576531786.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: Add key generation and token
+ tree"
+Date: Tue, 17 Dec 2019 19:37:44 +0100
+Message-ID: <08acbfd8-614e-c6cb-c7e4-68500ac3fe84@tessares.net>
+In-Reply-To: alpine.OSX.2.21.1912170910540.17283@shorley-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3118
+X-UID: 3119
 
---===============6428943703014708380==
+--===============8270834715766831604==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 16/12/2019 22:29, Paolo Abeni wrote:
-> drop duplicate line indroduced by the 'Squash-to' commit.
+On 17/12/2019 18:14, Mat Martineau wrote:
+> On Tue, 17 Dec 2019, Paolo Abeni wrote:
 > =
 
-> Note: this will cause some conflict in v1 patches. Resolution
-> is trivial, howver the patches must be rebased on top of this
-> one.
+>> include net/tcp.h instead of linux/tcp.h
+>>
+>> We will switch to the latter header later in part 4, but
+>> in between, and after "mptcp: new sysctl to control the activation per =
 
-Good catch but your prediction seems wrong, no conflicts!
+>> NS"
+>> we get some sparse warning due to missing ipv6-related fuction =
 
-- 77b04716a417: "squashed" in "mptcp: Implement MPTCP receive path"
-- 63ed4f5b07f4..3b9cd12db9d1: empty but expected, right?
+>> declaration.
+>>
+>> Alternativelly we add an include for "net/tcp.h" in ctrl.c in patch
+>> "mptcp: new sysctl to control the activation per NS".
+> =
+
+> Looks good, thanks Paolo.
+
+Thank you for the patch and the review!
+
+- 0f1c84751418: "squashed" in "mptcp: Add key generation and token tree"
+- 3b9cd12db9d1..118ffba5ca21: result (empty, as expected, right?)
 
 Cheers,
 Matt
@@ -39,4 +52,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6428943703014708380==--
+--===============8270834715766831604==--
