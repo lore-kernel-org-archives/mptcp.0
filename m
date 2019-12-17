@@ -1,49 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============7656515306673529159=="
+Content-Type: multipart/mixed; boundary="===============6428943703014708380=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] more performance figures
-Date: Tue, 17 Dec 2019 19:18:34 +0100
-Message-ID: <b3109bbee289b65cb743393e56f696a339bdc03d.camel@redhat.com>
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: Implement MPTCP receive path"
+Date: Tue, 17 Dec 2019 19:35:14 +0100
+Message-ID: <da266238-eea2-c787-ccde-aaea959e2716@tessares.net>
+In-Reply-To: 6c8a763ddc3d9110354a197ab9b1f0f2aace020e.1576531786.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3117
+X-UID: 3118
 
---===============7656515306673529159==
+--===============6428943703014708380==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi Paolo,
 
-I was finally able to collect some performance figures on a MPTCP non
-debug build (using a plain config from a somewhat notorious distro)
+On 16/12/2019 22:29, Paolo Abeni wrote:
+> drop duplicate line indroduced by the 'Squash-to' commit.
+> =
 
-		TCP		MPTCP
-ab 		86529.19	71504.38	(higher is better)
-(100 concurrent connections)
+> Note: this will cause some conflict in v1 patches. Resolution
+> is trivial, howver the patches must be rebased on top of this
+> one.
 
-ab		12076.22	11983.72	(higher is better)
-(10000 concurrent connections)
+Good catch but your prediction seems wrong, no conflicts!
 
-netperf		41895.41	53244.68	(higher is better!!!)
-
-'ab' is apache-bench, vs ngnix web server.
-
-not sure why on plain stream transfer MPTCP apparently perform better
-than plain TCP. This is for sure a test artifact, but still:
-
-- at least we don't have tragic delta
-- it's nice ;)
-
-On a more serious side, the mesurable delta will a little number of
-connection hints at the room for improvement we currently have in
-mptcp_{stream_}accept().
+- 77b04716a417: "squashed" in "mptcp: Implement MPTCP receive path"
+- 63ed4f5b07f4..3b9cd12db9d1: empty but expected, right?
 
 Cheers,
+Matt
+-- =
 
-Paolo
-
-
-
---===============7656515306673529159==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6428943703014708380==--
