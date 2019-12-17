@@ -1,178 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============7183532726754490277=="
+Content-Type: multipart/mixed; boundary="===============0342715526084449469=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v3 07/11] tcp: Prevent coalesce/collapse when
- skb has MPTCP extensions
-Date: Tue, 17 Dec 2019 12:38:03 -0800
-Message-ID: <20191217203807.12579-8-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v3 09/11] tcp: Check for filled TCP option
+ space before SACK
+Date: Tue, 17 Dec 2019 12:38:05 -0800
+Message-ID: <20191217203807.12579-10-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191217203807.12579-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3128
+X-UID: 3129
 
---===============7183532726754490277==
+--===============0342715526084449469==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP extension data needs to be preserved as it passes through the
-TCP stack. Make sure that these skbs are not appended to others during
-coalesce or collapse, so the data remains associated with the payload of
-the given skb.
+Update the SACK check to work with zero option space available, a case
+that's possible with MPTCP but not MD5+TS. Maintained only one
+conditional branch for insufficient SACK space.
 
+v1 -> v2:
+- Moves the check inside the SACK branch by taking recent SACK fix:
+
+    9424e2e7ad93 (tcp: md5: fix potential overestimation of TCP option spac=
+e)
+
+  in to account, but modifies it to work in MPTCP scenarios beyond the
+  MD5+TS corner case.
+
+Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/mptcp.h   | 16 ++++++++++++++++
- include/net/tcp.h     |  8 ++++++++
- net/ipv4/tcp_input.c  | 10 ++++++++--
- net/ipv4/tcp_output.c |  2 +-
- 4 files changed, 33 insertions(+), 3 deletions(-)
+ net/ipv4/tcp_output.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index f9f668ac4339..43ddfdf9e4a3 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -8,6 +8,7 @@
- #ifndef __NET_MPTCP_H
- #define __NET_MPTCP_H
- =
-
-+#include <linux/skbuff.h>
- #include <linux/types.h>
- =
-
- /* MPTCP sk_buff extension data */
-@@ -24,4 +25,19 @@ struct mptcp_ext {
- 			__unused:2;
- };
- =
-
-+#ifdef CONFIG_MPTCP
-+
-+static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
-+{
-+	return skb_ext_exist(skb, SKB_EXT_MPTCP);
-+}
-+
-+#else
-+
-+static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
-+{
-+	return false;
-+}
-+
-+#endif /* CONFIG_MPTCP */
- #endif /* __NET_MPTCP_H */
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index c82b2f75d024..c483c73b8d41 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -39,6 +39,7 @@
- #include <net/tcp_states.h>
- #include <net/inet_ecn.h>
- #include <net/dst.h>
-+#include <net/mptcp.h>
- =
-
- #include <linux/seq_file.h>
- #include <linux/memcontrol.h>
-@@ -978,6 +979,13 @@ static inline bool tcp_skb_can_collapse_to(const struc=
-t sk_buff *skb)
- 	return likely(!TCP_SKB_CB(skb)->eor);
- }
- =
-
-+static inline bool tcp_skb_can_collapse(const struct sk_buff *to,
-+					const struct sk_buff *from)
-+{
-+	return likely(tcp_skb_can_collapse_to(to) &&
-+		      !mptcp_skb_ext_exist(from));
-+}
-+
- /* Events passed to congestion control interface */
- enum tcp_ca_event {
- 	CA_EVENT_TX_START,	/* first transmit when no packets in flight */
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 88b987ca9ebb..55b460a2ece2 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1422,7 +1422,7 @@ static struct sk_buff *tcp_shift_skb_data(struct sock=
- *sk, struct sk_buff *skb,
- 	if ((TCP_SKB_CB(prev)->sacked & TCPCB_TAGBITS) !=3D TCPCB_SACKED_ACKED)
- 		goto fallback;
- =
-
--	if (!tcp_skb_can_collapse_to(prev))
-+	if (!tcp_skb_can_collapse(prev, skb))
- 		goto fallback;
- =
-
- 	in_sack =3D !after(start_seq, TCP_SKB_CB(skb)->seq) &&
-@@ -4420,6 +4420,9 @@ static bool tcp_try_coalesce(struct sock *sk,
- 	if (TCP_SKB_CB(from)->seq !=3D TCP_SKB_CB(to)->end_seq)
- 		return false;
- =
-
-+	if (mptcp_skb_ext_exist(from))
-+		return false;
-+
- #ifdef CONFIG_TLS_DEVICE
- 	if (from->decrypted !=3D to->decrypted)
- 		return false;
-@@ -4928,10 +4931,12 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *=
-list, struct rb_root *root,
- =
-
- 		/* The first skb to collapse is:
- 		 * - not SYN/FIN and
-+		 * - does not include a MPTCP skb extension
- 		 * - bloated or contains data before "start" or
- 		 *   overlaps to the next one.
- 		 */
- 		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
-+		    !mptcp_skb_ext_exist(skb) &&
- 		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
- 		     before(TCP_SKB_CB(skb)->seq, start))) {
- 			end_of_skbs =3D false;
-@@ -4947,7 +4952,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 		/* Decided to skip this, advance start seq. */
- 		start =3D TCP_SKB_CB(skb)->end_seq;
- 	}
--	if (end_of_skbs ||
-+	if (end_of_skbs || mptcp_skb_ext_exist(skb) ||
- 	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
- 		return;
- =
-
-@@ -4990,6 +4995,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 				skb =3D tcp_collapse_one(sk, skb, list, root);
- 				if (!skb ||
- 				    skb =3D=3D tail ||
-+				    mptcp_skb_ext_exist(skb) ||
- 				    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
- 					goto end;
- #ifdef CONFIG_TLS_DEVICE
 diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index b184f03d7437..9e04d45bc0e4 100644
+index 9e04d45bc0e4..e797ca6c6d7d 100644
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
-@@ -2854,7 +2854,7 @@ static void tcp_retrans_try_collapse(struct sock *sk,=
- struct sk_buff *to,
- 		if (!tcp_can_collapse(sk, skb))
- 			break;
+@@ -751,13 +751,17 @@ static unsigned int tcp_established_options(struct so=
+ck *sk, struct sk_buff *skb
+ 	eff_sacks =3D tp->rx_opt.num_sacks + tp->rx_opt.dsack;
+ 	if (unlikely(eff_sacks)) {
+ 		const unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
++		if (unlikely(remaining < TCPOLEN_SACK_BASE_ALIGNED +
++					 TCPOLEN_SACK_PERBLOCK))
++			return size;
++
+ 		opts->num_sack_blocks =3D
+ 			min_t(unsigned int, eff_sacks,
+ 			      (remaining - TCPOLEN_SACK_BASE_ALIGNED) /
+ 			      TCPOLEN_SACK_PERBLOCK);
+-		if (likely(opts->num_sack_blocks))
+-			size +=3D TCPOLEN_SACK_BASE_ALIGNED +
+-				opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
++
++		size +=3D TCPOLEN_SACK_BASE_ALIGNED +
++			opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
+ 	}
  =
 
--		if (!tcp_skb_can_collapse_to(to))
-+		if (!tcp_skb_can_collapse(to, skb))
- 			break;
- =
-
- 		space -=3D skb->len;
+ 	return size;
 -- =
 
 2.24.1
 
---===============7183532726754490277==--
+--===============0342715526084449469==--
