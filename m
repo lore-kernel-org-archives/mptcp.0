@@ -1,95 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============2383881600401287969=="
+Content-Type: multipart/mixed; boundary="===============2120527717794504770=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 00/11] Multipath TCP: Prerequisites
-Date: Mon, 16 Dec 2019 16:24:44 -0800
-Message-ID: <20191217002455.24849-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v2 03/11] tcp: Define IPPROTO_MPTCP
+Date: Mon, 16 Dec 2019 16:24:47 -0800
+Message-ID: <20191217002455.24849-4-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20191217002455.24849-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3098
+X-UID: 3099
 
---===============2383881600401287969==
+--===============2120527717794504770==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-v2 changes: sk_pacing_shift left as a regular struct member, and modified S=
-ACK
-space check based on recent -net fix.
+To open a MPTCP socket with socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP),
+IPPROTO_MPTCP needs a value that differs from IPPROTO_TCP. The existing
+IPPROTO numbers mostly map directly to IANA-specified protocol numbers.
+MPTCP does not have a protocol number allocated because MPTCP packets
+use the TCP protocol number. Use private number not used OTA.
 
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ include/trace/events/sock.h   | 3 ++-
+ include/uapi/linux/in.h       | 2 ++
+ tools/include/uapi/linux/in.h | 2 ++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
-The MPTCP upstreaming community has been collaborating on an
-upstreamable MPTCP implementation that complies with RFC 8684. A minimal
-set of features to comply with the specification involves a sizeable set
-of code changes, so David requested that we split this work in to
-multiple, smaller patch sets to build up MPTCP infrastructure.
+diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
+index 3ff12b90048d..a966d4b5ab37 100644
+--- a/include/trace/events/sock.h
++++ b/include/trace/events/sock.h
+@@ -19,7 +19,8 @@
+ #define inet_protocol_names		\
+ 		EM(IPPROTO_TCP)			\
+ 		EM(IPPROTO_DCCP)		\
+-		EMe(IPPROTO_SCTP)
++		EM(IPPROTO_SCTP)		\
++		EMe(IPPROTO_MPTCP)
+ =
 
-The minimal MPTCP feature set we are proposing for review in the v5.6
-timeframe begins with these three parts:
-
-Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP
-definitions, additional ULP and skb extension features, TCP option space
-checking, and a few exported symbols.
-
-Part 2: Single subflow implementation and self tests.
-
-Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684,
-publication expected in the next few days).
-
-We plan to send those over the next week. Additional patches for
-multiple subflow support, path management, active backup, and other
-features are in the pipeline for submission after making progress with
-the above reviews.
-
-Clone/fetch:
-https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v2-part1)
-
-Browse:
-https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v2-part1
-
-Thank you for your review. You can find us at mptcp(a)lists.01.org and
-https://is.gd/mptcp_upstream
-
-
-Mat Martineau (9):
-  net: Make sock protocol value checks more specific
-  sock: Make sk_protocol a 16-bit value
-  tcp: Define IPPROTO_MPTCP
-  tcp: Add MPTCP option number
-  tcp, ulp: Add clone operation to tcp_ulp_ops
-  mptcp: Add MPTCP to skb extensions
-  tcp: Prevent coalesce/collapse when skb has MPTCP extensions
-  tcp: Export TCP functions and ops struct
-  tcp: Check for filled TCP option space before SACK
-
-Paolo Abeni (2):
-  tcp: clean ext on tx recycle
-  skb: add helpers to allocate ext independently from sk_buff
-
- MAINTAINERS                     | 10 ++++++++
- include/linux/skbuff.h          |  6 +++++
- include/net/mptcp.h             | 43 +++++++++++++++++++++++++++++++++
- include/net/sock.h              |  6 ++---
- include/net/tcp.h               | 22 +++++++++++++++++
- include/trace/events/sock.h     |  5 ++--
- include/uapi/linux/in.h         |  2 ++
- net/ax25/af_ax25.c              |  2 +-
- net/core/skbuff.c               | 42 ++++++++++++++++++++++++++++++--
- net/decnet/af_decnet.c          |  2 +-
- net/ipv4/inet_connection_sock.c |  2 ++
- net/ipv4/tcp.c                  |  6 ++---
- net/ipv4/tcp_input.c            | 10 ++++++--
- net/ipv4/tcp_ipv4.c             |  2 +-
- net/ipv4/tcp_output.c           | 12 ++++++---
- net/ipv4/tcp_ulp.c              | 12 +++++++++
- net/ipv6/tcp_ipv6.c             |  6 ++---
- tools/include/uapi/linux/in.h   |  2 ++
- 18 files changed, 170 insertions(+), 22 deletions(-)
- create mode 100644 include/net/mptcp.h
-
+ #define tcp_state_names			\
+ 		EM(TCP_ESTABLISHED)		\
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index e7ad9d350a28..1521073b6348 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -76,6 +76,8 @@ enum {
+ #define IPPROTO_MPLS		IPPROTO_MPLS
+   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
+ #define IPPROTO_RAW		IPPROTO_RAW
++  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
++#define IPPROTO_MPTCP		IPPROTO_MPTCP
+   IPPROTO_MAX
+ };
+ #endif
+diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
+index e7ad9d350a28..1521073b6348 100644
+--- a/tools/include/uapi/linux/in.h
++++ b/tools/include/uapi/linux/in.h
+@@ -76,6 +76,8 @@ enum {
+ #define IPPROTO_MPLS		IPPROTO_MPLS
+   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
+ #define IPPROTO_RAW		IPPROTO_RAW
++  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
++#define IPPROTO_MPTCP		IPPROTO_MPTCP
+   IPPROTO_MAX
+ };
+ #endif
 -- =
 
 2.24.1
 
---===============2383881600401287969==--
+--===============2120527717794504770==--
