@@ -1,39 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============0843769611163879309=="
+Content-Type: multipart/mixed; boundary="===============0393193148507904958=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 19 December 2019 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 18 Dec 2019 16:26:04 +0100
-Message-ID: <0e41ac70-6422-580f-f648-f96cc325d8d9@tessares.net>
+Subject: [MPTCP] Re: [PATCH 2/2] Squash-to: "mptcp: Implement MPTCP receive
+ path"
+Date: Wed, 18 Dec 2019 16:32:11 +0100
+Message-ID: <6b16645aa5c2ab2063a64c9b287d41ffdf257e64.camel@redhat.com>
+In-Reply-To: ae0ce521-b657-741b-a106-87a3c3fa3639@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3139
+X-UID: 3140
 
---===============0843769611163879309==
+--===============0393193148507904958==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Wed, 2019-12-18 at 16:22 +0100, Matthieu Baerts wrote:
+> Hi Paolo,
+> =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> On 18/12/2019 13:33, Paolo Abeni wrote:
+> > drop C++ style comment, we have explicit checks in place
+> > for supported flags
+> =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20191219
+> Thank you for these two patches!
+> =
 
-Feel free to add/modify topics!
+> It looks good to me, good catch! Please check the conflict resolution =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+> and result to make sure I did this correctly.
+> =
 
-Speak to you tomorrow!
-Matthieu
--- =
+> - 1c8b2fdb49ea: "squashed" patch 1/2 in "mptcp: Add MPTCP socket stubs"
+> - 490e2f994f44: "squashed" patch 2/2 in "mptcp: Implement MPTCP receive =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0843769611163879309==--
+> path"
+> - b48b06bb1b2b: conflict in =
+
+> t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections
+> - ba600451fc45..27be141bb6d9: result
+
+LGTM!
+
+Thanks,
+
+Paolo
+
+--===============0393193148507904958==--
