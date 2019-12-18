@@ -1,49 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============2671069619762850718=="
+Content-Type: multipart/mixed; boundary="===============1674446534007602321=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH net-next v3 07/11] tcp: Prevent coalesce/collapse
  when skb has MPTCP extensions
-Date: Wed, 18 Dec 2019 22:52:24 +0100
-Message-ID: <518dc6a3c77f51a9d56b66ac80ffb883d80ceedf.camel@redhat.com>
-In-Reply-To: 6411d0366a6ec6a30f9dbf4117ea6d1f@codeaurora.org
+Date: Wed, 18 Dec 2019 23:15:46 +0100
+Message-ID: <5e6ae66a8adea061388919fe0ce5b766feab4c31.camel@redhat.com>
+In-Reply-To: 20191218.124510.1971632024371398726.davem@davemloft.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3165
+X-UID: 3166
 
---===============2671069619762850718==
+--===============1674446534007602321==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-12-18 at 14:36 -0700, subashab(a)codeaurora.org wrote:
-> > Ok, understood. Not every packet has this MPTCP extension data so
-> > coalescing was not always turned off, but given the importance of
-> > avoiding
-> > =
-
-> > this memory waste I'll confirm GRO behavior and work on maintaining
-> > coalesce/collapse with identical MPTCP extension data.
-> > =
-
+On Wed, 2019-12-18 at 12:45 -0800, David Miller wrote:
+> From: Eric Dumazet <eric.dumazet(a)gmail.com>
+> Date: Wed, 18 Dec 2019 11:50:24 -0800
 > =
 
-> Hi Mat
+> > On 12/17/19 12:38 PM, Mat Martineau wrote:
+> >> The MPTCP extension data needs to be preserved as it passes through the
+> >> TCP stack. Make sure that these skbs are not appended to others during
+> >> coalesce or collapse, so the data remains associated with the payload =
+of
+> >> the given skb.
+> > =
+
+> > This seems a very pessimistic change to me.
+> > =
+
+> > Are you planing later to refine this limitation ?
+> > =
+
+> > Surely if a sender sends TSO packet, we allow all the segments
+> > being aggregated at receive side either by GRO or TCP coalescing.
 > =
 
-> Are identical MPTCP extensions a common case?
+> This turns off absolutely crucial functional elements of our TCP
+> stack, and will avoid all of the machinery that avoids wastage in TCP
+> packets sitting in the various queues.  skb->truesize management, etc.
 
-Yes, they are.
+Thank you for the feedback!
 
-> AFAIK the data sequence number and the subflow sequence number change
-> per packet even in a single stream scenario.
+Just to clarify, with the code we have currently posted TSO trains of
+MPTCP packets can be aggregated by the GRO engine almost exactly as
+currently happens for plain TCP packets.
 
-What actually change on per packet basis is the TCP sequence number.
-The DSS mapping can spawn on multiple packets, and will have constand
-(base) sequence number and length.
+We still have chances to aggregate packets belonging to a MPTCP stream,
+as not all of them carry a DSS option.
 
-Cheers,
+We opted to not coalesce at the TCP level for the moment to avoid
+adding additional hook code inside the coalescing code.
+
+If you are ok without such hooks in the initial version, we can handle
+MPTCP coalescing, too. The real work will likely land in part 2.
+
+Would that fit you?
+
+Thanks,
 
 Paolo
 
---===============2671069619762850718==--
+--===============1674446534007602321==--
