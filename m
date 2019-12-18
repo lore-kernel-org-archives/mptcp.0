@@ -1,34 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============2804399036726545085=="
+Content-Type: multipart/mixed; boundary="===============3964540038883322708=="
 MIME-Version: 1.0
 From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 00/15] Multipath TCP part 2: Single
- subflow
-Date: Wed, 18 Dec 2019 12:42:44 -0800
-Message-ID: <20191218.124244.864160487872326152.davem@davemloft.net>
-In-Reply-To: 20191218195510.7782-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net-next v3 07/11] tcp: Prevent coalesce/collapse
+ when skb has MPTCP extensions
+Date: Wed, 18 Dec 2019 12:45:10 -0800
+Message-ID: <20191218.124510.1971632024371398726.davem@davemloft.net>
+In-Reply-To: 5fc0d4bd-5172-298d-6bbb-00f75c7c0dc9@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3160
+X-UID: 3161
 
---===============2804399036726545085==
+--===============3964540038883322708==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Date: Wed, 18 Dec 2019 11:54:55 -0800
+From: Eric Dumazet <eric.dumazet(a)gmail.com>
+Date: Wed, 18 Dec 2019 11:50:24 -0800
 
-> v1 -> v2: Rebased on latest "Multipath TCP: Prerequisites" v3 series
+> On 12/17/19 12:38 PM, Mat Martineau wrote:
+>> The MPTCP extension data needs to be preserved as it passes through the
+>> TCP stack. Make sure that these skbs are not appended to others during
+>> coalesce or collapse, so the data remains associated with the payload of
+>> the given skb.
+> =
 
-This really can't proceed in this manner.
+> This seems a very pessimistic change to me.
+> =
 
-Wait until one patch series is fully reviewed and integrated before
-trying to build things on top of it, ok?
+> Are you planing later to refine this limitation ?
+> =
 
-Nobody is going to review this second series in any reasonable manner
-while the prerequisites are not upstream yet.
+> Surely if a sender sends TSO packet, we allow all the segments
+> being aggregated at receive side either by GRO or TCP coalescing.
 
-Thank you.
+This turns off absolutely crucial functional elements of our TCP
+stack, and will avoid all of the machinery that avoids wastage in TCP
+packets sitting in the various queues.  skb->truesize management, etc.
 
---===============2804399036726545085==--
+I will not apply these patches with such a non-trivial regression in
+place for MPTCP streams, sorry.
+--===============3964540038883322708==--
