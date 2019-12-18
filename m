@@ -1,40 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============7682283169446769856=="
+Content-Type: multipart/mixed; boundary="===============7273976649600073078=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Eric Dumazet <eric.dumazet at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: Add MPTCP socket stubs"
-Date: Wed, 18 Dec 2019 17:19:34 +0100
-Message-ID: <7b99209e-a64e-9715-2944-e4ee91d3c55f@tessares.net>
-In-Reply-To: 3e4ffcf745e9f34ad46a21bff91f199c882ef740.1576685173.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v3 07/11] tcp: Prevent coalesce/collapse
+ when skb has MPTCP extensions
+Date: Wed, 18 Dec 2019 11:50:24 -0800
+Message-ID: <5fc0d4bd-5172-298d-6bbb-00f75c7c0dc9@gmail.com>
+In-Reply-To: 20191217203807.12579-8-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3142
+X-UID: 3143
 
---===============7682283169446769856==
+--===============7273976649600073078==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
 
-On 18/12/2019 17:11, Paolo Abeni wrote:
-> whoops, bad bitmask in previous commit - we must enumerate
-> the supported {recv,send}msg flags.
 
-Thank you for the quick fix!
+On 12/17/19 12:38 PM, Mat Martineau wrote:
+> The MPTCP extension data needs to be preserved as it passes through the
+> TCP stack. Make sure that these skbs are not appended to others during
+> coalesce or collapse, so the data remains associated with the payload of
+> the given skb.
+>
 
-- 4474e23c1aaa: "squashed" in "mptcp: Add MPTCP socket stubs"
-- 5a00cac10d5f..df2ff7c12d47: result
 
-Tests + export are in progress
+This seems a very pessimistic change to me.
 
-Cheers,
-Matt
--- =
+Are you planing later to refine this limitation ?
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7682283169446769856==--
+Surely if a sender sends TSO packet, we allow all the segments
+being aggregated at receive side either by GRO or TCP coalescing.
+
+--===============7273976649600073078==--
