@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============0282462577752472904=="
+Content-Type: multipart/mixed; boundary="===============6924809398126580693=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 00/15] Multipath TCP part 2: Single
- subflow
-Date: Wed, 18 Dec 2019 12:48:23 -0800
-Message-ID: <alpine.OSX.2.21.1912181244270.32925@mjmartin-mac01.local>
-In-Reply-To: 20191218.124244.864160487872326152.davem@davemloft.net
+Subject: [MPTCP] Re: [PATCH net-next v3 07/11] tcp: Prevent coalesce/collapse
+ when skb has MPTCP extensions
+Date: Wed, 18 Dec 2019 13:02:51 -0800
+Message-ID: <alpine.OSX.2.21.1912181251550.32925@mjmartin-mac01.local>
+In-Reply-To: 20191218.124510.1971632024371398726.davem@davemloft.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3162
+X-UID: 3163
 
---===============0282462577752472904==
+--===============6924809398126580693==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,25 +19,39 @@ Content-Transfer-Encoding: quoted-printable
 
 On Wed, 18 Dec 2019, David Miller wrote:
 
-> From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> Date: Wed, 18 Dec 2019 11:54:55 -0800
+> From: Eric Dumazet <eric.dumazet(a)gmail.com>
+> Date: Wed, 18 Dec 2019 11:50:24 -0800
 >
->> v1 -> v2: Rebased on latest "Multipath TCP: Prerequisites" v3 series
+>> On 12/17/19 12:38 PM, Mat Martineau wrote:
+>>> The MPTCP extension data needs to be preserved as it passes through the
+>>> TCP stack. Make sure that these skbs are not appended to others during
+>>> coalesce or collapse, so the data remains associated with the payload of
+>>> the given skb.
+>>
+>> This seems a very pessimistic change to me.
+>>
+>> Are you planing later to refine this limitation ?
+>>
+>> Surely if a sender sends TSO packet, we allow all the segments
+>> being aggregated at receive side either by GRO or TCP coalescing.
 >
-> This really can't proceed in this manner.
+> This turns off absolutely crucial functional elements of our TCP
+> stack, and will avoid all of the machinery that avoids wastage in TCP
+> packets sitting in the various queues.  skb->truesize management, etc.
 >
-> Wait until one patch series is fully reviewed and integrated before
-> trying to build things on top of it, ok?
+> I will not apply these patches with such a non-trivial regression in
+> place for MPTCP streams, sorry.
 >
-> Nobody is going to review this second series in any reasonable manner
-> while the prerequisites are not upstream yet.
->
-> Thank you.
 
-Will do. Thank you for the process feedback.
+Ok, understood. Not every packet has this MPTCP extension data so =
 
+coalescing was not always turned off, but given the importance of avoiding =
+
+this memory waste I'll confirm GRO behavior and work on maintaining =
+
+coalesce/collapse with identical MPTCP extension data.
 
 --
 Mat Martineau
 Intel
---===============0282462577752472904==--
+--===============6924809398126580693==--
