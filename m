@@ -1,51 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============0393193148507904958=="
+Content-Type: multipart/mixed; boundary="===============8643981134083607161=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] Squash-to: "mptcp: Implement MPTCP receive
- path"
-Date: Wed, 18 Dec 2019 16:32:11 +0100
-Message-ID: <6b16645aa5c2ab2063a64c9b287d41ffdf257e64.camel@redhat.com>
-In-Reply-To: ae0ce521-b657-741b-a106-87a3c3fa3639@tessares.net
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: Add MPTCP socket stubs"
+Date: Wed, 18 Dec 2019 17:11:27 +0100
+Message-ID: <3e4ffcf745e9f34ad46a21bff91f199c882ef740.1576685173.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3140
+X-UID: 3141
 
---===============0393193148507904958==
+--===============8643981134083607161==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-12-18 at 16:22 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+whoops, bad bitmask in previous commit - we must enumerate
+the supported {recv,send}msg flags.
 
-> On 18/12/2019 13:33, Paolo Abeni wrote:
-> > drop C++ style comment, we have explicit checks in place
-> > for supported flags
-> =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Thank you for these two patches!
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cbd6c1e0fb96..5e24e7cf7d70 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -22,7 +22,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *=
+msg, size_t len)
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct socket *subflow =3D msk->subflow;
+ =
 
-> It looks good to me, good catch! Please check the conflict resolution =
+-	if (msg->msg_flags & ~(MSG_MORE | MSG_NOSIGNAL))
++	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+ 		return -EOPNOTSUPP;
+ =
 
-> and result to make sure I did this correctly.
-> =
+ 	return sock_sendmsg(subflow, msg);
+@@ -34,7 +34,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *=
+msg, size_t len,
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct socket *subflow =3D msk->subflow;
+ =
 
-> - 1c8b2fdb49ea: "squashed" patch 1/2 in "mptcp: Add MPTCP socket stubs"
-> - 490e2f994f44: "squashed" patch 2/2 in "mptcp: Implement MPTCP receive =
+-	if (msg->msg_flags & ~(MSG_MORE | MSG_PEEK))
++	if (msg->msg_flags & ~(MSG_WAITALL | MSG_DONTWAIT))
+ 		return -EOPNOTSUPP;
+ =
 
-> path"
-> - b48b06bb1b2b: conflict in =
+ 	return sock_recvmsg(subflow, msg, flags);
+-- =
 
-> t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections
-> - ba600451fc45..27be141bb6d9: result
+2.21.0
 
-LGTM!
-
-Thanks,
-
-Paolo
-
---===============0393193148507904958==--
+--===============8643981134083607161==--
