@@ -1,149 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============6732215152853605135=="
+Content-Type: multipart/mixed; boundary="===============4996236256631423590=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v5 08/11] tcp: Export TCP functions and ops
- struct
-Date: Thu, 19 Dec 2019 14:34:31 -0800
-Message-ID: <20191219223434.19722-9-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v5 10/11] tcp: clean ext on tx recycle
+Date: Thu, 19 Dec 2019 14:34:33 -0800
+Message-ID: <20191219223434.19722-11-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191219223434.19722-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3208
+X-UID: 3209
 
---===============6732215152853605135==
+--===============4996236256631423590==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-MPTCP will make use of tcp_send_mss() and tcp_push() when sending
-data to specific TCP subflows.
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-tcp_request_sock_ipvX_ops and ipvX_specific will be referenced
-during TCP subflow creation.
+Otherwise we will find stray/unexpected/old extensions value on next
+iteration.
 
-Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+On tcp_write_xmit() we can end-up splitting an already queued skb in two
+parts, via tso_fragment(). The newly created skb can be allocated via
+the tx cache and an upper layer will not be aware of it, so that upper
+layer cannot set the ext properly.
+
+Resetting the ext on recycle ensures that stale data is not propagated
+in to packet headers or elsewhere.
+
+An alternative would be add an additional hook in tso_fragment() or in
+sk_stream_alloc_skb() to init the ext for upper layers that need it.
+
+Co-developed-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/tcp.h   | 8 ++++++++
- net/ipv4/tcp.c      | 6 +++---
- net/ipv4/tcp_ipv4.c | 2 +-
- net/ipv6/tcp_ipv6.c | 6 +++---
- 4 files changed, 15 insertions(+), 7 deletions(-)
+ include/net/sock.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index f4cddd42d52a..0a3533c019c6 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -330,6 +330,9 @@ int tcp_sendpage_locked(struct sock *sk, struct page *p=
-age, int offset,
- 			size_t size, int flags);
- ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
- 		 size_t size, int flags);
-+int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
-+void tcp_push(struct sock *sk, int flags, int mss_now, int nonagle,
-+	      int size_goal);
- void tcp_release_cb(struct sock *sk);
- void tcp_wfree(struct sk_buff *skb);
- void tcp_write_timer_handler(struct sock *sk);
-@@ -2002,6 +2005,11 @@ struct tcp_request_sock_ops {
- 			   enum tcp_synack_type synack_type);
- };
- =
-
-+extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
-+#if IS_ENABLED(CONFIG_IPV6)
-+extern const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops;
-+#endif
-+
- #ifdef CONFIG_SYN_COOKIES
- static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
- *ops,
- 					 const struct sock *sk, struct sk_buff *skb,
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 93fe77c5b02d..dc9bd27f4222 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -690,8 +690,8 @@ static bool tcp_should_autocork(struct sock *sk, struct=
- sk_buff *skb,
- 	       refcount_read(&sk->sk_wmem_alloc) > skb->truesize;
- }
- =
-
--static void tcp_push(struct sock *sk, int flags, int mss_now,
--		     int nonagle, int size_goal)
-+void tcp_push(struct sock *sk, int flags, int mss_now,
-+	      int nonagle, int size_goal)
- {
- 	struct tcp_sock *tp =3D tcp_sk(sk);
- 	struct sk_buff *skb;
-@@ -925,7 +925,7 @@ static unsigned int tcp_xmit_size_goal(struct sock *sk,=
- u32 mss_now,
- 	return max(size_goal, mss_now);
- }
- =
-
--static int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
-+int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
- {
- 	int mss_now;
- =
-
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 26637fce324d..c3b91789de65 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1372,7 +1372,7 @@ struct request_sock_ops tcp_request_sock_ops __read_m=
-ostly =3D {
- 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
- };
- =
-
--static const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
-+const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
- 	.mss_clamp	=3D	TCP_MSS_DEFAULT,
- #ifdef CONFIG_TCP_MD5SIG
- 	.req_md5_lookup	=3D	tcp_v4_md5_lookup,
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index df5fd9109696..30dceac8a608 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -75,7 +75,7 @@ static void	tcp_v6_reqsk_send_ack(const struct sock *sk, =
-struct sk_buff *skb,
- static int	tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb);
- =
-
- static const struct inet_connection_sock_af_ops ipv6_mapped;
--static const struct inet_connection_sock_af_ops ipv6_specific;
-+const struct inet_connection_sock_af_ops ipv6_specific;
- #ifdef CONFIG_TCP_MD5SIG
- static const struct tcp_sock_af_ops tcp_sock_ipv6_specific;
- static const struct tcp_sock_af_ops tcp_sock_ipv6_mapped_specific;
-@@ -785,7 +785,7 @@ struct request_sock_ops tcp6_request_sock_ops __read_mo=
-stly =3D {
- 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
- };
- =
-
--static const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
-+const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
- 	.mss_clamp	=3D	IPV6_MIN_MTU - sizeof(struct tcphdr) -
- 				sizeof(struct ipv6hdr),
- #ifdef CONFIG_TCP_MD5SIG
-@@ -1739,7 +1739,7 @@ static struct timewait_sock_ops tcp6_timewait_sock_op=
-s =3D {
- 	.twsk_destructor =3D tcp_twsk_destructor,
- };
- =
-
--static const struct inet_connection_sock_af_ops ipv6_specific =3D {
-+const struct inet_connection_sock_af_ops ipv6_specific =3D {
- 	.queue_xmit	   =3D inet6_csk_xmit,
- 	.send_check	   =3D tcp_v6_send_check,
- 	.rebuild_header	   =3D inet6_sk_rebuild_header,
+diff --git a/include/net/sock.h b/include/net/sock.h
+index b93cadba1a3b..23efed7f4e70 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1474,6 +1474,7 @@ static inline void sk_wmem_free_skb(struct sock *sk, =
+struct sk_buff *skb)
+ 	sk_mem_uncharge(sk, skb->truesize);
+ 	if (static_branch_unlikely(&tcp_tx_skb_cache_key) &&
+ 	    !sk->sk_tx_skb_cache && !skb_cloned(skb)) {
++		skb_ext_reset(skb);
+ 		skb_zcopy_clear(skb, true);
+ 		sk->sk_tx_skb_cache =3D skb;
+ 		return;
 -- =
 
 2.24.1
 
---===============6732215152853605135==--
+--===============4996236256631423590==--
