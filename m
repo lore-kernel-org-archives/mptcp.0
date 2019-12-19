@@ -1,76 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============1402219242789516345=="
+Content-Type: multipart/mixed; boundary="===============1668394961997802216=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v5 03/11] tcp: Define IPPROTO_MPTCP
-Date: Thu, 19 Dec 2019 14:34:26 -0800
-Message-ID: <20191219223434.19722-4-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v5 05/11] tcp,
+ ulp: Add clone operation to tcp_ulp_ops
+Date: Thu, 19 Dec 2019 14:34:28 -0800
+Message-ID: <20191219223434.19722-6-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191219223434.19722-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3202
+X-UID: 3203
 
---===============1402219242789516345==
+--===============1668394961997802216==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-To open a MPTCP socket with socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP),
-IPPROTO_MPTCP needs a value that differs from IPPROTO_TCP. The existing
-IPPROTO numbers mostly map directly to IANA-specified protocol numbers.
-MPTCP does not have a protocol number allocated because MPTCP packets
-use the TCP protocol number. Use private number not used OTA.
+If ULP is used on a listening socket, icsk_ulp_ops and icsk_ulp_data are
+copied when the listener is cloned. Sometimes the clone is immediately
+deleted, which will invoke the release op on the clone and likely
+corrupt the listening socket's icsk_ulp_data.
+
+The clone operation is invoked immediately after the clone is copied and
+gives the ULP type an opportunity to set up the clone socket and its
+icsk_ulp_data.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/trace/events/sock.h   | 3 ++-
- include/uapi/linux/in.h       | 2 ++
- tools/include/uapi/linux/in.h | 2 ++
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ include/net/tcp.h               |  5 +++++
+ net/ipv4/inet_connection_sock.c |  2 ++
+ net/ipv4/tcp_ulp.c              | 12 ++++++++++++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
-index 3ff12b90048d..a966d4b5ab37 100644
---- a/include/trace/events/sock.h
-+++ b/include/trace/events/sock.h
-@@ -19,7 +19,8 @@
- #define inet_protocol_names		\
- 		EM(IPPROTO_TCP)			\
- 		EM(IPPROTO_DCCP)		\
--		EMe(IPPROTO_SCTP)
-+		EM(IPPROTO_SCTP)		\
-+		EMe(IPPROTO_MPTCP)
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index d4b6bf2c5d3c..c82b2f75d024 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2145,6 +2145,9 @@ struct tcp_ulp_ops {
+ 	/* diagnostic */
+ 	int (*get_info)(const struct sock *sk, struct sk_buff *skb);
+ 	size_t (*get_info_size)(const struct sock *sk);
++	/* clone ulp */
++	void (*clone)(const struct request_sock *req, struct sock *newsk,
++		      const gfp_t priority);
  =
 
- #define tcp_state_names			\
- 		EM(TCP_ESTABLISHED)		\
-diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
-index e7ad9d350a28..1521073b6348 100644
---- a/include/uapi/linux/in.h
-+++ b/include/uapi/linux/in.h
-@@ -76,6 +76,8 @@ enum {
- #define IPPROTO_MPLS		IPPROTO_MPLS
-   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-+  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
-+#define IPPROTO_MPTCP		IPPROTO_MPTCP
-   IPPROTO_MAX
- };
- #endif
-diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
-index e7ad9d350a28..1521073b6348 100644
---- a/tools/include/uapi/linux/in.h
-+++ b/tools/include/uapi/linux/in.h
-@@ -76,6 +76,8 @@ enum {
- #define IPPROTO_MPLS		IPPROTO_MPLS
-   IPPROTO_RAW =3D 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-+  IPPROTO_MPTCP =3D 262,		/* Multipath TCP connection		*/
-+#define IPPROTO_MPTCP		IPPROTO_MPTCP
-   IPPROTO_MAX
- };
- #endif
+ 	char		name[TCP_ULP_NAME_MAX];
+ 	struct module	*owner;
+@@ -2155,6 +2158,8 @@ int tcp_set_ulp(struct sock *sk, const char *name);
+ void tcp_get_available_ulp(char *buf, size_t len);
+ void tcp_cleanup_ulp(struct sock *sk);
+ void tcp_update_ulp(struct sock *sk, struct proto *p);
++void tcp_clone_ulp(const struct request_sock *req,
++		   struct sock *newsk, const gfp_t priority);
+ =
+
+ #define MODULE_ALIAS_TCP_ULP(name)				\
+ 	__MODULE_INFO(alias, alias_userspace, name);		\
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_soc=
+k.c
+index e4c6e8b40490..d667f2569f8e 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -810,6 +810,8 @@ struct sock *inet_csk_clone_lock(const struct sock *sk,
+ 		/* Deinitialize accept_queue to trap illegal accesses. */
+ 		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_queue=
+));
+ =
+
++		tcp_clone_ulp(req, newsk, priority);
++
+ 		security_inet_csk_clone(newsk, req);
+ 	}
+ 	return newsk;
+diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+index 12ab5db2b71c..e7a2589d69ee 100644
+--- a/net/ipv4/tcp_ulp.c
++++ b/net/ipv4/tcp_ulp.c
+@@ -130,6 +130,18 @@ void tcp_cleanup_ulp(struct sock *sk)
+ 	icsk->icsk_ulp_ops =3D NULL;
+ }
+ =
+
++void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
++		   const gfp_t priority)
++{
++	struct inet_connection_sock *icsk =3D inet_csk(newsk);
++
++	if (!icsk->icsk_ulp_ops)
++		return;
++
++	if (icsk->icsk_ulp_ops->clone)
++		icsk->icsk_ulp_ops->clone(req, newsk, priority);
++}
++
+ static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_op=
+s)
+ {
+ 	struct inet_connection_sock *icsk =3D inet_csk(sk);
 -- =
 
 2.24.1
 
---===============1402219242789516345==--
+--===============1668394961997802216==--
