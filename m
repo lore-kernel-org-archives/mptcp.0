@@ -1,118 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============1022595562556350711=="
+Content-Type: multipart/mixed; boundary="===============8325738336603594690=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v4 11/11] skb: add helpers to allocate ext
- independently from sk_buff
-Date: Thu, 19 Dec 2019 14:05:57 -0800
-Message-ID: <20191219220557.17823-12-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v4 00/11] Multipath TCP: Prerequisites
+Date: Thu, 19 Dec 2019 14:14:05 -0800
+Message-ID: <20191219221405.18698-1-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20191219220557.17823-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3196
+X-UID: 3197
 
---===============1022595562556350711==
+--===============8325738336603594690==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+(Fixed subject line on cover letter, sorry)
 
-Currently we can allocate the extension only after the skb,
-this change allows the user to do the opposite, will simplify
-allocation failure handling from MPTCP.
+v3 -> v4: Update coalesce/collapse of incoming MPTCP skbs (patch 7)
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- include/linux/skbuff.h |  3 +++
- net/core/skbuff.c      | 35 +++++++++++++++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 2 deletions(-)
+v2 -> v3: Ensure sk_type alignment in struct sock (patch 2)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 1a261c3ee074..af9b6cf79a65 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4115,6 +4115,9 @@ struct skb_ext {
- 	char data[0] __aligned(8);
- };
- =
+v1 -> v2: sk_pacing_shift left as a regular struct member (patch 2), and
+modified SACK space check based on recent -net fix (patch 9).
 
-+struct skb_ext *__skb_ext_alloc(void);
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext);
- void *skb_ext_add(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_del(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_put(struct skb_ext *ext);
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index fa67036dd928..504e9bd5ebce 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5983,7 +5983,14 @@ static void *skb_ext_get_ptr(struct skb_ext *ext, en=
-um skb_ext_id id)
- 	return (void *)ext + (ext->offset[id] * SKB_EXT_ALIGN_VALUE);
- }
- =
 
--static struct skb_ext *skb_ext_alloc(void)
-+/**
-+ * __skb_ext_alloc - allocate a new skb extensions storage
-+ *
-+ * Returns the newly allocated pointer. The pointer can later attached to a
-+ * skb via __skb_ext_set().
-+ * Note: caller must handle the skb_ext as an opaque data.
-+ */
-+struct skb_ext *__skb_ext_alloc(void)
- {
- 	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, GFP_ATOMIC);
- =
+The MPTCP upstreaming community has been collaborating on an
+upstreamable MPTCP implementation that complies with RFC 8684. A minimal
+set of features to comply with the specification involves a sizeable set
+of code changes, so David requested that we split this work in to
+multiple, smaller patch sets to build up MPTCP infrastructure.
 
-@@ -6023,6 +6030,30 @@ static struct skb_ext *skb_ext_maybe_cow(struct skb_=
-ext *old,
- 	return new;
- }
- =
+The minimal MPTCP feature set we are proposing for review in the v5.6
+timeframe begins with these three parts:
 
-+/**
-+ * __skb_ext_set - attach the specified extension storage to this skb
-+ * @skb: buffer
-+ * @id: extension id
-+ * @ext: extension storage previously allocated via __skb_ext_alloc()
-+ *
-+ * Existing extensions, if any, are cleared.
-+ *
-+ * Returns the pointer to the extension.
-+ */
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext)
-+{
-+	unsigned int newlen, newoff =3D SKB_EXT_CHUNKSIZEOF(*ext);
-+
-+	skb_ext_put(skb);
-+	newlen =3D newoff + skb_ext_type_len[id];
-+	ext->chunks =3D newlen;
-+	ext->offset[id] =3D newoff;
-+	skb->extensions =3D ext;
-+	skb->active_extensions =3D 1 << id;
-+	return skb_ext_get_ptr(ext, id);
-+}
-+
- /**
-  * skb_ext_add - allocate space for given extension, COW if needed
-  * @skb: buffer
-@@ -6056,7 +6087,7 @@ void *skb_ext_add(struct sk_buff *skb, enum skb_ext_i=
-d id)
- 	} else {
- 		newoff =3D SKB_EXT_CHUNKSIZEOF(*new);
- =
+Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP
+definitions, additional ULP and skb extension features, TCP option space
+checking, and a few exported symbols.
 
--		new =3D skb_ext_alloc();
-+		new =3D __skb_ext_alloc();
- 		if (!new)
- 			return NULL;
- 	}
+Part 2: Single subflow implementation and self tests.
+
+Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684,
+publication expected in the next few days).
+
+We plan to send those over the next week. Additional patches for
+multiple subflow support, path management, active backup, and other
+features are in the pipeline for submission after making progress with
+the above reviews.
+
+Clone/fetch:
+https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v4-part1)
+
+Browse:
+https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v4-part1
+
+Thank you for your review. You can find us at mptcp(a)lists.01.org and
+https://is.gd/mptcp_upstream
+
+
+Mat Martineau (9):
+  net: Make sock protocol value checks more specific
+  sock: Make sk_protocol a 16-bit value
+  tcp: Define IPPROTO_MPTCP
+  tcp: Add MPTCP option number
+  tcp, ulp: Add clone operation to tcp_ulp_ops
+  mptcp: Add MPTCP to skb extensions
+  tcp: coalesce/collapse must respect MPTCP extensions
+  tcp: Export TCP functions and ops struct
+  tcp: Check for filled TCP option space before SACK
+
+Paolo Abeni (2):
+  tcp: clean ext on tx recycle
+  skb: add helpers to allocate ext independently from sk_buff
+
+ MAINTAINERS                     | 10 ++++
+ include/linux/skbuff.h          |  6 +++
+ include/net/mptcp.h             | 81 +++++++++++++++++++++++++++++++++
+ include/net/sock.h              | 12 ++---
+ include/net/tcp.h               | 22 +++++++++
+ include/trace/events/sock.h     |  5 +-
+ include/uapi/linux/in.h         |  2 +
+ net/ax25/af_ax25.c              |  2 +-
+ net/core/skbuff.c               | 42 ++++++++++++++++-
+ net/decnet/af_decnet.c          |  2 +-
+ net/ipv4/inet_connection_sock.c |  2 +
+ net/ipv4/tcp.c                  |  6 +--
+ net/ipv4/tcp_input.c            | 11 +++--
+ net/ipv4/tcp_ipv4.c             |  2 +-
+ net/ipv4/tcp_output.c           | 12 +++--
+ net/ipv4/tcp_ulp.c              | 12 +++++
+ net/ipv6/tcp_ipv6.c             |  6 +--
+ tools/include/uapi/linux/in.h   |  2 +
+ 18 files changed, 211 insertions(+), 26 deletions(-)
+ create mode 100644 include/net/mptcp.h
+
 -- =
 
 2.24.1
 
---===============1022595562556350711==--
+--===============8325738336603594690==--
