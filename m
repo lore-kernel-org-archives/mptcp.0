@@ -1,252 +1,229 @@
-Content-Type: multipart/mixed; boundary="===============6360446604803097338=="
+Content-Type: multipart/mixed; boundary="===============8162778004058268368=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1] Squash-to: "tcp: Prevent coalesce/collapse
- when skb has MPTCP extensions"
-Date: Thu, 19 Dec 2019 12:47:52 +0100
-Message-ID: <ec32e92de5a1503dbc65a1808a1016aa7c3e19c3.camel@redhat.com>
-In-Reply-To: 642fe7fe86460576858ecffc1145a11b414d7112.camel@redhat.com
+Subject: [MPTCP] [PATCH v2] Squash-to: "tcp: Prevent coalesce/collapse when
+ skb has MPTCP extensions"
+Date: Thu, 19 Dec 2019 13:35:35 +0100
+Message-ID: <5a93f2baef8bd316afbd029ccdb0bef057c8c300.1576757715.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3178
+X-UID: 3179
 
---===============6360446604803097338==
+--===============8162778004058268368==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-12-19 at 12:12 +0100, Paolo Abeni wrote:
-> On Thu, 2019-12-19 at 11:54 +0100, Christoph Paasch wrote:
-> > Hello,
-> > =
+Allow coalescing when mptcp extensions are equal or 'from' lacks such exten=
+sions.
 
-> > > On Dec 19, 2019, at 11:40 AM, Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > > =
+Note: we could be a little less restrictive allowing coalescing with
+different data_ack, but this simplify the code a bit, we can improve
+later and at least mptcp_net-next do not generate almost identical
+DSS with different data_ack.
 
-> > > Allow coalescing when mptcp extensions are equal or 'from' lacks such=
- extensions.
-> > > =
+With the above assumption, we don't need any special action when
+moving bits from skb1 to skb2, as the mapping in skb2 will already
+fit, and mapping in skb1 will be dropped as/if needed.
 
-> > > Note: we could be a little less restrictive allowing coalescing with
-> > > different data_ack, but this simplify the code a bit, we can improve
-> > > later and at least mptcp_net-next do not generate almost identical
-> > > DSS with different data_ack.
-> > > =
+When coalescing to a newly allocated skb, we transfer the relevant
+extension to. An MPTCP specific helper is added for that goal,
+possibly we could use/create a generic one.
 
-> > > With the above assumption, we don't need any special action when
-> > > moving bits from skb1 to skb2, as the mapping in skb2 will already
-> > > fit, and mapping in skb1 will be dropped as/if needed.
-> > > =
+Rebased tree available at:
 
-> > > When coalescing to a newly allocated skb, we transfer the relevant
-> > > extension to. An MPTCP specific helper is added for that goal,
-> > > possibly we could use/create a generic one.
-> > > =
+https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v4.2
 
-> > > RFC -> v1:
-> > > - changed helpers checks as per Florian && Mat feedback
-> > > - added comments (Florian)
-> > > - fixed check in tcp_try_coalesce() (Mat)
-> > > - fixed memcpy (Mat && Florian)
-> > > - dropped now unused mptcp_skb_ext_exist()
-> > > - move the mptcp_skb_can_collapse() into the 2nd group of checks in
-> > >   tcp_coalese()
-> > > =
+@Matt, can you please spin self-tests loop on top of this? =
 
-> > > This latter point is somewhat relevant. An unpatched kernel allows
-> > > collapsing a single skb with 'old' bits (seq lower than 'start'). Than
-> > > really means shrink a bit the current skb, possibly without any fourt=
-her
-> > > action. This change preserve this behavior, but add the restriction to
-> > > respect MPTCP coalescing test when trying to collapsing to the next o=
-ne.
-> > > Overall consequences are not 110% clear to me!
-> > > =
+I'm running with KASAN build on v1 patches and on branch topmost
+commit
 
-> > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > > ---
-> > > include/net/mptcp.h  | 45 ++++++++++++++++++++++++++++++++++++++++----
-> > > include/net/tcp.h    |  2 +-
-> > > net/ipv4/tcp_input.c | 13 ++++++-------
-> > > 3 files changed, 48 insertions(+), 12 deletions(-)
-> > > =
+v1  -> v2:
+ - mptcp_skb_ext_move() is a no-op if from lack an MPTCP ext (Christoph)
+ - clean-up mptcp_skb_ext_move() as per Florian's suggestions
 
-> > > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> > > index 43ddfdf9e4a3..f0b8ee40fe5a 100644
-> > > --- a/include/net/mptcp.h
-> > > +++ b/include/net/mptcp.h
-> > > @@ -27,16 +27,53 @@ struct mptcp_ext {
-> > > =
+RFC -> v1:
+ - changed helpers checks as per Florian && Mat feedback
+ - added comments (Florian)
+ - fixed check in tcp_try_coalesce() (Mat)
+ - fixed memcpy (Mat && Florian)
+ - dropped now unused mptcp_skb_ext_exist()
+ - move the mptcp_skb_can_collapse() into the 2nd group of checks in
+   tcp_coalese()
 
-> > > #ifdef CONFIG_MPTCP
-> > > =
+This latter point is somewhat relevant. An unpatched kernel allows
+collapsing a single skb with 'old' bits (seq lower than 'start'). Than
+really means shrink a bit the current skb, possibly without any fourther
+action. This change preserve this behavior, but add the restriction to
+respect MPTCP coalescing test when trying to collapsing to the next one.
+Overall consequences are not 110% clear to me!
 
-> > > -static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
-> > > +/* move the skb extension owership, with the assumption that 'to' is
-> > > + * newly allocated and 'from' carries only MPTCP ext
-> > > + */
-> > > +static inline void mptcp_skb_ext_move(struct sk_buff *to,
-> > > +				      struct sk_buff *from)
-> > > +{
-> > > +	if (WARN_ON_ONCE(to->active_extensions))
-> > > +		skb_ext_put(to);
-> > > +	WARN_ON_ONCE(from->active_extensions & ~(1 << SKB_EXT_MPTCP));
-> > > +
-> > > +	to->active_extensions =3D from->active_extensions;
-> > > +	to->extensions =3D from->extensions;
-> > > +	from->extensions =3D NULL;
-> > > +	from->active_extensions =3D 0;
-> > > +}
-> > > +
-> > > +static inline bool mptcp_ext_matches(const struct mptcp_ext *to_ext,
-> > > +				     const struct mptcp_ext *from_ext)
-> > > +{
-> > > +	return to_ext =3D=3D from_ext ||
-> > > +	       (to_ext && from_ext &&
-> > > +	        !memcmp(from_ext, to_ext, sizeof(struct mptcp_ext)));
-> > > +}
-> > > +
-> > > +/* check if skbs can be collapsed.
-> > > + * MPTCP collapse is allowed if neither @to or @from carry an mptcp =
-data
-> > > + * mapping, or if the extension of @to is the same as @from.
-> > > + * Collapsing is not possible if @to lacks an extension, but @from c=
-arries one.
-> > > + */
-> > > +static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
-> > > +					  const struct sk_buff *from)
-> > > {
-> > > -	return skb_ext_exist(skb, SKB_EXT_MPTCP);
-> > > +	return mptcp_ext_matches(skb_ext_find(to, SKB_EXT_MPTCP),
-> > > +				 skb_ext_find(from, SKB_EXT_MPTCP));
-> > > }
-> > > =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/net/mptcp.h  | 46 ++++++++++++++++++++++++++++++++++++++++----
+ include/net/tcp.h    |  2 +-
+ net/ipv4/tcp_input.c | 13 ++++++-------
+ 3 files changed, 49 insertions(+), 12 deletions(-)
 
-> > > #else
-> > > =
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 43ddfdf9e4a3..03240a6052e6 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -27,16 +27,54 @@ struct mptcp_ext {
+ =
 
-> > > -static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
-> > > +static inline void mptcp_skb_ext_move(struct sk_buff *to,
-> > > +				      const struct sk_buff *from)
-> > > +{
-> > > +}
-> > > +
-> > > +static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
-> > > +					  const struct sk_buff *from)
-> > > {
-> > > -	return false;
-> > > +	return true;
-> > > }
-> > > =
+ #ifdef CONFIG_MPTCP
+ =
 
-> > > #endif /* CONFIG_MPTCP */
-> > > diff --git a/include/net/tcp.h b/include/net/tcp.h
-> > > index c483c73b8d41..f4cddd42d52a 100644
-> > > --- a/include/net/tcp.h
-> > > +++ b/include/net/tcp.h
-> > > @@ -983,7 +983,7 @@ static inline bool tcp_skb_can_collapse(const str=
-uct sk_buff *to,
-> > > 					const struct sk_buff *from)
-> > > {
-> > > 	return likely(tcp_skb_can_collapse_to(to) &&
-> > > -		      !mptcp_skb_ext_exist(from));
-> > > +		      mptcp_skb_can_collapse(to, from));
-> > > }
-> > > =
+-static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
++/* move the skb extension owership, with the assumption that 'to' is
++ * newly allocated
++ */
++static inline void mptcp_skb_ext_move(struct sk_buff *to,
++				      struct sk_buff *from)
+ {
+-	return skb_ext_exist(skb, SKB_EXT_MPTCP);
++	if (!skb_ext_exist(from, SKB_EXT_MPTCP))
++		return;
++
++	if (WARN_ON_ONCE(to->active_extensions))
++		skb_ext_put(to);
++
++	to->active_extensions =3D from->active_extensions;
++	to->extensions =3D from->extensions;
++	from->active_extensions =3D 0;
++}
++
++static inline bool mptcp_ext_matches(const struct mptcp_ext *to_ext,
++				     const struct mptcp_ext *from_ext)
++{
++	return to_ext =3D=3D from_ext ||
++	       (to_ext && from_ext &&
++	        !memcmp(from_ext, to_ext, sizeof(struct mptcp_ext)));
++}
++
++/* check if skbs can be collapsed.
++ * MPTCP collapse is allowed if neither @to or @from carry an mptcp data
++ * mapping, or if the extension of @to is the same as @from.
++ * Collapsing is not possible if @to lacks an extension, but @from carries=
+ one.
++ */
++static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
++					  const struct sk_buff *from)
++{
++	return mptcp_ext_matches(skb_ext_find(to, SKB_EXT_MPTCP),
++				 skb_ext_find(from, SKB_EXT_MPTCP));
+ }
+ =
 
-> > > /* Events passed to congestion control interface */
-> > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > > index 55b460a2ece2..a16d9f2a0529 100644
-> > > --- a/net/ipv4/tcp_input.c
-> > > +++ b/net/ipv4/tcp_input.c
-> > > @@ -4420,7 +4420,7 @@ static bool tcp_try_coalesce(struct sock *sk,
-> > > 	if (TCP_SKB_CB(from)->seq !=3D TCP_SKB_CB(to)->end_seq)
-> > > 		return false;
-> > > =
+ #else
+ =
 
-> > > -	if (mptcp_skb_ext_exist(from))
-> > > +	if (!mptcp_skb_can_collapse(to, from))
-> > > 		return false;
-> > > =
+-static inline bool mptcp_skb_ext_exist(const struct sk_buff *skb)
++static inline void mptcp_skb_ext_move(struct sk_buff *to,
++				      const struct sk_buff *from)
++{
++}
++
++static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
++					  const struct sk_buff *from)
+ {
+-	return false;
++	return true;
+ }
+ =
 
-> > > #ifdef CONFIG_TLS_DEVICE
-> > > @@ -4931,19 +4931,17 @@ tcp_collapse(struct sock *sk, struct sk_buff_=
-head *list, struct rb_root *root,
-> > > =
+ #endif /* CONFIG_MPTCP */
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index c483c73b8d41..f4cddd42d52a 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -983,7 +983,7 @@ static inline bool tcp_skb_can_collapse(const struct sk=
+_buff *to,
+ 					const struct sk_buff *from)
+ {
+ 	return likely(tcp_skb_can_collapse_to(to) &&
+-		      !mptcp_skb_ext_exist(from));
++		      mptcp_skb_can_collapse(to, from));
+ }
+ =
 
-> > > 		/* The first skb to collapse is:
-> > > 		 * - not SYN/FIN and
-> > > -		 * - does not include a MPTCP skb extension
-> > > 		 * - bloated or contains data before "start" or
-> > > -		 *   overlaps to the next one.
-> > > +		 *   overlaps to the next one and mptcp allow collapsing.
-> > > 		 */
-> > > 		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
-> > > -		    !mptcp_skb_ext_exist(skb) &&
-> > > 		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
-> > > 		     before(TCP_SKB_CB(skb)->seq, start))) {
-> > > 			end_of_skbs =3D false;
-> > > 			break;
-> > > 		}
-> > > =
+ /* Events passed to congestion control interface */
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 55b460a2ece2..a16d9f2a0529 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -4420,7 +4420,7 @@ static bool tcp_try_coalesce(struct sock *sk,
+ 	if (TCP_SKB_CB(from)->seq !=3D TCP_SKB_CB(to)->end_seq)
+ 		return false;
+ =
 
-> > > -		if (n && n !=3D tail &&
-> > > +		if (n && n !=3D tail && mptcp_skb_can_collapse(skb, n) &&
-> > > 		    TCP_SKB_CB(skb)->end_seq !=3D TCP_SKB_CB(n)->seq) {
-> > > 			end_of_skbs =3D false;
-> > > 			break;
-> > > @@ -4952,7 +4950,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_he=
-ad *list, struct rb_root *root,
-> > > 		/* Decided to skip this, advance start seq. */
-> > > 		start =3D TCP_SKB_CB(skb)->end_seq;
-> > > 	}
-> > > -	if (end_of_skbs || mptcp_skb_ext_exist(skb) ||
-> > > +	if (end_of_skbs ||
-> > > 	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
-> > > 		return;
-> > > =
+-	if (mptcp_skb_ext_exist(from))
++	if (!mptcp_skb_can_collapse(to, from))
+ 		return false;
+ =
 
-> > > @@ -4976,6 +4974,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_he=
-ad *list, struct rb_root *root,
-> > > 		else
-> > > 			__skb_queue_tail(&tmp, nskb); /* defer rbtree insertion */
-> > > 		skb_set_owner_r(nskb, sk);
-> > > +		mptcp_skb_ext_move(nskb, skb);
-> > =
+ #ifdef CONFIG_TLS_DEVICE
+@@ -4931,19 +4931,17 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *=
+list, struct rb_root *root,
+ =
 
-> > should we avoid this call when there are no extensions or it is not MPT=
-CP?
-> > =
+ 		/* The first skb to collapse is:
+ 		 * - not SYN/FIN and
+-		 * - does not include a MPTCP skb extension
+ 		 * - bloated or contains data before "start" or
+-		 *   overlaps to the next one.
++		 *   overlaps to the next one and mptcp allow collapsing.
+ 		 */
+ 		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
+-		    !mptcp_skb_ext_exist(skb) &&
+ 		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
+ 		     before(TCP_SKB_CB(skb)->seq, start))) {
+ 			end_of_skbs =3D false;
+ 			break;
+ 		}
+ =
 
-> > Just to avoid to spend CPU-cycles when MPTCP is not used.
-> =
+-		if (n && n !=3D tail &&
++		if (n && n !=3D tail && mptcp_skb_can_collapse(skb, n) &&
+ 		    TCP_SKB_CB(skb)->end_seq !=3D TCP_SKB_CB(n)->seq) {
+ 			end_of_skbs =3D false;
+ 			break;
+@@ -4952,7 +4950,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
+st, struct rb_root *root,
+ 		/* Decided to skip this, advance start seq. */
+ 		start =3D TCP_SKB_CB(skb)->end_seq;
+ 	}
+-	if (end_of_skbs || mptcp_skb_ext_exist(skb) ||
++	if (end_of_skbs ||
+ 	    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
+ 		return;
+ =
 
-> Thank you for the feeback. The function is inlined and just copies a
-> couple of skb fields. We can even skip the copies if =
+@@ -4976,6 +4974,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
+st, struct rb_root *root,
+ 		else
+ 			__skb_queue_tail(&tmp, nskb); /* defer rbtree insertion */
+ 		skb_set_owner_r(nskb, sk);
++		mptcp_skb_ext_move(nskb, skb);
+ =
 
-> =
+ 		/* Copy data, releasing collapsed skbs. */
+ 		while (copy > 0) {
+@@ -4995,7 +4994,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
+st, struct rb_root *root,
+ 				skb =3D tcp_collapse_one(sk, skb, list, root);
+ 				if (!skb ||
+ 				    skb =3D=3D tail ||
+-				    mptcp_skb_ext_exist(skb) ||
++				    !mptcp_skb_can_collapse(nskb, skb) ||
+ 				    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
+ 					goto end;
+ #ifdef CONFIG_TLS_DEVICE
+-- =
 
-> !(from->active_extensions & (1 << SKB_EXT_MPTCP))
-> =
+2.21.0
 
-> but not sure if the extra branch and code will be a win. Perhpas we can
-> simply skip if =
-
-> =
-
-> !sk_is_mptcp(sk)
-> =
-
-> which should be simpler and will reduce cache utilization for the TCP
-> scenario
-
-uhm... the problem with the above is that sk_is_mptcp() is introduced
-only by a later patch, in part 2. So let's check skb_ext_exist()
-instead.
-
-Thanks,
-
-Paolo
-
---===============6360446604803097338==--
+--===============8162778004058268368==--
