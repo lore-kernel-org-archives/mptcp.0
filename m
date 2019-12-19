@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============8162778004058268368=="
+Content-Type: multipart/mixed; boundary="===============5029192689563657559=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2] Squash-to: "tcp: Prevent coalesce/collapse when
+Subject: [MPTCP] [PATCH v3] Squash-to: "tcp: Prevent coalesce/collapse when
  skb has MPTCP extensions"
-Date: Thu, 19 Dec 2019 13:35:35 +0100
-Message-ID: <5a93f2baef8bd316afbd029ccdb0bef057c8c300.1576757715.git.pabeni@redhat.com>
+Date: Thu, 19 Dec 2019 17:47:58 +0100
+Message-ID: <580478d5584a2b4f4d68ed2676cbcb85b9ae44a5.1576773662.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3179
+X-UID: 3180
 
---===============8162778004058268368==
+--===============5029192689563657559==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -32,13 +32,11 @@ extension to. An MPTCP specific helper is added for that goal,
 possibly we could use/create a generic one.
 
 Rebased tree available at:
+https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v4.3
 
-https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v4.2
-
-@Matt, can you please spin self-tests loop on top of this? =
-
-I'm running with KASAN build on v1 patches and on branch topmost
-commit
+v2  -> v3:
+ - refine mptcp_ext_matches() checks -> matches if !from_ext
+   (was from_ext =3D=3D to_ext, which was more restrictive)
 
 v1  -> v2:
  - mptcp_skb_ext_move() is a no-op if from lack an MPTCP ext (Christoph)
@@ -68,7 +66,7 @@ Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
  3 files changed, 49 insertions(+), 12 deletions(-)
 
 diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 43ddfdf9e4a3..03240a6052e6 100644
+index 43ddfdf9e4a3..8e27e33861ab 100644
 --- a/include/net/mptcp.h
 +++ b/include/net/mptcp.h
 @@ -27,16 +27,54 @@ struct mptcp_ext {
@@ -99,7 +97,7 @@ index 43ddfdf9e4a3..03240a6052e6 100644
 +static inline bool mptcp_ext_matches(const struct mptcp_ext *to_ext,
 +				     const struct mptcp_ext *from_ext)
 +{
-+	return to_ext =3D=3D from_ext ||
++	return !from_ext ||
 +	       (to_ext && from_ext &&
 +	        !memcmp(from_ext, to_ext, sizeof(struct mptcp_ext)));
 +}
@@ -226,4 +224,4 @@ st, struct rb_root *root,
 
 2.21.0
 
---===============8162778004058268368==--
+--===============5029192689563657559==--
