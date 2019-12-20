@@ -1,75 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============3555958828244408786=="
+Content-Type: multipart/mixed; boundary="===============4869621956564362921=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 1/4] Squash-to: "mptcp: Handle MP_CAPABLE options
- for outgoing connections"
-Date: Fri, 20 Dec 2019 19:45:06 +0100
-Message-ID: <a91929d1327d846a715ef6655311acae49285ae5.1576867317.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: Add MPTCP to skb extensions"
+Date: Fri, 20 Dec 2019 19:48:30 +0100
+Message-ID: <7f507a35-0cf8-3632-4605-4323a4e24629@tessares.net>
+In-Reply-To: dbcd71e92d92e8274b19057ec94d300d6b374549.1576859688.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3236
+X-UID: 3237
 
---===============3555958828244408786==
+--===============4869621956564362921==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After upstream feedback, I just noticed that we actually
-don't clear the is_mptcp field on clone allocation failure.
 
-Do that and additionally don't allocate at all the subflow if MPC handshake
-failed.
+On 20/12/2019 17:35, Paolo Abeni wrote:
+> address upstream feedback
+> =
 
-Note: we need to update accordingly accept on later patch
+> rebased tree available at:
+> =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+> https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v5
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index b9aca17b0b91..7dd8733dc72a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -262,23 +262,19 @@ static void subflow_ulp_clone(const struct request_so=
-ck *req,
- 	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
- 	struct mptcp_subflow_context *new_ctx;
- =
+Thank you for the patch!
+- cecc47fb77e4: "squashed" in "mptcp: Add MPTCP to skb extensions"
+- f3fac5ec0007: "Signed-off-by" + "Co-developed-by"
+- 381d8190403a: conflict in =
 
--	/* newsk->sk_socket is NULL at this point */
--	new_ctx =3D subflow_create_ctx(newsk, priority);
--	if (!new_ctx)
-+	if (!subflow_req->mp_capable ||
-+	    (new_ctx =3D subflow_create_ctx(newsk, priority)) =3D=3D NULL) {
-+		tcp_sk(newsk)->is_mptcp =3D 0;
- 		return;
-+	}
- =
+t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
+- d6d41dde162a..bcfc31d5bde4: result
 
- 	new_ctx->conn =3D NULL;
- 	new_ctx->conn_finished =3D 1;
- 	new_ctx->icsk_af_ops =3D old_ctx->icsk_af_ops;
--
--	if (subflow_req->mp_capable) {
--		new_ctx->mp_capable =3D 1;
--		new_ctx->fourth_ack =3D 1;
--		new_ctx->remote_key =3D subflow_req->remote_key;
--		new_ctx->local_key =3D subflow_req->local_key;
--	} else {
--		tcp_sk(newsk)->is_mptcp =3D 0;
--	}
-+	new_ctx->mp_capable =3D 1;
-+	new_ctx->fourth_ack =3D 1;
-+	new_ctx->remote_key =3D subflow_req->remote_key;
-+	new_ctx->local_key =3D subflow_req->local_key;
- }
- =
-
- static struct tcp_ulp_ops subflow_ulp_ops __read_mostly =3D {
+Cheers,
+Matt
 -- =
 
-2.21.0
-
---===============3555958828244408786==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============4869621956564362921==--
