@@ -1,61 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============6322979615741665722=="
+Content-Type: multipart/mixed; boundary="===============0838761348511226428=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "tcp: coalesce/collapse must respect
- MPTCP extensions"
-Date: Fri, 20 Dec 2019 10:29:45 -0800
-Message-ID: <alpine.OSX.2.21.1912201027150.52347@mkavai-mobl.amr.corp.intel.com>
-In-Reply-To: 7d8d66c1daa70ab3b70200ca33e5551427fadbab.1576866221.git.pabeni@redhat.com
+Subject: [MPTCP] Git: modification of commit messages
+Date: Fri, 20 Dec 2019 19:41:24 +0100
+Message-ID: <61d013a6-6d33-69ea-3bce-ee473d6e8233@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3231
+X-UID: 3232
 
---===============6322979615741665722==
+--===============0838761348511226428==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-On Fri, 20 Dec 2019, Paolo Abeni wrote:
+Here are the last modifications in the commit messages:
 
-> clarify mptcp ext usage
->
-> to be added to squashed commit changelog:
-> """
-> v5 -> v6:
->  - clarify MPTCP must always be cleared at allocation time
+1/11:
+- [t/net-Make-sock-protocol-value-checks-more-specific 66e251bd0df8] =
 
-"clarify MPTCP skb extensions must always be cleared at allocation time"
+tg:msg: add Eric's Reviewed-by
 
-> """
-> ---
-> include/net/mptcp.h | 3 +++
-> 1 file changed, 3 insertions(+)
->
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 7d693d0a38ff..8825da7538dd 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -48,6 +48,9 @@ static inline void mptcp_skb_ext_move(struct sk_buff *t=
-o,
-> static inline bool mptcp_ext_matches(const struct mptcp_ext *to_ext,
-> 				     const struct mptcp_ext *from_ext)
-> {
-> +	/* MPTCP always clear the ext when adding it to the skb, so
+2/11:
+- [t/sock-Make-sk_protocol-a-16-bit-value 84c37b7e1c18] tg:msg: add =
 
-s/clear/clears/
+Eric's Reviewed-by
 
-> +	 * holes do not bother us here
-> +	 */
-> 	return !from_ext ||
-> 	       (to_ext && from_ext &&
-> 	        !memcmp(from_ext, to_ext, sizeof(struct mptcp_ext)));
-> -- =
+3/11:
+- [t/tcp-Define-IPPROTO_MPTCP 0f2af3970219] tg:msg: add Eric's Reviewed-by
 
-> 2.21.0
+4/11:
+- [t/tcp-Add-MPTCP-option-number d54316644a67] tg:msg: add Eric's =
 
---
-Mat Martineau
-Intel
---===============6322979615741665722==--
+Reviewed-by
+
+5/11:
+- [t/tcp-ulp-Add-clone-operation-to-tcp_ulp_ops fa0ed52c3a20] tg:msg: =
+
+add note about return code
+- [t/tcp-ulp-Add-clone-operation-to-tcp_ulp_ops 09d10fe722fd] tg:msg: =
+
+add changelog
+- No RevB
+
+6/11:
+- [t/mptcp-Add-MPTCP-to-skb-extensions 1bbe046c3d79] tg:msg: add changelog
+- note: this change is not in the code yet, coming soon
+- No RevB
+
+7/11:
+- [t/tcp-Prevent-coalesce-collapse-when-skb-has-MPTCP-extensions =
+
+83747ff24c84] tg:msg: add changelog
+- note: this change is not in the code yet, coming soon
+- No RevB
+
+8/11:
+- [t/tcp-Export-TCP-functions-and-ops-struct 909512591df0] tg:msg: add =
+
+Eric's Reviewed-by
+
+9/11:
+- [t/tcp-Check-for-filled-TCP-option-space-before-SACK c9505a319286] =
+
+tg:msg: add Eric's Reviewed-by
+
+10/11:
+- [t/tcp-clean-ext-on-tx-recycle c6ad811986c7] tg:msg: add Eric's =
+
+Reviewed-by
+
+11/11:
+- No RevB
+
+- 6454fec75495..d6d41dde162a: result (empty as expected)
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============0838761348511226428==--
