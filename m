@@ -1,48 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============0011361128935248082=="
+Content-Type: multipart/mixed; boundary="===============3555958828244408786=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 4/4] Squash-to: "mptcp: cope with later TCP
- fallback"
-Date: Fri, 20 Dec 2019 19:45:09 +0100
-Message-ID: <f237a169874b5af7e35462c10d27e9ffb165f71b.1576867317.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 1/4] Squash-to: "mptcp: Handle MP_CAPABLE options
+ for outgoing connections"
+Date: Fri, 20 Dec 2019 19:45:06 +0100
+Message-ID: <a91929d1327d846a715ef6655311acae49285ae5.1576867317.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3235
+X-UID: 3236
 
---===============0011361128935248082==
+--===============3555958828244408786==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Now we can fully restore the subflow status on late tcp fallback
+After upstream feedback, I just noticed that we actually
+don't clear the is_mptcp field on clone allocation failure.
+
+Do that and additionally don't allocate at all the subflow if MPC handshake
+failed.
+
+Note: we need to update accordingly accept on later patch
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/mptcp/subflow.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 71e82fd326c5..14c0bd79a534 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -52,10 +52,10 @@ static struct socket *__mptcp_fallback_to_tcp(struct mp=
-tcp_sock *msk,
- 	lock_sock(ssk);
- 	sock_graft(ssk, sock);
- 	if (subflow->conn) {
--		/* Clearing the 'conn' field will make the ULP-overriden
--		 * ops behaving like plain TCP ones.
--		 * Note: we can't release the ULP data on a live socket.
-+		/* We can't release the ULP data on a live socket,
-+		 * restore the tcp callback
- 		 */
-+		mptcp_subflow_tcp_fallback(ssk, subflow);
- 		sock_put(subflow->conn);
- 		subflow->conn =3D NULL;
- 	}
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b9aca17b0b91..7dd8733dc72a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -262,23 +262,19 @@ static void subflow_ulp_clone(const struct request_so=
+ck *req,
+ 	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
+ 	struct mptcp_subflow_context *new_ctx;
+ =
+
+-	/* newsk->sk_socket is NULL at this point */
+-	new_ctx =3D subflow_create_ctx(newsk, priority);
+-	if (!new_ctx)
++	if (!subflow_req->mp_capable ||
++	    (new_ctx =3D subflow_create_ctx(newsk, priority)) =3D=3D NULL) {
++		tcp_sk(newsk)->is_mptcp =3D 0;
+ 		return;
++	}
+ =
+
+ 	new_ctx->conn =3D NULL;
+ 	new_ctx->conn_finished =3D 1;
+ 	new_ctx->icsk_af_ops =3D old_ctx->icsk_af_ops;
+-
+-	if (subflow_req->mp_capable) {
+-		new_ctx->mp_capable =3D 1;
+-		new_ctx->fourth_ack =3D 1;
+-		new_ctx->remote_key =3D subflow_req->remote_key;
+-		new_ctx->local_key =3D subflow_req->local_key;
+-	} else {
+-		tcp_sk(newsk)->is_mptcp =3D 0;
+-	}
++	new_ctx->mp_capable =3D 1;
++	new_ctx->fourth_ack =3D 1;
++	new_ctx->remote_key =3D subflow_req->remote_key;
++	new_ctx->local_key =3D subflow_req->local_key;
+ }
+ =
+
+ static struct tcp_ulp_ops subflow_ulp_ops __read_mostly =3D {
 -- =
 
 2.21.0
 
---===============0011361128935248082==--
+--===============3555958828244408786==--
