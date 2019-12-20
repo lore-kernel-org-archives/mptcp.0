@@ -1,89 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============0838761348511226428=="
+Content-Type: multipart/mixed; boundary="===============1287207164776426971=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Git: modification of commit messages
-Date: Fri, 20 Dec 2019 19:41:24 +0100
-Message-ID: <61d013a6-6d33-69ea-3bce-ee473d6e8233@tessares.net>
+Subject: [MPTCP] [RFC PATCH 2/4] Squash-to "mptcp: Create SUBFLOW socket for
+ incoming connection"
+Date: Fri, 20 Dec 2019 19:45:07 +0100
+Message-ID: <a896ba9a34ee1191688d7418b076db88263a7d61.1576867317.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3232
+X-UID: 3233
 
---===============0838761348511226428==
+--===============1287207164776426971==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+use is_mptcp instead of 'subflow->mp_capable'
+---
+ net/mptcp/protocol.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Here are the last modifications in the commit messages:
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 70e28cc0dbe0..283e7dc2d25e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -243,7 +243,6 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ 				 bool kern)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-	struct mptcp_subflow_context *subflow;
+ 	struct socket *listener;
+ 	struct sock *newsk;
+ =
 
-1/11:
-- [t/net-Make-sock-protocol-value-checks-more-specific 66e251bd0df8] =
+@@ -258,13 +257,14 @@ static struct sock *mptcp_accept(struct sock *sk, int=
+ flags, int *err,
+ 	if (!newsk)
+ 		return NULL;
+ =
 
-tg:msg: add Eric's Reviewed-by
+-	subflow =3D mptcp_subflow_ctx(newsk);
+-	pr_debug("msk=3D%p, new subflow=3D%p, ", msk, subflow);
++	pr_debug("msk=3D%p, subflow is mptcp=3D%d", msk, tcp_sk(newsk)->is_mptcp);
+ =
 
-2/11:
-- [t/sock-Make-sk_protocol-a-16-bit-value 84c37b7e1c18] tg:msg: add =
+-	if (subflow->mp_capable) {
++	if (tcp_sk(newsk)->is_mptcp) {
++		struct mptcp_subflow_context *subflow;
+ 		struct sock *new_mptcp_sock;
+ 		struct sock *ssk =3D newsk;
+ =
 
-Eric's Reviewed-by
++		subflow =3D mptcp_subflow_ctx(newsk);
+ 		lock_sock(sk);
+ =
 
-3/11:
-- [t/tcp-Define-IPPROTO_MPTCP 0f2af3970219] tg:msg: add Eric's Reviewed-by
+ 		local_bh_disable();
+@@ -295,8 +295,6 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ 		bh_unlock_sock(new_mptcp_sock);
+ 		local_bh_enable();
+ 		release_sock(sk);
+-	} else {
+-		tcp_sk(newsk)->is_mptcp =3D 0;
+ 	}
+ =
 
-4/11:
-- [t/tcp-Add-MPTCP-option-number d54316644a67] tg:msg: add Eric's =
-
-Reviewed-by
-
-5/11:
-- [t/tcp-ulp-Add-clone-operation-to-tcp_ulp_ops fa0ed52c3a20] tg:msg: =
-
-add note about return code
-- [t/tcp-ulp-Add-clone-operation-to-tcp_ulp_ops 09d10fe722fd] tg:msg: =
-
-add changelog
-- No RevB
-
-6/11:
-- [t/mptcp-Add-MPTCP-to-skb-extensions 1bbe046c3d79] tg:msg: add changelog
-- note: this change is not in the code yet, coming soon
-- No RevB
-
-7/11:
-- [t/tcp-Prevent-coalesce-collapse-when-skb-has-MPTCP-extensions =
-
-83747ff24c84] tg:msg: add changelog
-- note: this change is not in the code yet, coming soon
-- No RevB
-
-8/11:
-- [t/tcp-Export-TCP-functions-and-ops-struct 909512591df0] tg:msg: add =
-
-Eric's Reviewed-by
-
-9/11:
-- [t/tcp-Check-for-filled-TCP-option-space-before-SACK c9505a319286] =
-
-tg:msg: add Eric's Reviewed-by
-
-10/11:
-- [t/tcp-clean-ext-on-tx-recycle c6ad811986c7] tg:msg: add Eric's =
-
-Reviewed-by
-
-11/11:
-- No RevB
-
-- 6454fec75495..d6d41dde162a: result (empty as expected)
-
-Cheers,
-Matt
+ 	return newsk;
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0838761348511226428==--
+2.21.0
+
+--===============1287207164776426971==--
