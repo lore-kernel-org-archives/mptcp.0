@@ -1,20 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============8014075353904665326=="
+Content-Type: multipart/mixed; boundary="===============6653951703577660399=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [multipathtcp] RFC6824bis edits based on implementation
- feedback
-Date: Thu, 02 Jan 2020 10:26:55 -0800
-Message-ID: <20200102182655.GB44237@MacBook-Pro-64.local>
-In-Reply-To: C36D742F-6D76-48FA-B6D8-44DE484A9E2C@gmail.com
+Subject: [MPTCP] Fwd: Re: [multipathtcp] RFC6824bis edits based on
+ implementation feedback
+Date: Thu, 02 Jan 2020 10:42:33 -0800
+Message-ID: <20200102184233.GC44237@MacBook-Pro-64.local>
 X-Status: 
 X-Keywords:                  
-X-UID: 3250
+X-UID: 3251
 
---===============8014075353904665326==
+--===============6653951703577660399==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+(Only MPTCP upstream-list)
+
+Hi all,
+
+happy new year! :-)
+
+
+To help in the IETF-process, it would be good if you reply to my previous
+mail with a statement of support to the IETF mailing-list. That will help
+getting these changes in.
+
+
+Christoph
+
+
+----- Forwarded message from Christoph Paasch <cpaasch=3D40apple.com(a)dmar=
+c.ietf.org> -----
+
+From: Christoph Paasch <cpaasch=3D40apple.com(a)dmarc.ietf.org>
+To: Alan Ford <alan.ford(a)gmail.com>
+Cc: MultiPath TCP - IETF WG <multipathtcp(a)ietf.org>, mptcp Upstreaming <m=
+ptcp(a)lists.01.org>
+Date: Thu, 02 Jan 2020 10:26:55 -0800
+Subject: Re: [multipathtcp] RFC6824bis edits based on implementation feedba=
+ck
 
 + MPTCP upstreaming community
 
@@ -132,4 +157,10 @@ support this change.
 Thanks,
 Christoph
 
---===============8014075353904665326==--
+_______________________________________________
+multipathtcp mailing list
+multipathtcp(a)ietf.org
+https://www.ietf.org/mailman/listinfo/multipathtcp
+
+----- End forwarded message -----
+--===============6653951703577660399==--
