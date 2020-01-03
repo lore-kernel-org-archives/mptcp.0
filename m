@@ -1,50 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============6425279168382912684=="
+Content-Type: multipart/mixed; boundary="===============5659625426478974385=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 2/4] Squash-to "mptcp: Create SUBFLOW socket
- for incoming connection"
-Date: Fri, 03 Jan 2020 11:33:06 +0100
-Message-ID: <b49fb77f8f4ee173bc7362965927d37d8a3a5d85.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.1912201411080.52347@mkavai-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [RFC PATCH 1/4] Squash-to: "mptcp: Handle MP_CAPABLE
+ options for outgoing connections"
+Date: Fri, 03 Jan 2020 19:29:50 +0100
+Message-ID: <d0f7ae07c28b9c256d455fcad92328c946500d72.camel@redhat.com>
+In-Reply-To: a91929d1327d846a715ef6655311acae49285ae5.1576867317.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3254
+X-UID: 3255
 
---===============6425279168382912684==
+--===============5659625426478974385==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-12-20 at 14:12 -0800, Mat Martineau wrote:
-> On Fri, 20 Dec 2019, Paolo Abeni wrote:
+On Fri, 2019-12-20 at 19:45 +0100, Paolo Abeni wrote:
+> After upstream feedback, I just noticed that we actually
+> don't clear the is_mptcp field on clone allocation failure.
 > =
 
-> > use is_mptcp instead of 'subflow->mp_capable'
+> Do that and additionally don't allocate at all the subflow if MPC handsha=
+ke
+> failed.
 > =
 
-> There is still some similar use of subflow->mp_capable in other places =
+> Note: we need to update accordingly accept on later patch
+> =
 
-> (subflow.c, options.c) - should those also be re-examined for possible =
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>  net/mptcp/subflow.c | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
+> =
 
-> change to is_mptcp?
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index b9aca17b0b91..7dd8733dc72a 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -262,23 +262,19 @@ static void subflow_ulp_clone(const struct request_=
+sock *req,
+>  	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
+>  	struct mptcp_subflow_context *new_ctx;
+>  =
 
-After a not-so-quick check I think there are only 2 additional places
-where the above applies - e.g. we really check for TCP fallback:
+> -	/* newsk->sk_socket is NULL at this point */
+> -	new_ctx =3D subflow_create_ctx(newsk, priority);
+> -	if (!new_ctx)
+> +	if (!subflow_req->mp_capable ||
+> +	    (new_ctx =3D subflow_create_ctx(newsk, priority)) =3D=3D NULL) {
+> +		tcp_sk(newsk)->is_mptcp =3D 0;
+>  		return;
+> +	}
+ =
 
-* in subflow.c, subflow_data_ready()
+We have an additional problem here.
 
-* in options.c, mptcp_established_options()
+When the MPC handshake and/or allocation fail, we need to clear the
+icsk ulp fields, or we will get double free on the old_ctx.
 
-AFAICS all other places we really check mp_capable (vs mp_join)
+Still trying to clean this thing up...
 
-I'll cover the above in the (upconing) next iteration.
+/P
 
-Thanks,
-
-Paolo
-
-
-
-
---===============6425279168382912684==--
+--===============5659625426478974385==--
