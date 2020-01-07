@@ -1,89 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============5178502793559279394=="
+Content-Type: multipart/mixed; boundary="===============4055352011486510818=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "sock: Make sk_protocol a 16-bit
- value"
-Date: Tue, 07 Jan 2020 23:21:08 +0100
-Message-ID: <59491a5f-e3da-189b-dc08-90c4411d78d7@tessares.net>
-In-Reply-To: 3c338f9b353da739e72c3c7bb2a290074ea38c85.camel@redhat.com
+Subject: [MPTCP] Re: BPF-related self test failure with part1-v5 patches
+Date: Tue, 07 Jan 2020 15:49:15 -0800
+Message-ID: <alpine.OSX.2.21.2001071547480.18884@fepiepan-mobl.amr.corp.intel.com>
+In-Reply-To: 99c5be4c85f3f33730b3bd94d27b000e1c8d4006.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3269
+X-UID: 3270
 
---===============5178502793559279394==
+--===============4055352011486510818==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+On Tue, 7 Jan 2020, Paolo Abeni wrote:
 
-On 07/01/2020 19:13, Paolo Abeni wrote:
-> On Tue, 2020-01-07 at 10:05 -0800, Mat Martineau wrote:
->> On Tue, 7 Jan 2020, Mat Martineau wrote:
+> On Tue, 2020-01-07 at 09:38 -0800, Mat Martineau wrote:
+>> On Tue, 7 Jan 2020, Paolo Abeni wrote:
 >>
->>> On Tue, 7 Jan 2020, Paolo Abeni wrote:
->>>
->>>> We need to update the ebpf accessors for both sk_type and
->>>> sk_protocol. The code previously in place has some special
->>>> hack to take care such fields being part of a bitfield.
+>>> On Mon, 2020-01-06 at 15:05 -0800, Mat Martineau wrote:
+>>>> Hello everyone -
 >>>>
->>>> The fix actually clean-up a bit the existing code.
 >>>>
->>>> Note: I'm not 100% sure about dropping the '*target_size =3D '
->>>> instructions, my take is that the full ebpf register is loaded
->>>> with the (short) values. AFAICS other short field accesses
->>>> do not set 'targer_size', too.
+>>>> I received a 0day automated build email this morning related to patch =
+2/11
+>>>> in our v5 patch set:
 >>>>
->>>> to be appended to the orig commit message:
+>>>> https://lists.01.org/hyperkitty/list/lkp(a)lists.01.org/thread/XB3HTAB=
+NGVKPJ5QEF46NLIYN6AN5DNGD/
+>>>>
+>>>> In summary, there's a test failure in the BPF self tests:
+>>>>
 >>>> """
->>>> Take care of BPF field access for sk_type/sk_protocol.
->>>> Both of them are now outside the bitfield, so we can use
->>>> load instructions without further shifting/masking.
->>>>
->>>> v5 -> v6:
->>>> - update eBPF accessors, too.
+>>>> # selftests: bpf: test_select_reuseport
+>>>> ...
+>>>> # ######## IPv6/TCP LOOPBACK ########
+>>>> # test_err_inner_map: unexpected result
+>>>> # result: [0, 0, 0, 1, 0, 0]
+>>>> # expected: [1, 0, 0, 0, 0, 0]
+>>>> # check_results(343):FAIL:unexpected result expected_results[0] !=3D r=
+esults[0]
+>>>> bpf_prog_linum:142
+>>>> not ok 17 selftests: bpf: test_select_reuseport # exit=3D255
 >>>> """
 >>>>
->>>> Additionally, Eric's Reviewed-by should be dropped.
->>>>
->>>> v1 -> v2:
->>>> - replace BPF_H with BPF_FIELD_SIZEOF, plus indentation
->>>>    adjust (matttbe)
+>>>> It seems like a good idea to see if this is reproducible before sending
+>>>> v6, for a few reasons:
 >>>
->>> Based on code review and applying/building the patch, I think it this i=
-s good
->>> to merge/squash.
+>>> +1
 >>>
->>> I'm still working on getting the relevant ebpf selftest to run locally =
-and
->>> would like to replicate Paolo's results before sending v6. If any fixes=
- are
->>> required we can squash those too.
+>>>> I run in to build problems, though - it looks like LLVM 10 is required=
+ to
+>>>> build the BPF tests, is anyone already set up with that version?
 >>>
+>>> I'm unsure if such version is required, why do you think so?!?
 >>
->> One more thing - should we cc the BPF maintainer(s) on this patch when
->> submitting to netdev?
-> =
+>> My build (LLVM 8) broke on an unknown builtin
+>> (__builtin_preserve_access_index), which led me to this thread from
+>> September with LLVM version information:
+>>
+>> https://lore.kernel.org/netdev/0a5bf608-bb15-c116-8e58-7224b6c3b62f(a)fb=
+.com/
+>>
+>> I'll try skipping the problem builds like you mentioned on IRC.
+>
+> Running the attached script before 'make clean; make' in the eBPF self-
+> tests, I'm able to do reproduce successful builds - not sure if it's
+> luck or some stale 'good' status.
+>
+> It looks like that deteting files is 'the way' to disable ebpf tests :(
+>
 
-> Both Alexei and Daniel are subscribed to netdev, but I think likely the
-> patch will go unnoticed for them unless we cc them explicitly. Yep, cc-
-> ing them should be good, IMHO.
+Thanks for the script! It didn't seem to produce a working build with =
 
-- 80133b5cafce: "squashed" in "sock: Make sk_protocol a 16-bit value"
-- 73b0b8fd39c7: tg:msg: remove Eric's Reviewed-by
-- a4fca1719469: tg:msg: add Paolo's changelog
-- e7785eab3ede: tg:msg: add BPF maintainers + ML in Cc
+Fedora 30 / llvm8, but Fedora 31 / llvm9 builds ok.
 
-Tests are in progress.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5178502793559279394==--
+--
+Mat Martineau
+Intel
+--===============4055352011486510818==--
