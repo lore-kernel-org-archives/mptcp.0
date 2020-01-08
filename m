@@ -1,134 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============2914725775474862114=="
+Content-Type: multipart/mixed; boundary="===============7413816102131766863=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v6 05/11] tcp,
- ulp: Add clone operation to tcp_ulp_ops
-Date: Wed, 08 Jan 2020 09:06:48 -0800
-Message-ID: <alpine.OSX.2.21.2001080843490.27415@fepiepan-mobl.amr.corp.intel.com>
-In-Reply-To: 7df4cdc2-37fe-e724-a2e8-829b6920e9c6@gmail.com
+Subject: [MPTCP] [PATCH] Squash-to: "tcp,
+ ulp: Add clone operation to tcp_ulp_ops"
+Date: Wed, 08 Jan 2020 13:57:38 -0800
+Message-ID: <20200108215738.28326-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3298
+X-UID: 3299
 
---===============2914725775474862114==
+--===============7413816102131766863==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Make change suggested in upstream review - move and rename ulp clone
+helper to make it inline-friendly.
 
-On Wed, 8 Jan 2020, Eric Dumazet wrote:
+Commit message addition:
 
->
->
-> On 1/7/20 5:19 PM, Mat Martineau wrote:
->> If ULP is used on a listening socket, icsk_ulp_ops and icsk_ulp_data are
->> copied when the listener is cloned. Sometimes the clone is immediately
->> deleted, which will invoke the release op on the clone and likely
->> corrupt the listening socket's icsk_ulp_data.
->>
->> The clone operation is invoked immediately after the clone is copied and
->> gives the ULP type an opportunity to set up the clone socket and its
->> icsk_ulp_data.
->>
->> The MPTCP ULP clone will silently fallback to plain TCP on allocation
->> failure, so 'clone()' does not need to return an error code.
->>
->> v5 -> v6:
->>  - clarified MPTCP clone usage in commit message
->>
->> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->> ---
->>  include/net/tcp.h               |  5 +++++
->>  net/ipv4/inet_connection_sock.c |  2 ++
->>  net/ipv4/tcp_ulp.c              | 12 ++++++++++++
->>  3 files changed, 19 insertions(+)
->>
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index 85f1d7ff6e8b..82879718d35a 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -2154,6 +2154,9 @@ struct tcp_ulp_ops {
->>  	/* diagnostic */
->>  	int (*get_info)(const struct sock *sk, struct sk_buff *skb);
->>  	size_t (*get_info_size)(const struct sock *sk);
->> +	/* clone ulp */
->> +	void (*clone)(const struct request_sock *req, struct sock *newsk,
->> +		      const gfp_t priority);
->>
->>  	char		name[TCP_ULP_NAME_MAX];
->>  	struct module	*owner;
->> @@ -2164,6 +2167,8 @@ int tcp_set_ulp(struct sock *sk, const char *name);
->>  void tcp_get_available_ulp(char *buf, size_t len);
->>  void tcp_cleanup_ulp(struct sock *sk);
->>  void tcp_update_ulp(struct sock *sk, struct proto *p);
->> +void tcp_clone_ulp(const struct request_sock *req,
->> +		   struct sock *newsk, const gfp_t priority);
->
->
-> Maybe not needed, see below.
->
->>
->>  #define MODULE_ALIAS_TCP_ULP(name)				\
->>  	__MODULE_INFO(alias, alias_userspace, name);		\
->> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_=
-sock.c
->> index 18c0d5bffe12..bf53a722923a 100644
->> --- a/net/ipv4/inet_connection_sock.c
->> +++ b/net/ipv4/inet_connection_sock.c
->> @@ -810,6 +810,8 @@ struct sock *inet_csk_clone_lock(const struct sock *=
-sk,
->>  		/* Deinitialize accept_queue to trap illegal accesses. */
->>  		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_qu=
-eue));
->>
->> +		tcp_clone_ulp(req, newsk, priority);
->
-> Since inet_csk_clone_lock() is also used by dccp, I would suggest renaming
-> this helper to inet_clone_ulp() ?
+"""
+v6 -> v7:
+ - move and rename ulp clone helper to make it inline-friendly
+"""
 
-Sure, icsk_ulp_ops does reside in inet_connection_sock so that naming =
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ include/net/tcp.h               |  2 --
+ net/ipv4/inet_connection_sock.c | 14 +++++++++++++-
+ net/ipv4/tcp_ulp.c              | 12 ------------
+ 3 files changed, 13 insertions(+), 15 deletions(-)
 
-works too.
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 853537e330f8..5e4133d09b9d 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2183,8 +2183,6 @@ int tcp_set_ulp(struct sock *sk, const char *name);
+ void tcp_get_available_ulp(char *buf, size_t len);
+ void tcp_cleanup_ulp(struct sock *sk);
+ void tcp_update_ulp(struct sock *sk, struct proto *p);
+-void tcp_clone_ulp(const struct request_sock *req,
+-		   struct sock *newsk, const gfp_t priority);
+ =
 
->
->> +
->>  		security_inet_csk_clone(newsk, req);
->>  	}
->>  	return newsk;
->> diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
->> index 12ab5db2b71c..e7a2589d69ee 100644
->> --- a/net/ipv4/tcp_ulp.c
->> +++ b/net/ipv4/tcp_ulp.c
->> @@ -130,6 +130,18 @@ void tcp_cleanup_ulp(struct sock *sk)
->>  	icsk->icsk_ulp_ops =3D NULL;
->>  }
->>
->> +void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
->> +		   const gfp_t priority)
->> +{
->> +	struct inet_connection_sock *icsk =3D inet_csk(newsk);
->> +
->> +	if (!icsk->icsk_ulp_ops)
->> +		return;
->> +
->> +	if (icsk->icsk_ulp_ops->clone)
->> +		icsk->icsk_ulp_ops->clone(req, newsk, priority);
->> +}
->> +
->
-> Unless I am mistaken, this is only used from  inet_csk_clone_lock()
+ #define MODULE_ALIAS_TCP_ULP(name)				\
+ 	__MODULE_INFO(alias, alias_userspace, name);		\
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_soc=
+k.c
+index bf53a722923a..6a691fd04398 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -770,6 +770,18 @@ void inet_csk_reqsk_queue_hash_add(struct sock *sk, st=
+ruct request_sock *req,
+ }
+ EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
+ =
 
-Yes, only used there.
++static void inet_clone_ulp(const struct request_sock *req, struct sock *ne=
+wsk,
++			   const gfp_t priority)
++{
++	struct inet_connection_sock *icsk =3D inet_csk(newsk);
++
++	if (!icsk->icsk_ulp_ops)
++		return;
++
++	if (icsk->icsk_ulp_ops->clone)
++		icsk->icsk_ulp_ops->clone(req, newsk, priority);
++}
++
+ /**
+  *	inet_csk_clone_lock - clone an inet socket, and lock its clone
+  *	@sk: the socket to clone
+@@ -810,7 +822,7 @@ struct sock *inet_csk_clone_lock(const struct sock *sk,
+ 		/* Deinitialize accept_queue to trap illegal accesses. */
+ 		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_queue=
+));
+ =
 
->
-> So I would move this function in net/ipv4/inet_connection_sock.c, make it=
- static
-> so that compiler can inline it cleanly.
+-		tcp_clone_ulp(req, newsk, priority);
++		inet_clone_ulp(req, newsk, priority);
+ =
 
-I'll do that. Thanks for the feedback.
+ 		security_inet_csk_clone(newsk, req);
+ 	}
+diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+index e7a2589d69ee..12ab5db2b71c 100644
+--- a/net/ipv4/tcp_ulp.c
++++ b/net/ipv4/tcp_ulp.c
+@@ -130,18 +130,6 @@ void tcp_cleanup_ulp(struct sock *sk)
+ 	icsk->icsk_ulp_ops =3D NULL;
+ }
+ =
 
---
-Mat Martineau
-Intel
---===============2914725775474862114==--
+-void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
+-		   const gfp_t priority)
+-{
+-	struct inet_connection_sock *icsk =3D inet_csk(newsk);
+-
+-	if (!icsk->icsk_ulp_ops)
+-		return;
+-
+-	if (icsk->icsk_ulp_ops->clone)
+-		icsk->icsk_ulp_ops->clone(req, newsk, priority);
+-}
+-
+ static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_op=
+s)
+ {
+ 	struct inet_connection_sock *icsk =3D inet_csk(sk);
+-- =
+
+2.24.1
+
+--===============7413816102131766863==--
