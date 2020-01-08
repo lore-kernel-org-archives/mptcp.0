@@ -1,76 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============0890608290645729983=="
+Content-Type: multipart/mixed; boundary="===============4875680067435425592=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Eric Dumazet <eric.dumazet at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 7/7] Squash-to: "mptcp: Add handling of incoming
- MP_JOIN requests"
-Date: Wed, 08 Jan 2020 15:47:24 +0100
-Message-ID: <d076e2c89e81860c1ae9ce7de296d6aeb97f70b0.1578487811.git.pabeni@redhat.com>
-In-Reply-To: cover.1578487811.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v6 05/11] tcp,
+ ulp: Add clone operation to tcp_ulp_ops
+Date: Wed, 08 Jan 2020 08:04:53 -0800
+Message-ID: <7df4cdc2-37fe-e724-a2e8-829b6920e9c6@gmail.com>
+In-Reply-To: 20200108011921.28942-6-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3296
+X-UID: 3297
 
---===============0890608290645729983==
+--===============4875680067435425592==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-ensure fallback is fatal for MP_JOIN, copying with
-changes introduced by previous squash-to patches
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 4e846b4e0b81..49d430479124 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -256,6 +256,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_subflow_request_sock *subflow_req;
- 	struct tcp_options_received opt_rx;
-+	bool fallback_is_fatal =3D false;
- 	struct sock *child;
- =
+On 1/7/20 5:19 PM, Mat Martineau wrote:
+> If ULP is used on a listening socket, icsk_ulp_ops and icsk_ulp_data are
+> copied when the listener is cloned. Sometimes the clone is immediately
+> deleted, which will invoke the release op on the clone and likely
+> corrupt the listening socket's icsk_ulp_data.
+> =
 
- 	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener->c=
-onn);
-@@ -280,6 +281,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 			subflow_req->mp_capable =3D 0;
- 		}
- 	} else if (subflow_req->mp_join) {
-+		fallback_is_fatal =3D true;
- 		opt_rx.mptcp.mp_join =3D 0;
- 		mptcp_get_options(skb, &opt_rx);
- 		if (!opt_rx.mptcp.mp_join ||
-@@ -294,11 +296,14 @@ static struct sock *subflow_syn_recv_sock(const struc=
-t sock *sk,
- 	if (child && *own_req) {
- 		struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(child);
- =
+> The clone operation is invoked immediately after the clone is copied and
+> gives the ULP type an opportunity to set up the clone socket and its
+> icsk_ulp_data.
+> =
 
--		/* we have null ctx on TCP fallback, not fatal on MPC
--		 * handshake
-+		/* we have null ctx on TCP fallback, which is fatal on
-+		 * MPJ handshake
- 		 */
--		if (!ctx)
-+		if (!ctx) {
-+			if (fallback_is_fatal)
-+				goto close_child;
- 			return child;
-+		}
- =
+> The MPTCP ULP clone will silently fallback to plain TCP on allocation
+> failure, so 'clone()' does not need to return an error code.
+> =
 
- 		if (ctx->mp_capable) {
- 			if (mptcp_token_new_accept(ctx->token))
--- =
+> v5 -> v6:
+>  - clarified MPTCP clone usage in commit message
+> =
 
-2.21.0
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+>  include/net/tcp.h               |  5 +++++
+>  net/ipv4/inet_connection_sock.c |  2 ++
+>  net/ipv4/tcp_ulp.c              | 12 ++++++++++++
+>  3 files changed, 19 insertions(+)
+> =
 
---===============0890608290645729983==--
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index 85f1d7ff6e8b..82879718d35a 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -2154,6 +2154,9 @@ struct tcp_ulp_ops {
+>  	/* diagnostic */
+>  	int (*get_info)(const struct sock *sk, struct sk_buff *skb);
+>  	size_t (*get_info_size)(const struct sock *sk);
+> +	/* clone ulp */
+> +	void (*clone)(const struct request_sock *req, struct sock *newsk,
+> +		      const gfp_t priority);
+>  =
+
+>  	char		name[TCP_ULP_NAME_MAX];
+>  	struct module	*owner;
+> @@ -2164,6 +2167,8 @@ int tcp_set_ulp(struct sock *sk, const char *name);
+>  void tcp_get_available_ulp(char *buf, size_t len);
+>  void tcp_cleanup_ulp(struct sock *sk);
+>  void tcp_update_ulp(struct sock *sk, struct proto *p);
+> +void tcp_clone_ulp(const struct request_sock *req,
+> +		   struct sock *newsk, const gfp_t priority);
+
+
+Maybe not needed, see below.
+
+>  =
+
+>  #define MODULE_ALIAS_TCP_ULP(name)				\
+>  	__MODULE_INFO(alias, alias_userspace, name);		\
+> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_s=
+ock.c
+> index 18c0d5bffe12..bf53a722923a 100644
+> --- a/net/ipv4/inet_connection_sock.c
+> +++ b/net/ipv4/inet_connection_sock.c
+> @@ -810,6 +810,8 @@ struct sock *inet_csk_clone_lock(const struct sock *s=
+k,
+>  		/* Deinitialize accept_queue to trap illegal accesses. */
+>  		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_que=
+ue));
+>  =
+
+> +		tcp_clone_ulp(req, newsk, priority);
+
+Since inet_csk_clone_lock() is also used by dccp, I would suggest renaming
+this helper to inet_clone_ulp() ?
+
+> +
+>  		security_inet_csk_clone(newsk, req);
+>  	}
+>  	return newsk;
+> diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+> index 12ab5db2b71c..e7a2589d69ee 100644
+> --- a/net/ipv4/tcp_ulp.c
+> +++ b/net/ipv4/tcp_ulp.c
+> @@ -130,6 +130,18 @@ void tcp_cleanup_ulp(struct sock *sk)
+>  	icsk->icsk_ulp_ops =3D NULL;
+>  }
+>  =
+
+> +void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
+> +		   const gfp_t priority)
+> +{
+> +	struct inet_connection_sock *icsk =3D inet_csk(newsk);
+> +
+> +	if (!icsk->icsk_ulp_ops)
+> +		return;
+> +
+> +	if (icsk->icsk_ulp_ops->clone)
+> +		icsk->icsk_ulp_ops->clone(req, newsk, priority);
+> +}
+> +
+
+Unless I am mistaken, this is only used from  inet_csk_clone_lock()
+
+So I would move this function in net/ipv4/inet_connection_sock.c, make it s=
+tatic
+so that compiler can inline it cleanly.
+
+
+--===============4875680067435425592==--
