@@ -1,165 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============2115606888811056624=="
+Content-Type: multipart/mixed; boundary="===============0890608290645729983=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 5/7] Squash-to: "mptcp: Implement MPTCP receive
- path"
-Date: Wed, 08 Jan 2020 15:47:22 +0100
-Message-ID: <cd40acd0e61aac48221e124d1ff3d6be66ad6df5.1578487811.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v1 7/7] Squash-to: "mptcp: Add handling of incoming
+ MP_JOIN requests"
+Date: Wed, 08 Jan 2020 15:47:24 +0100
+Message-ID: <d076e2c89e81860c1ae9ce7de296d6aeb97f70b0.1578487811.git.pabeni@redhat.com>
 In-Reply-To: cover.1578487811.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3295
+X-UID: 3296
 
---===============2115606888811056624==
+--===============0890608290645729983==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-deal with fallback: we must reset sk callback to the TCP one.
-Use the cached ptr in the old ctx.
-
-RFC -> v1:
- - since mptcp_incoming_options() callers check for is_mptcp and
-   the latter is always cleared on fallback, we can drop any additional
-   check in mptcp_incoming_options()
+ensure fallback is fatal for MP_JOIN, copying with
+changes introduced by previous squash-to patches
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c  |  4 ----
- net/mptcp/protocol.h | 15 ++++++++++++++-
- net/mptcp/subflow.c  | 18 ++++++++++++------
- 3 files changed, 26 insertions(+), 11 deletions(-)
+ net/mptcp/subflow.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 015162f15576..5845c9a41ebb 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -416,13 +416,9 @@ bool mptcp_synack_options(const struct request_sock *r=
-eq, unsigned int *size,
- void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
- 			    struct tcp_options_received *opt_rx)
- {
--	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_options_received *mp_opt;
- 	struct mptcp_ext *mpext;
- =
-
--	if (!subflow->mp_capable)
--		return;
--
- 	mp_opt =3D &opt_rx->mptcp;
- =
-
- 	if (!mp_opt->dss)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e4fce9f0ad65..c6d8217e24d4 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -121,7 +121,10 @@ struct mptcp_subflow_context {
- 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
- 	struct	sock *conn;	    /* parent mptcp_sock */
- 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
--	void	(*tcp_sk_data_ready)(struct sock *sk);
-+	void	(*tcp_data_ready)(struct sock *sk);
-+	void	(*tcp_state_change)(struct sock *sk);
-+	void	(*tcp_write_space)(struct sock *sk);
-+
- 	struct	rcu_head rcu;
- };
- =
-
-@@ -159,6 +162,16 @@ bool mptcp_subflow_data_available(struct sock *sk);
- void mptcp_subflow_init(void);
- int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
- =
-
-+static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
-+					      struct mptcp_subflow_context *ctx)
-+{
-+	sk->sk_data_ready =3D ctx->tcp_data_ready;
-+	sk->sk_state_change =3D ctx->tcp_state_change;
-+	sk->sk_write_space =3D ctx->tcp_write_space;
-+
-+	inet_csk(sk)->icsk_af_ops =3D ctx->icsk_af_ops;
-+}
-+
- extern const struct inet_connection_sock_af_ops ipv4_specific;
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- extern const struct inet_connection_sock_af_ops ipv6_specific;
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7c51d31e6d17..a1be17926248 100644
+index 4e846b4e0b81..49d430479124 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -507,7 +507,7 @@ static void subflow_data_ready(struct sock *sk)
- 	struct sock *parent =3D subflow->conn;
+@@ -256,6 +256,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
+ 	struct mptcp_subflow_request_sock *subflow_req;
+ 	struct tcp_options_received opt_rx;
++	bool fallback_is_fatal =3D false;
+ 	struct sock *child;
  =
 
- 	if (!parent || !subflow->mp_capable) {
--		subflow->tcp_sk_data_ready(sk);
-+		subflow->tcp_data_ready(sk);
+ 	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener->c=
+onn);
+@@ -280,6 +281,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 			subflow_req->mp_capable =3D 0;
+ 		}
+ 	} else if (subflow_req->mp_join) {
++		fallback_is_fatal =3D true;
+ 		opt_rx.mptcp.mp_join =3D 0;
+ 		mptcp_get_options(skb, &opt_rx);
+ 		if (!opt_rx.mptcp.mp_join ||
+@@ -294,11 +296,14 @@ static struct sock *subflow_syn_recv_sock(const struc=
+t sock *sk,
+ 	if (child && *own_req) {
+ 		struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(child);
  =
 
- 		if (parent)
- 			parent->sk_data_ready(parent);
-@@ -655,7 +655,9 @@ static int subflow_ulp_init(struct sock *sk)
- 	if (sk->sk_family =3D=3D AF_INET6)
- 		icsk->icsk_af_ops =3D &subflow_v6_specific;
- #endif
--	ctx->tcp_sk_data_ready =3D sk->sk_data_ready;
-+	ctx->tcp_data_ready =3D sk->sk_data_ready;
-+	ctx->tcp_state_change =3D sk->sk_state_change;
-+	ctx->tcp_write_space =3D sk->sk_write_space;
- 	sk->sk_data_ready =3D subflow_data_ready;
- 	sk->sk_write_space =3D subflow_write_space;
- 	sk->sk_state_change =3D subflow_state_change;
-@@ -676,10 +678,12 @@ static void subflow_ulp_release(struct sock *sk)
- 	kfree_rcu(ctx, rcu);
- }
+-		/* we have null ctx on TCP fallback, not fatal on MPC
+-		 * handshake
++		/* we have null ctx on TCP fallback, which is fatal on
++		 * MPJ handshake
+ 		 */
+-		if (!ctx)
++		if (!ctx) {
++			if (fallback_is_fatal)
++				goto close_child;
+ 			return child;
++		}
  =
 
--static void subflow_ulp_fallback(struct sock *sk)
-+static void subflow_ulp_fallback(struct sock *sk,
-+				 struct mptcp_subflow_context *old_ctx)
- {
- 	struct inet_connection_sock *icsk =3D inet_csk(sk);
- =
-
-+	mptcp_subflow_tcp_fallback(sk, old_ctx);
- 	icsk->icsk_ulp_ops =3D NULL;
- 	rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
- 	tcp_sk(sk)->is_mptcp =3D 0;
-@@ -694,19 +698,21 @@ static void subflow_ulp_clone(const struct request_so=
-ck *req,
- 	struct mptcp_subflow_context *new_ctx;
- =
-
- 	if (!subflow_req->mp_capable) {
--		subflow_ulp_fallback(newsk);
-+		subflow_ulp_fallback(newsk, old_ctx);
- 		return;
- 	}
- =
-
- 	new_ctx =3D subflow_create_ctx(newsk, priority);
- 	if (new_ctx =3D=3D NULL) {
--		subflow_ulp_fallback(newsk);
-+		subflow_ulp_fallback(newsk, old_ctx);
- 		return;
- 	}
- =
-
- 	new_ctx->conn_finished =3D 1;
- 	new_ctx->icsk_af_ops =3D old_ctx->icsk_af_ops;
--	new_ctx->tcp_sk_data_ready =3D old_ctx->tcp_sk_data_ready;
-+	new_ctx->tcp_data_ready =3D old_ctx->tcp_data_ready;
-+	new_ctx->tcp_state_change =3D old_ctx->tcp_state_change;
-+	new_ctx->tcp_write_space =3D old_ctx->tcp_write_space;
- 	new_ctx->mp_capable =3D 1;
- 	new_ctx->fourth_ack =3D 1;
- 	new_ctx->remote_key =3D subflow_req->remote_key;
+ 		if (ctx->mp_capable) {
+ 			if (mptcp_token_new_accept(ctx->token))
 -- =
 
 2.21.0
 
---===============2115606888811056624==--
+--===============0890608290645729983==--
