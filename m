@@ -1,103 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============3118939785494647519=="
+Content-Type: multipart/mixed; boundary="===============6322522368428622240=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 1/7] Squash-to: "mptcp: Handle MP_CAPABLE options
- for outgoing connections"
-Date: Wed, 08 Jan 2020 15:47:18 +0100
-Message-ID: <b2d396ce824fdcff992be31ae10fcd5b730836b0.1578487811.git.pabeni@redhat.com>
-In-Reply-To: cover.1578487811.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v1 0/7] fallback to TCP on ulp clone failure
+Date: Wed, 08 Jan 2020 15:47:17 +0100
+Message-ID: <cover.1578487811.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3289
+X-UID: 3290
 
---===============3118939785494647519==
+--===============6322522368428622240==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After upstream feedback, I just noticed that we actually
-don't clear the is_mptcp field on clone allocation failure.
+This series do real TCP fallback for passive MPTCP connection when ULP clone
+fails: clear the 'is_mptcp' flag, reset overridden callback, icsk ops and
+clear the ULP ctx.
 
-Do that and additionally don't allocate at all the subflow if MPC handshake
-failed.
+Additionally uses the 'is_mptcp' flag to check for fallback in more places,
+as suggested by Mat (patches 2, 4), cope with NULL ctx in
+subflow_syn_recv_sock() (patches 3, 7), and restore TCP callback on =
 
-Note: we need to update accordingly accept on later patch
+later fallback, too (patch 6) for consistency.
 
-RFC -> v1:
- - avoid assign statement inside the if statement (Florian)
- - avoid rendundant  conn =3D NULL  (Mat)
- - clear ulp data on fallback, or to avoid double free at close
-   time
+This still uses function pointers to store all the overriden TCP callbacks,
+is simpler then other alternatives but waste some space inside the subflow
+struct.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+The rebased tree is available at:
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index b9aca17b0b91..cf4c05a6cfac 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -254,6 +254,15 @@ static void subflow_ulp_release(struct sock *sk)
- 	kfree_rcu(ctx, rcu);
- }
- =
+https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v6.2
 
-+static void subflow_ulp_fallback(struct sock *sk)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+
-+	icsk->icsk_ulp_ops =3D NULL;
-+	rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
-+	tcp_sk(sk)->is_mptcp =3D 0;
-+}
-+
- static void subflow_ulp_clone(const struct request_sock *req,
- 			      struct sock *newsk,
- 			      const gfp_t priority)
-@@ -262,23 +271,23 @@ static void subflow_ulp_clone(const struct request_so=
-ck *req,
- 	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
- 	struct mptcp_subflow_context *new_ctx;
- =
+ options.c  |    6 -----
+ protocol.c |   16 ++++++--------
+ protocol.h |   15 ++++++++++++-
+ subflow.c  |   67 ++++++++++++++++++++++++++++++++++++++++----------------=
+-----
+ 4 files changed, 67 insertions(+), 37 deletions(-)
 
--	/* newsk->sk_socket is NULL at this point */
-+	if (!subflow_req->mp_capable) {
-+		subflow_ulp_fallback(newsk);
-+		return;
-+	}
-+
- 	new_ctx =3D subflow_create_ctx(newsk, priority);
--	if (!new_ctx)
-+	if (new_ctx =3D=3D NULL) {
-+		subflow_ulp_fallback(newsk);
- 		return;
-+	}
- =
-
--	new_ctx->conn =3D NULL;
- 	new_ctx->conn_finished =3D 1;
- 	new_ctx->icsk_af_ops =3D old_ctx->icsk_af_ops;
--
--	if (subflow_req->mp_capable) {
--		new_ctx->mp_capable =3D 1;
--		new_ctx->fourth_ack =3D 1;
--		new_ctx->remote_key =3D subflow_req->remote_key;
--		new_ctx->local_key =3D subflow_req->local_key;
--	} else {
--		tcp_sk(newsk)->is_mptcp =3D 0;
--	}
-+	new_ctx->mp_capable =3D 1;
-+	new_ctx->fourth_ack =3D 1;
-+	new_ctx->remote_key =3D subflow_req->remote_key;
-+	new_ctx->local_key =3D subflow_req->local_key;
- }
- =
-
- static struct tcp_ulp_ops subflow_ulp_ops __read_mostly =3D {
--- =
-
-2.21.0
-
---===============3118939785494647519==--
+--===============6322522368428622240==--
