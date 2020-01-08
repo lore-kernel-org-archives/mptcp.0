@@ -1,48 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============1097291285840700647=="
+Content-Type: multipart/mixed; boundary="===============1661162110789105370=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 4/7] Squash-to: "mptcp: Write MPTCP DSS headers to
- outgoing data packets"
-Date: Wed, 08 Jan 2020 15:47:21 +0100
-Message-ID: <cd0f7bfec9008860447b9d26c39bd3442b6bfd50.1578487811.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v1 6/7] Squash-to: "mptcp: cope with later TCP
+ fallback"
+Date: Wed, 08 Jan 2020 15:47:23 +0100
+Message-ID: <128ccc48923a56e937de32716cbb5a7b1bd123d5.1578487811.git.pabeni@redhat.com>
 In-Reply-To: cover.1578487811.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3293
+X-UID: 3294
 
---===============1097291285840700647==
+--===============1661162110789105370==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-use 'is_tcp' to check for TCP fallback instead of mp_capable (and later
-mp_join).
+Now we can fully restore the subflow status on late tcp fallback
 
-Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c9b5f37db63b..25a46420b06d 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -303,7 +303,7 @@ bool mptcp_established_options(struct sock *sk, struct =
-sk_buff *skb,
- 	unsigned int opt_size =3D 0;
- 	bool ret =3D false;
- =
-
--	if (!mptcp_subflow_ctx(sk)->mp_capable)
-+	if (!tcp_sk(sk)->is_mptcp)
- 		return false;
- =
-
- 	if (mptcp_established_options_mp(sk, &opt_size, remaining, opts))
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 71e82fd326c5..14c0bd79a534 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -52,10 +52,10 @@ static struct socket *__mptcp_fallback_to_tcp(struct mp=
+tcp_sock *msk,
+ 	lock_sock(ssk);
+ 	sock_graft(ssk, sock);
+ 	if (subflow->conn) {
+-		/* Clearing the 'conn' field will make the ULP-overriden
+-		 * ops behaving like plain TCP ones.
+-		 * Note: we can't release the ULP data on a live socket.
++		/* We can't release the ULP data on a live socket,
++		 * restore the tcp callback
+ 		 */
++		mptcp_subflow_tcp_fallback(ssk, subflow);
+ 		sock_put(subflow->conn);
+ 		subflow->conn =3D NULL;
+ 	}
 -- =
 
 2.21.0
 
---===============1097291285840700647==--
+--===============1661162110789105370==--
