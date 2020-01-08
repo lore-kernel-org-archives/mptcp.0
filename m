@@ -1,94 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============0654967561253050659=="
+Content-Type: multipart/mixed; boundary="===============6880486088780937063=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Rebase request
-Date: Wed, 08 Jan 2020 10:25:51 +0100
-Message-ID: <fbda52a2-9706-8509-a193-f1b9ab3d48d9@tessares.net>
-In-Reply-To: ce14a20b5fe57043948993ed09d5e1451bbf9a4a.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2] Squash-to: "sock: Make sk_protocol a 16-bit
+ value"
+Date: Wed, 08 Jan 2020 10:32:26 +0100
+Message-ID: <932d359d-cd35-499e-d2f0-66760404a92b@tessares.net>
+In-Reply-To: 59491a5f-e3da-189b-dc08-90c4411d78d7@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3286
+X-UID: 3287
 
---===============0654967561253050659==
+--===============6880486088780937063==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Paolo,
+Hi Paolo, Mat,
 
-On 08/01/2020 09:22, Paolo Abeni wrote:
-> On Tue, 2020-01-07 at 17:31 -0800, Peter Krystad wrote:
->> I would like to switch the order of the two commits: "Add path manager
->> interface" and "Add ADD_ADDR handling". The addition of ADD_ADDR option
->> handling and adding the path manager interface is muddled between these =
-two
->> commits, this switch will clean this up and make further patches for
->> optimizing mptcp_options_received structure cleaner.
->>
->> I've done the work here:
->>
->> https://github.com/pkrystad/mptcp_net-next/tree/switched-0107
+On 07/01/2020 23:21, Matthieu Baerts wrote:
+> Hi Paolo, Mat,
 > =
 
-> I agree the code is cleaner/clearer this way, LGTM!
+> On 07/01/2020 19:13, Paolo Abeni wrote:
+>> On Tue, 2020-01-07 at 10:05 -0800, Mat Martineau wrote:
+>>> On Tue, 7 Jan 2020, Mat Martineau wrote:
+>>>
+>>>> On Tue, 7 Jan 2020, Paolo Abeni wrote:
+>>>>
+>>>>> We need to update the ebpf accessors for both sk_type and
+>>>>> sk_protocol. The code previously in place has some special
+>>>>> hack to take care such fields being part of a bitfield.
+>>>>>
+>>>>> The fix actually clean-up a bit the existing code.
+>>>>>
+>>>>> Note: I'm not 100% sure about dropping the '*target_size =3D '
+>>>>> instructions, my take is that the full ebpf register is loaded
+>>>>> with the (short) values. AFAICS other short field accesses
+>>>>> do not set 'targer_size', too.
+>>>>>
+>>>>> to be appended to the orig commit message:
+>>>>> """
+>>>>> Take care of BPF field access for sk_type/sk_protocol.
+>>>>> Both of them are now outside the bitfield, so we can use
+>>>>> load instructions without further shifting/masking.
+>>>>>
+>>>>> v5 -> v6:
+>>>>> - update eBPF accessors, too.
+>>>>> """
+>>>>>
+>>>>> Additionally, Eric's Reviewed-by should be dropped.
+>>>>>
+>>>>> v1 -> v2:
+>>>>> - replace BPF_H with BPF_FIELD_SIZEOF, plus indentation
+>>>>> =C2=A0=C2=A0 adjust (matttbe)
+>>>>
+>>>> Based on code review and applying/building the patch, I think it =
 
-Thank you for the rebase and the review!
+>>>> this is good
+>>>> to merge/squash.
+>>>>
+>>>> I'm still working on getting the relevant ebpf selftest to run =
 
-"mptcp: Add path manager interface" topic:
+>>>> locally and
+>>>> would like to replicate Paolo's results before sending v6. If any =
 
-- eafbb1db164d: tg: revert t/mptcp-Add-path-manager-interface
+>>>> fixes are
+>>>> required we can squash those too.
+>>>>
+>>>
+>>> One more thing - should we cc the BPF maintainer(s) on this patch when
+>>> submitting to netdev?
+>>
+>> Both Alexei and Daniel are subscribed to netdev, but I think likely the
+>> patch will go unnoticed for them unless we cc them explicitly. Yep, cc-
+>> ing them should be good, IMHO.
+> =
 
-"mptcp: Add ADD_ADDR handling" topic:
+> - 80133b5cafce: "squashed" in "sock: Make sk_protocol a 16-bit value"
+> - 73b0b8fd39c7: tg:msg: remove Eric's Reviewed-by
+> - a4fca1719469: tg:msg: add Paolo's changelog
+> - e7785eab3ede: tg:msg: add BPF maintainers + ML in Cc
 
-- b1bc561674d7: conflict in t/mptcp-Add-ADD_ADDR-handling
-- 8960e50e483e: mptcp:options: remove PM part
-- 3be7f0d27220: tg: now depends on t/mptcp-cope-with-later-TCP-fallback
+Mat spotted a typo in the commit message (good catch!) before sending =
 
-"mptcp: Add path manager interface" topic:
+the v6. Here is the fix in the TopGit tree:
 
-- 991423c2cb16: tg: now depends on t/mptcp-Add-ADD_ADDR-handling
-- f2c4091bab23: Revert "tg: revert t/mptcp-Add-path-manager-interface"
-- 13ce67bc877b: Revert "mptcp:options: remove PM part"
+- e22dffa3e52c: tg:msg: missing '>' after the email
 
-"mptcp: Add handling of incoming MP_JOIN requests" topic:
+I also updated the tag just in case:
 
-- f0ecd83da95e: tg: now depends on t/mptcp-Add-path-manager-interface
+- 005e805f0c79...028d8346f1a1 netdev-v6-part1 -> netdev-v6-part1 (forced =
 
-t/upstream:
-
-- 39373958a458..d2cef9d0ec37: result
-
-Remaining diff:
-
-=3D=3D=3D=3D=3D=3D=3D
-
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ead95592d9eb..aec7ecd1d709 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -147,8 +147,8 @@ struct mptcp_sock {
-         struct skb_ext  *cached_ext;    /* for the next sendmsg */
-         struct socket   *subflow; /* outgoing =
-
-connect/listener/!mp_capable */
-         struct sock     *first;
--       struct mptcp_pm_data    pm;
-         u8              addr_signal;
-+       struct mptcp_pm_data    pm;
-  };
-
-  #define mptcp_for_each_subflow(__msk, __subflow)                       \
-
-=3D=3D=3D=3D=3D=3D=3D
-
-I kept this as it seems to better reflect the new commit order, plus we =
-
-keep the alignment up to the last item and we add the inclusion of the =
-
-PM structure at the end.
-
-Tell me if you prefer to change this.
+update)
 
 Cheers,
 Matt
@@ -99,4 +103,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0654967561253050659==--
+--===============6880486088780937063==--
