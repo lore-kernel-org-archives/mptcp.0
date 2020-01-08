@@ -1,38 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============6385563640935231912=="
+Content-Type: multipart/mixed; boundary="===============1259754476994616905=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Rebase request
-Date: Tue, 07 Jan 2020 17:31:56 -0800
-Message-ID: <a54a945303550dd8ed624bb8801cdb3a780198d2.camel@linux.intel.com>
+Subject: [MPTCP] Re: Rebase request
+Date: Wed, 08 Jan 2020 09:22:45 +0100
+Message-ID: <ce14a20b5fe57043948993ed09d5e1451bbf9a4a.camel@redhat.com>
+In-Reply-To: a54a945303550dd8ed624bb8801cdb3a780198d2.camel@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3283
+X-UID: 3284
 
---===============6385563640935231912==
+--===============1259754476994616905==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2020-01-07 at 17:31 -0800, Peter Krystad wrote:
+> I would like to switch the order of the two commits: "Add path manager
+> interface" and "Add ADD_ADDR handling". The addition of ADD_ADDR option
+> handling and adding the path manager interface is muddled between these t=
+wo
+> commits, this switch will clean this up and make further patches for
+> optimizing mptcp_options_received structure cleaner.
+> =
 
-I would like to switch the order of the two commits: "Add path manager
-interface" and "Add ADD_ADDR handling". The addition of ADD_ADDR option
-handling and adding the path manager interface is muddled between these two
-commits, this switch will clean this up and make further patches for
-optimizing mptcp_options_received structure cleaner.
+> I've done the work here:
+> =
 
-I've done the work here:
+> https://github.com/pkrystad/mptcp_net-next/tree/switched-0107
 
-https://github.com/pkrystad/mptcp_net-next/tree/switched-0107
+I agree the code is cleaner/clearer this way, LGTM!
 
-git diff 3f1306e95e7a..ecd861ac7dc9 (updated export branch today) is no
-changes, I only modified the two affected commits.
+Thanks,
 
-Matthieu: let me know how you want to proceed.
+Paolo
 
-And Happy New Year everyone!
-
-Peter.
-
-
---===============6385563640935231912==--
+--===============1259754476994616905==--
