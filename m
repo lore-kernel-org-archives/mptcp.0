@@ -1,158 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============4659117868356049404=="
+Content-Type: multipart/mixed; boundary="===============3118939785494647519=="
 MIME-Version: 1.0
-From: philip.eardley at bt.com
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [multipathtcp] RFC6824bis edits based on implementation
- feedback
-Date: Wed, 08 Jan 2020 09:42:05 +0000
-Message-ID: <LNXP123MB2587B06B8226C92AF33F583FEB3E0@LNXP123MB2587.GBRP123.PROD.OUTLOOK.COM>
-In-Reply-To: 20200102182655.GB44237@MacBook-Pro-64.local
+Subject: [MPTCP] [PATCH v1 1/7] Squash-to: "mptcp: Handle MP_CAPABLE options
+ for outgoing connections"
+Date: Wed, 08 Jan 2020 15:47:18 +0100
+Message-ID: <b2d396ce824fdcff992be31ae10fcd5b730836b0.1578487811.git.pabeni@redhat.com>
+In-Reply-To: cover.1578487811.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3288
+X-UID: 3289
 
---===============4659117868356049404==
+--===============3118939785494647519==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-All - if you have any concerns, please send your comments as soon as possib=
-le. The deadline is 14th January. Given there's already been some discussio=
-n on the list, silence is considered as agreement.
+After upstream feedback, I just noticed that we actually
+don't clear the is_mptcp field on clone allocation failure.
 
-Alan - thanks for summarising these changes and the reasons behind them.
+Do that and additionally don't allocate at all the subflow if MPC handshake
+failed.
 
-Thanks,
-Phil & Yoshi
+Note: we need to update accordingly accept on later patch
 
------Original Message-----
-From: multipathtcp <multipathtcp-bounces(a)ietf.org> On Behalf Of Christoph=
- Paasch
-Sent: 02 January 2020 18:27
-To: Alan Ford <alan.ford(a)gmail.com>
-Cc: MultiPath TCP - IETF WG <multipathtcp(a)ietf.org>; mptcp Upstreaming <m=
-ptcp(a)lists.01.org>
-Subject: Re: [multipathtcp] RFC6824bis edits based on implementation feedba=
-ck
+RFC -> v1:
+ - avoid assign statement inside the if statement (Florian)
+ - avoid rendundant  conn =3D NULL  (Mat)
+ - clear ulp data on fallback, or to avoid double free at close
+   time
 
-+ MPTCP upstreaming community
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/subflow.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b9aca17b0b91..cf4c05a6cfac 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -254,6 +254,15 @@ static void subflow_ulp_release(struct sock *sk)
+ 	kfree_rcu(ctx, rcu);
+ }
+ =
 
-Hello,
++static void subflow_ulp_fallback(struct sock *sk)
++{
++	struct inet_connection_sock *icsk =3D inet_csk(sk);
++
++	icsk->icsk_ulp_ops =3D NULL;
++	rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
++	tcp_sk(sk)->is_mptcp =3D 0;
++}
++
+ static void subflow_ulp_clone(const struct request_sock *req,
+ 			      struct sock *newsk,
+ 			      const gfp_t priority)
+@@ -262,23 +271,23 @@ static void subflow_ulp_clone(const struct request_so=
+ck *req,
+ 	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
+ 	struct mptcp_subflow_context *new_ctx;
+ =
 
-On 01/01/20 - 22:51:32, Alan Ford wrote:
-> Hi all,
-> =
+-	/* newsk->sk_socket is NULL at this point */
++	if (!subflow_req->mp_capable) {
++		subflow_ulp_fallback(newsk);
++		return;
++	}
++
+ 	new_ctx =3D subflow_create_ctx(newsk, priority);
+-	if (!new_ctx)
++	if (new_ctx =3D=3D NULL) {
++		subflow_ulp_fallback(newsk);
+ 		return;
++	}
+ =
 
-> We=E2=80=99d love to get this to a state of completion as soon as possibl=
-e, and to this end I am starting a new thread on this topic. In discussion =
-with the chairs, it is possible to make the desired changes in AUTH48 as lo=
-ng as there is WG consensus. The discussion so far has been fairly limited =
-in terms of participation.
-> =
+-	new_ctx->conn =3D NULL;
+ 	new_ctx->conn_finished =3D 1;
+ 	new_ctx->icsk_af_ops =3D old_ctx->icsk_af_ops;
+-
+-	if (subflow_req->mp_capable) {
+-		new_ctx->mp_capable =3D 1;
+-		new_ctx->fourth_ack =3D 1;
+-		new_ctx->remote_key =3D subflow_req->remote_key;
+-		new_ctx->local_key =3D subflow_req->local_key;
+-	} else {
+-		tcp_sk(newsk)->is_mptcp =3D 0;
+-	}
++	new_ctx->mp_capable =3D 1;
++	new_ctx->fourth_ack =3D 1;
++	new_ctx->remote_key =3D subflow_req->remote_key;
++	new_ctx->local_key =3D subflow_req->local_key;
+ }
+ =
 
-> I would ask the chairs please if it was possible to specify a time bound =
-for this discussion and a default conclusion.
-> =
+ static struct tcp_ulp_ops subflow_ulp_ops __read_mostly =3D {
+-- =
 
-> Regarding the changes, in summary, there are two areas where changes have=
- been requested by the implementation community. As we are the IETF we obvi=
-ously have strong focus on =E2=80=9Crunning code=E2=80=9D and so ease of im=
-plementing standards-compliant code is strongly desirable. However, we do n=
-ot wish to reduce functionality agreed by the IETF community if it is consi=
-dered a required feature by the community.
-> =
+2.21.0
 
-> =
-
-> Change 1
-> =
-
-> Change the sentence reading:
-> =
-
->    If B has data to send first, then the reliable delivery of the ACK + M=
-P_CAPABLE can be inferred by the receipt of this data with an MPTCP Data Se=
-quence Signal (DSS) option (Section 3.3). =
-
-> =
-
-> To:
-> =
-
->    If B has data to send first, then the reliable delivery of the ACK + M=
-P_CAPABLE is ensured by the receipt of this data with an MPTCP Data Sequenc=
-e Signal (DSS) option (Section 3.3) containing a DATA_ACK for the MP_CAPABL=
-E (which is the first octet of the data sequence space).
-> =
-
-> What this means:
-> =
-
-> The current text is concerned only with ensuring a path is MPTCP capable,=
- and so only cares that DSS option occurs on a data packet. However, the MP=
-_CAPABLE option is defined to occupy the first octet of data sequence space=
- and thus, if analogous to TCP, must be acknowledged. From an implementatio=
-n point of view it would make sense not to have this hanging around forever=
- and instead define it is acknowledged at the connection level as soon as r=
-eceived. This change ensures the first data packet also DATA_ACKs this MP_C=
-APABLE octet.
-> =
-
-> =
-
-> Change 2
-> =
-
-> Change the sentence reading:
-> =
-
->    A Data Sequence Mapping does not need to be included in every MPTCP pa=
-cket, as long as the subflow sequence space in that packet is covered by a =
-mapping known at the receiver.
-> =
-
-> To:
-> =
-
->    The mapping provided by a Data Sequence Mapping MUST apply to some or =
-all of the subflow sequence space in the TCP segment which carries the opti=
-on. It does not need to be included in every MPTCP packet, as long as the s=
-ubflow sequence space in that packet is covered by a mapping known at the r=
-eceiver.
-> =
-
-> What this means:
-> =
-
-> The current text does not place any restrictions on where a mapping could=
- appear. In theory a sender could define a thousand different mappings up f=
-ront, send them all, and expect a receiver to store this and reassemble dat=
-a according to these mappings as it arrives. Indeed, this was never explici=
-tly disallowed since it =E2=80=9Cmight have been useful=E2=80=9D. The imple=
-mentation community, however, has expressed concerns over the difficulty of=
- implementing this open-endedly. How many mappings is it reasonable to stor=
-e? Is there a DoS risk here? Instead, it has been requested that thee speci=
-fication restricts the placement of the DSS option to being within the subf=
-low sequence space to which it applies.
-> =
-
-> =
-
-> Please can members of the WG express whether they are happy with these ch=
-anges, or concerned.
-
-As an implementor and having been the one kicking off this discussion, I fu=
-lly support this change.
-
-
-
-Thanks,
-Christoph
-
-_______________________________________________
-multipathtcp mailing list
-multipathtcp(a)ietf.org
-https://www.ietf.org/mailman/listinfo/multipathtcp
-
---===============4659117868356049404==--
+--===============3118939785494647519==--
