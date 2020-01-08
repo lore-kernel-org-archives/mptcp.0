@@ -1,106 +1,158 @@
-Content-Type: multipart/mixed; boundary="===============6880486088780937063=="
+Content-Type: multipart/mixed; boundary="===============4659117868356049404=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: philip.eardley at bt.com
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "sock: Make sk_protocol a 16-bit
- value"
-Date: Wed, 08 Jan 2020 10:32:26 +0100
-Message-ID: <932d359d-cd35-499e-d2f0-66760404a92b@tessares.net>
-In-Reply-To: 59491a5f-e3da-189b-dc08-90c4411d78d7@tessares.net
+Subject: [MPTCP] Re: [multipathtcp] RFC6824bis edits based on implementation
+ feedback
+Date: Wed, 08 Jan 2020 09:42:05 +0000
+Message-ID: <LNXP123MB2587B06B8226C92AF33F583FEB3E0@LNXP123MB2587.GBRP123.PROD.OUTLOOK.COM>
+In-Reply-To: 20200102182655.GB44237@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 3287
+X-UID: 3288
 
---===============6880486088780937063==
+--===============4659117868356049404==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+All - if you have any concerns, please send your comments as soon as possib=
+le. The deadline is 14th January. Given there's already been some discussio=
+n on the list, silence is considered as agreement.
 
-On 07/01/2020 23:21, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
+Alan - thanks for summarising these changes and the reasons behind them.
+
+Thanks,
+Phil & Yoshi
+
+-----Original Message-----
+From: multipathtcp <multipathtcp-bounces(a)ietf.org> On Behalf Of Christoph=
+ Paasch
+Sent: 02 January 2020 18:27
+To: Alan Ford <alan.ford(a)gmail.com>
+Cc: MultiPath TCP - IETF WG <multipathtcp(a)ietf.org>; mptcp Upstreaming <m=
+ptcp(a)lists.01.org>
+Subject: Re: [multipathtcp] RFC6824bis edits based on implementation feedba=
+ck
+
++ MPTCP upstreaming community
+
+
+Hello,
+
+On 01/01/20 - 22:51:32, Alan Ford wrote:
+> Hi all,
 > =
 
-> On 07/01/2020 19:13, Paolo Abeni wrote:
->> On Tue, 2020-01-07 at 10:05 -0800, Mat Martineau wrote:
->>> On Tue, 7 Jan 2020, Mat Martineau wrote:
->>>
->>>> On Tue, 7 Jan 2020, Paolo Abeni wrote:
->>>>
->>>>> We need to update the ebpf accessors for both sk_type and
->>>>> sk_protocol. The code previously in place has some special
->>>>> hack to take care such fields being part of a bitfield.
->>>>>
->>>>> The fix actually clean-up a bit the existing code.
->>>>>
->>>>> Note: I'm not 100% sure about dropping the '*target_size =3D '
->>>>> instructions, my take is that the full ebpf register is loaded
->>>>> with the (short) values. AFAICS other short field accesses
->>>>> do not set 'targer_size', too.
->>>>>
->>>>> to be appended to the orig commit message:
->>>>> """
->>>>> Take care of BPF field access for sk_type/sk_protocol.
->>>>> Both of them are now outside the bitfield, so we can use
->>>>> load instructions without further shifting/masking.
->>>>>
->>>>> v5 -> v6:
->>>>> - update eBPF accessors, too.
->>>>> """
->>>>>
->>>>> Additionally, Eric's Reviewed-by should be dropped.
->>>>>
->>>>> v1 -> v2:
->>>>> - replace BPF_H with BPF_FIELD_SIZEOF, plus indentation
->>>>> =C2=A0=C2=A0 adjust (matttbe)
->>>>
->>>> Based on code review and applying/building the patch, I think it =
-
->>>> this is good
->>>> to merge/squash.
->>>>
->>>> I'm still working on getting the relevant ebpf selftest to run =
-
->>>> locally and
->>>> would like to replicate Paolo's results before sending v6. If any =
-
->>>> fixes are
->>>> required we can squash those too.
->>>>
->>>
->>> One more thing - should we cc the BPF maintainer(s) on this patch when
->>> submitting to netdev?
->>
->> Both Alexei and Daniel are subscribed to netdev, but I think likely the
->> patch will go unnoticed for them unless we cc them explicitly. Yep, cc-
->> ing them should be good, IMHO.
+> We=E2=80=99d love to get this to a state of completion as soon as possibl=
+e, and to this end I am starting a new thread on this topic. In discussion =
+with the chairs, it is possible to make the desired changes in AUTH48 as lo=
+ng as there is WG consensus. The discussion so far has been fairly limited =
+in terms of participation.
 > =
 
-> - 80133b5cafce: "squashed" in "sock: Make sk_protocol a 16-bit value"
-> - 73b0b8fd39c7: tg:msg: remove Eric's Reviewed-by
-> - a4fca1719469: tg:msg: add Paolo's changelog
-> - e7785eab3ede: tg:msg: add BPF maintainers + ML in Cc
+> I would ask the chairs please if it was possible to specify a time bound =
+for this discussion and a default conclusion.
+> =
 
-Mat spotted a typo in the commit message (good catch!) before sending =
+> Regarding the changes, in summary, there are two areas where changes have=
+ been requested by the implementation community. As we are the IETF we obvi=
+ously have strong focus on =E2=80=9Crunning code=E2=80=9D and so ease of im=
+plementing standards-compliant code is strongly desirable. However, we do n=
+ot wish to reduce functionality agreed by the IETF community if it is consi=
+dered a required feature by the community.
+> =
 
-the v6. Here is the fix in the TopGit tree:
+> =
 
-- e22dffa3e52c: tg:msg: missing '>' after the email
+> Change 1
+> =
 
-I also updated the tag just in case:
+> Change the sentence reading:
+> =
 
-- 005e805f0c79...028d8346f1a1 netdev-v6-part1 -> netdev-v6-part1 (forced =
+>    If B has data to send first, then the reliable delivery of the ACK + M=
+P_CAPABLE can be inferred by the receipt of this data with an MPTCP Data Se=
+quence Signal (DSS) option (Section 3.3). =
 
-update)
+> =
 
-Cheers,
-Matt
--- =
+> To:
+> =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6880486088780937063==--
+>    If B has data to send first, then the reliable delivery of the ACK + M=
+P_CAPABLE is ensured by the receipt of this data with an MPTCP Data Sequenc=
+e Signal (DSS) option (Section 3.3) containing a DATA_ACK for the MP_CAPABL=
+E (which is the first octet of the data sequence space).
+> =
+
+> What this means:
+> =
+
+> The current text is concerned only with ensuring a path is MPTCP capable,=
+ and so only cares that DSS option occurs on a data packet. However, the MP=
+_CAPABLE option is defined to occupy the first octet of data sequence space=
+ and thus, if analogous to TCP, must be acknowledged. From an implementatio=
+n point of view it would make sense not to have this hanging around forever=
+ and instead define it is acknowledged at the connection level as soon as r=
+eceived. This change ensures the first data packet also DATA_ACKs this MP_C=
+APABLE octet.
+> =
+
+> =
+
+> Change 2
+> =
+
+> Change the sentence reading:
+> =
+
+>    A Data Sequence Mapping does not need to be included in every MPTCP pa=
+cket, as long as the subflow sequence space in that packet is covered by a =
+mapping known at the receiver.
+> =
+
+> To:
+> =
+
+>    The mapping provided by a Data Sequence Mapping MUST apply to some or =
+all of the subflow sequence space in the TCP segment which carries the opti=
+on. It does not need to be included in every MPTCP packet, as long as the s=
+ubflow sequence space in that packet is covered by a mapping known at the r=
+eceiver.
+> =
+
+> What this means:
+> =
+
+> The current text does not place any restrictions on where a mapping could=
+ appear. In theory a sender could define a thousand different mappings up f=
+ront, send them all, and expect a receiver to store this and reassemble dat=
+a according to these mappings as it arrives. Indeed, this was never explici=
+tly disallowed since it =E2=80=9Cmight have been useful=E2=80=9D. The imple=
+mentation community, however, has expressed concerns over the difficulty of=
+ implementing this open-endedly. How many mappings is it reasonable to stor=
+e? Is there a DoS risk here? Instead, it has been requested that thee speci=
+fication restricts the placement of the DSS option to being within the subf=
+low sequence space to which it applies.
+> =
+
+> =
+
+> Please can members of the WG express whether they are happy with these ch=
+anges, or concerned.
+
+As an implementor and having been the one kicking off this discussion, I fu=
+lly support this change.
+
+
+
+Thanks,
+Christoph
+
+_______________________________________________
+multipathtcp mailing list
+multipathtcp(a)ietf.org
+https://www.ietf.org/mailman/listinfo/multipathtcp
+
+--===============4659117868356049404==--
