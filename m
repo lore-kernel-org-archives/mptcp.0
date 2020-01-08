@@ -1,83 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============4055352011486510818=="
+Content-Type: multipart/mixed; boundary="===============2975534778578824270=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: BPF-related self test failure with part1-v5 patches
-Date: Tue, 07 Jan 2020 15:49:15 -0800
-Message-ID: <alpine.OSX.2.21.2001071547480.18884@fepiepan-mobl.amr.corp.intel.com>
-In-Reply-To: 99c5be4c85f3f33730b3bd94d27b000e1c8d4006.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next v6 01/11] net: Make sock protocol value
+ checks more specific
+Date: Tue, 07 Jan 2020 17:19:11 -0800
+Message-ID: <20200108011921.28942-2-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20200108011921.28942-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3270
+X-UID: 3271
 
---===============4055352011486510818==
+--===============2975534778578824270==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 7 Jan 2020, Paolo Abeni wrote:
+SK_PROTOCOL_MAX is only used in two places, for DECNet and AX.25. The
+limits have more to do with the those protocol definitions than they do
+with the data type of sk_protocol, so remove SK_PROTOCOL_MAX and use
+U8_MAX directly.
 
-> On Tue, 2020-01-07 at 09:38 -0800, Mat Martineau wrote:
->> On Tue, 7 Jan 2020, Paolo Abeni wrote:
->>
->>> On Mon, 2020-01-06 at 15:05 -0800, Mat Martineau wrote:
->>>> Hello everyone -
->>>>
->>>>
->>>> I received a 0day automated build email this morning related to patch =
-2/11
->>>> in our v5 patch set:
->>>>
->>>> https://lists.01.org/hyperkitty/list/lkp(a)lists.01.org/thread/XB3HTAB=
-NGVKPJ5QEF46NLIYN6AN5DNGD/
->>>>
->>>> In summary, there's a test failure in the BPF self tests:
->>>>
->>>> """
->>>> # selftests: bpf: test_select_reuseport
->>>> ...
->>>> # ######## IPv6/TCP LOOPBACK ########
->>>> # test_err_inner_map: unexpected result
->>>> # result: [0, 0, 0, 1, 0, 0]
->>>> # expected: [1, 0, 0, 0, 0, 0]
->>>> # check_results(343):FAIL:unexpected result expected_results[0] !=3D r=
-esults[0]
->>>> bpf_prog_linum:142
->>>> not ok 17 selftests: bpf: test_select_reuseport # exit=3D255
->>>> """
->>>>
->>>> It seems like a good idea to see if this is reproducible before sending
->>>> v6, for a few reasons:
->>>
->>> +1
->>>
->>>> I run in to build problems, though - it looks like LLVM 10 is required=
- to
->>>> build the BPF tests, is anyone already set up with that version?
->>>
->>> I'm unsure if such version is required, why do you think so?!?
->>
->> My build (LLVM 8) broke on an unknown builtin
->> (__builtin_preserve_access_index), which led me to this thread from
->> September with LLVM version information:
->>
->> https://lore.kernel.org/netdev/0a5bf608-bb15-c116-8e58-7224b6c3b62f(a)fb=
-.com/
->>
->> I'll try skipping the problem builds like you mentioned on IRC.
->
-> Running the attached script before 'make clean; make' in the eBPF self-
-> tests, I'm able to do reproduce successful builds - not sure if it's
-> luck or some stale 'good' status.
->
-> It looks like that deteting files is 'the way' to disable ebpf tests :(
->
+Reviewed-by: Eric Dumazet <edumazet(a)google.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ include/net/sock.h     | 1 -
+ net/ax25/af_ax25.c     | 2 +-
+ net/decnet/af_decnet.c | 2 +-
+ 3 files changed, 2 insertions(+), 3 deletions(-)
 
-Thanks for the script! It didn't seem to produce a working build with =
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 8dff68b4c316..091e55428415 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -458,7 +458,6 @@ struct sock {
+ 				sk_userlocks : 4,
+ 				sk_protocol  : 8,
+ 				sk_type      : 16;
+-#define SK_PROTOCOL_MAX U8_MAX
+ 	u16			sk_gso_max_segs;
+ 	u8			sk_pacing_shift;
+ 	unsigned long	        sk_lingertime;
+diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
+index 324306d6fde0..ff57ea89c27e 100644
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -808,7 +808,7 @@ static int ax25_create(struct net *net, struct socket *=
+sock, int protocol,
+ 	struct sock *sk;
+ 	ax25_cb *ax25;
+ =
 
-Fedora 30 / llvm8, but Fedora 31 / llvm9 builds ok.
+-	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
++	if (protocol < 0 || protocol > U8_MAX)
+ 		return -EINVAL;
+ =
 
---
-Mat Martineau
-Intel
---===============4055352011486510818==--
+ 	if (!net_eq(net, &init_net))
+diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
+index e19a92a62e14..0a46ea3bddd5 100644
+--- a/net/decnet/af_decnet.c
++++ b/net/decnet/af_decnet.c
+@@ -670,7 +670,7 @@ static int dn_create(struct net *net, struct socket *so=
+ck, int protocol,
+ {
+ 	struct sock *sk;
+ =
+
+-	if (protocol < 0 || protocol > SK_PROTOCOL_MAX)
++	if (protocol < 0 || protocol > U8_MAX)
+ 		return -EINVAL;
+ =
+
+ 	if (!net_eq(net, &init_net))
+-- =
+
+2.24.1
+
+--===============2975534778578824270==--
