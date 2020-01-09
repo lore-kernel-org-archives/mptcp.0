@@ -1,125 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============6065341041624527406=="
+Content-Type: multipart/mixed; boundary="===============6741336135995580115=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "tcp,
- ulp: Add clone operation to tcp_ulp_ops"
-Date: Thu, 09 Jan 2020 09:14:32 +0100
-Message-ID: <ebe1bddd242a7127cbbacbeb0de496bcae1e9b82.camel@redhat.com>
-In-Reply-To: 20200108215738.28326-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH v1 5/7] Squash-to: "mptcp: Implement MPTCP receive
+ path"
+Date: Thu, 09 Jan 2020 09:25:11 +0100
+Message-ID: <fbddaded229a44d7c06ac4843b4d53abdc205e78.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.2001081628300.27921@fepiepan-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3303
+X-UID: 3304
 
---===============6065341041624527406==
+--===============6741336135995580115==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-01-08 at 13:57 -0800, Mat Martineau wrote:
-> Make change suggested in upstream review - move and rename ulp clone
-> helper to make it inline-friendly.
+On Wed, 2020-01-08 at 16:42 -0800, Mat Martineau wrote:
+> On Wed, 8 Jan 2020, Paolo Abeni wrote:
 > =
 
-> Commit message addition:
+> > deal with fallback: we must reset sk callback to the TCP one.
+> > Use the cached ptr in the old ctx.
+> > =
+
+> > RFC -> v1:
+> > - since mptcp_incoming_options() callers check for is_mptcp and
+> >   the latter is always cleared on fallback, we can drop any additional
+> >   check in mptcp_incoming_options()
+> > =
+
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > ---
+> > net/mptcp/options.c  |  4 ----
+> > net/mptcp/protocol.h | 15 ++++++++++++++-
+> > net/mptcp/subflow.c  | 18 ++++++++++++------
+> > 3 files changed, 26 insertions(+), 11 deletions(-)
+> > =
+
+> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > index 015162f15576..5845c9a41ebb 100644
+> > --- a/net/mptcp/options.c
+> > +++ b/net/mptcp/options.c
+> > @@ -416,13 +416,9 @@ bool mptcp_synack_options(const struct request_soc=
+k *req, unsigned int *size,
+> > void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
+> > 			    struct tcp_options_received *opt_rx)
+> > {
+> > -	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> > 	struct mptcp_options_received *mp_opt;
+> > 	struct mptcp_ext *mpext;
+> > =
+
+> > -	if (!subflow->mp_capable)
+> > -		return;
+> > -
+> > 	mp_opt =3D &opt_rx->mptcp;
+> > =
+
+> > 	if (!mp_opt->dss)
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index e4fce9f0ad65..c6d8217e24d4 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -121,7 +121,10 @@ struct mptcp_subflow_context {
+> > 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
+> > 	struct	sock *conn;	    /* parent mptcp_sock */
+> > 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
+> > -	void	(*tcp_sk_data_ready)(struct sock *sk);
+> > +	void	(*tcp_data_ready)(struct sock *sk);
+> > +	void	(*tcp_state_change)(struct sock *sk);
+> > +	void	(*tcp_write_space)(struct sock *sk);
 > =
 
-> """
-> v6 -> v7:
->  - move and rename ulp clone helper to make it inline-friendly
-> """
+> subflow_write_space() ends up with some direct calls to =
+
+> sk_stream_write_space() and sk_stream_is_writeable() - would it be better =
+
+> to use these new pointers for tcp_state_change/tcp_write_space or leave =
+
+> the direct calls?
+
+yep, possibly. I opeted for the simpler change, and to avoid the
+indirect call. Perhaps we could use the indirect call wrappers here?
+
+> > +
+> > 	struct	rcu_head rcu;
+> > };
+> > =
+
+> > @@ -159,6 +162,16 @@ bool mptcp_subflow_data_available(struct sock *sk);
+> > void mptcp_subflow_init(void);
+> > int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_so=
+ck);
+> > =
+
+> > +static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+> > +					      struct mptcp_subflow_context *ctx)
+> > +{
+> > +	sk->sk_data_ready =3D ctx->tcp_data_ready;
+> > +	sk->sk_state_change =3D ctx->tcp_state_change;
+> > +	sk->sk_write_space =3D ctx->tcp_write_space;
+> > +
+> > +	inet_csk(sk)->icsk_af_ops =3D ctx->icsk_af_ops;
 > =
 
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> ---
->  include/net/tcp.h               |  2 --
->  net/ipv4/inet_connection_sock.c | 14 +++++++++++++-
->  net/ipv4/tcp_ulp.c              | 12 ------------
->  3 files changed, 13 insertions(+), 15 deletions(-)
+> I'm a little paranoid about changing these back, but if ULP can change th=
+e =
+
+> pointers on an existing socket then I guess it should be safe to change =
+
+> them again if the subflow socket is locked.
 > =
 
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index 853537e330f8..5e4133d09b9d 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -2183,8 +2183,6 @@ int tcp_set_ulp(struct sock *sk, const char *name);
->  void tcp_get_available_ulp(char *buf, size_t len);
->  void tcp_cleanup_ulp(struct sock *sk);
->  void tcp_update_ulp(struct sock *sk, struct proto *p);
-> -void tcp_clone_ulp(const struct request_sock *req,
-> -		   struct sock *newsk, const gfp_t priority);
->  =
+> I think the subflow callbacks to have the logic to handle fallback when =
 
->  #define MODULE_ALIAS_TCP_ULP(name)				\
->  	__MODULE_INFO(alias, alias_userspace, name);		\
-> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_s=
-ock.c
-> index bf53a722923a..6a691fd04398 100644
-> --- a/net/ipv4/inet_connection_sock.c
-> +++ b/net/ipv4/inet_connection_sock.c
-> @@ -770,6 +770,18 @@ void inet_csk_reqsk_queue_hash_add(struct sock *sk, =
-struct request_sock *req,
->  }
->  EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
->  =
+> is_mptcp is false, but it's less efficient to do so.
 
-> +static void inet_clone_ulp(const struct request_sock *req, struct sock *=
-newsk,
-> +			   const gfp_t priority)
-> +{
-> +	struct inet_connection_sock *icsk =3D inet_csk(newsk);
-> +
-> +	if (!icsk->icsk_ulp_ops)
-> +		return;
-> +
-> +	if (icsk->icsk_ulp_ops->clone)
-> +		icsk->icsk_ulp_ops->clone(req, newsk, priority);
-> +}
-> +
->  /**
->   *	inet_csk_clone_lock - clone an inet socket, and lock its clone
->   *	@sk: the socket to clone
-> @@ -810,7 +822,7 @@ struct sock *inet_csk_clone_lock(const struct sock *s=
-k,
->  		/* Deinitialize accept_queue to trap illegal accesses. */
->  		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_que=
-ue));
->  =
+Yes, the subflow callbacks can handle the fallback logic, but they
+require a not-NULL subflow ctx. If the ULP clone operation fails, we
+will not have one. =
 
-> -		tcp_clone_ulp(req, newsk, priority);
-> +		inet_clone_ulp(req, newsk, priority);
->  =
 
->  		security_inet_csk_clone(newsk, req);
->  	}
-> diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
-> index e7a2589d69ee..12ab5db2b71c 100644
-> --- a/net/ipv4/tcp_ulp.c
-> +++ b/net/ipv4/tcp_ulp.c
-> @@ -130,18 +130,6 @@ void tcp_cleanup_ulp(struct sock *sk)
->  	icsk->icsk_ulp_ops =3D NULL;
->  }
->  =
+We could handle that, checking for NULL ctx in the subflow specific
+icsk_af_ops, but I thought it simpler to just restore the TCP ones.
 
-> -void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
-> -		   const gfp_t priority)
-> -{
-> -	struct inet_connection_sock *icsk =3D inet_csk(newsk);
-> -
-> -	if (!icsk->icsk_ulp_ops)
-> -		return;
-> -
-> -	if (icsk->icsk_ulp_ops->clone)
-> -		icsk->icsk_ulp_ops->clone(req, newsk, priority);
-> -}
-> -
->  static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_=
-ops)
->  {
->  	struct inet_connection_sock *icsk =3D inet_csk(sk);
+The TCP_ULP sockopt() already switches the socket icsk_af_ops keeping
+the socket lock held, as we do here, so I think it should be safe.
 
-LGTM, thanks!
+Cheers,
 
 Paolo
 
---===============6065341041624527406==--
+--===============6741336135995580115==--
