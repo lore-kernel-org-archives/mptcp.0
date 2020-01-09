@@ -1,98 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============2375755445124675670=="
+Content-Type: multipart/mixed; boundary="===============3880176747480976154=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] protocol: fix list corruption
-Date: Thu, 09 Jan 2020 16:41:18 +0100
-Message-ID: <7687354e-1608-b022-d9e2-6407dfae1b65@tessares.net>
-In-Reply-To: 4b2fec06c49a5c449e418b3ba59d6dbd1ad76bef.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next v7 00/11] Multipath TCP: Prerequisites
+Date: Thu, 09 Jan 2020 07:59:13 -0800
+Message-ID: <20200109155924.30122-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3313
+X-UID: 3314
 
---===============2375755445124675670==
+--===============3880176747480976154==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Paolo,
+v6 -> v7: Rename/move ULP clone helper to make inline-friendly (patch 5)
 
-On 09/01/2020 16:30, Paolo Abeni wrote:
-> On Thu, 2020-01-09 at 15:31 +0100, Florian Westphal wrote:
->> squashto: subflow: place further subflows on new 'join_list'
->>
->> plugs:
->>   inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
->>   kworker/u8:1/31 [HC0[0]:SC1[1]:HE1:SE0] takes:
->>   ffff88810c43d520 (&(&msk->join_list_lock)->rlock){+.?.}, at: mptcp_fin=
-ish_join+0x30f/0x4d0
->>
->> and a list corruption, we need to re-init the join list head, else next
->> list_empty() test will splice this a second time, resulting in a
->> corrupted conn list.
->>
->> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->> ---
->>   net/mptcp/protocol.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index a33c4c58de78..6df4eb20916c 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -153,7 +153,7 @@ static void __mptcp_flush_join_list(struct mptcp_soc=
-k *msk)
->>   		return;
->>   =
+v5 -> v6: Fix BPF accessors for sk_type and sk_protocol (patch 2), fix
+the width of an __unused bitfield (patch 6), and add some commit message
+and comment text (patches 5 & 7).
 
->>   	spin_lock_bh(&msk->join_list_lock);
->> -	list_splice_tail(&msk->join_list, &msk->conn_list);
->> +	list_splice_tail_init(&msk->join_list, &msk->conn_list);
->>   	spin_unlock_bh(&msk->join_list_lock);
->>   }
->>   =
+v4 -> v5: Cover letter subject fix. No changes to commits.
 
->> @@ -1420,9 +1420,9 @@ bool mptcp_finish_join(struct sock *sk)
->>   =
+v3 -> v4: Update coalesce/collapse of incoming MPTCP skbs (patch 7)
 
->>   		/* active connections are already on conn_list */
->>   		if (list_empty(&subflow->node)) {
->> -			spin_lock(&msk->join_list_lock);
->> +			spin_lock_bh(&msk->join_list_lock);
->>   			list_add_tail(&subflow->node, &msk->join_list);
->> -			spin_unlock(&msk->join_list_lock);
->> +			spin_unlock_bh(&msk->join_list_lock);
->>   		}
->>   	}
->>   	return true;
-> =
+v2 -> v3: Ensure sk_type alignment in struct sock (patch 2)
 
-> whoops, I thought this would run in BH only - I was wrong!
+v1 -> v2: sk_pacing_shift left as a regular struct member (patch 2), and
+modified SACK space check based on recent -net fix (patch 9).
 
-Thank you for the patches and the review!
 
-- f11b0171d4ee: "squashed" patch 1/2 in "mptcp: Add path manager =
+The MPTCP upstreaming community has been collaborating on an
+upstreamable MPTCP implementation that complies with RFC 8684. A minimal
+set of features to comply with the specification involves a sizeable set
+of code changes, so David requested that we split this work in to
+multiple, smaller patch sets to build up MPTCP infrastructure.
 
-interface" (with a small conflict)
-- 8dc2fbf1951b: "Signed-off-by" + "Co-developed-by"
-- bf09e56f4f2b: conflict in =
+The minimal MPTCP feature set we are proposing for review in the v5.6
+timeframe begins with these three parts:
 
-t/mptcp-update-per-unacked-sequence-on-pkt-reception
-- 11cb91b0f172..0bc44ebe6199: result
-- a4445faa25c7: "squashed" patch 2/2 in "subflow: place further subflows =
+Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP
+definitions, additional ULP and skb extension features, TCP option space
+checking, and a few exported symbols.
 
-on new 'join_list'"
-- 0bc44ebe6199..23c5e836256b: result
+Part 2: Single subflow implementation and self tests.
 
-Tests are in progress.
+Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684,
+publication expected in the next few days).
 
-Cheers,
-Matt
+Additional patches for multiple subflow support, path management, active
+backup, and other features are in the pipeline for submission after
+making progress with the above reviews.
+
+Clone/fetch:
+https://github.com/multipath-tcp/mptcp_net-next.git (tag: netdev-v7-part1)
+
+Browse:
+https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v7-part1
+
+Thank you for your review. You can find us at mptcp(a)lists.01.org and
+https://is.gd/mptcp_upstream
+
+
+Mat Martineau (9):
+  net: Make sock protocol value checks more specific
+  sock: Make sk_protocol a 16-bit value
+  tcp: Define IPPROTO_MPTCP
+  tcp: Add MPTCP option number
+  tcp, ulp: Add clone operation to tcp_ulp_ops
+  mptcp: Add MPTCP to skb extensions
+  tcp: coalesce/collapse must respect MPTCP extensions
+  tcp: Export TCP functions and ops struct
+  tcp: Check for filled TCP option space before SACK
+
+Paolo Abeni (2):
+  tcp: clean ext on tx recycle
+  skb: add helpers to allocate ext independently from sk_buff
+
+ MAINTAINERS                     | 10 ++++
+ include/linux/skbuff.h          |  6 +++
+ include/net/mptcp.h             | 85 +++++++++++++++++++++++++++++++++
+ include/net/sock.h              | 27 +++--------
+ include/net/tcp.h               | 20 ++++++++
+ include/trace/events/sock.h     |  5 +-
+ include/uapi/linux/in.h         |  2 +
+ net/ax25/af_ax25.c              |  2 +-
+ net/core/filter.c               | 60 +++++++++--------------
+ net/core/skbuff.c               | 42 +++++++++++++++-
+ net/decnet/af_decnet.c          |  2 +-
+ net/ipv4/inet_connection_sock.c | 14 ++++++
+ net/ipv4/tcp.c                  |  6 +--
+ net/ipv4/tcp_input.c            | 11 +++--
+ net/ipv4/tcp_ipv4.c             |  2 +-
+ net/ipv4/tcp_output.c           | 12 +++--
+ net/ipv6/tcp_ipv6.c             |  6 +--
+ tools/include/uapi/linux/in.h   |  2 +
+ 18 files changed, 235 insertions(+), 79 deletions(-)
+ create mode 100644 include/net/mptcp.h
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2375755445124675670==--
+2.24.1
+
+--===============3880176747480976154==--
