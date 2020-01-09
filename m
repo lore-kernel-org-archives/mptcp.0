@@ -1,140 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============4537947427116414019=="
+Content-Type: multipart/mixed; boundary="===============1499014098337498440=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "tcp,
- ulp: Add clone operation to tcp_ulp_ops"
-Date: Thu, 09 Jan 2020 14:33:15 +0100
-Message-ID: <6b42b27c-3469-d879-0aea-6708699c9a4c@tessares.net>
-In-Reply-To: ebe1bddd242a7127cbbacbeb0de496bcae1e9b82.camel@redhat.com
+Subject: [MPTCP] [PATCH 1/2] protocol: pm callback must be done after msk
+ state is set up
+Date: Thu, 09 Jan 2020 15:31:13 +0100
+Message-ID: <20200109143114.7716-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3308
+X-UID: 3309
 
---===============4537947427116414019==
+--===============1499014098337498440==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Paolo,
+Squashto: mptcp: Add path manager interface
 
-On 09/01/2020 09:14, Paolo Abeni wrote:
-> On Wed, 2020-01-08 at 13:57 -0800, Mat Martineau wrote:
->> Make change suggested in upstream review - move and rename ulp clone
->> helper to make it inline-friendly.
->>
->> Commit message addition:
->>
->> """
->> v6 -> v7:
->>   - move and rename ulp clone helper to make it inline-friendly
->> """
->>
->> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->> ---
->>   include/net/tcp.h               |  2 --
->>   net/ipv4/inet_connection_sock.c | 14 +++++++++++++-
->>   net/ipv4/tcp_ulp.c              | 12 ------------
->>   3 files changed, 13 insertions(+), 15 deletions(-)
->>
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index 853537e330f8..5e4133d09b9d 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -2183,8 +2183,6 @@ int tcp_set_ulp(struct sock *sk, const char *name);
->>   void tcp_get_available_ulp(char *buf, size_t len);
->>   void tcp_cleanup_ulp(struct sock *sk);
->>   void tcp_update_ulp(struct sock *sk, struct proto *p);
->> -void tcp_clone_ulp(const struct request_sock *req,
->> -		   struct sock *newsk, const gfp_t priority);
->>   =
+current location calls this when msk->token is still 0, so pm worker
+will never find the mptcp socket it should be using.
 
->>   #define MODULE_ALIAS_TCP_ULP(name)				\
->>   	__MODULE_INFO(alias, alias_userspace, name);		\
->> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_=
-sock.c
->> index bf53a722923a..6a691fd04398 100644
->> --- a/net/ipv4/inet_connection_sock.c
->> +++ b/net/ipv4/inet_connection_sock.c
->> @@ -770,6 +770,18 @@ void inet_csk_reqsk_queue_hash_add(struct sock *sk,=
- struct request_sock *req,
->>   }
->>   EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
->>   =
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->> +static void inet_clone_ulp(const struct request_sock *req, struct sock =
-*newsk,
->> +			   const gfp_t priority)
->> +{
->> +	struct inet_connection_sock *icsk =3D inet_csk(newsk);
->> +
->> +	if (!icsk->icsk_ulp_ops)
->> +		return;
->> +
->> +	if (icsk->icsk_ulp_ops->clone)
->> +		icsk->icsk_ulp_ops->clone(req, newsk, priority);
->> +}
->> +
->>   /**
->>    *	inet_csk_clone_lock - clone an inet socket, and lock its clone
->>    *	@sk: the socket to clone
->> @@ -810,7 +822,7 @@ struct sock *inet_csk_clone_lock(const struct sock *=
-sk,
->>   		/* Deinitialize accept_queue to trap illegal accesses. */
->>   		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_q=
-ueue));
->>   =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 475ef4c90460..a33c4c58de78 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1371,8 +1371,6 @@ void mptcp_finish_connect(struct sock *ssk)
+ =
 
->> -		tcp_clone_ulp(req, newsk, priority);
->> +		inet_clone_ulp(req, newsk, priority);
->>   =
+ 	pr_debug("msk=3D%p, token=3D%u", sk, subflow->token);
+ =
 
->>   		security_inet_csk_clone(newsk, req);
->>   	}
->> diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
->> index e7a2589d69ee..12ab5db2b71c 100644
->> --- a/net/ipv4/tcp_ulp.c
->> +++ b/net/ipv4/tcp_ulp.c
->> @@ -130,18 +130,6 @@ void tcp_cleanup_ulp(struct sock *sk)
->>   	icsk->icsk_ulp_ops =3D NULL;
->>   }
->>   =
+-	mptcp_pm_new_connection(msk, 0);
+-
+ 	mptcp_crypto_key_sha(subflow->remote_key, NULL, &ack_seq);
+ 	ack_seq++;
+ 	subflow->map_seq =3D ack_seq;
+@@ -1389,6 +1387,8 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	WRITE_ONCE(msk->ack_seq, ack_seq);
+ 	WRITE_ONCE(msk->can_ack, 1);
+ 	atomic64_set(&msk->snd_una, msk->write_seq);
++
++	mptcp_pm_new_connection(msk, 0);
+ }
+ =
 
->> -void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
->> -		   const gfp_t priority)
->> -{
->> -	struct inet_connection_sock *icsk =3D inet_csk(newsk);
->> -
->> -	if (!icsk->icsk_ulp_ops)
->> -		return;
->> -
->> -	if (icsk->icsk_ulp_ops->clone)
->> -		icsk->icsk_ulp_ops->clone(req, newsk, priority);
->> -}
->> -
->>   static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ul=
-p_ops)
->>   {
->>   	struct inet_connection_sock *icsk =3D inet_csk(sk);
-> =
-
-> LGTM, thanks!
-
-Thank you for the patch and the review!
-
-- 7504dfc9d9a8: "squashed" in "tcp, ulp: Add clone operation to tcp_ulp_ops"
-- 34e94b7f4d61: tg:msg: add changelog (v7)
-- 04e0ad69c167..11cb91b0f172: result
-
-Tests are still OK.
-
-Cheers,
-Matt
+ static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4537947427116414019==--
+2.24.1
+
+--===============1499014098337498440==--
