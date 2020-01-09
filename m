@@ -1,71 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============5678849121880658514=="
+Content-Type: multipart/mixed; boundary="===============0913489362607868033=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v7 09/11] tcp: Check for filled TCP option
- space before SACK
-Date: Thu, 09 Jan 2020 07:59:22 -0800
-Message-ID: <20200109155924.30122-10-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v7 10/11] tcp: clean ext on tx recycle
+Date: Thu, 09 Jan 2020 07:59:23 -0800
+Message-ID: <20200109155924.30122-11-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200109155924.30122-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3323
+X-UID: 3324
 
---===============5678849121880658514==
+--===============0913489362607868033==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Update the SACK check to work with zero option space available, a case
-that's possible with MPTCP but not MD5+TS. Maintained only one
-conditional branch for insufficient SACK space.
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-v1 -> v2:
-- Moves the check inside the SACK branch by taking recent SACK fix:
+Otherwise we will find stray/unexpected/old extensions value on next
+iteration.
 
-    9424e2e7ad93 (tcp: md5: fix potential overestimation of TCP option spac=
-e)
+On tcp_write_xmit() we can end-up splitting an already queued skb in two
+parts, via tso_fragment(). The newly created skb can be allocated via
+the tx cache and an upper layer will not be aware of it, so that upper
+layer cannot set the ext properly.
 
-  in to account, but modifies it to work in MPTCP scenarios beyond the
-  MD5+TS corner case.
+Resetting the ext on recycle ensures that stale data is not propagated
+in to packet headers or elsewhere.
 
-Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+An alternative would be add an additional hook in tso_fragment() or in
+sk_stream_alloc_skb() to init the ext for upper layers that need it.
+
+Co-developed-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Reviewed-by: Eric Dumazet <edumazet(a)google.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/ipv4/tcp_output.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ include/net/sock.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 3ce7fe1c4076..05109d0c675b 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -754,13 +754,17 @@ static unsigned int tcp_established_options(struct so=
-ck *sk, struct sk_buff *skb
- 	eff_sacks =3D tp->rx_opt.num_sacks + tp->rx_opt.dsack;
- 	if (unlikely(eff_sacks)) {
- 		const unsigned int remaining =3D MAX_TCP_OPTION_SPACE - size;
-+		if (unlikely(remaining < TCPOLEN_SACK_BASE_ALIGNED +
-+					 TCPOLEN_SACK_PERBLOCK))
-+			return size;
-+
- 		opts->num_sack_blocks =3D
- 			min_t(unsigned int, eff_sacks,
- 			      (remaining - TCPOLEN_SACK_BASE_ALIGNED) /
- 			      TCPOLEN_SACK_PERBLOCK);
--		if (likely(opts->num_sack_blocks))
--			size +=3D TCPOLEN_SACK_BASE_ALIGNED +
--				opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
-+
-+		size +=3D TCPOLEN_SACK_BASE_ALIGNED +
-+			opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
- 	}
- =
-
- 	return size;
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 8766f9bc3e70..432ff73d20f3 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1464,6 +1464,7 @@ static inline void sk_wmem_free_skb(struct sock *sk, =
+struct sk_buff *skb)
+ 	sk_mem_uncharge(sk, skb->truesize);
+ 	if (static_branch_unlikely(&tcp_tx_skb_cache_key) &&
+ 	    !sk->sk_tx_skb_cache && !skb_cloned(skb)) {
++		skb_ext_reset(skb);
+ 		skb_zcopy_clear(skb, true);
+ 		sk->sk_tx_skb_cache =3D skb;
+ 		return;
 -- =
 
 2.24.1
 
---===============5678849121880658514==--
+--===============0913489362607868033==--
