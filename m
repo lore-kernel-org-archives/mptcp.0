@@ -1,118 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============2174320440034192595=="
+Content-Type: multipart/mixed; boundary="===============9196824429376663977=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v7 11/11] skb: add helpers to allocate ext
- independently from sk_buff
-Date: Thu, 09 Jan 2020 07:59:24 -0800
-Message-ID: <20200109155924.30122-12-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20200109155924.30122-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH v2 1/7] Squash-to: "mptcp: Handle MP_CAPABLE options
+ for outgoing connections"
+Date: Thu, 09 Jan 2020 17:41:32 +0100
+Message-ID: <3483a572e27be85e6191ebf443e18e4017c404bc.1578586484.git.pabeni@redhat.com>
+In-Reply-To: cover.1578586484.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3325
+X-UID: 3326
 
---===============2174320440034192595==
+--===============9196824429376663977==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+After upstream feedback, I just noticed that we actually
+don't clear the is_mptcp field on clone allocation failure.
 
-Currently we can allocate the extension only after the skb,
-this change allows the user to do the opposite, will simplify
-allocation failure handling from MPTCP.
+Do that and additionally don't allocate at all the subflow if MPC handshake
+failed.
+
+Note: we need to update accordingly accept on later patch
+
+v1  -> v2:
+ - use sk_is_mptcp() in __mptcp_tcp_fallback() (Mat)
+
+RFC -> v1:
+ - avoid assign statement inside the if statement (Florian)
+ - avoid rendundant  conn =3D NULL  (Mat)
+ - clear ulp data on fallback, or to avoid double free at close
+   time
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/linux/skbuff.h |  3 +++
- net/core/skbuff.c      | 35 +++++++++++++++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c |  2 +-
+ net/mptcp/subflow.c  | 33 +++++++++++++++++++++------------
+ 2 files changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index f5c27600b410..016b3c4ab99a 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4120,6 +4120,9 @@ struct skb_ext {
- 	char data[0] __aligned(8);
- };
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 8bb3ecf87ee5..9120f75659b5 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -42,7 +42,7 @@ static struct socket *__mptcp_tcp_fallback(const struct m=
+ptcp_sock *msk)
  =
 
-+struct skb_ext *__skb_ext_alloc(void);
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext);
- void *skb_ext_add(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_del(struct sk_buff *skb, enum skb_ext_id id);
- void __skb_ext_put(struct skb_ext *ext);
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index a4106da23c34..48a7029529c9 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5987,7 +5987,14 @@ static void *skb_ext_get_ptr(struct skb_ext *ext, en=
-um skb_ext_id id)
- 	return (void *)ext + (ext->offset[id] * SKB_EXT_ALIGN_VALUE);
+ 	sock_owned_by_me((const struct sock *)msk);
+ =
+
+-	if (!ssock || tcp_sk(ssock->sk)->is_mptcp)
++	if (!ssock || sk_is_mptcp(ssock->sk))
+ 		return NULL;
+ =
+
+ 	return ssock;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b9aca17b0b91..cf4c05a6cfac 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -254,6 +254,15 @@ static void subflow_ulp_release(struct sock *sk)
+ 	kfree_rcu(ctx, rcu);
  }
  =
 
--static struct skb_ext *skb_ext_alloc(void)
-+/**
-+ * __skb_ext_alloc - allocate a new skb extensions storage
-+ *
-+ * Returns the newly allocated pointer. The pointer can later attached to a
-+ * skb via __skb_ext_set().
-+ * Note: caller must handle the skb_ext as an opaque data.
-+ */
-+struct skb_ext *__skb_ext_alloc(void)
- {
- 	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, GFP_ATOMIC);
- =
-
-@@ -6027,6 +6034,30 @@ static struct skb_ext *skb_ext_maybe_cow(struct skb_=
-ext *old,
- 	return new;
- }
- =
-
-+/**
-+ * __skb_ext_set - attach the specified extension storage to this skb
-+ * @skb: buffer
-+ * @id: extension id
-+ * @ext: extension storage previously allocated via __skb_ext_alloc()
-+ *
-+ * Existing extensions, if any, are cleared.
-+ *
-+ * Returns the pointer to the extension.
-+ */
-+void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
-+		    struct skb_ext *ext)
++static void subflow_ulp_fallback(struct sock *sk)
 +{
-+	unsigned int newlen, newoff =3D SKB_EXT_CHUNKSIZEOF(*ext);
++	struct inet_connection_sock *icsk =3D inet_csk(sk);
 +
-+	skb_ext_put(skb);
-+	newlen =3D newoff + skb_ext_type_len[id];
-+	ext->chunks =3D newlen;
-+	ext->offset[id] =3D newoff;
-+	skb->extensions =3D ext;
-+	skb->active_extensions =3D 1 << id;
-+	return skb_ext_get_ptr(ext, id);
++	icsk->icsk_ulp_ops =3D NULL;
++	rcu_assign_pointer(icsk->icsk_ulp_data, NULL);
++	tcp_sk(sk)->is_mptcp =3D 0;
 +}
 +
- /**
-  * skb_ext_add - allocate space for given extension, COW if needed
-  * @skb: buffer
-@@ -6060,7 +6091,7 @@ void *skb_ext_add(struct sk_buff *skb, enum skb_ext_i=
-d id)
- 	} else {
- 		newoff =3D SKB_EXT_CHUNKSIZEOF(*new);
+ static void subflow_ulp_clone(const struct request_sock *req,
+ 			      struct sock *newsk,
+ 			      const gfp_t priority)
+@@ -262,23 +271,23 @@ static void subflow_ulp_clone(const struct request_so=
+ck *req,
+ 	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
+ 	struct mptcp_subflow_context *new_ctx;
  =
 
--		new =3D skb_ext_alloc();
-+		new =3D __skb_ext_alloc();
- 		if (!new)
- 			return NULL;
- 	}
+-	/* newsk->sk_socket is NULL at this point */
++	if (!subflow_req->mp_capable) {
++		subflow_ulp_fallback(newsk);
++		return;
++	}
++
+ 	new_ctx =3D subflow_create_ctx(newsk, priority);
+-	if (!new_ctx)
++	if (new_ctx =3D=3D NULL) {
++		subflow_ulp_fallback(newsk);
+ 		return;
++	}
+ =
+
+-	new_ctx->conn =3D NULL;
+ 	new_ctx->conn_finished =3D 1;
+ 	new_ctx->icsk_af_ops =3D old_ctx->icsk_af_ops;
+-
+-	if (subflow_req->mp_capable) {
+-		new_ctx->mp_capable =3D 1;
+-		new_ctx->fourth_ack =3D 1;
+-		new_ctx->remote_key =3D subflow_req->remote_key;
+-		new_ctx->local_key =3D subflow_req->local_key;
+-	} else {
+-		tcp_sk(newsk)->is_mptcp =3D 0;
+-	}
++	new_ctx->mp_capable =3D 1;
++	new_ctx->fourth_ack =3D 1;
++	new_ctx->remote_key =3D subflow_req->remote_key;
++	new_ctx->local_key =3D subflow_req->local_key;
+ }
+ =
+
+ static struct tcp_ulp_ops subflow_ulp_ops __read_mostly =3D {
 -- =
 
-2.24.1
+2.21.0
 
---===============2174320440034192595==--
+--===============9196824429376663977==--
