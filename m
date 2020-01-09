@@ -1,34 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============0855160143290679849=="
+Content-Type: multipart/mixed; boundary="===============4537947427116414019=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 9 January 2020 17:00 UTC (9am PST, 6pm CET)
-Date: Thu, 09 Jan 2020 13:25:55 +0100
-Message-ID: <97ec7505-afdd-a98f-9abc-b463c5aed867@tessares.net>
+Subject: [MPTCP] Re: [PATCH] Squash-to: "tcp,
+ ulp: Add clone operation to tcp_ulp_ops"
+Date: Thu, 09 Jan 2020 14:33:15 +0100
+Message-ID: <6b42b27c-3469-d879-0aea-6708699c9a4c@tessares.net>
+In-Reply-To: ebe1bddd242a7127cbbacbeb0de496bcae1e9b82.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3307
+X-UID: 3308
 
---===============0855160143290679849==
+--===============4537947427116414019==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+Hi Mat, Paolo,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-today.
+On 09/01/2020 09:14, Paolo Abeni wrote:
+> On Wed, 2020-01-08 at 13:57 -0800, Mat Martineau wrote:
+>> Make change suggested in upstream review - move and rename ulp clone
+>> helper to make it inline-friendly.
+>>
+>> Commit message addition:
+>>
+>> """
+>> v6 -> v7:
+>>   - move and rename ulp clone helper to make it inline-friendly
+>> """
+>>
+>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>> ---
+>>   include/net/tcp.h               |  2 --
+>>   net/ipv4/inet_connection_sock.c | 14 +++++++++++++-
+>>   net/ipv4/tcp_ulp.c              | 12 ------------
+>>   3 files changed, 13 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/include/net/tcp.h b/include/net/tcp.h
+>> index 853537e330f8..5e4133d09b9d 100644
+>> --- a/include/net/tcp.h
+>> +++ b/include/net/tcp.h
+>> @@ -2183,8 +2183,6 @@ int tcp_set_ulp(struct sock *sk, const char *name);
+>>   void tcp_get_available_ulp(char *buf, size_t len);
+>>   void tcp_cleanup_ulp(struct sock *sk);
+>>   void tcp_update_ulp(struct sock *sk, struct proto *p);
+>> -void tcp_clone_ulp(const struct request_sock *req,
+>> -		   struct sock *newsk, const gfp_t priority);
+>>   =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20200109
+>>   #define MODULE_ALIAS_TCP_ULP(name)				\
+>>   	__MODULE_INFO(alias, alias_userspace, name);		\
+>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_=
+sock.c
+>> index bf53a722923a..6a691fd04398 100644
+>> --- a/net/ipv4/inet_connection_sock.c
+>> +++ b/net/ipv4/inet_connection_sock.c
+>> @@ -770,6 +770,18 @@ void inet_csk_reqsk_queue_hash_add(struct sock *sk,=
+ struct request_sock *req,
+>>   }
+>>   EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
+>>   =
 
-Feel free to add/modify topics!
+>> +static void inet_clone_ulp(const struct request_sock *req, struct sock =
+*newsk,
+>> +			   const gfp_t priority)
+>> +{
+>> +	struct inet_connection_sock *icsk =3D inet_csk(newsk);
+>> +
+>> +	if (!icsk->icsk_ulp_ops)
+>> +		return;
+>> +
+>> +	if (icsk->icsk_ulp_ops->clone)
+>> +		icsk->icsk_ulp_ops->clone(req, newsk, priority);
+>> +}
+>> +
+>>   /**
+>>    *	inet_csk_clone_lock - clone an inet socket, and lock its clone
+>>    *	@sk: the socket to clone
+>> @@ -810,7 +822,7 @@ struct sock *inet_csk_clone_lock(const struct sock *=
+sk,
+>>   		/* Deinitialize accept_queue to trap illegal accesses. */
+>>   		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_q=
+ueue));
+>>   =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+>> -		tcp_clone_ulp(req, newsk, priority);
+>> +		inet_clone_ulp(req, newsk, priority);
+>>   =
 
-Speak to you tomorrow!
-Matthieu
+>>   		security_inet_csk_clone(newsk, req);
+>>   	}
+>> diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+>> index e7a2589d69ee..12ab5db2b71c 100644
+>> --- a/net/ipv4/tcp_ulp.c
+>> +++ b/net/ipv4/tcp_ulp.c
+>> @@ -130,18 +130,6 @@ void tcp_cleanup_ulp(struct sock *sk)
+>>   	icsk->icsk_ulp_ops =3D NULL;
+>>   }
+>>   =
+
+>> -void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
+>> -		   const gfp_t priority)
+>> -{
+>> -	struct inet_connection_sock *icsk =3D inet_csk(newsk);
+>> -
+>> -	if (!icsk->icsk_ulp_ops)
+>> -		return;
+>> -
+>> -	if (icsk->icsk_ulp_ops->clone)
+>> -		icsk->icsk_ulp_ops->clone(req, newsk, priority);
+>> -}
+>> -
+>>   static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ul=
+p_ops)
+>>   {
+>>   	struct inet_connection_sock *icsk =3D inet_csk(sk);
+> =
+
+> LGTM, thanks!
+
+Thank you for the patch and the review!
+
+- 7504dfc9d9a8: "squashed" in "tcp, ulp: Add clone operation to tcp_ulp_ops"
+- 34e94b7f4d61: tg:msg: add changelog (v7)
+- 04e0ad69c167..11cb91b0f172: result
+
+Tests are still OK.
+
+Cheers,
+Matt
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -36,4 +137,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0855160143290679849==--
+--===============4537947427116414019==--
