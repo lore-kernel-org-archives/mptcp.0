@@ -1,237 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============2874050016868236455=="
+Content-Type: multipart/mixed; boundary="===============6409783510750104625=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v7 07/11] tcp: coalesce/collapse must respect
- MPTCP extensions
-Date: Thu, 09 Jan 2020 07:59:20 -0800
-Message-ID: <20200109155924.30122-8-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v7 08/11] tcp: Export TCP functions and ops
+ struct
+Date: Thu, 09 Jan 2020 07:59:21 -0800
+Message-ID: <20200109155924.30122-9-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200109155924.30122-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3321
+X-UID: 3322
 
---===============2874050016868236455==
+--===============6409783510750104625==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Coalesce and collapse of packets carrying MPTCP extensions is allowed
-when the newer packet has no extension or the extensions carried by both
-packets are equal.
+MPTCP will make use of tcp_send_mss() and tcp_push() when sending
+data to specific TCP subflows.
 
-This allows merging of TSO packet trains and even cross-TSO packets, and
-does not require any additional action when moving data into existing
-SKBs.
+tcp_request_sock_ipvX_ops and ipvX_specific will be referenced
+during TCP subflow creation.
 
-v3 -> v4:
- - allow collapsing, under mptcp_skb_can_collapse() constraint
-
-v5 -> v6:
- - clarify MPTCP skb extensions must always be cleared at allocation
-   time
-
-Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Reviewed-by: Eric Dumazet <edumazet(a)google.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/mptcp.h   | 57 +++++++++++++++++++++++++++++++++++++++++++
- include/net/tcp.h     |  8 ++++++
- net/ipv4/tcp_input.c  | 11 ++++++---
- net/ipv4/tcp_output.c |  2 +-
- 4 files changed, 74 insertions(+), 4 deletions(-)
+ include/net/tcp.h   | 8 ++++++++
+ net/ipv4/tcp.c      | 6 +++---
+ net/ipv4/tcp_ipv4.c | 2 +-
+ net/ipv6/tcp_ipv6.c | 6 +++---
+ 4 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 326043c29c0a..0573ae75c3db 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -8,6 +8,7 @@
- #ifndef __NET_MPTCP_H
- #define __NET_MPTCP_H
- =
-
-+#include <linux/skbuff.h>
- #include <linux/types.h>
- =
-
- /* MPTCP sk_buff extension data */
-@@ -25,4 +26,60 @@ struct mptcp_ext {
- 	/* one byte hole */
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 13bc83fab454..5e4133d09b9d 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -330,6 +330,9 @@ int tcp_sendpage_locked(struct sock *sk, struct page *p=
+age, int offset,
+ 			size_t size, int flags);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
++void tcp_push(struct sock *sk, int flags, int mss_now, int nonagle,
++	      int size_goal);
+ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+@@ -2011,6 +2014,11 @@ struct tcp_request_sock_ops {
+ 			   enum tcp_synack_type synack_type);
  };
  =
 
-+#ifdef CONFIG_MPTCP
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops;
++#if IS_ENABLED(CONFIG_IPV6)
++extern const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops;
++#endif
 +
-+/* move the skb extension owership, with the assumption that 'to' is
-+ * newly allocated
-+ */
-+static inline void mptcp_skb_ext_move(struct sk_buff *to,
-+				      struct sk_buff *from)
-+{
-+	if (!skb_ext_exist(from, SKB_EXT_MPTCP))
-+		return;
-+
-+	if (WARN_ON_ONCE(to->active_extensions))
-+		skb_ext_put(to);
-+
-+	to->active_extensions =3D from->active_extensions;
-+	to->extensions =3D from->extensions;
-+	from->active_extensions =3D 0;
-+}
-+
-+static inline bool mptcp_ext_matches(const struct mptcp_ext *to_ext,
-+				     const struct mptcp_ext *from_ext)
-+{
-+	/* MPTCP always clears the ext when adding it to the skb, so
-+	 * holes do not bother us here
-+	 */
-+	return !from_ext ||
-+	       (to_ext && from_ext &&
-+	        !memcmp(from_ext, to_ext, sizeof(struct mptcp_ext)));
-+}
-+
-+/* check if skbs can be collapsed.
-+ * MPTCP collapse is allowed if neither @to or @from carry an mptcp data
-+ * mapping, or if the extension of @to is the same as @from.
-+ * Collapsing is not possible if @to lacks an extension, but @from carries=
- one.
-+ */
-+static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
-+					  const struct sk_buff *from)
-+{
-+	return mptcp_ext_matches(skb_ext_find(to, SKB_EXT_MPTCP),
-+				 skb_ext_find(from, SKB_EXT_MPTCP));
-+}
-+
-+#else
-+
-+static inline void mptcp_skb_ext_move(struct sk_buff *to,
-+				      const struct sk_buff *from)
-+{
-+}
-+
-+static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
-+					  const struct sk_buff *from)
-+{
-+	return true;
-+}
-+
-+#endif /* CONFIG_MPTCP */
- #endif /* __NET_MPTCP_H */
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index ac52633e7061..13bc83fab454 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -39,6 +39,7 @@
- #include <net/tcp_states.h>
- #include <net/inet_ecn.h>
- #include <net/dst.h>
-+#include <net/mptcp.h>
- =
-
- #include <linux/seq_file.h>
- #include <linux/memcontrol.h>
-@@ -978,6 +979,13 @@ static inline bool tcp_skb_can_collapse_to(const struc=
-t sk_buff *skb)
- 	return likely(!TCP_SKB_CB(skb)->eor);
+ #ifdef CONFIG_SYN_COOKIES
+ static inline __u32 cookie_init_sequence(const struct tcp_request_sock_ops=
+ *ops,
+ 					 const struct sock *sk, struct sk_buff *skb,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index f09fbc85b108..6711a97de3ce 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -690,8 +690,8 @@ static bool tcp_should_autocork(struct sock *sk, struct=
+ sk_buff *skb,
+ 	       refcount_read(&sk->sk_wmem_alloc) > skb->truesize;
  }
  =
 
-+static inline bool tcp_skb_can_collapse(const struct sk_buff *to,
-+					const struct sk_buff *from)
-+{
-+	return likely(tcp_skb_can_collapse_to(to) &&
-+		      mptcp_skb_can_collapse(to, from));
-+}
-+
- /* Events passed to congestion control interface */
- enum tcp_ca_event {
- 	CA_EVENT_TX_START,	/* first transmit when no packets in flight */
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 1d1e3493965f..4f760f1ead68 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1422,7 +1422,7 @@ static struct sk_buff *tcp_shift_skb_data(struct sock=
- *sk, struct sk_buff *skb,
- 	if ((TCP_SKB_CB(prev)->sacked & TCPCB_TAGBITS) !=3D TCPCB_SACKED_ACKED)
- 		goto fallback;
+-static void tcp_push(struct sock *sk, int flags, int mss_now,
+-		     int nonagle, int size_goal)
++void tcp_push(struct sock *sk, int flags, int mss_now,
++	      int nonagle, int size_goal)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	struct sk_buff *skb;
+@@ -925,7 +925,7 @@ static unsigned int tcp_xmit_size_goal(struct sock *sk,=
+ u32 mss_now,
+ 	return max(size_goal, mss_now);
+ }
  =
 
--	if (!tcp_skb_can_collapse_to(prev))
-+	if (!tcp_skb_can_collapse(prev, skb))
- 		goto fallback;
+-static int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
++int tcp_send_mss(struct sock *sk, int *size_goal, int flags)
+ {
+ 	int mss_now;
  =
 
- 	in_sack =3D !after(start_seq, TCP_SKB_CB(skb)->seq) &&
-@@ -4420,6 +4420,9 @@ static bool tcp_try_coalesce(struct sock *sk,
- 	if (TCP_SKB_CB(from)->seq !=3D TCP_SKB_CB(to)->end_seq)
- 		return false;
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 4adac9c75343..fedb537839ec 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1426,7 +1426,7 @@ struct request_sock_ops tcp_request_sock_ops __read_m=
+ostly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
+ };
  =
 
-+	if (!mptcp_skb_can_collapse(to, from))
-+		return false;
-+
- #ifdef CONFIG_TLS_DEVICE
- 	if (from->decrypted !=3D to->decrypted)
- 		return false;
-@@ -4929,7 +4932,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 		/* The first skb to collapse is:
- 		 * - not SYN/FIN and
- 		 * - bloated or contains data before "start" or
--		 *   overlaps to the next one.
-+		 *   overlaps to the next one and mptcp allow collapsing.
- 		 */
- 		if (!(TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)) &&
- 		    (tcp_win_from_space(sk, skb->truesize) > skb->len ||
-@@ -4938,7 +4941,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 			break;
- 		}
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv4_ops =3D {
+ 	.mss_clamp	=3D	TCP_MSS_DEFAULT,
+ #ifdef CONFIG_TCP_MD5SIG
+ 	.req_md5_lookup	=3D	tcp_v4_md5_lookup,
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 95e4e1e95db2..5b5260103b65 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -75,7 +75,7 @@ static void	tcp_v6_reqsk_send_ack(const struct sock *sk, =
+struct sk_buff *skb,
+ static int	tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb);
  =
 
--		if (n && n !=3D tail &&
-+		if (n && n !=3D tail && mptcp_skb_can_collapse(skb, n) &&
- 		    TCP_SKB_CB(skb)->end_seq !=3D TCP_SKB_CB(n)->seq) {
- 			end_of_skbs =3D false;
- 			break;
-@@ -4971,6 +4974,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 		else
- 			__skb_queue_tail(&tmp, nskb); /* defer rbtree insertion */
- 		skb_set_owner_r(nskb, sk);
-+		mptcp_skb_ext_move(nskb, skb);
+ static const struct inet_connection_sock_af_ops ipv6_mapped;
+-static const struct inet_connection_sock_af_ops ipv6_specific;
++const struct inet_connection_sock_af_ops ipv6_specific;
+ #ifdef CONFIG_TCP_MD5SIG
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_specific;
+ static const struct tcp_sock_af_ops tcp_sock_ipv6_mapped_specific;
+@@ -819,7 +819,7 @@ struct request_sock_ops tcp6_request_sock_ops __read_mo=
+stly =3D {
+ 	.syn_ack_timeout =3D	tcp_syn_ack_timeout,
+ };
  =
 
- 		/* Copy data, releasing collapsed skbs. */
- 		while (copy > 0) {
-@@ -4990,6 +4994,7 @@ tcp_collapse(struct sock *sk, struct sk_buff_head *li=
-st, struct rb_root *root,
- 				skb =3D tcp_collapse_one(sk, skb, list, root);
- 				if (!skb ||
- 				    skb =3D=3D tail ||
-+				    !mptcp_skb_can_collapse(nskb, skb) ||
- 				    (TCP_SKB_CB(skb)->tcp_flags & (TCPHDR_SYN | TCPHDR_FIN)))
- 					goto end;
- #ifdef CONFIG_TLS_DEVICE
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 58c92a7d671c..3ce7fe1c4076 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2865,7 +2865,7 @@ static void tcp_retrans_try_collapse(struct sock *sk,=
- struct sk_buff *to,
- 		if (!tcp_can_collapse(sk, skb))
- 			break;
+-static const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
++const struct tcp_request_sock_ops tcp_request_sock_ipv6_ops =3D {
+ 	.mss_clamp	=3D	IPV6_MIN_MTU - sizeof(struct tcphdr) -
+ 				sizeof(struct ipv6hdr),
+ #ifdef CONFIG_TCP_MD5SIG
+@@ -1794,7 +1794,7 @@ static struct timewait_sock_ops tcp6_timewait_sock_op=
+s =3D {
+ 	.twsk_destructor =3D tcp_twsk_destructor,
+ };
  =
 
--		if (!tcp_skb_can_collapse_to(to))
-+		if (!tcp_skb_can_collapse(to, skb))
- 			break;
- =
-
- 		space -=3D skb->len;
+-static const struct inet_connection_sock_af_ops ipv6_specific =3D {
++const struct inet_connection_sock_af_ops ipv6_specific =3D {
+ 	.queue_xmit	   =3D inet6_csk_xmit,
+ 	.send_check	   =3D tcp_v6_send_check,
+ 	.rebuild_header	   =3D inet6_sk_rebuild_header,
 -- =
 
 2.24.1
 
---===============2874050016868236455==--
+--===============6409783510750104625==--
