@@ -1,61 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============5655104588033626792=="
+Content-Type: multipart/mixed; boundary="===============6065341041624527406=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 0/7] fallback to TCP on ulp clone failure
-Date: Wed, 08 Jan 2020 16:46:38 -0800
-Message-ID: <alpine.OSX.2.21.2001081642200.27921@fepiepan-mobl.amr.corp.intel.com>
-In-Reply-To: cover.1578487811.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "tcp,
+ ulp: Add clone operation to tcp_ulp_ops"
+Date: Thu, 09 Jan 2020 09:14:32 +0100
+Message-ID: <ebe1bddd242a7127cbbacbeb0de496bcae1e9b82.camel@redhat.com>
+In-Reply-To: 20200108215738.28326-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3302
+X-UID: 3303
 
---===============5655104588033626792==
+--===============6065341041624527406==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Wed, 2020-01-08 at 13:57 -0800, Mat Martineau wrote:
+> Make change suggested in upstream review - move and rename ulp clone
+> helper to make it inline-friendly.
+> =
 
-On Wed, 8 Jan 2020, Paolo Abeni wrote:
+> Commit message addition:
+> =
 
-> This series do real TCP fallback for passive MPTCP connection when ULP cl=
-one
-> fails: clear the 'is_mptcp' flag, reset overridden callback, icsk ops and
-> clear the ULP ctx.
->
-> Additionally uses the 'is_mptcp' flag to check for fallback in more place=
-s,
-> as suggested by Mat (patches 2, 4), cope with NULL ctx in
-> subflow_syn_recv_sock() (patches 3, 7), and restore TCP callback on
-> later fallback, too (patch 6) for consistency.
->
-> This still uses function pointers to store all the overriden TCP callback=
-s,
-> is simpler then other alternatives but waste some space inside the subflow
-> struct.
->
-> The rebased tree is available at:
->
-> https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v6.2
->
-> options.c  |    6 -----
-> protocol.c |   16 ++++++--------
-> protocol.h |   15 ++++++++++++-
-> subflow.c  |   67 ++++++++++++++++++++++++++++++++++++++++---------------=
-------
-> 4 files changed, 67 insertions(+), 37 deletions(-)
+> """
+> v6 -> v7:
+>  - move and rename ulp clone helper to make it inline-friendly
+> """
+> =
 
-I have one overall question about the series: do you want to use the =
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+>  include/net/tcp.h               |  2 --
+>  net/ipv4/inet_connection_sock.c | 14 +++++++++++++-
+>  net/ipv4/tcp_ulp.c              | 12 ------------
+>  3 files changed, 13 insertions(+), 15 deletions(-)
+> =
 
-sk_is_mptcp() helper throughout? The added is_mptcp checks mostly do so =
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index 853537e330f8..5e4133d09b9d 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -2183,8 +2183,6 @@ int tcp_set_ulp(struct sock *sk, const char *name);
+>  void tcp_get_available_ulp(char *buf, size_t len);
+>  void tcp_cleanup_ulp(struct sock *sk);
+>  void tcp_update_ulp(struct sock *sk, struct proto *p);
+> -void tcp_clone_ulp(const struct request_sock *req,
+> -		   struct sock *newsk, const gfp_t priority);
+>  =
 
-directly (tcp_sk(sk)->is_mptcp).
+>  #define MODULE_ALIAS_TCP_ULP(name)				\
+>  	__MODULE_INFO(alias, alias_userspace, name);		\
+> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_s=
+ock.c
+> index bf53a722923a..6a691fd04398 100644
+> --- a/net/ipv4/inet_connection_sock.c
+> +++ b/net/ipv4/inet_connection_sock.c
+> @@ -770,6 +770,18 @@ void inet_csk_reqsk_queue_hash_add(struct sock *sk, =
+struct request_sock *req,
+>  }
+>  EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
+>  =
 
-I sent some feedback for patches 4 & 5, the others looked ok other than =
+> +static void inet_clone_ulp(const struct request_sock *req, struct sock *=
+newsk,
+> +			   const gfp_t priority)
+> +{
+> +	struct inet_connection_sock *icsk =3D inet_csk(newsk);
+> +
+> +	if (!icsk->icsk_ulp_ops)
+> +		return;
+> +
+> +	if (icsk->icsk_ulp_ops->clone)
+> +		icsk->icsk_ulp_ops->clone(req, newsk, priority);
+> +}
+> +
+>  /**
+>   *	inet_csk_clone_lock - clone an inet socket, and lock its clone
+>   *	@sk: the socket to clone
+> @@ -810,7 +822,7 @@ struct sock *inet_csk_clone_lock(const struct sock *s=
+k,
+>  		/* Deinitialize accept_queue to trap illegal accesses. */
+>  		memset(&newicsk->icsk_accept_queue, 0, sizeof(newicsk->icsk_accept_que=
+ue));
+>  =
 
-the sk_is_mptcp() question.
+> -		tcp_clone_ulp(req, newsk, priority);
+> +		inet_clone_ulp(req, newsk, priority);
+>  =
 
---
-Mat Martineau
-Intel
---===============5655104588033626792==--
+>  		security_inet_csk_clone(newsk, req);
+>  	}
+> diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+> index e7a2589d69ee..12ab5db2b71c 100644
+> --- a/net/ipv4/tcp_ulp.c
+> +++ b/net/ipv4/tcp_ulp.c
+> @@ -130,18 +130,6 @@ void tcp_cleanup_ulp(struct sock *sk)
+>  	icsk->icsk_ulp_ops =3D NULL;
+>  }
+>  =
+
+> -void tcp_clone_ulp(const struct request_sock *req, struct sock *newsk,
+> -		   const gfp_t priority)
+> -{
+> -	struct inet_connection_sock *icsk =3D inet_csk(newsk);
+> -
+> -	if (!icsk->icsk_ulp_ops)
+> -		return;
+> -
+> -	if (icsk->icsk_ulp_ops->clone)
+> -		icsk->icsk_ulp_ops->clone(req, newsk, priority);
+> -}
+> -
+>  static int __tcp_set_ulp(struct sock *sk, const struct tcp_ulp_ops *ulp_=
+ops)
+>  {
+>  	struct inet_connection_sock *icsk =3D inet_csk(sk);
+
+LGTM, thanks!
+
+Paolo
+
+--===============6065341041624527406==--
