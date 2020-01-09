@@ -1,76 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============4971972872509947297=="
+Content-Type: multipart/mixed; boundary="===============1909264516294451290=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 7/7] Squash-to: "mptcp: Add handling of incoming
- MP_JOIN requests"
-Date: Thu, 09 Jan 2020 17:41:38 +0100
-Message-ID: <b0dc34126d7db4ffada2db09ec8fdd6e945be394.1578586485.git.pabeni@redhat.com>
-In-Reply-To: cover.1578586484.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH 1/2] protocol: pm callback must be done after msk
+ state is set up
+Date: Thu, 09 Jan 2020 17:53:37 +0100
+Message-ID: <20200109165337.GE795@breakpoint.cc>
+In-Reply-To: 6826dc39601220d17b792204b34dc1414e163a7f.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3333
+X-UID: 3334
 
---===============4971972872509947297==
+--===============1909264516294451290==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-ensure fallback is fatal for MP_JOIN, copying with
-changes introduced by previous squash-to patches
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> On Thu, 2020-01-09 at 15:31 +0100, Florian Westphal wrote:
+> > Squashto: mptcp: Add path manager interface
+> > =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+> > current location calls this when msk->token is still 0, so pm worker
+> > will never find the mptcp socket it should be using.
+> > =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 4e846b4e0b81..49d430479124 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -256,6 +256,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_subflow_request_sock *subflow_req;
- 	struct tcp_options_received opt_rx;
-+	bool fallback_is_fatal =3D false;
- 	struct sock *child;
- =
+> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > ---
+> >  net/mptcp/protocol.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > =
 
- 	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener->c=
-onn);
-@@ -280,6 +281,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 			subflow_req->mp_capable =3D 0;
- 		}
- 	} else if (subflow_req->mp_join) {
-+		fallback_is_fatal =3D true;
- 		opt_rx.mptcp.mp_join =3D 0;
- 		mptcp_get_options(skb, &opt_rx);
- 		if (!opt_rx.mptcp.mp_join ||
-@@ -294,11 +296,14 @@ static struct sock *subflow_syn_recv_sock(const struc=
-t sock *sk,
- 	if (child && *own_req) {
- 		struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(child);
- =
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 475ef4c90460..a33c4c58de78 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -1371,8 +1371,6 @@ void mptcp_finish_connect(struct sock *ssk)
+> >  =
 
--		/* we have null ctx on TCP fallback, not fatal on MPC
--		 * handshake
-+		/* we have null ctx on TCP fallback, which is fatal on
-+		 * MPJ handshake
- 		 */
--		if (!ctx)
-+		if (!ctx) {
-+			if (fallback_is_fatal)
-+				goto close_child;
- 			return child;
-+		}
- =
+> >  	pr_debug("msk=3D%p, token=3D%u", sk, subflow->token);
+> >  =
 
- 		if (ctx->mp_capable) {
- 			if (mptcp_token_new_accept(ctx->token))
--- =
+> > -	mptcp_pm_new_connection(msk, 0);
+> > -
+> >  	mptcp_crypto_key_sha(subflow->remote_key, NULL, &ack_seq);
+> >  	ack_seq++;
+> >  	subflow->map_seq =3D ack_seq;
+> > @@ -1389,6 +1387,8 @@ void mptcp_finish_connect(struct sock *ssk)
+> >  	WRITE_ONCE(msk->ack_seq, ack_seq);
+> >  	WRITE_ONCE(msk->can_ack, 1);
+> >  	atomic64_set(&msk->snd_una, msk->write_seq);
+> > +
+> > +	mptcp_pm_new_connection(msk, 0);
+> >  }
+> >  =
 
-2.21.0
+> >  static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
+> =
 
---===============4971972872509947297==--
+> LGTM, thanks Florian! (This was fast!)
+> =
+
+> Does this fix the MP_JOIN handshake or is there any other pending known
+> issue ? (beyond the list corruption fixed by the next patch...)
+
+Yes and yes.  Things only work when slowing down the test prog to give
+the join time to complete.
+
+Else, this hits the 'is parent not established anymore' check
+in mptcp_finish_join.  This also gives a memory leak of the socket.
+--===============1909264516294451290==--
