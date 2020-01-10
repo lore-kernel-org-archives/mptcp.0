@@ -1,51 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============6281419039571839566=="
+Content-Type: multipart/mixed; boundary="===============3306436807857679579=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v7 00/11] Multipath TCP: Prerequisites
-Date: Thu, 09 Jan 2020 18:44:01 -0800
-Message-ID: <20200109.184401.74056974361053845.davem@davemloft.net>
-In-Reply-To: 20200109155924.30122-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] packetdrill first breath on MPTCP v1
+Date: Fri, 10 Jan 2020 11:13:39 +0100
+Message-ID: <ba7ac027b8304885f85a101f3378dc2b055a9663.camel@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3341
+X-UID: 3342
 
---===============6281419039571839566==
+--===============3306436807857679579==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Date: Thu,  9 Jan 2020 07:59:13 -0800
+hello,
 
- ...
-> The MPTCP upstreaming community has been collaborating on an
-> upstreamable MPTCP implementation that complies with RFC 8684. A minimal
-> set of features to comply with the specification involves a sizeable set
-> of code changes, so David requested that we split this work in to
-> multiple, smaller patch sets to build up MPTCP infrastructure.
-> =
+as mentioned in yesterday's public meeting, I'm hosting on my github [1] a
+rebase of Cristoph's packetdrill work [2] that uses the latest code
+released by Google.
 
-> The minimal MPTCP feature set we are proposing for review in the v5.6
-> timeframe begins with these three parts:
-> =
+This tree contains some small modifications to support IPPROTO_MPTCP
+sockets [3], and to support v1 handshake [4], trying to preserve
+testability of v0 protocol. In the next days, I will try to add the logic
+that uses SHA256 in place of SHA1 when protocol version is 1, so that also
+DSS option can be validated as well.
 
-> Part 1 (this patch set): MPTCP prerequisites. Introduce some MPTCP
-> definitions, additional ULP and skb extension features, TCP option space
-> checking, and a few exported symbols.
-> =
+Any feedback, any suggestion, any issue, all are welcome ;)
 
-> Part 2: Single subflow implementation and self tests.
-> =
+-- =
 
-> Part 3: Switch from MPTCP v0 (RFC 6824) to MPTCP v1 (new RFC 8684,
-> publication expected in the next few days).
-> =
+davide
 
-> Additional patches for multiple subflow support, path management, active
-> backup, and other features are in the pipeline for submission after
-> making progress with the above reviews.
- ...
+*** notes ***
 
-Series applied to net-next.
---===============6281419039571839566==--
+1) smoketests of the mp_capable handshake are available in the
+'gtests/net/mptcp' folder. I observe systematic failures when IPv4-mapped-
+v6 tests are ran: =
+
+
+FAIL [/root/packetdrill-new/gtests/net/mptcp/mp_capable/v1_mp_capable_bind_=
+no_cs.pkt (ipv4-mapped-v6)]                  =
+
+stdout:                                                                    =
+                                                                           =
+        =
+
+stderr:                                                                    =
+                                                                           =
+        =
+
+v1_mp_capable_bind_no_cs.pkt:10: error handling packet: live packet field i=
+pv4_total_length: expected: 64 (0x40) vs actual: 52 (0x34)
+script packet:  0.000030 S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscal=
+e 8,mp_capable v1 flags: |H| sender_key: 0>
+actual packet: -0.000001 S. 0:0(0) ack 1 win 65535 <mss 1460,nop,nop,sackOK=
+,nop,wscale 8>
+
+it appears that the fallback to TCP happens when the very first packet is
+received by the kernel. Moreover, Paolo reports that a systematic KASAN
+splat is visible when IPv4 mapped-v6 tests are ran. I didn't check this
+personally, but I trust him enough ;)
+
+2) I (intentionally) didn't integrate yet the support for mp_join. Before
+doing this, I think we should agree with the packetdrill "official"
+community on a way to test multiple sockets simultaneously, even
+"interleaving" the 3WHS (that, AFAIU, is not possible with the current
+code). =
+
+
+*** links ****
+
+[1] https://github.com/dcaratti/packetdrill
+[2] https://github.com/cpaasch/packetdrill_mptcp
+[3] https://github.com/dcaratti/packetdrill/tree/mptcp-net-next
+[4] https://github.com/dcaratti/packetdrill/commits/mpcapable_v1
+
+=20
+
+--===============3306436807857679579==--
