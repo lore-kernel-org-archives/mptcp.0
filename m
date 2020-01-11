@@ -1,81 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============3306436807857679579=="
+Content-Type: multipart/mixed; boundary="===============4338445689243932084=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] packetdrill first breath on MPTCP v1
-Date: Fri, 10 Jan 2020 11:13:39 +0100
-Message-ID: <ba7ac027b8304885f85a101f3378dc2b055a9663.camel@redhat.com>
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: add basic kselftest for mptcp"
+Date: Fri, 10 Jan 2020 17:10:57 -0800
+Message-ID: <20200111011057.19143-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3342
+X-UID: 3343
 
---===============3306436807857679579==
+--===============4338445689243932084==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-hello,
+I was helping the LKP/0-day team with information on running our tests,
+and noticed some missing config options.
 
-as mentioned in yesterday's public meeting, I'm hosting on my github [1] a
-rebase of Cristoph's packetdrill work [2] that uses the latest code
-released by Google.
+It looks like a toss-up between 'm' and 'y' for these, so I set values
+based on similar entries in tools/testing/selftests/net/config
 
-This tree contains some small modifications to support IPPROTO_MPTCP
-sockets [3], and to support v1 handshake [4], trying to preserve
-testability of v0 protocol. In the next days, I will try to add the logic
-that uses SHA256 in place of SHA1 when protocol version is 1, so that also
-DSS option can be validated as well.
+Did I miss any others that aren't in the default config?
 
-Any feedback, any suggestion, any issue, all are welcome ;)
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ tools/testing/selftests/net/mptcp/config | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selft=
+ests/net/mptcp/config
+index 463f0514577d..2499824d9e1c 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -1,2 +1,4 @@
+ CONFIG_MPTCP=3Dy
+ CONFIG_MPTCP_IPV6=3Dy
++CONFIG_VETH=3Dy
++CONFIG_NET_SCH_NETEM=3Dm
 -- =
 
-davide
+2.24.1
 
-*** notes ***
-
-1) smoketests of the mp_capable handshake are available in the
-'gtests/net/mptcp' folder. I observe systematic failures when IPv4-mapped-
-v6 tests are ran: =
-
-
-FAIL [/root/packetdrill-new/gtests/net/mptcp/mp_capable/v1_mp_capable_bind_=
-no_cs.pkt (ipv4-mapped-v6)]                  =
-
-stdout:                                                                    =
-                                                                           =
-        =
-
-stderr:                                                                    =
-                                                                           =
-        =
-
-v1_mp_capable_bind_no_cs.pkt:10: error handling packet: live packet field i=
-pv4_total_length: expected: 64 (0x40) vs actual: 52 (0x34)
-script packet:  0.000030 S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscal=
-e 8,mp_capable v1 flags: |H| sender_key: 0>
-actual packet: -0.000001 S. 0:0(0) ack 1 win 65535 <mss 1460,nop,nop,sackOK=
-,nop,wscale 8>
-
-it appears that the fallback to TCP happens when the very first packet is
-received by the kernel. Moreover, Paolo reports that a systematic KASAN
-splat is visible when IPv4 mapped-v6 tests are ran. I didn't check this
-personally, but I trust him enough ;)
-
-2) I (intentionally) didn't integrate yet the support for mp_join. Before
-doing this, I think we should agree with the packetdrill "official"
-community on a way to test multiple sockets simultaneously, even
-"interleaving" the 3WHS (that, AFAIU, is not possible with the current
-code). =
-
-
-*** links ****
-
-[1] https://github.com/dcaratti/packetdrill
-[2] https://github.com/cpaasch/packetdrill_mptcp
-[3] https://github.com/dcaratti/packetdrill/tree/mptcp-net-next
-[4] https://github.com/dcaratti/packetdrill/commits/mpcapable_v1
-
-=20
-
---===============3306436807857679579==--
+--===============4338445689243932084==--
