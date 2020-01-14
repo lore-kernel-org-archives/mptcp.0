@@ -1,61 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============1691942698378130085=="
+Content-Type: multipart/mixed; boundary="===============3661215448763393633=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] subflow: remove unneded memory barriers
-Date: Wed, 15 Jan 2020 00:19:49 +0100
-Message-ID: <20200114231949.20106-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH] protocol: add comment to smb_mb__after_atomic
+Date: Wed, 15 Jan 2020 00:28:00 +0100
+Message-ID: <20200114232800.20658-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3356
+X-UID: 3357
 
---===============1691942698378130085==
+--===============3661215448763393633==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: mptcp: Implement MPTCP receive path
+squashto: mptcp: add subflow write space signalling and mptcp_poll
 
-The bit set operation has no prior dependencies, so
-smp_mb__before_atomic() is not needed.
-
-It has no followup depenency: the woken task will always see the
-bit set, plus wakeup code (called via sk_data_ready) acquires a spinlock.
+msk->flags and sock->flags depend one one another, we first need to
+disable SEND_SPACE flag (no more wmem available for sending), then
+enable the write_space callbacks in the tcp core.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/subflow.c | 4 ----
- 1 file changed, 4 deletions(-)
+ net/mptcp/protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index abd97d1a8645..ae9173040f17 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -712,9 +712,7 @@ static void subflow_data_ready(struct sock *sk)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6df4eb20916c..5dfca0aa7ce4 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -547,6 +547,7 @@ static void ssk_check_wmem(struct mptcp_sock *msk, stru=
+ct sock *ssk)
+ 	if (sock) {
+ 		clear_bit(MPTCP_SEND_SPACE, &msk->flags);
+ 		smp_mb__after_atomic();
++		/* set NOSPACE only after clearing SEND_SPACE flag */
+ 		set_bit(SOCK_NOSPACE, &sock->flags);
  	}
- =
-
- 	if (mptcp_subflow_data_available(sk)) {
--		smp_mb__before_atomic();
- 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
--		smp_mb__after_atomic();
- =
-
- 		parent->sk_data_ready(parent);
- 	}
-@@ -869,9 +867,7 @@ static void subflow_state_change(struct sock *sk)
- 	 * the data available machinery here.
- 	 */
- 	if (parent && subflow->mp_capable && mptcp_subflow_data_available(sk)) {
--		smp_mb__before_atomic();
- 		set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
--		smp_mb__after_atomic();
- =
-
- 		parent->sk_data_ready(parent);
- 	}
+ }
 -- =
 
 2.24.1
 
---===============1691942698378130085==--
+--===============3661215448763393633==--
