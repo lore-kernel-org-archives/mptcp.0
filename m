@@ -1,63 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============5510914125602489292=="
+Content-Type: multipart/mixed; boundary="===============8258690448995174640=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] subflow: get a ref to the current net
-Date: Tue, 14 Jan 2020 22:46:13 +0100
-Message-ID: <43354232f69ebf85d4e54e822f8019930b1ccb57.1579038306.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 9th of January 2020
+Date: Tue, 14 Jan 2020 15:12:21 -0800
+Message-ID: <alpine.OSX.2.21.2001141504220.22998@ndoyal-mobl1.amr.corp.intel.com>
+In-Reply-To: a1ec0492-40c0-97bf-f4c2-860db5199c1f@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3354
+X-UID: 3355
 
---===============5510914125602489292==
+--===============8258690448995174640==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP subflows are created via sock_create_kern(), so they
-do not held any references to the current network namespace.
 
-The TCP timer infrastructure assumes the current net is always
-alive/goes away after the relevant sock.
+On Thu, 9 Jan 2020, Matthieu Baerts wrote:
 
-Due to the above packetdrill is able to trigger UAF with some
-simple scenario (and fast netns tear-down).
+> Netdev 0x14:
+>    - Submission deadline 15-Jan-2020. =
 
-Acquire a reference to the current net at creation time.
+> https://netdevconf.info/0x14/submit-proposal.html
+>    - Conference 17-20 March
+>    - Recycled talks not accepted
+>    - Ideas?:
+>        - Practical MPTCP - interoperability and effects of v1 protocol =
 
-Note: using __sock_create(/*...*/, 0) will break lockdep (kernel
-socket get a different lockdep key).
+> choice, userspace API (converting apps, socket option limitations/details=
+), =
 
-Squash-to: "mptcp: Associate MPTCP context with TCP socket"
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-RFC -> v1:
- - no changes, just added squash-to tag
----
- net/mptcp/subflow.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> current upstream feature set
+>        - Selftest & MPTCP
+>        - mptcpd (part of userspace API?)
+>    - Mat and Peter are not "far", they might go
+>    - harder for people in Europe
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 9e2ff5b40d13..96e156027f85 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -27,6 +27,11 @@ int mptcp_subflow_create_socket(struct sock *sk, struct =
-socket **new_sock)
- 		return err;
- =
+To follow up on a possible netdev conf talk, Ossama and I are thinking of =
 
- 	lock_sock(sf->sk);
-+	/* kern socket do not acquire by default net ref, but TCP timer need it
-+	 */
-+	sf->sk->sk_net_refcnt =3D 1;
-+	get_net(net);
-+	this_cpu_add(*net->core.sock_inuse, 1);
- 	err =3D tcp_set_ulp(sf->sk, "mptcp");
- 	release_sock(sf->sk);
- =
+the following proposal. Feedback welcome! The submission deadline is =
 
--- =
+coming up tomorrow.
 
-2.21.0
+"""
+Title TBD (MPTCP Upstream for users, admins, and distros ?)
 
---===============5510914125602489292==--
+Multipath TCP patches are now being merged for inclusion in the Linux =
+
+kernel, v5.6 and later. A community effort has been ongoing to develop an =
+
+upstream-friendly kernel patch set, with out-of-tree patches available =
+
+that implement MPTCP capability according to RFC 8684 (MPTCP =
+
+v1).=C2=A0Complementing this set of kernel patches is a user-space referenc=
+e =
+
+implementation for the MPTCP generic netlink API called the Multipath TCP =
+
+Daemon, i.e. "mptcpd". The Multipath TCP Daemon provides an extensible =
+
+framework for MPTCP path management.
+
+There are several practical considerations for network developers, system =
+
+administrators, and distribution maintainers who want to use or enable =
+
+MPTCP for their applications or systems:
+
+* Coordination with userspace for operating system, platform, and =
+
+application integration, as well as potentially enabling support for =
+
+user-space path management by configuring the kernel appropriately, and =
+
+installing a MPTCP path management daemon such as mptcpd
+
+* Compatibility between upstream Linux MPTCP (v1 protocol) and other =
+
+implementations
+
+* Opting in to MPTCP with the socket API
+
+* Phased feature introduction for code review and what that means for =
+
+server and client devices over time
+
+We will cover these kernel considerations, report on upstream merge =
+
+progress to date, and introduce the Multipath TCP Daemon to the Linux =
+
+networking community.
+"""
+
+
+--
+Mat Martineau
+Intel
+
+--===============8258690448995174640==--
