@@ -1,34 +1,158 @@
-Content-Type: multipart/mixed; boundary="===============4383516319318468907=="
+Content-Type: multipart/mixed; boundary="===============2915055032319686892=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 16 January 2020 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 15 Jan 2020 23:00:55 +0100
-Message-ID: <a8486777-bfea-d18f-4f71-64f8303efca4@tessares.net>
+Subject: [MPTCP] Re: [PATCH v2 0/7] fallback to TCP on ulp clone failure
+Date: Wed, 15 Jan 2020 23:01:23 +0100
+Message-ID: <b0618618-e17e-debf-e42d-7b542b43962f@tessares.net>
+In-Reply-To: alpine.OSX.2.21.2001091426500.47291@fepiepan-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3366
+X-UID: 3367
 
---===============4383516319318468907==
+--===============2915055032319686892==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+Hi Paolo, Mat,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-today.
+On 09/01/2020 23:27, Mat Martineau wrote:
+> =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20200116
+> On Thu, 9 Jan 2020, Paolo Abeni wrote:
+> =
 
-Feel free to add/modify topics!
+>> This series do real TCP fallback for passive MPTCP connection when ULP =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+>> clone
+>> fails: clear the 'is_mptcp' flag, reset overridden callback, icsk ops and
+>> clear the ULP ctx.
+>>
+>> Additionally uses the 'is_mptcp' flag to check for fallback in more =
 
-Speak to you tomorrow!
-Matthieu
+>> places,
+>> as suggested by Mat (patches 2, 4), cope with NULL ctx in
+>> subflow_syn_recv_sock() (patches 3, 7), and restore TCP callback on
+>> later fallback, too (patch 6) for consistency.
+>>
+>> This still uses function pointers to store all the overriden TCP =
+
+>> callbacks,
+>> is simpler then other alternatives but waste some space inside the =
+
+>> subflow
+>> struct.
+>>
+>> The rebased tree is available at:
+>>
+>> https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v7.1
+>>
+>> This is on top of export branch(a)b50a38e09bbc6182136836564945a323641a50=
+39
+>> (tag: export/20200109T154238)
+>>
+>> v1 -> v2
+>> - uses sk_is_mptcp() when possible (Mat)
+>> - drop rendundant checks (Mat)
+>>
+>> options.c=C2=A0 |=C2=A0=C2=A0=C2=A0 7 ------
+>> protocol.c |=C2=A0=C2=A0 20 ++++++++---------
+>> protocol.h |=C2=A0=C2=A0 15 ++++++++++++-
+>> subflow.c=C2=A0 |=C2=A0=C2=A0 68 =
+
+>> ++++++++++++++++++++++++++++++++++++++++---------------------
+>> 4 files changed, 68 insertions(+), 42 deletions(-)
+> =
+
+> Hi Paolo -
+> =
+
+> Thanks for the fixes from v1. Looks good to me.
+
+Thank you for the patches and the reviews!
+
+Please check the "/!\" below
+
+- e0350744cafc: "squashed" patch 1/7 in "mptcp: Handle MP_CAPABLE =
+
+options for outgoing connections"
+- 65850c198790: conflict in t/mptcp-Add-key-generation-and-token-tree
+- 7a3cef638c7b: conflict in t/mptcp-Implement-MPTCP-receive-path
+- fba261bbcdd9: conflict in t/mptcp-process-MP_CAPABLE-data-option
+   /!\ comment is re-added below
+- af9296ffbeec: conflict in t/mptcp-cope-with-later-TCP-fallback
+- 55dbb555ec6c: conflict in =
+
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+   /!\ I had to modify the first condition in subflow_ulp_clone()
+- 7e25825cceea: mptcp:subflow: re-add removed comment in =
+
+t/mptcp-process-MP_CAPABLE-data-option
+- 5593f3432c76] Revert "mptcp:subflow: re-add removed comment" in =
+
+t/mptcp-Add-handling-of-incoming-MP_JOIN-
+- 5c6690820e0a..513c7bff2864: result
+
+- df2d5cfd1573: "squashed" patch 2/7 in "mptcp: Create SUBFLOW socket =
+
+for incoming connections"
+- b146e9ab6e2a: conflict in =
+
+t/mptcp-recvmsg-can-drain-data-from-multiple-subflows
+- 6bc74228e82e: conflict in t/mptcp-increment-MIB-counters-in-a-few-places
+- 513c7bff2864..dbf315c33403: result
+
+- 3abec1c771df: "squashed" patch 3/7 in "mptcp: Add key generation and =
+
+token tree"
+- dbf315c33403..72aec0bc2ad9: result
+
+- ecde144ffa56: "squashed" patch 4/7 in "mptcp: Write MPTCP DSS headers =
+
+to outgoing data packets"
+- 006e52131d4f: conflict in =
+
+t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
+- b0ae53ced8cd: conflict in t/mptcp-Add-ADD_ADDR-handling
+- d099fdd0460f: conflict in =
+
+t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+- 72aec0bc2ad9..1f5cf153a4b1: result
+
+- 73afeb8aabbd: "squashed" patch 5/7 in "mptcp: Implement MPTCP receive =
+
+path"
+- 6259583be5a2: conflict in t/mptcp-Add-path-manager-interface
+- 23f44e1993f4: conflict in =
+
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+   /!\ tcp_state_change and tcp_write_space have been set for both like =
+
+in mptcp_net-next_export_v6.2
+- 49007086b792: conflict in =
+
+t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+- 1f5cf153a4b1..803fb6ea75b0: result
+
+- 5724921dc089: "squashed" patch 6/7 in "mptcp: cope with later TCP =
+
+fallback"
+   /!\ the second part of the patch was already applied in a previous =
+
+conflict resolution
+- 803fb6ea75b0..02e14c69386b: result
+
+- aa031bb3cab2: "squashed" patch 7/7 in "mptcp: Add handling of incoming =
+
+MP_JOIN requests"
+- 6d39473b63da: "Signed-off-by" + "Co-developed-by"
+- 02e14c69386b..f15fa3697153: result
+
+Compilation is OK but tests are in progress.
+
+Cheers,
+Matt
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -36,4 +160,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4383516319318468907==--
+--===============2915055032319686892==--
