@@ -1,68 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============6513924396485874168=="
+Content-Type: multipart/mixed; boundary="===============3001171974320913143=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] protocol: add comment to smb_mb__after_atomic
-Date: Tue, 14 Jan 2020 17:44:19 -0800
-Message-ID: <alpine.OSX.2.21.2001141741390.26562@ndoyal-mobl1.amr.corp.intel.com>
-In-Reply-To: 20200114232800.20658-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH] Handle subflow join failures
+Date: Wed, 15 Jan 2020 09:41:58 +0100
+Message-ID: <a9a3e3518641f1ddc9721438a4fa117ccb911e34.camel@redhat.com>
+In-Reply-To: 20200114135705.4019-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3359
+X-UID: 3360
 
---===============6513924396485874168==
+--===============3001171974320913143==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2020-01-14 at 14:57 +0100, Florian Westphal wrote:
+> squashto: mptcp: Add handling of outgoing MP_JOIN requests
+> =
 
-On Wed, 15 Jan 2020, Florian Westphal wrote:
+> When the join request fails we should send a reset and also
+> close the socket, we can't do anything useful with such a
+> connection.
+> =
 
-> squashto: mptcp: add subflow write space signalling and mptcp_poll
->
-> msk->flags and sock->flags depend one one another, we first need to
-> disable SEND_SPACE flag (no more wmem available for sending), then
-> enable the write_space callbacks in the tcp core.
-
-This dependency between msk->flags and sock->flags would also explain the =
-
-barrier in subflow_write_space(), correct? That barrier is also added in =
-
-this 'squashto' commit, and could benefit from a similar comment since the =
-
-access to sock->flags is hidden inside sk_stream_write_space().
-
-Mat
-
-
->
 > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> =
+
 > ---
-> net/mptcp/protocol.c | 1 +
-> 1 file changed, 1 insertion(+)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6df4eb20916c..5dfca0aa7ce4 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -547,6 +547,7 @@ static void ssk_check_wmem(struct mptcp_sock *msk, st=
-ruct sock *ssk)
-> 	if (sock) {
-> 		clear_bit(MPTCP_SEND_SPACE, &msk->flags);
-> 		smp_mb__after_atomic();
-> +		/* set NOSPACE only after clearing SEND_SPACE flag */
-> 		set_bit(SOCK_NOSPACE, &sock->flags);
-> 	}
-> }
-> -- =
+>  net/mptcp/subflow.c | 22 +++++++++++++++-------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
+> =
 
-> 2.24.1
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index f69a75f6bd6e..03f4604e2cb7 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -187,10 +187,13 @@ static void subflow_finish_connect(struct sock *sk,=
+ const struct sk_buff *skb)
+>  =
 
---
-Mat Martineau
-Intel
---===============6513924396485874168==--
+>  	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
+>  =
+
+> -	if (!subflow->conn)
+> +	if (subflow->conn_finished || !tcp_sk(sk)->is_mptcp)
+>  		return;
+>  =
+
+> -	if (subflow->mp_capable && !subflow->conn_finished) {
+> +	if (!subflow->conn)
+> +		goto do_reset;
+> +
+> +	if (subflow->mp_capable) {
+>  		pr_debug("subflow=3D%p, remote_key=3D%llu", mptcp_subflow_ctx(sk),
+>  			 subflow->remote_key);
+>  		mptcp_finish_connect(sk);
+> @@ -200,14 +203,13 @@ static void subflow_finish_connect(struct sock *sk,=
+ const struct sk_buff *skb)
+>  			pr_debug("synack seq=3D%u", TCP_SKB_CB(skb)->seq);
+>  			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
+>  		}
+> -	} else if (subflow->mp_join && !subflow->conn_finished) {
+> +	} else if (subflow->mp_join) {
+>  		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u",
+>  			 subflow, subflow->thmac,
+>  			 subflow->remote_nonce);
+>  		if (!subflow_thmac_valid(subflow)) {
+>  			subflow->mp_join =3D 0;
+> -			// @@ need to trigger RST
+> -			return;
+> +			goto do_reset;
+>  		}
+>  =
+
+>  		mptcp_crypto_hmac_sha(subflow->local_key, subflow->remote_key,
+> =
+
+
+> @@ -218,8 +220,14 @@ static void subflow_finish_connect(struct sock *sk, =
+const struct sk_buff *skb)
+>  		if (skb)
+>  			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
+>  =
+
+> -		if (mptcp_finish_join(sk))
+> -			subflow->conn_finished =3D 1;
+> +		if (!mptcp_finish_join(sk))
+> +			goto do_reset;
+> +
+> +		subflow->conn_finished =3D 1;
+> +	} else {
+> +do_reset:
+> +		tcp_send_active_reset(sk, GFP_ATOMIC);
+> +		tcp_done(sk);
+>  	}
+>  }
+
+LGTM! It's nice to remove that old todo ;)
+
+Thank you!
+
+Paolo
+
+--===============3001171974320913143==--
