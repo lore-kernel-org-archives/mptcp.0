@@ -1,39 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============1361302452221866637=="
+Content-Type: multipart/mixed; boundary="===============7964891045066731205=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Handle subflow join failures
-Date: Thu, 16 Jan 2020 17:43:41 +0100
-Message-ID: <17efebcc-626c-33b6-67a2-c7cb4876e3a9@tessares.net>
-In-Reply-To: a9a3e3518641f1ddc9721438a4fa117ccb911e34.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] subflow: get a ref to the current net
+Date: Thu, 16 Jan 2020 17:47:32 +0100
+Message-ID: <63db0bce-8a99-704b-18d5-a3045b98c8e2@tessares.net>
+In-Reply-To: 43354232f69ebf85d4e54e822f8019930b1ccb57.1579038306.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3378
+X-UID: 3379
 
---===============1361302452221866637==
+--===============7964891045066731205==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Paolo,
+Hi Paolo, Mat,
 
-On 15/01/2020 09:41, Paolo Abeni wrote:
-> On Tue, 2020-01-14 at 14:57 +0100, Florian Westphal wrote:
->> squashto: mptcp: Add handling of outgoing MP_JOIN requests
->>
->> When the join request fails we should send a reset and also
->> close the socket, we can't do anything useful with such a
->> connection.
+On 14/01/2020 22:46, Paolo Abeni wrote:
+> The MPTCP subflows are created via sock_create_kern(), so they
+> do not held any references to the current network namespace.
+> =
 
-[...]
+> The TCP timer infrastructure assumes the current net is always
+> alive/goes away after the relevant sock.
+> =
 
-> LGTM! It's nice to remove that old todo ;)
-Thank you for the patch and the review!
+> Due to the above packetdrill is able to trigger UAF with some
+> simple scenario (and fast netns tear-down).
+> =
 
-- cc94bbe4718f: "squashed" in "mptcp: Add handling of outgoing MP_JOIN =
+> Acquire a reference to the current net at creation time.
+> =
 
-requests"
-- 704e4fa8a50c..4fe8bda1127e: result
+> Note: using __sock_create(/*...*/, 0) will break lockdep (kernel
+> socket get a different lockdep key).
+> =
+
+> Squash-to: "mptcp: Associate MPTCP context with TCP socket"
+
+Thank you for the patch and the review (in the RFC thread):
+
+- beab459af74c: "squashed" in "mptcp: Associate MPTCP context with TCP =
+
+socket"
+- 4fe8bda1127e..41b3253570a8: result
 
 Tests + export will be launched soon!
 
@@ -46,4 +57,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1361302452221866637==--
+--===============7964891045066731205==--
