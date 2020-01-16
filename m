@@ -1,114 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============2401747889331464439=="
+Content-Type: multipart/mixed; boundary="===============4152982973692676121=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1] mptcp: handle ipv4-mapped ipv6 address.
-Date: Thu, 16 Jan 2020 10:20:13 +0100
-Message-ID: <5acd242e52ebe981e06148190ef43b8213207fe1.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.21.2001151844500.35155@ndoyal-mobl1.amr.corp.intel.com
+Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: move from sha1 (v0) to
+ sha256 (v1)"
+Date: Thu, 16 Jan 2020 11:12:06 +0100
+Message-ID: <ba44d0a9f9045d296ebceb8ddbfd204bbac27a68.1579169521.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3372
+X-UID: 3373
 
---===============2401747889331464439==
+--===============4152982973692676121==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-01-15 at 19:00 -0800, Mat Martineau wrote:
-> On Wed, 15 Jan 2020, Paolo Abeni wrote:
-> =
+Fixes the late_initcall signature, as reported by kbuildbot
 
-> > The TCP code unconditionally overwrite in a few places 'icsk->icsk_af_o=
-ps',
-> > which lead to the wrong oops being called for ipv4-mapped ipv6 address.
-> > e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
-> > tests.
-> > =
+Also rename the test function to be more consistent with other
+in-kernel test-cases.
 
-> > This patch try to address the issue building ipv4-mapped  mptcp icsk ops
-> > and using it when appropriate:
-> > - on connect() for ipv4 mapped address (and ev. failure)
-> > - on syn_recv_sock() - passive socket creation
-> > =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/crypto.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> > Additionally subflow_v6_conn_request() should call into subflow_v4_conn=
-_request()
-> > for ipv4 packets, otherwise we always fallback on passive socket bound =
-to
-> > ipv4 mapped addresses.
-> > =
+diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
+index 68f1758b96c2..40d1bb18fd60 100644
+--- a/net/mptcp/crypto.c
++++ b/net/mptcp/crypto.c
+@@ -120,7 +120,7 @@ static struct test_cast tests[] =3D {
+ 	},
+ };
+ =
 
-> > Note: this still touches af_ops twice. If we do differently, alike:
-> > =
+-static void __init crypto_test(void)
++static int __init test_mptcp_crypto(void)
+ {
+ 	char hmac[20], hmac_hex[41];
+ 	u32 nonce1, nonce2;
+@@ -145,7 +145,8 @@ static void __init crypto_test(void)
+ 		else
+ 			pr_info("test %d [ ok ]", i);
+ 	}
++	return 0;
+ }
+ =
 
-> > 	if (sk_is_mptcp(newsk))
-> > 		mptcp_handle_ipv6_mapped(sk, true);
-> > 	else
-> > 		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
-> > =
+-late_initcall(crypto_test);
++late_initcall(test_mptcp_crypto);
+ #endif
+-- =
 
-> > we need either:
-> > - additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
-> > as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
-> > initialization otherwise.
-> > - wrap the above mptcp_handle_ipv6_mapped() call under
-> > a preprocessor's conditional (CONFIG_MPTCP_IPV6).
-> =
+2.21.0
 
-> I was thinking something like:
-> =
-
-> static struct inet_connection_sock_af_ops *get_mapped_af_ops(sk)
-> {
->  	if (likely(!sk_is_mptcp(sk)))
->  		return &ipv6_mapped;
->  	else
->  		return mptcp_handle_ipv6_mapped(sk);
-> }
-> =
-
-> (with mptcp_handle_ipv6_mapped() modified to return the relevant pointer =
-
-> rather than assign to icsk_af_ops, and handling =
-
-> different CONFIG_MPTCP_IPV6 settings)
-
-
-Uhm... I don't like much 'mptcp_handle_ipv6_mapped()' being a sort of
-'getter' that also modify the status (it changes subflow af_ops).
-
-Additionally mptcp_handle_ipv6_mapped() must handle the
-
-#ifndef CONFIG_MPTCP_IPV6
-
-conditional. Likely it should never be called if !CONFIG_MPTCP_IPV6,
-but the overall code will be not so nice IMHO:
-
-static struct inet_connection_sock_af_ops *mptcp_handle_ipv6_mapped(sk)
-{
-#ifdef CONFIG_MPTCP_IPV6
-	// ... set subflow af_ops
-	return subflow_v6m_af_ops;
-#else
-	// ????
-	WARN_ON_ONCE(1);
-	return 0; // caller will crash
-	// or
-	// return &subflow_v6_af_ops // caller will crash too
-	// or
-	// return &subflow_v4_af_ops // ditto
-	// or
-	// return &ipv6_mapped; // needs additional 'export'
-	// or
-	// BUG_ON(1); // perhaps this ??? still not nice IMHO
-#endif
-}
-
-WDYT?
-
-Thanks,
-
-Paolo
-
---===============2401747889331464439==--
+--===============4152982973692676121==--
