@@ -1,188 +1,121 @@
-Content-Type: multipart/mixed; boundary="===============8007778951451366402=="
+Content-Type: multipart/mixed; boundary="===============5224241879094264014=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/7] fallback to TCP on ulp clone failure
-Date: Wed, 15 Jan 2020 23:23:36 +0100
-Message-ID: <e01e4069-25de-b5a1-4a98-4b8003f30b87@tessares.net>
-In-Reply-To: b0618618-e17e-debf-e42d-7b542b43962f@tessares.net
+Subject: [MPTCP] [PATCH] mptcp: Store 32 and 64-bit ACKs separately
+Date: Wed, 15 Jan 2020 17:13:09 -0800
+Message-ID: <20200116011309.3202-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3368
+X-UID: 3369
 
---===============8007778951451366402==
+--===============5224241879094264014==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 15/01/2020 23:01, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
-> =
+Will be useful optimizing struct mptcp_options_received.
 
-> On 09/01/2020 23:27, Mat Martineau wrote:
->>
->> On Thu, 9 Jan 2020, Paolo Abeni wrote:
->>
->>> This series do real TCP fallback for passive MPTCP connection when =
+squashto: Implement MPTCP receive path
 
->>> ULP clone
->>> fails: clear the 'is_mptcp' flag, reset overridden callback, icsk ops =
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ include/linux/tcp.h |  2 ++
+ net/mptcp/options.c | 24 ++++++++++++++++--------
+ 2 files changed, 18 insertions(+), 8 deletions(-)
 
->>> and
->>> clear the ULP ctx.
->>>
->>> Additionally uses the 'is_mptcp' flag to check for fallback in more =
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 0d00dad4b85d..6abf8d9f1a42 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -82,6 +82,8 @@ struct tcp_sack_block {
+ struct mptcp_options_received {
+ 	u64	sndr_key;
+ 	u64	rcvr_key;
++	u32	data_ack32;
++	u32	data_seq32;
+ 	u64	data_ack;
+ 	u64	data_seq;
+ 	u32	subflow_seq;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index db224e050666..b7f1892d8320 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -142,21 +142,23 @@ void mptcp_parse_option(const unsigned char *ptr, int=
+ opsize,
+ 		if (mp_opt->use_ack) {
+ 			if (mp_opt->ack64) {
+ 				mp_opt->data_ack =3D get_unaligned_be64(ptr);
++				pr_debug("data_ack=3D%llu", mp_opt->data_ack);
+ 				ptr +=3D 8;
+ 			} else {
+-				mp_opt->data_ack =3D get_unaligned_be32(ptr);
++				mp_opt->data_ack32 =3D get_unaligned_be32(ptr);
++				pr_debug("data_ack32=3D%u", mp_opt->data_ack32);
+ 				ptr +=3D 4;
+ 			}
+-
+-			pr_debug("data_ack=3D%llu", mp_opt->data_ack);
+ 		}
+ =
 
->>> places,
->>> as suggested by Mat (patches 2, 4), cope with NULL ctx in
->>> subflow_syn_recv_sock() (patches 3, 7), and restore TCP callback on
->>> later fallback, too (patch 6) for consistency.
->>>
->>> This still uses function pointers to store all the overriden TCP =
+ 		if (mp_opt->use_map) {
+ 			if (mp_opt->dsn64) {
+ 				mp_opt->data_seq =3D get_unaligned_be64(ptr);
++				pr_debug("data_seq=3D%llu", mp_opt->data_seq);
+ 				ptr +=3D 8;
+ 			} else {
+-				mp_opt->data_seq =3D get_unaligned_be32(ptr);
++				mp_opt->data_seq32 =3D get_unaligned_be32(ptr);
++				pr_debug("data_seq32=3D%u", mp_opt->data_seq32);
+ 				ptr +=3D 4;
+ 			}
+ =
 
->>> callbacks,
->>> is simpler then other alternatives but waste some space inside the =
+@@ -166,9 +168,8 @@ void mptcp_parse_option(const unsigned char *ptr, int o=
+psize,
+ 			mp_opt->data_len =3D get_unaligned_be16(ptr);
+ 			ptr +=3D 2;
+ =
 
->>> subflow
->>> struct.
->>>
->>> The rebased tree is available at:
->>>
->>> https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v7.1
->>>
->>> This is on top of export branch(a)b50a38e09bbc6182136836564945a323641a5=
-039
->>> (tag: export/20200109T154238)
->>>
->>> v1 -> v2
->>> - uses sk_is_mptcp() when possible (Mat)
->>> - drop rendundant checks (Mat)
->>>
->>> options.c=C2=A0 |=C2=A0=C2=A0=C2=A0 7 ------
->>> protocol.c |=C2=A0=C2=A0 20 ++++++++---------
->>> protocol.h |=C2=A0=C2=A0 15 ++++++++++++-
->>> subflow.c=C2=A0 |=C2=A0=C2=A0 68 =
+-			pr_debug("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u",
+-				 mp_opt->data_seq, mp_opt->subflow_seq,
+-				 mp_opt->data_len);
++			pr_debug("subflow_seq=3D%u data_len=3D%u",
++				 mp_opt->subflow_seq, mp_opt->data_len);
+ 		}
+ =
 
->>> ++++++++++++++++++++++++++++++++++++++++---------------------
->>> 4 files changed, 68 insertions(+), 42 deletions(-)
->>
->> Hi Paolo -
->>
->> Thanks for the fixes from v1. Looks good to me.
-> =
+ 		break;
+@@ -428,7 +429,10 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb,
+ 	memset(mpext, 0, sizeof(*mpext));
+ =
 
-> Thank you for the patches and the reviews!
-> =
+ 	if (mp_opt->use_map) {
+-		mpext->data_seq =3D mp_opt->data_seq;
++		if (mp_opt->dsn64)
++			mpext->data_seq =3D mp_opt->data_seq;
++		else
++			mpext->data_seq =3D mp_opt->data_seq32;
+ 		mpext->subflow_seq =3D mp_opt->subflow_seq;
+ 		mpext->data_len =3D mp_opt->data_len;
+ 		mpext->use_map =3D 1;
+@@ -436,6 +440,10 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb,
+ 	}
+ =
 
-> Please check the "/!\" below
-> =
-
-> - e0350744cafc: "squashed" patch 1/7 in "mptcp: Handle MP_CAPABLE =
-
-> options for outgoing connections"
-> - 65850c198790: conflict in t/mptcp-Add-key-generation-and-token-tree
-> - 7a3cef638c7b: conflict in t/mptcp-Implement-MPTCP-receive-path
-> - fba261bbcdd9: conflict in t/mptcp-process-MP_CAPABLE-data-option
->  =C2=A0 /!\ comment is re-added below
-> - af9296ffbeec: conflict in t/mptcp-cope-with-later-TCP-fallback
-> - 55dbb555ec6c: conflict in =
-
-> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
->  =C2=A0 /!\ I had to modify the first condition in subflow_ulp_clone()
-> - 7e25825cceea: mptcp:subflow: re-add removed comment in =
-
-> t/mptcp-process-MP_CAPABLE-data-option
-> - 5593f3432c76] Revert "mptcp:subflow: re-add removed comment" in =
-
-> t/mptcp-Add-handling-of-incoming-MP_JOIN-
-> - 5c6690820e0a..513c7bff2864: result
-> =
-
-> - df2d5cfd1573: "squashed" patch 2/7 in "mptcp: Create SUBFLOW socket =
-
-> for incoming connections"
-> - b146e9ab6e2a: conflict in =
-
-> t/mptcp-recvmsg-can-drain-data-from-multiple-subflows
-> - 6bc74228e82e: conflict in t/mptcp-increment-MIB-counters-in-a-few-places
-> - 513c7bff2864..dbf315c33403: result
-> =
-
-> - 3abec1c771df: "squashed" patch 3/7 in "mptcp: Add key generation and =
-
-> token tree"
-> - dbf315c33403..72aec0bc2ad9: result
-> =
-
-> - ecde144ffa56: "squashed" patch 4/7 in "mptcp: Write MPTCP DSS headers =
-
-> to outgoing data packets"
-> - 006e52131d4f: conflict in =
-
-> t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
-> - b0ae53ced8cd: conflict in t/mptcp-Add-ADD_ADDR-handling
-> - d099fdd0460f: conflict in =
-
-> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-> - 72aec0bc2ad9..1f5cf153a4b1: result
-> =
-
-> - 73afeb8aabbd: "squashed" patch 5/7 in "mptcp: Implement MPTCP receive =
-
-> path"
-> - 6259583be5a2: conflict in t/mptcp-Add-path-manager-interface
-> - 23f44e1993f4: conflict in =
-
-> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
->  =C2=A0 /!\ tcp_state_change and tcp_write_space have been set for both l=
-ike =
-
-> in mptcp_net-next_export_v6.2
-> - 49007086b792: conflict in =
-
-> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-> - 1f5cf153a4b1..803fb6ea75b0: result
-> =
-
-> - 5724921dc089: "squashed" patch 6/7 in "mptcp: cope with later TCP =
-
-> fallback"
->  =C2=A0 /!\ the second part of the patch was already applied in a previou=
-s =
-
-> conflict resolution
-> - 803fb6ea75b0..02e14c69386b: result
-> =
-
-> - aa031bb3cab2: "squashed" patch 7/7 in "mptcp: Add handling of incoming =
-
-> MP_JOIN requests"
-> - 6d39473b63da: "Signed-off-by" + "Co-developed-by"
-> - 02e14c69386b..f15fa3697153: result
-> =
-
-> Compilation is OK but tests are in progress.
-
-A small additional fix to allow the compilation of each exported commit:
-
-- 843c30e1447a: mptcp: fix compilation error in =
-
-t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
-- d27c2802c206: mptcp: fix compilation error in =
-
-t/mptcp-process-MP_CAPABLE-data-option
-- ed5fd3d9a3e8: conflict in t/mptcp-Add-path-manager-interface
-- f15fa3697153..a8dcfeb3a5c6: result (empty, normal)
-
-Tests are in progress.
-
-Cheers,
-Matt
+ 	if (mp_opt->use_ack) {
++		if (mp_opt->ack64)
++			mpext->data_ack =3D mp_opt->data_ack;
++		else
++			mpext->data_ack =3D mp_opt->data_ack32;
+ 		mpext->data_ack =3D mp_opt->data_ack;
+ 		mpext->use_ack =3D 1;
+ 		mpext->ack64 =3D mp_opt->ack64;
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8007778951451366402==--
+2.17.2
+
+--===============5224241879094264014==--
