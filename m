@@ -1,41 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============5511052401914342380=="
+Content-Type: multipart/mixed; boundary="===============1361302452221866637=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add basic kselftest for mptcp"
-Date: Thu, 16 Jan 2020 17:41:00 +0100
-Message-ID: <f48fdb45-eee6-0d89-1ae6-be7e54ef4ede@tessares.net>
-In-Reply-To: 15727d6eaf3ee36442eaf843da9e9f2bb49afdd6.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] Handle subflow join failures
+Date: Thu, 16 Jan 2020 17:43:41 +0100
+Message-ID: <17efebcc-626c-33b6-67a2-c7cb4876e3a9@tessares.net>
+In-Reply-To: a9a3e3518641f1ddc9721438a4fa117ccb911e34.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3377
+X-UID: 3378
 
---===============5511052401914342380==
+--===============1361302452221866637==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Paolo,
+Hi Florian, Paolo,
 
-On 13/01/2020 17:05, Paolo Abeni wrote:
-> On Fri, 2020-01-10 at 17:10 -0800, Mat Martineau wrote:
->> I was helping the LKP/0-day team with information on running our tests,
->> and noticed some missing config options.
+On 15/01/2020 09:41, Paolo Abeni wrote:
+> On Tue, 2020-01-14 at 14:57 +0100, Florian Westphal wrote:
+>> squashto: mptcp: Add handling of outgoing MP_JOIN requests
 >>
->> It looks like a toss-up between 'm' and 'y' for these, so I set values
->> based on similar entries in tools/testing/selftests/net/config
->>
->> Did I miss any others that aren't in the default config?
-> =
+>> When the join request fails we should send a reset and also
+>> close the socket, we can't do anything useful with such a
+>> connection.
 
-> I *think* this should be enough. LGTM, thanks!
+[...]
 
+> LGTM! It's nice to remove that old todo ;)
 Thank you for the patch and the review!
 
-- b034f1904b8e: "squashed" in "mptcp: add basic kselftest for mptcp"
-- b3a959af913e..704e4fa8a50c: result
+- cc94bbe4718f: "squashed" in "mptcp: Add handling of outgoing MP_JOIN =
 
-Tests + export will be launched soon
+requests"
+- 704e4fa8a50c..4fe8bda1127e: result
+
+Tests + export will be launched soon!
 
 Cheers,
 Matt
@@ -46,4 +46,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5511052401914342380==--
+--===============1361302452221866637==--
