@@ -1,213 +1,174 @@
-Content-Type: multipart/mixed; boundary="===============4109982246062501854=="
+Content-Type: multipart/mixed; boundary="===============8347614394106312819=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2] mptcp: handle ipv4-mapped ipv6 address.
-Date: Thu, 16 Jan 2020 23:29:30 +0100
-Message-ID: <e7f5b14540a28e29842f43587964ad111e40456c.1579213677.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: Part 2 - Cover Letter
+Date: Thu, 16 Jan 2020 14:47:37 -0800
+Message-ID: <FDE750BB-804A-428B-B31A-9B5539276D3A@apple.com>
+In-Reply-To: AFDCA786-3364-46AA-9227-558148BD463A@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3384
+X-UID: 3385
 
---===============4109982246062501854==
+--===============8347614394106312819==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The TCP code unconditionally overwrite in a few places 'icsk->icsk_af_ops',
-which lead to the wrong oops being called for ipv4-mapped ipv6 address.
-e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
-tests.
 
-This patch try to address the issue building ipv4-mapped  mptcp icsk ops
-and using it when appropriate:
- - on connect() for ipv4 mapped address (and ev. failure)
- - on syn_recv_sock() - passive socket creation
 
-Additionally subflow_v6_conn_request() should call into subflow_v4_conn_req=
-uest()
-for ipv4 packets, otherwise we always fallback on passive socket bound to
-ipv4 mapped addresses.
+> On Jan 16, 2020, at 10:07 AM, Christoph Paasch <cpaasch(a)apple.com> wrot=
+e:
+> =
 
-Note: this still touches af_ops twice. If we do differently, alike:
+> Hello,
+> =
 
-	if (sk_is_mptcp(newsk))
-		mptcp_handle_ipv6_mapped(sk, true);
-	else
-		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
+> here is the proposed cover-letter for Part 2. I assume that it will be "v=
+3" as Mat already sent out the v2 before Christmas.
+> =
 
-we need either:
-- additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
-as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
-initialization otherwise.
-- wrap the above mptcp_handle_ipv6_mapped() call under
-a preprocessor's conditional (CONFIG_MPTCP_IPV6).
+> Please let me know what should be changed.
+> =
 
- v1 -> v2:
- - fixed mptcp_handle_ipv6_mapped() argument on 2nd call (mat)
- - add squash-to tag
+> =3D=3D=3D=3D=3D=3D
+> =
 
-RFC -> v1:
- - drop unneeded mptcp_chk_mapped()
- - fix subflow_v6_conn_request()
- - add missing hook into tcp_v6_syn_recv_sock()
+> Subject: [PATCH net-next v3 ...] Multipath TCP part 2: Single subflow
+> =
 
-Squash-to: "mptcp: Handle MP_CAPABLE options for outgoing connections"
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- include/net/mptcp.h |  2 ++
- net/ipv6/tcp_ipv6.c |  6 ++++++
- net/mptcp/subflow.c | 46 +++++++++++++++++++++++++++++++++++++++------
- 3 files changed, 48 insertions(+), 6 deletions(-)
+> v2 -> v3: Added RFC8684-style handshake and some minor fixes
+> v1 -> v2: Rebased on latest "Multipath TCP: Prerequisites" v3 series
+> =
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index e1f248d01113..eabc57c3fde4 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -162,6 +162,8 @@ static inline bool mptcp_skb_can_collapse(const struct =
-sk_buff *to,
- =
+> This set adds MPTCP connection establishment, writing & reading MPTCP
+> options on data packets, a sysctl to allow MPTCP per-namespace, and self
+> tests. This is sufficient to establish and maintain a connection with a
+> MPTCP peer, but will not yet allow or initiate establishment of
+> additional MPTCP subflows.
+> =
 
- #endif /* CONFIG_MPTCP */
- =
+> We also add the necessary code for the RFC8684-style handshake.
+> RFC8684 obsoletes the experimental RFC6824 and makes MPTCP move-on to
+> version 1.
+> =
 
-+void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped);
-+
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- int mptcpv6_init(void);
- #elif IS_ENABLED(CONFIG_IPV6)
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 60068ffde1d9..b3eacd3549c3 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -238,6 +238,8 @@ static int tcp_v6_connect(struct sock *sk, struct socka=
-ddr *uaddr,
- 		sin.sin_addr.s_addr =3D usin->sin6_addr.s6_addr32[3];
- =
+> The MPTCP patchset exclusively supports RFC 8684. Although all MPTCP
+> deployments are currently based on RFC 6824, future deployments will be
+> migrating to MPTCP version 1. 3GPP's 5G standardization also solely suppo=
+rts
+> RFC 8684. Also, we believe that this initial submission of MPTCP will be
+> cleaner by solely supporting RFC 8684. If later on support for the old
+> MPTCP-version is required it can always be added in the future.
+> =
 
- 		icsk->icsk_af_ops =3D &ipv6_mapped;
-+		if (sk_is_mptcp(sk))
-+			mptcp_handle_ipv6_mapped(sk, true);
- 		sk->sk_backlog_rcv =3D tcp_v4_do_rcv;
- #ifdef CONFIG_TCP_MD5SIG
- 		tp->af_specific =3D &tcp_sock_ipv6_mapped_specific;
-@@ -248,6 +250,8 @@ static int tcp_v6_connect(struct sock *sk, struct socka=
-ddr *uaddr,
- 		if (err) {
- 			icsk->icsk_ext_hdr_len =3D exthdrlen;
- 			icsk->icsk_af_ops =3D &ipv6_specific;
-+			if (sk_is_mptcp(sk))
-+				mptcp_handle_ipv6_mapped(sk, false);
- 			sk->sk_backlog_rcv =3D tcp_v6_do_rcv;
- #ifdef CONFIG_TCP_MD5SIG
- 			tp->af_specific =3D &tcp_sock_ipv6_specific;
-@@ -1203,6 +1207,8 @@ static struct sock *tcp_v6_syn_recv_sock(const struct=
- sock *sk, struct sk_buff *
- 		newnp->saddr =3D newsk->sk_v6_rcv_saddr;
- =
+> The major difference between RFC 8684 and RFC 6824 is that it has a better
+> support for servers using TCP SYN-cookies by reliably retransmitting the
+> MP_CAPABLE option.
 
- 		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
-+		if (sk_is_mptcp(newsk))
-+			mptcp_handle_ipv6_mapped(sk, true);
- 		newsk->sk_backlog_rcv =3D tcp_v4_do_rcv;
- #ifdef CONFIG_TCP_MD5SIG
- 		newtp->af_specific =3D &tcp_sock_ipv6_mapped_specific;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index cf4c05a6cfac..31dfb6cb157e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -141,6 +141,7 @@ static struct inet_connection_sock_af_ops subflow_speci=
-fic;
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- static struct tcp_request_sock_ops subflow_request_sock_ipv6_ops;
- static struct inet_connection_sock_af_ops subflow_v6_specific;
-+static struct inet_connection_sock_af_ops subflow_v6m_specific;
- =
+I forgot the Twitter reference! Matth, any good ideas for a joke? :-)
 
- static int subflow_v6_conn_request(struct sock *sk, struct sk_buff *skb)
- {
-@@ -149,7 +150,7 @@ static int subflow_v6_conn_request(struct sock *sk, str=
-uct sk_buff *skb)
- 	pr_debug("subflow=3D%p", subflow);
- =
 
- 	if (skb->protocol =3D=3D htons(ETH_P_IP))
--		return tcp_v4_conn_request(sk, skb);
-+		return subflow_v4_conn_request(sk, skb);
- =
+Christoph
 
- 	if (!ipv6_unicast_destination(skb))
- 		goto drop;
-@@ -163,6 +164,36 @@ static int subflow_v6_conn_request(struct sock *sk, st=
-ruct sk_buff *skb)
- }
- #endif
- =
+> =
 
-+static struct inet_connection_sock_af_ops *
-+subflow_default_af_ops(struct sock *sk)
-+{
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (sk->sk_family =3D=3D AF_INET6)
-+		return &subflow_v6_specific;
-+#endif
-+	return &subflow_specific;
-+}
-+
-+void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped)
-+{
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+	struct inet_connection_sock_af_ops *target;
-+
-+	target =3D mapped ? &subflow_v6m_specific : subflow_default_af_ops(sk);
-+
-+	pr_debug("subflow=3D%p family=3D%d ops=3D%p target=3D%p mapped=3D%d",
-+	         subflow, sk->sk_family, icsk->icsk_af_ops, target, mapped);
-+
-+	if (likely(icsk->icsk_af_ops =3D=3D target))
-+		return;
-+
-+	subflow->icsk_af_ops =3D icsk->icsk_af_ops;
-+	icsk->icsk_af_ops =3D target;
-+#endif
-+}
-+
- int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -235,11 +266,7 @@ static int subflow_ulp_init(struct sock *sk)
- =
+> =
 
- 	tp->is_mptcp =3D 1;
- 	ctx->icsk_af_ops =3D icsk->icsk_af_ops;
--	icsk->icsk_af_ops =3D &subflow_specific;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	if (sk->sk_family =3D=3D AF_INET6)
--		icsk->icsk_af_ops =3D &subflow_v6_specific;
--#endif
-+	icsk->icsk_af_ops =3D subflow_default_af_ops(sk);
- out:
- 	return err;
- }
-@@ -336,6 +363,13 @@ void mptcp_subflow_init(void)
- 	subflow_v6_specific.conn_request =3D subflow_v6_conn_request;
- 	subflow_v6_specific.syn_recv_sock =3D subflow_syn_recv_sock;
- 	subflow_v6_specific.sk_rx_dst_set =3D subflow_finish_connect;
-+
-+	subflow_v6m_specific =3D subflow_v6_specific;
-+	subflow_v6m_specific.queue_xmit =3D ipv4_specific.queue_xmit;
-+	subflow_v6m_specific.send_check =3D ipv4_specific.send_check;
-+	subflow_v6m_specific.net_header_len =3D ipv4_specific.net_header_len;
-+	subflow_v6m_specific.mtu_reduced =3D ipv4_specific.mtu_reduced;
-+	subflow_v6m_specific.net_frag_header_len =3D 0;
- #endif
- =
+> Clone/fetch:
+> https://github.com/multipath-tcp/mptcp_net-next.git <https://github.com/m=
+ultipath-tcp/mptcp_net-next.git> (tag: netdev-v3-part2)
+> =
 
- 	if (tcp_register_ulp(&subflow_ulp_ops) !=3D 0)
--- =
+> Browse:
+> https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v3-part2 <htt=
+ps://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v3-part2>
+> =
 
-2.21.0
+> Thank you for your review. You can find us at mptcp(a)lists.01.org <mailt=
+o:mptcp(a)lists.01.org> and
+> https://is.gd/mptcp_upstream <https://is.gd/mptcp_upstream>
+> =
 
---===============4109982246062501854==--
+> =3D=3D=3D=3D=3D=3D
+> =
+
+> Cheers,
+> Christoph
+
+
+--===============8347614394106312819==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
+L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPjwvaGVhZD48Ym9keSBzdHlsZT0id29yZC13cmFwOiBi
+cmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdo
+aXRlLXNwYWNlOyIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjxkaXY+PGJyIGNsYXNzPSIiPjxibG9j
+a3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPjxkaXYgY2xhc3M9IiI+T24gSmFuIDE2LCAyMDIw
+LCBhdCAxMDowNyBBTSwgQ2hyaXN0b3BoIFBhYXNjaCAmbHQ7PGEgaHJlZj0ibWFpbHRvOmNwYWFz
+Y2hAYXBwbGUuY29tIiBjbGFzcz0iIj5jcGFhc2NoQGFwcGxlLmNvbTwvYT4mZ3Q7IHdyb3RlOjwv
+ZGl2PjxiciBjbGFzcz0iQXBwbGUtaW50ZXJjaGFuZ2UtbmV3bGluZSI+PGRpdiBjbGFzcz0iIj48
+bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNl
+dD11cy1hc2NpaSIgY2xhc3M9IiI+PGRpdiBzdHlsZT0id29yZC13cmFwOiBicmVhay13b3JkOyAt
+d2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdoaXRlLXNwYWNlOyIg
+Y2xhc3M9IiI+SGVsbG8sPGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFz
+cz0iIj5oZXJlIGlzIHRoZSBwcm9wb3NlZCBjb3Zlci1sZXR0ZXIgZm9yIFBhcnQgMi4gSSBhc3N1
+bWUgdGhhdCBpdCB3aWxsIGJlICJ2MyIgYXMgTWF0IGFscmVhZHkgc2VudCBvdXQgdGhlIHYyIGJl
+Zm9yZSBDaHJpc3RtYXMuPC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRp
+diBjbGFzcz0iIj5QbGVhc2UgbGV0IG1lIGtub3cgd2hhdCBzaG91bGQgYmUgY2hhbmdlZC48L2Rp
+dj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIiPj09PT09PTwv
+ZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+U3ViamVj
+dDogW1BBVENIIG5ldC1uZXh0IHYzIC4uLl0mbmJzcDtNdWx0aXBhdGggVENQIHBhcnQgMjogU2lu
+Z2xlIHN1YmZsb3c8L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNs
+YXNzPSIiPnYyIC0mZ3Q7IHYzOiBBZGRlZCBSRkM4Njg0LXN0eWxlIGhhbmRzaGFrZSBhbmQgc29t
+ZSBtaW5vciBmaXhlczxiciBjbGFzcz0iIj52MSAtJmd0OyB2MjogUmViYXNlZCBvbiBsYXRlc3Qg
+Ik11bHRpcGF0aCBUQ1A6IFByZXJlcXVpc2l0ZXMiIHYzIHNlcmllczxiciBjbGFzcz0iIj48YnIg
+Y2xhc3M9IiI+VGhpcyBzZXQgYWRkcyBNUFRDUCBjb25uZWN0aW9uIGVzdGFibGlzaG1lbnQsIHdy
+aXRpbmcgJmFtcDsgcmVhZGluZyBNUFRDUDxiciBjbGFzcz0iIj5vcHRpb25zIG9uIGRhdGEgcGFj
+a2V0cywgYSBzeXNjdGwgdG8gYWxsb3cgTVBUQ1AgcGVyLW5hbWVzcGFjZSwgYW5kIHNlbGY8YnIg
+Y2xhc3M9IiI+dGVzdHMuIFRoaXMgaXMgc3VmZmljaWVudCB0byBlc3RhYmxpc2ggYW5kIG1haW50
+YWluIGEgY29ubmVjdGlvbiB3aXRoIGE8YnIgY2xhc3M9IiI+TVBUQ1AgcGVlciwgYnV0IHdpbGwg
+bm90IHlldCBhbGxvdyBvciBpbml0aWF0ZSBlc3RhYmxpc2htZW50IG9mPGJyIGNsYXNzPSIiPmFk
+ZGl0aW9uYWwgTVBUQ1Agc3ViZmxvd3MuPGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj5XZSBhbHNv
+IGFkZCB0aGUgbmVjZXNzYXJ5IGNvZGUgZm9yIHRoZSBSRkM4Njg0LXN0eWxlIGhhbmRzaGFrZS48
+YnIgY2xhc3M9IiI+UkZDODY4NCBvYnNvbGV0ZXMgdGhlIGV4cGVyaW1lbnRhbCBSRkM2ODI0IGFu
+ZCBtYWtlcyBNUFRDUCBtb3ZlLW9uIHRvPGJyIGNsYXNzPSIiPnZlcnNpb24gMS48YnIgY2xhc3M9
+IiI+PGJyIGNsYXNzPSIiPlRoZSBNUFRDUCBwYXRjaHNldCBleGNsdXNpdmVseSBzdXBwb3J0cyBS
+RkMgODY4NC4gQWx0aG91Z2ggYWxsIE1QVENQPGJyIGNsYXNzPSIiPmRlcGxveW1lbnRzIGFyZSBj
+dXJyZW50bHkgYmFzZWQgb24gUkZDIDY4MjQsIGZ1dHVyZSBkZXBsb3ltZW50cyB3aWxsIGJlPGJy
+IGNsYXNzPSIiPm1pZ3JhdGluZyB0byBNUFRDUCB2ZXJzaW9uIDEuIDNHUFAncyA1RyBzdGFuZGFy
+ZGl6YXRpb24gYWxzbyBzb2xlbHkgc3VwcG9ydHM8YnIgY2xhc3M9IiI+UkZDIDg2ODQuIEFsc28s
+IHdlIGJlbGlldmUgdGhhdCB0aGlzIGluaXRpYWwgc3VibWlzc2lvbiBvZiBNUFRDUCB3aWxsIGJl
+PGJyIGNsYXNzPSIiPmNsZWFuZXIgYnkgc29sZWx5IHN1cHBvcnRpbmcgUkZDIDg2ODQuIElmIGxh
+dGVyIG9uIHN1cHBvcnQgZm9yIHRoZSBvbGQ8YnIgY2xhc3M9IiI+TVBUQ1AtdmVyc2lvbiBpcyBy
+ZXF1aXJlZCBpdCBjYW4gYWx3YXlzIGJlIGFkZGVkIGluIHRoZSBmdXR1cmUuPGJyIGNsYXNzPSIi
+PjxiciBjbGFzcz0iIj5UaGUgbWFqb3IgZGlmZmVyZW5jZSBiZXR3ZWVuIFJGQyA4Njg0IGFuZCBS
+RkMgNjgyNCBpcyB0aGF0IGl0IGhhcyBhIGJldHRlcjxiciBjbGFzcz0iIj5zdXBwb3J0IGZvciBz
+ZXJ2ZXJzIHVzaW5nIFRDUCBTWU4tY29va2llcyBieSByZWxpYWJseSByZXRyYW5zbWl0dGluZyB0
+aGU8YnIgY2xhc3M9IiI+TVBfQ0FQQUJMRSBvcHRpb24uPGJyIGNsYXNzPSIiPjwvZGl2PjwvZGl2
+PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2PjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2PkkgZm9yZ290
+IHRoZSBUd2l0dGVyIHJlZmVyZW5jZSEgTWF0dGgsIGFueSBnb29kIGlkZWFzIGZvciBhIGpva2U/
+IDotKTwvZGl2PjxkaXY+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXY+PGJyIGNsYXNzPSIiPjwvZGl2
+PjxkaXY+Q2hyaXN0b3BoPC9kaXY+PGJyIGNsYXNzPSIiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
+IGNsYXNzPSIiPjxkaXYgY2xhc3M9IiI+PGRpdiBzdHlsZT0id29yZC13cmFwOiBicmVhay13b3Jk
+OyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdoaXRlLXNwYWNl
+OyIgY2xhc3M9IiI+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPkNsb25l
+L2ZldGNoOjxiciBjbGFzcz0iIj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vbXVsdGlwYXRo
+LXRjcC9tcHRjcF9uZXQtbmV4dC5naXQiIGNsYXNzPSIiPmh0dHBzOi8vZ2l0aHViLmNvbS9tdWx0
+aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0LmdpdDwvYT4mbmJzcDsodGFnOiBuZXRkZXYtdjMtcGFy
+dDIpPGJyIGNsYXNzPSIiPjxiciBjbGFzcz0iIj5Ccm93c2U6PGJyIGNsYXNzPSIiPjxhIGhyZWY9
+Imh0dHBzOi8vZ2l0aHViLmNvbS9tdWx0aXBhdGgtdGNwL21wdGNwX25ldC1uZXh0L3RyZWUvbmV0
+ZGV2LXYzLXBhcnQyIiBjbGFzcz0iIj5odHRwczovL2dpdGh1Yi5jb20vbXVsdGlwYXRoLXRjcC9t
+cHRjcF9uZXQtbmV4dC90cmVlL25ldGRldi12My1wYXJ0MjwvYT48YnIgY2xhc3M9IiI+PGJyIGNs
+YXNzPSIiPlRoYW5rIHlvdSBmb3IgeW91ciByZXZpZXcuIFlvdSBjYW4gZmluZCB1cyBhdCZuYnNw
+OzxhIGhyZWY9Im1haWx0bzptcHRjcEBsaXN0cy4wMS5vcmciIGNsYXNzPSIiPm1wdGNwQGxpc3Rz
+LjAxLm9yZzwvYT4mbmJzcDthbmQ8YnIgY2xhc3M9IiI+PGEgaHJlZj0iaHR0cHM6Ly9pcy5nZC9t
+cHRjcF91cHN0cmVhbSIgY2xhc3M9IiI+aHR0cHM6Ly9pcy5nZC9tcHRjcF91cHN0cmVhbTwvYT48
+L2Rpdj48ZGl2IGNsYXNzPSIiPjxiciBjbGFzcz0iIj48L2Rpdj48ZGl2IGNsYXNzPSIiPj09PT09
+PTwvZGl2PjxkaXYgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgY2xhc3M9IiI+Q2hl
+ZXJzLDwvZGl2PjxkaXYgY2xhc3M9IiI+Q2hyaXN0b3BoPC9kaXY+PC9kaXY+PC9kaXY+PC9ibG9j
+a3F1b3RlPjwvZGl2PjxiciBjbGFzcz0iIj48L2JvZHk+PC9odG1sPg==
+--===============8347614394106312819==--
