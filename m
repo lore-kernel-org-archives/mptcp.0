@@ -1,115 +1,213 @@
-Content-Type: multipart/mixed; boundary="===============5649524709164597416=="
+Content-Type: multipart/mixed; boundary="===============4109982246062501854=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Handle subflow join failures
-Date: Thu, 16 Jan 2020 10:52:03 -0800
-Message-ID: <64aad4294a6e0b2bb8deab331269f9a8ac481bc3.camel@linux.intel.com>
-In-Reply-To: a9a3e3518641f1ddc9721438a4fa117ccb911e34.camel@redhat.com
+Subject: [MPTCP] [PATCH v2] mptcp: handle ipv4-mapped ipv6 address.
+Date: Thu, 16 Jan 2020 23:29:30 +0100
+Message-ID: <e7f5b14540a28e29842f43587964ad111e40456c.1579213677.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3383
+X-UID: 3384
 
---===============5649524709164597416==
+--===============4109982246062501854==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-01-15 at 09:41 +0100, Paolo Abeni wrote:
-> On Tue, 2020-01-14 at 14:57 +0100, Florian Westphal wrote:
-> > squashto: mptcp: Add handling of outgoing MP_JOIN requests
-> > =
+The TCP code unconditionally overwrite in a few places 'icsk->icsk_af_ops',
+which lead to the wrong oops being called for ipv4-mapped ipv6 address.
+e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
+tests.
 
-> > When the join request fails we should send a reset and also
-> > close the socket, we can't do anything useful with such a
-> > connection.
-> > =
+This patch try to address the issue building ipv4-mapped  mptcp icsk ops
+and using it when appropriate:
+ - on connect() for ipv4 mapped address (and ev. failure)
+ - on syn_recv_sock() - passive socket creation
 
-> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > =
+Additionally subflow_v6_conn_request() should call into subflow_v4_conn_req=
+uest()
+for ipv4 packets, otherwise we always fallback on passive socket bound to
+ipv4 mapped addresses.
 
-> > ---
-> >  net/mptcp/subflow.c | 22 +++++++++++++++-------
-> >  1 file changed, 15 insertions(+), 7 deletions(-)
-> > =
+Note: this still touches af_ops twice. If we do differently, alike:
 
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index f69a75f6bd6e..03f4604e2cb7 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -187,10 +187,13 @@ static void subflow_finish_connect(struct sock *s=
-k, const struct sk_buff *skb)
-> >  =
+	if (sk_is_mptcp(newsk))
+		mptcp_handle_ipv6_mapped(sk, true);
+	else
+		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
 
-> >  	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
-> >  =
+we need either:
+- additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
+as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
+initialization otherwise.
+- wrap the above mptcp_handle_ipv6_mapped() call under
+a preprocessor's conditional (CONFIG_MPTCP_IPV6).
 
-> > -	if (!subflow->conn)
-> > +	if (subflow->conn_finished || !tcp_sk(sk)->is_mptcp)
-> >  		return;
-> >  =
+ v1 -> v2:
+ - fixed mptcp_handle_ipv6_mapped() argument on 2nd call (mat)
+ - add squash-to tag
 
-> > -	if (subflow->mp_capable && !subflow->conn_finished) {
-> > +	if (!subflow->conn)
-> > +		goto do_reset;
-> > +
-> > +	if (subflow->mp_capable) {
-> >  		pr_debug("subflow=3D%p, remote_key=3D%llu", mptcp_subflow_ctx(sk),
-> >  			 subflow->remote_key);
-> >  		mptcp_finish_connect(sk);
-> > @@ -200,14 +203,13 @@ static void subflow_finish_connect(struct sock *s=
-k, const struct sk_buff *skb)
-> >  			pr_debug("synack seq=3D%u", TCP_SKB_CB(skb)->seq);
-> >  			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
-> >  		}
-> > -	} else if (subflow->mp_join && !subflow->conn_finished) {
-> > +	} else if (subflow->mp_join) {
-> >  		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u",
-> >  			 subflow, subflow->thmac,
-> >  			 subflow->remote_nonce);
-> >  		if (!subflow_thmac_valid(subflow)) {
-> >  			subflow->mp_join =3D 0;
-> > -			// @@ need to trigger RST
-> > -			return;
-> > +			goto do_reset;
-> >  		}
-> >  =
+RFC -> v1:
+ - drop unneeded mptcp_chk_mapped()
+ - fix subflow_v6_conn_request()
+ - add missing hook into tcp_v6_syn_recv_sock()
 
-> >  		mptcp_crypto_hmac_sha(subflow->local_key, subflow->remote_key,
-> > =
+Squash-to: "mptcp: Handle MP_CAPABLE options for outgoing connections"
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/net/mptcp.h |  2 ++
+ net/ipv6/tcp_ipv6.c |  6 ++++++
+ net/mptcp/subflow.c | 46 +++++++++++++++++++++++++++++++++++++++------
+ 3 files changed, 48 insertions(+), 6 deletions(-)
 
-> > @@ -218,8 +220,14 @@ static void subflow_finish_connect(struct sock *sk=
-, const struct sk_buff *skb)
-> >  		if (skb)
-> >  			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
-> >  =
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index e1f248d01113..eabc57c3fde4 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -162,6 +162,8 @@ static inline bool mptcp_skb_can_collapse(const struct =
+sk_buff *to,
+ =
 
-> > -		if (mptcp_finish_join(sk))
-> > -			subflow->conn_finished =3D 1;
-> > +		if (!mptcp_finish_join(sk))
-> > +			goto do_reset;
-> > +
-> > +		subflow->conn_finished =3D 1;
-> > +	} else {
-> > +do_reset:
-> > +		tcp_send_active_reset(sk, GFP_ATOMIC);
-> > +		tcp_done(sk);
-> >  	}
-> >  }
-> =
+ #endif /* CONFIG_MPTCP */
+ =
 
-> LGTM! It's nice to remove that old todo ;)
++void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped);
++
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ int mptcpv6_init(void);
+ #elif IS_ENABLED(CONFIG_IPV6)
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 60068ffde1d9..b3eacd3549c3 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -238,6 +238,8 @@ static int tcp_v6_connect(struct sock *sk, struct socka=
+ddr *uaddr,
+ 		sin.sin_addr.s_addr =3D usin->sin6_addr.s6_addr32[3];
+ =
 
-Ditto this, I put that there a long time ago. Thank-you!
+ 		icsk->icsk_af_ops =3D &ipv6_mapped;
++		if (sk_is_mptcp(sk))
++			mptcp_handle_ipv6_mapped(sk, true);
+ 		sk->sk_backlog_rcv =3D tcp_v4_do_rcv;
+ #ifdef CONFIG_TCP_MD5SIG
+ 		tp->af_specific =3D &tcp_sock_ipv6_mapped_specific;
+@@ -248,6 +250,8 @@ static int tcp_v6_connect(struct sock *sk, struct socka=
+ddr *uaddr,
+ 		if (err) {
+ 			icsk->icsk_ext_hdr_len =3D exthdrlen;
+ 			icsk->icsk_af_ops =3D &ipv6_specific;
++			if (sk_is_mptcp(sk))
++				mptcp_handle_ipv6_mapped(sk, false);
+ 			sk->sk_backlog_rcv =3D tcp_v6_do_rcv;
+ #ifdef CONFIG_TCP_MD5SIG
+ 			tp->af_specific =3D &tcp_sock_ipv6_specific;
+@@ -1203,6 +1207,8 @@ static struct sock *tcp_v6_syn_recv_sock(const struct=
+ sock *sk, struct sk_buff *
+ 		newnp->saddr =3D newsk->sk_v6_rcv_saddr;
+ =
 
-Peter.
+ 		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
++		if (sk_is_mptcp(newsk))
++			mptcp_handle_ipv6_mapped(sk, true);
+ 		newsk->sk_backlog_rcv =3D tcp_v4_do_rcv;
+ #ifdef CONFIG_TCP_MD5SIG
+ 		newtp->af_specific =3D &tcp_sock_ipv6_mapped_specific;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index cf4c05a6cfac..31dfb6cb157e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -141,6 +141,7 @@ static struct inet_connection_sock_af_ops subflow_speci=
+fic;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ static struct tcp_request_sock_ops subflow_request_sock_ipv6_ops;
+ static struct inet_connection_sock_af_ops subflow_v6_specific;
++static struct inet_connection_sock_af_ops subflow_v6m_specific;
+ =
 
-> Thank you!
-> =
+ static int subflow_v6_conn_request(struct sock *sk, struct sk_buff *skb)
+ {
+@@ -149,7 +150,7 @@ static int subflow_v6_conn_request(struct sock *sk, str=
+uct sk_buff *skb)
+ 	pr_debug("subflow=3D%p", subflow);
+ =
 
-> Paolo
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+ 	if (skb->protocol =3D=3D htons(ETH_P_IP))
+-		return tcp_v4_conn_request(sk, skb);
++		return subflow_v4_conn_request(sk, skb);
+ =
 
---===============5649524709164597416==--
+ 	if (!ipv6_unicast_destination(skb))
+ 		goto drop;
+@@ -163,6 +164,36 @@ static int subflow_v6_conn_request(struct sock *sk, st=
+ruct sk_buff *skb)
+ }
+ #endif
+ =
+
++static struct inet_connection_sock_af_ops *
++subflow_default_af_ops(struct sock *sk)
++{
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	if (sk->sk_family =3D=3D AF_INET6)
++		return &subflow_v6_specific;
++#endif
++	return &subflow_specific;
++}
++
++void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped)
++{
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
++	struct inet_connection_sock *icsk =3D inet_csk(sk);
++	struct inet_connection_sock_af_ops *target;
++
++	target =3D mapped ? &subflow_v6m_specific : subflow_default_af_ops(sk);
++
++	pr_debug("subflow=3D%p family=3D%d ops=3D%p target=3D%p mapped=3D%d",
++	         subflow, sk->sk_family, icsk->icsk_af_ops, target, mapped);
++
++	if (likely(icsk->icsk_af_ops =3D=3D target))
++		return;
++
++	subflow->icsk_af_ops =3D icsk->icsk_af_ops;
++	icsk->icsk_af_ops =3D target;
++#endif
++}
++
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -235,11 +266,7 @@ static int subflow_ulp_init(struct sock *sk)
+ =
+
+ 	tp->is_mptcp =3D 1;
+ 	ctx->icsk_af_ops =3D icsk->icsk_af_ops;
+-	icsk->icsk_af_ops =3D &subflow_specific;
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	if (sk->sk_family =3D=3D AF_INET6)
+-		icsk->icsk_af_ops =3D &subflow_v6_specific;
+-#endif
++	icsk->icsk_af_ops =3D subflow_default_af_ops(sk);
+ out:
+ 	return err;
+ }
+@@ -336,6 +363,13 @@ void mptcp_subflow_init(void)
+ 	subflow_v6_specific.conn_request =3D subflow_v6_conn_request;
+ 	subflow_v6_specific.syn_recv_sock =3D subflow_syn_recv_sock;
+ 	subflow_v6_specific.sk_rx_dst_set =3D subflow_finish_connect;
++
++	subflow_v6m_specific =3D subflow_v6_specific;
++	subflow_v6m_specific.queue_xmit =3D ipv4_specific.queue_xmit;
++	subflow_v6m_specific.send_check =3D ipv4_specific.send_check;
++	subflow_v6m_specific.net_header_len =3D ipv4_specific.net_header_len;
++	subflow_v6m_specific.mtu_reduced =3D ipv4_specific.mtu_reduced;
++	subflow_v6m_specific.net_frag_header_len =3D 0;
+ #endif
+ =
+
+ 	if (tcp_register_ulp(&subflow_ulp_ops) !=3D 0)
+-- =
+
+2.21.0
+
+--===============4109982246062501854==--
