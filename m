@@ -1,123 +1,161 @@
-Content-Type: multipart/mixed; boundary="===============8127312338626805478=="
+Content-Type: multipart/mixed; boundary="===============3908018688524349180=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1] mptcp: handle ipv4-mapped ipv6 address.
-Date: Thu, 16 Jan 2020 07:54:36 -0800
-Message-ID: <alpine.OSX.2.21.2001160744150.45790@ndoyal-mobl1.amr.corp.intel.com>
-In-Reply-To: 5acd242e52ebe981e06148190ef43b8213207fe1.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 0/7] fallback to TCP on ulp clone failure
+Date: Thu, 16 Jan 2020 17:14:57 +0100
+Message-ID: <73675eaa-140a-332c-0071-d897331a033b@tessares.net>
+In-Reply-To: c2929ebd02d068b6b20a76cd2fae7d600950130a.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3375
+X-UID: 3376
 
---===============8127312338626805478==
+--===============3908018688524349180==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Paolo,
 
-On Thu, 16 Jan 2020, Paolo Abeni wrote:
-
-> On Wed, 2020-01-15 at 19:00 -0800, Mat Martineau wrote:
->> On Wed, 15 Jan 2020, Paolo Abeni wrote:
+On 16/01/2020 16:18, Paolo Abeni wrote:
+> On Wed, 2020-01-15 at 23:23 +0100, Matthieu Baerts wrote:
+>> On 15/01/2020 23:01, Matthieu Baerts wrote:
+>>> Hi Paolo, Mat,
+>>>
+>>> On 09/01/2020 23:27, Mat Martineau wrote:
+>>>> On Thu, 9 Jan 2020, Paolo Abeni wrote:
+>>>>
+>>>>> This series do real TCP fallback for passive MPTCP connection when
+>>>>> ULP clone
+>>>>> fails: clear the 'is_mptcp' flag, reset overridden callback, icsk ops
+>>>>> and
+>>>>> clear the ULP ctx.
+>>>>>
+>>>>> Additionally uses the 'is_mptcp' flag to check for fallback in more
+>>>>> places,
+>>>>> as suggested by Mat (patches 2, 4), cope with NULL ctx in
+>>>>> subflow_syn_recv_sock() (patches 3, 7), and restore TCP callback on
+>>>>> later fallback, too (patch 6) for consistency.
+>>>>>
+>>>>> This still uses function pointers to store all the overriden TCP
+>>>>> callbacks,
+>>>>> is simpler then other alternatives but waste some space inside the
+>>>>> subflow
+>>>>> struct.
+>>>>>
+>>>>> The rebased tree is available at:
+>>>>>
+>>>>> https://github.com/pabeni/mptcp/tree/mptcp_net-next_export_v7.1
+>>>>>
+>>>>> This is on top of export branch(a)b50a38e09bbc6182136836564945a323641=
+a5039
+>>>>> (tag: export/20200109T154238)
+>>>>>
+>>>>> v1 -> v2
+>>>>> - uses sk_is_mptcp() when possible (Mat)
+>>>>> - drop rendundant checks (Mat)
+>>>>>
+>>>>> options.c  |    7 ------
+>>>>> protocol.c |   20 ++++++++---------
+>>>>> protocol.h |   15 ++++++++++++-
+>>>>> subflow.c  |   68
+>>>>> ++++++++++++++++++++++++++++++++++++++++---------------------
+>>>>> 4 files changed, 68 insertions(+), 42 deletions(-)
+>>>>
+>>>> Hi Paolo -
+>>>>
+>>>> Thanks for the fixes from v1. Looks good to me.
+>>>
+>>> Thank you for the patches and the reviews!
+>>>
+>>> Please check the "/!\" below
+>>>
+>>> - e0350744cafc: "squashed" patch 1/7 in "mptcp: Handle MP_CAPABLE
+>>> options for outgoing connections"
+>>> - 65850c198790: conflict in t/mptcp-Add-key-generation-and-token-tree
+>>> - 7a3cef638c7b: conflict in t/mptcp-Implement-MPTCP-receive-path
+>>> - fba261bbcdd9: conflict in t/mptcp-process-MP_CAPABLE-data-option
+>>>     /!\ comment is re-added below
+>>> - af9296ffbeec: conflict in t/mptcp-cope-with-later-TCP-fallback
+>>> - 55dbb555ec6c: conflict in
+>>> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+>>>     /!\ I had to modify the first condition in subflow_ulp_clone()
+>>> - 7e25825cceea: mptcp:subflow: re-add removed comment in
+>>> t/mptcp-process-MP_CAPABLE-data-option
+>>> - 5593f3432c76] Revert "mptcp:subflow: re-add removed comment" in
+>>> t/mptcp-Add-handling-of-incoming-MP_JOIN-
+>>> - 5c6690820e0a..513c7bff2864: result
+>>>
+>>> - df2d5cfd1573: "squashed" patch 2/7 in "mptcp: Create SUBFLOW socket
+>>> for incoming connections"
+>>> - b146e9ab6e2a: conflict in
+>>> t/mptcp-recvmsg-can-drain-data-from-multiple-subflows
+>>> - 6bc74228e82e: conflict in t/mptcp-increment-MIB-counters-in-a-few-pla=
+ces
+>>> - 513c7bff2864..dbf315c33403: result
+>>>
+>>> - 3abec1c771df: "squashed" patch 3/7 in "mptcp: Add key generation and
+>>> token tree"
+>>> - dbf315c33403..72aec0bc2ad9: result
+>>>
+>>> - ecde144ffa56: "squashed" patch 4/7 in "mptcp: Write MPTCP DSS headers
+>>> to outgoing data packets"
+>>> - 006e52131d4f: conflict in
+>>> t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
+>>> - b0ae53ced8cd: conflict in t/mptcp-Add-ADD_ADDR-handling
+>>> - d099fdd0460f: conflict in
+>>> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+>>> - 72aec0bc2ad9..1f5cf153a4b1: result
+>>>
+>>> - 73afeb8aabbd: "squashed" patch 5/7 in "mptcp: Implement MPTCP receive
+>>> path"
+>>> - 6259583be5a2: conflict in t/mptcp-Add-path-manager-interface
+>>> - 23f44e1993f4: conflict in
+>>> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+>>>     /!\ tcp_state_change and tcp_write_space have been set for both like
+>>> in mptcp_net-next_export_v6.2
+>>> - 49007086b792: conflict in
+>>> t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+>>> - 1f5cf153a4b1..803fb6ea75b0: result
+>>>
+>>> - 5724921dc089: "squashed" patch 6/7 in "mptcp: cope with later TCP
+>>> fallback"
+>>>     /!\ the second part of the patch was already applied in a previous
+>>> conflict resolution
+>>> - 803fb6ea75b0..02e14c69386b: result
+>>>
+>>> - aa031bb3cab2: "squashed" patch 7/7 in "mptcp: Add handling of incoming
+>>> MP_JOIN requests"
+>>> - 6d39473b63da: "Signed-off-by" + "Co-developed-by"
+>>> - 02e14c69386b..f15fa3697153: result
+>>>
+>>> Compilation is OK but tests are in progress.
 >>
->>> The TCP code unconditionally overwrite in a few places 'icsk->icsk_af_o=
-ps',
->>> which lead to the wrong oops being called for ipv4-mapped ipv6 address.
->>> e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
->>> tests.
->>>
->>> This patch try to address the issue building ipv4-mapped  mptcp icsk ops
->>> and using it when appropriate:
->>> - on connect() for ipv4 mapped address (and ev. failure)
->>> - on syn_recv_sock() - passive socket creation
->>>
->>> Additionally subflow_v6_conn_request() should call into subflow_v4_conn=
-_request()
->>> for ipv4 packets, otherwise we always fallback on passive socket bound =
-to
->>> ipv4 mapped addresses.
->>>
->>> Note: this still touches af_ops twice. If we do differently, alike:
->>>
->>> 	if (sk_is_mptcp(newsk))
->>> 		mptcp_handle_ipv6_mapped(sk, true);
->>> 	else
->>> 		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
->>>
->>> we need either:
->>> - additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
->>> as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
->>> initialization otherwise.
->>> - wrap the above mptcp_handle_ipv6_mapped() call under
->>> a preprocessor's conditional (CONFIG_MPTCP_IPV6).
+>> A small additional fix to allow the compilation of each exported commit:
 >>
->> I was thinking something like:
->>
->> static struct inet_connection_sock_af_ops *get_mapped_af_ops(sk)
->> {
->>  	if (likely(!sk_is_mptcp(sk)))
->>  		return &ipv6_mapped;
->>  	else
->>  		return mptcp_handle_ipv6_mapped(sk);
->> }
->>
->> (with mptcp_handle_ipv6_mapped() modified to return the relevant pointer
->> rather than assign to icsk_af_ops, and handling
->> different CONFIG_MPTCP_IPV6 settings)
->
->
-> Uhm... I don't like much 'mptcp_handle_ipv6_mapped()' being a sort of
-> 'getter' that also modify the status (it changes subflow af_ops).
+>> - 843c30e1447a: mptcp: fix compilation error in
+>> t/mptcp-parse-and-emit-MP_CAPABLE-option-according-to-v1-spec
+>> - d27c2802c206: mptcp: fix compilation error in
+>> t/mptcp-process-MP_CAPABLE-data-option
+>> - ed5fd3d9a3e8: conflict in t/mptcp-Add-path-manager-interface
+>> - f15fa3697153..a8dcfeb3a5c6: result (empty, normal)
+> =
 
-That's fine - I wasn't sure I explained the idea well in response to the =
+> Thank you for all the great work!
+> =
 
-RFC version of the patch, so I wanted to clarify.
+> I checked the mentioned relevant conflict commits, the delta vs my
+> local tree and did some self-tests run. LGTM
 
->
-> Additionally mptcp_handle_ipv6_mapped() must handle the
->
-> #ifndef CONFIG_MPTCP_IPV6
->
-> conditional. Likely it should never be called if !CONFIG_MPTCP_IPV6,
-> but the overall code will be not so nice IMHO:
->
-> static struct inet_connection_sock_af_ops *mptcp_handle_ipv6_mapped(sk)
-> {
-> #ifdef CONFIG_MPTCP_IPV6
-> 	// ... set subflow af_ops
-> 	return subflow_v6m_af_ops;
-> #else
-> 	// ????
-> 	WARN_ON_ONCE(1);
-> 	return 0; // caller will crash
-> 	// or
-> 	// return &subflow_v6_af_ops // caller will crash too
-> 	// or
-> 	// return &subflow_v4_af_ops // ditto
-> 	// or
-> 	// return &ipv6_mapped; // needs additional 'export'
+Glad to hear that it looks good! Thank you for having checked!
 
-This is where I thought having a helper function within tcp_ipv6.c would =
+Cheers,
+Matt
+-- =
 
-be helpful for returning &ipv6_mapped.
-
-> 	// or
-> 	// BUG_ON(1); // perhaps this ??? still not nice IMHO
-> #endif
-> }
->
-> WDYT?
-
-I don't think the 'getter' approach is required - the maintainers might =
-
-not even consider it a problem.
-
-Should still do something about the extra mptcp_handle_ipv6_mapped() =
-
-parameter though.
-
---
-Mat Martineau
-Intel
---===============8127312338626805478==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3908018688524349180==--
