@@ -1,62 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============5515265814562243639=="
+Content-Type: multipart/mixed; boundary="===============4722580719759170737=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: Deal with family field being removed from
+Subject: [MPTCP] [PATCH] mptcp: Optimize MP_JOIN fields in
  mptcp_options_received
-Date: Thu, 16 Jan 2020 23:01:23 -0800
-Message-ID: <20200117070123.5937-1-peter.krystad@linux.intel.com>
+Date: Thu, 16 Jan 2020 23:01:37 -0800
+Message-ID: <20200117070137.5987-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3390
+X-UID: 3391
 
---===============5515265814562243639==
+--===============4722580719759170737==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use individual add_addr flags instead.
+Use union to minimize space used in structure.
 
-squashto: Add path manager interface
+squashto: Add handling of incoming MP_JOIN requests
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/options.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ include/linux/tcp.h | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 3f15cd1620d3..b03e97eefbf4 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -621,15 +621,18 @@ void mptcp_incoming_options(struct sock *sk, struct s=
-k_buff *skb,
- 	if (!check_fourth_ack(subflow, skb, mp_opt))
- 		return;
- =
-
--	if (msk && mp_opt->add_addr) {
--		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
-+	if (msk) {
-+		if (mp_opt->add_addr) {
- 			mptcp_pm_add_addr(msk, &mp_opt->addr, mp_opt->addr_id);
-+			mp_opt->add_addr =3D 0;
-+		}
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--		else if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6)
-+		else if (mp_opt->add_addr6) {
- 			mptcp_pm_add_addr6(msk, &mp_opt->addr6,
--					   mp_opt->addr_id);
-+					   mp_opt->addr6_id);
-+			mp_opt->add_addr6 =3D 0;
-+		}
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index ff0db270f3d4..069c7dad49eb 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -105,6 +105,15 @@ struct mptcp_options_received {
+ 			u8	addr6_id;
+ 		};
  #endif
--		mp_opt->add_addr =3D 0;
- 	}
- =
-
- 	if (!mp_opt->dss)
++		union {
++			struct {
++				u32	token;
++				u32	nonce;
++				u64	thmac;
++				u8	join_id;
++			};
++			u8	hmac[20];
++		};
+ 	};
+ 	u32	subflow_seq;
+ 	u16	data_len;
+@@ -115,11 +124,6 @@ struct mptcp_options_received {
+ 		add_addr6 : 1,
+ 		rm_addr : 1,
+ 		backup : 1;
+-	u8	join_id;
+-	u32	token;
+-	u32	nonce;
+-	u64	thmac;
+-	u8	hmac[20];
+ 	u8	use_map:1,
+ 		dsn64:1,
+ 		data_fin:1,
 -- =
 
 2.17.2
 
---===============5515265814562243639==--
+--===============4722580719759170737==--
