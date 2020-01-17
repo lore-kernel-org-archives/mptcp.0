@@ -1,115 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============4960341824179437516=="
+Content-Type: multipart/mixed; boundary="===============8568271189870188384=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: fix compilation warning
-Date: Fri, 17 Jan 2020 18:16:07 +0100
-Message-ID: <acb4062b2baf89c715c4409d7a5fedbd16015911.camel@redhat.com>
-In-Reply-To: 20200117165631.1329562-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH v2] mptcp: handle ipv4-mapped ipv6 address.
+Date: Fri, 17 Jan 2020 18:17:07 +0100
+Message-ID: <1c38c7f4-53f2-2663-bc17-61476d751192@tessares.net>
+In-Reply-To: 5bf3d350-decb-53b4-9531-240e60e64d05@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3401
+X-UID: 3402
 
---===============4960341824179437516==
+--===============8568271189870188384==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-01-17 at 17:56 +0100, Matthieu Baerts wrote:
-> After having applied 77c6b6aec34b (mptcp: handle ipv4-mapped ipv6 address=
-.),
-> we have this warning:
+Hi Paolo, Matt
+
+On 17/01/2020 17:50, Matthieu Baerts wrote:
+> Hi Paolo, Mat,
 > =
 
->   net/ipv6/tcp_ipv6.c: In function =E2=80=98tcp_v6_syn_recv_sock=E2=80=99:
->   net/ipv6/tcp_ipv6.c:1211:29: warning: passing argument 1 of =E2=80=98mp=
-tcp_handle_ipv6_mapped=E2=80=99 discards =E2=80=98const=E2=80=99 qualifier =
-from pointer target type [-Wdiscarded-qualifiers]
->    1211 |    mptcp_handle_ipv6_mapped(sk, true);
->         |                             ^~
->   In file included from ./include/net/tcp.h:42,
->                    from net/ipv6/tcp_ipv6.c:44:
->   ./include/net/mptcp.h:201:44: note: expected =E2=80=98struct sock *=E2=
-=80=99 but argument is of type =E2=80=98const struct sock *=E2=80=99
->     201 | void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped);
->         |                               ~~~~~~~~~~~~~^~
+> On 17/01/2020 02:24, Mat Martineau wrote:
+>>
+>> On Thu, 16 Jan 2020, Paolo Abeni wrote:
+>>
+>>> The TCP code unconditionally overwrite in a few places =
+
+>>> 'icsk->icsk_af_ops',
+>>> which lead to the wrong oops being called for ipv4-mapped ipv6 address.
+>>> e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
+>>> tests.
+>>>
+>>> This patch try to address the issue building ipv4-mapped=C2=A0 mptcp ic=
+sk ops
+>>> and using it when appropriate:
+>>> - on connect() for ipv4 mapped address (and ev. failure)
+>>> - on syn_recv_sock() - passive socket creation
+>>>
+>>> Additionally subflow_v6_conn_request() should call into =
+
+>>> subflow_v4_conn_request()
+>>> for ipv4 packets, otherwise we always fallback on passive socket =
+
+>>> bound to
+>>> ipv4 mapped addresses.
+>>>
+>>> Note: this still touches af_ops twice. If we do differently, alike:
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0if (sk_is_mptcp(newsk))
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_handle_ipv6_mapped(sk,=
+ true);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0else
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 inet_csk(newsk)->icsk_af_ops=
+ =3D &ipv6_mapped;
+>>>
+>>> we need either:
+>>> - additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
+>>> as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
+>>> initialization otherwise.
+>>> - wrap the above mptcp_handle_ipv6_mapped() call under
+>>> a preprocessor's conditional (CONFIG_MPTCP_IPV6).
+>>>
+>>> v1 -> v2:
+>>> - fixed mptcp_handle_ipv6_mapped() argument on 2nd call (mat)
+>>> - add squash-to tag
+>>
+>> v2 looks good to me, thanks Paolo.
 > =
 
-> Simply fixed by passing some arguments to 'const'.
+> Thank you for the patches and the reviews!
 > =
 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
-> =
+> - 77c6b6aec34b: "squashed" in "mptcp: Handle MP_CAPABLE options for =
 
-> Notes:
->     to be squashed in "mptcp: Handle MP_CAPABLE options for outgoing conn=
-ections"
-> =
+> outgoing connections"
+> - d685ef032e97: conflict in t/mptcp-Add-key-generation-and-token-tree
+> - c95635052d13: conflict in t/mptcp-Implement-MPTCP-receive-path
 
->  include/net/mptcp.h | 2 +-
->  net/mptcp/subflow.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> =
+The conflict resolution was not correct. Thank you Paolo for having saw =
 
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index eabc57c3fde4..d9214f4387c3 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -162,7 +162,7 @@ static inline bool mptcp_skb_can_collapse(const struc=
-t sk_buff *to,
->  =
+that!
 
->  #endif /* CONFIG_MPTCP */
->  =
-
-> -void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped);
-> +void mptcp_handle_ipv6_mapped(const struct sock *sk, bool mapped);
->  =
-
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  int mptcpv6_init(void);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 1eff992a43dc..2525da9d28c9 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -165,7 +165,7 @@ static int subflow_v6_conn_request(struct sock *sk, s=
-truct sk_buff *skb)
->  #endif
->  =
-
->  static struct inet_connection_sock_af_ops *
-> -subflow_default_af_ops(struct sock *sk)
-> +subflow_default_af_ops(const struct sock *sk)
->  {
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  	if (sk->sk_family =3D=3D AF_INET6)
-> @@ -174,7 +174,7 @@ subflow_default_af_ops(struct sock *sk)
->  	return &subflow_specific;
->  }
->  =
-
-> -void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped)
-> +void mptcp_handle_ipv6_mapped(const struct sock *sk, bool mapped)
->  {
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-
-
-Uhmm..
-
-I think the correct fix is replacing in the call-side:
-
-	mptcp_handle_ipv6_mapped(sk, true);
-
-with:
-
-	mptcp_handle_ipv6_mapped(newsk, true);
-
-(the current code passes the wrong argument to the mptcp helper)
+- 1b74bd5e517b: fix in t/mptcp-Implement-MPTCP-receive-path
+- 899bafd7d1a1..2000db04936b: result
 
 Cheers,
+Matt
+-- =
 
-Paolo
-
---===============4960341824179437516==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8568271189870188384==--
