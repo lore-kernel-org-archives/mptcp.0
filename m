@@ -1,78 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============3053229098877099597=="
+Content-Type: multipart/mixed; boundary="===============8694557961172652286=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: handle ipv4-mapped ipv6 address.
-Date: Thu, 16 Jan 2020 17:24:00 -0800
-Message-ID: <alpine.OSX.2.21.2001161721070.45790@ndoyal-mobl1.amr.corp.intel.com>
-In-Reply-To: e7f5b14540a28e29842f43587964ad111e40456c.1579213677.git.pabeni@redhat.com
+Subject: [MPTCP] Re: Part 2 - Cover Letter
+Date: Thu, 16 Jan 2020 17:33:24 -0800
+Message-ID: <alpine.OSX.2.21.2001161729180.45790@ndoyal-mobl1.amr.corp.intel.com>
+In-Reply-To: FDE750BB-804A-428B-B31A-9B5539276D3A@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3386
+X-UID: 3387
 
---===============3053229098877099597==
+--===============8694557961172652286==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Thu, 16 Jan 2020, Paolo Abeni wrote:
+On Thu, 16 Jan 2020, Christoph Paasch wrote:
 
-> The TCP code unconditionally overwrite in a few places 'icsk->icsk_af_ops=
-',
-> which lead to the wrong oops being called for ipv4-mapped ipv6 address.
-> e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
-> tests.
->
-> This patch try to address the issue building ipv4-mapped  mptcp icsk ops
-> and using it when appropriate:
-> - on connect() for ipv4 mapped address (and ev. failure)
-> - on syn_recv_sock() - passive socket creation
->
-> Additionally subflow_v6_conn_request() should call into subflow_v4_conn_r=
-equest()
-> for ipv4 packets, otherwise we always fallback on passive socket bound to
-> ipv4 mapped addresses.
->
-> Note: this still touches af_ops twice. If we do differently, alike:
->
-> 	if (sk_is_mptcp(newsk))
-> 		mptcp_handle_ipv6_mapped(sk, true);
-> 	else
-> 		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
->
-> we need either:
-> - additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
-> as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
-> initialization otherwise.
-> - wrap the above mptcp_handle_ipv6_mapped() call under
-> a preprocessor's conditional (CONFIG_MPTCP_IPV6).
->
-> v1 -> v2:
-> - fixed mptcp_handle_ipv6_mapped() argument on 2nd call (mat)
-> - add squash-to tag
+> =
 
-v2 looks good to me, thanks Paolo.
+>
+>       On Jan 16, 2020, at 10:07 AM, Christoph Paasch <cpaasch(a)apple.com=
+> wrote:
+> =
+
+> Hello,
+> here is the proposed cover-letter for Part 2. I assume that it will be "v=
+3" as Mat already sent out the v2 before Christmas.
+>
+
+Yes, it should be v3.
+
+Cover letter additions for RFC8684 look good, thanks Christoph.
+
 
 Mat
 
 
+> Please let me know what should be changed.
+> =
+
+> =3D=3D=3D=3D=3D=3D
+> =
+
+> Subject: [PATCH net-next v3 ...]=C2=A0Multipath TCP part 2: Single subflow
+> =
+
+> v2 -> v3: Added RFC8684-style handshake and some minor fixes
+> v1 -> v2: Rebased on latest "Multipath TCP: Prerequisites" v3 series
+> =
+
+> This set adds MPTCP connection establishment, writing & reading MPTCP
+> options on data packets, a sysctl to allow MPTCP per-namespace, and self
+> tests. This is sufficient to establish and maintain a connection with a
+> MPTCP peer, but will not yet allow or initiate establishment of
+> additional MPTCP subflows.
+> =
+
+> We also add the necessary code for the RFC8684-style handshake.
+> RFC8684 obsoletes the experimental RFC6824 and makes MPTCP move-on to
+> version 1.
+> =
+
+> The MPTCP patchset exclusively supports RFC 8684. Although all MPTCP
+> deployments are currently based on RFC 6824, future deployments will be
+> migrating to MPTCP version 1. 3GPP's 5G standardization also solely suppo=
+rts
+> RFC 8684. Also, we believe that this initial submission of MPTCP will be
+> cleaner by solely supporting RFC 8684. If later on support for the old
+> MPTCP-version is required it can always be added in the future.
+> =
+
+> The major difference between RFC 8684 and RFC 6824 is that it has a better
+> support for servers using TCP SYN-cookies by reliably retransmitting the
+> MP_CAPABLE option.
+> =
+
+> =
+
+> I forgot the Twitter reference! Matth, any good ideas for a joke? :-)
+> =
+
+> =
+
+> Christoph
+> =
+
+> =
+
 >
-> RFC -> v1:
-> - drop unneeded mptcp_chk_mapped()
-> - fix subflow_v6_conn_request()
-> - add missing hook into tcp_v6_syn_recv_sock()
+>       Clone/fetch:
+>       https://github.com/multipath-tcp/mptcp_net-next.git=C2=A0(tag: netd=
+ev-v3-part2)
 >
-> Squash-to: "mptcp: Handle MP_CAPABLE options for outgoing connections"
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> include/net/mptcp.h |  2 ++
-> net/ipv6/tcp_ipv6.c |  6 ++++++
-> net/mptcp/subflow.c | 46 +++++++++++++++++++++++++++++++++++++++------
-> 3 files changed, 48 insertions(+), 6 deletions(-)
+>       Browse:
+>       https://github.com/multipath-tcp/mptcp_net-next/tree/netdev-v3-part2
+>
+>       Thank you for your review. You can find us at=C2=A0mptcp(a)lists.01=
+.org=C2=A0and
+>       https://is.gd/mptcp_upstream
+> =
+
+> =3D=3D=3D=3D=3D=3D
+> =
+
+> Cheers,
+> Christoph
+> =
+
+> =
+
+> =
+
 >
 
 --
 Mat Martineau
 Intel
---===============3053229098877099597==--
+
+--===============8694557961172652286==--
