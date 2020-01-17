@@ -1,120 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============6347463277335254902=="
+Content-Type: multipart/mixed; boundary="===============4960341824179437516=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Part 2 - Cover Letter
-Date: Fri, 17 Jan 2020 09:11:41 -0800
-Message-ID: <20200117171141.GA30818@MacBook-Pro-64.local>
-In-Reply-To: 6fc92b1e-99b5-ba7b-0d55-96b079b6c3fd@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp: fix compilation warning
+Date: Fri, 17 Jan 2020 18:16:07 +0100
+Message-ID: <acb4062b2baf89c715c4409d7a5fedbd16015911.camel@redhat.com>
+In-Reply-To: 20200117165631.1329562-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3400
+X-UID: 3401
 
---===============6347463277335254902==
+--===============4960341824179437516==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 17/01/20 - 17:32:21, Matthieu Baerts wrote:
-> Hi Christoph,
+On Fri, 2020-01-17 at 17:56 +0100, Matthieu Baerts wrote:
+> After having applied 77c6b6aec34b (mptcp: handle ipv4-mapped ipv6 address=
+.),
+> we have this warning:
 > =
 
-> On 17/01/2020 17:12, Christoph Paasch wrote:
+>   net/ipv6/tcp_ipv6.c: In function =E2=80=98tcp_v6_syn_recv_sock=E2=80=99:
+>   net/ipv6/tcp_ipv6.c:1211:29: warning: passing argument 1 of =E2=80=98mp=
+tcp_handle_ipv6_mapped=E2=80=99 discards =E2=80=98const=E2=80=99 qualifier =
+from pointer target type [-Wdiscarded-qualifiers]
+>    1211 |    mptcp_handle_ipv6_mapped(sk, true);
+>         |                             ^~
+>   In file included from ./include/net/tcp.h:42,
+>                    from net/ipv6/tcp_ipv6.c:44:
+>   ./include/net/mptcp.h:201:44: note: expected =E2=80=98struct sock *=E2=
+=80=99 but argument is of type =E2=80=98const struct sock *=E2=80=99
+>     201 | void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped);
+>         |                               ~~~~~~~~~~~~~^~
 > =
 
-> [...]
+> Simply fixed by passing some arguments to 'const'.
 > =
 
-> > Here is the current version:
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> ---
 > =
 
-> Thank you for this v2!
+> Notes:
+>     to be squashed in "mptcp: Handle MP_CAPABLE options for outgoing conn=
+ections"
 > =
 
-> > =3D=3D=3D
-> > =
-
-> > Subject: [PATCH net-next v3 ...]=C2=A0Multipath TCP part 2: Single subf=
-low & RFC8684 support
-> > =
-
-> > v2 -> v3: Added RFC8684-style handshake (see below fore more details) a=
-nd some minor fixes
-> > v1 -> v2: Rebased on latest "Multipath TCP: Prerequisites" v3 series
-> > =
-
-> > This set adds MPTCP connection establishment, writing & reading MPTCP
-> > options on data packets, a sysctl to allow MPTCP per-namespace, and self
-> > tests. This is sufficient to establish and maintain a connection with a
-> > MPTCP peer, but will not yet allow or initiate establishment of
-> > additional MPTCP subflows.
-> > =
-
-> > We also add the necessary code for the RFC8684-style handshake.
-> > RFC8684 obsoletes the experimental RFC6824 and makes MPTCP move-on to
-> > version 1.
-> > =
-
-> > Originally our plan was to submit single-subflow and RFC8684 support in
-> > two patchsets, but to simplify the merging-process and ensure that a co=
-herent
-> > MPTCP-version lands in Linux we decided to merge the two sets into a si=
-ngle
-> > one.
-> > =
-
-> > The MPTCP patchset exclusively supports RFC 8684. Although all MPTCP
-> > deployments are currently based on RFC 6824, future deployments will be
-> > migrating to MPTCP version 1. 3GPP's 5G standardization also solely sup=
-ports
-> > RFC 8684. In addition, we believe that this initial submission of MPTCP=
- will be
-> > cleaner by solely supporting RFC 8684. If later on support for the old
-> > MPTCP-version is required it can always be added in the future.
-> > =
-
-> > The major difference between RFC 8684 and RFC 6824 is that it has a bet=
-ter
-> > support for servers using TCP SYN-cookies by reliably retransmitting the
-> > MP_CAPABLE option.
-> > =
-
-> > Before ending this cover letter with some refs, it is worth mentioning
-> > that we promise David Miller that merging this series will be rewarded =
-by
-> > Twitter dopamine hits :-D
+>  include/net/mptcp.h | 2 +-
+>  net/mptcp/subflow.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > =
 
-> Sorry, I maybe added too many "that":
-> =
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index eabc57c3fde4..d9214f4387c3 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -162,7 +162,7 @@ static inline bool mptcp_skb_can_collapse(const struc=
+t sk_buff *to,
+>  =
 
->     (...) it is worth mentioning ~that~ we promise David Miller that merg=
-ing
-> this series (...)
+>  #endif /* CONFIG_MPTCP */
+>  =
 
-Hmmm... removing the that makes it sound incorrect to me though. I don't
-know... :)
+> -void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped);
+> +void mptcp_handle_ipv6_mapped(const struct sock *sk, bool mapped);
+>  =
 
-Maybe some of the native speakers here have a better wording ;-)
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>  int mptcpv6_init(void);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 1eff992a43dc..2525da9d28c9 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -165,7 +165,7 @@ static int subflow_v6_conn_request(struct sock *sk, s=
+truct sk_buff *skb)
+>  #endif
+>  =
+
+>  static struct inet_connection_sock_af_ops *
+> -subflow_default_af_ops(struct sock *sk)
+> +subflow_default_af_ops(const struct sock *sk)
+>  {
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>  	if (sk->sk_family =3D=3D AF_INET6)
+> @@ -174,7 +174,7 @@ subflow_default_af_ops(struct sock *sk)
+>  	return &subflow_specific;
+>  }
+>  =
+
+> -void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped)
+> +void mptcp_handle_ipv6_mapped(const struct sock *sk, bool mapped)
+>  {
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
 
 
-Christoph
+Uhmm..
 
-> =
+I think the correct fix is replacing in the call-side:
 
-> (feel free to fix English issues :) )
-> =
+	mptcp_handle_ipv6_mapped(sk, true);
 
-> The rest looks good to me!
-> =
+with:
 
-> Cheers,
-> Matt
-> -- =
+	mptcp_handle_ipv6_mapped(newsk, true);
 
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6347463277335254902==--
+(the current code passes the wrong argument to the mptcp helper)
+
+Cheers,
+
+Paolo
+
+--===============4960341824179437516==--
