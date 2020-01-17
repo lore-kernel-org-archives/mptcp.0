@@ -1,120 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============1407914052509139479=="
+Content-Type: multipart/mixed; boundary="===============7965933455888976902=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Deal with family field being removed from
+Subject: [MPTCP] Re: [PATCH] mptcp: Optimize DSS fields in
  mptcp_options_received
-Date: Fri, 17 Jan 2020 13:53:54 -0800
-Message-ID: <618ca15394d3e663a14d8b96f6e158241c4a32f7.camel@linux.intel.com>
-In-Reply-To: alpine.OSX.2.21.2001171142320.60719@mjmartin-mac01.local
+Date: Fri, 17 Jan 2020 14:00:22 -0800
+Message-ID: <d95c33c1557f0a34cee0b8684058a361cbc77e46.camel@linux.intel.com>
+In-Reply-To: 5cb6c4ec11a9ecf7d9b6b4b9b839531dc3f40690.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3411
+X-UID: 3412
 
---===============1407914052509139479==
+--===============7965933455888976902==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-01-17 at 11:56 -0800, Mat Martineau wrote:
-> On Thu, 16 Jan 2020, Peter Krystad wrote:
-> =
-
-> > Use individual add_addr flags instead.
+On Fri, 2020-01-17 at 19:40 +0100, Paolo Abeni wrote:
+> On Fri, 2020-01-17 at 10:08 -0800, Mat Martineau wrote:
+> > On Thu, 16 Jan 2020, Peter Krystad wrote:
 > > =
 
-> > squashto: Add path manager interface
+> > > Use union to minimize space used in structure.
+> > > Allow 32-bit DSS to be received at the same time as MP_CAPABLE.
+> > > =
+
+> > > squashto: Implement MPTCP receive path
+> > > =
+
+> > > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> > > ---
+> > > include/linux/tcp.h | 18 ++++++++++++------
+> > > 1 file changed, 12 insertions(+), 6 deletions(-)
+> > > =
+
+> > > diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+> > > index 6abf8d9f1a42..a9200a86a6d2 100644
+> > > --- a/include/linux/tcp.h
+> > > +++ b/include/linux/tcp.h
+> > > @@ -80,12 +80,18 @@ struct tcp_sack_block {
+> > > =
+
+> > > #if IS_ENABLED(CONFIG_MPTCP)
+> > > struct mptcp_options_received {
+> > > -	u64	sndr_key;
+> > > -	u64	rcvr_key;
+> > > -	u32	data_ack32;
+> > > -	u32	data_seq32;
+> > > -	u64	data_ack;
+> > > -	u64	data_seq;
+> > > +	union {
+> > > +		struct {
+> > > +			u64	sndr_key;
+> > > +			u64	rcvr_key;
+> > > +			u32	data_ack32;
+> > > +			u32	data_seq32;
+> > > +		};
+> > > +		struct {
+> > > +			u64	data_ack;
+> > > +			u64	data_seq;
+> > > +		};
+> > > +	};
 > > =
 
-> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> > If one of the goals is to ensure that mixed 32/64 ack/seq is working (a=
+s =
+
+> > mentioned in next commit message), I think it would be better to expres=
+s =
+
+> > that as a union with the data_ack/data_seq and sndr_key/rcvr_key values =
+
+> > rather than depend on struct alignment:
+> > =
+
+> >  	struct {
+> >  		union {
+> >  			struct {
+> >  				u64	sndr_key;
+> >  				u64	rcvr_key;
+> >  			};
+> >  			struct {
+> >  				u64	data_ack;
+> >  				u64	data_seq;
+> >  			};
+> >  		};
+> >  		u32	data_ack32;
+> >  		u32	data_seq32;
+> >  	};
 > =
 
-> I ran in to conflicts each time I tried to apply the six patches, applyin=
-g =
+> I'm really low on coffee here, so please perdom me for the likely dumb
+> comment, but... =
 
-> each patch at the noted squashto commit. Made an attempt with an older =
+> =
 
-> export branch too). I'm not sure of the best way to share "squashto" =
+> why do we need data_*32 and  *_key simult? I think we don't allow MPC
+> and DSS in the same packet ?!?
 
-> changes that introduce merge conflicts, but it's hard to take a look at =
-
-> the overall changes from this group of patches.
-
-I pushed my tree, with the two commits from Wednesday already squashed, and
-the four from last night in position, to =
-
-https://github.com/pkrystad/mptcp_net-next/tree/optimize-0116
-
-> Now that there's overlap in the data for MP_CAPABLE, MP_JOIN, DSS, and =
-
-> ADD_ADDR, should there also be more checking in mptcp_parse_options() to =
-
-> ensure only supported combinations are allowed to write in to the =
-
-> structure? We've made some assumptions regarding what will fit, but =
-
-> different combinations/orders of MPTCP options could overwrite values in =
-
-> interesting (and potentially harmful) ways.
-
-Sure, this would make it explicit what we're expecting is possible. I'll add
-such checks.
+The mutipath-tcp.org implementation would do this so (and also data_*32 + I=
+Pv4
+add_addr). If we know we won't ever do these combinations, and we only want=
+ to
+work with ourselves, then it is not necessary.
 
 Peter.
 
-> Mat
+> Thanks,
 > =
 
-> =
+> Paolo
+>=20
 
-> > ---
-> > net/mptcp/options.c | 13 ++++++++-----
-> > 1 file changed, 8 insertions(+), 5 deletions(-)
-> > =
-
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index 3f15cd1620d3..b03e97eefbf4 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -621,15 +621,18 @@ void mptcp_incoming_options(struct sock *sk, stru=
-ct sk_buff *skb,
-> > 	if (!check_fourth_ack(subflow, skb, mp_opt))
-> > 		return;
-> > =
-
-> > -	if (msk && mp_opt->add_addr) {
-> > -		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
-> > +	if (msk) {
-> > +		if (mp_opt->add_addr) {
-> > 			mptcp_pm_add_addr(msk, &mp_opt->addr, mp_opt->addr_id);
-> > +			mp_opt->add_addr =3D 0;
-> > +		}
-> > #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> > -		else if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6)
-> > +		else if (mp_opt->add_addr6) {
-> > 			mptcp_pm_add_addr6(msk, &mp_opt->addr6,
-> > -					   mp_opt->addr_id);
-> > +					   mp_opt->addr6_id);
-> > +			mp_opt->add_addr6 =3D 0;
-> > +		}
-> > #endif
-> > -		mp_opt->add_addr =3D 0;
-> > 	}
-> > =
-
-> > 	if (!mp_opt->dss)
-> > -- =
-
-> > 2.17.2
-> > _______________________________________________
-> > mptcp mailing list -- mptcp(a)lists.01.org
-> > To unsubscribe send an email to mptcp-leave(a)lists.01.org
-> > =
-
-> =
-
-> --
-> Mat Martineau
-> Intel
-
---===============1407914052509139479==--
+--===============7965933455888976902==--
