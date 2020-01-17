@@ -1,90 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============4012838127793988552=="
+Content-Type: multipart/mixed; boundary="===============2008158804621768794=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Part 2 - Cover Letter
-Date: Fri, 17 Jan 2020 17:32:21 +0100
-Message-ID: <6fc92b1e-99b5-ba7b-0d55-96b079b6c3fd@tessares.net>
-In-Reply-To: 20200117161216.GZ30818@MacBook-Pro-64.local
+Subject: [MPTCP] Re: [PATCH v2] mptcp: handle ipv4-mapped ipv6 address.
+Date: Fri, 17 Jan 2020 17:50:59 +0100
+Message-ID: <5bf3d350-decb-53b4-9531-240e60e64d05@tessares.net>
+In-Reply-To: alpine.OSX.2.21.2001161721070.45790@ndoyal-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3396
+X-UID: 3397
 
---===============4012838127793988552==
+--===============2008158804621768794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
+Hi Paolo, Mat,
 
-On 17/01/2020 17:12, Christoph Paasch wrote:
-
-[...]
-
-> Here is the current version:
-
-Thank you for this v2!
-
-> =3D=3D=3D
+On 17/01/2020 02:24, Mat Martineau wrote:
 > =
 
-> Subject: [PATCH net-next v3 ...]=C2=A0Multipath TCP part 2: Single subflo=
-w & RFC8684 support
+> On Thu, 16 Jan 2020, Paolo Abeni wrote:
 > =
 
-> v2 -> v3: Added RFC8684-style handshake (see below fore more details) and=
- some minor fixes
-> v1 -> v2: Rebased on latest "Multipath TCP: Prerequisites" v3 series
+>> The TCP code unconditionally overwrite in a few places =
+
+>> 'icsk->icsk_af_ops',
+>> which lead to the wrong oops being called for ipv4-mapped ipv6 address.
+>> e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
+>> tests.
+>>
+>> This patch try to address the issue building ipv4-mapped=C2=A0 mptcp ics=
+k ops
+>> and using it when appropriate:
+>> - on connect() for ipv4 mapped address (and ev. failure)
+>> - on syn_recv_sock() - passive socket creation
+>>
+>> Additionally subflow_v6_conn_request() should call into =
+
+>> subflow_v4_conn_request()
+>> for ipv4 packets, otherwise we always fallback on passive socket bound to
+>> ipv4 mapped addresses.
+>>
+>> Note: this still touches af_ops twice. If we do differently, alike:
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0if (sk_is_mptcp(newsk))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_handle_ipv6_mapped(sk, =
+true);
+>> =C2=A0=C2=A0=C2=A0=C2=A0else
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 inet_csk(newsk)->icsk_af_ops =
+=3D &ipv6_mapped;
+>>
+>> we need either:
+>> - additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
+>> as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
+>> initialization otherwise.
+>> - wrap the above mptcp_handle_ipv6_mapped() call under
+>> a preprocessor's conditional (CONFIG_MPTCP_IPV6).
+>>
+>> v1 -> v2:
+>> - fixed mptcp_handle_ipv6_mapped() argument on 2nd call (mat)
+>> - add squash-to tag
 > =
 
-> This set adds MPTCP connection establishment, writing & reading MPTCP
-> options on data packets, a sysctl to allow MPTCP per-namespace, and self
-> tests. This is sufficient to establish and maintain a connection with a
-> MPTCP peer, but will not yet allow or initiate establishment of
-> additional MPTCP subflows.
-> =
+> v2 looks good to me, thanks Paolo.
 
-> We also add the necessary code for the RFC8684-style handshake.
-> RFC8684 obsoletes the experimental RFC6824 and makes MPTCP move-on to
-> version 1.
-> =
+Thank you for the patches and the reviews!
 
-> Originally our plan was to submit single-subflow and RFC8684 support in
-> two patchsets, but to simplify the merging-process and ensure that a cohe=
-rent
-> MPTCP-version lands in Linux we decided to merge the two sets into a sing=
-le
-> one.
-> =
+- 77c6b6aec34b: "squashed" in "mptcp: Handle MP_CAPABLE options for =
 
-> The MPTCP patchset exclusively supports RFC 8684. Although all MPTCP
-> deployments are currently based on RFC 6824, future deployments will be
-> migrating to MPTCP version 1. 3GPP's 5G standardization also solely suppo=
-rts
-> RFC 8684. In addition, we believe that this initial submission of MPTCP w=
-ill be
-> cleaner by solely supporting RFC 8684. If later on support for the old
-> MPTCP-version is required it can always be added in the future.
-> =
+outgoing connections"
+- d685ef032e97: conflict in t/mptcp-Add-key-generation-and-token-tree
+- c95635052d13: conflict in t/mptcp-Implement-MPTCP-receive-path
+- 640243f24ecc: conflict in =
 
-> The major difference between RFC 8684 and RFC 6824 is that it has a better
-> support for servers using TCP SYN-cookies by reliably retransmitting the
-> MP_CAPABLE option.
-> =
+t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+- 9d3f4c0a1575..84c329311d4c: result
 
-> Before ending this cover letter with some refs, it is worth mentioning
-> that we promise David Miller that merging this series will be rewarded by
-> Twitter dopamine hits :-D
-
-Sorry, I maybe added too many "that":
-
-     (...) it is worth mentioning ~that~ we promise David Miller that =
-
-merging this series (...)
-
-(feel free to fix English issues :) )
-
-The rest looks good to me!
+Tests and export are in progress.
 
 Cheers,
 Matt
@@ -95,4 +88,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4012838127793988552==--
+--===============2008158804621768794==--
