@@ -1,75 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============0939267100254015254=="
+Content-Type: multipart/mixed; boundary="===============0151701509287705751=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: fix caller of mptcp_handle_ipv6_mapped
-Date: Fri, 17 Jan 2020 18:31:17 +0100
-Message-ID: <aafff912-700b-0c68-c84b-37d16cf7a58c@tessares.net>
-In-Reply-To: 112467d7ae964f42b650f4fc9ec509ddf06b3246.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] mptcp: Optimize DSS fields in
+ mptcp_options_received
+Date: Fri, 17 Jan 2020 10:08:40 -0800
+Message-ID: <alpine.OSX.2.21.2001170950400.60719@mjmartin-mac01.local>
+In-Reply-To: 20200117070030.5825-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3406
+X-UID: 3407
 
---===============0939267100254015254==
+--===============0151701509287705751==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Thu, 16 Jan 2020, Peter Krystad wrote:
 
-On 17/01/2020 18:29, Paolo Abeni wrote:
-> On Fri, 2020-01-17 at 18:24 +0100, Matthieu Baerts wrote:
->> This was causing a warning: 'sk' has a 'const' attribute. Good because
->> it was not the right sk!
->>
->> Fixes: 77c6b6aec34b (mptcp: handle ipv4-mapped ipv6 address.)
->> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> ---
->>
->> Notes:
->>      to be squashed in "mptcp: Handle MP_CAPABLE options for outgoing co=
-nnections"
->>
->>   net/ipv6/tcp_ipv6.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
->> index b3eacd3549c3..33a578a3eb3a 100644
->> --- a/net/ipv6/tcp_ipv6.c
->> +++ b/net/ipv6/tcp_ipv6.c
->> @@ -1208,7 +1208,7 @@ static struct sock *tcp_v6_syn_recv_sock(const str=
-uct sock *sk, struct sk_buff *
->>   =
+> Use union to minimize space used in structure.
+> Allow 32-bit DSS to be received at the same time as MP_CAPABLE.
+>
+> squashto: Implement MPTCP receive path
+>
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+> include/linux/tcp.h | 18 ++++++++++++------
+> 1 file changed, 12 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+> index 6abf8d9f1a42..a9200a86a6d2 100644
+> --- a/include/linux/tcp.h
+> +++ b/include/linux/tcp.h
+> @@ -80,12 +80,18 @@ struct tcp_sack_block {
+>
+> #if IS_ENABLED(CONFIG_MPTCP)
+> struct mptcp_options_received {
+> -	u64	sndr_key;
+> -	u64	rcvr_key;
+> -	u32	data_ack32;
+> -	u32	data_seq32;
+> -	u64	data_ack;
+> -	u64	data_seq;
+> +	union {
+> +		struct {
+> +			u64	sndr_key;
+> +			u64	rcvr_key;
+> +			u32	data_ack32;
+> +			u32	data_seq32;
+> +		};
+> +		struct {
+> +			u64	data_ack;
+> +			u64	data_seq;
+> +		};
+> +	};
 
->>   		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
->>   		if (sk_is_mptcp(newsk))
->> -			mptcp_handle_ipv6_mapped(sk, true);
->> +			mptcp_handle_ipv6_mapped(newsk, true);
->>   		newsk->sk_backlog_rcv =3D tcp_v4_do_rcv;
->>   #ifdef CONFIG_TCP_MD5SIG
->>   		newtp->af_specific =3D &tcp_sock_ipv6_mapped_specific;
-> =
+If one of the goals is to ensure that mixed 32/64 ack/seq is working (as =
 
-> LGMT, thank you for fixing my faults!
+mentioned in next commit message), I think it would be better to express =
 
-Thank you for the quick review!
+that as a union with the data_ack/data_seq and sndr_key/rcvr_key values =
 
-- 0a0a8d376ea2: "squashed" in "mptcp: Handle MP_CAPABLE options for =
+rather than depend on struct alignment:
 
-outgoing connections"
-- no signed-off added (because it was Paolo's fix :) )
-- 2000db04936b..336d5b81cb58: result
+ 	struct {
+ 		union {
+ 			struct {
+ 				u64	sndr_key;
+ 				u64	rcvr_key;
+ 			};
+ 			struct {
+ 				u64	data_ack;
+ 				u64	data_seq;
+ 			};
+ 		};
+ 		u32	data_ack32;
+ 		u32	data_seq32;
+ 	};
 
-Tests + export are in progress.
+That does require some rearranging in later commits (reintroducing the =
 
-Cheers,
-Matt
--- =
+top-level union to add the ipv6 ADD_ADDR data).
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0939267100254015254==--
+> 	u32	subflow_seq;
+> 	u16	data_len;
+> 	u8	mp_capable : 1,
+> -- =
+
+> 2.17.2
+
+--
+Mat Martineau
+Intel
+--===============0151701509287705751==--
