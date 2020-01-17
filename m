@@ -1,94 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============1644852856841324913=="
+Content-Type: multipart/mixed; boundary="===============3864080511996513479=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Re-factor expand_ack
-Date: Fri, 17 Jan 2020 09:22:17 -0800
-Message-ID: <alpine.OSX.2.21.2001170909370.60719@mjmartin-mac01.local>
-In-Reply-To: 20200116011324.3253-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] [PATCH v2] mptcp: fix caller of mptcp_handle_ipv6_mapped
+Date: Fri, 17 Jan 2020 18:24:13 +0100
+Message-ID: <20200117172413.1377116-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3403
+X-UID: 3404
 
---===============1644852856841324913==
+--===============3864080511996513479==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+This was causing a warning: 'sk' has a 'const' attribute. Good because
+it was not the right sk!
 
-On Wed, 15 Jan 2020, Peter Krystad wrote:
+Fixes: 77c6b6aec34b (mptcp: handle ipv4-mapped ipv6 address.)
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> Modify this commit to handle separately-stored 32-bit data acks.
->
-> squashto: update per unacked sequence on pkt reception
->
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> ---
-> net/mptcp/options.c | 22 +++++++++++-----------
-> 1 file changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index bd1c3ba134ae..6ad0cdfa6de2 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -674,15 +674,16 @@ static bool check_fourth_ack(struct mptcp_subflow_c=
-ontext *subflow,
-> 	return true;
-> }
->
-> -static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
-> +static u64 expand_ack(u64 old_ack, u32 cur_ack32)
-> {
-> -	u32 old_ack32, cur_ack32;
-> -
-> -	if (use_64bit)
-> -		return cur_ack;
-> +	u32 old_ack32;
-> +	u64 cur_ack;
->
-> +	/* avoid ack expansion on update conflict, to reduce the risk of
-> +	 * wrongly expanding to a future ack sequence number, which is way
-> +	 * more dangerous than missing an ack
-> +	 */
+Notes:
+    to be squashed in "mptcp: Handle MP_CAPABLE options for outgoing connec=
+tions"
 
-I think this comment belongs in the original function - there's no =
+ net/ipv6/tcp_ipv6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-conflict detection going on in this function.
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index b3eacd3549c3..33a578a3eb3a 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1208,7 +1208,7 @@ static struct sock *tcp_v6_syn_recv_sock(const struct=
+ sock *sk, struct sk_buff *
+ =
 
-> 	old_ack32 =3D (u32)old_ack;
-> -	cur_ack32 =3D (u32)cur_ack;
-> 	cur_ack =3D (old_ack & GENMASK_ULL(63, 32)) + cur_ack32;
-> 	if (unlikely(before(cur_ack32, old_ack32)))
-> 		return cur_ack + (1LL << 32);
-> @@ -695,11 +696,10 @@ static void update_una(struct mptcp_sock *msk,
-> 	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
-> 	u64 write_seq =3D READ_ONCE(msk->write_seq);
->
-> -	/* avoid ack expansion on update conflict, to reduce the risk of
-> -	 * wrongly expanding to a future ack sequence number, which is way
-> -	 * more dangerous than missing an ack
-> -	 */
+ 		inet_csk(newsk)->icsk_af_ops =3D &ipv6_mapped;
+ 		if (sk_is_mptcp(newsk))
+-			mptcp_handle_ipv6_mapped(sk, true);
++			mptcp_handle_ipv6_mapped(newsk, true);
+ 		newsk->sk_backlog_rcv =3D tcp_v4_do_rcv;
+ #ifdef CONFIG_TCP_MD5SIG
+ 		newtp->af_specific =3D &tcp_sock_ipv6_mapped_specific;
+-- =
 
-I have to admit this comment does seem out of place here too. In an =
+2.24.0
 
-earlier version, the comment was closer to the while loop (see =
-
-https://www.spinics.net/lists/netdev/msg602279.html )
-
-> -	new_snd_una =3D expand_ack(old_snd_una, mp_opt->data_ack, mp_opt->ack64=
-);
-> +	if (mp_opt->ack64)
-> +		new_snd_una =3D mp_opt->data_ack;
-> +	else
-> +		new_snd_una =3D expand_ack(old_snd_una, (u32)mp_opt->data_ack);
->
-> 	/* ACK for data not even sent yet? Ignore. */
-> 	if (after64(new_snd_una, write_seq))
-> -- =
-
-> 2.17.2
-
---
-Mat Martineau
-Intel
---===============1644852856841324913==--
+--===============3864080511996513479==--
