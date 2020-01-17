@@ -1,97 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============8568271189870188384=="
+Content-Type: multipart/mixed; boundary="===============1644852856841324913=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: handle ipv4-mapped ipv6 address.
-Date: Fri, 17 Jan 2020 18:17:07 +0100
-Message-ID: <1c38c7f4-53f2-2663-bc17-61476d751192@tessares.net>
-In-Reply-To: 5bf3d350-decb-53b4-9531-240e60e64d05@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp: Re-factor expand_ack
+Date: Fri, 17 Jan 2020 09:22:17 -0800
+Message-ID: <alpine.OSX.2.21.2001170909370.60719@mjmartin-mac01.local>
+In-Reply-To: 20200116011324.3253-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3402
+X-UID: 3403
 
---===============8568271189870188384==
+--===============1644852856841324913==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Matt
 
-On 17/01/2020 17:50, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
-> =
+On Wed, 15 Jan 2020, Peter Krystad wrote:
 
-> On 17/01/2020 02:24, Mat Martineau wrote:
->>
->> On Thu, 16 Jan 2020, Paolo Abeni wrote:
->>
->>> The TCP code unconditionally overwrite in a few places =
+> Modify this commit to handle separately-stored 32-bit data acks.
+>
+> squashto: update per unacked sequence on pkt reception
+>
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+> net/mptcp/options.c | 22 +++++++++++-----------
+> 1 file changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index bd1c3ba134ae..6ad0cdfa6de2 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -674,15 +674,16 @@ static bool check_fourth_ack(struct mptcp_subflow_c=
+ontext *subflow,
+> 	return true;
+> }
+>
+> -static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
+> +static u64 expand_ack(u64 old_ack, u32 cur_ack32)
+> {
+> -	u32 old_ack32, cur_ack32;
+> -
+> -	if (use_64bit)
+> -		return cur_ack;
+> +	u32 old_ack32;
+> +	u64 cur_ack;
+>
+> +	/* avoid ack expansion on update conflict, to reduce the risk of
+> +	 * wrongly expanding to a future ack sequence number, which is way
+> +	 * more dangerous than missing an ack
+> +	 */
 
->>> 'icsk->icsk_af_ops',
->>> which lead to the wrong oops being called for ipv4-mapped ipv6 address.
->>> e.g. Kasan notice a invalid slub access running packetdrill ipv4-mapped
->>> tests.
->>>
->>> This patch try to address the issue building ipv4-mapped=C2=A0 mptcp ic=
-sk ops
->>> and using it when appropriate:
->>> - on connect() for ipv4 mapped address (and ev. failure)
->>> - on syn_recv_sock() - passive socket creation
->>>
->>> Additionally subflow_v6_conn_request() should call into =
+I think this comment belongs in the original function - there's no =
 
->>> subflow_v4_conn_request()
->>> for ipv4 packets, otherwise we always fallback on passive socket =
+conflict detection going on in this function.
 
->>> bound to
->>> ipv4 mapped addresses.
->>>
->>> Note: this still touches af_ops twice. If we do differently, alike:
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0if (sk_is_mptcp(newsk))
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_handle_ipv6_mapped(sk,=
- true);
->>> =C2=A0=C2=A0=C2=A0=C2=A0else
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 inet_csk(newsk)->icsk_af_ops=
- =3D &ipv6_mapped;
->>>
->>> we need either:
->>> - additionally handle the #ifnef CONFIG_MPTCP_IPV6 case in
->>> as mptcp_handle_ipv6_mapped(), as we risk to skip 'icsk_af_ops'
->>> initialization otherwise.
->>> - wrap the above mptcp_handle_ipv6_mapped() call under
->>> a preprocessor's conditional (CONFIG_MPTCP_IPV6).
->>>
->>> v1 -> v2:
->>> - fixed mptcp_handle_ipv6_mapped() argument on 2nd call (mat)
->>> - add squash-to tag
->>
->> v2 looks good to me, thanks Paolo.
-> =
+> 	old_ack32 =3D (u32)old_ack;
+> -	cur_ack32 =3D (u32)cur_ack;
+> 	cur_ack =3D (old_ack & GENMASK_ULL(63, 32)) + cur_ack32;
+> 	if (unlikely(before(cur_ack32, old_ack32)))
+> 		return cur_ack + (1LL << 32);
+> @@ -695,11 +696,10 @@ static void update_una(struct mptcp_sock *msk,
+> 	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
+> 	u64 write_seq =3D READ_ONCE(msk->write_seq);
+>
+> -	/* avoid ack expansion on update conflict, to reduce the risk of
+> -	 * wrongly expanding to a future ack sequence number, which is way
+> -	 * more dangerous than missing an ack
+> -	 */
 
-> Thank you for the patches and the reviews!
-> =
+I have to admit this comment does seem out of place here too. In an =
 
-> - 77c6b6aec34b: "squashed" in "mptcp: Handle MP_CAPABLE options for =
+earlier version, the comment was closer to the while loop (see =
 
-> outgoing connections"
-> - d685ef032e97: conflict in t/mptcp-Add-key-generation-and-token-tree
-> - c95635052d13: conflict in t/mptcp-Implement-MPTCP-receive-path
+https://www.spinics.net/lists/netdev/msg602279.html )
 
-The conflict resolution was not correct. Thank you Paolo for having saw =
+> -	new_snd_una =3D expand_ack(old_snd_una, mp_opt->data_ack, mp_opt->ack64=
+);
+> +	if (mp_opt->ack64)
+> +		new_snd_una =3D mp_opt->data_ack;
+> +	else
+> +		new_snd_una =3D expand_ack(old_snd_una, (u32)mp_opt->data_ack);
+>
+> 	/* ACK for data not even sent yet? Ignore. */
+> 	if (after64(new_snd_una, write_seq))
+> -- =
 
-that!
+> 2.17.2
 
-- 1b74bd5e517b: fix in t/mptcp-Implement-MPTCP-receive-path
-- 899bafd7d1a1..2000db04936b: result
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8568271189870188384==--
+--
+Mat Martineau
+Intel
+--===============1644852856841324913==--
