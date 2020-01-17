@@ -1,80 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============6790327449717487494=="
+Content-Type: multipart/mixed; boundary="===============4012838127793988552=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Signed-off-by: add the ones of the sender
-Date: Fri, 17 Jan 2020 17:28:46 +0100
-Message-ID: <a2c845a3-9113-5e7c-d903-75969ff41c59@tessares.net>
-In-Reply-To: 51122759-4e6f-1410-44d1-620e1e0a4520@tessares.net
+Subject: [MPTCP] Re: Part 2 - Cover Letter
+Date: Fri, 17 Jan 2020 17:32:21 +0100
+Message-ID: <6fc92b1e-99b5-ba7b-0d55-96b079b6c3fd@tessares.net>
+In-Reply-To: 20200117161216.GZ30818@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 3395
+X-UID: 3396
 
---===============6790327449717487494==
+--===============4012838127793988552==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 13/12/2019 16:06, Matthieu Baerts wrote:
-> Hi,
+Hi Christoph,
+
+On 17/01/2020 17:12, Christoph Paasch wrote:
+
+[...]
+
+> Here is the current version:
+
+Thank you for this v2!
+
+> =3D=3D=3D
 > =
 
-> FYI, I just added Mat and Christoph' signed-off at the end in all =
-
-> patches where the sender is not the author.
+> Subject: [PATCH net-next v3 ...]=C2=A0Multipath TCP part 2: Single subflo=
+w & RFC8684 support
 > =
 
-> Mat' signed-off:
+> v2 -> v3: Added RFC8684-style handshake (see below fore more details) and=
+ some minor fixes
+> v1 -> v2: Rebased on latest "Multipath TCP: Prerequisites" v3 series
 > =
 
-> t/tcp-clean-ext-on-tx-recycle d0a53799b41b
-> t/skb-add-helpers-to-allocate-ext-independently-from-sk_buff 49657b530937
-> t/mptcp-Handle-MPTCP-TCP-options 7dcbde272d8d
-> t/mptcp-Associate-MPTCP-context-with-TCP-socket 77bc072d50bb
-> t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections fa30eb93af07
-> t/mptcp-Create-SUBFLOW-socket-for-incoming-connections 6aeb1ed9011b
-> t/mptcp-Add-key-generation-and-token-tree 51937718ddb0
-> t/mptcp-Add-shutdown-socket-operation 54fb2be27f3f
-> t/mptcp-Add-setsockopt-getsockopt-socket-operations 408d02d51c75
-> t/mptcp-add-subflow-write-space-signalling-and-mptcp_poll 688e4e89051c
-> t/mptcp-recvmsg-can-drain-data-from-multiple-subflows 1a2a035ade5c
-> t/mptcp-allow-collapsing-consecutive-sendpages-on-the-same-substream =
-
-> 86d9099d23ae
-> t/mptcp-new-sysctl-to-control-the-activation-per-NS e95682b4a686
-> t/mptcp-add-basic-kselftest-for-mptcp 254904819820
+> This set adds MPTCP connection establishment, writing & reading MPTCP
+> options on data packets, a sysctl to allow MPTCP per-namespace, and self
+> tests. This is sufficient to establish and maintain a connection with a
+> MPTCP peer, but will not yet allow or initiate establishment of
+> additional MPTCP subflows.
 > =
 
-> Christoph' signed-off:
+> We also add the necessary code for the RFC8684-style handshake.
+> RFC8684 obsoletes the experimental RFC6824 and makes MPTCP move-on to
+> version 1.
 > =
 
-> t/mptcp-move-from-sha1-v0-to-sha256-v1 76bdd7c23334
+> Originally our plan was to submit single-subflow and RFC8684 support in
+> two patchsets, but to simplify the merging-process and ensure that a cohe=
+rent
+> MPTCP-version lands in Linux we decided to merge the two sets into a sing=
+le
+> one.
+> =
 
-I just added Christoph' signed-off for the whole part 2 (and removed Mat =
+> The MPTCP patchset exclusively supports RFC 8684. Although all MPTCP
+> deployments are currently based on RFC 6824, future deployments will be
+> migrating to MPTCP version 1. 3GPP's 5G standardization also solely suppo=
+rts
+> RFC 8684. In addition, we believe that this initial submission of MPTCP w=
+ill be
+> cleaner by solely supporting RFC 8684. If later on support for the old
+> MPTCP-version is required it can always be added in the future.
+> =
 
-when needed)
+> The major difference between RFC 8684 and RFC 6824 is that it has a better
+> support for servers using TCP SYN-cookies by reliably retransmitting the
+> MP_CAPABLE option.
+> =
 
-t/mptcp-Add-MPTCP-socket-stubs 6fc97b496ddb
-t/mptcp-Handle-MPTCP-TCP-options 29bc9f92358c
-t/mptcp-Associate-MPTCP-context-with-TCP-socket f8fc982dff1e
-t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections 486969ba72ed
-t/mptcp-Create-SUBFLOW-socket-for-incoming-connections 0ca8ad65f908
-t/mptcp-Add-key-generation-and-token-tree 136a39892507
-t/mptcp-Add-shutdown-socket-operation 919041a5b757
-t/mptcp-Add-setsockopt-getsockopt-socket-operations 89a20f0dcec9
-t/mptcp-Write-MPTCP-DSS-headers-to-outgoing-data-packets a0c2e26ba010
-t/mptcp-Implement-MPTCP-receive-path 0407b2f68a91
-t/mptcp-add-subflow-write-space-signalling-and-mptcp_poll 0f68dd73e570
-t/mptcp-recvmsg-can-drain-data-from-multiple-subflows 2c353e180796
-t/mptcp-allow-collapsing-consecutive-sendpages-on-the-same-substream =
+> Before ending this cover letter with some refs, it is worth mentioning
+> that we promise David Miller that merging this series will be rewarded by
+> Twitter dopamine hits :-D
 
-bfd1a2285cfb
-t/mptcp-new-sysctl-to-control-the-activation-per-NS 31c9ec8fce82
-t/mptcp-add-basic-kselftest-for-mptcp ca7ac12a5753
+Sorry, I maybe added too many "that":
 
-The rest (previous part 3) was already done.
+     (...) it is worth mentioning ~that~ we promise David Miller that =
 
-A new version of the "export" branch has just been published.
+merging this series (...)
+
+(feel free to fix English issues :) )
+
+The rest looks good to me!
 
 Cheers,
 Matt
@@ -85,4 +95,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6790327449717487494==--
+--===============4012838127793988552==--
