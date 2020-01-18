@@ -1,55 +1,152 @@
-Content-Type: multipart/mixed; boundary="===============7650104640868082670=="
+Content-Type: multipart/mixed; boundary="===============0238994136512399928=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Fwd: [martineau:kbuild-mptcp 22/38] subflow.c:undefined
- reference to `__crypto_memneq'
-Date: Sat, 18 Jan 2020 01:05:36 +0100
-Message-ID: <20200118000536.GY795@breakpoint.cc>
+Subject: [MPTCP] [PATCH] mptcp: Remove protocol spec comments from
+ mptcp_parse_option
+Date: Fri, 17 Jan 2020 16:21:25 -0800
+Message-ID: <20200118002125.9042-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3413
+X-UID: 3414
 
---===============7650104640868082670==
+--===============0238994136512399928==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
------ Forwarded message from kbuild test robot <lkp(a)intel.com> -----
+They are already out-of-date. Let them read the spec, or least
+look at the pictures!
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git=
- kbuild-mptcp
-head:   c4ccdd8177fb3d8123dd294ae93ee2dac1f43f32
-commit: ccd5b6ef8fd4b37a7721231a55482523b07d7ef9 [22/38] mptcp: Add handlin=
-g of incoming MP_JOIN requests
-config: xtensa-common_defconfig (attached as .config)
-compiler: xtensa-linux-gcc (GCC) 7.5.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/=
-make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout ccd5b6ef8fd4b37a7721231a55482523b07d7ef9
-        # save the attached .config to linux build tree
-        GCC_VERSION=3D7.5.0 make.cross ARCH=3Dxtensa =
+squashto: Handle MPTCP TCP options
 
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+---
+ net/mptcp/options.c | 60 ---------------------------------------------
+ 1 file changed, 60 deletions(-)
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp(a)intel.com>
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 81d8704cbd3f..51290ec970bd 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -24,12 +24,6 @@ void mptcp_parse_option(const struct sk_buff *skb, const=
+ unsigned char *ptr,
+ 	u8 flags;
+ =
 
-All errors (new ones prefixed by >>):
+ 	switch (subtype) {
+-	/* MPTCPOPT_MP_CAPABLE
+-	 * 0: 4MSB=3Dsubtype, 4LSB=3Dversion
+-	 * 1: Handshake flags
+-	 * 2-9: Sender key
+-	 * 10-17: Receiver key (optional)
+-	 */
+ 	case MPTCPOPT_MP_CAPABLE:
+ 		/* strict size checking */
+ 		if (!(TCP_SKB_CB(skb)->tcp_flags & TCPHDR_SYN)) {
+@@ -102,22 +96,6 @@ void mptcp_parse_option(const struct sk_buff *skb, cons=
+t unsigned char *ptr,
+ 			 mp_opt->rcvr_key, mp_opt->data_len);
+ 		break;
+ =
 
-   net/mptcp/subflow.o: In function `subflow_ulp_release':
->> subflow.c:(.text+0x41c): undefined reference to `__crypto_memneq'
-   net/mptcp/subflow.o: In function `subflow_syn_recv_sock':
-   subflow.c:(.text+0x53a): undefined reference to `__crypto_memneq'
+-	/* MPTCPOPT_MP_JOIN
+-	 * Initial SYN
+-	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
+-	 * 1: Address ID
+-	 * 2-5: Receiver token
+-	 * 6-9: Sender random number
+-	 * SYN/ACK response
+-	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
+-	 * 1: Address ID
+-	 * 2-9: Sender truncated HMAC
+-	 * 10-13: Sender random number
+-	 * Third ACK
+-	 * 0: 4MSB=3Dsubtype, 0000
+-	 * 1: 0 (Reserved)
+-	 * 2-21: Sender HMAC
+-	 */
+ 	case MPTCPOPT_MP_JOIN:
+ 		mp_opt->mp_join =3D 1;
+ 		if (opsize =3D=3D TCPOLEN_MPTCP_MPJ_SYN) {
+@@ -150,17 +128,6 @@ void mptcp_parse_option(const struct sk_buff *skb, con=
+st unsigned char *ptr,
+ 		}
+ 		break;
+ =
 
-Hmpf.  The .config has CONFIG_CRYPTO=3Dn and then the symbol doesn't
-exist.
+-
+-	/* MPTCPOPT_DSS
+-	 * 0: 4MSB=3Dsubtype, 0000
+-	 * 1: 3MSB=3D0, F=3DData FIN, m=3DDSN length, M=3Dhas DSN/SSN/DLL/checksu=
+m,
+-	 *    a=3DDACK length, A=3Dhas DACK
+-	 * 0, 4, or 8 bytes of DACK (depending on A/a)
+-	 * 0, 4, or 8 bytes of DSN (depending on M/m)
+-	 * 0 or 4 bytes of SSN (depending on M)
+-	 * 0 or 2 bytes of DLL (depending on M)
+-	 * 0 or 2 bytes of checksum (depending on M)
+-	 */
+ 	case MPTCPOPT_DSS:
+ 		pr_debug("DSS");
+ 		ptr++;
+@@ -243,12 +210,6 @@ void mptcp_parse_option(const struct sk_buff *skb, con=
+st unsigned char *ptr,
+ =
 
-So we have two choices:
-- select CRYPTO from Kconfig
-- use plain memcmp as before (might reveal info about key though)
-- copypaste a similar function into mptcp.
+ 		break;
+ =
 
-What do you think?
---===============7650104640868082670==--
+-	/* MPTCPOPT_ADD_ADDR
+-	 * 0: 4MSB=3Dsubtype, 4LSB=3DIP version (4 or 6)
+-	 * 1: Address ID
+-	 * 4 or 16 bytes of address (depending on ip version)
+-	 * 0 or 2 bytes of port (depending on length)
+-	 */
+ 	case MPTCPOPT_ADD_ADDR:
+ 		if (opsize !=3D TCPOLEN_MPTCP_ADD_ADDR &&
+ 		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
+@@ -282,11 +243,6 @@ void mptcp_parse_option(const struct sk_buff *skb, con=
+st unsigned char *ptr,
+ #endif
+ 		break;
+ =
+
+-	/* MPTCPOPT_RM_ADDR
+-	 * 0: 4MSB=3Dsubtype, 0000
+-	 * 1: Address ID
+-	 * Additional bytes: More address IDs (depending on length)
+-	 */
+ 	case MPTCPOPT_RM_ADDR:
+ 		if (opsize !=3D TCPOLEN_MPTCP_RM_ADDR)
+ 			break;
+@@ -296,22 +252,6 @@ void mptcp_parse_option(const struct sk_buff *skb, con=
+st unsigned char *ptr,
+ 		pr_debug("RM_ADDR: id=3D%d", mp_opt->addr_id);
+ 		break;
+ =
+
+-	/* MPTCPOPT_MP_PRIO
+-	 * 0: 4MSB=3Dsubtype, 000, 1LSB=3DBackup
+-	 * 1: Address ID (optional, current addr implied if not present)
+-	 */
+-
+-	/* MPTCPOPT_MP_FAIL
+-	 * 0: 4MSB=3Dsubtype, 0000
+-	 * 1: 0 (Reserved)
+-	 * 2-9: DSN
+-	 */
+-
+-	/* MPTCPOPT_MP_FASTCLOSE
+-	 * 0: 4MSB=3Dsubtype, 0000
+-	 * 1: 0 (Reserved)
+-	 * 2-9: Receiver key
+-	 */
+ 	default:
+ 		break;
+ 	}
+-- =
+
+2.17.2
+
+--===============0238994136512399928==--
