@@ -1,62 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============1292049660705334369=="
+Content-Type: multipart/mixed; boundary="===============7434109319473810394=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] Update commit message for "mptcp: cope with later TCP
- fallback"
-Date: Fri, 17 Jan 2020 17:29:24 -0800
-Message-ID: <20200118012924.23062-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH] mptcp: Refine some comments
+Date: Fri, 17 Jan 2020 17:44:31 -0800
+Message-ID: <20200118014431.9925-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3420
+X-UID: 3421
 
---===============1292049660705334369==
+--===============7434109319473810394==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+squashto: Associate MPTCP context with TCP socket
+
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- .topmsg | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/mptcp/protocol.c | 9 ++++-----
+ net/mptcp/subflow.c  | 5 ++++-
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/.topmsg b/.topmsg
-index 58389f14ec17..542b142671a9 100644
---- a/.topmsg
-+++ b/.topmsg
-@@ -1,10 +1,10 @@
- From: Paolo Abeni <pabeni(a)redhat.com>
- Subject: [PATCH] mptcp: cope with later TCP fallback
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ed8f7afd43db..fe5f813b4c13 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -71,10 +71,9 @@ static struct socket *__mptcp_fallback_to_tcp(struct mpt=
+cp_sock *msk,
+ 	return sock;
+ }
  =
 
--With V1 passive connections can fallback TCP after that the
--subflow become established:
-+With MPTCP v1, passive connections can fallback to TCP after the
-+subflow becomes established:
+-/* if msk has a single subflow socket, and the mp_capable handshake is not
+- * completed yet or has failed - that is, the socket is Not MP Capable,
+- * returns it.
+- * Otherwise returns NULL
++/* If msk has an initial subflow socket, and the MP_CAPABLE handshake has =
+not
++ * completed yet or has failed, return the subflow socket.
++ * Otherwise return NULL.
+  */
+ static struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
+ {
+@@ -139,7 +138,7 @@ static struct socket *__mptcp_socket_create(struct mptc=
+p_sock *msk, int state)
+ 	msk->subflow =3D ssock;
+ 	subflow =3D mptcp_subflow_ctx(ssock->sk);
+ 	list_add(&subflow->node, &msk->conn_list);
+-	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
++	subflow->request_mptcp =3D 1;
  =
 
--syn+ MP_CAPABLE ->
-+syn + MP_CAPABLE ->
-                <- syn, ack + MP_CAPABLE
+ set_state:
+ 	if (state !=3D MPTCP_SAME_STATE)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 34ccaa7bbacd..b36c72ba3dd8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -841,7 +841,9 @@ int mptcp_subflow_create_socket(struct sock *sk, struct=
+ socket **new_sock)
+ 		return err;
  =
 
- ack, seq =3D 3    ->
-@@ -19,8 +19,8 @@ We can't use the 'subflow' socket fallback, as we don't h=
-ave
- it available for passive connection.
+ 	lock_sock(sf->sk);
+-	/* kern socket do not acquire by default net ref, but TCP timer need it
++
++	/* kernel sockets do not by default acquire net ref, but TCP timer
++	 * needs it.
+ 	 */
+ 	sf->sk->sk_net_refcnt =3D 1;
+ 	get_net(net);
+@@ -871,6 +873,7 @@ static struct mptcp_subflow_context *subflow_create_ctx=
+(struct sock *sk,
+ 	ctx =3D kzalloc(sizeof(*ctx), priority);
+ 	if (!ctx)
+ 		return NULL;
++
+ 	rcu_assign_pointer(icsk->icsk_ulp_data, ctx);
+ 	INIT_LIST_HEAD(&ctx->node);
  =
 
- Instead, when the fallback is detected, replace the mptcp
--socket with the underlining TCP subflow. Beyond covering
--the above scenario, it makes TCP fallback socket as efficient
-+socket with the underlying TCP subflow. Beyond covering
-+the above scenario, it makes a TCP fallback socket as efficient
- as plain TCP ones.
- =
-
- Co-developed-by: Florian Westphal <fw(a)strlen.de>
 -- =
 
-2.25.0
+2.17.2
 
---===============1292049660705334369==--
+--===============7434109319473810394==--
