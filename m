@@ -1,115 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============7965933455888976902=="
+Content-Type: multipart/mixed; boundary="===============7650104640868082670=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Optimize DSS fields in
- mptcp_options_received
-Date: Fri, 17 Jan 2020 14:00:22 -0800
-Message-ID: <d95c33c1557f0a34cee0b8684058a361cbc77e46.camel@linux.intel.com>
-In-Reply-To: 5cb6c4ec11a9ecf7d9b6b4b9b839531dc3f40690.camel@redhat.com
+Subject: [MPTCP] Fwd: [martineau:kbuild-mptcp 22/38] subflow.c:undefined
+ reference to `__crypto_memneq'
+Date: Sat, 18 Jan 2020 01:05:36 +0100
+Message-ID: <20200118000536.GY795@breakpoint.cc>
 X-Status: 
 X-Keywords:                  
-X-UID: 3412
+X-UID: 3413
 
---===============7965933455888976902==
+--===============7650104640868082670==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-01-17 at 19:40 +0100, Paolo Abeni wrote:
-> On Fri, 2020-01-17 at 10:08 -0800, Mat Martineau wrote:
-> > On Thu, 16 Jan 2020, Peter Krystad wrote:
-> > =
+----- Forwarded message from kbuild test robot <lkp(a)intel.com> -----
 
-> > > Use union to minimize space used in structure.
-> > > Allow 32-bit DSS to be received at the same time as MP_CAPABLE.
-> > > =
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git=
+ kbuild-mptcp
+head:   c4ccdd8177fb3d8123dd294ae93ee2dac1f43f32
+commit: ccd5b6ef8fd4b37a7721231a55482523b07d7ef9 [22/38] mptcp: Add handlin=
+g of incoming MP_JOIN requests
+config: xtensa-common_defconfig (attached as .config)
+compiler: xtensa-linux-gcc (GCC) 7.5.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/=
+make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git checkout ccd5b6ef8fd4b37a7721231a55482523b07d7ef9
+        # save the attached .config to linux build tree
+        GCC_VERSION=3D7.5.0 make.cross ARCH=3Dxtensa =
 
-> > > squashto: Implement MPTCP receive path
-> > > =
 
-> > > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> > > ---
-> > > include/linux/tcp.h | 18 ++++++++++++------
-> > > 1 file changed, 12 insertions(+), 6 deletions(-)
-> > > =
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp(a)intel.com>
 
-> > > diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> > > index 6abf8d9f1a42..a9200a86a6d2 100644
-> > > --- a/include/linux/tcp.h
-> > > +++ b/include/linux/tcp.h
-> > > @@ -80,12 +80,18 @@ struct tcp_sack_block {
-> > > =
+All errors (new ones prefixed by >>):
 
-> > > #if IS_ENABLED(CONFIG_MPTCP)
-> > > struct mptcp_options_received {
-> > > -	u64	sndr_key;
-> > > -	u64	rcvr_key;
-> > > -	u32	data_ack32;
-> > > -	u32	data_seq32;
-> > > -	u64	data_ack;
-> > > -	u64	data_seq;
-> > > +	union {
-> > > +		struct {
-> > > +			u64	sndr_key;
-> > > +			u64	rcvr_key;
-> > > +			u32	data_ack32;
-> > > +			u32	data_seq32;
-> > > +		};
-> > > +		struct {
-> > > +			u64	data_ack;
-> > > +			u64	data_seq;
-> > > +		};
-> > > +	};
-> > =
+   net/mptcp/subflow.o: In function `subflow_ulp_release':
+>> subflow.c:(.text+0x41c): undefined reference to `__crypto_memneq'
+   net/mptcp/subflow.o: In function `subflow_syn_recv_sock':
+   subflow.c:(.text+0x53a): undefined reference to `__crypto_memneq'
 
-> > If one of the goals is to ensure that mixed 32/64 ack/seq is working (a=
-s =
+Hmpf.  The .config has CONFIG_CRYPTO=3Dn and then the symbol doesn't
+exist.
 
-> > mentioned in next commit message), I think it would be better to expres=
-s =
+So we have two choices:
+- select CRYPTO from Kconfig
+- use plain memcmp as before (might reveal info about key though)
+- copypaste a similar function into mptcp.
 
-> > that as a union with the data_ack/data_seq and sndr_key/rcvr_key values =
-
-> > rather than depend on struct alignment:
-> > =
-
-> >  	struct {
-> >  		union {
-> >  			struct {
-> >  				u64	sndr_key;
-> >  				u64	rcvr_key;
-> >  			};
-> >  			struct {
-> >  				u64	data_ack;
-> >  				u64	data_seq;
-> >  			};
-> >  		};
-> >  		u32	data_ack32;
-> >  		u32	data_seq32;
-> >  	};
-> =
-
-> I'm really low on coffee here, so please perdom me for the likely dumb
-> comment, but... =
-
-> =
-
-> why do we need data_*32 and  *_key simult? I think we don't allow MPC
-> and DSS in the same packet ?!?
-
-The mutipath-tcp.org implementation would do this so (and also data_*32 + I=
-Pv4
-add_addr). If we know we won't ever do these combinations, and we only want=
- to
-work with ourselves, then it is not necessary.
-
-Peter.
-
-> Thanks,
-> =
-
-> Paolo
->=20
-
---===============7965933455888976902==--
+What do you think?
+--===============7650104640868082670==--
