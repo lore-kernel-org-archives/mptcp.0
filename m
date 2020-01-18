@@ -1,40 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============6578836813900228833=="
+Content-Type: multipart/mixed; boundary="===============1292049660705334369=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Commit text change: Handle MPTCP TCP options
-Date: Fri, 17 Jan 2020 17:24:30 -0800
-Message-ID: <49ba804f999b7f4907ab585ee456fd386f67bd8a.camel@linux.intel.com>
+Subject: [MPTCP] [PATCH] Update commit message for "mptcp: cope with later TCP
+ fallback"
+Date: Fri, 17 Jan 2020 17:29:24 -0800
+Message-ID: <20200118012924.23062-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3419
+X-UID: 3420
 
---===============6578836813900228833==
+--===============1292049660705334369==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ .topmsg | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Would like to change the commit text to:
-    =
+diff --git a/.topmsg b/.topmsg
+index 58389f14ec17..542b142671a9 100644
+--- a/.topmsg
++++ b/.topmsg
+@@ -1,10 +1,10 @@
+ From: Paolo Abeni <pabeni(a)redhat.com>
+ Subject: [PATCH] mptcp: cope with later TCP fallback
+ =
 
-Add hooks to parse and format the MP_CAPABLE option.
+-With V1 passive connections can fallback TCP after that the
+-subflow become established:
++With MPTCP v1, passive connections can fallback to TCP after the
++subflow becomes established:
+ =
 
-This option is handled according to MPTCP version 0 (RFC6824).
-MPTCP version 1 MP_CAPABLE (RFC6824bis/RFC8684) will be added
-later in coordination with related code changes.
-    =
+-syn+ MP_CAPABLE ->
++syn + MP_CAPABLE ->
+                <- syn, ack + MP_CAPABLE
+ =
 
+ ack, seq =3D 3    ->
+@@ -19,8 +19,8 @@ We can't use the 'subflow' socket fallback, as we don't h=
+ave
+ it available for passive connection.
+ =
 
-Previous:
+ Instead, when the fallback is detected, replace the mptcp
+-socket with the underlining TCP subflow. Beyond covering
+-the above scenario, it makes TCP fallback socket as efficient
++socket with the underlying TCP subflow. Beyond covering
++the above scenario, it makes a TCP fallback socket as efficient
+ as plain TCP ones.
+ =
 
-Add routines to parse and format the MP_CAPABLE option.
-    =
+ Co-developed-by: Florian Westphal <fw(a)strlen.de>
+-- =
 
-These options are handled according to MPTCPv0 (RFC6824).
-RFC6824bis/RFC8684 MPTCPv1 MP_CAPABLE is added later in coordination
-with related code changes.
+2.25.0
 
-Peter.
-
---===============6578836813900228833==--
+--===============1292049660705334369==--
