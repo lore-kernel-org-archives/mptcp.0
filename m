@@ -1,88 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============7434109319473810394=="
+Content-Type: multipart/mixed; boundary="===============5343012848969032646=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: Refine some comments
-Date: Fri, 17 Jan 2020 17:44:31 -0800
-Message-ID: <20200118014431.9925-1-peter.krystad@linux.intel.com>
+Subject: [MPTCP] Re: Fwd: [martineau:kbuild-mptcp 22/38] subflow.c:undefined
+ reference to `__crypto_memneq'
+Date: Sun, 19 Jan 2020 15:07:38 +0100
+Message-ID: <e630651f1e645b5b7fa24c79630d7edf97b79a47.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.2001171618020.68065@sjshaw-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3421
+X-UID: 3422
 
---===============7434109319473810394==
+--===============5343012848969032646==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: Associate MPTCP context with TCP socket
+On Fri, 2020-01-17 at 16:27 -0800, Mat Martineau wrote:
+> On Sat, 18 Jan 2020, Florian Westphal wrote:
+> =
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
----
- net/mptcp/protocol.c | 9 ++++-----
- net/mptcp/subflow.c  | 5 ++++-
- 2 files changed, 8 insertions(+), 6 deletions(-)
+> > ----- Forwarded message from kbuild test robot <lkp(a)intel.com> -----
+> > =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ed8f7afd43db..fe5f813b4c13 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -71,10 +71,9 @@ static struct socket *__mptcp_fallback_to_tcp(struct mpt=
-cp_sock *msk,
- 	return sock;
- }
- =
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux=
+.git kbuild-mptcp
+> > head:   c4ccdd8177fb3d8123dd294ae93ee2dac1f43f32
+> > commit: ccd5b6ef8fd4b37a7721231a55482523b07d7ef9 [22/38] mptcp: Add han=
+dling of incoming MP_JOIN requests
+> > config: xtensa-common_defconfig (attached as .config)
+> > compiler: xtensa-linux-gcc (GCC) 7.5.0
+> > reproduce:
+> >        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sb=
+in/make.cross -O ~/bin/make.cross
+> >        chmod +x ~/bin/make.cross
+> >        git checkout ccd5b6ef8fd4b37a7721231a55482523b07d7ef9
+> >        # save the attached .config to linux build tree
+> >        GCC_VERSION=3D7.5.0 make.cross ARCH=3Dxtensa
+> > =
 
--/* if msk has a single subflow socket, and the mp_capable handshake is not
-- * completed yet or has failed - that is, the socket is Not MP Capable,
-- * returns it.
-- * Otherwise returns NULL
-+/* If msk has an initial subflow socket, and the MP_CAPABLE handshake has =
-not
-+ * completed yet or has failed, return the subflow socket.
-+ * Otherwise return NULL.
-  */
- static struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
- {
-@@ -139,7 +138,7 @@ static struct socket *__mptcp_socket_create(struct mptc=
-p_sock *msk, int state)
- 	msk->subflow =3D ssock;
- 	subflow =3D mptcp_subflow_ctx(ssock->sk);
- 	list_add(&subflow->node, &msk->conn_list);
--	subflow->request_mptcp =3D 1; /* @@ if MPTCP enabled */
-+	subflow->request_mptcp =3D 1;
- =
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp(a)intel.com>
+> > =
 
- set_state:
- 	if (state !=3D MPTCP_SAME_STATE)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 34ccaa7bbacd..b36c72ba3dd8 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -841,7 +841,9 @@ int mptcp_subflow_create_socket(struct sock *sk, struct=
- socket **new_sock)
- 		return err;
- =
+> > All errors (new ones prefixed by >>):
+> > =
 
- 	lock_sock(sf->sk);
--	/* kern socket do not acquire by default net ref, but TCP timer need it
-+
-+	/* kernel sockets do not by default acquire net ref, but TCP timer
-+	 * needs it.
- 	 */
- 	sf->sk->sk_net_refcnt =3D 1;
- 	get_net(net);
-@@ -871,6 +873,7 @@ static struct mptcp_subflow_context *subflow_create_ctx=
-(struct sock *sk,
- 	ctx =3D kzalloc(sizeof(*ctx), priority);
- 	if (!ctx)
- 		return NULL;
-+
- 	rcu_assign_pointer(icsk->icsk_ulp_data, ctx);
- 	INIT_LIST_HEAD(&ctx->node);
- =
+> >   net/mptcp/subflow.o: In function `subflow_ulp_release':
+> > > > subflow.c:(.text+0x41c): undefined reference to `__crypto_memneq'
+> >   net/mptcp/subflow.o: In function `subflow_syn_recv_sock':
+> >   subflow.c:(.text+0x53a): undefined reference to `__crypto_memneq'
+> > =
 
--- =
+> > Hmpf.  The .config has CONFIG_CRYPTO=3Dn and then the symbol doesn't
+> > exist.
+> > =
 
-2.17.2
+> > So we have two choices:
+> > - select CRYPTO from Kconfig
+> > - use plain memcmp as before (might reveal info about key though)
+> > - copypaste a similar function into mptcp.
+> > =
 
---===============7434109319473810394==--
+> > What do you think?
+> =
+
+> I prefer selecting CRYPTO over copy/paste. =
+
+
+I agree with 'select CRYPTO=3Dy'
+
+/P
+
+--===============5343012848969032646==--
