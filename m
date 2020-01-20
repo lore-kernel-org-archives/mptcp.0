@@ -1,47 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============5816339106355252188=="
+Content-Type: multipart/mixed; boundary="===============2682390911176271526=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Remove protocol spec comments from
- mptcp_parse_option
-Date: Mon, 20 Jan 2020 16:55:38 +0100
-Message-ID: <e2d071d2-f028-8b05-d98c-022e1fffd0fc@tessares.net>
-In-Reply-To: alpine.OSX.2.21.2001171711360.68065@sjshaw-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH] Move subflow ipv6 code earlier in subflow.c
+Date: Mon, 20 Jan 2020 17:04:37 +0100
+Message-ID: <6b01cb15-604d-c4c1-922c-ea94cf5fad7a@tessares.net>
+In-Reply-To: c4b67714d7dc21e184e02570c7ebd1468c470baf.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3428
+X-UID: 3429
 
---===============5816339106355252188==
+--===============2682390911176271526==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter, Mat,
+Hi Mat, Paolo,
 
-On 18/01/2020 02:11, Mat Martineau wrote:
+On 19/01/2020 15:10, Paolo Abeni wrote:
+> On Fri, 2020-01-17 at 16:58 -0800, Mat Martineau wrote:
+>> This prevents some diff noise in "mptcp: Implement MPTCP receive path",
+>> where the code is currently moved.
+>>
+>> squashto: "mptcp: Handle MP_CAPABLE options for outgoing connections"
+>>
+>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 > =
 
-> On Fri, 17 Jan 2020, Peter Krystad wrote:
+> LGTM! yep, noise in later patch make the latter much less unreadable.
 > =
 
->> They are already out-of-date. Let them read the spec, or least
->> look at the pictures!
-> =
+> Thanks for addressing that!
 
-> I agree, it's good to remove these.
+Thank you for the patch and the review!
 
-Thank you for the patch and the review:
+- 3d4edf2302a5: "squashed" in "mptcp: Handle MP_CAPABLE options for =
 
-- 0d6a8d414b1d: "squashed" with conflicts in "mptcp: Handle MPTCP TCP =
+outgoing connections"
+- b6685f0043f6: conflict in t/mptcp-Implement-MPTCP-receive-path
+- d23bb6b15878..485d1d576dcd: result (empty, as expected, no?)
 
-options"
-- e435077830e6: conflict in t/mptcp-Add-ADD_ADDR-handling
-- 0afe0b6491a2: conflict in =
+But now, t/mptcp-Implement-MPTCP-receive-path is indeed cleaner
 
-t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-- 639d43b44b61..d23bb6b15878: result
-
-Tests + export will be launched soon
+Tests + export will be launched soon.
 
 Cheers,
 Matt
@@ -52,4 +53,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5816339106355252188==--
+--===============2682390911176271526==--
