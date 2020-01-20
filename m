@@ -1,48 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============2682390911176271526=="
+Content-Type: multipart/mixed; boundary="===============3715931528747487340=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Move subflow ipv6 code earlier in subflow.c
-Date: Mon, 20 Jan 2020 17:04:37 +0100
-Message-ID: <6b01cb15-604d-c4c1-922c-ea94cf5fad7a@tessares.net>
-In-Reply-To: c4b67714d7dc21e184e02570c7ebd1468c470baf.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] Update commit message for "mptcp: Implement MPTCP
+ receive path"
+Date: Mon, 20 Jan 2020 17:09:31 +0100
+Message-ID: <19b3f0f3-4abe-e0af-bd77-e2593a4db2b7@tessares.net>
+In-Reply-To: 20200118010657.22436-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3429
+X-UID: 3430
 
---===============2682390911176271526==
+--===============3715931528747487340==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Paolo,
+Hi Mat,
 
-On 19/01/2020 15:10, Paolo Abeni wrote:
-> On Fri, 2020-01-17 at 16:58 -0800, Mat Martineau wrote:
->> This prevents some diff noise in "mptcp: Implement MPTCP receive path",
->> where the code is currently moved.
->>
->> squashto: "mptcp: Handle MP_CAPABLE options for outgoing connections"
->>
->> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> =
+On 18/01/2020 02:06, Mat Martineau wrote:
+> Fix minor typos.
 
-> LGTM! yep, noise in later patch make the latter much less unreadable.
-> =
+Thank you for the patch!
 
-> Thanks for addressing that!
+- d2c4d63e88f1: "squashed" in "mptcp: Implement MPTCP receive path"
 
-Thank you for the patch and the review!
-
-- 3d4edf2302a5: "squashed" in "mptcp: Handle MP_CAPABLE options for =
-
-outgoing connections"
-- b6685f0043f6: conflict in t/mptcp-Implement-MPTCP-receive-path
-- d23bb6b15878..485d1d576dcd: result (empty, as expected, no?)
-
-But now, t/mptcp-Implement-MPTCP-receive-path is indeed cleaner
-
-Tests + export will be launched soon.
+TG export will be done soon.
 
 Cheers,
 Matt
@@ -53,4 +36,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2682390911176271526==--
+--===============3715931528747487340==--
