@@ -1,123 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============2802090484455571481=="
+Content-Type: multipart/mixed; boundary="===============8437997021294836072=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Optimize DSS fields in
- mptcp_options_received
-Date: Sun, 19 Jan 2020 15:27:56 +0100
-Message-ID: <fe8c38b56768df950cb143970ce5b36e072af20f.camel@redhat.com>
-In-Reply-To: d95c33c1557f0a34cee0b8684058a361cbc77e46.camel@linux.intel.com
+Subject: [MPTCP] Re: Fwd: [martineau:kbuild-mptcp 22/38] subflow.c:undefined
+ reference to `__crypto_memneq'
+Date: Mon, 20 Jan 2020 10:49:13 +0100
+Message-ID: <48a83812-3670-ed88-7a75-7ea0a1c86438@tessares.net>
+In-Reply-To: e630651f1e645b5b7fa24c79630d7edf97b79a47.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3424
+X-UID: 3425
 
---===============2802090484455571481==
+--===============8437997021294836072==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-01-17 at 14:00 -0800, Peter Krystad wrote:
-> On Fri, 2020-01-17 at 19:40 +0100, Paolo Abeni wrote:
-> > On Fri, 2020-01-17 at 10:08 -0800, Mat Martineau wrote:
-> > > On Thu, 16 Jan 2020, Peter Krystad wrote:
-> > > =
+Hi Florian, Mat, Paolo,
 
-> > > > Use union to minimize space used in structure.
-> > > > Allow 32-bit DSS to be received at the same time as MP_CAPABLE.
-> > > > =
-
-> > > > squashto: Implement MPTCP receive path
-> > > > =
-
-> > > > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> > > > ---
-> > > > include/linux/tcp.h | 18 ++++++++++++------
-> > > > 1 file changed, 12 insertions(+), 6 deletions(-)
-> > > > =
-
-> > > > diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> > > > index 6abf8d9f1a42..a9200a86a6d2 100644
-> > > > --- a/include/linux/tcp.h
-> > > > +++ b/include/linux/tcp.h
-> > > > @@ -80,12 +80,18 @@ struct tcp_sack_block {
-> > > > =
-
-> > > > #if IS_ENABLED(CONFIG_MPTCP)
-> > > > struct mptcp_options_received {
-> > > > -	u64	sndr_key;
-> > > > -	u64	rcvr_key;
-> > > > -	u32	data_ack32;
-> > > > -	u32	data_seq32;
-> > > > -	u64	data_ack;
-> > > > -	u64	data_seq;
-> > > > +	union {
-> > > > +		struct {
-> > > > +			u64	sndr_key;
-> > > > +			u64	rcvr_key;
-> > > > +			u32	data_ack32;
-> > > > +			u32	data_seq32;
-> > > > +		};
-> > > > +		struct {
-> > > > +			u64	data_ack;
-> > > > +			u64	data_seq;
-> > > > +		};
-> > > > +	};
-> > > =
-
-> > > If one of the goals is to ensure that mixed 32/64 ack/seq is working =
-(as =
-
-> > > mentioned in next commit message), I think it would be better to expr=
-ess =
-
-> > > that as a union with the data_ack/data_seq and sndr_key/rcvr_key valu=
-es =
-
-> > > rather than depend on struct alignment:
-> > > =
-
-> > >  	struct {
-> > >  		union {
-> > >  			struct {
-> > >  				u64	sndr_key;
-> > >  				u64	rcvr_key;
-> > >  			};
-> > >  			struct {
-> > >  				u64	data_ack;
-> > >  				u64	data_seq;
-> > >  			};
-> > >  		};
-> > >  		u32	data_ack32;
-> > >  		u32	data_seq32;
-> > >  	};
-> > =
-
-> > I'm really low on coffee here, so please perdom me for the likely dumb
-> > comment, but... =
-
-> > =
-
-> > why do we need data_*32 and  *_key simult? I think we don't allow MPC
-> > and DSS in the same packet ?!?
+On 19/01/2020 15:07, Paolo Abeni wrote:
+> On Fri, 2020-01-17 at 16:27 -0800, Mat Martineau wrote:
+>> On Sat, 18 Jan 2020, Florian Westphal wrote:
+>>
+>>> ----- Forwarded message from kbuild test robot <lkp(a)intel.com> -----
+>>>
+>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux=
+.git kbuild-mptcp
+>>> head:   c4ccdd8177fb3d8123dd294ae93ee2dac1f43f32
+>>> commit: ccd5b6ef8fd4b37a7721231a55482523b07d7ef9 [22/38] mptcp: Add han=
+dling of incoming MP_JOIN requests
+>>> config: xtensa-common_defconfig (attached as .config)
+>>> compiler: xtensa-linux-gcc (GCC) 7.5.0
+>>> reproduce:
+>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/s=
+bin/make.cross -O ~/bin/make.cross
+>>>         chmod +x ~/bin/make.cross
+>>>         git checkout ccd5b6ef8fd4b37a7721231a55482523b07d7ef9
+>>>         # save the attached .config to linux build tree
+>>>         GCC_VERSION=3D7.5.0 make.cross ARCH=3Dxtensa
+>>>
+>>> If you fix the issue, kindly add following tag
+>>> Reported-by: kbuild test robot <lkp(a)intel.com>
+>>>
+>>> All errors (new ones prefixed by >>):
+>>>
+>>>    net/mptcp/subflow.o: In function `subflow_ulp_release':
+>>>>> subflow.c:(.text+0x41c): undefined reference to `__crypto_memneq'
+>>>    net/mptcp/subflow.o: In function `subflow_syn_recv_sock':
+>>>    subflow.c:(.text+0x53a): undefined reference to `__crypto_memneq'
+>>>
+>>> Hmpf.  The .config has CONFIG_CRYPTO=3Dn and then the symbol doesn't
+>>> exist.
+>>>
+>>> So we have two choices:
+>>> - select CRYPTO from Kconfig
+>>> - use plain memcmp as before (might reveal info about key though)
+>>> - copypaste a similar function into mptcp.
+>>>
+>>> What do you think?
+>>
+>> I prefer selecting CRYPTO over copy/paste.
 > =
 
-> The mutipath-tcp.org implementation would do this so (and also data_*32 +=
- IPv4
-> add_addr). If we know we won't ever do these combinations, and we only wa=
-nt to
-> work with ourselves, then it is not necessary.
+> I agree with 'select CRYPTO=3Dy'
 
+Me too.
 
-Uhmm.. I *think* with MPTCP v1 MPC+DSS is no longer required (nor
-should be sent)? we have MPC+data instead...
+Florian: do you ask the question because you think we can have issues or =
 
-(sorry I have the vague the feeling we already have discussed this in
-the past, but for sure I completely forgot the conclusion...)
+comments from net maintainers when forcing the selection of CRYPTO for =
 
-Thanks,
+MPTCP?
 
-Paolo
+Do we plan to do this modification in "mptcp: Add handling of incoming =
 
+MP_JOIN requests" commit (part 3) or before (part 2, when starting using =
 
+functions from CRYPTO, e.g. "mptcp: Add key generation and token tree")?
 
---===============2802090484455571481==--
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8437997021294836072==--
