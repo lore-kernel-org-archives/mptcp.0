@@ -1,44 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============2074435492044007077=="
+Content-Type: multipart/mixed; boundary="===============0561339534634173305=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Part 2 for Netdev: remaining items
-Date: Mon, 20 Jan 2020 15:58:11 +0100
-Message-ID: <efe45551-0486-5d34-4ad0-49fa8a372490@tessares.net>
+Subject: [MPTCP] Re: [PATCH] mptcp: Remove protocol spec comments from
+ mptcp_parse_option
+Date: Mon, 20 Jan 2020 16:55:23 +0100
+Message-ID: <3bd9c380-d426-8776-f86e-8a4dde28e15c@tessares.net>
+In-Reply-To: alpine.OSX.2.21.2001171711360.68065@sjshaw-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3426
+X-UID: 3427
 
---===============2074435492044007077==
+--===============0561339534634173305==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello!
+Hi Mat, Peter,
 
-On a pad, I listed the different things to do before sending the new =
+On 18/01/2020 02:11, Mat Martineau wrote:
+> =
 
-version to netdev:
+> On Fri, 17 Jan 2020, Peter Krystad wrote:
+> =
 
-  https://annuel2.framapad.org/p/mptcp_upstreaming_20200116_patches_part2
+>> They are already out-of-date. Let them read the spec, or least
+>> look at the pictures!
+> =
 
+> I agree, it's good to remove these.
 
-In summary:
+Thank you for the patch and the review:
 
-- 1223968: mptcp: Store 32 and 64-bit ACKs separately
-   =E2=86=92 Needs Review
+- 0d6a8d414b1d: "squashed" with conflicts in "mptcp: Handle MPTCP TCP =
 
-- 1224646: mptcp: Optimize DSS fields in mptcp_options_received
-   =E2=86=92 Changes Requested, or not? (not clear for me)
+options"
+- e435077830e6: conflict in t/mptcp-Add-ADD_ADDR-handling
+- 0afe0b6491a2: conflict in =
 
-- a few patches to be applied
-   =E2=86=92 I will do that: mainly changing commit messages, comments, etc.
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- 639d43b44b61..d23bb6b15878: result
 
-- subflow.c:undefined reference to `__crypto_memneq'
-   =E2=86=92 see another email thread from Florian: what do we need to do?
-
-
-Did I miss something? Feel free to help on the above items ;-)
+Tests + export will be launched soon
 
 Cheers,
 Matt
@@ -49,4 +52,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2074435492044007077==--
+--===============0561339534634173305==--
