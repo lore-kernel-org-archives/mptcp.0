@@ -1,35 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============0282995801227354141=="
+Content-Type: multipart/mixed; boundary="===============2901908896342333921=="
 MIME-Version: 1.0
-From: Matt <mattator at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] request for a pcap with version 1
-Date: Mon, 20 Jan 2020 18:14:55 +0100
-Message-ID: <CADHp1NybvoUJEWO9DOuY60-SepUu+q_pfXzSa+=J8u5uS+fA5w@mail.gmail.com>
+Subject: [MPTCP] Re: [PATCH] Update commit message for "mptcp: cope with later
+ TCP fallback"
+Date: Mon, 20 Jan 2020 17:17:19 +0100
+Message-ID: <61419c3c-c271-b2d2-5a05-a3d14e2d1420@tessares.net>
+In-Reply-To: 20200118012924.23062-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3432
+X-UID: 3433
 
---===============0282995801227354141==
+--===============2901908896342333921==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Mat,
 
-First of all congrats on all the work done and the first patchset being mer=
-ged.
+On 18/01/2020 02:29, Mat Martineau wrote:
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+>   .topmsg | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
 
-I am the author of a small mptcp analyzer (displays
-throughput/goodput/one way delays if you capture both at
-client/server):
-https://github.com/teto/mptcpanalyzer
+Thank you for the patch!
 
-I would like to add support for mptcp v1 but I would need a pcap to
-check it works correctly (without having me compile the kernel).
-I wonder if it would be possible to share such a pcap (from a
-selftest, or mininet test) with the community, at
-https://wiki.wireshark.org/SampleCaptures#MPTCP for instance ?
+- a1bee5b2204b: "squashed" in "mptcp: cope with later TCP fallback"
 
-Best regards
+Export will be launched soon!
+
+Cheers,
 Matt
---===============0282995801227354141==--
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============2901908896342333921==--
