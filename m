@@ -1,42 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============5955096940366956861=="
+Content-Type: multipart/mixed; boundary="===============7811182102268927087=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Fwd: [martineau:kbuild-mptcp 22/38] subflow.c:undefined
- reference to `__crypto_memneq'
-Date: Mon, 20 Jan 2020 17:20:41 +0100
-Message-ID: <20200120162041.GD795@breakpoint.cc>
-In-Reply-To: 48a83812-3670-ed88-7a75-7ea0a1c86438@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp: Refine some comments
+Date: Mon, 20 Jan 2020 17:41:28 +0100
+Message-ID: <50fb5242-7c94-0fdd-c098-922e2487535f@tessares.net>
+In-Reply-To: 20200118014431.9925-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3434
+X-UID: 3435
 
---===============5955096940366956861==
+--===============7811182102268927087==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
-> > > I prefer selecting CRYPTO over copy/paste.
-> > =
+Hi Peter,
 
-> > I agree with 'select CRYPTO=3Dy'
-> =
+On 18/01/2020 02:44, Peter Krystad wrote:
+> squashto: Associate MPTCP context with TCP socket
 
-> Me too.
-> =
+Thank you for the patch!
 
-> Florian: do you ask the question because you think we can have issues or
-> comments from net maintainers when forcing the selection of CRYPTO for
-> MPTCP?
+Please double-check the changes in protocol.c because I had to do the =
 
-I think its fine, tcpmd5 and ipsec select it too.
+changes manually.
 
-> Do we plan to do this modification in "mptcp: Add handling of incoming
-> MP_JOIN requests" commit (part 3) or before (part 2, when starting using
-> functions from CRYPTO, e.g. "mptcp: Add key generation and token tree")?
+- 396d41c5d0ff: "squashed" (with conflicts) in "mptcp: Associate MPTCP =
 
-I'm currently travelling so I can't comment which commit makes the most
-sense.  It should be added when the first crypto functions are used, I
-think.
---===============5955096940366956861==--
+context with TCP socket"
+- 46202118ff84: conflict in =
+
+t/mptcp-Handle-MP_CAPABLE-options-for-outgoing-connections
+- 40e638606fbc: conflict in t/mptcp-cope-with-later-TCP-fallback
+- deb420f5399e..6f72af5829f8: result
+
+Tests and export are in progress!
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7811182102268927087==--
