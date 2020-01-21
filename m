@@ -1,86 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============1693159749782342558=="
+Content-Type: multipart/mixed; boundary="===============0921744920361677032=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: cope with later TCP fallback"
-Date: Tue, 21 Jan 2020 08:53:29 -0800
-Message-ID: <3c60e4ffcb6e32ce17113dab876dc21d9d6358df.camel@linux.intel.com>
-In-Reply-To: alpine.OSX.2.21.2001210847330.4301@mjmartin-mac01.local
+Subject: [MPTCP] [PATCH] mptcp: uniform the use of CONFIG_MPTCP_IPV6
+Date: Tue, 21 Jan 2020 18:05:42 +0100
+Message-ID: <20200121170542.2762865-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3448
+X-UID: 3449
 
---===============1693159749782342558==
+--===============0921744920361677032==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-01-21 at 08:49 -0800, Mat Martineau wrote:
-> On Tue, 21 Jan 2020, Paolo Abeni wrote:
-> =
+We should not check CONFIG_IPV6 but CONFIG_MPTCP_IPV6.
+And better to always use:
 
-> > kbuildbot reported a build breakage with IPV6 disabled.
-> > =
+  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
 
-> > Signed-off-by: Paolo Abeni <pabeni(a)redha.com>
-> > ---
-> > net/mptcp/protocol.c | 12 ++++++++++--
-> > 1 file changed, 10 insertions(+), 2 deletions(-)
-> > =
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 6da609791c7a..4e289ff748ad 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -26,6 +26,15 @@
-> > =
+Notes:
+    to be squashed in "mptcp: Create SUBFLOW socket for incoming connection=
+s"
 
-> > static void __mptcp_close(struct sock *sk, long timeout);
-> > =
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > +static const struct proto_ops * tcp_proto_ops(struct sock *sk)
-> > +{
-> > +#if IS_ENABLED(IPV6)
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7f1efe1aae5e..84799a5212a2 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -227,7 +227,7 @@ static void mptcp_copy_inaddrs(struct sock *msk, const =
+struct sock *ssk)
+ 	inet_sk(msk)->inet_saddr =3D inet_sk(ssk)->inet_saddr;
+ 	inet_sk(msk)->inet_rcv_saddr =3D inet_sk(ssk)->inet_rcv_saddr;
+ =
 
-> Does this need to be IS_ENABLED(CONFIG_IPV6) ?
+-#if IS_ENABLED(CONFIG_IPV6)
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	msk->sk_v6_daddr =3D ssk->sk_v6_daddr;
+ 	msk->sk_v6_rcv_saddr =3D ssk->sk_v6_rcv_saddr;
+ =
 
-Or IS_ENABLED(CONFIG_MPTCP_IPV6)?
+@@ -474,7 +474,7 @@ static int mptcp_listen(struct socket *sock, int backlo=
+g)
+ =
 
-Peter.
+ static bool is_tcp_proto(const struct proto *p)
+ {
+-#ifdef CONFIG_MPTCP_IPV6
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
+ #else
+ 	return p =3D=3D &tcp_prot;
+-- =
 
-> > +	if (sk->sk_family =3D=3D AF_INET6)
-> > +		return &inet6_stream_ops;
-> > +#endif
-> > +	return &inet_stream_ops;
-> > +}
-> > +
-> > /* MP_CAPABLE handshake failed, convert msk to plain tcp, replacing
-> >  * socket->sk and stream ops and destroying msk
-> >  * return the msk socket, as we can't access msk anymore after this fun=
-ction
-> > @@ -60,8 +69,7 @@ static struct socket *__mptcp_fallback_to_tcp(struct =
-mptcp_sock *msk,
-> > 		subflow->conn =3D NULL;
-> > 	}
-> > 	release_sock(ssk);
-> > -	sock->ops =3D sk->sk_family =3D=3D AF_INET6 ? &inet6_stream_ops :
-> > -						&inet_stream_ops;
-> > +	sock->ops =3D tcp_proto_ops(ssk);
-> > =
+2.24.0
 
-> > 	/* destroy the left-over msk sock */
-> > 	__mptcp_close(sk, 0);
-> > -- =
-
-> > 2.21.0
-> =
-
-> --
-> Mat Martineau
-> Intel
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
-
---===============1693159749782342558==--
+--===============0921744920361677032==--
