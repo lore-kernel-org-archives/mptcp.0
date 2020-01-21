@@ -1,168 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============6290132145489742616=="
+Content-Type: multipart/mixed; boundary="===============8603150127004908494=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Optimize DSS fields in
- mptcp_options_received
-Date: Mon, 20 Jan 2020 21:15:21 -0800
-Message-ID: <1194a6acf1f7945a90b4458df9854c9c8f8673d4.camel@linux.intel.com>
-In-Reply-To: 931bb51b-d7bf-ab84-5aca-6f17e4edbc77@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp: Store 32 and 64-bit ACKs separately
+Date: Mon, 20 Jan 2020 21:16:20 -0800
+Message-ID: <3049613c433d1db6366bc987b6d7d8c589d82f52.camel@linux.intel.com>
+In-Reply-To: 20200116011309.3202-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3439
+X-UID: 3440
 
---===============6290132145489742616==
+--===============8603150127004908494==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-01-20 at 23:34 +0100, Matthieu Baerts wrote:
-> Hi Paolo, Peter, Mat,
-> =
 
-> On 19/01/2020 15:27, Paolo Abeni wrote:
-> > On Fri, 2020-01-17 at 14:00 -0800, Peter Krystad wrote:
-> > > On Fri, 2020-01-17 at 19:40 +0100, Paolo Abeni wrote:
-> > > > On Fri, 2020-01-17 at 10:08 -0800, Mat Martineau wrote:
-> > > > > On Thu, 16 Jan 2020, Peter Krystad wrote:
-> > > > > =
-
-> > > > > > Use union to minimize space used in structure.
-> > > > > > Allow 32-bit DSS to be received at the same time as MP_CAPABLE.
-> > > > > > =
-
-> > > > > > squashto: Implement MPTCP receive path
-> > > > > > =
-
-> > > > > > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> > > > > > ---
-> > > > > > include/linux/tcp.h | 18 ++++++++++++------
-> > > > > > 1 file changed, 12 insertions(+), 6 deletions(-)
-> > > > > > =
-
-> > > > > > diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> > > > > > index 6abf8d9f1a42..a9200a86a6d2 100644
-> > > > > > --- a/include/linux/tcp.h
-> > > > > > +++ b/include/linux/tcp.h
-> > > > > > @@ -80,12 +80,18 @@ struct tcp_sack_block {
-> > > > > > =
-
-> > > > > > #if IS_ENABLED(CONFIG_MPTCP)
-> > > > > > struct mptcp_options_received {
-> > > > > > -	u64	sndr_key;
-> > > > > > -	u64	rcvr_key;
-> > > > > > -	u32	data_ack32;
-> > > > > > -	u32	data_seq32;
-> > > > > > -	u64	data_ack;
-> > > > > > -	u64	data_seq;
-> > > > > > +	union {
-> > > > > > +		struct {
-> > > > > > +			u64	sndr_key;
-> > > > > > +			u64	rcvr_key;
-> > > > > > +			u32	data_ack32;
-> > > > > > +			u32	data_seq32;
-> > > > > > +		};
-> > > > > > +		struct {
-> > > > > > +			u64	data_ack;
-> > > > > > +			u64	data_seq;
-> > > > > > +		};
-> > > > > > +	};
-> > > > > =
-
-> > > > > If one of the goals is to ensure that mixed 32/64 ack/seq is work=
-ing (as
-> > > > > mentioned in next commit message), I think it would be better to =
-express
-> > > > > that as a union with the data_ack/data_seq and sndr_key/rcvr_key =
-values
-> > > > > rather than depend on struct alignment:
-> > > > > =
-
-> > > > >   	struct {
-> > > > >   		union {
-> > > > >   			struct {
-> > > > >   				u64	sndr_key;
-> > > > >   				u64	rcvr_key;
-> > > > >   			};
-> > > > >   			struct {
-> > > > >   				u64	data_ack;
-> > > > >   				u64	data_seq;
-> > > > >   			};
-> > > > >   		};
-> > > > >   		u32	data_ack32;
-> > > > >   		u32	data_seq32;
-> > > > >   	};
-> > > > =
-
-> > > > I'm really low on coffee here, so please perdom me for the likely d=
-umb
-> > > > comment, but...
-> > > > =
-
-> > > > why do we need data_*32 and  *_key simult? I think we don't allow M=
-PC
-> > > > and DSS in the same packet ?!?
-> > > =
-
-> > > The mutipath-tcp.org implementation would do this so (and also data_*=
-32 + IPv4
-> > > add_addr). If we know we won't ever do these combinations, and we onl=
-y want to
-> > > work with ourselves, then it is not necessary.
-> > =
-
-> > Uhmm.. I *think* with MPTCP v1 MPC+DSS is no longer required (nor
-> > should be sent)? we have MPC+data instead...
-> > =
-
-> > (sorry I have the vague the feeling we already have discussed this in
-> > the past, but for sure I completely forgot the conclusion...)
-> =
-
-> Sorry to ask this question but do we want this change for part 2?
-> =
-
-> I understand the benefits and we should optimize mptcp_options_received =
-
-> structure at some points but from what I see, there are still some =
-
-> discussions about the content of the structure and having this union =
-
-> forces us to make sure we don't mix the usage of the members when =
-
-> parsing TCP options and when reading what has been parsed. Maybe it's a =
-
-> risk we don't want to take now for part 2.
-> =
-
-> We could postpone these optimizations for later before adding MP_JOIN =
-
-> and ADD_ADDR.
-> =
-
-> This patch and the "parent" one ("mptcp: Store 32 and 64-bit ACKs =
-
-> separately") are the two blocking ones to finalize part 2.
-> =
-
-> What do you think?
-
-I still think the optimization is worth addressing. Here is what I propose:
-
-I will drop/withdraw the two commits regarding 32-bit ack/seq:
-mptcp: Store 32 and 64-bit ACKs separately
-mptcp: Re-factor expand_ack
-
-Then I will re-submit the 'optimize' patches revised to reflect the
-dropping of the first two, adding checks to make sure use of the union
-is safe and to disallow simultaneous MPC+DSS. If we want to defer these
-until after v2 is submitted (to reduce risk and time to submission) that
-is also fine with me.
+We can drop this patch.
 
 Peter.
- =
 
-> Cheers,
-> Matt
+On Wed, 2020-01-15 at 17:13 -0800, Peter Krystad wrote:
+> Will be useful optimizing struct mptcp_options_received.
+> =
 
---===============6290132145489742616==--
+> squashto: Implement MPTCP receive path
+> =
+
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+>  include/linux/tcp.h |  2 ++
+>  net/mptcp/options.c | 24 ++++++++++++++++--------
+>  2 files changed, 18 insertions(+), 8 deletions(-)
+> =
+
+> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+> index 0d00dad4b85d..6abf8d9f1a42 100644
+> --- a/include/linux/tcp.h
+> +++ b/include/linux/tcp.h
+> @@ -82,6 +82,8 @@ struct tcp_sack_block {
+>  struct mptcp_options_received {
+>  	u64	sndr_key;
+>  	u64	rcvr_key;
+> +	u32	data_ack32;
+> +	u32	data_seq32;
+>  	u64	data_ack;
+>  	u64	data_seq;
+>  	u32	subflow_seq;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index db224e050666..b7f1892d8320 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -142,21 +142,23 @@ void mptcp_parse_option(const unsigned char *ptr, i=
+nt opsize,
+>  		if (mp_opt->use_ack) {
+>  			if (mp_opt->ack64) {
+>  				mp_opt->data_ack =3D get_unaligned_be64(ptr);
+> +				pr_debug("data_ack=3D%llu", mp_opt->data_ack);
+>  				ptr +=3D 8;
+>  			} else {
+> -				mp_opt->data_ack =3D get_unaligned_be32(ptr);
+> +				mp_opt->data_ack32 =3D get_unaligned_be32(ptr);
+> +				pr_debug("data_ack32=3D%u", mp_opt->data_ack32);
+>  				ptr +=3D 4;
+>  			}
+> -
+> -			pr_debug("data_ack=3D%llu", mp_opt->data_ack);
+>  		}
+>  =
+
+>  		if (mp_opt->use_map) {
+>  			if (mp_opt->dsn64) {
+>  				mp_opt->data_seq =3D get_unaligned_be64(ptr);
+> +				pr_debug("data_seq=3D%llu", mp_opt->data_seq);
+>  				ptr +=3D 8;
+>  			} else {
+> -				mp_opt->data_seq =3D get_unaligned_be32(ptr);
+> +				mp_opt->data_seq32 =3D get_unaligned_be32(ptr);
+> +				pr_debug("data_seq32=3D%u", mp_opt->data_seq32);
+>  				ptr +=3D 4;
+>  			}
+>  =
+
+> @@ -166,9 +168,8 @@ void mptcp_parse_option(const unsigned char *ptr, int=
+ opsize,
+>  			mp_opt->data_len =3D get_unaligned_be16(ptr);
+>  			ptr +=3D 2;
+>  =
+
+> -			pr_debug("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u",
+> -				 mp_opt->data_seq, mp_opt->subflow_seq,
+> -				 mp_opt->data_len);
+> +			pr_debug("subflow_seq=3D%u data_len=3D%u",
+> +				 mp_opt->subflow_seq, mp_opt->data_len);
+>  		}
+>  =
+
+>  		break;
+> @@ -428,7 +429,10 @@ void mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb,
+>  	memset(mpext, 0, sizeof(*mpext));
+>  =
+
+>  	if (mp_opt->use_map) {
+> -		mpext->data_seq =3D mp_opt->data_seq;
+> +		if (mp_opt->dsn64)
+> +			mpext->data_seq =3D mp_opt->data_seq;
+> +		else
+> +			mpext->data_seq =3D mp_opt->data_seq32;
+>  		mpext->subflow_seq =3D mp_opt->subflow_seq;
+>  		mpext->data_len =3D mp_opt->data_len;
+>  		mpext->use_map =3D 1;
+> @@ -436,6 +440,10 @@ void mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb,
+>  	}
+>  =
+
+>  	if (mp_opt->use_ack) {
+> +		if (mp_opt->ack64)
+> +			mpext->data_ack =3D mp_opt->data_ack;
+> +		else
+> +			mpext->data_ack =3D mp_opt->data_ack32;
+>  		mpext->data_ack =3D mp_opt->data_ack;
+>  		mpext->use_ack =3D 1;
+>  		mpext->ack64 =3D mp_opt->ack64;
+
+--===============8603150127004908494==--
