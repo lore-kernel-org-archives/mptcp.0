@@ -1,75 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============8000049633751707583=="
+Content-Type: multipart/mixed; boundary="===============7415356271857371845=="
 MIME-Version: 1.0
-From: Matt <mattator at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: request for a pcap with version 1
-Date: Tue, 21 Jan 2020 17:30:40 +0100
-Message-ID: <CADHp1NxRPdsASKHUnZ-3Hq1ftThvhVvYixFQrfLm6E1Ycy_7yQ@mail.gmail.com>
-In-Reply-To: df103c9f-983d-6896-e46c-cdb8e5e6c94c@tessares.net
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: cope with later TCP fallback"
+Date: Tue, 21 Jan 2020 17:32:37 +0100
+Message-ID: <9e790506ede2adbc601e5f3f576c023118d87280.1579624298.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3443
+X-UID: 3444
 
---===============8000049633751707583==
+--===============7415356271857371845==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-cool thanks ! Ideally it would be cool to have a pcap with multiple
-subflows to check that mapping subflows to an mptcp connection works
-fine (if the join mechanism doesnt changem there is no reason it
-shouldn't work but better safe than sorry). Meanwhile it's enough for
-me to get going.
+kbuildbot reported a build breakage with IPV6 disabled.
 
-If there is no interdiction, I will publish this pcap on the wireshark
-wiki this week.
+Signed-off-by: Paolo Abeni <pabeni(a)redha.com>
+---
+ net/mptcp/protocol.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Thanks again
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6da609791c7a..4e289ff748ad 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -26,6 +26,15 @@
+ =
 
-Cheers
+ static void __mptcp_close(struct sock *sk, long timeout);
+ =
 
-2020=E5=B9=B41=E6=9C=8820=E6=97=A5(=E6=9C=88) 22:59 Matthieu Baerts <matthi=
-eu.baerts(a)tessares.net>:
->
-> Hi Matt,
->
-> (too many Matt here too now :-=C3=BE )
->
-> On 20/01/2020 18:14, Matt wrote:
-> > Hi,
-> >
-> > First of all congrats on all the work done and the first patchset being=
- merged.
-> >
-> > I am the author of a small mptcp analyzer (displays
-> > throughput/goodput/one way delays if you capture both at
-> > client/server):
-> > https://github.com/teto/mptcpanalyzer
-> >
-> > I would like to add support for mptcp v1 but I would need a pcap to
-> > check it works correctly (without having me compile the kernel).
-> > I wonder if it would be possible to share such a pcap (from a
-> > selftest, or mininet test) with the community, at
-> > https://wiki.wireshark.org/SampleCaptures#MPTCP for instance ?
->
-> That's a good idea to add support for MPTCP v1!
->
-> Davide (in cc) recently created a pull request to add MPTCP v1 support
-> in TCPDump. There is one .pcap in the linked commit:
->
-> - https://github.com/the-tcpdump-group/tcpdump/pull/817
-> -
-> https://github.com/the-tcpdump-group/tcpdump/blob/0a7bfdb0d33265734bf9c05=
-9ee27ec6f04402145/tests/mptcp-v1.pcap?raw=3Dtrue
->
-> Would it help you supporting MPTCP v1?
->
-> Cheers,
-> Matt
-> --
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8000049633751707583==--
++static const struct proto_ops * tcp_proto_ops(struct sock *sk)
++{
++#if IS_ENABLED(IPV6)
++	if (sk->sk_family =3D=3D AF_INET6)
++		return &inet6_stream_ops;
++#endif
++	return &inet_stream_ops;
++}
++
+ /* MP_CAPABLE handshake failed, convert msk to plain tcp, replacing
+  * socket->sk and stream ops and destroying msk
+  * return the msk socket, as we can't access msk anymore after this functi=
+on
+@@ -60,8 +69,7 @@ static struct socket *__mptcp_fallback_to_tcp(struct mptc=
+p_sock *msk,
+ 		subflow->conn =3D NULL;
+ 	}
+ 	release_sock(ssk);
+-	sock->ops =3D sk->sk_family =3D=3D AF_INET6 ? &inet6_stream_ops :
+-						&inet_stream_ops;
++	sock->ops =3D tcp_proto_ops(ssk);
+ =
+
+ 	/* destroy the left-over msk sock */
+ 	__mptcp_close(sk, 0);
+-- =
+
+2.21.0
+
+--===============7415356271857371845==--
