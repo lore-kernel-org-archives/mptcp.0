@@ -1,83 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============9095059686119320112=="
+Content-Type: multipart/mixed; boundary="===============8910912109412970815=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "mptcp: cope with later TCP
- fallback"
-Date: Tue, 21 Jan 2020 23:58:38 +0100
-Message-ID: <9e10ae31-3bd7-f248-4457-cc8730cc3603@tessares.net>
-In-Reply-To: 78aef43d80722a559f4ef725f0e36674e74133ea.camel@redhat.com
+Subject: [MPTCP] [PATCH] mptcp: fix compilation warning without IPV6
+Date: Tue, 21 Jan 2020 23:59:33 +0100
+Message-ID: <20200121225933.3038131-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3463
+X-UID: 3464
 
---===============9095059686119320112==
+--===============8910912109412970815==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Spot by Mat:
 
-On 21/01/2020 22:04, Paolo Abeni wrote:
-> On Tue, 2020-01-21 at 12:58 -0800, Peter Krystad wrote:
->> On Tue, 2020-01-21 at 21:49 +0100, Paolo Abeni wrote:
->>> kbuildbot reported a build breakage with IPV6 disabled.
->>>
->>> v1 -> v2:
->>>   - fixed preprocessor conditional (Mat)
->>>   - fixed SoB (Mat)
->>>
->>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
->>> ---
->>>   net/mptcp/protocol.c | 12 ++++++++++--
->>>   1 file changed, 10 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 6da609791c7a..69b229607ab8 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -26,6 +26,15 @@
->>>   =
+    net/mptcp/protocol.c: In function =E2=80=98mptcp_copy_inaddrs=E2=80=99:
+    net/mptcp/protocol.c:672:21: warning: unused variable =E2=80=98msk6=E2=
+=80=99 [-Wunused-variable]
+      672 |  struct ipv6_pinfo *msk6 =3D inet6_sk(msk);
+          |                     ^~~~
+    net/mptcp/protocol.c:671:27: warning: unused variable =E2=80=98ssk6=E2=
+=80=99 [-Wunused-variable]
+      671 |  const struct ipv6_pinfo *ssk6 =3D inet6_sk(ssk);
+          |                           ^~~~
 
->>>   static void __mptcp_close(struct sock *sk, long timeout);
->>>   =
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
->>> +static const struct proto_ops * tcp_proto_ops(struct sock *sk)
->>> +{
->>> +#if IS_ENABLED(CONFIG_IPV6)
->>
->> Why not CONFIG_MPTCP_IPV6?
-> =
+Notes:
+    to be squashed in "mptcp: Create SUBFLOW socket for incoming connection=
+s"
 
-> The breakage happens with:
-> =
+ net/mptcp/protocol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> CONFIG_MPTCP=3Dy
-> # CONFIG_IPV6 is not set
-> # CONFIG_MPTCP_IPV6 is not set
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 84799a5212a2..41e83270c984 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -217,8 +217,10 @@ static void mptcp_close(struct sock *sk, long timeout)
+ =
 
-> so even CONFIG_MPTCP_IPV6 would work.
-> =
+ static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+ {
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	const struct ipv6_pinfo *ssk6 =3D inet6_sk(ssk);
+ 	struct ipv6_pinfo *msk6 =3D inet6_sk(msk);
++#endif
+ =
 
-> The offending code is using a symbol defined with CONFIG_IPV6 and copes
-> with TCP fallback, that is when the relevant socket is [no more] MPTCP,
-> so it felt more straightforward to me use the latter conditional.
-
-As discussed on IRC with Mat, we can apply this v2 of the patch:
-
-- 5bdcbe810d64: "squashed" in "mptcp: cope with later TCP fallback"
-- b0f4080cb362..fa392a833065: result
-
-Tests + export will be launched soon.
-
-Cheers,
-Matt
+ 	inet_sk(msk)->inet_num =3D inet_sk(ssk)->inet_num;
+ 	inet_sk(msk)->inet_dport =3D inet_sk(ssk)->inet_dport;
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============9095059686119320112==--
+2.24.0
+
+--===============8910912109412970815==--
