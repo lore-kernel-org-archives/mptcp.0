@@ -1,63 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============0921744920361677032=="
+Content-Type: multipart/mixed; boundary="===============7290470658414599697=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: uniform the use of CONFIG_MPTCP_IPV6
-Date: Tue, 21 Jan 2020 18:05:42 +0100
-Message-ID: <20200121170542.2762865-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH] mptcp: Optimize DSS fields in
+ mptcp_options_received
+Date: Tue, 21 Jan 2020 09:13:12 -0800
+Message-ID: <1ee87284cdd7358258f18d9d3ebbcd14bb74f1de.camel@linux.intel.com>
+In-Reply-To: 60a32d03-df98-fc36-5161-dfb6dd6a40dd@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3449
+X-UID: 3450
 
---===============0921744920361677032==
+--===============7290470658414599697==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We should not check CONFIG_IPV6 but CONFIG_MPTCP_IPV6.
-And better to always use:
+On Tue, 2020-01-21 at 15:04 +0100, Matthieu Baerts wrote:
+> Hi Peter,
 
-  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+<snip>
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+> Or do you think it will be mandatory to have this optimization now?
 
-Notes:
-    to be squashed in "mptcp: Create SUBFLOW socket for incoming connection=
-s"
+Not mandatory, we can go as is. I realized (after some code review) just th=
+is
+morning that for v1 although we do not send/receive MPC+DSS we need to have =
 
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+space for both options at the same time. This fragment when processing
+MP_CAPABLE in mptcp_parse_option() shows the need:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7f1efe1aae5e..84799a5212a2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -227,7 +227,7 @@ static void mptcp_copy_inaddrs(struct sock *msk, const =
-struct sock *ssk)
- 	inet_sk(msk)->inet_saddr =3D inet_sk(ssk)->inet_saddr;
- 	inet_sk(msk)->inet_rcv_saddr =3D inet_sk(ssk)->inet_rcv_saddr;
- =
+	if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK_DATA) {
+		/* Section 3.1.:
+		 * "the data parameters in a MP_CAPABLE are semantically
+		 * equivalent to those in a DSS option and can be used
+		 * interchangeably."
+		 */
+		mp_opt->dss =3D 1;
 
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	msk->sk_v6_daddr =3D ssk->sk_v6_daddr;
- 	msk->sk_v6_rcv_saddr =3D ssk->sk_v6_rcv_saddr;
- =
+The code for part 2 is fine as is. I'll send the optimizations for ADD_ADDR,
+etc. later.
 
-@@ -474,7 +474,7 @@ static int mptcp_listen(struct socket *sock, int backlo=
-g)
- =
+Peter.
 
- static bool is_tcp_proto(const struct proto *p)
- {
--#ifdef CONFIG_MPTCP_IPV6
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
- #else
- 	return p =3D=3D &tcp_prot;
--- =
+> Cheers,
+> Matt
 
-2.24.0
-
---===============0921744920361677032==--
+--===============7290470658414599697==--
