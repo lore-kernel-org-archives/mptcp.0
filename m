@@ -1,80 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============0619895160171259551=="
+Content-Type: multipart/mixed; boundary="===============2090515906449040668=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: uniform the use of CONFIG_MPTCP_IPV6
-Date: Tue, 21 Jan 2020 09:51:25 -0800
-Message-ID: <alpine.OSX.2.21.2001210941310.4301@mjmartin-mac01.local>
-In-Reply-To: 20200121170542.2762865-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: cope with later TCP fallback"
+Date: Tue, 21 Jan 2020 21:33:46 +0100
+Message-ID: <bc848ea94d7a865240a5bcc04f912eff33b9e1a2.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.21.2001210850550.4301@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 3453
+X-UID: 3454
 
---===============0619895160171259551==
+--===============2090515906449040668==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2020-01-21 at 08:51 -0800, Mat Martineau wrote:
+> On Tue, 21 Jan 2020, Mat Martineau wrote:
+> =
 
-On Tue, 21 Jan 2020, Matthieu Baerts wrote:
+> > On Tue, 21 Jan 2020, Paolo Abeni wrote:
+> > =
 
-> We should not check CONFIG_IPV6 but CONFIG_MPTCP_IPV6.
-> And better to always use:
->
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
->
-> Notes:
->    to be squashed in "mptcp: Create SUBFLOW socket for incoming connectio=
-ns"
->
-> net/mptcp/protocol.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7f1efe1aae5e..84799a5212a2 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -227,7 +227,7 @@ static void mptcp_copy_inaddrs(struct sock *msk, cons=
-t struct sock *ssk)
-> 	inet_sk(msk)->inet_saddr =3D inet_sk(ssk)->inet_saddr;
-> 	inet_sk(msk)->inet_rcv_saddr =3D inet_sk(ssk)->inet_rcv_saddr;
->
-> -#if IS_ENABLED(CONFIG_IPV6)
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 	msk->sk_v6_daddr =3D ssk->sk_v6_daddr;
-> 	msk->sk_v6_rcv_saddr =3D ssk->sk_v6_rcv_saddr;
+> > > kbuildbot reported a build breakage with IPV6 disabled.
+> > > =
 
-I noticed that the declarations for msk6 and ssk6 at the beginning of this =
+> > > Signed-off-by: Paolo Abeni <pabeni(a)redha.com>
+> =
 
-function are not #ifdef'd either - I suggest moving all the IPv6 code to =
+> One more thing - typo in signoff      ^^^^^
 
-the beginning of the function so the declaration and the assignments can =
+Thanks, will fix.
 
-all be in one ifdef.
+> > > ---
+> > > net/mptcp/protocol.c | 12 ++++++++++--
+> > > 1 file changed, 10 insertions(+), 2 deletions(-)
+> > > =
 
+> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > > index 6da609791c7a..4e289ff748ad 100644
+> > > --- a/net/mptcp/protocol.c
+> > > +++ b/net/mptcp/protocol.c
+> > > @@ -26,6 +26,15 @@
+> > > =
 
-Mat
+> > > static void __mptcp_close(struct sock *sk, long timeout);
+> > > =
 
->
-> @@ -474,7 +474,7 @@ static int mptcp_listen(struct socket *sock, int back=
-log)
->
-> static bool is_tcp_proto(const struct proto *p)
-> {
-> -#ifdef CONFIG_MPTCP_IPV6
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
-> #else
-> 	return p =3D=3D &tcp_prot;
-> -- =
+> > > +static const struct proto_ops * tcp_proto_ops(struct sock *sk)
+> > > +{
+> > > +#if IS_ENABLED(IPV6)
+> > =
 
-> 2.24.0
+> > Does this need to be IS_ENABLED(CONFIG_IPV6) ?
 
+yep, CONFIG_IPV6 is the thing.
 
---
-Mat Martineau
-Intel
---===============0619895160171259551==--
+v2 is coming.
+
+Cheers,
+
+Paolo
+
+--===============2090515906449040668==--
