@@ -1,61 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============6667351061507008495=="
+Content-Type: multipart/mixed; boundary="===============8761699662963539083=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: cope with later TCP fallback"
-Date: Tue, 21 Jan 2020 21:40:59 +0100
-Message-ID: <f1b14c29e7ccf456d0316203db679a9641f8f91b.camel@redhat.com>
-In-Reply-To: aa9bbf76-4c32-eee8-bc4e-25c73169f5fb@tessares.net
+Subject: [MPTCP] [PATCH v2] Squash-to: "mptcp: cope with later TCP fallback"
+Date: Tue, 21 Jan 2020 21:49:09 +0100
+Message-ID: <4da2ded92f9b41cd1bf77a1fe235e694e0d2cdf9.1579639542.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3455
+X-UID: 3456
 
---===============6667351061507008495==
+--===============8761699662963539083==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-01-21 at 18:20 +0100, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
-> =
+kbuildbot reported a build breakage with IPV6 disabled.
 
-> On 21/01/2020 17:32, Paolo Abeni wrote:
-> > kbuildbot reported a build breakage with IPV6 disabled.
-> =
+v1 -> v2:
+ - fixed preprocessor conditional (Mat)
+ - fixed SoB (Mat)
 
-> Do you know why my CI didn't get the issue?
-> =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-> It runs:
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6da609791c7a..69b229607ab8 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -26,6 +26,15 @@
+ =
 
->    make defconfig
->    echo | scripts/config -d (...) ## to disable DRM, SOUND, USB, etc.
->    echo | scripts/config -e MPTCP -e MPTCP_IPV6
->    echo | scripts/config -d IPV6 -d MPTCP_IPV6
->    make
-> =
+ static void __mptcp_close(struct sock *sk, long timeout);
+ =
 
-> MPTCP is enabled and IPV6 is not.
-> =
++static const struct proto_ops * tcp_proto_ops(struct sock *sk)
++{
++#if IS_ENABLED(CONFIG_IPV6)
++	if (sk->sk_family =3D=3D AF_INET6)
++		return &inet6_stream_ops;
++#endif
++	return &inet_stream_ops;
++}
++
+ /* MP_CAPABLE handshake failed, convert msk to plain tcp, replacing
+  * socket->sk and stream ops and destroying msk
+  * return the msk socket, as we can't access msk anymore after this functi=
+on
+@@ -60,8 +69,7 @@ static struct socket *__mptcp_fallback_to_tcp(struct mptc=
+p_sock *msk,
+ 		subflow->conn =3D NULL;
+ 	}
+ 	release_sock(ssk);
+-	sock->ops =3D sk->sk_family =3D=3D AF_INET6 ? &inet6_stream_ops :
+-						&inet_stream_ops;
++	sock->ops =3D tcp_proto_ops(ssk);
+ =
 
-> Which combination did I miss?
+ 	/* destroy the left-over msk sock */
+ 	__mptcp_close(sk, 0);
+-- =
 
-weird. I can reproduce the build failure with
+2.21.0
 
-CONFIG_MPTCP=3Dy
-# CONFIG_IPV6 is not set
-# CONFIG_MPTCP_IPV6 is not set
-
-
-net/mptcp/protocol.o: In function `__mptcp_fallback_to_tcp':
-/home/pabeni/linux-net/net/mptcp/protocol.c:63: undefined reference to
-`inet6_stream_ops'
-
-the inet6_stream_ops struct is unconditionally referenced by the mptcp
-code.
-
-/P
-
-
---===============6667351061507008495==--
+--===============8761699662963539083==--
