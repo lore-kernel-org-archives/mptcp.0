@@ -1,68 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============8301333317833544990=="
+Content-Type: multipart/mixed; boundary="===============5986463351568279995=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "mptcp: cope with later TCP
- fallback"
-Date: Tue, 21 Jan 2020 22:04:07 +0100
-Message-ID: <78aef43d80722a559f4ef725f0e36674e74133ea.camel@redhat.com>
-In-Reply-To: 12a39a012a11566abb9edc590c01e711498125cc.camel@linux.intel.com
+Subject: [MPTCP] Re: [PATCH] mptcp: uniform the use of CONFIG_MPTCP_IPV6
+Date: Tue, 21 Jan 2020 22:10:08 +0100
+Message-ID: <fa105b91-6ed7-7d60-aa4c-973287de7618@tessares.net>
+In-Reply-To: alpine.OSX.2.21.2001210941310.4301@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 3458
+X-UID: 3459
 
---===============8301333317833544990==
+--===============5986463351568279995==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-01-21 at 12:58 -0800, Peter Krystad wrote:
-> On Tue, 2020-01-21 at 21:49 +0100, Paolo Abeni wrote:
-> > kbuildbot reported a build breakage with IPV6 disabled.
-> > =
+Hi Mat,
 
-> > v1 -> v2:
-> >  - fixed preprocessor conditional (Mat)
-> >  - fixed SoB (Mat)
-> > =
-
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> >  net/mptcp/protocol.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > =
-
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 6da609791c7a..69b229607ab8 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -26,6 +26,15 @@
-> >  =
-
-> >  static void __mptcp_close(struct sock *sk, long timeout);
-> >  =
-
-> > +static const struct proto_ops * tcp_proto_ops(struct sock *sk)
-> > +{
-> > +#if IS_ENABLED(CONFIG_IPV6)
+On 21/01/2020 18:51, Mat Martineau wrote:
 > =
 
-> Why not CONFIG_MPTCP_IPV6?
+> On Tue, 21 Jan 2020, Matthieu Baerts wrote:
+> =
 
-The breakage happens with:
+>> We should not check CONFIG_IPV6 but CONFIG_MPTCP_IPV6.
+>> And better to always use:
+>>
+>> =C2=A0#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>> ---
+>>
+>> Notes:
+>> =C2=A0=C2=A0 to be squashed in "mptcp: Create SUBFLOW socket for incomin=
+g =
 
-CONFIG_MPTCP=3Dy
-# CONFIG_IPV6 is not set
-# CONFIG_MPTCP_IPV6 is not set
+>> connections"
+>>
+>> net/mptcp/protocol.c | 4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 7f1efe1aae5e..84799a5212a2 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -227,7 +227,7 @@ static void mptcp_copy_inaddrs(struct sock *msk, =
 
-so even CONFIG_MPTCP_IPV6 would work.
+>> const struct sock *ssk)
+>> =C2=A0=C2=A0=C2=A0=C2=A0inet_sk(msk)->inet_saddr =3D inet_sk(ssk)->inet_=
+saddr;
+>> =C2=A0=C2=A0=C2=A0=C2=A0inet_sk(msk)->inet_rcv_saddr =3D inet_sk(ssk)->i=
+net_rcv_saddr;
+>>
+>> -#if IS_ENABLED(CONFIG_IPV6)
+>> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>> =C2=A0=C2=A0=C2=A0=C2=A0msk->sk_v6_daddr =3D ssk->sk_v6_daddr;
+>> =C2=A0=C2=A0=C2=A0=C2=A0msk->sk_v6_rcv_saddr =3D ssk->sk_v6_rcv_saddr;
+> =
 
-The offending code is using a symbol defined with CONFIG_IPV6 and copes
-with TCP fallback, that is when the relevant socket is [no more] MPTCP,
-so it felt more straightforward to me use the latter conditional.
+> I noticed that the declarations for msk6 and ssk6 at the beginning of =
+
+> this function are not #ifdef'd either - I suggest moving all the IPv6 =
+
+> code to the beginning of the function so the declaration and the =
+
+> assignments can all be in one ifdef.
+
+Thank you for the review!
+
+I see that inet6_sk() is an inline function which will return NULL if =
+
+CONFIG_IPV6 is not enabled.
+Also "struct ipv6_pinfo" is always available.
+
+Do we need to add #ifdef then? Or to avoid declaring variables that are =
+
+not used if IPV6 is not enabled?
 
 Cheers,
+Matt
+-- =
 
-Paolo
-
---===============8301333317833544990==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5986463351568279995==--
