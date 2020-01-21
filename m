@@ -1,128 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============8603150127004908494=="
+Content-Type: multipart/mixed; boundary="===============3733385955327727154=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Store 32 and 64-bit ACKs separately
-Date: Mon, 20 Jan 2020 21:16:20 -0800
-Message-ID: <3049613c433d1db6366bc987b6d7d8c589d82f52.camel@linux.intel.com>
-In-Reply-To: 20200116011309.3202-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH] mptcp: Re-factor expand_ack
+Date: Mon, 20 Jan 2020 21:17:03 -0800
+Message-ID: <7439ceb65afb44c5635556aa48b8e4791c4fe270.camel@linux.intel.com>
+In-Reply-To: 20200116011324.3253-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3440
+X-UID: 3441
 
---===============8603150127004908494==
+--===============3733385955327727154==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-We can drop this patch.
+Same here, drop this patch.
 
 Peter.
 
 On Wed, 2020-01-15 at 17:13 -0800, Peter Krystad wrote:
-> Will be useful optimizing struct mptcp_options_received.
+> Modify this commit to handle separately-stored 32-bit data acks.
 > =
 
-> squashto: Implement MPTCP receive path
+> squashto: update per unacked sequence on pkt reception
 > =
 
 > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 > ---
->  include/linux/tcp.h |  2 ++
->  net/mptcp/options.c | 24 ++++++++++++++++--------
->  2 files changed, 18 insertions(+), 8 deletions(-)
+>  net/mptcp/options.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 > =
 
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 0d00dad4b85d..6abf8d9f1a42 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -82,6 +82,8 @@ struct tcp_sack_block {
->  struct mptcp_options_received {
->  	u64	sndr_key;
->  	u64	rcvr_key;
-> +	u32	data_ack32;
-> +	u32	data_seq32;
->  	u64	data_ack;
->  	u64	data_seq;
->  	u32	subflow_seq;
 > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index db224e050666..b7f1892d8320 100644
+> index bd1c3ba134ae..6ad0cdfa6de2 100644
 > --- a/net/mptcp/options.c
 > +++ b/net/mptcp/options.c
-> @@ -142,21 +142,23 @@ void mptcp_parse_option(const unsigned char *ptr, i=
-nt opsize,
->  		if (mp_opt->use_ack) {
->  			if (mp_opt->ack64) {
->  				mp_opt->data_ack =3D get_unaligned_be64(ptr);
-> +				pr_debug("data_ack=3D%llu", mp_opt->data_ack);
->  				ptr +=3D 8;
->  			} else {
-> -				mp_opt->data_ack =3D get_unaligned_be32(ptr);
-> +				mp_opt->data_ack32 =3D get_unaligned_be32(ptr);
-> +				pr_debug("data_ack32=3D%u", mp_opt->data_ack32);
->  				ptr +=3D 4;
->  			}
+> @@ -674,15 +674,16 @@ static bool check_fourth_ack(struct mptcp_subflow_c=
+ontext *subflow,
+>  	return true;
+>  }
+>  =
+
+> -static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
+> +static u64 expand_ack(u64 old_ack, u32 cur_ack32)
+>  {
+> -	u32 old_ack32, cur_ack32;
 > -
-> -			pr_debug("data_ack=3D%llu", mp_opt->data_ack);
->  		}
+> -	if (use_64bit)
+> -		return cur_ack;
+> +	u32 old_ack32;
+> +	u64 cur_ack;
 >  =
 
->  		if (mp_opt->use_map) {
->  			if (mp_opt->dsn64) {
->  				mp_opt->data_seq =3D get_unaligned_be64(ptr);
-> +				pr_debug("data_seq=3D%llu", mp_opt->data_seq);
->  				ptr +=3D 8;
->  			} else {
-> -				mp_opt->data_seq =3D get_unaligned_be32(ptr);
-> +				mp_opt->data_seq32 =3D get_unaligned_be32(ptr);
-> +				pr_debug("data_seq32=3D%u", mp_opt->data_seq32);
->  				ptr +=3D 4;
->  			}
+> +	/* avoid ack expansion on update conflict, to reduce the risk of
+> +	 * wrongly expanding to a future ack sequence number, which is way
+> +	 * more dangerous than missing an ack
+> +	 */
+>  	old_ack32 =3D (u32)old_ack;
+> -	cur_ack32 =3D (u32)cur_ack;
+>  	cur_ack =3D (old_ack & GENMASK_ULL(63, 32)) + cur_ack32;
+>  	if (unlikely(before(cur_ack32, old_ack32)))
+>  		return cur_ack + (1LL << 32);
+> @@ -695,11 +696,10 @@ static void update_una(struct mptcp_sock *msk,
+>  	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
+>  	u64 write_seq =3D READ_ONCE(msk->write_seq);
 >  =
 
-> @@ -166,9 +168,8 @@ void mptcp_parse_option(const unsigned char *ptr, int=
- opsize,
->  			mp_opt->data_len =3D get_unaligned_be16(ptr);
->  			ptr +=3D 2;
+> -	/* avoid ack expansion on update conflict, to reduce the risk of
+> -	 * wrongly expanding to a future ack sequence number, which is way
+> -	 * more dangerous than missing an ack
+> -	 */
+> -	new_snd_una =3D expand_ack(old_snd_una, mp_opt->data_ack, mp_opt->ack64=
+);
+> +	if (mp_opt->ack64)
+> +		new_snd_una =3D mp_opt->data_ack;
+> +	else
+> +		new_snd_una =3D expand_ack(old_snd_una, (u32)mp_opt->data_ack);
 >  =
 
-> -			pr_debug("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u",
-> -				 mp_opt->data_seq, mp_opt->subflow_seq,
-> -				 mp_opt->data_len);
-> +			pr_debug("subflow_seq=3D%u data_len=3D%u",
-> +				 mp_opt->subflow_seq, mp_opt->data_len);
->  		}
->  =
+>  	/* ACK for data not even sent yet? Ignore. */
+>  	if (after64(new_snd_una, write_seq))
 
->  		break;
-> @@ -428,7 +429,10 @@ void mptcp_incoming_options(struct sock *sk, struct =
-sk_buff *skb,
->  	memset(mpext, 0, sizeof(*mpext));
->  =
-
->  	if (mp_opt->use_map) {
-> -		mpext->data_seq =3D mp_opt->data_seq;
-> +		if (mp_opt->dsn64)
-> +			mpext->data_seq =3D mp_opt->data_seq;
-> +		else
-> +			mpext->data_seq =3D mp_opt->data_seq32;
->  		mpext->subflow_seq =3D mp_opt->subflow_seq;
->  		mpext->data_len =3D mp_opt->data_len;
->  		mpext->use_map =3D 1;
-> @@ -436,6 +440,10 @@ void mptcp_incoming_options(struct sock *sk, struct =
-sk_buff *skb,
->  	}
->  =
-
->  	if (mp_opt->use_ack) {
-> +		if (mp_opt->ack64)
-> +			mpext->data_ack =3D mp_opt->data_ack;
-> +		else
-> +			mpext->data_ack =3D mp_opt->data_ack32;
->  		mpext->data_ack =3D mp_opt->data_ack;
->  		mpext->use_ack =3D 1;
->  		mpext->ack64 =3D mp_opt->ack64;
-
---===============8603150127004908494==--
+--===============3733385955327727154==--
