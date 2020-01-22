@@ -1,62 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============1548331989001156446=="
+Content-Type: multipart/mixed; boundary="===============7470920715484497213=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Optimize DSS fields in
- mptcp_options_received
-Date: Wed, 22 Jan 2020 18:51:19 +0100
-Message-ID: <10968aa4-21ec-5aea-f2e8-e5d9553382dc@tessares.net>
-In-Reply-To: 1ee87284cdd7358258f18d9d3ebbcd14bb74f1de.camel@linux.intel.com
+Subject: [MPTCP] Weekly meeting - 23 January 2020 17:00 UTC (9am PST, 6pm CET)
+Date: Wed, 22 Jan 2020 18:53:32 +0100
+Message-ID: <b2d72620-7e47-ef32-25ba-63460a117804@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3491
+X-UID: 3492
 
---===============1548331989001156446==
+--===============7470920715484497213==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hello everybody!
 
-On 21/01/2020 18:13, Peter Krystad wrote:
-> On Tue, 2020-01-21 at 15:04 +0100, Matthieu Baerts wrote:
->> Hi Peter,
-> =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> <snip>
-> =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20200123
 
->> Or do you think it will be mandatory to have this optimization now?
-> =
+Feel free to add/modify topics!
 
-> Not mandatory, we can go as is. I realized (after some code review) just =
-this
-> morning that for v1 although we do not send/receive MPC+DSS we need to ha=
-ve
-> space for both options at the same time. This fragment when processing
-> MP_CAPABLE in mptcp_parse_option() shows the need:
-> =
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-> 	if (opsize =3D=3D TCPOLEN_MPTCP_MPC_ACK_DATA) {
-> 		/* Section 3.1.:
-> 		 * "the data parameters in a MP_CAPABLE are semantically
-> 		 * equivalent to those in a DSS option and can be used
-> 		 * interchangeably."
-> 		 */
-> 		mp_opt->dss =3D 1;
-
-Good catch, we have to deal with v0 and v1. Then indeed better not to =
-
-modify part 2 and do that in part 3.
-
-> The code for part 2 is fine as is. I'll send the optimizations for ADD_AD=
-DR,
-> etc. later.
-
-Thank you!
-
-Cheers,
-Matt
+Speak to you tomorrow!
+Matthieu
 -- =
 
 Matthieu Baerts | R&D Engineer
@@ -64,4 +36,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1548331989001156446==--
+--===============7470920715484497213==--
