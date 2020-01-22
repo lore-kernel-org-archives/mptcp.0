@@ -1,376 +1,394 @@
-Content-Type: multipart/mixed; boundary="===============8662944913430226941=="
+Content-Type: multipart/mixed; boundary="===============3131701640221033859=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v3 05/19] mptcp: Create SUBFLOW socket for
- incoming connections
-Date: Tue, 21 Jan 2020 16:56:19 -0800
-Message-ID: <20200122005633.21229-6-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH net-next v3 01/19] mptcp: Add MPTCP socket stubs
+Date: Tue, 21 Jan 2020 16:56:15 -0800
+Message-ID: <20200122005633.21229-2-cpaasch@apple.com>
 In-Reply-To: 20200122005633.21229-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3471
+X-UID: 3472
 
---===============8662944913430226941==
+--===============3131701640221033859==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Krystad <peter.krystad(a)linux.intel.com>
+From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-Add subflow_request_sock type that extends tcp_request_sock
-and add an is_mptcp flag to tcp_request_sock distinguish them.
+Implements the infrastructure for MPTCP sockets.
 
-Override the listen() and accept() methods of the MPTCP
-socket proto_ops so they may act on the subflow socket.
+MPTCP sockets open one in-kernel TCP socket per subflow. These subflow
+sockets are only managed by the MPTCP socket that owns them and are not
+visible from userspace. This commit allows a userspace program to open
+an MPTCP socket with:
 
-Override the conn_request() and syn_recv_sock() handlers
-in the inet_connection_sock to handle incoming MPTCP
-SYNs and the ACK to the response SYN.
+  sock =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
 
-Add handling in tcp_output.c to add MP_CAPABLE to an outgoing
-SYN-ACK response for a subflow_request_sock.
+The resulting socket is simply a wrapper around a single regular TCP
+socket, without any of the MPTCP protocol implemented over the wire.
 
-Co-developed-by: Davide Caratti <dcaratti(a)redhat.com>
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
 Co-developed-by: Florian Westphal <fw(a)strlen.de>
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Co-developed-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- net/mptcp/protocol.c | 236 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 231 insertions(+), 5 deletions(-)
+ MAINTAINERS          |   1 +
+ include/net/mptcp.h  |  16 +++++
+ net/Kconfig          |   1 +
+ net/Makefile         |   1 +
+ net/ipv4/tcp.c       |   2 +
+ net/ipv6/tcp_ipv6.c  |   7 +++
+ net/mptcp/Kconfig    |  16 +++++
+ net/mptcp/Makefile   |   4 ++
+ net/mptcp/protocol.c | 142 +++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  22 +++++++
+ 10 files changed, 212 insertions(+)
+ create mode 100644 net/mptcp/Kconfig
+ create mode 100644 net/mptcp/Makefile
+ create mode 100644 net/mptcp/protocol.c
+ create mode 100644 net/mptcp/protocol.h
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index bdd58da1e4f6..e08a25eabcd5 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -14,6 +14,9 @@
- #include <net/inet_hashtables.h>
- #include <net/protocol.h>
- #include <net/tcp.h>
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+#include <net/transp_v6.h>
-+#endif
- #include <net/mptcp.h>
- #include "protocol.h"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 702382b89c37..4be9c1b50183 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11583,6 +11583,7 @@ W:	https://github.com/multipath-tcp/mptcp_net-next/=
+wiki
+ B:	https://github.com/multipath-tcp/mptcp_net-next/issues
+ S:	Maintained
+ F:	include/net/mptcp.h
++F:	net/mptcp/
  =
 
-@@ -212,6 +215,90 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	sk_common_release(sk);
+ NETWORKING [TCP]
+ M:	Eric Dumazet <edumazet(a)google.com>
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 0573ae75c3db..98ba22379117 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -28,6 +28,8 @@ struct mptcp_ext {
+ =
+
+ #ifdef CONFIG_MPTCP
+ =
+
++void mptcp_init(void);
++
+ /* move the skb extension owership, with the assumption that 'to' is
+  * newly allocated
+  */
+@@ -70,6 +72,10 @@ static inline bool mptcp_skb_can_collapse(const struct s=
+k_buff *to,
+ =
+
+ #else
+ =
+
++static inline void mptcp_init(void)
++{
++}
++
+ static inline void mptcp_skb_ext_move(struct sk_buff *to,
+ 				      const struct sk_buff *from)
+ {
+@@ -82,4 +88,14 @@ static inline bool mptcp_skb_can_collapse(const struct s=
+k_buff *to,
  }
  =
 
-+static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
-+{
+ #endif /* CONFIG_MPTCP */
++
 +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	const struct ipv6_pinfo *ssk6 =3D inet6_sk(ssk);
-+	struct ipv6_pinfo *msk6 =3D inet6_sk(msk);
-+
-+	msk->sk_v6_daddr =3D ssk->sk_v6_daddr;
-+	msk->sk_v6_rcv_saddr =3D ssk->sk_v6_rcv_saddr;
-+
-+	if (msk6 && ssk6) {
-+		msk6->saddr =3D ssk6->saddr;
-+		msk6->flow_label =3D ssk6->flow_label;
-+	}
++int mptcpv6_init(void);
++#elif IS_ENABLED(CONFIG_IPV6)
++static inline int mptcpv6_init(void)
++{
++	return 0;
++}
 +#endif
 +
-+	inet_sk(msk)->inet_num =3D inet_sk(ssk)->inet_num;
-+	inet_sk(msk)->inet_dport =3D inet_sk(ssk)->inet_dport;
-+	inet_sk(msk)->inet_sport =3D inet_sk(ssk)->inet_sport;
-+	inet_sk(msk)->inet_daddr =3D inet_sk(ssk)->inet_daddr;
-+	inet_sk(msk)->inet_saddr =3D inet_sk(ssk)->inet_saddr;
-+	inet_sk(msk)->inet_rcv_saddr =3D inet_sk(ssk)->inet_rcv_saddr;
-+}
+ #endif /* __NET_MPTCP_H */
+diff --git a/net/Kconfig b/net/Kconfig
+index 54916b7adb9b..b0937a700f01 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -91,6 +91,7 @@ if INET
+ source "net/ipv4/Kconfig"
+ source "net/ipv6/Kconfig"
+ source "net/netlabel/Kconfig"
++source "net/mptcp/Kconfig"
+ =
+
+ endif # if INET
+ =
+
+diff --git a/net/Makefile b/net/Makefile
+index 848303d98d3d..07ea48160874 100644
+--- a/net/Makefile
++++ b/net/Makefile
+@@ -87,3 +87,4 @@ endif
+ obj-$(CONFIG_QRTR)		+=3D qrtr/
+ obj-$(CONFIG_NET_NCSI)		+=3D ncsi/
+ obj-$(CONFIG_XDP_SOCKETS)	+=3D xdp/
++obj-$(CONFIG_MPTCP)		+=3D mptcp/
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 6711a97de3ce..7dfb78caedaf 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -271,6 +271,7 @@
+ #include <net/icmp.h>
+ #include <net/inet_common.h>
+ #include <net/tcp.h>
++#include <net/mptcp.h>
+ #include <net/xfrm.h>
+ #include <net/ip.h>
+ #include <net/sock.h>
+@@ -4021,4 +4022,5 @@ void __init tcp_init(void)
+ 	tcp_metrics_init();
+ 	BUG_ON(tcp_register_congestion_control(&tcp_reno) !=3D 0);
+ 	tcp_tasklet_init();
++	mptcp_init();
+ }
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 5b5260103b65..60068ffde1d9 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -2163,9 +2163,16 @@ int __init tcpv6_init(void)
+ 	ret =3D register_pernet_subsys(&tcpv6_net_ops);
+ 	if (ret)
+ 		goto out_tcpv6_protosw;
 +
-+static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
-+				 bool kern)
++	ret =3D mptcpv6_init();
++	if (ret)
++		goto out_tcpv6_pernet_subsys;
++
+ out:
+ 	return ret;
+ =
+
++out_tcpv6_pernet_subsys:
++	unregister_pernet_subsys(&tcpv6_net_ops);
+ out_tcpv6_protosw:
+ 	inet6_unregister_protosw(&tcpv6_protosw);
+ out_tcpv6_protocol:
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+new file mode 100644
+index 000000000000..c1a99f07a4cd
+--- /dev/null
++++ b/net/mptcp/Kconfig
+@@ -0,0 +1,16 @@
++
++config MPTCP
++	bool "MPTCP: Multipath TCP"
++	depends on INET
++	select SKB_EXTENSIONS
++	help
++	  Multipath TCP (MPTCP) connections send and receive data over multiple
++	  subflows in order to utilize multiple network paths. Each subflow
++	  uses the TCP protocol, and TCP options carry header information for
++	  MPTCP.
++
++config MPTCP_IPV6
++	bool "MPTCP: IPv6 support for Multipath TCP"
++	depends on MPTCP
++	select IPV6
++	default y
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+new file mode 100644
+index 000000000000..659129d1fcbf
+--- /dev/null
++++ b/net/mptcp/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_MPTCP) +=3D mptcp.o
++
++mptcp-y :=3D protocol.o
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+new file mode 100644
+index 000000000000..5e24e7cf7d70
+--- /dev/null
++++ b/net/mptcp/protocol.c
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Multipath TCP
++ *
++ * Copyright (c) 2017 - 2019, Intel Corporation.
++ */
++
++#define pr_fmt(fmt) "MPTCP: " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/netdevice.h>
++#include <net/sock.h>
++#include <net/inet_common.h>
++#include <net/inet_hashtables.h>
++#include <net/protocol.h>
++#include <net/tcp.h>
++#include <net/mptcp.h>
++#include "protocol.h"
++
++static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
 +{
 +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct socket *listener;
-+	struct sock *newsk;
++	struct socket *subflow =3D msk->subflow;
 +
-+	listener =3D __mptcp_nmpc_socket(msk);
-+	if (WARN_ON_ONCE(!listener)) {
-+		*err =3D -EINVAL;
-+		return NULL;
-+	}
++	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
++		return -EOPNOTSUPP;
 +
-+	pr_debug("msk=3D%p, listener=3D%p", msk, mptcp_subflow_ctx(listener->sk));
-+	newsk =3D inet_csk_accept(listener->sk, flags, err, kern);
-+	if (!newsk)
-+		return NULL;
-+
-+	pr_debug("msk=3D%p, subflow is mptcp=3D%d", msk, sk_is_mptcp(newsk));
-+
-+	if (sk_is_mptcp(newsk)) {
-+		struct mptcp_subflow_context *subflow;
-+		struct sock *new_mptcp_sock;
-+		struct sock *ssk =3D newsk;
-+
-+		subflow =3D mptcp_subflow_ctx(newsk);
-+		lock_sock(sk);
-+
-+		local_bh_disable();
-+		new_mptcp_sock =3D sk_clone_lock(sk, GFP_ATOMIC);
-+		if (!new_mptcp_sock) {
-+			*err =3D -ENOBUFS;
-+			local_bh_enable();
-+			release_sock(sk);
-+			tcp_close(newsk, 0);
-+			return NULL;
-+		}
-+
-+		mptcp_init_sock(new_mptcp_sock);
-+
-+		msk =3D mptcp_sk(new_mptcp_sock);
-+		msk->remote_key =3D subflow->remote_key;
-+		msk->local_key =3D subflow->local_key;
-+		msk->subflow =3D NULL;
-+
-+		newsk =3D new_mptcp_sock;
-+		mptcp_copy_inaddrs(newsk, ssk);
-+		list_add(&subflow->node, &msk->conn_list);
-+
-+		/* will be fully established at mptcp_stream_accept()
-+		 * completion.
-+		 */
-+		inet_sk_state_store(new_mptcp_sock, TCP_SYN_RECV);
-+		bh_unlock_sock(new_mptcp_sock);
-+		local_bh_enable();
-+		release_sock(sk);
-+	}
-+
-+	return newsk;
++	return sock_sendmsg(subflow, msg);
 +}
 +
- static int mptcp_get_port(struct sock *sk, unsigned short snum)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -246,12 +333,21 @@ void mptcp_finish_connect(struct sock *ssk)
- 	WRITE_ONCE(msk->local_key, subflow->local_key);
- }
- =
-
-+static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
++static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
++			 int nonblock, int flags, int *addr_len)
 +{
-+	write_lock_bh(&sk->sk_callback_lock);
-+	rcu_assign_pointer(sk->sk_wq, &parent->wq);
-+	sk_set_socket(sk, parent);
-+	sk->sk_uid =3D SOCK_INODE(parent)->i_uid;
-+	write_unlock_bh(&sk->sk_callback_lock);
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct socket *subflow =3D msk->subflow;
++
++	if (msg->msg_flags & ~(MSG_WAITALL | MSG_DONTWAIT))
++		return -EOPNOTSUPP;
++
++	return sock_recvmsg(subflow, msg, flags);
 +}
 +
- static struct proto mptcp_prot =3D {
- 	.name		=3D "MPTCP",
- 	.owner		=3D THIS_MODULE,
- 	.init		=3D mptcp_init_sock,
- 	.close		=3D mptcp_close,
--	.accept		=3D inet_csk_accept,
-+	.accept		=3D mptcp_accept,
- 	.shutdown	=3D tcp_shutdown,
- 	.sendmsg	=3D mptcp_sendmsg,
- 	.recvmsg	=3D mptcp_recvmsg,
-@@ -266,10 +362,7 @@ static int mptcp_bind(struct socket *sock, struct sock=
-addr *uaddr, int addr_len)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
- 	struct socket *ssock;
--	int err =3D -ENOTSUPP;
--
--	if (uaddr->sa_family !=3D AF_INET) // @@ allow only IPv4 for now
--		return err;
-+	int err;
- =
-
- 	lock_sock(sock->sk);
- 	ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
-@@ -279,6 +372,8 @@ static int mptcp_bind(struct socket *sock, struct socka=
-ddr *uaddr, int addr_len)
- 	}
- =
-
- 	err =3D ssock->ops->bind(ssock, uaddr, addr_len);
-+	if (!err)
-+		mptcp_copy_inaddrs(sock->sk, ssock->sk);
- =
-
- unlock:
- 	release_sock(sock->sk);
-@@ -299,14 +394,139 @@ static int mptcp_stream_connect(struct socket *sock,=
- struct sockaddr *uaddr,
- 		goto unlock;
- 	}
- =
-
-+#ifdef CONFIG_TCP_MD5SIG
-+	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-+	 * TCP option space.
-+	 */
-+	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
-+		mptcp_subflow_ctx(ssock->sk)->request_mptcp =3D 0;
-+#endif
-+
- 	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
- 	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
-+	mptcp_copy_inaddrs(sock->sk, ssock->sk);
- =
-
- unlock:
- 	release_sock(sock->sk);
- 	return err;
- }
- =
-
-+static int mptcp_v4_getname(struct socket *sock, struct sockaddr *uaddr,
-+			    int peer)
++static int mptcp_init_sock(struct sock *sk)
 +{
-+	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
-+		/* we are being invoked from __sys_accept4, after
-+		 * mptcp_accept() has just accepted a non-mp-capable
-+		 * flow: sk is a tcp_sk, not an mptcp one.
-+		 *
-+		 * Hand the socket over to tcp so all further socket ops
-+		 * bypass mptcp.
-+		 */
-+		sock->ops =3D &inet_stream_ops;
++	return 0;
++}
++
++static void mptcp_close(struct sock *sk, long timeout)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	inet_sk_state_store(sk, TCP_CLOSE);
++
++	if (msk->subflow) {
++		pr_debug("subflow=3D%p", msk->subflow->sk);
++		sock_release(msk->subflow);
 +	}
 +
-+	return inet_getname(sock, uaddr, peer);
++	sock_orphan(sk);
++	sock_put(sk);
 +}
 +
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+static int mptcp_v6_getname(struct socket *sock, struct sockaddr *uaddr,
-+			    int peer)
++static int mptcp_connect(struct sock *sk, struct sockaddr *saddr, int len)
 +{
-+	if (sock->sk->sk_prot =3D=3D &tcpv6_prot) {
-+		/* we are being invoked from __sys_accept4 after
-+		 * mptcp_accept() has accepted a non-mp-capable
-+		 * subflow: sk is a tcp_sk, not mptcp.
-+		 *
-+		 * Hand the socket over to tcp so all further
-+		 * socket ops bypass mptcp.
-+		 */
-+		sock->ops =3D &inet6_stream_ops;
-+	}
-+
-+	return inet6_getname(sock, uaddr, peer);
-+}
-+#endif
-+
-+static int mptcp_listen(struct socket *sock, int backlog)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	struct socket *ssock;
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
 +	int err;
 +
-+	pr_debug("msk=3D%p", msk);
++	saddr->sa_family =3D AF_INET;
 +
-+	lock_sock(sock->sk);
-+	ssock =3D __mptcp_socket_create(msk, TCP_LISTEN);
-+	if (IS_ERR(ssock)) {
-+		err =3D PTR_ERR(ssock);
-+		goto unlock;
-+	}
++	pr_debug("msk=3D%p, subflow=3D%p", msk, msk->subflow->sk);
 +
-+	err =3D ssock->ops->listen(ssock, backlog);
-+	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
-+	if (!err)
-+		mptcp_copy_inaddrs(sock->sk, ssock->sk);
++	err =3D kernel_connect(msk->subflow, saddr, len, 0);
 +
-+unlock:
-+	release_sock(sock->sk);
++	sk->sk_state =3D TCP_ESTABLISHED;
++
 +	return err;
 +}
 +
-+static bool is_tcp_proto(const struct proto *p)
++static struct proto mptcp_prot =3D {
++	.name		=3D "MPTCP",
++	.owner		=3D THIS_MODULE,
++	.init		=3D mptcp_init_sock,
++	.close		=3D mptcp_close,
++	.accept		=3D inet_csk_accept,
++	.connect	=3D mptcp_connect,
++	.shutdown	=3D tcp_shutdown,
++	.sendmsg	=3D mptcp_sendmsg,
++	.recvmsg	=3D mptcp_recvmsg,
++	.hash		=3D inet_hash,
++	.unhash		=3D inet_unhash,
++	.get_port	=3D inet_csk_get_port,
++	.obj_size	=3D sizeof(struct mptcp_sock),
++	.no_autobind	=3D true,
++};
++
++static struct inet_protosw mptcp_protosw =3D {
++	.type		=3D SOCK_STREAM,
++	.protocol	=3D IPPROTO_MPTCP,
++	.prot		=3D &mptcp_prot,
++	.ops		=3D &inet_stream_ops,
++};
++
++void __init mptcp_init(void)
 +{
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
-+#else
-+	return p =3D=3D &tcp_prot;
-+#endif
++	if (proto_register(&mptcp_prot, 1) !=3D 0)
++		panic("Failed to register MPTCP proto.\n");
++
++	inet_register_protosw(&mptcp_protosw);
 +}
 +
-+static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
-+			       int flags, bool kern)
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++static struct proto mptcp_v6_prot;
++
++static struct inet_protosw mptcp_v6_protosw =3D {
++	.type		=3D SOCK_STREAM,
++	.protocol	=3D IPPROTO_MPTCP,
++	.prot		=3D &mptcp_v6_prot,
++	.ops		=3D &inet6_stream_ops,
++	.flags		=3D INET_PROTOSW_ICSK,
++};
++
++int mptcpv6_init(void)
 +{
-+	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	struct socket *ssock;
 +	int err;
 +
-+	pr_debug("msk=3D%p", msk);
++	mptcp_v6_prot =3D mptcp_prot;
++	strcpy(mptcp_v6_prot.name, "MPTCPv6");
++	mptcp_v6_prot.slab =3D NULL;
++	mptcp_v6_prot.obj_size =3D sizeof(struct mptcp_sock) +
++				 sizeof(struct ipv6_pinfo);
 +
-+	lock_sock(sock->sk);
-+	if (sock->sk->sk_state !=3D TCP_LISTEN)
-+		goto unlock_fail;
++	err =3D proto_register(&mptcp_v6_prot, 1);
++	if (err)
++		return err;
 +
-+	ssock =3D __mptcp_nmpc_socket(msk);
-+	if (!ssock)
-+		goto unlock_fail;
++	err =3D inet6_register_protosw(&mptcp_v6_protosw);
++	if (err)
++		proto_unregister(&mptcp_v6_prot);
 +
-+	sock_hold(ssock->sk);
-+	release_sock(sock->sk);
-+
-+	err =3D ssock->ops->accept(sock, newsock, flags, kern);
-+	if (err =3D=3D 0 && !is_tcp_proto(newsock->sk->sk_prot)) {
-+		struct mptcp_sock *msk =3D mptcp_sk(newsock->sk);
-+		struct mptcp_subflow_context *subflow;
-+
-+		/* set ssk->sk_socket of accept()ed flows to mptcp socket.
-+		 * This is needed so NOSPACE flag can be set from tcp stack.
-+		 */
-+		list_for_each_entry(subflow, &msk->conn_list, node) {
-+			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+			if (!ssk->sk_socket)
-+				mptcp_sock_graft(ssk, newsock);
-+		}
-+
-+		inet_sk_state_store(newsock->sk, TCP_ESTABLISHED);
-+	}
-+
-+	sock_put(ssock->sk);
 +	return err;
++}
++#endif
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+new file mode 100644
+index 000000000000..ee04a01bffd3
+--- /dev/null
++++ b/net/mptcp/protocol.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Multipath TCP
++ *
++ * Copyright (c) 2017 - 2019, Intel Corporation.
++ */
 +
-+unlock_fail:
-+	release_sock(sock->sk);
-+	return -EINVAL;
++#ifndef __MPTCP_PROTOCOL_H
++#define __MPTCP_PROTOCOL_H
++
++/* MPTCP connection sock */
++struct mptcp_sock {
++	/* inet_connection_sock must be the first member */
++	struct inet_connection_sock sk;
++	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
++};
++
++static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
++{
++	return (struct mptcp_sock *)sk;
 +}
 +
- static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 			   struct poll_table_struct *wait)
- {
-@@ -332,6 +552,9 @@ void __init mptcp_init(void)
- 	mptcp_stream_ops.bind =3D mptcp_bind;
- 	mptcp_stream_ops.connect =3D mptcp_stream_connect;
- 	mptcp_stream_ops.poll =3D mptcp_poll;
-+	mptcp_stream_ops.accept =3D mptcp_stream_accept;
-+	mptcp_stream_ops.getname =3D mptcp_v4_getname;
-+	mptcp_stream_ops.listen =3D mptcp_listen;
- =
-
- 	mptcp_subflow_init();
- =
-
-@@ -371,6 +594,9 @@ int mptcpv6_init(void)
- 	mptcp_v6_stream_ops.bind =3D mptcp_bind;
- 	mptcp_v6_stream_ops.connect =3D mptcp_stream_connect;
- 	mptcp_v6_stream_ops.poll =3D mptcp_poll;
-+	mptcp_v6_stream_ops.accept =3D mptcp_stream_accept;
-+	mptcp_v6_stream_ops.getname =3D mptcp_v6_getname;
-+	mptcp_v6_stream_ops.listen =3D mptcp_listen;
- =
-
- 	err =3D inet6_register_protosw(&mptcp_v6_protosw);
- 	if (err)
++#endif /* __MPTCP_PROTOCOL_H */
 -- =
 
 2.23.0
 
---===============8662944913430226941==--
+--===============3131701640221033859==--
