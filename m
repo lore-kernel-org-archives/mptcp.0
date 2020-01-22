@@ -1,452 +1,206 @@
-Content-Type: multipart/mixed; boundary="===============5195999874013008033=="
+Content-Type: multipart/mixed; boundary="===============3284917323577682334=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v3 03/19] mptcp: Associate MPTCP context with
- TCP socket
-Date: Tue, 21 Jan 2020 16:56:17 -0800
-Message-ID: <20200122005633.21229-4-cpaasch@apple.com>
+Subject: [MPTCP] [PATCH net-next v3 13/19] mptcp: allow collapsing consecutive
+ sendpages on the same substream
+Date: Tue, 21 Jan 2020 16:56:27 -0800
+Message-ID: <20200122005633.21229-14-cpaasch@apple.com>
 In-Reply-To: 20200122005633.21229-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3473
+X-UID: 3474
 
---===============5195999874013008033==
+--===============3284917323577682334==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Krystad <peter.krystad(a)linux.intel.com>
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-Use ULP to associate a subflow_context structure with each TCP subflow
-socket. Creating these sockets requires new bind and connect functions
-to make sure ULP is set up immediately when the subflow sockets are
-created.
+If the current sendmsg() lands on the same subflow we used last, we
+can try to collapse the data.
 
-Co-developed-by: Florian Westphal <fw(a)strlen.de>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
-Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Co-developed-by: Davide Caratti <dcaratti(a)redhat.com>
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 ---
- include/linux/tcp.h  |   3 +
- net/mptcp/Makefile   |   2 +-
- net/mptcp/protocol.c | 132 +++++++++++++++++++++++++++++++++++++++++--
- net/mptcp/protocol.h |  26 +++++++++
- net/mptcp/subflow.c  | 119 ++++++++++++++++++++++++++++++++++++++
- 5 files changed, 275 insertions(+), 7 deletions(-)
- create mode 100644 net/mptcp/subflow.c
+ net/mptcp/protocol.c | 75 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 60 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 52798ab00394..877947475814 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -397,6 +397,9 @@ struct tcp_sock {
- 	u32	mtu_info; /* We received an ICMP_FRAG_NEEDED / ICMPV6_PKT_TOOBIG
- 			   * while socket was owned by user.
- 			   */
-+#if IS_ENABLED(CONFIG_MPTCP)
-+	bool	is_mptcp;
-+#endif
- =
-
- #ifdef CONFIG_TCP_MD5SIG
- /* TCP AF-Specific parts; only used by MD5 Signature support so far */
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index 27a846263f08..e1ee5aade8b0 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_MPTCP) +=3D mptcp.o
- =
-
--mptcp-y :=3D protocol.o options.o
-+mptcp-y :=3D protocol.o subflow.o options.o
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5e24e7cf7d70..294b03a0393a 100644
+index ad9c73cc20e1..0b21ae25bd0f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -17,6 +17,53 @@
- #include <net/mptcp.h>
- #include "protocol.h"
+@@ -122,14 +122,27 @@ static struct sock *mptcp_subflow_recv_lookup(const s=
+truct mptcp_sock *msk)
+ 	return NULL;
+ }
  =
 
-+#define MPTCP_SAME_STATE TCP_MAX_STATES
-+
-+/* If msk has an initial subflow socket, and the MP_CAPABLE handshake has =
-not
-+ * completed yet or has failed, return the subflow socket.
-+ * Otherwise return NULL.
-+ */
-+static struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
++static inline bool mptcp_skb_can_collapse_to(const struct mptcp_sock *msk,
++					     const struct sk_buff *skb,
++					     const struct mptcp_ext *mpext)
 +{
-+	if (!msk->subflow)
-+		return NULL;
++	if (!tcp_skb_can_collapse_to(skb))
++		return false;
 +
-+	return msk->subflow;
++	/* can collapse only if MPTCP level sequence is in order */
++	return mpext && mpext->data_seq + mpext->data_len =3D=3D msk->write_seq;
 +}
 +
-+static bool __mptcp_can_create_subflow(const struct mptcp_sock *msk)
-+{
-+	return ((struct sock *)msk)->sk_state =3D=3D TCP_CLOSE;
-+}
+ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+-			      struct msghdr *msg, long *timeo)
++			      struct msghdr *msg, long *timeo, int *pmss_now,
++			      int *ps_goal)
+ {
+-	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
++	int mss_now, avail_size, size_goal, ret;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_ext *mpext =3D NULL;
++	struct sk_buff *skb, *tail;
++	bool can_collapse =3D false;
+ 	struct page_frag *pfrag;
+-	struct sk_buff *skb;
+ 	size_t psize;
+ =
+
+ 	/* use the mptcp page cache so that we can easily move the data
+@@ -145,8 +158,29 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ =
+
+ 	/* compute copy limit */
+ 	mss_now =3D tcp_send_mss(ssk, &size_goal, msg->msg_flags);
+-	psize =3D min_t(int, pfrag->size - pfrag->offset, size_goal);
++	*pmss_now =3D mss_now;
++	*ps_goal =3D size_goal;
++	avail_size =3D size_goal;
++	skb =3D tcp_write_queue_tail(ssk);
++	if (skb) {
++		mpext =3D skb_ext_find(skb, SKB_EXT_MPTCP);
 +
-+static struct socket *__mptcp_socket_create(struct mptcp_sock *msk, int st=
-ate)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct socket *ssock;
-+	int err;
++		/* Limit the write to the size available in the
++		 * current skb, if any, so that we create at most a new skb.
++		 * Explicitly tells TCP internals to avoid collapsing on later
++		 * queue management operation, to avoid breaking the ext <->
++		 * SSN association set here
++		 */
++		can_collapse =3D (size_goal - skb->len > 0) &&
++			      mptcp_skb_can_collapse_to(msk, skb, mpext);
++		if (!can_collapse)
++			TCP_SKB_CB(skb)->eor =3D 1;
++		else
++			avail_size =3D size_goal - skb->len;
++	}
++	psize =3D min_t(size_t, pfrag->size - pfrag->offset, avail_size);
+ =
+
++	/* Copy to page */
+ 	pr_debug("left=3D%zu", msg_data_left(msg));
+ 	psize =3D copy_page_from_iter(pfrag->page, pfrag->offset,
+ 				    min_t(size_t, msg_data_left(msg), psize),
+@@ -155,14 +189,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ 	if (!psize)
+ 		return -EINVAL;
+ =
+
+-	/* Mark the end of the previous write so the beginning of the
+-	 * next write (with its own mptcp skb extension data) is not
+-	 * collapsed.
++	/* tell the TCP stack to delay the push so that we can safely
++	 * access the skb after the sendpages call
+ 	 */
+-	skb =3D tcp_write_queue_tail(ssk);
+-	if (skb)
+-		TCP_SKB_CB(skb)->eor =3D 1;
+-
+ 	ret =3D do_tcp_sendpages(ssk, pfrag->page, pfrag->offset, psize,
+ 			       msg->msg_flags | MSG_SENDPAGE_NOTLAST);
+ 	if (ret <=3D 0)
+@@ -170,6 +199,18 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ 	if (unlikely(ret < psize))
+ 		iov_iter_revert(&msg->msg_iter, psize - ret);
+ =
+
++	/* if the tail skb extension is still the cached one, collapsing
++	 * really happened. Note: we can't check for 'same skb' as the sk_buff
++	 * hdr on tail can be transmitted, freed and re-allocated by the
++	 * do_tcp_sendpages() call
++	 */
++	tail =3D tcp_write_queue_tail(ssk);
++	if (mpext && tail && mpext =3D=3D skb_ext_find(tail, SKB_EXT_MPTCP)) {
++		WARN_ON_ONCE(!can_collapse);
++		mpext->data_len +=3D ret;
++		goto out;
++	}
 +
-+	ssock =3D __mptcp_nmpc_socket(msk);
-+	if (ssock)
-+		goto set_state;
-+
-+	if (!__mptcp_can_create_subflow(msk))
-+		return ERR_PTR(-EINVAL);
-+
-+	err =3D mptcp_subflow_create_socket(sk, &ssock);
-+	if (err)
-+		return ERR_PTR(err);
-+
-+	msk->subflow =3D ssock;
-+	subflow =3D mptcp_subflow_ctx(ssock->sk);
-+	subflow->request_mptcp =3D 1;
-+
-+set_state:
-+	if (state !=3D MPTCP_SAME_STATE)
-+		inet_sk_state_store(sk, state);
-+	return ssock;
-+}
-+
+ 	skb =3D tcp_write_queue_tail(ssk);
+ 	mpext =3D __skb_ext_set(skb, SKB_EXT_MPTCP, msk->cached_ext);
+ 	msk->cached_ext =3D NULL;
+@@ -185,11 +226,11 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+ 		 mpext->data_seq, mpext->subflow_seq, mpext->data_len,
+ 		 mpext->dsn64);
+ =
+
++out:
+ 	pfrag->offset +=3D ret;
+ 	msk->write_seq +=3D ret;
+ 	mptcp_subflow_ctx(ssk)->rel_write_seq +=3D ret;
+ =
+
+-	tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle, size_goal);
+ 	return ret;
+ }
+ =
+
+@@ -212,11 +253,11 @@ static void ssk_check_wmem(struct mptcp_sock *msk, st=
+ruct sock *ssk)
+ =
+
  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  {
++	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
  	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -48,12 +95,14 @@ static int mptcp_init_sock(struct sock *sk)
- static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct socket *ssock;
+ 	struct socket *ssock;
+ 	size_t copied =3D 0;
+ 	struct sock *ssk;
+-	int ret =3D 0;
+ 	long timeo;
  =
 
- 	inet_sk_state_store(sk, TCP_CLOSE);
+ 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+@@ -243,15 +284,19 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
  =
 
--	if (msk->subflow) {
--		pr_debug("subflow=3D%p", msk->subflow->sk);
--		sock_release(msk->subflow);
-+	ssock =3D __mptcp_nmpc_socket(msk);
-+	if (ssock) {
-+		pr_debug("subflow=3D%p", mptcp_subflow_ctx(ssock->sk));
-+		sock_release(ssock);
+ 	lock_sock(ssk);
+ 	while (msg_data_left(msg)) {
+-		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, &timeo);
++		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, &timeo, &mss_now,
++					 &size_goal);
+ 		if (ret < 0)
+ 			break;
+ =
+
+ 		copied +=3D ret;
  	}
  =
 
- 	sock_orphan(sk);
-@@ -67,7 +116,8 @@ static int mptcp_connect(struct sock *sk, struct sockadd=
-r *saddr, int len)
- =
-
- 	saddr->sa_family =3D AF_INET;
- =
-
--	pr_debug("msk=3D%p, subflow=3D%p", msk, msk->subflow->sk);
-+	pr_debug("msk=3D%p, subflow=3D%p", msk,
-+		 mptcp_subflow_ctx(msk->subflow->sk));
- =
-
- 	err =3D kernel_connect(msk->subflow, saddr, len, 0);
- =
-
-@@ -93,15 +143,79 @@ static struct proto mptcp_prot =3D {
- 	.no_autobind	=3D true,
- };
- =
-
-+static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int add=
-r_len)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	struct socket *ssock;
-+	int err =3D -ENOTSUPP;
-+
-+	if (uaddr->sa_family !=3D AF_INET) // @@ allow only IPv4 for now
-+		return err;
-+
-+	lock_sock(sock->sk);
-+	ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
-+	if (IS_ERR(ssock)) {
-+		err =3D PTR_ERR(ssock);
-+		goto unlock;
+-	if (copied > 0)
++	if (copied) {
+ 		ret =3D copied;
++		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
++			 size_goal);
 +	}
-+
-+	err =3D ssock->ops->bind(ssock, uaddr, addr_len);
-+
-+unlock:
-+	release_sock(sock->sk);
-+	return err;
-+}
-+
-+static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uadd=
-r,
-+				int addr_len, int flags)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-+	struct socket *ssock;
-+	int err;
-+
-+	lock_sock(sock->sk);
-+	ssock =3D __mptcp_socket_create(msk, TCP_SYN_SENT);
-+	if (IS_ERR(ssock)) {
-+		err =3D PTR_ERR(ssock);
-+		goto unlock;
-+	}
-+
-+	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
-+	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
-+
-+unlock:
-+	release_sock(sock->sk);
-+	return err;
-+}
-+
-+static __poll_t mptcp_poll(struct file *file, struct socket *sock,
-+			   struct poll_table_struct *wait)
-+{
-+	__poll_t mask =3D 0;
-+
-+	return mask;
-+}
-+
-+static struct proto_ops mptcp_stream_ops;
-+
- static struct inet_protosw mptcp_protosw =3D {
- 	.type		=3D SOCK_STREAM,
- 	.protocol	=3D IPPROTO_MPTCP,
- 	.prot		=3D &mptcp_prot,
--	.ops		=3D &inet_stream_ops,
-+	.ops		=3D &mptcp_stream_ops,
-+	.flags		=3D INET_PROTOSW_ICSK,
- };
  =
 
- void __init mptcp_init(void)
- {
-+	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
-+	mptcp_stream_ops =3D inet_stream_ops;
-+	mptcp_stream_ops.bind =3D mptcp_bind;
-+	mptcp_stream_ops.connect =3D mptcp_stream_connect;
-+	mptcp_stream_ops.poll =3D mptcp_poll;
-+
-+	mptcp_subflow_init();
-+
- 	if (proto_register(&mptcp_prot, 1) !=3D 0)
- 		panic("Failed to register MPTCP proto.\n");
- =
-
-@@ -109,13 +223,14 @@ void __init mptcp_init(void)
- }
- =
-
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+static struct proto_ops mptcp_v6_stream_ops;
- static struct proto mptcp_v6_prot;
- =
-
- static struct inet_protosw mptcp_v6_protosw =3D {
- 	.type		=3D SOCK_STREAM,
- 	.protocol	=3D IPPROTO_MPTCP,
- 	.prot		=3D &mptcp_v6_prot,
--	.ops		=3D &inet6_stream_ops,
-+	.ops		=3D &mptcp_v6_stream_ops,
- 	.flags		=3D INET_PROTOSW_ICSK,
- };
- =
-
-@@ -133,6 +248,11 @@ int mptcpv6_init(void)
- 	if (err)
- 		return err;
- =
-
-+	mptcp_v6_stream_ops =3D inet6_stream_ops;
-+	mptcp_v6_stream_ops.bind =3D mptcp_bind;
-+	mptcp_v6_stream_ops.connect =3D mptcp_stream_connect;
-+	mptcp_v6_stream_ops.poll =3D mptcp_poll;
-+
- 	err =3D inet6_register_protosw(&mptcp_v6_protosw);
- 	if (err)
- 		proto_unregister(&mptcp_v6_prot);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index c59cf8b220b0..543d4d5d8985 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -48,4 +48,30 @@ static inline struct mptcp_sock *mptcp_sk(const struct s=
-ock *sk)
- 	return (struct mptcp_sock *)sk;
- }
- =
-
-+/* MPTCP subflow context */
-+struct mptcp_subflow_context {
-+	u32	request_mptcp : 1;  /* send MP_CAPABLE */
-+	struct	sock *tcp_sock;	    /* tcp sk backpointer */
-+	struct	sock *conn;	    /* parent mptcp_sock */
-+	struct	rcu_head rcu;
-+};
-+
-+static inline struct mptcp_subflow_context *
-+mptcp_subflow_ctx(const struct sock *sk)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+
-+	/* Use RCU on icsk_ulp_data only for sock diag code */
-+	return (__force struct mptcp_subflow_context *)icsk->icsk_ulp_data;
-+}
-+
-+static inline struct sock *
-+mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
-+{
-+	return subflow->tcp_sock;
-+}
-+
-+void mptcp_subflow_init(void);
-+int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
-+
- #endif /* __MPTCP_PROTOCOL_H */
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-new file mode 100644
-index 000000000000..bf8139353653
---- /dev/null
-+++ b/net/mptcp/subflow.c
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Multipath TCP
-+ *
-+ * Copyright (c) 2017 - 2019, Intel Corporation.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/netdevice.h>
-+#include <net/sock.h>
-+#include <net/inet_common.h>
-+#include <net/inet_hashtables.h>
-+#include <net/protocol.h>
-+#include <net/tcp.h>
-+#include <net/mptcp.h>
-+#include "protocol.h"
-+
-+int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct net *net =3D sock_net(sk);
-+	struct socket *sf;
-+	int err;
-+
-+	err =3D sock_create_kern(net, PF_INET, SOCK_STREAM, IPPROTO_TCP, &sf);
-+	if (err)
-+		return err;
-+
-+	lock_sock(sf->sk);
-+
-+	/* kernel sockets do not by default acquire net ref, but TCP timer
-+	 * needs it.
-+	 */
-+	sf->sk->sk_net_refcnt =3D 1;
-+	get_net(net);
-+	this_cpu_add(*net->core.sock_inuse, 1);
-+	err =3D tcp_set_ulp(sf->sk, "mptcp");
-+	release_sock(sf->sk);
-+
-+	if (err)
-+		return err;
-+
-+	subflow =3D mptcp_subflow_ctx(sf->sk);
-+	pr_debug("subflow=3D%p", subflow);
-+
-+	*new_sock =3D sf;
-+	subflow->conn =3D sk;
-+
-+	return 0;
-+}
-+
-+static struct mptcp_subflow_context *subflow_create_ctx(struct sock *sk,
-+							gfp_t priority)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+	struct mptcp_subflow_context *ctx;
-+
-+	ctx =3D kzalloc(sizeof(*ctx), priority);
-+	if (!ctx)
-+		return NULL;
-+
-+	rcu_assign_pointer(icsk->icsk_ulp_data, ctx);
-+
-+	pr_debug("subflow=3D%p", ctx);
-+
-+	ctx->tcp_sock =3D sk;
-+
-+	return ctx;
-+}
-+
-+static int subflow_ulp_init(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *ctx;
-+	struct tcp_sock *tp =3D tcp_sk(sk);
-+	int err =3D 0;
-+
-+	/* disallow attaching ULP to a socket unless it has been
-+	 * created with sock_create_kern()
-+	 */
-+	if (!sk->sk_kern_sock) {
-+		err =3D -EOPNOTSUPP;
-+		goto out;
-+	}
-+
-+	ctx =3D subflow_create_ctx(sk, GFP_KERNEL);
-+	if (!ctx) {
-+		err =3D -ENOMEM;
-+		goto out;
-+	}
-+
-+	pr_debug("subflow=3D%p, family=3D%d", ctx, sk->sk_family);
-+
-+	tp->is_mptcp =3D 1;
-+out:
-+	return err;
-+}
-+
-+static void subflow_ulp_release(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(sk);
-+
-+	if (!ctx)
-+		return;
-+
-+	kfree_rcu(ctx, rcu);
-+}
-+
-+static struct tcp_ulp_ops subflow_ulp_ops __read_mostly =3D {
-+	.name		=3D "mptcp",
-+	.owner		=3D THIS_MODULE,
-+	.init		=3D subflow_ulp_init,
-+	.release	=3D subflow_ulp_release,
-+};
-+
-+void mptcp_subflow_init(void)
-+{
-+	if (tcp_register_ulp(&subflow_ulp_ops) !=3D 0)
-+		panic("MPTCP: failed to register subflows to ULP\n");
-+}
+ 	ssk_check_wmem(msk, ssk);
+ 	release_sock(ssk);
 -- =
 
 2.23.0
 
---===============5195999874013008033==--
+--===============3284917323577682334==--
