@@ -1,131 +1,190 @@
-Content-Type: multipart/mixed; boundary="===============7800657882292102619=="
+Content-Type: multipart/mixed; boundary="===============8543429561355412710=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [syzkaller] KASAN: slab-out-of-bounds Write in
- tcp_mstamp_refresh
-Date: Fri, 24 Jan 2020 11:20:18 -0800
-Message-ID: <20200124192018.GK60524@MacBook-Pro-64.local>
-In-Reply-To: 20200124175550.GX795@breakpoint.cc
+Subject: [MPTCP] [PATCH] mptcp: do not inherit inet proto ops
+Date: Fri, 24 Jan 2020 13:41:33 -0800
+Message-ID: <20200124214133.171506-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3503
+X-UID: 3504
 
---===============7800657882292102619==
+--===============8543429561355412710==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 24/01/20 - 18:55:50, Florian Westphal wrote:
-> Christoph Paasch <cpaasch(a)apple.com> wrote:
-> > One more:
-> > =
+From: Florian Westphal <fw(a)strlen.de>
 
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > BUG: KASAN: slab-out-of-bounds in tcp_mstamp_refresh+0x80/0xa0 net/ipv4=
-/tcp_output.c:57
-> > Write of size 8 at addr ffff888116aa21d0 by task syz-executor.0/5478
-> =
+We need to initialise the struct ourselves, else we expose tcp-specific
+callbacks such as tcp_splice_read which will then trigger splat because
+the socket is an mptcp one:
 
-> Ugh.
-> =
+BUG: KASAN: slab-out-of-bounds in tcp_mstamp_refresh+0x80/0xa0 net/ipv4/tcp=
+_output.c:57
+Write of size 8 at addr ffff888116aa21d0 by task syz-executor.0/5478
 
-> >  tcp_mstamp_refresh+0x80/0xa0 net/ipv4/tcp_output.c:57
-> >  tcp_rcv_space_adjust+0x72/0x7f0 net/ipv4/tcp_input.c:612
-> >  tcp_read_sock+0x622/0x990 net/ipv4/tcp.c:1674
-> >  __tcp_splice_read net/ipv4/tcp.c:749 [inline]
-> >  tcp_splice_read+0x20b/0xb40 net/ipv4/tcp.c:791
-> >  sock_splice_read+0xb9/0x120 net/socket.c:962
-> >  do_splice_to+0x111/0x160 fs/splice.c:892
-> >  do_splice+0x1259/0x1560 fs/splice.c:1205
-> >  __do_sys_splice fs/splice.c:1447 [inline]
-> >  __se_sys_splice fs/splice.c:1427 [inline]
-> >  __x64_sys_splice+0x2b7/0x320 fs/splice.c:1427
-> >  do_syscall_64+0xbd/0x5b0 arch/x86/entry/common.c:294
-> =
-
-> mptcp allows calls into tcp proto ops on mptcp socket.
-> =
-
-> I'm trying a fix shortly.
-
-Got another one:
-BUG: KASAN: slab-out-of-bounds in tcp_rcv_space_adjust+0x75a/0x7f0 net/ipv4=
-/tcp_input.c:613
-
-(full trace at the bottom)
-
-I guess it's the same
-
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-BUG: KASAN: slab-out-of-bounds in tcp_rcv_space_adjust+0x75a/0x7f0 net/ipv4=
-/tcp_input.c:613
-Read of size 8 at addr ffff8880aa8d1ca0 by task syz-executor.6/5975
-
-CPU: 1 PID: 5975 Comm: syz-executor.6 Not tainted 5.5.0-rc6 #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga=
-5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+CPU: 1 PID: 5478 Comm: syz-executor.0 Not tainted 5.5.0-rc6 #3
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
- __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:639
- tcp_rcv_space_adjust+0x75a/0x7f0 net/ipv4/tcp_input.c:613
+ tcp_mstamp_refresh+0x80/0xa0 net/ipv4/tcp_output.c:57
+ tcp_rcv_space_adjust+0x72/0x7f0 net/ipv4/tcp_input.c:612
  tcp_read_sock+0x622/0x990 net/ipv4/tcp.c:1674
- __tcp_splice_read net/ipv4/tcp.c:749 [inline]
  tcp_splice_read+0x20b/0xb40 net/ipv4/tcp.c:791
- sock_splice_read+0xb9/0x120 net/socket.c:962
- do_splice_to+0x111/0x160 fs/splice.c:892
  do_splice+0x1259/0x1560 fs/splice.c:1205
- __do_sys_splice fs/splice.c:1447 [inline]
- __se_sys_splice fs/splice.c:1427 [inline]
- __x64_sys_splice+0x2b7/0x320 fs/splice.c:1427
- do_syscall_64+0xbd/0x5b0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fe662b1d469
-Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 =
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
-f 73 01 c3 48 8b 0d ff 49 2b 00 f7 d8 64 89 01 48
-syz-executor.2 (5985) used greatest stack depth: 22656 bytes left
-RSP: 002b:00007fe6631ecdd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
-RAX: ffffffffffffffda RBX: 000000000066bfa8 RCX: 00007fe662b1d469
-RDX: 0000000000000005 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00000000ffffffff R08: 0000000000080007 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000b38
-R13: 000000000041e1c1 R14: 00007fe6631ed5c0 R15: 0000000000000003
 
-Allocated by task 0:
-(stack is not available)
+To prevent build error with ipv6, add the recv/sendmsg function
+declaration to ipv6.h.  The functions are already accessible "thanks"
+to retpoline related work, but they are currently only made visible
+by socket.c specific INDIRECT_CALLABLE macros.
 
-Freed by task 0:
-(stack is not available)
+Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
 
-The buggy address belongs to the object at ffff8880aa8d1b00
- which belongs to the cache MPTCPv6 of size 2160
-The buggy address is located 416 bytes inside of
- 2160-byte region [ffff8880aa8d1b00, ffff8880aa8d2370)
-The buggy address belongs to the page:
-page:ffffea0002aa3400 refcount:1 mapcount:0 mapping:ffff888115fc3400 index:=
-0x0 compound_mapcount: 0
-raw: 0100000000010200 dead000000000100 dead000000000122 ffff888115fc3400
-raw: 0000000000000000 00000000800e000e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+Patch is from
+https://git.breakpoint.cc/cgit/fw/net-next.git/commit/?h=3Dmptcp_fixes_02
+and Florian asked me to test and post. (Florian, I wasn't sure if you
+wanted this on netdev today)
 
-Memory state around the buggy address:
- ffff8880aa8d1b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880aa8d1c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880aa8d1c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                               ^
- ffff8880aa8d1d00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880aa8d1d80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+I've confirmed that the MPTCP self-tests pass with this patch applied to
+net-next and when applied to our export branch. I haven't set up
+syzkaller locally so I don't have results for that.
 
---===============7800657882292102619==--
+
+ include/net/ipv6.h   |  3 ++
+ net/mptcp/protocol.c | 70 ++++++++++++++++++++++++++++++++------------
+ 2 files changed, 54 insertions(+), 19 deletions(-)
+
+diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+index 4e95f6df508c..cec1a54401f2 100644
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -1113,6 +1113,9 @@ int inet6_ioctl(struct socket *sock, unsigned int cmd=
+, unsigned long arg);
+ =
+
+ int inet6_hash_connect(struct inet_timewait_death_row *death_row,
+ 			      struct sock *sk);
++int inet6_sendmsg(struct socket *sock, struct msghdr *msg, size_t size);
++int inet6_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
++		  int flags);
+ =
+
+ /*
+  * reassembly.c
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ee916b3686fe..41d49126d29a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1163,7 +1163,31 @@ static int mptcp_shutdown(struct socket *sock, int h=
+ow)
+ 	return ret;
+ }
+ =
+
+-static struct proto_ops mptcp_stream_ops;
++static const struct proto_ops mptcp_stream_ops =3D {
++	.family		   =3D PF_INET,
++	.owner		   =3D THIS_MODULE,
++	.release	   =3D inet_release,
++	.bind		   =3D mptcp_bind,
++	.connect	   =3D mptcp_stream_connect,
++	.socketpair	   =3D sock_no_socketpair,
++	.accept		   =3D mptcp_stream_accept,
++	.getname	   =3D mptcp_v4_getname,
++	.poll		   =3D mptcp_poll,
++	.ioctl		   =3D inet_ioctl,
++	.gettstamp	   =3D sock_gettstamp,
++	.listen		   =3D mptcp_listen,
++	.shutdown	   =3D mptcp_shutdown,
++	.setsockopt	   =3D sock_common_setsockopt,
++	.getsockopt	   =3D sock_common_getsockopt,
++	.sendmsg	   =3D inet_sendmsg,
++	.recvmsg	   =3D inet_recvmsg,
++	.mmap		   =3D sock_no_mmap,
++	.sendpage	   =3D inet_sendpage,
++#ifdef CONFIG_COMPAT
++	.compat_setsockopt =3D compat_sock_common_setsockopt,
++	.compat_getsockopt =3D compat_sock_common_getsockopt,
++#endif
++};
+ =
+
+ static struct inet_protosw mptcp_protosw =3D {
+ 	.type		=3D SOCK_STREAM,
+@@ -1176,14 +1200,6 @@ static struct inet_protosw mptcp_protosw =3D {
+ void mptcp_proto_init(void)
+ {
+ 	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
+-	mptcp_stream_ops =3D inet_stream_ops;
+-	mptcp_stream_ops.bind =3D mptcp_bind;
+-	mptcp_stream_ops.connect =3D mptcp_stream_connect;
+-	mptcp_stream_ops.poll =3D mptcp_poll;
+-	mptcp_stream_ops.accept =3D mptcp_stream_accept;
+-	mptcp_stream_ops.getname =3D mptcp_v4_getname;
+-	mptcp_stream_ops.listen =3D mptcp_listen;
+-	mptcp_stream_ops.shutdown =3D mptcp_shutdown;
+ =
+
+ 	mptcp_subflow_init();
+ =
+
+@@ -1194,7 +1210,32 @@ void mptcp_proto_init(void)
+ }
+ =
+
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-static struct proto_ops mptcp_v6_stream_ops;
++static const struct proto_ops mptcp_v6_stream_ops =3D {
++	.family		   =3D PF_INET6,
++	.owner		   =3D THIS_MODULE,
++	.release	   =3D inet6_release,
++	.bind		   =3D mptcp_bind,
++	.connect	   =3D mptcp_stream_connect,
++	.socketpair	   =3D sock_no_socketpair,
++	.accept		   =3D mptcp_stream_accept,
++	.getname	   =3D mptcp_v6_getname,
++	.poll		   =3D mptcp_poll,
++	.ioctl		   =3D inet6_ioctl,
++	.gettstamp	   =3D sock_gettstamp,
++	.listen		   =3D mptcp_listen,
++	.shutdown	   =3D mptcp_shutdown,
++	.setsockopt	   =3D sock_common_setsockopt,
++	.getsockopt	   =3D sock_common_getsockopt,
++	.sendmsg	   =3D inet6_sendmsg,
++	.recvmsg	   =3D inet6_recvmsg,
++	.mmap		   =3D sock_no_mmap,
++	.sendpage	   =3D inet_sendpage,
++#ifdef CONFIG_COMPAT
++	.compat_setsockopt =3D compat_sock_common_setsockopt,
++	.compat_getsockopt =3D compat_sock_common_getsockopt,
++#endif
++};
++
+ static struct proto mptcp_v6_prot;
+ =
+
+ static void mptcp_v6_destroy(struct sock *sk)
+@@ -1226,15 +1267,6 @@ int mptcp_proto_v6_init(void)
+ 	if (err)
+ 		return err;
+ =
+
+-	mptcp_v6_stream_ops =3D inet6_stream_ops;
+-	mptcp_v6_stream_ops.bind =3D mptcp_bind;
+-	mptcp_v6_stream_ops.connect =3D mptcp_stream_connect;
+-	mptcp_v6_stream_ops.poll =3D mptcp_poll;
+-	mptcp_v6_stream_ops.accept =3D mptcp_stream_accept;
+-	mptcp_v6_stream_ops.getname =3D mptcp_v6_getname;
+-	mptcp_v6_stream_ops.listen =3D mptcp_listen;
+-	mptcp_v6_stream_ops.shutdown =3D mptcp_shutdown;
+-
+ 	err =3D inet6_register_protosw(&mptcp_v6_protosw);
+ 	if (err)
+ 		proto_unregister(&mptcp_v6_prot);
+-- =
+
+2.25.0
+
+--===============8543429561355412710==--
