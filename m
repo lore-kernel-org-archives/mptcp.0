@@ -1,156 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============3674367137665611886=="
+Content-Type: multipart/mixed; boundary="===============2489341068535220598=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 23rd of January 2020
-Date: Fri, 24 Jan 2020 17:38:56 +0100
-Message-ID: <9c637883-ad74-d916-1bbf-8256ac86c4ac@tessares.net>
-In-Reply-To: fea5f312eded56950abc076914c464a1a5f264c7.camel@redhat.com
+Subject: [MPTCP] [syzkaller] KASAN: slab-out-of-bounds Write in
+ tcp_mstamp_refresh
+Date: Fri, 24 Jan 2020 09:19:16 -0800
+Message-ID: <20200124171916.GH60524@MacBook-Pro-64.local>
 X-Status: 
 X-Keywords:                  
-X-UID: 3498
+X-UID: 3499
 
---===============3674367137665611886==
+--===============2489341068535220598==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+One more:
 
-On 24/01/2020 11:14, Paolo Abeni wrote:
-> On Thu, 2020-01-23 at 22:42 +0100, Matthieu Baerts wrote:
->>           - We propose to send a new version on Monday if we don't have
->> any feedback (not to spam netdev even more)
-> =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+BUG: KASAN: slab-out-of-bounds in tcp_mstamp_refresh+0x80/0xa0 net/ipv4/tcp=
+_output.c:57
+Write of size 8 at addr ffff888116aa21d0 by task syz-executor.0/5478
 
-> I think it's a good plan.
+CPU: 1 PID: 5478 Comm: syz-executor.0 Not tainted 5.5.0-rc6 #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga=
+5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+ __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:639
+ tcp_mstamp_refresh+0x80/0xa0 net/ipv4/tcp_output.c:57
+ tcp_rcv_space_adjust+0x72/0x7f0 net/ipv4/tcp_input.c:612
+ tcp_read_sock+0x622/0x990 net/ipv4/tcp.c:1674
+ __tcp_splice_read net/ipv4/tcp.c:749 [inline]
+ tcp_splice_read+0x20b/0xb40 net/ipv4/tcp.c:791
+ sock_splice_read+0xb9/0x120 net/socket.c:962
+ do_splice_to+0x111/0x160 fs/splice.c:892
+ do_splice+0x1259/0x1560 fs/splice.c:1205
+ __do_sys_splice fs/splice.c:1447 [inline]
+ __se_sys_splice fs/splice.c:1427 [inline]
+ __x64_sys_splice+0x2b7/0x320 fs/splice.c:1427
+ do_syscall_64+0xbd/0x5b0 arch/x86/entry/common.c:294
+syz-executor.7 uses obsolete (PF_INET,SOCK_PACKET)
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f16bc65a469
+Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 8b 0d ff 49 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007f16bcd08dd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+RAX: ffffffffffffffda RBX: 000000000066c050 RCX: 00007f16bc65a469
+RDX: 0000000000000005 RSI: 0000000000000000 RDI: 0000000000000007
+RBP: 00000000ffffffff R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000b38
+R13: 000000000041e1c1 R14: 00007f16bcd095c0 R15: 0000000000000003
 
-Plans have changed, it's applied!!! :-D
+Allocated by task 5470:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:513 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:486
+ slab_post_alloc_hook mm/slab.h:584 [inline]
+ slab_alloc_node mm/slub.c:2759 [inline]
+ slab_alloc mm/slub.c:2767 [inline]
+ kmem_cache_alloc+0xd8/0x2e0 mm/slub.c:2772
+ sk_prot_alloc+0x5f/0x2c0 net/core/sock.c:1597
+ sk_alloc+0x36/0xf90 net/core/sock.c:1657
+ inet_create net/ipv4/af_inet.c:321 [inline]
+ inet_create+0x368/0xdc0 net/ipv4/af_inet.c:247
+ __sock_create+0x3d9/0x740 net/socket.c:1433
+ sock_create net/socket.c:1484 [inline]
+ __sys_socket+0xef/0x200 net/socket.c:1526
+ __do_sys_socket net/socket.c:1535 [inline]
+ __se_sys_socket net/socket.c:1533 [inline]
+ __x64_sys_socket+0x6f/0xb0 net/socket.c:1533
+ do_syscall_64+0xbd/0x5b0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
->>           - Patches are still marked as "Needs Review / ACK"
->>             https://patchwork.ozlabs.org/patch/1226939/
->>
->>           - if we re-send, we should include the checkpatch fixes
->>
->>       - checkpatch: 3 issues:
->>           - one space/tabs mix (1 tabs + 9 spaces instead of 2 tabs + 1
->> space)
->>           - one extra space after '*' when declaring a function
->>           - one comparison to "NULL": var =3D=3D NULL instead of !var
->>           =E2=86=92 we can wait for when we will need to send a new vers=
-ion
->>           =E2=86=92 *Matth* can send patches and apply them later
-> =
+Freed by task 0:
+(stack is not available)
 
-> Would be good including the above, but I personally have hard time to
-> do anything before next Mon.
+The buggy address belongs to the object at ffff888116aa1980
+ which belongs to the cache MPTCP of size 2008
+The buggy address is located 120 bytes to the right of
+ 2008-byte region [ffff888116aa1980, ffff888116aa2158)
+The buggy address belongs to the page:
+page:ffffea00045aa800 refcount:1 mapcount:0 mapping:ffff8881181d7400 index:=
+0x0 compound_mapcount: 0
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881181d7400
+raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-Where can we apply these very small fixes now that the series is =
-
-applied? I can send the patches but do we want to ignore them or apply =
-
-them if we modify the code around?
-
->> Part 3 remaining stuff:
->>       - Review commit messages:
->>           - needed for the next merge window: not urgent
->>
->>       - reduce locks in mptcp_stream_accept() (currently 3 locks) but we
->> might need to add an helper in inet API:
->>           - Paolo started to look at that
->>           - we suppose he is still on it, to be discussed next week
-> =
-
-> Still on my TODO list, but not as high priority as the PM stuff
-> below... (no work done so far)
-> =
-
->>       - memleak if a request comes after a socket is closed:
->>           - Florian plans to look at that
->>           - we suppose he is still on it, to be discussed next week
->>
->>       - PM:
->>           - the one we have:
->>               - was/is an interim PM
->>               - maybe need more work: locking ??? (at least check which
->> are the missing pieces, possibly some basic locking schema is missing)
-> =
-
-> I think the locking should/could be fixed a not too intrusive way, as
-> most PM action already happens in workqueue context and we can acquire
-> the msk socket lock there.
-
-Thank you for sharing this!
-
->>           - do we want to ship it?
->>
->>           - the idea would be to have:
->>               - a "basic" path manager that can create subflows
->>               - a server-side dedicated PM that sends ADD_ADDR, maybe
->> more but not too much (max nb of subflows if it is not possible to block
->> via another way?)
->>               - a netlink PM (see mptcp.org) to be able to customise it
->> from the userspace
->>               - a flexible BPF oriented PM (easy to implement =E2=86=92 =
-easy to
->> hook, easy to call bpf functions to change behaviours)
-> =
-
-> We discussed off-line this topic. We think that a netlink-based,
-> simple and allowing future features could be created with a reasonable
-> effort. The idea would be to initially support only a few commands:
-> =
-
-> 	- announce the provided address[es]
-> 		* argument is an address [list]
-> =
-
-> 	- add new subflows using the provided address[es]
-> 		* argument is an address [list]
-> 		=
-
-> 	- add subflows for each announced address
-> 		* argument is a single number: the maximum number
-> 		  of allowed subflows created for the addresses
-> 		  announced by the peers. 0 =3D=3D no subflows creation
-> 		  for the announced received.
-> =
-
-> each command will affect all the MPTCP sockets created in the current
-> netns after that the netlink command is issued.
-
-If I understand well, you want something different than the netlink =
-
-path-manager we have on MPTCP out-of-tree, right?
-
-This PM acts per MPTCP connection while here, you want to act on all =
-
-existing and future connections, right?
-
-For the two first items, is it not something we can already achieve with =
-
-the "basic" PM via sysctl per NS but only valid for one address to =
-
-announce/create a subflow?
-
-> The idea is that we should be able to easily plug both self-tests and
-> almost reasonable "production" behaviours with the above.
-
-To replace the basic PM them or already support the "server PM" we were =
-
-mentioning in the notes?
-
-Cheers,
-Matt
-
-PS: thank you for your talk in Brno, I am sure it helped to have part 2 =
-
-accepted :-D
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3674367137665611886==--
+Memory state around the buggy address:
+ ffff888116aa2080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff888116aa2100: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
+>ffff888116aa2180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                                                 ^
+ ffff888116aa2200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff888116aa2280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+--===============2489341068535220598==--
