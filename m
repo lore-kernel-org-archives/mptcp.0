@@ -1,39 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============4639832954704401013=="
+Content-Type: multipart/mixed; boundary="===============2393393280433447879=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 2/2] mptcp: Fix code formatting
-Date: Sat, 25 Jan 2020 08:15:01 +0100
-Message-ID: <20200125.081501.844064409437176102.davem@davemloft.net>
-In-Reply-To: 20200125000403.251894-3-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 23rd of January 2020
+Date: Sat, 25 Jan 2020 10:02:29 +0100
+Message-ID: <c58c945268058b94011de41d0d3fdcdd9f26399f.camel@redhat.com>
+In-Reply-To: 9c637883-ad74-d916-1bbf-8256ac86c4ac@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3511
+X-UID: 3512
 
---===============4639832954704401013==
+--===============2393393280433447879==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Date: Fri, 24 Jan 2020 16:04:03 -0800
+Hi,
 
-> checkpatch.pl had a few complaints in the last set of MPTCP patches:
-> =
+On Fri, 2020-01-24 at 17:38 +0100, Matthieu Baerts wrote:
+> PS: thank you for your talk in Brno, I am sure it helped to have part 2 =
 
-> ERROR: code indent should use tabs where possible
-> +^I         subflow, sk->sk_family, icsk->icsk_af_ops, target, mapped);$
-> =
+> accepted :-D
 
-> CHECK: Comparison to NULL could be written "!new_ctx"
-> +	if (new_ctx =3D=3D NULL) {
-> =
+I'm still digesting  yday very unexpected event, but...
 
-> ERROR: "foo * bar" should be "foo *bar"
-> +static const struct proto_ops * tcp_proto_ops(struct sock *sk)
-> =
 
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+~15:30 ->
+https://people.redhat.com/pabeni/how_to_not.pdf slide 22
 
-Applied.
---===============4639832954704401013==--
+~18 -> davem twitted about linux being the first OS supporting mptcp v1
+
+yep, there could be a relationship ;)
+
+/me will just have beers till monday, than will need some time to get
+sober again, than the syzbot backlog will fill the rest of my life ;)
+
+
+
+--===============2393393280433447879==--
