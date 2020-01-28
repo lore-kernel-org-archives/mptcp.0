@@ -1,110 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============3745310811007552378=="
+Content-Type: multipart/mixed; boundary="===============6273998257156380929=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 23rd of January 2020
-Date: Tue, 28 Jan 2020 17:43:13 +0100
-Message-ID: <d75ec7229a6c2286f1b52eeb52ee20289b922f08.camel@redhat.com>
-In-Reply-To: 9c637883-ad74-d916-1bbf-8256ac86c4ac@tessares.net
+Subject: [MPTCP] Re: [PATCH v3 net-next 1/2] mptcp: protocol: fix panic on
+ user pointer access
+Date: Tue, 28 Jan 2020 09:20:40 -0800
+Message-ID: <alpine.OSX.2.21.2001280918140.1736@apanikul-mobl1.amr.corp.intel.com>
+In-Reply-To: 28ccbe252d0799248278b9a4f4cc05e2fb38e4e7.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3543
+X-UID: 3544
 
---===============3745310811007552378==
+--===============6273998257156380929==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-01-24 at 17:38 +0100, Matthieu Baerts wrote:
-> On 24/01/2020 11:14, Paolo Abeni wrote:
-> > On Thu, 2020-01-23 at 22:42 +0100, Matthieu Baerts wrote:
-> > >       - checkpatch: 3 issues:
-> > >           - one space/tabs mix (1 tabs + 9 spaces instead of 2 tabs +=
- 1
-> > > space)
-> > >           - one extra space after '*' when declaring a function
-> > >           - one comparison to "NULL": var =3D=3D NULL instead of !var
-> > >           =E2=86=92 we can wait for when we will need to send a new v=
-ersion
-> > >           =E2=86=92 *Matth* can send patches and apply them later
-> > =
 
-> > Would be good including the above, but I personally have hard time to
-> > do anything before next Mon.
-> =
+On Tue, 28 Jan 2020, Paolo Abeni wrote:
 
-> Where can we apply these very small fixes now that the series is =
+> On Tue, 2020-01-28 at 14:35 +0100, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 28/01/2020 12:31, Paolo Abeni wrote:
+>>> On Mon, 2020-01-27 at 17:22 -0800, Mat Martineau wrote:
+>>>> On Mon, 27 Jan 2020, Matthieu Baerts wrote:
+>>>>
+>>>>> Hi Florian,
+>>>>>
+>>>>> On 27/01/2020 00:41, Florian Westphal wrote:
+>>>>>> Its not possible to call the kernel_(s|g)etsockopt functions here,
+>>>>>> the address points to user memory:
+>>>>>
+>>>>> I am sorry for this maybe stupid question but why can we not use these
+>>>>> functions directly? Is it because of the "(g|s)et_fs()"?
+>>>>
+>>>> Yes, the set_fs(KERNEL_DS) bypasses some checks for userspace memory
+>>>> ranges.
+>>>>
+>>>>> [...]
+>>>>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>>>>> index 39fdca79ce90..f8232e9f08e7 100644
+>>>>>> --- a/net/mptcp/protocol.c
+>>>>>> +++ b/net/mptcp/protocol.c
+>>>>>> @@ -778,17 +778,23 @@ static void mptcp_destroy(struct sock *sk)
+>>>>>>    {
+>>>>>>    }
+>>>>>>    +static int subflow_setsockopt(struct socket *sock, int level, int
+>>>>>> optname,
+>>>>>> +			       char __user *optval, unsigned int optlen)
+>>>>>> +{
+>>>>>> +	if (level =3D=3D SOL_SOCKET)
+>>>>>
+>>>>> Can we arrive in this case with MPTCP? I guess not form the userspace'
+>>>>> syscall but maybe from somewhere else in the kernel code?
+>>>>
+>>>> Right now there isn't any code in mptcp_setsockopt() that checks which
+>>>> levels or options are allowed through to the subflows. We discussed
+>>>> whitelisting the socket options allowed to pass through to the subflow=
+s -
+>>>> but the patch to whitelist TCP_CONGESTION was mostly dropped and allow=
+ed
+>>>> everything instead of allowing nothing. I'm not sure that's what was
+>>>> intended, I will add it to this week's agenda.
+>>>>
+>>>> For this patch, though, the SOL_SOCKET check is needed to match
+>>>> kernel_setsockopt behavior.
+>>>
+>>> Uhm... I think handling of SOL_SOCKET is not needed ?!? we reach
+>>> mptcp_setsockopt via __sys_setsockopt(), which already took care of
+>>> SOL_SOCKET case. The check inside kernel_{get,set}sockopt was
+>>> rendundant. I think calling directly ssock->ops->setsockopt suffice
+>>> (and also keep the code smaller)
+>>
+>> Do we need to protect against other parts of the kernel calling:
+>>
+>>    sock->ops->(g|s)etsockopt()
+>>
+>> directly, possibly with level =3D=3D SOL_SOCKET?
+>
+> I think we don't, as we don't for tcp_{g,s}etsockopt(). Why need that
+> additionallty here?!?
 
-> applied? I can send the patches but do we want to ignore them or apply =
+I think Paolo's right (I forgot to look at __sys_setsockopt). Any direct =
 
-> them if we modify the code around?
+calls in the kernel would be for the MPTCP-level socket and would use =
 
-I would go with "net" patches to address the above (and ev. review on
-the mptcp ML before the actual upstream submission).
+kernel_{get,set}sockopt that handles SOL_SOCKET.
 
-> > We discussed off-line this topic. We think that a netlink-based,
-> > simple and allowing future features could be created with a reasonable
-> > effort. The idea would be to initially support only a few commands:
-> > =
-
-> > 	- announce the provided address[es]
-> > 		* argument is an address [list]
-> > =
-
-> > 	- add new subflows using the provided address[es]
-> > 		* argument is an address [list]
-> > 		=
-
-> > 	- add subflows for each announced address
-> > 		* argument is a single number: the maximum number
-> > 		  of allowed subflows created for the addresses
-> > 		  announced by the peers. 0 =3D=3D no subflows creation
-> > 		  for the announced received.
-> > =
-
-> > each command will affect all the MPTCP sockets created in the current
-> > netns after that the netlink command is issued.
-> =
-
-> If I understand well, you want something different than the netlink =
-
-> path-manager we have on MPTCP out-of-tree, right?
-> =
-
-> This PM acts per MPTCP connection while here, you want to act on all =
-
-> existing and future connections, right?
-> =
-
-> For the two first items, is it not something we can already achieve with =
-
-> the "basic" PM via sysctl per NS but only valid for one address to =
-
-> announce/create a subflow?
-
-Yes, but the current basic PM uses the not so clean procfs interface.
-The idea is get something could fit upstream more nicely. It will
-(initially) operate on a netns basic, could be extended to something
-compatible with out-of-tree PM later.
-
-> > The idea is that we should be able to easily plug both self-tests and
-> > almost reasonable "production" behaviours with the above.
-> =
-
-> To replace the basic PM them or already support the "server PM" we were =
-
-> mentioning in the notes?
-> =
-
-
-The idea would be replacing the current basic PM, still keeping the
-code as small as possible.
-
-The 'server PM' should likely obtained extending this NL interface
-(and/or basic behaviour should already fit some/most server scenarios).
-
-Cheers,
-
-Paolo
-
---===============3745310811007552378==--
+--
+Mat Martineau
+Intel
+--===============6273998257156380929==--
