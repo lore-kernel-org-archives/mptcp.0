@@ -1,54 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============4898690049740533364=="
+Content-Type: multipart/mixed; boundary="===============0702176132669896527=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v4 0/4] fix syzkaller splats reported by
- Christoph
-Date: Tue, 28 Jan 2020 16:01:20 +0100
-Message-ID: <20200128150125.26625-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH net-next v1 1/4] mptcp: protocol: defer freeing of
+ cached ext until last moment
+Date: Tue, 28 Jan 2020 16:01:21 +0100
+Message-ID: <20200128150125.26625-2-fw@strlen.de>
+In-Reply-To: 20200128150125.26625-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3535
+X-UID: 3536
 
---===============4898690049740533364==
+--===============0702176132669896527==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This fixes the syzkaller splats with reproducers that Christoph forwarded
-to the mailing list, including the one wrt. slab oob in syncookie mode.
+access to msk->cached_ext is only legal if the msk is locked or all
+concurrent accesses are impossible.
 
-First patch moves free of the cached extension pointer to the destroy
-callback to make sure no other call path can allocate a new one.
-Actually net-next should be fine in this regard (no msk work queue yet),
-but as Paolo pointed out it looks bogus when 3rd patch calls it with
-mptcp lock already released.
+Furthermore, once we start to tear down, we must make sure nothing else
+can step in and allocate a new cached ext.
 
-2nd patch fixes a crash with set/getsockopt interface and resolves
-a lockdep splat due to calls to rtnl_lock while already holding the msk loc=
-k.
+So place this code in the destroy callback where it belongs.
 
-I resolved both in the same patch because the fixes need to touch the same
-spot.
-
-3rd patch fixes another lockdep splat, this time during mptcp_close
-but again related to rtnl_lock.
-
-Last patch avoid OOB access when syncookies are used.
-This should be resolved differently, as mptcp v1 can use 4th ack to
-recover state, but that will be more intrusive so this fix downgrades to
-TCP instead.
-
-See patches for more detailed explanation.
-
- include/linux/tcp.h   |    2 --
- net/ipv4/syncookies.c |    4 ++++
- net/ipv4/tcp_input.c  |    3 +++
- net/ipv6/syncookies.c |    3 +++
- net/mptcp/protocol.c  |   48 ++++++++++++++++++++++++++++-----------------=
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/subflow.c   |    5 ++++-
- 6 files changed, 42 insertions(+), 23 deletions(-)
+ patch is new in this round.
 
+ net/mptcp/protocol.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---===============4898690049740533364==--
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 39fdca79ce90..f1b1160dbbb4 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -654,8 +654,6 @@ static void __mptcp_close(struct sock *sk, long timeout)
+ 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
+ 	}
+ =
+
+-	if (msk->cached_ext)
+-		__skb_ext_put(msk->cached_ext);
+ 	release_sock(sk);
+ 	sk_common_release(sk);
+ }
+@@ -776,6 +774,10 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ =
+
+ static void mptcp_destroy(struct sock *sk)
+ {
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	if (msk->cached_ext)
++		__skb_ext_put(msk->cached_ext);
+ }
+ =
+
+ static int mptcp_setsockopt(struct sock *sk, int level, int optname,
+-- =
+
+2.24.1
+
+--===============0702176132669896527==--
