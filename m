@@ -1,208 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============3353055236745770598=="
+Content-Type: multipart/mixed; boundary="===============6947655219188464459=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v4 2/4] mptcp: protocol: fix panic on user
- pointer access
-Date: Tue, 28 Jan 2020 16:01:22 +0100
-Message-ID: <20200128150125.26625-3-fw@strlen.de>
+Subject: [MPTCP] [PATCH net-next v2 3/4] mptcp: mptcp_close: avoid a lockdep
+ splat when mcast group was joined
+Date: Tue, 28 Jan 2020 16:01:23 +0100
+Message-ID: <20200128150125.26625-4-fw@strlen.de>
 In-Reply-To: 20200128150125.26625-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3537
+X-UID: 3538
 
---===============3353055236745770598==
+--===============6947655219188464459==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Its not possible to call the kernel_(s|g)etsockopt functions here,
-the address points to user memory:
+syzbot triggered following lockdep splat:
 
-General protection fault in user access. Non-canonical address?
-WARNING: CPU: 1 PID: 5352 at arch/x86/mm/extable.c:77 ex_handler_uaccess+0x=
-ba/0xe0 arch/x86/mm/extable.c:77
-Kernel panic - not syncing: panic_on_warn set ...
-[..]
-Call Trace:
- fixup_exception+0x9d/0xcd arch/x86/mm/extable.c:178
- general_protection+0x2d/0x40 arch/x86/entry/entry_64.S:1202
- do_ip_getsockopt+0x1f6/0x1860 net/ipv4/ip_sockglue.c:1323
- ip_getsockopt+0x87/0x1c0 net/ipv4/ip_sockglue.c:1561
- tcp_getsockopt net/ipv4/tcp.c:3691 [inline]
- tcp_getsockopt+0x8c/0xd0 net/ipv4/tcp.c:3685
- kernel_getsockopt+0x121/0x1f0 net/socket.c:3736
- mptcp_getsockopt+0x69/0x90 net/mptcp/protocol.c:830
- __sys_getsockopt+0x13a/0x220 net/socket.c:2175
+ffffffff82d2cd40 (rtnl_mutex){+.+.}, at: ip_mc_drop_socket+0x52/0x180
+but task is already holding lock:
+ffff8881187a2310 (sk_lock-AF_INET){+.+.}, at: mptcp_close+0x18/0x30
 
-v2: also fix a circular locking dependency reported by Christoph:
-    release the mptcp-level lock before calling set/getsockopt on the
-    underlying tcp subflow socket, else this yields:
- v4: no need to check for SOL_SOCKET again (Paolo)
+which lock already depends on the new lock.
 
- WARNING: possible circular locking dependency detected
- 5.5.0-rc6 #2 Not tainted
- ------------------------------------------------------
- syz-executor.0/16334 is trying to acquire lock:
- ffffffff84f7a080 (rtnl_mutex){+.+.}, at: do_ip_setsockopt.isra.0+0x277/0x3=
-820 net/ipv4/ip_sockglue.c:644
- but task is already holding lock:
- ffff888116503b90 (sk_lock-AF_INET){+.+.}, at: lock_sock include/net/sock.h=
-:1516 [inline]
- ffff888116503b90 (sk_lock-AF_INET){+.+.}, at: mptcp_setsockopt+0x28/0x90 n=
-et/mptcp/protocol.c:1284
+the existing dependency chain (in reverse order) is:
+-> #1 (sk_lock-AF_INET){+.+.}:
+       lock_acquire+0xee/0x230
+       lock_sock_nested+0x89/0xc0
+       do_ip_setsockopt.isra.0+0x335/0x22f0
+       ip_setsockopt+0x35/0x60
+       tcp_setsockopt+0x5d/0x90
+       __sys_setsockopt+0xf3/0x190
+       __x64_sys_setsockopt+0x61/0x70
+       do_syscall_64+0x72/0x300
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+-> #0 (rtnl_mutex){+.+.}:
+       check_prevs_add+0x2b7/0x1210
+       __lock_acquire+0x10b6/0x1400
+       lock_acquire+0xee/0x230
+       __mutex_lock+0x120/0xc70
+       ip_mc_drop_socket+0x52/0x180
+       inet_release+0x36/0xe0
+       __sock_release+0xfd/0x130
+       __mptcp_close+0xa8/0x1f0
+       inet_release+0x7f/0xe0
+       __sock_release+0x69/0x130
+       sock_close+0x18/0x20
+       __fput+0x179/0x400
+       task_work_run+0xd5/0x110
+       do_exit+0x685/0x1510
+       do_group_exit+0x7e/0x170
+       __x64_sys_exit_group+0x28/0x30
+       do_syscall_64+0x72/0x300
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
- which lock already depends on the new lock.
- the existing dependency chain (in reverse order) is:
+The trigger is:
+  socket(AF_INET, SOCK_STREAM, 0x106 /* IPPROTO_MPTCP */) =3D 4
+  setsockopt(4, SOL_IP, MCAST_JOIN_GROUP, {gr_interface=3D7, gr_group=3D{sa=
+_family=3DAF_INET, sin_port=3Dhtons(20003), sin_addr=3Dinet_addr("224.0.0.2=
+")}}, 136) =3D 0
+  exit(0)
 
- -> #1 (sk_lock-AF_INET){+.+.}:
-        lock_sock_nested+0xca/0x120 net/core/sock.c:2944
-        lock_sock include/net/sock.h:1516 [inline]
-        do_ip_setsockopt.isra.0+0x281/0x3820 net/ipv4/ip_sockglue.c:645
-        ip_setsockopt+0x44/0xf0 net/ipv4/ip_sockglue.c:1248
-        udp_setsockopt+0x5d/0xa0 net/ipv4/udp.c:2639
-        __sys_setsockopt+0x152/0x240 net/socket.c:2130
-        __do_sys_setsockopt net/socket.c:2146 [inline]
-        __se_sys_setsockopt net/socket.c:2143 [inline]
-        __x64_sys_setsockopt+0xba/0x150 net/socket.c:2143
-        do_syscall_64+0xbd/0x5b0 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Which results in a call to rtnl_lock while we are holding
+the parent mptcp socket lock via
+mptcp_close -> lock_sock(msk) -> inet_release -> ip_mc_drop_socket -> rtnl_=
+lock().
 
- -> #0 (rtnl_mutex){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2475 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-        validate_chain kernel/locking/lockdep.c:2970 [inline]
-        __lock_acquire+0x1fb2/0x4680 kernel/locking/lockdep.c:3954
-        lock_acquire+0x127/0x330 kernel/locking/lockdep.c:4484
-        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-        __mutex_lock+0x158/0x1340 kernel/locking/mutex.c:1103
-        do_ip_setsockopt.isra.0+0x277/0x3820 net/ipv4/ip_sockglue.c:644
-        ip_setsockopt+0x44/0xf0 net/ipv4/ip_sockglue.c:1248
-        tcp_setsockopt net/ipv4/tcp.c:3159 [inline]
-        tcp_setsockopt+0x8c/0xd0 net/ipv4/tcp.c:3153
-        kernel_setsockopt+0x121/0x1f0 net/socket.c:3767
-        mptcp_setsockopt+0x69/0x90 net/mptcp/protocol.c:1288
-        __sys_setsockopt+0x152/0x240 net/socket.c:2130
-        __do_sys_setsockopt net/socket.c:2146 [inline]
-        __se_sys_setsockopt net/socket.c:2143 [inline]
-        __x64_sys_setsockopt+0xba/0x150 net/socket.c:2143
-        do_syscall_64+0xbd/0x5b0 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+From lockdep point of view we thus have both
+'rtnl_lock; lock_sock' and 'lock_sock; rtnl_lock'.
 
- other info that might help us debug this:
+Fix this by stealing the msk conn_list and doing the subflow close
+without holding the msk lock.
 
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(sk_lock-AF_INET);
-                                lock(rtnl_mutex);
-                                lock(sk_lock-AF_INET);
-   lock(rtnl_mutex);
-
-v4: no need to handle SOL_SOCKET, sys_s/getsockopt handles this already.
-
-Fixes: 717e79c867ca5 ("mptcp: Add setsockopt()/getsockopt() socket operatio=
-ns")
+Fixes: cec37a6e41aae7bf ("mptcp: Handle MP_CAPABLE options for outgoing con=
+nections")
 Reported-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 34 ++++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ v2: rebase to account for new patch 1.
+
+ net/mptcp/protocol.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f1b1160dbbb4..432265f84a65 100644
+index 432265f84a65..6a8f2978b3e5 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -780,17 +780,19 @@ static void mptcp_destroy(struct sock *sk)
- 		__skb_ext_put(msk->cached_ext);
- }
- =
-
-+static int subflow_setsockopt(struct socket *sock, int level, int optname,
-+			       char __user *optval, unsigned int optlen)
-+{
-+	return sock->ops->setsockopt(sock, level, optname, optval, optlen);
-+}
-+
- static int mptcp_setsockopt(struct sock *sk, int level, int optname,
--			    char __user *uoptval, unsigned int optlen)
-+			    char __user *optval, unsigned int optlen)
+@@ -644,17 +644,21 @@ static void __mptcp_close(struct sock *sk, long timeo=
+ut)
  {
+ 	struct mptcp_subflow_context *subflow, *tmp;
  	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	char __kernel *optval;
- 	int ret =3D -EOPNOTSUPP;
- 	struct socket *ssock;
++	LIST_HEAD(conn_list);
  =
 
--	/* will be treated as __user in tcp_setsockopt */
--	optval =3D (char __kernel __force *)uoptval;
--
- 	pr_debug("msk=3D%p", msk);
+ 	mptcp_token_destroy(msk->token);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
  =
 
- 	/* @@ the meaning of setsockopt() when the socket is connected and
-@@ -798,28 +800,28 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- 	 */
- 	lock_sock(sk);
- 	ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
-+	release_sock(sk);
- 	if (!IS_ERR(ssock)) {
- 		pr_debug("subflow=3D%p", ssock->sk);
--		ret =3D kernel_setsockopt(ssock, level, optname, optval, optlen);
-+		ret =3D subflow_setsockopt(ssock, level, optname, optval, optlen);
- 	}
--	release_sock(sk);
- =
-
- 	return ret;
- }
- =
-
-+static int subflow_getsockopt(struct socket *sock, int level, int optname,
-+			       char __user *optval, int __user *optlen)
-+{
-+	return sock->ops->getsockopt(sock, level, optname, optval, optlen);
-+}
+-	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
++	list_splice_init(&msk->conn_list, &conn_list);
 +
- static int mptcp_getsockopt(struct sock *sk, int level, int optname,
--			    char __user *uoptval, int __user *uoption)
-+			    char __user *optval, int __user *option)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	char __kernel *optval;
- 	int ret =3D -EOPNOTSUPP;
--	int __kernel *option;
- 	struct socket *ssock;
- =
-
--	/* will be treated as __user in tcp_getsockopt */
--	optval =3D (char __kernel __force *)uoptval;
--	option =3D (int __kernel __force *)uoption;
--
- 	pr_debug("msk=3D%p", msk);
- =
-
- 	/* @@ the meaning of getsockopt() when the socket is connected and
-@@ -827,11 +829,11 @@ static int mptcp_getsockopt(struct sock *sk, int leve=
-l, int optname,
- 	 */
- 	lock_sock(sk);
- 	ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
 +	release_sock(sk);
- 	if (!IS_ERR(ssock)) {
- 		pr_debug("subflow=3D%p", ssock->sk);
--		ret =3D kernel_getsockopt(ssock, level, optname, optval, option);
-+		ret =3D subflow_getsockopt(ssock, level, optname, optval, option);
- 	}
--	release_sock(sk);
++
++	list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
+ 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
  =
 
- 	return ret;
+ 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
+ 	}
+ =
+
+-	release_sock(sk);
+ 	sk_common_release(sk);
  }
+ =
+
 -- =
 
 2.24.1
 
---===============3353055236745770598==--
+--===============6947655219188464459==--
