@@ -1,100 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============7506324279650621175=="
+Content-Type: multipart/mixed; boundary="===============4898690049740533364=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 net-next 1/2] mptcp: protocol: fix panic on
- user pointer access
-Date: Tue, 28 Jan 2020 14:48:53 +0100
-Message-ID: <28ccbe252d0799248278b9a4f4cc05e2fb38e4e7.camel@redhat.com>
-In-Reply-To: f91bfb0e-6685-af08-0d30-72b80138bfb1@tessares.net
+Subject: [MPTCP] [PATCH net-next v4 0/4] fix syzkaller splats reported by
+ Christoph
+Date: Tue, 28 Jan 2020 16:01:20 +0100
+Message-ID: <20200128150125.26625-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3534
+X-UID: 3535
 
---===============7506324279650621175==
+--===============4898690049740533364==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-01-28 at 14:35 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+This fixes the syzkaller splats with reproducers that Christoph forwarded
+to the mailing list, including the one wrt. slab oob in syncookie mode.
 
-> On 28/01/2020 12:31, Paolo Abeni wrote:
-> > On Mon, 2020-01-27 at 17:22 -0800, Mat Martineau wrote:
-> > > On Mon, 27 Jan 2020, Matthieu Baerts wrote:
-> > > =
+First patch moves free of the cached extension pointer to the destroy
+callback to make sure no other call path can allocate a new one.
+Actually net-next should be fine in this regard (no msk work queue yet),
+but as Paolo pointed out it looks bogus when 3rd patch calls it with
+mptcp lock already released.
 
-> > > > Hi Florian,
-> > > > =
+2nd patch fixes a crash with set/getsockopt interface and resolves
+a lockdep splat due to calls to rtnl_lock while already holding the msk loc=
+k.
 
-> > > > On 27/01/2020 00:41, Florian Westphal wrote:
-> > > > > Its not possible to call the kernel_(s|g)etsockopt functions here,
-> > > > > the address points to user memory:
-> > > > =
+I resolved both in the same patch because the fixes need to touch the same
+spot.
 
-> > > > I am sorry for this maybe stupid question but why can we not use th=
-ese
-> > > > functions directly? Is it because of the "(g|s)et_fs()"?
-> > > =
+3rd patch fixes another lockdep splat, this time during mptcp_close
+but again related to rtnl_lock.
 
-> > > Yes, the set_fs(KERNEL_DS) bypasses some checks for userspace memory
-> > > ranges.
-> > > =
+Last patch avoid OOB access when syncookies are used.
+This should be resolved differently, as mptcp v1 can use 4th ack to
+recover state, but that will be more intrusive so this fix downgrades to
+TCP instead.
 
-> > > > [...]
-> > > > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > > > index 39fdca79ce90..f8232e9f08e7 100644
-> > > > > --- a/net/mptcp/protocol.c
-> > > > > +++ b/net/mptcp/protocol.c
-> > > > > @@ -778,17 +778,23 @@ static void mptcp_destroy(struct sock *sk)
-> > > > >    {
-> > > > >    }
-> > > > >    +static int subflow_setsockopt(struct socket *sock, int level,=
- int
-> > > > > optname,
-> > > > > +			       char __user *optval, unsigned int optlen)
-> > > > > +{
-> > > > > +	if (level =3D=3D SOL_SOCKET)
-> > > > =
+See patches for more detailed explanation.
 
-> > > > Can we arrive in this case with MPTCP? I guess not form the userspa=
-ce'
-> > > > syscall but maybe from somewhere else in the kernel code?
-> > > =
+ include/linux/tcp.h   |    2 --
+ net/ipv4/syncookies.c |    4 ++++
+ net/ipv4/tcp_input.c  |    3 +++
+ net/ipv6/syncookies.c |    3 +++
+ net/mptcp/protocol.c  |   48 ++++++++++++++++++++++++++++-----------------=
+---
+ net/mptcp/subflow.c   |    5 ++++-
+ 6 files changed, 42 insertions(+), 23 deletions(-)
 
-> > > Right now there isn't any code in mptcp_setsockopt() that checks which
-> > > levels or options are allowed through to the subflows. We discussed
-> > > whitelisting the socket options allowed to pass through to the subflo=
-ws -
-> > > but the patch to whitelist TCP_CONGESTION was mostly dropped and allo=
-wed
-> > > everything instead of allowing nothing. I'm not sure that's what was
-> > > intended, I will add it to this week's agenda.
-> > > =
 
-> > > For this patch, though, the SOL_SOCKET check is needed to match
-> > > kernel_setsockopt behavior.
-> > =
-
-> > Uhm... I think handling of SOL_SOCKET is not needed ?!? we reach
-> > mptcp_setsockopt via __sys_setsockopt(), which already took care of
-> > SOL_SOCKET case. The check inside kernel_{get,set}sockopt was
-> > rendundant. I think calling directly ssock->ops->setsockopt suffice
-> > (and also keep the code smaller)
-> =
-
-> Do we need to protect against other parts of the kernel calling:
-> =
-
->    sock->ops->(g|s)etsockopt()
-> =
-
-> directly, possibly with level =3D=3D SOL_SOCKET?
-
-I think we don't, as we don't for tcp_{g,s}etsockopt(). Why need that
-additionallty here?!?
-
-Paolo
-
---===============7506324279650621175==--
+--===============4898690049740533364==--
