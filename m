@@ -1,66 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============1310034806554967376=="
+Content-Type: multipart/mixed; boundary="===============3745310811007552378=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v1 4/4] mptcp: handle tcp fallback when
- using syn cookies
-Date: Tue, 28 Jan 2020 17:41:50 +0100
-Message-ID: <cb174326-928a-4037-b366-68f9eecb52c1@tessares.net>
-In-Reply-To: 20200128150125.26625-5-fw@strlen.de
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 23rd of January 2020
+Date: Tue, 28 Jan 2020 17:43:13 +0100
+Message-ID: <d75ec7229a6c2286f1b52eeb52ee20289b922f08.camel@redhat.com>
+In-Reply-To: 9c637883-ad74-d916-1bbf-8256ac86c4ac@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3542
+X-UID: 3543
 
---===============1310034806554967376==
+--===============3745310811007552378==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+On Fri, 2020-01-24 at 17:38 +0100, Matthieu Baerts wrote:
+> On 24/01/2020 11:14, Paolo Abeni wrote:
+> > On Thu, 2020-01-23 at 22:42 +0100, Matthieu Baerts wrote:
+> > >       - checkpatch: 3 issues:
+> > >           - one space/tabs mix (1 tabs + 9 spaces instead of 2 tabs +=
+ 1
+> > > space)
+> > >           - one extra space after '*' when declaring a function
+> > >           - one comparison to "NULL": var =3D=3D NULL instead of !var
+> > >           =E2=86=92 we can wait for when we will need to send a new v=
+ersion
+> > >           =E2=86=92 *Matth* can send patches and apply them later
+> > =
 
-On 28/01/2020 16:01, Florian Westphal wrote:
-> We can't deal with syncookie mode yet, the syncookie rx path will create
-> tcp rsk instead of mptcp rsk, i.e. we get OOB access because we treat
-> tcp rsk as mptcp rsk:
+> > Would be good including the above, but I personally have hard time to
+> > do anything before next Mon.
 > =
 
-> TCP: request_sock_subflow: Possible SYN flooding on port 20002. Sending c=
-ookies.  Check SNMP counters.
-> BUG: KASAN: slab-out-of-bounds in subflow_syn_recv_sock+0x451/0x4d0 net/m=
-ptcp/subflow.c:191
-> Read of size 1 at addr ffff8881167bc148 by task syz-executor099/2120
->   subflow_syn_recv_sock+0x451/0x4d0 net/mptcp/subflow.c:191
->   tcp_get_cookie_sock+0xcf/0x520 net/ipv4/syncookies.c:209
->   cookie_v6_check+0x15a5/0x1e90 net/ipv6/syncookies.c:252
->   tcp_v6_cookie_check net/ipv6/tcp_ipv6.c:1123 [inline]
->   [..]
+> Where can we apply these very small fixes now that the series is =
+
+> applied? I can send the patches but do we want to ignore them or apply =
+
+> them if we modify the code around?
+
+I would go with "net" patches to address the above (and ev. review on
+the mptcp ML before the actual upstream submission).
+
+> > We discussed off-line this topic. We think that a netlink-based,
+> > simple and allowing future features could be created with a reasonable
+> > effort. The idea would be to initially support only a few commands:
+> > =
+
+> > 	- announce the provided address[es]
+> > 		* argument is an address [list]
+> > =
+
+> > 	- add new subflows using the provided address[es]
+> > 		* argument is an address [list]
+> > 		=
+
+> > 	- add subflows for each announced address
+> > 		* argument is a single number: the maximum number
+> > 		  of allowed subflows created for the addresses
+> > 		  announced by the peers. 0 =3D=3D no subflows creation
+> > 		  for the announced received.
+> > =
+
+> > each command will affect all the MPTCP sockets created in the current
+> > netns after that the netlink command is issued.
 > =
 
-> Bug can be reproduced via "sysctl net.ipv4.tcp_syncookies=3D2".
+> If I understand well, you want something different than the netlink =
 
-Thank you for looking at that!
+> path-manager we have on MPTCP out-of-tree, right?
+> =
 
-> Note that MPTCP should work with syncookies (4th ack would carry needed
-> state), but it appears better to sort that out in -next so do tcp
-> fallback for now.
+> This PM acts per MPTCP connection while here, you want to act on all =
 
-Indeed, it makes sense.
+> existing and future connections, right?
+> =
 
-> I decided to remove the ifdef on tcp_rsk "is_mptcp" member because
-> if (IS_ENABLED()) is easier to read than "#ifdef IS_ENABLED()/#endif" pai=
-r.
+> For the two first items, is it not something we can already achieve with =
 
-I agree with you that it is easier to read but will it be OK for =
+> the "basic" PM via sysctl per NS but only valid for one address to =
 
-upstream? Should we use a bitfield and include 'tfo_listener' in it?
+> announce/create a subflow?
+
+Yes, but the current basic PM uses the not so clean procfs interface.
+The idea is get something could fit upstream more nicely. It will
+(initially) operate on a netns basic, could be extended to something
+compatible with out-of-tree PM later.
+
+> > The idea is that we should be able to easily plug both self-tests and
+> > almost reasonable "production" behaviours with the above.
+> =
+
+> To replace the basic PM them or already support the "server PM" we were =
+
+> mentioning in the notes?
+> =
+
+
+The idea would be replacing the current basic PM, still keeping the
+code as small as possible.
+
+The 'server PM' should likely obtained extending this NL interface
+(and/or basic behaviour should already fit some/most server scenarios).
 
 Cheers,
-Matt
--- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1310034806554967376==--
+Paolo
+
+--===============3745310811007552378==--
