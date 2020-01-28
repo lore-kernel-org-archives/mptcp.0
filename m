@@ -1,69 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============3199366264803485397=="
+Content-Type: multipart/mixed; boundary="===============1310034806554967376=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v4 0/4] fix syzkaller splats reported by
- Christoph
-Date: Tue, 28 Jan 2020 17:24:51 +0100
-Message-ID: <45e893021c8f86f71605543379cba96080e224cd.camel@redhat.com>
-In-Reply-To: 20200128150125.26625-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next v1 4/4] mptcp: handle tcp fallback when
+ using syn cookies
+Date: Tue, 28 Jan 2020 17:41:50 +0100
+Message-ID: <cb174326-928a-4037-b366-68f9eecb52c1@tessares.net>
+In-Reply-To: 20200128150125.26625-5-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3541
+X-UID: 3542
 
---===============3199366264803485397==
+--===============1310034806554967376==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-01-28 at 16:01 +0100, Florian Westphal wrote:
-> This fixes the syzkaller splats with reproducers that Christoph forwarded
-> to the mailing list, including the one wrt. slab oob in syncookie mode.
+Hi Florian,
+
+On 28/01/2020 16:01, Florian Westphal wrote:
+> We can't deal with syncookie mode yet, the syncookie rx path will create
+> tcp rsk instead of mptcp rsk, i.e. we get OOB access because we treat
+> tcp rsk as mptcp rsk:
 > =
 
-> First patch moves free of the cached extension pointer to the destroy
-> callback to make sure no other call path can allocate a new one.
-> Actually net-next should be fine in this regard (no msk work queue yet),
-> but as Paolo pointed out it looks bogus when 3rd patch calls it with
-> mptcp lock already released.
+> TCP: request_sock_subflow: Possible SYN flooding on port 20002. Sending c=
+ookies.  Check SNMP counters.
+> BUG: KASAN: slab-out-of-bounds in subflow_syn_recv_sock+0x451/0x4d0 net/m=
+ptcp/subflow.c:191
+> Read of size 1 at addr ffff8881167bc148 by task syz-executor099/2120
+>   subflow_syn_recv_sock+0x451/0x4d0 net/mptcp/subflow.c:191
+>   tcp_get_cookie_sock+0xcf/0x520 net/ipv4/syncookies.c:209
+>   cookie_v6_check+0x15a5/0x1e90 net/ipv6/syncookies.c:252
+>   tcp_v6_cookie_check net/ipv6/tcp_ipv6.c:1123 [inline]
+>   [..]
 > =
 
-> 2nd patch fixes a crash with set/getsockopt interface and resolves
-> a lockdep splat due to calls to rtnl_lock while already holding the msk l=
-ock.
-> =
+> Bug can be reproduced via "sysctl net.ipv4.tcp_syncookies=3D2".
 
-> I resolved both in the same patch because the fixes need to touch the same
-> spot.
-> =
+Thank you for looking at that!
 
-> 3rd patch fixes another lockdep splat, this time during mptcp_close
-> but again related to rtnl_lock.
-> =
+> Note that MPTCP should work with syncookies (4th ack would carry needed
+> state), but it appears better to sort that out in -next so do tcp
+> fallback for now.
 
-> Last patch avoid OOB access when syncookies are used.
-> This should be resolved differently, as mptcp v1 can use 4th ack to
-> recover state, but that will be more intrusive so this fix downgrades to
-> TCP instead.
-> =
+Indeed, it makes sense.
 
-> See patches for more detailed explanation.
-> =
+> I decided to remove the ifdef on tcp_rsk "is_mptcp" member because
+> if (IS_ENABLED()) is easier to read than "#ifdef IS_ENABLED()/#endif" pai=
+r.
 
->  include/linux/tcp.h   |    2 --
->  net/ipv4/syncookies.c |    4 ++++
->  net/ipv4/tcp_input.c  |    3 +++
->  net/ipv6/syncookies.c |    3 +++
->  net/mptcp/protocol.c  |   48 ++++++++++++++++++++++++++++---------------=
------
->  net/mptcp/subflow.c   |    5 ++++-
->  6 files changed, 42 insertions(+), 23 deletions(-)
+I agree with you that it is easier to read but will it be OK for =
 
-Except for the already reported note on patch 2/4, I think the others
-patches are good.
+upstream? Should we use a bitfield and include 'tfo_listener' in it?
 
-Thanks Florian for fixing our mess ;)
+Cheers,
+Matt
+-- =
 
-/P
-
---===============3199366264803485397==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============1310034806554967376==--
