@@ -1,124 +1,153 @@
-Content-Type: multipart/mixed; boundary="===============6947655219188464459=="
+Content-Type: multipart/mixed; boundary="===============8115230018058166208=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 3/4] mptcp: mptcp_close: avoid a lockdep
- splat when mcast group was joined
-Date: Tue, 28 Jan 2020 16:01:23 +0100
-Message-ID: <20200128150125.26625-4-fw@strlen.de>
+Subject: [MPTCP] [PATCH net-next v1 4/4] mptcp: handle tcp fallback when using
+ syn cookies
+Date: Tue, 28 Jan 2020 16:01:24 +0100
+Message-ID: <20200128150125.26625-5-fw@strlen.de>
 In-Reply-To: 20200128150125.26625-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3538
+X-UID: 3539
 
---===============6947655219188464459==
+--===============8115230018058166208==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-syzbot triggered following lockdep splat:
+We can't deal with syncookie mode yet, the syncookie rx path will create
+tcp rsk instead of mptcp rsk, i.e. we get OOB access because we treat
+tcp rsk as mptcp rsk:
 
-ffffffff82d2cd40 (rtnl_mutex){+.+.}, at: ip_mc_drop_socket+0x52/0x180
-but task is already holding lock:
-ffff8881187a2310 (sk_lock-AF_INET){+.+.}, at: mptcp_close+0x18/0x30
+TCP: request_sock_subflow: Possible SYN flooding on port 20002. Sending coo=
+kies.  Check SNMP counters.
+BUG: KASAN: slab-out-of-bounds in subflow_syn_recv_sock+0x451/0x4d0 net/mpt=
+cp/subflow.c:191
+Read of size 1 at addr ffff8881167bc148 by task syz-executor099/2120
+ subflow_syn_recv_sock+0x451/0x4d0 net/mptcp/subflow.c:191
+ tcp_get_cookie_sock+0xcf/0x520 net/ipv4/syncookies.c:209
+ cookie_v6_check+0x15a5/0x1e90 net/ipv6/syncookies.c:252
+ tcp_v6_cookie_check net/ipv6/tcp_ipv6.c:1123 [inline]
+ [..]
 
-which lock already depends on the new lock.
+Bug can be reproduced via "sysctl net.ipv4.tcp_syncookies=3D2".
 
-the existing dependency chain (in reverse order) is:
--> #1 (sk_lock-AF_INET){+.+.}:
-       lock_acquire+0xee/0x230
-       lock_sock_nested+0x89/0xc0
-       do_ip_setsockopt.isra.0+0x335/0x22f0
-       ip_setsockopt+0x35/0x60
-       tcp_setsockopt+0x5d/0x90
-       __sys_setsockopt+0xf3/0x190
-       __x64_sys_setsockopt+0x61/0x70
-       do_syscall_64+0x72/0x300
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
--> #0 (rtnl_mutex){+.+.}:
-       check_prevs_add+0x2b7/0x1210
-       __lock_acquire+0x10b6/0x1400
-       lock_acquire+0xee/0x230
-       __mutex_lock+0x120/0xc70
-       ip_mc_drop_socket+0x52/0x180
-       inet_release+0x36/0xe0
-       __sock_release+0xfd/0x130
-       __mptcp_close+0xa8/0x1f0
-       inet_release+0x7f/0xe0
-       __sock_release+0x69/0x130
-       sock_close+0x18/0x20
-       __fput+0x179/0x400
-       task_work_run+0xd5/0x110
-       do_exit+0x685/0x1510
-       do_group_exit+0x7e/0x170
-       __x64_sys_exit_group+0x28/0x30
-       do_syscall_64+0x72/0x300
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Note that MPTCP should work with syncookies (4th ack would carry needed
+state), but it appears better to sort that out in -next so do tcp
+fallback for now.
 
-The trigger is:
-  socket(AF_INET, SOCK_STREAM, 0x106 /* IPPROTO_MPTCP */) =3D 4
-  setsockopt(4, SOL_IP, MCAST_JOIN_GROUP, {gr_interface=3D7, gr_group=3D{sa=
-_family=3DAF_INET, sin_port=3Dhtons(20003), sin_addr=3Dinet_addr("224.0.0.2=
-")}}, 136) =3D 0
-  exit(0)
+I decided to remove the ifdef on tcp_rsk "is_mptcp" member because
+if (IS_ENABLED()) is easier to read than "#ifdef IS_ENABLED()/#endif" pair.
 
-Which results in a call to rtnl_lock while we are holding
-the parent mptcp socket lock via
-mptcp_close -> lock_sock(msk) -> inet_release -> ip_mc_drop_socket -> rtnl_=
-lock().
-
-From lockdep point of view we thus have both
-'rtnl_lock; lock_sock' and 'lock_sock; rtnl_lock'.
-
-Fix this by stealing the msk conn_list and doing the subflow close
-without holding the msk lock.
-
-Fixes: cec37a6e41aae7bf ("mptcp: Handle MP_CAPABLE options for outgoing con=
-nections")
 Reported-by: Christoph Paasch <cpaasch(a)apple.com>
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- v2: rebase to account for new patch 1.
+ patch is new in this set.
 
- net/mptcp/protocol.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/linux/tcp.h   | 2 --
+ net/ipv4/syncookies.c | 4 ++++
+ net/ipv4/tcp_input.c  | 3 +++
+ net/ipv6/syncookies.c | 3 +++
+ net/mptcp/subflow.c   | 5 ++++-
+ 5 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 432265f84a65..6a8f2978b3e5 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -644,17 +644,21 @@ static void __mptcp_close(struct sock *sk, long timeo=
-ut)
- {
- 	struct mptcp_subflow_context *subflow, *tmp;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	LIST_HEAD(conn_list);
- =
-
- 	mptcp_token_destroy(msk->token);
- 	inet_sk_state_store(sk, TCP_CLOSE);
- =
-
--	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+	list_splice_init(&msk->conn_list, &conn_list);
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 1cf73e6f85ca..3dc964010fef 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -148,9 +148,7 @@ struct tcp_request_sock {
+ 	const struct tcp_request_sock_ops *af_specific;
+ 	u64				snt_synack; /* first SYNACK sent time */
+ 	bool				tfo_listener;
+-#if IS_ENABLED(CONFIG_MPTCP)
+ 	bool				is_mptcp;
+-#endif
+ 	u32				txhash;
+ 	u32				rcv_isn;
+ 	u32				snt_isn;
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index 345b2b0ff618..9a4f6b16c9bc 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -349,6 +349,10 @@ struct sock *cookie_v4_check(struct sock *sk, struct s=
+k_buff *skb)
+ 	req->ts_recent		=3D tcp_opt.saw_tstamp ? tcp_opt.rcv_tsval : 0;
+ 	treq->snt_synack	=3D 0;
+ 	treq->tfo_listener	=3D false;
 +
-+	release_sock(sk);
++	if (IS_ENABLED(CONFIG_MPTCP))
++		treq->is_mptcp =3D 0;
 +
-+	list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+ 	if (IS_ENABLED(CONFIG_SMC))
+ 		ireq->smc_ok =3D 0;
  =
 
- 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index e8b840a4767e..e325b4506e25 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6637,6 +6637,9 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ =
+
+ 	af_ops->init_req(req, sk, skb);
+ =
+
++	if (IS_ENABLED(CONFIG_MPTCP) && want_cookie)
++		tcp_rsk(req)->is_mptcp =3D 0;
++
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto drop_and_free;
+ =
+
+diff --git a/net/ipv6/syncookies.c b/net/ipv6/syncookies.c
+index 30915f6f31e3..13235a012388 100644
+--- a/net/ipv6/syncookies.c
++++ b/net/ipv6/syncookies.c
+@@ -178,6 +178,9 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	treq =3D tcp_rsk(req);
+ 	treq->tfo_listener =3D false;
+ =
+
++	if (IS_ENABLED(CONFIG_MPTCP))
++		treq->is_mptcp =3D 0;
++
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto out_free;
+ =
+
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 1662e1178949..cf9bad97a12a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -186,6 +186,9 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ =
+
+ 	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener->c=
+onn);
+ =
+
++	if (tcp_rsk(req)->is_mptcp =3D=3D 0)
++		goto create_child;
++
+ 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
+ 	subflow_req =3D mptcp_subflow_rsk(req);
+ 	if (subflow_req->mp_capable) {
+@@ -767,7 +770,7 @@ static void subflow_ulp_clone(const struct request_sock=
+ *req,
+ 	struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
+ 	struct mptcp_subflow_context *new_ctx;
+ =
+
+-	if (!subflow_req->mp_capable) {
++	if (!tcp_rsk(req)->is_mptcp || !subflow_req->mp_capable) {
+ 		subflow_ulp_fallback(newsk, old_ctx);
+ 		return;
  	}
- =
-
--	release_sock(sk);
- 	sk_common_release(sk);
- }
- =
-
 -- =
 
 2.24.1
 
---===============6947655219188464459==--
+--===============8115230018058166208==--
