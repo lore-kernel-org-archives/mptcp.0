@@ -1,69 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============8047153702019740447=="
+Content-Type: multipart/mixed; boundary="===============0039216870178953608=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] MAINTAINERS: mptcp@ mailing list is moderated
-Date: Wed, 29 Jan 2020 09:09:12 -0800
-Message-ID: <alpine.OSX.2.21.2001290857310.9282@cmossx-mobl1.amr.corp.intel.com>
-In-Reply-To: 0d3e4e6f-5437-ae85-f1f5-89971ea3423f@infradead.org
+Subject: [MPTCP] Weekly meeting - 30 January 2020 17:00 UTC (9am PST, 6pm CET)
+Date: Wed, 29 Jan 2020 18:54:53 +0100
+Message-ID: <f4e46eac-8916-dfd1-b20c-ff9fc97c3591@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3550
+X-UID: 3551
 
---===============8047153702019740447==
+--===============0039216870178953608==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello everybody!
 
-On Tue, 28 Jan 2020, Randy Dunlap wrote:
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> From: Randy Dunlap <rdunlap(a)infradead.org>
->
-> Note that mptcp(a)lists.01.org is moderated, like we note for
-> other mailing lists.
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20200130
 
-Hi Randy -
+Feel free to add/modify topics!
 
-The mptcp(a)lists.01.org list is not moderated, but there's a server-wide =
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-default rule that holds messages with 10 or more recipients for any sender =
+Speak to you tomorrow!
+Matthieu
+-- =
 
-(list member or not). I've turned off those server-wide defaults for this =
-
-list so it shouldn't be a problem in the future.
-
-Thank you for your report on the build errors.
-
-
-Mat
-
-
->
-> Signed-off-by: Randy Dunlap <rdunlap(a)infradead.org>
-> Cc: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> Cc: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> Cc: netdev(a)vger.kernel.org
-> Cc: mptcp(a)lists.01.org
-> ---
-> MAINTAINERS |    2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- mmotm-2020-0128-2005.orig/MAINTAINERS
-> +++ mmotm-2020-0128-2005/MAINTAINERS
-> @@ -11718,7 +11718,7 @@ NETWORKING [MPTCP]
-> M:	Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> M:	Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> L:	netdev(a)vger.kernel.org
-> -L:	mptcp(a)lists.01.org
-> +L:	mptcp(a)lists.01.org (moderated for non-subscribers)
-> W:	https://github.com/multipath-tcp/mptcp_net-next/wiki
-> B:	https://github.com/multipath-tcp/mptcp_net-next/issues
-> S:	Maintained
->
->
-
---
-Mat Martineau
-Intel
---===============8047153702019740447==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============0039216870178953608==--
