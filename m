@@ -1,49 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============8525937692699390913=="
+Content-Type: multipart/mixed; boundary="===============8627277521453462222=="
 MIME-Version: 1.0
 From: Geert Uytterhoeven <geert at linux-m68k.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: Fix incorrect IPV6 dependency check
-Date: Wed, 29 Jan 2020 19:01:17 +0100
-Message-ID: <20200129180117.545-1-geert@linux-m68k.org>
+Subject: [MPTCP] [PATCH] mptcp: MPTCP_HMAC_TEST should depend on MPTCP
+Date: Wed, 29 Jan 2020 19:02:24 +0100
+Message-ID: <20200129180224.700-1-geert@linux-m68k.org>
 X-Status: 
 X-Keywords:                  
-X-UID: 3553
+X-UID: 3554
 
---===============8525937692699390913==
+--===============8627277521453462222==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If CONFIG_MPTCP=3Dy, CONFIG_MPTCP_IPV6=3Dn, and CONFIG_IPV6=3Dm:
+As the MPTCP HMAC test is integrated into the MPTCP code, it can be
+built only when MPTCP is enabled.  Hence when MPTCP is disabled, asking
+the user if the test code should be enabled is futile.
 
-    net/mptcp/protocol.o: In function `__mptcp_tcp_fallback':
-    protocol.c:(.text+0x786): undefined reference to `inet6_stream_ops'
+Wrap the whole block of MPTCP-specific config options inside a check for
+MPTCP.  While at it, drop the "default n" for MPTCP_HMAC_TEST, as that
+is the default anyway.
 
-Fix this by checking for CONFIG_MPTCP_IPV6 instead of CONFIG_IPV6, like
-is done in all other places in the mptcp code.
-
-Fixes: 8ab183deb26a3b79 ("mptcp: cope with later TCP fallback")
+Fixes: 65492c5a6ab5df50 ("mptcp: move from sha1 (v0) to sha256 (v1)")
 Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
 ---
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/Kconfig | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 39fdca79ce90137e..096dfd1074540c8a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -28,7 +28,7 @@ static void __mptcp_close(struct sock *sk, long timeout);
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index 5db56d2218c518c8..49f6054e7f4ebc15 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -10,17 +10,19 @@ config MPTCP
+ 	  uses the TCP protocol, and TCP options carry header information for
+ 	  MPTCP.
  =
 
- static const struct proto_ops *tcp_proto_ops(struct sock *sk)
- {
--#if IS_ENABLED(CONFIG_IPV6)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	if (sk->sk_family =3D=3D AF_INET6)
- 		return &inet6_stream_ops;
- #endif
++if MPTCP
++
+ config MPTCP_IPV6
+ 	bool "MPTCP: IPv6 support for Multipath TCP"
+-	depends on MPTCP
+ 	select IPV6
+ 	default y
+ =
+
+ config MPTCP_HMAC_TEST
+ 	bool "Tests for MPTCP HMAC implementation"
+-	default n
+ 	help
+ 	  This option enable boot time self-test for the HMAC implementation
+ 	  used by the MPTCP code
+ =
+
+ 	  Say N if you are unsure.
++
++endif
 -- =
 
 2.17.1
 
---===============8525937692699390913==--
+--===============8627277521453462222==--
