@@ -1,48 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============7688533545999679103=="
+Content-Type: multipart/mixed; boundary="===============8525937692699390913=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geert Uytterhoeven <geert at linux-m68k.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] Revert "MAINTAINERS: mptcp@ mailing list is
- moderated"
-Date: Wed, 29 Jan 2020 09:41:37 -0800
-Message-ID: <20200129174137.22948-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH] mptcp: Fix incorrect IPV6 dependency check
+Date: Wed, 29 Jan 2020 19:01:17 +0100
+Message-ID: <20200129180117.545-1-geert@linux-m68k.org>
 X-Status: 
 X-Keywords:                  
-X-UID: 3552
+X-UID: 3553
 
---===============7688533545999679103==
+--===============8525937692699390913==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This reverts commit 74759e1693311a8d1441de836c4080c192374238.
+If CONFIG_MPTCP=3Dy, CONFIG_MPTCP_IPV6=3Dn, and CONFIG_IPV6=3Dm:
 
-mptcp(a)lists.01.org accepts messages from non-subscribers. There was an
-invisible and unexpected server-wide rule limiting the number of
-recipients for subscribers and non-subscribers alike, and that has now
-been turned off for this list.
+    net/mptcp/protocol.o: In function `__mptcp_tcp_fallback':
+    protocol.c:(.text+0x786): undefined reference to `inet6_stream_ops'
 
-Cc: Randy Dunlap <rdunlap(a)infradead.org>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Fix this by checking for CONFIG_MPTCP_IPV6 instead of CONFIG_IPV6, like
+is done in all other places in the mptcp code.
+
+Fixes: 8ab183deb26a3b79 ("mptcp: cope with later TCP fallback")
+Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
 ---
- MAINTAINERS | 2 +-
+ net/mptcp/protocol.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 58e4eb554d0e..d51ce1a0a817 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11641,7 +11641,7 @@ NETWORKING [MPTCP]
- M:	Mat Martineau <mathew.j.martineau(a)linux.intel.com>
- M:	Matthieu Baerts <matthieu.baerts(a)tessares.net>
- L:	netdev(a)vger.kernel.org
--L:	mptcp(a)lists.01.org (moderated for non-subscribers)
-+L:	mptcp(a)lists.01.org
- W:	https://github.com/multipath-tcp/mptcp_net-next/wiki
- B:	https://github.com/multipath-tcp/mptcp_net-next/issues
- S:	Maintained
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 39fdca79ce90137e..096dfd1074540c8a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -28,7 +28,7 @@ static void __mptcp_close(struct sock *sk, long timeout);
+ =
+
+ static const struct proto_ops *tcp_proto_ops(struct sock *sk)
+ {
+-#if IS_ENABLED(CONFIG_IPV6)
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	if (sk->sk_family =3D=3D AF_INET6)
+ 		return &inet6_stream_ops;
+ #endif
 -- =
 
-2.25.0
+2.17.1
 
---===============7688533545999679103==--
+--===============8525937692699390913==--
