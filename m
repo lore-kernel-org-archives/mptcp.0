@@ -1,64 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============8627277521453462222=="
+Content-Type: multipart/mixed; boundary="===============6826911776376887135=="
 MIME-Version: 1.0
-From: Geert Uytterhoeven <geert at linux-m68k.org>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: MPTCP_HMAC_TEST should depend on MPTCP
-Date: Wed, 29 Jan 2020 19:02:24 +0100
-Message-ID: <20200129180224.700-1-geert@linux-m68k.org>
+Subject: [MPTCP] Re: Weekly meeting - 30 January 2020 17:00 UTC (9am PST,
+ 6pm CET)
+Date: Wed, 29 Jan 2020 11:06:48 -0800
+Message-ID: <20200129190648.GG19649@MacBook-Pro-64.local>
+In-Reply-To: f4e46eac-8916-dfd1-b20c-ff9fc97c3591@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3554
+X-UID: 3555
 
---===============8627277521453462222==
+--===============6826911776376887135==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-As the MPTCP HMAC test is integrated into the MPTCP code, it can be
-built only when MPTCP is enabled.  Hence when MPTCP is disabled, asking
-the user if the test code should be enabled is futile.
+Hello,
 
-Wrap the whole block of MPTCP-specific config options inside a check for
-MPTCP.  While at it, drop the "default n" for MPTCP_HMAC_TEST, as that
-is the default anyway.
+I have a conflict from 9 to 9h30. I will try to call in after that.
 
-Fixes: 65492c5a6ab5df50 ("mptcp: move from sha1 (v0) to sha256 (v1)")
-Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
----
- net/mptcp/Kconfig | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index 5db56d2218c518c8..49f6054e7f4ebc15 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -10,17 +10,19 @@ config MPTCP
- 	  uses the TCP protocol, and TCP options carry header information for
- 	  MPTCP.
- =
 
-+if MPTCP
-+
- config MPTCP_IPV6
- 	bool "MPTCP: IPv6 support for Multipath TCP"
--	depends on MPTCP
- 	select IPV6
- 	default y
- =
+Christoph
 
- config MPTCP_HMAC_TEST
- 	bool "Tests for MPTCP HMAC implementation"
--	default n
- 	help
- 	  This option enable boot time self-test for the HMAC implementation
- 	  used by the MPTCP code
- =
 
- 	  Say N if you are unsure.
-+
-+endif
--- =
+On 29/01/20 - 18:54:53, Matthieu Baerts wrote:
+> Hello everybody!
+> =
 
-2.17.1
+> Our public MPTCP upstreaming weekly web conference is scheduled for
+> tomorrow.
+> =
 
---===============8627277521453462222==--
+> The list of topics is available here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20200130
+> =
+
+> Feel free to add/modify topics!
+> =
+
+> Anybody can join the meeting using Google Meet website/app/phone:
+> https://meet.google.com/edk-rkrk-vaj
+> =
+
+> Speak to you tomorrow!
+> Matthieu
+> -- =
+
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+--===============6826911776376887135==--
