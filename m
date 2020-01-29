@@ -1,35 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============8547685602322409933=="
+Content-Type: multipart/mixed; boundary="===============3680263866514142915=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] Revert "MAINTAINERS: mptcp@ mailing list is
- moderated"
-Date: Wed, 29 Jan 2020 20:29:25 +0100
-Message-ID: <20200129.202925.1646206232932778594.davem@davemloft.net>
-In-Reply-To: 20200129174137.22948-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH] mptcp: MPTCP_HMAC_TEST should depend on MPTCP
+Date: Wed, 29 Jan 2020 13:08:04 -0800
+Message-ID: <alpine.OSX.2.21.2001291246140.9282@cmossx-mobl1.amr.corp.intel.com>
+In-Reply-To: 20200129180224.700-1-geert@linux-m68k.org
 X-Status: 
 X-Keywords:                  
-X-UID: 3556
+X-UID: 3558
 
---===============8547685602322409933==
+--===============3680263866514142915==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Date: Wed, 29 Jan 2020 09:41:37 -0800
 
-> This reverts commit 74759e1693311a8d1441de836c4080c192374238.
-> =
+On Wed, 29 Jan 2020, Geert Uytterhoeven wrote:
 
-> mptcp(a)lists.01.org accepts messages from non-subscribers. There was an
-> invisible and unexpected server-wide rule limiting the number of
-> recipients for subscribers and non-subscribers alike, and that has now
-> been turned off for this list.
-> =
+> As the MPTCP HMAC test is integrated into the MPTCP code, it can be
+> built only when MPTCP is enabled.  Hence when MPTCP is disabled, asking
+> the user if the test code should be enabled is futile.
+>
+> Wrap the whole block of MPTCP-specific config options inside a check for
+> MPTCP.  While at it, drop the "default n" for MPTCP_HMAC_TEST, as that
+> is the default anyway.
+>
+> Fixes: 65492c5a6ab5df50 ("mptcp: move from sha1 (v0) to sha256 (v1)")
+> Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
+> ---
 
-> Cc: Randy Dunlap <rdunlap(a)infradead.org>
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-Applied, thanks.
---===============8547685602322409933==--
+--
+Mat Martineau
+Intel
+--===============3680263866514142915==--
