@@ -1,36 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============0221013786536171530=="
+Content-Type: multipart/mixed; boundary="===============3917499670292129611=="
 MIME-Version: 1.0
 From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Fix incorrect IPV6 dependency check
-Date: Thu, 30 Jan 2020 09:56:19 +0100
-Message-ID: <20200130.095619.1080558867331721556.davem@davemloft.net>
-In-Reply-To: 20200129180117.545-1-geert@linux-m68k.org
+Subject: [MPTCP] Re: [PATCH] mptcp: MPTCP_HMAC_TEST should depend on MPTCP
+Date: Thu, 30 Jan 2020 09:56:29 +0100
+Message-ID: <20200130.095629.1691702887527418741.davem@davemloft.net>
+In-Reply-To: 20200129180224.700-1-geert@linux-m68k.org
 X-Status: 
 X-Keywords:                  
-X-UID: 3562
+X-UID: 3563
 
---===============0221013786536171530==
+--===============3917499670292129611==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geert Uytterhoeven <geert(a)linux-m68k.org>
-Date: Wed, 29 Jan 2020 19:01:17 +0100
+Date: Wed, 29 Jan 2020 19:02:24 +0100
 
-> If CONFIG_MPTCP=3Dy, CONFIG_MPTCP_IPV6=3Dn, and CONFIG_IPV6=3Dm:
+> As the MPTCP HMAC test is integrated into the MPTCP code, it can be
+> built only when MPTCP is enabled.  Hence when MPTCP is disabled, asking
+> the user if the test code should be enabled is futile.
 > =
 
->     net/mptcp/protocol.o: In function `__mptcp_tcp_fallback':
->     protocol.c:(.text+0x786): undefined reference to `inet6_stream_ops'
+> Wrap the whole block of MPTCP-specific config options inside a check for
+> MPTCP.  While at it, drop the "default n" for MPTCP_HMAC_TEST, as that
+> is the default anyway.
 > =
 
-> Fix this by checking for CONFIG_MPTCP_IPV6 instead of CONFIG_IPV6, like
-> is done in all other places in the mptcp code.
-> =
-
-> Fixes: 8ab183deb26a3b79 ("mptcp: cope with later TCP fallback")
+> Fixes: 65492c5a6ab5df50 ("mptcp: move from sha1 (v0) to sha256 (v1)")
 > Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
 
 Applied.
---===============0221013786536171530==--
+--===============3917499670292129611==--
