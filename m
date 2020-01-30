@@ -1,79 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============9130239040871253160=="
+Content-Type: multipart/mixed; boundary="===============0221013786536171530=="
 MIME-Version: 1.0
-From: Randy Dunlap <rdunlap at infradead.org>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] MAINTAINERS: mptcp@ mailing list is moderated
-Date: Wed, 29 Jan 2020 14:02:52 -0800
-Message-ID: <4112784b-a70b-8e4a-4110-9898e0626306@infradead.org>
-In-Reply-To: alpine.OSX.2.21.2001290857310.9282@cmossx-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH] mptcp: Fix incorrect IPV6 dependency check
+Date: Thu, 30 Jan 2020 09:56:19 +0100
+Message-ID: <20200130.095619.1080558867331721556.davem@davemloft.net>
+In-Reply-To: 20200129180117.545-1-geert@linux-m68k.org
 X-Status: 
 X-Keywords:                  
-X-UID: 3561
+X-UID: 3562
 
---===============9130239040871253160==
+--===============0221013786536171530==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 1/29/20 9:09 AM, Mat Martineau wrote:
+From: Geert Uytterhoeven <geert(a)linux-m68k.org>
+Date: Wed, 29 Jan 2020 19:01:17 +0100
+
+> If CONFIG_MPTCP=3Dy, CONFIG_MPTCP_IPV6=3Dn, and CONFIG_IPV6=3Dm:
 > =
 
-> On Tue, 28 Jan 2020, Randy Dunlap wrote:
+>     net/mptcp/protocol.o: In function `__mptcp_tcp_fallback':
+>     protocol.c:(.text+0x786): undefined reference to `inet6_stream_ops'
 > =
 
->> From: Randy Dunlap <rdunlap(a)infradead.org>
->>
->> Note that mptcp(a)lists.01.org is moderated, like we note for
->> other mailing lists.
+> Fix this by checking for CONFIG_MPTCP_IPV6 instead of CONFIG_IPV6, like
+> is done in all other places in the mptcp code.
 > =
 
-> Hi Randy -
-> =
+> Fixes: 8ab183deb26a3b79 ("mptcp: cope with later TCP fallback")
+> Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
 
-> The mptcp(a)lists.01.org list is not moderated, but there's a server-wide=
- default rule that holds messages with 10 or more recipients for any sender=
- (list member or not). I've turned off those server-wide defaults for this =
-list so it shouldn't be a problem in the future.
-
-OK, thanks for the clarification & revert...
-
-> Thank you for your report on the build errors.
-> =
-
-> =
-
-> Mat
-> =
-
-> =
-
->>
->> Signed-off-by: Randy Dunlap <rdunlap(a)infradead.org>
->> Cc: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->> Cc: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> Cc: netdev(a)vger.kernel.org
->> Cc: mptcp(a)lists.01.org
->> ---
->> MAINTAINERS |=C2=A0=C2=A0=C2=A0 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> --- mmotm-2020-0128-2005.orig/MAINTAINERS
->> +++ mmotm-2020-0128-2005/MAINTAINERS
->> @@ -11718,7 +11718,7 @@ NETWORKING [MPTCP]
->> M:=C2=A0=C2=A0=C2=A0 Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->> M:=C2=A0=C2=A0=C2=A0 Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> L:=C2=A0=C2=A0=C2=A0 netdev(a)vger.kernel.org
->> -L:=C2=A0=C2=A0=C2=A0 mptcp(a)lists.01.org
->> +L:=C2=A0=C2=A0=C2=A0 mptcp(a)lists.01.org (moderated for non-subscriber=
-s)
->> W:=C2=A0=C2=A0=C2=A0 https://github.com/multipath-tcp/mptcp_net-next/wiki
->> B:=C2=A0=C2=A0=C2=A0 https://github.com/multipath-tcp/mptcp_net-next/iss=
-ues
->> S:=C2=A0=C2=A0=C2=A0 Maintained
-
-
--- =
-
-~Randy
-
---===============9130239040871253160==--
+Applied.
+--===============0221013786536171530==--
