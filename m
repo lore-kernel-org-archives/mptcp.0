@@ -1,308 +1,359 @@
-Content-Type: multipart/mixed; boundary="===============6343112608928695246=="
+Content-Type: multipart/mixed; boundary="===============1324391132888407820=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [GIT] Sync with net-next on 20190131: a few conflicts
-Date: Fri, 31 Jan 2020 18:42:49 +0100
-Message-ID: <ff82f12d-c1e3-e64f-95ba-fff450928c78@tessares.net>
+Subject: [MPTCP] [Weekly meetings] MoM - 30th of January 2020
+Date: Fri, 31 Jan 2020 19:02:10 +0100
+Message-ID: <c99fc3d1-a69b-cc84-5200-16ce0ed53d63@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3568
+X-UID: 3569
 
---===============6343112608928695246==
+--===============1324391132888407820==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-It seems that recently, 'net-next' has been synced with 'net' which =
+Yesterday, we had our 84th meeting with Mat and Ossama (Intel OTC), =
 
-contains some modifications in MPTCP code. We then had a few conflicts =
+Christoph (Apple), Paolo, Florian, Davide (RedHat) and myself (Tessares).
 
-due to Florian's patch-set, see: 55c6ab4b368 (Merge branch =
+Thanks again for this new good meeting!
 
-'mptcp-fix-sockopt-crash-and-lockdep-splats')
+Here are the minutes of the meeting:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=
-=3Dd55c6ab4b368633f39f8fe059f3b877f978cfb4c
 
-The first conflict is with: ae2dd7164943 (mptcp: handle tcp fallback =
 
-when using syn cookies)
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
+     - By Florian Westphal, Geert Uytterhoeven, Mat Martineau, Randy Dunlap
+     - All these patches have been directly sent to netdev ML, not =
 
-diff --cc net/mptcp/subflow.c
-index 65122edf60aa,8b5945266890..000000000000
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@@ -772,7 -863,7 +868,11 @@@ static void subflow_ulp_clone(const str
-         struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
-         struct mptcp_subflow_context *new_ctx;
+applied in our TopGit tree (export branch)
 
-++<<<<<<< t/mptcp-Add-handling-of-incoming-MP_JOIN-requests base content
-  +      if (!tcp_rsk(req)->is_mptcp || !subflow_req->mp_capable) {
-++=3D=3D=3D=3D=3D=3D=3D
-+       if (!subflow_req->mp_capable && !subflow_req->mp_join) {
-++>>>>>>> remotes/origin/t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-                 subflow_ulp_fallback(newsk, old_ctx);
-                 return;
-         }
+1229123  [net-next,2/2] mptcp: Fix code formatting
+1229125  [net-next,1/2] mptcp: do not inherit inet proto ops
+1231348  mptcp: Fix undefined mptcp_handle_ipv6_mapped for modular IPV6
+1231046  mptcp: MPTCP_HMAC_TEST should depend on MPTCP
+1231044  mptcp: Fix incorrect IPV6 dependency check
+1231042  [net] Revert "MAINTAINERS: mptcp@ mailing list is moderated"
+1230708  MAINTAINERS: mptcp@ mailing list is moderated
+1230404  [net-next,v1,4/4] mptcp: handle tcp fallback when using syn coo
+1230403  [net-next,v2,3/4] mptcp: mptcp_close: avoid a lockdep splat whe
+1230402  [net-next,v4,2/4] mptcp: protocol: fix panic on user pointer ac
+1230400  [net-next,v1,1/4] mptcp: protocol: defer freeing of cached ext
 
 
-The resolution:
 
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+     - By Matthieu Baerts
 
-diff --cc net/mptcp/subflow.c
-index 8b5945266890,65122edf60aa..000000000000
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@@ -863,7 -772,7 +868,8 @@@ static void subflow_ulp_clone(const str
-         struct mptcp_subflow_context *old_ctx =3D mptcp_subflow_ctx(newsk);
-         struct mptcp_subflow_context *new_ctx;
+1196109: RFC: [10/10,RFC] selftests:mptcp: decrease timeout to 100 sec:
+     - note that the fix for selftests core has been applied: it now =
 
--       if (!subflow_req->mp_capable && !subflow_req->mp_join) {
-  -      if (!tcp_rsk(req)->is_mptcp || !subflow_req->mp_capable) {
-++      if (!tcp_rsk(req)->is_mptcp ||
-++          (!subflow_req->mp_capable && !subflow_req->mp_join)) {
-                 subflow_ulp_fallback(newsk, old_ctx);
-                 return;
-         }
+takes into account the timeout we set.
+     - but we still have a bug when there is no re-ordering
 
 
-=E2=86=92 05f97b84e5d6: conflict in =
 
-t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+FYI: Current Roadmap: (before the meeting)
+     - Part 1 (mainly TCP changes, will be sent with Part 2):
+         - Merged!
+     - Part 2 (minimum set for MPTCP, up to MPTCPv1 including =
 
+KSelftests, one subflow):
+         - Merged!
+     - Kernel 5.6:
+         - fix issues reported by users and Syzkaller
+     - Part 3 (to be sent when the next merge window opens)
+         - Full DATA_FIN support [WIP]
+         - Shared recv window (drop data received on other subflows) [TODO]
+         - Active backup support [WIP]
+         - Opti in TCP option structures (unions) [to be rebased)
+         - ADD_ADDR for MPTCPv1 [TODO]
+         - PM basic [WIP]
+     - Part 4 (to fully support MPTCP):
+         - Shared recv window (full support)
+         - IPv6 - IPv4 mapped support
+         - not dropping MPTCP options (ADD_ADDR, etc.)
+         - FAST_CLOSE
+         - full MPTCP v1 support (reliable add_addr, etc.)
+         - after a few attempts of failed MPTCP, we fallback to TCP =
 
-Another one caused by another patch from Florian: b2c5b614ca6e (mptcp: =
+(like TFO is doing)
+         - PM server
+     - Part 5 (extra needed for prod):
+         - opti/perfs
+         - TFO
+         - PM netlink
+         - PM bpf
+         - Scheduler bpf
+         - syncookies
 
-avoid a lockdep splat when mcast group was joined):
 
 
-diff --cc net/mptcp/protocol.c
-index 95bc6f9c6745,766a4b15c586..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -691,6 -794,11 +799,14 @@@ static void __mptcp_close(struct sock *
-                 __mptcp_close_ssk(sk, ssk, subflow, timeout);
-         }
+Initial submission to net-next:
+     - Part 2:
+         - v3 has been merged!
+         - We got more likes than Wireguard :-D =
 
-++<<<<<<< t/mptcp-queue-data-for-mptcp-level-retransmission base content
-++=3D=3D=3D=3D=3D=3D=3D
-+       if (msk->cached_ext)
-+               __skb_ext_put(msk->cached_ext);
-+       __mptcp_clear_xmit(sk);
-+       release_sock(sk);
-+
-++>>>>>>> remotes/origin/t/mptcp-queue-data-for-mptcp-level-retransmission
-         sk_common_release(sk);
-   }
+https://twitter.com/davem_dokebi/status/1220715287365943298
 
 
 
-The resolution:
+Kernel 5.6:
+     - stabilisation
 
+     - run Syzkaller
 
-diff --cc net/mptcp/protocol.c
-index 766a4b15c586,95bc6f9c6745..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -788,7 -681,11 +789,13 @@@ static void __mptcp_close(struct sock *
-         mptcp_token_destroy(msk->token);
-         inet_sk_state_store(sk, TCP_CLOSE);
+     - doc?:
+         - userspace devs:
+             - maybe better to wait for the next kernel with multiple =
 
--       list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+       list_splice_init(&msk->conn_list, &conn_list);
-+
-++      __mptcp_clear_xmit(sk);
-++
-+       release_sock(sk);
-+
-+       list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
-                 struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+subflows support
+         - kernelspace devs:
+             - Is it something needed? To be discussed next week
 
-                 __mptcp_close_ssk(sk, ssk, subflow, timeout);
+     -  Jakub Sitnicki new Net co-maintainer: does it change anything =
 
+for us?:
+         - he was already maintaining the net tree for some time, should =
 
-=E2=86=92 b62d04c9cdd9: conflict in =
+not change anything
 
-t/mptcp-queue-data-for-mptcp-level-retransmission
 
 
-Another conflict due to yet another patch from the series: c9fd9c5f4b93 =
+Where to store patches for "net" and "net-next"?:
+     - a new repo?
 
-(mptcp: defer freeing of cached ext until last moment)
+     - maybe easier with branches?: =E2=86=92 should be fine
+         - fixes-net
+         - fixes-net-next
+         - =E2=86=92 we would force push on them because we will continue t=
+o =
 
+send patches to netdev
+         - =E2=86=92 if not OK, we can change that later
 
-diff --cc net/mptcp/protocol.c
-index 65141c3d1574,60aca199fea2..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -1034,7 -1012,10 +1038,14 @@@ static struct sock *mptcp_accept(struc
+     - these branches can be used for having a pre-review
 
-   static void mptcp_destroy(struct sock *sk)
-   {
-++<<<<<<< t/mptcp-implement-memory-accounting-for-mptcp-rtx-queue
-  +      sk_sockets_allocated_dec(sk);
-++=3D=3D=3D=3D=3D=3D=3D
-+       struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+       if (msk->cached_ext)
-+               __skb_ext_put(msk->cached_ext);
-++>>>>>>> top-bases/t/mptcp-implement-memory-accounting-for-mptcp-rtx-queue
-   }
+     - would be easier to have the patches on Git to run CI jobs
 
-   static int mptcp_setsockopt(struct sock *sk, int level, int optname,
+     - we could have CI jobs on public CI (appveyor.com, travis (but =
 
+annoying to store the .yml file), etc.):
+         - *Matth* can look at that
 
-The resolution:
 
 
-diff --cc net/mptcp/protocol.c
-index 65141c3d1574,60aca199fea2..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -1034,7 -1012,10 +1038,12 @@@ static struct sock *mptcp_accept(struc
+About patches sent by other people directly to netdev ML:
+     - do we have to send ACK-by/Reviewed-By?
 
-   static void mptcp_destroy(struct sock *sk)
-   {
-+       struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+       if (msk->cached_ext)
-+               __skb_ext_put(msk->cached_ext);
-++
-  +      sk_sockets_allocated_dec(sk);
-   }
+     - for the moment we had fixes to fix compilation issues, better to =
 
-   static int mptcp_setsockopt(struct sock *sk, int level, int optname,
+merge them directly, net maintainers will not wait for us
 
+     - for the rest, net maintainers might wait for us to review. Most =
 
-=E2=86=92 ccc5451794ad: conflict in =
+of the time, there are no explicit request except if it is for a long =
 
-t/mptcp-implement-memory-accounting-for-mptcp-rtx-queue
+time in "waiting for review" status.
 
+     - we should then try to review these patches ASAP when directly =
 
+posted to netdev from other people
 
-Two last conflicts this time due to b2c5b614ca6e (mptcp: avoid a lockdep =
 
-splat when mcast group was joined) again:
 
+Part 3 remaining stuff:
+     - Review commit messages:
+         - needed for the next merge window: not urgent
 
-diff --cc net/mptcp/protocol.c
-index fd6f434455df,e9ae42a8c49d..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -1052,13 -947,6 +1059,16 @@@ static void __mptcp_close(struct sock *
-                 __mptcp_close_ssk(sk, ssk, subflow, timeout);
-         }
+     - reduce locks when mptcp_stream_accept (currently 3 locks) but we =
 
-++<<<<<<< t/mptcp-implement-and-use-MPTCP-level-retransmission
-  +      if (msk->cached_ext)
-  +              __skb_ext_put(msk->cached_ext);
-  +      __mptcp_clear_xmit(sk);
-  +      release_sock(sk);
-  +
-  +      mptcp_cancel_work(sk);
-  +
-++=3D=3D=3D=3D=3D=3D=3D
-++>>>>>>> top-bases/t/mptcp-implement-and-use-MPTCP-level-retransmission
-         sk_common_release(sk);
-   }
+might need to add an helper in inet API:
+         - Paolo started to look at that
 
+     - memleak if a request comes after a socket is closed:
+         - Florian plans to look at that
 
-and the resolution:
+     - PM:
+         - maybe need more work: locking ??? (at least check which are =
 
+the missing pieces, possibly some basic locking schema is missing)
+         - do we want to ship it?
+         - see the discussions below
 
-diff --cc net/mptcp/protocol.c
-index fd6f434455df,e9ae42a8c49d..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -1052,13 -947,6 +1059,8 @@@ static void __mptcp_close(struct sock *
-                 __mptcp_close_ssk(sk, ssk, subflow, timeout);
-         }
+     - MP_JOIN self-tests:
+         - we need to cover this part
 
--       if (msk->cached_ext)
--               __skb_ext_put(msk->cached_ext);
--       __mptcp_clear_xmit(sk);
--       release_sock(sk);
--
-  +      mptcp_cancel_work(sk);
-  +
-         sk_common_release(sk);
-   }
+     - packetdrill:
+         - latest state: https://github.com/dcaratti/packetdrill/tree/dss_v1
 
+     - there are also a couple of patches at the end of the series we =
 
+will have to rebase/squash:
+         - to be discussed next week
 
-=E2=86=92 c4534101b55b: conflict in =
+     - ADD_ADDR for MPTCPv1:
+         - Peter plans to work on that
 
-t/mptcp-implement-and-use-MPTCP-level-retransmission
+     - Path Manager basic with netlink interface.
 
+     - Active backup support:
+         - Florian is working on it, patches have been shared
 
-And again due to the same patch:
+     - DATA_FIN:
+         - Mat is working on it
 
 
-diff --cc net/mptcp/protocol.c
-index 0b5bf17419ac,76b11e9e6642..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -1111,9 -1096,13 +1112,19 @@@ static void __mptcp_close(struct sock *
-         mptcp_token_destroy(msk->token);
-         inet_sk_state_store(sk, TCP_CLOSE);
 
-++<<<<<<< t/subflow-place-further-subflows-on-new-join_list
-  +      __mptcp_flush_join_list(msk);
-  +
-  +      list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-++=3D=3D=3D=3D=3D=3D=3D
-+       list_splice_init(&msk->conn_list, &conn_list);
-+
-+       __mptcp_clear_xmit(sk);
-+
-+       release_sock(sk);
-+
-+       list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
-++>>>>>>> top-bases/t/subflow-place-further-subflows-on-new-join_list
-                 struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+For the next iteration:
+     - PM:
+         - locking
+         - basic =E2=86=92 netlink support
 
-                 __mptcp_close_ssk(sk, ssk, subflow, timeout);
+     - MP_JOIN
 
+     - ADD_ADDR for MPTCP v1
 
-and the resolution:
+     - clean the current patches
 
+     - need to make sure we continue to support the protocol =E2=86=92 shar=
+ed =
 
-diff --cc net/mptcp/protocol.c
-index 0b5bf17419ac,76b11e9e6642..000000000000
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@@ -1111,9 -1096,13 +1112,15 @@@ static void __mptcp_close(struct sock *
-         mptcp_token_destroy(msk->token);
-         inet_sk_state_store(sk, TCP_CLOSE);
+received windows
 
-  +      __mptcp_flush_join_list(msk);
-  +
--       list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+       list_splice_init(&msk->conn_list, &conn_list);
-+
-+       __mptcp_clear_xmit(sk);
-+
-+       release_sock(sk);
-+
-+       list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
-                 struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
 
-                 __mptcp_close_ssk(sk, ssk, subflow, timeout);
 
+last data packet is ACKed when the app read data:
+     - in Out-Of-Tree (OOT) MPTCP and iOS: data are ACKed directly
 
-=E2=86=92 fc30e7873372: conflict in =
+     - maybe not nice to rely on the application to ACK the last one: =
 
-t/subflow-place-further-subflows-on-new-join_list
+userspace can take time, the server can then timeout, not nice
 
-I hope it is what you had in mind!
 
-Tests + export are running!
 
-Cheers,
+ACK:
+     - in OOT MPTCP: we ACK the last in order chunk. Once it's ordered, =
+
+we ACK everything
+
+     - in OOT MPTCP, there is a single lock per connection =E2=86=92 easier=
+ but =
+
+more intrusive to TCP
+
+     - alternative solution:
+         - share a pointer for the lock but would not be accepted
+         - a workqueue that is triggered to send a ACK
+         - can be useful to keep in mind: it's rare to have more than 3 =
+
+subflows.
+
+
+
+MP_JOIN:
+     - addr ID: it's related to the sender's address
+     - for the moment in the "export" branch, we mix things =E2=86=92 TODO
+
+
+
+ADD_ADDR echo reply:
+     - it's too long, would be easier with only the ID
+     - but (too) late to change the RFC
+     - this cannot fit in a "normal" packet transporting data
+     - we would need to send a dedicated ACK
+     - can be seen as a dup ACK
+     - (same for dedicated ADD_ADDR, RM_ADDR, etc.)
+     - TCP CC should ignore these dup ACK containing these MPTCP options =
+
+(according to the RFC)
+     - sounds not like a bit deal, it's not often it happens
+
+
+
+Extra tests:
+     - news about Syzkaller? (see prev meeting):
+         - an instance running at Apple (Christoph)
+         - Christoph has modifications for Syzkaller to take into =
+
+account MPTCP
+         - That means syzbot will test that and report issues on netdev ML
+         - Christoph will send the Pull Request
+         - and test the end of the "export" branch
+
+     - news about Intel's kbuild? (Mat):
+         - they are going to test out "export" branch
+         - running our kselftests and more
+         - "export" branch is re-written every day: should be OK
+
+
+
+Socket option whitelisting (from Mat):
+     - Revisit socket option whitelisting?
+
+     - In discussion of patch to allow TCP_CONGESTION, changes were =
+
+dropped so we allow all socket options to pass through to subflows.
+
+     - will we need a 'if (level =3D=3D SO_MPTCP)'?
+
+     - we would like to whitelist some but later
+
+     - if we pass option to existing subflows, what happens when there =
+
+is a new subflow created: we keep the modifications in a list and we =
+
+send options to subflows
+
+     - could we pass options only to some subflows, not all
+
+     - =E2=86=92 to be discussed next week
+
+
+
+Path Manager: (Paolo):
+     - Basic but using netlink instead of sysctl
+
+     - revisiting the current pm.c
+
+     - idea would be to fix issues with the locks, then improve PM basic =
+
+to support netlink, should be compatible with OOT Netlink PM
+
+     - discussion to be continue next week or on the ML
+
+
+
+Move the parent branch of export from net-next to net:
+     - if net-next is behind net for a long time, better to switch
+     - [after meeting note]: it seems net-next was updated during the =
+
+meeting
+     - we just need to resolve conflicts
+
+
+
+Next meeting:
+     - We propose to have the next meeting on Thursday, the 6th of February.
+     - Usual time: 17:00 UTC (9am PST, 6pm CET)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200206
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you next week,
 Matt
 -- =
 
@@ -311,4 +362,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6343112608928695246==--
+--===============1324391132888407820==--
