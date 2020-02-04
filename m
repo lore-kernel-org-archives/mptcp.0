@@ -1,47 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============2475059826959171378=="
+Content-Type: multipart/mixed; boundary="===============0799029250418616663=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [syzkaller] KASAN: use-after-free Write in __lock_sock
-Date: Tue, 04 Feb 2020 11:46:17 +0100
-Message-ID: <20200204104617.GF15904@breakpoint.cc>
+Date: Tue, 04 Feb 2020 13:34:36 +0100
+Message-ID: <154a5d21-47ff-33e8-d599-ca10a24e9714@tessares.net>
 In-Reply-To: 5b235b4f2636c7621be6a8526e8b6f5cfb7852de.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3581
+X-UID: 3582
 
---===============2475059826959171378==
+--===============0799029250418616663==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Tue, 2020-02-04 at 00:59 +0100, Florian Westphal wrote:
-> > AFAICS we need to revert to a state we had very early on:
-> > proxy tcp fallback case everywhere: msk is left alone and
-> > sendmsg/recvmsg and so on invoke the tcp versions on the (only) ssk.
-> =
+Hi Paolo,
 
+On 04/02/2020 10:12, Paolo Abeni wrote:
 > That is unfortunated, I liked the fact that a fallback socket got the
 > same performances of a plain TCP socket (could encourage MPTCP adoption
 > - not sure that is good thing, anyway ;)
 
-Heh.
+That would be nice but we can also say that this case is supposed to be =
 
-> On the plus side, __mptcp_tcp_fallback() should be already hooked in
-> every place where we need special/single subflow handling. Should be
-> just a matter of simplify __mptcp_tcp_fallback() to just return the
-> subflow sk.
+an exception. If you create an "MPTCP socket" on purpose, you hope to =
 
-Yes, I can confirm that I don't get a crash when i dumb-down the
-fallback to always proxy.
+use MPTCP, certainly because you know the server side supports MPTCP and =
 
-> I guess/hope we can still call mptcp_subflow_tcp_fallback() - so that
-> at least we get no overhead in the BH processing for the fall-back sk.
+maybe you also know that there is no middleboxes blocking MPTCP on the path.
 
-Right, I will have a look to see if we can repair it somehow.
+So maybe as a first step and *if it eases things*, the fallback could =
 
-If we have to go with always-proxy we will still have the server-side
-mostly covered hwoever, mptcp accept will still return plain tcp sk for
-non-mptcp syn case.
---===============2475059826959171378==--
+have extra overheads.
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============0799029250418616663==--
