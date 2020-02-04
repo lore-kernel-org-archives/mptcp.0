@@ -1,75 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============5099211751928696868=="
+Content-Type: multipart/mixed; boundary="===============4109278983093195462=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp] subflow: place outgoing connections on the join
- list
-Date: Tue, 04 Feb 2020 16:35:34 +0100
-Message-ID: <20200204153534.23813-1-fw@strlen.de>
+Subject: [MPTCP] Re: [GIT] Sync with net-next on 20190131: a few conflicts
+Date: Tue, 04 Feb 2020 07:40:12 -0800
+Message-ID: <20200204154012.GF33105@MacBook-Pro-64.local>
+In-Reply-To: 91c726c1-6425-8b63-2f6f-b4ff803c9b93@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3584
+X-UID: 3585
 
---===============5099211751928696868==
+--===============4109278983093195462==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-squashto: subflow: place further subflows on new 'join_list'
+On 04/02/20 - 15:58:49, Matthieu Baerts wrote:
+> Hello,
+> =
 
-in case the subflow can't be established (timeout, reset) the subflow
-socket is leaked.
+> On 02/02/2020 09:38, Matthieu Baerts wrote:
+> > On 31/01/2020 18:42, Matthieu Baerts wrote:
+> > > Hello,
+> > > =
 
-Add it to the join list for now.  This isn't nice because the socket
-will be added while its known to not be established, and its not removed
-at any time even if its not useable.
+> > > It seems that recently, 'net-next' has been synced with 'net' which
+> > > contains some modifications in MPTCP code. We then had a few
+> > > conflicts due to Florian's patch-set, see: 55c6ab4b368 (Merge branch
+> > > 'mptcp-fix-sockopt-crash-and-lockdep-splats')
+> > > =
 
-The list_del_init() call can be removed because the subflow context
-->node is still unused / not on a list in all cases.
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit=
+/?id=3Dd55c6ab4b368633f39f8fe059f3b877f978cfb4c
+> > =
 
-On a different note:
+> > =
 
-I think it makes sense to remove the 'splice join to conn list' approach
-and instead have the worker check the join and conn lists:
+> > FYI, I was not able to validate the new version after having resolved
+> > conflicts because it crashed before starting MPTCP:
+> =
 
-1. subflows are added from join to conn list once they are established.
-2. subflows on join list that are still in SYN_SENT are ignored
-3. subflows on join and/or conn list that are closed already are removed
-and free'd.
+> Again FYI, net-next has been updated a few minutes ago and it includes a =
+fix
+> for the crash I reported 2 days ago.
+> After a rebase, the CI has just validated the new "export" branch and all
+> tests are passing.
 
-Alternatively, we could probably extend the sk_state_change callback
-to do this and keep checking outside of send/receive code paths.
+Great! I move syzkaller on top of the export-branch then.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/subflow.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 547d5ffef070..154fb2b42243 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -821,11 +821,14 @@ int mptcp_subflow_connect(struct sock *sk, struct soc=
-kaddr *local,
- 	if (err && err !=3D -EINPROGRESS)
- 		goto failed;
- =
+Christoph
 
-+	spin_lock_bh(&msk->join_list_lock);
-+	list_add_tail(&subflow->node, &msk->join_list);
-+	spin_unlock_bh(&msk->join_list_lock);
-+
- 	release_sock(sk);
- 	return err;
- =
+> =
 
- failed:
--	list_del_init(&subflow->node);
- 	release_sock(sk);
- 	sock_release(sf);
- 	return err;
--- =
+> Cheers,
+> Matt
+> -- =
 
-2.24.1
-
---===============5099211751928696868==--
+> Matthieu Baerts | R&D Engineer
+> matthieu.baerts(a)tessares.net
+> Tessares SA | Hybrid Access Solutions
+> www.tessares.net
+> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+--===============4109278983093195462==--
