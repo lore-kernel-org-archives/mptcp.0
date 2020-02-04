@@ -1,38 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============0799029250418616663=="
+Content-Type: multipart/mixed; boundary="===============2841387750633583417=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [syzkaller] KASAN: use-after-free Write in __lock_sock
-Date: Tue, 04 Feb 2020 13:34:36 +0100
-Message-ID: <154a5d21-47ff-33e8-d599-ca10a24e9714@tessares.net>
-In-Reply-To: 5b235b4f2636c7621be6a8526e8b6f5cfb7852de.camel@redhat.com
+Subject: [MPTCP] Re: [GIT] Sync with net-next on 20190131: a few conflicts
+Date: Tue, 04 Feb 2020 15:58:49 +0100
+Message-ID: <91c726c1-6425-8b63-2f6f-b4ff803c9b93@tessares.net>
+In-Reply-To: 2b6d9285-a73e-047d-6b71-33b6a47f45e4@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3582
+X-UID: 3583
 
---===============0799029250418616663==
+--===============2841387750633583417==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hello,
 
-On 04/02/2020 10:12, Paolo Abeni wrote:
-> That is unfortunated, I liked the fact that a fallback socket got the
-> same performances of a plain TCP socket (could encourage MPTCP adoption
-> - not sure that is good thing, anyway ;)
+On 02/02/2020 09:38, Matthieu Baerts wrote:
+> On 31/01/2020 18:42, Matthieu Baerts wrote:
+>> Hello,
+>>
+>> It seems that recently, 'net-next' has been synced with 'net' which =
 
-That would be nice but we can also say that this case is supposed to be =
+>> contains some modifications in MPTCP code. We then had a few conflicts =
 
-an exception. If you create an "MPTCP socket" on purpose, you hope to =
+>> due to Florian's patch-set, see: 55c6ab4b368 (Merge branch =
 
-use MPTCP, certainly because you know the server side supports MPTCP and =
+>> 'mptcp-fix-sockopt-crash-and-lockdep-splats')
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?i=
+d=3Dd55c6ab4b368633f39f8fe059f3b877f978cfb4c =
 
-maybe you also know that there is no middleboxes blocking MPTCP on the path.
+> =
 
-So maybe as a first step and *if it eases things*, the fallback could =
+> =
 
-have extra overheads.
+> FYI, I was not able to validate the new version after having resolved =
+
+> conflicts because it crashed before starting MPTCP:
+
+Again FYI, net-next has been updated a few minutes ago and it includes a =
+
+fix for the crash I reported 2 days ago.
+After a rebase, the CI has just validated the new "export" branch and =
+
+all tests are passing.
 
 Cheers,
 Matt
@@ -43,4 +56,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0799029250418616663==--
+--===============2841387750633583417==--
