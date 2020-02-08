@@ -1,54 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============2295668444966135037=="
+Content-Type: multipart/mixed; boundary="===============5527964028678651359=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Protect subflow socket options before
- connection completes
-Date: Fri, 07 Feb 2020 13:13:33 -0800
-Message-ID: <alpine.OSX.2.22.394.2002071312350.55785@adstraw-mobl1.amr.corp.intel.com>
-In-Reply-To: 20200207211055.78411-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH 0/2] Add support for v1 of ADD_ADDR option
+Date: Fri, 07 Feb 2020 17:39:28 -0800
+Message-ID: <20200208013930.16640-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3600
+X-UID: 3601
 
---===============2295668444966135037==
+--===============5527964028678651359==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Support parsing and writing the new option format, with hmac generation
+and validation.
 
-On Fri, 7 Feb 2020, Mat Martineau wrote:
+Support for echoing ADD_ADDR still to come.
 
-> Userspace should not be able to directly manipulate subflow socket
-> options before a connection is established since it is not yet known if
-> it will be an MPTCP subflow or a TCP fallback subflow. TCP fallback
-> subflows can be more directly controlled by userspace because they are
-> regular TCP connections, while MPTCP subflow sockets need to be
-> configured for the specific needs of MPTCP. Use the same logic as
-> sendmsg/recvmsg to ensure that socket option calls are only passed
-> through to known TCP fallback subflows.
->
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> ---
->
-> One other question: is it racy to have __mptcp_tcp_fallback() return an
-> unlocked msk, then do the sock_hold(ssk) from an unlocked state? It
-> seems like if holding the ssk reference count is necessary at all it
-> should be done while the msk is still locked. I'm considering a change
-> to __mptcp_tcp_fallback() to have it not release the msk lock and
-> instead have all the callers do that.
->
->
-> net/mptcp/protocol.c | 52 +++++++++++++++++++++++---------------------
-> 1 file changed, 27 insertions(+), 25 deletions(-)
+Peter Krystad (2):
+  mptcp: Re-factor mptcp_crypto_hmac_sha()
+  mptcp: Make v1 changes for ADD_ADDR and RM_ADDR options
 
+ include/linux/tcp.h  |  22 +++---
+ include/net/mptcp.h  |   2 +
+ net/mptcp/crypto.c   |  14 ++--
+ net/mptcp/options.c  | 180 ++++++++++++++++++++++++++++++++++---------
+ net/mptcp/protocol.h |  20 +++--
+ net/mptcp/subflow.c  |  19 ++++-
+ 6 files changed, 194 insertions(+), 63 deletions(-)
 
-Clarification: This is a patch I'm proposing to send to netdev for the net =
+-- =
 
-repository, not something to merge to the export branch.
+2.17.2
 
-
---
-Mat Martineau
-Intel
---===============2295668444966135037==--
+--===============5527964028678651359==--
