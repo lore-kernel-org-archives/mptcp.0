@@ -1,31 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============0851788584508072744=="
+Content-Type: multipart/mixed; boundary="===============2277208431124092223=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH next] mptcp: make the symbol 'mptcp_sk_clone_lock'
- static
-Date: Mon, 10 Feb 2020 10:24:58 +0100
-Message-ID: <20200210.102458.1980916355586297612.davem@davemloft.net>
-In-Reply-To: 20200210082759.12157-1-chenwandun@huawei.com
+Subject: [MPTCP] [GIT] Sync with net-next on 20190210: a few conflicts
+Date: Mon, 10 Feb 2020 11:16:16 +0100
+Message-ID: <e898d046-8cc8-f59a-6448-3aae1cc65f06@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3606
+X-UID: 3607
 
---===============0851788584508072744==
+--===============2277208431124092223==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Chen Wandun <chenwandun(a)huawei.com>
-Date: Mon, 10 Feb 2020 16:27:59 +0800
+Hello,
 
-> Fix the following sparse warning:
-> net/mptcp/protocol.c:646:13: warning: symbol 'mptcp_sk_clone_lock' was no=
-t declared. Should it be static?
-> =
+Recently, 'net-next' has been synced with Linus tree including recent =
 
-> Fixes: b0519de8b3f1 ("mptcp: fix use-after-free for ipv6")
-> Signed-off-by: Chen Wandun <chenwandun(a)huawei.com>
+changes in 'net'.
 
-Applied.
---===============0851788584508072744==--
+We then had a few conflicts with two patches from Florian:
+- b0519de8b3f1 (mptcp: fix use-after-free for ipv6)
+- 2c22c06ce426 (mptcp: fix use-after-free on tcp fallback)
+
+The resolution were quite simple, only because new functions have been =
+
+added or removed. Here are the resolution:
+
+- 6c8b03547162: conflict in =
+
+t/mptcp-queue-data-for-mptcp-level-retransmission
+- d7940fab2c95: conflict in =
+
+t/mptcp-implement-memory-accounting-for-mptcp-rtx-queue
+
+Tests and export are in progress.
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============2277208431124092223==--
