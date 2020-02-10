@@ -1,49 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============2277208431124092223=="
+Content-Type: multipart/mixed; boundary="===============5441449454788542690=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [GIT] Sync with net-next on 20190210: a few conflicts
-Date: Mon, 10 Feb 2020 11:16:16 +0100
-Message-ID: <e898d046-8cc8-f59a-6448-3aae1cc65f06@tessares.net>
+Subject: [MPTCP] Re: [PATCH] mptcp: Protect subflow socket options before
+ connection completes
+Date: Mon, 10 Feb 2020 12:52:21 +0100
+Message-ID: <20200210115221.GG2991@breakpoint.cc>
+In-Reply-To: 20200207211055.78411-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3607
+X-UID: 3608
 
---===============2277208431124092223==
+--===============5441449454788542690==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> Userspace should not be able to directly manipulate subflow socket
+> options before a connection is established since it is not yet known if
+> it will be an MPTCP subflow or a TCP fallback subflow. TCP fallback
+> subflows can be more directly controlled by userspace because they are
+> regular TCP connections, while MPTCP subflow sockets need to be
+> configured for the specific needs of MPTCP. Use the same logic as
+> sendmsg/recvmsg to ensure that socket option calls are only passed
+> through to known TCP fallback subflows.
+> =
 
-Recently, 'net-next' has been synced with Linus tree including recent =
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+> =
 
-changes in 'net'.
+> One other question: is it racy to have __mptcp_tcp_fallback() return an
+> unlocked msk, then do the sock_hold(ssk) from an unlocked state?
 
-We then had a few conflicts with two patches from Florian:
-- b0519de8b3f1 (mptcp: fix use-after-free for ipv6)
-- 2c22c06ce426 (mptcp: fix use-after-free on tcp fallback)
+Yes.
 
-The resolution were quite simple, only because new functions have been =
+> It seems like if holding the ssk reference count is necessary at all it
+> should be done while the msk is still locked. I'm considering a change
+> to __mptcp_tcp_fallback() to have it not release the msk lock and
+> instead have all the callers do that.
 
-added or removed. Here are the resolution:
-
-- 6c8b03547162: conflict in =
-
-t/mptcp-queue-data-for-mptcp-level-retransmission
-- d7940fab2c95: conflict in =
-
-t/mptcp-implement-memory-accounting-for-mptcp-rtx-queue
-
-Tests and export are in progress.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2277208431124092223==--
+Yes, that seems like the right thing to do.
+--===============5441449454788542690==--
