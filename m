@@ -1,45 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============9200192970132828352=="
+Content-Type: multipart/mixed; boundary="===============6991243785498105147=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: Protect subflow socket options before
- connection completes
-Date: Wed, 12 Feb 2020 11:02:22 +0100
-Message-ID: <399de22d-d350-c509-e77c-ab89b7978b8a@tessares.net>
-In-Reply-To: 2feb5b6dd24cafd2cbd347b5029f7038220c8ea2.camel@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH 6/6] mptcp: add netlink based PM
+Date: Wed, 12 Feb 2020 11:21:54 +0100
+Message-ID: <43a4d59d6ce25cac0638c0cc5f825e16819135d2.camel@redhat.com>
+In-Reply-To: 88c03932daa25595c8507dbfc1166328e8fb7941.1581444138.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3624
+X-UID: 3625
 
---===============9200192970132828352==
+--===============6991243785498105147==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+On Tue, 2020-02-11 at 19:12 +0100, Paolo Abeni wrote:
+> +/*
+> + * ATTR types defined for MPTCP
+> + */
+> +enum mptcp_pm_attrs {
+> +	MPTCP_PM_ATTR_UNSPEC,
+> +
+> +	MPTCP_PM_ATTR_ADDR_LIST,			/* nested list */
+> +	MPTCP_PM_ATTR_ADD_ADDR_MAX,			/* u32 */
+> +
+> +	__MPTCP_PM_ATTR_MAX
+> +};
+> +
+> +#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
+> +
+> +enum mptcp_pm_addr_addrs {
+> +	MPTCP_PM_ADDR_ATTR_UNSPEC,
+> +
+> +	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
+> +	MPTCP_PM_ADDR_ATTR_ADDR4,			/* u32 */
+> +	MPTCP_PM_ADDR_ATTR_ADDR6,			/* struct in6_addr */
+> +
+> +	__MPTCP_PM_ADDR_ATTR_MAX
+> +};
+> +
+> +#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
+> +
+> +enum {
+> +	MPTCP_CMD_UNSPEC,
+> +
+> +	MPTCP_CMD_NS_SIGNAL,
+> +	MPTCP_CMD_NS_LOCAL,
+> +	MPTCP_CMD_NS_ADD_ADDR_MAX,
 
-On 12/02/2020 10:39, Davide Caratti wrote:
-> @Matthieu,
-> while we are at this, what do you expect for the "official" packetdrill
-> branch 'mptcp-net-next' [1]? can I do a pull request from my GH to that
-> one for those tests that are currently passing (e.g. mp_capable v1, TCP
-> fallback and DSN8/DACK8?)
+Starting the self-test implementation, I noticed changing the above ABI
+a bit would make things simpler:
 
-I think you can directly work on this repo like you were doing with =
+instead of MPTCP_CMD_NS_SIGNAL,
 
-yours. At least it looks somehow "official".
+	MPTCP_CMD_SIGNAL_ADD // adds a single addr to the 'signal' list
 
-Of course if you need some reviews, you can open pull requests.
+	MPTCP_CMD_SIGNAL_DEL // remote an address from 'signal' list
+				by id
+	MPTCP_CMD_SIGNAL_GET	// 'doit' get a single address from =
 
-You should have the write permissions. Please tell me if not.
+				//	list, by id
+				// 'dumpit' dump the whole list. =
 
-Cheers,
-Matt
--- =
+ 	MPTCP_CMD_SIGNAL_FLUSH	// remove all addresses from 'signal'
+				// list
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============9200192970132828352==--
+And similar changes for 'MPTCP_CMD_NS_LOCAL'
+Also, I'dd an additional addr MPTCP_PM_ADDR_ATTR_ID =
+
+
+Any feedback welcome!
+
+Thanks,
+
+Paolo
+
+--===============6991243785498105147==--
