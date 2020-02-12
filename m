@@ -1,76 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============4020639518349170988=="
+Content-Type: multipart/mixed; boundary="===============3221258253708479400=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] subflow.c:undefined reference to `__crypto_memneq' (fwd)
-Date: Tue, 11 Feb 2020 16:10:26 -0800
-Message-ID: <alpine.OSX.2.22.394.2002111530220.16674@echiprou-mobl.amr.corp.intel.com>
+Subject: [MPTCP] Re: [PATCH] mptcp: Protect subflow socket options before
+ connection completes
+Date: Wed, 12 Feb 2020 10:39:39 +0100
+Message-ID: <2feb5b6dd24cafd2cbd347b5029f7038220c8ea2.camel@redhat.com>
+In-Reply-To: d762e4800137fb8ae4b3368edc34573e293d072e.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3622
+X-UID: 3623
 
---===============4020639518349170988==
+--===============3221258253708479400==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2020-02-11 at 18:42 +0100, Paolo Abeni wrote:
+> BTW I'm wondering if we are behaving correctly WRT TCP fallback for
+> passive sockets (msk->subflow =3D NULL): __mptcp_tcp_fallback() currently
+> returns NULL, even if the subflow has fallback to TCP. I think/fear
+> recvmsg should hang in that scenario?!? (as the server still does a
+> full bloat mptcp_recvmsg(), while the client does not provide the DSS
+> options).
+> =
 
-I pushed the current export branch to my git.kernel.org repo, which =
+> @Davide: do we have a packetdrill to test the above? e.g. the packet
+> socket is the client, it initiates an MP_CAPABLE handshake, causes
+> fallback on the 3rd ack, then sends some data and (kernel) server try
+> to read it with recvmsg() (possibly hanging on top of current net-next)
 
-triggered the following result.
+hi Paolo, I'm just re-building and doing a test right now. @Matthieu,
+while we are at this, what do you expect for the "official" packetdrill
+branch 'mptcp-net-next' [1]? can I do a pull request from my GH to that
+one for those tests that are currently passing (e.g. mp_capable v1, TCP
+fallback and DSN8/DACK8?)
 
-We've seen this before from a kbuild in January:
+thanks!
+-- =
 
-https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/thread/65P5YLV2JE=
-R3QGQIM2746SFK6NGTV2DS/
+davide
 
-The conclusion was to add a "select CRYPTO" to the mptcp Kconfig in =
+[1] https://github.com/multipath-tcp/packetdrill
 
-"mptcp: Add handling of incoming MP_JOIN requests", but we haven't updated =
-
-the code yet. I'll send a patch.
-
-The .config does have CONFIG_MPTCP=3Dy, even though that's not in the nios2 =
-
-defconfig. I think that means the kbuild team is setting CONFIG_MPTCP in =
-
-their builds.
-
-Mat
-
-
----------- Forwarded message ----------
-Date: Tue, 11 Feb 2020 15:06:40
-From: kbuild test robot <lkp(a)intel.com>
-Subject: [martineau:kbuild-mptcp 3/19] subflow.c:undefined reference to
-     `__crypto_memneq'
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linux.git=
- kbuild-mptcp
-head:   e4b7e3a8c3a2f84c554b656bbb7ce0b96de6c33f
-commit: 98c5c4c35ea6464188e8c343f0441e231e000d2e [3/19] mptcp: Add handling=
- of incoming MP_JOIN requests
-config: nios2-3c120_defconfig (attached as .config)
-compiler: nios2-linux-gcc (GCC) 7.5.0
-reproduce:
-         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin=
-/make.cross -O ~/bin/make.cross
-         chmod +x ~/bin/make.cross
-         git checkout 98c5c4c35ea6464188e8c343f0441e231e000d2e
-         # save the attached .config to linux build tree
-         GCC_VERSION=3D7.5.0 make.cross ARCH=3Dnios2
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp(a)intel.com>
-
-All errors (new ones prefixed by >>):
-
-    net/mptcp/subflow.o: In function `subflow_syn_recv_sock':
->> subflow.c:(.text+0x790): undefined reference to `__crypto_memneq'
-    subflow.c:(.text+0x790): relocation truncated to fit: R_NIOS2_CALL26 ag=
-ainst `__crypto_memneq'
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all(a)lists.01.org
---===============4020639518349170988==--
+--===============3221258253708479400==--
