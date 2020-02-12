@@ -1,37 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============6242681007781831361=="
+Content-Type: multipart/mixed; boundary="===============2393444051654994551=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 2/6] Squash-to: "mptcp: Add path manager
- interface"
-Date: Wed, 12 Feb 2020 15:22:43 +0100
-Message-ID: <20200212142243.GL2991@breakpoint.cc>
-In-Reply-To: d62fdfef647801bac3445fa4f210d4aacc0e5991.1581444137.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH 6/6] mptcp: add netlink based PM
+Date: Wed, 12 Feb 2020 15:33:19 +0100
+Message-ID: <20200212143319.GM2991@breakpoint.cc>
+In-Reply-To: 88c03932daa25595c8507dbfc1166328e8fb7941.1581444138.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3627
+X-UID: 3628
 
---===============6242681007781831361==
+--===============2393444051654994551==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Paolo Abeni <pabeni(a)redhat.com> wrote:
-> +struct mptcp_pm_data {
-> +	struct mptcp_addr_info local;
-> +	struct mptcp_addr_info remote;
-> +
-> +	spinlock_t	lock;
-> +
-> +	bool		addr_signal;
-> +	bool		server_side;
-> +	bool		fully_established;
-> +	enum mptcp_pm_status status;
-> +	u8		add_addr_signaled;
-> +	u8		add_addr_accepted;
+> Expose to U/S a netlink family to control the PM, setting:
+> =
 
-Why are the first three bool and the rest u8?
+>  - list of local addresses to be signaled.
+>  - list of local addresses used to created subflows.
+>  - maximum number of add_addr option to react
+> =
 
-We should probably avoid "bool" in structs.
-Perhaps use foo:1 as most of net stack?
---===============6242681007781831361==--
+> When the msk is fully established, the PM netlink attempts to
+> create subflow for each addr in 'local' list, waiting for each
+> connection to be completed before attempting the next one.
+> =
+
+> After exausting the 'local' list, the PM tries to announce the
+> 'signal' list via the ADD_ADDR option. Since we currenlty lack
+> the ADD_ADDR echo (and related event) only the first addr is sent.
+
+> Idea is to add an additional PM hook for ADD_ADDR echo, to allow
+> the PM netlink announcing multiple addresses, in sequence.
+
+Makes sense, thanks!
+
+> +static const struct nla_policy mptcp_pm_addr_policy[MPTCP_PM_ADDR_ATTR_M=
+AX + 1] =3D {
+> +	[MPTCP_PM_ADDR_ATTR_FAMILY]	=3D { .type	=3D NLA_U16,	},
+> +	[MPTCP_PM_ADDR_ATTR_ADDR4]	=3D { .type	=3D NLA_U32,	},
+> +	[MPTCP_PM_ADDR_ATTR_ADDR6]	=3D { .type	=3D NLA_BINARY,
+
+	NLA_EXACT_LEN?
+
+NLA_BINARY is weird (it allows shorter sizes...).
+--===============2393444051654994551==--
