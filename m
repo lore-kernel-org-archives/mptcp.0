@@ -1,79 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============6991243785498105147=="
+Content-Type: multipart/mixed; boundary="===============4583302337241041430=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 6/6] mptcp: add netlink based PM
-Date: Wed, 12 Feb 2020 11:21:54 +0100
-Message-ID: <43a4d59d6ce25cac0638c0cc5f825e16819135d2.camel@redhat.com>
-In-Reply-To: 88c03932daa25595c8507dbfc1166328e8fb7941.1581444138.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] mptcp: Protect subflow socket options before
+ connection completes
+Date: Wed, 12 Feb 2020 11:33:33 +0100
+Message-ID: <c1706025c934a0ca3d6b5e2877759e93b00b7c96.camel@redhat.com>
+In-Reply-To: 2feb5b6dd24cafd2cbd347b5029f7038220c8ea2.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3625
+X-UID: 3626
 
---===============6991243785498105147==
+--===============4583302337241041430==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-02-11 at 19:12 +0100, Paolo Abeni wrote:
-> +/*
-> + * ATTR types defined for MPTCP
-> + */
-> +enum mptcp_pm_attrs {
-> +	MPTCP_PM_ATTR_UNSPEC,
-> +
-> +	MPTCP_PM_ATTR_ADDR_LIST,			/* nested list */
-> +	MPTCP_PM_ATTR_ADD_ADDR_MAX,			/* u32 */
-> +
-> +	__MPTCP_PM_ATTR_MAX
-> +};
-> +
-> +#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
-> +
-> +enum mptcp_pm_addr_addrs {
-> +	MPTCP_PM_ADDR_ATTR_UNSPEC,
-> +
-> +	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
-> +	MPTCP_PM_ADDR_ATTR_ADDR4,			/* u32 */
-> +	MPTCP_PM_ADDR_ATTR_ADDR6,			/* struct in6_addr */
-> +
-> +	__MPTCP_PM_ADDR_ATTR_MAX
-> +};
-> +
-> +#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
-> +
-> +enum {
-> +	MPTCP_CMD_UNSPEC,
-> +
-> +	MPTCP_CMD_NS_SIGNAL,
-> +	MPTCP_CMD_NS_LOCAL,
-> +	MPTCP_CMD_NS_ADD_ADDR_MAX,
+On Wed, 2020-02-12 at 10:39 +0100, Davide Caratti wrote:
+> On Tue, 2020-02-11 at 18:42 +0100, Paolo Abeni wrote:
+> > BTW I'm wondering if we are behaving correctly WRT TCP fallback for
+> > passive sockets (msk->subflow =3D NULL): __mptcp_tcp_fallback() current=
+ly
+> > returns NULL, even if the subflow has fallback to TCP. I think/fear
+> > recvmsg should hang in that scenario?!? (as the server still does a
+> > full bloat mptcp_recvmsg(), while the client does not provide the DSS
+> > options).
 
-Starting the self-test implementation, I noticed changing the above ABI
-a bit would make things simpler:
+from what I see, in the above case the server is not doing fallback to TCP
+(see attachment). As I send to the server a packet without the DSS option,
+the kernel answers with a TCP RST, that has a DSS option with DACK number
+equal to the IDSN (that means probably that received data have been
+discarded):
 
-instead of MPTCP_CMD_NS_SIGNAL,
+[root(a)f31 packetdrill]# cat ../mptcp/dss/fallback.pkt
+`../common/defaults.sh`
 
-	MPTCP_CMD_SIGNAL_ADD // adds a single addr to the 'signal' list
++0    socket(..., SOCK_STREAM, IPPROTO_MPTCP) =3D 3
++0    setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) =3D 0
++0    bind(3, ..., ...) =3D 0
++0    listen(3, 1) =3D 0
++0      < S 0:0(0) win 32792 <mss 1460,sackOK,nop,nop,nop,wscale 7,mpcapabl=
+e v1 flags[flag_h] nokey>
++0      > S. 0:0(0) ack 1 <mss 1460,nop,nop,sackOK,nop,wscale 8,mpcapable v=
+1 flags[flag_h] key[skey] >
++0.01   < . 1:1(0) ack 1 win 257 <mpcapable v1 flags[flag_h] key[ckey=3D2,s=
+key]>
++0    accept(3, ..., ...) =3D 4
++0      < . 1:101(100) ack 1 win 257
++0      > . 1:1(0) ack 101
++0    write(4, ..., 1000) =3D 1000
++0      > P. 1:1001(1000) ack 101
++0    close(4) =3D 0
 
-	MPTCP_CMD_SIGNAL_DEL // remote an address from 'signal' list
-				by id
-	MPTCP_CMD_SIGNAL_GET	// 'doit' get a single address from =
+[root(a)f31 packetdrill]# ./packetdrill -vvv ../mptcp/dss/fallback.pkt =
 
-				//	list, by id
-				// 'dumpit' dump the whole list. =
+socket syscall: 1581502995.628410
+setsockopt syscall: 1581502995.628771
+bind syscall: 1581502995.629067
+listen syscall: 1581502995.629135
+inbound injected packet:  0.001306 S 0:0(0) win 32792 <mss 1460,sackOK,nop,=
+nop,nop,wscale 7,mp_capable v1 flags: |H| >
+outbound sniffed packet:  0.001768 S. 612568362:612568362(0) ack 1 win 6553=
+5 <mss 1460,nop,nop,sackOK,nop,wscale 8,mp_capable v1 flags: |H| sender_key=
+: 16291872690117590433>
+inbound injected packet:  0.013829 . 1:1(0) ack 612568363 win 257 <mp_capab=
+le v1 flags: |H| sender_key: 2 receiver_key: 16291872690117590433>
+accept syscall: 1581502995.642149
+inbound injected packet:  0.014330 . 1:101(100) ack 612568363 win 257 =
 
- 	MPTCP_CMD_SIGNAL_FLUSH	// remove all addresses from 'signal'
-				// list
+outbound sniffed packet:  0.014460 R. 612568363:612568363(0) ack 101 win 25=
+6 <dss dack8 13263177308786788773 flags: Aa>
+../mptcp/dss/fallback.pkt:13: error handling packet: live packet field ipv4=
+_total_length: expected: 40 (0x28) vs actual: 52 (0x34)
+script packet:  0.014478 . 1:1(0) ack 101 =
 
-And similar changes for 'MPTCP_CMD_NS_LOCAL'
-Also, I'dd an additional addr MPTCP_PM_ADDR_ATTR_ID =
+actual packet:  0.014460 R. 1:1(0) ack 101 win 256 <dss dack8 1326317730878=
+6788773 flags: Aa>
+[root(a)f31 packetdrill]# =
 
 
-Any feedback welcome!
+-- =
 
-Thanks,
+davide
+=20
 
-Paolo
+--===============4583302337241041430==
+Content-Type: application/vnd.tcpdump.pcap
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="mptcp.pcap"
 
---===============6991243785498105147==--
+1MOyoQIABAAAAAAAAAAAAAAABABxAAAAHNNDXpRqAgBIAAAASAAAAAAA//4AAAAAAAAAAAAACABF
+AAA4AAAAAP8GMvfAAAIBwKgGH67DH5AAAAAAAAAAAJACgBho0wAAAgQFtAQCAQEBAwMHHgQBARzT
+Q17xawIAUAAAAFAAAAAABP/+AAAAAAAAAAAAAAgARQAAQAAAQABABrHvwKgGH8AAAgEfkK7DCeHE
+UAAAAAGwEv//iPsAAAIEBbQBAQQCAQMDCB4MAQElKZMWpJyUXxzTQ17DmQIATAAAAEwAAAAAAP/+
+AAAAAAAAAAAAAAgARQAAPAAAAAD/BjLzwAACAcCoBh+uwx+QAAAAAQnhxFGgEAEBJx4AAB4UAQEC
+AAAAAAAAACUpkxaknJRfHNNDXgGdAgCcAAAAnAAAAAAA//4AAAAAAAAAAAAACABFAACMAAAAAP8G
+MqPAAAIBwKgGH67DH5AAAAABCeHEUVAQAOGJPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAABzTQ15anQIARAAAAEQAAAAABP/+AAAAAAAAAAAAAAgARQAANKzhQABA
+BgUawKgGH8AAAgEfkK7DCeHEUQAAAGWAFAEAiO8AAB4MIAO4EEV9s0IJpQ==
+--===============4583302337241041430==--
