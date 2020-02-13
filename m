@@ -1,78 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============5450390527747756383=="
+Content-Type: multipart/mixed; boundary="===============2181352434626152422=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 5/5] mptcp: add rmem queue accounting
-Date: Thu, 13 Feb 2020 15:58:49 +0100
-Message-ID: <287ac3a90eaadf833003cb4f774e37878bd26194.camel@redhat.com>
-In-Reply-To: 20200213102742.18937-6-fw@strlen.de
+Subject: [MPTCP] Re: [RFC PATCH 5/6] Squash-to: "mptcp: Implement path manager
+ interface commands"
+Date: Thu, 13 Feb 2020 08:56:41 -0800
+Message-ID: <alpine.OSX.2.22.394.2002130856010.41270@echiprou-mobl.amr.corp.intel.com>
+In-Reply-To: 62d99523b475296ba37280556f42758fee300e60.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3651
+X-UID: 3652
 
---===============5450390527747756383==
+--===============2181352434626152422==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-02-13 at 11:27 +0100, Florian Westphal wrote:
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/protocol.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> =
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e9e87e62a184..0583429b36ac 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -172,6 +172,10 @@ void mptcp_data_ready(struct sock *sk)
->  	if (test_and_set_bit(MPTCP_WORK_DATA_READY, &msk->flags))
->  		return;
->  =
+On Thu, 13 Feb 2020, Paolo Abeni wrote:
 
-> +	/* don't schedule if mptcp sk is (still) over limit */
-> +	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
-> +		return;
-> +
+> On Wed, 2020-02-12 at 18:05 -0800, Mat Martineau wrote:
+>> +static bool mptcp_pm_work_pending(const struct mptcp_pm_data *pm)
+>>> +{
+>>> +	return (READ_ONCE(pm->local_addr_used) <
+>>> +		READ_ONCE(pm->local_addr_max)) ||
+>>> +	       (READ_ONCE(pm->add_addr_signaled) <
+>>> +		READ_ONCE(pm->add_addr_signal_max));
+>>> +}
+>>
+>> It looks like these values are only modified under a lock, but are read
+>> some of the time without a lock. If the values are concurrently modified
+>> is it harmless? It would be helpful to have at least a comment explaining
+>> the expected locking semantics.
+>>
+>> Would it be overkill to pack the values that are compared (like
+>> local_addr_used and local_addr_max) so they can be read & written
+>> together?
+>
+> Thank you for the feedback! I'm double minded about this READ_ONCE
+> stuff. I'd like to avoid lock osperation when possible but I agree the
+> current impl is ugly.
+>
+> What if I a single 'work_pending' bool in 'struct mptcp_pm_data', let
+> pm_netlink WRITE_ONCE it as needed, and use it to replace the above
+> code?
+>
 
-I think we need a READ_ONCE() around sk->sk_rcvbuf, as we don't held
-the sk socket lock here.
+Sure, that looks like a safe approach.
 
->  	sock_hold(sk);
->  	if (!schedule_work(&msk->rtx_work))
->  		sock_put(sk);
-> @@ -993,12 +997,20 @@ static int mptcp_steal_actor(read_descriptor_t *des=
-c, struct sk_buff *skb,
->  	sk =3D (struct sock *)arg->msk;
->  	ssk =3D arg->ssk;
->  =
-
-> +	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf ||
-> +	    !sk_rmem_schedule(sk, skb, skb->truesize)) {
-
-This has the side effect of possibly updating/decreasing 'sk_sndbuf'
-via sk_stream_moderate_sndbuf(). Do we need a similar update schema for
-msk->sk_sndbuf, too?
-
-> +		if (ssk->sk_rcvbuf <=3D sk->sk_rcvbuf)
-> +			return 0;
-> +
-> +		sk->sk_rcvbuf =3D ssk->sk_rcvbuf;
-> +	}
-> +
-
-As an alternative, could we just do:
-
-	rcvbuf =3D max(sk->sk_rcvbuf, ssk->sk_rcvbuf)
-	if (rcvbuf > sk->sk_rcvbuf)
-		sk->sk_rcvbuf =3D rcvbuf
-
-before looping? =
-
-
-Thanks,
-
-Paolo
-
---===============5450390527747756383==--
+--
+Mat Martineau
+Intel
+--===============2181352434626152422==--
