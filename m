@@ -1,54 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============2181352434626152422=="
+Content-Type: multipart/mixed; boundary="===============5483178592860329568=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 5/6] Squash-to: "mptcp: Implement path manager
- interface commands"
-Date: Thu, 13 Feb 2020 08:56:41 -0800
-Message-ID: <alpine.OSX.2.22.394.2002130856010.41270@echiprou-mobl.amr.corp.intel.com>
-In-Reply-To: 62d99523b475296ba37280556f42758fee300e60.camel@redhat.com
+Subject: [MPTCP] [PATCH net v2 0/3] MPTCP fallback fixes
+Date: Thu, 13 Feb 2020 12:38:33 -0800
+Message-ID: <20200213203836.225812-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3652
+X-UID: 3653
 
---===============2181352434626152422==
+--===============5483178592860329568==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+This is a follow-up to the "Protect subflow socket options before
+connection completes" patch I sent last week. It has two more patches to
+address race conditions where __mptcp_tcp_fallback() is used before
+calling TCP functions on a fallback subflow.
 
-On Thu, 13 Feb 2020, Paolo Abeni wrote:
+Self tests pass.
 
-> On Wed, 2020-02-12 at 18:05 -0800, Mat Martineau wrote:
->> +static bool mptcp_pm_work_pending(const struct mptcp_pm_data *pm)
->>> +{
->>> +	return (READ_ONCE(pm->local_addr_used) <
->>> +		READ_ONCE(pm->local_addr_max)) ||
->>> +	       (READ_ONCE(pm->add_addr_signaled) <
->>> +		READ_ONCE(pm->add_addr_signal_max));
->>> +}
->>
->> It looks like these values are only modified under a lock, but are read
->> some of the time without a lock. If the values are concurrently modified
->> is it harmless? It would be helpful to have at least a comment explaining
->> the expected locking semantics.
->>
->> Would it be overkill to pack the values that are compared (like
->> local_addr_used and local_addr_max) so they can be read & written
->> together?
->
-> Thank you for the feedback! I'm double minded about this READ_ONCE
-> stuff. I'd like to avoid lock osperation when possible but I agree the
-> current impl is ugly.
->
-> What if I a single 'work_pending' bool in 'struct mptcp_pm_data', let
-> pm_netlink WRITE_ONCE it as needed, and use it to replace the above
-> code?
->
+I plan to send this to netdev tomorrow, but a pre-review on this list
+would be great!
 
-Sure, that looks like a safe approach.
 
---
-Mat Martineau
-Intel
---===============2181352434626152422==--
+Mat Martineau (3):
+  mptcp: Keep TCP fallback subflow valid after lookup
+  mptcp: Protect subflow socket options before connection completes
+  mptcp: Use TCP sendmsg/recvmsg for fallback subflows
+
+ net/mptcp/protocol.c | 78 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 30 deletions(-)
+
+
+base-commit: b9287f2ac321ecac56eb51e6231f6579683dcdae
+-- =
+
+2.25.0
+
+--===============5483178592860329568==--
