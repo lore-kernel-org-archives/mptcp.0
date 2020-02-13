@@ -1,428 +1,337 @@
-Content-Type: multipart/mixed; boundary="===============7514211426705773044=="
+Content-Type: multipart/mixed; boundary="===============0883032052439862221=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] mptcp: Make v1 changes for ADD_ADDR and
- RM_ADDR options
-Date: Wed, 12 Feb 2020 15:58:00 -0800
-Message-ID: <alpine.OSX.2.22.394.2002121530360.31766@echiprou-mobl.amr.corp.intel.com>
-In-Reply-To: 20200208013930.16640-3-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [RFC PATCH 5/6] Squash-to: "mptcp: Implement path manager
+ interface commands"
+Date: Wed, 12 Feb 2020 18:05:04 -0800
+Message-ID: <alpine.OSX.2.22.394.2002121726140.34444@echiprou-mobl.amr.corp.intel.com>
+In-Reply-To: 8b9330153ed2fb1cfd96333a47d27a956bd82306.1581444137.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3639
+X-UID: 3640
 
---===============7514211426705773044==
+--===============0883032052439862221==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 11 Feb 2020, Paolo Abeni wrote:
 
-On Fri, 7 Feb 2020, Peter Krystad wrote:
-
-> Use union to minimize space used in struct mptcp_received_options.
-> Remove family field and add hmac and port fields.
+> Implement stubs for PM events delegating the action to the work
+> queue. This allows acquiring whatever lock is needed to perform
+> the actual implementation.
 >
-> squashto: Add ADD_ADDR handling
+> Try to avoid scheduling the worker if no action is needed/possible.
+> I relies on the accounting info included into the PM struct and
+> on great deal of double-checked locking [anti-]pattern.
 >
-> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> include/linux/tcp.h  |  22 +++---
-> include/net/mptcp.h  |   2 +
-> net/mptcp/options.c  | 180 ++++++++++++++++++++++++++++++++++---------
-> net/mptcp/protocol.h |  17 ++--
-> 4 files changed, 170 insertions(+), 51 deletions(-)
+> net/mptcp/pm.c | 213 +++++++++++++++++++++++++------------------------
+> 1 file changed, 107 insertions(+), 106 deletions(-)
 >
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 0c75d7919f9a..42522be45cf7 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -86,9 +86,20 @@ struct mptcp_options_received {
-> 	u64	data_seq;
-> 	u32	subflow_seq;
-> 	u16	data_len;
-> +	struct in_addr	addr;
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +	struct in6_addr	addr6;
-> +#endif
-
-The commit message says "Use union...", but it looks like this moved addr =
-
-and addr6 out of a union. Could you clarify the intent here?
-
-> +	u64	ahmac;
-> +	u8	addr_id;
-> +	u8	rm_id;
-> 	u8	mp_capable : 1,
-> 		mp_join : 1,
-> 		dss : 1,
-> +		add_addr : 1,
-> +		add_addr6 : 1,
-> +		rm_addr : 1,
-> +		echo : 1,
-> 		backup : 1;
-> 	u8	join_id;
-> 	u32	token;
-> @@ -102,16 +113,6 @@ struct mptcp_options_received {
-> 		ack64:1,
-> 		mpc_map:1,
-> 		__unused:2;
-> -	u8	add_addr : 1,
-> -		rm_addr : 1,
-> -		family : 4;
-> -	u8	addr_id;
-> -	union {
-> -		struct	in_addr	addr;
-> -#if IS_ENABLED(CONFIG_IPV6)
-> -		struct	in6_addr addr6;
-> -#endif
-> -	};
-> };
-> #endif
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 52c89e5a7d4f..5323945216f2 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -15,117 +15,17 @@ static struct workqueue_struct *pm_wq;
+> int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+> 			   const struct mptcp_addr_info *addr)
+> {
+> -	struct mptcp_sock *msk =3D mptcp_token_get_sock(token);
+> -	int err =3D 0;
+> +	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
 >
-> @@ -148,6 +149,7 @@ static inline void tcp_clear_options(struct tcp_optio=
-ns_received *rx_opt)
-> 	rx_opt->mptcp.mp_capable =3D 0;
-> 	rx_opt->mptcp.mp_join =3D 0;
-> 	rx_opt->mptcp.add_addr =3D 0;
-> +	rx_opt->mptcp.add_addr6 =3D 0;
-> 	rx_opt->mptcp.rm_addr =3D 0;
-> 	rx_opt->mptcp.dss =3D 0;
-> #endif
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 7489f9267640..0e7c5471010b 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -42,6 +42,8 @@ struct mptcp_out_options {
-> #endif
-> 	};
-> 	u8 addr_id;
-> +	u64 ahmac;
-> +	u8 rm_id;
-> 	u8 join_id;
-> 	u8 backup;
-> 	u32 nonce;
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 97d2328fbb52..43f65847799d 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -212,45 +212,56 @@ void mptcp_parse_option(const struct sk_buff *skb, =
-const unsigned char *ptr,
-> 		break;
->
-> 	case MPTCPOPT_ADD_ADDR:
-> -		if (opsize !=3D TCPOLEN_MPTCP_ADD_ADDR &&
-> -		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
-> -			break;
-> -		mp_opt->family =3D *ptr++ & MPTCP_ADDR_FAMILY_MASK;
-> -		if (mp_opt->family !=3D MPTCP_ADDR_IPVERSION_4 &&
-> -		    mp_opt->family !=3D MPTCP_ADDR_IPVERSION_6)
-> -			break;
+> -	if (!msk)
+> -		return -EINVAL;
 > -
-> -		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4 &&
-> -		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR)
-> -			break;
-> +		mp_opt->echo =3D (*ptr++) & MPTCP_ADDR_ECHO;
-> +		if (!mp_opt->echo) {
-> +			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR ||
-> +			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_PORT)
-> +				mp_opt->add_addr =3D 1;
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6 &&
-> -		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
-> -			break;
-> +			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6 ||
-> +				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_PORT)
-> +				mp_opt->add_addr6 =3D 1;
-> +#endif
-> +			else
-> +				break;
-> +		} else {
-> +			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE ||
-> +			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT)
-> +				mp_opt->add_addr =3D 1;
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE ||
-> +				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT)
-> +				mp_opt->add_addr6 =3D 1;
-> #endif
-> +			else
-> +				break;
-> +		}
-> +
-> 		mp_opt->addr_id =3D *ptr++;
-> -		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
-> -			mp_opt->add_addr =3D 1;
-> +		pr_debug("ADD_ADDR: id=3D%d", mp_opt->addr_id);
-> +		if (mp_opt->add_addr =3D=3D 1) {
-> 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
-> -			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
-> -				 mp_opt->addr.s_addr, mp_opt->addr_id);
-> +			ptr +=3D 4;
-> 		}
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 		else {
-> -			mp_opt->add_addr =3D 1;
-> 			memcpy(mp_opt->addr6.s6_addr, (u8 *)ptr, 16);
-> -			pr_debug("ADD_ADDR: addr6=3D, id=3D%d", mp_opt->addr_id);
-> +			ptr +=3D 16;
-> 		}
-> #endif
-> +		if (!mp_opt->echo) {
-> +			mp_opt->ahmac =3D get_unaligned_be64(ptr);
-> +			ptr +=3D 8;
-> +		}
-> 		break;
->
-> 	case MPTCPOPT_RM_ADDR:
-> -		if (opsize !=3D TCPOLEN_MPTCP_RM_ADDR)
-> +		if (opsize !=3D TCPOLEN_MPTCP_RM_ADDR_BASE)
-> 			break;
->
-> 		mp_opt->rm_addr =3D 1;
-> -		mp_opt->addr_id =3D *ptr++;
-> -		pr_debug("RM_ADDR: id=3D%d", mp_opt->addr_id);
-> +		mp_opt->rm_id =3D *ptr++;
-> +		pr_debug("RM_ADDR: id=3D%d", mp_opt->rm_id);
-> 		break;
->
-> 	default:
-> @@ -482,6 +493,38 @@ static bool mptcp_established_options_dss(struct soc=
-k *sk, struct sk_buff *skb,
-> 	return true;
+> -	if (msk->pm.local_valid) {
+> -		err =3D -EBADR;
+> -		goto announce_put;
+> -	}
+> -
+> -	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
+> -	msk->pm.local_valid =3D 1;
+> -	msk->pm.local_id =3D local_id;
+> -	msk->pm.local_family =3D AF_INET;
+> -	msk->pm.local_addr =3D *addr;
+> -	msk->addr_signal =3D 1;
+> -
+> -announce_put:
+> -	sock_put((struct sock *)msk);
+> -	return err;
+> -}
+> -
+> -int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
+> -{
+> -	struct mptcp_sock *msk =3D mptcp_token_get_sock(token);
+> -
+> -	if (!msk)
+> -		return -EINVAL;
+> -
+> -	pr_debug("msk=3D%p", msk);
+> -	msk->pm.local_valid =3D 0;
+> -
+> -	sock_put((struct sock *)msk);
+> +	msk->pm.local =3D *addr;
+> +	WRITE_ONCE(msk->pm.addr_signal, true);
+> 	return 0;
 > }
 >
-> +static u64 add_addr_generate_hmac(u64 key1, u64 key2, u8 addr_id,
-> +				  struct in_addr *addr)
+> -int mptcp_pm_create_subflow(u32 token, u8 remote_id, struct in6_addr *ad=
+dr)
+> -{
+> -	struct mptcp_sock *msk =3D mptcp_token_get_sock(token);
+> -	struct sockaddr_in6 remote;
+> -	struct sockaddr_in6 local;
+> -	struct sock *sk;
+> -	int err;
+> -
+> -	pr_debug("msk=3D%p", msk);
+> -
+> -	sk =3D (struct sock *)msk;
+> -	if (!msk->pm.remote_valid || remote_id !=3D msk->pm.remote_id) {
+> -		err =3D -EBADR;
+> -		goto create_put;
+> -	}
+> -
+> -	local.sin_family =3D AF_INET;
+> -	local.sin_port =3D 0;
+> -	if (addr)
+> -		local.sin_addr =3D *addr;
+> -	else
+> -		local.sin_addr.s_addr =3D htonl(INADDR_ANY);
+> -
+> -	remote.sin_family =3D msk->pm.remote_family;
+> -	remote.sin_port =3D inet_sk(sk)->inet_dport;
+> -	remote.sin_addr =3D msk->pm.remote_addr;
+> -
+> -	err =3D mptcp_subflow_connect(sk, (struct sockaddr *)&local,
+> -				    (struct sockaddr *)&remote, remote_id);
+> -
+> -create_put:
+> -	sock_put(sk);
+> -	return err;
+> -}
+> -
+> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -int mptcp_pm_create_subflow6(u32 token, u8 remote_id, struct in6_addr *a=
+ddr)
+> +int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
+> {
+> -	struct mptcp_sock *msk =3D mptcp_token_get_sock(token);
+> -	struct sockaddr_in6 remote;
+> -	struct sockaddr_in6 local;
+> -	struct sock *sk;
+> -	int err;
+> -
+> -	if (!msk)
+> -		return -EINVAL;
+> -
+> -	pr_debug("msk=3D%p", msk);
+> -	sk =3D (struct sock *)msk;
+> -
+> -	if (!msk->pm.remote_valid || remote_id !=3D msk->pm.remote_id) {
+> -		err =3D -EBADR;
+> -		goto create_put;
+> -	}
+> -
+> -	local.sin6_family =3D AF_INET6;
+> -	local.sin6_port =3D 0;
+> -	if (addr)
+> -		local.sin6_addr =3D *addr;
+> -	else
+> -		local.sin6_addr =3D in6addr_any;
+> -
+> -	remote.sin6_family =3D msk->pm.remote_family;
+> -	remote.sin6_port =3D inet_sk(sk)->inet_dport;
+> -	remote.sin6_addr =3D msk->pm.remote_addr6;
+> -
+> -	err =3D mptcp_subflow_connect(sk, (struct sockaddr *)&local,
+> -				    (struct sockaddr *)&remote, remote_id);
+> -
+> -create_put:
+> -	sock_put(sk);
+> -	return err;
+> +	return -ENOTSUPP;
+> }
+> -#endif
+>
+> int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
+> {
+> @@ -143,11 +43,47 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk,=
+ int server_side)
+> 	WRITE_ONCE(pm->server_side, server_side);
+> }
+>
+> +static bool mptcp_pm_work_pending(const struct mptcp_pm_data *pm)
 > +{
-> +	u8 hmac[MPTCPOPT_HMAC_LEN];
-> +	u8 msg[7];
-> +
-> +	msg[0] =3D addr_id;
-> +	memcpy(&msg[1], &addr->s_addr, 4);
-> +	msg[5] =3D 0;
-> +	msg[6] =3D 0;
-> +
-> +	mptcp_crypto_hmac_sha(key1, key2, msg, 7, (u32 *)hmac);
-> +
-> +	return get_unaligned_be64(hmac);
+> +	return (READ_ONCE(pm->local_addr_used) <
+> +		READ_ONCE(pm->local_addr_max)) ||
+> +	       (READ_ONCE(pm->add_addr_signaled) <
+> +		READ_ONCE(pm->add_addr_signal_max));
 > +}
-> +
-> +static u64 add_addr6_generate_hmac(u64 key1, u64 key2, u8 addr_id,
-> +				   struct in6_addr *addr)
-> +{
-> +	u8 hmac[MPTCPOPT_HMAC_LEN];
-> +	u8 msg[19];
-> +
-> +	msg[0] =3D addr_id;
-> +	memcpy(&msg[1], &addr->s6_addr, 16);
-> +	msg[17] =3D 0;
-> +	msg[18] =3D 0;
-> +
-> +	mptcp_crypto_hmac_sha(key1, key2, msg, 19, (u32 *)hmac);
 
-Why the cast to u32* here?
+It looks like these values are only modified under a lock, but are read =
 
+some of the time without a lock. If the values are concurrently modified =
 
-Thanks,
+is it harmless? It would be helpful to have at least a comment explaining =
+
+the expected locking semantics.
+
+Would it be overkill to pack the values that are compared (like =
+
+local_addr_used and local_addr_max) so they can be read & written =
+
+together?
 
 Mat
 
 
 > +
-> +	return get_unaligned_be64(hmac);
+> +static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
+> +				   enum mptcp_pm_status new_status)
+> +{
+> +	if (msk->pm.status !=3D MPTCP_PM_IDLE)
+> +		return false;
+> +
+> +	if (queue_work(pm_wq, &msk->pm.work)) {
+> +		msk->pm.status =3D new_status;
+> +		sock_hold((struct sock *)msk);
+> +		return true;
+> +	}
+> +	return false;
 > +}
 > +
-> static bool mptcp_established_options_addr(struct sock *sk,
-> 					   unsigned int *size,
-> 					   unsigned int remaining,
-> @@ -507,6 +550,11 @@ static bool mptcp_established_options_addr(struct so=
-ck *sk,
-> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> 		opts->addr_id =3D id;
-> 		opts->addr =3D ((struct sockaddr_in *)&saddr)->sin_addr;
-> +		opts->ahmac =3D add_addr_generate_hmac(subflow->local_key,
-> +						     subflow->remote_key,
-> +						     opts->addr_id,
-> +						     &opts->addr);
-> +		pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
-> 		*size =3D TCPOLEN_MPTCP_ADD_ADDR;
-> 	}
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> @@ -516,6 +564,11 @@ static bool mptcp_established_options_addr(struct so=
-ck *sk,
-> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
-> 		opts->addr_id =3D id;
-> 		opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_addr;
-> +		opts->ahmac =3D add_addr6_generate_hmac(subflow->local_key,
-> +						      subflow->remote_key,
-> +						      opts->addr_id,
-> +						      &opts->addr6);
-> +		pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
-> 		*size =3D TCPOLEN_MPTCP_ADD_ADDR6;
-> 	}
-> #endif
-> @@ -656,6 +709,36 @@ static void update_una(struct mptcp_sock *msk,
-> 	}
+> void mptcp_pm_fully_established(struct mptcp_sock *msk)
+> {
+> 	struct mptcp_pm_data *pm =3D &msk->pm;
+>
+> 	pr_debug("msk=3D%p", msk);
+> +
+> +	/* try to avoid acquiring the lock below */
+> +	if (READ_ONCE(pm->fully_established) || !mptcp_pm_work_pending(pm))
+> +		return;
+> +
+> +	spin_lock_bh(&pm->lock);
+> +	if (READ_ONCE(pm->fully_established))
+> +		goto out_unlock;
+> +
+> +	if (mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED))
+> +		WRITE_ONCE(pm->fully_established, true);
+> +
+> +out_unlock:
+> +	spin_unlock_bh(&pm->lock);
 > }
 >
-> +static bool add_addr_hmac_valid(struct mptcp_subflow_context *subflow,
-> +				struct mptcp_options_received *mp_opt)
-> +{
-> +	u64 ahmac;
-> +
-> +	ahmac =3D add_addr_generate_hmac(subflow->remote_key, subflow->local_ke=
-y,
-> +				       mp_opt->addr_id, &mp_opt->addr);
-> +
-> +	pr_debug("subflow=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
-> +		 subflow, (unsigned long long)ahmac,
-> +		 (unsigned long long)mp_opt->ahmac);
-> +
-> +	return ahmac =3D=3D mp_opt->ahmac;
-> +}
-> +
-> +static bool add_addr6_hmac_valid(struct mptcp_subflow_context *subflow,
-> +				 struct mptcp_options_received *mp_opt)
-> +{
-> +	u64 ahmac;
-> +
-> +	ahmac =3D add_addr6_generate_hmac(subflow->remote_key, subflow->local_k=
-ey,
-> +					mp_opt->addr_id, &mp_opt->addr6);
-> +
-> +	pr_debug("subflow=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
-> +		 subflow, (unsigned long long)ahmac,
-> +		 (unsigned long long)mp_opt->ahmac);
-> +
-> +	return ahmac =3D=3D mp_opt->ahmac;
-> +}
-> +
-> void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
-> 			    struct tcp_options_received *opt_rx)
+> void mptcp_pm_connection_closed(struct mptcp_sock *msk)
+> @@ -158,7 +94,19 @@ void mptcp_pm_connection_closed(struct mptcp_sock *ms=
+k)
+> void mptcp_pm_subflow_established(struct mptcp_sock *msk,
+> 				  struct mptcp_subflow_context *subflow)
 > {
-> @@ -669,15 +752,20 @@ void mptcp_incoming_options(struct sock *sk, struct=
- sk_buff *skb,
-> 		return;
+> +	struct mptcp_pm_data *pm =3D &msk->pm;
+> +
+> 	pr_debug("msk=3D%p", msk);
+> +
+> +	if (!mptcp_pm_work_pending(pm))
+> +		return;
+> +
+> +	spin_lock_bh(&pm->lock);
+> +
+> +	if (mptcp_pm_work_pending(pm))
+> +		mptcp_pm_schedule_work(msk, MPTCP_PM_SUBFLOW_ESTABLISHED);
+> +
+> +	spin_unlock_bh(&pm->lock);
+> }
 >
-> 	if (msk && mp_opt->add_addr) {
-> -		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
-> -			mptcp_pm_add_addr(msk, &mp_opt->addr, mp_opt->addr_id);
-> +		pr_debug("subflow=3D%p, ahmac=3D%llu", subflow, mp_opt->ahmac);
-> +		if (!mp_opt->echo && add_addr_hmac_valid(subflow, mp_opt))
-> +			mptcp_pm_add_addr(msk, &mp_opt->addr,
-> +					  mp_opt->addr_id);
-> +		mp_opt->add_addr =3D 0;
+> void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id)
+> @@ -170,8 +118,30 @@ void mptcp_pm_add_addr(struct mptcp_sock *msk,
+> 		       const struct mptcp_addr_info *addr)
+> {
+> 	struct mptcp_pm_data *pm =3D &msk->pm;
+> +	unsigned max, cur;
+>
+> 	pr_debug("msk=3D%p, remote_id=3D%d", msk, addr->id);
+> +
+> +	/* avoid acquiring the lock if there is no room for fouther addresses */
+> +	if (READ_ONCE(pm->add_addr_accepted) >=3D
+> +	    READ_ONCE(pm->add_addr_accept_max))
+> +		return;
+> +
+> +	spin_lock_bh(&pm->lock);
+> +
+> +	/* be sure there is something to signal re-checking under PM lock */
+> +	max =3D READ_ONCE(pm->add_addr_accept_max);
+> +	cur =3D READ_ONCE(pm->add_addr_accepted);
+> +	if (cur >=3D max)
+> +		goto unlock;
+> +
+> +	if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR)) {
+> +		WRITE_ONCE(pm->add_addr_accepted, cur + 1);
+> +		pm->remote =3D *addr;
 > +	}
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -		else if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6)
-> +	else if (msk && mp_opt->add_addr6) {
-> +		if (!mp_opt->echo && add_addr6_hmac_valid(subflow, mp_opt))
-> 			mptcp_pm_add_addr6(msk, &mp_opt->addr6,
-> 					   mp_opt->addr_id);
-> -#endif
-> -		mp_opt->add_addr =3D 0;
-> +		mp_opt->add_addr6 =3D 0;
-> 	}
-> +#endif
+> +
+> +unlock:
+> +	spin_unlock_bh(&pm->lock);
+> }
 >
-> 	if (!mp_opt->dss)
-> 		return;
-> @@ -760,25 +848,47 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_=
-out_options *opts)
+> /* path manager helpers */
+> @@ -179,7 +149,27 @@ void mptcp_pm_add_addr(struct mptcp_sock *msk,
+> int mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+> 			 struct mptcp_addr_info *saddr)
+> {
+> -	return 0;
+> +	struct mptcp_addr_info addr;
+> +	int ret =3D -EINVAL;
+> +
+> +	spin_lock_bh(&msk->pm.lock);
+> +
+> +	/* double check after the lock is acquired */
+> +	if (!mptcp_pm_should_signal(msk))
+> +		goto out_unlock;
+> +
+> +	/* load real data */
+> +	memset(&addr, 0, sizeof(addr));
+> +
+> +	if (remaining < mptcp_add_addr_len(saddr->family))
+> +		goto out_unlock;
+> +
+> +	WRITE_ONCE(msk->pm.addr_signal, false);
+> +	ret =3D 0;
+> +
+> +out_unlock:
+> +	spin_unlock_bh(&msk->pm.lock);
+> +	return ret;
+> }
 >
-> mp_capable_done:
-> 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
-> -		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR, TCPOLEN_MPTCP_ADD_ADDR,
-> -				      MPTCP_ADDR_IPVERSION_4, opts->addr_id);
-> +		if (opts->ahmac)
-> +			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> +					      TCPOLEN_MPTCP_ADD_ADDR, 0,
-> +					      opts->addr_id);
-> +		else
-> +			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> +					      TCPOLEN_MPTCP_ADD_ADDR_BASE,
-> +					      MPTCP_ADDR_ECHO,
-> +					      opts->addr_id);
-> 		memcpy((u8 *)ptr, (u8 *)&opts->addr.s_addr, 4);
-> 		ptr +=3D 1;
-> +		if (opts->ahmac) {
-> +			put_unaligned_be64(opts->ahmac, ptr);
-> +			ptr +=3D 2;
-> +		}
-> 	}
+> int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+> @@ -189,6 +179,17 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc)
 >
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
-> -		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> -				      TCPOLEN_MPTCP_ADD_ADDR6,
-> -				      MPTCP_ADDR_IPVERSION_6, opts->addr_id);
-> +		if (opts->ahmac)
-> +			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> +					      TCPOLEN_MPTCP_ADD_ADDR6, 0,
-> +					      opts->addr_id);
-> +		else
-> +			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
-> +					      TCPOLEN_MPTCP_ADD_ADDR6_BASE,
-> +					      MPTCP_ADDR_ECHO,
-> +					      opts->addr_id);
-> 		memcpy((u8 *)ptr, opts->addr6.s6_addr, 16);
-> 		ptr +=3D 4;
-> +		if (opts->ahmac) {
-> +			put_unaligned_be64(opts->ahmac, ptr);
-> +			ptr +=3D 2;
-> +		}
-> 	}
-> #endif
+> static void pm_worker(struct work_struct *work)
+> {
+> +	struct mptcp_pm_data *pm =3D container_of(work, struct mptcp_pm_data,
+> +						work);
+> +	struct mptcp_sock *msk =3D container_of(pm, struct mptcp_sock, pm);
+> +	struct sock *sk =3D (struct sock *)msk;
+> +
+> +	switch (pm->status) {
+> +	default:
+> +		break;
+> +	}
+> +
+> +	sock_put(sk);
+> }
 >
-> 	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
-> -		*ptr++ =3D mptcp_option(MPTCPOPT_RM_ADDR, TCPOLEN_MPTCP_RM_ADDR,
-> -				      0, opts->addr_id);
-> +		*ptr++ =3D mptcp_option(MPTCPOPT_RM_ADDR,
-> +				      TCPOLEN_MPTCP_RM_ADDR_BASE,
-> +				      0, opts->rm_id);
-> 	}
->
-> 	if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index e10b24ba1636..c6f9e56b59f2 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -48,9 +48,16 @@
-> #define TCPOLEN_MPTCP_DSS_MAP32		10
-> #define TCPOLEN_MPTCP_DSS_MAP64		14
-> #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
-> -#define TCPOLEN_MPTCP_ADD_ADDR		8
-> -#define TCPOLEN_MPTCP_ADD_ADDR6		20
-> -#define TCPOLEN_MPTCP_RM_ADDR		4
-> +#define TCPOLEN_MPTCP_ADD_ADDR		16
-> +#define TCPOLEN_MPTCP_ADD_ADDR_PORT	18
-> +#define TCPOLEN_MPTCP_ADD_ADDR_BASE	8
-> +#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	10
-> +#define TCPOLEN_MPTCP_ADD_ADDR6		28
-> +#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	30
-> +#define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
-> +#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	22
-> +#define TCPOLEN_MPTCP_PORT_LEN		2
-> +#define TCPOLEN_MPTCP_RM_ADDR_BASE	4
->
-> /* MPTCP MP_JOIN flags */
-> #define MPTCPOPT_BACKUP		BIT(0)
-> @@ -73,9 +80,7 @@
-> #define MPTCP_DSS_FLAG_MASK	(0x1F)
->
-> /* MPTCP ADD_ADDR flags */
-> -#define MPTCP_ADDR_FAMILY_MASK	(0x0F)
-> -#define MPTCP_ADDR_IPVERSION_4	4
-> -#define MPTCP_ADDR_IPVERSION_6	6
-> +#define MPTCP_ADDR_ECHO		BIT(0)
->
-> /* MPTCP socket flags */
-> #define MPTCP_DATA_READY	BIT(0)
+> void mptcp_pm_data_init(struct mptcp_sock *msk)
 > -- =
 
-> 2.17.2
+> 2.21.1
 
 --
 Mat Martineau
 Intel
---===============7514211426705773044==--
+--===============0883032052439862221==--
