@@ -1,68 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============7867086733051701033=="
+Content-Type: multipart/mixed; boundary="===============5473652380414433817=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC 5/5] mptcp: add rmem queue accounting
-Date: Thu, 13 Feb 2020 11:27:42 +0100
-Message-ID: <20200213102742.18937-6-fw@strlen.de>
-In-Reply-To: 20200213102742.18937-1-fw@strlen.de
+Subject: [MPTCP] Re: [RFC PATCH 5/6] Squash-to: "mptcp: Implement path manager
+ interface commands"
+Date: Thu, 13 Feb 2020 12:54:12 +0100
+Message-ID: <62d99523b475296ba37280556f42758fee300e60.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.22.394.2002121726140.34444@echiprou-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3648
+X-UID: 3649
 
---===============7867086733051701033==
+--===============5473652380414433817==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+On Wed, 2020-02-12 at 18:05 -0800, Mat Martineau wrote:
+> +static bool mptcp_pm_work_pending(const struct mptcp_pm_data *pm)
+> > +{
+> > +	return (READ_ONCE(pm->local_addr_used) <
+> > +		READ_ONCE(pm->local_addr_max)) ||
+> > +	       (READ_ONCE(pm->add_addr_signaled) <
+> > +		READ_ONCE(pm->add_addr_signal_max));
+> > +}
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e9e87e62a184..0583429b36ac 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -172,6 +172,10 @@ void mptcp_data_ready(struct sock *sk)
- 	if (test_and_set_bit(MPTCP_WORK_DATA_READY, &msk->flags))
- 		return;
- =
+> It looks like these values are only modified under a lock, but are read =
 
-+	/* don't schedule if mptcp sk is (still) over limit */
-+	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
-+		return;
-+
- 	sock_hold(sk);
- 	if (!schedule_work(&msk->rtx_work))
- 		sock_put(sk);
-@@ -993,12 +997,20 @@ static int mptcp_steal_actor(read_descriptor_t *desc,=
- struct sk_buff *skb,
- 	sk =3D (struct sock *)arg->msk;
- 	ssk =3D arg->ssk;
- =
+> some of the time without a lock. If the values are concurrently modified =
 
-+	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf ||
-+	    !sk_rmem_schedule(sk, skb, skb->truesize)) {
-+		if (ssk->sk_rcvbuf <=3D sk->sk_rcvbuf)
-+			return 0;
-+
-+		sk->sk_rcvbuf =3D ssk->sk_rcvbuf;
-+	}
-+
- 	/* skb_orphan is not good (should keep skb charged to subflow).
- 	 * Removing it causes WARN at ssk close time, as tcp_done() call
- 	 * path may see ssk->sk_forward_alloc > 0.
- 	 */
- 	__skb_unlink(skb, &ssk->sk_receive_queue);
--	skb_orphan(skb);
-+	skb_set_owner_r(skb, sk);
- 	__skb_queue_tail(&sk->sk_receive_queue, skb);
- =
+> is it harmless? It would be helpful to have at least a comment explaining =
 
- 	arg->msk->ack_seq +=3D copy_len;
--- =
+> the expected locking semantics.
+> =
 
-2.24.1
+> Would it be overkill to pack the values that are compared (like =
 
---===============7867086733051701033==--
+> local_addr_used and local_addr_max) so they can be read & written =
+
+> together?
+
+Thank you for the feedback! I'm double minded about this READ_ONCE
+stuff. I'd like to avoid lock osperation when possible but I agree the
+current impl is ugly.
+
+What if I a single 'work_pending' bool in 'struct mptcp_pm_data', let
+pm_netlink WRITE_ONCE it as needed, and use it to replace the above
+code?
+
+Thanks,
+
+Paolo
+
+@Florian: addendum WRT bool vs u8:1 usage: I need 'bool' type to
+{WRITE,READ}_ONCE. Are you ok if I keep using bool?
+
+--===============5473652380414433817==--
