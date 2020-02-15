@@ -1,95 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============5384714105249807965=="
+Content-Type: multipart/mixed; boundary="===============7139817105392974517=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 1/5] mptcp: perform mptcp ack update during read
- operations
-Date: Fri, 14 Feb 2020 16:29:23 -0800
-Message-ID: <alpine.OSX.2.22.394.2002141625080.55209@echiprou-mobl.amr.corp.intel.com>
-In-Reply-To: 20200213102742.18937-2-fw@strlen.de
+Subject: [MPTCP] Re: [RFC 4/5] mptcp: update mptcp ack sequence from work queue
+Date: Fri, 14 Feb 2020 17:39:14 -0800
+Message-ID: <alpine.OSX.2.22.394.2002141725070.55209@echiprou-mobl.amr.corp.intel.com>
+In-Reply-To: dacf63e06bc2cd1984968414e8ba96d38140a21c.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3662
+X-UID: 3663
 
---===============5384714105249807965==
+--===============7139817105392974517==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Feb 2020, Florian Westphal wrote:
 
-> tcp_read_sock() will drain the receive queue, i.e. it frees memory.
-> Therefore, at the end of the function it can generate ACKs to open
-> up the tcp receive window.
->
-> Unfortunately, the MPTCP ack sequence was updated later, i.e. those
-> ACKs carry an outdated mptcp ack sequence.
->
-> This isn't a bug per se, but we can improve this and update the
-> mptcp ack in the read actor callback, thus allowing the acks sent
-> by tcp_read_sock() to include the most recent mptcp ack sequence.
->
-> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> net/mptcp/protocol.c | 4 +++-
-> net/mptcp/protocol.h | 1 +
-> 2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1f405b812243..f68ee86376f0 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -608,6 +608,8 @@ int mptcp_read_actor(read_descriptor_t *desc, struct =
-sk_buff *skb,
-> 			desc->error =3D err;
-> 			return err;
-> 		}
-> +
-> +		arg->msk->ack_seq +=3D copy_len;
-> 	} else {
-> 		pr_debug("Flushing skb payload");
-> 	}
-> @@ -664,6 +666,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
-> 	}
->
-> 	arg.msg =3D msg;
-> +	arg.msk =3D msk;
-> 	desc.arg.data =3D &arg;
-> 	desc.error =3D 0;
->
-> @@ -704,7 +707,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
->
-> 			pr_debug("msk ack_seq=3D%llx -> %llx", msk->ack_seq,
-> 				 msk->ack_seq + bytes_read);
+On Thu, 13 Feb 2020, Paolo Abeni wrote:
 
-This debug print will show misleading information because ack_seq has =
-
-already advanced.
-
-> -			msk->ack_seq +=3D bytes_read;
-> 			copied +=3D bytes_read;
-> 			if (copied >=3D len) {
-> 				done =3D true;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 3fbb33deb764..06a57bf6d5f0 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -305,6 +305,7 @@ int mptcp_proto_v6_init(void);
+> On Thu, 2020-02-13 at 11:27 +0100, Florian Westphal wrote:
+>> +static void __mptcp_move_skbs(struct mptcp_sock *msk)
+>> +{
+>> +	struct mptcp_steal_arg arg =3D {
+>> +		.msk =3D msk,
+>> +		.fin =3D false,
+>> +	};
+>> +	read_descriptor_t desc =3D {
+>> +		.arg.data =3D &arg,
+>> +	};
+>> +
+>> +	for (;;) {
+>> +		struct mptcp_subflow_context *subflow;
+>> +		bool more_data_avail;
+>> +
+>> +		arg.ssk =3D mptcp_subflow_recv_lookup(msk);
+>> +		if (!arg.ssk)
+>> +			break;
+>> +
+>> +		subflow =3D mptcp_subflow_ctx(arg.ssk);
+>> +
+>> +		lock_sock(arg.ssk);
+>> +
+>> +		do {
+>> +			u32 map_remaining;
+>> +			int bytes_read;
+>> +
+>> +			/* try to read as much data as available */
+>> +			map_remaining =3D subflow->map_data_len -
+>> +					mptcp_subflow_get_map_offset(subflow);
+>> +			desc.count =3D map_remaining;
+>> +
+>> +			bytes_read =3D tcp_read_sock(arg.ssk, &desc, mptcp_steal_actor);
+>> +			if (bytes_read <=3D 0) {
+>> +				release_sock(arg.ssk);
+>> +				return;
+>> +			}
+>> +
+>> +			if (arg.fin) {
+>> +				struct tcp_sock *tp =3D tcp_sk(arg.ssk);
+>> +				u32 seq =3D READ_ONCE(tp->copied_seq);
+>> +
+>> +				WRITE_ONCE(tp->copied_seq, seq + 1);
+>> +			}
+>> +
+>> +			more_data_avail =3D mptcp_subflow_data_available(arg.ssk);
+>> +		} while (more_data_avail);
+>> +
+>> +		release_sock(arg.ssk);
+>> +	}
+>> +}
 >
-> struct mptcp_read_arg {
-> 	struct msghdr *msg;
-> +	struct mptcp_sock *msk;
-> };
+> Overall the above move the pending skbs to the msk receive queue,
+> increment ssk copied_seq and eventually let TCP send ack via
+> tcp_cleanup_rbuf().
 >
-> int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
-> -- =
 
-> 2.24.1
+It's only moving in-order skbs, right?
+
+> I think we could avoid touching tcp_read_sock() in patch 2/5 moving the
+> skb directly from __mptcp_move_skbs() - no call to tcp_read_sock(),
+> just queue manipulation and copied_seq accounting.
+>
+> Than __mptcp_move_skbs() will call directly, as needed - need to export
+> it.
+
+This makes sense to me. We have to do another layer of reassembly for =
+
+MPTCP and we already know the skbs are in-order for the subflow stream, =
+
+and there's no need to handle partial skb reads like tcp_read_sock does.
+
+>
+> We could additionally clean-up the code calling __mptcp_move_skbs()
+> from mptcp_recvmsg() before looking into the msk receive queue. Than no
+> need for the current recvmsg inner loop.
+>
+> I fear we need some tweek to handle TCP fallback. If I read the RFC
+> correctly the msk can fallback to TCP even after receiving some DSS
+> data (e.g. msk receive queue contains some skbs and the msk fallback to
+> TCP. We can't call anymore sock_recvmsg())
+
+RFC 8684 section 3.7 (Fallback) says that "If a subflow breaks during =
+
+operation... the subflow SHOULD be treated as broken and closed with a =
+
+RST". Does that cover your concern, or are you referring to a fallback at =
+
+connection time?
+
 
 --
 Mat Martineau
 Intel
---===============5384714105249807965==--
+--===============7139817105392974517==--
