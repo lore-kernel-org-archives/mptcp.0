@@ -1,65 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============7579530480603861555=="
+Content-Type: multipart/mixed; boundary="===============5384714105249807965=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 0/6] add locking to PM APis,
- implement PM netlink
-Date: Sat, 15 Feb 2020 01:16:23 +0100
-Message-ID: <b7912a4ff7f2c9c49e149289d6c101da15da44d7.camel@redhat.com>
-In-Reply-To: cover.1581444137.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [RFC 1/5] mptcp: perform mptcp ack update during read
+ operations
+Date: Fri, 14 Feb 2020 16:29:23 -0800
+Message-ID: <alpine.OSX.2.22.394.2002141625080.55209@echiprou-mobl.amr.corp.intel.com>
+In-Reply-To: 20200213102742.18937-2-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3661
+X-UID: 3662
 
---===============7579530480603861555==
+--===============5384714105249807965==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-02-11 at 19:12 +0100, Paolo Abeni wrote:
-> Sending as an early RFC to gather feedback, as this is proving to be more
-> intrusive that what I initially hoped for.
-> =
+On Thu, 13 Feb 2020, Florian Westphal wrote:
 
-> This implement the locking required by the PM to allow concurent subflow
-> accessing the msk PM data in a safe way. Such data is protected via a msk=
--level
-> spinlock. It relies on the Double checked locking to avoid contention in =
-the
-> most common scenarion (no or very little PM "actions").
-> =
+> tcp_read_sock() will drain the receive queue, i.e. it frees memory.
+> Therefore, at the end of the function it can generate ACKs to open
+> up the tcp receive window.
+>
+> Unfortunately, the MPTCP ack sequence was updated later, i.e. those
+> ACKs carry an outdated mptcp ack sequence.
+>
+> This isn't a bug per se, but we can improve this and update the
+> mptcp ack in the read actor callback, thus allowing the acks sent
+> by tcp_read_sock() to include the most recent mptcp ack sequence.
+>
+> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+> net/mptcp/protocol.c | 4 +++-
+> net/mptcp/protocol.h | 1 +
+> 2 files changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1f405b812243..f68ee86376f0 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -608,6 +608,8 @@ int mptcp_read_actor(read_descriptor_t *desc, struct =
+sk_buff *skb,
+> 			desc->error =3D err;
+> 			return err;
+> 		}
+> +
+> +		arg->msk->ack_seq +=3D copy_len;
+> 	} else {
+> 		pr_debug("Flushing skb payload");
+> 	}
+> @@ -664,6 +666,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+> 	}
+>
+> 	arg.msg =3D msg;
+> +	arg.msk =3D msk;
+> 	desc.arg.data =3D &arg;
+> 	desc.error =3D 0;
+>
+> @@ -704,7 +707,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+>
+> 			pr_debug("msk ack_seq=3D%llx -> %llx", msk->ack_seq,
+> 				 msk->ack_seq + bytes_read);
 
-> Overall the above adds quite a bit of code churn, is that a too premature
-> optimization? On the flip side, the whole PM processing should be quite
-> light on the CPU in most cases.
-> =
+This debug print will show misleading information because ack_seq has =
 
-> Additionally changes more than a bit the PM hooks/APIs, to be hopefully s=
-impler
-> and avoiding duplicate code (no v4/v6 variant, work queue management done=
- by the
-> core PM infra).
-> =
+already advanced.
 
-> It also introduce the PM netlink - should replace the current basic ones.
-> Completely untested but please have a look at the specified netlink uAPI.
-> =
+> -			msk->ack_seq +=3D bytes_read;
+> 			copied +=3D bytes_read;
+> 			if (copied >=3D len) {
+> 				done =3D true;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 3fbb33deb764..06a57bf6d5f0 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -305,6 +305,7 @@ int mptcp_proto_v6_init(void);
+>
+> struct mptcp_read_arg {
+> 	struct msghdr *msg;
+> +	struct mptcp_sock *msk;
+> };
+>
+> int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
+> -- =
 
-> TODO:
->  - implement U/S helper
->  - self-tests
->  - do we need NL dump operation to inspect the PM netlink status?
+> 2.24.1
 
-The current snapshot of this work is available here:
-
-https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_4
-
-It includes some APIs schanges, basic self-tests for the NL APIs, a
-bunch of bugfixes, but I still have to include Mat's feedback and full
-MP_JOIN self-tests.
-
-Cheers,
-
-Paolo
-
---===============7579530480603861555==--
+--
+Mat Martineau
+Intel
+--===============5384714105249807965==--
