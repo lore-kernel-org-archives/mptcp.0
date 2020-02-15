@@ -1,115 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============7139817105392974517=="
+Content-Type: multipart/mixed; boundary="===============7597547828321383443=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC 4/5] mptcp: update mptcp ack sequence from work queue
-Date: Fri, 14 Feb 2020 17:39:14 -0800
-Message-ID: <alpine.OSX.2.22.394.2002141725070.55209@echiprou-mobl.amr.corp.intel.com>
-In-Reply-To: dacf63e06bc2cd1984968414e8ba96d38140a21c.camel@redhat.com
+Subject: [MPTCP] [PATCH net] mptcp: select CRYPTO
+Date: Sat, 15 Feb 2020 15:45:56 +0100
+Message-ID: <20200215144556.956173-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3663
+X-UID: 3664
 
---===============7139817105392974517==
+--===============7597547828321383443==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Without this modification and if CRYPTO is not selected, we have this
+warning:
 
-On Thu, 13 Feb 2020, Paolo Abeni wrote:
+  WARNING: unmet direct dependencies detected for CRYPTO_LIB_SHA256
+    Depends on [n]: CRYPTO [=3Dn]
+    Selected by [y]:
+    - MPTCP [=3Dy] && NET [=3Dy] && INET [=3Dy]
 
-> On Thu, 2020-02-13 at 11:27 +0100, Florian Westphal wrote:
->> +static void __mptcp_move_skbs(struct mptcp_sock *msk)
->> +{
->> +	struct mptcp_steal_arg arg =3D {
->> +		.msk =3D msk,
->> +		.fin =3D false,
->> +	};
->> +	read_descriptor_t desc =3D {
->> +		.arg.data =3D &arg,
->> +	};
->> +
->> +	for (;;) {
->> +		struct mptcp_subflow_context *subflow;
->> +		bool more_data_avail;
->> +
->> +		arg.ssk =3D mptcp_subflow_recv_lookup(msk);
->> +		if (!arg.ssk)
->> +			break;
->> +
->> +		subflow =3D mptcp_subflow_ctx(arg.ssk);
->> +
->> +		lock_sock(arg.ssk);
->> +
->> +		do {
->> +			u32 map_remaining;
->> +			int bytes_read;
->> +
->> +			/* try to read as much data as available */
->> +			map_remaining =3D subflow->map_data_len -
->> +					mptcp_subflow_get_map_offset(subflow);
->> +			desc.count =3D map_remaining;
->> +
->> +			bytes_read =3D tcp_read_sock(arg.ssk, &desc, mptcp_steal_actor);
->> +			if (bytes_read <=3D 0) {
->> +				release_sock(arg.ssk);
->> +				return;
->> +			}
->> +
->> +			if (arg.fin) {
->> +				struct tcp_sock *tp =3D tcp_sk(arg.ssk);
->> +				u32 seq =3D READ_ONCE(tp->copied_seq);
->> +
->> +				WRITE_ONCE(tp->copied_seq, seq + 1);
->> +			}
->> +
->> +			more_data_avail =3D mptcp_subflow_data_available(arg.ssk);
->> +		} while (more_data_avail);
->> +
->> +		release_sock(arg.ssk);
->> +	}
->> +}
->
-> Overall the above move the pending skbs to the msk receive queue,
-> increment ssk copied_seq and eventually let TCP send ack via
-> tcp_cleanup_rbuf().
->
+MPTCP selects CRYPTO_LIB_SHA256 which seems to depend on CRYPTO. CRYPTO
+is now selected to avoid this issue.
 
-It's only moving in-order skbs, right?
+Even though the config system prints that warning, it looks like
+sha256.c is compiled and linked even without CONFIG_CRYPTO. Since MPTCP
+will end up needing CONFIG_CRYPTO anyway in future commits -- currently
+in preparation for net-next -- we propose to add it now to fix the
+warning.
 
-> I think we could avoid touching tcp_read_sock() in patch 2/5 moving the
-> skb directly from __mptcp_move_skbs() - no call to tcp_read_sock(),
-> just queue manipulation and copied_seq accounting.
->
-> Than __mptcp_move_skbs() will call directly, as needed - need to export
-> it.
+The dependency in the config system comes from the fact that
+CRYPTO_LIB_SHA256 is defined in "lib/crypto/Kconfig" which is sourced
+from "crypto/Kconfig" only if CRYPTO is selected.
 
-This makes sense to me. We have to do another layer of reassembly for =
+Fixes: 65492c5a6ab5 (mptcp: move from sha1 (v0) to sha256 (v1))
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ net/mptcp/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-MPTCP and we already know the skbs are in-order for the subflow stream, =
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index 49f6054e7f4e..a9ed3bf1d93f 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -4,6 +4,7 @@ config MPTCP
+ 	depends on INET
+ 	select SKB_EXTENSIONS
+ 	select CRYPTO_LIB_SHA256
++	select CRYPTO
+ 	help
+ 	  Multipath TCP (MPTCP) connections send and receive data over multiple
+ 	  subflows in order to utilize multiple network paths. Each subflow
+-- =
 
-and there's no need to handle partial skb reads like tcp_read_sock does.
+2.25.0
 
->
-> We could additionally clean-up the code calling __mptcp_move_skbs()
-> from mptcp_recvmsg() before looking into the msk receive queue. Than no
-> need for the current recvmsg inner loop.
->
-> I fear we need some tweek to handle TCP fallback. If I read the RFC
-> correctly the msk can fallback to TCP even after receiving some DSS
-> data (e.g. msk receive queue contains some skbs and the msk fallback to
-> TCP. We can't call anymore sock_recvmsg())
-
-RFC 8684 section 3.7 (Fallback) says that "If a subflow breaks during =
-
-operation... the subflow SHOULD be treated as broken and closed with a =
-
-RST". Does that cover your concern, or are you referring to a fallback at =
-
-connection time?
-
-
---
-Mat Martineau
-Intel
---===============7139817105392974517==--
+--===============7597547828321383443==--
