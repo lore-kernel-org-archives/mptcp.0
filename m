@@ -1,78 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============4112081413875047161=="
+Content-Type: multipart/mixed; boundary="===============2213537877861668307=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 5/6] mptcp: protocol: re-check dsn before reading
- from subflow
-Date: Mon, 17 Feb 2020 16:01:00 +0100
-Message-ID: <20200217150101.13603-6-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 6/6] mptcp: send acks when moving skbs to mptcp
+ receive queue
+Date: Mon, 17 Feb 2020 16:01:01 +0100
+Message-ID: <20200217150101.13603-7-fw@strlen.de>
 In-Reply-To: 20200217150101.13603-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3674
+X-UID: 3675
 
---===============4112081413875047161==
+--===============2213537877861668307==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_subflow_data_available() is commonly called via
-ssk->sk_data_ready(), in this case the mptcp socket lock
-cannot be acquired.
-
-Therefore, while we can safely discard subflow data that
-was already received up to msk->ack_seq, we cannot be sure
-that 'subflow->data_avail' will still be valid at the time
-userspace wants to read the data -- a previous read on a
-different subflow might have carried this data already.
-
-In that (unlikely) event, msk->ack_seq will have been updated
-and will be ahead of the subflow dsn.
-
-We can check for this condition and skip/resync to the expected
-sequence number.
-
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ include/net/tcp.h    | 1 +
+ net/ipv4/tcp.c       | 2 +-
+ net/mptcp/protocol.c | 3 +++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index a5ea27df3c2b..454ecab0df8b 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -650,6 +650,7 @@ static inline int tcp_bound_to_half_wnd(struct tcp_sock=
+ *tp, int pktsize)
+ =
+
+ /* tcp.c */
+ void tcp_get_info(struct sock *, struct tcp_info *);
++void tcp_cleanup_rbuf(struct sock *sk, int copied);
+ =
+
+ /* Read 'sendfile()'-style from a TCP socket */
+ int tcp_read_sock(struct sock *sk, read_descriptor_t *desc,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index eb2d80519f8e..91883dbc37fc 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1517,7 +1517,7 @@ static int tcp_peek_sndq(struct sock *sk, struct msgh=
+dr *msg, int len)
+  * calculation of whether or not we must ACK for the sake of
+  * a window update.
+  */
+-static void tcp_cleanup_rbuf(struct sock *sk, int copied)
++void tcp_cleanup_rbuf(struct sock *sk, int copied)
+ {
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	bool time_to_ack =3D false;
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index fe5504994fbd..54efcb4aecbc 100644
+index 54efcb4aecbc..1db6b64f4097 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -205,8 +205,24 @@ static struct sock *mptcp_subflow_recv_lookup(const st=
-ruct mptcp_sock *msk)
- 	sock_owned_by_me(sk);
+@@ -773,6 +773,9 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
+ 			more_data_avail =3D mptcp_subflow_data_available(ssk);
+ 		} while (more_data_avail);
  =
 
- 	mptcp_for_each_subflow(msk, subflow) {
--		if (subflow->data_avail)
--			return mptcp_subflow_tcp_sock(subflow);
-+		if (subflow->data_avail) {
-+			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+			u64 dsn =3D mptcp_subflow_get_mapped_dsn(subflow);
++		if (moved > 0)
++			tcp_cleanup_rbuf(ssk, moved);
 +
-+			/* revalidate data sequence number.
-+			 *
-+			 * mptcp_subflow_data_available() is usually called
-+			 * without msk lock.  Its unlikely (but possible)
-+			 * that msk->ack_seq has been advanced since the last
-+			 * call found in-sequence data.
-+			 */
-+			if (likely(dsn =3D=3D msk->ack_seq))
-+				return ssk;
-+
-+			subflow->data_avail =3D 0;
-+			if (mptcp_subflow_data_available(ssk))
-+				return ssk;
-+		}
- 	}
+ 		release_sock(ssk);
+ 	} while (!done);
  =
 
- 	return NULL;
 -- =
 
 2.24.1
 
---===============4112081413875047161==--
+--===============2213537877861668307==--
