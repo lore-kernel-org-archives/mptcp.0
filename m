@@ -1,490 +1,209 @@
-Content-Type: multipart/mixed; boundary="===============8667148875217668939=="
+Content-Type: multipart/mixed; boundary="===============1942176475865340023=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/7] Squash-to: "mptcp: Add path manager interface"
-Date: Mon, 17 Feb 2020 19:28:28 +0100
-Message-ID: <5819c30a9cd47afa706a471949eb43fbbc1b72f6.1581963738.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 4/7] Squash-to: "mptcp: Add handling of outgoing
+ MP_JOIN requests"
+Date: Mon, 17 Feb 2020 19:28:30 +0100
+Message-ID: <fe874c55d82da7d942a8c5c8ad2d98aa1e0676f0.1581963739.git.pabeni@redhat.com>
 In-Reply-To: cover.1581963738.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3682
+X-UID: 3683
 
---===============8667148875217668939==
+--===============1942176475865340023==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Factor out PM addr info to simplify PM data definition and
-simplify the PM hooks/APIs.
+record local id for outgoing MP_JOIN connection.
 
-The PM will carry a single local and remote addrs - the one
-currently being processed, if any. It's up to the PM impl,
-e.g. netlink, maintain additional per msk data, if needed.
-
-Account the number of created subflow and received addresses,
-to enforce limits.
-
-Add a spinlock to protect PM datas, so that we can manipulate
-them from subflow BH.
-
-Delegate events handling to a workqueue, so that PM events can
-be processed with both the above spinlock and the msk socket
-lock held. The PM impl should hook inside the worker.
+join_id is the local address id, set as such in mptcp_syn_options()
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c  |  45 +++++++++--------
- net/mptcp/pm.c       | 112 ++++++++++++++-----------------------------
- net/mptcp/protocol.c |   2 +
- net/mptcp/protocol.h |  98 ++++++++++++++++++++++---------------
- 4 files changed, 122 insertions(+), 135 deletions(-)
+ net/mptcp/options.c  |  2 +-
+ net/mptcp/protocol.h |  6 +++--
+ net/mptcp/subflow.c  | 58 ++++++++++++++++++++++++++++++++------------
+ 3 files changed, 47 insertions(+), 19 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 6a2d6cea7d54..13fe6245cfcf 100644
+index 29ccff13412e..2716cbc0953f 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -432,34 +432,30 @@ static bool mptcp_established_options_addr(struct soc=
-k *sk,
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
--	struct sockaddr_storage saddr;
--	u8 id;
-+	struct mptcp_addr_info saddr;
-+	int len;
- =
-
- 	if (!msk)
- 		return false;
- =
-
--	if (!msk->pm.fully_established)
-+	if (!mptcp_pm_should_signal(msk) ||
-+	    !(mptcp_pm_addr_signal(msk, remaining, &saddr)))
- 		return false;
- =
-
--	if (mptcp_pm_addr_signal(msk, &id, &saddr))
-+	len =3D mptcp_add_addr_len(saddr.family);
-+	if (remaining < len)
- 		return false;
- =
-
--	if (saddr.ss_family =3D=3D AF_INET) {
--		if (remaining < TCPOLEN_MPTCP_ADD_ADDR)
--			return false;
-+	*size =3D len;
-+	opts->addr_id =3D saddr.id;
-+	if (saddr.family =3D=3D AF_INET) {
- 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
--		opts->addr_id =3D id;
--		opts->addr =3D ((struct sockaddr_in *)&saddr)->sin_addr;
--		*size =3D TCPOLEN_MPTCP_ADD_ADDR;
-+		opts->addr =3D saddr.addr;
- 	}
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	else if (saddr.ss_family =3D=3D AF_INET6) {
--		if (remaining < TCPOLEN_MPTCP_ADD_ADDR6)
--			return false;
-+	else if (saddr.family =3D=3D AF_INET6) {
- 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
--		opts->addr_id =3D id;
--		opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_addr;
--		*size =3D TCPOLEN_MPTCP_ADD_ADDR6;
-+		opts->addr6 =3D saddr.addr6;
- 	}
- #endif
- =
-
-@@ -557,13 +553,20 @@ void mptcp_incoming_options(struct sock *sk, struct s=
-k_buff *skb,
- 		return;
- =
-
- 	if (msk && mp_opt->add_addr) {
--		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
--			mptcp_pm_add_addr(msk, &mp_opt->addr, mp_opt->addr_id);
-+		struct mptcp_addr_info addr;
-+
-+		addr.id =3D mp_opt->addr_id;
-+		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
-+			addr.family =3D AF_INET;
-+			addr.addr =3D mp_opt->addr;
-+		}
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--		else if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6)
--			mptcp_pm_add_addr6(msk, &mp_opt->addr6,
--					   mp_opt->addr_id);
-+		else if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6) {
-+			addr.family =3D AF_INET6;
-+			addr.addr6 =3D mp_opt->addr6;
-+		}
- #endif
-+		mptcp_pm_add_addr(msk, &addr);
- 		mp_opt->add_addr =3D 0;
- 	}
- =
-
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c9f508451f2e..ca6596bd7eab 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -8,38 +8,22 @@
- #include <net/mptcp.h>
- #include "protocol.h"
- =
-
--/* path manager command handlers */
--
--int mptcp_pm_announce_addr(u32 token, u8 local_id, struct in_addr *addr)
--{
--	return -ENOTSUPP;
--}
--
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--int mptcp_pm_announce_addr6(u32 token, u8 local_id, struct in6_addr *addr)
--{
--	return -ENOTSUPP;
--}
--#endif
-+static struct workqueue_struct *pm_wq;
- =
-
--int mptcp_pm_remove_addr(u32 token, u8 local_id)
--{
--	return -ENOTSUPP;
--}
-+/* path manager command handlers */
- =
-
--int mptcp_pm_create_subflow(u32 token, u8 remote_id, struct in_addr *addr)
-+int mptcp_pm_announce_addr(struct mptcp_sock *msk,
-+			   const struct mptcp_addr_info *addr)
- {
- 	return -ENOTSUPP;
- }
- =
-
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--int mptcp_pm_create_subflow6(u32 token, u8 remote_id, struct in6_addr *add=
-r)
-+int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
- {
- 	return -ENOTSUPP;
- }
--#endif
- =
-
--int mptcp_pm_remove_subflow(u32 token, u8 remote_id)
-+int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
- {
- 	return -ENOTSUPP;
- }
-@@ -50,10 +34,9 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, int=
- server_side)
- {
- 	struct mptcp_pm_data *pm =3D &msk->pm;
- =
-
--	pr_debug("msk=3D%p, token=3D%u", msk, msk->token);
-+	pr_debug("msk=3D%p, token=3D%u side=3D%d", msk, msk->token, server_side);
- =
-
--	pm->server_side =3D server_side;
--	pm->token =3D msk->token;
-+	WRITE_ONCE(pm->server_side, server_side);
- }
- =
-
- void mptcp_pm_fully_established(struct mptcp_sock *msk)
-@@ -61,8 +44,6 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk)
- 	struct mptcp_pm_data *pm =3D &msk->pm;
- =
-
- 	pr_debug("msk=3D%p", msk);
--
--	pm->fully_established =3D 1;
- }
- =
-
- void mptcp_pm_connection_closed(struct mptcp_sock *msk)
-@@ -70,7 +51,8 @@ void mptcp_pm_connection_closed(struct mptcp_sock *msk)
- 	pr_debug("msk=3D%p", msk);
- }
- =
-
--void mptcp_pm_subflow_established(struct mptcp_sock *msk, u8 id)
-+void mptcp_pm_subflow_established(struct mptcp_sock *msk,
-+				  struct mptcp_subflow_context *subflow)
- {
- 	pr_debug("msk=3D%p", msk);
- }
-@@ -80,71 +62,49 @@ void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8=
- id)
- 	pr_debug("msk=3D%p", msk);
- }
- =
-
--void mptcp_pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr,
--		       u8 id)
-+void mptcp_pm_add_addr(struct mptcp_sock *msk,
-+		       const struct mptcp_addr_info *addr)
- {
- 	struct mptcp_pm_data *pm =3D &msk->pm;
- =
-
--	pr_debug("msk=3D%p, addr=3D%x, remote_id=3D%d", msk, addr->s_addr, id);
--
--	pm->remote_addr =3D *addr;
--	pm->remote_id =3D id;
--	pm->remote_family =3D AF_INET;
--	pm->remote_valid =3D 1;
--}
--
--void mptcp_pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *add=
-r,
--			u8 id)
--{
--	pr_debug("msk=3D%p", msk);
-+	pr_debug("msk=3D%p, remote_id=3D%d", msk, addr->id);
- }
- =
-
- /* path manager helpers */
- =
-
--int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
--			 struct sockaddr_storage *saddr)
-+int mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-+			 struct mptcp_addr_info *saddr)
- {
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	struct sockaddr_in6 *addr6 =3D (struct sockaddr_in6 *)saddr;
--#endif
--	struct sockaddr_in *addr =3D (struct sockaddr_in *)saddr;
--
--	if (!msk->pm.local_valid)
--		return -1;
--
--	if (msk->pm.local_family =3D=3D AF_INET) {
--		addr->sin_family =3D msk->pm.local_family;
--		addr->sin_addr =3D msk->pm.local_addr;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	} else if (msk->pm.local_family =3D=3D AF_INET6) {
--		addr6->sin6_family =3D msk->pm.local_family;
--		addr6->sin6_addr =3D msk->pm.local_addr6;
--#endif
--	} else {
--		return -1;
--	}
--	*id =3D msk->pm.local_id;
--
- 	return 0;
- }
- =
-
--int mptcp_pm_get_local_id(struct request_sock *req, struct sock *sk,
--			  const struct sk_buff *skb)
-+int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
- {
--	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
--	struct mptcp_sock *msk =3D mptcp_sk(sk);
--
--	if (!msk->pm.local_valid)
--		return -1;
-+	return 0;
-+}
- =
-
--	/* @@ check if address actually matches... */
-+static void pm_worker(struct work_struct *work)
-+{
-+}
- =
-
--	pr_debug("msk=3D%p, addr_id=3D%d", msk, msk->pm.local_id);
--	subflow_req->local_id =3D msk->pm.local_id;
-+void mptcp_pm_data_init(struct mptcp_sock *msk)
-+{
-+	msk->pm.add_addr_signaled =3D 0;
-+	msk->pm.add_addr_accepted =3D 0;
-+	msk->pm.local_addr_used =3D 0;
-+	WRITE_ONCE(msk->pm.work_pending, false);
-+	WRITE_ONCE(msk->pm.addr_signal, false);
-+	WRITE_ONCE(msk->pm.fully_established, false);
-+	WRITE_ONCE(msk->pm.accept_addr, false);
-+	msk->pm.status =3D MPTCP_PM_IDLE;
- =
-
--	return 0;
-+	spin_lock_init(&msk->pm.lock);
-+	INIT_WORK(&msk->pm.work, pm_worker);
- }
- =
-
- void mptcp_pm_init(void)
- {
-+	pm_wq =3D alloc_workqueue("pm_wq", WQ_UNBOUND | WQ_MEM_RECLAIM, 8);
-+	if (!pm_wq)
-+		panic("Failed to allocate workqueue");
- }
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 620af9d1c6bc..a30d26661b61 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -605,6 +605,8 @@ static int __mptcp_init_sock(struct sock *sk)
- =
-
- 	msk->first =3D NULL;
- =
-
-+	mptcp_pm_data_init(msk);
-+
- 	return 0;
- }
- =
-
+@@ -309,7 +309,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk=
+_buff *skb,
+ 		pr_debug("remote_token=3D%u, nonce=3D%u", subflow->remote_token,
+ 			 subflow->local_nonce);
+ 		opts->suboptions =3D OPTION_MPTCP_MPJ_SYN;
+-		opts->join_id =3D subflow->remote_id;
++		opts->join_id =3D subflow->local_id;
+ 		opts->token =3D subflow->remote_token;
+ 		opts->nonce =3D subflow->local_nonce;
+ 		opts->backup =3D subflow->request_bkup;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1d658d9aac36..09a261f68c1d 100644
+index a64a12a02d19..d16bc5a94f56 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -76,32 +76,47 @@ static inline __be32 mptcp_option(u8 subopt, u8 len, u8=
- nib, u8 field)
- 		     ((nib & 0xF) << 8) | field);
- }
+@@ -256,8 +256,10 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflo=
+w_context *subflow)
+ int mptcp_is_enabled(struct net *net);
+ bool mptcp_subflow_data_available(struct sock *sk);
+ void mptcp_subflow_init(void);
+-int mptcp_subflow_connect(struct sock *sk, struct sockaddr *local,
+-			  struct sockaddr *remote, u8 remote_id);
++
++/* called with sk socket lock held */
++int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
+*loc,
++			    const struct mptcp_addr_info *remote);
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
  =
 
--struct mptcp_pm_data {
--	u8	local_valid;
--	u8	local_id;
--	sa_family_t local_family;
--	union {
--		struct in_addr local_addr;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--		struct in6_addr local_addr6;
--#endif
--	};
--	u8	remote_valid;
--	u8	remote_id;
--	sa_family_t remote_family;
-+#define MPTCP_PM_MAX_ADDR	4
-+
-+struct mptcp_addr_info {
-+	sa_family_t		family;
-+	__be16			port;
-+	u8			id;
- 	union {
--		struct in_addr remote_addr;
-+		struct in_addr addr;
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--		struct in6_addr remote_addr6;
-+		struct in6_addr addr6;
- #endif
- 	};
--	u8	server_side : 1,
--		fully_established : 1;
-+};
- =
-
--	/* for interim path manager */
--	struct	work_struct addr_work;
--	struct	work_struct subflow_work;
--	u32	token;
-+enum mptcp_pm_status {
-+	MPTCP_PM_IDLE,
-+	MPTCP_PM_ADD_ADDR,
-+	MPTCP_PM_ESTABLISHED,
-+	MPTCP_PM_SUBFLOW_ESTABLISHED,
-+};
-+
-+struct mptcp_pm_data {
-+	struct mptcp_addr_info local;
-+	struct mptcp_addr_info remote;
-+
-+	spinlock_t	lock;		/*protects the whole PM data */
-+
-+	bool		addr_signal;
-+	bool		server_side;
-+	bool		fully_established;
-+	bool		work_pending;
-+	bool		accept_addr;
-+	u8		add_addr_signaled;
-+	u8		add_addr_accepted;
-+	u8		local_addr_used;
-+	u8		add_addr_signal_max;
-+	u8		add_addr_accept_max;
-+	u8		local_addr_max;
-+	enum mptcp_pm_status status;
-+
-+	struct		work_struct work;
- };
- =
-
- /* MPTCP connection sock */
-@@ -273,29 +288,36 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 no=
-nce1, u32 nonce2,
- 			   void *hash_out);
- =
-
- void mptcp_pm_init(void);
-+void mptcp_pm_data_init(struct mptcp_sock *msk);
- void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side);
- void mptcp_pm_fully_established(struct mptcp_sock *msk);
- void mptcp_pm_connection_closed(struct mptcp_sock *msk);
--void mptcp_pm_subflow_established(struct mptcp_sock *msk, u8 id);
-+void mptcp_pm_subflow_established(struct mptcp_sock *msk,
-+				  struct mptcp_subflow_context *subflow);
- void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
--void mptcp_pm_add_addr(struct mptcp_sock *msk, const struct in_addr *addr,
--		       u8 id);
--void mptcp_pm_add_addr6(struct mptcp_sock *msk, const struct in6_addr *add=
-r,
--			u8 id);
-+void mptcp_pm_add_addr(struct mptcp_sock *msk,
-+		       const struct mptcp_addr_info *addr);
- =
-
--int mptcp_pm_announce_addr(u32 token, u8 local_id, struct in_addr *addr);
--int mptcp_pm_create_subflow(u32 token, u8 remote_id, struct in_addr *addr);
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--int mptcp_pm_announce_addr6(u32 token, u8 local_id, struct in6_addr *addr);
--int mptcp_pm_create_subflow6(u32 token, u8 remote_id, struct in6_addr *add=
-r);
--#endif
--int mptcp_pm_remove_addr(u32 token, u8 local_id);
--int mptcp_pm_remove_subflow(u32 token, u8 remote_id);
-+int mptcp_pm_announce_addr(struct mptcp_sock *msk,
-+			   const struct mptcp_addr_info *addr);
-+int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
-+int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
-+
-+static inline bool mptcp_pm_should_signal(struct mptcp_sock *msk)
-+{
-+	return READ_ONCE(msk->pm.addr_signal);
-+}
-+
-+static inline unsigned int mptcp_add_addr_len(int family)
-+{
-+	if (family =3D=3D AF_INET)
-+		return OPTION_MPTCP_ADD_ADDR;
-+	return OPTION_MPTCP_ADD_ADDR6;
-+}
- =
-
--int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
--			 struct sockaddr_storage *saddr);
--int mptcp_pm_get_local_id(struct request_sock *req, struct sock *sk,
--			  const struct sk_buff *skb);
-+int mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-+			 struct mptcp_addr_info *saddr);
-+int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- =
-
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
+ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 14c168df264d..6d45659f0802 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -24,19 +24,31 @@
+ static int subflow_rebuild_header(struct sock *sk)
  {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-	int err =3D 0;
++	int local_id, err =3D 0;
+ =
+
+ 	if (subflow->request_mptcp && !subflow->token) {
+ 		pr_debug("subflow=3D%p", sk);
+ 		err =3D mptcp_token_new_connect(sk);
+ 	} else if (subflow->request_join && !subflow->local_nonce) {
++		struct mptcp_sock *msk =3D (struct mptcp_sock *)subflow->conn;
++
+ 		pr_debug("subflow=3D%p", sk);
+ =
+
+ 		do {
+ 			get_random_bytes(&subflow->local_nonce, sizeof(u32));
+ 		} while (!subflow->local_nonce);
++
++		if (subflow->local_id)
++			goto out;
++
++		local_id =3D mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
++		if (local_id < 0)
++			return -EINVAL;
++
++		subflow->local_id =3D local_id;
+ 	}
+ =
+
++out:
+ 	if (err)
+ 		return err;
+ =
+
+@@ -761,59 +773,73 @@ void mptcpv6_handle_mapped(struct sock *sk, bool mapp=
+ed)
+ }
+ #endif
+ =
+
+-int mptcp_subflow_connect(struct sock *sk, struct sockaddr *local,
+-			  struct sockaddr *remote, u8 remote_id)
++static void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
++				struct sockaddr_storage *addr)
++{
++	memset(addr, 0, sizeof(*addr));
++	addr->ss_family =3D info->family;
++	if (addr->ss_family =3D=3D AF_INET) {
++		struct sockaddr_in *in_addr =3D (struct sockaddr_in *)addr;
++
++		in_addr->sin_addr =3D info->addr;
++		in_addr->sin_port =3D info->port;
++	} else if (addr->ss_family =3D=3D AF_INET6) {
++		struct sockaddr_in6 *in6_addr =3D (struct sockaddr_in6 *)addr;
++
++		in6_addr->sin6_addr =3D info->addr6;
++		in6_addr->sin6_port =3D info->port;
++	}
++}
++
++int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
+*loc,
++			    const struct mptcp_addr_info *remote)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_subflow_context *subflow;
++	struct sockaddr_storage addr;
+ 	struct socket *sf;
+ 	u32 remote_token;
+ 	int addrlen;
+ 	int err;
+ =
+
+-	lock_sock(sk);
+-	if (sk->sk_state !=3D TCP_ESTABLISHED) {
+-		release_sock(sk);
++	if (sk->sk_state !=3D TCP_ESTABLISHED)
+ 		return -ENOTCONN;
+-	}
+ =
+
+ 	err =3D mptcp_subflow_create_socket(sk, &sf);
+-	if (err) {
+-		release_sock(sk);
++	if (err)
+ 		return err;
+-	}
+ =
+
+ 	subflow =3D mptcp_subflow_ctx(sf->sk);
+ 	subflow->remote_key =3D msk->remote_key;
+ 	subflow->local_key =3D msk->local_key;
+ 	subflow->token =3D msk->token;
++	mptcp_info2sockaddr(loc, &addr);
+ =
+
+ 	addrlen =3D sizeof(struct sockaddr_in);
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	if (local->sa_family =3D=3D AF_INET6)
++	if (loc->family =3D=3D AF_INET6)
+ 		addrlen =3D sizeof(struct sockaddr_in6);
+ #endif
+-	err =3D kernel_bind(sf, local, addrlen);
++	err =3D kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+ 	if (err)
+ 		goto failed;
+ =
+
+ 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
+ 	pr_debug("msk=3D%p remote_token=3D%u", msk, remote_token);
+ 	subflow->remote_token =3D remote_token;
+-	subflow->remote_id =3D remote_id;
++	subflow->local_id =3D loc->id;
+ 	subflow->request_join =3D 1;
+ 	subflow->request_bkup =3D 1;
++	mptcp_info2sockaddr(remote, &addr);
+ =
+
+-	err =3D kernel_connect(sf, remote, addrlen, O_NONBLOCK);
++	err =3D kernel_connect(sf, (struct sockaddr *)&addr, addrlen, O_NONBLOCK);
+ 	if (err && err !=3D -EINPROGRESS)
+ 		goto failed;
+ =
+
+-	release_sock(sk);
+ 	return err;
+ =
+
+ failed:
+ 	list_del_init(&subflow->node);
+-	release_sock(sk);
+ 	sock_release(sf);
+ 	return err;
+ }
 -- =
 
 2.21.1
 
---===============8667148875217668939==--
+--===============1942176475865340023==--
