@@ -1,81 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============2182272170315564497=="
+Content-Type: multipart/mixed; boundary="===============2052172836660601393=="
 MIME-Version: 1.0
-From: Dan Carpenter <dan.carpenter at oracle.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [bug report] mptcp: Implement MPTCP receive path
-Date: Mon, 17 Feb 2020 17:52:15 +0300
-Message-ID: <20200217145214.sfn76fqgt6ixo5sw@kili.mountain>
+Subject: [MPTCP] [PATCH v2 0/6] mptcp: update mptcp ack sequence from work
+ queue
+Date: Mon, 17 Feb 2020 16:00:55 +0100
+Message-ID: <20200217150101.13603-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3668
+X-UID: 3669
 
---===============2182272170315564497==
+--===============2052172836660601393==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Mat Martineau,
+Hi.
 
-The patch 648ef4b88673: "mptcp: Implement MPTCP receive path" from
-Jan 21, 2020, leads to the following static checker warning:
+This is v2 of the attempt to allow mptcp to update its ack-sequence
+number even if userspace doesn't call recv() for some time.
 
-	net/mptcp/subflow.c:558 subflow_data_ready()
-	warn: test_bit() takes a bit number
+I tried to address all comments from previous feedback.
 
-net/mptcp/subflow.c
-   544  static void subflow_data_ready(struct sock *sk)
-   545  {
-   546          struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx=
-(sk);
-   547          struct sock *parent =3D subflow->conn;
-   548  =
+tcp_read_sock() is not used anymore, skbs are moved off the subflow
+receive queue and re-linked to the mptcp receive queue.
 
-   549          if (!parent || !subflow->mp_capable) {
-   550                  subflow->tcp_data_ready(sk);
-   551  =
+The inner loop in mptcp_recvmsg is gone. skbs are only taken
+from the mptcp receive queue.  In case that mptcp receive queue is
+empty, it will pull skbs off the subflow receive queue.
 
-   552                  if (parent)
-   553                          parent->sk_data_ready(parent);
-   554                  return;
-   555          }
-   556  =
+Thus, the previous patch to make tcp_read_sock actors eat skbs
+isn't included in this series anymore.
 
-   557          if (mptcp_subflow_data_available(sk)) {
-   558                  set_bit(MPTCP_DATA_READY, &mptcp_sk(parent)->flags);
-                                ^^^^^^^^^^^^^^^^
-This is "BIT(0)" but it should just be "0".  The double shift bug will
-not cause a problem so long as it is done consistently and it doesn't go
-higher than BIT(6).
+Patch 4 is new: after removing the inner loop from recvmsg
+we can also move the actor callback to subflow.c.
 
-   559  =
+Patch 5 is also new, but not strictly related to this series.
+Patch 6 isn't strictly required, but I think its a good idea anyway
+to do this so that we don't need to rely on bulk traffic to generate
+acks/enough window updates.
 
-   560                  parent->sk_data_ready(parent);
-   561          }
-   562  }
+Thanks,
+Florian
 
-See also:
 
-net/mptcp/subflow.c:558 subflow_data_ready() warn: test_bit() takes a bit n=
-umber
-net/mptcp/subflow.c:571 subflow_write_space() warn: test_bit() takes a bit =
-number
-net/mptcp/subflow.c:694 subflow_state_change() warn: test_bit() takes a bit=
- number
-net/mptcp/protocol.c:261 ssk_check_wmem() warn: test_bit() takes a bit numb=
-er
-net/mptcp/protocol.c:361 mptcp_wait_data() warn: test_bit() takes a bit num=
-ber
-net/mptcp/protocol.c:361 mptcp_wait_data() warn: test_bit() takes a bit num=
-ber
-net/mptcp/protocol.c:504 mptcp_recvmsg() warn: test_bit() takes a bit number
-net/mptcp/protocol.c:505 mptcp_recvmsg() warn: test_bit() takes a bit number
-net/mptcp/protocol.c:507 mptcp_recvmsg() warn: test_bit() takes a bit number
-net/mptcp/protocol.c:514 mptcp_recvmsg() warn: test_bit() takes a bit number
-net/mptcp/protocol.c:874 mptcp_memory_free() warn: test_bit() takes a bit n=
-umber
-net/mptcp/protocol.c:1090 mptcp_poll() warn: test_bit() takes a bit number
-net/mptcp/protocol.c:1093 mptcp_poll() warn: test_bit() takes a bit number
-
-regards,
-dan carpenter
---===============2182272170315564497==--
+--===============2052172836660601393==--
