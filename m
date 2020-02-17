@@ -1,61 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============7948999205730451177=="
+Content-Type: multipart/mixed; boundary="===============0545458600826069337=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 0/7] add locking to PM APis, implement PM netlink
-Date: Mon, 17 Feb 2020 19:28:26 +0100
-Message-ID: <cover.1581963738.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 1/7] Squash-to: "mptcp: Add ADD_ADDR handling"
+Date: Mon, 17 Feb 2020 19:28:27 +0100
+Message-ID: <0155ff6dc2c1125c897273d55526856df8a184d9.1581963738.git.pabeni@redhat.com>
+In-Reply-To: cover.1581963738.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3678
+X-UID: 3679
 
---===============7948999205730451177==
+--===============0545458600826069337==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This implement the locking required by the PM to allow concurent subflow
-accessing the msk PM data in a safe way. Such data is protected via a msk-l=
-evel
-spinlock. It relies on the Double checked locking to avoid contention in the
-most common scenarion (no or very little PM "actions").
+Drop addr_signal flag: it belong to the PM and
+needs additional locking
 
-Additionally changes more than a bit the PM hooks/APIs, to be hopefully sim=
-pler
-and avoiding duplicate code (no v4/v6 variant, work queue management done b=
-y the
-core PM infra).
-
-It also introduce the PM netlink - it should replace the current basic ones.
-
-git tree available at:
-
-https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_5
-
-changes from RFC:
- - cleanup uAPIs
- - added self-tests for the uAPIs
- - fixed ton of bugs
- - included feedback from Mat
-
-TODO:
- - implement MP_JOIN self-tests
+Signed-off-by: Paolo Abeni<pabeni(a)redhat.com>
 ---
- include/uapi/linux/mptcp.h                      |   51 +
- net/mptcp/Makefile                              |    3 =
+ net/mptcp/options.c  | 5 -----
+ net/mptcp/protocol.h | 1 -
+ 2 files changed, 6 deletions(-)
 
- net/mptcp/options.c                             |   59 -
- net/mptcp/pm.c                                  |  325 ++++-----
- net/mptcp/pm_netlink.c                          |  799 +++++++++++++++++++=
-+++++
- net/mptcp/protocol.c                            |    2 =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 439bb14e29dc..331b020d64ae 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -438,9 +438,6 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 	if (!msk)
+ 		return false;
+ =
 
- net/mptcp/protocol.h                            |  112 ++-
- net/mptcp/subflow.c                             |   63 +
- tools/testing/selftests/net/mptcp/Makefile      |    4 =
+-	if (!msk->addr_signal)
+-		return false;
+-
+ 	id =3D 0;
+ 	memset(&saddr, 0, sizeof(saddr));
+ =
 
- tools/testing/selftests/net/mptcp/pm_netlink.sh |  149 ++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |  556 ++++++++++++++++
- 11 files changed, 1850 insertions(+), 273 deletions(-)
+@@ -463,8 +460,6 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 	}
+ #endif
+ =
 
---===============7948999205730451177==--
+-	msk->addr_signal =3D 0;
+-
+ 	return true;
+ }
+ =
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index fa707a57f000..65ba8ddb62e6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -91,7 +91,6 @@ struct mptcp_sock {
+ 	struct skb_ext	*cached_ext;	/* for the next sendmsg */
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+ 	struct sock	*first;
+-	u8		addr_signal;
+ };
+ =
+
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+-- =
+
+2.21.1
+
+--===============0545458600826069337==--
