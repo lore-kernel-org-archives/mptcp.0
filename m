@@ -1,39 +1,27 @@
-Content-Type: multipart/mixed; boundary="===============1178043634129551698=="
+Content-Type: multipart/mixed; boundary="===============2253604674435484920=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 20 February 2020 17:00 UTC (9am PST, 6pm CET)
-Date: Wed, 19 Feb 2020 23:21:07 +0100
-Message-ID: <91ccc615-4a83-d3f7-b871-f15f7ba9d9b6@tessares.net>
+Subject: [MPTCP] [PATCH v3 0/6] mptcp: update mptcp ack sequence from work
+ queue
+Date: Thu, 20 Feb 2020 15:34:19 +0100
+Message-ID: <20200220143426.28626-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3704
+X-UID: 3706
 
---===============1178043634129551698==
+--===============2253604674435484920==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+V3.  No changes since v2, I only updated commit messages in
+patches 1, 2, 3 and 6.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+I think we should try to avoid needless squashing and keep
+these as-is for now.  We can always condense some of this later
+on in case we need to reduce number of individual patches for some
+reason.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20200220
 
-Feel free to add/modify topics!
-
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
-
-Speak to you tomorrow!
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1178043634129551698==--
+--===============2253604674435484920==--
