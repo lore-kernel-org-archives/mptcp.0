@@ -1,136 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============3423039501632825544=="
+Content-Type: multipart/mixed; boundary="===============0088458738140849228=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 4/6] mptcp: remove mptcp_read_actor
-Date: Thu, 20 Feb 2020 15:34:23 +0100
-Message-ID: <20200220143426.28626-5-fw@strlen.de>
+Subject: [MPTCP] [PATCH v3 5/6] mptcp: protocol: re-check dsn before reading
+ from subflow
+Date: Thu, 20 Feb 2020 15:34:24 +0100
+Message-ID: <20200220143426.28626-6-fw@strlen.de>
 In-Reply-To: 20200220143426.28626-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3710
+X-UID: 3711
 
---===============3423039501632825544==
+--===============0088458738140849228==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Only used to discard stale data from the subflow, so move
-it where needed.
+mptcp_subflow_data_available() is commonly called via
+ssk->sk_data_ready(), in this case the mptcp socket lock
+cannot be acquired.
+
+Therefore, while we can safely discard subflow data that
+was already received up to msk->ack_seq, we cannot be sure
+that 'subflow->data_avail' will still be valid at the time
+userspace wants to read the data -- a previous read on a
+different subflow might have carried this data already.
+
+In that (unlikely) event, msk->ack_seq will have been updated
+and will be ahead of the subflow dsn.
+
+We can check for this condition and skip/resync to the expected
+sequence number.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 27 ---------------------------
- net/mptcp/protocol.h |  7 -------
- net/mptcp/subflow.c  | 18 +++++++++++++-----
- 3 files changed, 13 insertions(+), 39 deletions(-)
+ net/mptcp/protocol.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ac81283d5ec3..75ae03931963 100644
+index 75ae03931963..02aba8b31f1f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -616,33 +616,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- 	return ret;
- }
+@@ -205,8 +205,24 @@ static struct sock *mptcp_subflow_recv_lookup(const st=
+ruct mptcp_sock *msk)
+ 	sock_owned_by_me(sk);
  =
 
--int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
--		     unsigned int offset, size_t len)
--{
--	struct mptcp_read_arg *arg =3D desc->arg.data;
--	size_t copy_len;
--
--	copy_len =3D min(desc->count, len);
--
--	if (likely(arg->msg)) {
--		int err;
--
--		err =3D skb_copy_datagram_msg(skb, offset, arg->msg, copy_len);
--		if (err) {
--			pr_debug("error path");
--			desc->error =3D err;
--			return err;
--		}
--	} else {
--		pr_debug("Flushing skb payload");
--	}
--
--	desc->count -=3D copy_len;
--
--	pr_debug("consumed %zu bytes, %zu left", copy_len, desc->count);
--	return copy_len;
--}
--
- static void mptcp_wait_data(struct sock *sk, long *timeo)
- {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d676b7b6bbd3..c6f955f0fd0b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -304,13 +304,6 @@ void mptcp_proto_init(void);
- int mptcp_proto_v6_init(void);
- #endif
- =
-
--struct mptcp_read_arg {
--	struct msghdr *msg;
--};
--
--int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
--		     unsigned int offset, size_t len);
--
- void mptcp_get_options(const struct sk_buff *skb,
- 		       struct tcp_options_received *opt_rx);
- =
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index fbff5dc39575..da984f2af7ac 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -577,6 +577,18 @@ static enum mapping_status get_mapping_status(struct s=
-ock *ssk)
- 	return MAPPING_OK;
- }
- =
-
-+static int subflow_read_actor(read_descriptor_t *desc,
-+			      struct sk_buff *skb,
-+			      unsigned int offset, size_t len)
-+{
-+	size_t copy_len =3D min(desc->count, len);
+ 	mptcp_for_each_subflow(msk, subflow) {
+-		if (subflow->data_avail)
+-			return mptcp_subflow_tcp_sock(subflow);
++		if (subflow->data_avail) {
++			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++			u64 dsn =3D mptcp_subflow_get_mapped_dsn(subflow);
 +
-+	desc->count -=3D copy_len;
++			/* revalidate data sequence number.
++			 *
++			 * mptcp_subflow_data_available() is usually called
++			 * without msk lock.  Its unlikely (but possible)
++			 * that msk->ack_seq has been advanced since the last
++			 * call found in-sequence data.
++			 */
++			if (likely(dsn =3D=3D msk->ack_seq))
++				return ssk;
 +
-+	pr_debug("flushed %zu bytes, %zu left", copy_len, desc->count);
-+	return copy_len;
-+}
-+
- static bool subflow_check_data_avail(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-@@ -651,16 +663,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		pr_debug("discarding %zu bytes, current map len=3D%d", delta,
- 			 map_remaining);
- 		if (delta) {
--			struct mptcp_read_arg arg =3D {
--				.msg =3D NULL,
--			};
- 			read_descriptor_t desc =3D {
- 				.count =3D delta,
--				.arg.data =3D &arg,
- 			};
- 			int ret;
++			subflow->data_avail =3D 0;
++			if (mptcp_subflow_data_available(ssk))
++				return ssk;
++		}
+ 	}
  =
 
--			ret =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
-+			ret =3D tcp_read_sock(ssk, &desc, subflow_read_actor);
- 			if (ret < 0) {
- 				ssk->sk_err =3D -ret;
- 				goto fatal;
+ 	return NULL;
 -- =
 
 2.24.1
 
---===============3423039501632825544==--
+--===============0088458738140849228==--
