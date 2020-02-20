@@ -1,96 +1,136 @@
-Content-Type: multipart/mixed; boundary="===============7180872585772733276=="
+Content-Type: multipart/mixed; boundary="===============3423039501632825544=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 3/6] mptcp: add rmem queue accounting
-Date: Thu, 20 Feb 2020 15:34:22 +0100
-Message-ID: <20200220143426.28626-4-fw@strlen.de>
+Subject: [MPTCP] [PATCH v3 4/6] mptcp: remove mptcp_read_actor
+Date: Thu, 20 Feb 2020 15:34:23 +0100
+Message-ID: <20200220143426.28626-5-fw@strlen.de>
 In-Reply-To: 20200220143426.28626-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3709
+X-UID: 3710
 
---===============7180872585772733276==
+--===============3423039501632825544==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If userspace never drains the receive buffers we must stop draining
-the subflow socket(s) at some point.
-
-This adds the needed rmem accouting for this.
-If the threshold is reached, we stop draining the subflows.
+Only used to discard stale data from the subflow, so move
+it where needed.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 27 ---------------------------
+ net/mptcp/protocol.h |  7 -------
+ net/mptcp/subflow.c  | 18 +++++++++++++-----
+ 3 files changed, 13 insertions(+), 39 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 85d7f73ca804..ac81283d5ec3 100644
+index ac81283d5ec3..75ae03931963 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -172,6 +172,10 @@ void mptcp_data_ready(struct sock *sk)
- 	if (test_and_set_bit(MPTCP_WORK_DATA_READY, &msk->flags))
- 		return;
+@@ -616,33 +616,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
+r *msg, size_t len)
+ 	return ret;
+ }
  =
 
-+	/* don't schedule if mptcp sk is (still) over limit */
-+	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
-+		return;
+-int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
+-		     unsigned int offset, size_t len)
+-{
+-	struct mptcp_read_arg *arg =3D desc->arg.data;
+-	size_t copy_len;
+-
+-	copy_len =3D min(desc->count, len);
+-
+-	if (likely(arg->msg)) {
+-		int err;
+-
+-		err =3D skb_copy_datagram_msg(skb, offset, arg->msg, copy_len);
+-		if (err) {
+-			pr_debug("error path");
+-			desc->error =3D err;
+-			return err;
+-		}
+-	} else {
+-		pr_debug("Flushing skb payload");
+-	}
+-
+-	desc->count -=3D copy_len;
+-
+-	pr_debug("consumed %zu bytes, %zu left", copy_len, desc->count);
+-	return copy_len;
+-}
+-
+ static void mptcp_wait_data(struct sock *sk, long *timeo)
+ {
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d676b7b6bbd3..c6f955f0fd0b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -304,13 +304,6 @@ void mptcp_proto_init(void);
+ int mptcp_proto_v6_init(void);
+ #endif
+ =
+
+-struct mptcp_read_arg {
+-	struct msghdr *msg;
+-};
+-
+-int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
+-		     unsigned int offset, size_t len);
+-
+ void mptcp_get_options(const struct sk_buff *skb,
+ 		       struct tcp_options_received *opt_rx);
+ =
+
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index fbff5dc39575..da984f2af7ac 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -577,6 +577,18 @@ static enum mapping_status get_mapping_status(struct s=
+ock *ssk)
+ 	return MAPPING_OK;
+ }
+ =
+
++static int subflow_read_actor(read_descriptor_t *desc,
++			      struct sk_buff *skb,
++			      unsigned int offset, size_t len)
++{
++	size_t copy_len =3D min(desc->count, len);
 +
- 	sock_hold(sk);
- 	if (!schedule_work(&msk->rtx_work))
- 		sock_put(sk);
-@@ -699,7 +703,7 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, st=
-ruct sock *ssk,
- 	struct sock *sk =3D (struct sock *)msk;
- =
-
- 	__skb_unlink(skb, &ssk->sk_receive_queue);
--	skb_orphan(skb);
-+	skb_set_owner_r(skb, sk);
- 	__skb_queue_tail(&sk->sk_receive_queue, skb);
- =
-
- 	msk->ack_seq +=3D copy_len;
-@@ -717,6 +721,7 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 		struct sock *ssk;
- 		bool more_data_avail;
- 		struct tcp_sock *tp;
-+		int rcvbuf;
- =
-
- 		ssk =3D mptcp_subflow_recv_lookup(msk);
- 		if (!ssk)
-@@ -726,6 +731,10 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- =
-
- 		lock_sock(ssk);
- =
-
-+		rcvbuf =3D max(ssk->sk_rcvbuf, sk->sk_rcvbuf);
-+		if (rcvbuf > sk->sk_rcvbuf)
-+			sk->sk_rcvbuf =3D rcvbuf;
++	desc->count -=3D copy_len;
 +
- 		tp =3D tcp_sk(ssk);
- 		do {
- 			u32 map_remaining, offset;
-@@ -741,6 +750,11 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 			if (!skb)
- 				break;
++	pr_debug("flushed %zu bytes, %zu left", copy_len, desc->count);
++	return copy_len;
++}
++
+ static bool subflow_check_data_avail(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+@@ -651,16 +663,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		pr_debug("discarding %zu bytes, current map len=3D%d", delta,
+ 			 map_remaining);
+ 		if (delta) {
+-			struct mptcp_read_arg arg =3D {
+-				.msg =3D NULL,
+-			};
+ 			read_descriptor_t desc =3D {
+ 				.count =3D delta,
+-				.arg.data =3D &arg,
+ 			};
+ 			int ret;
  =
 
-+			if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
-+				done =3D true;
-+				break;
-+			}
-+
- 			offset =3D seq - TCP_SKB_CB(skb)->seq;
- 			fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
- 			if (fin) {
+-			ret =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
++			ret =3D tcp_read_sock(ssk, &desc, subflow_read_actor);
+ 			if (ret < 0) {
+ 				ssk->sk_err =3D -ret;
+ 				goto fatal;
 -- =
 
 2.24.1
 
---===============7180872585772733276==--
+--===============3423039501632825544==--
