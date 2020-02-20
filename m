@@ -1,91 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============3652669699466496791=="
+Content-Type: multipart/mixed; boundary="===============1818881267345020922=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp] subflow: place outgoing connections on the
- join list
-Date: Thu, 20 Feb 2020 17:00:18 +0100
-Message-ID: <72608929bc3b314de71a87502e091acff140953c.camel@redhat.com>
-In-Reply-To: 20200204153534.23813-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v3 0/6] mptcp: update mptcp ack sequence from work
+ queue
+Date: Fri, 21 Feb 2020 00:23:32 +0100
+Message-ID: <20200220232332.GN19559@breakpoint.cc>
+In-Reply-To: 20200220143426.28626-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3713
+X-UID: 3715
 
---===============3652669699466496791==
+--===============1818881267345020922==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-02-04 at 16:35 +0100, Florian Westphal wrote:
-> squashto: subflow: place further subflows on new 'join_list'
+Florian Westphal <fw(a)strlen.de> wrote:
+> V3.  No changes since v2, I only updated commit messages in
+> patches 1, 2, 3 and 6.
 > =
 
-> in case the subflow can't be established (timeout, reset) the subflow
-> socket is leaked.
-> =
+> I think we should try to avoid needless squashing and keep
+> these as-is for now.  We can always condense some of this later
+> on in case we need to reduce number of individual patches for some
+> reason.
 
-> Add it to the join list for now.  This isn't nice because the socket
-> will be added while its known to not be established, and its not removed
-> at any time even if its not useable.
-> =
+As per yesterdays meeting, I've rebased this on top of net-next:
 
-> The list_del_init() call can be removed because the subflow context
-> ->node is still unused / not on a list in all cases.
-> =
+https://git.breakpoint.cc/cgit/fw/net-next.git/log/?h=3Dmptcp_ssk_drain_01
 
-> On a different note:
-> =
+Paolo, I extracted the parts that add the work queue from your retrans
+patch, I renamed the work queue because 'rtx_work' doesn't makse
+sense if its not related to retransmits.
 
-> I think it makes sense to remove the 'splice join to conn list' approach
-> and instead have the worker check the join and conn lists:
-> =
+The patch is rather tiny so I wonder if it should be merged with the
+main patch (mptcp: update mptcp ack sequence from work queue).
 
-> 1. subflows are added from join to conn list once they are established.
-> 2. subflows on join list that are still in SYN_SENT are ignored
-> 3. subflows on join and/or conn list that are closed already are removed
-> and free'd.
-> =
+Let me know.
 
-> Alternatively, we could probably extend the sk_state_change callback
-> to do this and keep checking outside of send/receive code paths.
-> =
+Also, I would propose to drop
+"mptcp: protocol: re-check dsn before reading from subflow" before
+sending this to netdev since that patch isn't related to the rest
+of the patches.
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/subflow.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> =
+It should probably be part of the batch after this, at the latest
+it needs to go in when MP_JOIN support is added.
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 547d5ffef070..154fb2b42243 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -821,11 +821,14 @@ int mptcp_subflow_connect(struct sock *sk, struct s=
-ockaddr *local,
->  	if (err && err !=3D -EINPROGRESS)
->  		goto failed;
->  =
+WDYT?
 
-> +	spin_lock_bh(&msk->join_list_lock);
-> +	list_add_tail(&subflow->node, &msk->join_list);
-> +	spin_unlock_bh(&msk->join_list_lock);
-> +
->  	release_sock(sk);
->  	return err;
->  =
-
->  failed:
-> -	list_del_init(&subflow->node);
->  	release_sock(sk);
->  	sock_release(sf);
->  	return err;
-
-whooops ... this one fell outside my radar for a long time.
-
-mp_join self-tests (WIP) demonstrated the need for this one!
-
-LGTM, thanks Florian!
-
-/P
-
---===============3652669699466496791==--
+I can't post it to netdev yet anyway because I need to wait for
+net -> net-next merge to avoid a small conflict in protocol.h, so
+you can take your time with reviewing this.
+--===============1818881267345020922==--
