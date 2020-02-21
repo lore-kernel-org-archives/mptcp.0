@@ -1,72 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============1784173997436224119=="
+Content-Type: multipart/mixed; boundary="===============0554026583160706937=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 8/9] selftests: add PM netlink functional tests
-Date: Fri, 21 Feb 2020 17:25:35 +0100
-Message-ID: <caf990180194bbfbd30dbb12abe0854b36d4070c.camel@redhat.com>
-In-Reply-To: e4307bf91c05a491555683174a076c51425afa92.1582297150.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v3 0/9] add locking to PM APis, implement PM netlink
+Date: Fri, 21 Feb 2020 17:48:04 +0100
+Message-ID: <cover.1582303591.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3727
+X-UID: 3728
 
---===============1784173997436224119==
+--===============0554026583160706937==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-02-21 at 17:17 +0100, Paolo Abeni wrote:
-> This introduces basic self-tests for the PM netlink,
-> checking the basic APIs and possible exceptional
-> values.
-> =
+This implement the locking required by the PM to allow concurent subflow
+accessing the msk PM data in a safe way. Such data is protected via a msk-l=
+evel
+spinlock. It relies on the Double checked locking to avoid contention in the
+most common scenarion (no or very little PM "actions").
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  tools/testing/selftests/net/mptcp/Makefile    |   5 +-
->  .../testing/selftests/net/mptcp/pm_netlink.sh | 123 ++++
->  tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 600 ++++++++++++++++++
->  3 files changed, 726 insertions(+), 2 deletions(-)
->  create mode 100755 tools/testing/selftests/net/mptcp/pm_netlink.sh
->  create mode 100644 tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-> =
+Additionally changes more than a bit the PM hooks/APIs, to be hopefully sim=
+pler
+and avoiding duplicate code (no v4/v6 variant, work queue management done b=
+y the
+core PM infra).
 
-> diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/s=
-elftests/net/mptcp/Makefile
-> index 93de52016dde..c47069c18e41 100644
-> --- a/tools/testing/selftests/net/mptcp/Makefile
-> +++ b/tools/testing/selftests/net/mptcp/Makefile
-> @@ -1,12 +1,13 @@
->  # SPDX-License-Identifier: GPL-2.0
->  =
+It also introduce the PM netlink - it replace the current basic ones, the
+related patch has been dropped locally.
 
->  top_srcdir =3D ../../../../..
-> +KSFT_KHDR_INSTALL :=3D 1
->  =
+git tree available at:
 
-> -CFLAGS =3D  -Wall -Wl,--no-as-needed -O2 -g
-> +CFLAGS =3D  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
->  =
+https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_6
 
->  TEST_PROGS :=3D mptcp_connect.sh
->  =
+changes from v2:
+ - hook the new tests into the self-tests infra
 
-> -TEST_GEN_FILES =3D mptcp_connect
-> +TEST_GEN_FILES =3D mptcp_connect pm_nl_ctl
->  =
+changes from v1:
+ - 2 new patches: mp_join self-tests (9/9) and a specific mp_join fix (6/9)
+ - fixed several bugs as pointed out by the above tests
+ - added support for bind to interface
 
->  EXTRA_CLEAN :=3D *.pcap
->  =
+changes from RFC:
+ - cleanup uAPIs
+ - added self-tests for the uAPIs
+ - fixed ton of bugs
+ - included feedback from Mat
 
+ include/uapi/linux/mptcp.h                        |   53 +
+ net/mptcp/Makefile                                |    3 =
 
-Dumb me! I forgot to update $TEST_PROGS. I did not notice, since I
-always execute the tests script outside the self-tests suite. =
+ net/mptcp/options.c                               |   60 -
+ net/mptcp/pm.c                                    |  353 +++------
+ net/mptcp/pm_netlink.c                            |  828 +++++++++++++++++=
++++++
+ net/mptcp/protocol.c                              |   14 =
 
+ net/mptcp/protocol.h                              |  113 +--
+ net/mptcp/subflow.c                               |   65 +
+ tools/testing/selftests/net/mptcp/Makefile        |    9 =
 
-I'll send a v3 soon.
+ tools/testing/selftests/net/mptcp/mptcp_connect.c |   19 =
 
-Sorry for the noise,
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   |  296 +++++++
+ tools/testing/selftests/net/mptcp/pm_netlink.sh   |  123 +++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  600 +++++++++++++++
+ 13 files changed, 2221 insertions(+), 315 deletions(-)
 
-Paolo
-
---===============1784173997436224119==--
+--===============0554026583160706937==--
