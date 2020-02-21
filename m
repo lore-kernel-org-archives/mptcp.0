@@ -1,73 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============5636997579109604056=="
+Content-Type: multipart/mixed; boundary="===============7612673480904106425=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 1/9] Squash-to: "mptcp: Add ADD_ADDR handling"
-Date: Fri, 21 Feb 2020 17:17:22 +0100
-Message-ID: <891352b903746ec9eb1ff14641792fba7e088a86.1582297149.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 3/9] Squash-to: "mptcp: Add handling of incoming
+ MP_JOIN requests"
+Date: Fri, 21 Feb 2020 17:17:24 +0100
+Message-ID: <80a3e8418952523b6f951d23727996e42ffde5a7.1582297150.git.pabeni@redhat.com>
 In-Reply-To: cover.1582297149.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3718
+X-UID: 3719
 
---===============5636997579109604056==
+--===============7612673480904106425==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Drop addr_signal flag: it belong to the PM and
-needs additional locking
+Update mptcp_pm_get_local_id() callers to new API.
+
+Hook mptcp_pm_subflow_established() when MP_JOIN completes
+successfully
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c  | 5 -----
- net/mptcp/protocol.h | 1 -
- 2 files changed, 6 deletions(-)
+ net/mptcp/options.c | 7 +++++--
+ net/mptcp/subflow.c | 5 ++++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 439bb14e29dc..331b020d64ae 100644
+index 5047755baf0d..1b7681885ace 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -438,9 +438,6 @@ static bool mptcp_established_options_addr(struct sock =
-*sk,
- 	if (!msk)
+@@ -128,7 +128,6 @@ void mptcp_parse_option(const struct sk_buff *skb, cons=
+t unsigned char *ptr,
+ 		}
+ 		break;
+ =
+
+-
+ 	case MPTCPOPT_DSS:
+ 		pr_debug("DSS");
+ 		ptr++;
+@@ -565,8 +564,12 @@ static bool check_fourth_ack(struct mptcp_subflow_cont=
+ext *subflow,
+ 		   TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1))
+ 		return true;
+ =
+
+-	if (mp_opt->use_ack)
++	if (mp_opt->use_ack) {
+ 		subflow->fourth_ack =3D 1;
++		if (subflow->mp_join)
++			mptcp_pm_subflow_established(mptcp_sk(subflow->conn),
++						     subflow);
++	}
+ =
+
+ 	if (subflow->can_ack)
+ 		return true;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index a8dedbd8d458..5710b439e418 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -55,6 +55,7 @@ static bool subflow_token_join_request(struct request_soc=
+k *req,
+ 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
+ 	u8 hmac[MPTCPOPT_HMAC_LEN];
+ 	struct mptcp_sock *msk;
++	int local_id;
+ =
+
+ 	msk =3D mptcp_token_get_sock(subflow_req->token);
+ 	if (!msk) {
+@@ -63,10 +64,12 @@ static bool subflow_token_join_request(struct request_s=
+ock *req,
  		return false;
- =
-
--	if (!msk->addr_signal)
--		return false;
--
- 	id =3D 0;
- 	memset(&saddr, 0, sizeof(saddr));
- =
-
-@@ -463,8 +460,6 @@ static bool mptcp_established_options_addr(struct sock =
-*sk,
  	}
- #endif
  =
 
--	msk->addr_signal =3D 0;
--
- 	return true;
- }
+-	if (mptcp_pm_get_local_id(req, (struct sock *)msk, skb)) {
++	local_id =3D mptcp_pm_get_local_id(msk, (struct sock_common *)req);
++	if (local_id < 0) {
+ 		sock_put((struct sock *)msk);
+ 		return false;
+ 	}
++	subflow_req->local_id =3D local_id;
  =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index fa707a57f000..65ba8ddb62e6 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -91,7 +91,6 @@ struct mptcp_sock {
- 	struct skb_ext	*cached_ext;	/* for the next sendmsg */
- 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
- 	struct sock	*first;
--	u8		addr_signal;
- };
+ 	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
  =
 
- #define mptcp_for_each_subflow(__msk, __subflow)			\
 -- =
 
 2.21.1
 
---===============5636997579109604056==--
+--===============7612673480904106425==--
