@@ -1,117 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============5754866839347631881=="
+Content-Type: multipart/mixed; boundary="===============7906570404616757844=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 2/9] Squash-to: "mptcp: Add path manager
- interface"
-Date: Fri, 21 Feb 2020 19:39:29 +0100
-Message-ID: <65169979-72cb-7e23-8475-76ecf1b71773@tessares.net>
-In-Reply-To: 05a0035395ea62d8c99ae42ba8ec68eba8906100.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v3 5/9] Squash-to: "mptcp: Implement path manager
+ interface commands"
+Date: Fri, 21 Feb 2020 19:41:08 +0100
+Message-ID: <d5fc5bef-438b-3d9e-bf37-a6f0cb39d146@tessares.net>
+In-Reply-To: 25da9a0545cfd20ea3515c40564e3b85a2be62b5.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3742
+X-UID: 3743
 
---===============5754866839347631881==
+--===============7906570404616757844==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo,
 
-On 21/02/2020 19:32, Paolo Abeni wrote:
-> On Fri, 2020-02-21 at 18:59 +0100, Matthieu Baerts wrote:
+On 21/02/2020 19:38, Paolo Abeni wrote:
+> On Fri, 2020-02-21 at 19:24 +0100, Matthieu Baerts wrote:
 >> Hi Paolo,
 >>
->> Thank you for looking at that!
->>
 >> On 21/02/2020 17:48, Paolo Abeni wrote:
->>> Factor out PM addr info to simplify PM data definition and
->>> simplify the PM hooks/APIs.
+>>> Implement stubs for PM events delegating the action to the work
+>>> queue. This allows acquiring whatever lock is needed to perform
+>>> the actual implementation.
 >>>
->>> The PM will carry a single local and remote addrs - the one
->>> currently being processed, if any. It's up to the PM impl,
->>> e.g. netlink, maintain additional per msk data, if needed.
+>>> Try to avoid scheduling the worker if no action is needed/possible.
+>>> I relies on the accounting info included into the PM struct and
+>>> on great deal of double-checked locking [anti-]pattern.
 >>>
->>> Account the number of created subflow and received addresses,
->>> to enforce limits.
+>>> v1  -> v2:
+>>>    - fix several issues in mptcp_pm_addr_signal()
 >>>
->>> Add a spinlock to protect PM datas, so that we can manipulate
->>> them from subflow BH.
->>>
->>> Delegate events handling to a workqueue, so that PM events can
->>> be processed with both the above spinlock and the msk socket
->>> lock held. The PM impl should hook inside the worker.
->>>
->>> v1 -> v2:
->>>    - be sure to initialize the address port before calling
->>>      mptcp_pm_add_addr()
+>>> RFC -> v1:
+>>>    - simplify/cleanup mptcp_pm_work_pending() - Mat
+>>>    - likewise simplify/cleanup mptcp_pm_add_addr()
 >>>
 >>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 >>> ---
->>>    net/mptcp/options.c  |  46 ++++++++++--------
->>>    net/mptcp/pm.c       | 112 ++++++++++++++---------------------------=
+>>>    net/mptcp/pm.c | 223 +++++++++++++++++++----------------------------=
 --
->>>    net/mptcp/protocol.c |   2 +
->>>    net/mptcp/protocol.h |  98 ++++++++++++++++++++++---------------
->>>    4 files changed, 123 insertions(+), 135 deletions(-)
+>>>    1 file changed, 86 insertions(+), 137 deletions(-)
 >>>
 >>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->>> index c9f508451f2e..08f00f251838 100644
+>>> index 30bce85adda1..d6e60b4bdb56 100644
 >>> --- a/net/mptcp/pm.c
 >>> +++ b/net/mptcp/pm.c
->>> @@ -8,38 +8,22 @@
->>
->> [...]
->>
->>> +void mptcp_pm_data_init(struct mptcp_sock *msk)
->>> +{
->>> +	msk->pm.add_addr_signaled =3D 0;
->>> +	msk->pm.add_addr_accepted =3D 0;
->>> +	msk->pm.local_addr_used =3D 0;
->>> +	WRITE_ONCE(msk->pm.work_pending, false);
+>>> @@ -209,7 +130,24 @@ void mptcp_pm_add_addr(struct mptcp_sock *msk,
+>>>    bool mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remai=
+ning,
+>>>    			  struct mptcp_addr_info *saddr)
+>>>    {
+>>> -	return false;
+>>> +	int ret =3D false;
+>>> +
+>>> +	spin_lock_bh(&msk->pm.lock);
+>>> +
+>>> +	/* double check after the lock is acquired */
+>>> +	if (!mptcp_pm_should_signal(msk))
+>>> +		goto out_unlock;
+>>> +
+>>> +	if (remaining < mptcp_add_addr_len(msk->pm.local.family))
+>>> +		goto out_unlock;
+>>> +
+>>> +	*saddr =3D msk->pm.local;
 >>> +	WRITE_ONCE(msk->pm.addr_signal, false);
->>> +	WRITE_ONCE(msk->pm.fully_established, false);
->>> +	WRITE_ONCE(msk->pm.accept_addr, false);
->>> +	msk->pm.status =3D MPTCP_PM_IDLE;
->> Just by curiosity, why do we need to reset those fields to 0? Is this
->> msk not already init to 0? Can we not memset the whole pm part?
-> =
-
-> Uhm... we don't need that for sk_alloc(), but we need the above after
-> mptcp_sk_clone_lock().
-
-Oh OK, thank you for the clarification!
-
-> memset() could be more efficient than direct assigment if clearing a
-> wider memory area, see 236222d39347e0e486010f10c1493e83dbbdfba8.
-
-Thank you for the pointer and for the tests you did before :)
-
-> For a bunch of fields we are better off explicitly setting them, I
-> think.
-
-Fine for me, as long as we don't forget one!
-
->>> -int mptcp_pm_addr_signal(struct mptcp_sock *msk, u8 *id,
->>> -			 struct sockaddr_storage *saddr);
->>> -int mptcp_pm_get_local_id(struct request_sock *req, struct sock *sk,
->>> -			  const struct sk_buff *skb);
->>> +bool mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
->>> +			  struct mptcp_addr_info *saddr);
->>> +int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *=
-skc);
+>>> +	ret =3D true;
+>>> +
+>>> +out_unlock:
+>>> +	spin_unlock_bh(&msk->pm.lock);
+>>> +	return ret;
+>>>    }
 >>
->> I guess I will see that in another patch but why "struct sock_common"
->> instead of "struc sock"?
+>> I would still need to digest this new code (and look at the next
+>> patches) but if a PM has to announce more than one ADD_ADDR, would it be
+>> notified when the first one has been sent? To know when it can call
+>> mptcp_pm_announce_addr() again.
 > =
 
-> I guess you are already there, anyway mptcp_pm_get_local_id() must be
-> called on both request_sock and tcp_sock.
+> Good question :) Currently we don't have yet the infrastructure for
+> such notification. I think we could add that on top of reliable
+> add_addr delivery: we can attach the next addr signaling to 'add_addr
+> echo' opt reception.
 
-Yes sorry, I was looking in the new PM netlink but the answer was in the =
+Good idea! I forgot about the ADD_ADDRv1!
 
-next patch :)
+> I tried to keep the NL APIs/infrastructure generic enough to adjust the
+> above.
+That's good, thank you for that!
 
 Cheers,
 Matt
@@ -122,4 +100,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============5754866839347631881==--
+--===============7906570404616757844==--
