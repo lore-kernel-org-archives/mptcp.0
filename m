@@ -1,67 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============8982229979352609269=="
+Content-Type: multipart/mixed; boundary="===============5636997579109604056=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/9] add locking to PM APis, implement PM netlink
-Date: Fri, 21 Feb 2020 17:17:21 +0100
-Message-ID: <cover.1582297149.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 1/9] Squash-to: "mptcp: Add ADD_ADDR handling"
+Date: Fri, 21 Feb 2020 17:17:22 +0100
+Message-ID: <891352b903746ec9eb1ff14641792fba7e088a86.1582297149.git.pabeni@redhat.com>
+In-Reply-To: cover.1582297149.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3717
+X-UID: 3718
 
---===============8982229979352609269==
+--===============5636997579109604056==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This implement the locking required by the PM to allow concurent subflow
-accessing the msk PM data in a safe way. Such data is protected via a msk-l=
-evel
-spinlock. It relies on the Double checked locking to avoid contention in the
-most common scenarion (no or very little PM "actions").
+Drop addr_signal flag: it belong to the PM and
+needs additional locking
 
-Additionally changes more than a bit the PM hooks/APIs, to be hopefully sim=
-pler
-and avoiding duplicate code (no v4/v6 variant, work queue management done b=
-y the
-core PM infra).
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c  | 5 -----
+ net/mptcp/protocol.h | 1 -
+ 2 files changed, 6 deletions(-)
 
-It also introduce the PM netlink - it replace the current basic ones, the
-related patch has been dropped locally.
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 439bb14e29dc..331b020d64ae 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -438,9 +438,6 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 	if (!msk)
+ 		return false;
+ =
 
-git tree available at:
+-	if (!msk->addr_signal)
+-		return false;
+-
+ 	id =3D 0;
+ 	memset(&saddr, 0, sizeof(saddr));
+ =
 
-https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_6
+@@ -463,8 +460,6 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 	}
+ #endif
+ =
 
-changes from v1:
- - 2 new patches: mp_join self-tests (9/9) and a specific mp_join fix (6/9)
- - fixed several bugs as pointed out by the above tests
- - added support for bind to interface
+-	msk->addr_signal =3D 0;
+-
+ 	return true;
+ }
+ =
 
-changes from RFC:
- - cleanup uAPIs
- - added self-tests for the uAPIs
- - fixed ton of bugs
- - included feedback from Mat
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index fa707a57f000..65ba8ddb62e6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -91,7 +91,6 @@ struct mptcp_sock {
+ 	struct skb_ext	*cached_ext;	/* for the next sendmsg */
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+ 	struct sock	*first;
+-	u8		addr_signal;
+ };
+ =
 
- include/uapi/linux/mptcp.h                        |   53 +
- net/mptcp/Makefile                                |    3 =
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+-- =
 
- net/mptcp/options.c                               |   60 -
- net/mptcp/pm.c                                    |  353 +++------
- net/mptcp/pm_netlink.c                            |  828 +++++++++++++++++=
-+++++
- net/mptcp/protocol.c                              |   14 =
+2.21.1
 
- net/mptcp/protocol.h                              |  113 +--
- net/mptcp/subflow.c                               |   65 +
- tools/testing/selftests/net/mptcp/Makefile        |    5 =
-
- tools/testing/selftests/net/mptcp/mptcp_connect.c |   19 =
-
- tools/testing/selftests/net/mptcp/mptcp_join.sh   |  295 +++++++
- tools/testing/selftests/net/mptcp/pm_netlink.sh   |  123 +++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  600 +++++++++++++++
- 13 files changed, 2218 insertions(+), 313 deletions(-)
-
---===============8982229979352609269==--
+--===============5636997579109604056==--
