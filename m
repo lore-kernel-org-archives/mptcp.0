@@ -1,110 +1,230 @@
-Content-Type: multipart/mixed; boundary="===============2293614175563865999=="
+Content-Type: multipart/mixed; boundary="===============6717712257093583300=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v4 8/9] selftests: add PM netlink functional tests
-Date: Mon, 24 Feb 2020 16:51:11 +0100
-Message-ID: <5ef04eb1834ade8297c8a0c87372481afb2d4dc5.1582558805.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v4 9/9] selftests: add test-cases for MPTCP MP_JOIN
+Date: Mon, 24 Feb 2020 16:51:12 +0100
+Message-ID: <d179aac677c69a2b2794a6741fcb36bcf3cc398e.1582558805.git.pabeni@redhat.com>
 In-Reply-To: cover.1582558805.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3758
+X-UID: 3759
 
---===============2293614175563865999==
+--===============6717712257093583300==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This introduces basic self-tests for the PM netlink,
-checking the basic APIs and possible exceptional
-values.
+Use the pm netlink to configure the creation of several
+subflows, and verify that via MIB counters.
+
+Update the mptcp_connect program to allow reliable MP_JOIN
+handshake even on small data file
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-v3 -> v4:
- - adapted to new CMD names
-
 v2 -> v3:
- - include the newly added self-test script into self-tests
-   infra
+ - update self-tests Makefile, too
+ - really return an error code on error
+
+Notes:
+- all the tests trying to establish subflows using multiple
+local addresses currently fail because we currently don'
+t send the 4th ack for subflows, so we don't trigger the
+mptcp_pm_subflow_established() function (subflows are in
+PREESTABLISHED status)
+
+- need more MIB for more reliable checks,
+  e.g. MPTcpExtMPJoinSynTx, MPTcpExtMPJoinSynAckRx, AddAddrRx,
+	AddAddrTx
 ---
- tools/testing/selftests/net/mptcp/Makefile    |   7 +-
- .../testing/selftests/net/mptcp/pm_netlink.sh | 123 ++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 604 ++++++++++++++++++
- 3 files changed, 731 insertions(+), 3 deletions(-)
- create mode 100755 tools/testing/selftests/net/mptcp/pm_netlink.sh
- create mode 100644 tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ .../selftests/net/mptcp/mptcp_connect.c       |  19 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 296 ++++++++++++++++++
+ 3 files changed, 314 insertions(+), 3 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_join.sh
 
 diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/sel=
 ftests/net/mptcp/Makefile
-index 93de52016dde..2985cc2f6168 100644
+index 2985cc2f6168..c84589a5c646 100644
 --- a/tools/testing/selftests/net/mptcp/Makefile
 +++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -1,12 +1,13 @@
- # SPDX-License-Identifier: GPL-2.0
+@@ -5,7 +5,7 @@ KSFT_KHDR_INSTALL :=3D 1
  =
 
- top_srcdir =3D ../../../../..
-+KSFT_KHDR_INSTALL :=3D 1
+ CFLAGS =3D  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
  =
 
--CFLAGS =3D  -Wall -Wl,--no-as-needed -O2 -g
-+CFLAGS =3D  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
+-TEST_PROGS :=3D mptcp_connect.sh pm_netlink.sh
++TEST_PROGS :=3D mptcp_connect.sh pm_netlink.sh mptcp_join.sh
  =
 
--TEST_PROGS :=3D mptcp_connect.sh
-+TEST_PROGS :=3D mptcp_connect.sh pm_netlink.sh
+ TEST_GEN_FILES =3D mptcp_connect pm_nl_ctl
  =
 
--TEST_GEN_FILES =3D mptcp_connect
-+TEST_GEN_FILES =3D mptcp_connect pm_nl_ctl
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+index 99579c0223c1..1c8696a1417a 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -50,6 +50,7 @@ static int cfg_sock_proto	=3D IPPROTO_MPTCP;
+ static bool tcpulp_audit;
+ static int pf =3D AF_INET;
+ static int cfg_sndbuf;
++static bool cfg_join;
  =
 
- EXTRA_CLEAN :=3D *.pcap
+ static void die_usage(void)
+ {
+@@ -230,6 +231,7 @@ static int sock_connect_mptcp(const char * const remote=
+addr,
  =
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testin=
-g/selftests/net/mptcp/pm_netlink.sh
+ static size_t do_rnd_write(const int fd, char *buf, const size_t len)
+ {
++	static bool first =3D true;
+ 	unsigned int do_w;
+ 	ssize_t bw;
+ =
+
+@@ -237,10 +239,19 @@ static size_t do_rnd_write(const int fd, char *buf, c=
+onst size_t len)
+ 	if (do_w =3D=3D 0 || do_w > len)
+ 		do_w =3D len;
+ =
+
++	if (cfg_join && first && do_w > 100)
++		do_w =3D 100;
++
+ 	bw =3D write(fd, buf, do_w);
+ 	if (bw < 0)
+ 		perror("write");
+ =
+
++	/* let the join handshake complete, before going on */
++	if (cfg_join && first) {
++		sleep(1);
++		first =3D false;
++	}
++
+ 	return bw;
+ }
+ =
+
+@@ -638,7 +649,7 @@ static void maybe_close(int fd)
+ {
+ 	unsigned int r =3D rand();
+ =
+
+-	if (r & 1)
++	if (!cfg_join && (r & 1))
+ 		close(fd);
+ }
+ =
+
+@@ -774,8 +785,12 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ =
+
+-	while ((c =3D getopt(argc, argv, "6lp:s:hut:m:b:")) !=3D -1) {
++	while ((c =3D getopt(argc, argv, "6jlp:s:hut:m:b:")) !=3D -1) {
+ 		switch (c) {
++		case 'j':
++			cfg_join =3D true;
++			cfg_mode =3D CFG_MODE_POLL;
++			break;
+ 		case 'l':
+ 			listen_mode =3D true;
+ 			break;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
 new file mode 100755
-index 000000000000..a6552eb8acbe
+index 000000000000..799914cd973a
 --- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -0,0 +1,123 @@
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -0,0 +1,296 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +
-+ksft_skip=3D4
 +ret=3D0
++sin=3D""
++sout=3D""
++cin=3D""
++cout=3D""
++ksft_skip=3D4
++timeout=3D30
++capture=3D0
 +
-+usage() {
-+	echo "Usage: $0 [ -h ]"
++TEST_COUNT=3D0
++
++init()
++{
++	capout=3D$(mktemp)
++
++	rndh=3D$(printf %x $sec)-$(mktemp -u XXXXXX)
++	nstat=3D"/tmp/.nstat.$rndh"
++
++	ns1=3D"ns1-$rndh"
++	ns2=3D"ns2-$rndh"
++
++	for netns in "$ns1" "$ns2";do
++		ip netns add $netns || exit $ksft_skip
++		ip -net $netns link set lo up
++		ip netns exec $netns sysctl -q net.mptcp.enabled=3D1
++		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=3D0
++		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=3D0
++	done
++
++	#  ns1              ns2
++	# ns1eth1    ns2eth1
++	# ns1eth2    ns2eth2
++	# ns1eth3    ns2eth3
++
++	for i in `seq 1 3`; do
++		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$n=
+s2"
++		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
++		ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
++		ip -net "$ns1" link set ns1eth$i up
++
++		ip -net "$ns2" addr add 10.0.$i.2/24 dev ns2eth$i
++		ip -net "$ns2" addr add dead:beef:$i::2/64 dev ns2eth$i nodad
++		ip -net "$ns2" link set ns2eth$i up
++
++		# let $ns2 reach any $ns1 address from any interface
++		ip -net "$ns2" route add default via 10.0.$i.1 dev ns2eth$i metric 10$i
++	done
 +}
 +
++cleanup_partial()
++{
++	rm -f "$capout"
++	rm -f "$nstat"
 +
-+while getopts "$optstring" option;do
-+	case "$option" in
-+	"h")
-+		usage $0
-+		exit 0
-+		;;
-+	"?")
-+		usage $0
-+		exit 1
-+		;;
-+	esac
-+done
-+
-+sec=3D$(date +%s)
-+rndh=3D$(printf %x $sec)-$(mktemp -u XXXXXX)
-+ns1=3D"ns1-$rndh"
-+err=3D$(mktemp)
-+ret=3D0
++	for netns in "$ns1" "$ns2"; do
++		ip netns del $netns
++	done
++}
 +
 +cleanup()
 +{
-+	rm -f $out
-+	ip netns del $ns1
++	rm -f "$cin" "$cout"
++	rm -f "$sin" "$sout"
++	cleanup_partial
 +}
++
++reset()
++{
++	cleanup_partial
++	init
++}
++
++for arg in "$@"; do
++	if [ "$arg" =3D "-c" ]; then
++		capture=3D1
++	fi
++done
 +
 +ip -Version > /dev/null 2>&1
 +if [ $? -ne 0 ];then
@@ -112,716 +232,222 @@ index 000000000000..a6552eb8acbe
 +	exit $ksft_skip
 +fi
 +
-+trap cleanup EXIT
 +
-+ip netns add $ns1 || exit $ksft_skip
-+ip -net $ns1 link set lo up
-+ip netns exec $ns1 sysctl -q net.mptcp.enabled=3D1
-+
-+check()
++check_transfer()
 +{
-+	local cmd=3D"$1"
-+	local expected=3D"$2"
-+	local msg=3D"$3"
-+	local out=3D`$cmd 2>$err`
-+	local cmd_ret=3D$?
++	in=3D$1
++	out=3D$2
++	what=3D$3
 +
-+	printf "%-50s %s" "$msg"
-+	if [ $cmd_ret -ne 0 ]; then
-+		echo "[FAIL] command execution '$cmd' stderr "
-+		cat $err
-+		ret=3D1
-+	elif [ "$out" =3D "$expected" ]; then
-+		echo "[ OK ]"
-+	else
-+		echo -n "[FAIL] "
-+		echo "expected '$expected' got '$out'"
++	cmp "$in" "$out" > /dev/null 2>&1
++	if [ $? -ne 0 ] ;then
++		echo "[ FAIL ] $what does not match (in, out):"
++		print_file_err "$in"
++		print_file_err "$out"
++
++		return 1
++	fi
++
++	return 0
++}
++
++do_ping()
++{
++	listener_ns=3D"$1"
++	connector_ns=3D"$2"
++	connect_addr=3D"$3"
++
++	ip netns exec ${connector_ns} ping -q -c 1 $connect_addr >/dev/null
++	if [ $? -ne 0 ] ; then
++		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
 +		ret=3D1
 +	fi
 +}
 +
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "defaults addr list"
-+check "ip netns exec $ns1 ./pm_nl_ctl accept" "accept 0" "defaults accept =
-add addr"
++do_transfer()
++{
++	listener_ns=3D"$1"
++	connector_ns=3D"$2"
++	cl_proto=3D"$3"
++	srv_proto=3D"$4"
++	connect_addr=3D"$5"
 +
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2 flags subflow dev lo
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 flags signal,backup
-+check "ip netns exec $ns1 ./pm_nl_ctl get 1" "id 1 flags  10.0.1.1 " "simp=
-le add/get addr"
++	port=3D$((10000+$TEST_COUNT))
++	TEST_COUNT=3D$((TEST_COUNT+1))
 +
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+"id 1 flags  10.0.1.1 =
-
-+id 2 flags subflow dev lo 10.0.1.2 =
-
-+id 3 flags signal,backup 10.0.1.3 " "dump addrs"
++	:> "$cout"
++	:> "$sout"
++	:> "$capout"
 +
-+ip netns exec $ns1 ./pm_nl_ctl del 2
-+check "ip netns exec $ns1 ./pm_nl_ctl get 2" "" "simple del addr"
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+"id 1 flags  10.0.1.1 =
-
-+id 3 flags signal,backup 10.0.1.3 " "dump addrs after del"
++	if [ $capture -eq 1 ]; then
++		if [ -z $SUDO_USER ] ; then
++			capuser=3D""
++		else
++			capuser=3D"-Z $SUDO_USER"
++		fi
 +
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3
-+check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
++		capfile=3D"mp_join-${listener_ns}.pcap"
 +
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 id 10 flags signal
-+check "ip netns exec $ns1 ./pm_nl_ctl get 4" "id 4 flags signal 10.0.1.4 "=
- "id addr increment"
++		echo "Capturing traffic for test $TEST_COUNT into $capfile"
++		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -=
+w $capfile > "$capout" 2>&1 &
++		cappid=3D$!
 +
-+for i in `seq 5 9`; do
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.$i flags signal >/dev/null 2>&1
-+done
-+check "ip netns exec $ns1 ./pm_nl_ctl get 9" "id 9 flags signal 10.0.1.9 "=
- "hard addr limit"
-+check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
++		sleep 1
++	fi
 +
-+for i in `seq 9 256`; do
-+	ip netns exec $ns1 ./pm_nl_ctl del $i
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9
-+done
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1 =
-
-+id 3 flags signal,backup 10.0.1.3 =
-
-+id 4 flags signal 10.0.1.4 =
-
-+id 5 flags signal 10.0.1.5 =
-
-+id 6 flags signal 10.0.1.6 =
-
-+id 7 flags signal 10.0.1.7 =
-
-+id 8 flags signal 10.0.1.8 " "id limit"
++	ip netns exec ${listener_ns} ./mptcp_connect -j -t $timeout -l -p $port -=
+s ${srv_proto} 0.0.0.0 < "$sin" > "$sout" &
++	spid=3D$!
 +
-+ip netns exec $ns1 ./pm_nl_ctl flush
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "flush addrs"
++	sleep 1
 +
-+ip netns exec $ns1 ./pm_nl_ctl accept 9
-+check "ip netns exec $ns1 ./pm_nl_ctl accept" "accept 0" "above accept add=
-_addr hard limit"
++	ip netns exec ${connector_ns} ./mptcp_connect -j -t $timeout -p $port -s =
+${cl_proto} $connect_addr < "$cin" > "$cout" &
++	cpid=3D$!
 +
-+ip netns exec $ns1 ./pm_nl_ctl accept 8
-+check "ip netns exec $ns1 ./pm_nl_ctl accept" "accept 8" "set accept add_a=
-ddr"
++	wait $cpid
++	retc=3D$?
++	wait $spid
++	rets=3D$?
++
++	if [ $capture -eq 1 ]; then
++	    sleep 1
++	    kill $cappid
++	fi
++
++	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
++		echo " client exit code $retc, server $rets" 1>&2
++		echo "\nnetns ${listener_ns} socket stat for $port:" 1>&2
++		ip netns exec ${listener_ns} ss -nita 1>&2 -o "sport =3D :$port"
++		echo "\nnetns ${connector_ns} socket stat for $port:" 1>&2
++		ip netns exec ${connector_ns} ss -nita 1>&2 -o "dport =3D :$port"
++
++		cat "$capout"
++		return 1
++	fi
++
++	check_transfer $sin $cout "file received by client"
++	retc=3D$?
++	check_transfer $cin $sout "file received by server"
++	rets=3D$?
++
++	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
++		cat "$capout"
++		return 0
++	fi
++
++	cat "$capout"
++	return 1
++}
++
++make_file()
++{
++	name=3D$1
++	who=3D$2
++
++	SIZE=3D1
++
++	dd if=3D/dev/urandom of=3D"$name" bs=3D1024 count=3D$SIZE 2> /dev/null
++	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
++
++	echo "Created $name (size $SIZE KB) containing data sent by $who"
++}
++
++run_tests()
++{
++	listener_ns=3D"$1"
++	connector_ns=3D"$2"
++	connect_addr=3D"$3"
++	lret=3D0
++
++	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
++	lret=3D$?
++	if [ $lret -ne 0 ]; then
++		ret=3D$lret
++		return
++	fi
++}
++
++chk_join_nr()
++{
++	local msg=3D"$1"
++	local ns=3D$2
++	local nr=3D$3
++	local count
++
++	count=3D`NSTAT_HISTORY=3D$nstat ip netns exec $ns nstat |grep MPTcpExtMPJ=
+oinSynRx | awk '{print $2}'`
++	[ -z "$count" ] && count=3D0
++	printf "%-50s %s" "$msg"
++	if [ "$count" !=3D "$nr" ]; then
++		echo "[fail] got $count JOIN[s] expected $nr"
++		ret=3D1
++	else
++		echo "[ ok ]"
++	fi
++
++}
++
++sin=3D$(mktemp)
++sout=3D$(mktemp)
++cin=3D$(mktemp)
++cout=3D$(mktemp)
++init
++make_file "$cin" "client"
++make_file "$sin" "server"
++trap cleanup EXIT
++
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "no JOIN" $ns1 "0"
++
++# subflow
++reset
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "single subflow" $ns1 1
++
++# multiple subflows
++reset
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple subflows" $ns1 2
++
++# add_address, unused
++reset
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "unused signal address" $ns1 0
++
++# accept and use add_addr
++reset
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl accept 1
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "signal address" $ns1 1
++
++# accept and use add_addr with an additional subflow
++reset
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl accept 1
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "subflow and signal" $ns1 2
++
++# accept and use add_addr with an additional subflows
++reset
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl accept 1
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.2 flags signal
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple subflows and signal" $ns1 3
 +
 +exit $ret
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/=
-selftests/net/mptcp/pm_nl_ctl.c
-new file mode 100644
-index 000000000000..66ce85a0ff98
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -0,0 +1,604 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <errno.h>
-+#include <error.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include <sys/socket.h>
-+#include <sys/types.h>
-+
-+#include <arpa/inet.h>
-+#include <net/if.h>
-+
-+#include <linux/rtnetlink.h>
-+#include <linux/genetlink.h>
-+
-+#include "linux/mptcp.h"
-+
-+#ifndef MPTCP_PM_NAME
-+#define MPTCP_PM_NAME		"mptcp_pm"
-+#endif
-+
-+static void syntax(char *argv[])
-+{
-+	fprintf(stderr, "%s add|get|del|flush|dump|accept [<args>]\n", argv[0]);
-+	fprintf(stderr, "\tadd [flags signal|subflow|backup] [id <nr>] [dev <name=
->] <ip>\n");
-+	fprintf(stderr, "\tdel <id>\n");
-+	fprintf(stderr, "\tget <id>\n");
-+	fprintf(stderr, "\tflush\n");
-+	fprintf(stderr, "\tdump\n");
-+	fprintf(stderr, "\taccept [<max>]\n");
-+	exit(0);
-+}
-+
-+static int init_genl_req(char *data, int family, int cmd, int version)
-+{
-+	struct nlmsghdr *nh =3D (void *)data;
-+	struct genlmsghdr *gh;
-+	int off =3D 0;
-+
-+	nh->nlmsg_type =3D family;
-+	nh->nlmsg_flags =3D NLM_F_REQUEST;
-+	nh->nlmsg_len =3D NLMSG_LENGTH(GENL_HDRLEN);
-+	off +=3D NLMSG_ALIGN(sizeof(*nh));
-+
-+	gh =3D (void *)(data + off);
-+	gh->cmd =3D cmd;
-+	gh->version =3D version;
-+	off +=3D NLMSG_ALIGN(sizeof(*gh));
-+	return off;
-+}
-+
-+static void nl_error(struct nlmsghdr *nh)
-+{
-+	struct nlmsgerr *err =3D (struct nlmsgerr *)NLMSG_DATA(nh);
-+	int len =3D nh->nlmsg_len - sizeof(*nh);
-+	uint32_t off;
-+
-+	if (len < sizeof(struct nlmsgerr))
-+		error(1, 0, "netlink error message truncated %d min %ld", len,
-+		      sizeof(struct nlmsgerr));
-+
-+	if (!err->error) {
-+		/* check messages from kernel */
-+		struct rtattr *attrs =3D (struct rtattr *)NLMSG_DATA(nh);
-+
-+		while (RTA_OK(attrs, len)) {
-+			if (attrs->rta_type =3D=3D NLMSGERR_ATTR_MSG)
-+				fprintf(stderr, "netlink ext ack msg: %s\n",
-+					(char *)RTA_DATA(attrs));
-+			if (attrs->rta_type =3D=3D NLMSGERR_ATTR_OFFS) {
-+				memcpy(&off, RTA_DATA(attrs), 4);
-+				fprintf(stderr, "netlink err off %d\n",
-+					(int)off);
-+			}
-+			attrs =3D RTA_NEXT(attrs, len);
-+		}
-+	} else {
-+		fprintf(stderr, "netlink error %d", err->error);
-+	}
-+}
-+
-+/* do a netlink command and, if max > 0, fetch the reply  */
-+static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
-+{
-+	struct sockaddr_nl nladdr =3D { .nl_family =3D AF_NETLINK };
-+	socklen_t addr_len;
-+	void *data =3D nh;
-+	int rem, ret;
-+	int err =3D 0;
-+
-+	nh->nlmsg_len =3D len;
-+	ret =3D sendto(fd, data, len, 0, (void *)&nladdr, sizeof(nladdr));
-+	if (ret !=3D len)
-+		error(1, errno, "send netlink: %uB !=3D %uB\n", ret, len);
-+	if (max =3D=3D 0)
-+		return 0;
-+
-+	addr_len =3D sizeof(nladdr);
-+	rem =3D ret =3D recvfrom(fd, data, max, 0, (void *)&nladdr, &addr_len);
-+	if (ret < 0)
-+		error(1, errno, "recv netlink: %uB\n", ret);
-+
-+	/* Beware: the NLMSG_NEXT macro updates the 'rem' argument */
-+	for (; NLMSG_OK(nh, rem); nh =3D NLMSG_NEXT(nh, rem)) {
-+		if (nh->nlmsg_type =3D=3D NLMSG_ERROR) {
-+			nl_error(nh);
-+			err =3D 1;
-+		}
-+	}
-+	if (err)
-+		error(1, 0, "bailing out due to netlink error[s]");
-+	return ret;
-+}
-+
-+static int genl_parse_getfamily(struct nlmsghdr *nlh)
-+{
-+	struct genlmsghdr *ghdr =3D NLMSG_DATA(nlh);
-+	int len =3D nlh->nlmsg_len;
-+	struct rtattr *attrs;
-+
-+	if (nlh->nlmsg_type !=3D GENL_ID_CTRL)
-+		error(1, errno, "Not a controller message, len=3D%d type=3D0x%x\n",
-+		      nlh->nlmsg_len, nlh->nlmsg_type);
-+
-+	len -=3D NLMSG_LENGTH(GENL_HDRLEN);
-+
-+	if (len < 0)
-+		error(1, errno, "wrong controller message len %d\n", len);
-+
-+	if (ghdr->cmd !=3D CTRL_CMD_NEWFAMILY)
-+		error(1, errno, "Unknown controller command %d\n", ghdr->cmd);
-+
-+	attrs =3D (struct rtattr *) ((char *) ghdr + GENL_HDRLEN);
-+	while (RTA_OK(attrs, len)) {
-+		if (attrs->rta_type =3D=3D CTRL_ATTR_FAMILY_ID)
-+			return *(__u16 *)RTA_DATA(attrs);
-+		attrs =3D RTA_NEXT(attrs, len);
-+	}
-+
-+	error(1, errno, "can't find CTRL_ATTR_FAMILY_ID attr");
-+	return -1;
-+}
-+
-+static int resolve_mptcp_pm_netlink(int fd)
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	struct nlmsghdr *nh;
-+	struct rtattr *rta;
-+	int namelen;
-+	int off =3D 0;
-+
-+	memset(data, 0, sizeof(data));
-+	nh =3D (void *)data;
-+	off =3D init_genl_req(data, GENL_ID_CTRL, CTRL_CMD_GETFAMILY, 0);
-+
-+	rta =3D (void *)(data + off);
-+	namelen =3D strlen(MPTCP_PM_NAME) + 1;
-+	rta->rta_type =3D CTRL_ATTR_FAMILY_NAME;
-+	rta->rta_len =3D RTA_LENGTH(namelen);
-+	memcpy(RTA_DATA(rta), MPTCP_PM_NAME, namelen);
-+	off +=3D NLMSG_ALIGN(rta->rta_len);
-+
-+	do_nl_req(fd, nh, off, sizeof(data));
-+	return genl_parse_getfamily((void *)data);
-+}
-+
-+int add_addr(int fd, int pm_family, int argc, char *argv[])
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	struct rtattr *rta, *nest;
-+	struct nlmsghdr *nh;
-+	u_int16_t family;
-+	u_int32_t flags;
-+	int nest_start;
-+	u_int8_t id;
-+	int off =3D 0;
-+	int arg;
-+
-+	memset(data, 0, sizeof(data));
-+	nh =3D (void *)data;
-+	off =3D init_genl_req(data, pm_family, MPTCP_PM_CMD_ADD_ADDR,
-+			    MPTCP_PM_VER);
-+
-+	if (argc < 3)
-+		syntax(argv);
-+
-+	nest_start =3D off;
-+	nest =3D (void *)(data + off);
-+	nest->rta_type =3D NLA_F_NESTED | MPTCP_PM_ATTR_ADDR;
-+	nest->rta_len =3D RTA_LENGTH(0);
-+	off +=3D NLMSG_ALIGN(nest->rta_len);
-+
-+	/* addr data */
-+	rta =3D (void *)(data + off);
-+	if (inet_pton(AF_INET, argv[2], RTA_DATA(rta))) {
-+		family =3D AF_INET;
-+		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR4;
-+		rta->rta_len =3D RTA_LENGTH(4);
-+	} else if (inet_pton(AF_INET6, argv[2], RTA_DATA(rta))) {
-+		family =3D AF_INET6;
-+		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR6;
-+		rta->rta_len =3D RTA_LENGTH(16);
-+	} else
-+		error(1, errno, "can't parse ip %s", argv[2]);
-+	off +=3D NLMSG_ALIGN(rta->rta_len);
-+
-+	/* family */
-+	rta =3D (void *)(data + off);
-+	rta->rta_type =3D MPTCP_PM_ADDR_ATTR_FAMILY;
-+	rta->rta_len =3D RTA_LENGTH(2);
-+	memcpy(RTA_DATA(rta), &family, 2);
-+	off +=3D NLMSG_ALIGN(rta->rta_len);
-+
-+	for (arg =3D 3; arg < argc; arg++) {
-+		if (!strcmp(argv[arg], "flags")) {
-+			char *tok, *str;
-+
-+			/* flags */
-+			flags =3D 0;
-+			if (++arg >=3D argc)
-+				error(1, 0, " missing flags value");
-+
-+			/* do not support flag list yet */
-+			for (str =3D argv[arg]; (tok =3D strtok(str, ","));
-+			     str =3D NULL) {
-+				if (!strcmp(tok, "subflow"))
-+					flags |=3D MPTCP_PM_ADDR_FLAG_SUBFLOW;
-+				else if (!strcmp(tok, "signal"))
-+					flags |=3D MPTCP_PM_ADDR_FLAG_SIGNAL;
-+				else if (!strcmp(tok, "backup"))
-+					flags |=3D MPTCP_PM_ADDR_FLAG_BACKUP;
-+				else
-+					error(1, errno,
-+					      "unknown flag %s", argv[arg]);
-+			}
-+
-+			rta =3D (void *)(data + off);
-+			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_FLAGS;
-+			rta->rta_len =3D RTA_LENGTH(4);
-+			memcpy(RTA_DATA(rta), &flags, 4);
-+			off +=3D NLMSG_ALIGN(rta->rta_len);
-+		} else if (!strcmp(argv[arg], "id")) {
-+			if (++arg >=3D argc)
-+				error(1, 0, " missing id value");
-+
-+			id =3D atoi(argv[arg]);
-+			rta =3D (void *)(data + off);
-+			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ID;
-+			rta->rta_len =3D RTA_LENGTH(1);
-+			memcpy(RTA_DATA(rta), &id, 1);
-+			off +=3D NLMSG_ALIGN(rta->rta_len);
-+		} else if (!strcmp(argv[arg], "dev")) {
-+			int32_t ifindex;
-+
-+			if (++arg >=3D argc)
-+				error(1, 0, " missing dev name");
-+
-+			ifindex =3D if_nametoindex(argv[arg]);
-+			if (!ifindex)
-+				error(1, errno, "unknown device %s", argv[arg]);
-+
-+			rta =3D (void *)(data + off);
-+			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_IF_IDX;
-+			rta->rta_len =3D RTA_LENGTH(4);
-+			memcpy(RTA_DATA(rta), &ifindex, 4);
-+			off +=3D NLMSG_ALIGN(rta->rta_len);
-+		} else
-+			error(1, 0, "unknown keyword %s", argv[arg]);
-+	}
-+	nest->rta_len =3D off - nest_start;
-+
-+	do_nl_req(fd, nh, off, 0);
-+	return 0;
-+}
-+
-+int del_addr(int fd, int pm_family, int argc, char *argv[])
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	struct rtattr *rta, *nest;
-+	struct nlmsghdr *nh;
-+	int nest_start;
-+	u_int8_t id;
-+	int off =3D 0;
-+
-+	memset(data, 0, sizeof(data));
-+	nh =3D (void *)data;
-+	off =3D init_genl_req(data, pm_family, MPTCP_PM_CMD_DEL_ADDR,
-+			    MPTCP_PM_VER);
-+
-+	/* the only argument is the address id */
-+	if (argc !=3D 3)
-+		syntax(argv);
-+
-+	id =3D atoi(argv[2]);
-+
-+	nest_start =3D off;
-+	nest =3D (void *)(data + off);
-+	nest->rta_type =3D NLA_F_NESTED | MPTCP_PM_ATTR_ADDR;
-+	nest->rta_len =3D  RTA_LENGTH(0);
-+	off +=3D NLMSG_ALIGN(nest->rta_len);
-+
-+	/* build a dummy addr with only the ID set */
-+	rta =3D (void *)(data + off);
-+	rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ID;
-+	rta->rta_len =3D RTA_LENGTH(1);
-+	memcpy(RTA_DATA(rta), &id, 1);
-+	off +=3D NLMSG_ALIGN(rta->rta_len);
-+	nest->rta_len =3D off - nest_start;
-+
-+	do_nl_req(fd, nh, off, 0);
-+	return 0;
-+}
-+
-+static void print_addr(struct rtattr *attrs, int len)
-+{
-+	uint16_t family =3D 0;
-+	char str[1024];
-+	uint32_t flags;
-+	uint8_t id;
-+
-+	while (RTA_OK(attrs, len)) {
-+		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_FAMILY)
-+			memcpy(&family, RTA_DATA(attrs), 2);
-+		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ADDR4) {
-+			if (family !=3D AF_INET)
-+				error(1, errno, "wrong IP (v4) for family %d",
-+				      family);
-+			inet_ntop(AF_INET, RTA_DATA(attrs), str, sizeof(str));
-+			printf("%s ", str);
-+		}
-+		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ADDR6) {
-+			if (family !=3D AF_INET6)
-+				error(1, errno, "wrong IP (v6) for family %d",
-+				      family);
-+			inet_ntop(AF_INET6, RTA_DATA(attrs), str, sizeof(str));
-+			printf("%s ", str);
-+		}
-+		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ID) {
-+			memcpy(&id, RTA_DATA(attrs), 1);
-+			printf("id %d ", id);
-+		}
-+		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_FLAGS) {
-+			memcpy(&flags, RTA_DATA(attrs), 4);
-+
-+			printf("flags ");
-+			if (flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
-+				printf("signal");
-+				flags &=3D ~MPTCP_PM_ADDR_FLAG_SIGNAL;
-+				if (flags)
-+					printf(",");
-+			}
-+
-+			if (flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
-+				printf("subflow");
-+				flags &=3D ~MPTCP_PM_ADDR_FLAG_SUBFLOW;
-+				if (flags)
-+					printf(",");
-+			}
-+
-+			if (flags & MPTCP_PM_ADDR_FLAG_BACKUP) {
-+				printf("backup");
-+				flags &=3D ~MPTCP_PM_ADDR_FLAG_BACKUP;
-+				if (flags)
-+					printf(",");
-+			}
-+
-+			/* bump unknown flags, if any */
-+			if (flags)
-+				printf("0x%x", flags);
-+			printf(" ");
-+		}
-+		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_IF_IDX) {
-+			char name[IF_NAMESIZE], *ret;
-+			int32_t ifindex;
-+
-+			memcpy(&ifindex, RTA_DATA(attrs), 4);
-+			ret =3D if_indextoname(ifindex, name);
-+			if (ret)
-+				printf("dev %s ", ret);
-+			else
-+				printf("dev unknown/%d", ifindex);
-+		}
-+
-+		attrs =3D RTA_NEXT(attrs, len);
-+	}
-+	printf("\n");
-+}
-+
-+static void print_addrs(struct nlmsghdr *nh, int pm_family, int total_len)
-+{
-+	struct rtattr *attrs;
-+
-+	for (; NLMSG_OK(nh, total_len); nh =3D NLMSG_NEXT(nh, total_len)) {
-+		int len =3D nh->nlmsg_len;
-+
-+		if (nh->nlmsg_type =3D=3D NLMSG_DONE)
-+			break;
-+		if (nh->nlmsg_type =3D=3D NLMSG_ERROR)
-+			nl_error(nh);
-+		if (nh->nlmsg_type !=3D pm_family)
-+			continue;
-+
-+		len -=3D NLMSG_LENGTH(GENL_HDRLEN);
-+		attrs =3D (struct rtattr *) ((char *) NLMSG_DATA(nh) +
-+					   GENL_HDRLEN);
-+		while (RTA_OK(attrs, len)) {
-+			if (attrs->rta_type =3D=3D
-+			    (MPTCP_PM_ATTR_ADDR | NLA_F_NESTED))
-+				print_addr((void *)RTA_DATA(attrs),
-+					   attrs->rta_len);
-+			attrs =3D RTA_NEXT(attrs, len);
-+		}
-+	}
-+}
-+
-+int get_addr(int fd, int pm_family, int argc, char *argv[])
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	struct rtattr *rta, *nest;
-+	struct nlmsghdr *nh;
-+	int nest_start;
-+	u_int8_t id;
-+	int off =3D 0;
-+
-+	memset(data, 0, sizeof(data));
-+	nh =3D (void *)data;
-+	off =3D init_genl_req(data, pm_family, MPTCP_PM_CMD_GET_ADDR,
-+			    MPTCP_PM_VER);
-+
-+	/* the only argument is the address id */
-+	if (argc !=3D 3)
-+		syntax(argv);
-+
-+	id =3D atoi(argv[2]);
-+
-+	nest_start =3D off;
-+	nest =3D (void *)(data + off);
-+	nest->rta_type =3D NLA_F_NESTED | MPTCP_PM_ATTR_ADDR;
-+	nest->rta_len =3D  RTA_LENGTH(0);
-+	off +=3D NLMSG_ALIGN(nest->rta_len);
-+
-+	/* build a dummy addr with only the ID set */
-+	rta =3D (void *)(data + off);
-+	rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ID;
-+	rta->rta_len =3D RTA_LENGTH(1);
-+	memcpy(RTA_DATA(rta), &id, 1);
-+	off +=3D NLMSG_ALIGN(rta->rta_len);
-+	nest->rta_len =3D off - nest_start;
-+
-+	print_addrs(nh, pm_family, do_nl_req(fd, nh, off, sizeof(data)));
-+	return 0;
-+}
-+
-+int dump_addrs(int fd, int pm_family, int argc, char *argv[])
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	pid_t pid =3D getpid();
-+	struct nlmsghdr *nh;
-+	int off =3D 0;
-+
-+	memset(data, 0, sizeof(data));
-+	nh =3D (void *)data;
-+	off =3D init_genl_req(data, pm_family, MPTCP_PM_CMD_GET_ADDR,
-+			    MPTCP_PM_VER);
-+	nh->nlmsg_flags |=3D NLM_F_DUMP;
-+	nh->nlmsg_seq =3D 1;
-+	nh->nlmsg_pid =3D pid;
-+	nh->nlmsg_len =3D off;
-+
-+	print_addrs(nh, pm_family, do_nl_req(fd, nh, off, sizeof(data)));
-+	return 0;
-+}
-+
-+int flush_addrs(int fd, int pm_family, int argc, char *argv[])
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	struct nlmsghdr *nh;
-+	int off =3D 0;
-+
-+	memset(data, 0, sizeof(data));
-+	nh =3D (void *)data;
-+	off =3D init_genl_req(data, pm_family, MPTCP_PM_CMD_FLUSH_ADDRS,
-+			    MPTCP_PM_VER);
-+
-+	do_nl_req(fd, nh, off, 0);
-+	return 0;
-+}
-+
-+static void print_accept(struct nlmsghdr *nh, int pm_family, int total_len)
-+{
-+	struct rtattr *attrs;
-+	uint32_t max;
-+
-+	for (; NLMSG_OK(nh, total_len); nh =3D NLMSG_NEXT(nh, total_len)) {
-+		int len =3D nh->nlmsg_len;
-+
-+		if (nh->nlmsg_type =3D=3D NLMSG_DONE)
-+			break;
-+		if (nh->nlmsg_type =3D=3D NLMSG_ERROR)
-+			nl_error(nh);
-+		if (nh->nlmsg_type !=3D pm_family)
-+			continue;
-+
-+		len -=3D NLMSG_LENGTH(GENL_HDRLEN);
-+		attrs =3D (struct rtattr *) ((char *) NLMSG_DATA(nh) +
-+					   GENL_HDRLEN);
-+		while (RTA_OK(attrs, len)) {
-+			if (attrs->rta_type !=3D MPTCP_PM_ATTR_RCV_ADD_ADDRS)
-+				goto next;
-+
-+			memcpy(&max, RTA_DATA(attrs), 4);
-+			printf("accept %u\n", max);
-+
-+next:
-+			attrs =3D RTA_NEXT(attrs, len);
-+		}
-+	}
-+}
-+
-+int get_set_accept(int fd, int pm_family, int argc, char *argv[])
-+{
-+	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-+		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
-+		  1024];
-+	int cmd, len =3D sizeof(data);
-+	struct nlmsghdr *nh;
-+	uint32_t max =3D 0;
-+	int off =3D 0;
-+
-+	/* limit */
-+	if (argc =3D=3D 3) {
-+		max =3D atoi(argv[2]);
-+		cmd =3D MPTCP_PM_CMD_SET_RCV_ADD_ADDRS;
-+	} else {
-+		cmd =3D MPTCP_PM_CMD_GET_RCV_ADD_ADDRS;
-+	}
-+
-+	memset(data, 0, sizeof(data));
-+	nh =3D (void *)data;
-+	off =3D init_genl_req(data, pm_family, cmd, MPTCP_PM_VER);
-+
-+	/* limit */
-+	if (cmd =3D=3D MPTCP_PM_CMD_SET_RCV_ADD_ADDRS) {
-+		struct rtattr *rta =3D (void *)(data + off);
-+
-+		rta->rta_type =3D MPTCP_PM_ATTR_RCV_ADD_ADDRS;
-+		rta->rta_len =3D RTA_LENGTH(4);
-+		memcpy(RTA_DATA(rta), &max, 4);
-+		off +=3D NLMSG_ALIGN(rta->rta_len);
-+		cmd =3D MPTCP_PM_CMD_SET_RCV_ADD_ADDRS;
-+		len =3D 0;
-+	}
-+
-+	len =3D do_nl_req(fd, nh, off, len);
-+	if (cmd =3D=3D MPTCP_PM_CMD_GET_RCV_ADD_ADDRS)
-+		print_accept(nh, pm_family, len);
-+	return 0;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int fd, pm_family;
-+
-+	if (argc < 2)
-+		syntax(argv);
-+
-+	fd =3D socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
-+	if (fd =3D=3D -1)
-+		error(1, errno, "socket netlink");
-+
-+	pm_family =3D resolve_mptcp_pm_netlink(fd);
-+
-+	if (!strcmp(argv[1], "add"))
-+		return add_addr(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "del"))
-+		return del_addr(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "flush"))
-+		return flush_addrs(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "get"))
-+		return get_addr(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "dump"))
-+		return dump_addrs(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "accept"))
-+		return get_set_accept(fd, pm_family, argc, argv);
-+
-+	fprintf(stderr, "unknown sub-command: %s", argv[1]);
-+	syntax(argv);
-+	return 0;
-+}
+\ No newline at end of file
 -- =
 
 2.21.1
 
---===============2293614175563865999==--
+--===============6717712257093583300==--
