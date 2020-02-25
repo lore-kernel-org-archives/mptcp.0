@@ -1,53 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============8432417435363641791=="
+Content-Type: multipart/mixed; boundary="===============7772956957188290400=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 3/8] mptcp: update mptcp ack sequence
- from work queue
-Date: Tue, 25 Feb 2020 13:49:26 +0100
-Message-ID: <20200225124926.GI19559@breakpoint.cc>
-In-Reply-To: 8049d9054ab08f3c7a68176d7fcae77478f50065.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 8/8] mptcp: defer work schedule until
+ mptcp lock is released
+Date: Tue, 25 Feb 2020 13:50:37 +0100
+Message-ID: <e570c24a581bd1ce734f7c5751ee3579d92069d1.camel@redhat.com>
+In-Reply-To: 20200225120526.2866-9-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3781
+X-UID: 3782
 
---===============8432417435363641791==
+--===============7772956957188290400==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > +	do {
-> > +		struct sock *ssk =3D mptcp_subflow_recv_lookup(msk);
-> > +
-> > +		if (!ssk)
-> > +			break;
-> > +
-> > +		lock_sock(ssk);
+On Tue, 2020-02-25 at 13:05 +0100, Florian Westphal wrote:
+> Don't schedule the work queue right away, instead defer this
+> to the lock release callback.
 > =
 
-> I'm wondering if bh_lock_sock(ssk) would suffice here?
+> This has the advantage that it will give recv path a chance to
+> complete -- this might have moved all pending packets from the
+> subflow to the mptcp receive queue, which allows to avoid another
+> schedule_work().
 > =
 
-> If so we could do the skbs move from mptcp_release_cb() in patch 8.
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  net/mptcp/protocol.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
 > =
 
-> But it looks like the full lock_sock() is required by the skb_orphan()
-> call, which in turn modifies ssk->sk_forward_alloc, so no luck right?
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index de6bd9d28116..f7c0d205b047 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -240,8 +240,15 @@ void mptcp_data_ready(struct sock *sk, struct sock *=
+ssk)
+>  		return;
+>  =
 
-Yep, the destructor of the skbs on the ssk rx queue assumes its called
-with the ssk owned.
+>  	/* mptcp socket is busy, schedule worker */
+> -	if (schedule_work(&msk->work))
+> -		sock_hold((struct sock *)msk);
+> +	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
+> +			      &sk->sk_tsq_flags)) {
+> +		sock_hold(sk);
 
-We could of course do bh_lock+then check 'owned' but I'm not sure its
-worth it.
+Here is the msk/sk socket lock always held by some other process?
 
-I'd suggest to keep the 'direct move from release_cb' in mind as
-something we could try to do later.
+I think the trylock in patch 6 from different subflows can collide with
+each other, so a try lock can fail even with !sk->sk_lock.owned
 
-When I tested an older version of this patch set on top of mptcp-next
-then the number of times the work queue ran with nothing todo (no
-data in any subflow, no retransmission pending, nothing to reclaim from
-rtx queue etc. was really small -- a low 3-digit number for entire mptcp
-selftest run iirc. (with poll).
+Or the process owning the msk sock lock when the previous check has
+been done can release it in the meanwhile.
 
---===============8432417435363641791==--
+In one of the above happens, can the TCP_DELACK_TIMER_DEFERRED delayed
+for a long time? Do we need to address that scenario?
+
+Thanks,
+
+Paolo
+
+
+--===============7772956957188290400==--
