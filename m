@@ -1,122 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============6063314446670176930=="
+Content-Type: multipart/mixed; boundary="===============5751476320443005274=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 8/8] mptcp: defer work schedule until
- mptcp lock is released
-Date: Tue, 25 Feb 2020 15:53:36 +0100
-Message-ID: <134191ed6e2bbd67ee36a7ac415ee54ef4f9f505.camel@redhat.com>
-In-Reply-To: 20200225125408.GK19559@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH] net: mptcp: rename MPTCP_SUBFLOW_* into
+ MPTCP_SUBFLOW_ATTR_* in diag uAPI
+Date: Tue, 25 Feb 2020 17:06:33 +0100
+Message-ID: <dd7a5d8a-53ca-5e38-510b-ae0a2ffed0fe@tessares.net>
+In-Reply-To: 3e6ba8371d82801358113ba14218b2b889f4098a.1582556386.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3787
+X-UID: 3788
 
---===============6063314446670176930==
+--===============5751476320443005274==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-02-25 at 13:54 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Tue, 2020-02-25 at 13:05 +0100, Florian Westphal wrote:
-> > > Don't schedule the work queue right away, instead defer this
-> > > to the lock release callback.
-> > > =
+Hi Davide,
 
-> > > This has the advantage that it will give recv path a chance to
-> > > complete -- this might have moved all pending packets from the
-> > > subflow to the mptcp receive queue, which allows to avoid another
-> > > schedule_work().
-> > > =
-
-> > > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > > ---
-> > >  net/mptcp/protocol.c | 20 ++++++++++++++++++--
-> > >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > > =
-
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index de6bd9d28116..f7c0d205b047 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -240,8 +240,15 @@ void mptcp_data_ready(struct sock *sk, struct so=
-ck *ssk)
-> > >  		return;
-> > >  =
-
-> > >  	/* mptcp socket is busy, schedule worker */
-> > > -	if (schedule_work(&msk->work))
-> > > -		sock_hold((struct sock *)msk);
-> > > +	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
-> > > +			      &sk->sk_tsq_flags)) {
-> > > +		sock_hold(sk);
-> > =
-
-> > Here is the msk/sk socket lock always held by some other process?
+On 24/02/2020 15:59, Davide Caratti wrote:
+> Squash-to: "mptcp: allow dumping subflow context to userspace"
 > =
 
-> Yes, why?
-> =
+> otherwise MPTCP_SUBFLOW_MAX might recall the maximum possible number of
+> subflows in a MPTCP connection, which is not controlled by uAPI at all.
 
-> > I think the trylock in patch 6 from different subflows can collide with
-> > each other, so a try lock can fail even with !sk->sk_lock.owned
-> =
+Thank you for the patch, LGTM!
 
-> Not following, sorry.
+I guess you did a find & replace and adapt lines that are now too big.
 
-I mean something alike
+Cheers,
+Matt
+-- =
 
-CPU0 (subflow 0)		CPU1 (subflow 1)
-trylock				trylock
-// enqueue the			// lock busy =
-
-// data	=
-
-				test_and_set_bit(TCP_DELACK_TIMER_DEFERRED)
-
-but nobody will call mptcp_release_cb() soon.
-
-> > Or the process owning the msk sock lock when the previous check has
-> > been done can release it in the meanwhile.
-> =
-
-> Yes, why?
-> =
-
-> > In one of the above happens, can the TCP_DELACK_TIMER_DEFERRED delayed
-> > for a long time? Do we need to address that scenario?
-> =
-
-> Hmm:
->         /* mptcp socket is busy, schedule worker */
->         if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
->                               &sk->sk_tsq_flags)) {
->                 sock_hold(sk);
-> =
-
->                 /* need to try again, its possible release_cb() has alrea=
-dy
->                  * been called after the test_and_set_bit() above.
->                  */
->                 move_skbs_to_msk(msk, ssk);
->         }
-> =
-
-> I thought the last move_skbs_to_msk() would address that?
-> (If it fails, msk is still owned so release cb will be called 'soon').
-
-Thank for pointing this out! I underlooked this part. It looks like the
-2nd scenario I feared is not possible!
-
-I'm unsure about the first one ?!? can the move_skbs_to_msk() above =
-
-still race with another subflows ?!?
-
-Thanks,
-
-Paolo
-
-
-
-
---===============6063314446670176930==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5751476320443005274==--
