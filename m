@@ -1,85 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============8257879851976274429=="
+Content-Type: multipart/mixed; boundary="===============1518931778610021709=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 8/8] mptcp: defer work schedule until
- mptcp lock is released
-Date: Tue, 25 Feb 2020 13:54:08 +0100
-Message-ID: <20200225125408.GK19559@breakpoint.cc>
-In-Reply-To: e570c24a581bd1ce734f7c5751ee3579d92069d1.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 6/8] mptcp: avoid work queue scheduling
+ if possible
+Date: Tue, 25 Feb 2020 13:55:45 +0100
+Message-ID: <20200225125545.GL19559@breakpoint.cc>
+In-Reply-To: 20200225120526.2866-7-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3784
+X-UID: 3785
 
---===============8257879851976274429==
+--===============1518931778610021709==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Tue, 2020-02-25 at 13:05 +0100, Florian Westphal wrote:
-> > Don't schedule the work queue right away, instead defer this
-> > to the lock release callback.
-> > =
+Florian Westphal <fw(a)strlen.de> wrote:
+> +void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+>  {
+>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>  =
 
-> > This has the advantage that it will give recv path a chance to
-> > complete -- this might have moved all pending packets from the
-> > subflow to the mptcp receive queue, which allows to avoid another
-> > schedule_work().
-> > =
+>  	set_bit(MPTCP_DATA_READY, &msk->flags);
+>  	sk->sk_data_ready(sk);
+>  =
 
-> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > ---
-> >  net/mptcp/protocol.c | 20 ++++++++++++++++++--
-> >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > =
+> +	if (atomic_read(&sk->sk_rmem_alloc) < READ_ONCE(sk->sk_rcvbuf) &&
+> +	    move_skbs_to_msk(msk, ssk))
+> +		return;
+> +
 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index de6bd9d28116..f7c0d205b047 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -240,8 +240,15 @@ void mptcp_data_ready(struct sock *sk, struct sock=
- *ssk)
-> >  		return;
-> >  =
-
-> >  	/* mptcp socket is busy, schedule worker */
-> > -	if (schedule_work(&msk->work))
-> > -		sock_hold((struct sock *)msk);
-> > +	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
-> > +			      &sk->sk_tsq_flags)) {
-> > +		sock_hold(sk);
-> =
-
-> Here is the msk/sk socket lock always held by some other process?
-
-Yes, why?
-
-> I think the trylock in patch 6 from different subflows can collide with
-> each other, so a try lock can fail even with !sk->sk_lock.owned
-
-Not following, sorry.
-
-> Or the process owning the msk sock lock when the previous check has
-> been done can release it in the meanwhile.
-
-Yes, why?
-
-> In one of the above happens, can the TCP_DELACK_TIMER_DEFERRED delayed
-> for a long time? Do we need to address that scenario?
-
-Hmm:
-        /* mptcp socket is busy, schedule worker */
-        if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
-                              &sk->sk_tsq_flags)) {
-                sock_hold(sk);
-
-                /* need to try again, its possible release_cb() has already
-                 * been called after the test_and_set_bit() above.
-                 */
-                move_skbs_to_msk(msk, ssk);
-        }
-
-I thought the last move_skbs_to_msk() would address that?
-(If it fails, msk is still owned so release cb will be called 'soon').
---===============8257879851976274429==--
+It just occured to me that it might be better to move the
+sk->sk_data_ready(sk); call to the end of mptcp_data_ready(),
+I would do this for next iteration.
+--===============1518931778610021709==--
