@@ -1,62 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============6709317738599139565=="
+Content-Type: multipart/mixed; boundary="===============5973328197049022298=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 8/8] mptcp: defer work schedule until
- mptcp lock is released
-Date: Tue, 25 Feb 2020 17:18:21 +0100
-Message-ID: <20200225161821.GM19559@breakpoint.cc>
-In-Reply-To: 134191ed6e2bbd67ee36a7ac415ee54ef4f9f505.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp] subflow: place outgoing connections on the
+ join list
+Date: Tue, 25 Feb 2020 17:28:55 +0100
+Message-ID: <5de72499-6b84-229d-e55b-8c06112cb027@tessares.net>
+In-Reply-To: 72608929bc3b314de71a87502e091acff140953c.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3789
+X-UID: 3790
 
---===============6709317738599139565==
+--===============5973328197049022298==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Tue, 2020-02-25 at 13:54 +0100, Florian Westphal wrote:
-> > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > > I think the trylock in patch 6 from different subflows can collide wi=
-th
-> > > each other, so a try lock can fail even with !sk->sk_lock.owned
-> > =
+Hi Florian, Paolo,
 
-> > Not following, sorry.
+On 20/02/2020 17:00, Paolo Abeni wrote:
+> On Tue, 2020-02-04 at 16:35 +0100, Florian Westphal wrote:
+>> squashto: subflow: place further subflows on new 'join_list'
+>>
+>> in case the subflow can't be established (timeout, reset) the subflow
+>> socket is leaked.
+>>
+>> Add it to the join list for now.  This isn't nice because the socket
+>> will be added while its known to not be established, and its not removed
+>> at any time even if its not useable.
+>>
+>> The list_del_init() call can be removed because the subflow context
+>> ->node is still unused / not on a list in all cases.
+>>
+>> On a different note:
+>>
+>> I think it makes sense to remove the 'splice join to conn list' approach
+>> and instead have the worker check the join and conn lists:
+>>
+>> 1. subflows are added from join to conn list once they are established.
+>> 2. subflows on join list that are still in SYN_SENT are ignored
+>> 3. subflows on join and/or conn list that are closed already are removed
+>> and free'd.
+>>
+>> Alternatively, we could probably extend the sk_state_change callback
+>> to do this and keep checking outside of send/receive code paths.
+
+[...]
+
+> whooops ... this one fell outside my radar for a long time.
 > =
 
-> I mean something alike
+> mp_join self-tests (WIP) demonstrated the need for this one!
 > =
 
-> CPU0 (subflow 0)		CPU1 (subflow 1)
-> trylock				trylock
-> // enqueue the			// lock busy =
+> LGTM, thanks Florian!
 
-> // data	=
+Sorry for the delay, I missed that too at first and got other things =
 
-> 				test_and_set_bit(TCP_DELACK_TIMER_DEFERRED)
-> =
+scheduled after. Please insist if a patch has been reviewed but not =
 
-> but nobody will call mptcp_release_cb() soon.
+applied! :)
 
-This would only happen if both subflows have in-sequence data
-at the time they enter this function.
+- f20d350cb8d5: "squashed" in "subflow: place further subflows on new =
 
-Even if it happens, then:
-1. We enqueued new data (mptcp->ack_seq update)
-2. We unblock/notify userspace there is new data to read
+'join_list'"
+- 676a5c51ff36..8b57e57b1ba4: result
 
-If userspaces goes sleep(3600);
+Tests + export are going to be launched soon.
 
-then its possible that we leave 'unacked' data behind
-in case the 'losing' subflow had more data than that.
+Cheers,
+Matt
+-- =
 
-If thats a concern, the fix is simple:
-
-get rid of TCP_DELACK_TIMER_DEFERRED/release_cb and
-schedule work directly.
-
-I will do that in next series.
---===============6709317738599139565==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5973328197049022298==--
