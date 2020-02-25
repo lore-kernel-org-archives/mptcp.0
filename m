@@ -1,129 +1,109 @@
-Content-Type: multipart/mixed; boundary="===============8773122021708504661=="
+Content-Type: multipart/mixed; boundary="===============2217780105383341094=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 6/7] mptcp: avoid work queue scheduling if
- possible
-Date: Tue, 25 Feb 2020 18:16:58 +0100
-Message-ID: <20200225171659.4807-7-fw@strlen.de>
+Subject: [MPTCP] [PATCH net-next v2 7/7] mptcp: defer work schedule until
+ mptcp lock is released
+Date: Tue, 25 Feb 2020 18:16:59 +0100
+Message-ID: <20200225171659.4807-8-fw@strlen.de>
 In-Reply-To: 20200225171659.4807-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3798
+X-UID: 3799
 
---===============8773122021708504661==
+--===============2217780105383341094==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We can't lock_sock() the mptcp socket from the subflow data_ready callback,
-it would result in ABBA deadlock with the subflow socket lock.
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-We can however grab the spinlock: if that succeeds and the mptcp socket
-is not owned at the moment, we can process the new skbs right away
-without deferring this to the work queue.
+Don't schedule the work queue right away, instead defer this
+to the lock release callback.
 
-This avoids the schedule_work and hence the small delay until the
-work item is processed.
+This has the advantage that it will give recv path a chance to
+complete -- this might have moved all pending packets from the
+subflow to the mptcp receive queue, which allows to avoid the
+schedule_work().
 
+Co-developed-by: Florian Westphal <fw(a)strlen.de>
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 29 ++++++++++++++++++++++++++++-
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  |  4 ++--
- 3 files changed, 31 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 38 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b781498e69b4..70f20c8eddbd 100644
+index 70f20c8eddbd..044295707bbf 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -201,12 +201,39 @@ static bool __mptcp_move_skbs_from_subflow(struct mpt=
-cp_sock *msk,
- 	return done;
- }
- =
-
--void mptcp_data_ready(struct sock *sk)
-+/* In most cases we will be able to lock the mptcp socket.  If its already
-+ * owned, we need to defer to the work queue to avoid ABBA deadlock.
-+ */
-+static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	unsigned int moved =3D 0;
-+
-+	if (READ_ONCE(sk->sk_lock.owned))
-+		return false;
-+
-+	if (unlikely(!spin_trylock_bh(&sk->sk_lock.slock)))
-+		return false;
-+
-+	/* must re-check after taking the lock */
-+	if (!READ_ONCE(sk->sk_lock.owned))
-+		__mptcp_move_skbs_from_subflow(msk, ssk, &moved);
-+
-+	spin_unlock_bh(&sk->sk_lock.slock);
-+
-+	return moved > 0;
-+}
-+
-+void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
-
- 	set_bit(MPTCP_DATA_READY, &msk->flags);
- =
-
-+	if (atomic_read(&sk->sk_rmem_alloc) < READ_ONCE(sk->sk_rcvbuf) &&
-+	    move_skbs_to_msk(msk, ssk))
-+		goto wake;
-+
- 	/* don't schedule if mptcp sk is (still) over limit */
+@@ -238,9 +238,16 @@ void mptcp_data_ready(struct sock *sk, struct sock *ss=
+k)
  	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
  		goto wake;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d06170c5f191..6c0b2c8ab674 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -195,7 +195,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 		       struct tcp_options_received *opt_rx);
  =
 
- void mptcp_finish_connect(struct sock *sk);
--void mptcp_data_ready(struct sock *sk);
-+void mptcp_data_ready(struct sock *sk, struct sock *ssk);
+-	if (schedule_work(&msk->work))
+-		sock_hold((struct sock *)msk);
++	/* mptcp socket is owned, release_cb should retry */
++	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
++			      &sk->sk_tsq_flags)) {
++		sock_hold(sk);
  =
 
- int mptcp_token_new_request(struct request_sock *req);
- void mptcp_token_destroy_request(u32 token);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 37a4767db441..0de2a44bdaa0 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -563,7 +563,7 @@ static void subflow_data_ready(struct sock *sk)
- 	}
- =
-
- 	if (mptcp_subflow_data_available(sk))
--		mptcp_data_ready(parent);
-+		mptcp_data_ready(parent, sk);
++		/* need to try again, its possible release_cb() has already
++		 * been called after the test_and_set_bit() above.
++		 */
++		move_skbs_to_msk(msk, ssk);
++	}
+ wake:
+ 	sk->sk_data_ready(sk);
+ }
+@@ -941,6 +948,32 @@ static int mptcp_getsockopt(struct sock *sk, int level=
+, int optname,
+ 	return -EOPNOTSUPP;
  }
  =
 
- static void subflow_write_space(struct sock *sk)
-@@ -696,7 +696,7 @@ static void subflow_state_change(struct sock *sk)
- 	 * the data available machinery here.
- 	 */
- 	if (parent && subflow->mp_capable && mptcp_subflow_data_available(sk))
--		mptcp_data_ready(parent);
-+		mptcp_data_ready(parent, sk);
- =
-
- 	if (parent && !(parent->sk_shutdown & RCV_SHUTDOWN) &&
- 	    !subflow->rx_eof && subflow_is_done(sk)) {
++#define MPTCP_DEFERRED_ALL TCPF_DELACK_TIMER_DEFERRED
++
++/* this is very alike tcp_release_cb() but we must handle differently a
++ * different set of events
++ */
++static void mptcp_release_cb(struct sock *sk)
++{
++	unsigned long flags, nflags;
++
++	do {
++		flags =3D sk->sk_tsq_flags;
++		if (!(flags & MPTCP_DEFERRED_ALL))
++			return;
++		nflags =3D flags & ~MPTCP_DEFERRED_ALL;
++	} while (cmpxchg(&sk->sk_tsq_flags, flags, nflags) !=3D flags);
++
++	if (flags & TCPF_DELACK_TIMER_DEFERRED) {
++		struct mptcp_sock *msk =3D mptcp_sk(sk);
++		struct sock *ssk;
++
++		ssk =3D mptcp_subflow_recv_lookup(msk);
++		if (!ssk || !schedule_work(&msk->work))
++			__sock_put(sk);
++	}
++}
++
+ static int mptcp_get_port(struct sock *sk, unsigned short snum)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -1016,6 +1049,7 @@ static struct proto mptcp_prot =3D {
+ 	.destroy	=3D mptcp_destroy,
+ 	.sendmsg	=3D mptcp_sendmsg,
+ 	.recvmsg	=3D mptcp_recvmsg,
++	.release_cb	=3D mptcp_release_cb,
+ 	.hash		=3D inet_hash,
+ 	.unhash		=3D inet_unhash,
+ 	.get_port	=3D mptcp_get_port,
 -- =
 
 2.24.1
 
---===============8773122021708504661==--
+--===============2217780105383341094==--
