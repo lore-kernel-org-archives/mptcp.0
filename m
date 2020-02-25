@@ -1,72 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============2485175931795397589=="
+Content-Type: multipart/mixed; boundary="===============5099837256606271819=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 7/8] mptcp: add mptcp_release_cb skeleton
-Date: Tue, 25 Feb 2020 13:05:25 +0100
-Message-ID: <20200225120526.2866-8-fw@strlen.de>
+Subject: [MPTCP] [PATCH net-next 8/8] mptcp: defer work schedule until mptcp
+ lock is released
+Date: Tue, 25 Feb 2020 13:05:26 +0100
+Message-ID: <20200225120526.2866-9-fw@strlen.de>
 In-Reply-To: 20200225120526.2866-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3777
+X-UID: 3778
 
---===============2485175931795397589==
+--===============5099837256606271819==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+Don't schedule the work queue right away, instead defer this
+to the lock release callback.
 
-It will be used to check if we still have a subflow with pending data.
+This has the advantage that it will give recv path a chance to
+complete -- this might have moved all pending packets from the
+subflow to the mptcp receive queue, which allows to avoid another
+schedule_work().
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ net/mptcp/protocol.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c28c5cc49d65..de6bd9d28116 100644
+index de6bd9d28116..f7c0d205b047 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -940,6 +940,25 @@ static int mptcp_getsockopt(struct sock *sk, int level=
-, int optname,
- 	return -EOPNOTSUPP;
+@@ -240,8 +240,15 @@ void mptcp_data_ready(struct sock *sk, struct sock *ss=
+k)
+ 		return;
+ =
+
+ 	/* mptcp socket is busy, schedule worker */
+-	if (schedule_work(&msk->work))
+-		sock_hold((struct sock *)msk);
++	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
++			      &sk->sk_tsq_flags)) {
++		sock_hold(sk);
++
++		/* need to try again, its possible release_cb() has already
++		 * been called after the test_and_set_bit() above.
++		 */
++		move_skbs_to_msk(msk, ssk);
++	}
  }
  =
 
-+#define MPTCP_DEFERRED_ALL TCPF_DELACK_TIMER_DEFERRED
+ static bool mptcp_ext_cache_refill(struct mptcp_sock *msk)
+@@ -957,6 +964,15 @@ static void mptcp_release_cb(struct sock *sk)
+ 	} while (cmpxchg(&sk->sk_tsq_flags, flags, nflags) !=3D flags);
+ =
+
+ 	sock_release_ownership(sk);
 +
-+/* this is very alike tcp_release_cb() but we must handle differently a
-+ * different set of events
-+ */
-+static void mptcp_release_cb(struct sock *sk)
-+{
-+	unsigned long flags, nflags;
++	if (flags & TCPF_DELACK_TIMER_DEFERRED) {
++		struct mptcp_sock *msk =3D mptcp_sk(sk);
++		struct sock *ssk;
 +
-+	do {
-+		flags =3D sk->sk_tsq_flags;
-+		if (!(flags & MPTCP_DEFERRED_ALL))
-+			return;
-+		nflags =3D flags & ~MPTCP_DEFERRED_ALL;
-+	} while (cmpxchg(&sk->sk_tsq_flags, flags, nflags) !=3D flags);
-+
-+	sock_release_ownership(sk);
-+}
-+
++		ssk =3D mptcp_subflow_recv_lookup(msk);
++		if (!ssk || !schedule_work(&msk->work))
++			__sock_put(sk);
++	}
+ }
+ =
+
  static int mptcp_get_port(struct sock *sk, unsigned short snum)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -1015,6 +1034,7 @@ static struct proto mptcp_prot =3D {
- 	.destroy	=3D mptcp_destroy,
- 	.sendmsg	=3D mptcp_sendmsg,
- 	.recvmsg	=3D mptcp_recvmsg,
-+	.release_cb	=3D mptcp_release_cb,
- 	.hash		=3D inet_hash,
- 	.unhash		=3D inet_unhash,
- 	.get_port	=3D mptcp_get_port,
 -- =
 
 2.24.1
 
---===============2485175931795397589==--
+--===============5099837256606271819==--
