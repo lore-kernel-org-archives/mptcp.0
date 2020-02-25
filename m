@@ -1,79 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============5099837256606271819=="
+Content-Type: multipart/mixed; boundary="===============0830872427615063326=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 8/8] mptcp: defer work schedule until mptcp
- lock is released
-Date: Tue, 25 Feb 2020 13:05:26 +0100
-Message-ID: <20200225120526.2866-9-fw@strlen.de>
-In-Reply-To: 20200225120526.2866-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next 3/8] mptcp: update mptcp ack sequence
+ from work queue
+Date: Tue, 25 Feb 2020 13:31:27 +0100
+Message-ID: <8049d9054ab08f3c7a68176d7fcae77478f50065.camel@redhat.com>
+In-Reply-To: 20200225120526.2866-4-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3778
+X-UID: 3779
 
---===============5099837256606271819==
+--===============0830872427615063326==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Don't schedule the work queue right away, instead defer this
-to the lock release callback.
+On Tue, 2020-02-25 at 13:05 +0100, Florian Westphal wrote:
+> +static bool __mptcp_move_skbs(struct mptcp_sock *msk)
+> +{
+> +	unsigned int moved =3D 0;
+> +	bool done;
+> +
+> +	do {
+> +		struct sock *ssk =3D mptcp_subflow_recv_lookup(msk);
+> +
+> +		if (!ssk)
+> +			break;
+> +
+> +		lock_sock(ssk);
 
-This has the advantage that it will give recv path a chance to
-complete -- this might have moved all pending packets from the
-subflow to the mptcp receive queue, which allows to avoid another
-schedule_work().
+I'm wondering if bh_lock_sock(ssk) would suffice here?
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+If so we could do the skbs move from mptcp_release_cb() in patch 8.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index de6bd9d28116..f7c0d205b047 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -240,8 +240,15 @@ void mptcp_data_ready(struct sock *sk, struct sock *ss=
-k)
- 		return;
- =
+But it looks like the full lock_sock() is required by the skb_orphan()
+call, which in turn modifies ssk->sk_forward_alloc, so no luck right?
 
- 	/* mptcp socket is busy, schedule worker */
--	if (schedule_work(&msk->work))
--		sock_hold((struct sock *)msk);
-+	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
-+			      &sk->sk_tsq_flags)) {
-+		sock_hold(sk);
-+
-+		/* need to try again, its possible release_cb() has already
-+		 * been called after the test_and_set_bit() above.
-+		 */
-+		move_skbs_to_msk(msk, ssk);
-+	}
- }
- =
+Thanks!
 
- static bool mptcp_ext_cache_refill(struct mptcp_sock *msk)
-@@ -957,6 +964,15 @@ static void mptcp_release_cb(struct sock *sk)
- 	} while (cmpxchg(&sk->sk_tsq_flags, flags, nflags) !=3D flags);
- =
+Paolo
 
- 	sock_release_ownership(sk);
-+
-+	if (flags & TCPF_DELACK_TIMER_DEFERRED) {
-+		struct mptcp_sock *msk =3D mptcp_sk(sk);
-+		struct sock *ssk;
-+
-+		ssk =3D mptcp_subflow_recv_lookup(msk);
-+		if (!ssk || !schedule_work(&msk->work))
-+			__sock_put(sk);
-+	}
- }
- =
-
- static int mptcp_get_port(struct sock *sk, unsigned short snum)
--- =
-
-2.24.1
-
---===============5099837256606271819==--
+--===============0830872427615063326==--
