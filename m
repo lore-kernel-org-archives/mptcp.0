@@ -1,68 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============7772956957188290400=="
+Content-Type: multipart/mixed; boundary="===============5227829608630111225=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 8/8] mptcp: defer work schedule until
- mptcp lock is released
-Date: Tue, 25 Feb 2020 13:50:37 +0100
-Message-ID: <e570c24a581bd1ce734f7c5751ee3579d92069d1.camel@redhat.com>
-In-Reply-To: 20200225120526.2866-9-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next 6/8] mptcp: avoid work queue scheduling
+ if possible
+Date: Tue, 25 Feb 2020 13:51:21 +0100
+Message-ID: <20200225125121.GJ19559@breakpoint.cc>
+In-Reply-To: e39273fde8de31e82c35048cd758c48268518bff.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3782
+X-UID: 3783
 
---===============7772956957188290400==
+--===============5227829608630111225==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-02-25 at 13:05 +0100, Florian Westphal wrote:
-> Don't schedule the work queue right away, instead defer this
-> to the lock release callback.
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > +/* In most cases we will be able to lock the mptcp socket.  If its alr=
+eady
+> > + * owned, we need to defer to the work queue to avoid ABBA deadlock.
+> > + */
+> > +static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+> > +{
+> > +	struct sock *sk =3D (struct sock *)msk;
+> > +	unsigned int moved =3D 0;
+> > +
+> > +	if (sock_owned_by_user_nocheck(sk))
+> > +		return false;
+> > +
+> > +	if (unlikely(!spin_trylock_bh(&sk->sk_lock.slock)))
+> > +		return false;
+> > +
+> > +	/* must re-check after taking the lock */
+> > +	if (!sock_owned_by_user_nocheck(sk))
 > =
 
-> This has the advantage that it will give recv path a chance to
-> complete -- this might have moved all pending packets from the
-> subflow to the mptcp receive queue, which allows to avoid another
-> schedule_work().
+> Don't we additionally need a READ_ONCE() here and above ?
+> Otherwise the compiler and/or CPU could merge the read?
+
+Oh, right, at least first check needs READ_ONCE annotation, thanks.
+
+> AFAICS sock_owned_by_user_nocheck() does not include the additional
+> annotation.
 > =
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/protocol.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
-> =
+> I think we could simply drop the first check (and always do the
+> trylock)
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index de6bd9d28116..f7c0d205b047 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -240,8 +240,15 @@ void mptcp_data_ready(struct sock *sk, struct sock *=
-ssk)
->  		return;
->  =
-
->  	/* mptcp socket is busy, schedule worker */
-> -	if (schedule_work(&msk->work))
-> -		sock_hold((struct sock *)msk);
-> +	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
-> +			      &sk->sk_tsq_flags)) {
-> +		sock_hold(sk);
-
-Here is the msk/sk socket lock always held by some other process?
-
-I think the trylock in patch 6 from different subflows can collide with
-each other, so a try lock can fail even with !sk->sk_lock.owned
-
-Or the process owning the msk sock lock when the previous check has
-been done can release it in the meanwhile.
-
-In one of the above happens, can the TCP_DELACK_TIMER_DEFERRED delayed
-for a long time? Do we need to address that scenario?
-
-Thanks,
-
-Paolo
-
-
---===============7772956957188290400==--
+The trylock would succeed however when socket is owned, leading to
+a uneeded lock operation.
+--===============5227829608630111225==--
