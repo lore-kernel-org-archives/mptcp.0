@@ -1,136 +1,134 @@
-Content-Type: multipart/mixed; boundary="===============4420518765546820311=="
+Content-Type: multipart/mixed; boundary="===============5576066510463191551=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 5/8] mptcp: remove mptcp_read_actor
-Date: Tue, 25 Feb 2020 13:05:23 +0100
-Message-ID: <20200225120526.2866-6-fw@strlen.de>
+Subject: [MPTCP] [PATCH net-next 6/8] mptcp: avoid work queue scheduling if
+ possible
+Date: Tue, 25 Feb 2020 13:05:24 +0100
+Message-ID: <20200225120526.2866-7-fw@strlen.de>
 In-Reply-To: 20200225120526.2866-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3775
+X-UID: 3776
 
---===============4420518765546820311==
+--===============5576066510463191551==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Only used to discard stale data from the subflow, so move
-it where needed.
+We can't grab the mptcp socket lock from the subflow data_ready
+callback, it would result in ABBA deadlock.
+
+But we can try to grab the mptcp lock.
+If we can't, we can defer to work queue.
+If the lock succeeds however we can avoid the schedule_work()
+call and move all in-sequence skbs to the mptcp receive queue.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 27 ---------------------------
- net/mptcp/protocol.h |  7 -------
- net/mptcp/subflow.c  | 18 +++++++++++++-----
- 3 files changed, 13 insertions(+), 39 deletions(-)
+ net/mptcp/protocol.c | 30 +++++++++++++++++++++++++++++-
+ net/mptcp/protocol.h |  2 +-
+ net/mptcp/subflow.c  |  4 ++--
+ 3 files changed, 32 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index bca23b999916..c96489c5c875 100644
+index c96489c5c875..c28c5cc49d65 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -428,33 +428,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- 	return ret;
+@@ -201,17 +201,45 @@ static bool __mptcp_move_skbs_from_subflow(struct mpt=
+cp_sock *msk,
+ 	return done;
  }
  =
 
--int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
--		     unsigned int offset, size_t len)
--{
--	struct mptcp_read_arg *arg =3D desc->arg.data;
--	size_t copy_len;
--
--	copy_len =3D min(desc->count, len);
--
--	if (likely(arg->msg)) {
--		int err;
--
--		err =3D skb_copy_datagram_msg(skb, offset, arg->msg, copy_len);
--		if (err) {
--			pr_debug("error path");
--			desc->error =3D err;
--			return err;
--		}
--	} else {
--		pr_debug("Flushing skb payload");
--	}
--
--	desc->count -=3D copy_len;
--
--	pr_debug("consumed %zu bytes, %zu left", copy_len, desc->count);
--	return copy_len;
--}
--
- static void mptcp_wait_data(struct sock *sk, long *timeo)
+-void mptcp_data_ready(struct sock *sk)
++/* In most cases we will be able to lock the mptcp socket.  If its already
++ * owned, we need to defer to the work queue to avoid ABBA deadlock.
++ */
++static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
++{
++	struct sock *sk =3D (struct sock *)msk;
++	unsigned int moved =3D 0;
++
++	if (sock_owned_by_user_nocheck(sk))
++		return false;
++
++	if (unlikely(!spin_trylock_bh(&sk->sk_lock.slock)))
++		return false;
++
++	/* must re-check after taking the lock */
++	if (!sock_owned_by_user_nocheck(sk))
++		__mptcp_move_skbs_from_subflow(msk, ssk, &moved);
++
++	spin_unlock_bh(&sk->sk_lock.slock);
++
++	return skb_queue_empty(&ssk->sk_receive_queue);
++}
++
++void mptcp_data_ready(struct sock *sk, struct sock *ssk)
  {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6e6e162d25f1..d06170c5f191 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -191,13 +191,6 @@ void mptcp_proto_init(void);
- int mptcp_proto_v6_init(void);
- #endif
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
  =
 
--struct mptcp_read_arg {
--	struct msghdr *msg;
--};
--
--int mptcp_read_actor(read_descriptor_t *desc, struct sk_buff *skb,
--		     unsigned int offset, size_t len);
--
- void mptcp_get_options(const struct sk_buff *skb,
+ 	set_bit(MPTCP_DATA_READY, &msk->flags);
+ 	sk->sk_data_ready(sk);
+ =
+
++	if (atomic_read(&sk->sk_rmem_alloc) < READ_ONCE(sk->sk_rcvbuf) &&
++	    move_skbs_to_msk(msk, ssk))
++		return;
++
+ 	/* don't schedule if mptcp sk is (still) over limit */
+ 	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
+ 		return;
+ =
+
++	/* mptcp socket is busy, schedule worker */
+ 	if (schedule_work(&msk->work))
+ 		sock_hold((struct sock *)msk);
+ }
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d06170c5f191..6c0b2c8ab674 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -195,7 +195,7 @@ void mptcp_get_options(const struct sk_buff *skb,
  		       struct tcp_options_received *opt_rx);
  =
 
+ void mptcp_finish_connect(struct sock *sk);
+-void mptcp_data_ready(struct sock *sk);
++void mptcp_data_ready(struct sock *sk, struct sock *ssk);
+ =
+
+ int mptcp_token_new_request(struct request_sock *req);
+ void mptcp_token_destroy_request(u32 token);
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 3dad662840aa..37a4767db441 100644
+index 37a4767db441..0de2a44bdaa0 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -408,6 +408,18 @@ static enum mapping_status get_mapping_status(struct s=
-ock *ssk)
- 	return MAPPING_OK;
+@@ -563,7 +563,7 @@ static void subflow_data_ready(struct sock *sk)
+ 	}
+ =
+
+ 	if (mptcp_subflow_data_available(sk))
+-		mptcp_data_ready(parent);
++		mptcp_data_ready(parent, sk);
  }
  =
 
-+static int subflow_read_actor(read_descriptor_t *desc,
-+			      struct sk_buff *skb,
-+			      unsigned int offset, size_t len)
-+{
-+	size_t copy_len =3D min(desc->count, len);
-+
-+	desc->count -=3D copy_len;
-+
-+	pr_debug("flushed %zu bytes, %zu left", copy_len, desc->count);
-+	return copy_len;
-+}
-+
- static bool subflow_check_data_avail(struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-@@ -482,16 +494,12 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		pr_debug("discarding %zu bytes, current map len=3D%d", delta,
- 			 map_remaining);
- 		if (delta) {
--			struct mptcp_read_arg arg =3D {
--				.msg =3D NULL,
--			};
- 			read_descriptor_t desc =3D {
- 				.count =3D delta,
--				.arg.data =3D &arg,
- 			};
- 			int ret;
+ static void subflow_write_space(struct sock *sk)
+@@ -696,7 +696,7 @@ static void subflow_state_change(struct sock *sk)
+ 	 * the data available machinery here.
+ 	 */
+ 	if (parent && subflow->mp_capable && mptcp_subflow_data_available(sk))
+-		mptcp_data_ready(parent);
++		mptcp_data_ready(parent, sk);
  =
 
--			ret =3D tcp_read_sock(ssk, &desc, mptcp_read_actor);
-+			ret =3D tcp_read_sock(ssk, &desc, subflow_read_actor);
- 			if (ret < 0) {
- 				ssk->sk_err =3D -ret;
- 				goto fatal;
+ 	if (parent && !(parent->sk_shutdown & RCV_SHUTDOWN) &&
+ 	    !subflow->rx_eof && subflow_is_done(sk)) {
 -- =
 
 2.24.1
 
---===============4420518765546820311==--
+--===============5576066510463191551==--
