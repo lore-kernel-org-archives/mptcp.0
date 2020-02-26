@@ -1,58 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============3412292599991499550=="
+Content-Type: multipart/mixed; boundary="===============2064124147161446355=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 7/9] mptcp: add netlink based PM
-Date: Wed, 26 Feb 2020 10:54:37 +0100
-Message-ID: <24deb929-cd4b-e537-6f65-2b4145585e6c@tessares.net>
-In-Reply-To: 20200226095134.GO19559@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH v4 7/9] mptcp: add netlink based PM
+Date: Wed, 26 Feb 2020 12:36:47 +0100
+Message-ID: <8096c62ca92b5ca5e16fc7caa3e60fedb2beb2fb.camel@redhat.com>
+In-Reply-To: fda264ac4e8825c54ae893188f9b58563abab1ce.1582558805.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3808
+X-UID: 3809
 
---===============3412292599991499550==
+--===============2064124147161446355==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Florian,
+On Mon, 2020-02-24 at 16:51 +0100, Paolo Abeni wrote:
+> +enum {
+> +	MPTCP_PM_CMD_UNSPEC,
+> +
+> +	MPTCP_PM_CMD_ADD_ADDR,
+> +	MPTCP_PM_CMD_DEL_ADDR,
+> +	MPTCP_PM_CMD_GET_ADDR,
+> +	MPTCP_PM_CMD_FLUSH_ADDRS,
+> +	MPTCP_PM_CMD_SET_RCV_ADD_ADDRS,
+> +	MPTCP_PM_CMD_GET_RCV_ADD_ADDRS,
 
-On 26/02/2020 10:51, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
->> On Wed, 2020-02-26 at 10:36 +0100, Florian Westphal wrote:
->>> Paolo Abeni <pabeni(a)redhat.com> wrote:
->>>> I see! Yes, currently we can't limit the number of subflows created for
->>>> a single mptcp socket on a server. I'm unsure how bad that is, as
->>>> usually we allow each client to create an arbitrary high number of TCP
->>>> connection to the server (modulo syn flood).
->>>>
->>>> Still I think adding the ability to impose such limit could be nice. It
->>>> requires an additional hook (from subflow_syn_recv_sock() towards the
->>>> PM). If we agree on that, I can try to cover in a separate
->>>> patch/series.
->>>
->>> I think its a must-have, as file descriptor limits don't apply.
->>
->> Ok I'll work on that!
->>
->> Can we still merge the series without this feature to unblock Peter ?
-> =
+To enforce the server subflow limits, the idea would be to change (in a
+separated series) the above 2 commands to:
+	MPTCP_PM_CMD_SET_LIMITS,
+	MPTCP_PM_CMD_GET_LIMITS,
 
-> No objections, I did not mean that as a veto.
+and add a new attribute for the max subflow limits
 
-Fine for me too.
+Plus the core infrastructure/hooks to let the PM really enforce such
+limit.
 
-I can have a look at that after Florian's rebase.
+WDYT?
 
-I will also drop "mptcp: Implement basic path manager" patch as =
+Cheers,
 
-mentioned in the cover-letter!
+Paolo
 
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3412292599991499550==--
+--===============2064124147161446355==--
