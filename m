@@ -1,53 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============1306242665473073206=="
+Content-Type: multipart/mixed; boundary="===============0223926465621727158=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 20th of February 2020
-Date: Wed, 26 Feb 2020 11:42:06 -0800
-Message-ID: <alpine.OSX.2.22.394.2002261031570.50710@tvtrimel-mobl2.amr.corp.intel.com>
-In-Reply-To: 815ae65b-cab1-5685-eaba-979182655895@tessares.net
+Subject: [MPTCP] [PATCH mptcp] mptcp: re-check dsn before reading from subflow
+Date: Thu, 27 Feb 2020 09:39:35 +0100
+Message-ID: <20200227083935.11585-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3814
+X-UID: 3815
 
---===============1306242665473073206==
+--===============0223926465621727158==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+mptcp_subflow_data_available() is commonly called via
+ssk->sk_data_ready(), in this case the mptcp socket lock
+cannot be acquired.
 
-On Fri, 21 Feb 2020, Matthieu Baerts wrote:
+Therefore, while we can safely discard subflow data that
+was already received up to msk->ack_seq, we cannot be sure
+that 'subflow->data_avail' will still be valid at the time
+userspace wants to read the data -- a previous read on a
+different subflow might have carried this data already.
 
-> 1233648: Needs Review / ACK: [RFC,1/3] mptcp: Check connection state bef
-> 1233650: Needs Review / ACK: [RFC,2/3] mptcp: Use per-subflow storage fo
-> 1233649: Needs Review / ACK: [RFC,3/3] mptcp: Only send DATA_FIN with f:
->    - *need review* (for more than one week)
+In that (unlikely) event, msk->ack_seq will have been updated
+and will be ahead of the subflow dsn.
 
-This is old enough now that I need to rebase it.
+We can check for this condition and skip/resync to the expected
+sequence number.
 
-> 1237722: New: [net,v2,1/3] mptcp: Keep TCP fallback subflow valid after
-> 1237721: New: [net,v2,3/3] mptcp: Use TCP sendmsg/recvmsg for fallback:
->    - patch 2/3 has been upstreamed
->    - Paolo's understanding is that they are no longer needed
->    - *Mat* : can you confirm please?
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ I could also submit this directly for net-next, but this
+ patch is only needed w. MP_JOIN support.
 
-That's correct - these aren't needed. I've archived them in patchwork.
+ net/mptcp/protocol.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 53a2b0ba2241..8f2fc72fc5ed 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -121,6 +121,27 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, s=
+truct sock *ssk,
+ 	MPTCP_SKB_CB(skb)->offset =3D offset;
+ }
+ =
 
->    - new about Intel's kbuild? (to check next week with Mat)
++/* both sockets must be locked */
++static bool mptcp_subflow_dsn_valid(const struct mptcp_sock *msk,
++				    struct sock *ssk)
++{
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
++	u64 dsn =3D mptcp_subflow_get_mapped_dsn(subflow);
++
++	/* revalidate data sequence number.
++	 *
++	 * mptcp_subflow_data_available() is usually called
++	 * without msk lock.  Its unlikely (but possible)
++	 * that msk->ack_seq has been advanced since the last
++	 * call found in-sequence data.
++	 */
++	if (likely(dsn =3D=3D msk->ack_seq))
++		return true;
++
++	subflow->data_avail =3D 0;
++	return mptcp_subflow_data_available(ssk);
++}
++
+ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 					   struct sock *ssk,
+ 					   unsigned int *bytes)
+@@ -133,6 +154,11 @@ static bool __mptcp_move_skbs_from_subflow(struct mptc=
+p_sock *msk,
+ 	bool done =3D false;
+ 	int rcvbuf;
+ =
 
-The kbuild team has been busy addressing other tasks, but they said I =
++	if (!mptcp_subflow_dsn_valid(msk, ssk)) {
++		*bytes =3D 0;
++		return false;
++	}
++
+ 	rcvbuf =3D max(ssk->sk_rcvbuf, sk->sk_rcvbuf);
+ 	if (rcvbuf > sk->sk_rcvbuf)
+ 		sk->sk_rcvbuf =3D rcvbuf;
+-- =
 
-could submit a pull request to have them build the export branch. I will =
+2.24.1
 
-set that up to report results to mptcp(a)lists.01.org . Further =
-
-configuration may be needed to have the self tests run, I will ask about =
-
-that in the pull request.
-
-
---
-Mat Martineau
-Intel
---===============1306242665473073206==--
+--===============0223926465621727158==--
