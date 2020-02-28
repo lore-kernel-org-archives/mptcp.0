@@ -1,93 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============0223926465621727158=="
+Content-Type: multipart/mixed; boundary="===============2212153138966389991=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp] mptcp: re-check dsn before reading from subflow
-Date: Thu, 27 Feb 2020 09:39:35 +0100
-Message-ID: <20200227083935.11585-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH net 0/3] DATA_FIN fixes proposed for net tree
+Date: Thu, 27 Feb 2020 16:29:38 -0800
+Message-ID: <20200228002941.99393-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3815
+X-UID: 3817
 
---===============0223926465621727158==
+--===============2212153138966389991==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_subflow_data_available() is commonly called via
-ssk->sk_data_ready(), in this case the mptcp socket lock
-cannot be acquired.
+More changes are needed for multi-subflow DATA_FIN support, but these
+fixes may be worth applying to the 5.6 tree for single subflow. Self
+tests pass, and I checked the headers with DATA_FIN for both the
+DATA_FIN-only DSS option and packet with a full mapping and DATA_FIN.
 
-Therefore, while we can safely discard subflow data that
-was already received up to msk->ack_seq, we cannot be sure
-that 'subflow->data_avail' will still be valid at the time
-userspace wants to read the data -- a previous read on a
-different subflow might have carried this data already.
+I'll send to netdev following review on this list.
 
-In that (unlikely) event, msk->ack_seq will have been updated
-and will be ahead of the subflow dsn.
+RFC -> v1: Rebased on current net tree
 
-We can check for this condition and skip/resync to the expected
-sequence number.
+Mat Martineau (3):
+  mptcp: Check connection state before attempting send
+  mptcp: Use per-subflow storage for DATA_FIN sequence number
+  mptcp: Only send DATA_FIN with final mapping
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- I could also submit this directly for net-next, but this
- patch is only needed w. MP_JOIN support.
+ net/mptcp/options.c  | 16 ++++++++--------
+ net/mptcp/protocol.c | 32 +++++++++++++++++++++++++++-----
+ net/mptcp/protocol.h |  2 ++
+ 3 files changed, 37 insertions(+), 13 deletions(-)
 
- net/mptcp/protocol.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 53a2b0ba2241..8f2fc72fc5ed 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -121,6 +121,27 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, s=
-truct sock *ssk,
- 	MPTCP_SKB_CB(skb)->offset =3D offset;
- }
- =
-
-+/* both sockets must be locked */
-+static bool mptcp_subflow_dsn_valid(const struct mptcp_sock *msk,
-+				    struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-+	u64 dsn =3D mptcp_subflow_get_mapped_dsn(subflow);
-+
-+	/* revalidate data sequence number.
-+	 *
-+	 * mptcp_subflow_data_available() is usually called
-+	 * without msk lock.  Its unlikely (but possible)
-+	 * that msk->ack_seq has been advanced since the last
-+	 * call found in-sequence data.
-+	 */
-+	if (likely(dsn =3D=3D msk->ack_seq))
-+		return true;
-+
-+	subflow->data_avail =3D 0;
-+	return mptcp_subflow_data_available(ssk);
-+}
-+
- static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
- 					   struct sock *ssk,
- 					   unsigned int *bytes)
-@@ -133,6 +154,11 @@ static bool __mptcp_move_skbs_from_subflow(struct mptc=
-p_sock *msk,
- 	bool done =3D false;
- 	int rcvbuf;
- =
-
-+	if (!mptcp_subflow_dsn_valid(msk, ssk)) {
-+		*bytes =3D 0;
-+		return false;
-+	}
-+
- 	rcvbuf =3D max(ssk->sk_rcvbuf, sk->sk_rcvbuf);
- 	if (rcvbuf > sk->sk_rcvbuf)
- 		sk->sk_rcvbuf =3D rcvbuf;
+base-commit: 3ee339eb28959629db33aaa2b8cde4c63c6289eb
 -- =
 
-2.24.1
+2.25.1
 
---===============0223926465621727158==--
+--===============2212153138966389991==--
