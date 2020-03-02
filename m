@@ -1,68 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============8590026439191119245=="
+Content-Type: multipart/mixed; boundary="===============6196178093116973219=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] mptcp: fix compilation warning without IPv6
-Date: Mon, 02 Mar 2020 14:46:54 +0100
-Message-ID: <00593c18bb000ea6cf0fd9a4b7b7611b9187079b.camel@redhat.com>
-In-Reply-To: 20200302090911.1442823-2-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp: fix wrong merge resolution
+Date: Mon, 02 Mar 2020 16:39:14 +0100
+Message-ID: <c6182435-07ba-fac4-5c12-96c05ea1c08a@tessares.net>
+In-Reply-To: 4cf244b31673213a3cc2428fd9079c77a77d9b77.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3839
+X-UID: 3840
 
---===============8590026439191119245==
+--===============6196178093116973219==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-03-02 at 10:09 +0100, Matthieu Baerts wrote:
-> net/mptcp/pm_netlink.c: In function =E2=80=98mptcp_pm_nl_append_new_local=
-_addr=E2=80=99:
-> net/mptcp/pm_netlink.c:58:5: warning: =E2=80=98addr_equals=E2=80=99 may b=
-e used uninitialized in this function [-Wmaybe-uninitialized]
->    58 |  if (!addr_equals)
->       |     ^
-> net/mptcp/pm_netlink.c:46:7: note: =E2=80=98addr_equals=E2=80=99 was decl=
-ared here
->    46 |  bool addr_equals;
->       |       ^~~~~~~~~~~
+Hi Paolo,
+
+On 02/03/2020 14:43, Paolo Abeni wrote:
+> On Mon, 2020-03-02 at 10:34 +0100, Matthieu Baerts wrote:
+>> Otherwise the data are never init and we get warnings in workqueue code.
+>>
+>> I really don't know how I made this mistake :-/
+>>
+>> Fixes: ce2d7fb36478 (tgupdate: merge t/mptcp-introduce-MPTCP-retransmiss=
+ion-timer base into t/mptcp-introduce-MPTCP-retransmission-timer)
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 > =
 
-> Fixes: c3a214585944 (mptcp: add netlink based PM)
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
-> =
+> LGTM, Thanks!
 
-> Notes:
->     to be squashed in "mptcp: add netlink based PM"
-> =
+Thank you for the review:
 
->  net/mptcp/pm_netlink.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> =
+- 05d850dd0f09: "squashed" in "mptcp: introduce MPTCP retransmission timer"
+- I didn't add the signed-off-by, it was a wrong merge resolution.
+- fa603a295c69..ee3a464ce517: result
 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 0887fae982fc..c430ab37910a 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -50,9 +50,11 @@ static bool addresses_equal(const struct mptcp_addr_in=
-fo *a,
->  =
+Tests + export will be launched soon.
 
->  	if (a->family =3D=3D AF_INET)
->  		addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
-> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  	else
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  		addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
-> +#else
-> +		addr_equals =3D false;
->  #endif
+Cheers,
+Matt
+-- =
 
-If we init 'addr_equals' to 'false' we can avoid the #else branch here.
-
-(Thanks for fixing by mistakes!)
-
-/P
-
---===============8590026439191119245==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6196178093116973219==--
