@@ -1,65 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============8220102662537360149=="
+Content-Type: multipart/mixed; boundary="===============5243482595682238475=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/2] mptcp: fix compilation error without IPv6
-Date: Mon, 02 Mar 2020 10:09:10 +0100
-Message-ID: <20200302090911.1442823-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 2/2] mptcp: fix compilation warning without IPv6
+Date: Mon, 02 Mar 2020 10:09:11 +0100
+Message-ID: <20200302090911.1442823-2-matthieu.baerts@tessares.net>
+In-Reply-To: 20200302090911.1442823-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3835
+X-UID: 3836
 
---===============8220102662537360149==
+--===============5243482595682238475==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-net/mptcp/subflow.c: In function =E2=80=98mptcp_info2sockaddr=E2=80=99:
-net/mptcp/subflow.c:810:31: error: =E2=80=98const struct mptcp_addr_info=E2=
-=80=99 has no member named =E2=80=98addr6=E2=80=99; did you mean =E2=80=98a=
-ddr=E2=80=99?
-  810 |   in6_addr->sin6_addr =3D info->addr6;
-      |                               ^~~~~
-      |                               addr
+net/mptcp/pm_netlink.c: In function =E2=80=98mptcp_pm_nl_append_new_local_a=
+ddr=E2=80=99:
+net/mptcp/pm_netlink.c:58:5: warning: =E2=80=98addr_equals=E2=80=99 may be =
+used uninitialized in this function [-Wmaybe-uninitialized]
+   58 |  if (!addr_equals)
+      |     ^
+net/mptcp/pm_netlink.c:46:7: note: =E2=80=98addr_equals=E2=80=99 was declar=
+ed here
+   46 |  bool addr_equals;
+      |       ^~~~~~~~~~~
 
-Fixes: f88ff34735b9 (Squash-to: "mptcp: Add handling of outgoing MP_JOIN re=
-quests")
+Fixes: c3a214585944 (mptcp: add netlink based PM)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
 
 Notes:
-    to be squashed in "mptcp: Add handling of outgoing MP_JOIN requests"
+    to be squashed in "mptcp: add netlink based PM"
 
- net/mptcp/subflow.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/mptcp/pm_netlink.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 663e963995e1..68e0023422d6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -804,12 +804,15 @@ static void mptcp_info2sockaddr(const struct mptcp_ad=
-dr_info *info,
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 0887fae982fc..c430ab37910a 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -50,9 +50,11 @@ static bool addresses_equal(const struct mptcp_addr_info=
+ *a,
  =
 
- 		in_addr->sin_addr =3D info->addr;
- 		in_addr->sin_port =3D info->port;
--	} else if (addr->ss_family =3D=3D AF_INET6) {
-+	}
+ 	if (a->family =3D=3D AF_INET)
+ 		addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	else
 +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	else if (addr->ss_family =3D=3D AF_INET6) {
- 		struct sockaddr_in6 *in6_addr =3D (struct sockaddr_in6 *)addr;
+ 		addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
++#else
++		addr_equals =3D false;
+ #endif
  =
 
- 		in6_addr->sin6_addr =3D info->addr6;
- 		in6_addr->sin6_port =3D info->port;
- 	}
-+#endif
- }
- =
-
- int __mptcp_subflow_connect(struct sock *sk, int ifindex,
+ 	if (!addr_equals)
 -- =
 
 2.25.0
 
---===============8220102662537360149==--
+--===============5243482595682238475==--
