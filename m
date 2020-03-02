@@ -1,47 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============0862322313353382786=="
+Content-Type: multipart/mixed; boundary="===============6085636027853196692=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: disable two unstable mptcp_join tests
-Date: Mon, 02 Mar 2020 17:11:08 +0100
-Message-ID: <81b4a085-0e1d-4481-68c5-f8aedc0292f7@tessares.net>
-In-Reply-To: b2cf7a3358172f0a7b9aae6223dfb9d48950438c.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 2/2] mptcp: fix compilation warning without IPv6
+Date: Mon, 02 Mar 2020 17:18:09 +0100
+Message-ID: <b1756e62-85dc-6118-b108-b3225a51dc13@tessares.net>
+In-Reply-To: 255884997d97f8bdae42df1eb2c012f5b97d7919.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3845
+X-UID: 3846
 
---===============0862322313353382786==
+--===============6085636027853196692==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo,
 
-On 02/03/2020 17:07, Paolo Abeni wrote:
-> On Mon, 2020-03-02 at 17:03 +0100, Matthieu Baerts wrote:
->> They are currently unstable. Paolo is looking at them.
+On 02/03/2020 17:05, Paolo Abeni wrote:
+> On Mon, 2020-03-02 at 16:56 +0100, Matthieu Baerts wrote:
+>> net/mptcp/pm_netlink.c: In function =E2=80=98mptcp_pm_nl_append_new_loca=
+l_addr=E2=80=99:
+>> net/mptcp/pm_netlink.c:58:5: warning: =E2=80=98addr_equals=E2=80=99 may =
+be used uninitialized in this function [-Wmaybe-uninitialized]
+>>     58 |  if (!addr_equals)
+>>        |     ^
+>> net/mptcp/pm_netlink.c:46:7: note: =E2=80=98addr_equals=E2=80=99 was dec=
+lared here
+>>     46 |  bool addr_equals;
+>>        |       ^~~~~~~~~~~
 >>
->> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
->> Fixes: a17132c420b0 (selftests: add test-cases for MPTCP MP_JOIN)
+>> Fixes: c3a214585944 (mptcp: add netlink based PM)
 >> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>> ---
+>>
+>> Notes:
+>>      to be squashed in "mptcp: add netlink based PM"
+>>
+>>   net/mptcp/pm_netlink.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index 0887fae982fc..4cbf338c0d2c 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -43,7 +43,7 @@ struct pm_nl_pernet {
+>>   static bool addresses_equal(const struct mptcp_addr_info *a,
+>>   			    struct mptcp_addr_info *b, bool use_port)
+>>   {
+>> -	bool addr_equals;
+>> +	bool addr_equals =3D false;
+>>   =
+
+>>   	if (a->family !=3D b->family)
+>>   		return false;
 > =
 
-> Well, they are actually stable: they fail with 100% accuracy ;)
+> The series (patch 1 and 2) LGTM, thanks!
 
-Indeed, I just updated the commit message with s/unstable/failing to =
+Thank you for the review!
 
-clarify this :)
+- c04914d046f0: "squashed" in "mptcp: Add handling of outgoing MP_JOIN =
 
-- 118f5a4e2a1b: "squashed" in "selftests: add test-cases for MPTCP MP_JOIN"
-- no signed-off-by added, that's temporary
-- ee3a464ce517..b48bbfeadf3b: result
+requests"
+- 9987941c10c3: "squashed" in "mptcp: add netlink based PM"
+- b48bbfeadf3b..512b7f2ab36f: result
 
-Tests + export will be launched soon.
-
-> Looking to re-enable them ASAP, but will take time (we need correct and
-> accurate fourth ack handling/3rd ack retransmission)
-
-Thank you for looking at this complex part!
+Tests + export in progress.
 
 Cheers,
 Matt
@@ -52,4 +77,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0862322313353382786==--
+--===============6085636027853196692==--
