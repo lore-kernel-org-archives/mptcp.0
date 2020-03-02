@@ -1,63 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============5243482595682238475=="
+Content-Type: multipart/mixed; boundary="===============0311667411502490933=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp: fix compilation warning without IPv6
-Date: Mon, 02 Mar 2020 10:09:11 +0100
-Message-ID: <20200302090911.1442823-2-matthieu.baerts@tessares.net>
-In-Reply-To: 20200302090911.1442823-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] [PATCH] mptcp: fix wrong merge resolution
+Date: Mon, 02 Mar 2020 10:34:42 +0100
+Message-ID: <20200302093442.1481757-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3836
+X-UID: 3837
 
---===============5243482595682238475==
+--===============0311667411502490933==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-net/mptcp/pm_netlink.c: In function =E2=80=98mptcp_pm_nl_append_new_local_a=
-ddr=E2=80=99:
-net/mptcp/pm_netlink.c:58:5: warning: =E2=80=98addr_equals=E2=80=99 may be =
-used uninitialized in this function [-Wmaybe-uninitialized]
-   58 |  if (!addr_equals)
-      |     ^
-net/mptcp/pm_netlink.c:46:7: note: =E2=80=98addr_equals=E2=80=99 was declar=
-ed here
-   46 |  bool addr_equals;
-      |       ^~~~~~~~~~~
+Otherwise the data are never init and we get warnings in workqueue code.
 
-Fixes: c3a214585944 (mptcp: add netlink based PM)
+I really don't know how I made this mistake :-/
+
+Fixes: ce2d7fb36478 (tgupdate: merge t/mptcp-introduce-MPTCP-retransmission=
+-timer base into t/mptcp-introduce-MPTCP-retransmission-timer)
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
 
 Notes:
-    to be squashed in "mptcp: add netlink based PM"
+    to be squashed in "mptcp: introduce MPTCP retransmission timer"
 
- net/mptcp/pm_netlink.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 0887fae982fc..c430ab37910a 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -50,9 +50,11 @@ static bool addresses_equal(const struct mptcp_addr_info=
- *a,
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b8e71d5a4ff9..d20f19b779fb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1106,6 +1106,8 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->first =3D NULL;
+ 	inet_csk(sk)->icsk_sync_mss =3D mptcp_sync_mss;
  =
 
- 	if (a->family =3D=3D AF_INET)
- 		addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	else
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
-+#else
-+		addr_equals =3D false;
- #endif
++	mptcp_pm_data_init(msk);
++
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
  =
 
- 	if (!addr_equals)
 -- =
 
 2.25.0
 
---===============5243482595682238475==--
+--===============0311667411502490933==--
