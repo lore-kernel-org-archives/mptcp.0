@@ -1,80 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============6085636027853196692=="
+Content-Type: multipart/mixed; boundary="===============7719861354617640189=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 2/2] mptcp: fix compilation warning without IPv6
-Date: Mon, 02 Mar 2020 17:18:09 +0100
-Message-ID: <b1756e62-85dc-6118-b108-b3225a51dc13@tessares.net>
-In-Reply-To: 255884997d97f8bdae42df1eb2c012f5b97d7919.camel@redhat.com
+Subject: [MPTCP] [PATCH net] mptcp: always include dack if possible.
+Date: Tue, 03 Mar 2020 17:31:03 +0100
+Message-ID: <df54b6101eec13563d9b19ff5bd085446ec25ede.1583253028.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3846
+X-UID: 3847
 
---===============6085636027853196692==
+--===============7719861354617640189==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Currently passive MPTCP socket can skip including the DACK
+option - if the peer sends data before accept() completes.
 
-On 02/03/2020 17:05, Paolo Abeni wrote:
-> On Mon, 2020-03-02 at 16:56 +0100, Matthieu Baerts wrote:
->> net/mptcp/pm_netlink.c: In function =E2=80=98mptcp_pm_nl_append_new_loca=
-l_addr=E2=80=99:
->> net/mptcp/pm_netlink.c:58:5: warning: =E2=80=98addr_equals=E2=80=99 may =
-be used uninitialized in this function [-Wmaybe-uninitialized]
->>     58 |  if (!addr_equals)
->>        |     ^
->> net/mptcp/pm_netlink.c:46:7: note: =E2=80=98addr_equals=E2=80=99 was dec=
-lared here
->>     46 |  bool addr_equals;
->>        |       ^~~~~~~~~~~
->>
->> Fixes: c3a214585944 (mptcp: add netlink based PM)
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> ---
->>
->> Notes:
->>      to be squashed in "mptcp: add netlink based PM"
->>
->>   net/mptcp/pm_netlink.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 0887fae982fc..4cbf338c0d2c 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -43,7 +43,7 @@ struct pm_nl_pernet {
->>   static bool addresses_equal(const struct mptcp_addr_info *a,
->>   			    struct mptcp_addr_info *b, bool use_port)
->>   {
->> -	bool addr_equals;
->> +	bool addr_equals =3D false;
->>   =
+The above happens because the msk 'can_ack' flag is set
+only after the accept() call.
 
->>   	if (a->family !=3D b->family)
->>   		return false;
-> =
+Such missing DACK option may cause - as per RFC spec -
+unwanted fallback to TCP.
 
-> The series (patch 1 and 2) LGTM, thanks!
+This change addresses the issue using the key material
+available in the current subflow, if any, to create a suitable
+dack option when msk ack seq is not yet available.
 
-Thank you for the review!
+Fixes: d22f4988ffec ("mptcp: process MP_CAPABLE data option")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-- c04914d046f0: "squashed" in "mptcp: Add handling of outgoing MP_JOIN =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 29a8ec2aab8d..f64b3e2e508e 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -473,6 +473,8 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ 	struct mptcp_sock *msk;
+ 	unsigned int ack_size;
+ 	bool ret =3D false;
++	bool can_ack;
++	u64 ack_seq;
+ 	u8 tcp_fin;
+ =
 
-requests"
-- 9987941c10c3: "squashed" in "mptcp: add netlink based PM"
-- b48bbfeadf3b..512b7f2ab36f: result
+ 	if (skb) {
+@@ -499,9 +501,20 @@ static bool mptcp_established_options_dss(struct sock =
+*sk, struct sk_buff *skb,
+ 		ret =3D true;
+ 	}
+ =
 
-Tests + export in progress.
++	/* passive sockets msk will set the 'can_ack' after accept(), even
++	 * if the first subflow may have the already the remote key handy
++	 */
++	can_ack =3D true;
+ 	opts->ext_copy.use_ack =3D 0;
+ 	msk =3D mptcp_sk(subflow->conn);
+-	if (!msk || !READ_ONCE(msk->can_ack)) {
++	if (likely(msk && READ_ONCE(msk->can_ack)))
++		ack_seq =3D msk->ack_seq;
++	else if (subflow->can_ack)
++		mptcp_crypto_key_sha(subflow->remote_key, NULL, &ack_seq);
++	else
++		can_ack =3D false;
++
++	if (unlikely(!can_ack)) {
+ 		*size =3D ALIGN(dss_size, 4);
+ 		return ret;
+ 	}
+@@ -514,7 +527,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ =
 
-Cheers,
-Matt
+ 	dss_size +=3D ack_size;
+ =
+
+-	opts->ext_copy.data_ack =3D msk->ack_seq;
++	opts->ext_copy.data_ack =3D ack_seq;
+ 	opts->ext_copy.ack64 =3D 1;
+ 	opts->ext_copy.use_ack =3D 1;
+ =
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6085636027853196692==--
+2.21.1
+
+--===============7719861354617640189==--
