@@ -1,43 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============7439110089814724248=="
+Content-Type: multipart/mixed; boundary="===============4515661685980441869=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [GIT] Sync with net-next on 20200304: 2 conflicts
-Date: Wed, 04 Mar 2020 19:01:59 +0100
-Message-ID: <cd770b0b-333f-e86e-1292-b95cc606122b@tessares.net>
+Subject: [MPTCP] Re: [PATCH v1 0/12] pm netlink: followup and fixes
+Date: Wed, 04 Mar 2020 19:56:09 +0100
+Message-ID: <d26beb71fd0c5b5469b4ec3c3b31d5639805f4e3.camel@redhat.com>
+In-Reply-To: cover.1583334095.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3862
+X-UID: 3863
 
---===============7439110089814724248==
+--===============4515661685980441869==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, 2020-03-04 at 16:01 +0100, Paolo Abeni wrote:
+> Note: mp join self tests are still unstable, e.g. can fail randomly, due =
+to an
+> old race between mptcp_token_update_accept() and mptcp_token_get_sock(): =
+e.g.
+> a client may legitly try to create a subflow after that the first one is =
+fully
+> established but before the server has accepted the initial socket:
+> mptcp_token_get_sock() will fail and MP_JOIN will fail too, incrementing
+> MPTCP_MIB_JOINNOTOKEN.
 
-Recently, 3 MPTCP-related patched from Mat have been applied on =
+I'm looking at the above issue. =
 
-'net-next'. This created 2 conflicts:
 
-- d102ef2a59b5: conflict in =
+I think we can address it allocating earlier the msk socket in
+subflow_syn_recv_sock(), so that we can always insert the 'token ->
+msk' association into the radix tree before entering the fully
+established status.
 
-t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-- a94ddfbf73b1: conflict in =
+As a nice side effect mptcp_connect() will be simpler and faster.
 
-t/mptcp-queue-data-for-mptcp-level-retransmission
+The flip side is more memory allocated for the child socket backlog (I
+think it should not be that bad, as the child backlog is limited).
 
-Please tell me if the resolution is not OK.
+I hope to share some early code soon. (will be a separate series
+anyway)
 
-Tests + export in progress.
+Any comments/opinion/warns ?!?
 
-Cheers,
-Matt
--- =
+Thanks,
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7439110089814724248==--
+Paolo
+
+
+
+--===============4515661685980441869==--
