@@ -1,53 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============4515661685980441869=="
+Content-Type: multipart/mixed; boundary="===============3763576989132772589=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 0/12] pm netlink: followup and fixes
-Date: Wed, 04 Mar 2020 19:56:09 +0100
-Message-ID: <d26beb71fd0c5b5469b4ec3c3b31d5639805f4e3.camel@redhat.com>
-In-Reply-To: cover.1583334095.git.pabeni@redhat.com
+Subject: [MPTCP] Weekly meeting - 5 March 2020 17:00 UTC (9am PST, 6pm CET)
+Date: Wed, 04 Mar 2020 20:09:37 +0100
+Message-ID: <b1113d1c-4f88-8bdb-7660-80c338b6838a@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3863
+X-UID: 3864
 
---===============4515661685980441869==
+--===============3763576989132772589==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-03-04 at 16:01 +0100, Paolo Abeni wrote:
-> Note: mp join self tests are still unstable, e.g. can fail randomly, due =
-to an
-> old race between mptcp_token_update_accept() and mptcp_token_get_sock(): =
-e.g.
-> a client may legitly try to create a subflow after that the first one is =
-fully
-> established but before the server has accepted the initial socket:
-> mptcp_token_get_sock() will fail and MP_JOIN will fail too, incrementing
-> MPTCP_MIB_JOINNOTOKEN.
+Hello everybody!
 
-I'm looking at the above issue. =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20200305
 
-I think we can address it allocating earlier the msk socket in
-subflow_syn_recv_sock(), so that we can always insert the 'token ->
-msk' association into the radix tree before entering the fully
-established status.
+Feel free to add/modify topics!
 
-As a nice side effect mptcp_connect() will be simpler and faster.
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-The flip side is more memory allocated for the child socket backlog (I
-think it should not be that bad, as the child backlog is limited).
+Speak to you tomorrow!
+Matt
+-- =
 
-I hope to share some early code soon. (will be a separate series
-anyway)
-
-Any comments/opinion/warns ?!?
-
-Thanks,
-
-Paolo
-
-
-
---===============4515661685980441869==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============3763576989132772589==--
