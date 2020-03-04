@@ -1,81 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============5345367957692028890=="
+Content-Type: multipart/mixed; boundary="===============7401585540653320132=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 6/0006] Squash-to: "mptcp: allow dumping subflow
- context to userspace"
-Date: Wed, 04 Mar 2020 16:02:05 +0100
-Message-ID: <bd09b746907c90b322b5ae7bc296e99d366d0739.1583334095.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v1 7/0007] Squash-to: "mptcp: add MIB counter
+ infrastructure"
+Date: Wed, 04 Mar 2020 16:02:06 +0100
+Message-ID: <e97883c06981964521cd2b78dc8e9a986771741e.1583334095.git.pabeni@redhat.com>
 In-Reply-To: cover.1583334095.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3854
+X-UID: 3855
 
---===============5345367957692028890==
+--===============7401585540653320132==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-fix after field name change.
-
-Additionally rename the exposed uAPI flags to be more consistent
+Add more MP JOIN related counters, will help self-tests
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- include/uapi/linux/mptcp.h | 18 +++++++++---------
- net/mptcp/diag.c           |  4 ++--
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ net/mptcp/mib.c | 3 +++
+ net/mptcp/mib.h | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index d087048fb4a2..c564140d20f0 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -4,15 +4,15 @@
- =
-
- #include <linux/types.h>
- =
-
--#define MPTCP_SUBFLOW_FLAG_MCAP_REM	BIT(0)
--#define MPTCP_SUBFLOW_FLAG_MCAP_LOC	BIT(1)
--#define MPTCP_SUBFLOW_FLAG_JOIN_REM	BIT(2)
--#define MPTCP_SUBFLOW_FLAG_JOIN_LOC	BIT(3)
--#define MPTCP_SUBFLOW_FLAG_BKUP_REM	BIT(4)
--#define MPTCP_SUBFLOW_FLAG_BKUP_LOC	BIT(5)
--#define MPTCP_SUBFLOW_FLAG_4THACK	BIT(6)
--#define MPTCP_SUBFLOW_FLAG_CONNECTED	BIT(7)
--#define MPTCP_SUBFLOW_FLAG_MAPVALID	BIT(8)
-+#define MPTCP_SUBFLOW_FLAG_MCAP_REM		BIT(0)
-+#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		BIT(1)
-+#define MPTCP_SUBFLOW_FLAG_JOIN_REM		BIT(2)
-+#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		BIT(3)
-+#define MPTCP_SUBFLOW_FLAG_BKUP_REM		BIT(4)
-+#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		BIT(5)
-+#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	BIT(6)
-+#define MPTCP_SUBFLOW_FLAG_CONNECTED		BIT(7)
-+#define MPTCP_SUBFLOW_FLAG_MAPVALID		BIT(8)
- =
-
- enum {
- 	MPTCP_SUBFLOW_ATTR_UNSPEC,
-diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
-index 4b6d9f7e418f..a536586742f2 100644
---- a/net/mptcp/diag.c
-+++ b/net/mptcp/diag.c
-@@ -43,8 +43,8 @@ static int subflow_get_info(const struct sock *sk, struct=
- sk_buff *skb)
- 		flags |=3D MPTCP_SUBFLOW_FLAG_BKUP_REM;
- 	if (sf->request_bkup)
- 		flags |=3D MPTCP_SUBFLOW_FLAG_BKUP_LOC;
--	if (sf->fourth_ack)
--		flags |=3D MPTCP_SUBFLOW_FLAG_4THACK;
-+	if (sf->fully_established)
-+		flags |=3D MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED;
- 	if (sf->conn_finished)
- 		flags |=3D MPTCP_SUBFLOW_FLAG_CONNECTED;
- 	if (sf->map_valid)
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 4ab627e877d1..365bd574940c 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -16,6 +16,9 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
+ 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
+ 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
+ 	SNMP_MIB_ITEM("MPJoinSynRx", MPTCP_MIB_JOINSYNRX),
++	SNMP_MIB_ITEM("MPJoinSynAckRx", MPTCP_MIB_JOINSYNACKRX),
++	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure", MPTCP_MIB_JOINSYNACKMAC),
++	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
+ 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+ 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
+ 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index d50b53e8209b..d7de340fc997 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -9,6 +9,9 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
+ 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
+ 	MPTCP_MIB_JOINSYNRX,		/* Received a SYN + MP_JOIN */
++	MPTCP_MIB_JOINSYNACKRX,		/* Received a SYN/ACK + MP_JOIN */
++	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK + MP_JOIN */
++	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
+ 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+ 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the p=
+revious one */
+ 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
 -- =
 
 2.21.1
 
---===============5345367957692028890==--
+--===============7401585540653320132==--
