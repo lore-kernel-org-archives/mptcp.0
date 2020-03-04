@@ -1,141 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============0870333489796956308=="
+Content-Type: multipart/mixed; boundary="===============5345367957692028890=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 4/0004] Squash-to: "mptcp: Add handling of outgoing
- MP_JOIN requests"
-Date: Wed, 04 Mar 2020 16:02:03 +0100
-Message-ID: <98f314b8358e6d65ff31513c3adc137b06d9b21e.1583334095.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v1 6/0006] Squash-to: "mptcp: allow dumping subflow
+ context to userspace"
+Date: Wed, 04 Mar 2020 16:02:05 +0100
+Message-ID: <bd09b746907c90b322b5ae7bc296e99d366d0739.1583334095.git.pabeni@redhat.com>
 In-Reply-To: cover.1583334095.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3853
+X-UID: 3854
 
---===============0870333489796956308==
+--===============5345367957692028890==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Schedule 3rd ack retransmission via delack timer, and clear
-it on fully established event
+fix after field name change.
+
+Additionally rename the exposed uAPI flags to be more consistent
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c | 61 ++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 52 insertions(+), 9 deletions(-)
+ include/uapi/linux/mptcp.h | 18 +++++++++---------
+ net/mptcp/diag.c           |  4 ++--
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index eb688b3f759f..6f01ae8efeee 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -341,6 +341,38 @@ void mptcp_rcv_synsent(struct sock *sk)
- 	}
- }
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index d087048fb4a2..c564140d20f0 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -4,15 +4,15 @@
  =
 
-+/* MP_JOIN client subflow must wait for 4th ack before sending any data:
-+ * TCP can't schedule delack timer before the subflow is fully established.
-+ * MPTCP uses the delack timer to do 3rd ack retransmissions
-+ */
-+static void schedule_3rdack_retransmission(struct sock *sk)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+	struct tcp_sock *tp =3D tcp_sk(sk);
-+	unsigned long timeout;
-+
-+	/* reschedule with a timeout above RTT, as we must look only for drop */
-+	if (tp->srtt_us)
-+		timeout =3D tp->srtt_us << 1;
-+	else
-+		timeout =3D TCP_TIMEOUT_INIT;
-+
-+	WARN_ON_ONCE(icsk->icsk_ack.pending & ICSK_ACK_TIMER);
-+	icsk->icsk_ack.pending |=3D ICSK_ACK_SCHED | ICSK_ACK_TIMER;
-+	icsk->icsk_ack.timeout =3D timeout;
-+	sk_reset_timer(sk, &icsk->icsk_delack_timer, timeout);
-+}
-+
-+static void clear_3rdack_retransmission(struct sock *sk)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+
-+	sk_stop_timer(sk, &icsk->icsk_delack_timer);
-+	icsk->icsk_ack.timeout =3D 0;
-+	icsk->icsk_ack.ato =3D 0;
-+	icsk->icsk_ack.pending &=3D ~(ICSK_ACK_SCHED | ICSK_ACK_TIMER);
-+}
-+
- static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *=
-skb,
- 					 unsigned int *size,
- 					 unsigned int remaining,
-@@ -350,12 +382,20 @@ static bool mptcp_established_options_mp(struct sock =
-*sk, struct sk_buff *skb,
- 	struct mptcp_ext *mpext;
- 	unsigned int data_len;
+ #include <linux/types.h>
  =
 
--	pr_debug("subflow=3D%p fully established=3D%d seq=3D%x:%x remaining=3D%d",
--		 subflow, subflow->fully_established, subflow->snd_isn,
--		 skb ? TCP_SKB_CB(skb)->seq : 0, remaining);
-+	/* When skb is not available, we better over-estimate the emitted
-+	 * options len. A full DSS option (28 bytes) is longer than
-+	 * TCPOLEN_MPTCP_MPC_ACK_DATA(22) or TCPOLEN_MPTCP_MPJ_ACK(24), so
-+	 * let's the caller try to fit that.
-+	 */
-+	if (!skb)
-+		return false;
-+
-+	/* MPC/MPJ needed only on 3rd ack packet */
-+	if (subflow->snd_isn !=3D TCP_SKB_CB(skb)->seq ||
-+	    subflow->fully_established)
-+		return false;
+-#define MPTCP_SUBFLOW_FLAG_MCAP_REM	BIT(0)
+-#define MPTCP_SUBFLOW_FLAG_MCAP_LOC	BIT(1)
+-#define MPTCP_SUBFLOW_FLAG_JOIN_REM	BIT(2)
+-#define MPTCP_SUBFLOW_FLAG_JOIN_LOC	BIT(3)
+-#define MPTCP_SUBFLOW_FLAG_BKUP_REM	BIT(4)
+-#define MPTCP_SUBFLOW_FLAG_BKUP_LOC	BIT(5)
+-#define MPTCP_SUBFLOW_FLAG_4THACK	BIT(6)
+-#define MPTCP_SUBFLOW_FLAG_CONNECTED	BIT(7)
+-#define MPTCP_SUBFLOW_FLAG_MAPVALID	BIT(8)
++#define MPTCP_SUBFLOW_FLAG_MCAP_REM		BIT(0)
++#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		BIT(1)
++#define MPTCP_SUBFLOW_FLAG_JOIN_REM		BIT(2)
++#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		BIT(3)
++#define MPTCP_SUBFLOW_FLAG_BKUP_REM		BIT(4)
++#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		BIT(5)
++#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	BIT(6)
++#define MPTCP_SUBFLOW_FLAG_CONNECTED		BIT(7)
++#define MPTCP_SUBFLOW_FLAG_MAPVALID		BIT(8)
  =
 
--	if (subflow->mp_capable && !subflow->fully_established && skb &&
--	    subflow->snd_isn =3D=3D TCP_SKB_CB(skb)->seq) {
-+	if (subflow->mp_capable) {
- 		/* When skb is not available, we better over-estimate the
- 		 * emitted options len. A full DSS option is longer than
- 		 * TCPOLEN_MPTCP_MPC_ACK_DATA, so let's the caller try to fit
-@@ -388,12 +428,13 @@ static bool mptcp_established_options_mp(struct sock =
-*sk, struct sk_buff *skb,
- 			 data_len);
- =
-
- 		return true;
--	} else if (subflow->mp_join && !subflow->fourth_ack) {
-+	} else if (subflow->mp_join) {
- 		opts->suboptions =3D OPTION_MPTCP_MPJ_ACK;
- 		memcpy(opts->hmac, subflow->hmac, MPTCPOPT_HMAC_LEN);
- 		*size =3D TCPOLEN_MPTCP_MPJ_ACK;
--		subflow->fourth_ack =3D 1;
- 		pr_debug("subflow=3D%p", subflow);
-+
-+		schedule_3rdack_retransmission(sk);
- 		return true;
- 	}
- 	return false;
-@@ -633,10 +674,12 @@ static bool check_fully_established(struct mptcp_sock=
- *msk, struct sock *sk,
- 		return true;
- =
-
- 	subflow->pm_notified =3D 1;
--	if (subflow->mp_join)
-+	if (subflow->mp_join) {
-+		clear_3rdack_retransmission(sk);
- 		mptcp_pm_subflow_established(msk, subflow);
--	else
-+	} else {
- 		mptcp_pm_fully_established(msk);
-+	}
- 	return true;
- }
- =
-
+ enum {
+ 	MPTCP_SUBFLOW_ATTR_UNSPEC,
+diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+index 4b6d9f7e418f..a536586742f2 100644
+--- a/net/mptcp/diag.c
++++ b/net/mptcp/diag.c
+@@ -43,8 +43,8 @@ static int subflow_get_info(const struct sock *sk, struct=
+ sk_buff *skb)
+ 		flags |=3D MPTCP_SUBFLOW_FLAG_BKUP_REM;
+ 	if (sf->request_bkup)
+ 		flags |=3D MPTCP_SUBFLOW_FLAG_BKUP_LOC;
+-	if (sf->fourth_ack)
+-		flags |=3D MPTCP_SUBFLOW_FLAG_4THACK;
++	if (sf->fully_established)
++		flags |=3D MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED;
+ 	if (sf->conn_finished)
+ 		flags |=3D MPTCP_SUBFLOW_FLAG_CONNECTED;
+ 	if (sf->map_valid)
 -- =
 
 2.21.1
 
---===============0870333489796956308==--
+--===============5345367957692028890==--
