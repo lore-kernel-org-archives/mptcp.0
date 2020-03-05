@@ -1,208 +1,322 @@
-Content-Type: multipart/mixed; boundary="===============2762040970876027525=="
+Content-Type: multipart/mixed; boundary="===============0998263933424433471=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 11/12] Squash-to: "selftests: add PM netlink
- functional tests"
-Date: Thu, 05 Mar 2020 15:46:48 +0100
-Message-ID: <c53d6cd7bec834b5aa3691704a566dfeffa11d2a.1583418574.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 10/12] Squash-to: "mptcp: add netlink based PM"
+Date: Thu, 05 Mar 2020 15:46:47 +0100
+Message-ID: <49babca922e5470d11d4277eddde792fa9e3d2d0.1583418573.git.pabeni@redhat.com>
 In-Reply-To: cover.1583418571.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3883
+X-UID: 3884
 
---===============2762040970876027525==
+--===============0998263933424433471==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-update to new NL APIs
+Implement support for max subflow limits, updating the APIs.
+Be sure to avoid any pending work if the subflows limit will
+block that.
 
-add checks for subflows limits
+Fix an issue in local address lookup: we must traverse also
+the join_list.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- .../testing/selftests/net/mptcp/pm_netlink.sh | 17 +++++--
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 46 ++++++++++++-------
- 2 files changed, 41 insertions(+), 22 deletions(-)
+ include/uapi/linux/mptcp.h |  5 +-
+ net/mptcp/pm_netlink.c     | 93 +++++++++++++++++++++++++++-----------
+ 2 files changed, 69 insertions(+), 29 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testin=
-g/selftests/net/mptcp/pm_netlink.sh
-index a6552eb8acbe..cfc743c47cb2 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -69,7 +69,8 @@ check()
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 92414f3d1463..d061c5a6ae05 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -45,6 +45,7 @@ enum mptcp_pm_attrs {
+ =
+
+ 	MPTCP_PM_ATTR_ADDR,				/* nested address */
+ 	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
++	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
+ =
+
+ 	__MPTCP_PM_ATTR_MAX
+ };
+@@ -78,8 +79,8 @@ enum {
+ 	MPTCP_PM_CMD_DEL_ADDR,
+ 	MPTCP_PM_CMD_GET_ADDR,
+ 	MPTCP_PM_CMD_FLUSH_ADDRS,
+-	MPTCP_PM_CMD_SET_RCV_ADD_ADDRS,
+-	MPTCP_PM_CMD_GET_RCV_ADD_ADDRS,
++	MPTCP_PM_CMD_SET_LIMITS,
++	MPTCP_PM_CMD_GET_LIMITS,
+ =
+
+ 	__MPTCP_PM_CMD_AFTER_LAST
+ };
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 0887fae982fc..adfea3b85606 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -35,6 +35,7 @@ struct pm_nl_pernet {
+ 	unsigned int		add_addr_signal_max;
+ 	unsigned int		add_addr_accept_max;
+ 	unsigned int		local_addr_max;
++	unsigned int		subflows_max;
+ 	unsigned int		next_id;
+ };
+ =
+
+@@ -89,14 +90,14 @@ static void remote_address(const struct sock_common *sk=
+c,
+ #endif
  }
  =
 
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "defaults addr list"
--check "ip netns exec $ns1 ./pm_nl_ctl accept" "accept 0" "defaults accept =
-add addr"
-+check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
-+subflows 0" "defaults limits"
+-static bool lookup_subflow_by_saddr(const struct mptcp_sock *msk,
++static bool lookup_subflow_by_saddr(const struct list_head *list,
+ 				    struct mptcp_addr_info *saddr)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_addr_info cur;
+ 	struct sock_common *skc;
  =
 
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2 flags subflow dev lo
-@@ -114,10 +115,16 @@ id 8 flags signal 10.0.1.8 " "id limit"
- ip netns exec $ns1 ./pm_nl_ctl flush
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "flush addrs"
+-	list_for_each_entry(subflow, &msk->conn_list, node) {
++	list_for_each_entry(subflow, list, node) {
+ 		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
  =
 
--ip netns exec $ns1 ./pm_nl_ctl accept 9
--check "ip netns exec $ns1 ./pm_nl_ctl accept" "accept 0" "above accept add=
-_addr hard limit"
-+ip netns exec $ns1 ./pm_nl_ctl limits 9 1
-+check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
-+subflows 0" "rcv addrs above hard limit"
+ 		local_address(skc, &cur);
+@@ -109,20 +110,27 @@ static bool lookup_subflow_by_saddr(const struct mptc=
+p_sock *msk,
  =
 
--ip netns exec $ns1 ./pm_nl_ctl accept 8
--check "ip netns exec $ns1 ./pm_nl_ctl accept" "accept 8" "set accept add_a=
-ddr"
-+ip netns exec $ns1 ./pm_nl_ctl limits 1 9
-+check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
-+subflows 0" "subflows above hard limit"
+ static struct mptcp_pm_addr_entry *
+ select_local_address(const struct pm_nl_pernet *pernet,
+-		     const struct mptcp_sock *msk)
++		     struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
+ =
+
+ 	rcu_read_lock();
++	spin_lock_bh(&msk->join_list_lock);
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+ 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+ 			continue;
 +
-+ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-+check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 8
-+subflows 8" "set limits"
- =
-
- exit $ret
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/=
-selftests/net/mptcp/pm_nl_ctl.c
-index 66ce85a0ff98..cc3b9c5a3cff 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -30,7 +30,7 @@ static void syntax(char *argv[])
- 	fprintf(stderr, "\tget <id>\n");
- 	fprintf(stderr, "\tflush\n");
- 	fprintf(stderr, "\tdump\n");
--	fprintf(stderr, "\taccept [<max>]\n");
-+	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
- 	exit(0);
++		/* avoid any address already in use by subflows and
++		 * pending join
++		 */
+ 		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
+-		    !lookup_subflow_by_saddr(msk, &entry->addr)) {
++		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
++		    !lookup_subflow_by_saddr(&msk->join_list, &entry->addr)) {
+ 			ret =3D entry;
+ 			break;
+ 		}
+ 	}
++	spin_unlock_bh(&msk->join_list_lock);
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+@@ -154,7 +162,8 @@ select_signal_address(struct pm_nl_pernet *pernet, unsi=
+gned int pos)
+ static void check_work_pending(struct mptcp_sock *msk)
+ {
+ 	if (msk->pm.add_addr_signaled =3D=3D msk->pm.add_addr_signal_max &&
+-	    msk->pm.local_addr_used =3D=3D msk->pm.local_addr_max)
++	    (msk->pm.local_addr_used =3D=3D msk->pm.local_addr_max ||
++	     (msk->pm.subflows =3D=3D msk->pm.subflows_max)))
+ 		WRITE_ONCE(msk->pm.work_pending, false);
  }
  =
 
-@@ -501,7 +501,7 @@ int flush_addrs(int fd, int pm_family, int argc, char *=
-argv[])
+@@ -192,12 +201,14 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+ 	}
+ =
+
+ 	/* check if should create a new subflow */
+-	if (msk->pm.local_addr_used < msk->pm.local_addr_max) {
++	if (msk->pm.local_addr_used < msk->pm.local_addr_max &&
++	    msk->pm.subflows < msk->pm.subflows_max) {
+ 		remote_address((struct sock_common *)sk, &remote);
+ =
+
+ 		local =3D select_local_address(pernet, msk);
+ 		if (local) {
+ 			msk->pm.local_addr_used++;
++			msk->pm.subflows++;
+ 			check_work_pending(msk);
+ 			spin_unlock_bh(&msk->pm.lock);
+ 			__mptcp_subflow_connect(sk, local->ifindex,
+@@ -239,7 +250,10 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *=
+msk)
+ 	pr_debug("accepted %d:%d remote family %d",
+ 		 msk->pm.add_addr_accepted, msk->pm.add_addr_accept_max,
+ 		 msk->pm.remote.family);
+-	if (++msk->pm.add_addr_accepted >=3D msk->pm.add_addr_accept_max)
++	msk->pm.add_addr_accepted++;
++	msk->pm.subflows++;
++	if (msk->pm.add_addr_accepted >=3D msk->pm.add_addr_accept_max ||
++	    msk->pm.subflows >=3D msk->pm.subflows_max)
+ 		WRITE_ONCE(msk->pm.accept_addr, false);
+ =
+
+ 	/* connect to the specified remote address, using whatever
+@@ -352,16 +366,21 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, =
+struct sock_common *skc)
+ =
+
+ void mptcp_pm_nl_data_init(struct mptcp_sock *msk)
+ {
++	struct mptcp_pm_data *pm =3D &msk->pm;
+ 	struct pm_nl_pernet *pernet;
++	bool subflows;
+ =
+
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ =
+
+-	msk->pm.add_addr_signal_max =3D READ_ONCE(pernet->add_addr_signal_max);
+-	msk->pm.add_addr_accept_max =3D READ_ONCE(pernet->add_addr_accept_max);
+-	msk->pm.local_addr_max =3D READ_ONCE(pernet->local_addr_max);
+-	WRITE_ONCE(msk->pm.work_pending,
+-		   !!msk->pm.local_addr_max || !!msk->pm.add_addr_signal_max);
+-	WRITE_ONCE(msk->pm.accept_addr, !!msk->pm.add_addr_accept_max);
++	pm->add_addr_signal_max =3D READ_ONCE(pernet->add_addr_signal_max);
++	pm->add_addr_accept_max =3D READ_ONCE(pernet->add_addr_accept_max);
++	pm->local_addr_max =3D READ_ONCE(pernet->local_addr_max);
++	pm->subflows_max =3D READ_ONCE(pernet->subflows_max);
++	subflows =3D !!pm->subflows_max;
++	WRITE_ONCE(pm->work_pending, (!!pm->local_addr_max && subflows) ||
++		   !!pm->add_addr_signal_max);
++	WRITE_ONCE(pm->accept_addr, !!pm->add_addr_accept_max && subflows);
++	WRITE_ONCE(pm->accept_subflow, subflows);
+ }
+ =
+
+ #define MPTCP_PM_CMD_GRP_OFFSET	0
+@@ -386,6 +405,7 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_PM=
+_ATTR_MAX + 1] =3D {
+ 	[MPTCP_PM_ATTR_ADDR]		=3D
+ 					NLA_POLICY_NESTED(mptcp_pm_addr_policy),
+ 	[MPTCP_PM_ATTR_RCV_ADD_ADDRS]	=3D { .type	=3D NLA_U32,	},
++	[MPTCP_PM_ATTR_SUBFLOWS]	=3D { .type	=3D NLA_U32,	},
+ };
+ =
+
+ static int mptcp_pm_family_to_addr(int family)
+@@ -690,31 +710,46 @@ static int mptcp_nl_cmd_dump_addrs(struct sk_buff *ms=
+g,
+ 	return msg->len;
+ }
+ =
+
+-static int
+-mptcp_nl_cmd_set_rcv_add_addrs(struct sk_buff *skb, struct genl_info *info)
++static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
+ {
+-	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_RCV_ADD_ADDRS];
+-	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
+-	int limit;
++	struct nlattr *attr =3D info->attrs[id];
+ =
+
+ 	if (!attr) {
+ 		GENL_SET_ERR_MSG(info, "missing announce accept limit");
+ 		return -EINVAL;
+ 	}
+ =
+
+-	limit =3D nla_get_u32(attr);
+-	if (limit > MPTCP_PM_ADDR_MAX) {
++	*limit =3D nla_get_u32(attr);
++	if (*limit > MPTCP_PM_ADDR_MAX) {
+ 		GENL_SET_ERR_MSG(info,
+ 				 "announce accept limit greater than maximum");
+ 		return -EINVAL;
+ 	}
++	return 0;
++}
+ =
+
+-	WRITE_ONCE(pernet->add_addr_accept_max, limit);
++static int
++mptcp_nl_cmd_set_limits(struct sk_buff *skb, struct genl_info *info)
++{
++	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
++	unsigned int rcv_addrs, subflows;
++	int ret;
++
++	ret =3D parse_limit(info, MPTCP_PM_ATTR_RCV_ADD_ADDRS, &rcv_addrs);
++	if (ret)
++		return ret;
++
++	ret =3D parse_limit(info, MPTCP_PM_ATTR_SUBFLOWS, &subflows);
++	if (ret)
++		return ret;
++
++	WRITE_ONCE(pernet->add_addr_accept_max, rcv_addrs);
++	WRITE_ONCE(pernet->subflows_max, subflows);
  	return 0;
  }
  =
 
--static void print_accept(struct nlmsghdr *nh, int pm_family, int total_len)
-+static void print_limits(struct nlmsghdr *nh, int pm_family, int total_len)
+ static int
+-mptcp_nl_cmd_get_rcv_add_addrs(struct sk_buff *skb, struct genl_info *info)
++mptcp_nl_cmd_get_limits(struct sk_buff *skb, struct genl_info *info)
  {
- 	struct rtattr *attrs;
- 	uint32_t max;
-@@ -520,11 +520,15 @@ static void print_accept(struct nlmsghdr *nh, int pm_=
-family, int total_len)
- 		attrs =3D (struct rtattr *) ((char *) NLMSG_DATA(nh) +
- 					   GENL_HDRLEN);
- 		while (RTA_OK(attrs, len)) {
--			if (attrs->rta_type !=3D MPTCP_PM_ATTR_RCV_ADD_ADDRS)
-+			int type =3D attrs->rta_type;
+ 	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
+ 	struct sk_buff *msg;
+@@ -725,7 +760,7 @@ mptcp_nl_cmd_get_rcv_add_addrs(struct sk_buff *skb, str=
+uct genl_info *info)
+ 		return -ENOMEM;
+ =
+
+ 	reply =3D genlmsg_put_reply(msg, info, &mptcp_genl_family, 0,
+-				  MPTCP_PM_CMD_GET_RCV_ADD_ADDRS);
++				  MPTCP_PM_CMD_GET_LIMITS);
+ 	if (!reply)
+ 		goto fail;
+ =
+
+@@ -733,6 +768,10 @@ mptcp_nl_cmd_get_rcv_add_addrs(struct sk_buff *skb, st=
+ruct genl_info *info)
+ 			READ_ONCE(pernet->add_addr_accept_max)))
+ 		goto fail;
+ =
+
++	if (nla_put_u32(msg, MPTCP_PM_ATTR_SUBFLOWS,
++			READ_ONCE(pernet->subflows_max)))
++		goto fail;
 +
-+			if (type !=3D MPTCP_PM_ATTR_RCV_ADD_ADDRS &&
-+			    type !=3D MPTCP_PM_ATTR_SUBFLOWS)
- 				goto next;
+ 	genlmsg_end(msg, reply);
+ 	return genlmsg_reply(msg, info);
  =
 
- 			memcpy(&max, RTA_DATA(attrs), 4);
--			printf("accept %u\n", max);
-+			printf("%s %u\n", type =3D=3D MPTCP_PM_ATTR_SUBFLOWS ?
-+					  "subflows": "accept", max);
- =
-
- next:
- 			attrs =3D RTA_NEXT(attrs, len);
-@@ -532,22 +536,23 @@ static void print_accept(struct nlmsghdr *nh, int pm_=
-family, int total_len)
- 	}
- }
- =
-
--int get_set_accept(int fd, int pm_family, int argc, char *argv[])
-+int get_set_limits(int fd, int pm_family, int argc, char *argv[])
- {
- 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
- 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
- 		  1024];
-+	uint32_t rcv_addr =3D 0, subflows =3D 0;
- 	int cmd, len =3D sizeof(data);
- 	struct nlmsghdr *nh;
--	uint32_t max =3D 0;
- 	int off =3D 0;
- =
-
- 	/* limit */
--	if (argc =3D=3D 3) {
--		max =3D atoi(argv[2]);
--		cmd =3D MPTCP_PM_CMD_SET_RCV_ADD_ADDRS;
-+	if (argc =3D=3D 4) {
-+		rcv_addr =3D atoi(argv[2]);
-+		subflows =3D atoi(argv[3]);
-+		cmd =3D MPTCP_PM_CMD_SET_LIMITS;
- 	} else {
--		cmd =3D MPTCP_PM_CMD_GET_RCV_ADD_ADDRS;
-+		cmd =3D MPTCP_PM_CMD_GET_LIMITS;
- 	}
- =
-
- 	memset(data, 0, sizeof(data));
-@@ -555,20 +560,27 @@ int get_set_accept(int fd, int pm_family, int argc, c=
-har *argv[])
- 	off =3D init_genl_req(data, pm_family, cmd, MPTCP_PM_VER);
- =
-
- 	/* limit */
--	if (cmd =3D=3D MPTCP_PM_CMD_SET_RCV_ADD_ADDRS) {
-+	if (cmd =3D=3D MPTCP_PM_CMD_SET_LIMITS) {
- 		struct rtattr *rta =3D (void *)(data + off);
- =
-
- 		rta->rta_type =3D MPTCP_PM_ATTR_RCV_ADD_ADDRS;
- 		rta->rta_len =3D RTA_LENGTH(4);
--		memcpy(RTA_DATA(rta), &max, 4);
-+		memcpy(RTA_DATA(rta), &rcv_addr, 4);
- 		off +=3D NLMSG_ALIGN(rta->rta_len);
--		cmd =3D MPTCP_PM_CMD_SET_RCV_ADD_ADDRS;
-+
-+		rta =3D (void *)(data + off);
-+		rta->rta_type =3D MPTCP_PM_ATTR_SUBFLOWS;
-+		rta->rta_len =3D RTA_LENGTH(4);
-+		memcpy(RTA_DATA(rta), &subflows, 4);
-+		off +=3D NLMSG_ALIGN(rta->rta_len);
-+
-+		/* do not expect a reply */
- 		len =3D 0;
- 	}
- =
-
- 	len =3D do_nl_req(fd, nh, off, len);
--	if (cmd =3D=3D MPTCP_PM_CMD_GET_RCV_ADD_ADDRS)
--		print_accept(nh, pm_family, len);
-+	if (cmd =3D=3D MPTCP_PM_CMD_GET_LIMITS)
-+		print_limits(nh, pm_family, len);
- 	return 0;
- }
- =
-
-@@ -595,8 +607,8 @@ int main(int argc, char *argv[])
- 		return get_addr(fd, pm_family, argc, argv);
- 	else if (!strcmp(argv[1], "dump"))
- 		return dump_addrs(fd, pm_family, argc, argv);
--	else if (!strcmp(argv[1], "accept"))
--		return get_set_accept(fd, pm_family, argc, argv);
-+	else if (!strcmp(argv[1], "limits"))
-+		return get_set_limits(fd, pm_family, argc, argv);
- =
-
- 	fprintf(stderr, "unknown sub-command: %s", argv[1]);
- 	syntax(argv);
+@@ -765,13 +804,13 @@ static struct genl_ops mptcp_pm_ops[] =3D {
+ 		.flags  =3D GENL_ADMIN_PERM,
+ 	},
+ 	{
+-		.cmd    =3D MPTCP_PM_CMD_SET_RCV_ADD_ADDRS,
+-		.doit   =3D mptcp_nl_cmd_set_rcv_add_addrs,
++		.cmd    =3D MPTCP_PM_CMD_SET_LIMITS,
++		.doit   =3D mptcp_nl_cmd_set_limits,
+ 		.flags  =3D GENL_ADMIN_PERM,
+ 	},
+ 	{
+-		.cmd    =3D MPTCP_PM_CMD_GET_RCV_ADD_ADDRS,
+-		.doit   =3D mptcp_nl_cmd_get_rcv_add_addrs,
++		.cmd    =3D MPTCP_PM_CMD_GET_LIMITS,
++		.doit   =3D mptcp_nl_cmd_get_limits,
+ 		.flags  =3D GENL_ADMIN_PERM,
+ 	},
+ };
 -- =
 
 2.21.1
 
---===============2762040970876027525==--
+--===============0998263933424433471==--
