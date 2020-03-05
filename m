@@ -1,260 +1,195 @@
-Content-Type: multipart/mixed; boundary="===============5500281697061057826=="
+Content-Type: multipart/mixed; boundary="===============1116498943542233636=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 1/3] selftests: add mptcp ip set/getsockopt test
- program
-Date: Thu, 05 Mar 2020 14:22:29 +0100
-Message-ID: <20200305132231.22953-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH RFC 2/3] mptcp: propagate mptcp-socket level ip
+ options to the subflows
+Date: Thu, 05 Mar 2020 14:22:30 +0100
+Message-ID: <20200305132231.22953-3-fw@strlen.de>
 In-Reply-To: 20200305132231.22953-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3870
+X-UID: 3871
 
---===============5500281697061057826==
+--===============1116498943542233636==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Useless for the time being as this depends on an ugly hack to expose
-IP_OPTIONS set/getsockopt.
+Upper layers typically update inet_opts and icsk_ext_hdr_len, then
+call the sync_mss callback.
+
+We will need to propagate this to the individual subflows.
+
+This is modeled after tcp semantics, i.e. if there are ip options
+on incoming connection, these will be propagated to the mptcp
+socket.  This is questionable, because ip options may be path
+specific (e.g. source routing), so it might make sense to NOT
+copy them to the mptcp socket.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- .../selftests/net/mptcp/mptcp_setsockopt.c    | 220 ++++++++++++++++++
- 1 file changed, 220 insertions(+)
- create mode 100644 tools/testing/selftests/net/mptcp/mptcp_setsockopt.c
+ net/mptcp/protocol.c | 78 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_setsockopt.c b/tools/t=
-esting/selftests/net/mptcp/mptcp_setsockopt.c
-new file mode 100644
-index 000000000000..aa2405b54013
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_setsockopt.c
-@@ -0,0 +1,220 @@
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <unistd.h>
-+
-+#include <arpa/inet.h>
-+
-+#include <sys/types.h>
-+#include <sys/socket.h>
-+#include <sys/wait.h>
-+
-+#include <netinet/ip.h>
-+
-+#ifndef IPPROTO_MPTCP
-+#define IPPROTO_MPTCP 262
-+#endif
-+
-+#define OPT_SIZE 40
-+
-+enum test_ipopt_state {
-+	TEST_OPTS_NONE,
-+	TEST_OPTS_SET,
-+	TEST_OPTS_RX_SET,
-+};
-+
-+static void die(const char *s)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a8445407d25a..0e3654ce77a0 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -74,10 +74,41 @@ static bool __mptcp_can_create_subflow(const struct mpt=
+cp_sock *msk)
+ 	return !msk->first;
+ }
+ =
+
++static void mptcp_copy_inet_opts(struct sock *nsk, const struct sock *sk,
++				 bool nsk_locked, bool sk_locked)
 +{
-+	perror(s);
-+	exit(1);
-+}
++	struct ip_options_rcu *inet_opt;
++	unsigned int len;
 +
-+static void xgetsockopt(int sockfd, int level, int optname,
-+		        void *optval, socklen_t *optlen)
-+{
-+	int err =3D getsockopt(sockfd, level, optname, optval, optlen);
-+
-+	if (err < 0)
-+		die("getsockopt");
-+}
-+
-+static void xsetsockopt(int sockfd, int level, int optname,
-+		        const void *optval, socklen_t optlen)
-+{
-+	int err =3D setsockopt(sockfd, level, optname, optval, optlen);
-+
-+	if (err < 0)
-+		die("setsockopt");
-+}
-+
-+static void xbind(int fd, struct sockaddr_in *sin, socklen_t l)
-+{
-+	int err =3D bind(fd, (void *)sin, l);
-+
-+	if (err < 0)
-+		die("bind");
-+}
-+
-+static void set_ipopts(int fd)
-+{
-+	char options[OPT_SIZE];
-+	uint8_t olen =3D 5;
-+
-+	memset(options, 0, sizeof(options));
-+
-+	options[0] =3D IPOPT_TS | IPOPT_TS_TSONLY;
-+	options[1] =3D sizeof(options);
-+	options[2] =3D olen;
-+
-+	xsetsockopt(fd, SOL_IP, IP_OPTIONS, options, sizeof(options));
-+}
-+
-+static void check_ip_opts(int fd, enum test_ipopt_state state,
-+			  const char *prefix)
-+{
-+	socklen_t bufsz =3D 128;
-+	char buf[128];
-+
-+	memset(buf, 0, sizeof(buf));
-+
-+	xgetsockopt(fd, SOL_IP, IP_OPTIONS, buf, &bufsz);
-+
-+	if (state =3D=3D TEST_OPTS_NONE) {
-+		printf("%s: expect IP_OPTIONS are cleared ", prefix);
-+		if (bufsz =3D=3D 0)
-+			puts("[ OK ]");
-+		else
-+			printf("but got %d [ FAIL ]\n", (int)bufsz);
-+
++	inet_opt =3D rcu_dereference_check(inet_sk(sk)->inet_opt, sk_locked);
++	if (!inet_opt)
 +		return;
++
++	len =3D sizeof(*inet_opt) + inet_opt->opt.optlen;
++	inet_opt =3D kmemdup(inet_opt, len, GFP_ATOMIC);
++	if (inet_opt) {
++		struct ip_options_rcu *old;
++
++		old =3D rcu_replace_pointer(inet_sk(nsk)->inet_opt,
++						  inet_opt, nsk_locked);
++		kfree_rcu(old, rcu);
++	}
++}
++
++static void mptcp_sync_mss_one(struct sock *ssk, const struct sock *sk)
++{
++	mptcp_copy_inet_opts(ssk, sk, lockdep_sock_is_held(ssk),
++				      lockdep_sock_is_held(sk));
++
++	/* don't use msk->icsk_pmtu_cookie; mtu is per-ssk */
++	tcp_sync_mss(ssk, inet_csk(ssk)->icsk_pmtu_cookie);
++}
++
+ static struct socket *__mptcp_socket_create(struct mptcp_sock *msk, int st=
+ate)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk =3D (struct sock *)msk;
++	struct inet_connection_sock *icsk;
+ 	struct socket *ssock;
+ 	int err;
+ =
+
+@@ -95,6 +126,9 @@ static struct socket *__mptcp_socket_create(struct mptcp=
+_sock *msk, int state)
+ 	msk->first =3D ssock->sk;
+ 	msk->subflow =3D ssock;
+ 	subflow =3D mptcp_subflow_ctx(ssock->sk);
++	icsk =3D inet_csk(ssock->sk);
++	icsk->icsk_ext_hdr_len =3D inet_csk(sk)->icsk_ext_hdr_len;
++	mptcp_copy_inet_opts(ssock->sk, sk, true, lockdep_sock_is_held(sk));
+ 	list_add(&subflow->node, &msk->conn_list);
+ 	subflow->request_mptcp =3D 1;
+ =
+
+@@ -668,6 +702,23 @@ static void __mptcp_close_ssk(struct sock *sk, struct =
+sock *ssk,
+ =
+
+ static unsigned int mptcp_sync_mss(struct sock *sk, u32 pmtu)
+ {
++	u16 ext_hdr_len =3D inet_csk(sk)->icsk_ext_hdr_len;
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct mptcp_subflow_context *subflow;
++
++	sock_owned_by_me((const struct sock *)msk);
++
++	inet_csk(sk)->icsk_pmtu_cookie =3D pmtu;
++
++	list_for_each_entry(subflow, &msk->conn_list, node) {
++		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++
++		lock_sock(ssk);
++		inet_csk(ssk)->icsk_ext_hdr_len =3D ext_hdr_len;
++		mptcp_sync_mss_one(ssk, (struct sock *)msk);
++		release_sock(ssk);
 +	}
 +
-+	printf("%s: expect IP_OPTIONS are set ", prefix);
-+	if (bufsz =3D=3D OPT_SIZE &&
-+	    buf[0] =3D=3D (IPOPT_TS | IPOPT_TS_TSONLY) &&
-+	    buf[1] =3D=3D OPT_SIZE)
-+		puts("[ OK ]");
-+	else if (bufsz =3D=3D 0)
-+		puts("[ FAIL ]");
-+	else
-+		printf(" -- opt length %d, 0x%x/0x%x/0x%x [ FAIL ]\n", (int)bufsz,
-+			buf[0], buf[1], buf[2]);
-+}
-+
-+static int server_fd(void)
+ 	return 0;
+ }
+ =
+
+@@ -808,9 +859,17 @@ static struct sock *mptcp_sk_clone_lock(const struct s=
+ock *sk)
+ 		inet_sk(nsk)->pinet6 =3D mptcp_inet6_sk(nsk);
+ #endif
+ =
+
++	RCU_INIT_POINTER(inet_sk(nsk)->inet_opt, NULL);
++	mptcp_copy_inet_opts(nsk, sk, lockdep_sock_is_held(nsk),
++			     lockdep_sock_is_held(sk));
+ 	return nsk;
+ }
+ =
+
++static bool mptcp_sk_has_ipopts(struct sock *sk)
 +{
-+	int fd =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
-+	struct sockaddr_in sin;
-+	static const int on =3D 1;
-+
-+	if (fd < 0)
-+		die("socket");
-+
-+	if (alarm(9))
-+		die("alarm");
-+
-+	xsetsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on));
-+
-+	sin.sin_family =3D AF_INET;
-+	sin.sin_addr.s_addr =3D inet_addr("127.0.0.1");
-+	sin.sin_port =3D htons(0x4242);
-+	xbind(fd, &sin, sizeof(sin));
-+
-+	listen(fd, 10);
-+
-+	return fd;
++	return rcu_access_pointer(inet_sk(sk)->inet_opt) !=3D NULL;
 +}
 +
-+static void server_handle_client(int fd, enum test_ipopt_state opts,
-+				 const char *testname)
-+{
-+	char buf[8192];
-+	int fdc, err;
+ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+ 				 bool kern)
+ {
+@@ -835,6 +894,7 @@ static struct sock *mptcp_accept(struct sock *sk, int f=
+lags, int *err,
+ 		struct mptcp_subflow_context *subflow;
+ 		struct sock *new_mptcp_sock;
+ 		struct sock *ssk =3D newsk;
++		bool sk_has_ip_opts;
+ 		u64 ack_seq;
+ =
+
+ 		subflow =3D mptcp_subflow_ctx(newsk);
+@@ -871,6 +931,17 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ 		}
+ 		newsk =3D new_mptcp_sock;
+ 		mptcp_copy_inaddrs(newsk, ssk);
 +
-+	if (opts =3D=3D TEST_OPTS_SET)
-+		set_ipopts(fd);
++		sk_has_ip_opts =3D mptcp_sk_has_ipopts(newsk);
 +
-+	fdc =3D accept(fd, NULL, NULL);
-+	if (fdc < 0)
-+		die("accept");
++		if (!sk_has_ip_opts && mptcp_sk_has_ipopts(ssk)) {
++			rcu_read_lock();
++			mptcp_copy_inet_opts(newsk, ssk,
++					     lockdep_sock_is_held(newsk),
++					     lockdep_sock_is_held(ssk));
++			rcu_read_unlock();
++		}
 +
-+	if (opts =3D=3D TEST_OPTS_SET)
-+		set_ipopts(fdc);
+ 		list_add(&subflow->node, &msk->conn_list);
+ =
+
+ 		/* will be fully established at mptcp_stream_accept()
+@@ -890,6 +961,13 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ 		subflow->conn =3D new_mptcp_sock;
+ 		if (unlikely(!skb_queue_empty(&ssk->sk_receive_queue)))
+ 			mptcp_subflow_data_available(ssk);
 +
-+	do {
-+		err =3D (int)read(fdc, buf, sizeof(buf));
-+		if (err < 0)
-+			die("read");
-+		write(fdc, ".", 1);
-+	} while (err > 0);
++		if (sk_has_ip_opts) {
++			rcu_read_lock();
++			mptcp_sync_mss_one(ssk, new_mptcp_sock);
++			rcu_read_unlock();
++		}
 +
-+	check_ip_opts(fdc, opts, testname);
-+	close(fdc);
-+}
-+
-+static void client(enum test_ipopt_state state, const char *testname)
-+{
-+	int err, fd =3D socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP);
-+	struct sockaddr_in sin;
-+	char buf[64];;
-+
-+	if (fd < 0)
-+		die("socket");
-+
-+	sin.sin_family =3D AF_INET;
-+	sin.sin_addr.s_addr =3D inet_addr("127.0.0.1");
-+	sin.sin_port =3D htons(0x4242);
-+
-+	if (state =3D=3D TEST_OPTS_SET)
-+		set_ipopts(fd);
-+
-+	err =3D connect(fd, (void *)&sin, sizeof(sin));
-+	if (err < 0)
-+		die("connect");
-+
-+	write(fd, "Test", sizeof("Test"));
-+	read(fd, buf, sizeof(buf));
-+
-+	check_ip_opts(fd, state, testname);
-+	close(fd);
-+}
-+
-+int main(void)
-+{
-+	pid_t ret, pid =3D fork();
-+	int wstatus;
-+
-+	if (pid < 0)
-+		die("fork");
-+
-+	if (pid =3D=3D 0) {
-+		int fd =3D server_fd();
-+
-+		if (fd < 0)
-+			die("server_fd");
-+
-+		server_handle_client(fd, TEST_OPTS_NONE, "srv1");
-+		server_handle_client(fd, TEST_OPTS_RX_SET, "srv2");
-+		server_handle_client(fd, TEST_OPTS_SET, "srv3");
-+
-+		close(fd);
-+		exit(0);
-+	}
-+
-+	sleep(1);
-+	client(TEST_OPTS_NONE, "client1");
-+	client(TEST_OPTS_SET, "client2");
-+	client(TEST_OPTS_NONE, "client3");
-+
-+	do {
-+		ret =3D wait(&wstatus);
-+	} while (ret !=3D pid);
-+
-+	if (WIFEXITED(wstatus))
-+		return WEXITSTATUS(wstatus);
-+
-+	fprintf(stderr, "Bad return value from %d (signaled %d)\n", (int)pid, WIF=
-SIGNALED(wstatus));
-+	return 111;
-+}
+ 		release_sock(ssk);
+ 	}
+ =
+
 -- =
 
 2.24.1
 
---===============5500281697061057826==--
+--===============1116498943542233636==--
