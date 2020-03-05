@@ -1,87 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============0443809763700090819=="
+Content-Type: multipart/mixed; boundary="===============7738134972594692592=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 5/12] Squash-to: "mptcp: Implement path manager
- interface commands"
-Date: Thu, 05 Mar 2020 15:46:42 +0100
-Message-ID: <0db2fb40deda2e09e28a1fed61a01eb9a179d1af.1583418572.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 9/12] Squash-to: "subflow: place further subflows
+ on new 'join_list'"
+Date: Thu, 05 Mar 2020 15:46:46 +0100
+Message-ID: <dcca446f9be51658dad4f51ef87d8bce13126304.1583418573.git.pabeni@redhat.com>
 In-Reply-To: cover.1583418571.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3881
+X-UID: 3882
 
---===============0443809763700090819==
+--===============7738134972594692592==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Adapt the mptcp_pm_fully_established() hook to the new call
-site. Additionally avoid useless work if we don't need to
-announce any address /create any subflows
+do not insert the new subflow on join list, if we are going to drop it
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/pm.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ net/mptcp/protocol.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 174fde4071e0..a3fe2371d41b 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -45,9 +45,23 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, int=
- server_side)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2db55fb1be6b..b3eb886b9488 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1519,6 +1519,7 @@ bool mptcp_finish_join(struct sock *sk)
+ 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+ 	struct sock *parent =3D (void *)msk;
+ 	struct socket *parent_sock;
++	bool ret;
  =
 
- bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
- {
--	pr_debug("msk=3D%p", msk);
-+	struct mptcp_pm_data *pm =3D &msk->pm;
-+	int ret;
+ 	pr_debug("msk=3D%p, subflow=3D%p", msk, subflow);
  =
 
--	return false;
-+	pr_debug("msk=3D%p subflows=3D%d max=3D%d allow=3D%d", msk, pm->subflows,
-+		 pm->subflows_max, READ_ONCE(pm->accept_subflow));
-+
-+	/* try to avoid acquiring the lock below */
-+	if (!READ_ONCE(pm->accept_subflow))
-+		return false;
-+
-+	spin_lock_bh(&pm->lock);
-+	ret =3D pm->subflows < pm->subflows_max;
-+	if (ret && ++pm->subflows =3D=3D pm->subflows_max)
-+		WRITE_ONCE(pm->accept_subflow, false);
-+	spin_unlock_bh(&pm->lock);
-+
-+	return ret;
- }
+@@ -1530,12 +1531,15 @@ bool mptcp_finish_join(struct sock *sk)
+ 	if (parent_sock && !sk->sk_socket) {
+ 		mptcp_sock_graft(sk, parent_sock);
  =
 
- static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
-@@ -71,13 +85,13 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk)
- 	pr_debug("msk=3D%p", msk);
- =
-
- 	/* try to avoid acquiring the lock below */
--	if (READ_ONCE(pm->fully_established))
-+	if (!READ_ONCE(pm->work_pending))
- 		return;
- =
-
- 	spin_lock_bh(&pm->lock);
--	if (!READ_ONCE(pm->fully_established) &&
--	    mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED))
--		WRITE_ONCE(pm->fully_established, true);
-+
-+	if (READ_ONCE(pm->work_pending))
-+		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
- =
-
- 	spin_unlock_bh(&pm->lock);
+-		/* active connections are already on conn_list */
+-		spin_lock_bh(&msk->join_list_lock);
+-		if (!WARN_ON_ONCE(!list_empty(&subflow->node)))
+-			list_add_tail(&subflow->node, &msk->join_list);
+-		spin_unlock_bh(&msk->join_list_lock);
+-		return mptcp_pm_allow_new_subflow(msk);
++		ret =3D mptcp_pm_allow_new_subflow(msk);
++		if (ret) {
++			/* active connections are already on conn_list */
++			spin_lock_bh(&msk->join_list_lock);
++			if (!WARN_ON_ONCE(!list_empty(&subflow->node)))
++				list_add_tail(&subflow->node, &msk->join_list);
++			spin_unlock_bh(&msk->join_list_lock);
++		}
++		return ret;
+ 	}
+ 	return true;
  }
 -- =
 
 2.21.1
 
---===============0443809763700090819==--
+--===============7738134972594692592==--
