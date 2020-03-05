@@ -1,69 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============6405900873222214631=="
+Content-Type: multipart/mixed; boundary="===============0443809763700090819=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 8/12] Squash-to: "mptcp: increment MIB counters in
- a few places"
-Date: Thu, 05 Mar 2020 15:46:45 +0100
-Message-ID: <40c76b96ceffa7226cd5b870b23a75bba4196984.1583418573.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 5/12] Squash-to: "mptcp: Implement path manager
+ interface commands"
+Date: Thu, 05 Mar 2020 15:46:42 +0100
+Message-ID: <0db2fb40deda2e09e28a1fed61a01eb9a179d1af.1583418572.git.pabeni@redhat.com>
 In-Reply-To: cover.1583418571.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3880
+X-UID: 3881
 
---===============6405900873222214631==
+--===============0443809763700090819==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-incremente the newly introduced counters
+Adapt the mptcp_pm_fully_established() hook to the new call
+site. Additionally avoid useless work if we don't need to
+announce any address /create any subflows
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/subflow.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/mptcp/pm.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 639f3d6ac9dc..201a695a792b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -252,6 +252,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 			goto do_reset;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 174fde4071e0..a3fe2371d41b 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -45,9 +45,23 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, int=
+ server_side)
  =
 
- 		subflow->conn_finished =3D 1;
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
- 	} else {
- do_reset:
- 		tcp_send_active_reset(sk, GFP_ATOMIC);
-@@ -374,8 +375,10 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- 		opt_rx.mptcp.mp_join =3D 0;
- 		mptcp_get_options(skb, &opt_rx);
- 		if (!opt_rx.mptcp.mp_join ||
--		    !subflow_hmac_valid(req, &opt_rx))
-+		    !subflow_hmac_valid(req, &opt_rx)) {
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
- 			return NULL;
-+		}
- 	}
+ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+ {
+-	pr_debug("msk=3D%p", msk);
++	struct mptcp_pm_data *pm =3D &msk->pm;
++	int ret;
  =
 
- create_child:
-@@ -407,6 +410,8 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 			ctx->conn =3D (struct sock *)owner;
- 			if (!mptcp_finish_join(child))
- 				goto close_child;
+-	return false;
++	pr_debug("msk=3D%p subflows=3D%d max=3D%d allow=3D%d", msk, pm->subflows,
++		 pm->subflows_max, READ_ONCE(pm->accept_subflow));
 +
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
- 		}
- 	}
++	/* try to avoid acquiring the lock below */
++	if (!READ_ONCE(pm->accept_subflow))
++		return false;
++
++	spin_lock_bh(&pm->lock);
++	ret =3D pm->subflows < pm->subflows_max;
++	if (ret && ++pm->subflows =3D=3D pm->subflows_max)
++		WRITE_ONCE(pm->accept_subflow, false);
++	spin_unlock_bh(&pm->lock);
++
++	return ret;
+ }
  =
 
+ static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
+@@ -71,13 +85,13 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk)
+ 	pr_debug("msk=3D%p", msk);
+ =
+
+ 	/* try to avoid acquiring the lock below */
+-	if (READ_ONCE(pm->fully_established))
++	if (!READ_ONCE(pm->work_pending))
+ 		return;
+ =
+
+ 	spin_lock_bh(&pm->lock);
+-	if (!READ_ONCE(pm->fully_established) &&
+-	    mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED))
+-		WRITE_ONCE(pm->fully_established, true);
++
++	if (READ_ONCE(pm->work_pending))
++		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
+ =
+
+ 	spin_unlock_bh(&pm->lock);
+ }
 -- =
 
 2.21.1
 
---===============6405900873222214631==--
+--===============0443809763700090819==--
