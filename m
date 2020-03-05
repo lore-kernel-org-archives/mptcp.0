@@ -1,79 +1,123 @@
-Content-Type: multipart/mixed; boundary="===============7380884050572068904=="
+Content-Type: multipart/mixed; boundary="===============5998102411151415948=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/12] pm netlink: followup and fixes
-Date: Thu, 05 Mar 2020 15:46:37 +0100
-Message-ID: <cover.1583418571.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 1/12] mptcp: rename fourth ack field
+Date: Thu, 05 Mar 2020 15:46:38 +0100
+Message-ID: <91063550108210c28a3b3aeb5f0e4cb5bc3b73df.1583418572.git.pabeni@redhat.com>
+In-Reply-To: cover.1583418571.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3873
+X-UID: 3874
 
---===============7380884050572068904==
+--===============5998102411151415948==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series bring some fixes and improvement related to the PM netlink,
-specifically:
+The name is misleading, it actually track the 'fully established'
+status.
 
-- renames 4th_ack subflow field to 'fully_established':
-  this is hopefully more accurate
-- implements support to enforce the maximum number of subflows per msk
-- implements MP_JOIN 3rd ack retransmission and 4th ack delivery:
-  this [ab]use the TCP delack timer. I personally think the idea is nice and
-  avoids changes to the core TCP stack, but I guess it could be disputed
-- more accurare 'fully established' accounting as per RFC
-- drop the msk level 'fully_established' field, as we can use the first sub=
-flow
-  status without additional locking instead. This simplify core PM event
-  handling
-- adds more MP_JOIN related mib counters
-- update the PM netlink to enforce a configurable maximum number of subflows
-  per msk
-- extend the pm netlink self-tests to check the above APIs
-- uses amost all the above to fix the currently disable mp join self-tests =
-and
- re-enable them
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c  | 18 +++++++++---------
+ net/mptcp/protocol.h |  2 +-
+ net/mptcp/subflow.c  |  2 +-
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-Note: mp join self tests are still unstable, e.g. can fail randomly, due to=
- an
-old race between mptcp_token_update_accept() and mptcp_token_get_sock(): e.=
-g.
-a client may legitly try to create a subflow after that the first one is fu=
-lly
-established but before the server has accepted the initial socket:
-mptcp_token_get_sock() will fail and MP_JOIN will fail too, incrementing
-MPTCP_MIB_JOINNOTOKEN.
-I think the above should be addressed in a separate series - otherwise this=
- one
-will be too big.
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 45acd877bef3..a45f6f97ef45 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -259,11 +259,11 @@ static bool mptcp_established_options_mp(struct sock =
+*sk, struct sk_buff *skb,
+ 	struct mptcp_ext *mpext;
+ 	unsigned int data_len;
+ =
 
-The up2date branch for this series (v2) is available here:
+-	pr_debug("subflow=3D%p fourth_ack=3D%d seq=3D%x:%x remaining=3D%d", subfl=
+ow,
+-		 subflow->fourth_ack, subflow->snd_isn,
++	pr_debug("subflow=3D%p fully established=3D%d seq=3D%x:%x remaining=3D%d",
++		 subflow, subflow->fully_established, subflow->snd_isn,
+ 		 skb ? TCP_SKB_CB(skb)->seq : 0, remaining);
+ =
 
-https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_7 =
+-	if (subflow->mp_capable && !subflow->fourth_ack && skb &&
++	if (subflow->mp_capable && !subflow->fully_established && skb &&
+ 	    subflow->snd_isn =3D=3D TCP_SKB_CB(skb)->seq) {
+ 		/* When skb is not available, we better over-estimate the
+ 		 * emitted options len. A full DSS option is longer than
+@@ -424,19 +424,19 @@ bool mptcp_synack_options(const struct request_sock *=
+req, unsigned int *size,
+ 	return false;
+ }
+ =
 
+-static bool check_fourth_ack(struct mptcp_subflow_context *subflow,
+-			     struct sk_buff *skb,
+-			     struct mptcp_options_received *mp_opt)
++static bool check_fully_established(struct mptcp_subflow_context *subflow,
++				    struct sk_buff *skb,
++				    struct mptcp_options_received *mp_opt)
+ {
+ 	/* here we can process OoO, in-window pkts, only in-sequence 4th ack
+ 	 * are relevant
+ 	 */
+-	if (likely(subflow->fourth_ack ||
++	if (likely(subflow->fully_established ||
+ 		   TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1))
+ 		return true;
+ =
 
-v1 -> v2:
- - comments and readability changes in patch 04
+ 	if (mp_opt->use_ack)
+-		subflow->fourth_ack =3D 1;
++		subflow->fully_established =3D 1;
+ =
 
- include/uapi/linux/mptcp.h                      |   23 ++-
- net/mptcp/diag.c                                |    4 =
+ 	if (subflow->can_ack)
+ 		return true;
+@@ -462,7 +462,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb,
+ 	struct mptcp_ext *mpext;
+ =
 
- net/mptcp/mib.c                                 |    3 =
+ 	mp_opt =3D &opt_rx->mptcp;
+-	if (!check_fourth_ack(subflow, skb, mp_opt))
++	if (!check_fully_established(subflow, skb, mp_opt))
+ 		return;
+ =
 
- net/mptcp/mib.h                                 |    3 =
+ 	if (!mp_opt->dss)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 6c0b2c8ab674..fcba0e8f45f2 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -119,7 +119,7 @@ struct mptcp_subflow_context {
+ 	u32	map_data_len;
+ 	u32	request_mptcp : 1,  /* send MP_CAPABLE */
+ 		mp_capable : 1,	    /* remote is MPTCP capable */
+-		fourth_ack : 1,	    /* send initial DSS */
++		fully_established : 1,	    /* path validated */
+ 		conn_finished : 1,
+ 		map_valid : 1,
+ 		mpc_map : 1,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 0de2a44bdaa0..b5f7a5a90ed1 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -794,7 +794,7 @@ static void subflow_ulp_clone(const struct request_sock=
+ *req,
+ 	new_ctx->tcp_state_change =3D old_ctx->tcp_state_change;
+ 	new_ctx->tcp_write_space =3D old_ctx->tcp_write_space;
+ 	new_ctx->mp_capable =3D 1;
+-	new_ctx->fourth_ack =3D subflow_req->remote_key_valid;
++	new_ctx->fully_established =3D subflow_req->remote_key_valid;
+ 	new_ctx->can_ack =3D subflow_req->remote_key_valid;
+ 	new_ctx->remote_key =3D subflow_req->remote_key;
+ 	new_ctx->local_key =3D subflow_req->local_key;
+-- =
 
- net/mptcp/options.c                             |  141 +++++++++++++++++--=
------
- net/mptcp/pm.c                                  |   35 ++++-
- net/mptcp/pm_netlink.c                          |   93 +++++++++++----
- net/mptcp/protocol.c                            |   23 ++-
- net/mptcp/protocol.h                            |    8 +
- net/mptcp/subflow.c                             |    9 +
- tools/testing/selftests/net/mptcp/mptcp_join.sh |  100 +++++++++++++----
- tools/testing/selftests/net/mptcp/pm_netlink.sh |   17 ++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   46 ++++---
- 13 files changed, 364 insertions(+), 141 deletions(-)
+2.21.1
 
---===============7380884050572068904==--
+--===============5998102411151415948==--
