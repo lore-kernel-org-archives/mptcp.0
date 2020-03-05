@@ -1,60 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============5048883198801787157=="
+Content-Type: multipart/mixed; boundary="===============6405900873222214631=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 7/12] Squash-to: "mptcp: add MIB counter
- infrastructure"
-Date: Thu, 05 Mar 2020 15:46:44 +0100
-Message-ID: <022bd71ed0dd1e66e8a61796ea273547511cb494.1583418573.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 8/12] Squash-to: "mptcp: increment MIB counters in
+ a few places"
+Date: Thu, 05 Mar 2020 15:46:45 +0100
+Message-ID: <40c76b96ceffa7226cd5b870b23a75bba4196984.1583418573.git.pabeni@redhat.com>
 In-Reply-To: cover.1583418571.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3879
+X-UID: 3880
 
---===============5048883198801787157==
+--===============6405900873222214631==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add more MP JOIN related counters, will help self-tests
+incremente the newly introduced counters
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/mib.c | 3 +++
- net/mptcp/mib.h | 3 +++
- 2 files changed, 6 insertions(+)
+ net/mptcp/subflow.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 4ab627e877d1..365bd574940c 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -16,6 +16,9 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
- 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
- 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
- 	SNMP_MIB_ITEM("MPJoinSynRx", MPTCP_MIB_JOINSYNRX),
-+	SNMP_MIB_ITEM("MPJoinSynAckRx", MPTCP_MIB_JOINSYNACKRX),
-+	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure", MPTCP_MIB_JOINSYNACKMAC),
-+	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
- 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
- 	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
- 	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index d50b53e8209b..d7de340fc997 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -9,6 +9,9 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
- 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
- 	MPTCP_MIB_JOINSYNRX,		/* Received a SYN + MP_JOIN */
-+	MPTCP_MIB_JOINSYNACKRX,		/* Received a SYN/ACK + MP_JOIN */
-+	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK + MP_JOIN */
-+	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
- 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
- 	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping that did not match the p=
-revious one */
- 	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite mapping */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 639f3d6ac9dc..201a695a792b 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -252,6 +252,7 @@ static void subflow_finish_connect(struct sock *sk, con=
+st struct sk_buff *skb)
+ 			goto do_reset;
+ =
+
+ 		subflow->conn_finished =3D 1;
++		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
+ 	} else {
+ do_reset:
+ 		tcp_send_active_reset(sk, GFP_ATOMIC);
+@@ -374,8 +375,10 @@ static struct sock *subflow_syn_recv_sock(const struct=
+ sock *sk,
+ 		opt_rx.mptcp.mp_join =3D 0;
+ 		mptcp_get_options(skb, &opt_rx);
+ 		if (!opt_rx.mptcp.mp_join ||
+-		    !subflow_hmac_valid(req, &opt_rx))
++		    !subflow_hmac_valid(req, &opt_rx)) {
++			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+ 			return NULL;
++		}
+ 	}
+ =
+
+ create_child:
+@@ -407,6 +410,8 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 			ctx->conn =3D (struct sock *)owner;
+ 			if (!mptcp_finish_join(child))
+ 				goto close_child;
++
++			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+ 		}
+ 	}
+ =
+
 -- =
 
 2.21.1
 
---===============5048883198801787157==--
+--===============6405900873222214631==--
