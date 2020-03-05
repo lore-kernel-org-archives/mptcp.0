@@ -1,92 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============2924865282767105195=="
+Content-Type: multipart/mixed; boundary="===============7380884050572068904=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 3/3] testing only: allow IP_OPTIONS set/getsockopt
-Date: Thu, 05 Mar 2020 14:22:31 +0100
-Message-ID: <20200305132231.22953-4-fw@strlen.de>
-In-Reply-To: 20200305132231.22953-1-fw@strlen.de
+Subject: [MPTCP] [PATCH v2 0/12] pm netlink: followup and fixes
+Date: Thu, 05 Mar 2020 15:46:37 +0100
+Message-ID: <cover.1583418571.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3872
+X-UID: 3873
 
---===============2924865282767105195==
+--===============7380884050572068904==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is WRONG, it will not work with ipv6.
-We would need to add approprate callbacks for this.
----
- net/mptcp/protocol.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+This series bring some fixes and improvement related to the PM netlink,
+specifically:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0e3654ce77a0..1d12b6baffdc 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -982,6 +982,24 @@ static void mptcp_destroy(struct sock *sk)
- 		__skb_ext_put(msk->cached_ext);
- }
- =
+- renames 4th_ack subflow field to 'fully_established':
+  this is hopefully more accurate
+- implements support to enforce the maximum number of subflows per msk
+- implements MP_JOIN 3rd ack retransmission and 4th ack delivery:
+  this [ab]use the TCP delack timer. I personally think the idea is nice and
+  avoids changes to the core TCP stack, but I guess it could be disputed
+- more accurare 'fully established' accounting as per RFC
+- drop the msk level 'fully_established' field, as we can use the first sub=
+flow
+  status without additional locking instead. This simplify core PM event
+  handling
+- adds more MP_JOIN related mib counters
+- update the PM netlink to enforce a configurable maximum number of subflows
+  per msk
+- extend the pm netlink self-tests to check the above APIs
+- uses amost all the above to fix the currently disable mp join self-tests =
+and
+ re-enable them
 
-+static bool is_ok(int level, int optname)
-+{
-+	if (level =3D=3D SOL_IP && optname =3D=3D IP_OPTIONS)
-+		return true;
-+
-+	return false;
-+}
-+
-+static int do_mptcp_setsockopt(struct sock *sk, int level, int optname,
-+			       char __user *optval, unsigned int optlen)
-+{
-+	if (is_ok(level, optname))
-+		return ip_setsockopt(sk, level, optname,
-+				     optval, optlen);
-+
-+	return -EOPNOTSUPP;
-+}
-+
- static int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 			    char __user *optval, unsigned int optlen)
- {
-@@ -1004,6 +1022,16 @@ static int mptcp_setsockopt(struct sock *sk, int lev=
-el, int optname,
- =
+Note: mp join self tests are still unstable, e.g. can fail randomly, due to=
+ an
+old race between mptcp_token_update_accept() and mptcp_token_get_sock(): e.=
+g.
+a client may legitly try to create a subflow after that the first one is fu=
+lly
+established but before the server has accepted the initial socket:
+mptcp_token_get_sock() will fail and MP_JOIN will fail too, incrementing
+MPTCP_MIB_JOINNOTOKEN.
+I think the above should be addressed in a separate series - otherwise this=
+ one
+will be too big.
 
- 	release_sock(sk);
- =
+The up2date branch for this series (v2) is available here:
 
-+	return do_mptcp_setsockopt(sk, level, optname, optval, optlen);
-+}
-+
-+static int do_mptcp_getsockopt(struct sock *sk, int level, int optname,
-+			       char __user *optval, int __user *option)
-+{
-+	if (is_ok(level, optname))
-+		return ip_getsockopt(sk, level, optname,
-+				     optval, option);
-+
- 	return -EOPNOTSUPP;
- }
- =
+https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_7 =
 
-@@ -1029,7 +1057,7 @@ static int mptcp_getsockopt(struct sock *sk, int leve=
-l, int optname,
- =
 
- 	release_sock(sk);
- =
+v1 -> v2:
+ - comments and readability changes in patch 04
 
--	return -EOPNOTSUPP;
-+	return do_mptcp_getsockopt(sk, level, optname, optval, option);
- }
- =
+ include/uapi/linux/mptcp.h                      |   23 ++-
+ net/mptcp/diag.c                                |    4 =
 
- #define MPTCP_DEFERRED_ALL TCPF_DELACK_TIMER_DEFERRED
--- =
+ net/mptcp/mib.c                                 |    3 =
 
-2.24.1
+ net/mptcp/mib.h                                 |    3 =
 
---===============2924865282767105195==--
+ net/mptcp/options.c                             |  141 +++++++++++++++++--=
+-----
+ net/mptcp/pm.c                                  |   35 ++++-
+ net/mptcp/pm_netlink.c                          |   93 +++++++++++----
+ net/mptcp/protocol.c                            |   23 ++-
+ net/mptcp/protocol.h                            |    8 +
+ net/mptcp/subflow.c                             |    9 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  100 +++++++++++++----
+ tools/testing/selftests/net/mptcp/pm_netlink.sh |   17 ++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c   |   46 ++++---
+ 13 files changed, 364 insertions(+), 141 deletions(-)
+
+--===============7380884050572068904==--
