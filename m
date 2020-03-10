@@ -1,41 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============6904152519297701416=="
+Content-Type: multipart/mixed; boundary="===============1854551933999900553=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: BUG: KASAN: slab-out-of-bounds in
- subflow_ulp_init+0xa6/0x190
-Date: Tue, 10 Mar 2020 18:48:06 +0100
-Message-ID: <8e9ba8f08d0dde89bd35c4228c11439439406028.camel@redhat.com>
-In-Reply-To: 20200310161535.GA86670@MacBook-Pro-64.local
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: add netlink based PM"
+Date: Tue, 10 Mar 2020 19:26:22 +0100
+Message-ID: <6be08bc3c70b13306aeaee7f65163e9a349cb632.1583864759.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3902
+X-UID: 3903
 
---===============6904152519297701416==
+--===============1854551933999900553==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-03-10 at 09:15 -0700, Christoph Paasch wrote:
-> Should the following be correct?
-> =
+Remove typo in enum name. It looks like anonymous enum
+is the most common choice, so drop the enum type name
+completely.
 
-> r0 =3D socket$netlink(0x10, 0x3, 0x0)
-> r1 =3D syz_genetlink_get_family_id$mptcp(&(0x7f0000000100)=3D'mptcp_pm\x0=
-0')
-> sendmsg$MPTCP_PM_CMD_ADD_ADDR(r0, &(0x7f0000000200)=3D{0x0, 0x0,
-> &(0x7f00000001c0)=3D{&(0x7f0000000140)=3D{0x20, r1, 0x1, 0x0, 0x0, {0x1,
-> 0x2}, [@MPTCP_PM_ATTR_ADDR=3D{0xc, 0x1,
-> @MPTCP_PM_ADDR_ATTR_FAMILY=3D{0x5}}]}, 0x20}}, 0x0)
+Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/uapi/linux/mptcp.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'm unsure I parse correctly the syzkaller syntax... are you creating a
-NL attr, type nested, id MPTCP_PM_ATTR_ADDR, with a single nested
-attribute type uint8, id MPTCP_PM_ADDR_ATTR_FAMILY, value 5?
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index d061c5a6ae05..dfd6674c39b0 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -40,7 +40,7 @@ enum {
+ /*
+  * ATTR types defined for MPTCP
+  */
+-enum mptcp_pm_attrs {
++enum {
+ 	MPTCP_PM_ATTR_UNSPEC,
+ =
 
-if so, than is correct ;)
+ 	MPTCP_PM_ATTR_ADDR,				/* nested address */
+@@ -52,7 +52,7 @@ enum mptcp_pm_attrs {
+ =
 
-Cheers,
+ #define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
+ =
 
-Paolo
+-enum mptcp_pm_addr_addrs {
++enum {
+ 	MPTCP_PM_ADDR_ATTR_UNSPEC,
+ =
 
---===============6904152519297701416==--
+ 	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
+-- =
+
+2.21.1
+
+--===============1854551933999900553==--
