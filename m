@@ -1,47 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============5556493846339819958=="
+Content-Type: multipart/mixed; boundary="===============4469379171055036781=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: BUG: KASAN: slab-out-of-bounds in
- subflow_ulp_init+0xa6/0x190
-Date: Tue, 10 Mar 2020 13:45:49 -0700
-Message-ID: <20200310204549.GB5362@MacBook-Pro-64.local>
-In-Reply-To: 8e9ba8f08d0dde89bd35c4228c11439439406028.camel@redhat.com
+Subject: [MPTCP] [PATCH v3 0/5] Add support for v1 of ADD_ADDR option
+Date: Tue, 10 Mar 2020 15:33:27 -0700
+Message-ID: <20200310223332.3845-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3904
+X-UID: 3905
 
---===============5556493846339819958==
+--===============4469379171055036781==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 10/03/20 - 18:48:06, Paolo Abeni wrote:
-> On Tue, 2020-03-10 at 09:15 -0700, Christoph Paasch wrote:
-> > Should the following be correct?
-> > =
+Support parsing and writing the new option format, with hmac generation
+and validation.
 
-> > r0 =3D socket$netlink(0x10, 0x3, 0x0)
-> > r1 =3D syz_genetlink_get_family_id$mptcp(&(0x7f0000000100)=3D'mptcp_pm\=
-x00')
-> > sendmsg$MPTCP_PM_CMD_ADD_ADDR(r0, &(0x7f0000000200)=3D{0x0, 0x0,
-> > &(0x7f00000001c0)=3D{&(0x7f0000000140)=3D{0x20, r1, 0x1, 0x0, 0x0, {0x1,
-> > 0x2}, [@MPTCP_PM_ATTR_ADDR=3D{0xc, 0x1,
-> > @MPTCP_PM_ADDR_ATTR_FAMILY=3D{0x5}}]}, 0x20}}, 0x0)
-> =
+Support for echoing ADD_ADDR still to come.
 
-> I'm unsure I parse correctly the syzkaller syntax... are you creating a
-> NL attr, type nested, id MPTCP_PM_ATTR_ADDR, with a single nested
-> attribute type uint8, id MPTCP_PM_ADDR_ATTR_FAMILY, value 5?
-> =
+v2: check msg len in mptcp_crypto_hmac_sha().
+    remove obsolete casts
+v3: Rebase and split for squashing, patches ready to be applied.
 
-> if so, than is correct ;)
+Peter Krystad (5):
+  mptcp: v1 ADD_ADDR changes: use subflow_generate_hmac()
+  mptcp: v1 ADD_ADDR changes: add subflow_generate_hmac()
+  mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
+  mptcp: Add ADD_ADDR handling
+  mptcp: Re-factor mptcp_crypto_hmac_sha()
 
-Thanks! I might not be getting very far in the coverage because syzkaller is
-not chaining a family followed by an address. I need to find out how to do
-this.
+ include/linux/tcp.h  |  12 +++++
+ include/net/mptcp.h  |   7 +++
+ net/mptcp/crypto.c   |  17 +++---
+ net/mptcp/options.c  | 121 ++++++++++++++++++++++++++++++++++++++++---
+ net/mptcp/protocol.h |  20 ++++++-
+ 5 files changed, 161 insertions(+), 16 deletions(-)
 
+-- =
 
-Christoph
+2.17.2
 
---===============5556493846339819958==--
+--===============4469379171055036781==--
