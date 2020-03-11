@@ -1,68 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============8474845695290047367=="
+Content-Type: multipart/mixed; boundary="===============3760892787312291505=="
 MIME-Version: 1.0
-From: Peter Krystad <peter.krystad at linux.intel.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v4 5/5] mptcp: v1 ADD_ADDR changes: use
- subflow_generate_hmac()
-Date: Wed, 11 Mar 2020 10:26:00 -0700
-Message-ID: <20200311172600.4185-6-peter.krystad@linux.intel.com>
-In-Reply-To: 20200311172600.4185-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] [PATCH net-next] net: mptcp: don't hang before sending 'MP
+ capable with data'
+Date: Wed, 11 Mar 2020 19:50:53 +0100
+Message-ID: <da448d7e0a2459519394ab0c398875061f2bf1d0.1583952277.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3923
+X-UID: 3924
 
---===============8474845695290047367==
+--===============3760892787312291505==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use subflow_generate_hmac() to create hmac from nonces.
+the following packetdrill script
 
-squash-to: Add handling of outgoing MP_JOIN requests
+  socket(..., SOCK_STREAM, IPPROTO_MPTCP) =3D 3
+  fcntl(3, F_GETFL) =3D 0x2 (flags O_RDWR)
+  fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK) =3D 0
+  connect(3, ..., ...) =3D -1 EINPROGRESS (Operation now in progress)
+  > S 0:0(0) <mss 1460,sackOK,TS val 100 ecr 0,nop,wscale 8,mpcapable v1 fl=
+ags[flag_h] nokey>
+  < S. 0:0(0) ack 1 win 65535 <mss 1460,sackOK,TS val 700 ecr 100,nop,wscal=
+e 8,mpcapable v1 flags[flag_h] key[skey=3D2]>
+  > . 1:1(0) ack 1 win 256 <nop, nop, TS val 100 ecr 700,mpcapable v1 flags=
+[flag_h] key[ckey,skey]>
+  getsockopt(3, SOL_SOCKET, SO_ERROR, [0], [4]) =3D 0
+  fcntl(3, F_SETFL, O_RDWR) =3D 0
+  write(3, ..., 1000) =3D 1000
 
-Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+doesn't transmit 1KB data packet after a successful three-way-handshake,
+using mp_capable with data as required by protocol v1, and write() hangs
+forever:
+
+ PID: 973    TASK: ffff97dd399cae80  CPU: 1   COMMAND: "packetdrill"
+  #0 [ffffa9b94062fb78] __schedule at ffffffff9c90a000
+  #1 [ffffa9b94062fc08] schedule at ffffffff9c90a4a0
+  #2 [ffffa9b94062fc18] schedule_timeout at ffffffff9c90e00d
+  #3 [ffffa9b94062fc90] wait_woken at ffffffff9c120184
+  #4 [ffffa9b94062fcb0] sk_stream_wait_connect at ffffffff9c75b064
+  #5 [ffffa9b94062fd20] mptcp_sendmsg at ffffffff9c8e801c
+  #6 [ffffa9b94062fdc0] sock_sendmsg at ffffffff9c747324
+  #7 [ffffa9b94062fdd8] sock_write_iter at ffffffff9c7473c7
+  #8 [ffffa9b94062fe48] new_sync_write at ffffffff9c302976
+  #9 [ffffa9b94062fed0] vfs_write at ffffffff9c305685
+ #10 [ffffa9b94062ff00] ksys_write at ffffffff9c305985
+ #11 [ffffa9b94062ff38] do_syscall_64 at ffffffff9c004475
+ #12 [ffffa9b94062ff50] entry_SYSCALL_64_after_hwframe at ffffffff9ca0008c
+     RIP: 00007f959407eaf7  RSP: 00007ffe9e95a910  RFLAGS: 00000293
+     RAX: ffffffffffffffda  RBX: 0000000000000008  RCX: 00007f959407eaf7
+     RDX: 00000000000003e8  RSI: 0000000001785fe0  RDI: 0000000000000008
+     RBP: 0000000001785fe0   R8: 0000000000000000   R9: 0000000000000003
+     R10: 0000000000000007  R11: 0000000000000293  R12: 00000000000003e8
+     R13: 00007ffe9e95ae30  R14: 0000000000000000  R15: 0000000000000000
+     ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
+
+Fix it ensuring that socket state is TCP_ESTABLISHED on reception of the
+third ack.
+
+Fixes: 1954b86016cf ("mptcp: Check connection state before attempting send")
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
 ---
- net/mptcp/subflow.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index a857ea8cf6ad..728367db6901 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -194,9 +194,9 @@ static bool subflow_thmac_valid(struct mptcp_subflow_co=
-ntext *subflow)
- 	u8 hmac[MPTCPOPT_HMAC_LEN];
- 	u64 thmac;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 95007e433109..c0cef07f4382 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1049,6 +1049,10 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	WRITE_ONCE(msk->write_seq, subflow->idsn + 1);
+ 	WRITE_ONCE(msk->ack_seq, ack_seq);
+ 	WRITE_ONCE(msk->can_ack, 1);
++	if (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED) {
++		inet_sk_state_store(sk, TCP_ESTABLISHED);
++		sk->sk_state_change(sk);
++	}
+ }
  =
 
--	mptcp_crypto_hmac_sha(subflow->remote_key, subflow->local_key,
-+	subflow_generate_hmac(subflow->remote_key, subflow->local_key,
- 			      subflow->remote_nonce, subflow->local_nonce,
--			      (u32 *)hmac);
-+			      hmac);
- =
-
- 	thmac =3D get_unaligned_be64(hmac);
- 	pr_debug("subflow=3D%p, token=3D%u, thmac=3D%llu, subflow->thmac=3D%llu\n=
-",
-@@ -238,10 +238,10 @@ static void subflow_finish_connect(struct sock *sk, c=
-onst struct sk_buff *skb)
- 			goto do_reset;
- 		}
- =
-
--		mptcp_crypto_hmac_sha(subflow->local_key, subflow->remote_key,
-+		subflow_generate_hmac(subflow->local_key, subflow->remote_key,
- 				      subflow->local_nonce,
- 				      subflow->remote_nonce,
--				      (u32 *)subflow->hmac);
-+				      subflow->hmac);
- =
-
- 		if (skb)
- 			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
+ static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
 -- =
 
-2.17.2
+2.24.1
 
---===============8474845695290047367==--
+--===============3760892787312291505==--
