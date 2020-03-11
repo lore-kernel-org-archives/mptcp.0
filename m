@@ -1,92 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============2726381967221460152=="
+Content-Type: multipart/mixed; boundary="===============8474845695290047367=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v4 3/5] mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
-Date: Wed, 11 Mar 2020 10:25:58 -0700
-Message-ID: <20200311172600.4185-4-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH v4 5/5] mptcp: v1 ADD_ADDR changes: use
+ subflow_generate_hmac()
+Date: Wed, 11 Mar 2020 10:26:00 -0700
+Message-ID: <20200311172600.4185-6-peter.krystad@linux.intel.com>
 In-Reply-To: 20200311172600.4185-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3922
+X-UID: 3923
 
---===============2726381967221460152==
+--===============8474845695290047367==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Validate incoming ADD_ADDR options
+Use subflow_generate_hmac() to create hmac from nonces.
 
-squash-to: Add path manager interface
+squash-to: Add handling of outgoing MP_JOIN requests
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/options.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ net/mptcp/subflow.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 411ae3ad8c9e..d157e32fb001 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -592,6 +592,30 @@ static bool check_fourth_ack(struct mptcp_subflow_cont=
-ext *subflow,
- 	return true;
- }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index a857ea8cf6ad..728367db6901 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -194,9 +194,9 @@ static bool subflow_thmac_valid(struct mptcp_subflow_co=
+ntext *subflow)
+ 	u8 hmac[MPTCPOPT_HMAC_LEN];
+ 	u64 thmac;
  =
 
-+static bool add_addr_hmac_valid(struct mptcp_subflow_context *subflow,
-+				struct mptcp_options_received *mp_opt)
-+{
-+	u64 hmac;
-+
-+	if (mp_opt->echo)
-+		return true;
-+
-+	if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
-+		hmac =3D add_addr_generate_hmac(subflow->remote_key,
-+					      subflow->local_key,
-+					      mp_opt->addr_id, &mp_opt->addr);
-+	else
-+		hmac =3D add_addr6_generate_hmac(subflow->remote_key,
-+					       subflow->local_key,
-+					       mp_opt->addr_id, &mp_opt->addr6);
-+
-+	pr_debug("subflow=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
-+		 subflow, (unsigned long long)hmac,
-+		 (unsigned long long)mp_opt->ahmac);
-+
-+	return hmac =3D=3D mp_opt->ahmac;
-+}
-+
- void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
- 			    struct tcp_options_received *opt_rx)
- {
-@@ -604,7 +628,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- 	if (!check_fourth_ack(subflow, skb, mp_opt))
- 		return;
+-	mptcp_crypto_hmac_sha(subflow->remote_key, subflow->local_key,
++	subflow_generate_hmac(subflow->remote_key, subflow->local_key,
+ 			      subflow->remote_nonce, subflow->local_nonce,
+-			      (u32 *)hmac);
++			      hmac);
  =
 
--	if (msk && mp_opt->add_addr) {
-+	if (msk && mp_opt->add_addr && add_addr_hmac_valid(subflow, mp_opt)) {
- 		struct mptcp_addr_info addr;
- =
-
- 		addr.port =3D 0;
-@@ -619,7 +643,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- 			addr.addr6 =3D mp_opt->addr6;
+ 	thmac =3D get_unaligned_be64(hmac);
+ 	pr_debug("subflow=3D%p, token=3D%u, thmac=3D%llu, subflow->thmac=3D%llu\n=
+",
+@@ -238,10 +238,10 @@ static void subflow_finish_connect(struct sock *sk, c=
+onst struct sk_buff *skb)
+ 			goto do_reset;
  		}
- #endif
--		mptcp_pm_add_addr_received(msk, &addr);
-+		if (!mp_opt->echo)
-+			mptcp_pm_add_addr_received(msk, &addr);
- 		mp_opt->add_addr =3D 0;
- 	}
  =
 
+-		mptcp_crypto_hmac_sha(subflow->local_key, subflow->remote_key,
++		subflow_generate_hmac(subflow->local_key, subflow->remote_key,
+ 				      subflow->local_nonce,
+ 				      subflow->remote_nonce,
+-				      (u32 *)subflow->hmac);
++				      subflow->hmac);
+ =
+
+ 		if (skb)
+ 			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
 -- =
 
 2.17.2
 
---===============2726381967221460152==--
+--===============8474845695290047367==--
