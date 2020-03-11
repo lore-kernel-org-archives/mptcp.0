@@ -1,90 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============0601194823040615641=="
+Content-Type: multipart/mixed; boundary="===============2726381967221460152=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v4 4/5] mptcp: v1 ADD_ADDR changes: add
- subflow_generate_hmac()
-Date: Wed, 11 Mar 2020 10:25:59 -0700
-Message-ID: <20200311172600.4185-5-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH v4 3/5] mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
+Date: Wed, 11 Mar 2020 10:25:58 -0700
+Message-ID: <20200311172600.4185-4-peter.krystad@linux.intel.com>
 In-Reply-To: 20200311172600.4185-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3921
+X-UID: 3922
 
---===============0601194823040615641==
+--===============2726381967221460152==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add subflow_generate_hmac() to generate hmac from nonces.
+Validate incoming ADD_ADDR options
 
-squash-to: Add handling of incoming MP_JOIN requests
+squash-to: Add path manager interface
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/subflow.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ net/mptcp/options.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index de35c47e829f..dc7e0cc64659 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -48,6 +48,17 @@ static void subflow_req_destructor(struct request_sock *=
-req)
- 	tcp_request_sock_ops.destructor(req);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 411ae3ad8c9e..d157e32fb001 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -592,6 +592,30 @@ static bool check_fourth_ack(struct mptcp_subflow_cont=
+ext *subflow,
+ 	return true;
  }
  =
 
-+static void subflow_generate_hmac(u64 key1, u64 key2, u32 nonce1, u32 nonc=
-e2,
-+				  void *hmac)
++static bool add_addr_hmac_valid(struct mptcp_subflow_context *subflow,
++				struct mptcp_options_received *mp_opt)
 +{
-+	u8 msg[8];
++	u64 hmac;
 +
-+	put_unaligned_be32(nonce1, &msg[0]);
-+	put_unaligned_be32(nonce2, &msg[4]);
++	if (mp_opt->echo)
++		return true;
 +
-+	mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
++	if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
++		hmac =3D add_addr_generate_hmac(subflow->remote_key,
++					      subflow->local_key,
++					      mp_opt->addr_id, &mp_opt->addr);
++	else
++		hmac =3D add_addr6_generate_hmac(subflow->remote_key,
++					       subflow->local_key,
++					       mp_opt->addr_id, &mp_opt->addr6);
++
++	pr_debug("subflow=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
++		 subflow, (unsigned long long)hmac,
++		 (unsigned long long)mp_opt->ahmac);
++
++	return hmac =3D=3D mp_opt->ahmac;
 +}
 +
- /* validate received token and create truncated hmac and nonce for SYN-ACK=
- */
- static bool subflow_token_join_request(struct request_sock *req,
- 				       const struct sk_buff *skb)
-@@ -73,9 +84,9 @@ static bool subflow_token_join_request(struct request_soc=
-k *req,
+ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
+ 			    struct tcp_options_received *opt_rx)
+ {
+@@ -604,7 +628,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb,
+ 	if (!check_fourth_ack(subflow, skb, mp_opt))
+ 		return;
  =
 
- 	get_random_bytes(&subflow_req->local_nonce, sizeof(u32));
+-	if (msk && mp_opt->add_addr) {
++	if (msk && mp_opt->add_addr && add_addr_hmac_valid(subflow, mp_opt)) {
+ 		struct mptcp_addr_info addr;
  =
 
--	mptcp_crypto_hmac_sha(msk->local_key, msk->remote_key,
-+	subflow_generate_hmac(msk->local_key, msk->remote_key,
- 			      subflow_req->local_nonce,
--			      subflow_req->remote_nonce, (u32 *)hmac);
-+			      subflow_req->remote_nonce, hmac);
+ 		addr.port =3D 0;
+@@ -619,7 +643,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb,
+ 			addr.addr6 =3D mp_opt->addr6;
+ 		}
+ #endif
+-		mptcp_pm_add_addr_received(msk, &addr);
++		if (!mp_opt->echo)
++			mptcp_pm_add_addr_received(msk, &addr);
+ 		mp_opt->add_addr =3D 0;
+ 	}
  =
 
- 	subflow_req->thmac =3D get_unaligned_be64(hmac);
- =
-
-@@ -238,9 +249,9 @@ static bool subflow_hmac_valid(const struct request_soc=
-k *req,
- 	if (!msk)
- 		return false;
- =
-
--	mptcp_crypto_hmac_sha(msk->remote_key, msk->local_key,
-+	subflow_generate_hmac(msk->remote_key, msk->local_key,
- 			      subflow_req->remote_nonce,
--			      subflow_req->local_nonce, (u32 *)hmac);
-+			      subflow_req->local_nonce, hmac);
- =
-
- 	ret =3D true;
- 	if (crypto_memneq(hmac, rx_opt->mptcp.hmac, sizeof(hmac)))
 -- =
 
 2.17.2
 
---===============0601194823040615641==--
+--===============2726381967221460152==--
