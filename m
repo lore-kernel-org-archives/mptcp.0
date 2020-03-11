@@ -1,51 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============2487388199206280861=="
+Content-Type: multipart/mixed; boundary="===============6547911586735578414=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 1/5] mptcp: Add ADD_ADDR handling
-Date: Wed, 11 Mar 2020 08:45:48 -0700
-Message-ID: <1673ccee95e1c9af6cc8bddc3f82694c7d906151.camel@linux.intel.com>
-In-Reply-To: 3c66051e81015614821a451b3e322b8db04656b0.camel@redhat.com
+Subject: [MPTCP] [PATCH v4 0/5] Add support for v1 of ADD_ADDR option
+Date: Wed, 11 Mar 2020 10:25:55 -0700
+Message-ID: <20200311172600.4185-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3917
+X-UID: 3918
 
---===============2487388199206280861==
+--===============6547911586735578414==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-03-11 at 11:07 +0100, Paolo Abeni wrote:
-> Hi Peter,
-> =
+Support parsing and writing the new option format, with hmac generation
+and validation.
 
-> On Tue, 2020-03-10 at 15:33 -0700, Peter Krystad wrote:
-> > Add handling for sending and receiving the ADD_ADDR, ADD_ADDR6,
-> > and RM_ADDR suboptions.
-> > =
+Support for echoing ADD_ADDR still to come.
 
-> > squashto: Add ADD_ADDR handling
-> > =
+v2: check msg len in mptcp_crypto_hmac_sha().
+    remove obsolete casts
+v3: Rebase and split for squashing, patches ready to be applied.
+v4: Get the first two patches of the set right
 
-> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> =
+Peter Krystad (5):
+  mptcp: Re-factor mptcp_crypto_hmac_sha()
+  mptcp: v1 ADD_ADDR changes: options and parsing
+  mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
+  mptcp: v1 ADD_ADDR changes: add subflow_generate_hmac()
+  mptcp: v1 ADD_ADDR changes: use subflow_generate_hmac()
 
-> This looks like the current "mptcp: Add ADD_ADDR handling" patch,
-> unmodified ?!? Am I missing something ?!?
+ include/linux/tcp.h  |  19 ++++---
+ include/net/mptcp.h  |   2 +
+ net/mptcp/crypto.c   |  17 ++++--
+ net/mptcp/options.c  | 132 +++++++++++++++++++++++++++++++++----------
+ net/mptcp/protocol.h |  19 +++++--
+ 5 files changed, 140 insertions(+), 49 deletions(-)
 
-My mistake, dyslexia with format-patch direction, new set coming.
+-- =
 
-Peter.
+2.17.2
 
-> The other patches LGTM,
-> =
-
-> Thanks,
-> =
-
-> Paolo
-> =
-
->=20
-
---===============2487388199206280861==--
+--===============6547911586735578414==--
