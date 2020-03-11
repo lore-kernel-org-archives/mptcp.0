@@ -1,34 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============6058556633098026795=="
+Content-Type: multipart/mixed; boundary="===============6907437954299274532=="
 MIME-Version: 1.0
 From: kbuild test robot <lkp at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [mptcp:t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests 1/4]
- net//mptcp/options.c:391:41: error: 'struct mptcp_subflow_context' has no
+Subject: [MPTCP] [mptcp:t/mptcp-allow-dumping-subflow-context-to-userspace
+ 1/7] net/mptcp/diag.c:46:8: error: 'struct mptcp_subflow_context' has no
  member named 'fourth_ack'
-Date: Thu, 12 Mar 2020 05:41:07 +0800
-Message-ID: <202003120520.zlXfOP48%lkp@intel.com>
+Date: Thu, 12 Mar 2020 07:19:04 +0800
+Message-ID: <202003120754.uidDOaWC%lkp@intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3928
+X-UID: 3929
 
---===============6058556633098026795==
+--===============6907437954299274532==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git t/mptcp-Add-han=
-dling-of-outgoing-MP_JOIN-requests
-head:   d1a5f94551a0e54cc7cdcd7305e22971aa2dbacb
-commit: e06605d017e3bf2ee4c4803da4d25b2544735718 [1/4] tgupdate: merge t/mp=
-tcp-Add-handling-of-outgoing-MP_JOIN-requests base into t/mptcp-Add-handlin=
-g-of-outgoing-MP_JOIN-requests
+Hi Matthieu,
+
+First bad commit (maybe !=3D root cause):
+
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git t/mptcp-allow-d=
+umping-subflow-context-to-userspace
+head:   bac8494b909da28ffdf11b03fa39d3c2a3a264ba
+commit: 8b8c7c1c3ab581375074b0ce33fa7612fd4b947f [1/7] tgupdate: merge t/mp=
+tcp-allow-dumping-subflow-context-to-userspace base into t/mptcp-allow-dump=
+ing-subflow-context-to-userspace
 config: openrisc-randconfig-a001-20200312 (attached as .config)
 compiler: or1k-linux-gcc (GCC) 9.2.0
 reproduce:
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/=
 make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        git checkout e06605d017e3bf2ee4c4803da4d25b2544735718
+        git checkout 8b8c7c1c3ab581375074b0ce33fa7612fd4b947f
         # save the attached .config to linux build tree
         GCC_VERSION=3D9.2.0 make.cross ARCH=3Dopenrisc =
 
@@ -36,143 +40,137 @@ make.cross -O ~/bin/make.cross
 If you fix the issue, kindly add following tag
 Reported-by: kbuild test robot <lkp(a)intel.com>
 
-Note: the mptcp/t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests HEAD d1a5=
-f94551a0e54cc7cdcd7305e22971aa2dbacb builds fine.
+Note: the mptcp/t/mptcp-allow-dumping-subflow-context-to-userspace HEAD bac=
+8494b909da28ffdf11b03fa39d3c2a3a264ba builds fine.
       It only hurts bisectibility.
 
 All errors (new ones prefixed by >>):
 
-   net//mptcp/options.c: In function 'mptcp_established_options_mp':
->> net//mptcp/options.c:391:41: error: 'struct mptcp_subflow_context' has n=
-o member named 'fourth_ack'
-     391 |  } else if (subflow->mp_join && !subflow->fourth_ack) {
-         |                                         ^~
-   net//mptcp/options.c:395:10: error: 'struct mptcp_subflow_context' has n=
-o member named 'fourth_ack'
-     395 |   subflow->fourth_ack =3D 1;
-         |          ^~
+   net/mptcp/diag.c: In function 'subflow_get_info':
+>> net/mptcp/diag.c:46:8: error: 'struct mptcp_subflow_context' has no memb=
+er named 'fourth_ack'
+      46 |  if (sf->fourth_ack)
+         |        ^~
 
-vim +391 net//mptcp/options.c
+vim +46 net/mptcp/diag.c
 
-cec37a6e41aae7 Peter Krystad    2020-01-21  343  =
+5b04a26c66f161 Davide Caratti 2020-02-26  15  =
 
-cc7972ea193233 Christoph Paasch 2020-01-21  344  static bool mptcp_establis=
-hed_options_mp(struct sock *sk, struct sk_buff *skb,
-cc7972ea193233 Christoph Paasch 2020-01-21  345  					 unsigned int *size,
-6d0060f600adfd Mat Martineau    2020-01-21  346  					 unsigned int remaini=
-ng,
-cec37a6e41aae7 Peter Krystad    2020-01-21  347  					 struct mptcp_out_opt=
-ions *opts)
-cec37a6e41aae7 Peter Krystad    2020-01-21  348  {
-cec37a6e41aae7 Peter Krystad    2020-01-21  349  	struct mptcp_subflow_cont=
-ext *subflow =3D mptcp_subflow_ctx(sk);
-cc7972ea193233 Christoph Paasch 2020-01-21  350  	struct mptcp_ext *mpext;
-cc7972ea193233 Christoph Paasch 2020-01-21  351  	unsigned int data_len;
-cc7972ea193233 Christoph Paasch 2020-01-21  352  =
+5b04a26c66f161 Davide Caratti 2020-02-26  16  static int subflow_get_info(c=
+onst struct sock *sk, struct sk_buff *skb)
+5b04a26c66f161 Davide Caratti 2020-02-26  17  {
+5b04a26c66f161 Davide Caratti 2020-02-26  18  	struct mptcp_subflow_context=
+ *sf;
+5b04a26c66f161 Davide Caratti 2020-02-26  19  	struct nlattr *start;
+5b04a26c66f161 Davide Caratti 2020-02-26  20  	u32 flags =3D 0;
+5b04a26c66f161 Davide Caratti 2020-02-26  21  	int err;
+5b04a26c66f161 Davide Caratti 2020-02-26  22  =
 
-9ca72cd814cdd8 Paolo Abeni      2020-03-05  353  	pr_debug("subflow=3D%p fu=
-lly established=3D%d seq=3D%x:%x remaining=3D%d",
-9ca72cd814cdd8 Paolo Abeni      2020-03-05  354  		 subflow, subflow->fully=
-_established, subflow->snd_isn,
-cc7972ea193233 Christoph Paasch 2020-01-21  355  		 skb ? TCP_SKB_CB(skb)->=
-seq : 0, remaining);
-cc7972ea193233 Christoph Paasch 2020-01-21  356  =
+5b04a26c66f161 Davide Caratti 2020-02-26  23  	start =3D nla_nest_start_nof=
+lag(skb, INET_ULP_INFO_MPTCP);
+5b04a26c66f161 Davide Caratti 2020-02-26  24  	if (!start)
+5b04a26c66f161 Davide Caratti 2020-02-26  25  		return -EMSGSIZE;
+5b04a26c66f161 Davide Caratti 2020-02-26  26  =
 
-9ca72cd814cdd8 Paolo Abeni      2020-03-05  357  	if (subflow->mp_capable &=
-& !subflow->fully_established && skb &&
-cc7972ea193233 Christoph Paasch 2020-01-21  358  	    subflow->snd_isn =3D=
-=3D TCP_SKB_CB(skb)->seq) {
-cc7972ea193233 Christoph Paasch 2020-01-21  359  		/* When skb is not avail=
-able, we better over-estimate the
-cc7972ea193233 Christoph Paasch 2020-01-21  360  		 * emitted options len. =
-A full DSS option is longer than
-cc7972ea193233 Christoph Paasch 2020-01-21  361  		 * TCPOLEN_MPTCP_MPC_ACK=
-_DATA, so let's the caller try to fit
-cc7972ea193233 Christoph Paasch 2020-01-21  362  		 * that.
-cc7972ea193233 Christoph Paasch 2020-01-21  363  		 */
-cc7972ea193233 Christoph Paasch 2020-01-21  364  		mpext =3D mptcp_get_ext(=
-skb);
-cc7972ea193233 Christoph Paasch 2020-01-21  365  		data_len =3D mpext ? mpe=
-xt->data_len : 0;
-cec37a6e41aae7 Peter Krystad    2020-01-21  366  =
+5b04a26c66f161 Davide Caratti 2020-02-26  27  	rcu_read_lock();
+5b04a26c66f161 Davide Caratti 2020-02-26  28  	sf =3D rcu_dereference(inet_=
+csk(sk)->icsk_ulp_data);
+5b04a26c66f161 Davide Caratti 2020-02-26  29  	if (!sf) {
+5b04a26c66f161 Davide Caratti 2020-02-26  30  		err =3D 0;
+5b04a26c66f161 Davide Caratti 2020-02-26  31  		goto nla_failure;
+5b04a26c66f161 Davide Caratti 2020-02-26  32  	}
+5b04a26c66f161 Davide Caratti 2020-02-26  33  =
 
-cc7972ea193233 Christoph Paasch 2020-01-21  367  		/* we will check ext_cop=
-y.data_len in mptcp_write_options() to
-cc7972ea193233 Christoph Paasch 2020-01-21  368  		 * discriminate between =
-TCPOLEN_MPTCP_MPC_ACK_DATA and
-cc7972ea193233 Christoph Paasch 2020-01-21  369  		 * TCPOLEN_MPTCP_MPC_ACK
-cc7972ea193233 Christoph Paasch 2020-01-21  370  		 */
-cc7972ea193233 Christoph Paasch 2020-01-21  371  		opts->ext_copy.data_len =
-=3D data_len;
-cec37a6e41aae7 Peter Krystad    2020-01-21  372  		opts->suboptions =3D OPT=
-ION_MPTCP_MPC_ACK;
-cec37a6e41aae7 Peter Krystad    2020-01-21  373  		opts->sndr_key =3D subfl=
-ow->local_key;
-cec37a6e41aae7 Peter Krystad    2020-01-21  374  		opts->rcvr_key =3D subfl=
-ow->remote_key;
-cc7972ea193233 Christoph Paasch 2020-01-21  375  =
+5b04a26c66f161 Davide Caratti 2020-02-26  34  	if (sf->mp_capable)
+5b04a26c66f161 Davide Caratti 2020-02-26  35  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_MCAP_REM;
+5b04a26c66f161 Davide Caratti 2020-02-26  36  	if (sf->request_mptcp)
+5b04a26c66f161 Davide Caratti 2020-02-26  37  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_MCAP_LOC;
+5b04a26c66f161 Davide Caratti 2020-02-26  38  	if (sf->mp_join)
+5b04a26c66f161 Davide Caratti 2020-02-26  39  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_JOIN_REM;
+5b04a26c66f161 Davide Caratti 2020-02-26  40  	if (sf->request_join)
+5b04a26c66f161 Davide Caratti 2020-02-26  41  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_JOIN_LOC;
+5b04a26c66f161 Davide Caratti 2020-02-26  42  	if (sf->backup)
+5b04a26c66f161 Davide Caratti 2020-02-26  43  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_BKUP_REM;
+5b04a26c66f161 Davide Caratti 2020-02-26  44  	if (sf->request_bkup)
+5b04a26c66f161 Davide Caratti 2020-02-26  45  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_BKUP_LOC;
+5b04a26c66f161 Davide Caratti 2020-02-26 @46  	if (sf->fourth_ack)
+5b04a26c66f161 Davide Caratti 2020-02-26  47  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_4THACK;
+5b04a26c66f161 Davide Caratti 2020-02-26  48  	if (sf->conn_finished)
+5b04a26c66f161 Davide Caratti 2020-02-26  49  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_CONNECTED;
+5b04a26c66f161 Davide Caratti 2020-02-26  50  	if (sf->map_valid)
+5b04a26c66f161 Davide Caratti 2020-02-26  51  		flags |=3D MPTCP_SUBFLOW_FL=
+AG_MAPVALID;
+5b04a26c66f161 Davide Caratti 2020-02-26  52  =
 
-cc7972ea193233 Christoph Paasch 2020-01-21  376  		/* Section 3.1.
-cc7972ea193233 Christoph Paasch 2020-01-21  377  		 * The MP_CAPABLE option=
- is carried on the SYN, SYN/ACK, and ACK
-cc7972ea193233 Christoph Paasch 2020-01-21  378  		 * packets that start th=
-e first subflow of an MPTCP connection,
-cc7972ea193233 Christoph Paasch 2020-01-21  379  		 * as well as the first =
-packet that carries data
-cc7972ea193233 Christoph Paasch 2020-01-21  380  		 */
-cc7972ea193233 Christoph Paasch 2020-01-21  381  		if (data_len > 0)
-cc7972ea193233 Christoph Paasch 2020-01-21  382  			*size =3D ALIGN(TCPOLEN=
-_MPTCP_MPC_ACK_DATA, 4);
-cc7972ea193233 Christoph Paasch 2020-01-21  383  		else
-cec37a6e41aae7 Peter Krystad    2020-01-21  384  			*size =3D TCPOLEN_MPTCP=
-_MPC_ACK;
-cc7972ea193233 Christoph Paasch 2020-01-21  385  =
+5b04a26c66f161 Davide Caratti 2020-02-26  53  	if (nla_put_u32(skb, MPTCP_S=
+UBFLOW_ATTR_TOKEN_REM, sf->remote_token) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  54  	    nla_put_u32(skb, MPTCP_S=
+UBFLOW_ATTR_TOKEN_LOC, sf->token) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  55  	    nla_put_u32(skb, MPTCP_S=
+UBFLOW_ATTR_RELWRITE_SEQ,
+5b04a26c66f161 Davide Caratti 2020-02-26  56  			sf->rel_write_seq) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  57  	    nla_put_u64_64bit(skb, M=
+PTCP_SUBFLOW_ATTR_MAP_SEQ, sf->map_seq,
+5b04a26c66f161 Davide Caratti 2020-02-26  58  			      MPTCP_SUBFLOW_ATTR_P=
+AD) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  59  	    nla_put_u32(skb, MPTCP_S=
+UBFLOW_ATTR_MAP_SFSEQ,
+5b04a26c66f161 Davide Caratti 2020-02-26  60  			sf->map_subflow_seq) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  61  	    nla_put_u32(skb, MPTCP_S=
+UBFLOW_ATTR_SSN_OFFSET, sf->ssn_offset) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  62  	    nla_put_u16(skb, MPTCP_S=
+UBFLOW_ATTR_MAP_DATALEN,
+5b04a26c66f161 Davide Caratti 2020-02-26  63  			sf->map_data_len) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  64  	    nla_put_u32(skb, MPTCP_S=
+UBFLOW_ATTR_FLAGS, flags) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  65  	    nla_put_u8(skb, MPTCP_SU=
+BFLOW_ATTR_ID_REM, sf->remote_id) ||
+5b04a26c66f161 Davide Caratti 2020-02-26  66  	    nla_put_u8(skb, MPTCP_SU=
+BFLOW_ATTR_ID_LOC, sf->local_id)) {
+5b04a26c66f161 Davide Caratti 2020-02-26  67  		err =3D -EMSGSIZE;
+5b04a26c66f161 Davide Caratti 2020-02-26  68  		goto nla_failure;
+5b04a26c66f161 Davide Caratti 2020-02-26  69  	}
+5b04a26c66f161 Davide Caratti 2020-02-26  70  =
 
-cc7972ea193233 Christoph Paasch 2020-01-21  386  		pr_debug("subflow=3D%p, =
-local_key=3D%llu, remote_key=3D%llu map_len=3D%d",
-cc7972ea193233 Christoph Paasch 2020-01-21  387  			 subflow, subflow->loca=
-l_key, subflow->remote_key,
-cc7972ea193233 Christoph Paasch 2020-01-21  388  			 data_len);
-cc7972ea193233 Christoph Paasch 2020-01-21  389  =
+5b04a26c66f161 Davide Caratti 2020-02-26  71  	rcu_read_unlock();
+5b04a26c66f161 Davide Caratti 2020-02-26  72  	nla_nest_end(skb, start);
+5b04a26c66f161 Davide Caratti 2020-02-26  73  	return 0;
+5b04a26c66f161 Davide Caratti 2020-02-26  74  =
 
-cec37a6e41aae7 Peter Krystad    2020-01-21  390  		return true;
-58d3e05e59695f Peter Krystad    2020-02-26 @391  	} else if (subflow->mp_jo=
-in && !subflow->fourth_ack) {
-58d3e05e59695f Peter Krystad    2020-02-26  392  		opts->suboptions =3D OPT=
-ION_MPTCP_MPJ_ACK;
-58d3e05e59695f Peter Krystad    2020-02-26  393  		memcpy(opts->hmac, subfl=
-ow->hmac, MPTCPOPT_HMAC_LEN);
-58d3e05e59695f Peter Krystad    2020-02-26  394  		*size =3D TCPOLEN_MPTCP_=
-MPJ_ACK;
-58d3e05e59695f Peter Krystad    2020-02-26  395  		subflow->fourth_ack =3D =
-1;
-58d3e05e59695f Peter Krystad    2020-02-26  396  		pr_debug("subflow=3D%p",=
- subflow);
-58d3e05e59695f Peter Krystad    2020-02-26  397  		return true;
-cec37a6e41aae7 Peter Krystad    2020-01-21  398  	}
-cec37a6e41aae7 Peter Krystad    2020-01-21  399  	return false;
-cec37a6e41aae7 Peter Krystad    2020-01-21  400  }
-cec37a6e41aae7 Peter Krystad    2020-01-21  401  =
+5b04a26c66f161 Davide Caratti 2020-02-26  75  nla_failure:
+5b04a26c66f161 Davide Caratti 2020-02-26  76  	rcu_read_unlock();
+5b04a26c66f161 Davide Caratti 2020-02-26  77  	nla_nest_cancel(skb, start);
+5b04a26c66f161 Davide Caratti 2020-02-26  78  	return err;
+5b04a26c66f161 Davide Caratti 2020-02-26  79  }
+5b04a26c66f161 Davide Caratti 2020-02-26  80  =
 
 
-:::::: The code at line 391 was first introduced by commit
-:::::: 58d3e05e59695fb74330e0a7dc80b67d3101f6e9 mptcp: Add handling of outg=
-oing MP_JOIN requests
+:::::: The code at line 46 was first introduced by commit
+:::::: 5b04a26c66f161428203e8e504af59dd05ed2a8d mptcp: allow dumping subflo=
+w context to userspace
 
-:::::: TO: Peter Krystad <peter.krystad(a)linux.intel.com>
+:::::: TO: Davide Caratti <dcaratti(a)redhat.com>
 :::::: CC: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all(a)lists.01.org
 
---===============6058556633098026795==
+--===============6907437954299274532==
 Content-Type: application/gzip
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="config.gz"
 
-H4sICGFNaV4AAy5jb25maWcAnDxrb+O2st/PrxC2wEWLc9LazmM39yIfKIqyWUuiVqQcZ78Q3sS7
+H4sICPhkaV4AAy5jb25maWcAnDxrb+O2st/PrxC2wEWLc9LazmM39yIfKIqyWUuiVqQcZ78Q3sS7
 GzRxAttpu//+zFAvUqK8xQW6TTwzfM0M50nnp3/9FJC348vz5vh4v3l6+h583e62+81x+xB8eXza
 /l8QiSATKmARV78CcfK4e/v7t5fX7W7/eLgPLn+9+nVytr8/D5bb/W77FNCX3ZfHr28ww+PL7l8/
 /Qv++wmAz68w2f5/g5f99I+zJ5zj7Ov9ffDznNJfgutfZ79OgJCKLOZzTanmUgPm5nsDgg96xQrJ
@@ -639,4 +637,4 @@ MiP4DhBtKaVvIPTwpvroAIfLYb8pAFPR8nhXu84sYK/pYSCOl86aLkWNr20tyvM4je954mJNKnlv
 WXbc5d48XOXW+Hah5HKCkQz+rFXBPOJL+LYk7XPl5J8wBWYzi0hg3sTa1DkYudpreQj7ntNG0d9M
 Qrl5PpEPloWXHRkJ2jiHUYzGEI3i8FhepgG35DpPQDNLB5KxOTx0mHBHwC+jdxyAC8fgxj3IUj0I
 jrDvFv8DfWz2+YOWAQA=
---===============6058556633098026795==--
+--===============6907437954299274532==--
