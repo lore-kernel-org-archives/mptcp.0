@@ -1,43 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============0686643950072528851=="
+Content-Type: multipart/mixed; boundary="===============2487388199206280861=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 12 March 2020 /!\ 16:00 UTC (9am PDT,
- 5pm CET)
-Date: Wed, 11 Mar 2020 16:33:42 +0100
-Message-ID: <50e8c722-aef4-4072-99ac-41f7ef1bdd99@tessares.net>
+Subject: [MPTCP] Re: [PATCH v3 1/5] mptcp: Add ADD_ADDR handling
+Date: Wed, 11 Mar 2020 08:45:48 -0700
+Message-ID: <1673ccee95e1c9af6cc8bddc3f82694c7d906151.camel@linux.intel.com>
+In-Reply-To: 3c66051e81015614821a451b3e322b8db04656b0.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3916
+X-UID: 3917
 
---===============0686643950072528851==
+--===============2487388199206280861==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Wed, 2020-03-11 at 11:07 +0100, Paolo Abeni wrote:
+> Hi Peter,
+> =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> On Tue, 2020-03-10 at 15:33 -0700, Peter Krystad wrote:
+> > Add handling for sending and receiving the ADD_ADDR, ADD_ADDR6,
+> > and RM_ADDR suboptions.
+> > =
 
-/!\ The time might not be the usual one depending on your location:
-/!\ 16:00 UTC (9am PDT, 5pm CET)
+> > squashto: Add ADD_ADDR handling
+> > =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20200312
+> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> =
 
-Feel free to add/modify topics!
+> This looks like the current "mptcp: Add ADD_ADDR handling" patch,
+> unmodified ?!? Am I missing something ?!?
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+My mistake, dyslexia with format-patch direction, new set coming.
 
-Speak to you tomorrow!
-Matt
--- =
+Peter.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0686643950072528851==--
+> The other patches LGTM,
+> =
+
+> Thanks,
+> =
+
+> Paolo
+> =
+
+>=20
+
+--===============2487388199206280861==--
