@@ -1,60 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============1811761148019148831=="
+Content-Type: multipart/mixed; boundary="===============8682992279484273471=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/12] pm netlink: followup and fixes
-Date: Thu, 12 Mar 2020 10:34:59 +0100
-Message-ID: <5a898d2f3185cd57b3b7700abc8c580308e0e89b.camel@redhat.com>
-In-Reply-To: 60fd12e6-fdf3-f370-d0cc-c113be5b9cf4@tessares.net
+Subject: [MPTCP] Re: [PATCH v4 2/5] mptcp: v1 ADD_ADDR changes: options and
+ parsing
+Date: Thu, 12 Mar 2020 16:33:27 +0100
+Message-ID: <46be534ae8bb1e36fa363f4bc7a518a7577b919e.camel@redhat.com>
+In-Reply-To: 20200311172600.4185-3-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3932
+X-UID: 3934
 
---===============1811761148019148831==
+--===============8682992279484273471==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-03-11 at 20:59 +0100, Matthieu Baerts wrote:
-> *Paolo* : there is one comment for you below:
+Hi Peter,
+
+On Wed, 2020-03-11 at 10:25 -0700, Peter Krystad wrote:
+> Remove family field and add hmac and echo fields to struct
+> mptcp_options_received. Parse incoming hmac on ADD_ADDR option,
+> and send hmac with outgoing option.
 > =
 
+> squashto: Add ADD_ADDR handling
 > =
 
-> - the first patch has been applied as a new topic (exported commit) at =
-
-> the beginning of the series. =E2=86=92 t/mptcp-rename-fourth-ack-field
-> - 5a5f6637f84f: conflict in =
-
-> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
-> - b5b033c18651..a6e8ad2a3769: result
+> Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
+> ---
+>  include/linux/tcp.h  |  19 ++++---
+>  include/net/mptcp.h  |   2 +
+>  net/mptcp/options.c  | 132 +++++++++++++++++++++++++++++++++----------
+>  net/mptcp/protocol.h |  16 ++++--
+>  4 files changed, 128 insertions(+), 41 deletions(-)
 > =
 
-> - 1e9a3e8639eb: "squashed" patch 2/12 in "mptcp: Add path manager =
+> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+> index 1e733f9fb4ab..2fa145aae5ae 100644
+> --- a/include/linux/tcp.h
+> +++ b/include/linux/tcp.h
+> @@ -86,9 +86,13 @@ struct mptcp_options_received {
+>  	u64	data_seq;
+>  	u32	subflow_seq;
+>  	u16	data_len;
+> -	u8	mp_capable : 1,
+> +	u16	mp_capable : 1,
+>  		mp_join : 1,
+> -		dss : 1;
+> +		dss : 1,
+> +		add_addr : 1,
+> +		rm_addr : 1,
+> +		family : 4,
+> +		echo : 1;
+>  	u8	use_map:1,
+>  		dsn64:1,
+>  		data_fin:1,
+> @@ -96,16 +100,15 @@ struct mptcp_options_received {
+>  		ack64:1,
+>  		mpc_map:1,
+>  		__unused:2;
+> -	u8	add_addr : 1,
+> -		rm_addr : 1,
+> -		family : 4;
+>  	u8	addr_id;
+>  	union {
+> -		struct	in_addr	addr;
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -		struct	in6_addr addr6;
+> +		struct in_addr	addr;
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +		struct in6_addr	addr6;
+>  #endif
+>  	};
+> +	u64	ahmac;
+> +	u8	rm_id;
 
-> interface" (not on top of "mptcp: Add ADD_ADDR handling")
-> - 02ebff8a2889: conflict in =
+I think we will have 2 bytes hole before the above union. If so,
+'rm_id' could be moved there.
 
-> t/mptcp-Implement-path-manager-interface-commands
-> - a6e8ad2a3769..b9678d1875a3: result
-> =
+Other than that, LGTM.
 
-> - 0e515e7616d3: "squashed" patch 3/12 in "mptcp: Add handling of =
-
-> incoming MP_JOIN requests"
-> =E2=86=92 *Paolo*: I removed the new comment "passive connection, attach =
-to msk =
-
-> socket" as you did in your branch. Was it OK?
-
-Yep, look good to me!
-
-I'll have a better look at the code while working at more follow-up
-patches to fix sporadic self-tests failures.
-
-Thank you for your great work!
+Thanks,
 
 Paolo
 
-
---===============1811761148019148831==--
+--===============8682992279484273471==--
