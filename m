@@ -1,78 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============7257506483935101287=="
+Content-Type: multipart/mixed; boundary="===============1811761148019148831=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] net: mptcp: don't hang before sending
- 'MP capable with data'
-Date: Thu, 12 Mar 2020 00:00:26 -0700
-Message-ID: <20200312.000026.1883783044714484563.davem@davemloft.net>
-In-Reply-To: da448d7e0a2459519394ab0c398875061f2bf1d0.1583952277.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 0/12] pm netlink: followup and fixes
+Date: Thu, 12 Mar 2020 10:34:59 +0100
+Message-ID: <5a898d2f3185cd57b3b7700abc8c580308e0e89b.camel@redhat.com>
+In-Reply-To: 60fd12e6-fdf3-f370-d0cc-c113be5b9cf4@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3931
+X-UID: 3932
 
---===============7257506483935101287==
+--===============1811761148019148831==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Davide Caratti <dcaratti(a)redhat.com>
-Date: Wed, 11 Mar 2020 19:50:53 +0100
-
-> the following packetdrill script
+On Wed, 2020-03-11 at 20:59 +0100, Matthieu Baerts wrote:
+> *Paolo* : there is one comment for you below:
 > =
 
->   socket(..., SOCK_STREAM, IPPROTO_MPTCP) =3D 3
->   fcntl(3, F_GETFL) =3D 0x2 (flags O_RDWR)
->   fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK) =3D 0
->   connect(3, ..., ...) =3D -1 EINPROGRESS (Operation now in progress)
->   > S 0:0(0) <mss 1460,sackOK,TS val 100 ecr 0,nop,wscale 8,mpcapable v1 =
-flags[flag_h] nokey>
->   < S. 0:0(0) ack 1 win 65535 <mss 1460,sackOK,TS val 700 ecr 100,nop,wsc=
-ale 8,mpcapable v1 flags[flag_h] key[skey=3D2]>
->   > . 1:1(0) ack 1 win 256 <nop, nop, TS val 100 ecr 700,mpcapable v1 fla=
-gs[flag_h] key[ckey,skey]>
->   getsockopt(3, SOL_SOCKET, SO_ERROR, [0], [4]) =3D 0
->   fcntl(3, F_SETFL, O_RDWR) =3D 0
->   write(3, ..., 1000) =3D 1000
 > =
 
-> doesn't transmit 1KB data packet after a successful three-way-handshake,
-> using mp_capable with data as required by protocol v1, and write() hangs
-> forever:
+> - the first patch has been applied as a new topic (exported commit) at =
+
+> the beginning of the series. =E2=86=92 t/mptcp-rename-fourth-ack-field
+> - 5a5f6637f84f: conflict in =
+
+> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+> - b5b033c18651..a6e8ad2a3769: result
 > =
 
->  PID: 973    TASK: ffff97dd399cae80  CPU: 1   COMMAND: "packetdrill"
->   #0 [ffffa9b94062fb78] __schedule at ffffffff9c90a000
->   #1 [ffffa9b94062fc08] schedule at ffffffff9c90a4a0
->   #2 [ffffa9b94062fc18] schedule_timeout at ffffffff9c90e00d
->   #3 [ffffa9b94062fc90] wait_woken at ffffffff9c120184
->   #4 [ffffa9b94062fcb0] sk_stream_wait_connect at ffffffff9c75b064
->   #5 [ffffa9b94062fd20] mptcp_sendmsg at ffffffff9c8e801c
->   #6 [ffffa9b94062fdc0] sock_sendmsg at ffffffff9c747324
->   #7 [ffffa9b94062fdd8] sock_write_iter at ffffffff9c7473c7
->   #8 [ffffa9b94062fe48] new_sync_write at ffffffff9c302976
->   #9 [ffffa9b94062fed0] vfs_write at ffffffff9c305685
->  #10 [ffffa9b94062ff00] ksys_write at ffffffff9c305985
->  #11 [ffffa9b94062ff38] do_syscall_64 at ffffffff9c004475
->  #12 [ffffa9b94062ff50] entry_SYSCALL_64_after_hwframe at ffffffff9ca0008c
->      RIP: 00007f959407eaf7  RSP: 00007ffe9e95a910  RFLAGS: 00000293
->      RAX: ffffffffffffffda  RBX: 0000000000000008  RCX: 00007f959407eaf7
->      RDX: 00000000000003e8  RSI: 0000000001785fe0  RDI: 0000000000000008
->      RBP: 0000000001785fe0   R8: 0000000000000000   R9: 0000000000000003
->      R10: 0000000000000007  R11: 0000000000000293  R12: 00000000000003e8
->      R13: 00007ffe9e95ae30  R14: 0000000000000000  R15: 0000000000000000
->      ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
+> - 1e9a3e8639eb: "squashed" patch 2/12 in "mptcp: Add path manager =
+
+> interface" (not on top of "mptcp: Add ADD_ADDR handling")
+> - 02ebff8a2889: conflict in =
+
+> t/mptcp-Implement-path-manager-interface-commands
+> - a6e8ad2a3769..b9678d1875a3: result
 > =
 
-> Fix it ensuring that socket state is TCP_ESTABLISHED on reception of the
-> third ack.
-> =
+> - 0e515e7616d3: "squashed" patch 3/12 in "mptcp: Add handling of =
 
-> Fixes: 1954b86016cf ("mptcp: Check connection state before attempting sen=
-d")
-> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> incoming MP_JOIN requests"
+> =E2=86=92 *Paolo*: I removed the new comment "passive connection, attach =
+to msk =
 
-Applied, thanks.
---===============7257506483935101287==--
+> socket" as you did in your branch. Was it OK?
+
+Yep, look good to me!
+
+I'll have a better look at the code while working at more follow-up
+patches to fix sporadic self-tests failures.
+
+Thank you for your great work!
+
+Paolo
+
+
+--===============1811761148019148831==--
