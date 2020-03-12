@@ -1,78 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============3506891295948756997=="
+Content-Type: multipart/mixed; boundary="===============5001193301851109435=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: propagate sendbuf setting to subflow on
- fallback
-Date: Thu, 12 Mar 2020 16:44:08 +0100
-Message-ID: <20200312154408.597-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH] mptcp: copy mptcp receive buffer setting to subflow
+Date: Thu, 12 Mar 2020 16:45:07 +0100
+Message-ID: <20200312154507.860-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3935
+X-UID: 3936
 
---===============3506891295948756997==
+--===============5001193301851109435==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-For normal mptcp subflows we do not need to propagate the sndbuf size
-because all skbs to be transmitted via mptcp get charged to the mptcp
-send buffer, i.e. mptcp sndbuf will limit the amount of data handed to
-the subflow sockets.
+For incoming/outgoing connections, initial window is chosen based om
+the subflow receive buffer size.
 
-However, when we enter fallback mode, the mptcp xmit function is cut
-short and no mptcp-level socket accouting takes place.
-Therefore for the sndbuf limit to have any effect we need to set it
-on the fallback socket.
+In case mptcp socket has a fixed buffer size, we should copy it to the
+subflow/tcp socket as well.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
  I'll pass this to netdev@ unless there are objections.
 
- net/mptcp/protocol.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8d6ab825bdab..ddfd02ab6e31 100644
+index ddfd02ab6e31..a65cedcb905f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -57,15 +57,27 @@ static bool __mptcp_needs_tcp_fallback(const struct mpt=
-cp_sock *msk)
- 	return msk->first && !sk_is_mptcp(msk->first);
+@@ -89,6 +89,15 @@ static bool __mptcp_can_create_subflow(const struct mptc=
+p_sock *msk)
+ 	return !msk->first;
  }
  =
 
-+static void sync_sndbuf(const struct sock *msk, struct sock *ssk)
++static void sync_rcvbuf(const struct sock *msk, struct sock *ssk)
 +{
-+	if (unlikely((msk->sk_userlocks & SOCK_SNDBUF_LOCK) &&
-+	     ssk->sk_sndbuf !=3D msk->sk_sndbuf)) {
-+		ssk->sk_userlocks |=3D SOCK_SNDBUF_LOCK;
-+		WRITE_ONCE(ssk->sk_sndbuf, msk->sk_sndbuf);
++	if (unlikely((msk->sk_userlocks & SOCK_RCVBUF_LOCK) &&
++	     ssk->sk_rcvbuf !=3D msk->sk_rcvbuf)) {
++		ssk->sk_userlocks |=3D SOCK_RCVBUF_LOCK;
++		WRITE_ONCE(ssk->sk_rcvbuf, msk->sk_rcvbuf);
 +	}
 +}
 +
- static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ static struct socket *__mptcp_socket_create(struct mptcp_sock *msk, int st=
+ate)
  {
--	sock_owned_by_me((const struct sock *)msk);
-+	struct sock *sk =3D (struct sock *)msk;
-+
-+	sock_owned_by_me(sk);
+ 	struct mptcp_subflow_context *subflow;
+@@ -107,6 +116,7 @@ static struct socket *__mptcp_socket_create(struct mptc=
+p_sock *msk, int state)
+ 	if (err)
+ 		return ERR_PTR(err);
  =
 
- 	if (likely(!__mptcp_needs_tcp_fallback(msk)))
- 		return NULL;
- =
-
- 	if (msk->subflow) {
--		release_sock((struct sock *)msk);
-+		sync_sndbuf(sk, msk->subflow->sk);
-+		release_sock(sk);
- 		return msk->subflow;
- 	}
- =
-
++	sync_rcvbuf(sk, ssock->sk);
+ 	msk->first =3D ssock->sk;
+ 	msk->subflow =3D ssock;
+ 	subflow =3D mptcp_subflow_ctx(ssock->sk);
 -- =
 
 2.24.1
 
---===============3506891295948756997==--
+--===============5001193301851109435==--
