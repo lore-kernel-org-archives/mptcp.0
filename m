@@ -1,77 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============1565180515126725459=="
+Content-Type: multipart/mixed; boundary="===============7407427706126158310=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp] mptcp: re-check dsn before reading from
+Subject: [MPTCP] Re: [PATCH] mptcp: copy mptcp receive buffer setting to
  subflow
-Date: Fri, 13 Mar 2020 23:39:22 +0100
-Message-ID: <4b74a42b-de17-f2eb-bca0-436ec47c1621@tessares.net>
-In-Reply-To: alpine.OSX.2.22.394.2003121535390.53592@jsingh3-mobl.amr.corp.intel.com
+Date: Fri, 13 Mar 2020 15:48:15 -0700
+Message-ID: <alpine.OSX.2.22.394.2003131543450.69817@jsingh3-mobl.amr.corp.intel.com>
+In-Reply-To: 20200312154507.860-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 3943
+X-UID: 3944
 
---===============1565180515126725459==
+--===============7407427706126158310==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Mat,
 
-On 13/03/2020 00:12, Mat Martineau wrote:
-> =
+On Thu, 12 Mar 2020, Florian Westphal wrote:
 
-> On Thu, 27 Feb 2020, Florian Westphal wrote:
-> =
+> For incoming/outgoing connections, initial window is chosen based om
+> the subflow receive buffer size.
+>
+> In case mptcp socket has a fixed buffer size, we should copy it to the
+> subflow/tcp socket as well.
 
->> mptcp_subflow_data_available() is commonly called via
->> ssk->sk_data_ready(), in this case the mptcp socket lock
->> cannot be acquired.
->>
->> Therefore, while we can safely discard subflow data that
->> was already received up to msk->ack_seq, we cannot be sure
->> that 'subflow->data_avail' will still be valid at the time
->> userspace wants to read the data -- a previous read on a
->> different subflow might have carried this data already.
->>
->> In that (unlikely) event, msk->ack_seq will have been updated
->> and will be ahead of the subflow dsn.
->>
->> We can check for this condition and skip/resync to the expected
->> sequence number.
->>
->> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->> ---
->> I could also submit this directly for net-next, but this
->> patch is only needed w. MP_JOIN support.
-> =
+Does this need to be synced later in the connection when SO_RECVBUF is =
 
-> I think this is ok to integrate in the topgit tree.
+changed? If it does, this patch is not really blocked: copying the value =
 
-Thank you for the patch and the review!
+at subflow creation time allows initial window tuning that isn't currently =
 
-I just added this patch at the end of the series, as a new commit =
+possible.
 
-(t/mptcp-re-check-dsn-before-reading-from-subflow).
+Mat
 
-Was it what you had in mind? I can easily move it somewhere else if needed.
 
-> It didn't apply =
+>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+> I'll pass this to netdev@ unless there are objections.
+>
+> net/mptcp/protocol.c | 10 ++++++++++
+> 1 file changed, 10 insertions(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ddfd02ab6e31..a65cedcb905f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -89,6 +89,15 @@ static bool __mptcp_can_create_subflow(const struct mp=
+tcp_sock *msk)
+> 	return !msk->first;
+> }
+>
+> +static void sync_rcvbuf(const struct sock *msk, struct sock *ssk)
+> +{
+> +	if (unlikely((msk->sk_userlocks & SOCK_RCVBUF_LOCK) &&
+> +	     ssk->sk_rcvbuf !=3D msk->sk_rcvbuf)) {
+> +		ssk->sk_userlocks |=3D SOCK_RCVBUF_LOCK;
+> +		WRITE_ONCE(ssk->sk_rcvbuf, msk->sk_rcvbuf);
+> +	}
+> +}
+> +
+> static struct socket *__mptcp_socket_create(struct mptcp_sock *msk, int s=
+tate)
+> {
+> 	struct mptcp_subflow_context *subflow;
+> @@ -107,6 +116,7 @@ static struct socket *__mptcp_socket_create(struct mp=
+tcp_sock *msk, int state)
+> 	if (err)
+> 		return ERR_PTR(err);
+>
+> +	sync_rcvbuf(sk, ssock->sk);
+> 	msk->first =3D ssock->sk;
+> 	msk->subflow =3D ssock;
+> 	subflow =3D mptcp_subflow_ctx(ssock->sk);
+> -- =
 
-> directly due to upstream changes (sorry about the review delay) but the =
+> 2.24.1
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
-> only conflict was straightforward to fix.
-Indeed, I had one conflict, simple to resolve.
-
-Tests are successful and the "export" has been updated.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1565180515126725459==--
+--
+Mat Martineau
+Intel
+--===============7407427706126158310==--
