@@ -1,47 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============4424495994420181263=="
+Content-Type: multipart/mixed; boundary="===============3144252017098389907=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [GIT] Sync with net-next on 20200313: conflicts
-Date: Fri, 13 Mar 2020 18:46:24 +0100
-Message-ID: <f106be37-1a94-25ef-02f0-83e1eaf3c222@tessares.net>
+Subject: [MPTCP] Re: [GIT] Sync with net-next on 20200313: conflicts
+Date: Fri, 13 Mar 2020 18:50:44 +0100
+Message-ID: <57a8012989fdd2932b75a41a91b8fbd6da909687.camel@redhat.com>
+In-Reply-To: f106be37-1a94-25ef-02f0-83e1eaf3c222@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3940
+X-UID: 3941
 
---===============4424495994420181263==
+--===============3144252017098389907==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, 2020-03-13 at 18:46 +0100, Matthieu Baerts wrote:
+> Hello,
+> =
 
-Recently, one MPTCP-related patch from Davide has been applied in =
+> Recently, one MPTCP-related patch from Davide has been applied in =
 
-'net-next' repo:
+> 'net-next' repo:
+> =
 
-- 767d3ded5fb8 (net: mptcp: don't hang before sending 'MP capable with =
+> - 767d3ded5fb8 (net: mptcp: don't hang before sending 'MP capable with =
 
-data')
+> data')
+> =
 
-This created conflicts:
+> This created conflicts:
+> =
 
-- 21a8666f4683: conflict in t/mptcp-Add-path-manager-interface
-- c1aa2cd27a83: conflict in =
+> - 21a8666f4683: conflict in t/mptcp-Add-path-manager-interface
+> - c1aa2cd27a83: conflict in =
 
-t/mptcp-update-per-unacked-sequence-on-pkt-reception
+> t/mptcp-update-per-unacked-sequence-on-pkt-reception
+> =
 
-I hope they have been resolved as expected.
+> I hope they have been resolved as expected.
+> =
 
-Tests are all green and the "export" branch has been updated.
+> Tests are all green and the "export" branch has been updated.
 
-Cheers,
-Matt
--- =
+Yep, conflicts resolution LGTM.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4424495994420181263==--
+Thanks,
+
+Paolo
+
+--===============3144252017098389907==--
