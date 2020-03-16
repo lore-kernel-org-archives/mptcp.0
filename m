@@ -1,120 +1,348 @@
-Content-Type: multipart/mixed; boundary="===============0474631128185395920=="
+Content-Type: multipart/mixed; boundary="===============2032138776286953610=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v5 1/5] mptcp: Re-factor mptcp_crypto_hmac_sha()
-Date: Mon, 16 Mar 2020 11:39:07 -0700
-Message-ID: <20200316183911.4347-2-peter.krystad@linux.intel.com>
+Subject: [MPTCP] [PATCH v5 2/5] mptcp: v1 ADD_ADDR changes: options and parsing
+Date: Mon, 16 Mar 2020 11:39:08 -0700
+Message-ID: <20200316183911.4347-3-peter.krystad@linux.intel.com>
 In-Reply-To: 20200316183911.4347-1-peter.krystad@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3959
+X-UID: 3960
 
---===============0474631128185395920==
+--===============2032138776286953610==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Allow it to take variable-length messages so that v1 ADD_ADDR
-option processing may also use it.
+Remove family field and add hmac and echo fields to struct
+mptcp_options_received. Parse incoming hmac on ADD_ADDR option,
+and send hmac with outgoing option.
 
 squashto: Add ADD_ADDR handling
 
 Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
 ---
- net/mptcp/crypto.c   | 17 +++++++++++------
- net/mptcp/protocol.h |  3 +--
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ include/linux/tcp.h  |  19 ++++---
+ include/net/mptcp.h  |   2 +
+ net/mptcp/options.c  | 132 +++++++++++++++++++++++++++++++++----------
+ net/mptcp/protocol.h |  16 ++++--
+ 4 files changed, 128 insertions(+), 41 deletions(-)
 
-diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
-index 40d1bb18fd60..c151628bd416 100644
---- a/net/mptcp/crypto.c
-+++ b/net/mptcp/crypto.c
-@@ -44,8 +44,7 @@ void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
- 		*idsn =3D be64_to_cpu(*((__be64 *)&mptcp_hashed_key[6]));
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 1e733f9fb4ab..41e5a0e3622f 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -86,9 +86,13 @@ struct mptcp_options_received {
+ 	u64	data_seq;
+ 	u32	subflow_seq;
+ 	u16	data_len;
+-	u8	mp_capable : 1,
++	u16	mp_capable : 1,
+ 		mp_join : 1,
+-		dss : 1;
++		dss : 1,
++		add_addr : 1,
++		rm_addr : 1,
++		family : 4,
++		echo : 1;
+ 	u8	use_map:1,
+ 		dsn64:1,
+ 		data_fin:1,
+@@ -96,16 +100,15 @@ struct mptcp_options_received {
+ 		ack64:1,
+ 		mpc_map:1,
+ 		__unused:2;
+-	u8	add_addr : 1,
+-		rm_addr : 1,
+-		family : 4;
+ 	u8	addr_id;
++	u8	rm_id;
+ 	union {
+-		struct	in_addr	addr;
+-#if IS_ENABLED(CONFIG_IPV6)
+-		struct	in6_addr addr6;
++		struct in_addr	addr;
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++		struct in6_addr	addr6;
+ #endif
+ 	};
++	u64	ahmac;
+ };
+ #endif
+ =
+
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 2d7e478f0380..0d5ea71dd3d0 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -40,6 +40,8 @@ struct mptcp_out_options {
+ #endif
+ 	};
+ 	u8 addr_id;
++	u64 ahmac;
++	u8 rm_id;
+ 	struct mptcp_ext ext_copy;
+ #endif
+ };
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 5e4ed3607983..6db834a5d5b5 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -179,45 +179,56 @@ void mptcp_parse_option(const struct sk_buff *skb, co=
+nst unsigned char *ptr,
+ 		break;
+ =
+
+ 	case MPTCPOPT_ADD_ADDR:
+-		if (opsize !=3D TCPOLEN_MPTCP_ADD_ADDR &&
+-		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
+-			break;
+-		mp_opt->family =3D *ptr++ & MPTCP_ADDR_FAMILY_MASK;
+-		if (mp_opt->family !=3D MPTCP_ADDR_IPVERSION_4 &&
+-		    mp_opt->family !=3D MPTCP_ADDR_IPVERSION_6)
+-			break;
+-
+-		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4 &&
+-		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR)
+-			break;
++		mp_opt->echo =3D (*ptr++) & MPTCP_ADDR_ECHO;
++		if (!mp_opt->echo) {
++			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR ||
++			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_PORT)
++				mp_opt->family =3D MPTCP_ADDR_IPVERSION_4;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6 &&
+-		    opsize !=3D TCPOLEN_MPTCP_ADD_ADDR6)
+-			break;
++			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6 ||
++				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_PORT)
++				mp_opt->family =3D MPTCP_ADDR_IPVERSION_6;
++#endif
++			else
++				break;
++		} else {
++			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE ||
++			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT)
++				mp_opt->family =3D MPTCP_ADDR_IPVERSION_4;
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE ||
++				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT)
++				mp_opt->family =3D MPTCP_ADDR_IPVERSION_6;
+ #endif
++			else
++				break;
++		}
++
+ 		mp_opt->addr_id =3D *ptr++;
++		pr_debug("ADD_ADDR: id=3D%d", mp_opt->addr_id);
+ 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+-			mp_opt->add_addr =3D 1;
+ 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
+-			pr_debug("ADD_ADDR: addr=3D%x, id=3D%d",
+-				 mp_opt->addr.s_addr, mp_opt->addr_id);
++			ptr +=3D 4;
+ 		}
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 		else {
+-			mp_opt->add_addr =3D 1;
+ 			memcpy(mp_opt->addr6.s6_addr, (u8 *)ptr, 16);
+-			pr_debug("ADD_ADDR: addr6=3D, id=3D%d", mp_opt->addr_id);
++			ptr +=3D 16;
+ 		}
+ #endif
++		if (!mp_opt->echo) {
++			mp_opt->ahmac =3D get_unaligned_be64(ptr);
++			ptr +=3D 8;
++		}
+ 		break;
+ =
+
+ 	case MPTCPOPT_RM_ADDR:
+-		if (opsize !=3D TCPOLEN_MPTCP_RM_ADDR)
++		if (opsize !=3D TCPOLEN_MPTCP_RM_ADDR_BASE)
+ 			break;
+ =
+
+ 		mp_opt->rm_addr =3D 1;
+-		mp_opt->addr_id =3D *ptr++;
+-		pr_debug("RM_ADDR: id=3D%d", mp_opt->addr_id);
++		mp_opt->rm_id =3D *ptr++;
++		pr_debug("RM_ADDR: id=3D%d", mp_opt->rm_id);
+ 		break;
+ =
+
+ 	default:
+@@ -430,6 +441,38 @@ static bool mptcp_established_options_dss(struct sock =
+*sk, struct sk_buff *skb,
+ 	return true;
  }
  =
 
--void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
--			   void *hmac)
-+void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hma=
-c)
- {
- 	u8 input[SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE];
- 	__be32 mptcp_hashed_key[SHA256_DIGEST_WORDS];
-@@ -55,6 +54,9 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 nonce1=
-, u32 nonce2,
- 	u8 key2be[8];
- 	int i;
- =
-
-+	if (WARN_ON_ONCE(len > SHA256_DIGEST_SIZE))
-+		len =3D SHA256_DIGEST_SIZE;
++static u64 add_addr_generate_hmac(u64 key1, u64 key2, u8 addr_id,
++				  struct in_addr *addr)
++{
++	u8 hmac[MPTCP_ADDR_HMAC_LEN];
++	u8 msg[7];
 +
- 	put_unaligned_be64(key1, key1be);
- 	put_unaligned_be64(key2, key2be);
- =
-
-@@ -65,11 +67,10 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 nonc=
-e1, u32 nonce2,
- 	for (i =3D 0; i < 8; i++)
- 		input[i + 8] ^=3D key2be[i];
- =
-
--	put_unaligned_be32(nonce1, &input[SHA256_BLOCK_SIZE]);
--	put_unaligned_be32(nonce2, &input[SHA256_BLOCK_SIZE + 4]);
-+	memcpy(&input[SHA256_BLOCK_SIZE], msg, len);
- =
-
- 	sha256_init(&state);
--	sha256_update(&state, input, SHA256_BLOCK_SIZE + 8);
-+	sha256_update(&state, input, SHA256_BLOCK_SIZE + len);
- =
-
- 	/* emit sha256(K1 || msg) on the second input block, so we can
- 	 * reuse 'input' for the last hashing
-@@ -125,6 +126,7 @@ static int __init test_mptcp_crypto(void)
- 	char hmac[20], hmac_hex[41];
- 	u32 nonce1, nonce2;
- 	u64 key1, key2;
-+	u8 msg[8];
- 	int i, j;
- =
-
- 	for (i =3D 0; i < ARRAY_SIZE(tests); ++i) {
-@@ -134,7 +136,10 @@ static int __init test_mptcp_crypto(void)
- 		nonce1 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[0]));
- 		nonce2 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[4]));
- =
-
--		mptcp_crypto_hmac_sha(key1, key2, nonce1, nonce2, hmac);
-+		put_unaligned_be32(nonce1, &msg[0]);
-+		put_unaligned_be32(nonce2, &msg[4]);
++	msg[0] =3D addr_id;
++	memcpy(&msg[1], &addr->s_addr, 4);
++	msg[5] =3D 0;
++	msg[6] =3D 0;
 +
-+		mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
- 		for (j =3D 0; j < 20; ++j)
- 			sprintf(&hmac_hex[j << 1], "%02x", hmac[j] & 0xff);
- 		hmac_hex[40] =3D 0;
++	mptcp_crypto_hmac_sha(key1, key2, msg, 7, hmac);
++
++	return get_unaligned_be64(hmac);
++}
++
++static u64 add_addr6_generate_hmac(u64 key1, u64 key2, u8 addr_id,
++				   struct in6_addr *addr)
++{
++	u8 hmac[MPTCP_ADDR_HMAC_LEN];
++	u8 msg[19];
++
++	msg[0] =3D addr_id;
++	memcpy(&msg[1], &addr->s6_addr, 16);
++	msg[17] =3D 0;
++	msg[18] =3D 0;
++
++	mptcp_crypto_hmac_sha(key1, key2, msg, 19, hmac);
++
++	return get_unaligned_be64(hmac);
++}
++
+ static bool mptcp_established_options_addr(struct sock *sk,
+ 					   unsigned int *size,
+ 					   unsigned int remaining,
+@@ -452,6 +495,10 @@ static bool mptcp_established_options_addr(struct sock=
+ *sk,
+ 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+ 		opts->addr_id =3D id;
+ 		opts->addr =3D ((struct sockaddr_in *)&saddr)->sin_addr;
++		opts->ahmac =3D add_addr_generate_hmac(subflow->local_key,
++						     subflow->remote_key,
++						     opts->addr_id,
++						     &opts->addr);
+ 		*size =3D TCPOLEN_MPTCP_ADD_ADDR;
+ 	}
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+@@ -460,10 +507,15 @@ static bool mptcp_established_options_addr(struct soc=
+k *sk,
+ 			return false;
+ 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
+ 		opts->addr_id =3D id;
++		opts->ahmac =3D add_addr6_generate_hmac(subflow->local_key,
++						      subflow->remote_key,
++						      opts->addr_id,
++						      &opts->addr6);
+ 		opts->addr6 =3D ((struct sockaddr_in6 *)&saddr)->sin6_addr;
+ 		*size =3D TCPOLEN_MPTCP_ADD_ADDR6;
+ 	}
+ #endif
++	pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
+ =
+
+ 	return true;
+ }
+@@ -635,25 +687,47 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_ou=
+t_options *opts)
+ =
+
+ mp_capable_done:
+ 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+-		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR, TCPOLEN_MPTCP_ADD_ADDR,
+-				      MPTCP_ADDR_IPVERSION_4, opts->addr_id);
++		if (opts->ahmac)
++			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++					      TCPOLEN_MPTCP_ADD_ADDR, 0,
++					      opts->addr_id);
++		else
++			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++					      TCPOLEN_MPTCP_ADD_ADDR_BASE,
++					      MPTCP_ADDR_ECHO,
++					      opts->addr_id);
+ 		memcpy((u8 *)ptr, (u8 *)&opts->addr.s_addr, 4);
+ 		ptr +=3D 1;
++		if (opts->ahmac) {
++			put_unaligned_be64(opts->ahmac, ptr);
++			ptr +=3D 2;
++		}
+ 	}
+ =
+
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
+-		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-				      TCPOLEN_MPTCP_ADD_ADDR6,
+-				      MPTCP_ADDR_IPVERSION_6, opts->addr_id);
++		if (opts->ahmac)
++			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++					      TCPOLEN_MPTCP_ADD_ADDR6, 0,
++					      opts->addr_id);
++		else
++			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++					      TCPOLEN_MPTCP_ADD_ADDR6_BASE,
++					      MPTCP_ADDR_ECHO,
++					      opts->addr_id);
+ 		memcpy((u8 *)ptr, opts->addr6.s6_addr, 16);
+ 		ptr +=3D 4;
++		if (opts->ahmac) {
++			put_unaligned_be64(opts->ahmac, ptr);
++			ptr +=3D 2;
++		}
+ 	}
+ #endif
+ =
+
+ 	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
+-		*ptr++ =3D mptcp_option(MPTCPOPT_RM_ADDR, TCPOLEN_MPTCP_RM_ADDR,
+-				      0, opts->addr_id);
++		*ptr++ =3D mptcp_option(MPTCPOPT_RM_ADDR,
++				      TCPOLEN_MPTCP_RM_ADDR_BASE,
++				      0, opts->rm_id);
+ 	}
+ =
+
+ 	if (opts->ext_copy.use_ack || opts->ext_copy.use_map) {
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2c36f9c7d2d7..d04fee8d1959 100644
+index d04fee8d1959..471e013d1c32 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -236,8 +236,7 @@ static inline void mptcp_crypto_key_gen_sha(u64 *key, u=
-32 *token, u64 *idsn)
- 	mptcp_crypto_key_sha(*key, token, idsn);
- }
+@@ -42,9 +42,16 @@
+ #define TCPOLEN_MPTCP_DSS_MAP32		10
+ #define TCPOLEN_MPTCP_DSS_MAP64		14
+ #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
+-#define TCPOLEN_MPTCP_ADD_ADDR		8
+-#define TCPOLEN_MPTCP_ADD_ADDR6		20
+-#define TCPOLEN_MPTCP_RM_ADDR		4
++#define TCPOLEN_MPTCP_ADD_ADDR		16
++#define TCPOLEN_MPTCP_ADD_ADDR_PORT	18
++#define TCPOLEN_MPTCP_ADD_ADDR_BASE	8
++#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	10
++#define TCPOLEN_MPTCP_ADD_ADDR6		28
++#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	30
++#define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
++#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	22
++#define TCPOLEN_MPTCP_PORT_LEN		2
++#define TCPOLEN_MPTCP_RM_ADDR_BASE	4
  =
 
--void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 nonce1, u32 nonce2,
--			   void *hash_out);
-+void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hma=
-c);
+ /* MPTCP MP_CAPABLE flags */
+ #define MPTCP_VERSION_MASK	(0x0F)
+@@ -62,7 +69,8 @@
+ #define MPTCP_DSS_FLAG_MASK	(0x1F)
  =
 
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
- {
+ /* MPTCP ADD_ADDR flags */
+-#define MPTCP_ADDR_FAMILY_MASK	(0x0F)
++#define MPTCP_ADDR_ECHO		BIT(0)
++#define MPTCP_ADDR_HMAC_LEN	20
+ #define MPTCP_ADDR_IPVERSION_4	4
+ #define MPTCP_ADDR_IPVERSION_6	6
+ =
+
 -- =
 
 2.17.2
 
---===============0474631128185395920==--
+--===============2032138776286953610==--
