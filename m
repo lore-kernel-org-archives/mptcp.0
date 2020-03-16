@@ -1,100 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============5627624841032074852=="
+Content-Type: multipart/mixed; boundary="===============3089198874264178144=="
 MIME-Version: 1.0
 From: Peter Krystad <peter.krystad at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v4 2/5] mptcp: v1 ADD_ADDR changes: options and
- parsing
-Date: Mon, 16 Mar 2020 11:28:20 -0700
-Message-ID: <125c3dc7ad60f3c9e72a9ce11957ea9dffb1522d.camel@linux.intel.com>
-In-Reply-To: 46be534ae8bb1e36fa363f4bc7a518a7577b919e.camel@redhat.com
+Subject: [MPTCP] [PATCH v5 0/5] Add support for v1 of ADD_ADDR option
+Date: Mon, 16 Mar 2020 11:39:06 -0700
+Message-ID: <20200316183911.4347-1-peter.krystad@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3957
+X-UID: 3958
 
---===============5627624841032074852==
+--===============3089198874264178144==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-03-12 at 16:33 +0100, Paolo Abeni wrote:
-> Hi Peter,
-> =
+Support parsing and writing the new option format, with hmac generation
+and validation.
 
-> On Wed, 2020-03-11 at 10:25 -0700, Peter Krystad wrote:
-> > Remove family field and add hmac and echo fields to struct
-> > mptcp_options_received. Parse incoming hmac on ADD_ADDR option,
-> > and send hmac with outgoing option.
-> > =
+Support for echoing ADD_ADDR still to come.
 
-> > squashto: Add ADD_ADDR handling
-> > =
+v2: check msg len in mptcp_crypto_hmac_sha().
+    remove obsolete casts
+v3: Rebase and split for squashing, patches ready to be applied.
+v4: Get the first two patches of the set right
+v5: plug hole in mptcp_options_received
 
-> > Signed-off-by: Peter Krystad <peter.krystad(a)linux.intel.com>
-> > ---
-> >  include/linux/tcp.h  |  19 ++++---
-> >  include/net/mptcp.h  |   2 +
-> >  net/mptcp/options.c  | 132 +++++++++++++++++++++++++++++++++----------
-> >  net/mptcp/protocol.h |  16 ++++--
-> >  4 files changed, 128 insertions(+), 41 deletions(-)
-> > =
+Peter Krystad (5):
+  mptcp: Re-factor mptcp_crypto_hmac_sha()
+  mptcp: v1 ADD_ADDR changes: options and parsing
+  mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
+  mptcp: v1 ADD_ADDR changes: add subflow_generate_hmac()
+  mptcp: v1 ADD_ADDR changes: use subflow_generate_hmac()
 
-> > diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> > index 1e733f9fb4ab..2fa145aae5ae 100644
-> > --- a/include/linux/tcp.h
-> > +++ b/include/linux/tcp.h
-> > @@ -86,9 +86,13 @@ struct mptcp_options_received {
-> >  	u64	data_seq;
-> >  	u32	subflow_seq;
-> >  	u16	data_len;
-> > -	u8	mp_capable : 1,
-> > +	u16	mp_capable : 1,
-> >  		mp_join : 1,
-> > -		dss : 1;
-> > +		dss : 1,
-> > +		add_addr : 1,
-> > +		rm_addr : 1,
-> > +		family : 4,
-> > +		echo : 1;
-> >  	u8	use_map:1,
-> >  		dsn64:1,
-> >  		data_fin:1,
-> > @@ -96,16 +100,15 @@ struct mptcp_options_received {
-> >  		ack64:1,
-> >  		mpc_map:1,
-> >  		__unused:2;
-> > -	u8	add_addr : 1,
-> > -		rm_addr : 1,
-> > -		family : 4;
-> >  	u8	addr_id;
-> >  	union {
-> > -		struct	in_addr	addr;
-> > -#if IS_ENABLED(CONFIG_IPV6)
-> > -		struct	in6_addr addr6;
-> > +		struct in_addr	addr;
-> > +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> > +		struct in6_addr	addr6;
-> >  #endif
-> >  	};
-> > +	u64	ahmac;
-> > +	u8	rm_id;
-> =
+ include/linux/tcp.h  |  19 ++++---
+ include/net/mptcp.h  |   2 +
+ net/mptcp/crypto.c   |  17 ++++--
+ net/mptcp/options.c  | 132 +++++++++++++++++++++++++++++++++----------
+ net/mptcp/protocol.h |  19 +++++--
+ 5 files changed, 140 insertions(+), 49 deletions(-)
 
-> I think we will have 2 bytes hole before the above union. If so,
-> 'rm_id' could be moved there.
+-- =
 
-I'll move rm_id and join_id so we get 4 u8's in a row.
+2.17.2
 
-Peter.
-
-> =
-
-> Other than that, LGTM.
-> =
-
-> Thanks,
-> =
-
-> Paolo
->=20
-
---===============5627624841032074852==--
+--===============3089198874264178144==--
