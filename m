@@ -1,121 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============3983956061903013576=="
+Content-Type: multipart/mixed; boundary="===============7311830502448978744=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 2/3] Squash-to: "mptcp: add netlink based PM"
-Date: Mon, 16 Mar 2020 16:09:44 +0100
-Message-ID: <03253d59063a86258e2579413046ef8d74b89c7b.1584370791.git.pabeni@redhat.com>
-In-Reply-To: cover.1584370791.git.pabeni@redhat.com
+Subject: [MPTCP] [GIT] Sync with net-next on 20200316: conflicts
+Date: Mon, 16 Mar 2020 16:58:00 +0100
+Message-ID: <ec3664be-cde7-fc1c-c201-f0432246e4e6@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3953
+X-UID: 3954
 
---===============3983956061903013576==
+--===============7311830502448978744==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-update pm netlink hook to previous patch -
-locks are already held.
+Hello,
 
-Additionally fixes wrong status counter update on address
-announcement.
+Recently, MPTCP-related patches from Paolo have been applied in =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/pm_netlink.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+'net-next' repo:
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d74dc813f4a6..5fb65770c0d2 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -176,13 +176,10 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
-ruct mptcp_sock *msk)
- =
+- 58b09919626b (mptcp: create msk early)
+- dc093db5cc05 (mptcp: drop unneeded checks)
 
- 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
- =
+This created conflicts:
 
--	lock_sock(sk);
--
--	spin_lock_bh(&msk->pm.lock);
--	msk->pm.status =3D MPTCP_PM_IDLE;
--	pr_debug("local %d:%d signal %d:%d\n",
-+	pr_debug("local %d:%d signal %d:%d subflows %d:%d\n",
- 		 msk->pm.local_addr_used, msk->pm.local_addr_max,
--		 msk->pm.add_addr_signaled, msk->pm.add_addr_signal_max);
-+		 msk->pm.add_addr_signaled, msk->pm.add_addr_signal_max,
-+		 msk->pm.subflows, msk->pm.subflows_max);
- =
+- cf1a8046cf64: conflict in t/mptcp-Add-path-manager-interface
+- 09497b43baab: conflict in =
 
- 	/* check first for announce */
- 	if (msk->pm.add_addr_signaled < msk->pm.add_addr_signal_max) {
-@@ -190,7 +187,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 					      msk->pm.add_addr_signaled);
- =
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+- 08b1bc302164: conflict in =
 
- 		if (local) {
--			msk->pm.local_addr_used++;
-+			msk->pm.add_addr_signaled++;
- 			mptcp_pm_announce_addr(msk, &local->addr);
- 		} else {
- 			/* pick failed, avoid fourther attempts later */
-@@ -213,7 +210,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 			spin_unlock_bh(&msk->pm.lock);
- 			__mptcp_subflow_connect(sk, local->ifindex,
- 						&local->addr, &remote);
--			release_sock(sk);
-+			spin_lock_bh(&msk->pm.lock);
- 			return;
- 		}
- =
+t/mptcp-Add-handling-of-incoming-MP_JOIN-requests - part 2
+- 5d58ead3f82c: conflict in =
 
-@@ -221,9 +218,6 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 		msk->pm.local_addr_used =3D msk->pm.local_addr_max;
- 		check_work_pending(msk);
- 	}
--
--	spin_unlock_bh(&msk->pm.lock);
--	release_sock(sk);
- }
- =
+t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
+- 2737f5aa7672: conflict in =
 
- void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
-@@ -245,8 +239,6 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
-sk)
- =
+t/mptcp-update-per-unacked-sequence-on-pkt-reception
+- 2d24b3dc7d8a: conflict in t/mptcp-increment-MIB-counters-in-a-few-places
 
- 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
- =
+I hope they have been resolved as expected.
 
--	spin_lock_bh(&msk->pm.lock);
--	msk->pm.status =3D MPTCP_PM_IDLE;
- 	pr_debug("accepted %d:%d remote family %d",
- 		 msk->pm.add_addr_accepted, msk->pm.add_addr_accept_max,
- 		 msk->pm.remote.family);
-@@ -264,11 +256,10 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock =
-*msk)
- 		remote.port =3D sk->sk_dport;
- 	memset(&local, 0, sizeof(local));
- 	local.family =3D remote.family;
--	spin_unlock_bh(&msk->pm.lock);
- =
+Tests are in progress. The "export" branch will be updated after the tests.
 
--	lock_sock(sk);
-+	spin_unlock_bh(&msk->pm.lock);
- 	__mptcp_subflow_connect((struct sock *)msk, 0, &local, &remote);
--	release_sock(sk);
-+	spin_lock_bh(&msk->pm.lock);
- }
- =
-
- static bool address_use_port(struct mptcp_pm_addr_entry *entry)
+Cheers,
+Matt
 -- =
 
-2.21.1
-
---===============3983956061903013576==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7311830502448978744==--
