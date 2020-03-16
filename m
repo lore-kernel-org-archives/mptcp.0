@@ -1,49 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============8575797208554248495=="
+Content-Type: multipart/mixed; boundary="===============6707930024340213747=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] tcp: mptcp: use mptcp receive buffer space to
- select rcv window
-Date: Fri, 13 Mar 2020 16:30:21 -0700
-Message-ID: <alpine.OSX.2.22.394.2003131621310.69817@jsingh3-mobl.amr.corp.intel.com>
-In-Reply-To: 20200312154901.540-1-fw@strlen.de
+Subject: [MPTCP] [PATCH net-next] mptcp: move msk state update to
+ subflow_syn_recv_sock()
+Date: Mon, 16 Mar 2020 15:57:53 +0100
+Message-ID: <ca414f55f4c74190bc419815f6ac7c61313bac2a.1584370498.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 3945
+X-UID: 3949
 
---===============8575797208554248495==
+--===============6707930024340213747==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+After commit 58b09919626b ("mptcp: create msk early"), the
+msk socket is already available at subflow_syn_recv_sock()
+time. Let's move there the state update, to mirror more
+closely the first subflow state.
 
-On Thu, 12 Mar 2020, Florian Westphal wrote:
+The above will also help multiple subflow supports.
 
-> In MPTCP, the receive windo is shared across all subflows, because it
-> refers to the mptcp-level sequence space.
->
-> This commit doesn't change choice of initial window for passive or active
-> connections.
-> While it would be possible to change those as well, this adds complexity
-> (especially when handling MP_JOIN requests).
->
-> However, the MPTCP RFC specifically says that a MPTCP sender
-> 'MUST NOT use the RCV.WND field of a TCP segment at the connection level =
-if
-> it does not also carry a DSS option with a Data ACK field.'
->
-> SYN/SYNACK packets do not carry a DSS option with a Data ACK field.
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> Unless there are comments i will post this as RFC to netdev and will
-> CC Eric Dumazet.
->
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+The idea is send this one to net-next asap, [well] before =
 
-I think this looks ready for netdev RFC. Thanks.
+part 3
+---
+ net/mptcp/protocol.c | 9 +++------
+ net/mptcp/subflow.c  | 2 ++
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 04c3caed92df..e959104832ef 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -861,6 +861,9 @@ struct sock *mptcp_sk_clone(const struct sock *sk, stru=
+ct request_sock *req)
+ 		ack_seq++;
+ 		msk->ack_seq =3D ack_seq;
+ 	}
++
++	/* will be fully established after successful MPC subflow creation */
++	inet_sk_state_store(nsk, TCP_SYN_RECV);
+ 	bh_unlock_sock(nsk);
+ =
 
---
-Mat Martineau
-Intel
---===============8575797208554248495==--
+ 	/* keep a single reference */
+@@ -916,10 +919,6 @@ static struct sock *mptcp_accept(struct sock *sk, int =
+flags, int *err,
+ 		mptcp_copy_inaddrs(newsk, ssk);
+ 		list_add(&subflow->node, &msk->conn_list);
+ =
+
+-		/* will be fully established at mptcp_stream_accept()
+-		 * completion.
+-		 */
+-		inet_sk_state_store(new_mptcp_sock, TCP_SYN_RECV);
+ 		bh_unlock_sock(new_mptcp_sock);
+ 		local_bh_enable();
+ 	}
+@@ -1256,8 +1255,6 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ 			if (!ssk->sk_socket)
+ 				mptcp_sock_graft(ssk, newsock);
+ 		}
+-
+-		inet_sk_state_store(newsock->sk, TCP_ESTABLISHED);
+ 	}
+ =
+
+ 	sock_put(ssock->sk);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8434c7f5f712..052d72a1d3a2 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -234,6 +234,8 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 			/* new mpc subflow takes ownership of the newly
+ 			 * created mptcp socket
+ 			 */
++			inet_sk_state_store((struct sock *)new_msk,
++					    TCP_ESTABLISHED);
+ 			ctx->conn =3D new_msk;
+ 			new_msk =3D NULL;
+ 		}
+-- =
+
+2.21.1
+
+--===============6707930024340213747==--
