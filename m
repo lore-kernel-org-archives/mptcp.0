@@ -1,228 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============7502475772331541332=="
+Content-Type: multipart/mixed; boundary="===============7279502804648516505=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 1/3] Squash-to: "mptcp: Implement path manager
- interface commands"
-Date: Tue, 17 Mar 2020 15:34:41 -0700
-Message-ID: <alpine.OSX.2.22.394.2003171518510.25711@fvaldivi-mobl1.amr.corp.intel.com>
-In-Reply-To: alpine.OSX.2.22.394.2003171453080.25711@fvaldivi-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH v1 2/3] Squash-to: "mptcp: add netlink based PM"
+Date: Tue, 17 Mar 2020 15:57:10 -0700
+Message-ID: <alpine.OSX.2.22.394.2003171538090.25711@fvaldivi-mobl1.amr.corp.intel.com>
+In-Reply-To: 03253d59063a86258e2579413046ef8d74b89c7b.1584370791.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3971
+X-UID: 3972
 
---===============7502475772331541332==
+--===============7279502804648516505==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 17 Mar 2020, Mat Martineau wrote:
 
-> On Mon, 16 Mar 2020, Paolo Abeni wrote:
+On Mon, 16 Mar 2020, Paolo Abeni wrote:
+
+> update pm netlink hook to previous patch -
+> locks are already held.
 >
->> currently the PM events are mutually exclusive: the PM will
->> e.g. ignore ADD_ADDR till a 'fully_established' event is
->> completely processed.
->> =
-
->> The above can give somewhat randomic self-tests results
->> because we sometimes do not start additional subflows
->> as expected, because the PM workqueue is still running.
->> =
-
->> Address the above allowing the PM to process simult the
->> currently available different kind of events.
->> =
-
->> Additionally:
->> =
-
->> - move the locking from NL PM to the pm_worker(), so that
->>  the latter will be simpler
->> =
-
->> - cancel the eventually pending PM work at socket shutdown
->> =
-
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
->> ---
->> net/mptcp/pm.c       | 40 ++++++++++++++++++++++++++++++----------
->> net/mptcp/protocol.c |  1 +
->> net/mptcp/protocol.h |  4 ++--
->> 3 files changed, 33 insertions(+), 12 deletions(-)
->> =
-
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index a3fe2371d41b..9af0833f1b2c 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -64,18 +64,21 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *m=
-sk)
->> 	return ret;
->> }
->> =
-
->> +/* return true if the new status bit is currenty cleared, that is, this =
-
->> event
->> + * can be server, eventually by an already scheduled work
->> + */
->> static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
->> 				   enum mptcp_pm_status new_status)
->> {
->> -	if (msk->pm.status !=3D MPTCP_PM_IDLE)
->> +	pr_debug("msk=3D%p status=3D%x new=3D%lx", msk, msk->pm.status,
->> +		 BIT(new_status));
->> +	if (msk->pm.status & BIT(new_status))
->> 		return false;
->> =
-
->> -	if (queue_work(pm_wq, &msk->pm.work)) {
->> -		msk->pm.status =3D new_status;
->> +	msk->pm.status |=3D BIT(new_status);
->> +	if (queue_work(pm_wq, &msk->pm.work))
->> 		sock_hold((struct sock *)msk);
->> -		return true;
->> -	}
->> -	return false;
->> +	return true;
+> Additionally fixes wrong status counter update on address
+> announcement.
 >
-> Does it make sense to skip the queue_work() call if any pm.status bits we=
-re =
-
-> already set, not just the one matching new_status?
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/pm_netlink.c | 23 +++++++----------------
+> 1 file changed, 7 insertions(+), 16 deletions(-)
 >
-
-Nevermind on this one, I noticed some other behavior when looking at patch =
-
-2/3. Since pm.lock is released and reacquired while the worker is running, =
-
-it does look necessary to try to queue the work even if other status bits =
-
-are set. Should be ok to exit early if the bit is set (as this patch does) =
-
-since each status bit is cleared before running the related function in =
-
-pm_worker.
-
-Mat
-
-
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index d74dc813f4a6..5fb65770c0d2 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -176,13 +176,10 @@ static void mptcp_pm_create_subflow_or_signal_addr(=
+struct mptcp_sock *msk)
 >
->> }
->> =
-
->> void mptcp_pm_fully_established(struct mptcp_sock *msk)
->> @@ -183,11 +186,22 @@ static void pm_worker(struct work_struct *work)
->> 	struct mptcp_sock *msk =3D container_of(pm, struct mptcp_sock, pm);
->> 	struct sock *sk =3D (struct sock *)msk;
->> =
-
->> -	switch (READ_ONCE(pm->status)) {
->> -	default:
->> -		break;
->> +	lock_sock(sk);
->> +	spin_lock_bh(&msk->pm.lock);
->> +
->> +	pr_debug("msk=3D%p status=3D%x", msk, pm->status);
->> +	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_RECEIVED)) {
->> +		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
->> +	}
->> +	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
->> +		pm->status &=3D ~BIT(MPTCP_PM_ESTABLISHED);
->> +	}
->> +	if (pm->status & BIT(MPTCP_PM_SUBFLOW_ESTABLISHED)) {
->> +		pm->status &=3D ~BIT(MPTCP_PM_SUBFLOW_ESTABLISHED);
->> 	}
->> =
-
->> +	spin_unlock_bh(&msk->pm.lock);
->> +	release_sock(sk);
->> 	sock_put(sk);
->> }
->> =
-
->> @@ -201,12 +215,18 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
->> 	WRITE_ONCE(msk->pm.addr_signal, false);
->> 	WRITE_ONCE(msk->pm.accept_addr, false);
->> 	WRITE_ONCE(msk->pm.accept_subflow, false);
->> -	msk->pm.status =3D MPTCP_PM_IDLE;
->> +	msk->pm.status =3D 0;
->>
->> 	spin_lock_init(&msk->pm.lock);
->> 	INIT_WORK(&msk->pm.work, pm_worker);
->> }
->> =
-
->> +void mptcp_pm_close(struct mptcp_sock *msk)
->> +{
->> +	if (cancel_work_sync(&msk->pm.work))
->> +		sock_put((struct sock *)msk);
->> +}
->> +
->> void mptcp_pm_init(void)
->> {
->> 	pm_wq =3D alloc_workqueue("pm_wq", WQ_UNBOUND | WQ_MEM_RECLAIM, 8);
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 6d950a46619d..c8501fdff68b 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -815,6 +815,7 @@ static void mptcp_close(struct sock *sk, long timeou=
-t)
->> 	}
->>
->> 	mptcp_cancel_work(sk);
->> +	mptcp_pm_close(msk);
->>
->> 	__skb_queue_purge(&sk->sk_receive_queue);
->> =
-
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 8a42a35ebe8d..9a2f33f7affa 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -102,7 +102,6 @@ struct mptcp_addr_info {
->> };
->> =
-
->> enum mptcp_pm_status {
->> -	MPTCP_PM_IDLE,
->> 	MPTCP_PM_ADD_ADDR_RECEIVED,
->> 	MPTCP_PM_ESTABLISHED,
->> 	MPTCP_PM_SUBFLOW_ESTABLISHED,
->> @@ -127,7 +126,7 @@ struct mptcp_pm_data {
->> 	u8		add_addr_accept_max;
->> 	u8		local_addr_max;
->> 	u8		subflows_max;
->> -	enum mptcp_pm_status status;
->> +	u8		status;
->>
->> 	struct		work_struct work;
->> };
->> @@ -322,6 +321,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u32 =
-
->> nonce1, u32 nonce2,
->> =
-
->> void mptcp_pm_init(void);
->> void mptcp_pm_data_init(struct mptcp_sock *msk);
->> +void mptcp_pm_close(struct mptcp_sock *msk);
->> void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side);
->> void mptcp_pm_fully_established(struct mptcp_sock *msk);
->> bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
->> -- =
-
->> 2.21.1
+> 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
 >
-> --
-> Mat Martineau
-> Intel
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+> -	lock_sock(sk);
+> -
+> -	spin_lock_bh(&msk->pm.lock);
+> -	msk->pm.status =3D MPTCP_PM_IDLE;
+> -	pr_debug("local %d:%d signal %d:%d\n",
+> +	pr_debug("local %d:%d signal %d:%d subflows %d:%d\n",
+> 		 msk->pm.local_addr_used, msk->pm.local_addr_max,
+> -		 msk->pm.add_addr_signaled, msk->pm.add_addr_signal_max);
+> +		 msk->pm.add_addr_signaled, msk->pm.add_addr_signal_max,
+> +		 msk->pm.subflows, msk->pm.subflows_max);
 >
+> 	/* check first for announce */
+> 	if (msk->pm.add_addr_signaled < msk->pm.add_addr_signal_max) {
+> @@ -190,7 +187,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+> 					      msk->pm.add_addr_signaled);
+>
+> 		if (local) {
+> -			msk->pm.local_addr_used++;
+> +			msk->pm.add_addr_signaled++;
+> 			mptcp_pm_announce_addr(msk, &local->addr);
+> 		} else {
+> 			/* pick failed, avoid fourther attempts later */
+> @@ -213,7 +210,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+> 			spin_unlock_bh(&msk->pm.lock);
+> 			__mptcp_subflow_connect(sk, local->ifindex,
+> 						&local->addr, &remote);
+> -			release_sock(sk);
+> +			spin_lock_bh(&msk->pm.lock);
+> 			return;
+> 		}
+>
+> @@ -221,9 +218,6 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+> 		msk->pm.local_addr_used =3D msk->pm.local_addr_max;
+> 		check_work_pending(msk);
+> 	}
+> -
+> -	spin_unlock_bh(&msk->pm.lock);
+> -	release_sock(sk);
+> }
+>
+> void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
+> @@ -245,8 +239,6 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock =
+*msk)
+>
+> 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+>
+> -	spin_lock_bh(&msk->pm.lock);
+> -	msk->pm.status =3D MPTCP_PM_IDLE;
+> 	pr_debug("accepted %d:%d remote family %d",
+> 		 msk->pm.add_addr_accepted, msk->pm.add_addr_accept_max,
+> 		 msk->pm.remote.family);
+> @@ -264,11 +256,10 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_soc=
+k *msk)
+> 		remote.port =3D sk->sk_dport;
+> 	memset(&local, 0, sizeof(local));
+> 	local.family =3D remote.family;
+> -	spin_unlock_bh(&msk->pm.lock);
+>
+> -	lock_sock(sk);
+> +	spin_unlock_bh(&msk->pm.lock);
+> 	__mptcp_subflow_connect((struct sock *)msk, 0, &local, &remote);
+> -	release_sock(sk);
+> +	spin_lock_bh(&msk->pm.lock);
+
+This last change to unlock/re-lock pm.lock does require care around =
+
+setting and clearing the pm->status bits. It looks like it's possible to =
+
+set a bit that gets cleared by a currently running worker, so the next run =
+
+of pm_worker might find no bits set.
+
+Should pm_worker copy and and clear pm->status once at the beginning, then =
+
+use the copy to choose when to run the mptcp_pm_nl_* functions? It might =
+
+behave more consistently when the worker code is reacquiring the lock.
 
 --
 Mat Martineau
 Intel
---===============7502475772331541332==--
+--===============7279502804648516505==--
