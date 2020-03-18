@@ -1,122 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============2062951290902839422=="
+Content-Type: multipart/mixed; boundary="===============4926299406900764626=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC mptcp-next] tcp: mptcp: use mptcp receive buffer space
- to select rcv window
-Date: Wed, 18 Mar 2020 15:19:17 +0100
-Message-ID: <20200318141917.2612-1-fw@strlen.de>
+Subject: [MPTCP] Weekly meeting - 19 March 2020 /!\ 16:00 UTC (9am PDT,
+ 5pm CET)
+Date: Wed, 18 Mar 2020 17:54:45 +0100
+Message-ID: <079fef6f-c200-1e13-87d6-c818aed17619@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3979
+X-UID: 3980
 
---===============2062951290902839422==
+--===============4926299406900764626==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In MPTCP, the receive windo is shared across all subflows, because it
-refers to the mptcp-level sequence space.
+Hello everybody!
 
-This commit doesn't change choice of initial window for passive or active
-connections.
-While it would be possible to change those as well, this adds complexity
-(especially when handling MP_JOIN requests).
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-However, the MPTCP RFC specifically says that a MPTCP sender
-'MUST NOT use the RCV.WND field of a TCP segment at the connection level if
-it does not also carry a DSS option with a Data ACK field.'
+/!\ The time might not be the usual one depending on your location:
+/!\ 16:00 UTC (9am PDT, 5pm CET)
 
-SYN/SYNACK packets do not carry a DSS option with a Data ACK field.
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20200319
 
-CC: Eric Dumazet <edumazet(a)google.com>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- This patch would add additional direct call in __tcp_select_window().
+Feel free to add/modify topics!
 
- I looked at mptcp option writing to check if it could be done there but
- that seemed worse.
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
- include/net/mptcp.h   |  3 +++
- net/ipv4/tcp_output.c |  5 +++++
- net/mptcp/subflow.c   | 17 +++++++++++++++++
- 3 files changed, 25 insertions(+)
-
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 7489f9267640..1ef4520f45c3 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -66,6 +66,8 @@ static inline bool rsk_is_mptcp(const struct request_sock=
- *req)
- 	return tcp_rsk(req)->is_mptcp;
- }
- =
-
-+void mptcp_space(const struct sock *ssk, int *space, int *full_space);
-+
- void mptcp_parse_option(const struct sk_buff *skb, const unsigned char *pt=
-r,
- 			int opsize, struct tcp_options_received *opt_rx);
- bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
-@@ -195,6 +197,7 @@ static inline bool mptcp_sk_is_subflow(const struct soc=
-k *sk)
- 	return false;
- }
- =
-
-+static inline void mptcp_space(const struct sock *ssk, int *s, int *fs) { }
- static inline void mptcp_seq_show(struct seq_file *seq) { }
- #endif /* CONFIG_MPTCP */
- =
-
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 306e25d743e8..1a829536a115 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2771,6 +2771,11 @@ u32 __tcp_select_window(struct sock *sk)
- 	int full_space =3D min_t(int, tp->window_clamp, allowed_space);
- 	int window;
- =
-
-+	if (sk_is_mptcp(sk)) {
-+		mptcp_space(sk, &free_space, &allowed_space);
-+		full_space =3D min_t(int, tp->window_clamp, allowed_space);
-+	}
-+
- 	if (unlikely(mss > full_space)) {
- 		mss =3D full_space;
- 		if (mss <=3D 0)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 40ad7995b13b..aefcbb8bb737 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -745,6 +745,23 @@ bool mptcp_subflow_data_available(struct sock *sk)
- 	return subflow->data_avail;
- }
- =
-
-+/* If ssk has an mptcp parent socket, use the mptcp rcvbuf occupancy,
-+ * not the ssk one.
-+ *
-+ * In mptcp, rwin is about the mptcp-level connection data.
-+ *
-+ * Data that is still on the ssk rx queue can thus be ignored,
-+ * as far as mptcp peer is concerened that data is still inflight.
-+ */
-+void mptcp_space(const struct sock *ssk, int *space, int *full_space)
-+{
-+	const struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-+	const struct sock *sk =3D READ_ONCE(subflow->conn);
-+
-+	*space =3D tcp_space(sk);
-+	*full_space =3D tcp_full_space(sk);
-+}
-+
- static void subflow_data_ready(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+Speak to you tomorrow!
+Matt
 -- =
 
-2.24.1
-
---===============2062951290902839422==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============4926299406900764626==--
