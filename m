@@ -1,66 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============2850146874291463757=="
+Content-Type: multipart/mixed; boundary="===============2062951290902839422=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: Remove set but not used variable
- 'can_ack'
-Date: Wed, 18 Mar 2020 10:26:22 +0100
-Message-ID: <2a5b1c0194a92bcaa626c071701a399cc85ee0b4.camel@redhat.com>
-In-Reply-To: 20200318020157.178956-1-yuehaibing@huawei.com
+Subject: [MPTCP] [RFC mptcp-next] tcp: mptcp: use mptcp receive buffer space
+ to select rcv window
+Date: Wed, 18 Mar 2020 15:19:17 +0100
+Message-ID: <20200318141917.2612-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3977
+X-UID: 3979
 
---===============2850146874291463757==
+--===============2062951290902839422==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-03-18 at 02:01 +0000, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> =
+In MPTCP, the receive windo is shared across all subflows, because it
+refers to the mptcp-level sequence space.
 
-> net/mptcp/options.c: In function 'mptcp_established_options_dss':
-> net/mptcp/options.c:338:7: warning:
->  variable 'can_ack' set but not used [-Wunused-but-set-variable]
-> =
+This commit doesn't change choice of initial window for passive or active
+connections.
+While it would be possible to change those as well, this adds complexity
+(especially when handling MP_JOIN requests).
 
-> commit dc093db5cc05 ("mptcp: drop unneeded checks")
-> leave behind this unused, remove it.
-> =
+However, the MPTCP RFC specifically says that a MPTCP sender
+'MUST NOT use the RCV.WND field of a TCP segment at the connection level if
+it does not also carry a DSS option with a Data ACK field.'
 
-> Signed-off-by: YueHaibing <yuehaibing(a)huawei.com>
-> ---
->  net/mptcp/options.c | 2 --
->  1 file changed, 2 deletions(-)
-> =
+SYN/SYNACK packets do not carry a DSS option with a Data ACK field.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 63c8ee49cef2..8ba34950241c 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -335,7 +335,6 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
->  	struct mptcp_sock *msk;
->  	unsigned int ack_size;
->  	bool ret =3D false;
-> -	bool can_ack;
->  	u8 tcp_fin;
->  =
+CC: Eric Dumazet <edumazet(a)google.com>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ This patch would add additional direct call in __tcp_select_window().
 
->  	if (skb) {
-> @@ -364,7 +363,6 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
->  	/* passive sockets msk will set the 'can_ack' after accept(), even
->  	 * if the first subflow may have the already the remote key handy
->  	 */
-> -	can_ack =3D true;
->  	opts->ext_copy.use_ack =3D 0;
->  	msk =3D mptcp_sk(subflow->conn);
->  	if (!READ_ONCE(msk->can_ack)) {
+ I looked at mptcp option writing to check if it could be done there but
+ that seemed worse.
 
-Yep, left-over on my side! Thanks for clearing it!
+ include/net/mptcp.h   |  3 +++
+ net/ipv4/tcp_output.c |  5 +++++
+ net/mptcp/subflow.c   | 17 +++++++++++++++++
+ 3 files changed, 25 insertions(+)
 
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 7489f9267640..1ef4520f45c3 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -66,6 +66,8 @@ static inline bool rsk_is_mptcp(const struct request_sock=
+ *req)
+ 	return tcp_rsk(req)->is_mptcp;
+ }
+ =
 
---===============2850146874291463757==--
++void mptcp_space(const struct sock *ssk, int *space, int *full_space);
++
+ void mptcp_parse_option(const struct sk_buff *skb, const unsigned char *pt=
+r,
+ 			int opsize, struct tcp_options_received *opt_rx);
+ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+@@ -195,6 +197,7 @@ static inline bool mptcp_sk_is_subflow(const struct soc=
+k *sk)
+ 	return false;
+ }
+ =
+
++static inline void mptcp_space(const struct sock *ssk, int *s, int *fs) { }
+ static inline void mptcp_seq_show(struct seq_file *seq) { }
+ #endif /* CONFIG_MPTCP */
+ =
+
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 306e25d743e8..1a829536a115 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2771,6 +2771,11 @@ u32 __tcp_select_window(struct sock *sk)
+ 	int full_space =3D min_t(int, tp->window_clamp, allowed_space);
+ 	int window;
+ =
+
++	if (sk_is_mptcp(sk)) {
++		mptcp_space(sk, &free_space, &allowed_space);
++		full_space =3D min_t(int, tp->window_clamp, allowed_space);
++	}
++
+ 	if (unlikely(mss > full_space)) {
+ 		mss =3D full_space;
+ 		if (mss <=3D 0)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 40ad7995b13b..aefcbb8bb737 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -745,6 +745,23 @@ bool mptcp_subflow_data_available(struct sock *sk)
+ 	return subflow->data_avail;
+ }
+ =
+
++/* If ssk has an mptcp parent socket, use the mptcp rcvbuf occupancy,
++ * not the ssk one.
++ *
++ * In mptcp, rwin is about the mptcp-level connection data.
++ *
++ * Data that is still on the ssk rx queue can thus be ignored,
++ * as far as mptcp peer is concerened that data is still inflight.
++ */
++void mptcp_space(const struct sock *ssk, int *space, int *full_space)
++{
++	const struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
++	const struct sock *sk =3D READ_ONCE(subflow->conn);
++
++	*space =3D tcp_space(sk);
++	*full_space =3D tcp_full_space(sk);
++}
++
+ static void subflow_data_ready(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-- =
+
+2.24.1
+
+--===============2062951290902839422==--
