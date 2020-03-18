@@ -1,72 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============1875793737667704184=="
+Content-Type: multipart/mixed; boundary="===============3333734414517421922=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v5 0/5] Add support for v1 of ADD_ADDR option
-Date: Wed, 18 Mar 2020 21:06:55 +0100
-Message-ID: <3541ed99-3e12-97f4-f688-7ba2095ad535@tessares.net>
-In-Reply-To: 170c6174-92a0-e094-4abc-6ba3a528cc8b@tessares.net
+Subject: [MPTCP] Re: [RFC mptcp-next] tcp: mptcp: use mptcp receive buffer
+ space to select rcv window
+Date: Wed, 18 Mar 2020 21:59:20 +0100
+Message-ID: <20200318205920.GK979@breakpoint.cc>
+In-Reply-To: 95e08be8-9902-f998-6558-e7e574d783b0@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 3986
+X-UID: 3987
 
---===============1875793737667704184==
+--===============3333734414517421922==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 18/03/2020 19:08, Matthieu Baerts wrote:
-> Hi Peter, Paolo, Mat,
+Eric Dumazet <eric.dumazet(a)gmail.com> wrote:
+> >>> +/* If ssk has an mptcp parent socket, use the mptcp rcvbuf occupancy,
+> >>> + * not the ssk one.
+> >>> + *
+> >>> + * In mptcp, rwin is about the mptcp-level connection data.
+> >>> + *
+> >>> + * Data that is still on the ssk rx queue can thus be ignored,
+> >>> + * as far as mptcp peer is concerened that data is still inflight.
+> >>> + */
+> >>> +void mptcp_space(const struct sock *ssk, int *space, int *full_space)
+> >>> +{
+> >>> +	const struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(s=
+sk);
+> >>> +	const struct sock *sk =3D READ_ONCE(subflow->conn);
+> >>
+> >> What are the rules protecting subflow->conn lifetime ?
+> >>
+> >> Why dereferencing sk after this line is safe ?
+> > =
+
+> > Subflow sockets hold a reference on the master/parent mptcp-socket.
+> > =
+
 > =
 
-> On 17/03/2020 13:16, Paolo Abeni wrote:
->> On Mon, 2020-03-16 at 11:39 -0700, Peter Krystad wrote:
->>> Support parsing and writing the new option format, with hmac generation
->>> and validation.
->>>
->>> Support for echoing ADD_ADDR still to come.
->>>
->>> v2: check msg len in mptcp_crypto_hmac_sha().
->>> =C2=A0=C2=A0=C2=A0=C2=A0 remove obsolete casts
->>> v3: Rebase and split for squashing, patches ready to be applied.
->>> v4: Get the first two patches of the set right
->>> v5: plug hole in mptcp_options_received
->>>
->>> Peter Krystad (5):
->>> =C2=A0=C2=A0 mptcp: Re-factor mptcp_crypto_hmac_sha()
->>> =C2=A0=C2=A0 mptcp: v1 ADD_ADDR changes: options and parsing
->>> =C2=A0=C2=A0 mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
->>> =C2=A0=C2=A0 mptcp: v1 ADD_ADDR changes: add subflow_generate_hmac()
->>> =C2=A0=C2=A0 mptcp: v1 ADD_ADDR changes: use subflow_generate_hmac()
->>
->> LGMT, thanks Peter!
-> =
+> Presence of READ_ONCE() tells something might happen on
+> this pointer after you read it.
 
-> Thank you for the patches and the reviews!
-> =
+Right, sorry about this. The READ_ONCE() isn't needed anymore after
+recent improvement from Paolo.
 
-> - 0e053a193ad1: "squashed" patch 1/5 in "mptcp: Add ADD_ADDR handling"
-> - 7bb8b2299e7d..fc9c89129b5b: result
-> =
+> Can this pointer be set while this thread is owning the socket lock ?
 
-> - 86d51566ce39: "squashed" patch 2/5 in "mptcp: Add ADD_ADDR handling"
-> - e51aa5c6bb39: conflict in t/mptcp-Add-path-manager-interface
-> - 3849afd831cb: conflict in =
+Only by the one holding the sk lock, so no race.
 
-> t/mptcp-Add-handling-of-incoming-MP_JOIN-requests
+> If not, then you do not need READ_ONCE(), this is confusing.
 
-There was a small typo:
+Yes.
 
-- 9150e96fcf1c: mptcp: fix bad conflict resolution
-- 584615268acc..643e943f5de4: result
+> If yes, then it means that whatever changes the pointer might also releas=
+e the reference
+> on the old object.
 
-Tests + export are in progress.
-
-Cheers,
-Matt--
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1875793737667704184==--
+The reference is released only after aquiring the socket lock.
+--===============3333734414517421922==--
