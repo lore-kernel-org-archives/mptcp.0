@@ -1,77 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============8904465791467090764=="
+Content-Type: multipart/mixed; boundary="===============1691536857526317335=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] net: mptcp: don't hang in mptcp_sendmsg()
- after TCP fallback
-Date: Thu, 19 Mar 2020 22:45:37 +0100
-Message-ID: <9a7cd34e2d8688364297d700bfd8aea60c3a6c7f.1584653622.git.dcaratti@redhat.com>
+Subject: [MPTCP] Re: [PATCH v1 0/3] MP_JOIN self-tests fixes
+Date: Thu, 19 Mar 2020 23:45:17 +0100
+Message-ID: <07fb93ff4494094a7a5ca2dec204a9a935335454.camel@redhat.com>
+In-Reply-To: 3ef23261-371e-4b04-8b08-dd7e4187b9c8@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3995
+X-UID: 3996
 
---===============8904465791467090764==
+--===============1691536857526317335==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-it's still possible for packetdrill to hang in mptcp_sendmsg(), when the
-MPTCP socket falls back to regular TCP (e.g. after receiving unsupported
-flags/version during the three-way handshake). Adjust MPTCP socket state
-earlier, to ensure correct functionality of mptcp_sendmsg() even in case
-of TCP fallback.
+On Thu, 2020-03-19 at 22:29 +0100, Matthieu Baerts wrote:
+> On 19/03/2020 18:58, Matthieu Baerts wrote:> On 16/03/2020 19:06, Paolo =
 
-Fixes: 767d3ded5fb8 ("net: mptcp: don't hang before sending 'MP capable wit=
-h data'")
-Fixes: 1954b86016cf ("mptcp: Check connection state before attempting send")
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/protocol.c | 4 ----
- net/mptcp/subflow.c  | 6 ++++++
- 2 files changed, 6 insertions(+), 4 deletions(-)
+> Abeni wrote:
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e959104832ef..92d5382e71f4 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1055,10 +1055,6 @@ void mptcp_finish_connect(struct sock *ssk)
- 	WRITE_ONCE(msk->write_seq, subflow->idsn + 1);
- 	WRITE_ONCE(msk->ack_seq, ack_seq);
- 	WRITE_ONCE(msk->can_ack, 1);
--	if (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED) {
--		inet_sk_state_store(sk, TCP_ESTABLISHED);
--		sk->sk_state_change(sk);
--	}
- }
- =
+> (...)
+> =
 
- static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 052d72a1d3a2..06b9075333c5 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -109,9 +109,15 @@ static void subflow_v6_init_req(struct request_sock *r=
-eq,
- static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
-skb)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct sock *parent =3D subflow->conn;
- =
+> > Thank you for the patches and the reviews!
+> > =
 
- 	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
- =
+> > - c4615f515b41: "squashed" patch 1/3 in "mptcp: Implement path manager =
 
-+	if (inet_sk_state_load(parent) !=3D TCP_ESTABLISHED) {
-+		inet_sk_state_store(parent, TCP_ESTABLISHED);
-+		parent->sk_state_change(parent);
-+	}
-+
- 	if (!subflow->conn_finished) {
- 		pr_debug("subflow=3D%p, remote_key=3D%llu", mptcp_subflow_ctx(sk),
- 			 subflow->remote_key);
--- =
+> > interface commands"
+> > - 5257c21d9804: conflict in =
 
-2.24.1
+> > t/mptcp-implement-and-use-MPTCP-level-retransmission
+> > - b2fc8ed9ca5f: conflict in t/mptcp-add-netlink-based-PM
+> > - ca158067259a..ef5d4d25c399: result
+> > =
 
---===============8904465791467090764==--
+> > - a49945862c4d: "squashed" patch 2/3 in "mptcp: add netlink based PM"
+> > - ef5d4d25c399..152845a286fa: result
+> > =
+
+> > - 89d9a90d57ec: "squashed" patch 3/3 in "selftests: add test-cases for =
+
+> > MPTCP MP_JOIN"
+> > - 152845a286fa..6854e267eb38: result
+> > =
+
+> > Tests + export are in progress.
+> =
+
+> I don't know if it is because of this series of the previous one (I =
+
+> didn't validate the ADD_ADDRv1 series because of the compilation errors =
+
+> without IPv6) but MP-JOIN selftests are not passing:
+
+[...]
+
+I think it's due to:
+
+mptcp: v1 ADD_ADDR changes: options and parsing
+
+which stripped (I think unintentionally) a couple of:
+
+	 mp_opt->add_addr =3D 1;
+
+so the client never get notifed of incoming address
+
+Also, with a quick too into the captured pcap trace, I think the ipv4
+address inside add_Addr option is not initialized.
+
+I'll try to double check.
+
+/P
+
+--===============1691536857526317335==--
