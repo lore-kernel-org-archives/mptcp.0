@@ -1,62 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============7212620417488327944=="
+Content-Type: multipart/mixed; boundary="===============3397913147184514014=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp: fix compilation warning without IPV6
-Date: Thu, 19 Mar 2020 10:05:02 +0100
-Message-ID: <20200319090502.2275907-2-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH 1/2] mptcp: fix compilation error without IPV6
+Date: Thu, 19 Mar 2020 10:24:11 +0100
+Message-ID: <dcc47c28e0e3ea621774c0d3eaf999ed4171e1d4.camel@redhat.com>
 In-Reply-To: 20200319090502.2275907-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 3989
+X-UID: 3990
 
---===============7212620417488327944==
+--===============3397913147184514014==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  net/mptcp/options.c:553:12: warning: =E2=80=98add_addr6_generate_hmac=E2=
-=80=99 defined but not used [-Wunused-function]
-    553 | static u64 add_addr6_generate_hmac(u64 key1, u64 key2, u8 addr_id,
-        |            ^~~~~~~~~~~~~~~~~~~~~~~
+Hi,
 
-Fixes: 86d51566ce39 (mptcp: v1 ADD_ADDR changes: options and parsing)
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+On Thu, 2020-03-19 at 10:05 +0100, Matthieu Baerts wrote:
+>   net/mptcp/options.c: In function =E2=80=98add_addr_hmac_valid=E2=80=99:
+>   net/mptcp/options.c:796:39: error: =E2=80=98struct mptcp_options_receiv=
+ed=E2=80=99 has no member named =E2=80=98addr6=E2=80=99; did you mean =E2=
+=80=98addr=E2=80=99?
+>     796 |             mp_opt->addr_id, &mp_opt->addr6);
+>         |                                       ^~~~~
+>         |                                       addr
+> =
 
-Notes:
-    to be squashed in "mptcp: Add ADD_ADDR handling"
+> Fixes: 8536089ea875 (mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid)
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> ---
+> =
 
- net/mptcp/options.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Notes:
+>     to be squashed in "mptcp: Add path manager interface"
+> =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 919f727cc7de..2cd61267133e 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -550,6 +550,7 @@ static u64 add_addr_generate_hmac(u64 key1, u64 key2, u=
-8 addr_id,
- 	return get_unaligned_be64(hmac);
- }
- =
+>  net/mptcp/options.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> =
 
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- static u64 add_addr6_generate_hmac(u64 key1, u64 key2, u8 addr_id,
- 				   struct in6_addr *addr)
- {
-@@ -565,6 +566,7 @@ static u64 add_addr6_generate_hmac(u64 key1, u64 key2, =
-u8 addr_id,
- =
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 1f64619be5c0..919f727cc7de 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -781,7 +781,7 @@ static void update_una(struct mptcp_sock *msk,
+>  static bool add_addr_hmac_valid(struct mptcp_subflow_context *subflow,
+>  				struct mptcp_options_received *mp_opt)
+>  {
+> -	u64 hmac;
+> +	u64 hmac =3D 0;
+>  =
 
- 	return get_unaligned_be64(hmac);
- }
-+#endif
- =
+>  	if (mp_opt->echo)
+>  		return true;
+> @@ -790,10 +790,12 @@ static bool add_addr_hmac_valid(struct mptcp_subflo=
+w_context *subflow,
+>  		hmac =3D add_addr_generate_hmac(subflow->remote_key,
+>  					      subflow->local_key,
+>  					      mp_opt->addr_id, &mp_opt->addr);
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>  	else
+>  		hmac =3D add_addr6_generate_hmac(subflow->remote_key,
+>  					       subflow->local_key,
+>  					       mp_opt->addr_id, &mp_opt->addr6);
+> +#endif
+>  =
 
- static bool mptcp_established_options_addr(struct sock *sk,
- 					   unsigned int *size,
--- =
+>  	pr_debug("subflow=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
+>  		 subflow, (unsigned long long)hmac,
+> -- =
 
-2.25.1
+> 2.25.1
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
 
---===============7212620417488327944==--
+Both patches LGTM, thanks!
+
+Paolo
+
+--===============3397913147184514014==--
