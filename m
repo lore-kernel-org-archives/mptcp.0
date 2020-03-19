@@ -1,36 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============2711055836765056883=="
+Content-Type: multipart/mixed; boundary="===============6947099634914483220=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 0/3] MP_JOIN self-tests fixes
-Date: Fri, 20 Mar 2020 00:32:40 +0100
-Message-ID: <fe076d994b9df9e7e368faa0030f85b4aa22c4ba.camel@redhat.com>
-In-Reply-To: d6f19bdb2f5299871bb0dff73b2bba30467fc971.camel@redhat.com
+Subject: [MPTCP] Re: Additional part 3 squash suggestion
+Date: Fri, 20 Mar 2020 00:34:17 +0100
+Message-ID: <20200319233417.GA3305@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.22.394.2003191614420.3820@sugandh1-mobl2.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4000
+X-UID: 4001
 
---===============2711055836765056883==
+--===============6947099634914483220==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-03-19 at 23:54 +0100, Paolo Abeni wrote:
-> On Thu, 2020-03-19 at 23:45 +0100, Paolo Abeni wrote:
-> > Also, with a quick too into the captured pcap trace, I think the ipv4
-> > address inside add_Addr option is not initialized.
-> > =
-
-> > I'll try to double check.
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
 > =
 
-> Nope, it's just a wireshark bug (it looks like there is no correct
-> mptcp v1 add_addr support in wireshark, but that is a topic for later).
-> I'll cook a patch for the missing add_addr.
+> Florian and Matthieu -
+> =
 
-Uhm... the above it's not enough, as add_addr validation sometimes
-fails (wrong ahmac). Still investigating...
+> From the meeting notes, it looks like "subflow: place further subflows on
+> new 'join_list'" is the commit that you're planning to squash.
+> =
 
-/P
+> What do you think about also squashing "mptcp: increment MIB counters in a
+> few places" in to the previous MIB commit? Seems like our patch count for
+> part 3 is still kind of high.
 
---===============2711055836765056883==--
+SGTM.  We could change the commit title as follows:
+
+- mptcp: add MIB counter infrastructure
++ mptcp: add and use MIB counter infrastructure
+
+and toss the commit description of the 'increment MIB' patch,
+it doesn't add any value.
+--===============6947099634914483220==--
