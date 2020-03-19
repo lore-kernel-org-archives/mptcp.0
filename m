@@ -1,63 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============3333734414517421922=="
+Content-Type: multipart/mixed; boundary="===============3733366492906987955=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC mptcp-next] tcp: mptcp: use mptcp receive buffer
- space to select rcv window
-Date: Wed, 18 Mar 2020 21:59:20 +0100
-Message-ID: <20200318205920.GK979@breakpoint.cc>
-In-Reply-To: 95e08be8-9902-f998-6558-e7e574d783b0@gmail.com
+Subject: [MPTCP] [PATCH 1/2] mptcp: fix compilation error without IPV6
+Date: Thu, 19 Mar 2020 10:05:01 +0100
+Message-ID: <20200319090502.2275907-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 3987
+X-UID: 3988
 
---===============3333734414517421922==
+--===============3733366492906987955==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Eric Dumazet <eric.dumazet(a)gmail.com> wrote:
-> >>> +/* If ssk has an mptcp parent socket, use the mptcp rcvbuf occupancy,
-> >>> + * not the ssk one.
-> >>> + *
-> >>> + * In mptcp, rwin is about the mptcp-level connection data.
-> >>> + *
-> >>> + * Data that is still on the ssk rx queue can thus be ignored,
-> >>> + * as far as mptcp peer is concerened that data is still inflight.
-> >>> + */
-> >>> +void mptcp_space(const struct sock *ssk, int *space, int *full_space)
-> >>> +{
-> >>> +	const struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(s=
-sk);
-> >>> +	const struct sock *sk =3D READ_ONCE(subflow->conn);
-> >>
-> >> What are the rules protecting subflow->conn lifetime ?
-> >>
-> >> Why dereferencing sk after this line is safe ?
-> > =
+  net/mptcp/options.c: In function =E2=80=98add_addr_hmac_valid=E2=80=99:
+  net/mptcp/options.c:796:39: error: =E2=80=98struct mptcp_options_received=
+=E2=80=99 has no member named =E2=80=98addr6=E2=80=99; did you mean =E2=80=
+=98addr=E2=80=99?
+    796 |             mp_opt->addr_id, &mp_opt->addr6);
+        |                                       ^~~~~
+        |                                       addr
 
-> > Subflow sockets hold a reference on the master/parent mptcp-socket.
-> > =
+Fixes: 8536089ea875 (mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid)
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> =
+Notes:
+    to be squashed in "mptcp: Add path manager interface"
 
-> Presence of READ_ONCE() tells something might happen on
-> this pointer after you read it.
+ net/mptcp/options.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Right, sorry about this. The READ_ONCE() isn't needed anymore after
-recent improvement from Paolo.
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 1f64619be5c0..919f727cc7de 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -781,7 +781,7 @@ static void update_una(struct mptcp_sock *msk,
+ static bool add_addr_hmac_valid(struct mptcp_subflow_context *subflow,
+ 				struct mptcp_options_received *mp_opt)
+ {
+-	u64 hmac;
++	u64 hmac =3D 0;
+ =
 
-> Can this pointer be set while this thread is owning the socket lock ?
+ 	if (mp_opt->echo)
+ 		return true;
+@@ -790,10 +790,12 @@ static bool add_addr_hmac_valid(struct mptcp_subflow_=
+context *subflow,
+ 		hmac =3D add_addr_generate_hmac(subflow->remote_key,
+ 					      subflow->local_key,
+ 					      mp_opt->addr_id, &mp_opt->addr);
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	else
+ 		hmac =3D add_addr6_generate_hmac(subflow->remote_key,
+ 					       subflow->local_key,
+ 					       mp_opt->addr_id, &mp_opt->addr6);
++#endif
+ =
 
-Only by the one holding the sk lock, so no race.
+ 	pr_debug("subflow=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
+ 		 subflow, (unsigned long long)hmac,
+-- =
 
-> If not, then you do not need READ_ONCE(), this is confusing.
+2.25.1
 
-Yes.
-
-> If yes, then it means that whatever changes the pointer might also releas=
-e the reference
-> on the old object.
-
-The reference is released only after aquiring the socket lock.
---===============3333734414517421922==--
+--===============3733366492906987955==--
