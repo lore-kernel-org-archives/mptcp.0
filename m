@@ -1,83 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============3397913147184514014=="
+Content-Type: multipart/mixed; boundary="===============8154981186625971525=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 1/2] mptcp: fix compilation error without IPV6
-Date: Thu, 19 Mar 2020 10:24:11 +0100
-Message-ID: <dcc47c28e0e3ea621774c0d3eaf999ed4171e1d4.camel@redhat.com>
-In-Reply-To: 20200319090502.2275907-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] [PATCH mptcp-next v2] tcp: mptcp: use mptcp receive buffer
+ space to select rcv window
+Date: Thu, 19 Mar 2020 14:51:33 +0100
+Message-ID: <20200319135133.13825-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 3990
+X-UID: 3991
 
---===============3397913147184514014==
+--===============8154981186625971525==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+In MPTCP, the receive windo is shared across all subflows, because it
+refers to the mptcp-level sequence space.
 
-On Thu, 2020-03-19 at 10:05 +0100, Matthieu Baerts wrote:
->   net/mptcp/options.c: In function =E2=80=98add_addr_hmac_valid=E2=80=99:
->   net/mptcp/options.c:796:39: error: =E2=80=98struct mptcp_options_receiv=
-ed=E2=80=99 has no member named =E2=80=98addr6=E2=80=99; did you mean =E2=
-=80=98addr=E2=80=99?
->     796 |             mp_opt->addr_id, &mp_opt->addr6);
->         |                                       ^~~~~
->         |                                       addr
-> =
+This commit doesn't change choice of initial window for passive or active
+connections.
+While it would be possible to change those as well, this adds complexity
+(especially when handling MP_JOIN requests).
 
-> Fixes: 8536089ea875 (mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid)
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
-> =
+However, the MPTCP RFC specifically says that a MPTCP sender
+'MUST NOT use the RCV.WND field of a TCP segment at the connection level if
+it does not also carry a DSS option with a Data ACK field.'
 
-> Notes:
->     to be squashed in "mptcp: Add path manager interface"
-> =
+SYN/SYNACK packets do not carry a DSS option with a Data ACK field.
 
->  net/mptcp/options.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> =
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ This time without RFC.  I've addressed Erics comments, i.e.
+ READ_ONCE annotation is gone and min_t() was moved around
+ to avoid the duplication.
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 1f64619be5c0..919f727cc7de 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -781,7 +781,7 @@ static void update_una(struct mptcp_sock *msk,
->  static bool add_addr_hmac_valid(struct mptcp_subflow_context *subflow,
->  				struct mptcp_options_received *mp_opt)
->  {
-> -	u64 hmac;
-> +	u64 hmac =3D 0;
->  =
+ include/net/mptcp.h   |  3 +++
+ net/ipv4/tcp_output.c |  8 ++++++--
+ net/mptcp/subflow.c   | 18 ++++++++++++++++++
+ 3 files changed, 27 insertions(+), 2 deletions(-)
 
->  	if (mp_opt->echo)
->  		return true;
-> @@ -790,10 +790,12 @@ static bool add_addr_hmac_valid(struct mptcp_subflo=
-w_context *subflow,
->  		hmac =3D add_addr_generate_hmac(subflow->remote_key,
->  					      subflow->local_key,
->  					      mp_opt->addr_id, &mp_opt->addr);
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  	else
->  		hmac =3D add_addr6_generate_hmac(subflow->remote_key,
->  					       subflow->local_key,
->  					       mp_opt->addr_id, &mp_opt->addr6);
-> +#endif
->  =
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 7489f9267640..1ef4520f45c3 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -66,6 +66,8 @@ static inline bool rsk_is_mptcp(const struct request_sock=
+ *req)
+ 	return tcp_rsk(req)->is_mptcp;
+ }
+ =
 
->  	pr_debug("subflow=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
->  		 subflow, (unsigned long long)hmac,
-> -- =
++void mptcp_space(const struct sock *ssk, int *space, int *full_space);
++
+ void mptcp_parse_option(const struct sk_buff *skb, const unsigned char *pt=
+r,
+ 			int opsize, struct tcp_options_received *opt_rx);
+ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+@@ -195,6 +197,7 @@ static inline bool mptcp_sk_is_subflow(const struct soc=
+k *sk)
+ 	return false;
+ }
+ =
 
-> 2.25.1
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
++static inline void mptcp_space(const struct sock *ssk, int *s, int *fs) { }
+ static inline void mptcp_seq_show(struct seq_file *seq) { }
+ #endif /* CONFIG_MPTCP */
+ =
 
-Both patches LGTM, thanks!
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 306e25d743e8..d38cf5e75823 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2768,8 +2768,12 @@ u32 __tcp_select_window(struct sock *sk)
+ 	int mss =3D icsk->icsk_ack.rcv_mss;
+ 	int free_space =3D tcp_space(sk);
+ 	int allowed_space =3D tcp_full_space(sk);
+-	int full_space =3D min_t(int, tp->window_clamp, allowed_space);
+-	int window;
++	int full_space, window;
++
++	if (sk_is_mptcp(sk))
++		mptcp_space(sk, &free_space, &allowed_space);
++
++	full_space =3D min_t(int, tp->window_clamp, allowed_space);
+ =
 
-Paolo
+ 	if (unlikely(mss > full_space)) {
+ 		mss =3D full_space;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 40ad7995b13b..8cce26dc0bce 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -745,6 +745,24 @@ bool mptcp_subflow_data_available(struct sock *sk)
+ 	return subflow->data_avail;
+ }
+ =
 
---===============3397913147184514014==--
++/* If ssk has an mptcp parent socket, use the mptcp rcvbuf occupancy,
++ * not the ssk one.
++ *
++ * In mptcp, rwin is about the mptcp-level connection data.
++ *
++ * Data that is still on the ssk rx queue can thus be ignored,
++ * as far as mptcp peer is concerened that data is still inflight.
++ * DSS ACK is updated when skb is moved to the mptcp rx queue.
++ */
++void mptcp_space(const struct sock *ssk, int *space, int *full_space)
++{
++	const struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
++	const struct sock *sk =3D subflow->conn;
++
++	*space =3D tcp_space(sk);
++	*full_space =3D tcp_full_space(sk);
++}
++
+ static void subflow_data_ready(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-- =
+
+2.24.1
+
+--===============8154981186625971525==--
