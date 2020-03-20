@@ -1,41 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============2610957548295624946=="
+Content-Type: multipart/mixed; boundary="===============1600231294526258607=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/2] Correctly handle port field in ADD_ADDR option
-Date: Fri, 20 Mar 2020 12:17:26 -0700
-Message-ID: <alpine.OSX.2.22.394.2003201216340.19124@mcgray1-mobl.amr.corp.intel.com>
-In-Reply-To: 20200320175151.4665-1-peter.krystad@linux.intel.com
+Subject: [MPTCP] Re: [PATCH v1 0/5] squash and cleanup
+Date: Fri, 20 Mar 2020 21:55:27 +0100
+Message-ID: <40fe96d539e88732b5c3530ec9adca9699506bb1.camel@redhat.com>
+In-Reply-To: cover.1584728931.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4033
+X-UID: 4034
 
---===============2610957548295624946==
+--===============1600231294526258607==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Fri, 2020-03-20 at 19:34 +0100, Paolo Abeni wrote:
+> This series contains a "squashable" version of:
+> =
 
-On Fri, 20 Mar 2020, Peter Krystad wrote:
+> subflow: place further subflows on new 'join_list'
+> =
 
-> Existing code allows ADD_ADDR option lengths that include the port field,
-> so we should correctly parse options with those lengths.
->
->
-> Peter Krystad (2):
->  mptcp: Parse optional port field of ADD_ADDR
->  mptcp: Include ADD_ADDR port value for path manager
->
-> include/linux/tcp.h |  1 +
-> net/mptcp/options.c | 11 +++++++++++
-> 2 files changed, 12 insertions(+)
->
+> and a bunch of minor cleanup (unneeded check after not so recent net-next
+> changes)
+> =
 
-Both patches look good to me - and they apply cleanly to the current =
+> Rebased tree available at:
+> =
 
-export branch.
+> https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_14
+> =
 
---
-Mat Martineau
-Intel
---===============2610957548295624946==--
+> this supersede the squashed branch posted previously.
+> =
+
+> Self-tests loop running. Will update here with results.
+
+Went throught ~700 self-tests loop iteration without issues.
+
+/P
+
+--===============1600231294526258607==--
