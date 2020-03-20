@@ -1,47 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============7136581218248216363=="
+Content-Type: multipart/mixed; boundary="===============8795617640466799767=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 1/5] Squash-to: "mptcp: Add ADD_ADDR handling"
-Date: Fri, 20 Mar 2020 19:34:39 +0100
-Message-ID: <b4439e27f0c42d429f714b1d8afc69fd3f240fba.1584728932.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v1 2/5] Squash-to: "mptcp: Add path manager interface"
+Date: Fri, 20 Mar 2020 19:34:40 +0100
+Message-ID: <5d4aa2018c7b6049e83c71c7f89adcf1e404a6c2.1584728932.git.pabeni@redhat.com>
 In-Reply-To: cover.1584728931.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4027
+X-UID: 4028
 
---===============7136581218248216363==
+--===============8795617640466799767==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-subflow->conn is always valid for is_mptcp socket, drop
-unneeded check
+Same as previous patch
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c | 3 ---
- 1 file changed, 3 deletions(-)
+ net/mptcp/options.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 9b90bdc419ac..633bda691fff 100644
+index fdab1869bf10..b21ea3147b91 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -486,9 +486,6 @@ static bool mptcp_established_options_addr(struct sock =
-*sk,
- 	struct sockaddr_storage saddr;
- 	u8 id;
+@@ -692,8 +692,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb,
  =
 
--	if (!msk)
--		return false;
--
- 	id =3D 0;
- 	memset(&saddr, 0, sizeof(saddr));
+ 	mpext->data_fin =3D mp_opt->data_fin;
  =
 
+-	if (msk)
+-		mptcp_pm_fully_established(msk);
++	mptcp_pm_fully_established(msk);
+ }
+ =
+
+ void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
 -- =
 
 2.21.1
 
---===============7136581218248216363==--
+--===============8795617640466799767==--
