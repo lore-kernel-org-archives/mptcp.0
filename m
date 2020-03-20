@@ -1,83 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============0921636903951840519=="
+Content-Type: multipart/mixed; boundary="===============5011725018908008811=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] topmsg: mptcp: add netlink based PM
-Date: Thu, 19 Mar 2020 17:23:07 -0700
-Message-ID: <20200320002307.89947-5-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH] squash-to: mptcp: Add path manager interface
+Date: Thu, 19 Mar 2020 17:41:22 -0700
+Message-ID: <20200320004122.91365-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4006
+X-UID: 4007
 
---===============0921636903951840519==
+--===============5011725018908008811==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Move some minor changes from "mptcp: Implement path manager interface
+commands" to reduce churn within the patch set. Does not cause conflicts
+later in the series.
+
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- .topmsg | 30 +++---------------------------
- 1 file changed, 3 insertions(+), 27 deletions(-)
+ net/mptcp/pm.c       | 2 +-
+ net/mptcp/protocol.h | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/.topmsg b/.topmsg
-index bf371916f85e..e1be48166a8c 100644
---- a/.topmsg
-+++ b/.topmsg
-@@ -1,7 +1,7 @@
- From: Paolo Abeni <pabeni(a)redhat.com>
--Subject: [PATCH] mptcp: add netlink based PM
-+Subject: [PATCH] mptcp: add netlink-based PM
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index f17db5517544..ad837da0193d 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -99,7 +99,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	WRITE_ONCE(msk->pm.addr_signal, false);
+ 	WRITE_ONCE(msk->pm.accept_addr, false);
+ 	WRITE_ONCE(msk->pm.accept_subflow, false);
+-	msk->pm.status =3D MPTCP_PM_IDLE;
++	msk->pm.status =3D 0;
  =
 
--Expose to U/S a netlink family to control the PM, setting:
-+Expose a new netlink family to userspace to control the PM, setting:
+ 	spin_lock_init(&msk->pm.lock);
+ 	INIT_WORK(&msk->pm.work, pm_worker);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 9f9e397eee1e..8d4761ae3951 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -99,7 +99,6 @@ struct mptcp_addr_info {
+ };
  =
 
-  - list of local addresses to be signalled.
-  - list of local addresses used to created subflows.
-@@ -12,35 +12,11 @@ announce the 'signal' list via the ADD_ADDR option. Sin=
-ce we
- currently lack the ADD_ADDR echo (and related event) only the
- first addr is sent.
+ enum mptcp_pm_status {
+-	MPTCP_PM_IDLE,
+ 	MPTCP_PM_ADD_ADDR_RECEIVED,
+ 	MPTCP_PM_ESTABLISHED,
+ 	MPTCP_PM_SUBFLOW_ESTABLISHED,
+@@ -124,7 +123,7 @@ struct mptcp_pm_data {
+ 	u8		add_addr_accept_max;
+ 	u8		local_addr_max;
+ 	u8		subflows_max;
+-	enum mptcp_pm_status status;
++	u8		status;
  =
 
--After exhausting the 'annunce' list, the PM tries to create
-+After exhausting the 'announce' list, the PM tries to create
- subflow for each addr in 'local' list, waiting for each
- connection to be completed before attempting the next one.
- =
-
- Idea is to add an additional PM hook for ADD_ADDR echo, to allow
- the PM netlink announcing multiple addresses, in sequence.
- =
-
--v3  -> v4:
-- - fixed several NL parsing issues
-- - give announce priority to subflow creation
-- - added '_PM' prefix to command names
-- - renamed 'addr_list' to 'local_addr_list'
-- - renamed mptcp_pm_create_subflow_or_signal ->
--	 mptcp_pm_create_subflow_or_signal_addr
-- - renamed mptcp_pm_nl_add_addr ->
--	mptcp_pm_nl_add_addr_received
--
--v1  -> v2:
-- - explicitly reset pm status to idle after processing a command
-- - fix msk pm initialization
-- - fix mptcp_pm_nl_add_addr bugs
-- - added ifindex support
-- - hopefully clearer local function names
-- - always use  IS_ENABLED(CONFIG_MPTCP_IPV6) instead of
--    IS_ENABLED(CONFIG_IPV6)
--
--RFC -> v1:
-- - simplified NL API
-- - reduced {WRITE,READ}_ONCE boilerplate due to PM changes
-- - add check for duplicate addresses
--
- Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+ 	struct		work_struct work;
+ };
 -- =
 
 2.25.2
 
---===============0921636903951840519==--
+--===============5011725018908008811==--
