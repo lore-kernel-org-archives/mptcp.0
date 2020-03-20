@@ -1,38 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============7666847097041279624=="
+Content-Type: multipart/mixed; boundary="===============7136581218248216363=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 0/5] squash and cleanup
-Date: Fri, 20 Mar 2020 19:34:38 +0100
-Message-ID: <cover.1584728931.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v1 1/5] Squash-to: "mptcp: Add ADD_ADDR handling"
+Date: Fri, 20 Mar 2020 19:34:39 +0100
+Message-ID: <b4439e27f0c42d429f714b1d8afc69fd3f240fba.1584728932.git.pabeni@redhat.com>
+In-Reply-To: cover.1584728931.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4026
+X-UID: 4027
 
---===============7666847097041279624==
+--===============7136581218248216363==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series contains a "squashable" version of:
+subflow->conn is always valid for is_mptcp socket, drop
+unneeded check
 
-subflow: place further subflows on new 'join_list'
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-and a bunch of minor cleanup (unneeded check after not so recent net-next
-changes)
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 9b90bdc419ac..633bda691fff 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -486,9 +486,6 @@ static bool mptcp_established_options_addr(struct sock =
+*sk,
+ 	struct sockaddr_storage saddr;
+ 	u8 id;
+ =
 
-Rebased tree available at:
+-	if (!msk)
+-		return false;
+-
+ 	id =3D 0;
+ 	memset(&saddr, 0, sizeof(saddr));
+ =
 
-https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_14
+-- =
 
-this supersede the squashed branch posted previously.
+2.21.1
 
-Self-tests loop running. Will update here with results.
-
- options.c  |   11 +++--------
- protocol.c |   31 ++++++++++++++++++++++++++++++-
- protocol.h |    2 ++
- subflow.c  |    5 ++++-
- 4 files changed, 39 insertions(+), 10 deletions(-)
-
---===============7666847097041279624==--
+--===============7136581218248216363==--
