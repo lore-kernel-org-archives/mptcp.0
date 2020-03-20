@@ -1,42 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============0286063071397343679=="
+Content-Type: multipart/mixed; boundary="===============8094397114910870594=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] net: mptcp: don't hang in
- mptcp_sendmsg() after TCP fallback
-Date: Fri, 20 Mar 2020 16:54:45 +0100
-Message-ID: <b4cc3997-c4d8-2f7c-30c8-1fb6922a910b@tessares.net>
-In-Reply-To: 3121516743a4acdb67799565d0251531092244e7.camel@redhat.com
+Subject: [MPTCP] Re: Additional part 3 squash suggestion
+Date: Fri, 20 Mar 2020 17:20:14 +0100
+Message-ID: <9311d261-d264-bc95-3d6b-be8caa358a4f@tessares.net>
+In-Reply-To: 20200319233417.GA3305@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 4020
+X-UID: 4021
 
---===============0286063071397343679==
+--===============8094397114910870594==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 19/03/2020 23:48, Paolo Abeni wrote:
-> On Thu, 2020-03-19 at 22:45 +0100, Davide Caratti wrote:
->> it's still possible for packetdrill to hang in mptcp_sendmsg(), when the
->> MPTCP socket falls back to regular TCP (e.g. after receiving unsupported
->> flags/version during the three-way handshake). Adjust MPTCP socket state
->> earlier, to ensure correct functionality of mptcp_sendmsg() even in case
->> of TCP fallback.
+Hi Mat, Florian,
+
+On 20/03/2020 00:34, Florian Westphal wrote:
+> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
 >>
->> Fixes: 767d3ded5fb8 ("net: mptcp: don't hang before sending 'MP capable =
-with data'")
->> Fixes: 1954b86016cf ("mptcp: Check connection state before attempting se=
-nd")
->> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+>> Florian and Matthieu -
+>>
+>>  From the meeting notes, it looks like "subflow: place further subflows =
+on
+>> new 'join_list'" is the commit that you're planning to squash.
+>>
+>> What do you think about also squashing "mptcp: increment MIB counters in=
+ a
+>> few places" in to the previous MIB commit? Seems like our patch count for
+>> part 3 is still kind of high.
 > =
 
-> LGTM, thanks Davide!
+> SGTM.  We could change the commit title as follows:
 > =
 
-> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+> - mptcp: add MIB counter infrastructure
+> + mptcp: add and use MIB counter infrastructure
+> =
 
-LGTM too, thanks Davide and Paolo!
+> and toss the commit description of the 'increment MIB' patch,
+> it doesn't add any value.
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
---===============0286063071397343679==--
+Thank you for the idea and the instructions!
+
+- 3eccc998b50b: mptcp: increment MIB counters in a few places
+- 74ddb090f4a9: tg:msg: MIB counters are now used
+- 1347fe98687a: tg: now depend on t/mptcp-add-MIB-counter-infrastructure
+- 1f804516b871..c011ac35dcba: result (empty as expected)
+
+Tests + export are in progress.
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8094397114910870594==--
