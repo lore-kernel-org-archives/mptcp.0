@@ -1,47 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============7127851996981048965=="
+Content-Type: multipart/mixed; boundary="===============0286063071397343679=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] topmsg: mptcp: Add path manager interface
-Date: Fri, 20 Mar 2020 16:50:47 +0100
-Message-ID: <6e9a7795-6164-2113-bd8b-3c51a1080bc2@tessares.net>
-In-Reply-To: 20200320002307.89947-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net-next] net: mptcp: don't hang in
+ mptcp_sendmsg() after TCP fallback
+Date: Fri, 20 Mar 2020 16:54:45 +0100
+Message-ID: <b4cc3997-c4d8-2f7c-30c8-1fb6922a910b@tessares.net>
+In-Reply-To: 3121516743a4acdb67799565d0251531092244e7.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4019
+X-UID: 4020
 
---===============7127851996981048965==
+--===============0286063071397343679==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+On 19/03/2020 23:48, Paolo Abeni wrote:
+> On Thu, 2020-03-19 at 22:45 +0100, Davide Caratti wrote:
+>> it's still possible for packetdrill to hang in mptcp_sendmsg(), when the
+>> MPTCP socket falls back to regular TCP (e.g. after receiving unsupported
+>> flags/version during the three-way handshake). Adjust MPTCP socket state
+>> earlier, to ensure correct functionality of mptcp_sendmsg() even in case
+>> of TCP fallback.
+>>
+>> Fixes: 767d3ded5fb8 ("net: mptcp: don't hang before sending 'MP capable =
+with data'")
+>> Fixes: 1954b86016cf ("mptcp: Check connection state before attempting se=
+nd")
+>> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> =
 
-On 20/03/2020 01:23, Mat Martineau wrote:
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> LGTM, thanks Davide!
+> =
 
-Thank you for these patches!
+> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 
-- 5c7c950ba85b: "squashed" in "mptcp: Add path manager interface"
-- bdecb7c5df17: "squashed" in "mptcp: Implement path manager interface =
+LGTM too, thanks Davide and Paolo!
 
-commands"
-- 4c0b1e789c3d: "squashed" in "mptcp: update per unacked sequence on pkt =
-
-reception"
-- bd658ed32871: "squashed" in "mptcp: implement and use MPTCP-level =
-
-retransmission"
-- 0e32daaa734d: "squashed" in "mptcp: add netlink-based PM"
-- 1d4ba9d3d46e..1f804516b871: result (empty as expected)
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7127851996981048965==--
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+--===============0286063071397343679==--
