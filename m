@@ -1,39 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============6947099634914483220=="
+Content-Type: multipart/mixed; boundary="===============4974237357638861875=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Additional part 3 squash suggestion
-Date: Fri, 20 Mar 2020 00:34:17 +0100
-Message-ID: <20200319233417.GA3305@breakpoint.cc>
-In-Reply-To: alpine.OSX.2.22.394.2003191614420.3820@sugandh1-mobl2.amr.corp.intel.com
+Subject: [MPTCP] [PATCH] topmsg: mptcp: implement and use MPTCP-level
+ retransmission
+Date: Thu, 19 Mar 2020 17:23:06 -0700
+Message-ID: <20200320002307.89947-4-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4001
+X-UID: 4002
 
---===============6947099634914483220==
+--===============4974237357638861875==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
-> =
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ .topmsg | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Florian and Matthieu -
-> =
+diff --git a/.topmsg b/.topmsg
+index 33c007398123..d0f9f41aa08f 100644
+--- a/.topmsg
++++ b/.topmsg
+@@ -2,7 +2,7 @@ From: Paolo Abeni <pabeni(a)redhat.com>
+ Subject: [PATCH] mptcp: implement and use MPTCP-level retransmission
+ =
 
-> From the meeting notes, it looks like "subflow: place further subflows on
-> new 'join_list'" is the commit that you're planning to squash.
-> =
+ On timeout event, schedule a work queue to do the retransmission.
+-Retransmission code resemple closely sendmsg() implementation and
++Retransmission code closely resembles the sendmsg() implementation and
+ re-uses mptcp_sendmsg_frag, providing a dummy msghdr - for flags'
+ sake - and peeking the relevant dfrag from the rtx head.
+ =
 
-> What do you think about also squashing "mptcp: increment MIB counters in a
-> few places" in to the previous MIB commit? Seems like our patch count for
-> part 3 is still kind of high.
+-- =
 
-SGTM.  We could change the commit title as follows:
+2.25.2
 
-- mptcp: add MIB counter infrastructure
-+ mptcp: add and use MIB counter infrastructure
-
-and toss the commit description of the 'increment MIB' patch,
-it doesn't add any value.
---===============6947099634914483220==--
+--===============4974237357638861875==--
