@@ -1,63 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============8094397114910870594=="
+Content-Type: multipart/mixed; boundary="===============2503629941462552299=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Additional part 3 squash suggestion
-Date: Fri, 20 Mar 2020 17:20:14 +0100
-Message-ID: <9311d261-d264-bc95-3d6b-be8caa358a4f@tessares.net>
-In-Reply-To: 20200319233417.GA3305@breakpoint.cc
+Subject: [MPTCP] squashing of "subflow: place further subflows on new
+ 'join_list'"
+Date: Fri, 20 Mar 2020 18:00:33 +0100
+Message-ID: <5572aff38090b31c297aa943e24890b4eb317f64.camel@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4021
+X-UID: 4022
 
---===============8094397114910870594==
+--===============2503629941462552299==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Florian,
+Hi all,
 
-On 20/03/2020 00:34, Florian Westphal wrote:
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
->>
->> Florian and Matthieu -
->>
->>  From the meeting notes, it looks like "subflow: place further subflows =
-on
->> new 'join_list'" is the commit that you're planning to squash.
->>
->> What do you think about also squashing "mptcp: increment MIB counters in=
- a
->> few places" in to the previous MIB commit? Seems like our patch count for
->> part 3 is still kind of high.
-> =
+A tree with the above patch squashed is available at:
 
-> SGTM.  We could change the commit title as follows:
-> =
+https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_13
 
-> - mptcp: add MIB counter infrastructure
-> + mptcp: add and use MIB counter infrastructure
-> =
+(It also contains the mib patches squashing)
 
-> and toss the commit description of the 'increment MIB' patch,
-> it doesn't add any value.
+Difference from current export is:
+---
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 13767d0ba572..9870243acbcb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1071,7 +1071,6 @@ static void mptcp_worker(struct work_struct *work)
+ 	long timeo =3D 0;
+ =
 
-Thank you for the idea and the instructions!
+ 	lock_sock(sk);
+-	__mptcp_flush_join_list(msk);
+ 	mptcp_clean_una(sk);
+ 	__mptcp_move_skbs(msk);
+ =
 
-- 3eccc998b50b: mptcp: increment MIB counters in a few places
-- 74ddb090f4a9: tg:msg: MIB counters are now used
-- 1347fe98687a: tg: now depend on t/mptcp-add-MIB-counter-infrastructure
-- 1f804516b871..c011ac35dcba: result (empty as expected)
+@@ -1085,6 +1084,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (!dfrag)
+ 		goto unlock;
+ =
 
-Tests + export are in progress.
++	__mptcp_flush_join_list(msk);
+ 	ssk =3D mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+ 		goto reset_unlock;
+---
 
-Cheers,
-Matt
--- =
+Which is intentional, we likely want to try fetching data from the
+join_list subflows, too.
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8094397114910870594==--
+I can post a squash-to patches if that is preferable.
+
+/P
+
+--===============2503629941462552299==--
