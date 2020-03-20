@@ -1,68 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============4769625753819139610=="
+Content-Type: multipart/mixed; boundary="===============8434256338470970869=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 0/4] more MP_JOIN self-tests fixes
-Date: Fri, 20 Mar 2020 14:08:11 +0100
-Message-ID: <287d81d2-6030-36cc-8eaf-8571261d125c@tessares.net>
-In-Reply-To: cover.1584665520.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] squash-to: mptcp: Add path manager interface
+Date: Fri, 20 Mar 2020 14:12:00 +0100
+Message-ID: <9c798b51-2a7f-f143-3959-8582a230ac2b@tessares.net>
+In-Reply-To: f44a47eaa3bb3f5bb222201201406ae1d9b86268.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4016
+X-UID: 4017
 
---===============4769625753819139610==
+--===============8434256338470970869==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Mat, Paolo,
 
-On 20/03/2020 01:59, Paolo Abeni wrote:
-> This series bring in more MP_JOIN self-tests fixes.
+On 20/03/2020 02:01, Paolo Abeni wrote:
+> On Thu, 2020-03-19 at 17:41 -0700, Mat Martineau wrote:
+>> Move some minor changes from "mptcp: Implement path manager interface
+>> commands" to reduce churn within the patch set. Does not cause conflicts
+>> later in the series.
+>>
+>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+
+(...)
+
 > =
 
-> It also includes a couple of last minute fixes for add_addr hmac, please =
-see
-> individual patches for detailed info.
+> LGTM, thanks!
 > =
 
-> With a previous iteration of this series applied, the  self-tests survide=
-d >
-> 1500 iterations without any failures. This iteration went through smaller
-> test-cycles, still without issues.
-> =
+> (My intention was to squash changes this way when I posted the patches,
+> but I was likely too low on coffee :)
 
-> The rebased export branch is available here:
-> =
+Thank you for the patch and the review!
 
-> https://github.com/pabeni/mptcp/tree/mptcp_net-next_part3_12
+- f25e2388ecbc: "squashed" in "mptcp: Add path manager interface"
+- 498995c58801: "Signed-off-by" + "Co-developed-by"
+- 10a5c66719de..1d4ba9d3d46e: result
 
-Thank you for the patches!
-
-- 07ba7723f14f: "squashed" patch 1/4 in "mptcp: Add ADD_ADDR handling"
-- 79ced2399cff: conflict in t/mptcp-Add-path-manager-interface
-- 75fd7fbcff54..57b87fa20529: result
-
-- 9e1e12b0253a: "squashed" patch 2/4 in "mptcp: Add path manager interface"
-- a116910e09e2: conflict in =
-
-t/mptcp-update-per-unacked-sequence-on-pkt-reception
-- 57b87fa20529..a60d43a78ea9: result
-
-- f1c4bd2b5b30: "squashed" patch 3/4 in "mptcp: Add handling of incoming =
-
-MP_JOIN requests"
-- 0a5b28b67886: conflict in =
-
-t/subflow-place-further-subflows-on-new-join_list
-- a60d43a78ea9..dd40c4166ba2: result
-
-- 08ef7db1c8c7: "squashed" patch 4/4 in "subflow: place further subflows =
-
-on new 'join_list'"
-- dd40c4166ba2..10a5c66719de: result
-
-Tests + export will be launched soon!
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -73,4 +52,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4769625753819139610==--
+--===============8434256338470970869==--
