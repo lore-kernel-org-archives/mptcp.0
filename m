@@ -1,37 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============4177622068170185879=="
+Content-Type: multipart/mixed; boundary="===============7127851996981048965=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 0/3] MP_JOIN self-tests fixes
-Date: Fri, 20 Mar 2020 16:11:29 +0100
-Message-ID: <0bec23ecaa2f63f26cc19237963dbbd114a5feeb.camel@redhat.com>
-In-Reply-To: d6f19bdb2f5299871bb0dff73b2bba30467fc971.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] topmsg: mptcp: Add path manager interface
+Date: Fri, 20 Mar 2020 16:50:47 +0100
+Message-ID: <6e9a7795-6164-2113-bd8b-3c51a1080bc2@tessares.net>
+In-Reply-To: 20200320002307.89947-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4018
+X-UID: 4019
 
---===============4177622068170185879==
+--===============7127851996981048965==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-03-19 at 23:54 +0100, Paolo Abeni wrote:
-> On Thu, 2020-03-19 at 23:45 +0100, Paolo Abeni wrote:
-> > Also, with a quick too into the captured pcap trace, I think the ipv4
-> > address inside add_Addr option is not initialized.
-> > =
+Hi Mat,
 
-> > I'll try to double check.
-> =
+On 20/03/2020 01:23, Mat Martineau wrote:
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-> Nope, it's just a wireshark bug (it looks like there is no correct
-> mptcp v1 add_addr support in wireshark, but that is a topic for later).
+Thank you for these patches!
 
-Well, actually such support is already there, thanks to Peter! my local
-wireshark build was a bit outdated.
+- 5c7c950ba85b: "squashed" in "mptcp: Add path manager interface"
+- bdecb7c5df17: "squashed" in "mptcp: Implement path manager interface =
 
-Many thanks, Peter!
+commands"
+- 4c0b1e789c3d: "squashed" in "mptcp: update per unacked sequence on pkt =
 
-/P
+reception"
+- bd658ed32871: "squashed" in "mptcp: implement and use MPTCP-level =
 
---===============4177622068170185879==--
+retransmission"
+- 0e32daaa734d: "squashed" in "mptcp: add netlink-based PM"
+- 1d4ba9d3d46e..1f804516b871: result (empty as expected)
+
+Cheers,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7127851996981048965==--
