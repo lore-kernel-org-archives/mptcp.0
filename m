@@ -1,51 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============4221431140414373907=="
+Content-Type: multipart/mixed; boundary="===============3841446026688173375=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [GIT] Sync with net-next on 20200324: conflicts
-Date: Tue, 24 Mar 2020 09:46:52 +0100
-Message-ID: <3dc23f12-9664-e473-4b87-6858a06f4fd0@tessares.net>
+Subject: [MPTCP] Re: [PATCH] mptcp:netlink: fix compilation warning
+Date: Tue, 24 Mar 2020 09:49:50 +0100
+Message-ID: <95069d1311f82c97a64f4c8714ce87931060a164.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.22.394.2003231255560.9443@jrdrew-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4052
+X-UID: 4053
 
---===============4221431140414373907==
+--===============3841446026688173375==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-Recently, MPTCP-related patch from Davide has been applied in 'net-next' =
+On Mon, 2020-03-23 at 13:04 -0700, Mat Martineau wrote:
+> On Mon, 23 Mar 2020, Matthieu Baerts wrote:
+> =
 
-repo:
+> >  net/mptcp/pm_netlink.c: In function =E2=80=98mptcp_pm_nl_add_addr_rece=
+ived=E2=80=99:
+> >  net/mptcp/pm_netlink.c:238:23: warning: variable =E2=80=98pernet=E2=80=
+=99 set but not used [-Wunused-but-set-variable]
+> >    238 |  struct pm_nl_pernet *pernet;
+> >        |                       ^~~~~~
+> > =
 
-- 767d3ded5fb8 (net: mptcp: don't hang before sending 'MP capable with =
+> > Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> > ---
+> > =
 
-data')
+> > Notes:
+> >    to be squashed in "mptcp: add netlink-based PM"
+> > =
 
-This created conflicts:
+> > net/mptcp/pm_netlink.c | 3 ---
+> > 1 file changed, 3 deletions(-)
+> > =
 
-- 02366081040c: conflict in t/mptcp-Add-path-manager-interface
-- fc3cbf097321: conflict in =
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index 4bab1b32f932..743c3c58f826 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> > @@ -235,9 +235,6 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_soc=
+k *msk)
+> > 	struct sock *sk =3D (struct sock *)msk;
+> > 	struct mptcp_addr_info remote;
+> > 	struct mptcp_addr_info local;
+> > -	struct pm_nl_pernet *pernet;
+> > -
+> > -	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+> > =
 
-t/mptcp-Add-handling-of-outgoing-MP_JOIN-requests
-- 501e7cf63225: conflict in =
+> > 	pr_debug("accepted %d:%d remote family %d",
+> > 		 msk->pm.add_addr_accepted, msk->pm.add_addr_accept_max,
+> =
 
-t/mptcp-update-per-unacked-sequence-on-pkt-reception
-- 6ed26433863c..844c9c9ed5a1 -- net/mptcp: result
+> I think this is ok to drop for now. Looks like it's left over from copied =
 
-I hope they have been resolved as expected.
+> code, but we should double-check with Paolo tomorrow in case it was =
 
-Tests are in progress. The "export" branch will be updated after the tests.
+> intended to check the pernet limits.
 
-Cheers,
-Matt
--- =
+This is a left-over from previous iteration. The funny thing is that I
+don't get the warning locally:
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4221431140414373907==--
+$ touch net/mptcp/pm_netlink.c;  make C=3D2  net/mptcp/pm_netlink.o
+  CHECK   scripts/mod/empty.c
+  CALL    scripts/checksyscalls.sh
+  CALL    scripts/atomic/check-atomics.sh
+  DESCEND  objtool
+  CHECK   net/mptcp/pm_netlink.c
+  CC      net/mptcp/pm_netlink.o
+# no other output ?!?
+
+despite there is actually no usage of 'pernet' ?!? gcc 9.2.1 here.
+
+I hope there are no other left-over!
+
+/P
+
+--===============3841446026688173375==--
