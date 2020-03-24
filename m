@@ -1,46 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============1617448242188160257=="
+Content-Type: multipart/mixed; boundary="===============1090659407273471116=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/3] mptcp: fix "fn parameter not described" warning
-Date: Tue, 24 Mar 2020 17:57:09 +0100
-Message-ID: <20200324165709.2024557-4-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH 0/3] mptcp: fix "fn parameter not described"
+ warnings
+Date: Tue, 24 Mar 2020 18:16:27 +0100
+Message-ID: <17613bfe3e3e6eb6d274b1ccd3dc0e520b0ee24b.camel@redhat.com>
 In-Reply-To: 20200324165709.2024557-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4058
+X-UID: 4059
 
---===============1617448242188160257==
+--===============1090659407273471116==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Obtained with:
+On Tue, 2020-03-24 at 17:57 +0100, Matthieu Baerts wrote:
+> When checking for extra warnings using 'make W=3D1' [1], I saw this:
+> =
 
-  $ make W=3D1 net/mptcp/token.o
-  net/mptcp/token.c:133: warning: Function parameter or member 'conn' not d=
-escribed in 'mptcp_token_new_accept'
+>   $ make W=3D1 net/mptcp/token.o
+>   net/mptcp/token.c:53: warning: Function parameter or member 'req' not d=
+escribed in 'mptcp_token_new_request'
+>   net/mptcp/token.c:98: warning: Function parameter or member 'sk' not de=
+scribed in 'mptcp_token_new_connect'
+>   net/mptcp/token.c:133: warning: Function parameter or member 'conn' not=
+ described in 'mptcp_token_new_accept'
+>   net/mptcp/token.c:153: warning: Function parameter or member 'token' no=
+t described in 'mptcp_token_get_sock'
+>   net/mptcp/token.c:178: warning: Function parameter or member 'token' no=
+t described in 'mptcp_token_destroy_request'
+>   net/mptcp/token.c:191: warning: Function parameter or member 'token' no=
+t described in 'mptcp_token_destroy'
+> =
 
-Fixes: 58b09919626b (mptcp: create msk early)
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
- net/mptcp/token.c | 1 +
- 1 file changed, 1 insertion(+)
+> This doesn't stop the build if KCFLAGS=3D'-Werror' is used but better to =
+fix them.
+> =
 
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index ed7dc73c80eb..33352dd99d4d 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -125,6 +125,7 @@ int mptcp_token_new_connect(struct sock *sk)
- /**
-  * mptcp_token_new_accept - insert token for later processing
-  * @token: the token to insert to the tree
-+ * @conn: the just cloned socket linked to the new connection
-  *
-  * Called when a SYN packet creates a new logical connection, i.e.
-  * is not a join request.
--- =
+> One of these warnings has been introduced in commits from the 'export' br=
+anch
+> but the rest is from two already published commits.
+> =
 
-2.25.1
+> [1] https://github.com/multipath-tcp/mptcp_net-next/commit/2069cff66f186b=
+0d4edf23af5ca02977d8806dc1
+> =
 
---===============1617448242188160257==--
+> Matthieu Baerts (3):
+>   mptcp: fix "fn parameter not described" warning
+>   mptcp: fix "fn parameter not described" warnings
+>   mptcp: fix "fn parameter not described" warning
+> =
+
+>  net/mptcp/token.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> =
+
+LGTM, thanks!
+
+/P
+
+--===============1090659407273471116==--
