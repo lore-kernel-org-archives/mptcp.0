@@ -1,278 +1,186 @@
-Content-Type: multipart/mixed; boundary="===============7777514289881247593=="
+Content-Type: multipart/mixed; boundary="===============0663929490546051811=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 19th of March 2020
-Date: Thu, 26 Mar 2020 16:18:55 +0100
-Message-ID: <158e3b0a-c46b-fa9e-e14b-4266bee05cdc@tessares.net>
+Subject: [MPTCP] Re: [syzkaller] WARNING: CPU: 0 PID: 9 at
+ net/mptcp/protocol.c:200 __mptcp_move_skbs_from_subflow+0x371/0x4a0
+ net/mptcp/protocol.c:200
+Date: Thu, 26 Mar 2020 17:53:12 +0100
+Message-ID: <68770c06490c93d448c0fbc1794bc76e4712fead.camel@redhat.com>
+In-Reply-To: 20200325013943.GC3854@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4081
+X-UID: 4082
 
---===============7777514289881247593==
+--===============0663929490546051811==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-Last Thursday, we had our 91st meeting with Mat, Peter and Ossama (Intel =
-
-OTC), Christoph (Apple), Paolo, Davide and Florian (RedHat) and myself =
-
-(Tessares).
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-     - The list of accepted patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
-
-     net-next: (Paolo, Florian)
-
-mptcp: rename fourth ack field
-mptcp: create msk early
-mptcp: drop unneeded checks
-RFC: tcp: mptcp: use mptcp receive buffer space to select rcv window
-
-     our repo: (Paolo, Florian)
-
-1255763  [v5,5/5] mptcp: v1 ADD_ADDR changes: use subflow_generate_hmac(
-1255762  [v5,4/5] mptcp: v1 ADD_ADDR changes: add subflow_generate_hmac(
-1255760  [v5,3/5] mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
-1255761  [v5,2/5] mptcp: v1 ADD_ADDR changes: options and parsing
-1255759  [v5,1/5] mptcp: Re-factor mptcp_crypto_hmac_sha()
-1245636  mptcp: re-check dsn before reading from subflow
-
-
-
-Pending patches:
-     - The list of pending patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
-     - By Matthieu, Florian, Paolo
-
-1196109: RFC: [10/10,RFC] selftests:mptcp: decrease timeout to 100 sec:
-     - still have the bug
-     - we can convert that as a Github issue
-
-1253668: Changes Requested: mptcp: propagate sendbuf setting to subflow =
-
-on fallback
-1253672: Changes Requested: mptcp: copy mptcp receive buffer setting to =
-
-subflow
-1253677: Changes Requested: tcp: mptcp: use mptcp receive buffer space =
-
-to select rcv window:
-1258245: New: [mptcp-next,v2] tcp: mptcp: use mptcp receive buffer space =
-
-to select rcv window:
-     - one has been sent to net-next for RFC
-     - the rest might be sent to net-next
-     - or include in the "export" branch?
-     - but this will increase the number of patches we will sent to net-next
-     - so better to send these patches directly to net-next
-     - but better to wait for part 3 to be included
-
-1255550: Awaiting Upstream: [v1,1/3] Squash-to: "mptcp: Implement path =
-
-manager interface commands"
-1255552: Awaiting Upstream: [v1,2/3] Squash-to: "mptcp: add netlink =
-
-based PM"
-1255551: Awaiting Upstream: [v1,3/3] Squash-to: "selftests: add =
-
-test-cases for MPTCP MP_JOIN":
-     - to be applied
-     - new small patches should arrive to fix sporadic failure
-
-1258047: Awaiting Upstream: [1/2] mptcp: fix compilation error without IPV6
-1258046: Awaiting Upstream: [2/2] mptcp: fix compilation warning without =
-
-IPV6:
-     - to be applied
-
-
-
-FYI: Current Roadmap:
-     - Part 3 (next merge window):
-         - PM: [Done]
-             - locking [Done]
-             - basic =E2=86=92 netlink support [Done]
-         - MP_JOIN [Done]
-         - ADD_ADDR for MPTCP v1 [DONE]
-         - clean the current patches [TODO]
-         - squash the current patches [TODO]:
-             - "subflow: place further subflows on new 'join_list'"
-         - need to make sure we continue to support the protocol =E2=86=92 =
-we =
-
-will not fully support it
-         - PM basic [Done]
-         - fix sender ID in MP_JOIN [Done]
-
-     - Part 4 (to fully support MPTCP):
-         - Shared recv window (full support)
-         - IPv6 - IPv4 mapped support
-         - not dropping MPTCP options (ADD_ADDR, etc.)
-         - FAST_CLOSE
-         - full MPTCP v1 support (reliable add_addr, etc.)
-         - after a few attempts of failed MPTCP, we fallback to TCP =
-
-(like TFO is doing)
-         - PM server (more advanced)
-         - reduce locks when mptcp_stream_accept (currently 3 locks) but =
-
-we might need to add an helper in inet API:
-             - already covered by "mptcp: create msk early" [DONE]
-         - Full DATA_FIN support [WIP]:
-             - could be nice to have it: if ready
-         - Active backup support [WIP]
-         - ADD_ADDR for MPTCPv1: echo bit
-         - Opti in TCP option structures (unions) [to be rebased]
-
-     - Part 5 (extra needed for prod):
-         - opti/perfs
-         - TFO
-         - PM netlink
-         - PM bpf
-         - Scheduler bpf
-         - syncookies
-         - [gs]etsockopt per subflow
-         - notify the userspace when a subflow is added/removed =E2=86=92 c=
-msg
-
-
-
-Part 3 remaining stuff:
-     - Review commit messages:
-         - needed for the next merge window
-         - Mat will look at that
-
-     - there are also a couple of patches at the end of the series we =
-
-will have to rebase/squash:
-         - "subflow: place further subflows on new 'join_list'"
-         - Paolo will look at how to squash it in multiple commits
-
-     - ADD_ADDR for MPTCPv1:
-         - DONE
-
-     - new patches coming:
-         - small fixes from Paolo
-         - Davide has a fix, will send it directly to net-next as soon =
-
-as possible.
-
-     - apply pending patches:
-         - Matth will do that
-
-     - Shared received windows:
-         - we don't include other changes in this patch-set
-         - Florian has sent an RFC to get feedback from Eric
-
-     - cover letter:
-         - Mat will draft one
-
-     - Let's try to send it ASAP, ideally max this Monday
-
-
-
-Extra tests:
-     - news about Syzkaller? (Christoph):
-         - Christoph is looking at fuzzing the netlink API but he has =
-
-some issues with syzkaller
-         - checking with syzkaller guys.
-
-     - new about Intel's kbuild? (Mat):
-         - t/* branches are now blacklisted
-         - but hard to know what is tested for the moment because there =
-
-is no "success" email.
-         - Mat will turn them on for the moment to verify everything is OK
-         - "export" branch was successful
-
-     - packetdrill (Davide):
-         - mpc + data https://github.com/multipath-tcp/packetdrill/pull/3
-         - Matth can look at it and merge it to have the CI testing it
-
-
-
-mptcp.org:
-     - Christoph is adding support for MPTCPv1
-
-     - He was able to launch interop tests (without MP_JOIN): running =
-
-fine with net-next kernel!
-
-     - do we need to ntohl the key? Christoph will try to run interop =
-
-tests: big/small endian
-
-
-
-Reviewed-by tags:
-     - should we add them next time we add new patches in the TopGit =
-
-tree? ("export" branch)
-
-     - Paolo: for patches with many authors, I _think_ it's less relevant
-
-     - feel free to add Reviewed-by tags before sending to net-next if =
-
-you got reviews from mptcp ML
-
-
-
-CI:
-     - mptcp_connect.sh -m mmap =E2=86=92 not yet (still the bug):
-         - the bug should be there and tracked with a Github issue
-
-     - mptcp_connect.sh: more to run? e.g. -R, -S?:
-         - TODO
-
-     - how I can run `make W=3D1` only for files in `net/mptcp`? (to run =
-
-it with -Wunused-but-set-variable and more):
-         - make W=3D1 then clear the objects and retry the compile and =
-
-look for warnings with KCFLAGS=3D"-Werror"
-
-
-
-Issues:
-     - now added in Github
-     - feel free to use it
-     - Paolo started to use it
-     - Proposition to add this URL in MAINTAINERS file to have other =
-
-seeing known-issues. =E2=86=92 feel free to send a patch
-
-
-
-Next meeting:
-     - We propose to have the next meeting on Thursday, the 26th of March.
-     - /!\ *NOT* the Usual time: 16:00 UTC (9am PDT, 5pm CET) /!\
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200326
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you next week,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7777514289881247593==--
+On Tue, 2020-03-24 at 18:39 -0700, Christoph Paasch wrote:
+> Hello,
+> =
+
+> yet another one:
+> =
+
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 9 at net/mptcp/protocol.c:200 __mptcp_move_skbs_from=
+_subflow+0x371/0x4a0 net/mptcp/protocol.c:200
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.6.0-rc5 #62
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-=
+ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xda/0x116 lib/dump_stack.c:118
+>  panic+0x1ae/0x509 kernel/panic.c:221
+>  __warn.cold+0x2a/0x2e kernel/panic.c:582
+>  report_bug+0x1a9/0x1e0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>  do_error_trap+0x97/0xc0 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+>  invalid_op+0x1e/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:__mptcp_move_skbs_from_subflow+0x371/0x4a0 net/mptcp/protocol.c=
+:200
+> Code: 00 01 41 89 44 24 28 8b 45 b8 03 45 a8 41 01 c7 44 2b 7d ac 44 89 f=
+e e8 ad d5 2e ff 44 39 fb 0f 86 0c fe ff ff e8 9f d4 2e ff <0f> 0b e9 51 fe=
+ ff ff e8 93 d4 2e ff 49 83 be c8 00 00 00 00 0f 85
+> RSP: 0018:ffffc900000679e0 EFLAGS: 00010206
+> RAX: ffff88807d525040 RBX: 0000000000007fc9 RCX: ffffffff81faa183
+> RDX: 0000000000000100 RSI: ffffffff81faa191 RDI: 0000000000000004
+> RBP: ffffc90000067a48 R08: ffff88807d525040 R09: 000000006215a4a4
+> R10: 0000000036cc3e18 R11: 00000000f697ff28 R12: ffff888052c6ad18
+> R13: ffff8880539a06c0 R14: ffff888055e98080 R15: 0000000000007fc8
+>  move_skbs_to_msk+0xe6/0xf0 net/mptcp/protocol.c:238
+>  mptcp_data_ready+0xa8/0x150 net/mptcp/protocol.c:252
+>  subflow_data_ready+0x8a/0xa0 net/mptcp/subflow.c:774
+>  tcp_data_ready net/ipv4/tcp_input.c:4767 [inline]
+>  tcp_data_queue+0x692/0x15b0 net/ipv4/tcp_input.c:4833
+>  tcp_rcv_established+0x302/0xae0 net/ipv4/tcp_input.c:5727
+>  tcp_v4_do_rcv+0x231/0x350 net/ipv4/tcp_ipv4.c:1621
+>  tcp_v4_rcv+0x10da/0x1220 net/ipv4/tcp_ipv4.c:2003
+>  ip_protocol_deliver_rcu+0x20/0x130 net/ipv4/ip_input.c:204
+>  ip_local_deliver_finish net/ipv4/ip_input.c:231 [inline]
+>  NF_HOOK include/linux/netfilter.h:421 [inline]
+>  ip_local_deliver+0xe0/0x100 net/ipv4/ip_input.c:252
+>  dst_input include/net/dst.h:442 [inline]
+>  ip_rcv_finish net/ipv4/ip_input.c:428 [inline]
+>  ip_rcv_finish net/ipv4/ip_input.c:414 [inline]
+>  NF_HOOK include/linux/netfilter.h:421 [inline]
+>  ip_rcv+0x70/0xa0 net/ipv4/ip_input.c:538
+>  __netif_receive_skb_one_core+0x68/0xa0 net/core/dev.c:5187
+>  __netif_receive_skb+0x2a/0xa0 net/core/dev.c:5301
+>  process_backlog+0x104/0x250 net/core/dev.c:6133
+>  napi_poll net/core/dev.c:6571 [inline]
+>  net_rx_action+0x14a/0x520 net/core/dev.c:6639
+>  __do_softirq+0x115/0x33f kernel/softirq.c:292
+>  run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
+>  smpboot_thread_fn+0x297/0x390 kernel/smpboot.c:165
+>  kthread+0x153/0x180 kernel/kthread.c:255
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> Dumping ftrace buffer:
+>    (ftrace buffer empty)
+> Kernel Offset: disabled
+> Rebooting in 1 seconds..
+> =
+
+> =
+
+> On top of 402d1b0dc2e1 ("mptcp: re-check dsn before reading from subflow")
+> =
+
+> syzkaller-repro:
+> # {Threaded:true Collide:false Repeat:true RepeatTimes:0 Procs:1 Sandbox:=
+none Fault:false FaultCall:-1 FaultNth:0 Leak:false NetInjection:true NetDe=
+vices:true NetReset:false Cgroups:true BinfmtMisc:true CloseFDs:true KCSAN:=
+false DevlinkPCI:false UseTmpDir:true HandleSegv:false Repro:false Trace:fa=
+lse}
+> r0 =3D socket$inet_mptcp(0x2, 0x1, 0x106)
+> r1 =3D socket$inet_mptcp(0x2, 0x1, 0x106)
+> bind$inet(r1, &(0x7f00000013c0)=3D{0x2, 0x4e20, @multicast2}, 0x10)
+> connect$inet(r1, &(0x7f0000000040)=3D{0x2, 0x0, @loopback}, 0x10)
+> listen(r1, 0x3)
+> r2 =3D socket$inet6_tcp(0xa, 0x1, 0x0)
+> ioctl$sock_SIOCGIFVLAN_SET_VLAN_NAME_TYPE_CMD(r2, 0x8982, 0x0)
+> connect$inet(r0, &(0x7f0000000040)=3D{0x2, 0x4e20, @loopback}, 0x4d)
+> sendmsg$inet(r0, &(0x7f0000000280)=3D{0x0, 0x0, &(0x7f0000000000)=3D[{&(0=
+x7f0000000080)=3D"ff", 0xff3e}], 0x1}, 0x0)
+> =
+
+> =
+
+> C-repro is attached.
+
+Thanks!
+
+This is unfortunatelly ugly :(
+
+Running the repro in a loop, without panic_on_warn I see a few
+additional issues:
+
+* at socket destroy time:
+"""
+IPv4: Attempt to release TCP socket in state 1 0000000000ac3381
+"""
+
+this is alreay tracked by:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/9
+
+* WARN_ON_ONCE(subflow->can_ack) in check_fully_established()
+
+Adding more debug, looks like this is on client side, and the server is
+sending an MPC over an established TCP connection !?!
+
+* a final oops:
+
+[ 3957.373087] general protection fault, probably for non-canonical address=
+ 0xdffffc000000008d: 0000 [#1] SMP KASAN PTI
+[ 3957.375782] KASAN: null-ptr-deref in range [0x0000000000000468-0x0000000=
+00000046f]
+[ 3957.379704] CPU: 2 PID: 21 Comm: ksoftirqd/2 Tainted: G        W        =
+ 5.6.0-rc5.mptcp_bf07a8137067+ #32
+[ 3957.381619] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
+1.12.0-2.fc30 04/01/2014
+[ 3957.383363] RIP: 0010:subflow_state_change (/home/pabeni/devel/linux-mpt=
+cp/net/mptcp/subflow.c:994) =
+
+[ 3957.388117] RSP: 0018:ffff888103d0f658 EFLAGS: 00010206
+[ 3957.389131] RAX: dffffc0000000000 RBX: ffff88809209be80 RCX: 00000000000=
+00000
+[ 3957.390383] RDX: 000000000000008d RSI: 1ffff11020b04922 RDI: 00000000000=
+0046a
+[ 3957.391851] RBP: ffff88803630fe00 R08: 0000000000000001 R09: 00000000000=
+00004
+[ 3957.393163] R10: fffffbfff78bcae0 R11: ffffffffbc5e5707 R12: ffff8880363=
+0fe48
+[ 3957.394484] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880b0a=
+9a000
+[ 3957.395726] FS:  0000000000000000(0000) GS:ffff888105800000(0000) knlGS:=
+0000000000000000
+[ 3957.397281] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3957.398502] CR2: 0000000000000000 CR3: 0000000092ca8001 CR4: 00000000001=
+60ee0
+[ 3957.399863] Call Trace:
+[ 3957.400601] tcp_rcv_state_process (/home/pabeni/devel/linux-mptcp/net/ip=
+v4/tcp_input.c:6268) =
+
+[ 3957.402776] tcp_child_process (/home/pabeni/devel/linux-mptcp/net/ipv4/t=
+cp_minisocks.c:838) =
+
+[ 3957.407542] tcp_v4_rcv (/home/pabeni/devel/linux-mptcp/net/ipv4/tcp_ipv4=
+.c:1961) =
+
+[ 3957.410859] ip_protocol_deliver_rcu (/home/pabeni/devel/linux-mptcp/net/=
+ipv4/ip_input.c:204 (discriminator 1)) =
+
+
+So it looks like subflow->conn can still be NULL due to some race
+
+I think we should track the above with individual github issues.
+
+/P
+
+--===============0663929490546051811==--
