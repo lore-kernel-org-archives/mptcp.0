@@ -1,557 +1,278 @@
-Content-Type: multipart/mixed; boundary="===============6384026362080888084=="
+Content-Type: multipart/mixed; boundary="===============7777514289881247593=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 2/2] add support for mptcp netlink interface.
-Date: Thu, 26 Mar 2020 16:03:04 +0100
-Message-ID: <65a08c10aa83d4cc6861b1c2b9534fa8b9e1cae1.1585234717.git.pabeni@redhat.com>
-In-Reply-To: cover.1585234717.git.pabeni@redhat.com
+Subject: [MPTCP] [Weekly meetings] MoM - 19th of March 2020
+Date: Thu, 26 Mar 2020 16:18:55 +0100
+Message-ID: <158e3b0a-c46b-fa9e-e14b-4266bee05cdc@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4080
+X-UID: 4081
 
---===============6384026362080888084==
+--===============7777514289881247593==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Implement basic commands to:
-- manipulate MPTCP local addresses list
-- manipulate MPTCP connection limits
+Hello,
 
-Examples:
-1. Allows multiple subflows per MPTCP connection
-   $ ip mptcp limits subflows 2
+Last Thursday, we had our 91st meeting with Mat, Peter and Ossama (Intel =
 
-2. Accept ADD_ADDR announcement from the peer (server):
-   $ ip mptcp limits add_addr_accepted 2
+OTC), Christoph (Apple), Paolo, Davide and Florian (RedHat) and myself =
 
-3. Add a ipv4 address to be annunced for backup subflows:
-   $ip mptcp address add 10.99.1.2 signal backup
+(Tessares).
 
-4. Add an ipv6 address used as source for additional subflows:
-   $ip mptcp address add 2001::2 subflow
+Thanks again for this new good meeting!
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- ip/Makefile    |   2 +-
- ip/ip.c        |   3 +-
- ip/ip_common.h |   1 +
- ip/ipmptcp.c   | 446 +++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 450 insertions(+), 2 deletions(-)
- create mode 100644 ip/ipmptcp.c
+Here are the minutes of the meeting:
 
-diff --git a/ip/Makefile b/ip/Makefile
-index 5ab78d7d..8735b8e4 100644
---- a/ip/Makefile
-+++ b/ip/Makefile
-@@ -11,7 +11,7 @@ IPOBJ=3Dip.o ipaddress.o ipaddrlabel.o iproute.o iprule.o=
- ipnetns.o \
-     iplink_bridge.o iplink_bridge_slave.o ipfou.o iplink_ipvlan.o \
-     iplink_geneve.o iplink_vrf.o iproute_lwtunnel.o ipmacsec.o ipila.o \
-     ipvrf.o iplink_xstats.o ipseg6.o iplink_netdevsim.o iplink_rmnet.o \
--    ipnexthop.o
-+    ipnexthop.o ipmptcp.o
- =
 
- RTMONOBJ=3Drtmon.o
- =
 
-diff --git a/ip/ip.c b/ip/ip.c
-index 90392c2a..4249df03 100644
---- a/ip/ip.c
-+++ b/ip/ip.c
-@@ -51,7 +51,7 @@ static void usage(void)
- 		"where  OBJECT :=3D { link | address | addrlabel | route | rule | neigh =
-| ntable |\n"
- 		"                   tunnel | tuntap | maddress | mroute | mrule | monito=
-r | xfrm |\n"
- 		"                   netns | l2tp | fou | macsec | tcp_metrics | token | =
-netconf | ila |\n"
--		"                   vrf | sr | nexthop }\n"
-+		"                   vrf | sr | nexthop | mptcp }\n"
- 		"       OPTIONS :=3D { -V[ersion] | -s[tatistics] | -d[etails] | -r[esol=
-ve] |\n"
- 		"                    -h[uman-readable] | -iec | -j[son] | -p[retty] |\n"
- 		"                    -f[amily] { inet | inet6 | mpls | bridge | link } |=
-\n"
-@@ -103,6 +103,7 @@ static const struct cmd {
- 	{ "vrf",	do_ipvrf},
- 	{ "sr",		do_seg6 },
- 	{ "nexthop",	do_ipnh },
-+	{ "mptcp",	do_mptcp },
- 	{ "help",	do_help },
- 	{ 0 }
- };
-diff --git a/ip/ip_common.h b/ip/ip_common.h
-index 879287e3..d604f755 100644
---- a/ip/ip_common.h
-+++ b/ip/ip_common.h
-@@ -83,6 +83,7 @@ void vrf_reset(void);
- int netns_identify_pid(const char *pidstr, char *name, int len);
- int do_seg6(int argc, char **argv);
- int do_ipnh(int argc, char **argv);
-+int do_mptcp(int argc, char **argv);
- =
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
- int iplink_get(char *name, __u32 filt_mask);
- int iplink_ifla_xstats(int argc, char **argv);
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-new file mode 100644
-index 00000000..1ff66a7b
---- /dev/null
-+++ b/ip/ipmptcp.c
-@@ -0,0 +1,446 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <stdio.h>
-+#include <string.h>
-+#include <rt_names.h>
-+#include <errno.h>
-+
-+#include <linux/genetlink.h>
-+#include <linux/mptcp.h>
-+
-+#include "utils.h"
-+#include "ip_common.h"
-+#include "libgenl.h"
-+#include "json_print.h"
-+
-+static void usage(void)
-+{
-+	fprintf(stderr,
-+		"Usage:	ip mptcp address add <address> [dev <name>] [id <id>] [signal] [=
-subflow] [backup]\n"
-+		"	ip mptcp address del id <id>\n"
-+		"	ip mptcp address list\n"
-+		"	ip mptcp address get id <id>\n"
-+		"	ip mptcp address flush\n"
-+		"	ip mptcp limits [subflows <nr>] [add_addr_accepted <nr>]\n");
-+
-+	exit(-1);
-+}
-+
-+/* netlink socket */
-+static struct rtnl_handle genl_rth =3D { .fd =3D -1 };
-+static int genl_family =3D -1;
-+
-+#define MPTCP_BUFLEN	4096
-+#define MPTCP_REQUEST(_req,  _cmd, _flags)	\
-+	GENL_REQUEST(_req, MPTCP_BUFLEN, genl_family, 0,	\
-+		     MPTCP_PM_VER, _cmd, _flags)
-+
-+/* Mapping from argument to address flag mask */
-+static const struct {
-+	const char *name;
-+	unsigned long value;
-+} mptcp_addr_flag_names[] =3D {
-+	{ "signal",		MPTCP_PM_ADDR_FLAG_SIGNAL },
-+	{ "subflow",		MPTCP_PM_ADDR_FLAG_SUBFLOW },
-+	{ "backup",		MPTCP_PM_ADDR_FLAG_BACKUP },
-+};
-+
-+static void print_mptcp_addr_flags(unsigned int flags)
-+{
-+	unsigned int i;
-+
-+	for (i =3D 0; i < ARRAY_SIZE(mptcp_addr_flag_names); i++) {
-+		unsigned long mask =3D mptcp_addr_flag_names[i].value;
-+
-+		if (flags & mask) {
-+			print_string(PRINT_FP, NULL, "%s ",
-+				     mptcp_addr_flag_names[i].name);
-+			print_bool(PRINT_JSON,
-+				   mptcp_addr_flag_names[i].name, NULL, true);
-+		}
-+
-+		flags &=3D ~mask;
-+	}
-+
-+	if (flags) {
-+		/* unknown flags */
-+		SPRINT_BUF(b1);
-+
-+		snprintf(b1, sizeof(b1), "%02x", flags);
-+		print_string(PRINT_ANY, "rawflags", "rawflags %s ", b1);
-+	}
-+}
-+
-+static int get_flags(const char *arg, __u32 *flags)
-+{
-+	unsigned int i;
-+
-+	for (i =3D 0; i < ARRAY_SIZE(mptcp_addr_flag_names); i++) {
-+		if (strcmp(arg, mptcp_addr_flag_names[i].name))
-+			continue;
-+
-+		*flags |=3D mptcp_addr_flag_names[i].value;
-+		return 0;
-+	}
-+	return -1;
-+}
-+
-+static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n,
-+			 bool adding)
-+{
-+	struct rtattr *attr_addr;
-+	bool addr_set =3D false;
-+	inet_prefix address;
-+	bool id_set =3D false;
-+	__u32 index =3D 0;
-+	__u32 flags =3D 0;
-+	__u8 id =3D 0;
-+
-+	ll_init_map(&rth);
-+	while (argc > 0) {
-+		if (get_flags(*argv, &flags) =3D=3D 0) {
-+		} else if (!matches(*argv, "id")) {
-+			NEXT_ARG();
-+
-+			if (get_u8(&id, *argv, 0)) {
-+				invarg("invalid TTL\n", *argv);
-+				return -1;
-+			}
-+			id_set =3D true;
-+		} else if (!matches(*argv, "dev")) {
-+			const char *ifname;
-+
-+			NEXT_ARG();
-+
-+			ifname =3D *argv;
-+
-+			if (check_ifname(ifname)) {
-+				invarg("name", ifname);
-+				return -1;
-+			}
-+
-+			index =3D ll_name_to_index(ifname);
-+
-+			if (!index) {
-+				invarg("name", ifname);
-+				return -1;
-+			}
-+		} else if (get_addr(&address, *argv, AF_UNSPEC) =3D=3D 0) {
-+			addr_set =3D true;
-+		} else {
-+			invarg("unknown argument", *argv);
-+			usage();
-+		}
-+		argc--, argv++;
-+	}
-+
-+	if (!addr_set && adding) {
-+		fprintf(stderr, "mptcp: must set 'address' on add\n");
-+		return -1;
-+	}
-+
-+	if (!id_set && !adding) {
-+		fprintf(stderr, "mptcp: must set 'id'\n");
-+		return -1;
-+	}
-+
-+	attr_addr =3D addattr_nest(n, MPTCP_BUFLEN,
-+				 MPTCP_PM_ATTR_ADDR | NLA_F_NESTED);
-+	if (id_set)
-+		addattr8(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_ID, id);
-+	if (flags)
-+		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_FLAGS, flags);
-+	if (index)
-+		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_IF_IDX, index);
-+	if (addr_set) {
-+		int type;
-+
-+		addattr16(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_FAMILY,
-+			  address.family);
-+		type =3D address.family =3D=3D AF_INET ? MPTCP_PM_ADDR_ATTR_ADDR4 :
-+						   MPTCP_PM_ADDR_ATTR_ADDR6;
-+		addattr_l(n, MPTCP_BUFLEN, type, &address.data,
-+			  address.bytelen);
-+	}
-+
-+	addattr_nest_end(n, attr_addr);
-+	return 0;
-+}
-+
-+static int mptcp_addr_modify(int argc, char **argv, int cmd)
-+{
-+	MPTCP_REQUEST(req, cmd, NLM_F_REQUEST);
-+	int ret;
-+
-+	ret =3D mptcp_parse_opt(argc, argv, &req.n, cmd =3D=3D MPTCP_PM_CMD_ADD_A=
-DDR);
-+	if (ret)
-+		return ret;
-+
-+	if (rtnl_talk(&genl_rth, &req.n, NULL) < 0)
-+		return -2;
-+
-+	return 0;
-+}
-+
-+static int print_mptcp_addrinfo(struct rtattr *addrinfo)
-+{
-+	struct rtattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
-+	__u8 family =3D AF_UNSPEC, addr_attr_type;
-+	const char *ifname;
-+	unsigned int flags;
-+	int index;
-+	__u16 id;
-+
-+	parse_rtattr_nested(tb, MPTCP_PM_ADDR_ATTR_MAX, addrinfo);
-+
-+	open_json_object(NULL);
-+	if (tb[MPTCP_PM_ADDR_ATTR_FAMILY])
-+		family =3D rta_getattr_u8(tb[MPTCP_PM_ADDR_ATTR_FAMILY]);
-+
-+	addr_attr_type =3D family =3D=3D AF_INET ? MPTCP_PM_ADDR_ATTR_ADDR4 :
-+					     MPTCP_PM_ADDR_ATTR_ADDR6;
-+	if (tb[addr_attr_type]) {
-+		print_string(PRINT_ANY, "address", "%s ",
-+			     format_host_rta(family, tb[addr_attr_type]));
-+	}
-+	if (tb[MPTCP_PM_ADDR_ATTR_ID]) {
-+		id =3D rta_getattr_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
-+		print_uint(PRINT_ANY, "id", "id %u ", id);
-+	}
-+	if (tb[MPTCP_PM_ADDR_ATTR_FLAGS]) {
-+		flags =3D rta_getattr_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]);
-+		print_mptcp_addr_flags(flags);
-+	}
-+	if (tb[MPTCP_PM_ADDR_ATTR_IF_IDX]) {
-+		index =3D rta_getattr_s32(tb[MPTCP_PM_ADDR_ATTR_IF_IDX]);
-+		ifname =3D index ? ll_index_to_name(index) : NULL;
-+
-+		if (ifname)
-+			print_string(PRINT_ANY, "dev", "dev %s ", ifname);
-+	}
-+
-+	close_json_object();
-+	print_string(PRINT_FP, NULL, "\n", NULL);
-+	fflush(stdout);
-+
-+	return 0;
-+}
-+
-+static int print_mptcp_addr(struct nlmsghdr *n, void *arg)
-+{
-+	struct rtattr *tb[MPTCP_PM_ATTR_MAX + 1];
-+	struct genlmsghdr *ghdr;
-+	struct rtattr *addrinfo;
-+	int len =3D n->nlmsg_len;
-+
-+	if (n->nlmsg_type !=3D genl_family)
-+		return 0;
-+
-+	len -=3D NLMSG_LENGTH(GENL_HDRLEN);
-+	if (len < 0)
-+		return -1;
-+
-+	ghdr =3D NLMSG_DATA(n);
-+	parse_rtattr_flags(tb, MPTCP_PM_ATTR_MAX, (void *) ghdr + GENL_HDRLEN,
-+			   len, NLA_F_NESTED);
-+	addrinfo =3D tb[MPTCP_PM_ATTR_ADDR];
-+	if (!addrinfo)
-+		return -1;
-+
-+	ll_init_map(&rth);
-+	return print_mptcp_addrinfo(addrinfo);
-+}
-+
-+static int mptcp_addr_list(int argc, char **argv)
-+{
-+	MPTCP_REQUEST(req, MPTCP_PM_CMD_GET_ADDR, NLM_F_REQUEST | NLM_F_DUMP);
-+
-+	if (argc > 0) {
-+		fprintf(stderr,
-+			"\"ip mptcp addr show\" does not take any arguments.\n");
-+		return -1;
-+	}
-+
-+	if (rtnl_send(&genl_rth, &req.n, req.n.nlmsg_len) < 0) {
-+		perror("Cannot send show request");
-+		exit(1);
-+	}
-+
-+	new_json_obj(json);
-+
-+	if (rtnl_dump_filter(&genl_rth, print_mptcp_addr, stdout) < 0) {
-+		fprintf(stderr, "Dump terminated\n");
-+		delete_json_obj();
-+		fflush(stdout);
-+		return -2;
-+	}
-+
-+	close_json_object();
-+	fflush(stdout);
-+	return 0;
-+}
-+
-+static int mptcp_addr_get(int argc, char **argv)
-+{
-+	MPTCP_REQUEST(req, MPTCP_PM_CMD_GET_ADDR, NLM_F_REQUEST);
-+	struct nlmsghdr *answer;
-+	int ret;
-+
-+	ret =3D mptcp_parse_opt(argc, argv, &req.n, false);
-+	if (ret)
-+		return ret;
-+
-+	if (rtnl_talk(&genl_rth, &req.n, &answer) < 0)
-+		return -2;
-+
-+	return print_mptcp_addr(answer, stdout);
-+}
-+
-+static int mptcp_addr_flush(int argc, char **argv)
-+{
-+	MPTCP_REQUEST(req, MPTCP_PM_CMD_FLUSH_ADDRS, NLM_F_REQUEST);
-+
-+	if (rtnl_talk(&genl_rth, &req.n, NULL) < 0)
-+		return -2;
-+
-+	return 0;
-+}
-+
-+static int mptcp_parse_limit(int argc, char **argv, struct nlmsghdr *n)
-+{
-+	bool set_rcv_add_addrs =3D false;
-+	bool set_subflows =3D false;
-+	__u32 rcv_add_addrs =3D 0;
-+	__u32 subflows =3D 0;
-+
-+	while (argc > 0) {
-+		if (!matches(*argv, "subflows")) {
-+			NEXT_ARG();
-+
-+			if (get_u32(&subflows, *argv, 0)) {
-+				invarg("invalid subflows\n", *argv);
-+				return -1;
-+			}
-+			set_subflows =3D true;
-+		} else if (!matches(*argv, "add_addr_accepted")) {
-+			NEXT_ARG();
-+
-+			if (get_u32(&rcv_add_addrs, *argv, 0)) {
-+				invarg("invalid add_addr_accepted\n", *argv);
-+				return -1;
-+			}
-+			set_rcv_add_addrs =3D true;
-+		} else {
-+			invarg("unknown argument", *argv);
-+			usage();
-+		}
-+		argc--, argv++;
-+	}
-+
-+	if (set_rcv_add_addrs)
-+		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ATTR_RCV_ADD_ADDRS,
-+			  rcv_add_addrs);
-+	if (set_subflows)
-+		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ATTR_SUBFLOWS, subflows);
-+	return set_rcv_add_addrs || set_subflows;
-+}
-+
-+static int print_mptcp_limit(struct nlmsghdr *n, void *arg)
-+{
-+	struct rtattr *tb[MPTCP_PM_ATTR_MAX + 1];
-+	struct genlmsghdr *ghdr;
-+	int len =3D n->nlmsg_len;
-+	__u32 val;
-+
-+	if (n->nlmsg_type !=3D genl_family)
-+		return 0;
-+
-+	len -=3D NLMSG_LENGTH(GENL_HDRLEN);
-+	if (len < 0)
-+		return -1;
-+
-+	ghdr =3D NLMSG_DATA(n);
-+	parse_rtattr(tb, MPTCP_PM_ATTR_MAX, (void *) ghdr + GENL_HDRLEN, len);
-+
-+	open_json_object(NULL);
-+	if (tb[MPTCP_PM_ATTR_RCV_ADD_ADDRS]) {
-+		val =3D rta_getattr_u32(tb[MPTCP_PM_ATTR_RCV_ADD_ADDRS]);
-+
-+		print_uint(PRINT_ANY, "add_addr_accepted",
-+			   "add_addr_accepted %d ", val);
-+	}
-+
-+	if (tb[MPTCP_PM_ATTR_SUBFLOWS]) {
-+		val =3D rta_getattr_u32(tb[MPTCP_PM_ATTR_SUBFLOWS]);
-+
-+		print_uint(PRINT_ANY, "subflows", "subflows %d ", val);
-+	}
-+	print_string(PRINT_FP, NULL, "%s", "\n");
-+	fflush(stdout);
-+	close_json_object();
-+	return 0;
-+}
-+
-+static int mptcp_limit_get_set(int argc, char **argv)
-+{
-+	MPTCP_REQUEST(req, MPTCP_PM_CMD_SET_LIMITS, NLM_F_REQUEST);
-+	struct nlmsghdr *answer;
-+	bool do_get;
-+	int ret;
-+
-+	ret =3D mptcp_parse_limit(argc, argv, &req.n);
-+	if (ret < 0)
-+		return -1;
-+
-+	do_get =3D ret =3D=3D 0;
-+	if (do_get)
-+		req.g.cmd =3D MPTCP_PM_CMD_GET_LIMITS;
-+	if (rtnl_talk(&genl_rth, &req.n, do_get ? &answer : NULL) < 0)
-+		return -2;
-+
-+	if (do_get)
-+		return print_mptcp_limit(answer, stdout);
-+	return 0;
-+}
-+
-+int do_mptcp(int argc, char **argv)
-+{
-+	if (argc =3D=3D 0)
-+		usage();
-+
-+	if (!matches(*argv, "help"))
-+		usage();
-+
-+	if (genl_init_handle(&genl_rth, MPTCP_PM_NAME, &genl_family))
-+		exit(1);
-+
-+	if (!matches(*argv, "address")) {
-+		argc--, argv++;
-+		if (argc =3D=3D 0)
-+			return mptcp_addr_list(0, NULL);
-+
-+		if (!matches(*argv, "add"))
-+			return mptcp_addr_modify(argc-1, argv+1,
-+						 MPTCP_PM_CMD_ADD_ADDR);
-+		if (!matches(*argv, "delete"))
-+			return mptcp_addr_modify(argc-1, argv+1,
-+						 MPTCP_PM_CMD_DEL_ADDR);
-+		if (!matches(*argv, "list"))
-+			return mptcp_addr_list(argc-1, argv+1);
-+		if (!matches(*argv, "get"))
-+			return mptcp_addr_get(argc-1, argv+1);
-+		if (!matches(*argv, "flush"))
-+			return mptcp_addr_flush(argc-1, argv+1);
-+
-+		goto unknown;
-+	}
-+
-+	if (!matches(*argv, "limits"))
-+		return mptcp_limit_get_set(argc-1, argv+1);
-+
-+unknown:
-+	fprintf(stderr,
-+		"Command \"%s\" is unknown, try \"ip mptcp help\".\n",
-+		*argv);
-+	exit(-1);
-+}
+     net-next: (Paolo, Florian)
+
+mptcp: rename fourth ack field
+mptcp: create msk early
+mptcp: drop unneeded checks
+RFC: tcp: mptcp: use mptcp receive buffer space to select rcv window
+
+     our repo: (Paolo, Florian)
+
+1255763  [v5,5/5] mptcp: v1 ADD_ADDR changes: use subflow_generate_hmac(
+1255762  [v5,4/5] mptcp: v1 ADD_ADDR changes: add subflow_generate_hmac(
+1255760  [v5,3/5] mptcp: v1 ADD_ADDR changes: add_addr_hmac_valid
+1255761  [v5,2/5] mptcp: v1 ADD_ADDR changes: options and parsing
+1255759  [v5,1/5] mptcp: Re-factor mptcp_crypto_hmac_sha()
+1245636  mptcp: re-check dsn before reading from subflow
+
+
+
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+     - By Matthieu, Florian, Paolo
+
+1196109: RFC: [10/10,RFC] selftests:mptcp: decrease timeout to 100 sec:
+     - still have the bug
+     - we can convert that as a Github issue
+
+1253668: Changes Requested: mptcp: propagate sendbuf setting to subflow =
+
+on fallback
+1253672: Changes Requested: mptcp: copy mptcp receive buffer setting to =
+
+subflow
+1253677: Changes Requested: tcp: mptcp: use mptcp receive buffer space =
+
+to select rcv window:
+1258245: New: [mptcp-next,v2] tcp: mptcp: use mptcp receive buffer space =
+
+to select rcv window:
+     - one has been sent to net-next for RFC
+     - the rest might be sent to net-next
+     - or include in the "export" branch?
+     - but this will increase the number of patches we will sent to net-next
+     - so better to send these patches directly to net-next
+     - but better to wait for part 3 to be included
+
+1255550: Awaiting Upstream: [v1,1/3] Squash-to: "mptcp: Implement path =
+
+manager interface commands"
+1255552: Awaiting Upstream: [v1,2/3] Squash-to: "mptcp: add netlink =
+
+based PM"
+1255551: Awaiting Upstream: [v1,3/3] Squash-to: "selftests: add =
+
+test-cases for MPTCP MP_JOIN":
+     - to be applied
+     - new small patches should arrive to fix sporadic failure
+
+1258047: Awaiting Upstream: [1/2] mptcp: fix compilation error without IPV6
+1258046: Awaiting Upstream: [2/2] mptcp: fix compilation warning without =
+
+IPV6:
+     - to be applied
+
+
+
+FYI: Current Roadmap:
+     - Part 3 (next merge window):
+         - PM: [Done]
+             - locking [Done]
+             - basic =E2=86=92 netlink support [Done]
+         - MP_JOIN [Done]
+         - ADD_ADDR for MPTCP v1 [DONE]
+         - clean the current patches [TODO]
+         - squash the current patches [TODO]:
+             - "subflow: place further subflows on new 'join_list'"
+         - need to make sure we continue to support the protocol =E2=86=92 =
+we =
+
+will not fully support it
+         - PM basic [Done]
+         - fix sender ID in MP_JOIN [Done]
+
+     - Part 4 (to fully support MPTCP):
+         - Shared recv window (full support)
+         - IPv6 - IPv4 mapped support
+         - not dropping MPTCP options (ADD_ADDR, etc.)
+         - FAST_CLOSE
+         - full MPTCP v1 support (reliable add_addr, etc.)
+         - after a few attempts of failed MPTCP, we fallback to TCP =
+
+(like TFO is doing)
+         - PM server (more advanced)
+         - reduce locks when mptcp_stream_accept (currently 3 locks) but =
+
+we might need to add an helper in inet API:
+             - already covered by "mptcp: create msk early" [DONE]
+         - Full DATA_FIN support [WIP]:
+             - could be nice to have it: if ready
+         - Active backup support [WIP]
+         - ADD_ADDR for MPTCPv1: echo bit
+         - Opti in TCP option structures (unions) [to be rebased]
+
+     - Part 5 (extra needed for prod):
+         - opti/perfs
+         - TFO
+         - PM netlink
+         - PM bpf
+         - Scheduler bpf
+         - syncookies
+         - [gs]etsockopt per subflow
+         - notify the userspace when a subflow is added/removed =E2=86=92 c=
+msg
+
+
+
+Part 3 remaining stuff:
+     - Review commit messages:
+         - needed for the next merge window
+         - Mat will look at that
+
+     - there are also a couple of patches at the end of the series we =
+
+will have to rebase/squash:
+         - "subflow: place further subflows on new 'join_list'"
+         - Paolo will look at how to squash it in multiple commits
+
+     - ADD_ADDR for MPTCPv1:
+         - DONE
+
+     - new patches coming:
+         - small fixes from Paolo
+         - Davide has a fix, will send it directly to net-next as soon =
+
+as possible.
+
+     - apply pending patches:
+         - Matth will do that
+
+     - Shared received windows:
+         - we don't include other changes in this patch-set
+         - Florian has sent an RFC to get feedback from Eric
+
+     - cover letter:
+         - Mat will draft one
+
+     - Let's try to send it ASAP, ideally max this Monday
+
+
+
+Extra tests:
+     - news about Syzkaller? (Christoph):
+         - Christoph is looking at fuzzing the netlink API but he has =
+
+some issues with syzkaller
+         - checking with syzkaller guys.
+
+     - new about Intel's kbuild? (Mat):
+         - t/* branches are now blacklisted
+         - but hard to know what is tested for the moment because there =
+
+is no "success" email.
+         - Mat will turn them on for the moment to verify everything is OK
+         - "export" branch was successful
+
+     - packetdrill (Davide):
+         - mpc + data https://github.com/multipath-tcp/packetdrill/pull/3
+         - Matth can look at it and merge it to have the CI testing it
+
+
+
+mptcp.org:
+     - Christoph is adding support for MPTCPv1
+
+     - He was able to launch interop tests (without MP_JOIN): running =
+
+fine with net-next kernel!
+
+     - do we need to ntohl the key? Christoph will try to run interop =
+
+tests: big/small endian
+
+
+
+Reviewed-by tags:
+     - should we add them next time we add new patches in the TopGit =
+
+tree? ("export" branch)
+
+     - Paolo: for patches with many authors, I _think_ it's less relevant
+
+     - feel free to add Reviewed-by tags before sending to net-next if =
+
+you got reviews from mptcp ML
+
+
+
+CI:
+     - mptcp_connect.sh -m mmap =E2=86=92 not yet (still the bug):
+         - the bug should be there and tracked with a Github issue
+
+     - mptcp_connect.sh: more to run? e.g. -R, -S?:
+         - TODO
+
+     - how I can run `make W=3D1` only for files in `net/mptcp`? (to run =
+
+it with -Wunused-but-set-variable and more):
+         - make W=3D1 then clear the objects and retry the compile and =
+
+look for warnings with KCFLAGS=3D"-Werror"
+
+
+
+Issues:
+     - now added in Github
+     - feel free to use it
+     - Paolo started to use it
+     - Proposition to add this URL in MAINTAINERS file to have other =
+
+seeing known-issues. =E2=86=92 feel free to send a patch
+
+
+
+Next meeting:
+     - We propose to have the next meeting on Thursday, the 26th of March.
+     - /!\ *NOT* the Usual time: 16:00 UTC (9am PDT, 5pm CET) /!\
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200326
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you next week,
+Matt
 -- =
 
-2.21.1
-
---===============6384026362080888084==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7777514289881247593==--
