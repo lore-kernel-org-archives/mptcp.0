@@ -1,41 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============5778461583184532651=="
+Content-Type: multipart/mixed; boundary="===============7018437922237505937=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 0/2] iproute: mptcp support
-Date: Thu, 26 Mar 2020 16:03:02 +0100
-Message-ID: <cover.1585234717.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 1/2] uapi: update linux/mptcp.h
+Date: Thu, 26 Mar 2020 16:03:03 +0100
+Message-ID: <46efbc7d07ec2e52eb100e3237c23213637b0ab7.1585234717.git.pabeni@redhat.com>
+In-Reply-To: cover.1585234717.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4078
+X-UID: 4079
 
---===============5778461583184532651==
+--===============7018437922237505937==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is the first draft for iproute support.
-
-Still lack a man-page (help more than welcome!!!)
-
-Any feedback on [sub]commands name and syntax more than welcome - please
-have a look at the usage() section in patch 2
-
-Paolo Abeni (2):
-  uapi: update linux/mptcp.h
-  add support for mptcp netlink interface.
-
- include/uapi/linux/mptcp.h |  88 ++++++++
- ip/Makefile                |   2 +-
- ip/ip.c                    |   3 +-
- ip/ip_common.h             |   1 +
- ip/ipmptcp.c               | 446 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 538 insertions(+), 2 deletions(-)
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/uapi/linux/mptcp.h | 88 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
  create mode 100644 include/uapi/linux/mptcp.h
- create mode 100644 ip/ipmptcp.c
 
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+new file mode 100644
+index 00000000..dfd6674c
+--- /dev/null
++++ b/include/uapi/linux/mptcp.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
++#ifndef _UAPI_MPTCP_H
++#define _UAPI_MPTCP_H
++
++#include <linux/types.h>
++
++#define MPTCP_SUBFLOW_FLAG_MCAP_REM		BIT(0)
++#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		BIT(1)
++#define MPTCP_SUBFLOW_FLAG_JOIN_REM		BIT(2)
++#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		BIT(3)
++#define MPTCP_SUBFLOW_FLAG_BKUP_REM		BIT(4)
++#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		BIT(5)
++#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	BIT(6)
++#define MPTCP_SUBFLOW_FLAG_CONNECTED		BIT(7)
++#define MPTCP_SUBFLOW_FLAG_MAPVALID		BIT(8)
++
++enum {
++	MPTCP_SUBFLOW_ATTR_UNSPEC,
++	MPTCP_SUBFLOW_ATTR_TOKEN_REM,
++	MPTCP_SUBFLOW_ATTR_TOKEN_LOC,
++	MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
++	MPTCP_SUBFLOW_ATTR_MAP_SEQ,
++	MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
++	MPTCP_SUBFLOW_ATTR_SSN_OFFSET,
++	MPTCP_SUBFLOW_ATTR_MAP_DATALEN,
++	MPTCP_SUBFLOW_ATTR_FLAGS,
++	MPTCP_SUBFLOW_ATTR_ID_REM,
++	MPTCP_SUBFLOW_ATTR_ID_LOC,
++	MPTCP_SUBFLOW_ATTR_PAD,
++	__MPTCP_SUBFLOW_ATTR_MAX
++};
++
++#define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
++
++/* netlink interface */
++#define MPTCP_PM_NAME		"mptcp_pm"
++#define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
++#define MPTCP_PM_VER		0x1
++
++/*
++ * ATTR types defined for MPTCP
++ */
++enum {
++	MPTCP_PM_ATTR_UNSPEC,
++
++	MPTCP_PM_ATTR_ADDR,				/* nested address */
++	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
++	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
++
++	__MPTCP_PM_ATTR_MAX
++};
++
++#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
++
++enum {
++	MPTCP_PM_ADDR_ATTR_UNSPEC,
++
++	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
++	MPTCP_PM_ADDR_ATTR_ID,				/* u8 */
++	MPTCP_PM_ADDR_ATTR_ADDR4,			/* struct in_addr */
++	MPTCP_PM_ADDR_ATTR_ADDR6,			/* struct in6_addr */
++	MPTCP_PM_ADDR_ATTR_PORT,			/* u16 */
++	MPTCP_PM_ADDR_ATTR_FLAGS,			/* u32 */
++	MPTCP_PM_ADDR_ATTR_IF_IDX,			/* s32 */
++
++	__MPTCP_PM_ADDR_ATTR_MAX
++};
++
++#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
++
++#define MPTCP_PM_ADDR_FLAG_SIGNAL			(1 << 0)
++#define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
++#define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
++
++enum {
++	MPTCP_PM_CMD_UNSPEC,
++
++	MPTCP_PM_CMD_ADD_ADDR,
++	MPTCP_PM_CMD_DEL_ADDR,
++	MPTCP_PM_CMD_GET_ADDR,
++	MPTCP_PM_CMD_FLUSH_ADDRS,
++	MPTCP_PM_CMD_SET_LIMITS,
++	MPTCP_PM_CMD_GET_LIMITS,
++
++	__MPTCP_PM_CMD_AFTER_LAST
++};
++
++#endif /* _UAPI_MPTCP_H */
 -- =
 
 2.21.1
 
---===============5778461583184532651==--
+--===============7018437922237505937==--
