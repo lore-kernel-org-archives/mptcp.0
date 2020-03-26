@@ -1,49 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============0192104056302676407=="
+Content-Type: multipart/mixed; boundary="===============1562493837711152247=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] squash-to: selftests: add PM netlink functional
- tests
-Date: Thu, 26 Mar 2020 15:41:50 +0100
-Message-ID: <29795bf5-bd16-0f2d-d733-5bca54ebb1a1@tessares.net>
-In-Reply-To: 52dc8380f188a099ce85d32d3ce878e7853c2484.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v3] Squash-to: "mptcp: add netlink-based
+ PM"
+Date: Thu, 26 Mar 2020 15:45:45 +0100
+Message-ID: <eda5e6ff-aff8-6a55-a469-f299f4b61974@tessares.net>
+In-Reply-To: 60934ce2-342d-2d4f-ae01-de1917118dbd@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4075
+X-UID: 4076
 
---===============0192104056302676407==
+--===============1562493837711152247==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Paolo,
+Hi Paolo,
 
-On 26/03/2020 10:32, Paolo Abeni wrote:
-> On Wed, 2020-03-25 at 16:19 -0700, Mat Martineau wrote:
->> Add pm_nl_ctl to .gitignore
->>
->> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->> ---
->>   tools/testing/selftests/net/mptcp/.gitignore | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testin=
-g/selftests/net/mptcp/.gitignore
->> index d72f07642738..ea13b255a99d 100644
->> --- a/tools/testing/selftests/net/mptcp/.gitignore
->> +++ b/tools/testing/selftests/net/mptcp/.gitignore
->> @@ -1,2 +1,3 @@
->>   mptcp_connect
->> +pm_nl_ctl
->>   *.pcap
+On 26/03/2020 14:53, Matthieu Baerts wrote:
+> Hi Paolo,
 > =
 
-> LGTM, thanks!
+> On 26/03/2020 12:53, Paolo Abeni wrote:
+>> Let user space set a single limit at once and drop bogus
+>> NL extack error message.
+>>
+>> v2 -> v3:
+>> =C2=A0 - better error message (Mat)
+>> =C2=A0 - add spinlock
+>> =C2=A0 - relax admin constraint on 'getters'
+>>
+>> v1 -> v2:
+>> =C2=A0 - do not include dumb dbg messages
+> =
 
-Thank you for the patch and the review!
+> Thank you for the v3, it looks good to=C2=A0 me!
+> =
 
-- 21cabc4b267c: "squashed" in "selftests: add PM netlink functional tests"
-- bd9717f94812..8e8969983c72: result
+> Cheers,
+> Matt
+
+- 621737cebef3: "squashed" in "mptcp: add netlink-based PM"
+- 8e8969983c72..cda56df42342: result
+
+Tests + export are in progress.
 
 Cheers,
 Matt
@@ -54,4 +55,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============0192104056302676407==--
+--===============1562493837711152247==--
