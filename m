@@ -1,100 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============6435407948391348089=="
+Content-Type: multipart/mixed; boundary="===============2473067625973479121=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2] Squash-to: "mptcp: add netlink-based
- PM"
-Date: Thu, 26 Mar 2020 12:37:12 +0100
-Message-ID: <993bd818949c8845f6e690338a34e3975392638f.camel@redhat.com>
-In-Reply-To: 03ea8345-c10a-7434-9a3e-37a7fd693fba@tessares.net
+Subject: [MPTCP] [PATCH net-next v3] Squash-to: "mptcp: add netlink-based PM"
+Date: Thu, 26 Mar 2020 12:53:56 +0100
+Message-ID: <b733f047245027ea51dfc99e02d56fe8ff6aa13c.1585223512.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4072
+X-UID: 4073
 
---===============6435407948391348089==
+--===============2473067625973479121==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-03-26 at 11:34 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+Let user space set a single limit at once and drop bogus
+NL extack error message.
 
-> On 26/03/2020 11:19, Paolo Abeni wrote:
-> > Let user space set a single limit at once and drop bogus
-> > NL extack error message.
-> =
+v2 -> v3:
+ - better error message (Mat)
+ - add spinlock
+ - relax admin constraint on 'getters'
 
-> Thank you for the patch!
-> =
+v1 -> v2:
+ - do not include dumb dbg messages
 
-> > v1 -> v2:
-> >   - do not include dumb dbg messages
-> > =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/pm_netlink.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> >   net/mptcp/pm_netlink.c | 8 ++++----
-> >   1 file changed, 4 insertions(+), 4 deletions(-)
-> > =
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 743c3c58f826..a0ce7f324499 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -702,15 +702,12 @@ static int parse_limit(struct genl_info *info, int id=
+, unsigned int *limit)
+ {
+ 	struct nlattr *attr =3D info->attrs[id];
+ =
 
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index 743c3c58f826..caad73dfda64 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -702,10 +702,8 @@ static int parse_limit(struct genl_info *info, int=
- id, unsigned int *limit)
-> >   {
-> >   	struct nlattr *attr =3D info->attrs[id];
-> >   =
+-	if (!attr) {
+-		GENL_SET_ERR_MSG(info, "missing announce accept limit");
+-		return -EINVAL;
+-	}
++	if (!attr)
++		return 0;
+ =
 
-> > -	if (!attr) {
-> > -		GENL_SET_ERR_MSG(info, "missing announce accept limit");
-> > -		return -EINVAL;
-> > -	}
-> > +	if (!attr)
-> > +		return 0;
-> =
+ 	*limit =3D nla_get_u32(attr);
+ 	if (*limit > MPTCP_PM_ADDR_MAX) {
+-		GENL_SET_ERR_MSG(info,
+-				 "announce accept limit greater than maximum");
++		GENL_SET_ERR_MSG(info, "limit greater than maximum");
+ 		return -EINVAL;
+ 	}
+ 	return 0;
+@@ -723,17 +720,23 @@ mptcp_nl_cmd_set_limits(struct sk_buff *skb, struct g=
+enl_info *info)
+ 	unsigned int rcv_addrs, subflows;
+ 	int ret;
+ =
 
-> I guess we don't need to return an error if no attributes are given for =
++	spin_lock_bh(&pernet->lock);
++	rcv_addrs =3D pernet->add_addr_accept_max;
+ 	ret =3D parse_limit(info, MPTCP_PM_ATTR_RCV_ADD_ADDRS, &rcv_addrs);
+ 	if (ret)
+-		return ret;
++		goto unlock;
+ =
 
-> both RCV_ADD_ADDRS and SUBFLOWS, right?
++	subflows =3D pernet->subflows_max;
+ 	ret =3D parse_limit(info, MPTCP_PM_ATTR_SUBFLOWS, &subflows);
+ 	if (ret)
+-		return ret;
++		goto unlock;
+ =
 
-yep
+ 	WRITE_ONCE(pernet->add_addr_accept_max, rcv_addrs);
+ 	WRITE_ONCE(pernet->subflows_max, subflows);
+-	return 0;
++
++unlock:
++	spin_unlock_bh(&pernet->lock);
++	return ret;
+ }
+ =
 
-> >   =
+ static int
+@@ -789,7 +792,6 @@ static struct genl_ops mptcp_pm_ops[] =3D {
+ 		.cmd    =3D MPTCP_PM_CMD_GET_ADDR,
+ 		.doit   =3D mptcp_nl_cmd_get_addr,
+ 		.dumpit   =3D mptcp_nl_cmd_dump_addrs,
+-		.flags  =3D GENL_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd    =3D MPTCP_PM_CMD_SET_LIMITS,
+@@ -799,7 +801,6 @@ static struct genl_ops mptcp_pm_ops[] =3D {
+ 	{
+ 		.cmd    =3D MPTCP_PM_CMD_GET_LIMITS,
+ 		.doit   =3D mptcp_nl_cmd_get_limits,
+-		.flags  =3D GENL_ADMIN_PERM,
+ 	},
+ };
+ =
 
-> >   	*limit =3D nla_get_u32(attr);
-> >   	if (*limit > MPTCP_PM_ADDR_MAX) {
-> =
+-- =
 
-> Here below, the message is "announce accept limit greater than maximum". =
+2.21.1
 
-> Should we keep only "limit greater than maximum"?
-
-agreed
-> =
-
-> > @@ -723,10 +721,12 @@ mptcp_nl_cmd_set_limits(struct sk_buff *skb, stru=
-ct genl_info *info)
-> >   	unsigned int rcv_addrs, subflows;
-> >   	int ret;
-> >   =
-
-> > +	rcv_addrs =3D pernet->add_addr_accept_max;
-> =
-
-> I guess that's fine to always call the two WRITE_ONCE() here below even =
-
-> if it is not needed, right?
-
-I see no issue with that, but looking again at this, I guess it's
-better wrap everthing with spin lock protection.
-
-Additionally I need to relax the GENL_ADMIN_PERM on get commands.
-
-Thanks for the feedback, v3 is coming ;)
-
-/P
-
---===============6435407948391348089==--
+--===============2473067625973479121==--
