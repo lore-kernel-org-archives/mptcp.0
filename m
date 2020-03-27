@@ -1,63 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============8003879543539012445=="
+Content-Type: multipart/mixed; boundary="===============1113819082649372239=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/6] Squash-to: "mptcp: queue data for mptcp level
- retransmission"
-Date: Fri, 27 Mar 2020 16:53:22 +0100
-Message-ID: <20200327155327.605375-2-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 2/6] topmsg: mptcp: queue data for mptcp level
+ retransmission
+Date: Fri, 27 Mar 2020 16:53:23 +0100
+Message-ID: <20200327155327.605375-3-matthieu.baerts@tessares.net>
 In-Reply-To: 20200327155327.605375-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4087
+X-UID: 4088
 
---===============8003879543539012445==
+--===============1113819082649372239==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Remove inline in foo.c files, let the compiler decide.
-
-Request from David S. Miller.
+Add ChangeLog + add missing capital letters.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/protocol.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .topmsg | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index dae5d3152da4..812a646c349a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -285,9 +285,9 @@ static inline bool mptcp_skb_can_collapse_to(const stru=
-ct mptcp_sock *msk,
- 	return mpext && mpext->data_seq + mpext->data_len =3D=3D msk->write_seq;
- }
+diff --git a/.topmsg b/.topmsg
+index cf9740a54b08..4ca75d24c88e 100644
+--- a/.topmsg
++++ b/.topmsg
+@@ -1,8 +1,8 @@
+ From: Paolo Abeni <pabeni(a)redhat.com>
+ Subject: [PATCH] mptcp: queue data for mptcp level retransmission
  =
 
--static inline bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
--					      const struct page_frag *pfrag,
--					      const struct mptcp_data_frag *df)
-+static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
-+				       const struct page_frag *pfrag,
-+				       const struct mptcp_data_frag *df)
- {
- 	return df && pfrag->page =3D=3D df->page &&
- 		df->data_seq + df->data_len =3D=3D msk->write_seq;
-@@ -327,7 +327,7 @@ static bool mptcp_page_frag_refill(struct sock *sk, str=
-uct page_frag *pfrag)
- 	return false;
- }
+-keep the send page fragment on an MPTCP level retransmission queue.
+-the queue entries are allocated inside the page frag allocator,
++Keep the send page fragment on an MPTCP level retransmission queue.
++The queue entries are allocated inside the page frag allocator,
+ acquiring an additional reference to the page for each list entry.
  =
 
--static inline struct mptcp_data_frag *
-+static struct mptcp_data_frag *
- mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfra=
-g,
- 		      int orig_offset)
- {
+ Also switch to a custom page frag refill function, to ensure that
+@@ -13,5 +13,8 @@ The MPTCP rtx queue is flushed at disconnect() and close(=
+) time
+ Note that now we need to call __mptcp_init_sock() regardless of mptcp
+ enable status, as the destructor will try to walk the rtx_queue.
+ =
+
++v2 -> v3:
++ - remove 'inline' in foo.c files (David S. Miller)
++
+ Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+ Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 -- =
 
 2.25.1
 
---===============8003879543539012445==--
+--===============1113819082649372239==--
