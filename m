@@ -1,62 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============8334450844170377029=="
+Content-Type: multipart/mixed; boundary="===============8918051781617299714=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] squashto: mptcp: allow dumping subflow context to
+Subject: [MPTCP] Re: [PATCH] squashto: mptcp: allow dumping subflow context to
  userspace
-Date: Fri, 27 Mar 2020 12:58:17 -0700
-Message-ID: <20200327195817.122912-1-mathew.j.martineau@linux.intel.com>
+Date: Fri, 27 Mar 2020 22:07:08 +0100
+Message-ID: <1e188dd0-1572-e373-0bdb-f3de505cefd8@tessares.net>
+In-Reply-To: 20200327195817.122912-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4097
+X-UID: 4098
 
---===============8334450844170377029==
+--===============8918051781617299714==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use bit macros appropriate for userspace.
+Hi Mat, Davide,
 
-Suggested-by: Davide Caratti <dcaratti(a)redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- include/uapi/linux/mptcp.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+On 27/03/2020 20:58, Mat Martineau wrote:
+> Use bit macros appropriate for userspace.
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index c564140d20f0..8acc78b7ca7c 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -4,15 +4,15 @@
- =
+Thank you for the patch and good catch for the missing bits!
 
- #include <linux/types.h>
- =
+- 9c766e8ddcec: "squashed" in "mptcp: allow dumping subflow context to =
 
--#define MPTCP_SUBFLOW_FLAG_MCAP_REM		BIT(0)
--#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		BIT(1)
--#define MPTCP_SUBFLOW_FLAG_JOIN_REM		BIT(2)
--#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		BIT(3)
--#define MPTCP_SUBFLOW_FLAG_BKUP_REM		BIT(4)
--#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		BIT(5)
--#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	BIT(6)
--#define MPTCP_SUBFLOW_FLAG_CONNECTED		BIT(7)
--#define MPTCP_SUBFLOW_FLAG_MAPVALID		BIT(8)
-+#define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
-+#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
-+#define MPTCP_SUBFLOW_FLAG_JOIN_REM		_BITUL(2)
-+#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		_BITUL(3)
-+#define MPTCP_SUBFLOW_FLAG_BKUP_REM		_BITUL(4)
-+#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		_BITUL(5)
-+#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	_BITUL(6)
-+#define MPTCP_SUBFLOW_FLAG_CONNECTED		_BITUL(7)
-+#define MPTCP_SUBFLOW_FLAG_MAPVALID		_BITUL(8)
- =
+userspace"
+- c32f026cdf86..9fd2aa240f88: result
+- 0a22c57a4750: topmsg: add changelog
 
- enum {
- 	MPTCP_SUBFLOW_ATTR_UNSPEC,
+- 0ca910a55213: mptcp:uapi: add missing import for _BITUL
+- 9fd2aa240f88..b753d266aaa6: result
+
+Test + export are in progress.
+
+Cheers,
+Matt
 -- =
 
-2.26.0
-
---===============8334450844170377029==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8918051781617299714==--
