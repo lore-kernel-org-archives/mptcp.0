@@ -1,46 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============8918051781617299714=="
+Content-Type: multipart/mixed; boundary="===============7346659019867694921=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] squashto: mptcp: allow dumping subflow context to
- userspace
-Date: Fri, 27 Mar 2020 22:07:08 +0100
-Message-ID: <1e188dd0-1572-e373-0bdb-f3de505cefd8@tessares.net>
-In-Reply-To: 20200327195817.122912-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Part 3 review status
+Date: Fri, 27 Mar 2020 16:52:33 -0700
+Message-ID: <alpine.OSX.2.22.394.2003271644410.47929@amitamah-mobl1.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4098
+X-UID: 4100
 
---===============8918051781617299714==
+--===============7346659019867694921==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Davide,
 
-On 27/03/2020 20:58, Mat Martineau wrote:
-> Use bit macros appropriate for userspace.
+Hello -
 
-Thank you for the patch and good catch for the missing bits!
+Part 3 version 3 of the upstream MPTCP implementation is currently under =
 
-- 9c766e8ddcec: "squashed" in "mptcp: allow dumping subflow context to =
+review on the netdev list, after addressing davem's comment on v2.
 
-userspace"
-- c32f026cdf86..9fd2aa240f88: result
-- 0a22c57a4750: topmsg: add changelog
+It's currently delegated to David Ahern for additional review, presumably =
 
-- 0ca910a55213: mptcp:uapi: add missing import for _BITUL
-- 9fd2aa240f88..b753d266aaa6: result
+to have a look at the netlink interface.
 
-Test + export are in progress.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8918051781617299714==--
+--
+Mat Martineau
+Intel
+--===============7346659019867694921==--
