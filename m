@@ -1,45 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============1477386211593722596=="
+Content-Type: multipart/mixed; boundary="===============7216926536449347568=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 4/6] topmsg: mptcp: rework mptcp_sendmsg_frag to
- accept optional dfrag
-Date: Fri, 27 Mar 2020 16:53:25 +0100
-Message-ID: <20200327155327.605375-5-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH 5/6] Squash-to: "mptcp: add and use MIB counter
+ infrastructure"
+Date: Fri, 27 Mar 2020 16:53:26 +0100
+Message-ID: <20200327155327.605375-6-matthieu.baerts@tessares.net>
 In-Reply-To: 20200327155327.605375-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4091
+X-UID: 4092
 
---===============1477386211593722596==
+--===============7216926536449347568==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add ChangeLog.
+Remove inline in foo.c files, let the compiler decide.
+
+Request from David S. Miller.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- .topmsg | 3 +++
- 1 file changed, 3 insertions(+)
+ net/mptcp/subflow.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/.topmsg b/.topmsg
-index a6886a686d9d..0060d6b54385 100644
---- a/.topmsg
-+++ b/.topmsg
-@@ -23,6 +23,9 @@ this the mptcp sk_sndbuf limit.
- In the future we could add experiment with autotuning as TCP does in
- tcp_sndbuf_expand().
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index edf5b543bdf5..b5180c81588e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -22,8 +22,8 @@
+ #include "protocol.h"
+ #include "mib.h"
  =
 
-+v2 -> v3:
-+ - remove 'inline' in foo.c files (David S. Miller)
-+
- Co-developed-by: Florian Westphal <fw(a)strlen.de>
- Signed-off-by: Florian Westphal <fw(a)strlen.de>
- Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+-static inline void SUBFLOW_REQ_INC_STATS(struct request_sock *req,
+-					 enum linux_mptcp_mib_field field)
++static void SUBFLOW_REQ_INC_STATS(struct request_sock *req,
++				  enum linux_mptcp_mib_field field)
+ {
+ 	MPTCP_INC_STATS(sock_net(req_to_sk(req)), field);
+ }
 -- =
 
 2.25.1
 
---===============1477386211593722596==--
+--===============7216926536449347568==--
