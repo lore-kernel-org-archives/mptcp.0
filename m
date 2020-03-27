@@ -1,155 +1,96 @@
-Content-Type: multipart/mixed; boundary="===============8816861280411959941=="
+Content-Type: multipart/mixed; boundary="===============7031950922458365184=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 2/2] add support for mptcp netlink interface.
-Date: Fri, 27 Mar 2020 17:32:05 +0100
-Message-ID: <f23b7145f3eb0f681172d4ebb129bd339b8f8cf3.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.22.394.2003261538040.29004@spazoki-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH 0/6] mptcp: remove all "inline" in foo.c files
+Date: Fri, 27 Mar 2020 17:39:00 +0100
+Message-ID: <5cf367bf-0d84-1441-bc50-97477b5dc6eb@tessares.net>
+In-Reply-To: alpine.OSX.2.22.394.2003270900350.41044@amitamah-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4095
+X-UID: 4096
 
---===============8816861280411959941==
+--===============7031950922458365184==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-03-26 at 16:45 -0700, Mat Martineau wrote:
-> On Thu, 26 Mar 2020, Paolo Abeni wrote:
+Hi Mat,
+
+On 27/03/2020 17:01, Mat Martineau wrote:
+> On Fri, 27 Mar 2020, Matthieu Baerts wrote:
 > =
 
-> > Implement basic commands to:
-> > - manipulate MPTCP local addresses list
-> > - manipulate MPTCP connection limits
-> > =
+>> This remove all the "inline" in net/mptcp/*.c files as requested by =
 
-> > Examples:
-> > 1. Allows multiple subflows per MPTCP connection
-> >   $ ip mptcp limits subflows 2
-> > =
+>> davem.
+>>
+>> Matthieu Baerts (6):
+>> =C2=A0Squash-to: "mptcp: queue data for mptcp level retransmission"
+>> =C2=A0topmsg: mptcp: queue data for mptcp level retransmission
+>> =C2=A0Squash-to: "mptcp: rework mptcp_sendmsg_frag to accept optional df=
+rag"
+>> =C2=A0topmsg: mptcp: rework mptcp_sendmsg_frag to accept optional dfrag
+>> =C2=A0Squash-to: "mptcp: add and use MIB counter infrastructure"
+>> =C2=A0topmsg: mptcp: add and use MIB counter infrastructure
+>>
+>> .topmsg=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 7 +++++--
+>> net/mptcp/protocol.c | 8 ++++----
+>> 2 files changed, 9 insertions(+), 6 deletions(-)
+>> .topmsg=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 3 +++
+>> net/mptcp/protocol.c | 6 +++---
+>> 2 files changed, 6 insertions(+), 3 deletions(-)
+>> .topmsg=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 3 +++
+>> net/mptcp/subflow.c | 4 ++--
+>> 2 files changed, 5 insertions(+), 2 deletions(-)
+>>
+>> -- =
 
-> > 2. Accept ADD_ADDR announcement from the peer (server):
-> >   $ ip mptcp limits add_addr_accepted 2
-> > =
-
-> > 3. Add a ipv4 address to be annunced for backup subflows:
-> >   $ip mptcp address add 10.99.1.2 signal backup
-> > =
-
-> > 4. Add an ipv6 address used as source for additional subflows:
-> >   $ip mptcp address add 2001::2 subflow
-> > =
-
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> > diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-> > new file mode 100644
-> > index 00000000..1ff66a7b
-> > --- /dev/null
-> > +++ b/ip/ipmptcp.c
-> > @@ -0,0 +1,446 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <stdio.h>
-> > +#include <string.h>
-> > +#include <rt_names.h>
-> > +#include <errno.h>
-> > +
-> > +#include <linux/genetlink.h>
-> > +#include <linux/mptcp.h>
-> > +
-> > +#include "utils.h"
-> > +#include "ip_common.h"
-> > +#include "libgenl.h"
-> > +#include "json_print.h"
-> > +
-> > +static void usage(void)
-> > +{
-> > +	fprintf(stderr,
-> > +		"Usage:	ip mptcp address add <address> [dev <name>] [id <id>] [signa=
-l] [subflow] [backup]\n"
-> > +		"	ip mptcp address del id <id>\n"
-> > +		"	ip mptcp address list\n"
-> > +		"	ip mptcp address get id <id>\n"
-> > +		"	ip mptcp address flush\n"
-> > +		"	ip mptcp limits [subflows <nr>] [add_addr_accepted <nr>]\n");
-> > +
-> > +	exit(-1);
-> > +}
-> > +
+>> 2.25.1
 > =
 
-> Looking at the documentation for 'ip', there seem to be two command =
+> All of these are good, thanks for the fixes!
 
-> styles:
-> =
+Thank you for the quick review!
 
-> ip [ OPTIONS ] OBJECT { COMMAND }     # for most commands
-> =
+- df2317351c03: "squashed" patch 1/6 in "mptcp: queue data for mptcp =
 
-> ip xfrm XFRM-OBJECT { COMMAND }       # for xfrm
-> =
+level retransmission"
+- 3ca135cd38f8: "squashed" patch 2/6 in "mptcp: queue data for mptcp =
 
-> =
+level retransmission"
+- c0278fca42e9..1e32ece055b4: result
 
-> and the above seems to fit the 'xfrm' style.
-> =
+- 6d5f52025e96: "squashed" patch 3/6 in "mptcp: rework =
 
-> =
+mptcp_sendmsg_frag to accept optional dfrag"
+- 0f5cad683f41: "squashed" patch 4/6 in "mptcp: rework =
 
-> To avoid confusion with 'ip address', what about using "ip mptcp =
+mptcp_sendmsg_frag to accept optional dfrag"
+- 1e32ece055b4..52c0b52a3ffb: result
 
-> adv-address" (or "advertise-addr"?) to clarify that these are addresses t=
-o =
+- e094de42eb1f: "squashed" patch 5/6 in "mptcp: add and use MIB counter =
 
-> be advertised, rather than something that creates new addresses?
+infrastructure"
+- cb65c93667b2: "squashed" patch 6/6 in "mptcp: add and use MIB counter =
 
-ok to rename, but the addresses specified here could be used for
-advertise but also as source address for additional flows, so we would
-need something more generic (and nothing come to my mind beyond
-'address').
+infrastructure"
+- 52c0b52a3ffb..c32f026cdf86: result
 
-> For consistency with other commands, "ip mptcp address show id <id>" coul=
-d =
+(I didn't change the signed-off-by)
 
-> be a better fit than 'get'.
+Tests + export are in progress
 
-Ok, than is probably better also rename 'list' into 'show', so we will
-have a single 'getter' command with optional filter, WDYT?
+Cheers,
+Matt
+-- =
 
-> For the limit changes, how about:
-> =
-
-> ip mptcp limit set [subflows <nr>] [add_addr_accepted <nr>]
-> =
-
-> ip mptcp limit get
-> or
-> ip mptcp limit show
-
-Ok, I'll use 'show'
-> =
-
-> =
-
-> Do you think the 'ip mptcp' command will be extended in the future for =
-
-> managing per-connection settings? That probably still works with the abov=
-e =
-
-> syntax, for example by adding [connection <token>] to 'ip mptcp address =
-
-> add'.
-> =
-
-> =
-
-> --
-> Mat Martineau
-> Intel
-> =
-
-
-
---===============8816861280411959941==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============7031950922458365184==--
