@@ -1,46 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============8092267081715921168=="
+Content-Type: multipart/mixed; boundary="===============4795185768570230817=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 6/6] topmsg: mptcp: add and use MIB counter
- infrastructure
-Date: Fri, 27 Mar 2020 16:53:27 +0100
-Message-ID: <20200327155327.605375-7-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH 0/6] mptcp: remove all "inline" in foo.c files
+Date: Fri, 27 Mar 2020 09:01:21 -0700
+Message-ID: <alpine.OSX.2.22.394.2003270900350.41044@amitamah-mobl1.amr.corp.intel.com>
 In-Reply-To: 20200327155327.605375-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4093
+X-UID: 4094
 
---===============8092267081715921168==
+--===============4795185768570230817==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add ChangeLog.
+On Fri, 27 Mar 2020, Matthieu Baerts wrote:
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
- .topmsg | 3 +++
- 1 file changed, 3 insertions(+)
+> This remove all the "inline" in net/mptcp/*.c files as requested by davem.
+>
+> Matthieu Baerts (6):
+>  Squash-to: "mptcp: queue data for mptcp level retransmission"
+>  topmsg: mptcp: queue data for mptcp level retransmission
+>  Squash-to: "mptcp: rework mptcp_sendmsg_frag to accept optional dfrag"
+>  topmsg: mptcp: rework mptcp_sendmsg_frag to accept optional dfrag
+>  Squash-to: "mptcp: add and use MIB counter infrastructure"
+>  topmsg: mptcp: add and use MIB counter infrastructure
+>
+> .topmsg              | 7 +++++--
+> net/mptcp/protocol.c | 8 ++++----
+> 2 files changed, 9 insertions(+), 6 deletions(-)
+> .topmsg              | 3 +++
+> net/mptcp/protocol.c | 6 +++---
+> 2 files changed, 6 insertions(+), 3 deletions(-)
+> .topmsg             | 3 +++
+> net/mptcp/subflow.c | 4 ++--
+> 2 files changed, 5 insertions(+), 2 deletions(-)
+>
+> -- =
 
-diff --git a/.topmsg b/.topmsg
-index a1260cccb9e2..c7f8e6f5fe79 100644
---- a/.topmsg
-+++ b/.topmsg
-@@ -16,6 +16,9 @@ The MIB counter list is taken from the multipath-tcp.org =
-kernel, but
- only a few counters have been picked up so far.  The counter list can
- be increased at any time later on.
- =
+> 2.25.1
 
-+v2 -> v3:
-+ - remove 'inline' in foo.c files (David S. Miller)
-+
- Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
- Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
- Signed-off-by: Florian Westphal <fw(a)strlen.de>
--- =
+All of these are good, thanks for the fixes!
 
-2.25.1
-
---===============8092267081715921168==--
+--
+Mat Martineau
+Intel
+--===============4795185768570230817==--
