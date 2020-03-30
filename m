@@ -1,30 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============3764939598197172047=="
+Content-Type: multipart/mixed; boundary="===============4276749531537780175=="
 MIME-Version: 1.0
 From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/1] selftests:mptcp: fix failure due to
+Subject: [MPTCP] Re: [PATCH net-next 1/1] selftests:mptcp: fix failure due to
  whitespace damage
-Date: Mon, 30 Mar 2020 10:27:46 -0700
-Message-ID: <20200330.102746.391267468350272936.davem@davemloft.net>
-In-Reply-To: 20200330142354.563259-1-matthieu.baerts@tessares.net
+Date: Mon, 30 Mar 2020 10:27:52 -0700
+Message-ID: <20200330.102752.2020625896267237076.davem@davemloft.net>
+In-Reply-To: 20200330142354.563259-2-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4110
+X-UID: 4111
 
---===============3764939598197172047==
+--===============4276749531537780175==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Date: Mon, 30 Mar 2020 16:23:53 +0200
+Date: Mon, 30 Mar 2020 16:23:54 +0200
 
-> But we simply want to ask you this question: Is it normal that these
-> trailing whitespaces are automatically removed? We understand if it is
-> and it would make sense somehow but just in case it is not normal, we
-> prefer to raise the question and avoid other people hitting the same
-> issue we had :)
+> 'pm_nl_ctl' was adding a trailing whitespace after having printed the
+> IP. But at the end, the IP element is currently always the last one.
+> =
 
-I removed them because "git am" complains when I apply your patches so
-I removed them to make git happy.
---===============3764939598197172047==--
+> The bash script launching 'pm_nl_ctl' had trailing whitespaces in the
+> expected result on purpose. But these whitespaces have been removed when
+> the patch has been applied upstream. To avoid trailing whitespaces in
+> the bash code, 'pm_nl_ctl' and expected results have now been adapted.
+> =
+
+> The MPTCP PM selftest can now pass again.
+> =
+
+> Fixes: eedbc685321b (selftests: add PM netlink functional tests)
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+
+Applied, thanks.
+--===============4276749531537780175==--
