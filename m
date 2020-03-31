@@ -1,39 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============4276749531537780175=="
+Content-Type: multipart/mixed; boundary="===============4165818868295949420=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 1/1] selftests:mptcp: fix failure due to
- whitespace damage
-Date: Mon, 30 Mar 2020 10:27:52 -0700
-Message-ID: <20200330.102752.2020625896267237076.davem@davemloft.net>
-In-Reply-To: 20200330142354.563259-2-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [syzkaller] general protection fault in
+ __mptcp_flush_join_list
+Date: Tue, 31 Mar 2020 02:27:19 +0200
+Message-ID: <20200331002719.GE23604@breakpoint.cc>
+In-Reply-To: 20200329181412.GB14672@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4111
+X-UID: 4112
 
---===============4276749531537780175==
+--===============4165818868295949420==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Date: Mon, 30 Mar 2020 16:23:54 +0200
-
-> 'pm_nl_ctl' was adding a trailing whitespace after having printed the
-> IP. But at the end, the IP element is currently always the last one.
+Christoph Paasch <cpaasch(a)apple.com> wrote:
+> Hello,
 > =
 
-> The bash script launching 'pm_nl_ctl' had trailing whitespaces in the
-> expected result on purpose. But these whitespaces have been removed when
-> the patch has been applied upstream. To avoid trailing whitespaces in
-> the bash code, 'pm_nl_ctl' and expected results have now been adapted.
-> =
+> another one - on top of 402d1b0dc2e1 (yes, it's a week old - I wanted to
+> let syzkaller deep-dive a bit).
 
-> The MPTCP PM selftest can now pass again.
-> =
-
-> Fixes: eedbc685321b (selftests: add PM netlink functional tests)
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-Applied, thanks.
---===============4276749531537780175==--
+Thanks for reporting, tcp fallback is buggy, we trip because msk is
+tcp_sk.  No idea yet how to fix this other than hooking into
+inet_accept() :(
+--===============4165818868295949420==--
