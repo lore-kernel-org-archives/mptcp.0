@@ -1,64 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============3191194017469859008=="
+Content-Type: multipart/mixed; boundary="===============1761858035059858843=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Weekly meeting - 2 April 2020 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Wed, 01 Apr 2020 18:21:32 -0700
-Message-ID: <E26CC4CF-1210-49E9-8B0A-AF31A10564EF@apple.com>
-In-Reply-To: 15196b11-9ecb-1d88-d545-354a53d9437e@tessares.net
+Subject: [MPTCP] [PATCH] selftests:mptcp:pm: rm the right tmp file
+Date: Thu, 02 Apr 2020 09:29:53 +0200
+Message-ID: <20200402072953.2505815-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4125
+X-UID: 4126
 
---===============3191194017469859008==
+--===============1761858035059858843==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+"$err" is a variable pointing to a temp file. "$out" is not: only used
+as a local variable in "check()" and representing the output of a
+command line.
 
-I have a conflict and this can=E2=80=99t attend the meeting. You have seen =
-my syzkaller reports :-)
+Fixes: eedbc685321b (selftests: add PM netlink functional tests)
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Christoph
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testin=
+g/selftests/net/mptcp/pm_netlink.sh
+index 9172746b6cf0..15f4f46ca3a9 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -30,7 +30,7 @@ ret=3D0
+ =
 
-> On Apr 1, 2020, at 9:54 AM, Matthieu Baerts <matthieu.baerts(a)tessares.n=
-et> wrote:
-> =
+ cleanup()
+ {
+-	rm -f $out
++	rm -f $err
+ 	ip netns del $ns1
+ }
+ =
 
-> =EF=BB=BFHello everybody!
-> =
+-- =
 
-> Our public MPTCP upstreaming weekly web conference is scheduled for
-> tomorrow.
-> =
+2.25.1
 
-> /!\ In Central Europe, it's back at 6pm!
-> =
-
-> The list of topics is available here:
-> https://annuel2.framapad.org/p/mptcp_upstreaming_20200402
-> =
-
-> Feel free to add/modify topics!
-> =
-
-> Anybody can join the meeting using Google Meet website/app/phone:
-> https://meet.google.com/edk-rkrk-vaj
-> =
-
-> Speak to you tomorrow!
-> Matt
-> -- =
-
-> Matthieu Baerts | R&D Engineer
-> matthieu.baerts(a)tessares.net
-> Tessares SA | Hybrid Access Solutions
-> www.tessares.net
-> 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
---===============3191194017469859008==--
+--===============1761858035059858843==--
