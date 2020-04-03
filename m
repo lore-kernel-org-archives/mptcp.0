@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============2198485017687585817=="
+Content-Type: multipart/mixed; boundary="===============6504570703562797160=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH] mptcp: move pr_fmt defining to protocol.h
-Date: Fri, 03 Apr 2020 19:41:58 +0800
-Message-ID: <20200403114157.GA10201@OptiPlex>
+Date: Fri, 03 Apr 2020 19:49:01 +0800
+Message-ID: <20200403114901.GB10201@OptiPlex>
 In-Reply-To: 9674b6ce-3888-557e-8f32-230671363903@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4135
+X-UID: 4136
 
---===============2198485017687585817==
+--===============6504570703562797160==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -86,8 +86,8 @@ Hi Matthieu,
 
 Thanks for your reply.
 
-I have already resend this patch to you, a better version, v2, added pr_fmt
-in each .c files.
+I have already resend this patch to you, patch v2, a better version, add
+pr_fmt defines in each .c files.
 
 -Geliang
---===============2198485017687585817==--
+--===============6504570703562797160==--
