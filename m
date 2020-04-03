@@ -1,93 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============6504570703562797160=="
+Content-Type: multipart/mixed; boundary="===============5175654292039490007=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: move pr_fmt defining to protocol.h
-Date: Fri, 03 Apr 2020 19:49:01 +0800
-Message-ID: <20200403114901.GB10201@OptiPlex>
-In-Reply-To: 9674b6ce-3888-557e-8f32-230671363903@tessares.net
+Subject: [MPTCP] Re: [PATCH v2] mptcp: add some missing pr_fmt defines
+Date: Fri, 03 Apr 2020 13:57:48 +0200
+Message-ID: <53e4271f-c881-c52d-c6e1-4930a4f6898a@tessares.net>
+In-Reply-To: f66ab0b7dfcc895d901e6e85b30f2a21842d2b2c.1585904950.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4136
+X-UID: 4137
 
---===============6504570703562797160==
+--===============5175654292039490007==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 03, 2020 at 12:29:27PM +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+Hi Geliang,
+
+On 03/04/2020 11:14, Geliang Tang wrote:
+> Some of the mptcp logs didn't print out the format string:
 > =
 
-> On 03/04/2020 09:57, Geliang Tang wrote:
-> > Some of the mptcp logs didn't print out the format string "MPTCP":
-> > =
-
-> > [  129.185774] DSS
-> > [  129.185774] data_fin=3D0 dsn64=3D1 use_map=3D1 ack64=3D1 use_ack=3D1
-> > [  129.185774] data_ack=3D5481534886531492085
-> > [  129.185775] data_seq=3D15725204003114694615 subflow_seq=3D1425409 da=
-ta_len=3D5216
-> > [  129.185776] subflow=3D0000000093526a92 fully established=3D1 seq=3D0=
-:0 remaining=3D28
-> > [  129.185776] MPTCP: msk=3D00000000d5a704a6 ssk=3D00000000b5aabc31 dat=
-a_avail=3D0 skb=3D0000000088f05424
-> > [  129.185777] MPTCP: seq=3D15725204003114694615 is64=3D1 ssn=3D1425409=
- data_len=3D5216 data_fin=3D0
-> > [  129.185777] MPTCP: msk=3D00000000d5a704a6 ssk=3D00000000b5aabc31 sta=
-tus=3D0
-> > [  129.185778] MPTCP: msk ack_seq=3Dda3b25b9a233c2c7 subflow ack_seq=3D=
-da3b25b9a233c2c7
-> > [  129.185778] MPTCP: msk=3D00000000d5a704a6 ssk=3D00000000b5aabc31 dat=
-a_avail=3D1 skb=3D000000000caed2cc
-> > [  129.185779] subflow=3D0000000093526a92 fully established=3D1 seq=3D0=
-:0 remaining=3D28
-> > =
-
-> > So this patch moves the pr_fmt defining from protocol.c to protocol.h, =
-which
-> > is included by all the C files. Then we can get the same format string
-> > "MPTCP" in all mptcp logs like this:
-> > =
-
-> > [  141.854787] MPTCP: DSS
-> > [  141.854788] MPTCP: data_fin=3D0 dsn64=3D1 use_map=3D1 ack64=3D1 use_=
-ack=3D1
-> > [  141.854788] MPTCP: data_ack=3D18028325517710311871
-> > [  141.854788] MPTCP: data_seq=3D6163976859259356786 subflow_seq=3D3309=
-569 data_len=3D8192
-> > [  141.854789] MPTCP: msk=3D000000005847a66a ssk=3D0000000022469903 dat=
-a_avail=3D0 skb=3D00000000dd95efc3
-> > [  141.854789] MPTCP: seq=3D6163976859259356786 is64=3D1 ssn=3D3309569 =
-data_len=3D8192 data_fin=3D0
-> > [  141.854790] MPTCP: msk=3D000000005847a66a ssk=3D0000000022469903 sta=
-tus=3D0
-> > [  141.854790] MPTCP: msk ack_seq=3D558ad84b9be1d162 subflow ack_seq=3D=
-558ad84b9be1d162
-> > [  141.854791] MPTCP: msk=3D000000005847a66a ssk=3D0000000022469903 dat=
-a_avail=3D1 skb=3D000000000b8926f6
-> > [  141.854791] MPTCP: subflow=3D00000000e4e4579c fully established=3D1 =
-seq=3D0:0 remaining=3D28
-> > [  141.854792] MPTCP: subflow=3D00000000e4e4579c fully established=3D1 =
-seq=3D0:dcdf2f3b remaining=3D28
+> [  185.651493] DSS
+> [  185.651494] data_fin=3D0 dsn64=3D0 use_map=3D0 ack64=3D1 use_ack=3D1
+> [  185.651494] data_ack=3D13792750332298763796
+> [  185.651495] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 data_=
+avail=3D0 skb=3D0000000063dc595d
+> [  185.651495] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 statu=
+s=3D0
+> [  185.651495] MPTCP: msk ack_seq=3D9bbc894565aa2f9a subflow ack_seq=3D9b=
+bc894565aa2f9a
+> [  185.651496] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 data_=
+avail=3D1 skb=3D0000000012e809e1
 > =
 
-> Good idea to uniform that.
-> I think it can be useful for MPTCP devs to add a different prefix in each
-> MPTCP .c files but this small improvement can be done later.
+> So this patch added these missing pr_fmt defines. Then we can get the same
+> format string "MPTCP" in all mptcp logs like this:
 > =
 
-> LGTM, thanks Geliang!
+> [  142.795829] MPTCP: DSS
+> [  142.795829] MPTCP: data_fin=3D0 dsn64=3D0 use_map=3D0 ack64=3D1 use_ac=
+k=3D1
+> [  142.795829] MPTCP: data_ack=3D8089704603109242421
+> [  142.795830] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 data_=
+avail=3D0 skb=3D00000000d5f230df
+> [  142.795830] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 statu=
+s=3D0
+> [  142.795831] MPTCP: msk ack_seq=3D66790290f1199d9b subflow ack_seq=3D66=
+790290f1199d9b
+> [  142.795831] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 data_=
+avail=3D1 skb=3D00000000de5aca2e
 > =
 
-> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> =
 
-Hi Matthieu,
+> ---
+> Changes in v2:
+>   - add pr_fmt to C files, not headers.
 
-Thanks for your reply.
+Thank you for this v2 (sorry, it was in my spam folder).
 
-I have already resend this patch to you, patch v2, a better version, add
-pr_fmt defines in each .c files.
+I thought checkpatch.pl would have forced you to add a new blank line in =
 
--Geliang
---===============6504570703562797160==--
+net/mptcp/pm.c after the copyright comment and before the beginning of =
+
+the code but it seems not. And there was no blank line before so I guess =
+
+it's OK like that!
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+--===============5175654292039490007==--
