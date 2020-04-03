@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============5175654292039490007=="
+Content-Type: multipart/mixed; boundary="===============9102356363792688276=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH v2] mptcp: add some missing pr_fmt defines
-Date: Fri, 03 Apr 2020 13:57:48 +0200
-Message-ID: <53e4271f-c881-c52d-c6e1-4930a4f6898a@tessares.net>
+Date: Fri, 03 Apr 2020 16:06:49 -0700
+Message-ID: <20200403.160649.1243854856424851277.davem@davemloft.net>
 In-Reply-To: f66ab0b7dfcc895d901e6e85b30f2a21842d2b2c.1585904950.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4137
+X-UID: 4138
 
---===============5175654292039490007==
+--===============9102356363792688276==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+From: Geliang Tang <geliangtang(a)gmail.com>
+Date: Fri,  3 Apr 2020 17:14:08 +0800
 
-On 03/04/2020 11:14, Geliang Tang wrote:
 > Some of the mptcp logs didn't print out the format string:
 > =
 
@@ -53,21 +53,6 @@ avail=3D1 skb=3D00000000de5aca2e
 > =
 
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> =
 
-> ---
-> Changes in v2:
->   - add pr_fmt to C files, not headers.
-
-Thank you for this v2 (sorry, it was in my spam folder).
-
-I thought checkpatch.pl would have forced you to add a new blank line in =
-
-net/mptcp/pm.c after the copyright comment and before the beginning of =
-
-the code but it seems not. And there was no blank line before so I guess =
-
-it's OK like that!
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
---===============5175654292039490007==--
+Applied, thanks.
+--===============9102356363792688276==--
