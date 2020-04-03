@@ -1,102 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============1241744102575242051=="
+Content-Type: multipart/mixed; boundary="===============4869324935298814449=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: move pr_fmt defining to protocol.h
-Date: Fri, 03 Apr 2020 15:57:25 +0800
-Message-ID: <34c83a5fe561739c7b85a3c4959eb44c3155d075.1585899578.git.geliangtang@gmail.com>
+Subject: [MPTCP] [PATCH v2] mptcp: add some missing pr_fmt defines
+Date: Fri, 03 Apr 2020 17:14:08 +0800
+Message-ID: <f66ab0b7dfcc895d901e6e85b30f2a21842d2b2c.1585904950.git.geliangtang@gmail.com>
+In-Reply-To: 34c83a5fe561739c7b85a3c4959eb44c3155d075.1585899578.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4132
+X-UID: 4133
 
---===============1241744102575242051==
+--===============4869324935298814449==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Some of the mptcp logs didn't print out the format string "MPTCP":
+Some of the mptcp logs didn't print out the format string:
 
-[  129.185774] DSS
-[  129.185774] data_fin=3D0 dsn64=3D1 use_map=3D1 ack64=3D1 use_ack=3D1
-[  129.185774] data_ack=3D5481534886531492085
-[  129.185775] data_seq=3D15725204003114694615 subflow_seq=3D1425409 data_l=
-en=3D5216
-[  129.185776] subflow=3D0000000093526a92 fully established=3D1 seq=3D0:0 r=
-emaining=3D28
-[  129.185776] MPTCP: msk=3D00000000d5a704a6 ssk=3D00000000b5aabc31 data_av=
-ail=3D0 skb=3D0000000088f05424
-[  129.185777] MPTCP: seq=3D15725204003114694615 is64=3D1 ssn=3D1425409 dat=
-a_len=3D5216 data_fin=3D0
-[  129.185777] MPTCP: msk=3D00000000d5a704a6 ssk=3D00000000b5aabc31 status=
+[  185.651493] DSS
+[  185.651494] data_fin=3D0 dsn64=3D0 use_map=3D0 ack64=3D1 use_ack=3D1
+[  185.651494] data_ack=3D13792750332298763796
+[  185.651495] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 data_av=
+ail=3D0 skb=3D0000000063dc595d
+[  185.651495] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 status=
 =3D0
-[  129.185778] MPTCP: msk ack_seq=3Dda3b25b9a233c2c7 subflow ack_seq=3Dda3b=
-25b9a233c2c7
-[  129.185778] MPTCP: msk=3D00000000d5a704a6 ssk=3D00000000b5aabc31 data_av=
-ail=3D1 skb=3D000000000caed2cc
-[  129.185779] subflow=3D0000000093526a92 fully established=3D1 seq=3D0:0 r=
-emaining=3D28
+[  185.651495] MPTCP: msk ack_seq=3D9bbc894565aa2f9a subflow ack_seq=3D9bbc=
+894565aa2f9a
+[  185.651496] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 data_av=
+ail=3D1 skb=3D0000000012e809e1
 
-So this patch moves the pr_fmt defining from protocol.c to protocol.h, which
-is included by all the C files. Then we can get the same format string
-"MPTCP" in all mptcp logs like this:
+So this patch added these missing pr_fmt defines. Then we can get the same
+format string "MPTCP" in all mptcp logs like this:
 
-[  141.854787] MPTCP: DSS
-[  141.854788] MPTCP: data_fin=3D0 dsn64=3D1 use_map=3D1 ack64=3D1 use_ack=
+[  142.795829] MPTCP: DSS
+[  142.795829] MPTCP: data_fin=3D0 dsn64=3D0 use_map=3D0 ack64=3D1 use_ack=
 =3D1
-[  141.854788] MPTCP: data_ack=3D18028325517710311871
-[  141.854788] MPTCP: data_seq=3D6163976859259356786 subflow_seq=3D3309569 =
-data_len=3D8192
-[  141.854789] MPTCP: msk=3D000000005847a66a ssk=3D0000000022469903 data_av=
-ail=3D0 skb=3D00000000dd95efc3
-[  141.854789] MPTCP: seq=3D6163976859259356786 is64=3D1 ssn=3D3309569 data=
-_len=3D8192 data_fin=3D0
-[  141.854790] MPTCP: msk=3D000000005847a66a ssk=3D0000000022469903 status=
+[  142.795829] MPTCP: data_ack=3D8089704603109242421
+[  142.795830] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 data_av=
+ail=3D0 skb=3D00000000d5f230df
+[  142.795830] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 status=
 =3D0
-[  141.854790] MPTCP: msk ack_seq=3D558ad84b9be1d162 subflow ack_seq=3D558a=
-d84b9be1d162
-[  141.854791] MPTCP: msk=3D000000005847a66a ssk=3D0000000022469903 data_av=
-ail=3D1 skb=3D000000000b8926f6
-[  141.854791] MPTCP: subflow=3D00000000e4e4579c fully established=3D1 seq=
-=3D0:0 remaining=3D28
-[  141.854792] MPTCP: subflow=3D00000000e4e4579c fully established=3D1 seq=
-=3D0:dcdf2f3b remaining=3D28
+[  142.795831] MPTCP: msk ack_seq=3D66790290f1199d9b subflow ack_seq=3D6679=
+0290f1199d9b
+[  142.795831] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 data_av=
+ail=3D1 skb=3D00000000de5aca2e
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/protocol.c | 2 --
- net/mptcp/protocol.h | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 72f3176dc924..cc86137cd04f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4,8 +4,6 @@
+---
+Changes in v2:
+ - add pr_fmt to C files, not headers. =
+
+---
+ net/mptcp/options.c    | 2 ++
+ net/mptcp/pm.c         | 2 ++
+ net/mptcp/pm_netlink.c | 2 ++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index bd220ee4aac9..faf57585b892 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -4,6 +4,8 @@
   * Copyright (c) 2017 - 2019, Intel Corporation.
   */
  =
 
--#define pr_fmt(fmt) "MPTCP: " fmt
--
++#define pr_fmt(fmt) "MPTCP: " fmt
++
  #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 67448002a2d7..3eff041eeccf 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -7,6 +7,8 @@
- #ifndef __MPTCP_PROTOCOL_H
- #define __MPTCP_PROTOCOL_H
+ #include <net/tcp.h>
+ #include <net/mptcp.h>
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 064639f72487..977d9c8b1453 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -3,6 +3,8 @@
+  *
+  * Copyright (c) 2019, Intel Corporation.
+  */
++#define pr_fmt(fmt) "MPTCP: " fmt
++
+ #include <linux/kernel.h>
+ #include <net/tcp.h>
+ #include <net/mptcp.h>
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index a0ce7f324499..86d61ab34c7c 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -4,6 +4,8 @@
+  * Copyright (c) 2020, Red Hat, Inc.
+  */
  =
 
 +#define pr_fmt(fmt) "MPTCP: " fmt
 +
- #include <linux/random.h>
+ #include <linux/inet.h>
+ #include <linux/kernel.h>
  #include <net/tcp.h>
- #include <net/inet_connection_sock.h>
 -- =
 
 2.17.1
 
---===============1241744102575242051==--
+--===============4869324935298814449==--
