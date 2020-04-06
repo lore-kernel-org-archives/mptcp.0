@@ -1,58 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============9102356363792688276=="
+Content-Type: multipart/mixed; boundary="===============4616488401779338502=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: add some missing pr_fmt defines
-Date: Fri, 03 Apr 2020 16:06:49 -0700
-Message-ID: <20200403.160649.1243854856424851277.davem@davemloft.net>
-In-Reply-To: f66ab0b7dfcc895d901e6e85b30f2a21842d2b2c.1585904950.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH] mptcp:pm netlink: fix variable scope
+Date: Mon, 06 Apr 2020 16:19:31 +0200
+Message-ID: <20200406141931.134339-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4138
+X-UID: 4141
 
---===============9102356363792688276==
+--===============4616488401779338502==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
-Date: Fri,  3 Apr 2020 17:14:08 +0800
+kbuild reported this warning from CPPCheck:
 
-> Some of the mptcp logs didn't print out the format string:
-> =
+    net/mptcp/pm_netlink.c:98:22: warning: The scope of the variable 'skc' =
+can be reduced. [variableScope]
 
-> [  185.651493] DSS
-> [  185.651494] data_fin=3D0 dsn64=3D0 use_map=3D0 ack64=3D1 use_ack=3D1
-> [  185.651494] data_ack=3D13792750332298763796
-> [  185.651495] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 data_=
-avail=3D0 skb=3D0000000063dc595d
-> [  185.651495] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 statu=
-s=3D0
-> [  185.651495] MPTCP: msk ack_seq=3D9bbc894565aa2f9a subflow ack_seq=3D9b=
-bc894565aa2f9a
-> [  185.651496] MPTCP: msk=3D00000000c4b81cfc ssk=3D000000009743af53 data_=
-avail=3D1 skb=3D0000000012e809e1
-> =
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> So this patch added these missing pr_fmt defines. Then we can get the same
-> format string "MPTCP" in all mptcp logs like this:
-> =
+Notes:
+    I tried to reproduce this warning with CPPCheck (1.90) but without succ=
+ess.
+    Should I send this patch to netdev? In this function, it will not change
+    anything, no?
+    =
 
-> [  142.795829] MPTCP: DSS
-> [  142.795829] MPTCP: data_fin=3D0 dsn64=3D0 use_map=3D0 ack64=3D1 use_ac=
-k=3D1
-> [  142.795829] MPTCP: data_ack=3D8089704603109242421
-> [  142.795830] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 data_=
-avail=3D0 skb=3D00000000d5f230df
-> [  142.795830] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 statu=
-s=3D0
-> [  142.795831] MPTCP: msk ack_seq=3D66790290f1199d9b subflow ack_seq=3D66=
-790290f1199d9b
-> [  142.795831] MPTCP: msk=3D00000000133a24e0 ssk=3D000000002e508c64 data_=
-avail=3D1 skb=3D00000000de5aca2e
-> =
+    CPPCheck could also complain that 'cur' variable scope could be reduced.
+    =
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+    With CPPCheck, I only got false positive warnings in net/mptcp/protocol=
+.c:
+    =
 
-Applied, thanks.
---===============9102356363792688276==--
+        Possible null pointer dereference: dfrag
+    =
+
+        net/mptcp/protocol.c:776:42: note: Calling function 'mptcp_sendmsg_=
+frag', 4th argument 'NULL' value is 0
+          ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
+    =
+
+    It seems it doesn't understand "retransmision =3D !!dfrag". I don't kno=
+w if I
+    should add cppcheck support in the CI. For the moment, I would only hav=
+e to
+    suppress false positives :)
+
+ net/mptcp/pm_netlink.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index a0ce7f324499..3ad952affdcf 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -95,9 +95,10 @@ static bool lookup_subflow_by_saddr(const struct list_he=
+ad *list,
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_addr_info cur;
+-	struct sock_common *skc;
+ =
+
+ 	list_for_each_entry(subflow, list, node) {
++		struct sock_common *skc;
++
+ 		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+ =
+
+ 		local_address(skc, &cur);
+-- =
+
+2.25.1
+
+--===============4616488401779338502==--
