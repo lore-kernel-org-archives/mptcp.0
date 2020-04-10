@@ -1,167 +1,211 @@
-Content-Type: multipart/mixed; boundary="===============6211614748901741873=="
+Content-Type: multipart/mixed; boundary="===============0911966864205864805=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 9th of April 2020
-Date: Thu, 09 Apr 2020 18:30:50 +0200
-Message-ID: <e517a0a5-e328-1c04-92d5-148544a48055@tessares.net>
+Subject: [MPTCP] MPTCP kbuild configuration updated
+Date: Fri, 10 Apr 2020 15:48:27 -0700
+Message-ID: <alpine.OSX.2.22.394.2004101538590.23941@poovizhi-mobl1.amr.corp.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4148
+X-UID: 4150
 
---===============6211614748901741873==
+--===============0911966864205864805==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-We just had our 94th meeting with Mat and Ossama (Intel OTC), Christoph =
+Hello -
 
-(Apple), Davide and Florian (RedHat) and myself (Tessares).
+I updated the kbuild configuration for the mptcp export branch to send =
 
-Thanks again for this new good meeting!
+build success message (example forwarded below). I also added Matthieu as =
 
-Here are the minutes of the meeting:
+a co-owner. The current mptcp config is here:
 
+https://github.com/intel/lkp-tests/blob/master/repo/linux/mptcp
 
+To check the turnaround time on build success, I pushed a current snapshot =
 
-Accepted patches:
-     - The list of accepted patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
+of the export branch to my public repo. The success message arrived less =
 
-     netdev (if mptcp ML is in cc) (by: /)
+than 24 hours later, so hopefully we will see a similar message on this =
 
-/
+list shortly after the next export branch update.
 
-     our repo (by: /):
-
-/
+Mat
 
 
+---------- Forwarded message ----------
+Date: Fri, 10 Apr 2020 07:16:08
+From: kbuild test robot <lkp(a)intel.com>
+To: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Subject: [martineau:kbuild-mptcp-enabled] BUILD SUCCESS
+     57da6f0185b3f2e1f98fb8bc5c72a30b6d3732e7
 
-Pending patches:
-     - The list of pending patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linu=
+x.git  kbuild-mptcp-enabled
+branch HEAD: 57da6f0185b3f2e1f98fb8bc5c72a30b6d3732e7  kbuild: Enable CONFI=
+G_MPTCP for automated kbuild checking
 
-     netdev (if mptcp ML is in cc) (by: /):
+elapsed time: 951m
 
-/
+configs tested: 148
+configs skipped: 7
 
-     our repo (by: Davide Caratti, Matthieu Baerts, Paolo Abeni):
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-1262061: RFC: [RFC,1/2] uapi: update linux/mptcp.h
-1262063: RFC: [RFC,2/2] add support for mptcp netlink interface:
-     - on going discussions with ADD_ADDR management
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+s390                          debug_defconfig
+m68k                          multi_defconfig
+ia64                                defconfig
+powerpc                             defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                                defconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+x86_64               randconfig-a001-20200410
+x86_64               randconfig-a002-20200410
+x86_64               randconfig-a003-20200410
+i386                 randconfig-a001-20200410
+i386                 randconfig-a002-20200410
+i386                 randconfig-a003-20200410
+alpha                randconfig-a001-20200409
+m68k                 randconfig-a001-20200409
+mips                 randconfig-a001-20200409
+nds32                randconfig-a001-20200409
+parisc               randconfig-a001-20200409
+riscv                randconfig-a001-20200409
+mips                 randconfig-a001-20200410
+nds32                randconfig-a001-20200410
+m68k                 randconfig-a001-20200410
+riscv                randconfig-a001-20200410
+alpha                randconfig-a001-20200410
+parisc               randconfig-a001-20200410
+h8300                randconfig-a001-20200410
+nios2                randconfig-a001-20200410
+c6x                  randconfig-a001-20200410
+sparc64              randconfig-a001-20200410
+microblaze           randconfig-a001-20200410
+csky                 randconfig-a001-20200409
+openrisc             randconfig-a001-20200409
+s390                 randconfig-a001-20200409
+sh                   randconfig-a001-20200409
+xtensa               randconfig-a001-20200409
+x86_64               randconfig-b001-20200410
+x86_64               randconfig-b002-20200410
+x86_64               randconfig-b003-20200410
+i386                 randconfig-b001-20200410
+i386                 randconfig-b002-20200410
+i386                 randconfig-b003-20200410
+x86_64               randconfig-c001-20200410
+x86_64               randconfig-c002-20200410
+x86_64               randconfig-c003-20200410
+i386                 randconfig-c001-20200410
+i386                 randconfig-c002-20200410
+i386                 randconfig-c003-20200410
+x86_64               randconfig-e001-20200410
+x86_64               randconfig-e002-20200410
+x86_64               randconfig-e003-20200410
+i386                 randconfig-e001-20200410
+i386                 randconfig-e002-20200410
+i386                 randconfig-e003-20200410
+arc                  randconfig-a001-20200409
+arm                  randconfig-a001-20200409
+arm64                randconfig-a001-20200409
+ia64                 randconfig-a001-20200409
+powerpc              randconfig-a001-20200409
+sparc                randconfig-a001-20200409
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
 
-1263271: RFC: [RFC,iproute2-next] ss: allow dumping MPTCP subflow =
-
-information:
-     - to be reviewed
-
-1265469: Needs Review / ACK: selftests:mptcp:pm: rm the right tmp file:
-     - to be reviewed
-
-1266897: Under Review: mptcp:pm netlink: fix variable scope:
-     - reviewed by Mat (thx)
-     - do we need this fix just to silence cppcheck while not bringing =
-
-anything else?
-     - not really: we can keep it for later or drop it
-
-
-
-FYI: Current Roadmap:
-     - Part 4 (next merge window):
-         - Shared recv window (full support)
-         - IPv6 - IPv4 mapped support
-         - not dropping MPTCP options (ADD_ADDR, etc.)
-         - FAST_CLOSE
-         - full MPTCP v1 support (reliable add_addr, etc.)
-         - after a few attempts of failed MPTCP, we fallback to TCP =
-
-(like TFO is doing)
-         - PM server (more advanced)
-         - Full DATA_FIN support [WIP]:
-             - could be nice to have it: if ready
-         - Active backup support [WIP]
-         - ADD_ADDR for MPTCPv1: echo bit
-         - Opti in TCP option structures (unions) [to be rebased]
-
-     - Part 5 (extra needed for prod):
-         - opti/perfs
-         - TFO
-         - PM netlink
-         - PM bpf
-         - Scheduler bpf
-         - syncookies
-         - [gs]etsockopt per subflow
-         - notify the userspace when a subflow is added/removed =E2=86=92 c=
-msg
-
-
-
-In progress fixes for -net:
-     - subflow ctx usage is broken (discussion started on IRC and it =
-
-seems I missed that :) ):
-         - it's more complex than expected.
-         - Some bugs appears after a few hours
-         - Florian is looking at that
-
-
-
-Extra tests:
-     - news about Syzkaller? (Christoph):
-         - no new crash
-         - will push descriptions for the netlink PM once available
-
-     - new about Intel's kbuild? (Mat):
-         - Mat got news about the issue with BPF:
-             - seems not related to MPTCP but issues in kselftests
-             - Mat is looking at reproduce the issue and follow-up with =
-
-these guys
-             - will notify us if it is related to MPTCP
-         - we didn't get any email:
-             - could be good to force sending an email in case of =
-
-success just to be sure everything is OK
-             - note that net-next is only updated once a week for the =
-
-moment so "export" is not modified a lot
-
-     - packetdrill (Davide):
-         - /
-
-     - CI (Matth):
-         - do we need to run cppcheck?:
-             - Matth was not able to reproduce the warnings reporting by =
-
-kbuild
-             - there are other false positive, see ML
-             - seems OK not to have it
-
-
-
-Next meeting:
-     - We propose to have the next meeting on Thursday, the 16th of April.
-     - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200416
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you next week,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6211614748901741873==--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all(a)lists.01.org
+--===============0911966864205864805==--
