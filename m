@@ -1,87 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============3287206260448100342=="
+Content-Type: multipart/mixed; boundary="===============0045266046410040107=="
 MIME-Version: 1.0
-From: syzbot <syzbot+6ebb6d4830e8f8815623 at syzkaller.appspotmail.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] WARNING: bad unlock balance in mptcp_shutdown
-Date: Sat, 11 Apr 2020 14:38:12 -0700
-Message-ID: <000000000000adb83a05a30aaa04@google.com>
+Subject: [MPTCP] Re: WARNING: bad unlock balance in mptcp_shutdown
+Date: Sun, 12 Apr 2020 00:43:37 +0200
+Message-ID: <20200411224337.GA5795@breakpoint.cc>
+In-Reply-To: 000000000000adb83a05a30aaa04@google.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4153
+X-UID: 4154
 
---===============3287206260448100342==
+--===============0045266046410040107==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D17a5dbfbe00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dca75979eeebf0=
+6c2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D6ebb6d4830e8f88=
+15623
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> =
 
-syzbot found the following crash on:
+> Unfortunately, I don't have any reproducer for this crash yet.
+> =
 
-HEAD commit:    f5e94d10 Merge tag 'drm-next-2020-04-08' of git://anongit...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D17a5dbfbe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dca75979eeebf06c2
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D6ebb6d4830e8f8815=
-623
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6ebb6d4830e8f8815623(a)syzkaller.appspotmail.com
+> =
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> WARNING: bad unlock balance detected!
+> 5.6.0-syzkaller #0 Not tainted
+> -------------------------------------
+> syz-executor.5/2215 is trying to release lock (sk_lock-AF_INET6) at:
+> [<ffffffff87c5203b>] mptcp_shutdown+0x38b/0x550 net/mptcp/protocol.c:1889
+> but there are no more locks to release!
+> =
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6ebb6d4830e8f8815623(a)syzkaller.appspotmail.com
+> other info that might help us debug this:
+> 1 lock held by syz-executor.5/2215:
+>  #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: spin_lock_bh incl=
+ude/linux/spinlock.h:358 [inline]
+>  #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: release_sock+0x1b=
+/0x1b0 net/core/sock.c:2974
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-WARNING: bad unlock balance detected!
-5.6.0-syzkaller #0 Not tainted
--------------------------------------
-syz-executor.5/2215 is trying to release lock (sk_lock-AF_INET6) at:
-[<ffffffff87c5203b>] mptcp_shutdown+0x38b/0x550 net/mptcp/protocol.c:1889
-but there are no more locks to release!
+I think this is same issue as the other report, so:
 
-other info that might help us debug this:
-1 lock held by syz-executor.5/2215:
- #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: spin_lock_bh includ=
-e/linux/spinlock.h:358 [inline]
- #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: release_sock+0x1b/0=
-x1b0 net/core/sock.c:2974
-
-stack backtrace:
-CPU: 0 PID: 2215 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __lock_release kernel/locking/lockdep.c:4633 [inline]
- lock_release+0x586/0x800 kernel/locking/lockdep.c:4941
- sock_release_ownership include/net/sock.h:1539 [inline]
- release_sock+0x177/0x1b0 net/core/sock.c:2984
- mptcp_shutdown+0x38b/0x550 net/mptcp/protocol.c:1889
- __sys_shutdown+0xf3/0x1a0 net/socket.c:2208
- __do_sys_shutdown net/socket.c:2216 [inline]
- __se_sys_shutdown net/socket.c:2214 [inline]
- __x64_sys_shutdown+0x50/0x70 net/socket.c:2214
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c889
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 =
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
-f 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa67df32c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000030
-RAX: ffffffffffffffda RBX: 00007fa67df336d4 RCX: 000000000045c889
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 000000000076bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000b5e R14: 00000000004cd960 R15: 000000000076bfac
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller(a)googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
---===============3287206260448100342==--
+#syz dup: WARNING: bad unlock balance in mptcp_poll
+--===============0045266046410040107==--
