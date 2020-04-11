@@ -1,211 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============0911966864205864805=="
+Content-Type: multipart/mixed; boundary="===============2165826842233657302=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: syzbot <syzbot+e56606435b7bfeea8cf5 at syzkaller.appspotmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] MPTCP kbuild configuration updated
-Date: Fri, 10 Apr 2020 15:48:27 -0700
-Message-ID: <alpine.OSX.2.22.394.2004101538590.23941@poovizhi-mobl1.amr.corp.intel.com>
+Subject: [MPTCP] WARNING: bad unlock balance in mptcp_poll
+Date: Sat, 11 Apr 2020 09:51:14 -0700
+Message-ID: <000000000000758fcf05a306a8bf@google.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4150
+X-UID: 4151
 
---===============0911966864205864805==
+--===============2165826842233657302==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-Hello -
+syzbot found the following crash on:
 
-I updated the kbuild configuration for the mptcp export branch to send =
+HEAD commit:    ae46d2aa mm/gup: Let __get_user_pages_locked() return -EIN..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D14fef69fe00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dca75979eeebf06c2
+dashboard link: https://syzkaller.appspot.com/bug?extid=3De56606435b7bfeea8=
+cf5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D111ccd2be00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D162b0a77e00000
 
-build success message (example forwarded below). I also added Matthieu as =
+The bug was bisected to:
 
-a co-owner. The current mptcp config is here:
+commit 59832e246515ab6a4f5aa878073e6f415aa35166
+Author: Florian Westphal <fw(a)strlen.de>
+Date:   Thu Apr 2 11:44:52 2020 +0000
 
-https://github.com/intel/lkp-tests/blob/master/repo/linux/mptcp
+    mptcp: subflow: check parent mptcp socket on subflow state change
 
-To check the turnaround time on build success, I pushed a current snapshot =
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D14c1f69fe000=
+00
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D16c1f69fe000=
+00
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D12c1f69fe00000
 
-of the export branch to my public repo. The success message arrived less =
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e56606435b7bfeea8cf5(a)syzkaller.appspotmail.com
+Fixes: 59832e246515 ("mptcp: subflow: check parent mptcp socket on subflow =
+state change")
 
-than 24 hours later, so hopefully we will see a similar message on this =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+WARNING: bad unlock balance detected!
+5.6.0-syzkaller #0 Not tainted
+-------------------------------------
+syz-executor473/7733 is trying to release lock (sk_lock-AF_INET6) at:
+[<ffffffff87c51839>] mptcp_poll+0xb9/0x530 net/mptcp/protocol.c:1856
+but there are no more locks to release!
 
-list shortly after the next export branch update.
+other info that might help us debug this:
+1 lock held by syz-executor473/7733:
+ #0: ffff88808fe2f0a0 (slock-AF_INET6){+...}-{2:2}, at: spin_lock_bh includ=
+e/linux/spinlock.h:358 [inline]
+ #0: ffff88808fe2f0a0 (slock-AF_INET6){+...}-{2:2}, at: release_sock+0x1b/0=
+x1b0 net/core/sock.c:2974
 
-Mat
+stack backtrace:
+CPU: 0 PID: 7733 Comm: syz-executor473 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __lock_release kernel/locking/lockdep.c:4633 [inline]
+ lock_release+0x586/0x800 kernel/locking/lockdep.c:4941
+ sock_release_ownership include/net/sock.h:1539 [inline]
+ release_sock+0x177/0x1b0 net/core/sock.c:2984
+ mptcp_poll+0xb9/0x530 net/mptcp/protocol.c:1856
+ sock_poll+0x15c/0x470 net/socket.c:1271
+ vfs_poll include/linux/poll.h:90 [inline]
+ do_pollfd fs/select.c:859 [inline]
+ do_poll fs/select.c:907 [inline]
+ do_sys_poll+0x63c/0xdd0 fs/select.c:1001
+ __do_sys_ppoll fs/select.c:1101 [inline]
+ __se_sys_ppoll fs/select.c:1081 [inline]
+ __x64_sys_ppoll+0x210/0x280 fs/select.c:1081
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x441219
+Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff9deb18e8 EFLAGS: 00000246 ORIG_RAX: 000000000000010f
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441219
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000020000080
+RBP: 000000000000f233 R08: 3f00000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402040
+R13: 00000000004020d0 R14: 0000000000000000 R15: 0000000000000000
 
-
----------- Forwarded message ----------
-Date: Fri, 10 Apr 2020 07:16:08
-From: kbuild test robot <lkp(a)intel.com>
-To: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Subject: [martineau:kbuild-mptcp-enabled] BUILD SUCCESS
-     57da6f0185b3f2e1f98fb8bc5c72a30b6d3732e7
-
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/martineau/linu=
-x.git  kbuild-mptcp-enabled
-branch HEAD: 57da6f0185b3f2e1f98fb8bc5c72a30b6d3732e7  kbuild: Enable CONFI=
-G_MPTCP for automated kbuild checking
-
-elapsed time: 951m
-
-configs tested: 148
-configs skipped: 7
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-s390                          debug_defconfig
-m68k                          multi_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                                defconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200410
-x86_64               randconfig-a002-20200410
-x86_64               randconfig-a003-20200410
-i386                 randconfig-a001-20200410
-i386                 randconfig-a002-20200410
-i386                 randconfig-a003-20200410
-alpha                randconfig-a001-20200409
-m68k                 randconfig-a001-20200409
-mips                 randconfig-a001-20200409
-nds32                randconfig-a001-20200409
-parisc               randconfig-a001-20200409
-riscv                randconfig-a001-20200409
-mips                 randconfig-a001-20200410
-nds32                randconfig-a001-20200410
-m68k                 randconfig-a001-20200410
-riscv                randconfig-a001-20200410
-alpha                randconfig-a001-20200410
-parisc               randconfig-a001-20200410
-h8300                randconfig-a001-20200410
-nios2                randconfig-a001-20200410
-c6x                  randconfig-a001-20200410
-sparc64              randconfig-a001-20200410
-microblaze           randconfig-a001-20200410
-csky                 randconfig-a001-20200409
-openrisc             randconfig-a001-20200409
-s390                 randconfig-a001-20200409
-sh                   randconfig-a001-20200409
-xtensa               randconfig-a001-20200409
-x86_64               randconfig-b001-20200410
-x86_64               randconfig-b002-20200410
-x86_64               randconfig-b003-20200410
-i386                 randconfig-b001-20200410
-i386                 randconfig-b002-20200410
-i386                 randconfig-b003-20200410
-x86_64               randconfig-c001-20200410
-x86_64               randconfig-c002-20200410
-x86_64               randconfig-c003-20200410
-i386                 randconfig-c001-20200410
-i386                 randconfig-c002-20200410
-i386                 randconfig-c003-20200410
-x86_64               randconfig-e001-20200410
-x86_64               randconfig-e002-20200410
-x86_64               randconfig-e003-20200410
-i386                 randconfig-e001-20200410
-i386                 randconfig-e002-20200410
-i386                 randconfig-e003-20200410
-arc                  randconfig-a001-20200409
-arm                  randconfig-a001-20200409
-arm64                randconfig-a001-20200409
-ia64                 randconfig-a001-20200409
-powerpc              randconfig-a001-20200409
-sparc                randconfig-a001-20200409
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
 
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all(a)lists.01.org
---===============0911966864205864805==--
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller(a)googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
+--===============2165826842233657302==--
