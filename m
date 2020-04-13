@@ -1,49 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============5427961790493477010=="
+Content-Type: multipart/mixed; boundary="===============4954692016892859261=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: WARNING: bad unlock balance in mptcp_listen
-Date: Sun, 12 Apr 2020 10:32:01 +0200
-Message-ID: <20200412083201.GB5795@breakpoint.cc>
-In-Reply-To: 000000000000d754eb05a312bd8f@google.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix double-unlock in mptcp_poll
+Date: Sun, 12 Apr 2020 21:05:08 -0700
+Message-ID: <20200412.210508.28307843911867097.davem@davemloft.net>
+In-Reply-To: 20200411190501.13249-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4157
+X-UID: 4158
 
---===============5427961790493477010==
+--===============4954692016892859261==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-syzbot <syzbot+ffec3741d41140477097(a)syzkaller.appspotmail.com> wrote:
-> syzbot found the following crash on:
-> =
+From: Florian Westphal <fw(a)strlen.de>
+Date: Sat, 11 Apr 2020 21:05:01 +0200
 
-> HEAD commit:    5b8b9d0c Merge branch 'akpm' (patches from Andrew)
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1712bdb3e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D23c5a352e32a1=
-944
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dffec3741d411404=
-77097
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> =
-
-> Unfortunately, I don't have any reproducer for this crash yet.
-> =
-
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+ffec3741d41140477097(a)syzkaller.appspotmail.com
-> =
-
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> WARNING: bad unlock balance detected!
-> 5.6.0-syzkaller #0 Not tainted
-> -------------------------------------
-> syz-executor.0/25417 is trying to release lock (sk_lock-AF_INET6) at:
-> [<ffffffff87c65063>] mptcp_listen+0x1c3/0x2e0 net/mptcp/protocol.c:1783
+> mptcp_connect/28740 is trying to release lock (sk_lock-AF_INET) at:
+> [<ffffffff82c15869>] mptcp_poll+0xb9/0x550
 > but there are no more locks to release!
+> Call Trace:
+>  lock_release+0x50f/0x750
+>  release_sock+0x171/0x1b0
+>  mptcp_poll+0xb9/0x550
+>  sock_poll+0x157/0x470
+>  ? get_net_ns+0xb0/0xb0
+>  do_sys_poll+0x63c/0xdd0
+> =
 
-#syz dup: WARNING: bad unlock balance in mptcp_poll
---===============5427961790493477010==--
+> Problem is that __mptcp_tcp_fallback() releases the mptcp socket lock,
+> but after recent change it doesn't do this in all of its return paths.
+> =
+
+> To fix this, remove the unlock from __mptcp_tcp_fallback() and
+> always do the unlock in the caller.
+> =
+
+> Also add a small comment as to why we have this
+> __mptcp_needs_tcp_fallback().
+> =
+
+> Fixes: 0b4f33def7bbde ("mptcp: fix tcp fallback crash")
+> Reported-by: syzbot+e56606435b7bfeea8cf5(a)syzkaller.appspotmail.com
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  NB: Reproducer did not trigger for me, so i can't be 100% sure,
+>  but looking at the 'Fixes' commit the change to
+>  __mptcp_needs_tcp_fallback was broken.
+
+Applied, thanks Florian.
+--===============4954692016892859261==--
