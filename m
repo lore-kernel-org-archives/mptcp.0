@@ -1,55 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1412558811041228299=="
+Content-Type: multipart/mixed; boundary="===============6329109536190905241=="
 MIME-Version: 1.0
-From: kernel test robot <lkp at intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export 531346f5a4 ("tcp: mptcp:
- use mptcp receive buffer space to select rcv window")
-Date: Tue, 14 Apr 2020 11:21:13 +0800
-Message-ID: <5e952c29.hibd7Wq+qFFl5Fc6%lkp@intel.com>
+Subject: [MPTCP] [PATCH 0/2] iproute: mptcp support
+Date: Tue, 14 Apr 2020 10:24:20 +0200
+Message-ID: <cover.1586444916.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4159
+X-UID: 4160
 
---===============1412558811041228299==
+--===============6329109536190905241==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+This updated the command syntax as per ML discussion. I picked 'endpoint' as
+the main sub-command name.
 
-LINUX COMMIT
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-commit : 531346f5a4531ca65fade2ec1d4c5beea97e5864
-subject: tcp: mptcp: use mptcp receive buffer space to select rcv window
-date   : 2020-04-09 09:17:34 +0800
-author : Florian Westphal <fw(a)strlen.de>
+Still lacks a man-page (help more than welcome!!!)
 
+If there is agreement, the idea is including Davide's 'ss' patch and send
+them upstream as a whole.
 
-Test status of 531346f5a4531ca65fade2ec1d4c5beea97e5864 (compared to v5.6)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+--------------------------------------------------------------------------=
------+------+------+----------+------+---+------------+-----+
-|                                                                          =
-     | pass | fail | unstable | skip | - | regression | fix |
-| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
-ts   | 42   | 7    |          | 3    |   |            |     |
-| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
-ests | 3    |      |          |      |   |            |     |
-+--------------------------------------------------------------------------=
------+------+------+----------+------+---+------------+-----+
+Any feedback welcome!
 
-Fails
-=3D=3D=3D=3D=3D
-kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftests
----
-- kernel-selftests.bpf.test_progs.fail
-- kernel-selftests.bpf.test_align.fail
-- kernel-selftests.bpf.test_btf.fail
-- kernel-selftests.bpf.test_sysctl.fail
-- kernel-selftests.bpf.test_progs-no_alu32.fail
-- kernel-selftests.bpf.test_bpftool.sh.fail
-- kernel-selftests.bpf.test_tc_edt.sh.fail
+Paolo Abeni (2):
+  uapi: update linux/mptcp.h
+  add support for mptcp netlink interface.
 
+ include/uapi/linux/mptcp.h |  88 ++++++++
+ ip/Makefile                |   2 +-
+ ip/ip.c                    |   3 +-
+ ip/ip_common.h             |   1 +
+ ip/ipmptcp.c               | 449 +++++++++++++++++++++++++++++++++++++
+ 5 files changed, 541 insertions(+), 2 deletions(-)
+ create mode 100644 include/uapi/linux/mptcp.h
+ create mode 100644 ip/ipmptcp.c
 
---===============1412558811041228299==--
+-- =
+
+2.21.1
+
+--===============6329109536190905241==--
