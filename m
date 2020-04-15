@@ -1,123 +1,180 @@
-Content-Type: multipart/mixed; boundary="===============0299245850505547334=="
+Content-Type: multipart/mixed; boundary="===============7324929920444808858=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 1/4] uapi: update linux/mptcp.h
-Date: Wed, 15 Apr 2020 14:28:53 +0200
-Message-ID: <211c1fcffddd7b820ea2777f9b114d748853c8fc.1586953702.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 4/4] man: mptcp man page
+Date: Wed, 15 Apr 2020 14:28:56 +0200
+Message-ID: <4fc768461852c4fbe44bd988bda5a809fb796577.1586953702.git.pabeni@redhat.com>
 In-Reply-To: cover.1586953702.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4168
+X-UID: 4169
 
---===============0299245850505547334==
+--===============7324929920444808858==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+describe the mptcp subcommands implemented so far.
+
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- include/uapi/linux/mptcp.h | 89 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 include/uapi/linux/mptcp.h
+ man/man8/ip-mptcp.8 | 142 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 142 insertions(+)
+ create mode 100644 man/man8/ip-mptcp.8
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
 new file mode 100644
-index 00000000..5f2c7708
+index 00000000..5ed0457b
 --- /dev/null
-+++ b/include/uapi/linux/mptcp.h
-@@ -0,0 +1,89 @@
-+/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-+#ifndef _UAPI_MPTCP_H
-+#define _UAPI_MPTCP_H
++++ b/man/man8/ip-mptcp.8
+@@ -0,0 +1,142 @@
++.TH IP\-MPTCP 8 "4 Apr 2020" "iproute2" "Linux"
++.SH "NAME"
++ip-mptcp \- MPTCP path manager configuration
++.SH "SYNOPSIS"
++.sp
++.ad l
++.in +8
++.ti -8
++.B ip
++.RI "[ " OPTIONS " ]"
++.B mptcp
++.RB "{ "
++.B endpoint
++.RB " | "
++.B limits
++.RB " | "
++.B help
++.RB " }"
++.sp
 +
-+#include <linux/const.h>
-+#include <linux/types.h>
++.ti -8
++.BR "ip mptcp endpoint add "
++.IR IFADDR
++.RB "[ " dev
++.IR IFNAME " ]"
++.RB "[ " id
++.I ID
++.RB "] [ "
++.I FLAG-LIST
++.RB "] "
 +
-+#define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
-+#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
-+#define MPTCP_SUBFLOW_FLAG_JOIN_REM		_BITUL(2)
-+#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		_BITUL(3)
-+#define MPTCP_SUBFLOW_FLAG_BKUP_REM		_BITUL(4)
-+#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		_BITUL(5)
-+#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	_BITUL(6)
-+#define MPTCP_SUBFLOW_FLAG_CONNECTED		_BITUL(7)
-+#define MPTCP_SUBFLOW_FLAG_MAPVALID		_BITUL(8)
++.ti -8
++.BR "ip mptcp endpoint del id "
++.I ID
 +
-+enum {
-+	MPTCP_SUBFLOW_ATTR_UNSPEC,
-+	MPTCP_SUBFLOW_ATTR_TOKEN_REM,
-+	MPTCP_SUBFLOW_ATTR_TOKEN_LOC,
-+	MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
-+	MPTCP_SUBFLOW_ATTR_MAP_SEQ,
-+	MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
-+	MPTCP_SUBFLOW_ATTR_SSN_OFFSET,
-+	MPTCP_SUBFLOW_ATTR_MAP_DATALEN,
-+	MPTCP_SUBFLOW_ATTR_FLAGS,
-+	MPTCP_SUBFLOW_ATTR_ID_REM,
-+	MPTCP_SUBFLOW_ATTR_ID_LOC,
-+	MPTCP_SUBFLOW_ATTR_PAD,
-+	__MPTCP_SUBFLOW_ATTR_MAX
-+};
++.ti -8
++.BR "ip mptcp endpoint show "
++.RB "[ " id
++.I ID
++.RB "]"
 +
-+#define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
++.ti -8
++.BR "ip mptcp endpoint flush"
 +
-+/* netlink interface */
-+#define MPTCP_PM_NAME		"mptcp_pm"
-+#define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
-+#define MPTCP_PM_VER		0x1
++.ti -8
++.IR FLAG-LIST " :=3D [ "  FLAG-LIST " ] " FLAG
 +
-+/*
-+ * ATTR types defined for MPTCP
-+ */
-+enum {
-+	MPTCP_PM_ATTR_UNSPEC,
++.ti -8
++.IR FLAG " :=3D ["
++.B signal
++.RB "|"
++.B subflow
++.RB "|"
++.B backup
++.RB  "]"
 +
-+	MPTCP_PM_ATTR_ADDR,				/* nested address */
-+	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
-+	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
++.ti -8
++.BR "ip mptcp limits set "
++.RB "[ "
++.B subflow
++.IR SUBFLOW_NR " ]"
++.RB "[ "
++.B add_addr_accepted
++.IR  ADD_ADDR_ACCEPTED_NR " ]"
 +
-+	__MPTCP_PM_ATTR_MAX
-+};
++.ti -8
++.BR "ip mptcp limits show"
 +
-+#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
++.SH DESCRIPTION
 +
-+enum {
-+	MPTCP_PM_ADDR_ATTR_UNSPEC,
++MPTCP is a transport protocol build on top of TCP that allows TCP
++connections to use multiple paths to maximize resource usage and increase
++redundancy. The ip-mptcp sub-commands allow configuring several aspects of=
+ the
++MPTCP path manager, which is in charge of subflows creation:
 +
-+	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
-+	MPTCP_PM_ADDR_ATTR_ID,				/* u8 */
-+	MPTCP_PM_ADDR_ATTR_ADDR4,			/* struct in_addr */
-+	MPTCP_PM_ADDR_ATTR_ADDR6,			/* struct in6_addr */
-+	MPTCP_PM_ADDR_ATTR_PORT,			/* u16 */
-+	MPTCP_PM_ADDR_ATTR_FLAGS,			/* u32 */
-+	MPTCP_PM_ADDR_ATTR_IF_IDX,			/* s32 */
++.P
++The
++.B endpoint
++object specifies the IP addresses that will be used and/or announced for
++additional subflows:
 +
-+	__MPTCP_PM_ADDR_ATTR_MAX
-+};
++.TS
++l l.
++ip mptcp endpoint add	add new MPTCP endpoint
++ip mptcp endpoint delete	delete existing MPTCP endpoint
++ip mptcp endpoint show	get existing MPTCP endpoint
++ip mptcp endpoint flush	flush all existing MPTCP endpoints
++.TE
 +
-+#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
++.TP
++.IR ID
++is a unique numeric identifier for the given endpoint
 +
-+#define MPTCP_PM_ADDR_FLAG_SIGNAL			(1 << 0)
-+#define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
-+#define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
++.TP
++.BR signal
++the endpoint will be announced/signaled to each peer via an ADD_ADDR MPTCP
++sub-option
 +
-+enum {
-+	MPTCP_PM_CMD_UNSPEC,
++.TP
++.BR subflow
++If the MPTCP limits allow for additional subflows creation, the endpoint w=
+ill
++be used as the source address to create an additional subflow after that
++the MPTCP connection is established.
 +
-+	MPTCP_PM_CMD_ADD_ADDR,
-+	MPTCP_PM_CMD_DEL_ADDR,
-+	MPTCP_PM_CMD_GET_ADDR,
-+	MPTCP_PM_CMD_FLUSH_ADDRS,
-+	MPTCP_PM_CMD_SET_LIMITS,
-+	MPTCP_PM_CMD_GET_LIMITS,
++.TP
++.BR backup
++the endpoint will be announced as a backup address, if this is a
++.BR signal
++endpoint, or the subflow will be created as a backup one if this a
++.BR subflow
++endpoint
 +
-+	__MPTCP_PM_CMD_AFTER_LAST
-+};
++.sp
++.PP
++The
++.B limits
++object specifies the constraints for subflow creations:
 +
-+#endif /* _UAPI_MPTCP_H */
++.TS
++l l.
++ip mptcp limits show	get current MPTCP subflow creation limits
++ip mptcp limits set	change the MPTCP subflow creation limits
++.TE
++
++.TP
++.IR SUBFLOW_NR
++specifies the maximum number of additional subflows allowed for each MPTCP
++connection. Additional subflows can be created due to: incoming accepted
++ADD_ADDR option, local
++.BR subflow
++endpoints, additional subflows started by the peer.
++
++.TP
++.IR ADD_ADDR_ACCEPTED_NR
++specifies the maximum number of ADD_ADDR suboptions accepted for each MPTCP
++connection. The MPTCP path manager will try to create a new subflow for
++each accepted ADD_ADDR option, respecting the
++.IR SUBFLOW_NR
++limit.
++
++.SH AUTHOR
++Original Manpage by Paolo Abeni <pabeni(a)redhat.com>
 -- =
 
 2.21.1
 
---===============0299245850505547334==--
+--===============7324929920444808858==--
