@@ -1,93 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============0068705724848282260=="
+Content-Type: multipart/mixed; boundary="===============5898830747279796182=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp 2/7] mptcp: fix 'Attempt to release TCP socket
- in state' warnings
-Date: Wed, 15 Apr 2020 19:19:49 +0200
-Message-ID: <20200415171954.15321-3-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp 3/7] mptcp: handle mptcp listener destruction
+ via rcu
+Date: Wed, 15 Apr 2020 19:19:50 +0200
+Message-ID: <20200415171954.15321-4-fw@strlen.de>
 In-Reply-To: 20200415171954.15321-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4181
+X-UID: 4182
 
---===============0068705724848282260==
+--===============5898830747279796182==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We need to set sk_state to CLOSED, else we will get following:
+Following splat can occur during self test:
 
-IPv4: Attempt to release TCP socket in state 3 00000000b95f109e
-IPv4: Attempt to release TCP socket in state 10 00000000b95f109e
+ BUG: KASAN: use-after-free in subflow_data_ready+0x156/0x160
+ Read of size 8 at addr ffff888100c35c28 by task mptcp_connect/4808
 
-First one is from inet_sock_destruct(), second one from
-mptcp_sk_clone failure handling.  Setting sk_state to CLOSED isn't
-enough, we also need to orphan sk so it has DEAD flag set.
-Otherwise, a very similar warning is printed from inet_sock_destruct().
+  subflow_data_ready+0x156/0x160
+  tcp_child_process+0x6a3/0xb30
+  tcp_v4_rcv+0x2231/0x3730
+  ip_protocol_deliver_rcu+0x5c/0x860
+  ip_local_deliver_finish+0x220/0x360
+  ip_local_deliver+0x1c8/0x4e0
+  ip_rcv_finish+0x1da/0x2f0
+  ip_rcv+0xd0/0x3c0
+  __netif_receive_skb_one_core+0xf5/0x160
+  __netif_receive_skb+0x27/0x1c0
+  process_backlog+0x21e/0x780
+  net_rx_action+0x35f/0xe90
+  do_softirq+0x4c/0x50
+  [..]
 
+This occurs when accessing subflow_ctx->conn.
+
+Problem is that tcp_child_process() calls listen sockets'
+sk_data_ready() notification, but it doesn't hold the listener
+lock.  Another cpu calling close() on the listener will then cause
+transition of refcount to 0.
+
+Fixes: 58b09919626bf ("mptcp: create msk early")
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 7 +++++--
- net/mptcp/subflow.c  | 8 +++++++-
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2118b51afd60..2bdfe2ea35bb 100644
+index 2bdfe2ea35bb..955b3d99bc21 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1364,12 +1364,15 @@ struct sock *mptcp_sk_clone(const struct sock *sk, =
-struct request_sock *req)
- 	msk->subflow =3D NULL;
- =
-
- 	if (unlikely(mptcp_token_new_accept(subflow_req->token, nsk))) {
-+		nsk->sk_state =3D TCP_CLOSE;
- 		bh_unlock_sock(nsk);
- =
-
- 		/* we can't call into mptcp_close() here - possible BH context
--		 * free the sock directly
-+		 * free the sock directly.
-+		 * sk_clone_lock() sets nsk refcnt to two, hence call sk_free()
-+		 * too.
- 		 */
--		nsk->sk_prot->destroy(nsk);
-+		sk_common_release(nsk);
- 		sk_free(nsk);
- 		return NULL;
+@@ -1387,6 +1387,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk, st=
+ruct request_sock *req)
+ 		msk->ack_seq =3D ack_seq;
  	}
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 936f748075a7..3a94f859347a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -370,6 +370,12 @@ static void mptcp_sock_destruct(struct sock *sk)
- 	inet_sock_destruct(sk);
- }
  =
 
-+static void mptcp_force_close(struct sock *sk)
-+{
-+	inet_sk_state_store(sk, TCP_CLOSE);
-+	sk_common_release(sk);
-+}
++	sock_reset_flag(nsk, SOCK_RCU_FREE);
+ 	/* will be fully established after successful MPC subflow creation */
+ 	inet_sk_state_store(nsk, TCP_SYN_RECV);
+ 	bh_unlock_sock(nsk);
+@@ -1788,6 +1789,8 @@ static int mptcp_listen(struct socket *sock, int back=
+log)
+ 		goto unlock;
+ 	}
+ =
+
++	sock_set_flag(sock->sk, SOCK_RCU_FREE);
 +
- static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 					  struct sk_buff *skb,
- 					  struct request_sock *req,
-@@ -467,7 +473,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- out:
- 	/* dispose of the left over mptcp master, if any */
- 	if (unlikely(new_msk))
--		sock_put(new_msk);
-+		mptcp_force_close(new_msk);
- 	return child;
- =
-
- close_child:
+ 	err =3D ssock->ops->listen(ssock, backlog);
+ 	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
+ 	if (!err)
 -- =
 
 2.24.1
 
---===============0068705724848282260==--
+--===============5898830747279796182==--
