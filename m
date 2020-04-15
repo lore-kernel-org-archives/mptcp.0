@@ -1,55 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5758379896320234150=="
+Content-Type: multipart/mixed; boundary="===============3976527342956410312=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp 7/7] mptcp: prevent null deref crash on normal
- tcp sockets
-Date: Wed, 15 Apr 2020 19:19:54 +0200
-Message-ID: <20200415171954.15321-8-fw@strlen.de>
-In-Reply-To: 20200415171954.15321-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH mptcp 4/7] mptcp: avoid callback invocation when
+ mptcp parent socket doesn't exist
+Date: Wed, 15 Apr 2020 19:41:15 +0200
+Message-ID: <4a58f8fa3a140be8b09bf6ee0605a5dcc4492858.camel@redhat.com>
+In-Reply-To: 20200415171954.15321-5-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4186
+X-UID: 4187
 
---===============5758379896320234150==
+--===============3976527342956410312==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Best case we get a WARN in mptcp_accept().
+On Wed, 2020-04-15 at 19:19 +0200, Florian Westphal wrote:
+> We can crash with a NULL dereference in case a packet arrives on the new
+> socket before ctx->conn has been initialized.
 
-Worst case is a null pointer dereference when we attempt to add mptcp
-options to the tcp flow: it has 'is_mptcp' set to 1, but a subflow
-context with a NULL mptcp master socket (ctx->conn).
+I don't understand this race. I thought tcp_v4_syn_recv_sock() creates
+the new socket and acquires the socket lock atomically, and ctx->conn =3D
+new_msk happens in the same critical section ?!?
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/subflow.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+So no packets should reach the newly created socket while conn is NULL
+!?!
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7ad9413cf9d9..f9fe59febf6a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -495,8 +495,12 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- =
+but I do see a similar crash even if ctx->conn is not NULL, is a low,
+invalid value.
 
- out:
- 	/* dispose of the left over mptcp master, if any */
--	if (unlikely(new_msk))
-+	if (unlikely(new_msk)) {
-+		if (child)
-+			tcp_sk(child)->is_mptcp =3D 0;
- 		mptcp_force_close(new_msk);
-+	}
-+
- 	return child;
- =
+I'll try to give this patch a spin in my testbed.
 
- close_child:
--- =
+Thanks!
 
-2.24.1
 
---===============5758379896320234150==--
+/P
+
+--===============3976527342956410312==--
