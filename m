@@ -1,93 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============1133400067954188642=="
+Content-Type: multipart/mixed; boundary="===============5396488517065838857=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 4/4] man: mptcp man page
-Date: Thu, 16 Apr 2020 12:26:08 +0200
-Message-ID: <5bd38ba5-bbde-e4a4-eca1-e733baf77b40@tessares.net>
-In-Reply-To: 13c8087ab70a9c11299b3fc3fff1c45fd4f6dc4c.camel@redhat.com
+Subject: [MPTCP] Re: [kselftest UNSTABLE] mptcp/export 531346f5a4 ("tcp:
+ mptcp: use mptcp receive buffer space to select rcv window")
+Date: Thu, 16 Apr 2020 09:38:53 -0700
+Message-ID: <alpine.OSX.2.22.394.2004160930310.50963@ajherdri-mobl.amr.corp.intel.com>
+In-Reply-To: 5e952c29.hibd7Wq+qFFl5Fc6%lkp@intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4191
+X-UID: 4192
 
---===============1133400067954188642==
+--===============5396488517065838857==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
 
-Thank you for your reply!
+Philip,
 
-On 15/04/2020 19:19, Paolo Abeni wrote:
-> On Wed, 2020-04-15 at 18:49 +0200, Matthieu Baerts wrote:
->> On 15/04/2020 14:28, Paolo Abeni wrote: >>> diff --git a/man/man8/ip-mpt=
-cp.8 b/man/man8/ip-mptcp.8
->>> new file mode 100644
->>> index 00000000..5ed0457b
->>> --- /dev/null
->>> +++ b/man/man8/ip-mptcp.8
+On Tue, 14 Apr 2020, kernel test robot wrote:
 
-(...)
+>
+> LINUX COMMIT
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> commit : 531346f5a4531ca65fade2ec1d4c5beea97e5864
+> subject: tcp: mptcp: use mptcp receive buffer space to select rcv window
+> date   : 2020-04-09 09:17:34 +0800
+> author : Florian Westphal <fw(a)strlen.de>
+>
+>
+> Test status of 531346f5a4531ca65fade2ec1d4c5beea97e5864 (compared to v5.6)
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +------------------------------------------------------------------------=
+-------+------+------+----------+------+---+------------+-----+
+> |                                                                        =
+       | pass | fail | unstable | skip | - | regression | fix |
+> | kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
+ests   | 42   | 7    |          | 3    |   |            |     |
+> | kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-ksel=
+ftests | 3    |      |          |      |   |            |     |
+> +------------------------------------------------------------------------=
+-------+------+------+----------+------+---+------------+-----+
+>
+> Fails
+> =3D=3D=3D=3D=3D
+> kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
+ts
+> ---
+> - kernel-selftests.bpf.test_progs.fail
+> - kernel-selftests.bpf.test_align.fail
+> - kernel-selftests.bpf.test_btf.fail
+> - kernel-selftests.bpf.test_sysctl.fail
+> - kernel-selftests.bpf.test_progs-no_alu32.fail
+> - kernel-selftests.bpf.test_bpftool.sh.fail
+> - kernel-selftests.bpf.test_tc_edt.sh.fail
+>
 
->>> +.ti -8
->>> +.BR "ip mptcp limits set "
->>> +.RB "[ "
->>> +.B subflow
->>> +.IR SUBFLOW_NR " ]"
->>> +.RB "[ "
->>> +.B add_addr_accepted
->>> +.IR  ADD_ADDR_ACCEPTED_NR " ]"
->>
->> Should it be?
->>
->>     set { subflow SUBFLOW_NR | add_addr_accepted ADD_ADDR_ACCEPTED_NR }
->>
->> or:
->>
->>     set { subflow | add_addr_accepted } NR
-> =
+Are these failures also present on net-next or Linus' 5.7-rc1+ tree? The =
 
-> I think that the text you suggest has different semantic.
+message does say the test status is compared to v5.6, but the mptcp tree =
 
-Indeed, my bad!
+has only minor changes from net-next right now so it seems like there may =
 
->>> +
->>> +.ti -8
->>> +.BR "ip mptcp limits show"
->>> +
->>> +.SH DESCRIPTION
->>> +
->>> +MPTCP is a transport protocol build on top of TCP that allows TCP
->>
->> (I guess it could be nice if some English natives can have a look at
->> this :) )
->> I think here you need s/build/built/
->>
->>> +connections to use multiple paths to maximize resource usage and incre=
-ase
->>> +redundancy.
->>
->> Should we mention that the socket needs to be open using the MPTCP optio=
-n?
-> =
+be underlying problems not related to mptcp.
 
-> I think that would should be in a different man page: man(7) mptcp in
-> the kernel man pages.
+Thanks for sharing the test status for the mptcp repo!
 
-I was thinking about a small sentence just to say that this can be =
 
-applied only to sockets created with IPPROTO_MPTCP and not to all =
-
-existing TCP connections but fine also for me to skip this.
-
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1133400067954188642==--
+--
+Mat Martineau
+Intel
+--===============5396488517065838857==--
