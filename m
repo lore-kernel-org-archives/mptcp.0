@@ -1,76 +1,123 @@
-Content-Type: multipart/mixed; boundary="===============7074115398936290070=="
+Content-Type: multipart/mixed; boundary="===============6655200462341038282=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 2/4] add support for mptcp netlink interface.
-Date: Fri, 17 Apr 2020 16:59:43 +0200
-Message-ID: <f9bf68f86712510a67680e02385786484c99140a.camel@redhat.com>
-In-Reply-To: 01f75ca9-3672-8783-4dfa-58fad7d44cc8@tessares.net
+Subject: [MPTCP] [PATCH v3 1/4] uapi: update linux/mptcp.h
+Date: Fri, 17 Apr 2020 18:08:24 +0200
+Message-ID: <211c1fcffddd7b820ea2777f9b114d748853c8fc.1587139599.git.pabeni@redhat.com>
+In-Reply-To: cover.1587139599.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4198
+X-UID: 4199
 
---===============7074115398936290070==
+--===============6655200462341038282==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-04-16 at 12:22 +0200, Matthieu Baerts wrote:
-> On 15/04/2020 19:12, Paolo Abeni wrote:
-> > On Wed, 2020-04-15 at 18:28 +0200, Matthieu Baerts wrote:
-> > > On 15/04/2020 14:28, Paolo Abeni wrote:
-> > > > +	if (flags) {
-> > > > +		/* unknown flags */
-> > > > +		SPRINT_BUF(b1);
-> > > > +
-> > > > +		snprintf(b1, sizeof(b1), "%02x", flags);
-> > > > +		print_string(PRINT_ANY, "rawflags", "rawflags %s ", b1);
-> > > =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/uapi/linux/mptcp.h | 89 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 include/uapi/linux/mptcp.h
 
-> > > (it looks strange to me to end with a space even in json context but I
-> > > don't know the code of iproute2 :) )
-> > =
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+new file mode 100644
+index 00000000..5f2c7708
+--- /dev/null
++++ b/include/uapi/linux/mptcp.h
+@@ -0,0 +1,89 @@
++/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
++#ifndef _UAPI_MPTCP_H
++#define _UAPI_MPTCP_H
++
++#include <linux/const.h>
++#include <linux/types.h>
++
++#define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
++#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
++#define MPTCP_SUBFLOW_FLAG_JOIN_REM		_BITUL(2)
++#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		_BITUL(3)
++#define MPTCP_SUBFLOW_FLAG_BKUP_REM		_BITUL(4)
++#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		_BITUL(5)
++#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	_BITUL(6)
++#define MPTCP_SUBFLOW_FLAG_CONNECTED		_BITUL(7)
++#define MPTCP_SUBFLOW_FLAG_MAPVALID		_BITUL(8)
++
++enum {
++	MPTCP_SUBFLOW_ATTR_UNSPEC,
++	MPTCP_SUBFLOW_ATTR_TOKEN_REM,
++	MPTCP_SUBFLOW_ATTR_TOKEN_LOC,
++	MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
++	MPTCP_SUBFLOW_ATTR_MAP_SEQ,
++	MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
++	MPTCP_SUBFLOW_ATTR_SSN_OFFSET,
++	MPTCP_SUBFLOW_ATTR_MAP_DATALEN,
++	MPTCP_SUBFLOW_ATTR_FLAGS,
++	MPTCP_SUBFLOW_ATTR_ID_REM,
++	MPTCP_SUBFLOW_ATTR_ID_LOC,
++	MPTCP_SUBFLOW_ATTR_PAD,
++	__MPTCP_SUBFLOW_ATTR_MAX
++};
++
++#define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
++
++/* netlink interface */
++#define MPTCP_PM_NAME		"mptcp_pm"
++#define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
++#define MPTCP_PM_VER		0x1
++
++/*
++ * ATTR types defined for MPTCP
++ */
++enum {
++	MPTCP_PM_ATTR_UNSPEC,
++
++	MPTCP_PM_ATTR_ADDR,				/* nested address */
++	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
++	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
++
++	__MPTCP_PM_ATTR_MAX
++};
++
++#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
++
++enum {
++	MPTCP_PM_ADDR_ATTR_UNSPEC,
++
++	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
++	MPTCP_PM_ADDR_ATTR_ID,				/* u8 */
++	MPTCP_PM_ADDR_ATTR_ADDR4,			/* struct in_addr */
++	MPTCP_PM_ADDR_ATTR_ADDR6,			/* struct in6_addr */
++	MPTCP_PM_ADDR_ATTR_PORT,			/* u16 */
++	MPTCP_PM_ADDR_ATTR_FLAGS,			/* u32 */
++	MPTCP_PM_ADDR_ATTR_IF_IDX,			/* s32 */
++
++	__MPTCP_PM_ADDR_ATTR_MAX
++};
++
++#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
++
++#define MPTCP_PM_ADDR_FLAG_SIGNAL			(1 << 0)
++#define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
++#define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
++
++enum {
++	MPTCP_PM_CMD_UNSPEC,
++
++	MPTCP_PM_CMD_ADD_ADDR,
++	MPTCP_PM_CMD_DEL_ADDR,
++	MPTCP_PM_CMD_GET_ADDR,
++	MPTCP_PM_CMD_FLUSH_ADDRS,
++	MPTCP_PM_CMD_SET_LIMITS,
++	MPTCP_PM_CMD_GET_LIMITS,
++
++	__MPTCP_PM_CMD_AFTER_LAST
++};
++
++#endif /* _UAPI_MPTCP_H */
+-- =
 
-> > It's just to keep the code simple, otherwise we have to check for 'last
-> > flag' condition.
-> =
+2.21.1
 
-> Yes, JSON supports doesn't make the code easy to do.
-> It is maybe fine like that for upstream for the moment.
-
-reading the above again, it *should* not introduce whitespaces for
-JSON: it will emit:
-	<key>:<value>
-
-where <key> is "rawflags" and <value> the hex flags
-
-[...]
-
-> > > > +
-> > > > +		if (!matches(*argv, "set"))
-> > > > +			return mptcp_limit_get_set(argc-1, argv+1,
-> > > > +						   MPTCP_PM_CMD_SET_LIMITS);
-> > > > +		if (!matches(*argv, "show"))
-> > > > +			return mptcp_limit_get_set(argc-1, argv+1,
-> > > > +						   MPTCP_PM_CMD_GET_LIMITS);
-> > > > +	}
-> > > > +
-> > > > +unknown:
-> > > > +	fprintf(stderr,
-> > > > +		"Command \"%s\" is unknown, try \"ip mptcp help\".\n",
-> > > > +		*argv);
-> > > > +	exit(-1);
-> > =
-
-> > and here invarg("unknown", *argv) would fit.
-> =
-
-> It seems this last fprintf() is used almost everywhere. Maybe better not =
-
-> to use invarg() here?
-
-ok,
-
-Paolo
-
---===============7074115398936290070==--
+--===============6655200462341038282==--
