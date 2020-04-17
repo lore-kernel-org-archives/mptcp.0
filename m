@@ -1,180 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============6862866209488593010=="
+Content-Type: multipart/mixed; boundary="===============5794887400496228516=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 4/4] man: mptcp man page
-Date: Fri, 17 Apr 2020 18:08:27 +0200
-Message-ID: <45b999f7934fbd75a2b27afcafa541f31d5aaa03.1587139599.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v3 3/4] ss: allow dumping MPTCP subflow information
+Date: Fri, 17 Apr 2020 18:08:26 +0200
+Message-ID: <075c9ea7d3368d21972405166574cb7e4efe34ce.1587139599.git.pabeni@redhat.com>
 In-Reply-To: cover.1587139599.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4202
+X-UID: 4203
 
---===============6862866209488593010==
+--===============5794887400496228516==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-describe the mptcp subcommands implemented so far.
+From: Davide Caratti <dcaratti(a)redhat.com>
 
+ [root(a)f31 packetdrill]# ss -tni
+
+ ESTAB    0        0           192.168.82.247:8080           192.0.2.1:35273
+          cubic wscale:7,8 [...] tcp-ulp-mptcp flags:Mec token:0000(id:0)/5=
+f856c60(id:0) seq:b810457db34209a5 sfseq:1 ssnoff:0 maplen:190
+
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- man/man8/ip-mptcp.8 | 142 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 142 insertions(+)
- create mode 100644 man/man8/ip-mptcp.8
+ man/man8/ss.8 |  5 +++++
+ misc/ss.c     | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
 
-diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-new file mode 100644
-index 00000000..5ed0457b
---- /dev/null
-+++ b/man/man8/ip-mptcp.8
-@@ -0,0 +1,142 @@
-+.TH IP\-MPTCP 8 "4 Apr 2020" "iproute2" "Linux"
-+.SH "NAME"
-+ip-mptcp \- MPTCP path manager configuration
-+.SH "SYNOPSIS"
-+.sp
-+.ad l
-+.in +8
-+.ti -8
-+.B ip
-+.RI "[ " OPTIONS " ]"
-+.B mptcp
-+.RB "{ "
-+.B endpoint
-+.RB " | "
-+.B limits
-+.RB " | "
-+.B help
-+.RB " }"
-+.sp
-+
-+.ti -8
-+.BR "ip mptcp endpoint add "
-+.IR IFADDR
-+.RB "[ " dev
-+.IR IFNAME " ]"
-+.RB "[ " id
-+.I ID
-+.RB "] [ "
-+.I FLAG-LIST
-+.RB "] "
-+
-+.ti -8
-+.BR "ip mptcp endpoint del id "
-+.I ID
-+
-+.ti -8
-+.BR "ip mptcp endpoint show "
-+.RB "[ " id
-+.I ID
-+.RB "]"
-+
-+.ti -8
-+.BR "ip mptcp endpoint flush"
-+
-+.ti -8
-+.IR FLAG-LIST " :=3D [ "  FLAG-LIST " ] " FLAG
-+
-+.ti -8
-+.IR FLAG " :=3D ["
-+.B signal
-+.RB "|"
-+.B subflow
-+.RB "|"
-+.B backup
-+.RB  "]"
-+
-+.ti -8
-+.BR "ip mptcp limits set "
-+.RB "[ "
-+.B subflow
-+.IR SUBFLOW_NR " ]"
-+.RB "[ "
-+.B add_addr_accepted
-+.IR  ADD_ADDR_ACCEPTED_NR " ]"
-+
-+.ti -8
-+.BR "ip mptcp limits show"
-+
-+.SH DESCRIPTION
-+
-+MPTCP is a transport protocol build on top of TCP that allows TCP
-+connections to use multiple paths to maximize resource usage and increase
-+redundancy. The ip-mptcp sub-commands allow configuring several aspects of=
- the
-+MPTCP path manager, which is in charge of subflows creation:
-+
+diff --git a/man/man8/ss.8 b/man/man8/ss.8
+index 023d771b..c80853f9 100644
+--- a/man/man8/ss.8
++++ b/man/man8/ss.8
+@@ -261,6 +261,11 @@ the pacing rate and max pacing rate
+ .TP
+ .B rcv_space:<rcv_space>
+ a helper variable for TCP internal auto tuning socket receive buffer
 +.P
-+The
-+.B endpoint
-+object specifies the IP addresses that will be used and/or announced for
-+additional subflows:
-+
-+.TS
-+l l.
-+ip mptcp endpoint add	add new MPTCP endpoint
-+ip mptcp endpoint delete	delete existing MPTCP endpoint
-+ip mptcp endpoint show	get existing MPTCP endpoint
-+ip mptcp endpoint flush	flush all existing MPTCP endpoints
-+.TE
-+
 +.TP
-+.IR ID
-+is a unique numeric identifier for the given endpoint
++.B tcp-ulp-mptcp flags:[MmBbJjecv] token:<rem_token(rem_id)/loc_token(loc_=
+id)> seq:<sn> sfseq:<ssn> ssnoff:<off> maplen:<maplen>
++MPTCP subflow information
++.P
+ .RE
+ .TP
+ .B \-\-tos
+diff --git a/misc/ss.c b/misc/ss.c
+index 3ef151fb..ee840149 100644
+--- a/misc/ss.c
++++ b/misc/ss.c
+@@ -53,6 +53,7 @@
+ #include <linux/tipc_netlink.h>
+ #include <linux/tipc_sockets_diag.h>
+ #include <linux/tls.h>
++#include <linux/mptcp.h>
+ =
+
+ /* AF_VSOCK/PF_VSOCK is only provided since glibc 2.18 */
+ #ifndef PF_VSOCK
+@@ -2836,6 +2837,59 @@ static void tcp_tls_conf(const char *name, struct rt=
+attr *attr)
+ 	}
+ }
+ =
+
++static void mptcp_subflow_info(struct rtattr *tb[])
++{
++	u_int32_t flags =3D 0;
 +
-+.TP
-+.BR signal
-+the endpoint will be announced/signaled to each peer via an ADD_ADDR MPTCP
-+sub-option
++	if (tb[MPTCP_SUBFLOW_ATTR_FLAGS]) {
++		char caps[32 + 1] =3D { 0 }, *cap =3D &caps[0];
 +
-+.TP
-+.BR subflow
-+If the MPTCP limits allow for additional subflows creation, the endpoint w=
-ill
-+be used as the source address to create an additional subflow after that
-+the MPTCP connection is established.
++		flags =3D rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_FLAGS]);
 +
-+.TP
-+.BR backup
-+the endpoint will be announced as a backup address, if this is a
-+.BR signal
-+endpoint, or the subflow will be created as a backup one if this a
-+.BR subflow
-+endpoint
++		if (flags & MPTCP_SUBFLOW_FLAG_MCAP_REM)
++			*cap++ =3D 'M';
++		if (flags & MPTCP_SUBFLOW_FLAG_MCAP_LOC)
++			*cap++ =3D 'm';
++		if (flags & MPTCP_SUBFLOW_FLAG_JOIN_REM)
++			*cap++ =3D 'J';
++		if (flags & MPTCP_SUBFLOW_FLAG_JOIN_LOC)
++			*cap++ =3D 'j';
++		if (flags & MPTCP_SUBFLOW_FLAG_BKUP_REM)
++			*cap++ =3D 'B';
++		if (flags & MPTCP_SUBFLOW_FLAG_BKUP_LOC)
++			*cap++ =3D 'b';
++		if (flags & MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED)
++			*cap++ =3D 'e';
++		if (flags & MPTCP_SUBFLOW_FLAG_CONNECTED)
++			*cap++ =3D 'c';
++		if (flags & MPTCP_SUBFLOW_FLAG_MAPVALID)
++			*cap++ =3D 'v';
++		if (flags)
++			out(" flags:%s", caps);
++	}
++	if (tb[MPTCP_SUBFLOW_ATTR_TOKEN_REM] &&
++	    tb[MPTCP_SUBFLOW_ATTR_TOKEN_LOC] &&
++	    tb[MPTCP_SUBFLOW_ATTR_ID_REM] &&
++	    tb[MPTCP_SUBFLOW_ATTR_ID_LOC])
++		out(" token:%04x(id:%hhu)/%04x(id:%hhu)",
++		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_TOKEN_REM]),
++		    rta_getattr_u8(tb[MPTCP_SUBFLOW_ATTR_ID_REM]),
++		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_TOKEN_LOC]),
++		    rta_getattr_u8(tb[MPTCP_SUBFLOW_ATTR_ID_LOC]));
++	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ])
++		out(" seq:%llx",
++		    rta_getattr_u64(tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ]));
++	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ])
++		out(" sfseq:%x",
++		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ]));
++	if (tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET])
++		out(" ssnoff:%x",
++		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET]));
++	if (tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN])
++		out(" maplen:%x",
++		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN]));
++}
 +
-+.sp
-+.PP
-+The
-+.B limits
-+object specifies the constraints for subflow creations:
+ #define TCPI_HAS_OPT(info, opt) !!(info->tcpi_options & (opt))
+ =
+
+ static void tcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg=
+ *r,
+@@ -3012,6 +3066,14 @@ static void tcp_show_info(const struct nlmsghdr *nlh=
+, struct inet_diag_msg *r,
+ 			tcp_tls_conf("rxconf", tlsinfo[TLS_INFO_RXCONF]);
+ 			tcp_tls_conf("txconf", tlsinfo[TLS_INFO_TXCONF]);
+ 		}
++		if (ulpinfo[INET_ULP_INFO_MPTCP]) {
++			struct rtattr *sfinfo[MPTCP_SUBFLOW_ATTR_MAX + 1] =3D
++				{ 0 };
 +
-+.TS
-+l l.
-+ip mptcp limits show	get current MPTCP subflow creation limits
-+ip mptcp limits set	change the MPTCP subflow creation limits
-+.TE
-+
-+.TP
-+.IR SUBFLOW_NR
-+specifies the maximum number of additional subflows allowed for each MPTCP
-+connection. Additional subflows can be created due to: incoming accepted
-+ADD_ADDR option, local
-+.BR subflow
-+endpoints, additional subflows started by the peer.
-+
-+.TP
-+.IR ADD_ADDR_ACCEPTED_NR
-+specifies the maximum number of ADD_ADDR suboptions accepted for each MPTCP
-+connection. The MPTCP path manager will try to create a new subflow for
-+each accepted ADD_ADDR option, respecting the
-+.IR SUBFLOW_NR
-+limit.
-+
-+.SH AUTHOR
-+Original Manpage by Paolo Abeni <pabeni(a)redhat.com>
++			parse_rtattr_nested(sfinfo, MPTCP_SUBFLOW_ATTR_MAX,
++					    ulpinfo[INET_ULP_INFO_MPTCP]);
++			mptcp_subflow_info(sfinfo);
++		}
+ 	}
+ }
+ =
+
 -- =
 
 2.21.1
 
---===============6862866209488593010==--
+--===============5794887400496228516==--
