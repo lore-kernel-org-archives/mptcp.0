@@ -1,196 +1,99 @@
-Content-Type: multipart/mixed; boundary="===============4417669360909821985=="
+Content-Type: multipart/mixed; boundary="===============0054655626030373615=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Philip Li <philip.li at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 16th of April 2020
-Date: Thu, 16 Apr 2020 18:45:36 +0200
-Message-ID: <278687e3-d103-b173-9da8-541fbe00c405@tessares.net>
+Subject: [MPTCP] Re: [kselftest UNSTABLE] mptcp/export 531346f5a4 ("tcp:
+ mptcp: use mptcp receive buffer space to select rcv window")
+Date: Fri, 17 Apr 2020 09:29:20 +0800
+Message-ID: <20200417012920.GB27206@intel.com>
+In-Reply-To: alpine.OSX.2.22.394.2004160930310.50963@ajherdri-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4193
+X-UID: 4194
 
---===============4417669360909821985==
+--===============0054655626030373615==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Apr 16, 2020 at 09:38:53AM -0700, Mat Martineau wrote:
+> =
 
-We just had our 95th meeting with Mat and Ossama (Intel OTC), Christoph =
+> Philip,
+> =
 
-(Apple), Paolo, Davide and Florian (RedHat) and myself (Tessares).
+> On Tue, 14 Apr 2020, kernel test robot wrote:
+> =
 
-Thanks again for this new good meeting!
+> > =
 
-Here are the minutes of the meeting:
+> > LINUX COMMIT
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > commit : 531346f5a4531ca65fade2ec1d4c5beea97e5864
+> > subject: tcp: mptcp: use mptcp receive buffer space to select rcv window
+> > date   : 2020-04-09 09:17:34 +0800
+> > author : Florian Westphal <fw(a)strlen.de>
+> > =
 
+> > =
 
+> > Test status of 531346f5a4531ca65fade2ec1d4c5beea97e5864 (compared to v5=
+.6)
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > +----------------------------------------------------------------------=
+---------+------+------+----------+------+---+------------+-----+
+> > |                                                                      =
+         | pass | fail | unstable | skip | - | regression | fix |
+> > | kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-ksel=
+ftests   | 42   | 7    |          | 3    |   |            |     |
+> > | kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-ks=
+elftests | 3    |      |          |      |   |            |     |
+> > +----------------------------------------------------------------------=
+---------+------+------+----------+------+---+------------+-----+
+> > =
 
-Accepted patches:
-     - The list of accepted patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
+> > Fails
+> > =3D=3D=3D=3D=3D
+> > kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
+ests
+> > ---
+> > - kernel-selftests.bpf.test_progs.fail
+> > - kernel-selftests.bpf.test_align.fail
+> > - kernel-selftests.bpf.test_btf.fail
+> > - kernel-selftests.bpf.test_sysctl.fail
+> > - kernel-selftests.bpf.test_progs-no_alu32.fail
+> > - kernel-selftests.bpf.test_bpftool.sh.fail
+> > - kernel-selftests.bpf.test_tc_edt.sh.fail
+> > =
 
-     netdev (if mptcp ML is in cc) (by: Florian Westphal):
+> =
 
-1269367: Deferred: [net] mptcp: fix double-unlock in mptcp_poll
+> Are these failures also present on net-next or Linus' 5.7-rc1+ tree? The
+> message does say the test status is compared to v5.6, but the mptcp tree =
+has
+> only minor changes from net-next right now so it seems like there may be
+> underlying problems not related to mptcp.
+Hi Mat, we will follow up to provide test data.
 
-     our repo (by: /):
+Currently, if the fail is not regression, which means failsure is also exis=
+ted
+on v5.6. The cause can be our test environment, we will continue to solving=
+ them
+to avoid confusion.
 
-/
+> =
 
+> Thanks for sharing the test status for the mptcp repo!
+You are welcome!
 
+> =
 
-Pending patches:
-     - The list of pending patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+> =
 
-     netdev (if mptcp ML is in cc) (by: Hillf Danton):
-
-1269397: Rejected: Re: WARNING: bad unlock balance in mptcp_shutdown
-
-     our repo (by: Davide Caratti, Florian Westphal, Matthieu Baerts, =
-
-Paolo Abeni):
-
-1265469: Needs Review / ACK: selftests:mptcp:pm: rm the right tmp file:
-     - To be reviewed (one line)
-
-1266897: Under Review: mptcp:pm netlink: fix variable scope:
-     - Drop? Yes!
-
-1271115: Changes Requested: [v2,1/4] uapi: update linux/mptcp.h
-1271117: Changes Requested: [v2,2/4] add support for mptcp netlink =
-
-interface.
-1271119: Changes Requested: [v2,3/4] ss: allow dumping MPTCP subflow =
-
-information
-1271118: Changes Requested: [v2,4/4] man: mptcp man page:
-     - v3 in preparation
-
-1271341: New: [1/7] mptcp: fix splat when incoming connection is never =
-
-accepted before exit/close
-1271343: New: [2/7] mptcp: fix 'Attempt to release TCP socket in state' =
-
-warnings
-1271344: New: [3/7] mptcp: handle mptcp listener destruction via rcu
-1271345: New: [4/7] mptcp: avoid callback invocation when mptcp parent =
-
-socket doesn't exist
-1271346: New: [5/7] mptcp: use rcu helpers to fetch ulp subflow context
-1271347: New: [6/7] mptcp: reverse order of sk_state_change and is_mptcp =
-
-check
-1271348: New: [7/7] mptcp: prevent null deref crash on normal tcp sockets:
-     - The 4th and 7th should go together
-     - Raise condition regarding the 3rd ACK
-     - Still investigating because the cause is still unclear, maybe =
-
-there is another issue we would hide there
-     - the first 3 patches can be applied, ACK from Paolo.
-     - Matth can applied them at the end of the export branch
-     - Florian can also send them directly to netdev (-net)
-
-
-
-Bugs on Github:
-    2: reduce hooking in TCP code =E2=86=92 could go upstream before part 4
-    4: keep a single work struct in mptcp socket =E2=86=92 could go upstrea=
-m =
-
-before part 4
-    5: Allow ss/netstat etc. to show program name for client and =
-
-listener MPTCP subflows =E2=86=92 could go upstream before part 4
-    7: cleanup sendmsg_frag allocation
-    8: fix possible race in subflow_finish_connect()
-    9: fix "IPv4: Attempt to release TCP socket in state 1 "... on shutdown
-   10: reduce mptcp options space usage
-   11: fix fallback to TCP... @dcaratti
-    3: fix 'mmap' related race
-    6: loss and delay without reordering causes very slow transfer
-   13: [syzkaller] WARNING in mptcp_incoming_options
-   12: [syzkaller] INFO: task hung in lock_sock_nested
-
-
-
-FYI: Current Roadmap:
-     - Part 4 (next merge window):
-         - Fix bugs reported on Github: =
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/
-         - Shared recv window (full support)
-         - IPv6 - IPv4 mapped support
-         - not dropping MPTCP options (ADD_ADDR, etc.)
-         - FAST_CLOSE
-         - full MPTCP v1 support (reliable add_addr, etc.)
-         - after a few attempts of failed MPTCP, we fallback to TCP =
-
-(like TFO is doing)
-         - PM server (more advanced)
-         - Full DATA_FIN support [WIP by Mat]:
-             - could be nice to have it: if ready
-         - Active backup support
-         - ADD_ADDR for MPTCPv1: echo bit [WIP by Peter]
-         - Opti in TCP option structures (unions) [to be rebased]
-
-     - Part 5 (extra needed for prod):
-         - opti/perfs
-         - TFO
-         - PM netlink
-         - PM bpf
-         - Scheduler bpf
-         - syncookies
-         - [gs]etsockopt per subflow
-         - notify the userspace when a subflow is added/removed =E2=86=92 c=
-msg
-
-
-
-Extra tests:
-     - news about Syzkaller? (Christoph):
-         - syzbot reported new issues on netdev, all already addressed
-         - "WARNING in mptcp_incoming_options": but no reproducer
-
-     - new about Intel's kbuild? (Mat):
-         - there was a report this week but unclear if the errors were =
-
-due to our modifications
-         - =
-
-https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/thread/TLP3WL3AFX=
-NXKORIT7JKQMSTNYBGIX2C/
-         - Mat will follow-up
-
-     - packetdrill (Davide):
-         - could be nice to use this new version with the out-of-tree =
-
-kernel!
-
-     - CI (Matth):
-         - /
-
-
-
-Next meeting:
-     - We propose to have the next meeting on Thursday, the 23rd of April.
-     - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200423
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you next week,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============4417669360909821985==--
+> --
+> Mat Martineau
+> Intel
+--===============0054655626030373615==--
