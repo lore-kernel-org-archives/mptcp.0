@@ -1,119 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============6332454660503088161=="
+Content-Type: multipart/mixed; boundary="===============7161656545846541356=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 4/4] man: mptcp man page
-Date: Wed, 22 Apr 2020 16:29:11 +0200
-Message-ID: <8624a4e4-171e-54a1-9f92-7f176c4f8cfa@tessares.net>
-In-Reply-To: 45b999f7934fbd75a2b27afcafa541f31d5aaa03.1587139599.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v3 2/4] add support for mptcp netlink interface
+Date: Wed, 22 Apr 2020 16:48:05 +0200
+Message-ID: <d410c3e7-5d6b-fa5f-cbab-28e35bede31e@tessares.net>
+In-Reply-To: 3d606c7f3644e756bc4c91f1eeca386374facca5.1587139599.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4225
+X-UID: 4226
 
---===============6332454660503088161==
+--===============7161656545846541356==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo,
 
-I think you missed some of my previous comments :)
-
-I managed to get a review from an English native!
+Thank you for the v3!
 
 On 17/04/2020 18:08, Paolo Abeni wrote:
-> describe the mptcp subcommands implemented so far.
-> =
-
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->   man/man8/ip-mptcp.8 | 142 ++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 142 insertions(+)
->   create mode 100644 man/man8/ip-mptcp.8
-> =
-
-> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
 > new file mode 100644
-> index 00000000..5ed0457b
+> index 00000000..c2122790
 > --- /dev/null
-> +++ b/man/man8/ip-mptcp.8
-> @@ -0,0 +1,142 @@
+> +++ b/ip/ipmptcp.c
+> @@ -0,0 +1,436 @@
 
 (...)
 
-> +.SH DESCRIPTION
+> +static int mptcp_parse_limit(int argc, char **argv, struct nlmsghdr *n)
+> +{
+> +	bool set_rcv_add_addrs =3D false;
+> +	bool set_subflows =3D false;
+> +	__u32 rcv_add_addrs =3D 0;
+> +	__u32 subflows =3D 0;
 > +
-> +MPTCP is a transport protocol build on top of TCP that allows TCP
-
-s/build/built/
-
-> +connections to use multiple paths to maximize resource usage and increase
-> +redundancy. The ip-mptcp sub-commands allow configuring several aspects =
-of the
-> +MPTCP path manager, which is in charge of subflows creation:
+> +	while (argc > 0) {
+> +		if (matches(*argv, "subflows") =3D=3D 0) {
+> +			NEXT_ARG();
 > +
-> +.P
-> +The
-> +.B endpoint
-> +object specifies the IP addresses that will be used and/or announced for
-> +additional subflows:
+> +			if (get_u32(&subflows, *argv, 0))
+> +				invarg("invalid subflows\n", *argv);
+> +			set_subflows =3D true;
+> +		} else if (matches(*argv, "add_addr_accepted") =3D=3D 0) {
+> +			NEXT_ARG();
 > +
-> +.TS
-> +l l.
-> +ip mptcp endpoint add	add new MPTCP endpoint
-> +ip mptcp endpoint delete	delete existing MPTCP endpoint
-> +ip mptcp endpoint show	get existing MPTCP endpoint
-> +ip mptcp endpoint flush	flush all existing MPTCP endpoints
-> +.TE
-> +
-> +.TP
-> +.IR ID
-> +is a unique numeric identifier for the given endpoint
-> +
-> +.TP
-> +.BR signal
-> +the endpoint will be announced/signaled to each peer via an ADD_ADDR MPT=
-CP
+> +			if (get_u32(&rcv_add_addrs, *argv, 0))
+> +				invarg("invalid add_addr_accepted\n", *argv);
+> +			set_rcv_add_addrs =3D true;
+> +		} else {
+> +			invarg("unknown", *argv);
 
-s/signaled/signalled/
+I was going to add a detail here: "\n" seems missing but I just noticed =
 
-> +sub-option
-> +
-> +.TP
-> +.BR subflow
-> +If the MPTCP limits allow for additional subflows creation, the endpoint=
- will
+it is always added in a few files I opened but not everywhere. =
 
-s/subflows creation/subflow creations/
+Apparently, there is a mix usage:
 
-or: s/If the MPTCP limits allow for additional subflows creation/If =
+  $ git grep -e "invarg(\".*);$" -- ip/ip*.c | wc -l
+  359
+  $ git grep -e "invarg(\".*);$" -- ip/ip*.c | grep -c '\\n"'
+  161
 
-additional subflow creation is allowed by MPTCP limits/
+So I am fine with or without this \n here and above where invarg() is used.
 
-detail: s/If/if/
 
-> +be used as the source address to create an additional subflow after that
-> +the MPTCP connection is established.
+But maybe should we have: "unknown limit"? Up to you!
 
-s/after that the MPTCP connection is established/after the MPTCP =
-
-connection has been established/
-
-or: s/after that the MPTCP connection is established/after the =
-
-establishment of the MPTCP connection/
-
-> +
-> +.TP
-> +.BR backup
-> +the endpoint will be announced as a backup address, if this is a
-> +.BR signal
-> +endpoint, or the subflow will be created as a backup one if this a
-
-s/this a/this is a/
-
-> +.BR subflow
-> +endpoint
+Of course no need to send a v4 just for that ;-)
 
 Cheers,
 Matt
@@ -124,4 +79,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6332454660503088161==--
+--===============7161656545846541356==--
