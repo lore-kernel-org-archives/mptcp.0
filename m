@@ -1,82 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============7161656545846541356=="
+Content-Type: multipart/mixed; boundary="===============8999584605995720998=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Bo YU <tsu.yubo at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 2/4] add support for mptcp netlink interface
-Date: Wed, 22 Apr 2020 16:48:05 +0200
-Message-ID: <d410c3e7-5d6b-fa5f-cbab-28e35bede31e@tessares.net>
-In-Reply-To: 3d606c7f3644e756bc4c91f1eeca386374facca5.1587139599.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH V2 -next] mptcp/pm_netlink.c : add check for
+ nla_put_in/6_addr
+Date: Wed, 22 Apr 2020 22:56:21 +0800
+Message-ID: <20200422145618.b5qshinlmi26i6ko@host>
+In-Reply-To: f82e4d00d4d4680994f0885c55831b2e9a2299c1.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4226
+X-UID: 4227
 
---===============7161656545846541356==
+--===============8999584605995720998==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-Thank you for the v3!
-
-On 17/04/2020 18:08, Paolo Abeni wrote:
-> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-> new file mode 100644
-> index 00000000..c2122790
-> --- /dev/null
-> +++ b/ip/ipmptcp.c
-> @@ -0,0 +1,436 @@
-
-(...)
-
-> +static int mptcp_parse_limit(int argc, char **argv, struct nlmsghdr *n)
-> +{
-> +	bool set_rcv_add_addrs =3D false;
-> +	bool set_subflows =3D false;
-> +	__u32 rcv_add_addrs =3D 0;
-> +	__u32 subflows =3D 0;
-> +
-> +	while (argc > 0) {
-> +		if (matches(*argv, "subflows") =3D=3D 0) {
-> +			NEXT_ARG();
-> +
-> +			if (get_u32(&subflows, *argv, 0))
-> +				invarg("invalid subflows\n", *argv);
-> +			set_subflows =3D true;
-> +		} else if (matches(*argv, "add_addr_accepted") =3D=3D 0) {
-> +			NEXT_ARG();
-> +
-> +			if (get_u32(&rcv_add_addrs, *argv, 0))
-> +				invarg("invalid add_addr_accepted\n", *argv);
-> +			set_rcv_add_addrs =3D true;
-> +		} else {
-> +			invarg("unknown", *argv);
-
-I was going to add a detail here: "\n" seems missing but I just noticed =
-
-it is always added in a few files I opened but not everywhere. =
-
-Apparently, there is a mix usage:
-
-  $ git grep -e "invarg(\".*);$" -- ip/ip*.c | wc -l
-  359
-  $ git grep -e "invarg(\".*);$" -- ip/ip*.c | grep -c '\\n"'
-  161
-
-So I am fine with or without this \n here and above where invarg() is used.
+On Wed, Apr 22, 2020 at 12:12:27PM +0200, Paolo Abeni wrote:
+>On Wed, 2020-04-22 at 09:34 +0800, Bo YU wrote:
+>> Normal there should be checked for nla_put_in6_addr like other
+>> usage in net.
+>>
+>> Detected by CoverityScan, CID# 1461639
+>>
+>> Fixes: 01cacb00b35c("mptcp: add netlink-based PM")
+>> Signed-off-by: Bo YU <tsu.yubo(a)gmail.com>
+>> ---
+>> V2: Add check for nla_put_in_addr suggested by Paolo Abeni
+>
+>Thank you for addressing my feedback!
+>
+>> ---
+>>  net/mptcp/pm_netlink.c | 11 +++++++----
+>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index 86d61ab34c7c..0a39f0ebad76 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -599,12 +599,15 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
+>>  	    nla_put_s32(skb, MPTCP_PM_ADDR_ATTR_IF_IDX, entry->ifindex))
+>>  		goto nla_put_failure;
+>>
+>> -	if (addr->family =3D=3D AF_INET)
+>> +	if (addr->family =3D=3D AF_INET &&
+>>  		nla_put_in_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR4,
+>> -				addr->addr.s_addr);
+>> +				addr->addr.s_addr))
+>> +		goto nla_put_failure;
+>> +
+>
+>I'm very sorry about the nit-picking, but the above is now a single
+>statement, and indentation should be adjusted accordingly:
+>'nla_put_in_addr()' should be aligned with 'addr->family'.
+Ok, but i just want to make clear for that, do you mean:
 
 
-But maybe should we have: "unknown limit"? Up to you!
+	if (addr->family =3D=3D AF_INET && nla_put_in_addr(skb,
+			MPTCP_PM_ADDR_ATTR_ADDR4, addr->addr.s_addr))
 
-Of course no need to send a v4 just for that ;-)
+In fact, i was upset by checkpatch about over 80 chars warning.
+This is my originally version patch to fix it :(. If i was wrong
+to understand your means, please  correct me. Thank you.
 
-Cheers,
-Matt
--- =
-
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============7161656545846541356==--
+>
+>The same applies to the chunk below.
+>
+>>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>> -	else if (addr->family =3D=3D AF_INET6)
+>> -		nla_put_in6_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR6, &addr->addr6);
+>> +	else if (addr->family =3D=3D AF_INET6 &&
+>> +		nla_put_in6_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR6, &addr->addr6))
+>> +		goto nla_put_failure;
+>>  #endif
+>>  	nla_nest_end(skb, attr);
+>>  	return 0;
+>
+>Otherwise LGTM, thanks!
+>
+>Paolo
+>
+--===============8999584605995720998==--
