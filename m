@@ -1,76 +1,201 @@
-Content-Type: multipart/mixed; boundary="===============6413254537525144804=="
+Content-Type: multipart/mixed; boundary="===============3321413165338427565=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH V2 -next] mptcp/pm_netlink.c : add check for
- nla_put_in/6_addr
-Date: Wed, 22 Apr 2020 12:12:27 +0200
-Message-ID: <f82e4d00d4d4680994f0885c55831b2e9a2299c1.camel@redhat.com>
-In-Reply-To: 20200422013433.qzlthtmx4c7mmlh3@host
+Subject: [MPTCP] Re: [PATCH RFC] net: mptcp: improve fallback after successful
+ 3-way-handshake
+Date: Wed, 22 Apr 2020 13:45:07 +0200
+Message-ID: <b136437afd19a1dc31ef21c913dd4d531c971ac0.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.22.394.2004211133370.18697@tedri-mobl.ger.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4219
+X-UID: 4220
 
---===============6413254537525144804==
+--===============3321413165338427565==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-04-22 at 09:34 +0800, Bo YU wrote:
-> Normal there should be checked for nla_put_in6_addr like other
-> usage in net.
+On Tue, 2020-04-21 at 14:57 -0700, Mat Martineau wrote:
+> On Tue, 21 Apr 2020, Davide Caratti wrote:
 > =
 
-> Detected by CoverityScan, CID# 1461639
+> > From: Davide Caratti <dcaratti(a)nst.lab.eng.brq.redhat.com>
 > =
 
-> Fixes: 01cacb00b35c("mptcp: add netlink-based PM")
-> Signed-off-by: Bo YU <tsu.yubo(a)gmail.com>
-> ---
-> V2: Add check for nla_put_in_addr suggested by Paolo Abeni
-
-Thank you for addressing my feedback!
-
-> ---
->  net/mptcp/pm_netlink.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+> I'm guessing this isn't the address you want in the git "Author" field!
 > =
 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 86d61ab34c7c..0a39f0ebad76 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -599,12 +599,15 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
->  	    nla_put_s32(skb, MPTCP_PM_ADDR_ATTR_IF_IDX, entry->ifindex))
->  		goto nla_put_failure;
+> > a socket can receive data without a DSS option after MP_CAPABLE exchange
+> > in the three way handshake. In this case, it must fall-back to normal
+> > TCP in accordance to RFC8684 =C2=A73.7. In addition, fall-back to TCP m=
+ust
+> > occur if the peer sends data with a DSS option with zero DLL (so-called
+> > "infinite mapping"). In case a server needs to fallback and msk->subflow
+> > is NULL, msk->first can be used for send/receive operations.
+> > =
+
+> > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> > ---
+> > net/mptcp/protocol.c | 20 +++++++++++++++++++-
+> > net/mptcp/subflow.c  | 18 ++++++++++++++----
+> > 2 files changed, 33 insertions(+), 5 deletions(-)
+> > =
+
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 457655ea875b..045aacb68e13 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -736,6 +736,12 @@ static int mptcp_sendmsg(struct sock *sk, struct m=
+sghdr *msg, size_t len)
+> > 		pr_debug("fallback passthrough");
+> > 		ret =3D sock_sendmsg(ssock, msg);
+> > 		return ret >=3D 0 ? ret + copied : (copied ? copied : ret);
+> > +	} else if (__mptcp_needs_tcp_fallback(msk)) {
+> > +		ssk =3D msk->first;
+> > +		release_sock((struct sock *)msk);
+> > +		pr_debug("msk->first passthrough");
+> > +		ret =3D ssk->sk_prot->sendmsg(ssk, msg, len);
+> > +		return ret >=3D 0 ? ret + copied : (copied ? copied : ret);
+> > 	}
+> > =
+
+> > 	mptcp_clean_una(sk);
+> > @@ -899,6 +905,14 @@ static int mptcp_recvmsg(struct sock *sk, struct m=
+sghdr *msg, size_t len,
+> > 			 mptcp_subflow_ctx(ssock->sk));
+> > 		copied =3D sock_recvmsg(ssock, msg, flags);
+> > 		return copied;
+> > +	} else if (__mptcp_needs_tcp_fallback(msk)) {
+> > +use_mskfirst:
+> > +		pr_debug("fallback-read using msk->first");
+> > +		sk =3D msk->first;
+> > +		release_sock((struct sock *)msk);
 > =
 
-> -	if (addr->family =3D=3D AF_INET)
-> +	if (addr->family =3D=3D AF_INET &&
->  		nla_put_in_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR4,
-> -				addr->addr.s_addr);
-> +				addr->addr.s_addr))
-> +		goto nla_put_failure;
-> +
+> sk is one of the function arguments referring to the MPTCP-level socket, =
 
-I'm very sorry about the nit-picking, but the above is now a single
-statement, and indentation should be adjusted accordingly:
-'nla_put_in_addr()' should be aligned with 'addr->family'.
+> so a "struct sock *ssk" to use in this block of code would be clearer and =
 
-The same applies to the chunk below.
+> would remove the cast in the release_sock().
+> =
 
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -	else if (addr->family =3D=3D AF_INET6)
-> -		nla_put_in6_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR6, &addr->addr6);
-> +	else if (addr->family =3D=3D AF_INET6 &&
-> +		nla_put_in6_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR6, &addr->addr6))
-> +		goto nla_put_failure;
->  #endif
->  	nla_nest_end(skb, attr);
->  	return 0;
+> I recognize that in this fallback scenario there is no struct sock =
 
-Otherwise LGTM, thanks!
+> available, so sock_recvmsg() can't be used, but is there any way to =
 
-Paolo
+> handle sendmsg/recvmsg the same after either type of fallback?
 
---===============6413254537525144804==--
+I *think* the above 2 conditionals can be replaced with only the second
+one, e.g. always use 'ssk->sk_prot->{sendmsg,recvmsg}(ssk, msg, len);' =
+
+
+> > +				return MAPPING_INFINITE;
+> > +			}
+> =
+
+> This will treat any skb without a DSS option on the initial subflow as an =
+
+> implicit infinite mapping, if there is not a current valid mapping. It's =
+
+> possible to encounter this after valid mappings were found and DATA_ACKed.
+> =
+
+> Section 3.7 is specific about what to do when an ACK (not a data packet) =
+
+> without DSS is received on the initial subflow before any other subflows =
+
+> are added: this is treated as an implicit infinite mapping, and the next =
+
+> data packet that is sent should include an infinite mapping to signal the =
+
+> fallback to the peer.
+> =
+
+> While section 3.7 says a sender "MUST" include a DSS option in every =
+
+> segment until a DATA_ACK is received, I don't see a description of what =
+
+> happens if the DSS option is missing when the receiver processes it - is =
+
+> it supposed to also be treated as a fallback? If so, the code above must =
+
+> only return MAPPING_INFINITE if DATA_ACK has never been sent and no other =
+
+                                                          ^^^^
+received ?!?
+                                                          =
+
+> subflows have been created.
+
+I *think* we can add an additional per subflow flag to track the 'first
+data_ack received' event, and check READ_ONCE(msk->pm.subflows) =3D=3D 0 to
+verify no additional subflows exits.
+
+> > 			return MAPPING_INVALID;
+> > +		}
+> > =
+
+> > 		goto validate_seq;
+> > 	}
+> > @@ -552,9 +559,8 @@ static enum mapping_status get_mapping_status(struc=
+t sock *ssk)
+> > =
+
+> > 	data_len =3D mpext->data_len;
+> > 	if (data_len =3D=3D 0) {
+> > -		pr_err("Infinite mapping not handled");
+> > 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
+> > -		return MAPPING_INVALID;
+> > +		return subflow->local_id ? MAPPING_INVALID : MAPPING_INFINITE;
+> =
+
+> Like above, I think this requires different logic to determine that there =
+
+> are no other subflows and that DATA_ACK has not been sent -- if that's th=
+e =
+
+> narrow case the code is trying to detect.
+> =
+
+> The RFC seems to allow infinite mappings on any single subflow connection=
+. =
+
+> If a second subflow was established and then the initial subflow (local_i=
+d =
+
+> =3D=3D 0) was closed, then there could be an infinite mapping on a subflo=
+w =
+
+> with a different local_id. (If I'm misreading the spec, please let me =
+
+> know!). This may be outside the scope of this patch anyway.
+
+from =
+
+https://datatracker.ietf.org/doc/rfc8684/?include_text=3D1, section 3.7.:
+
+"""
+      In the case of such an ACK being received on the first subflow
+      (i.e., that started with MP_CAPABLE), before any additional
+      subflows are added, the implementation MUST drop out of MPTCP mode
+      and fall back to regular TCP.
+"""
+
+and:
+
+"""
+      In the case of this occurring
+      on an additional subflow (i.e., one started with MP_JOIN), the
+      host MUST close the subflow with a RST, which SHOULD contain an
+      MP_TCPRST option (Section 3.6) with a "Middlebox interference"
+      reason code.
+"""
+
+I think we should cope only with local_id =3D=3D 0
+
+thanks!
+
+/P
+
+--===============3321413165338427565==--
