@@ -1,60 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============4411311370856247543=="
+Content-Type: multipart/mixed; boundary="===============0286987226387780051=="
 MIME-Version: 1.0
-From: Bo YU <tsu.yubo at gmail.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH V3 -next] mptcp/pm_netlink.c : add check for
- nla_put_in/6_addr
-Date: Thu, 23 Apr 2020 10:10:03 +0800
-Message-ID: <20200423020957.g5ovpymbbp4nykbr@debian.debian-2>
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix data_fin handing in RX path
+Date: Wed, 22 Apr 2020 19:46:47 -0700
+Message-ID: <20200422.194647.2015117902662502050.davem@davemloft.net>
+In-Reply-To: 97c9e399060f81ed71ebfd446d9cf89bbb534142.1587572315.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4231
+X-UID: 4232
 
---===============4411311370856247543==
+--===============0286987226387780051==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Normal there should be checked for nla_put_in6_addr like other
-usage in net.
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Wed, 22 Apr 2020 18:24:56 +0200
 
-Detected by CoverityScan, CID# 1461639
+> The data fin flag is set only via a DSS option, but
+> mptcp_incoming_options() copies it unconditionally from the
+> provided RX options.
+> =
 
-Fixes: 01cacb00b35c("mptcp: add netlink-based PM")
-Signed-off-by: Bo YU <tsu.yubo(a)gmail.com>
----
-V3: fix code style, thanks for Paolo
+> Since we do not clear all the mptcp sock RX options in a
+> socket free/alloc cycle, we can end-up with a stray data_fin
+> value while parsing e.g. MPC packets.
+> =
 
-V2: Add check for nla_put_in_addr suggested by Paolo Abeni
----
- net/mptcp/pm_netlink.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+> That would lead to mapping data corruption and will trigger
+> a few WARN_ON() in the RX path.
+> =
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 86d61ab34c7c..b78edf237ba0 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -599,12 +599,14 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
- 	    nla_put_s32(skb, MPTCP_PM_ADDR_ATTR_IF_IDX, entry->ifindex))
- 		goto nla_put_failure;
+> Instead of adding a costly memset(), fetch the data_fin flag
+> only for DSS packets - when we always explicitly initialize
+> such bit at option parsing time.
+> =
 
--	if (addr->family =3D=3D AF_INET)
--		nla_put_in_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR4,
--				addr->addr.s_addr);
-+	if (addr->family =3D=3D AF_INET &&
-+	    nla_put_in_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR4,
-+			    addr->addr.s_addr))
-+		goto nla_put_failure;
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	else if (addr->family =3D=3D AF_INET6)
--		nla_put_in6_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR6, &addr->addr6);
-+	else if (addr->family =3D=3D AF_INET6 &&
-+		 nla_put_in6_addr(skb, MPTCP_PM_ADDR_ATTR_ADDR6, &addr->addr6))
-+		goto nla_put_failure;
- #endif
- 	nla_nest_end(skb, attr);
- 	return 0;
---
-2.11.0
+> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
---===============4411311370856247543==--
+Applied and queued up for v5.6 -stable, thanks.
+--===============0286987226387780051==--
