@@ -1,117 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============4002056574031013151=="
+Content-Type: multipart/mixed; boundary="===============8491166507871281869=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: kernel test robot <lkp at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 3/5] tcp: init MPTCP option before parsing.
-Date: Mon, 27 Apr 2020 19:43:02 +0200
-Message-ID: <1601536ea355dda6d6c7f62144723f00b151bf0c.camel@redhat.com>
-In-Reply-To: 606694a5d5c7a74aa90f2bf6f8275933a17b626d.1587738345.git.pabeni@redhat.com
+Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export 2ac757e415 ("net: ethernet:
+ ti: fix return value check in k3_cppi_desc_pool_create_name()")
+Date: Tue, 28 Apr 2020 11:53:41 +0800
+Message-ID: <5ea7a8c5.zYyjjKZt00B0iLBp%lkp@intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4254
+X-UID: 4256
 
---===============4002056574031013151==
+--===============8491166507871281869==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-04-24 at 19:14 +0200, Paolo Abeni wrote:
-> The sub_options field carries per packet information,
-> The MPTCP option parsing will set the relevant bits according
-> to the ingress option.
-> =
 
-> Currently the sub_option field is cleared only on option
-> reset, so that a sub_option set by e.g. a packet later dropped
-> due to seq checks, will remain visible on next good packet.
-> =
-
-> The above allows out-of-windows packets to corrupt the mptcp
-> stream.
-> =
-
-> Fix the above clearing the sub_options field before options
-> parsing.
-> =
-
-> Additionally avoid explicitly clearing the add_addr sub-option
-> after processing it - no more needed, as it's now always
-> cleared before parsing.
-> =
-
-> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  include/linux/tcp.h  | 1 -
->  net/ipv4/tcp_input.c | 1 +
->  net/mptcp/options.c  | 1 -
->  3 files changed, 1 insertion(+), 2 deletions(-)
-> =
-
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index b2b34db4f424..bc16bb3bcbd1 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -152,7 +152,6 @@ static inline void tcp_clear_options(struct tcp_optio=
-ns_received *rx_opt)
->  #if IS_ENABLED(CONFIG_SMC)
->  	rx_opt->smc_ok =3D 0;
->  #endif
-> -	mptcp_init_options(rx_opt);
->  }
->  =
-
->  /* This is the max number of SACKS that we'll generate and process. It's=
- safe
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index bf4ced9273e8..738a0db29f77 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -3848,6 +3848,7 @@ void tcp_parse_options(const struct net *net,
->  =
-
->  	ptr =3D (const unsigned char *)(th + 1);
->  	opt_rx->saw_tstamp =3D 0;
-> +	mptcp_init_options(opt_rx);
->  =
-
->  	while (length > 0) {
->  		int opcode =3D *ptr++;
-
-I just noticed the above is not enough: we will get stray mptcp option
-values when hitting the tcp_fast_parse_options() code path (no opt in
-the rx packet, or only tstamp).
-
-Usually the export branch always set mptcp option, so we do not hit
-tcp_fast_parse_options(), but due to another bug - still quite obscure
-- the sender does that on some race.
-
-More importantly, a generic MPTCP endpoint may chose to omit the DSS in
-some packets.
-
-A possible fix would be adding more mptcp_init_options() in
-tcp_fast_parse_options(), but that starts looking very wrong... =
+LINUX COMMIT
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+commit : 2ac757e4152e3322a04a6dfb3d1fa010d3521abf
+subject: net: ethernet: ti: fix return value check in k3_cppi_desc_pool_cre=
+ate_name()
+date   : 2020-04-28 04:27:59 +0800
+author : Wei Yongjun <weiyongjun1(a)huawei.com>
 
 
-As an alternative, I was looking at booking an 'unused' bit in
-tcp_skb_cb() but even that will need explicit initialization.
+Test status of 2ac757e4152e3322a04a6dfb3d1fa010d3521abf (compared to v5.6)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
+|                                                                          =
+                       | pass | fail | unstable | skip | - | regression | f=
+ix |
+| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
+ts                     | 44   | 4    |          | 3    |   |            |  =
+   |
+| kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     | 34   | 7    |          | 1    |   |            |=
+     |
+| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
+ests                   | 3    |      |          |      |   |            |  =
+   |
+| kselftests-cpufreq-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x8=
+6_64-rhel-7.6-kselftests | 1    |      |          |      |   |            |=
+     |
+| kselftests-kvm-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     | 20   |      |          | 1    |   |            |=
+     |
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
 
-Another option would be calling skb_ext_add() in mptcp_parse_option(), =
+Fails
+=3D=3D=3D=3D=3D
+kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftests
+---
+- kernel-selftests.bpf.test_progs.fail
+- kernel-selftests.bpf.test_align.fail
+- kernel-selftests.bpf.test_sysctl.fail
+- kernel-selftests.bpf.test_progs-no_alu32.fail
 
-clear the mptcp option only when the extension is added and using
-mptcp_get_ext() in mptcp_incoming_options() to validate the
-mptcp_options_received sub options flags.
+kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64-r=
+hel-7.6-kselftests
+---
+- kernel-selftests.net.fib_tests.sh.fail
+- kernel-selftests.net.test_vxlan_under_vrf.sh.fail
+- kernel-selftests.net.fib_nexthop_multiprefix.sh.fail
+- kernel-selftests.net.altnames.sh.fail
+- kernel-selftests.net.icmp_redirect.sh.fail
+- kernel-selftests.net.txtimestamp.sh.fail
+- kernel-selftests.net.vrf-xfrm-tests.sh.fail
 
-The last one is probably the more robust alternative, but has the
-downside to force ext allocation on syn packet (we currently don't do
-that) and possibly try multiple allocation on memory pressure - if
-skb_ext_add() fails at option parsing time and the ingress packet has
-multiple mptcp options.
 
-Any better option?
-
-Thanks,
-
-Paolo
-
---===============4002056574031013151==--
+--===============8491166507871281869==--
