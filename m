@@ -1,47 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============1005911521063792925=="
+Content-Type: multipart/mixed; boundary="===============3584300846823191083=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 4/6] mptcp: fix 'use_ack' option access.
-Date: Tue, 28 Apr 2020 16:19:56 +0200
-Message-ID: <b3e640dd3f7e2c97dc355a6b3e46a3bf0cca1f13.1588082498.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 5/6] mptcp: initialize data_fin field for mpc
+ packets
+Date: Tue, 28 Apr 2020 16:20:03 +0200
+Message-ID: <e4c4277239d8332aae77b5866d4191e89848369d.1588082498.git.pabeni@redhat.com>
 In-Reply-To: cover.1588082498.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4261
+X-UID: 4262
 
---===============1005911521063792925==
+--===============3584300846823191083==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The mentioned RX option field is initialized only for DSS
-packet, we must access it only if 'dss' is set too, or
-the subflow will end-up in a bad status, leading to
-RFC violations.
+When parsing MPC+data packets we set the dss field, so
+we must also initialize the data_fin, or we can find stray
+value there.
 
+Fixes: 9a19371bf029 ("mptcp: fix data_fin handing in RX path")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/options.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ecf41d52d2fc..9486720c3256 100644
+index 9486720c3256..45497af23906 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -695,7 +695,7 @@ static bool check_fully_established(struct mptcp_sock *=
-msk, struct sock *sk,
- 	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1)
- 		return subflow->mp_capable;
- =
-
--	if (mp_opt->use_ack) {
-+	if (mp_opt->dss && mp_opt->use_ack) {
- 		/* subflows are fully established as soon as we get any
- 		 * additional ack.
- 		 */
+@@ -858,6 +858,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb,
+ 			mpext->subflow_seq =3D 1;
+ 			mpext->dsn64 =3D 1;
+ 			mpext->mpc_map =3D 1;
++			mpext->data_fin =3D 0;
+ 		} else {
+ 			mpext->data_seq =3D mp_opt.data_seq;
+ 			mpext->subflow_seq =3D mp_opt.subflow_seq;
 -- =
 
 2.21.1
 
---===============1005911521063792925==--
+--===============3584300846823191083==--
