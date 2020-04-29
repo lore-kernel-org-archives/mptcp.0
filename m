@@ -1,39 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============1759255254708904603=="
+Content-Type: multipart/mixed; boundary="===============4310133936398706804=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 30 April 2020 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 29 Apr 2020 19:42:10 +0200
-Message-ID: <f5f6da5f-585a-982a-fca9-e7aea3b6a98e@tessares.net>
+Subject: [MPTCP] Re: [PATCH net 1/5] mptcp: consolidate synack processing.
+Date: Wed, 29 Apr 2020 11:50:34 -0700
+Message-ID: <20200429.115034.117126455083840977.davem@davemloft.net>
+In-Reply-To: 5261bc9add632deda5890816c41188ee80c6765e.1588156257.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4276
+X-UID: 4277
 
---===============1759255254708904603==
+--===============4310133936398706804==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Wed, 29 Apr 2020 12:41:45 +0200
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> @@ -222,6 +222,7 @@ static void subflow_finish_connect(struct sock *sk, c=
+onst struct sk_buff *skb)
+>  {
+>  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+>  	struct sock *parent =3D subflow->conn;
+> +	struct tcp_sock *tp =3D tcp_sk(sk);
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20200430
+Since you introduce this 'tp' variable...
 
-Feel free to add/modify topics!
+> +	} else if (subflow->request_mptcp) {
+> +		tcp_sk(sk)->is_mptcp =3D 0;
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Please use it here.
 
-Speak to you tomorrow!
-Matt
--- =
+> +	}
+> +
+> +	if (!tcp_sk(sk)->is_mptcp)
+>  		return;
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1759255254708904603==--
+And here.
+
+Thank you.
+--===============4310133936398706804==--
