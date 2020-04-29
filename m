@@ -1,46 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============6488715968494909438=="
+Content-Type: multipart/mixed; boundary="===============7445510509862045591=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: kernel test robot <lkp at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: fix uninitialized value access
-Date: Wed, 29 Apr 2020 12:50:37 +0200
-Message-ID: <c2b96b3751ccf64357d2c6f0e7d23908dda8a601.1588157274.git.pabeni@redhat.com>
+Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export 790ab249b5 ("net: ethernet:
+ fec: Prevent MII event after MII_SPEED write")
+Date: Wed, 29 Apr 2020 19:35:08 +0800
+Message-ID: <5ea9666c.k1k5dK2U9n3rWzga%lkp@intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4272
+X-UID: 4273
 
---===============6488715968494909438==
+--===============7445510509862045591==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tcp_v{4,6}_syn_recv_sock() set 'own_req' only when returning
-a not NULL 'child', let's check 'own_req' only if child is
-available to avoid an - unharmful - UBSAN splat.
 
-Fixes: 20882e2cb904 ("mptcp: avoid flipping mp_capable field in syn_recv_so=
-ck()")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+LINUX COMMIT
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+commit : 790ab249b55d75fdb427b92f81964cd7cb525eec
+subject: net: ethernet: fec: Prevent MII event after MII_SPEED write
+date   : 2020-04-29 05:33:19 +0800
+author : Andrew Lunn <andrew(a)lunn.ch>
+
+
+Test status of 790ab249b55d75fdb427b92f81964cd7cb525eec (compared to v5.6)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
+|                                                                          =
+                       | pass | fail | unstable | skip | - | regression | f=
+ix |
+| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
+ests                   | 2    | 1    |          |      |   |            |  =
+   |
+| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
+ts                     | 43   | 5    |          | 3    |   |            |  =
+   |
+| kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     | 33   | 8    |          | 1    |   |            |=
+     |
+| kselftests-cpufreq-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x8=
+6_64-rhel-7.6-kselftests | 1    |      |          |      |   |            |=
+     |
+| kselftests-kvm-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     | 20   |      |          | 1    |   |            |=
+     |
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
+
+Fails
+=3D=3D=3D=3D=3D
+kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
+ts
 ---
- net/mptcp/subflow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- kernel-selftests.net/mptcp.mptcp_join.sh.fail
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f412e886aa9b..2fa319a36ea5 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -522,7 +522,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 	/* check for expected invariant - should never trigger, just help
- 	 * catching eariler subtle bugs
- 	 */
--	WARN_ON_ONCE(*own_req && child && tcp_sk(child)->is_mptcp &&
-+	WARN_ON_ONCE(child && *own_req && tcp_sk(child)->is_mptcp &&
- 		     (!mptcp_subflow_ctx(child) ||
- 		      !mptcp_subflow_ctx(child)->conn));
- 	return child;
--- =
+kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftests
+---
+- kernel-selftests.bpf.test_progs.fail
+- kernel-selftests.bpf.test_align.fail
+- kernel-selftests.bpf.test_tcpbpf_user.fail
+- kernel-selftests.bpf.test_sysctl.fail
+- kernel-selftests.bpf.test_progs-no_alu32.fail
 
-2.21.1
+kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64-r=
+hel-7.6-kselftests
+---
+- kernel-selftests.net.fib_tests.sh.fail
+- kernel-selftests.net.test_vxlan_under_vrf.sh.fail
+- kernel-selftests.net.fib_nexthop_multiprefix.sh.fail
+- kernel-selftests.net.fib_nexthops.sh.fail
+- kernel-selftests.net.altnames.sh.fail
+- kernel-selftests.net.icmp_redirect.sh.fail
+- kernel-selftests.net.txtimestamp.sh.fail
+- kernel-selftests.net.vrf-xfrm-tests.sh.fail
 
---===============6488715968494909438==--
+
+--===============7445510509862045591==--
