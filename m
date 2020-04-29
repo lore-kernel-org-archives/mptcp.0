@@ -1,84 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============7445510509862045591=="
+Content-Type: multipart/mixed; boundary="===============6507196487808563993=="
 MIME-Version: 1.0
-From: kernel test robot <lkp at intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export 790ab249b5 ("net: ethernet:
- fec: Prevent MII event after MII_SPEED write")
-Date: Wed, 29 Apr 2020 19:35:08 +0800
-Message-ID: <5ea9666c.k1k5dK2U9n3rWzga%lkp@intel.com>
+Subject: [MPTCP] [PATCH net] mptcp: replace mptcp_disconnect with a stub
+Date: Wed, 29 Apr 2020 16:22:23 +0200
+Message-ID: <20200429142223.18894-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 4273
+X-UID: 4274
 
---===============7445510509862045591==
+--===============6507196487808563993==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Paolo points out that mptcp_disconnect is bogus:
+"lock_sock(sk);
+looks suspicious (lock should be already held by the caller)
+And call to: tcp_disconnect(sk, flags); too, sk is not a tcp
+socket".
 
-LINUX COMMIT
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-commit : 790ab249b55d75fdb427b92f81964cd7cb525eec
-subject: net: ethernet: fec: Prevent MII event after MII_SPEED write
-date   : 2020-04-29 05:33:19 +0800
-author : Andrew Lunn <andrew(a)lunn.ch>
+->disconnect() gets called from e.g. inet_stream_connect when
+one tries to disassociate a connected socket again (to re-connect
+without closing the socket first).
+MPTCP however uses mptcp_stream_connect, not inet_stream_connect,
+for the mptcp-socket connect call.
 
+inet_stream_connect only gets called indirectly, for the tcp socket,
+so any ->disconnect() calls end up calling tcp_disconnect for that
+tcp subflow sk.
 
-Test status of 790ab249b55d75fdb427b92f81964cd7cb525eec (compared to v5.6)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+--------------------------------------------------------------------------=
------------------------+------+------+----------+------+---+------------+--=
----+
-|                                                                          =
-                       | pass | fail | unstable | skip | - | regression | f=
-ix |
-| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
-ests                   | 2    | 1    |          |      |   |            |  =
-   |
-| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
-ts                     | 43   | 5    |          | 3    |   |            |  =
-   |
-| kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
--rhel-7.6-kselftests     | 33   | 8    |          | 1    |   |            |=
-     |
-| kselftests-cpufreq-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x8=
-6_64-rhel-7.6-kselftests | 1    |      |          |      |   |            |=
-     |
-| kselftests-kvm-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
--rhel-7.6-kselftests     | 20   |      |          | 1    |   |            |=
-     |
-+--------------------------------------------------------------------------=
------------------------+------+------+----------+------+---+------------+--=
----+
+This also explains why syzkaller has not yet reported a problem
+here.  So for now replace this with a stub that doesn't do anything.
 
-Fails
-=3D=3D=3D=3D=3D
-kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
-ts
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/14
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
-- kernel-selftests.net/mptcp.mptcp_join.sh.fail
+ net/mptcp/protocol.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftests
----
-- kernel-selftests.bpf.test_progs.fail
-- kernel-selftests.bpf.test_align.fail
-- kernel-selftests.bpf.test_tcpbpf_user.fail
-- kernel-selftests.bpf.test_sysctl.fail
-- kernel-selftests.bpf.test_progs-no_alu32.fail
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b22a63ba2348..6e0188f5d3f3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1316,11 +1316,12 @@ static void mptcp_copy_inaddrs(struct sock *msk, co=
+nst struct sock *ssk)
+ =
 
-kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64-r=
-hel-7.6-kselftests
----
-- kernel-selftests.net.fib_tests.sh.fail
-- kernel-selftests.net.test_vxlan_under_vrf.sh.fail
-- kernel-selftests.net.fib_nexthop_multiprefix.sh.fail
-- kernel-selftests.net.fib_nexthops.sh.fail
-- kernel-selftests.net.altnames.sh.fail
-- kernel-selftests.net.icmp_redirect.sh.fail
-- kernel-selftests.net.txtimestamp.sh.fail
-- kernel-selftests.net.vrf-xfrm-tests.sh.fail
+ static int mptcp_disconnect(struct sock *sk, int flags)
+ {
+-	lock_sock(sk);
+-	__mptcp_clear_xmit(sk);
+-	release_sock(sk);
+-	mptcp_cancel_work(sk);
+-	return tcp_disconnect(sk, flags);
++	/* Should never be called.
++	 * inet_stream_connect() calls ->disconnect, but that
++	 * refers to the subflow socket, not the mptcp one.
++	 */
++	WARN_ON_ONCE(1);
++	return 0;
+ }
+ =
 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-- =
 
---===============7445510509862045591==--
+2.26.2
+
+--===============6507196487808563993==--
