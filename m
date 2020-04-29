@@ -1,60 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============5998378116543004278=="
+Content-Type: multipart/mixed; boundary="===============3211144271383149243=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 3/5] mptcp: avoid a WARN on bad input.
-Date: Wed, 29 Apr 2020 12:41:47 +0200
-Message-ID: <388f5aba3a30dfd827f95efbe40ccb6d4ad42fe1.1588156257.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net 5/5] mptcp: initialize the data_fin field for mpc
+ packets
+Date: Wed, 29 Apr 2020 12:41:49 +0200
+Message-ID: <e3d30a7e0b7bcbb11f9efff76da4341143d90340.1588156257.git.pabeni@redhat.com>
 In-Reply-To: cover.1588156257.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4269
+X-UID: 4270
 
---===============5998378116543004278==
+--===============3211144271383149243==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Syzcaller has found a way to trigger the WARN_ON_ONCE condition
-in check_fully_established().
+When parsing MPC+data packets we set the dss field, so
+we must also initialize the data_fin, or we can find stray
+value there.
 
-The root cause is a legit fallback to TCP scenario, so replace
-the WARN with a plain message on a more strict condition.
-
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+Fixes: 9a19371bf029 ("mptcp: fix data_fin handing in RX path")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/options.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index eadbd59586e4..ecf41d52d2fc 100644
+index 9486720c3256..45497af23906 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -703,8 +703,6 @@ static bool check_fully_established(struct mptcp_sock *=
-msk, struct sock *sk,
- 		goto fully_established;
- 	}
- =
-
--	WARN_ON_ONCE(subflow->can_ack);
--
- 	/* If the first established packet does not contain MP_CAPABLE + data
- 	 * then fallback to TCP
- 	 */
-@@ -714,6 +712,8 @@ static bool check_fully_established(struct mptcp_sock *=
-msk, struct sock *sk,
- 		return false;
- 	}
- =
-
-+	if (unlikely(!READ_ONCE(msk->pm.server_side)))
-+		pr_warn_once("bogus mpc option on established client sk");
- 	subflow->fully_established =3D 1;
- 	subflow->remote_key =3D mp_opt->sndr_key;
- 	subflow->can_ack =3D 1;
+@@ -858,6 +858,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb,
+ 			mpext->subflow_seq =3D 1;
+ 			mpext->dsn64 =3D 1;
+ 			mpext->mpc_map =3D 1;
++			mpext->data_fin =3D 0;
+ 		} else {
+ 			mpext->data_seq =3D mp_opt.data_seq;
+ 			mpext->subflow_seq =3D mp_opt.subflow_seq;
 -- =
 
 2.21.1
 
---===============5998378116543004278==--
+--===============3211144271383149243==--
