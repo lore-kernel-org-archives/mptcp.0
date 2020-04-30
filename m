@@ -1,42 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============0792502194563038664=="
+Content-Type: multipart/mixed; boundary="===============7171214473055880755=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net 2/5] mptcp: move option parsing into
- mptcp_incoming_options()
-Date: Thu, 30 Apr 2020 10:53:17 +0200
-Message-ID: <7f50648241eddfbc2062b6edf88b16db0e60787f.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.22.394.2004291151040.42484@jdfowle1-mobl1.amr.corp.intel.com
+Subject: [MPTCP] [PATCH net v2 0/5] mptcp: fix incoming options parsing
+Date: Thu, 30 Apr 2020 15:01:50 +0200
+Message-ID: <cover.1588243786.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4282
+X-UID: 4283
 
---===============0792502194563038664==
+--===============7171214473055880755==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-04-29 at 11:54 -0700, Mat Martineau wrote:
-> On Wed, 29 Apr 2020, Paolo Abeni wrote:
-[...]
+This series addresses a serious issue in MPTCP option parsing.
 
-> > Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> =
+This is bigger than the usual -net change, but I was unable to find a
+working, sane, smaller fix.
 
-> Hi Paolo -
-> =
+The core change is inside patch 2/5 which moved MPTCP options parsing from
+the TCP code inside existing MPTCP hooks and clean MPTCP options status on
+each processed packet.
 
-> This doesn't apply cleanly to the net tree.
+The patch 1/5 is a needed pre-requisite, and patches 3,4,5 are smaller,
+related fixes.
 
-I'm sorry, I had local unrelated changes that caused fuzzy. I'll rebase
-in v2.
+v1 -> v2:
+ - cleaned-up patch 1/5
+ - rebased on top of current -net
 
-Thank you for checking!
+Paolo Abeni (5):
+  mptcp: consolidate synack processing.
+  mptcp: move option parsing into  mptcp_incoming_options()
+  mptcp: avoid a WARN on bad input.
+  mptcp: fix 'use_ack' option access.
+  mptcp: initialize the data_fin field for mpc packets
 
-Cheers,
+ include/linux/tcp.h  | 51 ------------------------
+ include/net/mptcp.h  |  3 --
+ net/ipv4/tcp_input.c |  7 ----
+ net/mptcp/options.c  | 95 +++++++++++++++++++-------------------------
+ net/mptcp/protocol.c |  6 +--
+ net/mptcp/protocol.h | 43 +++++++++++++++++++-
+ net/mptcp/subflow.c  | 82 ++++++++++++++++++++++++--------------
+ 7 files changed, 138 insertions(+), 149 deletions(-)
 
-Paolo
+-- =
 
---===============0792502194563038664==--
+2.21.1
+
+--===============7171214473055880755==--
