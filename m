@@ -1,64 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============8041642225143189190=="
+Content-Type: multipart/mixed; boundary="===============1565228097587564268=="
 MIME-Version: 1.0
-From: Eric Biggers <ebiggers at kernel.org>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 1/7] mptcp: use SHA256_BLOCK_SIZE,
+Subject: [MPTCP] Re: [PATCH 1/7] mptcp: use SHA256_BLOCK_SIZE,
  not SHA_MESSAGE_BYTES
-Date: Sat, 02 May 2020 11:24:21 -0700
-Message-ID: <20200502182427.104383-2-ebiggers@kernel.org>
-In-Reply-To: 20200502182427.104383-1-ebiggers@kernel.org
+Date: Sat, 02 May 2020 20:56:37 +0200
+Message-ID: <22ea2039-18f3-12f0-cdc3-99b49c413f77@tessares.net>
+In-Reply-To: 20200502182427.104383-2-ebiggers@kernel.org
 X-Status: 
 X-Keywords:                  
-X-UID: 4299
+X-UID: 4300
 
---===============8041642225143189190==
+--===============1565228097587564268==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Eric Biggers <ebiggers(a)google.com>
+Hi Eric,
 
-In preparation for naming the SHA-1 stuff in <linux/cryptohash.h>
-properly and moving it to a more appropriate header, fix the HMAC-SHA256
-code in mptcp_crypto_hmac_sha() to use SHA256_BLOCK_SIZE instead of
-"SHA_MESSAGE_BYTES" which is actually the SHA-1 block size.
-(Fortunately these are both 64 bytes, so this wasn't a "real" bug...)
+On 02/05/2020 20:24, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers(a)google.com>
+> =
 
-Cc: Paolo Abeni <pabeni(a)redhat.com>
-Cc: mptcp(a)lists.01.org
-Signed-off-by: Eric Biggers <ebiggers(a)google.com>
----
- net/mptcp/crypto.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> In preparation for naming the SHA-1 stuff in <linux/cryptohash.h>
+> properly and moving it to a more appropriate header, fix the HMAC-SHA256
+> code in mptcp_crypto_hmac_sha() to use SHA256_BLOCK_SIZE instead of
+> "SHA_MESSAGE_BYTES" which is actually the SHA-1 block size.
+> (Fortunately these are both 64 bytes, so this wasn't a "real" bug...)
 
-diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
-index c151628bd4161a..81b06d875f9249 100644
---- a/net/mptcp/crypto.c
-+++ b/net/mptcp/crypto.c
-@@ -61,7 +61,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, i=
-nt len, void *hmac)
- 	put_unaligned_be64(key2, key2be);
- =
+Good catch! I guess it was left when switching from SHA-1 to SHA-256 in =
 
- 	/* Generate key xored with ipad */
--	memset(input, 0x36, SHA_MESSAGE_BYTES);
-+	memset(input, 0x36, SHA256_BLOCK_SIZE);
- 	for (i =3D 0; i < 8; i++)
- 		input[i] ^=3D key1be[i];
- 	for (i =3D 0; i < 8; i++)
-@@ -78,7 +78,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, i=
-nt len, void *hmac)
- 	sha256_final(&state, &input[SHA256_BLOCK_SIZE]);
- =
+65492c5a6ab5 (mptcp: move from sha1 (v0) to sha256 (v1)).
 
- 	/* Prepare second part of hmac */
--	memset(input, 0x5C, SHA_MESSAGE_BYTES);
-+	memset(input, 0x5C, SHA256_BLOCK_SIZE);
- 	for (i =3D 0; i < 8; i++)
- 		input[i] ^=3D key1be[i];
- 	for (i =3D 0; i < 8; i++)
+For MPTCP related code, it looks good to me, thank you for this!
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+
 -- =
 
-2.26.2
-
---===============8041642225143189190==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============1565228097587564268==--
