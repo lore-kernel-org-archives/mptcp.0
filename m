@@ -1,103 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============1880550636215567400=="
+Content-Type: multipart/mixed; boundary="===============3800424774401832225=="
 MIME-Version: 1.0
-From: Ard Biesheuvel <ardb at kernel.org>
+From: Eric Biggers <ebiggers at kernel.org>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH 0/7] sha1 library cleanup
-Date: Sun, 03 May 2020 18:14:31 +0200
-Message-ID: <CAMj1kXEBR1FUHOfCo1G2tGVgZDdSsUx8ZrNdLqHbKP6Hw7LfMw@mail.gmail.com>
-In-Reply-To: 20200502182427.104383-1-ebiggers@kernel.org
+Date: Sun, 03 May 2020 09:45:39 -0700
+Message-ID: <20200503164539.GA938@sol.localdomain>
+In-Reply-To: CAHmME9oPqWfTwTtawM-29Lqck-N-kYo4nGr1-4hCW975DhB0Uw@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4303
+X-UID: 4304
 
---===============1880550636215567400==
+--===============3800424774401832225==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2 May 2020 at 20:28, Eric Biggers <ebiggers(a)kernel.org> wrote:
->
-> <linux/cryptohash.h> sounds very generic and important, like it's the
-> header to include if you're doing cryptographic hashing in the kernel.
-> But actually it only includes the library implementation of the SHA-1
-> compression function (not even the full SHA-1).  This should basically
-> never be used anymore; SHA-1 is no longer considered secure, and there
-> are much better ways to do cryptographic hashing in the kernel.
->
-> Also the function is named just "sha_transform()", which makes it
-> unclear which version of SHA is meant.
->
-> Therefore, this series cleans things up by moving these SHA-1
-> declarations into <crypto/sha.h> where they better belong, and changing
-> the names to say SHA-1 rather than just SHA.
->
-> As future work, we should split sha.h into sha1.h and sha2.h and try to
-> remove the remaining uses of SHA-1.  For example, the remaining use in
-> drivers/char/random.c is probably one that can be gotten rid of.
->
-> This patch series applies to cryptodev/master.
->
-> Eric Biggers (7):
->   mptcp: use SHA256_BLOCK_SIZE, not SHA_MESSAGE_BYTES
->   crypto: powerpc/sha1 - remove unused temporary workspace
->   crypto: powerpc/sha1 - prefix the "sha1_" functions
->   crypto: s390/sha1 - prefix the "sha1_" functions
->   crypto: lib/sha1 - rename "sha" to "sha1"
->   crypto: lib/sha1 - remove unnecessary includes of linux/cryptohash.h
->   crypto: lib/sha1 - fold linux/cryptohash.h into crypto/sha.h
->
+On Sat, May 02, 2020 at 03:05:46PM -0600, Jason A. Donenfeld wrote:
+> Thanks for this series. I like the general idea. I think it might make
+> sense, though, to separate things out into sha1.h and sha256.h. That
+> will be nice preparation work for when we eventually move obsolete
+> primitives into some <crypto/dangerous/> subdirectory.
 
-For the series,
+That's basically what I suggested in the cover letter:
 
-Acked-by: Ard Biesheuvel <ardb(a)kernel.org>
+"As future work, we should split sha.h into sha1.h and sha2.h and try to
+remove the remaining uses of SHA-1.  For example, the remaining use in
+drivers/char/random.c is probably one that can be gotten rid of."
 
->  Documentation/security/siphash.rst          |  2 +-
->  arch/arm/crypto/sha1_glue.c                 |  1 -
->  arch/arm/crypto/sha1_neon_glue.c            |  1 -
->  arch/arm/crypto/sha256_glue.c               |  1 -
->  arch/arm/crypto/sha256_neon_glue.c          |  1 -
->  arch/arm/kernel/armksyms.c                  |  1 -
->  arch/arm64/crypto/sha256-glue.c             |  1 -
->  arch/arm64/crypto/sha512-glue.c             |  1 -
->  arch/microblaze/kernel/microblaze_ksyms.c   |  1 -
->  arch/mips/cavium-octeon/crypto/octeon-md5.c |  1 -
->  arch/powerpc/crypto/md5-glue.c              |  1 -
->  arch/powerpc/crypto/sha1-spe-glue.c         |  1 -
->  arch/powerpc/crypto/sha1.c                  | 33 ++++++++++-----------
->  arch/powerpc/crypto/sha256-spe-glue.c       |  1 -
->  arch/s390/crypto/sha1_s390.c                | 12 ++++----
->  arch/sparc/crypto/md5_glue.c                |  1 -
->  arch/sparc/crypto/sha1_glue.c               |  1 -
->  arch/sparc/crypto/sha256_glue.c             |  1 -
->  arch/sparc/crypto/sha512_glue.c             |  1 -
->  arch/unicore32/kernel/ksyms.c               |  1 -
->  arch/x86/crypto/sha1_ssse3_glue.c           |  1 -
->  arch/x86/crypto/sha256_ssse3_glue.c         |  1 -
->  arch/x86/crypto/sha512_ssse3_glue.c         |  1 -
->  crypto/sha1_generic.c                       |  5 ++--
->  drivers/char/random.c                       |  8 ++---
->  drivers/crypto/atmel-sha.c                  |  1 -
->  drivers/crypto/chelsio/chcr_algo.c          |  1 -
->  drivers/crypto/chelsio/chcr_ipsec.c         |  1 -
->  drivers/crypto/omap-sham.c                  |  1 -
->  fs/f2fs/hash.c                              |  1 -
->  include/crypto/sha.h                        | 10 +++++++
->  include/linux/cryptohash.h                  | 14 ---------
->  include/linux/filter.h                      |  4 +--
->  include/net/tcp.h                           |  1 -
->  kernel/bpf/core.c                           | 18 +++++------
->  lib/crypto/chacha.c                         |  1 -
->  lib/sha1.c                                  | 24 ++++++++-------
->  net/core/secure_seq.c                       |  1 -
->  net/ipv6/addrconf.c                         | 10 +++----
->  net/ipv6/seg6_hmac.c                        |  1 -
->  net/mptcp/crypto.c                          |  4 +--
->  41 files changed, 69 insertions(+), 104 deletions(-)
->  delete mode 100644 include/linux/cryptohash.h
->
->
-> base-commit: 12b3cf9093542d9f752a4968815ece836159013f
-> --
-> 2.26.2
->
---===============1880550636215567400==--
+("sha2.h" rather than "sha256.h", since it would include SHA-512 too.
+Also, we already have sha3.h, so having sha{1,2,3}.h would be logical.)
+
+But there are 108 files that include <crypto/sha.h>, all of which would nee=
+d to
+be updated, which risks merge conflicts.  So this series seemed like a good
+stopping point to get these initial changes in for 5.8.  Then in the next
+release we can split up sha.h (and debate whether sha1.h should really be
+"<crypto/dangerous/sha1.h>" or whatever).
+
+There are 3 files where I added an include of sha.h, where we could go dire=
+ctly
+to sha1.h if we did it now.  But that's not much compared to the 108 files.
+
+- Eric
+--===============3800424774401832225==--
