@@ -1,78 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============4609463001459201410=="
+Content-Type: multipart/mixed; boundary="===============7697423561540658943=="
 MIME-Version: 1.0
-From: kernel test robot <lkp at intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export e2366b97f1 ("[DO-NOT-MERGE]
- mptcp: enabled by default")
-Date: Mon, 04 May 2020 23:07:55 +0800
-Message-ID: <5eb02fcb.q2Er0w3BcSNtMzeG%lkp@intel.com>
+Subject: [MPTCP] [PATCH net-next] mptcp: set correct vfs info for subflows
+Date: Mon, 04 May 2020 18:33:45 +0200
+Message-ID: <2d848b43d0e52e6e2ecda5c878293ff3f12a5e23.1588609997.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4306
+X-UID: 4307
 
---===============4609463001459201410==
+--===============7697423561540658943==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+When a subflow is created via mptcp_subflow_create_socket(),
+a new 'struct socket' is allocated, with a new i_ino value.
 
-LINUX COMMIT
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-commit : e2366b97f12783349fc57eca428b1213d8be0043
-subject: [DO-NOT-MERGE] mptcp: enabled by default
-date   : 2020-05-02 09:05:54 +0800
-author : Matthieu Baerts <matthieu.baerts(a)tessares.net>
+When inspecting TCP sockets via the procfs and or the diag
+interface, the above ones are not related to the process owning
+the MPTCP master socket, even if they are a logical part of it
+('ss' shows an empty process field)
 
+Additionally, subflows created by the path manager get
+the uid/gid from the running workqueue.
 
-Test status of e2366b97f12783349fc57eca428b1213d8be0043 (compared to v5.6)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+--------------------------------------------------------------------------=
------------------------+------+------+----------+------+---+------------+--=
----+
-|                                                                          =
-                       | pass | fail | unstable | skip | - | regression | f=
-ix |
-| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
-ts                     | 44   | 4    |          | 3    |   |            |  =
-   |
-| kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
--rhel-7.6-kselftests     | 33   | 8    |          | 1    |   |            |=
-     |
-| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
-ests                   | 3    |      |          |      |   |            |  =
-   |
-| kselftests-cpufreq-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x8=
-6_64-rhel-7.6-kselftests | 1    |      |          |      |   |            |=
-     |
-| kselftests-kvm-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
--rhel-7.6-kselftests     | 20   |      |          | 1    |   |            |=
-     |
-+--------------------------------------------------------------------------=
------------------------+------+------+----------+------+---+------------+--=
----+
+Subflows are part of the owning MPTCP master socket, let's
+adjust the vfs info to reflect this.
 
-Fails
-=3D=3D=3D=3D=3D
-kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftests
+After this patch, 'ss' correctly displays subflows as belonging
+to the msk socket creator.
+
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-- kernel-selftests.bpf.test_progs.fail
-- kernel-selftests.bpf.test_align.fail
-- kernel-selftests.bpf.test_sysctl.fail
-- kernel-selftests.bpf.test_progs-no_alu32.fail
+ net/mptcp/subflow.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64-r=
-hel-7.6-kselftests
----
-- kernel-selftests.net.fib_tests.sh.fail
-- kernel-selftests.net.test_vxlan_under_vrf.sh.fail
-- kernel-selftests.net.fib_nexthop_multiprefix.sh.fail
-- kernel-selftests.net.fib_nexthops.sh.fail
-- kernel-selftests.net.altnames.sh.fail
-- kernel-selftests.net.icmp_redirect.sh.fail
-- kernel-selftests.net.txtimestamp.sh.fail
-- kernel-selftests.net.vrf-xfrm-tests.sh.fail
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 67a4e35d4838..86ade8f09f4a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1012,6 +1012,16 @@ int mptcp_subflow_create_socket(struct sock *sk, str=
+uct socket **new_sock)
+ 	if (err)
+ 		return err;
+ =
 
++	/* the newly created socket really belong to the owing MPTCP master
++	 * socket, even if for additional subflows the allocation is performed
++	 * by a kernel workqueue. Adjust inode references, so that the
++	 * procfs/diag interaces really show this one belonging to the correct
++	 * user.
++	 */
++	SOCK_INODE(sf)->i_ino =3D SOCK_INODE(sk->sk_socket)->i_ino;
++	SOCK_INODE(sf)->i_uid =3D SOCK_INODE(sk->sk_socket)->i_uid;
++	SOCK_INODE(sf)->i_gid =3D SOCK_INODE(sk->sk_socket)->i_gid;
++
+ 	subflow =3D mptcp_subflow_ctx(sf->sk);
+ 	pr_debug("subflow=3D%p", subflow);
+ =
 
---===============4609463001459201410==--
+-- =
+
+2.21.1
+
+--===============7697423561540658943==--
