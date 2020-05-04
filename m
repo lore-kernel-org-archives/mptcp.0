@@ -1,45 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============3800424774401832225=="
+Content-Type: multipart/mixed; boundary="===============4609463001459201410=="
 MIME-Version: 1.0
-From: Eric Biggers <ebiggers at kernel.org>
+From: kernel test robot <lkp at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/7] sha1 library cleanup
-Date: Sun, 03 May 2020 09:45:39 -0700
-Message-ID: <20200503164539.GA938@sol.localdomain>
-In-Reply-To: CAHmME9oPqWfTwTtawM-29Lqck-N-kYo4nGr1-4hCW975DhB0Uw@mail.gmail.com
+Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export e2366b97f1 ("[DO-NOT-MERGE]
+ mptcp: enabled by default")
+Date: Mon, 04 May 2020 23:07:55 +0800
+Message-ID: <5eb02fcb.q2Er0w3BcSNtMzeG%lkp@intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4304
+X-UID: 4306
 
---===============3800424774401832225==
+--===============4609463001459201410==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 02, 2020 at 03:05:46PM -0600, Jason A. Donenfeld wrote:
-> Thanks for this series. I like the general idea. I think it might make
-> sense, though, to separate things out into sha1.h and sha256.h. That
-> will be nice preparation work for when we eventually move obsolete
-> primitives into some <crypto/dangerous/> subdirectory.
 
-That's basically what I suggested in the cover letter:
+LINUX COMMIT
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+commit : e2366b97f12783349fc57eca428b1213d8be0043
+subject: [DO-NOT-MERGE] mptcp: enabled by default
+date   : 2020-05-02 09:05:54 +0800
+author : Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-"As future work, we should split sha.h into sha1.h and sha2.h and try to
-remove the remaining uses of SHA-1.  For example, the remaining use in
-drivers/char/random.c is probably one that can be gotten rid of."
 
-("sha2.h" rather than "sha256.h", since it would include SHA-512 too.
-Also, we already have sha3.h, so having sha{1,2,3}.h would be logical.)
+Test status of e2366b97f12783349fc57eca428b1213d8be0043 (compared to v5.6)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
+|                                                                          =
+                       | pass | fail | unstable | skip | - | regression | f=
+ix |
+| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
+ts                     | 44   | 4    |          | 3    |   |            |  =
+   |
+| kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     | 33   | 8    |          | 1    |   |            |=
+     |
+| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
+ests                   | 3    |      |          |      |   |            |  =
+   |
+| kselftests-cpufreq-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x8=
+6_64-rhel-7.6-kselftests | 1    |      |          |      |   |            |=
+     |
+| kselftests-kvm-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     | 20   |      |          | 1    |   |            |=
+     |
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
 
-But there are 108 files that include <crypto/sha.h>, all of which would nee=
-d to
-be updated, which risks merge conflicts.  So this series seemed like a good
-stopping point to get these initial changes in for 5.8.  Then in the next
-release we can split up sha.h (and debate whether sha1.h should really be
-"<crypto/dangerous/sha1.h>" or whatever).
+Fails
+=3D=3D=3D=3D=3D
+kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftests
+---
+- kernel-selftests.bpf.test_progs.fail
+- kernel-selftests.bpf.test_align.fail
+- kernel-selftests.bpf.test_sysctl.fail
+- kernel-selftests.bpf.test_progs-no_alu32.fail
 
-There are 3 files where I added an include of sha.h, where we could go dire=
-ctly
-to sha1.h if we did it now.  But that's not much compared to the 108 files.
+kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64-r=
+hel-7.6-kselftests
+---
+- kernel-selftests.net.fib_tests.sh.fail
+- kernel-selftests.net.test_vxlan_under_vrf.sh.fail
+- kernel-selftests.net.fib_nexthop_multiprefix.sh.fail
+- kernel-selftests.net.fib_nexthops.sh.fail
+- kernel-selftests.net.altnames.sh.fail
+- kernel-selftests.net.icmp_redirect.sh.fail
+- kernel-selftests.net.txtimestamp.sh.fail
+- kernel-selftests.net.vrf-xfrm-tests.sh.fail
 
-- Eric
---===============3800424774401832225==--
+
+--===============4609463001459201410==--
