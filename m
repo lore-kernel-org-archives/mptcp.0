@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============1532871993895217362=="
+Content-Type: multipart/mixed; boundary="===============5803296360091985211=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: SYN/ACK+MP_JOIN keeps getting retransmitted
-Date: Tue, 05 May 2020 13:13:29 +0200
-Message-ID: <fdfa1132bb902cb21ebaf5dbc50372baf43c92ae.camel@redhat.com>
+Date: Tue, 05 May 2020 12:42:16 +0200
+Message-ID: <422f8a74d7b0aa46780a93a80102cf3ef41d19f3.camel@redhat.com>
 In-Reply-To: 20200504163630.GA33923@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4313
+X-UID: 4314
 
---===============1532871993895217362==
+--===============5803296360091985211==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -104,5 +104,4 @@ Cheers,
 
 Paolo
 
-
---===============1532871993895217362==--
+--===============5803296360091985211==--
