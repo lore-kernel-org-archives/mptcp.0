@@ -1,67 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============5728479501002981706=="
+Content-Type: multipart/mixed; boundary="===============3658526162582609820=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: SYN/ACK+MP_JOIN keeps getting retransmitted
-Date: Mon, 04 May 2020 09:38:13 -0700
-Message-ID: <20200504163813.GB33923@MacBook-Pro-64.local>
-In-Reply-To: cb40fed4ef20511272146b2ce8710671b79079e8.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: set correct vfs info for subflows
+Date: Mon, 04 May 2020 18:19:24 -0700
+Message-ID: <alpine.OSX.2.22.394.2005041813440.23858@nelizabe-mobl.amr.corp.intel.com>
+In-Reply-To: 2d848b43d0e52e6e2ecda5c878293ff3f12a5e23.1588609997.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4309
+X-UID: 4310
 
---===============5728479501002981706==
+--===============3658526162582609820==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 02/05/20 - 09:33:25, Paolo Abeni wrote:
-> On Fri, 2020-05-01 at 11:09 -0700, Christoph Paasch wrote:
-> > while testing forked MPTCP as client and upstream MPTCP as server and o=
-ne
-> > forgets to set the max_subflow limit with iproute, I end up having a
-> > scenario where SYN+MP_JOIN is followed by SYN/ACK+MP_JOIN followed by t=
-he
-> > ACK+MP_JOIN, which then gets RST by the server.
-> > =
 
-> > This makes for a weird packet-trace:
-> > 16:48:01.626118 IP 10.1.3.1.35561 > 10.2.1.1.5001: Flags [S], seq 32677=
-01968, win 42340, options [mss 1460,sackOK,TS val 1457348237 ecr 0,nop,wsca=
-le 7,mptcp join id 4 token 0x8e133996 nonce 0xee4ce80a], length 0
-> > 16:48:01.626163 IP 10.2.1.1.5001 > 10.1.3.1.35561: Flags [S.], seq 2603=
-10350, ack 3267701969, win 43440, options [mss 1460,sackOK,TS val 391670343=
-7 ecr 1457348237,nop,wscale 7,mptcp join id 0 hmac 0x30e5a618ce852835 nonce=
- 0x3238ac63], length 0
-> > 16:48:01.626411 IP 10.1.3.1.35561 > 10.2.1.1.5001: Flags [.], ack 1, wi=
-n 991, options [nop,nop,TS val 1457348238 ecr 3916703437,mptcp join hmac 0x=
-5c9f67595a7c0f15e72b8d45d2abe73de3a86bf8], length 0
-> > 16:48:01.626427 IP 10.2.1.1.5001 > 10.1.3.1.35561: Flags [R.], seq 1, a=
-ck 1, win 340, options [nop,nop,TS val 3916703438 ecr 1457348238,mptcp dss =
-ack 7475064947213107918], length 0
-> =
+On Mon, 4 May 2020, Paolo Abeni wrote:
 
-> [...]
-> =
+> When a subflow is created via mptcp_subflow_create_socket(),
+> a new 'struct socket' is allocated, with a new i_ino value.
+>
+> When inspecting TCP sockets via the procfs and or the diag
+> interface, the above ones are not related to the process owning
+> the MPTCP master socket, even if they are a logical part of it
+> ('ss' shows an empty process field)
+>
+> Additionally, subflows created by the path manager get
+> the uid/gid from the running workqueue.
+>
+> Subflows are part of the owning MPTCP master socket, let's
+> adjust the vfs info to reflect this.
+>
+> After this patch, 'ss' correctly displays subflows as belonging
+> to the msk socket creator.
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-> =
+Seems like better information for userspace. Does this make sense for =
 
-> Almost forgot! does the above mean that with a correct configuration
-> the two implementations interoperate nicely ?
+-net, since the uid/gid info is not useful otherwise? Or is it benign =
 
-Depends on the definition of "nicely" ;-)
+enough behavior to fix in net-next?
 
 
-MP_CAPABLE & MP_JOIN exchanges work now.
+> ---
+> net/mptcp/subflow.c | 10 ++++++++++
+> 1 file changed, 10 insertions(+)
+>
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 67a4e35d4838..86ade8f09f4a 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1012,6 +1012,16 @@ int mptcp_subflow_create_socket(struct sock *sk, s=
+truct socket **new_sock)
+> 	if (err)
+> 		return err;
+>
+> +	/* the newly created socket really belong to the owing MPTCP master
 
-ADD_ADDR still has the old format in out-of-tree MPTCP, so that doesn't work
-yet.
+Minor fix: "belongs to the owning"
 
-When there is a single subflow, data-exchange works fine. Once there are two
-subflows, things become weird. Out-of-tree is retransmitting a lot... I need
-to look into this.
+> +	 * socket, even if for additional subflows the allocation is performed
+> +	 * by a kernel workqueue. Adjust inode references, so that the
+> +	 * procfs/diag interaces really show this one belonging to the correct
+> +	 * user.
+> +	 */
+> +	SOCK_INODE(sf)->i_ino =3D SOCK_INODE(sk->sk_socket)->i_ino;
+> +	SOCK_INODE(sf)->i_uid =3D SOCK_INODE(sk->sk_socket)->i_uid;
+> +	SOCK_INODE(sf)->i_gid =3D SOCK_INODE(sk->sk_socket)->i_gid;
+> +
+> 	subflow =3D mptcp_subflow_ctx(sf->sk);
+> 	pr_debug("subflow=3D%p", subflow);
+>
+> -- =
 
+> 2.21.1
 
-Christoph
-
---===============5728479501002981706==--
+--
+Mat Martineau
+Intel
+--===============3658526162582609820==--
