@@ -1,83 +1,108 @@
-Content-Type: multipart/mixed; boundary="===============3658526162582609820=="
+Content-Type: multipart/mixed; boundary="===============1532871993895217362=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: set correct vfs info for subflows
-Date: Mon, 04 May 2020 18:19:24 -0700
-Message-ID: <alpine.OSX.2.22.394.2005041813440.23858@nelizabe-mobl.amr.corp.intel.com>
-In-Reply-To: 2d848b43d0e52e6e2ecda5c878293ff3f12a5e23.1588609997.git.pabeni@redhat.com
+Subject: [MPTCP] Re: SYN/ACK+MP_JOIN keeps getting retransmitted
+Date: Tue, 05 May 2020 13:13:29 +0200
+Message-ID: <fdfa1132bb902cb21ebaf5dbc50372baf43c92ae.camel@redhat.com>
+In-Reply-To: 20200504163630.GA33923@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4310
+X-UID: 4313
 
---===============3658526162582609820==
+--===============1532871993895217362==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2020-05-04 at 09:36 -0700, Christoph Paasch wrote:
+> On 02/05/20 - 09:30:43, Paolo Abeni wrote:
+> > On Fri, 2020-05-01 at 11:09 -0700, Christoph Paasch wrote:
+[...]
+> > > Thoughts?
+> > > =
 
-On Mon, 4 May 2020, Paolo Abeni wrote:
+> > > This is not going to trigger a RST from the server (see comment in
+> > > subflow_init_req, because we are not passing up a return-value from i=
+nit_req
+> > > to tcp_conn_request - but that should be easy to change).
+> > =
 
-> When a subflow is created via mptcp_subflow_create_socket(),
-> a new 'struct socket' is allocated, with a new i_ino value.
->
-> When inspecting TCP sockets via the procfs and or the diag
-> interface, the above ones are not related to the process owning
-> the MPTCP master socket, even if they are a logical part of it
-> ('ss' shows an empty process field)
->
-> Additionally, subflows created by the path manager get
-> the uid/gid from the running workqueue.
->
-> Subflows are part of the owning MPTCP master socket, let's
-> adjust the vfs info to reflect this.
->
-> After this patch, 'ss' correctly displays subflows as belonging
-> to the msk socket creator.
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > Thank you for the detailed analisys! LGTM, with a couple of notes:
+> > =
 
-Seems like better information for userspace. Does this make sense for =
+> > - I think it would be nicer if we additionally decreases the subflows
+> > if the mp_join request sk 'fails'/fallback before completing the 3WHS
+> =
 
--net, since the uid/gid info is not useful otherwise? Or is it benign =
+> regarding decrease - I saw that and actually was surprised that we *never*
+> decrease the subflow-counter (at least, I couldn't find where it is being
+> decremented).
+> =
 
-enough behavior to fix in net-next?
+> Was that intended? =
 
 
-> ---
-> net/mptcp/subflow.c | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 67a4e35d4838..86ade8f09f4a 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1012,6 +1012,16 @@ int mptcp_subflow_create_socket(struct sock *sk, s=
-truct socket **new_sock)
-> 	if (err)
-> 		return err;
->
-> +	/* the newly created socket really belong to the owing MPTCP master
+So far, yes. The idea is that we currently increment the subflows
+counter only after the peer is completely validated and we close the
+subflow only at msk shutdown. Even if the peer closes the subflow, we -
+currently - still keep the 'struct sock' around. So the subflow count
+never decreases. =
 
-Minor fix: "belongs to the owning"
 
-> +	 * socket, even if for additional subflows the allocation is performed
-> +	 * by a kernel workqueue. Adjust inode references, so that the
-> +	 * procfs/diag interaces really show this one belonging to the correct
-> +	 * user.
-> +	 */
-> +	SOCK_INODE(sf)->i_ino =3D SOCK_INODE(sk->sk_socket)->i_ino;
-> +	SOCK_INODE(sf)->i_uid =3D SOCK_INODE(sk->sk_socket)->i_uid;
-> +	SOCK_INODE(sf)->i_gid =3D SOCK_INODE(sk->sk_socket)->i_gid;
-> +
-> 	subflow =3D mptcp_subflow_ctx(sf->sk);
-> 	pr_debug("subflow=3D%p", subflow);
->
-> -- =
+I plan to revisit the above within the scope of:
 
-> 2.21.1
+https://github.com/multipath-tcp/mptcp_net-next/issues/19
 
---
-Mat Martineau
-Intel
---===============3658526162582609820==--
+
+> Because, that means if I set max_subflows to 3 and even if
+> I only ever have 2 subflows in parallel, after the third subflow I am blo=
+cked.
+
+Which is expected, right ?!? Can you please re-phrase?!? =
+
+
+> > - we should cope better with failures when processing incoming mp_join
+> > syn-ack - e.g. dropping the req socket. =
+
+> =
+
+> These failures should be fairly easy to repro with packetdrill.
+> E.g., the state-check in finish_join.
+
+uhm... a pity we don't have mp_join support yet for the pktdrill
+version in use with the export-branch :(
+
+> But, looking at removing the request-sock upon failure in
+> subflow_syn_recv_sock(). That looks tricky to me because we would need to
+> somehow tell tcp_check_req() whether or not to continue processing.
+
+Just return NULL (as we currently do) and properly get rid of the req
+socket (as we currently _don't_ do) !?!
+
+The req is disposed by tcp_check_req() iff 'tcp_abort_on_overflow' !=3D
+0, which is not the default.
+
+Additionally we currently account syn-ack join checks as listener
+overflow.
+
+> Looking at DCCP, which seems to have some kind of activation of features
+> requested during the handshake - it also just seems to return NULL without
+> killing the request-sock.
+> =
+
+> Would it make sense to rather do the validity-checks (e.g., correctness of
+> hmac) in tcp_check_req where it is easy to fail the request-sock ?
+
+uhm... more hooks in tcp_check_req :(, see:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/16
+
+I'd like to avoid them if possible - but I can't find how :(
+
+Cheers,
+
+Paolo
+
+
+--===============1532871993895217362==--
