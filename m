@@ -1,99 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============7510079803947224139=="
+Content-Type: multipart/mixed; boundary="===============8761690175778263516=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 7/7] net: allow __skb_ext_alloc to sleep
-Date: Wed, 06 May 2020 15:02:28 +0200
-Message-ID: <20200506130228.1478-8-fw@strlen.de>
-In-Reply-To: 20200506130228.1478-1-fw@strlen.de
+Subject: [MPTCP] Weekly meeting - 7 May 2020 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 06 May 2020 18:07:53 +0200
+Message-ID: <b0c78db4-6ced-a01a-f3a9-fe9c87d00464@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4326
+X-UID: 4328
 
---===============7510079803947224139==
+--===============8761690175778263516==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp calls this from the transmit side, from process context.
-Allow a sleeping allocation instead of unconditional GFP_ATOMIC.
+Hello everybody!
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- include/linux/skbuff.h | 2 +-
- net/core/skbuff.c      | 8 +++++---
- net/mptcp/protocol.c   | 4 +++-
- 3 files changed, 9 insertions(+), 5 deletions(-)
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 3000c526f552..531843952809 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4165,7 +4165,7 @@ struct skb_ext {
- 	char data[] __aligned(8);
- };
- =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20200507
 
--struct skb_ext *__skb_ext_alloc(void);
-+struct skb_ext *__skb_ext_alloc(gfp_t flags);
- void *__skb_ext_set(struct sk_buff *skb, enum skb_ext_id id,
- 		    struct skb_ext *ext);
- void *skb_ext_add(struct sk_buff *skb, enum skb_ext_id id);
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 1bf0c3d278e7..35a133c6d13b 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -6087,13 +6087,15 @@ static void *skb_ext_get_ptr(struct skb_ext *ext, e=
-num skb_ext_id id)
- /**
-  * __skb_ext_alloc - allocate a new skb extensions storage
-  *
-+ * @flags: See kmalloc().
-+ *
-  * Returns the newly allocated pointer. The pointer can later attached to a
-  * skb via __skb_ext_set().
-  * Note: caller must handle the skb_ext as an opaque data.
-  */
--struct skb_ext *__skb_ext_alloc(void)
-+struct skb_ext *__skb_ext_alloc(gfp_t flags)
- {
--	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, GFP_ATOMIC);
-+	struct skb_ext *new =3D kmem_cache_alloc(skbuff_ext_cache, flags);
- =
+Feel free to add/modify topics!
 
- 	if (new) {
- 		memset(new->offset, 0, sizeof(new->offset));
-@@ -6188,7 +6190,7 @@ void *skb_ext_add(struct sk_buff *skb, enum skb_ext_i=
-d id)
- 	} else {
- 		newoff =3D SKB_EXT_CHUNKSIZEOF(*new);
- =
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
--		new =3D __skb_ext_alloc();
-+		new =3D __skb_ext_alloc(GFP_ATOMIC);
- 		if (!new)
- 			return NULL;
- 	}
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5c1fafb24d12..85e692b9e8cc 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -367,8 +367,10 @@ static void mptcp_stop_timer(struct sock *sk)
- =
-
- static bool mptcp_ext_cache_refill(struct mptcp_sock *msk)
- {
-+	const struct sock *sk =3D (const struct sock *)msk;
-+
- 	if (!msk->cached_ext)
--		msk->cached_ext =3D __skb_ext_alloc();
-+		msk->cached_ext =3D __skb_ext_alloc(sk->sk_allocation);
- =
-
- 	return !!msk->cached_ext;
- }
+Speak to you tomorrow!
+Matt
 -- =
 
-2.26.2
-
---===============7510079803947224139==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============8761690175778263516==--
