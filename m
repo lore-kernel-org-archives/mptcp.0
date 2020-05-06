@@ -1,39 +1,126 @@
-Content-Type: multipart/mixed; boundary="===============8761690175778263516=="
+Content-Type: multipart/mixed; boundary="===============0335788683952382832=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 7 May 2020 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 06 May 2020 18:07:53 +0200
-Message-ID: <b0c78db4-6ced-a01a-f3a9-fe9c87d00464@tessares.net>
+Subject: [MPTCP] Re: SYN/ACK+MP_JOIN keeps getting retransmitted
+Date: Wed, 06 May 2020 19:08:24 +0200
+Message-ID: <90bf76988ec6677dc11b64054f65bb60b8698064.camel@redhat.com>
+In-Reply-To: 20200505183101.GA99784@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4328
+X-UID: 4329
 
---===============8761690175778263516==
+--===============0335788683952382832==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Tue, 2020-05-05 at 11:31 -0700, Christoph Paasch wrote:
+> On 05/05/20 - 12:42:16, Paolo Abeni wrote:
+> > On Mon, 2020-05-04 at 09:36 -0700, Christoph Paasch wrote:
+> > > On 02/05/20 - 09:30:43, Paolo Abeni wrote:
+> > > > On Fri, 2020-05-01 at 11:09 -0700, Christoph Paasch wrote:
+> > [...]
+> > > > > Thoughts?
+> > > > > =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> > > > > This is not going to trigger a RST from the server (see comment in
+> > > > > subflow_init_req, because we are not passing up a return-value fr=
+om init_req
+> > > > > to tcp_conn_request - but that should be easy to change).
+> > > > =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20200507
+> > > > Thank you for the detailed analisys! LGTM, with a couple of notes:
+> > > > =
 
-Feel free to add/modify topics!
+> > > > - I think it would be nicer if we additionally decreases the subflo=
+ws
+> > > > if the mp_join request sk 'fails'/fallback before completing the 3W=
+HS
+> > > =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+> > > regarding decrease - I saw that and actually was surprised that we *n=
+ever*
+> > > decrease the subflow-counter (at least, I couldn't find where it is b=
+eing
+> > > decremented).
+> > > =
 
-Speak to you tomorrow!
-Matt
--- =
+> > > Was that intended? =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============8761690175778263516==--
+> > =
+
+> > So far, yes. The idea is that we currently increment the subflows
+> > counter only after the peer is completely validated and we close the
+> > subflow only at msk shutdown. Even if the peer closes the subflow, we -
+> > currently - still keep the 'struct sock' around. So the subflow count
+> > never decreases. =
+
+> > =
+
+> > I plan to revisit the above within the scope of:
+> > =
+
+> > https://github.com/multipath-tcp/mptcp_net-next/issues/19
+> > =
+
+> > =
+
+> > > Because, that means if I set max_subflows to 3 and even if
+> > > I only ever have 2 subflows in parallel, after the third subflow I am=
+ blocked.
+> > =
+
+> > Which is expected, right ?!? Can you please re-phrase?!? =
+
+> =
+
+> The scenario I have in mind is this:
+> =
+
+> One configures the server-side with X subflows (with X being a reasonable
+> number, like 8) to prevent an attacker from creating an endless list of
+> subflows which makes the kernel iterate over that list for a long time.
+> =
+
+> Now, the client is walking from one WiFi access-point to another, switchi=
+ng
+> from WiFi, back to cell, back to WiFi,... each time with a new subflow
+> (e.g., because it's a different WiFi AP). So, at any time the number of
+> "parallel" subflows should never be higher than 2, but the total number of
+> subflows this connection has seen can be very large.
+> =
+
+> It seems like this is being addressed with Issue #19 (I would add to it t=
+hat
+> subflows should also be closed if they receive a TCP-RST).
+
+Yep, that was the idea...
+
+Follow-up question: the above scenario will finally clash with the 8
+bit limit for address id, right?
+
+> Could we change the syn_recv_sock callback to return an int which indicat=
+es to
+> tcp_check_req whether or not it should dispose of the request-sock?
+
+Ok, that would work, I think.
+My *personal* taste would be to try to avoid additional modification to
+TCP.
+
+I *think* we can cope with this scenario in the following way:
+
+* if MP_JOIN checks fail, subflow_syn_recv_sock() instead of freeing
+the child will call:
+        tcp_set_state(ssk, TCP_CLOSE);
+        tcp_send_active_reset(ssk, GFP_ATOMIC);
+        sock_put(ssk); // ssk ref cnt should be 2 before this call
+  and return the subflow socket.
+* the TCP stack will call tcp_child_process() on the child process,
+which will release the last reference to subflow.
+
+Let me try to cook this one.
+
+/P
+
+--===============0335788683952382832==--
