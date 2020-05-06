@@ -1,85 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============3727762101456333280=="
+Content-Type: multipart/mixed; boundary="===============6301135924348242344=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 5/7] mptcp: fill skb page frag cache
- outside of mptcp_sendmsg_frag
-Date: Wed, 06 May 2020 15:02:26 +0200
-Message-ID: <20200506130228.1478-6-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 6/7] mptcp: remove inner wait loop from
+ mptcp_sendmsg_frag
+Date: Wed, 06 May 2020 15:02:27 +0200
+Message-ID: <20200506130228.1478-7-fw@strlen.de>
 In-Reply-To: 20200506130228.1478-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4324
+X-UID: 4325
 
---===============3727762101456333280==
+--===============6301135924348242344==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The mptcp_sendmsg_frag helper contains a loop that will wait on the
-subflow sk.
+previous patches made sure we only call into this function
+when these prerequisites are met, so no need to wait on the
+subflow socket anymore.
 
-It seems preferrable to only wait in mptcp_sendmsg() when blocking io is
-requested.  mptcp_sendmsg already has such a wait loop that is used when
-no subflow socket is available for transmission.
-
-This is another preparation patch that makes sure we call
-mptcp_sendmsg_frag only if the page frag cache has been refilled.
-
-Followup patch will remove the wait loop from mptcp_sendmsg_frag().
-
-The retransmit worker doesn't need to do this refill as it won't
-transmit new mptcp-level data.
-
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/7
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6b3141ecfced..06c77f16bf38 100644
+index 06c77f16bf38..5c1fafb24d12 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -739,6 +739,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
- {
- 	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct page_frag *pfrag;
- 	struct socket *ssock;
- 	size_t copied =3D 0;
- 	struct sock *ssk;
-@@ -767,12 +768,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		return ret >=3D 0 ? ret + copied : (copied ? copied : ret);
- 	}
- =
-
-+	pfrag =3D sk_page_frag(sk);
- restart:
- 	mptcp_clean_una(sk);
- =
-
- 	__mptcp_flush_join_list(msk);
- 	ssk =3D mptcp_subflow_get_send(msk);
--	while (!sk_stream_memory_free(sk) || !ssk) {
-+	while (!sk_stream_memory_free(sk) ||
-+	       !ssk ||
-+	       !mptcp_page_frag_refill(ssk, pfrag)) {
- 		ret =3D sk_stream_wait_memory(sk, &timeo);
- 		if (ret)
- 			goto out;
-@@ -822,6 +826,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
- 		if (!tx_ok)
- 			break;
- 		if (!sk_stream_memory_free(ssk) ||
-+		    !mptcp_page_frag_refill(ssk, pfrag) ||
- 		    !mptcp_ext_cache_refill(msk)) {
- 			tcp_push(ssk, msg->msg_flags, mss_now,
- 				 tcp_sk(ssk)->nonagle, size_goal);
+@@ -531,20 +531,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
+ 	 * fooled into a warning if we don't init here
+ 	 */
+ 	pfrag =3D sk_page_frag(sk);
+-	while ((!retransmission && !mptcp_page_frag_refill(ssk, pfrag)) ||
+-	       !mptcp_ext_cache_refill(msk)) {
+-		ret =3D sk_stream_wait_memory(ssk, timeo);
+-		if (ret)
+-			return ret;
+-
+-		/* if sk_stream_wait_memory() sleeps snd_una can change
+-		 * significantly, refresh the rtx queue
+-		 */
+-		mptcp_clean_una(sk);
+-
+-		if (unlikely(__mptcp_needs_tcp_fallback(msk)))
+-			return 0;
+-	}
+ 	if (!retransmission) {
+ 		write_seq =3D &msk->write_seq;
+ 		page =3D pfrag->page;
 -- =
 
 2.26.2
 
---===============3727762101456333280==--
+--===============6301135924348242344==--
