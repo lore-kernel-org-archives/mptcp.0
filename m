@@ -1,126 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============0335788683952382832=="
+Content-Type: multipart/mixed; boundary="===============1189421282855652727=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: SYN/ACK+MP_JOIN keeps getting retransmitted
-Date: Wed, 06 May 2020 19:08:24 +0200
-Message-ID: <90bf76988ec6677dc11b64054f65bb60b8698064.camel@redhat.com>
+Date: Wed, 06 May 2020 19:48:16 +0200
+Message-ID: <0cecd2b0c2568f2c796d32356342f561ce803a49.camel@redhat.com>
 In-Reply-To: 20200505183101.GA99784@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4329
+X-UID: 4330
 
---===============0335788683952382832==
+--===============1189421282855652727==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 2020-05-05 at 11:31 -0700, Christoph Paasch wrote:
-> On 05/05/20 - 12:42:16, Paolo Abeni wrote:
-> > On Mon, 2020-05-04 at 09:36 -0700, Christoph Paasch wrote:
-> > > On 02/05/20 - 09:30:43, Paolo Abeni wrote:
-> > > > On Fri, 2020-05-01 at 11:09 -0700, Christoph Paasch wrote:
-> > [...]
-> > > > > Thoughts?
-> > > > > =
+> What about something like this:
+> @@ -769,12 +769,16 @@ struct sock *tcp_check_req(struct sock *sk, struct =
+sk_buff *skb,
+>          * ESTABLISHED STATE. If it will be dropped after
+>          * socket is created, wait for troubles.
+>          */
+> -       child =3D inet_csk(sk)->icsk_af_ops->syn_recv_sock(sk, skb, req, =
+NULL,
+> -                                                        req, &own_req);
+> -       if (!child)
+> +       ret =3D inet_csk(sk)->icsk_af_ops->syn_recv_sock(sk, skb, req, NU=
+LL,
+> +                                                      req, &own_req, &ch=
+ild);
+> +       if (ret < 0) {
+> +               if (ret !=3D -ENOMEM) {
+> +                       goto embryonic_reset;
+> +               }
+>                 goto listen_overflow;
+> +       }
+> =
 
-> > > > > This is not going to trigger a RST from the server (see comment in
-> > > > > subflow_init_req, because we are not passing up a return-value fr=
-om init_req
-> > > > > to tcp_conn_request - but that should be easy to change).
-> > > > =
-
-> > > > Thank you for the detailed analisys! LGTM, with a couple of notes:
-> > > > =
-
-> > > > - I think it would be nicer if we additionally decreases the subflo=
-ws
-> > > > if the mp_join request sk 'fails'/fallback before completing the 3W=
-HS
-> > > =
-
-> > > regarding decrease - I saw that and actually was surprised that we *n=
-ever*
-> > > decrease the subflow-counter (at least, I couldn't find where it is b=
-eing
-> > > decremented).
-> > > =
-
-> > > Was that intended? =
-
-> > =
-
-> > So far, yes. The idea is that we currently increment the subflows
-> > counter only after the peer is completely validated and we close the
-> > subflow only at msk shutdown. Even if the peer closes the subflow, we -
-> > currently - still keep the 'struct sock' around. So the subflow count
-> > never decreases. =
-
-> > =
-
-> > I plan to revisit the above within the scope of:
-> > =
-
-> > https://github.com/multipath-tcp/mptcp_net-next/issues/19
-> > =
-
-> > =
-
-> > > Because, that means if I set max_subflows to 3 and even if
-> > > I only ever have 2 subflows in parallel, after the third subflow I am=
- blocked.
-> > =
-
-> > Which is expected, right ?!? Can you please re-phrase?!? =
+> -       if (own_req && sk_is_mptcp(child) && mptcp_sk_is_subflow(child)) {
+> +       if (ret > 0)
+>                 reqsk_queue_removed(&inet_csk(sk)->icsk_accept_queue, req=
+);
+>                 inet_csk_reqsk_queue_drop_and_put(sk, req);
+>                 return child;
+> =
 
 > =
 
-> The scenario I have in mind is this:
-> =
+> Yes, it does not get rid of the branching in tcp_check_req, but at least =
+it
+> makes it less MPTCP-specific.
 
-> One configures the server-side with X subflows (with X being a reasonable
-> number, like 8) to prevent an attacker from creating an endless list of
-> subflows which makes the kernel iterate over that list for a long time.
-> =
+I'm sorry, I forgot to mention in my previous email the following: one
+thing that I fear about the above change is that introduces some
+overhead for
 
-> Now, the client is walking from one WiFi access-point to another, switchi=
-ng
-> from WiFi, back to cell, back to WiFi,... each time with a new subflow
-> (e.g., because it's a different WiFi AP). So, at any time the number of
-> "parallel" subflows should never be higher than 2, but the total number of
-> subflows this connection has seen can be very large.
-> =
+# CONFIG_MPTCP is not set
 
-> It seems like this is being addressed with Issue #19 (I would add to it t=
-hat
-> subflows should also be closed if they receive a TCP-RST).
+builds, while the current code compiles to nothing. We will have a
+couple of additional conditionals - one in fast path - and an
+additional argument in the stack. Nothing drammatic, but still...
 
-Yep, that was the idea...
+Cheers,
 
-Follow-up question: the above scenario will finally clash with the 8
-bit limit for address id, right?
+Paolo
 
-> Could we change the syn_recv_sock callback to return an int which indicat=
-es to
-> tcp_check_req whether or not it should dispose of the request-sock?
-
-Ok, that would work, I think.
-My *personal* taste would be to try to avoid additional modification to
-TCP.
-
-I *think* we can cope with this scenario in the following way:
-
-* if MP_JOIN checks fail, subflow_syn_recv_sock() instead of freeing
-the child will call:
-        tcp_set_state(ssk, TCP_CLOSE);
-        tcp_send_active_reset(ssk, GFP_ATOMIC);
-        sock_put(ssk); // ssk ref cnt should be 2 before this call
-  and return the subflow socket.
-* the TCP stack will call tcp_child_process() on the child process,
-which will release the last reference to subflow.
-
-Let me try to cook this one.
-
-/P
-
---===============0335788683952382832==--
+--===============1189421282855652727==--
