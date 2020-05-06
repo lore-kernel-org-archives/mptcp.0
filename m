@@ -1,120 +1,114 @@
-Content-Type: multipart/mixed; boundary="===============8915611158231435168=="
+Content-Type: multipart/mixed; boundary="===============8249731660530140854=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 3/7] mptcp: avoid blocking in tcp_sendpages
- due to skb alloc
-Date: Wed, 06 May 2020 15:02:24 +0200
-Message-ID: <20200506130228.1478-4-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 4/7] mptcp: fill skb extension cache
+ outside of mptcp_sendmsg_frag
+Date: Wed, 06 May 2020 15:02:25 +0200
+Message-ID: <20200506130228.1478-5-fw@strlen.de>
 In-Reply-To: 20200506130228.1478-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4322
+X-UID: 4323
 
---===============8915611158231435168==
+--===============8249731660530140854==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If memory is tight, tcp_sendpages may fail because it can't
-allocate the skb head.
+The mptcp_sendmsg_frag helper contains a loop that will wait on the
+subflow sk.
 
-Now that we pass DONTWAIT to tcp_sendpages it won't block anymore on the
-subflow socket when this happens.
+It seems preferrable to only wait in mptcp_sendmsg() when blocking io is
+requested.  mptcp_sendmsg already has such a wait loop that is used when
+no subflow socket is available for transmission.
 
-We can avoid such allocation failure in tcp code by preallocating an skb
-skb when we pick the subflow to use.
+This is a preparation patch that makes sure we call
+mptcp_sendmsg_frag only if a skb extension has been allocated.
 
-If it fails, we can wait on the mptcp socket until memory becomes
-available.
+Moreover, such allocation currently uses GFP_ATOMIC while it
+could use sleeping allocation instead.
 
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Followup patches will remove the wait loop from mptcp_sendmsg_frag()
+and will allow to do a sleeping allocation for the extension.
+
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ab6599dfda59..f28c131c010e 100644
+index f28c131c010e..6b3141ecfced 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -488,6 +488,22 @@ mptcp_carve_data_frag(const struct mptcp_sock *msk, st=
-ruct page_frag *pfrag,
- 	return dfrag;
- }
+@@ -685,6 +685,9 @@ static struct sock *mptcp_subflow_get_send(struct mptcp=
+_sock *msk)
+ 	if (!mptcp_sendmsg_alloc_skb(sk))
+ 		return NULL;
  =
 
-+static bool mptcp_sendmsg_alloc_skb(struct sock *sk)
-+{
-+	struct sk_buff *skb;
-+
-+	if (sk->sk_tx_skb_cache)
-+		return true;
-+
-+	skb =3D alloc_skb_fclone(sk->sk_prot->max_header, sk->sk_allocation);
-+	if (skb) {
-+		skb_reserve(skb, sk->sk_prot->max_header);
-+		sk->sk_tx_skb_cache =3D skb;
-+	}
-+
-+	return sk->sk_tx_skb_cache !=3D NULL;
-+}
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct msghdr *msg, struct mptcp_data_frag *dfrag,
- 			      long *timeo, int *pmss_now,
-@@ -504,6 +520,11 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
-sock *ssk,
- 	u64 *write_seq;
- 	size_t psize;
- =
-
-+	if (!ssk->sk_tx_skb_cache) {
-+		ssk->sk_tx_skb_cache =3D sk->sk_tx_skb_cache;
-+		sk->sk_tx_skb_cache =3D NULL;
-+	}
-+
- 	/* use the mptcp page cache so that we can easily move the data
- 	 * from one substream to another, but do per subflow memory accounting
- 	 * Note: pfrag is used only !retransmission, but the compiler if
-@@ -656,9 +677,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
-sock *ssk,
- static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
-+	struct sock *sk =3D (struct sock *)msk;
- 	struct sock *backup =3D NULL;
- =
-
--	sock_owned_by_me((const struct sock *)msk);
-+	sock_owned_by_me(sk);
-+
-+	if (!mptcp_sendmsg_alloc_skb(sk))
++	if (!mptcp_ext_cache_refill(msk))
 +		return NULL;
- =
-
++
  	mptcp_for_each_subflow(msk, subflow) {
  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-@@ -1478,6 +1503,7 @@ static void mptcp_destroy(struct sock *sk)
- 	if (msk->cached_ext)
- 		__skb_ext_put(msk->cached_ext);
  =
 
-+	kfree_skb(sk->sk_tx_skb_cache);
- 	sk_sockets_allocated_dec(sk);
- }
+@@ -818,7 +821,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 		tx_ok =3D msg_data_left(msg);
+ 		if (!tx_ok)
+ 			break;
+-		if (!sk_stream_memory_free(ssk)) {
++		if (!sk_stream_memory_free(ssk) ||
++		    !mptcp_ext_cache_refill(msk)) {
+ 			tcp_push(ssk, msg->msg_flags, mss_now,
+ 				 tcp_sk(ssk)->nonagle, size_goal);
+ 			release_sock(ssk);
+@@ -1139,7 +1143,7 @@ static void mptcp_worker(struct work_struct *work)
+ {
+ 	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
+ 	struct sock *ssk, *sk =3D &msk->sk.icsk_inet.sk;
+-	int orig_len, orig_offset, ret, mss_now =3D 0, size_goal =3D 0;
++	int orig_len, orig_offset, mss_now =3D 0, size_goal =3D 0;
+ 	struct mptcp_data_frag *dfrag;
+ 	u64 orig_write_seq;
+ 	size_t copied =3D 0;
+@@ -1161,6 +1165,9 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (!dfrag)
+ 		goto unlock;
  =
 
-@@ -1688,6 +1714,7 @@ static struct proto mptcp_prot =3D {
- 	.hash		=3D inet_hash,
- 	.unhash		=3D inet_unhash,
- 	.get_port	=3D mptcp_get_port,
-+	.max_header	=3D MAX_TCP_HEADER,
- 	.sockets_allocated	=3D &mptcp_sockets_allocated,
- 	.memory_allocated	=3D &tcp_memory_allocated,
- 	.memory_pressure	=3D &tcp_memory_pressure,
++	if (!mptcp_ext_cache_refill(msk))
++		goto reset_unlock;
++
+ 	ssk =3D mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+ 		goto reset_unlock;
+@@ -1172,8 +1179,8 @@ static void mptcp_worker(struct work_struct *work)
+ 	orig_offset =3D dfrag->offset;
+ 	orig_write_seq =3D dfrag->data_seq;
+ 	while (dfrag->data_len > 0) {
+-		ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &timeo, &mss_now,
+-					 &size_goal);
++		int ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &timeo,
++					     &mss_now, &size_goal);
+ 		if (ret < 0)
+ 			break;
+ =
+
+@@ -1181,6 +1188,9 @@ static void mptcp_worker(struct work_struct *work)
+ 		copied +=3D ret;
+ 		dfrag->data_len -=3D ret;
+ 		dfrag->offset +=3D ret;
++
++		if (!mptcp_ext_cache_refill(msk))
++			break;
+ 	}
+ 	if (copied)
+ 		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
 -- =
 
 2.26.2
 
---===============8915611158231435168==--
+--===============8249731660530140854==--
