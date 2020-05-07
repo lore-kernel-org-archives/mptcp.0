@@ -1,144 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============1899291653432072272=="
+Content-Type: multipart/mixed; boundary="===============7096553099939506708=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: SYN/ACK+MP_JOIN keeps getting retransmitted
-Date: Thu, 07 May 2020 09:50:38 -0700
-Message-ID: <20200507165038.GG38702@MacBook-Pro-64.local>
-In-Reply-To: 90bf76988ec6677dc11b64054f65bb60b8698064.camel@redhat.com
+Subject: [MPTCP] [PATCH net] mptcp: set correct vfs info for subflows
+Date: Thu, 07 May 2020 18:53:24 +0200
+Message-ID: <a2fde8fb93863b0ffdeea94b5f44ba64b7601c5d.1588865446.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4344
+X-UID: 4345
 
---===============1899291653432072272==
+--===============7096553099939506708==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 06/05/20 - 19:08:24, Paolo Abeni wrote:
-> On Tue, 2020-05-05 at 11:31 -0700, Christoph Paasch wrote:
-> > On 05/05/20 - 12:42:16, Paolo Abeni wrote:
-> > > On Mon, 2020-05-04 at 09:36 -0700, Christoph Paasch wrote:
-> > > > On 02/05/20 - 09:30:43, Paolo Abeni wrote:
-> > > > > On Fri, 2020-05-01 at 11:09 -0700, Christoph Paasch wrote:
-> > > [...]
-> > > > > > Thoughts?
-> > > > > > =
+When a subflow is created via mptcp_subflow_create_socket(),
+a new 'struct socket' is allocated, with a new i_ino value.
 
-> > > > > > This is not going to trigger a RST from the server (see comment=
- in
-> > > > > > subflow_init_req, because we are not passing up a return-value =
-from init_req
-> > > > > > to tcp_conn_request - but that should be easy to change).
-> > > > > =
+When inspecting TCP sockets via the procfs and or the diag
+interface, the above ones are not related to the process owning
+the MPTCP master socket, even if they are a logical part of it
+('ss -p' shows an empty process field)
 
-> > > > > Thank you for the detailed analisys! LGTM, with a couple of notes:
-> > > > > =
+Additionally, subflows created by the path manager get
+the uid/gid from the running workqueue.
 
-> > > > > - I think it would be nicer if we additionally decreases the subf=
-lows
-> > > > > if the mp_join request sk 'fails'/fallback before completing the =
-3WHS
-> > > > =
+Subflows are part of the owning MPTCP master socket, let's
+adjust the vfs info to reflect this.
 
-> > > > regarding decrease - I saw that and actually was surprised that we =
-*never*
-> > > > decrease the subflow-counter (at least, I couldn't find where it is=
- being
-> > > > decremented).
-> > > > =
+After this patch, 'ss' correctly displays subflows as belonging
+to the msk socket creator.
 
-> > > > Was that intended? =
+Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/subflow.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> > > =
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 67a4e35d4838..4931a29a6f08 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1012,6 +1012,16 @@ int mptcp_subflow_create_socket(struct sock *sk, str=
+uct socket **new_sock)
+ 	if (err)
+ 		return err;
+ =
 
-> > > So far, yes. The idea is that we currently increment the subflows
-> > > counter only after the peer is completely validated and we close the
-> > > subflow only at msk shutdown. Even if the peer closes the subflow, we=
- -
-> > > currently - still keep the 'struct sock' around. So the subflow count
-> > > never decreases. =
++	/* the newly created socket really belongs to the owning MPTCP master
++	 * socket, even if for additional subflows the allocation is performed
++	 * by a kernel workqueue. Adjust inode references, so that the
++	 * procfs/diag interaces really show this one belonging to the correct
++	 * user.
++	 */
++	SOCK_INODE(sf)->i_ino =3D SOCK_INODE(sk->sk_socket)->i_ino;
++	SOCK_INODE(sf)->i_uid =3D SOCK_INODE(sk->sk_socket)->i_uid;
++	SOCK_INODE(sf)->i_gid =3D SOCK_INODE(sk->sk_socket)->i_gid;
++
+ 	subflow =3D mptcp_subflow_ctx(sf->sk);
+ 	pr_debug("subflow=3D%p", subflow);
+ =
 
-> > > =
+-- =
 
-> > > I plan to revisit the above within the scope of:
-> > > =
+2.21.1
 
-> > > https://github.com/multipath-tcp/mptcp_net-next/issues/19
-> > > =
-
-> > > =
-
-> > > > Because, that means if I set max_subflows to 3 and even if
-> > > > I only ever have 2 subflows in parallel, after the third subflow I =
-am blocked.
-> > > =
-
-> > > Which is expected, right ?!? Can you please re-phrase?!? =
-
-> > =
-
-> > The scenario I have in mind is this:
-> > =
-
-> > One configures the server-side with X subflows (with X being a reasonab=
-le
-> > number, like 8) to prevent an attacker from creating an endless list of
-> > subflows which makes the kernel iterate over that list for a long time.
-> > =
-
-> > Now, the client is walking from one WiFi access-point to another, switc=
-hing
-> > from WiFi, back to cell, back to WiFi,... each time with a new subflow
-> > (e.g., because it's a different WiFi AP). So, at any time the number of
-> > "parallel" subflows should never be higher than 2, but the total number=
- of
-> > subflows this connection has seen can be very large.
-> > =
-
-> > It seems like this is being addressed with Issue #19 (I would add to it=
- that
-> > subflows should also be closed if they receive a TCP-RST).
-> =
-
-> Yep, that was the idea...
-> =
-
-> Follow-up question: the above scenario will finally clash with the 8
-> bit limit for address id, right?
-
-I think it is fine to wrap-around the 8-bit counter then and use the
-address-IDs that are currently unused.
-
-
-Christoph
-
-> > Could we change the syn_recv_sock callback to return an int which indic=
-ates to
-> > tcp_check_req whether or not it should dispose of the request-sock?
-> =
-
-> Ok, that would work, I think.
-> My *personal* taste would be to try to avoid additional modification to
-> TCP.
-> =
-
-> I *think* we can cope with this scenario in the following way:
-> =
-
-> * if MP_JOIN checks fail, subflow_syn_recv_sock() instead of freeing
-> the child will call:
->         tcp_set_state(ssk, TCP_CLOSE);
->         tcp_send_active_reset(ssk, GFP_ATOMIC);
->         sock_put(ssk); // ssk ref cnt should be 2 before this call
->   and return the subflow socket.
-> * the TCP stack will call tcp_child_process() on the child process,
-> which will release the last reference to subflow.
-> =
-
-> Let me try to cook this one.
-> =
-
-> /P
->=20
---===============1899291653432072272==--
+--===============7096553099939506708==--
