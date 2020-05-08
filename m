@@ -1,47 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============3571319136357304829=="
+Content-Type: multipart/mixed; boundary="===============5380701779007616937=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: set correct vfs info for subflows
-Date: Thu, 07 May 2020 18:16:51 -0700
-Message-ID: <20200507.181651.1434873497888506640.davem@davemloft.net>
-In-Reply-To: a2fde8fb93863b0ffdeea94b5f44ba64b7601c5d.1588865446.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next 0/7] mptcp: don't sleep on ssk with msk
+ lock held
+Date: Thu, 07 May 2020 18:52:45 -0700
+Message-ID: <alpine.OSX.2.22.394.2005071840070.63842@msavoy-mobl.amr.corp.intel.com>
+In-Reply-To: 20200506130228.1478-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4348
+X-UID: 4349
 
---===============3571319136357304829==
+--===============5380701779007616937==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
-Date: Thu,  7 May 2020 18:53:24 +0200
 
-> When a subflow is created via mptcp_subflow_create_socket(),
-> a new 'struct socket' is allocated, with a new i_ino value.
-> =
+On Wed, 6 May 2020, Florian Westphal wrote:
 
-> When inspecting TCP sockets via the procfs and or the diag
-> interface, the above ones are not related to the process owning
-> the MPTCP master socket, even if they are a logical part of it
-> ('ss -p' shows an empty process field)
-> =
+> This series reworks mptcp_sendmsg logic to avoid blocking on the subflow
+> socket in an attempt to address/resolve:
+> https://github.com/multipath-tcp/mptcp_net-next/issues/7
+>
+> It does so by removing the wait loop from mptcp_sendmsg_frag helper.
+>
+> In order to do that, it moves prerequisites into the callers.
+>
+> The worker can just reschedule in case no subflow socket is ready.
+>
+> The sendmsg path can use the existing wait logic.
+>
+> Because large send requests can result in multiple mptcp_sendmsg_frag
+> calls from mptcp_sendmsg, we may need to restart the socket lookup in
+> case subflow can't accept more data or memory is low.
+>
+> Doing so blocks on the mptcp socket, and existing wait handling
+> releases the msk lock while blocking.
+>
+> Lastly, no need to use ATOMIC allocations for extension allocation,
+> so allow to pass gfp_t arg to the helper instead of hard-coded ATOMIC
+> in the core.
+>
+> Comments welcome.
+>
 
-> Additionally, subflows created by the path manager get
-> the uid/gid from the running workqueue.
-> =
+After looking over the rest of the series I don't have other changes to =
 
-> Subflows are part of the owning MPTCP master socket, let's
-> adjust the vfs info to reflect this.
-> =
+suggest, series looks good. Thanks for the clarification in Paolo's =
 
-> After this patch, 'ss' correctly displays subflows as belonging
-> to the msk socket creator.
-> =
+thread.
 
-> Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Mat
 
-Applied and queued up for -stable, thanks.
---===============3571319136357304829==--
+
+> Florian Westphal (7):
+>      mptcp: avoid blocking in tcp_sendpages
+>      mptcp: make sure timer is inited/started once data is pending for tr=
+ansmission
+>      mptcp: avoid blocking in tcp_sendpages due to skb alloc
+>      mptcp: fill skb extension cache outside of mptcp_sendmsg_frag
+>      mptcp: fill skb page frag cache outside of mptcp_sendmsg_frag
+>      mptcp: remove inner wait loop from mptcp_sendmsg_frag
+>      net: allow __skb_ext_alloc to sleep
+>
+> include/linux/skbuff.h |   2 +-
+> net/core/skbuff.c      |   8 ++--
+> net/mptcp/protocol.c   | 100 ++++++++++++++++++++++++++++++++++++--------=
+-----
+> 3 files changed, 81 insertions(+), 29 deletions(-)
+
+--
+Mat Martineau
+Intel
+--===============5380701779007616937==--
