@@ -1,68 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============4238367198979392046=="
+Content-Type: multipart/mixed; boundary="===============0857023904692974924=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC net] mptcp: Initialize map_seq upon subflow
- establishment
-Date: Mon, 11 May 2020 10:30:51 +0200
-Message-ID: <f1ee39d4cb0ce1390fd3e6047c216cd96cfde89b.camel@redhat.com>
-In-Reply-To: 20200509233905.72131-1-cpaasch@apple.com
+Subject: [MPTCP] [PATCH net-next v2 0/7] mptcp: rework mptcp_sendmsg
+Date: Mon, 11 May 2020 13:55:31 +0200
+Message-ID: <20200511115538.6015-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 4358
+X-UID: 4359
 
---===============4238367198979392046==
+--===============0857023904692974924==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2020-05-09 at 16:39 -0700, Christoph Paasch wrote:
-> When the other MPTCP-peer uses 32-bit data-sequence numbers, we rely on
-> map_seq to indicate how to expand to a 64-bit data-sequence number in
-> expand_seq() when receiving data.
-> =
+This series reworks mptcp_sendmsg logic to avoid blocking on the subflow
+socket.
+This is another iteration, because there were problems with the previous
+one.
 
-> For new subflows, this field is not initialized, thus results in an
-> "invalid" mapping being discarded.
-> =
+1. Add a new patch 1/7 to stop mptcp from accepting megabytes worth
+   of data when tcp data gets acked at subflow level quickly, but not
+   at mptcp level.
 
-> Fix this by initializing map_seq upon subflow establishment time.
-> =
+2. drop the patch that cached an skb in sk->sk_tx_skb_cache.
+   One problem with that patch was that it sabotages an extra check
+   that tcp has: when it allocates and skb it will behave slightly
+   differently when the tcp write and retrans queues are empty
+   wrt. wmem schedule.
+   By preallocating in mptcp layer that code gets bypassed.
+   Moreover, the preallocation doesn't buy anything; the
+   allocation can schedule but it won't sleep forever.
 
-> Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
-> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-> ---
->  net/mptcp/protocol.c | 2 ++
->  1 file changed, 2 insertions(+)
-> =
+3. for the 3rd patch I moved the initialisation to a single location,
+   also the timer is only started before returning to userspace.
+   As long was we keep looping, the timer doesn't have to be started
+   here as it will be kicked by mptcp_data_acked() for the incoming
+   acks.
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e1f23016ed3f..86ed1e55a59b 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1635,6 +1635,8 @@ bool mptcp_finish_join(struct sock *sk)
->  			list_add_tail(&subflow->node, &msk->join_list);
->  		spin_unlock_bh(&msk->join_list_lock);
->  	}
-> +
-> +	subflow->map_seq =3D msk->ack_seq;
->  	return ret;
->  }
->  =
+4. xmit via lo and MPTCP is SLOOOOOOOOW in 'mmap' mode.
+  However it turned out this is already the case without these patches,
+  so I decided to send these patches out anyway.
+  I will send another email to followup up on this.
+
+I've preserved Paolos ACKs on patches that had no changes vs. v1.
+
+Florian Westphal (7):
+      mptcp: break and restart in case mptcp sndbuf is full
+      mptcp: avoid blocking in tcp_sendpages
+      mptcp: make sure timer is inited once data is pending for transmission
+      mptcp: fill skb extension cache outside of mptcp_sendmsg_frag
+      mptcp: fill skb page frag cache outside of mptcp_sendmsg_frag
+      mptcp: remove inner wait loop from mptcp_sendmsg_frag
+      net: allow __skb_ext_alloc to sleep
+
+ include/linux/skbuff.h |   2 +-
+ net/core/skbuff.c      |   8 ++--
+ net/mptcp/protocol.c   | 116 ++++++++++++++++++++++++++++++++++++---------=
+----
+ 3 files changed, 91 insertions(+), 35 deletions(-)
 
 
-The patch LGTM, thanks! =
-
-
-Perhaps we can move the assignment under the 'if (ret) {' conditional,
-just for clarity?
-
-May I guess the above is the root cause for the retransmissions we get
-while interopertating with mptcp.org? Is that all, or there are still
-retransmissions?
-
-Thanks
-
-Paolo
-
---===============4238367198979392046==--
+--===============0857023904692974924==--
