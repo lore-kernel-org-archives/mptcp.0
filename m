@@ -1,116 +1,145 @@
-Content-Type: multipart/mixed; boundary="===============1400893242900441022=="
+Content-Type: multipart/mixed; boundary="===============8652468735243814742=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 1/7] mptcp: break and restart in case mptcp
- sndbuf is full
-Date: Mon, 11 May 2020 13:55:32 +0200
-Message-ID: <20200511115538.6015-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH net-next 2/7] mptcp: avoid blocking in tcp_sendpages
+Date: Mon, 11 May 2020 13:55:33 +0200
+Message-ID: <20200511115538.6015-3-fw@strlen.de>
 In-Reply-To: 20200511115538.6015-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4360
+X-UID: 4361
 
---===============1400893242900441022==
+--===============8652468735243814742==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Its not enough to wait for TCP-level acks (free tcp send space).
-We also hold on to any transmitted data for mptcp-level retransmits,
-so we can't continue sending more data when there is no more mptcp send
-buffer space available.
+The transmit loop continues to xmit new data until an error is returned
+or all data was transmitted.
 
-Therefore add needed check in mptcp_sendmsg, flush tcp data and
-wait until mptcp snd space becomes available.
+For the blocking i/o case, this means that tcp_sendpages() may block on
+the subflow until more space becomes available, i.e. we end up sleeping
+with the mptcp socket lock held.
+
+Instead we should check if a different subflow is ready to be used.
+
+This restarts the subflow sk lookup when the tx operation succeeded
+and the tcp subflow can't accept more data or if tcp_sendpages
+indicates -EAGAIN on a blocking mptcp socket.
+
+In that case we also need to set the NOSPACE bit to make sure we get
+notified once memory becomes available.
+
+In case all subflows are busy, the existing logic will wait until a
+subflow is ready, releasing the mptcp socket lock while doing so.
+
+The mptcp worker already sets DONTWAIT, so no need to make changes there.
+
+v2:
+ * set NOSPACE bit
+ * add a comment to clarify that mptcp-sk sndbuf limits need to
+   be checked as well.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 37 ++++++++++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 7 deletions(-)
+ net/mptcp/protocol.c | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e1f23016ed3f..d14e2aa30a14 100644
+index d14e2aa30a14..13fb04d45083 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -653,6 +653,15 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
-sock *ssk,
- 	return ret;
- }
+@@ -590,7 +590,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 	 * access the skb after the sendpages call
+ 	 */
+ 	ret =3D do_tcp_sendpages(ssk, page, offset, psize,
+-			       msg->msg_flags | MSG_SENDPAGE_NOTLAST);
++			       msg->msg_flags | MSG_SENDPAGE_NOTLAST | MSG_DONTWAIT);
+ 	if (ret <=3D 0)
+ 		return ret;
  =
 
-+static void mptcp_nospace(struct mptcp_sock *msk, struct socket *sock)
-+{
-+	clear_bit(MPTCP_SEND_SPACE, &msk->flags);
-+	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb */
-+
-+	/* enables sk->write_space() callbacks */
-+	set_bit(SOCK_NOSPACE, &sock->flags);
-+}
-+
- static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -666,13 +675,8 @@ static struct sock *mptcp_subflow_get_send(struct mptc=
-p_sock *msk)
- 		if (!sk_stream_memory_free(ssk)) {
- 			struct socket *sock =3D ssk->sk_socket;
- =
-
--			if (sock) {
--				clear_bit(MPTCP_SEND_SPACE, &msk->flags);
--				smp_mb__after_atomic();
--
--				/* enables sk->write_space() callbacks */
--				set_bit(SOCK_NOSPACE, &sock->flags);
--			}
-+			if (sock)
-+				mptcp_nospace(msk, sock);
- =
-
- 			return NULL;
- 		}
-@@ -740,6 +744,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+@@ -718,6 +718,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
  *msg, size_t len)
+ 	struct socket *ssock;
+ 	size_t copied =3D 0;
+ 	struct sock *ssk;
++	bool tx_ok;
+ 	long timeo;
  =
 
- 	mptcp_clean_una(sk);
- =
-
-+wait_for_sndbuf:
- 	__mptcp_flush_join_list(msk);
- 	ssk =3D mptcp_subflow_get_send(msk);
- 	while (!sk_stream_memory_free(sk) || !ssk) {
-@@ -777,6 +782,24 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- 		}
- =
-
- 		copied +=3D ret;
-+
-+		/* memory is charged to mptcp level socket as well, i.e.
-+		 * if msg is very large, mptcp socket may run out of buffer
-+		 * space.  mptcp_clean_una() will release data that has
-+		 * been acked at mptcp level in the mean time, so there is
-+		 * a good chance we can continue sending data right away.
-+		 */
-+		if (unlikely(!sk_stream_memory_free(sk))) {
-+			tcp_push(ssk, msg->msg_flags, mss_now,
-+				 tcp_sk(ssk)->nonagle, size_goal);
-+			mptcp_clean_una(sk);
-+			if (!sk_stream_memory_free(sk)) {
-+				/* no luck, can't send more for now */
-+				mptcp_nospace(msk, sk->sk_socket);
-+				release_sock(ssk);
-+				goto wait_for_sndbuf;
-+			}
-+		}
+ 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+@@ -742,6 +743,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 		return ret >=3D 0 ? ret + copied : (copied ? copied : ret);
  	}
  =
 
- 	mptcp_set_timeout(sk, ssk);
++restart:
+ 	mptcp_clean_una(sk);
+ =
+
+ wait_for_sndbuf:
+@@ -764,11 +766,17 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 	pr_debug("conn_list->subflow=3D%p", ssk);
+ =
+
+ 	lock_sock(ssk);
+-	while (msg_data_left(msg)) {
++	tx_ok =3D msg_data_left(msg);
++	while (tx_ok) {
+ 		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
+ 					 &size_goal);
+-		if (ret < 0)
++		if (ret < 0) {
++			if (ret =3D=3D -EAGAIN && timeo > 0) {
++				release_sock(ssk);
++				goto restart;
++			}
+ 			break;
++		}
+ 		if (ret =3D=3D 0 && unlikely(__mptcp_needs_tcp_fallback(msk))) {
+ 			/* Can happen for passive sockets:
+ 			 * 3WHS negotiated MPTCP, but first packet after is
+@@ -783,11 +791,30 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ =
+
+ 		copied +=3D ret;
+ =
+
++		tx_ok =3D msg_data_left(msg);
++		if (!tx_ok)
++			break;
++
++		if (!sk_stream_memory_free(ssk)) {
++			set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
++			tcp_push(ssk, msg->msg_flags, mss_now,
++				 tcp_sk(ssk)->nonagle, size_goal);
++			release_sock(ssk);
++			goto restart;
++		}
++
+ 		/* memory is charged to mptcp level socket as well, i.e.
+ 		 * if msg is very large, mptcp socket may run out of buffer
+ 		 * space.  mptcp_clean_una() will release data that has
+ 		 * been acked at mptcp level in the mean time, so there is
+ 		 * a good chance we can continue sending data right away.
++		 *
++		 * Normally, when the tcp subflow can accept more data, then
++		 * so can the MPTCP socket.  However, we need to cope with
++		 * peers that might lag behind in their MPTCP-level
++		 * acknowledgements, i.e.  data might have been acked at
++		 * tcp level only.  So, we must also check the MPTCP socket
++		 * limits before we send more data.
+ 		 */
+ 		if (unlikely(!sk_stream_memory_free(sk))) {
+ 			tcp_push(ssk, msg->msg_flags, mss_now,
 -- =
 
 2.26.2
 
---===============1400893242900441022==--
+--===============8652468735243814742==--
