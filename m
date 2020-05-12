@@ -1,63 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============7398503785212598325=="
+Content-Type: multipart/mixed; boundary="===============3077483598839210702=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 1/7] mptcp: break and restart in case
- mptcp sndbuf is full
-Date: Tue, 12 May 2020 12:44:00 +0200
-Message-ID: <20200512104400.GA11395@breakpoint.cc>
-In-Reply-To: 0ff4205b5f3aa251fa738e8f751c10e7593af519.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: Initialize map_seq upon subflow
+ establishment
+Date: Tue, 12 May 2020 12:09:11 -0700
+Message-ID: <20200512.120911.2258216308785425487.davem@davemloft.net>
+In-Reply-To: 6b0594845f7787b9bc82c845321e23b6bc3bca38.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4373
+X-UID: 4374
 
---===============7398503785212598325==
+--===============3077483598839210702==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2020-05-11 at 13:55 +0200, Florian Westphal wrote:
-> > Its not enough to wait for TCP-level acks (free tcp send space).
-> > We also hold on to any transmitted data for mptcp-level retransmits,
-> > so we can't continue sending more data when there is no more mptcp send
-> > buffer space available.
-> > =
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Mon, 11 May 2020 19:35:21 +0200
 
-> > Therefore add needed check in mptcp_sendmsg, flush tcp data and
-> > wait until mptcp snd space becomes available.
-> > =
+> On Mon, 2020-05-11 at 09:24 -0700, Christoph Paasch wrote:
+>> When the other MPTCP-peer uses 32-bit data-sequence numbers, we rely on
+>> map_seq to indicate how to expand to a 64-bit data-sequence number in
+>> expand_seq() when receiving data.
+>> =
 
-> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > ---
-> >  net/mptcp/protocol.c | 37 ++++++++++++++++++++++++++++++-------
-> >  1 file changed, 30 insertions(+), 7 deletions(-)
-> > =
+>> For new subflows, this field is not initialized, thus results in an
+>> "invalid" mapping being discarded.
+>> =
 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index e1f23016ed3f..d14e2aa30a14 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -653,6 +653,15 @@ static int mptcp_sendmsg_frag(struct sock *sk, str=
-uct sock *ssk,
-> >  	return ret;
-> >  }
-> >  =
+>> Fix this by initializing map_seq upon subflow establishment time.
+>> =
 
-> > +static void mptcp_nospace(struct mptcp_sock *msk, struct socket *sock)
-> > +{
-> > +	clear_bit(MPTCP_SEND_SPACE, &msk->flags);
-> > +	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb */
-> > +
-> > +	/* enables sk->write_space() callbacks */
-> > +	set_bit(SOCK_NOSPACE, &sock->flags);
-> > +}
-> =
+>> Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+>> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+ ...
+> Reviewed-by: Paolo Abeni <pabeni(a)redhat.com>
 
-> (sharing on the ML a topic already discussed privatelly) I think we can
-> use this helper also in ssk_check_wmem().
-
-Thanks for pointing this out, I've split this into a new patch to reduce
-size of this one.
-
---===============7398503785212598325==--
+Applied, thanks.
+--===============3077483598839210702==--
