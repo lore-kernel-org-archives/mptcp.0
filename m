@@ -1,41 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============3077483598839210702=="
+Content-Type: multipart/mixed; boundary="===============5953691480994764110=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: kernel test robot <lkp at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: Initialize map_seq upon subflow
- establishment
-Date: Tue, 12 May 2020 12:09:11 -0700
-Message-ID: <20200512.120911.2258216308785425487.davem@davemloft.net>
-In-Reply-To: 6b0594845f7787b9bc82c845321e23b6bc3bca38.camel@redhat.com
+Subject: [MPTCP] [kselftest SUCCESSFUL] mptcp/export 4999965350
+ ("[DO-NOT-MERGE] mptcp: enabled by default")
+Date: Wed, 13 May 2020 11:38:59 +0800
+Message-ID: <5ebb6bd3.2Uh/tHtigyjE4nTf%lkp@intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4374
+X-UID: 4376
 
---===============3077483598839210702==
+--===============5953691480994764110==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
-Date: Mon, 11 May 2020 19:35:21 +0200
 
-> On Mon, 2020-05-11 at 09:24 -0700, Christoph Paasch wrote:
->> When the other MPTCP-peer uses 32-bit data-sequence numbers, we rely on
->> map_seq to indicate how to expand to a 64-bit data-sequence number in
->> expand_seq() when receiving data.
->> =
+LINUX COMMIT
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+commit : 49999653505b450bc0309b0c9e2fd7c4abdc26a2
+subject: [DO-NOT-MERGE] mptcp: enabled by default
+date   : 2020-05-13 09:13:36 +0800
+author : Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
->> For new subflows, this field is not initialized, thus results in an
->> "invalid" mapping being discarded.
->> =
 
->> Fix this by initializing map_seq upon subflow establishment time.
->> =
+Test status of 49999653505b450bc0309b0c9e2fd7c4abdc26a2 (compared to v5.6)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
+|                                                                          =
+                       | pass | fail | unstable | skip | - | regression | f=
+ix |
+| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
+ests                   | 3    |      |          |      |   |            |  =
+   |
+| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
+ts                     |      |      |          | 1    |   |            |  =
+   |
+| kselftests-cpufreq-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x8=
+6_64-rhel-7.6-kselftests |      |      |          | 1    |   |            |=
+     |
+| kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     |      |      |          | 1    |   |            |=
+     |
+| kselftests-kvm-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
+-rhel-7.6-kselftests     | 20   |      |          | 1    |   |            |=
+     |
++--------------------------------------------------------------------------=
+-----------------------+------+------+----------+------+---+------------+--=
+---+
 
->> Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
->> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
- ...
-> Reviewed-by: Paolo Abeni <pabeni(a)redhat.com>
-
-Applied, thanks.
---===============3077483598839210702==--
+--===============5953691480994764110==--
