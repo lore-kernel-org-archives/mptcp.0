@@ -1,165 +1,274 @@
-Content-Type: multipart/mixed; boundary="===============4998906121325341583=="
+Content-Type: multipart/mixed; boundary="===============6890124566228476502=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] mptcp: Use 32-bit DATA_ACK when possible
-Date: Thu, 14 May 2020 08:53:03 -0700
-Message-ID: <20200514155303.14360-1-cpaasch@apple.com>
+Subject: [MPTCP] [Weekly meetings] MoM - 14th of May 2020
+Date: Thu, 14 May 2020 19:08:50 +0200
+Message-ID: <394dbf82-c2bf-b46f-d3c7-988e4dc9182f@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4384
+X-UID: 4385
 
---===============4998906121325341583==
+--===============6890124566228476502==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-RFC8684 allows to send 32-bit DATA_ACKs as long as the peer is not
-sending 64-bit data-sequence numbers. The 64-bit DSN is only there for
-extreme scenarios when a very high throughput subflow is combined with a
-long-RTT subflow such that the high-throughput subflow wraps around the
-32-bit sequence number space within an RTT of the high-RTT subflow.
+Hello,
 
-It is thus a rare scenario and we should try to use the 32-bit DATA_ACK
-instead as long as possible. It allows to reduce the TCP-option overhead
-by 4 bytes, thus makes space for an additional SACK-block. It also makes
-tcpdumps much easier to read when the DSN and DATA_ACK are both either
-32 or 64-bit.
+We just had our 99th meeting with Mat, Ossama and Todd (Intel OTC), =
 
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- include/net/mptcp.h  |  5 ++++-
- net/mptcp/options.c  | 33 ++++++++++++++++++++++++---------
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  |  2 ++
- 4 files changed, 31 insertions(+), 10 deletions(-)
+Christoph (Apple), Paolo, Davide and Florian (RedHat) and myself (Tessares).
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index e60275659de6..339eb36cf508 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -16,7 +16,10 @@ struct seq_file;
- =
+Thanks again for this new good meeting!
 
- /* MPTCP sk_buff extension data */
- struct mptcp_ext {
--	u64		data_ack;
-+	union {
-+		u64	data_ack;
-+		u32	data_ack32;
-+	};
- 	u64		data_seq;
- 	u32		subflow_seq;
- 	u16		data_len;
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 45497af23906..ece6f92cf7d1 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -516,7 +516,16 @@ static bool mptcp_established_options_dss(struct sock =
-*sk, struct sk_buff *skb,
- 		return ret;
- 	}
- =
+Here are the minutes of the meeting:
 
--	ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
-+	if (subflow->use_64bit_ack) {
-+		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
-+		opts->ext_copy.data_ack =3D msk->ack_seq;
-+		opts->ext_copy.ack64 =3D 1;
-+	} else {
-+		ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
-+		opts->ext_copy.data_ack32 =3D (uint32_t)(msk->ack_seq);
-+		opts->ext_copy.ack64 =3D 0;
-+	}
-+	opts->ext_copy.use_ack =3D 1;
- =
 
- 	/* Add kind/length/subtype/flag overhead if mapping is not populated */
- 	if (dss_size =3D=3D 0)
-@@ -524,10 +533,6 @@ static bool mptcp_established_options_dss(struct sock =
-*sk, struct sk_buff *skb,
- =
 
- 	dss_size +=3D ack_size;
- =
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
--	opts->ext_copy.data_ack =3D msk->ack_seq;
--	opts->ext_copy.ack64 =3D 1;
--	opts->ext_copy.use_ack =3D 1;
--
- 	*size =3D ALIGN(dss_size, 4);
- 	return true;
- }
-@@ -986,8 +991,13 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out=
-_options *opts)
- 		u8 flags =3D 0;
- =
+     netdev (if mptcp ML is in cc) (by: Christoph Paasch, Paolo Abeni):
 
- 		if (mpext->use_ack) {
--			len +=3D TCPOLEN_MPTCP_DSS_ACK64;
--			flags =3D MPTCP_DSS_HAS_ACK | MPTCP_DSS_ACK64;
-+			flags =3D MPTCP_DSS_HAS_ACK;
-+			if (mpext->ack64) {
-+				len +=3D TCPOLEN_MPTCP_DSS_ACK64;
-+				flags |=3D MPTCP_DSS_ACK64;
-+			} else {
-+				len +=3D TCPOLEN_MPTCP_DSS_ACK32;
-+			}
- 		}
- =
+1287914  [net] mptcp: Initialize map_seq upon subflow establishment
+1285495  [net] mptcp: set correct vfs info for subflows
++ better cope with MP_JOIN failure series
 
- 		if (mpext->use_map) {
-@@ -1004,8 +1014,13 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_o=
-ut_options *opts)
- 		*ptr++ =3D mptcp_option(MPTCPOPT_DSS, len, 0, flags);
- =
+     our repo (by: Florian):
 
- 		if (mpext->use_ack) {
--			put_unaligned_be64(mpext->data_ack, ptr);
--			ptr +=3D 2;
-+			if (mpext->ack64) {
-+				put_unaligned_be64(mpext->data_ack, ptr);
-+				ptr +=3D 2;
-+			} else {
-+				put_unaligned_be32(mpext->data_ack32, ptr);
-+				ptr +=3D 1;
-+			}
- 		}
- =
+Florian patches but they need to be updated, see the new version below
 
- 		if (mpext->use_map) {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e4ca6320ce76..f5adca93e8fb 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -290,6 +290,7 @@ struct mptcp_subflow_context {
- 		data_avail : 1,
- 		rx_eof : 1,
- 		data_fin_tx_enable : 1,
-+		use_64bit_ack : 1, /* Set when we received a 64-bit DSN */
- 		can_ack : 1;	    /* only after processing the remote a key */
- 	u64	data_fin_tx_seq;
- 	u32	remote_nonce;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 009d5c478062..f22dad482cd4 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -661,9 +661,11 @@ static enum mapping_status get_mapping_status(struct s=
-ock *ssk)
- 	if (!mpext->dsn64) {
- 		map_seq =3D expand_seq(subflow->map_seq, subflow->map_data_len,
- 				     mpext->data_seq);
-+		subflow->use_64bit_ack =3D 0;
- 		pr_debug("expanded seq=3D%llu", subflow->map_seq);
- 	} else {
- 		map_seq =3D mpext->data_seq;
-+		subflow->use_64bit_ack =3D 1;
- 	}
- =
 
- 	if (subflow->map_valid) {
+
+
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+
+     netdev (if mptcp ML is in cc) (by: Christoph Paasch):
+
+1290468  [net-next] mptcp: Use 32-bit DATA_ACK when possible
+
+     our repo (by: Davide Caratti, Florian Westphal, Matthieu Baerts, =
+
+Paolo Abeni):
+
+1265469: Needs Review / ACK: selftests:mptcp:pm: rm the right tmp file:
+     - Matth: to upstream
+
+1274449: Changes Requested: [RFC] net: mptcp: improve fallback after =
+
+successful 3-way-handshake:
+     - v2 is in progress
+
+1285369: Changes Requested: [RFC,1/2] mptcp: add new sock flag to deal =
+
+with join subflows
+1285367: Changes Requested: [RFC,2/2] mptcp: cope better with MP_JOIN =
+
+failure:
+     - a v1 has been sent to upstream
+     - Waiting for an ACK by Eric
+     - a Reviewed-by would be nice, Mat is looking at that
+     - Note: there is a new version: =
+
+https://patchwork.ozlabs.org/project/netdev/patch/968fb022a824140c6761c755e=
+916f4526fee0a29.1589383730.git.pabeni(a)redhat.com/
+
+1285373: Changes Requested: Re: [PATCH mptcp-next 3/7] mptcp: avoid =
+
+blocking in tcp_sendpages due to skb alloc:
+     - new version available
+
+1287644: Awaiting Upstream: [net-next,1/7] mptcp: break and restart in =
+
+case mptcp sndbuf is full
+1287646: Awaiting Upstream: [net-next,2/7] mptcp: avoid blocking in =
+
+tcp_sendpages
+1287647: Awaiting Upstream: [net-next,3/7] mptcp: make sure timer is =
+
+inited once data is pending for transmission
+1287648: Awaiting Upstream: [net-next,4/7] mptcp: fill skb extension =
+
+cache outside of mptcp_sendmsg_frag
+1287649: Awaiting Upstream: [net-next,5/7] mptcp: fill skb page frag =
+
+cache outside of mptcp_sendmsg_frag
+1287650: Awaiting Upstream: [net-next,6/7] mptcp: remove inner wait loop =
+
+from mptcp_sendmsg_frag
+1287651: Awaiting Upstream: [net-next,7/7] net: allow __skb_ext_alloc to =
+
+sleep:
+     - Florian plans to send it soon to netdev
+
+
+
+Bugs on Github:
+     https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+     open:
+
+   24  Revisit layout of struct mptcp_subflow_context:
+     - new one, linked to a discussion with Paolo and Christoph
+
+   23  refactor token container
+     - what Paolo discussed last week and working on
+
+   22  fix covscan issues @dcaratti
+     - see below
+
+   21  sort-out {set,get}sockopt handling
+   20  implement msk diag interface
+   19  let PM netlink update live sockets on local addresses list change
+   18  allow 'force to MPTCP' mode
+   17  audit 'backup' flag usage
+   16  get rid of mptcp hooking in tcp_check_req()
+   15  reduce mptcp_out_option struct size
+   11  fix fallback to TCP  @dcaratti
+    6  loss and delay without reordering causes very slow transfer
+    4  keep a single work struct in mptcp socket
+
+     recently closed:
+
+   7  cleanup sendmsg_frag allocation:
+       - linked to Florian patch-set
+
+   5  Allow ss/netstat etc. to show program name for client and listener =
+
+MPTCP subflows:
+       - linked to vfs fixes by Paolo
+
+   3  fix 'mmap' related race
+       - linked to Florian patch-set
+
+
+
+FYI: Current Roadmap:
+     - Part 4 (next merge window):
+         - Fix bugs reported on Github: =
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/
+         - IPv6 - IPv4 mapped support
+         - not dropping MPTCP options (ADD_ADDR, etc.)
+         - FAST_CLOSE
+         - full MPTCP v1 support (reliable add_addr, etc.)
+         - after a few attempts of failed MPTCP, we fallback to TCP =
+
+(like TFO is doing)
+         - PM server (more advanced)
+         - Active backup support
+         - sending "simultaneously" on different subflows (multiple non =
+
+backup subflows)
+         - Full DATA_FIN support [WIP by Mat]
+         - ADD_ADDR for MPTCPv1: echo bit [WIP by Peter]
+         - Opti in TCP option structures (unions) [DONE by Paolo]
+         - Shared recv window (full support) [DONE by Florian]
+
+     - Part 5 (extra needed for prod):
+         - opti/perfs
+         - TFO
+         - PM netlink
+         - PM bpf
+         - Scheduler bpf
+         - syncookies
+         - [gs]etsockopt per subflow
+         - notify the userspace when a subflow is added/removed =E2=86=92 c=
+msg
+
+
+
+in progress fixes for -net:
+     - /
+
+
+
+Part 4: new features:
+     - news about "Full DATA_FIN support"?:
+         - Mat is making some progress there: propagate the DATA_FIN to =
+
+bare ACKs
+         - when there are data with the TCP FIN, we have to be careful there
+
+     - news about "ADD_ADDR for MPTCPv1: echo bit"?:
+         - /
+
+     - Token in a hash list:
+         - Paolo is looking at that
+         - But he prefers to redo it as he likes perfection!
+
+     - mptcp.org supporting MPTCPv1:
+         - Christoph is looking at that
+         - next step: support ADD_ADDRv1
+
+
+
+Extra tests:
+     - news about Syzkaller? (Christoph):
+         - /
+
+     - news about Intel's kbuild? (Mat):
+         - we get successful kselftest notification
+         - maybe we could only get non successful one to reduce =
+
+notifications?
+
+     - packetdrill (Davide):
+         - https://github.com/dcaratti/packetdrill/tree/fallback-after3whs
+         - for those wanting to see what happens with fallback
+         - of course we need to wait for patches in MPTCP repo to have =
+
+these tests passing
+
+     - CI (Matth):
+         - mmap test has been added (fixed by Florian's patches)
+
+     -  Coverity (davide):
+         - covscan on Linux kernel
+         - now running on MPTCP code
+         - Davide receives random updates
+         - 2 reported problems:
+             - see Github issue N=C2=B022:  fix covscan issues
+         - TODO: Matth: add to the list of item to discuss at the weekly =
+
+meeting =E2=86=92 Done
+
+
+
+TODO: add Todd to the calendar event:
+     - Done!
+
+
+
+netdev conf:
+     - moved to August 16, fully virtual
+     - Mat still plans to present something
+     - paper and slides deadline is mid July
+
+
+
+Next meeting:
+     - We propose to have the next meeting on Thursday, the 21st of May.
+     - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200521
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you next week,
+Matt
 -- =
 
-2.23.0
-
---===============4998906121325341583==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6890124566228476502==--
