@@ -1,67 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============1845055483301481171=="
+Content-Type: multipart/mixed; boundary="===============6416320288590665501=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 1/3] mptcp: add new sock flag to deal
- with join subflows
-Date: Fri, 15 May 2020 11:29:32 -0700
-Message-ID: <20200515182932.GA45434@MacBook-Pro-64.local>
-In-Reply-To: a5acf97e4f39de13ba178a3a007eedd83b418702.1589558049.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v2 0/3] mptcp: fix MP_JOIN failure
+ handling
+Date: Fri, 15 May 2020 12:30:59 -0700
+Message-ID: <20200515.123059.151278519835306555.davem@davemloft.net>
+In-Reply-To: cover.1589558049.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4401
+X-UID: 4402
 
---===============1845055483301481171==
+--===============6416320288590665501==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 15/05/20 - 19:22:15, Paolo Abeni wrote:
-> MP_JOIN subflows must not land into the accept queue.
-> Currently tcp_check_req() calls an mptcp specific helper
-> to detect such scenario.
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Fri, 15 May 2020 19:22:14 +0200
+
+> Currently if we hit an MP_JOIN failure on the third ack, the child socket=
+ is
+> closed with reset, but the request socket is not deleted, causing weird
+> behaviors.
 > =
 
-> Such helper leverages the subflow context to check for
-> MP_JOIN subflows. We need to deal also with MP JOIN
-> failures, even when the subflow context is not available
-> due allocation failure.
+> The main problem is that MPTCP's MP_JOIN code needs to plug it's own
+> 'valid 3rd ack' checks and the current TCP callbacks do not allow that.
 > =
 
-> A possible solution would be changing the syn_recv_sock()
-> signature to allow returning a more descriptive action/
-> error code and deal with that in tcp_check_req().
+> This series tries to address the above shortcoming introducing a new MPTCP
+> specific bit in a 'struct tcp_request_sock' hole, and leveraging that to =
+allow
+> tcp_check_req releasing the request socket when needed.
 > =
 
-> Since the above need is MPTCP specific, this patch instead
-> uses a TCP request socket hole to add a MPTCP specific flag.
-> Such flag is used by the MPTCP syn_recv_sock() to tell
-> tcp_check_req() how to deal with the request socket.
+> The above allows cleaning-up a bit current MPTCP hooking in tcp_check_req=
+().
 > =
 
-> This change is a no-op for !MPTCP build, and makes the
-> MPTCP code simpler. It allows also the next patch to deal
-> correctly with MP JOIN failure.
+> An alternative solution, possibly cleaner but more invasive, would be
+> changing the 'bool *own_req' syn_recv_sock() argument into 'int *req_stat=
+us'
+> and let MPTCP set it to 'REQ_DROP'.
 > =
 
 > v1 -> v2:
->  - be more conservative on drop_req initialization (Mat)
+>  - be more conservative about drop_req initialization
 > =
 
 > RFC -> v1:
 >  - move the drop_req bit inside tcp_request_sock (Eric)
-> =
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  include/linux/tcp.h      |  3 +++
->  include/net/mptcp.h      | 17 ++++++++++-------
->  net/ipv4/tcp_minisocks.c |  2 +-
->  net/mptcp/protocol.c     |  7 -------
->  net/mptcp/subflow.c      |  3 +++
->  5 files changed, 17 insertions(+), 15 deletions(-)
-
-
-Reviewed-by: Christoph Paasch <cpaasch(a)apple.com>
-
---===============1845055483301481171==--
+Series applied, thanks Paolo.
+--===============6416320288590665501==--
