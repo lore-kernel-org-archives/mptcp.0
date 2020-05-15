@@ -1,56 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============8505884029243027584=="
+Content-Type: multipart/mixed; boundary="===============5040443704428111715=="
 MIME-Version: 1.0
-From: kernel test robot <lkp at intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [kselftest SUCCESSFUL] mptcp/export 3e8bd52df7
- ("[DO-NOT-MERGE] mptcp: enabled by default")
-Date: Fri, 15 May 2020 14:23:18 +0800
-Message-ID: <5ebe3556.H3po+ogTTlSiCKdn%lkp@intel.com>
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: Use 32-bit DATA_ACK when possible
+Date: Fri, 15 May 2020 17:30:37 +0200
+Message-ID: <445922ee-af86-131a-559f-5fa1b4ebbad5@tessares.net>
+In-Reply-To: 20200514155303.14360-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4389
+X-UID: 4391
 
---===============8505884029243027584==
+--===============5040443704428111715==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On 14/05/2020 17:53, Christoph Paasch wrote:
+> RFC8684 allows to send 32-bit DATA_ACKs as long as the peer is not
+> sending 64-bit data-sequence numbers. The 64-bit DSN is only there for
+> extreme scenarios when a very high throughput subflow is combined with a
+> long-RTT subflow such that the high-throughput subflow wraps around the
+> 32-bit sequence number space within an RTT of the high-RTT subflow.
+> =
 
-LINUX COMMIT
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-commit : 3e8bd52df7b83c5335c4cdf634ca82a74ce64641
-subject: [DO-NOT-MERGE] mptcp: enabled by default
-date   : 2020-05-15 09:08:48 +0800
-author : Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> It is thus a rare scenario and we should try to use the 32-bit DATA_ACK
+> instead as long as possible. It allows to reduce the TCP-option overhead
+> by 4 bytes, thus makes space for an additional SACK-block. It also makes
+> tcpdumps much easier to read when the DSN and DATA_ACK are both either
+> 32 or 64-bit.
+> =
 
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 
-Test status of 3e8bd52df7b83c5335c4cdf634ca82a74ce64641 (compared to v5.6)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+--------------------------------------------------------------------------=
------------------------+------+------+----------+------+---+------------+--=
----+
-|                                                                          =
-                       | pass | fail | unstable | skip | - | regression | f=
-ix |
-| kselftests-mptcp/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselft=
-ests                   | 3    |      |          |      |   |            |  =
-   |
-| kselftests-bpf/vm-snb/debian-x86_64-20191114.cgz/x86_64-rhel-7.6-kselftes=
-ts                     |      |      |          | 1    |   |            |  =
-   |
-| kselftests-cpufreq-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x8=
-6_64-rhel-7.6-kselftests | 1    |      |          |      |   |            |=
-     |
-| kselftests-net-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
--rhel-7.6-kselftests     |      |      |          | 1    |   |            |=
-     |
-| kselftests-kvm-ucode=3D0xd6/lkp-skl-d01/debian-x86_64-20191114.cgz/x86_64=
--rhel-7.6-kselftests     | 20   |      |          | 1    |   |            |=
-     |
-+--------------------------------------------------------------------------=
------------------------+------+------+----------+------+---+------------+--=
----+
+LGTM, thanks Christoph!
 
---===============8505884029243027584==--
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+--===============5040443704428111715==--
