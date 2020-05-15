@@ -1,53 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============0771010551608041625=="
+Content-Type: multipart/mixed; boundary="===============1845055483301481171=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 3/3] mptcp: cope better with MP_JOIN
- failure
-Date: Fri, 15 May 2020 11:10:05 -0700
-Message-ID: <alpine.OSX.2.22.394.2005151109510.36555@rasanche-mobl.amr.corp.intel.com>
-In-Reply-To: 4dc2d07bafebc2dde162fe1dc1c25f0c4cb602e1.1589558049.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v2 1/3] mptcp: add new sock flag to deal
+ with join subflows
+Date: Fri, 15 May 2020 11:29:32 -0700
+Message-ID: <20200515182932.GA45434@MacBook-Pro-64.local>
+In-Reply-To: a5acf97e4f39de13ba178a3a007eedd83b418702.1589558049.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4400
+X-UID: 4401
 
---===============0771010551608041625==
+--===============1845055483301481171==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On 15/05/20 - 19:22:15, Paolo Abeni wrote:
+> MP_JOIN subflows must not land into the accept queue.
+> Currently tcp_check_req() calls an mptcp specific helper
+> to detect such scenario.
+> =
 
-On Fri, 15 May 2020, Paolo Abeni wrote:
+> Such helper leverages the subflow context to check for
+> MP_JOIN subflows. We need to deal also with MP JOIN
+> failures, even when the subflow context is not available
+> due allocation failure.
+> =
 
-> Currently, on MP_JOIN failure we reset the child
-> socket, but leave the request socket untouched.
->
-> tcp_check_req will deal with it according to the
-> 'tcp_abort_on_overflow' sysctl value - by default the
-> req socket will stay alive.
->
-> The above leads to inconsistent behavior on MP JOIN
-> failure, and bad listener overflow accounting.
->
-> This patch addresses the issue leveraging the infrastructure
-> just introduced to ask the TCP stack to drop the req on
-> failure.
->
-> The child socket is not freed anymore by subflow_syn_recv_sock(),
-> instead it's moved to a dead state and will be disposed by the
-> next sock_put done by the TCP stack, so that listener overflow
-> accounting is not affected by MP JOIN failure.
->
+> A possible solution would be changing the syn_recv_sock()
+> signature to allow returning a more descriptive action/
+> error code and deal with that in tcp_check_req().
+> =
+
+> Since the above need is MPTCP specific, this patch instead
+> uses a TCP request socket hole to add a MPTCP specific flag.
+> Such flag is used by the MPTCP syn_recv_sock() to tell
+> tcp_check_req() how to deal with the request socket.
+> =
+
+> This change is a no-op for !MPTCP build, and makes the
+> MPTCP code simpler. It allows also the next patch to deal
+> correctly with MP JOIN failure.
+> =
+
+> v1 -> v2:
+>  - be more conservative on drop_req initialization (Mat)
+> =
+
+> RFC -> v1:
+>  - move the drop_req bit inside tcp_request_sock (Eric)
+> =
+
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> Reviewed-by: Christoph Paasch <cpaasch(a)apple.com>
 > ---
-> net/mptcp/subflow.c | 15 +++++++++------
-> 1 file changed, 9 insertions(+), 6 deletions(-)
->
+>  include/linux/tcp.h      |  3 +++
+>  include/net/mptcp.h      | 17 ++++++++++-------
+>  net/ipv4/tcp_minisocks.c |  2 +-
+>  net/mptcp/protocol.c     |  7 -------
+>  net/mptcp/subflow.c      |  3 +++
+>  5 files changed, 17 insertions(+), 15 deletions(-)
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
---
-Mat Martineau
-Intel
---===============0771010551608041625==--
+Reviewed-by: Christoph Paasch <cpaasch(a)apple.com>
+
+--===============1845055483301481171==--
