@@ -1,56 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============6416320288590665501=="
+Content-Type: multipart/mixed; boundary="===============5097703802922484743=="
 MIME-Version: 1.0
 From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 0/3] mptcp: fix MP_JOIN failure
- handling
-Date: Fri, 15 May 2020 12:30:59 -0700
-Message-ID: <20200515.123059.151278519835306555.davem@davemloft.net>
-In-Reply-To: cover.1589558049.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: Use 32-bit DATA_ACK when possible
+Date: Sat, 16 May 2020 13:51:26 -0700
+Message-ID: <20200516.135126.783678623237967089.davem@davemloft.net>
+In-Reply-To: 20200514155303.14360-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4402
+X-UID: 4404
 
---===============6416320288590665501==
+--===============5097703802922484743==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
-Date: Fri, 15 May 2020 19:22:14 +0200
+From: Christoph Paasch <cpaasch(a)apple.com>
+Date: Thu, 14 May 2020 08:53:03 -0700
 
-> Currently if we hit an MP_JOIN failure on the third ack, the child socket=
- is
-> closed with reset, but the request socket is not deleted, causing weird
-> behaviors.
+> RFC8684 allows to send 32-bit DATA_ACKs as long as the peer is not
+> sending 64-bit data-sequence numbers. The 64-bit DSN is only there for
+> extreme scenarios when a very high throughput subflow is combined with a
+> long-RTT subflow such that the high-throughput subflow wraps around the
+> 32-bit sequence number space within an RTT of the high-RTT subflow.
 > =
 
-> The main problem is that MPTCP's MP_JOIN code needs to plug it's own
-> 'valid 3rd ack' checks and the current TCP callbacks do not allow that.
+> It is thus a rare scenario and we should try to use the 32-bit DATA_ACK
+> instead as long as possible. It allows to reduce the TCP-option overhead
+> by 4 bytes, thus makes space for an additional SACK-block. It also makes
+> tcpdumps much easier to read when the DSN and DATA_ACK are both either
+> 32 or 64-bit.
 > =
 
-> This series tries to address the above shortcoming introducing a new MPTCP
-> specific bit in a 'struct tcp_request_sock' hole, and leveraging that to =
-allow
-> tcp_check_req releasing the request socket when needed.
-> =
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
 
-> The above allows cleaning-up a bit current MPTCP hooking in tcp_check_req=
-().
-> =
-
-> An alternative solution, possibly cleaner but more invasive, would be
-> changing the 'bool *own_req' syn_recv_sock() argument into 'int *req_stat=
-us'
-> and let MPTCP set it to 'REQ_DROP'.
-> =
-
-> v1 -> v2:
->  - be more conservative about drop_req initialization
-> =
-
-> RFC -> v1:
->  - move the drop_req bit inside tcp_request_sock (Eric)
-
-Series applied, thanks Paolo.
---===============6416320288590665501==--
+Applied, thanks.
+--===============5097703802922484743==--
