@@ -1,38 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5097703802922484743=="
+Content-Type: multipart/mixed; boundary="===============3380231952369941862=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: Use 32-bit DATA_ACK when possible
-Date: Sat, 16 May 2020 13:51:26 -0700
-Message-ID: <20200516.135126.783678623237967089.davem@davemloft.net>
-In-Reply-To: 20200514155303.14360-1-cpaasch@apple.com
+Subject: [MPTCP] [PATCH RFC net-next 0/2] improve MPTCP fallback
+Date: Mon, 18 May 2020 18:37:26 +0200
+Message-ID: <cover.1589819601.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4404
+X-UID: 4408
 
---===============5097703802922484743==
+--===============3380231952369941862==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Christoph Paasch <cpaasch(a)apple.com>
-Date: Thu, 14 May 2020 08:53:03 -0700
+- patch 1 refactors fallback code to allow infinite mapping
+- patch 2 fixes a race between recvmsg() and shutdown(), it was there
+  since earlier implementations but it became almost systematic =
 
-> RFC8684 allows to send 32-bit DATA_ACKs as long as the peer is not
-> sending 64-bit data-sequence numbers. The 64-bit DSN is only there for
-> extreme scenarios when a very high throughput subflow is combined with a
-> long-RTT subflow such that the high-throughput subflow wraps around the
-> 32-bit sequence number space within an RTT of the high-RTT subflow.
-> =
+  in case of fallback, after patch 1 was applied
 
-> It is thus a rare scenario and we should try to use the 32-bit DATA_ACK
-> instead as long as possible. It allows to reduce the TCP-option overhead
-> by 4 bytes, thus makes space for an additional SACK-block. It also makes
-> tcpdumps much easier to read when the DSN and DATA_ACK are both either
-> 32 or 64-bit.
-> =
 
-> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+Davide Caratti (1):
+  net: mptcp: improve fallback to TCP
 
-Applied, thanks.
---===============5097703802922484743==--
+Paolo Abeni (1):
+  mptcp: fix races between shutdown and recvmsg.
+
+ net/mptcp/options.c  |   9 +++-
+ net/mptcp/protocol.c | 125 ++++++++++++++++---------------------------
+ net/mptcp/protocol.h |  14 +++++
+ net/mptcp/subflow.c  |  63 +++++++++++++++-------
+ 4 files changed, 112 insertions(+), 99 deletions(-)
+
+-- =
+
+2.26.2
+
+--===============3380231952369941862==--
