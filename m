@@ -1,63 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============6101606225461772799=="
+Content-Type: multipart/mixed; boundary="===============3426753112554194047=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Todd Malsbary <todd.malsbary at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: use rightmost 64 bits in
- ADD_ADDR HMAC
-Date: Tue, 19 May 2020 18:26:55 +0200
-Message-ID: <dc80ead6-5b04-6fab-b9d7-a985f44657fc@tessares.net>
-In-Reply-To: cc760b468795bc4a189b1e3e0c6ab22bfccad757.camel@linux.intel.com
+Subject: [MPTCP] [PATCH net] mptcp: use rightmost 64 bits in ADD_ADDR HMAC
+Date: Tue, 19 May 2020 09:45:34 -0700
+Message-ID: <20200519164534.147058-1-todd.malsbary@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4420
+X-UID: 4421
 
---===============6101606225461772799==
+--===============3426753112554194047==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Todd,
+This changes the HMAC used in the ADD_ADDR option from the leftmost 64
+bits to the rightmost 64 bits as described in RFC 8684, section 3.4.1.
 
-On 19/05/2020 18:00, Todd Malsbary wrote:
-> Hi Matthieu,
-> =
+This issue was discovered while adding support to packetdrill for the
+ADD_ADDR v1 option.
 
-> On Tue, 2020-05-19 at 17:11 +0200, Matthieu Baerts wrote:
->> Hi Todd,
->>
->> On 19/05/2020 02:30, Christoph Paasch wrote:
->>> On 18/05/20 - 15:29:16, Todd Malsbary wrote:
->>>> This changes the HMAC used in the ADD_ADDR option from the leftmost 64
->>>> bits to the rightmost 64 bits as described in RFC 8684, section 3.4.1.
->>>>
->>>> Signed-off-by: Todd Malsbary <todd.malsbary(a)linux.intel.com>
->>>
->>> Nice find!
->>
->> Yes, good catch!
->>
->> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->>
->> I guess we should send that to -net branch, ideally before the release
->> of v5.7, not to introduce incompatibilities between versions. What do
->> you think?
->>
-> =
+Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
+Signed-off-by: Todd Malsbary <todd.malsbary(a)linux.intel.com>
+Acked-by: Christoph Paasch <cpaasch(a)apple.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ net/mptcp/options.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Sounds good to me.  Just to double check on the process: send this
-> patch out again to the netdev list with [PATCH net] as the prefix, and
-> cc this list?
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index ece6f92cf7d1..0e11fb3d908f 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -550,7 +550,7 @@ static u64 add_addr_generate_hmac(u64 key1, u64 key2, u=
+8 addr_id,
+ =
 
-(We continued the discussion on IRC).
-In short: yes but "Fixes" tag is required.
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 7, hmac);
+ =
 
-Cheers,
-Matt
+-	return get_unaligned_be64(hmac);
++	return get_unaligned_be64(&hmac[MPTCP_ADDR_HMAC_LEN - sizeof(u64)]);
+ }
+ =
+
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+@@ -567,7 +567,7 @@ static u64 add_addr6_generate_hmac(u64 key1, u64 key2, =
+u8 addr_id,
+ =
+
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 19, hmac);
+ =
+
+-	return get_unaligned_be64(hmac);
++	return get_unaligned_be64(&hmac[MPTCP_ADDR_HMAC_LEN - sizeof(u64)]);
+ }
+ #endif
+ =
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============6101606225461772799==--
+2.25.4
+
+--===============3426753112554194047==--
