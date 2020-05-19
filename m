@@ -1,33 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============5567045077357217238=="
+Content-Type: multipart/mixed; boundary="===============7457279576315283028=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH RFC net-next 1/2] net: mptcp: improve fallback to
  TCP
-Date: Tue, 19 May 2020 11:12:22 -0700
-Message-ID: <alpine.OSX.2.22.394.2005191021440.18759@dnlloyd-mobl.amr.corp.intel.com>
-In-Reply-To: a1fe73ff004547bc0750a217f1d9b7b7862b702e.camel@redhat.com
+Date: Tue, 19 May 2020 11:28:20 -0700
+Message-ID: <alpine.OSX.2.22.394.2005191112430.18759@dnlloyd-mobl.amr.corp.intel.com>
+In-Reply-To: ac96ebd7022571490f379ddbd2be2c8b5b1f439c.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4423
+X-UID: 4424
 
---===============5567045077357217238==
+--===============7457279576315283028==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Tue, 19 May 2020, Davide Caratti wrote:
+On Tue, 19 May 2020, Paolo Abeni wrote:
 
-> hello Mat, thanks for looking at this.
->
 > On Mon, 2020-05-18 at 17:14 -0700, Mat Martineau wrote:
 >> On Mon, 18 May 2020, Davide Caratti wrote:
 >>
 >>> current MPTCP resets the connection in case the DSS option is not recei=
 ved
->>> after a successful three-way handshake, while RFC8684 =C3=82=C2=A73.7 s=
-uggests a
+>>> after a successful three-way handshake, while RFC8684 =C2=A73.7 suggest=
+s a
 >>> fall-back to regular TCP when only the first subflow has been estabilsh=
 ed.
 >>> Introduce support for "infinite mapping" to allow continuing without DS=
@@ -39,21 +37,52 @@ S in
 >> short-circuit most of it by (1) not writing the DSS option to the TCP
 >> header on the tx side and (2) generating dummy mappings on the rx side.
 >
-> on a second thought, it would have been better to split this and the
-> support for infinite maps into two separate patches.
+> The above has a few goals, which can't be reached with the current
+> optimization for sendmsg/recvmsg on fallback:
 >
-
-That would help!
-
-> Initially I cleared "is_mptcp" on reception of an infinite map, but then
-> those "goto fallback" were creating so many troubles that the approach was
-> flipped to always use msk, also for fallback sockets (unless the ones
-> passing through subflow_ulp_fallback()).
+> * support for fallback in scenario we currently can't support. e.g. on
+> passive socket we can't fallback due to infinite mapping with the
+> current infra, as passive sockets have 'msk->subflow =3D=3D NULL'.
 >
+> * cleanup the non fallback code, removing most of 'if (<fallback>')' in
+> critical path
+>
+> * better performances for non fallback - e.g. we drop a lock pair in
+> poll() and likely we could drop also the remaning one. (this will
+> improve also the fallback scenario).
+>
+> Moreover this allows follow-up patch[es] to address other current
+> shortcoming. e.g. setsockopt()/getsockopt() on passive sockets
+> currently always return -EOPNOTSUPP as they relay on 'msk->subflow'.
+>
+> The rationale is I'm pretty sure we should try to remove 'msk->subflow'
+> usage completely ;)
 
-Not depending on is_mptcp for fallback behavior is good. Subflow sockets =
+Removing msk->subflow sounds good to me!
 
-with is_mptcp =3D=3D false do lead to some confusing situations.
+Thanks for explaining the goals for this approach to fallback.
+
+>
+>> That seems like a lot of overhead, but if optimizing sendmsg/recvmsg on
+>> fallback is introducing problems then we need to take that in to
+>> consideration. It's not clear to me what we gain by using MPTCP
+>> segmentation & reassembly after the fallback is complete (other than
+>> possibly working around bugs in the existing fallback code). If the tric=
+ky
+>> part is completing the transmit or receive call where fallback happens
+>> *during* the call, maybe the fallback technique used in this patch could
+>> help complete an in-progress send/recv, but future calls would use
+>> sock_sendmsg/sock_recvmsg?
+>
+> I would personally favour non fallback scenarios vs fallback ones.
+> Keeping the current fallback 'shortcuts' affects badly the non fallback
+> one due e.g. poll locking.
+
+I agree, we don't want to add overhead to MPTCP connections in order to =
+
+optimize fallback connections. The impact on polling and other operations =
+
+wasn't clear to me before.
 
 >
 >> I'd also like to avoid overloading the term "infinite mapping", which has
@@ -63,67 +92,39 @@ with is_mptcp =3D=3D false do lead to some confusing situations.
 g"
 >> is a useful term to use instead.
 >
-> good point. Looking at the specifications again, not only the kernel must
-> be able to process an incoming infinite map; it must also emit an infinite
-> map, tentatively, in case it detects a middlebox that filters/corrupts the
-> DSS sub-option.
+> Agreed! :)
 >
-> [...]
->>> 	}
->>> @@ -639,8 +645,12 @@ static enum mapping_status get_mapping_status(stru=
-ct sock *ssk)
->>>
->>> 	data_len =3D mpext->data_len;
->>> 	if (data_len =3D=3D 0) {
->>> -		pr_err("Infinite mapping not handled");
->>> +		/* XXX TODO this should be allowed only if we didn't
->>> +		 * receive a DACK yet. Paolo suggests to use a dedicated
->>> +		 * flag in msk, but can't we use msk->can_ack? */
+>>> @@ -428,8 +432,15 @@ static void mptcp_clean_una(struct sock *sk)
+>>> {
+>>> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>> 	struct mptcp_data_frag *dtmp, *dfrag;
+>>> -	u64 snd_una =3D atomic64_read(&msk->snd_una);
+>>> 	bool cleaned =3D false;
+>>> +	u64 snd_una;
+>>> +
+>>> +	/* on fallback we just need to ignore snd_una, as this is really
+>>> +	 * plain TCP
+>>> +	 */
+>>> +	if (msk->fallback)
+>>> +		atomic64_set(&msk->snd_una, msk->write_seq);
+>>> +	snd_una =3D atomic64_read(&msk->snd_una);
 >>
->> The RFC has a lot of requirements for allowing an infinite mapping, and I
->> don't think they align perfectly with what msk->can_ack means. A dedicat=
-ed
->> "allow_fallback" flag could be set to 'false' when fallback is no longer
->> allowed: a subflow is added, out-of-order MPTCP mappings are encountered,
->> etc.
+>> An alternative to flushing the rtx_queue here would be to not add anythi=
+ng
+>> to the rtx_queue when in fallback, and to do a one-time flush when going
+>> in to fallback.
 >
-> sure, and also talking with Paolo "can_ack" didn't really fit, as it means
-> "can send ack because have both local and remote keys". I was for using
-> subflow->conn_finished (and for removing all XXX stuff before posting to a
-> ML :) ), but also this is not fitting well.
-
-It has been a challenge to keep track of what each flag means and how they =
-
-all interact. A fallback state machine is a possible way to approach the =
-
-problem, but I'm not sure how well that works with our locking =
-
-arrangement. Hard to narrow down what to recommend here, the tradeoffs are =
-
-complicated!
-
-
+> I *think* we will end-up doing the one-time flushing here, as fallback
+> may happen in subflow ctx where the msk socket lock is not held.
 >
->> The way I read the RFC (and I could be misreading), there are cases where
->> an infinite mapping can be used after DATA_ACK if other conditions are
->> met (like the checksum error section in 3.7).
+> Yep, we can inprove memory usage avoiding the enqueue in the fallback
+> case.
 >
-> let's see if I can add a scenario for this (in addition to those at
-> https://github.com/dcaratti/packetdrill/tree/fallback-after3whs )
 
-Great, thank you.
-
->
->>> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
->>> +		if (!subflow->local_id && !READ_ONCE(msk->pm.subflows))
->>> +			return MAPPING_INFINITE;
->>> 		return MAPPING_INVALID;
->>> 	}
-
-Thanks for sharing the patch!
+Agreed, thanks!
 
 --
 Mat Martineau
 Intel
 
---===============5567045077357217238==--
+--===============7457279576315283028==--
