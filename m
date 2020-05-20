@@ -1,56 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============6913628847452897909=="
+Content-Type: multipart/mixed; boundary="===============5417857361497736794=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] ADD_ADDR HMAC ambiguity
-Date: Wed, 20 May 2020 09:40:23 -0700
-Message-ID: <20200520164023.GH45434@MacBook-Pro-64.local>
+Subject: [MPTCP] Weekly meeting - 21 May 2020 16:00 UTC (9am PDT, 6pm CEST)
+Date: Wed, 20 May 2020 20:25:37 +0200
+Message-ID: <a59c82a6-18f2-469d-df82-9fb72232af95@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4437
+X-UID: 4438
 
---===============6913628847452897909==
+--===============5417857361497736794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello everybody!
 
-Todd Malsbary from Intel is looking at the HMAC-support for ADD_ADDR in
-RFC8684. And it appears that there can be an ambiguity on how to interpret
-the truncation.
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-We want to clarify this and make sure all implementations,... are on the
-same page with the intention of the RFC:
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20200521
 
-RFC8684, Section 3.4.1 says:
-" The Truncated HMAC parameter present in this option is the rightmost
-  64 bits of an HMAC, negotiated and calculated in the same way as for
-  MP_JOIN as described in Section 3.2. "
+Feel free to add/modify topics!
 
-Now, in Section 3.2 it mentions:
-" This specification defines that HMAC as defined in [RFC2104] is used,
-  along with the SHA-256 hash algorithm [RFC6234], and that the output
-  is truncated to the leftmost 160 bits (20 octets). "
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
+Speak to you tomorrow!
+Matt
+-- =
 
-One can read these in two different ways:
-
-In Section 3.4.1, the truncation to the rightmost 64 bits is based on the
-full 256-bit HMAC-output or whether it is rather the 64 rightmost bits of
-the leftmost 160bits (the ones mentioned in Section 3.2).
-
-
-Can we clarify which of the two options is the correct one?
-
-
-
-I personally interpret it as "right most 64 bits of the 256-bit HMAC-output=
-".
-
-
-
-Thanks,
-Christoph
-
---===============6913628847452897909==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============5417857361497736794==--
