@@ -1,240 +1,285 @@
-Content-Type: multipart/mixed; boundary="===============1182588871371921271=="
+Content-Type: multipart/mixed; boundary="===============5490981943766094642=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Todd Malsbary <todd.malsbary at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 21th of May 2020
-Date: Thu, 21 May 2020 18:37:33 +0200
-Message-ID: <daf7fdfe-c7a4-a878-8a68-dc3e2e5c175e@tessares.net>
+Subject: [MPTCP] [PATCH mptcp] mptcp: use untruncated hash in ADD_ADDR HMAC
+Date: Thu, 21 May 2020 09:39:05 -0700
+Message-ID: <20200521163905.321893-1-todd.malsbary@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4443
+X-UID: 4444
 
---===============1182588871371921271==
+--===============5490981943766094642==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-We just had our 100th (\o/) meeting with Mat, Ossama and Todd (Intel =
-
-OTC), Christoph (Apple), Davide (RedHat) and myself (Tessares).
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-     - The list of accepted patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
-
-     netdev (if mptcp ML is in cc) (by: Christoph Paasch, Florian =
-
-Westphal, Matthieu Baerts, Paolo Abeni, Todd Malsbary):
-
-1293559  [net] mptcp: use rightmost 64 bits in ADD_ADDR HMAC
-
-1291530  [net-next,v2,3/3] mptcp: cope better with MP_JOIN failure
-1291527  [net-next,v2,2/3] inet_connection_sock: factor out destroy help
-1291526  [net-next,v2,1/3] mptcp: add new sock flag to deal with join su
-
-1291444  [net] selftests:mptcp:pm: rm the right tmp file
-
-1290468  [net-next] mptcp: Use 32-bit DATA_ACK when possible
-
-1287651  [net-next,7/7] net: allow __skb_ext_alloc to sleep
-1287650  [net-next,6/7] mptcp: remove inner wait loop from mptcp_sendmsg
-1287649  [net-next,5/7] mptcp: fill skb page frag cache outside of mptcp
-1287648  [net-next,4/7] mptcp: fill skb extension cache outside of mptcp
-1287647  [net-next,3/7] mptcp: make sure timer is inited once data is pe
-1287646  [net-next,2/7] mptcp: avoid blocking in tcp_sendpages
-1287644  [net-next,1/7] mptcp: break and restart in case mptcp sndbuf i:
-     - note: these IDs are from the previous version
-
-     our repo (by: /):
-
-(most of the above ones went in our repo, shortly before being sent =
-
-upstream)
-
-
-
-Pending patches:
-     - The list of pending patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
-
-     netdev (if mptcp ML is in cc) (by: /):
-
-/
-
-     our repo (by: Davide Caratti, Paolo Abeni):
-
-1292675: New: [RFC,net-next,1/2] net: mptcp: improve fallback to TCP:
-     - a new version is coming addressing the different comments raised =
-
-by Mat and Paolo
-
-1292673: New: [RFC,net-next,2/2] mptcp: fix races between shutdown and r
-
-1293349: New: [RFC] mptcp: refactor token container.:
-     - it needs review
-
-
-
-Issues on Github:
-     https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-     open: (latest from last week: 24)
-
-   26  NEW: Unstable packetdrill tests:
-       - https://github.com/multipath-tcp/mptcp_net-next/issues/26
-       - not easy to reproduce: DSS is different
-   25  NEW: mptcp_connect: Connection reset by peer during a test:
-       - "mptcp: fix races between shutdown and recvmsg" might help
-       - not able to reproduce so far
-   24  Revisit layout of struct mptcp_subflow_context
-   23  refactor token container:
-       - WIP by Paolo
-   22  fix covscan issues @dcaratti (indirectly fixed by issue 11)
-   21  sort-out {set,get}sockopt handling
-   20  implement msk diag interface
-   19  let PM netlink update live sockets on local addresses list change
-   18  allow 'force to MPTCP' mode
-   17  audit 'backup' flag usage
-   16  get rid of mptcp hooking in tcp_check_req()
-   15  reduce mptcp_out_option struct size
-   11  fix fallback to TCP  @dcaratti:
-       - Davide is working on fixing it
-    6  loss and delay without reordering causes very slow transfer
-    4  keep a single work struct in mptcp socket
-
-     recently closed:
-
-/
-
-
-
-FYI: Current Roadmap: (same as last week)
-     - Part 4 (next merge window):
-         - Fix bugs reported on Github: =
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/
-         - IPv6 - IPv4 mapped support
-         - not dropping MPTCP options (ADD_ADDR, etc.)
-         - FAST_CLOSE
-         - full MPTCP v1 support (reliable add_addr, etc.)
-         - after a few attempts of failed MPTCP, we fallback to TCP =
-
-(like TFO is doing)
-         - PM server (more advanced)
-         - Active backup support
-         - sending "simultaneously" on different subflows (multiple non =
-
-backup subflows)
-         - Full DATA_FIN support [WIP by Mat]
-         - ADD_ADDR for MPTCPv1: echo bit [WIP by Peter]
-         - Opti in TCP option structures (unions) [DONE by Paolo]
-         - Shared recv window (full support) [DONE by Florian]
-
-     - Part 5 (extra needed for prod):
-         - opti/perfs
-         - TFO
-         - PM netlink
-         - PM bpf
-         - Scheduler bpf
-         - syncookies
-         - [gs]etsockopt per subflow
-         - notify the userspace when a subflow is added/removed =E2=86=92 c=
-msg
-
-
-
-in progress fixes for -net:
-     - /
-
-
-
-Part 4: new features:
-     - news about "Full DATA_FIN support"?:
-         - some progress in the shutdown
-         - when Christoph was doing some interop tests, when killing =
-
-iperf, it randomly hangs:
-             - maybe linked to DATA_FIN?
-             - anybody else saw that?
-
-     - news about "ADD_ADDR for MPTCPv1: echo bit"?:
-         - /
-
-
-
-Extra tests:
-     - news about Syzkaller? (Christoph):
-         - /
-
-     - news about Intel's kbuild? (Mat):
-         - Notifications are now only sent to Mat who forwards only the =
-
-unstable ones.
-         - Notification from the 19/05: kselftest UNSTABLE:
-             - due to changes in MPTCP? maybe not: all bpf tests
-             - next one OK? (didn't get any new results yet)
-
-     - packetdrill (Davide & Todd):
-         - Todd is progressing on ADD_ADDRv1
-         - Todd will continue looking at MP_JOIN
-         - Davide is focusing on TCP fallback
-
-     - CI (Matth):
-         - some unstable tests, see above
-
-     - Coverity (Davide):
-         - 2 issues:
-             - https://github.com/multipath-tcp/mptcp_net-next/issues/22
-             - the other one seems to be a false positive when using =
-
-kmalloc_cache.
-
-
-
-ADD_ADDR HMAC ambiguity:
-     - feedback from IETF: we need to change it again.
-     - Todd is preparing a new patch (not a revert, something different)
-
-
-
-interop with mptcp.org:
-     - perf are pretty low but expected due to the way OOO packets are =
-
-handled
-     - for now, testing upstream version for the server =E2=86=92 so only u=
-pload =
-
-is bad when using two subflows and sending data at the same time
-     - it's limiting the number of tests that can be ran
-
-
-
-Next meeting:
-     - We propose to have the next meeting on Thursday, the 28th of May.
-     - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200528
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you next week,
-Matt
+There is some ambiguity in the RFC as to whether the ADD_ADDR HMAC is
+the rightmost 64 bits of the entire hash or of the leftmost 160 bits
+of the hash.  The intention, as clarified with the author of the RFC,
+is the entire hash.
+
+This change returns the entire hash from
+mptcp_crypto_hmac_sha (instead of only the first 160 bits), and moves
+any truncation/selection operation on the hash to the caller.
+
+Fixes: 12555a2d97e5 ("mptcp: use rightmost 64 bits in ADD_ADDR HMAC")
+Signed-off-by: Todd Malsbary <todd.malsbary(a)linux.intel.com>
+---
+
+Note that checkpatch complains about the long lines in the crypto
+test, but breaking the string causes it to then complain about
+splitting on a non-whitespace char.
+
+ net/mptcp/crypto.c   | 24 +++++++++---------------
+ net/mptcp/options.c  |  9 +++++----
+ net/mptcp/protocol.h |  1 -
+ net/mptcp/subflow.c  | 14 +++++++++-----
+ 4 files changed, 23 insertions(+), 25 deletions(-)
+
+diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
+index c151628bd416..0f5a414a9366 100644
+--- a/net/mptcp/crypto.c
++++ b/net/mptcp/crypto.c
+@@ -47,8 +47,6 @@ void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
+ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hma=
+c)
+ {
+ 	u8 input[SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE];
+-	__be32 mptcp_hashed_key[SHA256_DIGEST_WORDS];
+-	__be32 *hash_out =3D (__force __be32 *)hmac;
+ 	struct sha256_state state;
+ 	u8 key1be[8];
+ 	u8 key2be[8];
+@@ -86,11 +84,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, =
+int len, void *hmac)
+ =
+
+ 	sha256_init(&state);
+ 	sha256_update(&state, input, SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE);
+-	sha256_final(&state, (u8 *)mptcp_hashed_key);
+-
+-	/* takes only first 160 bits */
+-	for (i =3D 0; i < 5; i++)
+-		hash_out[i] =3D mptcp_hashed_key[i];
++	sha256_final(&state, (u8 *)hmac);
+ }
+ =
+
+ #ifdef CONFIG_MPTCP_HMAC_TEST
+@@ -101,29 +95,29 @@ struct test_cast {
+ };
+ =
+
+ /* we can't reuse RFC 4231 test vectors, as we have constraint on the
+- * input and key size, and we truncate the output.
++ * input and key size.
+  */
+ static struct test_cast tests[] =3D {
+ 	{
+ 		.key =3D "0b0b0b0b0b0b0b0b",
+ 		.msg =3D "48692054",
+-		.result =3D "8385e24fb4235ac37556b6b886db106284a1da67",
++		.result =3D "8385e24fb4235ac37556b6b886db106284a1da671699f46db1f235ec622=
+dcafa",
+ 	},
+ 	{
+ 		.key =3D "aaaaaaaaaaaaaaaa",
+ 		.msg =3D "dddddddd",
+-		.result =3D "2c5e219164ff1dca1c4a92318d847bb6b9d44492",
++		.result =3D "2c5e219164ff1dca1c4a92318d847bb6b9d44492984e1eb71aff9022f71=
+046e9",
+ 	},
+ 	{
+ 		.key =3D "0102030405060708",
+ 		.msg =3D "cdcdcdcd",
+-		.result =3D "e73b9ba9969969cefb04aa0d6df18ec2fcc075b6",
++		.result =3D "e73b9ba9969969cefb04aa0d6df18ec2fcc075b6f23b4d8c4da736a5dbb=
+c6e7d",
+ 	},
+ };
+ =
+
+ static int __init test_mptcp_crypto(void)
+ {
+-	char hmac[20], hmac_hex[41];
++	char hmac[32], hmac_hex[65];
+ 	u32 nonce1, nonce2;
+ 	u64 key1, key2;
+ 	u8 msg[8];
+@@ -140,11 +134,11 @@ static int __init test_mptcp_crypto(void)
+ 		put_unaligned_be32(nonce2, &msg[4]);
+ =
+
+ 		mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
+-		for (j =3D 0; j < 20; ++j)
++		for (j =3D 0; j < 32; ++j)
+ 			sprintf(&hmac_hex[j << 1], "%02x", hmac[j] & 0xff);
+-		hmac_hex[40] =3D 0;
++		hmac_hex[64] =3D 0;
+ =
+
+-		if (memcmp(hmac_hex, tests[i].result, 40))
++		if (memcmp(hmac_hex, tests[i].result, 64))
+ 			pr_err("test %d failed, got %s expected %s", i,
+ 			       hmac_hex, tests[i].result);
+ 		else
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index b88fae233a62..7793b6011fa7 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -7,6 +7,7 @@
+ #define pr_fmt(fmt) "MPTCP: " fmt
+ =
+
+ #include <linux/kernel.h>
++#include <crypto/sha.h>
+ #include <net/tcp.h>
+ #include <net/mptcp.h>
+ #include "protocol.h"
+@@ -535,7 +536,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ static u64 add_addr_generate_hmac(u64 key1, u64 key2, u8 addr_id,
+ 				  struct in_addr *addr)
+ {
+-	u8 hmac[MPTCP_ADDR_HMAC_LEN];
++	u8 hmac[SHA256_DIGEST_SIZE];
+ 	u8 msg[7];
+ =
+
+ 	msg[0] =3D addr_id;
+@@ -545,14 +546,14 @@ static u64 add_addr_generate_hmac(u64 key1, u64 key2,=
+ u8 addr_id,
+ =
+
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 7, hmac);
+ =
+
+-	return get_unaligned_be64(&hmac[MPTCP_ADDR_HMAC_LEN - sizeof(u64)]);
++	return get_unaligned_be64(&hmac[SHA256_DIGEST_SIZE - sizeof(u64)]);
+ }
+ =
+
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ static u64 add_addr6_generate_hmac(u64 key1, u64 key2, u8 addr_id,
+ 				   struct in6_addr *addr)
+ {
+-	u8 hmac[MPTCP_ADDR_HMAC_LEN];
++	u8 hmac[SHA256_DIGEST_SIZE];
+ 	u8 msg[19];
+ =
+
+ 	msg[0] =3D addr_id;
+@@ -562,7 +563,7 @@ static u64 add_addr6_generate_hmac(u64 key1, u64 key2, =
+u8 addr_id,
+ =
+
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 19, hmac);
+ =
+
+-	return get_unaligned_be64(&hmac[MPTCP_ADDR_HMAC_LEN - sizeof(u64)]);
++	return get_unaligned_be64(&hmac[SHA256_DIGEST_SIZE - sizeof(u64)]);
+ }
+ #endif
+ =
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index e4ca6320ce76..d0803dfb8108 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -81,7 +81,6 @@
+ =
+
+ /* MPTCP ADD_ADDR flags */
+ #define MPTCP_ADDR_ECHO		BIT(0)
+-#define MPTCP_ADDR_HMAC_LEN	20
+ #define MPTCP_ADDR_IPVERSION_4	4
+ #define MPTCP_ADDR_IPVERSION_6	6
+ =
+
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 4931a29a6f08..234f6c7572a4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/netdevice.h>
+ #include <crypto/algapi.h>
++#include <crypto/sha.h>
+ #include <net/sock.h>
+ #include <net/inet_common.h>
+ #include <net/inet_hashtables.h>
+@@ -89,7 +90,7 @@ static bool subflow_token_join_request(struct request_soc=
+k *req,
+ 				       const struct sk_buff *skb)
+ {
+ 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
+-	u8 hmac[MPTCPOPT_HMAC_LEN];
++	u8 hmac[SHA256_DIGEST_SIZE];
+ 	struct mptcp_sock *msk;
+ 	int local_id;
+ =
+
+@@ -201,7 +202,7 @@ static void subflow_v6_init_req(struct request_sock *re=
+q,
+ /* validate received truncated hmac and create hmac for third ACK */
+ static bool subflow_thmac_valid(struct mptcp_subflow_context *subflow)
+ {
+-	u8 hmac[MPTCPOPT_HMAC_LEN];
++	u8 hmac[SHA256_DIGEST_SIZE];
+ 	u64 thmac;
+ =
+
+ 	subflow_generate_hmac(subflow->remote_key, subflow->local_key,
+@@ -223,6 +224,7 @@ static void subflow_finish_connect(struct sock *sk, con=
+st struct sk_buff *skb)
+ 	struct mptcp_options_received mp_opt;
+ 	struct sock *parent =3D subflow->conn;
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
++	u8 hmac[SHA256_DIGEST_SIZE];
+ =
+
+ 	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
+ =
+
+@@ -279,7 +281,9 @@ static void subflow_finish_connect(struct sock *sk, con=
+st struct sk_buff *skb)
+ 		subflow_generate_hmac(subflow->local_key, subflow->remote_key,
+ 				      subflow->local_nonce,
+ 				      subflow->remote_nonce,
+-				      subflow->hmac);
++				      hmac);
++
++		memcpy(subflow->hmac, hmac, MPTCPOPT_HMAC_LEN);
+ =
+
+ 		if (skb)
+ 			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
+@@ -347,7 +351,7 @@ static bool subflow_hmac_valid(const struct request_soc=
+k *req,
+ 			       const struct mptcp_options_received *mp_opt)
+ {
+ 	const struct mptcp_subflow_request_sock *subflow_req;
+-	u8 hmac[MPTCPOPT_HMAC_LEN];
++	u8 hmac[SHA256_DIGEST_SIZE];
+ 	struct mptcp_sock *msk;
+ 	bool ret;
+ =
+
+@@ -361,7 +365,7 @@ static bool subflow_hmac_valid(const struct request_soc=
+k *req,
+ 			      subflow_req->local_nonce, hmac);
+ =
+
+ 	ret =3D true;
+-	if (crypto_memneq(hmac, mp_opt->hmac, sizeof(hmac)))
++	if (crypto_memneq(hmac, mp_opt->hmac, MPTCPOPT_HMAC_LEN))
+ 		ret =3D false;
+ =
+
+ 	sock_put((struct sock *)msk);
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============1182588871371921271==--
+2.25.4
+
+--===============5490981943766094642==--
