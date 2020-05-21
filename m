@@ -1,93 +1,240 @@
-Content-Type: multipart/mixed; boundary="===============1289703675573871309=="
+Content-Type: multipart/mixed; boundary="===============1182588871371921271=="
 MIME-Version: 1.0
-From: Alan Ford <alan.ford at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [multipathtcp] ADD_ADDR HMAC ambiguity
-Date: Wed, 20 May 2020 21:38:18 +0100
-Message-ID: <882ACBE0-07FC-4BB8-B0BC-60A884DA1DD7@gmail.com>
-In-Reply-To: 20200520164023.GH45434@MacBook-Pro-64.local
+Subject: [MPTCP] [Weekly meetings] MoM - 21th of May 2020
+Date: Thu, 21 May 2020 18:37:33 +0200
+Message-ID: <daf7fdfe-c7a4-a878-8a68-dc3e2e5c175e@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4440
+X-UID: 4443
 
---===============1289703675573871309==
+--===============1182588871371921271==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
+Hello,
 
-Your interpretation is the intended one.
+We just had our 100th (\o/) meeting with Mat, Ossama and Todd (Intel =
 
-3.4.1 says "rightmost 64 bits of an HMAC=E2=80=9D =E2=80=A6 the HMAC is 256=
- bits in both 3.2 and 3.4.1. The truncation is the separate from the defini=
-tion of the HMAC algorithm used.
+OTC), Christoph (Apple), Davide (RedHat) and myself (Tessares).
 
-Best regards,
-Alan
+Thanks again for this new good meeting!
 
-> On 20 May 2020, at 17:40, Christoph Paasch <cpaasch=3D40apple.com(a)dmarc=
-.ietf.org> wrote:
-> =
+Here are the minutes of the meeting:
 
-> Hello,
-> =
 
-> Todd Malsbary from Intel is looking at the HMAC-support for ADD_ADDR in
-> RFC8684. And it appears that there can be an ambiguity on how to interpret
-> the truncation.
-> =
 
-> We want to clarify this and make sure all implementations,... are on the
-> same page with the intention of the RFC:
-> =
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
-> RFC8684, Section 3.4.1 says:
-> " The Truncated HMAC parameter present in this option is the rightmost
->  64 bits of an HMAC, negotiated and calculated in the same way as for
->  MP_JOIN as described in Section 3.2. "
-> =
+     netdev (if mptcp ML is in cc) (by: Christoph Paasch, Florian =
 
-> Now, in Section 3.2 it mentions:
-> " This specification defines that HMAC as defined in [RFC2104] is used,
->  along with the SHA-256 hash algorithm [RFC6234], and that the output
->  is truncated to the leftmost 160 bits (20 octets). "
-> =
+Westphal, Matthieu Baerts, Paolo Abeni, Todd Malsbary):
 
-> =
+1293559  [net] mptcp: use rightmost 64 bits in ADD_ADDR HMAC
 
-> One can read these in two different ways:
-> =
+1291530  [net-next,v2,3/3] mptcp: cope better with MP_JOIN failure
+1291527  [net-next,v2,2/3] inet_connection_sock: factor out destroy help
+1291526  [net-next,v2,1/3] mptcp: add new sock flag to deal with join su
 
-> In Section 3.4.1, the truncation to the rightmost 64 bits is based on the
-> full 256-bit HMAC-output or whether it is rather the 64 rightmost bits of
-> the leftmost 160bits (the ones mentioned in Section 3.2).
-> =
+1291444  [net] selftests:mptcp:pm: rm the right tmp file
 
-> =
+1290468  [net-next] mptcp: Use 32-bit DATA_ACK when possible
 
-> Can we clarify which of the two options is the correct one?
-> =
+1287651  [net-next,7/7] net: allow __skb_ext_alloc to sleep
+1287650  [net-next,6/7] mptcp: remove inner wait loop from mptcp_sendmsg
+1287649  [net-next,5/7] mptcp: fill skb page frag cache outside of mptcp
+1287648  [net-next,4/7] mptcp: fill skb extension cache outside of mptcp
+1287647  [net-next,3/7] mptcp: make sure timer is inited once data is pe
+1287646  [net-next,2/7] mptcp: avoid blocking in tcp_sendpages
+1287644  [net-next,1/7] mptcp: break and restart in case mptcp sndbuf i:
+     - note: these IDs are from the previous version
 
-> =
+     our repo (by: /):
 
-> =
+(most of the above ones went in our repo, shortly before being sent =
 
-> I personally interpret it as "right most 64 bits of the 256-bit HMAC-outp=
-ut".
-> =
+upstream)
 
-> =
 
-> =
 
-> Thanks,
-> Christoph
-> =
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
 
-> _______________________________________________
-> multipathtcp mailing list
-> multipathtcp(a)ietf.org
-> https://www.ietf.org/mailman/listinfo/multipathtcp
+     netdev (if mptcp ML is in cc) (by: /):
 
---===============1289703675573871309==--
+/
+
+     our repo (by: Davide Caratti, Paolo Abeni):
+
+1292675: New: [RFC,net-next,1/2] net: mptcp: improve fallback to TCP:
+     - a new version is coming addressing the different comments raised =
+
+by Mat and Paolo
+
+1292673: New: [RFC,net-next,2/2] mptcp: fix races between shutdown and r
+
+1293349: New: [RFC] mptcp: refactor token container.:
+     - it needs review
+
+
+
+Issues on Github:
+     https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+     open: (latest from last week: 24)
+
+   26  NEW: Unstable packetdrill tests:
+       - https://github.com/multipath-tcp/mptcp_net-next/issues/26
+       - not easy to reproduce: DSS is different
+   25  NEW: mptcp_connect: Connection reset by peer during a test:
+       - "mptcp: fix races between shutdown and recvmsg" might help
+       - not able to reproduce so far
+   24  Revisit layout of struct mptcp_subflow_context
+   23  refactor token container:
+       - WIP by Paolo
+   22  fix covscan issues @dcaratti (indirectly fixed by issue 11)
+   21  sort-out {set,get}sockopt handling
+   20  implement msk diag interface
+   19  let PM netlink update live sockets on local addresses list change
+   18  allow 'force to MPTCP' mode
+   17  audit 'backup' flag usage
+   16  get rid of mptcp hooking in tcp_check_req()
+   15  reduce mptcp_out_option struct size
+   11  fix fallback to TCP  @dcaratti:
+       - Davide is working on fixing it
+    6  loss and delay without reordering causes very slow transfer
+    4  keep a single work struct in mptcp socket
+
+     recently closed:
+
+/
+
+
+
+FYI: Current Roadmap: (same as last week)
+     - Part 4 (next merge window):
+         - Fix bugs reported on Github: =
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/
+         - IPv6 - IPv4 mapped support
+         - not dropping MPTCP options (ADD_ADDR, etc.)
+         - FAST_CLOSE
+         - full MPTCP v1 support (reliable add_addr, etc.)
+         - after a few attempts of failed MPTCP, we fallback to TCP =
+
+(like TFO is doing)
+         - PM server (more advanced)
+         - Active backup support
+         - sending "simultaneously" on different subflows (multiple non =
+
+backup subflows)
+         - Full DATA_FIN support [WIP by Mat]
+         - ADD_ADDR for MPTCPv1: echo bit [WIP by Peter]
+         - Opti in TCP option structures (unions) [DONE by Paolo]
+         - Shared recv window (full support) [DONE by Florian]
+
+     - Part 5 (extra needed for prod):
+         - opti/perfs
+         - TFO
+         - PM netlink
+         - PM bpf
+         - Scheduler bpf
+         - syncookies
+         - [gs]etsockopt per subflow
+         - notify the userspace when a subflow is added/removed =E2=86=92 c=
+msg
+
+
+
+in progress fixes for -net:
+     - /
+
+
+
+Part 4: new features:
+     - news about "Full DATA_FIN support"?:
+         - some progress in the shutdown
+         - when Christoph was doing some interop tests, when killing =
+
+iperf, it randomly hangs:
+             - maybe linked to DATA_FIN?
+             - anybody else saw that?
+
+     - news about "ADD_ADDR for MPTCPv1: echo bit"?:
+         - /
+
+
+
+Extra tests:
+     - news about Syzkaller? (Christoph):
+         - /
+
+     - news about Intel's kbuild? (Mat):
+         - Notifications are now only sent to Mat who forwards only the =
+
+unstable ones.
+         - Notification from the 19/05: kselftest UNSTABLE:
+             - due to changes in MPTCP? maybe not: all bpf tests
+             - next one OK? (didn't get any new results yet)
+
+     - packetdrill (Davide & Todd):
+         - Todd is progressing on ADD_ADDRv1
+         - Todd will continue looking at MP_JOIN
+         - Davide is focusing on TCP fallback
+
+     - CI (Matth):
+         - some unstable tests, see above
+
+     - Coverity (Davide):
+         - 2 issues:
+             - https://github.com/multipath-tcp/mptcp_net-next/issues/22
+             - the other one seems to be a false positive when using =
+
+kmalloc_cache.
+
+
+
+ADD_ADDR HMAC ambiguity:
+     - feedback from IETF: we need to change it again.
+     - Todd is preparing a new patch (not a revert, something different)
+
+
+
+interop with mptcp.org:
+     - perf are pretty low but expected due to the way OOO packets are =
+
+handled
+     - for now, testing upstream version for the server =E2=86=92 so only u=
+pload =
+
+is bad when using two subflows and sending data at the same time
+     - it's limiting the number of tests that can be ran
+
+
+
+Next meeting:
+     - We propose to have the next meeting on Thursday, the 28th of May.
+     - Usual time: 16:00 UTC (9am PDT, 6pm CEST)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200528
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you next week,
+Matt
+-- =
+
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============1182588871371921271==--
