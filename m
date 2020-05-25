@@ -1,102 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============5300023215252886529=="
+Content-Type: multipart/mixed; boundary="===============5525799684756532293=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/4] mptcp: refactor token container.
-Date: Mon, 25 May 2020 10:10:09 +0200
-Message-ID: <a451889bfdd8543d456ea9c6dc7ea3dc9043fb68.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.22.394.2005221656220.75205@rnpatelx-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH 3/4] mptcp: move crypto test to KUNIT
+Date: Mon, 25 May 2020 10:17:41 +0200
+Message-ID: <dda3ea16cab64e379f4e6fba802817ed867b9e56.camel@redhat.com>
+In-Reply-To: 15ed1aff118fea0f63e9068531e1d6940d399d9c.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4472
+X-UID: 4473
 
---===============5300023215252886529==
+--===============5525799684756532293==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, 2020-05-25 at 09:26 +0200, Davide Caratti wrote:
+> On Fri, 2020-05-22 at 12:10 +0200, Paolo Abeni wrote:
+> > currently MPTCP uses a custom hook to executed unit test at
+> > boot time. Let's use the KUNIT framework instead.
+> > Additionally move the relevant code to a separate file and
+> > export the function needed by the test when self-tests
+> > are build as a module.
+> > =
 
-On Fri, 2020-05-22 at 17:34 -0700, Mat Martineau wrote:
-> > +struct token_bucket {
-> > +	spinlock_t		lock;
-> > +	int			chain_len;
-> > +	struct hlist_nulls_head	req_chain;
-> > +	struct hlist_nulls_head	msk_chain;
-> > +};
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > ---
+> >  net/mptcp/Kconfig       | 19 +++++++----
+> >  net/mptcp/Makefile      |  3 ++
+> >  net/mptcp/crypto.c      | 65 ++-----------------------------------
+> >  net/mptcp/crypto_test.c | 71 +++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 90 insertions(+), 68 deletions(-)
+> >  create mode 100644 net/mptcp/crypto_test.c
+> > =
+
 > =
 
-> I remember a discussion a while ago about how we didn't really need two =
-
-> radix trees for req & msk, since there's only one "token space". =
-
-> Similarly, seems like we only need one linked list per bucket if we can =
-
-> define a common structure to use in both sock types, like:
+> [...]
 > =
 
-> struct mptcp_token_node {
->  	struct hlist_nulls_node node;
->  	u32 value;
->  	bool is_req;
-> };
+> > diff --git a/net/mptcp/crypto_test.c b/net/mptcp/crypto_test.c
+> > new file mode 100644
+> > index 000000000000..3a7c40f5e8f8
+> > --- /dev/null
+> > +++ b/net/mptcp/crypto_test.c
+> > @@ -0,0 +1,71 @@
+> > +#include <kunit/test.h>
 > =
 
-> It would use a little more space per mptcp_sock/req_sock and would requir=
-e =
+> Nit: I think we need a SPDX line here (or non-conventional users of
+> checkpatch might see a warning)
 
-> extra code in the lookup to return the appropriate container pointer (req =
+Right you are! I'll fix that in the next iteration!
 
-> or mptcp_sock), but would shrink the hash table or give us more buckets i=
-n =
-
-> the same memory, which seems like a win.
-
-LGTM, I'll try that.
-
-[...]
-> > struct mptcp_sock *mptcp_token_get_sock(u32 token)
-> > {
-> > -	struct sock *conn;
-> > -
-> > -	spin_lock_bh(&token_tree_lock);
-> > -	conn =3D radix_tree_lookup(&token_tree, token);
-> > -	if (conn) {
-> > -		/* token still reserved? */
-> > -		if (conn =3D=3D (struct sock *)&token_used)
-> > -			conn =3D NULL;
-> > -		else
-> > -			sock_hold(conn);
-> > +	struct hlist_nulls_node *pos;
-> > +	struct token_bucket *bucket;
-> > +	struct mptcp_sock *msk;
-> > +
-> > +	rcu_read_lock();
-> > +	bucket =3D token_bucket(token);
-> > +
-> > +again:
-> > +	hlist_nulls_for_each_entry_rcu(msk, pos, &bucket->msk_chain,
-> > +				       token_node) {
-> > +		if (READ_ONCE(msk->token) !=3D token)
-> > +			continue;
-> > +		if (!refcount_inc_not_zero(&((struct sock *)msk)->sk_refcnt))
-> > +			goto not_found;
-> > +		if (READ_ONCE(msk->token) !=3D token)
-> > +			goto again;
-> =
-
-> Checking msk->token twice here, but it doesn't look like it ever gets =
-
-> changed after it's set?
-
-AFAICT, this is the common list_nulls usage pattern. The problem is
-that a msk can be freed and re-allocated concurrently by another CPU.
-Since this lookup is lockless, the token value can possibly change
-'under-the-wood' till we get a reference to the token - and forbit msk
-de-allocation.
-
-Cheers,
+Thanks,
 
 Paolo
 
---===============5300023215252886529==--
+--===============5525799684756532293==--
