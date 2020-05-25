@@ -1,123 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============5273986326997781038=="
+Content-Type: multipart/mixed; boundary="===============1131997611866907348=="
 MIME-Version: 1.0
-From: syzbot <syzbot+d7cface3f90b13edf5b0 at syzkaller.appspotmail.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] general protection fault in sock_recvmsg
-Date: Sun, 24 May 2020 20:14:15 -0700
-Message-ID: <000000000000b5f39305a6705fd3@google.com>
+Subject: [MPTCP] Re: [PATCH 3/4] mptcp: move crypto test to KUNIT
+Date: Mon, 25 May 2020 09:26:37 +0200
+Message-ID: <15ed1aff118fea0f63e9068531e1d6940d399d9c.camel@redhat.com>
+In-Reply-To: 791d0cdbda74f383e0a828b0bd83853c928f3a99.1590142022.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4468
+X-UID: 4470
 
---===============5273986326997781038==
+--===============1131997611866907348==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, 2020-05-22 at 12:10 +0200, Paolo Abeni wrote:
+> currently MPTCP uses a custom hook to executed unit test at
+> boot time. Let's use the KUNIT framework instead.
+> Additionally move the relevant code to a separate file and
+> export the function needed by the test when self-tests
+> are build as a module.
+> =
 
-syzbot found the following crash on:
-
-HEAD commit:    caffb99b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D15a74441100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc33c7f7c5471fd39
-dashboard link: https://syzkaller.appspot.com/bug?extid=3Dd7cface3f90b13edf=
-5b0
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/=
- c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D141034ba100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D119cd016100000
-
-The bug was bisected to:
-
-commit 263e1201a2c324b60b15ecda5de9ebf1e7293e31
-Author: Paolo Abeni <pabeni(a)redhat.com>
-Date:   Thu Apr 30 13:01:51 2020 +0000
-
-    mptcp: consolidate synack processing.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D119d86261000=
-00
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D139d86261000=
-00
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D159d8626100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d7cface3f90b13edf5b0(a)syzkaller.appspotmail.com
-Fixes: 263e1201a2c3 ("mptcp: consolidate synack processing.")
-
-general protection fault, probably for non-canonical address 0xdffffc000000=
-0004: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-CPU: 1 PID: 7226 Comm: syz-executor523 Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 01/01/2011
-RIP: 0010:sock_recvmsg_nosec net/socket.c:886 [inline]
-RIP: 0010:sock_recvmsg+0x92/0x110 net/socket.c:904
-Code: 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89 6c 24 04 e8 53 18 1d fb 4d 8d =
-6f 20 4c 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 0=
-8 4c 89 ef e8 20 12 5b fb bd a0 00 00 00 49 03 6d
-RSP: 0018:ffffc90001077b98 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: ffffc90001077dc0 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff86565e59 R09: ffffed10115afeaa
-R10: ffffed10115afeaa R11: 0000000000000000 R12: 1ffff9200020efbc
-R13: 0000000000000020 R14: ffffc90001077de0 R15: 0000000000000000
-FS:  00007fc6a3abe700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004d0050 CR3: 00000000969f0000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- mptcp_recvmsg+0x18d5/0x19b0 net/mptcp/protocol.c:891
- inet_recvmsg+0xf6/0x1d0 net/ipv4/af_inet.c:838
- sock_recvmsg_nosec net/socket.c:886 [inline]
- sock_recvmsg net/socket.c:904 [inline]
- __sys_recvfrom+0x2f3/0x470 net/socket.c:2057
- __do_sys_recvfrom net/socket.c:2075 [inline]
- __se_sys_recvfrom net/socket.c:2071 [inline]
- __x64_sys_recvfrom+0xda/0xf0 net/socket.c:2071
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x448ef9
-Code: e8 cc 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 =
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
-f 0f 83 9b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc6a3abdda8 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
-RAX: ffffffffffffffda RBX: 00000000006dec28 RCX: 0000000000448ef9
-RDX: 0000000000001000 RSI: 00000000200004c0 RDI: 0000000000000003
-RBP: 00000000006dec20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000040000000 R11: 0000000000000246 R12: 00000000006dec2c
-R13: 00007ffe4730174f R14: 00007fc6a3abe9c0 R15: 00000000006dec2c
-Modules linked in:
----[ end trace 097bdf143c3a60db ]---
-RIP: 0010:sock_recvmsg_nosec net/socket.c:886 [inline]
-RIP: 0010:sock_recvmsg+0x92/0x110 net/socket.c:904
-Code: 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89 6c 24 04 e8 53 18 1d fb 4d 8d =
-6f 20 4c 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 0=
-8 4c 89 ef e8 20 12 5b fb bd a0 00 00 00 49 03 6d
-RSP: 0018:ffffc90001077b98 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: ffffc90001077dc0 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff86565e59 R09: ffffed10115afeaa
-R10: ffffed10115afeaa R11: 0000000000000000 R12: 1ffff9200020efbc
-R13: 0000000000000020 R14: ffffc90001077de0 R15: 0000000000000000
-FS:  00007fc6a3abe700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004d0050 CR3: 00000000969f0000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>  net/mptcp/Kconfig       | 19 +++++++----
+>  net/mptcp/Makefile      |  3 ++
+>  net/mptcp/crypto.c      | 65 ++-----------------------------------
+>  net/mptcp/crypto_test.c | 71 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 90 insertions(+), 68 deletions(-)
+>  create mode 100644 net/mptcp/crypto_test.c
+> =
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller(a)googlegroups.com.
+[...]
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
---===============5273986326997781038==--
+> diff --git a/net/mptcp/crypto_test.c b/net/mptcp/crypto_test.c
+> new file mode 100644
+> index 000000000000..3a7c40f5e8f8
+> --- /dev/null
+> +++ b/net/mptcp/crypto_test.c
+> @@ -0,0 +1,71 @@
+> +#include <kunit/test.h>
+
+Nit: I think we need a SPDX line here (or non-conventional users of
+checkpatch might see a warning)
+
+> +
+> +#include "protocol.h"
+> +
+> +struct test_case {
+> +	char *key;
+> +	char *msg;
+> +	char *result;
+> +};
+> +
+> +/* we can't reuse RFC 4231 test vectors, as we have constraint on the
+> + * input and key size, and we truncate the output.
+> + */
+> +static struct test_case tests[] =3D {
+> +	{
+> +		.key =3D "0b0b0b0b0b0b0b0b",
+> +		.msg =3D "48692054",
+> +		.result =3D "8385e24fb4235ac37556b6b886db106284a1da67",
+> +	},
+> +	{
+> +		.key =3D "aaaaaaaaaaaaaaaa",
+> +		.msg =3D "dddddddd",
+> +		.result =3D "2c5e219164ff1dca1c4a92318d847bb6b9d44492",
+> +	},
+> +	{
+> +		.key =3D "0102030405060708",
+> +		.msg =3D "cdcdcdcd",
+> +		.result =3D "e73b9ba9969969cefb04aa0d6df18ec2fcc075b6",
+> +	},
+> +};
+> +
+> +static void mptcp_crypto_test_basic(struct kunit *test)
+> +{
+> +	char hmac[20], hmac_hex[41];
+> +	u32 nonce1, nonce2;
+> +	u64 key1, key2;
+> +	u8 msg[8];
+> +	int i, j;
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(tests); ++i) {
+> +		/* mptcp hmap will convert to be before computing the hmac */
+> +		key1 =3D be64_to_cpu(*((__be64 *)&tests[i].key[0]));
+> +		key2 =3D be64_to_cpu(*((__be64 *)&tests[i].key[8]));
+> +		nonce1 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[0]));
+> +		nonce2 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[4]));
+> +
+> +		put_unaligned_be32(nonce1, &msg[0]);
+> +		put_unaligned_be32(nonce2, &msg[4]);
+> +
+> +		mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
+> +		for (j =3D 0; j < 20; ++j)
+> +			sprintf(&hmac_hex[j << 1], "%02x", hmac[j] & 0xff);
+> +		hmac_hex[40] =3D 0;
+> +
+> +		KUNIT_EXPECT_STREQ(test, &hmac_hex[0], tests[i].result);
+> +	}
+> +}
+> +
+> +static struct kunit_case mptcp_crypto_test_cases[] =3D {
+> +	KUNIT_CASE(mptcp_crypto_test_basic),
+> +	{}
+> +};
+> +
+> +static struct kunit_suite mptcp_crypto_suite =3D {
+> +	.name =3D "mptcp-crypto",
+> +	.test_cases =3D mptcp_crypto_test_cases,
+> +};
+> +
+> +kunit_test_suite(mptcp_crypto_suite);
+> +
+> +MODULE_LICENSE("GPL");
+
+
+--===============1131997611866907348==--
