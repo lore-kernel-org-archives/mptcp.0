@@ -1,62 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============0521101324407718923=="
+Content-Type: multipart/mixed; boundary="===============8199494577281323257=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/2] mptcp: move recbuf adjustment
- to recvmsg path
-Date: Mon, 25 May 2020 16:55:45 +0200
-Message-ID: <24c34db5505371e9e6e462e46ffa778517b0f78a.camel@redhat.com>
-In-Reply-To: 20200525120243.4160-3-fw@strlen.de
+Subject: [MPTCP] [PATCH] mptcp: attempt skb coalescing when moving skbs to
+ mptcp rx queue
+Date: Mon, 25 May 2020 18:02:55 +0200
+Message-ID: <20200525160255.20560-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 4487
+X-UID: 4488
 
---===============0521101324407718923==
+--===============8199494577281323257==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-05-25 at 14:02 +0200, Florian Westphal wrote:
-> @@ -933,6 +926,22 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
->  	return moved > 0;
->  }
->  =
+We can try to coalesce the skbs we take from the subflows rx queue
+with the tail of the mptcp rx queue.
 
-> +static void mptcp_rcv_space_adjust(struct mptcp_sock *msk)
-> +{
-> +	struct sock *sk =3D (struct sock *)msk;
-> +	const struct mptcp_subflow_context *subflow;
-> +	const struct sock *ssk;
-> +	int rcvbuf =3D 0;
+If successful, the skb head can be discarded early.
 
-Reverse x-mas tree ;)
+We can also free the skb extensions, we do not access them after
+this so no need to hold on to them.
 
-> @@ -975,8 +987,10 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len,
->  		copied +=3D bytes_read;
->  =
+Only caveat: do not built too fat skbs. They are only free'd once
+userspace has read all data.
 
->  		if (skb_queue_empty(&sk->sk_receive_queue) &&
-> -		    __mptcp_move_skbs(msk))
-> +		    __mptcp_move_skbs(msk)) {
-> +			mptcp_rcv_space_adjust(msk);
->  			continue;
-> +		}
->  =
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
->  		/* only the master socket status is relevant here. The exit
->  		 * conditions mirror closely tcp_recvmsg()
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d868b3d921fd..ab4a712b2529 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -144,12 +144,34 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, =
+struct sock *ssk,
+ 			     unsigned int offset, size_t copy_len)
+ {
+ 	struct sock *sk =3D (struct sock *)msk;
++	struct sk_buff *tail;
+ =
 
-We currently don't check the SOCK_RCVBUF_LOCK here, while we do that in
-the other mptcp_rcv_space_adjust() call-site.
+ 	__skb_unlink(skb, &ssk->sk_receive_queue);
+-	skb_set_owner_r(skb, sk);
+-	__skb_queue_tail(&sk->sk_receive_queue, skb);
+ =
 
-It likely should not matter as ssk userlocks mimics msk's ones, but for
-consistency we could always do the test before trying to update the
-buffer (e.g. move the userlocks check inside mptcp_rcv_space_adjust()),
-WDYT?
++	skb_ext_reset(skb);
++	skb_orphan(skb);
+ 	msk->ack_seq +=3D copy_len;
++
++	tail =3D skb_peek_tail(&sk->sk_receive_queue);
++	if (offset =3D=3D 0 && tail) {
++		bool fragstolen;
++		int delta;
++
++		/* don't coalesce when tail is already fat.
++		 * skbs are only free'd once all of the data was
++		 * copied to userspace.
++		 */
++		if (tail->len < GSO_MAX_SIZE &&
++		    skb_try_coalesce(tail, skb, &fragstolen, &delta)) {
++			kfree_skb_partial(skb, fragstolen);
++			atomic_add(delta, &sk->sk_rmem_alloc);
++			sk_mem_charge(sk, delta);
++			return;
++		}
++	}
++
++	skb_set_owner_r(skb, sk);
++	__skb_queue_tail(&sk->sk_receive_queue, skb);
+ 	MPTCP_SKB_CB(skb)->offset =3D offset;
+ }
+ =
 
-Thanks!
+-- =
 
-Paolo
+2.26.2
 
---===============0521101324407718923==--
+--===============8199494577281323257==--
