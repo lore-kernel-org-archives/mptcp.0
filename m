@@ -1,28 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============6691296541349053098=="
+Content-Type: multipart/mixed; boundary="===============0467182202466357940=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 mptcp-next 0/2] mptcp: adjust tcp rcvbuf size
-Date: Mon, 25 May 2020 14:02:41 +0200
-Message-ID: <20200525120243.4160-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH v2 mptcp-next 1/2] mptcp: adjust tcp rcvspace after
+ moving skbs from ssk to sk queue
+Date: Mon, 25 May 2020 14:02:42 +0200
+Message-ID: <20200525120243.4160-2-fw@strlen.de>
+In-Reply-To: 20200525120243.4160-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4483
+X-UID: 4484
 
---===============6691296541349053098==
+--===============0467182202466357940==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is a v2 of the patch I sent to netdev previously.
-No change.  The second patch is new: It makes sure we track/use the
-largest rcvbuf size of a subflow.
+TCP does tcp rcvbuf tuning when copying packets to userspace, e.g. in
+tcp_read_sock().  In case of mptcp, that function is only rarely used
+(when discarding retransmitted duplicate data).
 
-Futhermore, msk rcvbuf tracking is only done from the recvmsg path.
-i.e., if userspace never calls recvmsg, the msk socket rcvbuffer won't
-be adjusted.
+Instead, skbs are moved from the tcp rx queue to the mptcp socket rx
+queue.
+Adjust subflow rcvbuf when we do so, its the last spot where we can
+adjust the ssk rcvbuf -- later we only have the mptcp-level socket.
 
-This still provides the same benefits as 1/2 while preventing unbounded
-growth to tcp_rmem[2].
+This greatly improves performance on mptcp bulk transfers.
 
---===============6691296541349053098==--
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ v2: no changes.
+ net/mptcp/protocol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ba9d3d5c625f..dbb86cbb9e77 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -248,6 +248,9 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp=
+_sock *msk,
+ =
+
+ 	*bytes =3D moved;
+ =
+
++	if (moved)
++		tcp_rcv_space_adjust(ssk);
++
+ 	return done;
+ }
+ =
+
+@@ -1263,6 +1266,7 @@ static int mptcp_init_sock(struct sock *sk)
+ 		return ret;
+ =
+
+ 	sk_sockets_allocated_inc(sk);
++	sk->sk_rcvbuf =3D sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
+ 	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[2];
+ =
+
+ 	return 0;
+-- =
+
+2.26.2
+
+--===============0467182202466357940==--
