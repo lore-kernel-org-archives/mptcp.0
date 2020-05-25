@@ -1,184 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============5624148105006394001=="
+Content-Type: multipart/mixed; boundary="===============5300023215252886529=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 4/4] mptcp: introduce token KUNIT self-tests
-Date: Mon, 25 May 2020 09:27:58 +0200
-Message-ID: <dcc2871af225e992dd90768b5e6f03cb0ca0325e.camel@redhat.com>
-In-Reply-To: 51d35c6723bd74bef0e546914f246b3569e93b28.1590142022.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH 2/4] mptcp: refactor token container.
+Date: Mon, 25 May 2020 10:10:09 +0200
+Message-ID: <a451889bfdd8543d456ea9c6dc7ea3dc9043fb68.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.22.394.2005221656220.75205@rnpatelx-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4471
+X-UID: 4472
 
---===============5624148105006394001==
+--===============5300023215252886529==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-05-22 at 12:10 +0200, Paolo Abeni wrote:
-> Unit tests for the internal MPTCP token APIs, using KUNIT
+Hi,
+
+On Fri, 2020-05-22 at 17:34 -0700, Mat Martineau wrote:
+> > +struct token_bucket {
+> > +	spinlock_t		lock;
+> > +	int			chain_len;
+> > +	struct hlist_nulls_head	req_chain;
+> > +	struct hlist_nulls_head	msk_chain;
+> > +};
 > =
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  net/mptcp/Makefile     |   3 +-
->  net/mptcp/token.c      |   9 +++
->  net/mptcp/token_test.c | 138 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 149 insertions(+), 1 deletion(-)
->  create mode 100644 net/mptcp/token_test.c
+> I remember a discussion a while ago about how we didn't really need two =
+
+> radix trees for req & msk, since there's only one "token space". =
+
+> Similarly, seems like we only need one linked list per bucket if we can =
+
+> define a common structure to use in both sock types, like:
+> =
+
+> struct mptcp_token_node {
+>  	struct hlist_nulls_node node;
+>  	u32 value;
+>  	bool is_req;
+> };
+> =
+
+> It would use a little more space per mptcp_sock/req_sock and would requir=
+e =
+
+> extra code in the lookup to return the appropriate container pointer (req =
+
+> or mptcp_sock), but would shrink the hash table or give us more buckets i=
+n =
+
+> the same memory, which seems like a win.
+
+LGTM, I'll try that.
 
 [...]
+> > struct mptcp_sock *mptcp_token_get_sock(u32 token)
+> > {
+> > -	struct sock *conn;
+> > -
+> > -	spin_lock_bh(&token_tree_lock);
+> > -	conn =3D radix_tree_lookup(&token_tree, token);
+> > -	if (conn) {
+> > -		/* token still reserved? */
+> > -		if (conn =3D=3D (struct sock *)&token_used)
+> > -			conn =3D NULL;
+> > -		else
+> > -			sock_hold(conn);
+> > +	struct hlist_nulls_node *pos;
+> > +	struct token_bucket *bucket;
+> > +	struct mptcp_sock *msk;
+> > +
+> > +	rcu_read_lock();
+> > +	bucket =3D token_bucket(token);
+> > +
+> > +again:
+> > +	hlist_nulls_for_each_entry_rcu(msk, pos, &bucket->msk_chain,
+> > +				       token_node) {
+> > +		if (READ_ONCE(msk->token) !=3D token)
+> > +			continue;
+> > +		if (!refcount_inc_not_zero(&((struct sock *)msk)->sk_refcnt))
+> > +			goto not_found;
+> > +		if (READ_ONCE(msk->token) !=3D token)
+> > +			goto again;
+> =
 
-> diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
-> new file mode 100644
-> index 000000000000..9e385d2c9ff0
-> --- /dev/null
-> +++ b/net/mptcp/token_test.c
-> @@ -0,0 +1,138 @@
-> +#include <kunit/test.h>
+> Checking msk->token twice here, but it doesn't look like it ever gets =
 
-same as patch 3/4: I think we need a SPDX line here (or non-conventional
-users of checkpatch might see a warning)
+> changed after it's set?
 
-> +
-> +#include "protocol.h"
-> +
-> +static struct mptcp_subflow_request_sock *build_req_sock(struct kunit *t=
-est)
-> +{
-> +	struct mptcp_subflow_request_sock *req;
-> +
-> +	req =3D kunit_kzalloc(test, sizeof(struct mptcp_subflow_request_sock),
-> +			    GFP_USER);
-> +	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, req);
-> +	return req;
-> +}
-> +
-> +static void mptcp_token_test_req_basic(struct kunit *test)
-> +{
-> +	struct mptcp_subflow_request_sock *req =3D build_req_sock(test);
-> +	struct mptcp_sock *null_msk =3D NULL;
-> +
-> +	KUNIT_ASSERT_EQ(test, 0,
-> +			mptcp_token_new_request((struct request_sock *)req));
-> +	KUNIT_EXPECT_NE(test, 0, (int)req->token);
-> +	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(req->token));
-> +
-> +	/* cleanup */
-> +	mptcp_token_destroy_request(req->token);
-> +}
-> +
-> +static struct inet_connection_sock *build_icsk(struct kunit *test)
-> +{
-> +	struct inet_connection_sock *icsk;
-> +
-> +	icsk =3D kunit_kzalloc(test, sizeof(struct inet_connection_sock),
-> +			     GFP_USER);
-> +	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, icsk);
-> +	return icsk;
-> +}
-> +
-> +static struct mptcp_subflow_context *build_ctx(struct kunit *test)
-> +{
-> +	struct mptcp_subflow_context *ctx;
-> +
-> +	ctx =3D kunit_kzalloc(test, sizeof(struct mptcp_subflow_context),
-> +			    GFP_USER);
-> +	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, ctx);
-> +	return ctx;
-> +}
-> +
-> +static struct mptcp_sock *build_msk(struct kunit *test)
-> +{
-> +	struct mptcp_sock *msk;
-> +
-> +	msk =3D kunit_kzalloc(test, sizeof(struct mptcp_sock), GFP_USER);
-> +	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, msk);
-> +	refcount_set(&((struct sock *)msk)->sk_refcnt, 1);
-> +	return msk;
-> +}
-> +
-> +static void mptcp_token_test_msk_basic(struct kunit *test)
-> +{
-> +	struct inet_connection_sock *icsk =3D build_icsk(test);
-> +	struct mptcp_subflow_context *ctx =3D build_ctx(test);
-> +	struct mptcp_sock *msk =3D build_msk(test);
-> +	struct mptcp_sock *null_msk =3D NULL;
-> +	struct sock *sk;
-> +
-> +	icsk->icsk_ulp_data =3D ctx;
-> +	ctx->conn =3D (struct sock*)msk;
-> +	sk =3D (struct sock*)msk;
-> +
-> +	KUNIT_ASSERT_EQ(test, 0,
-> +			mptcp_token_new_connect((struct sock *)icsk));
-> +	KUNIT_EXPECT_NE(test, 0, (int)ctx->token);
-> +	KUNIT_EXPECT_EQ(test, ctx->token, msk->token);
-> +	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(ctx->token));
-> +	KUNIT_EXPECT_EQ(test, 2, (int)refcount_read(&sk->sk_refcnt));
-> +
-> +	mptcp_token_destroy(ctx->token);
-> +	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(ctx->token));
-> +}
-> +
-> +static void mptcp_token_test_accept(struct kunit *test)
-> +{
-> +	struct mptcp_subflow_request_sock *req =3D build_req_sock(test);
-> +	struct mptcp_sock *msk =3D build_msk(test);
-> +
-> +	KUNIT_ASSERT_EQ(test, 0,
-> +			mptcp_token_new_request((struct request_sock *)req));
-> +	msk->token =3D req->token;
-> +	mptcp_token_accept(req, msk);
-> +	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(msk->token));
-> +
-> +	/* this is now a no-op */
-> +	mptcp_token_destroy_request(req->token);
-> +	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(msk->token));
-> +
-> +	/* cleanup */
-> +	mptcp_token_destroy(msk->token);
-> +}
-> +
-> +static void mptcp_token_test_destroyed(struct kunit *test)
-> +{
-> +	struct mptcp_subflow_request_sock *req =3D build_req_sock(test);
-> +	struct mptcp_sock *msk =3D build_msk(test);
-> +	struct mptcp_sock *null_msk =3D NULL;
-> +	struct sock *sk;
-> +
-> +	sk =3D (struct sock*)msk;
-> +
-> +	KUNIT_ASSERT_EQ(test, 0,
-> +			mptcp_token_new_request((struct request_sock *)req));
-> +	msk->token =3D req->token;
-> +	mptcp_token_accept(req, msk);
-> +
-> +	/* simulate race on removal */
-> +	refcount_set(&sk->sk_refcnt, 0);
-> +	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(msk->token));
-> +
-> +	/* cleanup */
-> +	mptcp_token_destroy(msk->token);
-> +}
-> +
-> +static struct kunit_case mptcp_token_test_cases[] =3D {
-> +	KUNIT_CASE(mptcp_token_test_req_basic),
-> +	KUNIT_CASE(mptcp_token_test_msk_basic),
-> +	KUNIT_CASE(mptcp_token_test_accept),
-> +	KUNIT_CASE(mptcp_token_test_destroyed),
-> +	{}
-> +};
-> +
-> +static struct kunit_suite mptcp_token_suite =3D {
-> +	.name =3D "mptcp-token",
-> +	.test_cases =3D mptcp_token_test_cases,
-> +};
-> +
-> +kunit_test_suite(mptcp_token_suite);
-> +
-> +MODULE_LICENSE("GPL");
-> \ No newline at end of file
+AFAICT, this is the common list_nulls usage pattern. The problem is
+that a msk can be freed and re-allocated concurrently by another CPU.
+Since this lookup is lockless, the token value can possibly change
+'under-the-wood' till we get a reference to the token - and forbit msk
+de-allocation.
 
+Cheers,
 
---===============5624148105006394001==--
+Paolo
+
+--===============5300023215252886529==--
