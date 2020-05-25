@@ -1,47 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============2972986055368594491=="
+Content-Type: multipart/mixed; boundary="===============3961834723240580995=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: attempt skb coalescing when moving skbs to
- mptcp rx queue
-Date: Mon, 25 May 2020 19:08:31 +0200
-Message-ID: <f4836de8b7756bd749878450935bc296c193f931.camel@redhat.com>
-In-Reply-To: 20200525160255.20560-1-fw@strlen.de
+Subject: [MPTCP] [PATCH v2 0/4] mptcp: token container refactor
+Date: Mon, 25 May 2020 19:35:15 +0200
+Message-ID: <cover.1590427813.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4493
+X-UID: 4494
 
---===============2972986055368594491==
+--===============3961834723240580995==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-05-25 at 18:02 +0200, Florian Westphal wrote:
-> We can try to coalesce the skbs we take from the subflows rx queue
-> with the tail of the mptcp rx queue.
-> =
+This series supersede the RTC patch for token refactor. The relevant patch
+is unchanged, but this additional bring in some related minor cleanup
+(patch 1/4) and KUNIT (!!!) self-tests (4/4). To make things cleaner it also
+moves the existing in-kernel tests (crypto) to KUNIT.
 
-> If successful, the skb head can be discarded early.
-> =
+The most relevant changes from v1 are in patch 2/4.
 
-> We can also free the skb extensions, we do not access them after
-> this so no need to hold on to them.
-> =
+This addresses most of the issues raised by Christoph, Davide and Mat, with=
+ the
+notable exception of shirinking the hash table bucket size - I'm unable to =
+do
+that with the current fixes for the list curruption noted by Christoph.
 
-> Only caveat: do not built too fat skbs. They are only free'd once
-> userspace has read all data.
+I hope the trade-off beween the self-contained fix and the avoided memory
+optimization is acceptable.
 
-To share IRC thoughts here:
+Paolo Abeni (4):
+  mptcp: add __init annotation on setup functions
+  mptcp: refactor token container.
+  mptcp: move crypto test to KUNIT
+  mptcp: introduce token KUNIT self-tests
 
-It looks like TCP allows skb to grow above GSO_MAX_SIZE and frees them
-only when user-space read all the data. Could we relax this constraint,
-too?
+ net/mptcp/Kconfig       |  19 ++-
+ net/mptcp/Makefile      |   4 +
+ net/mptcp/crypto.c      |  65 +---------
+ net/mptcp/crypto_test.c |  72 +++++++++++
+ net/mptcp/pm.c          |   2 +-
+ net/mptcp/pm_netlink.c  |   2 +-
+ net/mptcp/protocol.c    |  39 +++---
+ net/mptcp/protocol.h    |  15 ++-
+ net/mptcp/subflow.c     |  12 +-
+ net/mptcp/token.c       | 258 ++++++++++++++++++++++++++++------------
+ net/mptcp/token_test.c  | 138 +++++++++++++++++++++
+ 11 files changed, 453 insertions(+), 173 deletions(-)
+ create mode 100644 net/mptcp/crypto_test.c
+ create mode 100644 net/mptcp/token_test.c
 
-skb_try_coalesce() will still somehow bound the skb size to
-MAX_SKB_FRAGS * <something [PAGE_SIZE ?!?]>
+-- =
 
-Cheers,
+2.21.3
 
-Paolo
-
---===============2972986055368594491==--
+--===============3961834723240580995==--
