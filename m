@@ -1,60 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============5525799684756532293=="
+Content-Type: multipart/mixed; boundary="===============4161024553262692050=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/4] mptcp: move crypto test to KUNIT
-Date: Mon, 25 May 2020 10:17:41 +0200
-Message-ID: <dda3ea16cab64e379f4e6fba802817ed867b9e56.camel@redhat.com>
-In-Reply-To: 15ed1aff118fea0f63e9068531e1d6940d399d9c.camel@redhat.com
+Subject: [MPTCP] Re: general protection fault in selinux_socket_recvmsg
+Date: Mon, 25 May 2020 10:58:46 +0200
+Message-ID: <724312f087f459f0318e3edb862e415b3e8b94f6.camel@redhat.com>
+In-Reply-To: 000000000000a1a76d05a668ccbb@google.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4473
+X-UID: 4474
 
---===============5525799684756532293==
+--===============4161024553262692050==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-05-25 at 09:26 +0200, Davide Caratti wrote:
-> On Fri, 2020-05-22 at 12:10 +0200, Paolo Abeni wrote:
-> > currently MPTCP uses a custom hook to executed unit test at
-> > boot time. Let's use the KUNIT framework instead.
-> > Additionally move the relevant code to a separate file and
-> > export the function needed by the test when self-tests
-> > are build as a module.
-> > =
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git mast=
+er
 
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> >  net/mptcp/Kconfig       | 19 +++++++----
-> >  net/mptcp/Makefile      |  3 ++
-> >  net/mptcp/crypto.c      | 65 ++-----------------------------------
-> >  net/mptcp/crypto_test.c | 71 +++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 90 insertions(+), 68 deletions(-)
-> >  create mode 100644 net/mptcp/crypto_test.c
-> > =
+---
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1f52a0fa31ed..69b66423305b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -954,7 +954,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len,
+ =
 
-> =
+ 		pr_debug("block timeout %ld", timeo);
+ 		mptcp_wait_data(sk, &timeo);
+-		if (unlikely(__mptcp_tcp_fallback(msk)))
++		ssock =3D __mptcp_tcp_fallback(msk);
++		if (unlikely(ssock))
+ 			goto fallback;
+ 	}
+=20
 
-> [...]
-> =
-
-> > diff --git a/net/mptcp/crypto_test.c b/net/mptcp/crypto_test.c
-> > new file mode 100644
-> > index 000000000000..3a7c40f5e8f8
-> > --- /dev/null
-> > +++ b/net/mptcp/crypto_test.c
-> > @@ -0,0 +1,71 @@
-> > +#include <kunit/test.h>
-> =
-
-> Nit: I think we need a SPDX line here (or non-conventional users of
-> checkpatch might see a warning)
-
-Right you are! I'll fix that in the next iteration!
-
-Thanks,
-
-Paolo
-
---===============5525799684756532293==--
+--===============4161024553262692050==--
