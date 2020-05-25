@@ -1,58 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============8453272375810037052=="
+Content-Type: multipart/mixed; boundary="===============3159778672288659239=="
 MIME-Version: 1.0
-From: Dmitry Vyukov <dvyukov at google.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: general protection fault in sock_recvmsg
-Date: Mon, 25 May 2020 11:36:07 +0200
-Message-ID: <CACT4Y+Ya2K+h=TXQEdCUag9P2TcVQV5YP8rF7u+wTuar40SP4A@mail.gmail.com>
-In-Reply-To: f82cedb30d32f24f962360f96d7bef633792a401.camel@redhat.com
+Date: Mon, 25 May 2020 12:02:31 +0200
+Message-ID: <cba982dc5d280f43406200e3186b8bce76159617.camel@redhat.com>
+In-Reply-To: CACT4Y+Ya2K+h=TXQEdCUag9P2TcVQV5YP8rF7u+wTuar40SP4A@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4476
+X-UID: 4477
 
---===============8453272375810037052==
+--===============3159778672288659239==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 25, 2020 at 11:07 AM Paolo Abeni <pabeni(a)redhat.com> wrote:
->
-> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git ma=
-ster
->
-> I don't easily see how we can reach sock_recvmsg() without first
-> splatting on selinux_socket_recvmsg()
+On Mon, 2020-05-25 at 11:36 +0200, Dmitry Vyukov wrote:
+> On Mon, May 25, 2020 at 11:07 AM Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git =
+master
+> > =
 
-This instance uses smack.
+> > I don't easily see how we can reach sock_recvmsg() without first
+> > splatting on selinux_socket_recvmsg()
+> =
 
->, anyhow this really looks like a
-> duplicate of syzbot+c6bfc3db991edc918432(a)syzkaller.appspotmail.com.
->
-> Just be pedantic and check the same fix for both.
->
-> ---
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1f52a0fa31ed..69b66423305b 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -954,7 +954,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
->
->                 pr_debug("block timeout %ld", timeo);
->                 mptcp_wait_data(sk, &timeo);
-> -               if (unlikely(__mptcp_tcp_fallback(msk)))
-> +               ssock =3D __mptcp_tcp_fallback(msk);
-> +               if (unlikely(ssock))
->                         goto fallback;
->         }
->
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller-bugs+unsubscribe(a)googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/syzkaller-bugs/f82cedb30d32f24f962360f96d7bef633792a401.camel%40redhat.co=
-m.
---===============8453272375810037052==--
+> This instance uses smack.
+
+Thank you for the prompt reply! Is that configuration somehow visible
+in the syzbot report? if so, where/how? (the only differences I see in
+.config are related to the used compiler).
+
+Thanks!
+
+Paolo
+
+--===============3159778672288659239==--
