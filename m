@@ -1,80 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============5017100523090544980=="
+Content-Type: multipart/mixed; boundary="===============8319135195574330729=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/4] mptcp: refactor token container.
-Date: Tue, 26 May 2020 09:28:38 -0700
-Message-ID: <alpine.OSX.2.22.394.2005260909260.8041@emfomenk-mobl.amr.corp.intel.com>
-In-Reply-To: e43c8de25dbea8738f12f0d2a7cfbc1992282bd8.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: avoid NULL-ptr derefence on fallback
+Date: Tue, 26 May 2020 11:21:33 -0700
+Message-ID: <alpine.OSX.2.22.394.2005261120500.8041@emfomenk-mobl.amr.corp.intel.com>
+In-Reply-To: d7d7f946ab9c43e96720d97e68645e38fb8b233c.1590417507.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4504
+X-UID: 4505
 
---===============5017100523090544980==
+--===============8319135195574330729==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 25 May 2020, Paolo Abeni wrote:
 
-> On Fri, 2020-05-22 at 17:34 -0700, Mat Martineau wrote:
->> On Fri, 22 May 2020, Paolo Abeni wrote:
->>> -static RADIX_TREE(token_tree, GFP_ATOMIC);
->>> -static RADIX_TREE(token_req_tree, GFP_ATOMIC);
->>> -static DEFINE_SPINLOCK(token_tree_lock);
->>> -static int token_used __read_mostly;
->>> +#define TOKEN_MAX_RETRIES	4
->>> +#define TOKEN_MAX_CHAIN_LEN	4
->>> +
->>> +struct token_bucket {
->>> +	spinlock_t		lock;
->>> +	int			chain_len;
->>> +	struct hlist_nulls_head	req_chain;
->>> +	struct hlist_nulls_head	msk_chain;
->>> +};
->>
->> I remember a discussion a while ago about how we didn't really need two
->> radix trees for req & msk, since there's only one "token space".
->> Similarly, seems like we only need one linked list per bucket if we can
->> define a common structure to use in both sock types, like:
->>
->> struct mptcp_token_node {
->>  	struct hlist_nulls_node node;
->>  	u32 value;
->>  	bool is_req;
->> };
->>
->> It would use a little more space per mptcp_sock/req_sock and would requi=
-re
->> extra code in the lookup to return the appropriate container pointer (req
->> or mptcp_sock), but would shrink the hash table or give us more buckets =
-in
->> the same memory, which seems like a win.
+> In the MPTCP receive path we must cope with TCP fallback
+> on blocking recvmsg(). Currently in such code path we detect
+> the fallback condition, but we don't fetch the struct socket
+> required for fallback.
 >
-> In v2 I had to drop the above idea because it would not fit with the
-> current solution for the list corruption issue.
+> The above allowed syzkaller to trigger a NULL pointer
+> dereference:
+>
+> general protection fault, probably for non-canonical address 0xdffffc0000=
+000004: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+> CPU: 1 PID: 7226 Comm: syz-executor523 Not tainted 5.7.0-rc6-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 01/01/2011
+> RIP: 0010:sock_recvmsg_nosec net/socket.c:886 [inline]
+> RIP: 0010:sock_recvmsg+0x92/0x110 net/socket.c:904
+> Code: 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89 6c 24 04 e8 53 18 1d fb 4d 8=
+d 6f 20 4c 89 e8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74=
+ 08 4c 89 ef e8 20 12 5b fb bd a0 00 00 00 49 03 6d
+> RSP: 0018:ffffc90001077b98 EFLAGS: 00010202
+> RAX: 0000000000000004 RBX: ffffc90001077dc0 RCX: dffffc0000000000
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: ffffffff86565e59 R09: ffffed10115afeaa
+> R10: ffffed10115afeaa R11: 0000000000000000 R12: 1ffff9200020efbc
+> R13: 0000000000000020 R14: ffffc90001077de0 R15: 0000000000000000
+> FS:  00007fc6a3abe700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000004d0050 CR3: 00000000969f0000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+> mptcp_recvmsg+0x18d5/0x19b0 net/mptcp/protocol.c:891
+> inet_recvmsg+0xf6/0x1d0 net/ipv4/af_inet.c:838
+> sock_recvmsg_nosec net/socket.c:886 [inline]
+> sock_recvmsg net/socket.c:904 [inline]
+> __sys_recvfrom+0x2f3/0x470 net/socket.c:2057
+> __do_sys_recvfrom net/socket.c:2075 [inline]
+> __se_sys_recvfrom net/socket.c:2071 [inline]
+> __x64_sys_recvfrom+0xda/0xf0 net/socket.c:2071
+> do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+> entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>
+> Address the issue initializing the struct socket reference
+> before entering the fallback code.
+>
+> Reported-and-tested-by: syzbot+c6bfc3db991edc918432(a)syzkaller.appspotma=
+il.com
+> Suggested-by: Ondrej Mosnacek <omosnace(a)redhat.com>
+> Fixes: 8ab183deb26a ("mptcp: cope with later TCP fallback")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 >
 
-Yes, the list corruption issue is more important than the above =
-
-optimization!
-
-> Anyhow I have an addional doubt, how can the above fit the list
-> traversal helper ? Don't we need to allocate 'mptcp_token_node'
-> separatelly and keep a back ptr to the main socket/req???
->
-> Otherwise 'mptcp_token_node' should have the same offset inside 'struct
-> mptcp_sock' and inside 'struct mptcp_subflow_request_sock' to fit
-> hlist_nulls_entry(), right?
->
-
-The idea was to wrap up the information the list traversal helper needed =
-
-in mptcp_token_node. Then use is_req to determine which structure type =
-
-(mptcp_sock or mptcp_subflow_request_sock) to use with container_of().
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============5017100523090544980==--
+--===============8319135195574330729==--
