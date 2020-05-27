@@ -1,212 +1,244 @@
-Content-Type: multipart/mixed; boundary="===============3327743174893859610=="
+Content-Type: multipart/mixed; boundary="===============7665672331759526092=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Crashers on netnext with apache-benchmark
-Date: Wed, 27 May 2020 09:43:23 -0700
-Message-ID: <20200527164323.GW81884@MacBook-Pro-64.local>
-In-Reply-To: b4d8b4d7fc991e2dcba11b7772b0e4ad18516f54.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH 2/4] mptcp: refactor token container.
+Date: Wed, 27 May 2020 09:47:19 -0700
+Message-ID: <20200527164719.GX81884@MacBook-Pro-64.local>
+In-Reply-To: 3cd9e31d081a1b3190b9699ee531fb919422fd98.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4514
+X-UID: 4515
 
---===============3327743174893859610==
+--===============7665672331759526092==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 05/27/20 - 12:38, Paolo Abeni wrote:
-> On Tue, 2020-05-26 at 17:28 -0700, Christoph Paasch wrote:
-> > [  142.001017] ------------[ cut here ]------------
-> > [  142.002079] refcount_t: saturated; leaking memory.
-> > [  142.002226] WARNING: CPU: 0 PID: 1400 at lib/refcount.c:22 refcount_=
-warn_saturate+0x65/0x110
-> > [  142.003085] refcount_t: addition on 0; use-after-free.
-> > [...]
-> > [  142.004121] RIP: 0010:refcount_warn_saturate+0x65/0x110
-> > [  142.004125] Code: 00 0f 84 b1 00 00 00 5b 5d c3 85 db 74 40 80 3d 50=
- 02 8d 01 00 75 f0 48 c7 c7 20 62 39 82 c6 05 40 02 8d 01 01 e8 d0 64 aa ff=
- <0f> 0b eb d9 80 3d 2f 02 8d 01 00 75 d0 48 c7 c7 c0 62 39 82 c6 05
-> > [  142.004130] RSP: 0018:ffff88810d26fb78 EFLAGS: 00010282
-> > [  142.004138] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000=
-000000000
-> > [  142.004141] RDX: 00000000fffffff8 RSI: 0000000000000004 RDI: ffffed1=
-021a4df61
-> > [  142.004143] RBP: ffff8880aac11740 R08: ffffffff8120b958 R09: ffffed1=
-0236843c9
-> > [  142.004146] R10: ffff88811b421e43 R11: ffffed10236843c8 R12: ffff888=
-0a1cc0d00
-> > [  142.004149] R13: ffff88810c273100 R14: ffff8880aac11740 R15: ffff888=
-10669b458
-> > [  142.004178]  mptcp_accept+0x2ca/0x300
-> > [  142.004213]  inet_accept+0xaa/0x3b0
-> > [  142.004256]  mptcp_stream_accept+0x124/0x350
-> > [  142.004272]  __sys_accept4_file+0x260/0x330
-> > [  142.004324]  __sys_accept4+0x6d/0xb0
-> > [  142.004343]  __x64_sys_accept4+0x4b/0x60
-> > [  142.004353]  do_syscall_64+0xc1/0xa10
-> > [  142.004381]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> =
+On 05/27/20 - 13:00, Paolo Abeni wrote:
+> On Tue, 2020-05-26 at 09:23 -0700, Christoph Paasch wrote:
+> > On 05/25/20 - 12:42, Paolo Abeni wrote:
+> > > On Fri, 2020-05-22 at 18:10 -0700, Mat Martineau wrote:
+> > > > On Fri, 22 May 2020, Paolo Abeni wrote:
+> > > > =
 
-> I've looked a little bit at this one and it puzzle me... Is this the
-> only refcount_t related oops you splat you observe? e.g. no previous
-> underflow/decrement hit 0?
-> =
+> > > > > On Fri, 2020-05-22 at 09:06 -0700, Christoph Paasch wrote:
+> > > > > > Hello,
+> > > > > > =
 
-> If so it looks like refcount growed above MAX_INT !?! that should
-> require quite a lot of time ... more likely uninitialized memory/UaF?!?
-> I'm wondering why KASAN did not detect such UaF?!?
+> > > > > > On 22/05/20 - 12:10:11, Paolo Abeni wrote:
+> > > > > > > Replace the radix tree with an hash table allocated
+> > > > > > > at boot time. The radix tree has some short coming:
+> > > > > > > a single lock is contented by all the mptcp operation,
+> > > > > > > the lookup currently use such lock, and traversing
+> > > > > > > all the items would require lock, too.
+> > > > > > > =
 
-There was nothing before it. But, I think it is the "if (unlikely(!old)"
-condition that is triggering here, no?
+> > > > > > > With hash table instead we trade a little memory to
+> > > > > > > address all the above - a per bucket lock is used.
+> > > > > > > =
 
-> can you please add some local dbg code alike:
-> ---
-> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-> index 0e3ee25eb156..eba047c8dad9 100644
-> --- a/include/linux/refcount.h
-> +++ b/include/linux/refcount.h
-> @@ -202,8 +202,10 @@ static inline void refcount_add(int i, refcount_t *r)
->  =
+> > > > > > > Additionally refactor the token creation to code to:
+> > > > > > > =
 
->         if (unlikely(!old))
->                 refcount_warn_saturate(r, REFCOUNT_ADD_UAF);
-> -       else if (unlikely(old < 0 || old + i < 0))
-> +       else if (unlikely(old < 0 || old + i < 0)) {
-> +               pr_warn("old %d old + i %d\n", old, old + 1);
->                 refcount_warn_saturate(r, REFCOUNT_ADD_OVF);
-> +       }
->  }
+> > > > > > > - limit the number of consecutive attempts to a fixed
+> > > > > > > maximum. Hitting an hash bucket with long chain is
+> > > > > > > considered a failed attempt
+> > > > > > > =
 
-Sure, I can add this to my debugs. Might have some time later today to test
-this again.
+> > > > > > > - accept() no longer can fail to to token management.
+> > > > > > > =
 
->  =
+> > > > > > > - if token creation fails at connect() time, we do
+> > > > > > > fallback to TCP (before the connection was closed)
+> > > > > > > =
 
->  /**
-> ---
-> =
+> > > > > > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > > > > > > ---
+> > > > > > >  net/mptcp/protocol.c |  16 +--
+> > > > > > >  net/mptcp/protocol.h |   5 +-
+> > > > > > >  net/mptcp/subflow.c  |  10 +-
+> > > > > > >  net/mptcp/token.c    | 246 ++++++++++++++++++++++++++++++---=
+----------
+> > > > > > >  4 files changed, 184 insertions(+), 93 deletions(-)
+> > > > > > > =
 
-> > And another one:
+> > > > > > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > > > > > > index 16ca39ae314a..09152cb80e05 100644
+> > > > > > > --- a/net/mptcp/protocol.c
+> > > > > > > +++ b/net/mptcp/protocol.c
+> > > > > > > @@ -1424,19 +1424,7 @@ struct sock *mptcp_sk_clone(const stru=
+ct sock *sk,
+> > > > > > >  	msk->token =3D subflow_req->token;
+> > > > > > >  	msk->subflow =3D NULL;
+> > > > > > > =
+
+> > > > > > > -	if (unlikely(mptcp_token_new_accept(subflow_req->token, nsk=
+))) {
+> > > > > > > -		nsk->sk_state =3D TCP_CLOSE;
+> > > > > > > -		bh_unlock_sock(nsk);
+> > > > > > > -
+> > > > > > > -		/* we can't call into mptcp_close() here - possible BH con=
+text
+> > > > > > > -		 * free the sock directly.
+> > > > > > > -		 * sk_clone_lock() sets nsk refcnt to two, hence call sk_f=
+ree()
+> > > > > > > -		 * too.
+> > > > > > > -		 */
+> > > > > > > -		sk_common_release(nsk);
+> > > > > > > -		sk_free(nsk);
+> > > > > > > -		return NULL;
+> > > > > > > -	}
+> > > > > > > +	mptcp_token_accept(subflow_req, msk);
+> > > > > > > =
+
+> > > > > > >  	msk->write_seq =3D subflow_req->idsn + 1;
+> > > > > > >  	atomic64_set(&msk->snd_una, msk->write_seq);
+> > > > > > > @@ -1654,7 +1642,6 @@ void mptcp_finish_connect(struct sock *=
+ssk)
+> > > > > > >  	 */
+> > > > > > >  	WRITE_ONCE(msk->remote_key, subflow->remote_key);
+> > > > > > >  	WRITE_ONCE(msk->local_key, subflow->local_key);
+> > > > > > > -	WRITE_ONCE(msk->token, subflow->token);
+> > > > > > >  	WRITE_ONCE(msk->write_seq, subflow->idsn + 1);
+> > > > > > >  	WRITE_ONCE(msk->ack_seq, ack_seq);
+> > > > > > >  	WRITE_ONCE(msk->can_ack, 1);
+> > > > > > > @@ -1738,6 +1725,7 @@ static struct proto mptcp_prot =3D {
+> > > > > > >  	.sysctl_wmem_offset	=3D offsetof(struct net, ipv4.sysctl_tc=
+p_wmem),
+> > > > > > >  	.sysctl_mem	=3D sysctl_tcp_mem,
+> > > > > > >  	.obj_size	=3D sizeof(struct mptcp_sock),
+> > > > > > > +	.slab_flags	=3D SLAB_TYPESAFE_BY_RCU,
+> > > > > > =
+
+> > > > > > I wonder if you now need to be careful when allocating and zero=
+'ing the socket,
+> > > > > > same way it is happening in sock_copy ?
+> > > > > > =
+
+> > > > > > In out-of-tree I had to take care of that by bringing back the =
+clear_sk
+> > > > > > callback in struct proto which will then be called in sk_prot_a=
+lloc:
+> > > > > > =
+
+> > > > > > https://github.com/multipath-tcp/mptcp/blob/b86461666ede4e6da19=
+5431dcf26cd454bc547fe/net/mptcp/mptcp_ctrl.c#L2867
+> > > > > > =
+
+> > > > > > https://github.com/multipath-tcp/mptcp/blob/f04a56b142b1cb20933=
+8392d563102837db4e2d4/net/core/sock.c#L1486
+> > > > > =
+
+> > > > > Indeed! I felt like I was missing some relevant point!
+> > > > > =
+
+> > > > > re-adding the clear_sk callback for mptcp's sake does not look 11=
+0%
+> > > > > nice. There are a few alternatives, which sounds equally suboptim=
+al too
+> > > > > me:
+> > > > > =
+
+> > > > > 1) use plain RCU (with kfree_rcu() and all the relevant memory
+> > > > > overhead) for the whole msk sockets (~1600 bytes for IPv4). We al=
+ready
+> > > > > to that for the subflow contexts (~200 bytes). This is simple, bu=
+t the
+> > > > > memory overhead could be relevant ?!?
+> > > > > =
+
+> > > > > 	1.a) additionally srink the mptcp_sock structure, e.g. I'm wild
+> > > > > guessing we can use 'struct sock' as the base type and add mptcp =
+custom
+> > > > > fields there ?!?
+> > > > > =
+
+> > > > > 2) use ULP for msk, too. Move the token there (and possibly all m=
+ptcp-
+> > > > > specific data), and use plain RCU to handle the context. As a dow=
+nside
+> > > > > we will need 2 allocations per accept() (the msk socket and the m=
+sk ulp
+> > > > > context)
+> > > > > =
+
+> > > > > Any other better option?!?
+> > > > > =
+
+> > > > =
+
+> > > > I lean toward option 1 so we don't have to change around ULP to not=
+ expose =
+
+> > > > MPTCP stuff (we rely on a kernel sock check to keep the subflow ULP=
+ from =
+
+> > > > being exposed to userspace). I'd also like to keep ULP available fo=
+r =
+
+> > > > possible TLS support someday.
+> > > =
+
+> > > I just occurred to me a likely crazy 3rd alternative. What if we defi=
+ne
+> > > a new list_nulls variant with 'nulls' values using the least
+> > > significative bit zeroed? (the current implementation requires the
+> > > opposite). =
+
+> > > =
+
+> > > Something alike:
+> > > =
+
+> > > struct list_0_node *list_0_next(struct list_0_node *node)
+> > > {
+> > > 	return (struct list_0_node *)(list->next & ~1);
+> > > }
+> > > =
+
+> > > bool list_0_is_null(struct list_0_node *node)
+> > > {
+> > > 	return !((unsigned long __force)node & 1);
+> > > }
+> > > =
+
+> > > [...]
+> > > =
+
+> > > This way, memsetting a struct to 0 will preserve the NULL value and we
+> > > should not need any additional care. Do I miss something relevant ?!?
 > > =
 
-> > [   62.586401] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > [   62.588813] BUG: KASAN: use-after-free in inet_twsk_bind_unhash+0x5f=
-/0xe0
-> > [   62.589975] Write of size 8 at addr ffff88810f155a20 by task ksoftir=
-qd/2/21
-> > [   62.591194]
-> > [   62.591485] CPU: 2 PID: 21 Comm: ksoftirqd/2 Kdump: loaded Not taint=
-ed 5.7.0-rc6.mptcp #36
-> > [   62.593067] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B=
-IOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-> > [   62.595268] Call Trace:
-> > [   62.595775]  dump_stack+0x76/0xa0
-> > [   62.596448]  print_address_description.constprop.0+0x3a/0x60
-> > [   62.600581]  __kasan_report.cold+0x20/0x3b
-> > [   62.602968]  kasan_report+0x38/0x50
-> > [   62.603561]  inet_twsk_bind_unhash+0x5f/0xe0
-> > [   62.604282]  inet_twsk_kill+0x195/0x200
-> > [   62.604945]  inet_twsk_deschedule_put+0x25/0x30
-> > [   62.605731]  tcp_v4_rcv+0xa79/0x15e0
-> > [   62.607139]  ip_protocol_deliver_rcu+0x37/0x270
-> > [   62.607980]  ip_local_deliver_finish+0xb0/0xd0
-> > [   62.608758]  ip_local_deliver+0x1c9/0x1e0
-> > [   62.611162]  ip_sublist_rcv_finish+0x84/0xa0
-> > [   62.611894]  ip_sublist_rcv+0x22c/0x320
-> > [   62.616143]  ip_list_rcv+0x1e4/0x225
-> > [   62.619427]  __netif_receive_skb_list_core+0x439/0x460
-> > [   62.622771]  netif_receive_skb_list_internal+0x3ea/0x570
-> > [   62.625320]  gro_normal_list.part.0+0x14/0x50
-> > [   62.626088]  napi_gro_receive+0x6a/0xb0
-> > [   62.626787]  receive_buf+0x371/0x1d50
-> > [   62.632092]  virtnet_poll+0x2be/0x5b0
-> > [   62.634099]  net_rx_action+0x1ec/0x4c0
-> > [   62.636132]  __do_softirq+0xfc/0x29c
-> > [   62.638180]  run_ksoftirqd+0x15/0x30
-> > [   62.638787]  smpboot_thread_fn+0x1fc/0x380
-> > [   62.642009]  kthread+0x1f1/0x210
-> > [   62.643478]  ret_from_fork+0x35/0x40
-> > [   62.644094]
-> > [   62.644371] Allocated by task 1355:
-> > [   62.644980]  save_stack+0x1b/0x40
-> > [   62.645539]  __kasan_kmalloc.constprop.0+0xc2/0xd0
-> > [   62.646347]  kmem_cache_alloc+0xb8/0x190
-> > [   62.647006]  getname_flags+0x6b/0x2b0
-> > [   62.647627]  user_path_at_empty+0x1b/0x40
-> > [   62.648306]  vfs_statx+0xba/0x140
-> > [   62.648875]  __do_sys_newstat+0x8c/0xf0
-> > [   62.649518]  do_syscall_64+0xbc/0x790
-> > [   62.650199]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [   62.651091]
-> > [   62.651360] Freed by task 1355:
-> > [   62.651903]  save_stack+0x1b/0x40
-> > [   62.652460]  __kasan_slab_free+0x12f/0x180
-> > [   62.653147]  kmem_cache_free+0x87/0x240
-> > [   62.653795]  filename_lookup+0x183/0x250
-> > [   62.654447]  vfs_statx+0xba/0x140
-> > [   62.655001]  __do_sys_newstat+0x8c/0xf0
-> > [   62.655640]  do_syscall_64+0xbc/0x790
-> > [   62.656246]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [   62.657089]
-> > [   62.657351] The buggy address belongs to the object at ffff88810f155=
-500
-> >                 which belongs to the cache names_cache of size 4096
-> > [   62.659420] The buggy address is located 1312 bytes inside of
-> >                 4096-byte region [ffff88810f155500, ffff88810f156500)
-> > [   62.661358] The buggy address belongs to the page:
-> > [   62.662175] page:ffffea00043c5400 refcount:1 mapcount:0 mapping:0000=
-000000000000 index:0x0 head:ffffea00043c5400 order:3 compound_mapcount:0 co=
-mpound_pincount:0
-> > [   62.664523] flags: 0x8000000000010200(slab|head)
-> > [   62.665342] raw: 8000000000010200 0000000000000000 0000000400000001 =
-ffff88811ac772c0
-> > [   62.666713] raw: 0000000000000000 0000000000070007 00000001ffffffff =
-0000000000000000
-> > [   62.667984] page dumped because: kasan: bad access detected
-> > [   62.668904]
-> > [   62.669171] Memory state around the buggy address:
-> > [   62.669975]  ffff88810f155900: fb fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb
-> > [   62.671163]  ffff88810f155980: fb fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb
-> > [   62.672363] >ffff88810f155a00: fb fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb
-> > [   62.673559]                                ^
-> > [   62.674349]  ffff88810f155a80: fb fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb
-> > [   62.675531]  ffff88810f155b00: fb fb fb fb fb fb fb fb fb fb fb fb f=
-b fb fb fb
-> > [   62.676723] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > Meaning, when bytes get zero'd the nulls value becomes 0 and we always =
+"goto again"?
+> > =
+
+> > That's a neat idea IMO. I think it could work.
 > =
 
-> This one is even more puzzling: the chunk of memory triggering UAF via
-> the tw sock was originally used by the filesystem, as 'struct
-> filename'. We haven't touched any of the relevant code path here ??! =
+> That was the idea ;)
+> =
 
+> > But it means that a 0 nulls-value is invalid, right? (which is easy to =
+take
+> > care of)
+> =
 
-My guess is that somehow the time-wait-socket is being free'd without being
-removed from the bind-hash-table.
+> Why? (I like the idea that NULL is snull ;) I don't see why it can't
+> !??)
 
-I added debugs to see in inet_twsk_free whether the bind-hash was still
-there but couldn't trigger these debugs.
+I was wondering how in the lookup you handle the end-case when you hit a
+NULL. Would you be able to know whether either the token is not present or
+the socket has been zero'ed?
 
+> Anyhow I opted for a different, hopefully less invasive solution -
+> using the currently unused msk->sk_node to insert the msk into the
+> token hash - please see v2 :)
 
-I have seen the "allocated by" for different things. skbs, filename, and
-time_wait_sock.
-
-> Dumb question... can we exclude a broken memory bank here ?? (not sure
-> if ";)" :)
-
-I doubt it. This is on a hardware where I am running the kernels under-test
-in three KVMs. The other KVMs and the machine in general are not having any
-issues.
+Nice, that solution is even cleaner!
 
 
 Christoph
 
---===============3327743174893859610==--
+--===============7665672331759526092==--
