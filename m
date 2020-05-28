@@ -1,286 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============1065642402858293615=="
+Content-Type: multipart/mixed; boundary="===============3833065180568952483=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH mptcp-next 2/2] mptcp: add receive buffer
  auto-tuning
-Date: Thu, 28 May 2020 10:46:23 -0700
-Message-ID: <20200528174623.GA95040@MacBook-Pro-64.local>
-In-Reply-To: 20200528174019.GM2915@breakpoint.cc
+Date: Thu, 28 May 2020 19:48:50 +0200
+Message-ID: <9d1f3c59c12898b7bf8c7fe23cc8a9ae30ea7340.camel@redhat.com>
+In-Reply-To: 20200528130239.16498-3-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4535
+X-UID: 4536
 
---===============1065642402858293615==
+--===============3833065180568952483==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 05/28/20 - 19:40, Florian Westphal wrote:
-> Christoph Paasch <cpaasch(a)apple.com> wrote:
-> > Hello,
-> > =
+On Thu, 2020-05-28 at 15:02 +0200, Florian Westphal wrote:
+> +static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	u32 time, advmss =3D 1;
+> +	u64 rtt_us, mstamp;
+> +
+> +	sock_owned_by_me(sk);
+> +
+> +	if (copied <=3D 0)
+> +		return;
+> +
+> +	msk->rcvq_space.copied +=3D copied;
+> +
+> +	rtt_us =3D 0;
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		const struct tcp_sock *tp;
+> +		u64 sf_rtt_us;
+> +		u32 sf_advmss;
+> +
+> +		tp =3D tcp_sk(mptcp_subflow_tcp_sock(subflow));
+> +
+> +		sf_rtt_us =3D READ_ONCE(tp->rcv_rtt_est.rtt_us);
+> +		sf_advmss =3D READ_ONCE(tp->advmss);
+> +
+> +		rtt_us =3D max(sf_rtt_us, rtt_us);
+> +		advmss =3D max(sf_advmss, advmss);
+> +	}
+> +
+> +	mstamp =3D div_u64(tcp_clock_ns(), NSEC_PER_USEC);
+> +
+> +	time =3D tcp_stamp_us_delta(mstamp, msk->rcvq_space.time);
+> +	if (time < (rtt_us >> 3) || rtt_us =3D=3D 0)
+> +		return;
 
-> > On 05/28/20 - 15:02, Florian Westphal wrote:
-> > > When mptcp is used, userspace doesn't read from the tcp (subflow)
-> > > socket but from the parent (mptcp) socket receive queue.
-> > > =
+what if you cache the rtt_ns value, too, and use it to move the above
+test before the loop? So that the receive path will loop on the subflow
+at most once every rtt_us/8.
 
-> > > skbs are moved from the subflow socket to the mptcp rx queue either f=
-rom
-> > > 'data_ready' callback (if mptcp socket can be locked), a work queue, =
-or
-> > > the socket receive function.
-> > > =
+The value used to skip the update will be not accurated, but should not
+matter much, right? The correct value will still be used to update the
+rcvbuf below.
 
-> > > This means tcp_rcv_space_adjust() is never called and thus no receive
-> > > buffer size auto-tuning is done.
-> > > =
+WDYT?
 
-> > > An earlier (not merged) patch added tcp_rcv_space_adjust() calls to t=
-he
-> > > function that moves skbs from subflow to mptcp socket.
-> > > While this enabled autotuning, it also meant tuning was done even if
-> > > userspace was reading the mptcp socket very slowly.
-> > > =
+Thanks!
 
-> > > This adds mptcp_rcv_space_adjust() and calls it after userspace has
-> > > read data from the mptcp socket rx queue.
-> > > =
+Paolo
 
-> > > Its very similar to tcp_rcv_space_adjust, with two differences:
-> > > =
-
-> > > 1. The rtt estimate is the largest one observed on a subflow
-> > > 2. The rcvbuf size and window clamp of all subflows is adjusted
-> > >    to the mptcp-level rcvbuf.
-> > > =
-
-> > > Otherwise, we get spurious drops at tcp (subflow) socket level if
-> > > the skbs are not moved to the mptcp socket fast enough and reduced
-> > > throughput..
-> > > =
-
-> > > Before:
-> > > time mptcp_connect.sh -t -f $((4*1024*1024)) -d 300 -l 0.01% -r 0 -e =
-"" -m mmap
-> > > [..]
-> > > ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration 40562ms) [ =
-OK ]
-> > > ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5415ms) [ =
-OK ]
-> > > ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5413ms) [ =
-OK ]
-> > > ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration 41331ms) [ =
-OK ]
-> > > ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5415ms) [ =
-OK ]
-> > > ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5714ms) [ =
-OK ]
-> > > Time: 846 seconds
-> > > =
-
-> > > After:
-> > > ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration  5417ms) [ =
-OK ]
-> > > ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5429ms) [ =
-OK ]
-> > > ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5418ms) [ =
-OK ]
-> > > ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration  5423ms) [ =
-OK ]
-> > > ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5715ms) [ =
-OK ]
-> > > ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5415ms) [ =
-OK ]
-> > > Time: 275 seconds
-> > > =
-
-> > > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > > ---
-> > >  net/mptcp/protocol.c | 117 ++++++++++++++++++++++++++++++++++++++++-=
---
-> > >  net/mptcp/protocol.h |   6 +++
-> > >  2 files changed, 116 insertions(+), 7 deletions(-)
-> > > =
-
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index b2c8b57e7942..7c1b50ee751b 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -207,13 +207,6 @@ static bool __mptcp_move_skbs_from_subflow(struc=
-t mptcp_sock *msk,
-> > >  		return false;
-> > >  	}
-> > >  =
-
-> > > -	if (!(sk->sk_userlocks & SOCK_RCVBUF_LOCK)) {
-> > > -		int rcvbuf =3D max(ssk->sk_rcvbuf, sk->sk_rcvbuf);
-> > > -
-> > > -		if (rcvbuf > sk->sk_rcvbuf)
-> > > -			sk->sk_rcvbuf =3D rcvbuf;
-> > > -	}
-> > > -
-> > >  	tp =3D tcp_sk(ssk);
-> > >  	do {
-> > >  		u32 map_remaining, offset;
-> > > @@ -928,6 +921,95 @@ static int __mptcp_recvmsg_mskq(struct mptcp_soc=
-k *msk,
-> > >  	return copied;
-> > >  }
-> > >  =
-
-> > > +/* receive buffer autotuning.  See tcp_rcv_space_adjust for more inf=
-ormation.
-> > > + *
-> > > + * Only difference: Use highest rtt estimate of the subflows in use.
-> > > + */
-> > > +static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copie=
-d)
-> > =
-
-> > Overall, I think this is the right way to go, but I'm a bit confused by=
- the
-> > logic here.
-> > =
-
-> > It seems that rcvq_space.copied is a cumulative counter of the number o=
-f bytes copied
-> > to user during this measurement period (in TCP-terms copied_seq - rcvq_=
-space.seq).
-> > =
-
-> > So, it seems to me like rcvq_space.seq is not needed (?).
-> > The substraction further below (msk->rcvq_space.copied - msk->rcvq_spac=
-e.seq) seems
-> > to be giving rather the increment compared to the previous measurement.
-> =
-
-> > > +	msk->rcvq_space.copied +=3D copied;
-> =
-
-> This is the number of bytes copied to user so far.
-
-Ah, I missed the fact that rcvq_space.copied is not reset to 0 when a new
-measurement starts.
-
-> =
-
-> > > +	mstamp =3D div_u64(tcp_clock_ns(), NSEC_PER_USEC);
-> > > +
-> > > +	time =3D tcp_stamp_us_delta(mstamp, msk->rcvq_space.time);
-> > > +	if (time < (rtt_us >> 3) || rtt_us =3D=3D 0)
-> > > +		return;
-> > > +
-> > > +	copied =3D msk->rcvq_space.copied - msk->rcvq_space.seq;
-> =
-
-> This is what we copied to user in THIS window.
-> =
-
-> > > +	if (copied <=3D msk->rcvq_space.space)
-> > > +		goto new_measure;
-> =
-
-> If thats true, we copied less than during the last time rcvbuf was
-> adjusted.
-> =
-
-> If false, we consumed more and should consider rcvbuf increase.
-> =
-
-> > > +	if (sock_net(sk)->ipv4.sysctl_tcp_moderate_rcvbuf &&
-> > > +	    !(sk->sk_userlocks & SOCK_RCVBUF_LOCK)) {
-> > > +		int rcvmem, rcvbuf;
-> > > +		u64 rcvwin, grow;
-> > > +
-> > > +		rcvwin =3D ((u64)copied << 1) + 16 * advmss;
-> > > +
-> > > +		grow =3D rcvwin * (copied - msk->rcvq_space.space);
-> > > +		do_div(grow, msk->rcvq_space.space);
-> > > +		rcvwin +=3D (grow << 1);
-> > > +
-> > > +		rcvmem =3D SKB_TRUESIZE(advmss + MAX_TCP_HEADER);
-> > > +		while (tcp_win_from_space(sk, rcvmem) < advmss)
-> > > +			rcvmem +=3D 128;
-> > > +
-> > > +		do_div(rcvwin, advmss);
-> > > +		rcvbuf =3D min_t(u64, rcvwin * rcvmem,
-> > > +			       sock_net(sk)->ipv4.sysctl_tcp_rmem[2]);
-> > > +
-> > > +		if (rcvbuf > sk->sk_rcvbuf) {
-> > > +			u32 window_clamp;
-> > > +
-> > > +			window_clamp =3D tcp_win_from_space(sk, rcvbuf);
-> > > +			WRITE_ONCE(sk->sk_rcvbuf, rcvbuf);
-> > > +
-> > > +			/* Make subflows follow along.  If we do not do this, we
-> > > +			 * get drops at subflow level if skbs can't be moved to
-> > > +			 * the mptcp rx queue fast enough (announced rcv_win can
-> > > +			 * exceed ssk->sk_rcvbuf).
-> > > +			 */
-> > > +			mptcp_for_each_subflow(msk, subflow) {
-> > > +				struct sock *ssk;
-> > > +
-> > > +				ssk =3D mptcp_subflow_tcp_sock(subflow);
-> > > +				WRITE_ONCE(ssk->sk_rcvbuf, rcvbuf);
-> > > +				tcp_sk(ssk)->window_clamp =3D window_clamp;
-> > > +			}
-> > > +		}
-> > > +	}
-> > > +
-> > > +	msk->rcvq_space.space =3D copied;
-> > > +new_measure:
-> > > +	msk->rcvq_space.seq =3D msk->rcvq_space.copied;
-> > > +	msk->rcvq_space.time =3D mstamp;
-> > > +}
-> =
-
-> I think this could be simplified a little:
-> =
-
-> 1. instead of incrementing space.copied forever, do this after
-> rcvbuf increase:
-> =
-
-> 	msk->rcvq_space.space =3D msk->rcvq_space.copied;
-> new_measure:
->         msk->rcvq_space.copied =3D 0;
-> 	msk->rcvq_space.time =3D mstamp;
-> }
-> =
-
-> So: msk->rcvq_space.space becomes to number of bytes consumed the last
-> time we adjusted the rcvbuf.
-> =
-
-> space.copied would hold the number of bytes copied to user during the
-> new measurement period.
-> =
-
-> space.seq would become unneeded, instead of
-> =
-
-> copied =3D msk->rcvq_space.copied - msk->rcvq_space.seq;
-> if (copied <=3D msk->rcvq_space.space)
->    goto new_measure;
-> =
-
-> test: msk->rcvq_space.copied <=3D msk->rcvq_space.space
-> =
-
-> Is that what you had in mind?
-
-Yes, that's how I read your code.
-
-It looks to me to be more straight-forward. But that's a question of taste =
-:)
-
-Looks good to me then!
-
-Reviewed-by: Christoph Paasch <cpaasch(a)apple.com>
-
-
-Christoph
-
---===============1065642402858293615==--
+--===============3833065180568952483==--
