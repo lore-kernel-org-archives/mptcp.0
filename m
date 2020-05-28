@@ -1,91 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============8506431056604225990=="
+Content-Type: multipart/mixed; boundary="===============4544580309354158583=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net v2] mptcp: fix NULL ptr dereference in MP_JOIN
- error path
-Date: Thu, 28 May 2020 20:07:35 +0200
-Message-ID: <b53d426cb3a43f7c545613b89d149c481ec78198.1590689211.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net] mptcp: fix race between MP_JOIN and close
+Date: Thu, 28 May 2020 20:15:47 +0200
+Message-ID: <5d79dc3444f2ee869849dda8a92ff8e44887739d.1590689729.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4545
+X-UID: 4546
 
---===============8506431056604225990==
+--===============4544580309354158583==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When token lookup on MP_JOIN 3rd ack fails, the server
-socket closes with a reset the incoming child. Such socket
-has the 'is_mptcp' flag set, but no msk socket associated
-- due to the failed lookup.
+If a MP_JOIN subflow completes the 3whs while another
+CPU is closing the master msk, we can hit the
+following race:
 
-While crafting the reset packet mptcp_established_options_mp()
-will try to dereference the child's master socket, causing
-a NULL ptr dereference.
+CPU1                                    CPU2
 
-This change addresses the issue with explicit fallback to
-TCP in such error path.
+close()
+ mptcp_close
+                                        subflow_syn_recv_sock
+                                         mptcp_token_get_sock
+                                         mptcp_finish_join
+                                          inet_sk_state_load
+  mptcp_token_destroy
+  inet_sk_state_store(TCP_CLOSE)
+  __mptcp_flush_join_list()
+                                          mptcp_sock_graft
+                                          list_add_tail
+  sk_common_release
+   sock_orphan()
+ <socket free>
 
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+The MP_JOIN socket will be leaked. Additionally we can hit
+UaF for the msk 'struct socket' referenced via the 'conn'
+field.
+
+This change try to address the issue introducing some
+synchronization between the MP_JOIN 3whs and mptcp_close
+via the join_list spinlock. If we detect the msk is closing
+the MP_JOIN socket is closed, too.
+
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-v1 -> v2:
- - dropped unneeded dbg messages
----
- net/mptcp/subflow.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++++++++---------------
+ 1 file changed, 27 insertions(+), 15 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0a01b6e8f2dc..5b06a5910aeb 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -413,6 +413,17 @@ static void subflow_ulp_fallback(struct sock *sk,
- 	tcp_sk(sk)->is_mptcp =3D 0;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 0f244c0f422e..0b9368c30311 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1349,8 +1349,12 @@ static void mptcp_close(struct sock *sk, long timeou=
+t)
+ 	mptcp_token_destroy(msk->token);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ =
+
+-	__mptcp_flush_join_list(msk);
+-
++	/* be sure to always acquire the join list lock, to sync vs
++	 * mptcp_finish_join().
++	 */
++	spin_lock_bh(&msk->join_list_lock);
++	list_splice_tail_init(&msk->join_list, &msk->conn_list);
++	spin_unlock_bh(&msk->join_list_lock);
+ 	list_splice_init(&msk->conn_list, &conn_list);
+ =
+
+ 	data_fin_tx_seq =3D msk->write_seq;
+@@ -1707,22 +1711,30 @@ bool mptcp_finish_join(struct sock *sk)
+ 	if (!msk->pm.server_side)
+ 		return true;
+ =
+
+-	/* passive connection, attach to msk socket */
++	if (!mptcp_pm_allow_new_subflow(msk))
++		return false;
++
++	/* active connections are already on conn_list, and we can't acquire
++	 * msk lock here.
++	 * use the join list lock as synchronization point and double-check
++	 * msk status to avoid racing with mptcp_close()
++	 */
++	spin_lock_bh(&msk->join_list_lock);
++	ret =3D inet_sk_state_load(parent) =3D=3D TCP_ESTABLISHED;
++	if (ret && !WARN_ON_ONCE(!list_empty(&subflow->node)))
++		list_add_tail(&subflow->node, &msk->join_list);
++	spin_unlock_bh(&msk->join_list_lock);
++	if (!ret)
++		return false;
++
++	/* attach to msk socket only after we are sure he will deal with us
++	 * at close time
++	 */
+ 	parent_sock =3D READ_ONCE(parent->sk_socket);
+ 	if (parent_sock && !sk->sk_socket)
+ 		mptcp_sock_graft(sk, parent_sock);
+-
+-	ret =3D mptcp_pm_allow_new_subflow(msk);
+-	if (ret) {
+-		subflow->map_seq =3D msk->ack_seq;
+-
+-		/* active connections are already on conn_list */
+-		spin_lock_bh(&msk->join_list_lock);
+-		if (!WARN_ON_ONCE(!list_empty(&subflow->node)))
+-			list_add_tail(&subflow->node, &msk->join_list);
+-		spin_unlock_bh(&msk->join_list_lock);
+-	}
+-	return ret;
++	subflow->map_seq =3D msk->ack_seq;
++	return true;
  }
  =
 
-+static void subflow_drop_ctx(struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(ssk);
-+
-+	if (!ctx)
-+		return;
-+
-+	subflow_ulp_fallback(ssk, ctx);
-+	kfree_rcu(ctx, rcu);
-+}
-+
- static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 					  struct sk_buff *skb,
- 					  struct request_sock *req,
-@@ -485,10 +496,7 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- 			if (fallback_is_fatal)
- 				goto dispose_child;
- =
-
--			if (ctx) {
--				subflow_ulp_fallback(child, ctx);
--				kfree_rcu(ctx, rcu);
--			}
-+			subflow_drop_ctx(child);
- 			goto out;
- 		}
- =
-
-@@ -537,6 +545,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 	return child;
- =
-
- dispose_child:
-+	subflow_drop_ctx(child);
- 	tcp_rsk(req)->drop_req =3D true;
- 	tcp_send_active_reset(child, GFP_ATOMIC);
- 	inet_csk_prepare_for_destroy_sock(child);
+ static bool mptcp_memory_free(const struct sock *sk, int wake)
 -- =
 
 2.21.3
 
---===============8506431056604225990==--
+--===============4544580309354158583==--
