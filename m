@@ -1,63 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============1330087012963576425=="
+Content-Type: multipart/mixed; boundary="===============0689102286393037734=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 2/2] mptcp: add receive buffer
- auto-tuning
-Date: Thu, 28 May 2020 19:55:18 +0200
-Message-ID: <20200528175518.GN2915@breakpoint.cc>
-In-Reply-To: 9d1f3c59c12898b7bf8c7fe23cc8a9ae30ea7340.camel@redhat.com
+Subject: [MPTCP] [PATCH v3 0/4] mptcp: token container refactor
+Date: Thu, 28 May 2020 20:01:50 +0200
+Message-ID: <cover.1590688878.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4537
+X-UID: 4539
 
---===============1330087012963576425==
+--===============0689102286393037734==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Thu, 2020-05-28 at 15:02 +0200, Florian Westphal wrote:
-> > +static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
-> > +{
-> > +	struct mptcp_subflow_context *subflow;
-> > +	struct sock *sk =3D (struct sock *)msk;
-> > +	u32 time, advmss =3D 1;
-> > +	u64 rtt_us, mstamp;
-> > +
-> > +	sock_owned_by_me(sk);
-> > +
-> > +	if (copied <=3D 0)
-> > +		return;
-> > +
-> > +	msk->rcvq_space.copied +=3D copied;
-> > +
-> > +	rtt_us =3D 0;
-> > +	mptcp_for_each_subflow(msk, subflow) {
-> > +		const struct tcp_sock *tp;
-> > +		u64 sf_rtt_us;
-> > +		u32 sf_advmss;
-> > +
-> > +		tp =3D tcp_sk(mptcp_subflow_tcp_sock(subflow));
-> > +
-> > +		sf_rtt_us =3D READ_ONCE(tp->rcv_rtt_est.rtt_us);
-> > +		sf_advmss =3D READ_ONCE(tp->advmss);
-> > +
-> > +		rtt_us =3D max(sf_rtt_us, rtt_us);
-> > +		advmss =3D max(sf_advmss, advmss);
-> > +	}
-> > +
-> > +	mstamp =3D div_u64(tcp_clock_ns(), NSEC_PER_USEC);
-> > +
-> > +	time =3D tcp_stamp_us_delta(mstamp, msk->rcvq_space.time);
-> > +	if (time < (rtt_us >> 3) || rtt_us =3D=3D 0)
-> > +		return;
-> =
+This series supersede the RTC patch for token refactor. The relevant patch
+is unchanged, but this additional bring in some related minor cleanup
+(patch 1/4) and KUNIT (!!!) self-tests (4/4). To make things cleaner it also
+moves the existing in-kernel tests (crypto) to KUNIT.
 
-> what if you cache the rtt_ns value, too, and use it to move the above
-> test before the loop? So that the receive path will loop on the subflow
-> at most once every rtt_us/8.
+only changes from v2 are some comments in patch 2/4 and patch 3/4 rebased.
 
-Which rtt_us should I cache?  The one used during last measurement
-window?
---===============1330087012963576425==--
+Paolo Abeni (4):
+  mptcp: add __init annotation on setup functions
+  mptcp: refactor token container.
+  mptcp: move crypto test to KUNIT
+  mptcp: introduce token KUNIT self-tests
+
+ net/mptcp/Kconfig       |  19 ++-
+ net/mptcp/Makefile      |   4 +
+ net/mptcp/crypto.c      |  63 +---------
+ net/mptcp/crypto_test.c |  72 +++++++++++
+ net/mptcp/pm.c          |   2 +-
+ net/mptcp/pm_netlink.c  |   2 +-
+ net/mptcp/protocol.c    |  39 +++---
+ net/mptcp/protocol.h    |  15 ++-
+ net/mptcp/subflow.c     |  12 +-
+ net/mptcp/token.c       | 263 +++++++++++++++++++++++++++++-----------
+ net/mptcp/token_test.c  | 138 +++++++++++++++++++++
+ 11 files changed, 458 insertions(+), 171 deletions(-)
+ create mode 100644 net/mptcp/crypto_test.c
+ create mode 100644 net/mptcp/token_test.c
+
+-- =
+
+2.21.3
+
+--===============0689102286393037734==--
