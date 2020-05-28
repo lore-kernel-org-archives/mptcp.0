@@ -1,79 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============2821673124666769513=="
+Content-Type: multipart/mixed; boundary="===============6344393337206287794=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: token container refactor
-Date: Thu, 28 May 2020 11:29:57 +0200
-Message-ID: <5c86b8638331a7b99849b4cbd9ad4aaf828c69c5.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.22.394.2005271555540.6568@mjmartin-mac01.local
+Subject: [MPTCP] [PATCH net] mptcp: fix unblocking connect()
+Date: Thu, 28 May 2020 13:20:03 +0200
+Message-ID: <a8487a6ea16e12c26367004317165af41b75db56.1590662723.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4520
+X-UID: 4521
 
---===============2821673124666769513==
+--===============6344393337206287794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-05-27 at 16:05 -0700, Mat Martineau wrote:
-> Hi Paolo,
-> =
+Currently unblocking connect() on MPTCP sockets fails frequently.
+If mptcp_stream_connect() is invoked to complete a previously
+attempted unblocking connection, it will still try to create
+the first subflow via __mptcp_socket_create(). If the 3whs is
+completed and the 'can_ack' flag is already set, the latter
+will fail with -EINVAL.
 
-> On Mon, 25 May 2020, Paolo Abeni wrote:
-> =
+This change addresses the issue checking for pending connect and
+delegating the completion to the first subflow. Additionally
+do msk addresses and sk_state changes only when needed.
 
-> > This series supersede the RTC patch for token refactor. The relevant pa=
-tch
-> > is unchanged, but this additional bring in some related minor cleanup
-> > (patch 1/4) and KUNIT (!!!) self-tests (4/4). To make things cleaner it=
- also
-> > moves the existing in-kernel tests (crypto) to KUNIT.
-> > =
+Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+Note: this addresses:
+ https://github.com/multipath-tcp/mptcp_net-next/issues/27
+but do not care about connect()/disconnect()/connect() cycles
+(which are also currently broken, likely we would need a separate
+issue to tracking the latter)
+---
+ net/mptcp/protocol.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-> > The most relevant changes from v1 are in patch 2/4.
-> > =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 5f036a2c2940..7716c07b46f0 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1773,6 +1773,14 @@ static int mptcp_stream_connect(struct socket *sock,=
+ struct sockaddr *uaddr,
+ 	int err;
+ =
 
-> > This addresses most of the issues raised by Christoph, Davide and Mat, =
-with the
-> > notable exception of shirinking the hash table bucket size - I'm unable=
- to do
-> > that with the current fixes for the list curruption noted by Christoph.
-> > =
+ 	lock_sock(sock->sk);
++	if (sock->state !=3D SS_UNCONNECTED && msk->subflow) {
++		/* pending connection or invalid state, let existing subflow
++		 * cope with that
++		 */
++		ssock =3D msk->subflow;
++		goto do_connect;
++	}
++
+ 	ssock =3D __mptcp_socket_create(msk, TCP_SYN_SENT);
+ 	if (IS_ERR(ssock)) {
+ 		err =3D PTR_ERR(ssock);
+@@ -1787,9 +1795,17 @@ static int mptcp_stream_connect(struct socket *sock,=
+ struct sockaddr *uaddr,
+ 		mptcp_subflow_ctx(ssock->sk)->request_mptcp =3D 0;
+ #endif
+ =
 
-> > I hope the trade-off beween the self-contained fix and the avoided memo=
-ry
-> > optimization is acceptable.
-> > =
++do_connect:
+ 	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
+-	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
+-	mptcp_copy_inaddrs(sock->sk, ssock->sk);
++	sock->state =3D ssock->state;
++
++	/* on successful connect, the msk state will be moved to established by
++	 * subflow_finish_connect()
++	 */
++	if (!err || err =3D=3D EINPROGRESS)
++		mptcp_copy_inaddrs(sock->sk, ssock->sk);
++	else
++		inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
+ =
 
-> > Paolo Abeni (4):
-> >  mptcp: add __init annotation on setup functions
-> >  mptcp: refactor token container.
-> >  mptcp: move crypto test to KUNIT
-> >  mptcp: introduce token KUNIT self-tests
-> > =
+ unlock:
+ 	release_sock(sock->sk);
+-- =
 
-> =
+2.21.3
 
-> The series looks good to me. Is this something we should let bake in =
-
-> mptcp-next for a little bit or do you want to submit for net-next while =
-
-> it's still open?
-> =
-
-> I'm curious to see if there's any netdv pushback on the boot-time memory =
-
-> allocation.
-
-I hope should not be problematic, but only the submission could prove
-it ;)
-
-My idea would be staging this thing a bit in the export branch to let
-syzkaller and internal usage find the most gross mistakes. I'm open to
-other options ;)
-
-Thanks!
-
-Paolo=20
-
---===============2821673124666769513==--
+--===============6344393337206287794==--
