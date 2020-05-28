@@ -1,63 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============4770072590577572323=="
+Content-Type: multipart/mixed; boundary="===============1915971072092861719=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 0/4] mptcp: token container refactor
-Date: Thu, 28 May 2020 11:16:13 -0700
-Message-ID: <20200528181613.GH64606@MacBook-Pro-64.local>
-In-Reply-To: cover.1590688878.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix race between MP_JOIN and close
+Date: Thu, 28 May 2020 11:52:16 -0700
+Message-ID: <20200528185216.GI64606@MacBook-Pro-64.local>
+In-Reply-To: 5d79dc3444f2ee869849dda8a92ff8e44887739d.1590689729.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4547
+X-UID: 4548
 
---===============4770072590577572323==
+--===============1915971072092861719==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I am scheduling syzkaller on top of these patches.
+On 05/28/20 - 20:15, Paolo Abeni wrote:
+> If a MP_JOIN subflow completes the 3whs while another
+> CPU is closing the master msk, we can hit the
+> following race:
+> =
+
+> CPU1                                    CPU2
+> =
+
+> close()
+>  mptcp_close
+>                                         subflow_syn_recv_sock
+>                                          mptcp_token_get_sock
+>                                          mptcp_finish_join
+>                                           inet_sk_state_load
+>   mptcp_token_destroy
+>   inet_sk_state_store(TCP_CLOSE)
+>   __mptcp_flush_join_list()
+>                                           mptcp_sock_graft
+>                                           list_add_tail
+>   sk_common_release
+>    sock_orphan()
+>  <socket free>
+> =
+
+> The MP_JOIN socket will be leaked. Additionally we can hit
+> UaF for the msk 'struct socket' referenced via the 'conn'
+> field.
+> =
+
+> This change try to address the issue introducing some
+> synchronization between the MP_JOIN 3whs and mptcp_close
+> via the join_list spinlock. If we detect the msk is closing
+> the MP_JOIN socket is closed, too.
+> =
+
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>  net/mptcp/protocol.c | 42 +++++++++++++++++++++++++++---------------
+>  1 file changed, 27 insertions(+), 15 deletions(-)
+
+LGTM, but I'm still hitting the KASAN: use-after-free in inet_twsk_bind_unh=
+ash.
+
+:-/
 
 
 Christoph
 
-On 05/28/20 - 20:01, Paolo Abeni wrote:
-> This series supersede the RTC patch for token refactor. The relevant patch
-> is unchanged, but this additional bring in some related minor cleanup
-> (patch 1/4) and KUNIT (!!!) self-tests (4/4). To make things cleaner it a=
-lso
-> moves the existing in-kernel tests (crypto) to KUNIT.
-> =
-
-> only changes from v2 are some comments in patch 2/4 and patch 3/4 rebased.
-> =
-
-> Paolo Abeni (4):
->   mptcp: add __init annotation on setup functions
->   mptcp: refactor token container.
->   mptcp: move crypto test to KUNIT
->   mptcp: introduce token KUNIT self-tests
-> =
-
->  net/mptcp/Kconfig       |  19 ++-
->  net/mptcp/Makefile      |   4 +
->  net/mptcp/crypto.c      |  63 +---------
->  net/mptcp/crypto_test.c |  72 +++++++++++
->  net/mptcp/pm.c          |   2 +-
->  net/mptcp/pm_netlink.c  |   2 +-
->  net/mptcp/protocol.c    |  39 +++---
->  net/mptcp/protocol.h    |  15 ++-
->  net/mptcp/subflow.c     |  12 +-
->  net/mptcp/token.c       | 263 +++++++++++++++++++++++++++++-----------
->  net/mptcp/token_test.c  | 138 +++++++++++++++++++++
->  11 files changed, 458 insertions(+), 171 deletions(-)
->  create mode 100644 net/mptcp/crypto_test.c
->  create mode 100644 net/mptcp/token_test.c
-> =
-
-> -- =
-
-> 2.21.3
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
---===============4770072590577572323==--
+--===============1915971072092861719==--
