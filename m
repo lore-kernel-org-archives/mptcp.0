@@ -1,63 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============8867365142049834857=="
+Content-Type: multipart/mixed; boundary="===============1455693972582419178=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: remove msk from the token container at
- destruction time.
-Date: Fri, 29 May 2020 11:28:34 +0200
-Message-ID: <eca7eae3ef534c9fd09ec144d972435898b8f92e.1590744492.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next v3] mptcp: fix NULL ptr dereference in
+ MP_JOIN error path
+Date: Fri, 29 May 2020 11:31:55 +0200
+Message-ID: <5f2f6ab200fd6c1e7c6eacc8978cb1e1d9432eb1.1590744706.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4551
+X-UID: 4552
 
---===============8867365142049834857==
+--===============1455693972582419178==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we remote the msk from the token container only
-via mptcp_close(). The MPTCP master socket can be destroyed
-also via other paths (e.g. if not yet accepted, when shutting
-down the listener socket). When we hit the latter scenario,
-dangling msk references are left into the token container,
-leading to memory corruption and/or UaF.
+When token lookup on MP_JOIN 3rd ack fails, the server
+socket closes with a reset the incoming child. Such socket
+has the 'is_mptcp' flag set, but no msk socket associated
+- due to the failed lookup.
 
-This change addresses the issue by moving the token removal
-into the msk destructor.
+While crafting the reset packet mptcp_established_options_mp()
+will try to dereference the child's master socket, causing
+a NULL ptr dereference.
 
-Fixes: 79c0949e9a09 ("mptcp: Add key generation and token tree")
+This change addresses the issue with explicit fallback to
+TCP in such error path.
+
+Fixes: 729cd6436f35 ("mptcp: cope better with MP_JOIN failure")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2 -> v3:
+ - fix msk leak
+ - targeting net-next to avoid merge conflitc
+---
+ net/mptcp/subflow.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0b9368c30311..2867160a9524 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1346,7 +1346,6 @@ static void mptcp_close(struct sock *sk, long timeout)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 0a01b6e8f2dc..10b4770a1419 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -413,6 +413,20 @@ static void subflow_ulp_fallback(struct sock *sk,
+ 	tcp_sk(sk)->is_mptcp =3D 0;
+ }
  =
 
- 	lock_sock(sk);
++static void subflow_drop_ctx(struct sock *ssk)
++{
++	struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(ssk);
++
++	if (!ctx)
++		return;
++
++	subflow_ulp_fallback(ssk, ctx);
++	if (ctx->conn)
++		sock_put(ctx->conn);
++
++	kfree_rcu(ctx, rcu);
++}
++
+ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 					  struct sk_buff *skb,
+ 					  struct request_sock *req,
+@@ -485,10 +499,7 @@ static struct sock *subflow_syn_recv_sock(const struct=
+ sock *sk,
+ 			if (fallback_is_fatal)
+ 				goto dispose_child;
  =
 
--	mptcp_token_destroy(msk->token);
- 	inet_sk_state_store(sk, TCP_CLOSE);
+-			if (ctx) {
+-				subflow_ulp_fallback(child, ctx);
+-				kfree_rcu(ctx, rcu);
+-			}
++			subflow_drop_ctx(child);
+ 			goto out;
+ 		}
  =
 
- 	/* be sure to always acquire the join list lock, to sync vs
-@@ -1532,6 +1531,7 @@ static void mptcp_destroy(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -537,6 +548,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 	return child;
  =
 
-+	mptcp_token_destroy(msk->token);
- 	if (msk->cached_ext)
- 		__skb_ext_put(msk->cached_ext);
- =
-
+ dispose_child:
++	subflow_drop_ctx(child);
+ 	tcp_rsk(req)->drop_req =3D true;
+ 	tcp_send_active_reset(child, GFP_ATOMIC);
+ 	inet_csk_prepare_for_destroy_sock(child);
 -- =
 
 2.21.3
 
---===============8867365142049834857==--
+--===============1455693972582419178==--
