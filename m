@@ -1,500 +1,292 @@
-Content-Type: multipart/mixed; boundary="===============7175711424856875560=="
+Content-Type: multipart/mixed; boundary="===============2363770332394884543=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] net: mptcp: improve fallback to TCP
-Date: Fri, 29 May 2020 10:21:47 +0200
-Message-ID: <dda3f31d39426bd93b8d5ac26f132c6630fcb815.1590740223.git.dcaratti@redhat.com>
+Subject: [MPTCP] [PATCH v2 mptcp-next] mptcp: add receive buffer auto-tuning
+Date: Fri, 29 May 2020 11:17:28 +0200
+Message-ID: <20200529091728.2679-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 4549
+X-UID: 4550
 
---===============7175711424856875560==
+--===============2363770332394884543==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-keep using MPTCP sockets and a "dummy mapping" in case of fallback to
-regular TCP. Skip adding DSS option on send, if TCP fallback has been
-done earlier.
+When mptcp is used, userspace doesn't read from the tcp (subflow)
+socket but from the parent (mptcp) socket receive queue.
 
-Notes: I'm unsure on what to do in mptcp_clean_una() to do a one-time
-flush of the retransmit queue, as per Mat's suggestion. Any advice?
+skbs are moved from the subflow socket to the mptcp rx queue either from
+'data_ready' callback (if mptcp socket can be locked), a work queue, or
+the socket receive function.
 
-Changes since RFC v2:
- - use a bit in msk->flags, rather than a dedicated boolean in struct
-   msk. This bit is going to be used in combination with another one,
-   TCP_FALLBACK_ALLOWED, that is 1 at the first subflow creation
-   and gets cleared once TCP fallback is no more allowed.
- - separate code that adds support for "infinite mapping", and use
-   the term "dummy" instead of "infinite". Suggested by Mat
- - remove inappropriate call to __mptcp_do_fallback() in
-   mptcp_accept() (Paolo)
+This means tcp_rcv_space_adjust() is never called and thus no receive
+buffer size auto-tuning is done.
 
-Changes since RFC v1:
- - use a dedicated member of struct msk to indicate that a fallback
-   ha happened, use it in case of infinite mapping
- - don't delete skb_ext in case of infinite mapping (Mat)
- - test the value of pm.subflows on reception of an infinite map to
-   ensure that no other subflow is currently opened (Mat)
- - in mptcp_established_options(), avoid adding TCP options in case
-   of fallback indication; simplify sendmsg()/recvmsg()/poll() to
-   keep using the MPTCP socket in case of TCP fallback. Set the
-   fallback indication in case subflow is not mp_capable after
-   successful 3-way handshake, instead of flipping 'is_mptcp'
-   (Paolo/Mat)
- - remove deadcode in mptcp_finish_connect, and increment
-   MPTCP_MIB_MPCAPABLEACTIVEFALLBACK in subflow_finish_connect
-   (Paolo)
+An earlier (not merged) patch added tcp_rcv_space_adjust() calls to the
+function that moves skbs from subflow to mptcp socket.
+While this enabled autotuning, it also meant tuning was done even if
+userspace was reading the mptcp socket very slowly.
 
-BugLink: https://github.com/multipath-tcp/mptcp_net-next/issues/11
-BugLink: https://github.com/multipath-tcp/mptcp_net-next/issues/22
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+This adds mptcp_rcv_space_adjust() and calls it after userspace has
+read data from the mptcp socket rx queue.
+
+Its very similar to tcp_rcv_space_adjust, with two differences:
+
+1. The rtt estimate is the largest one observed on a subflow
+2. The rcvbuf size and window clamp of all subflows is adjusted
+   to the mptcp-level rcvbuf.
+
+Otherwise, we get spurious drops at tcp (subflow) socket level if
+the skbs are not moved to the mptcp socket fast enough and reduced
+throughput..
+
+Before:
+time mptcp_connect.sh -t -f $((4*1024*1024)) -d 300 -l 0.01% -r 0 -e "" -m =
+mmap
+[..]
+ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration 40562ms) [ OK ]
+ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5415ms) [ OK ]
+ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5413ms) [ OK ]
+ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration 41331ms) [ OK ]
+ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5415ms) [ OK ]
+ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5714ms) [ OK ]
+Time: 846 seconds
+
+After:
+ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration  5417ms) [ OK ]
+ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5429ms) [ OK ]
+ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5418ms) [ OK ]
+ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration  5423ms) [ OK ]
+ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5715ms) [ OK ]
+ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5415ms) [ OK ]
+Time: 275 seconds
+
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/options.c  |  9 +++++-
- net/mptcp/protocol.c | 77 +++++++++++---------------------------------
- net/mptcp/protocol.h | 34 +++++++++++++++++++
- net/mptcp/subflow.c  | 46 +++++++++++++++++---------
- 4 files changed, 90 insertions(+), 76 deletions(-)
+ changes in v2:
+  - cache last rtt_us value used
+  - don't store seq value
+  - reset 'copied' to 0 when starting
+    new measurement to simplify adjust function.
+  - make sure space.space is not inited to 0, else div-by-0 occurs
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 01f1f4cf4902a..cf0b59ead1e43 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -624,6 +624,9 @@ bool mptcp_established_options(struct sock *sk, struct =
-sk_buff *skb,
- =
+ net/mptcp/protocol.c | 124 ++++++++++++++++++++++++++++++++++++++++---
+ net/mptcp/protocol.h |   6 +++
+ 2 files changed, 123 insertions(+), 7 deletions(-)
 
- 	opts->suboptions =3D 0;
- =
-
-+	if (unlikely(mptcp_check_fallback(sk)))
-+		return false;
-+
- 	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining, opts))
- 		ret =3D true;
- 	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
-@@ -714,7 +717,8 @@ static bool check_fully_established(struct mptcp_sock *=
-msk, struct sock *sk,
- 	 */
- 	if (!mp_opt->mp_capable) {
- 		subflow->mp_capable =3D 0;
--		tcp_sk(sk)->is_mptcp =3D 0;
-+		pr_fallback(msk);
-+		__mptcp_do_fallback(msk);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b2c8b57e7942..3827e4004877 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -207,13 +207,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptc=
+p_sock *msk,
  		return false;
  	}
  =
 
-@@ -814,6 +818,9 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- 	struct mptcp_options_received mp_opt;
- 	struct mptcp_ext *mpext;
- =
-
-+	if (__mptcp_check_fallback(msk))
-+		return;
-+
- 	mptcp_get_options(skb, &mp_opt);
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b2c8b57e7942a..c2786c661f2fb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -52,11 +52,6 @@ static struct socket *__mptcp_nmpc_socket(const struct m=
-ptcp_sock *msk)
- 	return msk->subflow;
+-	if (!(sk->sk_userlocks & SOCK_RCVBUF_LOCK)) {
+-		int rcvbuf =3D max(ssk->sk_rcvbuf, sk->sk_rcvbuf);
+-
+-		if (rcvbuf > sk->sk_rcvbuf)
+-			sk->sk_rcvbuf =3D rcvbuf;
+-	}
+-
+ 	tp =3D tcp_sk(ssk);
+ 	do {
+ 		u32 map_remaining, offset;
+@@ -928,6 +921,100 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *ms=
+k,
+ 	return copied;
  }
  =
 
--static bool __mptcp_needs_tcp_fallback(const struct mptcp_sock *msk)
--{
--	return msk->first && !sk_is_mptcp(msk->first);
--}
--
- static struct socket *mptcp_is_tcpsk(struct sock *sk)
- {
- 	struct socket *sock =3D sk->sk_socket;
-@@ -94,7 +89,7 @@ static struct socket *__mptcp_tcp_fallback(struct mptcp_s=
-ock *msk)
- 	if (unlikely(sock))
- 		return sock;
- =
-
--	if (likely(!__mptcp_needs_tcp_fallback(msk)))
-+	if (likely(!__mptcp_check_fallback(msk)))
- 		return NULL;
- =
-
- 	return msk->subflow;
-@@ -229,6 +224,15 @@ static bool __mptcp_move_skbs_from_subflow(struct mptc=
-p_sock *msk,
- 		if (!skb)
- 			break;
- =
-
-+		if (__mptcp_check_fallback(msk)) {
-+			/* if we are running under the workqueue, TCP could have
-+			 * collapsed skbs between dummy map creation and now
-+			 * be sure to adjust the size
++/* receive buffer autotuning.  See tcp_rcv_space_adjust for more informati=
+on.
++ *
++ * Only difference: Use highest rtt estimate of the subflows in use.
++ */
++static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk =3D (struct sock *)msk;
++	u32 time, advmss =3D 1;
++	u64 rtt_us, mstamp;
++
++	sock_owned_by_me(sk);
++
++	if (copied <=3D 0)
++		return;
++
++	msk->rcvq_space.copied +=3D copied;
++
++	mstamp =3D div_u64(tcp_clock_ns(), NSEC_PER_USEC);
++	time =3D tcp_stamp_us_delta(mstamp, msk->rcvq_space.time);
++
++	rtt_us =3D msk->rcvq_space.rtt_us;
++	if (rtt_us && time < (rtt_us >> 3))
++		return;
++
++	rtt_us =3D 0;
++	mptcp_for_each_subflow(msk, subflow) {
++		const struct tcp_sock *tp;
++		u64 sf_rtt_us;
++		u32 sf_advmss;
++
++		tp =3D tcp_sk(mptcp_subflow_tcp_sock(subflow));
++
++		sf_rtt_us =3D READ_ONCE(tp->rcv_rtt_est.rtt_us);
++		sf_advmss =3D READ_ONCE(tp->advmss);
++
++		rtt_us =3D max(sf_rtt_us, rtt_us);
++		advmss =3D max(sf_advmss, advmss);
++	}
++
++	msk->rcvq_space.rtt_us =3D rtt_us;
++	if (time < (rtt_us >> 3) || rtt_us =3D=3D 0)
++		return;
++
++	if (msk->rcvq_space.copied <=3D msk->rcvq_space.space)
++		goto new_measure;
++
++	if (sock_net(sk)->ipv4.sysctl_tcp_moderate_rcvbuf &&
++	    !(sk->sk_userlocks & SOCK_RCVBUF_LOCK)) {
++		int rcvmem, rcvbuf;
++		u64 rcvwin, grow;
++
++		rcvwin =3D ((u64)msk->rcvq_space.copied << 1) + 16 * advmss;
++
++		grow  =3D rcvwin *(msk->rcvq_space.copied - msk->rcvq_space.space);
++
++		do_div(grow, msk->rcvq_space.space);
++		rcvwin +=3D (grow << 1);
++
++		rcvmem =3D SKB_TRUESIZE(advmss + MAX_TCP_HEADER);
++		while (tcp_win_from_space(sk, rcvmem) < advmss)
++			rcvmem +=3D 128;
++
++		do_div(rcvwin, advmss);
++		rcvbuf =3D min_t(u64, rcvwin * rcvmem,
++			       sock_net(sk)->ipv4.sysctl_tcp_rmem[2]);
++
++		if (rcvbuf > sk->sk_rcvbuf) {
++			u32 window_clamp;
++
++			window_clamp =3D tcp_win_from_space(sk, rcvbuf);
++			WRITE_ONCE(sk->sk_rcvbuf, rcvbuf);
++
++			/* Make subflows follow along.  If we do not do this, we
++			 * get drops at subflow level if skbs can't be moved to
++			 * the mptcp rx queue fast enough (announced rcv_win can
++			 * exceed ssk->sk_rcvbuf).
 +			 */
-+			map_remaining =3D skb->len;
-+			subflow->map_data_len =3D skb->len;
++			mptcp_for_each_subflow(msk, subflow) {
++				struct sock *ssk;
++
++				ssk =3D mptcp_subflow_tcp_sock(subflow);
++				WRITE_ONCE(ssk->sk_rcvbuf, rcvbuf);
++				tcp_sk(ssk)->window_clamp =3D window_clamp;
++			}
 +		}
++	}
 +
- 		offset =3D seq - TCP_SKB_CB(skb)->seq;
- 		fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
- 		if (fin) {
-@@ -445,8 +449,15 @@ static void mptcp_clean_una(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_data_frag *dtmp, *dfrag;
--	u64 snd_una =3D atomic64_read(&msk->snd_una);
- 	bool cleaned =3D false;
-+	u64 snd_una;
++	msk->rcvq_space.space =3D msk->rcvq_space.copied;
++new_measure:
++	msk->rcvq_space.copied =3D 0;
++	msk->rcvq_space.time =3D mstamp;
++}
 +
-+	/* on fallback we just need to ignore snd_una, as this is really
-+	 * plain TCP
-+	 */
-+	if (__mptcp_check_fallback(msk))
-+		atomic64_set(&msk->snd_una, msk->write_seq);
-+	snd_una =3D atomic64_read(&msk->snd_una);
- =
-
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
- 		if (after64(dfrag->data_seq + dfrag->data_len, snd_una))
-@@ -719,7 +730,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
- *msg, size_t len)
- 	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct page_frag *pfrag;
--	struct socket *ssock;
- 	size_t copied =3D 0;
- 	struct sock *ssk;
- 	bool tx_ok;
-@@ -738,15 +748,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- 			goto out;
- 	}
- =
-
--fallback:
--	ssock =3D __mptcp_tcp_fallback(msk);
--	if (unlikely(ssock)) {
--		release_sock(sk);
--		pr_debug("fallback passthrough");
--		ret =3D sock_sendmsg(ssock, msg);
--		return ret >=3D 0 ? ret + copied : (copied ? copied : ret);
--	}
--
- 	pfrag =3D sk_page_frag(sk);
- restart:
- 	mptcp_clean_una(sk);
-@@ -798,17 +799,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- 			}
- 			break;
- 		}
--		if (ret =3D=3D 0 && unlikely(__mptcp_needs_tcp_fallback(msk))) {
--			/* Can happen for passive sockets:
--			 * 3WHS negotiated MPTCP, but first packet after is
--			 * plain TCP (e.g. due to middlebox filtering unknown
--			 * options).
--			 *
--			 * Fall back to TCP.
--			 */
--			release_sock(ssk);
--			goto fallback;
--		}
- =
-
- 		copied +=3D ret;
- =
-
-@@ -951,7 +941,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr=
- *msg, size_t len,
- 			 int nonblock, int flags, int *addr_len)
+ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
  {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	struct socket *ssock;
- 	int copied =3D 0;
- 	int target;
- 	long timeo;
-@@ -960,16 +949,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghd=
-r *msg, size_t len,
- 		return -EOPNOTSUPP;
- =
-
- 	lock_sock(sk);
--	ssock =3D __mptcp_tcp_fallback(msk);
--	if (unlikely(ssock)) {
--fallback:
--		release_sock(sk);
--		pr_debug("fallback-read subflow=3D%p",
--			 mptcp_subflow_ctx(ssock->sk));
--		copied =3D sock_recvmsg(ssock, msg, flags);
--		return copied;
--	}
--
- 	timeo =3D sock_rcvtimeo(sk, nonblock);
- =
-
- 	len =3D min_t(size_t, len, INT_MAX);
-@@ -1032,8 +1011,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+ 	unsigned int moved =3D 0;
+@@ -1050,6 +1137,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
 dr *msg, size_t len,
- =
-
- 		pr_debug("block timeout %ld", timeo);
- 		mptcp_wait_data(sk, &timeo);
--		if (unlikely(__mptcp_tcp_fallback(msk)))
--			goto fallback;
+ 		set_bit(MPTCP_DATA_READY, &msk->flags);
  	}
+ out_err:
++	mptcp_rcv_space_adjust(msk, copied);
++
+ 	release_sock(sk);
+ 	return copied;
+ }
+@@ -1280,6 +1369,7 @@ static int mptcp_init_sock(struct sock *sk)
+ 		return ret;
  =
 
- 	if (skb_queue_empty(&sk->sk_receive_queue)) {
-@@ -1652,12 +1629,6 @@ void mptcp_finish_connect(struct sock *ssk)
- 	sk =3D subflow->conn;
- 	msk =3D mptcp_sk(sk);
+ 	sk_sockets_allocated_inc(sk);
++	sk->sk_rcvbuf =3D sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
+ 	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[2];
  =
 
--	if (!subflow->mp_capable) {
--		MPTCP_INC_STATS(sock_net(sk),
--				MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
--		return;
--	}
--
- 	pr_debug("msk=3D%p, token=3D%u", sk, subflow->token);
+ 	return 0;
+@@ -1475,6 +1565,23 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 	return nsk;
+ }
  =
 
- 	mptcp_crypto_key_sha(subflow->remote_key, NULL, &ack_seq);
-@@ -1933,21 +1904,9 @@ static __poll_t mptcp_poll(struct file *file, struct=
- socket *sock,
++static void mptcp_rcv_space_init(struct mptcp_sock *msk, struct sock *ssk)
++{
++	struct tcp_sock *tp =3D tcp_sk(ssk);
++
++	msk->rcvq_space.copied =3D 0;
++	msk->rcvq_space.rtt_us =3D 0;
++
++	tcp_mstamp_refresh(tp);
++	msk->rcvq_space.time =3D tp->tcp_mstamp;
++
++	/* initial rcv_space offering made to peer */
++	msk->rcvq_space.space =3D min_t(u32, tp->rcv_wnd,
++				      TCP_INIT_CWND * tp->advmss);
++	if (msk->rcvq_space.space =3D=3D 0)
++		msk->rcvq_space.space =3D TCP_INIT_CWND * TCP_MSS_DEFAULT;
++}
++
+ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+ 				 bool kern)
  {
- 	struct sock *sk =3D sock->sk;
- 	struct mptcp_sock *msk;
--	struct socket *ssock;
- 	__poll_t mask =3D 0;
+@@ -1524,6 +1631,7 @@ static struct sock *mptcp_accept(struct sock *sk, int=
+ flags, int *err,
+ 		list_add(&subflow->node, &msk->conn_list);
+ 		inet_sk_state_store(newsk, TCP_ESTABLISHED);
  =
 
- 	msk =3D mptcp_sk(sk);
--	lock_sock(sk);
--	ssock =3D __mptcp_tcp_fallback(msk);
--	if (!ssock)
--		ssock =3D __mptcp_nmpc_socket(msk);
--	if (ssock) {
--		mask =3D ssock->ops->poll(file, ssock, wait);
--		release_sock(sk);
--		return mask;
--	}
--
--	release_sock(sk);
- 	sock_poll_wait(file, sock, wait);
- 	lock_sock(sk);
++		mptcp_rcv_space_init(msk, ssk);
+ 		bh_unlock_sock(new_mptcp_sock);
  =
 
+ 		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
+@@ -1678,6 +1786,8 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	atomic64_set(&msk->snd_una, msk->write_seq);
+ =
+
+ 	mptcp_pm_new_connection(msk, 0);
++
++	mptcp_rcv_space_init(msk, ssk);
+ }
+ =
+
+ static void mptcp_sock_graft(struct sock *sk, struct socket *parent)
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 809687d3f4100..efc6436052e2d 100644
+index 809687d3f410..5ac157e007e9 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -89,6 +89,7 @@
- #define MPTCP_SEND_SPACE	1
- #define MPTCP_WORK_RTX		2
- #define MPTCP_WORK_EOF		3
-+#define MPTCP_FALLBACK_DONE	4
- =
-
- struct mptcp_options_received {
- 	u64	sndr_key;
-@@ -458,4 +459,37 @@ static inline bool before64(__u64 seq1, __u64 seq2)
- =
-
- void mptcp_diag_subflow_init(struct tcp_ulp_ops *ops);
- =
-
-+static inline bool __mptcp_check_fallback(struct mptcp_sock *msk)
-+{
-+	return test_bit(MPTCP_FALLBACK_DONE, &msk->flags);
-+}
-+
-+static inline bool mptcp_check_fallback(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-+
-+	return __mptcp_check_fallback(msk);
-+}
-+
-+static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
-+{
-+	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags)) {
-+		pr_debug("TCP fallback already done (msk=3D%p)", msk);
-+		return;
-+	}
-+	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
-+}
-+
-+static inline void mptcp_do_fallback(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-+
-+	__mptcp_do_fallback(msk);
-+}
-+
-+#define pr_fallback(a) do { pr_debug("%s:fallback to TCP (msk=3D%p)",\
-+				      __FUNCTION__, a); } while (0)
-+
- #endif /* __MPTCP_PROTOCOL_H */
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f3c06b8af92de..59c6de6fac3fb 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -223,7 +223,6 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_options_received mp_opt;
- 	struct sock *parent =3D subflow->conn;
--	struct tcp_sock *tp =3D tcp_sk(sk);
- =
-
- 	subflow->icsk_af_ops->sk_rx_dst_set(sk, skb);
- =
-
-@@ -237,6 +236,8 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 		return;
- =
-
- 	subflow->conn_finished =3D 1;
-+	subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
-+	pr_debug("subflow=3D%p synack seq=3D%x", subflow, subflow->ssn_offset);
- =
-
- 	mptcp_get_options(skb, &mp_opt);
- 	if (subflow->request_mptcp && mp_opt.mp_capable) {
-@@ -252,21 +253,19 @@ static void subflow_finish_connect(struct sock *sk, c=
-onst struct sk_buff *skb)
- 		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u", subflow,
- 			 subflow->thmac, subflow->remote_nonce);
- 	} else if (subflow->request_mptcp) {
--		tp->is_mptcp =3D 0;
-+		mptcp_do_fallback(sk);
-+		pr_fallback(mptcp_sk(subflow->conn));
-+		MPTCP_INC_STATS(sock_net(sk),
-+				MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
- 	}
- =
-
--	if (!tp->is_mptcp)
-+	if (mptcp_check_fallback(sk))
- 		return;
- =
-
- 	if (subflow->mp_capable) {
- 		pr_debug("subflow=3D%p, remote_key=3D%llu", mptcp_subflow_ctx(sk),
- 			 subflow->remote_key);
- 		mptcp_finish_connect(sk);
--
--		if (skb) {
--			pr_debug("synack seq=3D%u", TCP_SKB_CB(skb)->seq);
--			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
--		}
- 	} else if (subflow->mp_join) {
- 		u8 hmac[SHA256_DIGEST_SIZE];
- =
-
-@@ -286,9 +285,6 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- =
-
- 		memcpy(subflow->hmac, hmac, MPTCPOPT_HMAC_LEN);
- =
-
--		if (skb)
--			subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
--
- 		if (!mptcp_finish_join(sk))
- 			goto do_reset;
- =
-
-@@ -552,7 +548,8 @@ enum mapping_status {
- 	MAPPING_OK,
- 	MAPPING_INVALID,
- 	MAPPING_EMPTY,
--	MAPPING_DATA_FIN
-+	MAPPING_DATA_FIN,
-+	MAPPING_DUMMY
+@@ -210,6 +210,12 @@ struct mptcp_sock {
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+ 	struct sock	*first;
+ 	struct mptcp_pm_data	pm;
++	struct {
++		u32	space;	/* bytes copied in last measurement window */
++		u32	copied; /* bytes copied in this measurement window */
++		u64	time;	/* start time of measurement window */
++		u64	rtt_us; /* last maximum rtt of subflows */
++	} rcvq_space;
  };
  =
 
- static u64 expand_seq(u64 old_seq, u16 old_data_len, u64 seq)
-@@ -616,6 +613,9 @@ static enum mapping_status get_mapping_status(struct so=
-ck *ssk)
- 	if (!skb)
- 		return MAPPING_EMPTY;
- =
-
-+	if (mptcp_check_fallback(ssk))
-+		return MAPPING_DUMMY;
-+
- 	mpext =3D mptcp_get_ext(skb);
- 	if (!mpext || !mpext->use_map) {
- 		if (!subflow->map_valid && !skb->len) {
-@@ -757,6 +757,16 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			ssk->sk_err =3D EBADMSG;
- 			goto fatal;
- 		}
-+		if (status =3D=3D MAPPING_DUMMY) {
-+			__mptcp_do_fallback(msk);
-+			skb =3D skb_peek(&ssk->sk_receive_queue);
-+			subflow->map_valid =3D 1;
-+			subflow->map_seq =3D READ_ONCE(msk->ack_seq);
-+			subflow->map_data_len =3D skb->len;
-+			subflow->map_subflow_seq =3D tcp_sk(ssk)->copied_seq -
-+						   subflow->ssn_offset;
-+			return true;
-+		}
- =
-
- 		if (status !=3D MAPPING_OK)
- 			return false;
-@@ -880,14 +890,18 @@ static void subflow_data_ready(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct sock *parent =3D subflow->conn;
-+	struct mptcp_sock *msk;
- =
-
--	if (!subflow->mp_capable && !subflow->mp_join) {
--		subflow->tcp_data_ready(sk);
--
-+	msk =3D mptcp_sk(parent);
-+	if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN) {
-+		set_bit(MPTCP_DATA_READY, &msk->flags);
- 		parent->sk_data_ready(parent);
- 		return;
- 	}
- =
-
-+	WARN_ON_ONCE(!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
-+		     !subflow->mp_join);
-+
- 	if (mptcp_subflow_data_available(sk))
- 		mptcp_data_ready(parent, sk);
- }
-@@ -1110,7 +1124,7 @@ static void subflow_state_change(struct sock *sk)
- 	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
- 	 * the data available machinery here.
- 	 */
--	if (subflow->mp_capable && mptcp_subflow_data_available(sk))
-+	if (mptcp_subflow_data_available(sk))
- 		mptcp_data_ready(parent, sk);
- =
-
- 	if (!(parent->sk_shutdown & RCV_SHUTDOWN) &&
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
 -- =
 
 2.26.2
 
---===============7175711424856875560==--
+--===============2363770332394884543==--
