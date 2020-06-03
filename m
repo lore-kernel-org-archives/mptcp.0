@@ -1,172 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============8751983072253424215=="
+Content-Type: multipart/mixed; boundary="===============6196617770893848761=="
 MIME-Version: 1.0
-From: syzbot <syzbot+6921abfb75d6fc79c0eb at syzkaller.appspotmail.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] INFO: task hung in corrupted (2)
-Date: Mon, 01 Jun 2020 04:30:13 -0700
-Message-ID: <0000000000004afcae05a7041e98@google.com>
+Subject: [MPTCP] Re: [PATCH v2 mptcp-next] mptcp: add receive buffer
+ auto-tuning
+Date: Wed, 03 Jun 2020 16:06:36 +0200
+Message-ID: <f67740d53f31df60e321dafeab195d020c53c3af.camel@redhat.com>
+In-Reply-To: 20200529201005.GA12873@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 4570
+X-UID: 4575
 
---===============8751983072253424215==
+--===============6196617770893848761==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, 2020-05-29 at 22:10 +0200, Florian Westphal wrote:
+> Christoph Paasch <cpaasch(a)apple.com> wrote:
+> > > After:
+> > > ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration  5417ms) [ =
+OK ]
+> > > ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5429ms) [ =
+OK ]
+> > > ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5418ms) [ =
+OK ]
+> > > ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration  5423ms) [ =
+OK ]
+> > > ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5715ms) [ =
+OK ]
+> > > ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5415ms) [ =
+OK ]
+> > > Time: 275 seconds
+> > > =
 
-syzbot found the following crash on:
+> > > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > > ---
+> > Need to also handle the fallback to TCP-case. Otherwise there is a
+> > divide-by-0:
 
-HEAD commit:    b0c3ba31 Merge tag 'fsnotify_for_v5.7-rc8' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D14089eee100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dce116858301bc2ea
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D6921abfb75d6fc79c=
-0eb
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/=
- c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14947d26100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D172726d2100000
+[...]
 
-The bug was bisected to:
+> > server login: [ 1998.037445] divide error: 0000 [#1] SMP KASAN PTI
+> > [ 1998.038321] CPU: 3 PID: 1671 Comm: http Kdump: loaded Not tainted 5.=
+7.0-rc6.mptcp #43
+> > [ 1998.039599] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B=
+IOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+> > [ 1998.041526] RIP: 0010:mptcp_recvmsg+0x6ae/0xa40
 
-commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
-Author: Andrey Konovalov <andreyknvl(a)google.com>
-Date:   Mon Feb 24 16:13:03 2020 +0000
+[...]
 
-    usb: gadget: add raw-gadget interface
+> WTF?  How can this happen? All TCP -> MPTCP tests passed for me.
+> This would mean we call mptcp_recvmsg *without* gping through
+> either mptcp_finish_connect or mptcp_accept?
+> > @@ -259,8 +259,10 @@ static void subflow_finish_connect(struct sock *sk=
+, const struct sk_buff *skb)
+> >  				MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
+> >  	}
+> > =
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D119e47021000=
-00
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D139e47021000=
-00
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D159e4702100000
+> > -	if (mptcp_check_fallback(sk))
+> > +	if (mptcp_check_fallback(sk)) {
+> > +		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+> >  		return;
+> > +	}
+> =
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6921abfb75d6fc79c0eb(a)syzkaller.appspotmail.com
-Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+> Oh, wait.  That code is not present in net-next.
+> =
 
-INFO: task syz-executor610:7072 blocked for more than 143 seconds.
-      Not tainted 5.7.0-rc7-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor610 D24336  7072   7071 0x80004002
-Call Trace:
- context_switch kernel/sched/core.c:3367 [inline]
- __schedule+0x805/0xc90 kernel/sched/core.c:4083
+> In that case I will wait until this has propagated to net-next; i assume
+> I would see the crash with the self test too.
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/1134:
- #0: ffffffff892e85d0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire+0x0=
-/0x30 net/mptcp/pm_netlink.c:860
-1 lock held by in:imklog/6715:
- #0: ffff8880a441e6b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0x25d/0=
-x2f0 fs/file.c:826
-6 locks held by kworker/1:0/7064:
-1 lock held by syz-executor610/7072:
- #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_loc=
-k kernel/rcu/tree_exp.h:290 [inline]
- #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rc=
-u_expedited+0x1bd/0x5b0 kernel/rcu/tree_exp.h:856
-4 locks held by systemd-udevd/7099:
- #0: ffff8880a7fdcc70 (&p->lock){+.+.}-{3:3}, at: seq_read+0x60/0xce0 fs/se=
-q_file.c:153
- #1: ffff888096486888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x50/0=
-x3b0 fs/kernfs/file.c:111
- #2: ffff88809fc0d660 (kn->count#78){.+.+}-{0:0}, at: kernfs_seq_start+0x6f=
-/0x3b0 fs/kernfs/file.c:112
- #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: device_lock_interrupti=
-ble include/linux/device.h:773 [inline]
- #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: serial_show+0x22/0xa0 =
-drivers/usb/core/sysfs.c:142
+hello Florian,
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+net-next will not be accepting patches for a while - but I would like to
+fix this on some tree, so that periodic tests can be run over there. So, I
+will rebase the fallback rework on top of the rx buffer auto-tuning patch.
 
-NMI backtrace for cpu 0
-CPU: 0 PID: 1134 Comm: khungtaskd Not tainted 5.7.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- nmi_cpu_backtrace+0x9f/0x180 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x16a/0x280 lib/nmi_backtrace.c:62
- check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
- watchdog+0xd2a/0xd40 kernel/hung_task.c:289
- kthread+0x353/0x380 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 7064 Comm: kworker/1:0 Not tainted 5.7.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x0/0x90 kernel/kcov.c:275
-Code: 4c f2 08 48 c1 e0 03 48 83 c8 18 49 89 14 02 4d 89 44 f2 18 49 ff c1 =
-4d 89 0a c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <4c> 8b 04 24 65 4=
-8 8b 04 25 40 1e 02 00 65 8b 0d 78 96 8e 7e f7 c1
-RSP: 0018:ffffc90001676cf0 EFLAGS: 00000246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88809fb9e240
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000ffffffff
-RBP: ffff888092d24a04 R08: ffffffff86034f3b R09: ffffc900016790cc
-R10: 0000000000000004 R11: 0000000000000000 R12: ffff888092d24a00
-R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888092d24a00
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004c6e68 CR3: 0000000092d41000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- hid_apply_multiplier drivers/hid/hid-core.c:1106 [inline]
- hid_setup_resolution_multiplier+0x2ab/0xbe0 drivers/hid/hid-core.c:1163
- hid_open_report+0xab2/0xdd0 drivers/hid/hid-core.c:1274
- hid_parse include/linux/hid.h:1017 [inline]
- ms_probe+0x12f/0x3f0 drivers/hid/hid-microsoft.c:388
- hid_device_probe+0x26c/0x410 drivers/hid/hid-core.c:2263
- really_probe+0x704/0xf60 drivers/base/dd.c:520
- driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
- bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
- __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
- bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
- device_add+0x1828/0x1ba0 drivers/base/core.c:2557
- hid_add_device+0xa2a/0xef0 drivers/hid/hid-core.c:2419
- usbhid_probe+0x9bd/0xd10 drivers/hid/usbhid/hid-core.c:1407
- usb_probe_interface+0x614/0xac0 drivers/usb/core/driver.c:374
- really_probe+0x761/0xf60 drivers/base/dd.c:524
- driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
- bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
- __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
- bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
- device_add+0x1828/0x1ba0 drivers/base/core.c:2557
- usb_set_configuration+0x19d2/0x1f20 drivers/usb/core/message.c:2032
- usb_generic_driver_probe+0x82/0x140 drivers/usb/core/generic.c:241
- usb_probe_device+0x12d/0x1d0 drivers/usb/core/driver.c:272
- really_probe+0x761/0xf60 drivers/base/dd.c:524
- driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
- bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
- __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
- bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
- device_add+0x1828/0x1ba0 drivers/base/core.c:2557
- usb_new_device+0xcc3/0x1650 drivers/usb/core/hub.c:2554
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x2823/0x4cb0 drivers/usb/core/hub.c:5576
- process_one_work+0x76e/0xfd0 kernel/workqueue.c:2268
- worker_thread+0xa7f/0x1450 kernel/workqueue.c:2414
- kthread+0x353/0x380 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+Ok?
+
+-- =
+
+davide
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller(a)googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
---===============8751983072253424215==--
+--===============6196617770893848761==--
