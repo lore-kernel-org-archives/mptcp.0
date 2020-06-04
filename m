@@ -1,53 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============4963300287625146631=="
+Content-Type: multipart/mixed; boundary="===============5443933547775981844=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/4] mptcp: don't leak msk in token container
-Date: Thu, 04 Jun 2020 19:40:05 +0200
-Message-ID: <65f44ff773902fc1e7e2d03f8ae4b5632f1e2164.1591291903.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 2/4] Squash-to: "mptcp: introduce token KUNIT
+ self-tests"
+Date: Thu, 04 Jun 2020 19:40:04 +0200
+Message-ID: <b8f4e00209b41371f6d5d63f20ad04a8984d4887.1591291903.git.pabeni@redhat.com>
 In-Reply-To: cover.1591291903.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4589
+X-UID: 4590
 
---===============4963300287625146631==
+--===============5443933547775981844==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When the left-over msk is freed by subflow_syn_recv_sock(),
-we don't invoke the proto->destroy() method, to the socket
-is not removed from the token container, leading to later
-UaF.
-
-Address the issue explicitly removing the token even in the
-above error path.
+Update tests to APIs change
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-note:
- - the net patch will be slightly different, to cope with
-   the token API changes introduced by the token refactor
----
- net/mptcp/subflow.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/mptcp/token_test.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index fcb9ca9a9dce..229ffff4b217 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -393,6 +393,7 @@ static void mptcp_sock_destruct(struct sock *sk)
- 		sock_orphan(sk);
- 	}
- =
-
-+	mptcp_token_destroy(mptcp_sk(sk));
- 	inet_sock_destruct(sk);
+diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
+index 9e385d2c9ff0..c0f76b8b0ce0 100644
+--- a/net/mptcp/token_test.c
++++ b/net/mptcp/token_test.c
+@@ -9,6 +9,7 @@ static struct mptcp_subflow_request_sock *build_req_sock(st=
+ruct kunit *test)
+ 	req =3D kunit_kzalloc(test, sizeof(struct mptcp_subflow_request_sock),
+ 			    GFP_USER);
+ 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, req);
++	mptcp_token_init_request((struct request_sock *)req);
+ 	return req;
  }
  =
 
+@@ -23,7 +24,7 @@ static void mptcp_token_test_req_basic(struct kunit *test)
+ 	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(req->token));
+ =
+
+ 	/* cleanup */
+-	mptcp_token_destroy_request(req->token);
++	mptcp_token_destroy_request((struct request_sock *)req);
+ }
+ =
+
+ static struct inet_connection_sock *build_icsk(struct kunit *test)
+@@ -75,7 +76,7 @@ static void mptcp_token_test_msk_basic(struct kunit *test)
+ 	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(ctx->token));
+ 	KUNIT_EXPECT_EQ(test, 2, (int)refcount_read(&sk->sk_refcnt));
+ =
+
+-	mptcp_token_destroy(ctx->token);
++	mptcp_token_destroy(msk);
+ 	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(ctx->token));
+ }
+ =
+
+@@ -91,11 +92,11 @@ static void mptcp_token_test_accept(struct kunit *test)
+ 	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(msk->token));
+ =
+
+ 	/* this is now a no-op */
+-	mptcp_token_destroy_request(req->token);
++	mptcp_token_destroy_request((struct request_sock *)req);
+ 	KUNIT_EXPECT_PTR_EQ(test, msk, mptcp_token_get_sock(msk->token));
+ =
+
+ 	/* cleanup */
+-	mptcp_token_destroy(msk->token);
++	mptcp_token_destroy(msk);
+ }
+ =
+
+ static void mptcp_token_test_destroyed(struct kunit *test)
+@@ -117,7 +118,7 @@ static void mptcp_token_test_destroyed(struct kunit *te=
+st)
+ 	KUNIT_EXPECT_PTR_EQ(test, null_msk, mptcp_token_get_sock(msk->token));
+ =
+
+ 	/* cleanup */
+-	mptcp_token_destroy(msk->token);
++	mptcp_token_destroy(msk);
+ }
+ =
+
+ static struct kunit_case mptcp_token_test_cases[] =3D {
 -- =
 
 2.21.3
 
---===============4963300287625146631==--
+--===============5443933547775981844==--
