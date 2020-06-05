@@ -1,60 +1,138 @@
-Content-Type: multipart/mixed; boundary="===============3649802020152186117=="
+Content-Type: multipart/mixed; boundary="===============8064169838584322250=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 0/4] mptcp: token refactor follow-up
-Date: Fri, 05 Jun 2020 18:04:46 +0200
-Message-ID: <33e846dd-e1a1-aeb3-2a3a-fa791194ccce@tessares.net>
-In-Reply-To: cover.1591291903.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH mptcp-next v2] [DO-NOT-MERGE] mptcp: use kmalloc on
+ kasan build
+Date: Fri, 05 Jun 2020 19:32:42 +0200
+Message-ID: <20200605173242.2644099-1-dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4597
+X-UID: 4598
 
---===============3649802020152186117==
+--===============8064169838584322250==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Christoph,
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-On 04/06/2020 19:40, Paolo Abeni wrote:
-> First patch clean-up a bit the token container refactor
-> 2nd adapt the tests cases, 3rd one fixes a long standing
-> bug which become apparent with token refactor and the
-> last one helps debugging with kasan
-> =
+Helps detection UaF, which apparently kasan misses
+with kmem_cache allocator.
 
-> patch 3 will target -net tree hopefully soon (adapted
-> to the current -net token apis). will need a little
-> rebasing of export branch after that.
-> =
+We also need to always set the SOCK_RCU_FREE flag, to
+preserved the current code leveraging SLAB_TYPESAFE_BY_RCU.
+This latter change will make unreachable some existing
+errors path, but I don't see other options.
 
-> @Christph: this series should replace any pending export branch fixes sha=
-red on
-> pastebin/mails/whatever (excluding the -net patch submitted little time a=
-go)
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/ipv4/af_inet.c   |  3 +++
+ net/ipv6/af_inet6.c  |  3 +++
+ net/mptcp/protocol.c | 15 +++++++++++++--
+ 3 files changed, 19 insertions(+), 2 deletions(-)
 
-Thank you for the patches and the reviews/test (on IRC)!
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 02aa5cb3a4fd..53da7a4683d3 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -316,7 +316,10 @@ static int inet_create(struct net *net, struct socket =
+*sock, int protocol,
+ 	answer_flags =3D answer->flags;
+ 	rcu_read_unlock();
+ =
 
-- d439e86abf12: "squashed" patch 1/4 in "mptcp: refactor token container."
-- 0cf95b148037..c6c48c061cc1: result
++#if !IS_ENABLED(CONFIG_KASAN)
++	/* with kasan we use kmalloc */
+ 	WARN_ON(!answer_prot->slab);
++#endif
+ =
 
-- 80e87cdeeaaa: "squashed" patch 2/4 in "mptcp: introduce token KUNIT =
+ 	err =3D -ENOBUFS;
+ 	sk =3D sk_alloc(net, PF_INET, GFP_KERNEL, answer_prot, kern);
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index b304b882e031..14358a623e88 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -177,7 +177,10 @@ static int inet6_create(struct net *net, struct socket=
+ *sock, int protocol,
+ 	answer_flags =3D answer->flags;
+ 	rcu_read_unlock();
+ =
 
-self-tests"
-- c6c48c061cc1..b194cc9477a5: result
++#if !IS_ENABLED(CONFIG_KASAN)
+ 	WARN_ON(!answer_prot->slab);
++	/* with kasan we use kmalloc */
++#endif
+ =
 
-The other patches have been added at the end: b194cc9477a5..12401818bff5
+ 	err =3D -ENOBUFS;
+ 	sk =3D sk_alloc(net, PF_INET6, GFP_KERNEL, answer_prot, kern);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 99c019879833..1138caaae330 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1265,6 +1265,9 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+ =
 
-"export" branch has just been updated, tests seem still OK!
++#if IS_ENABLED(CONFIG_KASAN)
++	sock_set_flag(sk, SOCK_RCU_FREE);
++#endif
+ 	return 0;
+ }
+ =
 
-Cheers,
-Matt
+@@ -1458,7 +1461,9 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 		msk->ack_seq =3D ack_seq;
+ 	}
+ =
+
++#if !IS_ENABLED(CONFIG_KASAN)
+ 	sock_reset_flag(nsk, SOCK_RCU_FREE);
++#endif
+ 	/* will be fully established after successful MPC subflow creation */
+ 	inet_sk_state_store(nsk, TCP_SYN_RECV);
+ 	bh_unlock_sock(nsk);
+@@ -2079,6 +2084,12 @@ static struct inet_protosw mptcp_protosw =3D {
+ 	.flags		=3D INET_PROTOSW_ICSK,
+ };
+ =
+
++#if IS_ENABLED(CONFIG_KASAN)
++#define MPTCP_USE_SLAB		0
++#else
++#define MPTCP_USE_SLAB		1
++#endif
++
+ void __init mptcp_proto_init(void)
+ {
+ 	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
+@@ -2090,7 +2101,7 @@ void __init mptcp_proto_init(void)
+ 	mptcp_pm_init();
+ 	mptcp_token_init();
+ =
+
+-	if (proto_register(&mptcp_prot, 1) !=3D 0)
++	if (proto_register(&mptcp_prot, MPTCP_USE_SLAB) !=3D 0)
+ 		panic("Failed to register MPTCP proto.\n");
+ =
+
+ 	inet_register_protosw(&mptcp_protosw);
+@@ -2152,7 +2163,7 @@ int __init mptcp_proto_v6_init(void)
+ 	mptcp_v6_prot.destroy =3D mptcp_v6_destroy;
+ 	mptcp_v6_prot.obj_size =3D sizeof(struct mptcp6_sock);
+ =
+
+-	err =3D proto_register(&mptcp_v6_prot, 1);
++	err =3D proto_register(&mptcp_v6_prot, MPTCP_USE_SLAB);
+ 	if (err)
+ 		return err;
+ =
+
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3649802020152186117==--
+2.18.1
+
+--===============8064169838584322250==--
