@@ -1,47 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============2758239778746451183=="
+Content-Type: multipart/mixed; boundary="===============3649802020152186117=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC net-next 2/2] mptcp: fix races between
- shutdown and recvmsg.
-Date: Fri, 05 Jun 2020 16:31:39 +0200
-Message-ID: <640f663a-6431-6df5-877f-2f684abc1bd5@tessares.net>
-In-Reply-To: 6b71f5e37a9e2b3eb2fab51354ef2b168fdc9b09.1589819601.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH 0/4] mptcp: token refactor follow-up
+Date: Fri, 05 Jun 2020 18:04:46 +0200
+Message-ID: <33e846dd-e1a1-aeb3-2a3a-fa791194ccce@tessares.net>
+In-Reply-To: cover.1591291903.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4596
+X-UID: 4597
 
---===============2758239778746451183==
+--===============3649802020152186117==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Davide, Mat,
+Hi Paolo, Christoph,
 
-On 18/05/2020 18:37, Davide Caratti wrote:
-> From: Paolo Abeni <pabeni(a)redhat.com>
+On 04/06/2020 19:40, Paolo Abeni wrote:
+> First patch clean-up a bit the token container refactor
+> 2nd adapt the tests cases, 3rd one fixes a long standing
+> bug which become apparent with token refactor and the
+> last one helps debugging with kasan
 > =
 
-> The msk sk_shutdown flag is set by a workqueue, possibly
-> introducing some delay in user-space notification. If the last
-> subflow carries some data with the fin packet, the user space
-> can wake-up before RCV_SHUTDOWN is set. If it executes unblocking
-> recvmsg(), it may return with an error instead of eof.
+> patch 3 will target -net tree hopefully soon (adapted
+> to the current -net token apis). will need a little
+> rebasing of export branch after that.
 > =
 
-> Address the issue explicitly checking for eof in recvmsg(), when
-> no data is found.
-> =
+> @Christph: this series should replace any pending export branch fixes sha=
+red on
+> pastebin/mails/whatever (excluding the -net patch submitted little time a=
+go)
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Thank you for the patches and the reviews/test (on IRC)!
 
-Thank you for the patch and the review!
+- d439e86abf12: "squashed" patch 1/4 in "mptcp: refactor token container."
+- 0cf95b148037..c6c48c061cc1: result
 
-Just added to the TopGit tree. The export branch has not been updated yet.
+- 80e87cdeeaaa: "squashed" patch 2/4 in "mptcp: introduce token KUNIT =
 
-As discussed on IRC, I added a "Fixes" tag. (and I remove the dot at the =
+self-tests"
+- c6c48c061cc1..b194cc9477a5: result
 
-end of the commit title :) )
+The other patches have been added at the end: b194cc9477a5..12401818bff5
+
+"export" branch has just been updated, tests seem still OK!
 
 Cheers,
 Matt
@@ -52,4 +57,4 @@ matthieu.baerts(a)tessares.net
 Tessares SA | Hybrid Access Solutions
 www.tessares.net
 1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============2758239778746451183==--
+--===============3649802020152186117==--
