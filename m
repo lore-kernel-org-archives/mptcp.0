@@ -1,148 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============5050864185850918358=="
+Content-Type: multipart/mixed; boundary="===============3884592716740319590=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 3/3] mptcp: do nonce initialization at subflow
- creation time
-Date: Mon, 08 Jun 2020 23:51:32 +0200
-Message-ID: <0fbc584e64585ca59df3076f2d22f1312ba06972.1591652866.git.pabeni@redhat.com>
-In-Reply-To: cover.1591652866.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v2 0/3] mptcp: more token follow-up
+Date: Mon, 08 Jun 2020 23:51:29 +0200
+Message-ID: <cover.1591652866.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4620
+X-UID: 4621
 
---===============5050864185850918358==
+--===============3884592716740319590==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This clean-up the code a bit, reduces the number of
-used hooks and indirect call requested, and allow
-better error reporting from __mptcp_subflow_connect()
+The patch 1 addesses a race on close which may possibly fix
+issues/36 && issues/29, the 2nd patch is resolve conflicts and the 3rd one
+is a follow-up cleanup.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 54 +++++++++++++++++----------------------------
- 1 file changed, 20 insertions(+), 34 deletions(-)
+Patch 3 should be inserted just after "mptcp: refactor token container."
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index db066a43925f..d5935f3bfbd1 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -29,34 +29,6 @@ static void SUBFLOW_REQ_INC_STATS(struct request_sock *r=
-eq,
- 	MPTCP_INC_STATS(sock_net(req_to_sk(req)), field);
- }
- =
+v1 -> v2:
+ - hopefully includes the correct patches
 
--static int subflow_rebuild_header(struct sock *sk)
--{
--	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
--	int local_id;
--
--	if (subflow->request_join && !subflow->local_nonce) {
--		struct mptcp_sock *msk =3D (struct mptcp_sock *)subflow->conn;
--
--		pr_debug("subflow=3D%p", sk);
--
--		do {
--			get_random_bytes(&subflow->local_nonce, sizeof(u32));
--		} while (!subflow->local_nonce);
--
--		if (subflow->local_id)
--			goto out;
--
--		local_id =3D mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
--		if (local_id < 0)
--			return -EINVAL;
--
--		subflow->local_id =3D local_id;
--	}
--
--out:
--	return subflow->icsk_af_ops->rebuild_header(sk);
--}
--
- static void subflow_req_destructor(struct request_sock *req)
- {
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
-@@ -987,7 +959,9 @@ int __mptcp_subflow_connect(struct sock *sk, int ifinde=
-x,
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_subflow_context *subflow;
- 	struct sockaddr_storage addr;
-+	int local_id =3D loc->id;
- 	struct socket *sf;
-+	struct sock *ssk;
- 	u32 remote_token;
- 	int addrlen;
- 	int err;
-@@ -999,7 +973,20 @@ int __mptcp_subflow_connect(struct sock *sk, int ifind=
-ex,
- 	if (err)
- 		return err;
- =
+ protocol.c |    9 ++++---
+ subflow.c  |   69 ++++++++++++++++++++++----------------------------------=
+-----
+ 2 files changed, 30 insertions(+), 48 deletions(-)
 
--	subflow =3D mptcp_subflow_ctx(sf->sk);
-+	ssk =3D sf->sk;
-+	subflow =3D mptcp_subflow_ctx(ssk);
-+	do {
-+		get_random_bytes(&subflow->local_nonce, sizeof(u32));
-+	} while (!subflow->local_nonce);
-+
-+	if (!local_id) {
-+		err =3D mptcp_pm_get_local_id(msk, (struct sock_common *)ssk);
-+		if (err < 0)
-+			goto failed;
-+
-+		local_id =3D err;
-+	}
-+
- 	subflow->remote_key =3D msk->remote_key;
- 	subflow->local_key =3D msk->local_key;
- 	subflow->token =3D msk->token;
-@@ -1010,15 +997,16 @@ int __mptcp_subflow_connect(struct sock *sk, int ifi=
-ndex,
- 	if (loc->family =3D=3D AF_INET6)
- 		addrlen =3D sizeof(struct sockaddr_in6);
- #endif
--	sf->sk->sk_bound_dev_if =3D ifindex;
-+	ssk->sk_bound_dev_if =3D ifindex;
- 	err =3D kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
- 	if (err)
- 		goto failed;
- =
-
- 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
--	pr_debug("msk=3D%p remote_token=3D%u", msk, remote_token);
-+	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d", msk, remote_token,
-+		 local_id);
- 	subflow->remote_token =3D remote_token;
--	subflow->local_id =3D loc->id;
-+	subflow->local_id =3D local_id;
- 	subflow->request_join =3D 1;
- 	subflow->request_bkup =3D 1;
- 	mptcp_info2sockaddr(remote, &addr);
-@@ -1279,7 +1267,6 @@ void __init mptcp_subflow_init(void)
- 	subflow_specific.conn_request =3D subflow_v4_conn_request;
- 	subflow_specific.syn_recv_sock =3D subflow_syn_recv_sock;
- 	subflow_specific.sk_rx_dst_set =3D subflow_finish_connect;
--	subflow_specific.rebuild_header =3D subflow_rebuild_header;
- =
-
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	subflow_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
-@@ -1289,7 +1276,6 @@ void __init mptcp_subflow_init(void)
- 	subflow_v6_specific.conn_request =3D subflow_v6_conn_request;
- 	subflow_v6_specific.syn_recv_sock =3D subflow_syn_recv_sock;
- 	subflow_v6_specific.sk_rx_dst_set =3D subflow_finish_connect;
--	subflow_v6_specific.rebuild_header =3D subflow_rebuild_header;
- =
-
- 	subflow_v6m_specific =3D subflow_v6_specific;
- 	subflow_v6m_specific.queue_xmit =3D ipv4_specific.queue_xmit;
--- =
-
-2.21.3
-
---===============5050864185850918358==--
+--===============3884592716740319590==--
