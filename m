@@ -1,150 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============0444262590593991624=="
+Content-Type: multipart/mixed; boundary="===============7680499362360234780=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 2/2] dbg
-Date: Mon, 08 Jun 2020 18:44:28 +0200
-Message-ID: <e377f787126b17eeed52e365d76bd8004105e79d.1591615582.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 1/2] mptcp: do nonce initialization at
+ subflow creation time
+Date: Mon, 08 Jun 2020 18:44:27 +0200
+Message-ID: <a4abb728c45d0c90c34bee9169d7f616ab4a7b67.1591615582.git.pabeni@redhat.com>
 In-Reply-To: cover.1591615582.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4614
+X-UID: 4615
 
---===============0444262590593991624==
+--===============7680499362360234780==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
----
- net/core/sock.c      | 16 +---------------
- net/mptcp/protocol.c | 23 +++++++++++++++++++++++
- net/mptcp/protocol.h |  7 +++++++
- net/mptcp/token.c    |  3 +++
- 4 files changed, 34 insertions(+), 15 deletions(-)
+This clean-up the code a bit, reduces the number of
+used hooks and indirect call requested, and allow
+better error reporting from __mptcp_subflow_connect()
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 6c4acf1f0220..92030a61752b 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1776,7 +1776,7 @@ EXPORT_SYMBOL(sk_alloc);
- /* Sockets having SOCK_RCU_FREE will call this function after one RCU
-  * grace period. This is the case for UDP sockets and TCP listeners.
-  */
--static void __sk_destruct(struct rcu_head *head)
-+void __sk_destruct(struct rcu_head *head)
- {
- 	struct sock *sk =3D container_of(head, struct sock, sk_rcu);
- 	struct sk_filter *filter;
-@@ -1814,20 +1814,6 @@ static void __sk_destruct(struct rcu_head *head)
- 	sk_prot_free(sk->sk_prot_creator, sk);
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/subflow.c | 54 +++++++++++++++++----------------------------
+ 1 file changed, 20 insertions(+), 34 deletions(-)
+
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 9cb9585776a0..cd126250242c 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -29,34 +29,6 @@ static void SUBFLOW_REQ_INC_STATS(struct request_sock *r=
+eq,
+ 	MPTCP_INC_STATS(sock_net(req_to_sk(req)), field);
  }
  =
 
--void sk_destruct(struct sock *sk)
+-static int subflow_rebuild_header(struct sock *sk)
 -{
--	bool use_call_rcu =3D sock_flag(sk, SOCK_RCU_FREE);
+-	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-	int local_id;
 -
--	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
--		reuseport_detach_sock(sk);
--		use_call_rcu =3D true;
+-	if (subflow->request_join && !subflow->local_nonce) {
+-		struct mptcp_sock *msk =3D (struct mptcp_sock *)subflow->conn;
+-
+-		pr_debug("subflow=3D%p", sk);
+-
+-		do {
+-			get_random_bytes(&subflow->local_nonce, sizeof(u32));
+-		} while (!subflow->local_nonce);
+-
+-		if (subflow->local_id)
+-			goto out;
+-
+-		local_id =3D mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
+-		if (local_id < 0)
+-			return -EINVAL;
+-
+-		subflow->local_id =3D local_id;
 -	}
 -
--	if (use_call_rcu)
--		call_rcu(&sk->sk_rcu, __sk_destruct);
--	else
--		__sk_destruct(&sk->sk_rcu);
+-out:
+-	return subflow->icsk_af_ops->rebuild_header(sk);
 -}
- =
-
- static void __sk_free(struct sock *sk)
+-
+ static void subflow_req_destructor(struct request_sock *req)
  {
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3cbd33debea1..09e0fc91983b 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2088,6 +2088,29 @@ static struct inet_protosw mptcp_protosw =3D {
- 	.flags		=3D INET_PROTOSW_ICSK,
- };
+ 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
+@@ -972,7 +944,9 @@ int __mptcp_subflow_connect(struct sock *sk, int ifinde=
+x,
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sockaddr_storage addr;
++	int local_id =3D loc->id;
+ 	struct socket *sf;
++	struct sock *ssk;
+ 	u32 remote_token;
+ 	int addrlen;
+ 	int err;
+@@ -984,7 +958,20 @@ int __mptcp_subflow_connect(struct sock *sk, int ifind=
+ex,
+ 	if (err)
+ 		return err;
  =
 
-+void __sk_destruct(struct rcu_head *head);
+-	subflow =3D mptcp_subflow_ctx(sf->sk);
++	ssk =3D sf->sk;
++	subflow =3D mptcp_subflow_ctx(ssk);
++	do {
++		get_random_bytes(&subflow->local_nonce, sizeof(u32));
++	} while (!subflow->local_nonce);
 +
-+void sk_destruct(struct sock *sk)
-+{
-+	bool use_call_rcu =3D sock_flag(sk, SOCK_RCU_FREE);
++	if (!local_id) {
++		err =3D mptcp_pm_get_local_id(msk, (struct sock_common *)ssk);
++		if (err < 0)
++			goto failed;
 +
-+	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
-+		reuseport_detach_sock(sk);
-+		use_call_rcu =3D true;
++		local_id =3D err;
 +	}
 +
-+	if (sk->sk_prot =3D=3D &mptcp_prot) {
-+		struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+		msk->add_nr =3D stack_trace_save(msk->add_store, STORE_LEN, 1);
-+	}
-+
-+	if (use_call_rcu)
-+		call_rcu(&sk->sk_rcu, __sk_destruct);
-+	else
-+		__sk_destruct(&sk->sk_rcu);
-+}
-+
- #if IS_ENABLED(CONFIG_KASAN)
- #define MPTCP_USE_SLAB		0
- #else
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6322c4e2d07c..912525b677c6 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -210,6 +210,13 @@ struct mptcp_sock {
- 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
- 	struct sock	*first;
- 	struct mptcp_pm_data	pm;
-+
-+#define STORE_LEN		16
-+	long		add_store[STORE_LEN];
-+	int		add_nr;
-+	bool		connect;
-+	bool		accept;
-+	int		del_nr;
- };
+ 	subflow->remote_key =3D msk->remote_key;
+ 	subflow->local_key =3D msk->local_key;
+ 	subflow->token =3D msk->token;
+@@ -995,15 +982,16 @@ int __mptcp_subflow_connect(struct sock *sk, int ifin=
+dex,
+ 	if (loc->family =3D=3D AF_INET6)
+ 		addrlen =3D sizeof(struct sockaddr_in6);
+ #endif
+-	sf->sk->sk_bound_dev_if =3D ifindex;
++	ssk->sk_bound_dev_if =3D ifindex;
+ 	err =3D kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+ 	if (err)
+ 		goto failed;
  =
 
- #define mptcp_for_each_subflow(__msk, __subflow)			\
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 8acea188323c..fae4f4724f2a 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -167,6 +167,7 @@ int mptcp_token_new_connect(struct sock *sk)
- 	WRITE_ONCE(msk->token, subflow->token);
- 	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
- 	bucket->chain_len++;
-+	msk->connect =3D true;
- 	spin_unlock_bh(&bucket->lock);
- 	return 0;
- }
-@@ -193,6 +194,7 @@ void mptcp_token_accept(struct mptcp_subflow_request_so=
-ck *req,
- 	if (!WARN_ON_ONCE(pos !=3D req))
- 		hlist_nulls_del_init_rcu(&req->token_node);
- 	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
-+	msk->accept =3D true;
- 	spin_unlock_bh(&bucket->lock);
- }
+ 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
+-	pr_debug("msk=3D%p remote_token=3D%u", msk, remote_token);
++	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d", msk, remote_token,
++		 local_id);
+ 	subflow->remote_token =3D remote_token;
+-	subflow->local_id =3D loc->id;
++	subflow->local_id =3D local_id;
+ 	subflow->request_join =3D 1;
+ 	subflow->request_bkup =3D 1;
+ 	mptcp_info2sockaddr(remote, &addr);
+@@ -1264,7 +1252,6 @@ void __init mptcp_subflow_init(void)
+ 	subflow_specific.conn_request =3D subflow_v4_conn_request;
+ 	subflow_specific.syn_recv_sock =3D subflow_syn_recv_sock;
+ 	subflow_specific.sk_rx_dst_set =3D subflow_finish_connect;
+-	subflow_specific.rebuild_header =3D subflow_rebuild_header;
  =
 
-@@ -285,6 +287,7 @@ void mptcp_token_destroy(struct mptcp_sock *msk)
- 		__sk_nulls_del_node_init_rcu((struct sock *)pos);
- 		bucket->chain_len--;
- 	}
-+	msk->del_nr++;
- 	spin_unlock_bh(&bucket->lock);
- }
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	subflow_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
+@@ -1274,7 +1261,6 @@ void __init mptcp_subflow_init(void)
+ 	subflow_v6_specific.conn_request =3D subflow_v6_conn_request;
+ 	subflow_v6_specific.syn_recv_sock =3D subflow_syn_recv_sock;
+ 	subflow_v6_specific.sk_rx_dst_set =3D subflow_finish_connect;
+-	subflow_v6_specific.rebuild_header =3D subflow_rebuild_header;
  =
 
+ 	subflow_v6m_specific =3D subflow_v6_specific;
+ 	subflow_v6m_specific.queue_xmit =3D ipv4_specific.queue_xmit;
 -- =
 
 2.21.3
 
---===============0444262590593991624==--
+--===============7680499362360234780==--
