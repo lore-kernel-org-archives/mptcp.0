@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============3771896256214146725=="
+Content-Type: multipart/mixed; boundary="===============8795742277051384029=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [kbuild] [mptcp:export 5/10] net/mptcp/subflow.c:512
  subflow_syn_recv_sock() error: uninitialized symbol 'subflow_req'.
-Date: Mon, 08 Jun 2020 15:29:12 +0200
-Message-ID: <a77061c3f7ef8ef800e3646b6b2165774594564d.camel@redhat.com>
+Date: Mon, 08 Jun 2020 15:29:24 +0200
+Message-ID: <b639639a2592d5f54e4a5634569c8fa3bcbe99c5.camel@redhat.com>
 In-Reply-To: 20200608131535.GO22511@kadam
 X-Status: 
 X-Keywords:                  
-X-UID: 4609
+X-UID: 4610
 
---===============3771896256214146725==
+--===============8795742277051384029==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -203,8 +203,8 @@ can't reach here.
 BTW I'll be curious to learn how this report has been created?!? Are
 you using a kbuild bot instance to run smack on mptcp export branch ?!?
 
-Manu thanks!
+Many thanks!
 
 Paolo
 
---===============3771896256214146725==--
+--===============8795742277051384029==--
