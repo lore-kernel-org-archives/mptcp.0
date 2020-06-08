@@ -1,158 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============6071134110335930916=="
+Content-Type: multipart/mixed; boundary="===============3960836171551711593=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 2/2] dbg
-Date: Mon, 08 Jun 2020 19:13:18 +0200
-Message-ID: <3fd153bfe811e88a50eba35e6e2ca391cf9e0950.camel@redhat.com>
-In-Reply-To: e377f787126b17eeed52e365d76bd8004105e79d.1591615582.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v2 1/3] Squash-to: "mptcp: refactor token container."
+Date: Mon, 08 Jun 2020 23:51:30 +0200
+Message-ID: <3937b1a365f3f679c4f09887ba372d310af52f48.1591652866.git.pabeni@redhat.com>
+In-Reply-To: cover.1591652866.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4617
+X-UID: 4618
 
---===============6071134110335930916==
+--===============3960836171551711593==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-06-08 at 18:44 +0200, Paolo Abeni wrote:
-> ---
->  net/core/sock.c      | 16 +---------------
->  net/mptcp/protocol.c | 23 +++++++++++++++++++++++
->  net/mptcp/protocol.h |  7 +++++++
->  net/mptcp/token.c    |  3 +++
->  4 files changed, 34 insertions(+), 15 deletions(-)
-> =
+Move token creation into stream_connect(). This clean
+the code a bit reducing the test in critical path and
+plug a race: at shutdown time, subflow_rebuild_header()
+can be called after the msk token is removed, leaving
+a refecen to the to-be destroyed socket into the
+token container with later UaF.
 
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 6c4acf1f0220..92030a61752b 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -1776,7 +1776,7 @@ EXPORT_SYMBOL(sk_alloc);
->  /* Sockets having SOCK_RCU_FREE will call this function after one RCU
->   * grace period. This is the case for UDP sockets and TCP listeners.
->   */
-> -static void __sk_destruct(struct rcu_head *head)
-> +void __sk_destruct(struct rcu_head *head)
->  {
->  	struct sock *sk =3D container_of(head, struct sock, sk_rcu);
->  	struct sk_filter *filter;
-> @@ -1814,20 +1814,6 @@ static void __sk_destruct(struct rcu_head *head)
->  	sk_prot_free(sk->sk_prot_creator, sk);
->  }
->  =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c |  6 +++++-
+ net/mptcp/subflow.c  | 10 ++--------
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-> -void sk_destruct(struct sock *sk)
-> -{
-> -	bool use_call_rcu =3D sock_flag(sk, SOCK_RCU_FREE);
-> -
-> -	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
-> -		reuseport_detach_sock(sk);
-> -		use_call_rcu =3D true;
-> -	}
-> -
-> -	if (use_call_rcu)
-> -		call_rcu(&sk->sk_rcu, __sk_destruct);
-> -	else
-> -		__sk_destruct(&sk->sk_rcu);
-> -}
->  =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 99c019879833..be09fd525f8f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1800,6 +1800,7 @@ static int mptcp_stream_connect(struct socket *sock, =
+struct sockaddr *uaddr,
+ 				int addr_len, int flags)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
++	struct mptcp_subflow_context *subflow;
+ 	struct socket *ssock;
+ 	int err;
+ =
 
->  static void __sk_free(struct sock *sk)
->  {
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3cbd33debea1..09e0fc91983b 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2088,6 +2088,29 @@ static struct inet_protosw mptcp_protosw =3D {
->  	.flags		=3D INET_PROTOSW_ICSK,
->  };
->  =
+@@ -1819,13 +1820,16 @@ static int mptcp_stream_connect(struct socket *sock=
+, struct sockaddr *uaddr,
+ 		goto unlock;
+ 	}
+ =
 
-> +void __sk_destruct(struct rcu_head *head);
-> +
-> +void sk_destruct(struct sock *sk)
-> +{
-> +	bool use_call_rcu =3D sock_flag(sk, SOCK_RCU_FREE);
-> +
-> +	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
-> +		reuseport_detach_sock(sk);
-> +		use_call_rcu =3D true;
-> +	}
-> +
-> +	if (sk->sk_prot =3D=3D &mptcp_prot) {
-> +		struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +
-> +		msk->add_nr =3D stack_trace_save(msk->add_store, STORE_LEN, 1);
-> +	}
-> +
-> +	if (use_call_rcu)
-> +		call_rcu(&sk->sk_rcu, __sk_destruct);
-> +	else
-> +		__sk_destruct(&sk->sk_rcu);
-> +}
-> +
->  #if IS_ENABLED(CONFIG_KASAN)
->  #define MPTCP_USE_SLAB		0
->  #else
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 6322c4e2d07c..912525b677c6 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -210,6 +210,13 @@ struct mptcp_sock {
->  	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
->  	struct sock	*first;
->  	struct mptcp_pm_data	pm;
-> +
-> +#define STORE_LEN		16
-> +	long		add_store[STORE_LEN];
-> +	int		add_nr;
-> +	bool		connect;
-> +	bool		accept;
-> +	int		del_nr;
->  };
->  =
++	subflow =3D mptcp_subflow_ctx(ssock->sk);
+ #ifdef CONFIG_TCP_MD5SIG
+ 	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
+ 	 * TCP option space.
+ 	 */
+ 	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
+-		mptcp_subflow_ctx(ssock->sk)->request_mptcp =3D 0;
++		subflow->request_mptcp =3D 0;
+ #endif
++	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk))
++		subflow->request_mptcp =3D 0;
+ =
 
->  #define mptcp_for_each_subflow(__msk, __subflow)			\
-> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-> index 8acea188323c..fae4f4724f2a 100644
-> --- a/net/mptcp/token.c
-> +++ b/net/mptcp/token.c
-> @@ -167,6 +167,7 @@ int mptcp_token_new_connect(struct sock *sk)
->  	WRITE_ONCE(msk->token, subflow->token);
->  	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
->  	bucket->chain_len++;
-> +	msk->connect =3D true;
->  	spin_unlock_bh(&bucket->lock);
->  	return 0;
->  }
-> @@ -193,6 +194,7 @@ void mptcp_token_accept(struct mptcp_subflow_request_=
-sock *req,
->  	if (!WARN_ON_ONCE(pos !=3D req))
->  		hlist_nulls_del_init_rcu(&req->token_node);
->  	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
-> +	msk->accept =3D true;
->  	spin_unlock_bh(&bucket->lock);
->  }
->  =
+ do_connect:
+ 	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index fcb9ca9a9dce..2d30fafa1aed 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -34,13 +34,7 @@ static int subflow_rebuild_header(struct sock *sk)
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	int local_id;
+ =
 
-> @@ -285,6 +287,7 @@ void mptcp_token_destroy(struct mptcp_sock *msk)
->  		__sk_nulls_del_node_init_rcu((struct sock *)pos);
->  		bucket->chain_len--;
->  	}
-> +	msk->del_nr++;
->  	spin_unlock_bh(&bucket->lock);
->  }
->  =
+-	if (subflow->request_mptcp && sk_unhashed(subflow->conn)) {
+-		pr_debug("subflow=3D%p", sk);
+-		if (mptcp_token_new_connect(sk)) {
+-			subflow->mp_capable =3D 0;
+-			goto out;
+-		}
+-	} else if (subflow->request_join && !subflow->local_nonce) {
++	if (subflow->request_join && !subflow->local_nonce) {
+ 		struct mptcp_sock *msk =3D (struct mptcp_sock *)subflow->conn;
+ =
 
+ 		pr_debug("subflow=3D%p", sk);
+@@ -251,7 +245,7 @@ static void subflow_finish_connect(struct sock *sk, con=
+st struct sk_buff *skb)
+ 		subflow->remote_nonce =3D mp_opt.nonce;
+ 		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u", subflow,
+ 			 subflow->thmac, subflow->remote_nonce);
+-	} else if (subflow->request_mptcp) {
++	} else {
+ 		tp->is_mptcp =3D 0;
+ 	}
+ =
 
-For the records: this horrible crap was not supposed to be here.
--ENOCOFFEE :(
+-- =
 
-Will send a v2 hopefully comprising the correct code.
+2.21.3
 
-Sorry for the noise.
-
-/P
-
---===============6071134110335930916==--
+--===============3960836171551711593==--
