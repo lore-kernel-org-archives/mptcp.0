@@ -1,53 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============3698871136618271374=="
+Content-Type: multipart/mixed; boundary="===============1256685028481211243=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2] [DO-NOT-MERGE] mptcp: use kmalloc
- on kasan build
-Date: Fri, 05 Jun 2020 20:02:20 +0200
-Message-ID: <a92b901b-6f7d-22f1-0177-444e7c1712a3@tessares.net>
-In-Reply-To: 20200605173242.2644099-1-dcaratti@redhat.com
+Subject: [MPTCP] [PATCH] mptcp: bugfix for RM_ADDR option parsing
+Date: Mon, 08 Jun 2020 15:48:10 +0800
+Message-ID: <904e4ae90b94d679d9877d3c48bd277cb9b39f5f.1591601587.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4599
+X-UID: 4600
 
---===============3698871136618271374==
+--===============1256685028481211243==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Davide,
+In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
+"Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
 
-On 05/06/2020 19:32, Davide Caratti wrote:
-> From: Paolo Abeni <pabeni(a)redhat.com>
-> =
+  +-------+-------+---------------+
+  |Subtype|(resvd)|   Address ID  |
+  +-------+-------+---------------+
+  |               |
+ ptr            ptr+1
 
-> Helps detection UaF, which apparently kasan misses
-> with kmem_cache allocator.
-> =
+We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
+will fix this bug.
 
-> We also need to always set the SOCK_RCU_FREE flag, to
-> preserved the current code leveraging SLAB_TYPESAFE_BY_RCU.
-> This latter change will make unreachable some existing
-> errors path, but I don't see other options.
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/options.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thank you for this new version.
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 01f1f4cf4902..490b92534afc 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -273,6 +273,8 @@ static void mptcp_parse_option(const struct sk_buff *sk=
+b,
+ 		if (opsize !=3D TCPOLEN_MPTCP_RM_ADDR_BASE)
+ 			break;
+ =
 
-I just added this patch I squashed in "[DO-NOT-MERGE] mptcp: use kmalloc =
-
-on kasan build" commit:
-
-- f83f82c06635: mptcp: support IPv6 with kmalloc
-
-The "export" branch is going to be updated soon.
-
-Cheers,
-Matt
++		ptr++;
++
+ 		mp_opt->rm_addr =3D 1;
+ 		mp_opt->rm_id =3D *ptr++;
+ 		pr_debug("RM_ADDR: id=3D%d", mp_opt->rm_id);
 -- =
 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts(a)tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
---===============3698871136618271374==--
+2.17.1
+
+--===============1256685028481211243==--
