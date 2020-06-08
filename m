@@ -1,42 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============5777705247719191169=="
+Content-Type: multipart/mixed; boundary="===============0444262590593991624=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 0/2] mptcp: more token follow-up
-Date: Mon, 08 Jun 2020 18:44:26 +0200
-Message-ID: <cover.1591615582.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 2/2] dbg
+Date: Mon, 08 Jun 2020 18:44:28 +0200
+Message-ID: <e377f787126b17eeed52e365d76bd8004105e79d.1591615582.git.pabeni@redhat.com>
+In-Reply-To: cover.1591615582.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4613
+X-UID: 4614
 
---===============5777705247719191169==
+--===============0444262590593991624==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The patch 1 addesses a race on close which may possibly fix
-issues/36 && issues/29, the 2nd patch is a follow-up cleanup.
-
-Patch 2 should be inserted just after "mptcp: refactor token container."
-
-Note: I'm observing frequent (1 every a few runs) self-tests failure on top
-of export branch due to timeout, but looks unrelated from series (happens =
-
-on unpatched tree)
-
-Paolo Abeni (2):
-  mptcp: do nonce initialization at subflow creation time
-  dbg
-
- net/core/sock.c      | 16 +------------
- net/mptcp/protocol.c | 23 +++++++++++++++++++
- net/mptcp/protocol.h |  7 ++++++
- net/mptcp/subflow.c  | 54 ++++++++++++++++----------------------------
+---
+ net/core/sock.c      | 16 +---------------
+ net/mptcp/protocol.c | 23 +++++++++++++++++++++++
+ net/mptcp/protocol.h |  7 +++++++
  net/mptcp/token.c    |  3 +++
- 5 files changed, 54 insertions(+), 49 deletions(-)
+ 4 files changed, 34 insertions(+), 15 deletions(-)
+
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 6c4acf1f0220..92030a61752b 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1776,7 +1776,7 @@ EXPORT_SYMBOL(sk_alloc);
+ /* Sockets having SOCK_RCU_FREE will call this function after one RCU
+  * grace period. This is the case for UDP sockets and TCP listeners.
+  */
+-static void __sk_destruct(struct rcu_head *head)
++void __sk_destruct(struct rcu_head *head)
+ {
+ 	struct sock *sk =3D container_of(head, struct sock, sk_rcu);
+ 	struct sk_filter *filter;
+@@ -1814,20 +1814,6 @@ static void __sk_destruct(struct rcu_head *head)
+ 	sk_prot_free(sk->sk_prot_creator, sk);
+ }
+ =
+
+-void sk_destruct(struct sock *sk)
+-{
+-	bool use_call_rcu =3D sock_flag(sk, SOCK_RCU_FREE);
+-
+-	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
+-		reuseport_detach_sock(sk);
+-		use_call_rcu =3D true;
+-	}
+-
+-	if (use_call_rcu)
+-		call_rcu(&sk->sk_rcu, __sk_destruct);
+-	else
+-		__sk_destruct(&sk->sk_rcu);
+-}
+ =
+
+ static void __sk_free(struct sock *sk)
+ {
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3cbd33debea1..09e0fc91983b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2088,6 +2088,29 @@ static struct inet_protosw mptcp_protosw =3D {
+ 	.flags		=3D INET_PROTOSW_ICSK,
+ };
+ =
+
++void __sk_destruct(struct rcu_head *head);
++
++void sk_destruct(struct sock *sk)
++{
++	bool use_call_rcu =3D sock_flag(sk, SOCK_RCU_FREE);
++
++	if (rcu_access_pointer(sk->sk_reuseport_cb)) {
++		reuseport_detach_sock(sk);
++		use_call_rcu =3D true;
++	}
++
++	if (sk->sk_prot =3D=3D &mptcp_prot) {
++		struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++		msk->add_nr =3D stack_trace_save(msk->add_store, STORE_LEN, 1);
++	}
++
++	if (use_call_rcu)
++		call_rcu(&sk->sk_rcu, __sk_destruct);
++	else
++		__sk_destruct(&sk->sk_rcu);
++}
++
+ #if IS_ENABLED(CONFIG_KASAN)
+ #define MPTCP_USE_SLAB		0
+ #else
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 6322c4e2d07c..912525b677c6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -210,6 +210,13 @@ struct mptcp_sock {
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+ 	struct sock	*first;
+ 	struct mptcp_pm_data	pm;
++
++#define STORE_LEN		16
++	long		add_store[STORE_LEN];
++	int		add_nr;
++	bool		connect;
++	bool		accept;
++	int		del_nr;
+ };
+ =
+
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 8acea188323c..fae4f4724f2a 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -167,6 +167,7 @@ int mptcp_token_new_connect(struct sock *sk)
+ 	WRITE_ONCE(msk->token, subflow->token);
+ 	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
+ 	bucket->chain_len++;
++	msk->connect =3D true;
+ 	spin_unlock_bh(&bucket->lock);
+ 	return 0;
+ }
+@@ -193,6 +194,7 @@ void mptcp_token_accept(struct mptcp_subflow_request_so=
+ck *req,
+ 	if (!WARN_ON_ONCE(pos !=3D req))
+ 		hlist_nulls_del_init_rcu(&req->token_node);
+ 	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
++	msk->accept =3D true;
+ 	spin_unlock_bh(&bucket->lock);
+ }
+ =
+
+@@ -285,6 +287,7 @@ void mptcp_token_destroy(struct mptcp_sock *msk)
+ 		__sk_nulls_del_node_init_rcu((struct sock *)pos);
+ 		bucket->chain_len--;
+ 	}
++	msk->del_nr++;
+ 	spin_unlock_bh(&bucket->lock);
+ }
+ =
 
 -- =
 
 2.21.3
 
---===============5777705247719191169==--
+--===============0444262590593991624==--
