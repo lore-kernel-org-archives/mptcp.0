@@ -1,53 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============1256685028481211243=="
+Content-Type: multipart/mixed; boundary="===============6491617705613002493=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: bugfix for RM_ADDR option parsing
-Date: Mon, 08 Jun 2020 15:48:10 +0800
-Message-ID: <904e4ae90b94d679d9877d3c48bd277cb9b39f5f.1591601587.git.geliangtang@gmail.com>
+Subject: [MPTCP] Re: [PATCH] mptcp: bugfix for RM_ADDR option parsing
+Date: Mon, 08 Jun 2020 12:10:23 +0200
+Message-ID: <41246875-febc-e88d-304b-2a6692f590ac@tessares.net>
+In-Reply-To: 904e4ae90b94d679d9877d3c48bd277cb9b39f5f.1591601587.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4600
+X-UID: 4601
 
---===============1256685028481211243==
+--===============6491617705613002493==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
-"Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+Hi Geliang,
 
-  +-------+-------+---------------+
-  |Subtype|(resvd)|   Address ID  |
-  +-------+-------+---------------+
-  |               |
- ptr            ptr+1
+On 08/06/2020 09:48, Geliang Tang wrote:
+> In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
+> "Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+> =
 
-We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
-will fix this bug.
+>    +-------+-------+---------------+
+>    |Subtype|(resvd)|   Address ID  |
+>    +-------+-------+---------------+
+>    |               |
+>   ptr            ptr+1
+> =
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/options.c | 2 ++
- 1 file changed, 2 insertions(+)
+> We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
+> will fix this bug.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 01f1f4cf4902..490b92534afc 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -273,6 +273,8 @@ static void mptcp_parse_option(const struct sk_buff *sk=
-b,
- 		if (opsize !=3D TCPOLEN_MPTCP_RM_ADDR_BASE)
- 			break;
- =
+Thank you for the patch, good catch!
+Indeed "ptr" should be incremented.
 
-+		ptr++;
-+
- 		mp_opt->rm_addr =3D 1;
- 		mp_opt->rm_id =3D *ptr++;
- 		pr_debug("RM_ADDR: id=3D%d", mp_opt->rm_id);
+Because this is a bug-fix for net, may you clearly indicate that in the =
+
+subject to help -net maintainers please? [PATCH net v2]
+
+Also, may you add a "Fixes" tag as well as it is for -net ? I guess it =
+
+should be:
+
+     Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
+
+The rest is good!
+
+Cheers,
+Matt
 -- =
 
-2.17.1
-
---===============1256685028481211243==--
+Matthieu Baerts | R&D Engineer
+matthieu.baerts(a)tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--===============6491617705613002493==--
