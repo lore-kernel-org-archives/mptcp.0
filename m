@@ -1,31 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============8198548285453809630=="
+Content-Type: multipart/mixed; boundary="===============5777705247719191169=="
 MIME-Version: 1.0
-From: Dan Carpenter <dan.carpenter at oracle.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [kbuild] [mptcp:export 5/10] net/mptcp/subflow.c:512
- subflow_syn_recv_sock() error: uninitialized symbol 'subflow_req'.
-Date: Mon, 08 Jun 2020 16:34:37 +0300
-Message-ID: <20200608133437.GR22511@kadam>
-In-Reply-To: a77061c3f7ef8ef800e3646b6b2165774594564d.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next 0/2] mptcp: more token follow-up
+Date: Mon, 08 Jun 2020 18:44:26 +0200
+Message-ID: <cover.1591615582.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4611
+X-UID: 4613
 
---===============8198548285453809630==
+--===============5777705247719191169==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 08, 2020 at 03:29:12PM +0200, Paolo Abeni wrote:
-> BTW I'll be curious to learn how this report has been created?!? Are
-> you using a kbuild bot instance to run smack on mptcp export branch ?!?
-> =
+The patch 1 addesses a race on close which may possibly fix
+issues/36 && issues/29, the 2nd patch is a follow-up cleanup.
 
+Patch 2 should be inserted just after "mptcp: refactor token container."
 
-The kbuild bot run Smatch on whatever trees it can find.  Then I look it
-over and forward to ignore the warnings.
+Note: I'm observing frequent (1 every a few runs) self-tests failure on top
+of export branch due to timeout, but looks unrelated from series (happens =
 
-regards,
-dan carpenter
+on unpatched tree)
 
---===============8198548285453809630==--
+Paolo Abeni (2):
+  mptcp: do nonce initialization at subflow creation time
+  dbg
+
+ net/core/sock.c      | 16 +------------
+ net/mptcp/protocol.c | 23 +++++++++++++++++++
+ net/mptcp/protocol.h |  7 ++++++
+ net/mptcp/subflow.c  | 54 ++++++++++++++++----------------------------
+ net/mptcp/token.c    |  3 +++
+ 5 files changed, 54 insertions(+), 49 deletions(-)
+
+-- =
+
+2.21.3
+
+--===============5777705247719191169==--
