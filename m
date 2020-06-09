@@ -1,93 +1,143 @@
-Content-Type: multipart/mixed; boundary="===============0445563974695634530=="
+Content-Type: multipart/mixed; boundary="===============3937035905741937861=="
 MIME-Version: 1.0
 From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 1/3] Squash-to: "mptcp: refactor token
- container."
-Date: Tue, 09 Jun 2020 12:09:56 +0200
-Message-ID: <42c65b684c04040c5f9c5a5993a92dcc0642bdeb.camel@redhat.com>
-In-Reply-To: 3937b1a365f3f679c4f09887ba372d310af52f48.1591652866.git.pabeni@redhat.com
+Subject: [MPTCP] [RFC net] mptcp: fallback in case of simultaneous connect
+Date: Tue, 09 Jun 2020 19:37:16 +0200
+Message-ID: <20200609173716.1105362-1-dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4623
+X-UID: 4624
 
---===============0445563974695634530==
+--===============3937035905741937861==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-06-08 at 23:51 +0200, Paolo Abeni wrote:
-> Move token creation into stream_connect(). This clean
-> the code a bit reducing the test in critical path and
-> plug a race: at shutdown time, subflow_rebuild_header()
-> can be called after the msk token is removed, leaving
-> a refecen to the to-be destroyed socket into the
-> token container with later UaF.
-> =
+when a MPTCP client tries to connect to itself, tcp_finish_connect() is
+never reached. Because of this, depending on ther socket current state,
+multiple faults can be observed:
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+1) hitting a WARN_ON() in subflow_data_ready()
+ WARNING: CPU: 2 PID: 882 at net/mptcp/subflow.c:911 subflow_data_ready+0x1=
+8b/0x230
+ [...]
+ CPU: 2 PID: 882 Comm: gh35 Not tainted 5.7.0+ #187
+ [...]
+ RIP: 0010:subflow_data_ready+0x18b/0x230
+ [...]
+ Call Trace:
+  tcp_data_queue+0xd2f/0x4250
+  tcp_rcv_state_process+0xb1c/0x49d3
+  tcp_v4_do_rcv+0x2bc/0x790
+  __release_sock+0x153/0x2d0
+  release_sock+0x4f/0x170
+  mptcp_shutdown+0x167/0x4e0
+  __sys_shutdown+0xe6/0x180
+  __x64_sys_shutdown+0x50/0x70
+  do_syscall_64+0x9a/0x370
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-hello Paolo,
+2) being stucked forever in mptcp_sendmsg() because the socket is not
+   TCP_ESTABLISHED
 
-this patch fixes the kasan UAF and the GPF crash I saw yesterday on my
-test environments. See below:
+ crash> bt 4847
+ PID: 4847   TASK: ffff88814b2fb100  CPU: 1   COMMAND: "gh35"
+  #0 [ffff8881376ff680] __schedule at ffffffff97248da4
+  #1 [ffff8881376ff778] schedule at ffffffff9724a34f
+  #2 [ffff8881376ff7a0] schedule_timeout at ffffffff97252ba0
+  #3 [ffff8881376ff8a8] wait_woken at ffffffff958ab4ba
+  #4 [ffff8881376ff940] sk_stream_wait_connect at ffffffff96c2d859
+  #5 [ffff8881376ffa28] mptcp_sendmsg at ffffffff97207fca
+  #6 [ffff8881376ffbc0] sock_sendmsg at ffffffff96be1b5b
+  #7 [ffff8881376ffbe8] sock_write_iter at ffffffff96be1daa
+  #8 [ffff8881376ffce8] new_sync_write at ffffffff95e5cb52
+  #9 [ffff8881376ffe50] vfs_write at ffffffff95e6547f
+ #10 [ffff8881376ffe90] ksys_write at ffffffff95e65d26
+ #11 [ffff8881376fff28] do_syscall_64 at ffffffff956088ba
+ #12 [ffff8881376fff50] entry_SYSCALL_64_after_hwframe at ffffffff9740008c
+     RIP: 00007f126f6956ed  RSP: 00007ffc2a320278  RFLAGS: 00000217
+     RAX: ffffffffffffffda  RBX: 0000000020000044  RCX: 00007f126f6956ed
+     RDX: 0000000000000004  RSI: 00000000004007b8  RDI: 0000000000000003
+     RBP: 00007ffc2a3202a0   R8: 0000000000400720   R9: 0000000000400720
+     R10: 0000000000400720  R11: 0000000000000217  R12: 00000000004004b0
+     R13: 00007ffc2a320380  R14: 0000000000000000  R15: 0000000000000000
+     ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
 
-> ---
->  net/mptcp/protocol.c |  6 +++++-
->  net/mptcp/subflow.c  | 10 ++--------
->  2 files changed, 7 insertions(+), 9 deletions(-)
+3) tcpdump captures showing DSS exchange even when MP_CAPABLE handshake
+   didn't complete.
 
-[...]
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index fcb9ca9a9dce..2d30fafa1aed 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-[...]
-> @@ -251,7 +245,7 @@ static void subflow_finish_connect(struct sock *sk, c=
-onst struct sk_buff *skb)
->  		subflow->remote_nonce =3D mp_opt.nonce;
->  		pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u", subflow,
->  			 subflow->thmac, subflow->remote_nonce);
-> -	} else if (subflow->request_mptcp) {
-> +	} else {
->  		tp->is_mptcp =3D 0;
->  	}
+ $ tcpdump -tnnr bad.pcap
+ IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [S], seq 3208913911, win 65483=
+, options [mss 65495,sackOK,TS val 3291706876 ecr 3291694721,nop,wscale 7,m=
+ptcp capable v1], length 0
+ IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [S.], seq 3208913911, ack 3208=
+913912, win 65483, options [mss 65495,sackOK,TS val 3291706876 ecr 32917068=
+76,nop,wscale 7,mptcp capable v1], length 0
+ IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [.], ack 1, win 512, options [=
+nop,nop,TS val 3291706876 ecr 3291706876], length 0
+ IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [F.], seq 1, ack 1, win 512, o=
+ptions [nop,nop,TS val 3291707876 ecr 3291706876,mptcp dss fin seq 0 subseq=
+ 0 len 1,nop,nop], length 0
+ IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [.], ack 2, win 512, options [=
+nop,nop,TS val 3291707876 ecr 3291707876], length 0
 
-the above hunk does not apply because the lower context is different (it
-has been changed wityh the fallback rework). I reworked it like this:
+force a fallback to TCP in these cases, and adjust the main socket
+state to avoid hanging in sendmsg().
 
------------------------- >8 ------------------------
-@@ -252,7 +246,7 @@ static void subflow_finish_connect(struct sock *sk,
-const struct sk_buff *skb)
-                subflow->remote_nonce =3D mp_opt.nonce;
-                pr_debug("subflow=3D%p, thmac=3D%llu, remote_nonce=3D%u", s=
-ubflow,
-                         subflow->thmac, subflow->remote_nonce);
--       } else if (subflow->request_mptcp) {
-+       } else {
-                mptcp_do_fallback(sk);
-                pr_fallback(mptcp_sk(subflow->conn));
-                MPTCP_INC_STATS(sock_net(sk),
------------------------- >8 ------------------------
+BugLink: https://github.com/multipath-tcp/mptcp_net-next/issues/35
+Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/protocol.h | 10 ++++++++++
+ net/mptcp/subflow.c  |  9 +++++++++
+ 2 files changed, 19 insertions(+)
 
-During tests, I saw a sporadic packetdrill failure (one occurrence) here:
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index e4341b278464..cdd0eaeebf0c 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -500,4 +500,14 @@ static inline void mptcp_do_fallback(struct sock *sk)
+ #define pr_fallback(a) do { pr_debug("%s:fallback to TCP (msk=3D%p)",\
+ 				      __FUNCTION__, a); } while (0)
+ =
 
-/root/packetdrill/gtests/net/mptcp/mp_capable/v1_connect_tcpfallback_flagB.=
-pkt
++static inline bool subflow_simultaneous_connect(struct sock *sk)
++{
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
++	struct sock *parent =3D subflow->conn;
++
++	return sk->sk_state =3D=3D TCP_ESTABLISHED &&
++	       !mptcp_sk(parent)->pm.server_side &&
++	       !subflow->conn_finished;
++}
++
+ #endif /* __MPTCP_PROTOCOL_H */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 439170f798c8..eccc19e1adbe 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1128,6 +1128,15 @@ static void subflow_state_change(struct sock *sk)
+ =
 
-and here:
+ 	__subflow_state_change(sk);
+ =
 
-/root/packetdrill/gtests/net/mptcp/mp_capable/v1_bind_tcpfallback_wrongver.=
-pkt
-
-but I'm unsure if this is really a problem related to this patch. I'm
-quite sure that it's something recent, because tests in the 'mp_capable'
-subfolder have been passing wothout problems since a long time.
-
++	if (subflow_simultaneous_connect(sk)) {
++		mptcp_do_fallback(sk);
++		pr_fallback(mptcp_sk(parent));
++		if (inet_sk_state_load(parent) =3D=3D TCP_SYN_SENT) {
++			inet_sk_state_store(parent, TCP_ESTABLISHED);
++			parent->sk_state_change(parent);
++		}
++	}
++
+ 	/* as recvmsg() does not acquire the subflow socket for ssk selection
+ 	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
+ 	 * the data available machinery here.
 -- =
 
-davide
+2.18.1
 
-
-
---===============0445563974695634530==--
+--===============3937035905741937861==--
