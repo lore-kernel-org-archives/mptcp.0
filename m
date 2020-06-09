@@ -1,31 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============3884592716740319590=="
+Content-Type: multipart/mixed; boundary="===============2277208299499322335=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/3] mptcp: more token follow-up
-Date: Mon, 08 Jun 2020 23:51:29 +0200
-Message-ID: <cover.1591652866.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH net v2] mptcp: bugfix for RM_ADDR option parsing
+Date: Mon, 08 Jun 2020 19:11:08 -0700
+Message-ID: <20200608.191108.1901661787245617914.davem@davemloft.net>
+In-Reply-To: 5ec9759a19d4eba5f7f9006354da2cfeb39fa839.1591612830.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4621
+X-UID: 4622
 
---===============3884592716740319590==
+--===============2277208299499322335==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The patch 1 addesses a race on close which may possibly fix
-issues/36 && issues/29, the 2nd patch is resolve conflicts and the 3rd one
-is a follow-up cleanup.
+From: Geliang Tang <geliangtang(a)gmail.com>
+Date: Mon,  8 Jun 2020 18:47:54 +0800
 
-Patch 3 should be inserted just after "mptcp: refactor token container."
+> In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
+> "Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+> =
 
-v1 -> v2:
- - hopefully includes the correct patches
+>   +-------+-------+---------------+
+>   |Subtype|(resvd)|   Address ID  |
+>   +-------+-------+---------------+
+>   |               |
+>  ptr            ptr+1
+> =
 
- protocol.c |    9 ++++---
- subflow.c  |   69 ++++++++++++++++++++++----------------------------------=
------
- 2 files changed, 30 insertions(+), 48 deletions(-)
+> We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
+> will fix this bug.
+> =
 
---===============3884592716740319590==--
+> Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+>  Changes in v2:
+>   - Add "-net" subject and "Fixes" tag as Matt suggested.
+
+Applied and queued up for v5.7 -stable, thanks!
+--===============2277208299499322335==--
