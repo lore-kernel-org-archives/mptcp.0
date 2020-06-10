@@ -1,52 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============7439315309124244279=="
+Content-Type: multipart/mixed; boundary="===============7700875591042586282=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: don't leak msk in token container
-Date: Wed, 10 Jun 2020 10:49:00 +0200
-Message-ID: <f52cfae0ddacd91b37a804f19a6ffa2f79efe56f.1591778889.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH v2 0/3] mptcp: more token follow-up
+Date: Wed, 10 Jun 2020 11:20:49 +0200
+Message-ID: <c20a5b3e8538f2fbd0a34ae61b87c30d2612b003.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.22.394.2006091414220.26344@hlin4-mobl2.gar.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4629
+X-UID: 4630
 
---===============7439315309124244279==
+--===============7700875591042586282==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If a listening MPTCP socket has unaccepted sockets at close
-time, the related msks are freed via mptcp_sock_destruct(),
-which in turn does not invoke the proto->destroy() method
-nor the mptcp_token_destroy() function.
+On Tue, 2020-06-09 at 14:26 -0700, Mat Martineau wrote:
+> On Mon, 8 Jun 2020, Paolo Abeni wrote:
+> =
 
-Due to the above, the child msk socket is not removed from
-the token container, leading to later UaF.
+> > The patch 1 addesses a race on close which may possibly fix
+> > issues/36 && issues/29, the 2nd patch is resolve conflicts and the 3rd =
+one
+> > is a follow-up cleanup.
+> > =
 
-Address the issue explicitly removing the token even in the
-above error path.
+> > Patch 3 should be inserted just after "mptcp: refactor token container."
+> > =
 
-Fixes: 79c0949e9a09 ("mptcp: Add key generation and token tree")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 1 +
- 1 file changed, 1 insertion(+)
+> > v1 -> v2:
+> > - hopefully includes the correct patches
+> > =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 493b98a0825c..bf132575040d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -393,6 +393,7 @@ static void mptcp_sock_destruct(struct sock *sk)
- 		sock_orphan(sk);
- 	}
- =
+> > protocol.c |    9 ++++---
+> > subflow.c  |   69 ++++++++++++++++++++++-------------------------------=
+--------
+> > 2 files changed, 30 insertions(+), 48 deletions(-)
+> =
 
-+	mptcp_token_destroy(mptcp_sk(sk)->token);
- 	inet_sock_destruct(sk);
- }
- =
+> Thanks Paolo, these fixes look good. From IRC and =
 
--- =
+> https://github.com/multipath-tcp/mptcp_net-next/issues/36 it looks like =
 
-2.21.3
+> #36 is still happening, do you prefer to try more changes in a v3 or =
 
---===============7439315309124244279==--
+> squash these in the export branch and work from there?
+
+I don't have anything more in my pocket, so I would opt for squashing
+this changes as is, thanks!
+
+/P
+
+--===============7700875591042586282==--
