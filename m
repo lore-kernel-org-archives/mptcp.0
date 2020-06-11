@@ -1,93 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============0921458521864673186=="
+Content-Type: multipart/mixed; boundary="===============7807143751661843747=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 2/2] mptcp: drop MP_JOIN request sock on syn cookies
-Date: Thu, 11 Jun 2020 19:20:57 +0200
-Message-ID: <ba394e20f65fb338e27e952bf1128b23b5552506.1591895765.git.pabeni@redhat.com>
-In-Reply-To: cover.1591895765.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] mptcp: close poll() races
+Date: Thu, 11 Jun 2020 20:51:45 +0200
+Message-ID: <02e94e8f-edb4-32dc-1a5b-b0a90d0385e9@tessares.net>
+In-Reply-To: alpine.OSX.2.22.394.2006101722240.42607@jkolinsk-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4653
+X-UID: 4654
 
---===============0921458521864673186==
+--===============7807143751661843747==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently any MPTCP socket using syn cookies will fallback to
-TCP at 3rd ack time. In case of MP_JOIN requests, the RFC mandate
-closing the child and sockets, but the existing error paths
-do not handle the syncookie scenario correctly.
+Hi Paolo, Mat,
 
-Address the issue always forcing the child shutdown in case of
-MP_JOIN fallback.
+On 11/06/2020 02:52, Mat Martineau wrote:
+> =
 
-Fixes: ae2dd7164943 ("mptcp: handle tcp fallback when using syn cookies")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+> On Wed, 10 Jun 2020, Paolo Abeni wrote:
+> =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8367d93e2f5c..339c9226c6ee 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -393,22 +393,25 @@ static struct sock *subflow_syn_recv_sock(const struc=
-t sock *sk,
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_subflow_request_sock *subflow_req;
- 	struct mptcp_options_received mp_opt;
--	bool fallback_is_fatal =3D false;
-+	bool fallback, fallback_is_fatal;
- 	struct sock *new_msk =3D NULL;
--	bool fallback =3D false;
- 	struct sock *child;
- =
+>> mptcp_poll always return POLLOUT for unblocking
+>> connect(), ensure that the socket is a suitable
+>> state.
+>> The MPTCP_DATA_READY bit is never cleared on accept:
+>> ensure we don't leave mptcp_accept() with an empty
+>> accept queue and such bit set.
 
- 	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener->c=
-onn);
- =
+Thank you for the patch and the review!
 
--	/* we need later a valid 'mp_capable' value even when options are not
--	 * parsed
-+	/* After child creation we must look for 'mp_capable' even when options
-+	 * are not parsed
- 	 */
- 	mp_opt.mp_capable =3D 0;
--	if (tcp_rsk(req)->is_mptcp =3D=3D 0)
-+
-+	/* hopefully temporary handling for MP_JOIN+syncookie */
-+	subflow_req =3D mptcp_subflow_rsk(req);
-+	fallback_is_fatal =3D subflow_req->mp_join;
-+	fallback =3D !tcp_rsk(req)->is_mptcp;
-+	if (fallback)
- 		goto create_child;
- =
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+>> ---
+>> This can be:
+>> - keep as is
+>> - split in 2 patches (listen fix and connect fix)
+>> - squashed into "mptcp: fallback in case of simultaneous connect",
+>> - partially squashed (listen fix) and partially keeped as separate patch
+>>
+>> I'll personally vote for option 1 or 3 but I'm open to other
+>> alternatives ;)
+> =
 
- 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
--	subflow_req =3D mptcp_subflow_rsk(req);
- 	if (subflow_req->mp_capable) {
- 		if (TCP_SKB_CB(skb)->seq !=3D subflow_req->ssn_offset + 1) {
- 			/* here we can receive and accept an in-window,
-@@ -429,12 +432,11 @@ static struct sock *subflow_syn_recv_sock(const struc=
-t sock *sk,
- 		if (!new_msk)
- 			fallback =3D true;
- 	} else if (subflow_req->mp_join) {
--		fallback_is_fatal =3D true;
- 		mptcp_get_options(skb, &mp_opt);
- 		if (!mp_opt.mp_join ||
- 		    !subflow_hmac_valid(req, &mp_opt)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
--			return NULL;
-+			fallback =3D true;
- 		}
- 	}
- =
+> Option 1 sounds good, but I don't object to #3
 
+I picked the option 1 because the "mptcp: fallback in case of =
+
+simultaneous connect" is currently waiting for review :)
+
+So this patch is now at the end of the series.
+
+- 76c6304b26cb..e914fa85bdc4: result
+
+The "export" branch has been updated. Tests are still OK!
+
+Cheers,
+Matt
 -- =
 
-2.21.3
-
---===============0921458521864673186==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============7807143751661843747==--
