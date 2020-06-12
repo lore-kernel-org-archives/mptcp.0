@@ -1,102 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============7078021320409689476=="
+Content-Type: multipart/mixed; boundary="===============5849361625825316663=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 2/2] mptcp: drop MP_JOIN request sock on syn
- cookies
-Date: Thu, 11 Jun 2020 22:14:36 -0700
-Message-ID: <alpine.OSX.2.22.394.2006112132170.67471@adevaraj-mobl1.amr.corp.intel.com>
-In-Reply-To: ba394e20f65fb338e27e952bf1128b23b5552506.1591895765.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH] mptcp: unify MPTCP_PM_MAX_ADDR and MPTCP_PM_ADDR_MAX
+Date: Fri, 12 Jun 2020 13:27:28 +0800
+Message-ID: <463f48a4f92aa403453d30a801259c68fda15387.1591939496.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4656
+X-UID: 4657
 
---===============7078021320409689476==
+--===============5849361625825316663==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 11 Jun 2020, Paolo Abeni wrote:
+Unify these two duplicate macros into 8.
 
-> Currently any MPTCP socket using syn cookies will fallback to
-> TCP at 3rd ack time. In case of MP_JOIN requests, the RFC mandate
-> closing the child and sockets, but the existing error paths
-> do not handle the syncookie scenario correctly.
->
-> Address the issue always forcing the child shutdown in case of
-> MP_JOIN fallback.
->
-> Fixes: ae2dd7164943 ("mptcp: handle tcp fallback when using syn cookies")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/subflow.c | 18 ++++++++++--------
-> 1 file changed, 10 insertions(+), 8 deletions(-)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 8367d93e2f5c..339c9226c6ee 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -393,22 +393,25 @@ static struct sock *subflow_syn_recv_sock(const str=
-uct sock *sk,
-> 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk);
-> 	struct mptcp_subflow_request_sock *subflow_req;
-> 	struct mptcp_options_received mp_opt;
-> -	bool fallback_is_fatal =3D false;
-> +	bool fallback, fallback_is_fatal;
-> 	struct sock *new_msk =3D NULL;
-> -	bool fallback =3D false;
-> 	struct sock *child;
->
-> 	pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, listener->=
-conn);
->
-> -	/* we need later a valid 'mp_capable' value even when options are not
-> -	 * parsed
-> +	/* After child creation we must look for 'mp_capable' even when options
-> +	 * are not parsed
-> 	 */
-> 	mp_opt.mp_capable =3D 0;
-> -	if (tcp_rsk(req)->is_mptcp =3D=3D 0)
-> +
-> +	/* hopefully temporary handling for MP_JOIN+syncookie */
-> +	subflow_req =3D mptcp_subflow_rsk(req);
-> +	fallback_is_fatal =3D subflow_req->mp_join;
-> +	fallback =3D !tcp_rsk(req)->is_mptcp;
-> +	if (fallback)
-> 		goto create_child;
->
-> 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
-> -	subflow_req =3D mptcp_subflow_rsk(req);
-> 	if (subflow_req->mp_capable) {
-> 		if (TCP_SKB_CB(skb)->seq !=3D subflow_req->ssn_offset + 1) {
-> 			/* here we can receive and accept an in-window,
-> @@ -429,12 +432,11 @@ static struct sock *subflow_syn_recv_sock(const str=
-uct sock *sk,
-> 		if (!new_msk)
-> 			fallback =3D true;
-> 	} else if (subflow_req->mp_join) {
-> -		fallback_is_fatal =3D true;
-> 		mptcp_get_options(skb, &mp_opt);
-> 		if (!mp_opt.mp_join ||
-> 		    !subflow_hmac_valid(req, &mp_opt)) {
-> 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
-> -			return NULL;
-> +			fallback =3D true;
-> 		}
-> 	}
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/pm_netlink.c | 2 --
+ net/mptcp/protocol.h   | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-When fallback and fallback_is_fatal are both true when continuing past =
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index b78edf237ba0..b694f13caba8 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -41,8 +41,6 @@ struct pm_nl_pernet {
+ 	unsigned int		next_id;
+ };
+ =
 
-this block of code, it does look difficult to detect when to *not* send a =
+-#define MPTCP_PM_ADDR_MAX	8
+-
+ static bool addresses_equal(const struct mptcp_addr_info *a,
+ 			    struct mptcp_addr_info *b, bool use_port)
+ {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 809687d3f410..86d265500cf6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -135,7 +135,7 @@ static inline __be32 mptcp_option(u8 subopt, u8 len, u8=
+ nib, u8 field)
+ 		     ((nib & 0xF) << 8) | field);
+ }
+ =
 
-reset without doing the work of allocating the child. The approach of =
+-#define MPTCP_PM_MAX_ADDR	4
++#define MPTCP_PM_ADDR_MAX	8
+ =
 
-doing the allocation seems ok, hopefully the extra work to do the =
+ struct mptcp_addr_info {
+ 	sa_family_t		family;
+-- =
 
-allocation is not itself subject to attack :)
+2.17.1
 
-
---
-Mat Martineau
-Intel
---===============7078021320409689476==--
+--===============5849361625825316663==--
