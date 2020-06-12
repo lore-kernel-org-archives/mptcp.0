@@ -1,67 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============7756835363871913116=="
+Content-Type: multipart/mixed; boundary="===============8909775342184862557=="
 MIME-Version: 1.0
-From: Wei Yongjun <weiyongjun1 at huawei.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: fix memory leak in
- mptcp_subflow_create_socket()
-Date: Fri, 12 Jun 2020 16:49:38 +0800
-Message-ID: <20200612084938.52083-1-weiyongjun1@huawei.com>
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 11th of June 2020
+Date: Fri, 12 Jun 2020 16:52:51 +0200
+Message-ID: <5a20fc04-c6ef-4cd2-aa00-60b0fc904b1f@tessares.net>
+In-Reply-To: f3a5e140-0cc1-7ad3-3e92-dc61be603e8f@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4659
+X-UID: 4660
 
---===============7756835363871913116==
+--===============8909775342184862557==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-socket malloced  by sock_create_kern() should be release before return
-in the error handling, otherwise it cause memory leak.
+Hi Paolo,
 
-unreferenced object 0xffff88810910c000 (size 1216):
-  comm "00000003_test_m", pid 12238, jiffies 4295050289 (age 54.237s)
-  hex dump (first 32 bytes):
-    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 2f 30 0a 81 88 ff ff  ........./0.....
-  backtrace:
-    [<00000000e877f89f>] sock_alloc_inode+0x18/0x1c0
-    [<0000000093d1dd51>] alloc_inode+0x63/0x1d0
-    [<000000005673fec6>] new_inode_pseudo+0x14/0xe0
-    [<00000000b5db6be8>] sock_alloc+0x3c/0x260
-    [<00000000e7e3cbb2>] __sock_create+0x89/0x620
-    [<0000000023e48593>] mptcp_subflow_create_socket+0xc0/0x5e0
-    [<00000000419795e4>] __mptcp_socket_create+0x1ad/0x3f0
-    [<00000000b2f942e8>] mptcp_stream_connect+0x281/0x4f0
-    [<00000000c80cd5cc>] __sys_connect_file+0x14d/0x190
-    [<00000000dc761f11>] __sys_connect+0x128/0x160
-    [<000000008b14e764>] __x64_sys_connect+0x6f/0xb0
-    [<000000007b4f93bd>] do_syscall_64+0xa1/0x530
-    [<00000000d3e770b6>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+On 11/06/2020 19:01, Matthieu Baerts wrote:
 
-Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
-Signed-off-by: Wei Yongjun <weiyongjun1(a)huawei.com>
+(...)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index bf132575040d..bbdb74b8bc3c 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1053,8 +1053,10 @@ int mptcp_subflow_create_socket(struct sock *sk, str=
-uct socket **new_sock)
- 	err =3D tcp_set_ulp(sf->sk, "mptcp");
- 	release_sock(sf->sk);
- =
+>  =C2=A0 20=C2=A0 implement msk diag interface [enhancement]:
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - could be possible now that the token co=
+ntainer has been refactor
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - there is an API issue with IPPROTO_MPTCP
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - "Florian said that the diag handler for=
+ IPPROTO_RAW already =
 
--	if (err)
-+	if (err) {
-+		sock_release(sf);
- 		return err;
-+	}
- =
+> uses it"
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adding something in '/proc/net/mptcp'?:
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - instead of a re=
+al diag interface
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - *Matth* : TODO:=
+ we said something about that at the LPC, =
 
- 	/* the newly created socket really belongs to the owning MPTCP master
- 	 * socket, even if for additional subflows the allocation is performed
+> check that
+
+It is still unclear to me if having an interface similar to =
+
+/proc/net/tcp could be accepted upstream. It seems some people already =
+
+forgot this interface still exists :)
+
+     https://youtu.be/Y64n_R14GtI?t=3D1722
+
+(but it is useful on embedded devices with limited tools)
+
+Maybe a good justification could be OK :)
+But people might expect to have everything via sock_diag.
+
+I hope this info will help :)
+
+Cheers,
+Matt
 -- =
 
-2.25.1
-
---===============7756835363871913116==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============8909775342184862557==--
