@@ -1,71 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============1212228208724814900=="
+Content-Type: multipart/mixed; boundary="===============3873578828424466002=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: use list_first_entry_or_null
-Date: Fri, 12 Jun 2020 11:22:31 -0700
-Message-ID: <alpine.OSX.2.22.394.2006121114030.74555@mjmartin-mac01.local>
-In-Reply-To: 9958d3f15d2d181eb9d48ffe5bf3251ec900f27a.1591941826.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH] mptcp: fix memory leak in
+ mptcp_subflow_create_socket()
+Date: Fri, 12 Jun 2020 12:14:38 -0700
+Message-ID: <alpine.OSX.2.22.394.2006121151020.74555@mjmartin-mac01.local>
+In-Reply-To: 20200612084938.52083-1-weiyongjun1@huawei.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4662
+X-UID: 4663
 
---===============1212228208724814900==
+--===============3873578828424466002==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-Hello Geliang,
+Hello Wei,
 
-On Fri, 12 Jun 2020, Geliang Tang wrote:
+On Fri, 12 Jun 2020, Wei Yongjun wrote:
 
-> Use list_first_entry_or_null to simplify the code.
+> socket malloced  by sock_create_kern() should be release before return
+> in the error handling, otherwise it cause memory leak.
 >
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> net/mptcp/protocol.h | 5 +----
-> 1 file changed, 1 insertion(+), 4 deletions(-)
+> unreferenced object 0xffff88810910c000 (size 1216):
+>  comm "00000003_test_m", pid 12238, jiffies 4295050289 (age 54.237s)
+>  hex dump (first 32 bytes):
+>    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+>    00 00 00 00 00 00 00 00 00 2f 30 0a 81 88 ff ff  ........./0.....
+>  backtrace:
+>    [<00000000e877f89f>] sock_alloc_inode+0x18/0x1c0
+>    [<0000000093d1dd51>] alloc_inode+0x63/0x1d0
+>    [<000000005673fec6>] new_inode_pseudo+0x14/0xe0
+>    [<00000000b5db6be8>] sock_alloc+0x3c/0x260
+>    [<00000000e7e3cbb2>] __sock_create+0x89/0x620
+>    [<0000000023e48593>] mptcp_subflow_create_socket+0xc0/0x5e0
+>    [<00000000419795e4>] __mptcp_socket_create+0x1ad/0x3f0
+>    [<00000000b2f942e8>] mptcp_stream_connect+0x281/0x4f0
+>    [<00000000c80cd5cc>] __sys_connect_file+0x14d/0x190
+>    [<00000000dc761f11>] __sys_connect+0x128/0x160
+>    [<000000008b14e764>] __x64_sys_connect+0x6f/0xb0
+>    [<000000007b4f93bd>] do_syscall_64+0xa1/0x530
+>    [<00000000d3e770b6>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
 >
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 86d265500cf6..55c65abcad64 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -234,10 +234,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head=
-(const struct sock *sk)
-> {
-> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+> Signed-off-by: Wei Yongjun <weiyongjun1(a)huawei.com>
 >
-> -	if (list_empty(&msk->rtx_queue))
-> -		return NULL;
-> -
-> -	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
-> +	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag=
-, list);
-> }
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index bf132575040d..bbdb74b8bc3c 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1053,8 +1053,10 @@ int mptcp_subflow_create_socket(struct sock *sk, s=
+truct socket **new_sock)
+> 	err =3D tcp_set_ulp(sf->sk, "mptcp");
+> 	release_sock(sf->sk);
 >
-> struct mptcp_subflow_request_sock {
+> -	if (err)
+> +	if (err) {
+> +		sock_release(sf);
+> 		return err;
+> +	}
+>
+> 	/* the newly created socket really belongs to the owning MPTCP master
+> 	 * socket, even if for additional subflows the allocation is performed
 > -- =
 
-> 2.17.1
+> 2.25.1
 
-As Matthieu mentioned on your earlier patch, please submit patches to =
+Thanks for catching this leak. Be sure to specify which git tree this =
 
-netdev with either a [PATCH net] or [PATCH net-next] tag. In this case, =
+should be applied to in the subject line, I'm assuming in this case you'd =
 
-these are non-critical bug fixes so they should be targeted at net-next.
-
-Note that net-next branch is currently closed to submissions due to the =
-
-v5.8 merge window. Please resubmit both MPTCP patches for net-next when =
-
-David announces that it is open again. The change does look ok but will =
-
-not be merged now.
-
-Thanks for your patch,
+want [PATCH net].
 
 --
 Mat Martineau
 Intel
---===============1212228208724814900==--
+--===============3873578828424466002==--
