@@ -1,56 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============8909775342184862557=="
+Content-Type: multipart/mixed; boundary="===============0164042173620994691=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 11th of June 2020
-Date: Fri, 12 Jun 2020 16:52:51 +0200
-Message-ID: <5a20fc04-c6ef-4cd2-aa00-60b0fc904b1f@tessares.net>
-In-Reply-To: f3a5e140-0cc1-7ad3-3e92-dc61be603e8f@tessares.net
+Subject: [MPTCP] Re: [PATCH] mptcp: unify MPTCP_PM_MAX_ADDR and
+ MPTCP_PM_ADDR_MAX
+Date: Fri, 12 Jun 2020 19:33:11 +0200
+Message-ID: <2638593d-82bd-73be-8ff1-3a4a7d4d5968@tessares.net>
+In-Reply-To: 463f48a4f92aa403453d30a801259c68fda15387.1591939496.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4660
+X-UID: 4661
 
---===============8909775342184862557==
+--===============0164042173620994691==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Geliang,
 
-On 11/06/2020 19:01, Matthieu Baerts wrote:
+On 12/06/2020 07:27, Geliang Tang wrote:
+> Unify these two duplicate macros into 8.
+
+Thank you for this new patch!
 
 (...)
 
->  =C2=A0 20=C2=A0 implement msk diag interface [enhancement]:
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - could be possible now that the token co=
-ntainer has been refactor
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - there is an API issue with IPPROTO_MPTCP
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - "Florian said that the diag handler for=
- IPPROTO_RAW already =
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 809687d3f410..86d265500cf6 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -135,7 +135,7 @@ static inline __be32 mptcp_option(u8 subopt, u8 len, =
+u8 nib, u8 field)
+>   		     ((nib & 0xF) << 8) | field);
+>   }
+>   =
 
-> uses it"
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adding something in '/proc/net/mptcp'?:
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - instead of a re=
-al diag interface
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - *Matth* : TODO:=
- we said something about that at the LPC, =
+> -#define MPTCP_PM_MAX_ADDR	4
+> +#define MPTCP_PM_ADDR_MAX	8
 
-> check that
+I think it would be better to drop MPTCP_PM_MAX_ADDR and keep =
 
-It is still unclear to me if having an interface similar to =
+MPTCP_PM_ADDR_MAX in pm_netlink.c where it is used. Each PM can decide =
 
-/proc/net/tcp could be accepted upstream. It seems some people already =
+what's the maximum number of addresses it can support.
 
-forgot this interface still exists :)
+MPTCP_PM_MAX_ADDR seems to be a left over from a previous implementation =
 
-     https://youtu.be/Y64n_R14GtI?t=3D1722
+of a PM that has not been upstreamed but replaced by the Netlink PM later.
 
-(but it is useful on embedded devices with limited tools)
+Also, please always add "net" or "net-next" prefix in the subject of =
 
-Maybe a good justification could be OK :)
-But people might expect to have everything via sock_diag.
+your email to help -net maintainers. Do not hesitate to look at the =
 
-I hope this info will help :)
+netdev FAQ for more details.
+
+Here this patch looks like a fix so you should have [PATCH net] and a =
+
+"Fixes" tag. I guess for this patch you can use:
+
+   Fixes: 1b1c7a0ef7f3 ("mptcp: Add path manager interface")
+
+That's where MPTCP_PM_MAX_ADDR has been introduced. It was already not =
+
+used and never used later.
 
 Cheers,
 Matt
@@ -58,4 +70,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============8909775342184862557==--
+--===============0164042173620994691==--
