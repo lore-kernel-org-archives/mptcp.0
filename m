@@ -1,49 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============1862822274938780987=="
+Content-Type: multipart/mixed; boundary="===============5481776519722336824=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net v2] mptcp: drop MPTCP_PM_MAX_ADDR
-Date: Mon, 15 Jun 2020 16:28:03 +0800
-Message-ID: <8d8984e8f73e37c87e69459fdef12fe9bab80949.1592209282.git.geliangtang@gmail.com>
+Subject: [MPTCP] [PATCH net-next v2] mptcp: use list_first_entry_or_null
+Date: Mon, 15 Jun 2020 16:34:28 +0800
+Message-ID: <6cf9b609f1d77b389165448b9a9b38f6bee48f87.1592209896.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4672
+X-UID: 4673
 
---===============1862822274938780987==
+--===============5481776519722336824==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We have defined MPTCP_PM_ADDR_MAX in pm_netlink.c, so drop this duplicate m=
-acro.
+Use list_first_entry_or_null to simplify the code.
 
-Fixes: 1b1c7a0ef7f3 ("mptcp: Add path manager interface")
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
  Changes in v2:
-  - change Subject from "mptcp: unify MPTCP_PM_MAX_ADDR and MPTCP_PM_ADDR_M=
-AX"
+  - Add "net-next" tag in Subject.
 ---
- net/mptcp/protocol.h | 2 --
- 1 file changed, 2 deletions(-)
+ net/mptcp/protocol.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 809687d3f410..70ed698bd206 100644
+index 70ed698bd206..db56535dfc29 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -135,8 +135,6 @@ static inline __be32 mptcp_option(u8 subopt, u8 len, u8=
- nib, u8 field)
- 		     ((nib & 0xF) << 8) | field);
+@@ -232,10 +232,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(c=
+onst struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
+
+-	if (list_empty(&msk->rtx_queue))
+-		return NULL;
+-
+-	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
++	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, =
+list);
  }
  =
 
--#define MPTCP_PM_MAX_ADDR	4
--
- struct mptcp_addr_info {
- 	sa_family_t		family;
- 	__be16			port;
+ struct mptcp_subflow_request_sock {
 -- =
 
 2.17.1
 
---===============1862822274938780987==--
+--===============5481776519722336824==--
