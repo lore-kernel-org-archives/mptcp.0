@@ -1,88 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============7185962667199759515=="
+Content-Type: multipart/mixed; boundary="===============0992995080936240994=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: use list_first_entry_or_null
-Date: Mon, 15 Jun 2020 16:48:55 +0800
-Message-ID: <20200615084855.GB29964@OptiPlex>
-In-Reply-To: alpine.OSX.2.22.394.2006121114030.74555@mjmartin-mac01.local
+Subject: [MPTCP] Re: [PATCH net v2] mptcp: drop MPTCP_PM_MAX_ADDR
+Date: Mon, 15 Jun 2020 12:29:06 +0200
+Message-ID: <dace6dec-e908-4bf8-f98e-cbec6c2a0f62@tessares.net>
+In-Reply-To: 8d8984e8f73e37c87e69459fdef12fe9bab80949.1592209282.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4675
+X-UID: 4676
 
---===============7185962667199759515==
+--===============0992995080936240994==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 12, 2020 at 11:22:31AM -0700, Mat Martineau wrote:
+Hi Geliang,
+
+On 15/06/2020 10:28, Geliang Tang wrote:
+> We have defined MPTCP_PM_ADDR_MAX in pm_netlink.c, so drop this duplicate=
+ macro.
 > =
 
-> Hello Geliang,
-> =
+> Fixes: 1b1c7a0ef7f3 ("mptcp: Add path manager interface")
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+>   Changes in v2:
+>    - change Subject from "mptcp: unify MPTCP_PM_MAX_ADDR and MPTCP_PM_ADD=
+R_MAX"
 
-> On Fri, 12 Jun 2020, Geliang Tang wrote:
-> =
+Thank you for this v2, it looks good to me!
 
-> > Use list_first_entry_or_null to simplify the code.
-> > =
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-> > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> > ---
-> > net/mptcp/protocol.h | 5 +----
-> > 1 file changed, 1 insertion(+), 4 deletions(-)
-> > =
+Cheers,
+Matt
+-- =
 
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 86d265500cf6..55c65abcad64 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -234,10 +234,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_he=
-ad(const struct sock *sk)
-> > {
-> > 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> > =
-
-> > -	if (list_empty(&msk->rtx_queue))
-> > -		return NULL;
-> > -
-> > -	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list=
-);
-> > +	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_fr=
-ag, list);
-> > }
-> > =
-
-> > struct mptcp_subflow_request_sock {
-> > -- =
-
-> > 2.17.1
-> =
-
-> As Matthieu mentioned on your earlier patch, please submit patches to net=
-dev
-> with either a [PATCH net] or [PATCH net-next] tag. In this case, these are
-> non-critical bug fixes so they should be targeted at net-next.
-> =
-
-> Note that net-next branch is currently closed to submissions due to the v=
-5.8
-> merge window. Please resubmit both MPTCP patches for net-next when David
-> announces that it is open again. The change does look ok but will not be
-> merged now.
-> =
-
-> Thanks for your patch,
-> =
-
-> --
-> Mat Martineau
-> Intel
-
-Hi Mat,
-
-Thanks for your reply.
-I have already resend patch v2 to you.
-
--Geliang
---===============7185962667199759515==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0992995080936240994==--
