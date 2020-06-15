@@ -1,72 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============0697125147143999327=="
+Content-Type: multipart/mixed; boundary="===============1862822274938780987=="
 MIME-Version: 1.0
-From: Wei Yongjun <weiyongjun1 at huawei.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net v2] mptcp: fix memory leak in
- mptcp_subflow_create_socket()
-Date: Mon, 15 Jun 2020 09:35:22 +0800
-Message-ID: <20200615013522.96854-1-weiyongjun1@huawei.com>
+Subject: [MPTCP] [PATCH net v2] mptcp: drop MPTCP_PM_MAX_ADDR
+Date: Mon, 15 Jun 2020 16:28:03 +0800
+Message-ID: <8d8984e8f73e37c87e69459fdef12fe9bab80949.1592209282.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4669
+X-UID: 4672
 
---===============0697125147143999327==
+--===============1862822274938780987==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-socket malloced  by sock_create_kern() should be release before return
-in the error handling, otherwise it cause memory leak.
+We have defined MPTCP_PM_ADDR_MAX in pm_netlink.c, so drop this duplicate m=
+acro.
 
-unreferenced object 0xffff88810910c000 (size 1216):
-  comm "00000003_test_m", pid 12238, jiffies 4295050289 (age 54.237s)
-  hex dump (first 32 bytes):
-    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 2f 30 0a 81 88 ff ff  ........./0.....
-  backtrace:
-    [<00000000e877f89f>] sock_alloc_inode+0x18/0x1c0
-    [<0000000093d1dd51>] alloc_inode+0x63/0x1d0
-    [<000000005673fec6>] new_inode_pseudo+0x14/0xe0
-    [<00000000b5db6be8>] sock_alloc+0x3c/0x260
-    [<00000000e7e3cbb2>] __sock_create+0x89/0x620
-    [<0000000023e48593>] mptcp_subflow_create_socket+0xc0/0x5e0
-    [<00000000419795e4>] __mptcp_socket_create+0x1ad/0x3f0
-    [<00000000b2f942e8>] mptcp_stream_connect+0x281/0x4f0
-    [<00000000c80cd5cc>] __sys_connect_file+0x14d/0x190
-    [<00000000dc761f11>] __sys_connect+0x128/0x160
-    [<000000008b14e764>] __x64_sys_connect+0x6f/0xb0
-    [<000000007b4f93bd>] do_syscall_64+0xa1/0x530
-    [<00000000d3e770b6>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
-Signed-off-by: Wei Yongjun <weiyongjun1(a)huawei.com>
+Fixes: 1b1c7a0ef7f3 ("mptcp: Add path manager interface")
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
-v1 -> v2: add net prefix to subject line
+ Changes in v2:
+  - change Subject from "mptcp: unify MPTCP_PM_MAX_ADDR and MPTCP_PM_ADDR_M=
+AX"
 ---
- net/mptcp/subflow.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index bf132575040d..bbdb74b8bc3c 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1053,8 +1053,10 @@ int mptcp_subflow_create_socket(struct sock *sk, str=
-uct socket **new_sock)
- 	err =3D tcp_set_ulp(sf->sk, "mptcp");
- 	release_sock(sf->sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 809687d3f410..70ed698bd206 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -135,8 +135,6 @@ static inline __be32 mptcp_option(u8 subopt, u8 len, u8=
+ nib, u8 field)
+ 		     ((nib & 0xF) << 8) | field);
+ }
  =
 
--	if (err)
-+	if (err) {
-+		sock_release(sf);
- 		return err;
-+	}
- =
-
- 	/* the newly created socket really belongs to the owning MPTCP master
- 	 * socket, even if for additional subflows the allocation is performed
+-#define MPTCP_PM_MAX_ADDR	4
+-
+ struct mptcp_addr_info {
+ 	sa_family_t		family;
+ 	__be16			port;
 -- =
 
-2.25.1
+2.17.1
 
---===============0697125147143999327==--
+--===============1862822274938780987==--
