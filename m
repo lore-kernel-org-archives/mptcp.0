@@ -1,97 +1,166 @@
-Content-Type: multipart/mixed; boundary="===============3140985102733298346=="
+Content-Type: multipart/mixed; boundary="===============2243587956042745315=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] selftests/mptcp: Capture pcap on both
- sender and receiver
-Date: Tue, 16 Jun 2020 18:38:06 +0200
-Message-ID: <20200616163806.2994090-1-matthieu.baerts@tessares.net>
-In-Reply-To: 20200616154924.17949-1-cpaasch@apple.com
+Subject: [MPTCP] [PATCH] mptcp: check for plain TCP sock at accept time
+Date: Tue, 16 Jun 2020 18:41:58 +0200
+Message-ID: <3b0e33f9306a9eb6415c5cb5b30a21f6d686b7bb.1592325256.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4705
+X-UID: 4706
 
---===============3140985102733298346==
+--===============2243587956042745315==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When investigating performance issues that involve
-latency/loss/reordering it is useful to have the pcap from the
-sender-side as it allows to easier infer the state of the sender's
-congestion-control, loss-recovery,...
+This cleanup the code a bit and avoid corrupted states
+on weird syscall sequence (accept(), connect()).
 
-Allow the selftests to capture a pcap on both sides so that this
-information is not lost when reproducing.
-
-This patch also improves the file names. Instead of:
-
-  ns4-5ee79a56-X4O6gS-ns3-5ee79a56-X4O6gS-MPTCP-MPTCP-10.0.3.1.pcap
-
-We now have something like:
-
-  5ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-connector.pcap
-  5ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-listener.pcap
-
-It was a connection from ns3 to ns4, better to start with ns3 then. The
-port is also added, easier to find the trace we want.
-
-Co-developed-by: Christoph Paasch <cpaasch(a)apple.com>
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
+ net/mptcp/protocol.c | 61 +++-----------------------------------------
+ 1 file changed, 3 insertions(+), 58 deletions(-)
 
-Notes:
-    As discussed on IRC, here is the patch I made this morning.
-
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 8f7145c413b9..c0589e071f20 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -395,10 +395,14 @@ do_transfer()
- 			capuser=3D"-Z $SUDO_USER"
- 		fi
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index faa804f63c81..590009a2591a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -56,9 +56,6 @@ static struct socket *mptcp_is_tcpsk(struct sock *sk)
+ {
+ 	struct socket *sock =3D sk->sk_socket;
  =
 
--		local capfile=3D"${listener_ns}-${connector_ns}-${cl_proto}-${srv_proto}=
--${connect_addr}.pcap"
-+		local capfile=3D"${rndh}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_pro=
-to}-${srv_proto}-${connect_addr}-${port}"
-+		local capopt=3D"-i any -s 65535 -B 32768 ${capuser}"
+-	if (sock->sk !=3D sk)
+-		return NULL;
+-
+ 	if (unlikely(sk->sk_prot =3D=3D &tcp_prot)) {
+ 		/* we are being invoked after mptcp_accept() has
+ 		 * accepted a non-mp-capable flow: sk is a tcp_sk,
+@@ -81,14 +78,8 @@ static struct socket *mptcp_is_tcpsk(struct sock *sk)
  =
 
--		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -=
-w $capfile > "$capout" 2>&1 &
--		local cappid=3D$!
-+		ip netns exec ${listener_ns}  tcpdump ${capopt} -w "${capfile}-listener.=
-pcap"  >> "${capout}" 2>&1 &
-+		local cappid_listener=3D$!
-+
-+		ip netns exec ${connector_ns} tcpdump ${capopt} -w "${capfile}-connector=
-.pcap" >> "${capout}" 2>&1 &
-+		local cappid_connector=3D$!
+ static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ {
+-	struct socket *sock;
+-
+ 	sock_owned_by_me((const struct sock *)msk);
  =
 
- 		sleep 1
- 	fi
-@@ -423,7 +427,8 @@ do_transfer()
+-	sock =3D mptcp_is_tcpsk((struct sock *)msk);
+-	if (unlikely(sock))
+-		return sock;
+-
+ 	if (likely(!__mptcp_check_fallback(msk)))
+ 		return NULL;
  =
 
- 	if $capture; then
- 		sleep 1
--		kill $cappid
-+		kill ${cappid_listener}
-+		kill ${cappid_connector}
- 	fi
+@@ -1574,7 +1565,6 @@ static struct sock *mptcp_accept(struct sock *sk, int=
+ flags, int *err,
+ 		return NULL;
  =
 
- 	local duration
+ 	pr_debug("msk=3D%p, subflow is mptcp=3D%d", msk, sk_is_mptcp(newsk));
+-
+ 	if (sk_is_mptcp(newsk)) {
+ 		struct mptcp_subflow_context *subflow;
+ 		struct sock *new_mptcp_sock;
+@@ -1932,42 +1922,6 @@ static int mptcp_stream_connect(struct socket *sock,=
+ struct sockaddr *uaddr,
+ 	return err;
+ }
+ =
+
+-static int mptcp_v4_getname(struct socket *sock, struct sockaddr *uaddr,
+-			    int peer)
+-{
+-	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
+-		/* we are being invoked from __sys_accept4, after
+-		 * mptcp_accept() has just accepted a non-mp-capable
+-		 * flow: sk is a tcp_sk, not an mptcp one.
+-		 *
+-		 * Hand the socket over to tcp so all further socket ops
+-		 * bypass mptcp.
+-		 */
+-		sock->ops =3D &inet_stream_ops;
+-	}
+-
+-	return inet_getname(sock, uaddr, peer);
+-}
+-
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-static int mptcp_v6_getname(struct socket *sock, struct sockaddr *uaddr,
+-			    int peer)
+-{
+-	if (sock->sk->sk_prot =3D=3D &tcpv6_prot) {
+-		/* we are being invoked from __sys_accept4 after
+-		 * mptcp_accept() has accepted a non-mp-capable
+-		 * subflow: sk is a tcp_sk, not mptcp.
+-		 *
+-		 * Hand the socket over to tcp so all further
+-		 * socket ops bypass mptcp.
+-		 */
+-		sock->ops =3D &inet6_stream_ops;
+-	}
+-
+-	return inet6_getname(sock, uaddr, peer);
+-}
+-#endif
+-
+ static int mptcp_listen(struct socket *sock, int backlog)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+@@ -1996,15 +1950,6 @@ static int mptcp_listen(struct socket *sock, int bac=
+klog)
+ 	return err;
+ }
+ =
+
+-static bool is_tcp_proto(const struct proto *p)
+-{
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
+-#else
+-	return p =3D=3D &tcp_prot;
+-#endif
+-}
+-
+ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 			       int flags, bool kern)
+ {
+@@ -2027,7 +1972,7 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ 	release_sock(sock->sk);
+ =
+
+ 	err =3D ssock->ops->accept(sock, newsock, flags, kern);
+-	if (err =3D=3D 0 && !is_tcp_proto(newsock->sk->sk_prot)) {
++	if (err =3D=3D 0 && !mptcp_is_tcpsk(newsock->sk)) {
+ 		struct mptcp_sock *msk =3D mptcp_sk(newsock->sk);
+ 		struct mptcp_subflow_context *subflow;
+ =
+
+@@ -2142,7 +2087,7 @@ static const struct proto_ops mptcp_stream_ops =3D {
+ 	.connect	   =3D mptcp_stream_connect,
+ 	.socketpair	   =3D sock_no_socketpair,
+ 	.accept		   =3D mptcp_stream_accept,
+-	.getname	   =3D mptcp_v4_getname,
++	.getname	   =3D inet_getname,
+ 	.poll		   =3D mptcp_poll,
+ 	.ioctl		   =3D inet_ioctl,
+ 	.gettstamp	   =3D sock_gettstamp,
+@@ -2202,7 +2147,7 @@ static const struct proto_ops mptcp_v6_stream_ops =3D=
+ {
+ 	.connect	   =3D mptcp_stream_connect,
+ 	.socketpair	   =3D sock_no_socketpair,
+ 	.accept		   =3D mptcp_stream_accept,
+-	.getname	   =3D mptcp_v6_getname,
++	.getname	   =3D inet6_getname,
+ 	.poll		   =3D mptcp_poll,
+ 	.ioctl		   =3D inet6_ioctl,
+ 	.gettstamp	   =3D sock_gettstamp,
 -- =
 
-2.27.0.rc0
+2.26.2
 
---===============3140985102733298346==--
+--===============2243587956042745315==--
