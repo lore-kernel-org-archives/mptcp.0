@@ -1,38 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============5545536845545087653=="
+Content-Type: multipart/mixed; boundary="===============9018362551711228849=="
 MIME-Version: 1.0
 From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2 1/3] mptcp: add reuseaddr/port and
- v6only setsockopts
-Date: Tue, 16 Jun 2020 08:46:21 -0700
-Message-ID: <20200616154621.GH3048@MacBook-Pro-64.local>
-In-Reply-To: 20200616122531.2443-1-fw@strlen.de
+Subject: [MPTCP] [PATCH mptcp-next] selftests/mptcp: Capture pcap on both
+ sender and receiver
+Date: Tue, 16 Jun 2020 08:49:24 -0700
+Message-ID: <20200616154924.17949-1-cpaasch@apple.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4701
+X-UID: 4702
 
---===============5545536845545087653==
+--===============9018362551711228849==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 06/16/20 - 14:25, Florian Westphal wrote:
-> Paolo says he prefers direct hooking of SOL_SOCKET instead of copying
-> values in bind/listen/connect, so do that here.
-> =
+When investigating performance issues that involve
+latency/loss/reordering it is useful to have the pcap from the
+sender-side as it allows to easier infer the state of the sender's
+congestion-control, loss-recovery,...
 
-> Similar to the v1 patchset, except that first patch is new (adds
-> needed 'do not use generic handler' for mptcp sake),
-> second patch adds minimal SOL_SOCKET support (rest yields -EOPNOTSUPP).
-> Last patch is almost the same as v1 (only fixes an error check and
-> extends scope of sk lock).
+Allow the selftests to capture a pcap on both sides so that this
+information is not lost when reproducing.
 
-Nice! I gave it a shot and restarting sshd now works fine on my test-machin=
-es!
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-I also am running syzkaller on these to see if anything breaks.
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index acf02e156d20..faf636d1639f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -386,9 +386,11 @@ do_transfer()
+ 		fi
+ =
 
+ 		local capfile=3D"${listener_ns}-${connector_ns}-${cl_proto}-${srv_proto}=
+-${connect_addr}.pcap"
+-
+ 		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -=
+w $capfile > "$capout" 2>&1 &
+-		local cappid=3D$!
++		local cappid_listener=3D$!
++		local capfile=3D"${connector_ns}-${listener_ns}-${cl_proto}-${srv_proto}=
+-${connect_addr}.pcap"
++		ip netns exec ${connector_ns} tcpdump -i any -s 65535 -B 32768 $capuser =
+-w $capfile > "$capout" 2>&1 &
++		local cappid_connector=3D$!
+ =
 
-Christoph
+ 		sleep 1
+ 	fi
+@@ -413,7 +415,8 @@ do_transfer()
+ =
 
---===============5545536845545087653==--
+ 	if $capture; then
+ 		sleep 1
+-		kill $cappid
++		kill $cappid_listener
++		kill $cappid_connector
+ 	fi
+ =
+
+ 	local duration
+-- =
+
+2.23.0
+
+--===============9018362551711228849==--
