@@ -1,114 +1,126 @@
-Content-Type: multipart/mixed; boundary="===============1445303710545064341=="
+Content-Type: multipart/mixed; boundary="===============7856346310639095152=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2 2/3] mptcp: add REUSEADDR/REUSEADDR
- support
-Date: Tue, 16 Jun 2020 13:59:22 -0700
-Message-ID: <alpine.OSX.2.22.394.2006161331510.21710@ajaladi-mobl.amr.corp.intel.com>
-In-Reply-To: 20200616122531.2443-3-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH mptcp-next v2 1/3] net: use mptcp setsockopt
+ function for SOL_SOCKET on mptcp sockets
+Date: Tue, 16 Jun 2020 14:01:27 -0700
+Message-ID: <alpine.OSX.2.22.394.2006161400290.25143@ajaladi-mobl.amr.corp.intel.com>
+In-Reply-To: alpine.OSX.2.22.394.2006161319130.21710@ajaladi-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4712
+X-UID: 4713
 
---===============1445303710545064341==
+--===============7856346310639095152==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Tue, 16 Jun 2020, Florian Westphal wrote:
+On Tue, 16 Jun 2020, Mat Martineau wrote:
 
-> This will e.g. make 'sshd restart' work when MPTCP is used, as we will
-> now set this option on the listener socket instead of only the mptcp
-> socket (where it has no effect).
 >
-> We still need to copy the setting to the master socket so that a
-> subsequent getsockopt() returns the expected value.
+> On Tue, 16 Jun 2020, Florian Westphal wrote:
 >
-> Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> net/mptcp/protocol.c | 34 +++++++++++++++++++++++++++++++++-
-> 1 file changed, 33 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f9429c6f5b96..b2338680497a 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1628,6 +1628,37 @@ static void mptcp_destroy(struct sock *sk)
-> 	sk_sockets_allocated_dec(sk);
-> }
->
-> +static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optna=
-me,
-> +				       char __user *optval, unsigned int optlen)
-> +{
-> +	struct sock *sk =3D (struct sock *)msk;
-> +	int ret =3D -EOPNOTSUPP;
-> +	struct socket *ssock;
-> +
-> +	switch (optname) {
-> +	case SO_REUSEPORT:
-> +	case SO_REUSEADDR:
-> +		lock_sock(sk);
-> +		ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
-> +		if (IS_ERR(ssock)) {
-> +			release_sock(sk);
-> +			return PTR_ERR(ssock);
-> +		}
-> +
-> +		ret =3D sock_setsockopt(ssock, SOL_SOCKET, optname, optval, optlen);
-> +		if (ret =3D=3D 0) {
-> +			if (optname =3D=3D SO_REUSEPORT)
-> +				sk->sk_reuseport =3D ssock->sk->sk_reuseport;
-> +			else if (optname =3D=3D SO_REUSEADDR)
-> +				sk->sk_reuse =3D ssock->sk->sk_reuse;
-> +		}
-> +		release_sock(sk);
-> +		break;
+>> setsockopt(mptcp_fd, SOL_SOCKET, ...)...  appears to work (returns 0),
+>> but it has no effect -- this is because the MPTCP layer never has a
+>> chance to copy the settings to the subflow socket.
+>> =
 
-Returning EOPNOTSUPP for all the other SOL_SOCKET options would be a =
+>> Skip the generic handling for the mptcp case and return -EOPNOTSUPP.
+>> Next patch adds handling for SOL_SOCKET to mptcp.
+>> =
 
-significant change in behavior from MPTCP in 5.7 (or 5.8, depending on =
+>> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+>> ---
+>> net/mptcp/protocol.c |  3 +++
+>> net/socket.c         | 12 +++++++++++-
+>> 2 files changed, 14 insertions(+), 1 deletion(-)
+>> =
 
-whether this goes to net or net-next), and also different from every other =
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index faa804f63c81..f9429c6f5b96 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -1636,6 +1636,9 @@ static int mptcp_setsockopt(struct sock *sk, int =
 
-kind of socket. Even of not all the SOL_SOCKET options end up doing much =
+>> level, int optname,
+>>
+>> 	pr_debug("msk=3D%p", msk);
+>> =
 
-yet, it seems more consistent for userspace if this switch statement has a =
+>> +	if (level =3D=3D SOL_SOCKET)
+>> +		return -EOPNOTSUPP;
 
-default case that calls sock_setsockopt() on the msk. What do you think?
+One more thing: calling sock_setsockopt() here would be a better =
+
+placeholder, depending on what you think about my comments on patch 2/3.
 
 
 Mat
 
 
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> static int mptcp_setsockopt(struct sock *sk, int level, int optname,
-> 			    char __user *optval, unsigned int optlen)
-> {
-> @@ -1637,7 +1668,8 @@ static int mptcp_setsockopt(struct sock *sk, int le=
-vel, int optname,
-> 	pr_debug("msk=3D%p", msk);
->
-> 	if (level =3D=3D SOL_SOCKET)
-> -		return -EOPNOTSUPP;
-> +		return mptcp_setsockopt_sol_socket(msk, optname,
-> +						   optval, optlen);
->
-> 	/* @@ the meaning of setsockopt() when the socket is connected and
-> 	 * there are multiple subflows is not yet defined. It is up to the
-> -- =
+>> +
+>> 	/* @@ the meaning of setsockopt() when the socket is connected and
+>> 	 * there are multiple subflows is not yet defined. It is up to the
+>> 	 * MPTCP-level socket to configure the subflows until the subflow
+>> diff --git a/net/socket.c b/net/socket.c
+>> index d5b555845b37..98b70fcaff19 100644
+>> --- a/net/socket.c
+>> +++ b/net/socket.c
+>> @@ -2091,6 +2091,16 @@ SYSCALL_DEFINE4(recv, int, fd, void __user *, ubu=
+f, =
 
-> 2.26.2
+>> size_t, size,
+>> 	return __sys_recvfrom(fd, ubuf, size, flags, NULL, NULL);
+>> }
+>> =
+
+>> +static bool sock_use_custom_sol_socket(const struct socket *sock)
+>> +{
+>> +	const struct sock *sk =3D sock->sk;
+>> +
+>> +	/* Use sock->ops->setsockopt() for MPTCP */
+>> +	return sk->sk_protocol =3D=3D IPPROTO_MPTCP &&
+>
+> Is it worth using IS_ENABLED(CONFIG_MPTCP) first in this boolean expressi=
+on =
+
+> so this all compiles out when MPTCP is not enabled? On one hand it's a =
+
+> microoptimization on a path where performance doesn't matter much, but on=
+ the =
+
+> other hand we have tried to make things compile out where we can.
+>
+>
+> Mat
+>
+>
+>> +	       sk->sk_type =3D=3D SOCK_STREAM &&
+>> +	       (sk->sk_family =3D=3D AF_INET || sk->sk_family =3D=3D AF_INET6);
+>> +}
+>> +
+>> /*
+>>  *	Set a socket option. Because we don't know the option lengths we have
+>>  *	to pass the user mode parameter for the protocols to sort out.
+>> @@ -2129,7 +2139,7 @@ static int __sys_setsockopt(int fd, int level, int =
+
+>> optname,
+>> 			optval =3D (char __user __force *)kernel_optval;
+>> 		}
+>> =
+
+>> -		if (level =3D=3D SOL_SOCKET)
+>> +		if (level =3D=3D SOL_SOCKET && !sock_use_custom_sol_socket(sock))
+>> 			err =3D
+>> 			    sock_setsockopt(sock, level, optname, optval,
+>> 					    optlen);
+>> -- =
+
+>> 2.26.2
 
 --
 Mat Martineau
 Intel
---===============1445303710545064341==--
+--===============7856346310639095152==--
