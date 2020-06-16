@@ -1,53 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============7200137038316517045=="
+Content-Type: multipart/mixed; boundary="===============0091255631330145776=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net v2] mptcp: fix memory leak in
- mptcp_subflow_create_socket()
-Date: Mon, 15 Jun 2020 18:09:41 -0700
-Message-ID: <20200615.180941.204956390185248889.davem@davemloft.net>
-In-Reply-To: 20200615013522.96854-1-weiyongjun1@huawei.com
+Subject: [MPTCP] [PATCH net-next 0/3] add MP_PRIO,
+ MP_FAIL and MP_FASTCLOSE suboptions handling
+Date: Tue, 16 Jun 2020 14:47:35 +0800
+Message-ID: <cover.1592289629.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4688
+X-UID: 4690
 
---===============7200137038316517045==
+--===============0091255631330145776==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Wei Yongjun <weiyongjun1(a)huawei.com>
-Date: Mon, 15 Jun 2020 09:35:22 +0800
+Add handling for sending and receiving the MP_PRIO, MP_FAIL, and
+MP_FASTCLOSE suboptions.
 
-> socket malloced  by sock_create_kern() should be release before return
-> in the error handling, otherwise it cause memory leak.
-> =
+Geliang Tang (3):
+  mptcp: add MP_PRIO suboption handling
+  mptcp: add MP_FAIL suboption handling
+  mptcp: add MP_FASTCLOSE suboption handling
 
-> unreferenced object 0xffff88810910c000 (size 1216):
->   comm "00000003_test_m", pid 12238, jiffies 4295050289 (age 54.237s)
->   hex dump (first 32 bytes):
->     01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 2f 30 0a 81 88 ff ff  ........./0.....
->   backtrace:
->     [<00000000e877f89f>] sock_alloc_inode+0x18/0x1c0
->     [<0000000093d1dd51>] alloc_inode+0x63/0x1d0
->     [<000000005673fec6>] new_inode_pseudo+0x14/0xe0
->     [<00000000b5db6be8>] sock_alloc+0x3c/0x260
->     [<00000000e7e3cbb2>] __sock_create+0x89/0x620
->     [<0000000023e48593>] mptcp_subflow_create_socket+0xc0/0x5e0
->     [<00000000419795e4>] __mptcp_socket_create+0x1ad/0x3f0
->     [<00000000b2f942e8>] mptcp_stream_connect+0x281/0x4f0
->     [<00000000c80cd5cc>] __sys_connect_file+0x14d/0x190
->     [<00000000dc761f11>] __sys_connect+0x128/0x160
->     [<000000008b14e764>] __x64_sys_connect+0x6f/0xb0
->     [<000000007b4f93bd>] do_syscall_64+0xa1/0x530
->     [<00000000d3e770b6>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> =
+ net/mptcp/options.c  | 48 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  9 +++++++++
+ 2 files changed, 57 insertions(+)
 
-> Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
-> Signed-off-by: Wei Yongjun <weiyongjun1(a)huawei.com>
-> ---
-> v1 -> v2: add net prefix to subject line
+-- =
 
-Applied and queued up for v5.6 -stable, thanks.
---===============7200137038316517045==--
+2.17.1
+
+--===============0091255631330145776==--
