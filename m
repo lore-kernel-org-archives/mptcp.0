@@ -1,121 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============3402296533320811739=="
+Content-Type: multipart/mixed; boundary="===============3140985102733298346=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 2/2] mptcp: add receive buffer
- auto-tuning
-Date: Tue, 16 Jun 2020 09:09:12 -0700
-Message-ID: <20200616160912.GI3048@MacBook-Pro-64.local>
-In-Reply-To: 20200610115534.17417-3-fw@strlen.de
+Subject: [MPTCP] [PATCH mptcp-next] selftests/mptcp: Capture pcap on both
+ sender and receiver
+Date: Tue, 16 Jun 2020 18:38:06 +0200
+Message-ID: <20200616163806.2994090-1-matthieu.baerts@tessares.net>
+In-Reply-To: 20200616154924.17949-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4704
+X-UID: 4705
 
---===============3402296533320811739==
+--===============3140985102733298346==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+When investigating performance issues that involve
+latency/loss/reordering it is useful to have the pcap from the
+sender-side as it allows to easier infer the state of the sender's
+congestion-control, loss-recovery,...
 
-On 06/10/20 - 13:55, Florian Westphal wrote:
-> When mptcp is used, userspace doesn't read from the tcp (subflow)
-> socket but from the parent (mptcp) socket receive queue.
-> =
+Allow the selftests to capture a pcap on both sides so that this
+information is not lost when reproducing.
 
-> skbs are moved from the subflow socket to the mptcp rx queue either from
-> 'data_ready' callback (if mptcp socket can be locked), a work queue, or
-> the socket receive function.
-> =
+This patch also improves the file names. Instead of:
 
-> This means tcp_rcv_space_adjust() is never called and thus no receive
-> buffer size auto-tuning is done.
-> =
+  ns4-5ee79a56-X4O6gS-ns3-5ee79a56-X4O6gS-MPTCP-MPTCP-10.0.3.1.pcap
 
-> An earlier (not merged) patch added tcp_rcv_space_adjust() calls to the
-> function that moves skbs from subflow to mptcp socket.
-> While this enabled autotuning, it also meant tuning was done even if
-> userspace was reading the mptcp socket very slowly.
-> =
+We now have something like:
 
-> This adds mptcp_rcv_space_adjust() and calls it after userspace has
-> read data from the mptcp socket rx queue.
-> =
+  5ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-connector.pcap
+  5ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-listener.pcap
 
-> Its very similar to tcp_rcv_space_adjust, with two differences:
-> =
+It was a connection from ns3 to ns4, better to start with ns3 then. The
+port is also added, easier to find the trace we want.
 
-> 1. The rtt estimate is the largest one observed on a subflow
-> 2. The rcvbuf size and window clamp of all subflows is adjusted
->    to the mptcp-level rcvbuf.
-> =
+Co-developed-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> Otherwise, we get spurious drops at tcp (subflow) socket level if
-> the skbs are not moved to the mptcp socket fast enough and reduced
-> throughput..
-> =
+Notes:
+    As discussed on IRC, here is the patch I made this morning.
 
-> Before:
-> time mptcp_connect.sh -t -f $((4*1024*1024)) -d 300 -l 0.01% -r 0 -e "" -=
-m mmap
-> [..]
-> ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration 40562ms) [ OK ]
-> ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5415ms) [ OK ]
-> ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5413ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration 41331ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5415ms) [ OK ]
-> ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5714ms) [ OK ]
-> Time: 846 seconds
-> =
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-> After:
-> ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration  5417ms) [ OK ]
-> ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5429ms) [ OK ]
-> ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5418ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration  5423ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5715ms) [ OK ]
-> ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5415ms) [ OK ]
-> Time: 275 seconds
-> =
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index 8f7145c413b9..c0589e071f20 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -395,10 +395,14 @@ do_transfer()
+ 			capuser=3D"-Z $SUDO_USER"
+ 		fi
+ =
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  changes since last version:
->   - adjust for 'mptcp fallback' patches
->   - add 'const' qualifier to function argument
+-		local capfile=3D"${listener_ns}-${connector_ns}-${cl_proto}-${srv_proto}=
+-${connect_addr}.pcap"
++		local capfile=3D"${rndh}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_pro=
+to}-${srv_proto}-${connect_addr}-${port}"
++		local capopt=3D"-i any -s 65535 -B 32768 ${capuser}"
+ =
 
-syzkaller found another divide-by-zero. I don't yet have a real repro
-generated by syzkaller, but from the logs it looks like it is the
-simultaneous self-connect case.
-
-In Davide's other patch I think we need to call mptcp_rcv_space_init in this
-hunk:
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index fc3be8ab2168..781836f93a68 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1114,6 +1114,16 @@ static void subflow_state_change(struct sock *sk)
-
-        __subflow_state_change(sk);
-
-+       if (subflow_simultaneous_connect(sk)) {
-+               mptcp_do_fallback(sk);
-+               pr_fallback(mptcp_sk(parent));
-+               subflow->conn_finished =3D 1;
-+               if (inet_sk_state_load(parent) =3D=3D TCP_SYN_SENT) {
-+                       inet_sk_state_store(parent, TCP_ESTABLISHED);
-+                       parent->sk_state_change(parent);
-+               }
-+       }
+-		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -=
+w $capfile > "$capout" 2>&1 &
+-		local cappid=3D$!
++		ip netns exec ${listener_ns}  tcpdump ${capopt} -w "${capfile}-listener.=
+pcap"  >> "${capout}" 2>&1 &
++		local cappid_listener=3D$!
 +
-        /* as recvmsg() does not acquire the subflow socket for ssk selecti=
-on
-         * a fin packet carrying a DSS can be unnoticed if we don't trigger
-         * the data available machinery here.
++		ip netns exec ${connector_ns} tcpdump ${capopt} -w "${capfile}-connector=
+.pcap" >> "${capout}" 2>&1 &
++		local cappid_connector=3D$!
+ =
 
+ 		sleep 1
+ 	fi
+@@ -423,7 +427,8 @@ do_transfer()
+ =
 
+ 	if $capture; then
+ 		sleep 1
+-		kill $cappid
++		kill ${cappid_listener}
++		kill ${cappid_connector}
+ 	fi
+ =
 
-Christoph
+ 	local duration
+-- =
 
---===============3402296533320811739==--
+2.27.0.rc0
+
+--===============3140985102733298346==--
