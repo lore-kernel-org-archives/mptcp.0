@@ -1,86 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============5661314741443463335=="
+Content-Type: multipart/mixed; boundary="===============7200137038316517045=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 2/2] mptcp: support IPV6_V6ONLY setsockopt
-Date: Tue, 16 Jun 2020 02:41:49 +0200
-Message-ID: <20200616004149.21233-3-fw@strlen.de>
-In-Reply-To: 20200616004149.21233-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net v2] mptcp: fix memory leak in
+ mptcp_subflow_create_socket()
+Date: Mon, 15 Jun 2020 18:09:41 -0700
+Message-ID: <20200615.180941.204956390185248889.davem@davemloft.net>
+In-Reply-To: 20200615013522.96854-1-weiyongjun1@huawei.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4687
+X-UID: 4688
 
---===============5661314741443463335==
+--===============7200137038316517045==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Without this, Opensshd fails to open an ipv6 socket listening
-socket:
-  error: setsockopt IPV6_V6ONLY: Operation not supported
-  error: Bind to port 22 on :: failed: Address already in use.
+From: Wei Yongjun <weiyongjun1(a)huawei.com>
+Date: Mon, 15 Jun 2020 09:35:22 +0800
 
-Opensshd opens an ipv4 and and ipv6 listening socket, but because
-IPV6_V6ONLY setsockopt fails, the port number is already in use.
+> socket malloced  by sock_create_kern() should be release before return
+> in the error handling, otherwise it cause memory leak.
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+> unreferenced object 0xffff88810910c000 (size 1216):
+>   comm "00000003_test_m", pid 12238, jiffies 4295050289 (age 54.237s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 2f 30 0a 81 88 ff ff  ........./0.....
+>   backtrace:
+>     [<00000000e877f89f>] sock_alloc_inode+0x18/0x1c0
+>     [<0000000093d1dd51>] alloc_inode+0x63/0x1d0
+>     [<000000005673fec6>] new_inode_pseudo+0x14/0xe0
+>     [<00000000b5db6be8>] sock_alloc+0x3c/0x260
+>     [<00000000e7e3cbb2>] __sock_create+0x89/0x620
+>     [<0000000023e48593>] mptcp_subflow_create_socket+0xc0/0x5e0
+>     [<00000000419795e4>] __mptcp_socket_create+0x1ad/0x3f0
+>     [<00000000b2f942e8>] mptcp_stream_connect+0x281/0x4f0
+>     [<00000000c80cd5cc>] __sys_connect_file+0x14d/0x190
+>     [<00000000dc761f11>] __sys_connect+0x128/0x160
+>     [<000000008b14e764>] __x64_sys_connect+0x6f/0xb0
+>     [<000000007b4f93bd>] do_syscall_64+0xa1/0x530
+>     [<00000000d3e770b6>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d6dc2649bb8e..38d77107137d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1628,6 +1628,31 @@ static void mptcp_destroy(struct sock *sk)
- 	sk_sockets_allocated_dec(sk);
- }
- =
+> Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+> Signed-off-by: Wei Yongjun <weiyongjun1(a)huawei.com>
+> ---
+> v1 -> v2: add net prefix to subject line
 
-+static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int level, int optn=
-ame,
-+			       char __user *optval, unsigned int optlen)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	int ret =3D -EOPNOTSUPP;
-+	struct socket *ssock;
-+
-+	switch (optname) {
-+	case IPV6_V6ONLY:
-+		lock_sock(sk);
-+		ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
-+		release_sock(sk);
-+		if (!ssock)
-+			return -EINVAL;
-+
-+		ret =3D tcp_setsockopt(ssock->sk, level, optname, optval, optlen);
-+		if (ret =3D=3D 0)
-+			sk->sk_ipv6only =3D ssock->sk->sk_ipv6only;
-+
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
- static int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 			    char __user *optval, unsigned int optlen)
- {
-@@ -1649,6 +1674,9 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- 		return tcp_setsockopt(ssock->sk, level, optname, optval,
- 				      optlen);
- =
-
-+	if (level =3D=3D SOL_IPV6)
-+		return mptcp_setsockopt_v6(msk, level, optname, optval, optlen);
-+
- 	return -EOPNOTSUPP;
- }
- =
-
--- =
-
-2.26.2
-
---===============5661314741443463335==--
+Applied and queued up for v5.6 -stable, thanks.
+--===============7200137038316517045==--
