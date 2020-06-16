@@ -1,27 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============4666390893165520658=="
+Content-Type: multipart/mixed; boundary="===============5287642821054309684=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2] mptcp: use list_first_entry_or_null
-Date: Mon, 15 Jun 2020 13:05:04 -0700
-Message-ID: <20200615.130504.858968576691085467.davem@davemloft.net>
-In-Reply-To: 6cf9b609f1d77b389165448b9a9b38f6bee48f87.1592209896.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH mptcp-next 0/2] mptcp: setsockopt: allow reuseport and
+ ip6only
+Date: Tue, 16 Jun 2020 02:41:47 +0200
+Message-ID: <20200616004149.21233-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 4683
+X-UID: 4685
 
---===============4666390893165520658==
+--===============5287642821054309684==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
-Date: Mon, 15 Jun 2020 16:34:28 +0800
+First patch makes reuseport setsockopt work by copying the mptcp
+sockets setting to the newly created subflow socket.
 
-> Use list_first_entry_or_null to simplify the code.
-> =
+Second patch makes mptcp accept IPV6_V6ONLY by applying the setsockopt
+to the initial socket.
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+First patch addresses:
+https://github.com/multipath-tcp/mptcp_net-next/issues/30
 
-Applied, thanks.
---===============4666390893165520658==--
+Second patch makes sshd work with ipv6 too.
+
+I've tested this with out-of-tree patch that aliases IPPROTO_TCP to
+IPPROTO_MPTCP, without these patches I see the behaviour Christoph
+describes in the github issue (restart fails, IPV6_V6only error).
+
+
+--===============5287642821054309684==--
