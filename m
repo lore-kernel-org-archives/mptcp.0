@@ -1,58 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============4655091410926123155=="
+Content-Type: multipart/mixed; boundary="===============4786999356324780942=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] net: mptcp: improve fallback to TCP
-Date: Tue, 16 Jun 2020 18:55:21 +0200
-Message-ID: <83506bdd-26d8-910a-6a9b-f9ed9e786972@tessares.net>
-In-Reply-To: 6c04233494742fb42935ebf4d8617cf8bbf736a9.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v2 1/3] net: use mptcp setsockopt
+ function for SOL_SOCKET on mptcp sockets
+Date: Tue, 16 Jun 2020 13:50:38 -0700
+Message-ID: <alpine.OSX.2.22.394.2006161319130.21710@ajaladi-mobl.amr.corp.intel.com>
+In-Reply-To: 20200616122531.2443-2-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4708
+X-UID: 4711
 
---===============4655091410926123155==
+--===============4786999356324780942==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
 
-On 16/06/2020 16:18, Davide Caratti wrote:
-> On Mon, 2020-06-15 at 21:54 +0200, Davide Caratti wrote:
->> keep using MPTCP sockets and a use "dummy mapping" in case of fallback to
->> regular TCP. When fallback is triggered, skip addition of the MPTCP opti=
-on
->> on send.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/11
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/22
->> Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
->> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
->> ---
->>   net/mptcp/options.c  |  9 ++++-
->>   net/mptcp/protocol.c | 81 ++++++++++----------------------------------
->>   net/mptcp/protocol.h | 34 +++++++++++++++++++
->>   net/mptcp/subflow.c  | 47 ++++++++++++++++---------
->>   4 files changed, 91 insertions(+), 80 deletions(-)
-> =
+On Tue, 16 Jun 2020, Florian Westphal wrote:
 
-> forgot to mention, this patch is code-wise the same as the one alrready
-> merged. Just the commit message is changed (and 'BugLink:' tags converted
-> in 'Closes:').
+> setsockopt(mptcp_fd, SOL_SOCKET, ...)...  appears to work (returns 0),
+> but it has no effect -- this is because the MPTCP layer never has a
+> chance to copy the settings to the subflow socket.
+>
+> Skip the generic handling for the mptcp case and return -EOPNOTSUPP.
+> Next patch adds handling for SOL_SOCKET to mptcp.
+>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+> net/mptcp/protocol.c |  3 +++
+> net/socket.c         | 12 +++++++++++-
+> 2 files changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index faa804f63c81..f9429c6f5b96 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1636,6 +1636,9 @@ static int mptcp_setsockopt(struct sock *sk, int le=
+vel, int optname,
+>
+> 	pr_debug("msk=3D%p", msk);
+>
+> +	if (level =3D=3D SOL_SOCKET)
+> +		return -EOPNOTSUPP;
+> +
+> 	/* @@ the meaning of setsockopt() when the socket is connected and
+> 	 * there are multiple subflows is not yet defined. It is up to the
+> 	 * MPTCP-level socket to configure the subflows until the subflow
+> diff --git a/net/socket.c b/net/socket.c
+> index d5b555845b37..98b70fcaff19 100644
+> --- a/net/socket.c
+> +++ b/net/socket.c
+> @@ -2091,6 +2091,16 @@ SYSCALL_DEFINE4(recv, int, fd, void __user *, ubuf=
+, size_t, size,
+> 	return __sys_recvfrom(fd, ubuf, size, flags, NULL, NULL);
+> }
+>
+> +static bool sock_use_custom_sol_socket(const struct socket *sock)
+> +{
+> +	const struct sock *sk =3D sock->sk;
+> +
+> +	/* Use sock->ops->setsockopt() for MPTCP */
+> +	return sk->sk_protocol =3D=3D IPPROTO_MPTCP &&
 
-Thank you for this note!
+Is it worth using IS_ENABLED(CONFIG_MPTCP) first in this boolean =
 
-I just updated the commit message:
+expression so this all compiles out when MPTCP is not enabled? On one hand =
 
-- 8fe7257d8332: tg:msg: remove internal notes
+it's a microoptimization on a path where performance doesn't matter much, =
 
-The "export" branch is going to be recreated in a few minutes.
+but on the other hand we have tried to make things compile out where we =
 
-Cheers,
-Matt
--- =
+can.
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4655091410926123155==--
+
+Mat
+
+
+> +	       sk->sk_type =3D=3D SOCK_STREAM &&
+> +	       (sk->sk_family =3D=3D AF_INET || sk->sk_family =3D=3D AF_INET6);
+> +}
+> +
+> /*
+>  *	Set a socket option. Because we don't know the option lengths we have
+>  *	to pass the user mode parameter for the protocols to sort out.
+> @@ -2129,7 +2139,7 @@ static int __sys_setsockopt(int fd, int level, int =
+optname,
+> 			optval =3D (char __user __force *)kernel_optval;
+> 		}
+>
+> -		if (level =3D=3D SOL_SOCKET)
+> +		if (level =3D=3D SOL_SOCKET && !sock_use_custom_sol_socket(sock))
+> 			err =3D
+> 			    sock_setsockopt(sock, level, optname, optval,
+> 					    optlen);
+> -- =
+
+> 2.26.2
+
+--
+Mat Martineau
+Intel
+--===============4786999356324780942==--
