@@ -1,58 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============3134375754056069895=="
+Content-Type: multipart/mixed; boundary="===============4655091410926123155=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] mptcp: default KUNIT_* fragments to
- KUNIT_ALL_TESTS
-Date: Tue, 16 Jun 2020 18:51:05 +0200
-Message-ID: <20200616165105.3015572-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH v2] net: mptcp: improve fallback to TCP
+Date: Tue, 16 Jun 2020 18:55:21 +0200
+Message-ID: <83506bdd-26d8-910a-6a9b-f9ed9e786972@tessares.net>
+In-Reply-To: 6c04233494742fb42935ebf4d8617cf8bbf736a9.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4707
+X-UID: 4708
 
---===============3134375754056069895==
+--===============4655091410926123155==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This makes it easier to enable all KUnit fragments.
+Hi Davide,
 
-Adding 'if !KUNIT_ALL_TESTS so individual tests can not be turned off.
-Therefore if KUNIT_ALL_TESTS is enabled that will hide the prompt in
-menuconfig.
+On 16/06/2020 16:18, Davide Caratti wrote:
+> On Mon, 2020-06-15 at 21:54 +0200, Davide Caratti wrote:
+>> keep using MPTCP sockets and a use "dummy mapping" in case of fallback to
+>> regular TCP. When fallback is triggered, skip addition of the MPTCP opti=
+on
+>> on send.
+>>
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/11
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/22
+>> Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+>> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+>> ---
+>>   net/mptcp/options.c  |  9 ++++-
+>>   net/mptcp/protocol.c | 81 ++++++++++----------------------------------
+>>   net/mptcp/protocol.h | 34 +++++++++++++++++++
+>>   net/mptcp/subflow.c  | 47 ++++++++++++++++---------
+>>   4 files changed, 91 insertions(+), 80 deletions(-)
+> =
 
-Similar to beaed42c427d ("kunit: default KUNIT_* fragments to KUNIT_ALL_TES=
-TS")
-and following ones.
+> forgot to mention, this patch is code-wise the same as the one alrready
+> merged. Just the commit message is changed (and 'BugLink:' tags converted
+> in 'Closes:').
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+Thank you for this note!
 
-Notes:
-    to be squashed in "mptcp: move crypto test to KUNIT"
+I just updated the commit message:
 
- net/mptcp/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+- 8fe7257d8332: tg:msg: remove internal notes
 
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index c701f27300ce..d7d5f9349366 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -21,9 +21,10 @@ config MPTCP_IPV6
- endif
- =
+The "export" branch is going to be recreated in a few minutes.
 
- config MPTCP_KUNIT_TESTS
--	tristate "This builds the MPTCP KUnit tests"
-+	tristate "This builds the MPTCP KUnit tests" if !KUNIT_ALL_TESTS
- 	select MPTCP
- 	depends on KUNIT
-+	default KUNIT_ALL_TESTS
- 	help
- 	  Currently covers the MPTCP crypto helpers.
- 	  Only useful for kernel devs running KUnit test harness and are not
+Cheers,
+Matt
 -- =
 
-2.27.0.rc0
-
---===============3134375754056069895==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============4655091410926123155==--
