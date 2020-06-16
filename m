@@ -1,93 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============0475638394494743428=="
+Content-Type: multipart/mixed; boundary="===============5661314741443463335=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 1/2] mptcp: replay SOL_SOCKET options to
- subflows
-Date: Tue, 16 Jun 2020 02:41:48 +0200
-Message-ID: <20200616004149.21233-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 2/2] mptcp: support IPV6_V6ONLY setsockopt
+Date: Tue, 16 Jun 2020 02:41:49 +0200
+Message-ID: <20200616004149.21233-3-fw@strlen.de>
 In-Reply-To: 20200616004149.21233-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4686
+X-UID: 4687
 
---===============0475638394494743428==
+--===============5661314741443463335==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-SO_REUSEPORT won't work as expected: the setsockopt will
-be successful (the mptcp sk has the flag toggled), but it has
-no effect because the subflow socket isn't aware of this.
+Without this, Opensshd fails to open an ipv6 socket listening
+socket:
+  error: setsockopt IPV6_V6ONLY: Operation not supported
+  error: Bind to port 22 on :: failed: Address already in use.
 
-Copy the flag(s) from the mptcp socket to the subflow socket
-to resolve this.
+Opensshd opens an ipv4 and and ipv6 listening socket, but because
+IPV6_V6ONLY setsockopt fails, the port number is already in use.
 
-This will e.g. make 'sshd restart' work when MPTCP is used.
-
-Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/mptcp/protocol.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index faa804f63c81..d6dc2649bb8e 100644
+index d6dc2649bb8e..38d77107137d 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1858,6 +1858,14 @@ static struct proto mptcp_prot =3D {
- 	.no_autobind	=3D true,
- };
+@@ -1628,6 +1628,31 @@ static void mptcp_destroy(struct sock *sk)
+ 	sk_sockets_allocated_dec(sk);
+ }
  =
 
-+static void mptcp_copy_setsockopt(struct sock *sk, struct sock *ssk)
++static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int level, int optn=
+ame,
++			       char __user *optval, unsigned int optlen)
 +{
-+#define C(name) ssk->name =3D sk->name
-+	C(sk_reuse);
-+	C(sk_reuseport);
-+#undef C
++	struct sock *sk =3D (struct sock *)msk;
++	int ret =3D -EOPNOTSUPP;
++	struct socket *ssock;
++
++	switch (optname) {
++	case IPV6_V6ONLY:
++		lock_sock(sk);
++		ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
++		release_sock(sk);
++		if (!ssock)
++			return -EINVAL;
++
++		ret =3D tcp_setsockopt(ssock->sk, level, optname, optval, optlen);
++		if (ret =3D=3D 0)
++			sk->sk_ipv6only =3D ssock->sk->sk_ipv6only;
++
++		return ret;
++	}
++
++	return ret;
 +}
 +
- static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int add=
-r_len)
+ static int mptcp_setsockopt(struct sock *sk, int level, int optname,
+ 			    char __user *optval, unsigned int optlen)
  {
- 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
-@@ -1871,6 +1879,8 @@ static int mptcp_bind(struct socket *sock, struct soc=
-kaddr *uaddr, int addr_len)
- 		goto unlock;
- 	}
+@@ -1649,6 +1674,9 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
+l, int optname,
+ 		return tcp_setsockopt(ssock->sk, level, optname, optval,
+ 				      optlen);
  =
 
-+	mptcp_copy_setsockopt(sock->sk, ssock->sk);
++	if (level =3D=3D SOL_IPV6)
++		return mptcp_setsockopt_v6(msk, level, optname, optval, optlen);
 +
- 	err =3D ssock->ops->bind(ssock, uaddr, addr_len);
- 	if (!err)
- 		mptcp_copy_inaddrs(sock->sk, ssock->sk);
-@@ -1916,6 +1926,7 @@ static int mptcp_stream_connect(struct socket *sock, =
-struct sockaddr *uaddr,
- 		subflow->request_mptcp =3D 0;
+ 	return -EOPNOTSUPP;
+ }
  =
 
- do_connect:
-+	mptcp_copy_setsockopt(sock->sk, ssock->sk);
- 	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
- 	sock->state =3D ssock->state;
- =
-
-@@ -1985,6 +1996,7 @@ static int mptcp_listen(struct socket *sock, int back=
-log)
- 	}
- =
-
- 	sock_set_flag(sock->sk, SOCK_RCU_FREE);
-+	mptcp_copy_setsockopt(sock->sk, ssock->sk);
- =
-
- 	err =3D ssock->ops->listen(ssock, backlog);
- 	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
 -- =
 
 2.26.2
 
---===============0475638394494743428==--
+--===============5661314741443463335==--
