@@ -1,89 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============3627341381853638541=="
+Content-Type: multipart/mixed; boundary="===============7346593587541442226=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2 3/3] mptcp: support IPV6_V6ONLY
- setsockopt
-Date: Tue, 16 Jun 2020 14:25:31 +0200
-Message-ID: <20200616122531.2443-4-fw@strlen.de>
-In-Reply-To: 20200616122531.2443-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v2] net: mptcp: improve fallback to TCP
+Date: Tue, 16 Jun 2020 16:18:02 +0200
+Message-ID: <6c04233494742fb42935ebf4d8617cf8bbf736a9.camel@redhat.com>
+In-Reply-To: 99da6ce722b8af16ea76e57ca8d1bf5d13fc14c1.1592250531.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4698
+X-UID: 4699
 
---===============3627341381853638541==
+--===============7346593587541442226==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Without this, Opensshd fails to open an ipv6 socket listening
-socket:
-  error: setsockopt IPV6_V6ONLY: Operation not supported
-  error: Bind to port 22 on :: failed: Address already in use.
+On Mon, 2020-06-15 at 21:54 +0200, Davide Caratti wrote:
+> keep using MPTCP sockets and a use "dummy mapping" in case of fallback to
+> regular TCP. When fallback is triggered, skip addition of the MPTCP option
+> on send.
+> =
 
-Opensshd opens an ipv4 and and ipv6 listening socket, but because
-IPV6_V6ONLY setsockopt fails, the port number is already in use.
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/11
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/22
+> Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> ---
+>  net/mptcp/options.c  |  9 ++++-
+>  net/mptcp/protocol.c | 81 ++++++++++----------------------------------
+>  net/mptcp/protocol.h | 34 +++++++++++++++++++
+>  net/mptcp/subflow.c  | 47 ++++++++++++++++---------
+>  4 files changed, 91 insertions(+), 80 deletions(-)
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b2338680497a..9e7fc44f405d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1659,6 +1659,33 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_=
-sock *msk, int optname,
- 	return ret;
- }
- =
-
-+static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
-+			       char __user *optval, unsigned int optlen)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	int ret =3D -EOPNOTSUPP;
-+	struct socket *ssock;
-+
-+	switch (optname) {
-+	case IPV6_V6ONLY:
-+		lock_sock(sk);
-+		ssock =3D __mptcp_socket_create(msk, MPTCP_SAME_STATE);
-+		if (IS_ERR(ssock)) {
-+			release_sock(sk);
-+			return PTR_ERR(ssock);
-+		}
-+
-+		ret =3D tcp_setsockopt(ssock->sk, SOL_IPV6, optname, optval, optlen);
-+		if (ret =3D=3D 0)
-+			sk->sk_ipv6only =3D ssock->sk->sk_ipv6only;
-+
-+		release_sock(sk);
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
- static int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 			    char __user *optval, unsigned int optlen)
- {
-@@ -1684,6 +1711,9 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- 		return tcp_setsockopt(ssock->sk, level, optname, optval,
- 				      optlen);
- =
-
-+	if (level =3D=3D SOL_IPV6)
-+		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
-+
- 	return -EOPNOTSUPP;
- }
- =
+forgot to mention, this patch is code-wise the same as the one alrready
+merged. Just the commit message is changed (and 'BugLink:' tags converted
+in 'Closes:').
 
 -- =
 
-2.26.2
+davide
 
---===============3627341381853638541==--
+--===============7346593587541442226==--
