@@ -1,44 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============7346593587541442226=="
+Content-Type: multipart/mixed; boundary="===============3708809740529596213=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] net: mptcp: improve fallback to TCP
-Date: Tue, 16 Jun 2020 16:18:02 +0200
-Message-ID: <6c04233494742fb42935ebf4d8617cf8bbf736a9.camel@redhat.com>
-In-Reply-To: 99da6ce722b8af16ea76e57ca8d1bf5d13fc14c1.1592250531.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 0/3] add MP_PRIO,
+ MP_FAIL and MP_FASTCLOSE suboptions handling
+Date: Tue, 16 Jun 2020 17:18:56 +0200
+Message-ID: <04ae76d9-231a-de8e-ad33-1e4e80bb314c@tessares.net>
+In-Reply-To: cover.1592289629.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4699
+X-UID: 4700
 
---===============7346593587541442226==
+--===============3708809740529596213==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-06-15 at 21:54 +0200, Davide Caratti wrote:
-> keep using MPTCP sockets and a use "dummy mapping" in case of fallback to
-> regular TCP. When fallback is triggered, skip addition of the MPTCP option
-> on send.
-> =
+Hi Geliang
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/11
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/22
-> Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> ---
->  net/mptcp/options.c  |  9 ++++-
->  net/mptcp/protocol.c | 81 ++++++++++----------------------------------
->  net/mptcp/protocol.h | 34 +++++++++++++++++++
->  net/mptcp/subflow.c  | 47 ++++++++++++++++---------
->  4 files changed, 91 insertions(+), 80 deletions(-)
+On 16/06/2020 08:47, Geliang Tang wrote:
+> Add handling for sending and receiving the MP_PRIO, MP_FAIL, and
+> MP_FASTCLOSE suboptions.
 
-forgot to mention, this patch is code-wise the same as the one alrready
-merged. Just the commit message is changed (and 'BugLink:' tags converted
-in 'Closes:').
+Thank you for the patches!
 
+Unfortunately, I don't think it would be wise to accept them now: for =
+
+the moment, these suboptions are ignored at the reception. If we accept =
+
+them and change some variables like you did, we would need to make sure =
+
+the kernel is still acting correctly. In other words, we would need tests:
+* For MP_PRIO, there are still quite some works to do regarding the =
+
+scheduling of the packets between the different MPTCP subflows to do =
+
+before supporting this.
+* For MP_FAIL, we should forward the info to the path manager.
+* For MP_FASTCLOSE, we should close connections and ACK this.
+
+Also, net-next is closed for the moment: =
+
+http://vger.kernel.org/~davem/net-next.html
+
+I would suggest you to discuss about that on MPTCP mailing list. We also =
+
+have meetings every Thursday. New devs are always welcome to contribute =
+
+to new features and bug-fixes!
+
+Cheers,
+Matt
 -- =
 
-davide
-
---===============7346593587541442226==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============3708809740529596213==--
