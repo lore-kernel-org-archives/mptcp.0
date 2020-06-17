@@ -1,126 +1,176 @@
-Content-Type: multipart/mixed; boundary="===============7856346310639095152=="
+Content-Type: multipart/mixed; boundary="===============4116120043368771605=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2 1/3] net: use mptcp setsockopt
- function for SOL_SOCKET on mptcp sockets
-Date: Tue, 16 Jun 2020 14:01:27 -0700
-Message-ID: <alpine.OSX.2.22.394.2006161400290.25143@ajaladi-mobl.amr.corp.intel.com>
-In-Reply-To: alpine.OSX.2.22.394.2006161319130.21710@ajaladi-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH] mptcp: check for plain TCP sock at accept time
+Date: Tue, 16 Jun 2020 17:34:23 -0700
+Message-ID: <alpine.OSX.2.22.394.2006161655420.25143@ajaladi-mobl.amr.corp.intel.com>
+In-Reply-To: 3b0e33f9306a9eb6415c5cb5b30a21f6d686b7bb.1592325256.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4713
+X-UID: 4714
 
---===============7856346310639095152==
+--===============4116120043368771605==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Tue, 16 Jun 2020, Mat Martineau wrote:
+On Tue, 16 Jun 2020, Paolo Abeni wrote:
 
+> This cleanup the code a bit and avoid corrupted states
+> on weird syscall sequence (accept(), connect()).
 >
-> On Tue, 16 Jun 2020, Florian Westphal wrote:
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 61 +++-----------------------------------------
+> 1 file changed, 3 insertions(+), 58 deletions(-)
 >
->> setsockopt(mptcp_fd, SOL_SOCKET, ...)...  appears to work (returns 0),
->> but it has no effect -- this is because the MPTCP layer never has a
->> chance to copy the settings to the subflow socket.
->> =
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index faa804f63c81..590009a2591a 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -56,9 +56,6 @@ static struct socket *mptcp_is_tcpsk(struct sock *sk)
 
->> Skip the generic handling for the mptcp case and return -EOPNOTSUPP.
->> Next patch adds handling for SOL_SOCKET to mptcp.
->> =
+The returned pointer isn't used other than for a null check now, so it =
 
->> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->> ---
->> net/mptcp/protocol.c |  3 +++
->> net/socket.c         | 12 +++++++++++-
->> 2 files changed, 14 insertions(+), 1 deletion(-)
->> =
+could return a bool instead.
 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index faa804f63c81..f9429c6f5b96 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -1636,6 +1636,9 @@ static int mptcp_setsockopt(struct sock *sk, int =
-
->> level, int optname,
->>
->> 	pr_debug("msk=3D%p", msk);
->> =
-
->> +	if (level =3D=3D SOL_SOCKET)
->> +		return -EOPNOTSUPP;
-
-One more thing: calling sock_setsockopt() here would be a better =
-
-placeholder, depending on what you think about my comments on patch 2/3.
+Other than that, looks good to clean things up this way! Thanks.
 
 
 Mat
 
 
->> +
->> 	/* @@ the meaning of setsockopt() when the socket is connected and
->> 	 * there are multiple subflows is not yet defined. It is up to the
->> 	 * MPTCP-level socket to configure the subflows until the subflow
->> diff --git a/net/socket.c b/net/socket.c
->> index d5b555845b37..98b70fcaff19 100644
->> --- a/net/socket.c
->> +++ b/net/socket.c
->> @@ -2091,6 +2091,16 @@ SYSCALL_DEFINE4(recv, int, fd, void __user *, ubu=
-f, =
-
->> size_t, size,
->> 	return __sys_recvfrom(fd, ubuf, size, flags, NULL, NULL);
->> }
->> =
-
->> +static bool sock_use_custom_sol_socket(const struct socket *sock)
->> +{
->> +	const struct sock *sk =3D sock->sk;
->> +
->> +	/* Use sock->ops->setsockopt() for MPTCP */
->> +	return sk->sk_protocol =3D=3D IPPROTO_MPTCP &&
+> {
+> 	struct socket *sock =3D sk->sk_socket;
 >
-> Is it worth using IS_ENABLED(CONFIG_MPTCP) first in this boolean expressi=
-on =
-
-> so this all compiles out when MPTCP is not enabled? On one hand it's a =
-
-> microoptimization on a path where performance doesn't matter much, but on=
- the =
-
-> other hand we have tried to make things compile out where we can.
+> -	if (sock->sk !=3D sk)
+> -		return NULL;
+> -
+> 	if (unlikely(sk->sk_prot =3D=3D &tcp_prot)) {
+> 		/* we are being invoked after mptcp_accept() has
+> 		 * accepted a non-mp-capable flow: sk is a tcp_sk,
+> @@ -81,14 +78,8 @@ static struct socket *mptcp_is_tcpsk(struct sock *sk)
 >
+> static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+> {
+> -	struct socket *sock;
+> -
+> 	sock_owned_by_me((const struct sock *)msk);
 >
-> Mat
+> -	sock =3D mptcp_is_tcpsk((struct sock *)msk);
+> -	if (unlikely(sock))
+> -		return sock;
+> -
+> 	if (likely(!__mptcp_check_fallback(msk)))
+> 		return NULL;
 >
+> @@ -1574,7 +1565,6 @@ static struct sock *mptcp_accept(struct sock *sk, i=
+nt flags, int *err,
+> 		return NULL;
 >
->> +	       sk->sk_type =3D=3D SOCK_STREAM &&
->> +	       (sk->sk_family =3D=3D AF_INET || sk->sk_family =3D=3D AF_INET6);
->> +}
->> +
->> /*
->>  *	Set a socket option. Because we don't know the option lengths we have
->>  *	to pass the user mode parameter for the protocols to sort out.
->> @@ -2129,7 +2139,7 @@ static int __sys_setsockopt(int fd, int level, int =
+> 	pr_debug("msk=3D%p, subflow is mptcp=3D%d", msk, sk_is_mptcp(newsk));
+> -
+> 	if (sk_is_mptcp(newsk)) {
+> 		struct mptcp_subflow_context *subflow;
+> 		struct sock *new_mptcp_sock;
+> @@ -1932,42 +1922,6 @@ static int mptcp_stream_connect(struct socket *soc=
+k, struct sockaddr *uaddr,
+> 	return err;
+> }
+>
+> -static int mptcp_v4_getname(struct socket *sock, struct sockaddr *uaddr,
+> -			    int peer)
+> -{
+> -	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
+> -		/* we are being invoked from __sys_accept4, after
+> -		 * mptcp_accept() has just accepted a non-mp-capable
+> -		 * flow: sk is a tcp_sk, not an mptcp one.
+> -		 *
+> -		 * Hand the socket over to tcp so all further socket ops
+> -		 * bypass mptcp.
+> -		 */
+> -		sock->ops =3D &inet_stream_ops;
+> -	}
+> -
+> -	return inet_getname(sock, uaddr, peer);
+> -}
+> -
+> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -static int mptcp_v6_getname(struct socket *sock, struct sockaddr *uaddr,
+> -			    int peer)
+> -{
+> -	if (sock->sk->sk_prot =3D=3D &tcpv6_prot) {
+> -		/* we are being invoked from __sys_accept4 after
+> -		 * mptcp_accept() has accepted a non-mp-capable
+> -		 * subflow: sk is a tcp_sk, not mptcp.
+> -		 *
+> -		 * Hand the socket over to tcp so all further
+> -		 * socket ops bypass mptcp.
+> -		 */
+> -		sock->ops =3D &inet6_stream_ops;
+> -	}
+> -
+> -	return inet6_getname(sock, uaddr, peer);
+> -}
+> -#endif
+> -
+> static int mptcp_listen(struct socket *sock, int backlog)
+> {
+> 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+> @@ -1996,15 +1950,6 @@ static int mptcp_listen(struct socket *sock, int b=
+acklog)
+> 	return err;
+> }
+>
+> -static bool is_tcp_proto(const struct proto *p)
+> -{
+> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
+> -#else
+> -	return p =3D=3D &tcp_prot;
+> -#endif
+> -}
+> -
+> static int mptcp_stream_accept(struct socket *sock, struct socket *newsoc=
+k,
+> 			       int flags, bool kern)
+> {
+> @@ -2027,7 +1972,7 @@ static int mptcp_stream_accept(struct socket *sock,=
+ struct socket *newsock,
+> 	release_sock(sock->sk);
+>
+> 	err =3D ssock->ops->accept(sock, newsock, flags, kern);
+> -	if (err =3D=3D 0 && !is_tcp_proto(newsock->sk->sk_prot)) {
+> +	if (err =3D=3D 0 && !mptcp_is_tcpsk(newsock->sk)) {
+> 		struct mptcp_sock *msk =3D mptcp_sk(newsock->sk);
+> 		struct mptcp_subflow_context *subflow;
+>
+> @@ -2142,7 +2087,7 @@ static const struct proto_ops mptcp_stream_ops =3D {
+> 	.connect	   =3D mptcp_stream_connect,
+> 	.socketpair	   =3D sock_no_socketpair,
+> 	.accept		   =3D mptcp_stream_accept,
+> -	.getname	   =3D mptcp_v4_getname,
+> +	.getname	   =3D inet_getname,
+> 	.poll		   =3D mptcp_poll,
+> 	.ioctl		   =3D inet_ioctl,
+> 	.gettstamp	   =3D sock_gettstamp,
+> @@ -2202,7 +2147,7 @@ static const struct proto_ops mptcp_v6_stream_ops =
+=3D {
+> 	.connect	   =3D mptcp_stream_connect,
+> 	.socketpair	   =3D sock_no_socketpair,
+> 	.accept		   =3D mptcp_stream_accept,
+> -	.getname	   =3D mptcp_v6_getname,
+> +	.getname	   =3D inet6_getname,
+> 	.poll		   =3D mptcp_poll,
+> 	.ioctl		   =3D inet6_ioctl,
+> 	.gettstamp	   =3D sock_gettstamp,
+> -- =
 
->> optname,
->> 			optval =3D (char __user __force *)kernel_optval;
->> 		}
->> =
-
->> -		if (level =3D=3D SOL_SOCKET)
->> +		if (level =3D=3D SOL_SOCKET && !sock_use_custom_sol_socket(sock))
->> 			err =3D
->> 			    sock_setsockopt(sock, level, optname, optval,
->> 					    optlen);
->> -- =
-
->> 2.26.2
+> 2.26.2
 
 --
 Mat Martineau
 Intel
---===============7856346310639095152==--
+--===============4116120043368771605==--
