@@ -1,36 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============5002466298219521187=="
+Content-Type: multipart/mixed; boundary="===============0418640507300803879=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 18 June 2020 16:00 UTC (9am PDT, 6pm CEST)
-Date: Wed, 17 Jun 2020 18:00:25 +0200
-Message-ID: <b4a85cde-021e-708b-e514-ef92e942989e@tessares.net>
+Subject: [MPTCP] Re: [PATCH net 1/2] mptcp: cache msk on MP_JOIN init_req
+Date: Wed, 17 Jun 2020 11:13:22 -0700
+Message-ID: <alpine.OSX.2.22.394.2006171112280.1663@mjmartin-mac01.local>
+In-Reply-To: 3213f22a1fa85217032ba3de482f2209c63f2870.1592388398.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4719
+X-UID: 4720
 
---===============5002466298219521187==
+--===============0418640507300803879==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Wed, 17 Jun 2020, Paolo Abeni wrote:
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> The msk ownership is transferred to the child socket at
+> 3rd ack time, so that we avoid more lookups later. If the
+> request does not reach the 3rd ack, the MSK reference is
+> dropped at request sock release time.
+>
+> As a side effect, fallback is now tracked by a NULL msk
+> reference instead of zeroed 'mp_join' field. This will
+> simplify the next patch.
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.h |  1 +
+> net/mptcp/subflow.c  | 39 +++++++++++++++++----------------------
+> 2 files changed, 18 insertions(+), 22 deletions(-)
+>
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20200618
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-Feel free to add/modify topics!
-
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
-
-Speak to you tomorrow!
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5002466298219521187==--
+--
+Mat Martineau
+Intel
+--===============0418640507300803879==--
