@@ -1,39 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============0563004443577420569=="
+Content-Type: multipart/mixed; boundary="===============8016868592505722099=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/4] mptcp: fallback refactor follow-up
-Date: Thu, 18 Jun 2020 12:55:17 +0200
-Message-ID: <cover.1592477699.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 1/4] Squash-to: "net: mptcp: improve fallback to
+ TCP"
+Date: Thu, 18 Jun 2020 12:55:18 +0200
+Message-ID: <dab15370315ced25255947ec1ea3d9b62e3387b9.1592477699.git.pabeni@redhat.com>
+In-Reply-To: cover.1592477699.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4727
+X-UID: 4728
 
---===============0563004443577420569==
+--===============8016868592505722099==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series compraises a few followup to the fallback refactor patch.
-Ideally, they should land into the export branch just after =
+We need to take care of shutdown, too: drop the
+special fallback handling.
 
-"mptcp: fallback in case of simultaneous connect" - except for patch 1/4
+Additionally invoke the state_change op on the
+relevant socket (the msk one).
 
-This a v2, as patch 2/4 is the new version of the already posted
-"mptcp: check for plain TCP sock at accept time", including the changes
-suggested by Mat (M.)
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-Paolo Abeni (4):
-  Squash-to: "net: mptcp: improve fallback to TCP"
-  mptcp: check for plain TCP sock at accept time
-  mptcp: create first subflow at msk creation time
-  mptcp: __mptcp_tcp_fallback() returns a struct sock
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index faa804f63c81..2c15bf4cdb53 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1404,8 +1404,6 @@ static void mptcp_subflow_shutdown(struct sock *ssk, =
+int how,
+ 		break;
+ 	}
+ =
 
- net/mptcp/protocol.c | 156 +++++++++++--------------------------------
- 1 file changed, 40 insertions(+), 116 deletions(-)
+-	/* Wake up anyone sleeping in poll. */
+-	ssk->sk_state_change(ssk);
+ 	release_sock(ssk);
+ }
+ =
+
+@@ -2091,18 +2089,11 @@ static int mptcp_shutdown(struct socket *sock, int =
+how)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+ 	struct mptcp_subflow_context *subflow;
+-	struct socket *ssock;
+ 	int ret =3D 0;
+ =
+
+ 	pr_debug("sk=3D%p, how=3D%d", msk, how);
+ =
+
+ 	lock_sock(sock->sk);
+-	ssock =3D __mptcp_tcp_fallback(msk);
+-	if (ssock) {
+-		release_sock(sock->sk);
+-		return inet_shutdown(ssock, how);
+-	}
+-
+ 	if (how =3D=3D SHUT_WR || how =3D=3D SHUT_RDWR)
+ 		inet_sk_state_store(sock->sk, TCP_FIN_WAIT1);
+ =
+
+@@ -2128,6 +2119,9 @@ static int mptcp_shutdown(struct socket *sock, int ho=
+w)
+ 		mptcp_subflow_shutdown(tcp_sk, how, 1, msk->write_seq);
+ 	}
+ =
+
++	/* Wake up anyone sleeping in poll. */
++	sock->sk->sk_state_change(sock->sk);
++
+ out_unlock:
+ 	release_sock(sock->sk);
+ =
 
 -- =
 
 2.26.2
 
---===============0563004443577420569==--
+--===============8016868592505722099==--
