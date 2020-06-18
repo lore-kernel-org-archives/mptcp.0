@@ -1,40 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============2626945699172767359=="
+Content-Type: multipart/mixed; boundary="===============5031907486653979656=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net 2/2] mptcp: drop MP_JOIN request sock on syn
- cookies
-Date: Wed, 17 Jun 2020 11:14:28 -0700
-Message-ID: <alpine.OSX.2.22.394.2006171113260.1663@mjmartin-mac01.local>
-In-Reply-To: 3aff0acec0b89a55fdae02194036f34be56b545c.1592388398.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 0/3] add MP_PRIO,
+ MP_FAIL and MP_FASTCLOSE suboptions handling
+Date: Thu, 18 Jun 2020 14:27:37 +0800
+Message-ID: <20200618062737.GA21303@OptiPlex>
+In-Reply-To: 04ae76d9-231a-de8e-ad33-1e4e80bb314c@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4721
+X-UID: 4724
 
---===============2626945699172767359==
+--===============5031907486653979656==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 17 Jun 2020, Paolo Abeni wrote:
+On Tue, Jun 16, 2020 at 05:18:56PM +0200, Matthieu Baerts wrote:
+> Hi Geliang
+> =
 
-> Currently any MPTCP socket using syn cookies will fallback to
-> TCP at 3rd ack time. In case of MP_JOIN requests, the RFC mandate
-> closing the child and sockets, but the existing error paths
-> do not handle the syncookie scenario correctly.
->
-> Address the issue always forcing the child shutdown in case of
-> MP_JOIN fallback.
->
-> Fixes: ae2dd7164943 ("mptcp: handle tcp fallback when using syn cookies")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/subflow.c | 18 ++++++++++--------
-> 1 file changed, 10 insertions(+), 8 deletions(-)
+> On 16/06/2020 08:47, Geliang Tang wrote:
+> > Add handling for sending and receiving the MP_PRIO, MP_FAIL, and
+> > MP_FASTCLOSE suboptions.
+> =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Thank you for the patches!
+> =
 
---
-Mat Martineau
-Intel
---===============2626945699172767359==--
+> Unfortunately, I don't think it would be wise to accept them now: for the
+> moment, these suboptions are ignored at the reception. If we accept them =
+and
+> change some variables like you did, we would need to make sure the kernel=
+ is
+> still acting correctly. In other words, we would need tests:
+> * For MP_PRIO, there are still quite some works to do regarding the
+> scheduling of the packets between the different MPTCP subflows to do befo=
+re
+> supporting this.
+> * For MP_FAIL, we should forward the info to the path manager.
+> * For MP_FASTCLOSE, we should close connections and ACK this.
+> =
+
+> Also, net-next is closed for the moment:
+> http://vger.kernel.org/~davem/net-next.html
+> =
+
+> I would suggest you to discuss about that on MPTCP mailing list. We also
+> have meetings every Thursday. New devs are always welcome to contribute to
+> new features and bug-fixes!
+> =
+
+
+Hi Matt,
+
+Thanks for your reply. I will do these tests and improve my patches.
+
+-Geliang
+
+> Cheers,
+> Matt
+> -- =
+
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+--===============5031907486653979656==--
