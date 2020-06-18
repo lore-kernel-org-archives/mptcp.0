@@ -1,117 +1,194 @@
-Content-Type: multipart/mixed; boundary="===============8142624505775166675=="
+Content-Type: multipart/mixed; boundary="===============7273270007536570056=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 4/4] mptcp: __mptcp_tcp_fallback() returns a struct
- sock
-Date: Thu, 18 Jun 2020 12:55:21 +0200
-Message-ID: <e277c0701c79bc5467f1ce9fbf9bcb1755fb3800.1592477699.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 2/4] mptcp: check for plain TCP sock at accept time
+Date: Thu, 18 Jun 2020 12:55:19 +0200
+Message-ID: <5d8722384e1d1370f75ccb52ed7000029f6fcf78.1592477699.git.pabeni@redhat.com>
 In-Reply-To: cover.1592477699.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4730
+X-UID: 4731
 
---===============8142624505775166675==
+--===============7273270007536570056==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently __mptcp_tcp_fallback() always return NULL
-on passive sockets. Callers don't need anymore a
-struct socket, so let __mptcp_tcp_fallback return
-the first subflow sock and cope correctly even
-with passive sockets.
+This cleanup the code a bit and avoid corrupted states
+on weird syscall sequence (accept(), connect()).
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+v1 -> v2:
+ - mptcp_is_tcpsk() returns a bool value (Mat)
+---
+ net/mptcp/protocol.c | 69 +++++---------------------------------------
+ 1 file changed, 7 insertions(+), 62 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 75a96d8665e9..fb1f78ef3213 100644
+index 2c15bf4cdb53..ff160b95cc84 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -76,14 +76,14 @@ static bool mptcp_is_tcpsk(struct sock *sk)
- 	return false;
+@@ -52,13 +52,10 @@ static struct socket *__mptcp_nmpc_socket(const struct =
+mptcp_sock *msk)
+ 	return msk->subflow;
  }
  =
 
--static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
-+static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+-static struct socket *mptcp_is_tcpsk(struct sock *sk)
++static bool mptcp_is_tcpsk(struct sock *sk)
  {
+ 	struct socket *sock =3D sk->sk_socket;
+ =
+
+-	if (sock->sk !=3D sk)
+-		return NULL;
+-
+ 	if (unlikely(sk->sk_prot =3D=3D &tcp_prot)) {
+ 		/* we are being invoked after mptcp_accept() has
+ 		 * accepted a non-mp-capable flow: sk is a tcp_sk,
+@@ -68,27 +65,21 @@ static struct socket *mptcp_is_tcpsk(struct sock *sk)
+ 		 * bypass mptcp.
+ 		 */
+ 		sock->ops =3D &inet_stream_ops;
+-		return sock;
++		return true;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	} else if (unlikely(sk->sk_prot =3D=3D &tcpv6_prot)) {
+ 		sock->ops =3D &inet6_stream_ops;
+-		return sock;
++		return true;
+ #endif
+ 	}
+ =
+
+-	return NULL;
++	return false;
+ }
+ =
+
+ static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ {
+-	struct socket *sock;
+-
  	sock_owned_by_me((const struct sock *)msk);
  =
 
+-	sock =3D mptcp_is_tcpsk((struct sock *)msk);
+-	if (unlikely(sock))
+-		return sock;
+-
  	if (likely(!__mptcp_check_fallback(msk)))
  		return NULL;
  =
 
--	return msk->subflow;
-+	return msk->first;
+@@ -1572,7 +1563,6 @@ static struct sock *mptcp_accept(struct sock *sk, int=
+ flags, int *err,
+ 		return NULL;
+ =
+
+ 	pr_debug("msk=3D%p, subflow is mptcp=3D%d", msk, sk_is_mptcp(newsk));
+-
+ 	if (sk_is_mptcp(newsk)) {
+ 		struct mptcp_subflow_context *subflow;
+ 		struct sock *new_mptcp_sock;
+@@ -1930,42 +1920,6 @@ static int mptcp_stream_connect(struct socket *sock,=
+ struct sockaddr *uaddr,
+ 	return err;
  }
  =
 
- static int __mptcp_socket_create(struct mptcp_sock *msk)
-@@ -1605,7 +1605,7 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- 			    char __user *optval, unsigned int optlen)
+-static int mptcp_v4_getname(struct socket *sock, struct sockaddr *uaddr,
+-			    int peer)
+-{
+-	if (sock->sk->sk_prot =3D=3D &tcp_prot) {
+-		/* we are being invoked from __sys_accept4, after
+-		 * mptcp_accept() has just accepted a non-mp-capable
+-		 * flow: sk is a tcp_sk, not an mptcp one.
+-		 *
+-		 * Hand the socket over to tcp so all further socket ops
+-		 * bypass mptcp.
+-		 */
+-		sock->ops =3D &inet_stream_ops;
+-	}
+-
+-	return inet_getname(sock, uaddr, peer);
+-}
+-
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-static int mptcp_v6_getname(struct socket *sock, struct sockaddr *uaddr,
+-			    int peer)
+-{
+-	if (sock->sk->sk_prot =3D=3D &tcpv6_prot) {
+-		/* we are being invoked from __sys_accept4 after
+-		 * mptcp_accept() has accepted a non-mp-capable
+-		 * subflow: sk is a tcp_sk, not mptcp.
+-		 *
+-		 * Hand the socket over to tcp so all further
+-		 * socket ops bypass mptcp.
+-		 */
+-		sock->ops =3D &inet6_stream_ops;
+-	}
+-
+-	return inet6_getname(sock, uaddr, peer);
+-}
+-#endif
+-
+ static int mptcp_listen(struct socket *sock, int backlog)
  {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	struct socket *ssock;
-+	struct sock *ssk;
- =
-
- 	pr_debug("msk=3D%p", msk);
- =
-
-@@ -1616,11 +1616,10 @@ static int mptcp_setsockopt(struct sock *sk, int le=
-vel, int optname,
- 	 * to the one remaining subflow.
- 	 */
- 	lock_sock(sk);
--	ssock =3D __mptcp_tcp_fallback(msk);
-+	ssk =3D __mptcp_tcp_fallback(msk);
- 	release_sock(sk);
--	if (ssock)
--		return tcp_setsockopt(ssock->sk, level, optname, optval,
--				      optlen);
-+	if (ssk)
-+		return tcp_setsockopt(ssk, level, optname, optval, optlen);
- =
-
- 	return -EOPNOTSUPP;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
+@@ -1994,15 +1948,6 @@ static int mptcp_listen(struct socket *sock, int bac=
+klog)
+ 	return err;
  }
-@@ -1629,7 +1628,7 @@ static int mptcp_getsockopt(struct sock *sk, int leve=
-l, int optname,
- 			    char __user *optval, int __user *option)
+ =
+
+-static bool is_tcp_proto(const struct proto *p)
+-{
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	return p =3D=3D &tcp_prot || p =3D=3D &tcpv6_prot;
+-#else
+-	return p =3D=3D &tcp_prot;
+-#endif
+-}
+-
+ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 			       int flags, bool kern)
  {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
--	struct socket *ssock;
-+	struct sock *ssk;
+@@ -2025,7 +1970,7 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ 	release_sock(sock->sk);
  =
 
- 	pr_debug("msk=3D%p", msk);
+ 	err =3D ssock->ops->accept(sock, newsock, flags, kern);
+-	if (err =3D=3D 0 && !is_tcp_proto(newsock->sk->sk_prot)) {
++	if (err =3D=3D 0 && !mptcp_is_tcpsk(newsock->sk)) {
+ 		struct mptcp_sock *msk =3D mptcp_sk(newsock->sk);
+ 		struct mptcp_subflow_context *subflow;
  =
 
-@@ -1640,11 +1639,10 @@ static int mptcp_getsockopt(struct sock *sk, int le=
-vel, int optname,
- 	 * to the one remaining subflow.
- 	 */
- 	lock_sock(sk);
--	ssock =3D __mptcp_tcp_fallback(msk);
-+	ssk =3D __mptcp_tcp_fallback(msk);
- 	release_sock(sk);
--	if (ssock)
--		return tcp_getsockopt(ssock->sk, level, optname, optval,
--				      option);
-+	if (ssk)
-+		return tcp_getsockopt(ssk, level, optname, optval, option);
- =
-
- 	return -EOPNOTSUPP;
- }
+@@ -2136,7 +2081,7 @@ static const struct proto_ops mptcp_stream_ops =3D {
+ 	.connect	   =3D mptcp_stream_connect,
+ 	.socketpair	   =3D sock_no_socketpair,
+ 	.accept		   =3D mptcp_stream_accept,
+-	.getname	   =3D mptcp_v4_getname,
++	.getname	   =3D inet_getname,
+ 	.poll		   =3D mptcp_poll,
+ 	.ioctl		   =3D inet_ioctl,
+ 	.gettstamp	   =3D sock_gettstamp,
+@@ -2196,7 +2141,7 @@ static const struct proto_ops mptcp_v6_stream_ops =3D=
+ {
+ 	.connect	   =3D mptcp_stream_connect,
+ 	.socketpair	   =3D sock_no_socketpair,
+ 	.accept		   =3D mptcp_stream_accept,
+-	.getname	   =3D mptcp_v6_getname,
++	.getname	   =3D inet6_getname,
+ 	.poll		   =3D mptcp_poll,
+ 	.ioctl		   =3D inet6_ioctl,
+ 	.gettstamp	   =3D sock_gettstamp,
 -- =
 
 2.26.2
 
---===============8142624505775166675==--
+--===============7273270007536570056==--
