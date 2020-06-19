@@ -1,62 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============1310262656935635343=="
+Content-Type: multipart/mixed; boundary="===============5072824474272292184=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] selftests/mptcp: Capture pcap on both
- sender and receiver
-Date: Fri, 19 Jun 2020 17:28:17 +0200
-Message-ID: <f8bd76bc-2f26-04d8-b742-7f882f7e977c@tessares.net>
-In-Reply-To: alpine.OSX.2.22.394.2006182051191.19717@adhawale-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: fallback refactor follow-up
+Date: Fri, 19 Jun 2020 17:55:24 +0200
+Message-ID: <508b5620-a87b-4168-852e-ca85f62a5fe2@tessares.net>
+In-Reply-To: cover.1592477699.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4754
+X-UID: 4755
 
---===============1310262656935635343==
+--===============5072824474272292184==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat, Christoph,
+Hi Paolo, Mat
 
-On 19/06/2020 05:52, Mat Martineau wrote:
+On 18/06/2020 12:55, Paolo Abeni wrote:
+> This series compraises a few followup to the fallback refactor patch.
+> Ideally, they should land into the export branch just after
+> "mptcp: fallback in case of simultaneous connect" - except for patch 1/4
 > =
 
-> On Tue, 16 Jun 2020, Matthieu Baerts wrote:
+> This a v2, as patch 2/4 is the new version of the already posted
+> "mptcp: check for plain TCP sock at accept time", including the changes
+> suggested by Mat (M.)
 > =
 
->> When investigating performance issues that involve
->> latency/loss/reordering it is useful to have the pcap from the
->> sender-side as it allows to easier infer the state of the sender's
->> congestion-control, loss-recovery,...
->>
->> Allow the selftests to capture a pcap on both sides so that this
->> information is not lost when reproducing.
->>
->> This patch also improves the file names. Instead of:
->>
->> =C2=A0ns4-5ee79a56-X4O6gS-ns3-5ee79a56-X4O6gS-MPTCP-MPTCP-10.0.3.1.pcap
->>
->> We now have something like:
->>
->> =C2=A05ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-connector.pcap
->> =C2=A05ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-listener.pcap
->>
->> It was a connection from ns3 to ns4, better to start with ns3 then. The
->> port is also added, easier to find the trace we want.
+> Paolo Abeni (4):
+>    Squash-to: "net: mptcp: improve fallback to TCP"
+>    mptcp: check for plain TCP sock at accept time
+>    mptcp: create first subflow at msk creation time
+>    mptcp: __mptcp_tcp_fallback() returns a struct sock
 
-(...)
+Thank you for the patches and the reviews!
 
-> =
+- 65e7483a1524: "squashed" patch 1/4 in "net: mptcp: improve fallback to =
 
-> Nice improvement for the capture feature - looks ready to merge!
+TCP"
 
-Thank you for the review and the patch!
+Patches 2/4 and 3/4 have been added after "mptcp: fallback in case of =
 
-Just added at the end of the series (before the two DO-NOT-MERGE patches)
+simultaneous connect":
 
-- a4c3a82f66d9: selftests/mptcp: Capture pcap on both sender and receiver
+- b22287584333: mptcp: check for plain TCP sock at accept time
+- ba758075a064: mptcp: create first subflow at msk creation time
 
-Tests will be launched soon.
+Note: as discussed on IRC, I modified the commit message for 3/4.
+
+Patch 4/4 has not been accepted, discussions are still in progress.
+
+Tests + export are in progress.
 
 Cheers,
 Matt
@@ -64,4 +59,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1310262656935635343==--
+--===============5072824474272292184==--
