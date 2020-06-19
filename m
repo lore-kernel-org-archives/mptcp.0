@@ -1,62 +1,139 @@
-Content-Type: multipart/mixed; boundary="===============5072824474272292184=="
+Content-Type: multipart/mixed; boundary="===============2354322356415826839=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 0/4] mptcp: fallback refactor follow-up
-Date: Fri, 19 Jun 2020 17:55:24 +0200
-Message-ID: <508b5620-a87b-4168-852e-ca85f62a5fe2@tessares.net>
-In-Reply-To: cover.1592477699.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 4/4] mptcp: __mptcp_tcp_fallback() returns a
+ struct sock
+Date: Fri, 19 Jun 2020 11:16:59 -0700
+Message-ID: <alpine.OSX.2.22.394.2006190927100.31751@gdaskalx-mobl3.amr.corp.intel.com>
+In-Reply-To: 3d5fc65eae2bf64dd82e2f6b5d3f494c0b3eaa0c.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4755
+X-UID: 4756
 
---===============5072824474272292184==
+--===============2354322356415826839==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat
+On Fri, 19 Jun 2020, Paolo Abeni wrote:
 
-On 18/06/2020 12:55, Paolo Abeni wrote:
-> This series compraises a few followup to the fallback refactor patch.
-> Ideally, they should land into the export branch just after
-> "mptcp: fallback in case of simultaneous connect" - except for patch 1/4
-> =
+> On Thu, 2020-06-18 at 17:33 -0700, Mat Martineau wrote:
+>> On Thu, 18 Jun 2020, Paolo Abeni wrote:
+>>
+>>> Currently __mptcp_tcp_fallback() always return NULL
+>>> on passive sockets. Callers don't need anymore a
+>>> struct socket, so let __mptcp_tcp_fallback return
+>>> the first subflow sock and cope correctly even
+>>> with passive sockets.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+>>> ---
+>>> net/mptcp/protocol.c | 22 ++++++++++------------
+>>> 1 file changed, 10 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 75a96d8665e9..fb1f78ef3213 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -76,14 +76,14 @@ static bool mptcp_is_tcpsk(struct sock *sk)
+>>> 	return false;
+>>> }
+>>>
+>>> -static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+>>> +static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+>>> {
+>>> 	sock_owned_by_me((const struct sock *)msk);
+>>>
+>>> 	if (likely(!__mptcp_check_fallback(msk)))
+>>> 		return NULL;
+>>>
+>>> -	return msk->subflow;
+>>> +	return msk->first;
+>>> }
+>>>
+>>> static int __mptcp_socket_create(struct mptcp_sock *msk)
+>>> @@ -1605,7 +1605,7 @@ static int mptcp_setsockopt(struct sock *sk, int =
+level, int optname,
+>>> 			    char __user *optval, unsigned int optlen)
+>>> {
+>>> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>>> -	struct socket *ssock;
+>>> +	struct sock *ssk;
+>>>
+>>> 	pr_debug("msk=3D%p", msk);
+>>>
+>>> @@ -1616,11 +1616,10 @@ static int mptcp_setsockopt(struct sock *sk, in=
+t level, int optname,
+>>> 	 * to the one remaining subflow.
+>>> 	 */
+>>> 	lock_sock(sk);
+>>> -	ssock =3D __mptcp_tcp_fallback(msk);
+>>> +	ssk =3D __mptcp_tcp_fallback(msk);
+>>> 	release_sock(sk);
+>>> -	if (ssock)
+>>> -		return tcp_setsockopt(ssock->sk, level, optname, optval,
+>>> -				      optlen);
+>>> +	if (ssk)
+>>> +		return tcp_setsockopt(ssk, level, optname, optval, optlen);
+>>
+>> Are there any TCP socket options on a passive socket that will cause
+>> problems for MPTCP connections?
+>>
+>> We've talked about keeping socket options limited on active MPTCP subflo=
+ws
+>> and allowing all socket options after fallback, but I don't remember if =
+we
+>> discussed socket options on the passive subflow socket.
+>
+> I think we haven't discussed this item explicitly. Passive socket can
+> already fallback after the completion of the 3whs due to OoO 3rd ack
+> packet. With infinite mapping support they could fallback even later.
+> When that happens we have a fallen-back socket and
+> {set,get}sockopt() not working, and that looks incosistent to me.
+>
+> Still not a big deal, I guess we can skip this change if there is no
+> agreement.
+>
 
-> This a v2, as patch 2/4 is the new version of the already posted
-> "mptcp: check for plain TCP sock at accept time", including the changes
-> suggested by Mat (M.)
-> =
+I've been thinking that a "passive socket" is one that has had listen() =
 
-> Paolo Abeni (4):
->    Squash-to: "net: mptcp: improve fallback to TCP"
->    mptcp: check for plain TCP sock at accept time
->    mptcp: create first subflow at msk creation time
->    mptcp: __mptcp_tcp_fallback() returns a struct sock
+called on it, and an "active socket" is one that has either had connect() =
 
-Thank you for the patches and the reviews!
+called or was returned by accept(). Under that definition, fallback only =
 
-- 65e7483a1524: "squashed" patch 1/4 in "net: mptcp: improve fallback to =
+applies to "active" sockets, hence my confusion about fallback for passive =
 
-TCP"
+sockets.
 
-Patches 2/4 and 3/4 have been added after "mptcp: fallback in case of =
+Should I instead be thinking of a "passive socket" as applying to sockets =
 
-simultaneous connect":
+returned by accept()? Or something else?
 
-- b22287584333: mptcp: check for plain TCP sock at accept time
-- ba758075a064: mptcp: create first subflow at msk creation time
 
-Note: as discussed on IRC, I modified the commit message for 3/4.
+I do think it's important to have get/setsockopt working on any =
 
-Patch 4/4 has not been accepted, discussions are still in progress.
+fallen-back socket. My concern was that it sounded like the changes might =
 
-Tests + export are in progress.
+affect how listening sockets handled TCP socket options, but reading your =
 
-Cheers,
-Matt
--- =
+reply I think I was misunderstanding.
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5072824474272292184==--
+
+> Apropos: I just noticed that we can likely drop the lock/unlock pair
+> in {set,get}sockopt(). After: "net: mptcp: improve fallback to TCP" we
+> don't need them anymore, as checking the fallback status is an atomic
+> op and not reversible.
+>
+> WDYT?
+>
+
+The fallback check is atomic and it looks like we access msk->subflow =
+
+elsewhere without a lock, so it seems ok to me.
+
+
+--
+Mat Martineau
+Intel
+--===============2354322356415826839==--
