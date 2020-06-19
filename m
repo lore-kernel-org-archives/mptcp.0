@@ -1,67 +1,82 @@
-Content-Type: multipart/mixed; boundary="===============0055675881290859415=="
+Content-Type: multipart/mixed; boundary="===============0353879506719631419=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Question about running mPTCP in kernel 5.0
-Date: Fri, 19 Jun 2020 17:18:28 +0200
-Message-ID: <b2199e49-d711-8fbd-fcc2-e357f08aafb3@tessares.net>
-In-Reply-To: CAD3NH5WtOhWb7oK=jMuwi_ZmAfFGx0VeOm+cCWOXLpjx+WbJ_Q@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: default KUNIT_* fragments to
+ KUNIT_ALL_TESTS
+Date: Fri, 19 Jun 2020 17:25:37 +0200
+Message-ID: <b999e02f-3a62-2a4f-4637-877db22db29a@tessares.net>
+In-Reply-To: alpine.OSX.2.22.394.2006182045190.19717@adhawale-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4752
+X-UID: 4753
 
---===============0055675881290859415==
+--===============0353879506719631419==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel,
+Hi Mat,
 
-On 19/06/2020 15:42, Dani Camps wrote:
-> Dear all,
+On 19/06/2020 05:45, Mat Martineau wrote:
 > =
 
-> Apologies if this is not the appropriate forum for this question.
+> On Tue, 16 Jun 2020, Matthieu Baerts wrote:
+> =
 
-There are currently two implementations of MPTCP in the Linux kernel:
+>> This makes it easier to enable all KUnit fragments.
+>>
+>> Adding 'if !KUNIT_ALL_TESTS so individual tests can not be turned off.
+>> Therefore if KUNIT_ALL_TESTS is enabled that will hide the prompt in
+>> menuconfig.
+>>
+>> Similar to beaed42c427d ("kunit: default KUNIT_* fragments to =
 
-  - An out-of-tree kernel described in https://www.multipath-tcp.org
-    Mailing list: mptcp-dev(a)listes.uclouvain.be
+>> KUNIT_ALL_TESTS")
+>> and following ones.
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>> ---
+>>
+>> Notes:
+>> =C2=A0=C2=A0 to be squashed in "mptcp: move crypto test to KUNIT"
+>>
+>> net/mptcp/Kconfig | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+>> index c701f27300ce..d7d5f9349366 100644
+>> --- a/net/mptcp/Kconfig
+>> +++ b/net/mptcp/Kconfig
+>> @@ -21,9 +21,10 @@ config MPTCP_IPV6
+>> endif
+>>
+>> config MPTCP_KUNIT_TESTS
+>> -=C2=A0=C2=A0=C2=A0 tristate "This builds the MPTCP KUnit tests"
+>> +=C2=A0=C2=A0=C2=A0 tristate "This builds the MPTCP KUnit tests" if !KUN=
+IT_ALL_TESTS
+>> =C2=A0=C2=A0=C2=A0=C2=A0select MPTCP
+>> =C2=A0=C2=A0=C2=A0=C2=A0depends on KUNIT
+>> +=C2=A0=C2=A0=C2=A0 default KUNIT_ALL_TESTS
+>> =C2=A0=C2=A0=C2=A0=C2=A0help
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Currently covers the MPTCP crypto helpers.
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Only useful for kernel devs running KUnit=
+ test harness and are not
+>> -- =
 
-  - An upstream version, the work is in progress since v5.6:
-    Info: https://github.com/multipath-tcp/mptcp_net-next/wiki
-    Mailing list: mptcp(a)lists.01.org
+>> 2.27.0.rc0
+> =
 
-I guess you are interested here in the out-of-tree kernel. Better to ask =
+> Looks good to me, thanks Matthieu.
 
-the question on the other list.
+Thank you for the review!
 
-> I have a machine running Kernel=C2=A05.0.0-23-generic. I am interested in =
+Just applied:
+- 0868473a09ec: "squashed" in "mptcp: move crypto test to KUNIT"
+- e414c4e075c8: "Signed-off-by" + "Co-developed-by"
+- fadbf9fd17fc..7c2398e9940d: result
 
-> running=C2=A0MPTCP on it. I have seen the implementation in =
-
-> https://www.multipath-tcp.org/, but I understand=C2=A0this is a full kern=
-el =
-
-> 4.1 modified for MPTCP.
-
-This out-of-tree kernel only supports LTS versions of the kernel, =
-
-typically the two last ones. So the v5.0.0 kernel is not supported. But =
-
-packages are available for other kernel versions.
-
-> Is there any implementation available that can be compiled into a module =
-
-> for kernel 5.0?
-
-I don't think so. Probably the best is to switch to another kernel: v5.7 =
-
-(upstream) or 4.19 (out-of-tree)
-
-If you are interested by the out-of-tree kernel, please continue the =
-
-discussion on the other list.
+Tests will be launched soon.
 
 Cheers,
 Matt
@@ -69,4 +84,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============0055675881290859415==--
+--===============0353879506719631419==--
