@@ -1,41 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============5599805552127861953=="
+Content-Type: multipart/mixed; boundary="===============0298669571019174206=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: use mptcp worker for path
- management
-Date: Mon, 22 Jun 2020 15:03:10 +0200
-Message-ID: <20200622130310.GQ26990@breakpoint.cc>
-In-Reply-To: 3274892c9713c52432c0e06d1b66a0a5028c9ec1.camel@redhat.com
+Subject: [MPTCP] [PATCH mptcp-next] mptcp: init autotune state also in
+ simultaneous connect case.
+Date: Mon, 22 Jun 2020 15:57:37 +0200
+Message-ID: <20200622135737.8217-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 4769
+X-UID: 4770
 
---===============5599805552127861953==
+--===============0298669571019174206==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2020-06-22 at 13:18 +0200, Florian Westphal wrote:
-> > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > > I'm wondering if we should keep using an MPTCP-specific workqueue.
-> > > Server side, we don't expect the work to trigger very often, but shou=
-ld
-> > > that ever happen, top will tell easily.
-> > =
+This is what Christoph suggested needs to be added to avoid
+div0 in case of simultaneous connect.
 
-> > You mean switch msk->work from system_wq to a custom workqueue?
-> =
+Squashto: mptcp: add receive buffer auto-tuning
+---
+ net/mptcp/subflow.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> yep, e.g. reusing and renaming 'pm_wq'. When the PM works a lot (in
-> "ndiffports" mode as in issues/33), the pm_wq is visible in top - at
-> least in dbg build, I never tested with regular kconfig - and I like
-> being able to identify it easily. WDYT?
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 0f0fa1ba57a8..e1e19c76e267 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1120,6 +1120,7 @@ static void subflow_state_change(struct sock *sk)
+ =
 
-Can you do this?
+ 	if (subflow_simultaneous_connect(sk)) {
+ 		mptcp_do_fallback(sk);
++		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+ 		pr_fallback(mptcp_sk(parent));
+ 		subflow->conn_finished =3D 1;
+ 		if (inet_sk_state_load(parent) =3D=3D TCP_SYN_SENT) {
+-- =
 
-I am not at all sure how you would like this to look like 8-(
+2.26.2
 
-(Merge parts of protocol.c into pm.c?)
---===============5599805552127861953==--
+--===============0298669571019174206==--
