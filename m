@@ -1,37 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============2659162738156455235=="
+Content-Type: multipart/mixed; boundary="===============8226521332177386563=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: use mptcp worker for path
- management
-Date: Mon, 22 Jun 2020 13:30:16 +0200
-Message-ID: <3274892c9713c52432c0e06d1b66a0a5028c9ec1.camel@redhat.com>
-In-Reply-To: 20200622111817.GP26990@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH net] mptcp: drop sndr_key in mptcp_syn_options
+Date: Mon, 22 Jun 2020 13:33:47 +0200
+Message-ID: <2776de97-5f55-faae-c02d-4f0d4dfa0df8@tessares.net>
+In-Reply-To: 4e452a1ba52065633cb45d844af2e998176a6121.1592823756.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4765
+X-UID: 4766
 
---===============2659162738156455235==
+--===============8226521332177386563==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-06-22 at 13:18 +0200, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > I'm wondering if we should keep using an MPTCP-specific workqueue.
-> > Server side, we don't expect the work to trigger very often, but should
-> > that ever happen, top will tell easily.
-> =
+Hi Geliang,
 
-> You mean switch msk->work from system_wq to a custom workqueue?
+Thank you for the patch!
 
-yep, e.g. reusing and renaming 'pm_wq'. When the PM works a lot (in
-"ndiffports" mode as in issues/33), the pm_wq is visible in top - at
-least in dbg build, I never tested with regular kconfig - and I like
-being able to identify it easily. WDYT?
+On 22/06/2020 13:09, Geliang Tang wrote:
+> In RFC 8684, we don't need to send sndr_key in SYN package anymore, so dr=
+op it.
 
-Thanks!
+Good catch, it is no longer needed there.
 
-Paolo
+But please wrap your commit message after max 72 chars.
+I guess you know there are exceptions like for the Fixes tag, etc. More =
 
---===============2659162738156455235==--
+info by running checkpatch.pl.
+
+> Fixes: cec37a6e41aae ("mptcp: Handle MP_CAPABLE options for outgoing conn=
+ections")
+
+When this commit was pushed, only MPTCPv0 (RFC 6824) was supported.
+I guess you can do a reference to this one:
+
+     Fixes: cc7972ea1932 ("mptcp: parse and emit MP_CAPABLE option =
+
+according to v1 spec")
+
+Since this commit, we no longer need sndr_key for the SYN.
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============8226521332177386563==--
