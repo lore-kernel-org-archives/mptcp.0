@@ -1,58 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============3431460921582027958=="
+Content-Type: multipart/mixed; boundary="===============7403044800882415992=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: sock diag uAPI and MPTCP
-Date: Mon, 22 Jun 2020 12:18:52 +0200
-Message-ID: <07e0f81138421beee347c362dce61f78dd8bf00c.camel@redhat.com>
-In-Reply-To: 20200620.174408.1728600398443363480.davem@davemloft.net
+Subject: [MPTCP] [PATCH net] mptcp: drop sndr_key in mptcp_syn_options
+Date: Mon, 22 Jun 2020 19:09:18 +0800
+Message-ID: <4e452a1ba52065633cb45d844af2e998176a6121.1592823756.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4761
+X-UID: 4763
 
---===============3431460921582027958==
+--===============7403044800882415992==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2020-06-20 at 17:44 -0700, David Miller wrote:
-> From: Paolo Abeni <pabeni(a)redhat.com>
-> Date: Fri, 19 Jun 2020 12:54:40 +0200
-> =
+In RFC 8684, we don't need to send sndr_key in SYN package anymore, so drop=
+ it.
 
-> > IPPROTO_MPTCP value (0x106) can't be represented using the current sock
-> > diag uAPI, as the 'sdiag_protocol' field is 8 bits wide.
-> > =
+Fixes: cec37a6e41aae ("mptcp: Handle MP_CAPABLE options for outgoing connec=
+tions")
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/options.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> > To implement diag support for MPTCP socket, we will likely need a
-> > 'inet_diag_req_v3' with a wider 'sdiag_protocol'
-> > field. inet_diag_handler_cmd() could detect the version of
-> > the inet_diag_req_v* provided by user-space checking nlmsg_len() and
-> > convert _v2 reqs to _v3.
-> > =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 490b92534afc..df9a51425c6f 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -336,9 +336,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk=
+_buff *skb,
+ 	 */
+ 	subflow->snd_isn =3D TCP_SKB_CB(skb)->end_seq;
+ 	if (subflow->request_mptcp) {
+-		pr_debug("local_key=3D%llu", subflow->local_key);
+ 		opts->suboptions =3D OPTION_MPTCP_MPC_SYN;
+-		opts->sndr_key =3D subflow->local_key;
+ 		*size =3D TCPOLEN_MPTCP_MPC_SYN;
+ 		return true;
+ 	} else if (subflow->request_join) {
+-- =
 
-> > This change will be a bit invasive, as all in kernel diag users will
-> > then operate only on 'inet_diag_req_v3' (many functions' signature
-> > change required), but the code-related changes will be encapsulated
-> > by inet_diag_handler_cmd().
-> =
+2.17.1
 
-> Another way to extend the size of a field is to add an attribute which
-> supercedes the header structure field when present.
-> =
-
-> We did this when we needed to make the fib rule table ID number larger,
-> see FRA_TABLE.
-> =
-
-> You'd only need to specify this when using protocol values larger than
-> 8 bits in size.
-
-Thank you very much for the directions! This looks like a better, more
-encapsulated solution. I'll try to give it a shot.
-
-Thanks!
-
-Paolo
-
---===============3431460921582027958==--
+--===============7403044800882415992==--
