@@ -1,42 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============8951114549819130677=="
+Content-Type: multipart/mixed; boundary="===============5599805552127861953=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net v2] mptcp: drop sndr_key in mptcp_syn_options
-Date: Mon, 22 Jun 2020 13:50:00 +0200
-Message-ID: <1c0f6f37-ede8-b341-f274-2b65b17dc141@tessares.net>
-In-Reply-To: 60f8315d6ae7b62d175c573f75cee50f14ce988b.1592826171.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: use mptcp worker for path
+ management
+Date: Mon, 22 Jun 2020 15:03:10 +0200
+Message-ID: <20200622130310.GQ26990@breakpoint.cc>
+In-Reply-To: 3274892c9713c52432c0e06d1b66a0a5028c9ec1.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4768
+X-UID: 4769
 
---===============8951114549819130677==
+--===============5599805552127861953==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> On Mon, 2020-06-22 at 13:18 +0200, Florian Westphal wrote:
+> > Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > > I'm wondering if we should keep using an MPTCP-specific workqueue.
+> > > Server side, we don't expect the work to trigger very often, but shou=
+ld
+> > > that ever happen, top will tell easily.
+> > =
 
-On 22/06/2020 13:45, Geliang Tang wrote:
-> In RFC 8684, we don't need to send sndr_key in SYN package anymore, so dr=
-op
-
-Please next time try to have max 72 chars per line in your commit message ;)
-
-> it.
+> > You mean switch msk->work from system_wq to a custom workqueue?
 > =
 
-> Fixes: cc7972ea1932 ("mptcp: parse and emit MP_CAPABLE option according t=
-o v1 spec")
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> yep, e.g. reusing and renaming 'pm_wq'. When the PM works a lot (in
+> "ndiffports" mode as in issues/33), the pm_wq is visible in top - at
+> least in dbg build, I never tested with regular kconfig - and I like
+> being able to identify it easily. WDYT?
 
-Thank you for this v2. It looks good to me!
+Can you do this?
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+I am not at all sure how you would like this to look like 8-(
 
-Cheers,
-Matt
---
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============8951114549819130677==--
+(Merge parts of protocol.c into pm.c?)
+--===============5599805552127861953==--
