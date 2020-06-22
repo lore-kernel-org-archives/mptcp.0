@@ -1,51 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============8226521332177386563=="
+Content-Type: multipart/mixed; boundary="===============5707069398881341369=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: drop sndr_key in mptcp_syn_options
-Date: Mon, 22 Jun 2020 13:33:47 +0200
-Message-ID: <2776de97-5f55-faae-c02d-4f0d4dfa0df8@tessares.net>
-In-Reply-To: 4e452a1ba52065633cb45d844af2e998176a6121.1592823756.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH net v2] mptcp: drop sndr_key in mptcp_syn_options
+Date: Mon, 22 Jun 2020 19:45:58 +0800
+Message-ID: <60f8315d6ae7b62d175c573f75cee50f14ce988b.1592826171.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4766
+X-UID: 4767
 
---===============8226521332177386563==
+--===============5707069398881341369==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+In RFC 8684, we don't need to send sndr_key in SYN package anymore, so drop
+it.
 
-Thank you for the patch!
+Fixes: cc7972ea1932 ("mptcp: parse and emit MP_CAPABLE option according to =
+v1 spec")
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/options.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-On 22/06/2020 13:09, Geliang Tang wrote:
-> In RFC 8684, we don't need to send sndr_key in SYN package anymore, so dr=
-op it.
-
-Good catch, it is no longer needed there.
-
-But please wrap your commit message after max 72 chars.
-I guess you know there are exceptions like for the Fixes tag, etc. More =
-
-info by running checkpatch.pl.
-
-> Fixes: cec37a6e41aae ("mptcp: Handle MP_CAPABLE options for outgoing conn=
-ections")
-
-When this commit was pushed, only MPTCPv0 (RFC 6824) was supported.
-I guess you can do a reference to this one:
-
-     Fixes: cc7972ea1932 ("mptcp: parse and emit MP_CAPABLE option =
-
-according to v1 spec")
-
-Since this commit, we no longer need sndr_key for the SYN.
-
-Cheers,
-Matt
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 490b92534afc..df9a51425c6f 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -336,9 +336,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk=
+_buff *skb,
+ 	 */
+ 	subflow->snd_isn =3D TCP_SKB_CB(skb)->end_seq;
+ 	if (subflow->request_mptcp) {
+-		pr_debug("local_key=3D%llu", subflow->local_key);
+ 		opts->suboptions =3D OPTION_MPTCP_MPC_SYN;
+-		opts->sndr_key =3D subflow->local_key;
+ 		*size =3D TCPOLEN_MPTCP_MPC_SYN;
+ 		return true;
+ 	} else if (subflow->request_join) {
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============8226521332177386563==--
+2.17.1
+
+--===============5707069398881341369==--
