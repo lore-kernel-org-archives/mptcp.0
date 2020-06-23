@@ -1,31 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============4869995547815946880=="
+Content-Type: multipart/mixed; boundary="===============8739776721573005483=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net v2] mptcp: drop sndr_key in mptcp_syn_options
-Date: Mon, 22 Jun 2020 21:07:24 -0700
-Message-ID: <20200622.210724.1974696285872270248.davem@davemloft.net>
-In-Reply-To: 60f8315d6ae7b62d175c573f75cee50f14ce988b.1592826171.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH v3] mptcp: __mptcp_tcp_fallback() returns a struct sock
+Date: Tue, 23 Jun 2020 17:39:00 +0200
+Message-ID: <6f713f0450817f3b7abaa14a5b5914505b99f524.1592926724.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4773
+X-UID: 4778
 
---===============4869995547815946880==
+--===============8739776721573005483==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
-Date: Mon, 22 Jun 2020 19:45:58 +0800
+Currently __mptcp_tcp_fallback() always return NULL
+on incoming connections, because MPTCP does not create
+the additional socket for the first subflow.
+Since the previous commit no __mptcp_tcp_fallback()
+caller needs a struct socket, so let __mptcp_tcp_fallback()
+return the first subflow sock and cope correctly even with
+incoming connections.
 
-> In RFC 8684, we don't need to send sndr_key in SYN package anymore, so dr=
-op
-> it.
-> =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+v2 -> v2:
+ - update commit message
+---
+ net/mptcp/protocol.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-> Fixes: cc7972ea1932 ("mptcp: parse and emit MP_CAPABLE option according t=
-o v1 spec")
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 75a96d8665e9..fb1f78ef3213 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -76,14 +76,14 @@ static bool mptcp_is_tcpsk(struct sock *sk)
+ 	return false;
+ }
+ =
 
-Applied and queued up for v5.6+ -stable, thanks.
---===============4869995547815946880==--
+-static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
++static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ {
+ 	sock_owned_by_me((const struct sock *)msk);
+ =
+
+ 	if (likely(!__mptcp_check_fallback(msk)))
+ 		return NULL;
+ =
+
+-	return msk->subflow;
++	return msk->first;
+ }
+ =
+
+ static int __mptcp_socket_create(struct mptcp_sock *msk)
+@@ -1605,7 +1605,7 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
+l, int optname,
+ 			    char __user *optval, unsigned int optlen)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-	struct socket *ssock;
++	struct sock *ssk;
+ =
+
+ 	pr_debug("msk=3D%p", msk);
+ =
+
+@@ -1616,11 +1616,10 @@ static int mptcp_setsockopt(struct sock *sk, int le=
+vel, int optname,
+ 	 * to the one remaining subflow.
+ 	 */
+ 	lock_sock(sk);
+-	ssock =3D __mptcp_tcp_fallback(msk);
++	ssk =3D __mptcp_tcp_fallback(msk);
+ 	release_sock(sk);
+-	if (ssock)
+-		return tcp_setsockopt(ssock->sk, level, optname, optval,
+-				      optlen);
++	if (ssk)
++		return tcp_setsockopt(ssk, level, optname, optval, optlen);
+ =
+
+ 	return -EOPNOTSUPP;
+ }
+@@ -1629,7 +1628,7 @@ static int mptcp_getsockopt(struct sock *sk, int leve=
+l, int optname,
+ 			    char __user *optval, int __user *option)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-	struct socket *ssock;
++	struct sock *ssk;
+ =
+
+ 	pr_debug("msk=3D%p", msk);
+ =
+
+@@ -1640,11 +1639,10 @@ static int mptcp_getsockopt(struct sock *sk, int le=
+vel, int optname,
+ 	 * to the one remaining subflow.
+ 	 */
+ 	lock_sock(sk);
+-	ssock =3D __mptcp_tcp_fallback(msk);
++	ssk =3D __mptcp_tcp_fallback(msk);
+ 	release_sock(sk);
+-	if (ssock)
+-		return tcp_getsockopt(ssock->sk, level, optname, optval,
+-				      option);
++	if (ssk)
++		return tcp_getsockopt(ssk, level, optname, optval, option);
+ =
+
+ 	return -EOPNOTSUPP;
+ }
+-- =
+
+2.26.2
+
+--===============8739776721573005483==--
