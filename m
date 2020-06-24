@@ -1,38 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5811275221183676756=="
+Content-Type: multipart/mixed; boundary="===============6841514723501230976=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH mptcp-next v3 0/3] setsockopt: allow reuseport and
  ip6only
-Date: Wed, 24 Jun 2020 15:08:49 -0700
-Message-ID: <alpine.OSX.2.23.453.2006241502290.39721@adesai3-mobl.amr.corp.intel.com>
-In-Reply-To: 20200624192448.20837-1-fw@strlen.de
+Date: Thu, 25 Jun 2020 00:46:08 +0200
+Message-ID: <20200624224608.GX26990@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.23.453.2006241502290.39721@adesai3-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4790
+X-UID: 4791
 
---===============5811275221183676756==
+--===============6841514723501230976==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> =
 
-On Wed, 24 Jun 2020, Florian Westphal wrote:
+> On Wed, 24 Jun 2020, Florian Westphal wrote:
+> =
 
-> 3rd iteration.  I've incorporated feedback from Mat, so for
-> options other than reuseport/reuseaddr the generic handler gets called
-> instead of returning -EOPNOTSUPP.
->
-> I've tested that ssh restart works on a a modified kernel that
-> enables mptcp for all IPPROTO_TCP sockets.
+> > 3rd iteration.  I've incorporated feedback from Mat, so for
+> > options other than reuseport/reuseaddr the generic handler gets called
+> > instead of returning -EOPNOTSUPP.
+> > =
 
-Thanks for the v3 updates, changes look good. Should the patches go to the =
+> > I've tested that ssh restart works on a a modified kernel that
+> > enables mptcp for all IPPROTO_TCP sockets.
+> =
 
-mptcp repo for some more test coverage or are you intending to post for =
+> Thanks for the v3 updates, changes look good. Should the patches go to the
+> mptcp repo for some more test coverage or are you intending to post for
+> net-next soon?
 
-net-next soon?
-
---
-Mat Martineau
-Intel
---===============5811275221183676756==--
+The former, they depend on Paolos fallback refactoring which isn't in
+net-next yet afaics.
+--===============6841514723501230976==--
