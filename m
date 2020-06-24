@@ -1,90 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============5246286710874947716=="
+Content-Type: multipart/mixed; boundary="===============6792367898683105564=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 1/3] net: use mptcp setsockopt function for
- SOL_SOCKET on mptcp sockets
-Date: Wed, 24 Jun 2020 21:24:46 +0200
-Message-ID: <20200624192448.20837-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 2/3] mptcp: add REUSEADDR/REUSEPORT support
+Date: Wed, 24 Jun 2020 21:24:47 +0200
+Message-ID: <20200624192448.20837-3-fw@strlen.de>
 In-Reply-To: 20200624192448.20837-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4787
+X-UID: 4788
 
---===============5246286710874947716==
+--===============6792367898683105564==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-setsockopt(mptcp_fd, SOL_SOCKET, ...)...  appears to work (returns 0),
-but it has no effect -- this is because the MPTCP layer never has a
-chance to copy the settings to the subflow socket.
+This will e.g. make 'sshd restart' work when MPTCP is used, as we will
+now set this option on the listener socket instead of only the mptcp
+socket (where it has no effect).
 
-Skip the generic handling for the mptcp case and instead call the
-mptcp specific handler instead for SOL_SOCKET too.
+We still need to copy the setting to the master socket so that a
+subsequent getsockopt() returns the expected value.
 
-Next patch adds more specific handling for SOL_SOCKET to mptcp.
-
+Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c |  3 +++
- net/socket.c         | 13 ++++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 75a96d8665e9..f1ecdc7084ca 100644
+index f1ecdc7084ca..469f651fbdff 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1609,6 +1609,9 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- =
-
- 	pr_debug("msk=3D%p", msk);
- =
-
-+	if (level =3D=3D SOL_SOCKET)
-+		return sock_setsockopt(sk->sk_socket, level, optname, optval, optlen);
-+
- 	/* @@ the meaning of setsockopt() when the socket is connected and
- 	 * there are multiple subflows is not yet defined. It is up to the
- 	 * MPTCP-level socket to configure the subflows until the subflow
-diff --git a/net/socket.c b/net/socket.c
-index d5b555845b37..af256c473b4a 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -2091,6 +2091,17 @@ SYSCALL_DEFINE4(recv, int, fd, void __user *, ubuf, =
-size_t, size,
- 	return __sys_recvfrom(fd, ubuf, size, flags, NULL, NULL);
+@@ -1601,6 +1601,37 @@ static void mptcp_destroy(struct sock *sk)
+ 	sk_sockets_allocated_dec(sk);
  }
  =
 
-+static bool sock_use_custom_sol_socket(const struct socket *sock)
++static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
++				       char __user *optval, unsigned int optlen)
 +{
-+	const struct sock *sk =3D sock->sk;
++	struct sock *sk =3D (struct sock *)msk;
++	struct socket *ssock;
++	int ret;
 +
-+	/* Use sock->ops->setsockopt() for MPTCP */
-+	return IS_ENABLED(CONFIG_MPTCP) &&
-+	       sk->sk_protocol =3D=3D IPPROTO_MPTCP &&
-+	       sk->sk_type =3D=3D SOCK_STREAM &&
-+	       (sk->sk_family =3D=3D AF_INET || sk->sk_family =3D=3D AF_INET6);
++	switch (optname) {
++	case SO_REUSEPORT:
++	case SO_REUSEADDR:
++		lock_sock(sk);
++		ssock =3D __mptcp_nmpc_socket(msk);
++		if (!ssock) {
++			release_sock(sk);
++			return -EINVAL;
++		}
++
++		ret =3D sock_setsockopt(ssock, SOL_SOCKET, optname, optval, optlen);
++		if (ret =3D=3D 0) {
++			if (optname =3D=3D SO_REUSEPORT)
++				sk->sk_reuseport =3D ssock->sk->sk_reuseport;
++			else if (optname =3D=3D SO_REUSEADDR)
++				sk->sk_reuse =3D ssock->sk->sk_reuse;
++		}
++		release_sock(sk);
++		return ret;
++	}
++
++	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen=
+);
 +}
 +
- /*
-  *	Set a socket option. Because we don't know the option lengths we have
-  *	to pass the user mode parameter for the protocols to sort out.
-@@ -2129,7 +2140,7 @@ static int __sys_setsockopt(int fd, int level, int op=
-tname,
- 			optval =3D (char __user __force *)kernel_optval;
- 		}
+ static int mptcp_setsockopt(struct sock *sk, int level, int optname,
+ 			    char __user *optval, unsigned int optlen)
+ {
+@@ -1610,7 +1641,8 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
+l, int optname,
+ 	pr_debug("msk=3D%p", msk);
  =
 
--		if (level =3D=3D SOL_SOCKET)
-+		if (level =3D=3D SOL_SOCKET && !sock_use_custom_sol_socket(sock))
- 			err =3D
- 			    sock_setsockopt(sock, level, optname, optval,
- 					    optlen);
+ 	if (level =3D=3D SOL_SOCKET)
+-		return sock_setsockopt(sk->sk_socket, level, optname, optval, optlen);
++		return mptcp_setsockopt_sol_socket(msk, optname,
++						   optval, optlen);
+ =
+
+ 	/* @@ the meaning of setsockopt() when the socket is connected and
+ 	 * there are multiple subflows is not yet defined. It is up to the
 -- =
 
 2.26.2
 
---===============5246286710874947716==--
+--===============6792367898683105564==--
