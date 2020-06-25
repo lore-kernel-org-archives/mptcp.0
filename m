@@ -1,53 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============2583014914535196752=="
+Content-Type: multipart/mixed; boundary="===============0626816160947976496=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v3 0/3] setsockopt: allow reuseport and
- ip6only
-Date: Thu, 25 Jun 2020 10:59:40 +0200
-Message-ID: <67ee87c768b20504453f443fe92df60e64068a98.camel@redhat.com>
-In-Reply-To: 20200624224608.GX26990@breakpoint.cc
+Subject: [MPTCP] [PATCH 0/3] mptcp: msk diag support
+Date: Thu, 25 Jun 2020 12:22:27 +0200
+Message-ID: <cover.1593080104.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4795
+X-UID: 4796
 
---===============2583014914535196752==
+--===============0626816160947976496==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-06-25 at 00:46 +0200, Florian Westphal wrote:
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
-> > On Wed, 24 Jun 2020, Florian Westphal wrote:
-> > =
+This introduces basic mptcp sockets diag support.
+As IPPROTO_MPTCP excedes 8 bits, we need some changes at the inet_diag leve=
+l:
+a new attribute is introduced to allow user-space providing u32 protocol
+values.
 
-> > > 3rd iteration.  I've incorporated feedback from Mat, so for
-> > > options other than reuseport/reuseaddr the generic handler gets called
-> > > instead of returning -EOPNOTSUPP.
-> > > =
+Patch 2 introduces new token APIs to allow traversing the existing msks, wh=
+ile
+patch 3 bring in the actual diag implementation.
 
-> > > I've tested that ssh restart works on a a modified kernel that
-> > > enables mptcp for all IPPROTO_TCP sockets.
-> > =
+Paolo Abeni (3):
+  inet_diag: support for wider protocol numbers
+  mptcp: add msk interations helpers
+  mptcp: add MPTCP socket diag interface
 
-> > Thanks for the v3 updates, changes look good. Should the patches go to =
-the
-> > mptcp repo for some more test coverage or are you intending to post for
-> > net-next soon?
-> =
+ include/uapi/linux/inet_diag.h |   1 +
+ include/uapi/linux/mptcp.h     |  15 ++++
+ net/core/sock.c                |   1 +
+ net/ipv4/inet_diag.c           |  63 +++++++++----
+ net/mptcp/Kconfig              |   4 +
+ net/mptcp/Makefile             |   2 +
+ net/mptcp/mptcp_diag.c         | 160 +++++++++++++++++++++++++++++++++
+ net/mptcp/options.c            |   6 +-
+ net/mptcp/protocol.h           |   3 +
+ net/mptcp/token.c              |  83 +++++++++++++++++
+ 10 files changed, 318 insertions(+), 20 deletions(-)
+ create mode 100644 net/mptcp/mptcp_diag.c
 
-> The former, they depend on Paolos fallback refactoring which isn't in
-> net-next yet afaics.
+-- =
 
-I'd like to spool the token refactor first, which in turn will cause
-conflict without "mptcp: drop MP_JOIN request sock on syn cookies" -
-currently on -net only.
+2.26.2
 
-I'll ask Dave for a -net -> -net-next merge, so we can start spooling
-stuff.
-
-Cheers,
-
-Paolo
-
---===============2583014914535196752==--
+--===============0626816160947976496==--
