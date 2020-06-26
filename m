@@ -1,42 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============0483829744962269186=="
+Content-Type: multipart/mixed; boundary="===============4392849290312976186=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 4/4] mptcp: introduce token KUNIT
- self-tests
-Date: Fri, 26 Jun 2020 14:26:08 -0700
-Message-ID: <alpine.OSX.2.23.453.2006261425520.66996@redsall-mobl2.amr.corp.intel.com>
-In-Reply-To: 592538b2c28ee849ff94d9cfc8f7f6dbc5adae5d.1593192442.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v2 0/4] mptcp: refactor token container
+Date: Fri, 26 Jun 2020 16:22:31 -0700
+Message-ID: <20200626.162231.1590461076613614486.davem@davemloft.net>
+In-Reply-To: cover.1593192442.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4836
+X-UID: 4837
 
---===============0483829744962269186==
+--===============4392849290312976186==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Fri, 26 Jun 2020 19:29:58 +0200
 
-On Fri, 26 Jun 2020, Paolo Abeni wrote:
+> Currently the msk sockets are stored in a single radix tree, protected by=
+ a
+> global spin_lock. This series moves to an hash table, allocated at boot t=
+ime,
+> with per bucker spin_lock - alike inet_hashtables, but using a different =
+key:
+> the token itself.
+> =
 
-> Unit tests for the internal MPTCP token APIs, using KUNIT
->
+> The above improves scalability, as write operations will have a far later=
+ chance
+> to compete for lock acquisition, allows lockless lookup, and will allow
+> easier msk traversing - e.g. for diag interface implementation's sake.
+> =
+
+> This also introduces trivial, related, kunit tests and move the existing =
+in
+> kernel's one to kunit.
+> =
+
 > v1 -> v2:
-> - use the correct RCU annotation when initializing icsk ulp
-> - fix a few checkpatch issues
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/Kconfig      |   2 +-
-> net/mptcp/Makefile     |   3 +-
-> net/mptcp/token.c      |   9 +++
-> net/mptcp/token_test.c | 140 +++++++++++++++++++++++++++++++++++++++++
-> 4 files changed, 152 insertions(+), 2 deletions(-)
-> create mode 100644 net/mptcp/token_test.c
+>  - fixed a few extra and sparse warns
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-
---
-Mat Martineau
-Intel
---===============0483829744962269186==--
+Series applied, thanks Paolo.
+--===============4392849290312976186==--
