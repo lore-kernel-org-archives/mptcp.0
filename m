@@ -1,75 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============0889051527082617448=="
+Content-Type: multipart/mixed; boundary="===============3304625377986643611=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: fix DSS map generation on fin
- retransmission
-Date: Fri, 26 Jun 2020 11:10:40 +0200
-Message-ID: <931b43323a1bd913745dca440b26f85bb25e062c.1593162557.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 0/4] mptcp: refactor token container
+Date: Fri, 26 Jun 2020 12:12:45 +0200
+Message-ID: <cover.1593159603.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4810
+X-UID: 4811
 
---===============0889051527082617448==
+--===============3304625377986643611==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The RFC 8684 mandates that no-data DATA FIN packets should carry
-a DSS with 0 sequence number and data len equal to 1. Currently,
-on FIN retransmission we re-use the existing mapping; if the previous
-fin transmission was part of a partially acked data packet, we could
-end-up writing in the egress packet a non-compliant DSS.
+Currently the msk sockets are stored in a single radix tree, protected by a
+global spin_lock. This series moves to an hash table, allocated at boot tim=
+e,
+with per bucker spin_lock - alike inet_hashtables, but using a different ke=
+y:
+the token itself.
 
-The above will be detected by a "Bad mapping" warning on the receiver
-side.
+The above improves scalability, as write operations will have a far later c=
+hance
+to compete for lock acquisition, allows lockless lookup, and will allow
+easier msk traversing - e.g. for diag interface implementation's sake.
 
-This change addresses the issue explicitly checking for 0 len packet
-when adding the DATA_FIN option.
+This also introduces trivial, related, kunit tests and move the existing in
+kernel's one to kunit.
 
-Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packe=
-ts")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/options.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
----
-this should go on "top" of export branch, just before the "DO NOT MERGE"
-changes.
-Hopefully should not conflict with others
+Paolo Abeni (4):
+  mptcp: add __init annotation on setup functions
+  mptcp: refactor token container
+  mptcp: move crypto test to KUNIT
+  mptcp: introduce token KUNIT self-tests
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index f464f8669dfc..46470194b8ca 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -451,9 +451,9 @@ static bool mptcp_established_options_mp(struct sock *s=
-k, struct sk_buff *skb,
- }
- =
-
- static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
--				 struct mptcp_ext *ext)
-+				 struct sk_buff *skb, struct mptcp_ext *ext)
- {
--	if (!ext->use_map) {
-+	if (!ext->use_map || !skb->len) {
- 		/* RFC6824 requires a DSS mapping with specific values
- 		 * if DATA_FIN is set but no data payload is mapped
- 		 */
-@@ -505,7 +505,7 @@ static bool mptcp_established_options_dss(struct sock *=
-sk, struct sk_buff *skb,
- 			opts->ext_copy =3D *mpext;
- =
-
- 		if (skb && tcp_fin && subflow->data_fin_tx_enable)
--			mptcp_write_data_fin(subflow, &opts->ext_copy);
-+			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
- 		ret =3D true;
- 	}
- =
+ net/mptcp/Kconfig       |  20 ++-
+ net/mptcp/Makefile      |   4 +
+ net/mptcp/crypto.c      |  63 +--------
+ net/mptcp/crypto_test.c |  72 +++++++++++
+ net/mptcp/pm.c          |   2 +-
+ net/mptcp/pm_netlink.c  |   2 +-
+ net/mptcp/protocol.c    |  49 ++++---
+ net/mptcp/protocol.h    |  24 ++--
+ net/mptcp/subflow.c     |  21 ++-
+ net/mptcp/token.c       | 280 ++++++++++++++++++++++++++++------------
+ net/mptcp/token_test.c  | 139 ++++++++++++++++++++
+ 11 files changed, 486 insertions(+), 190 deletions(-)
+ create mode 100644 net/mptcp/crypto_test.c
+ create mode 100644 net/mptcp/token_test.c
 
 -- =
 
 2.26.2
 
---===============0889051527082617448==--
+--===============3304625377986643611==--
