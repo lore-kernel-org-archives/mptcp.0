@@ -1,34 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============2334183638590166012=="
+Content-Type: multipart/mixed; boundary="===============5275778355871720515=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 4/4] mptcp: introduce token KUNIT
- self-tests
-Date: Fri, 26 Jun 2020 09:02:38 -0700
-Message-ID: <20200626090238.6914222a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: 848d6611c87790a6e4028b856e7c3323a53f2679.1593159603.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "net: mptcp: improve fallback to TCP"
+Date: Fri, 26 Jun 2020 09:17:16 -0700
+Message-ID: <alpine.OSX.2.23.453.2006260916580.66996@redsall-mobl2.amr.corp.intel.com>
+In-Reply-To: 95262bb3dfcddcfe670fef5af0290b429df67e35.1593170557.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4819
+X-UID: 4820
 
---===============2334183638590166012==
+--===============5275778355871720515==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 26 Jun 2020 12:12:49 +0200 Paolo Abeni wrote:
-> Unit tests for the internal MPTCP token APIs, using KUNIT
-> =
 
+On Fri, 26 Jun 2020, Paolo Abeni wrote:
+
+> This fixes blocking accept() never waking-up.
+>
+> When blocking, mptcp_stream_accept() calls into:
+> ssock->ops->acceptk -> ssock->sk->sk_prot->accept ->
+> inet_csk_accept() -> inet_csk_wait_for_connect(),
+>
+> which in turns waits on ssock->sk->sk_wq, while
+> all signaling how happens on sock->sk->sk_wq.
+>
+> Since we ssock->sk->sk_wq is never used otherwise,
+> just copy sock->sk->sk_wq into it at first subflow
+> creatin time.
+>
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 4 ++++
+> 1 file changed, 4 insertions(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 4d6d35e99d0f..5ae8952189d2 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -128,6 +128,10 @@ static struct socket *__mptcp_socket_create(struct m=
+ptcp_sock *msk, int state)
+> 	list_add(&subflow->node, &msk->conn_list);
+> 	subflow->request_mptcp =3D 1;
+>
+> +	/* accept() will wait on first subflow sk_wq, and we always wakes up
+> +	 * via msk->sk_socket */
+> +	RCU_INIT_POINTER(msk->first->sk_wq, &sk->sk_socket->wq);
+> +
+> set_state:
+> 	if (state !=3D MPTCP_SAME_STATE)
+> 		inet_sk_state_store(sk, state);
+> -- =
 
-Greetings! W=3D1 C=3D1 sayeth:
+> 2.26.2
 
-net/mptcp/token.c:318:6: warning: no newline at end of file
-net/mptcp/token_test.c:139:22: warning: no newline at end of file
-net/mptcp/token_test.c:68:29: warning: incorrect type in assignment (differ=
-ent address spaces)
-net/mptcp/token_test.c:68:29:    expected void [noderef] __rcu *icsk_ulp_da=
-ta
-net/mptcp/token_test.c:68:29:    got struct mptcp_subflow_context *ctx
---===============2334183638590166012==--
+This fixes the problem for me - thanks Paolo!
+
+--
+Mat Martineau
+Intel
+--===============5275778355871720515==--
