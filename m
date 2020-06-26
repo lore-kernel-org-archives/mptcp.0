@@ -1,48 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============0835225725669626005=="
+Content-Type: multipart/mixed; boundary="===============6410654302446135486=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/3] mptcp: add MPTCP socket diag interface
-Date: Fri, 26 Jun 2020 09:19:51 -0700
-Message-ID: <20200626161951.GG2513@MacBook-Pro-64.local>
-In-Reply-To: 796242d444a52afeaed649affb6a2401aa43c48c.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 4/4] mptcp: introduce token KUNIT
+ self-tests
+Date: Fri, 26 Jun 2020 18:46:50 +0200
+Message-ID: <20013c7fa42802ec9029a05cdc59dca7bcb51c59.camel@redhat.com>
+In-Reply-To: 20200626090238.6914222a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4821
+X-UID: 4822
 
---===============0835225725669626005==
+--===============6410654302446135486==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 06/26/20 - 12:33, Davide Caratti wrote:
-> On Fri, 2020-06-26 at 09:53 +0200, Paolo Abeni wrote:
-> > I can replace 'can_ack' and 'fallback' with a 32bit flags. =
+Hi,
 
+On Fri, 2020-06-26 at 09:02 -0700, Jakub Kicinski wrote:
+> On Fri, 26 Jun 2020 12:12:49 +0200 Paolo Abeni wrote:
+> > Unit tests for the internal MPTCP token APIs, using KUNIT
+> > =
+
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > =
 
-> I support this: in the future we might want to add additinal states to
-> control TCP fallback (specifically, add the possibility to disallow it)
-
-+1 for 32bit flags.
-
-> > Perhaps I can use a better name for the first bit (suggestion welcome!)=
- I
-> > would opt for 'remote_key', WDYT?
+> Greetings! W=3D1 C=3D1 sayeth:
 > =
 
-> this variable becomes true when it's possible to use the 64-bit key
-> received by the peer, generate the DACK4 / DACK8 number (probably it's
-> used also for other purposes, right?) if so, what about 'remote_key_valid'
-> ?
+> net/mptcp/token.c:318:6: warning: no newline at end of file
+> net/mptcp/token_test.c:139:22: warning: no newline at end of file
+> net/mptcp/token_test.c:68:29: warning: incorrect type in assignment (diff=
+erent address spaces)
+> net/mptcp/token_test.c:68:29:    expected void [noderef] __rcu *icsk_ulp_=
+data
+> net/mptcp/token_test.c:68:29:    got struct mptcp_subflow_context *ctx
 
-Or "remote_key_set" or "remote_key_received" ?
-
-Because "valid" has a notion that the remote-key could also become "invalid=
-",
-which is not really the case.
+Thank you for checking! =
 
 
-Christoph
+v2 is coming.
 
---===============0835225725669626005==--
+Cheers,
+
+Paolo
+
+--===============6410654302446135486==--
