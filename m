@@ -1,42 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============0387310764363578087=="
+Content-Type: multipart/mixed; boundary="===============0483829744962269186=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 3/4] mptcp: move crypto test to KUNIT
-Date: Fri, 26 Jun 2020 14:25:48 -0700
-Message-ID: <alpine.OSX.2.23.453.2006261425220.66996@redsall-mobl2.amr.corp.intel.com>
-In-Reply-To: cc66fb0363b7e454cbc4d3d70d1216e7c242908c.1593192442.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v2 4/4] mptcp: introduce token KUNIT
+ self-tests
+Date: Fri, 26 Jun 2020 14:26:08 -0700
+Message-ID: <alpine.OSX.2.23.453.2006261425520.66996@redsall-mobl2.amr.corp.intel.com>
+In-Reply-To: 592538b2c28ee849ff94d9cfc8f7f6dbc5adae5d.1593192442.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4835
+X-UID: 4836
 
---===============0387310764363578087==
+--===============0483829744962269186==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+
 On Fri, 26 Jun 2020, Paolo Abeni wrote:
 
-> currently MPTCP uses a custom hook to executed unit tests at
-> boot time. Let's use the KUNIT framework instead.
-> Additionally move the relevant code to a separate file and
-> export the function needed by the test when self-tests
-> are build as a module.
+> Unit tests for the internal MPTCP token APIs, using KUNIT
 >
-> Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> v1 -> v2:
+> - use the correct RCU annotation when initializing icsk ulp
+> - fix a few checkpatch issues
+>
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> net/mptcp/Kconfig       | 20 ++++++++----
-> net/mptcp/Makefile      |  3 ++
-> net/mptcp/crypto.c      | 63 ++----------------------------------
-> net/mptcp/crypto_test.c | 72 +++++++++++++++++++++++++++++++++++++++++
-> 4 files changed, 91 insertions(+), 67 deletions(-)
-> create mode 100644 net/mptcp/crypto_test.c
+> net/mptcp/Kconfig      |   2 +-
+> net/mptcp/Makefile     |   3 +-
+> net/mptcp/token.c      |   9 +++
+> net/mptcp/token_test.c | 140 +++++++++++++++++++++++++++++++++++++++++
+> 4 files changed, 152 insertions(+), 2 deletions(-)
+> create mode 100644 net/mptcp/token_test.c
 
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============0387310764363578087==--
+--===============0483829744962269186==--
