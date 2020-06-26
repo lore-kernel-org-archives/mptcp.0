@@ -1,160 +1,245 @@
-Content-Type: multipart/mixed; boundary="===============4784968105829356247=="
+Content-Type: multipart/mixed; boundary="===============5583125781338445728=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 1/4] mptcp: add __init annotation on setup
- functions
-Date: Fri, 26 Jun 2020 12:12:46 +0200
-Message-ID: <37cfccea23f199a5e11497a11373786b0f3e078a.1593159603.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 3/4] mptcp: move crypto test to KUNIT
+Date: Fri, 26 Jun 2020 12:12:48 +0200
+Message-ID: <4ec5d5fd6f88896de9e85046320f1bf1c05ab396.1593159603.git.pabeni@redhat.com>
 In-Reply-To: cover.1593159603.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4812
+X-UID: 4813
 
---===============4784968105829356247==
+--===============5583125781338445728==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add the missing annotation in some setup-only
-functions.
+currently MPTCP uses a custom hook to executed unit tests at
+boot time. Let's use the KUNIT framework instead.
+Additionally move the relevant code to a separate file and
+export the function needed by the test when self-tests
+are build as a module.
 
+Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/pm.c         |  2 +-
- net/mptcp/pm_netlink.c |  2 +-
- net/mptcp/protocol.c   |  4 ++--
- net/mptcp/protocol.h   | 10 +++++-----
- net/mptcp/subflow.c    |  2 +-
- 5 files changed, 10 insertions(+), 10 deletions(-)
+ net/mptcp/Kconfig       | 20 ++++++++----
+ net/mptcp/Makefile      |  3 ++
+ net/mptcp/crypto.c      | 63 ++----------------------------------
+ net/mptcp/crypto_test.c | 72 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 91 insertions(+), 67 deletions(-)
+ create mode 100644 net/mptcp/crypto_test.c
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 977d9c8b1453..7de09fdd42a3 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -234,7 +234,7 @@ void mptcp_pm_close(struct mptcp_sock *msk)
- 		sock_put((struct sock *)msk);
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index a9ed3bf1d93f..d7d5f9349366 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -18,12 +18,20 @@ config MPTCP_IPV6
+ 	select IPV6
+ 	default y
+ =
+
+-config MPTCP_HMAC_TEST
+-	bool "Tests for MPTCP HMAC implementation"
++endif
++
++config MPTCP_KUNIT_TESTS
++	tristate "This builds the MPTCP KUnit tests" if !KUNIT_ALL_TESTS
++	select MPTCP
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
+ 	help
+-	  This option enable boot time self-test for the HMAC implementation
+-	  used by the MPTCP code
++	  Currently covers the MPTCP crypto helpers.
++	  Only useful for kernel devs running KUnit test harness and are not
++	  for inclusion into a production build.
+ =
+
+-	  Say N if you are unsure.
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
+ =
+
+-endif
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index baa0640527c7..f9039804207b 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -3,3 +3,6 @@ obj-$(CONFIG_MPTCP) +=3D mptcp.o
+ =
+
+ mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o d=
+iag.o \
+ 	   mib.o pm_netlink.o
++
++mptcp_crypto_test-objs :=3D crypto_test.o
++obj-$(CONFIG_MPTCP_KUNIT_TESTS) +=3D mptcp_crypto_test.o
+\ No newline at end of file
+diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
+index 3d980713a9e2..6c4ea979dfd4 100644
+--- a/net/mptcp/crypto.c
++++ b/net/mptcp/crypto.c
+@@ -87,65 +87,6 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, =
+int len, void *hmac)
+ 	sha256_final(&state, (u8 *)hmac);
  }
  =
 
--void mptcp_pm_init(void)
-+void __init mptcp_pm_init(void)
- {
- 	pm_wq =3D alloc_workqueue("pm_wq", WQ_UNBOUND | WQ_MEM_RECLAIM, 8);
- 	if (!pm_wq)
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b78edf237ba0..c8820c4156e6 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -851,7 +851,7 @@ static struct pernet_operations mptcp_pm_pernet_ops =3D=
- {
- 	.size =3D sizeof(struct pm_nl_pernet),
- };
- =
-
--void mptcp_pm_nl_init(void)
-+void __init mptcp_pm_nl_init(void)
- {
- 	if (register_pernet_subsys(&mptcp_pm_pernet_ops) < 0)
- 		panic("Failed to register MPTCP PM pernet subsystem.\n");
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3980fbb6f31e..9163a05b9e46 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2077,7 +2077,7 @@ static struct inet_protosw mptcp_protosw =3D {
- 	.flags		=3D INET_PROTOSW_ICSK,
- };
- =
-
--void mptcp_proto_init(void)
-+void __init mptcp_proto_init(void)
- {
- 	mptcp_prot.h.hashinfo =3D tcp_prot.h.hashinfo;
- =
-
-@@ -2139,7 +2139,7 @@ static struct inet_protosw mptcp_v6_protosw =3D {
- 	.flags		=3D INET_PROTOSW_ICSK,
- };
- =
-
--int mptcp_proto_v6_init(void)
-+int __init mptcp_proto_v6_init(void)
- {
- 	int err;
- =
-
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 482f53aed30a..571d39a1a17c 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -337,7 +337,7 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow=
-_context *subflow)
- =
-
- int mptcp_is_enabled(struct net *net);
- bool mptcp_subflow_data_available(struct sock *sk);
--void mptcp_subflow_init(void);
-+void __init mptcp_subflow_init(void);
- =
-
- /* called with sk socket lock held */
- int __mptcp_subflow_connect(struct sock *sk, int ifindex,
-@@ -355,9 +355,9 @@ static inline void mptcp_subflow_tcp_fallback(struct so=
-ck *sk,
- 	inet_csk(sk)->icsk_af_ops =3D ctx->icsk_af_ops;
- }
- =
-
--void mptcp_proto_init(void);
-+void __init mptcp_proto_init(void);
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--int mptcp_proto_v6_init(void);
-+int __init mptcp_proto_v6_init(void);
+-#ifdef CONFIG_MPTCP_HMAC_TEST
+-struct test_cast {
+-	char *key;
+-	char *msg;
+-	char *result;
+-};
+-
+-/* we can't reuse RFC 4231 test vectors, as we have constraint on the
+- * input and key size.
+- */
+-static struct test_cast tests[] =3D {
+-	{
+-		.key =3D "0b0b0b0b0b0b0b0b",
+-		.msg =3D "48692054",
+-		.result =3D "8385e24fb4235ac37556b6b886db106284a1da671699f46db1f235ec622=
+dcafa",
+-	},
+-	{
+-		.key =3D "aaaaaaaaaaaaaaaa",
+-		.msg =3D "dddddddd",
+-		.result =3D "2c5e219164ff1dca1c4a92318d847bb6b9d44492984e1eb71aff9022f71=
+046e9",
+-	},
+-	{
+-		.key =3D "0102030405060708",
+-		.msg =3D "cdcdcdcd",
+-		.result =3D "e73b9ba9969969cefb04aa0d6df18ec2fcc075b6f23b4d8c4da736a5dbb=
+c6e7d",
+-	},
+-};
+-
+-static int __init test_mptcp_crypto(void)
+-{
+-	char hmac[32], hmac_hex[65];
+-	u32 nonce1, nonce2;
+-	u64 key1, key2;
+-	u8 msg[8];
+-	int i, j;
+-
+-	for (i =3D 0; i < ARRAY_SIZE(tests); ++i) {
+-		/* mptcp hmap will convert to be before computing the hmac */
+-		key1 =3D be64_to_cpu(*((__be64 *)&tests[i].key[0]));
+-		key2 =3D be64_to_cpu(*((__be64 *)&tests[i].key[8]));
+-		nonce1 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[0]));
+-		nonce2 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[4]));
+-
+-		put_unaligned_be32(nonce1, &msg[0]);
+-		put_unaligned_be32(nonce2, &msg[4]);
+-
+-		mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
+-		for (j =3D 0; j < 32; ++j)
+-			sprintf(&hmac_hex[j << 1], "%02x", hmac[j] & 0xff);
+-		hmac_hex[64] =3D 0;
+-
+-		if (memcmp(hmac_hex, tests[i].result, 64))
+-			pr_err("test %d failed, got %s expected %s", i,
+-			       hmac_hex, tests[i].result);
+-		else
+-			pr_info("test %d [ ok ]", i);
+-	}
+-	return 0;
+-}
+-
+-late_initcall(test_mptcp_crypto);
++#if IS_MODULE(CONFIG_MPTCP_KUNIT_TESTS)
++EXPORT_SYMBOL_GPL(mptcp_crypto_hmac_sha);
  #endif
- =
-
- struct sock *mptcp_sk_clone(const struct sock *sk,
-@@ -394,7 +394,7 @@ static inline void mptcp_crypto_key_gen_sha(u64 *key, u=
-32 *token, u64 *idsn)
- =
-
- void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hma=
-c);
- =
-
--void mptcp_pm_init(void);
-+void __init mptcp_pm_init(void);
- void mptcp_pm_data_init(struct mptcp_sock *msk);
- void mptcp_pm_close(struct mptcp_sock *msk);
- void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side);
-@@ -428,7 +428,7 @@ bool mptcp_pm_addr_signal(struct mptcp_sock *msk, unsig=
-ned int remaining,
- 			  struct mptcp_addr_info *saddr);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- =
-
--void mptcp_pm_nl_init(void);
-+void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
- void mptcp_pm_nl_fully_established(struct mptcp_sock *msk);
- void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 3838a0b3a21f..c2389ba2d4ee 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1255,7 +1255,7 @@ static int subflow_ops_init(struct request_sock_ops *=
-subflow_ops)
- 	return 0;
- }
- =
-
--void mptcp_subflow_init(void)
-+void __init mptcp_subflow_init(void)
- {
- 	subflow_request_sock_ops =3D tcp_request_sock_ops;
- 	if (subflow_ops_init(&subflow_request_sock_ops) !=3D 0)
+diff --git a/net/mptcp/crypto_test.c b/net/mptcp/crypto_test.c
+new file mode 100644
+index 000000000000..017248dea038
+--- /dev/null
++++ b/net/mptcp/crypto_test.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <kunit/test.h>
++
++#include "protocol.h"
++
++struct test_case {
++	char *key;
++	char *msg;
++	char *result;
++};
++
++/* we can't reuse RFC 4231 test vectors, as we have constraint on the
++ * input and key size.
++ */
++static struct test_case tests[] =3D {
++	{
++		.key =3D "0b0b0b0b0b0b0b0b",
++		.msg =3D "48692054",
++		.result =3D "8385e24fb4235ac37556b6b886db106284a1da671699f46db1f235ec622=
+dcafa",
++	},
++	{
++		.key =3D "aaaaaaaaaaaaaaaa",
++		.msg =3D "dddddddd",
++		.result =3D "2c5e219164ff1dca1c4a92318d847bb6b9d44492984e1eb71aff9022f71=
+046e9",
++	},
++	{
++		.key =3D "0102030405060708",
++		.msg =3D "cdcdcdcd",
++		.result =3D "e73b9ba9969969cefb04aa0d6df18ec2fcc075b6f23b4d8c4da736a5dbb=
+c6e7d",
++	},
++};
++
++static void mptcp_crypto_test_basic(struct kunit *test)
++{
++	char hmac[32], hmac_hex[65];
++	u32 nonce1, nonce2;
++	u64 key1, key2;
++	u8 msg[8];
++	int i, j;
++
++	for (i =3D 0; i < ARRAY_SIZE(tests); ++i) {
++		/* mptcp hmap will convert to be before computing the hmac */
++		key1 =3D be64_to_cpu(*((__be64 *)&tests[i].key[0]));
++		key2 =3D be64_to_cpu(*((__be64 *)&tests[i].key[8]));
++		nonce1 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[0]));
++		nonce2 =3D be32_to_cpu(*((__be32 *)&tests[i].msg[4]));
++
++		put_unaligned_be32(nonce1, &msg[0]);
++		put_unaligned_be32(nonce2, &msg[4]);
++
++		mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
++		for (j =3D 0; j < 32; ++j)
++			sprintf(&hmac_hex[j << 1], "%02x", hmac[j] & 0xff);
++		hmac_hex[64] =3D 0;
++
++		KUNIT_EXPECT_STREQ(test, &hmac_hex[0], tests[i].result);
++	}
++}
++
++static struct kunit_case mptcp_crypto_test_cases[] =3D {
++	KUNIT_CASE(mptcp_crypto_test_basic),
++	{}
++};
++
++static struct kunit_suite mptcp_crypto_suite =3D {
++	.name =3D "mptcp-crypto",
++	.test_cases =3D mptcp_crypto_test_cases,
++};
++
++kunit_test_suite(mptcp_crypto_suite);
++
++MODULE_LICENSE("GPL");
 -- =
 
 2.26.2
 
---===============4784968105829356247==--
+--===============5583125781338445728==--
