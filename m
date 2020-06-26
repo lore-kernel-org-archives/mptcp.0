@@ -1,40 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============4598153161838643207=="
+Content-Type: multipart/mixed; boundary="===============8609594667257419061=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 3/3] mptcp: add MPTCP socket diag interface
-Date: Fri, 26 Jun 2020 12:33:31 +0200
-Message-ID: <796242d444a52afeaed649affb6a2401aa43c48c.camel@redhat.com>
-In-Reply-To: b5032e6de38e68ce506c8ce7f5ee2ba9eef685a3.camel@redhat.com
+Subject: [MPTCP] [PATCH] Squash-to: "net: mptcp: improve fallback to TCP"
+Date: Fri, 26 Jun 2020 13:27:34 +0200
+Message-ID: <95262bb3dfcddcfe670fef5af0290b429df67e35.1593170557.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4816
+X-UID: 4817
 
---===============4598153161838643207==
+--===============8609594667257419061==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-06-26 at 09:53 +0200, Paolo Abeni wrote:
-> I can replace 'can_ack' and 'fallback' with a 32bit flags. =
+This fixes blocking accept() never waking-up.
 
+When blocking, mptcp_stream_accept() calls into:
+ssock->ops->acceptk -> ssock->sk->sk_prot->accept ->
+inet_csk_accept() -> inet_csk_wait_for_connect(),
 
-I support this: in the future we might want to add additinal states to
-control TCP fallback (specifically, add the possibility to disallow it)
+which in turns waits on ssock->sk->sk_wq, while
+all signaling how happens on sock->sk->sk_wq.
 
-> Perhaps I can use a better name for the first bit (suggestion welcome!) I
-> would opt for 'remote_key', WDYT?
+Since we ssock->sk->sk_wq is never used otherwise,
+just copy sock->sk->sk_wq into it at first subflow
+creatin time.
 
-this variable becomes true when it's possible to use the 64-bit key
-received by the peer, generate the DACK4 / DACK8 number (probably it's
-used also for other purposes, right?) if so, what about 'remote_key_valid'
-?
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-thanks!
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4d6d35e99d0f..5ae8952189d2 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -128,6 +128,10 @@ static struct socket *__mptcp_socket_create(struct mpt=
+cp_sock *msk, int state)
+ 	list_add(&subflow->node, &msk->conn_list);
+ 	subflow->request_mptcp =3D 1;
+ =
+
++	/* accept() will wait on first subflow sk_wq, and we always wakes up
++	 * via msk->sk_socket */
++	RCU_INIT_POINTER(msk->first->sk_wq, &sk->sk_socket->wq);
++
+ set_state:
+ 	if (state !=3D MPTCP_SAME_STATE)
+ 		inet_sk_state_store(sk, state);
 -- =
 
-davide
+2.26.2
 
-
-
---===============4598153161838643207==--
+--===============8609594667257419061==--
