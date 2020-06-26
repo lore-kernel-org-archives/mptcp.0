@@ -1,101 +1,258 @@
-Content-Type: multipart/mixed; boundary="===============5529847379615859163=="
+Content-Type: multipart/mixed; boundary="===============2600810195325462687=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Weekly meeting - 25 June 2020 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Fri, 26 Jun 2020 08:40:02 +0800
-Message-ID: <CA+WQbwsg7yR-OQge=NtQX2vnb231qxFSV4xsqY9Mg=fq25ziCA@mail.gmail.com>
-In-Reply-To: 106a0b8c-919c-8953-20c5-e2cb9e6e7891@tessares.net
+Subject: [MPTCP] Re: [PATCH 3/3] mptcp: add MPTCP socket diag interface
+Date: Fri, 26 Jun 2020 09:53:08 +0200
+Message-ID: <b5032e6de38e68ce506c8ce7f5ee2ba9eef685a3.camel@redhat.com>
+In-Reply-To: 20200625175805.GE2513@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4808
+X-UID: 4809
 
---===============5529847379615859163==
+--===============2600810195325462687==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
+On Thu, 2020-06-25 at 10:58 -0700, Christoph Paasch wrote:
+> Hello,
+> =
 
-There are several questions I didn't answer clearly in the last meeting.
-Here I try to write them down:
+> On 06/25/20 - 12:22, Paolo Abeni wrote:
+> > exposes basic inet socket attribute, plus some MPTCP socket
+> > fields comprising PM status and MPTCP-level sequence numbers.
+> > =
 
-1 My name pronunciation
-Geliang Tang sounds like Glenn Town.
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > ---
+> >  include/uapi/linux/mptcp.h |  15 ++++
+> >  net/mptcp/Kconfig          |   4 +
+> >  net/mptcp/Makefile         |   2 +
+> >  net/mptcp/mptcp_diag.c     | 160 +++++++++++++++++++++++++++++++++++++
+> >  net/mptcp/options.c        |   6 +-
+> >  5 files changed, 184 insertions(+), 3 deletions(-)
+> >  create mode 100644 net/mptcp/mptcp_diag.c
+> > =
 
-2 My ideal meeting time
-Every hour from 11am to 6pm (my location time-zone) at every working day is
-fine to me to attend the meeting.
+> > diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> > index 5f2c77082d9e..69a6d5a0c56d 100644
+> > --- a/include/uapi/linux/mptcp.h
+> > +++ b/include/uapi/linux/mptcp.h
+> > @@ -86,4 +86,19 @@ enum {
+> >  	__MPTCP_PM_CMD_AFTER_LAST
+> >  };
+> >  =
 
-3 What would you like to work on?
-I'm interested in the BPF topic in the last meeting. But I don't have any
-idea about this at the moment. Can you please give me more detail about it
-and I'll spend some time to learn it.
+> > +struct mptcp_info {
+> > +	__u8	mptcpi_subflows;
+> > +	__u8	mptcpi_add_addr_signal;
+> > +	__u8	mptcpi_add_addr_accepted;
+> > +	__u8	mptcpi_subflows_max;
+> > +	__u8	mptcpi_add_addr_signal_max;
+> > +	__u8	mptcpi_add_addr_accepted_max;
+> > +	__u8	mptcpi_fallback;
+> > +	__u8	mptcpi_can_ack;
+> > +	__u32	mptcpi_token;
+> > +	__u64	mptcpi_write_seq;
+> > +	__u64	mptcpi_snd_una;
+> > +	__u64	mptcpi_rcv_nxt;
+> > +};
+> > +
+> >  #endif /* _UAPI_MPTCP_H */
+> > diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+> > index 0ec787d8b9a2..97c29caa65f3 100644
+> > --- a/net/mptcp/Kconfig
+> > +++ b/net/mptcp/Kconfig
+> > @@ -14,6 +14,10 @@ config MPTCP
+> >  =
 
--Geliang
+> >  if MPTCP
+> >  =
 
+> > +config INET_MPTCP_DIAG
+> > +	depends on INET_DIAG
+> > +	def_tristate INET_DIAG
+> > +
+> >  config MPTCP_IPV6
+> >  	bool "MPTCP: IPv6 support for Multipath TCP"
+> >  	select IPV6
+> > diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+> > index c53f9b845523..2360cbd27d59 100644
+> > --- a/net/mptcp/Makefile
+> > +++ b/net/mptcp/Makefile
+> > @@ -4,6 +4,8 @@ obj-$(CONFIG_MPTCP) +=3D mptcp.o
+> >  mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm=
+.o diag.o \
+> >  	   mib.o pm_netlink.o
+> >  =
 
-=E5=9C=A8 2020=E5=B9=B46=E6=9C=8824=E6=97=A5=E6=98=9F=E6=9C=9F=E4=B8=89=EF=
-=BC=8CMatthieu Baerts <matthieu.baerts(a)tessares.net> =E5=86=99=E9=81=93=
-=EF=BC=9A
+> > +obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
+> > +
+> >  mptcp_crypto_test-objs :=3D crypto_test.o
+> >  mptcp_token_test-objs :=3D token_test.o
+> >  obj-$(CONFIG_MPTCP_KUNIT_TESTS) +=3D mptcp_crypto_test.o mptcp_token_t=
+est.o
+> > diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+> > new file mode 100644
+> > index 000000000000..a7c801b7f575
+> > --- /dev/null
+> > +++ b/net/mptcp/mptcp_diag.c
+> > @@ -0,0 +1,160 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* MPTCP socket monitoring support
+> > + *
+> > + * Copyright (c) 2020 Red Hat
+> > + *
+> > + * Author: Paolo Abeni <pabeni(a)redhat.com>
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/net.h>
+> > +#include <linux/inet_diag.h>
+> > +#include <net/netlink.h>
+> > +#include <uapi/linux/mptcp.h>
+> > +#include "protocol.h"
+> > +
+> > +static int sk_diag_dump(struct sock *sk, struct sk_buff *skb,
+> > +			struct netlink_callback *cb,
+> > +			const struct inet_diag_req_v2 *req,
+> > +			struct nlattr *bc, bool net_admin)
+> > +{
+> > +	if (!inet_diag_bc_sk(bc, sk))
+> > +		return 0;
+> > +
+> > +	return inet_sk_diag_fill(sk, inet_csk(sk), skb, cb, req, NLM_F_MULTI,
+> > +				 net_admin);
+> > +}
+> > +
+> > +static int mptcp_diag_dump_one(struct netlink_callback *cb,
+> > +			       const struct inet_diag_req_v2 *req)
+> > +{
+> > +	struct sk_buff *in_skb =3D cb->skb;
+> > +	struct mptcp_sock *msk =3D NULL;
+> > +	struct sk_buff *rep;
+> > +	int err =3D -ENOENT;
+> > +	struct net *net;
+> > +	struct sock *sk;
+> > +
+> > +	net =3D sock_net(in_skb->sk);
+> > +	msk =3D mptcp_token_get_sock(req->id.idiag_cookie[0]);
+> > +	if (!msk)
+> > +		goto out_nosk;
+> > +
+> > +	err =3D -ENOMEM;
+> > +	sk =3D (struct sock *)msk;
+> > +	rep =3D nlmsg_new(nla_total_size(sizeof(struct inet_diag_msg)) +
+> > +			inet_diag_msg_attrs_size() +
+> > +			nla_total_size(sizeof(struct mptcp_info)) +
+> > +			nla_total_size(sizeof(struct inet_diag_meminfo)) + 64,
+> > +			GFP_KERNEL);
+> > +	if (!rep)
+> > +		goto out;
+> > +
+> > +	err =3D inet_sk_diag_fill(sk, inet_csk(sk), rep, cb, req, 0,
+> > +				netlink_net_capable(in_skb, CAP_NET_ADMIN));
+> > +	if (err < 0) {
+> > +		WARN_ON(err =3D=3D -EMSGSIZE);
+> > +		kfree_skb(rep);
+> > +		goto out;
+> > +	}
+> > +	err =3D netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).porti=
+d,
+> > +			      MSG_DONTWAIT);
+> > +	if (err > 0)
+> > +		err =3D 0;
+> > +out:
+> > +	sock_put(sk);
+> > +
+> > +out_nosk:
+> > +	return err;
+> > +}
+> > +
+> > +static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callba=
+ck *cb,
+> > +			    const struct inet_diag_req_v2 *r)
+> > +{
+> > +	bool net_admin =3D netlink_net_capable(cb->skb, CAP_NET_ADMIN);
+> > +	struct net *net =3D sock_net(skb->sk);
+> > +	struct inet_diag_dump_data *cb_data;
+> > +	struct mptcp_sock *msk;
+> > +	struct nlattr *bc;
+> > +
+> > +	cb_data =3D cb->data;
+> > +	bc =3D cb_data->inet_diag_nla_bc;
+> > +
+> > +	for (msk =3D mptcp_token_iter_start(&cb->args[0], &cb->args[1]);
+> > +	     msk; msk =3D mptcp_token_iter_next(&cb->args[0], &cb->args[1])) {
+> > +		struct inet_sock *inet;
+> > +		struct sock *sk;
+> > +
+> > +		inet =3D (struct inet_sock *)msk;
+> > +		sk =3D (struct sock *)msk;
+> > +		if (!net_eq(sock_net(sk), net))
+> > +			continue;
+> > +		if (!(r->idiag_states & (1 << sk->sk_state)))
+> > +			continue;
+> > +		if (r->sdiag_family !=3D AF_UNSPEC &&
+> > +		    sk->sk_family !=3D r->sdiag_family)
+> > +			continue;
+> > +		if (r->id.idiag_sport !=3D inet->inet_sport &&
+> > +		    r->id.idiag_sport)
+> > +			continue;
+> > +		if (r->id.idiag_dport !=3D inet->inet_dport &&
+> > +		    r->id.idiag_dport)
+> > +			continue;
+> > +
+> > +		if (sk_diag_dump(sk, skb, cb, r, bc, net_admin) < 0) {
+> > +			mptcp_token_iter_stop(cb->args[0]);
+> > +			break;
+> > +		}
+> > +	}
+> > +}
+> > +
+> > +static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg =
+*r,
+> > +				void *_info)
+> > +{
+> > +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> > +	struct mptcp_info *info =3D _info;
+> > +	u8 val;
+> > +
+> > +	r->idiag_rqueue =3D sk_rmem_alloc_get(sk);
+> > +	r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
+> > +	if (!info)
+> > +		return;
+> > +
+> > +	info->mptcpi_subflows =3D READ_ONCE(msk->pm.subflows);
+> > +	info->mptcpi_add_addr_signal =3D READ_ONCE(msk->pm.add_addr_signaled);
+> > +	info->mptcpi_add_addr_accepted =3D READ_ONCE(msk->pm.add_addr_accepte=
+d);
+> > +	info->mptcpi_subflows_max =3D READ_ONCE(msk->pm.subflows_max);
+> > +	val =3D READ_ONCE(msk->pm.add_addr_signal_max);
+> > +	info->mptcpi_add_addr_signal_max =3D val;
+> > +	val =3D READ_ONCE(msk->pm.add_addr_accept_max);
+> > +	info->mptcpi_add_addr_accepted_max =3D val;
+> > +	info->mptcpi_fallback =3D test_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+> > +	info->mptcpi_can_ack =3D READ_ONCE(msk->can_ack);
+> =
 
-> Hello everybody!
->
-> Our public MPTCP upstreaming weekly web conference is scheduled for
-> tomorrow.
->
-> The list of topics is available here:
-> https://annuel2.framapad.org/p/mptcp_upstreaming_20200625
->
-> Feel free to add/modify topics!
->
-> Anybody can join the meeting using Google Meet website/app/phone:
-> https://meet.google.com/edk-rkrk-vaj
->
-> Speak to you tomorrow!
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
+> I'm not sure about the can_ack attribute. Isn't it the opposite of
+> mptcpci_fallback?
 
---===============5529847379615859163==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+'can_ack' becomes true when the peer receives the other's end key.
+Depending on when fallback happens, we can have both can_ack and
+fallback set. Possibly we may consider renaming the field.
 
-PGRpdj5IaSBNYXR0LDwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhlcmUgYXJlIHNldmVyYWwg
-cXVlc3Rpb25zIEkgZGlkbiYjMzk7dCBhbnN3ZXIgY2xlYXJseSBpbiB0aGUgbGFzdCBtZWV0aW5n
-LiBIZXJlIEkgdHJ5IHRvIHdyaXRlIHRoZW0gZG93bjo8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2
-PjEgTXkgbmFtZSBwcm9udW5jaWF0aW9uPC9kaXY+PGRpdj5HZWxpYW5nIFRhbmcgc291bmRzIGxp
-a2UgR2xlbm4gVG93bi48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjIgTXkgaWRlYWwgbWVldGlu
-ZyB0aW1lPC9kaXY+PGRpdj5FdmVyeSBob3VyIGZyb23CoDExYW0gdG8gNnBtIChteSBsb2NhdGlv
-biB0aW1lLXpvbmUpIGF0IGV2ZXJ5IHdvcmtpbmcgZGF5IGlzIGZpbmUgdG8gbWUgdG8gYXR0ZW5k
-IHRoZSBtZWV0aW5nLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+MyBXaGF0IHdvdWxkIHlvdcKg
-bGlrZSB0byB3b3JrIG9uPzwvZGl2PjxkaXY+SSYjMzk7bSBpbnRlcmVzdGVkIGluIHRoZSBCUEYg
-dG9waWMgaW4gdGhlIGxhc3QgbWVldGluZy4gQnV0wqBJIGRvbiYjMzk7dCBoYXZlIGFueSBpZGVh
-IGFib3V0IHRoaXMgYXQgdGhlIG1vbWVudC4gQ2FuIHlvdSBwbGVhc2UgZ2l2ZSBtZSBtb3JlIGRl
-dGFpbCBhYm91dCBpdCBhbmQgSSYjMzk7bGwgc3BlbmQgc29tZSB0aW1lIHRvIGxlYXJuIGl0Ljwv
-ZGl2PjxkaXY+PGJyPjwvZGl2Pi1HZWxpYW5nPGRpdj48YnI+PC9kaXY+PGRpdj48YnI+5ZyoIDIw
-MjDlubQ25pyIMjTml6XmmJ/mnJ/kuInvvIxNYXR0aGlldSBCYWVydHMgJmx0OzxhIGhyZWY9Im1h
-aWx0bzptYXR0aGlldS5iYWVydHNAdGVzc2FyZXMubmV0Ij5tYXR0aGlldS5iYWVydHNAdGVzc2Fy
-ZXMubmV0PC9hPiZndDsg5YaZ6YGT77yaPGJyPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90
-ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3Bh
-ZGRpbmctbGVmdDoxZXgiPkhlbGxvIGV2ZXJ5Ym9keSE8YnI+Cjxicj4KT3VyIHB1YmxpYyBNUFRD
-UCB1cHN0cmVhbWluZyB3ZWVrbHkgd2ViIGNvbmZlcmVuY2UgaXMgc2NoZWR1bGVkIGZvcjxicj4K
-dG9tb3Jyb3cuPGJyPgo8YnI+ClRoZSBsaXN0IG9mIHRvcGljcyBpcyBhdmFpbGFibGUgaGVyZTo8
-YnI+CjxhIGhyZWY9Imh0dHBzOi8vYW5udWVsMi5mcmFtYXBhZC5vcmcvcC9tcHRjcF91cHN0cmVh
-bWluZ18yMDIwMDYyNSIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8vYW5udWVsMi5mcmFtYXBhZC5v
-cmcvcDx3YnI+L21wdGNwX3Vwc3RyZWFtaW5nXzIwMjAwNjI1PC9hPjxicj4KPGJyPgpGZWVsIGZy
-ZWUgdG8gYWRkL21vZGlmeSB0b3BpY3MhPGJyPgo8YnI+CkFueWJvZHkgY2FuIGpvaW4gdGhlIG1l
-ZXRpbmcgdXNpbmcgR29vZ2xlIE1lZXQgd2Vic2l0ZS9hcHAvcGhvbmU6PGJyPgo8YSBocmVmPSJo
-dHRwczovL21lZXQuZ29vZ2xlLmNvbS9lZGstcmtyay12YWoiIHRhcmdldD0iX2JsYW5rIj5odHRw
-czovL21lZXQuZ29vZ2xlLmNvbS9lZGstcms8d2JyPnJrLXZhajwvYT48YnI+Cjxicj4KU3BlYWsg
-dG8geW91IHRvbW9ycm93ITxicj4KTWF0dDxicj4KLS0gPGJyPgpUZXNzYXJlcyB8IEJlbGdpdW0g
-fCBIeWJyaWQgQWNjZXNzIFNvbHV0aW9uczxicj4KPGEgaHJlZj0iaHR0cDovL3d3dy50ZXNzYXJl
-cy5uZXQiIHRhcmdldD0iX2JsYW5rIj53d3cudGVzc2FyZXMubmV0PC9hPjxicj4KPC9ibG9ja3F1
-b3RlPjwvZGl2Pgo=
+> Also, should we make binary attribtues like fallback just a single bit to
+> safe space?
 
---===============5529847379615859163==--
+I can replace 'can_ack' and 'fallback' with a 32bit flags. Perhaps I
+can use a better name for the first bit (suggestion welcome!) I would
+opt for 'remote_key', WDYT?
+
+Thanks!
+
+Paolo
+
+--===============2600810195325462687==--
