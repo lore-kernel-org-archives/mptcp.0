@@ -1,63 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============2442127217391222345=="
+Content-Type: multipart/mixed; boundary="===============3860482179422058478=="
 MIME-Version: 1.0
 From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 0/6] MPTCP: improve fallback to TCP
-Date: Mon, 29 Jun 2020 22:26:19 +0200
-Message-ID: <cover.1593461586.git.dcaratti@redhat.com>
+Subject: [MPTCP] [PATCH net-next 5/6] mptcp: __mptcp_tcp_fallback() returns a
+ struct sock
+Date: Mon, 29 Jun 2020 22:26:24 +0200
+Message-ID: <f4474c22d50669fa3702224677fd2c2541b83ca9.1593461586.git.dcaratti@redhat.com>
+In-Reply-To: cover.1593461586.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4850
+X-UID: 4851
 
---===============2442127217391222345==
+--===============3860482179422058478==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-there are situations where MPTCP sockets should fall-back to regular TCP:
-this series reworks the fallback code to pursue the following goals:
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-1) cleanup the non fallback code, removing most of 'if (<fallback>)' in
-   the data path
-2) improve performance for non-fallback sockets, avoiding locks in poll()
+Currently __mptcp_tcp_fallback() always return NULL
+on incoming connections, because MPTCP does not create
+the additional socket for the first subflow.
+Since the previous commit no __mptcp_tcp_fallback()
+caller needs a struct socket, so let __mptcp_tcp_fallback()
+return the first subflow sock and cope correctly even with
+incoming connections.
 
-further work will also leverage on this changes to achieve:
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/protocol.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-a) more consistent behavior of gestockopt()/setsockopt() on passive sockets
-   after fallback
-b) support for "infinite maps" as per RFC8684, section 3.7
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ad619bda71cc..f2b2bd37e371 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -76,14 +76,14 @@ static bool mptcp_is_tcpsk(struct sock *sk)
+ 	return false;
+ }
+ =
 
-the series is made of the following items:
+-static struct socket *__mptcp_tcp_fallback(struct mptcp_sock *msk)
++static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ {
+ 	sock_owned_by_me((const struct sock *)msk);
+ =
 
-- patch 1 lets sendmsg() / recvmsg() / poll() use the main socket also
-  after fallback
-- patch 2 fixes 'simultaneous connect' scenario after fallback. The
-  problem was present also before the rework, but the fix is much easier
-  to implement after patch 1
-- patch 3, 4, 5 are clean-ups for code that is no more needed after the
-  fallback rework
-- patch 6 fixes a race condition between close() and poll(). The problem
-  was theoretically present before the rework, but it became almost
-  systematic after patch 1
+ 	if (likely(!__mptcp_check_fallback(msk)))
+ 		return NULL;
+ =
 
-Davide Caratti (2):
-  net: mptcp: improve fallback to TCP
-  mptcp: fallback in case of simultaneous connect
+-	return msk->subflow;
++	return msk->first;
+ }
+ =
 
-Paolo Abeni (4):
-  mptcp: check for plain TCP sock at accept time
-  mptcp: create first subflow at msk creation time
-  mptcp: __mptcp_tcp_fallback() returns a struct sock
-  mptcp: close poll() races
+ static int __mptcp_socket_create(struct mptcp_sock *msk)
+@@ -1498,7 +1498,7 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
+l, int optname,
+ 			    char __user *optval, unsigned int optlen)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-	struct socket *ssock;
++	struct sock *ssk;
+ =
 
- net/mptcp/options.c  |   9 +-
- net/mptcp/protocol.c | 267 ++++++++++++++-----------------------------
- net/mptcp/protocol.h |  43 +++++++
- net/mptcp/subflow.c  |  57 ++++++---
- 4 files changed, 175 insertions(+), 201 deletions(-)
+ 	pr_debug("msk=3D%p", msk);
+ =
 
+@@ -1509,11 +1509,10 @@ static int mptcp_setsockopt(struct sock *sk, int le=
+vel, int optname,
+ 	 * to the one remaining subflow.
+ 	 */
+ 	lock_sock(sk);
+-	ssock =3D __mptcp_tcp_fallback(msk);
++	ssk =3D __mptcp_tcp_fallback(msk);
+ 	release_sock(sk);
+-	if (ssock)
+-		return tcp_setsockopt(ssock->sk, level, optname, optval,
+-				      optlen);
++	if (ssk)
++		return tcp_setsockopt(ssk, level, optname, optval, optlen);
+ =
+
+ 	return -EOPNOTSUPP;
+ }
+@@ -1522,7 +1521,7 @@ static int mptcp_getsockopt(struct sock *sk, int leve=
+l, int optname,
+ 			    char __user *optval, int __user *option)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-	struct socket *ssock;
++	struct sock *ssk;
+ =
+
+ 	pr_debug("msk=3D%p", msk);
+ =
+
+@@ -1533,11 +1532,10 @@ static int mptcp_getsockopt(struct sock *sk, int le=
+vel, int optname,
+ 	 * to the one remaining subflow.
+ 	 */
+ 	lock_sock(sk);
+-	ssock =3D __mptcp_tcp_fallback(msk);
++	ssk =3D __mptcp_tcp_fallback(msk);
+ 	release_sock(sk);
+-	if (ssock)
+-		return tcp_getsockopt(ssock->sk, level, optname, optval,
+-				      option);
++	if (ssk)
++		return tcp_getsockopt(ssk, level, optname, optval, option);
+ =
+
+ 	return -EOPNOTSUPP;
+ }
 -- =
 
 2.26.2
 
---===============2442127217391222345==--
+--===============3860482179422058478==--
