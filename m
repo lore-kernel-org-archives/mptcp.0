@@ -1,149 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============5737014862668366904=="
+Content-Type: multipart/mixed; boundary="===============1873582936713236252=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 2/6] mptcp: fallback in case of simultaneous
- connect
-Date: Mon, 29 Jun 2020 22:26:21 +0200
-Message-ID: <e64ab0baf0f68bc4499201fe5ea7a33d92ee7c08.1593461586.git.dcaratti@redhat.com>
-In-Reply-To: cover.1593461586.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 1/6] net: mptcp: improve fallback to TCP
+Date: Mon, 29 Jun 2020 16:29:32 -0700
+Message-ID: <alpine.OSX.2.23.453.2006291624250.11066@jlbliss-mobl.amr.corp.intel.com>
+In-Reply-To: 48551241b592f237f236361276b5b42774d2ba69.1593461586.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4853
+X-UID: 4854
 
---===============5737014862668366904==
+--===============1873582936713236252==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-when a MPTCP client tries to connect to itself, tcp_finish_connect() is
-never reached. Because of this, depending on the socket current state,
-multiple faulty behaviours can be observed:
+On Mon, 29 Jun 2020, Davide Caratti wrote:
 
-1) a WARN_ON() in subflow_data_ready() is hit
- WARNING: CPU: 2 PID: 882 at net/mptcp/subflow.c:911 subflow_data_ready+0x1=
-8b/0x230
- [...]
- CPU: 2 PID: 882 Comm: gh35 Not tainted 5.7.0+ #187
- [...]
- RIP: 0010:subflow_data_ready+0x18b/0x230
- [...]
- Call Trace:
-  tcp_data_queue+0xd2f/0x4250
-  tcp_rcv_state_process+0xb1c/0x49d3
-  tcp_v4_do_rcv+0x2bc/0x790
-  __release_sock+0x153/0x2d0
-  release_sock+0x4f/0x170
-  mptcp_shutdown+0x167/0x4e0
-  __sys_shutdown+0xe6/0x180
-  __x64_sys_shutdown+0x50/0x70
-  do_syscall_64+0x9a/0x370
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> Keep using MPTCP sockets and a use "dummy mapping" in case of fallback
+> to regular TCP. When fallback is triggered, skip addition of the MPTCP
+> option on send.
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/11
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/22
+> Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> ---
+> net/mptcp/options.c  |  9 +++-
+> net/mptcp/protocol.c | 98 ++++++++++++--------------------------------
+> net/mptcp/protocol.h | 33 +++++++++++++++
+> net/mptcp/subflow.c  | 47 +++++++++++++--------
+> 4 files changed, 98 insertions(+), 89 deletions(-)
+>
 
-2) client is stuck forever in mptcp_sendmsg() because the socket is not
-   TCP_ESTABLISHED
+Thanks Davide and Paolo! Appreciate the simplification of the fallback =
 
- crash> bt 4847
- PID: 4847   TASK: ffff88814b2fb100  CPU: 1   COMMAND: "gh35"
-  #0 [ffff8881376ff680] __schedule at ffffffff97248da4
-  #1 [ffff8881376ff778] schedule at ffffffff9724a34f
-  #2 [ffff8881376ff7a0] schedule_timeout at ffffffff97252ba0
-  #3 [ffff8881376ff8a8] wait_woken at ffffffff958ab4ba
-  #4 [ffff8881376ff940] sk_stream_wait_connect at ffffffff96c2d859
-  #5 [ffff8881376ffa28] mptcp_sendmsg at ffffffff97207fca
-  #6 [ffff8881376ffbc0] sock_sendmsg at ffffffff96be1b5b
-  #7 [ffff8881376ffbe8] sock_write_iter at ffffffff96be1daa
-  #8 [ffff8881376ffce8] new_sync_write at ffffffff95e5cb52
-  #9 [ffff8881376ffe50] vfs_write at ffffffff95e6547f
- #10 [ffff8881376ffe90] ksys_write at ffffffff95e65d26
- #11 [ffff8881376fff28] do_syscall_64 at ffffffff956088ba
- #12 [ffff8881376fff50] entry_SYSCALL_64_after_hwframe at ffffffff9740008c
-     RIP: 00007f126f6956ed  RSP: 00007ffc2a320278  RFLAGS: 00000217
-     RAX: ffffffffffffffda  RBX: 0000000020000044  RCX: 00007f126f6956ed
-     RDX: 0000000000000004  RSI: 00000000004007b8  RDI: 0000000000000003
-     RBP: 00007ffc2a3202a0   R8: 0000000000400720   R9: 0000000000400720
-     R10: 0000000000400720  R11: 0000000000000217  R12: 00000000004004b0
-     R13: 00007ffc2a320380  R14: 0000000000000000  R15: 0000000000000000
-     ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
+code.
 
-3) tcpdump captures show that DSS is exchanged even when MP_CAPABLE handsha=
-ke
-   didn't complete.
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
- $ tcpdump -tnnr bad.pcap
- IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [S], seq 3208913911, win 65483=
-, options [mss 65495,sackOK,TS val 3291706876 ecr 3291694721,nop,wscale 7,m=
-ptcp capable v1], length 0
- IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [S.], seq 3208913911, ack 3208=
-913912, win 65483, options [mss 65495,sackOK,TS val 3291706876 ecr 32917068=
-76,nop,wscale 7,mptcp capable v1], length 0
- IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [.], ack 1, win 512, options [=
-nop,nop,TS val 3291706876 ecr 3291706876], length 0
- IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [F.], seq 1, ack 1, win 512, o=
-ptions [nop,nop,TS val 3291707876 ecr 3291706876,mptcp dss fin seq 0 subseq=
- 0 len 1,nop,nop], length 0
- IP 127.0.0.1.20000 > 127.0.0.1.20000: Flags [.], ack 2, win 512, options [=
-nop,nop,TS val 3291707876 ecr 3291707876], length 0
-
-force a fallback to TCP in these cases, and adjust the main socket
-state to avoid hanging in mptcp_sendmsg().
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/35
-Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/protocol.h | 10 ++++++++++
- net/mptcp/subflow.c  | 10 ++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a709df659ae0..1d05d9841b5c 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -490,4 +490,14 @@ static inline void mptcp_do_fallback(struct sock *sk)
- =
-
- #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=3D%p)", __func__,=
- a)
- =
-
-+static inline bool subflow_simultaneous_connect(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct sock *parent =3D subflow->conn;
-+
-+	return sk->sk_state =3D=3D TCP_ESTABLISHED &&
-+	       !mptcp_sk(parent)->pm.server_side &&
-+	       !subflow->conn_finished;
-+}
-+
- #endif /* __MPTCP_PROTOCOL_H */
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index cb8a42ff4646..548f9e347ff5 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1128,6 +1128,16 @@ static void subflow_state_change(struct sock *sk)
- =
-
- 	__subflow_state_change(sk);
- =
-
-+	if (subflow_simultaneous_connect(sk)) {
-+		mptcp_do_fallback(sk);
-+		pr_fallback(mptcp_sk(parent));
-+		subflow->conn_finished =3D 1;
-+		if (inet_sk_state_load(parent) =3D=3D TCP_SYN_SENT) {
-+			inet_sk_state_store(parent, TCP_ESTABLISHED);
-+			parent->sk_state_change(parent);
-+		}
-+	}
-+
- 	/* as recvmsg() does not acquire the subflow socket for ssk selection
- 	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
- 	 * the data available machinery here.
--- =
-
-2.26.2
-
---===============5737014862668366904==--
+--
+Mat Martineau
+Intel
+--===============1873582936713236252==--
