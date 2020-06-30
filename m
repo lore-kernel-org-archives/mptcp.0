@@ -1,72 +1,147 @@
-Content-Type: multipart/mixed; boundary="===============4227827536222301083=="
+Content-Type: multipart/mixed; boundary="===============4734344637409065208=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 4/5] subflow: introduce and use
- mptcp_can_accept_new_subflow()
-Date: Tue, 30 Jun 2020 13:12:07 +0200
-Message-ID: <cae22fc12d266777c7d710197efd28b5afd17d5a.1593515429.git.pabeni@redhat.com>
-In-Reply-To: cover.1593515429.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH net-next] mptcp: do nonce initialization at subflow
+ creation time
+Date: Tue, 30 Jun 2020 16:38:26 +0200
+Message-ID: <cc811b8707d488492fb8e33ed651aab456de6f72.1593527763.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4868
+X-UID: 4869
 
---===============4227827536222301083==
+--===============4734344637409065208==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-So that we can easily perform some basic PM-related
-adimission checks before creating the child socket.
+This clean-up the code a bit, reduces the number of
+used hooks and indirect call requested, and allow
+better error reporting from __mptcp_subflow_connect()
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-Note: I initially used mptcp_can_accept_new_subflow() in
-subflow_token_join_request(), too. The goal was add a follow-up
-patch sending reset at rsk creation time in case of !can_accept
-but I dismissed such patch because it feel "insecure"/potentially
-dos prone send this early reset: an attacker could force an mptcp
-server to send reset packets towards arbitrary IP/ports.
-
-Additionally, after a quick look at mptcp.org, I could not find
-trace of such early reset - looks like resets for bad MP_JOINs
-are send only at syn_recv_sock() time.
----
- net/mptcp/subflow.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/mptcp/subflow.c | 54 +++++++++++++++++----------------------------
+ 1 file changed, 20 insertions(+), 34 deletions(-)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f3517d4f70f6..3077e07375b5 100644
+index 548f9e347ff5..664aa9158363 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -53,6 +53,12 @@ static void subflow_generate_hmac(u64 key1, u64 key2, u3=
-2 nonce1, u32 nonce2,
- 	mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
+@@ -29,34 +29,6 @@ static void SUBFLOW_REQ_INC_STATS(struct request_sock *r=
+eq,
+ 	MPTCP_INC_STATS(sock_net(req_to_sk(req)), field);
  }
  =
 
-+static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
-+{
-+	return inet_sk_state_load((struct sock *)msk) =3D=3D TCP_ESTABLISHED &&
-+	       READ_ONCE(msk->pm.accept_subflow);
-+}
+-static int subflow_rebuild_header(struct sock *sk)
+-{
+-	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+-	int local_id;
+-
+-	if (subflow->request_join && !subflow->local_nonce) {
+-		struct mptcp_sock *msk =3D (struct mptcp_sock *)subflow->conn;
+-
+-		pr_debug("subflow=3D%p", sk);
+-
+-		do {
+-			get_random_bytes(&subflow->local_nonce, sizeof(u32));
+-		} while (!subflow->local_nonce);
+-
+-		if (subflow->local_id)
+-			goto out;
+-
+-		local_id =3D mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
+-		if (local_id < 0)
+-			return -EINVAL;
+-
+-		subflow->local_id =3D local_id;
+-	}
+-
+-out:
+-	return subflow->icsk_af_ops->rebuild_header(sk);
+-}
+-
+ static void subflow_req_destructor(struct request_sock *req)
+ {
+ 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
+@@ -984,7 +956,9 @@ int __mptcp_subflow_connect(struct sock *sk, int ifinde=
+x,
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sockaddr_storage addr;
++	int local_id =3D loc->id;
+ 	struct socket *sf;
++	struct sock *ssk;
+ 	u32 remote_token;
+ 	int addrlen;
+ 	int err;
+@@ -996,7 +970,20 @@ int __mptcp_subflow_connect(struct sock *sk, int ifind=
+ex,
+ 	if (err)
+ 		return err;
+ =
+
+-	subflow =3D mptcp_subflow_ctx(sf->sk);
++	ssk =3D sf->sk;
++	subflow =3D mptcp_subflow_ctx(ssk);
++	do {
++		get_random_bytes(&subflow->local_nonce, sizeof(u32));
++	} while (!subflow->local_nonce);
 +
- /* validate received token and create truncated hmac and nonce for SYN-ACK=
- */
- static struct mptcp_sock *subflow_token_join_request(struct request_sock *=
-req,
- 						     const struct sk_buff *skb)
-@@ -425,6 +431,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 	} else if (subflow_req->mp_join) {
- 		mptcp_get_options(skb, &mp_opt);
- 		if (!mp_opt.mp_join ||
-+		    !mptcp_can_accept_new_subflow(subflow_req->msk) ||
- 		    !subflow_hmac_valid(req, &mp_opt)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
- 			fallback =3D true;
++	if (!local_id) {
++		err =3D mptcp_pm_get_local_id(msk, (struct sock_common *)ssk);
++		if (err < 0)
++			goto failed;
++
++		local_id =3D err;
++	}
++
+ 	subflow->remote_key =3D msk->remote_key;
+ 	subflow->local_key =3D msk->local_key;
+ 	subflow->token =3D msk->token;
+@@ -1007,15 +994,16 @@ int __mptcp_subflow_connect(struct sock *sk, int ifi=
+ndex,
+ 	if (loc->family =3D=3D AF_INET6)
+ 		addrlen =3D sizeof(struct sockaddr_in6);
+ #endif
+-	sf->sk->sk_bound_dev_if =3D ifindex;
++	ssk->sk_bound_dev_if =3D ifindex;
+ 	err =3D kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+ 	if (err)
+ 		goto failed;
+ =
+
+ 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
+-	pr_debug("msk=3D%p remote_token=3D%u", msk, remote_token);
++	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d", msk, remote_token,
++		 local_id);
+ 	subflow->remote_token =3D remote_token;
+-	subflow->local_id =3D loc->id;
++	subflow->local_id =3D local_id;
+ 	subflow->request_join =3D 1;
+ 	subflow->request_bkup =3D 1;
+ 	mptcp_info2sockaddr(remote, &addr);
+@@ -1288,7 +1276,6 @@ void __init mptcp_subflow_init(void)
+ 	subflow_specific.conn_request =3D subflow_v4_conn_request;
+ 	subflow_specific.syn_recv_sock =3D subflow_syn_recv_sock;
+ 	subflow_specific.sk_rx_dst_set =3D subflow_finish_connect;
+-	subflow_specific.rebuild_header =3D subflow_rebuild_header;
+ =
+
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	subflow_request_sock_ipv6_ops =3D tcp_request_sock_ipv6_ops;
+@@ -1298,7 +1285,6 @@ void __init mptcp_subflow_init(void)
+ 	subflow_v6_specific.conn_request =3D subflow_v6_conn_request;
+ 	subflow_v6_specific.syn_recv_sock =3D subflow_syn_recv_sock;
+ 	subflow_v6_specific.sk_rx_dst_set =3D subflow_finish_connect;
+-	subflow_v6_specific.rebuild_header =3D subflow_rebuild_header;
+ =
+
+ 	subflow_v6m_specific =3D subflow_v6_specific;
+ 	subflow_v6m_specific.queue_xmit =3D ipv4_specific.queue_xmit;
 -- =
 
 2.26.2
 
---===============4227827536222301083==--
+--===============4734344637409065208==--
