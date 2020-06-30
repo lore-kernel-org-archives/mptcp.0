@@ -1,50 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============5068179707947299151=="
+Content-Type: multipart/mixed; boundary="===============7032309184571746540=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: init autotune state also in
- simultaneous connect case.
-Date: Tue, 30 Jun 2020 12:54:42 +0200
-Message-ID: <be692bedbab09f941b546cdf33e655ba8337e22b.camel@redhat.com>
-In-Reply-To: 20200622135737.8217-1-fw@strlen.de
+Subject: [MPTCP] [RFC PATCH 0/5] mptcp: cope better with mp_join storm
+Date: Tue, 30 Jun 2020 13:12:03 +0200
+Message-ID: <cover.1593515429.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4862
+X-UID: 4863
 
---===============5068179707947299151==
+--===============7032309184571746540==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-06-22 at 15:57 +0200, Florian Westphal wrote:
-> This is what Christoph suggested needs to be added to avoid
-> div0 in case of simultaneous connect.
-> =
+This series it amied at fixing:
 
-> Squashto: mptcp: add receive buffer auto-tuning
-> ---
->  net/mptcp/subflow.c | 1 +
->  1 file changed, 1 insertion(+)
-> =
+https://github.com/multipath-tcp/mptcp_net-next/issues/33
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 0f0fa1ba57a8..e1e19c76e267 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1120,6 +1120,7 @@ static void subflow_state_change(struct sock *sk)
->  =
+patch 3/5 do the main work, while patch 4 and 5 should
+reduce the server load avoid creating unneeded children.
 
->  	if (subflow_simultaneous_connect(sk)) {
->  		mptcp_do_fallback(sk);
-> +		mptcp_rcv_space_init(mptcp_sk(parent), sk);
->  		pr_fallback(mptcp_sk(parent));
->  		subflow->conn_finished =3D 1;
->  		if (inet_sk_state_load(parent) =3D=3D TCP_SYN_SENT) {
+Patch 1 and 2 are somewhat related cleanup.
 
-LGTM, and I think Christoph already acked it.
+Patch 2 && 5 are likely the most controversial. Any
+feedback more than welcome!
 
-Thanks Florian,
+Paolo Abeni (5):
+  mptcp: cleanup subflow_finish_connect()
+  subflow: explicitly check for plain tcp rsk
+  subflow: use rsk_ops->send_reset()
+  subflow: introduce and use mptcp_can_accept_new_subflow()
+  subflow: do not create child subflow for fallback MP_JOIN
 
-/P
+ net/mptcp/subflow.c | 76 +++++++++++++++++++++++++--------------------
+ 1 file changed, 42 insertions(+), 34 deletions(-)
 
---===============5068179707947299151==--
+-- =
+
+2.26.2
+
+--===============7032309184571746540==--
