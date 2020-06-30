@@ -1,109 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============8037149786705425826=="
+Content-Type: multipart/mixed; boundary="===============4227827536222301083=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 5/5] subflow: do not create child subflow for
- fallback MP_JOIN
-Date: Tue, 30 Jun 2020 13:12:08 +0200
-Message-ID: <63292184bb1aed7c8f64d66fe39ef6089266f873.1593515429.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 4/5] subflow: introduce and use
+ mptcp_can_accept_new_subflow()
+Date: Tue, 30 Jun 2020 13:12:07 +0200
+Message-ID: <cae22fc12d266777c7d710197efd28b5afd17d5a.1593515429.git.pabeni@redhat.com>
 In-Reply-To: cover.1593515429.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4867
+X-UID: 4868
 
---===============8037149786705425826==
+--===============4227827536222301083==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On MP_JOIN fallback, the child socket was used just to send-out
-the due reset packet. As we don't use the child sock anymore
-for such role, when can avoid creating the fallback MP_JOIN
-sock entirely.
-
-This saves a busy server from quite a bit of useless work, if
-clients are storming with MP_JOIN reqs above the server limits
+So that we can easily perform some basic PM-related
+adimission checks before creating the child socket.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-Note: to avoid changing the hook into tcp_check_req(), I had
-to introduce a quite ugly const cast in subflow_syn_recv_sock().
-I *think* it should be safe, but I'm 110% sure about unintended
-implications - alike cc optimizing the calling code assuming sk
-never changes, and generated code being bugged due to the above
-cast.
+Note: I initially used mptcp_can_accept_new_subflow() in
+subflow_token_join_request(), too. The goal was add a follow-up
+patch sending reset at rsk creation time in case of !can_accept
+but I dismissed such patch because it feel "insecure"/potentially
+dos prone send this early reset: an attacker could force an mptcp
+server to send reset packets towards arbitrary IP/ports.
 
-I think should be safe, as the struct sock is not accessed
-by tcp_check_req() when the relevant conditions held after
-syn_recv_sock(), still something require additional eyeballs.
+Additionally, after a quick look at mptcp.org, I could not find
+trace of such early reset - looks like resets for bad MP_JOINs
+are send only at syn_recv_sock() time.
 ---
- net/mptcp/subflow.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ net/mptcp/subflow.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 3077e07375b5..9f4f3e29587d 100644
+index f3517d4f70f6..3077e07375b5 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -405,8 +405,11 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- 	subflow_req =3D mptcp_subflow_rsk(req);
- 	fallback_is_fatal =3D tcp_rsk(req)->is_mptcp && subflow_req->mp_join;
- 	fallback =3D !tcp_rsk(req)->is_mptcp;
--	if (fallback)
-+	if (fallback) {
-+		if (fallback_is_fatal)
-+			goto dispose_req;
- 		goto create_child;
-+	}
- =
-
- 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
- 	if (subflow_req->mp_capable) {
-@@ -434,7 +437,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 		    !mptcp_can_accept_new_subflow(subflow_req->msk) ||
- 		    !subflow_hmac_valid(req, &mp_opt)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
--			fallback =3D true;
-+			goto dispose_req;
- 		}
- 	}
- =
-
-@@ -506,15 +509,25 @@ static struct sock *subflow_syn_recv_sock(const struc=
-t sock *sk,
- 		      !mptcp_subflow_ctx(child)->conn));
- 	return child;
- =
-
-+dispose_req:
-+	/* The last req reference will be released by the caller */
-+	child =3D NULL;
-+	*own_req =3D false;
-+	reqsk_queue_removed(&inet_csk(sk)->icsk_accept_queue, req);
-+	inet_csk_reqsk_queue_drop((struct sock *)sk, req);
-+	goto reset;
-+
- dispose_child:
-+	/* The last child reference will be released by the caller */
- 	subflow_drop_ctx(child);
- 	tcp_rsk(req)->drop_req =3D true;
- 	inet_csk_prepare_for_destroy_sock(child);
- 	tcp_done(child);
--	req->rsk_ops->send_reset(sk, skb);
- =
-
--	/* The last child reference will be released by the caller */
-+reset:
-+	req->rsk_ops->send_reset(sk, skb);
- 	return child;
-+
+@@ -53,6 +53,12 @@ static void subflow_generate_hmac(u64 key1, u64 key2, u3=
+2 nonce1, u32 nonce2,
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
  }
  =
 
- static struct inet_connection_sock_af_ops subflow_specific;
++static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
++{
++	return inet_sk_state_load((struct sock *)msk) =3D=3D TCP_ESTABLISHED &&
++	       READ_ONCE(msk->pm.accept_subflow);
++}
++
+ /* validate received token and create truncated hmac and nonce for SYN-ACK=
+ */
+ static struct mptcp_sock *subflow_token_join_request(struct request_sock *=
+req,
+ 						     const struct sk_buff *skb)
+@@ -425,6 +431,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 	} else if (subflow_req->mp_join) {
+ 		mptcp_get_options(skb, &mp_opt);
+ 		if (!mp_opt.mp_join ||
++		    !mptcp_can_accept_new_subflow(subflow_req->msk) ||
+ 		    !subflow_hmac_valid(req, &mp_opt)) {
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+ 			fallback =3D true;
 -- =
 
 2.26.2
 
---===============8037149786705425826==--
+--===============4227827536222301083==--
