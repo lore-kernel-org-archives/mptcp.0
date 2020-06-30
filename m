@@ -1,50 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============0842249541936551557=="
+Content-Type: multipart/mixed; boundary="===============6170958536152912970=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: init autotune state also in
- simultaneous connect case.
-Date: Tue, 30 Jun 2020 11:44:47 -0700
-Message-ID: <alpine.OSX.2.23.453.2006301144100.27064@ptcotton-mobl1.amr.corp.intel.com>
-In-Reply-To: be692bedbab09f941b546cdf33e655ba8337e22b.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next 0/2] mptcp: add receive buffer auto-tuning
+Date: Tue, 30 Jun 2020 21:24:43 +0200
+Message-ID: <20200630192445.18333-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 4872
+X-UID: 4873
 
---===============0842249541936551557==
+--===============6170958536152912970==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 30 Jun 2020, Paolo Abeni wrote:
+First patch extends the test script to allow for reproducible results.
+Second patch adds receive auto-tuning.  Its based on what TCP is doing,
+only difference is that we use the largest RTT of any of the subflows
+and that we will update all subflows with the new value.
 
-> On Mon, 2020-06-22 at 15:57 +0200, Florian Westphal wrote:
->> This is what Christoph suggested needs to be added to avoid
->> div0 in case of simultaneous connect.
->>
->> Squashto: mptcp: add receive buffer auto-tuning
->> ---
->>  net/mptcp/subflow.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 0f0fa1ba57a8..e1e19c76e267 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1120,6 +1120,7 @@ static void subflow_state_change(struct sock *sk)
->>
->>  	if (subflow_simultaneous_connect(sk)) {
->>  		mptcp_do_fallback(sk);
->> +		mptcp_rcv_space_init(mptcp_sk(parent), sk);
->>  		pr_fallback(mptcp_sk(parent));
->>  		subflow->conn_finished =3D 1;
->>  		if (inet_sk_state_load(parent) =3D=3D TCP_SYN_SENT) {
->
-> LGTM, and I think Christoph already acked it.
+Else, we get spurious packet drops because the mptcp work queue might
+not be able to move packets from subflow socket to master socket
+fast enough.  Without the adjustment, TCP may drop the packets because
+the subflow socket is over its rcvbuffer limit.
 
-Yes, definitely good to squash this.
+Florian Westphal (2):
+      selftests: mptcp: add option to specify size of file to transfer
+      mptcp: add receive buffer auto-tuning
 
---
-Mat Martineau
-Intel
---===============0842249541936551557==--
+ net/mptcp/protocol.c                               | 123 +++++++++++++++++=
+++--
+ net/mptcp/protocol.h                               |   7 ++
+ net/mptcp/subflow.c                                |   5 +-
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  52 ++++++---
+ 4 files changed, 166 insertions(+), 21 deletions(-)
+
+--===============6170958536152912970==--
