@@ -1,54 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============4625279883538305877=="
+Content-Type: multipart/mixed; boundary="===============5068179707947299151=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/6] MPTCP: improve fallback to TCP
-Date: Mon, 29 Jun 2020 17:29:54 -0700
-Message-ID: <20200629.172954.2096977916313984108.davem@davemloft.net>
-In-Reply-To: cover.1593461586.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: init autotune state also in
+ simultaneous connect case.
+Date: Tue, 30 Jun 2020 12:54:42 +0200
+Message-ID: <be692bedbab09f941b546cdf33e655ba8337e22b.camel@redhat.com>
+In-Reply-To: 20200622135737.8217-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4860
+X-UID: 4862
 
---===============4625279883538305877==
+--===============5068179707947299151==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Davide Caratti <dcaratti(a)redhat.com>
-Date: Mon, 29 Jun 2020 22:26:19 +0200
-
-> there are situations where MPTCP sockets should fall-back to regular TCP:
-> this series reworks the fallback code to pursue the following goals:
+On Mon, 2020-06-22 at 15:57 +0200, Florian Westphal wrote:
+> This is what Christoph suggested needs to be added to avoid
+> div0 in case of simultaneous connect.
 > =
 
-> 1) cleanup the non fallback code, removing most of 'if (<fallback>)' in
->    the data path
-> 2) improve performance for non-fallback sockets, avoiding locks in poll()
+> Squashto: mptcp: add receive buffer auto-tuning
+> ---
+>  net/mptcp/subflow.c | 1 +
+>  1 file changed, 1 insertion(+)
 > =
 
-> further work will also leverage on this changes to achieve:
-> =
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 0f0fa1ba57a8..e1e19c76e267 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1120,6 +1120,7 @@ static void subflow_state_change(struct sock *sk)
+>  =
 
-> a) more consistent behavior of gestockopt()/setsockopt() on passive socke=
-ts
->    after fallback
-> b) support for "infinite maps" as per RFC8684, section 3.7
-> =
+>  	if (subflow_simultaneous_connect(sk)) {
+>  		mptcp_do_fallback(sk);
+> +		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+>  		pr_fallback(mptcp_sk(parent));
+>  		subflow->conn_finished =3D 1;
+>  		if (inet_sk_state_load(parent) =3D=3D TCP_SYN_SENT) {
 
-> the series is made of the following items:
-> =
+LGTM, and I think Christoph already acked it.
 
-> - patch 1 lets sendmsg() / recvmsg() / poll() use the main socket also
->   after fallback
-> - patch 2 fixes 'simultaneous connect' scenario after fallback. The
->   problem was present also before the rework, but the fix is much easier
->   to implement after patch 1
-> - patch 3, 4, 5 are clean-ups for code that is no more needed after the
->   fallback rework
-> - patch 6 fixes a race condition between close() and poll(). The problem
->   was theoretically present before the rework, but it became almost
->   systematic after patch 1
+Thanks Florian,
 
-Series applied to net-next, thank you.
---===============4625279883538305877==--
+/P
+
+--===============5068179707947299151==--
