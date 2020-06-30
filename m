@@ -1,41 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============4901083920075423496=="
+Content-Type: multipart/mixed; boundary="===============4625279883538305877=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 6/6] mptcp: close poll() races
-Date: Mon, 29 Jun 2020 16:31:21 -0700
-Message-ID: <alpine.OSX.2.23.453.2006291631060.11066@jlbliss-mobl.amr.corp.intel.com>
-In-Reply-To: 0c0e9026c97b90d92047b3771dc248e5d873ac6a.1593461586.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 0/6] MPTCP: improve fallback to TCP
+Date: Mon, 29 Jun 2020 17:29:54 -0700
+Message-ID: <20200629.172954.2096977916313984108.davem@davemloft.net>
+In-Reply-To: cover.1593461586.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4859
+X-UID: 4860
 
---===============4901083920075423496==
+--===============4625279883538305877==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 29 Jun 2020, Davide Caratti wrote:
+From: Davide Caratti <dcaratti(a)redhat.com>
+Date: Mon, 29 Jun 2020 22:26:19 +0200
 
-> From: Paolo Abeni <pabeni(a)redhat.com>
->
-> mptcp_poll always return POLLOUT for unblocking
-> connect(), ensure that the socket is a suitable
-> state.
-> The MPTCP_DATA_READY bit is never cleared on accept:
-> ensure we don't leave mptcp_accept() with an empty
-> accept queue and such bit set.
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> ---
-> net/mptcp/protocol.c | 25 ++++++++++++++++++++-----
-> 1 file changed, 20 insertions(+), 5 deletions(-)
->
+> there are situations where MPTCP sockets should fall-back to regular TCP:
+> this series reworks the fallback code to pursue the following goals:
+> =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> 1) cleanup the non fallback code, removing most of 'if (<fallback>)' in
+>    the data path
+> 2) improve performance for non-fallback sockets, avoiding locks in poll()
+> =
 
---
-Mat Martineau
-Intel
---===============4901083920075423496==--
+> further work will also leverage on this changes to achieve:
+> =
+
+> a) more consistent behavior of gestockopt()/setsockopt() on passive socke=
+ts
+>    after fallback
+> b) support for "infinite maps" as per RFC8684, section 3.7
+> =
+
+> the series is made of the following items:
+> =
+
+> - patch 1 lets sendmsg() / recvmsg() / poll() use the main socket also
+>   after fallback
+> - patch 2 fixes 'simultaneous connect' scenario after fallback. The
+>   problem was present also before the rework, but the fix is much easier
+>   to implement after patch 1
+> - patch 3, 4, 5 are clean-ups for code that is no more needed after the
+>   fallback rework
+> - patch 6 fixes a race condition between close() and poll(). The problem
+>   was theoretically present before the rework, but it became almost
+>   systematic after patch 1
+
+Series applied to net-next, thank you.
+--===============4625279883538305877==--
