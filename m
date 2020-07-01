@@ -1,67 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============0840508365921713264=="
+Content-Type: multipart/mixed; boundary="===============8667926819927046173=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: fix DSS map generation on fin
- retransmission
-Date: Wed, 01 Jul 2020 14:12:28 +0200
-Message-ID: <c85a1cef-7f04-d43e-e1f8-1dfaa816b8cf@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2006301127330.27064@ptcotton-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH net-next 1/2] selftests: mptcp: add option to
+ specify size of file to transfer
+Date: Wed, 01 Jul 2020 15:06:51 +0200
+Message-ID: <1943d2bb-fc60-4614-07db-e56d7e3a824d@tessares.net>
+In-Reply-To: 20200630192445.18333-2-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4882
+X-UID: 4883
 
---===============0840508365921713264==
+--===============8667926819927046173==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat, Christoph
+Hi Florian,
 
-On 30/06/2020 20:28, Mat Martineau wrote:
-> On Fri, 26 Jun 2020, Paolo Abeni wrote:
+On 30/06/2020 21:24, Florian Westphal wrote:
+> The script generates two random files that are then sent via tcp and
+> mptcp connections.
 > =
 
->> The RFC 8684 mandates that no-data DATA FIN packets should carry
->> a DSS with 0 sequence number and data len equal to 1. Currently,
->> on FIN retransmission we re-use the existing mapping; if the previous
->> fin transmission was part of a partially acked data packet, we could
->> end-up writing in the egress packet a non-compliant DSS.
->>
->> The above will be detected by a "Bad mapping" warning on the receiver
->> side.
->>
->> This change addresses the issue explicitly checking for 0 len packet
->> when adding the DATA_FIN option.
->>
->> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data =
-
->> packets")
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> In order to compare throughput over consecutive runs add an option
+> to provide the file size on the command line: "-f 128000".
 > =
 
-> Thanks Paolo, looks good.
+> Also add an option, -t, to enable tcp tests. This is useful to
+> compare throughput of mptcp connections and tcp connections.
 > =
 
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Example: run tests with a 4mb file size, 300ms delay 0.01% loss,
+> default gso/tso/gro settings and with large write/blocking io:
+> =
 
-Thank you for the patch, the validation and the reviews!
+> mptcp_connect.sh -t -f $((4 * 1024 * 1024)) -d 300 -l 0.01%  -r 0 -e "" -=
+m mmap
+> =
 
-@Christoph: it seems "Reviewed-and-tested-by" tag is not recognised by =
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 
-Patchwork so I split them :)
+Thank you for the patch! The new '-t' option was also very helpful when =
 
-I added this patch at the end:
+investigating the issue 6 on Github!
 
-- aea4d1ebbc5f: mptcp: fix DSS map generation on fin retransmission
-- d8ab2db3ac90..3813e7acdac2: result
-
-Tests and export are in progress.
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
 Cheers,
 Matt
--- =
-
+--
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============0840508365921713264==--
+--===============8667926819927046173==--
