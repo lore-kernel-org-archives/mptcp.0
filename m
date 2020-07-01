@@ -1,17 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============8667926819927046173=="
+Content-Type: multipart/mixed; boundary="===============1099046298809923223=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 1/2] selftests: mptcp: add option to
- specify size of file to transfer
-Date: Wed, 01 Jul 2020 15:06:51 +0200
-Message-ID: <1943d2bb-fc60-4614-07db-e56d7e3a824d@tessares.net>
-In-Reply-To: 20200630192445.18333-2-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next 2/2] mptcp: add receive buffer auto-tuning
+Date: Wed, 01 Jul 2020 15:07:06 +0200
+Message-ID: <26e2e166-ffcc-d53c-21f1-c35bf456655a@tessares.net>
+In-Reply-To: 20200630192445.18333-3-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4883
+X-UID: 4884
 
---===============8667926819927046173==
+--===============1099046298809923223==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,37 +18,74 @@ Content-Transfer-Encoding: quoted-printable
 Hi Florian,
 
 On 30/06/2020 21:24, Florian Westphal wrote:
-> The script generates two random files that are then sent via tcp and
-> mptcp connections.
+> When mptcp is used, userspace doesn't read from the tcp (subflow)
+> socket but from the parent (mptcp) socket receive queue.
 > =
 
-> In order to compare throughput over consecutive runs add an option
-> to provide the file size on the command line: "-f 128000".
+> skbs are moved from the subflow socket to the mptcp rx queue either from
+> 'data_ready' callback (if mptcp socket can be locked), a work queue, or
+> the socket receive function.
 > =
 
-> Also add an option, -t, to enable tcp tests. This is useful to
-> compare throughput of mptcp connections and tcp connections.
+> This means tcp_rcv_space_adjust() is never called and thus no receive
+> buffer size auto-tuning is done.
 > =
 
-> Example: run tests with a 4mb file size, 300ms delay 0.01% loss,
-> default gso/tso/gro settings and with large write/blocking io:
+> An earlier (not merged) patch added tcp_rcv_space_adjust() calls to the
+> function that moves skbs from subflow to mptcp socket.
+> While this enabled autotuning, it also meant tuning was done even if
+> userspace was reading the mptcp socket very slowly.
 > =
 
-> mptcp_connect.sh -t -f $((4 * 1024 * 1024)) -d 300 -l 0.01%  -r 0 -e "" -=
+> This adds mptcp_rcv_space_adjust() and calls it after userspace has
+> read data from the mptcp socket rx queue.
+> =
+
+> Its very similar to tcp_rcv_space_adjust, with two differences:
+> =
+
+> 1. The rtt estimate is the largest one observed on a subflow
+> 2. The rcvbuf size and window clamp of all subflows is adjusted
+>     to the mptcp-level rcvbuf.
+> =
+
+> Otherwise, we get spurious drops at tcp (subflow) socket level if
+> the skbs are not moved to the mptcp socket fast enough.
+> =
+
+> Before:
+> time mptcp_connect.sh -t -f $((4*1024*1024)) -d 300 -l 0.01% -r 0 -e "" -=
 m mmap
+> [..]
+> ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration 40823ms) [ OK ]
+> ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration 23119ms) [ OK ]
+> ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5421ms) [ OK ]
+> ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration 41446ms) [ OK ]
+> ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration 23427ms) [ OK ]
+> ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5426ms) [ OK ]
+> Time: 1396 seconds
+> =
+
+> After:
+> ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration  5417ms) [ OK ]
+> ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5427ms) [ OK ]
+> ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5422ms) [ OK ]
+> ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration  5415ms) [ OK ]
+> ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5422ms) [ OK ]
+> ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5423ms) [ OK ]
+> Time: 296 seconds
 > =
 
 > Signed-off-by: Florian Westphal <fw(a)strlen.de>
 
-Thank you for the patch! The new '-t' option was also very helpful when =
-
-investigating the issue 6 on Github!
+Thank you for adding this very useful feature!
 
 Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
 Cheers,
 Matt
---
+-- =
+
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============8667926819927046173==--
+--===============1099046298809923223==--
