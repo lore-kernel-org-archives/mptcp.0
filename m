@@ -1,44 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============1528933848215505904=="
+Content-Type: multipart/mixed; boundary="===============0840508365921713264=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: init autotune state also in
- simultaneous connect case.
-Date: Wed, 01 Jul 2020 13:42:47 +0200
-Message-ID: <24ae05b6-b4ea-39ec-25f3-73aadb1f94bc@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2006301144100.27064@ptcotton-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix DSS map generation on fin
+ retransmission
+Date: Wed, 01 Jul 2020 14:12:28 +0200
+Message-ID: <c85a1cef-7f04-d43e-e1f8-1dfaa816b8cf@tessares.net>
+In-Reply-To: alpine.OSX.2.23.453.2006301127330.27064@ptcotton-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4881
+X-UID: 4882
 
---===============1528933848215505904==
+--===============0840508365921713264==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Mat, Paolo,
+Hi Paolo, Mat, Christoph
 
-On 30/06/2020 20:44, Mat Martineau wrote:
-> On Tue, 30 Jun 2020, Paolo Abeni wrote:
+On 30/06/2020 20:28, Mat Martineau wrote:
+> On Fri, 26 Jun 2020, Paolo Abeni wrote:
 > =
 
->> On Mon, 2020-06-22 at 15:57 +0200, Florian Westphal wrote:
->>> This is what Christoph suggested needs to be added to avoid
->>> div0 in case of simultaneous connect.
->>>
->>> Squashto: mptcp: add receive buffer auto-tuning
+>> The RFC 8684 mandates that no-data DATA FIN packets should carry
+>> a DSS with 0 sequence number and data len equal to 1. Currently,
+>> on FIN retransmission we re-use the existing mapping; if the previous
+>> fin transmission was part of a partially acked data packet, we could
+>> end-up writing in the egress packet a non-compliant DSS.
 >>
->> LGTM, and I think Christoph already acked it.
+>> The above will be detected by a "Bad mapping" warning on the receiver
+>> side.
+>>
+>> This change addresses the issue explicitly checking for 0 len packet
+>> when adding the DATA_FIN option.
+>>
+>> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data =
+
+>> packets")
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > =
 
-> Yes, definitely good to squash this.
+> Thanks Paolo, looks good.
+> =
 
-Thank you for the patch and the review! Just applied:
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-- e6df694a4180: "squashed" in "mptcp: add receive buffer auto-tuning"
-- 8de6e2516b12..d8ab2db3ac90: result
+Thank you for the patch, the validation and the reviews!
 
-Tests and export will be started soon.
+@Christoph: it seems "Reviewed-and-tested-by" tag is not recognised by =
+
+Patchwork so I split them :)
+
+I added this patch at the end:
+
+- aea4d1ebbc5f: mptcp: fix DSS map generation on fin retransmission
+- d8ab2db3ac90..3813e7acdac2: result
+
+Tests and export are in progress.
 
 Cheers,
 Matt
@@ -46,4 +64,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1528933848215505904==--
+--===============0840508365921713264==--
