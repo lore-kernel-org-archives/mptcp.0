@@ -1,86 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============1099046298809923223=="
+Content-Type: multipart/mixed; boundary="===============3109866519565528948=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 2/2] mptcp: add receive buffer auto-tuning
-Date: Wed, 01 Jul 2020 15:07:06 +0200
-Message-ID: <26e2e166-ffcc-d53c-21f1-c35bf456655a@tessares.net>
-In-Reply-To: 20200630192445.18333-3-fw@strlen.de
+Subject: [MPTCP] Weekly meeting at a different time or multiple meetings?
+Date: Wed, 01 Jul 2020 17:58:04 +0200
+Message-ID: <bdbff332-4605-52bd-0aa3-f6f7dba0c9ff@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4884
+X-UID: 4885
 
---===============1099046298809923223==
+--===============3109866519565528948==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+Hello,
 
-On 30/06/2020 21:24, Florian Westphal wrote:
-> When mptcp is used, userspace doesn't read from the tcp (subflow)
-> socket but from the parent (mptcp) socket receive queue.
-> =
+At the last weekly meeting, we discussed about changing the time of the =
 
-> skbs are moved from the subflow socket to the mptcp rx queue either from
-> 'data_ready' callback (if mptcp socket can be locked), a work queue, or
-> the socket receive function.
-> =
+meeting to be able to accept more people.
 
-> This means tcp_rcv_space_adjust() is never called and thus no receive
-> buffer size auto-tuning is done.
-> =
+It would be difficult to find a single time suiting everybody from US' =
 
-> An earlier (not merged) patch added tcp_rcv_space_adjust() calls to the
-> function that moves skbs from subflow to mptcp socket.
-> While this enabled autotuning, it also meant tuning was done even if
-> userspace was reading the mptcp socket very slowly.
-> =
+West coast, Europe and China:
 
-> This adds mptcp_rcv_space_adjust() and calls it after userspace has
-> read data from the mptcp socket rx queue.
-> =
+https://www.timeanddate.com/worldclock/meetingtime.html?day=3D2&month=3D7&y=
+ear=3D2020&p1=3D48&p2=3D234&p3=3D33&iv=3D0
 
-> Its very similar to tcp_rcv_space_adjust, with two differences:
-> =
+When discussing with a few of you what we could do, two choices seem =
 
-> 1. The rtt estimate is the largest one observed on a subflow
-> 2. The rcvbuf size and window clamp of all subflows is adjusted
->     to the mptcp-level rcvbuf.
-> =
+possible:
+- having the meeting one hour earlier: 1500 UTC (5pm CEST, 8am PDT but =
 
-> Otherwise, we get spurious drops at tcp (subflow) socket level if
-> the skbs are not moved to the mptcp socket fast enough.
-> =
+still 11pm Beijing Time)
+- having an additional meetings, shorter, maybe not each week but at =
 
-> Before:
-> time mptcp_connect.sh -t -f $((4*1024*1024)) -d 300 -l 0.01% -r 0 -e "" -=
-m mmap
-> [..]
-> ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration 40823ms) [ OK ]
-> ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration 23119ms) [ OK ]
-> ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5421ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration 41446ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration 23427ms) [ OK ]
-> ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5426ms) [ OK ]
-> Time: 1396 seconds
-> =
+something like ~0900 UTC (11am CEST / 5pm UTC+8) and ~0100 UTC (~6pm PDT =
 
-> After:
-> ns4 MPTCP -> ns3 (10.0.3.2:10108      ) MPTCP   (duration  5417ms) [ OK ]
-> ns4 MPTCP -> ns3 (10.0.3.2:10109      ) TCP     (duration  5427ms) [ OK ]
-> ns4 TCP   -> ns3 (10.0.3.2:10110      ) MPTCP   (duration  5422ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10111) MPTCP   (duration  5415ms) [ OK ]
-> ns4 MPTCP -> ns3 (dead:beef:3::2:10112) TCP     (duration  5422ms) [ OK ]
-> ns4 TCP   -> ns3 (dead:beef:3::2:10113) MPTCP   (duration  5423ms) [ OK ]
-> Time: 296 seconds
-> =
+/ 9am UTC+8).
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+We can discuss about that at tomorrow's meeting. If you cannot attend =
 
-Thank you for adding this very useful feature!
+this meeting, please share your point of view on the ML, especially if =
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+these times are not possible for you.
 
 Cheers,
 Matt
@@ -88,4 +51,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1099046298809923223==--
+--===============3109866519565528948==--
