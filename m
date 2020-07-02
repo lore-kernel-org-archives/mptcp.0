@@ -1,239 +1,279 @@
-Content-Type: multipart/mixed; boundary="===============6300242277962071075=="
+Content-Type: multipart/mixed; boundary="===============1790299863421823277=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 1/4] inet_diag: support for wider protocol numbers
-Date: Thu, 02 Jul 2020 13:32:30 +0200
-Message-ID: <ceda819ab0e95a7b8009041294888439fcf20882.1593689328.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v3 3/4] mptcp: add MPTCP socket diag interface
+Date: Thu, 02 Jul 2020 13:32:32 +0200
+Message-ID: <a5050e76f6990a85dde0e85a4ed74d3d1d5541e4.1593689328.git.pabeni@redhat.com>
 In-Reply-To: cover.1593689328.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4898
+X-UID: 4899
 
---===============6300242277962071075==
+--===============1790299863421823277==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After commit bf9765145b85 ("sock: Make sk_protocol a 16-bit value")
-the current size of 'sdiag_protocol' is not sufficient to represent
-the possible protocol values.
+exposes basic inet socket attribute, plus some MPTCP socket
+fields comprising PM status and MPTCP-level sequence numbers.
 
-This change introduces a new inet diag request attribute to let
-user space specify the relevant protocol number using u32 values.
-
-The attribute is parsed by inet diag core on get/dump command
-and the extended protocol value, if available, is preferred to
-'sdiag_protocol' to lookup the diag handler.
-
-The parse attributed are exposed to all the diag handlers via
-the cb->data.
-
-Note that inet_diag_dump_one_icsk() is left unmodified, as it
-will not be used by protocol using the extended attribute.
-
-Suggested-by: David S. Miller <davem(a)davemloft.net>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- include/uapi/linux/inet_diag.h |  1 +
- net/core/sock.c                |  1 +
- net/ipv4/inet_diag.c           | 63 +++++++++++++++++++++++++---------
- 3 files changed, 48 insertions(+), 17 deletions(-)
+v2 -> v3:
+ - update to new token APIs
+ - acquire socket lock for mptcp get info
+ - cond_resched() on each iteration
+v1 -> v2:
+ - fix dump on skb full event
+ - use 'flags' for fallback, can_ack
+---
+ include/uapi/linux/mptcp.h |  17 ++++
+ net/mptcp/Kconfig          |   4 +
+ net/mptcp/Makefile         |   2 +
+ net/mptcp/mptcp_diag.c     | 169 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 192 insertions(+)
+ create mode 100644 net/mptcp/mptcp_diag.c
 
-diff --git a/include/uapi/linux/inet_diag.h b/include/uapi/linux/inet_diag.h
-index e6f183ee8417..5ba122c1949a 100644
---- a/include/uapi/linux/inet_diag.h
-+++ b/include/uapi/linux/inet_diag.h
-@@ -65,6 +65,7 @@ enum {
- 	INET_DIAG_REQ_NONE,
- 	INET_DIAG_REQ_BYTECODE,
- 	INET_DIAG_REQ_SK_BPF_STORAGES,
-+	INET_DIAG_REQ_PROTOCOL,
- 	__INET_DIAG_REQ_MAX,
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 5f2c77082d9e..9762660df741 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -86,4 +86,21 @@ enum {
+ 	__MPTCP_PM_CMD_AFTER_LAST
  };
  =
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index d832c650287c..d48cdfcb4055 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3575,6 +3575,7 @@ int sock_load_diag_module(int family, int protocol)
- #ifdef CONFIG_INET
- 	if (family =3D=3D AF_INET &&
- 	    protocol !=3D IPPROTO_RAW &&
-+	    protocol < MAX_INET_PROTOS &&
- 	    !rcu_access_pointer(inet_protos[protocol]))
- 		return -ENOENT;
- #endif
-diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
-index 125f4f8a36b4..a3a7ef3fada6 100644
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@ -52,6 +52,9 @@ static DEFINE_MUTEX(inet_diag_table_mutex);
- =
-
- static const struct inet_diag_handler *inet_diag_lock_handler(int proto)
- {
-+	if (proto >=3D IPPROTO_MAX)
-+		return ERR_PTR(-ENOENT);
++#define MPTCP_INFO_FLAG_FALLBACK		_BITUL(0)
++#define MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED	_BITUL(1)
 +
- 	if (!inet_diag_table[proto])
- 		sock_load_diag_module(AF_INET, proto);
++struct mptcp_info {
++	__u8	mptcpi_subflows;
++	__u8	mptcpi_add_addr_signal;
++	__u8	mptcpi_add_addr_accepted;
++	__u8	mptcpi_subflows_max;
++	__u8	mptcpi_add_addr_signal_max;
++	__u8	mptcpi_add_addr_accepted_max;
++	__u32	mptcpi_flags;
++	__u32	mptcpi_token;
++	__u64	mptcpi_write_seq;
++	__u64	mptcpi_snd_una;
++	__u64	mptcpi_rcv_nxt;
++};
++
+ #endif /* _UAPI_MPTCP_H */
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index 0ec787d8b9a2..97c29caa65f3 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -14,6 +14,10 @@ config MPTCP
  =
 
-@@ -181,6 +184,28 @@ int inet_diag_msg_attrs_fill(struct sock *sk, struct s=
-k_buff *skb,
- }
- EXPORT_SYMBOL_GPL(inet_diag_msg_attrs_fill);
+ if MPTCP
  =
 
-+static void inet_diag_parse_attrs(const struct nlmsghdr *nlh, int hdrlen,
-+				  struct nlattr **req_nlas)
++config INET_MPTCP_DIAG
++	depends on INET_DIAG
++	def_tristate INET_DIAG
++
+ config MPTCP_IPV6
+ 	bool "MPTCP: IPv6 support for Multipath TCP"
+ 	select IPV6
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index c53f9b845523..2360cbd27d59 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -4,6 +4,8 @@ obj-$(CONFIG_MPTCP) +=3D mptcp.o
+ mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o d=
+iag.o \
+ 	   mib.o pm_netlink.o
+ =
+
++obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
++
+ mptcp_crypto_test-objs :=3D crypto_test.o
+ mptcp_token_test-objs :=3D token_test.o
+ obj-$(CONFIG_MPTCP_KUNIT_TESTS) +=3D mptcp_crypto_test.o mptcp_token_test.o
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+new file mode 100644
+index 000000000000..5f390a97f556
+--- /dev/null
++++ b/net/mptcp/mptcp_diag.c
+@@ -0,0 +1,169 @@
++// SPDX-License-Identifier: GPL-2.0
++/* MPTCP socket monitoring support
++ *
++ * Copyright (c) 2020 Red Hat
++ *
++ * Author: Paolo Abeni <pabeni(a)redhat.com>
++ */
++
++#include <linux/kernel.h>
++#include <linux/net.h>
++#include <linux/inet_diag.h>
++#include <net/netlink.h>
++#include <uapi/linux/mptcp.h>
++#include "protocol.h"
++
++static int sk_diag_dump(struct sock *sk, struct sk_buff *skb,
++			struct netlink_callback *cb,
++			const struct inet_diag_req_v2 *req,
++			struct nlattr *bc, bool net_admin)
 +{
-+	struct nlattr *nla;
-+	int remaining;
++	if (!inet_diag_bc_sk(bc, sk))
++		return 0;
 +
-+	nlmsg_for_each_attr(nla, nlh, hdrlen, remaining) {
-+		int type =3D nla_type(nla);
++	return inet_sk_diag_fill(sk, inet_csk(sk), skb, cb, req, NLM_F_MULTI,
++				 net_admin);
++}
 +
-+		if (type < __INET_DIAG_REQ_MAX)
-+			req_nlas[type] =3D nla;
++static int mptcp_diag_dump_one(struct netlink_callback *cb,
++			       const struct inet_diag_req_v2 *req)
++{
++	struct sk_buff *in_skb =3D cb->skb;
++	struct mptcp_sock *msk =3D NULL;
++	struct sk_buff *rep;
++	int err =3D -ENOENT;
++	struct net *net;
++	struct sock *sk;
++
++	net =3D sock_net(in_skb->sk);
++	msk =3D mptcp_token_get_sock(req->id.idiag_cookie[0]);
++	if (!msk)
++		goto out_nosk;
++
++	err =3D -ENOMEM;
++	sk =3D (struct sock *)msk;
++	rep =3D nlmsg_new(nla_total_size(sizeof(struct inet_diag_msg)) +
++			inet_diag_msg_attrs_size() +
++			nla_total_size(sizeof(struct mptcp_info)) +
++			nla_total_size(sizeof(struct inet_diag_meminfo)) + 64,
++			GFP_KERNEL);
++	if (!rep)
++		goto out;
++
++	err =3D inet_sk_diag_fill(sk, inet_csk(sk), rep, cb, req, 0,
++				netlink_net_capable(in_skb, CAP_NET_ADMIN));
++	if (err < 0) {
++		WARN_ON(err =3D=3D -EMSGSIZE);
++		kfree_skb(rep);
++		goto out;
++	}
++	err =3D netlink_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).portid,
++			      MSG_DONTWAIT);
++	if (err > 0)
++		err =3D 0;
++out:
++	sock_put(sk);
++
++out_nosk:
++	return err;
++}
++
++static void mptcp_diag_dump(struct sk_buff *skb, struct netlink_callback *=
+cb,
++			    const struct inet_diag_req_v2 *r)
++{
++	bool net_admin =3D netlink_net_capable(cb->skb, CAP_NET_ADMIN);
++	struct net *net =3D sock_net(skb->sk);
++	struct inet_diag_dump_data *cb_data;
++	struct mptcp_sock *msk;
++	struct nlattr *bc;
++
++	cb_data =3D cb->data;
++	bc =3D cb_data->inet_diag_nla_bc;
++
++	while ((msk =3D mptcp_token_iter_next(net, &cb->args[0], &cb->args[1])) !=
+=3D
++	       NULL) {
++		struct inet_sock *inet =3D (struct inet_sock *)msk;
++		struct sock *sk =3D (struct sock *)msk;
++		int ret =3D 0;
++
++		if (!(r->idiag_states & (1 << sk->sk_state)))
++			goto next;
++		if (r->sdiag_family !=3D AF_UNSPEC &&
++		    sk->sk_family !=3D r->sdiag_family)
++			goto next;
++		if (r->id.idiag_sport !=3D inet->inet_sport &&
++		    r->id.idiag_sport)
++			goto next;
++		if (r->id.idiag_dport !=3D inet->inet_dport &&
++		    r->id.idiag_dport)
++			goto next;
++
++		ret =3D sk_diag_dump(sk, skb, cb, r, bc, net_admin);
++next:
++		sock_put(sk);
++		if (ret < 0) {
++			/* will retry on the same position */
++			cb->args[1]--;
++			break;
++		}
++		cond_resched();
 +	}
 +}
 +
-+static int inet_diag_get_protocol(const struct inet_diag_req_v2 *req,
-+				  const struct inet_diag_dump_data *data)
++static void mptcp_diag_get_info(struct sock *sk, struct inet_diag_msg *r,
++				void *_info)
 +{
-+	if (data->req_nlas[INET_DIAG_REQ_PROTOCOL])
-+		return nla_get_u32(data->req_nlas[INET_DIAG_REQ_PROTOCOL]);
-+	return req->sdiag_protocol;
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct mptcp_info *info =3D _info;
++	u32 flags =3D 0;
++	bool slow;
++	u8 val;
++
++	r->idiag_rqueue =3D sk_rmem_alloc_get(sk);
++	r->idiag_wqueue =3D sk_wmem_alloc_get(sk);
++	if (!info)
++		return;
++
++	slow =3D lock_sock_fast(sk);
++	info->mptcpi_subflows =3D READ_ONCE(msk->pm.subflows);
++	info->mptcpi_add_addr_signal =3D READ_ONCE(msk->pm.add_addr_signaled);
++	info->mptcpi_add_addr_accepted =3D READ_ONCE(msk->pm.add_addr_accepted);
++	info->mptcpi_subflows_max =3D READ_ONCE(msk->pm.subflows_max);
++	val =3D READ_ONCE(msk->pm.add_addr_signal_max);
++	info->mptcpi_add_addr_signal_max =3D val;
++	val =3D READ_ONCE(msk->pm.add_addr_accept_max);
++	info->mptcpi_add_addr_accepted_max =3D val;
++	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
++		flags |=3D MPTCP_INFO_FLAG_FALLBACK;
++	if (READ_ONCE(msk->can_ack))
++		flags |=3D MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
++	info->mptcpi_flags =3D flags;
++	info->mptcpi_token =3D READ_ONCE(msk->token);
++	info->mptcpi_write_seq =3D READ_ONCE(msk->write_seq);
++	info->mptcpi_snd_una =3D atomic64_read(&msk->snd_una);
++	info->mptcpi_rcv_nxt =3D READ_ONCE(msk->ack_seq);
++	unlock_sock_fast(sk, slow);
 +}
 +
- #define MAX_DUMP_ALLOC_SIZE (KMALLOC_MAX_SIZE - SKB_DATA_ALIGN(sizeof(stru=
-ct skb_shared_info)))
- =
-
- int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
-@@ -198,7 +223,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_conn=
-ection_sock *icsk,
- 	void *info =3D NULL;
- =
-
- 	cb_data =3D cb->data;
--	handler =3D inet_diag_table[req->sdiag_protocol];
-+	handler =3D inet_diag_table[inet_diag_get_protocol(req, cb_data)];
- 	BUG_ON(!handler);
- =
-
- 	nlh =3D nlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
-@@ -539,20 +564,25 @@ EXPORT_SYMBOL_GPL(inet_diag_dump_one_icsk);
- =
-
- static int inet_diag_cmd_exact(int cmd, struct sk_buff *in_skb,
- 			       const struct nlmsghdr *nlh,
-+			       int hdrlen,
- 			       const struct inet_diag_req_v2 *req)
- {
- 	const struct inet_diag_handler *handler;
--	int err;
-+	struct inet_diag_dump_data dump_data;
-+	int err, protocol;
- =
-
--	handler =3D inet_diag_lock_handler(req->sdiag_protocol);
-+	memset(&dump_data, 0, sizeof(dump_data));
-+	inet_diag_parse_attrs(nlh, hdrlen, dump_data.req_nlas);
-+	protocol =3D inet_diag_get_protocol(req, &dump_data);
++static const struct inet_diag_handler mptcp_diag_handler =3D {
++	.dump		 =3D mptcp_diag_dump,
++	.dump_one	 =3D mptcp_diag_dump_one,
++	.idiag_get_info  =3D mptcp_diag_get_info,
++	.idiag_type	 =3D IPPROTO_MPTCP,
++	.idiag_info_size =3D sizeof(struct mptcp_info),
++};
 +
-+	handler =3D inet_diag_lock_handler(protocol);
- 	if (IS_ERR(handler)) {
- 		err =3D PTR_ERR(handler);
- 	} else if (cmd =3D=3D SOCK_DIAG_BY_FAMILY) {
--		struct inet_diag_dump_data empty_dump_data =3D {};
- 		struct netlink_callback cb =3D {
- 			.nlh =3D nlh,
- 			.skb =3D in_skb,
--			.data =3D &empty_dump_data,
-+			.data =3D &dump_data,
- 		};
- 		err =3D handler->dump_one(&cb, req);
- 	} else if (cmd =3D=3D SOCK_DESTROY && handler->destroy) {
-@@ -1103,13 +1133,16 @@ EXPORT_SYMBOL_GPL(inet_diag_dump_icsk);
- static int __inet_diag_dump(struct sk_buff *skb, struct netlink_callback *=
-cb,
- 			    const struct inet_diag_req_v2 *r)
- {
-+	struct inet_diag_dump_data *cb_data =3D cb->data;
- 	const struct inet_diag_handler *handler;
- 	u32 prev_min_dump_alloc;
--	int err =3D 0;
-+	int protocol, err =3D 0;
++static int __init mptcp_diag_init(void)
++{
++	return inet_diag_register(&mptcp_diag_handler);
++}
 +
-+	protocol =3D inet_diag_get_protocol(r, cb_data);
- =
-
- again:
- 	prev_min_dump_alloc =3D cb->min_dump_alloc;
--	handler =3D inet_diag_lock_handler(r->sdiag_protocol);
-+	handler =3D inet_diag_lock_handler(protocol);
- 	if (!IS_ERR(handler))
- 		handler->dump(skb, cb, r);
- 	else
-@@ -1139,19 +1172,13 @@ static int __inet_diag_dump_start(struct netlink_ca=
-llback *cb, int hdrlen)
- 	struct inet_diag_dump_data *cb_data;
- 	struct sk_buff *skb =3D cb->skb;
- 	struct nlattr *nla;
--	int rem, err;
-+	int err;
- =
-
- 	cb_data =3D kzalloc(sizeof(*cb_data), GFP_KERNEL);
- 	if (!cb_data)
- 		return -ENOMEM;
- =
-
--	nla_for_each_attr(nla, nlmsg_attrdata(nlh, hdrlen),
--			  nlmsg_attrlen(nlh, hdrlen), rem) {
--		int type =3D nla_type(nla);
--
--		if (type < __INET_DIAG_REQ_MAX)
--			cb_data->req_nlas[type] =3D nla;
--	}
-+	inet_diag_parse_attrs(nlh, hdrlen, cb_data->req_nlas);
- =
-
- 	nla =3D cb_data->inet_diag_nla_bc;
- 	if (nla) {
-@@ -1237,7 +1264,8 @@ static int inet_diag_get_exact_compat(struct sk_buff =
-*in_skb,
- 	req.idiag_states =3D rc->idiag_states;
- 	req.id =3D rc->id;
- =
-
--	return inet_diag_cmd_exact(SOCK_DIAG_BY_FAMILY, in_skb, nlh, &req);
-+	return inet_diag_cmd_exact(SOCK_DIAG_BY_FAMILY, in_skb, nlh,
-+				   sizeof(struct inet_diag_req), &req);
- }
- =
-
- static int inet_diag_rcv_msg_compat(struct sk_buff *skb, struct nlmsghdr *=
-nlh)
-@@ -1279,7 +1307,8 @@ static int inet_diag_handler_cmd(struct sk_buff *skb,=
- struct nlmsghdr *h)
- 		return netlink_dump_start(net->diag_nlsk, skb, h, &c);
- 	}
- =
-
--	return inet_diag_cmd_exact(h->nlmsg_type, skb, h, nlmsg_data(h));
-+	return inet_diag_cmd_exact(h->nlmsg_type, skb, h, hdrlen,
-+				   nlmsg_data(h));
- }
- =
-
- static
++static void __exit mptcp_diag_exit(void)
++{
++	inet_diag_unregister(&mptcp_diag_handler);
++}
++
++module_init(mptcp_diag_init);
++module_exit(mptcp_diag_exit);
++MODULE_LICENSE("GPL");
++MODULE_ALIAS_NET_PF_PROTO_TYPE(PF_NETLINK, NETLINK_SOCK_DIAG, 2-262 /* AF_=
+INET - IPPROTO_MPTCP */);
 -- =
 
 2.26.2
 
---===============6300242277962071075==--
+--===============1790299863421823277==--
