@@ -1,86 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============4286335379870520871=="
+Content-Type: multipart/mixed; boundary="===============0570134696219865874=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Weekly meeting - 25 June 2020 16:00 UTC (9am PDT,
- 6pm CEST)
-Date: Thu, 02 Jul 2020 10:08:16 +0200
-Message-ID: <456cd886-a6d2-36a0-08cf-435734b17fc1@tessares.net>
-In-Reply-To: 20200702053116.GA17066@OptiPlex
+Subject: [MPTCP] [PATCH v3 0/4] mptcp: msk diag support
+Date: Thu, 02 Jul 2020 13:32:29 +0200
+Message-ID: <cover.1593689328.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4894
+X-UID: 4896
 
---===============4286335379870520871==
+--===============0570134696219865874==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+This introduces basic mptcp sockets diag support.
+As IPPROTO_MPTCP excedes 8 bits, we need some changes at the inet_diag leve=
+l:
+a new attribute is introduced to allow user-space providing u32 protocol
+values.
 
-On 02/07/2020 07:31, Geliang Tang wrote:
-> Hi Matt,
-> =
+Patch 2 introduces new token APIs to allow traversing the existing msks, wh=
+ile
+patch 3 bring in the actual diag implementation.
 
-> On Wed, Jul 01, 2020 at 06:17:14PM +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 26/06/2020 02:40, Geliang Tang wrote:
->>> Hi Matt,
->>>
->>> There are several questions I didn't answer clearly in the last meeting.
->>> Here I try to write them down:
->>
->> Thank you for the clarification!
->>
->>> 1 My name pronunciation
->>> Geliang Tang sounds like Glenn Town.
->>
->> Thank you, that's helpful!
->>
->>> 2 My ideal meeting time
->>> Every hour from=C2=A011am to 6pm (my location time-zone) at every worki=
-ng day
->>> is fine to me to attend the meeting.
->>
->> I just sent another email now that I am back to work. Did you see it?
->> I guess you subscribed to the ML but just in case: https://lists.01.org/=
-hyperkitty/list/mptcp(a)lists.01.org/thread/SHULDCJUWQJX7CWUH6N66MFTRW6TAOD=
-S/
->>
->> The best would be to have a single meeting, once per week where everybody
->> can join. But it would always be difficult for people of some time zones=
-...
->> I know it is very late and not in the working hours but do you think hav=
-ing
->> the meeting one hour sooner (11pm your time) would be OK for you? Maybe =
-not
->> every week of course. Don't be afraid to say no!
->>
-> =
+Patch 4 includes some basic functional tests
 
-> 11pm is fine to me. Hope it is not too early to other people.
+v2 -> v3:
+ - changed token iterator APIs: use RCU && get_sock
+ - tests cleanup
 
-Thank you for your reply!
+v1 -> v2
+ - fixed dump issue on large dump
+ - use flags for fallback, etc
+ - patch 4
 
-Great, thank you being available that late, that will be easier with =
+Paolo Abeni (4):
+  inet_diag: support for wider protocol numbers
+  mptcp: add msk interations helper
+  mptcp: add MPTCP socket diag interface
+  selftests/mptcp: add diag interface tests
 
-only one meeting! Because I didn't receive answers from everybody and =
+ include/uapi/linux/inet_diag.h                |   1 +
+ include/uapi/linux/mptcp.h                    |  17 ++
+ net/core/sock.c                               |   1 +
+ net/ipv4/inet_diag.c                          |  63 +++++--
+ net/mptcp/Kconfig                             |   4 +
+ net/mptcp/Makefile                            |   2 +
+ net/mptcp/mptcp_diag.c                        | 169 ++++++++++++++++++
+ net/mptcp/protocol.h                          |   2 +
+ net/mptcp/token.c                             |  59 ++++++
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ tools/testing/selftests/net/mptcp/diag.sh     | 122 +++++++++++++
+ .../selftests/net/mptcp/mptcp_connect.c       |  22 ++-
+ 12 files changed, 442 insertions(+), 22 deletions(-)
+ create mode 100644 net/mptcp/mptcp_diag.c
+ create mode 100755 tools/testing/selftests/net/mptcp/diag.sh
 
-people in the US are likely sleeping now, I propose to keep the meeting =
-
-this evening at the same time as last week. Sorry for that, do not feel =
-
-forced to join if it is too late for you!
-
-If it is OK with everybody, the next meeting would be scheduled one hour =
-
-sooner.
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4286335379870520871==--
+2.26.2
+
+--===============0570134696219865874==--
