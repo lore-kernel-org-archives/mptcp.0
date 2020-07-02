@@ -1,103 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============6030910266420491893=="
+Content-Type: multipart/mixed; boundary="===============0548236082720883799=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 1/4] inet_diag: support for wider protocol
- numbers
-Date: Thu, 02 Jul 2020 14:23:29 -0700
-Message-ID: <20200702212329.GJ97871@MacBook-Pro-64.local>
-In-Reply-To: f19a6baeacbbcdef48e673c7dade96a023f41f45.1593192703.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v3 0/4] mptcp: msk diag support
+Date: Thu, 02 Jul 2020 15:06:10 -0700
+Message-ID: <alpine.OSX.2.23.453.2007021501270.56922@pranalij-mobl.amr.corp.intel.com>
+In-Reply-To: cover.1593689328.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4904
+X-UID: 4905
 
---===============6030910266420491893==
+--===============0548236082720883799==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 06/26/20 - 19:33, Paolo Abeni wrote:
-> After commit bf9765145b85 ("sock: Make sk_protocol a 16-bit value")
-> the current size of 'sdiag_protocol' is not sufficient to represent
-> the possible protocol values.
-> =
 
-> This change introduces a new inet diag request attribute to let
-> user space specify the relevant protocol number using u32 values.
-> =
+On Thu, 2 Jul 2020, Paolo Abeni wrote:
 
-> The attribute is parsed by inet diag core on get/dump command
-> and the extended protocol value, if available, is preferred to
-> 'sdiag_protocol' to lookup the diag handler.
-> =
+> This introduces basic mptcp sockets diag support.
+> As IPPROTO_MPTCP excedes 8 bits, we need some changes at the inet_diag le=
+vel:
+> a new attribute is introduced to allow user-space providing u32 protocol
+> values.
+>
+> Patch 2 introduces new token APIs to allow traversing the existing msks, =
+while
+> patch 3 bring in the actual diag implementation.
+>
+> Patch 4 includes some basic functional tests
+>
+> v2 -> v3:
+> - changed token iterator APIs: use RCU && get_sock
+> - tests cleanup
 
-> The parse attributed are exposed to all the diag handlers via
-> the cb->data.
-> =
+Thanks for the v3 fixes Paolo, my concerns in v2 are addressed. There is =
 
-> Note that inet_diag_dump_one_icsk() is left unmodified, as it
-> will not be used by protocol using the extended attribute.
-> =
+the proto range checking issue Christoph noted in patch 1 to fix before =
 
-> Suggested-by: David S. Miller <davem(a)davemloft.net>
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  include/uapi/linux/inet_diag.h |  1 +
->  net/core/sock.c                |  1 +
->  net/ipv4/inet_diag.c           | 63 +++++++++++++++++++++++++---------
->  3 files changed, 48 insertions(+), 17 deletions(-)
-> =
-
-> diff --git a/include/uapi/linux/inet_diag.h b/include/uapi/linux/inet_dia=
-g.h
-> index e6f183ee8417..5ba122c1949a 100644
-> --- a/include/uapi/linux/inet_diag.h
-> +++ b/include/uapi/linux/inet_diag.h
-> @@ -65,6 +65,7 @@ enum {
->  	INET_DIAG_REQ_NONE,
->  	INET_DIAG_REQ_BYTECODE,
->  	INET_DIAG_REQ_SK_BPF_STORAGES,
-> +	INET_DIAG_REQ_PROTOCOL,
->  	__INET_DIAG_REQ_MAX,
->  };
->  =
-
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 6c4acf1f0220..b359e29bb737 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -3573,6 +3573,7 @@ int sock_load_diag_module(int family, int protocol)
->  #ifdef CONFIG_INET
->  	if (family =3D=3D AF_INET &&
->  	    protocol !=3D IPPROTO_RAW &&
-> +	    protocol < MAX_INET_PROTOS &&
->  	    !rcu_access_pointer(inet_protos[protocol]))
->  		return -ENOENT;
->  #endif
-> diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
-> index 125f4f8a36b4..a3a7ef3fada6 100644
-> --- a/net/ipv4/inet_diag.c
-> +++ b/net/ipv4/inet_diag.c
-> @@ -52,6 +52,9 @@ static DEFINE_MUTEX(inet_diag_table_mutex);
->  =
-
->  static const struct inet_diag_handler *inet_diag_lock_handler(int proto)
->  {
-> +	if (proto >=3D IPPROTO_MAX)
-> +		return ERR_PTR(-ENOENT);
-
-Just here by email so that it's not lost in IRC,... and so that it is picked
-up in patchwork:
+merging.
 
 
-Cfr. https://github.com/multipath-tcp/mptcp_net-next/issues/44
-
-This needs to be if (proto < 0 || proto >=3D IPPROTO_MAX).
-
-I tried that out and my syzkaller reproducers are no more panicking the
-system.
+Mat
 
 
-Christoph
+>
+> v1 -> v2
+> - fixed dump issue on large dump
+> - use flags for fallback, etc
+> - patch 4
+>
+> Paolo Abeni (4):
+>  inet_diag: support for wider protocol numbers
+>  mptcp: add msk interations helper
+>  mptcp: add MPTCP socket diag interface
+>  selftests/mptcp: add diag interface tests
+>
+> include/uapi/linux/inet_diag.h                |   1 +
+> include/uapi/linux/mptcp.h                    |  17 ++
+> net/core/sock.c                               |   1 +
+> net/ipv4/inet_diag.c                          |  63 +++++--
+> net/mptcp/Kconfig                             |   4 +
+> net/mptcp/Makefile                            |   2 +
+> net/mptcp/mptcp_diag.c                        | 169 ++++++++++++++++++
+> net/mptcp/protocol.h                          |   2 +
+> net/mptcp/token.c                             |  59 ++++++
+> tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+> tools/testing/selftests/net/mptcp/diag.sh     | 122 +++++++++++++
+> .../selftests/net/mptcp/mptcp_connect.c       |  22 ++-
+> 12 files changed, 442 insertions(+), 22 deletions(-)
+> create mode 100644 net/mptcp/mptcp_diag.c
+> create mode 100755 tools/testing/selftests/net/mptcp/diag.sh
+>
+> -- =
 
---===============6030910266420491893==--
+> 2.26.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
+
+--
+Mat Martineau
+Intel
+--===============0548236082720883799==--
