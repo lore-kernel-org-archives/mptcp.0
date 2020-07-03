@@ -1,86 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============0548236082720883799=="
+Content-Type: multipart/mixed; boundary="===============0133011874414407733=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 0/4] mptcp: msk diag support
-Date: Thu, 02 Jul 2020 15:06:10 -0700
-Message-ID: <alpine.OSX.2.23.453.2007021501270.56922@pranalij-mobl.amr.corp.intel.com>
-In-Reply-To: cover.1593689328.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH net] mptcp: fix DSS map generation on fin
+ retransmission
+Date: Fri, 03 Jul 2020 18:06:04 +0200
+Message-ID: <1fa7663816c25b247db50501cf3d9df01729dc28.1593792286.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4905
+X-UID: 4908
 
---===============0548236082720883799==
+--===============0133011874414407733==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+The RFC 8684 mandates that no-data DATA FIN packets should carry
+a DSS with 0 sequence number and data len equal to 1. Currently,
+on FIN retransmission we re-use the existing mapping; if the previous
+fin transmission was part of a partially acked data packet, we could
+end-up writing in the egress packet a non-compliant DSS.
 
-On Thu, 2 Jul 2020, Paolo Abeni wrote:
+The above will be detected by a "Bad mapping" warning on the receiver
+side.
 
-> This introduces basic mptcp sockets diag support.
-> As IPPROTO_MPTCP excedes 8 bits, we need some changes at the inet_diag le=
-vel:
-> a new attribute is introduced to allow user-space providing u32 protocol
-> values.
->
-> Patch 2 introduces new token APIs to allow traversing the existing msks, =
-while
-> patch 3 bring in the actual diag implementation.
->
-> Patch 4 includes some basic functional tests
->
-> v2 -> v3:
-> - changed token iterator APIs: use RCU && get_sock
-> - tests cleanup
+This change addresses the issue explicitly checking for 0 len packet
+when adding the DATA_FIN option.
 
-Thanks for the v3 fixes Paolo, my concerns in v2 are addressed. There is =
+Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packe=
+ts")
+Reported-by: syzbot+42a07faa5923cfaeb9c9(a)syzkaller.appspotmail.com
+Tested-by: Christoph Paasch <cpaasch(a)apple.com>
+Reviewed-by: Christoph Paasch <cpaasch(a)apple.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-the proto range checking issue Christoph noted in patch 1 to fix before =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index df9a51425c6f..8f940be42f98 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -449,9 +449,9 @@ static bool mptcp_established_options_mp(struct sock *s=
+k, struct sk_buff *skb,
+ }
+ =
 
-merging.
+ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
+-				 struct mptcp_ext *ext)
++				 struct sk_buff *skb, struct mptcp_ext *ext)
+ {
+-	if (!ext->use_map) {
++	if (!ext->use_map || !skb->len) {
+ 		/* RFC6824 requires a DSS mapping with specific values
+ 		 * if DATA_FIN is set but no data payload is mapped
+ 		 */
+@@ -503,7 +503,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ 			opts->ext_copy =3D *mpext;
+ =
 
+ 		if (skb && tcp_fin && subflow->data_fin_tx_enable)
+-			mptcp_write_data_fin(subflow, &opts->ext_copy);
++			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
+ 		ret =3D true;
+ 	}
+ =
 
-Mat
+-- =
 
+2.26.2
 
->
-> v1 -> v2
-> - fixed dump issue on large dump
-> - use flags for fallback, etc
-> - patch 4
->
-> Paolo Abeni (4):
->  inet_diag: support for wider protocol numbers
->  mptcp: add msk interations helper
->  mptcp: add MPTCP socket diag interface
->  selftests/mptcp: add diag interface tests
->
-> include/uapi/linux/inet_diag.h                |   1 +
-> include/uapi/linux/mptcp.h                    |  17 ++
-> net/core/sock.c                               |   1 +
-> net/ipv4/inet_diag.c                          |  63 +++++--
-> net/mptcp/Kconfig                             |   4 +
-> net/mptcp/Makefile                            |   2 +
-> net/mptcp/mptcp_diag.c                        | 169 ++++++++++++++++++
-> net/mptcp/protocol.h                          |   2 +
-> net/mptcp/token.c                             |  59 ++++++
-> tools/testing/selftests/net/mptcp/Makefile    |   2 +-
-> tools/testing/selftests/net/mptcp/diag.sh     | 122 +++++++++++++
-> .../selftests/net/mptcp/mptcp_connect.c       |  22 ++-
-> 12 files changed, 442 insertions(+), 22 deletions(-)
-> create mode 100644 net/mptcp/mptcp_diag.c
-> create mode 100755 tools/testing/selftests/net/mptcp/diag.sh
->
-> -- =
-
-> 2.26.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
-
---
-Mat Martineau
-Intel
---===============0548236082720883799==--
+--===============0133011874414407733==--
