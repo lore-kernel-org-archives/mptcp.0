@@ -1,60 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============5074002669129008206=="
+Content-Type: multipart/mixed; boundary="===============6334591836940291502=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 0/4] mptcp: msk diag support
-Date: Fri, 03 Jul 2020 21:11:21 +0200
-Message-ID: <18fabf01-df03-922e-e6c7-3331c5acc356@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2007021501270.56922@pranalij-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] diag: fix use-after-free Read in
+ inet_diag_lock_handler
+Date: Fri, 03 Jul 2020 21:21:52 +0200
+Message-ID: <34e3c4b5-38cb-9fc9-d476-17badf1736c3@tessares.net>
+In-Reply-To: 20200703190656.2611535-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4910
+X-UID: 4911
 
---===============5074002669129008206==
+--===============6334591836940291502==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+Hi Christoph, Paolo
 
-On 03/07/2020 00:06, Mat Martineau wrote:
+On 03/07/2020 21:06, Matthieu Baerts wrote:
+> From: Christoph Paasch <cpaasch(a)apple.com>
 > =
 
-> On Thu, 2 Jul 2020, Paolo Abeni wrote:
+> Syzkaller reported this:
 > =
 
->> This introduces basic mptcp sockets diag support.
->> As IPPROTO_MPTCP excedes 8 bits, we need some changes at the inet_diag =
-
->> level:
->> a new attribute is introduced to allow user-space providing u32 protocol
->> values.
->>
->> Patch 2 introduces new token APIs to allow traversing the existing =
-
->> msks, while
->> patch 3 bring in the actual diag implementation.
->>
->> Patch 4 includes some basic functional tests
->>
->> v2 -> v3:
->> - changed token iterator APIs: use RCU && get_sock
->> - tests cleanup
+> (...)
 > =
 
-> Thanks for the v3 fixes Paolo, my concerns in v2 are addressed. There is =
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/44
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-> the proto range checking issue Christoph noted in patch 1 to fix before =
+Thank you for the patch and the review!
 
-> merging.
+Just applied:
 
-Thank you for the patches and the reviews!
+- 679d6f510486: "squashed" in "inet_diag: support for wider protocol =
 
-These patches have been added at the end.
+numbers"
+- 2596401ff92a: "Signed-off-by" + "Co-developed-by"
+- 2740cccad3aa + 27bff9d83d8c + 1be53f1b75d5 + 098f1c381adc: tg:msg: =
 
-Tests are re-running with INET_DIAG enabled. Export is going to be done =
+signoff of the author at the end
+- 2051bf32b07e..0ec7680b7e39: result
 
-soon after.
+Tests + export are in progress.
 
 Cheers,
 Matt
@@ -62,4 +53,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============5074002669129008206==--
+--===============6334591836940291502==--
