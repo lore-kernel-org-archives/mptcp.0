@@ -1,89 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============8326402312494824146=="
+Content-Type: multipart/mixed; boundary="===============6902301390297632749=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 3/3] mptcp: support IPV6_V6ONLY setsockopt
-Date: Sun, 05 Jul 2020 01:30:17 +0200
-Message-ID: <20200704233017.20831-4-fw@strlen.de>
+Subject: [MPTCP] Re: [PATCH net-next 0/3] mptcp: add
+ REUSEADDR/REUSEPORT/V6ONLY setsockopt support
+Date: Sat, 04 Jul 2020 17:57:24 -0700
+Message-ID: <20200704.175724.1724928333689332249.davem@davemloft.net>
 In-Reply-To: 20200704233017.20831-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 4917
+X-UID: 4919
 
---===============8326402312494824146==
+--===============6902301390297632749==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Without this, Opensshd fails to open an ipv6 socket listening
-socket:
-  error: setsockopt IPV6_V6ONLY: Operation not supported
-  error: Bind to port 22 on :: failed: Address already in use.
+From: Florian Westphal <fw(a)strlen.de>
+Date: Sun,  5 Jul 2020 01:30:14 +0200
 
-Opensshd opens an ipv4 and and ipv6 listening socket, but because
-IPV6_V6ONLY setsockopt fails, the port number is already in use.
+> restarting an mptcp-patched sshd yields following error:
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+>   sshd: error: Bind to port 22 on 0.0.0.0 failed: Address already in use.
+>   sshd: error: setsockopt IPV6_V6ONLY: Operation not supported
+>   sshd: error: Bind to port 22 on :: failed: Address already in use.
+>   sshd: fatal: Cannot bind any address.
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 612f6d49f1bb..3ab060e30038 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1632,6 +1632,33 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_=
-sock *msk, int optname,
- 	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen=
-);
- }
- =
+> This series adds support for the needed setsockopts:
+> =
 
-+static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
-+			       char __user *optval, unsigned int optlen)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	int ret =3D -EOPNOTSUPP;
-+	struct socket *ssock;
-+
-+	switch (optname) {
-+	case IPV6_V6ONLY:
-+		lock_sock(sk);
-+		ssock =3D __mptcp_nmpc_socket(msk);
-+		if (!ssock) {
-+			release_sock(sk);
-+			return -EINVAL;
-+		}
-+
-+		ret =3D tcp_setsockopt(ssock->sk, SOL_IPV6, optname, optval, optlen);
-+		if (ret =3D=3D 0)
-+			sk->sk_ipv6only =3D ssock->sk->sk_ipv6only;
-+
-+		release_sock(sk);
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
- static int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 			    char __user *optval, unsigned int optlen)
- {
-@@ -1655,6 +1682,9 @@ static int mptcp_setsockopt(struct sock *sk, int leve=
-l, int optname,
- 	if (ssk)
- 		return tcp_setsockopt(ssk, level, optname, optval, optlen);
- =
+> First patch skips the generic SOL_SOCKET handler for MPTCP:
+> in mptcp case, the setsockopt needs to alter the tcp socket, not the mptcp
+> parent socket.
+> =
 
-+	if (level =3D=3D SOL_IPV6)
-+		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
-+
- 	return -EOPNOTSUPP;
- }
- =
+> Second patch adds minimal SOL_SOCKET support: REUSEPORT and REUSEADDR.
+> Rest is still handled by the generic SOL_SOCKET code.
+> =
 
--- =
+> Last patch adds IPV6ONLY support.  This makes ipv6 work for openssh:
+> It creates two listening sockets, before this patch, binding the ipv6
+> socket will fail because the port is already bound by the ipv4 one.
 
-2.26.2
-
---===============8326402312494824146==--
+Series applied, thanks Florian.
+--===============6902301390297632749==--
