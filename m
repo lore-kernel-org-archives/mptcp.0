@@ -1,48 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============6902301390297632749=="
+Content-Type: multipart/mixed; boundary="===============6400913270472057678=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/3] mptcp: add
- REUSEADDR/REUSEPORT/V6ONLY setsockopt support
-Date: Sat, 04 Jul 2020 17:57:24 -0700
-Message-ID: <20200704.175724.1724928333689332249.davem@davemloft.net>
-In-Reply-To: 20200704233017.20831-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH v3 0/4] mptcp: msk diag support
+Date: Mon, 06 Jul 2020 11:38:27 +0200
+Message-ID: <be82f2e7e7109a0e9f32180124ead2b080e052f3.camel@redhat.com>
+In-Reply-To: 18fabf01-df03-922e-e6c7-3331c5acc356@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 4919
+X-UID: 4924
 
---===============6902301390297632749==
+--===============6400913270472057678==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Florian Westphal <fw(a)strlen.de>
-Date: Sun,  5 Jul 2020 01:30:14 +0200
-
-> restarting an mptcp-patched sshd yields following error:
+On Fri, 2020-07-03 at 21:11 +0200, Matthieu Baerts wrote:
+> Hi Paolo, Mat,
 > =
 
->   sshd: error: Bind to port 22 on 0.0.0.0 failed: Address already in use.
->   sshd: error: setsockopt IPV6_V6ONLY: Operation not supported
->   sshd: error: Bind to port 22 on :: failed: Address already in use.
->   sshd: fatal: Cannot bind any address.
+> On 03/07/2020 00:06, Mat Martineau wrote:
+> > On Thu, 2 Jul 2020, Paolo Abeni wrote:
+> > =
+
+> > > This introduces basic mptcp sockets diag support.
+> > > As IPPROTO_MPTCP excedes 8 bits, we need some changes at the inet_dia=
+g =
+
+> > > level:
+> > > a new attribute is introduced to allow user-space providing u32 proto=
+col
+> > > values.
+> > > =
+
+> > > Patch 2 introduces new token APIs to allow traversing the existing =
+
+> > > msks, while
+> > > patch 3 bring in the actual diag implementation.
+> > > =
+
+> > > Patch 4 includes some basic functional tests
+> > > =
+
+> > > v2 -> v3:
+> > > - changed token iterator APIs: use RCU && get_sock
+> > > - tests cleanup
+> > =
+
+> > Thanks for the v3 fixes Paolo, my concerns in v2 are addressed. There i=
+s =
+
+> > the proto range checking issue Christoph noted in patch 1 to fix before =
+
+> > merging.
 > =
 
-> This series adds support for the needed setsockopts:
+> Thank you for the patches and the reviews!
 > =
 
-> First patch skips the generic SOL_SOCKET handler for MPTCP:
-> in mptcp case, the setsockopt needs to alter the tcp socket, not the mptcp
-> parent socket.
+> These patches have been added at the end.
 > =
 
-> Second patch adds minimal SOL_SOCKET support: REUSEPORT and REUSEADDR.
-> Rest is still handled by the generic SOL_SOCKET code.
-> =
+> Tests are re-running with INET_DIAG enabled. Export is going to be done =
 
-> Last patch adds IPV6ONLY support.  This makes ipv6 work for openssh:
-> It creates two listening sockets, before this patch, binding the ipv6
-> socket will fail because the port is already bound by the ipv4 one.
+> soon after.
 
-Series applied, thanks Florian.
---===============6902301390297632749==--
+Note that diag self-tests requiere a version of iproute2 including the
+pending 2 patches, otherwise tests will be skipped - so no failure but
+also no tests.
+
+Thanks,
+
+Paolo
+
+--===============6400913270472057678==--
