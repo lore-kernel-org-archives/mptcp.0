@@ -1,77 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============0404661646635078878=="
+Content-Type: multipart/mixed; boundary="===============7773933648366271738=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3 0/4] mptcp: msk diag support
-Date: Mon, 06 Jul 2020 12:59:29 +0200
-Message-ID: <beff77e4-84da-ddab-0394-bd0a60b53ce6@tessares.net>
-In-Reply-To: be82f2e7e7109a0e9f32180124ead2b080e052f3.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next] selftests: mptcp: capture pcap on both sides
+Date: Mon, 06 Jul 2020 14:44:08 +0200
+Message-ID: <20200706124408.3118005-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4925
+X-UID: 4926
 
---===============0404661646635078878==
+--===============7773933648366271738==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+When investigating performance issues that involve latency / loss /
+reordering it is useful to have the pcap from the sender-side as it
+allows to easier infer the state of the sender's congestion-control,
+loss-recovery, etc.
 
-On 06/07/2020 11:38, Paolo Abeni wrote:
-> On Fri, 2020-07-03 at 21:11 +0200, Matthieu Baerts wrote:
->> Hi Paolo, Mat,
->>
->> On 03/07/2020 00:06, Mat Martineau wrote:
->>> On Thu, 2 Jul 2020, Paolo Abeni wrote:
->>>
->>>> This introduces basic mptcp sockets diag support.
->>>> As IPPROTO_MPTCP excedes 8 bits, we need some changes at the inet_diag
->>>> level:
->>>> a new attribute is introduced to allow user-space providing u32 protoc=
-ol
->>>> values.
->>>>
->>>> Patch 2 introduces new token APIs to allow traversing the existing
->>>> msks, while
->>>> patch 3 bring in the actual diag implementation.
->>>>
->>>> Patch 4 includes some basic functional tests
->>>>
->>>> v2 -> v3:
->>>> - changed token iterator APIs: use RCU && get_sock
->>>> - tests cleanup
->>>
->>> Thanks for the v3 fixes Paolo, my concerns in v2 are addressed. There is
->>> the proto range checking issue Christoph noted in patch 1 to fix before
->>> merging.
->>
->> Thank you for the patches and the reviews!
->>
->> These patches have been added at the end.
->>
->> Tests are re-running with INET_DIAG enabled. Export is going to be done
->> soon after.
-> =
+Allow the selftests to capture a pcap on both sender and receiver so
+that this information is not lost when reproducing.
 
-> Note that diag self-tests requiere a version of iproute2 including the
-> pending 2 patches, otherwise tests will be skipped - so no failure but
-> also no tests.
+This patch also improves the file names. Instead of:
 
-Yes, my CI complained about the skipped test :)
+  ns4-5ee79a56-X4O6gS-ns3-5ee79a56-X4O6gS-MPTCP-MPTCP-10.0.3.1.pcap
 
-I am currently ignoring the skipped test: =
+We now have something like for the same test:
 
-https://github.com/multipath-tcp/mptcp_net-next/commit/f7ccd2f70239265cd13d=
-6017554a025a44e68d8a
+  5ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-connector.pcap
+  5ee79a56-X4O6gS-ns3-ns4-MPTCP-MPTCP-10.0.3.1-10030-listener.pcap
 
-Once the two others patches are merged in iproute2 repo, I will make =
+It was a connection from ns3 to ns4, better to start with ns3 then. The
+port is also added, easier to find the trace we want.
 
-sure this new selftest is correctly tested.
+Co-developed-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Cheers
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index 8f7145c413b9..c0589e071f20 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -395,10 +395,14 @@ do_transfer()
+ 			capuser=3D"-Z $SUDO_USER"
+ 		fi
+ =
+
+-		local capfile=3D"${listener_ns}-${connector_ns}-${cl_proto}-${srv_proto}=
+-${connect_addr}.pcap"
++		local capfile=3D"${rndh}-${connector_ns:0:3}-${listener_ns:0:3}-${cl_pro=
+to}-${srv_proto}-${connect_addr}-${port}"
++		local capopt=3D"-i any -s 65535 -B 32768 ${capuser}"
+ =
+
+-		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -=
+w $capfile > "$capout" 2>&1 &
+-		local cappid=3D$!
++		ip netns exec ${listener_ns}  tcpdump ${capopt} -w "${capfile}-listener.=
+pcap"  >> "${capout}" 2>&1 &
++		local cappid_listener=3D$!
++
++		ip netns exec ${connector_ns} tcpdump ${capopt} -w "${capfile}-connector=
+.pcap" >> "${capout}" 2>&1 &
++		local cappid_connector=3D$!
+ =
+
+ 		sleep 1
+ 	fi
+@@ -423,7 +427,8 @@ do_transfer()
+ =
+
+ 	if $capture; then
+ 		sleep 1
+-		kill $cappid
++		kill ${cappid_listener}
++		kill ${cappid_connector}
+ 	fi
+ =
+
+ 	local duration
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0404661646635078878==--
+2.27.0
+
+--===============7773933648366271738==--
