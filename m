@@ -1,42 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============3031977583665781801=="
+Content-Type: multipart/mixed; boundary="===============6131319709362947776=="
 MIME-Version: 1.0
 From: Eric Biggers <ebiggers at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 0/4] crypto: add sha256() function
-Date: Tue, 07 Jul 2020 11:58:14 -0700
-Message-ID: <20200707185818.80177-1-ebiggers@kernel.org>
+Subject: [MPTCP] [PATCH 1/4] crypto: lib/sha256 - add sha256() function
+Date: Tue, 07 Jul 2020 11:58:15 -0700
+Message-ID: <20200707185818.80177-2-ebiggers@kernel.org>
+In-Reply-To: 20200707185818.80177-1-ebiggers@kernel.org
 X-Status: 
 X-Keywords:                  
-X-UID: 4937
+X-UID: 4938
 
---===============3031977583665781801==
+--===============6131319709362947776==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series adds a function sha256() to the sha256 library so that users
-who want to compute a hash in one step can just call sha256() instead of
-sha256_init() + sha256_update() + sha256_final().
+From: Eric Biggers <ebiggers(a)google.com>
 
-Patches 2-4 then convert some users to use it.
+Add a function sha256() which computes a SHA-256 digest in one step,
+combining sha256_init() + sha256_update() + sha256_final().
 
-Eric Biggers (4):
-  crypto: lib/sha256 - add sha256() function
-  efi: use sha256() instead of open coding
-  mptcp: use sha256() instead of open coding
-  ASoC: cros_ec_codec: use sha256() instead of open coding
+This is similar to how we also have blake2s().
 
- drivers/firmware/efi/embedded-firmware.c |  9 +++-----
- include/crypto/sha.h                     |  1 +
- lib/crypto/sha256.c                      | 10 +++++++++
- net/mptcp/crypto.c                       | 15 +++----------
- sound/soc/codecs/cros_ec_codec.c         | 27 ++----------------------
- 5 files changed, 19 insertions(+), 43 deletions(-)
+Signed-off-by: Eric Biggers <ebiggers(a)google.com>
+---
+ include/crypto/sha.h |  1 +
+ lib/crypto/sha256.c  | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
 
+diff --git a/include/crypto/sha.h b/include/crypto/sha.h
+index 10753ff71d46..4ff3da816630 100644
+--- a/include/crypto/sha.h
++++ b/include/crypto/sha.h
+@@ -147,6 +147,7 @@ static inline void sha256_init(struct sha256_state *sct=
+x)
+ }
+ void sha256_update(struct sha256_state *sctx, const u8 *data, unsigned int=
+ len);
+ void sha256_final(struct sha256_state *sctx, u8 *out);
++void sha256(const u8 *data, unsigned int len, u8 *out);
+ =
 
-base-commit: 57c8aa43b9f272c382c253573c82be5cb68fe22d
+ static inline void sha224_init(struct sha256_state *sctx)
+ {
+diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
+index 2e621697c5c3..2321f6cb322f 100644
+--- a/lib/crypto/sha256.c
++++ b/lib/crypto/sha256.c
+@@ -280,4 +280,14 @@ void sha224_final(struct sha256_state *sctx, u8 *out)
+ }
+ EXPORT_SYMBOL(sha224_final);
+ =
+
++void sha256(const u8 *data, unsigned int len, u8 *out)
++{
++	struct sha256_state sctx;
++
++	sha256_init(&sctx);
++	sha256_update(&sctx, data, len);
++	sha256_final(&sctx, out);
++}
++EXPORT_SYMBOL(sha256);
++
+ MODULE_LICENSE("GPL");
 -- =
 
 2.27.0
 
---===============3031977583665781801==--
+--===============6131319709362947776==--
