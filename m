@@ -1,97 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============7213205668911064312=="
+Content-Type: multipart/mixed; boundary="===============8193285232308635411=="
 MIME-Version: 1.0
-From: Eric Biggers <ebiggers at kernel.org>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 3/4] mptcp: use sha256() instead of open coding
-Date: Tue, 07 Jul 2020 11:58:17 -0700
-Message-ID: <20200707185818.80177-4-ebiggers@kernel.org>
-In-Reply-To: 20200707185818.80177-1-ebiggers@kernel.org
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix DSS map generation on fin
+ retransmission
+Date: Tue, 07 Jul 2020 15:28:21 -0700
+Message-ID: <20200707.152821.167533135677461439.davem@davemloft.net>
+In-Reply-To: 1fa7663816c25b247db50501cf3d9df01729dc28.1593792286.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4939
+X-UID: 4940
 
---===============7213205668911064312==
+--===============8193285232308635411==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Eric Biggers <ebiggers(a)google.com>
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Fri,  3 Jul 2020 18:06:04 +0200
 
-Now that there's a function that calculates the SHA-256 digest of a
-buffer in one step, use it instead of sha256_init() + sha256_update() +
-sha256_final().
+> The RFC 8684 mandates that no-data DATA FIN packets should carry
+> a DSS with 0 sequence number and data len equal to 1. Currently,
+> on FIN retransmission we re-use the existing mapping; if the previous
+> fin transmission was part of a partially acked data packet, we could
+> end-up writing in the egress packet a non-compliant DSS.
+> =
 
-Cc: mptcp(a)lists.01.org
-Cc: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Cc: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Eric Biggers <ebiggers(a)google.com>
----
- net/mptcp/crypto.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+> The above will be detected by a "Bad mapping" warning on the receiver
+> side.
+> =
 
-diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
-index 3d980713a9e2..82bd2b54d741 100644
---- a/net/mptcp/crypto.c
-+++ b/net/mptcp/crypto.c
-@@ -32,11 +32,8 @@ void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
- {
- 	__be32 mptcp_hashed_key[SHA256_DIGEST_WORDS];
- 	__be64 input =3D cpu_to_be64(key);
--	struct sha256_state state;
- =
+> This change addresses the issue explicitly checking for 0 len packet
+> when adding the DATA_FIN option.
+> =
 
--	sha256_init(&state);
--	sha256_update(&state, (__force u8 *)&input, sizeof(input));
--	sha256_final(&state, (u8 *)mptcp_hashed_key);
-+	sha256((__force u8 *)&input, sizeof(input), (u8 *)mptcp_hashed_key);
- =
+> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data pac=
+kets")
+> Reported-by: syzbot+42a07faa5923cfaeb9c9(a)syzkaller.appspotmail.com
+> Tested-by: Christoph Paasch <cpaasch(a)apple.com>
+> Reviewed-by: Christoph Paasch <cpaasch(a)apple.com>
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
- 	if (token)
- 		*token =3D be32_to_cpu(mptcp_hashed_key[0]);
-@@ -47,7 +44,6 @@ void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
- void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hma=
-c)
- {
- 	u8 input[SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE];
--	struct sha256_state state;
- 	u8 key1be[8];
- 	u8 key2be[8];
- 	int i;
-@@ -67,13 +63,10 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg,=
- int len, void *hmac)
- =
-
- 	memcpy(&input[SHA256_BLOCK_SIZE], msg, len);
- =
-
--	sha256_init(&state);
--	sha256_update(&state, input, SHA256_BLOCK_SIZE + len);
--
- 	/* emit sha256(K1 || msg) on the second input block, so we can
- 	 * reuse 'input' for the last hashing
- 	 */
--	sha256_final(&state, &input[SHA256_BLOCK_SIZE]);
-+	sha256(input, SHA256_BLOCK_SIZE + len, &input[SHA256_BLOCK_SIZE]);
- =
-
- 	/* Prepare second part of hmac */
- 	memset(input, 0x5C, SHA256_BLOCK_SIZE);
-@@ -82,9 +75,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, i=
-nt len, void *hmac)
- 	for (i =3D 0; i < 8; i++)
- 		input[i + 8] ^=3D key2be[i];
- =
-
--	sha256_init(&state);
--	sha256_update(&state, input, SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE);
--	sha256_final(&state, (u8 *)hmac);
-+	sha256(input, SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE, hmac);
- }
- =
-
- #ifdef CONFIG_MPTCP_HMAC_TEST
--- =
-
-2.27.0
-
---===============7213205668911064312==--
+Applied and queued up for -stable, thank you.
+--===============8193285232308635411==--
