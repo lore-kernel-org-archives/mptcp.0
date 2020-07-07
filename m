@@ -1,64 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============3273631969668591500=="
+Content-Type: multipart/mixed; boundary="===============3031977583665781801=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Eric Biggers <ebiggers at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] Squash-to: "mptcp: add MPTCP socket diag interface"
-Date: Tue, 07 Jul 2020 19:13:27 +0200
-Message-ID: <20200707171327.180346-1-pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 0/4] crypto: add sha256() function
+Date: Tue, 07 Jul 2020 11:58:14 -0700
+Message-ID: <20200707185818.80177-1-ebiggers@kernel.org>
 X-Status: 
 X-Keywords:                  
-X-UID: 4936
+X-UID: 4937
 
---===============3273631969668591500==
+--===============3031977583665781801==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Davide reported build issues when compiling without
-CONFIG_MPTCP_KUNIT_TESTS. We need to always export
-mptcp_token_get_sock(), for diag's sake.
+This series adds a function sha256() to the sha256 library so that users
+who want to compute a hash in one step can just call sha256() instead of
+sha256_init() + sha256_update() + sha256_final().
 
-The following text should be inserted into the squash to
-commit:
-"""
-Additionally export mptcp_token_get_sock(), as it
-also will be used by the diag module.
-"""
+Patches 2-4 then convert some users to use it.
 
-just before:
-"""
-It will be used by the next patch, but keep the API generic,
-as we plan to use this later for PM's sake.
-"""
+Eric Biggers (4):
+  crypto: lib/sha256 - add sha256() function
+  efi: use sha256() instead of open coding
+  mptcp: use sha256() instead of open coding
+  ASoC: cros_ec_codec: use sha256() instead of open coding
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/token.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/embedded-firmware.c |  9 +++-----
+ include/crypto/sha.h                     |  1 +
+ lib/crypto/sha256.c                      | 10 +++++++++
+ net/mptcp/crypto.c                       | 15 +++----------
+ sound/soc/codecs/cros_ec_codec.c         | 27 ++----------------------
+ 5 files changed, 19 insertions(+), 43 deletions(-)
 
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 6d4fe70f7d30..7d8106026081 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -238,6 +238,7 @@ struct mptcp_sock *mptcp_token_get_sock(u32 token)
- 	rcu_read_unlock();
- 	return msk;
- }
-+EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
- =
 
- /**
-  * mptcp_token_iter_next - iterate over the token container from given pos
-@@ -371,7 +372,6 @@ void __init mptcp_token_init(void)
- EXPORT_SYMBOL_GPL(mptcp_token_new_request);
- EXPORT_SYMBOL_GPL(mptcp_token_new_connect);
- EXPORT_SYMBOL_GPL(mptcp_token_accept);
--EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
- EXPORT_SYMBOL_GPL(mptcp_token_destroy_request);
- EXPORT_SYMBOL_GPL(mptcp_token_destroy);
- #endif
+base-commit: 57c8aa43b9f272c382c253573c82be5cb68fe22d
 -- =
 
-2.18.1
+2.27.0
 
---===============3273631969668591500==--
+--===============3031977583665781801==--
