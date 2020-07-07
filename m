@@ -1,79 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============5560232411731475557=="
+Content-Type: multipart/mixed; boundary="===============3273631969668591500=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: WARNING in warn_bad_map
-Date: Tue, 07 Jul 2020 18:39:04 +0200
-Message-ID: <e612e676d55bae63ed20b7ad85262a44895bb346.camel@redhat.com>
-In-Reply-To: CACT4Y+Yiskcj-0vfH9PJ0xWxVuqUNhPqT5+0exY8jH-tFvnUCQ@mail.gmail.com
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: add MPTCP socket diag interface"
+Date: Tue, 07 Jul 2020 19:13:27 +0200
+Message-ID: <20200707171327.180346-1-pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4935
+X-UID: 4936
 
---===============5560232411731475557==
+--===============3273631969668591500==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-07-07 at 17:47 +0200, Dmitry Vyukov wrote:
-> On Tue, Jul 7, 2020 at 5:18 PM Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > [stripping some recipients, since the following should be syzbot-
-> > specific]
-> > =
+Davide reported build issues when compiling without
+CONFIG_MPTCP_KUNIT_TESTS. We need to always export
+mptcp_token_get_sock(), for diag's sake.
 
-> > On Mon, 2020-06-22 at 02:30 -0700, syzbot wrote:
-> > > syzbot found the following crash on:
-> > > =
+The following text should be inserted into the squash to
+commit:
+"""
+Additionally export mptcp_token_get_sock(), as it
+also will be used by the diag module.
+"""
 
-> > > HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kerne=
-l.org..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D111245211=
-00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd195fe572=
-fb15312
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D42a07faa592=
-3cfaeb9c9
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > =
+just before:
+"""
+It will be used by the next patch, but keep the API generic,
+as we plan to use this later for PM's sake.
+"""
 
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/token.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the co=
-mmit:
-> > > Reported-by: syzbot+42a07faa5923cfaeb9c9(a)syzkaller.appspotmail.com
-> > =
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 6d4fe70f7d30..7d8106026081 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -238,6 +238,7 @@ struct mptcp_sock *mptcp_token_get_sock(u32 token)
+ 	rcu_read_unlock();
+ 	return msk;
+ }
++EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
+ =
 
-> > This should be fixed by the combination of commit 0e7bc442b405 ("mptcp:
-> > fix DSS map generation on fin retransmission") (currently on -net) and
-> > commit 13f1555c1b4c49b8ab9dd80b7353deec0526ccac (currently only on net-
-> > next).
-> > =
+ /**
+  * mptcp_token_iter_next - iterate over the token container from given pos
+@@ -371,7 +372,6 @@ void __init mptcp_token_init(void)
+ EXPORT_SYMBOL_GPL(mptcp_token_new_request);
+ EXPORT_SYMBOL_GPL(mptcp_token_new_connect);
+ EXPORT_SYMBOL_GPL(mptcp_token_accept);
+-EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
+ EXPORT_SYMBOL_GPL(mptcp_token_destroy_request);
+ EXPORT_SYMBOL_GPL(mptcp_token_destroy);
+ #endif
+-- =
 
-> > In not clear to me how to communicate the above to syzbot. Any
-> > suggestion more than welcome!
-> =
+2.18.1
 
-> Hi Paolo,
-> =
-
-> Yes, there is no way to attach to fixing commits via email interface.
-> But if both are required to stop this WARNING from happening, we can
-> mark it as fixed by the one that is supposed to propagate to all trees
-> later. I guess it's the one in net-next?
-
-Thank you for the prompt reply!
-
-Yes, the net-next commit will land into vanilla later - in some weeks
-from now.
-
-Should I wait for that event to send a '#syz fix: ' reply? I fear
-otherwise syzbot may test a [net-next] tree without the first mentioned
-commit and still hit the issue.
-
-Cheers,
-
-Paolo
-
---===============5560232411731475557==--
+--===============3273631969668591500==--
