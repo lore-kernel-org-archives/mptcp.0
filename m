@@ -1,49 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============5945534043720563467=="
+Content-Type: multipart/mixed; boundary="===============6715866064195555805=="
 MIME-Version: 1.0
 From: Eric Biggers <ebiggers at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 0/5] crypto: add sha256() function
-Date: Wed, 08 Jul 2020 09:39:38 -0700
-Message-ID: <20200708163943.52071-1-ebiggers@kernel.org>
+Subject: [MPTCP] [PATCH v2 2/5] crypto: lib/sha256 - add sha256() function
+Date: Wed, 08 Jul 2020 09:39:40 -0700
+Message-ID: <20200708163943.52071-3-ebiggers@kernel.org>
+In-Reply-To: 20200708163943.52071-1-ebiggers@kernel.org
 X-Status: 
 X-Keywords:                  
-X-UID: 4951
+X-UID: 4952
 
---===============5945534043720563467==
+--===============6715866064195555805==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series adds a function sha256() to the sha256 library so that users
-who want to compute a hash in one step can just call sha256() instead of
-sha256_init() + sha256_update() + sha256_final().
+From: Eric Biggers <ebiggers(a)google.com>
 
-Patches 3-5 then convert some users to use it.
+Add a function sha256() which computes a SHA-256 digest in one step,
+combining sha256_init() + sha256_update() + sha256_final().
 
-Changed v1 =3D> v2:
-  - Added sparc patch to fix a build breakage caused by a
-    static variable already named "sha256".
-  - Added Reviewed-by, Acked-by, and Tested-by tags.
+This is similar to how we also have blake2s().
 
-Eric Biggers (5):
-  crypto: sparc - rename sha256 to sha256_alg
-  crypto: lib/sha256 - add sha256() function
-  efi: use sha256() instead of open coding
-  mptcp: use sha256() instead of open coding
-  ASoC: cros_ec_codec: use sha256() instead of open coding
+Reviewed-by: Ard Biesheuvel <ardb(a)kernel.org>
+Tested-by: Hans de Goede <hdegoede(a)redhat.com>
+Signed-off-by: Eric Biggers <ebiggers(a)google.com>
+---
+ include/crypto/sha.h |  1 +
+ lib/crypto/sha256.c  | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
 
- arch/sparc/crypto/sha256_glue.c          | 14 ++++++------
- drivers/firmware/efi/embedded-firmware.c |  9 +++-----
- include/crypto/sha.h                     |  1 +
- lib/crypto/sha256.c                      | 10 +++++++++
- net/mptcp/crypto.c                       | 15 +++----------
- sound/soc/codecs/cros_ec_codec.c         | 27 ++----------------------
- 6 files changed, 26 insertions(+), 50 deletions(-)
+diff --git a/include/crypto/sha.h b/include/crypto/sha.h
+index 10753ff71d46..4ff3da816630 100644
+--- a/include/crypto/sha.h
++++ b/include/crypto/sha.h
+@@ -147,6 +147,7 @@ static inline void sha256_init(struct sha256_state *sct=
+x)
+ }
+ void sha256_update(struct sha256_state *sctx, const u8 *data, unsigned int=
+ len);
+ void sha256_final(struct sha256_state *sctx, u8 *out);
++void sha256(const u8 *data, unsigned int len, u8 *out);
+ =
 
+ static inline void sha224_init(struct sha256_state *sctx)
+ {
+diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
+index 2e621697c5c3..2321f6cb322f 100644
+--- a/lib/crypto/sha256.c
++++ b/lib/crypto/sha256.c
+@@ -280,4 +280,14 @@ void sha224_final(struct sha256_state *sctx, u8 *out)
+ }
+ EXPORT_SYMBOL(sha224_final);
+ =
 
-base-commit: 57c8aa43b9f272c382c253573c82be5cb68fe22d
++void sha256(const u8 *data, unsigned int len, u8 *out)
++{
++	struct sha256_state sctx;
++
++	sha256_init(&sctx);
++	sha256_update(&sctx, data, len);
++	sha256_final(&sctx, out);
++}
++EXPORT_SYMBOL(sha256);
++
+ MODULE_LICENSE("GPL");
 -- =
 
 2.27.0
 
---===============5945534043720563467==--
+--===============6715866064195555805==--
