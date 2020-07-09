@@ -1,245 +1,294 @@
-Content-Type: multipart/mixed; boundary="===============7855904245081733861=="
+Content-Type: multipart/mixed; boundary="===============8386566043268657051=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 1/4] inet_diag: support for wider protocol
- numbers
-Date: Thu, 09 Jul 2020 15:12:39 +0200
-Message-ID: <2c52dcb2c5e5af58059714b496d5653c962b0c2a.1594292774.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 4/4] selftests/mptcp: add diag interface tests
+Date: Thu, 09 Jul 2020 15:12:42 +0200
+Message-ID: <cbaa69a08c809543b1647919687a300a297e0752.1594292774.git.pabeni@redhat.com>
 In-Reply-To: cover.1594292774.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4959
+X-UID: 4960
 
---===============7855904245081733861==
+--===============8386566043268657051==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After commit bf9765145b85 ("sock: Make sk_protocol a 16-bit value")
-the current size of 'sdiag_protocol' is not sufficient to represent
-the possible protocol values.
+basic functional test, triggering the msk diag interface
+code. Require appropriate iproute2 support, skip elsewhere.
 
-This change introduces a new inet diag request attribute to let
-user space specify the relevant protocol number using u32 values.
-
-The attribute is parsed by inet diag core on get/dump command
-and the extended protocol value, if available, is preferred to
-'sdiag_protocol' to lookup the diag handler.
-
-The parse attributed are exposed to all the diag handlers via
-the cb->data.
-
-Note that inet_diag_dump_one_icsk() is left unmodified, as it
-will not be used by protocol using the extended attribute.
-
-Suggested-by: David S. Miller <davem(a)davemloft.net>
-Co-developed-by: Christoph Paasch <cpaasch(a)apple.com>
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-Acked-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- include/uapi/linux/inet_diag.h |  1 +
- net/core/sock.c                |  1 +
- net/ipv4/inet_diag.c           | 65 +++++++++++++++++++++++++---------
- 3 files changed, 50 insertions(+), 17 deletions(-)
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ tools/testing/selftests/net/mptcp/diag.sh     | 122 ++++++++++++++++++
+ .../selftests/net/mptcp/mptcp_connect.c       |  22 +++-
+ 3 files changed, 141 insertions(+), 5 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/diag.sh
 
-diff --git a/include/uapi/linux/inet_diag.h b/include/uapi/linux/inet_diag.h
-index e6f183ee8417..5ba122c1949a 100644
---- a/include/uapi/linux/inet_diag.h
-+++ b/include/uapi/linux/inet_diag.h
-@@ -65,6 +65,7 @@ enum {
- 	INET_DIAG_REQ_NONE,
- 	INET_DIAG_REQ_BYTECODE,
- 	INET_DIAG_REQ_SK_BPF_STORAGES,
-+	INET_DIAG_REQ_PROTOCOL,
- 	__INET_DIAG_REQ_MAX,
- };
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/sel=
+ftests/net/mptcp/Makefile
+index f50976ee7d44..aa254aefc2c3 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -5,7 +5,7 @@ KSFT_KHDR_INSTALL :=3D 1
  =
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index f5b5fdd61c88..de26fe4ea19f 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3566,6 +3566,7 @@ int sock_load_diag_module(int family, int protocol)
- #ifdef CONFIG_INET
- 	if (family =3D=3D AF_INET &&
- 	    protocol !=3D IPPROTO_RAW &&
-+	    protocol < MAX_INET_PROTOS &&
- 	    !rcu_access_pointer(inet_protos[protocol]))
- 		return -ENOENT;
- #endif
-diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
-index 125f4f8a36b4..4a98dd736270 100644
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@ -52,6 +52,11 @@ static DEFINE_MUTEX(inet_diag_table_mutex);
+ CFLAGS =3D  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
  =
 
- static const struct inet_diag_handler *inet_diag_lock_handler(int proto)
- {
-+	if (proto < 0 || proto >=3D IPPROTO_MAX) {
-+		mutex_lock(&inet_diag_table_mutex);
-+		return ERR_PTR(-ENOENT);
-+	}
+-TEST_PROGS :=3D mptcp_connect.sh pm_netlink.sh mptcp_join.sh
++TEST_PROGS :=3D mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh
+ =
+
+ TEST_GEN_FILES =3D mptcp_connect pm_nl_ctl
+ =
+
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/self=
+tests/net/mptcp/diag.sh
+new file mode 100755
+index 000000000000..b3eee7ede18a
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -0,0 +1,122 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
 +
- 	if (!inet_diag_table[proto])
- 		sock_load_diag_module(AF_INET, proto);
- =
-
-@@ -181,6 +186,28 @@ int inet_diag_msg_attrs_fill(struct sock *sk, struct s=
-k_buff *skb,
- }
- EXPORT_SYMBOL_GPL(inet_diag_msg_attrs_fill);
- =
-
-+static void inet_diag_parse_attrs(const struct nlmsghdr *nlh, int hdrlen,
-+				  struct nlattr **req_nlas)
++rndh=3D$(printf %x $sec)-$(mktemp -u XXXXXX)
++ns=3D"ns1-$rndh"
++ksft_skip=3D4
++test_cnt=3D1
++ret=3D0
++pids=3D()
++
++flush_pids()
 +{
-+	struct nlattr *nla;
-+	int remaining;
++	# mptcp_connect in join mode will sleep a bit before completing,
++	# give it some time
++	sleep 1.1
 +
-+	nlmsg_for_each_attr(nla, nlh, hdrlen, remaining) {
-+		int type =3D nla_type(nla);
-+
-+		if (type < __INET_DIAG_REQ_MAX)
-+			req_nlas[type] =3D nla;
-+	}
++	for pid in ${pids[@]}; do
++		[ -d /proc/$pid ] && kill -SIGUSR1 $pid >/dev/null 2>&1
++	done
++	pids=3D()
 +}
 +
-+static int inet_diag_get_protocol(const struct inet_diag_req_v2 *req,
-+				  const struct inet_diag_dump_data *data)
++cleanup()
 +{
-+	if (data->req_nlas[INET_DIAG_REQ_PROTOCOL])
-+		return nla_get_u32(data->req_nlas[INET_DIAG_REQ_PROTOCOL]);
-+	return req->sdiag_protocol;
++	ip netns del $ns
++	for pid in ${pids[@]}; do
++		[ -d /proc/$pid ] && kill -9 $pid >/dev/null 2>&1
++	done
 +}
 +
- #define MAX_DUMP_ALLOC_SIZE (KMALLOC_MAX_SIZE - SKB_DATA_ALIGN(sizeof(stru=
-ct skb_shared_info)))
- =
-
- int inet_sk_diag_fill(struct sock *sk, struct inet_connection_sock *icsk,
-@@ -198,7 +225,7 @@ int inet_sk_diag_fill(struct sock *sk, struct inet_conn=
-ection_sock *icsk,
- 	void *info =3D NULL;
- =
-
- 	cb_data =3D cb->data;
--	handler =3D inet_diag_table[req->sdiag_protocol];
-+	handler =3D inet_diag_table[inet_diag_get_protocol(req, cb_data)];
- 	BUG_ON(!handler);
- =
-
- 	nlh =3D nlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
-@@ -539,20 +566,25 @@ EXPORT_SYMBOL_GPL(inet_diag_dump_one_icsk);
- =
-
- static int inet_diag_cmd_exact(int cmd, struct sk_buff *in_skb,
- 			       const struct nlmsghdr *nlh,
-+			       int hdrlen,
- 			       const struct inet_diag_req_v2 *req)
- {
- 	const struct inet_diag_handler *handler;
--	int err;
-+	struct inet_diag_dump_data dump_data;
-+	int err, protocol;
- =
-
--	handler =3D inet_diag_lock_handler(req->sdiag_protocol);
-+	memset(&dump_data, 0, sizeof(dump_data));
-+	inet_diag_parse_attrs(nlh, hdrlen, dump_data.req_nlas);
-+	protocol =3D inet_diag_get_protocol(req, &dump_data);
++ip -Version > /dev/null 2>&1
++if [ $? -ne 0 ];then
++	echo "SKIP: Could not run test without ip tool"
++	exit $ksft_skip
++fi
++ss -h | grep -q MPTCP
++if [ $? -ne 0 ];then
++	echo "SKIP: ss tool does not support MPTCP"
++	exit $ksft_skip
++fi
 +
-+	handler =3D inet_diag_lock_handler(protocol);
- 	if (IS_ERR(handler)) {
- 		err =3D PTR_ERR(handler);
- 	} else if (cmd =3D=3D SOCK_DIAG_BY_FAMILY) {
--		struct inet_diag_dump_data empty_dump_data =3D {};
- 		struct netlink_callback cb =3D {
- 			.nlh =3D nlh,
- 			.skb =3D in_skb,
--			.data =3D &empty_dump_data,
-+			.data =3D &dump_data,
- 		};
- 		err =3D handler->dump_one(&cb, req);
- 	} else if (cmd =3D=3D SOCK_DESTROY && handler->destroy) {
-@@ -1103,13 +1135,16 @@ EXPORT_SYMBOL_GPL(inet_diag_dump_icsk);
- static int __inet_diag_dump(struct sk_buff *skb, struct netlink_callback *=
-cb,
- 			    const struct inet_diag_req_v2 *r)
- {
-+	struct inet_diag_dump_data *cb_data =3D cb->data;
- 	const struct inet_diag_handler *handler;
- 	u32 prev_min_dump_alloc;
--	int err =3D 0;
-+	int protocol, err =3D 0;
++__chk_nr()
++{
++	local condition=3D"$1"
++	local expected=3D$2
++	local msg nr
 +
-+	protocol =3D inet_diag_get_protocol(r, cb_data);
++	shift 2
++	msg=3D$*
++	nr=3D$(ss -inmHMN $ns | $condition)
++
++	printf "%-50s" "$msg"
++	if [ $nr !=3D $expected ]; then
++		echo "[ fail ] expected $expected found $nr"
++		ret=3D$test_cnt
++	else
++		echo "[  ok  ]"
++	fi
++	test_cnt=3D$((test_cnt+1))
++}
++
++chk_msk_nr()
++{
++	__chk_nr "grep -c token:" $*
++}
++
++chk_msk_fallback_nr()
++{
++		__chk_nr "grep -c fallback" $*
++}
++
++chk_msk_remote_key_nr()
++{
++		__chk_nr "grep -c remote_key" $*
++}
++
++
++trap cleanup EXIT
++ip netns add $ns
++ip -n $ns link set dev lo up
++
++echo "a" | ip netns exec $ns ./mptcp_connect -p 10000 -l 0.0.0.0 -t 100 >/=
+dev/null &
++sleep 0.1
++pids[0]=3D$!
++chk_msk_nr 0 "no msk on netns creation"
++
++echo "b" | ip netns exec $ns ./mptcp_connect -p 10000 127.0.0.1 -j -t 100 =
+>/dev/null &
++sleep 0.1
++pids[1]=3D$!
++chk_msk_nr 2 "after MPC handshake "
++chk_msk_remote_key_nr 2 "....chk remote_key"
++chk_msk_fallback_nr 0 "....chk no fallback"
++flush_pids
++
++
++echo "a" | ip netns exec $ns ./mptcp_connect -p 10001 -s TCP -l 0.0.0.0 -t=
+ 100 >/dev/null &
++pids[0]=3D$!
++sleep 0.1
++echo "b" | ip netns exec $ns ./mptcp_connect -p 10001 127.0.0.1 -j -t 100 =
+>/dev/null &
++pids[1]=3D$!
++sleep 0.1
++chk_msk_fallback_nr 1 "check fallback"
++flush_pids
++
++NR_CLIENTS=3D100
++for I in `seq 1 $NR_CLIENTS`; do
++	echo "a" | ip netns exec $ns ./mptcp_connect -p $((I+10001)) -l 0.0.0.0 -=
+t 100 -w 10 >/dev/null  &
++	pids[$((I*2))]=3D$!
++done
++sleep 0.1
++
++for I in `seq 1 $NR_CLIENTS`; do
++	echo "b" | ip netns exec $ns ./mptcp_connect -p $((I+10001)) 127.0.0.1 -t=
+ 100 -w 10 >/dev/null &
++	pids[$((I*2 + 1))]=3D$!
++done
++sleep 1.5
++
++chk_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
++flush_pids
++
++exit $ret
++
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+index cedee5b952ba..cad6f73a5fd0 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -11,6 +11,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <strings.h>
++#include <signal.h>
+ #include <unistd.h>
  =
 
- again:
- 	prev_min_dump_alloc =3D cb->min_dump_alloc;
--	handler =3D inet_diag_lock_handler(r->sdiag_protocol);
-+	handler =3D inet_diag_lock_handler(protocol);
- 	if (!IS_ERR(handler))
- 		handler->dump(skb, cb, r);
- 	else
-@@ -1139,19 +1174,13 @@ static int __inet_diag_dump_start(struct netlink_ca=
-llback *cb, int hdrlen)
- 	struct inet_diag_dump_data *cb_data;
- 	struct sk_buff *skb =3D cb->skb;
- 	struct nlattr *nla;
--	int rem, err;
-+	int err;
+ #include <sys/poll.h>
+@@ -36,6 +37,7 @@ extern int optind;
  =
 
- 	cb_data =3D kzalloc(sizeof(*cb_data), GFP_KERNEL);
- 	if (!cb_data)
- 		return -ENOMEM;
+ static int  poll_timeout =3D 10 * 1000;
+ static bool listen_mode;
++static bool quit;
  =
 
--	nla_for_each_attr(nla, nlmsg_attrdata(nlh, hdrlen),
--			  nlmsg_attrlen(nlh, hdrlen), rem) {
--		int type =3D nla_type(nla);
--
--		if (type < __INET_DIAG_REQ_MAX)
--			cb_data->req_nlas[type] =3D nla;
--	}
-+	inet_diag_parse_attrs(nlh, hdrlen, cb_data->req_nlas);
+ enum cfg_mode {
+ 	CFG_MODE_POLL,
+@@ -52,11 +54,12 @@ static int pf =3D AF_INET;
+ static int cfg_sndbuf;
+ static int cfg_rcvbuf;
+ static bool cfg_join;
++static int cfg_wait;
  =
 
- 	nla =3D cb_data->inet_diag_nla_bc;
- 	if (nla) {
-@@ -1237,7 +1266,8 @@ static int inet_diag_get_exact_compat(struct sk_buff =
-*in_skb,
- 	req.idiag_states =3D rc->idiag_states;
- 	req.id =3D rc->id;
- =
-
--	return inet_diag_cmd_exact(SOCK_DIAG_BY_FAMILY, in_skb, nlh, &req);
-+	return inet_diag_cmd_exact(SOCK_DIAG_BY_FAMILY, in_skb, nlh,
-+				   sizeof(struct inet_diag_req), &req);
+ static void die_usage(void)
+ {
+ 	fprintf(stderr, "Usage: mptcp_connect [-6] [-u] [-s MPTCP|TCP] [-p port] =
+[-m mode]"
+-		"[-l] connect_address\n");
++		"[-l] [-w sec] connect_address\n");
+ 	fprintf(stderr, "\t-6 use ipv6\n");
+ 	fprintf(stderr, "\t-t num -- set poll timeout to num\n");
+ 	fprintf(stderr, "\t-S num -- set SO_SNDBUF to num\n");
+@@ -65,9 +68,15 @@ static void die_usage(void)
+ 	fprintf(stderr, "\t-m [MPTCP|TCP] -- use tcp or mptcp sockets\n");
+ 	fprintf(stderr, "\t-s [mmap|poll] -- use poll (default) or mmap\n");
+ 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
++	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
+ 	exit(1);
  }
  =
 
- static int inet_diag_rcv_msg_compat(struct sk_buff *skb, struct nlmsghdr *=
-nlh)
-@@ -1279,7 +1309,8 @@ static int inet_diag_handler_cmd(struct sk_buff *skb,=
- struct nlmsghdr *h)
- 		return netlink_dump_start(net->diag_nlsk, skb, h, &c);
++static void handle_signal(int nr)
++{
++	quit =3D true;
++}
++
+ static const char *getxinfo_strerr(int err)
+ {
+ 	if (err =3D=3D EAI_SYSTEM)
+@@ -418,8 +427,8 @@ static int copyfd_io_poll(int infd, int peerfd, int out=
+fd)
  	}
  =
 
--	return inet_diag_cmd_exact(h->nlmsg_type, skb, h, nlmsg_data(h));
-+	return inet_diag_cmd_exact(h->nlmsg_type, skb, h, hdrlen,
-+				   nlmsg_data(h));
- }
+ 	/* leave some time for late join/announce */
+-	if (cfg_join)
+-		usleep(400000);
++	if (cfg_wait)
++		usleep(cfg_wait);
  =
 
- static
+ 	close(peerfd);
+ 	return 0;
+@@ -812,11 +821,12 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ =
+
+-	while ((c =3D getopt(argc, argv, "6jlp:s:hut:m:S:R:")) !=3D -1) {
++	while ((c =3D getopt(argc, argv, "6jlp:s:hut:m:S:R:w:")) !=3D -1) {
+ 		switch (c) {
+ 		case 'j':
+ 			cfg_join =3D true;
+ 			cfg_mode =3D CFG_MODE_POLL;
++			cfg_wait =3D 400000;
+ 			break;
+ 		case 'l':
+ 			listen_mode =3D true;
+@@ -850,6 +860,9 @@ static void parse_opts(int argc, char **argv)
+ 		case 'R':
+ 			cfg_rcvbuf =3D parse_int(optarg);
+ 			break;
++		case 'w':
++			cfg_wait =3D atoi(optarg)*1000000;
++			break;
+ 		}
+ 	}
+ =
+
+@@ -865,6 +878,7 @@ int main(int argc, char *argv[])
+ {
+ 	init_rng();
+ =
+
++	signal(SIGUSR1, handle_signal);
+ 	parse_opts(argc, argv);
+ =
+
+ 	if (tcpulp_audit)
 -- =
 
 2.26.2
 
---===============7855904245081733861==--
+--===============8386566043268657051==--
