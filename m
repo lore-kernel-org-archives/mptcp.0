@@ -1,99 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============9027493759343680236=="
+Content-Type: multipart/mixed; boundary="===============1777782345028962214=="
 MIME-Version: 1.0
-From: Eric Biggers <ebiggers at kernel.org>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 4/5] mptcp: use sha256() instead of open coding
-Date: Wed, 08 Jul 2020 09:39:42 -0700
-Message-ID: <20200708163943.52071-5-ebiggers@kernel.org>
-In-Reply-To: 20200708163943.52071-1-ebiggers@kernel.org
+Subject: [MPTCP] Re: [PATCH] Squash-to: inet_diag: support for wider protocol
+ numbers
+Date: Thu, 09 Jul 2020 10:31:11 +0200
+Message-ID: <93654ac4-2296-b714-9617-fd052c00d743@tessares.net>
+In-Reply-To: 2c610659c6c6c1acaa452e8363853e6560fc3882.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4953
+X-UID: 4954
 
---===============9027493759343680236==
+--===============1777782345028962214==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Eric Biggers <ebiggers(a)google.com>
+Hi Christoph, Paolo,
 
-Now that there's a function that calculates the SHA-256 digest of a
-buffer in one step, use it instead of sha256_init() + sha256_update() +
-sha256_final().
+On 08/07/2020 12:28, Paolo Abeni wrote:
+> On Tue, 2020-07-07 at 17:01 -0700, Christoph Paasch wrote:
+>> Now running syzkaller with lockdep enabled:
+>> Syzkaller hit 'WARNING: bad unlock balance in inet_diag_cmd_exact' bug.
 
-Reviewed-by: Ard Biesheuvel <ardb(a)kernel.org>
-Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Cc: mptcp(a)lists.01.org
-Cc: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Cc: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Eric Biggers <ebiggers(a)google.com>
----
- net/mptcp/crypto.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+...
 
-diff --git a/net/mptcp/crypto.c b/net/mptcp/crypto.c
-index 3d980713a9e2..82bd2b54d741 100644
---- a/net/mptcp/crypto.c
-+++ b/net/mptcp/crypto.c
-@@ -32,11 +32,8 @@ void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
- {
- 	__be32 mptcp_hashed_key[SHA256_DIGEST_WORDS];
- 	__be64 input =3D cpu_to_be64(key);
--	struct sha256_state state;
- =
+>> inet_diag_lock_handler is supposed to exit always with the lock held.
+>> So, even if proto is out-of-bounds let's take the lock.
+>>
+>> Another way to fix that would be to teach to the callers whether or not
+>> inet_diag_lock_handler ended up taking the lock or not (by returning
+>> -EINVAL instead). But that looks more brittle to me as the intention of
+>> inet_diag_lock_handler really is to take the lock.
+> =
 
--	sha256_init(&state);
--	sha256_update(&state, (__force u8 *)&input, sizeof(input));
--	sha256_final(&state, (u8 *)mptcp_hashed_key);
-+	sha256((__force u8 *)&input, sizeof(input), (u8 *)mptcp_hashed_key);
- =
+> Agreed, looks better this way.
 
- 	if (token)
- 		*token =3D be32_to_cpu(mptcp_hashed_key[0]);
-@@ -47,7 +44,6 @@ void mptcp_crypto_key_sha(u64 key, u32 *token, u64 *idsn)
- void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, int len, void *hma=
-c)
- {
- 	u8 input[SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE];
--	struct sha256_state state;
- 	u8 key1be[8];
- 	u8 key2be[8];
- 	int i;
-@@ -67,13 +63,10 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg,=
- int len, void *hmac)
- =
+Thank you for the patch and the review!
 
- 	memcpy(&input[SHA256_BLOCK_SIZE], msg, len);
- =
+- cb46e21d1f7f: "squashed" in "inet_diag: support for wider protocol =
 
--	sha256_init(&state);
--	sha256_update(&state, input, SHA256_BLOCK_SIZE + len);
--
- 	/* emit sha256(K1 || msg) on the second input block, so we can
- 	 * reuse 'input' for the last hashing
- 	 */
--	sha256_final(&state, &input[SHA256_BLOCK_SIZE]);
-+	sha256(input, SHA256_BLOCK_SIZE + len, &input[SHA256_BLOCK_SIZE]);
- =
+numbers"
+- f0bfb9c8a333..287977a070ee: result
 
- 	/* Prepare second part of hmac */
- 	memset(input, 0x5C, SHA256_BLOCK_SIZE);
-@@ -82,9 +75,7 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg, i=
-nt len, void *hmac)
- 	for (i =3D 0; i < 8; i++)
- 		input[i + 8] ^=3D key2be[i];
- =
-
--	sha256_init(&state);
--	sha256_update(&state, input, SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE);
--	sha256_final(&state, (u8 *)hmac);
-+	sha256(input, SHA256_BLOCK_SIZE + SHA256_DIGEST_SIZE, hmac);
- }
- =
-
- #ifdef CONFIG_MPTCP_HMAC_TEST
+Cheers,
+Matt
 -- =
 
-2.27.0
-
---===============9027493759343680236==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============1777782345028962214==--
