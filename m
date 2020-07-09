@@ -1,59 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============3964328816265069295=="
+Content-Type: multipart/mixed; boundary="===============8124990304666062901=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add MPTCP socket diag
- interface"
-Date: Thu, 09 Jul 2020 10:45:12 +0200
-Message-ID: <8565ec49-b999-3411-ec51-eb3157e72d53@tessares.net>
-In-Reply-To: 20200707171327.180346-1-pabeni@redhat.com
+Subject: [MPTCP] [PATCH net-next 0/4] mptcp: introduce msk diag interface
+Date: Thu, 09 Jul 2020 15:12:38 +0200
+Message-ID: <cover.1594292774.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 4955
+X-UID: 4956
 
---===============3964328816265069295==
+--===============8124990304666062901==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Davide,
+This series implements the diag interface for the MPTCP sockets.
 
-On 07/07/2020 19:13, Paolo Abeni wrote:
-> Davide reported build issues when compiling without
-> CONFIG_MPTCP_KUNIT_TESTS. We need to always export
-> mptcp_token_get_sock(), for diag's sake.
-> =
+Since the MPTCP protocol value can't be represented with the
+current diag uAPI, the first patch introduces an extended attribute
+allowing user-space to specify lager protocol values.
 
-> The following text should be inserted into the squash to
-> commit:
-> """
-> Additionally export mptcp_token_get_sock(), as it
-> also will be used by the diag module.
-> """
-> =
+The token APIs are then extended to allow traversing the
+whole token container.
 
-> just before:
-> """
-> It will be used by the next patch, but keep the API generic,
-> as we plan to use this later for PM's sake.
-> """
+Patch 3 carries the actual diag interface implementation, and =
 
-Thank you for the patch and the instructions!
+later patch bring-in some functional self-tests.
 
-I guess you wanted me to squash the patch in "mptcp: add msk interations =
+Paolo Abeni (4):
+  inet_diag: support for wider protocol numbers
+  mptcp: add msk interations helper
+  mptcp: add MPTCP socket diag interface
+  selftests/mptcp: add diag interface tests
 
-helper" commit, not in "mptcp: add MPTCP socket diag interface", right?
+ include/uapi/linux/inet_diag.h                |   1 +
+ include/uapi/linux/mptcp.h                    |  17 ++
+ net/core/sock.c                               |   1 +
+ net/ipv4/inet_diag.c                          |  65 +++++--
+ net/mptcp/Kconfig                             |   4 +
+ net/mptcp/Makefile                            |   2 +
+ net/mptcp/mptcp_diag.c                        | 169 ++++++++++++++++++
+ net/mptcp/protocol.h                          |   2 +
+ net/mptcp/token.c                             |  61 ++++++-
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ tools/testing/selftests/net/mptcp/diag.sh     | 122 +++++++++++++
+ .../selftests/net/mptcp/mptcp_connect.c       |  22 ++-
+ 12 files changed, 445 insertions(+), 23 deletions(-)
+ create mode 100644 net/mptcp/mptcp_diag.c
+ create mode 100755 tools/testing/selftests/net/mptcp/diag.sh
 
-- 9b8b971fb7cb: "squashed" in "mptcp: add msk interations helper"
-- 5ed0672e64fa: tg:msg: info about mptcp_token_get_sock()
-- 287977a070ee..e08dbaf46bc8: result
-
-Tests and export are in progress!
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============3964328816265069295==--
+2.26.2
+
+--===============8124990304666062901==--
