@@ -1,54 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============7888441622282342676=="
+Content-Type: multipart/mixed; boundary="===============3603471886955175632=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 7/9] subflow: explicitly check for plain tcp
- rsk
-Date: Fri, 10 Jul 2020 19:22:16 +0200
-Message-ID: <d3e7a601036127035708ebe28359b8e0ad142b14.1594401165.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 8/9] subflow: use rsk_ops->send_reset()
+Date: Fri, 10 Jul 2020 19:22:17 +0200
+Message-ID: <e7cc83037093593f884bc5ba7e42c82835f510a2.1594401165.git.pabeni@redhat.com>
 In-Reply-To: cover.1594401165.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4984
+X-UID: 4985
 
---===============7888441622282342676==
+--===============3603471886955175632==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When syncookie are in use, the TCP stack may feed into
-subflow_syn_recv_sock() plain TCP request sockets. We can't
-access mptcp_subflow_request_sock-specific fields on such
-sockets. Explicitly check the rsk ops to do safe accesses.
+tcp_send_active_reset() is more prone to transient errors
+(memory allocation or xmit queue full): in stress conditions
+the kernel may drop the egress packet, and the client will be
+stuck.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-Note: this fixes an slab-out-of-bounds on syncookied
-MP_JOIN req, but handling of such req is still problematic:
-we relay on the client closing the socket before the 3rd
-ack, otherwise the client socket will be created as plain
-TCP one - and again client will have to close it.
 ---
  net/mptcp/subflow.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 90857d5da216..8eaf9eb8a29b 100644
+index 8eaf9eb8a29b..1ea37c776777 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -417,7 +417,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+@@ -520,9 +520,9 @@ static struct sock *subflow_syn_recv_sock(const struct =
 sock *sk,
+ dispose_child:
+ 	subflow_drop_ctx(child);
+ 	tcp_rsk(req)->drop_req =3D true;
+-	tcp_send_active_reset(child, GFP_ATOMIC);
+ 	inet_csk_prepare_for_destroy_sock(child);
+ 	tcp_done(child);
++	req->rsk_ops->send_reset(sk, skb);
  =
 
- 	/* hopefully temporary handling for MP_JOIN+syncookie */
- 	subflow_req =3D mptcp_subflow_rsk(req);
--	fallback_is_fatal =3D subflow_req->mp_join;
-+	fallback_is_fatal =3D tcp_rsk(req)->is_mptcp && subflow_req->mp_join;
- 	fallback =3D !tcp_rsk(req)->is_mptcp;
- 	if (fallback)
- 		goto create_child;
+ 	/* The last child reference will be released by the caller */
+ 	return child;
 -- =
 
 2.26.2
 
---===============7888441622282342676==--
+--===============3603471886955175632==--
