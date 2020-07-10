@@ -1,72 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============1782400106486625063=="
+Content-Type: multipart/mixed; boundary="===============3196687066353652957=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 9/9] subflow: introduce and use
- mptcp_can_accept_new_subflow()
-Date: Fri, 10 Jul 2020 19:22:18 +0200
-Message-ID: <721ab4f59d741086b68bf20504805be785d72648.1594401165.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH net-next 0/9] mptcp: cope better with mp_join storm
+Date: Fri, 10 Jul 2020 11:31:52 -0700
+Message-ID: <alpine.OSX.2.23.453.2007101125230.34362@apander1-mobl.amr.corp.intel.com>
 In-Reply-To: cover.1594401165.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4986
+X-UID: 4987
 
---===============1782400106486625063==
+--===============3196687066353652957==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-So that we can easily perform some basic PM-related
-adimission checks before creating the child socket.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-Note: I initially used mptcp_can_accept_new_subflow() in
-subflow_token_join_request(), too. The goal was add a follow-up
-patch sending reset at rsk creation time in case of !can_accept
-but I dismissed such patch because it feel "insecure"/potentially
-dos prone send this early reset: an attacker could force an mptcp
-server to send reset packets towards arbitrary IP/ports.
+On Fri, 10 Jul 2020, Paolo Abeni wrote:
 
-Additionally, after a quick look at mptcp.org, I could not find
-trace of such early reset - looks like resets for bad MP_JOINs
-are send only at syn_recv_sock() time.
----
- net/mptcp/subflow.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> This is a rebase of the RFC, dropping old 5/5 and including a few somewhat
+> related bugfixes - all targeting net-next because the fixed commit is only
+> there or the buggy behavior can be triggered only enabling non backup sub=
+flows
+>
+> Paolo Abeni (9):
+>  subflow: always init 'rel_write_seq'
+>  mptcp: avoid data corruption on reinsert
+>  mptcp: mark as fallback even early ones
+>  mptcp: zero token hash at creation time.
+>  mptcp: make msk established at remote key reception time
+>  mptcp: cleanup subflow_finish_connect()
+>  subflow: explicitly check for plain tcp rsk
+>  subflow: use rsk_ops->send_reset()
+>  subflow: introduce and use mptcp_can_accept_new_subflow()
+>
+> net/mptcp/options.c  |  4 +-
+> net/mptcp/protocol.c | 20 +++++++---
+> net/mptcp/protocol.h |  2 +
+> net/mptcp/subflow.c  | 87 +++++++++++++++++++++++++-------------------
+> net/mptcp/token.c    |  2 +-
+> 5 files changed, 69 insertions(+), 46 deletions(-)
+>
+> -- =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 1ea37c776777..07c6b3a65bb6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -53,6 +53,12 @@ static void subflow_generate_hmac(u64 key1, u64 key2, u3=
-2 nonce1, u32 nonce2,
- 	mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
- }
- =
+> 2.26.2
 
-+static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
-+{
-+	return inet_sk_state_load((struct sock *)msk) =3D=3D TCP_ESTABLISHED &&
-+	       READ_ONCE(msk->pm.accept_subflow);
-+}
-+
- /* validate received token and create truncated hmac and nonce for SYN-ACK=
- */
- static struct mptcp_sock *subflow_token_join_request(struct request_sock *=
-req,
- 						     const struct sk_buff *skb)
-@@ -445,6 +451,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 	} else if (subflow_req->mp_join) {
- 		mptcp_get_options(skb, &mp_opt);
- 		if (!mp_opt.mp_join ||
-+		    !mptcp_can_accept_new_subflow(subflow_req->msk) ||
- 		    !subflow_hmac_valid(req, &mp_opt)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
- 			fallback =3D true;
--- =
+Thanks Paolo, the changes look good. Should these go in mptcp_net-next for =
 
-2.26.2
+a testing pass before upstreaming?
 
---===============1782400106486625063==--
+--
+Mat Martineau
+Intel
+--===============3196687066353652957==--
