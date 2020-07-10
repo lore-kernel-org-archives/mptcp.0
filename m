@@ -1,49 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============3603471886955175632=="
+Content-Type: multipart/mixed; boundary="===============1782400106486625063=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 8/9] subflow: use rsk_ops->send_reset()
-Date: Fri, 10 Jul 2020 19:22:17 +0200
-Message-ID: <e7cc83037093593f884bc5ba7e42c82835f510a2.1594401165.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 9/9] subflow: introduce and use
+ mptcp_can_accept_new_subflow()
+Date: Fri, 10 Jul 2020 19:22:18 +0200
+Message-ID: <721ab4f59d741086b68bf20504805be785d72648.1594401165.git.pabeni@redhat.com>
 In-Reply-To: cover.1594401165.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4985
+X-UID: 4986
 
---===============3603471886955175632==
+--===============1782400106486625063==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tcp_send_active_reset() is more prone to transient errors
-(memory allocation or xmit queue full): in stress conditions
-the kernel may drop the egress packet, and the client will be
-stuck.
+So that we can easily perform some basic PM-related
+adimission checks before creating the child socket.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/subflow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Note: I initially used mptcp_can_accept_new_subflow() in
+subflow_token_join_request(), too. The goal was add a follow-up
+patch sending reset at rsk creation time in case of !can_accept
+but I dismissed such patch because it feel "insecure"/potentially
+dos prone send this early reset: an attacker could force an mptcp
+server to send reset packets towards arbitrary IP/ports.
+
+Additionally, after a quick look at mptcp.org, I could not find
+trace of such early reset - looks like resets for bad MP_JOINs
+are send only at syn_recv_sock() time.
+---
+ net/mptcp/subflow.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8eaf9eb8a29b..1ea37c776777 100644
+index 1ea37c776777..07c6b3a65bb6 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -520,9 +520,9 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- dispose_child:
- 	subflow_drop_ctx(child);
- 	tcp_rsk(req)->drop_req =3D true;
--	tcp_send_active_reset(child, GFP_ATOMIC);
- 	inet_csk_prepare_for_destroy_sock(child);
- 	tcp_done(child);
-+	req->rsk_ops->send_reset(sk, skb);
+@@ -53,6 +53,12 @@ static void subflow_generate_hmac(u64 key1, u64 key2, u3=
+2 nonce1, u32 nonce2,
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
+ }
  =
 
- 	/* The last child reference will be released by the caller */
- 	return child;
++static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
++{
++	return inet_sk_state_load((struct sock *)msk) =3D=3D TCP_ESTABLISHED &&
++	       READ_ONCE(msk->pm.accept_subflow);
++}
++
+ /* validate received token and create truncated hmac and nonce for SYN-ACK=
+ */
+ static struct mptcp_sock *subflow_token_join_request(struct request_sock *=
+req,
+ 						     const struct sk_buff *skb)
+@@ -445,6 +451,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 	} else if (subflow_req->mp_join) {
+ 		mptcp_get_options(skb, &mp_opt);
+ 		if (!mp_opt.mp_join ||
++		    !mptcp_can_accept_new_subflow(subflow_req->msk) ||
+ 		    !subflow_hmac_valid(req, &mp_opt)) {
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+ 			fallback =3D true;
 -- =
 
 2.26.2
 
---===============3603471886955175632==--
+--===============1782400106486625063==--
