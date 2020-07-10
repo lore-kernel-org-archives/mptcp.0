@@ -1,59 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============1345798039423103204=="
+Content-Type: multipart/mixed; boundary="===============8118207060093718460=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 1/9] subflow: always init 'rel_write_seq'
-Date: Fri, 10 Jul 2020 19:22:10 +0200
-Message-ID: <a412198c8004d7c616aa6c0875c42c730fea7f34.1594401165.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 2/9] mptcp: avoid data corruption on reinsert
+Date: Fri, 10 Jul 2020 19:22:11 +0200
+Message-ID: <1d3e1691c58583b91a96a847e90d09a58431eb80.1594401165.git.pabeni@redhat.com>
 In-Reply-To: cover.1594401165.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4978
+X-UID: 4979
 
---===============1345798039423103204==
+--===============8118207060093718460==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we do not init the subflow write sequence for
-MP_JOIN subflows. This will cause bad mapping being
-generated as soon as we will use non backup subflow.
+When updating a partially acked data fragment, we
+actually corrupt it. This is irrelevant till we send
+data on a single subflow, as retransmitted data, if
+any are discarded by the peer as duplicate, but it
+will cause data corruption as soon as we will start
+creating non backup subflows.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 1 -
- net/mptcp/subflow.c  | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c28b9aed3958..02eb37a3122b 100644
+index 02eb37a3122b..2986637fc39e 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1819,7 +1819,6 @@ void mptcp_finish_connect(struct sock *ssk)
- 	ack_seq++;
- 	subflow->map_seq =3D ack_seq;
- 	subflow->map_subflow_seq =3D 1;
--	subflow->rel_write_seq =3D 1;
+@@ -460,15 +460,20 @@ static void mptcp_clean_una(struct sock *sk)
  =
 
- 	/* the socket is not connected yet, no msk/subflow ops can access/race
- 	 * accessing the field below
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 9f7f3772c13c..0bdd57251da4 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -200,6 +200,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 	if (subflow->conn_finished)
- 		return;
+ 	dfrag =3D mptcp_rtx_head(sk);
+ 	if (dfrag && after64(snd_una, dfrag->data_seq)) {
+-		u64 delta =3D dfrag->data_seq + dfrag->data_len - snd_una;
++		u64 delta =3D snd_una - dfrag->data_seq;
++
++		if (WARN_ON_ONCE(delta > dfrag->data_len))
++			goto out;
  =
 
-+	subflow->rel_write_seq =3D 1;
- 	subflow->conn_finished =3D 1;
- 	subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
- 	pr_debug("subflow=3D%p synack seq=3D%x", subflow, subflow->ssn_offset);
+ 		dfrag->data_seq +=3D delta;
++		dfrag->offset +=3D delta;
+ 		dfrag->data_len -=3D delta;
+ =
+
+ 		dfrag_uncharge(sk, delta);
+ 		cleaned =3D true;
+ 	}
+ =
+
++out:
+ 	if (cleaned) {
+ 		sk_mem_reclaim_partial(sk);
+ =
+
 -- =
 
 2.26.2
 
---===============1345798039423103204==--
+--===============8118207060093718460==--
