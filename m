@@ -1,65 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============8118207060093718460=="
+Content-Type: multipart/mixed; boundary="===============3015405619996693496=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 2/9] mptcp: avoid data corruption on reinsert
-Date: Fri, 10 Jul 2020 19:22:11 +0200
-Message-ID: <1d3e1691c58583b91a96a847e90d09a58431eb80.1594401165.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 3/9] mptcp: mark as fallback even early ones
+Date: Fri, 10 Jul 2020 19:22:12 +0200
+Message-ID: <22af4673749f14e61117091bb40214e3e50febcb.1594401165.git.pabeni@redhat.com>
 In-Reply-To: cover.1594401165.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 4979
+X-UID: 4980
 
---===============8118207060093718460==
+--===============3015405619996693496==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When updating a partially acked data fragment, we
-actually corrupt it. This is irrelevant till we send
-data on a single subflow, as retransmitted data, if
-any are discarded by the peer as duplicate, but it
-will cause data corruption as soon as we will start
-creating non backup subflows.
+In the unlikely event of a failure at connect time,
+we currently clear the request_mptcp flag - so that
+the MPC handshake is not started at all, but the msk
+is not explicitly marked as fallback.
 
+This would lead to later insertion of wrong DSS options
+in the xmitted packets, in violation of RFC specs and
+possibly fooling the peer.
+
+Fixes: e1ff9e82e2ea ("net: mptcp: improve fallback to TCP")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 02eb37a3122b..2986637fc39e 100644
+index 2986637fc39e..15358d676020 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -460,15 +460,20 @@ static void mptcp_clean_una(struct sock *sk)
+@@ -1949,6 +1949,13 @@ static int mptcp_bind(struct socket *sock, struct so=
+ckaddr *uaddr, int addr_len)
+ 	return err;
+ }
  =
 
- 	dfrag =3D mptcp_rtx_head(sk);
- 	if (dfrag && after64(snd_una, dfrag->data_seq)) {
--		u64 delta =3D dfrag->data_seq + dfrag->data_len - snd_una;
-+		u64 delta =3D snd_una - dfrag->data_seq;
++static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
++					 struct mptcp_subflow_context *subflow)
++{
++	subflow->request_mptcp =3D 0;
++	__mptcp_do_fallback(msk);
++}
 +
-+		if (WARN_ON_ONCE(delta > dfrag->data_len))
-+			goto out;
+ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uadd=
+r,
+ 				int addr_len, int flags)
+ {
+@@ -1980,10 +1987,10 @@ static int mptcp_stream_connect(struct socket *sock=
+, struct sockaddr *uaddr,
+ 	 * TCP option space.
+ 	 */
+ 	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
+-		subflow->request_mptcp =3D 0;
++		mptcp_subflow_early_fallback(msk, subflow);
+ #endif
+ 	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk))
+-		subflow->request_mptcp =3D 0;
++		mptcp_subflow_early_fallback(msk, subflow);
  =
 
- 		dfrag->data_seq +=3D delta;
-+		dfrag->offset +=3D delta;
- 		dfrag->data_len -=3D delta;
- =
-
- 		dfrag_uncharge(sk, delta);
- 		cleaned =3D true;
- 	}
- =
-
-+out:
- 	if (cleaned) {
- 		sk_mem_reclaim_partial(sk);
- =
-
+ do_connect:
+ 	err =3D ssock->ops->connect(ssock, uaddr, addr_len, flags);
 -- =
 
 2.26.2
 
---===============8118207060093718460==--
+--===============3015405619996693496==--
