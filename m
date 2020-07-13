@@ -1,54 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============6290324914192993488=="
+Content-Type: multipart/mixed; boundary="===============8694097963500654080=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/9] mptcp: cope better with mp_join storm
-Date: Mon, 13 Jul 2020 08:40:07 +0200
-Message-ID: <f5681411-f7cf-f769-47a1-76a90ea99951@tessares.net>
-In-Reply-To: 20200710213512.GD60489@MacBook-Pro-64.local
+Subject: [MPTCP] [PATCH mptcp-iproute2] mptcp: show all endpoints when no ID
+ is specified
+Date: Mon, 13 Jul 2020 13:46:09 +0200
+Message-ID: <20200713114609.251267-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 4991
+X-UID: 4993
 
---===============6290324914192993488==
+--===============8694097963500654080==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat, Christoph,
+According to 'ip mptcp help', 'endpoint show' can accept no argument:
 
-On 10/07/2020 23:35, Christoph Paasch wrote:
-> On 07/10/20 - 11:31, Mat Martineau wrote:
->>
->> On Fri, 10 Jul 2020, Paolo Abeni wrote:
->>
->>> This is a rebase of the RFC, dropping old 5/5 and including a few somew=
-hat
->>> related bugfixes - all targeting net-next because the fixed commit is o=
-nly
->>> there or the buggy behavior can be triggered only enabling non backup s=
-ubflows
+  ip mptcp endpoint show [ id ID ]
 
-...
+It makes sense to print all endpoints when no filter is used.
 
->> Thanks Paolo, the changes look good. Should these go in mptcp_net-next f=
-or a
->> testing pass before upstreaming?
-> =
+So here if the following command is used, all endpoints are printed:
 
-> I picked these patches on top of export and am running syzkaller on top of
-> it. I will try to do an mptcp.org-interop run later or Monday.
-These patches are in the "export" branches with these tags:
+  ip mptcp endpoint show
 
-   Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-   Tested-by: Christoph Paasch <cpaasch(a)apple.com>
+Same as:
 
-Please tell me if you wish me to change this.
+  ip mptcp endpoint
 
-Cheers,
-Matt
+Fixes: 7e0767cd ("add support for mptcp netlink interface")
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ ip/ipmptcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index bc12418b..e1ffafb3 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -273,7 +273,7 @@ static int mptcp_addr_show(int argc, char **argv)
+ 	struct nlmsghdr *answer;
+ 	int ret;
+ =
+
+-	if (!argv)
++	if (argc <=3D 0)
+ 		return mptcp_addr_dump();
+ =
+
+ 	ret =3D mptcp_parse_opt(argc, argv, &req.n, false);
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============6290324914192993488==--
+2.27.0
+
+--===============8694097963500654080==--
