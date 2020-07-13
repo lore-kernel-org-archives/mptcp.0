@@ -1,67 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============4974403626693871574=="
+Content-Type: multipart/mixed; boundary="===============6290324914192993488=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH net-next 0/9] mptcp: cope better with mp_join storm
-Date: Fri, 10 Jul 2020 14:35:12 -0700
-Message-ID: <20200710213512.GD60489@MacBook-Pro-64.local>
-In-Reply-To: alpine.OSX.2.23.453.2007101125230.34362@apander1-mobl.amr.corp.intel.com
+Date: Mon, 13 Jul 2020 08:40:07 +0200
+Message-ID: <f5681411-f7cf-f769-47a1-76a90ea99951@tessares.net>
+In-Reply-To: 20200710213512.GD60489@MacBook-Pro-64.local
 X-Status: 
 X-Keywords:                  
-X-UID: 4988
+X-UID: 4991
 
---===============4974403626693871574==
+--===============6290324914192993488==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 07/10/20 - 11:31, Mat Martineau wrote:
-> =
+Hi Paolo, Mat, Christoph,
 
-> On Fri, 10 Jul 2020, Paolo Abeni wrote:
-> =
-
-> > This is a rebase of the RFC, dropping old 5/5 and including a few somew=
+On 10/07/2020 23:35, Christoph Paasch wrote:
+> On 07/10/20 - 11:31, Mat Martineau wrote:
+>>
+>> On Fri, 10 Jul 2020, Paolo Abeni wrote:
+>>
+>>> This is a rebase of the RFC, dropping old 5/5 and including a few somew=
 hat
-> > related bugfixes - all targeting net-next because the fixed commit is o=
+>>> related bugfixes - all targeting net-next because the fixed commit is o=
 nly
-> > there or the buggy behavior can be triggered only enabling non backup s=
+>>> there or the buggy behavior can be triggered only enabling non backup s=
 ubflows
-> > =
 
-> > Paolo Abeni (9):
-> >  subflow: always init 'rel_write_seq'
-> >  mptcp: avoid data corruption on reinsert
-> >  mptcp: mark as fallback even early ones
-> >  mptcp: zero token hash at creation time.
-> >  mptcp: make msk established at remote key reception time
-> >  mptcp: cleanup subflow_finish_connect()
-> >  subflow: explicitly check for plain tcp rsk
-> >  subflow: use rsk_ops->send_reset()
-> >  subflow: introduce and use mptcp_can_accept_new_subflow()
-> > =
+...
 
-> > net/mptcp/options.c  |  4 +-
-> > net/mptcp/protocol.c | 20 +++++++---
-> > net/mptcp/protocol.h |  2 +
-> > net/mptcp/subflow.c  | 87 +++++++++++++++++++++++++-------------------
-> > net/mptcp/token.c    |  2 +-
-> > 5 files changed, 69 insertions(+), 46 deletions(-)
-> > =
-
-> > -- =
-
-> > 2.26.2
+>> Thanks Paolo, the changes look good. Should these go in mptcp_net-next f=
+or a
+>> testing pass before upstreaming?
 > =
 
-> Thanks Paolo, the changes look good. Should these go in mptcp_net-next fo=
-r a
-> testing pass before upstreaming?
+> I picked these patches on top of export and am running syzkaller on top of
+> it. I will try to do an mptcp.org-interop run later or Monday.
+These patches are in the "export" branches with these tags:
 
-I picked these patches on top of export and am running syzkaller on top of
-it. I will try to do an mptcp.org-interop run later or Monday.
+   Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+   Tested-by: Christoph Paasch <cpaasch(a)apple.com>
 
+Please tell me if you wish me to change this.
 
-Christoph
+Cheers,
+Matt
+-- =
 
---===============4974403626693871574==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============6290324914192993488==--
