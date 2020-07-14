@@ -1,128 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============8603375062019281977=="
+Content-Type: multipart/mixed; boundary="===============6290525372406102920=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 11/11] selftests: mptcp: make 2nd net namespace
- use tcp syn cookies unconditionally
-Date: Tue, 14 Jul 2020 20:25:14 +0200
-Message-ID: <20200714182514.25250-12-fw@strlen.de>
-In-Reply-To: 20200714182514.25250-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH RFC 02/11] tcp: remove cookie_ts bit from
+ request_sock
+Date: Tue, 14 Jul 2020 12:29:24 -0700
+Message-ID: <20200714192924.GF73500@MacBook-Pro-64.local>
+In-Reply-To: 20200714182514.25250-3-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5008
+X-UID: 5009
 
---===============8603375062019281977==
+--===============6290525372406102920==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-check we can establish connections even in syncookie mode.
-Also check following MIB counters:
-MPTcpExtMPCapableSYNRX (should increase for each MPTCP test)
-MPTcpExtMPCapableACKRX (should increase for each MPTCP test)
-TcpExtSyncookiesSent (should increase for listener in ns2)
-TcpExtSyncookiesRecv (same)
+Hello,
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- .../selftests/net/mptcp/mptcp_connect.sh      | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+On 07/14/20 - 20:25, Florian Westphal wrote:
+> No need for this anymore; nowadays output function
+> has a 'synack_type' that tells us when the syn/ack is emitted
+> via syncookies.  The request already tells us when timestamps
+> are supported, so we can check both to detect when we need the
+> special timestamp for tcp option encoding.
+> =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index c0589e071f20..6260520674d0 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -196,6 +196,9 @@ ip -net "$ns4" link set ns4eth3 up
- ip -net "$ns4" route add default via 10.0.3.2
- ip -net "$ns4" route add default via dead:beef:3::2
- =
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  include/net/request_sock.h | 3 +--
+>  net/ipv4/tcp_input.c       | 2 --
+>  net/ipv4/tcp_output.c      | 2 +-
+>  3 files changed, 2 insertions(+), 5 deletions(-)
+> =
 
-+# use TCP syn cookies, even if no flooding was detected.
-+ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=3D2
-+
- set_ethtool_flags() {
- 	local ns=3D"$1"
- 	local dev=3D"$2"
-@@ -407,6 +410,11 @@ do_transfer()
- 		sleep 1
- 	fi
- =
+> diff --git a/include/net/request_sock.h b/include/net/request_sock.h
+> index cf8b33213bbc..2f717d4dafc5 100644
+> --- a/include/net/request_sock.h
+> +++ b/include/net/request_sock.h
+> @@ -54,8 +54,7 @@ struct request_sock {
+>  	struct request_sock		*dl_next;
+>  	u16				mss;
+>  	u8				num_retrans; /* number of retransmits */
+> -	u8				cookie_ts:1; /* syncookie: encode tcpopts in timestamp */
 
-+	local stat_synrx_last_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTc=
-pExtMPCapableSYNRX | while read a count c rest ;do  echo $count;done)
-+	local stat_ackrx_last_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTc=
-pExtMPCapableACKRX | while read a count c rest ;do  echo $count;done)
-+	local stat_cookietx_last=3D$(ip netns exec ${listener_ns} nstat -z -a Tcp=
-ExtSyncookiesSent | while read a count c rest ;do  echo $count;done)
-+	local stat_cookierx_last=3D$(ip netns exec ${listener_ns} nstat -z -a Tcp=
-ExtSyncookiesRecv | while read a count c rest ;do  echo $count;done)
-+
- 	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s $=
-{srv_proto} $extra_args $local_addr < "$sin" > "$sout" &
- 	local spid=3D$!
- =
+just a minor nit:
 
-@@ -450,6 +458,48 @@ do_transfer()
- 	check_transfer $cin $sout "file received by server"
- 	rets=3D$?
- =
+drivers/crypto/chelsio/chtls/chtls_cm.c is writing to that field as well - =
+so
+you need to remove that there as well.
 
-+	local stat_synrx_now_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTcp=
-ExtMPCapableSYNRX  | while read a count c rest ;do  echo $count;done)
-+	local stat_ackrx_now_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTcp=
-ExtMPCapableACKRX  | while read a count c rest ;do  echo $count;done)
-+
-+	local stat_cookietx_now=3D$(ip netns exec ${listener_ns} nstat -z -a TcpE=
-xtSyncookiesSent | while read a count c rest ;do  echo $count;done)
-+	local stat_cookierx_now=3D$(ip netns exec ${listener_ns} nstat -z -a TcpE=
-xtSyncookiesRecv | while read a count c rest ;do  echo $count;done)
-+
-+	expect_synrx=3D$((stat_synrx_last_l))
-+	expect_ackrx=3D$((stat_ackrx_last_l))
-+
-+	cookies=3D$(ip netns exec ${listener_ns} sysctl net.ipv4.tcp_syncookies)
-+	cookies=3D${cookies##*=3D}
-+
-+	if [ ${cl_proto} =3D "MPTCP" ] && [ ${srv_proto} =3D "MPTCP" ]; then
-+		expect_synrx=3D$((stat_synrx_last_l+1))
-+		expect_ackrx=3D$((stat_ackrx_last_l+1))
-+		if [ $cookies -eq 2 ];then
-+			expect_synrx=3D$((stat_synrx_last_l+2))
-+		fi
-+	fi
-+	if [ $cookies -eq 2 ];then
-+		if [ $stat_cookietx_last -ge $stat_cookietx_now ] ;then
-+			echo "${listener_ns} CookieSent: ${cl_proto} -> ${srv_proto}: did not a=
-dvance"
-+		fi
-+		if [ $stat_cookierx_last -ge $stat_cookierx_now ] ;then
-+			echo "${listener_ns} CookieRecv: ${cl_proto} -> ${srv_proto}: did not a=
-dvance"
-+		fi
-+	else
-+		if [ $stat_cookietx_last -ne $stat_cookietx_now ] ;then
-+			echo "${listener_ns} CookieSent: ${cl_proto} -> ${srv_proto}: changed"
-+		fi
-+		if [ $stat_cookierx_last -ne $stat_cookierx_now ] ;then
-+			echo "${listener_ns} CookieRecv: ${cl_proto} -> ${srv_proto}: changed"
-+		fi
-+	fi
-+
-+	if [ $expect_synrx -ne $stat_synrx_now_l ] ;then
-+		echo "${listener_ns} SYNRX: ${cl_proto} -> ${srv_proto}: expect ${expect=
-_synrx}, got ${stat_synrx_now_l}"
-+	fi
-+	if [ $expect_ackrx -ne $stat_ackrx_now_l ] ;then
-+		echo "${listener_ns} ACKRX: ${cl_proto} -> ${srv_proto}: expect ${expect=
-_synrx}, got ${stat_synrx_now_l}"
-+	fi
-+
- 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
- 		echo "$duration [ OK ]"
- 		cat "$capout"
--- =
 
-2.26.2
+Christoph
 
---===============8603375062019281977==--
+> -	u8				num_timeout:7; /* number of timeouts */
+> +	u8				num_timeout; /* number of timeouts */
+>  	u32				ts_recent;
+>  	struct timer_list		rsk_timer;
+>  	const struct request_sock_ops	*rsk_ops;
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 61c808864f6b..d8b9d09eb472 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -6510,7 +6510,6 @@ static void tcp_openreq_init(struct request_sock *r=
+eq,
+>  	struct inet_request_sock *ireq =3D inet_rsk(req);
+>  =
+
+>  	req->rsk_rcv_wnd =3D 0;		/* So that tcp_send_synack() knows! */
+> -	req->cookie_ts =3D 0;
+>  	tcp_rsk(req)->rcv_isn =3D TCP_SKB_CB(skb)->seq;
+>  	tcp_rsk(req)->rcv_nxt =3D TCP_SKB_CB(skb)->seq + 1;
+>  	tcp_rsk(req)->snt_synack =3D 0;
+> @@ -6730,7 +6729,6 @@ int tcp_conn_request(struct request_sock_ops *rsk_o=
+ps,
+>  =
+
+>  	if (want_cookie) {
+>  		isn =3D cookie_init_sequence(af_ops, sk, skb, &req->mss);
+> -		req->cookie_ts =3D tmp_opt.tstamp_ok;
+>  		if (!tmp_opt.tstamp_ok)
+>  			inet_rsk(req)->ecn_ok =3D 0;
+>  	}
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index 2d563efcee0d..2ab9c9c4ce85 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -3388,7 +3388,7 @@ struct sk_buff *tcp_make_synack(const struct sock *=
+sk, struct dst_entry *dst,
+>  	memset(&opts, 0, sizeof(opts));
+>  	now =3D tcp_clock_ns();
+>  #ifdef CONFIG_SYN_COOKIES
+> -	if (unlikely(req->cookie_ts))
+> +	if (unlikely(synack_type =3D=3D TCP_SYNACK_COOKIE && inet_rsk(req)->tst=
+amp_ok))
+>  		skb->skb_mstamp_ns =3D cookie_init_timestamp(req, now);
+>  	else
+>  #endif
+> -- =
+
+> 2.26.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+--===============6290525372406102920==--
