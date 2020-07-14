@@ -1,154 +1,168 @@
-Content-Type: multipart/mixed; boundary="===============4361621373956135809=="
+Content-Type: multipart/mixed; boundary="===============2155223230304386564=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH RFC 07/11] mptcp: subflow: add
- mptcp_subflow_init_cookie_req helper
-Date: Tue, 14 Jul 2020 20:25:10 +0200
-Message-ID: <20200714182514.25250-8-fw@strlen.de>
+Subject: [MPTCP] [PATCH RFC 08/11] tcp: syncookies: keep mptcp option enabled
+Date: Tue, 14 Jul 2020 20:25:11 +0200
+Message-ID: <20200714182514.25250-9-fw@strlen.de>
 In-Reply-To: 20200714182514.25250-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5004
+X-UID: 5005
 
---===============4361621373956135809==
+--===============2155223230304386564==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Will be used to initialize the mptcp request socket when a
-MP_CAPABLE request was handled in syncookie mode, i.e. when a
-TCP ACK containing a MP_CAPABLE option is a valid syncookie value.
+If SYN packet contains MP_CAPABLE option, keep it enabled.
+The mptcp relevant code is changed to detect the new 'sycookie' flag
+in the request socket.  If it is set, the socket isn't inserted into
+the token tree.  This will only be done when the cookie ACK comes back.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- include/linux/tcp.h |  1 +
- include/net/mptcp.h | 10 +++++++++
- net/mptcp/subflow.c | 53 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 64 insertions(+)
+ net/ipv4/syncookies.c | 21 +++++++++++++++++----
+ net/ipv4/tcp_input.c  |  4 +---
+ net/ipv6/syncookies.c | 17 ++++++++++++++---
+ 3 files changed, 32 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 3bdec31ce8f4..1f706157b551 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -118,6 +118,7 @@ struct tcp_request_sock {
- 	struct inet_request_sock 	req;
- 	const struct tcp_request_sock_ops *af_specific;
- 	u64				snt_synack; /* first SYNACK sent time */
-+	u8				syncookie:1;
- 	bool				tfo_listener;
- 	bool				is_mptcp;
- #if IS_ENABLED(CONFIG_MPTCP)
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 985344512f31..653acfe58d04 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -131,6 +131,9 @@ static inline bool mptcp_skb_can_collapse(const struct =
-sk_buff *to,
- }
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index ee17f55401ef..5da49dc126f9 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -289,6 +289,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+ 	__u32 cookie =3D ntohl(th->ack_seq) - 1;
++	const struct request_sock_ops *ops;
+ 	struct sock *ret =3D sk;
+ 	struct request_sock *req;
+ 	int mss;
+@@ -326,12 +327,27 @@ struct sock *cookie_v4_check(struct sock *sk, struct =
+sk_buff *skb)
+ 		goto out;
  =
 
- void mptcp_seq_show(struct seq_file *seq);
-+int mptcp_subflow_init_cookie_req(struct request_sock *req,
-+				  const struct sock *sk_listener,
-+				  struct sk_buff *skb);
- #else
+ 	ret =3D NULL;
+-	req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety=
+ */
++	ops =3D &tcp_request_sock_ops;
++#ifdef CONFIG_MPTCP
++	if (sk_is_mptcp(sk))
++		ops =3D &mptcp_subflow_request_sock_ops;
++#endif
++
++	req =3D inet_reqsk_alloc(ops, sk, false); /* for safety */
+ 	if (!req)
+ 		goto out;
  =
 
- static inline void mptcp_init(void)
-@@ -204,6 +207,13 @@ static inline bool mptcp_skb_can_collapse(const struct=
- sk_buff *to,
- =
-
- static inline void mptcp_space(const struct sock *ssk, int *s, int *fs) { }
- static inline void mptcp_seq_show(struct seq_file *seq) { }
+ 	ireq =3D inet_rsk(req);
+ 	treq =3D tcp_rsk(req);
++	treq->is_mptcp =3D sk_is_mptcp(sk);
 +
-+static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
-+						const struct sock *sk_listener,
-+						struct sk_buff *skb)
-+{
-+	return 0; /* TCP fallback */
-+}
- #endif /* CONFIG_MPTCP */
- =
-
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index cc9eaec14037..943fa650f1e9 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -154,6 +154,20 @@ static void subflow_init_req(struct request_sock *req,
- 			get_random_bytes(&subflow_req->local_key, sizeof(subflow_req->local_key=
-));
- 		} while (subflow_req->local_key =3D=3D 0);
- =
-
-+		if (unlikely(tcp_rsk(req)->syncookie)) {
-+			mptcp_crypto_key_sha(subflow_req->local_key,
-+					     &subflow_req->token,
-+					     &subflow_req->idsn);
-+			if (mptcp_token_get_sock(subflow_req->token)) {
-+				if (retries-- > 0)
-+					goto again;
-+			} else {
-+				subflow_req->mp_capable =3D 1;
-+			}
-+			subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
-+			return;
-+		}
++	if (treq->is_mptcp) {
++		int err =3D mptcp_subflow_init_cookie_req(req, sk, skb);
 +
- 		err =3D mptcp_token_new_request(req);
- 		if (err =3D=3D 0)
- 			subflow_req->mp_capable =3D 1;
-@@ -174,6 +188,45 @@ static void subflow_init_req(struct request_sock *req,
- 	}
- }
- =
-
-+int mptcp_subflow_init_cookie_req(struct request_sock *req,
-+				  const struct sock *sk_listener,
-+				  struct sk_buff *skb)
-+{
-+	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
-+	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
-+	struct mptcp_options_received mp_opt;
-+	int ret;
-+
-+	ret =3D __subflow_init_req(req, sk_listener);
-+	if (ret)
-+		return ret;
-+
-+	mptcp_get_options(skb, &mp_opt);
-+	ret =3D __subflow_check_options(&mp_opt, req);
-+	if (ret)
-+		return ret;
-+
-+	if (mp_opt.mp_capable && listener->request_mptcp) {
-+		int err;
-+
-+		if (mp_opt.sndr_key =3D=3D 0)
-+			return -EINVAL;
-+
-+		subflow_req->local_key =3D mp_opt.rcvr_key;
-+		err =3D mptcp_token_new_request(req);
 +		if (err)
-+			return err;
-+
-+		subflow_req->mp_capable =3D 1;
-+		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq - 1;
++			goto out_free;
 +	}
-+	/* JOIN cannot be handled via cookies due to need
-+	 * to store the remote peer nonce value.
-+	 */
 +
-+	return 0;
-+}
+ 	treq->rcv_isn		=3D ntohl(th->seq) - 1;
+ 	treq->snt_isn		=3D cookie;
+ 	treq->ts_off		=3D 0;
+@@ -350,9 +366,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	treq->snt_synack	=3D 0;
+ 	treq->tfo_listener	=3D false;
+ =
+
+-	if (IS_ENABLED(CONFIG_MPTCP))
+-		treq->is_mptcp =3D 0;
+-
+ 	if (IS_ENABLED(CONFIG_SMC))
+ 		ireq->smc_ok =3D 0;
+ =
+
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index d8b9d09eb472..5ae612902806 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6669,6 +6669,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ #if IS_ENABLED(CONFIG_MPTCP)
+ 	tcp_rsk(req)->is_mptcp =3D 0;
+ #endif
++	tcp_rsk(req)->syncookie =3D want_cookie;
+ =
+
+ 	tcp_clear_options(&tmp_opt);
+ 	tmp_opt.mss_clamp =3D af_ops->mss_clamp;
+@@ -6691,9 +6692,6 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ =
+
+ 	af_ops->init_req(req, sk, skb);
+ =
+
+-	if (IS_ENABLED(CONFIG_MPTCP) && want_cookie)
+-		tcp_rsk(req)->is_mptcp =3D 0;
+-
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto drop_and_free;
+ =
+
+diff --git a/net/ipv6/syncookies.c b/net/ipv6/syncookies.c
+index 13235a012388..0a05c3c1e776 100644
+--- a/net/ipv6/syncookies.c
++++ b/net/ipv6/syncookies.c
+@@ -134,6 +134,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+ 	__u32 cookie =3D ntohl(th->ack_seq) - 1;
++	const struct request_sock_ops *ops;
+ 	struct sock *ret =3D sk;
+ 	struct request_sock *req;
+ 	int mss;
+@@ -170,7 +171,13 @@ struct sock *cookie_v6_check(struct sock *sk, struct s=
+k_buff *skb)
+ 		goto out;
+ =
+
+ 	ret =3D NULL;
+-	req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
++	ops =3D &tcp6_request_sock_ops;
++#ifdef CONFIG_MPTCP
++	if (sk_is_mptcp(sk))
++		ops =3D &mptcp_subflow_request_sock_ops;
++#endif
 +
- static void subflow_v4_init_req(struct request_sock *req,
- 				const struct sock *sk_listener,
- 				struct sk_buff *skb)
++	req =3D inet_reqsk_alloc(ops, sk, false);
+ 	if (!req)
+ 		goto out;
+ =
+
+@@ -178,8 +185,12 @@ struct sock *cookie_v6_check(struct sock *sk, struct s=
+k_buff *skb)
+ 	treq =3D tcp_rsk(req);
+ 	treq->tfo_listener =3D false;
+ =
+
+-	if (IS_ENABLED(CONFIG_MPTCP))
+-		treq->is_mptcp =3D 0;
++	if (treq->is_mptcp) {
++		int err =3D mptcp_subflow_init_cookie_req(req, sk, skb);
++
++		if (err)
++			goto out_free;
++	}
+ =
+
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto out_free;
 -- =
 
 2.26.2
 
---===============4361621373956135809==--
+--===============2155223230304386564==--
