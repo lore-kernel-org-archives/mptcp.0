@@ -1,171 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============5918686684439108626=="
+Content-Type: multipart/mixed; boundary="===============1072956361323701476=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: David Ahern <dsahern at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 07/11] mptcp: subflow: add
- mptcp_subflow_init_cookie_req helper
-Date: Tue, 14 Jul 2020 12:32:00 -0700
-Message-ID: <20200714193200.GG73500@MacBook-Pro-64.local>
-In-Reply-To: 20200714182514.25250-8-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH iproute2-next 2/2] ss: mptcp: add msk diag
+ interface support
+Date: Tue, 14 Jul 2020 17:59:08 -0600
+Message-ID: <b3b053a5-186e-a272-0576-65d0950295d4@gmail.com>
+In-Reply-To: f99042572923cd0d569f3fa89393ca9b384ad1bf.1594388640.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5010
+X-UID: 5012
 
---===============5918686684439108626==
+--===============1072956361323701476==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 07/14/20 - 20:25, Florian Westphal wrote:
-> Will be used to initialize the mptcp request socket when a
-> MP_CAPABLE request was handled in syncookie mode, i.e. when a
-> TCP ACK containing a MP_CAPABLE option is a valid syncookie value.
+On 7/10/20 7:52 AM, Paolo Abeni wrote:
+> This implement support for MPTCP sockets type, comprising
+> extended socket info. Note that we need to add an extended
+> attribute carrying the actual protocol number to the diag
+> request.
 > =
 
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
->  include/linux/tcp.h |  1 +
->  include/net/mptcp.h | 10 +++++++++
->  net/mptcp/subflow.c | 53 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 64 insertions(+)
+>  misc/ss.c | 115 +++++++++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 105 insertions(+), 10 deletions(-)
 > =
 
-> diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-> index 3bdec31ce8f4..1f706157b551 100644
-> --- a/include/linux/tcp.h
-> +++ b/include/linux/tcp.h
-> @@ -118,6 +118,7 @@ struct tcp_request_sock {
->  	struct inet_request_sock 	req;
->  	const struct tcp_request_sock_ops *af_specific;
->  	u64				snt_synack; /* first SYNACK sent time */
-> +	u8				syncookie:1;
 
-As this field will only be used in init_req, would it make sense to rather
-pass want_cookie from tcp_conn_request as an argument to the callback?
+applied to iproute2-next. Thanks
 
 
-Christoph
-
->  	bool				tfo_listener;
->  	bool				is_mptcp;
->  #if IS_ENABLED(CONFIG_MPTCP)
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 985344512f31..653acfe58d04 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -131,6 +131,9 @@ static inline bool mptcp_skb_can_collapse(const struc=
-t sk_buff *to,
->  }
->  =
-
->  void mptcp_seq_show(struct seq_file *seq);
-> +int mptcp_subflow_init_cookie_req(struct request_sock *req,
-> +				  const struct sock *sk_listener,
-> +				  struct sk_buff *skb);
->  #else
->  =
-
->  static inline void mptcp_init(void)
-> @@ -204,6 +207,13 @@ static inline bool mptcp_skb_can_collapse(const stru=
-ct sk_buff *to,
->  =
-
->  static inline void mptcp_space(const struct sock *ssk, int *s, int *fs) =
-{ }
->  static inline void mptcp_seq_show(struct seq_file *seq) { }
-> +
-> +static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
-> +						const struct sock *sk_listener,
-> +						struct sk_buff *skb)
-> +{
-> +	return 0; /* TCP fallback */
-> +}
->  #endif /* CONFIG_MPTCP */
->  =
-
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index cc9eaec14037..943fa650f1e9 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -154,6 +154,20 @@ static void subflow_init_req(struct request_sock *re=
-q,
->  			get_random_bytes(&subflow_req->local_key, sizeof(subflow_req->local_k=
-ey));
->  		} while (subflow_req->local_key =3D=3D 0);
->  =
-
-> +		if (unlikely(tcp_rsk(req)->syncookie)) {
-> +			mptcp_crypto_key_sha(subflow_req->local_key,
-> +					     &subflow_req->token,
-> +					     &subflow_req->idsn);
-> +			if (mptcp_token_get_sock(subflow_req->token)) {
-> +				if (retries-- > 0)
-> +					goto again;
-> +			} else {
-> +				subflow_req->mp_capable =3D 1;
-> +			}
-> +			subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
-> +			return;
-> +		}
-> +
->  		err =3D mptcp_token_new_request(req);
->  		if (err =3D=3D 0)
->  			subflow_req->mp_capable =3D 1;
-> @@ -174,6 +188,45 @@ static void subflow_init_req(struct request_sock *re=
-q,
->  	}
->  }
->  =
-
-> +int mptcp_subflow_init_cookie_req(struct request_sock *req,
-> +				  const struct sock *sk_listener,
-> +				  struct sk_buff *skb)
-> +{
-> +	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listene=
-r);
-> +	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(re=
-q);
-> +	struct mptcp_options_received mp_opt;
-> +	int ret;
-> +
-> +	ret =3D __subflow_init_req(req, sk_listener);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mptcp_get_options(skb, &mp_opt);
-> +	ret =3D __subflow_check_options(&mp_opt, req);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (mp_opt.mp_capable && listener->request_mptcp) {
-> +		int err;
-> +
-> +		if (mp_opt.sndr_key =3D=3D 0)
-> +			return -EINVAL;
-> +
-> +		subflow_req->local_key =3D mp_opt.rcvr_key;
-> +		err =3D mptcp_token_new_request(req);
-> +		if (err)
-> +			return err;
-> +
-> +		subflow_req->mp_capable =3D 1;
-> +		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq - 1;
-> +	}
-> +	/* JOIN cannot be handled via cookies due to need
-> +	 * to store the remote peer nonce value.
-> +	 */
-> +
-> +	return 0;
-> +}
-> +
->  static void subflow_v4_init_req(struct request_sock *req,
->  				const struct sock *sk_listener,
->  				struct sk_buff *skb)
-> -- =
-
-> 2.26.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
---===============5918686684439108626==--
+--===============1072956361323701476==--
