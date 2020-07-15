@@ -1,36 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============1072956361323701476=="
+Content-Type: multipart/mixed; boundary="===============1628247770724178308=="
 MIME-Version: 1.0
-From: David Ahern <dsahern at gmail.com>
+From: YueHaibing <yuehaibing at huawei.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH iproute2-next 2/2] ss: mptcp: add msk diag
- interface support
-Date: Tue, 14 Jul 2020 17:59:08 -0600
-Message-ID: <b3b053a5-186e-a272-0576-65d0950295d4@gmail.com>
-In-Reply-To: f99042572923cd0d569f3fa89393ca9b384ad1bf.1594388640.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH net-next] mptcp: Remove unused inline function
+ mptcp_rcv_synsent()
+Date: Wed, 15 Jul 2020 10:36:13 +0800
+Message-ID: <20200715023613.9492-1-yuehaibing@huawei.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5012
+X-UID: 5013
 
---===============1072956361323701476==
+--===============1628247770724178308==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 7/10/20 7:52 AM, Paolo Abeni wrote:
-> This implement support for MPTCP sockets type, comprising
-> extended socket info. Note that we need to add an extended
-> attribute carrying the actual protocol number to the diag
-> request.
-> =
+commit 263e1201a2c3 ("mptcp: consolidate synack processing.")
+left behind this, remove it.
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  misc/ss.c | 115 +++++++++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 105 insertions(+), 10 deletions(-)
-> =
+Signed-off-by: YueHaibing <yuehaibing(a)huawei.com>
+---
+ include/net/mptcp.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 46d0487d2b22..02158c257bd4 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -164,10 +164,6 @@ static inline bool mptcp_syn_options(struct sock *sk, =
+const struct sk_buff *skb,
+ 	return false;
+ }
+ =
+
+-static inline void mptcp_rcv_synsent(struct sock *sk)
+-{
+-}
+-
+ static inline bool mptcp_synack_options(const struct request_sock *req,
+ 					unsigned int *size,
+ 					struct mptcp_out_options *opts)
+-- =
+
+2.17.1
 
 
-applied to iproute2-next. Thanks
-
-
---===============1072956361323701476==--
+--===============1628247770724178308==--
