@@ -1,71 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============0324520052824703895=="
+Content-Type: multipart/mixed; boundary="===============0640537223818661179=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] mptcp: silence warning in
- subflow_data_ready()
-Date: Wed, 15 Jul 2020 22:27:05 +0200
-Message-ID: <87f4954cfd7eacd6e220ab60d61e09f35ed32252.1594844608.git.dcaratti@redhat.com>
+Subject: [MPTCP] [PATCH mptcp-next 00/12] DATA_FIN support
+Date: Wed, 15 Jul 2020 17:20:24 -0700
+Message-ID: <20200716002036.705306-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5023
+X-UID: 5024
 
---===============0324520052824703895==
+--===============0640537223818661179==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-since commit d47a72152097 ("mptcp: fix race in subflow_data_ready()"), it
-is possible to observe a regression in MP_JOIN kselftests. For sockets in
-TCP_CLOSE state, it's not sufficient to just wake up the main socket: we
-also need to ensure that received data are made available to the reader.
-Silence the WARN_ON_ONCE() in these cases: it preserves the syzkaller fix
-and restores kselftests	when they are ran as follows:
+Here is a series adding DATA_FIN support with these improvements
+relative to the RFC patch:
 
-  # while true; do
-  > make KBUILD_OUTPUT=3D/tmp/kselftest TARGETS=3Dnet/mptcp kselftest
-  > done
+ * Split in to a series
+ * A few enhancements suggested by Paolo
+ * Lots of fixes, including handling of fallback sockets and
+   connections that are already doing the disconnect handshake before
+   accept() even returns.
+ * Self tests pass. I have not yet tested with mptcp_trunk...
 
-Reported-by: Florian Westphal <fw(a)strlen.de>
-Fixes: d47a72152097 ("mptcp: fix race in subflow_data_ready()")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/47
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/subflow.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+See the patch 8 commit message for information about the disconnection
+state machine.
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 9f7f3772c13c..519122e66f17 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -869,18 +869,19 @@ void mptcp_space(const struct sock *ssk, int *space, =
-int *full_space)
- static void subflow_data_ready(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	u16 state =3D 1 << inet_sk_state_load(sk);
- 	struct sock *parent =3D subflow->conn;
- 	struct mptcp_sock *msk;
- =
+The TCP fallback tests would hang at disconnect when I removed the
+subflow EOF handling altogether. Instead I only enabled that code for
+fallback sockets (see patch 9).
 
- 	msk =3D mptcp_sk(parent);
--	if ((1 << inet_sk_state_load(sk)) & (TCPF_LISTEN | TCPF_CLOSE)) {
-+	if (state & TCPF_LISTEN) {
- 		set_bit(MPTCP_DATA_READY, &msk->flags);
- 		parent->sk_data_ready(parent);
- 		return;
- 	}
- =
+Mat Martineau (12):
+  mptcp: Allow DATA_FIN in headers without TCP FIN
+  mptcp: Return EPIPE if sending is shut down during a sendmsg
+  mptcp: Add mptcp_close_state() helper
+  mptcp: Track received DATA_FIN sequence number and add related helpers
+  mptcp: Use MPTCP-level flag for sending DATA_FIN
+  mptcp: Add helper to process acks of DATA_FIN
+  mptcp: Send DATA_FIN in appropriate states during shutdown or close
+  mptcp: Use full MPTCP-level disconnect state machine
+  mptcp: Only use subflow EOF signaling on fallback connections
+  mptcp: Skip unnecessary skb extension allocation for bare acks
+  mptcp: Safely read sequence number when lock isn't held
+  mptcp: Safely store sequence number when sending data
 
- 	WARN_ON_ONCE(!__mptcp_check_fallback(msk) && !subflow->mp_capable &&
--		     !subflow->mp_join);
-+		     !subflow->mp_join && !(state & TCPF_CLOSE));
- =
+ net/mptcp/options.c  |  54 ++++++--
+ net/mptcp/protocol.c | 301 ++++++++++++++++++++++++++++++++++++-------
+ net/mptcp/protocol.h |   6 +-
+ net/mptcp/subflow.c  |  14 +-
+ 4 files changed, 309 insertions(+), 66 deletions(-)
 
- 	if (mptcp_subflow_data_available(sk))
- 		mptcp_data_ready(parent, sk);
+
+base-commit: 9389d1bcffad728d53fc5860d8201c14d1c86042
 -- =
 
-2.26.2
+2.27.0
 
---===============0324520052824703895==--
+--===============0640537223818661179==--
