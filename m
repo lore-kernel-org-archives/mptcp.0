@@ -1,60 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============0640537223818661179=="
+Content-Type: multipart/mixed; boundary="===============3299966647535718410=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 00/12] DATA_FIN support
-Date: Wed, 15 Jul 2020 17:20:24 -0700
-Message-ID: <20200716002036.705306-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next 03/12] mptcp: Add mptcp_close_state() helper
+Date: Wed, 15 Jul 2020 17:20:27 -0700
+Message-ID: <20200716002036.705306-4-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20200716002036.705306-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5024
+X-UID: 5025
 
---===============0640537223818661179==
+--===============3299966647535718410==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Here is a series adding DATA_FIN support with these improvements
-relative to the RFC patch:
+This will be used to transition to the appropriate state on close and
+determine if a DATA_FIN needs to be sent for that state transition.
 
- * Split in to a series
- * A few enhancements suggested by Paolo
- * Lots of fixes, including handling of fallback sockets and
-   connections that are already doing the disconnect handshake before
-   accept() even returns.
- * Self tests pass. I have not yet tested with mptcp_trunk...
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ net/mptcp/protocol.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-See the patch 8 commit message for information about the disconnection
-state machine.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7cdf451ea3da..69100187490f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1424,7 +1424,33 @@ static void mptcp_subflow_shutdown(struct sock *ssk,=
+ int how,
+ 	release_sock(ssk);
+ }
+ =
 
-The TCP fallback tests would hang at disconnect when I removed the
-subflow EOF handling altogether. Instead I only enabled that code for
-fallback sockets (see patch 9).
-
-Mat Martineau (12):
-  mptcp: Allow DATA_FIN in headers without TCP FIN
-  mptcp: Return EPIPE if sending is shut down during a sendmsg
-  mptcp: Add mptcp_close_state() helper
-  mptcp: Track received DATA_FIN sequence number and add related helpers
-  mptcp: Use MPTCP-level flag for sending DATA_FIN
-  mptcp: Add helper to process acks of DATA_FIN
-  mptcp: Send DATA_FIN in appropriate states during shutdown or close
-  mptcp: Use full MPTCP-level disconnect state machine
-  mptcp: Only use subflow EOF signaling on fallback connections
-  mptcp: Skip unnecessary skb extension allocation for bare acks
-  mptcp: Safely read sequence number when lock isn't held
-  mptcp: Safely store sequence number when sending data
-
- net/mptcp/options.c  |  54 ++++++--
- net/mptcp/protocol.c | 301 ++++++++++++++++++++++++++++++++++++-------
- net/mptcp/protocol.h |   6 +-
- net/mptcp/subflow.c  |  14 +-
- 4 files changed, 309 insertions(+), 66 deletions(-)
-
-
-base-commit: 9389d1bcffad728d53fc5860d8201c14d1c86042
+-/* Called with msk lock held, releases such lock before returning */
++static const unsigned char new_state[16] =3D {
++  /* current state:        new state:      action:	*/
++  [0 /* (Invalid) */]	=3D TCP_CLOSE,
++  [TCP_ESTABLISHED]	=3D TCP_FIN_WAIT1 | TCP_ACTION_FIN,
++  [TCP_SYN_SENT]	=3D TCP_CLOSE,
++  [TCP_SYN_RECV]	=3D TCP_FIN_WAIT1 | TCP_ACTION_FIN,
++  [TCP_FIN_WAIT1]	=3D TCP_FIN_WAIT1,
++  [TCP_FIN_WAIT2]	=3D TCP_FIN_WAIT2,
++  [TCP_TIME_WAIT]	=3D TCP_CLOSE,	/* should not happen ! */
++  [TCP_CLOSE]		=3D TCP_CLOSE,
++  [TCP_CLOSE_WAIT]	=3D TCP_LAST_ACK  | TCP_ACTION_FIN,
++  [TCP_LAST_ACK]	=3D TCP_LAST_ACK,
++  [TCP_LISTEN]		=3D TCP_CLOSE,
++  [TCP_CLOSING]		=3D TCP_CLOSING,
++  [TCP_NEW_SYN_RECV]	=3D TCP_CLOSE,	/* should not happen ! */
++};
++
++static int mptcp_close_state(struct sock *sk)
++{
++	int next =3D (int)new_state[sk->sk_state];
++	int ns =3D next & TCP_STATE_MASK;
++
++	inet_sk_state_store(sk, ns);
++
++	return next & TCP_ACTION_FIN;
++}
++
+ static void mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
 -- =
 
 2.27.0
 
---===============0640537223818661179==--
+--===============3299966647535718410==--
