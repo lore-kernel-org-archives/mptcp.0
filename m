@@ -1,71 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============3299966647535718410=="
+Content-Type: multipart/mixed; boundary="===============5060725934255225623=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 03/12] mptcp: Add mptcp_close_state() helper
-Date: Wed, 15 Jul 2020 17:20:27 -0700
-Message-ID: <20200716002036.705306-4-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next 01/12] mptcp: Allow DATA_FIN in headers
+ without TCP FIN
+Date: Wed, 15 Jul 2020 17:20:25 -0700
+Message-ID: <20200716002036.705306-2-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200716002036.705306-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5025
+X-UID: 5026
 
---===============3299966647535718410==
+--===============5060725934255225623==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This will be used to transition to the appropriate state on close and
-determine if a DATA_FIN needs to be sent for that state transition.
+RFC 8684-compliant DATA_FIN needs to be sent and ack'd before subflows
+are closed with TCP FIN, so write DATA_FIN DSS headers whenever their
+transmission has been enabled by the MPTCP connection-level socket.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ net/mptcp/options.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7cdf451ea3da..69100187490f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1424,7 +1424,33 @@ static void mptcp_subflow_shutdown(struct sock *ssk,=
- int how,
- 	release_sock(ssk);
- }
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 018025ae9f36..756a636d3d3a 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -482,17 +482,10 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ 	struct mptcp_sock *msk;
+ 	unsigned int ack_size;
+ 	bool ret =3D false;
+-	u8 tcp_fin;
  =
 
--/* Called with msk lock held, releases such lock before returning */
-+static const unsigned char new_state[16] =3D {
-+  /* current state:        new state:      action:	*/
-+  [0 /* (Invalid) */]	=3D TCP_CLOSE,
-+  [TCP_ESTABLISHED]	=3D TCP_FIN_WAIT1 | TCP_ACTION_FIN,
-+  [TCP_SYN_SENT]	=3D TCP_CLOSE,
-+  [TCP_SYN_RECV]	=3D TCP_FIN_WAIT1 | TCP_ACTION_FIN,
-+  [TCP_FIN_WAIT1]	=3D TCP_FIN_WAIT1,
-+  [TCP_FIN_WAIT2]	=3D TCP_FIN_WAIT2,
-+  [TCP_TIME_WAIT]	=3D TCP_CLOSE,	/* should not happen ! */
-+  [TCP_CLOSE]		=3D TCP_CLOSE,
-+  [TCP_CLOSE_WAIT]	=3D TCP_LAST_ACK  | TCP_ACTION_FIN,
-+  [TCP_LAST_ACK]	=3D TCP_LAST_ACK,
-+  [TCP_LISTEN]		=3D TCP_CLOSE,
-+  [TCP_CLOSING]		=3D TCP_CLOSING,
-+  [TCP_NEW_SYN_RECV]	=3D TCP_CLOSE,	/* should not happen ! */
-+};
-+
-+static int mptcp_close_state(struct sock *sk)
-+{
-+	int next =3D (int)new_state[sk->sk_state];
-+	int ns =3D next & TCP_STATE_MASK;
-+
-+	inet_sk_state_store(sk, ns);
-+
-+	return next & TCP_ACTION_FIN;
-+}
-+
- static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow, *tmp;
+-	if (skb) {
+-		mpext =3D mptcp_get_ext(skb);
+-		tcp_fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
+-	} else {
+-		mpext =3D NULL;
+-		tcp_fin =3D 0;
+-	}
++	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+ =
+
+-	if (!skb || (mpext && mpext->use_map) || tcp_fin) {
++	if (!skb || (mpext && mpext->use_map) || subflow->data_fin_tx_enable) {
+ 		unsigned int map_size;
+ =
+
+ 		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+@@ -502,7 +495,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ 		if (mpext)
+ 			opts->ext_copy =3D *mpext;
+ =
+
+-		if (skb && tcp_fin && subflow->data_fin_tx_enable)
++		if (skb && subflow->data_fin_tx_enable)
+ 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
+ 		ret =3D true;
+ 	}
 -- =
 
 2.27.0
 
---===============3299966647535718410==--
+--===============5060725934255225623==--
