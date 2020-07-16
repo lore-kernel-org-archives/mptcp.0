@@ -1,47 +1,153 @@
-Content-Type: multipart/mixed; boundary="===============1081253083628651154=="
+Content-Type: multipart/mixed; boundary="===============0062666988932436887=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 03/12] mptcp: Add mptcp_close_state()
- helper
-Date: Thu, 16 Jul 2020 15:20:43 +0200
-Message-ID: <dbd09873ffb51e8436feabd0af5340e827b03996.camel@redhat.com>
-In-Reply-To: 20200716002036.705306-4-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-next 08/12] mptcp: Use full MPTCP-level
+ disconnect state machine
+Date: Thu, 16 Jul 2020 15:25:53 +0200
+Message-ID: <07d988083a3aef7626b465d4acadb6e27744b5d6.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.23.453.2007151723050.40462@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 5042
+X-UID: 5043
 
---===============1081253083628651154==
+--===============0062666988932436887==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-07-15 at 17:20 -0700, Mat Martineau wrote:
-> This will be used to transition to the appropriate state on close and
-> determine if a DATA_FIN needs to be sent for that state transition.
+On Wed, 2020-07-15 at 17:40 -0700, Mat Martineau wrote:
+> On Wed, 15 Jul 2020, Mat Martineau wrote:
 > =
 
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> ---
->  net/mptcp/protocol.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
+> > RFC 8684 appendix D describes the connection state machine for
+> > MPTCP. This patch implements the DATA_FIN / DATA_ACK exchanges and
+> > MPTCP-level socket state changes described in that appendix, rather than
+> > simply sending DATA_FIN along with TCP FIN when disconnecting subflows.
+> > =
+
+> > DATA_FIN is now sent and acknowledged before shutting down the
+> > subflows. Received DATA_FIN information (if not part of a data packet)
+> > is written to the MPTCP socket when the incoming DSS option is parsed by
+> > the subflow, and the MPTCP worker is scheduled to process the
+> > flag. DATA_FIN received as part of a full DSS mapping will be handled
+> > when the mapping is processed.
+> > =
+
+> > The DATA_FIN is acknowledged by the worker if the reader is caught
+> > up. If there is still data to be moved to the MPTCP-level queue, ack_seq
+> > will be incremented to account for the DATA_FIN when it reaches the end
+> > of the stream and a DATA_ACK will be sent to the peer.
+> > =
+
+> > In this RFC patch, DATA_FIN is sent when calling shutdown(fd, SHUT_WR)
+> > on the MPTCP socket. mptcp_close() has not yet been updated to wait for
+> > the peer to DATA_ACK before forcing all the subflows to be closed and
+> > cleaned up. The handshake is working with both peers using test programs
+> > with shutdown() and delays, but is not yet working consistently with the
+> > self tests. It also doesn't currently detect if fallback has happened,
+> > so there are extra acks sent on fallback connections.
+> > =
+
+> > Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> > ---
+> > net/mptcp/options.c  | 11 ++++++
+> > net/mptcp/protocol.c | 83 +++++++++++++++++++++++++++++++++++---------
+> > net/mptcp/subflow.c  | 11 ++++--
+> > 3 files changed, 86 insertions(+), 19 deletions(-)
+> > =
+
+> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > index 4e2378369691..72d41c239acf 100644
+> > --- a/net/mptcp/options.c
+> > +++ b/net/mptcp/options.c
+> > @@ -864,6 +864,17 @@ void mptcp_incoming_options(struct sock *sk, struc=
+t sk_buff *skb,
+> > 	if (mp_opt.use_ack)
+> > 		update_una(msk, &mp_opt);
+> > =
+
+> > +	/* Zero-length packets, like bare ACKs carrying a DATA_FIN, are
+> > +	 * dropped by the caller and not propagated to the MPTCP layer.
+> > +	 * Copy the DATA_FIN information now.
+> > +	 */
+> > +	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
+> > +		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
+> > +		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
+> > +		    schedule_work(&msk->work))
+> > +			sock_hold(subflow->conn);
+> > +	}
+> > +
+> > 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
+> > 	if (!mpext)
+> > 		return;
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 9eef1fbe300b..d19e7ba5163c 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -299,6 +299,12 @@ static void mptcp_check_data_fin(struct sock *sk)
+> > 	}
+> > }
+> > =
+
+> > +static void mptcp_schedule_work(struct sock *sk)
+> > +{
+> > +	if (schedule_work(&mptcp_sk(sk)->work))
+> > +		sock_hold(sk);
+> > +}
+> > +
+> > static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+> > 					   struct sock *ssk,
+> > 					   unsigned int *bytes)
+> > @@ -356,6 +362,9 @@ static bool __mptcp_move_skbs_from_subflow(struct m=
+ptcp_sock *msk,
+> > 			seq +=3D len;
+> > 			moved +=3D len;
+> > =
+
+> > +			if (mptcp_pending_data_fin(sk))
+> > +				mptcp_schedule_work(sk);
+> > +
 > =
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 7cdf451ea3da..69100187490f 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1424,7 +1424,33 @@ static void mptcp_subflow_shutdown(struct sock *ss=
-k, int how,
->  	release_sock(ssk);
->  }
->  =
+> I noticed after sending that this check is redundant with the hunk of cod=
+e =
 
-> -/* Called with msk lock held, releases such lock before returning */
+> below. Only the one check at the end of the function is needed.
 
-Beware! this removes the above commit message, likely in an unintended
-way.
+Looks like the checked condition is slightly different ?!? =
+
+
+	msk->ack_seq =3D=3D READ_ONCE(msk->rcv_data_fin_seq)
+
+in mptcp_pending_data_fin()...
+
+> =
+
+> > 			if (WARN_ON_ONCE(map_remaining < len))
+> > 				break;
+> > 		} else {
+> > @@ -375,6 +384,16 @@ static bool __mptcp_move_skbs_from_subflow(struct =
+mptcp_sock *msk,
+> > =
+
+> > 	*bytes =3D moved;
+> > =
+
+> > +	/* If the moves have caught up with the DATA_FIN sequence number
+> > +	 * it's time to ack the DATA_FIN and change socket state, but
+> > +	 * this is not a good place to change state. Let the workqueue
+> > +	 * do it.
+> > +	 */
+> > +	if (READ_ONCE(msk->rcv_data_fin) &&
+> > +	    msk->ack_seq + 1 =3D=3D READ_ONCE(msk->rcv_data_fin_seq) &&
+
+... here we have 'msk->ack_seq + 1'. I guess this latter is the correct
+expression???
+
+If so I suggest to modify mptcp_pending_data_fin() accordingly, and
+reuse it here.
 
 /P
 
---===============1081253083628651154==--
+--===============0062666988932436887==--
