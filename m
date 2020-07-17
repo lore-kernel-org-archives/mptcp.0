@@ -1,170 +1,201 @@
-Content-Type: multipart/mixed; boundary="===============6877123973017769477=="
+Content-Type: multipart/mixed; boundary="===============8148588579484843971=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 16/22] net/ipv4: factor out mcast join/leave
- setsockopt helpers
-Date: Fri, 17 Jul 2020 08:23:25 +0200
-Message-ID: <20200717062331.691152-17-hch@lst.de>
+Subject: [MPTCP] [PATCH 18/22] net/ipv6: factor out MCAST_MSFILTER getsockopt
+ helpers
+Date: Fri, 17 Jul 2020 08:23:27 +0200
+Message-ID: <20200717062331.691152-19-hch@lst.de>
 In-Reply-To: 20200717062331.691152-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5065
+X-UID: 5066
 
---===============6877123973017769477==
+--===============8148588579484843971==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Factor out one helper each for setting the native and compat
+Factor out one helper each for getting the native and compat
 version of the MCAST_MSFILTER option.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- net/ipv4/ip_sockglue.c | 109 +++++++++++++++++++++--------------------
- 1 file changed, 56 insertions(+), 53 deletions(-)
+ net/ipv6/ipv6_sockglue.c | 139 +++++++++++++++++++++------------------
+ 1 file changed, 74 insertions(+), 65 deletions(-)
 
-diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index b587dee006f882..73bb88fbe54661 100644
---- a/net/ipv4/ip_sockglue.c
-+++ b/net/ipv4/ip_sockglue.c
-@@ -806,6 +806,60 @@ static int compat_ip_set_mcast_msfilter(struct sock *s=
-k, void __user *optval,
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index 6adfbdcb7979bd..ef5656f876ac05 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -1071,6 +1071,77 @@ static int ipv6_getsockopt_sticky(struct sock *sk, s=
+truct ipv6_txoptions *opt,
+ 	return len;
  }
- #endif
  =
 
-+static int ip_mcast_join_leave(struct sock *sk, int optname,
-+		void __user *optval, int optlen)
++static int ipv6_get_msfilter(struct sock *sk, void __user *optval,
++		int __user *optlen, int len)
 +{
-+	struct ip_mreqn mreq =3D { };
-+	struct sockaddr_in *psin;
-+	struct group_req greq;
++	const int size0 =3D offsetof(struct group_filter, gf_slist);
++	struct group_filter __user *p =3D optval;
++	struct group_filter gsf;
++	int num;
++	int err;
 +
-+	if (optlen < sizeof(struct group_req))
++	if (len < size0)
 +		return -EINVAL;
-+	if (copy_from_user(&greq, optval, sizeof(greq)))
++	if (copy_from_user(&gsf, p, size0))
 +		return -EFAULT;
-+
-+	psin =3D (struct sockaddr_in *)&greq.gr_group;
-+	if (psin->sin_family !=3D AF_INET)
-+		return -EINVAL;
-+	mreq.imr_multiaddr =3D psin->sin_addr;
-+	mreq.imr_ifindex =3D greq.gr_interface;
-+	if (optname =3D=3D MCAST_JOIN_GROUP)
-+		return ip_mc_join_group(sk, &mreq);
-+	return ip_mc_leave_group(sk, &mreq);
++	if (gsf.gf_group.ss_family !=3D AF_INET6)
++		return -EADDRNOTAVAIL;
++	num =3D gsf.gf_numsrc;
++	lock_sock(sk);
++	err =3D ip6_mc_msfget(sk, &gsf, p->gf_slist);
++	if (!err) {
++		if (num > gsf.gf_numsrc)
++			num =3D gsf.gf_numsrc;
++		if (put_user(GROUP_FILTER_SIZE(num), optlen) ||
++		    copy_to_user(p, &gsf, size0))
++			err =3D -EFAULT;
++	}
++	release_sock(sk);
++	return err;
 +}
 +
 +#ifdef CONFIG_COMPAT
-+static int compat_ip_mcast_join_leave(struct sock *sk, int optname,
-+		void __user *optval, int optlen)
++static int compat_ipv6_get_msfilter(struct sock *sk, void __user *optval,
++		int __user *optlen)
 +{
-+	struct compat_group_req greq;
-+	struct ip_mreqn mreq =3D { };
-+	struct sockaddr_in *psin;
-+	int err;
++	const int size0 =3D offsetof(struct compat_group_filter, gf_slist);
++	struct compat_group_filter __user *p =3D optval;
++	struct compat_group_filter gf32;
++	struct group_filter gf;
++	int len, err;
++	int num;
 +
-+	if (optlen < sizeof(struct compat_group_req))
-+		return -EINVAL;
-+	if (copy_from_user(&greq, optval, sizeof(greq)))
++	if (get_user(len, optlen))
 +		return -EFAULT;
-+
-+	psin =3D (struct sockaddr_in *)&greq.gr_group;
-+	if (psin->sin_family !=3D AF_INET)
++	if (len < size0)
 +		return -EINVAL;
-+	mreq.imr_multiaddr =3D psin->sin_addr;
-+	mreq.imr_ifindex =3D greq.gr_interface;
 +
-+	rtnl_lock();
++	if (copy_from_user(&gf32, p, size0))
++		return -EFAULT;
++	gf.gf_interface =3D gf32.gf_interface;
++	gf.gf_fmode =3D gf32.gf_fmode;
++	num =3D gf.gf_numsrc =3D gf32.gf_numsrc;
++	gf.gf_group =3D gf32.gf_group;
++
++	if (gf.gf_group.ss_family !=3D AF_INET6)
++		return -EADDRNOTAVAIL;
++
 +	lock_sock(sk);
-+	if (optname =3D=3D MCAST_JOIN_GROUP)
-+		err =3D ip_mc_join_group(sk, &mreq);
-+	else
-+		err =3D ip_mc_leave_group(sk, &mreq);
++	err =3D ip6_mc_msfget(sk, &gf, p->gf_slist);
 +	release_sock(sk);
-+	rtnl_unlock();
-+	return err;
++	if (err)
++		return err;
++	if (num > gf.gf_numsrc)
++		num =3D gf.gf_numsrc;
++	len =3D GROUP_FILTER_SIZE(num) - (sizeof(gf)-sizeof(gf32));
++	if (put_user(len, optlen) ||
++	    put_user(gf.gf_fmode, &p->gf_fmode) ||
++	    put_user(gf.gf_numsrc, &p->gf_numsrc))
++		return -EFAULT;
++	return 0;
 +}
 +#endif
 +
- static int do_ip_setsockopt(struct sock *sk, int level,
- 			    int optname, char __user *optval, unsigned int optlen)
+ static int do_ipv6_getsockopt(struct sock *sk, int level, int optname,
+ 		    char __user *optval, int __user *optlen, unsigned int flags)
  {
-@@ -1211,29 +1265,8 @@ static int do_ip_setsockopt(struct sock *sk, int lev=
-el,
- 	}
- 	case MCAST_JOIN_GROUP:
- 	case MCAST_LEAVE_GROUP:
--	{
--		struct group_req greq;
--		struct sockaddr_in *psin;
--		struct ip_mreqn mreq;
--
--		if (optlen < sizeof(struct group_req))
--			goto e_inval;
--		err =3D -EFAULT;
--		if (copy_from_user(&greq, optval, sizeof(greq)))
--			break;
--		psin =3D (struct sockaddr_in *)&greq.gr_group;
--		if (psin->sin_family !=3D AF_INET)
--			goto e_inval;
--		memset(&mreq, 0, sizeof(mreq));
--		mreq.imr_multiaddr =3D psin->sin_addr;
--		mreq.imr_ifindex =3D greq.gr_interface;
--
--		if (optname =3D=3D MCAST_JOIN_GROUP)
--			err =3D ip_mc_join_group(sk, &mreq);
--		else
--			err =3D ip_mc_leave_group(sk, &mreq);
-+		err =3D ip_mcast_join_leave(sk, optname, optval, optlen);
+@@ -1094,33 +1165,7 @@ static int do_ipv6_getsockopt(struct sock *sk, int l=
+evel, int optname,
+ 		val =3D sk->sk_family;
  		break;
--	}
- 	case MCAST_JOIN_SOURCE_GROUP:
- 	case MCAST_LEAVE_SOURCE_GROUP:
- 	case MCAST_BLOCK_SOURCE:
-@@ -1389,37 +1422,7 @@ int compat_ip_setsockopt(struct sock *sk, int level,=
- int optname,
- 	switch (optname) {
- 	case MCAST_JOIN_GROUP:
- 	case MCAST_LEAVE_GROUP:
+ 	case MCAST_MSFILTER:
 -	{
--		struct compat_group_req __user *gr32 =3D (void __user *)optval;
--		struct group_req greq;
--		struct sockaddr_in *psin =3D (struct sockaddr_in *)&greq.gr_group;
--		struct ip_mreqn mreq;
+-		struct group_filter __user *p =3D (void __user *)optval;
+-		struct group_filter gsf;
+-		const int size0 =3D offsetof(struct group_filter, gf_slist);
+-		int num;
+-		int err;
 -
--		if (optlen < sizeof(struct compat_group_req))
+-		if (len < size0)
 -			return -EINVAL;
--
--		if (get_user(greq.gr_interface, &gr32->gr_interface) ||
--		    copy_from_user(&greq.gr_group, &gr32->gr_group,
--				sizeof(greq.gr_group)))
+-		if (copy_from_user(&gsf, p, size0))
 -			return -EFAULT;
--
--		if (psin->sin_family !=3D AF_INET)
--			return -EINVAL;
--
--		memset(&mreq, 0, sizeof(mreq));
--		mreq.imr_multiaddr =3D psin->sin_addr;
--		mreq.imr_ifindex =3D greq.gr_interface;
--
--		rtnl_lock();
+-		if (gsf.gf_group.ss_family !=3D AF_INET6)
+-			return -EADDRNOTAVAIL;
+-		num =3D gsf.gf_numsrc;
 -		lock_sock(sk);
--		if (optname =3D=3D MCAST_JOIN_GROUP)
--			err =3D ip_mc_join_group(sk, &mreq);
--		else
--			err =3D ip_mc_leave_group(sk, &mreq);
+-		err =3D ip6_mc_msfget(sk, &gsf, p->gf_slist);
+-		if (!err) {
+-			if (num > gsf.gf_numsrc)
+-				num =3D gsf.gf_numsrc;
+-			if (put_user(GROUP_FILTER_SIZE(num), optlen) ||
+-			    copy_to_user(p, &gsf, size0))
+-				err =3D -EFAULT;
+-		}
 -		release_sock(sk);
--		rtnl_unlock();
 -		return err;
 -	}
-+		return compat_ip_mcast_join_leave(sk, optname, optval, optlen);
- 	case MCAST_JOIN_SOURCE_GROUP:
- 	case MCAST_LEAVE_SOURCE_GROUP:
- 	case MCAST_BLOCK_SOURCE:
+-
++		return ipv6_get_msfilter(sk, optval, optlen, len);
+ 	case IPV6_2292PKTOPTIONS:
+ 	{
+ 		struct msghdr msg;
+@@ -1481,44 +1526,8 @@ int compat_ipv6_getsockopt(struct sock *sk, int leve=
+l, int optname,
+ 	if (level !=3D SOL_IPV6)
+ 		return -ENOPROTOOPT;
+ =
+
+-	if (optname =3D=3D MCAST_MSFILTER) {
+-		const int size0 =3D offsetof(struct compat_group_filter, gf_slist);
+-		struct compat_group_filter __user *p =3D (void __user *)optval;
+-		struct compat_group_filter gf32;
+-		struct group_filter gf;
+-		int ulen, err;
+-		int num;
+-
+-		if (get_user(ulen, optlen))
+-			return -EFAULT;
+-
+-		if (ulen < size0)
+-			return -EINVAL;
+-
+-		if (copy_from_user(&gf32, p, size0))
+-			return -EFAULT;
+-
+-		gf.gf_interface =3D gf32.gf_interface;
+-		gf.gf_fmode =3D gf32.gf_fmode;
+-		num =3D gf.gf_numsrc =3D gf32.gf_numsrc;
+-		gf.gf_group =3D gf32.gf_group;
+-
+-		if (gf.gf_group.ss_family !=3D AF_INET6)
+-			return -EADDRNOTAVAIL;
+-		lock_sock(sk);
+-		err =3D ip6_mc_msfget(sk, &gf, p->gf_slist);
+-		release_sock(sk);
+-		if (err)
+-			return err;
+-		if (num > gf.gf_numsrc)
+-			num =3D gf.gf_numsrc;
+-		ulen =3D GROUP_FILTER_SIZE(num) - (sizeof(gf)-sizeof(gf32));
+-		if (put_user(ulen, optlen) ||
+-		    put_user(gf.gf_fmode, &p->gf_fmode) ||
+-		    put_user(gf.gf_numsrc, &p->gf_numsrc))
+-			return -EFAULT;
+-		return 0;
+-	}
++	if (optname =3D=3D MCAST_MSFILTER)
++		return compat_ipv6_get_msfilter(sk, optval, optlen);
+ =
+
+ 	err =3D do_ipv6_getsockopt(sk, level, optname, optval, optlen,
+ 				 MSG_CMSG_COMPAT);
 -- =
 
 2.27.0
 
---===============6877123973017769477==--
+--===============8148588579484843971==--
