@@ -1,88 +1,196 @@
-Content-Type: multipart/mixed; boundary="===============5637229390587405317=="
+Content-Type: multipart/mixed; boundary="===============6550975776476808079=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 13/22] netfilter: split nf_sockopt
-Date: Fri, 17 Jul 2020 08:23:22 +0200
-Message-ID: <20200717062331.691152-14-hch@lst.de>
+Subject: [MPTCP] [PATCH 14/22] net/ipv4: factor out MCAST_MSFILTER getsockopt
+ helpers
+Date: Fri, 17 Jul 2020 08:23:23 +0200
+Message-ID: <20200717062331.691152-15-hch@lst.de>
 In-Reply-To: 20200717062331.691152-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5062
+X-UID: 5063
 
---===============5637229390587405317==
+--===============6550975776476808079==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Split nf_sockopt into a getsockopt and setsockopt side as they share
-very little code.
+Factor out one helper each for getting the native and compat
+version of the MCAST_MSFILTER option.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- net/netfilter/nf_sockopt.c | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ net/ipv4/ip_sockglue.c | 131 ++++++++++++++++++++++-------------------
+ 1 file changed, 70 insertions(+), 61 deletions(-)
 
-diff --git a/net/netfilter/nf_sockopt.c b/net/netfilter/nf_sockopt.c
-index 02870993d335c9..90469b1f628a8e 100644
---- a/net/netfilter/nf_sockopt.c
-+++ b/net/netfilter/nf_sockopt.c
-@@ -89,36 +89,32 @@ static struct nf_sockopt_ops *nf_sockopt_find(struct so=
-ck *sk, u_int8_t pf,
- 	return ops;
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 95f4248c6fc5ed..70d32c9476a2e3 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -1468,6 +1468,74 @@ static bool getsockopt_needs_rtnl(int optname)
+ 	return false;
  }
  =
 
--/* Call get/setsockopt() */
--static int nf_sockopt(struct sock *sk, u_int8_t pf, int val,
--		      char __user *opt, int *len, int get)
-+int nf_setsockopt(struct sock *sk, u_int8_t pf, int val, char __user *opt,
-+		  unsigned int len)
- {
- 	struct nf_sockopt_ops *ops;
- 	int ret;
- =
-
--	ops =3D nf_sockopt_find(sk, pf, val, get);
-+	ops =3D nf_sockopt_find(sk, pf, val, 0);
- 	if (IS_ERR(ops))
- 		return PTR_ERR(ops);
--
--	if (get)
--		ret =3D ops->get(sk, val, opt, len);
--	else
--		ret =3D ops->set(sk, val, opt, *len);
--
-+	ret =3D ops->set(sk, val, opt, len);
- 	module_put(ops->owner);
- 	return ret;
- }
--
--int nf_setsockopt(struct sock *sk, u_int8_t pf, int val, char __user *opt,
--		  unsigned int len)
--{
--	return nf_sockopt(sk, pf, val, opt, &len, 0);
--}
- EXPORT_SYMBOL(nf_setsockopt);
- =
-
- int nf_getsockopt(struct sock *sk, u_int8_t pf, int val, char __user *opt,
- 		  int *len)
- {
--	return nf_sockopt(sk, pf, val, opt, len, 1);
-+	struct nf_sockopt_ops *ops;
-+	int ret;
++static int ip_get_mcast_msfilter(struct sock *sk, void __user *optval,
++		int __user *optlen, int len)
++{
++	const int size0 =3D offsetof(struct group_filter, gf_slist);
++	struct group_filter __user *p =3D optval;
++	struct group_filter gsf;
++	int num;
++	int err;
 +
-+	ops =3D nf_sockopt_find(sk, pf, val, 1);
-+	if (IS_ERR(ops))
-+		return PTR_ERR(ops);
-+	ret =3D ops->get(sk, val, opt, len);
-+	module_put(ops->owner);
-+	return ret;
- }
- EXPORT_SYMBOL(nf_getsockopt);
++	if (len < size0)
++		return -EINVAL;
++	if (copy_from_user(&gsf, p, size0))
++		return -EFAULT;
++
++	num =3D gsf.gf_numsrc;
++	err =3D ip_mc_gsfget(sk, &gsf, p->gf_slist);
++	if (err)
++		return err;
++	if (gsf.gf_numsrc < num)
++		num =3D gsf.gf_numsrc;
++	if (put_user(GROUP_FILTER_SIZE(num), optlen) ||
++	    copy_to_user(p, &gsf, size0))
++		return -EFAULT;
++	return 0;
++}
++
++#ifdef CONFIG_COMPAT
++static int compat_ip_get_mcast_msfilter(struct sock *sk, void __user *optv=
+al,
++		int __user *optlen)
++{
++	const int size0 =3D offsetof(struct compat_group_filter, gf_slist);
++	struct compat_group_filter __user *p =3D optval;
++	struct compat_group_filter gf32;
++	struct group_filter gf;
++	int len, err;
++	int num;
++
++	if (get_user(len, optlen))
++		return -EFAULT;
++	if (len < size0)
++		return -EINVAL;
++
++	if (copy_from_user(&gf32, p, size0))
++		return -EFAULT;
++
++	gf.gf_interface =3D gf32.gf_interface;
++	gf.gf_fmode =3D gf32.gf_fmode;
++	num =3D gf.gf_numsrc =3D gf32.gf_numsrc;
++	gf.gf_group =3D gf32.gf_group;
++
++	rtnl_lock();
++	lock_sock(sk);
++	err =3D ip_mc_gsfget(sk, &gf, p->gf_slist);
++	release_sock(sk);
++	rtnl_unlock();
++	if (err)
++		return err;
++	if (gf.gf_numsrc < num)
++		num =3D gf.gf_numsrc;
++	len =3D GROUP_FILTER_SIZE(num) - (sizeof(gf) - sizeof(gf32));
++	if (put_user(len, optlen) ||
++	    put_user(gf.gf_fmode, &p->gf_fmode) ||
++	    put_user(gf.gf_numsrc, &p->gf_numsrc))
++		return -EFAULT;
++	return 0;
++}
++#endif
++
+ static int do_ip_getsockopt(struct sock *sk, int level, int optname,
+ 			    char __user *optval, int __user *optlen, unsigned int flags)
+ {
+@@ -1626,31 +1694,8 @@ static int do_ip_getsockopt(struct sock *sk, int lev=
+el, int optname,
+ 		goto out;
+ 	}
+ 	case MCAST_MSFILTER:
+-	{
+-		struct group_filter __user *p =3D (void __user *)optval;
+-		struct group_filter gsf;
+-		const int size0 =3D offsetof(struct group_filter, gf_slist);
+-		int num;
+-
+-		if (len < size0) {
+-			err =3D -EINVAL;
+-			goto out;
+-		}
+-		if (copy_from_user(&gsf, p, size0)) {
+-			err =3D -EFAULT;
+-			goto out;
+-		}
+-		num =3D gsf.gf_numsrc;
+-		err =3D ip_mc_gsfget(sk, &gsf, p->gf_slist);
+-		if (err)
+-			goto out;
+-		if (gsf.gf_numsrc < num)
+-			num =3D gsf.gf_numsrc;
+-		if (put_user(GROUP_FILTER_SIZE(num), optlen) ||
+-		    copy_to_user(p, &gsf, size0))
+-			err =3D -EFAULT;
++		err =3D ip_get_mcast_msfilter(sk, optval, optlen, len);
+ 		goto out;
+-	}
+ 	case IP_MULTICAST_ALL:
+ 		val =3D inet->mc_all;
+ 		break;
+@@ -1762,45 +1807,9 @@ int compat_ip_getsockopt(struct sock *sk, int level,=
+ int optname,
+ 	int err;
+ =
+
+ 	if (optname =3D=3D MCAST_MSFILTER) {
+-		const int size0 =3D offsetof(struct compat_group_filter, gf_slist);
+-		struct compat_group_filter __user *p =3D (void __user *)optval;
+-		struct compat_group_filter gf32;
+-		struct group_filter gf;
+-		int ulen, err;
+-		int num;
+-
+ 		if (level !=3D SOL_IP)
+ 			return -EOPNOTSUPP;
+-
+-		if (get_user(ulen, optlen))
+-			return -EFAULT;
+-
+-		if (ulen < size0)
+-			return -EINVAL;
+-
+-		if (copy_from_user(&gf32, p, size0))
+-			return -EFAULT;
+-
+-		gf.gf_interface =3D gf32.gf_interface;
+-		gf.gf_fmode =3D gf32.gf_fmode;
+-		num =3D gf.gf_numsrc =3D gf32.gf_numsrc;
+-		gf.gf_group =3D gf32.gf_group;
+-
+-		rtnl_lock();
+-		lock_sock(sk);
+-		err =3D ip_mc_gsfget(sk, &gf, p->gf_slist);
+-		release_sock(sk);
+-		rtnl_unlock();
+-		if (err)
+-			return err;
+-		if (gf.gf_numsrc < num)
+-			num =3D gf.gf_numsrc;
+-		ulen =3D GROUP_FILTER_SIZE(num) - (sizeof(gf) - sizeof(gf32));
+-		if (put_user(ulen, optlen) ||
+-		    put_user(gf.gf_fmode, &p->gf_fmode) ||
+-		    put_user(gf.gf_numsrc, &p->gf_numsrc))
+-			return -EFAULT;
+-		return 0;
++		return compat_ip_get_mcast_msfilter(sk, optval, optlen);
+ 	}
+ =
+
+ 	err =3D do_ip_getsockopt(sk, level, optname, optval, optlen,
 -- =
 
 2.27.0
 
---===============5637229390587405317==--
+--===============6550975776476808079==--
