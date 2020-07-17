@@ -1,53 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============7735162681688800008=="
+Content-Type: multipart/mixed; boundary="===============0318556316437618371=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "subflow: introduce and use
- mptcp_can_accept_new_subflow()"
-Date: Fri, 17 Jul 2020 10:38:22 -0700
-Message-ID: <alpine.OSX.2.23.453.2007171037430.39222@kdpetti-mobl.amr.corp.intel.com>
-In-Reply-To: 6ec124da60099420355e8d0c0cb9bfeea13e5774.1594999871.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next 03/12] mptcp: Add mptcp_close_state()
+ helper
+Date: Fri, 17 Jul 2020 11:07:06 -0700
+Message-ID: <alpine.OSX.2.23.453.2007171105190.39222@kdpetti-mobl.amr.corp.intel.com>
+In-Reply-To: dbd09873ffb51e8436feabd0af5340e827b03996.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5084
+X-UID: 5085
 
---===============7735162681688800008==
+--===============0318556316437618371==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, 16 Jul 2020, Paolo Abeni wrote:
 
-On Fri, 17 Jul 2020, Paolo Abeni wrote:
+> On Wed, 2020-07-15 at 17:20 -0700, Mat Martineau wrote:
+>> This will be used to transition to the appropriate state on close and
+>> determine if a DATA_FIN needs to be sent for that state transition.
+>>
+>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>> ---
+>>  net/mptcp/protocol.c | 28 +++++++++++++++++++++++++++-
+>>  1 file changed, 27 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 7cdf451ea3da..69100187490f 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -1424,7 +1424,33 @@ static void mptcp_subflow_shutdown(struct sock *s=
+sk, int how,
+>>  	release_sock(ssk);
+>>  }
+>>
+>> -/* Called with msk lock held, releases such lock before returning */
+>
+> Beware! this removes the above commit message, likely in an unintended
+> way.
+>
 
-> Use the newly introduced helper. No change to the commit message
-> required.
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/subflow.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index edc29c2dec73..362637766d74 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -55,7 +55,7 @@ static void subflow_generate_hmac(u64 key1, u64 key2, u=
-32 nonce1, u32 nonce2,
->
-> static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
-> {
-> -	return inet_sk_state_load((struct sock *)msk) =3D=3D TCP_ESTABLISHED &&
-> +	return mptcp_is_fully_established((void *)msk) &&
-> 	       READ_ONCE(msk->pm.accept_subflow);
-> }
->
-> -- =
+Looks like I didn't split this commit correctly. The comment looked =
 
-> 2.26.2
+invalid since the msk lock is aquired at the beginning of mptcp_close, if =
 
-Looks good to squash after the previous patch is ready.
+the function was called with the msk lock held it would deadlock.
 
 --
 Mat Martineau
 Intel
---===============7735162681688800008==--
+--===============0318556316437618371==--
