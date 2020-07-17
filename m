@@ -1,588 +1,313 @@
-Content-Type: multipart/mixed; boundary="===============7322106624424944507=="
+Content-Type: multipart/mixed; boundary="===============5688829113429373799=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: add REMOVE_ADDR support v1
-Date: Thu, 16 Jul 2020 16:41:52 +0200
-Message-ID: <84f200774b99870e17072244c5d17caa89a89dba.camel@redhat.com>
-In-Reply-To: 871fc14341a1045a92fca933e37579bc3378e8e4.1594888308.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH 04/22] net: simplify cBPF setsockopt compat handling
+Date: Fri, 17 Jul 2020 08:23:13 +0200
+Message-ID: <20200717062331.691152-5-hch@lst.de>
+In-Reply-To: 20200717062331.691152-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5048
+X-UID: 5049
 
---===============7322106624424944507==
+--===============5688829113429373799==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Add a helper that copies either a native or compat bpf_fprog from
+userspace after verifying the length, and remove the compat setsockopt
+handlers that now aren't required.
 
-On Thu, 2020-07-16 at 16:45 +0800, Geliang Tang wrote:
-> Add REMOVE_ADDR support.
-> =
+Signed-off-by: Christoph Hellwig <hch(a)lst.de>
+---
+ include/linux/filter.h |  4 ++--
+ include/net/compat.h   |  1 -
+ net/compat.c           | 45 +-----------------------------------------
+ net/core/filter.c      | 23 +++++++++++++++++++++
+ net/core/sock.c        | 30 ++++++++++------------------
+ net/packet/af_packet.c | 33 ++++---------------------------
+ 6 files changed, 40 insertions(+), 96 deletions(-)
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
->  This is the first version of REMOVE_ADDR support. It's not finished yet =
-but
->  it works. I'll add selftest case and patch commit description later. Ple=
-ase
->  give me some advice on how to improve it. Thanks.
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 0b0144752d780a..4d049c8e1fbeaa 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -502,13 +502,11 @@ static inline bool insn_is_zext(const struct bpf_insn=
+ *insn)
+ 		offsetof(TYPE, MEMBER);						\
+ 	})
+ =
 
-I think this code could be split in a few patches:
+-#ifdef CONFIG_COMPAT
+ /* A struct sock_filter is architecture independent. */
+ struct compat_sock_fprog {
+ 	u16		len;
+ 	compat_uptr_t	filter;	/* struct sock_filter * */
+ };
+-#endif
+ =
 
-* one renaming the existing add_addr related functions
-* one doing the rm_addr option parsing/writing
-* one implementing the rm addr logic
+ struct sock_fprog_kern {
+ 	u16			len;
+@@ -1278,4 +1276,6 @@ struct bpf_sockopt_kern {
+ 	s32		retval;
+ };
+ =
 
-This latter part is the least clear to me. If I read the code
-correctly, the idea is having each msk checking in the data path if any
-address has been removed via the PM netlink APIs. Is the above correct?
++int copy_bpf_fprog_from_user(struct sock_fprog *dst, void __user *src, int=
+ len);
++
+ #endif /* __LINUX_FILTER_H__ */
+diff --git a/include/net/compat.h b/include/net/compat.h
+index f241666117d88c..745db0d605b62b 100644
+--- a/include/net/compat.h
++++ b/include/net/compat.h
+@@ -61,7 +61,6 @@ int __get_compat_msghdr(struct msghdr *kmsg, struct compa=
+t_msghdr __user *umsg,
+ 			compat_size_t *len);
+ int get_compat_msghdr(struct msghdr *, struct compat_msghdr __user *,
+ 		      struct sockaddr __user **, struct iovec **);
+-struct sock_fprog __user *get_compat_bpf_fprog(char __user *optval);
+ int put_cmsg_compat(struct msghdr*, int, int, int, void *);
+ =
 
-I think it would be better triggering the remove addr in the reverse
-way: when the PM netlink removes an address it should traverse all the
-existing msk sockets - using the recently introduced
-mptcp_token_iter_next() helper - and set 'rm_addr_signal' on the
-relevant sockets - the ones that already announced it.
+ int cmsghdr_from_user_compat_to_kern(struct msghdr *, struct sock *,
+diff --git a/net/compat.c b/net/compat.c
+index 5e3041a2c37d4d..3e6c2c5ff2609c 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -335,49 +335,6 @@ void scm_detach_fds_compat(struct msghdr *kmsg, struct=
+ scm_cookie *scm)
+ 	__scm_destroy(scm);
+ }
+ =
 
-This latter condition is possibly a bit hard to track. As far as I read
-the RFC, we could use a simpler one: send the RM_ADDR on the msk with a
-subflows using the relevant addr.
-
-The idea behind the above is that servers should not usually send
-RM_ADDR, while clients should have a limited number of open MPTCP
-connections, so traversing all the token table should not be a
-problem. =
-
-
-Not sure if the above is somewhat readable - we can discuss it in the
-mtg soon!
-
-Please see also:
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/19
-
-which is somewhat related.
-
-Cheers,
-
-Paolo
-
-> ---
->  net/mptcp/options.c    | 49 +++++++++++++++++++++++++----
->  net/mptcp/pm.c         | 71 ++++++++++++++++++++++++++++++++++++++----
->  net/mptcp/pm_netlink.c | 47 +++++++++++++++++++++++++++-
->  net/mptcp/protocol.c   | 12 +++++--
->  net/mptcp/protocol.h   | 26 +++++++++++++---
->  net/mptcp/subflow.c    |  1 +
->  6 files changed, 187 insertions(+), 19 deletions(-)
-> =
-
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 19707c07efc1..0d4d334fbc08 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -572,10 +572,10 @@ static u64 add_addr6_generate_hmac(u64 key1, u64 ke=
-y2, u8 addr_id,
->  }
->  #endif
->  =
-
-> -static bool mptcp_established_options_addr(struct sock *sk,
-> -					   unsigned int *size,
-> -					   unsigned int remaining,
-> -					   struct mptcp_out_options *opts)
-> +static bool mptcp_established_options_add_addr(struct sock *sk,
-> +					       unsigned int *size,
-> +					       unsigned int remaining,
-> +					       struct mptcp_out_options *opts)
->  {
->  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
->  	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-> @@ -583,7 +583,7 @@ static bool mptcp_established_options_addr(struct soc=
-k *sk,
->  	int len;
->  =
-
->  	if (!mptcp_pm_should_signal(msk) ||
-> -	    !(mptcp_pm_addr_signal(msk, remaining, &saddr)))
-> +	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr)))
->  		return false;
->  =
-
->  	len =3D mptcp_add_addr_len(saddr.family);
-> @@ -615,6 +615,31 @@ static bool mptcp_established_options_addr(struct so=
-ck *sk,
->  	return true;
->  }
->  =
-
-> +static bool mptcp_established_options_rm_addr(struct sock *sk,
-> +					      unsigned int *size,
-> +					      unsigned int remaining,
-> +					      struct mptcp_out_options *opts)
-> +{
-> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-> +	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-> +	u8 rm_id;
-> +
-> +	if (!mptcp_pm_should_rm_signal(msk) ||
-> +	    !(mptcp_pm_rm_addr_signal(msk, remaining, &rm_id)))
-> +		return false;
-> +
-> +	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
-> +		return false;
-> +
-> +	*size =3D TCPOLEN_MPTCP_RM_ADDR_BASE;
-> +	opts->suboptions |=3D OPTION_MPTCP_RM_ADDR;
-> +	opts->rm_id =3D rm_id;
-> +
-> +	pr_debug("rm_id=3D%d", opts->rm_id);
-> +
-> +	return true;
-> +}
-> +
->  bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
->  			       unsigned int *size, unsigned int remaining,
->  			       struct mptcp_out_options *opts)
-> @@ -641,7 +666,13 @@ bool mptcp_established_options(struct sock *sk, stru=
-ct sk_buff *skb,
->  =
-
->  	*size +=3D opt_size;
->  	remaining -=3D opt_size;
-> -	if (mptcp_established_options_addr(sk, &opt_size, remaining, opts)) {
-> +	if (mptcp_established_options_add_addr(sk, &opt_size, remaining, opts))=
+-/* allocate a 64-bit sock_fprog on the user stack for duration of syscall.=
+ */
+-struct sock_fprog __user *get_compat_bpf_fprog(char __user *optval)
+-{
+-	struct compat_sock_fprog __user *fprog32 =3D (struct compat_sock_fprog __=
+user *)optval;
+-	struct sock_fprog __user *kfprog =3D compat_alloc_user_space(sizeof(struc=
+t sock_fprog));
+-	struct compat_sock_fprog f32;
+-	struct sock_fprog f;
+-
+-	if (copy_from_user(&f32, fprog32, sizeof(*fprog32)))
+-		return NULL;
+-	memset(&f, 0, sizeof(f));
+-	f.len =3D f32.len;
+-	f.filter =3D compat_ptr(f32.filter);
+-	if (copy_to_user(kfprog, &f, sizeof(struct sock_fprog)))
+-		return NULL;
+-
+-	return kfprog;
+-}
+-EXPORT_SYMBOL_GPL(get_compat_bpf_fprog);
+-
+-static int do_set_attach_filter(struct socket *sock, int level, int optnam=
+e,
+-				char __user *optval, unsigned int optlen)
+-{
+-	struct sock_fprog __user *kfprog;
+-
+-	kfprog =3D get_compat_bpf_fprog(optval);
+-	if (!kfprog)
+-		return -EFAULT;
+-
+-	return sock_setsockopt(sock, level, optname, (char __user *)kfprog,
+-			      sizeof(struct sock_fprog));
+-}
+-
+-static int compat_sock_setsockopt(struct socket *sock, int level, int optn=
+ame,
+-				char __user *optval, unsigned int optlen)
+-{
+-	if (optname =3D=3D SO_ATTACH_FILTER ||
+-	    optname =3D=3D SO_ATTACH_REUSEPORT_CBPF)
+-		return do_set_attach_filter(sock, level, optname,
+-					    optval, optlen);
+-	return sock_setsockopt(sock, level, optname, optval, optlen);
+-}
+-
+ static int __compat_sys_setsockopt(int fd, int level, int optname,
+ 				   char __user *optval, unsigned int optlen)
  {
-> +		*size +=3D opt_size;
-> +		remaining -=3D opt_size;
-> +		ret =3D true;
-> +	}
-> +
-> +	if (mptcp_established_options_rm_addr(sk, &opt_size, remaining, opts)) {
->  		*size +=3D opt_size;
->  		remaining -=3D opt_size;
->  		ret =3D true;
-> @@ -729,6 +760,7 @@ static bool check_fully_established(struct mptcp_sock=
- *msk, struct sock *sk,
->  	subflow->can_ack =3D 1;
->  =
+@@ -396,7 +353,7 @@ static int __compat_sys_setsockopt(int fd, int level, i=
+nt optname,
+ 		}
+ =
 
->  fully_established:
-> +	mptcp_pm_addr_update(msk);
->  	if (likely(subflow->pm_notified))
->  		return true;
->  =
+ 		if (level =3D=3D SOL_SOCKET)
+-			err =3D compat_sock_setsockopt(sock, level,
++			err =3D sock_setsockopt(sock, level,
+ 					optname, optval, optlen);
+ 		else if (sock->ops->compat_setsockopt)
+ 			err =3D sock->ops->compat_setsockopt(sock, level,
+diff --git a/net/core/filter.c b/net/core/filter.c
+index bdd2382e655d85..2bf6624796d86f 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -77,6 +77,29 @@
+ #include <net/transp_v6.h>
+ #include <linux/btf_ids.h>
+ =
 
-> @@ -845,6 +877,11 @@ void mptcp_incoming_options(struct sock *sk, struct =
-sk_buff *skb,
->  		mp_opt.add_addr =3D 0;
->  	}
->  =
++int copy_bpf_fprog_from_user(struct sock_fprog *dst, void __user *src, int=
+ len)
++{
++	if (in_compat_syscall()) {
++		struct compat_sock_fprog f32;
++
++		if (len !=3D sizeof(f32))
++			return -EINVAL;
++		if (copy_from_user(&f32, src, sizeof(f32)))
++			return -EFAULT;
++		memset(dst, 0, sizeof(*dst));
++		dst->len =3D f32.len;
++		dst->filter =3D compat_ptr(f32.filter);
++	} else {
++		if (len !=3D sizeof(*dst))
++			return -EINVAL;
++		if (copy_from_user(dst, src, sizeof(*dst)))
++			return -EFAULT;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(copy_bpf_fprog_from_user);
++
+ /**
+  *	sk_filter_trim_cap - run a packet through a socket filter
+  *	@sk: sock associated with &sk_buff
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 11d6f77dd56207..e085df79482520 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1059,19 +1059,14 @@ int sock_setsockopt(struct socket *sock, int level,=
+ int optname,
+ 		ret =3D sock_set_timeout(&sk->sk_sndtimeo, optval, optlen, optname =3D=
+=3D SO_SNDTIMEO_OLD);
+ 		break;
+ =
 
-> +	if (mp_opt.rm_addr) {
-> +		mptcp_pm_rm_addr_received(msk, mp_opt.rm_id);
-> +		mp_opt.rm_addr =3D 0;
-> +	}
-> +
->  	if (!mp_opt.dss)
->  		return;
->  =
+-	case SO_ATTACH_FILTER:
+-		ret =3D -EINVAL;
+-		if (optlen =3D=3D sizeof(struct sock_fprog)) {
+-			struct sock_fprog fprog;
+-
+-			ret =3D -EFAULT;
+-			if (copy_from_user(&fprog, optval, sizeof(fprog)))
+-				break;
++	case SO_ATTACH_FILTER: {
++		struct sock_fprog fprog;
+ =
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index a8ad20559aaa..c811559ca78f 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -18,13 +18,17 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
->  	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
->  =
++		ret =3D copy_bpf_fprog_from_user(&fprog, optval, optlen);
++		if (!ret)
+ 			ret =3D sk_attach_filter(&fprog, sk);
+-		}
+ 		break;
+-
++	}
+ 	case SO_ATTACH_BPF:
+ 		ret =3D -EINVAL;
+ 		if (optlen =3D=3D sizeof(u32)) {
+@@ -1085,19 +1080,14 @@ int sock_setsockopt(struct socket *sock, int level,=
+ int optname,
+ 		}
+ 		break;
+ =
 
->  	msk->pm.local =3D *addr;
-> -	WRITE_ONCE(msk->pm.addr_signal, true);
-> +	WRITE_ONCE(msk->pm.add_addr_signal, true);
->  	return 0;
->  }
->  =
+-	case SO_ATTACH_REUSEPORT_CBPF:
+-		ret =3D -EINVAL;
+-		if (optlen =3D=3D sizeof(struct sock_fprog)) {
+-			struct sock_fprog fprog;
+-
+-			ret =3D -EFAULT;
+-			if (copy_from_user(&fprog, optval, sizeof(fprog)))
+-				break;
++	case SO_ATTACH_REUSEPORT_CBPF: {
++		struct sock_fprog fprog;
+ =
 
->  int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
->  {
-> -	return -ENOTSUPP;
-> +	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
-> +
-> +	msk->pm.rm_id =3D local_id;
-> +	WRITE_ONCE(msk->pm.rm_addr_signal, true);
-> +	return 0;
->  }
->  =
++		ret =3D copy_bpf_fprog_from_user(&fprog, optval, optlen);
++		if (!ret)
+ 			ret =3D sk_reuseport_attach_filter(&fprog, sk);
+-		}
+ 		break;
+-
++	}
+ 	case SO_ATTACH_REUSEPORT_EBPF:
+ 		ret =3D -EINVAL;
+ 		if (optlen =3D=3D sizeof(u32)) {
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 781fee93b7d5e3..35aee9e980536d 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -1545,10 +1545,10 @@ static int fanout_set_data_cbpf(struct packet_sock =
+*po, char __user *data,
+ =
 
->  int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
-> @@ -81,6 +85,24 @@ static bool mptcp_pm_schedule_work(struct mptcp_sock *=
-msk,
->  	return true;
->  }
->  =
+ 	if (sock_flag(&po->sk, SOCK_FILTER_LOCKED))
+ 		return -EPERM;
+-	if (len !=3D sizeof(fprog))
+-		return -EINVAL;
+-	if (copy_from_user(&fprog, data, len))
+-		return -EFAULT;
++
++	ret =3D copy_bpf_fprog_from_user(&fprog, data, len);
++	if (ret)
++		return ret;
+ =
 
-> +void mptcp_pm_addr_update(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_pm_data *pm =3D &msk->pm;
-> +
-> +	pr_debug("msk=3D%p", msk);
-> +
-> +	/* try to avoid acquiring the lock below */
-> +	if (!READ_ONCE(pm->work_pending))
-> +		return;
-> +
-> +	spin_lock_bh(&pm->lock);
-> +
-> +	if (READ_ONCE(pm->work_pending))
-> +		mptcp_pm_schedule_work(msk, MPTCP_PM_ADDR_UPDATE);
-> +
-> +	spin_unlock_bh(&pm->lock);
-> +}
-> +
->  void mptcp_pm_fully_established(struct mptcp_sock *msk)
->  {
->  	struct mptcp_pm_data *pm =3D &msk->pm;
-> @@ -151,8 +173,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
-k,
->  =
+ 	ret =3D bpf_prog_create_from_user(&new, &fprog, NULL, false);
+ 	if (ret)
+@@ -4040,28 +4040,6 @@ static int packet_getsockopt(struct socket *sock, in=
+t level, int optname,
+ 	return 0;
+ }
+ =
 
->  /* path manager helpers */
->  =
+-
+-#ifdef CONFIG_COMPAT
+-static int compat_packet_setsockopt(struct socket *sock, int level, int op=
+tname,
+-				    char __user *optval, unsigned int optlen)
+-{
+-	struct packet_sock *po =3D pkt_sk(sock->sk);
+-
+-	if (level !=3D SOL_PACKET)
+-		return -ENOPROTOOPT;
+-
+-	if (optname =3D=3D PACKET_FANOUT_DATA &&
+-	    po->fanout && po->fanout->type =3D=3D PACKET_FANOUT_CBPF) {
+-		optval =3D (char __user *)get_compat_bpf_fprog(optval);
+-		if (!optval)
+-			return -EFAULT;
+-		optlen =3D sizeof(struct sock_fprog);
+-	}
+-
+-	return packet_setsockopt(sock, level, optname, optval, optlen);
+-}
+-#endif
+-
+ static int packet_notifier(struct notifier_block *this,
+ 			   unsigned long msg, void *ptr)
+ {
+@@ -4549,9 +4527,6 @@ static const struct proto_ops packet_ops =3D {
+ 	.shutdown =3D	sock_no_shutdown,
+ 	.setsockopt =3D	packet_setsockopt,
+ 	.getsockopt =3D	packet_getsockopt,
+-#ifdef CONFIG_COMPAT
+-	.compat_setsockopt =3D compat_packet_setsockopt,
+-#endif
+ 	.sendmsg =3D	packet_sendmsg,
+ 	.recvmsg =3D	packet_recvmsg,
+ 	.mmap =3D		packet_mmap,
+-- =
 
-> -bool mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> -			  struct mptcp_addr_info *saddr)
-> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remai=
-ning,
-> +			      struct mptcp_addr_info *saddr)
->  {
->  	int ret =3D false;
->  =
+2.27.0
 
-> @@ -166,7 +188,42 @@ bool mptcp_pm_addr_signal(struct mptcp_sock *msk, un=
-signed int remaining,
->  		goto out_unlock;
->  =
-
->  	*saddr =3D msk->pm.local;
-> -	WRITE_ONCE(msk->pm.addr_signal, false);
-> +	WRITE_ONCE(msk->pm.add_addr_signal, false);
-> +	ret =3D true;
-> +
-> +out_unlock:
-> +	spin_unlock_bh(&msk->pm.lock);
-> +	return ret;
-> +}
-> +
-> +void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id)
-> +{
-> +	struct mptcp_pm_data *pm =3D &msk->pm;
-> +
-> +	pr_debug("msk=3D%p remote_id=3D%d", msk, rm_id);
-> +
-> +	spin_lock_bh(&pm->lock);
-> +	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
-> +	pm->rm_id =3D rm_id;
-> +	spin_unlock_bh(&pm->lock);
-> +}
-> +
-> +bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
-> +			     u8 *rm_id)
-> +{
-> +	int ret =3D false;
-> +
-> +	spin_lock_bh(&msk->pm.lock);
-> +
-> +	/* double check after the lock is acquired */
-> +	if (!mptcp_pm_should_rm_signal(msk))
-> +		goto out_unlock;
-> +
-> +	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
-> +		goto out_unlock;
-> +
-> +	*rm_id =3D msk->pm.rm_id;
-> +	WRITE_ONCE(msk->pm.rm_addr_signal, false);
->  	ret =3D true;
->  =
-
->  out_unlock:
-> @@ -186,9 +243,11 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
->  	msk->pm.local_addr_used =3D 0;
->  	msk->pm.subflows =3D 0;
->  	WRITE_ONCE(msk->pm.work_pending, false);
-> -	WRITE_ONCE(msk->pm.addr_signal, false);
-> +	WRITE_ONCE(msk->pm.add_addr_signal, false);
-> +	WRITE_ONCE(msk->pm.rm_addr_signal, false);
->  	WRITE_ONCE(msk->pm.accept_addr, false);
->  	WRITE_ONCE(msk->pm.accept_subflow, false);
-> +	WRITE_ONCE(msk->pm.addr_updated, false);
->  	msk->pm.status =3D 0;
->  =
-
->  	spin_lock_init(&msk->pm.lock);
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index c8820c4156e6..c9933387be09 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -39,6 +39,7 @@ struct pm_nl_pernet {
->  	unsigned int		local_addr_max;
->  	unsigned int		subflows_max;
->  	unsigned int		next_id;
-> +	unsigned int		rm_id;
->  };
->  =
-
->  #define MPTCP_PM_ADDR_MAX	8
-> @@ -165,7 +166,7 @@ static void check_work_pending(struct mptcp_sock *msk)
->  {
->  	if (msk->pm.add_addr_signaled =3D=3D msk->pm.add_addr_signal_max &&
->  	    (msk->pm.local_addr_used =3D=3D msk->pm.local_addr_max ||
-> -	     msk->pm.subflows =3D=3D msk->pm.subflows_max))
-> +	     msk->pm.subflows =3D=3D msk->pm.subflows_max) && msk->pm.addr_upda=
-ted)
->  		WRITE_ONCE(msk->pm.work_pending, false);
->  }
->  =
-
-> @@ -196,6 +197,11 @@ static void mptcp_pm_create_subflow_or_signal_addr(s=
-truct mptcp_sock *msk)
->  			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
->  		}
->  =
-
-> +		check_work_pending(msk);
-> +	} else if (msk->pm.add_addr_signaled > msk->pm.add_addr_signal_max) {
-> +		msk->pm.add_addr_signaled--;
-> +		mptcp_pm_remove_addr(msk, pernet->rm_id);
-> +
->  		check_work_pending(msk);
->  	}
->  =
-
-> @@ -261,6 +267,26 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock=
- *msk)
->  	spin_lock_bh(&msk->pm.lock);
->  }
->  =
-
-> +void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_subflow_context *subflow, *tmp;
-> +
-> +	pr_debug("remote_id %d", msk->pm.rm_id);
-> +
-> +	msk->pm.add_addr_accepted--;
-> +	msk->pm.subflows--;
-> +	WRITE_ONCE(msk->pm.accept_addr, true);
-> +
-> +	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> +		struct sock *tcp_sk =3D mptcp_subflow_tcp_sock(subflow);
-> +
-> +		if (msk->pm.rm_id =3D=3D subflow->remote_id) {
-> +			mptcp_subflow_shutdown(tcp_sk, 1, 1, msk->write_seq);
-> +			list_del(&subflow->node);
-> +		}
-> +	}
-> +}
-> +
->  static bool address_use_port(struct mptcp_pm_addr_entry *entry)
->  {
->  	return (entry->flags &
-> @@ -354,6 +380,24 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,=
- struct sock_common *skc)
->  	return ret;
->  }
->  =
-
-> +void mptcp_pm_nl_addr_update(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_pm_data *pm =3D &msk->pm;
-> +	struct pm_nl_pernet *pernet;
-> +
-> +	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-> +
-> +	if (pm->add_addr_signal_max !=3D pernet->add_addr_signal_max) {
-> +		pm->add_addr_signal_max =3D READ_ONCE(pernet->add_addr_signal_max);
-> +		pm->add_addr_accept_max =3D READ_ONCE(pernet->add_addr_accept_max);
-> +
-> +		mptcp_pm_create_subflow_or_signal_addr(msk);
-> +		WRITE_ONCE(pm->addr_updated, true);
-> +	} else {
-> +		WRITE_ONCE(pm->addr_updated, false);
-> +	}
-> +}
-> +
->  void mptcp_pm_nl_data_init(struct mptcp_sock *msk)
->  {
->  	struct mptcp_pm_data *pm =3D &msk->pm;
-> @@ -541,6 +585,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
- struct genl_info *info)
->  		pernet->local_addr_max--;
->  =
-
->  	pernet->addrs--;
-> +	pernet->rm_id =3D addr.addr.id;
->  	list_del_rcu(&entry->list);
->  	kfree_rcu(entry, rcu);
->  out:
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index dbe43e0cd734..31b836ed0786 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1225,6 +1225,14 @@ static void pm_work(struct mptcp_sock *msk)
->  		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
->  		mptcp_pm_nl_add_addr_received(msk);
->  	}
-> +	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
-> +		pm->status &=3D ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
-> +		mptcp_pm_nl_rm_addr_received(msk);
-> +	}
-> +	if (pm->status & BIT(MPTCP_PM_ADDR_UPDATE)) {
-> +		pm->status &=3D ~BIT(MPTCP_PM_ADDR_UPDATE);
-> +		mptcp_pm_nl_addr_update(msk);
-> +	}
->  	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
->  		pm->status &=3D ~BIT(MPTCP_PM_ESTABLISHED);
->  		mptcp_pm_nl_fully_established(msk);
-> @@ -1381,8 +1389,8 @@ static void mptcp_cancel_work(struct sock *sk)
->  		sock_put(sk);
->  }
->  =
-
-> -static void mptcp_subflow_shutdown(struct sock *ssk, int how,
-> -				   bool data_fin_tx_enable, u64 data_fin_tx_seq)
-> +void mptcp_subflow_shutdown(struct sock *ssk, int how,
-> +			    bool data_fin_tx_enable, u64 data_fin_tx_seq)
->  {
->  	lock_sock(ssk);
->  =
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index e5baaef5ec89..5587613f5b03 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -150,6 +150,8 @@ struct mptcp_addr_info {
->  =
-
->  enum mptcp_pm_status {
->  	MPTCP_PM_ADD_ADDR_RECEIVED,
-> +	MPTCP_PM_RM_ADDR_RECEIVED,
-> +	MPTCP_PM_ADDR_UPDATE,
->  	MPTCP_PM_ESTABLISHED,
->  	MPTCP_PM_SUBFLOW_ESTABLISHED,
->  };
-> @@ -160,11 +162,13 @@ struct mptcp_pm_data {
->  =
-
->  	spinlock_t	lock;		/*protects the whole PM data */
->  =
-
-> -	bool		addr_signal;
-> +	bool		add_addr_signal;
-> +	bool		rm_addr_signal;
->  	bool		server_side;
->  	bool		work_pending;
->  	bool		accept_addr;
->  	bool		accept_subflow;
-> +	bool		addr_updated;
->  	u8		add_addr_signaled;
->  	u8		add_addr_accepted;
->  	u8		local_addr_used;
-> @@ -174,6 +178,7 @@ struct mptcp_pm_data {
->  	u8		local_addr_max;
->  	u8		subflows_max;
->  	u8		status;
-> +	u8		rm_id;
->  };
->  =
-
->  struct mptcp_data_frag {
-> @@ -344,6 +349,8 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subfl=
-ow_context *subflow)
->  int mptcp_is_enabled(struct net *net);
->  bool mptcp_subflow_data_available(struct sock *sk);
->  void __init mptcp_subflow_init(void);
-> +void mptcp_subflow_shutdown(struct sock *ssk, int how,
-> +			    bool data_fin_tx_enable, u64 data_fin_tx_seq);
->  =
-
->  /* called with sk socket lock held */
->  int __mptcp_subflow_connect(struct sock *sk, int ifindex,
-> @@ -419,8 +426,10 @@ void mptcp_pm_connection_closed(struct mptcp_sock *m=
-sk);
->  void mptcp_pm_subflow_established(struct mptcp_sock *msk,
->  				  struct mptcp_subflow_context *subflow);
->  void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
-> +void mptcp_pm_addr_update(struct mptcp_sock *msk);
->  void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
->  				const struct mptcp_addr_info *addr);
-> +void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
->  =
-
->  int mptcp_pm_announce_addr(struct mptcp_sock *msk,
->  			   const struct mptcp_addr_info *addr);
-> @@ -429,7 +438,12 @@ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, =
-u8 remote_id);
->  =
-
->  static inline bool mptcp_pm_should_signal(struct mptcp_sock *msk)
->  {
-> -	return READ_ONCE(msk->pm.addr_signal);
-> +	return READ_ONCE(msk->pm.add_addr_signal);
-> +}
-> +
-> +static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
-> +{
-> +	return READ_ONCE(msk->pm.rm_addr_signal);
->  }
->  =
-
->  static inline unsigned int mptcp_add_addr_len(int family)
-> @@ -439,15 +453,19 @@ static inline unsigned int mptcp_add_addr_len(int f=
-amily)
->  	return TCPOLEN_MPTCP_ADD_ADDR6;
->  }
->  =
-
-> -bool mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
-> -			  struct mptcp_addr_info *saddr);
-> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remai=
-ning,
-> +			      struct mptcp_addr_info *saddr);
-> +bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
-> +			     u8 *rm_id);
->  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *sk=
-c);
->  =
-
->  void __init mptcp_pm_nl_init(void);
->  void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
-> +void mptcp_pm_nl_addr_update(struct mptcp_sock *msk);
->  void mptcp_pm_nl_fully_established(struct mptcp_sock *msk);
->  void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk);
->  void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk);
-> +void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk);
->  int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common =
-*skc);
->  =
-
->  static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 9f7f3772c13c..326c2df256b7 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -989,6 +989,7 @@ int __mptcp_subflow_connect(struct sock *sk, int ifin=
-dex,
->  	subflow->remote_key =3D msk->remote_key;
->  	subflow->local_key =3D msk->local_key;
->  	subflow->token =3D msk->token;
-> +	subflow->remote_id =3D remote->id;
->  	mptcp_info2sockaddr(loc, &addr);
->  =
-
->  	addrlen =3D sizeof(struct sockaddr_in);
-
-
---===============7322106624424944507==--
+--===============5688829113429373799==--
