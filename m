@@ -1,1002 +1,528 @@
-Content-Type: multipart/mixed; boundary="===============6413190528882440187=="
+Content-Type: multipart/mixed; boundary="===============4811023042402250619=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 21/22] net/ipv6: remove compat_ipv6_{get,set}sockopt
-Date: Fri, 17 Jul 2020 08:23:30 +0200
-Message-ID: <20200717062331.691152-22-hch@lst.de>
+Subject: [MPTCP] [PATCH 22/22] net: make ->{get,
+ set}sockopt in proto_ops optional
+Date: Fri, 17 Jul 2020 08:23:31 +0200
+Message-ID: <20200717062331.691152-23-hch@lst.de>
 In-Reply-To: 20200717062331.691152-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5070
+X-UID: 5071
 
---===============6413190528882440187==
+--===============4811023042402250619==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Handle the few cases that need special treatment in-line using
-in_compat_syscall().  This also removes all the now unused
-compat_{get,set}sockopt methods.
+Just check for a NULL method instead of wiring up
+sock_no_{get,set}sockopt.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- include/net/inet_connection_sock.h |  13 --
- include/net/ipv6.h                 |   4 -
- include/net/sctp/structs.h         |  10 --
- include/net/sock.h                 |   8 --
- include/net/tcp.h                  |   4 -
- net/core/sock.c                    |  10 --
- net/dccp/dccp.h                    |   6 -
- net/dccp/ipv4.c                    |   4 -
- net/dccp/ipv6.c                    |  12 --
- net/dccp/proto.c                   |  26 ----
- net/ipv4/inet_connection_sock.c    |  28 -----
- net/ipv4/tcp.c                     |  24 ----
- net/ipv4/tcp_ipv4.c                |   4 -
- net/ipv6/ipv6_sockglue.c           | 183 ++++++++---------------------
- net/ipv6/raw.c                     |  50 --------
- net/ipv6/tcp_ipv6.c                |  12 --
- net/ipv6/udp.c                     |  25 ----
- net/ipv6/udp_impl.h                |   6 -
- net/ipv6/udplite.c                 |   4 -
- net/l2tp/l2tp_ip6.c                |   4 -
- net/sctp/ipv6.c                    |   4 -
- 21 files changed, 51 insertions(+), 390 deletions(-)
+ crypto/af_alg.c             |  1 -
+ crypto/algif_aead.c         |  4 ----
+ crypto/algif_hash.c         |  4 ----
+ crypto/algif_rng.c          |  2 --
+ crypto/algif_skcipher.c     |  4 ----
+ drivers/isdn/mISDN/socket.c |  2 --
+ drivers/net/ppp/pppoe.c     |  2 --
+ drivers/net/ppp/pptp.c      |  2 --
+ include/net/sock.h          |  2 --
+ net/appletalk/ddp.c         |  2 --
+ net/bluetooth/bnep/sock.c   |  2 --
+ net/bluetooth/cmtp/sock.c   |  2 --
+ net/bluetooth/hidp/sock.c   |  2 --
+ net/caif/caif_socket.c      |  2 --
+ net/can/bcm.c               |  2 --
+ net/core/sock.c             | 14 --------------
+ net/key/af_key.c            |  2 --
+ net/nfc/llcp_sock.c         |  2 --
+ net/nfc/rawsock.c           |  4 ----
+ net/packet/af_packet.c      |  2 --
+ net/phonet/socket.c         |  2 --
+ net/qrtr/qrtr.c             |  2 --
+ net/smc/af_smc.c            |  9 +++++++--
+ net/socket.c                |  4 ++++
+ net/unix/af_unix.c          |  6 ------
+ net/vmw_vsock/af_vsock.c    |  2 --
+ 26 files changed, 11 insertions(+), 73 deletions(-)
 
-diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connecti=
-on_sock.h
-index e5b388f5fa2099..157c60cca0ca60 100644
---- a/include/net/inet_connection_sock.h
-+++ b/include/net/inet_connection_sock.h
-@@ -48,14 +48,6 @@ struct inet_connection_sock_af_ops {
- 				  char __user *optval, unsigned int optlen);
- 	int	    (*getsockopt)(struct sock *sk, int level, int optname,
- 				  char __user *optval, int __user *optlen);
--#ifdef CONFIG_COMPAT
--	int	    (*compat_setsockopt)(struct sock *sk,
--				int level, int optname,
--				char __user *optval, unsigned int optlen);
--	int	    (*compat_getsockopt)(struct sock *sk,
--				int level, int optname,
--				char __user *optval, int __user *optlen);
--#endif
- 	void	    (*addr2sockaddr)(struct sock *sk, struct sockaddr *);
- 	void	    (*mtu_reduced)(struct sock *sk);
- };
-@@ -311,11 +303,6 @@ void inet_csk_listen_stop(struct sock *sk);
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index 28fc323e3fe304..29f71428520b4b 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -335,7 +335,6 @@ static const struct proto_ops alg_proto_ops =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.sendpage	=3D	sock_no_sendpage,
+ 	.sendmsg	=3D	sock_no_sendmsg,
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index 0ae000a61c7f5b..527d09a694627b 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -361,11 +361,9 @@ static struct proto_ops algif_aead_ops =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.bind		=3D	sock_no_bind,
+ 	.accept		=3D	sock_no_accept,
+-	.setsockopt	=3D	sock_no_setsockopt,
  =
 
- void inet_csk_addr2sockaddr(struct sock *sk, struct sockaddr *uaddr);
+ 	.release	=3D	af_alg_release,
+ 	.sendmsg	=3D	aead_sendmsg,
+@@ -454,11 +452,9 @@ static struct proto_ops algif_aead_ops_nokey =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.bind		=3D	sock_no_bind,
+ 	.accept		=3D	sock_no_accept,
+-	.setsockopt	=3D	sock_no_setsockopt,
  =
 
--int inet_csk_compat_getsockopt(struct sock *sk, int level, int optname,
--			       char __user *optval, int __user *optlen);
--int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
--			       char __user *optval, unsigned int optlen);
--
- struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
+ 	.release	=3D	af_alg_release,
+ 	.sendmsg	=3D	aead_sendmsg_nokey,
+diff --git a/crypto/algif_hash.c b/crypto/algif_hash.c
+index e71727c25a7db7..50f7b22f1b4825 100644
+--- a/crypto/algif_hash.c
++++ b/crypto/algif_hash.c
+@@ -279,10 +279,8 @@ static struct proto_ops algif_hash_ops =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.bind		=3D	sock_no_bind,
+-	.setsockopt	=3D	sock_no_setsockopt,
  =
 
- #define TCP_PINGPONG_THRESH	3
-diff --git a/include/net/ipv6.h b/include/net/ipv6.h
-index 5e65bf2fd32d09..262fc88dbd7e2f 100644
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -1088,10 +1088,6 @@ int ipv6_setsockopt(struct sock *sk, int level, int =
-optname,
- 		    char __user *optval, unsigned int optlen);
- int ipv6_getsockopt(struct sock *sk, int level, int optname,
- 		    char __user *optval, int __user *optlen);
--int compat_ipv6_setsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, unsigned int optlen);
--int compat_ipv6_getsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, int __user *optlen);
+ 	.release	=3D	af_alg_release,
+ 	.sendmsg	=3D	hash_sendmsg,
+@@ -383,10 +381,8 @@ static struct proto_ops algif_hash_ops_nokey =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.bind		=3D	sock_no_bind,
+-	.setsockopt	=3D	sock_no_setsockopt,
  =
 
- int __ip6_datagram_connect(struct sock *sk, struct sockaddr *addr,
- 			   int addr_len);
-diff --git a/include/net/sctp/structs.h b/include/net/sctp/structs.h
-index 9bbb2f60db9262..233bbf7df5d66c 100644
---- a/include/net/sctp/structs.h
-+++ b/include/net/sctp/structs.h
-@@ -438,16 +438,6 @@ struct sctp_af {
- 					 int optname,
- 					 char __user *optval,
- 					 int __user *optlen);
--	int		(*compat_setsockopt)	(struct sock *sk,
--					 int level,
--					 int optname,
--					 char __user *optval,
--					 unsigned int optlen);
--	int		(*compat_getsockopt)	(struct sock *sk,
--					 int level,
--					 int optname,
--					 char __user *optval,
--					 int __user *optlen);
- 	void		(*get_dst)	(struct sctp_transport *t,
- 					 union sctp_addr *saddr,
- 					 struct flowi *fl,
+ 	.release	=3D	af_alg_release,
+ 	.sendmsg	=3D	hash_sendmsg_nokey,
+diff --git a/crypto/algif_rng.c b/crypto/algif_rng.c
+index 087c0ad09d382b..6300e0566dc560 100644
+--- a/crypto/algif_rng.c
++++ b/crypto/algif_rng.c
+@@ -101,11 +101,9 @@ static struct proto_ops algif_rng_ops =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.bind		=3D	sock_no_bind,
+ 	.accept		=3D	sock_no_accept,
+-	.setsockopt	=3D	sock_no_setsockopt,
+ 	.sendmsg	=3D	sock_no_sendmsg,
+ 	.sendpage	=3D	sock_no_sendpage,
+ =
+
+diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
+index ec5567c87a6df4..c487887f46711e 100644
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -188,11 +188,9 @@ static struct proto_ops algif_skcipher_ops =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.bind		=3D	sock_no_bind,
+ 	.accept		=3D	sock_no_accept,
+-	.setsockopt	=3D	sock_no_setsockopt,
+ =
+
+ 	.release	=3D	af_alg_release,
+ 	.sendmsg	=3D	skcipher_sendmsg,
+@@ -281,11 +279,9 @@ static struct proto_ops algif_skcipher_ops_nokey =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.bind		=3D	sock_no_bind,
+ 	.accept		=3D	sock_no_accept,
+-	.setsockopt	=3D	sock_no_setsockopt,
+ =
+
+ 	.release	=3D	af_alg_release,
+ 	.sendmsg	=3D	skcipher_sendmsg_nokey,
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index dff4132b3702c6..1b2b91479107bc 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -738,8 +738,6 @@ static const struct proto_ops base_sock_ops =3D {
+ 	.recvmsg	=3D sock_no_recvmsg,
+ 	.listen		=3D sock_no_listen,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.connect	=3D sock_no_connect,
+ 	.socketpair	=3D sock_no_socketpair,
+ 	.accept		=3D sock_no_accept,
+diff --git a/drivers/net/ppp/pppoe.c b/drivers/net/ppp/pppoe.c
+index beedaad082551b..d7f50b835050d1 100644
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -1110,8 +1110,6 @@ static const struct proto_ops pppoe_ops =3D {
+ 	.poll		=3D datagram_poll,
+ 	.listen		=3D sock_no_listen,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.sendmsg	=3D pppoe_sendmsg,
+ 	.recvmsg	=3D pppoe_recvmsg,
+ 	.mmap		=3D sock_no_mmap,
+diff --git a/drivers/net/ppp/pptp.c b/drivers/net/ppp/pptp.c
+index acccb747aedad6..ee5058445d06e2 100644
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -618,8 +618,6 @@ static const struct proto_ops pptp_ops =3D {
+ 	.getname    =3D pptp_getname,
+ 	.listen     =3D sock_no_listen,
+ 	.shutdown   =3D sock_no_shutdown,
+-	.setsockopt =3D sock_no_setsockopt,
+-	.getsockopt =3D sock_no_getsockopt,
+ 	.sendmsg    =3D sock_no_sendmsg,
+ 	.recvmsg    =3D sock_no_recvmsg,
+ 	.mmap       =3D sock_no_mmap,
 diff --git a/include/net/sock.h b/include/net/sock.h
-index 1fd7cf5fc7516c..3bd8bc578bf3e5 100644
+index 3bd8bc578bf3e5..62e18fc8ac9f96 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -1147,14 +1147,6 @@ struct proto {
- 					int __user *option);
- 	void			(*keepalive)(struct sock *sk, int valbool);
- #ifdef CONFIG_COMPAT
--	int			(*compat_setsockopt)(struct sock *sk,
--					int level,
--					int optname, char __user *optval,
--					unsigned int optlen);
--	int			(*compat_getsockopt)(struct sock *sk,
--					int level,
--					int optname, char __user *optval,
--					int __user *option);
- 	int			(*compat_ioctl)(struct sock *sk,
- 					unsigned int cmd, unsigned long arg);
+@@ -1714,8 +1714,6 @@ int sock_no_getname(struct socket *, struct sockaddr =
+*, int);
+ int sock_no_ioctl(struct socket *, unsigned int, unsigned long);
+ int sock_no_listen(struct socket *, int);
+ int sock_no_shutdown(struct socket *, int);
+-int sock_no_getsockopt(struct socket *, int , int, char __user *, int __us=
+er *);
+-int sock_no_setsockopt(struct socket *, int, int, char __user *, unsigned =
+int);
+ int sock_no_sendmsg(struct socket *, struct msghdr *, size_t);
+ int sock_no_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t len=
+);
+ int sock_no_recvmsg(struct socket *, struct msghdr *, size_t, int);
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 15787e8c0629a0..1d48708c5a2eb5 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1917,8 +1917,6 @@ static const struct proto_ops atalk_dgram_ops =3D {
  #endif
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d62e24533518a7..9f7f7c0c110451 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -401,10 +401,6 @@ int tcp_getsockopt(struct sock *sk, int level, int opt=
-name,
- 		   char __user *optval, int __user *optlen);
- int tcp_setsockopt(struct sock *sk, int level, int optname,
- 		   char __user *optval, unsigned int optlen);
--int compat_tcp_getsockopt(struct sock *sk, int level, int optname,
--			  char __user *optval, int __user *optlen);
--int compat_tcp_setsockopt(struct sock *sk, int level, int optname,
--			  char __user *optval, unsigned int optlen);
- void tcp_set_keepalive(struct sock *sk, int val);
- void tcp_syn_ack_timeout(const struct request_sock *req);
- int tcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int nonbl=
-ock,
+ 	.listen		=3D sock_no_listen,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.sendmsg	=3D atalk_sendmsg,
+ 	.recvmsg	=3D atalk_recvmsg,
+ 	.mmap		=3D sock_no_mmap,
+diff --git a/net/bluetooth/bnep/sock.c b/net/bluetooth/bnep/sock.c
+index cfd83c5521aecc..d515571b2afba9 100644
+--- a/net/bluetooth/bnep/sock.c
++++ b/net/bluetooth/bnep/sock.c
+@@ -182,8 +182,6 @@ static const struct proto_ops bnep_sock_ops =3D {
+ 	.recvmsg	=3D sock_no_recvmsg,
+ 	.listen		=3D sock_no_listen,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.connect	=3D sock_no_connect,
+ 	.socketpair	=3D sock_no_socketpair,
+ 	.accept		=3D sock_no_accept,
+diff --git a/net/bluetooth/cmtp/sock.c b/net/bluetooth/cmtp/sock.c
+index defdd4871919f3..96d49d9fae9643 100644
+--- a/net/bluetooth/cmtp/sock.c
++++ b/net/bluetooth/cmtp/sock.c
+@@ -185,8 +185,6 @@ static const struct proto_ops cmtp_sock_ops =3D {
+ 	.recvmsg	=3D sock_no_recvmsg,
+ 	.listen		=3D sock_no_listen,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.connect	=3D sock_no_connect,
+ 	.socketpair	=3D sock_no_socketpair,
+ 	.accept		=3D sock_no_accept,
+diff --git a/net/bluetooth/hidp/sock.c b/net/bluetooth/hidp/sock.c
+index 03be6a4baef30e..595fb3c9d6c361 100644
+--- a/net/bluetooth/hidp/sock.c
++++ b/net/bluetooth/hidp/sock.c
+@@ -233,8 +233,6 @@ static const struct proto_ops hidp_sock_ops =3D {
+ 	.recvmsg	=3D sock_no_recvmsg,
+ 	.listen		=3D sock_no_listen,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.connect	=3D sock_no_connect,
+ 	.socketpair	=3D sock_no_socketpair,
+ 	.accept		=3D sock_no_accept,
+diff --git a/net/caif/caif_socket.c b/net/caif/caif_socket.c
+index ef14da50a98191..b94ecd931002e7 100644
+--- a/net/caif/caif_socket.c
++++ b/net/caif/caif_socket.c
+@@ -981,7 +981,6 @@ static const struct proto_ops caif_seqpacket_ops =3D {
+ 	.listen =3D sock_no_listen,
+ 	.shutdown =3D sock_no_shutdown,
+ 	.setsockopt =3D setsockopt,
+-	.getsockopt =3D sock_no_getsockopt,
+ 	.sendmsg =3D caif_seqpkt_sendmsg,
+ 	.recvmsg =3D caif_seqpkt_recvmsg,
+ 	.mmap =3D sock_no_mmap,
+@@ -1002,7 +1001,6 @@ static const struct proto_ops caif_stream_ops =3D {
+ 	.listen =3D sock_no_listen,
+ 	.shutdown =3D sock_no_shutdown,
+ 	.setsockopt =3D setsockopt,
+-	.getsockopt =3D sock_no_getsockopt,
+ 	.sendmsg =3D caif_stream_sendmsg,
+ 	.recvmsg =3D caif_stream_recvmsg,
+ 	.mmap =3D sock_no_mmap,
+diff --git a/net/can/bcm.c b/net/can/bcm.c
+index c96fa0f33db39c..d14ea12affb112 100644
+--- a/net/can/bcm.c
++++ b/net/can/bcm.c
+@@ -1648,8 +1648,6 @@ static const struct proto_ops bcm_ops =3D {
+ 	.gettstamp     =3D sock_gettstamp,
+ 	.listen        =3D sock_no_listen,
+ 	.shutdown      =3D sock_no_shutdown,
+-	.setsockopt    =3D sock_no_setsockopt,
+-	.getsockopt    =3D sock_no_getsockopt,
+ 	.sendmsg       =3D bcm_sendmsg,
+ 	.recvmsg       =3D bcm_recvmsg,
+ 	.mmap          =3D sock_no_mmap,
 diff --git a/net/core/sock.c b/net/core/sock.c
-index 018404d1762682..48655d5c4cf37a 100644
+index 48655d5c4cf37a..d828bfe1c47dfa 100644
 --- a/net/core/sock.c
 +++ b/net/core/sock.c
-@@ -3199,11 +3199,6 @@ int sock_common_getsockopt(struct socket *sock, int =
-level, int optname,
- {
- 	struct sock *sk =3D sock->sk;
- =
-
--#ifdef CONFIG_COMPAT
--	if (in_compat_syscal() && sk->sk_prot->compat_getsockopt)
--		return sk->sk_prot->compat_getsockopt(sk, level, optname,
--						      optval, optlen);
--#endif
- 	return sk->sk_prot->getsockopt(sk, level, optname, optval, optlen);
+@@ -2783,20 +2783,6 @@ int sock_no_shutdown(struct socket *sock, int how)
  }
- EXPORT_SYMBOL(sock_common_getsockopt);
-@@ -3231,11 +3226,6 @@ int sock_common_setsockopt(struct socket *sock, int =
-level, int optname,
- {
- 	struct sock *sk =3D sock->sk;
+ EXPORT_SYMBOL(sock_no_shutdown);
  =
 
--#ifdef CONFIG_COMPAT
--	if (in_compat_syscall() && sk->sk_prot->compat_setsockopt)
--		return sk->sk_prot->compat_setsockopt(sk, level, optname,
--						      optval, optlen);
--#endif
- 	return sk->sk_prot->setsockopt(sk, level, optname, optval, optlen);
- }
- EXPORT_SYMBOL(sock_common_setsockopt);
-diff --git a/net/dccp/dccp.h b/net/dccp/dccp.h
-index 7dce4f6c70252d..434eea91b7679d 100644
---- a/net/dccp/dccp.h
-+++ b/net/dccp/dccp.h
-@@ -296,12 +296,6 @@ int dccp_getsockopt(struct sock *sk, int level, int op=
-tname,
- 		    char __user *optval, int __user *optlen);
- int dccp_setsockopt(struct sock *sk, int level, int optname,
- 		    char __user *optval, unsigned int optlen);
--#ifdef CONFIG_COMPAT
--int compat_dccp_getsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, int __user *optlen);
--int compat_dccp_setsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, unsigned int optlen);
--#endif
- int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg);
- int dccp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size);
- int dccp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int nonb=
-lock,
-diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
-index b91373eb1c7974..9c28c825112533 100644
---- a/net/dccp/ipv4.c
-+++ b/net/dccp/ipv4.c
-@@ -959,10 +959,6 @@ static struct proto dccp_v4_prot =3D {
- 	.rsk_prot		=3D &dccp_request_sock_ops,
- 	.twsk_prot		=3D &dccp_timewait_sock_ops,
- 	.h.hashinfo		=3D &dccp_hashinfo,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt	=3D compat_dccp_setsockopt,
--	.compat_getsockopt	=3D compat_dccp_getsockopt,
--#endif
- };
- =
-
- static const struct net_protocol dccp_v4_protocol =3D {
-diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
-index b50f85a72cd5fc..ef4ab28cfde0e3 100644
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -970,10 +970,6 @@ static const struct inet_connection_sock_af_ops dccp_i=
-pv6_af_ops =3D {
- 	.getsockopt	   =3D ipv6_getsockopt,
- 	.addr2sockaddr	   =3D inet6_csk_addr2sockaddr,
- 	.sockaddr_len	   =3D sizeof(struct sockaddr_in6),
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_ipv6_setsockopt,
--	.compat_getsockopt =3D compat_ipv6_getsockopt,
--#endif
- };
- =
-
- /*
-@@ -990,10 +986,6 @@ static const struct inet_connection_sock_af_ops dccp_i=
-pv6_mapped =3D {
- 	.getsockopt	   =3D ipv6_getsockopt,
- 	.addr2sockaddr	   =3D inet6_csk_addr2sockaddr,
- 	.sockaddr_len	   =3D sizeof(struct sockaddr_in6),
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_ipv6_setsockopt,
--	.compat_getsockopt =3D compat_ipv6_getsockopt,
--#endif
- };
- =
-
- /* NOTE: A lot of things set to zero explicitly by call to
-@@ -1049,10 +1041,6 @@ static struct proto dccp_v6_prot =3D {
- 	.rsk_prot	   =3D &dccp6_request_sock_ops,
- 	.twsk_prot	   =3D &dccp6_timewait_sock_ops,
- 	.h.hashinfo	   =3D &dccp_hashinfo,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_dccp_setsockopt,
--	.compat_getsockopt =3D compat_dccp_getsockopt,
--#endif
- };
- =
-
- static const struct inet6_protocol dccp_v6_protocol =3D {
-diff --git a/net/dccp/proto.c b/net/dccp/proto.c
-index c13b6609474b65..fd92d3fe321f08 100644
---- a/net/dccp/proto.c
-+++ b/net/dccp/proto.c
-@@ -575,19 +575,6 @@ int dccp_setsockopt(struct sock *sk, int level, int op=
-tname,
- =
-
- EXPORT_SYMBOL_GPL(dccp_setsockopt);
- =
-
--#ifdef CONFIG_COMPAT
--int compat_dccp_setsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, unsigned int optlen)
+-int sock_no_setsockopt(struct socket *sock, int level, int optname,
+-		    char __user *optval, unsigned int optlen)
 -{
--	if (level !=3D SOL_DCCP)
--		return inet_csk_compat_setsockopt(sk, level, optname,
--						  optval, optlen);
--	return do_dccp_setsockopt(sk, level, optname, optval, optlen);
+-	return -EOPNOTSUPP;
 -}
+-EXPORT_SYMBOL(sock_no_setsockopt);
 -
--EXPORT_SYMBOL_GPL(compat_dccp_setsockopt);
--#endif
--
- static int dccp_getsockopt_service(struct sock *sk, int len,
- 				   __be32 __user *optval,
- 				   int __user *optlen)
-@@ -696,19 +683,6 @@ int dccp_getsockopt(struct sock *sk, int level, int op=
-tname,
- =
-
- EXPORT_SYMBOL_GPL(dccp_getsockopt);
- =
-
--#ifdef CONFIG_COMPAT
--int compat_dccp_getsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, int __user *optlen)
+-int sock_no_getsockopt(struct socket *sock, int level, int optname,
+-		    char __user *optval, int __user *optlen)
 -{
--	if (level !=3D SOL_DCCP)
--		return inet_csk_compat_getsockopt(sk, level, optname,
--						  optval, optlen);
--	return do_dccp_getsockopt(sk, level, optname, optval, optlen);
+-	return -EOPNOTSUPP;
 -}
+-EXPORT_SYMBOL(sock_no_getsockopt);
 -
--EXPORT_SYMBOL_GPL(compat_dccp_getsockopt);
--#endif
--
- static int dccp_msghdr_parse(struct msghdr *msg, struct sk_buff *skb)
+ int sock_no_sendmsg(struct socket *sock, struct msghdr *m, size_t len)
  {
- 	struct cmsghdr *cmsg;
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_soc=
-k.c
-index 22b0e7336360f3..d1a3913eebe05f 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -1057,34 +1057,6 @@ void inet_csk_addr2sockaddr(struct sock *sk, struct =
-sockaddr *uaddr)
- }
- EXPORT_SYMBOL_GPL(inet_csk_addr2sockaddr);
+ 	return -EOPNOTSUPP;
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index b67ed3a8486c25..f13626c1a98592 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -3734,8 +3734,6 @@ static const struct proto_ops pfkey_ops =3D {
+ 	.ioctl		=3D	sock_no_ioctl,
+ 	.listen		=3D	sock_no_listen,
+ 	.shutdown	=3D	sock_no_shutdown,
+-	.setsockopt	=3D	sock_no_setsockopt,
+-	.getsockopt	=3D	sock_no_getsockopt,
+ 	.mmap		=3D	sock_no_mmap,
+ 	.sendpage	=3D	sock_no_sendpage,
  =
 
--#ifdef CONFIG_COMPAT
--int inet_csk_compat_getsockopt(struct sock *sk, int level, int optname,
--			       char __user *optval, int __user *optlen)
--{
--	const struct inet_connection_sock *icsk =3D inet_csk(sk);
--
--	if (icsk->icsk_af_ops->compat_getsockopt)
--		return icsk->icsk_af_ops->compat_getsockopt(sk, level, optname,
--							    optval, optlen);
--	return icsk->icsk_af_ops->getsockopt(sk, level, optname,
--					     optval, optlen);
--}
--EXPORT_SYMBOL_GPL(inet_csk_compat_getsockopt);
--
--int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
--			       char __user *optval, unsigned int optlen)
--{
--	const struct inet_connection_sock *icsk =3D inet_csk(sk);
--
--	if (icsk->icsk_af_ops->compat_setsockopt)
--		return icsk->icsk_af_ops->compat_setsockopt(sk, level, optname,
--							    optval, optlen);
--	return icsk->icsk_af_ops->setsockopt(sk, level, optname,
--					     optval, optlen);
--}
--EXPORT_SYMBOL_GPL(inet_csk_compat_setsockopt);
--#endif
--
- static struct dst_entry *inet_csk_rebuild_route(struct sock *sk, struct fl=
-owi *fl)
- {
- 	const struct inet_sock *inet =3D inet_sk(sk);
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 254b6a4cc95bd0..58ede3d62b2e2c 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3337,18 +3337,6 @@ int tcp_setsockopt(struct sock *sk, int level, int o=
-ptname, char __user *optval,
- }
- EXPORT_SYMBOL(tcp_setsockopt);
- =
-
--#ifdef CONFIG_COMPAT
--int compat_tcp_setsockopt(struct sock *sk, int level, int optname,
--			  char __user *optval, unsigned int optlen)
--{
--	if (level !=3D SOL_TCP)
--		return inet_csk_compat_setsockopt(sk, level, optname,
--						  optval, optlen);
--	return do_tcp_setsockopt(sk, level, optname, optval, optlen);
--}
--EXPORT_SYMBOL(compat_tcp_setsockopt);
--#endif
--
- static void tcp_get_info_chrono_stats(const struct tcp_sock *tp,
- 				      struct tcp_info *info)
- {
-@@ -3896,18 +3884,6 @@ int tcp_getsockopt(struct sock *sk, int level, int o=
-ptname, char __user *optval,
- }
- EXPORT_SYMBOL(tcp_getsockopt);
- =
-
--#ifdef CONFIG_COMPAT
--int compat_tcp_getsockopt(struct sock *sk, int level, int optname,
--			  char __user *optval, int __user *optlen)
--{
--	if (level !=3D SOL_TCP)
--		return inet_csk_compat_getsockopt(sk, level, optname,
--						  optval, optlen);
--	return do_tcp_getsockopt(sk, level, optname, optval, optlen);
--}
--EXPORT_SYMBOL(compat_tcp_getsockopt);
--#endif
--
- #ifdef CONFIG_TCP_MD5SIG
- static DEFINE_PER_CPU(struct tcp_md5sig_pool, tcp_md5sig_pool);
- static DEFINE_MUTEX(tcp_md5sig_mutex);
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index e5b7ef9a288769..cd81b6e04efbfa 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -2769,10 +2769,6 @@ struct proto tcp_prot =3D {
- 	.rsk_prot		=3D &tcp_request_sock_ops,
- 	.h.hashinfo		=3D &tcp_hashinfo,
- 	.no_autobind		=3D true,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt	=3D compat_tcp_setsockopt,
--	.compat_getsockopt	=3D compat_tcp_getsockopt,
--#endif
- 	.diag_destroy		=3D tcp_abort,
- };
- EXPORT_SYMBOL(tcp_prot);
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 1ea0cd12beaee9..add8f791229945 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -136,13 +136,42 @@ static bool setsockopt_needs_rtnl(int optname)
- 	return false;
- }
- =
-
-+static int copy_group_source_from_user(struct group_source_req *greqs,
-+		void __user *optval, int optlen)
-+{
-+	if (in_compat_syscall()) {
-+		struct compat_group_source_req gr32;
-+
-+		if (optlen < sizeof(gr32))
-+			return -EINVAL;
-+		if (copy_from_user(&gr32, optval, sizeof(gr32)))
-+			return -EFAULT;
-+		greqs->gsr_interface =3D gr32.gsr_interface;
-+		greqs->gsr_group =3D gr32.gsr_group;
-+		greqs->gsr_source =3D gr32.gsr_source;
-+	} else {
-+		if (optlen < sizeof(*greqs))
-+			return -EINVAL;
-+		if (copy_from_user(greqs, optval, sizeof(*greqs)))
-+			return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
- static int do_ipv6_mcast_group_source(struct sock *sk, int optname,
--				      struct group_source_req *greqs)
-+		void __user *optval, int optlen)
- {
-+	struct group_source_req greqs;
- 	int omode, add;
-+	int ret;
-+
-+	ret =3D copy_group_source_from_user(&greqs, optval, optlen);
-+	if (ret)
-+		return ret;
- =
-
--	if (greqs->gsr_group.ss_family !=3D AF_INET6 ||
--	    greqs->gsr_source.ss_family !=3D AF_INET6)
-+	if (greqs.gsr_group.ss_family !=3D AF_INET6 ||
-+	    greqs.gsr_source.ss_family !=3D AF_INET6)
- 		return -EADDRNOTAVAIL;
- =
-
- 	if (optname =3D=3D MCAST_BLOCK_SOURCE) {
-@@ -155,8 +184,8 @@ static int do_ipv6_mcast_group_source(struct sock *sk, =
-int optname,
- 		struct sockaddr_in6 *psin6;
- 		int retv;
- =
-
--		psin6 =3D (struct sockaddr_in6 *)&greqs->gsr_group;
--		retv =3D ipv6_sock_mc_join_ssm(sk, greqs->gsr_interface,
-+		psin6 =3D (struct sockaddr_in6 *)&greqs.gsr_group;
-+		retv =3D ipv6_sock_mc_join_ssm(sk, greqs.gsr_interface,
- 					     &psin6->sin6_addr,
- 					     MCAST_INCLUDE);
- 		/* prior join w/ different source is ok */
-@@ -168,7 +197,7 @@ static int do_ipv6_mcast_group_source(struct sock *sk, =
-int optname,
- 		omode =3D MCAST_INCLUDE;
- 		add =3D 0;
- 	}
--	return ip6_mc_source(add, omode, sk, greqs);
-+	return ip6_mc_source(add, omode, sk, &greqs);
- }
- =
-
- static int ipv6_set_mcast_msfilter(struct sock *sk, void __user *optval,
-@@ -202,7 +231,6 @@ static int ipv6_set_mcast_msfilter(struct sock *sk, voi=
-d __user *optval,
- 	return ret;
- }
- =
-
--#ifdef CONFIG_COMPAT
- static int compat_ipv6_set_mcast_msfilter(struct sock *sk, void __user *op=
-tval,
- 		int optlen)
- {
-@@ -236,21 +264,16 @@ static int compat_ipv6_set_mcast_msfilter(struct sock=
- *sk, void __user *optval,
- 	if (offsetof(struct compat_group_filter, gf_slist[n]) > optlen)
- 		goto out_free_p;
- =
-
--	rtnl_lock();
--	lock_sock(sk);
- 	ret =3D ip6_mc_msfilter(sk, &(struct group_filter){
- 			.gf_interface =3D gf32->gf_interface,
- 			.gf_group =3D gf32->gf_group,
- 			.gf_fmode =3D gf32->gf_fmode,
- 			.gf_numsrc =3D gf32->gf_numsrc}, gf32->gf_slist);
--	release_sock(sk);
--	rtnl_unlock();
- =
-
- out_free_p:
- 	kfree(p);
- 	return ret;
- }
--#endif
- =
-
- static int ipv6_mcast_join_leave(struct sock *sk, int optname,
- 		void __user *optval, int optlen)
-@@ -272,13 +295,11 @@ static int ipv6_mcast_join_leave(struct sock *sk, int=
- optname,
- 	return ipv6_sock_mc_drop(sk, greq.gr_interface, &psin6->sin6_addr);
- }
- =
-
--#ifdef CONFIG_COMPAT
- static int compat_ipv6_mcast_join_leave(struct sock *sk, int optname,
- 		void __user *optval, int optlen)
- {
- 	struct compat_group_req gr32;
- 	struct sockaddr_in6 *psin6;
--	int err;
- =
-
- 	if (optlen < sizeof(gr32))
- 		return -EINVAL;
-@@ -287,20 +308,12 @@ static int compat_ipv6_mcast_join_leave(struct sock *=
-sk, int optname,
- =
-
- 	if (gr32.gr_group.ss_family !=3D AF_INET6)
- 		return -EADDRNOTAVAIL;
--	rtnl_lock();
--	lock_sock(sk);
- 	psin6 =3D (struct sockaddr_in6 *)&gr32.gr_group;
- 	if (optname =3D=3D MCAST_JOIN_GROUP)
--		err =3D ipv6_sock_mc_join(sk, gr32.gr_interface,
-+		return ipv6_sock_mc_join(sk, gr32.gr_interface,
- 					&psin6->sin6_addr);
--	else
--		err =3D ipv6_sock_mc_drop(sk, gr32.gr_interface,
--					&psin6->sin6_addr);
--	release_sock(sk);
--	rtnl_unlock();
--	return err;
-+	return ipv6_sock_mc_drop(sk, gr32.gr_interface, &psin6->sin6_addr);
- }
--#endif
- =
-
- static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 		    char __user *optval, unsigned int optlen)
-@@ -853,26 +866,25 @@ static int do_ipv6_setsockopt(struct sock *sk, int le=
+diff --git a/net/nfc/llcp_sock.c b/net/nfc/llcp_sock.c
+index 28604414dec1b7..6da1e2334bb697 100644
+--- a/net/nfc/llcp_sock.c
++++ b/net/nfc/llcp_sock.c
+@@ -921,8 +921,6 @@ static const struct proto_ops llcp_rawsock_ops =3D {
+ 	.ioctl          =3D sock_no_ioctl,
+ 	.listen         =3D sock_no_listen,
+ 	.shutdown       =3D sock_no_shutdown,
+-	.setsockopt     =3D sock_no_setsockopt,
+-	.getsockopt     =3D sock_no_getsockopt,
+ 	.sendmsg        =3D sock_no_sendmsg,
+ 	.recvmsg        =3D llcp_sock_recvmsg,
+ 	.mmap           =3D sock_no_mmap,
+diff --git a/net/nfc/rawsock.c b/net/nfc/rawsock.c
+index ba5ffd3badd324..b2061b6746eaa6 100644
+--- a/net/nfc/rawsock.c
++++ b/net/nfc/rawsock.c
+@@ -276,8 +276,6 @@ static const struct proto_ops rawsock_ops =3D {
+ 	.ioctl          =3D sock_no_ioctl,
+ 	.listen         =3D sock_no_listen,
+ 	.shutdown       =3D sock_no_shutdown,
+-	.setsockopt     =3D sock_no_setsockopt,
+-	.getsockopt     =3D sock_no_getsockopt,
+ 	.sendmsg        =3D rawsock_sendmsg,
+ 	.recvmsg        =3D rawsock_recvmsg,
+ 	.mmap           =3D sock_no_mmap,
+@@ -296,8 +294,6 @@ static const struct proto_ops rawsock_raw_ops =3D {
+ 	.ioctl          =3D sock_no_ioctl,
+ 	.listen         =3D sock_no_listen,
+ 	.shutdown       =3D sock_no_shutdown,
+-	.setsockopt     =3D sock_no_setsockopt,
+-	.getsockopt     =3D sock_no_getsockopt,
+ 	.sendmsg        =3D sock_no_sendmsg,
+ 	.recvmsg        =3D rawsock_recvmsg,
+ 	.mmap           =3D sock_no_mmap,
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 35aee9e980536d..c240fb5de3f014 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4503,8 +4503,6 @@ static const struct proto_ops packet_ops_spkt =3D {
+ 	.gettstamp =3D	sock_gettstamp,
+ 	.listen =3D	sock_no_listen,
+ 	.shutdown =3D	sock_no_shutdown,
+-	.setsockopt =3D	sock_no_setsockopt,
+-	.getsockopt =3D	sock_no_getsockopt,
+ 	.sendmsg =3D	packet_sendmsg_spkt,
+ 	.recvmsg =3D	packet_recvmsg,
+ 	.mmap =3D		sock_no_mmap,
+diff --git a/net/phonet/socket.c b/net/phonet/socket.c
+index 87c60f83c18061..2599235d592e0b 100644
+--- a/net/phonet/socket.c
++++ b/net/phonet/socket.c
+@@ -439,8 +439,6 @@ const struct proto_ops phonet_dgram_ops =3D {
+ 	.ioctl		=3D pn_socket_ioctl,
+ 	.listen		=3D sock_no_listen,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.sendmsg	=3D pn_socket_sendmsg,
+ 	.recvmsg	=3D sock_common_recvmsg,
+ 	.mmap		=3D sock_no_mmap,
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 24a8c3c6da0dca..0cb4adfc6641da 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -1208,8 +1208,6 @@ static const struct proto_ops qrtr_proto_ops =3D {
+ 	.gettstamp	=3D sock_gettstamp,
+ 	.poll		=3D datagram_poll,
+ 	.shutdown	=3D sock_no_shutdown,
+-	.setsockopt	=3D sock_no_setsockopt,
+-	.getsockopt	=3D sock_no_getsockopt,
+ 	.release	=3D qrtr_release,
+ 	.mmap		=3D sock_no_mmap,
+ 	.sendpage	=3D sock_no_sendpage,
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index 9033215438384b..9711c9e0e515bf 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -1742,8 +1742,11 @@ static int smc_setsockopt(struct socket *sock, int l=
+evel, int optname,
+ 	/* generic setsockopts reaching us here always apply to the
+ 	 * CLC socket
+ 	 */
+-	rc =3D smc->clcsock->ops->setsockopt(smc->clcsock, level, optname,
+-					   optval, optlen);
++	if (unlikely(!smc->clcsock->ops->setsockopt))
++		rc =3D -EOPNOTSUPP;
++	else
++		rc =3D smc->clcsock->ops->setsockopt(smc->clcsock, level, optname,
++						   optval, optlen);
+ 	if (smc->clcsock->sk->sk_err) {
+ 		sk->sk_err =3D smc->clcsock->sk->sk_err;
+ 		sk->sk_error_report(sk);
+@@ -1808,6 +1811,8 @@ static int smc_getsockopt(struct socket *sock, int le=
 vel, int optname,
  =
 
- 	case MCAST_JOIN_GROUP:
- 	case MCAST_LEAVE_GROUP:
--		retv =3D ipv6_mcast_join_leave(sk, optname, optval, optlen);
-+		if (in_compat_syscall())
-+			retv =3D compat_ipv6_mcast_join_leave(sk, optname, optval,
-+							    optlen);
-+		else
-+			retv =3D ipv6_mcast_join_leave(sk, optname, optval,
-+						     optlen);
- 		break;
- 	case MCAST_JOIN_SOURCE_GROUP:
- 	case MCAST_LEAVE_SOURCE_GROUP:
- 	case MCAST_BLOCK_SOURCE:
- 	case MCAST_UNBLOCK_SOURCE:
--	{
--		struct group_source_req greqs;
--
--		if (optlen < sizeof(struct group_source_req))
--			goto e_inval;
--		if (copy_from_user(&greqs, optval, sizeof(greqs))) {
--			retv =3D -EFAULT;
--			break;
--		}
--		retv =3D do_ipv6_mcast_group_source(sk, optname, &greqs);
-+		retv =3D do_ipv6_mcast_group_source(sk, optname, optval, optlen);
- 		break;
--	}
- 	case MCAST_MSFILTER:
--		retv =3D ipv6_set_mcast_msfilter(sk, optval, optlen);
-+		if (in_compat_syscall())
-+			retv =3D compat_ipv6_set_mcast_msfilter(sk, optval,
-+							      optlen);
-+		else
-+			retv =3D ipv6_set_mcast_msfilter(sk, optval, optlen);
- 		break;
- 	case IPV6_ROUTER_ALERT:
- 		if (optlen < sizeof(int))
-@@ -989,64 +1001,6 @@ int ipv6_setsockopt(struct sock *sk, int level, int o=
-ptname,
+ 	smc =3D smc_sk(sock->sk);
+ 	/* socket options apply to the CLC socket */
++	if (unlikely(!smc->clcsock->ops->getsockopt))
++		return -EOPNOTSUPP;
+ 	return smc->clcsock->ops->getsockopt(smc->clcsock, level, optname,
+ 					     optval, optlen);
  }
- EXPORT_SYMBOL(ipv6_setsockopt);
+diff --git a/net/socket.c b/net/socket.c
+index dec345982abbb6..93846568c2fb7a 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2131,6 +2131,8 @@ int __sys_setsockopt(int fd, int level, int optname, =
+char __user *optval,
  =
 
--#ifdef CONFIG_COMPAT
--int compat_ipv6_setsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, unsigned int optlen)
--{
--	int err;
--
--	if (level =3D=3D SOL_IP && sk->sk_type !=3D SOCK_RAW)
--		return udp_prot.setsockopt(sk, level, optname, optval, optlen);
--
--	if (level !=3D SOL_IPV6)
--		return -ENOPROTOOPT;
--
--	switch (optname) {
--	case MCAST_JOIN_GROUP:
--	case MCAST_LEAVE_GROUP:
--		return compat_ipv6_mcast_join_leave(sk, optname, optval,
--						    optlen);
--	case MCAST_JOIN_SOURCE_GROUP:
--	case MCAST_LEAVE_SOURCE_GROUP:
--	case MCAST_BLOCK_SOURCE:
--	case MCAST_UNBLOCK_SOURCE:
--	{
--		struct compat_group_source_req __user *gsr32 =3D (void __user *)optval;
--		struct group_source_req greqs;
--
--		if (optlen < sizeof(struct compat_group_source_req))
--			return -EINVAL;
--
--		if (get_user(greqs.gsr_interface, &gsr32->gsr_interface) ||
--		    copy_from_user(&greqs.gsr_group, &gsr32->gsr_group,
--				sizeof(greqs.gsr_group)) ||
--		    copy_from_user(&greqs.gsr_source, &gsr32->gsr_source,
--				sizeof(greqs.gsr_source)))
--			return -EFAULT;
--
--		rtnl_lock();
--		lock_sock(sk);
--		err =3D do_ipv6_mcast_group_source(sk, optname, &greqs);
--		release_sock(sk);
--		rtnl_unlock();
--		return err;
--	}
--	case MCAST_MSFILTER:
--		return compat_ipv6_set_mcast_msfilter(sk, optval, optlen);
--	}
--
--	err =3D do_ipv6_setsockopt(sk, level, optname, optval, optlen);
--#ifdef CONFIG_NETFILTER
--	/* we need to exclude all possible ENOPROTOOPTs except default case */
--	if (err =3D=3D -ENOPROTOOPT && optname !=3D IPV6_IPSEC_POLICY &&
--	    optname !=3D IPV6_XFRM_POLICY)
--		err =3D nf_setsockopt(sk, PF_INET6, optname, optval, optlen);
--#endif
--	return err;
--}
--EXPORT_SYMBOL(compat_ipv6_setsockopt);
--#endif
--
- static int ipv6_getsockopt_sticky(struct sock *sk, struct ipv6_txoptions *=
-opt,
- 				  int optname, char __user *optval, int len)
- {
-@@ -1110,7 +1064,6 @@ static int ipv6_get_msfilter(struct sock *sk, void __=
-user *optval,
- 	return err;
- }
+ 	if (level =3D=3D SOL_SOCKET && !sock_use_custom_sol_socket(sock))
+ 		err =3D sock_setsockopt(sock, level, optname, optval, optlen);
++	else if (unlikely(!sock->ops->setsockopt))
++		err =3D -EOPNOTSUPP;
+ 	else
+ 		err =3D sock->ops->setsockopt(sock, level, optname, optval,
+ 					    optlen);
+@@ -2175,6 +2177,8 @@ int __sys_getsockopt(int fd, int level, int optname, =
+char __user *optval,
  =
 
--#ifdef CONFIG_COMPAT
- static int compat_ipv6_get_msfilter(struct sock *sk, void __user *optval,
- 		int __user *optlen)
- {
-@@ -1150,7 +1103,6 @@ static int compat_ipv6_get_msfilter(struct sock *sk, =
-void __user *optval,
- 		return -EFAULT;
- 	return 0;
- }
--#endif
- =
-
- static int do_ipv6_getsockopt(struct sock *sk, int level, int optname,
- 		    char __user *optval, int __user *optlen, unsigned int flags)
-@@ -1175,6 +1127,8 @@ static int do_ipv6_getsockopt(struct sock *sk, int le=
-vel, int optname,
- 		val =3D sk->sk_family;
- 		break;
- 	case MCAST_MSFILTER:
-+		if (in_compat_syscall())
-+			return compat_ipv6_get_msfilter(sk, optval, optlen);
- 		return ipv6_get_msfilter(sk, optval, optlen, len);
- 	case IPV6_2292PKTOPTIONS:
- 	{
-@@ -1523,38 +1477,3 @@ int ipv6_getsockopt(struct sock *sk, int level, int =
-optname,
- 	return err;
- }
- EXPORT_SYMBOL(ipv6_getsockopt);
--
--#ifdef CONFIG_COMPAT
--int compat_ipv6_getsockopt(struct sock *sk, int level, int optname,
--			   char __user *optval, int __user *optlen)
--{
--	int err;
--
--	if (level =3D=3D SOL_IP && sk->sk_type !=3D SOCK_RAW)
--		return udp_prot.getsockopt(sk, level, optname, optval, optlen);
--
--	if (level !=3D SOL_IPV6)
--		return -ENOPROTOOPT;
--
--	if (optname =3D=3D MCAST_MSFILTER)
--		return compat_ipv6_get_msfilter(sk, optval, optlen);
--
--	err =3D do_ipv6_getsockopt(sk, level, optname, optval, optlen,
--				 MSG_CMSG_COMPAT);
--#ifdef CONFIG_NETFILTER
--	/* we need to exclude all possible ENOPROTOOPTs except default case */
--	if (err =3D=3D -ENOPROTOOPT && optname !=3D IPV6_2292PKTOPTIONS) {
--		int len;
--
--		if (get_user(len, optlen))
--			return -EFAULT;
--
--		err =3D nf_getsockopt(sk, PF_INET6, optname, optval, &len);
--		if (err >=3D 0)
--			err =3D put_user(len, optlen);
--	}
--#endif
--	return err;
--}
--EXPORT_SYMBOL(compat_ipv6_getsockopt);
--#endif
-diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
-index e23c6b46175870..594e01ad670aa6 100644
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -1084,30 +1084,6 @@ static int rawv6_setsockopt(struct sock *sk, int lev=
-el, int optname,
- 	return do_rawv6_setsockopt(sk, level, optname, optval, optlen);
- }
- =
-
--#ifdef CONFIG_COMPAT
--static int compat_rawv6_setsockopt(struct sock *sk, int level, int optname,
--				   char __user *optval, unsigned int optlen)
--{
--	switch (level) {
--	case SOL_RAW:
--		break;
--	case SOL_ICMPV6:
--		if (inet_sk(sk)->inet_num !=3D IPPROTO_ICMPV6)
--			return -EOPNOTSUPP;
--		return rawv6_seticmpfilter(sk, level, optname, optval, optlen);
--	case SOL_IPV6:
--		if (optname =3D=3D IPV6_CHECKSUM ||
--		    optname =3D=3D IPV6_HDRINCL)
--			break;
--		fallthrough;
--	default:
--		return compat_ipv6_setsockopt(sk, level, optname,
--					      optval, optlen);
--	}
--	return do_rawv6_setsockopt(sk, level, optname, optval, optlen);
--}
--#endif
--
- static int do_rawv6_getsockopt(struct sock *sk, int level, int optname,
- 			    char __user *optval, int __user *optlen)
- {
-@@ -1169,30 +1145,6 @@ static int rawv6_getsockopt(struct sock *sk, int lev=
-el, int optname,
- 	return do_rawv6_getsockopt(sk, level, optname, optval, optlen);
- }
- =
-
--#ifdef CONFIG_COMPAT
--static int compat_rawv6_getsockopt(struct sock *sk, int level, int optname,
--				   char __user *optval, int __user *optlen)
--{
--	switch (level) {
--	case SOL_RAW:
--		break;
--	case SOL_ICMPV6:
--		if (inet_sk(sk)->inet_num !=3D IPPROTO_ICMPV6)
--			return -EOPNOTSUPP;
--		return rawv6_geticmpfilter(sk, level, optname, optval, optlen);
--	case SOL_IPV6:
--		if (optname =3D=3D IPV6_CHECKSUM ||
--		    optname =3D=3D IPV6_HDRINCL)
--			break;
--		fallthrough;
--	default:
--		return compat_ipv6_getsockopt(sk, level, optname,
--					      optval, optlen);
--	}
--	return do_rawv6_getsockopt(sk, level, optname, optval, optlen);
--}
--#endif
--
- static int rawv6_ioctl(struct sock *sk, int cmd, unsigned long arg)
- {
- 	switch (cmd) {
-@@ -1297,8 +1249,6 @@ struct proto rawv6_prot =3D {
- 	.usersize	   =3D sizeof_field(struct raw6_sock, filter),
- 	.h.raw_hash	   =3D &raw_v6_hashinfo,
- #ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_rawv6_setsockopt,
--	.compat_getsockopt =3D compat_rawv6_getsockopt,
- 	.compat_ioctl	   =3D compat_rawv6_ioctl,
+ 	if (level =3D=3D SOL_SOCKET)
+ 		err =3D sock_getsockopt(sock, level, optname, optval, optlen);
++	else if (unlikely(!sock->ops->getsockopt))
++		err =3D -EOPNOTSUPP;
+ 	else
+ 		err =3D sock->ops->getsockopt(sock, level, optname, optval,
+ 					    optlen);
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 3385a7a0b23133..181ea6fb56a617 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -714,8 +714,6 @@ static const struct proto_ops unix_stream_ops =3D {
  #endif
- 	.diag_destroy	   =3D raw_abort,
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 4502db706f7534..c34b7834fd84a8 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1831,10 +1831,6 @@ const struct inet_connection_sock_af_ops ipv6_specif=
-ic =3D {
- 	.getsockopt	   =3D ipv6_getsockopt,
- 	.addr2sockaddr	   =3D inet6_csk_addr2sockaddr,
- 	.sockaddr_len	   =3D sizeof(struct sockaddr_in6),
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_ipv6_setsockopt,
--	.compat_getsockopt =3D compat_ipv6_getsockopt,
--#endif
- 	.mtu_reduced	   =3D tcp_v6_mtu_reduced,
- };
- =
-
-@@ -1861,10 +1857,6 @@ static const struct inet_connection_sock_af_ops ipv6=
-_mapped =3D {
- 	.getsockopt	   =3D ipv6_getsockopt,
- 	.addr2sockaddr	   =3D inet6_csk_addr2sockaddr,
- 	.sockaddr_len	   =3D sizeof(struct sockaddr_in6),
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_ipv6_setsockopt,
--	.compat_getsockopt =3D compat_ipv6_getsockopt,
--#endif
- 	.mtu_reduced	   =3D tcp_v4_mtu_reduced,
- };
- =
-
-@@ -2122,10 +2114,6 @@ struct proto tcpv6_prot =3D {
- 	.rsk_prot		=3D &tcp6_request_sock_ops,
- 	.h.hashinfo		=3D &tcp_hashinfo,
- 	.no_autobind		=3D true,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt	=3D compat_tcp_setsockopt,
--	.compat_getsockopt	=3D compat_tcp_getsockopt,
--#endif
- 	.diag_destroy		=3D tcp_abort,
- };
- EXPORT_SYMBOL_GPL(tcpv6_prot);
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 38c0d9350c6b8f..5aff0856a05b44 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -1570,17 +1570,6 @@ int udpv6_setsockopt(struct sock *sk, int level, int=
- optname,
- 	return ipv6_setsockopt(sk, level, optname, optval, optlen);
- }
- =
-
--#ifdef CONFIG_COMPAT
--int compat_udpv6_setsockopt(struct sock *sk, int level, int optname,
--			    char __user *optval, unsigned int optlen)
--{
--	if (level =3D=3D SOL_UDP  ||  level =3D=3D SOL_UDPLITE)
--		return udp_lib_setsockopt(sk, level, optname, optval, optlen,
--					  udp_v6_push_pending_frames);
--	return compat_ipv6_setsockopt(sk, level, optname, optval, optlen);
--}
--#endif
--
- int udpv6_getsockopt(struct sock *sk, int level, int optname,
- 		     char __user *optval, int __user *optlen)
- {
-@@ -1589,16 +1578,6 @@ int udpv6_getsockopt(struct sock *sk, int level, int=
- optname,
- 	return ipv6_getsockopt(sk, level, optname, optval, optlen);
- }
- =
-
--#ifdef CONFIG_COMPAT
--int compat_udpv6_getsockopt(struct sock *sk, int level, int optname,
--			    char __user *optval, int __user *optlen)
--{
--	if (level =3D=3D SOL_UDP  ||  level =3D=3D SOL_UDPLITE)
--		return udp_lib_getsockopt(sk, level, optname, optval, optlen);
--	return compat_ipv6_getsockopt(sk, level, optname, optval, optlen);
--}
--#endif
--
- /* thinking of making this const? Don't.
-  * early_demux can change based on sysctl.
-  */
-@@ -1681,10 +1660,6 @@ struct proto udpv6_prot =3D {
- 	.sysctl_rmem_offset     =3D offsetof(struct net, ipv4.sysctl_udp_rmem_min=
-),
- 	.obj_size		=3D sizeof(struct udp6_sock),
- 	.h.udp_table		=3D &udp_table,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt	=3D compat_udpv6_setsockopt,
--	.compat_getsockopt	=3D compat_udpv6_getsockopt,
--#endif
- 	.diag_destroy		=3D udp_abort,
- };
- =
-
-diff --git a/net/ipv6/udp_impl.h b/net/ipv6/udp_impl.h
-index 20e324b6f3584e..30dfb6f1b7622a 100644
---- a/net/ipv6/udp_impl.h
-+++ b/net/ipv6/udp_impl.h
-@@ -19,12 +19,6 @@ int udpv6_getsockopt(struct sock *sk, int level, int opt=
-name,
- 		     char __user *optval, int __user *optlen);
- int udpv6_setsockopt(struct sock *sk, int level, int optname,
- 		     char __user *optval, unsigned int optlen);
--#ifdef CONFIG_COMPAT
--int compat_udpv6_setsockopt(struct sock *sk, int level, int optname,
--			    char __user *optval, unsigned int optlen);
--int compat_udpv6_getsockopt(struct sock *sk, int level, int optname,
--			    char __user *optval, int __user *optlen);
--#endif
- int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len);
- int udpv6_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int nob=
-lock,
- 		  int flags, int *addr_len);
-diff --git a/net/ipv6/udplite.c b/net/ipv6/udplite.c
-index bf7a7acd39b1d5..fbb700d3f437ee 100644
---- a/net/ipv6/udplite.c
-+++ b/net/ipv6/udplite.c
-@@ -52,10 +52,6 @@ struct proto udplitev6_prot =3D {
- 	.sysctl_mem	   =3D sysctl_udp_mem,
- 	.obj_size	   =3D sizeof(struct udp6_sock),
- 	.h.udp_table	   =3D &udplite_table,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_udpv6_setsockopt,
--	.compat_getsockopt =3D compat_udpv6_getsockopt,
--#endif
- };
- =
-
- static struct inet_protosw udplite6_protosw =3D {
-diff --git a/net/l2tp/l2tp_ip6.c b/net/l2tp/l2tp_ip6.c
-index 2cdc0b7a7a43c3..4799bec87b332f 100644
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -745,10 +745,6 @@ static struct proto l2tp_ip6_prot =3D {
- 	.hash		   =3D l2tp_ip6_hash,
- 	.unhash		   =3D l2tp_ip6_unhash,
- 	.obj_size	   =3D sizeof(struct l2tp_ip6_sock),
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_ipv6_setsockopt,
--	.compat_getsockopt =3D compat_ipv6_getsockopt,
--#endif
- };
- =
-
- static const struct proto_ops l2tp_ip6_ops =3D {
-diff --git a/net/sctp/ipv6.c b/net/sctp/ipv6.c
-index ebda31b7747d08..aea2a982984d02 100644
---- a/net/sctp/ipv6.c
-+++ b/net/sctp/ipv6.c
-@@ -1087,10 +1087,6 @@ static struct sctp_af sctp_af_inet6 =3D {
- 	.net_header_len	   =3D sizeof(struct ipv6hdr),
- 	.sockaddr_len	   =3D sizeof(struct sockaddr_in6),
- 	.ip_options_len	   =3D sctp_v6_ip_options_len,
--#ifdef CONFIG_COMPAT
--	.compat_setsockopt =3D compat_ipv6_setsockopt,
--	.compat_getsockopt =3D compat_ipv6_getsockopt,
--#endif
- };
- =
-
- static struct sctp_pf sctp_pf_inet6 =3D {
+ 	.listen =3D	unix_listen,
+ 	.shutdown =3D	unix_shutdown,
+-	.setsockopt =3D	sock_no_setsockopt,
+-	.getsockopt =3D	sock_no_getsockopt,
+ 	.sendmsg =3D	unix_stream_sendmsg,
+ 	.recvmsg =3D	unix_stream_recvmsg,
+ 	.mmap =3D		sock_no_mmap,
+@@ -741,8 +739,6 @@ static const struct proto_ops unix_dgram_ops =3D {
+ #endif
+ 	.listen =3D	sock_no_listen,
+ 	.shutdown =3D	unix_shutdown,
+-	.setsockopt =3D	sock_no_setsockopt,
+-	.getsockopt =3D	sock_no_getsockopt,
+ 	.sendmsg =3D	unix_dgram_sendmsg,
+ 	.recvmsg =3D	unix_dgram_recvmsg,
+ 	.mmap =3D		sock_no_mmap,
+@@ -767,8 +763,6 @@ static const struct proto_ops unix_seqpacket_ops =3D {
+ #endif
+ 	.listen =3D	unix_listen,
+ 	.shutdown =3D	unix_shutdown,
+-	.setsockopt =3D	sock_no_setsockopt,
+-	.getsockopt =3D	sock_no_getsockopt,
+ 	.sendmsg =3D	unix_seqpacket_sendmsg,
+ 	.recvmsg =3D	unix_seqpacket_recvmsg,
+ 	.mmap =3D		sock_no_mmap,
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 626bf9044418cc..df204c6761c453 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -1202,8 +1202,6 @@ static const struct proto_ops vsock_dgram_ops =3D {
+ 	.ioctl =3D sock_no_ioctl,
+ 	.listen =3D sock_no_listen,
+ 	.shutdown =3D vsock_shutdown,
+-	.setsockopt =3D sock_no_setsockopt,
+-	.getsockopt =3D sock_no_getsockopt,
+ 	.sendmsg =3D vsock_dgram_sendmsg,
+ 	.recvmsg =3D vsock_dgram_recvmsg,
+ 	.mmap =3D sock_no_mmap,
 -- =
 
 2.27.0
 
---===============6413190528882440187==--
+--===============4811023042402250619==--
