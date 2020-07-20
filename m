@@ -1,137 +1,204 @@
-Content-Type: multipart/mixed; boundary="===============3243159749603685402=="
+Content-Type: multipart/mixed; boundary="===============2805161236900952546=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 18/24] net/ipv6: switch ipv6_flowlabel_opt to sockptr_t
-Date: Mon, 20 Jul 2020 14:47:31 +0200
-Message-ID: <20200720124737.118617-19-hch@lst.de>
+Subject: [MPTCP] [PATCH 19/24] net/ipv6: factor out a ipv6_set_opt_hdr helper
+Date: Mon, 20 Jul 2020 14:47:32 +0200
+Message-ID: <20200720124737.118617-20-hch@lst.de>
 In-Reply-To: 20200720124737.118617-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5118
+X-UID: 5119
 
---===============3243159749603685402==
+--===============2805161236900952546==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Pass a sockptr_t to prepare for set_fs-less handling of the kernel
-pointer from bpf-cgroup.
-
-Note that the get case is pretty weird in that it actually copies data
-back to userspace from setsockopt.
+Factour out a helper to set the IPv6 option headers from
+do_ipv6_setsockopt.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- include/net/ipv6.h       |  2 +-
- net/ipv6/ip6_flowlabel.c | 16 +++++++++-------
- net/ipv6/ipv6_sockglue.c |  2 +-
- 3 files changed, 11 insertions(+), 9 deletions(-)
+ net/ipv6/ipv6_sockglue.c | 150 +++++++++++++++++++--------------------
+ 1 file changed, 75 insertions(+), 75 deletions(-)
 
-diff --git a/include/net/ipv6.h b/include/net/ipv6.h
-index 262fc88dbd7e2f..4c9d89b5d73268 100644
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -406,7 +406,7 @@ struct ipv6_txoptions *fl6_merge_options(struct ipv6_tx=
-options *opt_space,
- 					 struct ip6_flowlabel *fl,
- 					 struct ipv6_txoptions *fopt);
- void fl6_free_socklist(struct sock *sk);
--int ipv6_flowlabel_opt(struct sock *sk, char __user *optval, int optlen);
-+int ipv6_flowlabel_opt(struct sock *sk, sockptr_t optval, int optlen);
- int ipv6_flowlabel_opt_get(struct sock *sk, struct in6_flowlabel_req *freq,
- 			   int flags);
- int ip6_flowlabel_init(void);
-diff --git a/net/ipv6/ip6_flowlabel.c b/net/ipv6/ip6_flowlabel.c
-index 27ee6de9beffc4..6b3c315f3d461a 100644
---- a/net/ipv6/ip6_flowlabel.c
-+++ b/net/ipv6/ip6_flowlabel.c
-@@ -371,7 +371,7 @@ static int fl6_renew(struct ip6_flowlabel *fl, unsigned=
- long linger, unsigned lo
- =
-
- static struct ip6_flowlabel *
- fl_create(struct net *net, struct sock *sk, struct in6_flowlabel_req *freq,
--	  char __user *optval, int optlen, int *err_p)
-+	  sockptr_t optval, int optlen, int *err_p)
- {
- 	struct ip6_flowlabel *fl =3D NULL;
- 	int olen;
-@@ -401,7 +401,8 @@ fl_create(struct net *net, struct sock *sk, struct in6_=
-flowlabel_req *freq,
- 		memset(fl->opt, 0, sizeof(*fl->opt));
- 		fl->opt->tot_len =3D sizeof(*fl->opt) + olen;
- 		err =3D -EFAULT;
--		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen))
-+		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
-+		if (copy_from_sockptr(fl->opt + 1, optval, olen))
- 			goto done;
- =
-
- 		msg.msg_controllen =3D olen;
-@@ -604,7 +605,7 @@ static int ipv6_flowlabel_renew(struct sock *sk, struct=
- in6_flowlabel_req *freq)
- }
- =
-
- static int ipv6_flowlabel_get(struct sock *sk, struct in6_flowlabel_req *f=
-req,
--		void __user *optval, int optlen)
-+		sockptr_t optval, int optlen)
- {
- 	struct ipv6_fl_socklist *sfl, *sfl1 =3D NULL;
- 	struct ip6_flowlabel *fl, *fl1 =3D NULL;
-@@ -702,8 +703,9 @@ static int ipv6_flowlabel_get(struct sock *sk, struct i=
-n6_flowlabel_req *freq,
- 		goto recheck;
- =
-
- 	if (!freq->flr_label) {
--		if (copy_to_user(&((struct in6_flowlabel_req __user *) optval)->flr_labe=
-l,
--				 &fl->label, sizeof(fl->label))) {
-+		sockptr_advance(optval,
-+				offsetof(struct in6_flowlabel_req, flr_label));
-+		if (copy_to_sockptr(optval, &fl->label, sizeof(fl->label))) {
- 			/* Intentionally ignore fault. */
- 		}
- 	}
-@@ -716,13 +718,13 @@ static int ipv6_flowlabel_get(struct sock *sk, struct=
- in6_flowlabel_req *freq,
- 	return err;
- }
- =
-
--int ipv6_flowlabel_opt(struct sock *sk, char __user *optval, int optlen)
-+int ipv6_flowlabel_opt(struct sock *sk, sockptr_t optval, int optlen)
- {
- 	struct in6_flowlabel_req freq;
- =
-
- 	if (optlen < sizeof(freq))
- 		return -EINVAL;
--	if (copy_from_user(&freq, optval, sizeof(freq)))
-+	if (copy_from_sockptr(&freq, optval, sizeof(freq)))
- 		return -EFAULT;
- =
-
- 	switch (freq.flr_action) {
 diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 119dfaf5f4bb26..3897fb55372d38 100644
+index 3897fb55372d38..90442c8366dff2 100644
 --- a/net/ipv6/ipv6_sockglue.c
 +++ b/net/ipv6/ipv6_sockglue.c
-@@ -929,7 +929,7 @@ static int do_ipv6_setsockopt(struct sock *sk, int leve=
-l, int optname,
- 		retv =3D 0;
+@@ -315,6 +315,80 @@ static int compat_ipv6_mcast_join_leave(struct sock *s=
+k, int optname,
+ 	return ipv6_sock_mc_drop(sk, gr32.gr_interface, &psin6->sin6_addr);
+ }
+ =
+
++static int ipv6_set_opt_hdr(struct sock *sk, int optname, void __user *opt=
+val,
++		int optlen)
++{
++	struct ipv6_pinfo *np =3D inet6_sk(sk);
++	struct ipv6_opt_hdr *new =3D NULL;
++	struct net *net =3D sock_net(sk);
++	struct ipv6_txoptions *opt;
++	int err;
++
++	/* hop-by-hop / destination options are privileged option */
++	if (optname !=3D IPV6_RTHDR && !ns_capable(net->user_ns, CAP_NET_RAW))
++		return -EPERM;
++
++	/* remove any sticky options header with a zero option
++	 * length, per RFC3542.
++	 */
++	if (optlen > 0) {
++		if (!optval)
++			return -EINVAL;
++		if (optlen < sizeof(struct ipv6_opt_hdr) ||
++		    optlen & 0x7 ||
++		    optlen > 8 * 255)
++			return -EINVAL;
++
++		new =3D memdup_user(optval, optlen);
++		if (IS_ERR(new))
++			return PTR_ERR(new);
++		if (unlikely(ipv6_optlen(new) > optlen)) {
++			kfree(new);
++			return -EINVAL;
++		}
++	}
++
++	opt =3D rcu_dereference_protected(np->opt, lockdep_sock_is_held(sk));
++	opt =3D ipv6_renew_options(sk, opt, optname, new);
++	kfree(new);
++	if (IS_ERR(opt))
++		return PTR_ERR(opt);
++
++	/* routing header option needs extra check */
++	err =3D -EINVAL;
++	if (optname =3D=3D IPV6_RTHDR && opt && opt->srcrt) {
++		struct ipv6_rt_hdr *rthdr =3D opt->srcrt;
++		switch (rthdr->type) {
++#if IS_ENABLED(CONFIG_IPV6_MIP6)
++		case IPV6_SRCRT_TYPE_2:
++			if (rthdr->hdrlen !=3D 2 || rthdr->segments_left !=3D 1)
++				goto sticky_done;
++			break;
++#endif
++		case IPV6_SRCRT_TYPE_4:
++		{
++			struct ipv6_sr_hdr *srh =3D
++				(struct ipv6_sr_hdr *)opt->srcrt;
++
++			if (!seg6_validate_srh(srh, optlen, false))
++				goto sticky_done;
++			break;
++		}
++		default:
++			goto sticky_done;
++		}
++	}
++
++	err =3D 0;
++	opt =3D ipv6_update_options(sk, opt);
++sticky_done:
++	if (opt) {
++		atomic_sub(opt->tot_len, &sk->sk_omem_alloc);
++		txopt_put(opt);
++	}
++	return err;
++}
++
+ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 		    char __user *optval, unsigned int optlen)
+ {
+@@ -580,82 +654,8 @@ static int do_ipv6_setsockopt(struct sock *sk, int lev=
+el, int optname,
+ 	case IPV6_RTHDRDSTOPTS:
+ 	case IPV6_RTHDR:
+ 	case IPV6_DSTOPTS:
+-	{
+-		struct ipv6_txoptions *opt;
+-		struct ipv6_opt_hdr *new =3D NULL;
+-
+-		/* hop-by-hop / destination options are privileged option */
+-		retv =3D -EPERM;
+-		if (optname !=3D IPV6_RTHDR && !ns_capable(net->user_ns, CAP_NET_RAW))
+-			break;
+-
+-		/* remove any sticky options header with a zero option
+-		 * length, per RFC3542.
+-		 */
+-		if (optlen =3D=3D 0)
+-			optval =3D NULL;
+-		else if (!optval)
+-			goto e_inval;
+-		else if (optlen < sizeof(struct ipv6_opt_hdr) ||
+-			 optlen & 0x7 || optlen > 8 * 255)
+-			goto e_inval;
+-		else {
+-			new =3D memdup_user(optval, optlen);
+-			if (IS_ERR(new)) {
+-				retv =3D PTR_ERR(new);
+-				break;
+-			}
+-			if (unlikely(ipv6_optlen(new) > optlen)) {
+-				kfree(new);
+-				goto e_inval;
+-			}
+-		}
+-
+-		opt =3D rcu_dereference_protected(np->opt,
+-						lockdep_sock_is_held(sk));
+-		opt =3D ipv6_renew_options(sk, opt, optname, new);
+-		kfree(new);
+-		if (IS_ERR(opt)) {
+-			retv =3D PTR_ERR(opt);
+-			break;
+-		}
+-
+-		/* routing header option needs extra check */
+-		retv =3D -EINVAL;
+-		if (optname =3D=3D IPV6_RTHDR && opt && opt->srcrt) {
+-			struct ipv6_rt_hdr *rthdr =3D opt->srcrt;
+-			switch (rthdr->type) {
+-#if IS_ENABLED(CONFIG_IPV6_MIP6)
+-			case IPV6_SRCRT_TYPE_2:
+-				if (rthdr->hdrlen !=3D 2 ||
+-				    rthdr->segments_left !=3D 1)
+-					goto sticky_done;
+-
+-				break;
+-#endif
+-			case IPV6_SRCRT_TYPE_4:
+-			{
+-				struct ipv6_sr_hdr *srh =3D (struct ipv6_sr_hdr *)
+-							  opt->srcrt;
+-
+-				if (!seg6_validate_srh(srh, optlen, false))
+-					goto sticky_done;
+-				break;
+-			}
+-			default:
+-				goto sticky_done;
+-			}
+-		}
+-
+-		retv =3D 0;
+-		opt =3D ipv6_update_options(sk, opt);
+-sticky_done:
+-		if (opt) {
+-			atomic_sub(opt->tot_len, &sk->sk_omem_alloc);
+-			txopt_put(opt);
+-		}
++		retv =3D ipv6_set_opt_hdr(sk, optname, optval, optlen);
  		break;
- 	case IPV6_FLOWLABEL_MGR:
--		retv =3D ipv6_flowlabel_opt(sk, optval, optlen);
-+		retv =3D ipv6_flowlabel_opt(sk, USER_SOCKPTR(optval), optlen);
- 		break;
- 	case IPV6_IPSEC_POLICY:
- 	case IPV6_XFRM_POLICY:
+-	}
+ =
+
+ 	case IPV6_PKTINFO:
+ 	{
 -- =
 
 2.27.0
 
---===============3243159749603685402==--
+--===============2805161236900952546==--
