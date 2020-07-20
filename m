@@ -1,48 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============6640047396288616507=="
+Content-Type: multipart/mixed; boundary="===============4676662491769604445=="
 MIME-Version: 1.0
-From: Eric Biggers <ebiggers at kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 03/24] net: add a new sockptr_t type
-Date: Mon, 20 Jul 2020 10:55:43 -0700
-Message-ID: <20200720175543.GF1292162@gmail.com>
-In-Reply-To: 20200720174322.GA21785@lst.de
+Subject: [MPTCP] Re: get rid of the address_space override in setsockopt
+Date: Mon, 20 Jul 2020 13:47:56 -0700
+Message-ID: <20200720204756.iengwcguikj2yrxt@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: 20200720124737.118617-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5132
+X-UID: 5134
 
---===============6640047396288616507==
+--===============4676662491769604445==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 20, 2020 at 07:43:22PM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 20, 2020 at 09:37:48AM -0700, Eric Biggers wrote:
-> > How does this not introduce a massive security hole when
-> > CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
-> > =
-
-> > AFAICS, userspace can pass in a pointer >=3D TASK_SIZE,
-> > and this code makes it be treated as a kernel pointer.
+On Mon, Jul 20, 2020 at 02:47:13PM +0200, Christoph Hellwig wrote:
+> Hi Dave,
 > =
 
-> Yeah, we'll need to validate that before initializing the pointer.
+> setsockopt is the last place in architecture-independ code that still
+> uses set_fs to force the uaccess routines to operate on kernel pointers.
 > =
 
-> But thinking this a little further:  doesn't this mean any
-> set_fs(KERNEL_DS) that has other user pointers than the one it is
-> intended for has the same issue?  Pretty much all of these are gone
-> in mainline now, but in older stable kernels there might be some
-> interesting cases, especially in the compat ioctl handlers.
+> This series adds a new sockptr_t type that can contained either a kernel
+> or user pointer, and which has accessors that do the right thing, and
+> then uses it for setsockopt, starting by refactoring some low-level
+> helpers and moving them over to it before finally doing the main
+> setsockopt method.
+> =
 
-Yes.  I thought that eliminating that class of bug is one of the main
-motivations for your "remove set_fs" work.  See commit 128394eff343
-("sg_write()/bsg_write() is not fit to be called under KERNEL_DS") for a ca=
-se
-where this type of bug was fixed.
+> Note that I could not get the eBPF selftests to work, so this has been
+> tested with a testing patch that always copies the data first and passes
+> a kernel pointer.  This is something that works for most common sockopts
+> (and is something that the ePBF support relies on), but unfortunately
+> in various corner cases we either don't use the passed in length, or in
+> one case actually copy data back from setsockopt, so we unfortunately
+> can't just always do the copy in the highlevel code, which would have
+> been much nicer.
 
-Are you aware of any specific cases that weren't already fixed?  If there a=
-re
-any, they need to be urgently fixed.
+could you rebase on bpf-next tree and we can route it this way then?
+we'll also test the whole thing before applying.
 
-- Eric
---===============6640047396288616507==--
+sounds like v2 is needed anyway to address Eric's addr space concern?
+--===============4676662491769604445==--
