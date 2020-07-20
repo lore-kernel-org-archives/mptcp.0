@@ -1,47 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============8427886729839653635=="
+Content-Type: multipart/mixed; boundary="===============3826787781737014170=="
 MIME-Version: 1.0
-From: Eric Biggers <ebiggers at kernel.org>
+From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: get rid of the address_space override in setsockopt
-Date: Mon, 20 Jul 2020 09:38:36 -0700
-Message-ID: <20200720163836.GB1292162@gmail.com>
-In-Reply-To: 20200720124737.118617-1-hch@lst.de
+Subject: [MPTCP] Re: [PATCH 03/24] net: add a new sockptr_t type
+Date: Mon, 20 Jul 2020 19:43:22 +0200
+Message-ID: <20200720174322.GA21785@lst.de>
+In-Reply-To: 20200720163748.GA1292162@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5129
+X-UID: 5130
 
---===============8427886729839653635==
+--===============3826787781737014170==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 20, 2020 at 02:47:13PM +0200, Christoph Hellwig wrote:
-> Hi Dave,
+On Mon, Jul 20, 2020 at 09:37:48AM -0700, Eric Biggers wrote:
+> How does this not introduce a massive security hole when
+> CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
 > =
 
-> setsockopt is the last place in architecture-independ code that still
-> uses set_fs to force the uaccess routines to operate on kernel pointers.
-> =
+> AFAICS, userspace can pass in a pointer >=3D TASK_SIZE,
+> and this code makes it be treated as a kernel pointer.
 
-> This series adds a new sockptr_t type that can contained either a kernel
-> or user pointer, and which has accessors that do the right thing, and
-> then uses it for setsockopt, starting by refactoring some low-level
-> helpers and moving them over to it before finally doing the main
-> setsockopt method.
-> =
+Yeah, we'll need to validate that before initializing the pointer.
 
-> Note that I could not get the eBPF selftests to work, so this has been
-> tested with a testing patch that always copies the data first and passes
-> a kernel pointer.  This is something that works for most common sockopts
-> (and is something that the ePBF support relies on), but unfortunately
-> in various corner cases we either don't use the passed in length, or in
-> one case actually copy data back from setsockopt, so we unfortunately
-> can't just always do the copy in the highlevel code, which would have
-> been much nicer.
-> =
-
-
-Please mention what git tree your patchset applies to.
-
-- Eric
---===============8427886729839653635==--
+But thinking this a little further:  doesn't this mean any
+set_fs(KERNEL_DS) that has other user pointers than the one it is
+intended for has the same issue?  Pretty much all of these are gone
+in mainline now, but in older stable kernels there might be some
+interesting cases, especially in the compat ioctl handlers.
+--===============3826787781737014170==--
