@@ -1,154 +1,154 @@
-Content-Type: multipart/mixed; boundary="===============7708930335307719136=="
+Content-Type: multipart/mixed; boundary="===============5962896313936935680=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 13/24] net/ipv4: switch ip_mroute_setsockopt to
- sockptr_t
-Date: Mon, 20 Jul 2020 14:47:26 +0200
-Message-ID: <20200720124737.118617-14-hch@lst.de>
+Subject: [MPTCP] [PATCH 14/24] net/ipv4: merge ip_options_get and
+ ip_options_get_from_user
+Date: Mon, 20 Jul 2020 14:47:27 +0200
+Message-ID: <20200720124737.118617-15-hch@lst.de>
 In-Reply-To: 20200720124737.118617-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5113
+X-UID: 5114
 
---===============7708930335307719136==
+--===============5962896313936935680==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Pass a sockptr_t to prepare for set_fs-less handling of the kernel
-pointer from bpf-cgroup.
+Use the sockptr_t type to merge the versions.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- include/linux/mroute.h |  5 +++--
- net/ipv4/ip_sockglue.c |  3 ++-
- net/ipv4/ipmr.c        | 14 +++++++-------
- 3 files changed, 12 insertions(+), 10 deletions(-)
+ include/net/ip.h       |  5 ++---
+ net/ipv4/ip_options.c  | 43 +++++++++++-------------------------------
+ net/ipv4/ip_sockglue.c |  7 ++++---
+ 3 files changed, 17 insertions(+), 38 deletions(-)
 
-diff --git a/include/linux/mroute.h b/include/linux/mroute.h
-index 9a36fad9e068f6..6cbbfe94348cee 100644
---- a/include/linux/mroute.h
-+++ b/include/linux/mroute.h
-@@ -8,6 +8,7 @@
- #include <net/fib_notifier.h>
- #include <uapi/linux/mroute.h>
- #include <linux/mroute_base.h>
+diff --git a/include/net/ip.h b/include/net/ip.h
+index 3d34acc95ca825..d66ad3a9522081 100644
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -23,6 +23,7 @@
+ #include <linux/in.h>
+ #include <linux/skbuff.h>
+ #include <linux/jhash.h>
 +#include <linux/sockptr.h>
  =
 
- #ifdef CONFIG_IP_MROUTE
- static inline int ip_mroute_opt(int opt)
-@@ -15,7 +16,7 @@ static inline int ip_mroute_opt(int opt)
- 	return opt >=3D MRT_BASE && opt <=3D MRT_MAX;
+ #include <net/inet_sock.h>
+ #include <net/route.h>
+@@ -707,9 +708,7 @@ int __ip_options_compile(struct net *net, struct ip_opt=
+ions *opt,
+ int ip_options_compile(struct net *net, struct ip_options *opt,
+ 		       struct sk_buff *skb);
+ int ip_options_get(struct net *net, struct ip_options_rcu **optp,
+-		   unsigned char *data, int optlen);
+-int ip_options_get_from_user(struct net *net, struct ip_options_rcu **optp,
+-			     unsigned char __user *data, int optlen);
++		   sockptr_t data, int optlen);
+ void ip_options_undo(struct ip_options *opt);
+ void ip_forward_options(struct sk_buff *skb);
+ int ip_options_rcv_srr(struct sk_buff *skb, struct net_device *dev);
+diff --git a/net/ipv4/ip_options.c b/net/ipv4/ip_options.c
+index ddaa01ec2bce82..948747aac4e2d0 100644
+--- a/net/ipv4/ip_options.c
++++ b/net/ipv4/ip_options.c
+@@ -519,15 +519,20 @@ void ip_options_undo(struct ip_options *opt)
+ 	}
  }
  =
 
--int ip_mroute_setsockopt(struct sock *, int, char __user *, unsigned int);
-+int ip_mroute_setsockopt(struct sock *, int, sockptr_t, unsigned int);
- int ip_mroute_getsockopt(struct sock *, int, char __user *, int __user *);
- int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg);
- int ipmr_compat_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
-@@ -23,7 +24,7 @@ int ip_mr_init(void);
- bool ipmr_rule_default(const struct fib_rule *rule);
- #else
- static inline int ip_mroute_setsockopt(struct sock *sock, int optname,
--				       char __user *optval, unsigned int optlen)
-+				       sockptr_t optval, unsigned int optlen)
+-static struct ip_options_rcu *ip_options_get_alloc(const int optlen)
++int ip_options_get(struct net *net, struct ip_options_rcu **optp,
++		   sockptr_t data, int optlen)
  {
- 	return -ENOPROTOOPT;
+-	return kzalloc(sizeof(struct ip_options_rcu) + ((optlen + 3) & ~3),
++	struct ip_options_rcu *opt;
++
++	opt =3D kzalloc(sizeof(struct ip_options_rcu) + ((optlen + 3) & ~3),
+ 		       GFP_KERNEL);
+-}
++	if (!opt)
++		return -ENOMEM;
++	if (optlen && copy_from_sockptr(opt->opt.__data, data, optlen)) {
++		kfree(opt);
++		return -EFAULT;
++	}
+ =
+
+-static int ip_options_get_finish(struct net *net, struct ip_options_rcu **=
+optp,
+-				 struct ip_options_rcu *opt, int optlen)
+-{
+ 	while (optlen & 3)
+ 		opt->opt.__data[optlen++] =3D IPOPT_END;
+ 	opt->opt.optlen =3D optlen;
+@@ -540,32 +545,6 @@ static int ip_options_get_finish(struct net *net, stru=
+ct ip_options_rcu **optp,
+ 	return 0;
  }
+ =
+
+-int ip_options_get_from_user(struct net *net, struct ip_options_rcu **optp,
+-			     unsigned char __user *data, int optlen)
+-{
+-	struct ip_options_rcu *opt =3D ip_options_get_alloc(optlen);
+-
+-	if (!opt)
+-		return -ENOMEM;
+-	if (optlen && copy_from_user(opt->opt.__data, data, optlen)) {
+-		kfree(opt);
+-		return -EFAULT;
+-	}
+-	return ip_options_get_finish(net, optp, opt, optlen);
+-}
+-
+-int ip_options_get(struct net *net, struct ip_options_rcu **optp,
+-		   unsigned char *data, int optlen)
+-{
+-	struct ip_options_rcu *opt =3D ip_options_get_alloc(optlen);
+-
+-	if (!opt)
+-		return -ENOMEM;
+-	if (optlen)
+-		memcpy(opt->opt.__data, data, optlen);
+-	return ip_options_get_finish(net, optp, opt, optlen);
+-}
+-
+ void ip_forward_options(struct sk_buff *skb)
+ {
+ 	struct   ip_options *opt	=3D &(IPCB(skb)->opt);
 diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index 36f746e01741f6..ac495b0cff8ffb 100644
+index ac495b0cff8ffb..b12f39b52008a3 100644
 --- a/net/ipv4/ip_sockglue.c
 +++ b/net/ipv4/ip_sockglue.c
-@@ -925,7 +925,8 @@ static int do_ip_setsockopt(struct sock *sk, int level,
- 	if (optname =3D=3D IP_ROUTER_ALERT)
- 		return ip_ra_control(sk, val ? 1 : 0, NULL);
- 	if (ip_mroute_opt(optname))
--		return ip_mroute_setsockopt(sk, optname, optval, optlen);
-+		return ip_mroute_setsockopt(sk, optname, USER_SOCKPTR(optval),
-+					    optlen);
+@@ -280,7 +280,8 @@ int ip_cmsg_send(struct sock *sk, struct msghdr *msg, s=
+truct ipcm_cookie *ipc,
+ 			err =3D cmsg->cmsg_len - sizeof(struct cmsghdr);
  =
 
- 	err =3D 0;
- 	if (needs_rtnl)
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index 678639c01e4882..cdf3a40f9ff5fc 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -1341,7 +1341,7 @@ static void mrtsock_destruct(struct sock *sk)
-  * MOSPF/PIM router set up we can clean this up.
-  */
+ 			/* Our caller is responsible for freeing ipc->opt */
+-			err =3D ip_options_get(net, &ipc->opt, CMSG_DATA(cmsg),
++			err =3D ip_options_get(net, &ipc->opt,
++					     KERNEL_SOCKPTR(CMSG_DATA(cmsg)),
+ 					     err < 40 ? err : 40);
+ 			if (err)
+ 				return err;
+@@ -940,8 +941,8 @@ static int do_ip_setsockopt(struct sock *sk, int level,
  =
 
--int ip_mroute_setsockopt(struct sock *sk, int optname, char __user *optval,
-+int ip_mroute_setsockopt(struct sock *sk, int optname, sockptr_t optval,
- 			 unsigned int optlen)
- {
- 	struct net *net =3D sock_net(sk);
-@@ -1413,7 +1413,7 @@ int ip_mroute_setsockopt(struct sock *sk, int optname=
-, char __user *optval,
- 			ret =3D -EINVAL;
+ 		if (optlen > 40)
+ 			goto e_inval;
+-		err =3D ip_options_get_from_user(sock_net(sk), &opt,
+-					       optval, optlen);
++		err =3D ip_options_get(sock_net(sk), &opt, USER_SOCKPTR(optval),
++					      optlen);
+ 		if (err)
  			break;
- 		}
--		if (copy_from_user(&vif, optval, sizeof(vif))) {
-+		if (copy_from_sockptr(&vif, optval, sizeof(vif))) {
- 			ret =3D -EFAULT;
- 			break;
- 		}
-@@ -1441,7 +1441,7 @@ int ip_mroute_setsockopt(struct sock *sk, int optname=
-, char __user *optval,
- 			ret =3D -EINVAL;
- 			break;
- 		}
--		if (copy_from_user(&mfc, optval, sizeof(mfc))) {
-+		if (copy_from_sockptr(&val, optval, sizeof(val))) {
- 			ret =3D -EFAULT;
- 			break;
- 		}
-@@ -1459,7 +1459,7 @@ int ip_mroute_setsockopt(struct sock *sk, int optname=
-, char __user *optval,
- 			ret =3D -EINVAL;
- 			break;
- 		}
--		if (get_user(val, (int __user *)optval)) {
-+		if (copy_from_sockptr(&val, optval, sizeof(val))) {
- 			ret =3D -EFAULT;
- 			break;
- 		}
-@@ -1471,7 +1471,7 @@ int ip_mroute_setsockopt(struct sock *sk, int optname=
-, char __user *optval,
- 			ret =3D -EINVAL;
- 			break;
- 		}
--		if (get_user(val, (int __user *)optval)) {
-+		if (copy_from_sockptr(&val, optval, sizeof(val))) {
- 			ret =3D -EFAULT;
- 			break;
- 		}
-@@ -1486,7 +1486,7 @@ int ip_mroute_setsockopt(struct sock *sk, int optname=
-, char __user *optval,
- 			ret =3D -EINVAL;
- 			break;
- 		}
--		if (get_user(val, (int __user *)optval)) {
-+		if (copy_from_sockptr(&val, optval, sizeof(val))) {
- 			ret =3D -EFAULT;
- 			break;
- 		}
-@@ -1508,7 +1508,7 @@ int ip_mroute_setsockopt(struct sock *sk, int optname=
-, char __user *optval,
- 			ret =3D -EINVAL;
- 			break;
- 		}
--		if (get_user(uval, (u32 __user *)optval)) {
-+		if (copy_from_sockptr(&uval, optval, sizeof(uval))) {
- 			ret =3D -EFAULT;
- 			break;
- 		}
+ 		old =3D rcu_dereference_protected(inet->inet_opt,
 -- =
 
 2.27.0
 
---===============7708930335307719136==--
+--===============5962896313936935680==--
