@@ -1,154 +1,321 @@
-Content-Type: multipart/mixed; boundary="===============5962896313936935680=="
+Content-Type: multipart/mixed; boundary="===============1878657227551472721=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 14/24] net/ipv4: merge ip_options_get and
- ip_options_get_from_user
-Date: Mon, 20 Jul 2020 14:47:27 +0200
-Message-ID: <20200720124737.118617-15-hch@lst.de>
+Subject: [MPTCP] [PATCH 15/24] net/ipv4: switch do_ip_setsockopt to sockptr_t
+Date: Mon, 20 Jul 2020 14:47:28 +0200
+Message-ID: <20200720124737.118617-16-hch@lst.de>
 In-Reply-To: 20200720124737.118617-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5114
+X-UID: 5115
 
---===============5962896313936935680==
+--===============1878657227551472721==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use the sockptr_t type to merge the versions.
+Pass a sockptr_t to prepare for set_fs-less handling of the kernel
+pointer from bpf-cgroup.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- include/net/ip.h       |  5 ++---
- net/ipv4/ip_options.c  | 43 +++++++++++-------------------------------
- net/ipv4/ip_sockglue.c |  7 ++++---
- 3 files changed, 17 insertions(+), 38 deletions(-)
+ net/ipv4/ip_sockglue.c | 68 ++++++++++++++++++++----------------------
+ 1 file changed, 33 insertions(+), 35 deletions(-)
 
-diff --git a/include/net/ip.h b/include/net/ip.h
-index 3d34acc95ca825..d66ad3a9522081 100644
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -23,6 +23,7 @@
- #include <linux/in.h>
- #include <linux/skbuff.h>
- #include <linux/jhash.h>
-+#include <linux/sockptr.h>
- =
-
- #include <net/inet_sock.h>
- #include <net/route.h>
-@@ -707,9 +708,7 @@ int __ip_options_compile(struct net *net, struct ip_opt=
-ions *opt,
- int ip_options_compile(struct net *net, struct ip_options *opt,
- 		       struct sk_buff *skb);
- int ip_options_get(struct net *net, struct ip_options_rcu **optp,
--		   unsigned char *data, int optlen);
--int ip_options_get_from_user(struct net *net, struct ip_options_rcu **optp,
--			     unsigned char __user *data, int optlen);
-+		   sockptr_t data, int optlen);
- void ip_options_undo(struct ip_options *opt);
- void ip_forward_options(struct sk_buff *skb);
- int ip_options_rcv_srr(struct sk_buff *skb, struct net_device *dev);
-diff --git a/net/ipv4/ip_options.c b/net/ipv4/ip_options.c
-index ddaa01ec2bce82..948747aac4e2d0 100644
---- a/net/ipv4/ip_options.c
-+++ b/net/ipv4/ip_options.c
-@@ -519,15 +519,20 @@ void ip_options_undo(struct ip_options *opt)
- 	}
- }
- =
-
--static struct ip_options_rcu *ip_options_get_alloc(const int optlen)
-+int ip_options_get(struct net *net, struct ip_options_rcu **optp,
-+		   sockptr_t data, int optlen)
- {
--	return kzalloc(sizeof(struct ip_options_rcu) + ((optlen + 3) & ~3),
-+	struct ip_options_rcu *opt;
-+
-+	opt =3D kzalloc(sizeof(struct ip_options_rcu) + ((optlen + 3) & ~3),
- 		       GFP_KERNEL);
--}
-+	if (!opt)
-+		return -ENOMEM;
-+	if (optlen && copy_from_sockptr(opt->opt.__data, data, optlen)) {
-+		kfree(opt);
-+		return -EFAULT;
-+	}
- =
-
--static int ip_options_get_finish(struct net *net, struct ip_options_rcu **=
-optp,
--				 struct ip_options_rcu *opt, int optlen)
--{
- 	while (optlen & 3)
- 		opt->opt.__data[optlen++] =3D IPOPT_END;
- 	opt->opt.optlen =3D optlen;
-@@ -540,32 +545,6 @@ static int ip_options_get_finish(struct net *net, stru=
-ct ip_options_rcu **optp,
- 	return 0;
- }
- =
-
--int ip_options_get_from_user(struct net *net, struct ip_options_rcu **optp,
--			     unsigned char __user *data, int optlen)
--{
--	struct ip_options_rcu *opt =3D ip_options_get_alloc(optlen);
--
--	if (!opt)
--		return -ENOMEM;
--	if (optlen && copy_from_user(opt->opt.__data, data, optlen)) {
--		kfree(opt);
--		return -EFAULT;
--	}
--	return ip_options_get_finish(net, optp, opt, optlen);
--}
--
--int ip_options_get(struct net *net, struct ip_options_rcu **optp,
--		   unsigned char *data, int optlen)
--{
--	struct ip_options_rcu *opt =3D ip_options_get_alloc(optlen);
--
--	if (!opt)
--		return -ENOMEM;
--	if (optlen)
--		memcpy(opt->opt.__data, data, optlen);
--	return ip_options_get_finish(net, optp, opt, optlen);
--}
--
- void ip_forward_options(struct sk_buff *skb)
- {
- 	struct   ip_options *opt	=3D &(IPCB(skb)->opt);
 diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index ac495b0cff8ffb..b12f39b52008a3 100644
+index b12f39b52008a3..f7f1507b89fe24 100644
 --- a/net/ipv4/ip_sockglue.c
 +++ b/net/ipv4/ip_sockglue.c
-@@ -280,7 +280,8 @@ int ip_cmsg_send(struct sock *sk, struct msghdr *msg, s=
-truct ipcm_cookie *ipc,
- 			err =3D cmsg->cmsg_len - sizeof(struct cmsghdr);
+@@ -683,15 +683,15 @@ static int set_mcast_msfilter(struct sock *sk, int if=
+index,
+ 	return -EADDRNOTAVAIL;
+ }
  =
 
- 			/* Our caller is responsible for freeing ipc->opt */
--			err =3D ip_options_get(net, &ipc->opt, CMSG_DATA(cmsg),
-+			err =3D ip_options_get(net, &ipc->opt,
-+					     KERNEL_SOCKPTR(CMSG_DATA(cmsg)),
- 					     err < 40 ? err : 40);
- 			if (err)
- 				return err;
-@@ -940,8 +941,8 @@ static int do_ip_setsockopt(struct sock *sk, int level,
+-static int copy_group_source_from_user(struct group_source_req *greqs,
+-		void __user *optval, int optlen)
++static int copy_group_source_from_sockptr(struct group_source_req *greqs,
++		sockptr_t optval, int optlen)
+ {
+ 	if (in_compat_syscall()) {
+ 		struct compat_group_source_req gr32;
+ =
+
+ 		if (optlen !=3D sizeof(gr32))
+ 			return -EINVAL;
+-		if (copy_from_user(&gr32, optval, sizeof(gr32)))
++		if (copy_from_sockptr(&gr32, optval, sizeof(gr32)))
+ 			return -EFAULT;
+ 		greqs->gsr_interface =3D gr32.gsr_interface;
+ 		greqs->gsr_group =3D gr32.gsr_group;
+@@ -699,7 +699,7 @@ static int copy_group_source_from_user(struct group_sou=
+rce_req *greqs,
+ 	} else {
+ 		if (optlen !=3D sizeof(*greqs))
+ 			return -EINVAL;
+-		if (copy_from_user(greqs, optval, sizeof(*greqs)))
++		if (copy_from_sockptr(greqs, optval, sizeof(*greqs)))
+ 			return -EFAULT;
+ 	}
+ =
+
+@@ -707,14 +707,14 @@ static int copy_group_source_from_user(struct group_s=
+ource_req *greqs,
+ }
+ =
+
+ static int do_mcast_group_source(struct sock *sk, int optname,
+-		void __user *optval, int optlen)
++		sockptr_t optval, int optlen)
+ {
+ 	struct group_source_req greqs;
+ 	struct ip_mreq_source mreqs;
+ 	struct sockaddr_in *psin;
+ 	int omode, add, err;
+ =
+
+-	err =3D copy_group_source_from_user(&greqs, optval, optlen);
++	err =3D copy_group_source_from_sockptr(&greqs, optval, optlen);
+ 	if (err)
+ 		return err;
+ =
+
+@@ -754,8 +754,7 @@ static int do_mcast_group_source(struct sock *sk, int o=
+ptname,
+ 	return ip_mc_source(add, omode, sk, &mreqs, greqs.gsr_interface);
+ }
+ =
+
+-static int ip_set_mcast_msfilter(struct sock *sk, void __user *optval,
+-		int optlen)
++static int ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval, int op=
+tlen)
+ {
+ 	struct group_filter *gsf =3D NULL;
+ 	int err;
+@@ -765,7 +764,7 @@ static int ip_set_mcast_msfilter(struct sock *sk, void =
+__user *optval,
+ 	if (optlen > sysctl_optmem_max)
+ 		return -ENOBUFS;
+ =
+
+-	gsf =3D memdup_user(optval, optlen);
++	gsf =3D memdup_sockptr(optval, optlen);
+ 	if (IS_ERR(gsf))
+ 		return PTR_ERR(gsf);
+ =
+
+@@ -786,7 +785,7 @@ static int ip_set_mcast_msfilter(struct sock *sk, void =
+__user *optval,
+ 	return err;
+ }
+ =
+
+-static int compat_ip_set_mcast_msfilter(struct sock *sk, void __user *optv=
+al,
++static int compat_ip_set_mcast_msfilter(struct sock *sk, sockptr_t optval,
+ 		int optlen)
+ {
+ 	const int size0 =3D offsetof(struct compat_group_filter, gf_slist);
+@@ -806,7 +805,7 @@ static int compat_ip_set_mcast_msfilter(struct sock *sk=
+, void __user *optval,
+ 	gf32 =3D p + 4; /* we want ->gf_group and ->gf_slist aligned */
+ =
+
+ 	err =3D -EFAULT;
+-	if (copy_from_user(gf32, optval, optlen))
++	if (copy_from_sockptr(gf32, optval, optlen))
+ 		goto out_free_gsf;
+ =
+
+ 	/* numsrc >=3D (4G-140)/128 overflow in 32 bits */
+@@ -831,7 +830,7 @@ static int compat_ip_set_mcast_msfilter(struct sock *sk=
+, void __user *optval,
+ }
+ =
+
+ static int ip_mcast_join_leave(struct sock *sk, int optname,
+-		void __user *optval, int optlen)
++		sockptr_t optval, int optlen)
+ {
+ 	struct ip_mreqn mreq =3D { };
+ 	struct sockaddr_in *psin;
+@@ -839,7 +838,7 @@ static int ip_mcast_join_leave(struct sock *sk, int opt=
+name,
+ =
+
+ 	if (optlen < sizeof(struct group_req))
+ 		return -EINVAL;
+-	if (copy_from_user(&greq, optval, sizeof(greq)))
++	if (copy_from_sockptr(&greq, optval, sizeof(greq)))
+ 		return -EFAULT;
+ =
+
+ 	psin =3D (struct sockaddr_in *)&greq.gr_group;
+@@ -853,7 +852,7 @@ static int ip_mcast_join_leave(struct sock *sk, int opt=
+name,
+ }
+ =
+
+ static int compat_ip_mcast_join_leave(struct sock *sk, int optname,
+-		void __user *optval, int optlen)
++		sockptr_t optval, int optlen)
+ {
+ 	struct compat_group_req greq;
+ 	struct ip_mreqn mreq =3D { };
+@@ -861,7 +860,7 @@ static int compat_ip_mcast_join_leave(struct sock *sk, =
+int optname,
+ =
+
+ 	if (optlen < sizeof(struct compat_group_req))
+ 		return -EINVAL;
+-	if (copy_from_user(&greq, optval, sizeof(greq)))
++	if (copy_from_sockptr(&greq, optval, sizeof(greq)))
+ 		return -EFAULT;
+ =
+
+ 	psin =3D (struct sockaddr_in *)&greq.gr_group;
+@@ -875,8 +874,8 @@ static int compat_ip_mcast_join_leave(struct sock *sk, =
+int optname,
+ 	return ip_mc_leave_group(sk, &mreq);
+ }
+ =
+
+-static int do_ip_setsockopt(struct sock *sk, int level,
+-			    int optname, char __user *optval, unsigned int optlen)
++static int do_ip_setsockopt(struct sock *sk, int level, int optname,
++		sockptr_t optval, unsigned int optlen)
+ {
+ 	struct inet_sock *inet =3D inet_sk(sk);
+ 	struct net *net =3D sock_net(sk);
+@@ -910,12 +909,12 @@ static int do_ip_setsockopt(struct sock *sk, int leve=
+l,
+ 	case IP_RECVFRAGSIZE:
+ 	case IP_RECVERR_RFC4884:
+ 		if (optlen >=3D sizeof(int)) {
+-			if (get_user(val, (int __user *) optval))
++			if (copy_from_sockptr(&val, optval, sizeof(val)))
+ 				return -EFAULT;
+ 		} else if (optlen >=3D sizeof(char)) {
+ 			unsigned char ucval;
+ =
+
+-			if (get_user(ucval, (unsigned char __user *) optval))
++			if (copy_from_sockptr(&ucval, optval, sizeof(ucval)))
+ 				return -EFAULT;
+ 			val =3D (int) ucval;
+ 		}
+@@ -926,8 +925,7 @@ static int do_ip_setsockopt(struct sock *sk, int level,
+ 	if (optname =3D=3D IP_ROUTER_ALERT)
+ 		return ip_ra_control(sk, val ? 1 : 0, NULL);
+ 	if (ip_mroute_opt(optname))
+-		return ip_mroute_setsockopt(sk, optname, USER_SOCKPTR(optval),
+-					    optlen);
++		return ip_mroute_setsockopt(sk, optname, optval, optlen);
+ =
+
+ 	err =3D 0;
+ 	if (needs_rtnl)
+@@ -941,8 +939,7 @@ static int do_ip_setsockopt(struct sock *sk, int level,
  =
 
  		if (optlen > 40)
  			goto e_inval;
--		err =3D ip_options_get_from_user(sock_net(sk), &opt,
--					       optval, optlen);
-+		err =3D ip_options_get(sock_net(sk), &opt, USER_SOCKPTR(optval),
-+					      optlen);
+-		err =3D ip_options_get(sock_net(sk), &opt, USER_SOCKPTR(optval),
+-					      optlen);
++		err =3D ip_options_get(sock_net(sk), &opt, optval, optlen);
  		if (err)
  			break;
  		old =3D rcu_dereference_protected(inet->inet_opt,
+@@ -1140,17 +1137,17 @@ static int do_ip_setsockopt(struct sock *sk, int le=
+vel,
+ =
+
+ 		err =3D -EFAULT;
+ 		if (optlen >=3D sizeof(struct ip_mreqn)) {
+-			if (copy_from_user(&mreq, optval, sizeof(mreq)))
++			if (copy_from_sockptr(&mreq, optval, sizeof(mreq)))
+ 				break;
+ 		} else {
+ 			memset(&mreq, 0, sizeof(mreq));
+ 			if (optlen >=3D sizeof(struct ip_mreq)) {
+-				if (copy_from_user(&mreq, optval,
+-						   sizeof(struct ip_mreq)))
++				if (copy_from_sockptr(&mreq, optval,
++						      sizeof(struct ip_mreq)))
+ 					break;
+ 			} else if (optlen >=3D sizeof(struct in_addr)) {
+-				if (copy_from_user(&mreq.imr_address, optval,
+-						   sizeof(struct in_addr)))
++				if (copy_from_sockptr(&mreq.imr_address, optval,
++						      sizeof(struct in_addr)))
+ 					break;
+ 			}
+ 		}
+@@ -1202,11 +1199,12 @@ static int do_ip_setsockopt(struct sock *sk, int le=
+vel,
+ 			goto e_inval;
+ 		err =3D -EFAULT;
+ 		if (optlen >=3D sizeof(struct ip_mreqn)) {
+-			if (copy_from_user(&mreq, optval, sizeof(mreq)))
++			if (copy_from_sockptr(&mreq, optval, sizeof(mreq)))
+ 				break;
+ 		} else {
+ 			memset(&mreq, 0, sizeof(mreq));
+-			if (copy_from_user(&mreq, optval, sizeof(struct ip_mreq)))
++			if (copy_from_sockptr(&mreq, optval,
++					      sizeof(struct ip_mreq)))
+ 				break;
+ 		}
+ =
+
+@@ -1226,7 +1224,7 @@ static int do_ip_setsockopt(struct sock *sk, int leve=
+l,
+ 			err =3D -ENOBUFS;
+ 			break;
+ 		}
+-		msf =3D memdup_user(optval, optlen);
++		msf =3D memdup_sockptr(optval, optlen);
+ 		if (IS_ERR(msf)) {
+ 			err =3D PTR_ERR(msf);
+ 			break;
+@@ -1257,7 +1255,7 @@ static int do_ip_setsockopt(struct sock *sk, int leve=
+l,
+ =
+
+ 		if (optlen !=3D sizeof(struct ip_mreq_source))
+ 			goto e_inval;
+-		if (copy_from_user(&mreqs, optval, sizeof(mreqs))) {
++		if (copy_from_sockptr(&mreqs, optval, sizeof(mreqs))) {
+ 			err =3D -EFAULT;
+ 			break;
+ 		}
+@@ -1324,8 +1322,7 @@ static int do_ip_setsockopt(struct sock *sk, int leve=
+l,
+ 		err =3D -EPERM;
+ 		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
+ 			break;
+-		err =3D xfrm_user_policy(sk, optname, USER_SOCKPTR(optval),
+-				       optlen);
++		err =3D xfrm_user_policy(sk, optname, optval, optlen);
+ 		break;
+ =
+
+ 	case IP_TRANSPARENT:
+@@ -1412,7 +1409,8 @@ int ip_setsockopt(struct sock *sk, int level,
+ 	if (level !=3D SOL_IP)
+ 		return -ENOPROTOOPT;
+ =
+
+-	err =3D do_ip_setsockopt(sk, level, optname, optval, optlen);
++	err =3D do_ip_setsockopt(sk, level, optname, USER_SOCKPTR(optval),
++			       optlen);
+ #if IS_ENABLED(CONFIG_BPFILTER_UMH)
+ 	if (optname >=3D BPFILTER_IPT_SO_SET_REPLACE &&
+ 	    optname < BPFILTER_IPT_SET_MAX)
 -- =
 
 2.27.0
 
---===============5962896313936935680==--
+--===============1878657227551472721==--
