@@ -1,165 +1,186 @@
-Content-Type: multipart/mixed; boundary="===============3318765529720468265=="
+Content-Type: multipart/mixed; boundary="===============1423338505858734137=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 03/24] net: add a new sockptr_t type
-Date: Mon, 20 Jul 2020 14:47:16 +0200
-Message-ID: <20200720124737.118617-4-hch@lst.de>
-In-Reply-To: 20200720124737.118617-1-hch@lst.de
+Subject: [MPTCP] get rid of the address_space override in setsockopt
+Date: Mon, 20 Jul 2020 14:47:13 +0200
+Message-ID: <20200720124737.118617-1-hch@lst.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 5101
+X-UID: 5102
 
---===============3318765529720468265==
+--===============1423338505858734137==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add a uptr_t type that can hold a pointer to either a user or kernel
-memory region, and simply helpers to copy to and from it.  For
-architectures like x86 that have non-overlapping user and kernel
-address space it just is a union and uses a TASK_SIZE check to
-select the proper copy routine.  For architectures with overlapping
-address spaces a flag to indicate the address space is used instead.
+Hi Dave,
 
-Signed-off-by: Christoph Hellwig <hch(a)lst.de>
----
- include/linux/sockptr.h | 121 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 include/linux/sockptr.h
+setsockopt is the last place in architecture-independ code that still
+uses set_fs to force the uaccess routines to operate on kernel pointers.
 
-diff --git a/include/linux/sockptr.h b/include/linux/sockptr.h
-new file mode 100644
-index 00000000000000..e41dfa52555dec
---- /dev/null
-+++ b/include/linux/sockptr.h
-@@ -0,0 +1,121 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2020 Christoph Hellwig.
-+ *
-+ * Support for "universal" pointers that can point to either kernel or use=
-rspace
-+ * memory.
-+ */
-+#ifndef _LINUX_SOCKPTR_H
-+#define _LINUX_SOCKPTR_H
-+
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+
-+#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+typedef union {
-+	void		*kernel;
-+	void __user	*user;
-+} sockptr_t;
-+
-+static inline bool sockptr_is_kernel(sockptr_t sockptr)
-+{
-+	return (unsigned long)sockptr.kernel >=3D TASK_SIZE;
-+}
-+
-+static inline sockptr_t KERNEL_SOCKPTR(void *p)
-+{
-+	return (sockptr_t) { .kernel =3D p };
-+}
-+#else /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
-+typedef struct {
-+	union {
-+		void		*kernel;
-+		void __user	*user;
-+	};
-+	bool		is_kernel : 1;
-+} sockptr_t;
-+
-+static inline bool sockptr_is_kernel(sockptr_t sockptr)
-+{
-+	return sockptr.is_kernel;
-+}
-+
-+static inline sockptr_t KERNEL_SOCKPTR(void *p)
-+{
-+	return (sockptr_t) { .kernel =3D p, .is_kernel =3D true };
-+}
-+#endif /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
-+
-+static inline sockptr_t USER_SOCKPTR(void __user *p)
-+{
-+	return (sockptr_t) { .user =3D p };
-+}
-+
-+static inline bool sockptr_is_null(sockptr_t sockptr)
-+{
-+	return !sockptr.user && !sockptr.kernel;
-+}
-+
-+static inline int copy_from_sockptr(void *dst, sockptr_t src, size_t size)
-+{
-+	if (!sockptr_is_kernel(src))
-+		return copy_from_user(dst, src.user, size);
-+	memcpy(dst, src.kernel, size);
-+	return 0;
-+}
-+
-+static inline int copy_to_sockptr(sockptr_t dst, const void *src, size_t s=
-ize)
-+{
-+	if (!sockptr_is_kernel(dst))
-+		return copy_to_user(dst.user, src, size);
-+	memcpy(dst.kernel, src, size);
-+	return 0;
-+}
-+
-+static inline void *memdup_sockptr(sockptr_t src, size_t len)
-+{
-+	void *p =3D kmalloc_track_caller(len, GFP_USER | __GFP_NOWARN);
-+
-+	if (!p)
-+		return ERR_PTR(-ENOMEM);
-+	if (copy_from_sockptr(p, src, len)) {
-+		kfree(p);
-+		return ERR_PTR(-EFAULT);
-+	}
-+	return p;
-+}
-+
-+static inline void *memdup_sockptr_nul(sockptr_t src, size_t len)
-+{
-+	char *p =3D kmalloc_track_caller(len + 1, GFP_KERNEL);
-+
-+	if (!p)
-+		return ERR_PTR(-ENOMEM);
-+	if (copy_from_sockptr(p, src, len)) {
-+		kfree(p);
-+		return ERR_PTR(-EFAULT);
-+	}
-+	p[len] =3D '\0';
-+	return p;
-+}
-+
-+static inline void sockptr_advance(sockptr_t sockptr, size_t len)
-+{
-+	if (sockptr_is_kernel(sockptr))
-+		sockptr.kernel +=3D len;
-+	else
-+		sockptr.user +=3D len;
-+}
-+
-+static inline long strncpy_from_sockptr(char *dst, sockptr_t src, size_t c=
-ount)
-+{
-+	if (sockptr_is_kernel(src)) {
-+		size_t len =3D min(strnlen(src.kernel, count - 1) + 1, count);
-+
-+		memcpy(dst, src.kernel, len);
-+		return len;
-+	}
-+	return strncpy_from_user(dst, src.user, count);
-+}
-+
-+#endif /* _LINUX_SOCKPTR_H */
--- =
+This series adds a new sockptr_t type that can contained either a kernel
+or user pointer, and which has accessors that do the right thing, and
+then uses it for setsockopt, starting by refactoring some low-level
+helpers and moving them over to it before finally doing the main
+setsockopt method.
 
-2.27.0
+Note that I could not get the eBPF selftests to work, so this has been
+tested with a testing patch that always copies the data first and passes
+a kernel pointer.  This is something that works for most common sockopts
+(and is something that the ePBF support relies on), but unfortunately
+in various corner cases we either don't use the passed in length, or in
+one case actually copy data back from setsockopt, so we unfortunately
+can't just always do the copy in the highlevel code, which would have
+been much nicer.
 
---===============3318765529720468265==--
+
+Diffstt:
+ crypto/af_alg.c                           |    7 =
+
+ drivers/crypto/chelsio/chtls/chtls_main.c |   18 -
+ drivers/isdn/mISDN/socket.c               |    4 =
+
+ include/linux/bpfilter.h                  |    6 =
+
+ include/linux/filter.h                    |    3 =
+
+ include/linux/mroute.h                    |    5 =
+
+ include/linux/mroute6.h                   |    8 =
+
+ include/linux/net.h                       |    4 =
+
+ include/linux/netfilter.h                 |    6 =
+
+ include/linux/netfilter/x_tables.h        |    4 =
+
+ include/linux/sockptr.h                   |  121 +++++++++++
+ include/net/inet_connection_sock.h        |    3 =
+
+ include/net/ip.h                          |    7 =
+
+ include/net/ipv6.h                        |    6 =
+
+ include/net/sctp/structs.h                |    2 =
+
+ include/net/sock.h                        |    7 =
+
+ include/net/tcp.h                         |    6 =
+
+ include/net/udp.h                         |    2 =
+
+ include/net/xfrm.h                        |    8 =
+
+ net/atm/common.c                          |    6 =
+
+ net/atm/common.h                          |    2 =
+
+ net/atm/pvc.c                             |    2 =
+
+ net/atm/svc.c                             |    6 =
+
+ net/ax25/af_ax25.c                        |    6 =
+
+ net/bluetooth/hci_sock.c                  |    8 =
+
+ net/bluetooth/l2cap_sock.c                |   22 +-
+ net/bluetooth/rfcomm/sock.c               |   12 -
+ net/bluetooth/sco.c                       |    6 =
+
+ net/bpfilter/bpfilter_kern.c              |   11 -
+ net/bridge/netfilter/ebtables.c           |   46 +---
+ net/caif/caif_socket.c                    |    8 =
+
+ net/can/j1939/socket.c                    |   12 -
+ net/can/raw.c                             |   16 -
+ net/core/filter.c                         |    6 =
+
+ net/core/sock.c                           |   36 +--
+ net/dccp/dccp.h                           |    2 =
+
+ net/dccp/proto.c                          |   20 -
+ net/decnet/af_decnet.c                    |   13 -
+ net/ieee802154/socket.c                   |    6 =
+
+ net/ipv4/bpfilter/sockopt.c               |    8 =
+
+ net/ipv4/ip_options.c                     |   43 +---
+ net/ipv4/ip_sockglue.c                    |   66 +++---
+ net/ipv4/ipmr.c                           |   14 -
+ net/ipv4/netfilter/arp_tables.c           |   33 +--
+ net/ipv4/netfilter/ip_tables.c            |   29 +-
+ net/ipv4/raw.c                            |    8 =
+
+ net/ipv4/tcp.c                            |   30 +-
+ net/ipv4/tcp_ipv4.c                       |    4 =
+
+ net/ipv4/udp.c                            |   11 -
+ net/ipv4/udp_impl.h                       |    4 =
+
+ net/ipv6/ip6_flowlabel.c                  |  317 ++++++++++++++++---------=
+-----
+ net/ipv6/ip6mr.c                          |   17 -
+ net/ipv6/ipv6_sockglue.c                  |  203 +++++++++----------
+ net/ipv6/netfilter/ip6_tables.c           |   28 +-
+ net/ipv6/raw.c                            |   10 =
+
+ net/ipv6/tcp_ipv6.c                       |    4 =
+
+ net/ipv6/udp.c                            |    7 =
+
+ net/ipv6/udp_impl.h                       |    4 =
+
+ net/iucv/af_iucv.c                        |    4 =
+
+ net/kcm/kcmsock.c                         |    6 =
+
+ net/l2tp/l2tp_ppp.c                       |    4 =
+
+ net/llc/af_llc.c                          |    4 =
+
+ net/mptcp/protocol.c                      |   12 -
+ net/netfilter/ipvs/ip_vs_ctl.c            |    4 =
+
+ net/netfilter/nf_sockopt.c                |    2 =
+
+ net/netfilter/x_tables.c                  |   20 -
+ net/netlink/af_netlink.c                  |    4 =
+
+ net/netrom/af_netrom.c                    |    4 =
+
+ net/nfc/llcp_sock.c                       |    6 =
+
+ net/packet/af_packet.c                    |   39 +--
+ net/phonet/pep.c                          |    4 =
+
+ net/rds/af_rds.c                          |   30 +-
+ net/rds/rdma.c                            |   14 -
+ net/rds/rds.h                             |    6 =
+
+ net/rose/af_rose.c                        |    4 =
+
+ net/rxrpc/af_rxrpc.c                      |    8 =
+
+ net/rxrpc/ar-internal.h                   |    4 =
+
+ net/rxrpc/key.c                           |    9 =
+
+ net/sctp/socket.c                         |    4 =
+
+ net/smc/af_smc.c                          |    4 =
+
+ net/socket.c                              |   20 -
+ net/tipc/socket.c                         |    8 =
+
+ net/tls/tls_main.c                        |   17 -
+ net/vmw_vsock/af_vsock.c                  |    4 =
+
+ net/x25/af_x25.c                          |    4 =
+
+ net/xdp/xsk.c                             |    8 =
+
+ net/xfrm/xfrm_state.c                     |    6 =
+
+ 87 files changed, 855 insertions(+), 721 deletions(-)
+--===============1423338505858734137==--
