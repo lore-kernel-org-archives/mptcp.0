@@ -1,30 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============3404140115823379807=="
+Content-Type: multipart/mixed; boundary="===============2281884079581234798=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Luc Van Oostenryck <luc.vanoostenryck at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 24/24] net: pass a sockptr_t into ->setsockopt
-Date: Mon, 20 Jul 2020 16:20:13 -0700
-Message-ID: <20200720.162013.456211151711627380.davem@davemloft.net>
-In-Reply-To: deaedc6d-edde-68da-50e8-6474ca818191@datenfreihafen.org
+Subject: [MPTCP] Re: [PATCH 02/24] bpfilter: fix up a sparse annotation
+Date: Tue, 21 Jul 2020 04:40:16 +0200
+Message-ID: <20200721024016.2talwdt5hjqvirr6@ltop.local>
+In-Reply-To: 20200720124737.118617-3-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5135
+X-UID: 5136
 
---===============3404140115823379807==
+--===============2281884079581234798==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Stefan Schmidt <stefan(a)datenfreihafen.org>
-Date: Mon, 20 Jul 2020 16:19:38 +0200
-
-> For the ieee802154 part:
+On Mon, Jul 20, 2020 at 02:47:15PM +0200, Christoph Hellwig wrote:
+> The __user doesn't make sense when casting to an integer type.
 > =
 
-> Acked-by: Stefan Schmidt <stefan(a)datenfreihafen.org>
+> Signed-off-by: Christoph Hellwig <hch(a)lst.de>
+> ---
+>  net/bpfilter/bpfilter_kern.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> =
 
-Please do not quote an entire patch just to add an ACK, trim it just
-to the commit message, or even less.
+> diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
+> index 977e9dad72ca4f..713b4b3d02005d 100644
+> --- a/net/bpfilter/bpfilter_kern.c
+> +++ b/net/bpfilter/bpfilter_kern.c
+> @@ -49,7 +49,7 @@ static int __bpfilter_process_sockopt(struct sock *sk, =
+int optname,
+>  	req.is_set =3D is_set;
+>  	req.pid =3D current->pid;
+>  	req.cmd =3D optname;
+> -	req.addr =3D (long __force __user)optval;
+> +	req.addr =3D (__force long)optval;
 
-Thank you.
---===============3404140115823379807==--
+For casts to integers, even '__force' is not needed (since integers
+can't be dereferenced, the concept of address-space is meaningless
+for them, so it's never useful to warn when it's dropped and
+'__force' is thus not needed).
+
+-- Luc
+--===============2281884079581234798==--
