@@ -1,104 +1,121 @@
-Content-Type: multipart/mixed; boundary="===============2866760905442828293=="
+Content-Type: multipart/mixed; boundary="===============8214536453565149018=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC v2 mptcp-next 03/12] mptcp: token: move retry to caller
-Date: Tue, 21 Jul 2020 22:36:33 +0200
-Message-ID: <20200721203642.32753-4-fw@strlen.de>
+Subject: [MPTCP] [RFC v2 mptcp-next 04/12] mptcp: subflow: split
+ subflow_init_req into helpers
+Date: Tue, 21 Jul 2020 22:36:34 +0200
+Message-ID: <20200721203642.32753-5-fw@strlen.de>
 In-Reply-To: 20200721203642.32753-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5149
+X-UID: 5150
 
---===============2866760905442828293==
+--===============8214536453565149018==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Once syncookie support is added, no state will be stored anymore when the
-syn/ack is generated in syncookie mode.
+When syncookie support is added, we will need to add a variant of
+subflow_init_req() helper.  It will do almost same thing except
+that it will not compute/add a token to the mptcp token tree.
 
-When the ACK comes back, the generated key will be taken from the TCP ACK,
-the token is re-generated and inserted into the token tree.
-
-This means we can't retry with a new key when the token is already taken
-in the syncookie case.
-
-Therefore, move the retry logic to the caller to prepare for syncookie
-support in mptcp.
+To avoid excess copy&paste, this commit splits away part of the
+code into helpers that can then be re-used from the 'no insert'
+function added in a followup change.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/subflow.c |  9 ++++++++-
- net/mptcp/token.c   | 12 ++++--------
- 2 files changed, 12 insertions(+), 9 deletions(-)
+ net/mptcp/subflow.c | 49 ++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 35 insertions(+), 14 deletions(-)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 27dccf85b928..9526566ec153 100644
+index 9526566ec153..800e7d472dcd 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -126,11 +126,18 @@ static void subflow_init_req(struct request_sock *req,
- 	}
+@@ -91,17 +91,9 @@ static struct mptcp_sock *subflow_token_join_request(str=
+uct request_sock *req,
+ 	return msk;
+ }
  =
 
- 	if (mp_opt.mp_capable && listener->request_mptcp) {
--		int err;
-+		int err, retries =3D 4;
-+
-+again:
-+		do {
-+			get_random_bytes(&subflow_req->local_key, sizeof(subflow_req->local_key=
-));
-+		} while (subflow_req->local_key =3D=3D 0);
- =
-
- 		err =3D mptcp_token_new_request(req);
- 		if (err =3D=3D 0)
- 			subflow_req->mp_capable =3D 1;
-+		else if (retries-- > 0)
-+			goto again;
- =
-
- 		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
- 	} else if (mp_opt.mp_join && listener->request_mptcp) {
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index 97cfc45bcc4f..f82410c54653 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -109,14 +109,12 @@ static void mptcp_crypto_key_gen_sha(u64 *key, u32 *t=
-oken, u64 *idsn)
- int mptcp_token_new_request(struct request_sock *req)
+-static void subflow_init_req(struct request_sock *req,
+-			     const struct sock *sk_listener,
+-			     struct sk_buff *skb)
++static int __subflow_init_req(struct request_sock *req, const struct sock =
+*sk_listener)
  {
+-	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
  	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
--	int retries =3D TOKEN_MAX_RETRIES;
- 	struct token_bucket *bucket;
- 	u32 token;
+-	struct mptcp_options_received mp_opt;
+-
+-	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
+-
+-	mptcp_get_options(skb, &mp_opt);
  =
 
--again:
--	mptcp_crypto_key_gen_sha(&subflow_req->local_key,
--				 &subflow_req->token,
--				 &subflow_req->idsn);
-+	mptcp_crypto_key_sha(subflow_req->local_key,
-+			     &subflow_req->token,
-+			     &subflow_req->idsn);
- 	pr_debug("req=3D%p local_key=3D%llu, token=3D%u, idsn=3D%llu\n",
- 		 req, subflow_req->local_key, subflow_req->token,
- 		 subflow_req->idsn);
-@@ -126,9 +124,7 @@ int mptcp_token_new_request(struct request_sock *req)
- 	spin_lock_bh(&bucket->lock);
- 	if (__token_bucket_busy(bucket, token)) {
- 		spin_unlock_bh(&bucket->lock);
--		if (!--retries)
--			return -EBUSY;
--		goto again;
-+		return -EBUSY;
+ 	subflow_req->mp_capable =3D 0;
+ 	subflow_req->mp_join =3D 0;
+@@ -113,18 +105,47 @@ static void subflow_init_req(struct request_sock *req,
+ 	 * TCP option space.
+ 	 */
+ 	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
+-		return;
++		return -EINVAL;
+ #endif
+ =
+
+-	if (mp_opt.mp_capable) {
++	return 0;
++}
++
++static int __subflow_check_options(const struct mptcp_options_received *mp=
+_opt,
++				   struct request_sock *req)
++{
++	if (mp_opt->mp_capable) {
+ 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
+ =
+
+-		if (mp_opt.mp_join)
+-			return;
+-	} else if (mp_opt.mp_join) {
++		if (mp_opt->mp_join)
++			return -EINVAL;
++	} else if (mp_opt->mp_join) {
+ 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNRX);
  	}
  =
 
- 	hlist_nulls_add_head_rcu(&subflow_req->token_node, &bucket->req_chain);
++	return 0;
++}
++
++static void subflow_init_req(struct request_sock *req,
++			     const struct sock *sk_listener,
++			     struct sk_buff *skb)
++{
++	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
++	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
++	struct mptcp_options_received mp_opt;
++	int ret;
++
++	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
++
++	ret =3D __subflow_init_req(req, sk_listener);
++	if (ret)
++		return;
++
++	mptcp_get_options(skb, &mp_opt);
++	ret =3D __subflow_check_options(&mp_opt, req);
++	if (ret)
++		return;
++
+ 	if (mp_opt.mp_capable && listener->request_mptcp) {
+ 		int err, retries =3D 4;
+ =
+
 -- =
 
 2.26.2
 
---===============2866760905442828293==--
+--===============8214536453565149018==--
