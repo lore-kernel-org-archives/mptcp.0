@@ -1,188 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============7632776376732216752=="
+Content-Type: multipart/mixed; boundary="===============1832011546503177452=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC v2 mptcp-next 11/12] mptcp: enable JOIN requests even if
- cookies are in use
-Date: Tue, 21 Jul 2020 22:36:41 +0200
-Message-ID: <20200721203642.32753-12-fw@strlen.de>
+Subject: [MPTCP] [RFC v2 mptcp-next 12/12] selftests: mptcp: make 2nd net
+ namespace use tcp syn cookies unconditionally
+Date: Tue, 21 Jul 2020 22:36:42 +0200
+Message-ID: <20200721203642.32753-13-fw@strlen.de>
 In-Reply-To: 20200721203642.32753-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5157
+X-UID: 5158
 
---===============7632776376732216752==
+--===============1832011546503177452==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-JOIN requests do not work in syncookie mode -- for HMAC validation, the
-peers nonce is required, but this nonce is only present in the SYN.
-
-So either we need to drop or reject all JOIN requests once a listening
-socket enters syncookie mode, or we need to store enough state to
-validate the ACKs HMAC later on.
-
-This allows the subflow request initialisation function to store the
-request socket even when syncookies are used, i.e. the listener
-socket queue will grow past its upper limit.
-
-Following restrictions apply:
-1. The (32bit) token contained in the MP_JOIN SYN packet returns
-   a valid parent connection.
-2. The parent connection can accept one more subflow.
-
-To ensure 2), all MP_JOIN requests (new incoming and existing)
-are accounted in the mptcp parent socket.
-
-If the token is invalid or the parent cannot accept a new subflow,
-no information is stored and TCP fallback path is used.
-
-The parent socket can't be used without further changes in TCP stack,
-because socket creation after 3whs completion checks that the associated
-socket is in LISTEN state.
+check we can establish connections even in syncookie mode.
+Also check following MIB counters:
+MPTcpExtMPCapableSYNRX (should increase for each MPTCP test)
+MPTcpExtMPCapableACKRX (should increase for each MPTCP test)
+TcpExtSyncookiesSent (should increase for listener in ns2)
+TcpExtSyncookiesRecv (same)
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- To ease review I think it would also be possible to
- defer the JOIN stuff for later and just focus on initial
- MP_CAPABLE request.  OTOH, doing so yields MPTCP-on-wire but with no
- Multipath capability so I'm not sure having MP_CAPABLE without
- MP_JOIN is useful.
+ .../selftests/net/mptcp/mptcp_connect.sh      | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
- net/mptcp/pm_netlink.c |  2 +-
- net/mptcp/protocol.h   |  2 ++
- net/mptcp/subflow.c    | 60 +++++++++++++++++++++++++++++++++++++++---
- 3 files changed, 60 insertions(+), 4 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c8820c4156e6..117f794ecc54 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -41,7 +41,7 @@ struct pm_nl_pernet {
- 	unsigned int		next_id;
- };
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index c0589e071f20..6260520674d0 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -196,6 +196,9 @@ ip -net "$ns4" link set ns4eth3 up
+ ip -net "$ns4" route add default via 10.0.3.2
+ ip -net "$ns4" route add default via dead:beef:3::2
  =
 
--#define MPTCP_PM_ADDR_MAX	8
-+#define MPTCP_PM_ADDR_MAX	MPTCP_SUBFLOWS_MAX
++# use TCP syn cookies, even if no flooding was detected.
++ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=3D2
++
+ set_ethtool_flags() {
+ 	local ns=3D"$1"
+ 	local dev=3D"$2"
+@@ -407,6 +410,11 @@ do_transfer()
+ 		sleep 1
+ 	fi
  =
 
- static bool addresses_equal(const struct mptcp_addr_info *a,
- 			    struct mptcp_addr_info *b, bool use_port)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0ed402cdb9fd..586601e889fc 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -154,6 +154,8 @@ enum mptcp_pm_status {
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
- };
++	local stat_synrx_last_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTc=
+pExtMPCapableSYNRX | while read a count c rest ;do  echo $count;done)
++	local stat_ackrx_last_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTc=
+pExtMPCapableACKRX | while read a count c rest ;do  echo $count;done)
++	local stat_cookietx_last=3D$(ip netns exec ${listener_ns} nstat -z -a Tcp=
+ExtSyncookiesSent | while read a count c rest ;do  echo $count;done)
++	local stat_cookierx_last=3D$(ip netns exec ${listener_ns} nstat -z -a Tcp=
+ExtSyncookiesRecv | while read a count c rest ;do  echo $count;done)
++
+ 	ip netns exec ${listener_ns} ./mptcp_connect -t $timeout -l -p $port -s $=
+{srv_proto} $extra_args $local_addr < "$sin" > "$sout" &
+ 	local spid=3D$!
  =
 
-+#define MPTCP_SUBFLOWS_MAX	8
-+
- struct mptcp_pm_data {
- 	struct mptcp_addr_info local;
- 	struct mptcp_addr_info remote;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0761c35268ce..ab86010483fe 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -126,6 +126,49 @@ static int __subflow_check_options(const struct mptcp_=
-options_received *mp_opt,
- 	return 0;
- }
+@@ -450,6 +458,48 @@ do_transfer()
+ 	check_transfer $cin $sout "file received by server"
+ 	rets=3D$?
  =
 
-+static bool mptcp_join_store(struct mptcp_subflow_request_sock *req,
-+			     struct sock *sk_listener,
-+			     bool want_cookie)
-+{
-+	struct mptcp_sock *msk =3D req->msk;
-+	struct inet_connection_sock *icsk;
-+	struct sock *sk;
++	local stat_synrx_now_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTcp=
+ExtMPCapableSYNRX  | while read a count c rest ;do  echo $count;done)
++	local stat_ackrx_now_l=3D$(ip netns exec ${listener_ns} nstat -z -a MPTcp=
+ExtMPCapableACKRX  | while read a count c rest ;do  echo $count;done)
 +
-+	icsk =3D &msk->sk;
-+	sk =3D &icsk->icsk_inet.sk;
++	local stat_cookietx_now=3D$(ip netns exec ${listener_ns} nstat -z -a TcpE=
+xtSyncookiesSent | while read a count c rest ;do  echo $count;done)
++	local stat_cookierx_now=3D$(ip netns exec ${listener_ns} nstat -z -a TcpE=
+xtSyncookiesRecv | while read a count c rest ;do  echo $count;done)
 +
-+	if (inet_csk_reqsk_queue_len(sk) >=3D MPTCP_SUBFLOWS_MAX ||
-+	    !mptcp_can_accept_new_subflow(msk))
-+		return false;
++	expect_synrx=3D$((stat_synrx_last_l))
++	expect_ackrx=3D$((stat_ackrx_last_l))
 +
-+	atomic_inc(&inet_csk(sk)->icsk_accept_queue.qlen);
++	cookies=3D$(ip netns exec ${listener_ns} sysctl net.ipv4.tcp_syncookies)
++	cookies=3D${cookies##*=3D}
 +
-+	if (likely(!want_cookie))
-+		return true;
++	if [ ${cl_proto} =3D "MPTCP" ] && [ ${srv_proto} =3D "MPTCP" ]; then
++		expect_synrx=3D$((stat_synrx_last_l+1))
++		expect_ackrx=3D$((stat_ackrx_last_l+1))
++		if [ $cookies -eq 2 ];then
++			expect_synrx=3D$((stat_synrx_last_l+2))
++		fi
++	fi
++	if [ $cookies -eq 2 ];then
++		if [ $stat_cookietx_last -ge $stat_cookietx_now ] ;then
++			echo "${listener_ns} CookieSent: ${cl_proto} -> ${srv_proto}: did not a=
+dvance"
++		fi
++		if [ $stat_cookierx_last -ge $stat_cookierx_now ] ;then
++			echo "${listener_ns} CookieRecv: ${cl_proto} -> ${srv_proto}: did not a=
+dvance"
++		fi
++	else
++		if [ $stat_cookietx_last -ne $stat_cookietx_now ] ;then
++			echo "${listener_ns} CookieSent: ${cl_proto} -> ${srv_proto}: changed"
++		fi
++		if [ $stat_cookierx_last -ne $stat_cookierx_now ] ;then
++			echo "${listener_ns} CookieRecv: ${cl_proto} -> ${srv_proto}: changed"
++		fi
++	fi
 +
-+	/* Syncookies are used.
-+	 * We can't do this for JOIN requests because we need to store
-+	 * the initiators nonce for HMAC validation.
-+	 *
-+	 * At this point we know:
-+	 * 1. a valid parent connection that should be joined
-+	 * 2. the parent socket has less than MPTCP_SUBFLOWS_MAX joined
-+	 * connections (includes those in progress).
-+	 *
-+	 * We add the request to the accept queue backlog ourselves
-+	 * in this case.
-+	 */
-+	if (unlikely(!refcount_inc_not_zero(&sk_listener->sk_refcnt))) {
-+		atomic_dec(&inet_csk(sk)->icsk_accept_queue.qlen);
-+		return false;
-+	}
++	if [ $expect_synrx -ne $stat_synrx_now_l ] ;then
++		echo "${listener_ns} SYNRX: ${cl_proto} -> ${srv_proto}: expect ${expect=
+_synrx}, got ${stat_synrx_now_l}"
++	fi
++	if [ $expect_ackrx -ne $stat_ackrx_now_l ] ;then
++		echo "${listener_ns} ACKRX: ${cl_proto} -> ${srv_proto}: expect ${expect=
+_synrx}, got ${stat_synrx_now_l}"
++	fi
 +
-+	req->sk.req.req.rsk_listener =3D sk_listener;
-+	inet_csk_reqsk_queue_hash_add(sk, &req->sk.req.req,
-+				      tcp_timeout_init((struct sock *)req));
-+	return true;
-+}
-+
- static void subflow_init_req(struct request_sock *req,
- 			     const struct sock *sk_listener,
- 			     struct sk_buff *skb,
-@@ -177,12 +220,18 @@ static void subflow_init_req(struct request_sock *req,
- =
-
- 	} else if (mp_opt.mp_join && listener->request_mptcp) {
- 		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
--		subflow_req->mp_join =3D 1;
- 		subflow_req->backup =3D mp_opt.backup;
- 		subflow_req->remote_id =3D mp_opt.join_id;
- 		subflow_req->token =3D mp_opt.token;
- 		subflow_req->remote_nonce =3D mp_opt.nonce;
- 		subflow_req->msk =3D subflow_token_join_request(req, skb);
-+		if (!subflow_req->msk)
-+			return;
-+
-+		if (!mptcp_join_store(subflow_req, (void *)sk_listener, want_cookie))
-+			return;
-+
-+		subflow_req->mp_join =3D 1;
- 		pr_debug("token=3D%u, remote_nonce=3D%u msk=3D%p", subflow_req->token,
- 			 subflow_req->remote_nonce, subflow_req->msk);
- 	}
-@@ -1285,9 +1334,14 @@ static void subflow_ulp_release(struct sock *sk)
- 	if (!ctx)
- 		return;
- =
-
--	if (ctx->conn)
--		sock_put(ctx->conn);
-+	if (ctx->conn) {
-+		struct sock *msk =3D ctx->conn;
-+
-+		if (ctx->mp_join)
-+			atomic_add_unless(&inet_csk(msk)->icsk_accept_queue.qlen, -1, 0);
- =
-
-+		sock_put(msk);
-+	}
- 	kfree_rcu(ctx, rcu);
- }
- =
-
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
+ 		echo "$duration [ OK ]"
+ 		cat "$capout"
 -- =
 
 2.26.2
 
---===============7632776376732216752==--
+--===============1832011546503177452==--
