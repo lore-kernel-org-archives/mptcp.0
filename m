@@ -1,224 +1,160 @@
-Content-Type: multipart/mixed; boundary="===============8779599057893563444=="
+Content-Type: multipart/mixed; boundary="===============7265174242826335752=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC v2 mptcp-next 08/12] mptcp: subflow: add
- mptcp_subflow_init_cookie_req helper
-Date: Tue, 21 Jul 2020 22:36:38 +0200
-Message-ID: <20200721203642.32753-9-fw@strlen.de>
+Subject: [MPTCP] [RFC v2 mptcp-next 09/12] tcp: syncookies: create mptcp
+ request socket for ACK cookies with MPTCP option
+Date: Tue, 21 Jul 2020 22:36:39 +0200
+Message-ID: <20200721203642.32753-10-fw@strlen.de>
 In-Reply-To: 20200721203642.32753-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5154
+X-UID: 5155
 
---===============8779599057893563444==
+--===============7265174242826335752==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Will be used to initialize the mptcp request socket when a MP_CAPABLE
-request was handled in syncookie mode, i.e. when a TCP ACK containing a
-MP_CAPABLE option is a valid syncookie value.
-
-Normally (non-cookie case), MPTCP will generate a 32 bit connection
-ID and stores it in the MPTCP token storage to be able to retrieve the
-mptcp socket for JOIN requests.
-
-In syncookie case, we do not want to store any state, so just generate the
-unique ID and use it in the reply.
-
-This means there is a small window where another connection could generate
-the same token.
-
-When Cookie ACK comes back, we check that the token has not been registered
-in the mean time.  If it was, the connection needs to fall back to TCP.
+If SYN packet contains MP_CAPABLE option, keep it enabled.
+Syncokie validation and cookie-based socket creation is changed to
+instantiate an mptcp request sockets if the ACK contains an MPTCP
+connection request.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- include/net/mptcp.h  | 10 ++++++++
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 55 +++++++++++++++++++++++++++++++++++++++++++-
- net/mptcp/token.c    | 26 +++++++++++++++++++++
- 4 files changed, 91 insertions(+), 1 deletion(-)
+ net/ipv4/syncookies.c | 21 +++++++++++++++++----
+ net/ipv4/tcp_input.c  |  3 ---
+ net/ipv6/syncookies.c | 17 ++++++++++++++---
+ 3 files changed, 31 insertions(+), 10 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 76eb915bf91c..3525d2822abe 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -131,6 +131,9 @@ static inline bool mptcp_skb_can_collapse(const struct =
-sk_buff *to,
- }
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index ee17f55401ef..5da49dc126f9 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -289,6 +289,7 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+ 	__u32 cookie =3D ntohl(th->ack_seq) - 1;
++	const struct request_sock_ops *ops;
+ 	struct sock *ret =3D sk;
+ 	struct request_sock *req;
+ 	int mss;
+@@ -326,12 +327,27 @@ struct sock *cookie_v4_check(struct sock *sk, struct =
+sk_buff *skb)
+ 		goto out;
  =
 
- void mptcp_seq_show(struct seq_file *seq);
-+int mptcp_subflow_init_cookie_req(struct request_sock *req,
-+				  const struct sock *sk_listener,
-+				  struct sk_buff *skb);
- #else
- =
-
- static inline void mptcp_init(void)
-@@ -200,6 +203,13 @@ static inline bool mptcp_skb_can_collapse(const struct=
- sk_buff *to,
- =
-
- static inline void mptcp_space(const struct sock *ssk, int *s, int *fs) { }
- static inline void mptcp_seq_show(struct seq_file *seq) { }
+ 	ret =3D NULL;
+-	req =3D inet_reqsk_alloc(&tcp_request_sock_ops, sk, false); /* for safety=
+ */
++	ops =3D &tcp_request_sock_ops;
++#ifdef CONFIG_MPTCP
++	if (sk_is_mptcp(sk))
++		ops =3D &mptcp_subflow_request_sock_ops;
++#endif
 +
-+static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
-+						const struct sock *sk_listener,
-+						struct sk_buff *skb)
-+{
-+	return 0; /* TCP fallback */
-+}
- #endif /* CONFIG_MPTCP */
++	req =3D inet_reqsk_alloc(ops, sk, false); /* for safety */
+ 	if (!req)
+ 		goto out;
  =
 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index cf74305c1d42..0ed402cdb9fd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -392,6 +392,7 @@ void mptcp_token_destroy_request(struct request_sock *r=
-eq);
- int mptcp_token_new_connect(struct sock *sk);
- void mptcp_token_accept(struct mptcp_subflow_request_sock *r,
- 			struct mptcp_sock *msk);
-+bool mptcp_token_exists(u32 token);
- struct mptcp_sock *mptcp_token_get_sock(u32 token);
- struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_sl=
-ot,
- 					 long *s_num);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 023e9f435d1b..0761c35268ce 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -150,18 +150,31 @@ static void subflow_init_req(struct request_sock *req,
- 	if (mp_opt.mp_capable && listener->request_mptcp) {
- 		int err, retries =3D 4;
- =
-
-+		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
- again:
- 		do {
- 			get_random_bytes(&subflow_req->local_key, sizeof(subflow_req->local_key=
-));
- 		} while (subflow_req->local_key =3D=3D 0);
- =
-
-+		if (unlikely(want_cookie)) {
-+			mptcp_crypto_key_sha(subflow_req->local_key,
-+					     &subflow_req->token,
-+					     &subflow_req->idsn);
-+			if (mptcp_token_exists(subflow_req->token)) {
-+				if (retries-- > 0)
-+					goto again;
-+			} else {
-+				subflow_req->mp_capable =3D 1;
-+			}
-+			return;
-+		}
+ 	ireq =3D inet_rsk(req);
+ 	treq =3D tcp_rsk(req);
++	treq->is_mptcp =3D sk_is_mptcp(sk);
 +
- 		err =3D mptcp_token_new_request(req);
- 		if (err =3D=3D 0)
- 			subflow_req->mp_capable =3D 1;
- 		else if (retries-- > 0)
- 			goto again;
- =
-
--		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
- 	} else if (mp_opt.mp_join && listener->request_mptcp) {
- 		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq;
- 		subflow_req->mp_join =3D 1;
-@@ -175,6 +188,46 @@ static void subflow_init_req(struct request_sock *req,
- 	}
- }
- =
-
-+int mptcp_subflow_init_cookie_req(struct request_sock *req,
-+				  const struct sock *sk_listener,
-+				  struct sk_buff *skb)
-+{
-+	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
-+	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
-+	struct mptcp_options_received mp_opt;
-+	int ret;
++	if (treq->is_mptcp) {
++		int err =3D mptcp_subflow_init_cookie_req(req, sk, skb);
 +
-+	ret =3D __subflow_init_req(req, sk_listener);
-+	if (ret)
-+		return ret;
-+
-+	mptcp_get_options(skb, &mp_opt);
-+	ret =3D __subflow_check_options(&mp_opt, req);
-+	if (ret)
-+		return ret;
-+
-+	if (mp_opt.mp_capable && listener->request_mptcp) {
-+		int err;
-+
-+		if (mp_opt.sndr_key =3D=3D 0)
-+			return -EINVAL;
-+
-+		subflow_req->local_key =3D mp_opt.rcvr_key;
-+		err =3D mptcp_token_new_request(req);
 +		if (err)
-+			return err;
-+
-+		subflow_req->mp_capable =3D 1;
-+		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq - 1;
++			goto out_free;
 +	}
-+	/* JOIN cannot be handled via cookies due to need
-+	 * to store the remote peer nonce value.
-+	 */
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(mptcp_subflow_init_cookie_req);
-+
- static void subflow_v4_init_req(struct request_sock *req,
- 				struct sock *sk_listener,
- 				struct sk_buff *skb,
-diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-index f82410c54653..8b47c4bb1c6b 100644
---- a/net/mptcp/token.c
-+++ b/net/mptcp/token.c
-@@ -204,6 +204,32 @@ void mptcp_token_accept(struct mptcp_subflow_request_s=
-ock *req,
- 	spin_unlock_bh(&bucket->lock);
- }
+ 	treq->rcv_isn		=3D ntohl(th->seq) - 1;
+ 	treq->snt_isn		=3D cookie;
+ 	treq->ts_off		=3D 0;
+@@ -350,9 +366,6 @@ struct sock *cookie_v4_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	treq->snt_synack	=3D 0;
+ 	treq->tfo_listener	=3D false;
  =
 
-+bool mptcp_token_exists(u32 token)
-+{
-+	struct hlist_nulls_node *pos;
-+	struct token_bucket *bucket;
-+	struct mptcp_sock *msk;
-+	struct sock *sk;
+-	if (IS_ENABLED(CONFIG_MPTCP))
+-		treq->is_mptcp =3D 0;
+-
+ 	if (IS_ENABLED(CONFIG_SMC))
+ 		ireq->smc_ok =3D 0;
+ =
+
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 17aa1c29d11c..7f4c21bca3b5 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6699,9 +6699,6 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ =
+
+ 	af_ops->init_req(req, sk, skb, want_cookie);
+ =
+
+-	if (IS_ENABLED(CONFIG_MPTCP) && want_cookie)
+-		tcp_rsk(req)->is_mptcp =3D 0;
+-
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto drop_and_free;
+ =
+
+diff --git a/net/ipv6/syncookies.c b/net/ipv6/syncookies.c
+index 13235a012388..0a05c3c1e776 100644
+--- a/net/ipv6/syncookies.c
++++ b/net/ipv6/syncookies.c
+@@ -134,6 +134,7 @@ struct sock *cookie_v6_check(struct sock *sk, struct sk=
+_buff *skb)
+ 	struct tcp_sock *tp =3D tcp_sk(sk);
+ 	const struct tcphdr *th =3D tcp_hdr(skb);
+ 	__u32 cookie =3D ntohl(th->ack_seq) - 1;
++	const struct request_sock_ops *ops;
+ 	struct sock *ret =3D sk;
+ 	struct request_sock *req;
+ 	int mss;
+@@ -170,7 +171,13 @@ struct sock *cookie_v6_check(struct sock *sk, struct s=
+k_buff *skb)
+ 		goto out;
+ =
+
+ 	ret =3D NULL;
+-	req =3D inet_reqsk_alloc(&tcp6_request_sock_ops, sk, false);
++	ops =3D &tcp6_request_sock_ops;
++#ifdef CONFIG_MPTCP
++	if (sk_is_mptcp(sk))
++		ops =3D &mptcp_subflow_request_sock_ops;
++#endif
 +
-+	rcu_read_lock();
-+	bucket =3D token_bucket(token);
++	req =3D inet_reqsk_alloc(ops, sk, false);
+ 	if (!req)
+ 		goto out;
+ =
+
+@@ -178,8 +185,12 @@ struct sock *cookie_v6_check(struct sock *sk, struct s=
+k_buff *skb)
+ 	treq =3D tcp_rsk(req);
+ 	treq->tfo_listener =3D false;
+ =
+
+-	if (IS_ENABLED(CONFIG_MPTCP))
+-		treq->is_mptcp =3D 0;
++	if (treq->is_mptcp) {
++		int err =3D mptcp_subflow_init_cookie_req(req, sk, skb);
 +
-+again:
-+	sk_nulls_for_each_rcu(sk, pos, &bucket->msk_chain) {
-+		msk =3D mptcp_sk(sk);
-+		if (READ_ONCE(msk->token) =3D=3D token)
-+			goto found;
++		if (err)
++			goto out_free;
 +	}
-+	if (get_nulls_value(pos) !=3D (token & token_mask))
-+		goto again;
-+
-+	rcu_read_unlock();
-+	return false;
-+found:
-+	rcu_read_unlock();
-+	return true;
-+}
-+
- /**
-  * mptcp_token_get_sock - retrieve mptcp connection sock using its token
-  * @token: token of the mptcp connection to retrieve
+ =
+
+ 	if (security_inet_conn_request(sk, skb, req))
+ 		goto out_free;
 -- =
 
 2.26.2
 
---===============8779599057893563444==--
+--===============7265174242826335752==--
