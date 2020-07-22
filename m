@@ -1,34 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============6883345481945523417=="
+Content-Type: multipart/mixed; boundary="===============5088731047141625638=="
 MIME-Version: 1.0
 From: 'Christoph Hellwig' <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 12/24] bpfilter: switch bpfilter_ip_set_sockopt to
- sockptr_t
-Date: Wed, 22 Jul 2020 10:01:42 +0200
-Message-ID: <20200722080142.GA26841@lst.de>
-In-Reply-To: 20200722080023.GC26554@lst.de
+Subject: [MPTCP] Re: get rid of the address_space override in setsockopt
+Date: Wed, 22 Jul 2020 10:06:46 +0200
+Message-ID: <20200722080646.GA26864@lst.de>
+In-Reply-To: 60c52e31e9f240718fcda0dd5c2faeca@AcuMS.aculab.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5164
+X-UID: 5165
 
---===============6883345481945523417==
+--===============5088731047141625638==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 22, 2020 at 10:00:23AM +0200, 'Christoph Hellwig' wrote:
-> On Tue, Jul 21, 2020 at 08:36:57AM +0000, David Laight wrote:
-> > From: Christoph Hellwig
-> > > Sent: 20 July 2020 13:47
-> > > =
+On Tue, Jul 21, 2020 at 09:38:23AM +0000, David Laight wrote:
+> From: Christoph Hellwig
+> > Sent: 20 July 2020 13:47
+> >
+> > setsockopt is the last place in architecture-independ code that still
+> > uses set_fs to force the uaccess routines to operate on kernel pointers.
+> > =
 
-> > > This is mostly to prepare for cleaning up the callers, as bpfilter by
-> > > design can't handle kernel pointers.
-> >                       ^^^ user ??
+> > This series adds a new sockptr_t type that can contained either a kernel
+> > or user pointer, and which has accessors that do the right thing, and
+> > then uses it for setsockopt, starting by refactoring some low-level
+> > helpers and moving them over to it before finally doing the main
+> > setsockopt method.
 > =
 
-> No, it can't handle user pointers. =
+> Are you planning to make the equivalent change to getsockopt()?
 
-
-Err, I mean it can only handle user pointers.
---===============6883345481945523417==--
+No.  Only setsockopt can be fed kernel addresses from bpf-cgroup.
+There is no point in complicating the read side interface when it
+doesn't have that problem.
+--===============5088731047141625638==--
