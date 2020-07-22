@@ -1,149 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============6200921298955317235=="
+Content-Type: multipart/mixed; boundary="===============3798197570399331942=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 3/4] mptcp: add the RM_ADDR
- option parsing
-Date: Wed, 22 Jul 2020 12:41:47 +0200
-Message-ID: <cff743760f2c425253dc53e2e6299139a2e5c5ac.camel@redhat.com>
-In-Reply-To: 5236563860251c88b7f7b723f1515ef9b13d56b4.1595407078.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 4/4] mptcp: trigger the
+ RM_ADDR signal
+Date: Wed, 22 Jul 2020 13:12:32 +0200
+Message-ID: <c5a7af2044a9f9fc395579f4a10de9f2888f9556.camel@redhat.com>
+In-Reply-To: c794e8ba159e98f1a22d279a05cc913a7b5f803b.1595407078.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5175
+X-UID: 5176
 
---===============6200921298955317235==
+--===============3798197570399331942==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, 2020-07-22 at 16:42 +0800, Geliang Tang wrote:
-> This patch added the RM_ADDR option parsing logic.
-
-It would be nice if you could elaborate a bit the commit message,
-briefly describing how the RM_ADDR options are now handled (e.g.
-subflows matching the addr id are closed, and pm counter updated).
+> Trigger the RM_ADDR signal when the PM netlink removes an address.
+> =
 
 > Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 > Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
->  net/mptcp/options.c    |  5 +++++
->  net/mptcp/pm.c         | 12 ++++++++++++
->  net/mptcp/pm_netlink.c | 20 ++++++++++++++++++++
->  net/mptcp/protocol.c   |  8 ++++++--
->  net/mptcp/protocol.h   |  5 +++++
->  net/mptcp/subflow.c    |  1 +
->  6 files changed, 49 insertions(+), 2 deletions(-)
+>  net/mptcp/pm.c         |  6 +++++-
+>  net/mptcp/pm_netlink.c | 32 +++++++++++++++++++++++++++++++-
+>  net/mptcp/protocol.c   |  1 +
+>  net/mptcp/protocol.h   |  1 +
+>  4 files changed, 38 insertions(+), 2 deletions(-)
 > =
 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 38685e0e06db..b9e6e67ed195 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -875,6 +875,11 @@ void mptcp_incoming_options(struct sock *sk, struct =
-sk_buff *skb,
->  		mp_opt.add_addr =3D 0;
->  	}
->  =
-
-> +	if (mp_opt.rm_addr) {
-> +		mptcp_pm_rm_addr_received(msk, mp_opt.rm_id);
-> +		mp_opt.rm_addr =3D 0;
-> +	}
-> +
->  	if (!mp_opt.dss)
->  		return;
->  =
-
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 91b74ca47fa1..84fad1fec28b 100644
+> index 84fad1fec28b..4194fd2591c5 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -149,6 +149,18 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *m=
-sk,
->  	spin_unlock_bh(&pm->lock);
+> @@ -24,7 +24,11 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+>  =
+
+>  int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
+>  {
+> -	return -ENOTSUPP;
+> +	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
+> +
+> +	msk->pm.rm_id =3D local_id;
+> +	WRITE_ONCE(msk->pm.rm_addr_signal, true);
+> +	return 0;
 >  }
 >  =
 
-> +void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id)
-> +{
-> +	struct mptcp_pm_data *pm =3D &msk->pm;
-> +
-> +	pr_debug("msk=3D%p remote_id=3D%d", msk, rm_id);
-> +
-> +	spin_lock_bh(&pm->lock);
-> +	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
-> +	pm->rm_id =3D rm_id;
-> +	spin_unlock_bh(&pm->lock);
-> +}
-> +
->  /* path manager helpers */
->  =
-
->  bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remai=
-ning,
+>  int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index c8820c4156e6..2ee7227f5f2b 100644
+> index 2ee7227f5f2b..646398f16ce8 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -261,6 +261,26 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock=
- *msk)
->  	spin_lock_bh(&msk->pm.lock);
+> @@ -23,6 +23,7 @@ static int pm_nl_pernet_id;
+>  =
+
+>  struct mptcp_pm_addr_entry {
+>  	struct list_head	list;
+> +	struct list_head	alist;
+
+I think this new field is not needed, see below...
+
+>  	unsigned int		flags;
+>  	int			ifindex;
+>  	struct mptcp_addr_info	addr;
+> @@ -169,6 +170,13 @@ static void check_work_pending(struct mptcp_sock *ms=
+k)
+>  		WRITE_ONCE(msk->pm.work_pending, false);
 >  }
 >  =
 
-> +void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
+> +static int mptcp_pm_add_announce_list(struct mptcp_sock *msk,
+> +				      struct mptcp_pm_addr_entry *entry)
 > +{
-> +	struct mptcp_subflow_context *subflow, *tmp;
+> +	list_add(&entry->alist, &msk->anno_list);
+> +	return 0;
+> +}
 > +
-> +	pr_debug("remote_id %d", msk->pm.rm_id);
+>  static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *ms=
+k)
+>  {
+>  	struct sock *sk =3D (struct sock *)msk;
+> @@ -191,6 +199,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+>  		if (local) {
+>  			msk->pm.add_addr_signaled++;
+>  			mptcp_pm_announce_addr(msk, &local->addr);
+> +			mptcp_pm_add_announce_list(msk, local);
+
+Here we need to allocate a new mptcp_pm_addr_entry struct, copy the
+data from local, and finally add the new entry to anno_list. I guess
+all the logic could be encapsulated
+into mptcp_pm_create_subflow_or_signal_addr(), which could return a
+bool indicating if the allocation was successful.
+
+In cause of memory allocation failure the announce addr should not be
+performed.
+
+The same address can be signaled from multiple msks. If we always use
+the same struct we will see data corruption.
+
+I *think* dynamically allocation of announced address could be ok, I'd
+like to ear opinions from others.
+
+>  		} else {
+>  			/* pick failed, avoid fourther attempts later */
+>  			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
+> @@ -537,6 +546,25 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, uns=
+igned int id)
+>  	return NULL;
+>  }
+>  =
+
+> +static void mptcp_nl_remove_addr(struct sk_buff *skb, struct mptcp_addr_=
+info *addr)
+> +{
+> +	struct mptcp_sock *msk;
+> +	long s_slot =3D 0, s_num =3D 0;
+> +	struct net *net =3D sock_net(skb->sk);
 > +
-> +	msk->pm.add_addr_accepted--;
-> +	msk->pm.subflows--;
-> +	WRITE_ONCE(msk->pm.accept_addr, true);
+> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
+ {
+> +		struct mptcp_pm_addr_entry *entry, *tmp;
 > +
-> +	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> +		struct sock *tcp_sk =3D mptcp_subflow_tcp_sock(subflow);
-> +
-> +		if (msk->pm.rm_id =3D=3D subflow->remote_id) {
-> +			mptcp_subflow_shutdown(tcp_sk, 1, 1, msk->write_seq);
-
-the 2nd argument for mptcp_subflow_shutdown() should be something alike
-'RCV_SHUTDOWN|SEND_SHUTDOWN' - we are closing the subflow in both
-direction - and the third argument '0' - the msk will remain
-open/established.
-
-I think here the subflow socket will be leaked. Can you please double
-check that with a CONFIG_DEBUG_KMEMLEAK enabled build?
-
-Likely something alike what __mptcp_close_ssk() is currently doing
-should be added here, but that will not fit nicely with a proper
-shutdown, so I'm unsure how to address this correctly.
-
-> +			list_del(&subflow->node);
+> +		pr_debug("msk=3D%p\n", msk);
+> +		list_for_each_entry_safe(entry, tmp, &msk->anno_list, alist) {
+> +			if (addresses_equal(&entry->addr, addr, false)) {
+> +				mptcp_pm_remove_addr(msk, addr->id);
+> +				list_del(&entry->alist);
+> +			}
 > +		}
 > +	}
 > +}
 
-[...]
+Here you need to acquire the msk pm lock before traversing the
+anno_list and eventually removing the entry.
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 519122e66f17..2864b8d20dbd 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -990,6 +990,7 @@ int __mptcp_subflow_connect(struct sock *sk, int ifin=
-dex,
->  	subflow->remote_key =3D msk->remote_key;
->  	subflow->local_key =3D msk->local_key;
->  	subflow->token =3D msk->token;
-> +	subflow->remote_id =3D remote->id;
->  	mptcp_info2sockaddr(loc, &addr);
+Additionally, we should also shutdown the subflows with the local
+address matching the removed one. Note that the 'id' could not be used
+for the first subflow, being always 0, and we should to this for any
+removed address, regardless of the 'MPTCP_PM_ADDR_FLAG_SIGNAL' flag.
 
-Whoops... this chunk looks like fixing a long standing bug, thanks!
- =
+Cheers,
 
->  	addrlen =3D sizeof(struct sockaddr_in);
+Paolo
 
-/P
-
---===============6200921298955317235==--
+--===============3798197570399331942==--
