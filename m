@@ -1,53 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============2166574515966013264=="
+Content-Type: multipart/mixed; boundary="===============4283275145926816162=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 03/24] net: add a new sockptr_t type
-Date: Wed, 22 Jul 2020 09:56:20 +0200
-Message-ID: <20200722075620.GA26554@lst.de>
-In-Reply-To: 20200720175543.GF1292162@gmail.com
+Subject: [MPTCP] Re: get rid of the address_space override in setsockopt
+Date: Wed, 22 Jul 2020 09:56:57 +0200
+Message-ID: <20200722075657.GB26554@lst.de>
+In-Reply-To: 20200720204756.iengwcguikj2yrxt@ast-mbp.dhcp.thefacebook.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5161
+X-UID: 5162
 
---===============2166574515966013264==
+--===============4283275145926816162==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 20, 2020 at 10:55:43AM -0700, Eric Biggers wrote:
-> On Mon, Jul 20, 2020 at 07:43:22PM +0200, Christoph Hellwig wrote:
-> > On Mon, Jul 20, 2020 at 09:37:48AM -0700, Eric Biggers wrote:
-> > > How does this not introduce a massive security hole when
-> > > CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
-> > > =
-
-> > > AFAICS, userspace can pass in a pointer >=3D TASK_SIZE,
-> > > and this code makes it be treated as a kernel pointer.
-> > =
-
-> > Yeah, we'll need to validate that before initializing the pointer.
-> > =
-
-> > But thinking this a little further:  doesn't this mean any
-> > set_fs(KERNEL_DS) that has other user pointers than the one it is
-> > intended for has the same issue?  Pretty much all of these are gone
-> > in mainline now, but in older stable kernels there might be some
-> > interesting cases, especially in the compat ioctl handlers.
+On Mon, Jul 20, 2020 at 01:47:56PM -0700, Alexei Starovoitov wrote:
+> > a kernel pointer.  This is something that works for most common sockopts
+> > (and is something that the ePBF support relies on), but unfortunately
+> > in various corner cases we either don't use the passed in length, or in
+> > one case actually copy data back from setsockopt, so we unfortunately
+> > can't just always do the copy in the highlevel code, which would have
+> > been much nicer.
 > =
 
-> Yes.  I thought that eliminating that class of bug is one of the main
-> motivations for your "remove set_fs" work.  See commit 128394eff343
-> ("sg_write()/bsg_write() is not fit to be called under KERNEL_DS") for a =
-case
-> where this type of bug was fixed.
-> =
+> could you rebase on bpf-next tree and we can route it this way then?
+> we'll also test the whole thing before applying.
 
-> Are you aware of any specific cases that weren't already fixed?  If there=
- are
-> any, they need to be urgently fixed.
-
-current mainline has almost no set_fs left, and setsockopt seems
-pretty much safe.  But if we go back a long term stable release or two
-I bet I'd find one or two.
---===============2166574515966013264==--
+The bpf-next tree is missing all my previous setsockopt cleanups, so
+there series won't apply.
+--===============4283275145926816162==--
