@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============0794008460927452930=="
+Content-Type: multipart/mixed; boundary="===============1948880971302804026=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 06/26] net: switch sock_setbindtodevice to sockptr_t
-Date: Thu, 23 Jul 2020 08:08:48 +0200
-Message-ID: <20200723060908.50081-7-hch@lst.de>
+Subject: [MPTCP] [PATCH 07/26] net: switch sock_set_timeout to sockptr_t
+Date: Thu, 23 Jul 2020 08:08:49 +0200
+Message-ID: <20200723060908.50081-8-hch@lst.de>
 In-Reply-To: 20200723060908.50081-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5203
+X-UID: 5204
 
---===============0794008460927452930==
+--===============1948880971302804026==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -20,52 +20,82 @@ pointer from bpf-cgroup.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- net/core/sock.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ net/core/sock.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/net/core/sock.c b/net/core/sock.c
-index 71fc7e4ddd0648..5b55bc9397f282 100644
+index 5b55bc9397f282..8b9eddaff868a5 100644
 --- a/net/core/sock.c
 +++ b/net/core/sock.c
-@@ -609,8 +609,7 @@ int sock_bindtoindex(struct sock *sk, int ifindex, bool=
- lock_sk)
+@@ -361,7 +361,8 @@ static int sock_get_timeout(long timeo, void *optval, b=
+ool old_timeval)
+ 	return sizeof(tv);
  }
- EXPORT_SYMBOL(sock_bindtoindex);
  =
 
--static int sock_setbindtodevice(struct sock *sk, char __user *optval,
--				int optlen)
-+static int sock_setbindtodevice(struct sock *sk, sockptr_t optval, int opt=
-len)
+-static int sock_set_timeout(long *timeo_p, char __user *optval, int optlen=
+, bool old_timeval)
++static int sock_set_timeout(long *timeo_p, sockptr_t optval, int optlen,
++			    bool old_timeval)
  {
- 	int ret =3D -ENOPROTOOPT;
- #ifdef CONFIG_NETDEVICES
-@@ -632,7 +631,7 @@ static int sock_setbindtodevice(struct sock *sk, char _=
-_user *optval,
- 	memset(devname, 0, sizeof(devname));
+ 	struct __kernel_sock_timeval tv;
  =
 
- 	ret =3D -EFAULT;
--	if (copy_from_user(devname, optval, optlen))
-+	if (copy_from_sockptr(devname, optval, optlen))
- 		goto out;
+@@ -371,7 +372,7 @@ static int sock_set_timeout(long *timeo_p, char __user =
+*optval, int optlen, bool
+ 		if (optlen < sizeof(tv32))
+ 			return -EINVAL;
  =
 
- 	index =3D 0;
-@@ -840,7 +839,7 @@ int sock_setsockopt(struct socket *sock, int level, int=
- optname,
- 	 */
+-		if (copy_from_user(&tv32, optval, sizeof(tv32)))
++		if (copy_from_sockptr(&tv32, optval, sizeof(tv32)))
+ 			return -EFAULT;
+ 		tv.tv_sec =3D tv32.tv_sec;
+ 		tv.tv_usec =3D tv32.tv_usec;
+@@ -380,14 +381,14 @@ static int sock_set_timeout(long *timeo_p, char __use=
+r *optval, int optlen, bool
  =
 
- 	if (optname =3D=3D SO_BINDTODEVICE)
--		return sock_setbindtodevice(sk, optval, optlen);
-+		return sock_setbindtodevice(sk, USER_SOCKPTR(optval), optlen);
+ 		if (optlen < sizeof(old_tv))
+ 			return -EINVAL;
+-		if (copy_from_user(&old_tv, optval, sizeof(old_tv)))
++		if (copy_from_sockptr(&old_tv, optval, sizeof(old_tv)))
+ 			return -EFAULT;
+ 		tv.tv_sec =3D old_tv.tv_sec;
+ 		tv.tv_usec =3D old_tv.tv_usec;
+ 	} else {
+ 		if (optlen < sizeof(tv))
+ 			return -EINVAL;
+-		if (copy_from_user(&tv, optval, sizeof(tv)))
++		if (copy_from_sockptr(&tv, optval, sizeof(tv)))
+ 			return -EFAULT;
+ 	}
+ 	if (tv.tv_usec < 0 || tv.tv_usec >=3D USEC_PER_SEC)
+@@ -1051,12 +1052,14 @@ int sock_setsockopt(struct socket *sock, int level,=
+ int optname,
  =
 
- 	if (optlen < sizeof(int))
- 		return -EINVAL;
+ 	case SO_RCVTIMEO_OLD:
+ 	case SO_RCVTIMEO_NEW:
+-		ret =3D sock_set_timeout(&sk->sk_rcvtimeo, optval, optlen, optname =3D=
+=3D SO_RCVTIMEO_OLD);
++		ret =3D sock_set_timeout(&sk->sk_rcvtimeo, USER_SOCKPTR(optval),
++				       optlen, optname =3D=3D SO_RCVTIMEO_OLD);
+ 		break;
+ =
+
+ 	case SO_SNDTIMEO_OLD:
+ 	case SO_SNDTIMEO_NEW:
+-		ret =3D sock_set_timeout(&sk->sk_sndtimeo, optval, optlen, optname =3D=
+=3D SO_SNDTIMEO_OLD);
++		ret =3D sock_set_timeout(&sk->sk_sndtimeo, USER_SOCKPTR(optval),
++				       optlen, optname =3D=3D SO_SNDTIMEO_OLD);
+ 		break;
+ =
+
+ 	case SO_ATTACH_FILTER: {
 -- =
 
 2.27.0
 
---===============0794008460927452930==--
+--===============1948880971302804026==--
