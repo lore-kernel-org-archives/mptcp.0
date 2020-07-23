@@ -1,49 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============4082737976227859881=="
+Content-Type: multipart/mixed; boundary="===============1578748543918774602=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2 02/12] mptcp: Return EPIPE if sending is
- shut down during a sendmsg
-Date: Wed, 22 Jul 2020 17:32:09 -0700
-Message-ID: <20200723003219.90547-3-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next v2 03/12] mptcp: Remove outdated and
+ incorrect comment
+Date: Wed, 22 Jul 2020 17:32:10 -0700
+Message-ID: <20200723003219.90547-4-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200723003219.90547-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5187
+X-UID: 5188
 
---===============4082737976227859881==
+--===============1578748543918774602==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A MPTCP socket where sending has been shut down should not attempt to
-send additional data, since DATA_FIN has already been sent.
+mptcp_close() acquires the msk lock, so it clearly should not be held before
+the function is called.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mptcp/protocol.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 56cb47439ca3..9e812011c635 100644
+index 9e812011c635..84087982367f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -748,6 +748,11 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
-r *msg, size_t len)
- restart:
- 	mptcp_clean_una(sk);
+@@ -1424,7 +1424,6 @@ static void mptcp_subflow_shutdown(struct sock *ssk, =
+int how,
+ 	release_sock(ssk);
+ }
  =
 
-+	if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN)) {
-+		ret =3D -EPIPE;
-+		goto out;
-+	}
-+
- wait_for_sndbuf:
- 	__mptcp_flush_join_list(msk);
- 	ssk =3D mptcp_subflow_get_send(msk);
+-/* Called with msk lock held, releases such lock before returning */
+ static void mptcp_close(struct sock *sk, long timeout)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
 -- =
 
 2.27.0
 
---===============4082737976227859881==--
+--===============1578748543918774602==--
