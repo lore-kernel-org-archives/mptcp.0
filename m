@@ -1,191 +1,234 @@
-Content-Type: multipart/mixed; boundary="===============0189570211692764291=="
+Content-Type: multipart/mixed; boundary="===============2378758104286309755=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] get rid of the address_space override in setsockopt v2
-Date: Thu, 23 Jul 2020 08:08:42 +0200
-Message-ID: <20200723060908.50081-1-hch@lst.de>
+Subject: [MPTCP] [PATCH 08/26] net: switch sock_set_timeout to sockptr_t
+Date: Thu, 23 Jul 2020 08:08:50 +0200
+Message-ID: <20200723060908.50081-9-hch@lst.de>
+In-Reply-To: 20200723060908.50081-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5207
+X-UID: 5208
 
---===============0189570211692764291==
+--===============2378758104286309755==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Dave,
-
-setsockopt is the last place in architecture-independ code that still
-uses set_fs to force the uaccess routines to operate on kernel pointers.
-
-This series adds a new sockptr_t type that can contained either a kernel
-or user pointer, and which has accessors that do the right thing, and
-then uses it for setsockopt, starting by refactoring some low-level
-helpers and moving them over to it before finally doing the main
-setsockopt method.
-
-Note that apparently the eBPF selftests do not even cover this path, so
-the series has been tested with a testing patch that always copies the
-data first and passes a kernel pointer.  This is something that works for
-most common sockopts (and is something that the ePBF support relies on),
-but unfortunately in various corner cases we either don't use the passed
-in length, or in one case actually copy data back from setsockopt, or in
-case of bpfilter straight out do not work with kernel pointers at all.
-
-Against net-next/master.
-
-Changes since v1:
- - check that users don't pass in kernel addresses
- - more bpfilter cleanups
- - cosmetic mptcp tweak
-
-Diffstat:
- crypto/af_alg.c                           |    7 =
-
- drivers/crypto/chelsio/chtls/chtls_main.c |   18 -
- drivers/isdn/mISDN/socket.c               |    4 =
-
- include/linux/bpfilter.h                  |    6 =
-
- include/linux/filter.h                    |    3 =
-
- include/linux/mroute.h                    |    5 =
-
- include/linux/mroute6.h                   |    8 =
-
- include/linux/net.h                       |    4 =
-
- include/linux/netfilter.h                 |    6 =
-
- include/linux/netfilter/x_tables.h        |    4 =
-
- include/linux/sockptr.h                   |  132 ++++++++++++
- include/net/inet_connection_sock.h        |    3 =
-
- include/net/ip.h                          |    7 =
-
- include/net/ipv6.h                        |    6 =
-
- include/net/sctp/structs.h                |    2 =
-
- include/net/sock.h                        |    7 =
-
- include/net/tcp.h                         |    6 =
-
- include/net/udp.h                         |    2 =
-
- include/net/xfrm.h                        |    8 =
-
- net/atm/common.c                          |    6 =
-
- net/atm/common.h                          |    2 =
-
- net/atm/pvc.c                             |    2 =
-
- net/atm/svc.c                             |    6 =
-
- net/ax25/af_ax25.c                        |    6 =
-
- net/bluetooth/hci_sock.c                  |    8 =
-
- net/bluetooth/l2cap_sock.c                |   22 +-
- net/bluetooth/rfcomm/sock.c               |   12 -
- net/bluetooth/sco.c                       |    6 =
-
- net/bpfilter/bpfilter_kern.c              |   55 ++---
- net/bridge/netfilter/ebtables.c           |   46 +---
- net/caif/caif_socket.c                    |    8 =
-
- net/can/j1939/socket.c                    |   12 -
- net/can/raw.c                             |   16 -
- net/core/filter.c                         |    6 =
-
- net/core/sock.c                           |   36 +--
- net/dccp/dccp.h                           |    2 =
-
- net/dccp/proto.c                          |   20 -
- net/decnet/af_decnet.c                    |   13 -
- net/ieee802154/socket.c                   |    6 =
-
- net/ipv4/bpfilter/sockopt.c               |   16 -
- net/ipv4/ip_options.c                     |   43 +---
- net/ipv4/ip_sockglue.c                    |   66 +++---
- net/ipv4/ipmr.c                           |   14 -
- net/ipv4/netfilter/arp_tables.c           |   33 +--
- net/ipv4/netfilter/ip_tables.c            |   29 +-
- net/ipv4/raw.c                            |    8 =
-
- net/ipv4/tcp.c                            |   30 +-
- net/ipv4/tcp_ipv4.c                       |    4 =
-
- net/ipv4/udp.c                            |   11 -
- net/ipv4/udp_impl.h                       |    4 =
-
- net/ipv6/ip6_flowlabel.c                  |  317 ++++++++++++++++---------=
------
- net/ipv6/ip6mr.c                          |   17 -
- net/ipv6/ipv6_sockglue.c                  |  203 +++++++++----------
- net/ipv6/netfilter/ip6_tables.c           |   28 +-
- net/ipv6/raw.c                            |   10 =
-
- net/ipv6/tcp_ipv6.c                       |    4 =
-
- net/ipv6/udp.c                            |    7 =
-
- net/ipv6/udp_impl.h                       |    4 =
-
- net/iucv/af_iucv.c                        |    4 =
-
- net/kcm/kcmsock.c                         |    6 =
-
- net/l2tp/l2tp_ppp.c                       |    4 =
-
- net/llc/af_llc.c                          |    4 =
-
- net/mptcp/protocol.c                      |    6 =
-
- net/netfilter/ipvs/ip_vs_ctl.c            |    4 =
-
- net/netfilter/nf_sockopt.c                |    2 =
-
- net/netfilter/x_tables.c                  |   20 -
- net/netlink/af_netlink.c                  |    4 =
-
- net/netrom/af_netrom.c                    |    4 =
-
- net/nfc/llcp_sock.c                       |    6 =
-
- net/packet/af_packet.c                    |   39 +--
- net/phonet/pep.c                          |    4 =
-
- net/rds/af_rds.c                          |   30 +-
- net/rds/rdma.c                            |   14 -
- net/rds/rds.h                             |    6 =
-
- net/rose/af_rose.c                        |    4 =
-
- net/rxrpc/af_rxrpc.c                      |    8 =
-
- net/rxrpc/ar-internal.h                   |    4 =
-
- net/rxrpc/key.c                           |    9 =
-
- net/sctp/socket.c                         |    4 =
-
- net/smc/af_smc.c                          |    4 =
-
- net/socket.c                              |   24 --
- net/tipc/socket.c                         |    8 =
-
- net/tls/tls_main.c                        |   17 -
- net/vmw_vsock/af_vsock.c                  |    4 =
-
- net/x25/af_x25.c                          |    4 =
-
- net/xdp/xsk.c                             |    8 =
-
- net/xfrm/xfrm_state.c                     |    6 =
-
- 87 files changed, 894 insertions(+), 743 deletions(-)
---===============0189570211692764291==--
+Pass a sockptr_t to prepare for set_fs-less handling of the kernel
+pointer from bpf-cgroup.
+
+Signed-off-by: Christoph Hellwig <hch(a)lst.de>
+---
+ include/net/sock.h   |  3 ++-
+ net/core/sock.c      | 26 ++++++++++++--------------
+ net/mptcp/protocol.c |  6 ++++--
+ net/socket.c         |  3 ++-
+ 4 files changed, 20 insertions(+), 18 deletions(-)
+
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 62e18fc8ac9f96..bfb2fe2fc36876 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -59,6 +59,7 @@
+ #include <linux/filter.h>
+ #include <linux/rculist_nulls.h>
+ #include <linux/poll.h>
++#include <linux/sockptr.h>
+ =
+
+ #include <linux/atomic.h>
+ #include <linux/refcount.h>
+@@ -1669,7 +1670,7 @@ void sock_pfree(struct sk_buff *skb);
+ #endif
+ =
+
+ int sock_setsockopt(struct socket *sock, int level, int op,
+-		    char __user *optval, unsigned int optlen);
++		    sockptr_t optval, unsigned int optlen);
+ =
+
+ int sock_getsockopt(struct socket *sock, int level, int op,
+ 		    char __user *optval, int __user *optlen);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 8b9eddaff868a5..1444d7d53ba2fd 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -826,7 +826,7 @@ EXPORT_SYMBOL(sock_set_rcvbuf);
+  */
+ =
+
+ int sock_setsockopt(struct socket *sock, int level, int optname,
+-		    char __user *optval, unsigned int optlen)
++		    sockptr_t optval, unsigned int optlen)
+ {
+ 	struct sock_txtime sk_txtime;
+ 	struct sock *sk =3D sock->sk;
+@@ -840,12 +840,12 @@ int sock_setsockopt(struct socket *sock, int level, i=
+nt optname,
+ 	 */
+ =
+
+ 	if (optname =3D=3D SO_BINDTODEVICE)
+-		return sock_setbindtodevice(sk, USER_SOCKPTR(optval), optlen);
++		return sock_setbindtodevice(sk, optval, optlen);
+ =
+
+ 	if (optlen < sizeof(int))
+ 		return -EINVAL;
+ =
+
+-	if (get_user(val, (int __user *)optval))
++	if (copy_from_sockptr(&val, optval, sizeof(val)))
+ 		return -EFAULT;
+ =
+
+ 	valbool =3D val ? 1 : 0;
+@@ -958,7 +958,7 @@ int sock_setsockopt(struct socket *sock, int level, int=
+ optname,
+ 			ret =3D -EINVAL;	/* 1003.1g */
+ 			break;
+ 		}
+-		if (copy_from_user(&ling, optval, sizeof(ling))) {
++		if (copy_from_sockptr(&ling, optval, sizeof(ling))) {
+ 			ret =3D -EFAULT;
+ 			break;
+ 		}
+@@ -1052,21 +1052,20 @@ int sock_setsockopt(struct socket *sock, int level,=
+ int optname,
+ =
+
+ 	case SO_RCVTIMEO_OLD:
+ 	case SO_RCVTIMEO_NEW:
+-		ret =3D sock_set_timeout(&sk->sk_rcvtimeo, USER_SOCKPTR(optval),
++		ret =3D sock_set_timeout(&sk->sk_rcvtimeo, optval,
+ 				       optlen, optname =3D=3D SO_RCVTIMEO_OLD);
+ 		break;
+ =
+
+ 	case SO_SNDTIMEO_OLD:
+ 	case SO_SNDTIMEO_NEW:
+-		ret =3D sock_set_timeout(&sk->sk_sndtimeo, USER_SOCKPTR(optval),
++		ret =3D sock_set_timeout(&sk->sk_sndtimeo, optval,
+ 				       optlen, optname =3D=3D SO_SNDTIMEO_OLD);
+ 		break;
+ =
+
+ 	case SO_ATTACH_FILTER: {
+ 		struct sock_fprog fprog;
+ =
+
+-		ret =3D copy_bpf_fprog_from_user(&fprog, USER_SOCKPTR(optval),
+-					       optlen);
++		ret =3D copy_bpf_fprog_from_user(&fprog, optval, optlen);
+ 		if (!ret)
+ 			ret =3D sk_attach_filter(&fprog, sk);
+ 		break;
+@@ -1077,7 +1076,7 @@ int sock_setsockopt(struct socket *sock, int level, i=
+nt optname,
+ 			u32 ufd;
+ =
+
+ 			ret =3D -EFAULT;
+-			if (copy_from_user(&ufd, optval, sizeof(ufd)))
++			if (copy_from_sockptr(&ufd, optval, sizeof(ufd)))
+ 				break;
+ =
+
+ 			ret =3D sk_attach_bpf(ufd, sk);
+@@ -1087,8 +1086,7 @@ int sock_setsockopt(struct socket *sock, int level, i=
+nt optname,
+ 	case SO_ATTACH_REUSEPORT_CBPF: {
+ 		struct sock_fprog fprog;
+ =
+
+-		ret =3D copy_bpf_fprog_from_user(&fprog, USER_SOCKPTR(optval),
+-					       optlen);
++		ret =3D copy_bpf_fprog_from_user(&fprog, optval, optlen);
+ 		if (!ret)
+ 			ret =3D sk_reuseport_attach_filter(&fprog, sk);
+ 		break;
+@@ -1099,7 +1097,7 @@ int sock_setsockopt(struct socket *sock, int level, i=
+nt optname,
+ 			u32 ufd;
+ =
+
+ 			ret =3D -EFAULT;
+-			if (copy_from_user(&ufd, optval, sizeof(ufd)))
++			if (copy_from_sockptr(&ufd, optval, sizeof(ufd)))
+ 				break;
+ =
+
+ 			ret =3D sk_reuseport_attach_bpf(ufd, sk);
+@@ -1179,7 +1177,7 @@ int sock_setsockopt(struct socket *sock, int level, i=
+nt optname,
+ =
+
+ 		if (sizeof(ulval) !=3D sizeof(val) &&
+ 		    optlen >=3D sizeof(ulval) &&
+-		    get_user(ulval, (unsigned long __user *)optval)) {
++		    copy_from_sockptr(&ulval, optval, sizeof(ulval))) {
+ 			ret =3D -EFAULT;
+ 			break;
+ 		}
+@@ -1222,7 +1220,7 @@ int sock_setsockopt(struct socket *sock, int level, i=
+nt optname,
+ 		if (optlen !=3D sizeof(struct sock_txtime)) {
+ 			ret =3D -EINVAL;
+ 			break;
+-		} else if (copy_from_user(&sk_txtime, optval,
++		} else if (copy_from_sockptr(&sk_txtime, optval,
+ 			   sizeof(struct sock_txtime))) {
+ 			ret =3D -EFAULT;
+ 			break;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f0b0b503c2628d..27b6f250b87dfd 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1643,7 +1643,8 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_s=
+ock *msk, int optname,
+ 			return -EINVAL;
+ 		}
+ =
+
+-		ret =3D sock_setsockopt(ssock, SOL_SOCKET, optname, optval, optlen);
++		ret =3D sock_setsockopt(ssock, SOL_SOCKET, optname,
++				      USER_SOCKPTR(optval), optlen);
+ 		if (ret =3D=3D 0) {
+ 			if (optname =3D=3D SO_REUSEPORT)
+ 				sk->sk_reuseport =3D ssock->sk->sk_reuseport;
+@@ -1654,7 +1655,8 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_s=
+ock *msk, int optname,
+ 		return ret;
+ 	}
+ =
+
+-	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen=
+);
++	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname,
++			       USER_SOCKPTR(optval), optlen);
+ }
+ =
+
+ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+diff --git a/net/socket.c b/net/socket.c
+index 93846568c2fb7a..c97f83d879ae75 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2130,7 +2130,8 @@ int __sys_setsockopt(int fd, int level, int optname, =
+char __user *optval,
+ 	}
+ =
+
+ 	if (level =3D=3D SOL_SOCKET && !sock_use_custom_sol_socket(sock))
+-		err =3D sock_setsockopt(sock, level, optname, optval, optlen);
++		err =3D sock_setsockopt(sock, level, optname,
++				      USER_SOCKPTR(optval), optlen);
+ 	else if (unlikely(!sock->ops->setsockopt))
+ 		err =3D -EOPNOTSUPP;
+ 	else
+-- =
+
+2.27.0
+
+--===============2378758104286309755==--
