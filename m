@@ -1,101 +1,132 @@
-Content-Type: multipart/mixed; boundary="===============1948880971302804026=="
+Content-Type: multipart/mixed; boundary="===============1318404638438883032=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 07/26] net: switch sock_set_timeout to sockptr_t
-Date: Thu, 23 Jul 2020 08:08:49 +0200
-Message-ID: <20200723060908.50081-8-hch@lst.de>
+Subject: [MPTCP] [PATCH 02/26] net/bpfilter: split __bpfilter_process_sockopt
+Date: Thu, 23 Jul 2020 08:08:44 +0200
+Message-ID: <20200723060908.50081-3-hch@lst.de>
 In-Reply-To: 20200723060908.50081-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5204
+X-UID: 5205
 
---===============1948880971302804026==
+--===============1318404638438883032==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Pass a sockptr_t to prepare for set_fs-less handling of the kernel
-pointer from bpf-cgroup.
+Split __bpfilter_process_sockopt into a low-level send request routine and
+the actual setsockopt hook to split the init time ping from the actual
+setsockopt processing.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- net/core/sock.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ net/bpfilter/bpfilter_kern.c | 51 +++++++++++++++++++-----------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 5b55bc9397f282..8b9eddaff868a5 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -361,7 +361,8 @@ static int sock_get_timeout(long timeo, void *optval, b=
-ool old_timeval)
- 	return sizeof(tv);
+diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
+index 3bac5820062af1..78d561f2c54da7 100644
+--- a/net/bpfilter/bpfilter_kern.c
++++ b/net/bpfilter/bpfilter_kern.c
+@@ -31,48 +31,51 @@ static void __stop_umh(void)
+ 		shutdown_umh();
  }
  =
 
--static int sock_set_timeout(long *timeo_p, char __user *optval, int optlen=
-, bool old_timeval)
-+static int sock_set_timeout(long *timeo_p, sockptr_t optval, int optlen,
-+			    bool old_timeval)
+-static int __bpfilter_process_sockopt(struct sock *sk, int optname,
+-				      char __user *optval,
+-				      unsigned int optlen, bool is_set)
++static int bpfilter_send_req(struct mbox_request *req)
  {
- 	struct __kernel_sock_timeval tv;
+-	struct mbox_request req;
+ 	struct mbox_reply reply;
+ 	loff_t pos;
+ 	ssize_t n;
+-	int ret =3D -EFAULT;
  =
 
-@@ -371,7 +372,7 @@ static int sock_set_timeout(long *timeo_p, char __user =
-*optval, int optlen, bool
- 		if (optlen < sizeof(tv32))
- 			return -EINVAL;
- =
-
--		if (copy_from_user(&tv32, optval, sizeof(tv32)))
-+		if (copy_from_sockptr(&tv32, optval, sizeof(tv32)))
- 			return -EFAULT;
- 		tv.tv_sec =3D tv32.tv_sec;
- 		tv.tv_usec =3D tv32.tv_usec;
-@@ -380,14 +381,14 @@ static int sock_set_timeout(long *timeo_p, char __use=
-r *optval, int optlen, bool
- =
-
- 		if (optlen < sizeof(old_tv))
- 			return -EINVAL;
--		if (copy_from_user(&old_tv, optval, sizeof(old_tv)))
-+		if (copy_from_sockptr(&old_tv, optval, sizeof(old_tv)))
- 			return -EFAULT;
- 		tv.tv_sec =3D old_tv.tv_sec;
- 		tv.tv_usec =3D old_tv.tv_usec;
- 	} else {
- 		if (optlen < sizeof(tv))
- 			return -EINVAL;
--		if (copy_from_user(&tv, optval, sizeof(tv)))
-+		if (copy_from_sockptr(&tv, optval, sizeof(tv)))
- 			return -EFAULT;
+-	req.is_set =3D is_set;
+-	req.pid =3D current->pid;
+-	req.cmd =3D optname;
+-	req.addr =3D (uintptr_t)optval;
+-	req.len =3D optlen;
+ 	if (!bpfilter_ops.info.tgid)
+-		goto out;
++		return -EFAULT;
+ 	pos =3D 0;
+-	n =3D kernel_write(bpfilter_ops.info.pipe_to_umh, &req, sizeof(req),
++	n =3D kernel_write(bpfilter_ops.info.pipe_to_umh, req, sizeof(*req),
+ 			   &pos);
+-	if (n !=3D sizeof(req)) {
++	if (n !=3D sizeof(*req)) {
+ 		pr_err("write fail %zd\n", n);
+-		__stop_umh();
+-		ret =3D -EFAULT;
+-		goto out;
++		goto stop;
  	}
- 	if (tv.tv_usec < 0 || tv.tv_usec >=3D USEC_PER_SEC)
-@@ -1051,12 +1052,14 @@ int sock_setsockopt(struct socket *sock, int level,=
- int optname,
+ 	pos =3D 0;
+ 	n =3D kernel_read(bpfilter_ops.info.pipe_from_umh, &reply, sizeof(reply),
+ 			&pos);
+ 	if (n !=3D sizeof(reply)) {
+ 		pr_err("read fail %zd\n", n);
+-		__stop_umh();
+-		ret =3D -EFAULT;
+-		goto out;
++		goto stop;
+ 	}
+-	ret =3D reply.status;
+-out:
+-	return ret;
++	return reply.status;
++stop:
++	__stop_umh();
++	return -EFAULT;
++}
++
++static int bpfilter_process_sockopt(struct sock *sk, int optname,
++				    char __user *optval, unsigned int optlen,
++				    bool is_set)
++{
++	struct mbox_request req =3D {
++		.is_set		=3D is_set,
++		.pid		=3D current->pid,
++		.cmd		=3D optname,
++		.addr		=3D (uintptr_t)optval,
++		.len		=3D optlen,
++	};
++	return bpfilter_send_req(&req);
+ }
  =
 
- 	case SO_RCVTIMEO_OLD:
- 	case SO_RCVTIMEO_NEW:
--		ret =3D sock_set_timeout(&sk->sk_rcvtimeo, optval, optlen, optname =3D=
-=3D SO_RCVTIMEO_OLD);
-+		ret =3D sock_set_timeout(&sk->sk_rcvtimeo, USER_SOCKPTR(optval),
-+				       optlen, optname =3D=3D SO_RCVTIMEO_OLD);
- 		break;
+ static int start_umh(void)
+ {
++	struct mbox_request req =3D { .pid =3D current->pid };
+ 	int err;
  =
 
- 	case SO_SNDTIMEO_OLD:
- 	case SO_SNDTIMEO_NEW:
--		ret =3D sock_set_timeout(&sk->sk_sndtimeo, optval, optlen, optname =3D=
-=3D SO_SNDTIMEO_OLD);
-+		ret =3D sock_set_timeout(&sk->sk_sndtimeo, USER_SOCKPTR(optval),
-+				       optlen, optname =3D=3D SO_SNDTIMEO_OLD);
- 		break;
+ 	/* fork usermode process */
+@@ -82,7 +85,7 @@ static int start_umh(void)
+ 	pr_info("Loaded bpfilter_umh pid %d\n", pid_nr(bpfilter_ops.info.tgid));
  =
 
- 	case SO_ATTACH_FILTER: {
+ 	/* health check that usermode process started correctly */
+-	if (__bpfilter_process_sockopt(NULL, 0, NULL, 0, 0) !=3D 0) {
++	if (bpfilter_send_req(&req) !=3D 0) {
+ 		shutdown_umh();
+ 		return -EFAULT;
+ 	}
+@@ -103,7 +106,7 @@ static int __init load_umh(void)
+ 	mutex_lock(&bpfilter_ops.lock);
+ 	err =3D start_umh();
+ 	if (!err && IS_ENABLED(CONFIG_INET)) {
+-		bpfilter_ops.sockopt =3D &__bpfilter_process_sockopt;
++		bpfilter_ops.sockopt =3D &bpfilter_process_sockopt;
+ 		bpfilter_ops.start =3D &start_umh;
+ 	}
+ 	mutex_unlock(&bpfilter_ops.lock);
 -- =
 
 2.27.0
 
---===============1948880971302804026==--
+--===============1318404638438883032==--
