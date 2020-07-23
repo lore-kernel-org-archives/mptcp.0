@@ -1,114 +1,163 @@
-Content-Type: multipart/mixed; boundary="===============0173153539320000414=="
+Content-Type: multipart/mixed; boundary="===============8114051521044373011=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 23/26] net/tcp: switch ->md5_parse to sockptr_t
-Date: Thu, 23 Jul 2020 08:09:05 +0200
-Message-ID: <20200723060908.50081-24-hch@lst.de>
+Subject: [MPTCP] [PATCH 26/26] net: optimize the sockptr_t for unified
+ kernel/user address spaces
+Date: Thu, 23 Jul 2020 08:09:08 +0200
+Message-ID: <20200723060908.50081-27-hch@lst.de>
 In-Reply-To: 20200723060908.50081-1-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5224
+X-UID: 5225
 
---===============0173153539320000414==
+--===============8114051521044373011==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Pass a sockptr_t to prepare for set_fs-less handling of the kernel
-pointer from bpf-cgroup.
+For architectures like x86 and arm64 we don't need the separate bit to
+indicate that a pointer is a kernel pointer as the address spaces are
+unified.  That way the sockptr_t can be reduced to a union of two
+pointers, which leads to nicer calling conventions.
+
+The only caveat is that we need to check that users don't pass in kernel
+address and thus gain access to kernel memory.  Thus the USER_SOCKPTR
+helper is replaced with a init_user_sockptr function that does this check
+and returns an error if it fails.
 
 Signed-off-by: Christoph Hellwig <hch(a)lst.de>
 ---
- include/net/tcp.h   | 2 +-
- net/ipv4/tcp.c      | 3 ++-
- net/ipv4/tcp_ipv4.c | 4 ++--
- net/ipv6/tcp_ipv6.c | 4 ++--
- 4 files changed, 7 insertions(+), 6 deletions(-)
+ include/linux/sockptr.h     | 32 ++++++++++++++++++++++++++++++--
+ net/ipv4/bpfilter/sockopt.c | 14 ++++++++------
+ net/socket.c                |  6 +++++-
+ 3 files changed, 43 insertions(+), 9 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 9f7f7c0c110451..e3c8e1d820214c 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2002,7 +2002,7 @@ struct tcp_sock_af_ops {
- 					 const struct sk_buff *skb);
- 	int		(*md5_parse)(struct sock *sk,
- 				     int optname,
--				     char __user *optval,
-+				     sockptr_t optval,
- 				     int optlen);
- #endif
- };
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 58ede3d62b2e2c..49bf15c27deac7 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3249,7 +3249,8 @@ static int do_tcp_setsockopt(struct sock *sk, int lev=
-el,
- #ifdef CONFIG_TCP_MD5SIG
- 	case TCP_MD5SIG:
- 	case TCP_MD5SIG_EXT:
--		err =3D tp->af_specific->md5_parse(sk, optname, optval, optlen);
-+		err =3D tp->af_specific->md5_parse(sk, optname,
-+						 USER_SOCKPTR(optval), optlen);
- 		break;
- #endif
- 	case TCP_USER_TIMEOUT:
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index daa39d33702b13..f8913923a6c05e 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1195,7 +1195,7 @@ static void tcp_clear_md5_list(struct sock *sk)
+diff --git a/include/linux/sockptr.h b/include/linux/sockptr.h
+index 700856e13ea0c4..7d5cdb2b30b5f0 100644
+--- a/include/linux/sockptr.h
++++ b/include/linux/sockptr.h
+@@ -8,9 +8,34 @@
+ #ifndef _LINUX_SOCKPTR_H
+ #define _LINUX_SOCKPTR_H
+ =
+
++#include <linux/compiler.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ =
+
++#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
++typedef union {
++	void		*kernel;
++	void __user	*user;
++} sockptr_t;
++
++static inline bool sockptr_is_kernel(sockptr_t sockptr)
++{
++	return (unsigned long)sockptr.kernel >=3D TASK_SIZE;
++}
++
++static inline sockptr_t KERNEL_SOCKPTR(void *p)
++{
++	return (sockptr_t) { .kernel =3D p };
++}
++
++static inline int __must_check init_user_sockptr(sockptr_t *sp, void __use=
+r *p)
++{
++	if ((unsigned long)p >=3D TASK_SIZE)
++		return -EFAULT;
++	sp->user =3D p;
++	return 0;
++}
++#else /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
+ typedef struct {
+ 	union {
+ 		void		*kernel;
+@@ -29,10 +54,13 @@ static inline sockptr_t KERNEL_SOCKPTR(void *p)
+ 	return (sockptr_t) { .kernel =3D p, .is_kernel =3D true };
  }
  =
 
- static int tcp_v4_parse_md5_keys(struct sock *sk, int optname,
--				 char __user *optval, int optlen)
-+				 sockptr_t optval, int optlen)
+-static inline sockptr_t USER_SOCKPTR(void __user *p)
++static inline int __must_check init_user_sockptr(sockptr_t *sp, void __use=
+r *p)
  {
- 	struct tcp_md5sig cmd;
- 	struct sockaddr_in *sin =3D (struct sockaddr_in *)&cmd.tcpm_addr;
-@@ -1206,7 +1206,7 @@ static int tcp_v4_parse_md5_keys(struct sock *sk, int=
- optname,
- 	if (optlen < sizeof(cmd))
- 		return -EINVAL;
+-	return (sockptr_t) { .user =3D p };
++	sp->user =3D p;
++	sp->is_kernel =3D false;
++	return 0;
+ }
++#endif /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
  =
 
--	if (copy_from_user(&cmd, optval, sizeof(cmd)))
-+	if (copy_from_sockptr(&cmd, optval, sizeof(cmd)))
- 		return -EFAULT;
- =
-
- 	if (sin->sin_family !=3D AF_INET)
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index c34b7834fd84a8..305870a72352d6 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -567,7 +567,7 @@ static struct tcp_md5sig_key *tcp_v6_md5_lookup(const s=
-truct sock *sk,
+ static inline bool sockptr_is_null(sockptr_t sockptr)
+ {
+diff --git a/net/ipv4/bpfilter/sockopt.c b/net/ipv4/bpfilter/sockopt.c
+index 1b34cb9a7708ec..94f18d2352d007 100644
+--- a/net/ipv4/bpfilter/sockopt.c
++++ b/net/ipv4/bpfilter/sockopt.c
+@@ -57,16 +57,18 @@ int bpfilter_ip_set_sockopt(struct sock *sk, int optnam=
+e, sockptr_t optval,
+ 	return bpfilter_mbox_request(sk, optname, optval, optlen, true);
  }
  =
 
- static int tcp_v6_parse_md5_keys(struct sock *sk, int optname,
--				 char __user *optval, int optlen)
-+				 sockptr_t optval, int optlen)
+-int bpfilter_ip_get_sockopt(struct sock *sk, int optname, char __user *opt=
+val,
+-			    int __user *optlen)
++int bpfilter_ip_get_sockopt(struct sock *sk, int optname,
++			    char __user *user_optval, int __user *optlen)
  {
- 	struct tcp_md5sig cmd;
- 	struct sockaddr_in6 *sin6 =3D (struct sockaddr_in6 *)&cmd.tcpm_addr;
-@@ -577,7 +577,7 @@ static int tcp_v6_parse_md5_keys(struct sock *sk, int o=
-ptname,
- 	if (optlen < sizeof(cmd))
+-	int len;
++	sockptr_t optval;
++	int err, len;
+ =
+
+ 	if (get_user(len, optlen))
+ 		return -EFAULT;
+-
+-	return bpfilter_mbox_request(sk, optname, USER_SOCKPTR(optval), len,
+-				     false);
++	err =3D init_user_sockptr(&optval, user_optval);
++	if (err)
++		return err;
++	return bpfilter_mbox_request(sk, optname, optval, len, false);
+ }
+ =
+
+ static int __init bpfilter_sockopt_init(void)
+diff --git a/net/socket.c b/net/socket.c
+index e44b8ac47f6f46..94ca4547cd7c53 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2097,7 +2097,7 @@ static bool sock_use_custom_sol_socket(const struct s=
+ocket *sock)
+ int __sys_setsockopt(int fd, int level, int optname, char __user *user_opt=
+val,
+ 		int optlen)
+ {
+-	sockptr_t optval =3D USER_SOCKPTR(user_optval);
++	sockptr_t optval;
+ 	char *kernel_optval =3D NULL;
+ 	int err, fput_needed;
+ 	struct socket *sock;
+@@ -2105,6 +2105,10 @@ int __sys_setsockopt(int fd, int level, int optname,=
+ char __user *user_optval,
+ 	if (optlen < 0)
  		return -EINVAL;
  =
 
--	if (copy_from_user(&cmd, optval, sizeof(cmd)))
-+	if (copy_from_sockptr(&cmd, optval, sizeof(cmd)))
- 		return -EFAULT;
- =
-
- 	if (sin6->sin6_family !=3D AF_INET6)
++	err =3D init_user_sockptr(&optval, user_optval);
++	if (err)
++		return err;
++
+ 	sock =3D sockfd_lookup_light(fd, &err, &fput_needed);
+ 	if (!sock)
+ 		return err;
 -- =
 
 2.27.0
 
---===============0173153539320000414==--
+--===============8114051521044373011==--
