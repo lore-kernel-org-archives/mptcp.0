@@ -1,36 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============5390500759094401361=="
+Content-Type: multipart/mixed; boundary="===============6107169214352700446=="
 MIME-Version: 1.0
-From: Christoph Hellwig <hch at lst.de>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 04/26] net: add a new sockptr_t type
-Date: Thu, 23 Jul 2020 18:44:32 +0200
-Message-ID: <20200723164432.GA20917@lst.de>
-In-Reply-To: CANn89iJ3LKth-iWwh0+P3D3RqtDNv4AyXkkzhXr0oSEvE_JoRQ@mail.gmail.com
+Subject: [MPTCP] [PATCH mptcp-next v3 01/12] mptcp: Allow DATA_FIN in headers
+ without TCP FIN
+Date: Thu, 23 Jul 2020 10:43:05 -0700
+Message-ID: <20200723174316.131049-2-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20200723174316.131049-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5254
+X-UID: 5255
 
---===============5390500759094401361==
+--===============6107169214352700446==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 23, 2020 at 09:40:27AM -0700, Eric Dumazet wrote:
-> I am not sure why you chose sockptr_t   for something that really seems g=
-eneric.
-> =
+RFC 8684-compliant DATA_FIN needs to be sent and ack'd before subflows
+are closed with TCP FIN, so write DATA_FIN DSS headers whenever their
+transmission has been enabled by the MPTCP connection-level socket.
 
-> Or is it really meant to be exclusive to setsockopt() and/or getsockopt()=
- ?
-> =
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ net/mptcp/options.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-> If the first user of this had been futex code, we would have used
-> futexptr_t, I guess.
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 3bc56eb608d8..0b122b2a9c69 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -482,17 +482,10 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ 	struct mptcp_sock *msk;
+ 	unsigned int ack_size;
+ 	bool ret =3D false;
+-	u8 tcp_fin;
+ =
 
-It was originally intended to be generic and called uptr_t, based
-on me misunderstanding that Linus wanted a file operation for it,
-which he absolutely didn't and hate with passion.  So the plan is to
-only use it for setsockopt for now, although there are some arguments
-for also using it in sendmsg/recvmsg.  There is no need to use it for
-getsockopt.
---===============5390500759094401361==--
+-	if (skb) {
+-		mpext =3D mptcp_get_ext(skb);
+-		tcp_fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
+-	} else {
+-		mpext =3D NULL;
+-		tcp_fin =3D 0;
+-	}
++	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+ =
+
+-	if (!skb || (mpext && mpext->use_map) || tcp_fin) {
++	if (!skb || (mpext && mpext->use_map) || subflow->data_fin_tx_enable) {
+ 		unsigned int map_size;
+ =
+
+ 		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+@@ -502,7 +495,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ 		if (mpext)
+ 			opts->ext_copy =3D *mpext;
+ =
+
+-		if (skb && tcp_fin && subflow->data_fin_tx_enable)
++		if (skb && subflow->data_fin_tx_enable)
+ 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
+ 		ret =3D true;
+ 	}
+-- =
+
+2.27.0
+
+--===============6107169214352700446==--
