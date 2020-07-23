@@ -1,46 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============6184658718078284122=="
+Content-Type: multipart/mixed; boundary="===============0806783174516971626=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2 12/12] mptcp: Safely store sequence
- number when sending data
-Date: Wed, 22 Jul 2020 17:32:19 -0700
-Message-ID: <20200723003219.90547-13-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20200723003219.90547-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: zero token hash at creation time.
+Date: Wed, 22 Jul 2020 17:57:49 -0700
+Message-ID: <20200722.175749.2262678023965125909.davem@davemloft.net>
+In-Reply-To: 9c1619337f0fa54112c0fe6f0e0100ded392ac3e.1595431172.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5197
+X-UID: 5198
 
---===============6184658718078284122==
+--===============0806783174516971626==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP socket's write_seq member can be read without the msk lock
-held, so use WRITE_ONCE() to store it.
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Wed, 22 Jul 2020 17:20:50 +0200
 
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Otherwise the 'chain_len' filed will carry random values,
+> some token creation calls will fail due to excessive chain
+> length, causing unexpected fallback to TCP.
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d620f11d6c72..982b1e72aae8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -793,7 +793,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
-ock *ssk,
- out:
- 	if (!retransmission)
- 		pfrag->offset +=3D frag_truesize;
--	*write_seq +=3D ret;
-+	WRITE_ONCE(*write_seq, *write_seq + ret);
- 	mptcp_subflow_ctx(ssk)->rel_write_seq +=3D ret;
- =
+> Fixes: 2c5ebd001d4f ("mptcp: refactor token container")
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Tested-by: Christoph Paasch <cpaasch(a)apple.com>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
- 	return ret;
--- =
-
-2.27.0
-
---===============6184658718078284122==--
+Applied, thanks Paolo.
+--===============0806783174516971626==--
