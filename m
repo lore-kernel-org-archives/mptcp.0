@@ -1,43 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============5474317990963903560=="
+Content-Type: multipart/mixed; boundary="===============3596548155523843972=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
-Date: Thu, 23 Jul 2020 10:39:57 +0200
-Message-ID: <1056b902-fd25-1c13-758d-cd4341dd403b@tessares.net>
-In-Reply-To: 20200723060908.50081-26-hch@lst.de
+Subject: [MPTCP] [PATCH net-next 0/8] mptcp: non backup subflows pre-reqs
+Date: Thu, 23 Jul 2020 13:02:28 +0200
+Message-ID: <cover.1595431326.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5229
+X-UID: 5231
 
---===============5474317990963903560==
+--===============3596548155523843972==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
+This series contains a bunch of MPTCP improvements loosely related to
+concurrent subflows xmit usage, currently under development.
 
-On 23/07/2020 08:09, Christoph Hellwig wrote:
-> Rework the remaining setsockopt code to pass a sockptr_t instead of a
-> plain user pointer.  This removes the last remaining set_fs(KERNEL_DS)
-> outside of architecture specific code.
-> =
+The first 3 patches are actually bugfixes for issues that will become appar=
+ent
+as soon as we will enable the above feature.
 
-> Signed-off-by: Christoph Hellwig <hch(a)lst.de>
-> Acked-by: Stefan Schmidt <stefan(a)datenfreihafen.org> [ieee802154]
-> ---
->   net/mptcp/protocol.c                      | 12 +++----
+The later patches improve the handling of incoming additional subflows,
+improving significantly the performances in stress tests based on a high new
+connection rate.
 
-Thank you for the v2!
+Paolo Abeni (8):
+  subflow: always init 'rel_write_seq'
+  mptcp: avoid data corruption on reinsert
+  mptcp: mark as fallback even early ones
+  mptcp: explicitly track the fully established status
+  mptcp: cleanup subflow_finish_connect()
+  subflow: explicitly check for plain tcp rsk
+  subflow: use rsk_ops->send_reset()
+  subflow: introduce and use mptcp_can_accept_new_subflow()
 
-For MPTCP-related code:
+ net/mptcp/options.c  |  5 +--
+ net/mptcp/protocol.c | 23 ++++++++---
+ net/mptcp/protocol.h |  8 ++++
+ net/mptcp/subflow.c  | 91 ++++++++++++++++++++++++++------------------
+ 4 files changed, 81 insertions(+), 46 deletions(-)
 
-Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5474317990963903560==--
+2.26.2
+
+--===============3596548155523843972==--
