@@ -1,47 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============4365463794049968388=="
+Content-Type: multipart/mixed; boundary="===============6990107101308726771=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2 09/12] mptcp: Only use subflow EOF
- signaling on fallback connections
-Date: Wed, 22 Jul 2020 17:32:16 -0700
-Message-ID: <20200723003219.90547-10-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next v2 10/12] mptcp: Skip unnecessary skb
+ extension allocation for bare acks
+Date: Wed, 22 Jul 2020 17:32:17 -0700
+Message-ID: <20200723003219.90547-11-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200723003219.90547-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5194
+X-UID: 5195
 
---===============4365463794049968388==
+--===============6990107101308726771==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP state machine handles disconnections on non-fallback connections,
-but the mptcp_sock still needs to get notified when fallback subflows
-disconnect.
+Bare TCP ack skbs are freed right after MPTCP sees them, so the work to
+allocate, zero, and populate the MPTCP skb extension is wasted. Detect
+these skbs and do not add skb extensions to them.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/subflow.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mptcp/options.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7ab2a52ad150..1c8482bc2ce5 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1159,7 +1159,8 @@ static void subflow_state_change(struct sock *sk)
- 	if (mptcp_subflow_data_available(sk))
- 		mptcp_data_ready(parent, sk);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index a8cd2cc8a9c7..04738a3c4de3 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -865,15 +865,18 @@ void mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb,
+ 	if (mp_opt.use_ack)
+ 		update_una(msk, &mp_opt);
  =
 
--	if (!(parent->sk_shutdown & RCV_SHUTDOWN) &&
-+	if (__mptcp_check_fallback(mptcp_sk(parent)) &&
-+	    !(parent->sk_shutdown & RCV_SHUTDOWN) &&
- 	    !subflow->rx_eof && subflow_is_done(sk)) {
- 		subflow->rx_eof =3D 1;
- 		mptcp_subflow_eof(parent);
+-	/* Zero-length packets, like bare ACKs carrying a DATA_FIN, are
+-	 * dropped by the caller and not propagated to the MPTCP layer.
+-	 * Copy the DATA_FIN information now.
++	/* Zero-data-length packets are dropped by the caller and not
++	 * propagated to the MPTCP layer, so the skb extension does not
++	 * need to be allocated or populated. DATA_FIN information, if
++	 * present, needs to be updated here before the skb is freed.
+ 	 */
+ 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
+ 		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
+ 		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
+ 		    schedule_work(&msk->work))
+ 			sock_hold(subflow->conn);
++
++		return;
+ 	}
+ =
+
+ 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
 -- =
 
 2.27.0
 
---===============4365463794049968388==--
+--===============6990107101308726771==--
