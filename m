@@ -1,71 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============6107169214352700446=="
+Content-Type: multipart/mixed; boundary="===============5003591922818344699=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v3 01/12] mptcp: Allow DATA_FIN in headers
- without TCP FIN
-Date: Thu, 23 Jul 2020 10:43:05 -0700
-Message-ID: <20200723174316.131049-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next v3 10/12] mptcp: Skip unnecessary skb
+ extension allocation for bare acks
+Date: Thu, 23 Jul 2020 10:43:14 -0700
+Message-ID: <20200723174316.131049-11-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200723174316.131049-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5255
+X-UID: 5256
 
---===============6107169214352700446==
+--===============5003591922818344699==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-RFC 8684-compliant DATA_FIN needs to be sent and ack'd before subflows
-are closed with TCP FIN, so write DATA_FIN DSS headers whenever their
-transmission has been enabled by the MPTCP connection-level socket.
+Bare TCP ack skbs are freed right after MPTCP sees them, so the work to
+allocate, zero, and populate the MPTCP skb extension is wasted. Detect
+these skbs and do not add skb extensions to them.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/options.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ net/mptcp/options.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 3bc56eb608d8..0b122b2a9c69 100644
+index a8cd2cc8a9c7..04738a3c4de3 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -482,17 +482,10 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
- 	struct mptcp_sock *msk;
- 	unsigned int ack_size;
- 	bool ret =3D false;
--	u8 tcp_fin;
+@@ -865,15 +865,18 @@ void mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb,
+ 	if (mp_opt.use_ack)
+ 		update_una(msk, &mp_opt);
  =
 
--	if (skb) {
--		mpext =3D mptcp_get_ext(skb);
--		tcp_fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
--	} else {
--		mpext =3D NULL;
--		tcp_fin =3D 0;
--	}
-+	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
- =
-
--	if (!skb || (mpext && mpext->use_map) || tcp_fin) {
-+	if (!skb || (mpext && mpext->use_map) || subflow->data_fin_tx_enable) {
- 		unsigned int map_size;
- =
-
- 		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
-@@ -502,7 +495,7 @@ static bool mptcp_established_options_dss(struct sock *=
-sk, struct sk_buff *skb,
- 		if (mpext)
- 			opts->ext_copy =3D *mpext;
- =
-
--		if (skb && tcp_fin && subflow->data_fin_tx_enable)
-+		if (skb && subflow->data_fin_tx_enable)
- 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
- 		ret =3D true;
+-	/* Zero-length packets, like bare ACKs carrying a DATA_FIN, are
+-	 * dropped by the caller and not propagated to the MPTCP layer.
+-	 * Copy the DATA_FIN information now.
++	/* Zero-data-length packets are dropped by the caller and not
++	 * propagated to the MPTCP layer, so the skb extension does not
++	 * need to be allocated or populated. DATA_FIN information, if
++	 * present, needs to be updated here before the skb is freed.
+ 	 */
+ 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
+ 		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
+ 		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
+ 		    schedule_work(&msk->work))
+ 			sock_hold(subflow->conn);
++
++		return;
  	}
+ =
+
+ 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
 -- =
 
 2.27.0
 
---===============6107169214352700446==--
+--===============5003591922818344699==--
