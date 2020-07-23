@@ -1,78 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============1282873984771475448=="
+Content-Type: multipart/mixed; boundary="===============7047237713008323974=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2 00/12] DATA_FIN support
-Date: Wed, 22 Jul 2020 17:32:07 -0700
-Message-ID: <20200723003219.90547-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next v2 01/12] mptcp: Allow DATA_FIN in headers
+ without TCP FIN
+Date: Wed, 22 Jul 2020 17:32:08 -0700
+Message-ID: <20200723003219.90547-2-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20200723003219.90547-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5185
+X-UID: 5186
 
---===============1282873984771475448==
+--===============7047237713008323974==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Here is a series adding full DATA_FIN support at connection shutdown /
-close. See the patch 8 commit message for information about the
-disconnection state machine.
+RFC 8684-compliant DATA_FIN needs to be sent and ack'd before subflows
+are closed with TCP FIN, so write DATA_FIN DSS headers whenever their
+transmission has been enabled by the MPTCP connection-level socket.
 
-Self tests are passing. Still need to check compatibility and review
-wireshark traces when interacting with a mptcp_trunk peer.
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ net/mptcp/options.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-v1 -> v2
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 3bc56eb608d8..0b122b2a9c69 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -482,17 +482,10 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ 	struct mptcp_sock *msk;
+ 	unsigned int ack_size;
+ 	bool ret =3D false;
+-	u8 tcp_fin;
+ =
 
-Fixes from Paolo's review comments, including:
+-	if (skb) {
+-		mpext =3D mptcp_get_ext(skb);
+-		tcp_fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
+-	} else {
+-		mpext =3D NULL;
+-		tcp_fin =3D 0;
+-	}
++	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+ =
 
- * Squashed patch 8 (main functional changes for state machine) with the
-   previous commit, since the split was causing extra churn and was
-   misleading when trying to review.
+-	if (!skb || (mpext && mpext->use_map) || tcp_fin) {
++	if (!skb || (mpext && mpext->use_map) || subflow->data_fin_tx_enable) {
+ 		unsigned int map_size;
+ =
 
- * Made more use of the mptcp_pending_data_fin helper. Also refactored
-   that helper to optionally copy the read sequence number for the caller.
+ 		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
+@@ -502,7 +495,7 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
+ 		if (mpext)
+ 			opts->ext_copy =3D *mpext;
+ =
 
- * Fixed sequence number check off-by-one problem.
-
- * Removed redundant DATA_FIN sequence number checks in
-   __mptcp_move_skbs_from_subflow().
-
- * Split commit 3 to clarify intentional comment removal.
-
-RFC -> v1
-
- * Split in to a series
-
- * A few enhancements suggested by Paolo
-
- * Lots of fixes, including handling of fallback sockets and
-   connections that are already doing the disconnect handshake before
-   accept() even returns.
-
-Mat Martineau (12):
-  mptcp: Allow DATA_FIN in headers without TCP FIN
-  mptcp: Return EPIPE if sending is shut down during a sendmsg
-  mptcp: Remove outdated and incorrect comment
-  mptcp: Add mptcp_close_state() helper
-  mptcp: Track received DATA_FIN sequence number and add related helpers
-  mptcp: Use MPTCP-level flag for sending DATA_FIN
-  mptcp: Add helper to process acks of DATA_FIN
-  mptcp: Use full MPTCP-level disconnect state machine
-  mptcp: Only use subflow EOF signaling on fallback connections
-  mptcp: Skip unnecessary skb extension allocation for bare acks
-  mptcp: Safely read sequence number when lock isn't held
-  mptcp: Safely store sequence number when sending data
-
- net/mptcp/options.c  |  54 ++++++--
- net/mptcp/protocol.c | 297 ++++++++++++++++++++++++++++++++++++-------
- net/mptcp/protocol.h |   6 +-
- net/mptcp/subflow.c  |  14 +-
- 4 files changed, 305 insertions(+), 66 deletions(-)
-
-
-base-commit: eeb83400421e0c1f9122a36936db2a6c42dc72c4
+-		if (skb && tcp_fin && subflow->data_fin_tx_enable)
++		if (skb && subflow->data_fin_tx_enable)
+ 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
+ 		ret =3D true;
+ 	}
 -- =
 
 2.27.0
 
---===============1282873984771475448==--
+--===============7047237713008323974==--
