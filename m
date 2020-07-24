@@ -1,216 +1,230 @@
-Content-Type: multipart/mixed; boundary="===============8307881235565684087=="
+Content-Type: multipart/mixed; boundary="===============3094867220568787762=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v4 06/12] mptcp: Use MPTCP-level flag for
- sending DATA_FIN
-Date: Thu, 23 Jul 2020 18:11:21 -0700
-Message-ID: <20200724011127.363638-7-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next v4 05/12] mptcp: Track received DATA_FIN
+ sequence number and add related helpers
+Date: Thu, 23 Jul 2020 18:11:20 -0700
+Message-ID: <20200724011127.363638-6-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200724011127.363638-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5280
+X-UID: 5281
 
---===============8307881235565684087==
+--===============3094867220568787762==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Since DATA_FIN information is the same for every subflow, store it only
-in the mptcp_sock.
+Incoming DATA_FIN headers need to propagate the presence of the DATA_FIN
+bit and the associated sequence number to the MPTCP layer, even when
+arriving on a bare ACK that does not get added to the receive queue. Add
+structure members to store the DATA_FIN information and helpers to set
+and check those values.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/options.c  | 18 ++++++++++++------
- net/mptcp/protocol.c | 21 +++++----------------
- net/mptcp/protocol.h |  3 +--
- 3 files changed, 18 insertions(+), 24 deletions(-)
+ net/mptcp/options.c  |  16 +++++++
+ net/mptcp/protocol.c | 106 +++++++++++++++++++++++++++++++++++++++----
+ net/mptcp/protocol.h |   3 ++
+ 3 files changed, 115 insertions(+), 10 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c1f806f03021..38583d1b9b5f 100644
+index 0b122b2a9c69..c1f806f03021 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -451,6 +451,8 @@ static bool mptcp_established_options_mp(struct sock *s=
-k, struct sk_buff *skb,
- static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
- 				 struct sk_buff *skb, struct mptcp_ext *ext)
- {
-+	u64 data_fin_tx_seq =3D READ_ONCE(mptcp_sk(subflow->conn)->write_seq);
-+
- 	if (!ext->use_map || !skb->len) {
- 		/* RFC6824 requires a DSS mapping with specific values
- 		 * if DATA_FIN is set but no data payload is mapped
-@@ -458,10 +460,13 @@ static void mptcp_write_data_fin(struct mptcp_subflow=
-_context *subflow,
- 		ext->data_fin =3D 1;
- 		ext->use_map =3D 1;
- 		ext->dsn64 =3D 1;
--		ext->data_seq =3D subflow->data_fin_tx_seq;
-+		/* The write_seq value has already been incremented, so
-+		 * the actual sequence number for the DATA_FIN is one less.
-+		 */
-+		ext->data_seq =3D data_fin_tx_seq - 1;
- 		ext->subflow_seq =3D 0;
- 		ext->data_len =3D 1;
--	} else if (ext->data_seq + ext->data_len =3D=3D subflow->data_fin_tx_seq)=
- {
-+	} else if (ext->data_seq + ext->data_len =3D=3D data_fin_tx_seq) {
- 		/* If there's an existing DSS mapping and it is the
- 		 * final mapping, DATA_FIN consumes 1 additional byte of
- 		 * mapping space.
-@@ -477,15 +482,17 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
- 					  struct mptcp_out_options *opts)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
- 	unsigned int dss_size =3D 0;
-+	u64 snd_data_fin_enable;
- 	struct mptcp_ext *mpext;
--	struct mptcp_sock *msk;
- 	unsigned int ack_size;
- 	bool ret =3D false;
- =
-
- 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
-+	snd_data_fin_enable =3D READ_ONCE(msk->snd_data_fin_enable);
- =
-
--	if (!skb || (mpext && mpext->use_map) || subflow->data_fin_tx_enable) {
-+	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
- 		unsigned int map_size;
- =
-
- 		map_size =3D TCPOLEN_MPTCP_DSS_BASE + TCPOLEN_MPTCP_DSS_MAP64;
-@@ -495,7 +502,7 @@ static bool mptcp_established_options_dss(struct sock *=
-sk, struct sk_buff *skb,
- 		if (mpext)
- 			opts->ext_copy =3D *mpext;
- =
-
--		if (skb && subflow->data_fin_tx_enable)
-+		if (skb && snd_data_fin_enable)
- 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
- 		ret =3D true;
+@@ -776,6 +776,22 @@ static void update_una(struct mptcp_sock *msk,
  	}
-@@ -504,7 +511,6 @@ static bool mptcp_established_options_dss(struct sock *=
-sk, struct sk_buff *skb,
- 	 * if the first subflow may have the already the remote key handy
- 	 */
- 	opts->ext_copy.use_ack =3D 0;
--	msk =3D mptcp_sk(subflow->conn);
- 	if (!READ_ONCE(msk->can_ack)) {
- 		*size =3D ALIGN(dss_size, 4);
- 		return ret;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index da326c323645..9f609cd7e74c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1480,8 +1480,7 @@ static void mptcp_cancel_work(struct sock *sk)
- 		sock_put(sk);
  }
  =
 
--static void mptcp_subflow_shutdown(struct sock *ssk, int how,
--				   bool data_fin_tx_enable, u64 data_fin_tx_seq)
-+static void mptcp_subflow_shutdown(struct sock *ssk, int how)
- {
- 	lock_sock(ssk);
- =
-
-@@ -1494,14 +1493,6 @@ static void mptcp_subflow_shutdown(struct sock *ssk,=
- int how,
- 		tcp_disconnect(ssk, O_NONBLOCK);
- 		break;
- 	default:
--		if (data_fin_tx_enable) {
--			struct mptcp_subflow_context *subflow;
--
--			subflow =3D mptcp_subflow_ctx(ssk);
--			subflow->data_fin_tx_seq =3D data_fin_tx_seq;
--			subflow->data_fin_tx_enable =3D 1;
--		}
--
- 		ssk->sk_shutdown |=3D how;
- 		tcp_shutdown(ssk, how);
- 		break;
-@@ -1542,7 +1533,6 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	struct mptcp_subflow_context *subflow, *tmp;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	LIST_HEAD(conn_list);
--	u64 data_fin_tx_seq;
- =
-
- 	lock_sock(sk);
- =
-
-@@ -1556,7 +1546,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	spin_unlock_bh(&msk->join_list_lock);
- 	list_splice_init(&msk->conn_list, &conn_list);
- =
-
--	data_fin_tx_seq =3D msk->write_seq;
-+	msk->snd_data_fin_enable =3D 1;
- =
-
- 	__mptcp_clear_xmit(sk);
- =
-
-@@ -1564,9 +1554,6 @@ static void mptcp_close(struct sock *sk, long timeout)
- =
-
- 	list_for_each_entry_safe(subflow, tmp, &conn_list, node) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
--
--		subflow->data_fin_tx_seq =3D data_fin_tx_seq;
--		subflow->data_fin_tx_enable =3D 1;
- 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
- 	}
- =
-
-@@ -2264,10 +2251,12 @@ static int mptcp_shutdown(struct socket *sock, int =
-how)
- 	}
- =
-
- 	__mptcp_flush_join_list(msk);
-+	msk->snd_data_fin_enable =3D 1;
++bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq)
++{
++	/* Skip if DATA_FIN was already received.
++	 * If updating simultaneously with the recvmsg loop, values
++	 * should match. If they mismatch, the peer is misbehaving and
++	 * we will prefer the most recent information.
++	 */
++	if (READ_ONCE(msk->rcv_data_fin) || !READ_ONCE(msk->first))
++		return false;
 +
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *tcp_sk =3D mptcp_subflow_tcp_sock(subflow);
++	WRITE_ONCE(msk->rcv_data_fin_seq, data_fin_seq);
++	WRITE_ONCE(msk->rcv_data_fin, 1);
++
++	return true;
++}
++
+ static bool add_addr_hmac_valid(struct mptcp_sock *msk,
+ 				struct mptcp_options_received *mp_opt)
+ {
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 06e8bfea0858..da326c323645 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -16,6 +16,7 @@
+ #include <net/inet_hashtables.h>
+ #include <net/protocol.h>
+ #include <net/tcp.h>
++#include <net/tcp_states.h>
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ #include <net/transp_v6.h>
+ #endif
+@@ -163,6 +164,101 @@ static bool mptcp_subflow_dsn_valid(const struct mptc=
+p_sock *msk,
+ 	return mptcp_subflow_data_available(ssk);
+ }
  =
 
--		mptcp_subflow_shutdown(tcp_sk, how, 1, msk->write_seq);
-+		mptcp_subflow_shutdown(tcp_sk, how);
- 	}
++static bool mptcp_pending_data_fin(struct sock *sk, u64 *seq)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	if (READ_ONCE(msk->rcv_data_fin) &&
++	    ((1 << sk->sk_state) &
++	     (TCPF_ESTABLISHED | TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2))) {
++		u64 rcv_data_fin_seq =3D READ_ONCE(msk->rcv_data_fin_seq);
++
++		if (msk->ack_seq =3D=3D rcv_data_fin_seq) {
++			if (seq)
++				*seq =3D rcv_data_fin_seq;
++
++			return true;
++		}
++	}
++
++	return false;
++}
++
++static void mptcp_set_timeout(const struct sock *sk, const struct sock *ss=
+k)
++{
++	long tout =3D ssk && inet_csk(ssk)->icsk_pending ?
++				      inet_csk(ssk)->icsk_timeout - jiffies : 0;
++
++	if (tout <=3D 0)
++		tout =3D mptcp_sk(sk)->timer_ival;
++	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
++}
++
++static void mptcp_check_data_fin(struct sock *sk)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	u64 rcv_data_fin_seq;
++
++	if (__mptcp_check_fallback(msk) || !msk->first)
++		return;
++
++	/* Need to ack a DATA_FIN received from a peer while this side
++	 * of the connection is in ESTABLISHED, FIN_WAIT1, or FIN_WAIT2.
++	 * msk->rcv_data_fin was set when parsing the incoming options
++	 * at the subflow level and the msk lock was not held, so this
++	 * is the first opportunity to act on the DATA_FIN and change
++	 * the msk state.
++	 *
++	 * If we are caught up to the sequence number of the incoming
++	 * DATA_FIN, send the DATA_ACK now and do state transition.  If
++	 * not caught up, do nothing and let the recv code send DATA_ACK
++	 * when catching up.
++	 */
++
++	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
++		struct mptcp_subflow_context *subflow;
++
++		msk->ack_seq++;
++		WRITE_ONCE(msk->rcv_data_fin, 0);
++
++		sk->sk_shutdown |=3D RCV_SHUTDOWN;
++
++		switch (sk->sk_state) {
++		case TCP_ESTABLISHED:
++			inet_sk_state_store(sk, TCP_CLOSE_WAIT);
++			break;
++		case TCP_FIN_WAIT1:
++			inet_sk_state_store(sk, TCP_CLOSING);
++			break;
++		case TCP_FIN_WAIT2:
++			inet_sk_state_store(sk, TCP_CLOSE);
++			// @@ Close subflows now?
++			break;
++		default:
++			/* Other states not expected */
++			WARN_ON_ONCE(1);
++			break;
++		}
++
++		mptcp_set_timeout(sk, NULL);
++		mptcp_for_each_subflow(msk, subflow) {
++			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++
++			lock_sock(ssk);
++			tcp_send_ack(ssk);
++			release_sock(ssk);
++		}
++
++		sk->sk_state_change(sk);
++
++		if (sk->sk_shutdown =3D=3D SHUTDOWN_MASK ||
++		    sk->sk_state =3D=3D TCP_CLOSE)
++			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_HUP);
++		else
++			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
++	}
++}
++
+ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
+ 					   struct sock *ssk,
+ 					   unsigned int *bytes)
+@@ -303,16 +399,6 @@ static void __mptcp_flush_join_list(struct mptcp_sock =
+*msk)
+ 	spin_unlock_bh(&msk->join_list_lock);
+ }
  =
 
- 	/* Wake up anyone sleeping in poll. */
+-static void mptcp_set_timeout(const struct sock *sk, const struct sock *ss=
+k)
+-{
+-	long tout =3D ssk && inet_csk(ssk)->icsk_pending ?
+-				      inet_csk(ssk)->icsk_timeout - jiffies : 0;
+-
+-	if (tout <=3D 0)
+-		tout =3D mptcp_sk(sk)->timer_ival;
+-	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
+-}
+-
+ static bool mptcp_timer_pending(struct sock *sk)
+ {
+ 	return timer_pending(&inet_csk(sk)->icsk_retransmit_timer);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2cbcbfc79871..beb34b8a5363 100644
+index 67634b595466..2cbcbfc79871 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -201,6 +201,7 @@ struct mptcp_sock {
+@@ -193,12 +193,14 @@ struct mptcp_sock {
+ 	u64		remote_key;
+ 	u64		write_seq;
+ 	u64		ack_seq;
++	u64		rcv_data_fin_seq;
+ 	atomic64_t	snd_una;
+ 	unsigned long	timer_ival;
+ 	u32		token;
+ 	unsigned long	flags;
  	bool		can_ack;
  	bool		fully_established;
- 	bool		rcv_data_fin;
-+	bool		snd_data_fin_enable;
++	bool		rcv_data_fin;
  	spinlock_t	join_list_lock;
  	struct work_struct work;
  	struct list_head conn_list;
-@@ -293,10 +294,8 @@ struct mptcp_subflow_context {
- 		backup : 1,
- 		data_avail : 1,
- 		rx_eof : 1,
--		data_fin_tx_enable : 1,
- 		use_64bit_ack : 1, /* Set when we received a 64-bit DSN */
- 		can_ack : 1;	    /* only after processing the remote a key */
--	u64	data_fin_tx_seq;
- 	u32	remote_nonce;
- 	u64	thmac;
- 	u32	local_nonce;
+@@ -386,6 +388,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk=
+);
+ bool mptcp_finish_join(struct sock *sk);
+ void mptcp_data_acked(struct sock *sk);
+ void mptcp_subflow_eof(struct sock *sk);
++bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
+ =
+
+ void __init mptcp_token_init(void);
+ static inline void mptcp_token_init_request(struct request_sock *req)
 -- =
 
 2.27.0
 
---===============8307881235565684087==--
+--===============3094867220568787762==--
