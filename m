@@ -1,40 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============0288423616486489081=="
+Content-Type: multipart/mixed; boundary="===============0101431918409499269=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v4 03/12] mptcp: Remove outdated and
- incorrect comment
-Date: Thu, 23 Jul 2020 18:11:18 -0700
-Message-ID: <20200724011127.363638-4-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next v4 04/12] mptcp: Add mptcp_close_state()
+ helper
+Date: Thu, 23 Jul 2020 18:11:19 -0700
+Message-ID: <20200724011127.363638-5-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200724011127.363638-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5278
+X-UID: 5279
 
---===============0288423616486489081==
+--===============0101431918409499269==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_close() acquires the msk lock, so it clearly should not be held
-before the function is called.
+This will be used to transition to the appropriate state on close and
+determine if a DATA_FIN needs to be sent for that state transition.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/mptcp/protocol.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9e812011c635..84087982367f 100644
+index 84087982367f..06e8bfea0858 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1424,7 +1424,6 @@ static void mptcp_subflow_shutdown(struct sock *ssk, =
-int how,
+@@ -1424,6 +1424,33 @@ static void mptcp_subflow_shutdown(struct sock *ssk,=
+ int how,
  	release_sock(ssk);
  }
  =
 
--/* Called with msk lock held, releases such lock before returning */
++static const unsigned char new_state[16] =3D {
++	/* current state:     new state:      action:	*/
++	[0 /* (Invalid) */] =3D TCP_CLOSE,
++	[TCP_ESTABLISHED]   =3D TCP_FIN_WAIT1 | TCP_ACTION_FIN,
++	[TCP_SYN_SENT]      =3D TCP_CLOSE,
++	[TCP_SYN_RECV]      =3D TCP_FIN_WAIT1 | TCP_ACTION_FIN,
++	[TCP_FIN_WAIT1]     =3D TCP_FIN_WAIT1,
++	[TCP_FIN_WAIT2]     =3D TCP_FIN_WAIT2,
++	[TCP_TIME_WAIT]     =3D TCP_CLOSE,	/* should not happen ! */
++	[TCP_CLOSE]         =3D TCP_CLOSE,
++	[TCP_CLOSE_WAIT]    =3D TCP_LAST_ACK  | TCP_ACTION_FIN,
++	[TCP_LAST_ACK]      =3D TCP_LAST_ACK,
++	[TCP_LISTEN]        =3D TCP_CLOSE,
++	[TCP_CLOSING]       =3D TCP_CLOSING,
++	[TCP_NEW_SYN_RECV]  =3D TCP_CLOSE,	/* should not happen ! */
++};
++
++static int mptcp_close_state(struct sock *sk)
++{
++	int next =3D (int)new_state[sk->sk_state];
++	int ns =3D next & TCP_STATE_MASK;
++
++	inet_sk_state_store(sk, ns);
++
++	return next & TCP_ACTION_FIN;
++}
++
  static void mptcp_close(struct sock *sk, long timeout)
  {
  	struct mptcp_subflow_context *subflow, *tmp;
@@ -42,4 +68,4 @@ int how,
 
 2.27.0
 
---===============0288423616486489081==--
+--===============0101431918409499269==--
