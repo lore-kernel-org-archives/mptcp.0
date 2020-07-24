@@ -1,47 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============0430889386928567474=="
+Content-Type: multipart/mixed; boundary="===============4405767087077544171=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v4 09/12] mptcp: Only use subflow EOF
- signaling on fallback connections
-Date: Thu, 23 Jul 2020 18:11:24 -0700
-Message-ID: <20200724011127.363638-10-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH mptcp-next v4 11/12] mptcp: Safely read sequence
+ number when lock isn't held
+Date: Thu, 23 Jul 2020 18:11:26 -0700
+Message-ID: <20200724011127.363638-12-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200724011127.363638-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5284
+X-UID: 5285
 
---===============0430889386928567474==
+--===============4405767087077544171==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP state machine handles disconnections on non-fallback connections,
-but the mptcp_sock still needs to get notified when fallback subflows
-disconnect.
+The MPTCP socket's write_seq member should be read with READ_ONCE() when
+the msk lock is not held.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/subflow.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7ab2a52ad150..1c8482bc2ce5 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1159,7 +1159,8 @@ static void subflow_state_change(struct sock *sk)
- 	if (mptcp_subflow_data_available(sk))
- 		mptcp_data_ready(parent, sk);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2c5a9323cbe7..65aa2b9df721 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1269,7 +1269,7 @@ static void mptcp_retransmit_handler(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
  =
 
--	if (!(parent->sk_shutdown & RCV_SHUTDOWN) &&
-+	if (__mptcp_check_fallback(mptcp_sk(parent)) &&
-+	    !(parent->sk_shutdown & RCV_SHUTDOWN) &&
- 	    !subflow->rx_eof && subflow_is_done(sk)) {
- 		subflow->rx_eof =3D 1;
- 		mptcp_subflow_eof(parent);
+-	if (atomic64_read(&msk->snd_una) =3D=3D msk->write_seq) {
++	if (atomic64_read(&msk->snd_una) =3D=3D READ_ONCE(msk->write_seq)) {
+ 		mptcp_stop_timer(sk);
+ 	} else {
+ 		set_bit(MPTCP_WORK_RTX, &msk->flags);
 -- =
 
 2.27.0
 
---===============0430889386928567474==--
+--===============4405767087077544171==--
