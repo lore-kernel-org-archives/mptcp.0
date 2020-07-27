@@ -1,46 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============3438843062155531631=="
+Content-Type: multipart/mixed; boundary="===============8830898090957308512=="
 MIME-Version: 1.0
-From: Ido Schimmel <idosch at idosch.org>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to
- sockptr_t
-Date: Mon, 27 Jul 2020 21:22:59 +0300
-Message-ID: <20200727182259.GA1931870@shredder>
-In-Reply-To: 20200727161555.GA7817@lst.de
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix joined subflows with unblocking sk
+Date: Mon, 27 Jul 2020 11:52:18 -0700
+Message-ID: <20200727.115218.1191292272155021831.davem@davemloft.net>
+In-Reply-To: 20200727102433.3422117-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5328
+X-UID: 5329
 
---===============3438843062155531631==
+--===============8830898090957308512==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 27, 2020 at 06:15:55PM +0200, Christoph Hellwig wrote:
-> I have to admit I didn't spot the difference between the good and the
-> bad output even after trying hard..
+From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Date: Mon, 27 Jul 2020 12:24:33 +0200
+
+> Unblocking sockets used for outgoing connections were not containing
+> inet info about the initial connection due to a typo there: the value of
+> "err" variable is negative in the kernelspace.
 > =
 
-> But can you try the patch below?
+> This fixes the creation of additional subflows where the remote port has
+> to be reused if the other host didn't announce another one. This also
+> fixes inet_diag showing blank info about MPTCP sockets from unblocking
+> sockets doing a connect().
 > =
 
-> ---
-> From cce2d2e1b43ecee5f4af7cf116808b74b330080f Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch(a)lst.de>
-> Date: Mon, 27 Jul 2020 17:42:27 +0200
-> Subject: net: remove sockptr_advance
-> =
+> Fixes: 41be81a8d3d0 ("mptcp: fix unblocking connect()")
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-> sockptr_advance never properly worked.  Replace it with _offset variants
-> of copy_from_sockptr and copy_to_sockptr.
-> =
-
-> Fixes: ba423fdaa589 ("net: add a new sockptr_t type")
-> Reported-by: Jason A. Donenfeld <Jason(a)zx2c4.com>
-> Reported-by: Ido Schimmel <idosch(a)idosch.org>
-> Signed-off-by: Christoph Hellwig <hch(a)lst.de>
-
-Tested-by: Ido Schimmel <idosch(a)mellanox.com>
-
-Thanks!
---===============3438843062155531631==--
+Applied, thanks!
+--===============8830898090957308512==--
