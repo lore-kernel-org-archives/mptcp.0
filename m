@@ -1,27 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============6552416703547584882=="
+Content-Type: multipart/mixed; boundary="===============4096302293138654169=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 10/11] mptcp: enable JOIN requests even if
- cookies are in use
-Date: Tue, 28 Jul 2020 00:59:31 +0200
-Message-ID: <20200727225931.GM23458@breakpoint.cc>
-In-Reply-To: 79ee0796e2bcf48e4d84c119c1118c436b05c6e9.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH RFC 09/11] tcp: handle want_cookie clause via
+ reqsk_put
+Date: Tue, 28 Jul 2020 01:00:52 +0200
+Message-ID: <20200727230052.GN23458@breakpoint.cc>
+In-Reply-To: 962243569496bee88d74b854549d853ca9a1a726.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5331
+X-UID: 5332
 
---===============6552416703547584882==
+--===============4096302293138654169==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > Why would I need to add pm->subflows?
+> On Mon, 2020-07-27 at 11:00 +0200, Florian Westphal wrote:
+> > Would need to duplicate timeout logic and so on which I wanted to
+> > avoid.
 > =
 
-> Currently the PM netlink does not accept any additional subflows
-> when pm->subflows >=3D pm->subflows_max.
+> Yep that would be quite complex. I was wondering about something
+> simpler, like using with LRU policy a static 4 slots circular buffer
+> inside the msk (the one identified by the token). WDYT?
 
-What about mptcp_can_accept_new_subflow() helper?  Is that enough?
---===============6552416703547584882==--
+But where do I get the token to find the msk from the cookie ack?
+Its not re-sent in the options afaics, unlike mp_capable case.
+--===============4096302293138654169==--
