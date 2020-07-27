@@ -1,67 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============5616197879764953743=="
+Content-Type: multipart/mixed; boundary="===============0541305406207924869=="
 MIME-Version: 1.0
-From: David Laight <David.Laight at ACULAB.COM>
+From: Jason A. Donenfeld <Jason at zx2c4.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: get rid of the address_space override in setsockopt v2
-Date: Mon, 27 Jul 2020 14:09:09 +0000
-Message-ID: <5d958e937db54849b4ef9046e7e12277@AcuMS.aculab.com>
-In-Reply-To: 20200727134814.GD794331@ZenIV.linux.org.uk
+Subject: [MPTCP] Re: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
+Date: Mon, 27 Jul 2020 17:03:10 +0200
+Message-ID: <20200727150310.GA1632472@zx2c4.com>
+In-Reply-To: 20200723060908.50081-13-hch@lst.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5319
+X-UID: 5320
 
---===============5616197879764953743==
+--===============0541305406207924869==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Al Viro
-> Sent: 27 July 2020 14:48
-> =
+Hi Christoph,
 
-> On Mon, Jul 27, 2020 at 09:51:45AM +0000, David Laight wrote:
-> =
+On Thu, Jul 23, 2020 at 08:08:54AM +0200, Christoph Hellwig wrote:
+> diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+> index da933f99b5d517..42befbf12846c0 100644
+> --- a/net/ipv4/ip_sockglue.c
+> +++ b/net/ipv4/ip_sockglue.c
+> @@ -1422,7 +1422,8 @@ int ip_setsockopt(struct sock *sk, int level,
+>  			optname !=3D IP_IPSEC_POLICY &&
+>  			optname !=3D IP_XFRM_POLICY &&
+>  			!ip_mroute_opt(optname))
+> -		err =3D nf_setsockopt(sk, PF_INET, optname, optval, optlen);
+> +		err =3D nf_setsockopt(sk, PF_INET, optname, USER_SOCKPTR(optval),
+> +				    optlen);
+>  #endif
+>  	return err;
+>  }
+> diff --git a/net/ipv4/netfilter/ip_tables.c b/net/ipv4/netfilter/ip_table=
+s.c
+> index 4697d09c98dc3e..f2a9680303d8c0 100644
+> --- a/net/ipv4/netfilter/ip_tables.c
+> +++ b/net/ipv4/netfilter/ip_tables.c
+> @@ -1102,7 +1102,7 @@ __do_replace(struct net *net, const char *name, uns=
+igned int valid_hooks,
+>  }
+>  =
 
-> > I'm sure there is code that processes options in chunks.
-> > This probably means it is possible to put a chunk boundary
-> > at the end of userspace and continue processing the very start
-> > of kernel memory.
-> >
-> > At best this faults on the kernel copy code and crashes the system.
-> =
+>  static int
+> -do_replace(struct net *net, const void __user *user, unsigned int len)
+> +do_replace(struct net *net, sockptr_t arg, unsigned int len)
+>  {
+>  	int ret;
+>  	struct ipt_replace tmp;
+> @@ -1110,7 +1110,7 @@ do_replace(struct net *net, const void __user *user=
+, unsigned int len)
+>  	void *loc_cpu_entry;
+>  	struct ipt_entry *iter;
+>  =
 
-> Really?  Care to provide some details, or is it another of your "I can't
-> be possibly arsed to check what I'm saying, but it stands for reason
-> that..." specials?
+> -	if (copy_from_user(&tmp, user, sizeof(tmp)) !=3D 0)
+> +	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) !=3D 0)
+>  		return -EFAULT;
+>  =
 
-I did more 'homework' than sometimes :-)
-Slightly difficult without a searchable net-next tree.
-However, as has been pointed out is a different thread
-this code is used to update IPv6 flow labels:
+>  	/* overflow check */
+> @@ -1126,8 +1126,8 @@ do_replace(struct net *net, const void __user *user=
+, unsigned int len)
+>  		return -ENOMEM;
+>  =
 
-> > -		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen=
-))
-> > +		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
-> > +		if (copy_from_sockptr(fl->opt + 1, optval, olen))
-> >  			goto done;
+>  	loc_cpu_entry =3D newinfo->entries;
+> -	if (copy_from_user(loc_cpu_entry, user + sizeof(tmp),
+> -			   tmp.size) !=3D 0) {
+> +	sockptr_advance(arg, sizeof(tmp));
+> +	if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) !=3D 0) {
+>  		ret =3D -EFAULT;
+>  		goto free_newinfo;
+>  	}
 
-and doesn't work because the advances are no longer cumulative.
+Something along this path seems to have broken with this patch. An
+invocation of `iptables -A INPUT -m length --length 1360 -j DROP` now
+fails, with
 
-Now access_ok() has to take the base address and length to stop
-'running into' kernel space, but the code above can advance from
-a valid user pointer (which won't fault) to a kernel address.
+nf_setsockopt->do_replace->translate_table->check_entry_size_and_hooks:
+  (unsigned char *)e + e->next_offset > limit  =3D=3D>  TRUE
 
-If there were always an unmapped 'guard' page in the user address
-space the access_ok() check prior to copy_to/from_user() wouldn't
-need the length.
-So I surmise that no such guard page exists and so the above
-can advance from user addresses into kernel ones.
+resulting in the whole call chain returning -EINVAL. It bisects back to
+this commit. This is on net-next.
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
---===============5616197879764953743==--
+Jason
+--===============0541305406207924869==--
