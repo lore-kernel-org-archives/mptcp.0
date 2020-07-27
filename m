@@ -1,69 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============7731818681232525613=="
+Content-Type: multipart/mixed; boundary="===============4979913248238322549=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: David Laight <David.Laight at ACULAB.COM>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 10/11] mptcp: enable JOIN requests even if
- cookies are in use
-Date: Mon, 27 Jul 2020 11:50:25 +0200
-Message-ID: <20200727095025.GK23458@breakpoint.cc>
-In-Reply-To: 79ee0796e2bcf48e4d84c119c1118c436b05c6e9.camel@redhat.com
+Subject: [MPTCP] Re: get rid of the address_space override in setsockopt v2
+Date: Mon, 27 Jul 2020 09:51:45 +0000
+Message-ID: <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
+In-Reply-To: 20200724.154342.1433271593505001306.davem@davemloft.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5306
+X-UID: 5307
 
---===============7731818681232525613==
+--===============4979913248238322549==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2020-07-27 at 11:02 +0200, Florian Westphal wrote:
-> > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > > > +static bool mptcp_join_store(struct mptcp_subflow_request_sock *re=
-q, struct sock *sk_listener)
-> > > > +{
-> > > > +	struct mptcp_sock *msk =3D req->msk;
-> > > > +	struct inet_connection_sock *icsk;
-> > > > +	struct sock *sk;
-> > > > +
-> > > > +	icsk =3D &msk->sk;
-> > > > +	sk =3D &icsk->icsk_inet.sk;
-> > > > +
-> > > > +	if (inet_csk_reqsk_queue_len(sk) >=3D MPTCP_SUBFLOWS_MAX)
-> > > > +		return false;
-> > > =
-
-> > > Isn't this test a little too relaxed? e.g. shouldn't we check somethi=
-ng
-> > > alike:
-> > > =
-
-> > > 	if (inet_csk_reqsk_queue_len(sk) + READ_ONCE(pm->subflows) >
-> > > 	    READ_ONCE(pm->subflows_max))
-> > > =
-
-> > > Possibly we can account the pending MP_JOIN subflows in a new PM fiel=
-d,
-> > > so we could do the above check and the follow-up increment in a
-> > > consistent way with a single atomic opetation (the pm spinlock)
-> > =
-
-> > Not following here -- inet_csk_reqsk_queue_len() is supposed to return
-> > the number of all subflows, both established and half-open.
-> > =
-
-> > Why would I need to add pm->subflows?
+From: David Miller
+> Sent: 24 July 2020 23:44
 > =
 
-> Currently the PM netlink does not accept any additional subflows
-> when pm->subflows >=3D pm->subflows_max.
+> From: Christoph Hellwig <hch(a)lst.de>
+> Date: Thu, 23 Jul 2020 08:08:42 +0200
+> =
 
-You mean:
+> > setsockopt is the last place in architecture-independ code that still
+> > uses set_fs to force the uaccess routines to operate on kernel pointers.
+> >
+> > This series adds a new sockptr_t type that can contained either a kernel
+> > or user pointer, and which has accessors that do the right thing, and
+> > then uses it for setsockopt, starting by refactoring some low-level
+> > helpers and moving them over to it before finally doing the main
+> > setsockopt method.
+> >
+> > Note that apparently the eBPF selftests do not even cover this path, so
+> > the series has been tested with a testing patch that always copies the
+> > data first and passes a kernel pointer.  This is something that works f=
+or
+> > most common sockopts (and is something that the ePBF support relies on),
+> > but unfortunately in various corner cases we either don't use the passed
+> > in length, or in one case actually copy data back from setsockopt, or in
+> > case of bpfilter straight out do not work with kernel pointers at all.
+> >
+> > Against net-next/master.
+> >
+> > Changes since v1:
+> >  - check that users don't pass in kernel addresses
+> >  - more bpfilter cleanups
+> >  - cosmetic mptcp tweak
+> =
 
-if (inet_csk_reqsk_queue_len(sk) >=3D MPTCP_SUBFLOWS_MAX ||
-      pm->subflows >=3D pm->subflows_max)
-	return false;
+> Series applied to net-next, I'm build testing and will push this out when
+> that is done.
 
-?
-(I ommitted R_ONCE for brevity only).
---===============7731818681232525613==--
+Hmmm... this code does:
+
+int __sys_setsockopt(int fd, int level, int optname, char __user *user_optv=
+al,
+		int optlen)
+{
+	sockptr_t optval;
+	char *kernel_optval =3D NULL;
+	int err, fput_needed;
+	struct socket *sock;
+
+	if (optlen < 0)
+		return -EINVAL;
+
+	err =3D init_user_sockptr(&optval, user_optval);
+	if (err)
+		return err;
+
+And the called code does:
+	if (copy_from_sockptr(&opt, optbuf, sizeof(opt)))
+		return -EFAULT;
+
+
+Which means that only the base of the user's buffer is checked
+for being in userspace.
+
+I'm sure there is code that processes options in chunks.
+This probably means it is possible to put a chunk boundary
+at the end of userspace and continue processing the very start
+of kernel memory.
+
+At best this faults on the kernel copy code and crashes the system.
+
+Maybe there wasn't any code that actually incremented the user address.
+But it is hardly robust.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
+--===============4979913248238322549==--
