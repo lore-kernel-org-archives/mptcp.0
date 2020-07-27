@@ -1,61 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============2360544459527221576=="
+Content-Type: multipart/mixed; boundary="===============6479905664088186051=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix joined subflows with
- unblocking sk
-Date: Mon, 27 Jul 2020 10:59:47 +0200
-Message-ID: <0c60e99d58d3b143070bcb975a9c1c308e04579b.camel@redhat.com>
-In-Reply-To: 20200727083857.3137824-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH RFC 09/11] tcp: handle want_cookie clause via
+ reqsk_put
+Date: Mon, 27 Jul 2020 11:00:45 +0200
+Message-ID: <20200727090045.GI23458@breakpoint.cc>
+In-Reply-To: a49c792cc84ebd17c336f6fca9b6dd6f83b641b8.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5301
+X-UID: 5302
 
---===============2360544459527221576==
+--===============6479905664088186051==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-07-27 at 10:38 +0200, Matthieu Baerts wrote:
-> Unblocking sockets used for outgoing connections were not containing
-> inet info about the initial connection due to a typo there: the value of
-> "err" variable is negative in the kernelspace.
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> On Tue, 2020-07-14 at 20:25 +0200, Florian Westphal wrote:
+> > This will allow the syn_recv_sock callback to keep the request
+> > socket around even when syncookies are used.
+> > =
+
+> > This will be needed to make MPTCP JOIN requests work in cookie mode.
+> > =
+
+> > When a JOIN request is received, we cannot use cookies because
+> > we need to remember the peers nonce value for HMAC validation.
+> > =
+
+> > Next patch will handle the cookie+join case by allowing the
+> > rsk to stay around provided:
+> >  1. We can find a valid mptcp socket for the 32bit token provided
+> >     by the join and
+> >  2. the found mptcp socket doesn't exceed the maximum number of
+> >     subflows.
+> > =
+
+> > To handle 2) the request socket will not only be accounted with the
+> > listener but also with the mptcp (parent) socket.
+> > =
+
+> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > ---
+> >  net/ipv4/tcp_input.c | 7 ++-----
+> >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > =
+
+> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > index 5ae612902806..f45ca689bfa7 100644
+> > --- a/net/ipv4/tcp_input.c
+> > +++ b/net/ipv4/tcp_input.c
+> > @@ -6690,6 +6690,7 @@ int tcp_conn_request(struct request_sock_ops *rsk=
+_ops,
+> >  	/* Note: tcp_v6_init_req() might override ir_iif for link locals */
+> >  	inet_rsk(req)->ir_iif =3D inet_request_bound_dev_if(sk, skb);
+> >  =
+
+> > +	refcount_set(&req->rsk_refcnt, 1);
 > =
 
-> This fixes the creation of additional subflows where the remote port has
-> to be reused if the other host didn't announce another one. This also
-> fixes inet_diag showing blank info about MPTCP sockets from unblocking
-> sockets doing a connect().
+> I could not find easily where sk_refcnt is increment/how is handled
+> currently/before this patch. Can you please give some pointers?
+
+Its 0 and set to 3 on insert via reqsk_queue_hash_req().
+
+> >  	af_ops->init_req(req, sk, skb);
+> >  =
+
+> >  	if (security_inet_conn_request(sk, skb, req))
+> > @@ -6760,10 +6761,6 @@ int tcp_conn_request(struct request_sock_ops *rs=
+k_ops,
+> >  		af_ops->send_synack(sk, dst, &fl, req, &foc,
+> >  				    !want_cookie ? TCP_SYNACK_NORMAL :
+> >  						   TCP_SYNACK_COOKIE);
+> > -		if (want_cookie) {
+> > -			reqsk_free(req);
+> > -			return 0;
+> > -		}
+> >  	}
+> >  	reqsk_put(req);
 > =
 
-> Fixes: 41be81a8d3d0 ("mptcp: fix unblocking connect()")
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
->  net/mptcp/protocol.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> =
+> This means all syn cookied req (even plain TCP ones, even on non MPTCP
+> build) will get an additional atomic decrement, correct?
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3980fbb6f31e..c0abe738e7d3 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1833,7 +1833,7 @@ static int mptcp_stream_connect(struct socket *sock=
-, struct sockaddr *uaddr,
->  	/* on successful connect, the msk state will be moved to established by
->  	 * subflow_finish_connect()
->  	 */
-> -	if (!err || err =3D=3D EINPROGRESS)
-> +	if (!err || err =3D=3D -EINPROGRESS)
->  		mptcp_copy_inaddrs(sock->sk, ssock->sk);
->  	else
->  		inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
+Yes.
 
-LGTM! thanks for fixing my bugs :)
+> I fear the overhead could be measurable - even if the testbed is not
+> trivial at all!
 
-Feel free to go upstream ASAP ;)
+The alternative is to allow ->init_req to say 'I do want the req to be
+inserted anyway', e.g. via a bit in req.
 
-Thanks,
+> What if we avoid touching this code path, and instead store a - very
+> limited, possibly only 1 - number of hmacs into the msk?
 
-Paolo
+Would need to duplicate timeout logic and so on which I wanted to
+avoid.
 
---===============2360544459527221576==--
+But yes, thats another alternative.
+--===============6479905664088186051==--
