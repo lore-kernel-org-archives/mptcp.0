@@ -1,31 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============4096302293138654169=="
+Content-Type: multipart/mixed; boundary="===============1488065956731223691=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Stephen Hemminger <stephen at networkplumber.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 09/11] tcp: handle want_cookie clause via
- reqsk_put
-Date: Tue, 28 Jul 2020 01:00:52 +0200
-Message-ID: <20200727230052.GN23458@breakpoint.cc>
-In-Reply-To: 962243569496bee88d74b854549d853ca9a1a726.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH iproute2] mptcp: show all endpoints when no ID is
+ specified
+Date: Mon, 27 Jul 2020 16:44:04 -0700
+Message-ID: <20200727164404.05fc033f@hermes.lan>
+In-Reply-To: 20200724121718.2180511-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5332
+X-UID: 5334
 
---===============4096302293138654169==
+--===============1488065956731223691==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2020-07-27 at 11:00 +0200, Florian Westphal wrote:
-> > Would need to duplicate timeout logic and so on which I wanted to
-> > avoid.
+On Fri, 24 Jul 2020 14:17:18 +0200
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+
+> According to 'ip mptcp help', 'endpoint show' can accept no argument:
 > =
 
-> Yep that would be quite complex. I was wondering about something
-> simpler, like using with LRU policy a static 4 slots circular buffer
-> inside the msk (the one identified by the token). WDYT?
+>   ip mptcp endpoint show [ id ID ]
+> =
 
-But where do I get the token to find the msk from the cookie ack?
-Its not re-sent in the options afaics, unlike mp_capable case.
---===============4096302293138654169==--
+> It makes sense to print all endpoints when no filter is used.
+> =
+
+> So here if the following command is used, all endpoints are printed:
+> =
+
+>   ip mptcp endpoint show
+> =
+
+> Same as:
+> =
+
+>   ip mptcp endpoint
+> =
+
+> Fixes: 7e0767cd ("add support for mptcp netlink interface")
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+
+Applied thanks
+--===============1488065956731223691==--
