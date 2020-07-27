@@ -1,25 +1,21 @@
-Content-Type: multipart/mixed; boundary="===============4723688395470925295=="
+Content-Type: multipart/mixed; boundary="===============2578915197697316666=="
 MIME-Version: 1.0
 From: Christoph Hellwig <hch at lst.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to
- sockptr_t
-Date: Mon, 27 Jul 2020 18:15:55 +0200
-Message-ID: <20200727161555.GA7817@lst.de>
-In-Reply-To: 20200727133331.GA1851348@shredder
+Subject: [MPTCP] Re: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
+Date: Mon, 27 Jul 2020 18:16:15 +0200
+Message-ID: <20200727161615.GB7817@lst.de>
+In-Reply-To: 20200727150310.GA1632472@zx2c4.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5323
+X-UID: 5324
 
---===============4723688395470925295==
+--===============2578915197697316666==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I have to admit I didn't spot the difference between the good and the
-bad output even after trying hard..
-
-But can you try the patch below?
+Can you try the patch below?
 
 ---
 From cce2d2e1b43ecee5f4af7cf116808b74b330080f Mon Sep 17 00:00:00 2001
@@ -379,4 +375,4 @@ ptr_t optval,
 
 2.27.0
 
---===============4723688395470925295==--
+--===============2578915197697316666==--
