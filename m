@@ -1,98 +1,116 @@
-Content-Type: multipart/mixed; boundary="===============4979913248238322549=="
+Content-Type: multipart/mixed; boundary="===============6499142960351431938=="
 MIME-Version: 1.0
-From: David Laight <David.Laight at ACULAB.COM>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: get rid of the address_space override in setsockopt v2
-Date: Mon, 27 Jul 2020 09:51:45 +0000
-Message-ID: <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
-In-Reply-To: 20200724.154342.1433271593505001306.davem@davemloft.net
+Subject: [MPTCP] Re: [PATCH RFC 09/11] tcp: handle want_cookie clause via
+ reqsk_put
+Date: Mon, 27 Jul 2020 12:23:33 +0200
+Message-ID: <962243569496bee88d74b854549d853ca9a1a726.camel@redhat.com>
+In-Reply-To: 20200727090045.GI23458@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 5307
+X-UID: 5309
 
---===============4979913248238322549==
+--===============6499142960351431938==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: David Miller
-> Sent: 24 July 2020 23:44
+On Mon, 2020-07-27 at 11:00 +0200, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > On Tue, 2020-07-14 at 20:25 +0200, Florian Westphal wrote:
+> > > This will allow the syn_recv_sock callback to keep the request
+> > > socket around even when syncookies are used.
+> > > =
+
+> > > This will be needed to make MPTCP JOIN requests work in cookie mode.
+> > > =
+
+> > > When a JOIN request is received, we cannot use cookies because
+> > > we need to remember the peers nonce value for HMAC validation.
+> > > =
+
+> > > Next patch will handle the cookie+join case by allowing the
+> > > rsk to stay around provided:
+> > >  1. We can find a valid mptcp socket for the 32bit token provided
+> > >     by the join and
+> > >  2. the found mptcp socket doesn't exceed the maximum number of
+> > >     subflows.
+> > > =
+
+> > > To handle 2) the request socket will not only be accounted with the
+> > > listener but also with the mptcp (parent) socket.
+> > > =
+
+> > > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > > ---
+> > >  net/ipv4/tcp_input.c | 7 ++-----
+> > >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > > =
+
+> > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > > index 5ae612902806..f45ca689bfa7 100644
+> > > --- a/net/ipv4/tcp_input.c
+> > > +++ b/net/ipv4/tcp_input.c
+> > > @@ -6690,6 +6690,7 @@ int tcp_conn_request(struct request_sock_ops *r=
+sk_ops,
+> > >  	/* Note: tcp_v6_init_req() might override ir_iif for link locals */
+> > >  	inet_rsk(req)->ir_iif =3D inet_request_bound_dev_if(sk, skb);
+> > >  =
+
+> > > +	refcount_set(&req->rsk_refcnt, 1);
+> > =
+
+> > I could not find easily where sk_refcnt is increment/how is handled
+> > currently/before this patch. Can you please give some pointers?
 > =
 
-> From: Christoph Hellwig <hch(a)lst.de>
-> Date: Thu, 23 Jul 2020 08:08:42 +0200
+> Its 0 and set to 3 on insert via reqsk_queue_hash_req().
 > =
 
-> > setsockopt is the last place in architecture-independ code that still
-> > uses set_fs to force the uaccess routines to operate on kernel pointers.
-> >
-> > This series adds a new sockptr_t type that can contained either a kernel
-> > or user pointer, and which has accessors that do the right thing, and
-> > then uses it for setsockopt, starting by refactoring some low-level
-> > helpers and moving them over to it before finally doing the main
-> > setsockopt method.
-> >
-> > Note that apparently the eBPF selftests do not even cover this path, so
-> > the series has been tested with a testing patch that always copies the
-> > data first and passes a kernel pointer.  This is something that works f=
-or
-> > most common sockopts (and is something that the ePBF support relies on),
-> > but unfortunately in various corner cases we either don't use the passed
-> > in length, or in one case actually copy data back from setsockopt, or in
-> > case of bpfilter straight out do not work with kernel pointers at all.
-> >
-> > Against net-next/master.
-> >
-> > Changes since v1:
-> >  - check that users don't pass in kernel addresses
-> >  - more bpfilter cleanups
-> >  - cosmetic mptcp tweak
+> > >  	af_ops->init_req(req, sk, skb);
+> > >  =
+
+> > >  	if (security_inet_conn_request(sk, skb, req))
+> > > @@ -6760,10 +6761,6 @@ int tcp_conn_request(struct request_sock_ops *=
+rsk_ops,
+> > >  		af_ops->send_synack(sk, dst, &fl, req, &foc,
+> > >  				    !want_cookie ? TCP_SYNACK_NORMAL :
+> > >  						   TCP_SYNACK_COOKIE);
+> > > -		if (want_cookie) {
+> > > -			reqsk_free(req);
+> > > -			return 0;
+> > > -		}
+> > >  	}
+> > >  	reqsk_put(req);
+> > =
+
+> > This means all syn cookied req (even plain TCP ones, even on non MPTCP
+> > build) will get an additional atomic decrement, correct?
 > =
 
-> Series applied to net-next, I'm build testing and will push this out when
-> that is done.
+> Yes.
+> =
 
-Hmmm... this code does:
+> > I fear the overhead could be measurable - even if the testbed is not
+> > trivial at all!
+> =
 
-int __sys_setsockopt(int fd, int level, int optname, char __user *user_optv=
-al,
-		int optlen)
-{
-	sockptr_t optval;
-	char *kernel_optval =3D NULL;
-	int err, fput_needed;
-	struct socket *sock;
+> The alternative is to allow ->init_req to say 'I do want the req to be
+> inserted anyway', e.g. via a bit in req.
+> =
 
-	if (optlen < 0)
-		return -EINVAL;
+> > What if we avoid touching this code path, and instead store a - very
+> > limited, possibly only 1 - number of hmacs into the msk?
+> =
 
-	err =3D init_user_sockptr(&optval, user_optval);
-	if (err)
-		return err;
+> Would need to duplicate timeout logic and so on which I wanted to
+> avoid.
 
-And the called code does:
-	if (copy_from_sockptr(&opt, optbuf, sizeof(opt)))
-		return -EFAULT;
+Yep that would be quite complex. I was wondering about something
+simpler, like using with LRU policy a static 4 slots circular buffer
+inside the msk (the one identified by the token). WDYT?
 
+/P
 
-Which means that only the base of the user's buffer is checked
-for being in userspace.
-
-I'm sure there is code that processes options in chunks.
-This probably means it is possible to put a chunk boundary
-at the end of userspace and continue processing the very start
-of kernel memory.
-
-At best this faults on the kernel copy code and crashes the system.
-
-Maybe there wasn't any code that actually incremented the user address.
-But it is hardly robust.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
---===============4979913248238322549==--
+--===============6499142960351431938==--
