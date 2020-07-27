@@ -1,122 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============0265726838256555429=="
+Content-Type: multipart/mixed; boundary="===============5616197879764953743=="
 MIME-Version: 1.0
-From: Ido Schimmel <idosch at idosch.org>
+From: David Laight <David.Laight at ACULAB.COM>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to
- sockptr_t
-Date: Mon, 27 Jul 2020 16:33:31 +0300
-Message-ID: <20200727133331.GA1851348@shredder>
-In-Reply-To: 20200727130029.GA26393@lst.de
+Subject: [MPTCP] Re: get rid of the address_space override in setsockopt v2
+Date: Mon, 27 Jul 2020 14:09:09 +0000
+Message-ID: <5d958e937db54849b4ef9046e7e12277@AcuMS.aculab.com>
+In-Reply-To: 20200727134814.GD794331@ZenIV.linux.org.uk
 X-Status: 
 X-Keywords:                  
-X-UID: 5317
+X-UID: 5319
 
---===============0265726838256555429==
+--===============5616197879764953743==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 27, 2020 at 03:00:29PM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 27, 2020 at 03:15:05PM +0300, Ido Schimmel wrote:
-> > I see a regression with IPv6 flowlabel that I bisected to this patch.
-> > When passing '-F 0' to 'ping' the flow label should be random, yet it's
-> > the same every time after this patch.
+From: Al Viro
+> Sent: 27 July 2020 14:48
 > =
 
-> Can you send a reproducer?
-
-```
-#!/bin/bash
-
-ip link add name dummy10 up type dummy
-
-ping -q -F 0 -I dummy10 ff02::1 &> /dev/null &
-tcpdump -nne -e -i dummy10 -vvv -c 1 dst host ff02::1
-pkill ping
-
-echo
-
-ping -F 0 -I dummy10 ff02::1 &> /dev/null &
-tcpdump -nne -e -i dummy10 -vvv -c 1 dst host ff02::1
-pkill ping
-
-ip link del dev dummy10
-```
-
-Output with commit ff6a4cf214ef ("net/ipv6: split up
-ipv6_flowlabel_opt"):
-
-```
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 26=
-2144 bytes
-16:26:27.072559 62:80:34:1d:b4:b8 > 33:33:00:00:00:01, ethertype IPv6 (0x86=
-dd), length 118: (flowlabel 0x920cf, hlim 1, next-header ICMPv6 (58) payloa=
-d length: 64) fe80::6080:34ff:fe1d:b4b8 > ff02::1: [icmp6 sum ok] ICMP6, ec=
-ho request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 26=
-2144 bytes
-16:26:28.352528 62:80:34:1d:b4:b8 > 33:33:00:00:00:01, ethertype IPv6 (0x86=
-dd), length 118: (flowlabel 0xcdd97, hlim 1, next-header ICMPv6 (58) payloa=
-d length: 64) fe80::6080:34ff:fe1d:b4b8 > ff02::1: [icmp6 sum ok] ICMP6, ec=
-ho request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-```
-
-Output with commit 86298285c9ae ("net/ipv6: switch ipv6_flowlabel_opt to
-sockptr_t"):
-
-```
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 26=
-2144 bytes
-16:32:17.848517 f2:9a:05:ff:cb:25 > 33:33:00:00:00:01, ethertype IPv6 (0x86=
-dd), length 118: (flowlabel 0xfab36, hlim 1, next-header ICMPv6 (58) payloa=
-d length: 64) fe80::f09a:5ff:feff:cb25 > ff02::1: [icmp6 sum ok] ICMP6, ech=
-o request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 26=
-2144 bytes
-16:32:19.000779 f2:9a:05:ff:cb:25 > 33:33:00:00:00:01, ethertype IPv6 (0x86=
-dd), length 118: (flowlabel 0xfab36, hlim 1, next-header ICMPv6 (58) payloa=
-d length: 64) fe80::f09
-a:5ff:feff:cb25 > ff02::1: [icmp6 sum ok] ICMP6, echo request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-```
-
+> On Mon, Jul 27, 2020 at 09:51:45AM +0000, David Laight wrote:
 > =
 
-> > =
-
-> > It seems that the pointer is never advanced after the call to
-> > sockptr_advance() because it is passed by value and not by reference.
-> > Even if you were to pass it by reference I think you would later need to
-> > call sockptr_decrease() or something similar. Otherwise it is very
-> > error-prone.
-> > =
-
-> > Maybe adding an offset to copy_to_sockptr() and copy_from_sockptr() is
-> > better?
+> > I'm sure there is code that processes options in chunks.
+> > This probably means it is possible to put a chunk boundary
+> > at the end of userspace and continue processing the very start
+> > of kernel memory.
+> >
+> > At best this faults on the kernel copy code and crashes the system.
 > =
 
-> We could do that, although I wouldn't add it to the existing functions
-> to avoid the churns and instead add copy_to_sockptr_offset or something
-> like that.
+> Really?  Care to provide some details, or is it another of your "I can't
+> be possibly arsed to check what I'm saying, but it stands for reason
+> that..." specials?
 
-Sounds good
+I did more 'homework' than sometimes :-)
+Slightly difficult without a searchable net-next tree.
+However, as has been pointed out is a different thread
+this code is used to update IPv6 flow labels:
 
-Thanks
---===============0265726838256555429==--
+> > -		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen=
+))
+> > +		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
+> > +		if (copy_from_sockptr(fl->opt + 1, optval, olen))
+> >  			goto done;
+
+and doesn't work because the advances are no longer cumulative.
+
+Now access_ok() has to take the base address and length to stop
+'running into' kernel space, but the code above can advance from
+a valid user pointer (which won't fault) to a kernel address.
+
+If there were always an unmapped 'guard' page in the user address
+space the access_ok() check prior to copy_to/from_user() wouldn't
+need the length.
+So I surmise that no such guard page exists and so the above
+can advance from user addresses into kernel ones.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
+--===============5616197879764953743==--
