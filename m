@@ -1,50 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============8544299342359150197=="
+Content-Type: multipart/mixed; boundary="===============9081922158731890872=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 10/11] mptcp: enable JOIN requests even if
- cookies are in use
-Date: Mon, 27 Jul 2020 11:02:50 +0200
-Message-ID: <20200727090250.GJ23458@breakpoint.cc>
-In-Reply-To: 2e429ba0e48baa93a33c52c51abed51eb2ca56d5.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH RFC 08/11] tcp: syncookies: keep mptcp option
+ enabled
+Date: Mon, 27 Jul 2020 11:13:40 +0200
+Message-ID: <28ecf3fe8093764e1e81ec9158b95b2a441b6e78.camel@redhat.com>
+In-Reply-To: 20200727085728.GH23458@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 5303
+X-UID: 5304
 
---===============8544299342359150197==
+--===============9081922158731890872==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > +static bool mptcp_join_store(struct mptcp_subflow_request_sock *req, s=
-truct sock *sk_listener)
-> > +{
-> > +	struct mptcp_sock *msk =3D req->msk;
-> > +	struct inet_connection_sock *icsk;
-> > +	struct sock *sk;
-> > +
-> > +	icsk =3D &msk->sk;
-> > +	sk =3D &icsk->icsk_inet.sk;
-> > +
-> > +	if (inet_csk_reqsk_queue_len(sk) >=3D MPTCP_SUBFLOWS_MAX)
-> > +		return false;
+On Mon, 2020-07-27 at 10:57 +0200, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > >  	treq =3D tcp_rsk(req);
+> > >  	treq->tfo_listener =3D false;
+> > >  =
+
+> > > -	if (IS_ENABLED(CONFIG_MPTCP))
+> > > -		treq->is_mptcp =3D 0;
+> > > +	if (treq->is_mptcp) {
+> > > +		int err =3D mptcp_subflow_init_cookie_req(req, sk, skb);
+> > > +
+> > > +		if (err)
+> > > +			goto out_free;
+> > > +	}
+> > =
+
+> > It looks like 'treq->is_mptcp' is not initialized here ?
 > =
 
-> Isn't this test a little too relaxed? e.g. shouldn't we check something
-> alike:
+> Yes, this is resolved now.
 > =
 
-> 	if (inet_csk_reqsk_queue_len(sk) + READ_ONCE(pm->subflows) >
-> 	    READ_ONCE(pm->subflows_max))
+> > What about moving the whole oops selection, init_reqsk_alloc() call,
+> > is_mptcp init and mptcp_subflow_init_cookie_req() call in an header
+> > only helper? (say tcp_reqsk_alloc() or the like)
 > =
 
-> Possibly we can account the pending MP_JOIN subflows in a new PM field,
-> so we could do the above check and the follow-up increment in a
-> consistent way with a single atomic opetation (the pm spinlock)
+> ipv6 uses tcp6_request_sock_ops, so they are not 100% the same,
+> unfortunately.
+> =
 
-Not following here -- inet_csk_reqsk_queue_len() is supposed to return
-the number of all subflows, both established and half-open.
+> What did you have in mind?
 
-Why would I need to add pm->subflows?
---===============8544299342359150197==--
+Something alike the following (untested):
+
+struct request_sock *tcp_reqsk_alloc(const struct request_sock_ops *ops,
+				     struct sock *sk)
+{
+	struct tcp_request_sock *treq;
+	struct request_sock * req;
+	=
+
+#ifdef CONFIG_MPTCP
+	if (sk_is_mptcp(sk))
+		ops =3D &mptcp_subflow_request_sock_ops;
+#endif
+	req =3D inet_reqsk_alloc(ops, sk, false);
+	if (!req)
+		return req;
+	treq =3D tcp_rsk(req);
+	treq->is_mptcp =3D sk_is_mptcp(sk);
+	if (treq->is_mptcp &&
+	    mptcp_subflow_init_cookie_req(req, sk, skb)) {
+		reqsk_free(req);
+		return NULL;
+	}
+	return req;
+}
+
+than ipv4 may call tcp_reqsk_alloc(tcp_request_sock_ops, sk) and
+ipv6 tcp_reqsk_alloc(tcp6_request_sock_ops, sk). That could possibly
+remove the need for patch "tcp: syncookies: use single reqsk_free
+location"
+
+Not sure if I missed something more...
+
+Cheers,
+
+Paolo
+
+--===============9081922158731890872==--
