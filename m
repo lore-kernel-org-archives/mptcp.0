@@ -1,103 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============6479905664088186051=="
+Content-Type: multipart/mixed; boundary="===============8544299342359150197=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 09/11] tcp: handle want_cookie clause via
- reqsk_put
-Date: Mon, 27 Jul 2020 11:00:45 +0200
-Message-ID: <20200727090045.GI23458@breakpoint.cc>
-In-Reply-To: a49c792cc84ebd17c336f6fca9b6dd6f83b641b8.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH RFC 10/11] mptcp: enable JOIN requests even if
+ cookies are in use
+Date: Mon, 27 Jul 2020 11:02:50 +0200
+Message-ID: <20200727090250.GJ23458@breakpoint.cc>
+In-Reply-To: 2e429ba0e48baa93a33c52c51abed51eb2ca56d5.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5302
+X-UID: 5303
 
---===============6479905664088186051==
+--===============8544299342359150197==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Tue, 2020-07-14 at 20:25 +0200, Florian Westphal wrote:
-> > This will allow the syn_recv_sock callback to keep the request
-> > socket around even when syncookies are used.
-> > =
-
-> > This will be needed to make MPTCP JOIN requests work in cookie mode.
-> > =
-
-> > When a JOIN request is received, we cannot use cookies because
-> > we need to remember the peers nonce value for HMAC validation.
-> > =
-
-> > Next patch will handle the cookie+join case by allowing the
-> > rsk to stay around provided:
-> >  1. We can find a valid mptcp socket for the 32bit token provided
-> >     by the join and
-> >  2. the found mptcp socket doesn't exceed the maximum number of
-> >     subflows.
-> > =
-
-> > To handle 2) the request socket will not only be accounted with the
-> > listener but also with the mptcp (parent) socket.
-> > =
-
-> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > ---
-> >  net/ipv4/tcp_input.c | 7 ++-----
-> >  1 file changed, 2 insertions(+), 5 deletions(-)
-> > =
-
-> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > index 5ae612902806..f45ca689bfa7 100644
-> > --- a/net/ipv4/tcp_input.c
-> > +++ b/net/ipv4/tcp_input.c
-> > @@ -6690,6 +6690,7 @@ int tcp_conn_request(struct request_sock_ops *rsk=
-_ops,
-> >  	/* Note: tcp_v6_init_req() might override ir_iif for link locals */
-> >  	inet_rsk(req)->ir_iif =3D inet_request_bound_dev_if(sk, skb);
-> >  =
-
-> > +	refcount_set(&req->rsk_refcnt, 1);
+> > +static bool mptcp_join_store(struct mptcp_subflow_request_sock *req, s=
+truct sock *sk_listener)
+> > +{
+> > +	struct mptcp_sock *msk =3D req->msk;
+> > +	struct inet_connection_sock *icsk;
+> > +	struct sock *sk;
+> > +
+> > +	icsk =3D &msk->sk;
+> > +	sk =3D &icsk->icsk_inet.sk;
+> > +
+> > +	if (inet_csk_reqsk_queue_len(sk) >=3D MPTCP_SUBFLOWS_MAX)
+> > +		return false;
 > =
 
-> I could not find easily where sk_refcnt is increment/how is handled
-> currently/before this patch. Can you please give some pointers?
-
-Its 0 and set to 3 on insert via reqsk_queue_hash_req().
-
-> >  	af_ops->init_req(req, sk, skb);
-> >  =
-
-> >  	if (security_inet_conn_request(sk, skb, req))
-> > @@ -6760,10 +6761,6 @@ int tcp_conn_request(struct request_sock_ops *rs=
-k_ops,
-> >  		af_ops->send_synack(sk, dst, &fl, req, &foc,
-> >  				    !want_cookie ? TCP_SYNACK_NORMAL :
-> >  						   TCP_SYNACK_COOKIE);
-> > -		if (want_cookie) {
-> > -			reqsk_free(req);
-> > -			return 0;
-> > -		}
-> >  	}
-> >  	reqsk_put(req);
+> Isn't this test a little too relaxed? e.g. shouldn't we check something
+> alike:
 > =
 
-> This means all syn cookied req (even plain TCP ones, even on non MPTCP
-> build) will get an additional atomic decrement, correct?
+> 	if (inet_csk_reqsk_queue_len(sk) + READ_ONCE(pm->subflows) >
+> 	    READ_ONCE(pm->subflows_max))
+> =
 
-Yes.
+> Possibly we can account the pending MP_JOIN subflows in a new PM field,
+> so we could do the above check and the follow-up increment in a
+> consistent way with a single atomic opetation (the pm spinlock)
 
-> I fear the overhead could be measurable - even if the testbed is not
-> trivial at all!
+Not following here -- inet_csk_reqsk_queue_len() is supposed to return
+the number of all subflows, both established and half-open.
 
-The alternative is to allow ->init_req to say 'I do want the req to be
-inserted anyway', e.g. via a bit in req.
-
-> What if we avoid touching this code path, and instead store a - very
-> limited, possibly only 1 - number of hmacs into the msk?
-
-Would need to duplicate timeout logic and so on which I wanted to
-avoid.
-
-But yes, thats another alternative.
---===============6479905664088186051==--
+Why would I need to add pm->subflows?
+--===============8544299342359150197==--
