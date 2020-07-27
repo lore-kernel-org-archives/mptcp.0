@@ -1,36 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============8830898090957308512=="
+Content-Type: multipart/mixed; boundary="===============7890019612322133447=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: fix joined subflows with unblocking sk
-Date: Mon, 27 Jul 2020 11:52:18 -0700
-Message-ID: <20200727.115218.1191292272155021831.davem@davemloft.net>
-In-Reply-To: 20200727102433.3422117-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH mptcp-next v4 00/12] DATA_FIN support
+Date: Mon, 27 Jul 2020 22:00:45 +0200
+Message-ID: <3082c3f5-b17d-c6a9-6966-cbf06ff97b8c@tessares.net>
+In-Reply-To: 20200724011127.363638-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5329
+X-UID: 5330
 
---===============8830898090957308512==
+--===============7890019612322133447==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Date: Mon, 27 Jul 2020 12:24:33 +0200
+Hi Mat, Paolo,
 
-> Unblocking sockets used for outgoing connections were not containing
-> inet info about the initial connection due to a typo there: the value of
-> "err" variable is negative in the kernelspace.
+On 24/07/2020 03:11, Mat Martineau wrote:
+> Here is a series adding full DATA_FIN support at connection shutdown /
+> close. See the patch 8 commit message for information about the
+> disconnection state machine.
 > =
 
-> This fixes the creation of additional subflows where the remote port has
-> to be reused if the other host didn't announce another one. This also
-> fixes inet_diag showing blank info about MPTCP sockets from unblocking
-> sockets doing a connect().
-> =
+> Self tests are passing. Have now checked interoperation with the
+> mptcp_trunk branch.
 
-> Fixes: 41be81a8d3d0 ("mptcp: fix unblocking connect()")
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Thank you for the new v4 and the reviews!
 
-Applied, thanks!
---===============8830898090957308512==--
+As discussed on IRC, I added these patches at the end of the export branch.
+
+Note that I move:
+- "mptcp: Add mptcp_close_state() helper"
+- "mptcp: Track received DATA_FIN sequence number and add related helpers"
+- "07aac58e4c66 mptcp: Add helper to process acks of DATA_FIN"
+just before "mptcp: Use full MPTCP-level disconnect state machine" and =
+
+skip these commits from the "per-commit" validation tests because new =
+
+static functions are added without users.
+
+Tests + export are in progress!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============7890019612322133447==--
