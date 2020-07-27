@@ -1,89 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============9081922158731890872=="
+Content-Type: multipart/mixed; boundary="===============2465142198244214810=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 08/11] tcp: syncookies: keep mptcp option
- enabled
-Date: Mon, 27 Jul 2020 11:13:40 +0200
-Message-ID: <28ecf3fe8093764e1e81ec9158b95b2a441b6e78.camel@redhat.com>
-In-Reply-To: 20200727085728.GH23458@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH RFC 10/11] mptcp: enable JOIN requests even if
+ cookies are in use
+Date: Mon, 27 Jul 2020 11:32:20 +0200
+Message-ID: <79ee0796e2bcf48e4d84c119c1118c436b05c6e9.camel@redhat.com>
+In-Reply-To: 20200727090250.GJ23458@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 5304
+X-UID: 5305
 
---===============9081922158731890872==
+--===============2465142198244214810==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-07-27 at 10:57 +0200, Florian Westphal wrote:
+On Mon, 2020-07-27 at 11:02 +0200, Florian Westphal wrote:
 > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > >  	treq =3D tcp_rsk(req);
-> > >  	treq->tfo_listener =3D false;
-> > >  =
-
-> > > -	if (IS_ENABLED(CONFIG_MPTCP))
-> > > -		treq->is_mptcp =3D 0;
-> > > +	if (treq->is_mptcp) {
-> > > +		int err =3D mptcp_subflow_init_cookie_req(req, sk, skb);
+> > > +static bool mptcp_join_store(struct mptcp_subflow_request_sock *req,=
+ struct sock *sk_listener)
+> > > +{
+> > > +	struct mptcp_sock *msk =3D req->msk;
+> > > +	struct inet_connection_sock *icsk;
+> > > +	struct sock *sk;
 > > > +
-> > > +		if (err)
-> > > +			goto out_free;
-> > > +	}
+> > > +	icsk =3D &msk->sk;
+> > > +	sk =3D &icsk->icsk_inet.sk;
+> > > +
+> > > +	if (inet_csk_reqsk_queue_len(sk) >=3D MPTCP_SUBFLOWS_MAX)
+> > > +		return false;
 > > =
 
-> > It looks like 'treq->is_mptcp' is not initialized here ?
+> > Isn't this test a little too relaxed? e.g. shouldn't we check something
+> > alike:
+> > =
+
+> > 	if (inet_csk_reqsk_queue_len(sk) + READ_ONCE(pm->subflows) >
+> > 	    READ_ONCE(pm->subflows_max))
+> > =
+
+> > Possibly we can account the pending MP_JOIN subflows in a new PM field,
+> > so we could do the above check and the follow-up increment in a
+> > consistent way with a single atomic opetation (the pm spinlock)
 > =
 
-> Yes, this is resolved now.
+> Not following here -- inet_csk_reqsk_queue_len() is supposed to return
+> the number of all subflows, both established and half-open.
 > =
 
-> > What about moving the whole oops selection, init_reqsk_alloc() call,
-> > is_mptcp init and mptcp_subflow_init_cookie_req() call in an header
-> > only helper? (say tcp_reqsk_alloc() or the like)
-> =
+> Why would I need to add pm->subflows?
 
-> ipv6 uses tcp6_request_sock_ops, so they are not 100% the same,
-> unfortunately.
-> =
+Currently the PM netlink does not accept any additional subflows
+when pm->subflows >=3D pm->subflows_max.
 
-> What did you have in mind?
+To be reasonable sure the pending syncookied mp_joins will be accepted,
+I think we should check that the currently created subflows plus the
+pending ones will not exceed the maximum allowed.
 
-Something alike the following (untested):
-
-struct request_sock *tcp_reqsk_alloc(const struct request_sock_ops *ops,
-				     struct sock *sk)
-{
-	struct tcp_request_sock *treq;
-	struct request_sock * req;
-	=
-
-#ifdef CONFIG_MPTCP
-	if (sk_is_mptcp(sk))
-		ops =3D &mptcp_subflow_request_sock_ops;
-#endif
-	req =3D inet_reqsk_alloc(ops, sk, false);
-	if (!req)
-		return req;
-	treq =3D tcp_rsk(req);
-	treq->is_mptcp =3D sk_is_mptcp(sk);
-	if (treq->is_mptcp &&
-	    mptcp_subflow_init_cookie_req(req, sk, skb)) {
-		reqsk_free(req);
-		return NULL;
-	}
-	return req;
-}
-
-than ipv4 may call tcp_reqsk_alloc(tcp_request_sock_ops, sk) and
-ipv6 tcp_reqsk_alloc(tcp6_request_sock_ops, sk). That could possibly
-remove the need for patch "tcp: syncookies: use single reqsk_free
-location"
-
-Not sure if I missed something more...
+Not sure if the above clarify my thinking in any way, please let me
+know!
 
 Cheers,
 
 Paolo
 
---===============9081922158731890872==--
+--===============2465142198244214810==--
