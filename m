@@ -1,61 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============1681407156524464148=="
+Content-Type: multipart/mixed; boundary="===============7728699298945079586=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 10/12] mptcp: Skip unnecessary skb extension
- allocation for bare acks
-Date: Tue, 28 Jul 2020 15:12:08 -0700
-Message-ID: <20200728221210.92841-11-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 11/12] mptcp: Safely read sequence number
+ when lock isn't held
+Date: Tue, 28 Jul 2020 15:12:09 -0700
+Message-ID: <20200728221210.92841-12-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200728221210.92841-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5353
+X-UID: 5354
 
---===============1681407156524464148==
+--===============7728699298945079586==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Bare TCP ack skbs are freed right after MPTCP sees them, so the work to
-allocate, zero, and populate the MPTCP skb extension is wasted. Detect
-these skbs and do not add skb extensions to them.
+The MPTCP socket's write_seq member should be read with READ_ONCE() when
+the msk lock is not held.
 
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/options.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b4458ecd01f8..7fa822b55c34 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -868,15 +868,18 @@ void mptcp_incoming_options(struct sock *sk, struct s=
-k_buff *skb,
- 	if (mp_opt.use_ack)
- 		update_una(msk, &mp_opt);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f264ea15e081..f2455a68d231 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1269,7 +1269,7 @@ static void mptcp_retransmit_handler(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
  =
 
--	/* Zero-length packets, like bare ACKs carrying a DATA_FIN, are
--	 * dropped by the caller and not propagated to the MPTCP layer.
--	 * Copy the DATA_FIN information now.
-+	/* Zero-data-length packets are dropped by the caller and not
-+	 * propagated to the MPTCP layer, so the skb extension does not
-+	 * need to be allocated or populated. DATA_FIN information, if
-+	 * present, needs to be updated here before the skb is freed.
- 	 */
- 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
- 		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
- 		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
- 		    schedule_work(&msk->work))
- 			sock_hold(subflow->conn);
-+
-+		return;
- 	}
- =
-
- 	mpext =3D skb_ext_add(skb, SKB_EXT_MPTCP);
+-	if (atomic64_read(&msk->snd_una) =3D=3D msk->write_seq) {
++	if (atomic64_read(&msk->snd_una) =3D=3D READ_ONCE(msk->write_seq)) {
+ 		mptcp_stop_timer(sk);
+ 	} else {
+ 		set_bit(MPTCP_WORK_RTX, &msk->flags);
 -- =
 
 2.28.0
 
---===============1681407156524464148==--
+--===============7728699298945079586==--
