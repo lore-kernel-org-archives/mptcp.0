@@ -1,46 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============6423267071915479092=="
+Content-Type: multipart/mixed; boundary="===============7296138474517443161=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH RFC 09/11] tcp: handle want_cookie clause via
- reqsk_put
-Date: Tue, 28 Jul 2020 13:51:37 +0200
-Message-ID: <7baf4fd642790314afd5c4a5624003e41e620eb6.camel@redhat.com>
-In-Reply-To: 20200727230052.GN23458@breakpoint.cc
+Subject: [MPTCP] Re: [PATCH mptcp-next v4 00/12] DATA_FIN support
+Date: Tue, 28 Jul 2020 09:37:57 -0700
+Message-ID: <alpine.OSX.2.23.453.2007280936080.45676@joses-mobl6.amr.corp.intel.com>
+In-Reply-To: 3082c3f5-b17d-c6a9-6966-cbf06ff97b8c@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5340
+X-UID: 5342
 
---===============6423267071915479092==
+--===============7296138474517443161==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-07-28 at 01:00 +0200, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Mon, 2020-07-27 at 11:00 +0200, Florian Westphal wrote:
-> > > Would need to duplicate timeout logic and so on which I wanted to
-> > > avoid.
-> > =
+On Mon, 27 Jul 2020, Matthieu Baerts wrote:
 
-> > Yep that would be quite complex. I was wondering about something
-> > simpler, like using with LRU policy a static 4 slots circular buffer
-> > inside the msk (the one identified by the token). WDYT?
-> =
+> Hi Mat, Paolo,
+>
+> On 24/07/2020 03:11, Mat Martineau wrote:
+>> Here is a series adding full DATA_FIN support at connection shutdown /
+>> close. See the patch 8 commit message for information about the
+>> disconnection state machine.
+>> =
 
-> But where do I get the token to find the msk from the cookie ack?
-> Its not re-sent in the options afaics, unlike mp_capable case.
+>> Self tests are passing. Have now checked interoperation with the
+>> mptcp_trunk branch.
+>
+> Thank you for the new v4 and the reviews!
+>
+> As discussed on IRC, I added these patches at the end of the export branc=
+h.
+>
+> Note that I move:
+> - "mptcp: Add mptcp_close_state() helper"
+> - "mptcp: Track received DATA_FIN sequence number and add related helpers"
+> - "07aac58e4c66 mptcp: Add helper to process acks of DATA_FIN"
+> just before "mptcp: Use full MPTCP-level disconnect state machine" and sk=
+ip =
 
-uhm... wasting even more memory we could store in each slot hmac and
-token (24 bytes per slot)
+> these commits from the "per-commit" validation tests because new static =
 
-MPJ ACK with syncookie we could lookup the slot by hmac.
+> functions are added without users.
+>
+> Tests + export are in progress!
+>
 
-Not sure about the security implications.
+I'd like to send this to netdev soon (today maybe?). Can I add any =
 
-Sounds too overkill?
+Acked-by tags first?
 
-/P
+Thanks,
 
-
---===============6423267071915479092==--
+--
+Mat Martineau
+Intel
+--===============7296138474517443161==--
