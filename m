@@ -1,59 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============7296138474517443161=="
+Content-Type: multipart/mixed; boundary="===============4543841602350504585=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v4 00/12] DATA_FIN support
-Date: Tue, 28 Jul 2020 09:37:57 -0700
-Message-ID: <alpine.OSX.2.23.453.2007280936080.45676@joses-mobl6.amr.corp.intel.com>
-In-Reply-To: 3082c3f5-b17d-c6a9-6966-cbf06ff97b8c@tessares.net
+Subject: [MPTCP] [PATCH net-next 02/12] mptcp: Return EPIPE if sending is shut
+ down during a sendmsg
+Date: Tue, 28 Jul 2020 15:12:00 -0700
+Message-ID: <20200728221210.92841-3-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20200728221210.92841-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5342
+X-UID: 5343
 
---===============7296138474517443161==
+--===============4543841602350504585==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 27 Jul 2020, Matthieu Baerts wrote:
+A MPTCP socket where sending has been shut down should not attempt to
+send additional data, since DATA_FIN has already been sent.
 
-> Hi Mat, Paolo,
->
-> On 24/07/2020 03:11, Mat Martineau wrote:
->> Here is a series adding full DATA_FIN support at connection shutdown /
->> close. See the patch 8 commit message for information about the
->> disconnection state machine.
->> =
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ net/mptcp/protocol.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
->> Self tests are passing. Have now checked interoperation with the
->> mptcp_trunk branch.
->
-> Thank you for the new v4 and the reviews!
->
-> As discussed on IRC, I added these patches at the end of the export branc=
-h.
->
-> Note that I move:
-> - "mptcp: Add mptcp_close_state() helper"
-> - "mptcp: Track received DATA_FIN sequence number and add related helpers"
-> - "07aac58e4c66 mptcp: Add helper to process acks of DATA_FIN"
-> just before "mptcp: Use full MPTCP-level disconnect state machine" and sk=
-ip =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2891ae8a1028..b3c3dbc89b3f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -748,6 +748,11 @@ static int mptcp_sendmsg(struct sock *sk, struct msghd=
+r *msg, size_t len)
+ restart:
+ 	mptcp_clean_una(sk);
+ =
 
-> these commits from the "per-commit" validation tests because new static =
++	if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN)) {
++		ret =3D -EPIPE;
++		goto out;
++	}
++
+ wait_for_sndbuf:
+ 	__mptcp_flush_join_list(msk);
+ 	ssk =3D mptcp_subflow_get_send(msk);
+-- =
 
-> functions are added without users.
->
-> Tests + export are in progress!
->
+2.28.0
 
-I'd like to send this to netdev soon (today maybe?). Can I add any =
-
-Acked-by tags first?
-
-Thanks,
-
---
-Mat Martineau
-Intel
---===============7296138474517443161==--
+--===============4543841602350504585==--
