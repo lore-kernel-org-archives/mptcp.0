@@ -1,39 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============7252074718319519744=="
+Content-Type: multipart/mixed; boundary="===============1563907414107149168=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 00/12] Exchange MPTCP DATA_FIN/DATA_ACK
- before TCP FIN
-Date: Tue, 28 Jul 2020 17:02:55 -0700
-Message-ID: <20200728.170255.1791271197978687017.davem@davemloft.net>
-In-Reply-To: 20200728221210.92841-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 0/4] Add REMOVE_ADDR support
+Date: Wed, 29 Jul 2020 17:02:42 +0800
+Message-ID: <cover.1596012283.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5358
+X-UID: 5362
 
---===============7252074718319519744==
+--===============1563907414107149168==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Date: Tue, 28 Jul 2020 15:11:58 -0700
+v3:
+ - fix memory leak and lock issue in v2.
+ - drop alist in v2.
+ - fix mptcp_subflow_shutdown's arguments.
+ - bzero remote in mptcp_pm_create_subflow_or_signal_addr.
+ - add more commit message.
 
-> This series allows the MPTCP-level connection to be closed with the
-> peers exchanging DATA_FIN and DATA_ACK according to the state machine in
-> appendix D of RFC 8684. The process is very similar to the TCP
-> disconnect state machine. =
+Geliang Tang (4):
+  mptcp: rename addr_signal and the related functions
+  mptcp: add the outgoing RM_ADDR support
+  mptcp: add the incoming RM_ADDR support
+  mptcp: trigger the RM_ADDR signal
 
-> =
+ net/mptcp/options.c    | 48 ++++++++++++++++++++++----
+ net/mptcp/pm.c         | 54 ++++++++++++++++++++++++++----
+ net/mptcp/pm_netlink.c | 76 ++++++++++++++++++++++++++++++++++++++++--
+ net/mptcp/protocol.c   | 17 +++++++---
+ net/mptcp/protocol.h   | 29 +++++++++++++---
+ net/mptcp/subflow.c    |  1 +
+ 6 files changed, 199 insertions(+), 26 deletions(-)
 
-> The prior code sends DATA_FIN only when TCP FIN packets are sent, and
-> does not allow for the MPTCP-level connection to be half-closed.
-> =
+-- =
 
-> Patch 8 ("mptcp: Use full MPTCP-level disconnect state machine") is the
-> core of the series. Earlier patches in the series have some small fixes
-> and helpers in preparation, and the final four small patches do some
-> cleanup.
+2.17.1
 
-Series applied, thanks.
---===============7252074718319519744==--
+--===============1563907414107149168==--
