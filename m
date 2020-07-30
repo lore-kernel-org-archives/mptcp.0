@@ -1,200 +1,266 @@
-Content-Type: multipart/mixed; boundary="===============1176011870075106050=="
+Content-Type: multipart/mixed; boundary="===============2802407872755356726=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 4/4] mptcp: trigger the
- RM_ADDR signal
-Date: Wed, 29 Jul 2020 17:33:01 -0700
-Message-ID: <alpine.OSX.2.23.453.2007291730010.1985@ltd-ie-desk02.amr.corp.intel.com>
-In-Reply-To: 17efd13bba7cf64cb1df85dba5e338fb43b03863.1596012283.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH RFC v3 08/10] mptcp: enable JOIN requests even if
+ cookies are in use
+Date: Thu, 30 Jul 2020 09:30:34 +0200
+Message-ID: <76ef7e91f19a212e036223a052b92b0ac92dd144.camel@redhat.com>
+In-Reply-To: 20200730001241.3037-9-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5385
+X-UID: 5389
 
---===============1176011870075106050==
+--===============2802407872755356726==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 29 Jul 2020, Geliang Tang wrote:
+On Thu, 2020-07-30 at 02:12 +0200, Florian Westphal wrote:
+> JOIN requests do not work in syncookie mode -- for HMAC validation, the
+> peers nonce and the mptcp token (to obtain the desired connection socket
+> the join is for) are required, but this information is only present in the
+> initial syn.
+> =
 
-> The patch adds a new list named anno_list in msk, to record all the
-> announced addrs. When the PM netlink removes an address, we check if it h=
-as
-> been recorded. If it has been, we trigger the RM_ADDR signal.
->
-> Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> So either we need to drop all JOIN requests once a listening socket enters
+> syncookie mode, or we need to store enough state to reconstruct the reque=
+st
+> socket later.
+> =
+
+> This allows the subflow request initialisation function to store the
+> request socket even when syncookies are used, i.e. the listener
+> socket queue will grow past its upper limit.
+> =
+
+> Following restrictions apply:
+> 1. The (32bit) token contained in the MP_JOIN SYN packet returns
+>    a valid parent connection.
+> 2. The parent connection can accept one more subflow.
+> 3. Only 1024 requests can be remembered at most.
+> =
+
+> An alternate approach would be to "cancel" syn-cookie mode and force
+> MP_JOIN to always use a syn queue entry.
+> However, doing so brings the backlog over the configured limit.
+> =
+
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 > ---
-> net/mptcp/pm.c         |  6 +++++-
-> net/mptcp/pm_netlink.c | 49 +++++++++++++++++++++++++++++++++++++++++-
-> net/mptcp/protocol.c   |  3 +++
-> net/mptcp/protocol.h   |  2 ++
-> 4 files changed, 58 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 84fad1fec28b..4194fd2591c5 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -24,7 +24,11 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
->
-> int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
-> {
-> -	return -ENOTSUPP;
-> +	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
+>  net/ipv4/syncookies.c  |   6 +++
+>  net/mptcp/Makefile     |   1 +
+>  net/mptcp/protocol.h   |  18 +++++++
+>  net/mptcp/subflow.c    |  14 +++++
+>  net/mptcp/syncookies.c | 118 +++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 157 insertions(+)
+>  create mode 100644 net/mptcp/syncookies.c
+> =
+
+> diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+> index 54838ee2e8d4..11b20474be83 100644
+> --- a/net/ipv4/syncookies.c
+> +++ b/net/ipv4/syncookies.c
+> @@ -212,6 +212,12 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, st=
+ruct sk_buff *skb,
+>  		refcount_set(&req->rsk_refcnt, 1);
+>  		tcp_sk(child)->tsoffset =3D tsoff;
+>  		sock_rps_save_rxhash(child, skb);
 > +
-> +	msk->pm.rm_id =3D local_id;
-> +	WRITE_ONCE(msk->pm.rm_addr_signal, true);
-> +	return 0;
-> }
->
-> int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index bcf4fccaf7d0..a6885a22cf1a 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -169,6 +169,19 @@ static void check_work_pending(struct mptcp_sock *ms=
-k)
-> 		WRITE_ONCE(msk->pm.work_pending, false);
-> }
->
-> +void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_pm_addr_entry *entry, *tmp;
-> +
-> +	pr_debug("msk=3D%p\n", msk);
-> +	spin_lock_bh(&msk->pm.lock);
-> +	list_for_each_entry_safe(entry, tmp, &msk->anno_list, list) {
-> +		list_del(&entry->list);
-> +		kfree(entry);
-> +	}
-> +	spin_unlock_bh(&msk->pm.lock);
-> +}
-> +
-> static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
-> {
-> 	struct sock *sk =3D (struct sock *)msk;
-> @@ -189,8 +202,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(s=
-truct mptcp_sock *msk)
-> 					      msk->pm.add_addr_signaled);
->
-> 		if (local) {
-> +			struct mptcp_pm_addr_entry *clone =3D NULL;
-> +
-> 			msk->pm.add_addr_signaled++;
-> 			mptcp_pm_announce_addr(msk, &local->addr);
-> +
-> +			clone =3D kmemdup(local, sizeof(*local), GFP_ATOMIC);
-> +			if (!clone)
-> +				return;
-> +
-> +			list_add(&clone->list, &msk->anno_list);
-> 		} else {
-> 			/* pick failed, avoid fourther attempts later */
-> 			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
-> @@ -542,6 +563,30 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, uns=
-igned int id)
-> 	return NULL;
-> }
->
-> +static void mptcp_nl_remove_addr(struct sk_buff *skb, struct mptcp_addr_=
-info *addr)
-> +{
-> +	struct mptcp_sock *msk;
-> +	long s_slot =3D 0, s_num =3D 0;
-> +	struct net *net =3D sock_net(skb->sk);
-> +
-> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
- {
-> +		struct mptcp_pm_addr_entry *entry, *tmp;
-> +		struct sock *sk =3D (struct sock *)msk;
-> +
-> +		pr_debug("msk=3D%p\n", msk);
-> +		spin_lock_bh(&msk->pm.lock);
-> +		list_for_each_entry_safe(entry, tmp, &msk->anno_list, list) {
-> +			if (addresses_equal(&entry->addr, addr, false)) {
-> +				mptcp_pm_remove_addr(msk, addr->id);
-> +				list_del(&entry->list);
-> +				kfree(entry);
-> +			}
+> +		if (tcp_rsk(req)->drop_req) {
+> +			refcount_set(&req->rsk_refcnt, 2);
+> +			return child;
 > +		}
-> +		spin_unlock_bh(&msk->pm.lock);
-> +		sock_put(sk);
-> +	}
-> +}
 > +
-> static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *i=
-nfo)
-> {
-> 	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
-> @@ -560,8 +605,10 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb=
-, struct genl_info *info)
-> 		ret =3D -EINVAL;
-> 		goto out;
-> 	}
-> -	if (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)
-> +	if (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
-> 		pernet->add_addr_signal_max--;
-> +		mptcp_nl_remove_addr(skb, &entry->addr);
-> +	}
-> 	if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
-> 		pernet->local_addr_max--;
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index e7c7b8794868..fed0f5c4f215 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1330,6 +1330,7 @@ static int __mptcp_init_sock(struct sock *sk)
->
-> 	INIT_LIST_HEAD(&msk->conn_list);
-> 	INIT_LIST_HEAD(&msk->join_list);
-> +	INIT_LIST_HEAD(&msk->anno_list);
-> 	INIT_LIST_HEAD(&msk->rtx_queue);
-> 	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
-> 	INIT_WORK(&msk->work, mptcp_worker);
-> @@ -1454,6 +1455,8 @@ static void mptcp_close(struct sock *sk, long timeo=
-ut)
-> 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
-> 	}
->
-> +	mptcp_pm_free_anno_list(msk);
-> +
-> 	mptcp_cancel_work(sk);
->
-> 	__skb_queue_purge(&sk->sk_receive_queue);
+>  		if (inet_csk_reqsk_queue_add(sk, req, child))
+>  			return child;
+>  =
+
+> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+> index 2360cbd27d59..a611968be4d7 100644
+> --- a/net/mptcp/Makefile
+> +++ b/net/mptcp/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_MPTCP) +=3D mptcp.o
+>  mptcp-y :=3D protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o=
+ diag.o \
+>  	   mib.o pm_netlink.o
+>  =
+
+> +obj-$(CONFIG_SYN_COOKIES) +=3D syncookies.o
+>  obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
+>  =
+
+>  mptcp_crypto_test-objs :=3D crypto_test.o
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index b9058675cbf6..2714d59307de 100644
+> index d76d3b40d69e..24c78a25c348 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -207,6 +207,7 @@ struct mptcp_sock {
-> 	struct list_head conn_list;
-> 	struct list_head rtx_queue;
-> 	struct list_head join_list;
-> +	struct list_head anno_list;
+> @@ -506,4 +506,22 @@ static inline bool subflow_simultaneous_connect(stru=
+ct sock *sk)
+>  	       !subflow->conn_finished;
+>  }
+>  =
 
-I think anno_list would fit better in struct mptcp_pm_data, since it's =
+> +#ifdef CONFIG_SYN_COOKIES
+> +void subflow_init_req_cookie_join_save(const struct mptcp_subflow_reques=
+t_sock *subflow_req,
+> +				       struct sk_buff *skb);
+> +bool mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_soc=
+k *subflow_req,
+> +					struct sk_buff *skb);
+> +#else
+> +static inline void
+> +subflow_init_req_cookie_join_save(const struct mptcp_subflow_request_soc=
+k *subflow_req,
+> +				  struct sk_buff *skb) {}
+> +static inline bool
+> +mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *su=
+bflow_req,
+> +				   struct sk_buff *skb)
+> +{
+> +	return false;
+> +}
+> +
+> +#endif
+> +
+>  #endif /* __MPTCP_PROTOCOL_H */
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index e21dd19c617e..0bb0d66f0846 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -174,6 +174,12 @@ static void subflow_init_req(struct request_sock *re=
+q,
+>  		subflow_req->token =3D mp_opt.token;
+>  		subflow_req->remote_nonce =3D mp_opt.nonce;
+>  		subflow_req->msk =3D subflow_token_join_request(req, skb);
+> +
+> +		if (unlikely(want_cookie) && subflow_req->msk) {
+> +			if (mptcp_can_accept_new_subflow(subflow_req->msk))
+> +				subflow_init_req_cookie_join_save(subflow_req, skb);
+> +		}
+> +
+>  		pr_debug("token=3D%u, remote_nonce=3D%u msk=3D%p", subflow_req->token,
+>  			 subflow_req->remote_nonce, subflow_req->msk);
+>  	}
+> @@ -208,6 +214,14 @@ int mptcp_subflow_init_cookie_req(struct request_soc=
+k *req,
+>  =
 
-relevant for the in-kernel PM but won't necessarily be for userspace path =
+>  		subflow_req->mp_capable =3D 1;
+>  		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq - 1;
+> +	} else if (mp_opt.mp_join && listener->request_mptcp) {
+> +		if (!mptcp_token_join_cookie_init_state(subflow_req, skb))
+> +			return -EINVAL;
+> +
+> +		if (mptcp_can_accept_new_subflow(subflow_req->msk))
+> +			subflow_req->mp_join =3D 1;
+> +
+> +		subflow_req->ssn_offset =3D TCP_SKB_CB(skb)->seq - 1;
+>  	}
+>  =
 
-managers.
+>  	return 0;
+> diff --git a/net/mptcp/syncookies.c b/net/mptcp/syncookies.c
+> new file mode 100644
+> index 000000000000..9a5628acf9a5
+> --- /dev/null
+> +++ b/net/mptcp/syncookies.c
+> @@ -0,0 +1,118 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/skbuff.h>
+> +
+> +#include "protocol.h"
+> +
+> +/* Syncookies do not work for JOIN requests.
+> + *
+> + * Unlike MP_CAPABLE, where the ACK cookie contains the needed MPTCP
+> + * options to reconstruct the initial syn state, MP_JOIN does not contain
+> + * the token to obtain the mptcp socket nor the server-generated nonce
+> + * that was used in the cookie SYN/ACK response.
+> + *
+> + * Keep a small best effort state table to store the syn/synack data,
+> + * indexed by skb hash.
+> + *
+> + * A MP_JOIN SYN packet handled by syn cookies is only stored if the 32b=
+it
+> + * token matches a known mptcp connection that can still accept more sub=
+flows.
+> + *
+> + * There is no timeout handling -- state is only re-constructed
+> + * when the TCP ACK passed the cookie validation check.
+> + */
+> +
+> +struct join_entry {
+> +	u32 token;
+> +	u32 remote_nonce;
+> +	u32 local_nonce;
+> +	u8 backup;
+> +	u8 join_id;
+> +	u8 local_id;
+> +	u8 valid;
+> +};
+> +
+> +#define COOKIE_JOIN_SLOTS	1024
+> +
+> +static struct join_entry join_entries[COOKIE_JOIN_SLOTS];
+> +static struct join_entry *__mptcp_join_entry_slot(struct sk_buff *skb, s=
+truct net *net)
+> +{
+> +	u32 i =3D skb_get_hash(skb) ^ net_hash_mix(net);
+> +
+> +	return &join_entries[i % ARRAY_SIZE(join_entries)];
+> +}
+> +
+> +/* WRITE/READ_ONCE are used, as no locking exists for the state table.
+> + * Locking would also be useless given there is no guarantee that
+> + * the state is still valid once cookie comes back.
+> + */
+> +static void mptcp_join_store_state(struct join_entry *entry,
+> +				   const struct mptcp_subflow_request_sock *subflow_req)
+> +{
+> +	WRITE_ONCE(entry->token, subflow_req->token);
+> +	WRITE_ONCE(entry->remote_nonce, subflow_req->remote_nonce);
+> +	WRITE_ONCE(entry->local_nonce, subflow_req->local_nonce);
+> +	WRITE_ONCE(entry->backup, subflow_req->backup);
+> +	WRITE_ONCE(entry->join_id, subflow_req->remote_id);
+> +	WRITE_ONCE(entry->local_id, subflow_req->local_id);
+> +	WRITE_ONCE(entry->valid, 1);
+> +}
 
-> 	struct skb_ext	*cached_ext;	/* for the next sendmsg */
-> 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
-> 	struct sock	*first;
-> @@ -432,6 +433,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
-> 			   const struct mptcp_addr_info *addr);
-> int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
-> int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
-> +void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
->
-> static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
-> {
-> -- =
+If I read correctly, thread/CPU 1 may overwrite partially the entry
+while thread/CPU 2 is fetching the data into subflow_req for the 3rd
+ack, correct?
 
-> 2.17.1
+With enough bad luck the copied values could contain consistent data
+(nonces, token) to do the hmac matching but e.g. mismatching 'ids' or
+'backup' flags. Am I missing something?
 
---
-Mat Martineau
-Intel
---===============1176011870075106050==--
+IIRC, backup is currently ignored (but hopefully some day will not ;).
+ids impacts addr. =
+
+
+Perhaps locking is needed?
+
+> +
+> +void subflow_init_req_cookie_join_save(const struct mptcp_subflow_reques=
+t_sock *subflow_req,
+> +				       struct sk_buff *skb)
+> +{
+> +	struct net *net =3D read_pnet(&subflow_req->sk.req.ireq_net);
+> +	struct join_entry *e;
+> +
+> +	e =3D __mptcp_join_entry_slot(skb, net);
+
+I guess we don't need to validate the entry because hmac checking will
+follow and the hash arity is 1, right? that is, if the found entry does
+not match, no other attempt is possible. (no changes proposed/suggested
+here, just double checking I read this correctly).
+
+Overall I think this approach should be much more easily accepted
+upstream!
+
+Thanks,
+
+Paolo
+
+--===============2802407872755356726==--
