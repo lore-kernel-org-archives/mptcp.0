@@ -1,255 +1,232 @@
-Content-Type: multipart/mixed; boundary="===============8625253896631123523=="
+Content-Type: multipart/mixed; boundary="===============4274537702205217744=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 11/12] mptcp: allow picking different xmit subflows
-Date: Fri, 31 Jul 2020 19:39:26 +0200
-Message-ID: <960519a1162d5a416245fa239e57392ab0efa0be.1596216310.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 09/12] mptcp: move address attribute into
+ mptcp_addr_info
+Date: Fri, 31 Jul 2020 19:39:24 +0200
+Message-ID: <0bcf53173f0d86cd035f94e51226cc1a27998ac2.1596216310.git.pabeni@redhat.com>
 In-Reply-To: cover.1596216310.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5417
+X-UID: 5418
 
---===============8625253896631123523==
+--===============4274537702205217744==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Update the scheduler to less trivial heuristic: cache
-the last used subflow, and try to send on it a reasonably
-long burst of data. When the burst or the subflow send
-space is exausted, move to the next one with available
-send space.
+So that can be accessed easily from subflow creation
+helper. No functional change intended.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 112 +++++++++++++++++++++++++++++++++++++------
- net/mptcp/protocol.h |   6 ++-
- 2 files changed, 101 insertions(+), 17 deletions(-)
+ net/mptcp/pm_netlink.c | 38 +++++++++++++++++++-------------------
+ net/mptcp/protocol.h   |  5 +++--
+ net/mptcp/subflow.c    |  5 ++---
+ 3 files changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ef5b68c4ff49..89c0400593d1 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1012,39 +1012,112 @@ static void mptcp_nospace(struct sock *sk, struct =
-sock *ssk)
- 		set_bit(SOCK_NOSPACE, &sock->flags);
- }
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index c8820c4156e6..b15fb3c20146 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -23,8 +23,6 @@ static int pm_nl_pernet_id;
  =
 
-+static bool mptcp_subflow_active(struct mptcp_subflow_context *subflow,
-+				 bool fallback)
-+{
-+	struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+	/* subflow must be open for write */
-+	if ((1 << ssk->sk_state) &
-+	    (TCPF_CLOSE | TCPF_LAST_ACK | TCPF_CLOSING | TCPF_FIN_WAIT2 |
-+	     TCPF_FIN_WAIT1))
-+		return false;
-+
-+	/* we can xmit on MPC and fallen back subflows in
-+	 * TCP_SYN_SENT/TCP_SYN_RECV status, but we need fully established
-+	 * MP_JOIN subflows.
-+	 */
-+	return !subflow->request_join ||
-+	       (subflow->fully_established && !fallback);
-+}
-+
-+#define MPTCP_SEND_BURST_SIZE		(1 << 15)
-+
-+static struct list_head *mptcp_next_subflow(struct mptcp_sock *msk,
-+					    struct list_head *pos,
-+					    bool wrap_around)
-+{
-+	if (list_is_last(pos, &msk->conn_list) && wrap_around)
-+		return msk->conn_list.next;
-+	return pos->next;
-+}
-+
- static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk,
- 					   int *sndbuf)
- {
-+	int next_wspace =3D 0, next_bu_wspace =3D 0, last_snd_wspace =3D 0;
-+	bool fallback =3D __mptcp_check_fallback(msk);
- 	struct mptcp_subflow_context *subflow;
--	struct sock *sk =3D (struct sock *)msk;
--	struct sock *backup =3D NULL;
-+	struct sock *next_backup =3D NULL;
-+	struct list_head *pos, *start;
-+	struct sock *next_ssk =3D NULL;
-+	bool wrap_around;
- =
-
--	sock_owned_by_me(sk);
-+	sock_owned_by_me((struct sock *)msk);
- =
-
- 	*sndbuf =3D 0;
- 	if (!mptcp_ext_cache_refill(msk))
- 		return NULL;
- =
-
--	mptcp_for_each_subflow(msk, subflow) {
--		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+	/* lookup the first writeable subflow and first writable back subflow
-+	 * starting from last used, with wrap-around
-+	 */
-+	if (msk->last_snd) {
-+		start =3D &mptcp_subflow_ctx(msk->last_snd)->node;
-+		wrap_around =3D true;
-+	} else {
-+		start =3D &msk->conn_list;
-+		wrap_around =3D false;
-+	}
-+	pr_debug("msk=3D%p start=3D%p pos=3D%p wrap_around=3D%d last=3D%p", msk, =
-start,
-+		 mptcp_next_subflow(msk, start, wrap_around), wrap_around,
-+		 msk->last_snd);
-+	for (pos =3D mptcp_next_subflow(msk, start, wrap_around); pos !=3D start;
-+	     pos =3D mptcp_next_subflow(msk, pos, wrap_around)) {
-+		struct sock *ssk;
-+		int wspace;
- =
-
--		if (!sk_stream_memory_free(sk)) {
--			mptcp_nospace(sk, ssk);
--			return NULL;
--		}
-+		subflow =3D list_entry(pos, struct mptcp_subflow_context, node);
-+		ssk =3D  mptcp_subflow_tcp_sock(subflow);
-+		if (!mptcp_subflow_active(subflow, fallback))
-+			continue;
- =
-
- 		*sndbuf =3D max(ssk->sk_sndbuf, *sndbuf);
--		if (subflow->backup) {
--			if (!backup)
--				backup =3D ssk;
--
-+		wspace =3D sk_stream_wspace(ssk);
-+		if (wspace <=3D 0)
+ struct mptcp_pm_addr_entry {
+ 	struct list_head	list;
+-	unsigned int		flags;
+-	int			ifindex;
+ 	struct mptcp_addr_info	addr;
+ 	struct rcu_head		rcu;
+ };
+@@ -119,7 +117,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
+ 	rcu_read_lock();
+ 	spin_lock_bh(&msk->join_list_lock);
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+-		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
++		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
  			continue;
-+
-+		if (!subflow->backup && !next_ssk) {
-+			next_ssk =3D ssk;
-+			next_wspace =3D wspace;
+ =
+
+ 		/* avoid any address already in use by subflows and
+@@ -150,7 +148,7 @@ select_signal_address(struct pm_nl_pernet *pernet, unsi=
+gned int pos)
+ 	 * can lead to additional addresses not being announced.
+ 	 */
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+-		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
++		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
+ 			continue;
+ 		if (i++ =3D=3D pos) {
+ 			ret =3D entry;
+@@ -210,8 +208,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
+ct mptcp_sock *msk)
+ 			msk->pm.subflows++;
+ 			check_work_pending(msk);
+ 			spin_unlock_bh(&msk->pm.lock);
+-			__mptcp_subflow_connect(sk, local->ifindex,
+-						&local->addr, &remote);
++			__mptcp_subflow_connect(sk, &local->addr, &remote);
+ 			spin_lock_bh(&msk->pm.lock);
+ 			return;
  		}
+@@ -257,13 +254,13 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock =
+*msk)
+ 	local.family =3D remote.family;
  =
 
--		return ssk;
-+		if (subflow->backup && !next_backup) {
-+			next_backup =3D ssk;
-+			next_bu_wspace =3D wspace;
-+		}
-+	}
-+	if (!next_ssk) {
-+		next_ssk =3D next_backup;
-+		next_wspace =3D next_bu_wspace;
- 	}
-+	if (msk->last_snd) {
-+		*sndbuf =3D max(msk->last_snd->sk_sndbuf, *sndbuf);
-+		last_snd_wspace =3D sk_stream_wspace(msk->last_snd);
-+	}
-+	pr_debug("msk=3D%p ssk=3D%p last=3D%p wspace=3D%d last wspace=3D%d burst=
-=3D%d", msk,
-+		 next_ssk, msk->last_snd, next_wspace, last_snd_wspace,
-+		 msk->snd_burst);
- =
-
--	return backup;
-+	/* use the looked-up subflow if the previusly used has exauted the burst
-+	 * or is not writable
-+	 */
-+	if (next_ssk && (last_snd_wspace <=3D 0 || msk->snd_burst <=3D 0)) {
-+		msk->last_snd =3D next_ssk;
-+		msk->snd_burst =3D min(MPTCP_SEND_BURST_SIZE, next_wspace);
-+		last_snd_wspace =3D next_wspace;
-+	}
-+	return last_snd_wspace > 0 ? msk->last_snd : NULL;
+ 	spin_unlock_bh(&msk->pm.lock);
+-	__mptcp_subflow_connect((struct sock *)msk, 0, &local, &remote);
++	__mptcp_subflow_connect((struct sock *)msk, &local, &remote);
+ 	spin_lock_bh(&msk->pm.lock);
  }
  =
 
- static void ssk_check_wmem(struct sock *sk, struct sock *ssk)
-@@ -1142,6 +1215,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		}
- =
-
- 		copied +=3D ret;
-+		msk->snd_burst -=3D ret;
- =
-
- 		tx_ok =3D msg_data_left(msg);
- 		if (!tx_ok)
-@@ -1358,6 +1432,10 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 	unsigned int moved =3D 0;
- 	bool done;
- =
-
-+	if (((struct sock *)msk)->sk_state =3D=3D TCP_CLOSE)
-+		return false;
-+
-+	__mptcp_flush_join_list(msk);
- 	do {
- 		struct sock *ssk =3D mptcp_subflow_recv_lookup(msk);
- =
-
-@@ -1513,6 +1591,7 @@ static void mptcp_retransmit_timer(struct timer_list =
-*t)
-  */
- static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
+ static bool address_use_port(struct mptcp_pm_addr_entry *entry)
  {
-+	bool fallback =3D __mptcp_check_fallback(msk);
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *backup =3D NULL;
+-	return (entry->flags &
++	return (entry->addr.flags &
+ 		(MPTCP_PM_ADDR_FLAG_SIGNAL | MPTCP_PM_ADDR_FLAG_SUBFLOW)) =3D=3D
+ 		MPTCP_PM_ADDR_FLAG_SIGNAL;
+ }
+@@ -293,9 +290,9 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_=
+nl_pernet *pernet,
+ 			goto out;
+ 	}
  =
 
-@@ -1521,6 +1600,9 @@ static struct sock *mptcp_subflow_get_retrans(const s=
-truct mptcp_sock *msk)
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+-	if (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)
++	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)
+ 		pernet->add_addr_signal_max++;
+-	if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
++	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
+ 		pernet->local_addr_max++;
  =
 
-+		if (!mptcp_subflow_active(subflow, fallback))
-+			continue;
-+
- 		/* still data outstanding at TCP level?  Don't retransmit. */
- 		if (!tcp_write_queue_empty(ssk))
- 			return NULL;
+ 	entry->addr.id =3D pernet->next_id++;
+@@ -345,8 +342,9 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc)
+ 	if (!entry)
+ 		return -ENOMEM;
+ =
+
+-	entry->flags =3D 0;
+ 	entry->addr =3D skc_local;
++	entry->addr.ifindex =3D 0;
++	entry->addr.flags =3D 0;
+ 	ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
+ 	if (ret < 0)
+ 		kfree(entry);
+@@ -460,14 +458,16 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, s=
+truct genl_info *info,
+ 		entry->addr.addr.s_addr =3D nla_get_in_addr(tb[addr_addr]);
+ =
+
+ skip_family:
+-	if (tb[MPTCP_PM_ADDR_ATTR_IF_IDX])
+-		entry->ifindex =3D nla_get_s32(tb[MPTCP_PM_ADDR_ATTR_IF_IDX]);
++	if (tb[MPTCP_PM_ADDR_ATTR_IF_IDX]) {
++		u32 val =3D nla_get_s32(tb[MPTCP_PM_ADDR_ATTR_IF_IDX]);
++		entry->addr.ifindex =3D val;
++	}
+ =
+
+ 	if (tb[MPTCP_PM_ADDR_ATTR_ID])
+ 		entry->addr.id =3D nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
+ =
+
+ 	if (tb[MPTCP_PM_ADDR_ATTR_FLAGS])
+-		entry->flags =3D nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]);
++		entry->addr.flags =3D nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]);
+ =
+
+ 	return 0;
+ }
+@@ -535,9 +535,9 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, s=
+truct genl_info *info)
+ 		ret =3D -EINVAL;
+ 		goto out;
+ 	}
+-	if (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)
++	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)
+ 		pernet->add_addr_signal_max--;
+-	if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
++	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
+ 		pernet->local_addr_max--;
+ =
+
+ 	pernet->addrs--;
+@@ -593,10 +593,10 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
+ 		goto nla_put_failure;
+ 	if (nla_put_u8(skb, MPTCP_PM_ADDR_ATTR_ID, addr->id))
+ 		goto nla_put_failure;
+-	if (nla_put_u32(skb, MPTCP_PM_ADDR_ATTR_FLAGS, entry->flags))
++	if (nla_put_u32(skb, MPTCP_PM_ADDR_ATTR_FLAGS, entry->addr.flags))
+ 		goto nla_put_failure;
+-	if (entry->ifindex &&
+-	    nla_put_s32(skb, MPTCP_PM_ADDR_ATTR_IF_IDX, entry->ifindex))
++	if (entry->addr.ifindex &&
++	    nla_put_s32(skb, MPTCP_PM_ADDR_ATTR_IF_IDX, entry->addr.ifindex))
+ 		goto nla_put_failure;
+ =
+
+ 	if (addr->family =3D=3D AF_INET &&
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 5467eb1adebd..0381e63d866d 100644
+index dfcd7eab35ad..5467eb1adebd 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -196,6 +196,8 @@ struct mptcp_sock {
- 	u64		write_seq;
- 	u64		ack_seq;
- 	u64		rcv_data_fin_seq;
-+	struct sock	*last_snd;
-+	int		snd_burst;
- 	atomic64_t	snd_una;
- 	unsigned long	timer_ival;
- 	u32		token;
-@@ -469,12 +471,12 @@ static inline bool before64(__u64 seq1, __u64 seq2)
+@@ -140,6 +140,8 @@ struct mptcp_addr_info {
+ 	sa_family_t		family;
+ 	__be16			port;
+ 	u8			id;
++	unsigned int		flags;
++	int			ifindex;
+ 	union {
+ 		struct in_addr addr;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+@@ -355,8 +357,7 @@ bool mptcp_subflow_data_available(struct sock *sk);
+ void __init mptcp_subflow_init(void);
  =
 
- void mptcp_diag_subflow_init(struct tcp_ulp_ops *ops);
+ /* called with sk socket lock held */
+-int __mptcp_subflow_connect(struct sock *sk, int ifindex,
+-			    const struct mptcp_addr_info *loc,
++int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
+*loc,
+ 			    const struct mptcp_addr_info *remote);
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
  =
 
--static inline bool __mptcp_check_fallback(struct mptcp_sock *msk)
-+static inline bool __mptcp_check_fallback(const struct mptcp_sock *msk)
- {
- 	return test_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 5cedb836693b..867fd8496fb8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -963,8 +963,7 @@ static void mptcp_info2sockaddr(const struct mptcp_addr=
+_info *info,
+ #endif
  }
  =
 
--static inline bool mptcp_check_fallback(struct sock *sk)
-+static inline bool mptcp_check_fallback(const struct sock *sk)
+-int __mptcp_subflow_connect(struct sock *sk, int ifindex,
+-			    const struct mptcp_addr_info *loc,
++int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
+*loc,
+ 			    const struct mptcp_addr_info *remote)
  {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -1008,7 +1007,7 @@ int __mptcp_subflow_connect(struct sock *sk, int ifin=
+dex,
+ 	if (loc->family =3D=3D AF_INET6)
+ 		addrlen =3D sizeof(struct sockaddr_in6);
+ #endif
+-	ssk->sk_bound_dev_if =3D ifindex;
++	ssk->sk_bound_dev_if =3D loc->ifindex;
+ 	err =3D kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+ 	if (err)
+ 		goto failed;
 -- =
 
 2.26.2
 
---===============8625253896631123523==--
+--===============4274537702205217744==--
