@@ -1,107 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============2748152321813963131=="
+Content-Type: multipart/mixed; boundary="===============8740851320351960343=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 02/12] mptcp: set data_ready status bit in
- subflow_check_data_avail()
-Date: Fri, 31 Jul 2020 19:39:17 +0200
-Message-ID: <e75c80fd5ff91ff1ec763dbe5b2d3374a0a67766.1596216310.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 05/12] mptcp: introduce and use
+ mptcp_try_coalesce()
+Date: Fri, 31 Jul 2020 19:39:20 +0200
+Message-ID: <5494222e860732482eb8b40b2bb88f8cb613cb6b.1596216310.git.pabeni@redhat.com>
 In-Reply-To: cover.1596216310.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5409
+X-UID: 5410
 
---===============2748152321813963131==
+--===============8740851320351960343==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This simplify mptcp_subflow_data_available() and will
-made follow-up patches simpler.
+Factor-out existing code, will be re-used by the
+next patch.
 
-Additionally remove the unneeded checks on subflow copied_seq:
-we always whole skbs out of subflows.
-
-Signed-off-by Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/subflow.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ net/mptcp/protocol.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index bd2201d62ae6..54d89f9379e1 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -755,6 +755,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
- =
-
- 	pr_debug("msk=3D%p ssk=3D%p data_avail=3D%d skb=3D%p", subflow->conn, ssk,
- 		 subflow->data_avail, skb_peek(&ssk->sk_receive_queue));
-+	if (!skb_peek(&ssk->sk_receive_queue))
-+		subflow->data_avail =3D 0;
- 	if (subflow->data_avail)
- 		return true;
- =
-
-@@ -779,6 +781,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			subflow->map_data_len =3D skb->len;
- 			subflow->map_subflow_seq =3D tcp_sk(ssk)->copied_seq -
- 						   subflow->ssn_offset;
-+			subflow->data_avail =3D 1;
- 			return true;
- 		}
- =
-
-@@ -806,8 +809,10 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
- 		pr_debug("msk ack_seq=3D%llx subflow ack_seq=3D%llx", old_ack,
- 			 ack_seq);
--		if (ack_seq =3D=3D old_ack)
-+		if (ack_seq =3D=3D old_ack) {
-+			subflow->data_avail =3D 1;
- 			break;
-+		}
- =
-
- 		/* only accept in-sequence mapping. Old values are spurious
- 		 * retransmission; we can hit "future" values on active backup
-@@ -852,13 +857,13 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 	ssk->sk_error_report(ssk);
- 	tcp_set_state(ssk, TCP_CLOSE);
- 	tcp_send_active_reset(ssk, GFP_ATOMIC);
-+	subflow->data_avail =3D 0;
- 	return false;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c2fbd039f730..d50d51f26d18 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -112,6 +112,22 @@ static int __mptcp_socket_create(struct mptcp_sock *ms=
+k)
+ 	return 0;
  }
  =
 
- bool mptcp_subflow_data_available(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
--	struct sk_buff *skb;
++static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
++			       struct sk_buff *from)
++{
++	bool fragstolen;
++	int delta;
++
++	if (MPTCP_SKB_CB(from)->offset ||
++	    !skb_try_coalesce(to, from, &fragstolen, &delta))
++		return false;
++
++	kfree_skb_partial(from, fragstolen);
++	atomic_add(delta, &sk->sk_rmem_alloc);
++	sk_mem_charge(sk, delta);
++	return true;
++}
++
+ static void __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 			     struct sk_buff *skb,
+ 			     unsigned int offset, size_t copy_len)
+@@ -123,24 +139,15 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, =
+struct sock *ssk,
  =
 
- 	/* check if current mapping is still valid */
- 	if (subflow->map_valid &&
-@@ -871,15 +876,7 @@ bool mptcp_subflow_data_available(struct sock *sk)
- 			 subflow->map_data_len);
- 	}
+ 	skb_ext_reset(skb);
+ 	skb_orphan(skb);
++	MPTCP_SKB_CB(skb)->offset =3D offset;
+ 	msk->ack_seq +=3D copy_len;
  =
 
--	if (!subflow_check_data_avail(sk)) {
--		subflow->data_avail =3D 0;
--		return false;
--	}
+ 	tail =3D skb_peek_tail(&sk->sk_receive_queue);
+-	if (offset =3D=3D 0 && tail) {
+-		bool fragstolen;
+-		int delta;
 -
--	skb =3D skb_peek(&sk->sk_receive_queue);
--	subflow->data_avail =3D skb &&
--		       before(tcp_sk(sk)->copied_seq, TCP_SKB_CB(skb)->end_seq);
--	return subflow->data_avail;
-+	return subflow_check_data_avail(sk);
+-		if (skb_try_coalesce(tail, skb, &fragstolen, &delta)) {
+-			kfree_skb_partial(skb, fragstolen);
+-			atomic_add(delta, &sk->sk_rmem_alloc);
+-			sk_mem_charge(sk, delta);
+-			return;
+-		}
+-	}
++	if (tail && mptcp_try_coalesce(sk, tail, skb))
++		return;
+ =
+
+ 	skb_set_owner_r(skb, sk);
+ 	__skb_queue_tail(&sk->sk_receive_queue, skb);
+-	MPTCP_SKB_CB(skb)->offset =3D offset;
  }
  =
 
- /* If ssk has an mptcp parent socket, use the mptcp rcvbuf occupancy,
+ static void mptcp_stop_timer(struct sock *sk)
 -- =
 
 2.26.2
 
---===============2748152321813963131==--
+--===============8740851320351960343==--
