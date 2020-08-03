@@ -1,38 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============6299299072470384468=="
+Content-Type: multipart/mixed; boundary="===============0679903871267673971=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 00/12] mptcp: multiple xmit substreams support
-Date: Sun, 02 Aug 2020 02:14:31 +0200
-Message-ID: <20200802001431.GJ29169@breakpoint.cc>
-In-Reply-To: cover.1596216310.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH 03/12] mptcp: trigger msk processing even for
+ OoO data
+Date: Mon, 03 Aug 2020 12:51:28 +0200
+Message-ID: <5058b1696c5821aa29983a098cbf8d17c1db8c9f.camel@redhat.com>
+In-Reply-To: 20200801223033.GB29169@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 5429
+X-UID: 5433
 
---===============6299299072470384468==
+--===============0679903871267673971==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> The pain point is the in-window check:
+On Sun, 2020-08-02 at 00:30 +0200, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index beb34b8a5363..e964f3670d75 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -268,6 +268,9 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
+> >  	return (struct mptcp_subflow_request_sock *)rsk;
+> >  }
+> >  =
+
+> > +#define MPTCP_SUBFLOW_DATA_AVAIL	1
+> > +#define MPTCP_SUBFLOW_OOO_DATA		2
 > =
 
-> on the receiver side msk rcv window is set at tcp_space(msk) - which shou=
-ld be
-> a quite rough over-estimante of a more correct value.
+> Nit: maybe make this an enum. =
 
-Can you elaborate?
 
-> on the sender side no limit is imposed on the xmitted sequence number, ex=
-cept
-> the one given by the sndbuf. The msk sndbuf is autotuned to the subflows
-> largest sndbuf size.
+And move it outside the bitfield, right? well, looks like the standard
+should allows that, but I would prefer not mixing enum and int into the
+bitfield...
 
-Yes, I agree the amount of data we can send should be capped by the last
-dss-rwin we saw as well, which we don't track ATM.
+> OTOH, at the end of the series,
+> OOO_DATA seems to be set but never used?
 
-But this can be added later, sndbuf alone is good enough for the
-initial step i think.
---===============6299299072470384468==--
+It' used "indirectly" in mptcp_data_ready(). The latter is called when =
+
+data_avail !=3D 0, but wakes-up the reader only if
+
+	data_avail =3D=3D MPTCP_SUBFLOW_DATA_AVAIL
+
+otherwise (data_avail =3D=3D MPTCP_SUBFLOW_OOO_DATA) moves only the data to
+the ooo queue.
+
+Thanks!
+
+/P
+
+--===============0679903871267673971==--
