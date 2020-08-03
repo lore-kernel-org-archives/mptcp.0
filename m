@@ -1,54 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============6033285876800572905=="
+Content-Type: multipart/mixed; boundary="===============7957952512049051774=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: fix bogus sendmsg() return code under
+Subject: [MPTCP] [PATCH net] mptcp: fix bogus sendmsg() return code under
  pressure
-Date: Mon, 03 Aug 2020 18:14:45 +0200
-Message-ID: <6a63ce16-0fe3-e0a2-e7b5-0878572abda6@tessares.net>
-In-Reply-To: 6673051c-6e55-5a2d-6f83-4fb9ea026634@tessares.net
+Date: Mon, 03 Aug 2020 18:40:39 +0200
+Message-ID: <365d4a854cbfabbd93be7b0331e4c5d3eb1334b8.1596472748.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5445
+X-UID: 5446
 
---===============6033285876800572905==
+--===============7957952512049051774==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+In case of memory pressure, mptcp_sendmsg() may call
+sk_stream_wait_memory() after succesfully xmitting some
+bytes. If the latter fails we currently return to the
+user-space the error code, ignoring the succeful xmit.
 
-On 03/08/2020 17:30, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+Address the issue always checking for the xmitted bytes
+before mptcp_sendmsg() completes.
 
-> On 31/07/2020 18:53, Paolo Abeni wrote:
->> In case of memory pressure, mptcp_sendmsg() may call
->> sk_stream_wait_memory() after succesfully xmitting some
->> bytes. If the latter fails we currently return to the
->> user-space the error code, ignoring the succeful xmit.
->>
->> Address the issue always checking for the xmitted bytes
->> before mptcp_sendmsg() completes.
-> =
+Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> Thank you for the patch! It looks good to me!
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c0abe738e7d3..a761d3c613bb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -880,7 +880,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ =
 
-> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+ 	mptcp_set_timeout(sk, ssk);
+ 	if (copied) {
+-		ret =3D copied;
+ 		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
+ 			 size_goal);
+ =
 
-The commit is now in the "export" branch and validated by the CI. The =
+@@ -893,7 +892,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 	release_sock(ssk);
+ out:
+ 	release_sock(sk);
+-	return ret;
++	return copied ? : ret;
+ }
+ =
 
-results are the same as before your commit: the same 2 tests are failing =
-
-(diag.sh and packetdrill's dss tests as described on GitHub).
-
-Then please go ahead by sending this patch to -net! :)
-
-Cheers,
-Matt
+ static void mptcp_wait_data(struct sock *sk, long *timeo)
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============6033285876800572905==--
+2.26.2
+
+--===============7957952512049051774==--
