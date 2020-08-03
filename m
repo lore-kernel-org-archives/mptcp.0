@@ -1,57 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============0679903871267673971=="
+Content-Type: multipart/mixed; boundary="===============3634527122175199623=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 03/12] mptcp: trigger msk processing even for
- OoO data
-Date: Mon, 03 Aug 2020 12:51:28 +0200
-Message-ID: <5058b1696c5821aa29983a098cbf8d17c1db8c9f.camel@redhat.com>
-In-Reply-To: 20200801223033.GB29169@breakpoint.cc
+Subject: [MPTCP] Re: [RFC PATCH 07/12] mptcp: cleanup
+ mptcp_subflow_discard_data()
+Date: Mon, 03 Aug 2020 12:54:03 +0200
+Message-ID: <8918519002086e1d8eee65ec4f463c0cfeae8e55.camel@redhat.com>
+In-Reply-To: 20200801231846.GF29169@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 5433
+X-UID: 5434
 
---===============0679903871267673971==
+--===============3634527122175199623==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2020-08-02 at 00:30 +0200, Florian Westphal wrote:
+On Sun, 2020-08-02 at 01:18 +0200, Florian Westphal wrote:
 > Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index beb34b8a5363..e964f3670d75 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -268,6 +268,9 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
-> >  	return (struct mptcp_subflow_request_sock *)rsk;
-> >  }
-> >  =
-
-> > +#define MPTCP_SUBFLOW_DATA_AVAIL	1
-> > +#define MPTCP_SUBFLOW_OOO_DATA		2
 > =
 
-> Nit: maybe make this an enum. =
+> Hmmm, a changelog would have been nice 8-)
 
+whoops... I added the comments to most patch just before the submit,
+but I forgot about this one...
+> =
 
-And move it outside the bitfield, right? well, looks like the standard
-should allows that, but I would prefer not mixing enum and int into the
-bitfield...
+> > -	/* discard mapped data */
+> > -	pr_debug("discarding %zu bytes, current map len=3D%d", delta,
+> > -		 map_remaining);
+> > -	if (delta) {
+> > -		read_descriptor_t desc =3D {
+> > -			.count =3D delta,
+> > -		};
+> > -		int ret;
+> > -
+> > -		ret =3D tcp_read_sock(ssk, &desc, subflow_read_actor);
+> =
 
-> OTOH, at the end of the series,
-> OOO_DATA seems to be set but never used?
+> tcp_read_sock tosses 'delta' bytes, and may zap multiple skbs, but after
+> this change only at most one skb gets tossed.
+> =
 
-It' used "indirectly" in mptcp_data_ready(). The latter is called when =
+> >  	return 0;
+> >  }
+> =
 
-data_avail !=3D 0, but wakes-up the reader only if
+> Nit: After this change, mptcp_subflow_discard_data() always returns 0.
+> =
 
-	data_avail =3D=3D MPTCP_SUBFLOW_DATA_AVAIL
+> > @@ -853,7 +824,7 @@ static bool subflow_check_data_avail(struct sock *s=
+sk)
+> >  		/* only accept in-sequence mapping. Old values are spurious
+> >  		 * retransmission
+> >  		 */
+> > -		if (mptcp_subflow_discard_data(ssk, old_ack - ack_seq))
+> > +		if (mptcp_subflow_discard_data(ssk, skb, old_ack - ack_seq))
+> >  			goto fatal;
+> =
 
-otherwise (data_avail =3D=3D MPTCP_SUBFLOW_OOO_DATA) moves only the data to
-the ooo queue.
+> ... so this conditional can be removed.
+> =
+
+> >  		return false;
+> =
+
+> Wouldn't it make sense to get rid of the return false too so that this
+> checks if there is another skb to process?  This would also obsolete my
+> 'may zap multiple skbs' comment above since the caller would invoke the
+> discard helper again if next skb is also outdated.
+
+Yep, will look at this option.
 
 Thanks!
 
 /P
 
---===============0679903871267673971==--
+--===============3634527122175199623==--
