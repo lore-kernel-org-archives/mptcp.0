@@ -1,188 +1,194 @@
-Content-Type: multipart/mixed; boundary="===============3511273081089282002=="
+Content-Type: multipart/mixed; boundary="===============0934420486618088663=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 3/4] mptcp: add the incoming
- RM_ADDR support
-Date: Tue, 04 Aug 2020 12:49:37 +0200
-Message-ID: <64d8303c0a6ca80745f1f846c496cd33a8ca6fe0.camel@redhat.com>
-In-Reply-To: 911cff69decd339673ab391c56406166e6e6ecf8.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 4/4] mptcp: remove addr and
+ subflow in PM netlink
+Date: Tue, 04 Aug 2020 12:56:46 +0200
+Message-ID: <e4e6d9b1e33f4113dfacf1a3d978bc3dacd84f0f.camel@redhat.com>
+In-Reply-To: bbfc5de08176adb91aca942aca83928bede0dfbd.1596534832.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5460
+X-UID: 5461
 
---===============3511273081089282002==
+--===============0934420486618088663==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-08-04 at 12:44 +0200, Paolo Abeni wrote:
-> On Tue, 2020-08-04 at 18:01 +0800, Geliang Tang wrote:
-> > This patch added the RM_ADDR option parsing logic:
-> > =
-
-> > We parsed the incoming options to find if the rm_addr option is receive=
-d,
-> > and called mptcp_pm_rm_addr_received to schedule PM work to a new statu=
-s,
-> > named MPTCP_PM_RM_ADDR_RECEIVED.
-> > =
-
-> > PM work got this status, and called mptcp_pm_nl_rm_addr_received to han=
-dle
-> > it.
-> > =
-
-> > In mptcp_pm_nl_rm_addr_received, we closed the subflow matching the rm_=
-id,
-> > and updated PM counter.
-> > =
-
-> > Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> > Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-> > Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> > ---
-> >  net/mptcp/options.c    |  5 +++++
-> >  net/mptcp/pm.c         | 12 ++++++++++++
-> >  net/mptcp/pm_netlink.c | 36 +++++++++++++++++++++++++++++++++++-
-> >  net/mptcp/protocol.c   | 12 ++++++++----
-> >  net/mptcp/protocol.h   |  7 +++++++
-> >  net/mptcp/subflow.c    |  1 +
-> >  6 files changed, 68 insertions(+), 5 deletions(-)
-> > =
-
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index bbc124876417..a52a05effac9 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -888,6 +888,11 @@ void mptcp_incoming_options(struct sock *sk, struc=
-t sk_buff *skb,
-> >  		mp_opt.add_addr =3D 0;
-> >  	}
-> >  =
-
-> > +	if (mp_opt.rm_addr) {
-> > +		mptcp_pm_rm_addr_received(msk, mp_opt.rm_id);
-> > +		mp_opt.rm_addr =3D 0;
-> > +	}
-> > +
-> >  	if (!mp_opt.dss)
-> >  		return;
-> >  =
-
-> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> > index 81b07ae213b9..558462d87eb3 100644
-> > --- a/net/mptcp/pm.c
-> > +++ b/net/mptcp/pm.c
-> > @@ -149,6 +149,18 @@ void mptcp_pm_add_addr_received(struct mptcp_sock =
-*msk,
-> >  	spin_unlock_bh(&pm->lock);
-> >  }
-> >  =
-
-> > +void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id)
-> > +{
-> > +	struct mptcp_pm_data *pm =3D &msk->pm;
-> > +
-> > +	pr_debug("msk=3D%p remote_id=3D%d", msk, rm_id);
-> > +
-> > +	spin_lock_bh(&pm->lock);
-> > +	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
-> > +	pm->rm_id =3D rm_id;
-> > +	spin_unlock_bh(&pm->lock);
-> > +}
-> > +
-> >  /* path manager helpers */
-> >  =
-
-> >  bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int rem=
-aining,
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index c8820c4156e6..7461933fb68b 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -173,7 +173,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(=
-struct mptcp_sock *msk)
-> >  {
-> >  	struct sock *sk =3D (struct sock *)msk;
-> >  	struct mptcp_pm_addr_entry *local;
-> > -	struct mptcp_addr_info remote;
-> > +	struct mptcp_addr_info remote =3D { 0 };
-> >  	struct pm_nl_pernet *pernet;
-> >  =
-
-> >  	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-> > @@ -261,6 +261,40 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_so=
-ck *msk)
-> >  	spin_lock_bh(&msk->pm.lock);
-> >  }
-> >  =
-
-> > +void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
-> > +{
-> > +	struct mptcp_subflow_context *subflow, *tmp;
-> > +	struct sock *sk =3D (struct sock *)msk;
-> > +
-> > +	pr_debug("rm_id %d", msk->pm.rm_id);
-> > +
-> > +	if (!msk->pm.rm_id)
-> > +		return;
-> > +
-> > +	if (list_empty(&msk->conn_list))
-> > +		return;
-> > +
-> > +	msk->pm.add_addr_accepted--;
-> > +	msk->pm.subflows--;
-> > +	WRITE_ONCE(msk->pm.accept_addr, true);
-> > +
-> > +	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+On Tue, 2020-08-04 at 18:01 +0800, Geliang Tang wrote:
+> The patch adds a new list named anno_list in mptcp_pm_data, to record all
+> the announced addrs. When the PM netlink removes an address, we check if
+> it has been recorded. If it has been, we trigger the RM_ADDR signal.
 > =
 
-> I'm sorry, the following feedback was not likely clear enough in the
-> previous version:
+> We also check if this address is in conn_list. If it is, we remove the
+> subflow which using this local address.
 > =
 
-> msk->conn_list can be traversed only after acquiring the msk socket
-> lock. Should be something alike:
+> Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+> Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+>  net/mptcp/pm.c         |  7 +++-
+>  net/mptcp/pm_netlink.c | 93 ++++++++++++++++++++++++++++++++++++++++--
+>  net/mptcp/protocol.c   |  2 +
+>  net/mptcp/protocol.h   |  2 +
+>  4 files changed, 99 insertions(+), 5 deletions(-)
 > =
 
-> 	rm_id =3D msk->pm.rm_id;
->         spin_unlock_bh(&msk->pm.lock);
-> =
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 558462d87eb3..b3712771f268 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -24,7 +24,11 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+>  =
 
-> 	lock_sock(sk);
-> 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
->                struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
->                int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
->                long timeout =3D 0;
-> =
+>  int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
+>  {
+> -	return -ENOTSUPP;
+> +	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
+> +
+> +	msk->pm.rm_id =3D local_id;
+> +	WRITE_ONCE(msk->pm.rm_addr_signal, true);
+> +	return 0;
+>  }
+>  =
 
->                if (rm_id !=3D subflow->remote_id &&
->                    rm_id !=3D subflow->local_id)
->                        continue;
-> =
+>  int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
+> @@ -229,6 +233,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+>  	msk->pm.status =3D 0;
+>  =
 
->                mptcp_subflow_shutdown(sk, ssk, how);
->                __mptcp_close_ssk(sk, ssk, subflow, timeout);
->                break;
->        }
->        release_sock(sk);
->        spin_lock_bh(&msk->pm.lock);
-> =
+>  	spin_lock_init(&msk->pm.lock);
+> +	INIT_LIST_HEAD(&msk->pm.anno_list);
+>  =
 
-> =
+>  	mptcp_pm_nl_data_init(msk);
+>  }
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 7461933fb68b..7336f3f95f94 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -169,6 +169,19 @@ static void check_work_pending(struct mptcp_sock *ms=
+k)
+>  		WRITE_ONCE(msk->pm.work_pending, false);
+>  }
+>  =
 
-> note that we have to cache id before releasing the pm spin lock, access
-> to msk->pm.rm_id are not safe after releasing such lock.
+> +void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_pm_addr_entry *entry, *tmp;
+> +
+> +	pr_debug("msk=3D%p\n", msk);
+> +	spin_lock_bh(&msk->pm.lock);
+> +	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
+> +		list_del(&entry->list);
+> +		kfree(entry);
+> +	}
+> +	spin_unlock_bh(&msk->pm.lock);
+> +}
+> +
+>  static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *ms=
+k)
+>  {
+>  	struct sock *sk =3D (struct sock *)msk;
+> @@ -189,8 +202,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(s=
+truct mptcp_sock *msk)
+>  					      msk->pm.add_addr_signaled);
+>  =
 
-whoops, I did not recall/notice the sk socket lock is already held
-here!
+>  		if (local) {
+> +			struct mptcp_pm_addr_entry *clone =3D NULL;
+> +
+>  			msk->pm.add_addr_signaled++;
+>  			mptcp_pm_announce_addr(msk, &local->addr);
+> +
+> +			clone =3D kmemdup(local, sizeof(*local), GFP_ATOMIC);
+> +			if (!clone)
+> +				return;
+> +
+> +			list_add(&clone->list, &msk->pm.anno_list);
+>  		} else {
+>  			/* pick failed, avoid fourther attempts later */
+>  			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
+> @@ -551,6 +572,68 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, uns=
+igned int id)
+>  	return NULL;
+>  }
+>  =
 
-So your code looks actually correct, please ignore the above comment.
+> +static bool lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+> +				      struct mptcp_addr_info *addr,
+> +				      struct mptcp_pm_addr_entry **ret)
+> +{
+> +	struct mptcp_pm_addr_entry *entry, *tmp;
+> +
+> +	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
+> +		if (addresses_equal(&entry->addr, addr, false)) {
+> +			*ret =3D entry;
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static int mptcp_nl_remove_subflow_or_signal_addr(struct net *net,
+> +						  struct mptcp_addr_info *addr)
+> +{
+> +	struct mptcp_sock *msk;
+> +	long s_slot =3D 0, s_num =3D 0;
+> +
+> +	pr_debug("remove_id=3D%d\n", addr->id);
+> +
+> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
+ {
+> +		struct sock *sk =3D (struct sock *)msk;
+> +		struct mptcp_pm_addr_entry *entry;
+> +		bool ret =3D false;
+> +
+> +		/* check first for announced addr */
+> +		if (list_empty(&msk->pm.anno_list))
+> +			goto remove_subflow;
+> +
+> +		spin_lock_bh(&msk->pm.lock);
+> +		ret =3D lookup_anno_list_by_saddr(msk, addr, &entry);
+> +		spin_unlock_bh(&msk->pm.lock);
+> +		if (ret) {
+> +			mptcp_pm_remove_addr(msk, addr->id);
+> +			list_del(&entry->list);
 
-Sorry for the noise,
+list_del() should be called under msk->pm.lock or the anno list will be
+corrupted. Perhaps you can rename the 'lookup_anno_list_by_saddr'
+helper to 'remove_anno_list_by_saddr' and do the list_del(),
+ mptcp_pm_remove_addr(), free() inside such function.
+
+> +			kfree(entry);
+> +			goto next;
+
+My understanding of the RFC is that any msk subflows using this address
+should be closed, too - so no need for a goto here.
+
+> +		}
+> +
+> +		/* check if should remove a subflow */
+> +remove_subflow:
+> +		if (list_empty(&msk->conn_list))
+> +			goto next;
+> +
+> +		spin_lock_bh(&msk->pm.lock);
+> +		ret =3D lookup_subflow_by_saddr(&msk->conn_list, addr);
+> +		spin_unlock_bh(&msk->pm.lock);
+
+here you need to acquire the msk socket lock, and you shoud release
+after calling mptcp_pm_rm_addr_received(). The msk->pm.lock is not
+needed to traverse msk->conn_list.
+
+Thanks
 
 Paolo
 
---===============3511273081089282002==--
+
+--===============0934420486618088663==--
