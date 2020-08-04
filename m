@@ -1,310 +1,455 @@
-Content-Type: multipart/mixed; boundary="===============5451460870887656445=="
+Content-Type: multipart/mixed; boundary="===============7666739736069811269=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Nicolas Rybowski <nicolas.rybowski at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] selftests/mptcp: Better delay &
- reordering configuration
-Date: Tue, 04 Aug 2020 18:16:50 +0200
-Message-ID: <9530f681-9f79-d5d4-2eb3-7da3e935262b@tessares.net>
-In-Reply-To: 20200727234759.25705-1-cpaasch@apple.com
+Subject: [MPTCP] [PATCH mptcp-next 4/4] bpf: adding 'bpf_mptcp_sock' structure
+ and helper
+Date: Tue, 04 Aug 2020 18:13:31 +0200
+Message-ID: <20200804161331.1219161-5-nicolas.rybowski@tessares.net>
+In-Reply-To: 20200804161331.1219161-1-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5470
+X-UID: 5471
 
---===============5451460870887656445==
+--===============7666739736069811269==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christoph,
-
-Thank you for sharing this patch!
-
-On 28/07/2020 01:47, Christoph Paasch wrote:
-> The delay was intended to be configured to "simulate" a high(er) BDP
-> link. As such, it needs to be set as part of the loss-configuration and
-> not as part of the netem reordering configuration.
-> =
-
-> The reordering-config also requires a delay but that delay is the
-> reordering-extend. So, a good approach is to set the reordering-extend
-> as a function of the configured latency. E.g., 25% of the overall
-> latency.
-> =
-
-> Finally, the intention of tc_reorder was that when it is unset, the test
-> picks a random configuration. However, currently it is always initialized
-> and thus the random config won't be picked up.
-> =
-
-> Github-issue: https://github.com/multipath-tcp/mptcp_net-next/issues/6
-
-You can use the "Closes:" tag if you want.
-Or another one from:
-
-https://docs.github.com/en/enterprise/2.16/user/github/managing-your-work-o=
-n-github/closing-issues-using-keywords
-
-> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
-> ---
-> =
-
-> Notes:
->      Admittedly, two changes here in this patch (delay-fix and unitializi=
-ng
->      tc_reorder). If you want, I can split them but I thought that's over=
-kill for
->      a selftest-patch.
-
-I am fine with that.
-
->   tools/testing/selftests/net/mptcp/mptcp_connect.sh | 11 ++++++-----
->   1 file changed, 6 insertions(+), 5 deletions(-)
-> =
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index 6260520674d0..d29d189d1ae5 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -16,7 +16,6 @@ ipv6=3Dtrue
->   ethtool_random_on=3Dtrue
->   tc_delay=3D"$((RANDOM%400))"
->   tc_loss=3D$((RANDOM%101))
-> -tc_reorder=3D""
->   testmode=3D""
->   sndbuf=3D0
->   rcvbuf=3D0
-> @@ -631,22 +630,24 @@ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
->   	do_ping "$ns4" $sender dead:beef:3::1
->   done
->   =
-
-> -[ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem los=
-s random $tc_loss
-> +[ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem los=
-s random $tc_loss delay ${tc_delay}ms
-
-It looks like it is too slow when we use this tc_delay for each packets, =
-
-it is easy to timeout:
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-00:28:49.725 # selftests: net/mptcp: mptcp_connect.sh
-00:28:50.693 [   63.023982] ip (516) used greatest stack depth: 22984 =
-
-bytes left
-00:28:51.399 [   63.730210] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth2: link =
-
-becomes ready
-00:28:51.872 [   64.202628] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth1: link =
-
-becomes ready
-00:28:51.930 [   64.260700] IPv6: ADDRCONF(NETDEV_CHANGE): ns3eth2: link =
-
-becomes ready
-00:28:51.931 [   64.261982] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth3: link =
-
-becomes ready
-00:28:52.414 [   64.744960] IPv6: ADDRCONF(NETDEV_CHANGE): ns4eth3: link =
-
-becomes ready
-00:28:52.415 [   64.746169] IPv6: ADDRCONF(NETDEV_CHANGE): ns3eth4: link =
-
-becomes ready
-00:28:52.674 # INFO: set ns3-5f285c53-13cspj dev ns3eth2: ethtool -K =
-
-gso off gro off
-00:28:52.760 # INFO: set ns4-5f285c53-13cspj dev ns4eth3: ethtool -K tso off
-00:28:53.183 # Created /tmp/tmp.giudffQ2E4 (size 7922716 =
-
-/tmp/tmp.giudffQ2E4) containing data sent by client
-00:28:53.528 # Created /tmp/tmp.Tie6RowCZz (size 7493660 =
-
-/tmp/tmp.Tie6RowCZz) containing data sent by server
-00:28:53.956 # New MPTCP socket can be blocked via sysctl		[ OK ]
-00:28:54.164 # setsockopt(..., TCP_ULP, "mptcp", ...) blocked	[ OK ]
-00:28:54.215 # INFO: validating network environment with pings
-00:28:58.551 # INFO: Using loss of 0.57% delay 197 ms reorder 93% 64% on =
-
-ns3eth4
-00:29:00.071 # ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP	(duration =
-
-323ms) [ OK ]
-00:29:01.498 # ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP  	(duration =
-
-295ms) [ OK ]
-00:29:02.850 # ns1 TCP   -> ns1 (10.0.1.1:10002      ) MPTCP	(duration =
-
-256ms) [ OK ]
-00:29:04.294 # ns1 MPTCP -> ns1 (dead:beef:1::1:10003) MPTCP	(duration =
-
-351ms) [ OK ]
-00:29:05.697 # ns1 MPTCP -> ns1 (dead:beef:1::1:10004) TCP  	(duration =
-
-257ms) [ OK ]
-00:29:07.053 # ns1 TCP   -> ns1 (dead:beef:1::1:10005) MPTCP	(duration =
-
-244ms) [ OK ]
-00:29:08.924 # ns1 MPTCP -> ns2 (10.0.1.2:10006      ) MPTCP	(duration =
-
-736ms) [ OK ]
-00:29:10.537 # ns1 MPTCP -> ns2 (dead:beef:1::2:10007) MPTCP	(duration =
-
-530ms) [ OK ]
-00:29:12.570 # ns1 MPTCP -> ns2 (10.0.2.1:10008      ) MPTCP	(duration =
-
-915ms) [ OK ]
-00:29:14.483 # ns1 MPTCP -> ns2 (dead:beef:2::1:10009) MPTCP	(duration =
-
-807ms) [ OK ]
-00:29:39.992 # ns1 MPTCP -> ns3 (10.0.2.2:10010      ) MPTCP	(duration =
-
-24444ms) [ OK ]
-00:30:08.517 # ns1 MPTCP -> ns3 (dead:beef:2::2:10011) MPTCP	(duration =
-
-27434ms) [ OK ]
-00:30:39.626 # ns1 MPTCP -> ns3 (10.0.3.2:10012      ) MPTCP	(duration =
-
-30024ms) [ OK ]
-00:30:59.692 # ns1 MPTCP -> ns3 (dead:beef:3::2:10013) MPTCP	(duration =
-
-18959ms) [ OK ]
-00:31:35.088 # ns1 MPTCP -> ns4 (10.0.3.1:10014      ) MPTCP	(duration =
-
-34303ms) [ OK ]
-00:32:01.805 # ns1 MPTCP -> ns4 (dead:beef:3::1:10015) MPTCP	(duration =
-
-25614ms) [ OK ]
-00:32:03.701 # ns2 MPTCP -> ns1 (10.0.1.1:10016      ) MPTCP	(duration =
-
-792ms) [ OK ]
-00:32:05.375 # ns2 MPTCP -> ns1 (dead:beef:1::1:10017) MPTCP	(duration =
-
-568ms) [ OK ]
-00:32:24.546 # ns2 MPTCP -> ns3 (10.0.2.2:10018      ) MPTCP	(duration =
-
-17980ms) [ OK ]
-00:32:56.164 # ns2 MPTCP -> ns3 (dead:beef:2::2:10019) MPTCP	(duration =
-
-30497ms) [ OK ]
-00:33:00.952 # ns2 MPTCP -> ns3 (10.0.3.2:10020      ) MPTCP	(duration =
-
-3684ms) [ OK ]
-00:33:28.441 # ns2 MPTCP -> ns3 (dead:beef:3::2:10021) MPTCP	(duration =
-
-26375ms) [ OK ]
-00:34:00.064 # ns2 MPTCP -> ns4 (10.0.3.1:10022      ) MPTCP	(duration =
-
-30538ms) [ OK ]
-00:34:05.500 # ns2 MPTCP -> ns4 (dead:beef:3::1:10023) MPTCP	(duration =
-
-4352ms) [ OK ]
-00:34:27.354 # ns3 MPTCP -> ns1 (10.0.1.1:10024      ) MPTCP	(duration =
-
-20759ms) [ OK ]
-00:34:42.555 # ns3 MPTCP -> ns1 (dead:beef:1::1:10025) MPTCP	(duration =
-
-14098ms) [ OK ]
-00:34:54.836 # ns3 MPTCP -> ns2 (10.0.1.2:10026      ) MPTCP	(duration =
-
-11197ms) [ OK ]
-00:35:30.150 # ns3 MPTCP -> ns2 (dead:beef:1::2:10027) MPTCP	(duration =
-
-34225ms) [ OK ]
-00:36:07.746 # ns3 MPTCP -> ns2 (10.0.2.1:10028      ) MPTCP	(duration =
-
-36505ms) [ OK ]
-00:36:26.349 # ns3 MPTCP -> ns2 (dead:beef:2::1:10029) MPTCP	#
-00:36:26.350 not ok 1 selftests: net/mptcp: mptcp_connect.sh # TIMEOUT
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Should we have a max of 50ms or less?
-
-(+ ${reorder_delay} of max 50ms as well?)
-
-
->   echo -n "INFO: Using loss of $tc_loss "
->   test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
->   =
-
-> +reorder_delay=3D`expr $tc_delay / 4`
-
-It's a bit old school to use "`" :-D
-No but it is usually recommended to use "$(...)" because it is more =
-
-visible and can be nested.
-
-Also only "$(...)" are used in this file.
-
-And maybe even better to use this (if we still need to compute a value, =
-
-see my comment above):
-
-   reorder_delay=3D$((tc_delay / 4))
-
-like we do just below with "reorder":
-
-> +
->   if [ -z "${tc_reorder}" ]; then
->   	reorder1=3D$((RANDOM%10))
->   	reorder1=3D$((100 - reorder1))
->   	reorder2=3D$((RANDOM%100))
->   =
-
-> -	if [ $tc_delay -gt 0 ] && [ $reorder1 -lt 100 ] && [ $reorder2 -gt 0 ];=
- then
-> +	if [ $reorder_delay -gt 0 ] && [ $reorder1 -lt 100 ] && [ $reorder2 -gt=
- 0 ]; then
->   		tc_reorder=3D"reorder ${reorder1}% ${reorder2}%"
->   		echo -n "$tc_reorder "
->   	fi
->   elif [ "$tc_reorder" =3D "0" ];then
->   	tc_reorder=3D""
-> -elif [ "$tc_delay" -gt 0 ];then
-> +elif [ "$reorder_delay" -gt 0 ];then
->   	# reordering requires some delay
->   	tc_reorder=3D"reorder $tc_reorder"
->   	echo -n "$tc_reorder "
-
-Can you print ${reorder_delay} as well please?
-
-> @@ -654,7 +655,7 @@ fi
->   =
-
->   echo "on ns3eth4"
->   =
-
-> -tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${tc_delay}ms $tc_=
-reorder
-> +tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms=
- $tc_reorder
->   =
-
->   for sender in $ns1 $ns2 $ns3 $ns4;do
->   	run_tests_lo "$ns1" "$sender" 10.0.1.1 1
->
-
-Note that I applied your patch in the export branch to do more tests =
-
-with the CI but often, I was hitting the kselftest timeout. So I just =
-
-reverted it.
-
-I think it would be really good if these tests are quick to execute. =
-
-Except if we think it is really important to do some tests with more =
-
-than 50ms of delay? Maybe the proposed 50ms are already too high, 30ms =
-
-max + reorder_delay could be OK no? If we need some tests with higher =
-
-delay, maybe better to execute only a subset?
-
-Cheers,
-Matt
+In order to precisely identify the parent MPTCP connection of a subflow,
+it is required to access the mptcp_sock's token which uniquely identify a
+MPTCP connection.
+
+This patch adds a new structure 'bpf_mptcp_sock' exposing the 'token' field
+of the 'mptcp_sock' extracted from a subflow's 'tcp_sock'. It also adds a
+new BPF helper of the same name to expose the newly defined structure in
+the userspace BPF API.
+
+This is the fundation to expose more MPTCP-specific fields.
+
+Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
+---
+ include/linux/bpf.h            | 33 +++++++++++++++++
+ include/uapi/linux/bpf.h       | 13 +++++++
+ kernel/bpf/verifier.c          | 30 +++++++++++++++
+ net/core/filter.c              | 67 ++++++++++++++++++++++++++++++++++
+ scripts/bpf_helpers_doc.py     |  2 +
+ tools/include/uapi/linux/bpf.h | 13 +++++++
+ 6 files changed, 158 insertions(+)
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index bae557ff2da8..a257220cd107 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -267,6 +267,7 @@ enum bpf_return_type {
+ 	RET_PTR_TO_SOCK_COMMON_OR_NULL,	/* returns a pointer to a sock_common or =
+NULL */
+ 	RET_PTR_TO_ALLOC_MEM_OR_NULL,	/* returns a pointer to dynamically allocat=
+ed memory or NULL */
+ 	RET_PTR_TO_BTF_ID_OR_NULL,	/* returns a pointer to a btf_id or NULL */
++	RET_PTR_TO_MPTCP_SOCK_OR_NULL,	/* returns a pointer to mptcp_sock or NULL=
+ */
+ };
+ =
+
+ /* eBPF function prototype used by verifier to allow BPF_CALLs from eBPF p=
+rograms
+@@ -342,6 +343,8 @@ enum bpf_reg_type {
+ 	PTR_TO_BTF_ID_OR_NULL,	 /* reg points to kernel struct or NULL */
+ 	PTR_TO_MEM,		 /* reg points to valid memory region */
+ 	PTR_TO_MEM_OR_NULL,	 /* reg points to valid memory region or NULL */
++	PTR_TO_MPTCP_SOCK,	 /* reg points to struct mptcp_sock */
++	PTR_TO_MPTCP_SOCK_OR_NULL, /* reg points to struct mptcp_sock or NULL */
+ };
+ =
+
+ /* The information passed from prog-specific *_is_valid_access
+@@ -1671,6 +1674,7 @@ extern const struct bpf_func_proto bpf_skc_to_tcp_soc=
+k_proto;
+ extern const struct bpf_func_proto bpf_skc_to_tcp_timewait_sock_proto;
+ extern const struct bpf_func_proto bpf_skc_to_tcp_request_sock_proto;
+ extern const struct bpf_func_proto bpf_skc_to_udp6_sock_proto;
++extern const struct bpf_func_proto bpf_mptcp_sock_proto;
+ =
+
+ const struct bpf_func_proto *bpf_tracing_func_proto(
+ 	enum bpf_func_id func_id, const struct bpf_prog *prog);
+@@ -1727,6 +1731,35 @@ struct sk_reuseport_kern {
+ 	u32 reuseport_id;
+ 	bool bind_inany;
+ };
++
++#ifdef CONFIG_MPTCP
++bool bpf_mptcp_sock_is_valid_access(int off, int size,
++					enum bpf_access_type type,
++					struct bpf_insn_access_aux *info);
++
++u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type type,
++				    const struct bpf_insn *si,
++				    struct bpf_insn *insn_buf,
++				    struct bpf_prog *prog,
++				    u32 *target_size);
++#else /* CONFIG_MPTCP */
++static inline bool bpf_mptcp_sock_is_valid_access(int off, int size,
++						enum bpf_access_type type,
++						struct bpf_insn_access_aux *info)
++{
++	return false;
++}
++
++static inline u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type t=
+ype,
++						  const struct bpf_insn *si,
++						  struct bpf_insn *insn_buf,
++						  struct bpf_prog *prog,
++						  u32 *target_size)
++{
++	return 0;
++}
++#endif /* CONFIG_MPTCP */
++
+ bool bpf_tcp_sock_is_valid_access(int off, int size, enum bpf_access_type =
+type,
+ 				  struct bpf_insn_access_aux *info);
+ =
+
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index b68aa61ef144..9583c96400cf 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -3377,6 +3377,14 @@ union bpf_attr {
+  *		A non-negative value equal to or less than *size* on success,
+  *		or a negative error in case of failure.
+  *
++ * struct bpf_mptcp_sock *bpf_mptcp_sock(struct bpf_sock *sk)
++ *	Description
++ *		This helper gets a **struct bpf_mptcp_sock** pointer from a
++ *		**struct bpf_sock** pointer.
++ *	Return
++ *		A **struct bpf_mptcp_sock** pointer on success, or **NULL** in
++ *		case of failure.
++ *
+  */
+ #define __BPF_FUNC_MAPPER(FN)		\
+ 	FN(unspec),			\
+@@ -3521,6 +3529,7 @@ union bpf_attr {
+ 	FN(skc_to_tcp_request_sock),	\
+ 	FN(skc_to_udp6_sock),		\
+ 	FN(get_task_stack),		\
++	FN(mptcp_sock),			\
+ 	/* */
+ =
+
+ /* integer value in 'imm' field of BPF_CALL instruction selects which help=
+er
+@@ -3850,6 +3859,10 @@ struct bpf_tcp_sock {
+ 	__u32 is_mptcp;		/* Is MPTCP subflow? */
+ };
+ =
+
++struct bpf_mptcp_sock {
++	__u32 token;		/* msk token */
++};
++
+ struct bpf_sock_tuple {
+ 	union {
+ 		struct {
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 9a6703bc3f36..b913b1c1a71a 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -391,6 +391,7 @@ static bool type_is_sk_pointer(enum bpf_reg_type type)
+ 	return type =3D=3D PTR_TO_SOCKET ||
+ 		type =3D=3D PTR_TO_SOCK_COMMON ||
+ 		type =3D=3D PTR_TO_TCP_SOCK ||
++		type =3D=3D PTR_TO_MPTCP_SOCK ||
+ 		type =3D=3D PTR_TO_XDP_SOCK;
+ }
+ =
+
+@@ -398,6 +399,7 @@ static bool reg_type_not_null(enum bpf_reg_type type)
+ {
+ 	return type =3D=3D PTR_TO_SOCKET ||
+ 		type =3D=3D PTR_TO_TCP_SOCK ||
++		type =3D=3D PTR_TO_MPTCP_SOCK ||
+ 		type =3D=3D PTR_TO_MAP_VALUE ||
+ 		type =3D=3D PTR_TO_SOCK_COMMON;
+ }
+@@ -408,6 +410,7 @@ static bool reg_type_may_be_null(enum bpf_reg_type type)
+ 	       type =3D=3D PTR_TO_SOCKET_OR_NULL ||
+ 	       type =3D=3D PTR_TO_SOCK_COMMON_OR_NULL ||
+ 	       type =3D=3D PTR_TO_TCP_SOCK_OR_NULL ||
++	       type =3D=3D PTR_TO_MPTCP_SOCK_OR_NULL ||
+ 	       type =3D=3D PTR_TO_BTF_ID_OR_NULL ||
+ 	       type =3D=3D PTR_TO_MEM_OR_NULL;
+ }
+@@ -424,6 +427,8 @@ static bool reg_type_may_be_refcounted_or_null(enum bpf=
+_reg_type type)
+ 		type =3D=3D PTR_TO_SOCKET_OR_NULL ||
+ 		type =3D=3D PTR_TO_TCP_SOCK ||
+ 		type =3D=3D PTR_TO_TCP_SOCK_OR_NULL ||
++		type =3D=3D PTR_TO_MPTCP_SOCK ||
++		type =3D=3D PTR_TO_MPTCP_SOCK_OR_NULL ||
+ 		type =3D=3D PTR_TO_MEM ||
+ 		type =3D=3D PTR_TO_MEM_OR_NULL;
+ }
+@@ -497,6 +502,8 @@ static const char * const reg_type_str[] =3D {
+ 	[PTR_TO_SOCK_COMMON_OR_NULL] =3D "sock_common_or_null",
+ 	[PTR_TO_TCP_SOCK]	=3D "tcp_sock",
+ 	[PTR_TO_TCP_SOCK_OR_NULL] =3D "tcp_sock_or_null",
++	[PTR_TO_MPTCP_SOCK]	=3D "mptcp_sock",
++	[PTR_TO_MPTCP_SOCK_OR_NULL] =3D "mptcp_sock_or_null",
+ 	[PTR_TO_TP_BUFFER]	=3D "tp_buffer",
+ 	[PTR_TO_XDP_SOCK]	=3D "xdp_sock",
+ 	[PTR_TO_BTF_ID]		=3D "ptr_",
+@@ -2170,6 +2177,8 @@ static bool is_spillable_regtype(enum bpf_reg_type ty=
+pe)
+ 	case PTR_TO_SOCK_COMMON_OR_NULL:
+ 	case PTR_TO_TCP_SOCK:
+ 	case PTR_TO_TCP_SOCK_OR_NULL:
++	case PTR_TO_MPTCP_SOCK:
++	case PTR_TO_MPTCP_SOCK_OR_NULL:
+ 	case PTR_TO_XDP_SOCK:
+ 	case PTR_TO_BTF_ID:
+ 	case PTR_TO_BTF_ID_OR_NULL:
+@@ -2767,6 +2776,9 @@ static int check_sock_access(struct bpf_verifier_env =
+*env, int insn_idx,
+ 	case PTR_TO_TCP_SOCK:
+ 		valid =3D bpf_tcp_sock_is_valid_access(off, size, t, &info);
+ 		break;
++	case PTR_TO_MPTCP_SOCK:
++		valid =3D bpf_mptcp_sock_is_valid_access(off, size, t, &info);
++		break;
+ 	case PTR_TO_XDP_SOCK:
+ 		valid =3D bpf_xdp_sock_is_valid_access(off, size, t, &info);
+ 		break;
+@@ -2925,6 +2937,9 @@ static int check_ptr_alignment(struct bpf_verifier_en=
+v *env,
+ 	case PTR_TO_TCP_SOCK:
+ 		pointer_desc =3D "tcp_sock ";
+ 		break;
++	case PTR_TO_MPTCP_SOCK:
++		pointer_desc =3D "mptcp_sock ";
++		break;
+ 	case PTR_TO_XDP_SOCK:
+ 		pointer_desc =3D "xdp_sock ";
+ 		break;
+@@ -4824,6 +4839,10 @@ static int check_helper_call(struct bpf_verifier_env=
+ *env, int func_id, int insn
+ 		mark_reg_known_zero(env, regs, BPF_REG_0);
+ 		regs[BPF_REG_0].type =3D PTR_TO_TCP_SOCK_OR_NULL;
+ 		regs[BPF_REG_0].id =3D ++env->id_gen;
++	} else if (fn->ret_type =3D=3D RET_PTR_TO_MPTCP_SOCK_OR_NULL) {
++		mark_reg_known_zero(env, regs, BPF_REG_0);
++		regs[BPF_REG_0].type =3D PTR_TO_MPTCP_SOCK_OR_NULL;
++		regs[BPF_REG_0].id =3D ++env->id_gen;
+ 	} else if (fn->ret_type =3D=3D RET_PTR_TO_ALLOC_MEM_OR_NULL) {
+ 		mark_reg_known_zero(env, regs, BPF_REG_0);
+ 		regs[BPF_REG_0].type =3D PTR_TO_MEM_OR_NULL;
+@@ -5148,6 +5167,8 @@ static int adjust_ptr_min_max_vals(struct bpf_verifie=
+r_env *env,
+ 	case PTR_TO_SOCK_COMMON_OR_NULL:
+ 	case PTR_TO_TCP_SOCK:
+ 	case PTR_TO_TCP_SOCK_OR_NULL:
++	case PTR_TO_MPTCP_SOCK:
++	case PTR_TO_MPTCP_SOCK_OR_NULL:
+ 	case PTR_TO_XDP_SOCK:
+ 		verbose(env, "R%d pointer arithmetic on %s prohibited\n",
+ 			dst, reg_type_str[ptr_reg->type]);
+@@ -6802,6 +6823,8 @@ static void mark_ptr_or_null_reg(struct bpf_func_stat=
+e *state,
+ 			reg->type =3D PTR_TO_SOCK_COMMON;
+ 		} else if (reg->type =3D=3D PTR_TO_TCP_SOCK_OR_NULL) {
+ 			reg->type =3D PTR_TO_TCP_SOCK;
++		} else if (reg->type =3D=3D PTR_TO_MPTCP_SOCK_OR_NULL) {
++			reg->type =3D PTR_TO_MPTCP_SOCK;
+ 		} else if (reg->type =3D=3D PTR_TO_BTF_ID_OR_NULL) {
+ 			reg->type =3D PTR_TO_BTF_ID;
+ 		} else if (reg->type =3D=3D PTR_TO_MEM_OR_NULL) {
+@@ -8160,6 +8183,8 @@ static bool regsafe(struct bpf_reg_state *rold, struc=
+t bpf_reg_state *rcur,
+ 	case PTR_TO_SOCK_COMMON_OR_NULL:
+ 	case PTR_TO_TCP_SOCK:
+ 	case PTR_TO_TCP_SOCK_OR_NULL:
++	case PTR_TO_MPTCP_SOCK:
++	case PTR_TO_MPTCP_SOCK_OR_NULL:
+ 	case PTR_TO_XDP_SOCK:
+ 		/* Only valid matches are exact, which memcmp() above
+ 		 * would have accepted
+@@ -8687,6 +8712,8 @@ static bool reg_type_mismatch_ok(enum bpf_reg_type ty=
+pe)
+ 	case PTR_TO_SOCK_COMMON_OR_NULL:
+ 	case PTR_TO_TCP_SOCK:
+ 	case PTR_TO_TCP_SOCK_OR_NULL:
++	case PTR_TO_MPTCP_SOCK:
++	case PTR_TO_MPTCP_SOCK_OR_NULL:
+ 	case PTR_TO_XDP_SOCK:
+ 	case PTR_TO_BTF_ID:
+ 	case PTR_TO_BTF_ID_OR_NULL:
+@@ -9807,6 +9834,9 @@ static int convert_ctx_accesses(struct bpf_verifier_e=
+nv *env)
+ 		case PTR_TO_TCP_SOCK:
+ 			convert_ctx_access =3D bpf_tcp_sock_convert_ctx_access;
+ 			break;
++		case PTR_TO_MPTCP_SOCK:
++			convert_ctx_access =3D bpf_mptcp_sock_convert_ctx_access;
++			break;
+ 		case PTR_TO_XDP_SOCK:
+ 			convert_ctx_access =3D bpf_xdp_sock_convert_ctx_access;
+ 			break;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 048cb0adc75b..026d35a51b11 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -5903,6 +5903,69 @@ const struct bpf_func_proto bpf_tcp_sock_proto =3D {
+ 	.arg1_type	=3D ARG_PTR_TO_SOCK_COMMON,
+ };
+ =
+
++#ifdef CONFIG_MPTCP
++bool bpf_mptcp_sock_is_valid_access(int off, int size,
++		enum bpf_access_type type, struct bpf_insn_access_aux *info)
++{
++	if (off < 0 || off >=3D offsetofend(struct bpf_mptcp_sock,
++					  token))
++		return false;
++
++	if (off % size !=3D 0)
++		return false;
++
++	switch (off) {
++	default:
++		return size =3D=3D sizeof(__u32);
++	}
++}
++
++u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type type,
++				    const struct bpf_insn *si,
++				    struct bpf_insn *insn_buf,
++				    struct bpf_prog *prog, u32 *target_size)
++{
++	struct bpf_insn *insn =3D insn_buf;
++
++#define BPF_MPTCP_SOCK_GET_COMMON(FIELD)					\
++	do {								\
++		BUILD_BUG_ON(sizeof_field(struct mptcp_sock, FIELD) > \
++			     sizeof_field(struct bpf_mptcp_sock, FIELD)); \
++		*insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct mptcp_sock, FIELD),\
++				      si->dst_reg, si->src_reg,	\
++				      offsetof(struct mptcp_sock, FIELD)); \
++	} while (0)
++
++	if (insn > insn_buf)
++		return insn - insn_buf;
++
++	switch (si->off) {
++	case offsetof(struct bpf_mptcp_sock, token):
++		BPF_MPTCP_SOCK_GET_COMMON(token);
++		break;
++	}
++
++	return insn - insn_buf;
++}
++#endif /* CONFIG_MPTCP */
++
++BPF_CALL_1(bpf_mptcp_sock, struct sock *, sk)
++{
++	if (sk_fullsock(sk) && sk->sk_protocol =3D=3D IPPROTO_TCP && sk_is_mptcp(=
+sk)) {
++		struct mptcp_subflow_context *mptcp_sfc =3D mptcp_subflow_ctx(sk);
++
++		return (unsigned long)mptcp_sfc->conn;
++	}
++	return (unsigned long)NULL;
++}
++
++const struct bpf_func_proto bpf_mptcp_sock_proto =3D {
++	.func		=3D bpf_mptcp_sock,
++	.gpl_only	=3D false,
++	.ret_type	=3D RET_PTR_TO_MPTCP_SOCK_OR_NULL,
++	.arg1_type	=3D ARG_PTR_TO_SOCK_COMMON,
++};
++
+ BPF_CALL_1(bpf_get_listener_sock, struct sock *, sk)
+ {
+ 	sk =3D sk_to_full_sk(sk);
+@@ -6557,6 +6620,10 @@ sock_ops_func_proto(enum bpf_func_id func_id, const =
+struct bpf_prog *prog)
+ 	case BPF_FUNC_tcp_sock:
+ 		return &bpf_tcp_sock_proto;
+ #endif /* CONFIG_INET */
++#ifdef CONFIG_MPTCP
++	case BPF_FUNC_mptcp_sock:
++		return &bpf_mptcp_sock_proto;
++#endif /* CONFIG_MPTCP */
+ 	default:
+ 		return bpf_base_func_proto(func_id);
+ 	}
+diff --git a/scripts/bpf_helpers_doc.py b/scripts/bpf_helpers_doc.py
+index 5bfa448b4704..4db41a1c344a 100755
+--- a/scripts/bpf_helpers_doc.py
++++ b/scripts/bpf_helpers_doc.py
+@@ -428,6 +428,7 @@ class PrinterHelpers(Printer):
+             'struct tcp_request_sock',
+             'struct udp6_sock',
+             'struct task_struct',
++            'struct bpf_mptcp_sock',
+ =
+
+             'struct __sk_buff',
+             'struct sk_msg_md',
+@@ -472,6 +473,7 @@ class PrinterHelpers(Printer):
+             'struct tcp_request_sock',
+             'struct udp6_sock',
+             'struct task_struct',
++            'struct bpf_mptcp_sock',
+     }
+     mapped_types =3D {
+             'u8': '__u8',
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index b68aa61ef144..9583c96400cf 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -3377,6 +3377,14 @@ union bpf_attr {
+  *		A non-negative value equal to or less than *size* on success,
+  *		or a negative error in case of failure.
+  *
++ * struct bpf_mptcp_sock *bpf_mptcp_sock(struct bpf_sock *sk)
++ *	Description
++ *		This helper gets a **struct bpf_mptcp_sock** pointer from a
++ *		**struct bpf_sock** pointer.
++ *	Return
++ *		A **struct bpf_mptcp_sock** pointer on success, or **NULL** in
++ *		case of failure.
++ *
+  */
+ #define __BPF_FUNC_MAPPER(FN)		\
+ 	FN(unspec),			\
+@@ -3521,6 +3529,7 @@ union bpf_attr {
+ 	FN(skc_to_tcp_request_sock),	\
+ 	FN(skc_to_udp6_sock),		\
+ 	FN(get_task_stack),		\
++	FN(mptcp_sock),			\
+ 	/* */
+ =
+
+ /* integer value in 'imm' field of BPF_CALL instruction selects which help=
+er
+@@ -3850,6 +3859,10 @@ struct bpf_tcp_sock {
+ 	__u32 is_mptcp;		/* Is MPTCP subflow? */
+ };
+ =
+
++struct bpf_mptcp_sock {
++	__u32 token;		/* msk token */
++};
++
+ struct bpf_sock_tuple {
+ 	union {
+ 		struct {
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5451460870887656445==--
+2.28.0
+
+--===============7666739736069811269==--
