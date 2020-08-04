@@ -1,362 +1,310 @@
-Content-Type: multipart/mixed; boundary="===============3065098482592038500=="
+Content-Type: multipart/mixed; boundary="===============5451460870887656445=="
 MIME-Version: 1.0
-From: Nicolas Rybowski <nicolas.rybowski at tessares.net>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 3/4] mptcp: moving struct definitions
-Date: Tue, 04 Aug 2020 18:13:30 +0200
-Message-ID: <20200804161331.1219161-4-nicolas.rybowski@tessares.net>
-In-Reply-To: 20200804161331.1219161-1-nicolas.rybowski@tessares.net
+Subject: [MPTCP] Re: [PATCH mptcp-next] selftests/mptcp: Better delay &
+ reordering configuration
+Date: Tue, 04 Aug 2020 18:16:50 +0200
+Message-ID: <9530f681-9f79-d5d4-2eb3-7da3e935262b@tessares.net>
+In-Reply-To: 20200727234759.25705-1-cpaasch@apple.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5469
+X-UID: 5470
 
---===============3065098482592038500==
+--===============5451460870887656445==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In order to access 'struct mptcp_sock' in eBPF, it is required to be
-publicly accessible in the 'include/net/mptcp.h' interface rather than
-being privately defined in 'net/mptcp/protocol.h'.
+Hi Christoph,
 
-The other structures are required to define 'struct mptcp_sock' and the
-helper is used in a newly defined BPF helper.
+Thank you for sharing this patch!
 
-The moved structures are not expected to be used elsewhere than in
-net/mptcp and eBPF so there is maybe a better solution to expose them to
-BPF other than just moving them here.
+On 28/07/2020 01:47, Christoph Paasch wrote:
+> The delay was intended to be configured to "simulate" a high(er) BDP
+> link. As such, it needs to be set as part of the loss-configuration and
+> not as part of the netem reordering configuration.
+> =
 
-Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
----
- include/net/mptcp.h  | 132 +++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h | 123 ----------------------------------------
- 2 files changed, 132 insertions(+), 123 deletions(-)
+> The reordering-config also requires a delay but that delay is the
+> reordering-extend. So, a good approach is to set the reordering-extend
+> as a function of the configured latency. E.g., 25% of the overall
+> latency.
+> =
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 3525d2822abe..61b720144592 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -57,6 +57,122 @@ struct mptcp_out_options {
- #endif
- };
- =
+> Finally, the intention of tc_reorder was that when it is unset, the test
+> picks a random configuration. However, currently it is always initialized
+> and thus the random config won't be picked up.
+> =
 
-+struct mptcp_addr_info {
-+	sa_family_t		family;
-+	__be16			port;
-+	u8			id;
-+	union {
-+		struct in_addr addr;
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+		struct in6_addr addr6;
-+#endif
-+	};
-+};
-+
-+struct mptcp_pm_data {
-+	struct mptcp_addr_info local;
-+	struct mptcp_addr_info remote;
-+
-+	spinlock_t	lock;		/*protects the whole PM data */
-+
-+	bool		addr_signal;
-+	bool		server_side;
-+	bool		work_pending;
-+	bool		accept_addr;
-+	bool		accept_subflow;
-+	u8		add_addr_signaled;
-+	u8		add_addr_accepted;
-+	u8		local_addr_used;
-+	u8		subflows;
-+	u8		add_addr_signal_max;
-+	u8		add_addr_accept_max;
-+	u8		local_addr_max;
-+	u8		subflows_max;
-+	u8		status;
-+};
-+
-+/* MPTCP connection sock */
-+struct mptcp_sock {
-+	/* inet_connection_sock must be the first member */
-+	struct inet_connection_sock sk;
-+	u64		local_key;
-+	u64		remote_key;
-+	u64		write_seq;
-+	u64		ack_seq;
-+	u64		rcv_data_fin_seq;
-+	atomic64_t	snd_una;
-+	unsigned long	timer_ival;
-+	u32		token;
-+	unsigned long	flags;
-+	bool		can_ack;
-+	bool		fully_established;
-+	bool		rcv_data_fin;
-+	bool		snd_data_fin_enable;
-+	spinlock_t	join_list_lock;
-+	struct work_struct work;
-+	struct list_head conn_list;
-+	struct list_head rtx_queue;
-+	struct list_head join_list;
-+	struct skb_ext	*cached_ext;	/* for the next sendmsg */
-+	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
-+	struct sock	*first;
-+	struct mptcp_pm_data	pm;
-+	struct {
-+		u32	space;	/* bytes copied in last measurement window */
-+		u32	copied; /* bytes copied in this measurement window */
-+		u64	time;	/* start time of measurement window */
-+		u64	rtt_us; /* last maximum rtt of subflows */
-+	} rcvq_space;
-+};
-+
-+#define MPTCPOPT_HMAC_LEN	20
-+
-+/* MPTCP subflow context */
-+struct mptcp_subflow_context {
-+	struct	list_head node;/* conn_list of subflows */
-+	u64	local_key;
-+	u64	remote_key;
-+	u64	idsn;
-+	u64	map_seq;
-+	u32	snd_isn;
-+	u32	token;
-+	u32	rel_write_seq;
-+	u32	map_subflow_seq;
-+	u32	ssn_offset;
-+	u32	map_data_len;
-+	u32	request_mptcp : 1,  /* send MP_CAPABLE */
-+		request_join : 1,   /* send MP_JOIN */
-+		request_bkup : 1,
-+		mp_capable : 1,	    /* remote is MPTCP capable */
-+		mp_join : 1,	    /* remote is JOINing */
-+		fully_established : 1,	    /* path validated */
-+		pm_notified : 1,    /* PM hook called for established status */
-+		conn_finished : 1,
-+		map_valid : 1,
-+		mpc_map : 1,
-+		backup : 1,
-+		data_avail : 1,
-+		rx_eof : 1,
-+		use_64bit_ack : 1, /* Set when we received a 64-bit DSN */
-+		can_ack : 1;	    /* only after processing the remote a key */
-+	u32	remote_nonce;
-+	u64	thmac;
-+	u32	local_nonce;
-+	u32	remote_token;
-+	u8	hmac[MPTCPOPT_HMAC_LEN];
-+	u8	local_id;
-+	u8	remote_id;
-+
-+	struct	sock *tcp_sock;	    /* tcp sk backpointer */
-+	struct	sock *conn;	    /* parent mptcp_sock */
-+	const	struct inet_connection_sock_af_ops *icsk_af_ops;
-+	void	(*tcp_data_ready)(struct sock *sk);
-+	void	(*tcp_state_change)(struct sock *sk);
-+	void	(*tcp_write_space)(struct sock *sk);
-+
-+	struct	rcu_head rcu;
-+};
-+
- #ifdef CONFIG_MPTCP
- extern struct request_sock_ops mptcp_subflow_request_sock_ops;
- =
+> Github-issue: https://github.com/multipath-tcp/mptcp_net-next/issues/6
 
-@@ -134,6 +250,16 @@ void mptcp_seq_show(struct seq_file *seq);
- int mptcp_subflow_init_cookie_req(struct request_sock *req,
- 				  const struct sock *sk_listener,
- 				  struct sk_buff *skb);
-+
-+static inline struct mptcp_subflow_context *
-+mptcp_subflow_ctx(const struct sock *sk)
-+{
-+	struct inet_connection_sock *icsk =3D inet_csk(sk);
-+
-+	/* Use RCU on icsk_ulp_data only for sock diag code */
-+	return (__force struct mptcp_subflow_context *)icsk->icsk_ulp_data;
-+}
-+
- #else
- =
+You can use the "Closes:" tag if you want.
+Or another one from:
 
- static inline void mptcp_init(void)
-@@ -210,6 +336,12 @@ static inline int mptcp_subflow_init_cookie_req(struct=
- request_sock *req,
- {
- 	return 0; /* TCP fallback */
- }
-+
-+static inline struct mptcp_subflow_context *
-+mptcp_subflow_ctx(const struct sock *sk)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_MPTCP */
- =
+https://docs.github.com/en/enterprise/2.16/user/github/managing-your-work-o=
+n-github/closing-issues-using-keywords
 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 60b27d44c184..8ea421abd541 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -136,46 +136,12 @@ static inline __be32 mptcp_option(u8 subopt, u8 len, =
-u8 nib, u8 field)
- 		     ((nib & 0xF) << 8) | field);
- }
- =
+> Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
+> ---
+> =
 
--struct mptcp_addr_info {
--	sa_family_t		family;
--	__be16			port;
--	u8			id;
--	union {
--		struct in_addr addr;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--		struct in6_addr addr6;
--#endif
--	};
--};
--
- enum mptcp_pm_status {
- 	MPTCP_PM_ADD_ADDR_RECEIVED,
- 	MPTCP_PM_ESTABLISHED,
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
- };
- =
+> Notes:
+>      Admittedly, two changes here in this patch (delay-fix and unitializi=
+ng
+>      tc_reorder). If you want, I can split them but I thought that's over=
+kill for
+>      a selftest-patch.
 
--struct mptcp_pm_data {
--	struct mptcp_addr_info local;
--	struct mptcp_addr_info remote;
--
--	spinlock_t	lock;		/*protects the whole PM data */
--
--	bool		addr_signal;
--	bool		server_side;
--	bool		work_pending;
--	bool		accept_addr;
--	bool		accept_subflow;
--	u8		add_addr_signaled;
--	u8		add_addr_accepted;
--	u8		local_addr_used;
--	u8		subflows;
--	u8		add_addr_signal_max;
--	u8		add_addr_accept_max;
--	u8		local_addr_max;
--	u8		subflows_max;
--	u8		status;
--};
--
- struct mptcp_data_frag {
- 	struct list_head list;
- 	u64 data_seq;
-@@ -185,40 +151,6 @@ struct mptcp_data_frag {
- 	struct page *page;
- };
- =
+I am fine with that.
 
--/* MPTCP connection sock */
--struct mptcp_sock {
--	/* inet_connection_sock must be the first member */
--	struct inet_connection_sock sk;
--	u64		local_key;
--	u64		remote_key;
--	u64		write_seq;
--	u64		ack_seq;
--	u64		rcv_data_fin_seq;
--	atomic64_t	snd_una;
--	unsigned long	timer_ival;
--	u32		token;
--	unsigned long	flags;
--	bool		can_ack;
--	bool		fully_established;
--	bool		rcv_data_fin;
--	bool		snd_data_fin_enable;
--	spinlock_t	join_list_lock;
--	struct work_struct work;
--	struct list_head conn_list;
--	struct list_head rtx_queue;
--	struct list_head join_list;
--	struct skb_ext	*cached_ext;	/* for the next sendmsg */
--	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
--	struct sock	*first;
--	struct mptcp_pm_data	pm;
--	struct {
--		u32	space;	/* bytes copied in last measurement window */
--		u32	copied; /* bytes copied in this measurement window */
--		u64	time;	/* start time of measurement window */
--		u64	rtt_us; /* last maximum rtt of subflows */
--	} rcvq_space;
--};
--
- #define mptcp_for_each_subflow(__msk, __subflow)			\
- 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
- =
+>   tools/testing/selftests/net/mptcp/mptcp_connect.sh | 11 ++++++-----
+>   1 file changed, 6 insertions(+), 5 deletions(-)
+> =
 
-@@ -268,61 +200,6 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
- 	return (struct mptcp_subflow_request_sock *)rsk;
- }
- =
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
+esting/selftests/net/mptcp/mptcp_connect.sh
+> index 6260520674d0..d29d189d1ae5 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -16,7 +16,6 @@ ipv6=3Dtrue
+>   ethtool_random_on=3Dtrue
+>   tc_delay=3D"$((RANDOM%400))"
+>   tc_loss=3D$((RANDOM%101))
+> -tc_reorder=3D""
+>   testmode=3D""
+>   sndbuf=3D0
+>   rcvbuf=3D0
+> @@ -631,22 +630,24 @@ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
+>   	do_ping "$ns4" $sender dead:beef:3::1
+>   done
+>   =
 
--/* MPTCP subflow context */
--struct mptcp_subflow_context {
--	struct	list_head node;/* conn_list of subflows */
--	u64	local_key;
--	u64	remote_key;
--	u64	idsn;
--	u64	map_seq;
--	u32	snd_isn;
--	u32	token;
--	u32	rel_write_seq;
--	u32	map_subflow_seq;
--	u32	ssn_offset;
--	u32	map_data_len;
--	u32	request_mptcp : 1,  /* send MP_CAPABLE */
--		request_join : 1,   /* send MP_JOIN */
--		request_bkup : 1,
--		mp_capable : 1,	    /* remote is MPTCP capable */
--		mp_join : 1,	    /* remote is JOINing */
--		fully_established : 1,	    /* path validated */
--		pm_notified : 1,    /* PM hook called for established status */
--		conn_finished : 1,
--		map_valid : 1,
--		mpc_map : 1,
--		backup : 1,
--		data_avail : 1,
--		rx_eof : 1,
--		use_64bit_ack : 1, /* Set when we received a 64-bit DSN */
--		can_ack : 1;	    /* only after processing the remote a key */
--	u32	remote_nonce;
--	u64	thmac;
--	u32	local_nonce;
--	u32	remote_token;
--	u8	hmac[MPTCPOPT_HMAC_LEN];
--	u8	local_id;
--	u8	remote_id;
--
--	struct	sock *tcp_sock;	    /* tcp sk backpointer */
--	struct	sock *conn;	    /* parent mptcp_sock */
--	const	struct inet_connection_sock_af_ops *icsk_af_ops;
--	void	(*tcp_data_ready)(struct sock *sk);
--	void	(*tcp_state_change)(struct sock *sk);
--	void	(*tcp_write_space)(struct sock *sk);
--
--	struct	rcu_head rcu;
--};
--
--static inline struct mptcp_subflow_context *
--mptcp_subflow_ctx(const struct sock *sk)
--{
--	struct inet_connection_sock *icsk =3D inet_csk(sk);
--
--	/* Use RCU on icsk_ulp_data only for sock diag code */
--	return (__force struct mptcp_subflow_context *)icsk->icsk_ulp_data;
--}
--
- static inline struct sock *
- mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
- {
+> -[ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem los=
+s random $tc_loss
+> +[ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem los=
+s random $tc_loss delay ${tc_delay}ms
+
+It looks like it is too slow when we use this tc_delay for each packets, =
+
+it is easy to timeout:
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+00:28:49.725 # selftests: net/mptcp: mptcp_connect.sh
+00:28:50.693 [   63.023982] ip (516) used greatest stack depth: 22984 =
+
+bytes left
+00:28:51.399 [   63.730210] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth2: link =
+
+becomes ready
+00:28:51.872 [   64.202628] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth1: link =
+
+becomes ready
+00:28:51.930 [   64.260700] IPv6: ADDRCONF(NETDEV_CHANGE): ns3eth2: link =
+
+becomes ready
+00:28:51.931 [   64.261982] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth3: link =
+
+becomes ready
+00:28:52.414 [   64.744960] IPv6: ADDRCONF(NETDEV_CHANGE): ns4eth3: link =
+
+becomes ready
+00:28:52.415 [   64.746169] IPv6: ADDRCONF(NETDEV_CHANGE): ns3eth4: link =
+
+becomes ready
+00:28:52.674 # INFO: set ns3-5f285c53-13cspj dev ns3eth2: ethtool -K =
+
+gso off gro off
+00:28:52.760 # INFO: set ns4-5f285c53-13cspj dev ns4eth3: ethtool -K tso off
+00:28:53.183 # Created /tmp/tmp.giudffQ2E4 (size 7922716 =
+
+/tmp/tmp.giudffQ2E4) containing data sent by client
+00:28:53.528 # Created /tmp/tmp.Tie6RowCZz (size 7493660 =
+
+/tmp/tmp.Tie6RowCZz) containing data sent by server
+00:28:53.956 # New MPTCP socket can be blocked via sysctl		[ OK ]
+00:28:54.164 # setsockopt(..., TCP_ULP, "mptcp", ...) blocked	[ OK ]
+00:28:54.215 # INFO: validating network environment with pings
+00:28:58.551 # INFO: Using loss of 0.57% delay 197 ms reorder 93% 64% on =
+
+ns3eth4
+00:29:00.071 # ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP	(duration =
+
+323ms) [ OK ]
+00:29:01.498 # ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP  	(duration =
+
+295ms) [ OK ]
+00:29:02.850 # ns1 TCP   -> ns1 (10.0.1.1:10002      ) MPTCP	(duration =
+
+256ms) [ OK ]
+00:29:04.294 # ns1 MPTCP -> ns1 (dead:beef:1::1:10003) MPTCP	(duration =
+
+351ms) [ OK ]
+00:29:05.697 # ns1 MPTCP -> ns1 (dead:beef:1::1:10004) TCP  	(duration =
+
+257ms) [ OK ]
+00:29:07.053 # ns1 TCP   -> ns1 (dead:beef:1::1:10005) MPTCP	(duration =
+
+244ms) [ OK ]
+00:29:08.924 # ns1 MPTCP -> ns2 (10.0.1.2:10006      ) MPTCP	(duration =
+
+736ms) [ OK ]
+00:29:10.537 # ns1 MPTCP -> ns2 (dead:beef:1::2:10007) MPTCP	(duration =
+
+530ms) [ OK ]
+00:29:12.570 # ns1 MPTCP -> ns2 (10.0.2.1:10008      ) MPTCP	(duration =
+
+915ms) [ OK ]
+00:29:14.483 # ns1 MPTCP -> ns2 (dead:beef:2::1:10009) MPTCP	(duration =
+
+807ms) [ OK ]
+00:29:39.992 # ns1 MPTCP -> ns3 (10.0.2.2:10010      ) MPTCP	(duration =
+
+24444ms) [ OK ]
+00:30:08.517 # ns1 MPTCP -> ns3 (dead:beef:2::2:10011) MPTCP	(duration =
+
+27434ms) [ OK ]
+00:30:39.626 # ns1 MPTCP -> ns3 (10.0.3.2:10012      ) MPTCP	(duration =
+
+30024ms) [ OK ]
+00:30:59.692 # ns1 MPTCP -> ns3 (dead:beef:3::2:10013) MPTCP	(duration =
+
+18959ms) [ OK ]
+00:31:35.088 # ns1 MPTCP -> ns4 (10.0.3.1:10014      ) MPTCP	(duration =
+
+34303ms) [ OK ]
+00:32:01.805 # ns1 MPTCP -> ns4 (dead:beef:3::1:10015) MPTCP	(duration =
+
+25614ms) [ OK ]
+00:32:03.701 # ns2 MPTCP -> ns1 (10.0.1.1:10016      ) MPTCP	(duration =
+
+792ms) [ OK ]
+00:32:05.375 # ns2 MPTCP -> ns1 (dead:beef:1::1:10017) MPTCP	(duration =
+
+568ms) [ OK ]
+00:32:24.546 # ns2 MPTCP -> ns3 (10.0.2.2:10018      ) MPTCP	(duration =
+
+17980ms) [ OK ]
+00:32:56.164 # ns2 MPTCP -> ns3 (dead:beef:2::2:10019) MPTCP	(duration =
+
+30497ms) [ OK ]
+00:33:00.952 # ns2 MPTCP -> ns3 (10.0.3.2:10020      ) MPTCP	(duration =
+
+3684ms) [ OK ]
+00:33:28.441 # ns2 MPTCP -> ns3 (dead:beef:3::2:10021) MPTCP	(duration =
+
+26375ms) [ OK ]
+00:34:00.064 # ns2 MPTCP -> ns4 (10.0.3.1:10022      ) MPTCP	(duration =
+
+30538ms) [ OK ]
+00:34:05.500 # ns2 MPTCP -> ns4 (dead:beef:3::1:10023) MPTCP	(duration =
+
+4352ms) [ OK ]
+00:34:27.354 # ns3 MPTCP -> ns1 (10.0.1.1:10024      ) MPTCP	(duration =
+
+20759ms) [ OK ]
+00:34:42.555 # ns3 MPTCP -> ns1 (dead:beef:1::1:10025) MPTCP	(duration =
+
+14098ms) [ OK ]
+00:34:54.836 # ns3 MPTCP -> ns2 (10.0.1.2:10026      ) MPTCP	(duration =
+
+11197ms) [ OK ]
+00:35:30.150 # ns3 MPTCP -> ns2 (dead:beef:1::2:10027) MPTCP	(duration =
+
+34225ms) [ OK ]
+00:36:07.746 # ns3 MPTCP -> ns2 (10.0.2.1:10028      ) MPTCP	(duration =
+
+36505ms) [ OK ]
+00:36:26.349 # ns3 MPTCP -> ns2 (dead:beef:2::1:10029) MPTCP	#
+00:36:26.350 not ok 1 selftests: net/mptcp: mptcp_connect.sh # TIMEOUT
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Should we have a max of 50ms or less?
+
+(+ ${reorder_delay} of max 50ms as well?)
+
+
+>   echo -n "INFO: Using loss of $tc_loss "
+>   test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
+>   =
+
+> +reorder_delay=3D`expr $tc_delay / 4`
+
+It's a bit old school to use "`" :-D
+No but it is usually recommended to use "$(...)" because it is more =
+
+visible and can be nested.
+
+Also only "$(...)" are used in this file.
+
+And maybe even better to use this (if we still need to compute a value, =
+
+see my comment above):
+
+   reorder_delay=3D$((tc_delay / 4))
+
+like we do just below with "reorder":
+
+> +
+>   if [ -z "${tc_reorder}" ]; then
+>   	reorder1=3D$((RANDOM%10))
+>   	reorder1=3D$((100 - reorder1))
+>   	reorder2=3D$((RANDOM%100))
+>   =
+
+> -	if [ $tc_delay -gt 0 ] && [ $reorder1 -lt 100 ] && [ $reorder2 -gt 0 ];=
+ then
+> +	if [ $reorder_delay -gt 0 ] && [ $reorder1 -lt 100 ] && [ $reorder2 -gt=
+ 0 ]; then
+>   		tc_reorder=3D"reorder ${reorder1}% ${reorder2}%"
+>   		echo -n "$tc_reorder "
+>   	fi
+>   elif [ "$tc_reorder" =3D "0" ];then
+>   	tc_reorder=3D""
+> -elif [ "$tc_delay" -gt 0 ];then
+> +elif [ "$reorder_delay" -gt 0 ];then
+>   	# reordering requires some delay
+>   	tc_reorder=3D"reorder $tc_reorder"
+>   	echo -n "$tc_reorder "
+
+Can you print ${reorder_delay} as well please?
+
+> @@ -654,7 +655,7 @@ fi
+>   =
+
+>   echo "on ns3eth4"
+>   =
+
+> -tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${tc_delay}ms $tc_=
+reorder
+> +tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms=
+ $tc_reorder
+>   =
+
+>   for sender in $ns1 $ns2 $ns3 $ns4;do
+>   	run_tests_lo "$ns1" "$sender" 10.0.1.1 1
+>
+
+Note that I applied your patch in the export branch to do more tests =
+
+with the CI but often, I was hitting the kselftest timeout. So I just =
+
+reverted it.
+
+I think it would be really good if these tests are quick to execute. =
+
+Except if we think it is really important to do some tests with more =
+
+than 50ms of delay? Maybe the proposed 50ms are already too high, 30ms =
+
+max + reorder_delay could be OK no? If we need some tests with higher =
+
+delay, maybe better to execute only a subset?
+
+Cheers,
+Matt
 -- =
 
-2.28.0
-
---===============3065098482592038500==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============5451460870887656445==--
