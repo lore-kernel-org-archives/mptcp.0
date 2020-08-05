@@ -1,479 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============7604763321443054068=="
+Content-Type: multipart/mixed; boundary="===============3142034843467022377=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH 06/13] mptcp: move ooo skbs into msk out of order
- queue.
-Date: Wed, 05 Aug 2020 19:57:05 +0200
-Message-ID: <84853032f0985f160ac53fe2955d92956f74f502.1596649926.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH 07/13] mptcp: cleanup mptcp_subflow_discard_data()
+Date: Wed, 05 Aug 2020 19:57:06 +0200
+Message-ID: <ccec48f89fb481b9409add1bcc10c2fef8968ee9.1596649926.git.pabeni@redhat.com>
 In-Reply-To: cover.1596649926.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5485
+X-UID: 5486
 
---===============7604763321443054068==
+--===============3142034843467022377==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add an RB-tree to cope with OoO (at MPTCP level) data.
-__mptcp_move_skb() insert into the RB tree "future"
-data, eventually coalescing skb as allowed by the
-MPTCP DSN.
+There is no need to use the tcp_read_sock(), we can
+simply drop the skb. Additionally try to look at next
+buffer for in order data.
 
-To simplify sequence accounting, move the DSN inside
-the cb.
-
-After successfully enqueing in sequence data, check
-if we can use any data from the RB tree.
-
-Additionally move the data_fin check after spooling
-data from the OoO tree, otherwise we could miss shutdown
-events.
-
-The RB tree code is copied as verbatim as possible
-from tcp_data_queue_ofo(), with a few simplifications
-due to the fact that MPTCP don't need to cope with
-sacks. All bugs here added by me.
+This both simplify the code and avoid unneeded indirect
+calls.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-rfc -> v1:
- - move data_fin check after mptcp_ofo_queue()
+RFC -> v1:
+  - added changelog, continue looping on drop (Florian)
 ---
- net/mptcp/protocol.c | 264 ++++++++++++++++++++++++++++++++++---------
- net/mptcp/protocol.h |   2 +
- net/mptcp/subflow.c  |   1 +
- 3 files changed, 211 insertions(+), 56 deletions(-)
+ net/mptcp/protocol.h |  1 -
+ net/mptcp/subflow.c  | 56 ++++++++++----------------------------------
+ 2 files changed, 12 insertions(+), 45 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b8bded3a6728..c4c062079954 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -34,6 +34,8 @@ struct mptcp6_sock {
- #endif
- =
-
- struct mptcp_skb_cb {
-+	u64 map_seq;
-+	u64 end_seq;
- 	u32 offset;
- };
- =
-
-@@ -112,6 +114,12 @@ static int __mptcp_socket_create(struct mptcp_sock *ms=
-k)
- 	return 0;
- }
- =
-
-+static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
-+{
-+	sk_drops_add(sk, skb);
-+	__kfree_skb(skb);
-+}
-+
- static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
- 			       struct sk_buff *from)
- {
-@@ -122,16 +130,127 @@ static bool mptcp_try_coalesce(struct sock *sk, stru=
-ct sk_buff *to,
- 	    !skb_try_coalesce(to, from, &fragstolen, &delta))
- 		return false;
- =
-
-+	MPTCP_SKB_CB(to)->end_seq =3D MPTCP_SKB_CB(from)->end_seq;
- 	kfree_skb_partial(from, fragstolen);
- 	atomic_add(delta, &sk->sk_rmem_alloc);
- 	sk_mem_charge(sk, delta);
- 	return true;
- }
- =
-
--static void __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
--			     struct sk_buff *skb,
--			     unsigned int offset, size_t copy_len)
-+static bool mptcp_ooo_try_coalesce(struct mptcp_sock *msk, struct sk_buff =
-*to,
-+				   struct sk_buff *from)
-+{
-+	if (MPTCP_SKB_CB(from)->map_seq !=3D MPTCP_SKB_CB(to)->end_seq)
-+		return false;
-+
-+	return mptcp_try_coalesce((struct sock*)msk, to, from);
-+}
-+
-+/* "inspired" by tcp_data_queue_ofo(), main differences:
-+ * - use mptcp seqs
-+ * - don't cope with sacks
-+ */
-+static void mptcp_data_queue_ofo(struct mptcp_sock *msk, struct sk_buff *s=
-kb)
- {
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct rb_node **p, *parent;
-+	u64 seq, end_seq, max_seq;
-+	struct sk_buff *skb1;
-+
-+	seq =3D MPTCP_SKB_CB(skb)->map_seq;
-+	end_seq =3D MPTCP_SKB_CB(skb)->end_seq;
-+	max_seq =3D tcp_space(sk);
-+	max_seq =3D max_seq > 0 ? max_seq + msk->ack_seq: msk->ack_seq;
-+
-+	if (after64(seq, max_seq)) {
-+		/* out of window */
-+		mptcp_drop(sk, skb);
-+		return;
-+	}
-+
-+	p =3D &msk->out_of_order_queue.rb_node;
-+	if (RB_EMPTY_ROOT(&msk->out_of_order_queue)) {
-+		rb_link_node(&skb->rbnode, NULL, p);
-+		rb_insert_color(&skb->rbnode, &msk->out_of_order_queue);
-+		msk->ooo_last_skb =3D skb;
-+		goto end;
-+	}
-+
-+	/* with 2 subflows, adding at end of ooo queue is quite likely
-+	 * Use of ooo_last_skb avoids the O(Log(N)) rbtree lookup.
-+	 */
-+	if (mptcp_ooo_try_coalesce(msk, msk->ooo_last_skb, skb))
-+		return;
-+
-+	/* Can avoid an rbtree lookup if we are adding skb after ooo_last_skb */
-+	if (!before64(seq, MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq)) {
-+		parent =3D &msk->ooo_last_skb->rbnode;
-+		p =3D &parent->rb_right;
-+		goto insert;
-+	}
-+
-+	/* Find place to insert this segment. Handle overlaps on the way. */
-+	parent =3D NULL;
-+	while (*p) {
-+		parent =3D *p;
-+		skb1 =3D rb_to_skb(parent);
-+		if (before64(seq, MPTCP_SKB_CB(skb1)->map_seq)) {
-+			p =3D &parent->rb_left;
-+			continue;
-+		}
-+		if (before64(seq, MPTCP_SKB_CB(skb1)->end_seq)) {
-+			if (!after64(end_seq, MPTCP_SKB_CB(skb1)->end_seq)) {
-+				/* All the bits are present. Drop. */
-+				mptcp_drop(sk, skb);
-+				return;
-+			}
-+			if (after64(seq, MPTCP_SKB_CB(skb1)->map_seq)) {
-+				/* partial overlap:
-+				 *     |     skb      |
-+				 *  |     skb1    |
-+				 * continue traversing
-+				 */
-+			} else {
-+				/* skb's seq =3D=3D skb1's seq and skb covers skb1.
-+				 * Replace skb1 with skb.
-+				 */
-+				rb_replace_node(&skb1->rbnode, &skb->rbnode,
-+						&msk->out_of_order_queue);
-+				mptcp_drop(sk, skb1);
-+				goto merge_right;
-+			}
-+		} else if (mptcp_ooo_try_coalesce(msk, skb1, skb)) {
-+			return;
-+		}
-+		p =3D &parent->rb_right;
-+	}
-+insert:
-+	/* Insert segment into RB tree. */
-+	rb_link_node(&skb->rbnode, parent, p);
-+	rb_insert_color(&skb->rbnode, &msk->out_of_order_queue);
-+
-+merge_right:
-+	/* Remove other segments covered by skb. */
-+	while ((skb1 =3D skb_rb_next(skb)) !=3D NULL) {
-+		if (before64(end_seq, MPTCP_SKB_CB(skb1)->end_seq))
-+			break;
-+		rb_erase(&skb1->rbnode, &msk->out_of_order_queue);
-+		mptcp_drop(sk, skb1);
-+	}
-+	/* If there is no skb after us, we are the last_skb ! */
-+	if (!skb1)
-+		msk->ooo_last_skb =3D skb;
-+
-+end:
-+	skb_condense(skb);
-+	skb_set_owner_r(skb, sk);
-+}
-+
-+static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
-+			     struct sk_buff *skb, unsigned int offset,
-+			     size_t copy_len)
-+{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
- 	struct sock *sk =3D (struct sock *)msk;
- 	struct sk_buff *tail;
- =
-
-@@ -139,15 +258,35 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, =
-struct sock *ssk,
- =
-
- 	skb_ext_reset(skb);
- 	skb_orphan(skb);
-+
-+	/* the skb map_seq accounts for the skb offset:
-+	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
-+	 * value
-+	 */
-+	MPTCP_SKB_CB(skb)->map_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
-+	MPTCP_SKB_CB(skb)->end_seq =3D MPTCP_SKB_CB(skb)->map_seq + copy_len;
- 	MPTCP_SKB_CB(skb)->offset =3D offset;
--	msk->ack_seq +=3D copy_len;
- =
-
--	tail =3D skb_peek_tail(&sk->sk_receive_queue);
--	if (tail && mptcp_try_coalesce(sk, tail, skb))
--		return;
-+	if (MPTCP_SKB_CB(skb)->map_seq =3D=3D msk->ack_seq) {
-+		/* in sequence */
-+		msk->ack_seq +=3D copy_len;
-+		tail =3D skb_peek_tail(&sk->sk_receive_queue);
-+		if (tail && mptcp_try_coalesce(sk, tail, skb))
-+			return true;
- =
-
--	skb_set_owner_r(skb, sk);
--	__skb_queue_tail(&sk->sk_receive_queue, skb);
-+		skb_set_owner_r(skb, sk);
-+		__skb_queue_tail(&sk->sk_receive_queue, skb);
-+		return true;
-+	} else if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq)) {
-+		mptcp_data_queue_ofo(msk, skb);
-+		return false;
-+	}
-+
-+	/* old data, keep it simple and drop the whole pkt, sender
-+	 * will retransmit as needed, if needed.
-+	 */
-+	mptcp_drop(sk, skb);
-+	return false;
- }
- =
-
- static void mptcp_stop_timer(struct sock *sk)
-@@ -158,28 +297,6 @@ static void mptcp_stop_timer(struct sock *sk)
- 	mptcp_sk(sk)->timer_ival =3D 0;
- }
- =
-
--/* both sockets must be locked */
--static bool mptcp_subflow_dsn_valid(const struct mptcp_sock *msk,
--				    struct sock *ssk)
--{
--	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
--	u64 dsn =3D mptcp_subflow_get_mapped_dsn(subflow);
--
--	/* revalidate data sequence number.
--	 *
--	 * mptcp_subflow_data_available() is usually called
--	 * without msk lock.  Its unlikely (but possible)
--	 * that msk->ack_seq has been advanced since the last
--	 * call found in-sequence data.
--	 */
--	if (likely(dsn =3D=3D msk->ack_seq))
--		return true;
--
--	subflow->data_avail =3D 0;
--	mptcp_subflow_data_available(ssk);
--	return subflow->data_avail =3D=3D MPTCP_SUBFLOW_DATA_AVAIL;
--}
--
- static void mptcp_check_data_fin_ack(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -324,18 +441,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptc=
-p_sock *msk,
- 	struct tcp_sock *tp;
- 	bool done =3D false;
- =
-
--	pr_debug("msk=3D%p ssk=3D%p data avail=3D%d valid=3D%d empty=3D%d",
--		 msk, ssk, subflow->data_avail,
--		 mptcp_subflow_dsn_valid(msk, ssk),
--		 !skb_peek(&ssk->sk_receive_queue));
--	if (subflow->data_avail =3D=3D MPTCP_SUBFLOW_OOO_DATA) {
--		mptcp_subflow_discard_data(ssk, subflow->map_data_len);
--		return false;
--	}
--
--	if (!mptcp_subflow_dsn_valid(msk, ssk))
--		return false;
--
-+	pr_debug("msk=3D%p ssk=3D%p", msk, ssk);
- 	tp =3D tcp_sk(ssk);
- 	do {
- 		u32 map_remaining, offset;
-@@ -373,9 +479,9 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp=
-_sock *msk,
- 			if (tp->urg_data)
- 				done =3D true;
- =
-
--			__mptcp_move_skb(msk, ssk, skb, offset, len);
-+			if (__mptcp_move_skb(msk, ssk, skb, offset, len))
-+				moved +=3D len;
- 			seq +=3D len;
--			moved +=3D len;
- =
-
- 			if (WARN_ON_ONCE(map_remaining < len))
- 				break;
-@@ -396,18 +502,47 @@ static bool __mptcp_move_skbs_from_subflow(struct mpt=
-cp_sock *msk,
- =
-
- 	*bytes +=3D moved;
- =
-
--	/* If the moves have caught up with the DATA_FIN sequence number
--	 * it's time to ack the DATA_FIN and change socket state, but
--	 * this is not a good place to change state. Let the workqueue
--	 * do it.
--	 */
--	if (mptcp_pending_data_fin(sk, NULL) &&
--	    schedule_work(&msk->work))
--		sock_hold(sk);
--
- 	return done;
- }
- =
-
-+static bool mptcp_ofo_queue(struct mptcp_sock *msk)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct sk_buff *skb, *tail;
-+	bool moved =3D false;
-+	struct rb_node *p;
-+	u64 end_seq;
-+
-+	p =3D rb_first(&msk->out_of_order_queue);
-+	while (p) {
-+		skb =3D rb_to_skb(p);
-+		if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq))
-+			break;
-+
-+		p =3D rb_next(p);
-+		rb_erase(&skb->rbnode, &msk->out_of_order_queue);
-+
-+		if (unlikely(!after64(MPTCP_SKB_CB(skb)->end_seq,
-+				      msk->ack_seq))) {
-+			mptcp_drop(sk, skb);
-+			continue;
-+		}
-+
-+		end_seq =3D MPTCP_SKB_CB(skb)->end_seq;
-+		tail =3D skb_peek_tail(&sk->sk_receive_queue);
-+		if (!tail || !mptcp_ooo_try_coalesce(msk, tail, skb)) {
-+			int delta =3D msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
-+
-+			/* skip overlapping data, if any */
-+			MPTCP_SKB_CB(skb)->offset +=3D delta;
-+			__skb_queue_tail(&sk->sk_receive_queue, skb);
-+		}
-+		msk->ack_seq =3D end_seq;
-+		moved =3D true;
-+	}
-+	return moved;
-+}
-+
- /* In most cases we will be able to lock the mptcp socket.  If its already
-  * owned, we need to defer to the work queue to avoid ABBA deadlock.
-  */
-@@ -423,8 +558,19 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, s=
-truct sock *ssk)
- 		return false;
- =
-
- 	/* must re-check after taking the lock */
--	if (!READ_ONCE(sk->sk_lock.owned))
-+	if (!READ_ONCE(sk->sk_lock.owned)) {
- 		__mptcp_move_skbs_from_subflow(msk, ssk, &moved);
-+		mptcp_ofo_queue(msk);
-+
-+		/* If the moves have caught up with the DATA_FIN sequence number
-+		 * it's time to ack the DATA_FIN and change socket state, but
-+		 * this is not a good place to change state. Let the workqueue
-+		 * do it.
-+		 */
-+		if (mptcp_pending_data_fin(sk, NULL) &&
-+		    schedule_work(&msk->work))
-+			sock_hold(sk);
-+	}
- =
-
- 	spin_unlock_bh(&sk->sk_lock.slock);
- =
-
-@@ -1215,7 +1361,11 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 		release_sock(ssk);
- 	} while (!done);
- =
-
--	return moved > 0;
-+	if (mptcp_ofo_queue(msk) || moved > 0) {
-+		mptcp_check_data_fin((struct sock *)msk);
-+		return true;
-+	}
-+	return false;
- }
- =
-
- static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-@@ -1526,6 +1676,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->rtx_queue);
- 	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
- 	INIT_WORK(&msk->work, mptcp_worker);
-+	msk->out_of_order_queue =3D RB_ROOT;
- =
-
- 	msk->first =3D NULL;
- 	inet_csk(sk)->icsk_sync_mss =3D mptcp_sync_mss;
-@@ -1870,6 +2021,7 @@ static void mptcp_destroy(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
-
-+	skb_rbtree_purge(&msk->out_of_order_queue);
- 	mptcp_token_destroy(msk);
- 	if (msk->cached_ext)
- 		__skb_ext_put(msk->cached_ext);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 981e395abb46..e20154a33fa7 100644
+index e20154a33fa7..26f5f81f3f4c 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -204,6 +204,8 @@ struct mptcp_sock {
- 	bool		snd_data_fin_enable;
- 	spinlock_t	join_list_lock;
- 	struct work_struct work;
-+	struct sk_buff  *ooo_last_skb;
-+	struct rb_root  out_of_order_queue;
- 	struct list_head conn_list;
- 	struct list_head rtx_queue;
- 	struct list_head join_list;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7555dee019a0..db7a4c84b6da 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -434,6 +434,7 @@ static void mptcp_sock_destruct(struct sock *sk)
- 		sock_orphan(sk);
- 	}
+@@ -355,7 +355,6 @@ int mptcp_is_enabled(struct net *net);
+ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+ 				     struct mptcp_options_received *mp_opt);
+ bool mptcp_subflow_data_available(struct sock *sk);
+-int mptcp_subflow_discard_data(struct sock *sk, unsigned limit);
+ void __init mptcp_subflow_init(void);
  =
 
-+	skb_rbtree_purge(&mptcp_sk(sk)->out_of_order_queue);
- 	mptcp_token_destroy(mptcp_sk(sk));
- 	inet_sock_destruct(sk);
+ /* called with sk socket lock held */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index db7a4c84b6da..0b42e2be44fd 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -817,50 +817,20 @@ static enum mapping_status get_mapping_status(struct =
+sock *ssk,
+ 	return MAPPING_OK;
  }
+ =
+
+-static int subflow_read_actor(read_descriptor_t *desc,
+-			      struct sk_buff *skb,
+-			      unsigned int offset, size_t len)
++static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *s=
+kb,
++				       unsigned limit)
+ {
+-	size_t copy_len =3D min(desc->count, len);
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
++	bool fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
++	u32 incr;
+ =
+
+-	desc->count -=3D copy_len;
++	incr =3D limit >=3D skb->len ? skb->len + fin : limit;
+ =
+
+-	pr_debug("flushed %zu bytes, %zu left", copy_len, desc->count);
+-	return copy_len;
+-}
+-
+-int mptcp_subflow_discard_data(struct sock *ssk, unsigned limit)
+-{
+-	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+-	u32 map_remaining;
+-	size_t delta;
+-
+-	map_remaining =3D subflow->map_data_len -
+-			mptcp_subflow_get_map_offset(subflow);
+-	delta =3D min_t(size_t, limit, map_remaining);
+-
+-	/* discard mapped data */
+-	pr_debug("discarding %zu bytes, current map len=3D%d", delta,
+-		 map_remaining);
+-	if (delta) {
+-		read_descriptor_t desc =3D {
+-			.count =3D delta,
+-		};
+-		int ret;
+-
+-		ret =3D tcp_read_sock(ssk, &desc, subflow_read_actor);
+-		if (ret < 0) {
+-			ssk->sk_err =3D -ret;
+-			return ret;
+-		}
+-		if (ret < delta)
+-			return 0;
+-		if (delta =3D=3D map_remaining) {
+-			subflow->data_avail =3D 0;
+-			subflow->map_valid =3D 0;
+-		}
+-	}
+-	return 0;
++	pr_debug("discarding=3D%d len=3D%d seq=3D%d", incr, skb->len,
++		 subflow->map_subflow_seq);
++	tcp_sk(ssk)->copied_seq +=3D incr;
++	if (incr >=3D skb->len)
++		sk_eat_skb(ssk, skb);
+ }
+ =
+
+ static bool subflow_check_data_avail(struct sock *ssk)
+@@ -935,9 +905,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		/* only accept in-sequence mapping. Old values are spurious
+ 		 * retransmission
+ 		 */
+-		if (mptcp_subflow_discard_data(ssk, old_ack - ack_seq))
+-			goto fatal;
+-		return false;
++		mptcp_subflow_discard_data(ssk, skb, old_ack - ack_seq);
+ 	}
+ 	return true;
+ =
+
 -- =
 
 2.26.2
 
---===============7604763321443054068==--
+--===============3142034843467022377==--
