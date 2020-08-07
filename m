@@ -1,89 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============4797757937420349283=="
+Content-Type: multipart/mixed; boundary="===============4829193085382212010=="
 MIME-Version: 1.0
-From: David Laight <David.Laight at ACULAB.COM>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
-Date: Fri, 07 Aug 2020 09:18:03 +0000
-Message-ID: <f21589f1262640b09ca27ed20f8e6790@AcuMS.aculab.com>
-In-Reply-To: 6357942b-0b6e-1901-7dce-e308c9fac347@gmail.com
+Subject: [MPTCP] [PATCH net] selftests: mptcp: fix dependecies
+Date: Fri, 07 Aug 2020 11:32:04 +0200
+Message-ID: <781f07aa4d05b123a80bf98f5839e1611a833272.1596791966.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5507
+X-UID: 5508
 
---===============4797757937420349283==
+--===============4829193085382212010==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Eric Dumazet
-> Sent: 06 August 2020 23:21
-> =
+Since commit df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
+the MPTCP selftests relies on the MPTCP diag interface which is
+enabled by a specific kconfig knob: be sure to include it.
 
-> On 7/22/20 11:09 PM, Christoph Hellwig wrote:
-> > Rework the remaining setsockopt code to pass a sockptr_t instead of a
-> > plain user pointer.  This removes the last remaining set_fs(KERNEL_DS)
-> > outside of architecture specific code.
-> >
-> > Signed-off-by: Christoph Hellwig <hch(a)lst.de>
-> > Acked-by: Stefan Schmidt <stefan(a)datenfreihafen.org> [ieee802154]
-> > ---
-> =
+Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ tools/testing/selftests/net/mptcp/config | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> =
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selft=
+ests/net/mptcp/config
+index 2499824d9e1c..8df5cb8f71ff 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -1,4 +1,6 @@
+ CONFIG_MPTCP=3Dy
+ CONFIG_MPTCP_IPV6=3Dy
++CONFIG_INET_DIAG=3Dm
++CONFIG_INET_MPTCP_DIAG=3Dm
+ CONFIG_VETH=3Dy
+ CONFIG_NET_SCH_NETEM=3Dm
+-- =
 
-> ...
-> =
+2.26.2
 
-> > diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
-> > index 594e01ad670aa6..874f01cd7aec42 100644
-> > --- a/net/ipv6/raw.c
-> > +++ b/net/ipv6/raw.c
-> > @@ -972,13 +972,13 @@ static int rawv6_sendmsg(struct sock *sk, struct =
-msghdr *msg, size_t len)
-> >  }
-> >
-> =
-
-> ...
-> =
-
-> >  static int do_rawv6_setsockopt(struct sock *sk, int level, int optname,
-> > -			    char __user *optval, unsigned int optlen)
-> > +			       sockptr_t optval, unsigned int optlen)
-> >  {
-> >  	struct raw6_sock *rp =3D raw6_sk(sk);
-> >  	int val;
-> >
-> > -	if (get_user(val, (int __user *)optval))
-> > +	if (copy_from_sockptr(&val, optval, sizeof(val)))
-> >  		return -EFAULT;
-> >
-> =
-
-> converting get_user(...)   to  copy_from_sockptr(...) really assumed the =
-optlen
-> has been validated to be >=3D sizeof(int) earlier.
-> =
-
-> Which is not always the case, for example here.
-> =
-
-> User application can fool us passing optlen=3D0, and a user pointer of ex=
-actly TASK_SIZE-1
-
-Won't the user pointer force copy_from_sockptr() to call
-copy_from_user() which will then do access_ok() on the entire
-range and so return -EFAULT.
-
-The only problems arise if the kernel code adds an offset to the
-user address.
-And the later patch added an offset to the copy functions.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
---===============4797757937420349283==--
+--===============4829193085382212010==--
