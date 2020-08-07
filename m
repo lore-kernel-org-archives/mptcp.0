@@ -1,26 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============3496459121635990195=="
+Content-Type: multipart/mixed; boundary="===============9002613671690000557=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 30th of July 2020
-Date: Fri, 07 Aug 2020 23:34:49 +0200
-Message-ID: <be071bc6-f49b-735f-0340-06fb7b6cb0fe@tessares.net>
+Subject: [MPTCP] [Weekly meetings] MoM - 6th of August 2020
+Date: Fri, 07 Aug 2020 23:40:19 +0200
+Message-ID: <7e2b4164-2188-fd8f-4396-f23c8548354c@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 5521
+X-UID: 5522
 
---===============3496459121635990195==
+--===============9002613671690000557==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-Last week, we had our 110th meeting with Mat and Ossama (Intel OTC), =
+Yesterday, we had our 111st meeting with Ossama (Intel OTC), Christoph =
 
-Christoph (Apple), Paolo, Davide and Florian (RedHat), Geliang (Xiaomi), =
+(Apple), Paolo, Davide and Florian (RedHat), Geliang (Xiaomi), Nicolas =
 
-Nicolas and myself (Tessares).
+and myself (Tessares).
 
 Thanks again for this new good meeting!
 
@@ -32,27 +32,16 @@ Accepted patches:
      - The list of accepted patches can be seen on PatchWork:
        https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
-     netdev (if mptcp ML is in cc) (Christoph Hellwig, Matthieu Baerts):
+     netdev (if mptcp ML is in cc) (Geliang Tang, Paolo Abeni):
 
-1336841  [net] mptcp: fix joined subflows with unblocking sk
-1336444  Re: get rid of the address_space override in setsockopt v2
-1335658  [iproute2] mptcp: show all endpoints when no ID is specified
+1340921  [net] mptcp: be careful on subflow creation
+1340373  [net] mptcp: fix bogus sendmsg() return code under pressure
+1340308  [net-next] mptcp: use mptcp_for_each_subflow in mptcp_stream_ac
++ SYN cookies (from Florian)
 
-     our repo (by: Mat Martineau, Matthieu Baerts):
+     our repo (by: Paolo Abeni):
 
-1336746  [mptcp-net] mptcp: fix joined subflows with unblocking sk
-1335275  [mptcp-next,v4,12/12] mptcp: Safely store sequence number when
-1335272  [mptcp-next,v4,11/12] mptcp: Safely read sequence number when l
-1335274  [mptcp-next,v4,10/12] mptcp: Skip unnecessary skb extension all
-1335273  [mptcp-next,v4,09/12] mptcp: Only use subflow EOF signaling on
-1335271  [mptcp-next,v4,08/12] mptcp: Use full MPTCP-level disconnect st
-1335270  [mptcp-next,v4,07/12] mptcp: Add helper to process acks of DATA
-1335269  [mptcp-next,v4,06/12] mptcp: Use MPTCP-level flag for sending D
-1335268  [mptcp-next,v4,05/12] mptcp: Track received DATA_FIN sequence n
-1335265  [mptcp-next,v4,04/12] mptcp: Add mptcp_close_state() helper
-1335263  [mptcp-next,v4,03/12] mptcp: Remove outdated and incorrect comm
-1335264  [mptcp-next,v4,02/12] mptcp: Return EPIPE if sending is shut do
-1335266  [mptcp-next,v4,01/12] mptcp: Allow DATA_FIN in headers without
+1339501  [net] mptcp: fix bogus sendmsg() return code under pressure
 
 
 
@@ -64,142 +53,186 @@ Pending patches:
 
 /
 
-     our repo (by: Christoph Paasch, Florian Westphal, Geliang Tang, =
+     our repo (by: Christoph Paasch, Geliang Tang, Matthieu Baerts, =
 
-Matthieu Baerts):
+Nicolas Rybowski, Paolo Abeni):
 
 1325171: Changes Requested: [mptcp-next] selftests: mptcp: interpret \n =
 
 as a new line:
-     - TODO Matth
+     - Matth: TODO...
 
-1327905: Awaiting Upstream: [mptcp-iproute2] mptcp: show all endpoints =
+1337426: Changes Requested: [mptcp-next] selftests/mptcp: Better delay & =
 
-when no ID is specified:
-     - TODO Matth =E2=86=92 change state
+reordering configuration:
+     - Changes requested
 
-1337426: New: [mptcp-next] selftests/mptcp: Better delay & reordering =
+1340389: Rejected: mptcp: Allow ip mptcp endpoint show:
+     - Already sent =E2=86=92 iproute2 switched to "main" branch instead of=
+ "master"
 
-configuration:
-     - To be reviewed
-
-1338597: New: [RFC,v3,01/10] tcp: remove cookie_ts bit from request_sock
-1338598: New: [RFC,v3,02/10] mptcp: token: move retry to caller
-1338599: New: [RFC,v3,03/10] mptcp: subflow: split subflow_init_req
-1338600: New: [RFC,v3,04/10] mptcp: rename and export =
-
-mptcp_subflow_request_sock_ops
-1338601: New: [RFC,v3,05/10] tcp: pass want_cookie down to req_init =
-
-function
-1338602: New: [RFC,v3,06/10] mptcp: subflow: add =
-
-mptcp_subflow_init_cookie_req helper
-1338603: New: [RFC,v3,07/10] tcp: syncookies: create mptcp request =
-
-socket for ACK cookies with MPTCP option
-1338604: New: [RFC,v3,08/10] mptcp: enable JOIN requests even if cookies =
-
-are in use
-1338605: New: [RFC,v3,09/10] selftests: mptcp: make 2nd net namespace =
-
-use tcp syn cookies unconditionally
-1338606: New: [RFC,v3,10/10] selftests: mptcp: add test cases for mptcp =
-
-join tests with syn cookies:
-     - Florian will send them soon to netdev
-
-1338758: New: [v4,mptcp-next,1/5] mptcp: rename addr_signal and the =
+1340771: New: [v5,mptcp-next,1/4] mptcp: rename addr_signal and the =
 
 related functions
-1338760: New: [v4,mptcp-next,2/5] mptcp: add the outgoing RM_ADDR support
-1338761: New: [v4,mptcp-next,3/5] mptcp: add the incoming RM_ADDR support
-1338762: New: [v4,mptcp-next,4/5] mptcp: trigger the RM_ADDR signal
-1338763: New: [v4,mptcp-next,5/5] mptcp: add remove subflow support:
-     - Paolo will review the new version
+1340772: New: [v5,mptcp-next,2/4] mptcp: add the outgoing RM_ADDR support
+1340774: New: [v5,mptcp-next,3/4] mptcp: add the incoming RM_ADDR support
+1340775: New: [v5,mptcp-next,4/4] mptcp: remove addr and subflow in PM =
+
+netlink:
+     - in some cases, there is a lock
+     - Geliang is looking at that
+     - a new version will be sent later
+     - Paolo suggests to look without the 4th patch
+     - It seems it is OK without the 4th one
+     - Suggestion: we merge the 3th ones.
+     - TODO: Matth: apply the 3 first ones =E2=86=92 done
+
+1340915: New: [mptcp-next,1/4] bpf: expose is_mptcp flag to bpf_tcp_sock
+1340916: New: [mptcp-next,2/4] mptcp: attach subflow socket to parent =
+
+cgroup
+1340917: New: [mptcp-next,3/4] mptcp: moving struct definitions
+1340918: New: [mptcp-next,4/4] bpf: adding 'bpf_mptcp_sock' structure =
+
+and helper:
+     - Waiting for reviews
+     - Maybe possible to avoid exposing more specific MPTCP structure to =
+
+all the kernel
+     - Nicolas is looking at that
+     - Create a Github issue?
+     - TODO: Matth =E2=86=91 =E2=86=92 done
+
+1341330: New: [01/13] mptcp: rethink 'is writable' conditional
+1341334: New: [02/13] mptcp: set data_ready status bit in =
+
+subflow_check_data_avail()
+1341332: New: [03/13] mptcp: trigger msk processing even for OoO data
+1341336: New: [04/13] mptcp: basic sndbuf autotuning
+1341335: New: [05/13] mptcp: introduce and use mptcp_try_coalesce()
+1341337: New: [06/13] mptcp: move ooo skbs into msk out of order queue.
+1341338: New: [07/13] mptcp: cleanup mptcp_subflow_discard_data()
+1341339: New: [08/13] mptcp: add OoO related mibs
+1341341: New: [09/13] mptcp: move address attribute into mptcp_addr_info
+1341340: New: [10/13] mptcp: allow creating non-backup subflows
+1341342: New: [11/13] mptcp: allow picking different xmit subflows
+1341344: New: [12/13] mptcp: simult flow self-tests
+1341343: New: [13/13] mptcp: cache subflow write status in subflow ctx:
+     - Waiting for review
+     - Paolo addressed most comments from Florian
+     - Idea would be to merge this to have more tests and simplify the =
+
+process
+     - TODO: Matth =E2=86=91 =E2=86=92 done
+     - Comments reported by Christoph were not applied
 
 
 
 Issues on Github:
      https://github.com/multipath-tcp/mptcp_net-next/issues/
 
-     Recently opened (latest from last week: 64)
+     Recently opened (latest from last week: 69)
 
-   69  Packetdrill: dss: failing with new DATA_FIN patches [bug]:
-       - maybe normal
+   72  [iproute2] endpoint add with "id" is not persisted [enhancement] =
 
-   68  selftests: diag: failing with new DATA_FIN patches [bug]:
-       - to be investigated
+[iproute2]:
+       - Normal, new feature needed
 
-   67  `./mptcp_connect.sh -m mmap` timeout [bug]:
-       - could happen if there is not enough memory, unlikely possible =
+   71  [interop] Bad mapping: ssn=3D16194949 map_seq=3D16120693 =
 
-according to Paolo =E2=86=92 we don't receive the wake up signal if limited=
- by =
+map_data_len=3D31416 [bug] [interop]:
+       - With Paolo's patches, on going
+       - Should be still there with v1
+       - more debug will be needed to capture more states
+       - with a large transfer: iperf with 4 interfaces from mptcp.org =
 
-the sendbuffer
+to net-next: different VMs on the same host
 
-   66  [interop] IPv4: Attempt to release TCP socket in state 1 =
-
-00000000cbc88a4a [bug]:
-       - maybe introduced by the last series from Paolo
-
-   65  clearing properly the status in listen() [bug]:
-       - not blocking but still to be done
+   70  [syzkaller] WARNING in mptcp_reset_timer [bug] [syzkaller]:
+       - Christoph will see if he can reproduce it
 
 
      Bugs (open and flagged as "bug")
 
-   69  Packetdrill: dss: failing with new DATA_FIN patches [bug]
+   71  [interop] Bad mapping: ssn=3D16194949 map_seq=3D16120693 =
+
+map_data_len=3D31416 [bug] [interop]
+   70  [syzkaller] WARNING in mptcp_reset_timer [bug] [syzkaller]
+
+   69  Packetdrill: dss: failing with new DATA_FIN patches [bug] @dcaratti:
+       - Tests needs to be adapted due to changes in the kernel
+       - We would need to cover the cases where DATA_FIN are received =
+
+(1) only in FIN and (2) in ACK+FIN
+
    68  selftests: diag: failing with new DATA_FIN patches [bug]
-   67  `./mptcp_connect.sh -m mmap` timesout [bug]
+
+   67  `./mptcp_connect.sh -m mmap` timeout [bug]:
+       - Can be fixed with Paolo's patch? =E2=86=92 mptcp: fix bogus sendms=
+g() =
+
+return code under pressure
+       - Not related to that =E2=86=92 fix an error, not a timeout
+
    66  [interop] IPv4: Attempt to release TCP socket in state 1 =
 
-00000000cbc88a4a [bug]
+00000000cbc88a4a [bug] [interop]
    65  clearing properly the status in listen() [bug]
-   64  Kernel crash when using `pm_nl_ctl` and `use_mptcp.sh` [bug]
-   62  [syzkaller] WARNING in __mptcp_move_skbs_from_subflow [bug]
+   62  [syzkaller] WARNING in __mptcp_move_skbs_from_subflow [bug] =
+
+[syzkaller]
 
    56  msk connection state set without msk lock [bug] @pabeni:
-       - can be closed: patch has been sent.
-       - Matth: TODO
+       - the race is still there for the client msk socket
+       - now much more difficult to raise
+       - maybe we should not address it now, seems minor
+       - we can keep this one
+       - Paolo has been unassigned
+       - TODO: Matth: update the status =E2=86=92 done
 
     6  loss and delay without reordering causes very slow transfer [bug] =
 
-@cpaasch:
-        - Patch has been shared
+@cpaasch
+
+Paolo reported an issue with ss:
+     - mptcp diag interface weirdness
+     - easier to send the small fix for iproute2
+
+Paolo found an issue when sending on multiple subflows:
+     - If the writer is blocked because send buff is full =E2=86=92 we shou=
+ld =
+
+check for space on subflow, not msk
+     - still it is an issue for -net but more visible with multiple subflows
+     - we can send a patch just for -net (and different one for net-next =
+
+as this has been modified by Paolo's patches)
+     - =
+
+https://elixir.bootlin.com/linux/latest/source/net/mptcp/protocol.c#L495
+     - should be sk_stream_memory_free(ssk) or sk_stream_memory_free(sk)
 
 
      In Progress (open and assigned to someone)
 
-   49  ADD_ADDR: echo bit support [enhancement] @pkrystad:
-       - could be re-assigned maybe? Follow-up: Contacted @pkrystad, =
+   50  REMOVE_ADDR support [enhancement] @geliangtang
 
-this can be reassigned
+   49  ADD_ADDR: echo bit support [enhancement] @geliangtang:
+       - Was assigned to Peter but there was no activity on this for a =
+
+few months
+       - Now assigned to Geliang
 
    43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag =
 
-interface [enhancement] @cpaasch:
-       - Christoph will look if it is necesseraly (some paths are =
+interface [enhancement] [syzkaller] @cpaasch
 
-already tested)
-
-   17  allow non 'backup' subflows creation [enhancement] @pabeni:
-       - more complex than expected, already 15 patches and some issues =
-
-to fix
-       - for the moment the packet scheduler is "suboptimal": sending on =
-
-subflows having the bigger available snd space
-       - limited by the send buffer at the MPTCP level? Smaller than the =
-
-sum of the ones of the two subflows?
-       - built to be modular later :)
+   17  allow non 'backup' subflows creation [enhancement] @pabeni
 
 
      Recently closed (since last week)
 
-   63  New subflows send MP_JOIN to port 0 [bug]
+   64  Kernel crash when using `pm_nl_ctl` and `use_mptcp.sh` [bug]
    58  Full DATA_FIN support [enhancement] v5.9 @mjmartineau =E2=80=A1
 
 
@@ -208,68 +241,83 @@ FYI: Current Roadmap:
      - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
      - Current merge window (5.9): =
 
-https://github.com/multipath-tcp/mptcp_net-next/projects/1
+https://github.com/multipath-tcp/mptcp_net-next/projects/1 :
+         - TODO: Matth: close =E2=86=91
      - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+     - 5.10: https://github.com/multipath-tcp/mptcp_net-next/projects/5
+
+
+
+Scheduler with BPF:
+     - a lot of BPF helpers are already available
+
+     - possible to do:
+         - collect all subflows and put then in a map
+         - then using "skb_sk" type, we can ask to assign a skb to a sk
+         - current issue: ulp initialisation is done "too soon"
+         - more tests to do
+
+     - in the current MPTCP code:
+         - we select the path before creating the skb
+         - but we might need to change that
+         - but changing that might come with some heavy work:
+             - a send queue for MPTCP to queue SKB
+             - would be good for different perspectives and help for =
+
+this case with BPF
+
+     - a helper could receive some MPTCP info (a DSS mapping + sk) to =
+
+select the subflow:
+         - this would expose a new API for this (with specific data =
+
+structures)
 
 
 
 Extra tests:
      - news about Syzkaller? (Christoph):
-         - New issue was sent on Github
+         - / (see the new Github issue)
 
      - news about interop with mptcp.org? (Christoph):
-         - New issue sent on Github
-         - tested the export branch and with Florian patches, everything =
+         - / (see the new Github issue)
+         - once Paolo's patches are in the "export" branch, Christoph is =
 
-looks fine!
+going to do more tests
+         - maybe linked to a reinjection?
+         - needs more analyses
 
      - news about Intel's kbuild? (Mat):
-         - No email (success/failure)
-         - Jenkins status: seems still broken
+         - /
 
      - packetdrill (Davide):
-         - Sync with Google upstream repo
-         - Some fixes for the MP_JOIN
-         - One fix also for ADD_ADDR (in review)
-         - Some tests might need to be adapted due to the recent =
+         - needed: MP_JOIN tests where we continue reading while a =
 
-modification with the DATA_FIN =E2=86=92 Mat will look at that
+subflow didn't finish with a DATA_FIN
+         - some MP_JOIN tests are failing, Davide will investigate more
 
      - CI (Matth):
-         - goal: run all packetdrill tests
-         - next step: reproducers from syzkaller
-
-mptcpd:
-     [davide] initial specfile =
-
-(https://gitlab.com/dcaratti/mptcpd/-/blob/main/mptcpd.spec) that builds =
-
-in a copr (https://copr.fedorainfracloud.org/coprs/dcaratti/mptcpd/ )
-
-     [davide] I will file a package request for fedora, after "todo" =
-
-items are done (and check if %license is correct):
-     - One question about the license to be clarified by Ossama and Mat
-     - "make check" cannot be ran if the host kernel needs to be MPTCP =
-
-out-of-tree
-     - mptcpd will support Net-next in the next version
-
-
-
-"bounced" messages: what to do?:
-     - recently received a lot of spams
-     - maybe an issue on RedHat side wrongly scoring stuff
-     - Davide can open an issue on RedHat IT side
-     - Difficult for Mat to get more details
+         - /
 
 
 
 Next meeting:
-     - We propose to have the next meeting on Thursday, the 6th of August.
+     - Paolo and Matt will not be able to join the meeting next week and =
+
+the week after
+     - Christoph will not be able to join the meeting next week
+
+     - We propose to *skip* the meeting next week and have the next one =
+
+on Thursday, the 20th of August if there are enough people.
+
+     - Mat has been unanimously elected to take notes at the next =
+
+meeting :-D
+
      - Usual time: 15:00 UTC (8am PDT, 5pm CEST, 11pm UTC+8)
      - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200806
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200820
 
 
 
@@ -282,4 +330,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3496459121635990195==--
+--===============9002613671690000557==--
