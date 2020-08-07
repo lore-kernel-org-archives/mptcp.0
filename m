@@ -1,136 +1,285 @@
-Content-Type: multipart/mixed; boundary="===============1502067029854228957=="
+Content-Type: multipart/mixed; boundary="===============3496459121635990195=="
 MIME-Version: 1.0
-From: Eric Dumazet <eric.dumazet at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
-Date: Fri, 07 Aug 2020 11:29:19 -0700
-Message-ID: <90f626a4-d9e5-91a5-b71d-498e3b125da1@gmail.com>
-In-Reply-To: f21589f1262640b09ca27ed20f8e6790@AcuMS.aculab.com
+Subject: [MPTCP] [Weekly meetings] MoM - 30th of July 2020
+Date: Fri, 07 Aug 2020 23:34:49 +0200
+Message-ID: <be071bc6-f49b-735f-0340-06fb7b6cb0fe@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 5520
+X-UID: 5521
 
---===============1502067029854228957==
+--===============3496459121635990195==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
+
+Last week, we had our 110th meeting with Mat and Ossama (Intel OTC), =
+
+Christoph (Apple), Paolo, Davide and Florian (RedHat), Geliang (Xiaomi), =
+
+Nicolas and myself (Tessares).
+
+Thanks again for this new good meeting!
+
+Here are the minutes of the meeting:
 
 
-On 8/7/20 2:18 AM, David Laight wrote:
-> From: Eric Dumazet
->> Sent: 06 August 2020 23:21
->>
->> On 7/22/20 11:09 PM, Christoph Hellwig wrote:
->>> Rework the remaining setsockopt code to pass a sockptr_t instead of a
->>> plain user pointer.  This removes the last remaining set_fs(KERNEL_DS)
->>> outside of architecture specific code.
->>>
->>> Signed-off-by: Christoph Hellwig <hch(a)lst.de>
->>> Acked-by: Stefan Schmidt <stefan(a)datenfreihafen.org> [ieee802154]
->>> ---
->>
->>
->> ...
->>
->>> diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
->>> index 594e01ad670aa6..874f01cd7aec42 100644
->>> --- a/net/ipv6/raw.c
->>> +++ b/net/ipv6/raw.c
->>> @@ -972,13 +972,13 @@ static int rawv6_sendmsg(struct sock *sk, struct =
-msghdr *msg, size_t len)
->>>  }
->>>
->>
->> ...
->>
->>>  static int do_rawv6_setsockopt(struct sock *sk, int level, int optname,
->>> -			    char __user *optval, unsigned int optlen)
->>> +			       sockptr_t optval, unsigned int optlen)
->>>  {
->>>  	struct raw6_sock *rp =3D raw6_sk(sk);
->>>  	int val;
->>>
->>> -	if (get_user(val, (int __user *)optval))
->>> +	if (copy_from_sockptr(&val, optval, sizeof(val)))
->>>  		return -EFAULT;
->>>
->>
->> converting get_user(...)   to  copy_from_sockptr(...) really assumed the=
- optlen
->> has been validated to be >=3D sizeof(int) earlier.
->>
->> Which is not always the case, for example here.
->>
->> User application can fool us passing optlen=3D0, and a user pointer of e=
-xactly TASK_SIZE-1
-> =
 
-> Won't the user pointer force copy_from_sockptr() to call
-> copy_from_user() which will then do access_ok() on the entire
-> range and so return -EFAULT.
-> =
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
-> The only problems arise if the kernel code adds an offset to the
-> user address.
-> And the later patch added an offset to the copy functions.
+     netdev (if mptcp ML is in cc) (Christoph Hellwig, Matthieu Baerts):
 
-I dunno, I definitely got the following syzbot crash =
+1336841  [net] mptcp: fix joined subflows with unblocking sk
+1336444  Re: get rid of the address_space override in setsockopt v2
+1335658  [iproute2] mptcp: show all endpoints when no ID is specified
+
+     our repo (by: Mat Martineau, Matthieu Baerts):
+
+1336746  [mptcp-net] mptcp: fix joined subflows with unblocking sk
+1335275  [mptcp-next,v4,12/12] mptcp: Safely store sequence number when
+1335272  [mptcp-next,v4,11/12] mptcp: Safely read sequence number when l
+1335274  [mptcp-next,v4,10/12] mptcp: Skip unnecessary skb extension all
+1335273  [mptcp-next,v4,09/12] mptcp: Only use subflow EOF signaling on
+1335271  [mptcp-next,v4,08/12] mptcp: Use full MPTCP-level disconnect st
+1335270  [mptcp-next,v4,07/12] mptcp: Add helper to process acks of DATA
+1335269  [mptcp-next,v4,06/12] mptcp: Use MPTCP-level flag for sending D
+1335268  [mptcp-next,v4,05/12] mptcp: Track received DATA_FIN sequence n
+1335265  [mptcp-next,v4,04/12] mptcp: Add mptcp_close_state() helper
+1335263  [mptcp-next,v4,03/12] mptcp: Remove outdated and incorrect comm
+1335264  [mptcp-next,v4,02/12] mptcp: Return EPIPE if sending is shut do
+1335266  [mptcp-next,v4,01/12] mptcp: Allow DATA_FIN in headers without
 
 
-No repro found by syzbot yet, but I suspect a 32bit binary program
-did :
 
-setsockopt(fd, 0x29, 0x24, 0xffffffffffffffff, 0x0)
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+
+     netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+     our repo (by: Christoph Paasch, Florian Westphal, Geliang Tang, =
+
+Matthieu Baerts):
+
+1325171: Changes Requested: [mptcp-next] selftests: mptcp: interpret \n =
+
+as a new line:
+     - TODO Matth
+
+1327905: Awaiting Upstream: [mptcp-iproute2] mptcp: show all endpoints =
+
+when no ID is specified:
+     - TODO Matth =E2=86=92 change state
+
+1337426: New: [mptcp-next] selftests/mptcp: Better delay & reordering =
+
+configuration:
+     - To be reviewed
+
+1338597: New: [RFC,v3,01/10] tcp: remove cookie_ts bit from request_sock
+1338598: New: [RFC,v3,02/10] mptcp: token: move retry to caller
+1338599: New: [RFC,v3,03/10] mptcp: subflow: split subflow_init_req
+1338600: New: [RFC,v3,04/10] mptcp: rename and export =
+
+mptcp_subflow_request_sock_ops
+1338601: New: [RFC,v3,05/10] tcp: pass want_cookie down to req_init =
+
+function
+1338602: New: [RFC,v3,06/10] mptcp: subflow: add =
+
+mptcp_subflow_init_cookie_req helper
+1338603: New: [RFC,v3,07/10] tcp: syncookies: create mptcp request =
+
+socket for ACK cookies with MPTCP option
+1338604: New: [RFC,v3,08/10] mptcp: enable JOIN requests even if cookies =
+
+are in use
+1338605: New: [RFC,v3,09/10] selftests: mptcp: make 2nd net namespace =
+
+use tcp syn cookies unconditionally
+1338606: New: [RFC,v3,10/10] selftests: mptcp: add test cases for mptcp =
+
+join tests with syn cookies:
+     - Florian will send them soon to netdev
+
+1338758: New: [v4,mptcp-next,1/5] mptcp: rename addr_signal and the =
+
+related functions
+1338760: New: [v4,mptcp-next,2/5] mptcp: add the outgoing RM_ADDR support
+1338761: New: [v4,mptcp-next,3/5] mptcp: add the incoming RM_ADDR support
+1338762: New: [v4,mptcp-next,4/5] mptcp: trigger the RM_ADDR signal
+1338763: New: [v4,mptcp-next,5/5] mptcp: add remove subflow support:
+     - Paolo will review the new version
 
 
-BUG: KASAN: wild-memory-access in memcpy include/linux/string.h:406 [inline]
-BUG: KASAN: wild-memory-access in copy_from_sockptr_offset include/linux/so=
-ckptr.h:71 [inline]
-BUG: KASAN: wild-memory-access in copy_from_sockptr include/linux/sockptr.h=
-:77 [inline]
-BUG: KASAN: wild-memory-access in do_rawv6_setsockopt net/ipv6/raw.c:1023 [=
-inline]
-BUG: KASAN: wild-memory-access in rawv6_setsockopt+0x1a1/0x6f0 net/ipv6/raw=
-.c:1084
-Read of size 4 at addr 00000000ffffffff by task syz-executor.0/28251
 
-CPU: 3 PID: 28251 Comm: syz-executor.0 Not tainted 5.8.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9b=
-a5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- __kasan_report mm/kasan/report.c:517 [inline]
- kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
- memcpy+0x20/0x60 mm/kasan/common.c:105
- memcpy include/linux/string.h:406 [inline]
- copy_from_sockptr_offset include/linux/sockptr.h:71 [inline]
- copy_from_sockptr include/linux/sockptr.h:77 [inline]
- do_rawv6_setsockopt net/ipv6/raw.c:1023 [inline]
- rawv6_setsockopt+0x1a1/0x6f0 net/ipv6/raw.c:1084
- __sys_setsockopt+0x2ad/0x6d0 net/socket.c:2138
- __do_sys_setsockopt net/socket.c:2149 [inline]
- __se_sys_setsockopt net/socket.c:2146 [inline]
- __ia32_sys_setsockopt+0xb9/0x150 net/socket.c:2146
- do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
- __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
- do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f22569
-Code: c4 01 10 03 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 =
-74 b0 01 10 08 03 74 d8 01 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 9=
-0 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f551c0bc EFLAGS: 00000296 ORIG_RAX: 000000000000016e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000029
-RDX: 0000000000000024 RSI: 00000000ffffffff RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Issues on Github:
+     https://github.com/multipath-tcp/mptcp_net-next/issues/
 
---===============1502067029854228957==--
+     Recently opened (latest from last week: 64)
+
+   69  Packetdrill: dss: failing with new DATA_FIN patches [bug]:
+       - maybe normal
+
+   68  selftests: diag: failing with new DATA_FIN patches [bug]:
+       - to be investigated
+
+   67  `./mptcp_connect.sh -m mmap` timeout [bug]:
+       - could happen if there is not enough memory, unlikely possible =
+
+according to Paolo =E2=86=92 we don't receive the wake up signal if limited=
+ by =
+
+the sendbuffer
+
+   66  [interop] IPv4: Attempt to release TCP socket in state 1 =
+
+00000000cbc88a4a [bug]:
+       - maybe introduced by the last series from Paolo
+
+   65  clearing properly the status in listen() [bug]:
+       - not blocking but still to be done
+
+
+     Bugs (open and flagged as "bug")
+
+   69  Packetdrill: dss: failing with new DATA_FIN patches [bug]
+   68  selftests: diag: failing with new DATA_FIN patches [bug]
+   67  `./mptcp_connect.sh -m mmap` timesout [bug]
+   66  [interop] IPv4: Attempt to release TCP socket in state 1 =
+
+00000000cbc88a4a [bug]
+   65  clearing properly the status in listen() [bug]
+   64  Kernel crash when using `pm_nl_ctl` and `use_mptcp.sh` [bug]
+   62  [syzkaller] WARNING in __mptcp_move_skbs_from_subflow [bug]
+
+   56  msk connection state set without msk lock [bug] @pabeni:
+       - can be closed: patch has been sent.
+       - Matth: TODO
+
+    6  loss and delay without reordering causes very slow transfer [bug] =
+
+@cpaasch:
+        - Patch has been shared
+
+
+     In Progress (open and assigned to someone)
+
+   49  ADD_ADDR: echo bit support [enhancement] @pkrystad:
+       - could be re-assigned maybe? Follow-up: Contacted @pkrystad, =
+
+this can be reassigned
+
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag =
+
+interface [enhancement] @cpaasch:
+       - Christoph will look if it is necesseraly (some paths are =
+
+already tested)
+
+   17  allow non 'backup' subflows creation [enhancement] @pabeni:
+       - more complex than expected, already 15 patches and some issues =
+
+to fix
+       - for the moment the packet scheduler is "suboptimal": sending on =
+
+subflows having the bigger available snd space
+       - limited by the send buffer at the MPTCP level? Smaller than the =
+
+sum of the ones of the two subflows?
+       - built to be modular later :)
+
+
+     Recently closed (since last week)
+
+   63  New subflows send MP_JOIN to port 0 [bug]
+   58  Full DATA_FIN support [enhancement] v5.9 @mjmartineau =E2=80=A1
+
+
+
+FYI: Current Roadmap:
+     - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+     - Current merge window (5.9): =
+
+https://github.com/multipath-tcp/mptcp_net-next/projects/1
+     - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Extra tests:
+     - news about Syzkaller? (Christoph):
+         - New issue was sent on Github
+
+     - news about interop with mptcp.org? (Christoph):
+         - New issue sent on Github
+         - tested the export branch and with Florian patches, everything =
+
+looks fine!
+
+     - news about Intel's kbuild? (Mat):
+         - No email (success/failure)
+         - Jenkins status: seems still broken
+
+     - packetdrill (Davide):
+         - Sync with Google upstream repo
+         - Some fixes for the MP_JOIN
+         - One fix also for ADD_ADDR (in review)
+         - Some tests might need to be adapted due to the recent =
+
+modification with the DATA_FIN =E2=86=92 Mat will look at that
+
+     - CI (Matth):
+         - goal: run all packetdrill tests
+         - next step: reproducers from syzkaller
+
+mptcpd:
+     [davide] initial specfile =
+
+(https://gitlab.com/dcaratti/mptcpd/-/blob/main/mptcpd.spec) that builds =
+
+in a copr (https://copr.fedorainfracloud.org/coprs/dcaratti/mptcpd/ )
+
+     [davide] I will file a package request for fedora, after "todo" =
+
+items are done (and check if %license is correct):
+     - One question about the license to be clarified by Ossama and Mat
+     - "make check" cannot be ran if the host kernel needs to be MPTCP =
+
+out-of-tree
+     - mptcpd will support Net-next in the next version
+
+
+
+"bounced" messages: what to do?:
+     - recently received a lot of spams
+     - maybe an issue on RedHat side wrongly scoring stuff
+     - Davide can open an issue on RedHat IT side
+     - Difficult for Mat to get more details
+
+
+
+Next meeting:
+     - We propose to have the next meeting on Thursday, the 6th of August.
+     - Usual time: 15:00 UTC (8am PDT, 5pm CEST, 11pm UTC+8)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200806
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you next week,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============3496459121635990195==--
