@@ -1,43 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============4829193085382212010=="
+Content-Type: multipart/mixed; boundary="===============1716429209959155752=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] selftests: mptcp: fix dependecies
-Date: Fri, 07 Aug 2020 11:32:04 +0200
-Message-ID: <781f07aa4d05b123a80bf98f5839e1611a833272.1596791966.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH net] selftests: mptcp: fix dependecies
+Date: Fri, 07 Aug 2020 12:16:42 +0200
+Message-ID: <0892801f-c5d0-4ec3-361c-617208c8e5ec@tessares.net>
+In-Reply-To: 781f07aa4d05b123a80bf98f5839e1611a833272.1596791966.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5508
+X-UID: 5509
 
---===============4829193085382212010==
+--===============1716429209959155752==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Since commit df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
-the MPTCP selftests relies on the MPTCP diag interface which is
-enabled by a specific kconfig knob: be sure to include it.
+Hi Paolo,
 
-Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- tools/testing/selftests/net/mptcp/config | 2 ++
- 1 file changed, 2 insertions(+)
+On 07/08/2020 11:32, Paolo Abeni wrote:
+> Since commit df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
+> the MPTCP selftests relies on the MPTCP diag interface which is
+> enabled by a specific kconfig knob: be sure to include it.
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selft=
-ests/net/mptcp/config
-index 2499824d9e1c..8df5cb8f71ff 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -1,4 +1,6 @@
- CONFIG_MPTCP=3Dy
- CONFIG_MPTCP_IPV6=3Dy
-+CONFIG_INET_DIAG=3Dm
-+CONFIG_INET_MPTCP_DIAG=3Dm
- CONFIG_VETH=3Dy
- CONFIG_NET_SCH_NETEM=3Dm
+Good catch! Thank you for the patch!
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============4829193085382212010==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============1716429209959155752==--
