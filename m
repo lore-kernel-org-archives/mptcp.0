@@ -1,146 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============0880229818910171146=="
+Content-Type: multipart/mixed; boundary="===============1015443655639594707=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: more stable diag self-tests
-Date: Fri, 07 Aug 2020 18:12:19 +0200
-Message-ID: <692cf402-f7e2-1cbc-f38a-98934c88c3a3@tessares.net>
-In-Reply-To: 1634f4575a4a2c8e7621941b633a0be50e65e195.1596815971.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH net] mptcp: fix warn at shutdown time for unaccepted
+ msk sockets
+Date: Fri, 07 Aug 2020 18:17:37 +0200
+Message-ID: <1a4636f016e3e8b7949380b5f4ab4e77ae3c316d.1596817055.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5511
+X-UID: 5512
 
---===============0880229818910171146==
+--===============1015443655639594707==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+With commit b93df08ccda3 ("mptcp: explicitly track the fully
+established status"), the status of unaccepted mptcp closed in
+mptcp_sock_destruct() changes from TCP_SYN_RECV to TCP_ESTABLISHED.
 
-On 07/08/2020 17:59, Paolo Abeni wrote:
-> During diag self-tests we introduce long wait in the mptcp test
-> program to give the script enough time to access the sockets
-> dump.
-> =
+As a result mptcp_sock_destruct() does not perform the proper
+cleanup and inet_sock_destruct() will later emit a warn
+in ESTABLISHED status.
 
-> Such wait is introduced after shutting down one sockets end. Since
-> commit 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machin=
-e")
-> if boths sides shutdown the socket is correctly tranistioned
+Address the issue updating the condition tested in mptcp_sock_destruct().
+Also update the related comment.
 
-(small typo: s/boths/both/ and s/tranistioned/transitioned/
+Fixes: b93df08ccda3 ("mptcp: explicitly track the fully established status")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/subflow.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> into CLOSED status.
-> =
-
-> As a side effect some sockets are not dumped via the diag interface,
-> because the socket state (CLOSED) does not match the default filter, and
-> this cause self-tests instability.
-> =
-
-> Address the issue moving the above mentioned wait before shutting
-> down the socket.
-
-I just did a quick test and it seems it fixes the issue on my VM, =
-
-thanks! I guess it should fix the issue on my CI as well.
-
-=3D=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D
-# selftests: net/mptcp: diag.sh =
-
-
-# no msk on netns creation                          [  ok  ] =
-
-
-# after MPC handshake                               [  ok  ] =
-
-
-# ....chk remote_key                                [  ok  ] =
-
-
-# ....chk no fallback                               [  ok  ] =
-
-
-# check fallback                                    [  ok  ] =
-
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 45c2284f6ada..3c2ca2108ac2 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -424,12 +424,12 @@ static void mptcp_sock_destruct(struct sock *sk)
+ 	 * also remove the mptcp socket, via
+ 	 * sock_put(ctx->conn).
+ 	 *
+-	 * Problem is that the mptcp socket will not be in
+-	 * SYN_RECV state and doesn't have SOCK_DEAD flag.
++	 * Problem is that the mptcp socket will be in
++	 * ESTABLISHED state and will not have the SOCK_DEAD flag.
+ 	 * Both result in warnings from inet_sock_destruct.
+ 	 */
  =
 
- =
-
-
-# many msk socket present                           [  ok  ] =
-
-
-ok 4 selftests: net/mptcp: diag.sh
-=3D=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D
-
-> Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
-
-Your SoB is missing ;-)
-
-Also do not hesitate to add:
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/68
-
-> ---
->   tools/testing/selftests/net/mptcp/mptcp_connect.c | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
-> =
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> index cad6f73a5fd0..090620c3e10c 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -406,10 +406,11 @@ static int copyfd_io_poll(int infd, int peerfd, int=
- outfd)
->   =
-
->   				/* ... but we still receive.
->   				 * Close our write side, ev. give some time
-> -				 * for address notification
-> +				 * for address notification and/or checking
-> +				 * the current status
->   				 */
-> -				if (cfg_join)
-> -					usleep(400000);
-> +				if (cfg_wait)
-> +					usleep(cfg_wait);
-
-Would it be OK for the stability to keep a wait? I guess it would be =
-
-hard to wait for an event (check counters, etc.) to happen.
-
-(if it is possible, it can also be done in other patch, good to have a =
-
-fix here :-) )
-
->   				shutdown(peerfd, SHUT_WR);
->   			} else {
->   				if (errno =3D=3D EINTR)
-> @@ -427,7 +428,7 @@ static int copyfd_io_poll(int infd, int peerfd, int o=
-utfd)
->   	}
->   =
-
->   	/* leave some time for late join/announce */
-> -	if (cfg_wait)
-> +	if (cfg_join)
->   		usleep(cfg_wait);
-
-(same here)
-
-Cheers,
-Matt
-
->   =
-
->   	close(peerfd);
-> =
-
-
+-	if (sk->sk_state =3D=3D TCP_SYN_RECV) {
++	if (sk->sk_state =3D=3D TCP_ESTABLISHED) {
+ 		sk->sk_state =3D TCP_CLOSE;
+ 		WARN_ON_ONCE(sk->sk_socket);
+ 		sock_orphan(sk);
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0880229818910171146==--
+2.26.2
+
+--===============1015443655639594707==--
