@@ -1,47 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============3997045212442635322=="
+Content-Type: multipart/mixed; boundary="===============3629602713948969822=="
 MIME-Version: 1.0
 From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: more stable diag self-tests
-Date: Fri, 07 Aug 2020 17:25:58 -0700
-Message-ID: <20200807.172558.1135066576835187335.davem@davemloft.net>
-In-Reply-To: 80f1f6d16da4542e825d9aca1949d6169d77104c.1596817814.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix warn at shutdown time for
+ unaccepted msk sockets
+Date: Fri, 07 Aug 2020 17:26:41 -0700
+Message-ID: <20200807.172641.1534600180926439646.davem@davemloft.net>
+In-Reply-To: 2458c1210f1a164c615e3aa3b9613b085a6c8326.1596819537.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5524
+X-UID: 5525
 
---===============3997045212442635322==
+--===============3629602713948969822==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Paolo Abeni <pabeni(a)redhat.com>
-Date: Fri,  7 Aug 2020 18:31:00 +0200
+Date: Fri,  7 Aug 2020 19:03:53 +0200
 
-> During diag self-tests we introduce long wait in the mptcp test
-> program to give the script enough time to access the sockets
-> dump.
+> With commit b93df08ccda3 ("mptcp: explicitly track the fully
+> established status"), the status of unaccepted mptcp closed in
+> mptcp_sock_destruct() changes from TCP_SYN_RECV to TCP_ESTABLISHED.
 > =
 
-> Such wait is introduced after shutting down one sockets end. Since
-> commit 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state
-> machine") if both sides shutdown the socket is correctly transitioned
-> into CLOSED status.
+> As a result mptcp_sock_destruct() does not perform the proper
+> cleanup and inet_sock_destruct() will later emit a warn.
 > =
 
-> As a side effect some sockets are not dumped via the diag interface,
-> because the socket state (CLOSED) does not match the default filter, and
-> this cause self-tests instability.
+> Address the issue updating the condition tested in mptcp_sock_destruct().
+> Also update the related comment.
 > =
 
-> Address the issue moving the above mentioned wait before shutting
-> down the socket.
-> =
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/68
-> Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
-> Tested-and-acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/66
+> Reported-and-tested-by: Christoph Paasch <cpaasch(a)apple.com>
+> Fixes: b93df08ccda3 ("mptcp: explicitly track the fully established statu=
+s")
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-Applied, thanks.
---===============3997045212442635322==--
+Also applied, thank you.
+--===============3629602713948969822==--
