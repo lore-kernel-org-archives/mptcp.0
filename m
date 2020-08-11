@@ -1,252 +1,312 @@
-Content-Type: multipart/mixed; boundary="===============4130769379294391808=="
+Content-Type: multipart/mixed; boundary="===============4861289752411309550=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 1/2] mptcp: remove addr and
- subflow in PM netlink
-Date: Tue, 11 Aug 2020 17:34:25 +0800
-Message-ID: <d740583e08198e54f08f5c849cf178f647a2596f.1597136641.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 2/2] selftests: mptcp: add remove
+ addr and subflow test case
+Date: Tue, 11 Aug 2020 17:34:26 +0800
+Message-ID: <3ff88d930a76757c8560409daf3419612028c69e.1597136641.git.geliangtang@gmail.com>
 In-Reply-To: cover.1597136641.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5537
+X-UID: 5538
 
---===============4130769379294391808==
+--===============4861289752411309550==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch implements the remove announced addr and subflow logic in PM
-netlink.
+This patch added remove addr and subflow test case.
 
-When the PM netlink removes an address, we traverse all the existing msk
-sockets to find the relevant sockets.
+1 We droped the flag "first" in do_rnd_write, since we need to slow down
+all the transfer process to let the sending and receiving of the RM_ADDR
+suboption complete.
 
-We add a new list named anno_list in mptcp_pm_data, to record all the
-announced addrs. In the traversing, we check if it has been recorded.
-If it has been, we trigger the RM_ADDR signal.
-
-We also check if this address is in conn_list. If it is, we remove the
-subflow which using this local address.
+2 We added a new argument "remove_addr" in run_tests and do_transfer, if
+this flag is true, we called do_remove_addr to remove the addr and
+subflow.
 
 Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm.c         |  7 +++-
- net/mptcp/pm_netlink.c | 87 ++++++++++++++++++++++++++++++++++++++++--
- net/mptcp/protocol.c   |  2 +
- net/mptcp/protocol.h   |  2 +
- 4 files changed, 93 insertions(+), 5 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.c       |  7 +--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 62 ++++++++++++++-----
+ 2 files changed, 47 insertions(+), 22 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 558462d87eb3..b3712771f268 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -24,7 +24,11 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+index 090620c3e10c..e48c00fc117d 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -260,7 +260,6 @@ static int sock_connect_mptcp(const char * const remote=
+addr,
  =
 
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
+ static size_t do_rnd_write(const int fd, char *buf, const size_t len)
  {
--	return -ENOTSUPP;
-+	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
-+
-+	msk->pm.rm_id =3D local_id;
-+	WRITE_ONCE(msk->pm.rm_addr_signal, true);
-+	return 0;
+-	static bool first =3D true;
+ 	unsigned int do_w;
+ 	ssize_t bw;
+ =
+
+@@ -268,7 +267,7 @@ static size_t do_rnd_write(const int fd, char *buf, con=
+st size_t len)
+ 	if (do_w =3D=3D 0 || do_w > len)
+ 		do_w =3D len;
+ =
+
+-	if (cfg_join && first && do_w > 100)
++	if (cfg_join && do_w > 100)
+ 		do_w =3D 100;
+ =
+
+ 	bw =3D write(fd, buf, do_w);
+@@ -276,10 +275,8 @@ static size_t do_rnd_write(const int fd, char *buf, co=
+nst size_t len)
+ 		perror("write");
+ =
+
+ 	/* let the join handshake complete, before going on */
+-	if (cfg_join && first) {
++	if (cfg_join)
+ 		usleep(200000);
+-		first =3D false;
+-	}
+ =
+
+ 	return bw;
+ }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index f39c1129ce5f..3b250df8a7f8 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -125,6 +125,17 @@ do_ping()
+ 	fi
  }
  =
 
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
-@@ -229,6 +233,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	msk->pm.status =3D 0;
- =
-
- 	spin_lock_init(&msk->pm.lock);
-+	INIT_LIST_HEAD(&msk->pm.anno_list);
- =
-
- 	mptcp_pm_nl_data_init(msk);
- }
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 848649a82649..8d29eae2a0c1 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -167,6 +167,19 @@ static void check_work_pending(struct mptcp_sock *msk)
- 		WRITE_ONCE(msk->pm.work_pending, false);
- }
- =
-
-+void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
++do_remove_addr()
 +{
-+	struct mptcp_pm_addr_entry *entry, *tmp;
++	sleep 1
++	ip netns exec $ns1 ./pm_nl_ctl del 1
++	ip netns exec $ns2 ./pm_nl_ctl del 1
 +
-+	pr_debug("msk=3D%p\n", msk);
-+	spin_lock_bh(&msk->pm.lock);
-+	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
-+		list_del(&entry->list);
-+		kfree(entry);
-+	}
-+	spin_unlock_bh(&msk->pm.lock);
++	sleep 1
++	ip netns exec $ns1 ./pm_nl_ctl del 2
++	ip netns exec $ns2 ./pm_nl_ctl del 2
 +}
 +
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ do_transfer()
  {
- 	struct sock *sk =3D (struct sock *)msk;
-@@ -187,8 +200,16 @@ static void mptcp_pm_create_subflow_or_signal_addr(str=
-uct mptcp_sock *msk)
- 					      msk->pm.add_addr_signaled);
+ 	listener_ns=3D"$1"
+@@ -132,6 +143,7 @@ do_transfer()
+ 	cl_proto=3D"$3"
+ 	srv_proto=3D"$4"
+ 	connect_addr=3D"$5"
++	remove_addr=3D"$6"
  =
 
- 		if (local) {
-+			struct mptcp_pm_addr_entry *clone =3D NULL;
-+
- 			msk->pm.add_addr_signaled++;
- 			mptcp_pm_announce_addr(msk, &local->addr);
-+
-+			clone =3D kmemdup(local, sizeof(*local), GFP_ATOMIC);
-+			if (!clone)
-+				return;
-+
-+			list_add(&clone->list, &msk->pm.anno_list);
- 		} else {
- 			/* pick failed, avoid fourther attempts later */
- 			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
-@@ -552,6 +573,62 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsig=
-ned int id)
- 	return NULL;
- }
+ 	port=3D$((10000+$TEST_COUNT))
+ 	TEST_COUNT=3D$((TEST_COUNT+1))
+@@ -164,6 +176,10 @@ do_transfer()
+ 	ip netns exec ${connector_ns} ./mptcp_connect -j -t $timeout -p $port -s =
+${cl_proto} $connect_addr < "$cin" > "$cout" &
+ 	cpid=3D$!
  =
 
-+static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
-+				      struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_pm_addr_entry *entry, *tmp;
++	if [ $remove_addr -eq 1 ]; then
++		do_remove_addr
++	fi
 +
-+	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
-+		if (addresses_equal(&entry->addr, addr, false)) {
-+			list_del(&entry->list);
-+			kfree(entry);
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+static int mptcp_nl_remove_subflow_or_signal_addr(struct net *net,
-+						  struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_sock *msk;
-+	long s_slot =3D 0, s_num =3D 0;
-+
-+	pr_debug("remove_id=3D%d\n", addr->id);
-+
-+	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL) {
-+		struct sock *sk =3D (struct sock *)msk;
-+		bool ret =3D false;
-+
-+		/* check first for announced addr */
-+		if (list_empty(&msk->pm.anno_list))
-+			goto remove_subflow;
-+
-+		spin_lock_bh(&msk->pm.lock);
-+		ret =3D remove_anno_list_by_saddr(msk, addr);
-+		spin_unlock_bh(&msk->pm.lock);
-+		if (ret)
-+			mptcp_pm_remove_addr(msk, addr->id);
-+
-+		/* check if should remove a subflow */
-+remove_subflow:
-+		if (list_empty(&msk->conn_list))
-+			goto next;
-+
-+		lock_sock(sk);
-+		if (lookup_subflow_by_saddr(&msk->conn_list, addr))
-+			mptcp_pm_rm_addr_received(msk, addr->id);
-+		release_sock(sk);
-+
-+next:
-+		sock_put(sk);
-+		cond_resched();
-+	}
-+
-+	return 0;
-+}
-+
- static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *in=
-fo)
- {
- 	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
-@@ -567,8 +644,8 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, s=
-truct genl_info *info)
- 	entry =3D __lookup_addr_by_id(pernet, addr.addr.id);
- 	if (!entry) {
- 		GENL_SET_ERR_MSG(info, "address not found");
--		ret =3D -EINVAL;
--		goto out;
-+		spin_unlock_bh(&pernet->lock);
-+		return -EINVAL;
- 	}
- 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)
- 		pernet->add_addr_signal_max--;
-@@ -577,9 +654,11 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, =
-struct genl_info *info)
+ 	wait $cpid
+ 	retc=3D$?
+ 	wait $spid
+@@ -217,9 +233,10 @@ run_tests()
+ 	listener_ns=3D"$1"
+ 	connector_ns=3D"$2"
+ 	connect_addr=3D"$3"
++	remove_addr=3D"$4"
+ 	lret=3D0
  =
 
- 	pernet->addrs--;
- 	list_del_rcu(&entry->list);
--	kfree_rcu(entry, rcu);
--out:
- 	spin_unlock_bh(&pernet->lock);
+-	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
++	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${=
+remove_addr}
+ 	lret=3D$?
+ 	if [ $lret -ne 0 ]; then
+ 		ret=3D$lret
+@@ -285,20 +302,20 @@ make_file "$cin" "client"
+ make_file "$sin" "server"
+ trap cleanup EXIT
+ =
+
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "no JOIN" "0" "0" "0"
+ =
+
+ # subflow limted by client
+ reset
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow, limited by client" 0 0 0
+ =
+
+ # subflow limted by server
+ reset
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow, limited by server" 1 1 0
+ =
+
+ # subflow
+@@ -306,7 +323,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow" 1 1 1
+ =
+
+ # multiple subflows
+@@ -315,7 +332,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows" 2 2 2
+ =
+
+ # multiple subflows limited by serverf
+@@ -324,13 +341,13 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows, limited by server" 2 2 1
+ =
+
+ # add_address, unused
+ reset
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "unused signal address" 0 0 0
+ =
+
+ # accept and use add_addr
+@@ -338,7 +355,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "signal address" 1 1 1
+ =
+
+ # accept and use add_addr with an additional subflow
+@@ -350,7 +367,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflow and signal" 2 2 2
+ =
+
+ # accept and use add_addr with additional subflows
+@@ -360,15 +377,26 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags sig=
+nal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows and signal" 3 3 3
+ =
+
++# remove subflow and signal
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags subflow
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags signal
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 1
++chk_join_nr "remove subflow and signal" 2 2 1
 +
-+	mptcp_nl_remove_subflow_or_signal_addr(sock_net(skb->sk), &entry->addr);
-+	kfree_rcu(entry, rcu);
-+
- 	return ret;
- }
+ # single subflow, syncookies
+ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow with syn cookies" 1 1 1
  =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c800b9147a3c..3bf4975d0ef3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1961,6 +1961,8 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
- 	}
+ # multiple subflows with syn cookies
+@@ -377,7 +405,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows with syn cookies" 2 2 2
  =
 
-+	mptcp_pm_free_anno_list(msk);
-+
- 	mptcp_cancel_work(sk);
+ # multiple subflows limited by server
+@@ -386,7 +414,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflows limited by server w cookies" 2 2 1
  =
 
- 	__skb_queue_purge(&sk->sk_receive_queue);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4b8a5308aeed..ceca1ddea9f8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -179,6 +179,7 @@ struct mptcp_pm_data {
- 	u8		subflows_max;
- 	u8		status;
- 	u8		rm_id;
-+	struct list_head anno_list;
- };
+ # test signal address with cookies
+@@ -394,7 +422,7 @@ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "signal address with syn cookies" 1 1 1
  =
 
- struct mptcp_data_frag {
-@@ -446,6 +447,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr);
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
-+void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+ # test cookie with subflow and signal
+@@ -403,7 +431,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflow and signal w cookies" 2 2 2
  =
 
- static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
- {
+ # accept and use add_addr with additional subflows
+@@ -413,7 +441,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflows and signal w. cookies" 3 3 3
+ =
+
+ exit $ret
 -- =
 
 2.17.1
 
---===============4130769379294391808==--
+--===============4861289752411309550==--
