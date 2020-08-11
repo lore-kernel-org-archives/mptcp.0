@@ -1,61 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============1120017421825907797=="
+Content-Type: multipart/mixed; boundary="===============3659102434113103412=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Nicolas Rybowski <nicolas.rybowski at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 0/2] Add REMOVE_ADDR support
-Date: Tue, 11 Aug 2020 17:34:24 +0800
-Message-ID: <cover.1597136641.git.geliangtang@gmail.com>
+Subject: [MPTCP] [PATCH mptcp-next v2 0/3] bpf: add MPTCP subflow support
+Date: Tue, 11 Aug 2020 11:35:28 +0200
+Message-ID: <20200811093531.27768-1-nicolas.rybowski@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 5532
+X-UID: 5533
 
---===============1120017421825907797==
+--===============3659102434113103412==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-v6:
- - rename lookup_anno_list_by_saddr to remove_anno_list_by_saddr as
-   Paolo suggested.
- - add msk socket lock when traverse msk->conn_list as Paolo suggested.
- - Since the first three patches in v5 have been merged to export
-   branch, drop them from this patchset.
- - add remove addr and subflow selftest test case.
- - this patchset is against mptcp_net-next's export branch.
+Previously it was not possible to make a distinction between plain TCP
+sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
 
-v5:
- - merge mptcp_nl_remove_subflow() and mptcp_nl_remove_addr()
- - add cond_resched
- - reduce the indentation level in mptcp_pm_nl_rm_addr_received
+This patch series now enables a fine control of subflow sockets. In its
+current state, it allows to put different sockopt on each subflow from a
+same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
+BPF programs.
 
-v4:
- - update mptcp_subflow_shutdown()'s args.
- - add rm_id check to make sure we don't shutdown the first subflow.
- - add conn_list empty check.
- - move anno_list to mptcp_pm_data.
- - add a new patch 'mptcp: add remove subflow support'.
+It should also be the basis of exposing MPTCP-specific fields through BPF.
 
-v3:
- - fix memory leak and lock issue in v2.
- - drop alist in v2.
- - fix mptcp_subflow_shutdown's arguments.
- - bzero remote in mptcp_pm_create_subflow_or_signal_addr.
- - add more commit message.
+v1 -> v2:
+- update cgroup attachment code in net/mptcp/subflow.c due to additional #i=
+fdef
+- revert MPTCP private structure moving in public API (previous patch 3)
+- move new BPF helper implementation in net/mptcp/bpf.c
+- add bpf.c in Makefile of net/mptcp
+- minor cosmetic changes: alignment of function's arguments on open
+	parenthesis
 
-Geliang Tang (2):
-  mptcp: remove addr and subflow in PM netlink
-  selftests: mptcp: add remove addr and subflow test case
+Nicolas Rybowski (3):
+  bpf: expose is_mptcp flag to bpf_tcp_sock
+  mptcp: attach subflow socket to parent cgroup
+  bpf: add 'bpf_mptcp_sock' structure and helper
 
- net/mptcp/pm.c                                |  7 +-
- net/mptcp/pm_netlink.c                        | 87 ++++++++++++++++++-
- net/mptcp/protocol.c                          |  2 +
- net/mptcp/protocol.h                          |  2 +
- .../selftests/net/mptcp/mptcp_connect.c       |  7 +-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 62 +++++++++----
- 6 files changed, 140 insertions(+), 27 deletions(-)
+ include/linux/bpf.h            | 33 ++++++++++++++++
+ include/uapi/linux/bpf.h       | 14 +++++++
+ kernel/bpf/verifier.c          | 30 ++++++++++++++
+ net/core/filter.c              | 13 +++++-
+ net/mptcp/Makefile             |  2 +
+ net/mptcp/bpf.c                | 72 ++++++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c            | 27 +++++++++++++
+ scripts/bpf_helpers_doc.py     |  2 +
+ tools/include/uapi/linux/bpf.h | 14 +++++++
+ 9 files changed, 206 insertions(+), 1 deletion(-)
+ create mode 100644 net/mptcp/bpf.c
 
 -- =
 
-2.17.1
+2.28.0
 
---===============1120017421825907797==--
+--===============3659102434113103412==--
