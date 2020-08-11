@@ -1,113 +1,100 @@
-Content-Type: multipart/mixed; boundary="===============7783012716316249531=="
+Content-Type: multipart/mixed; boundary="===============0680838453005261319=="
 MIME-Version: 1.0
 From: Nicolas Rybowski <nicolas.rybowski at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2 1/3] bpf: expose is_mptcp flag to
- bpf_tcp_sock
-Date: Tue, 11 Aug 2020 11:35:29 +0200
-Message-ID: <20200811093531.27768-2-nicolas.rybowski@tessares.net>
+Subject: [MPTCP] [PATCH mptcp-next v2 2/3] mptcp: attach subflow socket to
+ parent cgroup
+Date: Tue, 11 Aug 2020 11:35:30 +0200
+Message-ID: <20200811093531.27768-3-nicolas.rybowski@tessares.net>
 In-Reply-To: 20200811093531.27768-1-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5534
+X-UID: 5535
 
---===============7783012716316249531==
+--===============0680838453005261319==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-is_mptcp is a field from struct tcp_sock used to indicate that the
-current tcp_sock is part of the MPTCP protocol.
+It has been observed that the kernel sockets created for the subflows
+(except the first one) are not in the same cgroup as their parents.
+That's because the additional subflows are created by kernel workers.
 
-In this protocol, a first socket (mptcp_sock) is created with
-sk_protocol set to IPPROTO_MPTCP (=3D262) for control purpose but it
-isn't directly on the wire. This is the role of the subflow (kernel)
-sockets which are classical tcp_sock with sk_protocol set to
-IPPROTO_TCP. The only way to differentiate such sockets from plain TCP
-sockets is the is_mptcp field from tcp_sock.
+This is a problem with eBPF programs attached to the parent's
+cgroup won't be executed for the children. But also with any other features
+of CGroup linked to a sk.
 
-Such an exposure in BPF is thus required to be able to differentiate
-plain TCP sockets from MPTCP subflow sockets in BPF_PROG_TYPE_SOCK_OPS
-programs.
+This patch fixes this behaviour.
 
-The choice has been made to silently pass the case when CONFIG_MPTCP is
-unset by defaulting is_mptcp to 0 in order to make BPF independent of
-the MPTCP configuration. Another solution is to make the verifier fail
-in 'bpf_tcp_sock_is_valid_ctx_access' but this will add an additional
-'#ifdef CONFIG_MPTCP' in the BPF code and a same injected BPF program
-will not run if MPTCP is not set.
-
-An example use-case is provided in
-https://github.com/multipath-tcp/mptcp_net-next/tree/scripts/bpf/examples
+As the subflow sockets are created by the kernel, we can't use
+'mem_cgroup_sk_alloc' because of the current context being the one of the
+kworker. This is why we have to do low level memcg manipulation, if
+required.
 
 Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
 ---
- include/uapi/linux/bpf.h       | 1 +
- net/core/filter.c              | 9 ++++++++-
- tools/include/uapi/linux/bpf.h | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index b134e679e9db..1a0caa4abc2d 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -3864,6 +3864,7 @@ struct bpf_tcp_sock {
- 	__u32 delivered;	/* Total data packets delivered incl. rexmits */
- 	__u32 delivered_ce;	/* Like the above but only ECE marked packets */
- 	__u32 icsk_retransmits;	/* Number of unrecovered [RTO] timeouts */
-+	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
+Notes:
+    v1 -> v2:
+    - update cgroup attachment code in subflow.c due to additional #ifdef
+
+ net/mptcp/subflow.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 3c2ca2108ac2..82f6d2d9e39e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1109,6 +1109,30 @@ int __mptcp_subflow_connect(struct sock *sk, const s=
+truct mptcp_addr_info *loc,
+ 	return err;
+ }
  =
 
- struct bpf_sock_tuple {
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 7124f0fe6974..ce83e1ec5259 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5742,7 +5742,7 @@ bool bpf_tcp_sock_is_valid_access(int off, int size, =
-enum bpf_access_type type,
- 				  struct bpf_insn_access_aux *info)
++static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
++{
++#ifdef CONFIG_SOCK_CGROUP_DATA
++	struct sock_cgroup_data *parent_skcd =3D &parent->sk_cgrp_data,
++				*child_skcd =3D &child->sk_cgrp_data;
++
++	/* only the additional subflows created by kworkers have to be modified */
++	if (cgroup_id(sock_cgroup_ptr(parent_skcd)) !=3D
++	    cgroup_id(sock_cgroup_ptr(child_skcd))) {
++#ifdef CONFIG_MEMCG
++		struct mem_cgroup *memcg =3D parent->sk_memcg;
++
++		mem_cgroup_sk_free(child);
++		if (memcg && css_tryget(&memcg->css))
++			child->sk_memcg =3D memcg;
++#endif /* CONFIG_MEMCG */
++
++		cgroup_sk_free(child_skcd);
++		*child_skcd =3D *parent_skcd;
++		cgroup_sk_clone(child_skcd);
++	}
++#endif /* CONFIG_SOCK_CGROUP_DATA */
++}
++
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
  {
- 	if (off < 0 || off >=3D offsetofend(struct bpf_tcp_sock,
--					  icsk_retransmits))
-+					  is_mptcp))
- 		return false;
+ 	struct mptcp_subflow_context *subflow;
+@@ -1129,6 +1153,9 @@ int mptcp_subflow_create_socket(struct sock *sk, stru=
+ct socket **new_sock)
  =
 
- 	if (off % size !=3D 0)
-@@ -5876,6 +5876,13 @@ u32 bpf_tcp_sock_convert_ctx_access(enum bpf_access_=
-type type,
- 	case offsetof(struct bpf_tcp_sock, icsk_retransmits):
- 		BPF_INET_SOCK_GET_COMMON(icsk_retransmits);
- 		break;
-+	case offsetof(struct bpf_tcp_sock, is_mptcp):
-+#ifdef CONFIG_MPTCP
-+		BPF_TCP_SOCK_GET_COMMON(is_mptcp);
-+#else
-+		*insn++ =3D BPF_MOV32_IMM(si->dst_reg, 0);
-+#endif
-+		break;
- 	}
+ 	lock_sock(sf->sk);
  =
 
- 	return insn - insn_buf;
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index b134e679e9db..1a0caa4abc2d 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -3864,6 +3864,7 @@ struct bpf_tcp_sock {
- 	__u32 delivered;	/* Total data packets delivered incl. rexmits */
- 	__u32 delivered_ce;	/* Like the above but only ECE marked packets */
- 	__u32 icsk_retransmits;	/* Number of unrecovered [RTO] timeouts */
-+	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
- =
-
- struct bpf_sock_tuple {
++	/* the newly created socket has to be in the same cgroup as its parent */
++	mptcp_attach_cgroup(sk, sf->sk);
++
+ 	/* kernel sockets do not by default acquire net ref, but TCP timer
+ 	 * needs it.
+ 	 */
 -- =
 
 2.28.0
 
---===============7783012716316249531==--
+--===============0680838453005261319==--
