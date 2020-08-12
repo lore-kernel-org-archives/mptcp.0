@@ -1,312 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============4861289752411309550=="
+Content-Type: multipart/mixed; boundary="===============6442791218462004552=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 2/2] selftests: mptcp: add remove
- addr and subflow test case
-Date: Tue, 11 Aug 2020 17:34:26 +0800
-Message-ID: <3ff88d930a76757c8560409daf3419612028c69e.1597136641.git.geliangtang@gmail.com>
-In-Reply-To: cover.1597136641.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next] mptcp: send out ADD_ADDR with echo
+ flag
+Date: Wed, 12 Aug 2020 15:59:07 +0800
+Message-ID: <767fcf49285f9242bb6a296b00f91e155be7c877.1597218966.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5538
+X-UID: 5541
 
---===============4861289752411309550==
+--===============6442791218462004552==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added remove addr and subflow test case.
+When the ADD_ADDR suboption has been received, we need to send out the same
+ADD_ADDR suboption with echo-flag=3D1.
 
-1 We droped the flag "first" in do_rnd_write, since we need to slow down
-all the transfer process to let the sending and receiving of the RM_ADDR
-suboption complete.
-
-2 We added a new argument "remove_addr" in run_tests and do_transfer, if
-this flag is true, we called do_remove_addr to remove the addr and
-subflow.
-
-Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- .../selftests/net/mptcp/mptcp_connect.c       |  7 +--
- .../testing/selftests/net/mptcp/mptcp_join.sh | 62 ++++++++++++++-----
- 2 files changed, 47 insertions(+), 22 deletions(-)
+ net/mptcp/options.c    | 30 +++++++++++++++++++-----------
+ net/mptcp/pm.c         |  1 +
+ net/mptcp/pm_netlink.c |  1 +
+ net/mptcp/protocol.h   |  1 +
+ 4 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
-ing/selftests/net/mptcp/mptcp_connect.c
-index 090620c3e10c..e48c00fc117d 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -260,7 +260,6 @@ static int sock_connect_mptcp(const char * const remote=
-addr,
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index a52a05effac9..0f8eb7f919f5 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -242,7 +242,7 @@ static void mptcp_parse_option(const struct sk_buff *sk=
+b,
+ 		mp_opt->add_addr =3D 1;
+ 		mp_opt->port =3D 0;
+ 		mp_opt->addr_id =3D *ptr++;
+-		pr_debug("ADD_ADDR: id=3D%d", mp_opt->addr_id);
++		pr_debug("ADD_ADDR: id=3D%d, echo=3D%d", mp_opt->addr_id, mp_opt->echo);
+ 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+ 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
+ 			ptr +=3D 4;
+@@ -579,6 +579,7 @@ static bool mptcp_established_options_add_addr(struct s=
+ock *sk,
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+ 	struct mptcp_addr_info saddr;
++	bool echo =3D READ_ONCE(msk->pm.add_addr_echo);
+ 	int len;
  =
 
- static size_t do_rnd_write(const int fd, char *buf, const size_t len)
- {
--	static bool first =3D true;
- 	unsigned int do_w;
- 	ssize_t bw;
+ 	if (!mptcp_pm_should_add_signal(msk) ||
+@@ -594,22 +595,26 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk,
+ 	if (saddr.family =3D=3D AF_INET) {
+ 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+ 		opts->addr =3D saddr.addr;
+-		opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
+-						     msk->remote_key,
+-						     opts->addr_id,
+-						     &opts->addr);
++		if (!echo) {
++			opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
++							     msk->remote_key,
++							     opts->addr_id,
++							     &opts->addr);
++		}
+ 	}
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	else if (saddr.family =3D=3D AF_INET6) {
+ 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
+ 		opts->addr6 =3D saddr.addr6;
+-		opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
+-						      msk->remote_key,
+-						      opts->addr_id,
+-						      &opts->addr6);
++		if (!echo) {
++			opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
++							      msk->remote_key,
++							      opts->addr_id,
++							      &opts->addr6);
++		}
+ 	}
+ #endif
+-	pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
++	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->ah=
+mac, echo);
  =
 
-@@ -268,7 +267,7 @@ static size_t do_rnd_write(const int fd, char *buf, con=
-st size_t len)
- 	if (do_w =3D=3D 0 || do_w > len)
- 		do_w =3D len;
- =
-
--	if (cfg_join && first && do_w > 100)
-+	if (cfg_join && do_w > 100)
- 		do_w =3D 100;
- =
-
- 	bw =3D write(fd, buf, do_w);
-@@ -276,10 +275,8 @@ static size_t do_rnd_write(const int fd, char *buf, co=
-nst size_t len)
- 		perror("write");
- =
-
- 	/* let the join handshake complete, before going on */
--	if (cfg_join && first) {
-+	if (cfg_join)
- 		usleep(200000);
--		first =3D false;
--	}
- =
-
- 	return bw;
+ 	return true;
  }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index f39c1129ce5f..3b250df8a7f8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -125,6 +125,17 @@ do_ping()
- 	fi
- }
+@@ -883,8 +888,11 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb,
+ 			addr.addr6 =3D mp_opt.addr6;
+ 		}
+ #endif
+-		if (!mp_opt.echo)
++		if (!mp_opt.echo) {
++			WRITE_ONCE(msk->pm.add_addr_echo, true);
++			mptcp_pm_announce_addr(msk, &addr);
+ 			mptcp_pm_add_addr_received(msk, &addr);
++		}
+ 		mp_opt.add_addr =3D 0;
+ 	}
  =
 
-+do_remove_addr()
-+{
-+	sleep 1
-+	ip netns exec $ns1 ./pm_nl_ctl del 1
-+	ip netns exec $ns2 ./pm_nl_ctl del 1
-+
-+	sleep 1
-+	ip netns exec $ns1 ./pm_nl_ctl del 2
-+	ip netns exec $ns2 ./pm_nl_ctl del 2
-+}
-+
- do_transfer()
- {
- 	listener_ns=3D"$1"
-@@ -132,6 +143,7 @@ do_transfer()
- 	cl_proto=3D"$3"
- 	srv_proto=3D"$4"
- 	connect_addr=3D"$5"
-+	remove_addr=3D"$6"
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 558462d87eb3..4709b9562cb0 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -226,6 +226,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	WRITE_ONCE(msk->pm.rm_addr_signal, false);
+ 	WRITE_ONCE(msk->pm.accept_addr, false);
+ 	WRITE_ONCE(msk->pm.accept_subflow, false);
++	WRITE_ONCE(msk->pm.add_addr_echo, false);
+ 	msk->pm.status =3D 0;
  =
 
- 	port=3D$((10000+$TEST_COUNT))
- 	TEST_COUNT=3D$((TEST_COUNT+1))
-@@ -164,6 +176,10 @@ do_transfer()
- 	ip netns exec ${connector_ns} ./mptcp_connect -j -t $timeout -p $port -s =
-${cl_proto} $connect_addr < "$cin" > "$cout" &
- 	cpid=3D$!
+ 	spin_lock_init(&msk->pm.lock);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 848649a82649..1328d6460a48 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -188,6 +188,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
+ct mptcp_sock *msk)
  =
 
-+	if [ $remove_addr -eq 1 ]; then
-+		do_remove_addr
-+	fi
-+
- 	wait $cpid
- 	retc=3D$?
- 	wait $spid
-@@ -217,9 +233,10 @@ run_tests()
- 	listener_ns=3D"$1"
- 	connector_ns=3D"$2"
- 	connect_addr=3D"$3"
-+	remove_addr=3D"$4"
- 	lret=3D0
- =
-
--	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${=
-remove_addr}
- 	lret=3D$?
- 	if [ $lret -ne 0 ]; then
- 		ret=3D$lret
-@@ -285,20 +302,20 @@ make_file "$cin" "client"
- make_file "$sin" "server"
- trap cleanup EXIT
- =
-
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "no JOIN" "0" "0" "0"
- =
-
- # subflow limted by client
- reset
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "single subflow, limited by client" 0 0 0
- =
-
- # subflow limted by server
- reset
- ip netns exec $ns2 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "single subflow, limited by server" 1 1 0
- =
-
- # subflow
-@@ -306,7 +323,7 @@ reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "single subflow" 1 1 1
- =
-
- # multiple subflows
-@@ -315,7 +332,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "multiple subflows" 2 2 2
- =
-
- # multiple subflows limited by serverf
-@@ -324,13 +341,13 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "multiple subflows, limited by server" 2 2 1
- =
-
- # add_address, unused
- reset
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "unused signal address" 0 0 0
- =
-
- # accept and use add_addr
-@@ -338,7 +355,7 @@ reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "signal address" 1 1 1
- =
-
- # accept and use add_addr with an additional subflow
-@@ -350,7 +367,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "subflow and signal" 2 2 2
- =
-
- # accept and use add_addr with additional subflows
-@@ -360,15 +377,26 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags sig=
-nal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 3
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "multiple subflows and signal" 3 3 3
- =
-
-+# remove subflow and signal
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags subflow
-+ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags signal
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+run_tests $ns1 $ns2 10.0.1.1 1
-+chk_join_nr "remove subflow and signal" 2 2 1
-+
- # single subflow, syncookies
- reset_with_cookies
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "single subflow with syn cookies" 1 1 1
- =
-
- # multiple subflows with syn cookies
-@@ -377,7 +405,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "multiple subflows with syn cookies" 2 2 2
- =
-
- # multiple subflows limited by server
-@@ -386,7 +414,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "subflows limited by server w cookies" 2 2 1
- =
-
- # test signal address with cookies
-@@ -394,7 +422,7 @@ reset_with_cookies
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "signal address with syn cookies" 1 1 1
- =
-
- # test cookie with subflow and signal
-@@ -403,7 +431,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "subflow and signal w cookies" 2 2 2
- =
-
- # accept and use add_addr with additional subflows
-@@ -413,7 +441,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 3
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "subflows and signal w. cookies" 3 3 3
- =
-
- exit $ret
+ 		if (local) {
+ 			msk->pm.add_addr_signaled++;
++			WRITE_ONCE(msk->pm.add_addr_echo, false);
+ 			mptcp_pm_announce_addr(msk, &local->addr);
+ 		} else {
+ 			/* pick failed, avoid fourther attempts later */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 4b8a5308aeed..425fbbc30b7a 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -169,6 +169,7 @@ struct mptcp_pm_data {
+ 	bool		work_pending;
+ 	bool		accept_addr;
+ 	bool		accept_subflow;
++	bool		add_addr_echo;
+ 	u8		add_addr_signaled;
+ 	u8		add_addr_accepted;
+ 	u8		local_addr_used;
 -- =
 
 2.17.1
 
---===============4861289752411309550==--
+--===============6442791218462004552==--
