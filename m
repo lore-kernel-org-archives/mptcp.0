@@ -1,40 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============5811938961771407067=="
+Content-Type: multipart/mixed; boundary="===============1059536873977332120=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 0/2] Add REMOVE_ADDR support
-Date: Thu, 13 Aug 2020 08:48:40 +0200
-Message-ID: <aa5f39c1e794688a31e703b1ce5623f2d67ec1d5.camel@redhat.com>
-In-Reply-To: cover.1597136641.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH mptcp-next] mptcp: adjust mptcp receive buffer limit
+ if subflow has larger one
+Date: Thu, 13 Aug 2020 09:32:34 +0200
+Message-ID: <20200813073234.277347-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 5542
+X-UID: 5543
 
---===============5811938961771407067==
+--===============1059536873977332120==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-08-11 at 17:34 +0800, Geliang Tang wrote:
-> v6:
->  - rename lookup_anno_list_by_saddr to remove_anno_list_by_saddr as
->    Paolo suggested.
->  - add msk socket lock when traverse msk->conn_list as Paolo suggested.
->  - Since the first three patches in v5 have been merged to export
->    branch, drop them from this patchset.
->  - add remove addr and subflow selftest test case.
->  - this patchset is against mptcp_net-next's export branch.
+In addition to tcp autotuning during read, it may also increase the
+receive buffer in tcp_clamp_window().
 
-Thank you for the great work. =
+In this case, mptcp should adjust its receive buffer size as well so
+it can pull all pending skbs at once.
 
+At this time, when TCP grows its receive buffer, it may have more
+skbs ready for processing than what mptcp allows.
 
-I'm currently on PTO, and likely will not able to review it till aug
-24. Hopefully someone else will step-in before :)
+In the mptcp case, the receive window is derived from free
+space of the mptcp parent socket instead of the individual subflows.
+Following the subflow allows mptcp to grow its receive buffer.
 
-Cheers,
+This is especially noticable for loopback traffic, when even two
+skbs are enough to fill the initial receive window.
 
-Paolo
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c800b9147a3c..d9307a3e1e62 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -603,6 +603,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	int sk_rbuf, ssk_rbuf;
+ 	bool wake;
+ =
 
+ 	/* move_skbs_to_msk below can legitly clear the data_avail flag,
+@@ -613,12 +614,18 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
+sk)
+ 	if (wake)
+ 		set_bit(MPTCP_DATA_READY, &msk->flags);
+ =
 
---===============5811938961771407067==--
+-	if (atomic_read(&sk->sk_rmem_alloc) < READ_ONCE(sk->sk_rcvbuf) &&
+-	    move_skbs_to_msk(msk, ssk))
++	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
++	ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
++	if (ssk_rbuf > sk_rbuf) {
++		WRITE_ONCE(sk->sk_rcvbuf, ssk_rbuf);
++		sk_rbuf =3D ssk_rbuf;
++	}
++
++	/* over limit? can't append more skbs to msk */
++	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
+ 		goto wake;
+ =
+
+-	/* don't schedule if mptcp sk is (still) over limit */
+-	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
++	if (move_skbs_to_msk(msk, ssk))
+ 		goto wake;
+ =
+
+ 	/* mptcp socket is owned, release_cb should retry */
+-- =
+
+2.26.2
+
+--===============1059536873977332120==--
