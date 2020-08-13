@@ -1,84 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============4656550490945972342=="
+Content-Type: multipart/mixed; boundary="===============2866192111407166894=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v7 mptcp-next 4/5] selftests: mptcp: add remove
- addr and subflow test case
-Date: Thu, 13 Aug 2020 18:37:18 +0800
-Message-ID: <6bf665265430e4705acaea06b9cb3c961dd9e43d.1597314634.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v7 mptcp-next 5/5] selftests: mptcp: add
+ RM_ADDR mib check function
+Date: Thu, 13 Aug 2020 18:37:19 +0800
+Message-ID: <51332154000875f58ab2a6685765689c5e7f43ba.1597314634.git.geliangtang@gmail.com>
 In-Reply-To: cover.1597314634.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5548
+X-UID: 5549
 
---===============4656550490945972342==
+--===============2866192111407166894==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new argument in do_transfer, a callback function. We
-passed do_remove_addr to do_transfer to remove the addr and subflow in
-the transfer process.
+This patch added the RM_ADDR mib counter check function chk_rm_nr(). This
+function check this mib both on server side and client side.
+
+The output looks like this:
+
+ 11 remove subflow and signal        syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                     rm [ ok ] - rm    [ ok ]
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
 g/selftests/net/mptcp/mptcp_join.sh
-index f39c1129ce5f..3c26f98f3cac 100755
+index 3c26f98f3cac..68c4243e2b22 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -164,6 +164,11 @@ do_transfer()
- 	ip netns exec ${connector_ns} ./mptcp_connect -j -t $timeout -p $port -s =
-${cl_proto} $connect_addr < "$cin" > "$cout" &
- 	cpid=3D$!
+@@ -281,6 +281,43 @@ chk_join_nr()
+ 	fi
+ }
  =
 
-+	# call a function if it has been passed as a parameter
-+	if [ $# -eq 6 ]; then
-+		($6)
++chk_rm_nr()
++{
++	local rm_nr_server=3D$1
++	local rm_nr_client=3D$2
++	local count
++	local dump_stats
++
++	printf "%-39s %s" " " "rm "
++	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtRmAddr | awk '{print=
+ $2}'`
++	[ -z "$count" ] && count=3D0
++	if [ "$count" !=3D "$rm_nr_server" ]; then
++		echo "[fail] got $count JOIN[s] ack expected $add_nr"
++		ret=3D1
++		dump_stats=3D1
++	else
++		echo -n "[ ok ]"
 +	fi
 +
- 	wait $cpid
- 	retc=3D$?
- 	wait $spid
-@@ -363,6 +368,30 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subf=
-low
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "multiple subflows and signal" 3 3 3
++	echo -n " - rm "
++	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtRmAddr | awk '{print=
+ $2}'`
++	[ -z "$count" ] && count=3D0
++	if [ "$count" !=3D "$rm_nr_client" ]; then
++		echo "[fail] got $count JOIN[s] ack expected $echo_nr"
++		ret=3D1
++		dump_stats=3D1
++	else
++		echo "   [ ok ]"
++	fi
++
++	if [ "${dump_stats}" =3D 1 ]; then
++		echo Server ns stats
++		ip netns exec $ns1 nstat -as | grep MPTcp
++		echo Client ns stats
++		ip netns exec $ns2 nstat -as | grep MPTcp
++	fi
++}
++
+ sin=3D$(mktemp)
+ sout=3D$(mktemp)
+ cin=3D$(mktemp)
+@@ -391,6 +428,7 @@ do_remove_addr()
+ }
+ do_transfer $ns1 $ns2 MPTCP MPTCP 10.0.1.1 do_remove_addr
+ chk_join_nr "remove subflow and signal" 2 2 1
++chk_rm_nr 1 1
  =
 
-+# remove subflow and signal
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags subflow
-+ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags signal
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+
-+do_remove_addr()
-+{
-+	sleep 1
-+	ip netns exec $ns1 ./pm_nl_ctl del 1
-+	ip netns exec $ns2 ./pm_nl_ctl del 1
-+
-+	sleep 1
-+	ip netns exec $ns1 ./pm_nl_ctl del 2
-+	ip netns exec $ns2 ./pm_nl_ctl del 2
-+
-+	sleep 2
-+}
-+do_transfer $ns1 $ns2 MPTCP MPTCP 10.0.1.1 do_remove_addr
-+chk_join_nr "remove subflow and signal" 2 2 1
-+
  # single subflow, syncookies
  reset_with_cookies
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.17.1
 
---===============4656550490945972342==--
+--===============2866192111407166894==--
