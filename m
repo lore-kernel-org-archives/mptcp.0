@@ -1,93 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============2433342712523305361=="
+Content-Type: multipart/mixed; boundary="===============7816248751826334987=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: adjust mptcp receive buffer
- limit if subflow has larger one
-Date: Fri, 14 Aug 2020 12:58:20 -0700
-Message-ID: <alpine.OSX.2.23.453.2008141255470.20141@cakenne1-mobl1.amr.corp.intel.com>
-In-Reply-To: 20200813073234.277347-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH mptcp-next v2 0/3] bpf: add MPTCP subflow support
+Date: Fri, 14 Aug 2020 13:14:59 -0700
+Message-ID: <alpine.OSX.2.23.453.2008141308520.20141@cakenne1-mobl1.amr.corp.intel.com>
+In-Reply-To: 20200811093531.27768-1-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5558
+X-UID: 5559
 
---===============2433342712523305361==
+--===============7816248751826334987==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Aug 2020, Florian Westphal wrote:
 
-> In addition to tcp autotuning during read, it may also increase the
-> receive buffer in tcp_clamp_window().
->
-> In this case, mptcp should adjust its receive buffer size as well so
-> it can pull all pending skbs at once.
->
-> At this time, when TCP grows its receive buffer, it may have more
-> skbs ready for processing than what mptcp allows.
->
-> In the mptcp case, the receive window is derived from free
-> space of the mptcp parent socket instead of the individual subflows.
-> Following the subflow allows mptcp to grow its receive buffer.
->
-> This is especially noticable for loopback traffic, when even two
-> skbs are enough to fill the initial receive window.
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> net/mptcp/protocol.c | 15 +++++++++++----
-> 1 file changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index c800b9147a3c..d9307a3e1e62 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -603,6 +603,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
-sk)
-> {
-> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	int sk_rbuf, ssk_rbuf;
-> 	bool wake;
->
-> 	/* move_skbs_to_msk below can legitly clear the data_avail flag,
-> @@ -613,12 +614,18 @@ void mptcp_data_ready(struct sock *sk, struct sock =
-*ssk)
-> 	if (wake)
-> 		set_bit(MPTCP_DATA_READY, &msk->flags);
->
-> -	if (atomic_read(&sk->sk_rmem_alloc) < READ_ONCE(sk->sk_rcvbuf) &&
-> -	    move_skbs_to_msk(msk, ssk))
-> +	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
-> +	ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
-> +	if (ssk_rbuf > sk_rbuf) {
-> +		WRITE_ONCE(sk->sk_rcvbuf, ssk_rbuf);
+On Tue, 11 Aug 2020, Nicolas Rybowski wrote:
 
-Any concern about this racing with updates to sk->sk_rcvbuf assignment =
-
-(with lock held) in mptcp_rcv_space_adjust() or other subflows =
-
-concurrently calling mptcp_data_ready?
-
-> +		sk_rbuf =3D ssk_rbuf;
-> +	}
-> +
-> +	/* over limit? can't append more skbs to msk */
-> +	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
-> 		goto wake;
+> Previously it was not possible to make a distinction between plain TCP
+> sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
 >
-> -	/* don't schedule if mptcp sk is (still) over limit */
-> -	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
-> +	if (move_skbs_to_msk(msk, ssk))
-> 		goto wake;
+> This patch series now enables a fine control of subflow sockets. In its
+> current state, it allows to put different sockopt on each subflow from a
+> same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
+> BPF programs.
 >
-> 	/* mptcp socket is owned, release_cb should retry */
+> It should also be the basis of exposing MPTCP-specific fields through BPF.
+>
+> v1 -> v2:
+> - update cgroup attachment code in net/mptcp/subflow.c due to additional =
+#ifdef
+> - revert MPTCP private structure moving in public API (previous patch 3)
+> - move new BPF helper implementation in net/mptcp/bpf.c
+> - add bpf.c in Makefile of net/mptcp
+> - minor cosmetic changes: alignment of function's arguments on open
+> 	parenthesis
+>
+> Nicolas Rybowski (3):
+>  bpf: expose is_mptcp flag to bpf_tcp_sock
+>  mptcp: attach subflow socket to parent cgroup
+>  bpf: add 'bpf_mptcp_sock' structure and helper
+>
+> include/linux/bpf.h            | 33 ++++++++++++++++
+> include/uapi/linux/bpf.h       | 14 +++++++
+> kernel/bpf/verifier.c          | 30 ++++++++++++++
+> net/core/filter.c              | 13 +++++-
+> net/mptcp/Makefile             |  2 +
+> net/mptcp/bpf.c                | 72 ++++++++++++++++++++++++++++++++++
+> net/mptcp/subflow.c            | 27 +++++++++++++
+> scripts/bpf_helpers_doc.py     |  2 +
+> tools/include/uapi/linux/bpf.h | 14 +++++++
+> 9 files changed, 206 insertions(+), 1 deletion(-)
+> create mode 100644 net/mptcp/bpf.c
+>
 > -- =
 
-> 2.26.2
+> 2.28.0
+
+Hi Nicolas -
+
+Thanks for the bpf changes. Looks good to me - from what I compared to the =
+
+tcp sock bpf code I didn't catch any problems.
 
 --
 Mat Martineau
 Intel
---===============2433342712523305361==--
+--===============7816248751826334987==--
