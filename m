@@ -1,119 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============3208435918839931765=="
+Content-Type: multipart/mixed; boundary="===============1151122641405621868=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2] mptcp: adjust mptcp receive buffer
- limit if subflow has larger one
-Date: Mon, 17 Aug 2020 02:55:24 +0200
-Message-ID: <20200817005524.16344-1-fw@strlen.de>
+Subject: [MPTCP] Re: [PATCH mptcp-next v2 0/3] bpf: add MPTCP subflow support
+Date: Mon, 17 Aug 2020 10:49:23 +0200
+Message-ID: <058df5ab-0027-77cf-579e-2f3a4403b81f@tessares.net>
+In-Reply-To: alpine.OSX.2.23.453.2008141308520.20141@cakenne1-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5564
+X-UID: 5566
 
---===============3208435918839931765==
+--===============1151122641405621868==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In addition to tcp autotuning during read, it may also increase the
-receive buffer in tcp_clamp_window().
+Hi Nicolas, Mat,
 
-In this case, mptcp should adjust its receive buffer size as well so
-it can pull all pending skbs at once.
+On 14/08/2020 22:14, Mat Martineau wrote:
+> =
 
-At this time, when TCP grows its receive buffer, it may have more
-skbs ready for processing than what mptcp allows.
+> On Tue, 11 Aug 2020, Nicolas Rybowski wrote:
+> =
 
-In the mptcp case, the receive window is derived from free
-space of the mptcp parent socket instead of the individual subflows.
-Following the subflow allows mptcp to grow its receive buffer.
+>> Previously it was not possible to make a distinction between plain TCP
+>> sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
+>>
+>> This patch series now enables a fine control of subflow sockets. In its
+>> current state, it allows to put different sockopt on each subflow from a
+>> same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
+>> BPF programs.
+>>
+>> It should also be the basis of exposing MPTCP-specific fields through =
 
-This is especially noticeable for loopback traffic, when even two
-skbs are enough to fill the initial receive window.
+>> BPF.
+>>
+>> v1 -> v2:
+>> - update cgroup attachment code in net/mptcp/subflow.c due to =
 
-In mptcp_data_ready() we do not hold the mptcp socket lock, so
-modification of sk_rcvbuf is racy.  Do it when moving skbs from subflow
-to mptcp socket, both sockets are locked in this case.
+>> additional #ifdef
+>> - revert MPTCP private structure moving in public API (previous patch 3)
+>> - move new BPF helper implementation in net/mptcp/bpf.c
+>> - add bpf.c in Makefile of net/mptcp
+>> - minor cosmetic changes: alignment of function's arguments on open
+>> =C2=A0=C2=A0=C2=A0=C2=A0parenthesis
+>>
+>> Nicolas Rybowski (3):
+>> =C2=A0bpf: expose is_mptcp flag to bpf_tcp_sock
+>> =C2=A0mptcp: attach subflow socket to parent cgroup
+>> =C2=A0bpf: add 'bpf_mptcp_sock' structure and helper
+>>
+>> include/linux/bpf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 33 ++++++++++++++++
+>> include/uapi/linux/bpf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 14 +++++++
+>> kernel/bpf/verifier.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 30 ++++++++++++++
+>> net/core/filter.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 13 +++++-
+>> net/mptcp/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +
+>> net/mptcp/bpf.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 72 ++++++++++++++++++++++++++++++++++
+>> net/mptcp/subflow.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 27 +++++++++++++
+>> scripts/bpf_helpers_doc.py=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +
+>> tools/include/uapi/linux/bpf.h | 14 +++++++
+>> 9 files changed, 206 insertions(+), 1 deletion(-)
+>> create mode 100644 net/mptcp/bpf.c
+>>
+>> -- =
 
-v2: move rcvbuf update to __mptcp_move_skbs_from_subflow where both
-mptcp and subflow sk locks are held (pointed out by Mat).
+>> 2.28.0
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+> Hi Nicolas -
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 77d655b0650c..ecf93d0bec14 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -454,10 +454,17 @@ static bool __mptcp_move_skbs_from_subflow(struct mpt=
-cp_sock *msk,
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
- 	struct sock *sk =3D (struct sock *)msk;
- 	unsigned int moved =3D 0;
-+	int sk_rbuf, ssk_rbuf;
- 	bool more_data_avail;
- 	struct tcp_sock *tp;
- 	bool done =3D false;
- =
+> Thanks for the bpf changes. Looks good to me - from what I compared to =
 
-+	ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
-+	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
-+
-+	if (unlikely(ssk_rbuf > sk_rbuf))
-+		WRITE_ONCE(sk->sk_rcvbuf, ssk_rbuf);
-+
- 	pr_debug("msk=3D%p ssk=3D%p", msk, ssk);
- 	tp =3D tcp_sk(ssk);
- 	do {
-@@ -511,7 +518,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp=
-_sock *msk,
- 		WRITE_ONCE(tp->copied_seq, seq);
- 		more_data_avail =3D mptcp_subflow_data_available(ssk);
- =
+> the tcp sock bpf code I didn't catch any problems.
 
--		if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf)) {
-+		if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf) {
- 			done =3D true;
- 			break;
- 		}
-@@ -603,6 +610,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	int sk_rbuf, ssk_rbuf;
- 	bool wake;
- =
+Thank you for the patches and the reviews!
 
- 	/* move_skbs_to_msk below can legitly clear the data_avail flag,
-@@ -613,12 +621,16 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
-sk)
- 	if (wake)
- 		set_bit(MPTCP_DATA_READY, &msk->flags);
- =
+I just added these patches in the export branch with Mat's Acked-by =
 
--	if (atomic_read(&sk->sk_rmem_alloc) < READ_ONCE(sk->sk_rcvbuf) &&
--	    move_skbs_to_msk(msk, ssk))
-+	ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
-+	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
-+	if (unlikely(ssk_rbuf > sk_rbuf))
-+		sk_rbuf =3D ssk_rbuf;
-+
-+	/* over limit? can't append more skbs to msk */
-+	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
- 		goto wake;
- =
+(patch 1/3 & 3/3) and Reviewed-by (patch 2/3) tags.
 
--	/* don't schedule if mptcp sk is (still) over limit */
--	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
-+	if (move_skbs_to_msk(msk, ssk))
- 		goto wake;
- =
-
- 	/* mptcp socket is owned, release_cb should retry */
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============3208435918839931765==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============1151122641405621868==--
