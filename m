@@ -1,95 +1,197 @@
-Content-Type: multipart/mixed; boundary="===============1151122641405621868=="
+Content-Type: multipart/mixed; boundary="===============3576602065252379769=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2 0/3] bpf: add MPTCP subflow support
-Date: Mon, 17 Aug 2020 10:49:23 +0200
-Message-ID: <058df5ab-0027-77cf-579e-2f3a4403b81f@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2008141308520.20141@cakenne1-mobl1.amr.corp.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 1/3] mptcp: send out ADD_ADDR
+ with echo flag
+Date: Mon, 17 Aug 2020 17:15:15 -0700
+Message-ID: <alpine.OSX.2.23.453.2008171657570.12394@saborios-mobl3.amr.corp.intel.com>
+In-Reply-To: cd5710fa6a69615b69af947f4809d2f0cb03ad3f.1597316052.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5566
+X-UID: 5568
 
---===============1151122641405621868==
+--===============3576602065252379769==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Nicolas, Mat,
 
-On 14/08/2020 22:14, Mat Martineau wrote:
-> =
+Hi Geilang,
 
-> On Tue, 11 Aug 2020, Nicolas Rybowski wrote:
-> =
+Thanks for the patch. Some comments below.
 
->> Previously it was not possible to make a distinction between plain TCP
->> sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
->>
->> This patch series now enables a fine control of subflow sockets. In its
->> current state, it allows to put different sockopt on each subflow from a
->> same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
->> BPF programs.
->>
->> It should also be the basis of exposing MPTCP-specific fields through =
+On Thu, 13 Aug 2020, Geliang Tang wrote:
 
->> BPF.
->>
->> v1 -> v2:
->> - update cgroup attachment code in net/mptcp/subflow.c due to =
+> When the ADD_ADDR suboption has been received, we need to send out the sa=
+me
+> ADD_ADDR suboption with echo-flag=3D1, and no HMAC.
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/options.c    | 30 +++++++++++++++++++-----------
+> net/mptcp/pm.c         |  1 +
+> net/mptcp/pm_netlink.c |  1 +
+> net/mptcp/protocol.h   |  1 +
+> 4 files changed, 22 insertions(+), 11 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index a5ecf004a152..6aa9a48322d7 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -243,7 +243,7 @@ static void mptcp_parse_option(const struct sk_buff *=
+skb,
+> 		mp_opt->add_addr =3D 1;
+> 		mp_opt->port =3D 0;
+> 		mp_opt->addr_id =3D *ptr++;
+> -		pr_debug("ADD_ADDR: id=3D%d", mp_opt->addr_id);
+> +		pr_debug("ADD_ADDR: id=3D%d, echo=3D%d", mp_opt->addr_id, mp_opt->echo=
+);
+> 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+> 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
+> 			ptr +=3D 4;
+> @@ -580,6 +580,7 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk,
+> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> 	struct mptcp_addr_info saddr;
+> +	bool echo =3D READ_ONCE(msk->pm.add_addr_echo);
 
->> additional #ifdef
->> - revert MPTCP private structure moving in public API (previous patch 3)
->> - move new BPF helper implementation in net/mptcp/bpf.c
->> - add bpf.c in Makefile of net/mptcp
->> - minor cosmetic changes: alignment of function's arguments on open
->> =C2=A0=C2=A0=C2=A0=C2=A0parenthesis
->>
->> Nicolas Rybowski (3):
->> =C2=A0bpf: expose is_mptcp flag to bpf_tcp_sock
->> =C2=A0mptcp: attach subflow socket to parent cgroup
->> =C2=A0bpf: add 'bpf_mptcp_sock' structure and helper
->>
->> include/linux/bpf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 33 ++++++++++++++++
->> include/uapi/linux/bpf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 14 +++++++
->> kernel/bpf/verifier.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 30 ++++++++++++++
->> net/core/filter.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 13 +++++-
->> net/mptcp/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +
->> net/mptcp/bpf.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 72 ++++++++++++++++++++++++++++++++++
->> net/mptcp/subflow.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 27 +++++++++++++
->> scripts/bpf_helpers_doc.py=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +
->> tools/include/uapi/linux/bpf.h | 14 +++++++
->> 9 files changed, 206 insertions(+), 1 deletion(-)
->> create mode 100644 net/mptcp/bpf.c
->>
->> -- =
+I think it's important to access msk->pm.add_addr_echo and =
 
->> 2.28.0
-> =
+msk->pm_msk->pm.add_addr_signal in a way that makes sure the values have =
 
-> Hi Nicolas -
-> =
+not been updated separately, so we can guarantee there is not a race =
 
-> Thanks for the bpf changes. Looks good to me - from what I compared to =
+condition where the 'echo' bit gets read before a parallel thread modifies =
 
-> the tcp sock bpf code I didn't catch any problems.
+it along with other add_addr information. Might be easier to coordinate =
 
-Thank you for the patches and the reviews!
+these accesses inside mptcp_pm_add_addr_signal() - that function could =
 
-I just added these patches in the export branch with Mat's Acked-by =
+also have an output parameter for the echo bit.
 
-(patch 1/3 & 3/3) and Reviewed-by (patch 2/3) tags.
+> 	int len;
+>
+> 	if (!mptcp_pm_should_add_signal(msk) ||
+> @@ -595,22 +596,26 @@ static bool mptcp_established_options_add_addr(stru=
+ct sock *sk,
+> 	if (saddr.family =3D=3D AF_INET) {
+> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+> 		opts->addr =3D saddr.addr;
+> -		opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
+> -						     msk->remote_key,
+> -						     opts->addr_id,
+> -						     &opts->addr);
+> +		if (!echo) {
+> +			opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
+> +							     msk->remote_key,
+> +							     opts->addr_id,
+> +							     &opts->addr);
+> +		}
+> 	}
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> 	else if (saddr.family =3D=3D AF_INET6) {
+> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
+> 		opts->addr6 =3D saddr.addr6;
+> -		opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
+> -						      msk->remote_key,
+> -						      opts->addr_id,
+> -						      &opts->addr6);
+> +		if (!echo) {
+> +			opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
+> +							      msk->remote_key,
+> +							      opts->addr_id,
+> +							      &opts->addr6);
+> +		}
+> 	}
+> #endif
+> -	pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
+> +	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->=
+ahmac, echo);
+>
+> 	return true;
+> }
+> @@ -884,8 +889,11 @@ void mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb,
+> 			addr.addr6 =3D mp_opt.addr6;
+> 		}
+> #endif
+> -		if (!mp_opt.echo)
+> +		if (!mp_opt.echo) {
+> +			WRITE_ONCE(msk->pm.add_addr_echo, true);
+> +			mptcp_pm_announce_addr(msk, &addr);
+> 			mptcp_pm_add_addr_received(msk, &addr);
+> +		}
+> 		mp_opt.add_addr =3D 0;
+> 	}
 
-Cheers,
-Matt
--- =
+I think the echo should not happen this early. mptcp_pm_add_add_received() =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============1151122641405621868==--
+might return without doing anything with the address, and in that case the =
+
+echo should not be sent. For a user space path manager, the echo might be =
+
+delayed for a while. Instead the path manager should be responsible for =
+
+requesting the echo when the address has been fully accepted and =
+
+processed. This would also allow writing msk->pm.add_addr_echo with the =
+
+appropriate lock held, so there would not be conflicts between outgoing =
+
+ADD_ADDRs and echoes.
+
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index b3712771f268..c66cbc53cbed 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -230,6 +230,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+> 	WRITE_ONCE(msk->pm.rm_addr_signal, false);
+> 	WRITE_ONCE(msk->pm.accept_addr, false);
+> 	WRITE_ONCE(msk->pm.accept_subflow, false);
+> +	WRITE_ONCE(msk->pm.add_addr_echo, false);
+> 	msk->pm.status =3D 0;
+>
+> 	spin_lock_init(&msk->pm.lock);
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 8d29eae2a0c1..d670a7e02731 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -203,6 +203,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+> 			struct mptcp_pm_addr_entry *clone =3D NULL;
+>
+> 			msk->pm.add_addr_signaled++;
+> +			WRITE_ONCE(msk->pm.add_addr_echo, false);
+> 			mptcp_pm_announce_addr(msk, &local->addr);
+
+I suggest adding a parameter to mptcp_pm_announce_addr() for the echo bit, =
+
+and setting msk->pm.add_addr_echo inside that function.
+
+>
+> 			clone =3D kmemdup(local, sizeof(*local), GFP_ATOMIC);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index ceca1ddea9f8..c4bc0d8f0995 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -169,6 +169,7 @@ struct mptcp_pm_data {
+> 	bool		work_pending;
+> 	bool		accept_addr;
+> 	bool		accept_subflow;
+> +	bool		add_addr_echo;
+> 	u8		add_addr_signaled;
+> 	u8		add_addr_accepted;
+> 	u8		local_addr_used;
+> -- =
+
+> 2.17.1
+
+Best regards,
+
+--
+Mat Martineau
+Intel
+--===============3576602065252379769==--
