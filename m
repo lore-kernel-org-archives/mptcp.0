@@ -1,161 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============7732744487788937975=="
+Content-Type: multipart/mixed; boundary="===============2465406563307562105=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v4 mptcp-next 3/3] selftests: mptcp: add
- ADD_ADDR mibs check function
-Date: Wed, 19 Aug 2020 14:52:18 +0800
-Message-ID: <2f03ce324fe223d107dad671084b22fdf12152cc.1597819482.git.geliangtang@gmail.com>
-In-Reply-To: cover.1597819482.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v2] mptcp: adjust mptcp receive buffer
+ limit if subflow has larger one
+Date: Wed, 19 Aug 2020 10:49:02 +0200
+Message-ID: <20200819084902.GG15804@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.23.453.2008171736170.12394@saborios-mobl3.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5580
+X-UID: 5581
 
---===============7732744487788937975==
+--===============2465406563307562105==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the ADD_ADDR related mibs counter check function
-chk_add_nr(). This function check both ADD_ADDR and ADD_ADDR with
-echo flag.
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> > In mptcp_data_ready() we do not hold the mptcp socket lock, so
+> > modification of sk_rcvbuf is racy.  Do it when moving skbs from subflow
+> > to mptcp socket, both sockets are locked in this case.
+> > =
 
-The output looks like this:
+> > v2: move rcvbuf update to __mptcp_move_skbs_from_subflow where both
+> > mptcp and subflow sk locks are held (pointed out by Mat).
+> > =
 
- 07 unused signal address             syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 08 signal address                    syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 09 subflow and signal                syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 10 multiple subflows and signal      syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 11 remove subflow and signal         syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
+> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > ---
+> > net/mptcp/protocol.c | 22 +++++++++++++++++-----
+> > 1 file changed, 17 insertions(+), 5 deletions(-)
+> > =
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 77d655b0650c..ecf93d0bec14 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -454,10 +454,17 @@ static bool __mptcp_move_skbs_from_subflow(struct=
+ mptcp_sock *msk,
+> > 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> > 	struct sock *sk =3D (struct sock *)msk;
+> > 	unsigned int moved =3D 0;
+> > +	int sk_rbuf, ssk_rbuf;
+> > 	bool more_data_avail;
+> > 	struct tcp_sock *tp;
+> > 	bool done =3D false;
+> > =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index f39c1129ce5f..58fab4cf150d 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -276,6 +276,43 @@ chk_join_nr()
- 	fi
- }
- =
+> > +	ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
+> > +	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
+> > +
+> > +	if (unlikely(ssk_rbuf > sk_rbuf))
+> > +		WRITE_ONCE(sk->sk_rcvbuf, ssk_rbuf);
+> > +
+> =
 
-+chk_add_nr()
-+{
-+	local add_nr=3D$1
-+	local echo_nr=3D$2
-+	local count
-+	local dump_stats
-+
-+	printf "%-39s %s" " " "add"
-+	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtAddAddr | awk '{prin=
-t $2}'`
-+	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$add_nr" ]; then
-+		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
-+		ret=3D1
-+		dump_stats=3D1
-+	else
-+		echo -n "[ ok ]"
-+	fi
-+
-+	echo -n " - echo  "
-+	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtEchoAdd | awk '{prin=
-t $2}'`
-+	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$echo_nr" ]; then
-+		echo "[fail] got $count ADD_ADDR echo[s] expected $echo_nr"
-+		ret=3D1
-+		dump_stats=3D1
-+	else
-+		echo "[ ok ]"
-+	fi
-+
-+	if [ "${dump_stats}" =3D 1 ]; then
-+		echo Server ns stats
-+		ip netns exec $ns1 nstat -as | grep MPTcp
-+		echo Client ns stats
-+		ip netns exec $ns2 nstat -as | grep MPTcp
-+	fi
-+}
-+
- sin=3D$(mktemp)
- sout=3D$(mktemp)
- cin=3D$(mktemp)
-@@ -332,6 +369,7 @@ reset
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "unused signal address" 0 0 0
-+chk_add_nr 0 0
- =
+> The v2 changes do address my concerns with v1, but now I'm looking at how
+> this change interacts with mptcp_rcv_space_adjust() and it's not obvious
+> what all the consequences are. Is ssk_rbuf always in a valid range for the
+> msk,
 
- # accept and use add_addr
- reset
-@@ -340,6 +378,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "signal address" 1 1 1
-+chk_add_nr 1 1
- =
+What is the 'valid range'?  TCP caps ssk_rcvbuf at rmem[2] sysctl.
 
- # accept and use add_addr with an additional subflow
- # note: signal address in server ns and local addresses in client ns must
-@@ -352,6 +391,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "subflow and signal" 2 2 2
-+chk_add_nr 1 1
- =
+> and is it ok if that is propagated to msk->sk_rcvbuf and changes the
+> way other ssk->sk_rcvbuf values are updated in mptcp_rcv_space_adjust()?
 
- # accept and use add_addr with additional subflows
- reset
-@@ -362,6 +402,7 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subfl=
-ow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "multiple subflows and signal" 3 3 3
-+chk_add_nr 1 1
- =
+Hmm, the values should be kept in-sync.
 
- # single subflow, syncookies
- reset_with_cookies
-@@ -396,6 +437,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "signal address with syn cookies" 1 1 1
-+chk_add_nr 1 1
- =
+If msk->sk_rcvbuf is large (e.g. increased via msk autotune) and we
+don't make the subflow rcvbuf setting follow along (this is what we do
+ATM), then subflow will drop packets on the floor if we can't drain fast
+enough.
 
- # test cookie with subflow and signal
- reset_with_cookies
-@@ -405,6 +447,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "subflow and signal w cookies" 2 2 2
-+chk_add_nr 1 1
- =
+If TCP has increased the subflow sk_rcvbuf via clamp_window() path and we
+don't update the msk (which is what this patch changes), then we may
+end up not moving all pending skbs to the mptcp socket because TCP
+queued up more than what the mptcp rcvbuf limit allows.
 
- # accept and use add_addr with additional subflows
- reset_with_cookies
-@@ -415,5 +458,6 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subfl=
-ow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "subflows and signal w. cookies" 3 3 3
-+chk_add_nr 1 1
- =
+That seems quite stupid to me -- data is already here, why have a delay?
+Making this change gets rid of excess delays in the "lo" test cases for
+me.
 
- exit $ret
--- =
+> Also what about checking (sk->sk_userlocks & SOCK_RCVBUF_LOCK)?
 
-2.17.1
+Agreed, that should be added.
 
---===============7732744487788937975==--
+I can send a v3, let me know.
+--===============2465406563307562105==--
