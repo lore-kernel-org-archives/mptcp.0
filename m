@@ -1,109 +1,256 @@
-Content-Type: multipart/mixed; boundary="===============5005568879568518921=="
+Content-Type: multipart/mixed; boundary="===============8331909469941197938=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2] mptcp: adjust mptcp receive buffer
- limit if subflow has larger one
-Date: Wed, 19 Aug 2020 16:11:22 -0700
-Message-ID: <alpine.OSX.2.23.453.2008191506540.40894@jaustin-mobl.amr.corp.intel.com>
-In-Reply-To: 20200819084902.GG15804@breakpoint.cc
+Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 1/3] mptcp: send out ADD_ADDR
+ with echo flag
+Date: Wed, 19 Aug 2020 17:00:09 -0700
+Message-ID: <alpine.OSX.2.23.453.2008191638470.40894@jaustin-mobl.amr.corp.intel.com>
+In-Reply-To: 2f6e1a093f5f3f5ae294a0f7cad2ab8e1b266feb.1597819482.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5582
+X-UID: 5583
 
---===============5005568879568518921==
+--===============8331909469941197938==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 19 Aug 2020, Florian Westphal wrote:
+On Wed, 19 Aug 2020, Geliang Tang wrote:
 
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
->>> In mptcp_data_ready() we do not hold the mptcp socket lock, so
->>> modification of sk_rcvbuf is racy.  Do it when moving skbs from subflow
->>> to mptcp socket, both sockets are locked in this case.
->>>
->>> v2: move rcvbuf update to __mptcp_move_skbs_from_subflow where both
->>> mptcp and subflow sk locks are held (pointed out by Mat).
->>>
->>> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->>> ---
->>> net/mptcp/protocol.c | 22 +++++++++++++++++-----
->>> 1 file changed, 17 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 77d655b0650c..ecf93d0bec14 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -454,10 +454,17 @@ static bool __mptcp_move_skbs_from_subflow(struct=
- mptcp_sock *msk,
->>> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
->>> 	struct sock *sk =3D (struct sock *)msk;
->>> 	unsigned int moved =3D 0;
->>> +	int sk_rbuf, ssk_rbuf;
->>> 	bool more_data_avail;
->>> 	struct tcp_sock *tp;
->>> 	bool done =3D false;
->>>
->>> +	ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
->>> +	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
->>> +
->>> +	if (unlikely(ssk_rbuf > sk_rbuf))
->>> +		WRITE_ONCE(sk->sk_rcvbuf, ssk_rbuf);
->>> +
->>
->> The v2 changes do address my concerns with v1, but now I'm looking at how
->> this change interacts with mptcp_rcv_space_adjust() and it's not obvious
->> what all the consequences are. Is ssk_rbuf always in a valid range for t=
-he
->> msk,
+> When the ADD_ADDR suboption has been received, we need to send out the sa=
+me
+> ADD_ADDR suboption with echo-flag=3D1, and no HMAC.
 >
-> What is the 'valid range'?  TCP caps ssk_rcvbuf at rmem[2] sysctl.
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/options.c    | 34 ++++++++++++++++++++++------------
+> net/mptcp/pm.c         | 13 +++++++++----
+> net/mptcp/pm_netlink.c |  2 +-
+> net/mptcp/protocol.h   |  8 +++++---
+> 4 files changed, 37 insertions(+), 20 deletions(-)
 >
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index a52a05effac9..f91238ff3200 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -242,7 +242,7 @@ static void mptcp_parse_option(const struct sk_buff *=
+skb,
+> 		mp_opt->add_addr =3D 1;
+> 		mp_opt->port =3D 0;
+> 		mp_opt->addr_id =3D *ptr++;
+> -		pr_debug("ADD_ADDR: id=3D%d", mp_opt->addr_id);
+> +		pr_debug("ADD_ADDR: id=3D%d, echo=3D%d", mp_opt->addr_id, mp_opt->echo=
+);
+> 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+> 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
+> 			ptr +=3D 4;
+> @@ -579,6 +579,7 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk,
+> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> 	struct mptcp_addr_info saddr;
+> +	bool echo =3D READ_ONCE(msk->pm.add_addr_echo);
 
-Ok, when I asked the question I was thinking the msk rcvbuf calculation =
+Still think that msk->pm.add_addr_echo should be accessed inside =
 
-differed more significantly from the TCP code, but as you point out they =
+mptcp_pm_add_addr_signal(), so it is read with the pm lock held. Do it =
 
-use the same sysctl limitation.
+right before or after the "*saddr =3D msk->pm.local;" line in =
 
->> and is it ok if that is propagated to msk->sk_rcvbuf and changes the
->> way other ssk->sk_rcvbuf values are updated in mptcp_rcv_space_adjust()?
+mptcp_pm_add_addr_signal().
+
+> 	int len;
 >
-> Hmm, the values should be kept in-sync.
+> 	if (!mptcp_pm_should_add_signal(msk) ||
+> @@ -594,22 +595,26 @@ static bool mptcp_established_options_add_addr(stru=
+ct sock *sk,
+> 	if (saddr.family =3D=3D AF_INET) {
+> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+> 		opts->addr =3D saddr.addr;
+> -		opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
+> -						     msk->remote_key,
+> -						     opts->addr_id,
+> -						     &opts->addr);
+> +		if (!echo) {
+> +			opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
+> +							     msk->remote_key,
+> +							     opts->addr_id,
+> +							     &opts->addr);
+> +		}
+> 	}
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> 	else if (saddr.family =3D=3D AF_INET6) {
+> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
+> 		opts->addr6 =3D saddr.addr6;
+> -		opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
+> -						      msk->remote_key,
+> -						      opts->addr_id,
+> -						      &opts->addr6);
+> +		if (!echo) {
+> +			opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
+> +							      msk->remote_key,
+> +							      opts->addr_id,
+> +							      &opts->addr6);
+> +		}
+> 	}
+> #endif
+> -	pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
+> +	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->=
+ahmac, echo);
 >
-> If msk->sk_rcvbuf is large (e.g. increased via msk autotune) and we
-> don't make the subflow rcvbuf setting follow along (this is what we do
-> ATM), then subflow will drop packets on the floor if we can't drain fast
-> enough.
+> 	return true;
+> }
+> @@ -883,8 +888,13 @@ void mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb,
+> 			addr.addr6 =3D mp_opt.addr6;
+> 		}
+> #endif
+> -		if (!mp_opt.echo)
+> -			mptcp_pm_add_addr_received(msk, &addr);
+> +		if (!mp_opt.echo) {
+> +			if (!mptcp_pm_add_addr_received(msk, &addr)) {
+> +				spin_lock_bh(&msk->pm.lock);
+> +				mptcp_pm_announce_addr(msk, &addr, true);
+
+Call this from mptcp_pm_nl_add_addr_received(), since that is the point =
+
+where the ADD_ADDR has been fully processed.
+
+Some other changes in mptcp_pm_add_addr_received() are needed if the call =
+
+to mptcp_pm_announce_addr() is moved. If pm->accept_addr is false in =
+
+mptcp_pm_add_addr_received(), then the pm worker is not scheduled and =
+
+mptcp_pm_nl_add_addr_received() won't run. The ADD_ADDR should probably =
+
+still be echoed so the peer doesn't keep sending it. I suggest removing =
+
+the first check of pm->accept_addr (the one without the lock held) in =
+
+mptcp_pm_add_addr_received(), and then call mptcp_pm_announce_addr() to =
+
+send the echo there in the !pm->accept_addr case.
+
+
+Mat
+
+
+> +				spin_unlock_bh(&msk->pm.lock);
+> +			}
+> +		}
+> 		mp_opt.add_addr =3D 0;
+> 	}
 >
-> If TCP has increased the subflow sk_rcvbuf via clamp_window() path and we
-> don't update the msk (which is what this patch changes), then we may
-> end up not moving all pending skbs to the mptcp socket because TCP
-> queued up more than what the mptcp rcvbuf limit allows.
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 558462d87eb3..27662d795b9a 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -13,11 +13,13 @@
+> /* path manager command handlers */
 >
-> That seems quite stupid to me -- data is already here, why have a delay?
-> Making this change gets rid of excess delays in the "lo" test cases for
-> me.
+> int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+> -			   const struct mptcp_addr_info *addr)
+> +			   const struct mptcp_addr_info *addr,
+> +			   bool echo)
+> {
+> 	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
 >
-
-I was misunderstanding the autotuning process at the msk level before. =
-
-Thanks for explaining more of the details, it does seems ok to propagate =
-
-the subflow sk_rcvbuf value up to the msk to avoid needlessly discarding =
-
-good data.
-
->> Also what about checking (sk->sk_userlocks & SOCK_RCVBUF_LOCK)?
+> 	msk->pm.local =3D *addr;
+> +	WRITE_ONCE(msk->pm.add_addr_echo, echo);
+> 	WRITE_ONCE(msk->pm.add_addr_signal, true);
+> 	return 0;
+> }
+> @@ -127,8 +129,8 @@ void mptcp_pm_subflow_closed(struct mptcp_sock *msk, =
+u8 id)
+> 	pr_debug("msk=3D%p", msk);
+> }
 >
-> Agreed, that should be added.
+> -void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+> -				const struct mptcp_addr_info *addr)
+> +int mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+> +			       const struct mptcp_addr_info *addr)
+> {
+> 	struct mptcp_pm_data *pm =3D &msk->pm;
 >
-> I can send a v3, let me know.
+> @@ -137,7 +139,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
+k,
+>
+> 	/* avoid acquiring the lock if there is no room for fouther addresses */
+> 	if (!READ_ONCE(pm->accept_addr))
+> -		return;
+> +		return -EINVAL;
+>
+> 	spin_lock_bh(&pm->lock);
+>
+> @@ -147,6 +149,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
+k,
+> 		pm->remote =3D *addr;
+>
+> 	spin_unlock_bh(&pm->lock);
+> +
+> +	return 0;
+> }
+>
+> void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id)
+> @@ -226,6 +230,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+> 	WRITE_ONCE(msk->pm.rm_addr_signal, false);
+> 	WRITE_ONCE(msk->pm.accept_addr, false);
+> 	WRITE_ONCE(msk->pm.accept_subflow, false);
+> +	WRITE_ONCE(msk->pm.add_addr_echo, false);
+> 	msk->pm.status =3D 0;
+>
+> 	spin_lock_init(&msk->pm.lock);
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index ad7232a1d9f1..d3e57573c307 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -188,7 +188,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+>
+> 		if (local) {
+> 			msk->pm.add_addr_signaled++;
+> -			mptcp_pm_announce_addr(msk, &local->addr);
+> +			mptcp_pm_announce_addr(msk, &local->addr, false);
+> 		} else {
+> 			/* pick failed, avoid fourther attempts later */
+> 			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 4b8a5308aeed..4a73d0526f06 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -169,6 +169,7 @@ struct mptcp_pm_data {
+> 	bool		work_pending;
+> 	bool		accept_addr;
+> 	bool		accept_subflow;
+> +	bool		add_addr_echo;
+> 	u8		add_addr_signaled;
+> 	u8		add_addr_accepted;
+> 	u8		local_addr_used;
+> @@ -438,12 +439,13 @@ void mptcp_pm_connection_closed(struct mptcp_sock *=
+msk);
+> void mptcp_pm_subflow_established(struct mptcp_sock *msk,
+> 				  struct mptcp_subflow_context *subflow);
+> void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
+> -void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+> -				const struct mptcp_addr_info *addr);
+> +int mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+> +			       const struct mptcp_addr_info *addr);
+> void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
+>
+> int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+> -			   const struct mptcp_addr_info *addr);
+> +			   const struct mptcp_addr_info *addr,
+> +			   bool echo);
+> int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
+> int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
+>
+> -- =
 
-Yes, please do.
+> 2.17.1
 
 --
 Mat Martineau
 Intel
---===============5005568879568518921==--
+--===============8331909469941197938==--
