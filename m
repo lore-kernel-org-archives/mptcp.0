@@ -1,83 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============6865556114802742795=="
+Content-Type: multipart/mixed; boundary="===============1041287654343822001=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v7 mptcp-next 3/5] selftests: mptcp: drop
- first flag in do_rnd_write
-Date: Thu, 20 Aug 2020 20:59:12 -0700
-Message-ID: <alpine.OSX.2.23.453.2008202051190.59053@mjmartin-mac01.local>
-In-Reply-To: 561b16421ac47d37e8bb8fd302682d85648233d7.1597314634.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH mptcp-next] mptcp: only wake parent if subflow is
+ writable
+Date: Fri, 21 Aug 2020 15:28:56 +0200
+Message-ID: <20200821132856.867-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 5588
+X-UID: 5590
 
---===============6865556114802742795==
+--===============1041287654343822001==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+mptcp_connect.sh -d 10 -l 0 -r 0 -e "" -f $((100 * 1024 * 1024)) -m poll
 
-On Thu, 13 Aug 2020, Geliang Tang wrote:
+will result in frequent write errors:
+ns1 MPTCP -> ns3 (10.0.2.2:10010      ) MPTCP   write: Resource temporarily=
+ unavailable
 
-> This patch dropped the flag "first" in do_rnd_write to make RM_ADDR test
-> case work. Since we need to slow down not only the transfer process of
-> the first 100 bytes, but also all the transfer process of all data to let
-> the RM_ADDR suboption can be sent and received completely.
+We promised write() would not block but then no subflow was ready
+to accept more data.
 
-It would be better to only slow down the RM_ADDR test. Maybe add a command =
+Changing the 'free' check to 'writeable' (which checks the available
+space is above min thresh) makes those errors go away.
 
-line parameter that sets a global cfg_join_slow or something?
+Note that there are still poll timeouts:
+ns1 MPTCP -> ns2 (10.0.1.2:10006      ) MPTCP   copyfd_io_poll: poll timed =
+out (events: POLLIN 1, POLLOUT 0)
+copyfd_io_poll: poll timed out (events: POLLIN 0, POLLOUT 4)
 
-Mat
+This appears unrelated, they also appear without this change.
 
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_connect.c | 7 ++-----
-> 1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> index 090620c3e10c..e48c00fc117d 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -260,7 +260,6 @@ static int sock_connect_mptcp(const char * const remo=
-teaddr,
->
-> static size_t do_rnd_write(const int fd, char *buf, const size_t len)
-> {
-> -	static bool first =3D true;
-> 	unsigned int do_w;
-> 	ssize_t bw;
->
-> @@ -268,7 +267,7 @@ static size_t do_rnd_write(const int fd, char *buf, c=
-onst size_t len)
-> 	if (do_w =3D=3D 0 || do_w > len)
-> 		do_w =3D len;
->
-> -	if (cfg_join && first && do_w > 100)
-> +	if (cfg_join && do_w > 100)
-> 		do_w =3D 100;
->
-> 	bw =3D write(fd, buf, do_w);
-> @@ -276,10 +275,8 @@ static size_t do_rnd_write(const int fd, char *buf, =
-const size_t len)
-> 		perror("write");
->
-> 	/* let the join handshake complete, before going on */
-> -	if (cfg_join && first) {
-> +	if (cfg_join)
-> 		usleep(200000);
-> -		first =3D false;
-> -	}
->
-> 	return bw;
-> }
-> -- =
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/subflow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 82f6d2d9e39e..3585fd63c757 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -972,7 +972,7 @@ static void subflow_write_space(struct sock *sk)
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	struct sock *parent =3D subflow->conn;
+ =
 
-> 2.17.1
+-	if (!sk_stream_memory_free(sk))
++	if (!sk_stream_is_writeable(sk))
+ 		return;
+ =
 
---
-Mat Martineau
-Intel
---===============6865556114802742795==--
+ 	WRITE_ONCE(subflow->writable, true);
+-- =
+
+2.26.2
+
+--===============1041287654343822001==--
