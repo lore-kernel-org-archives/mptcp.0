@@ -1,60 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============1041287654343822001=="
+Content-Type: multipart/mixed; boundary="===============2450494179197354136=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] mptcp: only wake parent if subflow is
- writable
-Date: Fri, 21 Aug 2020 15:28:56 +0200
-Message-ID: <20200821132856.867-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next] mptcp: free acked data before waiting for
+ more memory
+Date: Fri, 21 Aug 2020 15:39:10 +0200
+Message-ID: <20200821133910.6599-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 5590
+X-UID: 5591
 
---===============1041287654343822001==
+--===============2450494179197354136==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_connect.sh -d 10 -l 0 -r 0 -e "" -f $((100 * 1024 * 1024)) -m poll
+After subflow lock is dropped, more wmem might have been made available.
 
-will result in frequent write errors:
-ns1 MPTCP -> ns3 (10.0.2.2:10010      ) MPTCP   write: Resource temporarily=
- unavailable
+This fixes a deadlock in mptcp_connect.sh 'mmap' mode: wmem is exhausted.
+But as the mptcp socket holds on to already-acked data (for retransmit)
+no wakeup will occur.
 
-We promised write() would not block but then no subflow was ready
-to accept more data.
+Using 'goto restart' calls mptcp_clean_una(sk) which will free pages
+that have been acked completely in the mean time.
 
-Changing the 'free' check to 'writeable' (which checks the available
-space is above min thresh) makes those errors go away.
-
-Note that there are still poll timeouts:
-ns1 MPTCP -> ns2 (10.0.1.2:10006      ) MPTCP   copyfd_io_poll: poll timed =
-out (events: POLLIN 1, POLLOUT 0)
-copyfd_io_poll: poll timed out (events: POLLIN 0, POLLOUT 4)
-
-This appears unrelated, they also appear without this change.
-
+Fixes: fb529e62d3f3 ("mptcp: break and restart in case mptcp sndbuf is full=
+")
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/subflow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 82f6d2d9e39e..3585fd63c757 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -972,7 +972,7 @@ static void subflow_write_space(struct sock *sk)
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct sock *parent =3D subflow->conn;
+ I suspect Paolos recent sndbuf tracking changes made this bug trigger more
+ frequently. Afaics net-next is just more lucky so it might make sense to
+ pass this via net-next.  Let me know.
+
+ net/mptcp/protocol.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index bd02c568c4b9..ad91f4588216 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1178,7 +1178,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 		goto out;
+ 	}
  =
 
--	if (!sk_stream_memory_free(sk))
-+	if (!sk_stream_is_writeable(sk))
- 		return;
- =
-
- 	WRITE_ONCE(subflow->writable, true);
+-wait_for_sndbuf:
+ 	__mptcp_flush_join_list(msk);
+ 	ssk =3D mptcp_subflow_get_send(msk, &sndbuf);
+ 	while (!sk_stream_memory_free(sk) ||
+@@ -1282,7 +1281,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 				 */
+ 				mptcp_set_timeout(sk, ssk);
+ 				release_sock(ssk);
+-				goto wait_for_sndbuf;
++				goto restart;
+ 			}
+ 		}
+ 	}
 -- =
 
 2.26.2
 
---===============1041287654343822001==--
+--===============2450494179197354136==--
