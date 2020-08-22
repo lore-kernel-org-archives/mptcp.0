@@ -1,67 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============3145907505778841433=="
+Content-Type: multipart/mixed; boundary="===============1443909742572719835=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 1/1] mptcp: fix stale
- subflow->writeable caching
-Date: Fri, 21 Aug 2020 12:10:05 -0700
-Message-ID: <alpine.OSX.2.23.453.2008211209290.9615@mjmartin-mac01.local>
-In-Reply-To: 20200821153824.27468-1-fw@strlen.de
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 0/3] add ADD_ADDR echo flag
+ support
+Date: Sun, 23 Aug 2020 00:44:20 +0800
+Message-ID: <cover.1598114251.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5596
+X-UID: 5597
 
---===============3145907505778841433==
+--===============1443909742572719835==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 21 Aug 2020, Florian Westphal wrote:
+v5: =
 
-> Even with fixed subflow_write_space(), we may still indicate EPOLLOUT
-> even if no subflow is writeable.
->
-> We need to re-check the last ssk that was used after the final tcp_push().
-> tcp_push() can allocate new skbs that get charged to the subflow sk
-> which may bring it above the wmem limit.
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> net/mptcp/protocol.c | 5 ++++-
-> 1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ad91f4588216..4dd5d35a8f39 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1239,7 +1239,7 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len)
-> 		msk->snd_burst -=3D ret;
-> 		copied +=3D ret;
->
-> -		if (!sk_stream_memory_free(ssk))
-> +		if (!sk_stream_is_writeable(ssk))
-> 			WRITE_ONCE(subflow->writable, false);
->
-> 		tx_ok =3D msg_data_left(msg);
-> @@ -1294,6 +1294,9 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len)
-> 		/* start the timer, if it's not pending */
-> 		if (!mptcp_timer_pending(sk))
-> 			mptcp_reset_timer(sk);
-> +
-> +		if (!sk_stream_is_writeable(ssk))
-> +			WRITE_ONCE(mptcp_subflow_ctx(ssk)->writable, false);
-> 	}
->
-> 	release_sock(ssk);
-> -- =
+ - move READ_ONCE(msk->pm.add_addr_echo) into mptcp_pm_add_addr_signal
+ - move mptcp_pm_announce_addr into mptcp_pm_nl_add_addr_received and
+   mptcp_pm_add_addr_received
+v4:
+ - Just updated some log messages in mptcp_join.sh
 
-> 2.26.2
+v3:
+ - move add_addr_echo into mptcp_pm_announce_addr()
+ - check return value of mptcp_pm_add_add_received
+ - hold lock for add_addr_echo writing
 
-Thanks Florian. All three patches look good to me.
+v2:
+ - add ADD_ADDR mibs
+ - add selftests for ADD_ADDR
 
---
-Mat Martineau
-Intel
---===============3145907505778841433==--
+v1:
+ - mptcp: send out ADD_ADDR with echo flag
+
+Geliang Tang (3):
+  mptcp: send out ADD_ADDR with echo flag
+  mptcp: add ADD_ADDR related mibs
+  selftests: mptcp: add ADD_ADDR mibs check function
+
+ net/mptcp/mib.c                               |  2 +
+ net/mptcp/mib.h                               |  2 +
+ net/mptcp/options.c                           | 34 +++++++++-----
+ net/mptcp/pm.c                                | 14 ++++--
+ net/mptcp/pm_netlink.c                        |  4 +-
+ net/mptcp/protocol.h                          |  6 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 44 +++++++++++++++++++
+ 7 files changed, 88 insertions(+), 18 deletions(-)
+
+-- =
+
+2.17.1
+
+--===============1443909742572719835==--
