@@ -1,139 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============2784639275299670784=="
+Content-Type: multipart/mixed; boundary="===============4670913153265245895=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v8 mptcp-next 2/8] mptcp: fix
- mptcp_pm_nl_rm_addr_received logic issue
-Date: Mon, 24 Aug 2020 19:36:15 +0800
-Message-ID: <a7939301666d05ca0dcc47b7ab0262f6311aa933.1598267961.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v8 mptcp-next 3/8] mptcp: implementing
+ mptcp_pm_remove_subflow
+Date: Mon, 24 Aug 2020 19:36:16 +0800
+Message-ID: <28b149a285e6463b0aae95188c494d843a30b22e.1598267961.git.geliangtang@gmail.com>
 In-Reply-To: cover.1598267961.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5607
+X-UID: 5608
 
---===============2784639275299670784==
+--===============4670913153265245895==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We want to use mptcp_pm_nl_rm_addr_received to deal with both removing
-an address and removing a subflow. But it not work. Here is the problem:
+Like mptcp_pm_rm_addr_received and the related functions, we implemented
+the remove subflow logic.
 
-Suppose there are three subflows,
-
-    1 local_id=3D0 remote_id=3D0
-    2 local_id=3D0 remote_id=3D1
-    3 local_id=3D1 remote_id=3D0.
-
-Here we want to remove the local subflow, the No.3 subflow, so we passed
-msk->pm.rm_id=3D1 to mptcp_pm_nl_rm_addr_received.
-
-According to this logic,
-
-               if (msk->pm.rm_id !=3D subflow->remote_id &&
-                   msk->pm.rm_id !=3D subflow->local_id)
-
-We removed the wrong subflow, the No.2 subflow.
-
-So we need to deal with removing an address and removing a subflow
-separately. We check subflow->remote_id in mptcp_pm_nl_rm_addr_received to
-remove an address and check subflow->local_id in
-mptcp_pm_nl_rm_subflow_received to remove a subflow.
+We use mptcp_pm_remove_subflow to remove a local subflow, so change it's
+argument from remote_id to local_id.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 43 +++++++++++++++++++++++++++++++++++++-----
- net/mptcp/protocol.h   |  1 +
- 2 files changed, 39 insertions(+), 5 deletions(-)
+ net/mptcp/pm.c       | 19 +++++++++++++++++--
+ net/mptcp/protocol.c |  4 ++++
+ net/mptcp/protocol.h |  4 +++-
+ 3 files changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 0b1718921cc6..b3771a188a4c 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -271,23 +271,56 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *=
-msk)
- 	if (list_empty(&msk->conn_list))
- 		return;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 57227ab816fd..5c6b087c68b8 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -31,9 +31,12 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 loca=
+l_id)
+ 	return 0;
+ }
  =
 
--	msk->pm.add_addr_accepted--;
--	msk->pm.subflows--;
--	WRITE_ONCE(msk->pm.accept_addr, true);
-+	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+		int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
-+		long timeout =3D 0;
+-int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
++int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id)
+ {
+-	return -ENOTSUPP;
++	pr_debug("%s msk=3D%p, local_id=3D%d", __func__, msk, local_id);
 +
-+		if (msk->pm.rm_id !=3D subflow->remote_id)
-+			continue;
++	mptcp_pm_rm_subflow_received(msk, local_id);
++	return 0;
+ }
+ =
+
+ /* path manager event handlers */
+@@ -165,6 +168,18 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,=
+ u8 rm_id)
+ 	spin_unlock_bh(&pm->lock);
+ }
+ =
+
++void mptcp_pm_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id)
++{
++	struct mptcp_pm_data *pm =3D &msk->pm;
 +
-+		spin_unlock_bh(&msk->pm.lock);
-+		mptcp_subflow_shutdown(sk, ssk, how);
-+		__mptcp_close_ssk(sk, ssk, subflow, timeout);
-+		spin_lock_bh(&msk->pm.lock);
++	pr_debug("msk=3D%p local_id=3D%d", msk, rm_id);
 +
-+		msk->pm.add_addr_accepted--;
-+		msk->pm.subflows--;
-+		WRITE_ONCE(msk->pm.accept_addr, true);
-+
-+		break;
-+	}
++	spin_lock_bh(&pm->lock);
++	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_SUBFLOW_RECEIVED);
++	pm->rm_id =3D rm_id;
++	spin_unlock_bh(&pm->lock);
 +}
 +
-+void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct sock *sk =3D (struct sock *)msk;
-+
-+	pr_debug("rm_id %d", msk->pm.rm_id);
-+
-+	if (!msk->pm.rm_id)
-+		return;
-+
-+	if (list_empty(&msk->conn_list))
-+		return;
+ /* path manager helpers */
  =
 
- 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
- 		int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
- 		long timeout =3D 0;
- =
-
--		if (msk->pm.rm_id !=3D subflow->remote_id &&
--		    msk->pm.rm_id !=3D subflow->local_id)
-+		if (msk->pm.rm_id !=3D subflow->local_id)
- 			continue;
- =
-
- 		spin_unlock_bh(&msk->pm.lock);
- 		mptcp_subflow_shutdown(sk, ssk, how);
- 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
- 		spin_lock_bh(&msk->pm.lock);
-+
-+		msk->pm.local_addr_used--;
-+		msk->pm.subflows--;
-+
- 		break;
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index bd02c568c4b9..e8b84a693bf6 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1695,6 +1695,10 @@ static void pm_work(struct mptcp_sock *msk)
+ 		pm->status &=3D ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+ 		mptcp_pm_nl_rm_addr_received(msk);
  	}
- }
++	if (pm->status & BIT(MPTCP_PM_RM_SUBFLOW_RECEIVED)) {
++		pm->status &=3D ~BIT(MPTCP_PM_RM_SUBFLOW_RECEIVED);
++		mptcp_pm_nl_rm_subflow_received(msk);
++	}
+ 	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
+ 		pm->status &=3D ~BIT(MPTCP_PM_ESTABLISHED);
+ 		mptcp_pm_nl_fully_established(msk);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4b8a5308aeed..2849e1c8769b 100644
+index 2849e1c8769b..a2d575901cd6 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -476,6 +476,7 @@ void mptcp_pm_nl_fully_established(struct mptcp_sock *m=
-sk);
- void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk);
- void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk);
- void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk);
-+void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *s=
-kc);
+@@ -153,6 +153,7 @@ struct mptcp_addr_info {
+ enum mptcp_pm_status {
+ 	MPTCP_PM_ADD_ADDR_RECEIVED,
+ 	MPTCP_PM_RM_ADDR_RECEIVED,
++	MPTCP_PM_RM_SUBFLOW_RECEIVED,
+ 	MPTCP_PM_ESTABLISHED,
+ 	MPTCP_PM_SUBFLOW_ESTABLISHED,
+ };
+@@ -441,11 +442,12 @@ void mptcp_pm_subflow_closed(struct mptcp_sock *msk, =
+u8 id);
+ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ 				const struct mptcp_addr_info *addr);
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
++void mptcp_pm_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id);
  =
 
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 			   const struct mptcp_addr_info *addr);
+ int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
+-int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
++int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id);
+ =
+
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
 -- =
 
 2.17.1
 
---===============2784639275299670784==--
+--===============4670913153265245895==--
