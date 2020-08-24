@@ -1,211 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============0025512074686253492=="
+Content-Type: multipart/mixed; boundary="===============1996625623973077365=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] mptcp: keep track of receivers advertised
- window
-Date: Sun, 23 Aug 2020 03:15:59 +0200
-Message-ID: <20200823011559.28689-1-fw@strlen.de>
+Subject: [MPTCP] [MPTCP][PATCH v8 mptcp-next 0/8] Add REMOVE_ADDR support
+Date: Mon, 24 Aug 2020 19:36:13 +0800
+Message-ID: <cover.1598267961.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5602
+X-UID: 5605
 
---===============0025512074686253492==
+--===============1996625623973077365==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Before sending 'x' new bytes also check that the new snd_una would
-be within the permitted receive window.
+v8:
+ - drop anno_list in v7.
+   We don't need to add a new list, conn_list is enough for the signal
+address and local subflow.
+ - fix local_id and remote_id issues.
+   The RM_ADDR logic uses an address id to identify the removing
+address, so we must make sure the subflow's local_id and remote_id be
+set properly.
+ - fix mptcp_pm_nl_rm_addr_received logic issue
+ - update selftests
 
-Track the largest rcv_win seen on a subflow in the mptcp socket itself.
-Its updated for every ACK that also contains a DSS ack.
+v7:
+ - add RM_ADDR mib
+ - update RM_ADDR selftests test case
 
-When the window is exhausted, behave as if all subflow sockets are busy,
-i.e. re-use existing wait logic.
+v6:
+ - rename lookup_anno_list_by_saddr to remove_anno_list_by_saddr as
+   Paolo suggested.
+ - add msk socket lock when traverse msk->conn_list as Paolo suggested.
+ - Since the first three patches in v5 have been merged to export
+   branch, drop them from this patchset.
+ - add remove addr and subflow selftest test case.
+ - this patchset is against mptcp_net-next's export branch.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/options.c  | 16 +++++++++++++---
- net/mptcp/protocol.c | 33 ++++++++++++++++++++++++++++++---
- net/mptcp/protocol.h |  1 +
- 3 files changed, 44 insertions(+), 6 deletions(-)
+v5:
+ - merge mptcp_nl_remove_subflow() and mptcp_nl_remove_addr()
+ - add cond_resched
+ - reduce the indentation level in mptcp_pm_nl_rm_addr_received
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index a52a05effac9..9ff2e85b398a 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -784,11 +784,14 @@ static u64 expand_ack(u64 old_ack, u64 cur_ack, bool =
-use_64bit)
- 	return cur_ack;
- }
- =
+v4:
+ - update mptcp_subflow_shutdown()'s args.
+ - add rm_id check to make sure we don't shutdown the first subflow.
+ - add conn_list empty check.
+ - move anno_list to mptcp_pm_data.
+ - add a new patch 'mptcp: add remove subflow support'.
 
--static void update_una(struct mptcp_sock *msk,
--		       struct mptcp_options_received *mp_opt)
-+static void ack_update_msk(struct mptcp_sock *msk,
-+			   const struct sock *ssk,
-+			   struct mptcp_options_received *mp_opt)
- {
- 	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
-+	u32 sk_snd_wnd, old_sk_snd_wnd =3D atomic_read(&msk->snd_wnd);
- 	u64 write_seq =3D READ_ONCE(msk->write_seq);
-+	u32 ssk_snd_wnd =3D tcp_sk(ssk)->snd_wnd;
- =
+v3:
+ - fix memory leak and lock issue in v2.
+ - drop alist in v2.
+ - fix mptcp_subflow_shutdown's arguments.
+ - bzero remote in mptcp_pm_create_subflow_or_signal_addr.
+ - add more commit message.
 
- 	/* avoid ack expansion on update conflict, to reduce the risk of
- 	 * wrongly expanding to a future ack sequence number, which is way
-@@ -800,6 +803,13 @@ static void update_una(struct mptcp_sock *msk,
- 	if (after64(new_snd_una, write_seq))
- 		new_snd_una =3D old_snd_una;
- =
+Geliang Tang (8):
+  mptcp: remove addr and subflow in PM netlink
+  mptcp: fix mptcp_pm_nl_rm_addr_received logic issue
+  mptcp: implementing mptcp_pm_remove_subflow
+  mptcp: fix every subflow's local_id is zero
+  mptcp: fix subflow's remote_id is zero issue
+  mptcp: add RM_ADDR related mibs
+  selftests: mptcp: add remove cfg in mptcp_connect
+  selftests: mptcp: add remove addr and subflow test cases
 
-+	while (unlikely(ssk_snd_wnd > old_sk_snd_wnd)) {
-+		sk_snd_wnd =3D old_sk_snd_wnd;
-+
-+		old_sk_snd_wnd =3D atomic_cmpxchg(&msk->snd_wnd, sk_snd_wnd,
-+					        ssk_snd_wnd);
-+	}
-+
- 	while (after64(new_snd_una, old_snd_una)) {
- 		snd_una =3D old_snd_una;
- 		old_snd_una =3D atomic64_cmpxchg(&msk->snd_una, snd_una,
-@@ -900,7 +910,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- 	 * monodirectional flows will stuck
- 	 */
- 	if (mp_opt.use_ack)
--		update_una(msk, &mp_opt);
-+		ack_update_msk(msk, sk, &mp_opt);
- =
+ net/mptcp/mib.c                               |   2 +
+ net/mptcp/mib.h                               |   2 +
+ net/mptcp/pm.c                                |  25 ++-
+ net/mptcp/pm_netlink.c                        | 105 +++++++++++--
+ net/mptcp/protocol.c                          |   4 +
+ net/mptcp/protocol.h                          |   5 +-
+ net/mptcp/subflow.c                           |   8 +-
+ .../selftests/net/mptcp/mptcp_connect.c       |  18 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 142 +++++++++++++++++-
+ 9 files changed, 288 insertions(+), 23 deletions(-)
 
- 	/* Zero-data-length packets are dropped by the caller and not
- 	 * propagated to the MPTCP layer, so the skb extension does not
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4dd5d35a8f39..994704f85f4c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -55,6 +55,12 @@ static struct socket *__mptcp_nmpc_socket(const struct m=
-ptcp_sock *msk)
- 	return msk->subflow;
- }
- =
-
-+/* Returns end sequence number of the receiver's advertised window */
-+static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
-+{
-+	return atomic64_read(&msk->snd_una) + atomic_read(&msk->snd_wnd);
-+}
-+
- static bool mptcp_is_tcpsk(struct sock *sk)
- {
- 	struct socket *sock =3D sk->sk_socket;
-@@ -769,6 +775,9 @@ static bool mptcp_is_writeable(struct mptcp_sock *msk)
- 	if (!sk_stream_is_writeable((struct sock *)msk))
- 		return false;
- =
-
-+	if (!before64(msk->write_seq, mptcp_wnd_end(msk)))
-+		return false;
-+
- 	mptcp_for_each_subflow(msk, subflow) {
- 		if (READ_ONCE(subflow->writable))
- 			return true;
-@@ -915,6 +924,17 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
-sock *ssk,
- 	}
- =
-
- 	if (!retransmission) {
-+		u64 window_end =3D mptcp_wnd_end(msk);
-+
-+		if (!before64(*write_seq + avail_size, window_end)) {
-+			int allowed_size =3D window_end - *write_seq;
-+
-+			if (allowed_size <=3D 0)
-+				return -EAGAIN;
-+
-+			avail_size =3D allowed_size;
-+		}
-+
- 		/* reuse tail pfrag, if possible, or carve a new one from the
- 		 * page allocator
- 		 */
-@@ -1070,7 +1090,8 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk,
- 	sock_owned_by_me((struct sock *)msk);
- =
-
- 	*sndbuf =3D 0;
--	if (!mptcp_ext_cache_refill(msk))
-+	if (!mptcp_ext_cache_refill(msk) ||
-+	    !before64(msk->write_seq, mptcp_wnd_end(msk)))
- 		return NULL;
- =
-
- 	if (__mptcp_check_fallback(msk)) {
-@@ -1221,6 +1242,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 	tx_ok =3D msg_data_left(msg);
- 	while (tx_ok) {
- 		struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-+		bool zero_win;
- =
-
- 		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
- 					 &size_goal);
-@@ -1233,6 +1255,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 			break;
- 		}
- =
-
-+		zero_win =3D !before64(msk->write_seq, mptcp_wnd_end(msk));
-+
- 		/* burst can be negative, we will try move to the next subflow
- 		 * at selection time, if possible.
- 		 */
-@@ -1269,11 +1293,12 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len)
- 		 * tcp level only.  So, we must also check the MPTCP socket
- 		 * limits before we send more data.
- 		 */
--		if (unlikely(!sk_stream_memory_free(sk))) {
-+		if (unlikely(!sk_stream_memory_free(sk) || zero_win)) {
- 			tcp_push(ssk, msg->msg_flags, mss_now,
- 				 tcp_sk(ssk)->nonagle, size_goal);
- 			mptcp_clean_una(sk);
--			if (!sk_stream_memory_free(sk)) {
-+			zero_win =3D !before64(msk->write_seq, mptcp_wnd_end(msk));
-+			if (!sk_stream_memory_free(sk) || zero_win) {
- 				/* can't send more for now, need to wait for
- 				 * MPTCP-level ACKs from peer.
- 				 *
-@@ -2079,6 +2104,8 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, con=
-st struct sock *ssk)
- 				      TCP_INIT_CWND * tp->advmss);
- 	if (msk->rcvq_space.space =3D=3D 0)
- 		msk->rcvq_space.space =3D TCP_INIT_CWND * TCP_MSS_DEFAULT;
-+
-+	atomic_set(&msk->snd_wnd, tp->snd_wnd);
- }
- =
-
- static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4b8a5308aeed..e3d0e1faea05 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -200,6 +200,7 @@ struct mptcp_sock {
- 	u64		ack_seq;
- 	u64		rcv_data_fin_seq;
- 	struct sock	*last_snd;
-+	atomic_t	snd_wnd;
- 	int		snd_burst;
- 	atomic64_t	snd_una;
- 	unsigned long	timer_ival;
 -- =
 
-2.26.2
+2.17.1
 
---===============0025512074686253492==--
+--===============1996625623973077365==--
