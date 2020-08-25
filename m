@@ -1,35 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============7944732743718497585=="
+Content-Type: multipart/mixed; boundary="===============8434753332407287989=="
 MIME-Version: 1.0
-From: Alexei Starovoitov <alexei.starovoitov at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH bpf-next 0/3] bpf: add MPTCP subflow support
-Date: Mon, 24 Aug 2020 15:01:00 -0700
-Message-ID: <20200824220100.y33yza2sbd7sgemh@ast-mbp.dhcp.thefacebook.com>
-In-Reply-To: 20200821151544.1211989-1-nicolas.rybowski@tessares.net
+Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: cleanup
+ mptcp_subflow_discard_data()"
+Date: Tue, 25 Aug 2020 09:58:27 +0200
+Message-ID: <f5d4639388e26c2750b8287039797677b03b194a.1598342270.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5614
+X-UID: 5617
 
---===============7944732743718497585==
+--===============8434753332407287989==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 21, 2020 at 05:15:38PM +0200, Nicolas Rybowski wrote:
-> Previously it was not possible to make a distinction between plain TCP
-> sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
-> =
+While discarding old data we also need to flush the
+related map, if completed/exausted.
 
-> This patch series now enables a fine control of subflow sockets. In its
-> current state, it allows to put different sockopt on each subflow from a
-> same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
-> BPF programs.
-> =
+Additionally, use a safer condition to check for to-be-eaten
+skbs
 
-> It should also be the basis of exposing MPTCP-specific fields through BPF.
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+with this and pending Florian's patches, the kernel survived
+the following loop for quite a bit.
 
-Looks fine, but I'd like to see the full picture a bit better.
-What's the point of just 'token' ? What can be done with it?
-What are you thinking to add later?
-Also selftest for new feature is mandatory.
---===============7944732743718497585==--
+while true; do
+	./mptcp_connect.sh -d 10 -l 0 -r 0 -e "" -f $((100 * 1024 * 1024)) -m poll
+done
+
+I still see poll timeout with both ends not readable - not
+investigated yet.
+---
+ net/mptcp/subflow.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 3585fd63c757..34c195ed1371 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -819,8 +819,10 @@ static void mptcp_subflow_discard_data(struct sock *ss=
+k, struct sk_buff *skb,
+ 		 subflow->map_subflow_seq);
+ 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DUPDATA);
+ 	tcp_sk(ssk)->copied_seq +=3D incr;
+-	if (incr >=3D skb->len)
++	if (tcp_sk(ssk)->copied_seq >=3D TCP_SKB_CB(skb)->end_seq)
+ 		sk_eat_skb(ssk, skb);
++	if (mptcp_subflow_get_map_offset(subflow) >=3D subflow->map_data_len)
++		subflow->map_valid =3D 0;
+ }
+ =
+
+ static bool subflow_check_data_avail(struct sock *ssk)
+-- =
+
+2.26.2
+
+--===============8434753332407287989==--
