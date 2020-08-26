@@ -1,57 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============7379759064647005502=="
+Content-Type: multipart/mixed; boundary="===============3200872637585783918=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: packetdrill MP_JOIN failures
-Date: Wed, 26 Aug 2020 13:16:31 -0700
-Message-ID: <20200826201631.GN10870@MacBook-Pro.local>
-In-Reply-To: 44cb02c4f51c749c6533d254d90e2a5c2f625856.camel@redhat.com
+Subject: [MPTCP] Weekly meeting - 27 August 2020 15:00 UTC (8am PDT, 5pm CEST)
+Date: Wed, 26 Aug 2020 22:17:28 +0200
+Message-ID: <00322883-23e6-a7ae-7473-d3ae4a22678b@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 5631
+X-UID: 5632
 
---===============7379759064647005502==
+--===============3200872637585783918==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello everybody!
 
-On 08/26/20 - 12:03, Paolo Abeni wrote:
-> On Tue, 2020-08-25 at 22:47 +0200, Davide Caratti wrote:
-> > hello,
-> > =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> > after commit 3960b799b496 ("mptcp: allow creating non-backup subflows"),
-> > the mp_join_client.pkt packetdrill scenario detects a mismatch in the
-> > contents of MP_JOIN SYN: when the server's additional address is
-> > transmitted through an ADD_ADDR, the client has no way to set the 'B'
-> > flag [1]. If I well understand, we can toggle the 'B' flag using the
-> > MP_PRIO suboption, but this is not yet in mptcp-net-next [2].
-> > =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20200827
 
-> > Given the current state of mptcp-net-next, I'm for removing the 'B' flag
-> > from the current test [2] and adding another specific test case once the
-> > support for MP_PRIO is implemented (by the way, in case nobody is
-> > already planning to do it I can have a look at it in the next days).
-> > =
+Feel free to add/modify topics!
 
-> > Any opinions/feedback appreciated, thank you in advance!
-> =
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-> That looks the easier option and is looks reasonable to me.
-> =
+Speak to you tomorrow!
+Matt
+-- =
 
-> Additionally and not completely related, we could extend the netlink
-> interface to let user space configure the backup flag for subflows
-> created in response to ADD_ADDR options.
-> =
-
-> @Christoph: how does mptcp.org behave WRT the above?
-
-I'm not sure which scenario exactly you have in mind ?
-
-
-Christoph
-
---===============7379759064647005502==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============3200872637585783918==--
