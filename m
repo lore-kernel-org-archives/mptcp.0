@@ -1,52 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============1085376882781036571=="
+Content-Type: multipart/mixed; boundary="===============8718541780291066984=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: packetdrill MP_JOIN failures
-Date: Wed, 26 Aug 2020 12:03:33 +0200
-Message-ID: <44cb02c4f51c749c6533d254d90e2a5c2f625856.camel@redhat.com>
-In-Reply-To: c604be2ac566d83ca0f4c3e85594cf0552c6a887.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: keep track of receivers
+ advertised window
+Date: Wed, 26 Aug 2020 20:44:42 +0200
+Message-ID: <20200826184442.GA7319@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.23.453.2008251627090.25312@ticede-or-125.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5626
+X-UID: 5629
 
---===============1085376882781036571==
+--===============8718541780291066984==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-08-25 at 22:47 +0200, Davide Caratti wrote:
-> hello,
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> On Sun, 23 Aug 2020, Florian Westphal wrote:
+> It looks like this would ratchet up msk->snd_wnd based on the largest
+> subflow snd_wnd seen in the life of the connection.
 > =
 
-> after commit 3960b799b496 ("mptcp: allow creating non-backup subflows"),
-> the mp_join_client.pkt packetdrill scenario detects a mismatch in the
-> contents of MP_JOIN SYN: when the server's additional address is
-> transmitted through an ADD_ADDR, the client has no way to set the 'B'
-> flag [1]. If I well understand, we can toggle the 'B' flag using the
-> MP_PRIO suboption, but this is not yet in mptcp-net-next [2].
+> Section 3.3.5 in the RFC says to "only update its local receive window
+> values when the largest sequence number allowed (i.e., DATA_ACK + receive
+> window) increases on the receipt of a DATA_ACK". So that would compare
+> new_snd_una + ssk_snd_wnd and old_snd_una + sk_snd_wnd, and it would be
+> possible to have mismatched values for msk->snd_wnd and msk->snd_una if
+> there were concurrent reads or writes.
 > =
 
-> Given the current state of mptcp-net-next, I'm for removing the 'B' flag
-> from the current test [2] and adding another specific test case once the
-> support for MP_PRIO is implemented (by the way, in case nobody is
-> already planning to do it I can have a look at it in the next days).
-> =
+> What if this patch added msk->wnd_end instead of msk->snd_wnd? Then the m=
+sk
+> window information used at transmit time would always be valid, and it
+> doesn't really matter if the msk->snd_una update lags a little bit.
 
-> Any opinions/feedback appreciated, thank you in advance!
-
-That looks the easier option and is looks reasonable to me.
-
-Additionally and not completely related, we could extend the netlink
-interface to let user space configure the backup flag for subflows
-created in response to ADD_ADDR options.
-
-@Christoph: how does mptcp.org behave WRT the above?
-
-Thanks!
-
-Paolo
-
-
-
---===============1085376882781036571==--
+Sounds like a good plan, I will look into it.  Thanks for reviewing!
+--===============8718541780291066984==--
