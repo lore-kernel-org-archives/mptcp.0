@@ -1,72 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============3281787881547848609=="
+Content-Type: multipart/mixed; boundary="===============5052106638568993149=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: cleanup
- mptcp_subflow_discard_data()"
-Date: Thu, 27 Aug 2020 11:18:25 +0200
-Message-ID: <0a24c20f23fa93f15cc79de251c4c1362c0c4cec.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.23.453.2008261654250.48113@dandrus-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: packetdrill MP_JOIN failures
+Date: Thu, 27 Aug 2020 11:28:31 +0200
+Message-ID: <2566ca959c87c04647fc926fe690f1b545a93dee.camel@redhat.com>
+In-Reply-To: 20200826201631.GN10870@MacBook-Pro.local
 X-Status: 
 X-Keywords:                  
-X-UID: 5642
+X-UID: 5643
 
---===============3281787881547848609==
+--===============5052106638568993149==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-08-26 at 17:16 -0700, Mat Martineau wrote:
-> On Tue, 25 Aug 2020, Paolo Abeni wrote:
+On Wed, 2020-08-26 at 13:16 -0700, Christoph Paasch wrote:
+> Hello,
 > =
 
-> > While discarding old data we also need to flush the
-> > related map, if completed/exausted.
+> On 08/26/20 - 12:03, Paolo Abeni wrote:
+> > On Tue, 2020-08-25 at 22:47 +0200, Davide Caratti wrote:
+> > > hello,
+> > > =
+
+> > > after commit 3960b799b496 ("mptcp: allow creating non-backup subflows=
+"),
+> > > the mp_join_client.pkt packetdrill scenario detects a mismatch in the
+> > > contents of MP_JOIN SYN: when the server's additional address is
+> > > transmitted through an ADD_ADDR, the client has no way to set the 'B'
+> > > flag [1]. If I well understand, we can toggle the 'B' flag using the
+> > > MP_PRIO suboption, but this is not yet in mptcp-net-next [2].
+> > > =
+
+> > > Given the current state of mptcp-net-next, I'm for removing the 'B' f=
+lag
+> > > from the current test [2] and adding another specific test case once =
+the
+> > > support for MP_PRIO is implemented (by the way, in case nobody is
+> > > already planning to do it I can have a look at it in the next days).
+> > > =
+
+> > > Any opinions/feedback appreciated, thank you in advance!
 > > =
 
-> > Additionally, use a safer condition to check for to-be-eaten
-> > skbs
+> > That looks the easier option and is looks reasonable to me.
 > > =
 
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> > with this and pending Florian's patches, the kernel survived
-> > the following loop for quite a bit.
+> > Additionally and not completely related, we could extend the netlink
+> > interface to let user space configure the backup flag for subflows
+> > created in response to ADD_ADDR options.
 > > =
 
-> > while true; do
-> > 	./mptcp_connect.sh -d 10 -l 0 -r 0 -e "" -f $((100 * 1024 * 1024)) -m =
-poll
-> > done
-> > =
-
-> > I still see poll timeout with both ends not readable - not
-> > investigated yet.
-> > ---
-> > net/mptcp/subflow.c | 4 +++-
-> > 1 file changed, 3 insertions(+), 1 deletion(-)
-> > =
-
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index 3585fd63c757..34c195ed1371 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -819,8 +819,10 @@ static void mptcp_subflow_discard_data(struct sock=
- *ssk, struct sk_buff *skb,
-> > 		 subflow->map_subflow_seq);
-> > 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DUPDATA);
-> > 	tcp_sk(ssk)->copied_seq +=3D incr;
-> > -	if (incr >=3D skb->len)
-> > +	if (tcp_sk(ssk)->copied_seq >=3D TCP_SKB_CB(skb)->end_seq)
+> > @Christoph: how does mptcp.org behave WRT the above?
 > =
 
-> if (!before(tcp_sk(ssk)->copied_seq, TCP_SKB_CB(skb)->end_seq)) ?
+> I'm not sure which scenario exactly you have in mind ?
 
-Whoops! you are right! thank you for spotting this. I'll send a v2
-after some testing.
+I mean: how does mptcp.org handle the 'backup' flag for subflow created
+in response to add_Addr options? is there some default behavior, or it
+replies on netlink/user-space?
 
-Cheers,
+Thanks
 
 Paolo
 
---===============3281787881547848609==--
+--===============5052106638568993149==--
