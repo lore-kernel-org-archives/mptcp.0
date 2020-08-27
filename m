@@ -1,70 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============7031126866082786299=="
+Content-Type: multipart/mixed; boundary="===============8017997288525060053=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: cleanup
- mptcp_subflow_discard_data()"
-Date: Wed, 26 Aug 2020 17:16:57 -0700
-Message-ID: <alpine.OSX.2.23.453.2008261654250.48113@dandrus-mobl.amr.corp.intel.com>
-In-Reply-To: f5d4639388e26c2750b8287039797677b03b194a.1598342270.git.pabeni@redhat.com
+Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 0/4] add ADD_ADDR echo flag
+ support
+Date: Thu, 27 Aug 2020 12:09:32 +0800
+Message-ID: <cover.1598501119.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5636
+X-UID: 5637
 
---===============7031126866082786299==
+--===============8017997288525060053==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 25 Aug 2020, Paolo Abeni wrote:
+v6:
+ - add "drop re-check mechanism for PM's flags"
 
-> While discarding old data we also need to flush the
-> related map, if completed/exausted.
->
-> Additionally, use a safer condition to check for to-be-eaten
-> skbs
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> with this and pending Florian's patches, the kernel survived
-> the following loop for quite a bit.
->
-> while true; do
-> 	./mptcp_connect.sh -d 10 -l 0 -r 0 -e "" -f $((100 * 1024 * 1024)) -m po=
-ll
-> done
->
-> I still see poll timeout with both ends not readable - not
-> investigated yet.
-> ---
-> net/mptcp/subflow.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 3585fd63c757..34c195ed1371 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -819,8 +819,10 @@ static void mptcp_subflow_discard_data(struct sock *=
-ssk, struct sk_buff *skb,
-> 		 subflow->map_subflow_seq);
-> 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DUPDATA);
-> 	tcp_sk(ssk)->copied_seq +=3D incr;
-> -	if (incr >=3D skb->len)
-> +	if (tcp_sk(ssk)->copied_seq >=3D TCP_SKB_CB(skb)->end_seq)
+v5:
+ - move READ_ONCE(msk->pm.add_addr_echo) into mptcp_pm_add_addr_signal
+ - move mptcp_pm_announce_addr into mptcp_pm_nl_add_addr_received and
+   mptcp_pm_add_addr_received
 
-if (!before(tcp_sk(ssk)->copied_seq, TCP_SKB_CB(skb)->end_seq)) ?
+v4:
+ - Just updated some log messages in mptcp_join.sh
 
-> 		sk_eat_skb(ssk, skb);
-> +	if (mptcp_subflow_get_map_offset(subflow) >=3D subflow->map_data_len)
-> +		subflow->map_valid =3D 0;
-> }
->
-> static bool subflow_check_data_avail(struct sock *ssk)
-> -- =
+v3:
+ - move add_addr_echo into mptcp_pm_announce_addr()
+ - check return value of mptcp_pm_add_add_received
+ - hold lock for add_addr_echo writing
 
-> 2.26.2
+v2:
+ - add ADD_ADDR mibs
+ - add selftests for ADD_ADDR
 
---
-Mat Martineau
-Intel
---===============7031126866082786299==--
+v1:
+ - mptcp: send out ADD_ADDR with echo flag
+
+Geliang Tang (4):
+  mptcp: drop re-check mechanism for PM's flags
+  mptcp: send out ADD_ADDR with echo flag
+  mptcp: add ADD_ADDR related mibs
+  selftests: mptcp: add ADD_ADDR mibs check function
+
+ net/mptcp/mib.c                               |  2 +
+ net/mptcp/mib.h                               |  2 +
+ net/mptcp/options.c                           | 38 +++++++++-------
+ net/mptcp/pm.c                                | 39 ++++++----------
+ net/mptcp/pm_netlink.c                        |  4 +-
+ net/mptcp/protocol.h                          |  6 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 44 +++++++++++++++++++
+ 7 files changed, 92 insertions(+), 43 deletions(-)
+
+-- =
+
+2.17.1
+
+--===============8017997288525060053==--
