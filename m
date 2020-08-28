@@ -1,62 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============8797052238984313015=="
+Content-Type: multipart/mixed; boundary="===============2226601210976059005=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v3] mptcp: adjust mptcp receive buffer
- limit if subflow has larger one
-Date: Fri, 28 Aug 2020 21:15:00 +0200
-Message-ID: <96a4b355-0781-c534-5e3b-7d1c676dbeff@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2008201725250.59053@mjmartin-mac01.local
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: only wake parent if subflow is
+ writable
+Date: Fri, 28 Aug 2020 21:15:04 +0200
+Message-ID: <ec89cc4d-e7c7-4bc4-b926-53c337284a7c@tessares.net>
+In-Reply-To: 20200821132856.867-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5659
+X-UID: 5660
 
---===============8797052238984313015==
+--===============2226601210976059005==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Florian, Mat,
 
-On 21/08/2020 02:25, Mat Martineau wrote:
+On 21/08/2020 15:28, Florian Westphal wrote:
+> mptcp_connect.sh -d 10 -l 0 -r 0 -e "" -f $((100 * 1024 * 1024)) -m poll
 > =
 
-> On Thu, 20 Aug 2020, Florian Westphal wrote:
+> will result in frequent write errors:
+> ns1 MPTCP -> ns3 (10.0.2.2:10010      ) MPTCP   write: Resource temporari=
+ly unavailable
 > =
 
->> In addition to tcp autotuning during read, it may also increase the
->> receive buffer in tcp_clamp_window().
->>
->> In this case, mptcp should adjust its receive buffer size as well so
->> it can move all pending skbs from the subflow socket to the mptcp socket.
->>
->> At this time, TCP can have more skbs ready for processing than what the
->> mptcp receive buffer size allows.
->>
->> In the mptcp case, the receive window announced is based on the free
->> space of the mptcp parent socket instead of the individual subflows.
->>
->> Following the subflow allows mptcp to grow its receive buffer.
->>
->> This is especially noticeable for loopback traffic where two skbs are
->> enough to fill the initial receive window.
->>
->> In mptcp_data_ready() we do not hold the mptcp socket lock, so modifying
->> mptcp_sk->sk_rcvbuf is racy.=C2=A0 Do it when moving skbs from subflow to
->> mptcp socket, both sockets are locked in this case.
->>
->> v2: move rcvbuf update to __mptcp_move_skbs_from_subflow where both
->> mptcp and subflow sk locks are held (pointed out by Mat Martineau).
->> v3: only adjust if receive buffer size isn't fixed. (Mat Martineau).
->>
->> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->> ---
+> We promised write() would not block but then no subflow was ready
+> to accept more data.
 > =
 
-> Looks good to me.=C2=A0 Thanks Florian.
+> Changing the 'free' check to 'writeable' (which checks the available
+> space is above min thresh) makes those errors go away.
 > =
 
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Note that there are still poll timeouts:
+> ns1 MPTCP -> ns2 (10.0.1.2:10006      ) MPTCP   copyfd_io_poll: poll time=
+d out (events: POLLIN 1, POLLOUT 0)
+> copyfd_io_poll: poll timed out (events: POLLIN 0, POLLOUT 4)
+> =
+
+> This appears unrelated, they also appear without this change.
+> =
+
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 
 Thank you for the patch and the review!
 
@@ -70,4 +58,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============8797052238984313015==--
+--===============2226601210976059005==--
