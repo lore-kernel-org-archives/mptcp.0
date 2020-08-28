@@ -1,66 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============6470428378971343751=="
+Content-Type: multipart/mixed; boundary="===============8797052238984313015=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "mptcp: cleanup
- mptcp_subflow_discard_data()"
-Date: Fri, 28 Aug 2020 21:14:48 +0200
-Message-ID: <175b3a22-0cd4-4d6b-1b60-5bac1c2ce44f@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2008270818090.5728@waberry-mobl2.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v3] mptcp: adjust mptcp receive buffer
+ limit if subflow has larger one
+Date: Fri, 28 Aug 2020 21:15:00 +0200
+Message-ID: <96a4b355-0781-c534-5e3b-7d1c676dbeff@tessares.net>
+In-Reply-To: alpine.OSX.2.23.453.2008201725250.59053@mjmartin-mac01.local
 X-Status: 
 X-Keywords:                  
-X-UID: 5658
+X-UID: 5659
 
---===============6470428378971343751==
+--===============8797052238984313015==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+Hi Florian, Mat,
 
-On 27/08/2020 17:19, Mat Martineau wrote:
+On 21/08/2020 02:25, Mat Martineau wrote:
 > =
 
-> On Thu, 27 Aug 2020, Paolo Abeni wrote:
+> On Thu, 20 Aug 2020, Florian Westphal wrote:
 > =
 
->> While discarding old data we also need to flush the
->> related map, if completed/exausted.
+>> In addition to tcp autotuning during read, it may also increase the
+>> receive buffer in tcp_clamp_window().
 >>
->> Additionally, use a safer condition to check for to-be-eaten
->> skbs
+>> In this case, mptcp should adjust its receive buffer size as well so
+>> it can move all pending skbs from the subflow socket to the mptcp socket.
 >>
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+>> At this time, TCP can have more skbs ready for processing than what the
+>> mptcp receive buffer size allows.
+>>
+>> In the mptcp case, the receive window announced is based on the free
+>> space of the mptcp parent socket instead of the individual subflows.
+>>
+>> Following the subflow allows mptcp to grow its receive buffer.
+>>
+>> This is especially noticeable for loopback traffic where two skbs are
+>> enough to fill the initial receive window.
+>>
+>> In mptcp_data_ready() we do not hold the mptcp socket lock, so modifying
+>> mptcp_sk->sk_rcvbuf is racy.=C2=A0 Do it when moving skbs from subflow to
+>> mptcp socket, both sockets are locked in this case.
+>>
+>> v2: move rcvbuf update to __mptcp_move_skbs_from_subflow where both
+>> mptcp and subflow sk locks are held (pointed out by Mat Martineau).
+>> v3: only adjust if receive buffer size isn't fixed. (Mat Martineau).
+>>
+>> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 >> ---
->> v1 -> v2:
->> - fix seq check using before - Mat
->>
->> with this and pending Florian's patches, the kernel survived
->> the following loop for quite a bit.
->>
->> while true; do
->> =C2=A0=C2=A0=C2=A0=C2=A0./mptcp_connect.sh -d 10 -l 0 -r 0 -e "" -f $((1=
-00 * 1024 * 1024)) =
-
->> -m poll
->> done
->>
->> I still see poll timeout with both ends not readable - not
->> investigated yet.
->> ---
->> net/mptcp/subflow.c | 4 +++-
->> 1 file changed, 3 insertions(+), 1 deletion(-)
 > =
 
-> Looks good to me, thanks!
+> Looks good to me.=C2=A0 Thanks Florian.
 > =
 
 > Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 Thank you for the patch and the review!
 
-- 5f0b72ded99d: Squash-to: "mptcp: cleanup mptcp_subflow_discard_data()"
-- b7b93f993a82..e76b558ea71a: result
+Applied at the end of the series.
 
 Tests + export are in progress!
 
@@ -70,4 +70,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============6470428378971343751==--
+--===============8797052238984313015==--
