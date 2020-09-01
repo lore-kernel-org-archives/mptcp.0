@@ -1,58 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============3092835014247807430=="
+Content-Type: multipart/mixed; boundary="===============0559534882091320745=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v8 mptcp-next 5/8] mptcp: fix subflow's
- remote_id is zero issue
-Date: Tue, 01 Sep 2020 17:36:06 +0200
-Message-ID: <3161b9d711004276e9156b2983cf86419b1d2d77.camel@redhat.com>
-In-Reply-To: 690fe27e2779bb40aca87905ccc56c0403b9b92a.1598267961.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v8 mptcp-next 0/8] Add REMOVE_ADDR support
+Date: Tue, 01 Sep 2020 18:02:11 +0200
+Message-ID: <3717e7b40a029e1e5e5cd343af74d6f702e721d2.camel@redhat.com>
+In-Reply-To: cover.1598267961.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5682
+X-UID: 5683
 
---===============3092835014247807430==
+--===============0559534882091320745==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 2020-08-24 at 19:36 +0800, Geliang Tang wrote:
-> This patch added the missing remote_id set in subflow_ulp_clone. And also
-> updated the remote_id set in __mptcp_subflow_connect, to make the code mo=
-re
-> like local_id set.
-> =
+> v8:
+>  - drop anno_list in v7.
+>    We don't need to add a new list, conn_list is enough for the signal
+> address and local subflow.
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
->  net/mptcp/subflow.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> =
+I think this could be problematic.
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 82f6d2d9e39e..0a7b80711096 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1042,6 +1042,7 @@ int __mptcp_subflow_connect(struct sock *sk, const =
-struct mptcp_addr_info *loc,
->  	struct mptcp_subflow_context *subflow;
->  	struct sockaddr_storage addr;
->  	int local_id =3D loc->id;
-> +	int remote_id =3D remote->id;
->  	struct socket *sf;
->  	struct sock *ssk;
->  	u32 remote_token;
-
-very minor note: this does not respect the reverse x-mas tree order. =
+An MPTCP socket could refuse or delay the creation of new subflows for
+addresses received via ADD_ADDR. =
 
 
-Otherwise looks good.
+But an MPTCP should send REMOVE_ADDR for accounced addresses, even if
+no subflows exists on top of them.
 
-Note: I think you can submit this patch and the previous one (4/8)
-directly to -net (with an appropriate Fixes tag).
+Removing the anno_list we lose this ability.
+
+I'd like to avoid additional interations, if possible, and eventually
+add squash-to fixes if/where needed. Other options more than welcome.
 
 Cheers,
 
 Paolo
 
---===============3092835014247807430==--
+--===============0559534882091320745==--
