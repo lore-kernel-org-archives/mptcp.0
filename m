@@ -1,66 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============6611431371147443164=="
+Content-Type: multipart/mixed; boundary="===============4750395581412481763=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v8 mptcp-next 0/8] Add REMOVE_ADDR support
-Date: Wed, 02 Sep 2020 17:20:12 +0200
-Message-ID: <0b745566127668456049f6af4c7372c838a35fbb.camel@redhat.com>
-In-Reply-To: CA+WQbwvYqYZYq0CNHYiO0+_1WMQzaf6k8h8-BX15VHE4u=hX3Q@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: use _fast lock version in
+ __mptcp_move_skbs
+Date: Wed, 02 Sep 2020 18:16:36 +0200
+Message-ID: <cf777c2c14a091eca844228a44b31367a74e030f.camel@redhat.com>
+In-Reply-To: 20200902143750.28478-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5698
+X-UID: 5699
 
---===============6611431371147443164==
+--===============4750395581412481763==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-09-02 at 19:30 +0800, Geliang Tang wrote:
-> Hi Paolo,
+On Wed, 2020-09-02 at 16:37 +0200, Florian Westphal wrote:
+> The function is short and won't sleep, so this can use the _fast version.
 > =
 
-> Thanks for your review.
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  net/mptcp/protocol.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > =
 
-> Paolo Abeni <pabeni(a)redhat.com> =E4=BA=8E2020=E5=B9=B49=E6=9C=882=E6=97=
-=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=8812:02=E5=86=99=E9=81=93=EF=BC=9A
-> > On Mon, 2020-08-24 at 19:36 +0800, Geliang Tang wrote:
-> > > v8:
-> > >  - drop anno_list in v7.
-> > >    We don't need to add a new list, conn_list is enough for the signal
-> > > address and local subflow.
-> > =
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3b621a99c8c5..0c2b506d17de 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1472,13 +1472,14 @@ static bool __mptcp_move_skbs(struct mptcp_sock *=
+msk)
+>  	__mptcp_flush_join_list(msk);
+>  	do {
+>  		struct sock *ssk =3D mptcp_subflow_recv_lookup(msk);
+> +		bool slowpath;
+>  =
 
-> > I think this could be problematic.
-> > =
+>  		if (!ssk)
+>  			break;
+>  =
 
-> > An MPTCP socket could refuse or delay the creation of new subflows for
-> > addresses received via ADD_ADDR.
-> > =
+> -		lock_sock(ssk);
+> +		slowpath =3D lock_sock_fast(ssk);
+>  		done =3D __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
+> -		release_sock(ssk);
+> +		unlock_sock_fast(ssk, slowpath);
+>  	} while (!done);
+>  =
 
-> > But an MPTCP should send REMOVE_ADDR for accounced addresses, even if
-> > no subflows exists on top of them.
-> > =
+>  	if (mptcp_ofo_queue(msk) || moved > 0) {
 
-> > Removing the anno_list we lose this ability.
-> =
+Good catch! the patch LGTM, thanks!
 
-> Yes, we can't cover this case, but the v7 code with anno_list can't cover
-> it either. Since anno_list only recorded the local announced addresses,
-> we need also record the received addresses on the remote side.
+Do you think it could useful do the same also in mptcp_sendmsg()
+and mptcp_worker()? (since mptcp_sendmsg_frag() does not sleep, should
+be possible...)
 
-I think we don't need this latter list ?!? when the mptcp receives an
-ADD_ADDR option it will either create a new subflow with such address
-or will never use such address later.
-
-When the mptcp stack receives a REMOVE_ADDR option, it just need to
-check vs the existing subflows. If the relevant address has been
-ignored, no additional action is needed.
-
-Do I miss something?
-
-Thanks!
+Cheers,
 
 Paolo
 
---===============6611431371147443164==--
+--===============4750395581412481763==--
