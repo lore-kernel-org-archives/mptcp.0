@@ -1,77 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============3816212146981854801=="
+Content-Type: multipart/mixed; boundary="===============7980466835825962832=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v9 mptcp-next 3/8] mptcp: implement
- mptcp_pm_remove_subflow
-Date: Wed, 02 Sep 2020 17:38:25 +0800
-Message-ID: <9743b1a0daaf542b3f0d346a310d2b5290b49212.1599038897.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v9 mptcp-next 4/8] mptcp: fix every subflow's
+ local_id is zero
+Date: Wed, 02 Sep 2020 17:38:26 +0800
+Message-ID: <ed9e827eb0d58cf09d8616f0fdd1a1d0f2ce424b.1599038897.git.geliangtang@gmail.com>
 In-Reply-To: cover.1599038897.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5688
+X-UID: 5689
 
---===============3816212146981854801==
+--===============7980466835825962832==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch implemented the local subflow removing function,
-mptcp_pm_remove_subflow, it simply called mptcp_pm_nl_rm_subflow_received
-under the PM spin lock.
+skc_local is the same as msk_local, so mptcp_pm_nl_get_local_id always
+return 0. Thus every subflow's local_id is 0.
 
-We use mptcp_pm_remove_subflow to remove a local subflow, so change it's
-argument from remote_id to local_id.
+This patch fixed this issue.
+
+Also, we need to ignore the zero address here, like 0.0.0.0 in IPv4, when
+we use the zero address as a local address, we means that we can use
+any one of the local addresses. The zero address is not a new address,
+we don't need to add it to PM, so this patch added a new function
+address_zero to check whether an address is the zero address, if it is,
+we ignore this address.
 
 Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm.c       | 9 +++++++--
- net/mptcp/protocol.h | 2 +-
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ net/mptcp/pm_netlink.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 511996bf4838..9328f0b175a7 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -33,9 +33,14 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 loca=
-l_id)
- 	return 0;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 4e6c141b810f..62ffc9d5861f 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -64,6 +64,19 @@ static bool addresses_equal(const struct mptcp_addr_info=
+ *a,
+ 	return a->port =3D=3D b->port;
  }
  =
 
--int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id)
-+int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id)
- {
--	return -ENOTSUPP;
-+	pr_debug("%s msk=3D%p, local_id=3D%d", __func__, msk, local_id);
++static bool address_zero(const struct mptcp_addr_info *addr)
++{
++	struct mptcp_addr_info zero;
 +
-+	spin_lock_bh(&msk->pm.lock);
-+	mptcp_pm_nl_rm_subflow_received(msk, local_id);
-+	spin_unlock_bh(&msk->pm.lock);
-+	return 0;
- }
- =
-
- /* path manager event handlers */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 703fb1f1d0ce..bad751e2c8f3 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -446,7 +446,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
- 			   bool echo);
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
--int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
-+int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id);
- =
-
- static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
++	memset(&zero, 0, sizeof(zero));
++	zero.family =3D addr->family;
++
++	if (addresses_equal(addr, &zero, false))
++		return true;
++
++	return false;
++}
++
+ static void local_address(const struct sock_common *skc,
+ 			  struct mptcp_addr_info *addr)
  {
+@@ -389,10 +402,13 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, =
+struct sock_common *skc)
+ 	 * addr
+ 	 */
+ 	local_address((struct sock_common *)msk, &msk_local);
+-	local_address((struct sock_common *)msk, &skc_local);
++	local_address((struct sock_common *)skc, &skc_local);
+ 	if (addresses_equal(&msk_local, &skc_local, false))
+ 		return 0;
+ =
+
++	if (address_zero(&skc_local))
++		return 0;
++
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ =
+
+ 	rcu_read_lock();
 -- =
 
 2.17.1
 
---===============3816212146981854801==--
+--===============7980466835825962832==--
