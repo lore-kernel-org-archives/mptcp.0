@@ -1,482 +1,361 @@
-Content-Type: multipart/mixed; boundary="===============3758967646033232635=="
+Content-Type: multipart/mixed; boundary="===============7921156776227526823=="
 MIME-Version: 1.0
 From: Nicolas Rybowski <nicolas.rybowski at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v2 3/5] bpf: add 'bpf_mptcp_sock' structure
- and helper
-Date: Wed, 02 Sep 2020 19:04:41 +0200
-Message-ID: <20200902170443.272113-4-nicolas.rybowski@tessares.net>
+Subject: [MPTCP] [PATCH mptcp-next v2 4/5] bpf:selftests: add MPTCP test base
+Date: Wed, 02 Sep 2020 19:04:42 +0200
+Message-ID: <20200902170443.272113-5-nicolas.rybowski@tessares.net>
 In-Reply-To: 20200902170443.272113-1-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5704
+X-UID: 5705
 
---===============3758967646033232635==
+--===============7921156776227526823==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In order to precisely identify the parent MPTCP connection of a subflow,
-it is required to access the mptcp_sock's token which uniquely identify a
-MPTCP connection.
+This patch adds a base for MPTCP specific tests.
 
-This patch adds a new structure 'bpf_mptcp_sock' exposing the 'token' field
-of the 'mptcp_sock' extracted from a subflow's 'tcp_sock'. It also adds the
-declaration of a new BPF helper of the same name to expose the newly
-defined structure in the userspace BPF API.
-
-This is the foundation to expose more MPTCP-specific fields through BPF.
-
-Currently, it is limited to the field 'token' of the msk but it is
-easily extensible.
+It is currently limited to the is_mptcp field in case of plain TCP
+connection because there is no easy way to get the subflow sk from a msk
+in userspace. This implies that we cannot lookup the sk_storage attached
+to the subflow sk in the sockops program.
 
 Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Acked-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
 ---
- include/linux/bpf.h            | 33 ++++++++++++++++
- include/uapi/linux/bpf.h       | 14 +++++++
- kernel/bpf/verifier.c          | 30 ++++++++++++++
- net/core/filter.c              |  4 ++
- net/mptcp/Makefile             |  2 +
- net/mptcp/bpf.c                | 72 ++++++++++++++++++++++++++++++++++
- scripts/bpf_helpers_doc.py     |  2 +
- tools/include/uapi/linux/bpf.h | 14 +++++++
- 8 files changed, 171 insertions(+)
- create mode 100644 net/mptcp/bpf.c
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index c6d9f2c444f4..6be74420f6fa 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -305,6 +305,7 @@ enum bpf_return_type {
- 	RET_PTR_TO_SOCK_COMMON_OR_NULL,	/* returns a pointer to a sock_common or =
-NULL */
- 	RET_PTR_TO_ALLOC_MEM_OR_NULL,	/* returns a pointer to dynamically allocat=
-ed memory or NULL */
- 	RET_PTR_TO_BTF_ID_OR_NULL,	/* returns a pointer to a btf_id or NULL */
-+	RET_PTR_TO_MPTCP_SOCK_OR_NULL,	/* returns a pointer to mptcp_sock or NULL=
- */
- };
+Notes:
+    v1 -> v2:
+    - new patch: mandatory selftests (Alexei)
+
+ tools/testing/selftests/bpf/config            |   1 +
+ tools/testing/selftests/bpf/network_helpers.c |  37 +++++-
+ tools/testing/selftests/bpf/network_helpers.h |   3 +
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 119 ++++++++++++++++++
+ tools/testing/selftests/bpf/progs/mptcp.c     |  48 +++++++
+ 5 files changed, 203 insertions(+), 5 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/mptcp.c
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp.c
+
+diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/b=
+pf/config
+index 2118e23ac07a..8377836ea976 100644
+--- a/tools/testing/selftests/bpf/config
++++ b/tools/testing/selftests/bpf/config
+@@ -39,3 +39,4 @@ CONFIG_BPF_JIT=3Dy
+ CONFIG_BPF_LSM=3Dy
+ CONFIG_SECURITY=3Dy
+ CONFIG_LIRC=3Dy
++CONFIG_MPTCP=3Dy
+diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testing/=
+selftests/bpf/network_helpers.c
+index 12ee40284da0..9295a5d8e001 100644
+--- a/tools/testing/selftests/bpf/network_helpers.c
++++ b/tools/testing/selftests/bpf/network_helpers.c
+@@ -14,6 +14,10 @@
+ #include "bpf_util.h"
+ #include "network_helpers.h"
  =
 
- /* eBPF function prototype used by verifier to allow BPF_CALLs from eBPF p=
-rograms
-@@ -385,6 +386,8 @@ enum bpf_reg_type {
- 	PTR_TO_RDONLY_BUF_OR_NULL, /* reg points to a readonly buffer or NULL */
- 	PTR_TO_RDWR_BUF,	 /* reg points to a read/write buffer */
- 	PTR_TO_RDWR_BUF_OR_NULL, /* reg points to a read/write buffer or NULL */
-+	PTR_TO_MPTCP_SOCK,	 /* reg points to struct mptcp_sock */
-+	PTR_TO_MPTCP_SOCK_OR_NULL, /* reg points to struct mptcp_sock or NULL */
- };
- =
-
- /* The information passed from prog-specific *_is_valid_access
-@@ -1785,6 +1788,7 @@ extern const struct bpf_func_proto bpf_skc_to_tcp_tim=
-ewait_sock_proto;
- extern const struct bpf_func_proto bpf_skc_to_tcp_request_sock_proto;
- extern const struct bpf_func_proto bpf_skc_to_udp6_sock_proto;
- extern const struct bpf_func_proto bpf_copy_from_user_proto;
-+extern const struct bpf_func_proto bpf_mptcp_sock_proto;
- =
-
- const struct bpf_func_proto *bpf_tracing_func_proto(
- 	enum bpf_func_id func_id, const struct bpf_prog *prog);
-@@ -1841,6 +1845,35 @@ struct sk_reuseport_kern {
- 	u32 reuseport_id;
- 	bool bind_inany;
- };
++#ifndef IPPROTO_MPTCP
++#define IPPROTO_MPTCP 262
++#endif
 +
-+#ifdef CONFIG_MPTCP
-+bool bpf_mptcp_sock_is_valid_access(int off, int size,
-+				    enum bpf_access_type type,
-+				    struct bpf_insn_access_aux *info);
-+
-+u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type type,
-+				      const struct bpf_insn *si,
-+				      struct bpf_insn *insn_buf,
-+				      struct bpf_prog *prog,
-+				      u32 *target_size);
-+#else /* CONFIG_MPTCP */
-+static inline bool bpf_mptcp_sock_is_valid_access(int off, int size,
-+						  enum bpf_access_type type,
-+						  struct bpf_insn_access_aux *info)
-+{
-+	return false;
-+}
-+
-+static inline u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type t=
-ype,
-+						    const struct bpf_insn *si,
-+						    struct bpf_insn *insn_buf,
-+						    struct bpf_prog *prog,
-+						    u32 *target_size)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_MPTCP */
-+
- bool bpf_tcp_sock_is_valid_access(int off, int size, enum bpf_access_type =
-type,
- 				  struct bpf_insn_access_aux *info);
+ #define clean_errno() (errno =3D=3D 0 ? "None" : strerror(errno))
+ #define log_err(MSG, ...) ({						\
+ 			int __save =3D errno;				\
+@@ -66,8 +70,8 @@ static int settimeo(int fd, int timeout_ms)
  =
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 88fd3ad0d4b2..66eb98d6402f 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -3576,6 +3576,15 @@ union bpf_attr {
-  * 		the data in *dst*. This is a wrapper of copy_from_user().
-  * 	Return
-  * 		0 on success, or a negative error in case of failure.
-+ *
-+ * struct bpf_mptcp_sock *bpf_mptcp_sock(struct bpf_sock *sk)
-+ *	Description
-+ *		This helper gets a **struct bpf_mptcp_sock** pointer from a
-+ *		**struct bpf_sock** pointer.
-+ *	Return
-+ *		A **struct bpf_mptcp_sock** pointer on success, or **NULL** in
-+ *		case of failure.
-+ *
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -3727,6 +3736,7 @@ union bpf_attr {
- 	FN(inode_storage_delete),	\
- 	FN(d_path),			\
- 	FN(copy_from_user),		\
-+	FN(mptcp_sock),			\
- 	/* */
+ #define save_errno_close(fd) ({ int __save =3D errno; close(fd); errno =3D=
+ __save; })
  =
 
- /* integer value in 'imm' field of BPF_CALL instruction selects which help=
-er
-@@ -4060,6 +4070,10 @@ struct bpf_tcp_sock {
- 	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
- =
-
-+struct bpf_mptcp_sock {
-+	__u32 token;		/* msk token */
-+};
-+
- struct bpf_sock_tuple {
- 	union {
- 		struct {
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index b4e9c56b8b32..60242128e858 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -392,6 +392,7 @@ static bool type_is_sk_pointer(enum bpf_reg_type type)
- 	return type =3D=3D PTR_TO_SOCKET ||
- 		type =3D=3D PTR_TO_SOCK_COMMON ||
- 		type =3D=3D PTR_TO_TCP_SOCK ||
-+		type =3D=3D PTR_TO_MPTCP_SOCK ||
- 		type =3D=3D PTR_TO_XDP_SOCK;
- }
- =
-
-@@ -399,6 +400,7 @@ static bool reg_type_not_null(enum bpf_reg_type type)
+-int start_server(int family, int type, const char *addr_str, __u16 port,
+-		 int timeout_ms)
++static int start_server_proto(int family, int type, int protocol,
++			       const char *addr_str, __u16 port, int timeout_ms)
  {
- 	return type =3D=3D PTR_TO_SOCKET ||
- 		type =3D=3D PTR_TO_TCP_SOCK ||
-+		type =3D=3D PTR_TO_MPTCP_SOCK ||
- 		type =3D=3D PTR_TO_MAP_VALUE ||
- 		type =3D=3D PTR_TO_SOCK_COMMON;
+ 	struct sockaddr_storage addr =3D {};
+ 	socklen_t len;
+@@ -76,7 +80,7 @@ int start_server(int family, int type, const char *addr_s=
+tr, __u16 port,
+ 	if (make_sockaddr(family, addr_str, port, &addr, &len))
+ 		return -1;
+ =
+
+-	fd =3D socket(family, type, 0);
++	fd =3D socket(family, type, protocol);
+ 	if (fd < 0) {
+ 		log_err("Failed to create server socket");
+ 		return -1;
+@@ -104,6 +108,19 @@ int start_server(int family, int type, const char *add=
+r_str, __u16 port,
+ 	return -1;
  }
-@@ -409,6 +411,7 @@ static bool reg_type_may_be_null(enum bpf_reg_type type)
- 	       type =3D=3D PTR_TO_SOCKET_OR_NULL ||
- 	       type =3D=3D PTR_TO_SOCK_COMMON_OR_NULL ||
- 	       type =3D=3D PTR_TO_TCP_SOCK_OR_NULL ||
-+	       type =3D=3D PTR_TO_MPTCP_SOCK_OR_NULL ||
- 	       type =3D=3D PTR_TO_BTF_ID_OR_NULL ||
- 	       type =3D=3D PTR_TO_MEM_OR_NULL ||
- 	       type =3D=3D PTR_TO_RDONLY_BUF_OR_NULL ||
-@@ -427,6 +430,8 @@ static bool reg_type_may_be_refcounted_or_null(enum bpf=
-_reg_type type)
- 		type =3D=3D PTR_TO_SOCKET_OR_NULL ||
- 		type =3D=3D PTR_TO_TCP_SOCK ||
- 		type =3D=3D PTR_TO_TCP_SOCK_OR_NULL ||
-+		type =3D=3D PTR_TO_MPTCP_SOCK ||
-+		type =3D=3D PTR_TO_MPTCP_SOCK_OR_NULL ||
- 		type =3D=3D PTR_TO_MEM ||
- 		type =3D=3D PTR_TO_MEM_OR_NULL;
+ =
+
++int start_server(int family, int type, const char *addr_str, __u16 port,
++		 int timeout_ms)
++{
++	return start_server_proto(family, type, 0, addr_str, port, timeout_ms);
++}
++
++int start_mptcp_server(int family, const char *addr_str, __u16 port,
++		       int timeout_ms)
++{
++	return start_server_proto(family, SOCK_STREAM, IPPROTO_MPTCP, addr_str,
++				   port, timeout_ms);
++}
++
+ int fastopen_connect(int server_fd, const char *data, unsigned int data_le=
+n,
+ 		     int timeout_ms)
+ {
+@@ -153,7 +170,7 @@ static int connect_fd_to_addr(int fd,
+ 	return 0;
  }
-@@ -500,6 +505,8 @@ static const char * const reg_type_str[] =3D {
- 	[PTR_TO_SOCK_COMMON_OR_NULL] =3D "sock_common_or_null",
- 	[PTR_TO_TCP_SOCK]	=3D "tcp_sock",
- 	[PTR_TO_TCP_SOCK_OR_NULL] =3D "tcp_sock_or_null",
-+	[PTR_TO_MPTCP_SOCK]	=3D "mptcp_sock",
-+	[PTR_TO_MPTCP_SOCK_OR_NULL] =3D "mptcp_sock_or_null",
- 	[PTR_TO_TP_BUFFER]	=3D "tp_buffer",
- 	[PTR_TO_XDP_SOCK]	=3D "xdp_sock",
- 	[PTR_TO_BTF_ID]		=3D "ptr_",
-@@ -2177,6 +2184,8 @@ static bool is_spillable_regtype(enum bpf_reg_type ty=
-pe)
- 	case PTR_TO_SOCK_COMMON_OR_NULL:
- 	case PTR_TO_TCP_SOCK:
- 	case PTR_TO_TCP_SOCK_OR_NULL:
-+	case PTR_TO_MPTCP_SOCK:
-+	case PTR_TO_MPTCP_SOCK_OR_NULL:
- 	case PTR_TO_XDP_SOCK:
- 	case PTR_TO_BTF_ID:
- 	case PTR_TO_BTF_ID_OR_NULL:
-@@ -2786,6 +2795,9 @@ static int check_sock_access(struct bpf_verifier_env =
-*env, int insn_idx,
- 	case PTR_TO_TCP_SOCK:
- 		valid =3D bpf_tcp_sock_is_valid_access(off, size, t, &info);
- 		break;
-+	case PTR_TO_MPTCP_SOCK:
-+		valid =3D bpf_mptcp_sock_is_valid_access(off, size, t, &info);
-+		break;
- 	case PTR_TO_XDP_SOCK:
- 		valid =3D bpf_xdp_sock_is_valid_access(off, size, t, &info);
- 		break;
-@@ -2944,6 +2956,9 @@ static int check_ptr_alignment(struct bpf_verifier_en=
-v *env,
- 	case PTR_TO_TCP_SOCK:
- 		pointer_desc =3D "tcp_sock ";
- 		break;
-+	case PTR_TO_MPTCP_SOCK:
-+		pointer_desc =3D "mptcp_sock ";
-+		break;
- 	case PTR_TO_XDP_SOCK:
- 		pointer_desc =3D "xdp_sock ";
- 		break;
-@@ -4997,6 +5012,10 @@ static int check_helper_call(struct bpf_verifier_env=
- *env, int func_id, int insn
- 		mark_reg_known_zero(env, regs, BPF_REG_0);
- 		regs[BPF_REG_0].type =3D PTR_TO_TCP_SOCK_OR_NULL;
- 		regs[BPF_REG_0].id =3D ++env->id_gen;
-+	} else if (fn->ret_type =3D=3D RET_PTR_TO_MPTCP_SOCK_OR_NULL) {
-+		mark_reg_known_zero(env, regs, BPF_REG_0);
-+		regs[BPF_REG_0].type =3D PTR_TO_MPTCP_SOCK_OR_NULL;
-+		regs[BPF_REG_0].id =3D ++env->id_gen;
- 	} else if (fn->ret_type =3D=3D RET_PTR_TO_ALLOC_MEM_OR_NULL) {
- 		mark_reg_known_zero(env, regs, BPF_REG_0);
- 		regs[BPF_REG_0].type =3D PTR_TO_MEM_OR_NULL;
-@@ -5324,6 +5343,8 @@ static int adjust_ptr_min_max_vals(struct bpf_verifie=
-r_env *env,
- 	case PTR_TO_SOCK_COMMON_OR_NULL:
- 	case PTR_TO_TCP_SOCK:
- 	case PTR_TO_TCP_SOCK_OR_NULL:
-+	case PTR_TO_MPTCP_SOCK:
-+	case PTR_TO_MPTCP_SOCK_OR_NULL:
- 	case PTR_TO_XDP_SOCK:
- 		verbose(env, "R%d pointer arithmetic on %s prohibited\n",
- 			dst, reg_type_str[ptr_reg->type]);
-@@ -7044,6 +7065,8 @@ static void mark_ptr_or_null_reg(struct bpf_func_stat=
-e *state,
- 			reg->type =3D PTR_TO_SOCK_COMMON;
- 		} else if (reg->type =3D=3D PTR_TO_TCP_SOCK_OR_NULL) {
- 			reg->type =3D PTR_TO_TCP_SOCK;
-+		} else if (reg->type =3D=3D PTR_TO_MPTCP_SOCK_OR_NULL) {
-+			reg->type =3D PTR_TO_MPTCP_SOCK;
- 		} else if (reg->type =3D=3D PTR_TO_BTF_ID_OR_NULL) {
- 			reg->type =3D PTR_TO_BTF_ID;
- 		} else if (reg->type =3D=3D PTR_TO_MEM_OR_NULL) {
-@@ -8407,6 +8430,8 @@ static bool regsafe(struct bpf_reg_state *rold, struc=
-t bpf_reg_state *rcur,
- 	case PTR_TO_SOCK_COMMON_OR_NULL:
- 	case PTR_TO_TCP_SOCK:
- 	case PTR_TO_TCP_SOCK_OR_NULL:
-+	case PTR_TO_MPTCP_SOCK:
-+	case PTR_TO_MPTCP_SOCK_OR_NULL:
- 	case PTR_TO_XDP_SOCK:
- 		/* Only valid matches are exact, which memcmp() above
- 		 * would have accepted
-@@ -8934,6 +8959,8 @@ static bool reg_type_mismatch_ok(enum bpf_reg_type ty=
-pe)
- 	case PTR_TO_SOCK_COMMON_OR_NULL:
- 	case PTR_TO_TCP_SOCK:
- 	case PTR_TO_TCP_SOCK_OR_NULL:
-+	case PTR_TO_MPTCP_SOCK:
-+	case PTR_TO_MPTCP_SOCK_OR_NULL:
- 	case PTR_TO_XDP_SOCK:
- 	case PTR_TO_BTF_ID:
- 	case PTR_TO_BTF_ID_OR_NULL:
-@@ -10072,6 +10099,9 @@ static int convert_ctx_accesses(struct bpf_verifier=
-_env *env)
- 		case PTR_TO_TCP_SOCK:
- 			convert_ctx_access =3D bpf_tcp_sock_convert_ctx_access;
- 			break;
-+		case PTR_TO_MPTCP_SOCK:
-+			convert_ctx_access =3D bpf_mptcp_sock_convert_ctx_access;
-+			break;
- 		case PTR_TO_XDP_SOCK:
- 			convert_ctx_access =3D bpf_xdp_sock_convert_ctx_access;
- 			break;
-diff --git a/net/core/filter.c b/net/core/filter.c
-index c9092b6dc6f6..55a5058f5566 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -6900,6 +6900,10 @@ sock_ops_func_proto(enum bpf_func_id func_id, const =
-struct bpf_prog *prog)
- 	case BPF_FUNC_tcp_sock:
- 		return &bpf_tcp_sock_proto;
- #endif /* CONFIG_INET */
-+#ifdef CONFIG_MPTCP
-+	case BPF_FUNC_mptcp_sock:
-+		return &bpf_mptcp_sock_proto;
-+#endif /* CONFIG_MPTCP */
- 	default:
- 		return bpf_base_func_proto(func_id);
+ =
+
+-int connect_to_fd(int server_fd, int timeout_ms)
++static int connect_to_fd_proto(int server_fd, int protocol, int timeout_ms)
+ {
+ 	struct sockaddr_storage addr;
+ 	struct sockaddr_in *addr_in;
+@@ -173,7 +190,7 @@ int connect_to_fd(int server_fd, int timeout_ms)
  	}
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index a611968be4d7..aae2ede220ed 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -10,3 +10,5 @@ obj-$(CONFIG_INET_MPTCP_DIAG) +=3D mptcp_diag.o
- mptcp_crypto_test-objs :=3D crypto_test.o
- mptcp_token_test-objs :=3D token_test.o
- obj-$(CONFIG_MPTCP_KUNIT_TESTS) +=3D mptcp_crypto_test.o mptcp_token_test.o
+ =
+
+ 	addr_in =3D (struct sockaddr_in *)&addr;
+-	fd =3D socket(addr_in->sin_family, type, 0);
++	fd =3D socket(addr_in->sin_family, type, protocol);
+ 	if (fd < 0) {
+ 		log_err("Failed to create client socket");
+ 		return -1;
+@@ -192,6 +209,16 @@ int connect_to_fd(int server_fd, int timeout_ms)
+ 	return -1;
+ }
+ =
+
++int connect_to_fd(int server_fd, int timeout_ms)
++{
++	return connect_to_fd_proto(server_fd, 0, timeout_ms);
++}
 +
-+obj-$(CONFIG_BPF) +=3D bpf.o
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
++int connect_to_mptcp_fd(int server_fd, int timeout_ms)
++{
++	return connect_to_fd_proto(server_fd, IPPROTO_MPTCP, timeout_ms);
++}
++
+ int connect_fd_to_fd(int client_fd, int server_fd, int timeout_ms)
+ {
+ 	struct sockaddr_storage addr;
+diff --git a/tools/testing/selftests/bpf/network_helpers.h b/tools/testing/=
+selftests/bpf/network_helpers.h
+index 7205f8afdba1..336423a789e9 100644
+--- a/tools/testing/selftests/bpf/network_helpers.h
++++ b/tools/testing/selftests/bpf/network_helpers.h
+@@ -35,7 +35,10 @@ extern struct ipv6_packet pkt_v6;
+ =
+
+ int start_server(int family, int type, const char *addr, __u16 port,
+ 		 int timeout_ms);
++int start_mptcp_server(int family, const char *addr, __u16 port,
++		       int timeout_ms);
+ int connect_to_fd(int server_fd, int timeout_ms);
++int connect_to_mptcp_fd(int server_fd, int timeout_ms);
+ int connect_fd_to_fd(int client_fd, int server_fd, int timeout_ms);
+ int fastopen_connect(int server_fd, const char *data, unsigned int data_le=
+n,
+ 		     int timeout_ms);
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing=
+/selftests/bpf/prog_tests/mptcp.c
 new file mode 100644
-index 000000000000..5332469fbb28
+index 000000000000..0e65d64868e9
 --- /dev/null
-+++ b/net/mptcp/bpf.c
-@@ -0,0 +1,72 @@
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -0,0 +1,119 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/* Multipath TCP
-+ *
-+ * Copyright (c) 2020, Tessares SA.
-+ *
-+ * Author: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
-+ *
-+ */
++#include <test_progs.h>
++#include "cgroup_helpers.h"
++#include "network_helpers.h"
 +
++struct mptcp_storage {
++	__u32 invoked;
++	__u32 is_mptcp;
++};
++
++static int verify_sk(int map_fd, int client_fd, const char *msg, __u32 is_=
+mptcp)
++{
++	int err =3D 0, cfd =3D client_fd;
++	struct mptcp_storage val;
++
++	/* Currently there is no easy way to get back the subflow sk from the MPT=
+CP
++	 * sk, thus we cannot access here the sk_storage associated to the subflow
++	 * sk. Also, there is no sk_storage associated with the MPTCP sk since it
++	 * does not trigger sockops events.
++	 * We silently pass this situation at the moment.
++	 */
++	if (is_mptcp =3D=3D 1)
++		return 0;
++
++	if (CHECK_FAIL(bpf_map_lookup_elem(map_fd, &cfd, &val) < 0)) {
++		perror("Failed to read socket storage");
++		return -1;
++	}
++
++	if (val.invoked !=3D 1) {
++		log_err("%s: unexpected invoked count %d !=3D %d",
++			msg, val.invoked, 1);
++		err++;
++	}
++
++	if (val.is_mptcp !=3D is_mptcp) {
++		log_err("%s: unexpected bpf_tcp_sock.is_mptcp %d !=3D %d",
++			msg, val.is_mptcp, is_mptcp);
++		err++;
++	}
++
++	return err;
++}
++
++static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
++{
++	int client_fd, prog_fd, map_fd, err;
++	struct bpf_object *obj;
++	struct bpf_map *map;
++
++	struct bpf_prog_load_attr attr =3D {
++		.prog_type =3D BPF_PROG_TYPE_SOCK_OPS,
++		.file =3D "./mptcp.o",
++		.expected_attach_type =3D BPF_CGROUP_SOCK_OPS,
++	};
++
++	err =3D bpf_prog_load_xattr(&attr, &obj, &prog_fd);
++	if (err) {
++		log_err("Failed to load BPF object");
++		return -1;
++	}
++
++	map =3D bpf_map__next(NULL, obj);
++	map_fd =3D bpf_map__fd(map);
++
++	err =3D bpf_prog_attach(prog_fd, cgroup_fd, BPF_CGROUP_SOCK_OPS, 0);
++	if (err) {
++		log_err("Failed to attach BPF program");
++		goto close_bpf_object;
++	}
++
++	client_fd =3D is_mptcp ? connect_to_mptcp_fd(server_fd, 0) :
++			       connect_to_fd(server_fd, 0);
++	if (client_fd < 0) {
++		err =3D -1;
++		goto close_client_fd;
++	}
++
++	err +=3D is_mptcp ? verify_sk(map_fd, client_fd, "MPTCP subflow socket", =
+1) :
++			  verify_sk(map_fd, client_fd, "plain TCP socket", 0);
++
++close_client_fd:
++	close(client_fd);
++
++close_bpf_object:
++	bpf_object__close(obj);
++	return err;
++}
++
++void test_mptcp(void)
++{
++	int server_fd, cgroup_fd;
++
++	cgroup_fd =3D test__join_cgroup("/mptcp");
++	if (CHECK_FAIL(cgroup_fd < 0))
++		return;
++
++	/* without MPTCP */
++	server_fd =3D start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
++	if (CHECK_FAIL(server_fd < 0))
++		goto with_mptcp;
++
++	CHECK_FAIL(run_test(cgroup_fd, server_fd, false));
++
++	close(server_fd);
++
++with_mptcp:
++	/* with MPTCP */
++	server_fd =3D start_mptcp_server(AF_INET, NULL, 0, 0);
++	if (CHECK_FAIL(server_fd < 0))
++		goto close_cgroup_fd;
++
++	CHECK_FAIL(run_test(cgroup_fd, server_fd, true));
++
++	close(server_fd);
++
++close_cgroup_fd:
++	close(cgroup_fd);
++}
+diff --git a/tools/testing/selftests/bpf/progs/mptcp.c b/tools/testing/self=
+tests/bpf/progs/mptcp.c
+new file mode 100644
+index 000000000000..936edc8517df
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/mptcp.c
+@@ -0,0 +1,48 @@
++// SPDX-License-Identifier: GPL-2.0
 +#include <linux/bpf.h>
++#include <bpf/bpf_helpers.h>
 +
-+#include "protocol.h"
++char _license[] SEC("license") =3D "GPL";
++__u32 _version SEC("version") =3D 1;
 +
-+bool bpf_mptcp_sock_is_valid_access(int off, int size, enum bpf_access_typ=
-e type,
-+				    struct bpf_insn_access_aux *info)
-+{
-+	if (off < 0 || off >=3D offsetofend(struct bpf_mptcp_sock, token))
-+		return false;
-+
-+	if (off % size !=3D 0)
-+		return false;
-+
-+	switch (off) {
-+	default:
-+		return size =3D=3D sizeof(__u32);
-+	}
-+}
-+
-+u32 bpf_mptcp_sock_convert_ctx_access(enum bpf_access_type type,
-+				      const struct bpf_insn *si,
-+				      struct bpf_insn *insn_buf,
-+				      struct bpf_prog *prog, u32 *target_size)
-+{
-+	struct bpf_insn *insn =3D insn_buf;
-+
-+#define BPF_MPTCP_SOCK_GET_COMMON(FIELD)							\
-+	do {											\
-+		BUILD_BUG_ON(sizeof_field(struct mptcp_sock, FIELD) >				\
-+				sizeof_field(struct bpf_mptcp_sock, FIELD));			\
-+		*insn++ =3D BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct mptcp_sock, FIELD),		\
-+							si->dst_reg, si->src_reg,		\
-+							offsetof(struct mptcp_sock, FIELD));	\
-+	} while (0)
-+
-+	if (insn > insn_buf)
-+		return insn - insn_buf;
-+
-+	switch (si->off) {
-+	case offsetof(struct bpf_mptcp_sock, token):
-+		BPF_MPTCP_SOCK_GET_COMMON(token);
-+		break;
-+	}
-+
-+	return insn - insn_buf;
-+}
-+
-+BPF_CALL_1(bpf_mptcp_sock, struct sock *, sk)
-+{
-+	if (sk_fullsock(sk) && sk->sk_protocol =3D=3D IPPROTO_TCP && sk_is_mptcp(=
-sk)) {
-+		struct mptcp_subflow_context *mptcp_sfc =3D mptcp_subflow_ctx(sk);
-+
-+		return (unsigned long)mptcp_sfc->conn;
-+	}
-+	return (unsigned long)NULL;
-+}
-+
-+const struct bpf_func_proto bpf_mptcp_sock_proto =3D {
-+	.func           =3D bpf_mptcp_sock,
-+	.gpl_only       =3D false,
-+	.ret_type       =3D RET_PTR_TO_MPTCP_SOCK_OR_NULL,
-+	.arg1_type      =3D ARG_PTR_TO_SOCK_COMMON,
-+};
-diff --git a/scripts/bpf_helpers_doc.py b/scripts/bpf_helpers_doc.py
-index 08388173973f..5c3e7aad8faa 100755
---- a/scripts/bpf_helpers_doc.py
-+++ b/scripts/bpf_helpers_doc.py
-@@ -428,6 +428,7 @@ class PrinterHelpers(Printer):
-             'struct tcp_request_sock',
-             'struct udp6_sock',
-             'struct task_struct',
-+            'struct bpf_mptcp_sock',
- =
-
-             'struct __sk_buff',
-             'struct sk_msg_md',
-@@ -474,6 +475,7 @@ class PrinterHelpers(Printer):
-             'struct udp6_sock',
-             'struct task_struct',
-             'struct path',
-+            'struct bpf_mptcp_sock',
-     }
-     mapped_types =3D {
-             'u8': '__u8',
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 88fd3ad0d4b2..66eb98d6402f 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -3576,6 +3576,15 @@ union bpf_attr {
-  * 		the data in *dst*. This is a wrapper of copy_from_user().
-  * 	Return
-  * 		0 on success, or a negative error in case of failure.
-+ *
-+ * struct bpf_mptcp_sock *bpf_mptcp_sock(struct bpf_sock *sk)
-+ *	Description
-+ *		This helper gets a **struct bpf_mptcp_sock** pointer from a
-+ *		**struct bpf_sock** pointer.
-+ *	Return
-+ *		A **struct bpf_mptcp_sock** pointer on success, or **NULL** in
-+ *		case of failure.
-+ *
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -3727,6 +3736,7 @@ union bpf_attr {
- 	FN(inode_storage_delete),	\
- 	FN(d_path),			\
- 	FN(copy_from_user),		\
-+	FN(mptcp_sock),			\
- 	/* */
- =
-
- /* integer value in 'imm' field of BPF_CALL instruction selects which help=
-er
-@@ -4060,6 +4070,10 @@ struct bpf_tcp_sock {
- 	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
- =
-
-+struct bpf_mptcp_sock {
-+	__u32 token;		/* msk token */
++struct mptcp_storage {
++	__u32 invoked;
++	__u32 is_mptcp;
 +};
 +
- struct bpf_sock_tuple {
- 	union {
- 		struct {
++struct {
++	__uint(type, BPF_MAP_TYPE_SK_STORAGE);
++	__uint(map_flags, BPF_F_NO_PREALLOC);
++	__type(key, int);
++	__type(value, struct mptcp_storage);
++} socket_storage_map SEC(".maps");
++
++SEC("sockops")
++int _sockops(struct bpf_sock_ops *ctx)
++{
++	struct mptcp_storage *storage;
++	struct bpf_tcp_sock *tcp_sk;
++	int op =3D (int) ctx->op;
++	struct bpf_sock *sk;
++
++	sk =3D ctx->sk;
++	if (!sk)
++		return 1;
++
++	storage =3D bpf_sk_storage_get(&socket_storage_map, sk, 0,
++				     BPF_SK_STORAGE_GET_F_CREATE);
++	if (!storage)
++		return 1;
++
++	if (op !=3D BPF_SOCK_OPS_TCP_CONNECT_CB)
++		return 1;
++
++	tcp_sk =3D bpf_tcp_sock(sk);
++	if (!tcp_sk)
++		return 1;
++
++	storage->invoked++;
++	storage->is_mptcp =3D tcp_sk->is_mptcp;
++
++	return 1;
++}
 -- =
 
 2.28.0
 
---===============3758967646033232635==--
+--===============7921156776227526823==--
