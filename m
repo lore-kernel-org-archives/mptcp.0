@@ -1,84 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============5169016936825462343=="
+Content-Type: multipart/mixed; boundary="===============4400366670710468179=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v9 mptcp-next 5/8] mptcp: fix subflow's
- remote_id is zero issue
-Date: Wed, 02 Sep 2020 17:38:27 +0800
-Message-ID: <7e8cb403aead47f5b35fe8201c84047707e13d1e.1599038897.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v9 mptcp-next 6/8] mptcp: add RM_ADDR related
+ mibs
+Date: Wed, 02 Sep 2020 17:38:28 +0800
+Message-ID: <5caa17731888db90916a6d9975fbabc4bfeb35e3.1599038897.git.geliangtang@gmail.com>
 In-Reply-To: cover.1599038897.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5690
+X-UID: 5691
 
---===============5169016936825462343==
+--===============4400366670710468179==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the missing remote_id setting in subflow_ulp_clone. And
-also updated the remote_id setting in __mptcp_subflow_connect, to make the
-code more like local_id setting.
+This patch added two new mibs for RM_ADDR, named MPTCP_MIB_RMADDR and
+MPTCP_MIB_RMSUBFLOW, when the RM_ADDR suboption is received, increase
+the first mib counter, when the local subflow is removed, increase the
+second mib counter.
 
 Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/subflow.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/mptcp/mib.c        | 2 ++
+ net/mptcp/mib.h        | 2 ++
+ net/mptcp/pm_netlink.c | 5 +++++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e31900ff0c56..0a071794a5c2 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1042,6 +1042,7 @@ int __mptcp_subflow_connect(struct sock *sk, const st=
-ruct mptcp_addr_info *loc,
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_subflow_context *subflow;
- 	struct sockaddr_storage addr;
-+	int remote_id =3D remote->id;
- 	int local_id =3D loc->id;
- 	struct socket *sf;
- 	struct sock *ssk;
-@@ -1073,7 +1074,6 @@ int __mptcp_subflow_connect(struct sock *sk, const st=
-ruct mptcp_addr_info *loc,
- 	subflow->remote_key =3D msk->remote_key;
- 	subflow->local_key =3D msk->local_key;
- 	subflow->token =3D msk->token;
--	subflow->remote_id =3D remote->id;
- 	mptcp_info2sockaddr(loc, &addr);
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index a33bf719ce6f..84d119436b22 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -29,6 +29,8 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
+ 	SNMP_MIB_ITEM("DuplicateData", MPTCP_MIB_DUPDATA),
+ 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
+ 	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
++	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
++	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
+ 	SNMP_MIB_SENTINEL
+ };
  =
 
- 	addrlen =3D sizeof(struct sockaddr_in);
-@@ -1087,10 +1087,11 @@ int __mptcp_subflow_connect(struct sock *sk, const =
-struct mptcp_addr_info *loc,
- 		goto failed;
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index cdeea3732ddf..47bcecce1106 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -22,6 +22,8 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_DUPDATA,		/* Segments discarded due to duplicate DSS */
+ 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=3D0 */
+ 	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=3D1 */
++	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
++	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
+ 	__MPTCP_MIB_MAX
+ };
  =
 
- 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
--	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d", msk, remote_token,
--		 local_id);
-+	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d remote_id=3D%d", msk, =
-remote_token,
-+		 local_id, remote_id);
- 	subflow->remote_token =3D remote_token;
- 	subflow->local_id =3D local_id;
-+	subflow->remote_id =3D remote_id;
- 	subflow->request_join =3D 1;
- 	subflow->request_bkup =3D !!(loc->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
- 	mptcp_info2sockaddr(remote, &addr);
-@@ -1354,6 +1355,7 @@ static void subflow_ulp_clone(const struct request_so=
-ck *req,
- 		new_ctx->fully_established =3D 1;
- 		new_ctx->backup =3D subflow_req->backup;
- 		new_ctx->local_id =3D subflow_req->local_id;
-+		new_ctx->remote_id =3D subflow_req->remote_id;
- 		new_ctx->token =3D subflow_req->token;
- 		new_ctx->thmac =3D subflow_req->thmac;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 62ffc9d5861f..ac5df37b5170 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -15,6 +15,7 @@
+ #include <uapi/linux/mptcp.h>
+ =
+
+ #include "protocol.h"
++#include "mib.h"
+ =
+
+ /* forward declaration */
+ static struct genl_family mptcp_genl_family;
+@@ -303,6 +304,8 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *ms=
+k)
+ 		msk->pm.subflows--;
+ 		WRITE_ONCE(msk->pm.accept_addr, true);
+ =
+
++		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
++
+ 		break;
  	}
+ }
+@@ -336,6 +339,8 @@ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock =
+*msk, u8 rm_id)
+ 		msk->pm.local_addr_used--;
+ 		msk->pm.subflows--;
+ =
+
++		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
++
+ 		break;
+ 	}
+ }
 -- =
 
 2.17.1
 
---===============5169016936825462343==--
+--===============4400366670710468179==--
