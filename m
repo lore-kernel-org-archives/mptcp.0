@@ -1,118 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============4061181209393931794=="
+Content-Type: multipart/mixed; boundary="===============0131724265415612202=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 0/8] Add REMOVE_ADDR support
-Date: Fri, 04 Sep 2020 13:07:42 +0800
-Message-ID: <CA+WQbwttLmaW2U_ouuMwKXtKW-6RF=CXGLPdeHWhbTpTA7NRgw@mail.gmail.com>
-In-Reply-To: cover.1599038897.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v2 4/5] bpf:selftests: add MPTCP test
+ base
+Date: Fri, 04 Sep 2020 17:28:24 +0200
+Message-ID: <e66ceee3-55d6-ed77-ddd6-5de15bb77921@tessares.net>
+In-Reply-To: 20200902170443.272113-5-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5719
+X-UID: 5721
 
---===============4061181209393931794==
+--===============0131724265415612202==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Geliang Tang <geliangtang(a)gmail.com> =E4=BA=8E2020=E5=B9=B49=E6=9C=882=E6=
-=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=885:40=E5=86=99=E9=81=93=EF=BC=9A
->
-> v9:
->  - update patch 3/8, simply call mptcp_pm_nl_rm_subflow_received.
->  - update patch 5/8, use the reverse x-mas tree order.
->  - this patchset should be applied after the applying of my another
->    patchset, 'add ADD_ADDR echo flag support'.
->
-> v8:
->  - drop anno_list in v7.
->    We don't need to add a new list, conn_list is enough for the signal
-> address and local subflow.
->  - fix local_id and remote_id issues.
->    The RM_ADDR logic uses an address id to identify the removing
-> address, so we must make sure the subflow's local_id and remote_id be
-> set properly.
->  - fix mptcp_pm_nl_rm_addr_received logic issue
->  - update selftests
->
-> v7:
->  - add RM_ADDR mib
->  - update RM_ADDR selftests test case
->
-> v6:
->  - rename lookup_anno_list_by_saddr to remove_anno_list_by_saddr as
->    Paolo suggested.
->  - add msk socket lock when traverse msk->conn_list as Paolo suggested.
->  - Since the first three patches in v5 have been merged to export
->    branch, drop them from this patchset.
->  - add remove addr and subflow selftest test case.
->  - this patchset is against mptcp_net-next's export branch.
->
-> v5:
->  - merge mptcp_nl_remove_subflow() and mptcp_nl_remove_addr()
->  - add cond_resched
->  - reduce the indentation level in mptcp_pm_nl_rm_addr_received
->
-> v4:
->  - update mptcp_subflow_shutdown()'s args.
->  - add rm_id check to make sure we don't shutdown the first subflow.
->  - add conn_list empty check.
->  - move anno_list to mptcp_pm_data.
->  - add a new patch 'mptcp: add remove subflow support'.
->
-> v3:
->  - fix memory leak and lock issue in v2.
->  - drop alist in v2.
->  - fix mptcp_subflow_shutdown's arguments.
->  - bzero remote in mptcp_pm_create_subflow_or_signal_addr.
->  - add more commit message.
->
-> Geliang Tang (8):
->   1/8 mptcp: remove addr and subflow in PM netlink
->   2/8 mptcp: fix mptcp_pm_nl_rm_addr_received logic issue
->   3/8 mptcp: implement mptcp_pm_remove_subflow
->   4/8 mptcp: fix every subflow's local_id is zero
->   5/8 mptcp: fix subflow's remote_id is zero issue
->   6/8 mptcp: add RM_ADDR related mibs
->   7/8 selftests: mptcp: add remove cfg in mptcp_connect
->   8/8 selftests: mptcp: add remove addr and subflow test cases
+Hi Nicolas,
 
-Hi Paolo, Matt,
+On 02/09/2020 19:04, Nicolas Rybowski wrote:
+> This patch adds a base for MPTCP specific tests.
+> =
 
-I want to adjust some code in this patchset.
+> It is currently limited to the is_mptcp field in case of plain TCP
+> connection because there is no easy way to get the subflow sk from a msk
+> in userspace. This implies that we cannot lookup the sk_storage attached
+> to the subflow sk in the sockops program.
+> =
 
-I think patch 2/8 "mptcp: fix mptcp_pm_nl_rm_addr_received logic issue"
-shouldn't be here, it's better to squash-to the original commit "mptcp: add
-the incoming RM_ADDR support".
+> Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
 
-So I have sent out a new patch named 'Squash-to: "mptcp: add the incoming
-RM_ADDR support"' yesterday.
+(...)
 
-And I want to commit patch 4/8 "mptcp: fix every subflow's local_id is zero"
-and 5/8 "mptcp: fix subflow's remote_id is zero issue" directly to -net as =
-Paolo
-suggested. Some code about subflow's remote_id fixing in the commit "mptcp:
-add the incoming RM_ADDR support" should be put together in patch 5/8.
-So in the squash-to patch, I drop the original subflow's remote_id fixing c=
-ode.
+> diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testin=
+g/selftests/bpf/network_helpers.c
+> index 12ee40284da0..9295a5d8e001 100644
+> --- a/tools/testing/selftests/bpf/network_helpers.c
+> +++ b/tools/testing/selftests/bpf/network_helpers.c
 
-Please give me some suggestions about my squash-to patch.
+(...)
 
-Thanks.
--Geliang
+> @@ -66,8 +70,8 @@ static int settimeo(int fd, int timeout_ms)
+>   =
 
->
->  net/mptcp/mib.c                               |   2 +
->  net/mptcp/mib.h                               |   2 +
->  net/mptcp/pm.c                                |  15 +-
->  net/mptcp/pm_netlink.c                        | 107 +++++++++++--
->  net/mptcp/protocol.h                          |   3 +-
->  net/mptcp/subflow.c                           |   8 +-
->  .../selftests/net/mptcp/mptcp_connect.c       |  18 ++-
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 145 +++++++++++++++++-
->  8 files changed, 276 insertions(+), 24 deletions(-)
->
-> --
-> 2.17.1
->
---===============4061181209393931794==--
+>   #define save_errno_close(fd) ({ int __save =3D errno; close(fd); errno =
+=3D __save; })
+>   =
+
+> -int start_server(int family, int type, const char *addr_str, __u16 port,
+> -		 int timeout_ms)
+> +static int start_server_proto(int family, int type, int protocol,
+> +			       const char *addr_str, __u16 port, int timeout_ms)
+
+Here I add to remove an extra space (before const) to satisfy checkpatch.pl.
+
+(...)
+
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp.c b/tools/testing/se=
+lftests/bpf/progs/mptcp.c
+> new file mode 100644
+> index 000000000000..936edc8517df
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/mptcp.c
+> @@ -0,0 +1,48 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/bpf.h>
+> +#include <bpf/bpf_helpers.h>
+> +
+> +char _license[] SEC("license") =3D "GPL";
+> +__u32 _version SEC("version") =3D 1;
+> +
+> +struct mptcp_storage {
+> +	__u32 invoked;
+> +	__u32 is_mptcp;
+> +};
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_SK_STORAGE);
+> +	__uint(map_flags, BPF_F_NO_PREALLOC);
+> +	__type(key, int);
+> +	__type(value, struct mptcp_storage);
+> +} socket_storage_map SEC(".maps");
+> +
+> +SEC("sockops")
+> +int _sockops(struct bpf_sock_ops *ctx)
+> +{
+> +	struct mptcp_storage *storage;
+> +	struct bpf_tcp_sock *tcp_sk;
+> +	int op =3D (int) ctx->op;
+
+Here I had to remove the space between (int) and ctx.
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0131724265415612202==--
