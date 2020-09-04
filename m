@@ -1,47 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============1423245008697033637=="
+Content-Type: multipart/mixed; boundary="===============8118589197490387002=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v7 mptcp-next 0/4] add ADD_ADDR echo flag
- support
-Date: Fri, 04 Sep 2020 17:48:33 +0200
-Message-ID: <14503f54-b4b3-4496-0549-8958f9b77a2b@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2008311725450.53878@dgilroy-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: use _fast lock version in
+ __mptcp_move_skbs
+Date: Fri, 04 Sep 2020 18:40:20 +0200
+Message-ID: <48bde311-49dd-2a75-8a6c-0df1b1286ee9@tessares.net>
+In-Reply-To: 3ba08d7bad27095361fecc28af6c21ba25ecb3ac.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5723
+X-UID: 5725
 
---===============1423245008697033637==
+--===============8118589197490387002==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+Hi Florian, Paolo,
 
-On 01/09/2020 02:26, Mat Martineau wrote:
-> =
+On 03/09/2020 11:58, Paolo Abeni wrote:
+> On Thu, 2020-09-03 at 00:01 +0200, Florian Westphal wrote:
+>> Paolo Abeni <pabeni(a)redhat.com> wrote:
+>>> On Wed, 2020-09-02 at 16:37 +0200, Florian Westphal wrote:
+>>>> The function is short and won't sleep, so this can use the _fast versi=
+on.
+>>>>
+>>>> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 
-> On Fri, 28 Aug 2020, Geliang Tang wrote:
-> =
-
->> v7:
->> - add accept_subflow re-check
+(...)
+>>> Good catch! the patch LGTM, thanks!
+>>>
+>>> Do you think it could useful do the same also in mptcp_sendmsg()
+>>> and mptcp_worker()? (since mptcp_sendmsg_frag() does not sleep, should
+>>> be possible...)
 >>
+>> sendmsg path might sleep  (it copies data from userspace).
 > =
 
-> v7 looks good to add to the export branch, thank you for the changes.
+> Whoops I missed that.
+> =
 
-Thank you for the patches and the review!
+>> mptcp_worker might work, but I think we would need to make sure
+>> mptcp_ext_cache_refill() uses atomic allocations for this to work.
+>>
+>> Not sure this is a good idea.  For work queue case I think its better
+>> to try to make it a true slowpath that isn't invoked frequently.
+> =
 
-Just added in the tree just after your 3 previous patches related to =
+> Agreed, we really don't want to over-optimize the worker
+> =
 
-RM_ADDR. Because of that, I had 2 simple conflicts before of the =
+> I'm fine with this, thanks!
 
-modifications in the MIB:
+Thank you for the patch and the review!
 
-   - e864f2897303: conflict in t/mptcp-add-OoO-related-mibs
-
-I also added Mat's Reviewed-by.
+Just added at the end of the series!
 
 Tests + export are in progress.
 
@@ -51,4 +64,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1423245008697033637==--
+--===============8118589197490387002==--
