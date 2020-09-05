@@ -1,311 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============3885374466815944849=="
+Content-Type: multipart/mixed; boundary="===============4541038630457768291=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC mptcp-next 2/3] mptcp: rework poll+nospace handling
-Date: Sat, 05 Sep 2020 12:33:23 +0200
-Message-ID: <20200905103324.27066-3-fw@strlen.de>
+Subject: [MPTCP] [RFC mptcp-next 3/3] mptcp: try to clean data inplace if
+ possible
+Date: Sat, 05 Sep 2020 12:33:24 +0200
+Message-ID: <20200905103324.27066-4-fw@strlen.de>
 In-Reply-To: 20200905103324.27066-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5729
+X-UID: 5730
 
---===============3885374466815944849==
+--===============4541038630457768291==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-At this time, MPTCP maintains a status bit, MPTCP_SEND_SPACE,
-that is set when at least one subflow and the mptcp socket itself
-are writeable.
+In most cases the worker won't be scheduled because socket
+has enough space and is established.
 
-poll path set EPOLLOUT if the bit is set.
-sendmsg path makes sure MPTCP_SEND_SPACE gets cleared when last
-write has used up all subflows or the mptcp socket wmem.
-
-This reworks nospace handling as follows:
-
-MPTCP_SEND_SPACE is replaced with MPTCP_NOSPACE.
-This bit is set when the mptcp socket is not writeable anymore
-and makes the mptcp-level ack path schedule the mptcp worker.
-
-This is needed to wake up userspace processes that wait for a POLLOUT
-event.
-
-sendmsg will set MPTCP_NOSPACE only when it has to wait for more
-wmem (blocking I/O case).
-
-poll path will also set MPTCP_NOSPACE in case the mptcp socket
-is not writeable.
-
-Normal tcp-level notification (SOCK_NOSPACE) is only enabled
-in case the subflow socket has no available wmem.
+If the mptcp retransmit queue needs to cleaned up its possible to try to
+acquire the mptcp socket lock anyway.  This allows to avoid the work
+queue unless the socket is currently owned.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/protocol.c | 98 ++++++++++++++++++++++++++++++--------------
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  | 11 +++--
- 3 files changed, 74 insertions(+), 37 deletions(-)
+ net/mptcp/protocol.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 15ecb471602c..bc5231d5b06d 100644
+index bc5231d5b06d..d43f7e7125a1 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -680,10 +680,12 @@ static void mptcp_reset_timer(struct sock *sk)
+@@ -41,6 +41,8 @@ struct mptcp_skb_cb {
  =
 
+ static struct percpu_counter mptcp_sockets_allocated;
+ =
+
++static void mptcp_clean_una(struct sock *sk);
++
+ /* If msk has an initial subflow socket, and the MP_CAPABLE handshake has =
+not
+  * completed yet or has failed, return the subflow socket.
+  * Otherwise return NULL.
+@@ -681,13 +683,30 @@ static void mptcp_reset_timer(struct sock *sk)
  void mptcp_data_acked(struct sock *sk)
  {
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	bool fast =3D false;
+ =
+
  	mptcp_reset_timer(sk);
  =
 
--	if ((!test_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags) ||
--	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
-+	if ((test_bit(MPTCP_NOSPACE, &msk->flags) ||
-+	    (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
- 	    schedule_work(&mptcp_sk(sk)->work))
- 		sock_hold(sk);
- }
-@@ -841,12 +843,7 @@ static void mptcp_clean_una(struct sock *sk)
- =
-
- 	/* Only wake up writers if a subflow is ready */
- 	if (mptcp_is_writeable(msk)) {
--		set_bit(MPTCP_SEND_SPACE, &msk->flags);
--		smp_mb__after_atomic();
--
--		/* set SEND_SPACE before sk_stream_write_space clears
--		 * NOSPACE
--		 */
-+		clear_bit(MPTCP_NOSPACE, &msk->flags);
- 		sk_stream_write_space(sk);
- 	}
- }
-@@ -1038,21 +1035,37 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
-ct sock *ssk,
- 	return ret;
- }
- =
-
--static void mptcp_nospace(struct mptcp_sock *msk)
-+/* set SOCK_NOSPACE for any subflow that has no more wmem.
-+ *
-+ * Returns true if at least one subflow is writeable.
-+ */
-+static bool mptcp_set_subflow_nospace(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
--
--	clear_bit(MPTCP_SEND_SPACE, &msk->flags);
--	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb */
-+	bool ssk_any_writeable =3D false;
- =
-
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+		bool ssk_writeable =3D sk_stream_is_writeable(ssk);
- 		struct socket *sock =3D READ_ONCE(ssk->sk_socket);
- =
-
-+		if (ssk_writeable) {
-+			ssk_any_writeable =3D true;
-+			continue;
+ 	if ((test_bit(MPTCP_NOSPACE, &msk->flags) ||
+-	    (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
+-	    schedule_work(&mptcp_sk(sk)->work))
+-		sock_hold(sk);
++	    (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED))) {
++		if (READ_ONCE(sk->sk_lock.owned))
++			goto slowpath;
++
++		if (unlikely(!spin_trylock_bh(&sk->sk_lock.slock)))
++			goto slowpath;
++
++		if (!READ_ONCE(sk->sk_lock.owned)) {
++			mptcp_clean_una(sk);
++			fast =3D true;
 +		}
 +
-+		if (!sock)
-+			continue;
-+
- 		/* enables ssk->write_space() callbacks */
--		if (sock)
--			set_bit(SOCK_NOSPACE, &sock->flags);
-+		set_bit(SOCK_NOSPACE, &sock->flags);
-+
-+		ssk_writeable =3D sk_stream_is_writeable(ssk);
-+		if (ssk_writeable)
-+			ssk_any_writeable =3D true;
- 	}
-+
-+	return ssk_any_writeable;
- }
- =
-
- static bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-@@ -1160,10 +1173,28 @@ static struct sock *mptcp_subflow_get_send(struct m=
-ptcp_sock *msk,
- 	return free ? msk->last_snd : NULL;
- }
- =
-
--static void ssk_check_wmem(struct mptcp_sock *msk)
-+static bool __mptcp_check_writeable(struct mptcp_sock *msk)
- {
--	if (unlikely(!mptcp_is_writeable(msk)))
--		mptcp_nospace(msk);
-+	struct sock *sk =3D (struct sock *)msk;
-+	bool mptcp_writable;
-+
-+	__mptcp_clean_una(sk);
-+	mptcp_writable =3D sk_stream_is_writeable(sk);
-+	if (!mptcp_writable) {
-+		set_bit(MPTCP_NOSPACE, &msk->flags);
-+		smp_mb__after_atomic();
-+		__mptcp_clean_una(sk);
-+
-+		mptcp_writable =3D sk_stream_is_writeable(sk);
-+		if (likely(!mptcp_writable))
-+			return false;
-+
-+		/* MPTCP ack after MPTCP_NOSPACE was set */
-+		clear_bit(MPTCP_NOSPACE, &msk->flags);
++		spin_unlock_bh(&sk->sk_lock.slock);
++		if (fast)
++			return;
++	slowpath:
++		if (schedule_work(&mptcp_sk(sk)->work))
++			sock_hold(sk);
 +	}
-+
-+	/* mptcp socket is writeable, now check subflows */
-+	return mptcp_set_subflow_nospace(msk);
  }
  =
 
- static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-@@ -1217,7 +1248,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 				mptcp_reset_timer(sk);
- 		}
- =
-
--		mptcp_nospace(msk);
-+		__mptcp_check_writeable(msk);
-+
- 		ret =3D sk_stream_wait_memory(sk, &timeo);
- 		if (ret)
- 			goto out;
-@@ -1314,7 +1346,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- =
-
- 	release_sock(ssk);
- out:
--	ssk_check_wmem(msk);
- 	release_sock(sk);
- 	return copied ? : ret;
- }
-@@ -1811,7 +1842,6 @@ static int __mptcp_init_sock(struct sock *sk)
- 	INIT_LIST_HEAD(&msk->conn_list);
- 	INIT_LIST_HEAD(&msk->join_list);
- 	INIT_LIST_HEAD(&msk->rtx_queue);
--	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
- 	INIT_WORK(&msk->work, mptcp_worker);
- 	msk->out_of_order_queue =3D RB_ROOT;
- =
-
-@@ -2422,13 +2452,6 @@ bool mptcp_finish_join(struct sock *sk)
- 	return true;
- }
- =
-
--static bool mptcp_memory_free(const struct sock *sk, int wake)
--{
--	struct mptcp_sock *msk =3D mptcp_sk(sk);
--
--	return wake ? test_bit(MPTCP_SEND_SPACE, &msk->flags) : true;
--}
--
- static struct proto mptcp_prot =3D {
- 	.name		=3D "MPTCP",
- 	.owner		=3D THIS_MODULE,
-@@ -2449,7 +2472,6 @@ static struct proto mptcp_prot =3D {
- 	.sockets_allocated	=3D &mptcp_sockets_allocated,
- 	.memory_allocated	=3D &tcp_memory_allocated,
- 	.memory_pressure	=3D &tcp_memory_pressure,
--	.stream_memory_free	=3D mptcp_memory_free,
- 	.sysctl_wmem_offset	=3D offsetof(struct net, ipv4.sysctl_tcp_wmem),
- 	.sysctl_mem	=3D sysctl_tcp_mem,
- 	.obj_size	=3D sizeof(struct mptcp_sock),
-@@ -2622,6 +2644,23 @@ static __poll_t mptcp_check_readable(struct mptcp_so=
-ck *msk)
- 	       0;
- }
- =
-
-+static __poll_t mptcp_check_writeable(struct mptcp_sock *msk)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	__poll_t ret =3D 0;
-+	bool slow;
-+
-+	if (sk->sk_shutdown & SEND_SHUTDOWN)
-+		return 0;
-+
-+	slow =3D lock_sock_fast(sk);
-+	if (__mptcp_check_writeable(msk))
-+		ret =3D EPOLLOUT | EPOLLWRNORM;
-+
-+	unlock_sock_fast(sk, slow);
-+	return ret;
-+}
-+
- static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 			   struct poll_table_struct *wait)
- {
-@@ -2640,8 +2679,7 @@ static __poll_t mptcp_poll(struct file *file, struct =
-socket *sock,
- =
-
- 	if (state !=3D TCP_SYN_SENT && state !=3D TCP_SYN_RECV) {
- 		mask |=3D mptcp_check_readable(msk);
--		if (test_bit(MPTCP_SEND_SPACE, &msk->flags))
--			mask |=3D EPOLLOUT | EPOLLWRNORM;
-+		mask |=3D mptcp_check_writeable(msk);
- 	}
- 	if (sk->sk_shutdown & RCV_SHUTDOWN)
- 		mask |=3D EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ba253a6947b0..d18af92723e4 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -86,7 +86,7 @@
- =
-
- /* MPTCP socket flags */
- #define MPTCP_DATA_READY	0
--#define MPTCP_SEND_SPACE	1
-+#define MPTCP_NOSPACE		1
- #define MPTCP_WORK_RTX		2
- #define MPTCP_WORK_EOF		3
- #define MPTCP_FALLBACK_DONE	4
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e31900ff0c56..bdf28d1baba8 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -972,17 +972,16 @@ static void subflow_data_ready(struct sock *sk)
- static void subflow_write_space(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct socket *sock =3D READ_ONCE(sk->sk_socket);
- 	struct sock *parent =3D subflow->conn;
- =
-
- 	if (!sk_stream_is_writeable(sk))
- 		return;
- =
-
--	if (sk_stream_is_writeable(parent)) {
--		set_bit(MPTCP_SEND_SPACE, &mptcp_sk(parent)->flags);
--		smp_mb__after_atomic();
--		/* set SEND_SPACE before sk_stream_write_space clears NOSPACE */
--		sk_stream_write_space(parent);
--	}
-+	if (sock)
-+		clear_bit(SOCK_NOSPACE, &sock->flags);
-+
-+	sk_stream_write_space(parent);
- }
- =
-
- static struct inet_connection_sock_af_ops *
+ void mptcp_subflow_eof(struct sock *sk)
 -- =
 
 2.26.2
 
---===============3885374466815944849==--
+--===============4541038630457768291==--
