@@ -1,65 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============8901572147847930112=="
+Content-Type: multipart/mixed; boundary="===============6780605609200150353=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] tcp: propagate MPTCP skb extensions on xmit
- splits
-Date: Fri, 04 Sep 2020 18:44:08 +0200
-Message-ID: <c1f4b701-102f-8e56-df69-df10b72dd0de@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2009030803370.30999@candidom-mobl.amr.corp.intel.com
+Subject: [MPTCP] [RFC mptcp-next 0/3] mptcp: rework poll+nospace handling
+Date: Sat, 05 Sep 2020 12:33:21 +0200
+Message-ID: <20200905103324.27066-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 5726
+X-UID: 5727
 
---===============8901572147847930112==
+--===============6780605609200150353==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+A while back I had a discussion with Paolo on how mptcp handles the
+'is mptcp socket writeable' handling in the sendmsg path, rather than
+the poll one.
 
-On 03/09/2020 17:04, Mat Martineau wrote:
-> On Wed, 2 Sep 2020, Paolo Abeni wrote:
-> =
+There are only two cases:
+1. Blocking IO, where userspace calls send/read.
+   In this scenario, maintaining the MPTCP_SEND_SPACE bit in sendmsg
+   path is useless extra work -- userspace will block at send time if
+   no more wmem is available.
 
->> When the TCP stack splits a packet on the write queue, the tail
->> half currently lose the associated skb extensions, and will not
->> carry the DSM on the wire.
->>
->> The above does not cause functional problems and is allowed by
->> the RFC, but interact badly with GRO and RX coalescing, as possible
->> candidates for aggregation will carry different TCP options.
->>
->> This change tries to improve the MPTCP behavior, propagating the
->> skb estensions on split.
->>
->> Additionally, we must prevent the MPTCP stack from updating the
->> mapping after the split occour: that will both violate the RFC and
->> fool the reader.
->>
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
->> ---
->> v1 -> v2:
->> - move 'frozen' initialization above the copy - Mat
-> =
+2. Nonblocking IO.
+   If userspace calls sendmsg without checking poll first, it has
+   to cope with -EAGAIN.
+   If userspace does call poll first, then mptcp can do the 'is
+   mptcp socket writeable' check in mptcp_poll.
 
-> Looks good to me, thank you!
+Consequently, patch #2 removes ssk_check_wmem().  A similar test
+is added to mptcp_poll().
 
-Thank you for the patch and the review!
+Furthermore, the MPTCP_SEND_SPACE bit has its meaning inverted and
+gets renamed to MPTCP_NOSPACE.  Its only function is to let the
+mptcp_data_acked() path know if the mptcp worker needs to be scheduled
+or not.
 
-(I just fixed two typos in the commit messages with "occour" and =
+IOW, when sendmsg path is going to sleep, or when poll path finds
+socket isn't writeable, this bit makes sure that the next data ack
+will wake userspace.
 
-"estensions" reported by codespell via checkpatch :) )
+For the unlikely case that the mptcp socket is writeable but subflow
+sockets are not, this will still enable tcp-level callbacks via the
+SOCK_NOSPACE machinery.
 
-Just added the patch at the end of the series!
+Sending as RFC for now as I'm not sure others consider this approach
+better or easier to follow then what we currently have.
 
-Tests + export are in progress.
+First patch might be useful in its own right even if #2 is rejected.
 
-Cheers,
-Matt
 
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============8901572147847930112==--
+--===============6780605609200150353==--
