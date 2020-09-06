@@ -1,332 +1,343 @@
-Content-Type: multipart/mixed; boundary="===============1650037223859112593=="
+Content-Type: multipart/mixed; boundary="===============2761902727939001683=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 3rd of September 2020
-Date: Sat, 05 Sep 2020 12:44:15 +0200
-Message-ID: <5521bc92-8bf6-eb2b-0c7d-06c5f1954b99@tessares.net>
+Subject: [MPTCP] Re: [RFC mptcp-next 2/3] mptcp: rework poll+nospace handling
+Date: Sun, 06 Sep 2020 17:58:17 +0200
+Message-ID: <a4428c99de218ce78a6128d34e388910dce1dba6.camel@redhat.com>
+In-Reply-To: 20200905103324.27066-3-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 5731
+X-UID: 5734
 
---===============1650037223859112593==
+--===============2761902727939001683==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
-
-Last Thursday, we had our 114th meeting with Mat (Intel OTC), Christoph =
-
-(Apple), Paolo and Davide (RedHat), Geliang (Xiaomi) and myself (Tessares).
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-     - The list of accepted patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
-
-     netdev (if mptcp ML is in cc) (Davide Caratti, YueHaibing):
-
-1355689  [net-next] selftests: mptcp: fix typo in mptcp_connect usage
-1353662  [net-next] mptcp: Remove unused macro MPTCP_SAME_STATE
-
-
-     our repo (by: Florian Westphal, Paolo Abeni):
-
-1353755  fix for most poll selftest timeouts
-1352466  [v2] Squash-to: "mptcp: cleanup mptcp_subflow_discard_data()"
-1349374  [mptcp-next,1/1] mptcp: fix stale subflow->writeable caching
-1349247  [mptcp-next] mptcp: free acked data before waiting for more memory
-1349244  [mptcp-next] mptcp: only wake parent if subflow is writable
-1348371  [mptcp-next,v3] mptcp: adjust mptcp receive buffer limit if =
-
-subflow h...
-
-
-
-Pending patches:
-     - The list of pending patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
-
-     netdev (if mptcp ML is in cc) (by: Nicolas Rybowski):
-
-1349344  [bpf-next,3/3] bpf: add 'bpf_mptcp_sock' structure and helper
-1349341  [bpf-next,2/3] mptcp: attach subflow socket to parent cgroup
-
-
-     our repo (by: Florian Westphal, Geliang Tang, Matthieu Baerts, =
-
-Nicolas Rybowski, Paolo Abeni):
-
-1325171: Changes Requested: [mptcp-next] selftests: mptcp: interpret \n =
-
-as a new line:
-     - TODO: Matth
-
-1349790: Changes Requested: [mptcp-next] mptcp: keep track of receivers =
-
-advertised window:
-     - Florian is working on a v2
-
-1353032: Awaiting Upstream: [v7,mptcp-next,1/4] mptcp: send out ADD_ADDR =
-
-with echo flag
-1353033: Awaiting Upstream: [v7,mptcp-next,2/4] mptcp: add ADD_ADDR =
-
-related mibs
-1353034: Awaiting Upstream: [v7,mptcp-next,3/4] selftests: mptcp: add =
-
-ADD_ADDR mibs check function
-1353035: Awaiting Upstream: [v7,mptcp-next,4/4] mptcp: add =
-
-accept_subflow re-check:
-     - TODO: Matth =E2=86=92 done
-
-1355637: New: [v9,mptcp-next,1/8] mptcp: remove addr and subflow in PM =
-
-netlink
-1355638: New: [v9,mptcp-next,2/8] mptcp: fix =
-
-mptcp_pm_nl_rm_addr_received logic issue
-1355639: New: [v9,mptcp-next,3/8] mptcp: implement mptcp_pm_remove_subflow
-1355643: New: [v9,mptcp-next,4/8] mptcp: fix every subflow's local_id is =
-
-zero
-1355644: New: [v9,mptcp-next,5/8] mptcp: fix subflow's remote_id is zero =
-
-issue
-1355645: New: [v9,mptcp-next,6/8] mptcp: add RM_ADDR related mibs
-1355646: New: [v9,mptcp-next,7/8] selftests: mptcp: add remove cfg in =
-
-mptcp_connect
-1355647: New: [v9,mptcp-next,8/8] selftests: mptcp: add remove addr and =
-
-subflow test cases:
-     - Paolo will look at that
-     - v10 will arrive next week
-
-1355829: Awaiting Upstream: [mptcp-next] mptcp: use _fast lock version =
-
-in __mptcp_move_skbs:
-     - TODO: Matth =E2=86=92 Done
-     - Florian was right, as usual :-)
-
-1355957: New: [v2] tcp: propagate MPTCP skb extensions on xmit splits:
-     - TODO: Matth =E2=86=92 Done
-
-1355993: Awaiting Upstream: [mptcp-next,v2,1/5] bpf: expose is_mptcp =
-
-flag to bpf_tcp_sock
-1355994: Awaiting Upstream: [mptcp-next,v2,2/5] mptcp: attach subflow =
-
-socket to parent cgroup
-1355996: Awaiting Upstream: [mptcp-next,v2,3/5] bpf: add =
-
-'bpf_mptcp_sock' structure and helper
-1355997: Awaiting Upstream: [mptcp-next,v2,4/5] bpf:selftests: add MPTCP =
-
-test base
-1355998: Awaiting Upstream: [mptcp-next,v2,5/5] bpf:selftests: add =
-
-bpf_mptcp_sock() verifier tests:
-     - TODO: Matth =E2=86=92 done
-     - Then can be sent upstream
-
-1356477: New: Squash-to: "mptcp: add the incoming RM_ADDR support":
-     - needs review
-
-
-
-Issues on Github:
-     https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-     Recently opened (latest from last week: 82)
-
-   84  Received DATA_FIN+FIN does not trigger wakeup [bug] v5.9 =
-
-@mjmartineau =E2=80=A1:
-       - when checking 5.8 (Fedora) vs 5.9-rc3 (-net master branch)
-       - because of a FIN without data payload
-       - Mat is looking at that
-       - Could be related to an issue seen by Paolo
-
-   83  [syzkaller] No output from test machine:
-       - Christoph will try to reproduce it
-       - it means: the VM died and disappeared
-       - there is a reproducer with an MPTCP socket
-       - not sure if it is linked to MPTCP code
-
-
-     Bugs (opened, flagged as "bug" and assigned)
-
-   84  Received DATA_FIN+FIN does not trigger wakeup [bug] v5.9 =
-
-@mjmartineau =E2=80=A1:
-       - see above
-
-   81  packetdrill detects mismatching 'B' flag in mp_join_client.pkt =
-
-[bug] @dcaratti:
-       - Should be addressed with PR#18 in Packetdrill
-       - Matth: TODO =E2=86=92 review this PR#18 and merge (or Davide can =
-
-self-merge it)
-
-   69  Packetdrill: dss: failing with new DATA_FIN patches [bug] @dcaratti:
-       - Should be addressed with PR#17 in Packetdrill
-       - Matth: TODO =E2=86=92 review this PR#17 and merge (or Davide can =
-
-self-merge it)
-
-
-     Bugs (opened and flagged as "bug" and not assigned)
-
-   73  Simultaneous xmit issue [bug]
-       - can be closed
-       - Matth: TODO update ticket
-
-   71  [interop] Bad mapping: ssn=3D16194949 map_seq=3D16120693 =
-
-map_data_len=3D31416 [bug] [interop]
-       - can be closed after an ACK from @Christoph
-       - Matth: TODO update ticket
-
-   70  [syzkaller] WARNING in mptcp_reset_timer [bug] [syzkaller]
-   65  clearing properly the status in listen() [bug]
-
-   62  [syzkaller] WARNING in __mptcp_move_skbs_from_subflow [bug] =
-
-[syzkaller]:
-       - Matth: TODO update ticket
-
-   56  msk connection state set without msk lock [bug]
-
-
-     In Progress (opened and assigned)
-
-   82  improve packet scheduler for asymmetric links [enhancement] @pabeni :
-       - after having tweaked the scheduler, links with different =
-
-conditions can be fully used
-       - having an issue but more experiments are needed
-
-   55  ADD_ADDR: IPv6 support [enhancement] @geliangtang
-   50  REMOVE_ADDR support [enhancement] @geliangtang
-   49  ADD_ADDR: echo bit support [enhancement] @geliangtang :
-       - see patches above
-
-   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag =
-
-interface [enhancement] [syzkaller] @cpaasch :
-       - WIP
-
-
-     Recently closed (since last week)
-
-   67  `./mptcp_connect.sh -m mmap` test blocks [bug]
-   17  allow non 'backup' subflows creation [enhancement] @pabeni
-
-
-
-Patches from the "export" branch:
-     - multiple xmit:
-         - we would need to wait for the selftests to be enabled =E2=86=92 =
-
-linked to #82
-         - alternative: enable selftests for symmetric links and fixes =
-
-later?
-         - will see how it is going in the next weeks with #82
-
-     - REMOVE_ADDR: could be sent when the last patch (squashed-to) is =
-
-integrated
-
-     - selftests/mptcp: Better delay & reordering configuration:
-         - Christoph can send that
-
-
-
-New features for net-next:
-     - continue to let the different authors to send patches from the =
-
-"export" branch to net-next?
-     - Or maintain an mptcp-next branch sync with net-next and ask for a =
-
-pull?
-     - at the end, that's more for the net maintainers. Maybe at some =
-
-points they will suggest us to send PR instead of individual patches?
-     - Should we start discussions with them about that? Or just wait?
-     - no decision yet, we continue like before
-
-
-
-FYI: Current Roadmap:
-     - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
-     - Current merge window (5.10): =
-
-https://github.com/multipath-tcp/mptcp_net-next/projects/5
-     - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
-
-
-
-Extra tests:
-     - news about Syzkaller? (Christoph):
-         - see Github section
-
-     - news about interop with mptcp.org? (Christoph):
-         - /
-
-     - news about Intel's kbuild? (Mat):
-         - we got a report on the ML (unpacking failed) but doesn't seem =
-
-related to MPTCP
-         - selftests are still unstable, seems related to the setup, not =
-
-MPTCP code
-         - not sure any more what is running: also testing the new =
-
-selftests?
-         - Mat will monitor that
-
-     - packetdrill (Davide):
-         - planning to work on:
-             - DATA_FIN: to cover this feature better (see GH discussions)
-             - covering MP_PRIO
-
-     - CI (Matth):
-         - packetdrill tests are failing
-         - maybe linked to #84? =E2=86=92 No, see #85
-         - Matth: TODO =E2=86=92 take traces on "any" =E2=86=92 DONE, see #=
-85
-         - Matth: continue the "git bisect"
-         - Davide has issues only with MP_JOIN (src addr)
-
-
-
-Next meeting:
-     - We propose to have the next meeting on Thursday, the 10th of =
-
-September.
-     - Usual time: 15:00 UTC (8am PDT, 5pm CEST, 11pm UTC+8)
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20200910
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you next week,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============1650037223859112593==--
+On Sat, 2020-09-05 at 12:33 +0200, Florian Westphal wrote:
+> At this time, MPTCP maintains a status bit, MPTCP_SEND_SPACE,
+> that is set when at least one subflow and the mptcp socket itself
+> are writeable.
+> =
+
+> poll path set EPOLLOUT if the bit is set.
+> sendmsg path makes sure MPTCP_SEND_SPACE gets cleared when last
+> write has used up all subflows or the mptcp socket wmem.
+> =
+
+> This reworks nospace handling as follows:
+> =
+
+> MPTCP_SEND_SPACE is replaced with MPTCP_NOSPACE.
+> This bit is set when the mptcp socket is not writeable anymore
+> and makes the mptcp-level ack path schedule the mptcp worker.
+> =
+
+> This is needed to wake up userspace processes that wait for a POLLOUT
+> event.
+> =
+
+> sendmsg will set MPTCP_NOSPACE only when it has to wait for more
+> wmem (blocking I/O case).
+> =
+
+> poll path will also set MPTCP_NOSPACE in case the mptcp socket
+> is not writeable.
+> =
+
+> Normal tcp-level notification (SOCK_NOSPACE) is only enabled
+> in case the subflow socket has no available wmem.
+> =
+
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+>  net/mptcp/protocol.c | 98 ++++++++++++++++++++++++++++++--------------
+>  net/mptcp/protocol.h |  2 +-
+>  net/mptcp/subflow.c  | 11 +++--
+>  3 files changed, 74 insertions(+), 37 deletions(-)
+> =
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 15ecb471602c..bc5231d5b06d 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -680,10 +680,12 @@ static void mptcp_reset_timer(struct sock *sk)
+>  =
+
+>  void mptcp_data_acked(struct sock *sk)
+>  {
+> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +
+>  	mptcp_reset_timer(sk);
+>  =
+
+> -	if ((!test_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags) ||
+> -	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
+> +	if ((test_bit(MPTCP_NOSPACE, &msk->flags) ||
+> +	    (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
+>  	    schedule_work(&mptcp_sk(sk)->work))
+>  		sock_hold(sk);
+>  }
+> @@ -841,12 +843,7 @@ static void mptcp_clean_una(struct sock *sk)
+>  =
+
+>  	/* Only wake up writers if a subflow is ready */
+>  	if (mptcp_is_writeable(msk)) {
+> -		set_bit(MPTCP_SEND_SPACE, &msk->flags);
+> -		smp_mb__after_atomic();
+> -
+> -		/* set SEND_SPACE before sk_stream_write_space clears
+> -		 * NOSPACE
+> -		 */
+> +		clear_bit(MPTCP_NOSPACE, &msk->flags);
+>  		sk_stream_write_space(sk);
+>  	}
+>  }
+> @@ -1038,21 +1035,37 @@ static int mptcp_sendmsg_frag(struct sock *sk, st=
+ruct sock *ssk,
+>  	return ret;
+>  }
+>  =
+
+> -static void mptcp_nospace(struct mptcp_sock *msk)
+> +/* set SOCK_NOSPACE for any subflow that has no more wmem.
+> + *
+> + * Returns true if at least one subflow is writeable.
+> + */
+> +static bool mptcp_set_subflow_nospace(struct mptcp_sock *msk)
+>  {
+>  	struct mptcp_subflow_context *subflow;
+> -
+> -	clear_bit(MPTCP_SEND_SPACE, &msk->flags);
+> -	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb */
+> +	bool ssk_any_writeable =3D false;
+>  =
+
+>  	mptcp_for_each_subflow(msk, subflow) {
+
+Not strictly related to this patch, but perhpas we need a =
+
+__mptcp_flush_join_list() call before traversing the subflow list?!?
+
+>  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> +		bool ssk_writeable =3D sk_stream_is_writeable(ssk);
+>  		struct socket *sock =3D READ_ONCE(ssk->sk_socket);
+>  =
+
+> +		if (ssk_writeable) {
+> +			ssk_any_writeable =3D true;
+> +			continue;
+> +		}
+> +
+> +		if (!sock)
+> +			continue;
+> +
+>  		/* enables ssk->write_space() callbacks */
+> -		if (sock)
+> -			set_bit(SOCK_NOSPACE, &sock->flags);
+> +		set_bit(SOCK_NOSPACE, &sock->flags);
+> +
+> +		ssk_writeable =3D sk_stream_is_writeable(ssk);
+> +		if (ssk_writeable)
+> +			ssk_any_writeable =3D true;
+>  	}
+> +
+> +	return ssk_any_writeable;
+>  }
+>  =
+
+>  static bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+> @@ -1160,10 +1173,28 @@ static struct sock *mptcp_subflow_get_send(struct=
+ mptcp_sock *msk,
+>  	return free ? msk->last_snd : NULL;
+>  }
+>  =
+
+> -static void ssk_check_wmem(struct mptcp_sock *msk)
+> +static bool __mptcp_check_writeable(struct mptcp_sock *msk)
+>  {
+> -	if (unlikely(!mptcp_is_writeable(msk)))
+> -		mptcp_nospace(msk);
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	bool mptcp_writable;
+> +
+> +	__mptcp_clean_una(sk);
+> +	mptcp_writable =3D sk_stream_is_writeable(sk);
+> +	if (!mptcp_writable) {
+> +		set_bit(MPTCP_NOSPACE, &msk->flags);
+> +		smp_mb__after_atomic();
+> +		__mptcp_clean_una(sk);
+> +
+> +		mptcp_writable =3D sk_stream_is_writeable(sk);
+> +		if (likely(!mptcp_writable))
+> +			return false;
+> +
+> +		/* MPTCP ack after MPTCP_NOSPACE was set */
+> +		clear_bit(MPTCP_NOSPACE, &msk->flags);
+> +	}
+> +
+> +	/* mptcp socket is writeable, now check subflows */
+> +	return mptcp_set_subflow_nospace(msk);
+>  }
+>  =
+
+>  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> @@ -1217,7 +1248,8 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len)
+>  				mptcp_reset_timer(sk);
+>  		}
+>  =
+
+> -		mptcp_nospace(msk);
+> +		__mptcp_check_writeable(msk);
+> +
+
+Again not strictily related to this patch, but currently we start
+sleeping/blocking if msk/ssk are not writeable.
+
+I think we should do that instead when !sk_stream_memory_free() ?!?
+
+>  		ret =3D sk_stream_wait_memory(sk, &timeo);
+>  		if (ret)
+>  			goto out;
+> @@ -1314,7 +1346,6 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len)
+>  =
+
+>  	release_sock(ssk);
+>  out:
+> -	ssk_check_wmem(msk);
+>  	release_sock(sk);
+>  	return copied ? : ret;
+>  }
+> @@ -1811,7 +1842,6 @@ static int __mptcp_init_sock(struct sock *sk)
+>  	INIT_LIST_HEAD(&msk->conn_list);
+>  	INIT_LIST_HEAD(&msk->join_list);
+>  	INIT_LIST_HEAD(&msk->rtx_queue);
+> -	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
+>  	INIT_WORK(&msk->work, mptcp_worker);
+>  	msk->out_of_order_queue =3D RB_ROOT;
+>  =
+
+> @@ -2422,13 +2452,6 @@ bool mptcp_finish_join(struct sock *sk)
+>  	return true;
+>  }
+>  =
+
+> -static bool mptcp_memory_free(const struct sock *sk, int wake)
+> -{
+> -	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> -
+> -	return wake ? test_bit(MPTCP_SEND_SPACE, &msk->flags) : true;
+> -}
+> -
+>  static struct proto mptcp_prot =3D {
+>  	.name		=3D "MPTCP",
+>  	.owner		=3D THIS_MODULE,
+> @@ -2449,7 +2472,6 @@ static struct proto mptcp_prot =3D {
+>  	.sockets_allocated	=3D &mptcp_sockets_allocated,
+>  	.memory_allocated	=3D &tcp_memory_allocated,
+>  	.memory_pressure	=3D &tcp_memory_pressure,
+> -	.stream_memory_free	=3D mptcp_memory_free,
+>  	.sysctl_wmem_offset	=3D offsetof(struct net, ipv4.sysctl_tcp_wmem),
+>  	.sysctl_mem	=3D sysctl_tcp_mem,
+>  	.obj_size	=3D sizeof(struct mptcp_sock),
+> @@ -2622,6 +2644,23 @@ static __poll_t mptcp_check_readable(struct mptcp_=
+sock *msk)
+>  	       0;
+>  }
+>  =
+
+> +static __poll_t mptcp_check_writeable(struct mptcp_sock *msk)
+> +{
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	__poll_t ret =3D 0;
+> +	bool slow;
+> +
+> +	if (sk->sk_shutdown & SEND_SHUTDOWN)
+> +		return 0;
+> +
+> +	slow =3D lock_sock_fast(sk);
+> +	if (__mptcp_check_writeable(msk))
+> +		ret =3D EPOLLOUT | EPOLLWRNORM;
+> +
+> +	unlock_sock_fast(sk, slow);
+
+It's a pity we need to acquire the lock in mptcp_poll()... perhaps we
+could try to acquire it only if sk_stream_is_writeable(msk)?
+
+> +	return ret;
+> +}
+> +
+>  static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+>  			   struct poll_table_struct *wait)
+>  {
+> @@ -2640,8 +2679,7 @@ static __poll_t mptcp_poll(struct file *file, struc=
+t socket *sock,
+>  =
+
+>  	if (state !=3D TCP_SYN_SENT && state !=3D TCP_SYN_RECV) {
+>  		mask |=3D mptcp_check_readable(msk);
+> -		if (test_bit(MPTCP_SEND_SPACE, &msk->flags))
+> -			mask |=3D EPOLLOUT | EPOLLWRNORM;
+> +		mask |=3D mptcp_check_writeable(msk);
+>  	}
+>  	if (sk->sk_shutdown & RCV_SHUTDOWN)
+>  		mask |=3D EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index ba253a6947b0..d18af92723e4 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -86,7 +86,7 @@
+>  =
+
+>  /* MPTCP socket flags */
+>  #define MPTCP_DATA_READY	0
+> -#define MPTCP_SEND_SPACE	1
+> +#define MPTCP_NOSPACE		1
+>  #define MPTCP_WORK_RTX		2
+>  #define MPTCP_WORK_EOF		3
+>  #define MPTCP_FALLBACK_DONE	4
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index e31900ff0c56..bdf28d1baba8 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -972,17 +972,16 @@ static void subflow_data_ready(struct sock *sk)
+>  static void subflow_write_space(struct sock *sk)
+>  {
+>  	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> +	struct socket *sock =3D READ_ONCE(sk->sk_socket);
+>  	struct sock *parent =3D subflow->conn;
+>  =
+
+>  	if (!sk_stream_is_writeable(sk))
+>  		return;
+>  =
+
+> -	if (sk_stream_is_writeable(parent)) {
+> -		set_bit(MPTCP_SEND_SPACE, &mptcp_sk(parent)->flags);
+> -		smp_mb__after_atomic();
+> -		/* set SEND_SPACE before sk_stream_write_space clears NOSPACE */
+> -		sk_stream_write_space(parent);
+> -	}
+> +	if (sock)
+> +		clear_bit(SOCK_NOSPACE, &sock->flags);
+
+for server socket 'sock' is 'shared' among all the subflows (ssk-
+>sk_socket points to the same data). The above is disabling write space
+notification on all subflows, is that intended/correct?
+
+> +
+> +	sk_stream_write_space(parent);
+
+If I read correctly, this means that the msk could be woken-up even if
+not writeable (a subflow is writeable, but msk does not have enough
+wirte space), am I correct? =
+
+
+Thanks!
+
+Paolo
+
+--===============2761902727939001683==--
