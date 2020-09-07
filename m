@@ -1,43 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============0211913198432256579=="
+Content-Type: multipart/mixed; boundary="===============1429369741801289166=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 0/8] Add REMOVE_ADDR support
-Date: Mon, 07 Sep 2020 11:51:53 +0200
-Message-ID: <7a7efbbd87e07aa1a1178ae0c4a2c56b237b820d.camel@redhat.com>
-In-Reply-To: CA+WQbwttLmaW2U_ouuMwKXtKW-6RF=CXGLPdeHWhbTpTA7NRgw@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add ADD_ADDR related mibs"
+Date: Mon, 07 Sep 2020 11:52:09 +0200
+Message-ID: <b880b03e-61e2-1c57-1c28-5d3b14b27e69@tessares.net>
+In-Reply-To: 0a4053db6ce391392514c394f83386ed75efa050.1599470677.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5745
+X-UID: 5746
 
---===============0211913198432256579==
+--===============1429369741801289166==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-09-04 at 13:07 +0800, Geliang Tang wrote:
-> And I want to commit patch 4/8 "mptcp: fix every subflow's local_id is ze=
-ro"
-> and 5/8 "mptcp: fix subflow's remote_id is zero issue" directly to -net a=
-s Paolo
-> suggested.
+Hi Paolo,
 
-I think you can go ahead and post them upstream. The sooner, the better
-- than we will have to wait for -net merge into net-next to push the
-patches depending on the above ones.
-
-> Some code about subflow's remote_id fixing in the commit "mptcp:
-> add the incoming RM_ADDR support" should be put together in patch 5/8.
-> So in the squash-to patch, I drop the original subflow's remote_id fixing=
- code.
+On 07/09/2020 11:37, Paolo Abeni wrote:
+> mptcp_incoming_options() can be called with either BH enabled or
+> disabled, so we need to use the safer MIB accounting helper
+> version.
 > =
 
-> Please give me some suggestions about my squash-to patch.
+> This fixes isssue#86
 
-LGTM ;)
+Thank you for the fix. I had the same ready this morning but some =
 
-Thanks,
+meetings didn't allow me to send the patch :)
 
-Paolo
+- 1cca88bf8dd6: "squashed" in "mptcp: add ADD_ADDR related mibs"
+- f0fcae160636: "Signed-off-by" + "Co-developed-by"
+- 522700f41751..fa888ff43702: result
 
---===============0211913198432256579==--
+Tests + export are in progress.
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============1429369741801289166==--
