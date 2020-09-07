@@ -1,49 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============1118903338488673154=="
+Content-Type: multipart/mixed; boundary="===============0211913198432256579=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] Squash-to: "mptcp: add ADD_ADDR related mibs"
-Date: Mon, 07 Sep 2020 11:37:36 +0200
-Message-ID: <0a4053db6ce391392514c394f83386ed75efa050.1599470677.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 0/8] Add REMOVE_ADDR support
+Date: Mon, 07 Sep 2020 11:51:53 +0200
+Message-ID: <7a7efbbd87e07aa1a1178ae0c4a2c56b237b820d.camel@redhat.com>
+In-Reply-To: CA+WQbwttLmaW2U_ouuMwKXtKW-6RF=CXGLPdeHWhbTpTA7NRgw@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5744
+X-UID: 5745
 
---===============1118903338488673154==
+--===============0211913198432256579==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_incoming_options() can be called with either BH enabled or
-disabled, so we need to use the safer MIB accounting helper
-version.
+On Fri, 2020-09-04 at 13:07 +0800, Geliang Tang wrote:
+> And I want to commit patch 4/8 "mptcp: fix every subflow's local_id is ze=
+ro"
+> and 5/8 "mptcp: fix subflow's remote_id is zero issue" directly to -net a=
+s Paolo
+> suggested.
 
-This fixes isssue#86
+I think you can go ahead and post them upstream. The sooner, the better
+- than we will have to wait for -net merge into net-next to push the
+patches depending on the above ones.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/options.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Some code about subflow's remote_id fixing in the commit "mptcp:
+> add the incoming RM_ADDR support" should be put together in patch 5/8.
+> So in the squash-to patch, I drop the original subflow's remote_id fixing=
+ code.
+> =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 0d1ff621613c..171039cbe9c4 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -891,9 +891,9 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- #endif
- 		if (!mp_opt.echo) {
- 			mptcp_pm_add_addr_received(msk, &addr);
--			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
- 		} else {
--			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
- 		}
- 		mp_opt.add_addr =3D 0;
- 	}
--- =
+> Please give me some suggestions about my squash-to patch.
 
-2.26.2
+LGTM ;)
 
---===============1118903338488673154==--
+Thanks,
+
+Paolo
+
+--===============0211913198432256579==--
