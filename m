@@ -1,189 +1,255 @@
-Content-Type: multipart/mixed; boundary="===============4876981009490073149=="
+Content-Type: multipart/mixed; boundary="===============1262459027194775250=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC mptcp-next 2/3] mptcp: rework poll+nospace handling
-Date: Sun, 06 Sep 2020 19:55:31 +0200
-Message-ID: <20200906175531.GN7319@breakpoint.cc>
-In-Reply-To: a4428c99de218ce78a6128d34e388910dce1dba6.camel@redhat.com
+Subject: [MPTCP] [MPTCP][PATCH] Squash-to: "mptcp: remove addr and subflow in
+ PM netlink v9"
+Date: Mon, 07 Sep 2020 14:48:48 +0800
+Message-ID: <ad4ee3dabbf15a02ee73388e79ef0d037acd9eaf.1599461190.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5737
+X-UID: 5739
 
---===============4876981009490073149==
+--===============1262459027194775250==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Sat, 2020-09-05 at 12:33 +0200, Florian Westphal wrote:
-> > At this time, MPTCP maintains a status bit, MPTCP_SEND_SPACE,
-> > that is set when at least one subflow and the mptcp socket itself
-> > are writeable.
-> > =
+Commit message should be rewritten enterily:
+'''
+This patch implements the remove announced addr and subflow logic in PM
+netlink.
 
-> > poll path set EPOLLOUT if the bit is set.
-> > sendmsg path makes sure MPTCP_SEND_SPACE gets cleared when last
-> > write has used up all subflows or the mptcp socket wmem.
-> > =
+When the PM netlink removes an address, we traverse all the existing msk
+sockets to find the relevant sockets.
 
-> > This reworks nospace handling as follows:
-> > =
+If this removing address is a signaled address, we deal it like this:
 
-> > MPTCP_SEND_SPACE is replaced with MPTCP_NOSPACE.
-> > This bit is set when the mptcp socket is not writeable anymore
-> > and makes the mptcp-level ack path schedule the mptcp worker.
-> > =
+We add a new list named anno_list in mptcp_pm_data, to record all the
+announced addrs. In the traversing, we check if it has been recorded. If it
+has been, we trigger the RM_ADDR signal to remove the remote subflow. Then
+we check if this address is in conn_list. If it is, we remove the local
+subflow which using this local address.
 
-> > This is needed to wake up userspace processes that wait for a POLLOUT
-> > event.
-> > =
+If this removing address is a subflow address, we deal it like this:
 
-> > sendmsg will set MPTCP_NOSPACE only when it has to wait for more
-> > wmem (blocking I/O case).
-> > =
+In the traversing, we check if this address is in conn_list. If it is, we
+trigger the RM_ADDR signal to remove the remote subflow and remove the local
+subflow which using this local address.
+'''
 
-> > poll path will also set MPTCP_NOSPACE in case the mptcp socket
-> > is not writeable.
-> > =
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/pm.c         |   1 +
+ net/mptcp/pm_netlink.c | 106 +++++++++++++++++++++++++++++++++++++----
+ net/mptcp/protocol.c   |   2 +
+ net/mptcp/protocol.h   |   2 +
+ 4 files changed, 102 insertions(+), 9 deletions(-)
 
-> > Normal tcp-level notification (SOCK_NOSPACE) is only enabled
-> > in case the subflow socket has no available wmem.
-> > =
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 511996bf4838..f450bf0d49aa 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -235,6 +235,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	msk->pm.status =3D 0;
+ =
 
-> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > ---
-> >  net/mptcp/protocol.c | 98 ++++++++++++++++++++++++++++++--------------
-> >  net/mptcp/protocol.h |  2 +-
-> >  net/mptcp/subflow.c  | 11 +++--
-> >  3 files changed, 74 insertions(+), 37 deletions(-)
-> > =
+ 	spin_lock_init(&msk->pm.lock);
++	INIT_LIST_HEAD(&msk->pm.anno_list);
+ =
 
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 15ecb471602c..bc5231d5b06d 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -680,10 +680,12 @@ static void mptcp_reset_timer(struct sock *sk)
-> >  =
+ 	mptcp_pm_nl_data_init(msk);
+ }
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 16709939f767..f0981f332081 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -167,6 +167,50 @@ static void check_work_pending(struct mptcp_sock *msk)
+ 		WRITE_ONCE(msk->pm.work_pending, false);
+ }
+ =
 
-> >  void mptcp_data_acked(struct sock *sk)
-> >  {
-> > +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> > +
-> >  	mptcp_reset_timer(sk);
-> >  =
++static bool lookup_anno_list_by_saddr(struct mptcp_sock *msk,
++				      struct mptcp_addr_info *addr)
++{
++	struct mptcp_pm_addr_entry *entry;
++
++	list_for_each_entry(entry, &msk->pm.anno_list, list) {
++		if (addresses_equal(&entry->addr, addr, false))
++			return true;
++	}
++
++	return false;
++}
++
++static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
++				     struct mptcp_pm_addr_entry *entry)
++{
++	struct mptcp_pm_addr_entry *clone =3D NULL;
++
++	if (lookup_anno_list_by_saddr(msk, &entry->addr))
++		return false;
++
++	clone =3D kmemdup(entry, sizeof(*entry), GFP_ATOMIC);
++	if (!clone)
++		return false;
++
++	list_add(&clone->list, &msk->pm.anno_list);
++
++	return true;
++}
++
++void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
++{
++	struct mptcp_pm_addr_entry *entry, *tmp;
++
++	pr_debug("msk=3D%p\n", msk);
++
++	spin_lock_bh(&msk->pm.lock);
++	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
++		list_del(&entry->list);
++		kfree(entry);
++	}
++	spin_unlock_bh(&msk->pm.lock);
++}
++
+ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ {
+ 	struct sock *sk =3D (struct sock *)msk;
+@@ -187,8 +231,10 @@ static void mptcp_pm_create_subflow_or_signal_addr(str=
+uct mptcp_sock *msk)
+ 					      msk->pm.add_addr_signaled);
+ =
 
-> > -	if ((!test_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags) ||
-> > -	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
-> > +	if ((test_bit(MPTCP_NOSPACE, &msk->flags) ||
-> > +	    (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
-> >  	    schedule_work(&mptcp_sk(sk)->work))
-> >  		sock_hold(sk);
-> >  }
-> > @@ -841,12 +843,7 @@ static void mptcp_clean_una(struct sock *sk)
-> >  =
+ 		if (local) {
+-			msk->pm.add_addr_signaled++;
+-			mptcp_pm_announce_addr(msk, &local->addr, false);
++			if (mptcp_pm_alloc_anno_list(msk, local)) {
++				msk->pm.add_addr_signaled++;
++				mptcp_pm_announce_addr(msk, &local->addr, false);
++			}
+ 		} else {
+ 			/* pick failed, avoid fourther attempts later */
+ 			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
+@@ -554,6 +600,22 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsig=
+ned int id)
+ 	return NULL;
+ }
+ =
 
-> >  	/* Only wake up writers if a subflow is ready */
-> >  	if (mptcp_is_writeable(msk)) {
-> > -		set_bit(MPTCP_SEND_SPACE, &msk->flags);
-> > -		smp_mb__after_atomic();
-> > -
-> > -		/* set SEND_SPACE before sk_stream_write_space clears
-> > -		 * NOSPACE
-> > -		 */
-> > +		clear_bit(MPTCP_NOSPACE, &msk->flags);
-> >  		sk_stream_write_space(sk);
-> >  	}
-> >  }
-> > @@ -1038,21 +1035,37 @@ static int mptcp_sendmsg_frag(struct sock *sk, =
-struct sock *ssk,
-> >  	return ret;
-> >  }
-> >  =
++static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
++				      struct mptcp_addr_info *addr)
++{
++	struct mptcp_pm_addr_entry *entry, *tmp;
++
++	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
++		if (addresses_equal(&entry->addr, addr, false)) {
++			list_del(&entry->list);
++			kfree(entry);
++			return true;
++		}
++	}
++
++	return false;
++}
++
+ static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+ 						   struct mptcp_addr_info *addr)
+ {
+@@ -565,15 +627,41 @@ static int mptcp_nl_remove_subflow_and_signal_addr(st=
+ruct net *net,
+ 	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL) {
+ 		struct sock *sk =3D (struct sock *)msk;
+ =
 
-> > -static void mptcp_nospace(struct mptcp_sock *msk)
-> > +/* set SOCK_NOSPACE for any subflow that has no more wmem.
-> > + *
-> > + * Returns true if at least one subflow is writeable.
-> > + */
-> > +static bool mptcp_set_subflow_nospace(struct mptcp_sock *msk)
-> >  {
-> >  	struct mptcp_subflow_context *subflow;
-> > -
-> > -	clear_bit(MPTCP_SEND_SPACE, &msk->flags);
-> > -	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb */
-> > +	bool ssk_any_writeable =3D false;
-> >  =
+-		if (list_empty(&msk->conn_list))
+-			goto next;
++		if (addr->flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
++			bool ret =3D false;
++
++			/* check first for announced addr */
++			if (list_empty(&msk->pm.anno_list))
++				goto remove_subflow;
++
++			spin_lock_bh(&msk->pm.lock);
++			ret =3D remove_anno_list_by_saddr(msk, addr);
++			spin_unlock_bh(&msk->pm.lock);
++			if (ret)
++				mptcp_pm_remove_addr(msk, addr->id);
++
++			/* check if should remove a subflow */
++remove_subflow:
++			if (list_empty(&msk->conn_list))
++				goto next;
++
++			lock_sock(sk);
++			if (lookup_subflow_by_saddr(&msk->conn_list, addr))
++				mptcp_pm_remove_subflow(msk, addr->id);
++			release_sock(sk);
++		}
++
++		if (addr->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
++			if (list_empty(&msk->conn_list))
++				goto next;
+ =
 
-> >  	mptcp_for_each_subflow(msk, subflow) {
-> =
+-		lock_sock(sk);
+-		if (lookup_subflow_by_saddr(&msk->conn_list, addr)) {
+-			mptcp_pm_remove_addr(msk, addr->id);
+-			mptcp_pm_remove_subflow(msk, addr->id);
++			lock_sock(sk);
++			if (lookup_subflow_by_saddr(&msk->conn_list, addr)) {
++				mptcp_pm_remove_addr(msk, addr->id);
++				mptcp_pm_remove_subflow(msk, addr->id);
++			}
++			release_sock(sk);
+ 		}
+-		release_sock(sk);
+ =
 
-> Not strictly related to this patch, but perhpas we need a =
+ next:
+ 		sock_put(sk);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index eb833ecbba9e..e68e94738661 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1979,6 +1979,8 @@ static void mptcp_close(struct sock *sk, long timeout)
+ 		__mptcp_close_ssk(sk, ssk, subflow, timeout);
+ 	}
+ =
 
-> __mptcp_flush_join_list() call before traversing the subflow list?!?
++	mptcp_pm_free_anno_list(msk);
++
+ 	mptcp_cancel_work(sk);
+ =
 
-Yes, I think it makes sense to update the list here.
+ 	__skb_queue_purge(&sk->sk_receive_queue);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ba253a6947b0..d1b1416797f8 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -160,6 +160,7 @@ enum mptcp_pm_status {
+ struct mptcp_pm_data {
+ 	struct mptcp_addr_info local;
+ 	struct mptcp_addr_info remote;
++	struct list_head anno_list;
+ =
 
-> > -		mptcp_nospace(msk);
-> > +		__mptcp_check_writeable(msk);
-> > +
-> =
+ 	spinlock_t	lock;		/*protects the whole PM data */
+ =
 
-> Again not strictily related to this patch, but currently we start
-> sleeping/blocking if msk/ssk are not writeable.
-> =
+@@ -441,6 +442,7 @@ void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8=
+ id);
+ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ 				const struct mptcp_addr_info *addr);
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
++void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+ =
 
-> I think we should do that instead when !sk_stream_memory_free() ?!?
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 			   const struct mptcp_addr_info *addr,
+-- =
 
-Do what?  Sleep only if mptcp socket has not enough wspace?
-We can do that, requires change to mptcp_sendmsg to append to rtx queue
-(and make sure retrans timer is on), also see my other reply.
+2.17.1
 
-Is that what you meant?
-
-> > +	slow =3D lock_sock_fast(sk);
-> > +	if (__mptcp_check_writeable(msk))
-> > +		ret =3D EPOLLOUT | EPOLLWRNORM;
-> > +
-> > +	unlock_sock_fast(sk, slow);
-> =
-
-> It's a pity we need to acquire the lock in mptcp_poll()... perhaps we
-> could try to acquire it only if sk_stream_is_writeable(msk)?
-
-I think we need to determine desired behaviour of send path when no ssk is =
-ready
-(but mptcp sk has wspace).  I think we should change it to queue the
-data even if no ssk is available (but wmem permits it).  Then we could
-simplify poll too, as ssk state becomes irrelevant.
-
-> > +	if (sock)
-> > +		clear_bit(SOCK_NOSPACE, &sock->flags);
-> =
-
-> for server socket 'sock' is 'shared' among all the subflows (ssk-
-> >sk_socket points to the same data). The above is disabling write space
-> notification on all subflows, is that intended/correct?
-
-Yes, current sendmsg path accepts data if mptcp socket has wmem and one
-subflow is ready, so it only sleeps if mptcp wmem is also exhausted.
-
-And for that, the MPTCP_NOSPACE bit has been toggled so next data-ack
-wakes a blocking poll or blocking sendmsg.
-
-> > +
-> > +	sk_stream_write_space(parent);
-> =
-
-> If I read correctly, this means that the msk could be woken-up even if
-> not writeable (a subflow is writeable, but msk does not have enough
-> wirte space), am I correct? =
-
-
-No, this is in a mptcp_is_writeable() conditional so msk has enough
-wmem.  My main takeaway from your response is that I should rework this
-towards making the mptcp write buffer space the only relevant criteria
-wrt. when to signal/wake userspace.
-
-Does that sound good to you?
---===============4876981009490073149==--
+--===============1262459027194775250==--
