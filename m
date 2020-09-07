@@ -1,228 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============6956590807072241964=="
+Content-Type: multipart/mixed; boundary="===============7142174313933132024=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] Squash-to: "mptcp: allow picking different xmit
- subflows"
-Date: Mon, 07 Sep 2020 12:36:13 +0200
-Message-ID: <ca41af6d8fa3dd99ef3dcdc92c079663075d42b6.1599474962.git.pabeni@redhat.com>
+Subject: [MPTCP] [MPTCP][PATCH net 2/2] mptcp: fix subflow's remote_id issues
+Date: Mon, 07 Sep 2020 18:29:54 +0800
+Message-ID: <7187516ee5a9f17a7bf1e4aa9a849da2dd56a734.1599474422.git.geliangtang@gmail.com>
+In-Reply-To: f24ee917e4043d2befe2a0f96cd57aa74d2a4b26.1599474422.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5748
+X-UID: 5749
 
---===============6956590807072241964==
+--===============7142174313933132024==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This improves the current packet scheduler for scenarios
-where the msk sockets is using different links with different
-bandwith limits.
+This patch set the init remote_id to zero, otherwise it will be a random
+number.
 
-The commit comment should be changed into:
+Then it added the missing subflow's remote_id setting code both in
+__mptcp_subflow_connect and in subflow_ulp_clone.
 
-"""
-Update the scheduler to less trivial heuristic: cache
-the last used subflow, and try to send on it a reasonably
-long burst of data.
-
-When the burst or the subflow send space is exhausted, pick
-the subflow with the lower ratio between write space and
-send buffer - that is, the subflow with the greater relative
-amount of free space.
-"""
-
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Reviewed-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
-Note:
-- this is almost an RFC ;)
-- subflows are now selected when sk_stream_memory_free(ssk),
-  while before we used sk_stream_is_writeable(ssk). The current
-  choice is closer to plain TCP and IMHO more correct, but
-  even the old one should not be buggy.
-  Anyhow I saw reproducible write error (EAGAIN) when using
-  sk_stream_is_writeable() with this strategy, and I was unable
-  to track them down, so possibly there is some other bug there
-  I could not find.
-- simuilt xmit self-tests are still failing, even if we are now
-  closer to success. The failures are now caused by the high delay
-  configured on the virtual link.
-  This problem would be addressed by a larger initial send buffer,
-  but the current xmit path is unable to cope with that correctly:
-  with a larger send buffer it will send pkts outside the MPTCP
-  window.
-  To properly address the above we additionally need something alike
-  "mptcp: keep track of receivers advertised window" from Florian,
-  plus the ability to enqueue data at the MPTCP level and send it
-  when the MPTCP level window is open.
----
- net/mptcp/protocol.c | 107 ++++++++++++++++++++-----------------------
- 1 file changed, 49 insertions(+), 58 deletions(-)
+ net/mptcp/pm_netlink.c | 2 +-
+ net/mptcp/subflow.c    | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index eb833ecbba9e..86bd7d63fbcb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1063,26 +1063,25 @@ static bool mptcp_subflow_active(struct mptcp_subfl=
-ow_context *subflow)
- 	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
- }
- =
-
--#define MPTCP_SEND_BURST_SIZE		(1 << 15)
-+#define MPTCP_SEND_BURST_SIZE		((1 << 16) - \
-+					 sizeof(struct tcphdr) - \
-+					 MAX_TCP_OPTION_SPACE - \
-+					 sizeof(struct ipv6hdr) - \
-+					 sizeof(struct frag_hdr))
- =
-
--static struct list_head *mptcp_next_subflow(struct mptcp_sock *msk,
--					    struct list_head *pos,
--					    bool wrap_around)
--{
--	if (list_is_last(pos, &msk->conn_list) && wrap_around)
--		return msk->conn_list.next;
--	return pos->next;
--}
-+struct subflow_send_info {
-+	struct sock *ssk;
-+	uint64_t ratio;
-+};
- =
-
- static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk,
- 					   u32 *sndbuf)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index dc2c57860d2d..255695221309 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -186,7 +186,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
+ct mptcp_sock *msk)
  {
-+	struct subflow_send_info send_info[2];
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	struct mptcp_pm_addr_entry *local;
+-	struct mptcp_addr_info remote;
++	struct mptcp_addr_info remote =3D { 0 };
+ 	struct pm_nl_pernet *pernet;
+ =
+
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e8cac2655c82..9ead43f79023 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1063,6 +1063,7 @@ int __mptcp_subflow_connect(struct sock *sk, int ifin=
+dex,
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
  	struct mptcp_subflow_context *subflow;
--	struct sock *next_backup =3D NULL;
--	struct list_head *pos, *start;
--	struct sock *next_ssk =3D NULL;
--	bool wrap_around;
--	bool free;
-+	int nr_active =3D 0;
-+	struct sock *ssk;
-+	int64_t ratio;
+ 	struct sockaddr_storage addr;
++	int remote_id =3D remote->id;
+ 	int local_id =3D loc->id;
+ 	struct socket *sf;
+ 	struct sock *ssk;
+@@ -1107,10 +1108,11 @@ int __mptcp_subflow_connect(struct sock *sk, int if=
+index,
+ 		goto failed;
  =
 
- 	sock_owned_by_me((struct sock *)msk);
- =
-
-@@ -1095,65 +1094,57 @@ static struct sock *mptcp_subflow_get_send(struct m=
-ptcp_sock *msk,
- 		return msk->first;
+ 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
+-	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d", msk, remote_token,
+-		 local_id);
++	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d remote_id=3D%d", msk,
++		 remote_token, local_id, remote_id);
+ 	subflow->remote_token =3D remote_token;
+ 	subflow->local_id =3D local_id;
++	subflow->remote_id =3D remote_id;
+ 	subflow->request_join =3D 1;
+ 	subflow->request_bkup =3D 1;
+ 	mptcp_info2sockaddr(remote, &addr);
+@@ -1347,6 +1349,7 @@ static void subflow_ulp_clone(const struct request_so=
+ck *req,
+ 		new_ctx->fully_established =3D 1;
+ 		new_ctx->backup =3D subflow_req->backup;
+ 		new_ctx->local_id =3D subflow_req->local_id;
++		new_ctx->remote_id =3D subflow_req->remote_id;
+ 		new_ctx->token =3D subflow_req->token;
+ 		new_ctx->thmac =3D subflow_req->thmac;
  	}
- =
-
--	/* lookup the first writeable subflow and first writable back subflow
--	 * starting from last used, with wrap-around
--	 */
--	if (msk->last_snd) {
--		start =3D &mptcp_subflow_ctx(msk->last_snd)->node;
--		wrap_around =3D true;
--	} else {
--		start =3D &msk->conn_list;
--		wrap_around =3D false;
--	}
--	pr_debug("msk=3D%p start=3D%p pos=3D%p wrap_around=3D%d last=3D%p", msk, =
-start,
--		 mptcp_next_subflow(msk, start, wrap_around), wrap_around,
--		 msk->last_snd);
--	for (pos =3D mptcp_next_subflow(msk, start, wrap_around); pos !=3D start;
--	     pos =3D mptcp_next_subflow(msk, pos, wrap_around)) {
--		struct sock *ssk;
-+	/* re-use last subflow, if the burst allow that */
-+	if (msk->last_snd && msk->snd_burst > 0 &&
-+	    sk_stream_memory_free(msk->last_snd) &&
-+	    mptcp_subflow_active(mptcp_subflow_ctx(msk->last_snd))) {
-+		mptcp_for_each_subflow(msk, subflow) {
-+			ssk =3D  mptcp_subflow_tcp_sock(subflow);
-+			*sndbuf =3D max(tcp_sk(ssk)->snd_wnd, *sndbuf);
-+		}
-+		return msk->last_snd;
-+	}
- =
-
--		subflow =3D list_entry(pos, struct mptcp_subflow_context, node);
-+	/* pick the subflow with the lower wmem/wspace ratio */
-+	send_info[0].ssk =3D NULL;
-+	send_info[0].ratio =3D -1;
-+	send_info[1].ssk =3D NULL;
-+	send_info[1].ratio =3D -1;
-+	mptcp_for_each_subflow(msk, subflow) {
- 		ssk =3D  mptcp_subflow_tcp_sock(subflow);
- 		if (!mptcp_subflow_active(subflow))
- 			continue;
- =
-
-+		nr_active +=3D !subflow->backup;
- 		*sndbuf =3D max(tcp_sk(ssk)->snd_wnd, *sndbuf);
--		if (next_backup || next_ssk)
-+		if (!sk_stream_memory_free(subflow->tcp_sock))
- 			continue;
- =
-
--		free =3D sk_stream_is_writeable(subflow->tcp_sock);
--		if (!free)
-+		if (!READ_ONCE(ssk->sk_pacing_rate))
- 			continue;
- =
-
--		if (!subflow->backup && !next_ssk)
--			next_ssk =3D ssk;
--
--		if (subflow->backup && !next_backup)
--			next_backup =3D ssk;
-+		ratio =3D (int64_t)READ_ONCE(ssk->sk_wmem_queued) << 32 /
-+			READ_ONCE(ssk->sk_pacing_rate) >> 12;
-+		if (ratio < send_info[subflow->backup].ratio) {
-+			send_info[subflow->backup].ssk =3D ssk;
-+			send_info[subflow->backup].ratio =3D ratio;
-+		}
- 	}
--	if (!next_ssk)
--		next_ssk =3D next_backup;
- =
-
--	if (msk->last_snd) {
--		*sndbuf =3D max(tcp_sk(msk->last_snd)->snd_wnd, *sndbuf);
--		free =3D sk_stream_memory_free(msk->last_snd);
--	} else {
--		free =3D false;
--	}
--	pr_debug("msk=3D%p ssk=3D%p:%d last=3D%p last free=3D%d burst=3D%d", msk,
--		 next_ssk, next_ssk ? sk_stream_wspace(next_ssk) : 0,
--		 msk->last_snd, free, msk->snd_burst);
-+	/* pick the best backup if no other subflow is active */
-+	if (!nr_active)
-+		send_info[0].ssk =3D send_info[1].ssk;
- =
-
--	/* use the looked-up subflow if the previusly one has exauted the burst
--	 * or is not writable
--	 */
--	if (next_ssk && (!free || msk->snd_burst <=3D 0)) {
--		msk->last_snd =3D next_ssk;
-+	pr_debug("msk=3D%p nr_active=3D%d ssk=3D%p:%lld backup=3D%p:%lld",
-+		 msk, nr_active, send_info[0].ssk, send_info[0].ratio,
-+		 send_info[1].ssk, send_info[1].ratio);
-+	if (send_info[0].ssk) {
-+		msk->last_snd =3D send_info[0].ssk;
- 		msk->snd_burst =3D min_t(int, MPTCP_SEND_BURST_SIZE,
--				       sk_stream_wspace(next_ssk));
--		free =3D true;
-+				       sk_stream_wspace(msk->last_snd));
-+		return msk->last_snd;
- 	}
--	return free ? msk->last_snd : NULL;
-+	return NULL;
- }
- =
-
- static void ssk_check_wmem(struct mptcp_sock *msk)
 -- =
 
-2.26.2
+2.17.1
 
---===============6956590807072241964==--
+--===============7142174313933132024==--
