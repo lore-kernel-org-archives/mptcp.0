@@ -1,83 +1,228 @@
-Content-Type: multipart/mixed; boundary="===============2947439904204607662=="
+Content-Type: multipart/mixed; boundary="===============6956590807072241964=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net 1/2] mptcp: fix subflow's local_id issues
-Date: Mon, 07 Sep 2020 18:29:53 +0800
-Message-ID: <f24ee917e4043d2befe2a0f96cd57aa74d2a4b26.1599474422.git.geliangtang@gmail.com>
+Subject: [MPTCP] [PATCH] Squash-to: "mptcp: allow picking different xmit
+ subflows"
+Date: Mon, 07 Sep 2020 12:36:13 +0200
+Message-ID: <ca41af6d8fa3dd99ef3dcdc92c079663075d42b6.1599474962.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5747
+X-UID: 5748
 
---===============2947439904204607662==
+--===============6956590807072241964==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In mptcp_pm_nl_get_local_id, skc_local is the same as msk_local, so it
-always return 0. Thus every subflow's local_id is 0. It's incorrect.
+This improves the current packet scheduler for scenarios
+where the msk sockets is using different links with different
+bandwith limits.
 
-This patch fixed this issue.
+The commit comment should be changed into:
 
-Also, we need to ignore the zero address here, like 0.0.0.0 in IPv4. When
-we use the zero address as a local address, it means that we can use any
-one of the local addresses. The zero address is not a new address, we don't
-need to add it to PM, so this patch added a new function address_zero to
-check whether an address is the zero address, if it is, we ignore this
-address.
+"""
+Update the scheduler to less trivial heuristic: cache
+the last used subflow, and try to send on it a reasonably
+long burst of data.
 
-Reviewed-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+When the burst or the subflow send space is exhausted, pick
+the subflow with the lower ratio between write space and
+send buffer - that is, the subflow with the greater relative
+amount of free space.
+"""
+
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/pm_netlink.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+Note:
+- this is almost an RFC ;)
+- subflows are now selected when sk_stream_memory_free(ssk),
+  while before we used sk_stream_is_writeable(ssk). The current
+  choice is closer to plain TCP and IMHO more correct, but
+  even the old one should not be buggy.
+  Anyhow I saw reproducible write error (EAGAIN) when using
+  sk_stream_is_writeable() with this strategy, and I was unable
+  to track them down, so possibly there is some other bug there
+  I could not find.
+- simuilt xmit self-tests are still failing, even if we are now
+  closer to success. The failures are now caused by the high delay
+  configured on the virtual link.
+  This problem would be addressed by a larger initial send buffer,
+  but the current xmit path is unable to cope with that correctly:
+  with a larger send buffer it will send pkts outside the MPTCP
+  window.
+  To properly address the above we additionally need something alike
+  "mptcp: keep track of receivers advertised window" from Florian,
+  plus the ability to enqueue data at the MPTCP level and send it
+  when the MPTCP level window is open.
+---
+ net/mptcp/protocol.c | 107 ++++++++++++++++++++-----------------------
+ 1 file changed, 49 insertions(+), 58 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 2c208d2e65cd..dc2c57860d2d 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -66,6 +66,19 @@ static bool addresses_equal(const struct mptcp_addr_info=
- *a,
- 	return a->port =3D=3D b->port;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index eb833ecbba9e..86bd7d63fbcb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1063,26 +1063,25 @@ static bool mptcp_subflow_active(struct mptcp_subfl=
+ow_context *subflow)
+ 	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
  }
  =
 
-+static bool address_zero(const struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_addr_info zero;
-+
-+	memset(&zero, 0, sizeof(zero));
-+	zero.family =3D addr->family;
-+
-+	if (addresses_equal(addr, &zero, false))
-+		return true;
-+
-+	return false;
-+}
-+
- static void local_address(const struct sock_common *skc,
- 			  struct mptcp_addr_info *addr)
+-#define MPTCP_SEND_BURST_SIZE		(1 << 15)
++#define MPTCP_SEND_BURST_SIZE		((1 << 16) - \
++					 sizeof(struct tcphdr) - \
++					 MAX_TCP_OPTION_SPACE - \
++					 sizeof(struct ipv6hdr) - \
++					 sizeof(struct frag_hdr))
+ =
+
+-static struct list_head *mptcp_next_subflow(struct mptcp_sock *msk,
+-					    struct list_head *pos,
+-					    bool wrap_around)
+-{
+-	if (list_is_last(pos, &msk->conn_list) && wrap_around)
+-		return msk->conn_list.next;
+-	return pos->next;
+-}
++struct subflow_send_info {
++	struct sock *ssk;
++	uint64_t ratio;
++};
+ =
+
+ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk,
+ 					   u32 *sndbuf)
  {
-@@ -323,10 +336,13 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, =
-struct sock_common *skc)
- 	 * addr
- 	 */
- 	local_address((struct sock_common *)msk, &msk_local);
--	local_address((struct sock_common *)msk, &skc_local);
-+	local_address((struct sock_common *)skc, &skc_local);
- 	if (addresses_equal(&msk_local, &skc_local, false))
- 		return 0;
++	struct subflow_send_info send_info[2];
+ 	struct mptcp_subflow_context *subflow;
+-	struct sock *next_backup =3D NULL;
+-	struct list_head *pos, *start;
+-	struct sock *next_ssk =3D NULL;
+-	bool wrap_around;
+-	bool free;
++	int nr_active =3D 0;
++	struct sock *ssk;
++	int64_t ratio;
  =
 
-+	if (address_zero(&skc_local))
-+		return 0;
-+
- 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ 	sock_owned_by_me((struct sock *)msk);
  =
 
- 	rcu_read_lock();
+@@ -1095,65 +1094,57 @@ static struct sock *mptcp_subflow_get_send(struct m=
+ptcp_sock *msk,
+ 		return msk->first;
+ 	}
+ =
+
+-	/* lookup the first writeable subflow and first writable back subflow
+-	 * starting from last used, with wrap-around
+-	 */
+-	if (msk->last_snd) {
+-		start =3D &mptcp_subflow_ctx(msk->last_snd)->node;
+-		wrap_around =3D true;
+-	} else {
+-		start =3D &msk->conn_list;
+-		wrap_around =3D false;
+-	}
+-	pr_debug("msk=3D%p start=3D%p pos=3D%p wrap_around=3D%d last=3D%p", msk, =
+start,
+-		 mptcp_next_subflow(msk, start, wrap_around), wrap_around,
+-		 msk->last_snd);
+-	for (pos =3D mptcp_next_subflow(msk, start, wrap_around); pos !=3D start;
+-	     pos =3D mptcp_next_subflow(msk, pos, wrap_around)) {
+-		struct sock *ssk;
++	/* re-use last subflow, if the burst allow that */
++	if (msk->last_snd && msk->snd_burst > 0 &&
++	    sk_stream_memory_free(msk->last_snd) &&
++	    mptcp_subflow_active(mptcp_subflow_ctx(msk->last_snd))) {
++		mptcp_for_each_subflow(msk, subflow) {
++			ssk =3D  mptcp_subflow_tcp_sock(subflow);
++			*sndbuf =3D max(tcp_sk(ssk)->snd_wnd, *sndbuf);
++		}
++		return msk->last_snd;
++	}
+ =
+
+-		subflow =3D list_entry(pos, struct mptcp_subflow_context, node);
++	/* pick the subflow with the lower wmem/wspace ratio */
++	send_info[0].ssk =3D NULL;
++	send_info[0].ratio =3D -1;
++	send_info[1].ssk =3D NULL;
++	send_info[1].ratio =3D -1;
++	mptcp_for_each_subflow(msk, subflow) {
+ 		ssk =3D  mptcp_subflow_tcp_sock(subflow);
+ 		if (!mptcp_subflow_active(subflow))
+ 			continue;
+ =
+
++		nr_active +=3D !subflow->backup;
+ 		*sndbuf =3D max(tcp_sk(ssk)->snd_wnd, *sndbuf);
+-		if (next_backup || next_ssk)
++		if (!sk_stream_memory_free(subflow->tcp_sock))
+ 			continue;
+ =
+
+-		free =3D sk_stream_is_writeable(subflow->tcp_sock);
+-		if (!free)
++		if (!READ_ONCE(ssk->sk_pacing_rate))
+ 			continue;
+ =
+
+-		if (!subflow->backup && !next_ssk)
+-			next_ssk =3D ssk;
+-
+-		if (subflow->backup && !next_backup)
+-			next_backup =3D ssk;
++		ratio =3D (int64_t)READ_ONCE(ssk->sk_wmem_queued) << 32 /
++			READ_ONCE(ssk->sk_pacing_rate) >> 12;
++		if (ratio < send_info[subflow->backup].ratio) {
++			send_info[subflow->backup].ssk =3D ssk;
++			send_info[subflow->backup].ratio =3D ratio;
++		}
+ 	}
+-	if (!next_ssk)
+-		next_ssk =3D next_backup;
+ =
+
+-	if (msk->last_snd) {
+-		*sndbuf =3D max(tcp_sk(msk->last_snd)->snd_wnd, *sndbuf);
+-		free =3D sk_stream_memory_free(msk->last_snd);
+-	} else {
+-		free =3D false;
+-	}
+-	pr_debug("msk=3D%p ssk=3D%p:%d last=3D%p last free=3D%d burst=3D%d", msk,
+-		 next_ssk, next_ssk ? sk_stream_wspace(next_ssk) : 0,
+-		 msk->last_snd, free, msk->snd_burst);
++	/* pick the best backup if no other subflow is active */
++	if (!nr_active)
++		send_info[0].ssk =3D send_info[1].ssk;
+ =
+
+-	/* use the looked-up subflow if the previusly one has exauted the burst
+-	 * or is not writable
+-	 */
+-	if (next_ssk && (!free || msk->snd_burst <=3D 0)) {
+-		msk->last_snd =3D next_ssk;
++	pr_debug("msk=3D%p nr_active=3D%d ssk=3D%p:%lld backup=3D%p:%lld",
++		 msk, nr_active, send_info[0].ssk, send_info[0].ratio,
++		 send_info[1].ssk, send_info[1].ratio);
++	if (send_info[0].ssk) {
++		msk->last_snd =3D send_info[0].ssk;
+ 		msk->snd_burst =3D min_t(int, MPTCP_SEND_BURST_SIZE,
+-				       sk_stream_wspace(next_ssk));
+-		free =3D true;
++				       sk_stream_wspace(msk->last_snd));
++		return msk->last_snd;
+ 	}
+-	return free ? msk->last_snd : NULL;
++	return NULL;
+ }
+ =
+
+ static void ssk_check_wmem(struct mptcp_sock *msk)
 -- =
 
-2.17.1
+2.26.2
 
---===============2947439904204607662==--
+--===============6956590807072241964==--
