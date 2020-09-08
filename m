@@ -1,81 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============7111680156723127230=="
+Content-Type: multipart/mixed; boundary="===============1034273224700624009=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v2 net 1/2] mptcp: fix subflow's local_id issues
-Date: Tue, 08 Sep 2020 10:49:38 +0800
-Message-ID: <110eaa273bf313fb1a2a668a446956d27aba05a8.1599532593.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v2 net 2/2] mptcp: fix subflow's remote_id
+ issues
+Date: Tue, 08 Sep 2020 10:49:39 +0800
+Message-ID: <0127c08400bdf65c03438b0b6e90e4ab72ea1576.1599532593.git.geliangtang@gmail.com>
 In-Reply-To: cover.1599532593.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5754
+X-UID: 5755
 
---===============7111680156723127230==
+--===============1034273224700624009==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In mptcp_pm_nl_get_local_id, skc_local is the same as msk_local, so it
-always return 0. Thus every subflow's local_id is 0. It's incorrect.
+This patch set the init remote_id to zero, otherwise it will be a random
+number.
 
-This patch fixed this issue.
-
-Also, we need to ignore the zero address here, like 0.0.0.0 in IPv4. When
-we use the zero address as a local address, it means that we can use any
-one of the local addresses. The zero address is not a new address, we don't
-need to add it to PM, so this patch added a new function address_zero to
-check whether an address is the zero address, if it is, we ignore this
-address.
+Then it added the missing subflow's remote_id setting code both in
+__mptcp_subflow_connect and in subflow_ulp_clone.
 
 Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
+Fixes: ec3edaa7ca6ce ("mptcp: Add handling of outgoing MP_JOIN requests")
+Fixes: f296234c98a8f ("mptcp: Add handling of incoming MP_JOIN requests")
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ net/mptcp/pm_netlink.c | 2 +-
+ net/mptcp/subflow.c    | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 2c208d2e65cd..3e70d848033d 100644
+index 3e70d848033d..bd88e9c0bf71 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -66,6 +66,16 @@ static bool addresses_equal(const struct mptcp_addr_info=
- *a,
- 	return a->port =3D=3D b->port;
- }
+@@ -181,9 +181,9 @@ static void check_work_pending(struct mptcp_sock *msk)
  =
 
-+static bool address_zero(const struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_addr_info zero;
-+
-+	memset(&zero, 0, sizeof(zero));
-+	zero.family =3D addr->family;
-+
-+	return addresses_equal(addr, &zero, false);
-+}
-+
- static void local_address(const struct sock_common *skc,
- 			  struct mptcp_addr_info *addr)
+ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
  {
-@@ -323,10 +333,13 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, =
-struct sock_common *skc)
- 	 * addr
- 	 */
- 	local_address((struct sock_common *)msk, &msk_local);
--	local_address((struct sock_common *)msk, &skc_local);
-+	local_address((struct sock_common *)skc, &skc_local);
- 	if (addresses_equal(&msk_local, &skc_local, false))
- 		return 0;
++	struct mptcp_addr_info remote =3D { 0 };
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	struct mptcp_pm_addr_entry *local;
+-	struct mptcp_addr_info remote;
+ 	struct pm_nl_pernet *pernet;
  =
 
-+	if (address_zero(&skc_local))
-+		return 0;
-+
  	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e8cac2655c82..9ead43f79023 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1063,6 +1063,7 @@ int __mptcp_subflow_connect(struct sock *sk, int ifin=
+dex,
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sockaddr_storage addr;
++	int remote_id =3D remote->id;
+ 	int local_id =3D loc->id;
+ 	struct socket *sf;
+ 	struct sock *ssk;
+@@ -1107,10 +1108,11 @@ int __mptcp_subflow_connect(struct sock *sk, int if=
+index,
+ 		goto failed;
  =
 
- 	rcu_read_lock();
+ 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
+-	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d", msk, remote_token,
+-		 local_id);
++	pr_debug("msk=3D%p remote_token=3D%u local_id=3D%d remote_id=3D%d", msk,
++		 remote_token, local_id, remote_id);
+ 	subflow->remote_token =3D remote_token;
+ 	subflow->local_id =3D local_id;
++	subflow->remote_id =3D remote_id;
+ 	subflow->request_join =3D 1;
+ 	subflow->request_bkup =3D 1;
+ 	mptcp_info2sockaddr(remote, &addr);
+@@ -1347,6 +1349,7 @@ static void subflow_ulp_clone(const struct request_so=
+ck *req,
+ 		new_ctx->fully_established =3D 1;
+ 		new_ctx->backup =3D subflow_req->backup;
+ 		new_ctx->local_id =3D subflow_req->local_id;
++		new_ctx->remote_id =3D subflow_req->remote_id;
+ 		new_ctx->token =3D subflow_req->token;
+ 		new_ctx->thmac =3D subflow_req->thmac;
+ 	}
 -- =
 
 2.17.1
 
---===============7111680156723127230==--
+--===============1034273224700624009==--
