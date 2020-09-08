@@ -1,148 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============7493099701996180714=="
+Content-Type: multipart/mixed; boundary="===============3625168578251952464=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 0/8] Add REMOVE_ADDR support
-Date: Tue, 08 Sep 2020 14:56:15 +0800
-Message-ID: <CA+WQbwuwJZYybKPJqpC2dKLyAvdH8qHpeLsb0JmnyG7P9yNm2A@mail.gmail.com>
-In-Reply-To: CA+WQbwttLmaW2U_ouuMwKXtKW-6RF=CXGLPdeHWhbTpTA7NRgw@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: Wake up MPTCP worker when
+ DATA_FIN found on a TCP FIN packet
+Date: Tue, 08 Sep 2020 13:33:35 -0700
+Message-ID: <alpine.OSX.2.23.453.2009081003240.13022@fengzha2-mobl.amr.corp.intel.com>
+In-Reply-To: 421e39795d3e6954c55b2e40b84e59ce9164dfe8.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5759
+X-UID: 5762
 
---===============7493099701996180714==
+--===============3625168578251952464==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Geliang Tang <geliangtang(a)gmail.com> =E4=BA=8E2020=E5=B9=B49=E6=9C=884=E6=
-=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=881:07=E5=86=99=E9=81=93=EF=BC=9A
+On Mon, 7 Sep 2020, Paolo Abeni wrote:
+
+> On Thu, 2020-09-03 at 17:35 -0700, Mat Martineau wrote:
+>> When receiving a DATA_FIN MPTCP option on a TCP FIN packet, the DATA_FIN
+>> information would be stored but the MPTCP worker did not get
+>> scheduled. In turn, the MPTCP socket state would remain in
+>> TCP_ESTABLISHED and no blocked operations would be awakened.
+>>
+>> TCP FIN packets are seen by the MPTCP socket when moving skbs out of the
+>> subflow receive queues, so schedule the MPTCP worker when a skb with
+>> DATA_FIN but no data payload is moved from a subflow queue. Other cases
+>> (DATA_FIN on a bare TCP ACK or on a packet with data payload) are
+>> already handled.
+>>
+>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>> ---
+>>
+>> This patch is targeted at the -net tree, but also applies to net-next
+>> without conflict. If it looks ok, we can carry it in the export branch
+>> until it gets merged to both -net and net-next.
+>>
+>> net/mptcp/subflow.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index e8cac2655c82..3297233dece7 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -731,7 +731,7 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk,
+>>
+>>  	if (mpext->data_fin =3D=3D 1) {
+>>  		if (data_len =3D=3D 1) {
+>> -			mptcp_update_rcv_data_fin(msk, mpext->data_seq);
+>> +			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq);
+>>  			pr_debug("DATA_FIN with no payload seq=3D%llu", mpext->data_seq);
+>>  			if (subflow->map_valid) {
+>>  				/* A DATA_FIN might arrive in a DSS
+>> @@ -742,6 +742,9 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk,
+>>  				skb_ext_del(skb, SKB_EXT_MPTCP);
+>>  				return MAPPING_OK;
+>>  			} else {
+>> +				if (updated && schedule_work(&msk->work))
+>> +					sock_hold((struct sock *)msk);
+>> +
 >
-> Geliang Tang <geliangtang(a)gmail.com> =E4=BA=8E2020=E5=B9=B49=E6=9C=882=
-=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=885:40=E5=86=99=E9=81=93=EF=BC=
-=9A
-> >
-> > v9:
-> >  - update patch 3/8, simply call mptcp_pm_nl_rm_subflow_received.
-> >  - update patch 5/8, use the reverse x-mas tree order.
-> >  - this patchset should be applied after the applying of my another
-> >    patchset, 'add ADD_ADDR echo flag support'.
-> >
-> > v8:
-> >  - drop anno_list in v7.
-> >    We don't need to add a new list, conn_list is enough for the signal
-> > address and local subflow.
-> >  - fix local_id and remote_id issues.
-> >    The RM_ADDR logic uses an address id to identify the removing
-> > address, so we must make sure the subflow's local_id and remote_id be
-> > set properly.
-> >  - fix mptcp_pm_nl_rm_addr_received logic issue
-> >  - update selftests
-> >
-> > v7:
-> >  - add RM_ADDR mib
-> >  - update RM_ADDR selftests test case
-> >
-> > v6:
-> >  - rename lookup_anno_list_by_saddr to remove_anno_list_by_saddr as
-> >    Paolo suggested.
-> >  - add msk socket lock when traverse msk->conn_list as Paolo suggested.
-> >  - Since the first three patches in v5 have been merged to export
-> >    branch, drop them from this patchset.
-> >  - add remove addr and subflow selftest test case.
-> >  - this patchset is against mptcp_net-next's export branch.
-> >
-> > v5:
-> >  - merge mptcp_nl_remove_subflow() and mptcp_nl_remove_addr()
-> >  - add cond_resched
-> >  - reduce the indentation level in mptcp_pm_nl_rm_addr_received
-> >
-> > v4:
-> >  - update mptcp_subflow_shutdown()'s args.
-> >  - add rm_id check to make sure we don't shutdown the first subflow.
-> >  - add conn_list empty check.
-> >  - move anno_list to mptcp_pm_data.
-> >  - add a new patch 'mptcp: add remove subflow support'.
-> >
-> > v3:
-> >  - fix memory leak and lock issue in v2.
-> >  - drop alist in v2.
-> >  - fix mptcp_subflow_shutdown's arguments.
-> >  - bzero remote in mptcp_pm_create_subflow_or_signal_addr.
-> >  - add more commit message.
-> >
-> > Geliang Tang (8):
-> >   1/8 mptcp: remove addr and subflow in PM netlink
-> >   2/8 mptcp: fix mptcp_pm_nl_rm_addr_received logic issue
-> >   3/8 mptcp: implement mptcp_pm_remove_subflow
-> >   4/8 mptcp: fix every subflow's local_id is zero
-> >   5/8 mptcp: fix subflow's remote_id is zero issue
-> >   6/8 mptcp: add RM_ADDR related mibs
-> >   7/8 selftests: mptcp: add remove cfg in mptcp_connect
-> >   8/8 selftests: mptcp: add remove addr and subflow test cases
->
-> Hi Paolo, Matt,
->
-> I want to adjust some code in this patchset.
->
-> I think patch 2/8 "mptcp: fix mptcp_pm_nl_rm_addr_received logic issue"
-> shouldn't be here, it's better to squash-to the original commit "mptcp: a=
-dd
-> the incoming RM_ADDR support".
->
-> So I have sent out a new patch named 'Squash-to: "mptcp: add the incoming
-> RM_ADDR support"' yesterday.
->
-> And I want to commit patch 4/8 "mptcp: fix every subflow's local_id is ze=
-ro"
-> and 5/8 "mptcp: fix subflow's remote_id is zero issue" directly to -net a=
-s Paolo
-> suggested. Some code about subflow's remote_id fixing in the commit "mptc=
-p:
-> add the incoming RM_ADDR support" should be put together in patch 5/8.
-> So in the squash-to patch, I drop the original subflow's remote_id fixing=
- code.
->
-> Please give me some suggestions about my squash-to patch.
->
-> Thanks.
-> -Geliang
+> We already have 'schedule_work' call to handle incoming data fin
+> in mptcp_incoming_options(), can we instead extend the checks there to
+> cover also this scenario?
 >
 
-Hi Matt, Paolo,
+I did look at modifying mptcp_incoming_options(), but this patch looked =
 
-After this code adjusting, the valid patches in this "RM_ADDR
-support" patchset v9 are these 8 patches:
+like the simpler fix.
 
- Squash-to: "mptcp: add the incoming RM_ADDR support"
- mptcp: remove addr and subflow in PM netlink
- Squash-to: "mptcp: remove addr and subflow in PM netlink v9"
- mptcp: implement mptcp_pm_remove_subflow
- Squash-to: "mptcp: implement mptcp_pm_remove_subflow v9"
- mptcp: add RM_ADDR related mibs
- selftests: mptcp: add remove cfg in mptcp_connect
- selftests: mptcp: add remove addr and subflow test cases
+The existing checks for empty packets in mptcp_incoming_options() =
 
-These 3 patches should be removed from this patchset:
- mptcp: fix mptcp_pm_nl_rm_addr_received logic issue
- mptcp: fix every subflow's local_id is zero
- mptcp: fix subflow's remote_id is zero issue
+accomplish two things:
 
--Geliang
--Geliang
+1. DATA_FIN is handled for ACK packets that don't get in to the subflow =
 
-> >
-> >  net/mptcp/mib.c                               |   2 +
-> >  net/mptcp/mib.h                               |   2 +
-> >  net/mptcp/pm.c                                |  15 +-
-> >  net/mptcp/pm_netlink.c                        | 107 +++++++++++--
-> >  net/mptcp/protocol.h                          |   3 +-
-> >  net/mptcp/subflow.c                           |   8 +-
-> >  .../selftests/net/mptcp/mptcp_connect.c       |  18 ++-
-> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 145 +++++++++++++++++-
-> >  8 files changed, 276 insertions(+), 24 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
---===============7493099701996180714==--
+receive queue (TCP FIN packets do go in to the receive queue, even if =
+
+there's no payload).
+
+2. skb_ext attachment is skipped for ACK packets.
+
+
+Changing the logic in mptcp_incoming_options() would have to look for =
+
+seq+1 =3D=3D end_seq and TCP FIN, and then (maybe?) not attach the skb_ext =
+- =
+
+which significantly changes the code paths involved. It might also do an =
+
+extra wake up of the worker before the MPTCP socket is caught up with the =
+
+incoming data.
+
+In comparison, the above patch stores a return value that was previously =
+
+(incorrectly) ignored, and schedules the worker when it is most likely to =
+
+be able to do the work.
+
+Given that, do you think it's better to extend the =
+
+mptcp_incoming_options() checks?
+
+--
+Mat Martineau
+Intel
+--===============3625168578251952464==--
