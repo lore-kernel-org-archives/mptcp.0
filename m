@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============3774616266388781472=="
+Content-Type: multipart/mixed; boundary="===============7493099701996180714=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 0/8] Add REMOVE_ADDR support
-Date: Tue, 08 Sep 2020 14:52:23 +0800
-Message-ID: <CA+WQbws_eT1FuOnbH2HsEmC_9spFroByC=16dxMYc0-XAZA5+g@mail.gmail.com>
+Date: Tue, 08 Sep 2020 14:56:15 +0800
+Message-ID: <CA+WQbwuwJZYybKPJqpC2dKLyAvdH8qHpeLsb0JmnyG7P9yNm2A@mail.gmail.com>
 In-Reply-To: CA+WQbwttLmaW2U_ouuMwKXtKW-6RF=CXGLPdeHWhbTpTA7NRgw@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5758
+X-UID: 5759
 
---===============3774616266388781472==
+--===============7493099701996180714==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -108,6 +108,29 @@ p:
 > Thanks.
 > -Geliang
 >
+
+Hi Matt, Paolo,
+
+After this code adjusting, the valid patches in this "RM_ADDR
+support" patchset v9 are these 8 patches:
+
+ Squash-to: "mptcp: add the incoming RM_ADDR support"
+ mptcp: remove addr and subflow in PM netlink
+ Squash-to: "mptcp: remove addr and subflow in PM netlink v9"
+ mptcp: implement mptcp_pm_remove_subflow
+ Squash-to: "mptcp: implement mptcp_pm_remove_subflow v9"
+ mptcp: add RM_ADDR related mibs
+ selftests: mptcp: add remove cfg in mptcp_connect
+ selftests: mptcp: add remove addr and subflow test cases
+
+These 3 patches should be removed from this patchset:
+ mptcp: fix mptcp_pm_nl_rm_addr_received logic issue
+ mptcp: fix every subflow's local_id is zero
+ mptcp: fix subflow's remote_id is zero issue
+
+-Geliang
+-Geliang
+
 > >
 > >  net/mptcp/mib.c                               |   2 +
 > >  net/mptcp/mib.h                               |   2 +
@@ -122,4 +145,4 @@ p:
 > > --
 > > 2.17.1
 > >
---===============3774616266388781472==--
+--===============7493099701996180714==--
