@@ -1,102 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============1214375051407057918=="
+Content-Type: multipart/mixed; boundary="===============3774616266388781472=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH] Squash-to: "mptcp: implement
- mptcp_pm_remove_subflow v9"
-Date: Tue, 08 Sep 2020 14:32:31 +0800
-Message-ID: <5624c8ee7e6db4c20fa7f0593d2e6cc9be36ca32.1599546158.git.geliangtang@gmail.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 0/8] Add REMOVE_ADDR support
+Date: Tue, 08 Sep 2020 14:52:23 +0800
+Message-ID: <CA+WQbws_eT1FuOnbH2HsEmC_9spFroByC=16dxMYc0-XAZA5+g@mail.gmail.com>
+In-Reply-To: CA+WQbwttLmaW2U_ouuMwKXtKW-6RF=CXGLPdeHWhbTpTA7NRgw@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5757
+X-UID: 5758
 
---===============1214375051407057918==
+--===============3774616266388781472==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Commit message should be rewritten enterily:
-'''
-This patch implemented the local subflow removing function,
-mptcp_pm_remove_subflow, it simply called mptcp_pm_nl_rm_subflow_received
-under the PM spin lock.
-
-We use mptcp_pm_remove_subflow to remove a local subflow, so change it's
-argument from remote_id to local_id.
-
-We check subflow->local_id in mptcp_pm_nl_rm_subflow_received to remove
-a subflow.
-'''
-
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/pm_netlink.c | 33 +++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h   |  1 +
- 2 files changed, 34 insertions(+)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 0dae12862931..c7a7e70ba1cd 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -339,6 +339,39 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *m=
-sk)
- 	}
- }
- =
-
-+void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct sock *sk =3D (struct sock *)msk;
-+
-+	pr_debug("subflow rm_id %d", rm_id);
-+
-+	if (!rm_id)
-+		return;
-+
-+	if (list_empty(&msk->conn_list))
-+		return;
-+
-+	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+		int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
-+		long timeout =3D 0;
-+
-+		if (rm_id !=3D subflow->local_id)
-+			continue;
-+
-+		spin_unlock_bh(&msk->pm.lock);
-+		mptcp_subflow_shutdown(sk, ssk, how);
-+		__mptcp_close_ssk(sk, ssk, subflow, timeout);
-+		spin_lock_bh(&msk->pm.lock);
-+
-+		msk->pm.local_addr_used--;
-+		msk->pm.subflows--;
-+
-+		break;
-+	}
-+}
-+
- static bool address_use_port(struct mptcp_pm_addr_entry *entry)
- {
- 	return (entry->addr.flags &
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 91a68d7e672a..df6cc94df1f7 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -479,6 +479,7 @@ void mptcp_pm_nl_fully_established(struct mptcp_sock *m=
-sk);
- void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk);
- void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk);
- void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk);
-+void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *s=
-kc);
- =
-
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
--- =
-
-2.17.1
-
---===============1214375051407057918==--
+Geliang Tang <geliangtang(a)gmail.com> =E4=BA=8E2020=E5=B9=B49=E6=9C=884=E6=
+=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=881:07=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Geliang Tang <geliangtang(a)gmail.com> =E4=BA=8E2020=E5=B9=B49=E6=9C=882=
+=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=885:40=E5=86=99=E9=81=93=EF=BC=
+=9A
+> >
+> > v9:
+> >  - update patch 3/8, simply call mptcp_pm_nl_rm_subflow_received.
+> >  - update patch 5/8, use the reverse x-mas tree order.
+> >  - this patchset should be applied after the applying of my another
+> >    patchset, 'add ADD_ADDR echo flag support'.
+> >
+> > v8:
+> >  - drop anno_list in v7.
+> >    We don't need to add a new list, conn_list is enough for the signal
+> > address and local subflow.
+> >  - fix local_id and remote_id issues.
+> >    The RM_ADDR logic uses an address id to identify the removing
+> > address, so we must make sure the subflow's local_id and remote_id be
+> > set properly.
+> >  - fix mptcp_pm_nl_rm_addr_received logic issue
+> >  - update selftests
+> >
+> > v7:
+> >  - add RM_ADDR mib
+> >  - update RM_ADDR selftests test case
+> >
+> > v6:
+> >  - rename lookup_anno_list_by_saddr to remove_anno_list_by_saddr as
+> >    Paolo suggested.
+> >  - add msk socket lock when traverse msk->conn_list as Paolo suggested.
+> >  - Since the first three patches in v5 have been merged to export
+> >    branch, drop them from this patchset.
+> >  - add remove addr and subflow selftest test case.
+> >  - this patchset is against mptcp_net-next's export branch.
+> >
+> > v5:
+> >  - merge mptcp_nl_remove_subflow() and mptcp_nl_remove_addr()
+> >  - add cond_resched
+> >  - reduce the indentation level in mptcp_pm_nl_rm_addr_received
+> >
+> > v4:
+> >  - update mptcp_subflow_shutdown()'s args.
+> >  - add rm_id check to make sure we don't shutdown the first subflow.
+> >  - add conn_list empty check.
+> >  - move anno_list to mptcp_pm_data.
+> >  - add a new patch 'mptcp: add remove subflow support'.
+> >
+> > v3:
+> >  - fix memory leak and lock issue in v2.
+> >  - drop alist in v2.
+> >  - fix mptcp_subflow_shutdown's arguments.
+> >  - bzero remote in mptcp_pm_create_subflow_or_signal_addr.
+> >  - add more commit message.
+> >
+> > Geliang Tang (8):
+> >   1/8 mptcp: remove addr and subflow in PM netlink
+> >   2/8 mptcp: fix mptcp_pm_nl_rm_addr_received logic issue
+> >   3/8 mptcp: implement mptcp_pm_remove_subflow
+> >   4/8 mptcp: fix every subflow's local_id is zero
+> >   5/8 mptcp: fix subflow's remote_id is zero issue
+> >   6/8 mptcp: add RM_ADDR related mibs
+> >   7/8 selftests: mptcp: add remove cfg in mptcp_connect
+> >   8/8 selftests: mptcp: add remove addr and subflow test cases
+>
+> Hi Paolo, Matt,
+>
+> I want to adjust some code in this patchset.
+>
+> I think patch 2/8 "mptcp: fix mptcp_pm_nl_rm_addr_received logic issue"
+> shouldn't be here, it's better to squash-to the original commit "mptcp: a=
+dd
+> the incoming RM_ADDR support".
+>
+> So I have sent out a new patch named 'Squash-to: "mptcp: add the incoming
+> RM_ADDR support"' yesterday.
+>
+> And I want to commit patch 4/8 "mptcp: fix every subflow's local_id is ze=
+ro"
+> and 5/8 "mptcp: fix subflow's remote_id is zero issue" directly to -net a=
+s Paolo
+> suggested. Some code about subflow's remote_id fixing in the commit "mptc=
+p:
+> add the incoming RM_ADDR support" should be put together in patch 5/8.
+> So in the squash-to patch, I drop the original subflow's remote_id fixing=
+ code.
+>
+> Please give me some suggestions about my squash-to patch.
+>
+> Thanks.
+> -Geliang
+>
+> >
+> >  net/mptcp/mib.c                               |   2 +
+> >  net/mptcp/mib.h                               |   2 +
+> >  net/mptcp/pm.c                                |  15 +-
+> >  net/mptcp/pm_netlink.c                        | 107 +++++++++++--
+> >  net/mptcp/protocol.h                          |   3 +-
+> >  net/mptcp/subflow.c                           |   8 +-
+> >  .../selftests/net/mptcp/mptcp_connect.c       |  18 ++-
+> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 145 +++++++++++++++++-
+> >  8 files changed, 276 insertions(+), 24 deletions(-)
+> >
+> > --
+> > 2.17.1
+> >
+--===============3774616266388781472==--
