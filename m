@@ -1,45 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============0434101413121180271=="
+Content-Type: multipart/mixed; boundary="===============5695975393209229823=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 net 2/2] mptcp: fix subflow's remote_id
- issues
-Date: Wed, 09 Sep 2020 16:39:54 +0200
-Message-ID: <4c6c23fc-f493-ce9e-953f-679109de5fc8@tessares.net>
-In-Reply-To: 0127c08400bdf65c03438b0b6e90e4ab72ea1576.1599532593.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH] mptcp: call tcp_cleanup_rbuf on subflows
+Date: Wed, 09 Sep 2020 18:15:50 +0200
+Message-ID: <396a39fddc546f5d97cd42c59db565428cdc120a.camel@redhat.com>
+In-Reply-To: 3e3bca22480da1920cb48f87d1167a0f22cbd63f.1599659451.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5772
+X-UID: 5773
 
---===============0434101413121180271==
+--===============5695975393209229823==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
-
-On 08/09/2020 04:49, Geliang Tang wrote:
-> This patch set the init remote_id to zero, otherwise it will be a random
-> number.
+On Wed, 2020-09-09 at 15:51 +0200, Paolo Abeni wrote:
+> That is needed to let the subflows announce promply when new
+> space is available in the receive buffer.
 > =
 
-> Then it added the missing subflow's remote_id setting code both in
-> __mptcp_subflow_connect and in subflow_ulp_clone.
-> =
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> --
 
-> Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
-> Fixes: ec3edaa7ca6ce ("mptcp: Add handling of outgoing MP_JOIN requests")
-> Fixes: f296234c98a8f ("mptcp: Add handling of incoming MP_JOIN requests")
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Reporting here info shared on the IRC channel.
 
-Thank you for the v2!
+This is a bit rough, but fixes the simult self-tests (at least the
+enabled one) and here apparently also reduces the mptcp_connect.sh
+self-tests run time.
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Any third-party confirm more than appreciated ;)
 
-Cheers,
-Matt
--- =
+/P
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0434101413121180271==--
+
+
+
+
+--===============5695975393209229823==--
