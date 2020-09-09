@@ -1,70 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============7802969727036701342=="
+Content-Type: multipart/mixed; boundary="===============1136690503717603436=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC mptcp-next 2/3] mptcp: rework poll+nospace handling
-Date: Tue, 08 Sep 2020 17:48:18 -0700
-Message-ID: <alpine.OSX.2.23.453.2009081644260.19380@fengzha2-mobl.amr.corp.intel.com>
-In-Reply-To: 20200906174649.GM7319@breakpoint.cc
+Subject: [MPTCP] [MPTCP][PATCH net] mptcp: fix kmalloc flag in
+ mptcp_pm_nl_get_local_id
+Date: Wed, 09 Sep 2020 11:01:24 +0800
+Message-ID: <edf5e512a6932d9169f77d9cd5c89aa198b20d31.1599620248.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5763
+X-UID: 5764
 
---===============7802969727036701342==
+--===============1136690503717603436==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, 6 Sep 2020, Florian Westphal wrote:
+mptcp_pm_nl_get_local_id may be called in interrupt context, so we need to
+use GFP_ATOMIC flag to allocate memory to avoid sleeping in atomic context.
 
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
->> On Sun, 2020-09-06 at 17:58 +0200, Paolo Abeni wrote:
->>> On Sat, 2020-09-05 at 12:33 +0200, Florian Westphal wrote:
->>>> +static __poll_t mptcp_check_writeable(struct mptcp_sock *msk)
->>>> +{
->>>> +	struct sock *sk =3D (struct sock *)msk;
->>>> +	__poll_t ret =3D 0;
->>>> +	bool slow;
->>>> +
->>>> +	if (sk->sk_shutdown & SEND_SHUTDOWN)
->>>> +		return 0;
->>>> +
->>>> +	slow =3D lock_sock_fast(sk);
->>>> +	if (__mptcp_check_writeable(msk))
->>>> +		ret =3D EPOLLOUT | EPOLLWRNORM;
->>>> +
->>>> +	unlock_sock_fast(sk, slow);
->>>
->>> It's a pity we need to acquire the lock in mptcp_poll()... perhaps we
->>> could try to acquire it only if sk_stream_is_writeable(msk)?
->>
->> I'm also wondering if checking sk_stream_is_writeable(msk) could be
->> enough??? perhaps with a different sndbuf auto-tuning strategy.
->
-> Not right now.  But perhaps this is worth exploring -- we would need
-> to change mptcp_sendmsg to append data to the rtx queue in case no ssk
-> can be found.
->
-> I'd give this a try unless you or anyone else has objections.
+[  280.209809] BUG: sleeping function called from invalid context at mm/sla=
+b.h:498
+[  280.209812] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1680,=
+ name: kworker/1:3
+[  280.209814] INFO: lockdep is turned off.
+[  280.209816] CPU: 1 PID: 1680 Comm: kworker/1:3 Tainted: G        W      =
+   5.9.0-rc3-mptcp+ #146
+[  280.209818] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS Virt=
+ualBox 12/01/2006
+[  280.209820] Workqueue: events mptcp_worker
+[  280.209822] Call Trace:
+[  280.209824]  <IRQ>
+[  280.209826]  dump_stack+0x77/0xa0
+[  280.209829]  ___might_sleep.cold+0xa6/0xb6
+[  280.209832]  kmem_cache_alloc_trace+0x1d1/0x290
+[  280.209835]  mptcp_pm_nl_get_local_id+0x23c/0x410
+[  280.209840]  subflow_init_req+0x1e9/0x2ea
+[  280.209843]  ? inet_reqsk_alloc+0x1c/0x120
+[  280.209845]  ? kmem_cache_alloc+0x264/0x290
+[  280.209849]  tcp_conn_request+0x303/0xae0
+[  280.209854]  ? printk+0x53/0x6a
+[  280.209857]  ? tcp_rcv_state_process+0x28f/0x1374
+[  280.209859]  tcp_rcv_state_process+0x28f/0x1374
+[  280.209864]  ? tcp_v4_do_rcv+0xb3/0x1f0
+[  280.209866]  tcp_v4_do_rcv+0xb3/0x1f0
+[  280.209869]  tcp_v4_rcv+0xed6/0xfa0
+[  280.209873]  ip_protocol_deliver_rcu+0x28/0x270
+[  280.209875]  ip_local_deliver_finish+0x89/0x120
+[  280.209877]  ip_local_deliver+0x180/0x220
+[  280.209881]  ip_rcv+0x166/0x210
+[  280.209885]  __netif_receive_skb_one_core+0x82/0x90
+[  280.209888]  process_backlog+0xd6/0x230
+[  280.209891]  net_rx_action+0x13a/0x410
+[  280.209895]  __do_softirq+0xcf/0x468
+[  280.209899]  asm_call_on_stack+0x12/0x20
+[  280.209901]  </IRQ>
+[  280.209903]  ? ip_finish_output2+0x240/0x9a0
+[  280.209906]  do_softirq_own_stack+0x4d/0x60
+[  280.209908]  do_softirq.part.0+0x2b/0x60
+[  280.209911]  __local_bh_enable_ip+0x9a/0xa0
+[  280.209913]  ip_finish_output2+0x264/0x9a0
+[  280.209916]  ? rcu_read_lock_held+0x4d/0x60
+[  280.209920]  ? ip_output+0x7a/0x250
+[  280.209922]  ip_output+0x7a/0x250
+[  280.209925]  ? __ip_finish_output+0x330/0x330
+[  280.209928]  __ip_queue_xmit+0x1dc/0x5a0
+[  280.209931]  __tcp_transmit_skb+0xa0f/0xc70
+[  280.209937]  tcp_connect+0xb03/0xff0
+[  280.209939]  ? lockdep_hardirqs_on_prepare+0xe7/0x190
+[  280.209942]  ? ktime_get_with_offset+0x125/0x150
+[  280.209944]  ? trace_hardirqs_on+0x1c/0xe0
+[  280.209948]  tcp_v4_connect+0x449/0x550
+[  280.209953]  __inet_stream_connect+0xbb/0x320
+[  280.209955]  ? mark_held_locks+0x49/0x70
+[  280.209958]  ? lockdep_hardirqs_on_prepare+0xe7/0x190
+[  280.209960]  ? __local_bh_enable_ip+0x6b/0xa0
+[  280.209963]  inet_stream_connect+0x32/0x50
+[  280.209966]  __mptcp_subflow_connect+0x1fd/0x242
+[  280.209972]  mptcp_pm_create_subflow_or_signal_addr+0x2db/0x600
+[  280.209975]  mptcp_worker+0x543/0x7a0
+[  280.209980]  process_one_work+0x26d/0x5b0
+[  280.209984]  ? process_one_work+0x5b0/0x5b0
+[  280.209987]  worker_thread+0x48/0x3d0
+[  280.209990]  ? process_one_work+0x5b0/0x5b0
+[  280.209993]  kthread+0x117/0x150
+[  280.209996]  ? kthread_park+0x80/0x80
+[  280.209998]  ret_from_fork+0x22/0x30
 
-No objection here, I think it would be good to explore - might fit the =
+Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/pm_netlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-"easier to follow" criteria you mention in the cover letter. Having =
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index bd88e9c0bf71..1f6d029ccf40 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -354,7 +354,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc)
+ 		return ret;
+ =
 
-mptcp_poll() not only locking, but also doing the __mptcp_clean_una() =
+ 	/* address not found, add to local list */
+-	entry =3D kmalloc(sizeof(*entry), GFP_KERNEL);
++	entry =3D kmalloc(sizeof(*entry), GFP_ATOMIC);
+ 	if (!entry)
+ 		return -ENOMEM;
+ =
 
-work, seems kind of heavyweight for a poll operation.
+-- =
 
+2.17.1
 
->
->> e.g. if msk sndbuf <=3D max (ssk sndbuf), I *think*
->> that sk_stream_is_writeable(msk) implies at least a ssk is writeable,
->> too
->
-> You mean mptcp_is_writeable()?
-> [ Question above still stands though ]
-
---
-Mat Martineau
-Intel
---===============7802969727036701342==--
+--===============1136690503717603436==--
