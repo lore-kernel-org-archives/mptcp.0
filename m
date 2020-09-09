@@ -1,115 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============1136690503717603436=="
+Content-Type: multipart/mixed; boundary="===============2612136054723901074=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net] mptcp: fix kmalloc flag in
- mptcp_pm_nl_get_local_id
-Date: Wed, 09 Sep 2020 11:01:24 +0800
-Message-ID: <edf5e512a6932d9169f77d9cd5c89aa198b20d31.1599620248.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][BUG] kmemleak in cookie_tcp_reqsk_alloc
+Date: Wed, 09 Sep 2020 14:39:42 +0800
+Message-ID: <CA+WQbwsbesSDpPqyPO=jjC8O=ncX13rOiW1+w72BeiQJcD9Dbw@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5764
+X-UID: 5766
 
---===============1136690503717603436==
+--===============2612136054723901074==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_pm_nl_get_local_id may be called in interrupt context, so we need to
-use GFP_ATOMIC flag to allocate memory to avoid sleeping in atomic context.
+When I run today's mptcp_net-next kernel with selftest script mptcp_join.sh,
+I get this kmemleak report:
 
-[  280.209809] BUG: sleeping function called from invalid context at mm/sla=
-b.h:498
-[  280.209812] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1680,=
- name: kworker/1:3
-[  280.209814] INFO: lockdep is turned off.
-[  280.209816] CPU: 1 PID: 1680 Comm: kworker/1:3 Tainted: G        W      =
-   5.9.0-rc3-mptcp+ #146
-[  280.209818] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS Virt=
-ualBox 12/01/2006
-[  280.209820] Workqueue: events mptcp_worker
-[  280.209822] Call Trace:
-[  280.209824]  <IRQ>
-[  280.209826]  dump_stack+0x77/0xa0
-[  280.209829]  ___might_sleep.cold+0xa6/0xb6
-[  280.209832]  kmem_cache_alloc_trace+0x1d1/0x290
-[  280.209835]  mptcp_pm_nl_get_local_id+0x23c/0x410
-[  280.209840]  subflow_init_req+0x1e9/0x2ea
-[  280.209843]  ? inet_reqsk_alloc+0x1c/0x120
-[  280.209845]  ? kmem_cache_alloc+0x264/0x290
-[  280.209849]  tcp_conn_request+0x303/0xae0
-[  280.209854]  ? printk+0x53/0x6a
-[  280.209857]  ? tcp_rcv_state_process+0x28f/0x1374
-[  280.209859]  tcp_rcv_state_process+0x28f/0x1374
-[  280.209864]  ? tcp_v4_do_rcv+0xb3/0x1f0
-[  280.209866]  tcp_v4_do_rcv+0xb3/0x1f0
-[  280.209869]  tcp_v4_rcv+0xed6/0xfa0
-[  280.209873]  ip_protocol_deliver_rcu+0x28/0x270
-[  280.209875]  ip_local_deliver_finish+0x89/0x120
-[  280.209877]  ip_local_deliver+0x180/0x220
-[  280.209881]  ip_rcv+0x166/0x210
-[  280.209885]  __netif_receive_skb_one_core+0x82/0x90
-[  280.209888]  process_backlog+0xd6/0x230
-[  280.209891]  net_rx_action+0x13a/0x410
-[  280.209895]  __do_softirq+0xcf/0x468
-[  280.209899]  asm_call_on_stack+0x12/0x20
-[  280.209901]  </IRQ>
-[  280.209903]  ? ip_finish_output2+0x240/0x9a0
-[  280.209906]  do_softirq_own_stack+0x4d/0x60
-[  280.209908]  do_softirq.part.0+0x2b/0x60
-[  280.209911]  __local_bh_enable_ip+0x9a/0xa0
-[  280.209913]  ip_finish_output2+0x264/0x9a0
-[  280.209916]  ? rcu_read_lock_held+0x4d/0x60
-[  280.209920]  ? ip_output+0x7a/0x250
-[  280.209922]  ip_output+0x7a/0x250
-[  280.209925]  ? __ip_finish_output+0x330/0x330
-[  280.209928]  __ip_queue_xmit+0x1dc/0x5a0
-[  280.209931]  __tcp_transmit_skb+0xa0f/0xc70
-[  280.209937]  tcp_connect+0xb03/0xff0
-[  280.209939]  ? lockdep_hardirqs_on_prepare+0xe7/0x190
-[  280.209942]  ? ktime_get_with_offset+0x125/0x150
-[  280.209944]  ? trace_hardirqs_on+0x1c/0xe0
-[  280.209948]  tcp_v4_connect+0x449/0x550
-[  280.209953]  __inet_stream_connect+0xbb/0x320
-[  280.209955]  ? mark_held_locks+0x49/0x70
-[  280.209958]  ? lockdep_hardirqs_on_prepare+0xe7/0x190
-[  280.209960]  ? __local_bh_enable_ip+0x6b/0xa0
-[  280.209963]  inet_stream_connect+0x32/0x50
-[  280.209966]  __mptcp_subflow_connect+0x1fd/0x242
-[  280.209972]  mptcp_pm_create_subflow_or_signal_addr+0x2db/0x600
-[  280.209975]  mptcp_worker+0x543/0x7a0
-[  280.209980]  process_one_work+0x26d/0x5b0
-[  280.209984]  ? process_one_work+0x5b0/0x5b0
-[  280.209987]  worker_thread+0x48/0x3d0
-[  280.209990]  ? process_one_work+0x5b0/0x5b0
-[  280.209993]  kthread+0x117/0x150
-[  280.209996]  ? kthread_park+0x80/0x80
-[  280.209998]  ret_from_fork+0x22/0x30
+unreferenced object 0xffff9e83383af608 (size 368):
+  comm "softirq", pid 0, jiffies 4294809590 (age 237.243s)
+  hex dump (first 32 bytes):
+    0a 00 03 02 0a 00 01 01 6f b6 93 1c b0 3f 1f 27  ........o....?.'
+    02 00 0c 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000004235750>] inet_reqsk_alloc+0x21/0x130
+    [<00000000e50be1b8>] cookie_tcp_reqsk_alloc+0x29/0xf0
+    [<00000000de164302>] cookie_v4_check+0x14d/0x690
+    [<000000002f8e27b7>] tcp_v4_do_rcv+0x18d/0x1f0
+    [<000000003c898e94>] tcp_v4_rcv+0xc5f/0xcf0
+    [<00000000d8a4f3ab>] ip_protocol_deliver_rcu+0x2b/0x180
+    [<00000000098dd537>] ip_local_deliver_finish+0x4b/0x60
+    [<000000007919d713>] __netif_receive_skb_one_core+0x67/0x70
+    [<00000000d814cfd1>] process_backlog+0x9d/0x170
+    [<000000009fa3369b>] net_rx_action+0xf1/0x380
+    [<000000000750ea92>] __do_softirq+0xd9/0x2e4
+    [<0000000083859707>] asm_call_on_stack+0xf/0x20
+    [<000000009f5b0716>] do_softirq_own_stack+0x39/0x50
+    [<000000006f63cba9>] do_softirq+0x5e/0x70
+    [<00000000ade94a36>] __local_bh_enable_ip+0x4b/0x50
+    [<00000000cd74b5d0>] ip_finish_output2+0x19c/0x560
 
-Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/pm_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+My kernel version is export/20200909T050747.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index bd88e9c0bf71..1f6d029ccf40 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -354,7 +354,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
-ruct sock_common *skc)
- 		return ret;
- =
-
- 	/* address not found, add to local list */
--	entry =3D kmalloc(sizeof(*entry), GFP_KERNEL);
-+	entry =3D kmalloc(sizeof(*entry), GFP_ATOMIC);
- 	if (!entry)
- 		return -ENOMEM;
- =
-
--- =
-
-2.17.1
-
---===============1136690503717603436==--
+-Geliang
+--===============2612136054723901074==--
