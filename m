@@ -1,55 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============3235594251018869116=="
+Content-Type: multipart/mixed; boundary="===============4800654486773520694=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: allow picking different
- xmit subflows"
-Date: Fri, 11 Sep 2020 01:30:25 +0200
-Message-ID: <5c2b7b0df753a7f8c9be71a513e2542f58f8d7c0.1599780534.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH v2] mptcp: call tcp_cleanup_rbuf on subflows
+Date: Thu, 10 Sep 2020 16:31:16 -0700
+Message-ID: <alpine.OSX.2.23.453.2009101630360.6323@pbudhkar-mobl.amr.corp.intel.com>
+In-Reply-To: 90b277657a8e3bb69267f0cc902bf0d34bf32417.1599734019.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5793
+X-UID: 5794
 
---===============3235594251018869116==
+--===============4800654486773520694==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In case of fallback we still need to check for avail space
-on the only subflow, or we will trigger issues/83.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-Note:
-- I hope this also address issues/88, but it's just a wild guess
-- the repro from issue/83 will block, as expected, but will now
-  be responsive to signal
----
- net/mptcp/protocol.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Thu, 10 Sep 2020, Paolo Abeni wrote:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2abfe998ed05..d271cac7a1fb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1092,8 +1092,10 @@ static struct sock *mptcp_subflow_get_send(struct mp=
-tcp_sock *msk,
- 		return NULL;
- =
+> That is needed to let the subflows announce promply when new
+> space is available in the receive buffer.
+>
+> tcp_cleanup_rbuf() is currently a static function, drop the
+> scope modifier and add a declaration in the TCP header.
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> --
+> should be inserted just before "mptcp: simult flow self-tests"
+>
+> v1 -> v2:
+> - move tcp_cleanup_rbuf() declaration inside the headers
+> ---
 
- 	if (__mptcp_check_fallback(msk)) {
--		*sndbuf =3D msk->first ? msk->first->sk_sndbuf : 0;
--		return msk->first;
-+		if (!msk->first)
-+			return NULL;
-+		*sndbuf =3D msk->first->sk_sndbuf;
-+		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
- 	}
- =
+v2 looks good for the export branch, thanks Paolo.
 
- 	/* re-use last subflow, if the burst allow that */
--- =
-
-2.26.2
-
---===============3235594251018869116==--
+--
+Mat Martineau
+Intel
+--===============4800654486773520694==--
