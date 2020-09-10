@@ -1,112 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============7950489478005173239=="
+Content-Type: multipart/mixed; boundary="===============9007602316370784745=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] selftests/mptcp: Better delay & reordering
- configuration
-Date: Wed, 09 Sep 2020 22:07:36 -0700
-Message-ID: <20200910050736.377-1-cpaasch@apple.com>
+Subject: [MPTCP] Re: [PATCH net-next 1/2] Squash-to: "mptcp: allow picking
+ different xmit subflows"
+Date: Thu, 10 Sep 2020 10:38:37 +0200
+Message-ID: <129b5abdc28694386fce1e02f80a77766eb5bfa8.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.23.453.2009091737010.4909@atenciom-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5781
+X-UID: 5782
 
---===============7950489478005173239==
+--===============9007602316370784745==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The delay was intended to be configured to "simulate" a high(er) BDP
-link. As such, it needs to be set as part of the loss-configuration and
-not as part of the netem reordering configuration.
+On Wed, 2020-09-09 at 17:40 -0700, Mat Martineau wrote:
+> On Wed, 9 Sep 2020, Paolo Abeni wrote:
+> =
 
-The reordering-config also requires a delay but that delay is the
-reordering-extend. So, a good approach is to set the reordering-extend
-as a function of the configured latency. E.g., 25% of the overall
-latency.
+> > This improves the current packet scheduler for scenarios
+> > where the msk sockets is using different links with different
+> > bandwith limits.
+> > =
 
-To speed up the selftests, we limit the delay to 50ms maximum to avoid
-having the selftests run for too long.
+> > The commit comment should be changed into:
+> > =
 
-Finally, the intention of tc_reorder was that when it is unset, the test
-picks a random configuration. However, currently it is always initialized
-and thus the random config won't be picked up.
+> > """
+> > Update the scheduler to less trivial heuristic: cache
+> > the last used subflow, and try to send on it a reasonably
+> > long burst of data.
+> > =
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/6
-Reported-and-reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Christoph Paasch <cpaasch(a)apple.com>
----
- .../selftests/net/mptcp/mptcp_connect.sh        | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+> > When the burst or the subflow send space is exhausted, pick
+> > the subflow with the lower ratio between write space and
+> > send buffer - that is, the subflow with the greater relative
+> > amount of free space.
+> > """
+> > =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 57d75b7f6220..e4df9ba64824 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -14,9 +14,8 @@ capture=3Dfalse
- timeout=3D30
- ipv6=3Dtrue
- ethtool_random_on=3Dtrue
--tc_delay=3D"$((RANDOM%400))"
-+tc_delay=3D"$((RANDOM%50))"
- tc_loss=3D$((RANDOM%101))
--tc_reorder=3D""
- testmode=3D""
- sndbuf=3D0
- rcvbuf=3D0
-@@ -628,30 +627,32 @@ for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns4" $sender dead:beef:3::1
- done
- =
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > ---
+> > v1 -> v2:
+> > - remove some unneeded magic number
+> > - fix potential division by 0 - Florian
+> > =
 
--[ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss =
-random $tc_loss
-+[ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss =
-random $tc_loss delay ${tc_delay}ms
- echo -n "INFO: Using loss of $tc_loss "
- test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
- =
+> > Note:
+> > - subflows are now selected when sk_stream_memory_free(ssk),
+> >  while before we used sk_stream_is_writeable(ssk). The current
+> >  choice is closer to plain TCP and IMHO more correct, but
+> >  even the old one should not be buggy.
+> >  Anyhow I saw reproducible write error (EAGAIN) when using
+> >  sk_stream_is_writeable() with this strategy, and I was unable
+> >  to track them down, so possibly there is some other bug there
+> >  I could not find.
+> > - simuilt xmit self-tests are still failing, even if we are now
+> >  closer to success. The failures are now caused by the high delay
+> >  configured on the virtual link.
+> >  This problem would be addressed by a larger initial send buffer,
+> >  but the current xmit path is unable to cope with that correctly:
+> >  with a larger send buffer it will send pkts outside the MPTCP
+> >  window.
+> >  To properly address the above we additionally need something alike
+> >  "mptcp: keep track of receivers advertised window" from Florian,
+> >  plus the ability to enqueue data at the MPTCP level and send it
+> >  when the MPTCP level window is open.
+> =
 
-+reorder_delay=3D$(($tc_delay / 4))
-+
- if [ -z "${tc_reorder}" ]; then
- 	reorder1=3D$((RANDOM%10))
- 	reorder1=3D$((100 - reorder1))
- 	reorder2=3D$((RANDOM%100))
- =
+> Is this what the tcp_cleanup_rbuf() patch helps with?
 
--	if [ $tc_delay -gt 0 ] && [ $reorder1 -lt 100 ] && [ $reorder2 -gt 0 ]; t=
-hen
-+	if [ $reorder_delay -gt 0 ] && [ $reorder1 -lt 100 ] && [ $reorder2 -gt 0=
- ]; then
- 		tc_reorder=3D"reorder ${reorder1}% ${reorder2}%"
--		echo -n "$tc_reorder "
-+		echo -n "$tc_reorder with delay ${reorder_delay}ms "
- 	fi
- elif [ "$tc_reorder" =3D "0" ];then
- 	tc_reorder=3D""
--elif [ "$tc_delay" -gt 0 ];then
-+elif [ "$reorder_delay" -gt 0 ];then
- 	# reordering requires some delay
- 	tc_reorder=3D"reorder $tc_reorder"
--	echo -n "$tc_reorder "
-+	echo -n "$tc_reorder with delay ${reorder_delay}ms "
- fi
- =
+There are 2 issues:
 
- echo "on ns3eth4"
- =
+1) very long delay introduced by missing acks, addressed by
+the tcp_cleanup_rbuf() patch
 
--tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${tc_delay}ms $tc_re=
-order
-+tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms $=
-tc_reorder
- =
+2) inability of current MPTCP xmit path code to handle with large
+sndbuf - specifically larger then the send window. This latter needs
+quite a bit of rework - which is in progress - comprising Florian's
+snd_wnd patches and implementing the mptcp equivalent of
+tcp_push_pending_frames()
 
- for sender in $ns1 $ns2 $ns3 $ns4;do
- 	run_tests_lo "$ns1" "$sender" 10.0.1.1 1
--- =
+Cheers,
 
-2.23.0
+Paolo
 
---===============7950489478005173239==--
+--===============9007602316370784745==--
