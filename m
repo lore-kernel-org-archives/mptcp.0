@@ -1,117 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============7319051336469814077=="
+Content-Type: multipart/mixed; boundary="===============7032503854548366781=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2] mptcp: call tcp_cleanup_rbuf on subflows
-Date: Thu, 10 Sep 2020 12:33:53 +0200
-Message-ID: <90b277657a8e3bb69267f0cc902bf0d34bf32417.1599734019.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add the incoming RM_ADDR
+ support"
+Date: Thu, 10 Sep 2020 18:28:11 +0200
+Message-ID: <e2678d7012e25752b2826bd866b07b338fb18d3f.camel@redhat.com>
+In-Reply-To: f5882b944b7f71bc36dbb378209c6e3162a42d1d.1599128137.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5785
+X-UID: 5786
 
---===============7319051336469814077==
+--===============7032503854548366781==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-That is needed to let the subflows announce promply when new
-space is available in the receive buffer.
+On Thu, 2020-09-03 at 18:38 +0800, Geliang Tang wrote:
+> This squash-to patch fixed three issues in "mptcp: add the incoming RM_AD=
+DR
+> support":
+> =
 
-tcp_cleanup_rbuf() is currently a static function, drop the
-scope modifier and add a declaration in the TCP header.
+> 1. We will use another function mptcp_pm_nl_rm_subflow_received to remove=
+ a
+> local subflow, so the mptcp_pm_nl_rm_addr_received function only need to
+> deal with remote address removing. Thus we only need to check
+> subflow->remote_id in mptcp_pm_nl_rm_addr_received.
+> =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
---
-should be inserted just before "mptcp: simult flow self-tests"
+> 2. Update PM counters in the right place.
+> =
 
-v1 -> v2:
- - move tcp_cleanup_rbuf() declaration inside the headers
----
- include/net/tcp.h    | 2 ++
- net/ipv4/tcp.c       | 2 +-
- net/mptcp/protocol.c | 6 ++++++
- net/mptcp/subflow.c  | 2 ++
- 4 files changed, 11 insertions(+), 1 deletion(-)
+> 3. Drop the remot_id fixing code here, since another new patch will deal =
+with
+> subflow's remote_id and local_id fixing.
+> =
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index e85d564446c6..852f0d71dd40 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1414,6 +1414,8 @@ static inline int tcp_full_space(const struct sock *s=
-k)
- 	return tcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf));
- }
- =
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+>  net/mptcp/pm_netlink.c | 16 ++++++++--------
+>  net/mptcp/subflow.c    |  1 -
+>  2 files changed, 8 insertions(+), 9 deletions(-)
+> =
 
-+void tcp_cleanup_rbuf(struct sock *sk, int copied);
-+
- /* We provision sk_rcvbuf around 200% of sk_rcvlowat.
-  * If 87.5 % (7/8) of the space has been consumed, we want to override
-  * SO_RCVLOWAT constraint, since we are receiving skbs with too small
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 57a568875539..d3781b6087cb 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1527,7 +1527,7 @@ static int tcp_peek_sndq(struct sock *sk, struct msgh=
-dr *msg, int len)
-  * calculation of whether or not we must ACK for the sake of
-  * a window update.
-  */
--static void tcp_cleanup_rbuf(struct sock *sk, int copied)
-+void tcp_cleanup_rbuf(struct sock *sk, int copied)
- {
- 	struct tcp_sock *tp =3D tcp_sk(sk);
- 	bool time_to_ack =3D false;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7469e89b3d7a..2abfe998ed05 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -527,6 +527,8 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp=
-_sock *msk,
- 	} while (more_data_avail);
- =
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 544adfe66454..b1ce74bc589d 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -173,7 +173,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+>  {
+>  	struct sock *sk =3D (struct sock *)msk;
+>  	struct mptcp_pm_addr_entry *local;
+> -	struct mptcp_addr_info remote =3D { 0 };
+> +	struct mptcp_addr_info remote;
+>  	struct pm_nl_pernet *pernet;
+>  =
 
- 	*bytes +=3D moved;
-+	if (moved)
-+		tcp_cleanup_rbuf(ssk, moved);
- =
+>  	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+> @@ -266,7 +266,7 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *=
+msk)
+>  	struct mptcp_subflow_context *subflow, *tmp;
+>  	struct sock *sk =3D (struct sock *)msk;
+>  =
 
- 	return done;
- }
-@@ -1439,10 +1441,14 @@ static void mptcp_rcv_space_adjust(struct mptcp_soc=
-k *msk, int copied)
- 			 */
- 			mptcp_for_each_subflow(msk, subflow) {
- 				struct sock *ssk;
-+				bool slow;
- =
+> -	pr_debug("rm_id %d", msk->pm.rm_id);
+> +	pr_debug("address rm_id %d", msk->pm.rm_id);
+>  =
 
- 				ssk =3D mptcp_subflow_tcp_sock(subflow);
-+				slow =3D lock_sock_fast(ssk);
- 				WRITE_ONCE(ssk->sk_rcvbuf, rcvbuf);
- 				tcp_sk(ssk)->window_clamp =3D window_clamp;
-+				tcp_cleanup_rbuf(ssk, 1);
-+				unlock_sock_fast(ssk, slow);
- 			}
- 		}
- 	}
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e31900ff0c56..c3073c400d6c 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -823,6 +823,8 @@ static void mptcp_subflow_discard_data(struct sock *ssk=
-, struct sk_buff *skb,
- 		sk_eat_skb(ssk, skb);
- 	if (mptcp_subflow_get_map_offset(subflow) >=3D subflow->map_data_len)
- 		subflow->map_valid =3D 0;
-+	if (incr)
-+		tcp_cleanup_rbuf(ssk, incr);
- }
- =
+>  	if (!msk->pm.rm_id)
+>  		return;
+> @@ -274,23 +274,23 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock=
+ *msk)
+>  	if (list_empty(&msk->conn_list))
+>  		return;
+>  =
 
- static bool subflow_check_data_avail(struct sock *ssk)
--- =
+> -	msk->pm.add_addr_accepted--;
+> -	msk->pm.subflows--;
+> -	WRITE_ONCE(msk->pm.accept_addr, true);
+> -
+>  	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+>  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+>  		int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
+>  		long timeout =3D 0;
+>  =
 
-2.26.2
+> -		if (msk->pm.rm_id !=3D subflow->remote_id &&
+> -		    msk->pm.rm_id !=3D subflow->local_id)
+> +		if (msk->pm.rm_id !=3D subflow->remote_id)
+>  			continue;
+>  =
 
---===============7319051336469814077==--
+>  		spin_unlock_bh(&msk->pm.lock);
+>  		mptcp_subflow_shutdown(sk, ssk, how);
+>  		__mptcp_close_ssk(sk, ssk, subflow, timeout);
+>  		spin_lock_bh(&msk->pm.lock);
+> +
+> +		msk->pm.add_addr_accepted--;
+> +		msk->pm.subflows--;
+> +		WRITE_ONCE(msk->pm.accept_addr, true);
+> +
+>  		break;
+>  	}
+>  }
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 8464170e8dc1..535a3f9f8cfc 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1094,7 +1094,6 @@ int __mptcp_subflow_connect(struct sock *sk, int if=
+index,
+>  	subflow->remote_key =3D msk->remote_key;
+>  	subflow->local_key =3D msk->local_key;
+>  	subflow->token =3D msk->token;
+> -	subflow->remote_id =3D remote->id;
+>  	mptcp_info2sockaddr(loc, &addr);
+>  =
+
+>  	addrlen =3D sizeof(struct sockaddr_in);
+
+LGTM, thanks!
+
+Paolo
+
+--===============7032503854548366781==--
