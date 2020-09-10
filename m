@@ -1,127 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============7032503854548366781=="
+Content-Type: multipart/mixed; boundary="===============9173591611661825199=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add the incoming RM_ADDR
- support"
-Date: Thu, 10 Sep 2020 18:28:11 +0200
-Message-ID: <e2678d7012e25752b2826bd866b07b338fb18d3f.camel@redhat.com>
-In-Reply-To: f5882b944b7f71bc36dbb378209c6e3162a42d1d.1599128137.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH mptcp-next] mptcp: split mptcp_clean_una function
+Date: Thu, 10 Sep 2020 18:36:30 +0200
+Message-ID: <20200910163630.8137-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 5786
+X-UID: 5787
 
---===============7032503854548366781==
+--===============9173591611661825199==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-09-03 at 18:38 +0800, Geliang Tang wrote:
-> This squash-to patch fixed three issues in "mptcp: add the incoming RM_AD=
-DR
-> support":
-> =
+mptcp_clean_una() will wake writers in case memory could be reclaimed.
+When called from mptcp_sendmsg the wakeup code isn't needed.
 
-> 1. We will use another function mptcp_pm_nl_rm_subflow_received to remove=
- a
-> local subflow, so the mptcp_pm_nl_rm_addr_received function only need to
-> deal with remote address removing. Thus we only need to check
-> subflow->remote_id in mptcp_pm_nl_rm_addr_received.
-> =
+Move the wakeup to a new helper and then use that from the mptcp worker.
 
-> 2. Update PM counters in the right place.
-> =
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-> 3. Drop the remot_id fixing code here, since another new patch will deal =
-with
-> subflow's remote_id and local_id fixing.
-> =
+ Sending this ahead of the rebase on top of paolos patchset,
+ I think this can be integrated stand-alone as it has no dependency
+ on sendmsg refactor or poll rework.
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
->  net/mptcp/pm_netlink.c | 16 ++++++++--------
->  net/mptcp/subflow.c    |  1 -
->  2 files changed, 8 insertions(+), 9 deletions(-)
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7469e89b3d7a..3c2476baae2d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -831,19 +831,25 @@ static void mptcp_clean_una(struct sock *sk)
+ 	}
+ =
 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 544adfe66454..b1ce74bc589d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -173,7 +173,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
-ruct mptcp_sock *msk)
->  {
->  	struct sock *sk =3D (struct sock *)msk;
->  	struct mptcp_pm_addr_entry *local;
-> -	struct mptcp_addr_info remote =3D { 0 };
-> +	struct mptcp_addr_info remote;
->  	struct pm_nl_pernet *pernet;
->  =
+ out:
+-	if (cleaned) {
++	if (cleaned)
+ 		sk_mem_reclaim_partial(sk);
++}
+ =
 
->  	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-> @@ -266,7 +266,7 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *=
-msk)
->  	struct mptcp_subflow_context *subflow, *tmp;
->  	struct sock *sk =3D (struct sock *)msk;
->  =
+-		/* Only wake up writers if a subflow is ready */
+-		if (mptcp_is_writeable(msk)) {
+-			set_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags);
+-			smp_mb__after_atomic();
++static void mptcp_clean_una_wakeup(struct sock *sk)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
 
-> -	pr_debug("rm_id %d", msk->pm.rm_id);
-> +	pr_debug("address rm_id %d", msk->pm.rm_id);
->  =
+-			/* set SEND_SPACE before sk_stream_write_space clears
+-			 * NOSPACE
+-			 */
+-			sk_stream_write_space(sk);
+-		}
++	mptcp_clean_una(sk);
++
++	/* Only wake up writers if a subflow is ready */
++	if (mptcp_is_writeable(msk)) {
++		set_bit(MPTCP_SEND_SPACE, &msk->flags);
++		smp_mb__after_atomic();
++
++		/* set SEND_SPACE before sk_stream_write_space clears
++		 * NOSPACE
++		 */
++		sk_stream_write_space(sk);
+ 	}
+ }
+ =
 
->  	if (!msk->pm.rm_id)
->  		return;
-> @@ -274,23 +274,23 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock=
- *msk)
->  	if (list_empty(&msk->conn_list))
->  		return;
->  =
+@@ -1724,7 +1730,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	long timeo =3D 0;
+ =
 
-> -	msk->pm.add_addr_accepted--;
-> -	msk->pm.subflows--;
-> -	WRITE_ONCE(msk->pm.accept_addr, true);
-> -
->  	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
->  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
->  		int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
->  		long timeout =3D 0;
->  =
+ 	lock_sock(sk);
+-	mptcp_clean_una(sk);
++	mptcp_clean_una_wakeup(sk);
+ 	mptcp_check_data_fin_ack(sk);
+ 	__mptcp_flush_join_list(msk);
+ 	__mptcp_move_skbs(msk);
+-- =
 
-> -		if (msk->pm.rm_id !=3D subflow->remote_id &&
-> -		    msk->pm.rm_id !=3D subflow->local_id)
-> +		if (msk->pm.rm_id !=3D subflow->remote_id)
->  			continue;
->  =
+2.26.2
 
->  		spin_unlock_bh(&msk->pm.lock);
->  		mptcp_subflow_shutdown(sk, ssk, how);
->  		__mptcp_close_ssk(sk, ssk, subflow, timeout);
->  		spin_lock_bh(&msk->pm.lock);
-> +
-> +		msk->pm.add_addr_accepted--;
-> +		msk->pm.subflows--;
-> +		WRITE_ONCE(msk->pm.accept_addr, true);
-> +
->  		break;
->  	}
->  }
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 8464170e8dc1..535a3f9f8cfc 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1094,7 +1094,6 @@ int __mptcp_subflow_connect(struct sock *sk, int if=
-index,
->  	subflow->remote_key =3D msk->remote_key;
->  	subflow->local_key =3D msk->local_key;
->  	subflow->token =3D msk->token;
-> -	subflow->remote_id =3D remote->id;
->  	mptcp_info2sockaddr(loc, &addr);
->  =
-
->  	addrlen =3D sizeof(struct sockaddr_in);
-
-LGTM, thanks!
-
-Paolo
-
---===============7032503854548366781==--
+--===============9173591611661825199==--
