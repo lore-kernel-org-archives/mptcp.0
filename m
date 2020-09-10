@@ -1,89 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============9173591611661825199=="
+Content-Type: multipart/mixed; boundary="===============4758054729137221358=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] mptcp: split mptcp_clean_una function
-Date: Thu, 10 Sep 2020 18:36:30 +0200
-Message-ID: <20200910163630.8137-1-fw@strlen.de>
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: Wake up MPTCP worker when
+ DATA_FIN found on a TCP FIN packet
+Date: Thu, 10 Sep 2020 18:43:03 +0200
+Message-ID: <eaac35d1-30e7-7cea-27dd-35fe1a733af2@tessares.net>
+In-Reply-To: abea8e84cac295979dd0a3b7d2662c192d2aa4f2.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5787
+X-UID: 5788
 
---===============9173591611661825199==
+--===============4758054729137221358==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_clean_una() will wake writers in case memory could be reclaimed.
-When called from mptcp_sendmsg the wakeup code isn't needed.
+Hi Mat, Paolo,
 
-Move the wakeup to a new helper and then use that from the mptcp worker.
+On 09/09/2020 18:45, Paolo Abeni wrote:
+> On Tue, 2020-09-08 at 13:33 -0700, Mat Martineau wrote:
+>> On Mon, 7 Sep 2020, Paolo Abeni wrote:
+>>> We already have 'schedule_work' call to handle incoming data fin
+>>> in mptcp_incoming_options(), can we instead extend the checks there to
+>>> cover also this scenario?
+>>>
+>>
+>> I did look at modifying mptcp_incoming_options(), but this patch looked
+>> like the simpler fix.
+>>
+>> The existing checks for empty packets in mptcp_incoming_options()
+>> accomplish two things:
+>>
+>> 1. DATA_FIN is handled for ACK packets that don't get in to the subflow
+>> receive queue (TCP FIN packets do go in to the receive queue, even if
+>> there's no payload).
+>>
+>> 2. skb_ext attachment is skipped for ACK packets.
+>>
+>>
+>> Changing the logic in mptcp_incoming_options() would have to look for
+>> seq+1 =3D=3D end_seq and TCP FIN, and then (maybe?) not attach the skb_e=
+xt -
+>> which significantly changes the code paths involved. It might also do an
+>> extra wake up of the worker before the MPTCP socket is caught up with the
+>> incoming data.
+>>
+>> In comparison, the above patch stores a return value that was previously
+>> (incorrectly) ignored, and schedules the worker when it is most likely to
+>> be able to do the work.
+>>
+>> Given that, do you think it's better to extend the
+>> mptcp_incoming_options() checks?
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/protocol.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+> Yup, I did not look into the details of the other option. It looks like
+> it's overcomplicated, so I'm ok with this approach.
 
- Sending this ahead of the rebase on top of paolos patchset,
- I think this can be integrated stand-alone as it has no dependency
- on sendmsg refactor or poll rework.
+Thank you for the patch and the review!
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7469e89b3d7a..3c2476baae2d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -831,19 +831,25 @@ static void mptcp_clean_una(struct sock *sk)
- 	}
- =
+I just applied your patch with Paolo's ACK!
 
- out:
--	if (cleaned) {
-+	if (cleaned)
- 		sk_mem_reclaim_partial(sk);
-+}
- =
+Compilation tests are OK, "export" branch has been updated but the CI is =
 
--		/* Only wake up writers if a subflow is ready */
--		if (mptcp_is_writeable(msk)) {
--			set_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags);
--			smp_mb__after_atomic();
-+static void mptcp_clean_una_wakeup(struct sock *sk)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
+still validating functional tests in the VM (selftests, packetdrill, etc.).
 
--			/* set SEND_SPACE before sk_stream_write_space clears
--			 * NOSPACE
--			 */
--			sk_stream_write_space(sk);
--		}
-+	mptcp_clean_una(sk);
-+
-+	/* Only wake up writers if a subflow is ready */
-+	if (mptcp_is_writeable(msk)) {
-+		set_bit(MPTCP_SEND_SPACE, &msk->flags);
-+		smp_mb__after_atomic();
-+
-+		/* set SEND_SPACE before sk_stream_write_space clears
-+		 * NOSPACE
-+		 */
-+		sk_stream_write_space(sk);
- 	}
- }
- =
+I will try to report the status later on IRC but if you don't hear from =
 
-@@ -1724,7 +1730,7 @@ static void mptcp_worker(struct work_struct *work)
- 	long timeo =3D 0;
- =
+me today, I am sure this patch can be sent to netdev!
 
- 	lock_sock(sk);
--	mptcp_clean_una(sk);
-+	mptcp_clean_una_wakeup(sk);
- 	mptcp_check_data_fin_ack(sk);
- 	__mptcp_flush_join_list(msk);
- 	__mptcp_move_skbs(msk);
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============9173591611661825199==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============4758054729137221358==--
