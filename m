@@ -1,115 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============5283462112572578467=="
+Content-Type: multipart/mixed; boundary="===============2562235273042322104=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 12/13] mptcp: call tcp_cleanup_rbuf on
+Subject: [MPTCP] [PATCH net-next 10/13] mptcp: allow creating non-backup
  subflows
-Date: Fri, 11 Sep 2020 15:52:07 +0200
-Message-ID: <c3bd57834ebaf9030e6021c5bd51d169c995ab64.1599832097.git.pabeni@redhat.com>
+Date: Fri, 11 Sep 2020 15:52:05 +0200
+Message-ID: <c85687bfad852a7d23ba52b96cbb1b7dc85c3b2a.1599832097.git.pabeni@redhat.com>
 In-Reply-To: cover.1599832097.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5816
+X-UID: 5817
 
---===============5283462112572578467==
+--===============2562235273042322104==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-That is needed to let the subflows announce promptly when new
-space is available in the receive buffer.
+Currently the 'backup' attribute of local endpoint
+is ignored. Let's use it for the MP_JOIN handshake
 
-tcp_cleanup_rbuf() is currently a static function, drop the
-scope modifier and add a declaration in the TCP header.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- include/net/tcp.h    | 2 ++
- net/ipv4/tcp.c       | 2 +-
- net/mptcp/protocol.c | 6 ++++++
- net/mptcp/subflow.c  | 2 ++
- 4 files changed, 11 insertions(+), 1 deletion(-)
+ net/mptcp/subflow.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index e85d564446c6..852f0d71dd40 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1414,6 +1414,8 @@ static inline int tcp_full_space(const struct sock *s=
-k)
- 	return tcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf));
- }
- =
-
-+void tcp_cleanup_rbuf(struct sock *sk, int copied);
-+
- /* We provision sk_rcvbuf around 200% of sk_rcvlowat.
-  * If 87.5 % (7/8) of the space has been consumed, we want to override
-  * SO_RCVLOWAT constraint, since we are receiving skbs with too small
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 57a568875539..d3781b6087cb 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1527,7 +1527,7 @@ static int tcp_peek_sndq(struct sock *sk, struct msgh=
-dr *msg, int len)
-  * calculation of whether or not we must ACK for the sake of
-  * a window update.
-  */
--static void tcp_cleanup_rbuf(struct sock *sk, int copied)
-+void tcp_cleanup_rbuf(struct sock *sk, int copied)
- {
- 	struct tcp_sock *tp =3D tcp_sk(sk);
- 	bool time_to_ack =3D false;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 148c4e685ecd..a17e534a1425 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -515,6 +515,8 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp=
-_sock *msk,
- 	} while (more_data_avail);
- =
-
- 	*bytes +=3D moved;
-+	if (moved)
-+		tcp_cleanup_rbuf(ssk, moved);
- =
-
- 	return done;
- }
-@@ -1422,10 +1424,14 @@ static void mptcp_rcv_space_adjust(struct mptcp_soc=
-k *msk, int copied)
- 			 */
- 			mptcp_for_each_subflow(msk, subflow) {
- 				struct sock *ssk;
-+				bool slow;
- =
-
- 				ssk =3D mptcp_subflow_tcp_sock(subflow);
-+				slow =3D lock_sock_fast(ssk);
- 				WRITE_ONCE(ssk->sk_rcvbuf, rcvbuf);
- 				tcp_sk(ssk)->window_clamp =3D window_clamp;
-+				tcp_cleanup_rbuf(ssk, 1);
-+				unlock_sock_fast(ssk, slow);
- 			}
- 		}
- 	}
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 58f2349930a5..fb59bbd9b4cc 100644
+index 9edcce21715b..58f2349930a5 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -823,6 +823,8 @@ static void mptcp_subflow_discard_data(struct sock *ssk=
-, struct sk_buff *skb,
- 		sk_eat_skb(ssk, skb);
- 	if (mptcp_subflow_get_map_offset(subflow) >=3D subflow->map_data_len)
- 		subflow->map_valid =3D 0;
-+	if (incr)
-+		tcp_cleanup_rbuf(ssk, incr);
- }
+@@ -20,6 +20,7 @@
+ #include <net/ip6_route.h>
+ #endif
+ #include <net/mptcp.h>
++#include <uapi/linux/mptcp.h>
+ #include "protocol.h"
+ #include "mib.h"
  =
 
- static bool subflow_check_data_avail(struct sock *ssk)
+@@ -1090,7 +1091,7 @@ int __mptcp_subflow_connect(struct sock *sk, const st=
+ruct mptcp_addr_info *loc,
+ 	subflow->remote_token =3D remote_token;
+ 	subflow->local_id =3D local_id;
+ 	subflow->request_join =3D 1;
+-	subflow->request_bkup =3D 1;
++	subflow->request_bkup =3D !!(loc->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+ 	mptcp_info2sockaddr(remote, &addr);
+ =
+
+ 	err =3D kernel_connect(sf, (struct sockaddr *)&addr, addrlen, O_NONBLOCK);
 -- =
 
 2.26.2
 
---===============5283462112572578467==--
+--===============2562235273042322104==--
