@@ -1,54 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============2537483411040752047=="
+Content-Type: multipart/mixed; boundary="===============8389988395273456281=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 1/2] Squash-to: "mptcp: allow picking
- different xmit subflows"
-Date: Fri, 11 Sep 2020 12:48:31 +0200
-Message-ID: <da901f26-7bc7-9945-7224-d32c5787b2af@tessares.net>
-In-Reply-To: 49dbfbe2c7bfbdaabe83b34e508d3d5c6905ef80.1599659504.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 2/2] Squash-to: "mptcp: simult flow
+ self-tests"
+Date: Fri, 11 Sep 2020 12:49:11 +0200
+Message-ID: <499a8c25-5c48-9961-f85a-c5e0251aba5a@tessares.net>
+In-Reply-To: 37125cecdccab9bd6d83c0cd0d901b2e5cae07a6.1599659504.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5798
+X-UID: 5799
 
---===============2537483411040752047==
+--===============8389988395273456281==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat, Florian,
+Hi Paolo,
 
 On 09/09/2020 15:52, Paolo Abeni wrote:
-> This improves the current packet scheduler for scenarios
-> where the msk sockets is using different links with different
-> bandwith limits.
-> =
+> Tune a bit the timing parameters, comment-out unbalanced bwidth test
+> cases and enable simult self-tests - should pass now.
 
-> The commit comment should be changed into:
-> =
+Thank you for the patch!
 
-> """
-> Update the scheduler to less trivial heuristic: cache
-> the last used subflow, and try to send on it a reasonably
-> long burst of data.
-> =
-
-> When the burst or the subflow send space is exhausted, pick
-> the subflow with the lower ratio between write space and
-> send buffer - that is, the subflow with the greater relative
-> amount of free space.
-> """
-> =
-
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-
-Thank you for the patch and the reviews!
-
-- 145c1405c183: "squashed" patch 1/2 in "mptcp: allow picking different =
-
-xmit subflows"
-- a2332e5650da: tg:msg: explain new heuristic
-- b5e4b1109338..4822f58422e9: result
+- d7cc2da649bc: "squashed" patch 2/2 in "mptcp: simult flow self-tests"
+- 4822f58422e9..895b3d8264e8: result
 
 Tests + export will be started soon (after having applied your other =
 
@@ -60,4 +37,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============2537483411040752047==--
+--===============8389988395273456281==--
