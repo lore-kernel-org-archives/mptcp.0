@@ -1,92 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============4185281576346982911=="
+Content-Type: multipart/mixed; boundary="===============2460562555388422763=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 1/2] Squash-to: "mptcp: allow picking
- different xmit subflows"
-Date: Fri, 11 Sep 2020 12:57:35 +0200
-Message-ID: <59013220-92f5-77ef-2ef8-b0610e17f4aa@tessares.net>
-In-Reply-To: 82a7c126-e2a6-bf73-b50a-261e65fb02cb@tessares.net
+Subject: [MPTCP] [PATCH net] tcp: fix syn cookied MPTCP request socket leak
+Date: Fri, 11 Sep 2020 15:38:28 +0200
+Message-ID: <c92e068760b45b13cae7f29107acabf8512c5f3f.1599830705.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5802
+X-UID: 5804
 
---===============4185281576346982911==
+--===============2460562555388422763==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+If a syn-cookies request socket don't pass MPTCP-level
+validation done in syn_recv_sock(), we need to release
+it immediatelly, or it will be leaked.
 
-On 11/09/2020 12:36, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/89
+Fixes: 9466a1ccebbe ("mptcp: enable JOIN requests even if cookies are in us=
+e")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/ipv4/syncookies.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+---
+I don't really know what I'm doing here ;) =
 
-> Thank you for the patch!
-> =
+But apparently it fixes the leak in my tests
 
-> On 09/09/2020 15:52, Paolo Abeni wrote:
->> This improves the current packet scheduler for scenarios
->> where the msk sockets is using different links with different
->> bandwith limits.
->>
->> The commit comment should be changed into:
->>
->> """
->> Update the scheduler to less trivial heuristic: cache
->> the last used subflow, and try to send on it a reasonably
->> long burst of data.
->>
->> When the burst or the subflow send space is exhausted, pick
->> the subflow with the lower ratio between write space and
->> send buffer - that is, the subflow with the greater relative
->> amount of free space.
->> """
->>
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> =
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index c375c126f436..5c8390876cf8 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -209,15 +209,15 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, str=
+uct sk_buff *skb,
+ 	child =3D icsk->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
+ 						 NULL, &own_req);
+ 	if (child) {
+-		refcount_set(&req->rsk_refcnt, 1);
+-		tcp_sk(child)->tsoffset =3D tsoff;
+-		sock_rps_save_rxhash(child, skb);
+-
+ 		if (rsk_drop_req(req)) {
+-			refcount_set(&req->rsk_refcnt, 2);
++			reqsk_free(req);
+ 			return child;
+ 		}
+ =
 
-> (...)
-> =
++		refcount_set(&req->rsk_refcnt, 1);
++		tcp_sk(child)->tsoffset =3D tsoff;
++		sock_rps_save_rxhash(child, skb);
++
+ 		if (inet_csk_reqsk_queue_add(sk, req, child))
+ 			return child;
+ =
 
->> +=C2=A0=C2=A0=C2=A0 /* pick the best backup if no other subflow is activ=
-e */
->> +=C2=A0=C2=A0=C2=A0 if (!nr_active)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 send_info[0].ssk =3D send_in=
-fo[1].ssk;
->> -=C2=A0=C2=A0=C2=A0 /* use the looked-up subflow if the previusly one ha=
-s exauted the =
-
->> burst
->> -=C2=A0=C2=A0=C2=A0=C2=A0 * or is not writable
->> -=C2=A0=C2=A0=C2=A0=C2=A0 */
->> -=C2=A0=C2=A0=C2=A0 if (next_ssk && (!free || msk->snd_burst <=3D 0)) {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msk->last_snd =3D next_ssk;
->> +=C2=A0=C2=A0=C2=A0 pr_debug("msk=3D%p nr_active=3D%d ssk=3D%p:%lld back=
-up=3D%p:%lld",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msk, nr_active, send_i=
-nfo[0].ssk, send_info[0].ratio,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 send_info[1].ssk, send=
-_info[1].ratio);
-> =
-
-> We could maybe have this pr_debug before "if (!nr_active)" just above to =
-
-> avoid confusions but that's just a debug print. For me we can apply it =
-
-> like that. I can also move this pr_debug when applying if you want to.
-
-I did this small notification there:
-
-- 88d1a56e2c6f: mptcp: move pr_debug before changes
-- 2e7e0cdd7acd..2998848b5594: result
-
-Feel free to revert if you prefer the other way!
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4185281576346982911==--
+2.26.2
+
+--===============2460562555388422763==--
