@@ -1,65 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============2460562555388422763=="
+Content-Type: multipart/mixed; boundary="===============6370018531031526350=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] tcp: fix syn cookied MPTCP request socket leak
-Date: Fri, 11 Sep 2020 15:38:28 +0200
-Message-ID: <c92e068760b45b13cae7f29107acabf8512c5f3f.1599830705.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 00/13] mptcp: introduce support for real
+ multipath xmit
+Date: Fri, 11 Sep 2020 15:51:55 +0200
+Message-ID: <cover.1599832097.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5804
+X-UID: 5805
 
---===============2460562555388422763==
+--===============6370018531031526350==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If a syn-cookies request socket don't pass MPTCP-level
-validation done in syn_recv_sock(), we need to release
-it immediatelly, or it will be leaked.
+This series enable MPTCP socket to transmit data on multiple subflows
+concurrently in a load balancing scenario.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/89
-Fixes: 9466a1ccebbe ("mptcp: enable JOIN requests even if cookies are in us=
-e")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/ipv4/syncookies.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
----
-I don't really know what I'm doing here ;) =
+First the receive code path is refactored to better deal with out-of-order
+data (patches 1-7). An RB-tree is introduced to queue MPTCP-level out-of-or=
+der
+data, closely resembling the TCP level OoO handling.
 
-But apparently it fixes the leak in my tests
+When data is sent on multiple subflows, the peer can easily see OoO - "futu=
+re"
+data at the MPTCP level, especially if speeds, delay, or jitter are not
+symmetric.
 
-diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
-index c375c126f436..5c8390876cf8 100644
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -209,15 +209,15 @@ struct sock *tcp_get_cookie_sock(struct sock *sk, str=
-uct sk_buff *skb,
- 	child =3D icsk->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
- 						 NULL, &own_req);
- 	if (child) {
--		refcount_set(&req->rsk_refcnt, 1);
--		tcp_sk(child)->tsoffset =3D tsoff;
--		sock_rps_save_rxhash(child, skb);
--
- 		if (rsk_drop_req(req)) {
--			refcount_set(&req->rsk_refcnt, 2);
-+			reqsk_free(req);
- 			return child;
- 		}
- =
+The other major change regards the netlink PM, which is extended to allow
+creating non backup subflows in patches 9-11.
 
-+		refcount_set(&req->rsk_refcnt, 1);
-+		tcp_sk(child)->tsoffset =3D tsoff;
-+		sock_rps_save_rxhash(child, skb);
-+
- 		if (inet_csk_reqsk_queue_add(sk, req, child))
- 			return child;
- =
+There are a few smaller additions, like the introduction of OoO related mib=
+s,
+send buffer autotuning and better ack handling.
+
+Finally a bunch of new self-tests is introduced. The new feature is tested
+ensuring that the B/W used by an MPTCP socket using multiple subflows match=
+es
+the link aggregated B/W - we use low B/W virtual links, to ensure the tests
+are not CPU bounded.
+
+Paolo Abeni (13):
+  mptcp: rethink 'is writable' conditional
+  mptcp: set data_ready status bit in subflow_check_data_avail()
+  mptcp: trigger msk processing even for OoO data
+  mptcp: basic sndbuf autotuning
+  mptcp: introduce and use mptcp_try_coalesce()
+  mptcp: move ooo skbs into msk out of order queue.
+  mptcp: cleanup mptcp_subflow_discard_data()
+  mptcp: add OoO related mibs
+  mptcp: move address attribute into mptcp_addr_info
+  mptcp: allow creating non-backup subflows
+  mptcp: allow picking different xmit subflows
+  mptcp: call tcp_cleanup_rbuf on subflows
+  mptcp: simult flow self-tests
+
+ include/net/tcp.h                             |   2 +
+ net/ipv4/tcp.c                                |   2 +-
+ net/mptcp/mib.c                               |   5 +
+ net/mptcp/mib.h                               |   5 +
+ net/mptcp/pm_netlink.c                        |  39 +-
+ net/mptcp/protocol.c                          | 509 ++++++++++++++----
+ net/mptcp/protocol.h                          |  21 +-
+ net/mptcp/subflow.c                           |  99 ++--
+ tools/testing/selftests/net/mptcp/Makefile    |   3 +-
+ .../selftests/net/mptcp/simult_flows.sh       | 293 ++++++++++
+ 10 files changed, 796 insertions(+), 182 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/simult_flows.sh
 
 -- =
 
 2.26.2
 
---===============2460562555388422763==--
+--===============6370018531031526350==--
