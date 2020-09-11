@@ -1,59 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============5808997006866521516=="
+Content-Type: multipart/mixed; boundary="===============3347296143564214987=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: allow picking different
- xmit subflows"
-Date: Fri, 11 Sep 2020 19:40:28 +0200
-Message-ID: <5acfec9d91567f606a7cad10ef425a80d9cb05bc.1599846013.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: allow picking
+ different xmit subflows"
+Date: Fri, 11 Sep 2020 19:53:36 +0200
+Message-ID: <db768a88-6cb4-8451-18f5-0b091e766b73@tessares.net>
+In-Reply-To: 5acfec9d91567f606a7cad10ef425a80d9cb05bc.1599846013.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5824
+X-UID: 5825
 
---===============5808997006866521516==
+--===============3347296143564214987==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-unbreak 32 bits build avoid unsing '/' on 64 bits arguments.
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On 11/09/2020 19:40, Paolo Abeni wrote:
+> unbreak 32 bits build avoid unsing '/' on 64 bits arguments.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e5ef7227c914..d848ade67a4a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1082,8 +1082,9 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk,
- 	struct subflow_send_info send_info[2];
- 	struct mptcp_subflow_context *subflow;
- 	int i, nr_active =3D 0;
--	int64_t ratio, pace;
- 	struct sock *ssk;
-+	u64 ratio;
-+	u32 pace;
- =
+Thank you for the patch!
 
- 	sock_owned_by_me((struct sock *)msk);
- =
+- 4efce5952bbf: "squashed" in "mptcp: allow picking different xmit subflows"
+- 2998848b5594..ac40d56dec70: results
 
-@@ -1128,7 +1129,8 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk,
- 		if (!pace)
- 			continue;
- =
+Tests + export are in progress.
 
--		ratio =3D (int64_t)READ_ONCE(ssk->sk_wmem_queued) << 32 / pace;
-+		ratio =3D div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
-+				pace);
- 		if (ratio < send_info[subflow->backup].ratio) {
- 			send_info[subflow->backup].ssk =3D ssk;
- 			send_info[subflow->backup].ratio =3D ratio;
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============5808997006866521516==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============3347296143564214987==--
