@@ -1,24 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============3492281409450913975=="
+Content-Type: multipart/mixed; boundary="===============2537483411040752047=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH net-next 1/2] Squash-to: "mptcp: allow picking
  different xmit subflows"
-Date: Fri, 11 Sep 2020 12:36:13 +0200
-Message-ID: <82a7c126-e2a6-bf73-b50a-261e65fb02cb@tessares.net>
+Date: Fri, 11 Sep 2020 12:48:31 +0200
+Message-ID: <da901f26-7bc7-9945-7224-d32c5787b2af@tessares.net>
 In-Reply-To: 49dbfbe2c7bfbdaabe83b34e508d3d5c6905ef80.1599659504.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5797
+X-UID: 5798
 
---===============3492281409450913975==
+--===============2537483411040752047==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
-
-Thank you for the patch!
+Hi Paolo, Mat, Florian,
 
 On 09/09/2020 15:52, Paolo Abeni wrote:
 > This improves the current packet scheduler for scenarios
@@ -44,52 +42,22 @@ On 09/09/2020 15:52, Paolo Abeni wrote:
 
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-(...)
+Thank you for the patch and the reviews!
 
-> +	/* pick the best backup if no other subflow is active */
-> +	if (!nr_active)
-> +		send_info[0].ssk =3D send_info[1].ssk;
->   =
+- 145c1405c183: "squashed" patch 1/2 in "mptcp: allow picking different =
 
-> -	/* use the looked-up subflow if the previusly one has exauted the burst
-> -	 * or is not writable
-> -	 */
-> -	if (next_ssk && (!free || msk->snd_burst <=3D 0)) {
-> -		msk->last_snd =3D next_ssk;
-> +	pr_debug("msk=3D%p nr_active=3D%d ssk=3D%p:%lld backup=3D%p:%lld",
-> +		 msk, nr_active, send_info[0].ssk, send_info[0].ratio,
-> +		 send_info[1].ssk, send_info[1].ratio);
+xmit subflows"
+- a2332e5650da: tg:msg: explain new heuristic
+- b5e4b1109338..4822f58422e9: result
 
-We could maybe have this pr_debug before "if (!nr_active)" just above to =
+Tests + export will be started soon (after having applied your other =
 
-avoid confusions but that's just a debug print. For me we can apply it =
-
-like that. I can also move this pr_debug when applying if you want to.
-
-The rest is (very) good to me!
+patches)
 
 Cheers,
 Matt
-
-> +	if (send_info[0].ssk) {
-> +		msk->last_snd =3D send_info[0].ssk;
->   		msk->snd_burst =3D min_t(int, MPTCP_SEND_BURST_SIZE,
-> -				       sk_stream_wspace(next_ssk));
-> -		free =3D true;
-> +				       sk_stream_wspace(msk->last_snd));
-> +		return msk->last_snd;
->   	}
-> -	return free ? msk->last_snd : NULL;
-> +	return NULL;
->   }
->   =
-
->   static void ssk_check_wmem(struct mptcp_sock *msk)
-> =
-
-
 -- =
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3492281409450913975==--
+--===============2537483411040752047==--
