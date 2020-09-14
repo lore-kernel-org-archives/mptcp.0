@@ -1,60 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============1044961285834036812=="
+Content-Type: multipart/mixed; boundary="===============4896626339816306128=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Song Liu <song at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 00/13] mptcp: introduce support for
- real multipath xmit
-Date: Mon, 14 Sep 2020 13:28:34 -0700
-Message-ID: <20200914.132834.559855888563837718.davem@davemloft.net>
-In-Reply-To: cover.1599854632.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH bpf-next v2 2/5] mptcp: attach subflow socket to
+ parent cgroup
+Date: Mon, 14 Sep 2020 13:52:24 -0700
+Message-ID: <CAPhsuW4xqPD641gHAs7GjhmW7SANMhz75VKbP02Xyja9CnpZ-g@mail.gmail.com>
+In-Reply-To: 20200911143022.414783-2-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5861
+X-UID: 5862
 
---===============1044961285834036812==
+--===============4896626339816306128==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
-Date: Mon, 14 Sep 2020 10:01:06 +0200
+On Fri, Sep 11, 2020 at 9:43 AM Nicolas Rybowski
+<nicolas.rybowski(a)tessares.net> wrote:
+>
+> It has been observed that the kernel sockets created for the subflows
+> (except the first one) are not in the same cgroup as their parents.
+> That's because the additional subflows are created by kernel workers.
+>
+> This is a problem with eBPF programs attached to the parent's
+> cgroup won't be executed for the children. But also with any other featur=
+es
+> of CGroup linked to a sk.
+>
+> This patch fixes this behaviour.
+>
+> As the subflow sockets are created by the kernel, we can't use
+> 'mem_cgroup_sk_alloc' because of the current context being the one of the
+> kworker. This is why we have to do low level memcg manipulation, if
+> required.
+>
+> Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+> Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
 
-> This series enable MPTCP socket to transmit data on multiple subflows
-> concurrently in a load balancing scenario.
-> =
+Acked-by: Song Liu <songliubraving(a)fb.com>
 
-> First the receive code path is refactored to better deal with out-of-order
-> data (patches 1-7). An RB-tree is introduced to queue MPTCP-level out-of-=
-order
-> data, closely resembling the TCP level OoO handling.
-> =
-
-> When data is sent on multiple subflows, the peer can easily see OoO - "fu=
-ture"
-> data at the MPTCP level, especially if speeds, delay, or jitter are not
-> symmetric.
-> =
-
-> The other major change regards the netlink PM, which is extended to allow
-> creating non backup subflows in patches 9-11.
-> =
-
-> There are a few smaller additions, like the introduction of OoO related m=
-ibs,
-> send buffer autotuning and better ack handling.
-> =
-
-> Finally a bunch of new self-tests is introduced. The new feature is tested
-> ensuring that the B/W used by an MPTCP socket using multiple subflows mat=
-ches
-> the link aggregated B/W - we use low B/W virtual links, to ensure the tes=
-ts
-> are not CPU bounded.
-> =
-
-> v1 -> v2:
->   - fix 32 bit build breakage
->   - fix a bunch of checkpatch issues
-
-Looks good, series applied, thanks Paolo.
---===============1044961285834036812==--
+[...]
+--===============4896626339816306128==--
