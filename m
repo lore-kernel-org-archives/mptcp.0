@@ -1,110 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============4773873815251195220=="
+Content-Type: multipart/mixed; boundary="===============4255273722389395762=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: allow picking
- different xmit subflows"
-Date: Mon, 14 Sep 2020 09:16:53 +0200
-Message-ID: <de07f778-2516-a04d-e38d-b6fa032a1b9f@tessares.net>
-In-Reply-To: 431667ae326bed92b325685cf1275ae2d6575e73.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next v2 00/13] mptcp: introduce support for real
+ multipath xmit
+Date: Mon, 14 Sep 2020 10:01:06 +0200
+Message-ID: <cover.1599854632.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5830
+X-UID: 5831
 
---===============4773873815251195220==
+--===============4255273722389395762==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+This series enable MPTCP socket to transmit data on multiple subflows
+concurrently in a load balancing scenario.
 
-On 13/09/2020 12:12, Paolo Abeni wrote:
-> On Fri, 2020-09-11 at 16:12 -0700, Mat Martineau wrote:
->> On Fri, 11 Sep 2020, Paolo Abeni wrote:
->>
->>> unbreak 32 bits build avoid unsing '/' on 64 bits arguments.
->>>
->>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
->>> ---
->>> net/mptcp/protocol.c | 6 ++++--
->>> 1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index e5ef7227c914..d848ade67a4a 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -1082,8 +1082,9 @@ static struct sock *mptcp_subflow_get_send(struct=
- mptcp_sock *msk,
->>> 	struct subflow_send_info send_info[2];
->>> 	struct mptcp_subflow_context *subflow;
->>> 	int i, nr_active =3D 0;
->>> -	int64_t ratio, pace;
->>> 	struct sock *ssk;
->>> +	u64 ratio;
->>> +	u32 pace;
->>>
->>> 	sock_owned_by_me((struct sock *)msk);
->>>
->>> @@ -1128,7 +1129,8 @@ static struct sock *mptcp_subflow_get_send(struct=
- mptcp_sock *msk,
->>> 		if (!pace)
->>> 			continue;
->>>
->>> -		ratio =3D (int64_t)READ_ONCE(ssk->sk_wmem_queued) << 32 / pace;
->>> +		ratio =3D div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
->>> +				pace);
->>
->> For some reason this thread did not get to my inbox...
->>
->> I think you've also fixed an issue with operator precedence in this
->> expression. Given the div_u64 version of the expression, you intended
->> this:
->>
->> ratio =3D ((int64_t)READ_ONCE(ssk->sk_wmem_queued) << 32) / pace;
->>
->> to give you more significant digits than you would have had without
->> shifting sk_wmem_queued. However, the old expression in the v1 patch is
->> equivalent to:
->>
->> ratio =3D (int64_t)READ_ONCE(ssk->sk_wmem_queued) << (32 / pace);
->>
->> So, assuming pace is usually large this was shifting by 0 and selecting
->> the subflow with lower sk_wmem_queued. Behavior may be changed now
->> (hopefully for the better!), not sure if you want to do more testing
->> before posting v2.
-> =
+First the receive code path is refactored to better deal with out-of-order
+data (patches 1-7). An RB-tree is introduced to queue MPTCP-level out-of-or=
+der
+data, closely resembling the TCP level OoO handling.
 
-> wow, the old version was incredibly buggy!!! :(((
-> =
+When data is sent on multiple subflows, the peer can easily see OoO - "futu=
+re"
+data at the MPTCP level, especially if speeds, delay, or jitter are not
+symmetric.
 
-> Thank you very much for catching the above!
-> =
+The other major change regards the netlink PM, which is extended to allow
+creating non backup subflows in patches 9-11.
 
-> The new behaviour is the indended one since the beginning. I tested the
-> thing in a tight loop since Fri evening. I'd like to post, to move this
-> over.
-> =
+There are a few smaller additions, like the introduction of OoO related mib=
+s,
+send buffer autotuning and better ack handling.
 
-> Anyway I'll wait Mon morning my time, to get more feedback from CI, and
-> hopefully get feedback from Eric/Dave when they will wake-up
+Finally a bunch of new self-tests is introduced. The new feature is tested
+ensuring that the B/W used by an MPTCP socket using multiple subflows match=
+es
+the link aggregated B/W - we use low B/W virtual links, to ensure the tests
+are not CPU bounded.
 
-On my side, my CI is good with the new version.
-Note that my CI is also validating i386 build but kbuild reported issues =
+v1 -> v2:
+  - fix 32 bit build breakage
+  - fix a bunch of checkpatch issues
 
-only with m68k.
+Paolo Abeni (13):
+  mptcp: rethink 'is writable' conditional
+  mptcp: set data_ready status bit in subflow_check_data_avail()
+  mptcp: trigger msk processing even for OoO data
+  mptcp: basic sndbuf autotuning
+  mptcp: introduce and use mptcp_try_coalesce()
+  mptcp: move ooo skbs into msk out of order queue.
+  mptcp: cleanup mptcp_subflow_discard_data()
+  mptcp: add OoO related mibs
+  mptcp: move address attribute into mptcp_addr_info
+  mptcp: allow creating non-backup subflows
+  mptcp: allow picking different xmit subflows
+  mptcp: call tcp_cleanup_rbuf on subflows
+  mptcp: simult flow self-tests
 
-I don't know how to check if kbuild validated the commit but I guess it =
+ include/net/tcp.h                             |   2 +
+ net/ipv4/tcp.c                                |   2 +-
+ net/mptcp/mib.c                               |   5 +
+ net/mptcp/mib.h                               |   5 +
+ net/mptcp/pm_netlink.c                        |  39 +-
+ net/mptcp/protocol.c                          | 511 ++++++++++++++----
+ net/mptcp/protocol.h                          |  21 +-
+ net/mptcp/subflow.c                           |  99 ++--
+ tools/testing/selftests/net/mptcp/Makefile    |   3 +-
+ .../selftests/net/mptcp/simult_flows.sh       | 293 ++++++++++
+ 10 files changed, 798 insertions(+), 182 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/simult_flows.sh
 
-did it. Last time it took ~6h15 after the update of the export branch to =
-
-report the issue.
-
-Happy sending then :)
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4773873815251195220==--
+2.26.2
+
+--===============4255273722389395762==--
