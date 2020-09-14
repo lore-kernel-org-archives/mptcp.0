@@ -1,107 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============6688720010570681641=="
+Content-Type: multipart/mixed; boundary="===============4221579517395980267=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 02/13] mptcp: set data_ready status bit in
- subflow_check_data_avail()
-Date: Mon, 14 Sep 2020 10:01:08 +0200
-Message-ID: <10b65904849e08dfccab8da33219d2081341f581.1599854632.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next v2 04/13] mptcp: basic sndbuf autotuning
+Date: Mon, 14 Sep 2020 10:01:10 +0200
+Message-ID: <3f5500f120bf9a196abf3b7b1b307a1e48f8c715.1599854632.git.pabeni@redhat.com>
 In-Reply-To: cover.1599854632.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5833
+X-UID: 5834
 
---===============6688720010570681641==
+--===============4221579517395980267==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This simplify mptcp_subflow_data_available() and will
-made follow-up patches simpler.
+Let the msk sendbuf track the size of the larger subflow's
+send window, so that we ensure mptcp_sendmsg() does not
+exceed MPTCP-level send window.
 
-Additionally remove the unneeded checks on subflow copied_seq:
-we always whole skbs out of subflows.
+The update is performed just before try to send any data.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/subflow.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ net/mptcp/protocol.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7ae1d3604047..53b455c3c229 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -825,6 +825,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 95573c6f7762..4f12a8ce0ddd 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -856,7 +856,8 @@ static void mptcp_nospace(struct mptcp_sock *msk)
+ 	}
+ }
  =
 
- 	pr_debug("msk=3D%p ssk=3D%p data_avail=3D%d skb=3D%p", subflow->conn, ssk,
- 		 subflow->data_avail, skb_peek(&ssk->sk_receive_queue));
-+	if (!skb_peek(&ssk->sk_receive_queue))
-+		subflow->data_avail =3D 0;
- 	if (subflow->data_avail)
- 		return true;
+-static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
++static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk,
++					   u32 *sndbuf)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk =3D (struct sock *)msk;
+@@ -865,6 +866,7 @@ static struct sock *mptcp_subflow_get_send(struct mptcp=
+_sock *msk)
  =
 
-@@ -849,6 +851,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			subflow->map_data_len =3D skb->len;
- 			subflow->map_subflow_seq =3D tcp_sk(ssk)->copied_seq -
- 						   subflow->ssn_offset;
-+			subflow->data_avail =3D 1;
- 			return true;
+ 	sock_owned_by_me(sk);
+ =
+
++	*sndbuf =3D 0;
+ 	if (!mptcp_ext_cache_refill(msk))
+ 		return NULL;
+ =
+
+@@ -877,6 +879,7 @@ static struct sock *mptcp_subflow_get_send(struct mptcp=
+_sock *msk)
+ 			return NULL;
  		}
  =
 
-@@ -876,8 +879,10 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		ack_seq =3D mptcp_subflow_get_mapped_dsn(subflow);
- 		pr_debug("msk ack_seq=3D%llx subflow ack_seq=3D%llx", old_ack,
- 			 ack_seq);
--		if (ack_seq =3D=3D old_ack)
-+		if (ack_seq =3D=3D old_ack) {
-+			subflow->data_avail =3D 1;
- 			break;
-+		}
++		*sndbuf =3D max(tcp_sk(ssk)->snd_wnd, *sndbuf);
+ 		if (subflow->backup) {
+ 			if (!backup)
+ 				backup =3D ssk;
+@@ -903,6 +906,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
+ 	struct page_frag *pfrag;
+ 	size_t copied =3D 0;
+ 	struct sock *ssk;
++	u32 sndbuf;
+ 	bool tx_ok;
+ 	long timeo;
  =
 
- 		/* only accept in-sequence mapping. Old values are spurious
- 		 * retransmission; we can hit "future" values on active backup
-@@ -922,13 +927,13 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 	ssk->sk_error_report(ssk);
- 	tcp_set_state(ssk, TCP_CLOSE);
- 	tcp_send_active_reset(ssk, GFP_ATOMIC);
-+	subflow->data_avail =3D 0;
- 	return false;
- }
- =
-
- bool mptcp_subflow_data_available(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
--	struct sk_buff *skb;
- =
-
- 	/* check if current mapping is still valid */
- 	if (subflow->map_valid &&
-@@ -941,15 +946,7 @@ bool mptcp_subflow_data_available(struct sock *sk)
- 			 subflow->map_data_len);
+@@ -929,7 +933,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr=
+ *msg, size_t len)
  	}
  =
 
--	if (!subflow_check_data_avail(sk)) {
--		subflow->data_avail =3D 0;
--		return false;
--	}
--
--	skb =3D skb_peek(&sk->sk_receive_queue);
--	subflow->data_avail =3D skb &&
--		       before(tcp_sk(sk)->copied_seq, TCP_SKB_CB(skb)->end_seq);
--	return subflow->data_avail;
-+	return subflow_check_data_avail(sk);
- }
+ 	__mptcp_flush_join_list(msk);
+-	ssk =3D mptcp_subflow_get_send(msk);
++	ssk =3D mptcp_subflow_get_send(msk, &sndbuf);
+ 	while (!sk_stream_memory_free(sk) ||
+ 	       !ssk ||
+ 	       !mptcp_page_frag_refill(ssk, pfrag)) {
+@@ -953,13 +957,18 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
  =
 
- /* If ssk has an mptcp parent socket, use the mptcp rcvbuf occupancy,
+ 		mptcp_clean_una(sk);
+ =
+
+-		ssk =3D mptcp_subflow_get_send(msk);
++		ssk =3D mptcp_subflow_get_send(msk, &sndbuf);
+ 		if (list_empty(&msk->conn_list)) {
+ 			ret =3D -ENOTCONN;
+ 			goto out;
+ 		}
+ 	}
+ =
+
++	/* do auto tuning */
++	if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK) &&
++	    sndbuf > READ_ONCE(sk->sk_sndbuf))
++		WRITE_ONCE(sk->sk_sndbuf, sndbuf);
++
+ 	pr_debug("conn_list->subflow=3D%p", ssk);
+ =
+
+ 	lock_sock(ssk);
+@@ -1547,7 +1556,7 @@ static int mptcp_init_sock(struct sock *sk)
+ =
+
+ 	sk_sockets_allocated_inc(sk);
+ 	sk->sk_rcvbuf =3D sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
+-	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[2];
++	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[1];
+ =
+
+ 	return 0;
+ }
 -- =
 
 2.26.2
 
---===============6688720010570681641==--
+--===============4221579517395980267==--
