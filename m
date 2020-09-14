@@ -1,38 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============3586733027913936795=="
+Content-Type: multipart/mixed; boundary="===============1044961285834036812=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 13/13] mptcp: simult flow self-tests
-Date: Mon, 14 Sep 2020 11:09:53 -0700
-Message-ID: <alpine.OSX.2.23.453.2009141109260.57764@ningale-mobl.amr.corp.intel.com>
-In-Reply-To: c1fc87079b24def5cb0a6729481d4b14444296b4.1599854632.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v2 00/13] mptcp: introduce support for
+ real multipath xmit
+Date: Mon, 14 Sep 2020 13:28:34 -0700
+Message-ID: <20200914.132834.559855888563837718.davem@davemloft.net>
+In-Reply-To: cover.1599854632.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5860
+X-UID: 5861
 
---===============3586733027913936795==
+--===============1044961285834036812==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Sep 2020, Paolo Abeni wrote:
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Mon, 14 Sep 2020 10:01:06 +0200
 
-> Add a bunch of test-cases for multiple subflow xmit:
-> create multiple subflows simulating different links
-> condition via netem and verify that the msk is able
-> to use completely the aggregated bandwidth.
->
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> tools/testing/selftests/net/mptcp/Makefile    |   3 +-
-> .../selftests/net/mptcp/simult_flows.sh       | 293 ++++++++++++++++++
-> 2 files changed, 295 insertions(+), 1 deletion(-)
-> create mode 100755 tools/testing/selftests/net/mptcp/simult_flows.sh
->
+> This series enable MPTCP socket to transmit data on multiple subflows
+> concurrently in a load balancing scenario.
+> =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> First the receive code path is refactored to better deal with out-of-order
+> data (patches 1-7). An RB-tree is introduced to queue MPTCP-level out-of-=
+order
+> data, closely resembling the TCP level OoO handling.
+> =
 
---
-Mat Martineau
-Intel
---===============3586733027913936795==--
+> When data is sent on multiple subflows, the peer can easily see OoO - "fu=
+ture"
+> data at the MPTCP level, especially if speeds, delay, or jitter are not
+> symmetric.
+> =
+
+> The other major change regards the netlink PM, which is extended to allow
+> creating non backup subflows in patches 9-11.
+> =
+
+> There are a few smaller additions, like the introduction of OoO related m=
+ibs,
+> send buffer autotuning and better ack handling.
+> =
+
+> Finally a bunch of new self-tests is introduced. The new feature is tested
+> ensuring that the B/W used by an MPTCP socket using multiple subflows mat=
+ches
+> the link aggregated B/W - we use low B/W virtual links, to ensure the tes=
+ts
+> are not CPU bounded.
+> =
+
+> v1 -> v2:
+>   - fix 32 bit build breakage
+>   - fix a bunch of checkpatch issues
+
+Looks good, series applied, thanks Paolo.
+--===============1044961285834036812==--
