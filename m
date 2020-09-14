@@ -1,47 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============4896626339816306128=="
+Content-Type: multipart/mixed; boundary="===============5864527124975858687=="
 MIME-Version: 1.0
 From: Song Liu <song at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH bpf-next v2 2/5] mptcp: attach subflow socket to
- parent cgroup
-Date: Mon, 14 Sep 2020 13:52:24 -0700
-Message-ID: <CAPhsuW4xqPD641gHAs7GjhmW7SANMhz75VKbP02Xyja9CnpZ-g@mail.gmail.com>
-In-Reply-To: 20200911143022.414783-2-nicolas.rybowski@tessares.net
+Subject: [MPTCP] Re: [PATCH bpf-next v2 3/5] bpf: add 'bpf_mptcp_sock'
+ structure and helper
+Date: Mon, 14 Sep 2020 14:00:47 -0700
+Message-ID: <CAPhsuW7Qk8bea0efQspCOBbBaahgYt5eebvwvnGrA3xz9tw1Tg@mail.gmail.com>
+In-Reply-To: 20200911143022.414783-3-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5862
+X-UID: 5863
 
---===============4896626339816306128==
+--===============5864527124975858687==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 11, 2020 at 9:43 AM Nicolas Rybowski
+On Fri, Sep 11, 2020 at 8:15 AM Nicolas Rybowski
 <nicolas.rybowski(a)tessares.net> wrote:
 >
-> It has been observed that the kernel sockets created for the subflows
-> (except the first one) are not in the same cgroup as their parents.
-> That's because the additional subflows are created by kernel workers.
+> In order to precisely identify the parent MPTCP connection of a subflow,
+> it is required to access the mptcp_sock's token which uniquely identify a
+> MPTCP connection.
 >
-> This is a problem with eBPF programs attached to the parent's
-> cgroup won't be executed for the children. But also with any other featur=
-es
-> of CGroup linked to a sk.
+> This patch adds a new structure 'bpf_mptcp_sock' exposing the 'token' fie=
+ld
+> of the 'mptcp_sock' extracted from a subflow's 'tcp_sock'. It also adds t=
+he
+> declaration of a new BPF helper of the same name to expose the newly
+> defined structure in the userspace BPF API.
 >
-> This patch fixes this behaviour.
+> This is the foundation to expose more MPTCP-specific fields through BPF.
 >
-> As the subflow sockets are created by the kernel, we can't use
-> 'mem_cgroup_sk_alloc' because of the current context being the one of the
-> kworker. This is why we have to do low level memcg manipulation, if
-> required.
+> Currently, it is limited to the field 'token' of the msk but it is
+> easily extensible.
 >
-> Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 > Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Acked-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 > Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
 
 Acked-by: Song Liu <songliubraving(a)fb.com>
-
-[...]
---===============4896626339816306128==--
+--===============5864527124975858687==--
