@@ -1,93 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============3023930071443768650=="
+Content-Type: multipart/mixed; boundary="===============1308119632148205631=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 05/13] mptcp: introduce and use
- mptcp_try_coalesce()
-Date: Mon, 14 Sep 2020 10:01:11 +0200
-Message-ID: <39b392036de70a64726b19e7bb851a53ec90f134.1599854632.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next v2 07/13] mptcp: cleanup
+ mptcp_subflow_discard_data()
+Date: Mon, 14 Sep 2020 10:01:13 +0200
+Message-ID: <f62a0071f94505b78dd32140b685cd938560008e.1599854632.git.pabeni@redhat.com>
 In-Reply-To: cover.1599854632.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5836
+X-UID: 5837
 
---===============3023930071443768650==
+--===============1308119632148205631==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Factor-out existing code, will be re-used by the
-next patch.
+There is no need to use the tcp_read_sock(), we can
+simply drop the skb. Additionally try to look at the
+next buffer for in order data.
+
+This both simplifies the code and avoid unneeded indirect
+calls.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ net/mptcp/protocol.h |  1 -
+ net/mptcp/subflow.c  | 58 +++++++++++---------------------------------
+ 2 files changed, 14 insertions(+), 45 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4f12a8ce0ddd..5a2ff333e426 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -110,6 +110,22 @@ static int __mptcp_socket_create(struct mptcp_sock *ms=
-k)
- 	return 0;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0a602acf1f3d..26f5f81f3f4c 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -355,7 +355,6 @@ int mptcp_is_enabled(struct net *net);
+ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+ 				     struct mptcp_options_received *mp_opt);
+ bool mptcp_subflow_data_available(struct sock *sk);
+-int mptcp_subflow_discard_data(struct sock *sk, unsigned int limit);
+ void __init mptcp_subflow_init(void);
+ =
+
+ /* called with sk socket lock held */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 0b1d73a69daf..6eb2fc0a8ebb 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -805,50 +805,22 @@ static enum mapping_status get_mapping_status(struct =
+sock *ssk,
+ 	return MAPPING_OK;
  }
  =
 
-+static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
-+			       struct sk_buff *from)
-+{
-+	bool fragstolen;
-+	int delta;
-+
-+	if (MPTCP_SKB_CB(from)->offset ||
-+	    !skb_try_coalesce(to, from, &fragstolen, &delta))
-+		return false;
-+
-+	kfree_skb_partial(from, fragstolen);
-+	atomic_add(delta, &sk->sk_rmem_alloc);
-+	sk_mem_charge(sk, delta);
-+	return true;
-+}
-+
- static void __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
- 			     struct sk_buff *skb,
- 			     unsigned int offset, size_t copy_len)
-@@ -121,24 +137,15 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, =
-struct sock *ssk,
- =
-
- 	skb_ext_reset(skb);
- 	skb_orphan(skb);
-+	MPTCP_SKB_CB(skb)->offset =3D offset;
- 	msk->ack_seq +=3D copy_len;
- =
-
- 	tail =3D skb_peek_tail(&sk->sk_receive_queue);
--	if (offset =3D=3D 0 && tail) {
--		bool fragstolen;
--		int delta;
+-static int subflow_read_actor(read_descriptor_t *desc,
+-			      struct sk_buff *skb,
+-			      unsigned int offset, size_t len)
++static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *s=
+kb,
++				       unsigned int limit)
+ {
+-	size_t copy_len =3D min(desc->count, len);
 -
--		if (skb_try_coalesce(tail, skb, &fragstolen, &delta)) {
--			kfree_skb_partial(skb, fragstolen);
--			atomic_add(delta, &sk->sk_rmem_alloc);
--			sk_mem_charge(sk, delta);
--			return;
+-	desc->count -=3D copy_len;
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
++	bool fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
++	u32 incr;
+ =
+
+-	pr_debug("flushed %zu bytes, %zu left", copy_len, desc->count);
+-	return copy_len;
+-}
++	incr =3D limit >=3D skb->len ? skb->len + fin : limit;
+ =
+
+-int mptcp_subflow_discard_data(struct sock *ssk, unsigned int limit)
+-{
+-	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+-	u32 map_remaining;
+-	size_t delta;
+-
+-	map_remaining =3D subflow->map_data_len -
+-			mptcp_subflow_get_map_offset(subflow);
+-	delta =3D min_t(size_t, limit, map_remaining);
+-
+-	/* discard mapped data */
+-	pr_debug("discarding %zu bytes, current map len=3D%d", delta,
+-		 map_remaining);
+-	if (delta) {
+-		read_descriptor_t desc =3D {
+-			.count =3D delta,
+-		};
+-		int ret;
+-
+-		ret =3D tcp_read_sock(ssk, &desc, subflow_read_actor);
+-		if (ret < 0) {
+-			ssk->sk_err =3D -ret;
+-			return ret;
+-		}
+-		if (ret < delta)
+-			return 0;
+-		if (delta =3D=3D map_remaining) {
+-			subflow->data_avail =3D 0;
+-			subflow->map_valid =3D 0;
 -		}
 -	}
-+	if (tail && mptcp_try_coalesce(sk, tail, skb))
-+		return;
- =
-
- 	skb_set_owner_r(skb, sk);
- 	__skb_queue_tail(&sk->sk_receive_queue, skb);
--	MPTCP_SKB_CB(skb)->offset =3D offset;
+-	return 0;
++	pr_debug("discarding=3D%d len=3D%d seq=3D%d", incr, skb->len,
++		 subflow->map_subflow_seq);
++	tcp_sk(ssk)->copied_seq +=3D incr;
++	if (!before(tcp_sk(ssk)->copied_seq, TCP_SKB_CB(skb)->end_seq))
++		sk_eat_skb(ssk, skb);
++	if (mptcp_subflow_get_map_offset(subflow) >=3D subflow->map_data_len)
++		subflow->map_valid =3D 0;
  }
  =
 
- static void mptcp_stop_timer(struct sock *sk)
+ static bool subflow_check_data_avail(struct sock *ssk)
+@@ -923,9 +895,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		/* only accept in-sequence mapping. Old values are spurious
+ 		 * retransmission
+ 		 */
+-		if (mptcp_subflow_discard_data(ssk, old_ack - ack_seq))
+-			goto fatal;
+-		return false;
++		mptcp_subflow_discard_data(ssk, skb, old_ack - ack_seq);
+ 	}
+ 	return true;
+ =
+
 -- =
 
 2.26.2
 
---===============3023930071443768650==--
+--===============1308119632148205631==--
