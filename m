@@ -1,41 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============2161768831742119090=="
+Content-Type: multipart/mixed; boundary="===============3586733027913936795=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 11/13] mptcp: allow picking different
- xmit subflows
-Date: Mon, 14 Sep 2020 11:09:21 -0700
-Message-ID: <alpine.OSX.2.23.453.2009141109020.57764@ningale-mobl.amr.corp.intel.com>
-In-Reply-To: e676b2a4b3de838d458353e9f860a2fd4e1a9e35.1599854632.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v2 13/13] mptcp: simult flow self-tests
+Date: Mon, 14 Sep 2020 11:09:53 -0700
+Message-ID: <alpine.OSX.2.23.453.2009141109260.57764@ningale-mobl.amr.corp.intel.com>
+In-Reply-To: c1fc87079b24def5cb0a6729481d4b14444296b4.1599854632.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5859
+X-UID: 5860
 
---===============2161768831742119090==
+--===============3586733027913936795==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 14 Sep 2020, Paolo Abeni wrote:
 
-> Update the scheduler to less trivial heuristic: cache
-> the last used subflow, and try to send on it a reasonably
-> long burst of data.
->
-> When the burst or the subflow send space is exhausted, pick
-> the subflow with the lower ratio between write space and
-> send buffer - that is, the subflow with the greater relative
-> amount of free space.
->
-> v1 -> v2:
-> - fix 32 bit build breakage due to 64bits div
-> - fix checkpath issues (uint64_t -> u64)
+> Add a bunch of test-cases for multiple subflow xmit:
+> create multiple subflows simulating different links
+> condition via netem and verify that the msk is able
+> to use completely the aggregated bandwidth.
 >
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> net/mptcp/protocol.c | 111 ++++++++++++++++++++++++++++++++++++-------
-> net/mptcp/protocol.h |   6 ++-
-> 2 files changed, 99 insertions(+), 18 deletions(-)
+> tools/testing/selftests/net/mptcp/Makefile    |   3 +-
+> .../selftests/net/mptcp/simult_flows.sh       | 293 ++++++++++++++++++
+> 2 files changed, 295 insertions(+), 1 deletion(-)
+> create mode 100755 tools/testing/selftests/net/mptcp/simult_flows.sh
 >
 
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
@@ -43,4 +35,4 @@ Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 --
 Mat Martineau
 Intel
---===============2161768831742119090==--
+--===============3586733027913936795==--
