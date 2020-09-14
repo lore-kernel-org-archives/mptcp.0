@@ -1,78 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============8786858460130175876=="
+Content-Type: multipart/mixed; boundary="===============2096327180954028012=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] tcp: fix syn cookied MPTCP request socket leak
-Date: Mon, 14 Sep 2020 15:54:14 +0200
-Message-ID: <dde989490e00adfa9f2b56fd51736fd7b1880270.camel@redhat.com>
-In-Reply-To: CA+WQbwuNsAFfnu2nnGPdmrU42_xJkA+GsbbV64kjkCMNKVXyAA@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH net-next v2 01/13] mptcp: rethink 'is writable'
+ conditional
+Date: Mon, 14 Sep 2020 11:00:26 -0700
+Message-ID: <alpine.OSX.2.23.453.2009141056210.57764@ningale-mobl.amr.corp.intel.com>
+In-Reply-To: ae4a76d7e6c72044d63128689155643e9f888e74.1599854632.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5848
+X-UID: 5849
 
---===============8786858460130175876==
+--===============2096327180954028012==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-09-14 at 17:34 +0800, Geliang Tang wrote:
-> Hi Paolo,
-> =
+On Mon, 14 Sep 2020, Paolo Abeni wrote:
 
-> Thanks for your patch. I tested it. It fixed the memory leak problem.
-> But I got this
-> selftest fail output:
-> =
+> Currently, when checking for the 'msk is writable' condition, we
+> look at the individual subflows write space.
+> That works well while we send data via a single subflow, but will
+> not as soon as we will enable concurrent xmit on multiple subflows.
+>
+> With this change msk becomes writable when the following conditions
+> hold:
+> - the socket has some free write space
+> - there is at least a subflow with write free space
+>
+> Additionally we need to set the NOSPACE bit on all subflows
+> before blocking.
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 71 ++++++++++++++++++++++++++++----------------
+> net/mptcp/subflow.c  |  6 ++--
+> 2 files changed, 50 insertions(+), 27 deletions(-)
+>
 
-> 11 single subflow with syn cookies      syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> 12 multiple subflows with syn cookies   syn[fail] got 1 JOIN[s] syn expec=
-ted 2
->  - synack[fail] got 1 JOIN[s] synack expected 2
->  - ack[fail] got 1 JOIN[s] ack expected 2
-> Server ns stats
-> MPTcpExtMPCapableSYNRX          1                  0.0
-> MPTcpExtMPCapableACKRX          1                  0.0
-> MPTcpExtMPJoinSynRx             1                  0.0
-> MPTcpExtMPJoinAckRx             1                  0.0
-> Client ns stats
-> MPTcpExtMPJoinSynAckRx          1                  0.0
-> 13 subflows limited by server w cookies syn[fail] got 1 JOIN[s] syn expec=
-ted 2
->  - synack[fail] got 1 JOIN[s] synack expected 2
->  - ack[ ok ]
-> Server ns stats
-> MPTcpExtMPCapableSYNRX          1                  0.0
-> MPTcpExtMPCapableACKRX          1                  0.0
-> MPTcpExtMPJoinSynRx             1                  0.0
-> MPTcpExtMPJoinAckRx             1                  0.0
-> Client ns stats
-> MPTcpExtMPJoinSynAckRx          1                  0.0
-> 14 signal address with syn cookies      syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> 15 subflow and signal w cookies         syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> 16 subflows and signal w. cookies       syn[fail] got 1 JOIN[s] syn expec=
-ted 3
->  - synack[fail] got 1 JOIN[s] synack expected 3
->  - ack[fail] got 1 JOIN[s] ack expected 3
-> Server ns stats
-> MPTcpExtMPCapableSYNRX          1                  0.0
-> MPTcpExtMPCapableACKRX          1                  0.0
-> MPTcpExtMPJoinSynRx             1                  0.0
-> MPTcpExtMPJoinAckRx             1                  0.0
-> Client ns stats
-> MPTcpExtMPJoinSynAckRx          1                  0.0
+Thanks for the v2 Paolo. I've reviewed the series and will tag them all =
 
-I sometime see similar errors, but they are quite unfrequent, and looks
-tied to the self-test fragility: we use some hard-coded sleep to allow
-for MPJ/ADD_ADDR handshake. If the VM running the test is my change
-slowed down a bit, self-tests will fail.
+so patchwork is updated.
 
-Is the above failure reproducible for you?
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-Thanks,
-
-Paolo
-
---===============8786858460130175876==--
+--
+Mat Martineau
+Intel
+--===============2096327180954028012==--
