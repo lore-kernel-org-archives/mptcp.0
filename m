@@ -1,84 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============4174192476554602060=="
+Content-Type: multipart/mixed; boundary="===============6182889926667909805=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add the incoming RM_ADDR
- support"
-Date: Tue, 15 Sep 2020 16:04:56 +0800
-Message-ID: <CA+WQbwu0geTUddKtZNiKyKwYSrxPFNFu5cbHq6787v3Bzkqvuw@mail.gmail.com>
-In-Reply-To: f0e8c845-68e2-3aed-53ae-b870dd93b1ea@tessares.net
+Subject: [MPTCP] Re: [MPTCP][PATCH] Squash-to: "mptcp: implement
+ mptcp_pm_remove_subflow v9"
+Date: Tue, 15 Sep 2020 16:27:10 +0800
+Message-ID: <CA+WQbwuQSZbXPv9jkjQCNyy9CAfB5YwYxH7FsBySuedw7WZHhg@mail.gmail.com>
+In-Reply-To: 050f7802-d391-0278-7216-cd943d6191f6@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5871
+X-UID: 5872
 
---===============4174192476554602060==
+--===============6182889926667909805==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
-
-Thanks for applying this patch.
+Hi Matt, Paolo,
 
 Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=E6=
-=9C=8811=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=883:03=E5=86=99=E9=81=
+=9C=8811=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=882:45=E5=86=99=E9=81=
 =93=EF=BC=9A
 >
 > Hi Geliang, Paolo,
 >
-> On 10/09/2020 18:28, Paolo Abeni wrote:
-> > On Thu, 2020-09-03 at 18:38 +0800, Geliang Tang wrote:
-> >> This squash-to patch fixed three issues in "mptcp: add the incoming RM=
-_ADDR
-> >> support":
-> >>
-> >> 1. We will use another function mptcp_pm_nl_rm_subflow_received to rem=
-ove a
-> >> local subflow, so the mptcp_pm_nl_rm_addr_received function only need =
-to
-> >> deal with remote address removing. Thus we only need to check
-> >> subflow->remote_id in mptcp_pm_nl_rm_addr_received.
-> >>
-> >> 2. Update PM counters in the right place.
-> >>
-> >> 3. Drop the remot_id fixing code here, since another new patch will de=
-al with
-> >> subflow's remote_id and local_id fixing.
+> On 08/09/2020 08:32, Geliang Tang wrote:
+> > Commit message should be rewritten enterily:
+> > '''
+> > This patch implemented the local subflow removing function,
+> > mptcp_pm_remove_subflow, it simply called mptcp_pm_nl_rm_subflow_receiv=
+ed
+> > under the PM spin lock.
+> >
+> > We use mptcp_pm_remove_subflow to remove a local subflow, so change it's
+> > argument from remote_id to local_id.
+> >
+> > We check subflow->local_id in mptcp_pm_nl_rm_subflow_received to remove
+> > a subflow.
+> > '''
 >
-> Small note: I removed this part from the patch because I previously
-> applied this new patch you mentioned before in the list of commits.
+> As described in my previous message, I also applied this patch (without
+> Paolo's ACK) because this was needed for the patch modifying the MIB.
 
-That's fine, but there are duplicate code here. subflow->remote_id
-will be set twice:
+This squash-to patch is fine, and I'm very confident about it. The new func=
+tion
+mptcp_pm_nl_rm_subflow_received is copied from mptcp_pm_nl_rm_addr_received,
+there are only three differences between them:
 
-1078         subflow->remote_id =3D remote->id;
- ... ...
-1096         subflow->remote_id =3D remote_id;
+1. mptcp_pm_nl_rm_subflow_received use rm_id as an input parameter, but
+mptcp_pm_nl_rm_addr_received get rm_id from msk->pm.rm_id.
 
-I think we need to remove this duplicate code someday.
+2. mptcp_pm_nl_rm_subflow_received check if the rm_id equals subflow's
+local_id, but
+mptcp_pm_nl_rm_addr_received check if it equals subflow's remote_id.
+
+3. mptcp_pm_nl_rm_subflow_received reduce local_addr_used number, but
+mptcp_pm_nl_rm_addr_received reduce add_addr_accepted number and set
+accept_addr to true.
 
 -Geliang
 
 
->
-> >>
-> >> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> >
-> > LGTM, thanks!
->
-> Thank you for the patch and the review!
->
-> Just applied:
->
-> - bef779739129: "squashed" (with conflicts) in "mptcp: add the incoming
-> RM_ADDR support"
-> - b826ff1c8ae3..377cd31c5d51: result
->
-> Tests + export are in progress!
+
 >
 > Cheers,
 > Matt
 > --
 > Tessares | Belgium | Hybrid Access Solutions
 > www.tessares.net
---===============4174192476554602060==--
+--===============6182889926667909805==--
