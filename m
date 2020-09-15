@@ -1,101 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============4372385861675947717=="
+Content-Type: multipart/mixed; boundary="===============4174192476554602060=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 2/2] mptcp: add
- mptcp_destroy_common helper
-Date: Tue, 15 Sep 2020 15:36:36 +0800
-Message-ID: <9ba28d5dc65283a21065f44816b9de1ab0ebcf6f.1600154343.git.geliangtang@gmail.com>
-In-Reply-To: cover.1600154343.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add the incoming RM_ADDR
+ support"
+Date: Tue, 15 Sep 2020 16:04:56 +0800
+Message-ID: <CA+WQbwu0geTUddKtZNiKyKwYSrxPFNFu5cbHq6787v3Bzkqvuw@mail.gmail.com>
+In-Reply-To: f0e8c845-68e2-3aed-53ae-b870dd93b1ea@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5869
+X-UID: 5871
 
---===============4372385861675947717==
+--===============4174192476554602060==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new helper named mptcp_destroy_common containing the
-shared code between mptcp_destroy() and mptcp_sock_destruct().
+Hi Matt,
 
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/protocol.c | 13 +++++++++----
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  |  5 +----
- 3 files changed, 11 insertions(+), 8 deletions(-)
+Thanks for applying this patch.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5b8aa02856b6..e85827519e0a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2151,17 +2151,22 @@ static struct sock *mptcp_accept(struct sock *sk, i=
-nt flags, int *err,
- 	return newsk;
- }
- =
+Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=E6=
+=9C=8811=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=883:03=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> Hi Geliang, Paolo,
+>
+> On 10/09/2020 18:28, Paolo Abeni wrote:
+> > On Thu, 2020-09-03 at 18:38 +0800, Geliang Tang wrote:
+> >> This squash-to patch fixed three issues in "mptcp: add the incoming RM=
+_ADDR
+> >> support":
+> >>
+> >> 1. We will use another function mptcp_pm_nl_rm_subflow_received to rem=
+ove a
+> >> local subflow, so the mptcp_pm_nl_rm_addr_received function only need =
+to
+> >> deal with remote address removing. Thus we only need to check
+> >> subflow->remote_id in mptcp_pm_nl_rm_addr_received.
+> >>
+> >> 2. Update PM counters in the right place.
+> >>
+> >> 3. Drop the remot_id fixing code here, since another new patch will de=
+al with
+> >> subflow's remote_id and local_id fixing.
+>
+> Small note: I removed this part from the patch because I previously
+> applied this new patch you mentioned before in the list of commits.
 
-+void mptcp_destroy_common(struct sock *sk)
-+{
-+	skb_rbtree_purge(&mptcp_sk(sk)->out_of_order_queue);
-+	mptcp_token_destroy(mptcp_sk(sk));
-+	mptcp_pm_free_anno_list(mptcp_sk(sk));
-+	inet_sock_destruct(sk);
-+}
-+
- static void mptcp_destroy(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
+That's fine, but there are duplicate code here. subflow->remote_id
+will be set twice:
 
--	skb_rbtree_purge(&msk->out_of_order_queue);
--	mptcp_token_destroy(msk);
- 	if (msk->cached_ext)
- 		__skb_ext_put(msk->cached_ext);
- =
+1078         subflow->remote_id =3D remote->id;
+ ... ...
+1096         subflow->remote_id =3D remote_id;
 
--	mptcp_pm_free_anno_list(msk);
--	sk_sockets_allocated_dec(sk);
-+	mptcp_destroy_common(sk);
- }
- =
+I think we need to remove this duplicate code someday.
 
- static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index df6cc94df1f7..f87fa6ad445b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -408,6 +408,7 @@ bool mptcp_finish_join(struct sock *sk);
- void mptcp_data_acked(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
-+void mptcp_destroy_common(struct sock *sk);
- =
+-Geliang
 
- void __init mptcp_token_init(void);
- static inline void mptcp_token_init_request(struct request_sock *req)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 339f90e22269..e0d387a12eed 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -435,10 +435,7 @@ static void mptcp_sock_destruct(struct sock *sk)
- 		sock_orphan(sk);
- 	}
- =
 
--	skb_rbtree_purge(&mptcp_sk(sk)->out_of_order_queue);
--	mptcp_token_destroy(mptcp_sk(sk));
--	mptcp_pm_free_anno_list(mptcp_sk(sk));
--	inet_sock_destruct(sk);
-+	mptcp_destroy_common(sk);
- }
- =
-
- static void mptcp_force_close(struct sock *sk)
--- =
-
-2.17.1
-
---===============4372385861675947717==--
+>
+> >>
+> >> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> >
+> > LGTM, thanks!
+>
+> Thank you for the patch and the review!
+>
+> Just applied:
+>
+> - bef779739129: "squashed" (with conflicts) in "mptcp: add the incoming
+> RM_ADDR support"
+> - b826ff1c8ae3..377cd31c5d51: result
+>
+> Tests + export are in progress!
+>
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+--===============4174192476554602060==--
