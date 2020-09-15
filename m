@@ -1,84 +1,231 @@
-Content-Type: multipart/mixed; boundary="===============7955141205275362257=="
+Content-Type: multipart/mixed; boundary="===============0665102310359477094=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add the incoming RM_ADDR
- support"
-Date: Tue, 15 Sep 2020 10:34:46 +0200
-Message-ID: <94573ece-bc1c-c22a-89ef-b277c49d21cb@tessares.net>
-In-Reply-To: CA+WQbwu0geTUddKtZNiKyKwYSrxPFNFu5cbHq6787v3Bzkqvuw@mail.gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] mptcp: retransmit ADD_ADDR when
+ timeout
+Date: Tue, 15 Sep 2020 16:37:17 +0800
+Message-ID: <CA+WQbwsT_2D-8a1JgU234JJQxJTqZARX5S15tqKtQ7+LOzgaYQ@mail.gmail.com>
+In-Reply-To: alpine.OSX.2.23.453.2009111638400.23153@izaratax-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5873
+X-UID: 5874
 
---===============7955141205275362257==
+--===============0665102310359477094==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+Hi Mat,
 
-On 15/09/2020 10:04, Geliang Tang wrote:
-> Hi Matt,
-> =
-
-> Thanks for applying this patch.
-> =
-
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=
-=E6=9C=8811=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=883:03=E5=86=99=E9=
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2020=E5=B9=B4=
+9=E6=9C=8812=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=888:26=E5=86=99=E9=
 =81=93=EF=BC=9A
->>
->> Hi Geliang, Paolo,
->>
->> On 10/09/2020 18:28, Paolo Abeni wrote:
->>> On Thu, 2020-09-03 at 18:38 +0800, Geliang Tang wrote:
->>>> This squash-to patch fixed three issues in "mptcp: add the incoming RM=
-_ADDR
->>>> support":
->>>>
->>>> 1. We will use another function mptcp_pm_nl_rm_subflow_received to rem=
-ove a
->>>> local subflow, so the mptcp_pm_nl_rm_addr_received function only need =
-to
->>>> deal with remote address removing. Thus we only need to check
->>>> subflow->remote_id in mptcp_pm_nl_rm_addr_received.
->>>>
->>>> 2. Update PM counters in the right place.
->>>>
->>>> 3. Drop the remot_id fixing code here, since another new patch will de=
-al with
->>>> subflow's remote_id and local_id fixing.
->>
->> Small note: I removed this part from the patch because I previously
->> applied this new patch you mentioned before in the list of commits.
-> =
+>
+>
+> On Wed, 9 Sep 2020, Geliang Tang wrote:
+>
+> > This patch implemented the retransmition of ADD_ADDR when no ADD_ADDR e=
+cho
+> > is received. It added a timer with the announced address. When timeout
+> > occurs, ADD_ADDR will be retransmitted.
+> >
+> > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> > ---
+> > net/mptcp/options.c    |  1 +
+> > net/mptcp/pm_netlink.c | 71 +++++++++++++++++++++++++++++++++++++-----
+> > net/mptcp/protocol.h   |  1 +
+> > 3 files changed, 66 insertions(+), 7 deletions(-)
+>
+> Could you rebase this patch and the squash-to patch it depends on? I
+> couldn't get them to apply.
+>
+> >
+> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > index 171039cbe9c4..8445d292776b 100644
+> > --- a/net/mptcp/options.c
+> > +++ b/net/mptcp/options.c
+> > @@ -893,6 +893,7 @@ void mptcp_incoming_options(struct sock *sk, struct=
+ sk_buff *skb,
+> >                       mptcp_pm_add_addr_received(msk, &addr);
+> >                       MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
+> >               } else {
+> > +                     mptcp_pm_del_add_addr_timer(msk, &addr);
+> >                       MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
+> >               }
+> >               mp_opt.add_addr =3D 0;
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index 6bd5fe9ec086..d2303a3e356d 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> > @@ -28,6 +28,14 @@ struct mptcp_pm_addr_entry {
+> >       struct rcu_head         rcu;
+> > };
+> >
+> > +struct mptcp_pm_add_addr_entry {
+> > +     struct list_head        list;
+> > +     struct mptcp_addr_info  addr;
+> > +     struct timer_list       add_addr_timer;
+> > +     struct mptcp_sock       *sock;
+> > +     u8                      add_addr_retrans_times;
+> > +};
+> > +
+> > struct pm_nl_pernet {
+> >       /* protects pernet updates */
+> >       spinlock_t              lock;
+> > @@ -41,6 +49,7 @@ struct pm_nl_pernet {
+> > };
+> >
+> > #define MPTCP_PM_ADDR_MAX     8
+> > +#define ADD_ADDR_RETRANS_MAX 3
+> >
+> > static bool addresses_equal(const struct mptcp_addr_info *a,
+> >                           struct mptcp_addr_info *b, bool use_port)
+> > @@ -178,10 +187,50 @@ static void check_work_pending(struct mptcp_sock =
+*msk)
+> >               WRITE_ONCE(msk->pm.work_pending, false);
+> > }
+> >
+> > +static void mptcp_pm_add_addr_timer(struct timer_list *timer)
+> > +{
+> > +     struct mptcp_pm_add_addr_entry *entry =3D from_timer(entry, timer=
+, add_addr_timer);
+> > +     struct mptcp_sock *msk =3D entry->sock;
+> > +     struct sock *sk =3D (struct sock *)msk;
+> > +
+> > +     pr_debug("msk=3D%p\n", msk);
+> > +
+> > +     if (!msk)
+> > +             return;
+> > +
+> > +     bh_lock_sock(sk);
+>
+> Since the precise timing of the ADD_ADDR retransmit isn't that important,
+> does it make sense to use delayed_work rather than a timer? That way the
+> handler would run in process context too.
 
-> That's fine, but there are duplicate code here. subflow->remote_id
-> will be set twice:
-> =
+Thanks for your review. I'll use delayed_work to re-write this patch.
 
-> 1078         subflow->remote_id =3D remote->id;
->   ... ...
-> 1096         subflow->remote_id =3D remote_id;
-> =
+-Geliang
 
-> I think we need to remove this duplicate code someday.
-
-Oh yes OK, I didn't see the lines were different. I think I had =
-
-conflicts for some other reasons and I thought the lines were the same.
-
-Now fixed:
-
-- 8d1ec4c8327c: mptcp: drop useless assignment
-
-Tests + export will be started soon.
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============7955141205275362257==--
+>
+> Paolo, Florian, am I overthinking this point?
+>
+>
+> > +     spin_lock_bh(&msk->pm.lock);
+> > +
+> > +     __sock_put(sk);
+> > +
+> > +     if (entry->addr.id > 0) {
+> > +             mptcp_pm_announce_addr(msk, &entry->addr, false);
+> > +             entry->add_addr_retrans_times++;
+> > +     }
+> > +
+> > +     if (entry->add_addr_retrans_times < ADD_ADDR_RETRANS_MAX)
+> > +             sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX);
+> > +
+> > +     spin_unlock_bh(&msk->pm.lock);
+> > +     bh_unlock_sock(sk);
+> > +}
+> > +
+> > +void mptcp_pm_del_add_addr_timer(struct mptcp_sock *msk, struct mptcp_=
+addr_info *addr)
+> > +{
+> > +     struct mptcp_pm_add_addr_entry *entry;
+> > +
+> > +     spin_lock_bh(&msk->pm.lock);
+> > +     list_for_each_entry(entry, &msk->pm.anno_list, list) {
+> > +             if (addresses_equal(&entry->addr, addr, false))
+> > +                     sk_stop_timer((struct sock *)msk, &entry->add_add=
+r_timer);
+> > +     }
+> > +     spin_unlock_bh(&msk->pm.lock);
+> > +}
+> > +
+> > static bool lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+> >                                     struct mptcp_addr_info *addr)
+> > {
+> > -     struct mptcp_pm_addr_entry *entry;
+> > +     struct mptcp_pm_add_addr_entry *entry;
+> >
+> >       list_for_each_entry(entry, &msk->pm.anno_list, list) {
+> >               if (addresses_equal(&entry->addr, addr, false))
+> > @@ -194,27 +243,35 @@ static bool lookup_anno_list_by_saddr(struct mptc=
+p_sock *msk,
+> > static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+> >                                    struct mptcp_pm_addr_entry *entry)
+> > {
+> > -     struct mptcp_pm_addr_entry *clone =3D NULL;
+> > +     struct mptcp_pm_add_addr_entry *add_entry =3D NULL;
+> >
+> >       if (lookup_anno_list_by_saddr(msk, &entry->addr))
+> >               return false;
+> >
+> > -     clone =3D kmemdup(entry, sizeof(*entry), GFP_ATOMIC);
+> > -     if (!clone)
+> > +     add_entry =3D kmalloc(sizeof(*add_entry), GFP_ATOMIC);
+> > +     if (!add_entry)
+> >               return false;
+> >
+> > -     list_add(&clone->list, &msk->pm.anno_list);
+> > +     list_add(&add_entry->list, &msk->pm.anno_list);
+> > +
+> > +     add_entry->addr =3D entry->addr;
+> > +     add_entry->sock =3D msk;
+> > +     add_entry->add_addr_retrans_times =3D 0;
+> > +
+> > +     timer_setup(&add_entry->add_addr_timer, mptcp_pm_add_addr_timer, =
+0);
+> > +     sk_reset_timer((struct sock *)msk, &add_entry->add_addr_timer, ji=
+ffies + TCP_RTO_MAX);
+> >
+> >       return true;
+> > }
+> >
+> > void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+> > {
+> > -     struct mptcp_pm_addr_entry *entry, *tmp;
+> > +     struct mptcp_pm_add_addr_entry *entry, *tmp;
+> >
+> >       pr_debug("msk=3D%p\n", msk);
+> >       spin_lock_bh(&msk->pm.lock);
+> >       list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
+> > +             sk_stop_timer((struct sock *)msk, &entry->add_addr_timer);
+> >               list_del(&entry->list);
+> >               kfree(entry);
+> >       }
+> > @@ -653,7 +710,7 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, un=
+signed int id)
+> > static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+> >                                     struct mptcp_addr_info *addr)
+> > {
+> > -     struct mptcp_pm_addr_entry *entry, *tmp;
+> > +     struct mptcp_pm_add_addr_entry *entry, *tmp;
+> >
+> >       list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
+> >               if (addresses_equal(&entry->addr, addr, false)) {
+>
+> Also need to delete the timer before deleting and freeing the
+> mptcp_pm_add_addr_entry structure here.
+>
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index df6cc94df1f7..12ca49d34bf3 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -443,6 +443,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *=
+msk,
+> >                               const struct mptcp_addr_info *addr);
+> > void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
+> > void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+> > +void mptcp_pm_del_add_addr_timer(struct mptcp_sock *msk, struct mptcp_=
+addr_info *addr);
+> >
+> > int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+> >                          const struct mptcp_addr_info *addr,
+> > --
+> > 2.24.1
+>
+> --
+> Mat Martineau
+> Intel
+--===============0665102310359477094==--
