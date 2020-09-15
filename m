@@ -1,203 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============1412278127261281371=="
+Content-Type: multipart/mixed; boundary="===============5619266974081022464=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 1/2] Squash-to: "mptcp:
- remove addr and subflow in PM netlink"
-Date: Tue, 15 Sep 2020 12:09:32 +0200
-Message-ID: <11f9846f2b565c5532e7b2b6b8bce89b5ecb70fb.camel@redhat.com>
-In-Reply-To: 689b9e1e5a8a89b54c3a17454394b55c458c8739.1600154343.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 2/2] mptcp: add
+ mptcp_destroy_common helper
+Date: Tue, 15 Sep 2020 12:12:09 +0200
+Message-ID: <c98ade363df0ccd3b37e07cc5320a1ae88fae93c.camel@redhat.com>
+In-Reply-To: 9ba28d5dc65283a21065f44816b9de1ab0ebcf6f.1600154343.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5877
+X-UID: 5878
 
---===============1412278127261281371==
+--===============5619266974081022464==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 2020-09-15 at 15:36 +0800, Geliang Tang wrote:
-> Commit message should be rewritten entirely:
-> '''
-> This patch implements the remove announced addr and subflow logic in PM
-> netlink.
-> =
-
-> When the PM netlink removes an address, we traverse all the existing msk
-> sockets to find the relevant sockets.
-> =
-
-> We add a new list named anno_list in mptcp_pm_data, to record all the
-> announced addrs. In the traversing, we check if it has been recorded.
-> If it has been, we trigger the RM_ADDR signal.
-> =
-
-> We also check if this address is in conn_list. If it is, we remove the
-> subflow which using this local address.
-> '''
+> This patch added a new helper named mptcp_destroy_common containing the
+> shared code between mptcp_destroy() and mptcp_sock_destruct().
 > =
 
 > Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
->  net/mptcp/pm.c         |  1 +
->  net/mptcp/pm_netlink.c | 94 ++++++++++++++++++++++++++++++++++++++----
->  net/mptcp/protocol.c   |  1 +
->  net/mptcp/protocol.h   |  2 +
->  net/mptcp/subflow.c    |  1 +
->  5 files changed, 91 insertions(+), 8 deletions(-)
+>  net/mptcp/protocol.c | 13 +++++++++----
+>  net/mptcp/protocol.h |  1 +
+>  net/mptcp/subflow.c  |  5 +----
+>  3 files changed, 11 insertions(+), 8 deletions(-)
 > =
 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9328f0b175a7..6ca88422e774 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -240,6 +240,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
->  	msk->pm.status =3D 0;
->  =
-
->  	spin_lock_init(&msk->pm.lock);
-> +	INIT_LIST_HEAD(&msk->pm.anno_list);
->  =
-
->  	mptcp_pm_nl_data_init(msk);
->  }
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index c3ac466c6686..4ec909f86e5a 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -178,6 +178,50 @@ static void check_work_pending(struct mptcp_sock *ms=
-k)
->  		WRITE_ONCE(msk->pm.work_pending, false);
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 5b8aa02856b6..e85827519e0a 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2151,17 +2151,22 @@ static struct sock *mptcp_accept(struct sock *sk,=
+ int flags, int *err,
+>  	return newsk;
 >  }
 >  =
 
-> +static bool lookup_anno_list_by_saddr(struct mptcp_sock *msk,
-> +				      struct mptcp_addr_info *addr)
+> +void mptcp_destroy_common(struct sock *sk)
 > +{
-> +	struct mptcp_pm_addr_entry *entry;
-> +
-> +	list_for_each_entry(entry, &msk->pm.anno_list, list) {
-> +		if (addresses_equal(&entry->addr, addr, false))
-> +			return true;
-> +	}
-> +
-> +	return false;
+> +	skb_rbtree_purge(&mptcp_sk(sk)->out_of_order_queue);
+> +	mptcp_token_destroy(mptcp_sk(sk));
+> +	mptcp_pm_free_anno_list(mptcp_sk(sk));
+> +	inet_sock_destruct(sk);
+
+I think "inet_sock_destruct(sk);" should be left in mptcp_destroy()...
+
 > +}
 > +
-> +static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
-> +				     struct mptcp_pm_addr_entry *entry)
-> +{
-> +	struct mptcp_pm_addr_entry *clone =3D NULL;
-> +
-> +	if (lookup_anno_list_by_saddr(msk, &entry->addr))
-> +		return false;
-> +
-> +	clone =3D kmemdup(entry, sizeof(*entry), GFP_ATOMIC);
-> +	if (!clone)
-> +		return false;
-> +
-> +	list_add(&clone->list, &msk->pm.anno_list);
-> +
-> +	return true;
-> +}
-> +
-> +void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_pm_addr_entry *entry, *tmp;
-> +
-> +	pr_debug("msk=3D%p\n", msk);
-> +
-> +	spin_lock_bh(&msk->pm.lock);
-> +	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
-> +		list_del(&entry->list);
-> +		kfree(entry);
-> +	}
-> +	spin_unlock_bh(&msk->pm.lock);
-> +}
-> +
->  static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *ms=
-k)
+>  static void mptcp_destroy(struct sock *sk)
 >  {
->  	struct mptcp_addr_info remote =3D { 0 };
-> @@ -198,8 +242,10 @@ static void mptcp_pm_create_subflow_or_signal_addr(s=
-truct mptcp_sock *msk)
->  					      msk->pm.add_addr_signaled);
+>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
 >  =
 
->  		if (local) {
-> -			msk->pm.add_addr_signaled++;
-> -			mptcp_pm_announce_addr(msk, &local->addr, false);
-> +			if (mptcp_pm_alloc_anno_list(msk, local)) {
-> +				msk->pm.add_addr_signaled++;
-> +				mptcp_pm_announce_addr(msk, &local->addr, false);
-> +			}
->  		} else {
->  			/* pick failed, avoid fourther attempts later */
->  			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
-> @@ -605,6 +651,36 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, uns=
-igned int id)
->  	return NULL;
->  }
+> -	skb_rbtree_purge(&msk->out_of_order_queue);
+> -	mptcp_token_destroy(msk);
+>  	if (msk->cached_ext)
+>  		__skb_ext_put(msk->cached_ext);
 >  =
 
-> +static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
-> +				      struct mptcp_addr_info *addr)
-> +{
-> +	struct mptcp_pm_addr_entry *entry, *tmp;
-> +
-> +	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
-> +		if (addresses_equal(&entry->addr, addr, false)) {
-> +			list_del(&entry->list);
-> +			kfree(entry);
-> +			return true;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
-> +				      struct mptcp_addr_info *addr,
-> +				      bool force)
-> +{
-> +	bool ret;
-> +
-> +	spin_lock_bh(&msk->pm.lock);
-> +	ret =3D remove_anno_list_by_saddr(msk, addr);
-> +	if (ret || force)
-> +		mptcp_pm_remove_addr(msk, addr->id);
-> +	spin_unlock_bh(&msk->pm.lock);
-> +	return ret;
-> +}
-> +
->  static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
->  						   struct mptcp_addr_info *addr)
->  {
-> @@ -615,18 +691,20 @@ static int mptcp_nl_remove_subflow_and_signal_addr(=
-struct net *net,
->  =
+> -	mptcp_pm_free_anno_list(msk);
+> -	sk_sockets_allocated_dec(sk);
+> +	mptcp_destroy_common(sk);
 
->  	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
- {
->  		struct sock *sk =3D (struct sock *)msk;
-> +		bool remove_subflow;
->  =
-
-> -		if (list_empty(&msk->conn_list))
-> -			goto next;
-> +		if (list_empty(&msk->conn_list)) {
-> +			mptcp_pm_remove_anno_addr(msk, addr, false);
-> +			continue;
-
-I'm very sorry, I introduced the above problem in the sample I wrote in
-my previous reply. Here we still need to 'goto next', or we will leak a
-msk reference
-
-Otherwise looks good to me.
+... and we must keep sk_sockets_allocated_dec() this here, too.
 
 Cheers,
 
 Paolo
 
---===============1412278127261281371==--
+--===============5619266974081022464==--
