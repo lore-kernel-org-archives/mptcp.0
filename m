@@ -1,71 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============6182889926667909805=="
+Content-Type: multipart/mixed; boundary="===============7955141205275362257=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH] Squash-to: "mptcp: implement
- mptcp_pm_remove_subflow v9"
-Date: Tue, 15 Sep 2020 16:27:10 +0800
-Message-ID: <CA+WQbwuQSZbXPv9jkjQCNyy9CAfB5YwYxH7FsBySuedw7WZHhg@mail.gmail.com>
-In-Reply-To: 050f7802-d391-0278-7216-cd943d6191f6@tessares.net
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: add the incoming RM_ADDR
+ support"
+Date: Tue, 15 Sep 2020 10:34:46 +0200
+Message-ID: <94573ece-bc1c-c22a-89ef-b277c49d21cb@tessares.net>
+In-Reply-To: CA+WQbwu0geTUddKtZNiKyKwYSrxPFNFu5cbHq6787v3Bzkqvuw@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5872
+X-UID: 5873
 
---===============6182889926667909805==
+--===============7955141205275362257==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt, Paolo,
+Hi Geliang,
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=E6=
-=9C=8811=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=882:45=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> Hi Geliang, Paolo,
->
-> On 08/09/2020 08:32, Geliang Tang wrote:
-> > Commit message should be rewritten enterily:
-> > '''
-> > This patch implemented the local subflow removing function,
-> > mptcp_pm_remove_subflow, it simply called mptcp_pm_nl_rm_subflow_receiv=
-ed
-> > under the PM spin lock.
-> >
-> > We use mptcp_pm_remove_subflow to remove a local subflow, so change it's
-> > argument from remote_id to local_id.
-> >
-> > We check subflow->local_id in mptcp_pm_nl_rm_subflow_received to remove
-> > a subflow.
-> > '''
->
-> As described in my previous message, I also applied this patch (without
-> Paolo's ACK) because this was needed for the patch modifying the MIB.
+On 15/09/2020 10:04, Geliang Tang wrote:
+> Hi Matt,
+> =
 
-This squash-to patch is fine, and I'm very confident about it. The new func=
-tion
-mptcp_pm_nl_rm_subflow_received is copied from mptcp_pm_nl_rm_addr_received,
-there are only three differences between them:
+> Thanks for applying this patch.
+> =
 
-1. mptcp_pm_nl_rm_subflow_received use rm_id as an input parameter, but
-mptcp_pm_nl_rm_addr_received get rm_id from msk->pm.rm_id.
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=
+=E6=9C=8811=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=883:03=E5=86=99=E9=
+=81=93=EF=BC=9A
+>>
+>> Hi Geliang, Paolo,
+>>
+>> On 10/09/2020 18:28, Paolo Abeni wrote:
+>>> On Thu, 2020-09-03 at 18:38 +0800, Geliang Tang wrote:
+>>>> This squash-to patch fixed three issues in "mptcp: add the incoming RM=
+_ADDR
+>>>> support":
+>>>>
+>>>> 1. We will use another function mptcp_pm_nl_rm_subflow_received to rem=
+ove a
+>>>> local subflow, so the mptcp_pm_nl_rm_addr_received function only need =
+to
+>>>> deal with remote address removing. Thus we only need to check
+>>>> subflow->remote_id in mptcp_pm_nl_rm_addr_received.
+>>>>
+>>>> 2. Update PM counters in the right place.
+>>>>
+>>>> 3. Drop the remot_id fixing code here, since another new patch will de=
+al with
+>>>> subflow's remote_id and local_id fixing.
+>>
+>> Small note: I removed this part from the patch because I previously
+>> applied this new patch you mentioned before in the list of commits.
+> =
 
-2. mptcp_pm_nl_rm_subflow_received check if the rm_id equals subflow's
-local_id, but
-mptcp_pm_nl_rm_addr_received check if it equals subflow's remote_id.
+> That's fine, but there are duplicate code here. subflow->remote_id
+> will be set twice:
+> =
 
-3. mptcp_pm_nl_rm_subflow_received reduce local_addr_used number, but
-mptcp_pm_nl_rm_addr_received reduce add_addr_accepted number and set
-accept_addr to true.
+> 1078         subflow->remote_id =3D remote->id;
+>   ... ...
+> 1096         subflow->remote_id =3D remote_id;
+> =
 
--Geliang
+> I think we need to remove this duplicate code someday.
 
+Oh yes OK, I didn't see the lines were different. I think I had =
 
+conflicts for some other reasons and I thought the lines were the same.
 
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
---===============6182889926667909805==--
+Now fixed:
+
+- 8d1ec4c8327c: mptcp: drop useless assignment
+
+Tests + export will be started soon.
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============7955141205275362257==--
