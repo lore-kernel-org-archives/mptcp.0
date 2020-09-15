@@ -1,43 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============5864527124975858687=="
+Content-Type: multipart/mixed; boundary="===============6764424774095736731=="
 MIME-Version: 1.0
-From: Song Liu <song at kernel.org>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH bpf-next v2 3/5] bpf: add 'bpf_mptcp_sock'
- structure and helper
-Date: Mon, 14 Sep 2020 14:00:47 -0700
-Message-ID: <CAPhsuW7Qk8bea0efQspCOBbBaahgYt5eebvwvnGrA3xz9tw1Tg@mail.gmail.com>
-In-Reply-To: 20200911143022.414783-3-nicolas.rybowski@tessares.net
+Subject: [MPTCP] Re: [PATCH net] tcp: fix syn cookied MPTCP request socket leak
+Date: Tue, 15 Sep 2020 11:03:36 +0800
+Message-ID: <CA+WQbwtQkJrCP6tahHYSVkiS=2L0ry6YR8eh_892kmkcxNVO7g@mail.gmail.com>
+In-Reply-To: dde989490e00adfa9f2b56fd51736fd7b1880270.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5863
+X-UID: 5866
 
---===============5864527124975858687==
+--===============6764424774095736731==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 11, 2020 at 8:15 AM Nicolas Rybowski
-<nicolas.rybowski(a)tessares.net> wrote:
->
-> In order to precisely identify the parent MPTCP connection of a subflow,
-> it is required to access the mptcp_sock's token which uniquely identify a
-> MPTCP connection.
->
-> This patch adds a new structure 'bpf_mptcp_sock' exposing the 'token' fie=
-ld
-> of the 'mptcp_sock' extracted from a subflow's 'tcp_sock'. It also adds t=
-he
-> declaration of a new BPF helper of the same name to expose the newly
-> defined structure in the userspace BPF API.
->
-> This is the foundation to expose more MPTCP-specific fields through BPF.
->
-> Currently, it is limited to the field 'token' of the msk but it is
-> easily extensible.
->
-> Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> Acked-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
+Hi Paolo,
 
-Acked-by: Song Liu <songliubraving(a)fb.com>
---===============5864527124975858687==--
+Paolo Abeni <pabeni(a)redhat.com> =E4=BA=8E2020=E5=B9=B49=E6=9C=8814=E6=97=
+=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=889:54=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Mon, 2020-09-14 at 17:34 +0800, Geliang Tang wrote:
+> > Hi Paolo,
+> >
+> > Thanks for your patch. I tested it. It fixed the memory leak problem.
+> > But I got this
+> > selftest fail output:
+> >
+> > 11 single subflow with syn cookies      syn[ ok ] - synack[ ok ] - ack[=
+ ok ]
+> > 12 multiple subflows with syn cookies   syn[fail] got 1 JOIN[s] syn exp=
+ected 2
+> >  - synack[fail] got 1 JOIN[s] synack expected 2
+> >  - ack[fail] got 1 JOIN[s] ack expected 2
+> > Server ns stats
+> > MPTcpExtMPCapableSYNRX          1                  0.0
+> > MPTcpExtMPCapableACKRX          1                  0.0
+> > MPTcpExtMPJoinSynRx             1                  0.0
+> > MPTcpExtMPJoinAckRx             1                  0.0
+> > Client ns stats
+> > MPTcpExtMPJoinSynAckRx          1                  0.0
+> > 13 subflows limited by server w cookies syn[fail] got 1 JOIN[s] syn exp=
+ected 2
+> >  - synack[fail] got 1 JOIN[s] synack expected 2
+> >  - ack[ ok ]
+> > Server ns stats
+> > MPTcpExtMPCapableSYNRX          1                  0.0
+> > MPTcpExtMPCapableACKRX          1                  0.0
+> > MPTcpExtMPJoinSynRx             1                  0.0
+> > MPTcpExtMPJoinAckRx             1                  0.0
+> > Client ns stats
+> > MPTcpExtMPJoinSynAckRx          1                  0.0
+> > 14 signal address with syn cookies      syn[ ok ] - synack[ ok ] - ack[=
+ ok ]
+> > 15 subflow and signal w cookies         syn[ ok ] - synack[ ok ] - ack[=
+ ok ]
+> > 16 subflows and signal w. cookies       syn[fail] got 1 JOIN[s] syn exp=
+ected 3
+> >  - synack[fail] got 1 JOIN[s] synack expected 3
+> >  - ack[fail] got 1 JOIN[s] ack expected 3
+> > Server ns stats
+> > MPTcpExtMPCapableSYNRX          1                  0.0
+> > MPTcpExtMPCapableACKRX          1                  0.0
+> > MPTcpExtMPJoinSynRx             1                  0.0
+> > MPTcpExtMPJoinAckRx             1                  0.0
+> > Client ns stats
+> > MPTcpExtMPJoinSynAckRx          1                  0.0
+>
+> I sometime see similar errors, but they are quite unfrequent, and looks
+> tied to the self-test fragility: we use some hard-coded sleep to allow
+> for MPJ/ADD_ADDR handshake. If the VM running the test is my change
+> slowed down a bit, self-tests will fail.
+>
+> Is the above failure reproducible for you?
+
+Yes, I got this self-test failure every time both on -net and linux-next.
+
+-Geliang
+
+>
+> Thanks,
+>
+> Paolo
+>
+--===============6764424774095736731==--
