@@ -1,83 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============7060398528981451104=="
+Content-Type: multipart/mixed; boundary="===============0074580253664000163=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] selftests: mptcp: interpret \n as a new line
-Date: Wed, 16 Sep 2020 15:13:51 +0200
-Message-ID: <20200916131352.3072764-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 0/2] Squash-to: "mptcp:
+ remove addr and subflow in PM netlink v9"
+Date: Wed, 16 Sep 2020 15:17:07 +0200
+Message-ID: <f8233821-9715-8266-f52d-efacf0c09635@tessares.net>
+In-Reply-To: CA+WQbwv=gPBHpB-2QQtxV7qA=QWU_2Pg_c9anj02Vq8SiLHAKA@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5899
+X-UID: 5900
 
---===============7060398528981451104==
+--===============0074580253664000163==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In case of errors, this message was printed:
+Hi Geliang,
 
-  (...)
-  # read: Resource temporarily unavailable
-  #  client exit code 0, server 3
-  # \nnetns ns1-0-BJlt5D socket stat for 10003:
-  (...)
+On 16/09/2020 04:37, Geliang Tang wrote:
+> Hi Matt, Paolo,
+> =
 
-Obviously, the idea was to add a new line before the socket stat and not
-print "\nnetns".
-
-Fixes: b08fbf241064 ("selftests: add test-cases for MPTCP MP_JOIN")
-Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=
+=E6=9C=8816=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=884:26=E5=86=99=E9=
+=81=93=EF=BC=9A
+>>
+>> Hi Geliang, Paolo,
+>>
+>> On 15/09/2020 15:04, Paolo Abeni wrote:
+>>> On Tue, 2020-09-15 at 19:59 +0800, Geliang Tang wrote:
+>>>> v3:
+>>>>    - use "goto next" in mptcp_nl_remove_subflow_and_signal_addr
+>>>>    - update mptcp_destroy_common
+>>>>
+>>>> v2:
+>>>>    - add mptcp_pm_remove_anno_addr and update logic in
+>>>>    mptcp_nl_remove_subflow_and_signal_addr
+>>>>    - call mptcp_pm_free_anno_list in mptcp_destroy and mptcp_sock_dest=
+ruct
+>>>>    - add mptcp_destroy_common helper
+>>>>
+>>>> Geliang Tang (2):
+>>>>     Squash-to: "mptcp: remove addr and subflow in PM netlink"
+>>>>     mptcp: add mptcp_destroy_common helper
+>>>>
+>>>>    net/mptcp/pm.c         |  1 +
+>>>>    net/mptcp/pm_netlink.c | 91 +++++++++++++++++++++++++++++++++++++++=
 ---
+>>>>    net/mptcp/protocol.c   | 10 ++++-
+>>>>    net/mptcp/protocol.h   |  3 ++
+>>>>    net/mptcp/subflow.c    |  3 +-
+>>>>    5 files changed, 98 insertions(+), 10 deletions(-)
+>>>>
+>>>
+>>> Both patches LGTM, thanks!
+>>
+>> Thank you for the patches and the review!
+>>
+>> Just to be sure, can I squash the two of them in the same "mptcp: remove
+>> addr and subflow in PM netlink" commit? (+ update the commit message as
+>> written in 1/2 patch)
+> =
 
-Notes:
-    This commit improves the output in selftests in case of errors, mostly
-    seen when modifying MPTCP code. The selftests behaviour is not changed.
-    That's why this patch is proposed only for net-next.
+> Please only squash 1/2 patch to "mptcp: remove addr and subflow in PM net=
+link"
+> commit. And apply patch 2/2 (mptcp: add mptcp_destroy_common helper) as a
+> new commit.
 
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 4 ++--
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Thank you for the clarification.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index e4df9ba64824..2cfd87d94db8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -443,9 +443,9 @@ do_transfer()
- 	duration=3D$(printf "(duration %05sms)" $duration)
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		echo "$duration [ FAIL ] client exit code $retc, server $rets" 1>&2
--		echo "\nnetns ${listener_ns} socket stat for $port:" 1>&2
-+		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
- 		ip netns exec ${listener_ns} ss -nita 1>&2 -o "sport =3D :$port"
--		echo "\nnetns ${connector_ns} socket stat for $port:" 1>&2
-+		echo -e "\nnetns ${connector_ns} socket stat for ${port}:" 1>&2
- 		ip netns exec ${connector_ns} ss -nita 1>&2 -o "dport =3D :$port"
- =
+- 96141df51494: "squashed" patch 1/2 in "mptcp: remove addr and subflow =
 
- 		cat "$capout"
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index f39c1129ce5f..c2943e4dfcfe 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -176,9 +176,9 @@ do_transfer()
- =
+in PM netlink"
+- 4c292fe817d5..79a312a49fee: result
 
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		echo " client exit code $retc, server $rets" 1>&2
--		echo "\nnetns ${listener_ns} socket stat for $port:" 1>&2
-+		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
- 		ip netns exec ${listener_ns} ss -nita 1>&2 -o "sport =3D :$port"
--		echo "\nnetns ${connector_ns} socket stat for $port:" 1>&2
-+		echo -e "\nnetns ${connector_ns} socket stat for ${port}:" 1>&2
- 		ip netns exec ${connector_ns} ss -nita 1>&2 -o "dport =3D :$port"
- =
+The second patch has been added before your two commits modifying the =
 
- 		cat "$capout"
+selftests.
+- 6d043d6c3dc2: mptcp: add mptcp_destroy_common helper
+- c3f59bbd90df..653f02bb3161: result
+
+Tests + export are in progress.
+
+Cheers,
+Matt
 -- =
 
-2.27.0
-
---===============7060398528981451104==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0074580253664000163==--
