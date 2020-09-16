@@ -1,76 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============5149509167718607826=="
+Content-Type: multipart/mixed; boundary="===============8014218226756925874=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Ye Bin <yebin10 at huawei.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 0/2] Squash-to: "mptcp:
- remove addr and subflow in PM netlink v9"
-Date: Wed, 16 Sep 2020 10:37:10 +0800
-Message-ID: <CA+WQbwv=gPBHpB-2QQtxV7qA=QWU_2Pg_c9anj02Vq8SiLHAKA@mail.gmail.com>
-In-Reply-To: 92808529-48b6-7680-a982-1eca0fb0710e@tessares.net
+Subject: [MPTCP] [PATCH] mptcp: Fix unsigned 'max_seq' compared with zero in
+ mptcp_data_queue_ofo
+Date: Wed, 16 Sep 2020 11:30:03 +0800
+Message-ID: <20200916033003.1186727-1-yebin10@huawei.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5890
+X-UID: 5891
 
---===============5149509167718607826==
+--===============8014218226756925874==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt, Paolo,
+Fixes make coccicheck warnig:
+net/mptcp/protocol.c:164:11-18: WARNING: Unsigned expression compared with =
+zero: max_seq > 0
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=E6=
-=9C=8816=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=884:26=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> Hi Geliang, Paolo,
->
-> On 15/09/2020 15:04, Paolo Abeni wrote:
-> > On Tue, 2020-09-15 at 19:59 +0800, Geliang Tang wrote:
-> >> v3:
-> >>   - use "goto next" in mptcp_nl_remove_subflow_and_signal_addr
-> >>   - update mptcp_destroy_common
-> >>
-> >> v2:
-> >>   - add mptcp_pm_remove_anno_addr and update logic in
-> >>   mptcp_nl_remove_subflow_and_signal_addr
-> >>   - call mptcp_pm_free_anno_list in mptcp_destroy and mptcp_sock_destr=
-uct
-> >>   - add mptcp_destroy_common helper
-> >>
-> >> Geliang Tang (2):
-> >>    Squash-to: "mptcp: remove addr and subflow in PM netlink"
-> >>    mptcp: add mptcp_destroy_common helper
-> >>
-> >>   net/mptcp/pm.c         |  1 +
-> >>   net/mptcp/pm_netlink.c | 91 +++++++++++++++++++++++++++++++++++++++-=
---
-> >>   net/mptcp/protocol.c   | 10 ++++-
-> >>   net/mptcp/protocol.h   |  3 ++
-> >>   net/mptcp/subflow.c    |  3 +-
-> >>   5 files changed, 98 insertions(+), 10 deletions(-)
-> >>
-> >
-> > Both patches LGTM, thanks!
->
-> Thank you for the patches and the review!
->
-> Just to be sure, can I squash the two of them in the same "mptcp: remove
-> addr and subflow in PM netlink" commit? (+ update the commit message as
-> written in 1/2 patch)
+Reported-by: Hulk Robot <hulkci(a)huawei.com>
+Signed-off-by: Ye Bin <yebin10(a)huawei.com>
+---
+ net/mptcp/protocol.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Please only squash 1/2 patch to "mptcp: remove addr and subflow in PM netli=
-nk"
-commit. And apply patch 2/2 (mptcp: add mptcp_destroy_common helper) as a
-new commit.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ef0dd2f23482..3b71f6202524 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -155,13 +155,14 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *m=
+sk, struct sk_buff *skb)
+ {
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	struct rb_node **p, *parent;
++	int space;
+ 	u64 seq, end_seq, max_seq;
+ 	struct sk_buff *skb1;
+ =
 
-Thanks.
--Geliang
+ 	seq =3D MPTCP_SKB_CB(skb)->map_seq;
+ 	end_seq =3D MPTCP_SKB_CB(skb)->end_seq;
+-	max_seq =3D tcp_space(sk);
+-	max_seq =3D max_seq > 0 ? max_seq + msk->ack_seq : msk->ack_seq;
++	space =3D tcp_space(sk);
++	max_seq =3D space > 0 ? space + msk->ack_seq : msk->ack_seq;
+ =
 
+ 	pr_debug("msk=3D%p seq=3D%llx limit=3D%llx empty=3D%d", msk, seq, max_seq,
+ 		 RB_EMPTY_ROOT(&msk->out_of_order_queue));
+-- =
 
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
---===============5149509167718607826==--
+2.25.4
+
+--===============8014218226756925874==--
