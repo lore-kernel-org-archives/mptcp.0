@@ -1,45 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============0650345474361658069=="
+Content-Type: multipart/mixed; boundary="===============6128295848408841669=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: split mptcp_clean_una function
-Date: Thu, 17 Sep 2020 15:53:28 -0700
-Message-ID: <alpine.OSX.2.23.453.2009171551050.4728@shantika-mobl1.amr.corp.intel.com>
-In-Reply-To: 20200910163630.8137-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next] selftests: mptcp: interpret \n as a new
+ line
+Date: Thu, 17 Sep 2020 16:26:35 -0700
+Message-ID: <20200917.162635.1949227267966227941.davem@davemloft.net>
+In-Reply-To: 20200916131352.3072764-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5921
+X-UID: 5922
 
---===============0650345474361658069==
+--===============6128295848408841669==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Date: Wed, 16 Sep 2020 15:13:51 +0200
 
-On Thu, 10 Sep 2020, Florian Westphal wrote:
+> In case of errors, this message was printed:
+> =
 
-> mptcp_clean_una() will wake writers in case memory could be reclaimed.
-> When called from mptcp_sendmsg the wakeup code isn't needed.
->
-> Move the wakeup to a new helper and then use that from the mptcp worker.
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> net/mptcp/protocol.c | 28 +++++++++++++++++-----------
-> 1 file changed, 17 insertions(+), 11 deletions(-)
->
-> Sending this ahead of the rebase on top of paolos patchset,
-> I think this can be integrated stand-alone as it has no dependency
-> on sendmsg refactor or poll rework.
->
+>   (...)
+>   # read: Resource temporarily unavailable
+>   #  client exit code 0, server 3
+>   # \nnetns ns1-0-BJlt5D socket stat for 10003:
+>   (...)
+> =
 
-Looks good to me, thanks Florian. It still applies cleanly to the export =
+> Obviously, the idea was to add a new line before the socket stat and not
+> print "\nnetns".
+> =
 
-branch too.
+> Fixes: b08fbf241064 ("selftests: add test-cases for MPTCP MP_JOIN")
+> Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-
---
-Mat Martineau
-Intel
---===============0650345474361658069==--
+Applied.
+--===============6128295848408841669==--
