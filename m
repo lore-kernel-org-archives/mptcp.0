@@ -1,61 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============6896860332107242473=="
+Content-Type: multipart/mixed; boundary="===============7210351102843772220=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3] mptcp: Fix unsigned 'max_seq' compared with
- zero in mptcp_data_queue_ofo
-Date: Thu, 17 Sep 2020 10:18:51 +0200
-Message-ID: <cea6d18e823ed89270a5bb2cad9c65377b520678.camel@redhat.com>
-In-Reply-To: 20200917011233.2948595-1-yebin10@huawei.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash-to: "mptcp: remove addr
+ and subflow in PM netlink v9" Part 2
+Date: Thu, 17 Sep 2020 10:32:37 +0200
+Message-ID: <0ff8011851fa53445f69399b2d7817d416fad2c7.camel@redhat.com>
+In-Reply-To: 5f006df48114968c8919cfd35424821e53b26b15.1600319465.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5909
+X-UID: 5910
 
---===============6896860332107242473==
+--===============7210351102843772220==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-09-17 at 09:12 +0800, Ye Bin wrote:
-> Fixes coccicheck warnig:
-> net/mptcp/protocol.c:164:11-18: WARNING: Unsigned expression compared wit=
-h zero: max_seq > 0
+On Thu, 2020-09-17 at 13:12 +0800, Geliang Tang wrote:
+> This patch fixed BUG in mptcp_pm_free_anno_list(), mptcp_pm_free_anno_list
+> may be called when PM has not been inited. Then we'll get the "NULL point=
+er
+> dereference" BUG. This patch added a flag to mark whether PM has been
+> inited.
 > =
 
-> Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue")
-> Reported-by: Hulk Robot <hulkci(a)huawei.com>
-> Signed-off-by: Ye Bin <yebin10(a)huawei.com>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/90
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
->  net/mptcp/protocol.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  net/mptcp/pm.c         | 1 +
+>  net/mptcp/pm_netlink.c | 3 +++
+>  net/mptcp/protocol.h   | 1 +
+>  3 files changed, 5 insertions(+)
 > =
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ef0dd2f23482..386cd4e60250 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -157,11 +157,12 @@ static void mptcp_data_queue_ofo(struct mptcp_sock =
-*msk, struct sk_buff *skb)
->  	struct rb_node **p, *parent;
->  	u64 seq, end_seq, max_seq;
->  	struct sk_buff *skb1;
-> +	int space;
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 6ca88422e774..60e9a0d2ba1d 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -243,6 +243,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+>  	INIT_LIST_HEAD(&msk->pm.anno_list);
 >  =
 
->  	seq =3D MPTCP_SKB_CB(skb)->map_seq;
->  	end_seq =3D MPTCP_SKB_CB(skb)->end_seq;
-> -	max_seq =3D tcp_space(sk);
-> -	max_seq =3D max_seq > 0 ? max_seq + msk->ack_seq : msk->ack_seq;
-> +	space =3D tcp_space(sk);
-> +	max_seq =3D space > 0 ? space + msk->ack_seq : msk->ack_seq;
+>  	mptcp_pm_nl_data_init(msk);
+> +	WRITE_ONCE(msk->pm.inited, true);
+>  }
 >  =
 
->  	pr_debug("msk=3D%p seq=3D%llx limit=3D%llx empty=3D%d", msk, seq, max_s=
-eq,
->  		 RB_EMPTY_ROOT(&msk->out_of_order_queue));
+>  void __init mptcp_pm_init(void)
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 8780d618a05a..9afd66adffe2 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -214,6 +214,9 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+>  =
 
-Thank you for addressing our feedback!
+>  	pr_debug("msk=3D%p\n", msk);
+>  =
 
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+> +	if (!READ_ONCE(msk->pm.inited))
+> +		return;
+> +
+>  	spin_lock_bh(&msk->pm.lock);
+>  	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
+>  		list_del(&entry->list);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index db1e5de2fee7..a33ec4eae071 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -171,6 +171,7 @@ struct mptcp_pm_data {
+>  	bool		accept_addr;
+>  	bool		accept_subflow;
+>  	bool		add_addr_echo;
+> +	bool		inited;
+>  	u8		add_addr_signaled;
+>  	u8		add_addr_accepted;
+>  	u8		local_addr_used;
 
---===============6896860332107242473==--
+I think it would be simpler moving the __mptcp_init_sock() call before
+the !mptcp_is_enabled() check in mptcp_init_sock() - no need to add new
+field to the PM.
+
+Thanks,
+
+Paolo
+
+--===============7210351102843772220==--
