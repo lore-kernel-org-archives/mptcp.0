@@ -1,52 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============4193134575897392595=="
+Content-Type: multipart/mixed; boundary="===============4735180189987016527=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash-to: "mptcp: remove
- addr and subflow in PM netlink v9" Part 2
-Date: Thu, 17 Sep 2020 16:10:21 +0200
-Message-ID: <b30f982b-eabd-260b-d758-299a51761c74@tessares.net>
-In-Reply-To: 80b94c083e968672f79142d4be98d4b9f50ae636.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next] mptcp: fix integer overflow in
+ mptcp_subflow_discard_data()
+Date: Thu, 17 Sep 2020 23:07:24 +0200
+Message-ID: <1a927c595adf46cf5ff186ca6b129f12fb70f492.1600375771.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5916
+X-UID: 5919
 
---===============4193134575897392595==
+--===============4735180189987016527==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Paolo,
+Christoph reported an infinite loop in the subflow receive path
+under stress condition.
 
-On 17/09/2020 12:12, Paolo Abeni wrote:
-> On Thu, 2020-09-17 at 17:19 +0800, Geliang Tang wrote:
->> This patch fixed BUG in mptcp_pm_free_anno_list(). mptcp_pm_free_anno_li=
-st
->> may be called when PM has not been inited, then we'll get the "NULL poin=
-ter
->> dereference" BUG.
->>
->> This patch moved __mptcp_init_sock call before the !mptcp_is_enabled()
->> check in mptcp_init_sock(). No matter mptcp is enabled or not, we all
->> called __mptcp_init_sock to init the mptcp socket.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/90
->> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> =
+If there are multiple subflows, each of them using a large send
+buffer, the delta between the sequence number used by
+MPTCP-level retransmission can and the current msk->ack_seq
+can be greater than MAX_INT.
 
-> LGTM, thanks!
+In the above scenario, when calling mptcp_subflow_discard_data(),
+such delta will be truncated to int, and could result in a negative
+number: no bytes will be dropped, and subflow_check_data_avail()
+will try again to process the same packet, looping forever.
 
-Thank you for this patch and the review!
+This change addresses the issue by expanding the 'limit' size to 64
+bits, so that overflows are not possible anymore.
 
-- 3704fca5b32c: "squashed" in "mptcp: remove addr and subflow in PM netlink"
-- ed4dddf22888..6ffedca7e3d7: result
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/87
+Fixes: 6719331c2f73 ("mptcp: trigger msk processing even for OoO data")
+Reported-and-tested-by: Christoph Paasch <cpaasch(a)apple.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+net-next patch, as the culprit commit is only on net-next currently
+---
+ net/mptcp/subflow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tests + export are in progress!
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index a2ae3087e24d..34d6230df017 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -807,7 +807,7 @@ static enum mapping_status get_mapping_status(struct so=
+ck *ssk,
+ }
+ =
 
-Cheers,
-Matt
+ static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *s=
+kb,
+-				       unsigned int limit)
++				       u64 limit)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+ 	bool fin =3D TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4193134575897392595==--
+2.26.2
+
+--===============4735180189987016527==--
