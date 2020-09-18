@@ -1,99 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============0142265573660729217=="
+Content-Type: multipart/mixed; boundary="===============0242662884916556409=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Nicolas Rybowski <nicolas.rybowski at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash-to: "mptcp: remove
- addr and subflow in PM netlink v9" Part 2
-Date: Fri, 18 Sep 2020 14:04:00 +0200
-Message-ID: <336af1d5-73a7-599f-2d0b-5aea68f00e5f@tessares.net>
-In-Reply-To: CA+WQbwvohxAyiis46R+E4GVE7qRFHLDjhPzoEjBgJ0wSHWmMSg@mail.gmail.com
+Subject: [MPTCP] [PATCH bpf-next v3 2/5] mptcp: attach subflow socket to
+ parent cgroup
+Date: Fri, 18 Sep 2020 14:10:41 +0200
+Message-ID: <20200918121046.190240-2-nicolas.rybowski@tessares.net>
+In-Reply-To: 20200918121046.190240-1-nicolas.rybowski@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5928
+X-UID: 5929
 
---===============0142265573660729217==
+--===============0242662884916556409==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+It has been observed that the kernel sockets created for the subflows
+(except the first one) are not in the same cgroup as their parents.
+That's because the additional subflows are created by kernel workers.
 
-On 18/09/2020 04:48, Geliang Tang wrote:
-> Hi Matt,
-> =
+This is a problem with eBPF programs attached to the parent's
+cgroup won't be executed for the children. But also with any other features
+of CGroup linked to a sk.
 
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=
-=E6=9C=8817=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:10=E5=86=99=E9=
-=81=93=EF=BC=9A
->>
->> Hi Geliang, Paolo,
->>
->> On 17/09/2020 12:12, Paolo Abeni wrote:
->>> On Thu, 2020-09-17 at 17:19 +0800, Geliang Tang wrote:
->>>> This patch fixed BUG in mptcp_pm_free_anno_list(). mptcp_pm_free_anno_=
-list
->>>> may be called when PM has not been inited, then we'll get the "NULL po=
-inter
->>>> dereference" BUG.
->>>>
->>>> This patch moved __mptcp_init_sock call before the !mptcp_is_enabled()
->>>> check in mptcp_init_sock(). No matter mptcp is enabled or not, we all
->>>> called __mptcp_init_sock to init the mptcp socket.
->>>>
->>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/90
->>>> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
->>>
->>> LGTM, thanks!
->>
->> Thank you for this patch and the review!
->>
->> - 3704fca5b32c: "squashed" in "mptcp: remove addr and subflow in PM netl=
-ink"
->> - ed4dddf22888..6ffedca7e3d7: result
-> =
+This patch fixes this behaviour.
 
-> Since we squash two patches to commit "mptcp: remove addr and subflow
-> in PM netlink",
-> please update its commit message entirely like this:
-> =
+As the subflow sockets are created by the kernel, we can't use
+'mem_cgroup_sk_alloc' because of the current context being the one of the
+kworker. This is why we have to do low level memcg manipulation, if
+required.
 
-> '''
-> This patch implements the remove announced addr and subflow logic in PM
-> netlink.
-> =
+Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Acked-by: Song Liu <songliubraving(a)fb.com>
+Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
+---
+ net/mptcp/subflow.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-> When the PM netlink removes an address, we traverse all the existing msk
-> sockets to find the relevant sockets.
-> =
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e8cac2655c82..535a3f9f8cfc 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1130,6 +1130,30 @@ int __mptcp_subflow_connect(struct sock *sk, int ifi=
+ndex,
+ 	return err;
+ }
+ =
 
-> We add a new list named anno_list in mptcp_pm_data, to record all the
-> announced addrs. In the traversing, we check if it has been recorded.
-> If it has been, we trigger the RM_ADDR signal.
-> =
++static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
++{
++#ifdef CONFIG_SOCK_CGROUP_DATA
++	struct sock_cgroup_data *parent_skcd =3D &parent->sk_cgrp_data,
++				*child_skcd =3D &child->sk_cgrp_data;
++
++	/* only the additional subflows created by kworkers have to be modified */
++	if (cgroup_id(sock_cgroup_ptr(parent_skcd)) !=3D
++	    cgroup_id(sock_cgroup_ptr(child_skcd))) {
++#ifdef CONFIG_MEMCG
++		struct mem_cgroup *memcg =3D parent->sk_memcg;
++
++		mem_cgroup_sk_free(child);
++		if (memcg && css_tryget(&memcg->css))
++			child->sk_memcg =3D memcg;
++#endif /* CONFIG_MEMCG */
++
++		cgroup_sk_free(child_skcd);
++		*child_skcd =3D *parent_skcd;
++		cgroup_sk_clone(child_skcd);
++	}
++#endif /* CONFIG_SOCK_CGROUP_DATA */
++}
++
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -1150,6 +1174,9 @@ int mptcp_subflow_create_socket(struct sock *sk, stru=
+ct socket **new_sock)
+ =
 
-> We also check if this address is in conn_list. If it is, we remove the
-> subflow which using this local address.
-> =
+ 	lock_sock(sf->sk);
+ =
 
-> Since we call mptcp_pm_free_anno_list in mptcp_destroy, we need to move
-> __mptcp_init_sock before the mptcp_is_enabled check in mptcp_init_sock.
-> '''
-
-Thank you for checking that.
-
-I indeed forgot to update the commit message as requested.
-This is now done:
-
-- 1aca645292c4: tg:msg: new msg for "mptcp: remove addr and subflow in =
-
-PM netlink"
-
-"export" branch has already been updated.
-
-Cheers,
-Matt
++	/* the newly created socket has to be in the same cgroup as its parent */
++	mptcp_attach_cgroup(sk, sf->sk);
++
+ 	/* kernel sockets do not by default acquire net ref, but TCP timer
+ 	 * needs it.
+ 	 */
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0142265573660729217==--
+2.28.0
+
+--===============0242662884916556409==--
