@@ -1,50 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============0832228725196239646=="
+Content-Type: multipart/mixed; boundary="===============3413710470018012593=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: fix integer overflow in
- mptcp_subflow_discard_data()
-Date: Thu, 17 Sep 2020 18:05:08 -0700
-Message-ID: <20200917.180508.408478469576670851.davem@davemloft.net>
-In-Reply-To: 1a927c595adf46cf5ff186ca6b129f12fb70f492.1600375771.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash-to: "mptcp: remove
+ addr and subflow in PM netlink v9" Part 2
+Date: Fri, 18 Sep 2020 10:48:24 +0800
+Message-ID: <CA+WQbwvohxAyiis46R+E4GVE7qRFHLDjhPzoEjBgJ0wSHWmMSg@mail.gmail.com>
+In-Reply-To: b30f982b-eabd-260b-d758-299a51761c74@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5924
+X-UID: 5925
 
---===============0832228725196239646==
+--===============3413710470018012593==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
-Date: Thu, 17 Sep 2020 23:07:24 +0200
+Hi Matt,
 
-> Christoph reported an infinite loop in the subflow receive path
-> under stress condition.
-> =
+Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=E6=
+=9C=8817=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:10=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> Hi Geliang, Paolo,
+>
+> On 17/09/2020 12:12, Paolo Abeni wrote:
+> > On Thu, 2020-09-17 at 17:19 +0800, Geliang Tang wrote:
+> >> This patch fixed BUG in mptcp_pm_free_anno_list(). mptcp_pm_free_anno_=
+list
+> >> may be called when PM has not been inited, then we'll get the "NULL po=
+inter
+> >> dereference" BUG.
+> >>
+> >> This patch moved __mptcp_init_sock call before the !mptcp_is_enabled()
+> >> check in mptcp_init_sock(). No matter mptcp is enabled or not, we all
+> >> called __mptcp_init_sock to init the mptcp socket.
+> >>
+> >> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/90
+> >> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> >
+> > LGTM, thanks!
+>
+> Thank you for this patch and the review!
+>
+> - 3704fca5b32c: "squashed" in "mptcp: remove addr and subflow in PM netli=
+nk"
+> - ed4dddf22888..6ffedca7e3d7: result
 
-> If there are multiple subflows, each of them using a large send
-> buffer, the delta between the sequence number used by
-> MPTCP-level retransmission can and the current msk->ack_seq
-> can be greater than MAX_INT.
-> =
+Since we squash two patches to commit "mptcp: remove addr and subflow
+in PM netlink",
+please update its commit message entirely like this:
 
-> In the above scenario, when calling mptcp_subflow_discard_data(),
-> such delta will be truncated to int, and could result in a negative
-> number: no bytes will be dropped, and subflow_check_data_avail()
-> will try again to process the same packet, looping forever.
-> =
+'''
+This patch implements the remove announced addr and subflow logic in PM
+netlink.
 
-> This change addresses the issue by expanding the 'limit' size to 64
-> bits, so that overflows are not possible anymore.
-> =
+When the PM netlink removes an address, we traverse all the existing msk
+sockets to find the relevant sockets.
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/87
-> Fixes: 6719331c2f73 ("mptcp: trigger msk processing even for OoO data")
-> Reported-and-tested-by: Christoph Paasch <cpaasch(a)apple.com>
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net-next patch, as the culprit commit is only on net-next currently
+We add a new list named anno_list in mptcp_pm_data, to record all the
+announced addrs. In the traversing, we check if it has been recorded.
+If it has been, we trigger the RM_ADDR signal.
 
-Applied, thank you.
---===============0832228725196239646==--
+We also check if this address is in conn_list. If it is, we remove the
+subflow which using this local address.
+
+Since we call mptcp_pm_free_anno_list in mptcp_destroy, we need to move
+__mptcp_init_sock before the mptcp_is_enabled check in mptcp_init_sock.
+'''
+
+Thanks.
+
+-Geliang
+
+>
+> Tests + export are in progress!
+>
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+--===============3413710470018012593==--
