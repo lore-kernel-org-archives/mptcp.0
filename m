@@ -1,16 +1,16 @@
-Content-Type: multipart/mixed; boundary="===============4889264985185258557=="
+Content-Type: multipart/mixed; boundary="===============5718828077246486381=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: Wake up MPTCP worker when DATA_FIN found
- on a TCP FIN packet
-Date: Fri, 18 Sep 2020 16:27:00 -0700
-Message-ID: <20200918232700.39285-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net v2] mptcp: Wake up MPTCP worker when DATA_FIN
+ found on a TCP FIN packet
+Date: Fri, 18 Sep 2020 20:46:22 -0700
+Message-ID: <20200919034622.5268-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 5939
+X-UID: 5940
 
---===============4889264985185258557==
+--===============5718828077246486381==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -29,6 +29,12 @@ already handled.
 Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/84
 Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+
+This is a resend that's the same as v1, which did not get delivered to
+vger.kernel.org but did go to other recipients. There is a known issue
+with the SMTP server on the Intel side.
+
 ---
  net/mptcp/subflow.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
@@ -65,4 +71,4 @@ base-commit: 8f623a10c31bf7dd9cbb10bb53555b83d5ea3192
 
 2.28.0
 
---===============4889264985185258557==--
+--===============5718828077246486381==--
