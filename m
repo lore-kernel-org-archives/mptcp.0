@@ -1,56 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============8519240173681374065=="
+Content-Type: multipart/mixed; boundary="===============8600588090580071709=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 1/2] Squash-to: "mptcp: remove addr
- and subflow in PM netlink" Part 3
-Date: Sun, 20 Sep 2020 22:12:09 +0800
-Message-ID: <9187bb959f009488d716d545361cea6a68dd79d1.1600610895.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 2/2] Squash-to: "mptcp: implement
+ mptcp_pm_remove_subflow" Part 2
+Date: Sun, 20 Sep 2020 22:12:10 +0800
+Message-ID: <cc8276c2db393b0d0df38a86cc97008ef664ff4b.1600610895.git.geliangtang@gmail.com>
+In-Reply-To: 9187bb959f009488d716d545361cea6a68dd79d1.1600610895.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5947
+X-UID: 5948
 
---===============8519240173681374065==
+--===============8600588090580071709==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Just fix pr_debug logs.
+Just fix pr_debug log.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/pm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 8780d618a05a..b33aebd85bd5 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -212,7 +212,7 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
- {
- 	struct mptcp_pm_addr_entry *entry, *tmp;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 6ca88422e774..7e81f53d1e5d 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -35,7 +35,7 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local=
+_id)
  =
 
--	pr_debug("msk=3D%p\n", msk);
-+	pr_debug("msk=3D%p", msk);
+ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id)
+ {
+-	pr_debug("%s msk=3D%p, local_id=3D%d", __func__, msk, local_id);
++	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
  =
 
  	spin_lock_bh(&msk->pm.lock);
- 	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
-@@ -687,7 +687,7 @@ static int mptcp_nl_remove_subflow_and_signal_addr(stru=
-ct net *net,
- 	struct mptcp_sock *msk;
- 	long s_slot =3D 0, s_num =3D 0;
- =
-
--	pr_debug("remove_id=3D%d\n", addr->id);
-+	pr_debug("remove_id=3D%d", addr->id);
- =
-
- 	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL) {
- 		struct sock *sk =3D (struct sock *)msk;
+ 	mptcp_pm_nl_rm_subflow_received(msk, local_id);
 -- =
 
 2.26.2
 
---===============8519240173681374065==--
+--===============8600588090580071709==--
