@@ -1,62 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============4463619398421426981=="
+Content-Type: multipart/mixed; boundary="===============2700763398827676196=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 3/3] mptcp: retransmit
- ADD_ADDR when timeout
-Date: Mon, 21 Sep 2020 19:53:46 +0200
-Message-ID: <05497891-40c7-c0d4-0271-5ac24c649a53@tessares.net>
-In-Reply-To: b70fa4b2babfb3753750c89b0f3d0298f3c5e121.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash-to: "mptcp: retransmit
+ ADD_ADDR when timeout v5"
+Date: Mon, 21 Sep 2020 19:56:05 +0200
+Message-ID: <2e3f1ecf-c02f-06d2-ad9d-511beb32ab34@tessares.net>
+In-Reply-To: 45d2421a56322607cf4be3cebda2874a0f304e89.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5970
+X-UID: 5971
 
---===============4463619398421426981==
+--===============2700763398827676196==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Paolo
+Hi Geliang, Paolo,
 
-On 21/09/2020 12:24, Paolo Abeni wrote:
-> Hi,
-> =
-
-> Thank you for the prompt turn-over. There is still a somewhat relevant
-> item - the last comment in this patch. The others comments are mostly
-> nit picking, but nice to have.
-> =
-
-> On Mon, 2020-09-21 at 15:30 +0800, Geliang Tang wrote:
->> This patch implemented the retransmition of ADD_ADDR when no ADD_ADDR
->> echo
->> is received. It added a timer with the announced address. When
->> timeout
->> occurs, ADD_ADDR will be retransmitted.
+On 21/09/2020 19:05, Paolo Abeni wrote:
+> On Mon, 2020-09-21 at 20:16 +0800, Geliang Tang wrote:
+>> Improving patch "mptcp: retransmit ADD_ADDR when timeout" v5 as Paolo
+>> suggested. No commit message needs to update.
 >>
->> Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
->> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 >> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> =
 
-As discussed on IRC, I just applied this patch + the "squash to" one:
+> =
 
-- a972ed5d1ec5: mptcp: add struct mptcp_pm_add_entry
-- 39a25e21cbca: mptcp: add sk_stop_timer_sync helper
-- e83b080276ea: mptcp: retransmit ADD_ADDR when timeout
+> LGTM, thanks!
+> =
 
-Paolo's ACK has been added to these three patches. I applied these =
+> I think can be merged (togethar with  mptcp: retransmit ADD_ADDR when
+> timeout and others v5)
 
-patches after Geliang' selftests patches because the timeout feature is =
+Thank you for the patch and the review!
 
-not validated by any kselftests.
+- d1253b022a7b: "squashed" in "mptcp: retransmit ADD_ADDR when timeout"
+- 8c5acf4c1ab3..15b3d6c015b4: result
 
-- fe8df13fc5d3..8c5acf4c1ab3: result
-
-Note that it would maybe be more interesting to add packetdrill test to =
-
-validate this feature.
-
-Tests + export are going to be started soon.
+Test + export are going to be started soon!
 
 Cheers,
 Matt
@@ -64,4 +47,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============4463619398421426981==--
+--===============2700763398827676196==--
