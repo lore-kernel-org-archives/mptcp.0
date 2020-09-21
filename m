@@ -1,50 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============7221652103566437976=="
+Content-Type: multipart/mixed; boundary="===============2551874282045084926=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v3] mptcp: Wake up MPTCP worker when
- DATA_FIN found on a TCP FIN packet
-Date: Mon, 21 Sep 2020 17:15:56 +0200
-Message-ID: <ef95c4e2-37ee-bb77-0472-9fd7e805eecb@tessares.net>
-In-Reply-To: 20200921145759.1302197-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] mptcp: add ADD_ADDR IPv6
+ support
+Date: Mon, 21 Sep 2020 17:29:22 +0200
+Message-ID: <536cd32e-e283-ecaf-12c3-87e2a9dbd142@tessares.net>
+In-Reply-To: be15bba9a03fe0f7153e00041041fd77954beac4.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5965
+X-UID: 5966
 
---===============7221652103566437976==
+--===============2551874282045084926==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi David, Jakub,
-
-On 21/09/2020 16:57, Matthieu Baerts wrote:
-> From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+On 21/09/2020 16:02, Paolo Abeni wrote:
+> On Mon, 2020-09-21 at 13:12 +0200, Florian Westphal wrote:
+>> Geliang Tang <geliangtang(a)gmail.com> wrote:
+>>> When ADD_ADDR suboption include an IPv6 address, the size is 28
+>>> octets.
+>>> It will not fit when other options are included, e.g. TCP
+>>> Timestamps. So
+>>> here we send out a mptcp dedicated packet to carry only mptcp
+>>> options.
+>>
+>> Note that RFC 7323 requires TCP TS to be included for the remainder
+>> of
+>> the connection.  It even recommends TCP peers to drop segments that
+>> do
+>> not carry a timestamp option in case the connection has TCP TS
+>> enabled.
 > =
 
-> When receiving a DATA_FIN MPTCP option on a TCP FIN packet, the DATA_FIN
-> information would be stored but the MPTCP worker did not get
-> scheduled. In turn, the MPTCP socket state would remain in
-> TCP_ESTABLISHED and no blocked operations would be awakened.
+> IIRC, we discussed the above some mtg ago, and mptcp.org is currently
+> doing that (dropping the TS option on forged ack packet to allow for
+> extra MPTCP-level opts). Still IIRC, the main point was that the TS
+> option will be dropped on very rare occasion and only on "duplicate"
+> ack/ack forged by MPTCP to pass along ADD_ADDR/DELETE_ADDR info or the
+> like - relevant timing information should not be lost.
 > =
 
-> TCP FIN packets are seen by the MPTCP socket when moving skbs out of the
-> subflow receive queues, so schedule the MPTCP worker when a skb with
-> DATA_FIN but no data payload is moved from a subflow queue. Other cases
-> (DATA_FIN on a bare TCP ACK or on a packet with data payload) are
-> already handled.
-> =
+> @Christoph: is the above somewhat correct?
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/84
-> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machin=
-e")
+Note that mptcp.org already sends ADD_ADDR in dedicated ACK. And the =
 
-A small mistake from my side, this patch is for -net and not net-next :/
+plan is to drop other options when the goal is to signal MPTCP-related =
 
-Sorry, with these 3 patches with the same code, it really looks like we =
+notifications.
 
-don't want to have this patch sent properly :)
-I can resend a v4 with the proper subject if you prefer.
+According to MPTCP's RFC, that's the way to go:
+
+   During normal MPTCP operation, it is unlikely that there will be
+   sufficient TCP option space for ADD_ADDR to be included along with
+   those for data sequence numbering (Section 3.3.1). Therefore, it is
+   expected that an MPTCP implementation will send the ADD_ADDR option on
+   separate ACKs. As discussed earlier, however, an MPTCP implementation
+   MUST NOT treat duplicate ACKs with any MPTCP option, with the
+   exception of the DSS option, as indications of congestion [RFC5681],
+   and an MPTCP implementation SHOULD NOT send more than two duplicate
+   ACKs in a row for signaling purposes.
+
+   https://www.rfc-editor.org/rfc/rfc8684.html#section-3.4.1-14
+
+
+If later, packets without TS while enabled are dropped, we can maybe add =
+
+an exception for MPTCP-related notifications, no?
+
+
+This ADD_ADDR/REMOVE_ADDR would be in a dedicated ACK but from a TCP =
+
+(core) point of view, it will be seen as duplicated if you omit MPTCP =
+
+info. This will be misinterpreted by TCP CC but that's another topic :)
 
 Cheers,
 Matt
@@ -52,4 +82,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============7221652103566437976==--
+--===============2551874282045084926==--
