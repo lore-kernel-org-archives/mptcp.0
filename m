@@ -1,45 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============2700763398827676196=="
+Content-Type: multipart/mixed; boundary="===============2342281993577105022=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash-to: "mptcp: retransmit
- ADD_ADDR when timeout v5"
-Date: Mon, 21 Sep 2020 19:56:05 +0200
-Message-ID: <2e3f1ecf-c02f-06d2-ad9d-511beb32ab34@tessares.net>
-In-Reply-To: 45d2421a56322607cf4be3cebda2874a0f304e89.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 1/2] Squash-to: "mptcp: remove
+ addr and subflow in PM netlink" Part 3
+Date: Mon, 21 Sep 2020 19:59:30 +0200
+Message-ID: <484977ae-73ab-5c43-5200-3380e5e9e636@tessares.net>
+In-Reply-To: c145951ec94ac1813ce562299499494be11128a9.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5971
+X-UID: 5972
 
---===============2700763398827676196==
+--===============2342281993577105022==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Geliang, Paolo,
 
-On 21/09/2020 19:05, Paolo Abeni wrote:
-> On Mon, 2020-09-21 at 20:16 +0800, Geliang Tang wrote:
->> Improving patch "mptcp: retransmit ADD_ADDR when timeout" v5 as Paolo
->> suggested. No commit message needs to update.
+On 21/09/2020 12:39, Paolo Abeni wrote:
+> On Sun, 2020-09-20 at 22:12 +0800, Geliang Tang wrote:
+>> Just fix pr_debug logs.
 >>
 >> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > =
 
-> =
+> Both patches LGTM, thanks!
 
-> LGTM, thanks!
-> =
+Thank you for these patches and the reviews!
 
-> I think can be merged (togethar with  mptcp: retransmit ADD_ADDR when
-> timeout and others v5)
+- fed3a63d0d20: "squashed" patch 1/2 in "mptcp: remove addr and subflow =
 
-Thank you for the patch and the review!
+in PM netlink"
+- 15b3d6c015b4..3e686a88e64f: result
+- 8465b0333d89: "squashed" patch 2/2 in "mptcp: implement =
 
-- d1253b022a7b: "squashed" in "mptcp: retransmit ADD_ADDR when timeout"
-- 8c5acf4c1ab3..15b3d6c015b4: result
+mptcp_pm_remove_subflow"
+- 3e686a88e64f..18c4a31d77af: result
 
-Test + export are going to be started soon!
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -47,4 +46,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============2700763398827676196==--
+--===============2342281993577105022==--
