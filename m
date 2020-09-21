@@ -1,58 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============5937655363467832789=="
+Content-Type: multipart/mixed; boundary="===============5133740866742429677=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 0/3] mptcp: retransmit ADD_ADDR
- when timeout and others
-Date: Mon, 21 Sep 2020 15:30:35 +0800
-Message-ID: <cover.1600672866.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 1/3] mptcp: add struct
+ mptcp_pm_add_entry
+Date: Mon, 21 Sep 2020 15:30:36 +0800
+Message-ID: <98ee06c2effa72beb8fbc796e92cba6fa2663e77.1600672866.git.geliangtang@gmail.com>
+In-Reply-To: cover.1600672866.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5952
+X-UID: 5954
 
---===============5937655363467832789==
+--===============5133740866742429677==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-v5:
- - add mptcp_pm_should_add_signal check
- - use list_splice_init instead of list_move
- - reuse lookup_anno_list_by_saddr
- - reuse mptcp_pm_del_add_timer
- - add new helper sk_stop_timer_sync
- - this patchset deponds on my two little squash-to patches:
-  Squash-to: "mptcp: remove addr and subflow in PM netlink" Part 3
-  Squash-to: "mptcp: implement mptcp_pm_remove_subflow" Part 2
+Add a new struct mptcp_pm_add_entry to describe add_addr's entry.
 
-v4:
- - split in two patches
- - fix racy issues
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/pm_netlink.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-v3:
- - use timer.
- - drop bh_lock_sock.
- - move __sock_put at the end of mptcp_pm_add_timer.
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index b33aebd85bd5..701972b55a45 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -28,6 +28,11 @@ struct mptcp_pm_addr_entry {
+ 	struct rcu_head		rcu;
+ };
+ =
 
-v2:
- - Use delayed_work instead of timer.
- - This patch depends on my another patch named 'Squash-to: "mptcp: remove
-   addr and subflow in PM netlink"'.
++struct mptcp_pm_add_entry {
++	struct list_head	list;
++	struct mptcp_addr_info	addr;
++};
++
+ struct pm_nl_pernet {
+ 	/* protects pernet updates */
+ 	spinlock_t		lock;
+@@ -181,7 +186,7 @@ static void check_work_pending(struct mptcp_sock *msk)
+ static bool lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+ 				      struct mptcp_addr_info *addr)
+ {
+-	struct mptcp_pm_addr_entry *entry;
++	struct mptcp_pm_add_entry *entry;
+ =
 
-Geliang Tang (3):
-  mptcp: add struct mptcp_pm_add_entry
-  mptcp: add sk_stop_timer_sync helper
-  mptcp: retransmit ADD_ADDR when timeout
+ 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+ 		if (addresses_equal(&entry->addr, addr, false))
+@@ -194,23 +199,23 @@ static bool lookup_anno_list_by_saddr(struct mptcp_so=
+ck *msk,
+ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 				     struct mptcp_pm_addr_entry *entry)
+ {
+-	struct mptcp_pm_addr_entry *clone =3D NULL;
++	struct mptcp_pm_add_entry *add_entry =3D NULL;
+ =
 
- include/net/sock.h     |   2 +
- net/core/sock.c        |   7 +++
- net/mptcp/options.c    |   1 +
- net/mptcp/pm_netlink.c | 128 +++++++++++++++++++++++++++++++++--------
- net/mptcp/protocol.h   |   3 +
- 5 files changed, 117 insertions(+), 24 deletions(-)
+ 	if (lookup_anno_list_by_saddr(msk, &entry->addr))
+ 		return false;
+ =
 
+-	clone =3D kmemdup(entry, sizeof(*entry), GFP_ATOMIC);
+-	if (!clone)
++	add_entry =3D kmalloc(sizeof(*add_entry), GFP_ATOMIC);
++	if (!add_entry)
+ 		return false;
+ =
+
+-	list_add(&clone->list, &msk->pm.anno_list);
++	list_add(&add_entry->list, &msk->pm.anno_list);
+ =
+
+ 	return true;
+ }
+ =
+
+ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+ {
+-	struct mptcp_pm_addr_entry *entry, *tmp;
++	struct mptcp_pm_add_entry *entry, *tmp;
+ =
+
+ 	pr_debug("msk=3D%p", msk);
+ =
+
+@@ -654,7 +659,7 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsign=
+ed int id)
+ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+ 				      struct mptcp_addr_info *addr)
+ {
+-	struct mptcp_pm_addr_entry *entry, *tmp;
++	struct mptcp_pm_add_entry *entry, *tmp;
+ =
+
+ 	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
+ 		if (addresses_equal(&entry->addr, addr, false)) {
 -- =
 
 2.17.1
 
---===============5937655363467832789==--
+--===============5133740866742429677==--
