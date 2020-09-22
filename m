@@ -1,130 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============3291740401452313780=="
+Content-Type: multipart/mixed; boundary="===============5929637233789469962=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 3/3] selftests: mptcp: add ADD_ADDR
- timeout test case
-Date: Tue, 22 Sep 2020 16:12:53 +0800
-Message-ID: <4ea3b478ddb556e9eb3aff0cbeb786325833e768.1600762109.git.geliangtang@gmail.com>
-In-Reply-To: cover.1600762109.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] mptcp: add ADD_ADDR IPv6
+ support
+Date: Tue, 22 Sep 2020 20:44:30 +0800
+Message-ID: <CA+WQbwtEGp=z5whLZuUfvcJsn9O1OOUYid0eSYJ_QD4Yj7r1ng@mail.gmail.com>
+In-Reply-To: 905b76a4-c932-2155-02cc-82fa5b5ae86e@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5982
+X-UID: 5983
 
---===============3291740401452313780==
+--===============5929637233789469962==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the test case for retransmitting ADD_ADDR when timeout.
-It set NS1's add_addr_timeout to 1 second, and disable NS2's add_addr_echo.
+Hi Matt, Paolo, Florian,
 
-And we need to slow down the transfer process of all data to let the
-ADD_ADDR suboptions can be retransmitted three times.
+Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=E6=
+=9C=8822=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=8812:08=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> On 21/09/2020 17:42, Paolo Abeni wrote:
+> > On Mon, 2020-09-21 at 17:29 +0200, Matthieu Baerts wrote:
+> >> On 21/09/2020 16:02, Paolo Abeni wrote:
+> >>> On Mon, 2020-09-21 at 13:12 +0200, Florian Westphal wrote:
+> >>>> Geliang Tang <geliangtang(a)gmail.com> wrote:
+> >>>>> When ADD_ADDR suboption include an IPv6 address, the size is 28
+> >>>>> octets.
+> >>>>> It will not fit when other options are included, e.g. TCP
+> >>>>> Timestamps. So
+> >>>>> here we send out a mptcp dedicated packet to carry only mptcp
+> >>>>> options.
+> >>>>
+> >>>> Note that RFC 7323 requires TCP TS to be included for the
+> >>>> remainder
+> >>>> of
+> >>>> the connection.  It even recommends TCP peers to drop segments
+> >>>> that
+> >>>> do
+> >>>> not carry a timestamp option in case the connection has TCP TS
+> >>>> enabled.
+> >>>
+> >>> IIRC, we discussed the above some mtg ago, and mptcp.org is
+> >>> currently
+> >>> doing that (dropping the TS option on forged ack packet to allow
+> >>> for
+> >>> extra MPTCP-level opts). Still IIRC, the main point was that the TS
+> >>> option will be dropped on very rare occasion and only on
+> >>> "duplicate"
+> >>> ack/ack forged by MPTCP to pass along ADD_ADDR/DELETE_ADDR info or
+> >>> the
+> >>> like - relevant timing information should not be lost.
+> >>>
+> >>> @Christoph: is the above somewhat correct?
+> >>
+> >> Note that mptcp.org already sends ADD_ADDR in dedicated ACK. And the
+> >> plan is to drop other options when the goal is to signal MPTCP-
+> >> related
+> >> notifications.
+> >>
+> >> According to MPTCP's RFC, that's the way to go:
+> >>
+> >>     During normal MPTCP operation, it is unlikely that there will be
+> >>     sufficient TCP option space for ADD_ADDR to be included along with
+> >>     those for data sequence numbering (Section 3.3.1). Therefore, it
+> >> is
+> >>     expected that an MPTCP implementation will send the ADD_ADDR
+> >> option on
+> >>     separate ACKs. As discussed earlier, however, an MPTCP
+> >> implementation
+> >>     MUST NOT treat duplicate ACKs with any MPTCP option, with the
+> >>     exception of the DSS option, as indications of congestion
+> >> [RFC5681],
+> >>     and an MPTCP implementation SHOULD NOT send more than two
+> >> duplicate
+> >>     ACKs in a row for signaling purposes.
+> >>
+> >>     https://www.rfc-editor.org/rfc/rfc8684.html#section-3.4.1-14
+> >>
+> >>
+> >> If later, packets without TS while enabled are dropped, we can maybe
+> >> add
+> >> an exception for MPTCP-related notifications, no?
+> >
+> > It just occurred to me that the ipv6 ADD_ADDR option is 28 bytes when
+> > the port field is not present, so dropping other MPTCP options would be
+> > sufficient.
+> >
+> > For IPv6 ADD_ADDR with port anyhow will be necessary to drop the
+> > TS_OPTION, too.
+> >
+> > Perhaps we can start small and do not look at port support for IPv6?!?
+>
+> Looks good to me!
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 39 +++++++++++++++++--
- 1 file changed, 36 insertions(+), 3 deletions(-)
+Thanks for the information. I'll do this in patch v3.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 08f53d86dedc..fa0011f2422e 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -82,6 +82,14 @@ reset_with_cookies()
- 	done
- }
- =
+-Geliang
 
-+reset_with_timeout()
-+{
-+	reset
-+
-+	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=3D1
-+	ip netns exec $ns2 sysctl -q net.mptcp.add_addr_echo=3D0
-+}
-+
- for arg in "$@"; do
- 	if [ "$arg" =3D "-c" ]; then
- 		capture=3D1
-@@ -135,6 +143,7 @@ do_transfer()
- 	connect_addr=3D"$5"
- 	rm_nr_ns1=3D"$6"
- 	rm_nr_ns2=3D"$7"
-+	slow=3D"$8"
- =
-
- 	port=3D$((10000+$TEST_COUNT))
- 	TEST_COUNT=3D$((TEST_COUNT+1))
-@@ -159,7 +168,7 @@ do_transfer()
- 		sleep 1
- 	fi
- =
-
--	if [[ $rm_nr_ns1 -eq 0 && $rm_nr_ns2 -eq 0 ]]; then
-+	if [ $slow -eq 0 ]; then
- 		mptcp_connect=3D"./mptcp_connect -j"
- 	else
- 		mptcp_connect=3D"./mptcp_connect -r"
-@@ -252,7 +261,7 @@ run_tests()
- 	connect_addr=3D"$3"
- 	lret=3D0
- =
-
--	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} 0 0
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} 0 =
-0 0
- 	lret=3D$?
- 	if [ $lret -ne 0 ]; then
- 		ret=3D$lret
-@@ -269,7 +278,22 @@ run_remove_tests()
- 	rm_nr_ns2=3D"$5"
- 	lret=3D0
- =
-
--	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${=
-rm_nr_ns1} ${rm_nr_ns2}
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${=
-rm_nr_ns1} ${rm_nr_ns2} 1
-+	lret=3D$?
-+	if [ $lret -ne 0 ]; then
-+		ret=3D$lret
-+		return
-+	fi
-+}
-+
-+run_timeout_tests()
-+{
-+	listener_ns=3D"$1"
-+	connector_ns=3D"$2"
-+	connect_addr=3D"$3"
-+	lret=3D0
-+
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} 0 =
-0 1
- 	lret=3D$?
- 	if [ $lret -ne 0 ]; then
- 		ret=3D$lret
-@@ -491,6 +515,15 @@ run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "multiple subflows and signal" 3 3 3
- chk_add_nr 1 1
- =
-
-+# add_addr timeout
-+reset_with_timeout
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+run_timeout_tests $ns1 $ns2 10.0.1.1
-+chk_join_nr "signal address, timeout" 1 1 1
-+chk_add_nr 4 0
-+
- # single subflow, remove
- reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--- =
-
-2.17.1
-
---===============3291740401452313780==--
+>
+> >> This ADD_ADDR/REMOVE_ADDR would be in a dedicated ACK but from a TCP
+> >> (core) point of view, it will be seen as duplicated if you omit
+> >> MPTCP
+> >> info. This will be misinterpreted by TCP CC but that's another topic
+> >> :)
+> >
+> > Hopefully such acks will not be frequent at all, so the CC should not
+> > be fooled too much...
+>
+> Indeed, that should not be an issue. Likely these notifications will
+> happen at the beginning of the connection, certainly before carrying
+> data and then, if I am not mistaken, not impacting the slow start.
+>
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+--===============5929637233789469962==--
