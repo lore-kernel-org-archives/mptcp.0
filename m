@@ -1,49 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============2342281993577105022=="
+Content-Type: multipart/mixed; boundary="===============0634964554615723531=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 1/2] Squash-to: "mptcp: remove
- addr and subflow in PM netlink" Part 3
-Date: Mon, 21 Sep 2020 19:59:30 +0200
-Message-ID: <484977ae-73ab-5c43-5200-3380e5e9e636@tessares.net>
-In-Reply-To: c145951ec94ac1813ce562299499494be11128a9.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 3/3] mptcp: retransmit
+ ADD_ADDR when timeout
+Date: Tue, 22 Sep 2020 10:29:53 +0800
+Message-ID: <CA+WQbwvHuu1FREmKcj0H=MkB0C7isYo51xKa+9hKXJKwZz6Exg@mail.gmail.com>
+In-Reply-To: 05497891-40c7-c0d4-0271-5ac24c649a53@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5972
+X-UID: 5976
 
---===============2342281993577105022==
+--===============0634964554615723531==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Paolo,
+Hi Matt,
 
-On 21/09/2020 12:39, Paolo Abeni wrote:
-> On Sun, 2020-09-20 at 22:12 +0800, Geliang Tang wrote:
->> Just fix pr_debug logs.
->>
->> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> =
+Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B49=E6=
+=9C=8822=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=881:53=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> Hi Geliang, Paolo
+>
+> On 21/09/2020 12:24, Paolo Abeni wrote:
+> > Hi,
+> >
+> > Thank you for the prompt turn-over. There is still a somewhat relevant
+> > item - the last comment in this patch. The others comments are mostly
+> > nit picking, but nice to have.
+> >
+> > On Mon, 2020-09-21 at 15:30 +0800, Geliang Tang wrote:
+> >> This patch implemented the retransmition of ADD_ADDR when no ADD_ADDR
+> >> echo
+> >> is received. It added a timer with the announced address. When
+> >> timeout
+> >> occurs, ADD_ADDR will be retransmitted.
+> >>
+> >> Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> >> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+> >> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+>
+> As discussed on IRC, I just applied this patch + the "squash to" one:
+>
+> - a972ed5d1ec5: mptcp: add struct mptcp_pm_add_entry
+> - 39a25e21cbca: mptcp: add sk_stop_timer_sync helper
+> - e83b080276ea: mptcp: retransmit ADD_ADDR when timeout
+>
+> Paolo's ACK has been added to these three patches. I applied these
+> patches after Geliang' selftests patches because the timeout feature is
+> not validated by any kselftests.
 
-> Both patches LGTM, thanks!
+Thanks, as these patches have been applied, I think both issue #49 (ADD_ADD=
+R:
+echo bit support) and issue #50 (REMOVE_ADDR support) could be closed.
 
-Thank you for these patches and the reviews!
+And I'll write the selftest case of these patches later.
 
-- fed3a63d0d20: "squashed" patch 1/2 in "mptcp: remove addr and subflow =
+-Geliang
 
-in PM netlink"
-- 15b3d6c015b4..3e686a88e64f: result
-- 8465b0333d89: "squashed" patch 2/2 in "mptcp: implement =
-
-mptcp_pm_remove_subflow"
-- 3e686a88e64f..18c4a31d77af: result
-
-Tests + export are in progress!
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2342281993577105022==--
+>
+> - fe8df13fc5d3..8c5acf4c1ab3: result
+>
+> Note that it would maybe be more interesting to add packetdrill test to
+> validate this feature.
+>
+> Tests + export are going to be started soon.
+>
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+--===============0634964554615723531==--
