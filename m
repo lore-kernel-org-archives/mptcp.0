@@ -1,164 +1,155 @@
-Content-Type: multipart/mixed; boundary="===============4492201340776086278=="
+Content-Type: multipart/mixed; boundary="===============6748592187950526644=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 1/3] mptcp: add add_addr_echo sysctl
-Date: Tue, 22 Sep 2020 16:12:51 +0800
-Message-ID: <8d5a4bc3ef6b50f38e829f2cd5db881a30d41d5d.1600762109.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 2/3] mptcp: add add_addr_timeout
+ sysctl
+Date: Tue, 22 Sep 2020 16:12:52 +0800
+Message-ID: <42aa4bc355cb51f90e1cd6748baf08ddab4627c8.1600762109.git.geliangtang@gmail.com>
 In-Reply-To: cover.1600762109.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5980
+X-UID: 5981
 
---===============4492201340776086278==
+--===============6748592187950526644==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new sysctl, named add_addr_echo, to control the ADD_ADDR
-echo ability.
+This patch added a new sysctl, named add_addr_timeout, to control the
+timeout value (in seconds) of the ADD_ADDR retransmission.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
  net/mptcp/ctrl.c       | 14 ++++++++++++++
- net/mptcp/pm.c         |  9 ++++++---
- net/mptcp/pm_netlink.c |  4 +++-
+ net/mptcp/pm_netlink.c |  8 ++++++--
  net/mptcp/protocol.h   |  1 +
- 4 files changed, 24 insertions(+), 4 deletions(-)
+ 3 files changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 54b888f94009..2a250f2047a7 100644
+index 2a250f2047a7..4131f496cd84 100644
 --- a/net/mptcp/ctrl.c
 +++ b/net/mptcp/ctrl.c
-@@ -18,6 +18,7 @@ struct mptcp_pernet {
- 	struct ctl_table_header *ctl_table_hdr;
+@@ -19,6 +19,7 @@ struct mptcp_pernet {
  =
 
  	int mptcp_enabled;
-+	int add_addr_echo;
+ 	int add_addr_echo;
++	u32 add_addr_timeout;
  };
  =
 
  static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
-@@ -30,6 +31,11 @@ int mptcp_is_enabled(struct net *net)
- 	return mptcp_get_pernet(net)->mptcp_enabled;
+@@ -36,6 +37,11 @@ int mptcp_add_addr_echo_is_enabled(struct net *net)
+ 	return mptcp_get_pernet(net)->add_addr_echo;
  }
  =
 
-+int mptcp_add_addr_echo_is_enabled(struct net *net)
++unsigned long mptcp_get_add_addr_timeout(struct net *net)
 +{
-+	return mptcp_get_pernet(net)->add_addr_echo;
++	return jiffies + mptcp_get_pernet(net)->add_addr_timeout * HZ;
 +}
 +
  static struct ctl_table mptcp_sysctl_table[] =3D {
  	{
  		.procname =3D "enabled",
-@@ -40,12 +46,19 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
- 		 */
+@@ -52,6 +58,12 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
+ 		.mode =3D 0644,
  		.proc_handler =3D proc_dointvec,
  	},
 +	{
-+		.procname =3D "add_addr_echo",
-+		.maxlen =3D sizeof(int),
++		.procname =3D "add_addr_timeout",
++		.maxlen =3D sizeof(u32),
 +		.mode =3D 0644,
-+		.proc_handler =3D proc_dointvec,
++		.proc_handler =3D proc_douintvec,
 +	},
  	{}
  };
  =
 
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+@@ -59,6 +71,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet=
+ *pernet)
  {
  	pernet->mptcp_enabled =3D 1;
-+	pernet->add_addr_echo =3D 1;
+ 	pernet->add_addr_echo =3D 1;
++	pernet->add_addr_timeout =3D TCP_RTO_MAX / HZ;
  }
  =
 
  static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pe=
 rnet)
-@@ -61,6 +74,7 @@ static int mptcp_pernet_new_table(struct net *net, struct=
+@@ -75,6 +88,7 @@ static int mptcp_pernet_new_table(struct net *net, struct=
  mptcp_pernet *pernet)
- 	}
  =
 
  	table[0].data =3D &pernet->mptcp_enabled;
-+	table[1].data =3D &pernet->add_addr_echo;
+ 	table[1].data =3D &pernet->add_addr_echo;
++	table[2].data =3D &pernet->add_addr_timeout;
  =
 
  	hdr =3D register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
  	if (!hdr)
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 7e81f53d1e5d..01663ec0c7e2 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -143,6 +143,7 @@ void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8=
- id)
- void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 				const struct mptcp_addr_info *addr)
- {
-+	struct net *net =3D sock_net((struct sock *)msk);
- 	struct mptcp_pm_data *pm =3D &msk->pm;
- =
-
- 	pr_debug("msk=3D%p remote_id=3D%d accept=3D%d", msk, addr->id,
-@@ -150,10 +151,12 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
-k,
- =
-
- 	spin_lock_bh(&pm->lock);
- =
-
--	if (!READ_ONCE(pm->accept_addr))
--		mptcp_pm_announce_addr(msk, addr, true);
--	else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED))
-+	if (!READ_ONCE(pm->accept_addr)) {
-+		if (mptcp_add_addr_echo_is_enabled(net))
-+			mptcp_pm_announce_addr(msk, addr, true);
-+	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
- 		pm->remote =3D *addr;
-+	}
- =
-
- 	spin_unlock_bh(&pm->lock);
- }
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 5a0e4d11bcc3..d45f2320355a 100644
+index d45f2320355a..1d6d2840be7a 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -369,6 +369,7 @@ void mptcp_pm_nl_subflow_established(struct mptcp_sock =
-*msk)
- void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- {
+@@ -206,6 +206,8 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	struct mptcp_pm_add_entry *entry =3D from_timer(entry, timer, add_timer);
+ 	struct mptcp_sock *msk =3D entry->sock;
  	struct sock *sk =3D (struct sock *)msk;
 +	struct net *net =3D sock_net(sk);
- 	struct mptcp_addr_info remote;
- 	struct mptcp_addr_info local;
++	unsigned long timeout =3D mptcp_get_add_addr_timeout(net);
  =
 
-@@ -394,7 +395,8 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
-sk)
- 	__mptcp_subflow_connect((struct sock *)msk, &local, &remote);
- 	spin_lock_bh(&msk->pm.lock);
+ 	pr_debug("msk=3D%p", msk);
  =
 
--	mptcp_pm_announce_addr(msk, &remote, true);
-+	if (mptcp_add_addr_echo_is_enabled(net))
-+		mptcp_pm_announce_addr(msk, &remote, true);
+@@ -232,7 +234,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	}
+ =
+
+ 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+-		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX);
++		sk_reset_timer(sk, timer, timeout);
+ =
+
+ 	spin_unlock_bh(&msk->pm.lock);
+ =
+
+@@ -264,6 +266,8 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
+*msk,
+ {
+ 	struct mptcp_pm_add_entry *add_entry =3D NULL;
+ 	struct sock *sk =3D (struct sock *)msk;
++	struct net *net =3D sock_net(sk);
++	unsigned long timeout =3D mptcp_get_add_addr_timeout(net);
+ =
+
+ 	if (lookup_anno_list_by_saddr(msk, &entry->addr))
+ 		return false;
+@@ -279,7 +283,7 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
+*msk,
+ 	add_entry->retrans_times =3D 0;
+ =
+
+ 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+-	sk_reset_timer(sk, &add_entry->add_timer, jiffies + TCP_RTO_MAX);
++	sk_reset_timer(sk, &add_entry->add_timer, timeout);
+ =
+
+ 	return true;
  }
- =
-
- void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7cfe52aeb2b8..e0b00cc8bfaf 100644
+index e0b00cc8bfaf..d922884a1f96 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -361,6 +361,7 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow=
+@@ -362,6 +362,7 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow=
 _context *subflow)
- }
  =
 
  int mptcp_is_enabled(struct net *net);
-+int mptcp_add_addr_echo_is_enabled(struct net *net);
+ int mptcp_add_addr_echo_is_enabled(struct net *net);
++unsigned long mptcp_get_add_addr_timeout(struct net *net);
  void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
  				     struct mptcp_options_received *mp_opt);
  bool mptcp_subflow_data_available(struct sock *sk);
@@ -166,4 +157,4 @@ _context *subflow)
 
 2.17.1
 
---===============4492201340776086278==--
+--===============6748592187950526644==--
