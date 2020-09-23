@@ -1,43 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============0599166510985197258=="
+Content-Type: multipart/mixed; boundary="===============6702680518592769995=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 1/3] mptcp: add add_addr_echo
- sysctl
-Date: Wed, 23 Sep 2020 12:26:10 +0200
-Message-ID: <d6f2c576a003194210726ff820df728640340bb8.camel@redhat.com>
-In-Reply-To: 8d5a4bc3ef6b50f38e829f2cd5db881a30d41d5d.1600762109.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: Wake up MPTCP worker when
+ DATA_FIN found on a TCP FIN packet
+Date: Wed, 23 Sep 2020 17:56:01 +0200
+Message-ID: <519553b06e21824d9ed28c37943e8e03ef92d859.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.23.453.2009181548210.2091@klin3-mobl1.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5988
+X-UID: 5989
 
---===============0599166510985197258==
+--===============6702680518592769995==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-09-22 at 16:12 +0800, Geliang Tang wrote:
-> This patch added a new sysctl, named add_addr_echo, to control the
-> ADD_ADDR
-> echo ability.
-> =
+On Fri, 2020-09-18 at 15:52 -0700, Mat Martineau wrote:
+> I had been thinking the multipath-tcp.org interop problem was a
+> variation =
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> of the bug fixed by this patch, but it looks like a separate (and
+> very =
 
-If I read the series correctly, this sysctl is only needed for self-
-test's sake, right? can you instead drop the add_addr packet with some
-netfilter rules ? possibly matching on TCP PROTO, TCP len =3D=3D 0 and the
-appropriate packet len should be sufficient.
+> different) issue with mptcp_close(). I will send this patch to netdev
+> now =
 
-Disabling the echo would likely violate the RFC, I think that exposing
-this ability to user-space would be too much even for unix
-philosophy[1] ;)
+> and open a separate issue on github.
 
-Cheers,
+https://github.com/multipath-tcp/mptcp_net-next/issues/92
 
-Paolo
+I'm looking at the same problem from a different perspective.
 
-[1] http://www.anvari.org/fortune/Miscellaneous_Collections/412232_the-unix=
--philosophy-basically-involves-giving-you-enough-rope-to-hang-yourself.html
+To support correct snd wnd enforcing, we need the mptcp equivalent of
+tcp_push_pending_frames(): data must be queued into the msk and pushed
+to substream only when the MPTCP-level wnd is open.
 
---===============0599166510985197258==--
+As a side effect, at shutdown/close time we may end-up with data queued
+into the msk that never reached any subflow. To allow the MPTCP and
+later TCP stack to spool them we need to keep the ssk around.
+
+And here we hit some nasty problems: at mptcp_close() time we need to
+orphan all subflows sharing the same 'struct socket' as the msk - as
+the latter is going to be deleted just after mptcp_close() completes.
+
+But as soon as we orphan them, the tcp stack may async delete the
+subflow via tcp_done(). That will free also the related subflow
+context. In subflow_ulp_release() we can't acquire the msk socket lock,
+so we can't remove the deleted subflow from the conn_list.
+
+TL;DR: UaF in later MPTCP operation (e.g. [re]transmit) touching the
+subflows, not easy to solve.
+
+/P
+
+--===============6702680518592769995==--
