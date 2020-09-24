@@ -1,78 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============5408143646693379166=="
+Content-Type: multipart/mixed; boundary="===============0916458516259620351=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 1/8] tcp: factor out __tcp_close() helper
-Date: Thu, 24 Sep 2020 15:59:23 +0200
-Message-ID: <883f44cfeb0e48545e1ae01ea80c49b8a3f647a9.1600955407.git.pabeni@redhat.com>
-In-Reply-To: cover.1600955407.git.pabeni@redhat.com
+Subject: [MPTCP] [RFC PATCH 0/8] mptcp: support for queuing data at mptcp-level
+Date: Thu, 24 Sep 2020 15:59:22 +0200
+Message-ID: <cover.1600955407.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6014
+X-UID: 6015
 
---===============5408143646693379166==
+--===============0916458516259620351==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-unlocked version of protocol level close, will be used by
-MPTCP to allow decouple orphaning and subflow level close.
+This is necessary to cope correctly with large sendbuffer (larger then snd =
+wnd)
+while respecting the MPTCP level snd window.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- include/net/tcp.h | 1 +
- net/ipv4/tcp.c    | 9 +++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+A major rework of both xmit and shudown path is required to support this
+feature (patches 6 and 7). To try to keep the related patches as small as
+possible, a bunch of new helpers is created by patches 1-5.
+Note that patch 3 can stand for it's own merit and possibly be upstreamed s=
+oon.
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 852f0d71dd40..16fa67854059 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -392,6 +392,7 @@ void tcp_update_metrics(struct sock *sk);
- void tcp_init_metrics(struct sock *sk);
- void tcp_metrics_init(void);
- bool tcp_peer_is_proven(struct request_sock *req, struct dst_entry *dst);
-+void __tcp_close(struct sock *sk, long timeout);
- void tcp_close(struct sock *sk, long timeout);
- void tcp_init_sock(struct sock *sk);
- void tcp_init_transfer(struct sock *sk, int bpf_op, struct sk_buff *skb);
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 65057744fac8..a5fc63e58cb3 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2404,13 +2404,12 @@ bool tcp_check_oom(struct sock *sk, int shift)
- 	return too_many_orphans || out_of_socket_memory;
- }
- =
+Finally patch 8 uses the MPTCP equivalent of tcp_push_pending_frames(), to
+spool queued data ad MPTCP level, as soon as the windows allow that.
 
--void tcp_close(struct sock *sk, long timeout)
-+void __tcp_close(struct sock *sk, long timeout)
- {
- 	struct sk_buff *skb;
- 	int data_was_unread =3D 0;
- 	int state;
- =
+This is still more than a bit rough, and not all self-tests currently pass =
+in
+my local testbed, but the major issues should have been addressed.
 
--	lock_sock(sk);
- 	sk->sk_shutdown =3D SHUTDOWN_MASK;
- =
+Specifically the race described in:
 
- 	if (sk->sk_state =3D=3D TCP_LISTEN) {
-@@ -2574,6 +2573,12 @@ void tcp_close(struct sock *sk, long timeout)
- out:
- 	bh_unlock_sock(sk);
- 	local_bh_enable();
-+}
-+
-+void tcp_close(struct sock *sk, long timeout)
-+{
-+	lock_sock(sk);
-+	__tcp_close(sk, timeout);
- 	release_sock(sk);
- 	sock_put(sk);
- }
+https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/message/JC7GTZHEK=
+I6A3WHQKAWF3SYUSBEU5DYM/
+
+is addressed by patch 6.
+
+As usual any comments more than welcome!
+
+Note: some patches include [partial] changelog, because this already went
+through some private iterations.
+
+Paolo Abeni (8):
+  tcp: factor out __tcp_close() helper
+  mptcp: introduce mptcp_schedule_work
+  mptcp: reduce the arguments of mptcp_sendmsg_frag
+  mptcp: add accounting for pending data
+  mptcp: introduce MPTCP snd_nxt
+  mptcp: refactor shutdown and close
+  mptcp: move page frag allocation in mptcp_sendmsg()
+  mptcp: try to push pending data on snd una updates
+
+ include/net/tcp.h    |   1 +
+ net/ipv4/tcp.c       |   9 +-
+ net/mptcp/options.c  |   4 +-
+ net/mptcp/pm.c       |   4 +-
+ net/mptcp/protocol.c | 729 ++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h |  60 +++-
+ net/mptcp/subflow.c  |  21 +-
+ 7 files changed, 482 insertions(+), 346 deletions(-)
+
 -- =
 
 2.26.2
 
---===============5408143646693379166==--
+--===============0916458516259620351==--
