@@ -1,98 +1,121 @@
-Content-Type: multipart/mixed; boundary="===============2352161426516472904=="
+Content-Type: multipart/mixed; boundary="===============1587256743405526570=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net-next 11/16] mptcp: add mptcp_destroy_common
- helper
-Date: Thu, 24 Sep 2020 08:29:57 +0800
-Message-ID: <fcebccadfa3127e0f55103cc7ee4cd00841e2ea0.1600853093.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH net-next 12/16] selftests: mptcp: add remove
+ cfg in mptcp_connect
+Date: Thu, 24 Sep 2020 08:29:58 +0800
+Message-ID: <aa4ffb8cb7f8c135e5704eb11cfce7cb0bf7ecd4.1600853093.git.geliangtang@gmail.com>
 In-Reply-To: cover.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6007
+X-UID: 6008
 
---===============2352161426516472904==
+--===============1587256743405526570==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new helper named mptcp_destroy_common containing the
-shared code between mptcp_destroy() and mptcp_sock_destruct().
+This patch added a new cfg, named cfg_remove in mptcp_connect. This new
+cfg_remove is copied from cfg_join. The only difference between them is in
+the do_rnd_write function. Here we slow down the transfer process of all
+data to let the RM_ADDR suboption can be sent and received completely.
+Otherwise the remove address and subflow test cases don't work.
 
+Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/protocol.c | 11 ++++++++---
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  |  4 +---
- 3 files changed, 10 insertions(+), 6 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.c        | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b53e55826975..34c037731f35 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2128,16 +2128,21 @@ static struct sock *mptcp_accept(struct sock *sk, i=
-nt flags, int *err,
- 	return newsk;
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
+ing/selftests/net/mptcp/mptcp_connect.c
+index a54966531a64..77bb62feb872 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -54,6 +54,7 @@ static int pf =3D AF_INET;
+ static int cfg_sndbuf;
+ static int cfg_rcvbuf;
+ static bool cfg_join;
++static bool cfg_remove;
+ static int cfg_wait;
  =
 
-+void mptcp_destroy_common(struct mptcp_sock *msk)
-+{
-+	skb_rbtree_purge(&msk->out_of_order_queue);
-+	mptcp_token_destroy(msk);
-+	mptcp_pm_free_anno_list(msk);
-+}
+ static void die_usage(void)
+@@ -271,6 +272,9 @@ static size_t do_rnd_write(const int fd, char *buf, con=
+st size_t len)
+ 	if (cfg_join && first && do_w > 100)
+ 		do_w =3D 100;
+ =
+
++	if (cfg_remove && do_w > 50)
++		do_w =3D 50;
 +
- static void mptcp_destroy(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
-
--	skb_rbtree_purge(&msk->out_of_order_queue);
--	mptcp_token_destroy(msk);
- 	if (msk->cached_ext)
- 		__skb_ext_put(msk->cached_ext);
- =
-
--	mptcp_pm_free_anno_list(msk);
-+	mptcp_destroy_common(msk);
- 	sk_sockets_allocated_dec(sk);
- }
- =
-
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index df6cc94df1f7..db1e5de2fee7 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -408,6 +408,7 @@ bool mptcp_finish_join(struct sock *sk);
- void mptcp_data_acked(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
-+void mptcp_destroy_common(struct mptcp_sock *msk);
- =
-
- void __init mptcp_token_init(void);
- static inline void mptcp_token_init_request(struct request_sock *req)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index a1fefc965e17..ac2b19993f1a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -435,9 +435,7 @@ static void mptcp_sock_destruct(struct sock *sk)
- 		sock_orphan(sk);
+ 	bw =3D write(fd, buf, do_w);
+ 	if (bw < 0)
+ 		perror("write");
+@@ -281,6 +285,9 @@ static size_t do_rnd_write(const int fd, char *buf, con=
+st size_t len)
+ 		first =3D false;
  	}
  =
 
--	skb_rbtree_purge(&mptcp_sk(sk)->out_of_order_queue);
--	mptcp_token_destroy(mptcp_sk(sk));
--	mptcp_pm_free_anno_list(mptcp_sk(sk));
-+	mptcp_destroy_common(mptcp_sk(sk));
- 	inet_sock_destruct(sk);
++	if (cfg_remove)
++		usleep(200000);
++
+ 	return bw;
  }
  =
 
+@@ -428,7 +435,7 @@ static int copyfd_io_poll(int infd, int peerfd, int out=
+fd)
+ 	}
+ =
+
+ 	/* leave some time for late join/announce */
+-	if (cfg_join)
++	if (cfg_join || cfg_remove)
+ 		usleep(cfg_wait);
+ =
+
+ 	close(peerfd);
+@@ -686,7 +693,7 @@ static void maybe_close(int fd)
+ {
+ 	unsigned int r =3D rand();
+ =
+
+-	if (!cfg_join && (r & 1))
++	if (!(cfg_join || cfg_remove) && (r & 1))
+ 		close(fd);
+ }
+ =
+
+@@ -822,13 +829,18 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ =
+
+-	while ((c =3D getopt(argc, argv, "6jlp:s:hut:m:S:R:w:")) !=3D -1) {
++	while ((c =3D getopt(argc, argv, "6jrlp:s:hut:m:S:R:w:")) !=3D -1) {
+ 		switch (c) {
+ 		case 'j':
+ 			cfg_join =3D true;
+ 			cfg_mode =3D CFG_MODE_POLL;
+ 			cfg_wait =3D 400000;
+ 			break;
++		case 'r':
++			cfg_remove =3D true;
++			cfg_mode =3D CFG_MODE_POLL;
++			cfg_wait =3D 400000;
++			break;
+ 		case 'l':
+ 			listen_mode =3D true;
+ 			break;
 -- =
 
 2.17.1
 
---===============2352161426516472904==--
+--===============1587256743405526570==--
