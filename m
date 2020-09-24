@@ -1,145 +1,204 @@
-Content-Type: multipart/mixed; boundary="===============2573728143560765104=="
+Content-Type: multipart/mixed; boundary="===============6961914632788526746=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 2/8] mptcp: introduce mptcp_schedule_work
-Date: Thu, 24 Sep 2020 15:59:24 +0200
-Message-ID: <7d0abb41ebeb333bfaafa605422d186b58d38d36.1600955407.git.pabeni@redhat.com>
+Subject: [MPTCP] [RFC PATCH 3/8] mptcp: reduce the arguments of
+ mptcp_sendmsg_frag
+Date: Thu, 24 Sep 2020 15:59:25 +0200
+Message-ID: <9f106e7de6bef2d6b1be04fa56d1465308fd2432.1600955407.git.pabeni@redhat.com>
 In-Reply-To: cover.1600955407.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6016
+X-UID: 6017
 
---===============2573728143560765104==
+--===============6961914632788526746==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-remove some of code duplications an allow preventing
-rescheduling on close.
+The current argument list is pretty long and quite unreadable,
+move many of them into a specific struct. Later patches
+will add more stuff to such struct.
+
+Additionally drop the 'timeo' argument, now unused.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/pm.c       |  4 +---
- net/mptcp/protocol.c | 33 +++++++++++++++++++--------------
- net/mptcp/protocol.h |  1 +
- 3 files changed, 21 insertions(+), 17 deletions(-)
+v8 -> v9:
+ - cleanup mptcp_sendmsg_info init in mptcp_worker
+---
+ net/mptcp/protocol.c | 53 ++++++++++++++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 24 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 7e81f53d1e5d..fa4d8391b385 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -89,9 +89,7 @@ static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
- 		return false;
- =
-
- 	msk->pm.status |=3D BIT(new_status);
--	if (schedule_work(&msk->work))
--		sock_hold((struct sock *)msk);
--	return true;
-+	return mptcp_schedule_work((struct sock *)msk);
- }
- =
-
- void mptcp_pm_fully_established(struct mptcp_sock *msk)
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6677461efc85..efa8589a1c7d 100644
+index efa8589a1c7d..eb8c6d7a4b16 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -601,9 +601,8 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, st=
-ruct sock *ssk)
- 		 * this is not a good place to change state. Let the workqueue
- 		 * do it.
- 		 */
--		if (mptcp_pending_data_fin(sk, NULL) &&
--		    schedule_work(&msk->work))
--			sock_hold(sk);
-+		if (mptcp_pending_data_fin(sk, NULL))
-+			mptcp_schedule_work(sk);
- 	}
- =
-
- 	spin_unlock_bh(&sk->sk_lock.slock);
-@@ -680,23 +679,29 @@ static void mptcp_reset_timer(struct sock *sk)
- 	sk_reset_timer(sk, &icsk->icsk_retransmit_timer, jiffies + tout);
+@@ -892,12 +892,16 @@ mptcp_carve_data_frag(const struct mptcp_sock *msk, s=
+truct page_frag *pfrag,
+ 	return dfrag;
  }
  =
 
-+bool mptcp_schedule_work(struct sock *sk)
-+{
-+	if (inet_sk_state_load(sk) !=3D TCP_CLOSE &&
-+	   schedule_work(&mptcp_sk(sk)->work)) {
-+		sock_hold(sk);
-+		return true;
-+	}
-+	return false;
-+}
++struct mptcp_sendmsg_info {
++	int mss_now;
++	int size_goal;
++};
 +
- void mptcp_data_acked(struct sock *sk)
+ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 			      struct msghdr *msg, struct mptcp_data_frag *dfrag,
+-			      long *timeo, int *pmss_now,
+-			      int *ps_goal)
++			      struct mptcp_sendmsg_info *info)
  {
- 	mptcp_reset_timer(sk);
- =
-
- 	if ((!test_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags) ||
--	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
--	    schedule_work(&mptcp_sk(sk)->work))
--		sock_hold(sk);
-+	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)))
-+		mptcp_schedule_work(sk);
- }
- =
-
- void mptcp_subflow_eof(struct sock *sk)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(sk);
--
--	if (!test_and_set_bit(MPTCP_WORK_EOF, &msk->flags) &&
--	    schedule_work(&msk->work))
--		sock_hold(sk);
-+	if (!test_and_set_bit(MPTCP_WORK_EOF, &mptcp_sk(sk)->flags))
-+		mptcp_schedule_work(sk);
- }
- =
-
- static void mptcp_check_for_eof(struct mptcp_sock *msk)
-@@ -1610,8 +1615,7 @@ static void mptcp_retransmit_handler(struct sock *sk)
- 		mptcp_stop_timer(sk);
- 	} else {
- 		set_bit(MPTCP_WORK_RTX, &msk->flags);
--		if (schedule_work(&msk->work))
--			sock_hold(sk);
-+		mptcp_schedule_work(sk);
- 	}
- }
- =
-
-@@ -2312,7 +2316,8 @@ static void mptcp_release_cb(struct sock *sk)
- 		struct sock *ssk;
- =
-
- 		ssk =3D mptcp_subflow_recv_lookup(msk);
--		if (!ssk || !schedule_work(&msk->work))
-+		if (!ssk || sk->sk_state =3D=3D TCP_CLOSE ||
-+		    !schedule_work(&msk->work))
- 			__sock_put(sk);
+-	int mss_now, avail_size, size_goal, offset, ret, frag_truesize =3D 0;
++	int avail_size, offset, ret, frag_truesize =3D 0;
+ 	bool dfrag_collapsed, can_collapse =3D false;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_ext *mpext =3D NULL;
+@@ -923,10 +927,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct =
+sock *ssk,
  	}
  =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7cfe52aeb2b8..d16b5fcaa9a8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -405,6 +405,7 @@ static inline bool mptcp_is_fully_established(struct so=
-ck *sk)
- void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk);
- void mptcp_data_ready(struct sock *sk, struct sock *ssk);
- bool mptcp_finish_join(struct sock *sk);
-+bool mptcp_schedule_work(struct sock *sk);
- void mptcp_data_acked(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
+ 	/* compute copy limit */
+-	mss_now =3D tcp_send_mss(ssk, &size_goal, msg->msg_flags);
+-	*pmss_now =3D mss_now;
+-	*ps_goal =3D size_goal;
+-	avail_size =3D size_goal;
++	info->mss_now =3D tcp_send_mss(ssk, &info->size_goal, msg->msg_flags);
++	avail_size =3D info->size_goal;
+ 	skb =3D tcp_write_queue_tail(ssk);
+ 	if (skb) {
+ 		mpext =3D skb_ext_find(skb, SKB_EXT_MPTCP);
+@@ -937,12 +939,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+ 		 * queue management operation, to avoid breaking the ext <->
+ 		 * SSN association set here
+ 		 */
+-		can_collapse =3D (size_goal - skb->len > 0) &&
++		can_collapse =3D (info->size_goal - skb->len > 0) &&
+ 			      mptcp_skb_can_collapse_to(*write_seq, skb, mpext);
+ 		if (!can_collapse)
+ 			TCP_SKB_CB(skb)->eor =3D 1;
+ 		else
+-			avail_size =3D size_goal - skb->len;
++			avail_size =3D info->size_goal - skb->len;
+ 	}
+ =
+
+ 	if (!retransmission) {
+@@ -1174,11 +1176,15 @@ static void ssk_check_wmem(struct mptcp_sock *msk)
+ =
+
+ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ {
+-	int mss_now =3D 0, size_goal =3D 0, ret =3D 0;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct mptcp_sendmsg_info info =3D {
++		.mss_now =3D 0,
++		.size_goal =3D 0,
++	};
+ 	struct page_frag *pfrag;
+ 	size_t copied =3D 0;
+ 	struct sock *ssk;
++	int ret =3D 0;
+ 	u32 sndbuf;
+ 	bool tx_ok;
+ 	long timeo;
+@@ -1247,8 +1253,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 	lock_sock(ssk);
+ 	tx_ok =3D msg_data_left(msg);
+ 	while (tx_ok) {
+-		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &timeo, &mss_now,
+-					 &size_goal);
++		ret =3D mptcp_sendmsg_frag(sk, ssk, msg, NULL, &info);
+ 		if (ret < 0) {
+ 			if (ret =3D=3D -EAGAIN && timeo > 0) {
+ 				mptcp_set_timeout(sk, ssk);
+@@ -1271,8 +1276,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 		if (!sk_stream_memory_free(ssk) ||
+ 		    !mptcp_page_frag_refill(ssk, pfrag) ||
+ 		    !mptcp_ext_cache_refill(msk)) {
+-			tcp_push(ssk, msg->msg_flags, mss_now,
+-				 tcp_sk(ssk)->nonagle, size_goal);
++			tcp_push(ssk, msg->msg_flags, info.mss_now,
++				 tcp_sk(ssk)->nonagle, info.size_goal);
+ 			mptcp_set_timeout(sk, ssk);
+ 			release_sock(ssk);
+ 			goto restart;
+@@ -1292,8 +1297,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 		 * limits before we send more data.
+ 		 */
+ 		if (unlikely(!sk_stream_memory_free(sk))) {
+-			tcp_push(ssk, msg->msg_flags, mss_now,
+-				 tcp_sk(ssk)->nonagle, size_goal);
++			tcp_push(ssk, msg->msg_flags, info.mss_now,
++				 tcp_sk(ssk)->nonagle, info.size_goal);
+ 			mptcp_clean_una(sk);
+ 			if (!sk_stream_memory_free(sk)) {
+ 				/* can't send more for now, need to wait for
+@@ -1310,8 +1315,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ =
+
+ 	mptcp_set_timeout(sk, ssk);
+ 	if (copied) {
+-		tcp_push(ssk, msg->msg_flags, mss_now, tcp_sk(ssk)->nonagle,
+-			 size_goal);
++		tcp_push(ssk, msg->msg_flags, info.mss_now,
++			 tcp_sk(ssk)->nonagle, info.size_goal);
+ =
+
+ 		/* start the timer, if it's not pending */
+ 		if (!mptcp_timer_pending(sk))
+@@ -1736,14 +1741,15 @@ static void mptcp_worker(struct work_struct *work)
+ {
+ 	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
+ 	struct sock *ssk, *sk =3D &msk->sk.icsk_inet.sk;
+-	int orig_len, orig_offset, mss_now =3D 0, size_goal =3D 0;
++	struct mptcp_sendmsg_info info =3D {};
+ 	struct mptcp_data_frag *dfrag;
++	int orig_len, orig_offset;
+ 	u64 orig_write_seq;
+ 	size_t copied =3D 0;
+ 	struct msghdr msg =3D {
+ 		.msg_flags =3D MSG_DONTWAIT,
+ 	};
+-	long timeo =3D 0;
++	int ret;
+ =
+
+ 	lock_sock(sk);
+ 	mptcp_clean_una_wakeup(sk);
+@@ -1779,8 +1785,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	orig_offset =3D dfrag->offset;
+ 	orig_write_seq =3D dfrag->data_seq;
+ 	while (dfrag->data_len > 0) {
+-		int ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &timeo,
+-					     &mss_now, &size_goal);
++		ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &info);
+ 		if (ret < 0)
+ 			break;
+ =
+
+@@ -1793,8 +1798,8 @@ static void mptcp_worker(struct work_struct *work)
+ 			break;
+ 	}
+ 	if (copied)
+-		tcp_push(ssk, msg.msg_flags, mss_now, tcp_sk(ssk)->nonagle,
+-			 size_goal);
++		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
++			 info.size_goal);
+ =
+
+ 	dfrag->data_seq =3D orig_write_seq;
+ 	dfrag->offset =3D orig_offset;
 -- =
 
 2.26.2
 
---===============2573728143560765104==--
+--===============6961914632788526746==--
