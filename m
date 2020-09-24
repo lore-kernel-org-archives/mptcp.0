@@ -1,177 +1,180 @@
-Content-Type: multipart/mixed; boundary="===============5650164492538361746=="
+Content-Type: multipart/mixed; boundary="===============2439301919401003205=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net-next 01/16] mptcp: rename addr_signal and
- the related functions
-Date: Thu, 24 Sep 2020 08:29:47 +0800
-Message-ID: <bfecdd638bb74a02de1c3f1c84239911e304fcc3.1600853093.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH net-next 02/16] mptcp: add the outgoing RM_ADDR
+ support
+Date: Thu, 24 Sep 2020 08:29:48 +0800
+Message-ID: <e3c9ab612d773465ddf78cef0482208c73a0ca07.1600853093.git.geliangtang@gmail.com>
 In-Reply-To: cover.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5997
+X-UID: 5998
 
---===============5650164492538361746==
+--===============2439301919401003205==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch renamed addr_signal and the related functions with the explicit
-word "add".
+This patch added a new signal named rm_addr_signal in PM. On outgoing path,
+we called mptcp_pm_should_rm_signal to check if rm_addr_signal has been
+set. If it has been, we sent out the RM_ADDR option.
 
 Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/options.c  | 14 +++++++-------
- net/mptcp/pm.c       | 12 ++++++------
- net/mptcp/protocol.h | 10 +++++-----
- 3 files changed, 18 insertions(+), 18 deletions(-)
+ net/mptcp/options.c  | 29 +++++++++++++++++++++++++++++
+ net/mptcp/pm.c       | 25 +++++++++++++++++++++++++
+ net/mptcp/protocol.h |  9 +++++++++
+ 3 files changed, 63 insertions(+)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 7fa822b55c34..ee0cb0546324 100644
+index ee0cb0546324..bbc124876417 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -571,18 +571,18 @@ static u64 add_addr6_generate_hmac(u64 key1, u64 key2=
-, u8 addr_id,
+@@ -614,6 +614,31 @@ static bool mptcp_established_options_add_addr(struct =
+sock *sk,
+ 	return true;
  }
- #endif
  =
 
--static bool mptcp_established_options_addr(struct sock *sk,
--					   unsigned int *size,
--					   unsigned int remaining,
--					   struct mptcp_out_options *opts)
-+static bool mptcp_established_options_add_addr(struct sock *sk,
-+					       unsigned int *size,
-+					       unsigned int remaining,
-+					       struct mptcp_out_options *opts)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
- 	struct mptcp_addr_info saddr;
- 	int len;
- =
-
--	if (!mptcp_pm_should_signal(msk) ||
--	    !(mptcp_pm_addr_signal(msk, remaining, &saddr)))
-+	if (!mptcp_pm_should_add_signal(msk) ||
-+	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr)))
- 		return false;
- =
-
- 	len =3D mptcp_add_addr_len(saddr.family);
-@@ -640,7 +640,7 @@ bool mptcp_established_options(struct sock *sk, struct =
-sk_buff *skb,
- =
-
- 	*size +=3D opt_size;
- 	remaining -=3D opt_size;
--	if (mptcp_established_options_addr(sk, &opt_size, remaining, opts)) {
-+	if (mptcp_established_options_add_addr(sk, &opt_size, remaining, opts)) {
++static bool mptcp_established_options_rm_addr(struct sock *sk,
++					      unsigned int *size,
++					      unsigned int remaining,
++					      struct mptcp_out_options *opts)
++{
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
++	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
++	u8 rm_id;
++
++	if (!mptcp_pm_should_rm_signal(msk) ||
++	    !(mptcp_pm_rm_addr_signal(msk, remaining, &rm_id)))
++		return false;
++
++	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
++		return false;
++
++	*size =3D TCPOLEN_MPTCP_RM_ADDR_BASE;
++	opts->suboptions |=3D OPTION_MPTCP_RM_ADDR;
++	opts->rm_id =3D rm_id;
++
++	pr_debug("rm_id=3D%d", opts->rm_id);
++
++	return true;
++}
++
+ bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+ 			       unsigned int *size, unsigned int remaining,
+ 			       struct mptcp_out_options *opts)
+@@ -644,6 +669,10 @@ bool mptcp_established_options(struct sock *sk, struct=
+ sk_buff *skb,
  		*size +=3D opt_size;
  		remaining -=3D opt_size;
  		ret =3D true;
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index a8ad20559aaa..ce12b8b26ad2 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -18,7 +18,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
++	} else if (mptcp_established_options_rm_addr(sk, &opt_size, remaining, op=
+ts)) {
++		*size +=3D opt_size;
++		remaining -=3D opt_size;
++		ret =3D true;
+ 	}
  =
 
- 	msk->pm.local =3D *addr;
--	WRITE_ONCE(msk->pm.addr_signal, true);
-+	WRITE_ONCE(msk->pm.add_addr_signal, true);
- 	return 0;
+ 	return ret;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index ce12b8b26ad2..81b07ae213b9 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -174,6 +174,29 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, =
+unsigned int remaining,
+ 	return ret;
  }
  =
 
-@@ -151,22 +151,22 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
-k,
- =
-
- /* path manager helpers */
- =
-
--bool mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
--			  struct mptcp_addr_info *saddr)
-+bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
-+			      struct mptcp_addr_info *saddr)
++bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
+g,
++			     u8 *rm_id)
++{
++	int ret =3D false;
++
++	spin_lock_bh(&msk->pm.lock);
++
++	/* double check after the lock is acquired */
++	if (!mptcp_pm_should_rm_signal(msk))
++		goto out_unlock;
++
++	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
++		goto out_unlock;
++
++	*rm_id =3D msk->pm.rm_id;
++	WRITE_ONCE(msk->pm.rm_addr_signal, false);
++	ret =3D true;
++
++out_unlock:
++	spin_unlock_bh(&msk->pm.lock);
++	return ret;
++}
++
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
  {
- 	int ret =3D false;
- =
-
- 	spin_lock_bh(&msk->pm.lock);
- =
-
- 	/* double check after the lock is acquired */
--	if (!mptcp_pm_should_signal(msk))
-+	if (!mptcp_pm_should_add_signal(msk))
- 		goto out_unlock;
- =
-
- 	if (remaining < mptcp_add_addr_len(msk->pm.local.family))
- 		goto out_unlock;
- =
-
- 	*saddr =3D msk->pm.local;
--	WRITE_ONCE(msk->pm.addr_signal, false);
-+	WRITE_ONCE(msk->pm.add_addr_signal, false);
- 	ret =3D true;
- =
-
- out_unlock:
-@@ -186,7 +186,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	return mptcp_pm_nl_get_local_id(msk, skc);
+@@ -185,8 +208,10 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	msk->pm.add_addr_accepted =3D 0;
  	msk->pm.local_addr_used =3D 0;
  	msk->pm.subflows =3D 0;
++	msk->pm.rm_id =3D 0;
  	WRITE_ONCE(msk->pm.work_pending, false);
--	WRITE_ONCE(msk->pm.addr_signal, false);
-+	WRITE_ONCE(msk->pm.add_addr_signal, false);
+ 	WRITE_ONCE(msk->pm.add_addr_signal, false);
++	WRITE_ONCE(msk->pm.rm_addr_signal, false);
  	WRITE_ONCE(msk->pm.accept_addr, false);
  	WRITE_ONCE(msk->pm.accept_subflow, false);
  	msk->pm.status =3D 0;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 493bd2c13bc6..91adc9a19757 100644
+index 91adc9a19757..8929b0c7660a 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -162,7 +162,7 @@ struct mptcp_pm_data {
- =
-
+@@ -163,6 +163,7 @@ struct mptcp_pm_data {
  	spinlock_t	lock;		/*protects the whole PM data */
  =
 
--	bool		addr_signal;
-+	bool		add_addr_signal;
+ 	bool		add_addr_signal;
++	bool		rm_addr_signal;
  	bool		server_side;
  	bool		work_pending;
  	bool		accept_addr;
-@@ -438,9 +438,9 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
+@@ -176,6 +177,7 @@ struct mptcp_pm_data {
+ 	u8		local_addr_max;
+ 	u8		subflows_max;
+ 	u8		status;
++	u8		rm_id;
+ };
  =
 
--static inline bool mptcp_pm_should_signal(struct mptcp_sock *msk)
-+static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
- {
--	return READ_ONCE(msk->pm.addr_signal);
-+	return READ_ONCE(msk->pm.add_addr_signal);
+ struct mptcp_data_frag {
+@@ -443,6 +445,11 @@ static inline bool mptcp_pm_should_add_signal(struct m=
+ptcp_sock *msk)
+ 	return READ_ONCE(msk->pm.add_addr_signal);
  }
  =
 
++static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
++{
++	return READ_ONCE(msk->pm.rm_addr_signal);
++}
++
  static inline unsigned int mptcp_add_addr_len(int family)
-@@ -450,8 +450,8 @@ static inline unsigned int mptcp_add_addr_len(int famil=
+ {
+ 	if (family =3D=3D AF_INET)
+@@ -452,6 +459,8 @@ static inline unsigned int mptcp_add_addr_len(int famil=
 y)
- 	return TCPOLEN_MPTCP_ADD_ADDR6;
- }
  =
 
--bool mptcp_pm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
--			  struct mptcp_addr_info *saddr);
-+bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
 ng,
-+			      struct mptcp_addr_info *saddr);
+ 			      struct mptcp_addr_info *saddr);
++bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
+g,
++			     u8 *rm_id);
  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
  =
 
@@ -180,4 +183,4 @@ ng,
 
 2.17.1
 
---===============5650164492538361746==--
+--===============2439301919401003205==--
