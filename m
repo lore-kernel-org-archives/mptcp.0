@@ -1,245 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============0200603588892874509=="
+Content-Type: multipart/mixed; boundary="===============4387784099750087018=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net-next 04/16] mptcp: send out ADD_ADDR with
- echo flag
-Date: Thu, 24 Sep 2020 08:29:50 +0800
-Message-ID: <f9b7f06f71698c2e78366da929a7fef173d01856.1600853093.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH net-next 05/16] mptcp: add ADD_ADDR related mibs
+Date: Thu, 24 Sep 2020 08:29:51 +0800
+Message-ID: <430dd4f9c241ae990a5cfa6809276b36993ce91b.1600853093.git.geliangtang@gmail.com>
 In-Reply-To: cover.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6000
+X-UID: 6001
 
---===============0200603588892874509==
+--===============4387784099750087018==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When the ADD_ADDR suboption has been received, we need to send out the same
-ADD_ADDR suboption with echo-flag=3D1, and no HMAC.
+This patch added two mibs for ADD_ADDR, MPTCP_MIB_ADDADDR for receiving
+of the ADD_ADDR suboption with echo-flag=3D0, and MPTCP_MIB_ECHOADD for
+receiving the ADD_ADDR suboption with echo-flag=3D1.
 
-Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Co-developed-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/options.c    | 27 ++++++++++++++++-----------
- net/mptcp/pm.c         | 18 +++++++++---------
- net/mptcp/pm_netlink.c |  4 +++-
- net/mptcp/protocol.h   |  6 ++++--
- 4 files changed, 32 insertions(+), 23 deletions(-)
+ net/mptcp/mib.c     | 2 ++
+ net/mptcp/mib.h     | 2 ++
+ net/mptcp/options.c | 7 ++++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 056986c7a228..a33bf719ce6f 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -27,6 +27,8 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
+ 	SNMP_MIB_ITEM("OFOMerge", MPTCP_MIB_OFOMERGE),
+ 	SNMP_MIB_ITEM("NoDSSInWindow", MPTCP_MIB_NODSSWINDOW),
+ 	SNMP_MIB_ITEM("DuplicateData", MPTCP_MIB_DUPDATA),
++	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
++	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
+ 	SNMP_MIB_SENTINEL
+ };
+ =
+
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 937a177729f1..cdeea3732ddf 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -20,6 +20,8 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_OFOMERGE,		/* Segments merged in OoO queue */
+ 	MPTCP_MIB_NODSSWINDOW,		/* Segments not in MPTCP windows */
+ 	MPTCP_MIB_DUPDATA,		/* Segments discarded due to duplicate DSS */
++	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=3D0 */
++	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=3D1 */
+ 	__MPTCP_MIB_MAX
+ };
+ =
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index a52a05effac9..a41996e6c6d7 100644
+index a41996e6c6d7..171039cbe9c4 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -242,7 +242,7 @@ static void mptcp_parse_option(const struct sk_buff *sk=
-b,
- 		mp_opt->add_addr =3D 1;
- 		mp_opt->port =3D 0;
- 		mp_opt->addr_id =3D *ptr++;
--		pr_debug("ADD_ADDR: id=3D%d", mp_opt->addr_id);
-+		pr_debug("ADD_ADDR: id=3D%d, echo=3D%d", mp_opt->addr_id, mp_opt->echo);
- 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
- 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
- 			ptr +=3D 4;
-@@ -579,10 +579,11 @@ static bool mptcp_established_options_add_addr(struct=
- sock *sk,
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
- 	struct mptcp_addr_info saddr;
-+	bool echo;
- 	int len;
+@@ -11,6 +11,7 @@
+ #include <net/tcp.h>
+ #include <net/mptcp.h>
+ #include "protocol.h"
++#include "mib.h"
  =
 
- 	if (!mptcp_pm_should_add_signal(msk) ||
--	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr)))
-+	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
- 		return false;
- =
-
- 	len =3D mptcp_add_addr_len(saddr.family);
-@@ -594,22 +595,26 @@ static bool mptcp_established_options_add_addr(struct=
- sock *sk,
- 	if (saddr.family =3D=3D AF_INET) {
- 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
- 		opts->addr =3D saddr.addr;
--		opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
--						     msk->remote_key,
--						     opts->addr_id,
--						     &opts->addr);
-+		if (!echo) {
-+			opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
-+							     msk->remote_key,
-+							     opts->addr_id,
-+							     &opts->addr);
-+		}
- 	}
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	else if (saddr.family =3D=3D AF_INET6) {
- 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
- 		opts->addr6 =3D saddr.addr6;
--		opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
--						      msk->remote_key,
--						      opts->addr_id,
--						      &opts->addr6);
-+		if (!echo) {
-+			opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
-+							      msk->remote_key,
-+							      opts->addr_id,
-+							      &opts->addr6);
-+		}
- 	}
+ static bool mptcp_cap_flag_sha256(u8 flags)
+ {
+@@ -888,8 +889,12 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb,
+ 			addr.addr6 =3D mp_opt.addr6;
+ 		}
  #endif
--	pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
-+	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->ah=
-mac, echo);
+-		if (!mp_opt.echo)
++		if (!mp_opt.echo) {
+ 			mptcp_pm_add_addr_received(msk, &addr);
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDR);
++		} else {
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
++		}
+ 		mp_opt.add_addr =3D 0;
+ 	}
  =
 
- 	return true;
- }
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 558462d87eb3..39a76620d0a5 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -13,11 +13,13 @@
- /* path manager command handlers */
- =
-
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
--			   const struct mptcp_addr_info *addr)
-+			   const struct mptcp_addr_info *addr,
-+			   bool echo)
- {
- 	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
- =
-
- 	msk->pm.local =3D *addr;
-+	WRITE_ONCE(msk->pm.add_addr_echo, echo);
- 	WRITE_ONCE(msk->pm.add_addr_signal, true);
- 	return 0;
- }
-@@ -135,15 +137,11 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
-k,
- 	pr_debug("msk=3D%p remote_id=3D%d accept=3D%d", msk, addr->id,
- 		 READ_ONCE(pm->accept_addr));
- =
-
--	/* avoid acquiring the lock if there is no room for fouther addresses */
--	if (!READ_ONCE(pm->accept_addr))
--		return;
--
- 	spin_lock_bh(&pm->lock);
- =
-
--	/* be sure there is something to signal re-checking under PM lock */
--	if (READ_ONCE(pm->accept_addr) &&
--	    mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED))
-+	if (!READ_ONCE(pm->accept_addr))
-+		mptcp_pm_announce_addr(msk, addr, true);
-+	else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED))
- 		pm->remote =3D *addr;
- =
-
- 	spin_unlock_bh(&pm->lock);
-@@ -164,7 +162,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, =
-u8 rm_id)
- /* path manager helpers */
- =
-
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
--			      struct mptcp_addr_info *saddr)
-+			      struct mptcp_addr_info *saddr, bool *echo)
- {
- 	int ret =3D false;
- =
-
-@@ -178,6 +176,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
- 		goto out_unlock;
- =
-
- 	*saddr =3D msk->pm.local;
-+	*echo =3D READ_ONCE(msk->pm.add_addr_echo);
- 	WRITE_ONCE(msk->pm.add_addr_signal, false);
- 	ret =3D true;
- =
-
-@@ -226,6 +225,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	WRITE_ONCE(msk->pm.rm_addr_signal, false);
- 	WRITE_ONCE(msk->pm.accept_addr, false);
- 	WRITE_ONCE(msk->pm.accept_subflow, false);
-+	WRITE_ONCE(msk->pm.add_addr_echo, false);
- 	msk->pm.status =3D 0;
- =
-
- 	spin_lock_init(&msk->pm.lock);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 4124bc581308..f6f96bc2046b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -198,7 +198,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- =
-
- 		if (local) {
- 			msk->pm.add_addr_signaled++;
--			mptcp_pm_announce_addr(msk, &local->addr);
-+			mptcp_pm_announce_addr(msk, &local->addr, false);
- 		} else {
- 			/* pick failed, avoid fourther attempts later */
- 			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
-@@ -266,6 +266,8 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
-sk)
- 	spin_unlock_bh(&msk->pm.lock);
- 	__mptcp_subflow_connect((struct sock *)msk, &local, &remote);
- 	spin_lock_bh(&msk->pm.lock);
-+
-+	mptcp_pm_announce_addr(msk, &remote, true);
- }
- =
-
- void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 837e01057544..ba253a6947b0 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -169,6 +169,7 @@ struct mptcp_pm_data {
- 	bool		work_pending;
- 	bool		accept_addr;
- 	bool		accept_subflow;
-+	bool		add_addr_echo;
- 	u8		add_addr_signaled;
- 	u8		add_addr_accepted;
- 	u8		local_addr_used;
-@@ -442,7 +443,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
- =
-
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
--			   const struct mptcp_addr_info *addr);
-+			   const struct mptcp_addr_info *addr,
-+			   bool echo);
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
- =
-
-@@ -464,7 +466,7 @@ static inline unsigned int mptcp_add_addr_len(int famil=
-y)
- }
- =
-
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
--			      struct mptcp_addr_info *saddr);
-+			      struct mptcp_addr_info *saddr, bool *echo);
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
-g,
- 			     u8 *rm_id);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
 -- =
 
 2.17.1
 
---===============0200603588892874509==--
+--===============4387784099750087018==--
