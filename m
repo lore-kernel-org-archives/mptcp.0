@@ -1,106 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============6451164153689513527=="
+Content-Type: multipart/mixed; boundary="===============5223653246144634055=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net-next 14/16] mptcp: add struct
- mptcp_pm_add_entry
-Date: Thu, 24 Sep 2020 08:30:00 +0800
-Message-ID: <26617b54898c115de8d916633b8e42055ed5c678.1600853093.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH net-next 15/16] mptcp: add sk_stop_timer_sync
+ helper
+Date: Thu, 24 Sep 2020 08:30:01 +0800
+Message-ID: <31247220b62d6759de9eb91b841be449714b9d69.1600853093.git.geliangtang@gmail.com>
 In-Reply-To: cover.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6010
+X-UID: 6011
 
---===============6451164153689513527==
+--===============5223653246144634055==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add a new struct mptcp_pm_add_entry to describe add_addr's entry.
+This patch added a new helper sk_stop_timer_sync, it deactivates a timer
+like sk_stop_timer, but waits for the handler to finish.
 
 Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ include/net/sock.h | 2 ++
+ net/core/sock.c    | 7 +++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b33aebd85bd5..701972b55a45 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -28,6 +28,11 @@ struct mptcp_pm_addr_entry {
- 	struct rcu_head		rcu;
- };
+diff --git a/include/net/sock.h b/include/net/sock.h
+index eaa5cac5e836..a5c6ae78df77 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2195,6 +2195,8 @@ void sk_reset_timer(struct sock *sk, struct timer_lis=
+t *timer,
  =
 
-+struct mptcp_pm_add_entry {
-+	struct list_head	list;
-+	struct mptcp_addr_info	addr;
-+};
+ void sk_stop_timer(struct sock *sk, struct timer_list *timer);
+ =
+
++void sk_stop_timer_sync(struct sock *sk, struct timer_list *timer);
 +
- struct pm_nl_pernet {
- 	/* protects pernet updates */
- 	spinlock_t		lock;
-@@ -181,7 +186,7 @@ static void check_work_pending(struct mptcp_sock *msk)
- static bool lookup_anno_list_by_saddr(struct mptcp_sock *msk,
- 				      struct mptcp_addr_info *addr)
- {
--	struct mptcp_pm_addr_entry *entry;
-+	struct mptcp_pm_add_entry *entry;
- =
-
- 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
- 		if (addresses_equal(&entry->addr, addr, false))
-@@ -194,23 +199,23 @@ static bool lookup_anno_list_by_saddr(struct mptcp_so=
-ck *msk,
- static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
- 				     struct mptcp_pm_addr_entry *entry)
- {
--	struct mptcp_pm_addr_entry *clone =3D NULL;
-+	struct mptcp_pm_add_entry *add_entry =3D NULL;
- =
-
- 	if (lookup_anno_list_by_saddr(msk, &entry->addr))
- 		return false;
- =
-
--	clone =3D kmemdup(entry, sizeof(*entry), GFP_ATOMIC);
--	if (!clone)
-+	add_entry =3D kmalloc(sizeof(*add_entry), GFP_ATOMIC);
-+	if (!add_entry)
- 		return false;
- =
-
--	list_add(&clone->list, &msk->pm.anno_list);
-+	list_add(&add_entry->list, &msk->pm.anno_list);
- =
-
- 	return true;
+ int __sk_queue_drop_skb(struct sock *sk, struct sk_buff_head *sk_queue,
+ 			struct sk_buff *skb, unsigned int flags,
+ 			void (*destructor)(struct sock *sk,
+diff --git a/net/core/sock.c b/net/core/sock.c
+index ba9e7d91e2ef..d9a537e6876a 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2947,6 +2947,13 @@ void sk_stop_timer(struct sock *sk, struct timer_lis=
+t* timer)
  }
+ EXPORT_SYMBOL(sk_stop_timer);
  =
 
- void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
++void sk_stop_timer_sync(struct sock *sk, struct timer_list *timer)
++{
++	if (del_timer_sync(timer))
++		__sock_put(sk);
++}
++EXPORT_SYMBOL(sk_stop_timer_sync);
++
+ void sock_init_data(struct socket *sock, struct sock *sk)
  {
--	struct mptcp_pm_addr_entry *entry, *tmp;
-+	struct mptcp_pm_add_entry *entry, *tmp;
- =
-
- 	pr_debug("msk=3D%p", msk);
- =
-
-@@ -654,7 +659,7 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsign=
-ed int id)
- static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 				      struct mptcp_addr_info *addr)
- {
--	struct mptcp_pm_addr_entry *entry, *tmp;
-+	struct mptcp_pm_add_entry *entry, *tmp;
- =
-
- 	list_for_each_entry_safe(entry, tmp, &msk->pm.anno_list, list) {
- 		if (addresses_equal(&entry->addr, addr, false)) {
+ 	sk_init_common(sk);
 -- =
 
 2.17.1
 
---===============6451164153689513527==--
+--===============5223653246144634055==--
