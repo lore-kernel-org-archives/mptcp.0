@@ -1,63 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============7770139445093309821=="
+Content-Type: multipart/mixed; boundary="===============2366278995262604867=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: Wake up MPTCP worker when
+Subject: [MPTCP] Re: [PATCH net-next v3] mptcp: Wake up MPTCP worker when
  DATA_FIN found on a TCP FIN packet
-Date: Wed, 23 Sep 2020 17:06:36 -0700
-Message-ID: <alpine.OSX.2.23.453.2009231704520.43028@kamurph1-mobl5.amr.corp.intel.com>
-In-Reply-To: 519553b06e21824d9ed28c37943e8e03ef92d859.camel@redhat.com
+Date: Wed, 23 Sep 2020 17:31:26 -0700
+Message-ID: <20200923.173126.2037073365366368611.davem@davemloft.net>
+In-Reply-To: 20200921145759.1302197-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 5994
+X-UID: 5995
 
---===============7770139445093309821==
+--===============2366278995262604867==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 23 Sep 2020, Paolo Abeni wrote:
+From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Date: Mon, 21 Sep 2020 16:57:58 +0200
 
-> On Fri, 2020-09-18 at 15:52 -0700, Mat Martineau wrote:
->> I had been thinking the multipath-tcp.org interop problem was a
->> variation
->> of the bug fixed by this patch, but it looks like a separate (and
->> very
->> different) issue with mptcp_close(). I will send this patch to netdev
->> now
->> and open a separate issue on github.
->
-> https://github.com/multipath-tcp/mptcp_net-next/issues/92
->
-> I'm looking at the same problem from a different perspective.
->
-> To support correct snd wnd enforcing, we need the mptcp equivalent of
-> tcp_push_pending_frames(): data must be queued into the msk and pushed
-> to substream only when the MPTCP-level wnd is open.
->
-> As a side effect, at shutdown/close time we may end-up with data queued
-> into the msk that never reached any subflow. To allow the MPTCP and
-> later TCP stack to spool them we need to keep the ssk around.
->
-> And here we hit some nasty problems: at mptcp_close() time we need to
-> orphan all subflows sharing the same 'struct socket' as the msk - as
-> the latter is going to be deleted just after mptcp_close() completes.
->
-> But as soon as we orphan them, the tcp stack may async delete the
-> subflow via tcp_done(). That will free also the related subflow
-> context. In subflow_ulp_release() we can't acquire the msk socket lock,
-> so we can't remove the deleted subflow from the conn_list.
->
-> TL;DR: UaF in later MPTCP operation (e.g. [re]transmit) touching the
-> subflows, not easy to solve.
+> From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> =
 
-This is exactly the problem I'm running in to (UaF on later call to =
+> When receiving a DATA_FIN MPTCP option on a TCP FIN packet, the DATA_FIN
+> information would be stored but the MPTCP worker did not get
+> scheduled. In turn, the MPTCP socket state would remain in
+> TCP_ESTABLISHED and no blocked operations would be awakened.
+> =
 
-subflow_state_change), and so far hasn't been easy to solve. Would help to =
+> TCP FIN packets are seen by the MPTCP socket when moving skbs out of the
+> subflow receive queues, so schedule the MPTCP worker when a skb with
+> DATA_FIN but no data payload is moved from a subflow queue. Other cases
+> (DATA_FIN on a bare TCP ACK or on a packet with data payload) are
+> already handled.
+> =
 
-talk it over at the Thursday meeting!
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/84
+> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machin=
+e")
+> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
---
-Mat Martineau
-Intel
---===============7770139445093309821==--
+Applied to 'net', thanks.
+--===============2366278995262604867==--
