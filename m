@@ -1,162 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============8288940896251190149=="
+Content-Type: multipart/mixed; boundary="===============5795023800540185692=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net-next 06/16] selftests: mptcp: add ADD_ADDR
- mibs check function
-Date: Thu, 24 Sep 2020 08:29:52 +0800
-Message-ID: <7b0898eff793dde434464b5fac2629739d9546fd.1600853093.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH net-next 07/16] mptcp: add accept_subflow
+ re-check
+Date: Thu, 24 Sep 2020 08:29:53 +0800
+Message-ID: <98bcc56283c482c294bd6ae9ce1476821ddc6837.1600853093.git.geliangtang@gmail.com>
 In-Reply-To: cover.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6002
+X-UID: 6003
 
---===============8288940896251190149==
+--===============5795023800540185692==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the ADD_ADDR related mibs counter check function
-chk_add_nr(). This function check both ADD_ADDR and ADD_ADDR with
-echo flag.
+The re-check of pm->accept_subflow with pm->lock held was missing, this
+patch fixed it.
 
-The output looks like this:
-
- 07 unused signal address             syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 08 signal address                    syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 09 subflow and signal                syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 10 multiple subflows and signal      syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
- 11 remove subflow and signal         syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                      add[ ok ] - echo  [ ok ]
-
+Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ net/mptcp/pm.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index c2943e4dfcfe..9d64abdde146 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -276,6 +276,43 @@ chk_join_nr()
- 	fi
- }
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 39a76620d0a5..be4157279e15 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -48,7 +48,7 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, int =
+server_side)
+ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_data *pm =3D &msk->pm;
+-	int ret;
++	int ret =3D 0;
  =
 
-+chk_add_nr()
-+{
-+	local add_nr=3D$1
-+	local echo_nr=3D$2
-+	local count
-+	local dump_stats
-+
-+	printf "%-39s %s" " " "add"
-+	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtAddAddr | awk '{prin=
-t $2}'`
-+	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$add_nr" ]; then
-+		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
-+		ret=3D1
-+		dump_stats=3D1
-+	else
-+		echo -n "[ ok ]"
-+	fi
-+
-+	echo -n " - echo  "
-+	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtEchoAdd | awk '{prin=
-t $2}'`
-+	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$echo_nr" ]; then
-+		echo "[fail] got $count ADD_ADDR echo[s] expected $echo_nr"
-+		ret=3D1
-+		dump_stats=3D1
-+	else
-+		echo "[ ok ]"
-+	fi
-+
-+	if [ "${dump_stats}" =3D 1 ]; then
-+		echo Server ns stats
-+		ip netns exec $ns1 nstat -as | grep MPTcp
-+		echo Client ns stats
-+		ip netns exec $ns2 nstat -as | grep MPTcp
-+	fi
-+}
-+
- sin=3D$(mktemp)
- sout=3D$(mktemp)
- cin=3D$(mktemp)
-@@ -332,6 +369,7 @@ reset
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "unused signal address" 0 0 0
-+chk_add_nr 1 1
+ 	pr_debug("msk=3D%p subflows=3D%d max=3D%d allow=3D%d", msk, pm->subflows,
+ 		 pm->subflows_max, READ_ONCE(pm->accept_subflow));
+@@ -58,9 +58,11 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+ 		return false;
  =
 
- # accept and use add_addr
- reset
-@@ -340,6 +378,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "signal address" 1 1 1
-+chk_add_nr 1 1
+ 	spin_lock_bh(&pm->lock);
+-	ret =3D pm->subflows < pm->subflows_max;
+-	if (ret && ++pm->subflows =3D=3D pm->subflows_max)
+-		WRITE_ONCE(pm->accept_subflow, false);
++	if (READ_ONCE(pm->accept_subflow)) {
++		ret =3D pm->subflows < pm->subflows_max;
++		if (ret && ++pm->subflows =3D=3D pm->subflows_max)
++			WRITE_ONCE(pm->accept_subflow, false);
++	}
+ 	spin_unlock_bh(&pm->lock);
  =
 
- # accept and use add_addr with an additional subflow
- # note: signal address in server ns and local addresses in client ns must
-@@ -352,6 +391,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "subflow and signal" 2 2 2
-+chk_add_nr 1 1
- =
-
- # accept and use add_addr with additional subflows
- reset
-@@ -362,6 +402,7 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subfl=
-ow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "multiple subflows and signal" 3 3 3
-+chk_add_nr 1 1
- =
-
- # single subflow, syncookies
- reset_with_cookies
-@@ -396,6 +437,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "signal address with syn cookies" 1 1 1
-+chk_add_nr 1 1
- =
-
- # test cookie with subflow and signal
- reset_with_cookies
-@@ -405,6 +447,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "subflow and signal w cookies" 2 2 2
-+chk_add_nr 1 1
- =
-
- # accept and use add_addr with additional subflows
- reset_with_cookies
-@@ -415,5 +458,6 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subfl=
-ow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "subflows and signal w. cookies" 3 3 3
-+chk_add_nr 1 1
- =
-
- exit $ret
+ 	return ret;
 -- =
 
 2.17.1
 
---===============8288940896251190149==--
+--===============5795023800540185692==--
