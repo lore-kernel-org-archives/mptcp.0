@@ -1,61 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============8089965102765749422=="
+Content-Type: multipart/mixed; boundary="===============7745149281642482918=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 8/8] mptcp: try to push pending data on snd una
- updates
-Date: Thu, 24 Sep 2020 15:59:30 +0200
-Message-ID: <b9ff8d190f04263976edd53f3253cfcfa679679f.1600955407.git.pabeni@redhat.com>
-In-Reply-To: cover.1600955407.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH 7/8] mptcp: move page frag allocation in
+ mptcp_sendmsg()
+Date: Thu, 24 Sep 2020 16:24:46 +0200
+Message-ID: <323382b5b4ef71becdf9bdee4c7e45822c88f505.camel@redhat.com>
+In-Reply-To: e36a743b0bfe7fc2b0fb7799d087c29021df634c.1600955407.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6022
+X-UID: 6023
 
---===============8089965102765749422==
+--===============7745149281642482918==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After the previous patch we may end-up with unsent data
-in the write buffer. If such buffer is full, the writer
-will block for unlimited time.
+On Thu, 2020-09-24 at 15:59 +0200, Paolo Abeni wrote:
+> @@ -1855,18 +1823,17 @@ static void mptcp_worker(struct work_struct
+> *work)
+>  =
 
-We need to trigger the MPTCP xmit path even for the
-subflow rx path, on MPTCP snd_una updates.
+>  	lock_sock(ssk);
+>  =
 
-Keep things simple and just schedule the work queue if
-needed.
+> -	orig_len =3D dfrag->data_len;
+> -	orig_offset =3D dfrag->offset;
+> -	orig_write_seq =3D dfrag->data_seq;
+> -	while (dfrag->data_len > 0) {
+> -		ret =3D mptcp_sendmsg_frag(sk, ssk, &msg, dfrag, &info);
+> +	/* limit retransmission to the bytes already sent on some
+> subflows */
+> +	info.sent =3D 0;
+> +	info.limit =3D dfrag->already_sent;
+> +	while (info.sent < dfrag->already_sent) {
+> +		ret =3D mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+>  		if (ret < 0)
+>  			break;
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 3 +++
- 1 file changed, 3 insertions(+)
+I noted only shortly after posting... here should be 'ret <=3D 0' or we
+risk an infinite loop.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index def627d249c8..cda5802b880e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -718,6 +718,7 @@ void mptcp_data_acked(struct sock *sk)
- 	mptcp_reset_timer(sk);
- =
+/P
 
- 	if ((!test_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags) ||
-+	     mptcp_send_head(sk) ||
- 	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)))
- 		mptcp_schedule_work(sk);
- }
-@@ -1787,6 +1788,8 @@ static void mptcp_worker(struct work_struct *work)
- 	mptcp_check_data_fin_ack(sk);
- 	__mptcp_flush_join_list(msk);
- 	__mptcp_move_skbs(msk);
-+	if (mptcp_send_head(sk))
-+		mptcp_push_pending(sk, 0);
- =
-
- 	if (msk->pm.status)
- 		pm_work(msk);
--- =
-
-2.26.2
-
---===============8089965102765749422==--
+--===============7745149281642482918==--
