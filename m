@@ -1,228 +1,245 @@
-Content-Type: multipart/mixed; boundary="===============3395813467611381983=="
+Content-Type: multipart/mixed; boundary="===============0200603588892874509=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net-next 03/16] mptcp: add the incoming RM_ADDR
- support
-Date: Thu, 24 Sep 2020 08:29:49 +0800
-Message-ID: <bf7aca2bee20de148728e30343734628aee6d779.1600853093.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH net-next 04/16] mptcp: send out ADD_ADDR with
+ echo flag
+Date: Thu, 24 Sep 2020 08:29:50 +0800
+Message-ID: <f9b7f06f71698c2e78366da929a7fef173d01856.1600853093.git.geliangtang@gmail.com>
 In-Reply-To: cover.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 5999
+X-UID: 6000
 
---===============3395813467611381983==
+--===============0200603588892874509==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the RM_ADDR option parsing logic:
+When the ADD_ADDR suboption has been received, we need to send out the same
+ADD_ADDR suboption with echo-flag=3D1, and no HMAC.
 
-We parsed the incoming options to find if the rm_addr option is received,
-and called mptcp_pm_rm_addr_received to schedule PM work to a new status,
-named MPTCP_PM_RM_ADDR_RECEIVED.
-
-PM work got this status, and called mptcp_pm_nl_rm_addr_received to handle
-it.
-
-In mptcp_pm_nl_rm_addr_received, we closed the subflow matching the rm_id,
-and updated PM counter.
-
-Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/options.c    |  5 +++++
- net/mptcp/pm.c         | 12 ++++++++++++
- net/mptcp/pm_netlink.c | 34 ++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c   | 12 ++++++++----
- net/mptcp/protocol.h   |  7 +++++++
- 5 files changed, 66 insertions(+), 4 deletions(-)
+ net/mptcp/options.c    | 27 ++++++++++++++++-----------
+ net/mptcp/pm.c         | 18 +++++++++---------
+ net/mptcp/pm_netlink.c |  4 +++-
+ net/mptcp/protocol.h   |  6 ++++--
+ 4 files changed, 32 insertions(+), 23 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index bbc124876417..a52a05effac9 100644
+index a52a05effac9..a41996e6c6d7 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -888,6 +888,11 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
-_buff *skb,
- 		mp_opt.add_addr =3D 0;
+@@ -242,7 +242,7 @@ static void mptcp_parse_option(const struct sk_buff *sk=
+b,
+ 		mp_opt->add_addr =3D 1;
+ 		mp_opt->port =3D 0;
+ 		mp_opt->addr_id =3D *ptr++;
+-		pr_debug("ADD_ADDR: id=3D%d", mp_opt->addr_id);
++		pr_debug("ADD_ADDR: id=3D%d, echo=3D%d", mp_opt->addr_id, mp_opt->echo);
+ 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+ 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
+ 			ptr +=3D 4;
+@@ -579,10 +579,11 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk,
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+ 	struct mptcp_addr_info saddr;
++	bool echo;
+ 	int len;
+ =
+
+ 	if (!mptcp_pm_should_add_signal(msk) ||
+-	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr)))
++	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
+ 		return false;
+ =
+
+ 	len =3D mptcp_add_addr_len(saddr.family);
+@@ -594,22 +595,26 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk,
+ 	if (saddr.family =3D=3D AF_INET) {
+ 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+ 		opts->addr =3D saddr.addr;
+-		opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
+-						     msk->remote_key,
+-						     opts->addr_id,
+-						     &opts->addr);
++		if (!echo) {
++			opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
++							     msk->remote_key,
++							     opts->addr_id,
++							     &opts->addr);
++		}
  	}
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	else if (saddr.family =3D=3D AF_INET6) {
+ 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR6;
+ 		opts->addr6 =3D saddr.addr6;
+-		opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
+-						      msk->remote_key,
+-						      opts->addr_id,
+-						      &opts->addr6);
++		if (!echo) {
++			opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
++							      msk->remote_key,
++							      opts->addr_id,
++							      &opts->addr6);
++		}
+ 	}
+ #endif
+-	pr_debug("addr_id=3D%d, ahmac=3D%llu", opts->addr_id, opts->ahmac);
++	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->ah=
+mac, echo);
  =
 
-+	if (mp_opt.rm_addr) {
-+		mptcp_pm_rm_addr_received(msk, mp_opt.rm_id);
-+		mp_opt.rm_addr =3D 0;
-+	}
-+
- 	if (!mp_opt.dss)
- 		return;
- =
-
+ 	return true;
+ }
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 81b07ae213b9..558462d87eb3 100644
+index 558462d87eb3..39a76620d0a5 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -149,6 +149,18 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 	spin_unlock_bh(&pm->lock);
- }
+@@ -13,11 +13,13 @@
+ /* path manager command handlers */
  =
 
-+void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id)
-+{
-+	struct mptcp_pm_data *pm =3D &msk->pm;
-+
-+	pr_debug("msk=3D%p remote_id=3D%d", msk, rm_id);
-+
-+	spin_lock_bh(&pm->lock);
-+	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
-+	pm->rm_id =3D rm_id;
-+	spin_unlock_bh(&pm->lock);
-+}
-+
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+-			   const struct mptcp_addr_info *addr)
++			   const struct mptcp_addr_info *addr,
++			   bool echo)
+ {
+ 	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
+ =
+
+ 	msk->pm.local =3D *addr;
++	WRITE_ONCE(msk->pm.add_addr_echo, echo);
+ 	WRITE_ONCE(msk->pm.add_addr_signal, true);
+ 	return 0;
+ }
+@@ -135,15 +137,11 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
+k,
+ 	pr_debug("msk=3D%p remote_id=3D%d accept=3D%d", msk, addr->id,
+ 		 READ_ONCE(pm->accept_addr));
+ =
+
+-	/* avoid acquiring the lock if there is no room for fouther addresses */
+-	if (!READ_ONCE(pm->accept_addr))
+-		return;
+-
+ 	spin_lock_bh(&pm->lock);
+ =
+
+-	/* be sure there is something to signal re-checking under PM lock */
+-	if (READ_ONCE(pm->accept_addr) &&
+-	    mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED))
++	if (!READ_ONCE(pm->accept_addr))
++		mptcp_pm_announce_addr(msk, addr, true);
++	else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED))
+ 		pm->remote =3D *addr;
+ =
+
+ 	spin_unlock_bh(&pm->lock);
+@@ -164,7 +162,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, =
+u8 rm_id)
  /* path manager helpers */
  =
 
  bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
 ng,
+-			      struct mptcp_addr_info *saddr)
++			      struct mptcp_addr_info *saddr, bool *echo)
+ {
+ 	int ret =3D false;
+ =
+
+@@ -178,6 +176,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
+nsigned int remaining,
+ 		goto out_unlock;
+ =
+
+ 	*saddr =3D msk->pm.local;
++	*echo =3D READ_ONCE(msk->pm.add_addr_echo);
+ 	WRITE_ONCE(msk->pm.add_addr_signal, false);
+ 	ret =3D true;
+ =
+
+@@ -226,6 +225,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	WRITE_ONCE(msk->pm.rm_addr_signal, false);
+ 	WRITE_ONCE(msk->pm.accept_addr, false);
+ 	WRITE_ONCE(msk->pm.accept_subflow, false);
++	WRITE_ONCE(msk->pm.add_addr_echo, false);
+ 	msk->pm.status =3D 0;
+ =
+
+ 	spin_lock_init(&msk->pm.lock);
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b4a9624d7bf2..4124bc581308 100644
+index 4124bc581308..f6f96bc2046b 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -268,6 +268,40 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *=
-msk)
+@@ -198,7 +198,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
+ct mptcp_sock *msk)
+ =
+
+ 		if (local) {
+ 			msk->pm.add_addr_signaled++;
+-			mptcp_pm_announce_addr(msk, &local->addr);
++			mptcp_pm_announce_addr(msk, &local->addr, false);
+ 		} else {
+ 			/* pick failed, avoid fourther attempts later */
+ 			msk->pm.local_addr_used =3D msk->pm.add_addr_signal_max;
+@@ -266,6 +266,8 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
+sk)
+ 	spin_unlock_bh(&msk->pm.lock);
+ 	__mptcp_subflow_connect((struct sock *)msk, &local, &remote);
  	spin_lock_bh(&msk->pm.lock);
++
++	mptcp_pm_announce_addr(msk, &remote, true);
  }
  =
 
-+void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct sock *sk =3D (struct sock *)msk;
-+
-+	pr_debug("address rm_id %d", msk->pm.rm_id);
-+
-+	if (!msk->pm.rm_id)
-+		return;
-+
-+	if (list_empty(&msk->conn_list))
-+		return;
-+
-+	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+		int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
-+		long timeout =3D 0;
-+
-+		if (msk->pm.rm_id !=3D subflow->remote_id)
-+			continue;
-+
-+		spin_unlock_bh(&msk->pm.lock);
-+		mptcp_subflow_shutdown(sk, ssk, how);
-+		__mptcp_close_ssk(sk, ssk, subflow, timeout);
-+		spin_lock_bh(&msk->pm.lock);
-+
-+		msk->pm.add_addr_accepted--;
-+		msk->pm.subflows--;
-+		WRITE_ONCE(msk->pm.accept_addr, true);
-+
-+		break;
-+	}
-+}
-+
- static bool address_use_port(struct mptcp_pm_addr_entry *entry)
- {
- 	return (entry->addr.flags &
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 386cd4e60250..26b9233f247c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1652,9 +1652,9 @@ static struct sock *mptcp_subflow_get_retrans(const s=
-truct mptcp_sock *msk)
-  * so we need to use tcp_close() after detaching them from the mptcp
-  * parent socket.
-  */
--static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
--			      struct mptcp_subflow_context *subflow,
--			      long timeout)
-+void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-+		       struct mptcp_subflow_context *subflow,
-+		       long timeout)
- {
- 	struct socket *sock =3D READ_ONCE(ssk->sk_socket);
- =
-
-@@ -1685,6 +1685,10 @@ static void pm_work(struct mptcp_sock *msk)
- 		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
- 		mptcp_pm_nl_add_addr_received(msk);
- 	}
-+	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
-+		pm->status &=3D ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
-+		mptcp_pm_nl_rm_addr_received(msk);
-+	}
- 	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
- 		pm->status &=3D ~BIT(MPTCP_PM_ESTABLISHED);
- 		mptcp_pm_nl_fully_established(msk);
-@@ -1846,7 +1850,7 @@ static void mptcp_cancel_work(struct sock *sk)
- 		sock_put(sk);
- }
- =
-
--static void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int =
-how)
-+void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
- {
- 	lock_sock(ssk);
- =
-
+ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 8929b0c7660a..837e01057544 100644
+index 837e01057544..ba253a6947b0 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -152,6 +152,7 @@ struct mptcp_addr_info {
- =
-
- enum mptcp_pm_status {
- 	MPTCP_PM_ADD_ADDR_RECEIVED,
-+	MPTCP_PM_RM_ADDR_RECEIVED,
- 	MPTCP_PM_ESTABLISHED,
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
- };
-@@ -362,6 +363,10 @@ void mptcp_subflow_fully_established(struct mptcp_subf=
-low_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool mptcp_subflow_data_available(struct sock *sk);
- void __init mptcp_subflow_init(void);
-+void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
-+void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-+		       struct mptcp_subflow_context *subflow,
-+		       long timeout);
- =
-
- /* called with sk socket lock held */
- int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
-*loc,
-@@ -434,6 +439,7 @@ void mptcp_pm_subflow_established(struct mptcp_sock *ms=
-k,
- void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
- void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 				const struct mptcp_addr_info *addr);
-+void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
+@@ -169,6 +169,7 @@ struct mptcp_pm_data {
+ 	bool		work_pending;
+ 	bool		accept_addr;
+ 	bool		accept_subflow;
++	bool		add_addr_echo;
+ 	u8		add_addr_signaled;
+ 	u8		add_addr_accepted;
+ 	u8		local_addr_used;
+@@ -442,7 +443,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
  =
 
  int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr);
-@@ -468,6 +474,7 @@ void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
- void mptcp_pm_nl_fully_established(struct mptcp_sock *msk);
- void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk);
- void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk);
-+void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *s=
-kc);
+-			   const struct mptcp_addr_info *addr);
++			   const struct mptcp_addr_info *addr,
++			   bool echo);
+ int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
+ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 remote_id);
  =
 
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
+@@ -464,7 +466,7 @@ static inline unsigned int mptcp_add_addr_len(int famil=
+y)
+ }
+ =
+
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
+-			      struct mptcp_addr_info *saddr);
++			      struct mptcp_addr_info *saddr, bool *echo);
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
+g,
+ 			     u8 *rm_id);
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
 -- =
 
 2.17.1
 
---===============3395813467611381983==--
+--===============0200603588892874509==--
