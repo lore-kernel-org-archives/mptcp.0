@@ -1,110 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============2080143812951536067=="
+Content-Type: multipart/mixed; boundary="===============8302177221101890773=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 1/4] net: tcp: drop unused function argument
- from mptcp_incoming_options
-Date: Thu, 24 Sep 2020 17:38:07 -0700
-Message-ID: <alpine.OSX.2.23.453.2009241736060.62831@mmahler-mobl1.amr.corp.intel.com>
-In-Reply-To: 20200924143505.27641-2-fw@strlen.de
+Subject: [MPTCP] Re: [MPTCP][PATCH net-next 00/16] mptcp: RM_ADDR/ADD_ADDR
+ enhancements
+Date: Thu, 24 Sep 2020 19:58:48 -0700
+Message-ID: <20200924.195848.729334260699047552.davem@davemloft.net>
+In-Reply-To: cover.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6041
+X-UID: 6042
 
---===============2080143812951536067==
+--===============8302177221101890773==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+From: Geliang Tang <geliangtang(a)gmail.com>
+Date: Thu, 24 Sep 2020 08:29:46 +0800
 
-On Thu, 24 Sep 2020, Florian Westphal wrote:
+> This series include two enhancements for the MPTCP path management,
+> namely RM_ADDR support and ADD_ADDR echo support, as specified by RFC
+> sections 3.4.1 and 3.4.2.
+> =
 
-> Since commit cfde141ea3faa30e ("mptcp: move option parsing into mptcp_inc=
-oming_options()"), the 3rd
-> function argument is no longer used.
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> include/net/mptcp.h  | 6 ++----
-> net/ipv4/tcp_input.c | 4 ++--
-> net/mptcp/options.c  | 3 +--
-> 3 files changed, 5 insertions(+), 8 deletions(-)
->
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index a7fc486e1035..6e706d838e4e 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -86,8 +86,7 @@ bool mptcp_synack_options(const struct request_sock *re=
-q, unsigned int *size,
-> bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
-> 			       unsigned int *size, unsigned int remaining,
-> 			       struct mptcp_out_options *opts);
-> -void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
-> -			    struct tcp_options_received *opt_rx);
-> +void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
->
-> void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts);
->
-> @@ -199,8 +198,7 @@ static inline bool mptcp_established_options(struct s=
-ock *sk,
-> }
->
-> static inline void mptcp_incoming_options(struct sock *sk,
-> -					  struct sk_buff *skb,
-> -					  struct tcp_options_received *opt_rx)
-> +					  struct sk_buff *skb)
-> {
-> }
->
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 50834e7f958e..8afa4af30fdc 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -4908,7 +4908,7 @@ static void tcp_data_queue(struct sock *sk, struct =
-sk_buff *skb)
-> 	int eaten;
->
-> 	if (sk_is_mptcp(sk))
-> -		mptcp_incoming_options(sk, skb, &tp->rx_opt);
-> +		mptcp_incoming_options(sk, skb);
->
-> 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
-> 		__kfree_skb(skb);
-> @@ -6487,7 +6487,7 @@ int tcp_rcv_state_process(struct sock *sk, struct s=
-k_buff *skb)
-> 	case TCP_LAST_ACK:
-> 		if (!before(TCP_SKB_CB(skb)->seq, tp->rcv_nxt)) {
-> 			if (sk_is_mptcp(sk))
-> -				mptcp_incoming_options(sk, skb, &tp->rx_opt);
-> +				mptcp_incoming_options(sk, skb);
-> 			break;
-> 		}
-> 		fallthrough;
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 14a290fae767..411fd4a41796 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -859,8 +859,7 @@ static bool add_addr_hmac_valid(struct mptcp_sock *ms=
-k,
-> 	return hmac =3D=3D mp_opt->ahmac;
-> }
->
-> -void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb,
-> -			    struct tcp_options_received *opt_rx)
-> +void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
-> {
-> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-> 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
-> -- =
+> 1 RM_ADDR support include 9 patches (1-3 and 8-13):
+> =
 
-> 2.26.2
+> Patch 1 is the helper for patch 2, these two patches add the RM_ADDR
+> outgoing functions, which are derived from ADD_ADDR's corresponding
+> functions.
+> =
 
-I agree with Paolo, this can go to net-next soon.
+> Patch 3 adds the RM_ADDR incoming logic, when RM_ADDR suboption is
+> received, close the subflow matching the rm_id, and update PM counter.
+> =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Patch 8 is the main remove routine. When the PM netlink removes an addres=
+s,
+> we traverse all the existing msk sockets to find the relevant sockets. Th=
+en
+> trigger the RM_ADDR signal and remove the subflow which using this local
+> address, this subflow removing functions has been implemented in patch 9.
+> =
 
+> Finally, patches 10-13 are the self-tests for RM_ADDR.
+> =
 
---
-Mat Martineau
-Intel
---===============2080143812951536067==--
+> 2 ADD_ADDR echo support include 7 patches (4-7 and 14-16).
+> =
+
+> Patch 4 adds the ADD_ADDR echo logic, when the ADD_ADDR suboption has been
+> received, send out the same ADD_ADDR suboption with echo-flag, and no HMAC
+> included.
+> =
+
+> Patches 5 and 6 are the self-tests for ADD_ADDR echo. Patch 7 is a little
+> cleaning up.
+> =
+
+> Patch 14 and 15 are the helpers for patch 16. These three patches add
+> the ADD_ADDR retransmition when no ADD_ADDR echo is received.
+
+Series applied, thank you.
+--===============8302177221101890773==--
