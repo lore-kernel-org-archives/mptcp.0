@@ -1,50 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============3905643479770317580=="
+Content-Type: multipart/mixed; boundary="===============3223447068484569492=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH net-next 03/16] mptcp: add the incoming
- RM_ADDR support
-Date: Thu, 24 Sep 2020 17:19:50 -0700
-Message-ID: <alpine.OSX.2.23.453.2009241718510.62831@mmahler-mobl1.amr.corp.intel.com>
-In-Reply-To: bf7aca2bee20de148728e30343734628aee6d779.1600853093.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH net-next 08/16] mptcp: remove addr and
+ subflow in PM netlink
+Date: Thu, 24 Sep 2020 17:20:43 -0700
+Message-ID: <alpine.OSX.2.23.453.2009241720290.62831@mmahler-mobl1.amr.corp.intel.com>
+In-Reply-To: 37f2befac450fb46367f62446a4bb2c9d0a5986a.1600853093.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6031
+X-UID: 6032
 
---===============3905643479770317580==
+--===============3223447068484569492==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 24 Sep 2020, Geliang Tang wrote:
 
-> This patch added the RM_ADDR option parsing logic:
+> This patch implements the remove announced addr and subflow logic in PM
+> netlink.
 >
-> We parsed the incoming options to find if the rm_addr option is received,
-> and called mptcp_pm_rm_addr_received to schedule PM work to a new status,
-> named MPTCP_PM_RM_ADDR_RECEIVED.
+> When the PM netlink removes an address, we traverse all the existing msk
+> sockets to find the relevant sockets.
 >
-> PM work got this status, and called mptcp_pm_nl_rm_addr_received to handle
-> it.
+> We add a new list named anno_list in mptcp_pm_data, to record all the
+> announced addrs. In the traversing, we check if it has been recorded.
+> If it has been, we trigger the RM_ADDR signal.
 >
-> In mptcp_pm_nl_rm_addr_received, we closed the subflow matching the rm_id,
-> and updated PM counter.
+> We also check if this address is in conn_list. If it is, we remove the
+> subflow which using this local address.
+>
+> Since we call mptcp_pm_free_anno_list in mptcp_destroy, we need to move
+> __mptcp_init_sock before the mptcp_is_enabled check in mptcp_init_sock.
 >
 > Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 > Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 > Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> net/mptcp/options.c    |  5 +++++
-> net/mptcp/pm.c         | 12 ++++++++++++
-> net/mptcp/pm_netlink.c | 34 ++++++++++++++++++++++++++++++++++
-> net/mptcp/protocol.c   | 12 ++++++++----
-> net/mptcp/protocol.h   |  7 +++++++
-> 5 files changed, 66 insertions(+), 4 deletions(-)
+> net/mptcp/pm.c         |   7 ++-
+> net/mptcp/pm_netlink.c | 122 +++++++++++++++++++++++++++++++++++++++--
+> net/mptcp/protocol.c   |   9 +--
+> net/mptcp/protocol.h   |   2 +
+> net/mptcp/subflow.c    |   1 +
+> 5 files changed, 130 insertions(+), 11 deletions(-)
 
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============3905643479770317580==--
+--===============3223447068484569492==--
