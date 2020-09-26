@@ -1,148 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============0426031830117512286=="
+Content-Type: multipart/mixed; boundary="===============0082688323922918332=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 6/8] mptcp: refactor shutdown and close
-Date: Fri, 25 Sep 2020 14:34:57 -0700
-Message-ID: <alpine.OSX.2.23.453.2009251424490.10833@ageremew-mobl.amr.corp.intel.com>
-In-Reply-To: 1ad5ba55c3e1e32025b83d13ca9ccbe8996505f1.camel@redhat.com
+Subject: [MPTCP] [RFC PATCH net 1/2] mptcp: Consistently use
+ READ_ONCE/WRITE_ONCE with msk->ack_seq
+Date: Fri, 25 Sep 2020 17:24:07 -0700
+Message-ID: <20200926002408.432576-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6048
+X-UID: 6050
 
---===============0426031830117512286==
+--===============0082688323922918332==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 25 Sep 2020, Paolo Abeni wrote:
+The msk->ack_seq value is sometimes read without the msk lock held, so
+make proper use of READ_ONCE and WRITE_ONCE.
 
-> On Thu, 2020-09-24 at 15:59 +0200, Paolo Abeni wrote:
->> We must not close the subflows before all the MPTCP level
->> data, comprising the DATA_FIN has been acked at the MPTCP
->> level, otherwise we could be unable to retransmit as needed.
->>
->> __mptcp_wr_shutdown() shutdown is responsible to check for the
->> correct status and close all subflows. Is called by the output
->> path after spooling any data and at shutdown/close time.
->>
->> In a similar way, __mptcp_destroy_sock() is responsible to clean-up
->> the MPTCP level status, and is called when the msk transition
->> to TCP_CLOSE.
->>
->> The protocol level close() does not force anymore the TCP_CLOSE
->> status, but orphan the msk socket and all the subflows.
->> Orphaned msk sockets are forciby closed after a timeout or
->> when all MPTCP-level data is acked.
->>
->> There is a caveat about keeping the orphaned subflows around:
->> the TCP stack can asynchronusly call tcp_cleanup_ulp() on them via
->> tcp_close(). To prevent accessing freed memory on later MPTCP
->> level operations, the msk acquires a reference to each subflow
->> socket and prevent subflow_ulp_release() from releasing the
->> subflow context before __mptcp_destroy_sock().
->>
->> The additional subflow references are released by __mptcp_done()
->> and the async ULP release is detected checking ULP ops. If such
->> field has been already cleared by the ULP release path, the
->> dangling context is freed directly by __mptcp_done().
->>
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
->> ---
->> Note:
->> The convoluted ctx deallocation schema fixes the UaF described in:
->>
->> https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/message/JC7GTZ=
-HEKI6A3WHQKAWF3SYUSBEU5DYM/
->>
->> for me.
->> ---
->>  net/mptcp/protocol.c | 264 ++++++++++++++++++++++++++++++-----------
->> --
->>  net/mptcp/protocol.h |   4 +-
->>  net/mptcp/subflow.c  |  21 +++-
->>  3 files changed, 203 insertions(+), 86 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 2b6c704d4505..dec703103398 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -21,6 +21,7 @@
->>  #include <net/transp_v6.h>
->>  #endif
->>  #include <net/mptcp.h>
->> +#include <net/xfrm.h>
->>  #include "protocol.h"
->>  #include "mib.h"
->>
->> @@ -41,6 +42,8 @@ struct mptcp_skb_cb {
->>
->>  static struct percpu_counter mptcp_sockets_allocated;
->>
->> +static void __mptcp_destroy_sock(struct sock *sk, int timeout);
->> +
->>  /* If msk has an initial subflow socket, and the MP_CAPABLE
->> handshake has not
->>   * completed yet or has failed, return the subflow socket.
->>   * Otherwise return NULL.
->> @@ -102,6 +105,7 @@ static int __mptcp_socket_create(struct
->> mptcp_sock *msk)
->>  	msk->subflow =3D ssock;
->>  	subflow =3D mptcp_subflow_ctx(ssock->sk);
->>  	list_add(&subflow->node, &msk->conn_list);
->> +	sock_hold(ssock->sk);
->>  	subflow->request_mptcp =3D 1;
->>
->>  	/* accept() will wait on first subflow sk_wq, and we always
->> wakes up
->> @@ -313,6 +317,13 @@ static void mptcp_stop_timer(struct sock *sk)
->>  	mptcp_sk(sk)->timer_ival =3D 0;
->>  }
->>
->> +static bool mptcp_wr_eof(const struct sock *sk)
->> +{
->> +	return sk->sk_state =3D=3D TCP_FIN_WAIT2 || sk->sk_state =3D=3D
->> TCP_TIME_WAIT ||
->> +	       sk->sk_state =3D=3D TCP_CLOSE;
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
 
-Need to remove TCP_TIME_WAIT here too, the state isn't used (yet?).
+This does create some merge conflicts with net-next - what's the best
+way to handle that?
 
-I looked at how this interoperated with the mptcp_trunk kernel (with =
+net/mptcp/options.c  | 4 ++--
+ net/mptcp/protocol.c | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-MPTCPv1). With TCP_FIN_WAIT2 included in the mptcp_wr_eof() check, =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 7fa822b55c34..120ef39fe589 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -518,11 +518,11 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ =
 
-__mptcp_destroy_sock() gets called before we can receive and acknowledge =
+ 	if (subflow->use_64bit_ack) {
+ 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
+-		opts->ext_copy.data_ack =3D msk->ack_seq;
++		opts->ext_copy.data_ack =3D READ_ONCE(msk->ack_seq);
+ 		opts->ext_copy.ack64 =3D 1;
+ 	} else {
+ 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
+-		opts->ext_copy.data_ack32 =3D (uint32_t)(msk->ack_seq);
++		opts->ext_copy.data_ack32 =3D (uint32_t)READ_ONCE(msk->ack_seq);
+ 		opts->ext_copy.ack64 =3D 0;
+ 	}
+ 	opts->ext_copy.use_ack =3D 1;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 365ba96c84b0..5d747c6a610e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -123,7 +123,7 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, st=
+ruct sock *ssk,
+ =
 
-the peer's DATA_FIN.
+ 	skb_ext_reset(skb);
+ 	skb_orphan(skb);
+-	msk->ack_seq +=3D copy_len;
++	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
+ =
 
-I ran an experiment removing TCP_FIN_WAIT2 and TCP_TIME_WAIT from the =
+ 	tail =3D skb_peek_tail(&sk->sk_receive_queue);
+ 	if (offset =3D=3D 0 && tail) {
+@@ -261,7 +261,7 @@ static void mptcp_check_data_fin(struct sock *sk)
+ 	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
+ 		struct mptcp_subflow_context *subflow;
+ =
 
-above, and it did keep the socket alive to receive DATA_FIN... but then =
+-		msk->ack_seq++;
++		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
+ 		WRITE_ONCE(msk->rcv_data_fin, 0);
+ =
 
-exposed a bug matching an incoming DATA_FIN with 32-bit sequence number.
+ 		sk->sk_shutdown |=3D RCV_SHUTDOWN;
+@@ -1720,7 +1720,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 		msk->remote_key =3D mp_opt->sndr_key;
+ 		mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
+ 		ack_seq++;
+-		msk->ack_seq =3D ack_seq;
++		WRITE_ONCE(msk->ack_seq, ack_seq);
+ 	}
+ =
 
->> +}
->> +
->> +/* return true when transitioning to CLOSE state */
->>  static void mptcp_check_data_fin_ack(struct sock *sk)
->>  {
->>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
->> @@ -331,15 +342,22 @@ static void mptcp_check_data_fin_ack(struct
->> sock *sk)
->>  		switch (sk->sk_state) {
->>  		case TCP_FIN_WAIT1:
->>  			inet_sk_state_store(sk, TCP_FIN_WAIT2);
->> -			sk->sk_state_change(sk);
->>  			break;
->>  		case TCP_CLOSING:
->> +			inet_sk_state_store(sk, TCP_TIME_WAIT);
->> +			break;
->
-> I can't use TIME_WAIT here nor later, otherwise sk_fullsock() will be
-> fooled. Not sure why I did not notice before. I'll use directly
-> TCP_CLOSE.
+ 	sock_reset_flag(nsk, SOCK_RCU_FREE);
+@@ -2072,7 +2072,7 @@ bool mptcp_finish_join(struct sock *sk)
+ 	parent_sock =3D READ_ONCE(parent->sk_socket);
+ 	if (parent_sock && !sk->sk_socket)
+ 		mptcp_sock_graft(sk, parent_sock);
+-	subflow->map_seq =3D msk->ack_seq;
++	subflow->map_seq =3D READ_ONCE(msk->ack_seq);
+ 	return true;
+ }
+ =
 
---
-Mat Martineau
-Intel
---===============0426031830117512286==--
+
+base-commit: 4e1b469ab0c2c6e6611a0af9f88c7745250dbf64
+-- =
+
+2.28.0
+
+--===============0082688323922918332==--
