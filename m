@@ -1,163 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============7137688289959014494=="
+Content-Type: multipart/mixed; boundary="===============5917360850985843965=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [RFC PATCH 6/8] mptcp: refactor shutdown and close
-Date: Mon, 28 Sep 2020 11:39:48 +0200
-Message-ID: <e9bf053fb13f306554d1be9e24a590877f6e646c.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.23.453.2009251424490.10833@ageremew-mobl.amr.corp.intel.com
+Date: Mon, 28 Sep 2020 16:47:46 +0200
+Message-ID: <8685bde51729292e11779df5dce99ce66b497cce.camel@redhat.com>
+In-Reply-To: 6ba1cefb2825480dc5b5c3a29a14b63373e44dc6.1600955407.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6071
+X-UID: 6074
 
---===============7137688289959014494==
+--===============5917360850985843965==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-09-25 at 14:34 -0700, Mat Martineau wrote:
-> On Fri, 25 Sep 2020, Paolo Abeni wrote:
-> =
+On Thu, 2020-09-24 at 15:59 +0200, Paolo Abeni wrote:
+> @@ -417,9 +435,8 @@ static void mptcp_check_data_fin(struct sock *sk)
+>  			inet_sk_state_store(sk, TCP_CLOSING);
+>  			break;
+>  		case TCP_FIN_WAIT2:
+> -			inet_sk_state_store(sk, TCP_CLOSE);
+> -			// @@ Close subflows now?
+> -			break;
+> +			inet_sk_state_store(sk, TCP_TIME_WAIT);
+> +			return;
 
-> > On Thu, 2020-09-24 at 15:59 +0200, Paolo Abeni wrote:
-> > > We must not close the subflows before all the MPTCP level
-> > > data, comprising the DATA_FIN has been acked at the MPTCP
-> > > level, otherwise we could be unable to retransmit as needed.
-> > > =
+the 'return;' statement slipped-in unintentionally here: this does not
+send data_fin ack, if the fin in received in fin_wait2 state.
 
-> > > __mptcp_wr_shutdown() shutdown is responsible to check for the
-> > > correct status and close all subflows. Is called by the output
-> > > path after spooling any data and at shutdown/close time.
-> > > =
-
-> > > In a similar way, __mptcp_destroy_sock() is responsible to clean-
-> > > up
-> > > the MPTCP level status, and is called when the msk transition
-> > > to TCP_CLOSE.
-> > > =
-
-> > > The protocol level close() does not force anymore the TCP_CLOSE
-> > > status, but orphan the msk socket and all the subflows.
-> > > Orphaned msk sockets are forciby closed after a timeout or
-> > > when all MPTCP-level data is acked.
-> > > =
-
-> > > There is a caveat about keeping the orphaned subflows around:
-> > > the TCP stack can asynchronusly call tcp_cleanup_ulp() on them
-> > > via
-> > > tcp_close(). To prevent accessing freed memory on later MPTCP
-> > > level operations, the msk acquires a reference to each subflow
-> > > socket and prevent subflow_ulp_release() from releasing the
-> > > subflow context before __mptcp_destroy_sock().
-> > > =
-
-> > > The additional subflow references are released by __mptcp_done()
-> > > and the async ULP release is detected checking ULP ops. If such
-> > > field has been already cleared by the ULP release path, the
-> > > dangling context is freed directly by __mptcp_done().
-> > > =
-
-> > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > > ---
-> > > Note:
-> > > The convoluted ctx deallocation schema fixes the UaF described
-> > > in:
-> > > =
-
-> > > https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/message/JC7=
-GTZHEKI6A3WHQKAWF3SYUSBEU5DYM/
-> > > =
-
-> > > for me.
-> > > ---
-> > >  net/mptcp/protocol.c | 264 ++++++++++++++++++++++++++++++-------
-> > > ----
-> > > --
-> > >  net/mptcp/protocol.h |   4 +-
-> > >  net/mptcp/subflow.c  |  21 +++-
-> > >  3 files changed, 203 insertions(+), 86 deletions(-)
-> > > =
-
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index 2b6c704d4505..dec703103398 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -21,6 +21,7 @@
-> > >  #include <net/transp_v6.h>
-> > >  #endif
-> > >  #include <net/mptcp.h>
-> > > +#include <net/xfrm.h>
-> > >  #include "protocol.h"
-> > >  #include "mib.h"
-> > > =
-
-> > > @@ -41,6 +42,8 @@ struct mptcp_skb_cb {
-> > > =
-
-> > >  static struct percpu_counter mptcp_sockets_allocated;
-> > > =
-
-> > > +static void __mptcp_destroy_sock(struct sock *sk, int timeout);
-> > > +
-> > >  /* If msk has an initial subflow socket, and the MP_CAPABLE
-> > > handshake has not
-> > >   * completed yet or has failed, return the subflow socket.
-> > >   * Otherwise return NULL.
-> > > @@ -102,6 +105,7 @@ static int __mptcp_socket_create(struct
-> > > mptcp_sock *msk)
-> > >  	msk->subflow =3D ssock;
-> > >  	subflow =3D mptcp_subflow_ctx(ssock->sk);
-> > >  	list_add(&subflow->node, &msk->conn_list);
-> > > +	sock_hold(ssock->sk);
-> > >  	subflow->request_mptcp =3D 1;
-> > > =
-
-> > >  	/* accept() will wait on first subflow sk_wq, and we always
-> > > wakes up
-> > > @@ -313,6 +317,13 @@ static void mptcp_stop_timer(struct sock
-> > > *sk)
-> > >  	mptcp_sk(sk)->timer_ival =3D 0;
-> > >  }
-> > > =
-
-> > > +static bool mptcp_wr_eof(const struct sock *sk)
-> > > +{
-> > > +	return sk->sk_state =3D=3D TCP_FIN_WAIT2 || sk->sk_state =3D=3D
-> > > TCP_TIME_WAIT ||
-> > > +	       sk->sk_state =3D=3D TCP_CLOSE;
-> =
-
-> Need to remove TCP_TIME_WAIT here too, the state isn't used (yet?).
-
-Indeed, TIME_WAIT should be dropped from here. It's use is introduced
-by this version of this patch, but I removed in in later version
- (shared only on IRC so far ;)
-
-> I looked at how this interoperated with the mptcp_trunk kernel (with =
-
-> MPTCPv1). With TCP_FIN_WAIT2 included in the mptcp_wr_eof() check, =
-
-> __mptcp_destroy_sock() gets called before we can receive and
-> acknowledge =
-
-> the peer's DATA_FIN.
-> I ran an experiment removing TCP_FIN_WAIT2 and TCP_TIME_WAIT from
-> the =
-
-> above, and it did keep the socket alive to receive DATA_FIN... =
-
-
-Uhm... thinking again about it, I agree mptcp_wr_eof() is too
-aggressive: we still need to have the subflows around to cope with the
-scenario you describe.
-
-> but then =
-
-> exposed a bug matching an incoming DATA_FIN with 32-bit sequence
-> number.
-
-Lucky me, that seams an unrelated issue ;)
+I have quite a few pending fixes, so I'll send a v1 soon, even if there
+are likely more bugs pending.
 
 /P
 
---===============7137688289959014494==--
+--===============5917360850985843965==--
