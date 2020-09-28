@@ -1,95 +1,163 @@
-Content-Type: multipart/mixed; boundary="===============8363481220761073184=="
+Content-Type: multipart/mixed; boundary="===============7137688289959014494=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 2/2] selftests: mptcp: add
- subflow and ADD_ADDR IPv6 test cases
-Date: Mon, 28 Sep 2020 15:46:14 +0800
-Message-ID: <c9abf4713c8d05796621b1047cb7a1f88de4a4e4.1601278543.git.geliangtang@gmail.com>
-In-Reply-To: cover.1601278543.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [RFC PATCH 6/8] mptcp: refactor shutdown and close
+Date: Mon, 28 Sep 2020 11:39:48 +0200
+Message-ID: <e9bf053fb13f306554d1be9e24a590877f6e646c.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.23.453.2009251424490.10833@ageremew-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6070
+X-UID: 6071
 
---===============8363481220761073184==
+--===============7137688289959014494==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added IPv6 support for do_transfer, and the test cases for
-both subflow IPv6 and ADD_ADDR IPv6.
+On Fri, 2020-09-25 at 14:34 -0700, Mat Martineau wrote:
+> On Fri, 25 Sep 2020, Paolo Abeni wrote:
+> =
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 32 ++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+> > On Thu, 2020-09-24 at 15:59 +0200, Paolo Abeni wrote:
+> > > We must not close the subflows before all the MPTCP level
+> > > data, comprising the DATA_FIN has been acked at the MPTCP
+> > > level, otherwise we could be unable to retransmit as needed.
+> > > =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index ed03ed503655..678dce6fbf27 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -138,6 +138,12 @@ do_ping()
- 	fi
- }
- =
+> > > __mptcp_wr_shutdown() shutdown is responsible to check for the
+> > > correct status and close all subflows. Is called by the output
+> > > path after spooling any data and at shutdown/close time.
+> > > =
 
-+# $1: IP address
-+is_v6()
-+{
-+	[ -z "${1##*:*}" ]
-+}
-+
- do_transfer()
- {
- 	listener_ns=3D"$1"
-@@ -178,7 +184,14 @@ do_transfer()
- 		mptcp_connect=3D"./mptcp_connect -r"
- 	fi
- =
+> > > In a similar way, __mptcp_destroy_sock() is responsible to clean-
+> > > up
+> > > the MPTCP level status, and is called when the msk transition
+> > > to TCP_CLOSE.
+> > > =
 
--	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port -s ${=
-srv_proto} 0.0.0.0 < "$sin" > "$sout" &
-+	local local_addr
-+	if is_v6 "${connect_addr}"; then
-+		local_addr=3D"::"
-+	else
-+		local_addr=3D"0.0.0.0"
-+	fi
-+
-+	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port -s ${=
-srv_proto} ${local_addr} < "$sin" > "$sout" &
- 	spid=3D$!
- =
+> > > The protocol level close() does not force anymore the TCP_CLOSE
+> > > status, but orphan the msk socket and all the subflows.
+> > > Orphaned msk sockets are forciby closed after a timeout or
+> > > when all MPTCP-level data is acked.
+> > > =
 
- 	sleep 1
-@@ -528,6 +541,23 @@ run_tests_slow $ns1 $ns2 10.0.1.1
- chk_join_nr "signal address, ADD_ADDR timeout" 1 1 1
- chk_add_nr 4 0
- =
+> > > There is a caveat about keeping the orphaned subflows around:
+> > > the TCP stack can asynchronusly call tcp_cleanup_ulp() on them
+> > > via
+> > > tcp_close(). To prevent accessing freed memory on later MPTCP
+> > > level operations, the msk acquires a reference to each subflow
+> > > socket and prevent subflow_ulp_release() from releasing the
+> > > subflow context before __mptcp_destroy_sock().
+> > > =
 
-+# subflow IPv6
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
-+run_tests_slow $ns1 $ns2 dead:beef:1::1
-+chk_join_nr "single subflow IPv6" 1 1 1
-+
-+# signal address IPv6
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+run_tests_slow $ns1 $ns2 dead:beef:1::1
-+chk_join_nr "single address IPv6" 1 1 1
-+chk_add_nr 1 1
-+
- # single subflow, remove
- reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--- =
+> > > The additional subflow references are released by __mptcp_done()
+> > > and the async ULP release is detected checking ULP ops. If such
+> > > field has been already cleared by the ULP release path, the
+> > > dangling context is freed directly by __mptcp_done().
+> > > =
 
-2.17.1
+> > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > > ---
+> > > Note:
+> > > The convoluted ctx deallocation schema fixes the UaF described
+> > > in:
+> > > =
 
---===============8363481220761073184==--
+> > > https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/message/JC7=
+GTZHEKI6A3WHQKAWF3SYUSBEU5DYM/
+> > > =
+
+> > > for me.
+> > > ---
+> > >  net/mptcp/protocol.c | 264 ++++++++++++++++++++++++++++++-------
+> > > ----
+> > > --
+> > >  net/mptcp/protocol.h |   4 +-
+> > >  net/mptcp/subflow.c  |  21 +++-
+> > >  3 files changed, 203 insertions(+), 86 deletions(-)
+> > > =
+
+> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > > index 2b6c704d4505..dec703103398 100644
+> > > --- a/net/mptcp/protocol.c
+> > > +++ b/net/mptcp/protocol.c
+> > > @@ -21,6 +21,7 @@
+> > >  #include <net/transp_v6.h>
+> > >  #endif
+> > >  #include <net/mptcp.h>
+> > > +#include <net/xfrm.h>
+> > >  #include "protocol.h"
+> > >  #include "mib.h"
+> > > =
+
+> > > @@ -41,6 +42,8 @@ struct mptcp_skb_cb {
+> > > =
+
+> > >  static struct percpu_counter mptcp_sockets_allocated;
+> > > =
+
+> > > +static void __mptcp_destroy_sock(struct sock *sk, int timeout);
+> > > +
+> > >  /* If msk has an initial subflow socket, and the MP_CAPABLE
+> > > handshake has not
+> > >   * completed yet or has failed, return the subflow socket.
+> > >   * Otherwise return NULL.
+> > > @@ -102,6 +105,7 @@ static int __mptcp_socket_create(struct
+> > > mptcp_sock *msk)
+> > >  	msk->subflow =3D ssock;
+> > >  	subflow =3D mptcp_subflow_ctx(ssock->sk);
+> > >  	list_add(&subflow->node, &msk->conn_list);
+> > > +	sock_hold(ssock->sk);
+> > >  	subflow->request_mptcp =3D 1;
+> > > =
+
+> > >  	/* accept() will wait on first subflow sk_wq, and we always
+> > > wakes up
+> > > @@ -313,6 +317,13 @@ static void mptcp_stop_timer(struct sock
+> > > *sk)
+> > >  	mptcp_sk(sk)->timer_ival =3D 0;
+> > >  }
+> > > =
+
+> > > +static bool mptcp_wr_eof(const struct sock *sk)
+> > > +{
+> > > +	return sk->sk_state =3D=3D TCP_FIN_WAIT2 || sk->sk_state =3D=3D
+> > > TCP_TIME_WAIT ||
+> > > +	       sk->sk_state =3D=3D TCP_CLOSE;
+> =
+
+> Need to remove TCP_TIME_WAIT here too, the state isn't used (yet?).
+
+Indeed, TIME_WAIT should be dropped from here. It's use is introduced
+by this version of this patch, but I removed in in later version
+ (shared only on IRC so far ;)
+
+> I looked at how this interoperated with the mptcp_trunk kernel (with =
+
+> MPTCPv1). With TCP_FIN_WAIT2 included in the mptcp_wr_eof() check, =
+
+> __mptcp_destroy_sock() gets called before we can receive and
+> acknowledge =
+
+> the peer's DATA_FIN.
+> I ran an experiment removing TCP_FIN_WAIT2 and TCP_TIME_WAIT from
+> the =
+
+> above, and it did keep the socket alive to receive DATA_FIN... =
+
+
+Uhm... thinking again about it, I agree mptcp_wr_eof() is too
+aggressive: we still need to have the subflows around to cope with the
+scenario you describe.
+
+> but then =
+
+> exposed a bug matching an incoming DATA_FIN with 32-bit sequence
+> number.
+
+Lucky me, that seams an unrelated issue ;)
+
+/P
+
+--===============7137688289959014494==--
