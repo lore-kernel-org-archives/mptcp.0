@@ -1,37 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============5917360850985843965=="
+Content-Type: multipart/mixed; boundary="===============2094852556725255747=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 6/8] mptcp: refactor shutdown and close
-Date: Mon, 28 Sep 2020 16:47:46 +0200
-Message-ID: <8685bde51729292e11779df5dce99ce66b497cce.camel@redhat.com>
-In-Reply-To: 6ba1cefb2825480dc5b5c3a29a14b63373e44dc6.1600955407.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v1 1/9] tcp: factor out __tcp_close() helper
+Date: Mon, 28 Sep 2020 17:04:53 +0200
+Message-ID: <21d1659c26dc12dde2f2724d4229d257c8b158a2.1601304622.git.pabeni@redhat.com>
+In-Reply-To: cover.1601304622.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6074
+X-UID: 6075
 
---===============5917360850985843965==
+--===============2094852556725255747==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-09-24 at 15:59 +0200, Paolo Abeni wrote:
-> @@ -417,9 +435,8 @@ static void mptcp_check_data_fin(struct sock *sk)
->  			inet_sk_state_store(sk, TCP_CLOSING);
->  			break;
->  		case TCP_FIN_WAIT2:
-> -			inet_sk_state_store(sk, TCP_CLOSE);
-> -			// @@ Close subflows now?
-> -			break;
-> +			inet_sk_state_store(sk, TCP_TIME_WAIT);
-> +			return;
+unlocked version of protocol level close, will be used by
+MPTCP to allow decouple orphaning and subflow level close.
 
-the 'return;' statement slipped-in unintentionally here: this does not
-send data_fin ack, if the fin in received in fin_wait2 state.
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/net/tcp.h | 1 +
+ net/ipv4/tcp.c    | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-I have quite a few pending fixes, so I'll send a v1 soon, even if there
-are likely more bugs pending.
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 3601dea931a6..f2a0ff60da25 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -392,6 +392,7 @@ void tcp_update_metrics(struct sock *sk);
+ void tcp_init_metrics(struct sock *sk);
+ void tcp_metrics_init(void);
+ bool tcp_peer_is_proven(struct request_sock *req, struct dst_entry *dst);
++void __tcp_close(struct sock *sk, long timeout);
+ void tcp_close(struct sock *sk, long timeout);
+ void tcp_init_sock(struct sock *sk);
+ void tcp_init_transfer(struct sock *sk, int bpf_op, struct sk_buff *skb);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 2a8bfa89a515..109f17b722d2 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2404,13 +2404,12 @@ bool tcp_check_oom(struct sock *sk, int shift)
+ 	return too_many_orphans || out_of_socket_memory;
+ }
+ =
 
-/P
+-void tcp_close(struct sock *sk, long timeout)
++void __tcp_close(struct sock *sk, long timeout)
+ {
+ 	struct sk_buff *skb;
+ 	int data_was_unread =3D 0;
+ 	int state;
+ =
 
---===============5917360850985843965==--
+-	lock_sock(sk);
+ 	sk->sk_shutdown =3D SHUTDOWN_MASK;
+ =
+
+ 	if (sk->sk_state =3D=3D TCP_LISTEN) {
+@@ -2574,6 +2573,12 @@ void tcp_close(struct sock *sk, long timeout)
+ out:
+ 	bh_unlock_sock(sk);
+ 	local_bh_enable();
++}
++
++void tcp_close(struct sock *sk, long timeout)
++{
++	lock_sock(sk);
++	__tcp_close(sk, timeout);
+ 	release_sock(sk);
+ 	sock_put(sk);
+ }
+-- =
+
+2.26.2
+
+--===============2094852556725255747==--
