@@ -1,99 +1,131 @@
-Content-Type: multipart/mixed; boundary="===============0013166576539739038=="
+Content-Type: multipart/mixed; boundary="===============1151362569154280939=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 1/2] mptcp: Consistently use READ_ONCE/WRITE_ONCE
- with msk->ack_seq
-Date: Tue, 29 Sep 2020 15:08:19 -0700
-Message-ID: <20200929220820.278003-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net 2/2] mptcp: Handle incoming 32-bit DATA_FIN values
+Date: Tue, 29 Sep 2020 15:08:20 -0700
+Message-ID: <20200929220820.278003-3-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20200929220820.278003-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6102
+X-UID: 6103
 
---===============0013166576539739038==
+--===============1151362569154280939==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The msk->ack_seq value is sometimes read without the msk lock held, so
-make proper use of READ_ONCE and WRITE_ONCE.
+The peer may send a DATA_FIN mapping with either a 32-bit or 64-bit
+sequence number. When a 32-bit sequence number is received for the
+DATA_FIN, it must be expanded to 64 bits before comparing it to the
+last acked sequence number. This expansion was missing.
 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/93
+Fixes: 3721b9b64676 (mptcp: Track received DATA_FIN sequence number and add=
+ related helpers)
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/options.c  | 4 ++--
- net/mptcp/protocol.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ net/mptcp/options.c  |  7 ++++---
+ net/mptcp/protocol.h |  2 +-
+ net/mptcp/subflow.c  | 16 +++++++++++++---
+ 3 files changed, 18 insertions(+), 7 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 7fa822b55c34..120ef39fe589 100644
+index 120ef39fe589..afa486912f5a 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -518,11 +518,11 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
- =
-
- 	if (subflow->use_64bit_ack) {
- 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
--		opts->ext_copy.data_ack =3D msk->ack_seq;
-+		opts->ext_copy.data_ack =3D READ_ONCE(msk->ack_seq);
- 		opts->ext_copy.ack64 =3D 1;
- 	} else {
- 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
--		opts->ext_copy.data_ack32 =3D (uint32_t)(msk->ack_seq);
-+		opts->ext_copy.data_ack32 =3D (uint32_t)READ_ONCE(msk->ack_seq);
- 		opts->ext_copy.ack64 =3D 0;
+@@ -782,7 +782,7 @@ static void update_una(struct mptcp_sock *msk,
  	}
- 	opts->ext_copy.use_ack =3D 1;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 365ba96c84b0..5d747c6a610e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -123,7 +123,7 @@ static void __mptcp_move_skb(struct mptcp_sock *msk, st=
-ruct sock *ssk,
- =
-
- 	skb_ext_reset(skb);
- 	skb_orphan(skb);
--	msk->ack_seq +=3D copy_len;
-+	WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
- =
-
- 	tail =3D skb_peek_tail(&sk->sk_receive_queue);
- 	if (offset =3D=3D 0 && tail) {
-@@ -261,7 +261,7 @@ static void mptcp_check_data_fin(struct sock *sk)
- 	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
- 		struct mptcp_subflow_context *subflow;
- =
-
--		msk->ack_seq++;
-+		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
- 		WRITE_ONCE(msk->rcv_data_fin, 0);
- =
-
- 		sk->sk_shutdown |=3D RCV_SHUTDOWN;
-@@ -1720,7 +1720,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 		msk->remote_key =3D mp_opt->sndr_key;
- 		mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
- 		ack_seq++;
--		msk->ack_seq =3D ack_seq;
-+		WRITE_ONCE(msk->ack_seq, ack_seq);
- 	}
- =
-
- 	sock_reset_flag(nsk, SOCK_RCU_FREE);
-@@ -2072,7 +2072,7 @@ bool mptcp_finish_join(struct sock *sk)
- 	parent_sock =3D READ_ONCE(parent->sk_socket);
- 	if (parent_sock && !sk->sk_socket)
- 		mptcp_sock_graft(sk, parent_sock);
--	subflow->map_seq =3D msk->ack_seq;
-+	subflow->map_seq =3D READ_ONCE(msk->ack_seq);
- 	return true;
  }
  =
 
+-bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq)
++bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
+ool use_64bit)
+ {
+ 	/* Skip if DATA_FIN was already received.
+ 	 * If updating simultaneously with the recvmsg loop, values
+@@ -792,7 +792,8 @@ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, =
+u64 data_fin_seq)
+ 	if (READ_ONCE(msk->rcv_data_fin) || !READ_ONCE(msk->first))
+ 		return false;
+ =
+
+-	WRITE_ONCE(msk->rcv_data_fin_seq, data_fin_seq);
++	WRITE_ONCE(msk->rcv_data_fin_seq,
++		   expand_ack(READ_ONCE(msk->ack_seq), data_fin_seq, use_64bit));
+ 	WRITE_ONCE(msk->rcv_data_fin, 1);
+ =
+
+ 	return true;
+@@ -875,7 +876,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb,
+ 	 */
+ 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
+ 		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
+-		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
++		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64) &&
+ 		    schedule_work(&msk->work))
+ 			sock_hold(subflow->conn);
+ =
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 60b27d44c184..20f04ac85409 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -387,7 +387,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk=
+);
+ bool mptcp_finish_join(struct sock *sk);
+ void mptcp_data_acked(struct sock *sk);
+ void mptcp_subflow_eof(struct sock *sk);
+-bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
++bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
+ool use_64bit);
+ =
+
+ void __init mptcp_token_init(void);
+ static inline void mptcp_token_init_request(struct request_sock *req)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8cbeb68f3775..5f2fa935022d 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -731,7 +731,8 @@ static enum mapping_status get_mapping_status(struct so=
+ck *ssk,
+ =
+
+ 	if (mpext->data_fin =3D=3D 1) {
+ 		if (data_len =3D=3D 1) {
+-			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq);
++			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq,
++								 mpext->dsn64);
+ 			pr_debug("DATA_FIN with no payload seq=3D%llu", mpext->data_seq);
+ 			if (subflow->map_valid) {
+ 				/* A DATA_FIN might arrive in a DSS
+@@ -748,8 +749,17 @@ static enum mapping_status get_mapping_status(struct s=
+ock *ssk,
+ 				return MAPPING_DATA_FIN;
+ 			}
+ 		} else {
+-			mptcp_update_rcv_data_fin(msk, mpext->data_seq + data_len);
+-			pr_debug("DATA_FIN with mapping seq=3D%llu", mpext->data_seq + data_len=
+);
++			u64 data_fin_seq =3D mpext->data_seq + data_len;
++
++			/* If mpext->data_seq is a 32-bit value, data_fin_seq
++			 * must also be limited to 32 bits.
++			 */
++			if (!mpext->dsn64)
++				data_fin_seq &=3D GENMASK_ULL(31, 0);
++
++			mptcp_update_rcv_data_fin(msk, data_fin_seq, mpext->dsn64);
++			pr_debug("DATA_FIN with mapping seq=3D%llu dsn64=3D%d",
++				 data_fin_seq, mpext->dsn64);
+ 		}
+ =
+
+ 		/* Adjust for DATA_FIN using 1 byte of sequence space */
 -- =
 
 2.28.0
 
---===============0013166576539739038==--
+--===============1151362569154280939==--
