@@ -1,95 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============7313988344005697055=="
+Content-Type: multipart/mixed; boundary="===============2399039708540257395=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1 0/9] mptcp: support for queuing data at
- mptcp-level
-Date: Mon, 28 Sep 2020 18:10:13 -0700
-Message-ID: <alpine.OSX.2.23.453.2009281808380.6674@kemeng-mobl1.amr.corp.intel.com>
-In-Reply-To: cover.1601304622.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH net 2/2] mptcp: Handle incoming 32-bit
+ DATA_FIN values
+Date: Mon, 28 Sep 2020 18:13:39 -0700
+Message-ID: <alpine.OSX.2.23.453.2009281810170.6674@kemeng-mobl1.amr.corp.intel.com>
+In-Reply-To: 20200926002408.432576-2-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6088
+X-UID: 6089
 
---===============7313988344005697055==
+--===============2399039708540257395==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Fri, 25 Sep 2020, Mat Martineau wrote:
 
-On Mon, 28 Sep 2020, Paolo Abeni wrote:
-
-> This is necessary to cope correctly with large sendbuffer (larger then sn=
-d wnd)
-> while respecting the MPTCP level snd window.
+> The peer may send a DATA_FIN mapping with either a 32-bit or 64-bit
+> sequence number. When a 32-bit sequence number is received for the
+> DATA_FIN, it must be expanded to 64 bits before comparing it to the
+> last acked sequence number. This expansion was missing.
 >
-> A major rework of both xmit and shudown path is required to support this
-> feature (patches 6 and 7). To try to keep the related patches as small as
-> possible, a bunch of new helpers is created by patches 1-5.
-> Note that patch 3 can stand for it's own merit and possibly be upstreamed=
- soon.
->
-> Finally patch 8 uses the MPTCP equivalent of tcp_push_pending_frames(), to
-> spool queued data ad MPTCP level, as soon as the windows allow that.
->
-> This iteration includes all the fixes mentioned in the ML on top of the R=
-FC,
-> plus some mores - all noted in the individual patches changelog. It also
-> includes the sndwnd patch from Florian, rebased.
->
-> Still not bugs free - I see some not-so-frequent timeouts in mptcp_connec=
-t.sh
-> tests and tput in simult_xmit tests are less stable, but should be notably
-> better than previous iteration. I suggest considering for merge on the ex=
-port
-> branch.
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/93
+> Fixes: 3721b9b64676 (mptcp: Track received DATA_FIN sequence number and a=
+dd related helpers)
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-I had a couple of questions on patch 6, and also reviewed the rest. I'm ok =
+I'm hoping to send this to netdev on Tuesday, anyone see any problem with =
 
-with merging on the export branch if that works ok with other patches that =
+that plan?
 
-will get sent to net-next before it closes for the 5.10 merge window.
+What's the best way to handle introducing code to -net that will create a =
+
+conflict on a future net-next merge?
+
+
+Thanks,
 
 Mat
 
 
+> ---
+> net/mptcp/options.c  |  7 ++++---
+> net/mptcp/protocol.h |  2 +-
+> net/mptcp/subflow.c  | 17 ++++++++++++++---
+> 3 files changed, 19 insertions(+), 7 deletions(-)
 >
-> Not strictily related to this series: we currently send DATA_FIN ack only=
- once
-> - the behaviour is not change here. If that is dropped, we will never
-> retransmit, and the peer will be stuck.
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 120ef39fe589..afa486912f5a 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -782,7 +782,7 @@ static void update_una(struct mptcp_sock *msk,
+> 	}
+> }
 >
-> Florian Westphal (1):
->  mptcp: keep track of advertised windows right edge
+> -bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq)
+> +bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq,=
+ bool use_64bit)
+> {
+> 	/* Skip if DATA_FIN was already received.
+> 	 * If updating simultaneously with the recvmsg loop, values
+> @@ -792,7 +792,8 @@ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk=
+, u64 data_fin_seq)
+> 	if (READ_ONCE(msk->rcv_data_fin) || !READ_ONCE(msk->first))
+> 		return false;
 >
-> Paolo Abeni (8):
->  tcp: factor out __tcp_close() helper
->  mptcp: introduce mptcp_schedule_work
->  mptcp: reduce the arguments of mptcp_sendmsg_frag
->  mptcp: add accounting for pending data
->  mptcp: introduce MPTCP snd_nxt
->  mptcp: refactor shutdown and close
->  mptcp: move page frag allocation in mptcp_sendmsg()
->  mptcp: try to push pending data on snd una updates
+> -	WRITE_ONCE(msk->rcv_data_fin_seq, data_fin_seq);
+> +	WRITE_ONCE(msk->rcv_data_fin_seq,
+> +		   expand_ack(READ_ONCE(msk->ack_seq), data_fin_seq, use_64bit));
+> 	WRITE_ONCE(msk->rcv_data_fin, 1);
 >
-> include/net/tcp.h    |   1 +
-> net/ipv4/tcp.c       |   9 +-
-> net/mptcp/options.c  |  24 +-
-> net/mptcp/pm.c       |   4 +-
-> net/mptcp/protocol.c | 783 +++++++++++++++++++++++++------------------
-> net/mptcp/protocol.h |  67 +++-
-> net/mptcp/subflow.c  |  21 +-
-> 7 files changed, 560 insertions(+), 349 deletions(-)
+> 	return true;
+> @@ -875,7 +876,7 @@ void mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb,
+> 	 */
+> 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
+> 		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
+> -		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
+> +		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64) &&
+> 		    schedule_work(&msk->work))
+> 			sock_hold(subflow->conn);
 >
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 60b27d44c184..20f04ac85409 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -387,7 +387,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
+sk);
+> bool mptcp_finish_join(struct sock *sk);
+> void mptcp_data_acked(struct sock *sk);
+> void mptcp_subflow_eof(struct sock *sk);
+> -bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
+> +bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq,=
+ bool use_64bit);
+>
+> void __init mptcp_token_init(void);
+> static inline void mptcp_token_init_request(struct request_sock *req)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 8cbeb68f3775..8519962af3ba 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -731,7 +731,8 @@ static enum mapping_status get_mapping_status(struct =
+sock *ssk,
+>
+> 	if (mpext->data_fin =3D=3D 1) {
+> 		if (data_len =3D=3D 1) {
+> -			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq);
+> +			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq,
+> +								 mpext->dsn64);
+> 			pr_debug("DATA_FIN with no payload seq=3D%llu", mpext->data_seq);
+> 			if (subflow->map_valid) {
+> 				/* A DATA_FIN might arrive in a DSS
+> @@ -748,8 +749,18 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk,
+> 				return MAPPING_DATA_FIN;
+> 			}
+> 		} else {
+> -			mptcp_update_rcv_data_fin(msk, mpext->data_seq + data_len);
+> -			pr_debug("DATA_FIN with mapping seq=3D%llu", mpext->data_seq + data_l=
+en);
+> +			u64 data_fin_seq;
+> +
+> +			if (mpext->dsn64) {
+> +				data_fin_seq =3D mpext->data_seq;
+> +			} else {
+> +				data_fin_seq =3D expand_seq(subflow->map_seq,
+> +							  subflow->map_data_len,
+> +							  mpext->data_seq);
+> +			}
+> +
+> +			mptcp_update_rcv_data_fin(msk, data_fin_seq + data_len, 1);
+> +			pr_debug("DATA_FIN with mapping seq=3D%llu", data_fin_seq + data_len);
+> 		}
+>
+> 		/* Adjust for DATA_FIN using 1 byte of sequence space */
 > -- =
 
-> 2.26.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+> 2.28.0
+>
 >
 
 --
 Mat Martineau
 Intel
---===============7313988344005697055==--
+--===============2399039708540257395==--
