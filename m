@@ -1,148 +1,181 @@
-Content-Type: multipart/mixed; boundary="===============2399039708540257395=="
+Content-Type: multipart/mixed; boundary="===============1073738230290646273=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH net 2/2] mptcp: Handle incoming 32-bit
- DATA_FIN values
-Date: Mon, 28 Sep 2020 18:13:39 -0700
-Message-ID: <alpine.OSX.2.23.453.2009281810170.6674@kemeng-mobl1.amr.corp.intel.com>
-In-Reply-To: 20200926002408.432576-2-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 1/2] mptcp: send out
+ dedicated ADD_ADDR packet
+Date: Tue, 29 Sep 2020 11:30:18 +0200
+Message-ID: <a16970bc5d5b38bb47049e9cc43f4b9950361fc2.camel@redhat.com>
+In-Reply-To: f3ff31b79609d428322f82016bd765486d9de302.1601278543.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6089
+X-UID: 6090
 
---===============2399039708540257395==
+--===============1073738230290646273==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 25 Sep 2020, Mat Martineau wrote:
+On Mon, 2020-09-28 at 15:46 +0800, Geliang Tang wrote:
+> @@ -584,7 +586,7 @@ static bool
+> mptcp_established_options_add_addr(struct sock *sk,
+>  	int len;
+>  =
 
-> The peer may send a DATA_FIN mapping with either a 32-bit or 64-bit
-> sequence number. When a 32-bit sequence number is received for the
-> DATA_FIN, it must be expanded to 64 bits before comparing it to the
-> last acked sequence number. This expansion was missing.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/93
-> Fixes: 3721b9b64676 (mptcp: Track received DATA_FIN sequence number and a=
-dd related helpers)
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>  	if (!mptcp_pm_should_add_signal(msk) ||
+> -	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
+> +	    !(mptcp_pm_add_addr_signal(msk, sk, remaining, &saddr,
+> &echo)))
+>  		return false;
+>  =
 
-I'm hoping to send this to netdev on Tuesday, anyone see any problem with =
+>  	len =3D mptcp_add_addr_len(saddr.family);
+> @@ -645,6 +647,17 @@ static bool
+> mptcp_established_options_rm_addr(struct sock *sk,
+>  	return true;
+>  }
+>  =
 
-that plan?
-
-What's the best way to handle introducing code to -net that will create a =
-
-conflict on a future net-next merge?
-
-
-Thanks,
-
-Mat
-
-
-> ---
-> net/mptcp/options.c  |  7 ++++---
-> net/mptcp/protocol.h |  2 +-
-> net/mptcp/subflow.c  | 17 ++++++++++++++---
-> 3 files changed, 19 insertions(+), 7 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 120ef39fe589..afa486912f5a 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -782,7 +782,7 @@ static void update_una(struct mptcp_sock *msk,
-> 	}
-> }
->
-> -bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq)
-> +bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq,=
- bool use_64bit)
-> {
-> 	/* Skip if DATA_FIN was already received.
-> 	 * If updating simultaneously with the recvmsg loop, values
-> @@ -792,7 +792,8 @@ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk=
-, u64 data_fin_seq)
-> 	if (READ_ONCE(msk->rcv_data_fin) || !READ_ONCE(msk->first))
-> 		return false;
->
-> -	WRITE_ONCE(msk->rcv_data_fin_seq, data_fin_seq);
-> +	WRITE_ONCE(msk->rcv_data_fin_seq,
-> +		   expand_ack(READ_ONCE(msk->ack_seq), data_fin_seq, use_64bit));
-> 	WRITE_ONCE(msk->rcv_data_fin, 1);
->
-> 	return true;
-> @@ -875,7 +876,7 @@ void mptcp_incoming_options(struct sock *sk, struct s=
-k_buff *skb,
-> 	 */
-> 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
-> 		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
-> -		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
-> +		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64) &&
-> 		    schedule_work(&msk->work))
-> 			sock_hold(subflow->conn);
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 60b27d44c184..20f04ac85409 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -387,7 +387,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
-sk);
-> bool mptcp_finish_join(struct sock *sk);
-> void mptcp_data_acked(struct sock *sk);
-> void mptcp_subflow_eof(struct sock *sk);
-> -bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
-> +bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq,=
- bool use_64bit);
->
-> void __init mptcp_token_init(void);
-> static inline void mptcp_token_init_request(struct request_sock *req)
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 8cbeb68f3775..8519962af3ba 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -731,7 +731,8 @@ static enum mapping_status get_mapping_status(struct =
-sock *ssk,
->
-> 	if (mpext->data_fin =3D=3D 1) {
-> 		if (data_len =3D=3D 1) {
-> -			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq);
-> +			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq,
-> +								 mpext->dsn64);
-> 			pr_debug("DATA_FIN with no payload seq=3D%llu", mpext->data_seq);
-> 			if (subflow->map_valid) {
-> 				/* A DATA_FIN might arrive in a DSS
-> @@ -748,8 +749,18 @@ static enum mapping_status get_mapping_status(struct=
- sock *ssk,
-> 				return MAPPING_DATA_FIN;
-> 			}
-> 		} else {
-> -			mptcp_update_rcv_data_fin(msk, mpext->data_seq + data_len);
-> -			pr_debug("DATA_FIN with mapping seq=3D%llu", mpext->data_seq + data_l=
-en);
-> +			u64 data_fin_seq;
+> +static bool mptcp_check_add_addr_nospc(struct sock *sk, struct
+> sk_buff *skb)
+> +{
+> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> +	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
 > +
-> +			if (mpext->dsn64) {
-> +				data_fin_seq =3D mpext->data_seq;
-> +			} else {
-> +				data_fin_seq =3D expand_seq(subflow->map_seq,
-> +							  subflow->map_data_len,
-> +							  mpext->data_seq);
-> +			}
+> +	if (skb && skb_is_tcp_pure_ack(skb) && READ_ONCE(msk-
+> >pm.add_addr_nospc))
+> +		return true;
 > +
-> +			mptcp_update_rcv_data_fin(msk, data_fin_seq + data_len, 1);
-> +			pr_debug("DATA_FIN with mapping seq=3D%llu", data_fin_seq + data_len);
-> 		}
->
-> 		/* Adjust for DATA_FIN using 1 byte of sequence space */
-> -- =
+> +	return false;
+> +}
+> +
+>  bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+>  			       unsigned int *size, unsigned int
+> remaining,
+>  			       struct mptcp_out_options *opts)
+> @@ -657,6 +670,9 @@ bool mptcp_established_options(struct sock *sk,
+> struct sk_buff *skb,
+>  	if (unlikely(mptcp_check_fallback(sk)))
+>  		return false;
+>  =
 
-> 2.28.0
->
->
+> +	if (unlikely(mptcp_check_add_addr_nospc(sk, skb)))
+> +		goto add_addr;
+> +
 
---
-Mat Martineau
-Intel
---===============2399039708540257395==--
+I can't follow easily the code. Here we check the 'add_addr_nospc'
+field, but AFAICS, such field is initialized only later,
+by mptcp_pm_add_addr_signal(), called
+from mptcp_established_options_add_addr().
+
+Should we instead set 'add_addr_nospc' in mptcp_pm_announce_addr() ?
+
+Ninor note: the 'add_addr_nospc' name is a bit confusing to me, I would
+use instead something alike 'add_addr_ipv6', or even better we could
+change the 'add_addr_signal' type from bool to char, so that we could
+encode the addr type there. Then here we could check for
+'add_addr_signal =3D=3D AF_INET6' - possibly no need for a new field.
+
+>  	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining,
+> opts))
+>  		ret =3D true;
+>  	else if (mptcp_established_options_dss(sk, skb, &opt_size,
+> remaining,
+> @@ -671,6 +687,7 @@ bool mptcp_established_options(struct sock *sk,
+> struct sk_buff *skb,
+>  =
+
+>  	*size +=3D opt_size;
+>  	remaining -=3D opt_size;
+> +add_addr:
+>  	if (mptcp_established_options_add_addr(sk, &opt_size,
+> remaining, opts)) {
+>  		*size +=3D opt_size;
+>  		remaining -=3D opt_size;
+> @@ -747,10 +764,10 @@ static bool check_fully_established(struct
+> mptcp_sock *msk, struct sock *sk,
+>  		goto fully_established;
+>  	}
+>  =
+
+> -	/* If the first established packet does not contain MP_CAPABLE
+> + data
+> +	/* If the first established packet does not contain MP_CAPABLE
+> + data or ADD_ADDR
+>  	 * then fallback to TCP
+>  	 */
+> -	if (!mp_opt->mp_capable) {
+> +	if (!mp_opt->mp_capable && !mp_opt->add_addr) {
+>  		subflow->mp_capable =3D 0;
+>  		pr_fallback(msk);
+>  		__mptcp_do_fallback(msk);
+
+I think the RFC is a bit unclear with this point, because in
+section 3.4.1. says: =
+
+
+"""
+This [ADD_ADDR] option can be used at any time during a connection
+"""
+
+but also says that here we expect a mp_capable + data packet. =
+
+
+@Christoph, should we accept ADD_ADDR here or should we reject them?
+
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 7e81f53d1e5d..8015ee8ba621 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -172,7 +172,8 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock
+> *msk, u8 rm_id)
+>  =
+
+>  /* path manager helpers */
+>  =
+
+> -bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int
+> remaining,
+> +bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sock
+> *ssk,
+> +			      unsigned int remaining,
+>  			      struct mptcp_addr_info *saddr, bool
+> *echo)
+>  {
+>  	int ret =3D false;
+> @@ -183,16 +184,26 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock
+> *msk, unsigned int remaining,
+>  	if (!mptcp_pm_should_add_signal(msk))
+>  		goto out_unlock;
+>  =
+
+> -	if (remaining < mptcp_add_addr_len(msk->pm.local.family))
+> +	if (remaining < mptcp_add_addr_len(msk->pm.local.family)) {
+> +		if (msk->pm.local.family =3D=3D AF_INET6)
+> +			WRITE_ONCE(msk->pm.add_addr_nospc, true);
+>  		goto out_unlock;
+> +	}
+>  =
+
+>  	*saddr =3D msk->pm.local;
+>  	*echo =3D READ_ONCE(msk->pm.add_addr_echo);
+>  	WRITE_ONCE(msk->pm.add_addr_signal, false);
+> +	WRITE_ONCE(msk->pm.add_addr_nospc, false);
+>  	ret =3D true;
+>  =
+
+>  out_unlock:
+>  	spin_unlock_bh(&msk->pm.lock);
+> +
+> +	if (READ_ONCE(msk->pm.add_addr_nospc)) {
+> +		pr_debug("send ack for add_addr6");
+> +		tcp_send_ack(ssk);
+> +	}
+
+I think we should pick-up a subflow and call tcp_send_ack() when
+invoking mptcp_pm_announce_addr(..., false), either directly
+in mptcp_pm_announce_addr() or better in a wrapping helper.
+
+/P
+
+--===============1073738230290646273==--
