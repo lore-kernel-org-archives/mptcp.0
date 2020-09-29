@@ -1,148 +1,136 @@
-Content-Type: multipart/mixed; boundary="===============7079373377666635342=="
+Content-Type: multipart/mixed; boundary="===============2519581862097433213=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 2/2] selftests: mptcp: add
- ADD_ADDR timeout test case
-Date: Tue, 29 Sep 2020 11:43:44 +0200
-Message-ID: <96eb96771365d4c83068c1654b5f1018cdd93fd9.camel@redhat.com>
-In-Reply-To: 2e13e3e6c8bd31a8a3e65dee0d2f6da0bce79d48.1601275610.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [RFC PATCH net 2/2] mptcp: Handle incoming 32-bit
+ DATA_FIN values
+Date: Tue, 29 Sep 2020 12:08:08 +0200
+Message-ID: <95b5a6c64d14c0b336087fa555410ac80fa76561.camel@redhat.com>
+In-Reply-To: 20200926002408.432576-2-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6092
+X-UID: 6093
 
---===============7079373377666635342==
+--===============2519581862097433213==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-09-28 at 14:51 +0800, Geliang Tang wrote:
-> This patch added the test case for retransmitting ADD_ADDR when
-> timeout
-> occurs. It set NS1's add_addr_timeout to 1 second, and drop NS2's
-> ADD_ADDR
-> echo packets.
+On Fri, 2020-09-25 at 17:24 -0700, Mat Martineau wrote:
+> The peer may send a DATA_FIN mapping with either a 32-bit or 64-bit
+> sequence number. When a 32-bit sequence number is received for the
+> DATA_FIN, it must be expanded to 64 bits before comparing it to the
+> last acked sequence number. This expansion was missing.
 > =
 
-> And we need to slow down the transfer process of all data to let the
-> ADD_ADDR suboptions can be retransmitted three times.
-> =
-
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/93
+> Fixes: 3721b9b64676 (mptcp: Track received DATA_FIN sequence number and a=
+dd related helpers)
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 43
-> +++++++++++++++++--
->  1 file changed, 40 insertions(+), 3 deletions(-)
+>  net/mptcp/options.c  |  7 ++++---
+>  net/mptcp/protocol.h |  2 +-
+>  net/mptcp/subflow.c  | 17 ++++++++++++++---
+>  3 files changed, 19 insertions(+), 7 deletions(-)
 > =
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 08f53d86dedc..ed03ed503655 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -82,6 +82,18 @@ reset_with_cookies()
->  	done
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 120ef39fe589..afa486912f5a 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -782,7 +782,7 @@ static void update_una(struct mptcp_sock *msk,
+>  	}
 >  }
 >  =
 
-> +reset_with_add_addr_timeout()
-> +{
-> +	reset
-> +
-> +	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=3D1
-> +	ip netns exec $ns2 iptables -A OUTPUT -p tcp \
-> +		-m tcp --tcp-option 30 \
-> +		-m bpf --bytecode \
-> +		"$(nfbpf_compile '(tcp[34] & 0xf0) =3D=3D 0x30')" \
-> +		-j DROP
-
-Beware: you also need to update the 'config' file with the required
-minimal dependencies. =
-
-
-perhpas it would be even nicer/with less deps using directly nft.
-@Florian is there a simpler nft equivalent test for the above?
-
-> +}
-> +
->  for arg in "$@"; do
->  	if [ "$arg" =3D "-c" ]; then
->  		capture=3D1
-> @@ -135,6 +147,7 @@ do_transfer()
->  	connect_addr=3D"$5"
->  	rm_nr_ns1=3D"$6"
->  	rm_nr_ns2=3D"$7"
-> +	slow=3D"$8"
+> -bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq)
+> +bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq,=
+ bool use_64bit)
+>  {
+>  	/* Skip if DATA_FIN was already received.
+>  	 * If updating simultaneously with the recvmsg loop, values
+> @@ -792,7 +792,8 @@ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk=
+, u64 data_fin_seq)
+>  	if (READ_ONCE(msk->rcv_data_fin) || !READ_ONCE(msk->first))
+>  		return false;
 >  =
 
->  	port=3D$((10000+$TEST_COUNT))
->  	TEST_COUNT=3D$((TEST_COUNT+1))
-> @@ -159,7 +172,7 @@ do_transfer()
->  		sleep 1
->  	fi
+> -	WRITE_ONCE(msk->rcv_data_fin_seq, data_fin_seq);
+> +	WRITE_ONCE(msk->rcv_data_fin_seq,
+> +		   expand_ack(READ_ONCE(msk->ack_seq), data_fin_seq, use_64bit));
+>  	WRITE_ONCE(msk->rcv_data_fin, 1);
 >  =
 
-> -	if [[ $rm_nr_ns1 -eq 0 && $rm_nr_ns2 -eq 0 ]]; then
-> +	if [ $slow -eq 0 ]; then
->  		mptcp_connect=3D"./mptcp_connect -j"
->  	else
->  		mptcp_connect=3D"./mptcp_connect -r"
-> @@ -252,7 +265,22 @@ run_tests()
->  	connect_addr=3D"$3"
->  	lret=3D0
+>  	return true;
+> @@ -875,7 +876,7 @@ void mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb,
+>  	 */
+>  	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
+>  		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
+> -		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
+> +		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64) &&
+>  		    schedule_work(&msk->work))
+>  			sock_hold(subflow->conn);
 >  =
 
-> -	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP
-> ${connect_addr} 0 0
-> +	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP
-> ${connect_addr} 0 0 0
-> +	lret=3D$?
-> +	if [ $lret -ne 0 ]; then
-> +		ret=3D$lret
-> +		return
-> +	fi
-> +}
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 60b27d44c184..20f04ac85409 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -387,7 +387,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
+sk);
+>  bool mptcp_finish_join(struct sock *sk);
+>  void mptcp_data_acked(struct sock *sk);
+>  void mptcp_subflow_eof(struct sock *sk);
+> -bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
+> +bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq,=
+ bool use_64bit);
+>  =
+
+>  void __init mptcp_token_init(void);
+>  static inline void mptcp_token_init_request(struct request_sock *req)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 8cbeb68f3775..8519962af3ba 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -731,7 +731,8 @@ static enum mapping_status get_mapping_status(struct =
+sock *ssk,
+>  =
+
+>  	if (mpext->data_fin =3D=3D 1) {
+>  		if (data_len =3D=3D 1) {
+> -			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq);
+> +			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq,
+> +								 mpext->dsn64);
+>  			pr_debug("DATA_FIN with no payload seq=3D%llu", mpext->data_seq);
+>  			if (subflow->map_valid) {
+>  				/* A DATA_FIN might arrive in a DSS
+> @@ -748,8 +749,18 @@ static enum mapping_status get_mapping_status(struct=
+ sock *ssk,
+>  				return MAPPING_DATA_FIN;
+>  			}
+>  		} else {
+> -			mptcp_update_rcv_data_fin(msk, mpext->data_seq + data_len);
+> -			pr_debug("DATA_FIN with mapping seq=3D%llu", mpext->data_seq + data_l=
+en);
+> +			u64 data_fin_seq;
 > +
-> +run_tests_slow()
-> +{
-> +	listener_ns=3D"$1"
-> +	connector_ns=3D"$2"
-> +	connect_addr=3D"$3"
-> +	lret=3D0
-> +
-> +	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP
-> ${connect_addr} 0 0 1
->  	lret=3D$?
->  	if [ $lret -ne 0 ]; then
->  		ret=3D$lret
-> @@ -269,7 +297,7 @@ run_remove_tests()
->  	rm_nr_ns2=3D"$5"
->  	lret=3D0
->  =
+> +			if (mpext->dsn64) {
+> +				data_fin_seq =3D mpext->data_seq;
+> +			} else {
+> +				data_fin_seq =3D expand_seq(subflow->map_seq,
+> +							  subflow->map_data_len,
+> +							  mpext->data_seq);
+> +			}
 
-> -	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP
-> ${connect_addr} ${rm_nr_ns1} ${rm_nr_ns2}
-> +	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP
-> ${connect_addr} ${rm_nr_ns1} ${rm_nr_ns2} 1
->  	lret=3D$?
->  	if [ $lret -ne 0 ]; then
->  		ret=3D$lret
-> @@ -491,6 +519,15 @@ run_tests $ns1 $ns2 10.0.1.1
->  chk_join_nr "multiple subflows and signal" 3 3 3
->  chk_add_nr 1 1
->  =
+If you wrap the above chunk of code in an helper, you can additionally
+remove some code duplication with a similar chunk.
 
-> +# add_addr timeout
-> +reset_with_add_addr_timeout
-> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> +ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-> +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-> +run_tests_slow $ns1 $ns2 10.0.1.1
-> +chk_join_nr "signal address, ADD_ADDR timeout" 1 1 1
-> +chk_add_nr 4 0
-> +
->  # single subflow, remove
->  reset
->  ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+Not strictly related to this patch, but it looks like (to me) that seq
+expansion is done in a way more conforming to the RFC in expand_ack()
+and it feels strange we have 2 different helper to do the expansions,
+perhaps we should unify them?
 
---===============7079373377666635342==--
+/P
+
+--===============2519581862097433213==--
