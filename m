@@ -1,244 +1,224 @@
-Content-Type: multipart/mixed; boundary="===============4860436064281196076=="
+Content-Type: multipart/mixed; boundary="===============0536847156600404803=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v1 9/9] mptcp: keep track of advertised windows right
- edge
-Date: Mon, 28 Sep 2020 17:05:01 +0200
-Message-ID: <4bc9483aae0f4a9b83ec551f10fb008904c8fb11.1601304622.git.pabeni@redhat.com>
-In-Reply-To: cover.1601304622.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v1 6/9] mptcp: refactor shutdown and close
+Date: Mon, 28 Sep 2020 18:08:24 -0700
+Message-ID: <alpine.OSX.2.23.453.2009281737370.6674@kemeng-mobl1.amr.corp.intel.com>
+In-Reply-To: c877db9bf5e3433e5cf126d36ba5ef83033ab82c.1601304622.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6084
+X-UID: 6087
 
---===============4860436064281196076==
+--===============0536847156600404803==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Florian Westphal <fw(a)strlen.de>
+On Mon, 28 Sep 2020, Paolo Abeni wrote:
 
-Before sending 'x' new bytes also check that the new snd_una would
-be within the permitted receive window.
+> We must not close the subflows before all the MPTCP level
+> data, comprising the DATA_FIN has been acked at the MPTCP
+> level, otherwise we could be unable to retransmit as needed.
+>
+> __mptcp_wr_shutdown() shutdown is responsible to check for the
+> correct status and close all subflows. Is called by the output
+> path after spooling any data and at shutdown/close time.
+>
+> In a similar way, __mptcp_destroy_sock() is responsible to clean-up
+> the MPTCP level status, and is called when the msk transition
+> to TCP_CLOSE.
+>
+> The protocol level close() does not force anymore the TCP_CLOSE
+> status, but orphan the msk socket and all the subflows.
+> Orphaned msk sockets are forciby closed after a timeout or
+> when all MPTCP-level data is acked.
+>
+> There is a caveat about keeping the orphaned subflows around:
+> the TCP stack can asynchronusly call tcp_cleanup_ulp() on them via
+> tcp_close(). To prevent accessing freed memory on later MPTCP
+> level operations, the msk acquires a reference to each subflow
+> socket and prevent subflow_ulp_release() from releasing the
+> subflow context before __mptcp_destroy_sock().
+>
+> The additional subflow references are released by __mptcp_done()
+> and the async ULP release is detected checking ULP ops. If such
+> field has been already cleared by the ULP release path, the
+> dangling context is freed directly by __mptcp_done().
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> RFC -> v1:
+> - drop TCP_TIME_WAIT status, we can't use it or will foul sk_fullsock()
+> - refactor wr_shutdown, now split in 2 parts. DATA_FIN is sent
+>   by __mptcp_check_send_data_fin() when snd_nxt + 1 =3D=3D write_seq
+> - drop mptcp_wr_eof(), simply check for TCP_CLOSE state - Mat
+> - do send data fin ack in TCP_FIN_WAIT2 state  (return; -> break; in
+>   switch statement)
+> ---
+> net/mptcp/options.c  |   2 +-
+> net/mptcp/protocol.c | 264 ++++++++++++++++++++++++++++++-------------
+> net/mptcp/protocol.h |  10 +-
+> net/mptcp/subflow.c  |  21 +++-
+> 4 files changed, 212 insertions(+), 85 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index d2d8ac45bee1..3b9f7b2e706e 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -491,7 +491,7 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+> 	bool ret =3D false;
+>
+> 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+> -	snd_data_fin_enable =3D READ_ONCE(msk->snd_data_fin_enable);
+> +	snd_data_fin_enable =3D mptcp_data_fin_enabled(msk);
+>
+> 	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
+> 		unsigned int map_size;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 2b6c704d4505..207a618e6da9 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -21,6 +21,7 @@
+> #include <net/transp_v6.h>
+> #endif
+> #include <net/mptcp.h>
+> +#include <net/xfrm.h>
+> #include "protocol.h"
+> #include "mib.h"
+>
+> @@ -41,6 +42,8 @@ struct mptcp_skb_cb {
+>
+> static struct percpu_counter mptcp_sockets_allocated;
+>
+> +static void __mptcp_destroy_sock(struct sock *sk, int timeout);
+> +
+> /* If msk has an initial subflow socket, and the MP_CAPABLE handshake has=
+ not
+>  * completed yet or has failed, return the subflow socket.
+>  * Otherwise return NULL.
+> @@ -102,6 +105,7 @@ static int __mptcp_socket_create(struct mptcp_sock *m=
+sk)
+> 	msk->subflow =3D ssock;
+> 	subflow =3D mptcp_subflow_ctx(ssock->sk);
+> 	list_add(&subflow->node, &msk->conn_list);
+> +	sock_hold(ssock->sk);
+> 	subflow->request_mptcp =3D 1;
+>
+> 	/* accept() will wait on first subflow sk_wq, and we always wakes up
+> @@ -313,6 +317,7 @@ static void mptcp_stop_timer(struct sock *sk)
+> 	mptcp_sk(sk)->timer_ival =3D 0;
+> }
+>
+> +/* return true when transitioning to CLOSE state */
 
-For every ACK that also contains a DSS ack, check wheter its tcp-level
-receive window would advance the current mptcp window right edge and
-update it if so.
+Outdated comment? Function returns void.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- net/mptcp/options.c  | 18 +++++++++++---
- net/mptcp/protocol.c | 58 +++++++++++++++++++++++++++++++++++++++++---
- net/mptcp/protocol.h |  1 +
- 3 files changed, 71 insertions(+), 6 deletions(-)
+> static void mptcp_check_data_fin_ack(struct sock *sk)
+> {
+> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+> @@ -331,15 +336,20 @@ static void mptcp_check_data_fin_ack(struct sock *s=
+k)
+> 		switch (sk->sk_state) {
+> 		case TCP_FIN_WAIT1:
+> 			inet_sk_state_store(sk, TCP_FIN_WAIT2);
+> -			sk->sk_state_change(sk);
+> 			break;
+> 		case TCP_CLOSING:
+> 		case TCP_LAST_ACK:
+> 			inet_sk_state_store(sk, TCP_CLOSE);
+> -			sk->sk_state_change(sk);
+> 			break;
+> 		}
+>
+> +		/* if the socket is detached from user-space there is no point
+> +		 * in keeping it around after spooling all the data
+> +		 */
+> +		if (sock_flag(sk, SOCK_DEAD))
+> +			return;
+> +
+> +		sk->sk_state_change(sk);
+> 		if (sk->sk_shutdown =3D=3D SHUTDOWN_MASK ||
+> 		    sk->sk_state =3D=3D TCP_CLOSE)
+> 			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_HUP);
+> @@ -418,7 +428,6 @@ static void mptcp_check_data_fin(struct sock *sk)
+> 			break;
+> 		case TCP_FIN_WAIT2:
+> 			inet_sk_state_store(sk, TCP_CLOSE);
+> -			// @@ Close subflows now?
+> 			break;
+> 		default:
+> 			/* Other states not expected */
+> @@ -435,8 +444,10 @@ static void mptcp_check_data_fin(struct sock *sk)
+> 			release_sock(ssk);
+> 		}
+>
+> -		sk->sk_state_change(sk);
+> +		if (sock_flag(sk, SOCK_DEAD))
+> +			return;
+>
+> +		sk->sk_state_change(sk);
+> 		if (sk->sk_shutdown =3D=3D SHUTDOWN_MASK ||
+> 		    sk->sk_state =3D=3D TCP_CLOSE)
+> 			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_HUP);
+> @@ -672,6 +683,10 @@ static void mptcp_reset_timer(struct sock *sk)
+> 	struct inet_connection_sock *icsk =3D inet_csk(sk);
+> 	unsigned long tout;
+>
+> +	/* prevent rescheduling on close */
+> +	if (unlikely(inet_sk_state_load(sk) =3D=3D TCP_CLOSE))
+> +		return;
+> +
+> 	/* should never be called with mptcp level timer cleared */
+> 	tout =3D READ_ONCE(mptcp_sk(sk)->timer_ival);
+> 	if (WARN_ON_ONCE(!tout))
+> @@ -1697,13 +1712,28 @@ void __mptcp_close_ssk(struct sock *sk, struct so=
+ck *ssk,
+>
+> 	list_del(&subflow->node);
+>
+> -	if (sock && sock !=3D sk->sk_socket) {
+> -		/* outgoing subflow */
+> -		sock_release(sock);
+> +	/* outgoing subflow */
+> +	if (sock && sock !=3D sk->sk_socket)
+> +		iput(SOCK_INODE(sock));
+> +
+> +	lock_sock(ssk);
+> +
+> +	/* if ssk hit tcp_done(), tcp_cleanup_ulp() cleared the related oops
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 3b9f7b2e706e..d8c844ae176a 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -790,10 +790,12 @@ static u64 expand_ack(u64 old_ack, u64 cur_ack, bool =
-use_64bit)
- 	return cur_ack;
- }
- =
+Pointing out the oops/ops typo because "oops" has such major consequences =
 
--static void update_una(struct mptcp_sock *msk,
--		       struct mptcp_options_received *mp_opt)
-+static void ack_update_msk(struct mptcp_sock *msk,
-+			   const struct sock *ssk,
-+			   struct mptcp_options_received *mp_opt)
- {
- 	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
-+	u64 new_wnd_end, wnd_end, old_wnd_end =3D atomic64_read(&msk->wnd_end);
- 	u64 snd_nxt =3D READ_ONCE(msk->snd_nxt);
- =
+in the kernel!
 
- 	/* avoid ack expansion on update conflict, to reduce the risk of
-@@ -806,6 +808,16 @@ static void update_una(struct mptcp_sock *msk,
- 	if (after64(new_snd_una, snd_nxt))
- 		new_snd_una =3D old_snd_una;
- =
+> +	 * the ssk has been already destroyed, we just need to release the
+> +	 * reference owned by msk;
+> +	 */
+> +	if (!inet_csk(ssk)->icsk_ulp_ops) {
+> +		kfree_rcu(subflow, rcu);
 
-+	new_wnd_end =3D new_snd_una + tcp_sk(ssk)->snd_wnd;
-+
-+	while (after64(new_wnd_end, old_wnd_end)) {
-+		wnd_end =3D old_wnd_end;
-+		old_wnd_end =3D atomic64_cmpxchg(&msk->wnd_end, wnd_end,
-+							       new_wnd_end);
-+		if (old_wnd_end =3D=3D wnd_end)
-+			break;
-+	}
-+
- 	while (after64(new_snd_una, old_snd_una)) {
- 		snd_una =3D old_snd_una;
- 		old_snd_una =3D atomic64_cmpxchg(&msk->snd_una, snd_una,
-@@ -910,7 +922,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb)
- 	 * monodirectional flows will stuck
- 	 */
- 	if (mp_opt.use_ack)
--		update_una(msk, &mp_opt);
-+		ack_update_msk(msk, sk, &mp_opt);
- =
+icsk_ulp_ops might have been cleared for fallback sockets, is that an =
 
- 	/* Zero-data-length packets are dropped by the caller and not
- 	 * propagated to the MPTCP layer, so the skb extension does not
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4cd033b8fdac..03c581cdb7f6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -57,6 +57,22 @@ static struct socket *__mptcp_nmpc_socket(const struct m=
-ptcp_sock *msk)
- 	return msk->subflow;
- }
- =
+expected case here too?
 
-+/* Returns end sequence number of the receiver's advertised window */
-+static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
-+{
-+	return atomic64_read(&msk->wnd_end);
-+}
-+
-+static bool mptcp_has_zero_window(const struct mptcp_sock *msk)
-+{
-+	return msk->write_seq =3D=3D mptcp_wnd_end(msk);
-+}
-+
-+static bool mptcp_has_unacked_data(const struct mptcp_sock *msk)
-+{
-+	return mptcp_rtx_head((const struct sock *)msk) !=3D NULL;
-+}
-+
- static bool mptcp_is_tcpsk(struct sock *sk)
- {
- 	struct socket *sock =3D sk->sk_socket;
-@@ -174,6 +190,7 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk=
-, struct sk_buff *skb)
- 	if (after64(seq, max_seq)) {
- 		/* out of window */
- 		mptcp_drop(sk, skb);
-+		pr_info("oow by %ld\n", (unsigned long)seq - (unsigned long)max_seq);
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_NODSSWINDOW);
- 		return;
- 	}
-@@ -829,8 +846,11 @@ static void mptcp_clean_una(struct sock *sk)
- 	/* on fallback we just need to ignore snd_una, as this is really
- 	 * plain TCP
- 	 */
--	if (__mptcp_check_fallback(msk))
-+	if (__mptcp_check_fallback(msk)) {
- 		atomic64_set(&msk->snd_una, msk->snd_nxt);
-+		atomic64_set(&msk->wnd_end, msk->snd_nxt + 1);
-+	}
-+
- 	snd_una =3D atomic64_read(&msk->snd_una);
- =
+> 	} else {
+> -		/* incoming subflow */
+> -		tcp_close(ssk, timeout);
+> +		/* otherwise ask tcp do dispose of ssk and subflow ctx */
+> +		subflow->disposable =3D 1;
+> +		__tcp_close(ssk, timeout);
+> +
+> +		/* close acquired an extra ref */
+> +		__sock_put(ssk);
+> 	}
+> +	release_sock(ssk);
+> +	sock_put(ssk);
+> }
+>
 
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
-@@ -933,6 +953,28 @@ struct mptcp_sendmsg_info {
- 	unsigned int flags;
- };
- =
-
-+static int mptcp_check_allowed_size(struct mptcp_sock *msk, const struct m=
-ptcp_sendmsg_info *info)
-+{
-+	u64 window_end =3D mptcp_wnd_end(msk);
-+
-+	if (__mptcp_check_fallback(msk))
-+		return info->size_goal;
-+
-+	if (!before64(msk->snd_nxt + info->size_goal, window_end)) {
-+		u64 allowed_size =3D window_end - msk->snd_nxt;
-+
-+		/* Zero window and all data acked? Probe. */
-+		if (allowed_size =3D=3D 0 && !mptcp_has_unacked_data(msk)) {
-+			pr_info_ratelimited("%s: avail_size %d, allowed %d use mss_now %d\n", _=
-_func__, info->size_goal, (int)allowed_size, info->mss_now);
-+			allowed_size =3D info->mss_now;
-+		}
-+
-+		return min_t(unsigned int, allowed_size, info->size_goal);
-+	}
-+
-+	return info->size_goal;
-+}
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -950,7 +992,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
-ock *ssk,
- =
-
- 	/* compute send limit */
- 	info->mss_now =3D tcp_send_mss(ssk, &info->size_goal, info->flags);
--	avail_size =3D info->size_goal;
-+	avail_size =3D mptcp_check_allowed_size(msk, info);
- 	skb =3D tcp_write_queue_tail(ssk);
- 	if (skb) {
- 		/* Limit the write to the size available in the
-@@ -964,8 +1006,10 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 			 mptcp_skb_can_collapse_to(data_seq, skb, mpext);
- 		if (!can_collapse)
- 			TCP_SKB_CB(skb)->eor =3D 1;
-+		else if (avail_size > skb->len)
-+			avail_size -=3D skb->len;
- 		else
--			avail_size =3D info->size_goal - skb->len;
-+			avail_size =3D 0;
- 	}
- =
-
- 	if (WARN_ON_ONCE(info->sent > info->limit ||
-@@ -1077,6 +1121,10 @@ static struct sock *mptcp_subflow_get_send(struct mp=
-tcp_sock *msk,
- 		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
- 	}
- =
-
-+	/* Probe if we have zero window while everything has been acked */
-+	if (mptcp_has_zero_window(msk) && mptcp_has_unacked_data(msk))
-+		return NULL;
-+
- 	/* re-use last subflow, if the burst allow that */
- 	if (msk->last_snd && msk->snd_burst > 0 &&
- 	    sk_stream_memory_free(msk->last_snd) &&
-@@ -2171,6 +2219,8 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 	msk->write_seq =3D subflow_req->idsn + 1;
- 	msk->snd_nxt =3D msk->write_seq;
- 	atomic64_set(&msk->snd_una, msk->write_seq);
-+	atomic64_set(&msk->wnd_end, msk->snd_nxt + req->rsk_rcv_wnd);
-+
- 	if (mp_opt->mp_capable) {
- 		msk->can_ack =3D true;
- 		msk->remote_key =3D mp_opt->sndr_key;
-@@ -2205,6 +2255,8 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, con=
-st struct sock *ssk)
- 				      TCP_INIT_CWND * tp->advmss);
- 	if (msk->rcvq_space.space =3D=3D 0)
- 		msk->rcvq_space.space =3D TCP_INIT_CWND * TCP_MSS_DEFAULT;
-+
-+	atomic64_set(&msk->wnd_end, msk->snd_nxt + tcp_sk(ssk)->snd_wnd);
- }
- =
-
- static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6a4472709444..fec0a50a542a 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -214,6 +214,7 @@ struct mptcp_sock {
- 	struct sock	*last_snd;
- 	int		snd_burst;
- 	atomic64_t	snd_una;
-+	atomic64_t	wnd_end;
- 	unsigned long	timer_ival;
- 	u32		token;
- 	unsigned long	flags;
--- =
-
-2.26.2
-
---===============4860436064281196076==--
+--
+Mat Martineau
+Intel
+--===============0536847156600404803==--
