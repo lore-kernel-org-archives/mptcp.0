@@ -1,131 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============1151362569154280939=="
+Content-Type: multipart/mixed; boundary="===============2160556163785898605=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 2/2] mptcp: Handle incoming 32-bit DATA_FIN values
-Date: Tue, 29 Sep 2020 15:08:20 -0700
-Message-ID: <20200929220820.278003-3-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20200929220820.278003-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net 2/2] mptcp: Handle incoming 32-bit DATA_FIN
+ values
+Date: Tue, 29 Sep 2020 18:14:08 -0700
+Message-ID: <20200929.181408.534589469741619213.davem@davemloft.net>
+In-Reply-To: 20200929220820.278003-3-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6103
+X-UID: 6104
 
---===============1151362569154280939==
+--===============2160556163785898605==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The peer may send a DATA_FIN mapping with either a 32-bit or 64-bit
-sequence number. When a 32-bit sequence number is received for the
-DATA_FIN, it must be expanded to 64 bits before comparing it to the
-last acked sequence number. This expansion was missing.
+From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Date: Tue, 29 Sep 2020 15:08:20 -0700
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/93
-Fixes: 3721b9b64676 (mptcp: Track received DATA_FIN sequence number and add=
- related helpers)
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- net/mptcp/options.c  |  7 ++++---
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  | 16 +++++++++++++---
- 3 files changed, 18 insertions(+), 7 deletions(-)
+> The peer may send a DATA_FIN mapping with either a 32-bit or 64-bit
+> sequence number. When a 32-bit sequence number is received for the
+> DATA_FIN, it must be expanded to 64 bits before comparing it to the
+> last acked sequence number. This expansion was missing.
+> =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 120ef39fe589..afa486912f5a 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -782,7 +782,7 @@ static void update_una(struct mptcp_sock *msk,
- 	}
- }
- =
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/93
+> Fixes: 3721b9b64676 (mptcp: Track received DATA_FIN sequence number and a=
+dd related helpers)
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
--bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq)
-+bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
-ool use_64bit)
- {
- 	/* Skip if DATA_FIN was already received.
- 	 * If updating simultaneously with the recvmsg loop, values
-@@ -792,7 +792,8 @@ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, =
-u64 data_fin_seq)
- 	if (READ_ONCE(msk->rcv_data_fin) || !READ_ONCE(msk->first))
- 		return false;
- =
+The commit header text in a Fixes: tag should be inside of double quotes
+as well as parenthesis, like ("this")
 
--	WRITE_ONCE(msk->rcv_data_fin_seq, data_fin_seq);
-+	WRITE_ONCE(msk->rcv_data_fin_seq,
-+		   expand_ack(READ_ONCE(msk->ack_seq), data_fin_seq, use_64bit));
- 	WRITE_ONCE(msk->rcv_data_fin, 1);
- =
-
- 	return true;
-@@ -875,7 +876,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb,
- 	 */
- 	if (TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq) {
- 		if (mp_opt.data_fin && mp_opt.data_len =3D=3D 1 &&
--		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq) &&
-+		    mptcp_update_rcv_data_fin(msk, mp_opt.data_seq, mp_opt.dsn64) &&
- 		    schedule_work(&msk->work))
- 			sock_hold(subflow->conn);
- =
-
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 60b27d44c184..20f04ac85409 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -387,7 +387,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk=
-);
- bool mptcp_finish_join(struct sock *sk);
- void mptcp_data_acked(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
--bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq);
-+bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
-ool use_64bit);
- =
-
- void __init mptcp_token_init(void);
- static inline void mptcp_token_init_request(struct request_sock *req)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 8cbeb68f3775..5f2fa935022d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -731,7 +731,8 @@ static enum mapping_status get_mapping_status(struct so=
-ck *ssk,
- =
-
- 	if (mpext->data_fin =3D=3D 1) {
- 		if (data_len =3D=3D 1) {
--			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq);
-+			bool updated =3D mptcp_update_rcv_data_fin(msk, mpext->data_seq,
-+								 mpext->dsn64);
- 			pr_debug("DATA_FIN with no payload seq=3D%llu", mpext->data_seq);
- 			if (subflow->map_valid) {
- 				/* A DATA_FIN might arrive in a DSS
-@@ -748,8 +749,17 @@ static enum mapping_status get_mapping_status(struct s=
-ock *ssk,
- 				return MAPPING_DATA_FIN;
- 			}
- 		} else {
--			mptcp_update_rcv_data_fin(msk, mpext->data_seq + data_len);
--			pr_debug("DATA_FIN with mapping seq=3D%llu", mpext->data_seq + data_len=
-);
-+			u64 data_fin_seq =3D mpext->data_seq + data_len;
-+
-+			/* If mpext->data_seq is a 32-bit value, data_fin_seq
-+			 * must also be limited to 32 bits.
-+			 */
-+			if (!mpext->dsn64)
-+				data_fin_seq &=3D GENMASK_ULL(31, 0);
-+
-+			mptcp_update_rcv_data_fin(msk, data_fin_seq, mpext->dsn64);
-+			pr_debug("DATA_FIN with mapping seq=3D%llu dsn64=3D%d",
-+				 data_fin_seq, mpext->dsn64);
- 		}
- =
-
- 		/* Adjust for DATA_FIN using 1 byte of sequence space */
--- =
-
-2.28.0
-
---===============1151362569154280939==--
+I fixed this up while applying this series, but please get it correct
+next time.
+--===============2160556163785898605==--
