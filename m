@@ -1,37 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============9207193159581230777=="
+Content-Type: multipart/mixed; boundary="===============9028426084465976993=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net 0/2] mptcp: Fix for 32-bit DATA_FIN
-Date: Tue, 29 Sep 2020 18:17:33 -0700
-Message-ID: <20200929.181733.1663200201931665007.davem@davemloft.net>
-In-Reply-To: 20200929220820.278003-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [MPTCP][PATCH v4 mptcp-next 0/2] mptcp: add ADD_ADDR timeout
+ test case and others
+Date: Wed, 30 Sep 2020 16:50:42 +0800
+Message-ID: <cover.1601455568.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6105
+X-UID: 6107
 
---===============9207193159581230777==
+--===============9028426084465976993==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Date: Tue, 29 Sep 2020 15:08:18 -0700
+v4:
+ - use proc_dointvec_jiffies instead of proc_douintvec.
+ - use the reverse x-mas tree order.
+ - update the 'config' file for netfilter.
 
-> The main fix is contained in patch 2, and that commit message explains
-> the issue with not properly converting truncated DATA_FIN sequence
-> numbers sent by the peer.
-> =
+v3:
+ - rename run_add_addr_timeout_tests to run_tests_slow, it can be reused in
+   other test cases.
 
-> With patch 2 adding an unlocked read of msk->ack_seq, patch 1 cleans up
-> access to that data with READ_ONCE/WRITE_ONCE.
-> =
+v2:
+ - drop add_addr_echo sysctl in v1
+ - use iptables rules to drop ADD_ADDR echo packets.
 
-> This does introduce two merge conflicts with net-next, but both have
-> straightforward resolution. Patch 1 modifies a line that got removed in
-> net-next so the modification can be dropped when merging. Patch 2 will
-> require a trivial conflict resolution for a modified function
-> declaration.
+Geliang Tang (2):
+  mptcp: add a new sysctl add_addr_timeout
+  selftests: mptcp: add ADD_ADDR timeout test case
 
-Series applied, thank you.
---===============9207193159581230777==--
+ net/mptcp/ctrl.c                              | 14 ++++++
+ net/mptcp/pm_netlink.c                        |  8 +++-
+ net/mptcp/protocol.h                          |  1 +
+ tools/testing/selftests/net/mptcp/config      |  6 +++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 43 +++++++++++++++++--
+ 5 files changed, 67 insertions(+), 5 deletions(-)
+
+-- =
+
+2.26.2
+
+--===============9028426084465976993==--
