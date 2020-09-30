@@ -1,56 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============2157579352117834241=="
+Content-Type: multipart/mixed; boundary="===============7867398075386114113=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 0/2] mptcp: add ADD_ADDR
- timeout test case and others
-Date: Wed, 30 Sep 2020 11:19:36 +0200
-Message-ID: <3e02025111ee3bfcf327e16a58c3c35357f9fc11.camel@redhat.com>
-In-Reply-To: cover.1601455568.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 1/2] mptcp: send out
+ dedicated ADD_ADDR packet
+Date: Wed, 30 Sep 2020 11:31:14 +0200
+Message-ID: <27b358e8-cff0-0efa-c0c9-484ce8ad6d00@tessares.net>
+In-Reply-To: 20200929180745.GD95220@MacBook-Pro.local
 X-Status: 
 X-Keywords:                  
-X-UID: 6110
+X-UID: 6111
 
---===============2157579352117834241==
+--===============7867398075386114113==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-09-30 at 16:50 +0800, Geliang Tang wrote:
-> v4:
->  - use proc_dointvec_jiffies instead of proc_douintvec.
->  - use the reverse x-mas tree order.
->  - update the 'config' file for netfilter.
+Hi Christoph, Paolo, Geliang,
+
+On 29/09/2020 20:07, Christoph Paasch wrote:
+> On 09/29/20 - 11:30, Paolo Abeni wrote:
+>> On Mon, 2020-09-28 at 15:46 +0800, Geliang Tang wrote:
+
+(...)
+
+>>> -	/* If the first established packet does not contain MP_CAPABLE
+>>> + data
+>>> +	/* If the first established packet does not contain MP_CAPABLE
+>>> + data or ADD_ADDR
+>>>   	 * then fallback to TCP
+>>>   	 */
+>>> -	if (!mp_opt->mp_capable) {
+>>> +	if (!mp_opt->mp_capable && !mp_opt->add_addr) {
+>>>   		subflow->mp_capable =3D 0;
+>>>   		pr_fallback(msk);
+>>>   		__mptcp_do_fallback(msk);
+>>
+>> I think the RFC is a bit unclear with this point, because in
+>> section 3.4.1. says:
+>>
+>> """
+>> This [ADD_ADDR] option can be used at any time during a connection
+>> """
+>>
+>> but also says that here we expect a mp_capable + data packet.
+>>
+>> @Christoph, should we accept ADD_ADDR here or should we reject them?
 > =
 
-> v3:
->  - rename run_add_addr_timeout_tests to run_tests_slow, it can be reused =
-in
->    other test cases.
+> I think we should accept them. There are 2 things that can happen:
 > =
 
-> v2:
->  - drop add_addr_echo sysctl in v1
->  - use iptables rules to drop ADD_ADDR echo packets.
-> =
+> * MP_CAPABLE + data comes later on. In that case we can use the received
+>    addr.
+>    Note, for this to happen I am assuming that the ADD_ADDR comes on an
+>    out-of-order packet and that the MP_CAPABLE will still come on the pac=
+ket
+>    with relative sequence-number 1.
 
-> Geliang Tang (2):
->   mptcp: add a new sysctl add_addr_timeout
->   selftests: mptcp: add ADD_ADDR timeout test case
-> =
+If the ADD_ADDR comes on an out-of-order packet and because it is a ACK =
 
->  net/mptcp/ctrl.c                              | 14 ++++++
->  net/mptcp/pm_netlink.c                        |  8 +++-
->  net/mptcp/protocol.h                          |  1 +
->  tools/testing/selftests/net/mptcp/config      |  6 +++
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 43 +++++++++++++++++--
->  5 files changed, 67 insertions(+), 5 deletions(-)
+without data, is it not dropped earlier by the TCP stack?
+I think we have this behaviour with mptcp.org version.
 
-LGTM, thanks!
+Cheers,
+Matt
+-- =
 
-Note: I did not explicitly check the [k]config deps in patch 2/2, but I
-guess problem there - if any! - could be addressed later.
-
-/P
-
---===============2157579352117834241==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============7867398075386114113==--
