@@ -1,93 +1,385 @@
-Content-Type: multipart/mixed; boundary="===============3547639987103578777=="
+Content-Type: multipart/mixed; boundary="===============6365950277276471977=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 01/13] mptcp: more DATA FIN fixes
-Date: Thu, 01 Oct 2020 12:18:54 -0700
-Message-ID: <alpine.OSX.2.23.453.2010011216060.40522@vuongn2x-mobl.amr.corp.intel.com>
-In-Reply-To: b36a7c4bb7ca73ea8d93134147157c48d8a3d678.1601552158.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH mptcp-next] selftests: mptcp: add link failure test
+ case
+Date: Thu, 01 Oct 2020 23:56:00 +0200
+Message-ID: <20201001215600.17614-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 6144
+X-UID: 6146
 
---===============3547639987103578777==
+--===============6365950277276471977==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Add a test case where a link fails with multiple subflows.
+The expectation is that MPTCP will transmit any data that
+could not be delivered via the failed link on another subflow.
 
-On Thu, 1 Oct 2020, Paolo Abeni wrote:
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ NB: One could make the 'down link' deterministic:
+ this will down one of the 4 links randonly.
 
-> Currently data fin on data packet are not handled properly:
-> the 'rcv_data_fin_seq' field is interpreted as the last
-> sequence number carrying a valid data, but for data fin
-> packet with valid maps we currently store map_seq + map_len,
-> that is, the next value.
->
-> The 'write_seq' fields carries instead the value subseguent
-> to the last valid byte, so in mptcp_write_data_fin() we
-> never detect correctly the last DSS map.
->
-> Fixes: f7b6e548510a ("mptcp: Handle incoming 32-bit DATA_FIN values")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/options.c | 4 ++--
-> net/mptcp/subflow.c | 2 +-
-> 2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 45501c5f7f93..dde4340fca1f 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -452,7 +452,7 @@ static bool mptcp_established_options_mp(struct sock =
-*sk, struct sk_buff *skb,
-> static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
-> 				 struct sk_buff *skb, struct mptcp_ext *ext)
-> {
-> -	u64 data_fin_tx_seq =3D READ_ONCE(mptcp_sk(subflow->conn)->write_seq);
-> +	u64 data_fin_tx_seq =3D READ_ONCE(mptcp_sk(subflow->conn)->write_seq) -=
- 1;
->
-> 	if (!ext->use_map || !skb->len) {
-> 		/* RFC6824 requires a DSS mapping with specific values
-> @@ -464,7 +464,7 @@ static void mptcp_write_data_fin(struct mptcp_subflow=
-_context *subflow,
-> 		/* The write_seq value has already been incremented, so
-> 		 * the actual sequence number for the DATA_FIN is one less.
-> 		 */
+ The test case is new, its a copy of
+ "multiple subflows and signal", just with added link-fail.
 
-Just one piece of feedback - this comment would now make more sense in the =
+ Alternative would be to just extend the existing one.
 
-previous hunk where the subtraction happens and data_fin_tx_seq is =
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 111 +++++++++++++-----
+ 1 file changed, 84 insertions(+), 27 deletions(-)
 
-assigned.
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 08f53d86dedc..a8be79b226df 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -5,6 +5,7 @@ ret=3D0
+ sin=3D""
+ sout=3D""
+ cin=3D""
++cinsent=3D""
+ cout=3D""
+ ksft_skip=3D4
+ timeout=3D30
+@@ -63,7 +64,7 @@ cleanup_partial()
+ cleanup()
+ {
+ 	rm -f "$cin" "$cout"
+-	rm -f "$sin" "$sout"
++	rm -f "$cin" "$cout" "$cinsent"
+ 	cleanup_partial
+ }
+ =
 
-> -		ext->data_seq =3D data_fin_tx_seq - 1;
-> +		ext->data_seq =3D data_fin_tx_seq;
-> 		ext->subflow_seq =3D 0;
-> 		ext->data_len =3D 1;
-> 	} else if (ext->data_seq + ext->data_len =3D=3D data_fin_tx_seq) {
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index cc70a993e934..d04a9bb9448f 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -750,7 +750,7 @@ static enum mapping_status get_mapping_status(struct =
-sock *ssk,
-> 				return MAPPING_DATA_FIN;
-> 			}
-> 		} else {
-> -			u64 data_fin_seq =3D mpext->data_seq + data_len;
-> +			u64 data_fin_seq =3D mpext->data_seq + data_len - 1;
->
-> 			/* If mpext->data_seq is a 32-bit value, data_fin_seq
-> 			 * must also be limited to 32 bits.
-> -- =
+@@ -94,6 +95,12 @@ if [ $? -ne 0 ];then
+ 	exit $ksft_skip
+ fi
+ =
 
-> 2.26.2
++print_file_err()
++{
++	ls -l "$1" 1>&2
++	echo "Trailing bytes are: "
++	tail -c 27 "$1"
++}
+ =
 
-Thanks for the fix,
+ check_transfer()
+ {
+@@ -126,6 +133,17 @@ do_ping()
+ 	fi
+ }
+ =
 
---
-Mat Martineau
-Intel
---===============3547639987103578777==--
++link_failure()
++{
++	ns=3D"$1"
++
++	l=3D$((RANDOM%4))
++	l=3D$((l+1))
++
++	veth=3D"ns1eth$l"
++	ip -net "$ns" link set "$veth" down
++}
++
+ do_transfer()
+ {
+ 	listener_ns=3D"$1"
+@@ -135,6 +153,7 @@ do_transfer()
+ 	connect_addr=3D"$5"
+ 	rm_nr_ns1=3D"$6"
+ 	rm_nr_ns2=3D"$7"
++	test_link_fail=3D"$8"
+ =
+
+ 	port=3D$((10000+$TEST_COUNT))
+ 	TEST_COUNT=3D$((TEST_COUNT+1))
+@@ -170,7 +189,12 @@ do_transfer()
+ =
+
+ 	sleep 1
+ =
+
+-	ip netns exec ${connector_ns} $mptcp_connect -t $timeout -p $port -s ${cl=
+_proto} $connect_addr < "$cin" > "$cout" &
++	if [ "$test_link_fail" -eq 0 ];then
++		ip netns exec ${connector_ns} $mptcp_connect -t $timeout -p $port -s ${c=
+l_proto} $connect_addr < "$cin" > "$cout" &
++	else
++		( cat "$cin" ; sleep 2; link_failure $listener_ns ; cat "$cin" ) | tee "=
+$cinsent" | \
++		ip netns exec ${connector_ns} $mptcp_connect -t $timeout -p $port -s ${c=
+l_proto} $connect_addr > "$cout" &
++	fi
+ 	cpid=3D$!
+ =
+
+ 	if [ $rm_nr_ns1 -gt 0 ]; then
+@@ -220,7 +244,11 @@ do_transfer()
+ =
+
+ 	check_transfer $sin $cout "file received by client"
+ 	retc=3D$?
+-	check_transfer $cin $sout "file received by server"
++	if [ "$test_link_fail" -eq 0 ];then
++		check_transfer $cin $sout "file received by server"
++	else
++		check_transfer $cinsent $sout "file received by server"
++	fi
+ 	rets=3D$?
+ =
+
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
+@@ -236,13 +264,12 @@ make_file()
+ {
+ 	name=3D$1
+ 	who=3D$2
++	size=3D$3
+ =
+
+-	SIZE=3D1
+-
+-	dd if=3D/dev/urandom of=3D"$name" bs=3D1024 count=3D$SIZE 2> /dev/null
++	dd if=3D/dev/urandom of=3D"$name" bs=3D1024 count=3D$size 2> /dev/null
+ 	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+ =
+
+-	echo "Created $name (size $SIZE KB) containing data sent by $who"
++	echo "Created $name (size $size KB) containing data sent by $who"
+ }
+ =
+
+ run_tests()
+@@ -250,10 +277,28 @@ run_tests()
+ 	listener_ns=3D"$1"
+ 	connector_ns=3D"$2"
+ 	connect_addr=3D"$3"
++	test_linkfail=3D"$4"
+ 	lret=3D0
++	oldin=3D""
++
++	if [ "$test_linkfail" -eq 1 ];then
++		size=3D$((RANDOM%1024))
++		size=3D$((size+1))
++		size=3D$((size*128))
+ =
+
+-	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} 0 0
++		oldin=3D$(mktemp)
++		cp "$cin" "$oldin"
++		make_file "$cin" "client" $size
++	fi
++
++	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} 0 =
+0 "$test_linkfail"
+ 	lret=3D$?
++
++	if [ "$test_linkfail" -eq 1 ];then
++		cp "$oldin" "$cin"
++		rm -f "$oldin"
++	fi
++
+ 	if [ $lret -ne 0 ]; then
+ 		ret=3D$lret
+ 		return
+@@ -269,7 +314,7 @@ run_remove_tests()
+ 	rm_nr_ns2=3D"$5"
+ 	lret=3D0
+ =
+
+-	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${=
+rm_nr_ns1} ${rm_nr_ns2}
++	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${=
+rm_nr_ns1} ${rm_nr_ns2} 0
+ 	lret=3D$?
+ 	if [ $lret -ne 0 ]; then
+ 		ret=3D$lret
+@@ -403,26 +448,27 @@ chk_rm_nr()
+ sin=3D$(mktemp)
+ sout=3D$(mktemp)
+ cin=3D$(mktemp)
++cinsent=3D$(mktemp)
+ cout=3D$(mktemp)
+ init
+-make_file "$cin" "client"
+-make_file "$sin" "server"
++make_file "$cin" "client" 1
++make_file "$sin" "server" 1
+ trap cleanup EXIT
+ =
+
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "no JOIN" "0" "0" "0"
+ =
+
+ # subflow limted by client
+ reset
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow, limited by client" 0 0 0
+ =
+
+ # subflow limted by server
+ reset
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow, limited by server" 1 1 0
+ =
+
+ # subflow
+@@ -430,7 +476,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow" 1 1 1
+ =
+
+ # multiple subflows
+@@ -439,7 +485,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows" 2 2 2
+ =
+
+ # multiple subflows limited by serverf
+@@ -448,13 +494,13 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows, limited by server" 2 2 1
+ =
+
+ # add_address, unused
+ reset
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "unused signal address" 0 0 0
+ chk_add_nr 1 1
+ =
+
+@@ -463,7 +509,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "signal address" 1 1 1
+ chk_add_nr 1 1
+ =
+
+@@ -476,7 +522,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflow and signal" 2 2 2
+ chk_add_nr 1 1
+ =
+
+@@ -487,10 +533,21 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags sig=
+nal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows and signal" 3 3 3
+ chk_add_nr 1 1
+ =
+
++# accept and use add_addr with additional subflows
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 3
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl limits 1 3
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 1
++chk_join_nr "multiple flows, signal, link failure" 3 3 3
++chk_add_nr 1 1
++
+ # single subflow, remove
+ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+@@ -548,7 +605,7 @@ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "single subflow with syn cookies" 1 1 1
+ =
+
+ # multiple subflows with syn cookies
+@@ -557,7 +614,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "multiple subflows with syn cookies" 2 2 2
+ =
+
+ # multiple subflows limited by server
+@@ -566,7 +623,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflows limited by server w cookies" 2 2 1
+ =
+
+ # test signal address with cookies
+@@ -574,7 +631,7 @@ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "signal address with syn cookies" 1 1 1
+ chk_add_nr 1 1
+ =
+
+@@ -584,7 +641,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflow and signal w cookies" 2 2 2
+ chk_add_nr 1 1
+ =
+
+@@ -595,7 +652,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 10.0.1.1 0
+ chk_join_nr "subflows and signal w. cookies" 3 3 3
+ chk_add_nr 1 1
+ =
+
+-- =
+
+2.26.2
+
+--===============6365950277276471977==--
