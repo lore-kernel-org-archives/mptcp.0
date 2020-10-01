@@ -1,120 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============6886348377791584403=="
+Content-Type: multipart/mixed; boundary="===============1865186330647304927=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 13/13] mptcp: send explicit ack on delayed ack_seq
- incr
-Date: Thu, 01 Oct 2020 16:08:14 +0200
-Message-ID: <70378eeeaa6cfbfe9aa810351a62c97e11948224.1601552158.git.pabeni@redhat.com>
-In-Reply-To: cover.1601552158.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH mptcp-next] mptcp: ADD_ADDRs with echo bit are smaller
+Date: Thu, 01 Oct 2020 16:58:33 +0200
+Message-ID: <20201001145833.4039133-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 6140
+X-UID: 6141
 
---===============6886348377791584403==
+--===============1865186330647304927==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+The MPTCP ADD_ADDR suboption with echo-flag=3D1 has no HMAC, the size is
+smaller than the one initially sent without echo-flag=3D1. We then need to
+use the  correct size not to send a packet with the wrong TCP option
+lenght and containing garbage at the end.
+
+Fixes: 6a6c05a8b016 ("mptcp: send out ADD_ADDR with echo flag")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/95
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/protocol.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+ net/mptcp/options.c  | 2 +-
+ net/mptcp/pm.c       | 5 +++--
+ net/mptcp/protocol.h | 7 ++++---
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 76d5fd11d2f5..79cd8e879c10 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -395,13 +395,27 @@ static void mptcp_set_timeout(const struct sock *sk, =
-const struct sock *ssk)
- 	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 45501c5f7f93..4055769e4fde 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -587,7 +587,7 @@ static bool mptcp_established_options_add_addr(struct s=
+ock *sk,
+ 	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
+ 		return false;
+ =
+
+-	len =3D mptcp_add_addr_len(saddr.family);
++	len =3D mptcp_add_addr_len(saddr.family, echo);
+ 	if (remaining < len)
+ 		return false;
+ =
+
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 7e81f53d1e5d..e19e1525ecbb 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -183,11 +183,12 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
+ unsigned int remaining,
+ 	if (!mptcp_pm_should_add_signal(msk))
+ 		goto out_unlock;
+ =
+
+-	if (remaining < mptcp_add_addr_len(msk->pm.local.family))
++	*echo =3D READ_ONCE(msk->pm.add_addr_echo);
++
++	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
+ 		goto out_unlock;
+ =
+
+ 	*saddr =3D msk->pm.local;
+-	*echo =3D READ_ONCE(msk->pm.add_addr_echo);
+ 	WRITE_ONCE(msk->pm.add_addr_signal, false);
+ 	ret =3D true;
+ =
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a47307c82831..aa0ab18d2e57 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -464,11 +464,12 @@ static inline bool mptcp_pm_should_rm_signal(struct m=
+ptcp_sock *msk)
+ 	return READ_ONCE(msk->pm.rm_addr_signal);
  }
  =
 
--static void mptcp_check_data_fin(struct sock *sk)
-+static void mptcp_send_ack(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+		lock_sock(ssk);
-+		tcp_send_ack(ssk);
-+		release_sock(ssk);
-+	}
-+}
-+
-+static bool mptcp_check_data_fin(struct sock *sk)
+-static inline unsigned int mptcp_add_addr_len(int family)
++static inline unsigned int mptcp_add_addr_len(int family, bool echo)
  {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	u64 rcv_data_fin_seq;
-+	bool ret =3D false;
- =
-
- 	if (__mptcp_check_fallback(msk) || !msk->first)
--		return;
-+		return ret;
- =
-
- 	/* Need to ack a DATA_FIN received from a peer while this side
- 	 * of the connection is in ESTABLISHED, FIN_WAIT1, or FIN_WAIT2.
-@@ -417,8 +431,6 @@ static void mptcp_check_data_fin(struct sock *sk)
- 	 */
- =
-
- 	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
--		struct mptcp_subflow_context *subflow;
--
- 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
- 		WRITE_ONCE(msk->rcv_data_fin, 0);
- =
-
-@@ -442,17 +454,11 @@ static void mptcp_check_data_fin(struct sock *sk)
- 			break;
- 		}
- =
-
-+		ret =3D true;
- 		mptcp_set_timeout(sk, NULL);
--		mptcp_for_each_subflow(msk, subflow) {
--			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
--
--			lock_sock(ssk);
--			tcp_send_ack(ssk);
--			release_sock(ssk);
--		}
--
-+		mptcp_send_ack(msk);
- 		if (sock_flag(sk, SOCK_DEAD))
--			return;
-+			return ret;
- =
-
- 		sk->sk_state_change(sk);
- 		if (sk->sk_shutdown =3D=3D SHUTDOWN_MASK ||
-@@ -461,6 +467,7 @@ static void mptcp_check_data_fin(struct sock *sk)
- 		else
- 			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
- 	}
-+	return ret;
+ 	if (family =3D=3D AF_INET)
+-		return TCPOLEN_MPTCP_ADD_ADDR;
+-	return TCPOLEN_MPTCP_ADD_ADDR6;
++		return echo ? TCPOLEN_MPTCP_ADD_ADDR_BASE
++			    : TCPOLEN_MPTCP_ADD_ADDR;
++	return echo ? TCPOLEN_MPTCP_ADD_ADDR6_BASE : TCPOLEN_MPTCP_ADD_ADDR6;
  }
  =
 
- static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
-@@ -1522,7 +1529,8 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 	} while (!done);
- =
-
- 	if (mptcp_ofo_queue(msk) || moved > 0) {
--		mptcp_check_data_fin((struct sock *)msk);
-+		if (!mptcp_check_data_fin((struct sock *)msk))
-+			mptcp_send_ack(msk);
- 		return true;
- 	}
- 	return false;
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
 -- =
 
-2.26.2
+2.27.0
 
---===============6886348377791584403==--
+--===============1865186330647304927==--
