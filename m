@@ -1,91 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============2644527273981640355=="
+Content-Type: multipart/mixed; boundary="===============8788803435595738214=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 1/2] mptcp: send out
- dedicated ADD_ADDR packet
-Date: Wed, 30 Sep 2020 18:04:56 -0700
-Message-ID: <20201001010456.GL19948@MacBook-Pro.local>
-In-Reply-To: 27b358e8-cff0-0efa-c0c9-484ce8ad6d00@tessares.net
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 0/2] mptcp: add ADD_ADDR timeout
+ test case and others
+Date: Thu, 01 Oct 2020 15:25:53 +0800
+Message-ID: <cover.1601536190.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6122
+X-UID: 6123
 
---===============2644527273981640355==
+--===============8788803435595738214==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 09/30/20 - 11:31, Matthieu Baerts wrote:
-> Hi Christoph, Paolo, Geliang,
-> =
+v5:
+ - fix nfbpf_compile dependence
+ - add optional arguments for run_test, drop run_tests_slow and run_remove_=
+tests
+ - use 'slow/fast' in do_transfer
 
-> On 29/09/2020 20:07, Christoph Paasch wrote:
-> > On 09/29/20 - 11:30, Paolo Abeni wrote:
-> > > On Mon, 2020-09-28 at 15:46 +0800, Geliang Tang wrote:
-> =
+v4:
+ - use proc_dointvec_jiffies instead of proc_douintvec.
+ - use the reverse x-mas tree order.
+ - update the 'config' file for netfilter.
 
-> (...)
-> =
+v3:
+ - rename run_add_addr_timeout_tests to run_tests_slow, it can be reused in
+   other test cases.
 
-> > > > -	/* If the first established packet does not contain MP_CAPABLE
-> > > > + data
-> > > > +	/* If the first established packet does not contain MP_CAPABLE
-> > > > + data or ADD_ADDR
-> > > >   	 * then fallback to TCP
-> > > >   	 */
-> > > > -	if (!mp_opt->mp_capable) {
-> > > > +	if (!mp_opt->mp_capable && !mp_opt->add_addr) {
-> > > >   		subflow->mp_capable =3D 0;
-> > > >   		pr_fallback(msk);
-> > > >   		__mptcp_do_fallback(msk);
-> > > =
+v2:
+ - drop add_addr_echo sysctl in v1
+ - use iptables rules to drop ADD_ADDR echo packets.
 
-> > > I think the RFC is a bit unclear with this point, because in
-> > > section 3.4.1. says:
-> > > =
+Geliang Tang (2):
+  mptcp: add a new sysctl add_addr_timeout
+  selftests: mptcp: add ADD_ADDR timeout test case
 
-> > > """
-> > > This [ADD_ADDR] option can be used at any time during a connection
-> > > """
-> > > =
+ net/mptcp/ctrl.c                              | 14 ++++
+ net/mptcp/pm_netlink.c                        |  8 +-
+ net/mptcp/protocol.h                          |  1 +
+ tools/testing/selftests/net/mptcp/config      |  6 ++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 73 +++++++++++++------
+ 5 files changed, 76 insertions(+), 26 deletions(-)
 
-> > > but also says that here we expect a mp_capable + data packet.
-> > > =
+-- =
 
-> > > @Christoph, should we accept ADD_ADDR here or should we reject them?
-> > =
+2.26.2
 
-> > I think we should accept them. There are 2 things that can happen:
-> > =
-
-> > * MP_CAPABLE + data comes later on. In that case we can use the received
-> >    addr.
-> >    Note, for this to happen I am assuming that the ADD_ADDR comes on an
-> >    out-of-order packet and that the MP_CAPABLE will still come on the p=
-acket
-> >    with relative sequence-number 1.
-> =
-
-> If the ADD_ADDR comes on an out-of-order packet and because it is a ACK
-> without data, is it not dropped earlier by the TCP stack?
-> I think we have this behaviour with mptcp.org version.
-
-No, as far as I can see in mptcp.org we do parse the ADD_ADDR even if we
-haven't yet received an MP_CAPABLE with data.
-
-cfr., mptcp_handle_options, called from tcp_validate_incoming, which is
-called even on ACKs without data.
-
-
-Christoph
-
-> =
-
-> Cheers,
-> Matt
-> -- =
-
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
---===============2644527273981640355==--
+--===============8788803435595738214==--
