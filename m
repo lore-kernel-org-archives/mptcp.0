@@ -1,61 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============5599352438251712295=="
+Content-Type: multipart/mixed; boundary="===============1740965668159951880=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] tcp: fix syn cookied MPTCP request socket leak
-Date: Fri, 02 Oct 2020 11:12:06 +0200
-Message-ID: <873c3b3b-1940-abb1-6164-265d9b2e1d42@tessares.net>
-In-Reply-To: CA+WQbwsVq8n6-0f6qun9q2cVjTyXO3Nk72jCGQ536Y79ueLKsg@mail.gmail.com
+Subject: [MPTCP] [PATCH v3 01/13] mptcp: more DATA FIN fixes
+Date: Fri, 02 Oct 2020 11:26:11 +0200
+Message-ID: <6f72ee7f926a7fb06a9000084ef2a99154786f47.1601630384.git.pabeni@redhat.com>
+In-Reply-To: cover.1601630384.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6149
+X-UID: 6150
 
---===============5599352438251712295==
+--===============1740965668159951880==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Geliang,
+Currently data fin on data packet are not handled properly:
+the 'rcv_data_fin_seq' field is interpreted as the last
+sequence number carrying a valid data, but for data fin
+packet with valid maps we currently store map_seq + map_len,
+that is, the next value.
 
-On 02/10/2020 01:31, Geliang Tang wrote:
-> Hi Paolo,
-> =
+The 'write_seq' fields carries instead the value subseguent
+to the last valid byte, so in mptcp_write_data_fin() we
+never detect correctly the last DSS map.
 
-> Paolo Abeni <pabeni(a)redhat.com> =E4=BA=8E2020=E5=B9=B410=E6=9C=882=E6=
-=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=8812:32=E5=86=99=E9=81=93=EF=BC=9A
->>
->> If a syn-cookies request socket don't pass MPTCP-level
->> validation done in syn_recv_sock(), we need to release
->> it immediatelly, or it will be leaked.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/89
->> Fixes: 9466a1ccebbe ("mptcp: enable JOIN requests even if cookies are in=
- use")
->> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
->> --
->> Note: I still see some mptcp_join.sh self-tests failures, but
->>   I can observe them with and without this patch
-> =
+Fixes: f7b6e548510a ("mptcp: Handle incoming 32-bit DATA_FIN values")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c | 10 +++++-----
+ net/mptcp/subflow.c |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-> Thanks, I have tested this patch, it works.
-> =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 45501c5f7f93..24e89d87c1f0 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -452,7 +452,10 @@ static bool mptcp_established_options_mp(struct sock *=
+sk, struct sk_buff *skb,
+ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
+ 				 struct sk_buff *skb, struct mptcp_ext *ext)
+ {
+-	u64 data_fin_tx_seq =3D READ_ONCE(mptcp_sk(subflow->conn)->write_seq);
++	/* The write_seq value has already been incremented, so the actual
++	 * sequence number for the DATA_FIN is one less.
++	 */
++	u64 data_fin_tx_seq =3D READ_ONCE(mptcp_sk(subflow->conn)->write_seq) - 1;
+ =
 
-> Reported-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
+ 	if (!ext->use_map || !skb->len) {
+ 		/* RFC6824 requires a DSS mapping with specific values
+@@ -461,10 +464,7 @@ static void mptcp_write_data_fin(struct mptcp_subflow_=
+context *subflow,
+ 		ext->data_fin =3D 1;
+ 		ext->use_map =3D 1;
+ 		ext->dsn64 =3D 1;
+-		/* The write_seq value has already been incremented, so
+-		 * the actual sequence number for the DATA_FIN is one less.
+-		 */
+-		ext->data_seq =3D data_fin_tx_seq - 1;
++		ext->data_seq =3D data_fin_tx_seq;
+ 		ext->subflow_seq =3D 0;
+ 		ext->data_len =3D 1;
+ 	} else if (ext->data_seq + ext->data_len =3D=3D data_fin_tx_seq) {
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index cc70a993e934..d04a9bb9448f 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -750,7 +750,7 @@ static enum mapping_status get_mapping_status(struct so=
+ck *ssk,
+ 				return MAPPING_DATA_FIN;
+ 			}
+ 		} else {
+-			u64 data_fin_seq =3D mpext->data_seq + data_len;
++			u64 data_fin_seq =3D mpext->data_seq + data_len - 1;
+ =
 
-Thank you for the patch and the validation!
-
-I just added it to our Git tree with Geliang's tag, my Reviewed-by tag =
-
-and I fixed a typo reported by checkpatch --codespell (immediatelly):
-
-- 43495174d6ac: tcp: fix syn cookied MPTCP request socket leak
-
-Tests + export have been queued. It might take ~1h to get the results.
-
-Cheers,
-Matt
+ 			/* If mpext->data_seq is a 32-bit value, data_fin_seq
+ 			 * must also be limited to 32 bits.
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5599352438251712295==--
+2.26.2
+
+--===============1740965668159951880==--
