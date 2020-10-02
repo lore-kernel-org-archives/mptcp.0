@@ -1,112 +1,164 @@
-Content-Type: multipart/mixed; boundary="===============1378708838436497065=="
+Content-Type: multipart/mixed; boundary="===============4499178001660559747=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 06/13] mptcp: add accounting for pending data
-Date: Fri, 02 Oct 2020 11:26:16 +0200
-Message-ID: <945cb8399b037aa1dbaaed8ce59c6e516aac9f0c.1601630384.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v3 07/13] mptcp: introduce MPTCP snd_nxt
+Date: Fri, 02 Oct 2020 11:26:17 +0200
+Message-ID: <e2f6ba7d8264e3b90d5834626b5763ac537bf646.1601630384.git.pabeni@redhat.com>
 In-Reply-To: cover.1601630384.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6156
+X-UID: 6157
 
---===============1378708838436497065==
+--===============4499178001660559747==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Preparation patch to track the data pending in the msk
-write queue. No functional change introduced here
+Track the next MPTCP sequence numer used on xmit,
+currently always equal to write_next.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c |  1 +
- net/mptcp/protocol.h | 38 +++++++++++++++++++++++++++++++++++---
- 2 files changed, 36 insertions(+), 3 deletions(-)
+ net/mptcp/options.c  |  4 ++--
+ net/mptcp/protocol.c |  7 +++++--
+ net/mptcp/protocol.h | 17 +++++++++--------
+ 3 files changed, 16 insertions(+), 12 deletions(-)
 
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 24e89d87c1f0..3a4d12935b82 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -794,7 +794,7 @@ static void update_una(struct mptcp_sock *msk,
+ 		       struct mptcp_options_received *mp_opt)
+ {
+ 	u64 new_snd_una, snd_una, old_snd_una =3D atomic64_read(&msk->snd_una);
+-	u64 write_seq =3D READ_ONCE(msk->write_seq);
++	u64 snd_nxt =3D READ_ONCE(msk->snd_nxt);
+ =
+
+ 	/* avoid ack expansion on update conflict, to reduce the risk of
+ 	 * wrongly expanding to a future ack sequence number, which is way
+@@ -803,7 +803,7 @@ static void update_una(struct mptcp_sock *msk,
+ 	new_snd_una =3D expand_ack(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
+ =
+
+ 	/* ACK for data not even sent yet? Ignore. */
+-	if (after64(new_snd_una, write_seq))
++	if (after64(new_snd_una, snd_nxt))
+ 		new_snd_una =3D old_snd_una;
+ =
+
+ 	while (after64(new_snd_una, old_snd_una)) {
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 82385a1295eb..26f520450cca 100644
+index 26f520450cca..e9d9b5c0de1c 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1831,6 +1831,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
- 	INIT_WORK(&msk->work, mptcp_worker);
- 	msk->out_of_order_queue =3D RB_ROOT;
-+	msk->first_pending =3D NULL;
+@@ -814,7 +814,7 @@ static void mptcp_clean_una(struct sock *sk)
+ 	 * plain TCP
+ 	 */
+ 	if (__mptcp_check_fallback(msk))
+-		atomic64_set(&msk->snd_una, msk->write_seq);
++		atomic64_set(&msk->snd_una, msk->snd_nxt);
+ 	snd_una =3D atomic64_read(&msk->snd_una);
  =
 
- 	msk->first =3D NULL;
- 	inet_csk(sk)->icsk_sync_mss =3D mptcp_sync_mss;
+ 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
+@@ -1327,6 +1327,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ =
+
+ 	release_sock(ssk);
+ out:
++	msk->snd_nxt =3D msk->write_seq;
+ 	ssk_check_wmem(msk);
+ 	release_sock(sk);
+ 	return copied ? : ret;
+@@ -1618,7 +1619,7 @@ static void mptcp_retransmit_handler(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
+
+-	if (atomic64_read(&msk->snd_una) =3D=3D READ_ONCE(msk->write_seq)) {
++	if (atomic64_read(&msk->snd_una) =3D=3D READ_ONCE(msk->snd_nxt)) {
+ 		mptcp_stop_timer(sk);
+ 	} else {
+ 		set_bit(MPTCP_WORK_RTX, &msk->flags);
+@@ -2075,6 +2076,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 	WRITE_ONCE(msk->fully_established, false);
+ =
+
+ 	msk->write_seq =3D subflow_req->idsn + 1;
++	msk->snd_nxt =3D msk->write_seq;
+ 	atomic64_set(&msk->snd_una, msk->write_seq);
+ 	if (mp_opt->mp_capable) {
+ 		msk->can_ack =3D true;
+@@ -2386,6 +2388,7 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	WRITE_ONCE(msk->remote_key, subflow->remote_key);
+ 	WRITE_ONCE(msk->local_key, subflow->local_key);
+ 	WRITE_ONCE(msk->write_seq, subflow->idsn + 1);
++	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
+ 	WRITE_ONCE(msk->ack_seq, ack_seq);
+ 	WRITE_ONCE(msk->can_ack, 1);
+ 	atomic64_set(&msk->snd_una, msk->write_seq);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 50585311998c..683497e0375e 100644
+index 683497e0375e..f7ffed685640 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -186,9 +186,10 @@ struct mptcp_pm_data {
- struct mptcp_data_frag {
- 	struct list_head list;
- 	u64 data_seq;
--	int data_len;
--	int offset;
--	int overhead;
-+	u16 data_len;
-+	u16 offset;
-+	u16 overhead;
-+	u16 already_sent;
- 	struct page *page;
- };
+@@ -91,6 +91,13 @@
+ #define MPTCP_WORK_EOF		3
+ #define MPTCP_FALLBACK_DONE	4
  =
 
-@@ -217,6 +218,7 @@ struct mptcp_sock {
- 	struct rb_root  out_of_order_queue;
- 	struct list_head conn_list;
- 	struct list_head rtx_queue;
-+	struct mptcp_data_frag *first_pending;
- 	struct list_head join_list;
- 	struct skb_ext	*cached_ext;	/* for the next sendmsg */
- 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
-@@ -238,6 +240,36 @@ static inline struct mptcp_sock *mptcp_sk(const struct=
- sock *sk)
- 	return (struct mptcp_sock *)sk;
++static inline bool before64(__u64 seq1, __u64 seq2)
++{
++	return (__s64)(seq1 - seq2) < 0;
++}
++
++#define after64(seq2, seq1)	before64(seq1, seq2)
++
+ struct mptcp_options_received {
+ 	u64	sndr_key;
+ 	u64	rcvr_key;
+@@ -200,6 +207,7 @@ struct mptcp_sock {
+ 	u64		local_key;
+ 	u64		remote_key;
+ 	u64		write_seq;
++	u64		snd_nxt;
+ 	u64		ack_seq;
+ 	u64		rcv_data_fin_seq;
+ 	struct sock	*last_snd;
+@@ -274,7 +282,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_tail(co=
+nst struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
+
+-	if (list_empty(&msk->rtx_queue))
++	if (!before64(msk->snd_nxt, atomic64_read(&msk->snd_una)))
+ 		return NULL;
+ =
+
+ 	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
+@@ -524,13 +532,6 @@ static inline struct mptcp_ext *mptcp_get_ext(struct s=
+k_buff *skb)
+ 	return (struct mptcp_ext *)skb_ext_find(skb, SKB_EXT_MPTCP);
  }
  =
 
-+static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *s=
-k)
-+{
-+	const struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	return READ_ONCE(msk->first_pending);
-+}
-+
-+static inline struct mptcp_data_frag *mptcp_send_next(struct sock *sk)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct mptcp_data_frag *cur;
-+
-+	cur =3D msk->first_pending;
-+	return list_is_last(&cur->list, &msk->rtx_queue) ? NULL :
-+						     list_next_entry(cur, list);
-+}
-+
-+static inline struct mptcp_data_frag *mptcp_pending_tail(const struct sock=
- *sk)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	if (!msk->first_pending)
-+		return NULL;
-+
-+	if (WARN_ON_ONCE(list_empty(&msk->rtx_queue)))
-+		return NULL;
-+
-+	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
-+}
-+
- static inline struct mptcp_data_frag *mptcp_rtx_tail(const struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-static inline bool before64(__u64 seq1, __u64 seq2)
+-{
+-	return (__s64)(seq1 - seq2) < 0;
+-}
+-
+-#define after64(seq2, seq1)	before64(seq1, seq2)
+-
+ void mptcp_diag_subflow_init(struct tcp_ulp_ops *ops);
+ =
+
+ static inline bool __mptcp_check_fallback(const struct mptcp_sock *msk)
 -- =
 
 2.26.2
 
---===============1378708838436497065==--
+--===============4499178001660559747==--
