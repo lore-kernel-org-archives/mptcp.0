@@ -1,29 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============0314166102307115414=="
+Content-Type: multipart/mixed; boundary="===============8562313334701762278=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 0/2] net: Constify struct
- genl_small_ops
-Date: Sun, 04 Oct 2020 21:15:09 -0700
-Message-ID: <20201004.211509.1806096319887910594.davem@davemloft.net>
-In-Reply-To: 20201004234417.12768-1-rikard.falkeborn@gmail.com
+Subject: [MPTCP] Re: [PATCH v3 00/13] mptcp: support for queuing data at
+ mptcp-level
+Date: Mon, 05 Oct 2020 08:31:24 +0200
+Message-ID: <1ae96fe38254afe04d222abc665ee258b77de77b.camel@redhat.com>
+In-Reply-To: 876a5ca0-9627-7fab-5006-50f48d45c2d6@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6191
+X-UID: 6192
 
---===============0314166102307115414==
+--===============8562313334701762278==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Rikard Falkeborn <rikard.falkeborn(a)gmail.com>
-Date: Mon,  5 Oct 2020 01:44:15 +0200
-
-> Make a couple of static struct genl_small_ops const to allow the compiler
-> to put them in read-only memory. Patches are independent.
+On Sat, 2020-10-03 at 18:35 +0200, Matthieu Baerts wrote:
+> Hi Paolo,
 > =
 
-> v2: Rebase on net-next, genl_ops -> genl_small_ops
+> On 03/10/2020 12:48, Matthieu Baerts wrote:
+> > - Results: d157a0e07d13..d577ff3cf895
+> > =
 
-Applied, thank you.
---===============0314166102307115414==--
+> > tests + export are in progress!
+> =
+
+> I got two errors with the selftests:
+> =
+
+> =
+
+> # selftests: net/mptcp: diag.sh
+> # no msk on netns creation                          [  ok  ]
+> # after MPC handshake                               [  ok  ]
+> # ....chk remote_key                                [  ok  ]
+> # ....chk no fallback                               [  ok  ]
+> # check fallback                                    [  ok  ]
+> # many msk socket present                           [ fail ] expected =
+
+> 200 found 201
+> not ok 4 selftests: net/mptcp: diag.sh # exit=3D6
+
+This is still to be investigated, I guess It has to do with the newly
+introduced msk socket timeout
+
+> # selftests: net/mptcp: simult_flows.sh
+> # balanced bwidth                                     4693 max 5005 [ OK ]
+> # balanced bwidth - reverse direction                 4493 max 5005 [ OK ]
+> # balanced bwidth with unbalanced delay               5283 max 5005  [ =
+
+> fail ]
+> # client exit code 0, server 0
+> # \nnetns ns3-0-W3sXrt socket stat for 10003:
+> # State     Recv-Q Send-Q Local Address:Port  Peer Address:Port Process =
+
+> =
+
+> # TIME-WAIT 0      0           10.0.3.3:10003     10.0.2.1:34523 =
+
+> timer:(timewait,59sec,0)
+> # 	=
+
+> # TIME-WAIT 0      0           10.0.3.3:10003     10.0.1.1:44230 =
+
+> timer:(timewait,59sec,0)
+> # 	=
+
+> # \nnetns ns1-0-W3sXrt socket stat for 10003:
+> # State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+> # -rw------- 1 root root 8388608 Oct  3 13:23 /tmp/tmp.IeFESgOht2
+> # -rw------- 1 root root 8388608 Oct  3 13:24 /tmp/tmp.w7zJOAA5WT
+> # -rw------- 1 root root 81920 Oct  3 13:24 /tmp/tmp.bITD2uHm5f
+> # -rw------- 1 root root 81920 Oct  3 13:23 /tmp/tmp.fhMf6gzhah
+> # balanced bwidth with unbalanced delay - reverse direction  4560 max =
+
+> 5005 [ OK ]
+> not ok 5 selftests: net/mptcp: simult_flows.sh # exit=3D1
+
+This is still under investigation, likely not easy to fix. We still
+have some out-of-[mptcp-level]window packet, expecially at connection
+start. I'm *guessing* they cause this b/w fluctuation.
+
+Cheers,
+
+Paolo
+
+--===============8562313334701762278==--
