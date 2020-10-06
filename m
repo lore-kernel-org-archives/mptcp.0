@@ -1,51 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============4113698667627546562=="
+Content-Type: multipart/mixed; boundary="===============0129178571521746708=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: refactor shutdown and
- close"
-Date: Tue, 06 Oct 2020 14:28:35 +0200
-Message-ID: <aa9df75e-d5ca-9436-6211-295ddf12032b@tessares.net>
-In-Reply-To: alpine.OSX.2.23.453.2010051721010.13171@srinathb-mobl.amr.corp.intel.com
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: mptcp: move page frag
+ allocation in mptcp_sendmsg()
+Date: Tue, 06 Oct 2020 15:05:40 +0200
+Message-ID: <25159dc690aed7ba022e5eab2921409623e70a7c.camel@redhat.com>
+In-Reply-To: 57cb8722-066d-7354-bf42-50420b436c74@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6216
+X-UID: 6217
 
---===============4113698667627546562==
+--===============0129178571521746708==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
-
-On 06/10/2020 02:21, Mat Martineau wrote:
-> On Mon, 5 Oct 2020, Paolo Abeni wrote:
+On Tue, 2020-10-06 at 14:20 +0200, Matthieu Baerts wrote:
+> Hi Paolo,
 > =
 
->> With the additional SM handling, fallback socket will
->> go through an unneeded timeout, because they never
->> get the DATA_FIN from the peer.
->>
->> In case of fallback, we can just close the msk and
->> invoke directly tcp_close on the subflow.
->>
->> This fixes diag.sh self-tests failure in current export
->> branch
+> On 05/10/2020 11:00, Paolo Abeni wrote:
+> > This, as suggested by Florian, avoid probe coalescing, which
+> > will hit a later WARN_ON_ONCE() and will cause stream corruption.
+> > =
+
+> > Additionally bail early when the MPTCP win is closed an no
+> > probe.
 > =
 
-> Looks good to me. Thanks Paolo.
+> Thank you for the patch!
+> =
 
-Thank you for the patch and the review!
+> I guess it was for "mptcp: keep track of advertised windows right edge" =
 
-- a98dba029718: "squashed" in "mptcp: refactor shutdown and close"
-- Results: 10c53117392d..b74dfa0c4018
+> commit and not "mptcp: move page frag allocation in mptcp_sendmsg()".
 
-Tests + export are in progress!
+Indeed! thanks for the double check && correction!
 
-Cheers,
-Matt
--- =
+/P
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4113698667627546562==--
+--===============0129178571521746708==--
