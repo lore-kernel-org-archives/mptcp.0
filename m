@@ -1,30 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============0448534201699176079=="
+Content-Type: multipart/mixed; boundary="===============0078450746918858956=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH net-next] selftests: mptcp: interpret \n as a new
  line
-Date: Tue, 06 Oct 2020 18:12:45 +0200
-Message-ID: <c750c3256bec4ceab91a95f2725e4bc026f4b5dc.camel@redhat.com>
-In-Reply-To: 20201006160631.3987766-1-matthieu.baerts@tessares.net
+Date: Tue, 06 Oct 2020 18:17:37 +0200
+Message-ID: <3f08a0d2-0761-1a31-5909-6c6d84e543e4@tessares.net>
+In-Reply-To: 20201006145636.3863539-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6227
+X-UID: 6228
 
---===============0448534201699176079==
+--===============0078450746918858956==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-10-06 at 18:06 +0200, Matthieu Baerts wrote:
+Hi Paolo,
+
+On 06/10/2020 16:56, Matthieu Baerts wrote:
 > In case of errors, this message was printed:
 > =
 
->   (...)
->   balanced bwidth with unbalanced delay       5233 max 5005  [ fail ]
->   client exit code 0, server 0
->   \nnetns ns3-0-EwnkPH socket stat for 10003:
->   (...)
+>    (...)
+>    balanced bwidth with unbalanced delay       5233 max 5005  [ fail ]
+>    client exit code 0, server 0
+>    \nnetns ns3-0-EwnkPH socket stat for 10003:
+>    (...)
 > =
 
 > Obviously, the idea was to add a new line before the socket stat and not
@@ -39,6 +41,17 @@ On Tue, 2020-10-06 at 18:06 +0200, Matthieu Baerts wrote:
 > Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
 > Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+Thank you for the review (on netdev).
 
---===============0448534201699176079==--
+I just added this patch in our Git tree.
+
+- 8ddf02404ace: selftests: mptcp: interpret \n as a new line
+- Results: 9984fc6a69ca..4d2f295912ab
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0078450746918858956==--
