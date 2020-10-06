@@ -1,92 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============0929856989925631272=="
+Content-Type: multipart/mixed; boundary="===============6981919950577575546=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 0/2] mptcp: cope better with tcp_sendpage
- allocation
-Date: Tue, 06 Oct 2020 10:16:11 -0700
-Message-ID: <alpine.OSX.2.23.453.2010061004110.22542@ccarpent-mobl.amr.corp.intel.com>
-In-Reply-To: cover.1601982978.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: fix infinite loop on
+ recvmsg()/worker() race.
+Date: Tue, 06 Oct 2020 16:00:33 -0700
+Message-ID: <alpine.OSX.2.23.453.2010061600080.22542@ccarpent-mobl.amr.corp.intel.com>
+In-Reply-To: 5a2464d778499bdc2ced43b56569008030b470bc.1601965539.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6232
+X-UID: 6233
 
---===============0929856989925631272==
+--===============6981919950577575546==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
 On Tue, 6 Oct 2020, Paolo Abeni wrote:
 
-> The current export branch suffers of the following issue:
+> If recvmsg() and the workqueue race to dequeue the data
+> pending on some subflow, the current mapping for such
+> subflow covers several skbs and some of them have not
+> reached yet the received, either the worker or recvmsg()
+> can find a subflow with the data_avail flag set - since
+> the current mapping is valid and in sequence - but no
+> skbs in the receive queue - since the other entity just
+> processed them.
 >
-> https://github.com/multipath-tcp/mptcp_net-next/issues/97
+> The above will lead to an unbounded loop in __mptcp_move_skbs()
+> and a subsequent hang of any task trying to acquiring the msk
+> socket lock.
 >
-> To fix the above, MPTCP needs to be able to cope with memory allocation
-> failure in do_tcp_sendpages().
+> This change addresses the issue stopping the __mptcp_move_skbs()
+> loop as soon as we detect the above race (empty receive queue
+> with data_avail set).
 >
-> In this attempt, the relevant code is factored out of do_tcp_sendpages(),
-> in a smaller helper, so that mptcp_sendmsg_frag() can avoid touching
-> ssk->sk_socket.
->
-> There are other possible alternatives:
-> - add an explicit check in do_tcp_sendpages() for NULL sk->sk_socket
->  pro: very simple and little invasive
->  cons: hackysh?!?
-> - inline/open-code the relevant part of do_tcp_sendpages in mptcp_sendmsg=
-_frag()
->  pro: no need to change core TCP code
->  cons: code duplication, need to change the scope for a couple of TCP int=
-ernal
->        helpers (removing the 'static' keyword)
->
-> As a follow-up I would try to pre-allocate skbs and extensions, so that
-> push_pending could be called in BH context and we could avoid using the
-> work queue.
->
-> I'm looking for feedback on the less ugly/more upstreamable approach
+> Reported-and-tested-by: syzbot+fcf8ca5817d6e92c6567(a)syzkaller.appspotma=
+il.com
+> Fixes: ab174ad8ef76 ("mptcp: move ooo skbs into msk out of order queue.")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 9 ++++++++-
+> 1 file changed, 8 insertions(+), 1 deletion(-)
 
-I wouldn't object to the explicit sk->sk_socket check, it is simpler and =
-
-handling that in the existing do_error path in do_tcp_sendpages() does =
-
-make sense. It is, after all, an error that can be detected and handled.
-
-I think factoring out do_tcp_sendfrag() is "nice" enough - while it seems =
-
-like such a change might be preferred earlier in the net-next development =
-
-cycle it doesn't seem too invasive. The drawback I see is that there are =
-
-not likely to be other users of do_tcp_sendfrag().
-
-Would like to avoid open-coding part of the do_tcp_sendpages() code in =
-
-mptcp and having to maintain that.
-
-Mat
-
-
->
-> Paolo Abeni (2):
->  tcp: factor out do_tcp_sendfrag()
->  mptcp: use do_tcp_sendfrag()
->
-> include/net/tcp.h    |   3 ++
-> net/ipv4/tcp.c       | 120 ++++++++++++++++++++++++-------------------
-> net/mptcp/protocol.c |  21 ++++----
-> 3 files changed, 80 insertions(+), 64 deletions(-)
->
-> -- =
-
-> 2.26.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============0929856989925631272==--
+--===============6981919950577575546==--
