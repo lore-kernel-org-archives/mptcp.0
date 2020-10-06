@@ -1,197 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============2239485662539267292=="
+Content-Type: multipart/mixed; boundary="===============0929856989925631272=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] net: mptcp: make DACK4/DACK8 usage consistent
- among all subflows
-Date: Tue, 06 Oct 2020 18:50:40 +0200
-Message-ID: <8d3af7fa7ff822f45c274302557e8dde46763fe3.camel@redhat.com>
-In-Reply-To: c9ee8b30-df8a-ba97-b554-23a9068651a6@tessares.net
+Subject: [MPTCP] Re: [RFC PATCH 0/2] mptcp: cope better with tcp_sendpage
+ allocation
+Date: Tue, 06 Oct 2020 10:16:11 -0700
+Message-ID: <alpine.OSX.2.23.453.2010061004110.22542@ccarpent-mobl.amr.corp.intel.com>
+In-Reply-To: cover.1601982978.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6231
+X-UID: 6232
 
---===============2239485662539267292==
+--===============0929856989925631272==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-10-06 at 18:35 +0200, Matthieu Baerts wrote:
-> Hi Davide,
-> =
 
-> On 06/10/2020 16:03, Matthieu Baerts wrote:
-> > Hi Davide, Paolo,
-> > =
+On Tue, 6 Oct 2020, Paolo Abeni wrote:
 
-> > On 06/10/2020 15:07, Paolo Abeni wrote:
-> > > On Tue, 2020-10-06 at 14:22 +0200, Davide Caratti wrote:
-> > > > using packetdrill it's possible to observe the same MPTCP DSN being =
+> The current export branch suffers of the following issue:
+>
+> https://github.com/multipath-tcp/mptcp_net-next/issues/97
+>
+> To fix the above, MPTCP needs to be able to cope with memory allocation
+> failure in do_tcp_sendpages().
+>
+> In this attempt, the relevant code is factored out of do_tcp_sendpages(),
+> in a smaller helper, so that mptcp_sendmsg_frag() can avoid touching
+> ssk->sk_socket.
+>
+> There are other possible alternatives:
+> - add an explicit check in do_tcp_sendpages() for NULL sk->sk_socket
+>  pro: very simple and little invasive
+>  cons: hackysh?!?
+> - inline/open-code the relevant part of do_tcp_sendpages in mptcp_sendmsg=
+_frag()
+>  pro: no need to change core TCP code
+>  cons: code duplication, need to change the scope for a couple of TCP int=
+ernal
+>        helpers (removing the 'static' keyword)
+>
+> As a follow-up I would try to pre-allocate skbs and extensions, so that
+> push_pending could be called in BH context and we could avoid using the
+> work queue.
+>
+> I'm looking for feedback on the less ugly/more upstreamable approach
 
-> > > > acked
-> > > > by different subflows with DACK4 and DACK8. This is in contrast wit=
-h =
+I wouldn't object to the explicit sk->sk_socket check, it is simpler and =
 
-> > > > what
-> > > > specified in RFC8684 =C2=A73.3.2: if an MPTCP endpoint transmits a =
-64-bit =
+handling that in the existing do_error path in do_tcp_sendpages() does =
 
-> > > > wide
-> > > > DSN, it MUST be acknowledged with a 64-bit wide DACK. Fix =
+make sense. It is, after all, an error that can be detected and handled.
 
-> > > > 'use_64bit_ack'
-> > > > variable to make it a property of MPTCP sockets, not TCP subflows.
-> > > > =
+I think factoring out do_tcp_sendfrag() is "nice" enough - while it seems =
 
-> > > > Fixes: a0c1d0eafd1e ("mptcp: Use 32-bit DATA_ACK when possible")
-> > > > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> > > =
+like such a change might be preferred earlier in the net-next development =
 
-> > > LGTM, thanks Davide!
-> > =
+cycle it doesn't seem too invasive. The drawback I see is that there are =
 
-> > Thank you for the patch and the review!
-> > =
+not likely to be other users of do_tcp_sendfrag().
 
-> > @Davide: be careful that this patch doesn't apply as is on -net (or =
+Would like to avoid open-coding part of the do_tcp_sendpages() code in =
 
-> > net-next). I had a small conflict when applying it on top of net-next, =
+mptcp and having to maintain that.
 
-> > not at the end of the "export" branch?
-> > =
+Mat
 
-> > - 79519fc3f520: net: mptcp: make DACK4/DACK8 usage consistent among all =
 
-> > subflows
-> > - be078f4e24b5: conflict in t/mptcp-refactor-shutdown-and-close
-> > - Results: b74dfa0c4018..9984fc6a69ca
-> > =
+>
+> Paolo Abeni (2):
+>  tcp: factor out do_tcp_sendfrag()
+>  mptcp: use do_tcp_sendfrag()
+>
+> include/net/tcp.h    |   3 ++
+> net/ipv4/tcp.c       | 120 ++++++++++++++++++++++++-------------------
+> net/mptcp/protocol.c |  21 ++++----
+> 3 files changed, 80 insertions(+), 64 deletions(-)
+>
+> -- =
 
-> > Tests + export are in progress!
-> =
+> 2.26.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
-> It looks unrelated but one selftest -- mptcp_join.sh, test 11 -- was =
-
-> failing with a debug kernel:
-> =
-
-> =
-
-> # selftests: net/mptcp: mptcp_join.sh
-> # Created /tmp/tmp.TXFPMQuIYt (size 1 KB) containing data sent by client
-> # Created /tmp/tmp.rZmBg6Ql4I (size 1 KB) containing data sent by server
-> # 01 no JOIN                              syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 02 single subflow, limited by client    syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 03 single subflow, limited by server    syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 04 single subflow                       syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 05 multiple subflows                    syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 06 multiple subflows, limited by server syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 07 unused signal address                syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> # 08 signal address                       syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> # 09 subflow and signal                   syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> # 10 multiple subflows and signal         syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> # 11 signal address, ADD_ADDR timeout     syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[fail] got 2 ADD_ADDR[s] =
-
-> expected 4
-> #  - echo  [ ok ]
-> # Server ns stats
-> # MPTcpExtMPCapableSYNRX          1                  0.0
-> # MPTcpExtMPCapableACKRX          1                  0.0
-> # MPTcpExtMPTCPRetrans            1                  0.0
-> # MPTcpExtMPJoinSynRx             1                  0.0
-> # MPTcpExtMPJoinAckRx             1                  0.0
-> # MPTcpExtDuplicateData           1                  0.0
-> # Client ns stats
-> # MPTcpExtMPTCPRetrans            1                  0.0
-> # MPTcpExtMPJoinSynAckRx          1                  0.0
-> # MPTcpExtDuplicateData           1                  0.0
-> # MPTcpExtAddAddr                 2                  0.0
-> # 12 remove single subflow                syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         rm [ ok ] - sf    [ ok ]
-> # 13 remove multiple subflows             syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         rm [ ok ] - sf    [ ok ]
-> # 14 remove single address                syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> #                                         rm [ ok ] - sf    [ ok ]
-> # 15 remove subflow and signal            syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> #                                         rm [ ok ] - sf    [ ok ]
-> # 16 remove subflows and signal           syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> #                                         rm [ ok ] - sf    [ ok ]
-> # 17 single subflow with syn cookies      syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 18 multiple subflows with syn cookies   syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 19 subflows limited by server w cookies syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> # 20 signal address with syn cookies      syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> # 21 subflow and signal w cookies         syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> # 22 subflows and signal w. cookies       syn[ ok ] - synack[ ok ] - =
-
-> ack[ ok ]
-> #                                         add[ ok ] - echo  [ ok ]
-> not ok 3 selftests: net/mptcp: mptcp_join.sh # exit=3D1
-> =
-
-> =
-
-> I don't think it is due to your modification. I didn't have the issue =
-
-> without the debug kconfig.
-
-uhmm... that self-test is failing here, too...
-
-... just because my VM don't have iptables (required by said test:)
-
-iptables is dead! long live to nftables!!! :)))
-
-/P
-
---===============2239485662539267292==--
+--
+Mat Martineau
+Intel
+--===============0929856989925631272==--
