@@ -1,43 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============0129178571521746708=="
+Content-Type: multipart/mixed; boundary="===============7229730028195641566=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: David Miller <davem at davemloft.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: mptcp: move page frag
- allocation in mptcp_sendmsg()
-Date: Tue, 06 Oct 2020 15:05:40 +0200
-Message-ID: <25159dc690aed7ba022e5eab2921409623e70a7c.camel@redhat.com>
-In-Reply-To: 57cb8722-066d-7354-bf42-50420b436c74@tessares.net
+Subject: [MPTCP] Re: [PATCH net] mptcp: more DATA FIN fixes
+Date: Tue, 06 Oct 2020 06:07:44 -0700
+Message-ID: <20201006.060744.1614882032086190689.davem@davemloft.net>
+In-Reply-To: 359280012491ffc587afdfb55aaaec60953c7218.1601891999.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6217
+X-UID: 6218
 
---===============0129178571521746708==
+--===============7229730028195641566==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-10-06 at 14:20 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
+From: Paolo Abeni <pabeni(a)redhat.com>
+Date: Mon,  5 Oct 2020 12:01:06 +0200
+
+> Currently data fin on data packet are not handled properly:
+> the 'rcv_data_fin_seq' field is interpreted as the last
+> sequence number carrying a valid data, but for data fin
+> packet with valid maps we currently store map_seq + map_len,
+> that is, the next value.
 > =
 
-> On 05/10/2020 11:00, Paolo Abeni wrote:
-> > This, as suggested by Florian, avoid probe coalescing, which
-> > will hit a later WARN_ON_ONCE() and will cause stream corruption.
-> > =
-
-> > Additionally bail early when the MPTCP win is closed an no
-> > probe.
+> The 'write_seq' fields carries instead the value subseguent
+> to the last valid byte, so in mptcp_write_data_fin() we
+> never detect correctly the last DSS map.
 > =
 
-> Thank you for the patch!
-> =
+> Fixes: 7279da6145bb ("mptcp: Use MPTCP-level flag for sending DATA_FIN")
+> Fixes: 1a49b2c2a501 ("mptcp: Handle incoming 32-bit DATA_FIN values")
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-> I guess it was for "mptcp: keep track of advertised windows right edge" =
-
-> commit and not "mptcp: move page frag allocation in mptcp_sendmsg()".
-
-Indeed! thanks for the double check && correction!
-
-/P
-
---===============0129178571521746708==--
+Applied.
+--===============7229730028195641566==--
