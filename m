@@ -1,67 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============6110884663206608507=="
+Content-Type: multipart/mixed; boundary="===============1399725929163936413=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] net: mptcp: make DACK4/DACK8 usage consistent
- among all subflows
-Date: Tue, 06 Oct 2020 16:30:24 +0200
-Message-ID: <66550eee4efdef058cce389740545b4bb9fc95c8.camel@redhat.com>
-In-Reply-To: b90ae5e6-9858-eccd-ef45-eb59250ae8a1@tessares.net
+Subject: [MPTCP] [PATCH net-next] selftests: mptcp: interpret \n as a new line
+Date: Tue, 06 Oct 2020 16:56:36 +0200
+Message-ID: <20201006145636.3863539-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 6222
+X-UID: 6223
 
---===============6110884663206608507==
+--===============1399725929163936413==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-10-06 at 16:03 +0200, Matthieu Baerts wrote:
-> Hi Davide, Paolo,
-> =
+In case of errors, this message was printed:
 
-> On 06/10/2020 15:07, Paolo Abeni wrote:
-> > On Tue, 2020-10-06 at 14:22 +0200, Davide Caratti wrote:
-> > > using packetdrill it's possible to observe the same MPTCP DSN being a=
-cked
-> > > by different subflows with DACK4 and DACK8. This is in contrast with =
-what
-> > > specified in RFC8684 =C2=A73.3.2: if an MPTCP endpoint transmits a 64=
--bit wide
-> > > DSN, it MUST be acknowledged with a 64-bit wide DACK. Fix 'use_64bit_=
-ack'
-> > > variable to make it a property of MPTCP sockets, not TCP subflows.
-> > > =
+  (...)
+  balanced bwidth with unbalanced delay       5233 max 5005  [ fail ]
+  client exit code 0, server 0
+  \nnetns ns3-0-EwnkPH socket stat for 10003:
+  (...)
 
-> > > Fixes: a0c1d0eafd1e ("mptcp: Use 32-bit DATA_ACK when possible")
-> > > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> > =
+Obviously, the idea was to add a new line before the socket stat and not
+print "\nnetns".
 
-> > LGTM, thanks Davide!
-> =
+The commit 8b974778f998 ("selftests: mptcp: interpret \n as a new line")
+is very similar to this one. But the modification in simult_flows.sh was
+missed because this commit above was done in parallel to one here below.
 
-> Thank you for the patch and the review!
+Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-hello Matthieu, thanks for looking at this.
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/test=
+ing/selftests/net/mptcp/simult_flows.sh
+index 0d88225daa02..2f649b431456 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -200,9 +200,9 @@ do_transfer()
+ =
 
-> @Davide: be careful that this patch doesn't apply as is on -net (or =
-
-> net-next). I had a small conflict when applying it on top of net-next, =
-
-> not at the end of the "export" branch?
-
-right, I did that on top of export/20201006T083856 - but it requires
-some adjustment to apply to "net", because context mismatches in
-protocol.h.
-
-FTR, this is another strange thing I noticed while working on =
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/94 : after a call
-to close(), subflow-0 does DSS (DACK4+DATAFIN), while subflow-1 does
-DSS(DACK8+DATAFIN) :)
-
+ 	echo " [ fail ]"
+ 	echo "client exit code $retc, server $rets" 1>&2
+-	echo "\nnetns ${ns3} socket stat for $port:" 1>&2
++	echo -e "\nnetns ${ns3} socket stat for $port:" 1>&2
+ 	ip netns exec ${ns3} ss -nita 1>&2 -o "sport =3D :$port"
+-	echo "\nnetns ${ns1} socket stat for $port:" 1>&2
++	echo -e "\nnetns ${ns1} socket stat for $port:" 1>&2
+ 	ip netns exec ${ns1} ss -nita 1>&2 -o "dport =3D :$port"
+ 	ls -l $sin $cout
+ 	ls -l $cin $sout
 -- =
 
-davide
+2.27.0
 
---===============6110884663206608507==--
+--===============1399725929163936413==--
