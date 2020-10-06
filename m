@@ -1,38 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============6504565371153259183=="
+Content-Type: multipart/mixed; boundary="===============4909223570462015859=="
 MIME-Version: 1.0
-From: syzbot <syzbot+fcf8ca5817d6e92c6567 at syzkaller.appspotmail.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: INFO: task hung in lock_sock_nested (3)
-Date: Mon, 05 Oct 2020 18:17:05 -0700
-Message-ID: <0000000000006d9e4305b0f65ba6@google.com>
-In-Reply-To: 003589e3dce1ed8d9b9970bbf8ed1661ced8d2cc.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: refactor shutdown and
+ close"
+Date: Mon, 05 Oct 2020 17:21:18 -0700
+Message-ID: <alpine.OSX.2.23.453.2010051721010.13171@srinathb-mobl.amr.corp.intel.com>
+In-Reply-To: 4e09117934d8b4501cc32f83a850041a0dd6d917.1601895836.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6207
+X-UID: 6208
 
---===============6504565371153259183==
+--===============4909223570462015859==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, 5 Oct 2020, Paolo Abeni wrote:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any=
- issue:
+> With the additional SM handling, fallback socket will
+> go through an unneeded timeout, because they never
+> get the DATA_FIN from the peer.
+>
+> In case of fallback, we can just close the msk and
+> invoke directly tcp_close on the subflow.
+>
+> This fixes diag.sh self-tests failure in current export
+> branch
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 29be694c1d94..7d5905968fac 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2102,7 +2102,8 @@ static void mptcp_close(struct sock *sk, long timeo=
+ut)
+> 	lock_sock(sk);
+> 	sk->sk_shutdown =3D SHUTDOWN_MASK;
+>
+> -	if (sk->sk_state =3D=3D TCP_LISTEN) {
+> +	if (sk->sk_state =3D=3D TCP_LISTEN ||
+> +	    __mptcp_check_fallback((struct mptcp_sock *)sk)) {
+> 		inet_sk_state_store(sk, TCP_CLOSE);
+> 		goto cleanup;
+> 	} else if (sk->sk_state =3D=3D TCP_CLOSE) {
+> -- =
 
-Reported-and-tested-by: syzbot+fcf8ca5817d6e92c6567(a)syzkaller.appspotmail=
-.com
+> 2.26.2
 
-Tested on:
+Looks good to me. Thanks Paolo.
 
-commit:         f4f9dcc3 net: phy: marvell: Use phy_read_paged() instead o..
-git tree:       net-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D1e6c5266df853ae
-dashboard link: https://syzkaller.appspot.com/bug?extid=3Dfcf8ca5817d6e92c6=
-567
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D14f6da579000=
-00
-
-Note: testing is done by a robot and is best-effort only.
---===============6504565371153259183==--
+--
+Mat Martineau
+Intel
+--===============4909223570462015859==--
