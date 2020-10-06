@@ -1,36 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============0656292230342666928=="
+Content-Type: multipart/mixed; boundary="===============6504565371153259183=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: syzbot <syzbot+fcf8ca5817d6e92c6567 at syzkaller.appspotmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: don't skip needed ack
-Date: Mon, 05 Oct 2020 14:59:39 -0700
-Message-ID: <alpine.OSX.2.23.453.2010051459040.9753@srinathb-mobl.amr.corp.intel.com>
-In-Reply-To: 515e80a174ee9bad5e2c6a8338d9362eb43d39b7.1601894086.git.pabeni@redhat.com
+Subject: [MPTCP] Re: INFO: task hung in lock_sock_nested (3)
+Date: Mon, 05 Oct 2020 18:17:05 -0700
+Message-ID: <0000000000006d9e4305b0f65ba6@google.com>
+In-Reply-To: 003589e3dce1ed8d9b9970bbf8ed1661ced8d2cc.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6206
+X-UID: 6207
 
---===============0656292230342666928==
+--===============6504565371153259183==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 5 Oct 2020, Paolo Abeni wrote:
+Hello,
 
-> Currently we skip calling tcp_cleanup_rbuf() when packets
-> are moved into the OoO queue or simply dropped. In both
-> cases we still increment tp->copied_seq, and we should
-> ask the TCP stack to check for ack.
->
-> Fixes: c76c6956566f ("mptcp: call tcp_cleanup_rbuf on subflows")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/protocol.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any=
+ issue:
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Reported-and-tested-by: syzbot+fcf8ca5817d6e92c6567(a)syzkaller.appspotmail=
+.com
 
---
-Mat Martineau
-Intel
---===============0656292230342666928==--
+Tested on:
+
+commit:         f4f9dcc3 net: phy: marvell: Use phy_read_paged() instead o..
+git tree:       net-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D1e6c5266df853ae
+dashboard link: https://syzkaller.appspot.com/bug?extid=3Dfcf8ca5817d6e92c6=
+567
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D14f6da579000=
+00
+
+Note: testing is done by a robot and is best-effort only.
+--===============6504565371153259183==--
