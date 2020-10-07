@@ -1,43 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============0159628868719969728=="
+Content-Type: multipart/mixed; boundary="===============5891523868969138532=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] net: mptcp: make DACK4/DACK8 usage consistent
- among all subflows
-Date: Tue, 06 Oct 2020 16:58:58 -0700
-Message-ID: <alpine.OSX.2.23.453.2010061656560.22542@ccarpent-mobl.amr.corp.intel.com>
-In-Reply-To: 70c96303d6d9931aae1b1028aed016d807df0e20.1602001119.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH 0/2] mptcp: cope better with tcp_sendpage
+ allocation
+Date: Wed, 07 Oct 2020 11:22:39 +0200
+Message-ID: <7e9caf9b90d518037094b7e536e932e754e25895.camel@redhat.com>
+In-Reply-To: alpine.OSX.2.23.453.2010061004110.22542@ccarpent-mobl.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6234
+X-UID: 6237
 
---===============0159628868719969728==
+--===============5891523868969138532==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 6 Oct 2020, Davide Caratti wrote:
+On Tue, 2020-10-06 at 10:16 -0700, Mat Martineau wrote:
+> On Tue, 6 Oct 2020, Paolo Abeni wrote:
+> =
 
-> using packetdrill it's possible to observe the same MPTCP DSN being acked
-> by different subflows with DACK4 and DACK8. This is in contrast with what
-> specified in RFC8684 =C2=A73.3.2: if an MPTCP endpoint transmits a 64-bit=
- wide
-> DSN, it MUST be acknowledged with a 64-bit wide DACK. Fix 'use_64bit_ack'
-> variable to make it a property of MPTCP sockets, not TCP subflows.
->
-> Fixes: a0c1d0eafd1e ("mptcp: Use 32-bit DATA_ACK when possible")
-> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> ---
-> net/mptcp/options.c  | 2 +-
-> net/mptcp/protocol.h | 2 +-
-> net/mptcp/subflow.c  | 3 +--
-> 3 files changed, 3 insertions(+), 4 deletions(-)
+> > The current export branch suffers of the following issue:
+> > =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> > https://github.com/multipath-tcp/mptcp_net-next/issues/97
+> > =
 
---
-Mat Martineau
-Intel
+> > To fix the above, MPTCP needs to be able to cope with memory allocation
+> > failure in do_tcp_sendpages().
+> > =
 
---===============0159628868719969728==--
+> > In this attempt, the relevant code is factored out of do_tcp_sendpages(=
+),
+> > in a smaller helper, so that mptcp_sendmsg_frag() can avoid touching
+> > ssk->sk_socket.
+> > =
+
+> > There are other possible alternatives:
+> > - add an explicit check in do_tcp_sendpages() for NULL sk->sk_socket
+> >  pro: very simple and little invasive
+> >  cons: hackysh?!?
+> > - inline/open-code the relevant part of do_tcp_sendpages in mptcp_sendm=
+sg_frag()
+> >  pro: no need to change core TCP code
+> >  cons: code duplication, need to change the scope for a couple of TCP i=
+nternal
+> >        helpers (removing the 'static' keyword)
+> > =
+
+> > As a follow-up I would try to pre-allocate skbs and extensions, so that
+> > push_pending could be called in BH context and we could avoid using the
+> > work queue.
+> > =
+
+> > I'm looking for feedback on the less ugly/more upstreamable approach
+> =
+
+> I wouldn't object to the explicit sk->sk_socket check, it is simpler and =
+
+> handling that in the existing do_error path in do_tcp_sendpages() does =
+
+> make sense. It is, after all, an error that can be detected and handled.
+> =
+
+> I think factoring out do_tcp_sendfrag() is "nice" enough - while it seems =
+
+> like such a change might be preferred earlier in the net-next development =
+
+> cycle it doesn't seem too invasive. The drawback I see is that there are =
+
+> not likely to be other users of do_tcp_sendfrag().
+
+Thank you for the review and feedback!
+
+I would avoid adding mptcp-specific test in the TCP code, if possible,
+so my proposal is as follow:
+
+I'll rebase the patches to land on the "bottom" of the export branch -
+that is, just on top of the net-next branch, so that we could send them
+upstream ASAP - still on the next wnd, likely. Perhpas I can send them
+as RFC upstream while net-next will be closed.
+
+I'm wondering about changing do_tcp_sendfrag() signature to:
+
+struct sk_buff *
+do_tcp_sendfrag(struct sock *sk, int size_goal, int flags,
+		struct page *page, int offset, int *size);
+
+that is, first socket related fields, than buffer related fields. It
+will return the used skb, so that the caller will not need the
+additional tcp_write_queue_tail(), and will use the 'size' argument as
+an in-out one. On return will contains the copied bytes value - this
+later change to avoid increasing the number of arguments for this
+function.
+
+Overall it should produce smaller code in both the TCP and MPTCP
+protocol, WDYT?
+
+> Would like to avoid open-coding part of the do_tcp_sendpages() code in =
+
+> mptcp and having to maintain that.
+
+Agreed ;)
+
+Thanks!
+
+Paolo
+
+--===============5891523868969138532==--
