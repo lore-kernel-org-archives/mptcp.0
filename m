@@ -1,181 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============2540356646190736595=="
+Content-Type: multipart/mixed; boundary="===============5761147205721308371=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 1/2] mptcp: fix fallback for MP_JOIN subflows
-Date: Wed, 07 Oct 2020 19:37:17 +0200
-Message-ID: <4e8a4502e830a28c2f11d4f1e279e24afc21fabb.1602091906.git.pabeni@redhat.com>
-In-Reply-To: cover.1602091906.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH 0/2] mptcp: cope better with tcp_sendpage
+ allocation
+Date: Wed, 07 Oct 2020 15:20:37 -0700
+Message-ID: <alpine.OSX.2.23.453.2010071514560.37718@ytakamor-mobl2.gar.corp.intel.com>
+In-Reply-To: 7e9caf9b90d518037094b7e536e932e754e25895.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6242
+X-UID: 6244
 
---===============2540356646190736595==
+--===============5761147205721308371==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Additional/MP_JOIN subflows that do not pass some initial handshake
-tests currently causes fallback to TCP. That is an RFC violation:
-we should instead reset the subflow and leave the the msk untouched.
+On Wed, 7 Oct 2020, Paolo Abeni wrote:
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/91
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/options.c  | 32 +++++++++++++++++++++++++-------
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 10 ++++++++--
- 3 files changed, 34 insertions(+), 9 deletions(-)
+> On Tue, 2020-10-06 at 10:16 -0700, Mat Martineau wrote:
+>> On Tue, 6 Oct 2020, Paolo Abeni wrote:
+>>
+>>> The current export branch suffers of the following issue:
+>>>
+>>> https://github.com/multipath-tcp/mptcp_net-next/issues/97
+>>>
+>>> To fix the above, MPTCP needs to be able to cope with memory allocation
+>>> failure in do_tcp_sendpages().
+>>>
+>>> In this attempt, the relevant code is factored out of do_tcp_sendpages(=
+),
+>>> in a smaller helper, so that mptcp_sendmsg_frag() can avoid touching
+>>> ssk->sk_socket.
+>>>
+>>> There are other possible alternatives:
+>>> - add an explicit check in do_tcp_sendpages() for NULL sk->sk_socket
+>>>  pro: very simple and little invasive
+>>>  cons: hackysh?!?
+>>> - inline/open-code the relevant part of do_tcp_sendpages in mptcp_sendm=
+sg_frag()
+>>>  pro: no need to change core TCP code
+>>>  cons: code duplication, need to change the scope for a couple of TCP i=
+nternal
+>>>        helpers (removing the 'static' keyword)
+>>>
+>>> As a follow-up I would try to pre-allocate skbs and extensions, so that
+>>> push_pending could be called in BH context and we could avoid using the
+>>> work queue.
+>>>
+>>> I'm looking for feedback on the less ugly/more upstreamable approach
+>>
+>> I wouldn't object to the explicit sk->sk_socket check, it is simpler and
+>> handling that in the existing do_error path in do_tcp_sendpages() does
+>> make sense. It is, after all, an error that can be detected and handled.
+>>
+>> I think factoring out do_tcp_sendfrag() is "nice" enough - while it seems
+>> like such a change might be preferred earlier in the net-next development
+>> cycle it doesn't seem too invasive. The drawback I see is that there are
+>> not likely to be other users of do_tcp_sendfrag().
+>
+> Thank you for the review and feedback!
+>
+> I would avoid adding mptcp-specific test in the TCP code, if possible,
+> so my proposal is as follow:
+>
+> I'll rebase the patches to land on the "bottom" of the export branch -
+> that is, just on top of the net-next branch, so that we could send them
+> upstream ASAP - still on the next wnd, likely. Perhpas I can send them
+> as RFC upstream while net-next will be closed.
+>
+> I'm wondering about changing do_tcp_sendfrag() signature to:
+>
+> struct sk_buff *
+> do_tcp_sendfrag(struct sock *sk, int size_goal, int flags,
+> 		struct page *page, int offset, int *size);
+>
+> that is, first socket related fields, than buffer related fields. It
+> will return the used skb, so that the caller will not need the
+> additional tcp_write_queue_tail(), and will use the 'size' argument as
+> an in-out one. On return will contains the copied bytes value - this
+> later change to avoid increasing the number of arguments for this
+> function.
+>
+> Overall it should produce smaller code in both the TCP and MPTCP
+> protocol, WDYT?
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 4055769e4fde..ad2bc95dd638 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -657,6 +657,12 @@ bool mptcp_established_options(struct sock *sk, struct=
- sk_buff *skb,
- 	if (unlikely(mptcp_check_fallback(sk)))
- 		return false;
- =
+That has some similarities with what I wanted to do in the early drafts of =
 
-+	/* prevent adding of any MPTCP related options on reset packet
-+	 * until we support MP_TCPRST/MP_FASTCLOSE
-+	 */
-+	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST))
-+		return false;
-+
- 	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining, opts))
- 		ret =3D true;
- 	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
-@@ -711,7 +717,7 @@ bool mptcp_synack_options(const struct request_sock *re=
-q, unsigned int *size,
- 	return false;
- }
- =
+the sendmsg code, but I was being very (overly?) paranoid about not =
 
--static bool check_fully_established(struct mptcp_sock *msk, struct sock *s=
-k,
-+static bool check_fully_established(struct mptcp_sock *msk, struct sock *s=
-sk,
- 				    struct mptcp_subflow_context *subflow,
- 				    struct sk_buff *skb,
- 				    struct mptcp_options_received *mp_opt)
-@@ -728,15 +734,20 @@ static bool check_fully_established(struct mptcp_sock=
- *msk, struct sock *sk,
- 		    TCP_SKB_CB(skb)->end_seq =3D=3D TCP_SKB_CB(skb)->seq &&
- 		    subflow->mp_join && mp_opt->mp_join &&
- 		    READ_ONCE(msk->pm.server_side))
--			tcp_send_ack(sk);
-+			tcp_send_ack(ssk);
- 		goto fully_established;
- 	}
- =
+touching TCP code. A good proposal in my opinion!
 
--	/* we should process OoO packets before the first subflow is fully
--	 * established, but not expected for MP_JOIN subflows
-+	/* we must process OoO packets before the first subflow is fully
-+	 * established. OoO packets are instead a protocol violation
-+	 * for MP_JOIN subflows as the peer must not send any data
-+	 * before receiving the forth ack - cfr. RFC 8684 section 3.2.
- 	 */
--	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1)
-+	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1) {
-+		if (subflow->mp_join)
-+			goto reset;
- 		return subflow->mp_capable;
-+	}
- =
-
- 	if (mp_opt->dss && mp_opt->use_ack) {
- 		/* subflows are fully established as soon as we get any
-@@ -748,9 +759,12 @@ static bool check_fully_established(struct mptcp_sock =
-*msk, struct sock *sk,
- 	}
- =
-
- 	/* If the first established packet does not contain MP_CAPABLE + data
--	 * then fallback to TCP
-+	 * then fallback to TCP. Fallback scenarios requires a reset for
-+	 * MP_JOIN subflows.
- 	 */
- 	if (!mp_opt->mp_capable) {
-+		if (subflow->mp_join)
-+			goto reset;
- 		subflow->mp_capable =3D 0;
- 		pr_fallback(msk);
- 		__mptcp_do_fallback(msk);
-@@ -767,12 +781,16 @@ static bool check_fully_established(struct mptcp_sock=
- *msk, struct sock *sk,
- =
-
- 	subflow->pm_notified =3D 1;
- 	if (subflow->mp_join) {
--		clear_3rdack_retransmission(sk);
-+		clear_3rdack_retransmission(ssk);
- 		mptcp_pm_subflow_established(msk, subflow);
- 	} else {
- 		mptcp_pm_fully_established(msk);
- 	}
- 	return true;
-+
-+reset:
-+	mptcp_subflow_reset(ssk);
-+	return false;
- }
- =
-
- static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index aa0ab18d2e57..de5219fd3570 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -369,6 +369,7 @@ void mptcp_subflow_shutdown(struct sock *sk, struct soc=
-k *ssk, int how);
- void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		       struct mptcp_subflow_context *subflow,
- 		       long timeout);
-+void mptcp_subflow_reset(struct sock *ssk);
- =
-
- /* called with sk socket lock held */
- int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
-*loc,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 5ca8032e0d24..d2eb5f2abe5a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -271,6 +271,13 @@ static bool subflow_thmac_valid(struct mptcp_subflow_c=
-ontext *subflow)
- 	return thmac =3D=3D subflow->thmac;
- }
- =
-
-+void mptcp_subflow_reset(struct sock *ssk)
-+{
-+	tcp_set_state(ssk, TCP_CLOSE);
-+	tcp_send_active_reset(ssk, GFP_ATOMIC);
-+	tcp_done(ssk);
-+}
-+
- static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
-skb)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-@@ -343,8 +350,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 	return;
- =
-
- do_reset:
--	tcp_send_active_reset(sk, GFP_ATOMIC);
--	tcp_done(sk);
-+	mptcp_subflow_reset(sk);
- }
- =
-
- struct request_sock_ops mptcp_subflow_request_sock_ops;
--- =
-
-2.26.2
-
---===============2540356646190736595==--
+--
+Mat Martineau
+Intel
+--===============5761147205721308371==--
