@@ -1,110 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============5891523868969138532=="
+Content-Type: multipart/mixed; boundary="===============4554691237409789802=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 0/2] mptcp: cope better with tcp_sendpage
- allocation
-Date: Wed, 07 Oct 2020 11:22:39 +0200
-Message-ID: <7e9caf9b90d518037094b7e536e932e754e25895.camel@redhat.com>
-In-Reply-To: alpine.OSX.2.23.453.2010061004110.22542@ccarpent-mobl.amr.corp.intel.com
+Subject: [MPTCP] [PATCH net 0/2] mptcp: mp join fallback fixes.
+Date: Wed, 07 Oct 2020 19:37:16 +0200
+Message-ID: <cover.1602091906.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6237
+X-UID: 6240
 
---===============5891523868969138532==
+--===============4554691237409789802==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-10-06 at 10:16 -0700, Mat Martineau wrote:
-> On Tue, 6 Oct 2020, Paolo Abeni wrote:
-> =
+This solves issues/91 for me at least. Targeting upstream -net.
+As such, patches based on the "bottom" of current export branch,
+so that should apply cleanly on current -net.
 
-> > The current export branch suffers of the following issue:
-> > =
+Note that rebasing on top of patch 2 "mptcp: refactor shutdown and close",
+we must change the value of the macro MPTCP_WORKER_RUNNING (5 -> 6)
 
-> > https://github.com/multipath-tcp/mptcp_net-next/issues/97
-> > =
+The problem fixed by patch 2/2 already exist in the curren export/net =
 
-> > To fix the above, MPTCP needs to be able to cope with memory allocation
-> > failure in do_tcp_sendpages().
-> > =
+branches - is quite rare, but is more visible after patch 1/2.
 
-> > In this attempt, the relevant code is factored out of do_tcp_sendpages(=
-),
-> > in a smaller helper, so that mptcp_sendmsg_frag() can avoid touching
-> > ssk->sk_socket.
-> > =
+Paolo Abeni (2):
+  mptcp: fix fallback for MP_JOIN subflows
+  mptcp: subflows garbage collection
 
-> > There are other possible alternatives:
-> > - add an explicit check in do_tcp_sendpages() for NULL sk->sk_socket
-> >  pro: very simple and little invasive
-> >  cons: hackysh?!?
-> > - inline/open-code the relevant part of do_tcp_sendpages in mptcp_sendm=
-sg_frag()
-> >  pro: no need to change core TCP code
-> >  cons: code duplication, need to change the scope for a couple of TCP i=
-nternal
-> >        helpers (removing the 'static' keyword)
-> > =
+ net/mptcp/options.c  | 32 +++++++++++++++++++++++++-------
+ net/mptcp/protocol.c | 18 ++++++++++++++++++
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 15 +++++++++++++--
+ 4 files changed, 58 insertions(+), 9 deletions(-)
 
-> > As a follow-up I would try to pre-allocate skbs and extensions, so that
-> > push_pending could be called in BH context and we could avoid using the
-> > work queue.
-> > =
+-- =
 
-> > I'm looking for feedback on the less ugly/more upstreamable approach
-> =
+2.26.2
 
-> I wouldn't object to the explicit sk->sk_socket check, it is simpler and =
-
-> handling that in the existing do_error path in do_tcp_sendpages() does =
-
-> make sense. It is, after all, an error that can be detected and handled.
-> =
-
-> I think factoring out do_tcp_sendfrag() is "nice" enough - while it seems =
-
-> like such a change might be preferred earlier in the net-next development =
-
-> cycle it doesn't seem too invasive. The drawback I see is that there are =
-
-> not likely to be other users of do_tcp_sendfrag().
-
-Thank you for the review and feedback!
-
-I would avoid adding mptcp-specific test in the TCP code, if possible,
-so my proposal is as follow:
-
-I'll rebase the patches to land on the "bottom" of the export branch -
-that is, just on top of the net-next branch, so that we could send them
-upstream ASAP - still on the next wnd, likely. Perhpas I can send them
-as RFC upstream while net-next will be closed.
-
-I'm wondering about changing do_tcp_sendfrag() signature to:
-
-struct sk_buff *
-do_tcp_sendfrag(struct sock *sk, int size_goal, int flags,
-		struct page *page, int offset, int *size);
-
-that is, first socket related fields, than buffer related fields. It
-will return the used skb, so that the caller will not need the
-additional tcp_write_queue_tail(), and will use the 'size' argument as
-an in-out one. On return will contains the copied bytes value - this
-later change to avoid increasing the number of arguments for this
-function.
-
-Overall it should produce smaller code in both the TCP and MPTCP
-protocol, WDYT?
-
-> Would like to avoid open-coding part of the do_tcp_sendpages() code in =
-
-> mptcp and having to maintain that.
-
-Agreed ;)
-
-Thanks!
-
-Paolo
-
---===============5891523868969138532==--
+--===============4554691237409789802==--
