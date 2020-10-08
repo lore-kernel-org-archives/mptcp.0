@@ -1,92 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============1637167694021620810=="
+Content-Type: multipart/mixed; boundary="===============4894522799573545594=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net 2/2] mptcp: subflows garbage collection
-Date: Thu, 08 Oct 2020 14:28:56 -0700
-Message-ID: <alpine.OSX.2.23.453.2010081359500.49214@ozore-mobl2.amr.corp.intel.com>
-In-Reply-To: 885dd6801461324b1a9753625150cf5e55f22852.1602189151.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: skip to next candidate if
+ subflow has unacked data
+Date: Thu, 08 Oct 2020 15:36:58 -0700
+Message-ID: <alpine.OSX.2.23.453.2010081452440.49214@ozore-mobl2.amr.corp.intel.com>
+In-Reply-To: 20201001081406.4548-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 6258
+X-UID: 6259
 
---===============1637167694021620810==
+--===============4894522799573545594==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 8 Oct 2020, Paolo Abeni wrote:
 
-> The msk can close MP_JOIN subflows if the initial handshake
-> fails. Currently such subflows are kept alive in the
-> conn_list untill the msk itself is closed.
+On Thu, 1 Oct 2020, Florian Westphal wrote:
+
+> In case a subflow path is blocked, MPTCP-level retransmit may not take
+> place anymore because such subflow is likely to have unacked data left
+> in its write queue.
 >
-> Beyond the wasted memory, we could end-up sending the
-> DATA_FIN and the DATA_FIN ack on such socket, even after a
-> reset.
+> Ignore subflows that have experienced loss and test next candidate.
 >
-> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machin=
-e")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> Fixes: 3b1d6210a95773691 ("mptcp: implement and use MPTCP-level retransmi=
+ssion")
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 > ---
-> net/mptcp/protocol.c | 18 ++++++++++++++++++
-> net/mptcp/protocol.h |  1 +
-> net/mptcp/subflow.c  |  6 ++++++
-> 3 files changed, 25 insertions(+)
+> net/mptcp/protocol.c | 5 ++++-
+> 1 file changed, 4 insertions(+), 1 deletion(-)
 >
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 82b324ed3c4c..92e0152f831b 100644
+> index 7aa52a3bc5e2..0266d8ac24d2 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -1701,6 +1701,20 @@ static void pm_work(struct mptcp_sock *msk)
-> 	spin_unlock_bh(&msk->pm.lock);
-> }
+> @@ -1732,8 +1732,11 @@ static struct sock *mptcp_subflow_get_retrans(cons=
+t struct mptcp_sock *msk)
+> 			continue;
 >
-> +static void __mptcp_close_subflow(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_subflow_context *subflow, *tmp;
-> +
-> +	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-> +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> +
-> +		if (inet_sk_state_load(ssk) !=3D TCP_CLOSE)
-> +			continue;
-> +
-> +		__mptcp_close_ssk((struct sock *)msk, ssk, subflow, 0);
-> +	}
-> +}
-> +
-> static void mptcp_worker(struct work_struct *work)
-> {
-> 	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
-> @@ -1718,11 +1732,15 @@ static void mptcp_worker(struct work_struct *work)
-> 	mptcp_clean_una(sk);
-> 	mptcp_check_data_fin_ack(sk);
-> 	__mptcp_flush_join_list(msk);
-> +	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
-> +		__mptcp_close_subflow(msk);
-> +
-> 	__mptcp_move_skbs(msk);
+> 		/* still data outstanding at TCP level?  Don't retransmit. */
+> -		if (!tcp_write_queue_empty(ssk))
+> +		if (!tcp_write_queue_empty(ssk)) {
+> +			if (inet_csk(ssk)->icsk_ca_state >=3D TCP_CA_Loss)
+> +				continue;
+> 			return NULL;
+> +		}
 >
-> 	if (msk->pm.status)
-> 		pm_work(msk);
->
-> +
-> 	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
-> 		mptcp_check_for_eof(msk);
+> 		if (subflow->backup) {
+> 			if (!backup)
+> -- =
 
-Still this extra whitespace, but looks good other than that:
+> 2.26.2
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Checking for the loss state is an improvement when the first subflow in =
 
+the list is blocking retransmissions, looks like a good idea to me.
 
-I applied both (resolving conflict on patch 1) to net/master and the self =
+We can still get inconsistent retransmission behavior depending on the =
 
-tests look ok on my system. diag.sh has some failures, but those are the =
+order of subflows in the list - if the first non-loss subflow has an empty =
 
-same with or without these patches.
+write queue then retransmission will happen even if other subflows have =
+
+queued data. I suppose this causes the opposite problem, retransmitting =
+
+when it should wait. Better to handle a fix for that separately?
 
 --
 Mat Martineau
 Intel
---===============1637167694021620810==--
+--===============4894522799573545594==--
