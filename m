@@ -1,64 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============0144072285786638630=="
+Content-Type: multipart/mixed; boundary="===============0189159985109171077=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [mptcp-dev] mptcp code in kernel 5.8
-Date: Thu, 08 Oct 2020 11:28:24 -0700
-Message-ID: <20201008182824.GB34635@MacBook-Pro.local>
-In-Reply-To: CAO=PVE8JUAg8An96p0VVjL0GdVEd97hH27mpBGjUbq95j317HA@mail.gmail.com
+Subject: [MPTCP] [PATCH net 0/2] mptcp: mp join fallback fixes.
+Date: Thu, 08 Oct 2020 22:34:57 +0200
+Message-ID: <cover.1602189151.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6250
+X-UID: 6252
 
---===============0144072285786638630==
+--===============0189159985109171077==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-+MPTCP upstreaming list
+This solves issues/91 for me at least. Targeting upstream -net.
+As such, patches based on the "bottom" of current export branch,
+so that should apply cleanly on current -net.
 
-Hello Yoshi,
+Note that rebasing on top of patch 2 "mptcp: refactor shutdown and close",
+we must change the value of the macro MPTCP_WORKER_RUNNING (5 -> 6)
 
-On 10/08/20 - 01:44, yoshi nishida wrote:
-> Hello,
-> =
+The problem fixed by patch 2/2 already exist in the curren export/net =
 
-> It's really great to see mptcp codes in main stream.  So, I've tried
-> to use it with kernel 5.8 in ubuntu20.10.
-> However, as far as I've checked, the mptcp in the kernel seems to be
-> different from the one in the repo.
+branches - is quite rare, but is more visible after patch 1/2.
 
-The repo, you mean the repo of multipath-tcp.org kernel? Yes, they are
-entirely different. The MPTCP implementation in upstream Linux (5.6+) is a
-complete rewrite.
+This iteration addresses the comment from Mat on patch 2/2
 
-> I am not sure how to set scheduler
-> or path manager with this.
+Paolo Abeni (2):
+  mptcp: fix fallback for MP_JOIN subflows
+  mptcp: subflows garbage collection
 
-It is currently not possible to select different schedulers on the upstream
-implementation.
+ net/mptcp/options.c  | 32 +++++++++++++++++++++++++-------
+ net/mptcp/protocol.c | 18 ++++++++++++++++++
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 16 ++++++++++++++--
+ 4 files changed, 59 insertions(+), 9 deletions(-)
 
-For path-management there is an ip-mptcp interface that allows you to add
-subflows and addresses: https://man7.org/linux/man-pages/man8/ip-mptcp.8.ht=
-ml
+-- =
 
+2.26.2
 
-Christoph
-
-> Does anyone know about the differences?
-> Sorry if I overlooked something.
-> =
-
-> Thanks,
-> --
-> Yoshi
-
-> MPTCP-developpers Mailing-List
-> Visit http://multipath-tcp.org to access the source-code of MPTCP in the =
-Linux Kernel
-> =
-
-> To Unsubscribe, visit https://listes-2.sipr.ucl.ac.be/sympa/info/mptcp-dev
->=20
-
---===============0144072285786638630==--
+--===============0189159985109171077==--
