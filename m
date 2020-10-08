@@ -1,97 +1,123 @@
-Content-Type: multipart/mixed; boundary="===============5761147205721308371=="
+Content-Type: multipart/mixed; boundary="===============5858396651143185046=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH 0/2] mptcp: cope better with tcp_sendpage
- allocation
-Date: Wed, 07 Oct 2020 15:20:37 -0700
-Message-ID: <alpine.OSX.2.23.453.2010071514560.37718@ytakamor-mobl2.gar.corp.intel.com>
-In-Reply-To: 7e9caf9b90d518037094b7e536e932e754e25895.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net 2/2] mptcp: subflows garbage collection
+Date: Wed, 07 Oct 2020 17:22:24 -0700
+Message-ID: <alpine.OSX.2.23.453.2010071717070.42191@ytakamor-mobl2.gar.corp.intel.com>
+In-Reply-To: d63dc99e177c7a5a73a04edc9aa96c78a076ae01.1602091906.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6244
+X-UID: 6245
 
---===============5761147205721308371==
+--===============5858396651143185046==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+
+Hi Paolo,
+
 On Wed, 7 Oct 2020, Paolo Abeni wrote:
 
-> On Tue, 2020-10-06 at 10:16 -0700, Mat Martineau wrote:
->> On Tue, 6 Oct 2020, Paolo Abeni wrote:
->>
->>> The current export branch suffers of the following issue:
->>>
->>> https://github.com/multipath-tcp/mptcp_net-next/issues/97
->>>
->>> To fix the above, MPTCP needs to be able to cope with memory allocation
->>> failure in do_tcp_sendpages().
->>>
->>> In this attempt, the relevant code is factored out of do_tcp_sendpages(=
-),
->>> in a smaller helper, so that mptcp_sendmsg_frag() can avoid touching
->>> ssk->sk_socket.
->>>
->>> There are other possible alternatives:
->>> - add an explicit check in do_tcp_sendpages() for NULL sk->sk_socket
->>>  pro: very simple and little invasive
->>>  cons: hackysh?!?
->>> - inline/open-code the relevant part of do_tcp_sendpages in mptcp_sendm=
-sg_frag()
->>>  pro: no need to change core TCP code
->>>  cons: code duplication, need to change the scope for a couple of TCP i=
-nternal
->>>        helpers (removing the 'static' keyword)
->>>
->>> As a follow-up I would try to pre-allocate skbs and extensions, so that
->>> push_pending could be called in BH context and we could avoid using the
->>> work queue.
->>>
->>> I'm looking for feedback on the less ugly/more upstreamable approach
->>
->> I wouldn't object to the explicit sk->sk_socket check, it is simpler and
->> handling that in the existing do_error path in do_tcp_sendpages() does
->> make sense. It is, after all, an error that can be detected and handled.
->>
->> I think factoring out do_tcp_sendfrag() is "nice" enough - while it seems
->> like such a change might be preferred earlier in the net-next development
->> cycle it doesn't seem too invasive. The drawback I see is that there are
->> not likely to be other users of do_tcp_sendfrag().
+> The msk can close MP_JOIN subflows if the initial handshake
+> fails. Currently such subflows are kept alive in the
+> conn_list untill the msk itself is closed.
 >
-> Thank you for the review and feedback!
+> Beyond the wasted memory, we could end-up sending the
+> DATA_FIN and the DATA_FIN ack on such socket, even after a
+> reset.
 >
-> I would avoid adding mptcp-specific test in the TCP code, if possible,
-> so my proposal is as follow:
+> Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machin=
+e")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 18 ++++++++++++++++++
+> net/mptcp/protocol.h |  1 +
+> net/mptcp/subflow.c  |  5 +++++
+> 3 files changed, 24 insertions(+)
 >
-> I'll rebase the patches to land on the "bottom" of the export branch -
-> that is, just on top of the net-next branch, so that we could send them
-> upstream ASAP - still on the next wnd, likely. Perhpas I can send them
-> as RFC upstream while net-next will be closed.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 82b324ed3c4c..92e0152f831b 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1701,6 +1701,20 @@ static void pm_work(struct mptcp_sock *msk)
+> 	spin_unlock_bh(&msk->pm.lock);
+> }
 >
-> I'm wondering about changing do_tcp_sendfrag() signature to:
+> +static void __mptcp_close_subflow(struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_subflow_context *subflow, *tmp;
+> +
+> +	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+> +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> +
+> +		if (inet_sk_state_load(ssk) !=3D TCP_CLOSE)
+> +			continue;
+> +
+> +		__mptcp_close_ssk((struct sock *)msk, ssk, subflow, 0);
+> +	}
+> +}
+> +
+> static void mptcp_worker(struct work_struct *work)
+> {
+> 	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
+> @@ -1718,11 +1732,15 @@ static void mptcp_worker(struct work_struct *work)
+> 	mptcp_clean_una(sk);
+> 	mptcp_check_data_fin_ack(sk);
+> 	__mptcp_flush_join_list(msk);
+> +	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+> +		__mptcp_close_subflow(msk);
+> +
+> 	__mptcp_move_skbs(msk);
 >
-> struct sk_buff *
-> do_tcp_sendfrag(struct sock *sk, int size_goal, int flags,
-> 		struct page *page, int offset, int *size);
+> 	if (msk->pm.status)
+> 		pm_work(msk);
 >
-> that is, first socket related fields, than buffer related fields. It
-> will return the used skb, so that the caller will not need the
-> additional tcp_write_queue_tail(), and will use the 'size' argument as
-> an in-out one. On return will contains the copied bytes value - this
-> later change to avoid increasing the number of arguments for this
-> function.
->
-> Overall it should produce smaller code in both the TCP and MPTCP
-> protocol, WDYT?
+> +
 
-That has some similarities with what I wanted to do in the early drafts of =
+Some whitespace noise here.
 
-the sendmsg code, but I was being very (overly?) paranoid about not =
+> 	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
+> 		mptcp_check_for_eof(msk);
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index de5219fd3570..3462c00afd9e 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -90,6 +90,7 @@
+> #define MPTCP_WORK_RTX		2
+> #define MPTCP_WORK_EOF		3
+> #define MPTCP_FALLBACK_DONE	4
+> +#define MPTCP_WORK_CLOSE_SUBFLOW 5
+>
+> struct mptcp_options_received {
+> 	u64	sndr_key;
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index d2eb5f2abe5a..5ff806dc4b83 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -273,9 +273,14 @@ static bool subflow_thmac_valid(struct mptcp_subflow=
+_context *subflow)
+>
+> void mptcp_subflow_reset(struct sock *ssk)
+> {
+> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> +	struct sock *sk =3D subflow->conn;
+> +
+> 	tcp_set_state(ssk, TCP_CLOSE);
+> 	tcp_send_active_reset(ssk, GFP_ATOMIC);
+> 	tcp_done(ssk);
+> +	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
+> +		mptcp_schedule_work(sk);
 
-touching TCP code. A good proposal in my opinion!
+There's a build problem here, mptcp_schedule() is introduced later in the =
+
+export branch and isn't on -net or net-next.
+
+Otherwise, the series looks good.
 
 --
 Mat Martineau
 Intel
---===============5761147205721308371==--
+--===============5858396651143185046==--
