@@ -1,40 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============4358862217182426817=="
+Content-Type: multipart/mixed; boundary="===============5460939553240348248=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: fix infinite loop on
- recvmsg()/worker() race.
-Date: Thu, 08 Oct 2020 17:28:23 -0700
-Message-ID: <20201008172823.3e1ea388@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: 5a2464d778499bdc2ced43b56569008030b470bc.1601965539.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [RFC mptpcp-next] mptcp: add ooo prune support
+Date: Thu, 08 Oct 2020 17:29:10 -0700
+Message-ID: <alpine.OSX.2.23.453.2010081702580.49214@ozore-mobl2.amr.corp.intel.com>
+In-Reply-To: 20201002154535.28412-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 6262
+X-UID: 6263
 
---===============4358862217182426817==
+--===============5460939553240348248==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue,  6 Oct 2020 08:27:34 +0200 Paolo Abeni wrote:
-> If recvmsg() and the workqueue race to dequeue the data
-> pending on some subflow, the current mapping for such
-> subflow covers several skbs and some of them have not
-> reached yet the received, either the worker or recvmsg()
-> can find a subflow with the data_avail flag set - since
-> the current mapping is valid and in sequence - but no
-> skbs in the receive queue - since the other entity just
-> processed them.
-> =
+On Fri, 2 Oct 2020, Florian Westphal wrote:
 
-> The above will lead to an unbounded loop in __mptcp_move_skbs()
-> and a subsequent hang of any task trying to acquiring the msk
-> socket lock.
-> =
+> It might be possible that entire receive buffer is occupied by
+> skbs in the OOO queue.
+>
+> In this case we can't pull more skbs from subflows and the holes
+> will never be filled.
+>
+> If this happens, schedule the work queue and prune ~12% of skbs to
+> make space available. Also add a MIB counter for this.
+>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> ---
+> Paolo, this does relate a bit to our discussion wrt. oow
+> tracking.  I thought we might need to add some sort of cushion to
+> account for window discrepancies, but that might then get us
+> in a state where wmem might be full...
+>
+> What do you think?
+>
+> I did NOT see such a problem in practice, this is a theoretical "fix".
+> TCP has similar code to deal with corner cases of small-oow packets.
+>
 
-> This change addresses the issue stopping the __mptcp_move_skbs()
-> loop as soon as we detect the above race (empty receive queue
-> with data_avail set).
+Is there a benefit to relying on the workqueue to discard skbs from the =
 
-Applied, thanks!
---===============4358862217182426817==--
+ooo queue rather than handling that as data is moved from the subflows?
+
+The cause of "holes" in MPTCP reassembly is a little different from TCP, =
+
+since TCP takes care of the packet loss problem it seems to me the main =
+
+issue is recovering from path loss (assuming the window and rcv buffer =
+
+sizes are sane). We need to keep pulling from the subflows to potentially =
+
+fill the holes, and the most valuable data to make progress would be =
+
+earlier in the sequence space. We potentially throw less away if =
+
+discarding later-sequence ooo queued skbs as subflow data arrives rather =
+
+than doing the whole 12.5% chunk, and don't have the latency of waiting =
+
+for the workqueue to get scheduled.
+
+(I should look at the multipath-tcp.org kernel to understand how it's done =
+
+there but I haven't had a chance to do that yet)
+
+--
+Mat Martineau
+Intel
+--===============5460939553240348248==--
