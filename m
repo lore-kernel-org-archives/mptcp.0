@@ -1,181 +1,301 @@
-Content-Type: multipart/mixed; boundary="===============7827029962347734105=="
+Content-Type: multipart/mixed; boundary="===============4700331850954233639=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 1/2] mptcp: fix fallback for MP_JOIN subflows
-Date: Fri, 09 Oct 2020 19:00:00 +0200
-Message-ID: <d12d2628b07bb883e53a9b16a74802363326a432.1602262630.git.pabeni@redhat.com>
-In-Reply-To: cover.1602262630.git.pabeni@redhat.com
+Subject: [MPTCP] [Weekly meetings] MoM - 8th of October 2020
+Date: Fri, 09 Oct 2020 22:52:55 +0200
+Message-ID: <4ceb429e-4ef4-b775-0bdf-7b51906ab311@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 6276
+X-UID: 6277
 
---===============7827029962347734105==
+--===============4700331850954233639==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Additional/MP_JOIN subflows that do not pass some initial handshake
-tests currently causes fallback to TCP. That is an RFC violation:
-we should instead reset the subflow and leave the the msk untouched.
+Hello everyone,
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/91
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/options.c  | 32 +++++++++++++++++++++++++-------
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 10 ++++++++--
- 3 files changed, 34 insertions(+), 9 deletions(-)
+Last Thursday, we had our 119th meeting with Mat and Ossama (Intel OTC), =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 888bbbbb3e8a..277f12633fc9 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -626,6 +626,12 @@ bool mptcp_established_options(struct sock *sk, struct=
- sk_buff *skb,
- 	if (unlikely(mptcp_check_fallback(sk)))
- 		return false;
- =
+Paolo and Davide (RedHat) and myself (Tessares).
 
-+	/* prevent adding of any MPTCP related options on reset packet
-+	 * until we support MP_TCPRST/MP_FASTCLOSE
-+	 */
-+	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST))
-+		return false;
-+
- 	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining, opts))
- 		ret =3D true;
- 	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
-@@ -676,7 +682,7 @@ bool mptcp_synack_options(const struct request_sock *re=
-q, unsigned int *size,
- 	return false;
- }
- =
+Thanks again for this new good meeting!
 
--static bool check_fully_established(struct mptcp_sock *msk, struct sock *s=
-k,
-+static bool check_fully_established(struct mptcp_sock *msk, struct sock *s=
-sk,
- 				    struct mptcp_subflow_context *subflow,
- 				    struct sk_buff *skb,
- 				    struct mptcp_options_received *mp_opt)
-@@ -693,15 +699,20 @@ static bool check_fully_established(struct mptcp_sock=
- *msk, struct sock *sk,
- 		    TCP_SKB_CB(skb)->end_seq =3D=3D TCP_SKB_CB(skb)->seq &&
- 		    subflow->mp_join && mp_opt->mp_join &&
- 		    READ_ONCE(msk->pm.server_side))
--			tcp_send_ack(sk);
-+			tcp_send_ack(ssk);
- 		goto fully_established;
- 	}
- =
+Here are the minutes of the meeting:
 
--	/* we should process OoO packets before the first subflow is fully
--	 * established, but not expected for MP_JOIN subflows
-+	/* we must process OoO packets before the first subflow is fully
-+	 * established. OoO packets are instead a protocol violation
-+	 * for MP_JOIN subflows as the peer must not send any data
-+	 * before receiving the forth ack - cfr. RFC 8684 section 3.2.
- 	 */
--	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1)
-+	if (TCP_SKB_CB(skb)->seq !=3D subflow->ssn_offset + 1) {
-+		if (subflow->mp_join)
-+			goto reset;
- 		return subflow->mp_capable;
-+	}
- =
 
- 	if (mp_opt->dss && mp_opt->use_ack) {
- 		/* subflows are fully established as soon as we get any
-@@ -713,9 +724,12 @@ static bool check_fully_established(struct mptcp_sock =
-*msk, struct sock *sk,
- 	}
- =
 
- 	/* If the first established packet does not contain MP_CAPABLE + data
--	 * then fallback to TCP
-+	 * then fallback to TCP. Fallback scenarios requires a reset for
-+	 * MP_JOIN subflows.
- 	 */
- 	if (!mp_opt->mp_capable) {
-+		if (subflow->mp_join)
-+			goto reset;
- 		subflow->mp_capable =3D 0;
- 		pr_fallback(msk);
- 		__mptcp_do_fallback(msk);
-@@ -732,12 +746,16 @@ static bool check_fully_established(struct mptcp_sock=
- *msk, struct sock *sk,
- =
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
- 	subflow->pm_notified =3D 1;
- 	if (subflow->mp_join) {
--		clear_3rdack_retransmission(sk);
-+		clear_3rdack_retransmission(ssk);
- 		mptcp_pm_subflow_established(msk, subflow);
- 	} else {
- 		mptcp_pm_fully_established(msk);
- 	}
- 	return true;
-+
-+reset:
-+	mptcp_subflow_reset(ssk);
-+	return false;
- }
- =
+     netdev (if mptcp ML is in cc) (Matthieu Baerts, Paolo Abeni, Rikard =
 
- static u64 expand_ack(u64 old_ack, u64 cur_ack, bool use_64bit)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 20f04ac85409..0a6e5b3f6ae8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -348,6 +348,7 @@ void mptcp_subflow_fully_established(struct mptcp_subfl=
-ow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool mptcp_subflow_data_available(struct sock *sk);
- void __init mptcp_subflow_init(void);
-+void mptcp_subflow_reset(struct sock *ssk);
- =
+Falkeborn):
 
- /* called with sk socket lock held */
- int __mptcp_subflow_connect(struct sock *sk, int ifindex,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6f035af1c9d2..b1b8028730bf 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -270,6 +270,13 @@ static bool subflow_thmac_valid(struct mptcp_subflow_c=
-ontext *subflow)
- 	return thmac =3D=3D subflow->thmac;
- }
- =
+1377527  [net-next] selftests: mptcp: interpret \n as a new line
+1377217  [net-next] mptcp: fix infinite loop on recvmsg()/worker() race.
+1376734  [net-next] mptcp: don't skip needed ack
+1376726  [net] mptcp: more DATA FIN fixes
+1376565  [net-next,v2,1/2] mptcp: Constify mptcp_pm_ops
+1375648  [net] tcp: fix syn cookied MPTCP request socket leak
 
-+void mptcp_subflow_reset(struct sock *ssk)
-+{
-+	tcp_set_state(ssk, TCP_CLOSE);
-+	tcp_send_active_reset(ssk, GFP_ATOMIC);
-+	tcp_done(ssk);
-+}
-+
- static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
-skb)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-@@ -342,8 +349,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 	return;
- =
 
- do_reset:
--	tcp_send_active_reset(sk, GFP_ATOMIC);
--	tcp_done(sk);
-+	mptcp_subflow_reset(sk);
- }
- =
+     our repo (by: Davide Caratti, Geliang Tang, Matthieu Baerts, Paolo =
 
- struct request_sock_ops mptcp_subflow_request_sock_ops;
+Abeni):
+
+1377493  [net-next] selftests: mptcp: interpret \n as a new line
+
+1377396  [net] net: mptcp: make DACK4/DACK8 usage consistent among all =
+
+subflows
+
+1376740  [net-next] Squash-to: "mptcp: refactor shutdown and close"
+
+1376684  [net-next] Squash-to: mptcp: move page frag allocation in =
+
+mptcp_sendm...
+
+1376301  [net-next] mptcp: ADD_ADDRs with echo bit are smaller
+
+1375632  [v3,13/13] mptcp: send explicit ack on delayed ack_seq incr
+1375633  [v3,12/13] mptcp: keep track of advertised windows right edge
+1375634  [v3,11/13] mptcp: rework poll+nospace handling
+1375631  [v3,10/13] mptcp: try to push pending data on snd una updates
+1375630  [v3,09/13] mptcp: move page frag allocation in mptcp_sendmsg()
+1375629  [v3,08/13] mptcp: refactor shutdown and close
+1375628  [v3,07/13] mptcp: introduce MPTCP snd_nxt
+1375626  [v3,06/13] mptcp: add accounting for pending data
+1375627  [v3,05/13] mptcp: reduce the arguments of mptcp_sendmsg_frag
+1375625  [v3,04/13] mptcp: introduce mptcp_schedule_work
+1375624  [v3,03/13] tcp: factor out __tcp_close() helper
+1375621  [v3,02/13] mptcp: don't skip needed ack
+1375623  [v3,01/13] mptcp: more DATA FIN fixes
+
+1375217  [v2] tcp: fix syn cookied MPTCP request socket leak
+
+1374891  [v5,mptcp-next,2/2] selftests: mptcp: add ADD_ADDR timeout test =
+
+case
+1374890  [v5,mptcp-next,1/2] mptcp: add a new sysctl add_addr_timeout
+
+
+
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+
+     netdev (if mptcp ML is in cc) (by: Davide Caratti):
+
+1377553  [net] net: mptcp: make DACK4/DACK8 usage consistent among all =
+
+subflows
+
+
+     our repo (by: Florian Westphal, Geliang Tang, Matthieu Baerts, =
+
+Paolo Abeni):
+
+1370700: RFC: [RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
+1370701: RFC: [RFC,3/4] mptcp: add mptcp reset option support
+1370702: RFC: [RFC,4/4] tcp: parse tcp options contained in reset packets:
+     - WIP
+
+1372421: Changes Requested: [v3,mptcp-next,1/2] mptcp: send out =
+
+dedicated ADD_ADDR packet
+1372422: Changes Requested: [v3,mptcp-next,2/2] selftests: mptcp: add =
+
+subflow and ADD_ADDR IPv6 test cases:
+     - WIP
+
+1374921: Needs Review / ACK: [mptcp-next] mptcp: skip to next candidate =
+
+if subflow has unacked data:
+     - Waiting for review
+     - *Paolo* will have a look at it later
+
+1375475: New: [mptcp-next] selftests: mptcp: add link failure test case:
+     - Depends on the previous patch (mptcp: skip to next candidate if =
+
+subflow has unacked data) not to have other failure in the selftests
+
+1375893: New: [RFC,mptpcp-next] mptcp: add ooo prune support:
+     - Waiting for review
+     - *Mat* will have a look at it later
+
+1376724: New: [mptcp-next] Squash-to: mptcp: keep track of advertised =
+
+windows right edge:
+     - Can be applied: we can enable pr_debug dynamically
+     - TODO: *Matth*
+
+1378182: Changes Requested: [net,1/2] mptcp: fix fallback for MP_JOIN =
+
+subflows
+1378181: Changes Requested: [net,2/2] mptcp: subflows garbage collection:
+     - Will try to send a v2 fixing Mat's comment.
+
+
+Issues on Github:
+     https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+     Recently opened (latest from last week: 95)
+
+   99  simult_flows selftest is unstable: remaining sockets in TIME-WAIT =
+
+state [bug]:
+       - Could be due to out of window data we have at the end of the =
+
+"export" branch
+       - With what Paolo sent, this situation should be less frequent
+       - But a final fix (non trivial so that will be for Florian :) ) =
+
+is required
+
+   98  dss_ssn_specified_client packetdrill test fails (timeout) [bug]:
+       - seems to be an issue with packetdrill test itself
+       - because the data fin are sent first and then the FIN
+       - *Davide* has a PR but not fixing this specific issue right now.
+
+   97  null ptr dereference on close timeout under memory pressure [bug] =
+
+@pabeni :
+       - introduced by the recent refactor
+       - we could still enqueue data to a subflow after the it has been =
+
+closed
+       - allocation could fail, send the notification to socket struct =
+
+but will receive a null pointer
+       - should be fixed by "mptcp: mp join fallback fixes" series
+
+
+     Bugs (opened, flagged as "bug" and assigned)
+
+   97  null ptr dereference on close timeout under memory pressure [bug] =
+
+@pabeni
+
+   94  Packetdrill: after a received DATA_FIN, no new packets can be =
+
+treated [bug] @dcaratti :
+       - the received packet doesn't match the socket
+       - it doesn't match the expected socket
+
+   92  mptcp_close() deletes MPTCP socket before disconnection completes =
+
+[bug] @mjmartineau:
+       - should be addressed by the recent sendmsg refactor, right?
+       - *Mat* is going to verify this and close it if OK
+
+   91  MPJ: Fallback to TCP if the client receives a 4th ACK without DSS =
+
+options from the server [bug] @pabeni:
+       - should be addressed by "mptcp: mp join fallback fixes" series
+
+   85  Packetdrill: multiple timeout reported by the CI [bug] @matttbe:
+       - WIP
+
+
+     Bugs (opened and flagged as "bug" and not assigned)
+
+   99  simult_flows selftest is unstable: remaining sockets in TIME-WAIT =
+
+state [bug]
+   98  dss_ssn_specified_client packetdrill test fails (timeout) [bug]
+   70  [syzkaller] WARNING in mptcp_reset_timer [bug] [syzkaller]
+   65  clearing properly the status in listen() [bug]
+   56  msk connection state set without msk lock [bug]
+
+
+     In Progress (opened and assigned)
+
+   96  Python: add support for IPPROTO_MPTCP [enhancement] @matttbe :
+       - WIP
+
+   76  [gs]etsockopt per subflow: BPF [enhancement] @matttbe :
+       - WIP
+
+   55  ADD_ADDR: IPv6 support [enhancement] @geliangtang
+   54  ADD_ADDR: ports support [enhancement] @geliangtang
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag =
+
+interface [enhancement] [syzkaller] @cpaasch
+
+
+     Recently closed (since last week)
+
+   95  Additional random values are set with ADD_ADDR+echo bit packets =
+
+[bug] @matttbe
+   89  kmemleak in cookie_tcp_reqsk_alloc (mptcp_join.sh) [bug] @pabeni
+
+
+
+FYI: Current Roadmap:
+     - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+     - Current merge window (5.10): =
+
+https://github.com/multipath-tcp/mptcp_net-next/projects/5
+     - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Extra tests:
+     - news about Syzkaller? (Christoph):
+         - *@Christoph* Is it running on top of latest export branch =
+
+with sendmsg refactor?
+         - There was one report from syzbot but already fixed by Paolo
+
+     - news about interop with mptcp.org? (Christoph)
+
+     - news about Intel's kbuild? (Mat):
+         - got reports but still difficult to know what's wrong: we only =
+
+have "Test X has failed"
+         - Mat will check how to get more details
+
+     - packetdrill (Davide):
+         - echo-bit explicit?:
+             - not mandatory, but it can be modified
+
+     - CI (Matth):
+         - could be good to continue to run on a slow server but also a =
+
+non laggy one
+
+
+
+selftests:
+     - OK to depend on IPTables?:
+         - we should at least skip the test if the tool is not available
+         - and probably better to switch to nftables
+         - bpftables has been deprecated, we can no longer be cool and =
+
+do it with bpf :'(
+         - TODO: *Matth*
+
+
+
+Next meeting:
+     - We propose to have the next meeting on Thursday, the 15th of October.
+     - Usual time: 15:00 UTC (8am PDT, 5pm CEST, 11pm UTC+8)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20201015
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
 -- =
 
-2.26.2
-
---===============7827029962347734105==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============4700331850954233639==--
