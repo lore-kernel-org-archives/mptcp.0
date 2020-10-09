@@ -1,71 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============5460939553240348248=="
+Content-Type: multipart/mixed; boundary="===============2051142673216962491=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC mptpcp-next] mptcp: add ooo prune support
-Date: Thu, 08 Oct 2020 17:29:10 -0700
-Message-ID: <alpine.OSX.2.23.453.2010081702580.49214@ozore-mobl2.amr.corp.intel.com>
-In-Reply-To: 20201002154535.28412-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next] selftests: mptcp: interpret \n as a new
+ line
+Date: Thu, 08 Oct 2020 17:56:21 -0700
+Message-ID: <20201008175621.6d2f2ddd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: c750c3256bec4ceab91a95f2725e4bc026f4b5dc.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6263
+X-UID: 6264
 
---===============5460939553240348248==
+--===============2051142673216962491==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2 Oct 2020, Florian Westphal wrote:
+On Tue, 06 Oct 2020 18:12:45 +0200 Paolo Abeni wrote:
+> On Tue, 2020-10-06 at 18:06 +0200, Matthieu Baerts wrote:
+> > In case of errors, this message was printed:
+> > =
 
-> It might be possible that entire receive buffer is occupied by
-> skbs in the OOO queue.
->
-> In this case we can't pull more skbs from subflows and the holes
-> will never be filled.
->
-> If this happens, schedule the work queue and prune ~12% of skbs to
-> make space available. Also add a MIB counter for this.
->
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
-> Paolo, this does relate a bit to our discussion wrt. oow
-> tracking.  I thought we might need to add some sort of cushion to
-> account for window discrepancies, but that might then get us
-> in a state where wmem might be full...
->
-> What do you think?
->
-> I did NOT see such a problem in practice, this is a theoretical "fix".
-> TCP has similar code to deal with corner cases of small-oow packets.
->
+> >   (...)
+> >   balanced bwidth with unbalanced delay       5233 max 5005  [ fail ]
+> >   client exit code 0, server 0
+> >   \nnetns ns3-0-EwnkPH socket stat for 10003:
+> >   (...)
+> > =
 
-Is there a benefit to relying on the workqueue to discard skbs from the =
+> > Obviously, the idea was to add a new line before the socket stat and not
+> > print "\nnetns".
+> > =
 
-ooo queue rather than handling that as data is moved from the subflows?
+> > The commit 8b974778f998 ("selftests: mptcp: interpret \n as a new line")
+> > is very similar to this one. But the modification in simult_flows.sh was
+> > missed because this commit above was done in parallel to one here below.
+> =
 
-The cause of "holes" in MPTCP reassembly is a little different from TCP, =
+> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 
-since TCP takes care of the packet loss problem it seems to me the main =
-
-issue is recovering from path loss (assuming the window and rcv buffer =
-
-sizes are sane). We need to keep pulling from the subflows to potentially =
-
-fill the holes, and the most valuable data to make progress would be =
-
-earlier in the sequence space. We potentially throw less away if =
-
-discarding later-sequence ooo queued skbs as subflow data arrives rather =
-
-than doing the whole 12.5% chunk, and don't have the latency of waiting =
-
-for the workqueue to get scheduled.
-
-(I should look at the multipath-tcp.org kernel to understand how it's done =
-
-there but I haven't had a chance to do that yet)
-
---
-Mat Martineau
-Intel
---===============5460939553240348248==--
+Applied, thanks!
+--===============2051142673216962491==--
