@@ -1,88 +1,113 @@
-Content-Type: multipart/mixed; boundary="===============0860340117989398798=="
+Content-Type: multipart/mixed; boundary="===============9064749028236032761=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC mptpcp-next] mptcp: add ooo prune support
-Date: Fri, 09 Oct 2020 09:35:02 -0700
-Message-ID: <alpine.OSX.2.23.453.2010090925001.74568@plasker-mobl1.amr.corp.intel.com>
-In-Reply-To: 20201009111119.GD5723@breakpoint.cc
+Subject: [MPTCP] [PATCH net 2/2] mptcp: subflows garbage collection
+Date: Fri, 09 Oct 2020 19:00:01 +0200
+Message-ID: <bb9a445351f06c85ae2dd2e84c9b3b8f262def98.1602262630.git.pabeni@redhat.com>
+In-Reply-To: cover.1602262630.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6273
+X-UID: 6274
 
---===============0860340117989398798==
+--===============9064749028236032761==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 9 Oct 2020, Florian Westphal wrote:
+The msk can close MP_JOIN subflows if the initial handshake
+fails. Currently such subflows are kept alive in the
+conn_list until the msk itself is closed.
 
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
->> On Fri, 2 Oct 2020, Florian Westphal wrote:
->>
->>> It might be possible that entire receive buffer is occupied by
->>> skbs in the OOO queue.
->>>
->>> In this case we can't pull more skbs from subflows and the holes
->>> will never be filled.
->>>
->>> If this happens, schedule the work queue and prune ~12% of skbs to
->>> make space available. Also add a MIB counter for this.
->>>
->>> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->>> ---
->>> Paolo, this does relate a bit to our discussion wrt. oow
->>> tracking.  I thought we might need to add some sort of cushion to
->>> account for window discrepancies, but that might then get us
->>> in a state where wmem might be full...
->>>
->>> What do you think?
->>>
->>> I did NOT see such a problem in practice, this is a theoretical "fix".
->>> TCP has similar code to deal with corner cases of small-oow packets.
->>>
->>
->> Is there a benefit to relying on the workqueue to discard skbs from the =
-ooo
->> queue rather than handling that as data is moved from the subflows?
->
-> It seemed simpler to do it this way.  When data_ready callback is
-> running its the first spot where we make checks wrt. buffer occupancy.
->
-> move_skbs_to_msk() (which is called right after) may not be able to
-> acquire the msk lock.  I did not consider this performance critical to
-> deal with both 'can do it inline' and 'need to defer to worker' cases.
->
+Beyond the wasted memory, we could end-up sending the
+DATA_FIN and the DATA_FIN ack on such socket, even after a
+reset.
 
-Ok, makes sense.
+Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 17 +++++++++++++++++
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/subflow.c  |  6 ++++++
+ 3 files changed, 24 insertions(+)
 
->> The cause of "holes" in MPTCP reassembly is a little different from TCP,
->> since TCP takes care of the packet loss problem it seems to me the main
->> issue is recovering from path loss (assuming the window and rcv buffer s=
-izes
->> are sane). We need to keep pulling from the subflows to potentially fill=
- the
->> holes, and the most valuable data to make progress would be earlier in t=
-he
->> sequence space. We potentially throw less away if discarding later-seque=
-nce
->> ooo queued skbs as subflow data arrives rather than doing the whole 12.5%
->> chunk, and don't have the latency of waiting for the workqueue to get
->> scheduled.
->
-> Hmmm, thats true. OTOH I never obsevered this from happening, so I just
-> went for a 'compact' patch.  Not sure it makes sense to optimize this.
->
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 5d747c6a610e..b295eb6e9580 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1383,6 +1383,20 @@ static void pm_work(struct mptcp_sock *msk)
+ 	spin_unlock_bh(&msk->pm.lock);
+ }
+ =
 
-I do wonder if different packet schedulers might run in to this more, but =
++static void __mptcp_close_subflow(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow, *tmp;
++
++	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
++		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++
++		if (inet_sk_state_load(ssk) !=3D TCP_CLOSE)
++			continue;
++
++		__mptcp_close_ssk((struct sock *)msk, ssk, subflow, 0);
++	}
++}
++
+ static void mptcp_worker(struct work_struct *work)
+ {
+ 	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
+@@ -1400,6 +1414,9 @@ static void mptcp_worker(struct work_struct *work)
+ 	mptcp_clean_una(sk);
+ 	mptcp_check_data_fin_ack(sk);
+ 	__mptcp_flush_join_list(msk);
++	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
++		__mptcp_close_subflow(msk);
++
+ 	__mptcp_move_skbs(msk);
+ =
 
-agree that there isn't evidence to justify optimizing now. If we merge =
+ 	if (msk->pm.status)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0a6e5b3f6ae8..0c4b8cc64dbc 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -90,6 +90,7 @@
+ #define MPTCP_WORK_RTX		2
+ #define MPTCP_WORK_EOF		3
+ #define MPTCP_FALLBACK_DONE	4
++#define MPTCP_WORK_CLOSE_SUBFLOW 5
+ =
 
-this (or similar) we will have the MIB counter to help understand how much =
+ struct mptcp_options_received {
+ 	u64	sndr_key;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b1b8028730bf..80f67cb56631 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -272,9 +272,15 @@ static bool subflow_thmac_valid(struct mptcp_subflow_c=
+ontext *subflow)
+ =
 
-it does happen.
+ void mptcp_subflow_reset(struct sock *ssk)
+ {
++	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
++	struct sock *sk =3D subflow->conn;
++
+ 	tcp_set_state(ssk, TCP_CLOSE);
+ 	tcp_send_active_reset(ssk, GFP_ATOMIC);
+ 	tcp_done(ssk);
++	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags) &&
++	    schedule_work(&mptcp_sk(sk)->work))
++		sock_hold(sk);
+ }
+ =
 
---
-Mat Martineau
-Intel
---===============0860340117989398798==--
+ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
+skb)
+-- =
+
+2.26.2
+
+--===============9064749028236032761==--
