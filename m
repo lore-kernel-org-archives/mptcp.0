@@ -1,77 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============4794684488878176405=="
+Content-Type: multipart/mixed; boundary="===============2325030462774246329=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Dmitry Vyukov <dvyukov at google.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC mptpcp-next] mptcp: add ooo prune support
-Date: Fri, 09 Oct 2020 13:11:19 +0200
-Message-ID: <20201009111119.GD5723@breakpoint.cc>
-In-Reply-To: alpine.OSX.2.23.453.2010081702580.49214@ozore-mobl2.amr.corp.intel.com
+Subject: [MPTCP] Re: INFO: task hung in lock_sock_nested (3)
+Date: Fri, 09 Oct 2020 15:23:14 +0200
+Message-ID: <CACT4Y+YodEDgAT2eogOL6VsWx5CAyKTD+HLTeT+Sn3z9pkLvDQ@mail.gmail.com>
+In-Reply-To: 4404dbb2e925c97518f2aa1c828a7392e916e012.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6268
+X-UID: 6270
 
---===============4794684488878176405==
+--===============2325030462774246329==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
-> On Fri, 2 Oct 2020, Florian Westphal wrote:
-> =
+On Mon, Oct 5, 2020 at 4:29 PM Paolo Abeni <pabeni(a)redhat.com> wrote:
+>
+> Hi,
+>
+> On Mon, 2020-10-05 at 15:21 +0200, Dmitry Vyukov wrote:
+> > On Mon, Oct 5, 2020 at 3:17 PM Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > > On Fri, 2020-10-02 at 08:48 -0700, syzbot wrote:
+> > > > Hello,
+> > > >
+> > > > syzbot found the following issue on:
+> > > >
+> > > > HEAD commit:    87d5034d Merge tag 'mlx5-updates-2020-09-30' of git=
+://git...
+> > > > git tree:       net-next
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D1377fb3=
+7900000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D7b5cc8e=
+c2218e99d
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3Dfcf8ca581=
+7d6e92c6567
+> > > > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14566=
+267900000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D14458a4=
+d900000
+> > > >
+> > > > The issue was bisected to:
+> > > >
+> > > > commit ab174ad8ef76276cadfdae98731d31797d265927
+> > > > Author: Paolo Abeni <pabeni(a)redhat.com>
+> > > > Date:   Mon Sep 14 08:01:12 2020 +0000
+> > > >
+> > > >     mptcp: move ooo skbs into msk out of order queue.
+> > > >
+> > >
+> > > I can't easily reproduce the issue with the above c repro. I think it=
+'s
+> > > just a matter of timing - slower CPU will make the races harder to
+> > > reproduce right? Can I expect/hope more success with the syz-repro
+> > > instead? I'm asking beforehands because the local setup is less
+> > > immediate for that one.
+> >
+> > Hard to say. Maybe.
+> > That would be syz-execprog that replays syzkaller programs.
+>
+> Thank you for the kind and prompt reply - as usual ;)
+>
+> My guess/hope is based on the fact that some race-based bugs discovered
+> by syzkaller have only syz-execprog repro, with no c-repro.
+>
+> I'm using (so far without success):
+>
+> syz-execprog --threaded=3Dtrue --repeat=3D0 --procs=3D6 --fault_call=3D-1=
+ --enable=3Dtun,net_dev,close_fds -sandbox=3Dnone ./repro.syz
+>
+> the syz repro also contains a "segv":true annotation which I could not
+> map to 'syz-execprog' command line arguments. Is there any automated
+> way to do such mapping?
 
-> > It might be possible that entire receive buffer is occupied by
-> > skbs in the OOO queue.
-> > =
+This should be about right.
 
-> > In this case we can't pull more skbs from subflows and the holes
-> > will never be filled.
-> > =
+Some of these flags are the default, so this can be reduced to:
+syz-execprog --repeat=3D0 --procs=3D6 ./repro.syz
 
-> > If this happens, schedule the work queue and prune ~12% of skbs to
-> > make space available. Also add a MIB counter for this.
-> > =
+But I see you still weren't able to reproduce it.
+Looking at the comment in the patch, may it be because it's hard to
+trigger race condition?
 
-> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> > ---
-> > Paolo, this does relate a bit to our discussion wrt. oow
-> > tracking.  I thought we might need to add some sort of cushion to
-> > account for window discrepancies, but that might then get us
-> > in a state where wmem might be full...
-> > =
-
-> > What do you think?
-> > =
-
-> > I did NOT see such a problem in practice, this is a theoretical "fix".
-> > TCP has similar code to deal with corner cases of small-oow packets.
-> > =
-
-> =
-
-> Is there a benefit to relying on the workqueue to discard skbs from the o=
-oo
-> queue rather than handling that as data is moved from the subflows?
-
-It seemed simpler to do it this way.  When data_ready callback is
-running its the first spot where we make checks wrt. buffer occupancy.
-
-move_skbs_to_msk() (which is called right after) may not be able to
-acquire the msk lock.  I did not consider this performance critical to
-deal with both 'can do it inline' and 'need to defer to worker' cases.
-
-> The cause of "holes" in MPTCP reassembly is a little different from TCP,
-> since TCP takes care of the packet loss problem it seems to me the main
-> issue is recovering from path loss (assuming the window and rcv buffer si=
-zes
-> are sane). We need to keep pulling from the subflows to potentially fill =
-the
-> holes, and the most valuable data to make progress would be earlier in the
-> sequence space. We potentially throw less away if discarding later-sequen=
-ce
-> ooo queued skbs as subflow data arrives rather than doing the whole 12.5%
-> chunk, and don't have the latency of waiting for the workqueue to get
-> scheduled.
-
-Hmmm, thats true. OTOH I never obsevered this from happening, so I just
-went for a 'compact' patch.  Not sure it makes sense to optimize this.
---===============4794684488878176405==--
+Anyway, I think restoring to syzbot testing in such cases is the
+easiest solution.
+--===============2325030462774246329==--
