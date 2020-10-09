@@ -1,43 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============2051142673216962491=="
+Content-Type: multipart/mixed; boundary="===============1101994718427608689=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] selftests: mptcp: interpret \n as a new
- line
-Date: Thu, 08 Oct 2020 17:56:21 -0700
-Message-ID: <20201008175621.6d2f2ddd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: c750c3256bec4ceab91a95f2725e4bc026f4b5dc.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next] Squash-to: mptcp: refactor shutdown and close
+Date: Fri, 09 Oct 2020 12:57:00 +0200
+Message-ID: <24df6b98e251b2d67c25f12eb3c6c974aafa0101.1602241020.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6264
+X-UID: 6267
 
---===============2051142673216962491==
+--===============1101994718427608689==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 06 Oct 2020 18:12:45 +0200 Paolo Abeni wrote:
-> On Tue, 2020-10-06 at 18:06 +0200, Matthieu Baerts wrote:
-> > In case of errors, this message was printed:
-> > =
+the format specifier for 'write_seq' in __mptcp_check_send_data_fin()
+should be the same as the one used for 'snd_nxt', to prevent humans
+from becoming suddenly sad while inspecting the output of pr_debug().
+Change both 'snd_nxt' and 'write_seq' to be %llu.
 
-> >   (...)
-> >   balanced bwidth with unbalanced delay       5233 max 5005  [ fail ]
-> >   client exit code 0, server 0
-> >   \nnetns ns3-0-EwnkPH socket stat for 10003:
-> >   (...)
-> > =
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Obviously, the idea was to add a new line before the socket stat and not
-> > print "\nnetns".
-> > =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f8812097d63d..736a6481d20f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2033,7 +2033,7 @@ static void __mptcp_check_send_data_fin(struct sock *=
+sk)
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
 
-> > The commit 8b974778f998 ("selftests: mptcp: interpret \n as a new line")
-> > is very similar to this one. But the modification in simult_flows.sh was
-> > missed because this commit above was done in parallel to one here below.
-> =
+-	pr_debug("msk=3D%p snd_data_fin_enable=3D%d pending=3D%d snd_nxt=3D%lld w=
+rite_seq=3D%llx",
++	pr_debug("msk=3D%p snd_data_fin_enable=3D%d pending=3D%d snd_nxt=3D%llu w=
+rite_seq=3D%llu",
+ 		 msk, msk->snd_data_fin_enable, !!mptcp_send_head(sk),
+ 		 msk->snd_nxt, msk->write_seq);
+ =
 
-> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+-- =
 
-Applied, thanks!
---===============2051142673216962491==--
+2.26.2
+
+--===============1101994718427608689==--
