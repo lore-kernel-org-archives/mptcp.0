@@ -1,49 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============1101994718427608689=="
+Content-Type: multipart/mixed; boundary="===============4794684488878176405=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] Squash-to: mptcp: refactor shutdown and close
-Date: Fri, 09 Oct 2020 12:57:00 +0200
-Message-ID: <24df6b98e251b2d67c25f12eb3c6c974aafa0101.1602241020.git.dcaratti@redhat.com>
+Subject: [MPTCP] Re: [RFC mptpcp-next] mptcp: add ooo prune support
+Date: Fri, 09 Oct 2020 13:11:19 +0200
+Message-ID: <20201009111119.GD5723@breakpoint.cc>
+In-Reply-To: alpine.OSX.2.23.453.2010081702580.49214@ozore-mobl2.amr.corp.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6267
+X-UID: 6268
 
---===============1101994718427608689==
+--===============4794684488878176405==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-the format specifier for 'write_seq' in __mptcp_check_send_data_fin()
-should be the same as the one used for 'snd_nxt', to prevent humans
-from becoming suddenly sad while inspecting the output of pr_debug().
-Change both 'snd_nxt' and 'write_seq' to be %llu.
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+> On Fri, 2 Oct 2020, Florian Westphal wrote:
+> =
 
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > It might be possible that entire receive buffer is occupied by
+> > skbs in the OOO queue.
+> > =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f8812097d63d..736a6481d20f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2033,7 +2033,7 @@ static void __mptcp_check_send_data_fin(struct sock *=
-sk)
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
+> > In this case we can't pull more skbs from subflows and the holes
+> > will never be filled.
+> > =
 
--	pr_debug("msk=3D%p snd_data_fin_enable=3D%d pending=3D%d snd_nxt=3D%lld w=
-rite_seq=3D%llx",
-+	pr_debug("msk=3D%p snd_data_fin_enable=3D%d pending=3D%d snd_nxt=3D%llu w=
-rite_seq=3D%llu",
- 		 msk, msk->snd_data_fin_enable, !!mptcp_send_head(sk),
- 		 msk->snd_nxt, msk->write_seq);
- =
+> > If this happens, schedule the work queue and prune ~12% of skbs to
+> > make space available. Also add a MIB counter for this.
+> > =
 
--- =
+> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > ---
+> > Paolo, this does relate a bit to our discussion wrt. oow
+> > tracking.  I thought we might need to add some sort of cushion to
+> > account for window discrepancies, but that might then get us
+> > in a state where wmem might be full...
+> > =
 
-2.26.2
+> > What do you think?
+> > =
 
---===============1101994718427608689==--
+> > I did NOT see such a problem in practice, this is a theoretical "fix".
+> > TCP has similar code to deal with corner cases of small-oow packets.
+> > =
+
+> =
+
+> Is there a benefit to relying on the workqueue to discard skbs from the o=
+oo
+> queue rather than handling that as data is moved from the subflows?
+
+It seemed simpler to do it this way.  When data_ready callback is
+running its the first spot where we make checks wrt. buffer occupancy.
+
+move_skbs_to_msk() (which is called right after) may not be able to
+acquire the msk lock.  I did not consider this performance critical to
+deal with both 'can do it inline' and 'need to defer to worker' cases.
+
+> The cause of "holes" in MPTCP reassembly is a little different from TCP,
+> since TCP takes care of the packet loss problem it seems to me the main
+> issue is recovering from path loss (assuming the window and rcv buffer si=
+zes
+> are sane). We need to keep pulling from the subflows to potentially fill =
+the
+> holes, and the most valuable data to make progress would be earlier in the
+> sequence space. We potentially throw less away if discarding later-sequen=
+ce
+> ooo queued skbs as subflow data arrives rather than doing the whole 12.5%
+> chunk, and don't have the latency of waiting for the workqueue to get
+> scheduled.
+
+Hmmm, thats true. OTOH I never obsevered this from happening, so I just
+went for a 'compact' patch.  Not sure it makes sense to optimize this.
+--===============4794684488878176405==--
