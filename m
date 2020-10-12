@@ -1,59 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============8355938478913362257=="
+Content-Type: multipart/mixed; boundary="===============4662670731063644448=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] Squash to "selftests: mptcp: add ADD_ADDR
- timeout test case"
-Date: Mon, 12 Oct 2020 17:41:29 +0200
-Message-ID: <20201012154129.1824527-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 1/3] mptcp: change
+ add_addr_signal type
+Date: Mon, 12 Oct 2020 18:02:06 +0200
+Message-ID: <1dbbdb9f32998bde8afaf9e462bfa3999de9bc8a.camel@redhat.com>
+In-Reply-To: 4e6e17e8ca4879f101c7e649031fe1b174ee4c1d.1602323760.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6292
+X-UID: 6293
 
---===============8355938478913362257==
+--===============4662670731063644448==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Skip mptcp_join selftest if IPTables is not available.
+On Sat, 2020-10-10 at 18:07 +0800, Geliang Tang wrote:
+> This patch changed the 'add_addr_signal' type from bool to char, so that
+> we could encode the addr type there.
+> =
 
-Ideally, I agree that we should switch to ntf but I don't know the
-advanced features of it to block ADD_ADDR packets by matching TCP option
-30 and MPTCP subtype 3. If it is possible to do that, please guide me to
-match MPTCP option (it looks like we are limited to a fixed list and
-MPTCP is not there) and match some data after and offset (tcp doff?).
+> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+>  net/mptcp/pm.c       | 12 ++++++------
+>  net/mptcp/protocol.h | 10 +++++++---
+>  2 files changed, 13 insertions(+), 9 deletions(-)
+> =
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index f9c88e2abb8e..5f453db36e54 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -19,8 +19,9 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+>  	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
+>  =
 
-Notes:
-    to be squashed in "selftests: mptcp: add ADD_ADDR timeout test case"
+>  	msk->pm.local =3D *addr;
+> -	WRITE_ONCE(msk->pm.add_addr_echo, echo);
+> -	WRITE_ONCE(msk->pm.add_addr_signal, true);
+> +	msk->pm.add_addr_signal |=3D BIT(MPTCP_ADD_ADDR_SIGNAL);
+> +	if (echo)
+> +		msk->pm.add_addr_signal |=3D BIT(MPTCP_ADD_ADDR_ECHO);
 
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+I think we need to preserve the barriers.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 3767acb9bb12..0b060d9a79ae 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -122,6 +122,12 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
- =
+Under spin lock protection we need the WRITE_ONCE() when writing the
+field, outside the spinlock protection we need the READ_ONCE() to
+access it.
 
-+iptables -V > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run all tests without iptables tool"
-+	exit $ksft_skip
-+fi
-+
- =
+The above should be something alike:
 
- check_transfer()
- {
--- =
+	u8 add_addr =3D msk->pm.add_addr_signal;
 
-2.27.0
+	[...]
+	add_addr |=3D BIT(MPTCP_ADD_ADDR_SIGNAL);
+	if (echo)
+		add_addr |=3D BIT(MPTCP_ADD_ADDR_ECHO);
+	WRITE_ONCE(msk->pm.add_addr_signal, add_addr);
 
---===============8355938478913362257==--
+/P
+
+--===============4662670731063644448==--
