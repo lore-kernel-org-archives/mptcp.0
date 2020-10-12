@@ -1,62 +1,156 @@
-Content-Type: multipart/mixed; boundary="===============4771871558729802141=="
+Content-Type: multipart/mixed; boundary="===============4912609179286254633=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] Squash-to: mptcp: keep track of
- advertised windows right edge
-Date: Mon, 12 Oct 2020 15:12:06 +0200
-Message-ID: <23c6b7b5-dccd-f51c-8981-eae36a5e3555@tessares.net>
-In-Reply-To: 20201005122833.GB5213@breakpoint.cc
+Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export 94625945a1 ("DO-NOT-MERGE:
+ mptcp: enabled by default") (fwd)
+Date: Mon, 12 Oct 2020 08:14:57 -0700
+Message-ID: <21762642-989c-6f9b-ad7-f3c884c5323e@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6290
+X-UID: 6291
 
---===============4771871558729802141==
+--===============4912609179286254633==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
 
-On 05/10/2020 14:28, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
->> Move oow messages to debug: I guess we don't want to have this in
->> pr_info() :)
->> But maybe we don't want these info at all?
-> =
+Hello everyone:
 
-> Right, pr_info is a bug.  I will continue to test a not-yet-sent
-> patch that improves receive window tracking (i.e., what *WE* offered
-> most recently to the peer), probably I can send it tomorrow afternoon.
-> =
+The most recent kbuild/LKP run does show a failure in the simult_flows.sh =
 
-> This will add two new variables to msk: the real mptcp-level receive
-> window announced, and the ack sequence number that was used as the
-> reference point. Right now the codes uses ack_seq plus current space,
-> and that is sometimes not in line with what we told the peer.
+selftest. It did not appear in other recent builds from Friday or =
 
-Thank you for your reply! That would be good to be in line with what we =
+Saturday - might be intermittent.
 
-told the peer!
-> I think its useful to have a pr_debug (then modified to include that
-> information too).
+Mat
 
-As discussed at the last weekly meeting, we decided to apply the current =
 
-patch and modify it later to include the new variable.
+---------- Forwarded message ----------
+Date: Mon, 12 Oct 2020 04:06:47
+From: kernel test robot <lkp(a)intel.com>
+To: mathew.j.martineau(a)linux.intel.com
+Subject: [kselftest UNSTABLE] mptcp/export 94625945a1
+     ("DO-NOT-MERGE: mptcp: enabled by default")
 
-- c5d72b415ba2: "squashed" in "mptcp: keep track of advertised windows =
+Check console output at http://bee.sh.intel.com:8080/job/lkp-mptcp/300/
 
-right edge"
-- no co-dev/SOB added for that
-- Results: faedb495716f..5a5a571a738c
+LINUX COMMIT
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+commit : 94625945a1f16c982455d57b1681236d65bb3acd
+subject: DO-NOT-MERGE: mptcp: enabled by default
+date   : 2020-10-12 13:08:12 +0800
+author : Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-Tests + export are in progress!
 
-Cheers,
-Matt
--- =
+Test status of 94625945a1f16c982455d57b1681236d65bb3acd (compared to v5.8)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++--------------------------------------------------------------------------=
+------------------------------+------+------+----------+------+---+--------=
+----+-----+
+|                                                                          =
+                              | pass | fail | unstable | skip | - | regress=
+ion | fix |
+| kselftests-mptcp-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz=
+/x86_64-rhel-7.6-kselftests     | 48   | 1    |          |      |   |      =
+      |     |
+| kselftests-bpf-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x=
+86_64-rhel-7.6-kselftests       | 1528 | 14   |          |      |   |      =
+      |     |
+| kselftests-net-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x=
+86_64-rhel-7.6-kselftests       | 252  | 21   |          | 15   |   |      =
+      |     |
+| kselftests-netfilter-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603=
+.cgz/x86_64-rhel-7.6-kselftests | 64   | 1    |          | 16   |   |      =
+      |     |
+| kselftests-kvm-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x=
+86_64-rhel-7.6-kselftests       | 21   | 1    |          | 1    |   |      =
+      |     |
+| kselftests-cpufreq-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.c=
+gz/x86_64-rhel-7.6-kselftests   | 1    |      |          |      |   |      =
+      |     |
+| kselftests-firmware-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.=
+cgz/x86_64-rhel-7.6-kselftests  | 151  |      |          |      |   |      =
+      |     |
++--------------------------------------------------------------------------=
+------------------------------+------+------+----------+------+---+--------=
+----+-----+
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4771871558729802141==--
+Fails
+=3D=3D=3D=3D=3D
+kselftests-mptcp-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x=
+86_64-rhel-7.6-kselftests
+---
+- kernel-selftests.net/mptcp.simult_flows.sh.fail
+
+kselftests-bpf-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x86=
+_64-rhel-7.6-kselftests
+---
+- kernel-selftests.bpf.test_progs.perf_event_stackmap.fail
+- kernel-selftests.bpf.test_progs.test_bpffs.fail
+- kernel-selftests.bpf.test_progs.test_local_storage.fail
+- kernel-selftests.bpf.test_progs.test_lsm.fail
+- kernel-selftests.bpf.test_progs.fail
+- kernel-selftests.bpf.test_tcpbpf_user.fail
+- kernel-selftests.bpf.test_progs-no_alu32.send_signal.fail
+- kernel-selftests.bpf.test_progs-no_alu32.test_bpffs.fail
+- kernel-selftests.bpf.test_progs-no_alu32.test_local_storage.fail
+- kernel-selftests.bpf.test_progs-no_alu32.test_lsm.fail
+- kernel-selftests.bpf.test_progs-no_alu32.fail
+- kernel-selftests.bpf.test_offload.py.fail
+- kernel-selftests.bpf.test_flow_dissector.sh.fail
+- kernel-selftests.bpf.test_bpftool.sh.fail
+
+kselftests-net-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x86=
+_64-rhel-7.6-kselftests
+---
+- kernel-selftests.net.tls.fail
+- kernel-selftests.net.run_netsocktests.fail
+- kernel-selftests.net.rtnetlink.sh.ipsec_offload_netdevsim_doesn't_support=
+_ipsec_offload.fail
+- kernel-selftests.net.rtnetlink.sh.fail
+- kernel-selftests.net.fib_tests.sh.fail
+- kernel-selftests.net.psock_snd.sh.fail
+- kernel-selftests.net.test_vxlan_under_vrf.sh.fail
+- kernel-selftests.net.icmp_redirect.sh.legacy_routing.ipv6:_redirect_excep=
+tion.fail
+- kernel-selftests.net.icmp_redirect.sh.legacy_routing.ipv6:_redirect_excep=
+tion_plus_mtu.fail
+- kernel-selftests.net.icmp_redirect.sh.legacy_routing.ipv6:_mtu_exception_=
+plus_redirect.fail
+- kernel-selftests.net.icmp_redirect.sh.legacy_routing_with_vrf.ipv6:_redir=
+ect_exception.fail
+- kernel-selftests.net.icmp_redirect.sh.legacy_routing_with_vrf.ipv6:_redir=
+ect_exception_plus_mtu.fail
+- kernel-selftests.net.icmp_redirect.sh.legacy_routing_with_vrf.ipv6:_mtu_e=
+xception_plus_redirect.fail
+- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects.ipv6:_=
+redirect_exception.fail
+- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects.ipv6:_=
+redirect_exception_plus_mtu.fail
+- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects.ipv6:_=
+mtu_exception_plus_redirect.fail
+- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects_and_vr=
+f.ipv6:_redirect_exception.fail
+- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects_and_vr=
+f.ipv6:_redirect_exception_plus_mtu.fail
+- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects_and_vr=
+f.ipv6:_mtu_exception_plus_redirect.fail
+- kernel-selftests.net.txtimestamp.sh.fail
+- kernel-selftests.net.vrf-xfrm-tests.sh.fail
+
+kselftests-netfilter-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.c=
+gz/x86_64-rhel-7.6-kselftests
+---
+- kernel-selftests.netfilter.nft_concat_range.sh.fail
+
+kselftests-kvm-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x86=
+_64-rhel-7.6-kselftests
+---
+- kernel-selftests.kvm.vmx_preemption_timer_test.fail
+
+
+--===============4912609179286254633==--
