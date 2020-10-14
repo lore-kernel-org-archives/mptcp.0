@@ -1,35 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============8349504232950203155=="
+Content-Type: multipart/mixed; boundary="===============9083217159242017957=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 14 October 2020 15:00 UTC (8am PDT, 5pm CEST)
-Date: Wed, 14 Oct 2020 16:00:35 +0200
-Message-ID: <f7751367-620a-81b0-88a0-8478e46079bc@tessares.net>
+Subject: [MPTCP] [PATCH net-next 0/2] The current export branch suffers of the
+ following issue:
+Date: Wed, 14 Oct 2020 19:15:14 +0200
+Message-ID: <cover.1602693911.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6303
+X-UID: 6304
 
---===============8349504232950203155==
+--===============9083217159242017957==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+https://github.com/multipath-tcp/mptcp_net-next/issues/97
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+To fix the above, MPTCP needs to be able to cope with memory allocation
+failure in do_tcp_sendpages().
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20201014
+In this iteration the patches are rebased on top of:
 
-Feel free to add/modify topics!
+"bpf:selftests: add bpf_mptcp_sock() verifier tests"
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+and should apply without fuzz on net-next.
 
-Speak to you tomorrow!
-Matt
---
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============8349504232950203155==--
+patch 1/2 went through some lifting to be hopefully more acceptable
+upstream.
+
+This will cause a few conflicts in later patch, specifically in
+"mptcp: move page frag allocation in mptcp_sendmsg()". Possibly the
+simpler/better would be squashing 2/2 in there.
+
+The plan is to send 1/2 and "tcp: factor out __tcp_close() helper"
+as RFC upstream soon/while net-next is closed to try to understand
+if that could be acceptable. The 2 TCP patches alone, without the full
+series to hopefully make the review simpler/less cumbersome.
+
+Any feedback more than welcome!!!
+
+Paolo Abeni (2):
+  tcp: factor out tcp_build_frag()
+  mptcp: use tcp_build_frag()
+
+ include/net/tcp.h    |   3 ++
+ net/ipv4/tcp.c       | 119 ++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.c |  25 +++------
+ 3 files changed, 78 insertions(+), 69 deletions(-)
+
+-- =
+
+2.26.2
+
+--===============9083217159242017957==--
