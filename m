@@ -1,66 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============2019014738851354007=="
+Content-Type: multipart/mixed; boundary="===============6159551201568737832=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: yoshi nishida <nsdairy at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add
- ADD_ADDR timeout test case"
-Date: Tue, 13 Oct 2020 11:49:00 +0800
-Message-ID: <CA+WQbwuHx6Uyzomi+9x5GZ=WgJQy8fYCs0SzU3cmjk+5Mfc-iQ@mail.gmail.com>
-In-Reply-To: 20201012154129.1824527-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [mptcp-dev] mptcp code in kernel 5.8
+Date: Wed, 14 Oct 2020 02:02:31 -0700
+Message-ID: <CAO=PVE-KKsfQufb1N8xjqqFKrqQ09vc03yPP_zv01FnScdDXkA@mail.gmail.com>
+In-Reply-To: 20201008182824.GB34635@MacBook-Pro.local
 X-Status: 
 X-Keywords:                  
-X-UID: 6297
+X-UID: 6299
 
---===============2019014738851354007==
+--===============6159551201568737832==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B410=
-=E6=9C=8812=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=8811:41=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> Skip mptcp_join selftest if IPTables is not available.
->
-> Ideally, I agree that we should switch to ntf but I don't know the
-> advanced features of it to block ADD_ADDR packets by matching TCP option
-> 30 and MPTCP subtype 3. If it is possible to do that, please guide me to
-> match MPTCP option (it looks like we are limited to a fixed list and
-> MPTCP is not there) and match some data after and offset (tcp doff?).
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Hi Christoph,
 
-Acked-by: Geliang Tang <geliangtang(a)gmail.com>
+Sorry for the late reply. Yes, I meant the repo of multipath-tcp.org kernel.
+As far as I tested, it seems that they are quite different and they
+cannot interact with each other.
+But, at least, I understand the situation. Thanks for the explanation!
+So, if I find a bug in the upstream code, it is ok to send it to the
+upstreaming list?
 
-> ---
+Thanks,
+--
+Yoshi
+
+On Thu, Oct 8, 2020 at 11:28 AM Christoph Paasch <cpaasch(a)apple.com> wrot=
+e:
 >
-> Notes:
->     to be squashed in "selftests: mptcp: add ADD_ADDR timeout test case"
+> +MPTCP upstreaming list
 >
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Hello Yoshi,
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index 3767acb9bb12..0b060d9a79ae 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -122,6 +122,12 @@ if [ $? -ne 0 ];then
->         exit $ksft_skip
->  fi
+> On 10/08/20 - 01:44, yoshi nishida wrote:
+> > Hello,
+> >
+> > It's really great to see mptcp codes in main stream.  So, I've tried
+> > to use it with kernel 5.8 in ubuntu20.10.
+> > However, as far as I've checked, the mptcp in the kernel seems to be
+> > different from the one in the repo.
 >
-> +iptables -V > /dev/null 2>&1
-> +if [ $? -ne 0 ];then
-> +       echo "SKIP: Could not run all tests without iptables tool"
-> +       exit $ksft_skip
-> +fi
-> +
+> The repo, you mean the repo of multipath-tcp.org kernel? Yes, they are
+> entirely different. The MPTCP implementation in upstream Linux (5.6+) is a
+> complete rewrite.
 >
->  check_transfer()
->  {
-> --
-> 2.27.0
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
---===============2019014738851354007==--
+> > I am not sure how to set scheduler
+> > or path manager with this.
+>
+> It is currently not possible to select different schedulers on the upstre=
+am
+> implementation.
+>
+> For path-management there is an ip-mptcp interface that allows you to add
+> subflows and addresses: https://man7.org/linux/man-pages/man8/ip-mptcp.8.=
+html
+>
+>
+> Christoph
+>
+> > Does anyone know about the differences?
+> > Sorry if I overlooked something.
+> >
+> > Thanks,
+> > --
+> > Yoshi
+>
+> > MPTCP-developpers Mailing-List
+> > Visit http://multipath-tcp.org to access the source-code of MPTCP in th=
+e Linux Kernel
+> >
+> > To Unsubscribe, visit https://listes-2.sipr.ucl.ac.be/sympa/info/mptcp-=
+dev
+> >
+>
+--===============6159551201568737832==--
