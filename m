@@ -1,76 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============3855925938648813166=="
+Content-Type: multipart/mixed; boundary="===============2268765140631261657=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [mptcp-next] mptcp: track window announced to peer
-Date: Thu, 15 Oct 2020 15:59:21 +0200
-Message-ID: <20201015135921.GG16895@breakpoint.cc>
-In-Reply-To: bd6b44154a14fe74b67cd17c7f2fec6c464f0d2c.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: refactor shutdown and close"
+Date: Thu, 15 Oct 2020 16:00:19 +0200
+Message-ID: <b926d53fa15a1e9c11de69a10a721b4ec85e926a.camel@redhat.com>
+In-Reply-To: ec5396bf43b34115b9818099983a7f6bc25e7388.1602768332.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6316
+X-UID: 6317
 
---===============3855925938648813166==
+--===============2268765140631261657==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> > index 9abf5a0358d5..89946e451365 100644
-> > --- a/net/ipv4/tcp_output.c
-> > +++ b/net/ipv4/tcp_output.c
-> > @@ -279,6 +279,8 @@ static u16 tcp_select_window(struct sock *sk)
-> >  	}
-> >  	tp->rcv_wnd =3D new_win;
-> >  	tp->rcv_wup =3D tp->rcv_nxt;
-> > +	if (sk_is_mptcp(sk))
-> > +		mptcp_set_rwin(sk, new_win);
-> >  =
-
-> >  	/* Make sure we do not exceed the maximum possible
-> >  	 * scaled window.
+On Thu, 2020-10-15 at 15:26 +0200, Paolo Abeni wrote:
+> Currently we can miss the msk timeout event in several
+> circumstances (e.g. no outstanding data).
 > =
 
-> I'm wondering if we could avoid this extra hook moving option writing
-> after tcp wind selection, passing the tcp_sock to mptcp_write_options
-> and fetch rcv_wup there.
-
-Maybe, I agree the extra hooking is stupid.
-I'll have a look.
-
-> >  	if (READ_ONCE(msk->use_64bit_ack)) {
-> >  		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
-> > -		opts->ext_copy.data_ack =3D READ_ONCE(msk->ack_seq);
-> > +		opts->ext_copy.data_ack =3D ack_seq;
-> >  		opts->ext_copy.ack64 =3D 1;
-> >  	} else {
-> >  		ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
-> > -		opts->ext_copy.data_ack32 =3D (uint32_t)READ_ONCE(msk->ack_seq);
-> > +		opts->ext_copy.data_ack32 =3D (uint32_t)ack_seq;
-> >  		opts->ext_copy.ack64 =3D 0;
-> >  	}
-> > +
-> > +	ack_seq +=3D tcp_sk(sk)->rcv_wnd;
-> > +
-> > +	if (after64(ack_seq, msk->rcv_wnd_sent))
-> > +		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
-> > +
+> Let's use a separate timer to keep track of the timeout
+> after close().
 > =
 
-> Don't we need to READ_ONCE() the msk wnd ?
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>  net/mptcp/protocol.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 
-wnd?  You mean tcp_sk()->rcv_wnd?
+LGTM.
 
-> For TCP-generated acks or
-> TCP retransmissions, here we could be outside the msk socket lock.
+this is tested with the following script:
+https://paste.centos.org/view/4ff84dae
 
-Yes, we can't assume msk lock is held.
+(not sure if it's worth adding to the current packetdrill, because the
+test takes TCP_TIMEWAIT_LEN to pass)
 
-> Looks very good to me. I'm trying a few iteration of simult xmit self
-> test to see how it goes...
+-- =
 
-The alternative would be to relax the OOW test and allow a cushion,
-maybe based on msk rmem space, before deciding we have OoW packet and
-dropping it.
---===============3855925938648813166==--
+davide
+
+--===============2268765140631261657==--
