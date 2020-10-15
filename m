@@ -1,70 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============4228989318932545960=="
+Content-Type: multipart/mixed; boundary="===============2391698345307266884=="
 MIME-Version: 1.0
-From: yoshi nishida <nsdairy at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [mptcp-dev] mptcp code in kernel 5.8
-Date: Thu, 15 Oct 2020 01:09:55 -0700
-Message-ID: <CAO=PVE_C_hYEhAJbNuzBUqFMhAjUUxf1rb11H=ZrPOfduAi=-Q@mail.gmail.com>
-In-Reply-To: 5f11e7f7-2100-8b51-36bb-d0f084ab6477@tessares.net
+Date: Thu, 15 Oct 2020 10:30:10 +0200
+Message-ID: <380c19a3-1fe4-fa68-6b0c-0ef730eb9c3b@tessares.net>
+In-Reply-To: CAO=PVE_C_hYEhAJbNuzBUqFMhAjUUxf1rb11H=ZrPOfduAi=-Q@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6310
+X-UID: 6311
 
---===============4228989318932545960==
+--===============2391698345307266884==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
+Hi Yoshi,
 
-Thanks for the reply.
-Hmm. I've tried v0.95 mptcp kernel and kernel5.8 on ubuntu20.10.
-I tried both version 0 and 1 on v.95, but didn't work. But, I might
-miss something.
-I will dig into this a bit more as well as some minor issues I noticed
-during the weekend.
+On 15/10/2020 10:09, yoshi nishida wrote:
+> Hmm. I've tried v0.95 mptcp kernel and kernel5.8 on ubuntu20.10.
+> I tried both version 0 and 1 on v.95, but didn't work. But, I might
+> miss something.
 
-Thank you so much!
---
-Yoshi
+I guess you are referring to a sysctl parameter, right? If yes, on =
 
-On Wed, Oct 14, 2020 at 2:13 AM Matthieu Baerts
-<matthieu.baerts(a)tessares.net> wrote:
->
-> Hi Yoshi,
->
-> On 14/10/2020 11:02, yoshi nishida wrote:
-> > Hi Christoph,
-> >
-> > Sorry for the late reply. Yes, I meant the repo of multipath-tcp.org ke=
-rnel.
-> > As far as I tested, it seems that they are quite different and they
-> > cannot interact with each other.
->
-> The upstream version only supports the latest MPTCP protocol: v1. All
-> stable versions of the multipath-tcp.org kernel only support the now
-> deprecated MPTCPv0 protocol. The development version starts supporting
-> MPTCPv1.
->
-> I guess you likely tested two implementations only supporting 2
-> different versions of the protocols that are incompatible with each other=
-s.
->
-> Please see this for more details:
->
->
-> https://github.com/multipath-tcp/mptcp_net-next/wiki#upstream-vs-out-of-t=
-ree-implementations
->
-> > But, at least, I understand the situation. Thanks for the explanation!
-> > So, if I find a bug in the upstream code, it is ok to send it to the
-> > upstreaming list?
->
-> Yes please, this version is in development so any feedback is welcome!
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
---===============4228989318932545960==--
+v0.95, there is a partial support of MPTCPv1 regarding the modifications =
+
+around ADD_ADDR (with or without HMAC I think) but that's it.
+
+The v0.95 doesn't support the new way of initiating an MPTCP connection =
+
+making v0 and v1 incompatible. Of course, except if a fallback from v1 =
+
+to v0 is implemented, which is not the case in the upstream version.
+
+But in other words, v0.95 is not compatible with MPTCPv1. Only =
+
+mptcp_trunk is:
+
+https://github.com/multipath-tcp/mptcp/tree/mptcp_trunk
+
+> I will dig into this a bit more as well as some minor issues I noticed
+> during the weekend.
+
+Thanks!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============2391698345307266884==--
