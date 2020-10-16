@@ -1,78 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============5257143606591094508=="
+Content-Type: multipart/mixed; boundary="===============5679758318811269268=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 2/2] tcp: factor out __tcp_close() helper
-Date: Fri, 16 Oct 2020 12:51:08 +0200
-Message-ID: <223fbbe119ad993d10b3be9012f60cfd8ed58651.1602840570.git.pabeni@redhat.com>
-In-Reply-To: cover.1602840570.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 2/2] selftests: mptcp: add
+ ADD_ADDR timeout test case
+Date: Fri, 16 Oct 2020 17:02:29 +0200
+Message-ID: <a53638d5-c832-4bb2-1cd9-16a7e385a947@tessares.net>
+In-Reply-To: CA+WQbwt0Kzp7yGcs=htGjOs0uvXxKLGsm51oCq_L49Jez2pwWQ@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6330
+X-UID: 6331
 
---===============5257143606591094508==
+--===============5679758318811269268==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-unlocked version of protocol level close, will be used by
-MPTCP to allow decouple orphaning and subflow level close.
+Hi Geliang,
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- include/net/tcp.h | 1 +
- net/ipv4/tcp.c    | 9 +++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+On 16/10/2020 11:28, Geliang Tang wrote:
+> Hi Matt,
+> =
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index e41569e55d97..75c5ee45aaa8 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -395,6 +395,7 @@ void tcp_update_metrics(struct sock *sk);
- void tcp_init_metrics(struct sock *sk);
- void tcp_metrics_init(void);
- bool tcp_peer_is_proven(struct request_sock *req, struct dst_entry *dst);
-+void __tcp_close(struct sock *sk, long timeout);
- void tcp_close(struct sock *sk, long timeout);
- void tcp_init_sock(struct sock *sk);
- void tcp_init_transfer(struct sock *sk, int bpf_op, struct sk_buff *skb);
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 259dca2bd3dd..046ac30bb041 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2418,13 +2418,12 @@ bool tcp_check_oom(struct sock *sk, int shift)
- 	return too_many_orphans || out_of_socket_memory;
- }
- =
+> As I mentioned in the last meeting, I want to add ADD_ADDR timeout IPv6
+> test case. My patch is something like this:
+> =
 
--void tcp_close(struct sock *sk, long timeout)
-+void __tcp_close(struct sock *sk, long timeout)
- {
- 	struct sk_buff *skb;
- 	int data_was_unread =3D 0;
- 	int state;
- =
+> +reset_with_add_addr6_timeout()
+> +{
+> +       reset
+> +
+> +       ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=3D1
+> +       ip netns exec $ns2 ip6tables -A OUTPUT -p tcp \
+> +               -m tcp --tcp-option 30 \
+> +               -m bpf --bytecode \
+> +               "$(nfbpf_compile '(tcp[34] & 0xf0) =3D=3D 0x30')" \
+> +               -j DROP
+> +}
+> +
+>   for arg in "$@"; do
+>          if [ "$arg" =3D "-c" ]; then
+>                  capture=3D1
+> @@ -590,6 +604,22 @@ ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2
+> flags subflow
+>   run_tests $ns1 $ns2 dead:beef:1::1 0 0 slow
+>   chk_join_nr "single subflow IPv6" 1 1 1
+> =
 
--	lock_sock(sk);
- 	sk->sk_shutdown =3D SHUTDOWN_MASK;
- =
+> +# add_addr timeout IPv6
+> +reset_with_add_addr6_timeout
+> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+> +ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+> +ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
+> +run_tests $ns1 $ns2 dead:beef:1::1 0 0 slow
+> +chk_join_nr "signal address, ADD_ADDR6 timeout" 1 1 1
+> +chk_add_nr 4 0
+> +
+>   # signal address IPv6
+>   reset
+>   ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+> =
 
- 	if (sk->sk_state =3D=3D TCP_LISTEN) {
-@@ -2588,6 +2587,12 @@ void tcp_close(struct sock *sk, long timeout)
- out:
- 	bh_unlock_sock(sk);
- 	local_bh_enable();
-+}
-+
-+void tcp_close(struct sock *sk, long timeout)
-+{
-+	lock_sock(sk);
-+	__tcp_close(sk, timeout);
- 	release_sock(sk);
- 	sock_put(sk);
- }
+> But this BPF (tcp[34] & 0xf0) =3D=3D 0x30') is not working on IPv6, please
+> give me some help
+> about how to get this right offset value on IPv6. Thanks very much.
+
+It looks like it cannot get the offset correctly with TCP. The best is =
+
+then to start from the IP layer and suppose there will not be any IPv6 =
+
+extension: we control the selftests environment and we already check =
+
+with IPTables that we have TCP.
+
+
+$ docker run quay.io/casey_callendrello/nfbpf_compile RAW "(ip[54] & =
+
+0xf0) =3D=3D 0x30"
+8,48 0 0 0,84 0 0 240,21 0 4 64,48 0 0 54,84 0 0 240,21 0 1 48,6 0 0 =
+
+65535,6 0 0 0
+
+
+$ docker run quay.io/casey_callendrello/nfbpf_compile RAW "(ip6[74] & =
+
+0xf0) =3D=3D 0x30"
+8,48 0 0 0,84 0 0 240,21 0 4 96,48 0 0 74,84 0 0 240,21 0 1 48,6 0 0 =
+
+65535,6 0 0 0
+
+
+May you try with these two new bytecodes please?
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============5257143606591094508==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============5679758318811269268==--
