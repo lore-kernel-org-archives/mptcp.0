@@ -1,53 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============1050887428412961075=="
+Content-Type: multipart/mixed; boundary="===============6831229266496785003=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2] selftests: mptcp: add link failure
- test case
-Date: Sat, 17 Oct 2020 09:31:30 +0200
-Message-ID: <f41520c0-1cbb-8251-22d7-96b36643095f@tessares.net>
-In-Reply-To: d44679b6-8aa0-a1f9-19b9-4713495de53@linux.intel.com
+Subject: [MPTCP] Re: [PATCH] Squash-to: "mptcp: refactor shutdown and close"
+Date: Sat, 17 Oct 2020 09:56:46 +0200
+Message-ID: <86c80a2d-3e88-fea1-465a-9ef29d33ee49@tessares.net>
+In-Reply-To: b926d53fa15a1e9c11de69a10a721b4ec85e926a.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6338
+X-UID: 6339
 
---===============1050887428412961075==
+--===============6831229266496785003==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Mat,
+Hi Paolo, Davide,
 
-On 15/10/2020 02:09, Mat Martineau wrote:
-> On Fri, 9 Oct 2020, Florian Westphal wrote:
-> =
-
->> Add a test case where a link fails with multiple subflows.
->> The expectation is that MPTCP will transmit any data that
->> could not be delivered via the failed link on another subflow.
+On 15/10/2020 16:00, Davide Caratti wrote:
+> On Thu, 2020-10-15 at 15:26 +0200, Paolo Abeni wrote:
+>> Currently we can miss the msk timeout event in several
+>> circumstances (e.g. no outstanding data).
 >>
->> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+>> Let's use a separate timer to keep track of the timeout
+>> after close().
+>>
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 >> ---
->> v2: rebase and add 'link loss' to test-case comment.
->> =C2=A0=C2=A0=C2=A0 make sure we exit with 1 if file was corrupt or serve=
-r/client
->> =C2=A0=C2=A0=C2=A0 exited nonzero.
->>
->> .../testing/selftests/net/mptcp/mptcp_join.sh | 135 +++++++++++++-----
->> 1 file changed, 97 insertions(+), 38 deletions(-)
->>
+>>   net/mptcp/protocol.c | 14 ++++++++++++--
+>>   1 file changed, 12 insertions(+), 2 deletions(-)
 > =
 
-> Thanks for the v2, looks good for the export branch.
+> LGTM.
 
 Thank you for the patch and the review!
 
-Just applied with Mat's Reviewed-by.
+- fa6aac14613c: "squashed" in "mptcp: refactor shutdown and close"
+- 3141c7617e40: conflict in t/DO-NOT-MERGE-mptcp-use-kmalloc-on-kasan-build
+- Results: 0e70ef7be280..e41dc6548e3b
 
-- 36221baa8712: selftests: mptcp: add link failure test case
-- Results: 3fd01a5ab17b..0e70ef7be280
-
-Tests and export will be started soon!
+Tests + export are going to be started soon!
 
 Cheers,
 Matt
@@ -55,4 +47,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1050887428412961075==--
+--===============6831229266496785003==--
