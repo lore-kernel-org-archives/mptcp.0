@@ -1,61 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============2694188984135209736=="
+Content-Type: multipart/mixed; boundary="===============7567838463794661658=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Geert Uytterhoeven <geert at linux-m68k.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH net-next 0/2] init ahmac and port of
- mptcp_options_received
-Date: Mon, 19 Oct 2020 13:40:48 -0700
-Message-ID: <20201019134048.11c75c9a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: 7766357d-0838-1603-9967-8910aa312f65@tessares.net
+Subject: [MPTCP] [PATCH] mptcp: MPTCP_IPV6 should depend on IPV6 instead of
+ selecting it
+Date: Tue, 20 Oct 2020 09:38:39 +0200
+Message-ID: <20201020073839.29226-1-geert@linux-m68k.org>
 X-Status: 
 X-Keywords:                  
-X-UID: 6356
+X-UID: 6358
 
---===============2694188984135209736==
+--===============7567838463794661658==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 19 Oct 2020 18:27:55 +0200 Matthieu Baerts wrote:
-> Hi Geliang,
-> =
+MPTCP_IPV6 selects IPV6, thus enabling an optional feature the user may
+not want to enable.  Fix this by making MPTCP_IPV6 depend on IPV6, like
+is done for all other IPv6 features.
 
-> On 19/10/2020 12:23, Geliang Tang wrote:
-> > This patchset deals with initializations of mptcp_options_received's two
-> > fields, ahmac and port.
-> > =
+Fixes: f870fa0b5768842c ("mptcp: Add MPTCP socket stubs")
+Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
+---
+ net/mptcp/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Geliang Tang (2):
-> >    mptcp: initialize mptcp_options_received's ahmac
-> >    mptcp: move mptcp_options_received's port initialization  =
+diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
+index abb0a992d4a0855a..8936604b3bf9d76d 100644
+--- a/net/mptcp/Kconfig
++++ b/net/mptcp/Kconfig
+@@ -19,7 +19,7 @@ config INET_MPTCP_DIAG
+ =
 
-> =
+ config MPTCP_IPV6
+ 	bool "MPTCP: IPv6 support for Multipath TCP"
+-	select IPV6
++	depends on IPV6
+ 	default y
+ =
 
-> Thank you for these two patches. They look good to me except one detail: =
+ config MPTCP_KUNIT_TESTS
+-- =
 
-> these two patches are for -net and not net-next.
-> =
+2.17.1
 
-> I don't know if it is alright for Jakub to apply them to -net or if it =
-
-> is clearer to re-send them with an updated subject.
-> =
-
-> If it is OK to apply them to -net without a re-submit, here is my:
-> =
-
-> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-Thanks, I can apply to net.
-
-> Also, if you don't mind and while I am here, I never know: is it OK for =
-
-> you the maintainers to send one Acked/Reviewed-by for a whole series -- =
-
-> but then this is not reflected on patchwork -- or should we send one tag =
-
-> for each patch?
-
-It's fine, we propagate those semi-manually, but it's not a problem.
-Hopefully patchwork will address this at some point :(
---===============2694188984135209736==--
+--===============7567838463794661658==--
