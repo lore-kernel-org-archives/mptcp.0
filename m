@@ -1,57 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============5351065252590986601=="
+Content-Type: multipart/mixed; boundary="===============1606143188594161925=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: MPTCP_KUNIT_TESTS should depend on MPTCP
- instead of selecting it
-Date: Tue, 20 Oct 2020 11:27:45 +0200
-Message-ID: <2945fd68-6323-30f1-db6b-9ed1dba582a6@tessares.net>
-In-Reply-To: CAMuHMdWEKszUOA6Q9Y+vpLdRnq3wstCj1ubV=8iUKZAQkew_wg@mail.gmail.com
+Subject: [MPTCP] [PATCH net] mptcp: add missing memory scheduling in the rx
+ path
+Date: Tue, 20 Oct 2020 11:59:16 +0200
+Message-ID: <e9c867c873d2f44405498568e7709c4f2a94ece7.1603187930.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6361
+X-UID: 6362
 
---===============5351065252590986601==
+--===============1606143188594161925==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+When moving the skbs from the subflow into the msk receive
+queue, we must schedule there the required amount of memory.
 
-On 20/10/2020 09:40, Geert Uytterhoeven wrote:
-> On Mon, Oct 19, 2020 at 10:38 PM Geert Uytterhoeven
-> <geert(a)linux-m68k.org> wrote:
->> On Mon, Oct 19, 2020 at 5:47 PM Matthieu Baerts
->> <matthieu.baerts(a)tessares.net> wrote:
->>> On 19/10/2020 13:32, Geert Uytterhoeven wrote:
->>>> MPTCP_KUNIT_TESTS selects MPTCP, thus enabling an optional feature the
->>>> user may not want to enable.  Fix this by making the test depend on
->>>> MPTCP instead.
->>>
->>> I think the initial intension was to select MPTCP to have an easy way to
->>> enable all KUnit tests. We imitated what was and is still done in
->>> fs/ext4/Kconfig.
->>>
->>> But it probably makes sense to depend on MPTCP instead of selecting it.
->>> So that's fine for me. But then please also send a patch to ext4
->>> maintainer to do the same there.
->>
->> Thanks, good point.  I didn't notice, as I did have ext4 enabled anyway.
->> Will send a patch for ext4.  Looks like ext4 and MPTCP where the only
->> test modules selecting their dependencies.
-> =
+Try to borrow the required memory from the subflow, if needed,
+so that we leverage the existing TCP heuristic.
 
-> FTR, "[PATCH] ext: EXT4_KUNIT_TESTS should depend on EXT4_FS instead
-> of  selecting it"
-> https://lore.kernel.org/lkml/20201020073740.29081-1-geert(a)linux-m68k.or=
-g/
+Fixes: 6771bfd9ee24 ("mptcp: update mptcp ack sequence from work queue")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+@Florian: this is somewhat relates to the RFC patch
+"mptcp: add ooo prune support". I think we could try to prune the
+subflow via tcp_prune_queue()/tcp_prune_ofo_queue() when the msk is
+under memory pressure, so that we don't need to drop data already
+acked at the TCP level.
+---
+ net/mptcp/protocol.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thank you for having sent this other patch and shared the link here!
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1f0c5ad44eef..ebb43b2c1b34 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -286,6 +286,15 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, s=
+truct sock *ssk,
+ 	skb_ext_reset(skb);
+ 	skb_orphan(skb);
+ =
 
-Groetjes,
-Matt
++	/* try to fetch required memory from subflow */
++	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
++		if (ssk->sk_forward_alloc < skb->truesize)
++			goto drop;
++		__sk_mem_reclaim(ssk, skb->truesize);
++		if (!sk_rmem_schedule(sk, skb, skb->truesize))
++			goto drop;
++	}
++
+ 	/* the skb map_seq accounts for the skb offset:
+ 	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
+ 	 * value
+@@ -313,6 +322,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, st=
+ruct sock *ssk,
+ 	 * will retransmit as needed, if needed.
+ 	 */
+ 	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
++drop:
+ 	mptcp_drop(sk, skb);
+ 	return false;
+ }
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5351065252590986601==--
+2.26.2
+
+--===============1606143188594161925==--
