@@ -1,37 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============0759576565338716806=="
+Content-Type: multipart/mixed; boundary="===============0728671231183982265=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: introduce
- mptcp_schedule_work"
-Date: Tue, 20 Oct 2020 20:11:26 +0200
-Message-ID: <d423dd82-0f0a-4668-037f-7cfabb1828ba@tessares.net>
-In-Reply-To: 9c3c3b39b1f5c0eb3f1788ca84267ad838c0c59a.1603205529.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH net-next 0/2] init ahmac and port of
+ mptcp_options_received
+Date: Tue, 20 Oct 2020 16:39:23 -0700
+Message-ID: <20201020163923.6feef9ef@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: cover.1603102503.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6369
+X-UID: 6372
 
---===============0759576565338716806==
+--===============0728671231183982265==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Mon, 19 Oct 2020 18:23:14 +0800 Geliang Tang wrote:
+> This patchset deals with initializations of mptcp_options_received's two
+> fields, ahmac and port.
 
-On 20/10/2020 16:52, Paolo Abeni wrote:
-> Let's add some comment to clarify the reference management,
-> as it already raised a few questions upstream
+Applied, but two extra comments:
+ - please make sure the commit messages are in imperative form
+   e.g. "Initialize x..." rather than "This patches initializes x.."
+ - I dropped the Fixes tag from patch 2, and only queued patch 1 for =
 
-Thank you for the patch!
+   stable - patch 2 is a minor clean up, right?
 
-- c64a74456ff9: "squashed" in "mptcp: introduce mptcp_schedule_work"
-- 0fd2f58f6a86: mptcp: fix typo in comment (duplicated "and")
-- Results: c0690c525b32..da50c705808b
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0759576565338716806==--
+Thanks!
+--===============0728671231183982265==--
