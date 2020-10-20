@@ -1,112 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============6320138571499923964=="
+Content-Type: multipart/mixed; boundary="===============0759576565338716806=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: refactor shutdown and
- close"
-Date: Tue, 20 Oct 2020 18:25:31 +0200
-Message-ID: <a54e1b917f151b550951a0bad0b69a4924885ce1.1603211002.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: introduce
+ mptcp_schedule_work"
+Date: Tue, 20 Oct 2020 20:11:26 +0200
+Message-ID: <d423dd82-0f0a-4668-037f-7cfabb1828ba@tessares.net>
+In-Reply-To: 9c3c3b39b1f5c0eb3f1788ca84267ad838c0c59a.1603205529.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6368
+X-UID: 6369
 
---===============6320138571499923964==
+--===============0759576565338716806==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-we must release the ssk socket only after orphaning it,
-or we may hit UaF in the receive path.
+Hi Paolo,
 
-Beyond the error critical code path reported by syzkaller,
-there is also the scenario of a subflow closed by the PM.
+On 20/10/2020 16:52, Paolo Abeni wrote:
+> Let's add some comment to clarify the reference management,
+> as it already raised a few questions upstream
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-Should fix 101 by I actually tested this only vs self-tests
----
- net/mptcp/protocol.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+Thank you for the patch!
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a32c27fe525c..2240fd370014 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1746,16 +1746,22 @@ static struct sock *mptcp_subflow_get_retrans(const=
- struct mptcp_sock *msk)
- void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		       struct mptcp_subflow_context *subflow)
- {
--	struct socket *sock =3D READ_ONCE(ssk->sk_socket);
-+	bool dispose_socket =3D false;
-+	struct socket *sock;
- =
+- c64a74456ff9: "squashed" in "mptcp: introduce mptcp_schedule_work"
+- 0fd2f58f6a86: mptcp: fix typo in comment (duplicated "and")
+- Results: c0690c525b32..da50c705808b
 
- 	list_del(&subflow->node);
- =
-
--	/* outgoing subflow */
--	if (sock && sock !=3D sk->sk_socket)
--		iput(SOCK_INODE(sock));
--
- 	lock_sock(ssk);
- =
-
-+	/* if we are invoked by the msk cleanup code, the subflow is
-+	 * already orphaned
-+	 */
-+	sock =3D ssk->sk_socket;
-+	if (sock) {
-+		dispose_socket =3D sock !=3D sk->sk_socket;
-+		sock_orphan(ssk);
-+	}
-+
- 	/* if ssk hit tcp_done(), tcp_cleanup_ulp() cleared the related ops
- 	 * the ssk has been already destroyed, we just need to release the
- 	 * reference owned by msk;
-@@ -1771,6 +1777,9 @@ void __mptcp_close_ssk(struct sock *sk, struct sock *=
-ssk,
- 		__sock_put(ssk);
- 	}
- 	release_sock(ssk);
-+	if (dispose_socket)
-+		iput(SOCK_INODE(sock));
-+
- 	sock_put(ssk);
- }
- =
-
-@@ -2165,15 +2174,20 @@ static void mptcp_close(struct sock *sk, long timeo=
-ut)
- 	inet_csk(sk)->icsk_mtup.probe_timestamp =3D tcp_jiffies32;
- 	list_for_each_entry(subflow, &mptcp_sk(sk)->conn_list, node) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
--		struct socket *sock =3D READ_ONCE(ssk->sk_socket);
--		bool slow;
--
--		if (sock && sock !=3D sk->sk_socket)
--			iput(SOCK_INODE(sock));
-+		bool slow, dispose_socket;
-+		struct socket *sock;
- =
-
- 		slow =3D lock_sock_fast(ssk);
-+		sock =3D ssk->sk_socket;
-+		dispose_socket =3D sock && sock !=3D sk->sk_socket;
- 		sock_orphan(ssk);
- 		unlock_sock_fast(ssk, slow);
-+
-+		/* for the outgoing subflows we additionally need to free
-+		 * the associated socket
-+		 */
-+		if (dispose_socket)
-+			iput(SOCK_INODE(sock));
- 	}
- 	sock_orphan(sk);
- =
-
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============6320138571499923964==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0759576565338716806==--
