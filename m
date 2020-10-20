@@ -1,71 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============1606143188594161925=="
+Content-Type: multipart/mixed; boundary="===============1951900709434734185=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: add missing memory scheduling in the rx
- path
-Date: Tue, 20 Oct 2020 11:59:16 +0200
-Message-ID: <e9c867c873d2f44405498568e7709c4f2a94ece7.1603187930.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH net-next 0/2] init ahmac and port of
+ mptcp_options_received
+Date: Tue, 20 Oct 2020 15:18:38 +0200
+Message-ID: <91a59216-a1c7-1ffe-c263-b3bddcd2d801@tessares.net>
+In-Reply-To: 20201019134048.11c75c9a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6362
+X-UID: 6363
 
---===============1606143188594161925==
+--===============1951900709434734185==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When moving the skbs from the subflow into the msk receive
-queue, we must schedule there the required amount of memory.
+Hi Jakub,
 
-Try to borrow the required memory from the subflow, if needed,
-so that we leverage the existing TCP heuristic.
+On 19/10/2020 22:40, Jakub Kicinski wrote:
+> On Mon, 19 Oct 2020 18:27:55 +0200 Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 19/10/2020 12:23, Geliang Tang wrote:
+>>> This patchset deals with initializations of mptcp_options_received's two
+>>> fields, ahmac and port.
+>>>
+>>> Geliang Tang (2):
+>>>     mptcp: initialize mptcp_options_received's ahmac
+>>>     mptcp: move mptcp_options_received's port initialization
+>>
+>> Thank you for these two patches. They look good to me except one detail:
+>> these two patches are for -net and not net-next.
+>>
+>> I don't know if it is alright for Jakub to apply them to -net or if it
+>> is clearer to re-send them with an updated subject.
+>>
+>> If it is OK to apply them to -net without a re-submit, here is my:
+>>
+>> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> =
 
-Fixes: 6771bfd9ee24 ("mptcp: update mptcp ack sequence from work queue")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-@Florian: this is somewhat relates to the RFC patch
-"mptcp: add ooo prune support". I think we could try to prune the
-subflow via tcp_prune_queue()/tcp_prune_ofo_queue() when the msk is
-under memory pressure, so that we don't need to drop data already
-acked at the TCP level.
----
- net/mptcp/protocol.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> Thanks, I can apply to net.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1f0c5ad44eef..ebb43b2c1b34 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -286,6 +286,15 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, s=
-truct sock *ssk,
- 	skb_ext_reset(skb);
- 	skb_orphan(skb);
- =
+Great, thank you!
 
-+	/* try to fetch required memory from subflow */
-+	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
-+		if (ssk->sk_forward_alloc < skb->truesize)
-+			goto drop;
-+		__sk_mem_reclaim(ssk, skb->truesize);
-+		if (!sk_rmem_schedule(sk, skb, skb->truesize))
-+			goto drop;
-+	}
-+
- 	/* the skb map_seq accounts for the skb offset:
- 	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
- 	 * value
-@@ -313,6 +322,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, st=
-ruct sock *ssk,
- 	 * will retransmit as needed, if needed.
- 	 */
- 	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
-+drop:
- 	mptcp_drop(sk, skb);
- 	return false;
- }
+BTW, nice work with the maintenance of Net! More reasons for davem to =
+
+take time recovering :)
+
+> =
+
+>> Also, if you don't mind and while I am here, I never know: is it OK for
+>> you the maintainers to send one Acked/Reviewed-by for a whole series --
+>> but then this is not reflected on patchwork -- or should we send one tag
+>> for each patch?
+> =
+
+> It's fine, we propagate those semi-manually, but it's not a problem.
+> Hopefully patchwork will address this at some point :(
+
+Thank you for your reply, good to know!
+
+Then next time, I will send these tags per patch to save you some =
+
+semi-manual operations :)
+
+Some preparation works have been done on patchwork side but the feature =
+
+is not available yet:
+
+   https://github.com/getpatchwork/patchwork/issues/113
+
+Hopefully soon!
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============1606143188594161925==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============1951900709434734185==--
