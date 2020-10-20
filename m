@@ -1,47 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============7567838463794661658=="
+Content-Type: multipart/mixed; boundary="===============8419756149560391273=="
 MIME-Version: 1.0
 From: Geert Uytterhoeven <geert at linux-m68k.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH] mptcp: MPTCP_IPV6 should depend on IPV6 instead of
- selecting it
-Date: Tue, 20 Oct 2020 09:38:39 +0200
-Message-ID: <20201020073839.29226-1-geert@linux-m68k.org>
+Subject: [MPTCP] Re: [PATCH] mptcp: MPTCP_KUNIT_TESTS should depend on MPTCP
+ instead of selecting it
+Date: Tue, 20 Oct 2020 09:40:06 +0200
+Message-ID: <CAMuHMdWEKszUOA6Q9Y+vpLdRnq3wstCj1ubV=8iUKZAQkew_wg@mail.gmail.com>
+In-Reply-To: CAMuHMdUDpVVejmrr3ayxnN=tgHrgDmUCVMG0VJht1Y-FUUv42Q@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6358
+X-UID: 6359
 
---===============7567838463794661658==
+--===============8419756149560391273==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-MPTCP_IPV6 selects IPV6, thus enabling an optional feature the user may
-not want to enable.  Fix this by making MPTCP_IPV6 depend on IPV6, like
-is done for all other IPv6 features.
+On Mon, Oct 19, 2020 at 10:38 PM Geert Uytterhoeven
+<geert(a)linux-m68k.org> wrote:
+> On Mon, Oct 19, 2020 at 5:47 PM Matthieu Baerts
+> <matthieu.baerts(a)tessares.net> wrote:
+> > On 19/10/2020 13:32, Geert Uytterhoeven wrote:
+> > > MPTCP_KUNIT_TESTS selects MPTCP, thus enabling an optional feature the
+> > > user may not want to enable.  Fix this by making the test depend on
+> > > MPTCP instead.
+> >
+> > I think the initial intension was to select MPTCP to have an easy way to
+> > enable all KUnit tests. We imitated what was and is still done in
+> > fs/ext4/Kconfig.
+> >
+> > But it probably makes sense to depend on MPTCP instead of selecting it.
+> > So that's fine for me. But then please also send a patch to ext4
+> > maintainer to do the same there.
+>
+> Thanks, good point.  I didn't notice, as I did have ext4 enabled anyway.
+> Will send a patch for ext4.  Looks like ext4 and MPTCP where the only
+> test modules selecting their dependencies.
 
-Fixes: f870fa0b5768842c ("mptcp: Add MPTCP socket stubs")
-Signed-off-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
----
- net/mptcp/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+FTR, "[PATCH] ext: EXT4_KUNIT_TESTS should depend on EXT4_FS instead
+of  selecting it"
+https://lore.kernel.org/lkml/20201020073740.29081-1-geert(a)linux-m68k.org/
 
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index abb0a992d4a0855a..8936604b3bf9d76d 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -19,7 +19,7 @@ config INET_MPTCP_DIAG
- =
 
- config MPTCP_IPV6
- 	bool "MPTCP: IPv6 support for Multipath TCP"
--	select IPV6
-+	depends on IPV6
- 	default y
- =
+Gr{oetje,eeting}s,
 
- config MPTCP_KUNIT_TESTS
+                        Geert
+
 -- =
 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert(a)linux-m6=
+8k.org
 
---===============7567838463794661658==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
+--===============8419756149560391273==--
