@@ -1,66 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============0075689769819996833=="
+Content-Type: multipart/mixed; boundary="===============1024831125504376157=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 0/3] add ADD_ADDR IPv6 support
-Date: Wed, 21 Oct 2020 17:25:33 +0200
-Message-ID: <2ad41cbfe93791d1194a5ae70029461a6390b669.camel@redhat.com>
-In-Reply-To: cover.1603264085.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH net] selftests: mptcp: depends on built-in IPv6
+Date: Wed, 21 Oct 2020 17:55:49 +0200
+Message-ID: <20201021155549.933731-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 6393
+X-UID: 6395
 
---===============0075689769819996833==
+--===============1024831125504376157==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-10-21 at 15:19 +0800, Geliang Tang wrote:
-> v5:
->  - drop msleep() in v4
->  - drop MPTCP_ADD_ADDR_SEND_ACK in v4
->  - add WRITE_ONCE/READ_ONCE for msk->pm.add_addr_signal
->  - depend on "mptcp: keep unaccepted MPC subflow into join list"
-> =
+Recently, CONFIG_MPTCP_IPV6 no longer selects CONFIG_IPV6. As a
+consequence, if CONFIG_MPTCP_IPV6=3Dy is added to the kconfig, it will no
+longer ensure CONFIG_IPV6=3Dy. If it is not enabled, CONFIG_MPTCP_IPV6
+will stay disabled and selftests will fail.
 
-> v4:
->  - update the patches as Paolo suggested:
->  - change the 'add_addr_signal' type
->  - set MPTCP_ADD_ADDR_IPV6 in mptcp_pm_announce_addr
->  - add a new helper mptcp_send_dedicated_add_addr_packet to sent out a
-> new pure ACK packet
->  - drop other MPTCP suboptions in mptcp_established_options_add_addr
-> =
+We also need CONFIG_IPV6 to be built-in. For more details, please see
+commit 0ed37ac586c0 ("mptcp: depends on IPV6 but not as a module").
 
-> v3:
->  - drop other MPTCP suboptions instead of OPTION_TS
-> =
+Note that 'make kselftest-merge' will take all 'config' files found in
+'tools/testsing/selftests'. Because some of them already set
+CONFIG_IPV6=3Dy, MPTCP selftests were still passing. But they will fail if
+MPTCP selftests are launched manually after having executed this command
+to prepare the kernel config:
 
-> v2:
->  - avoid adding new field to tcp_sock, add new field in mptcp_pm_data.
->  - drop OPTION_TS in mptcp_established_options_add_addr, not in
-> tcp_established_options.
-> =
+  ./scripts/kconfig/merge_config.sh -m .config \
+      ./tools/testing/selftests/net/mptcp/config
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/55
-> =
+Fixes: 010b430d5df5 ("mptcp: MPTCP_IPV6 should depend on IPV6 instead of se=
+lecting it")
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ tools/testing/selftests/net/mptcp/config | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Geliang Tang (3):
->   mptcp: change add_addr_signal type
->   mptcp: send out dedicated ADD_ADDR packet
->   selftests: mptcp: add ADD_ADDR IPv6 test cases
-> =
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selft=
+ests/net/mptcp/config
+index 8df5cb8f71ff..741a1c4f4ae8 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -1,4 +1,5 @@
+ CONFIG_MPTCP=3Dy
++CONFIG_IPV6=3Dy
+ CONFIG_MPTCP_IPV6=3Dy
+ CONFIG_INET_DIAG=3Dm
+ CONFIG_INET_MPTCP_DIAG=3Dm
+-- =
 
->  net/mptcp/options.c                           | 25 ++++++-
->  net/mptcp/pm.c                                | 23 +++---
->  net/mptcp/pm_netlink.c                        | 27 +++++++
->  net/mptcp/protocol.c                          |  2 +-
->  net/mptcp/protocol.h                          | 13 +++-
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
->  6 files changed, 144 insertions(+), 16 deletions(-)
+2.27.0
 
-The series LGTM, thanks!
-
-/P
-
---===============0075689769819996833==--
+--===============1024831125504376157==--
