@@ -1,36 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============0903035793215061100=="
+Content-Type: multipart/mixed; boundary="===============7459808955608448192=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 22 October 2020 15:00 UTC (8am PDT, 5pm CEST)
-Date: Wed, 21 Oct 2020 18:37:05 +0200
-Message-ID: <3c12dcb2-87c9-9d3e-8c65-e8666775445b@tessares.net>
+Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: move page frag allocation
+ in mptcp_sendmsg()"
+Date: Wed, 21 Oct 2020 18:45:03 +0200
+Message-ID: <775ff99f80d6aa5ca14e738296bc23b3a2059edd.1603298699.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6396
+X-UID: 6397
 
---===============0903035793215061100==
+--===============7459808955608448192==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+better conflict resolution for a recent rebase
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20201022
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 897c0c1d2888..975a3243d55c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -978,8 +978,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct s=
+ock *ssk,
+ 	struct mptcp_ext *mpext =3D NULL;
+ 	struct sk_buff *skb, *tail;
+ 	bool can_collapse =3D false;
+-	int avail_size, ret;
+-	size_t psize;
++	int avail_size;
++	size_t ret;
+ =
 
-Feel free to add/modify topics!
+ 	pr_debug("msk=3D%p ssk=3D%p sending dfrag at seq=3D%lld len=3D%d already =
+sent=3D%d",
+ 		 msk, ssk, dfrag->data_seq, dfrag->data_len, info->sent);
+@@ -1018,15 +1018,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
+ct sock *ssk,
+ 			 info->limit > dfrag->data_len))
+ 		return 0;
+ =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+-	psize =3D min_t(size_t, info->limit - info->sent, avail_size);
+-
+-	tail =3D tcp_build_frag(ssk, psize, info->flags, dfrag->page,
+-			      dfrag->offset + info->sent, &psize);
++	ret =3D info->limit - info->sent;
++	tail =3D tcp_build_frag(ssk, avail_size, info->flags, dfrag->page,
++			      dfrag->offset + info->sent, &ret);
+ 	if (!tail) {
+ 		tcp_remove_empty_skb(sk, tcp_write_queue_tail(ssk));
+ 		return -ENOMEM;
+ 	}
+-	ret =3D psize;
+ =
 
-Speak to you tomorrow!
-Matt
+ 	/* if the tail skb is still the cached one, collapsing really happened.
+ 	 */
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0903035793215061100==--
+2.26.2
+
+--===============7459808955608448192==--
