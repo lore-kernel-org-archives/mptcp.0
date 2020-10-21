@@ -1,75 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============7070763344622768352=="
+Content-Type: multipart/mixed; boundary="===============6650225600975204345=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: depends on IPV6 but not as a module
-Date: Wed, 21 Oct 2020 12:51:53 +0200
-Message-ID: <20201021105154.628257-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH] mptcp: MPTCP_IPV6 should depend on IPV6 instead
+ of selecting it
+Date: Wed, 21 Oct 2020 12:54:11 +0200
+Message-ID: <f414539c-1370-1636-137e-38c735f449f6@tessares.net>
+In-Reply-To: CAMuHMdXUs_2DodcYva8bP+Df979TMrmRD=+LUiVVzdH0zmxK1Q@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6389
+X-UID: 6390
 
---===============7070763344622768352==
+--===============6650225600975204345==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Like TCP, MPTCP cannot be compiled as a module. Obviously, MPTCP IPv6'
-support also depends on CONFIG_IPV6. But not all functions from IPv6
-code are exported.
+Hi Geert,
 
-To simplify the code and reduce modifications outside MPTCP, it was
-decided from the beginning to support MPTCP with IPv6 only if
-CONFIG_IPV6 was built inlined. That's also why CONFIG_MPTCP_IPV6 was
-created. More modifications are needed to support CONFIG_IPV6=3Dm.
+On 21/10/2020 11:52, Geert Uytterhoeven wrote:
+> Hi Matthieu,
+> =
 
-Even if it was not explicit, until recently, we were forcing CONFIG_IPV6
-to be built-in because we had "select IPV6" in Kconfig. Now that we have
-"depends on IPV6", we have to explicitly set "IPV6=3Dy" to force
-CONFIG_IPV6 not to be built as a module.
+> On Wed, Oct 21, 2020 at 11:47 AM Matthieu Baerts
+> <matthieu.baerts(a)tessares.net> wrote:
+>> On 21/10/2020 11:43, Geert Uytterhoeven wrote:
+>>> On Wed, Oct 21, 2020 at 5:56 AM Jakub Kicinski <kuba(a)kernel.org> wrot=
+e:
+>>>> On Tue, 20 Oct 2020 11:26:34 +0200 Matthieu Baerts wrote:
+>>>>> On 20/10/2020 09:38, Geert Uytterhoeven wrote:
+>>>>>> MPTCP_IPV6 selects IPV6, thus enabling an optional feature the user =
+may
+>>>>>> not want to enable.  Fix this by making MPTCP_IPV6 depend on IPV6, l=
+ike
+>>>>>> is done for all other IPv6 features.
+>>>>>
+>>>>> Here again, the intension was to select IPv6 from MPTCP but I underst=
+and
+>>>>> the issue: if we enable MPTCP, we will select IPV6 as well by default.
+>>>>> Maybe not what we want on some embedded devices with very limited mem=
+ory
+>>>>> where IPV6 is already off. We should instead enable MPTCP_IPV6 only if
+>>>>> IPV6=3Dy. LGTM then!
+>>>>>
+>>>>> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>>>>
+>>>> Applied, thanks!
+>>>
+>>> My apologies, this fails for the CONFIG_IPV6=3Dm and CONFIG_MPTCP=3Dy
+>>> case:
+>>
+>> Good point, MPTCP cannot be compiled as a module (like TCP). It should
+>> then depends on IPV6=3Dy. I thought it would be the case.
+>>
+>> Do you want me to send a patch or do you already have one?
+> =
 
-In other words, we can now only have CONFIG_MPTCP_IPV6=3Dy if
-CONFIG_IPV6=3Dy.
+> I don't have a patch yet, so feel free to send one.
 
-Note that the new dependency might hide the fact IPv6 is not supported
-in MPTCP even if we have CONFIG_IPV6=3Dm. But selecting IPV6 like we did
-before was forcing it to be built-in while it was maybe not what the
-user wants.
+Just did:
 
-Reported-by: Geert Uytterhoeven <geert(a)linux-m68k.org>
-Fixes: 010b430d5df5 ("mptcp: MPTCP_IPV6 should depend on IPV6 instead of se=
-lecting it")
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+https://lore.kernel.org/netdev/20201021105154.628257-1-matthieu.baerts(a)te=
+ssares.net/
 
-Notes:
-    For more details about the issue we have when we try to compile
-    CONFIG_IPV6=3Dm and CONFIG_MPTCP_IPV6=3Dy, please refer to:
-    =
-
-    https://lore.kernel.org/netdev/CAMuHMdW=3D1LfE8UoGRVBvrvrintQMNKUdTe5PP=
-Qz=3DPN3=3DgJmw=3DQ(a)mail.gmail.com/
-
- net/mptcp/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index 8936604b3bf9..a014149aa323 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -19,7 +19,7 @@ config INET_MPTCP_DIAG
- =
-
- config MPTCP_IPV6
- 	bool "MPTCP: IPv6 support for Multipath TCP"
--	depends on IPV6
-+	depends on IPV6=3Dy
- 	default y
- =
-
- config MPTCP_KUNIT_TESTS
+Groetjes,
+Matt
 -- =
 
-2.27.0
-
---===============7070763344622768352==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============6650225600975204345==--
