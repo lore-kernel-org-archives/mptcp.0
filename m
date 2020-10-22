@@ -1,45 +1,200 @@
-Content-Type: multipart/mixed; boundary="===============4615128842052046625=="
+Content-Type: multipart/mixed; boundary="===============7734476452207636791=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] selftests: mptcp: depends on built-in IPv6
-Date: Wed, 21 Oct 2020 20:43:21 -0700
-Message-ID: <20201021204321.144e6df4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: 1d28e7da-3fce-b064-a159-662f53e5a3b@linux.intel.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "selftests: mptcp: add
+ link failure test case"
+Date: Thu, 22 Oct 2020 11:47:25 +0800
+Message-ID: <10330cb566261a70d0684856a9b468edcd8c4a05.1603337099.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6401
+X-UID: 6402
 
---===============4615128842052046625==
+--===============7734476452207636791==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 21 Oct 2020 17:35:32 -0700 (PDT) Mat Martineau wrote:
-> > Recently, CONFIG_MPTCP_IPV6 no longer selects CONFIG_IPV6. As a
-> > consequence, if CONFIG_MPTCP_IPV6=3Dy is added to the kconfig, it will =
-no
-> > longer ensure CONFIG_IPV6=3Dy. If it is not enabled, CONFIG_MPTCP_IPV6
-> > will stay disabled and selftests will fail.
-> >
-> > We also need CONFIG_IPV6 to be built-in. For more details, please see
-> > commit 0ed37ac586c0 ("mptcp: depends on IPV6 but not as a module").
-> >
-> > Note that 'make kselftest-merge' will take all 'config' files found in
-> > 'tools/testsing/selftests'. Because some of them already set
-> > CONFIG_IPV6=3Dy, MPTCP selftests were still passing. But they will fail=
- if
-> > MPTCP selftests are launched manually after having executed this command
-> > to prepare the kernel config:
-> >
-> >  ./scripts/kconfig/merge_config.sh -m .config \
-> >      ./tools/testing/selftests/net/mptcp/config
-> >
-> > Fixes: 010b430d5df5 ("mptcp: MPTCP_IPV6 should depend on IPV6 instead o=
-f selecting it")
-> > Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Change run_tests()'s test_linkfail as an optional argument, and set it's
+default value to 0.
 
-Applied, thank you!
---===============4615128842052046625==--
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 34 +++++++++----------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index b3fe9b4b0a16..6a4c8109ae49 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -308,7 +308,7 @@ run_tests()
+ 	listener_ns=3D"$1"
+ 	connector_ns=3D"$2"
+ 	connect_addr=3D"$3"
+-	test_linkfail=3D"$4"
++	test_linkfail=3D"${4:-0}"
+ 	rm_nr_ns1=3D"${5:-0}"
+ 	rm_nr_ns2=3D"${6:-0}"
+ 	speed=3D"${7:-fast}"
+@@ -473,20 +473,20 @@ make_file "$cin" "client" 1
+ make_file "$sin" "server" 1
+ trap cleanup EXIT
+ =
+
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "no JOIN" "0" "0" "0"
+ =
+
+ # subflow limted by client
+ reset
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "single subflow, limited by client" 0 0 0
+ =
+
+ # subflow limted by server
+ reset
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "single subflow, limited by server" 1 1 0
+ =
+
+ # subflow
+@@ -494,7 +494,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "single subflow" 1 1 1
+ =
+
+ # multiple subflows
+@@ -503,7 +503,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "multiple subflows" 2 2 2
+ =
+
+ # multiple subflows limited by serverf
+@@ -512,13 +512,13 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "multiple subflows, limited by server" 2 2 1
+ =
+
+ # add_address, unused
+ reset
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "unused signal address" 0 0 0
+ chk_add_nr 1 1
+ =
+
+@@ -527,7 +527,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "signal address" 1 1 1
+ chk_add_nr 1 1
+ =
+
+@@ -540,7 +540,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "subflow and signal" 2 2 2
+ chk_add_nr 1 1
+ =
+
+@@ -551,7 +551,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "multiple subflows and signal" 3 3 3
+ chk_add_nr 1 1
+ =
+
+@@ -632,7 +632,7 @@ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "single subflow with syn cookies" 1 1 1
+ =
+
+ # multiple subflows with syn cookies
+@@ -641,7 +641,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "multiple subflows with syn cookies" 2 2 2
+ =
+
+ # multiple subflows limited by server
+@@ -650,7 +650,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "subflows limited by server w cookies" 2 2 1
+ =
+
+ # test signal address with cookies
+@@ -658,7 +658,7 @@ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "signal address with syn cookies" 1 1 1
+ chk_add_nr 1 1
+ =
+
+@@ -668,7 +668,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "subflow and signal w cookies" 2 2 2
+ chk_add_nr 1 1
+ =
+
+@@ -679,7 +679,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0
++run_tests $ns1 $ns2 10.0.1.1
+ chk_join_nr "subflows and signal w. cookies" 3 3 3
+ chk_add_nr 1 1
+ =
+
+-- =
+
+2.26.2
+
+--===============7734476452207636791==--
