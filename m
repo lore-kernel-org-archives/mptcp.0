@@ -1,75 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============1628454923944813483=="
+Content-Type: multipart/mixed; boundary="===============2055034791377998648=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: move page frag
- allocation in mptcp_sendmsg()"
-Date: Wed, 21 Oct 2020 17:33:41 -0700
-Message-ID: <c36ebc17-e7d6-25d3-a91-8dacd82b3521@linux.intel.com>
-In-Reply-To: 775ff99f80d6aa5ca14e738296bc23b3a2059edd.1603298699.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net] selftests: mptcp: depends on built-in IPv6
+Date: Wed, 21 Oct 2020 17:35:32 -0700
+Message-ID: <1d28e7da-3fce-b064-a159-662f53e5a3b@linux.intel.com>
+In-Reply-To: 20201021155549.933731-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6398
+X-UID: 6399
 
---===============1628454923944813483==
+--===============2055034791377998648==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Wed, 21 Oct 2020, Matthieu Baerts wrote:
 
-On Wed, 21 Oct 2020, Paolo Abeni wrote:
-
-> better conflict resolution for a recent rebase
+> Recently, CONFIG_MPTCP_IPV6 no longer selects CONFIG_IPV6. As a
+> consequence, if CONFIG_MPTCP_IPV6=3Dy is added to the kconfig, it will no
+> longer ensure CONFIG_IPV6=3Dy. If it is not enabled, CONFIG_MPTCP_IPV6
+> will stay disabled and selftests will fail.
 >
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> We also need CONFIG_IPV6 to be built-in. For more details, please see
+> commit 0ed37ac586c0 ("mptcp: depends on IPV6 but not as a module").
+>
+> Note that 'make kselftest-merge' will take all 'config' files found in
+> 'tools/testsing/selftests'. Because some of them already set
+> CONFIG_IPV6=3Dy, MPTCP selftests were still passing. But they will fail if
+> MPTCP selftests are launched manually after having executed this command
+> to prepare the kernel config:
+>
+>  ./scripts/kconfig/merge_config.sh -m .config \
+>      ./tools/testing/selftests/net/mptcp/config
+>
+> Fixes: 010b430d5df5 ("mptcp: MPTCP_IPV6 should depend on IPV6 instead of =
+selecting it")
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 > ---
-> net/mptcp/protocol.c | 12 +++++-------
-> 1 file changed, 5 insertions(+), 7 deletions(-)
+> tools/testing/selftests/net/mptcp/config | 1 +
+> 1 file changed, 1 insertion(+)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 897c0c1d2888..975a3243d55c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -978,8 +978,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
-> 	struct mptcp_ext *mpext =3D NULL;
-> 	struct sk_buff *skb, *tail;
-> 	bool can_collapse =3D false;
-> -	int avail_size, ret;
-> -	size_t psize;
-> +	int avail_size;
-> +	size_t ret;
->
-> 	pr_debug("msk=3D%p ssk=3D%p sending dfrag at seq=3D%lld len=3D%d already=
- sent=3D%d",
-> 		 msk, ssk, dfrag->data_seq, dfrag->data_len, info->sent);
-> @@ -1018,15 +1018,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, st=
-ruct sock *ssk,
-> 			 info->limit > dfrag->data_len))
-> 		return 0;
->
-> -	psize =3D min_t(size_t, info->limit - info->sent, avail_size);
-> -
-> -	tail =3D tcp_build_frag(ssk, psize, info->flags, dfrag->page,
-> -			      dfrag->offset + info->sent, &psize);
-> +	ret =3D info->limit - info->sent;
-> +	tail =3D tcp_build_frag(ssk, avail_size, info->flags, dfrag->page,
-> +			      dfrag->offset + info->sent, &ret);
-> 	if (!tail) {
-> 		tcp_remove_empty_skb(sk, tcp_write_queue_tail(ssk));
-> 		return -ENOMEM;
-> 	}
-> -	ret =3D psize;
->
-> 	/* if the tail skb is still the cached one, collapsing really happened.
-> 	 */
-> -- =
 
-> 2.26.2
-
-Agreed, looks ready to squash.
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============1628454923944813483==--
+--===============2055034791377998648==--
