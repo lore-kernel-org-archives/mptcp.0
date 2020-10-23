@@ -1,77 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============2946361702291960087=="
+Content-Type: multipart/mixed; boundary="===============0116429450024558319=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v3] mptcp: track window announced to
- peer
-Date: Fri, 23 Oct 2020 13:59:34 +0200
-Message-ID: <20201023115934.GJ16895@breakpoint.cc>
-In-Reply-To: 585a027b0f4ea6a56c44b4050b76c8d3c0442083.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: refactor shutdown and
+ close"
+Date: Fri, 23 Oct 2020 18:03:52 +0200
+Message-ID: <697d818f-1457-6d9b-49e3-647c65fd3b22@tessares.net>
+In-Reply-To: a54e1b917f151b550951a0bad0b69a4924885ce1.1603211002.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6419
+X-UID: 6420
 
---===============2946361702291960087==
+--===============0116429450024558319==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Thu, 2020-10-22 at 17:43 -0700, Mat Martineau wrote:
-> > On Thu, 22 Oct 2020, Florian Westphal wrote:
-> > @@ -1348,7 +1349,6 @@ static int __tcp_transmit_skb(struct sock *sk, st=
-ruct sk_buff *skb,
-> > > 		}
-> > > 	}
-> > > =
+Hi Paolo, Mat,
 
-> > > -	tcp_options_write((__be32 *)(th + 1), tp, &opts);
-> > > 	skb_shinfo(skb)->gso_type =3D sk->sk_gso_type;
-> > > 	if (likely(!(tcb->tcp_flags & TCPHDR_SYN))) {
-> > > 		th->window      =3D htons(tcp_select_window(sk));
-> > =
-
-> > These lines of code between the old tcp_options_write() location and th=
-e =
-
-> > new location were last touched by Eric, doing some cache miss =
-
-> > optimizations. It doesn't seem like populating the TCP options just aft=
-er =
-
-> > th->window instead of just before should behave similarly with the data =
-
-> > cache - are you concerned about this at all?
+On 20/10/2020 18:25, Paolo Abeni wrote:
+> we must release the ssk socket only after orphaning it,
+> or we may hit UaF in the receive path.
 > =
 
-> Thank you for the carefully review!
-> =
+> Beyond the error critical code path reported by syzkaller,
+> there is also the scenario of a subflow closed by the PM.
 
-> commit 51466a7545b73b7ad7bcfb33410d2823ccfaa501
-> Author: Eric Dumazet <edumazet(a)google.com>
-> Date:   Thu Jun 11 09:15:16 2015 -0700
-> =
+Thank you for this patch and the review!
 
->     tcp: fill shinfo->gso_type at last moment
-> =
+- 51c3efe449ec: "squashed" in "mptcp: refactor shutdown and close"
+- Results: da50c705808b..62d3c2d391fa
 
-> moves 'skb_shinfo(skb)->gso_type' initialization just after the option
-> write. Looking at the commit message, what actually makes a difference
-> in such commit is moving the mentioned assigment after the last xmit
-> check to avoid touching extra cache lines if not needed - and we
-> preserve that fact.
-> =
+Tests + export are going to be started soon!
 
-> I think the above is sane performace-wise, but I guess Eric could still
-> teach me better ;)
+Cheers,
+Matt
+-- =
 
-If neither additional hooking nor change in tcp stack is possible only choi=
-ce
-is to relax OOW test:
-
-max_seq =3D READ_ONCE(msk->ack_seq) + READ_ONCE(sk->sk_rcvbuf);
-if (after64(end_seq, max_seq)) ...
-
-that means we will queue up OOW packets if those are still within
-current rcvbuf size but its fine from protocol pov.
---===============2946361702291960087==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0116429450024558319==--
