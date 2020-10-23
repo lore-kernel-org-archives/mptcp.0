@@ -1,39 +1,82 @@
-Content-Type: multipart/mixed; boundary="===============6343217660384450787=="
+Content-Type: multipart/mixed; boundary="===============8054495903675472738=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: move page frag
- allocation in mptcp_sendmsg()"
-Date: Fri, 23 Oct 2020 18:38:50 +0200
-Message-ID: <48ed08d2-718c-443d-e356-7ddda9c0aa98@tessares.net>
-In-Reply-To: 775ff99f80d6aa5ca14e738296bc23b3a2059edd.1603298699.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v3] mptcp: track window announced to
+ peer
+Date: Fri, 23 Oct 2020 19:00:34 +0200
+Message-ID: <9f1dde979aa49b9ccfd30c5cc93544c8d4a668ef.camel@redhat.com>
+In-Reply-To: 20201023115934.GJ16895@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 6422
+X-UID: 6423
 
---===============6343217660384450787==
+--===============8054495903675472738==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+On Fri, 2020-10-23 at 13:59 +0200, Florian Westphal wrote:
+> Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > On Thu, 2020-10-22 at 17:43 -0700, Mat Martineau wrote:
+> > > On Thu, 22 Oct 2020, Florian Westphal wrote:
+> > > @@ -1348,7 +1349,6 @@ static int __tcp_transmit_skb(struct sock *sk, =
+struct sk_buff *skb,
+> > > > 		}
+> > > > 	}
+> > > > =
 
-On 21/10/2020 18:45, Paolo Abeni wrote:
-> better conflict resolution for a recent rebase
+> > > > -	tcp_options_write((__be32 *)(th + 1), tp, &opts);
+> > > > 	skb_shinfo(skb)->gso_type =3D sk->sk_gso_type;
+> > > > 	if (likely(!(tcb->tcp_flags & TCPHDR_SYN))) {
+> > > > 		th->window      =3D htons(tcp_select_window(sk));
+> > > =
 
-Thanks for the patch fixing my mistakes and for the review!
+> > > These lines of code between the old tcp_options_write() location and =
+the =
 
-- 587ee99bf694: "squashed" in "mptcp: move page frag allocation in =
+> > > new location were last touched by Eric, doing some cache miss =
 
-mptcp_sendmsg()"
-- Results: 66965b9869c7..a1e156132206
+> > > optimizations. It doesn't seem like populating the TCP options just a=
+fter =
 
-Tests + export are in progress!
+> > > th->window instead of just before should behave similarly with the da=
+ta =
 
-Cheers,
-Matt
--- =
+> > > cache - are you concerned about this at all?
+> > =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============6343217660384450787==--
+> > Thank you for the carefully review!
+> > =
+
+> > commit 51466a7545b73b7ad7bcfb33410d2823ccfaa501
+> > Author: Eric Dumazet <edumazet(a)google.com>
+> > Date:   Thu Jun 11 09:15:16 2015 -0700
+> > =
+
+> >     tcp: fill shinfo->gso_type at last moment
+> > =
+
+> > moves 'skb_shinfo(skb)->gso_type' initialization just after the option
+> > write. Looking at the commit message, what actually makes a difference
+> > in such commit is moving the mentioned assigment after the last xmit
+> > check to avoid touching extra cache lines if not needed - and we
+> > preserve that fact.
+> > =
+
+> > I think the above is sane performace-wise, but I guess Eric could still
+> > teach me better ;)
+> =
+
+> If neither additional hooking nor change in tcp stack is possible only ch=
+oice
+
+I'm sorry, I was likely misleading. I mean: the patch looks fine and
+safe to me. Perhpas we can try send that upstream as RFC to explicitly
+ask for feedback ?!?
+
+Thanks!
+
+Paolo
+
+--===============8054495903675472738==--
