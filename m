@@ -1,79 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============7310960338861056156=="
+Content-Type: multipart/mixed; boundary="===============3901587870140358480=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v3] mptcp: track window announced to
- peer
-Date: Fri, 23 Oct 2020 10:26:57 -0700
-Message-ID: <88c3a8bf-3986-6d6-c69e-8e0a2467520@linux.intel.com>
-In-Reply-To: 9f1dde979aa49b9ccfd30c5cc93544c8d4a668ef.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: keep unaccepted MPC subflow into
+ join list
+Date: Fri, 23 Oct 2020 20:00:58 +0200
+Message-ID: <aac5a685-26a3-9eff-f40c-752f03bb8fd6@tessares.net>
+In-Reply-To: 2c16fd8e71c04ce6f38e2b3eafafb3996f95aa77.1603200777.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6424
+X-UID: 6425
 
---===============7310960338861056156==
+--===============3901587870140358480==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 Oct 2020, Paolo Abeni wrote:
+Hi Paolo, Mat, Geliang,
 
-> On Fri, 2020-10-23 at 13:59 +0200, Florian Westphal wrote:
->> Paolo Abeni <pabeni(a)redhat.com> wrote:
->>> On Thu, 2020-10-22 at 17:43 -0700, Mat Martineau wrote:
->>>> On Thu, 22 Oct 2020, Florian Westphal wrote:
->>>> @@ -1348,7 +1349,6 @@ static int __tcp_transmit_skb(struct sock *sk, s=
-truct sk_buff *skb,
->>>>> 		}
->>>>> 	}
->>>>>
->>>>> -	tcp_options_write((__be32 *)(th + 1), tp, &opts);
->>>>> 	skb_shinfo(skb)->gso_type =3D sk->sk_gso_type;
->>>>> 	if (likely(!(tcb->tcp_flags & TCPHDR_SYN))) {
->>>>> 		th->window      =3D htons(tcp_select_window(sk));
->>>>
->>>> These lines of code between the old tcp_options_write() location and t=
-he
->>>> new location were last touched by Eric, doing some cache miss
->>>> optimizations. It doesn't seem like populating the TCP options just af=
-ter
->>>> th->window instead of just before should behave similarly with the data
->>>> cache - are you concerned about this at all?
+On 20/10/2020 16:54, Paolo Abeni wrote:
+> This will simplify all operation dealing with subflows
+> before accept time (e.g. data fin processing, add_addr).
+> =
 
-I made a mistake re-editing my last sentence here - was trying to say it =
+> The join list is already flushed by mptcp_stream_accept()
+> before returning the newly created msk to the user space.
+> =
 
-*does* seem like the cache behavior should be similar.
+> This also fixes an potential bug present into the old code:
+> conn_list was manipulated without helding the msk lock
+> in mptcp_stream_accept().
 
->>>
->>> Thank you for the carefully review!
->>>
->>> commit 51466a7545b73b7ad7bcfb33410d2823ccfaa501
->>> Author: Eric Dumazet <edumazet(a)google.com>
->>> Date:   Thu Jun 11 09:15:16 2015 -0700
->>>
->>>     tcp: fill shinfo->gso_type at last moment
->>>
->>> moves 'skb_shinfo(skb)->gso_type' initialization just after the option
->>> write. Looking at the commit message, what actually makes a difference
->>> in such commit is moving the mentioned assigment after the last xmit
->>> check to avoid touching extra cache lines if not needed - and we
->>> preserve that fact.
->>>
->>> I think the above is sane performace-wise, but I guess Eric could still
->>> teach me better ;)
->>
->> If neither additional hooking nor change in tcp stack is possible only c=
-hoice
->
-> I'm sorry, I was likely misleading. I mean: the patch looks fine and
-> safe to me. Perhpas we can try send that upstream as RFC to explicitly
-> ask for feedback ?!?
->
+Thank you for the patch, review and validation!
 
-Agreed!
+Just applied:
 
+- cdf7f6c99e86: mptcp: keep unaccepted MPC subflow into join list
+- Results: a1e156132206..d13ebf3a735c
 
---
-Mat Martineau
-Intel
---===============7310960338861056156==--
+With Mat and Geliang's tags.
+
+Tests + export is in progress!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============3901587870140358480==--
