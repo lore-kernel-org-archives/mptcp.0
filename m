@@ -1,46 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============3901587870140358480=="
+Content-Type: multipart/mixed; boundary="===============3006221061884799562=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: keep unaccepted MPC subflow into
- join list
-Date: Fri, 23 Oct 2020 20:00:58 +0200
-Message-ID: <aac5a685-26a3-9eff-f40c-752f03bb8fd6@tessares.net>
-In-Reply-To: 2c16fd8e71c04ce6f38e2b3eafafb3996f95aa77.1603200777.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 0/3] add ADD_ADDR IPv6 support
+Date: Fri, 23 Oct 2020 20:02:54 +0200
+Message-ID: <30981261-116c-33aa-372d-44adfa98e993@tessares.net>
+In-Reply-To: cover.1603264085.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6425
+X-UID: 6426
 
---===============3901587870140358480==
+--===============3006221061884799562==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat, Geliang,
+Hi Geliang, Paolo,
 
-On 20/10/2020 16:54, Paolo Abeni wrote:
-> This will simplify all operation dealing with subflows
-> before accept time (e.g. data fin processing, add_addr).
+On 21/10/2020 09:19, Geliang Tang wrote:
+> v5:
+>   - drop msleep() in v4
+>   - drop MPTCP_ADD_ADDR_SEND_ACK in v4
+>   - add WRITE_ONCE/READ_ONCE for msk->pm.add_addr_signal
+>   - depend on "mptcp: keep unaccepted MPC subflow into join list"
 > =
 
-> The join list is already flushed by mptcp_stream_accept()
-> before returning the newly created msk to the user space.
+> v4:
+>   - update the patches as Paolo suggested:
+>   - change the 'add_addr_signal' type
+>   - set MPTCP_ADD_ADDR_IPV6 in mptcp_pm_announce_addr
+>   - add a new helper mptcp_send_dedicated_add_addr_packet to sent out a
+> new pure ACK packet
+>   - drop other MPTCP suboptions in mptcp_established_options_add_addr
 > =
 
-> This also fixes an potential bug present into the old code:
-> conn_list was manipulated without helding the msk lock
-> in mptcp_stream_accept().
+> v3:
+>   - drop other MPTCP suboptions instead of OPTION_TS
+> =
 
-Thank you for the patch, review and validation!
+> v2:
+>   - avoid adding new field to tcp_sock, add new field in mptcp_pm_data.
+>   - drop OPTION_TS in mptcp_established_options_add_addr, not in
+> tcp_established_options.
+> =
 
-Just applied:
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/55
 
-- cdf7f6c99e86: mptcp: keep unaccepted MPC subflow into join list
+Thank you for the patches and reviews!
+
+- 93f241dc7682: mptcp: change add_addr_signal type
+- 4769ab732416: mptcp: send out dedicated ADD_ADDR packet
+- 261b6b50e4e0: selftests: mptcp: add ADD_ADDR IPv6 test cases
 - Results: a1e156132206..d13ebf3a735c
 
-With Mat and Geliang's tags.
-
-Tests + export is in progress!
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -48,4 +61,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3901587870140358480==--
+--===============3006221061884799562==--
