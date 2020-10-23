@@ -1,35 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============6608682922862983498=="
+Content-Type: multipart/mixed; boundary="===============6343217660384450787=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] Squash to "selftests: mptcp: add ADD_ADDR timeout
- test case" v2
-Date: Fri, 23 Oct 2020 18:11:43 +0200
-Message-ID: <8063e473-b63c-fcbb-4825-0df4ca29c90e@tessares.net>
-In-Reply-To: b3ed8ba86d19ab431e4e04b3dd94afbd973d8393.1603262779.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: move page frag
+ allocation in mptcp_sendmsg()"
+Date: Fri, 23 Oct 2020 18:38:50 +0200
+Message-ID: <48ed08d2-718c-443d-e356-7ddda9c0aa98@tessares.net>
+In-Reply-To: 775ff99f80d6aa5ca14e738296bc23b3a2059edd.1603298699.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6421
+X-UID: 6422
 
---===============6608682922862983498==
+--===============6343217660384450787==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+Hi Paolo, Mat,
 
-On 21/10/2020 08:49, Geliang Tang wrote:
-> Added ADD_ADDR IPv6 support for reset_with_add_addr_timeout.
+On 21/10/2020 18:45, Paolo Abeni wrote:
+> better conflict resolution for a recent rebase
 
-Thank you for the patch!
+Thanks for the patch fixing my mistakes and for the review!
 
-- 270e0d80b14b: "squashed" in "selftests: mptcp: add ADD_ADDR timeout =
+- 587ee99bf694: "squashed" in "mptcp: move page frag allocation in =
 
-test case"
-- 6dbcea11474b: conflict in t/selftests-mptcp-add-link-failure-test-case
-- Results: 62d3c2d391fa..66965b9869c7
+mptcp_sendmsg()"
+- Results: 66965b9869c7..a1e156132206
 
-Tests + export are going to be started soon.
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -37,4 +36,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============6608682922862983498==--
+--===============6343217660384450787==--
