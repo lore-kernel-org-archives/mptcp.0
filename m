@@ -1,59 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============3006221061884799562=="
+Content-Type: multipart/mixed; boundary="===============3271696849466581076=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 0/3] add ADD_ADDR IPv6 support
-Date: Fri, 23 Oct 2020 20:02:54 +0200
-Message-ID: <30981261-116c-33aa-372d-44adfa98e993@tessares.net>
-In-Reply-To: cover.1603264085.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v2] selftests: mptcp: add link failure
+ test case
+Date: Sat, 24 Oct 2020 12:05:17 +0200
+Message-ID: <76abec4c-0056-e328-682c-ad135b979613@tessares.net>
+In-Reply-To: 20201009151117.6672-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 6426
+X-UID: 6429
 
---===============3006221061884799562==
+--===============3271696849466581076==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Paolo,
+Hi Florian,
 
-On 21/10/2020 09:19, Geliang Tang wrote:
-> v5:
->   - drop msleep() in v4
->   - drop MPTCP_ADD_ADDR_SEND_ACK in v4
->   - add WRITE_ONCE/READ_ONCE for msk->pm.add_addr_signal
->   - depend on "mptcp: keep unaccepted MPC subflow into join list"
-> =
+On 09/10/2020 17:11, Florian Westphal wrote:
+> Add a test case where a link fails with multiple subflows.
+> The expectation is that MPTCP will transmit any data that
+> could not be delivered via the failed link on another subflow.
 
-> v4:
->   - update the patches as Paolo suggested:
->   - change the 'add_addr_signal' type
->   - set MPTCP_ADD_ADDR_IPV6 in mptcp_pm_announce_addr
->   - add a new helper mptcp_send_dedicated_add_addr_packet to sent out a
-> new pure ACK packet
->   - drop other MPTCP suboptions in mptcp_established_options_add_addr
-> =
+Thank you for these modifications!
 
-> v3:
->   - drop other MPTCP suboptions instead of OPTION_TS
-> =
+(...)
 
-> v2:
->   - avoid adding new field to tcp_sock, add new field in mptcp_pm_data.
->   - drop OPTION_TS in mptcp_established_options_add_addr, not in
-> tcp_established_options.
-> =
+> @@ -279,14 +308,32 @@ run_tests()
+>   	listener_ns=3D"$1"
+>   	connector_ns=3D"$2"
+>   	connect_addr=3D"$3"
+> -	rm_nr_ns1=3D"${4:-0}"
+> -	rm_nr_ns2=3D"${5:-0}"
+> -	speed=3D"${6:-fast}"
+> +	test_linkfail=3D"$4"
+> +	rm_nr_ns1=3D"${5:-0}"
+> +	rm_nr_ns2=3D"${6:-0}"
+> +	speed=3D"${7:-fast}"
+>   	lret=3D0
+> +	oldin=3D""
+> +
+> +	if [ "$test_linkfail" -eq 1 ];then
+> +		size=3D$((RANDOM%1024))
+> +		size=3D$((size+1))
+> +		size=3D$((size*128)) > +
+> +		oldin=3D$(mktemp)
+> +		cp "$cin" "$oldin"
+> +		make_file "$cin" "client" $size
+This will create one file up to 1024*128 KB =3D ~131MB when later using =
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/55
+this command:
 
-Thank you for the patches and reviews!
 
-- 93f241dc7682: mptcp: change add_addr_signal type
-- 4769ab732416: mptcp: send out dedicated ADD_ADDR packet
-- 261b6b50e4e0: selftests: mptcp: add ADD_ADDR IPv6 test cases
-- Results: a1e156132206..d13ebf3a735c
+   dd if=3D/dev/urandom of=3D"$name" bs=3D1024 count=3D$size
 
-Tests + export are in progress!
+
+This file will be duplicated a few times later when doing the transfer:
+
+
+   ( cat "$cin" ; (...) ; cat "$cin" ) | \
+       tee "$cinsent" | \
+       (...) $mptcp_connect (...) > "$cout"
+
+
+If I am not mistaken, we then have:
+
+- $cin =3D max 131MB: initial file
+- $cinsent =3D 2 times $cin
+- $sout =3D $cinsent
+
+=E2=86=92 total: 5*$cin =3D max 655MB
+
+Was it the intension? Could we reduce the maximum size while keeping the =
+
+test valid?
+
+On my side, /tmp is mounted in tmpfs and currently limited to 490M. Just =
+
+to know if I need to increase the size of modify the selftest script :)
 
 Cheers,
 Matt
@@ -61,4 +86,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3006221061884799562==--
+--===============3271696849466581076==--
