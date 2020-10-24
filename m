@@ -1,53 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============3567160319467374347=="
+Content-Type: multipart/mixed; boundary="===============7994254194465883067=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] Squash to "selftests: mptcp: add link
- failure test case"
-Date: Sat, 24 Oct 2020 12:15:52 +0200
-Message-ID: <20201024101552.3707034-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH mptcp-next v2] selftests: mptcp: add link failure
+ test case
+Date: Sat, 24 Oct 2020 14:17:52 +0200
+Message-ID: <20201024121752.GK16895@breakpoint.cc>
+In-Reply-To: 76abec4c-0056-e328-682c-ad135b979613@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6430
+X-UID: 6431
 
---===============3567160319467374347==
+--===============7994254194465883067==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Fix typo in files listed in the cleanup() function: $sin and $sout were
-no longer removed at the end of the test.
+Matthieu Baerts <matthieu.baerts(a)tessares.net> wrote:
+>   ( cat "$cin" ; (...) ; cat "$cin" ) | \
+>       tee "$cinsent" | \
+>       (...) $mptcp_connect (...) > "$cout"
+> =
 
-That's not a big issue, when finishing the script, $sin and $sout weight
-both 1KB.
+> =
 
-Fixes: 36221baa8712 ("selftests: mptcp: add link failure test case")
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+> If I am not mistaken, we then have:
+> =
 
-Notes:
-    to be squashed in "selftests: mptcp: add link failure test case"
+> - $cin =3D max 131MB: initial file
+> - $cinsent =3D 2 times $cin
+> - $sout =3D $cinsent
+> =
 
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> =E2=86=92 total: 5*$cin =3D max 655MB
+> =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 8b28c6cc038d..7ed2d8bdc9c0 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -82,7 +82,7 @@ cleanup_partial()
- cleanup()
- {
- 	rm -f "$cin" "$cout"
--	rm -f "$cin" "$cout" "$cinsent"
-+	rm -f "$sin" "$sout" "$cinsent"
- 	cleanup_partial
- }
- =
+> Was it the intension? Could we reduce the maximum size while keeping the
+> test valid?
 
--- =
+Yes, I think its safe to reduce the size though.
 
-2.27.0
-
---===============3567160319467374347==--
+Another option is to use /dev/zero as source and set the "sparse" flag for =
+dd,
+this would also reduce /tmp usage.
+--===============7994254194465883067==--
