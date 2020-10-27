@@ -1,134 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============3055326583554345525=="
+Content-Type: multipart/mixed; boundary="===============6051371767114218546=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: MPTCP stream performances
-Date: Tue, 27 Oct 2020 20:19:24 +0100
-Message-ID: <20201027191924.GB15770@breakpoint.cc>
-In-Reply-To: 055e191f48d01344d3debca9f6260220c53f05f3.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v3] mptcp: track window announced to
+ peer
+Date: Tue, 27 Oct 2020 21:14:23 +0100
+Message-ID: <2f497c34-351c-f703-e53e-b11ddddefc00@tessares.net>
+In-Reply-To: 20201022212738.24258-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 6449
+X-UID: 6450
 
---===============3055326583554345525==
+--===============6051371767114218546==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> On Mon, 2020-10-26 at 16:46 +0100, Paolo Abeni wrote:
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index 4e02c259134f..2d07d099d038 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -530,6 +530,7 @@ static bool mptcp_established_options_dss(struct so=
-ck *sk, struct sk_buff *skb,
-> >  		opts->ext_copy.ack64 =3D 0;
-> >  	}
-> >  	opts->ext_copy.use_ack =3D 1;
-> > +	WRITE_ONCE(msk->old_wspace, tcp_space((struct sock *)msk));
+Hi Florian, Mat, Paolo,
+
+On 22/10/2020 23:27, Florian Westphal wrote:
+> OoO handling attemtps to detect when packet is out-of-window by testing
+> current ack sequence and remaining space vs. sequence number.
 > =
 
-> here a cmpxchg would be needed to make the above safe, but at worst we
-> will have an additional unneeded call to tcp_cleanp_rbuf(), and the
-> latter will avoid dup acks, so I think it's not tragic.
-
-Agree.
-
-> __mptcp_move_skbs_from_subflow() is invoked by the subflow receive
-> path, via subflow_data_ready()/mptcp_data_ready() and by
-> mptcp_recvmsg(), via __mptcp_move_skbs().
+> This doesn't work reliably.  Store the highest allowed sequence number
+> that we've announced and use it to detect oow packets.
 > =
 
-> In the first case we don't need to send additional acks, the TCP stack
-> will do that for us in tcp_rcv_established() via tcp_ack_snd_check()
-> just after updating the msk->ack_seq. =
+> Do this when mptcp options get written to the packet (wire format).
+> For this to work we need to move the write_options call until after stack
+> selected a new tcp window.
 
-> To cover the second case, is better moving the ack hook elsewhere, see
-> below.
+Thank you for the patch and reviews!
 
-[..]
+- 99873062750d: mptcp: track window announced to peer
+   - I added Mat's Reviewed-by and Paolo's Acked-by tags, please tell me =
 
-> > -
-> > +	*bytes =3D moved;
-> >  	return done;
-> >  }
-> >  =
+if you prefer when I don't add those if they are not explicit. It is =
 
-> > @@ -1526,7 +1526,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_s=
-ock *msk, int copied)
-> >  =
+just to avoid multiple messages on the netdev ML.
+   - (I fixed a small typo with 'attempts' in the commit message and =
 
-> >  static bool __mptcp_move_skbs(struct mptcp_sock *msk)
-> >  {
-> > -	unsigned int moved =3D 0;
-> > +	unsigned int moved_total =3D 0;
-> >  	bool done;
-> >  =
+reported by codespell)
+- Results: 9bceebfe0a58..c041aa4e115c
 
-> >  	/* avoid looping forever below on racing close */
-> > @@ -1536,6 +1536,7 @@ static bool __mptcp_move_skbs(struct mptcp_sock *=
-msk)
-> >  	__mptcp_flush_join_list(msk);
-> >  	do {
-> >  		struct sock *ssk =3D mptcp_subflow_recv_lookup(msk);
-> > +		unsigned int moved;
-> >  		bool slowpath;
-> >  =
+Tests + export are in progress!
 
-> >  		if (!ssk)
-> > @@ -1543,12 +1544,14 @@ static bool __mptcp_move_skbs(struct mptcp_sock=
- *msk)
-> >  =
+Cheers,
+Matt
+-- =
 
-> >  		slowpath =3D lock_sock_fast(ssk);
-> >  		done =3D __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
-> > +		if (moved)
-> > +			tcp_send_ack(ssk);
-> =
-
-> This may generare an high volume of TCP dup acks, but calling
-> tcp_cleanup_rbuf() here is not enough, because the packets are still
-> accounted in the msk receive buffer, the msk receive windows is not
-> changed with the above call, so neither the subflow receive window.
-> tcp_cleanup_rbuf() will likely _not_ generate a new ack when needed.
-
-Hmm, right.
-
-> Even replacing tcp_send_ack() with __tcp_ack_snd_check() will not
-> improve much: since the rcv window is not changed, and the relevant
-> segment has been already acked at the TCP level, such call will either
-> generate a dup ack or no ack at all. Additionally __tcp_ack_snd_check()
-> is currently static.
-> =
-
-> All the above makes me thing that trying to remove the workqueue for
-> the receive path could be a better solution: if incoming pkts are
-> always moved into the msk receive queue by subflow_data_ready(), the
-> ACK packet generated by the TCP stack will be enough to cover all the
-> above, without any need for dup acks.
-
-Agree, we will need to either remove or largely avoid mptcp-level
-ack_seq advancement, waiting for the work queue to schedule makes the
-mptcp-level ack updates too bursty, we should try to send those updates
-more smoothly.
-
-> With a caveat: currently we leave some packet in the subflow receive
-> queue while the msk receive queue is full. Possibly keeping the
-> incoming skb always accounted into the ingress ssk would avoid that
-> case - currently we move the accounting from ssk to msk
-> in __mptcp_move_skbs_from_subflow(). Handling the skb freing at receive
-> time and subflow tear down will not be trivial.
-
-Problem is that we rely on the mptcp-socket accountign as well for the
-receive window.
-
-I guess you should try to make this patch less hack-ish, probably by
-completely avoiding __mptcp_move_skbs() change, and then try to change
-the rx path to place skbs into the msk queue directly.
-
-What about a 'pre queue' with dedicated lock and then have recv() or
-worker splice that to the msk rx queue?
-
-This would be similar to what UDP is doing.
---===============3055326583554345525==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============6051371767114218546==--
