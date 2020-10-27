@@ -1,39 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============7780758801663632997=="
+Content-Type: multipart/mixed; boundary="===============1799375569186894551=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Philip Li <philip.li at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: add missing memory scheduling in the
- rx path
-Date: Tue, 27 Oct 2020 15:46:11 -0700
-Message-ID: <d7886714-7b92-9be8-441e-73c48c52d62@linux.intel.com>
-In-Reply-To: f6143a6193a083574f11b00dbf7b5ad151bc4ff4.1603810630.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [selftests] f2ff7f11f9: WARNING:suspicious_RCU_usage
+Date: Wed, 28 Oct 2020 07:00:39 +0800
+Message-ID: <20201027230039.GA25647@intel.com>
+In-Reply-To: c971b9f8-fd4a-292f-a7d8-8f6ef43c347e@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6452
+X-UID: 6453
 
---===============7780758801663632997==
+--===============1799375569186894551==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 27 Oct 2020, Paolo Abeni wrote:
+On Tue, Oct 27, 2020 at 04:07:28PM +0100, Matthieu Baerts wrote:
+> Hi all,
+> =
 
-> When moving the skbs from the subflow into the msk receive
-> queue, we must schedule there the required amount of memory.
->
-> Try to borrow the required memory from the subflow, if needed,
-> so that we leverage the existing TCP heuristic.
->
-> Fixes: 6771bfd9ee24 ("mptcp: update mptcp ack sequence from work queue")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/protocol.c | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
->
+> On 27/10/2020 14:16, kernel test robot wrote:
+> > Greeting,
+> > =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> > FYI, we noticed the following commit (built with gcc-9):
+> > =
 
---
-Mat Martineau
-Intel
---===============7780758801663632997==--
+> > commit: f2ff7f11f9a74842245db52d685bf9bc7ac2c4b1 ("selftests: mptcp: ad=
+d ADD_ADDR IPv6 test cases")
+> > https://github.com/multipath-tcp/mptcp_net-next.git export
+> =
+
+> Thanks for the maintainer of the kernel test robot at Intel for this bug
+> report!
+thanks, you are welcome!
+
+> =
+
+> FYI, this was already reported earlier:
+> =
+
+>   https://github.com/multipath-tcp/mptcp_net-next/issues/102
+Thanks for the info, we didn't notice this. We will take a look
+of reported issues in future to avoid duplicated report.
+
+> =
+
+> And Geliang is working on a fix (a v2 is available).
+> =
+
+> Cheers,
+> Matt
+> -- =
+
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+--===============1799375569186894551==--
