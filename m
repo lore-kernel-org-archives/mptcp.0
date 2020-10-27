@@ -1,65 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============6794956441154848175=="
+Content-Type: multipart/mixed; boundary="===============3025247727773327284=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: add missing memory scheduling in the rx
- path
-Date: Tue, 27 Oct 2020 15:59:14 +0100
-Message-ID: <f6143a6193a083574f11b00dbf7b5ad151bc4ff4.1603810630.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [selftests] f2ff7f11f9: WARNING:suspicious_RCU_usage
+Date: Tue, 27 Oct 2020 16:07:28 +0100
+Message-ID: <c971b9f8-fd4a-292f-a7d8-8f6ef43c347e@tessares.net>
+In-Reply-To: 20201027131624.GO31092@shao2-debian
 X-Status: 
 X-Keywords:                  
-X-UID: 6444
+X-UID: 6445
 
---===============6794956441154848175==
+--===============3025247727773327284==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When moving the skbs from the subflow into the msk receive
-queue, we must schedule there the required amount of memory.
+Hi all,
 
-Try to borrow the required memory from the subflow, if needed,
-so that we leverage the existing TCP heuristic.
+On 27/10/2020 14:16, kernel test robot wrote:
+> Greeting,
+> =
 
-Fixes: 6771bfd9ee24 ("mptcp: update mptcp ack sequence from work queue")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> FYI, we noticed the following commit (built with gcc-9):
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 185dacb39781..e7419fd15d84 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -274,6 +274,15 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, s=
-truct sock *ssk,
- 	skb_ext_reset(skb);
- 	skb_orphan(skb);
- =
+> commit: f2ff7f11f9a74842245db52d685bf9bc7ac2c4b1 ("selftests: mptcp: add =
+ADD_ADDR IPv6 test cases")
+> https://github.com/multipath-tcp/mptcp_net-next.git export
 
-+	/* try to fetch required memory from subflow */
-+	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
-+		if (ssk->sk_forward_alloc < skb->truesize)
-+			goto drop;
-+		__sk_mem_reclaim(ssk, skb->truesize);
-+		if (!sk_rmem_schedule(sk, skb, skb->truesize))
-+			goto drop;
-+	}
-+
- 	/* the skb map_seq accounts for the skb offset:
- 	 * mptcp_subflow_get_mapped_dsn() is based on the current tp->copied_seq
- 	 * value
-@@ -301,6 +310,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, st=
-ruct sock *ssk,
- 	 * will retransmit as needed, if needed.
- 	 */
- 	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_DUPDATA);
-+drop:
- 	mptcp_drop(sk, skb);
- 	return false;
- }
+Thanks for the maintainer of the kernel test robot at Intel for this bug =
+
+report!
+
+FYI, this was already reported earlier:
+
+   https://github.com/multipath-tcp/mptcp_net-next/issues/102
+
+And Geliang is working on a fix (a v2 is available).
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============6794956441154848175==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============3025247727773327284==--
