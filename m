@@ -1,64 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============8940019522057457906=="
+Content-Type: multipart/mixed; boundary="===============3020887659029888891=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next] mptcp: add
- mptcp_pm_should_add_signal_echo helper
-Date: Thu, 29 Oct 2020 11:52:03 +0800
-Message-ID: <9b71955a98bb1d28d8c5603d007a6a22aa584082.1603943436.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 0/8] ADD_ADDR: ports support
+Date: Thu, 29 Oct 2020 14:39:20 +0800
+Message-ID: <cover.1603952836.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6462
+X-UID: 6463
 
---===============8940019522057457906==
+--===============3020887659029888891==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new helper mptcp_pm_should_add_signal_echo.
+This series is the first version of ADD_ADDR ports support. I have solved
+the listener problem which I mentioned at the meeting on 15th of October
+by adding a new listening socket from the userspace (see patch 8). Up to
+now this patchset works well.
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/pm.c       | 2 +-
- net/mptcp/protocol.h | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+TODO:
+I added 2 octets padding in ADD_ADDR port suboption for alignment. (see
+patch 1). We need to drop this padding.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 83f59a428560..75c5040e8d5d 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -198,7 +198,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
- 	if (!mptcp_pm_should_add_signal(msk))
- 		goto out_unlock;
- =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
 
--	*echo =3D READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
-+	*echo =3D mptcp_pm_should_add_signal_echo(msk);
- =
+Geliang Tang (8):
+  mptcp: add ADD_ADDR port support for writing options
+  mptcp: add the outgoing ADD_ADDR port support
+  mptcp: send out ack for ADD_ADDR with port
+  mptcp: add port argument for mptcp_pm_announce_addr
+  mptcp: add the incoming ADD_ADDR port support
+  mptcp: add ADD_ADDR port support for netlink
+  selftests: mptcp: add ADD_ADDR port support for pm_nl_ctl
+  selftests: mptcp: add testcases for ADD_ADDR with port
 
- 	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
- 		goto out_unlock;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7a5c16f176c0..d29c6a4749eb 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -529,6 +529,11 @@ static inline bool mptcp_pm_should_add_signal(struct m=
-ptcp_sock *msk)
- 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
- }
- =
+ include/net/mptcp.h                           |  1 +
+ net/mptcp/options.c                           | 80 +++++++++++++++----
+ net/mptcp/pm.c                                | 14 ++--
+ net/mptcp/pm_netlink.c                        | 28 +++++--
+ net/mptcp/protocol.h                          | 31 ++++---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 18 +++++
+ 7 files changed, 162 insertions(+), 36 deletions(-)
 
-+static inline bool mptcp_pm_should_add_signal_echo(struct mptcp_sock *msk)
-+{
-+	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
-+}
-+
- static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *msk)
- {
- 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
 -- =
 
 2.26.2
 
---===============8940019522057457906==--
+--===============3020887659029888891==--
