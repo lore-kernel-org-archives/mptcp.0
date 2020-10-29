@@ -1,37 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============2614940027824076204=="
+Content-Type: multipart/mixed; boundary="===============8940019522057457906=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [selftests] f2ff7f11f9: WARNING:suspicious_RCU_usage
-Date: Wed, 28 Oct 2020 20:08:41 +0100
-Message-ID: <063c2289-1779-1c33-33f1-cfc186e9d9e1@tessares.net>
-In-Reply-To: 20201027230039.GA25647@intel.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next] mptcp: add
+ mptcp_pm_should_add_signal_echo helper
+Date: Thu, 29 Oct 2020 11:52:03 +0800
+Message-ID: <9b71955a98bb1d28d8c5603d007a6a22aa584082.1603943436.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6461
+X-UID: 6462
 
---===============2614940027824076204==
+--===============8940019522057457906==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Philip,
+This patch added a new helper mptcp_pm_should_add_signal_echo.
 
-On 28/10/2020 00:00, Philip Li wrote:
-> On Tue, Oct 27, 2020 at 04:07:28PM +0100, Matthieu Baerts wrote:
->> FYI, this was already reported earlier:
->>
->>    https://github.com/multipath-tcp/mptcp_net-next/issues/102
-> Thanks for the info, we didn't notice this. We will take a look
-> of reported issues in future to avoid duplicated report.
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/pm.c       | 2 +-
+ net/mptcp/protocol.h | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Thanks but I also hope we would not have a lot of other similar issues :)
-In this case, duplicated report is not a big deal!
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 83f59a428560..75c5040e8d5d 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -198,7 +198,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
+nsigned int remaining,
+ 	if (!mptcp_pm_should_add_signal(msk))
+ 		goto out_unlock;
+ =
 
-Cheers,
-Matt
+-	*echo =3D READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
++	*echo =3D mptcp_pm_should_add_signal_echo(msk);
+ =
+
+ 	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
+ 		goto out_unlock;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 7a5c16f176c0..d29c6a4749eb 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -529,6 +529,11 @@ static inline bool mptcp_pm_should_add_signal(struct m=
+ptcp_sock *msk)
+ 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
+ }
+ =
+
++static inline bool mptcp_pm_should_add_signal_echo(struct mptcp_sock *msk)
++{
++	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
++}
++
+ static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *msk)
+ {
+ 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2614940027824076204==--
+2.26.2
+
+--===============8940019522057457906==--
