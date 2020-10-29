@@ -1,139 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============5770020603852785560=="
+Content-Type: multipart/mixed; boundary="===============1264935236632744279=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 4/8] mptcp: add port argument for
- mptcp_pm_announce_addr
-Date: Thu, 29 Oct 2020 14:39:24 +0800
-Message-ID: <443a19151dd71160ce92b6ab3dbc6a62e4cdddd8.1603952836.git.geliangtang@gmail.com>
-In-Reply-To: 17fe96fa273fe2ed8d0d0f76b37187bbe8f0c99e.1603952836.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 5/8] mptcp: add the incoming
+ ADD_ADDR port support
+Date: Thu, 29 Oct 2020 14:39:25 +0800
+Message-ID: <b179cd8cddc1deb12561370d1fda19ad885b048d.1603952836.git.geliangtang@gmail.com>
+In-Reply-To: 443a19151dd71160ce92b6ab3dbc6a62e4cdddd8.1603952836.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6467
+X-UID: 6468
 
---===============5770020603852785560==
+--===============1264935236632744279==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new argument 'port' for mptcp_pm_announce_addr. If
-this argument is true, we set the MPTCP_ADD_ADDR_PORT bit.
+The port field in mptcp_options_received should be big-endian, since we
+use the following assignment statement in mptcp_parse_option:
+
+  mp_opt->port =3D get_unaligned_be16(ptr);
+
+And the addr.port is also big-endian, so we need to drop htons in
+mptcp_incoming_options.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm.c         | 6 ++++--
- net/mptcp/pm_netlink.c | 9 ++++++---
- net/mptcp/protocol.h   | 2 +-
- 3 files changed, 11 insertions(+), 6 deletions(-)
+ net/mptcp/options.c  | 3 ++-
+ net/mptcp/protocol.h | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 0c456747893e..e63e14f4cf2a 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -14,7 +14,7 @@
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index f983deb534ae..87998edcce4e 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -269,6 +269,7 @@ static void mptcp_parse_option(const struct sk_buff *sk=
+b,
+ 			mp_opt->ahmac =3D get_unaligned_be64(ptr);
+ 			ptr +=3D 8;
+ 		}
++		pr_debug("port=3D%d, ahmac=3D%llu", ntohs(mp_opt->port), mp_opt->ahmac);
+ 		break;
  =
 
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
--			   bool echo)
-+			   bool echo, bool port)
- {
- 	u8 add_addr =3D READ_ONCE(msk->pm.add_addr_signal);
+ 	case MPTCPOPT_RM_ADDR:
+@@ -936,7 +937,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb)
+ 	if (mp_opt.add_addr && add_addr_hmac_valid(msk, &mp_opt)) {
+ 		struct mptcp_addr_info addr;
  =
 
-@@ -26,6 +26,8 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 		add_addr |=3D BIT(MPTCP_ADD_ADDR_ECHO);
- 	if (addr->family =3D=3D AF_INET6)
- 		add_addr |=3D BIT(MPTCP_ADD_ADDR_IPV6);
-+	if (port)
-+		add_addr |=3D BIT(MPTCP_ADD_ADDR_PORT);
- 	WRITE_ONCE(msk->pm.add_addr_signal, add_addr);
- 	return 0;
- }
-@@ -156,7 +158,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 	spin_lock_bh(&pm->lock);
- =
-
- 	if (!READ_ONCE(pm->accept_addr)) {
--		mptcp_pm_announce_addr(msk, addr, true);
-+		mptcp_pm_announce_addr(msk, addr, true, addr->port);
- 		mptcp_pm_add_addr_send_ack(msk);
- 	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
- 		pm->remote =3D *addr;
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 72d150e45067..ab0e68426c9e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -228,7 +228,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- =
-
- 	if (!mptcp_pm_should_add_signal(msk)) {
- 		pr_debug("retransmit ADD_ADDR id=3D%d", entry->addr.id);
--		mptcp_pm_announce_addr(msk, &entry->addr, false);
-+		mptcp_pm_announce_addr(msk, &entry->addr, false, entry->addr.port);
- 		mptcp_pm_add_addr_send_ack(msk);
- 		entry->retrans_times++;
- 	}
-@@ -329,7 +329,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 		if (local) {
- 			if (mptcp_pm_alloc_anno_list(msk, local)) {
- 				msk->pm.add_addr_signaled++;
--				mptcp_pm_announce_addr(msk, &local->addr, false);
-+				mptcp_pm_announce_addr(msk, &local->addr, false, local->addr.port);
- 				mptcp_pm_nl_add_addr_send_ack(msk);
- 			}
- 		} else {
-@@ -377,6 +377,7 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
-sk)
- 	struct sock *sk =3D (struct sock *)msk;
- 	struct mptcp_addr_info remote;
- 	struct mptcp_addr_info local;
-+	bool use_port =3D false;
- =
-
- 	pr_debug("accepted %d:%d remote family %d",
- 		 msk->pm.add_addr_accepted, msk->pm.add_addr_accept_max,
-@@ -393,6 +394,8 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
-sk)
- 	remote =3D msk->pm.remote;
- 	if (!remote.port)
- 		remote.port =3D sk->sk_dport;
-+	else
-+		use_port =3D true;
- 	memset(&local, 0, sizeof(local));
- 	local.family =3D remote.family;
- =
-
-@@ -400,7 +403,7 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
-sk)
- 	__mptcp_subflow_connect((struct sock *)msk, &local, &remote);
- 	spin_lock_bh(&msk->pm.lock);
- =
-
--	mptcp_pm_announce_addr(msk, &remote, true);
-+	mptcp_pm_announce_addr(msk, &remote, true, use_port);
- 	mptcp_pm_nl_add_addr_send_ack(msk);
- }
- =
-
+-		addr.port =3D htons(mp_opt.port);
++		addr.port =3D mp_opt.port;
+ 		addr.id =3D mp_opt.addr_id;
+ 		if (mp_opt.family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+ 			addr.family =3D AF_INET;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2a5db34f63bf..f2cf09afd542 100644
+index f2cf09afd542..4c3350ed8d92 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -521,7 +521,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+@@ -136,7 +136,7 @@ struct mptcp_options_received {
+ #endif
+ 	};
+ 	u64	ahmac;
+-	u16	port;
++	__be16	port;
+ };
  =
 
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
--			   bool echo);
-+			   bool echo, bool port);
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id);
- =
-
+ static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
 -- =
 
 2.26.2
 
---===============5770020603852785560==--
+--===============1264935236632744279==--
