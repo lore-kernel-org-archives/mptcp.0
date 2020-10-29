@@ -1,180 +1,109 @@
-Content-Type: multipart/mixed; boundary="===============8482272708254829329=="
+Content-Type: multipart/mixed; boundary="===============5212258372019280036=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 2/8] mptcp: add the outgoing
- ADD_ADDR port support
-Date: Thu, 29 Oct 2020 14:39:22 +0800
-Message-ID: <28c900686b7ce170435daec8d9cd71527636a8af.1603952836.git.geliangtang@gmail.com>
-In-Reply-To: cf1bf5352d467144523d8b06b5d0cbb95b90407d.1603952836.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 3/8] mptcp: send out ack for
+ ADD_ADDR with port
+Date: Thu, 29 Oct 2020 14:39:23 +0800
+Message-ID: <17fe96fa273fe2ed8d0d0f76b37187bbe8f0c99e.1603952836.git.geliangtang@gmail.com>
+In-Reply-To: 28c900686b7ce170435daec8d9cd71527636a8af.1603952836.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6465
+X-UID: 6466
 
---===============8482272708254829329==
+--===============5212258372019280036==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new add_addr_signal type named MPTCP_ADD_ADDR_PORT,
-to identify this is an address with port.
-
-It also added a new argument 'port' for both mptcp_add_addr_len and
-mptcp_pm_add_addr_signal.
+Like ADD_ADDR IPv6, this patch also sent out a pure ack for ADD_ADDR
+with port.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/options.c  | 10 +++++++---
- net/mptcp/pm.c       |  5 +++--
- net/mptcp/protocol.h | 17 +++++++++++++++--
- 3 files changed, 25 insertions(+), 7 deletions(-)
+ net/mptcp/options.c    |  3 ++-
+ net/mptcp/pm.c         |  3 ++-
+ net/mptcp/pm_netlink.c | 14 +++++++++++---
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 7c928286c0da..24117c45f4e1 100644
+index 24117c45f4e1..f983deb534ae 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -586,6 +586,7 @@ static bool mptcp_established_options_add_addr(struct s=
+@@ -589,7 +589,8 @@ static bool mptcp_established_options_add_addr(struct s=
 ock *sk, struct sk_buff *
- 	unsigned int opt_size =3D *size;
- 	struct mptcp_addr_info saddr;
- 	bool echo;
-+	bool port;
+ 	bool port;
  	int len;
  =
 
- 	if (mptcp_pm_should_add_signal_ipv6(msk) &&
-@@ -597,10 +598,10 @@ static bool mptcp_established_options_add_addr(struct=
- sock *sk, struct sk_buff *
- 	}
- =
-
- 	if (!mptcp_pm_should_add_signal(msk) ||
--	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
-+	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo, &port)))
- 		return false;
- =
-
--	len =3D mptcp_add_addr_len(saddr.family, echo);
-+	len =3D mptcp_add_addr_len(saddr.family, echo, port);
- 	if (remaining < len)
- 		return false;
- =
-
-@@ -608,6 +609,8 @@ static bool mptcp_established_options_add_addr(struct s=
-ock *sk, struct sk_buff *
- 	if (drop_other_suboptions)
- 		*size -=3D opt_size;
- 	opts->addr_id =3D saddr.id;
-+	if (port)
-+		opts->port =3D saddr.port;
- 	if (saddr.family =3D=3D AF_INET) {
- 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
- 		opts->addr =3D saddr.addr;
-@@ -630,7 +633,8 @@ static bool mptcp_established_options_add_addr(struct s=
-ock *sk, struct sk_buff *
- 		}
- 	}
- #endif
--	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->ah=
-mac, echo);
-+	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d",
-+		 opts->addr_id, opts->ahmac, echo, ntohs(opts->port));
- =
-
- 	return true;
- }
+-	if (mptcp_pm_should_add_signal_ipv6(msk) &&
++	if ((mptcp_pm_should_add_signal_ipv6(msk) ||
++	     mptcp_pm_should_add_signal_port(msk)) &&
+ 	    skb && skb_is_tcp_pure_ack(skb)) {
+ 		pr_debug("drop other suboptions");
+ 		opts->suboptions =3D 0;
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 75c5040e8d5d..6d4be02681fa 100644
+index 6d4be02681fa..0c456747893e 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -188,7 +188,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, =
-u8 rm_id)
- /* path manager helpers */
+@@ -167,7 +167,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
  =
 
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
--			      struct mptcp_addr_info *saddr, bool *echo)
-+			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
+ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
  {
- 	int ret =3D false;
+-	if (!mptcp_pm_should_add_signal_ipv6(msk))
++	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
++	    !mptcp_pm_should_add_signal_port(msk))
+ 		return;
  =
 
-@@ -199,8 +199,9 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
- 		goto out_unlock;
+ 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 6180a8b39a3f..72d150e45067 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -408,7 +408,8 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *m=
+sk)
+ {
+ 	struct mptcp_subflow_context *subflow;
  =
 
- 	*echo =3D mptcp_pm_should_add_signal_echo(msk);
-+	*port =3D mptcp_pm_should_add_signal_port(msk);
+-	if (!mptcp_pm_should_add_signal_ipv6(msk))
++	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
++	    !mptcp_pm_should_add_signal_port(msk))
+ 		return;
  =
 
--	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
-+	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo, *port))
- 		goto out_unlock;
+ 	__mptcp_flush_join_list(msk);
+@@ -418,14 +419,21 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock =
+*msk)
+ 		u8 add_addr;
  =
 
- 	*saddr =3D msk->pm.local;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f303c46bcc29..2a5db34f63bf 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -171,6 +171,7 @@ enum mptcp_add_addr_status {
- 	MPTCP_ADD_ADDR_SIGNAL,
- 	MPTCP_ADD_ADDR_ECHO,
- 	MPTCP_ADD_ADDR_IPV6,
-+	MPTCP_ADD_ADDR_PORT,
- };
- =
-
- struct mptcp_pm_data {
-@@ -539,13 +540,25 @@ static inline bool mptcp_pm_should_add_signal_ipv6(st=
-ruct mptcp_sock *msk)
- 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
- }
- =
-
-+static inline bool mptcp_pm_should_add_signal_port(struct mptcp_sock *msk)
-+{
-+	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_PORT);
-+}
+ 		spin_unlock_bh(&msk->pm.lock);
+-		pr_debug("send ack for add_addr6");
++		if (mptcp_pm_should_add_signal_ipv6(msk))
++			pr_debug("send ack for add_addr6");
++		if (mptcp_pm_should_add_signal_port(msk))
++			pr_debug("send ack for add_addr_port");
 +
- static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
- {
- 	return READ_ONCE(msk->pm.rm_addr_signal);
- }
+ 		lock_sock(ssk);
+ 		tcp_send_ack(ssk);
+ 		release_sock(ssk);
+ 		spin_lock_bh(&msk->pm.lock);
  =
 
--static inline unsigned int mptcp_add_addr_len(int family, bool echo)
-+static inline unsigned int mptcp_add_addr_len(int family, bool echo, bool =
-port)
- {
-+	if (port) {
-+		if (family =3D=3D AF_INET)
-+			return echo ? TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT
-+				    : TCPOLEN_MPTCP_ADD_ADDR_PORT;
-+		return echo ? TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT : TCPOLEN_MPTCP_ADD_ADDR=
-6_PORT;
-+	}
-+
- 	if (family =3D=3D AF_INET)
- 		return echo ? TCPOLEN_MPTCP_ADD_ADDR_BASE
- 			    : TCPOLEN_MPTCP_ADD_ADDR;
-@@ -553,7 +566,7 @@ static inline unsigned int mptcp_add_addr_len(int famil=
-y, bool echo)
+ 		add_addr =3D READ_ONCE(msk->pm.add_addr_signal);
+-		add_addr &=3D ~BIT(MPTCP_ADD_ADDR_IPV6);
++		if (mptcp_pm_should_add_signal_ipv6(msk))
++			add_addr &=3D ~BIT(MPTCP_ADD_ADDR_IPV6);
++		if (mptcp_pm_should_add_signal_port(msk))
++			add_addr &=3D ~BIT(MPTCP_ADD_ADDR_PORT);
+ 		WRITE_ONCE(msk->pm.add_addr_signal, add_addr);
+ 	}
  }
- =
-
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
--			      struct mptcp_addr_info *saddr, bool *echo);
-+			      struct mptcp_addr_info *saddr, bool *echo, bool *port);
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
-g,
- 			     u8 *rm_id);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
 -- =
 
 2.26.2
 
---===============8482272708254829329==--
+--===============5212258372019280036==--
