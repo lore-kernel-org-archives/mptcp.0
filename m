@@ -1,263 +1,194 @@
-Content-Type: multipart/mixed; boundary="===============8557009689450692153=="
+Content-Type: multipart/mixed; boundary="===============5664177227321216419=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 6/6] selftests: mptcp: add ADD_ADDR timeout
- test case
-Date: Fri, 30 Oct 2020 15:45:06 -0700
-Message-ID: <20201030224506.108377-7-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20201030224506.108377-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 2/8] mptcp: add the outgoing
+ ADD_ADDR port support
+Date: Fri, 30 Oct 2020 16:55:02 -0700
+Message-ID: <c2eb1c84-24cc-2c66-ae2f-0e4862fcb46@linux.intel.com>
+In-Reply-To: 28c900686b7ce170435daec8d9cd71527636a8af.1603952836.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6497
+X-UID: 6498
 
---===============8557009689450692153==
+--===============5664177227321216419==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
+On Thu, 29 Oct 2020, Geliang Tang wrote:
 
-This patch added the test case for retransmitting ADD_ADDR when timeout
-occurs. It set NS1's add_addr_timeout to 1 second, and drop NS2's ADD_ADDR
-echo packets.
+> This patch added a new add_addr_signal type named MPTCP_ADD_ADDR_PORT,
+> to identify this is an address with port.
+>
+> It also added a new argument 'port' for both mptcp_add_addr_len and
+> mptcp_pm_add_addr_signal.
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/options.c  | 10 +++++++---
+> net/mptcp/pm.c       |  5 +++--
+> net/mptcp/protocol.h | 17 +++++++++++++++--
+> 3 files changed, 25 insertions(+), 7 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 7c928286c0da..24117c45f4e1 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -586,6 +586,7 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk, struct sk_buff *
+> 	unsigned int opt_size =3D *size;
+> 	struct mptcp_addr_info saddr;
+> 	bool echo;
+> +	bool port;
+> 	int len;
+>
+> 	if (mptcp_pm_should_add_signal_ipv6(msk) &&
+> @@ -597,10 +598,10 @@ static bool mptcp_established_options_add_addr(stru=
+ct sock *sk, struct sk_buff *
+> 	}
+>
+> 	if (!mptcp_pm_should_add_signal(msk) ||
+> -	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
+> +	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo, &port)))
+> 		return false;
+>
+> -	len =3D mptcp_add_addr_len(saddr.family, echo);
+> +	len =3D mptcp_add_addr_len(saddr.family, echo, port);
+> 	if (remaining < len)
+> 		return false;
+>
+> @@ -608,6 +609,8 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk, struct sk_buff *
+> 	if (drop_other_suboptions)
+> 		*size -=3D opt_size;
+> 	opts->addr_id =3D saddr.id;
+> +	if (port)
+> +		opts->port =3D saddr.port;
+> 	if (saddr.family =3D=3D AF_INET) {
+> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+> 		opts->addr =3D saddr.addr;
+> @@ -630,7 +633,8 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk, struct sk_buff *
+> 		}
+> 	}
+> #endif
+> -	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->=
+ahmac, echo);
+> +	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d",
+> +		 opts->addr_id, opts->ahmac, echo, ntohs(opts->port));
 
-Here we need to slow down the transfer process of all data to let the
-ADD_ADDR suboptions can be retransmitted three times. So we added a new
-parameter "speed" for do_transfer, it can be set with fast or slow.
+Remove ntohs() if opts->port converted to u16.
 
-We also added three new optional parameters for run_tests, and dropped
-run_remove_tests function.
+>
+> 	return true;
+> }
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 75c5040e8d5d..6d4be02681fa 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -188,7 +188,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk=
+, u8 rm_id)
+> /* path manager helpers */
+>
+> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remain=
+ing,
+> -			      struct mptcp_addr_info *saddr, bool *echo)
+> +			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
+> {
+> 	int ret =3D false;
+>
+> @@ -199,8 +199,9 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
+ unsigned int remaining,
+> 		goto out_unlock;
+>
+> 	*echo =3D mptcp_pm_should_add_signal_echo(msk);
+> +	*port =3D mptcp_pm_should_add_signal_port(msk);
+>
+> -	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
+> +	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo, *port))
+> 		goto out_unlock;
+>
+> 	*saddr =3D msk->pm.local;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index f303c46bcc29..2a5db34f63bf 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -171,6 +171,7 @@ enum mptcp_add_addr_status {
+> 	MPTCP_ADD_ADDR_SIGNAL,
+> 	MPTCP_ADD_ADDR_ECHO,
+> 	MPTCP_ADD_ADDR_IPV6,
+> +	MPTCP_ADD_ADDR_PORT,
+> };
+>
+> struct mptcp_pm_data {
+> @@ -539,13 +540,25 @@ static inline bool mptcp_pm_should_add_signal_ipv6(=
+struct mptcp_sock *msk)
+> 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
+> }
+>
+> +static inline bool mptcp_pm_should_add_signal_port(struct mptcp_sock *ms=
+k)
+> +{
+> +	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_PORT);
+> +}
+> +
+> static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+> {
+> 	return READ_ONCE(msk->pm.rm_addr_signal);
+> }
+>
+> -static inline unsigned int mptcp_add_addr_len(int family, bool echo)
+> +static inline unsigned int mptcp_add_addr_len(int family, bool echo, boo=
+l port)
+> {
+> +	if (port) {
+> +		if (family =3D=3D AF_INET)
+> +			return echo ? TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT
+> +				    : TCPOLEN_MPTCP_ADD_ADDR_PORT;
+> +		return echo ? TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT : TCPOLEN_MPTCP_ADD_AD=
+DR6_PORT;
+> +	}
+> +
+> 	if (family =3D=3D AF_INET)
+> 		return echo ? TCPOLEN_MPTCP_ADD_ADDR_BASE
+> 			    : TCPOLEN_MPTCP_ADD_ADDR;
 
-Since we added the netfilter rules in this test case, we need to update
-the "config" file.
+This helper function is getting kind of complicated for what it does. Can =
 
-Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- tools/testing/selftests/net/mptcp/config      | 10 ++
- .../testing/selftests/net/mptcp/mptcp_join.sh | 94 ++++++++++++++-----
- 2 files changed, 80 insertions(+), 24 deletions(-)
+you convert it to add up the correct size rather than returning one of the =
 
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selft=
-ests/net/mptcp/config
-index 741a1c4f4ae8..0faaccd21447 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -5,3 +5,13 @@ CONFIG_INET_DIAG=3Dm
- CONFIG_INET_MPTCP_DIAG=3Dm
- CONFIG_VETH=3Dy
- CONFIG_NET_SCH_NETEM=3Dm
-+CONFIG_NETFILTER=3Dy
-+CONFIG_NETFILTER_ADVANCED=3Dy
-+CONFIG_NETFILTER_NETLINK=3Dm
-+CONFIG_NF_TABLES=3Dm
-+CONFIG_NFT_COUNTER=3Dm
-+CONFIG_NFT_COMPAT=3Dm
-+CONFIG_NETFILTER_XTABLES=3Dm
-+CONFIG_NETFILTER_XT_MATCH_BPF=3Dm
-+CONFIG_NF_TABLES_IPV4=3Dy
-+CONFIG_NF_TABLES_IPV6=3Dy
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 08f53d86dedc..0d93b243695f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -13,6 +13,24 @@ capture=3D0
- =
+eight constants?
 
- TEST_COUNT=3D0
- =
+Like:
 
-+# generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) =3D=3D 0x30) ||
-+#				  (ip6 && (ip6[74] & 0xf0) =3D=3D 0x30)'"
-+CBPF_MPTCP_SUBOPTION_ADD_ADDR=3D"14,
-+			       48 0 0 0,
-+			       84 0 0 240,
-+			       21 0 3 64,
-+			       48 0 0 54,
-+			       84 0 0 240,
-+			       21 6 7 48,
-+			       48 0 0 0,
-+			       84 0 0 240,
-+			       21 0 4 96,
-+			       48 0 0 74,
-+			       84 0 0 240,
-+			       21 0 1 48,
-+			       6 0 0 65535,
-+			       6 0 0 0"
-+
- init()
- {
- 	capout=3D$(mktemp)
-@@ -82,6 +100,26 @@ reset_with_cookies()
- 	done
- }
- =
+unsigned int len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
 
-+reset_with_add_addr_timeout()
-+{
-+	local ip=3D"${1:-4}"
-+	local tables
-+
-+	tables=3D"iptables"
-+	if [ $ip -eq 6 ]; then
-+		tables=3D"ip6tables"
-+	fi
-+
-+	reset
-+
-+	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=3D1
-+	ip netns exec $ns2 $tables -A OUTPUT -p tcp \
-+		-m tcp --tcp-option 30 \
-+		-m bpf --bytecode \
-+		"$CBPF_MPTCP_SUBOPTION_ADD_ADDR" \
-+		-j DROP
-+}
-+
- for arg in "$@"; do
- 	if [ "$arg" =3D "-c" ]; then
- 		capture=3D1
-@@ -94,6 +132,17 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
- =
+if (echo)
+         len +=3D 8;
 
-+iptables -V > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run all tests without iptables tool"
-+	exit $ksft_skip
-+fi
-+
-+ip6tables -V > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run all tests without ip6tables tool"
-+	exit $ksft_skip
-+fi
- =
+if (family =3D=3D AF_INET6)
+         len +=3D 12;
+...
 
- check_transfer()
- {
-@@ -135,6 +184,7 @@ do_transfer()
- 	connect_addr=3D"$5"
- 	rm_nr_ns1=3D"$6"
- 	rm_nr_ns2=3D"$7"
-+	speed=3D"$8"
- =
+> @@ -553,7 +566,7 @@ static inline unsigned int mptcp_add_addr_len(int fam=
+ily, bool echo)
+> }
+>
+> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remain=
+ing,
+> -			      struct mptcp_addr_info *saddr, bool *echo);
+> +			      struct mptcp_addr_info *saddr, bool *echo, bool *port);
+> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
+> 			     u8 *rm_id);
+> int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc=
+);
+> -- =
 
- 	port=3D$((10000+$TEST_COUNT))
- 	TEST_COUNT=3D$((TEST_COUNT+1))
-@@ -159,7 +209,7 @@ do_transfer()
- 		sleep 1
- 	fi
- =
+> 2.26.2
 
--	if [[ $rm_nr_ns1 -eq 0 && $rm_nr_ns2 -eq 0 ]]; then
-+	if [ $speed =3D "fast" ]; then
- 		mptcp_connect=3D"./mptcp_connect -j"
- 	else
- 		mptcp_connect=3D"./mptcp_connect -r"
-@@ -250,26 +300,13 @@ run_tests()
- 	listener_ns=3D"$1"
- 	connector_ns=3D"$2"
- 	connect_addr=3D"$3"
-+	rm_nr_ns1=3D"${4:-0}"
-+	rm_nr_ns2=3D"${5:-0}"
-+	speed=3D"${6:-fast}"
- 	lret=3D0
- =
-
--	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} 0 0
--	lret=3D$?
--	if [ $lret -ne 0 ]; then
--		ret=3D$lret
--		return
--	fi
--}
--
--run_remove_tests()
--{
--	listener_ns=3D"$1"
--	connector_ns=3D"$2"
--	connect_addr=3D"$3"
--	rm_nr_ns1=3D"$4"
--	rm_nr_ns2=3D"$5"
--	lret=3D0
--
--	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${=
-rm_nr_ns1} ${rm_nr_ns2}
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
-+		${rm_nr_ns1} ${rm_nr_ns2} ${speed}
- 	lret=3D$?
- 	if [ $lret -ne 0 ]; then
- 		ret=3D$lret
-@@ -491,12 +528,21 @@ run_tests $ns1 $ns2 10.0.1.1
- chk_join_nr "multiple subflows and signal" 3 3 3
- chk_add_nr 1 1
- =
-
-+# add_addr timeout
-+reset_with_add_addr_timeout
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+run_tests $ns1 $ns2 10.0.1.1 0 0 slow
-+chk_join_nr "signal address, ADD_ADDR timeout" 1 1 1
-+chk_add_nr 4 0
-+
- # single subflow, remove
- reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_remove_tests $ns1 $ns2 10.0.1.1 0 1
-+run_tests $ns1 $ns2 10.0.1.1 0 1 slow
- chk_join_nr "remove single subflow" 1 1 1
- chk_rm_nr 1 1
- =
-
-@@ -506,7 +552,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_remove_tests $ns1 $ns2 10.0.1.1 0 2
-+run_tests $ns1 $ns2 10.0.1.1 0 2 slow
- chk_join_nr "remove multiple subflows" 2 2 2
- chk_rm_nr 2 2
- =
-
-@@ -515,7 +561,7 @@ reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 1
--run_remove_tests $ns1 $ns2 10.0.1.1 1 0
-+run_tests $ns1 $ns2 10.0.1.1 1 0 slow
- chk_join_nr "remove single address" 1 1 1
- chk_add_nr 1 1
- chk_rm_nr 0 0
-@@ -526,7 +572,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_remove_tests $ns1 $ns2 10.0.1.1 1 1
-+run_tests $ns1 $ns2 10.0.1.1 1 1 slow
- chk_join_nr "remove subflow and signal" 2 2 2
- chk_add_nr 1 1
- chk_rm_nr 1 1
-@@ -538,7 +584,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 3
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
--run_remove_tests $ns1 $ns2 10.0.1.1 1 2
-+run_tests $ns1 $ns2 10.0.1.1 1 2 slow
- chk_join_nr "remove subflows and signal" 3 3 3
- chk_add_nr 1 1
- chk_rm_nr 2 2
--- =
-
-2.29.2
-
---===============8557009689450692153==--
+--
+Mat Martineau
+Intel
+--===============5664177227321216419==--
