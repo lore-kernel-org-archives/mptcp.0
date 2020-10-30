@@ -1,73 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============2214503310534087107=="
+Content-Type: multipart/mixed; boundary="===============7750881894837355891=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] mptcp: add
- mptcp_pm_should_add_signal_echo helper
-Date: Thu, 29 Oct 2020 17:03:49 -0700
-Message-ID: <acdace46-c5d0-614d-566-4e0d4f2cf7a@linux.intel.com>
-In-Reply-To: 9b71955a98bb1d28d8c5603d007a6a22aa584082.1603943436.git.geliangtang@gmail.com
+Subject: [MPTCP] Fwd: [MPTCP][PATCH mptcp-next 0/8] ADD_ADDR: ports support
+Date: Fri, 30 Oct 2020 08:40:12 +0800
+Message-ID: <CA+WQbwu7enef+CBSaJHMTNp-OYdN6qTpS7dASJPTLZh6biMO2A@mail.gmail.com>
+In-Reply-To: cover.1603952836.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6479
+X-UID: 6480
 
---===============2214503310534087107==
+--===============7750881894837355891==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+---------- Forwarded message ---------
+=E5=8F=91=E4=BB=B6=E4=BA=BA=EF=BC=9A Geliang Tang <geliangtang(a)gmail.com>
+Date: 2020=E5=B9=B410=E6=9C=8829=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=
+=882:39
+Subject: [MPTCP][PATCH mptcp-next 0/8] ADD_ADDR: ports support
+To: <mptcp(a)lists.01.org>
+Cc: Geliang Tang <geliangtang(a)gmail.com>
 
-On Thu, 29 Oct 2020, Geliang Tang wrote:
 
-> This patch added a new helper mptcp_pm_should_add_signal_echo.
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> net/mptcp/pm.c       | 2 +-
-> net/mptcp/protocol.h | 5 +++++
-> 2 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 83f59a428560..75c5040e8d5d 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -198,7 +198,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
- unsigned int remaining,
-> 	if (!mptcp_pm_should_add_signal(msk))
-> 		goto out_unlock;
->
-> -	*echo =3D READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
-> +	*echo =3D mptcp_pm_should_add_signal_echo(msk);
->
-> 	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
-> 		goto out_unlock;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 7a5c16f176c0..d29c6a4749eb 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -529,6 +529,11 @@ static inline bool mptcp_pm_should_add_signal(struct=
- mptcp_sock *msk)
-> 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
-> }
->
-> +static inline bool mptcp_pm_should_add_signal_echo(struct mptcp_sock *ms=
-k)
-> +{
-> +	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
-> +}
-> +
-> static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *msk)
-> {
-> 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
-> -- =
+This series is the first version of ADD_ADDR ports support. I have solved
+the listener problem which I mentioned at the meeting on 15th of October
+by adding a new listening socket from the userspace (see patch 8). Up to
+now this patchset works well.
 
-> 2.26.2
+TODO:
+I added 2 octets padding in ADD_ADDR port suboption for alignment. (see
+patch 1). We need to drop this padding.
 
-Thanks for the cleanup
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Geliang Tang (8):
+  mptcp: add ADD_ADDR port support for writing options
+  mptcp: add the outgoing ADD_ADDR port support
+  mptcp: send out ack for ADD_ADDR with port
+  mptcp: add port argument for mptcp_pm_announce_addr
+  mptcp: add the incoming ADD_ADDR port support
+  mptcp: add ADD_ADDR port support for netlink
+  selftests: mptcp: add ADD_ADDR port support for pm_nl_ctl
+  selftests: mptcp: add testcases for ADD_ADDR with port
+
+ include/net/mptcp.h                           |  1 +
+ net/mptcp/options.c                           | 80 +++++++++++++++----
+ net/mptcp/pm.c                                | 14 ++--
+ net/mptcp/pm_netlink.c                        | 28 +++++--
+ net/mptcp/protocol.h                          | 31 ++++---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 18 +++++
+ 7 files changed, 162 insertions(+), 36 deletions(-)
 
 --
-Mat Martineau
-Intel
---===============2214503310534087107==--
+2.26.2
+--===============7750881894837355891==--
