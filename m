@@ -1,90 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============0515947876324915574=="
+Content-Type: multipart/mixed; boundary="===============6498031690901481803=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 1/8] mptcp: add ADD_ADDR port
- support for writing options
-Date: Fri, 30 Oct 2020 17:14:51 -0700
-Message-ID: <ef6b2cf7-6ff4-c0cf-da13-3974668a5715@linux.intel.com>
-In-Reply-To: 9f367861-1410-e87-546a-b33c211f5f7d@linux.intel.com
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 00/10] ADD_ADDR: ports support
+Date: Sat, 31 Oct 2020 23:24:31 +0800
+Message-ID: <cover.1604156723.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6500
+X-UID: 6502
 
---===============0515947876324915574==
+--===============6498031690901481803==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 Oct 2020, Mat Martineau wrote:
+v2:
+ - change mptcp_out_options's port field in CPU bype order.
+ - keep mptcp_options_received's port field in CPU bype order.
+ - add two new patches to simplify ADD_ADDR suboption writing.
+ - update mptcp_add_addr_len helper use adding up size.
+ - add more commit messages.
 
->
-> On Thu, 29 Oct 2020, Geliang Tang wrote:
->
->> This patch added ADD_ADDR port support for writing options.
->> =
+v1:
+ This series is the first version of ADD_ADDR ports support. I have solved
+ the listener problem which I mentioned at the meeting on 15th of October
+ by adding a new listening socket from the userspace (see patch 8). Up to
+ now this patchset works well.
 
->> In rfc8684, the length of ADD_ADDR suboption with IPv4 address and port
->> is 18 octets:
->>
->>                       1                   2                   3
->>   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
->>  +---------------+---------------+-------+-------+---------------+
->>  |     Kind      |     Length    |Subtype|(rsv)|E|  Address ID   |
->>  +---------------+---------------+-------+-------+---------------+
->>  |           Address (IPv4: 4 octets / IPv6: 16 octets)          |
->>  +-------------------------------+-------------------------------+
->>  |   Port (2 octets, optional)   |                               |
->>  +-------------------------------+                               |
->>  |                Truncated HMAC (8 octets, if E=3D0)              |
->>  |                               +-------------------------------+
->>  |                               |
->>  +-------------------------------+
->> =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
 
->> But mptcp_write_options is 32-bit aligned, so we need to pad it to 20
->> octets.
->> =
+Geliang Tang (10):
+  mptcp: unify ADD_ADDR and echo suboptions writing
+  mptcp: unify ADD_ADDR and ADD_ADDR6 suboptions writing
+  mptcp: add port support for ADD_ADDR suboption writing
+  mptcp: use adding up size when get ADD_ADDR length
+  mptcp: add the outgoing ADD_ADDR port support
+  mptcp: send out dedicated packet for ADD_ADDR using port
+  mptcp: add port parameter for mptcp_pm_announce_addr
+  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+  selftests: mptcp: add port argument for pm_nl_ctl
+  selftests: mptcp: add testcases for ADD_ADDR with port
 
->> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
->> ---
->> include/net/mptcp.h  |  1 +
->> net/mptcp/options.c  | 64 +++++++++++++++++++++++++++++++++++++-------
->> net/mptcp/protocol.h | 10 +++----
->> 3 files changed, 60 insertions(+), 15 deletions(-)
->> =
+ include/net/mptcp.h                           |  1 +
+ net/mptcp/options.c                           | 89 +++++++++++--------
+ net/mptcp/pm.c                                | 14 +--
+ net/mptcp/pm_netlink.c                        | 28 ++++--
+ net/mptcp/protocol.h                          | 36 +++++---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 18 ++++
+ 7 files changed, 153 insertions(+), 59 deletions(-)
 
->> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->> index b6cf07143a8a..bb8b7b931490 100644
->> --- a/include/net/mptcp.h
->> +++ b/include/net/mptcp.h
->> @@ -46,6 +46,7 @@ struct mptcp_out_options {
->> #endif
->> 	};
->> 	u8 addr_id;
->> +	__be16 port;
->
-> This should be a u16 (all the members in this struct use CPU byte order).=
- The =
+-- =
 
-> put_unaligned_be16() calls below also assume this is in CPU order.
->
+2.26.2
 
-Looking at later patches in the patch set, I see now that __be16 is used =
-
-in other places for the port number. __be16 is also used for inet_dport in =
-
-various places. We should make sure the port number is handled =
-
-consistently within the MPTCP code, and to make sure it is also consistent =
-
-with the other IP code. Anyone else have an opinion here?
-
-If you keep using __be16, it does remain an issue that you don't want to =
-
-use get_unaligned_be16() and put_unaligned_be16() with that data type.
-
---
-Mat Martineau
-Intel
---===============0515947876324915574==--
+--===============6498031690901481803==--
