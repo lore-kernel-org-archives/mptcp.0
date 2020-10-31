@@ -1,189 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============5664177227321216419=="
+Content-Type: multipart/mixed; boundary="===============4754203138503681028=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 2/8] mptcp: add the outgoing
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 5/8] mptcp: add the incoming
  ADD_ADDR port support
-Date: Fri, 30 Oct 2020 16:55:02 -0700
-Message-ID: <c2eb1c84-24cc-2c66-ae2f-0e4862fcb46@linux.intel.com>
-In-Reply-To: 28c900686b7ce170435daec8d9cd71527636a8af.1603952836.git.geliangtang@gmail.com
+Date: Fri, 30 Oct 2020 17:00:58 -0700
+Message-ID: <a1c8e3dc-e7c3-daf1-c05c-1f89ab30e7@linux.intel.com>
+In-Reply-To: b179cd8cddc1deb12561370d1fda19ad885b048d.1603952836.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6498
+X-UID: 6499
 
---===============5664177227321216419==
+--===============4754203138503681028==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+
 On Thu, 29 Oct 2020, Geliang Tang wrote:
 
-> This patch added a new add_addr_signal type named MPTCP_ADD_ADDR_PORT,
-> to identify this is an address with port.
+> The port field in mptcp_options_received should be big-endian, since we
+> use the following assignment statement in mptcp_parse_option:
 >
-> It also added a new argument 'port' for both mptcp_add_addr_len and
-> mptcp_pm_add_addr_signal.
+>  mp_opt->port =3D get_unaligned_be16(ptr);
 >
+> And the addr.port is also big-endian, so we need to drop htons in
+> mptcp_incoming_options.
+>
+
+Please keep mp_opt->port in CPU byte order and adjust other code to fit =
+
+that. get_unaligned_be16 does the byte order conversion if needed.
+
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> net/mptcp/options.c  | 10 +++++++---
-> net/mptcp/pm.c       |  5 +++--
-> net/mptcp/protocol.h | 17 +++++++++++++++--
-> 3 files changed, 25 insertions(+), 7 deletions(-)
+> net/mptcp/options.c  | 3 ++-
+> net/mptcp/protocol.h | 2 +-
+> 2 files changed, 3 insertions(+), 2 deletions(-)
 >
 > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 7c928286c0da..24117c45f4e1 100644
+> index f983deb534ae..87998edcce4e 100644
 > --- a/net/mptcp/options.c
 > +++ b/net/mptcp/options.c
-> @@ -586,6 +586,7 @@ static bool mptcp_established_options_add_addr(struct=
- sock *sk, struct sk_buff *
-> 	unsigned int opt_size =3D *size;
-> 	struct mptcp_addr_info saddr;
-> 	bool echo;
-> +	bool port;
-> 	int len;
->
-> 	if (mptcp_pm_should_add_signal_ipv6(msk) &&
-> @@ -597,10 +598,10 @@ static bool mptcp_established_options_add_addr(stru=
-ct sock *sk, struct sk_buff *
-> 	}
->
-> 	if (!mptcp_pm_should_add_signal(msk) ||
-> -	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
-> +	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo, &port)))
-> 		return false;
->
-> -	len =3D mptcp_add_addr_len(saddr.family, echo);
-> +	len =3D mptcp_add_addr_len(saddr.family, echo, port);
-> 	if (remaining < len)
-> 		return false;
->
-> @@ -608,6 +609,8 @@ static bool mptcp_established_options_add_addr(struct=
- sock *sk, struct sk_buff *
-> 	if (drop_other_suboptions)
-> 		*size -=3D opt_size;
-> 	opts->addr_id =3D saddr.id;
-> +	if (port)
-> +		opts->port =3D saddr.port;
-> 	if (saddr.family =3D=3D AF_INET) {
-> 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
-> 		opts->addr =3D saddr.addr;
-> @@ -630,7 +633,8 @@ static bool mptcp_established_options_add_addr(struct=
- sock *sk, struct sk_buff *
+> @@ -269,6 +269,7 @@ static void mptcp_parse_option(const struct sk_buff *=
+skb,
+> 			mp_opt->ahmac =3D get_unaligned_be64(ptr);
+> 			ptr +=3D 8;
 > 		}
-> 	}
-> #endif
-> -	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d", opts->addr_id, opts->=
-ahmac, echo);
-> +	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d",
-> +		 opts->addr_id, opts->ahmac, echo, ntohs(opts->port));
-
-Remove ntohs() if opts->port converted to u16.
-
+> +		pr_debug("port=3D%d, ahmac=3D%llu", ntohs(mp_opt->port), mp_opt->ahmac=
+);
+> 		break;
 >
-> 	return true;
-> }
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 75c5040e8d5d..6d4be02681fa 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -188,7 +188,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk=
-, u8 rm_id)
-> /* path manager helpers */
+> 	case MPTCPOPT_RM_ADDR:
+> @@ -936,7 +937,7 @@ void mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb)
+> 	if (mp_opt.add_addr && add_addr_hmac_valid(msk, &mp_opt)) {
+> 		struct mptcp_addr_info addr;
 >
-> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
-> -			      struct mptcp_addr_info *saddr, bool *echo)
-> +			      struct mptcp_addr_info *saddr, bool *echo, bool *port)
-> {
-> 	int ret =3D false;
->
-> @@ -199,8 +199,9 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
- unsigned int remaining,
-> 		goto out_unlock;
->
-> 	*echo =3D mptcp_pm_should_add_signal_echo(msk);
-> +	*port =3D mptcp_pm_should_add_signal_port(msk);
->
-> -	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
-> +	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo, *port))
-> 		goto out_unlock;
->
-> 	*saddr =3D msk->pm.local;
+> -		addr.port =3D htons(mp_opt.port);
+> +		addr.port =3D mp_opt.port;
+> 		addr.id =3D mp_opt.addr_id;
+> 		if (mp_opt.family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+> 			addr.family =3D AF_INET;
 > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index f303c46bcc29..2a5db34f63bf 100644
+> index f2cf09afd542..4c3350ed8d92 100644
 > --- a/net/mptcp/protocol.h
 > +++ b/net/mptcp/protocol.h
-> @@ -171,6 +171,7 @@ enum mptcp_add_addr_status {
-> 	MPTCP_ADD_ADDR_SIGNAL,
-> 	MPTCP_ADD_ADDR_ECHO,
-> 	MPTCP_ADD_ADDR_IPV6,
-> +	MPTCP_ADD_ADDR_PORT,
+> @@ -136,7 +136,7 @@ struct mptcp_options_received {
+> #endif
+> 	};
+> 	u64	ahmac;
+> -	u16	port;
+> +	__be16	port;
 > };
 >
-> struct mptcp_pm_data {
-> @@ -539,13 +540,25 @@ static inline bool mptcp_pm_should_add_signal_ipv6(=
-struct mptcp_sock *msk)
-> 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
-> }
->
-> +static inline bool mptcp_pm_should_add_signal_port(struct mptcp_sock *ms=
-k)
-> +{
-> +	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_PORT);
-> +}
-> +
-> static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
-> {
-> 	return READ_ONCE(msk->pm.rm_addr_signal);
-> }
->
-> -static inline unsigned int mptcp_add_addr_len(int family, bool echo)
-> +static inline unsigned int mptcp_add_addr_len(int family, bool echo, boo=
-l port)
-> {
-> +	if (port) {
-> +		if (family =3D=3D AF_INET)
-> +			return echo ? TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT
-> +				    : TCPOLEN_MPTCP_ADD_ADDR_PORT;
-> +		return echo ? TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT : TCPOLEN_MPTCP_ADD_AD=
-DR6_PORT;
-> +	}
-> +
-> 	if (family =3D=3D AF_INET)
-> 		return echo ? TCPOLEN_MPTCP_ADD_ADDR_BASE
-> 			    : TCPOLEN_MPTCP_ADD_ADDR;
-
-This helper function is getting kind of complicated for what it does. Can =
-
-you convert it to add up the correct size rather than returning one of the =
-
-eight constants?
-
-Like:
-
-unsigned int len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-
-if (echo)
-         len +=3D 8;
-
-if (family =3D=3D AF_INET6)
-         len +=3D 12;
-...
-
-> @@ -553,7 +566,7 @@ static inline unsigned int mptcp_add_addr_len(int fam=
-ily, bool echo)
-> }
->
-> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remain=
-ing,
-> -			      struct mptcp_addr_info *saddr, bool *echo);
-> +			      struct mptcp_addr_info *saddr, bool *echo, bool *port);
-> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
-> 			     u8 *rm_id);
-> int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc=
-);
+> static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
 > -- =
 
 > 2.26.2
@@ -191,4 +82,4 @@ ng,
 --
 Mat Martineau
 Intel
---===============5664177227321216419==--
+--===============4754203138503681028==--
