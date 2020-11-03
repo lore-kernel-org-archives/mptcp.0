@@ -1,165 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============7088237034189688936=="
+Content-Type: multipart/mixed; boundary="===============8824083957270270554=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 5/7] mptcp: add a new sysctl
- add_addr_timeout
-Date: Tue, 03 Nov 2020 11:05:07 -0800
-Message-ID: <20201103190509.27416-6-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v2 6/7] docs: networking: mptcp: Add MPTCP
+ sysctl entries
+Date: Tue, 03 Nov 2020 11:05:08 -0800
+Message-ID: <20201103190509.27416-7-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201103190509.27416-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6531
+X-UID: 6532
 
---===============7088237034189688936==
+--===============8824083957270270554==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
+Describe the two MPTCP sysctls, what the values mean, and the default
+settings.
 
-This patch added a new sysctl, named add_addr_timeout, to control the
-timeout value (in seconds) of the ADD_ADDR retransmission.
-
-Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Acked-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/ctrl.c       | 14 ++++++++++++++
- net/mptcp/pm_netlink.c |  8 ++++++--
- net/mptcp/protocol.h   |  1 +
- 3 files changed, 21 insertions(+), 2 deletions(-)
+ Documentation/networking/index.rst        |  1 +
+ Documentation/networking/mptcp-sysctl.rst | 26 +++++++++++++++++++++++
+ MAINTAINERS                               |  1 +
+ 3 files changed, 28 insertions(+)
+ create mode 100644 Documentation/networking/mptcp-sysctl.rst
 
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 54b888f94009..96ba616f59bf 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -18,6 +18,7 @@ struct mptcp_pernet {
- 	struct ctl_table_header *ctl_table_hdr;
- =
-
- 	int mptcp_enabled;
-+	unsigned int add_addr_timeout;
- };
- =
-
- static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
-@@ -30,6 +31,11 @@ int mptcp_is_enabled(struct net *net)
- 	return mptcp_get_pernet(net)->mptcp_enabled;
- }
- =
-
-+unsigned int mptcp_get_add_addr_timeout(struct net *net)
-+{
-+	return mptcp_get_pernet(net)->add_addr_timeout;
-+}
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/=
+index.rst
+index 63ef386afd0a..70c71c9206e2 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -70,6 +70,7 @@ Contents:
+    lapb-module
+    mac80211-injection
+    mpls-sysctl
++   mptcp-sysctl
+    multiqueue
+    netconsole
+    netdev-features
+diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/netw=
+orking/mptcp-sysctl.rst
+new file mode 100644
+index 000000000000..6af0196c4297
+--- /dev/null
++++ b/Documentation/networking/mptcp-sysctl.rst
+@@ -0,0 +1,26 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- static struct ctl_table mptcp_sysctl_table[] =3D {
- 	{
- 		.procname =3D "enabled",
-@@ -40,12 +46,19 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
- 		 */
- 		.proc_handler =3D proc_dointvec,
- 	},
-+	{
-+		.procname =3D "add_addr_timeout",
-+		.maxlen =3D sizeof(unsigned int),
-+		.mode =3D 0644,
-+		.proc_handler =3D proc_dointvec_jiffies,
-+	},
- 	{}
- };
- =
-
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- {
- 	pernet->mptcp_enabled =3D 1;
-+	pernet->add_addr_timeout =3D TCP_RTO_MAX;
- }
- =
-
- static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pe=
-rnet)
-@@ -61,6 +74,7 @@ static int mptcp_pernet_new_table(struct net *net, struct=
- mptcp_pernet *pernet)
- 	}
- =
-
- 	table[0].data =3D &pernet->mptcp_enabled;
-+	table[1].data =3D &pernet->add_addr_timeout;
- =
-
- 	hdr =3D register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
- 	if (!hdr)
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 0d6f3d912891..ed60538df7b2 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -206,6 +206,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- 	struct mptcp_pm_add_entry *entry =3D from_timer(entry, timer, add_timer);
- 	struct mptcp_sock *msk =3D entry->sock;
- 	struct sock *sk =3D (struct sock *)msk;
-+	struct net *net =3D sock_net(sk);
- =
-
- 	pr_debug("msk=3D%p", msk);
- =
-
-@@ -232,7 +233,8 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
- 	}
- =
-
- 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
--		sk_reset_timer(sk, timer, jiffies + TCP_RTO_MAX);
-+		sk_reset_timer(sk, timer,
-+			       jiffies + mptcp_get_add_addr_timeout(net));
- =
-
- 	spin_unlock_bh(&msk->pm.lock);
- =
-
-@@ -264,6 +266,7 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
-*msk,
- {
- 	struct mptcp_pm_add_entry *add_entry =3D NULL;
- 	struct sock *sk =3D (struct sock *)msk;
-+	struct net *net =3D sock_net(sk);
- =
-
- 	if (lookup_anno_list_by_saddr(msk, &entry->addr))
- 		return false;
-@@ -279,7 +282,8 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
-*msk,
- 	add_entry->retrans_times =3D 0;
- =
-
- 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
--	sk_reset_timer(sk, &add_entry->add_timer, jiffies + TCP_RTO_MAX);
-+	sk_reset_timer(sk, &add_entry->add_timer,
-+		       jiffies + mptcp_get_add_addr_timeout(net));
- =
-
- 	return true;
- }
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 13ab89dc1914..278c88c405e8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -362,6 +362,7 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow=
-_context *subflow)
- }
- =
-
- int mptcp_is_enabled(struct net *net);
-+unsigned int mptcp_get_add_addr_timeout(struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool mptcp_subflow_data_available(struct sock *sk);
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++MPTCP Sysfs variables
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++/proc/sys/net/mptcp/* Variables
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
++
++enabled - INTEGER
++	Control whether MPTCP sockets can be created.
++
++	MPTCP sockets can be created if the value is nonzero. This is
++	a per-namespace sysctl.
++
++	Default: 1
++
++add_addr_timeout - INTEGER (seconds)
++	Set the timeout after which an ADD_ADDR control message will be
++	resent to an MPTCP peer that has not acknowledged a previous
++	ADD_ADDR message.
++
++	The default value matches TCP_RTO_MAX. This is a per-namespace
++	sysctl.
++
++	Default: 120
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 17f5571788c9..badaaa815aa3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12265,6 +12265,7 @@ L:	mptcp(a)lists.01.org
+ S:	Maintained
+ W:	https://github.com/multipath-tcp/mptcp_net-next/wiki
+ B:	https://github.com/multipath-tcp/mptcp_net-next/issues
++F:	Documentation/networking/mptcp-sysctl.rst
+ F:	include/net/mptcp.h
+ F:	include/uapi/linux/mptcp.h
+ F:	net/mptcp/
 -- =
 
 2.29.2
 
---===============7088237034189688936==--
+--===============8824083957270270554==--
