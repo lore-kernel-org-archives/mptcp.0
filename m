@@ -1,61 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============8904867075850010002=="
+Content-Type: multipart/mixed; boundary="===============2556761480488784697=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 08/10] mptcp: deal with
- MPTCP_PM_ADDR_ATTR_PORT in PM netlink
-Date: Tue, 03 Nov 2020 18:29:46 +0100
-Message-ID: <cac59bd5-e67b-351f-e043-2dfb281560ec@tessares.net>
-In-Reply-To: 043eb9f772ca5b53f35a9553dd101e01f5db3ee6.1604156723.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 10/10] selftests: mptcp: add
+ testcases for ADD_ADDR with port
+Date: Tue, 03 Nov 2020 18:41:34 +0100
+Message-ID: <0306a5e1-62f9-3281-8f56-8a95dcddc786@tessares.net>
+In-Reply-To: 83024d39b0b057fffc73377d5e95219132a10780.1604156723.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6523
+X-UID: 6524
 
---===============8904867075850010002==
+--===============2556761480488784697==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
-
 On 31/10/2020 16:31, Geliang Tang wrote:
-> This patch added the MPTCP_PM_ADDR_ATTR_PORT filling and parsing in PM
-> netlink.
+> This patch added a new argument with_port for run_tests and
+> do_transfer, and added the testcases for ADD_ADDR with port.
 > =
 
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
->   net/mptcp/pm_netlink.c | 5 +++++
->   1 file changed, 5 insertions(+)
+>   .../testing/selftests/net/mptcp/mptcp_join.sh | 26 ++++++++++++++++++-
+>   1 file changed, 25 insertions(+), 1 deletion(-)
 > =
 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index ab0e68426c9e..069447424ddb 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -725,6 +725,9 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, s=
-truct genl_info *info,
->   	if (tb[MPTCP_PM_ADDR_ATTR_FLAGS])
->   		entry->addr.flags =3D nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]);
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
+ing/selftests/net/mptcp/mptcp_join.sh
+> index 0eae628d1ffd..826d662a9bf8 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -253,6 +254,11 @@ do_transfer()
+>   		-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
+>   	spid=3D$!
 >   =
 
-> +	if (tb[MPTCP_PM_ADDR_ATTR_PORT])
-> +		entry->addr.port =3D htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]));
+> +	if [ "$with_port" -gt 0 ];then
+> +		ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $with_po=
+rt \
+> +			-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
+
+Sorry, I am not sure to understand: why do you establish a new =
+
+connection if the port is set? Just to make sure we can also initiate a =
+
+new connection directly to this port (I am not sure we want this)?
+
+> +	fi
 > +
->   	return 0;
->   }
+>   	sleep 1
 >   =
 
-> @@ -911,6 +914,8 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
+>   	if [ "$test_link_fail" -eq 0 ];then
+
+(...)
+
+> @@ -717,6 +724,23 @@ chk_join_nr "remove subflow and signal IPv6" 2 2 2
+>   chk_add_nr 1 1
+>   chk_rm_nr 1 1
 >   =
 
->   	if (nla_put_u16(skb, MPTCP_PM_ADDR_ATTR_FAMILY, addr->family))
->   		goto nla_put_failure;
-> +	if (nla_put_u16(skb, MPTCP_PM_ADDR_ATTR_PORT, ntohs(addr->port)))
+> +# subflow with port
+> +reset
+> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+> +ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+> +ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow port 10100
+> +run_tests $ns1 $ns2 10.0.1.1
+> +chk_join_nr "single subflow with port" 1 1 1
 
-It looks strange to me to store something in "network" order. Do we not =
+Should we also check that the second subflow was established on the =
 
-store everything in "host" order, no?
+correct port?
+
+> +
+> +# signal address with port
+> +reset
+> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+> +ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+> +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
+> +run_tests $ns1 $ns2 10.0.1.1 0 0 0 fast 10100
+> +chk_join_nr "signal address with port" 1 1 1
+> +chk_add_nr 1 1
+
+Should we also check we announce the address with a port?
+
+(note that we could also have a MIB counter we increase when we =
+
+establish a port on a different port than the original one)
 
 Cheers,
 Matt
@@ -63,4 +96,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============8904867075850010002==--
+--===============2556761480488784697==--
