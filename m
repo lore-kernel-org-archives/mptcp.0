@@ -1,66 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============6116274632951098835=="
+Content-Type: multipart/mixed; boundary="===============0645820361652490526=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH mptcp-next] docs: networking: mptcp: Add MPTCP
  sysctl entries
-Date: Tue, 03 Nov 2020 10:54:19 +0800
-Message-ID: <CA+WQbwsnTcMwBNwzbJXrGohBHosAsJsguJrQQBS97Dz5uNmoRw@mail.gmail.com>
+Date: Tue, 03 Nov 2020 10:22:40 +0100
+Message-ID: <f1b44785-2654-4cca-2bd5-9c80f4db7b1d@tessares.net>
 In-Reply-To: 20201103015542.16615-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6519
+X-UID: 6520
 
---===============6116274632951098835==
+--===============0645820361652490526==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Mat,
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2020=E5=B9=B4=
-11=E6=9C=883=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=889:55=E5=86=99=E9=
-=81=93=EF=BC=9A
->
+On 03/11/2020 02:55, Mat Martineau wrote:
 > Describe the two MPTCP sysctls, what the values mean, and the default
 > settings.
->
+> =
+
 > Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 > ---
->
+> =
+
 > Jakub requested sysctl documentation for the 'add_addr_timeout' setting,
 > and we didn't have our 'enabled' sysctl documented either.
->
+
+Thanks for looking after this!
+
 > If this looks good to everyone I can add it to v2 the miscellaneous
 > series on the netdev list.
->
 
-Thanks for your help.
+Good idea! I just have one remark below!
 
-Acked-by: Geliang Tang <geliangtang(a)gmail.com>
+(...)
 
--Geliang
-
->
->  Documentation/networking/index.rst        |  1 +
->  Documentation/networking/mptcp-sysctl.rst | 24 +++++++++++++++++++++++
->  MAINTAINERS                               |  1 +
->  3 files changed, 26 insertions(+)
->  create mode 100644 Documentation/networking/mptcp-sysctl.rst
->
-> diff --git a/Documentation/networking/index.rst b/Documentation/networkin=
-g/index.rst
-> index 63ef386afd0a..70c71c9206e2 100644
-> --- a/Documentation/networking/index.rst
-> +++ b/Documentation/networking/index.rst
-> @@ -70,6 +70,7 @@ Contents:
->     lapb-module
->     mac80211-injection
->     mpls-sysctl
-> +   mptcp-sysctl
->     multiqueue
->     netconsole
->     netdev-features
 > diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/ne=
 tworking/mptcp-sysctl.rst
 > new file mode 100644
@@ -73,39 +51,61 @@ tworking/mptcp-sysctl.rst
 > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +MPTCP Sysfs variables
 > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
+
+The "s" at the end is going to fall :-/
+
+More seriously, if I am not mistaken, it is important to have at least =
+
+the same amount of characters for the mark representing the title in RST.
+
+There are some RST validators or maybe try this: http://rst.ninjs.org
+
 > +/proc/sys/net/mptcp/* Variables:
 > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D
-> +
+
+Same here: one "=3D" is missing.
+
+Note that for me, it is strange to add a ":" at the end of a title. They =
+
+don't do that in ip-sysctl.rst but they do that in mpls-sysctl.rst. =
+
+Personally, I would not add it.
+
+Should we give a very short introduction about MPTCP here? I guess not =
+
+in this "-sysctl" file. Later when we will have a documentation for =
+
+userspace.
+
 > +enabled - INTEGER
-> +       Control whether MPTCP sockets can be created.
+> +	Control whether MPTCP sockets can be created.
+
+Should we mention this?
+
+   This is a per-namespace sysctl.
+
+For me, that's a very useful thing to know but often missing in the doc.
+
+> +	MPTCP sockets can be created if the value is nonzero.
 > +
-> +       MPTCP sockets can be created if the value is nonzero.
-> +
-> +       Default: 1
+> +	Default: 1
 > +
 > +add_addr_timeout - INTEGER (seconds)
-> +       Set the timeout after which an ADD_ADDR control message will be
-> +       resent to an MPTCP peer that has not acknowledged a previous
-> +       ADD_ADDR message.
-> +
-> +       The default value matches TCP_RTO_MAX.
-> +
-> +       Default: 120
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 17f5571788c9..badaaa815aa3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12265,6 +12265,7 @@ L:      mptcp(a)lists.01.org
->  S:     Maintained
->  W:     https://github.com/multipath-tcp/mptcp_net-next/wiki
->  B:     https://github.com/multipath-tcp/mptcp_net-next/issues
-> +F:     Documentation/networking/mptcp-sysctl.rst
->  F:     include/net/mptcp.h
->  F:     include/uapi/linux/mptcp.h
->  F:     net/mptcp/
-> --
-> 2.29.2
->
---===============6116274632951098835==--
+> +	Set the timeout after which an ADD_ADDR control message will be
+> +	resent to an MPTCP peer that has not acknowledged a previous
+> +	ADD_ADDR message.
+
+Here too, it is per-ns. I guess it would be good to repeat that for each =
+
+sysctl. But because all of them are per-ns, we can also add something in =
+
+the introduction, just under "/proc/sys/net/mptcp/* Variables". Up to you!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0645820361652490526==--
