@@ -1,122 +1,153 @@
-Content-Type: multipart/mixed; boundary="===============8458715618006854413=="
+Content-Type: multipart/mixed; boundary="===============6824634207753574221=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 1/7] mptcp: adjust mptcp receive buffer
- limit if subflow has larger one
-Date: Tue, 03 Nov 2020 11:05:03 -0800
-Message-ID: <20201103190509.27416-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v2 3/7] tcp: propagate MPTCP skb extensions
+ on xmit splits
+Date: Tue, 03 Nov 2020 11:05:05 -0800
+Message-ID: <20201103190509.27416-4-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201103190509.27416-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6528
+X-UID: 6529
 
---===============8458715618006854413==
+--===============6824634207753574221==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Florian Westphal <fw(a)strlen.de>
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-In addition to tcp autotuning during read, it may also increase the
-receive buffer in tcp_clamp_window().
+When the TCP stack splits a packet on the write queue, the tail
+half currently lose the associated skb extensions, and will not
+carry the DSM on the wire.
 
-In this case, mptcp should adjust its receive buffer size as well so
-it can move all pending skbs from the subflow socket to the mptcp socket.
+The above does not cause functional problems and is allowed by
+the RFC, but interact badly with GRO and RX coalescing, as possible
+candidates for aggregation will carry different TCP options.
 
-At this time, TCP can have more skbs ready for processing than what the
-mptcp receive buffer size allows.
+This change tries to improve the MPTCP behavior, propagating the
+skb extensions on split.
 
-In the mptcp case, the receive window announced is based on the free
-space of the mptcp parent socket instead of the individual subflows.
+Additionally, we must prevent the MPTCP stack from updating the
+mapping after the split occur: that will both violate the RFC and
+fool the reader.
 
-Following the subflow allows mptcp to grow its receive buffer.
-
-This is especially noticeable for loopback traffic where two skbs are
-enough to fill the initial receive window.
-
-In mptcp_data_ready() we do not hold the mptcp socket lock, so modifying
-mptcp_sk->sk_rcvbuf is racy.  Do it when moving skbs from subflow to
-mptcp socket, both sockets are locked in this case.
-
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ include/net/mptcp.h   | 21 ++++++++++++++++++++-
+ net/ipv4/tcp_output.c |  3 +++
+ net/mptcp/protocol.c  |  7 +++++--
+ 3 files changed, 28 insertions(+), 3 deletions(-)
 
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 753ba7e755d6..6e706d838e4e 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -29,7 +29,8 @@ struct mptcp_ext {
+ 			use_ack:1,
+ 			ack64:1,
+ 			mpc_map:1,
+-			__unused:2;
++			frozen:1,
++			__unused:1;
+ 	/* one byte hole */
+ };
+ =
+
+@@ -106,6 +107,19 @@ static inline void mptcp_skb_ext_move(struct sk_buff *=
+to,
+ 	from->active_extensions =3D 0;
+ }
+ =
+
++static inline void mptcp_skb_ext_copy(struct sk_buff *to,
++				      struct sk_buff *from)
++{
++	struct mptcp_ext *from_ext;
++
++	from_ext =3D skb_ext_find(from, SKB_EXT_MPTCP);
++	if (!from_ext)
++		return;
++
++	from_ext->frozen =3D 1;
++	skb_ext_copy(to, from);
++}
++
+ static inline bool mptcp_ext_matches(const struct mptcp_ext *to_ext,
+ 				     const struct mptcp_ext *from_ext)
+ {
+@@ -193,6 +207,11 @@ static inline void mptcp_skb_ext_move(struct sk_buff *=
+to,
+ {
+ }
+ =
+
++static inline void mptcp_skb_ext_copy(struct sk_buff *to,
++				      struct sk_buff *from)
++{
++}
++
+ static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
+ 					  const struct sk_buff *from)
+ {
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index bf48cd73e967..9abf5a0358d5 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1569,6 +1569,7 @@ int tcp_fragment(struct sock *sk, enum tcp_queue tcp_=
+queue,
+ 	if (!buff)
+ 		return -ENOMEM; /* We'll just try again later. */
+ 	skb_copy_decrypted(buff, skb);
++	mptcp_skb_ext_copy(buff, skb);
+ =
+
+ 	sk_wmem_queued_add(sk, buff->truesize);
+ 	sk_mem_charge(sk, buff->truesize);
+@@ -2123,6 +2124,7 @@ static int tso_fragment(struct sock *sk, struct sk_bu=
+ff *skb, unsigned int len,
+ 	if (unlikely(!buff))
+ 		return -ENOMEM;
+ 	skb_copy_decrypted(buff, skb);
++	mptcp_skb_ext_copy(buff, skb);
+ =
+
+ 	sk_wmem_queued_add(sk, buff->truesize);
+ 	sk_mem_charge(sk, buff->truesize);
+@@ -2393,6 +2395,7 @@ static int tcp_mtu_probe(struct sock *sk)
+ =
+
+ 	skb =3D tcp_send_head(sk);
+ 	skb_copy_decrypted(nskb, skb);
++	mptcp_skb_ext_copy(nskb, skb);
+ =
+
+ 	TCP_SKB_CB(nskb)->seq =3D TCP_SKB_CB(skb)->seq;
+ 	TCP_SKB_CB(nskb)->end_seq =3D TCP_SKB_CB(skb)->seq + probe_size;
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e7419fd15d84..e010ef7585bf 100644
+index f5bacfc55006..25d12183d1ca 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -466,6 +466,18 @@ static bool __mptcp_move_skbs_from_subflow(struct mptc=
-p_sock *msk,
- 	struct tcp_sock *tp;
- 	u32 old_copied_seq;
- 	bool done =3D false;
-+	int sk_rbuf;
-+
-+	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
-+
-+	if (!(sk->sk_userlocks & SOCK_RCVBUF_LOCK)) {
-+		int ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
-+
-+		if (unlikely(ssk_rbuf > sk_rbuf)) {
-+			WRITE_ONCE(sk->sk_rcvbuf, ssk_rbuf);
-+			sk_rbuf =3D ssk_rbuf;
-+		}
-+	}
+@@ -771,8 +771,11 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
+ 	if (!tcp_skb_can_collapse_to(skb))
+ 		return false;
  =
 
- 	pr_debug("msk=3D%p ssk=3D%p", msk, ssk);
- 	tp =3D tcp_sk(ssk);
-@@ -528,7 +540,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp=
-_sock *msk,
- 		WRITE_ONCE(tp->copied_seq, seq);
- 		more_data_avail =3D mptcp_subflow_data_available(ssk);
+-	/* can collapse only if MPTCP level sequence is in order */
+-	return mpext && mpext->data_seq + mpext->data_len =3D=3D write_seq;
++	/* can collapse only if MPTCP level sequence is in order and this
++	 * mapping has not been xmitted yet
++	 */
++	return mpext && mpext->data_seq + mpext->data_len =3D=3D write_seq &&
++	       !mpext->frozen;
+ }
  =
 
--		if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf)) {
-+		if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf) {
- 			done =3D true;
- 			break;
- 		}
-@@ -622,6 +634,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	int sk_rbuf, ssk_rbuf;
- 	bool wake;
- =
-
- 	/* move_skbs_to_msk below can legitly clear the data_avail flag,
-@@ -632,12 +645,16 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
-sk)
- 	if (wake)
- 		set_bit(MPTCP_DATA_READY, &msk->flags);
- =
-
--	if (atomic_read(&sk->sk_rmem_alloc) < READ_ONCE(sk->sk_rcvbuf) &&
--	    move_skbs_to_msk(msk, ssk))
-+	ssk_rbuf =3D READ_ONCE(ssk->sk_rcvbuf);
-+	sk_rbuf =3D READ_ONCE(sk->sk_rcvbuf);
-+	if (unlikely(ssk_rbuf > sk_rbuf))
-+		sk_rbuf =3D ssk_rbuf;
-+
-+	/* over limit? can't append more skbs to msk */
-+	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
- 		goto wake;
- =
-
--	/* don't schedule if mptcp sk is (still) over limit */
--	if (atomic_read(&sk->sk_rmem_alloc) > READ_ONCE(sk->sk_rcvbuf))
-+	if (move_skbs_to_msk(msk, ssk))
- 		goto wake;
- =
-
- 	/* mptcp socket is owned, release_cb should retry */
+ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
 -- =
 
 2.29.2
 
---===============8458715618006854413==--
+--===============6824634207753574221==--
