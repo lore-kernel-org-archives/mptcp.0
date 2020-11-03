@@ -1,99 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============2556761480488784697=="
+Content-Type: multipart/mixed; boundary="===============5121263098756539279=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 10/10] selftests: mptcp: add
- testcases for ADD_ADDR with port
-Date: Tue, 03 Nov 2020 18:41:34 +0100
-Message-ID: <0306a5e1-62f9-3281-8f56-8a95dcddc786@tessares.net>
-In-Reply-To: 83024d39b0b057fffc73377d5e95219132a10780.1604156723.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] docs: networking: mptcp: Add MPTCP
+ sysctl entries
+Date: Tue, 03 Nov 2020 10:13:32 -0800
+Message-ID: <c98c8213-694e-bd18-c2a1-bab564697e2@linux.intel.com>
+In-Reply-To: f1b44785-2654-4cca-2bd5-9c80f4db7b1d@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6524
+X-UID: 6525
 
---===============2556761480488784697==
+--===============5121263098756539279==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 31/10/2020 16:31, Geliang Tang wrote:
-> This patch added a new argument with_port for run_tests and
-> do_transfer, and added the testcases for ADD_ADDR with port.
-> =
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
->   .../testing/selftests/net/mptcp/mptcp_join.sh | 26 ++++++++++++++++++-
->   1 file changed, 25 insertions(+), 1 deletion(-)
-> =
+On Tue, 3 Nov 2020, Matthieu Baerts wrote:
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index 0eae628d1ffd..826d662a9bf8 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -253,6 +254,11 @@ do_transfer()
->   		-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
->   	spid=3D$!
->   =
+> Hi Mat,
+>
+> On 03/11/2020 02:55, Mat Martineau wrote:
+>> Describe the two MPTCP sysctls, what the values mean, and the default
+>> settings.
+>> =
 
-> +	if [ "$with_port" -gt 0 ];then
-> +		ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $with_po=
-rt \
-> +			-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
+>> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>> ---
+>> =
 
-Sorry, I am not sure to understand: why do you establish a new =
+>> Jakub requested sysctl documentation for the 'add_addr_timeout' setting,
+>> and we didn't have our 'enabled' sysctl documented either.
+>
+> Thanks for looking after this!
+>
+>> If this looks good to everyone I can add it to v2 the miscellaneous
+>> series on the netdev list.
+>
+> Good idea! I just have one remark below!
+>
+> (...)
+>
+>> diff --git a/Documentation/networking/mptcp-sysctl.rst =
 
-connection if the port is set? Just to make sure we can also initiate a =
+>> b/Documentation/networking/mptcp-sysctl.rst
+>> new file mode 100644
+>> index 000000000000..70c076eb361d
+>> --- /dev/null
+>> +++ b/Documentation/networking/mptcp-sysctl.rst
+>> @@ -0,0 +1,24 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +MPTCP Sysfs variables
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> The "s" at the end is going to fall :-/
+>
+> More seriously, if I am not mistaken, it is important to have at least th=
+e =
 
-new connection directly to this port (I am not sure we want this)?
+> same amount of characters for the mark representing the title in RST.
+>
+> There are some RST validators or maybe try this: http://rst.ninjs.org
 
-> +	fi
-> +
->   	sleep 1
->   =
+Ok, will fix that up.
 
->   	if [ "$test_link_fail" -eq 0 ];then
+>
+>> +/proc/sys/net/mptcp/* Variables:
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> Same here: one "=3D" is missing.
+>
+> Note that for me, it is strange to add a ":" at the end of a title. They =
 
-(...)
+> don't do that in ip-sysctl.rst but they do that in mpls-sysctl.rst. =
 
-> @@ -717,6 +724,23 @@ chk_join_nr "remove subflow and signal IPv6" 2 2 2
->   chk_add_nr 1 1
->   chk_rm_nr 1 1
->   =
+> Personally, I would not add it.
+>
+> Should we give a very short introduction about MPTCP here? I guess not in =
 
-> +# subflow with port
-> +reset
-> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> +ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-> +ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow port 10100
-> +run_tests $ns1 $ns2 10.0.1.1
-> +chk_join_nr "single subflow with port" 1 1 1
+> this "-sysctl" file. Later when we will have a documentation for userspac=
+e.
 
-Should we also check that the second subflow was established on the =
+Yes, I did start from a copy of mpls-sysctl.rst and inherited its quirks.
 
-correct port?
+Happy to remove the colon. We do need to add MPTCP documentation but for =
 
-> +
-> +# signal address with port
-> +reset
-> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> +ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-> +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> +run_tests $ns1 $ns2 10.0.1.1 0 0 0 fast 10100
-> +chk_join_nr "signal address with port" 1 1 1
-> +chk_add_nr 1 1
+now I think we can start with the sysctl section.
 
-Should we also check we announce the address with a port?
+>
+>> +enabled - INTEGER
+>> +	Control whether MPTCP sockets can be created.
+>
+> Should we mention this?
+>
+>  This is a per-namespace sysctl.
+>
+> For me, that's a very useful thing to know but often missing in the doc.
+>
+>> +	MPTCP sockets can be created if the value is nonzero.
+>> +
+>> +	Default: 1
+>> +
+>> +add_addr_timeout - INTEGER (seconds)
+>> +	Set the timeout after which an ADD_ADDR control message will be
+>> +	resent to an MPTCP peer that has not acknowledged a previous
+>> +	ADD_ADDR message.
+>
+> Here too, it is per-ns. I guess it would be good to repeat that for each =
 
-(note that we could also have a MIB counter we increase when we =
+> sysctl. But because all of them are per-ns, we can also add something in =
+the =
 
-establish a port on a different port than the original one)
+> introduction, just under "/proc/sys/net/mptcp/* Variables". Up to you!
+>
 
-Cheers,
-Matt
--- =
+Will add the per-ns information.
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2556761480488784697==--
+Thanks for the review!
+
+--
+Mat Martineau
+Intel
+--===============5121263098756539279==--
