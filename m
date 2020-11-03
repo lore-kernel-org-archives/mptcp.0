@@ -1,106 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============0645820361652490526=="
+Content-Type: multipart/mixed; boundary="===============5888440067935841908=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] docs: networking: mptcp: Add MPTCP
- sysctl entries
-Date: Tue, 03 Nov 2020 10:22:40 +0100
-Message-ID: <f1b44785-2654-4cca-2bd5-9c80f4db7b1d@tessares.net>
-In-Reply-To: 20201103015542.16615-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 02/10] mptcp: unify ADD_ADDR
+ and ADD_ADDR6 suboptions writing
+Date: Tue, 03 Nov 2020 18:23:32 +0100
+Message-ID: <7c5ecd37-5bcb-d232-3450-716542390544@tessares.net>
+In-Reply-To: 5d9becee199f0ffbec60d34451b4779c4c9773c9.1604156723.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6520
+X-UID: 6521
 
---===============0645820361652490526==
+--===============5888440067935841908==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Geliang,
 
-On 03/11/2020 02:55, Mat Martineau wrote:
-> Describe the two MPTCP sysctls, what the values mean, and the default
-> settings.
+On 31/10/2020 16:24, Geliang Tang wrote:
+> The length of ADD_ADDR6 is 12 octets longer than ADD_ADDR. That's the
+> only difference between them.
 > =
 
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> ---
-> =
+> This patch dropped the duplicate code between ADD_ADDR and ADD_ADDR6
+> suboptions writing, and unify them into one.
 
-> Jakub requested sysctl documentation for the 'add_addr_timeout' setting,
-> and we didn't have our 'enabled' sysctl documented either.
+It is nice to avoid similar code but here, I think you are changing the =
 
-Thanks for looking after this!
+behaviour if CONFIG_MPTCP_IPV6 is disabled. If I am not mistaken, we are =
 
-> If this looks good to everyone I can add it to v2 the miscellaneous
-> series on the netdev list.
+going to reserve space but not write anything in it except the hmac.
 
-Good idea! I just have one remark below!
+For the moment, it is fine because we will not call mptcp_write_options =
 
-(...)
+with OPTION_MPTCP_ADD_ADDR6 but I don't know if we can safely take that =
 
-> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/ne=
-tworking/mptcp-sysctl.rst
-> new file mode 100644
-> index 000000000000..70c076eb361d
-> --- /dev/null
-> +++ b/Documentation/networking/mptcp-sysctl.rst
-> @@ -0,0 +1,24 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +MPTCP Sysfs variables
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+into consideration for a "public" function called from TCP.
 
-The "s" at the end is going to fall :-/
+Maybe "safer" by using a helper taking different arguments for v4 and =
 
-More seriously, if I am not mistaken, it is important to have at least =
+v6? In this case we could have something like:
 
-the same amount of characters for the mark representing the title in RST.
 
-There are some RST validators or maybe try this: http://rst.ninjs.org
+	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+		mptcp_write_add_addr_option(ptr, opts,
+					   TCPOLEN_MPTCP_ADD_ADDR_BASE);
+	}
 
-> +/proc/sys/net/mptcp/* Variables:
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
+		mptcp_write_add_addr_option(ptr, opts,
+					  TCPOLEN_MPTCP_ADD_ADDR6_BASE);
+	}
+#endif
 
-Same here: one "=3D" is missing.
+Or we add a comment mentioning we should not have OPTION_MPTCP_ADD_ADDR6 =
 
-Note that for me, it is strange to add a ":" at the end of a title. They =
-
-don't do that in ip-sysctl.rst but they do that in mpls-sysctl.rst. =
-
-Personally, I would not add it.
-
-Should we give a very short introduction about MPTCP here? I guess not =
-
-in this "-sysctl" file. Later when we will have a documentation for =
-
-userspace.
-
-> +enabled - INTEGER
-> +	Control whether MPTCP sockets can be created.
-
-Should we mention this?
-
-   This is a per-namespace sysctl.
-
-For me, that's a very useful thing to know but often missing in the doc.
-
-> +	MPTCP sockets can be created if the value is nonzero.
-> +
-> +	Default: 1
-> +
-> +add_addr_timeout - INTEGER (seconds)
-> +	Set the timeout after which an ADD_ADDR control message will be
-> +	resent to an MPTCP peer that has not acknowledged a previous
-> +	ADD_ADDR message.
-
-Here too, it is per-ns. I guess it would be good to repeat that for each =
-
-sysctl. But because all of them are per-ns, we can also add something in =
-
-the introduction, just under "/proc/sys/net/mptcp/* Variables". Up to you!
+if IPV6 is disabled?
 
 Cheers,
 Matt
@@ -108,4 +65,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============0645820361652490526==--
+--===============5888440067935841908==--
