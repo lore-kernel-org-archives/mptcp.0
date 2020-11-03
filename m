@@ -1,39 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============9182483815644975062=="
+Content-Type: multipart/mixed; boundary="===============8597837532847781570=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2 6/7] docs: networking: mptcp: Add
- MPTCP sysctl entries
-Date: Tue, 03 Nov 2020 21:31:43 +0100
-Message-ID: <de3be6ac-1249-9029-cedf-ed744319fc0f@tessares.net>
-In-Reply-To: 20201103190509.27416-7-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: token: fix unititialized variable
+Date: Tue, 03 Nov 2020 13:10:23 -0800
+Message-ID: <20201103131023.7deabb3e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: 97343b07772ae794ca2aad683734901c055aa0ab.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6534
+X-UID: 6535
 
---===============9182483815644975062==
+--===============8597837532847781570==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+On Mon, 02 Nov 2020 11:48:25 +0100 Paolo Abeni wrote:
+> On Mon, 2020-11-02 at 10:09 +0100, Davide Caratti wrote:
+> > gcc complains about use of uninitialized 'num'. Fix it by doing the fir=
+st
+> > assignment of 'num' when the variable is declared.
+> > =
 
-On 03/11/2020 20:05, Mat Martineau wrote:
-> Describe the two MPTCP sysctls, what the values mean, and the default
-> settings.
+> > Fixes: 96d890daad05 ("mptcp: add msk interations helper")
+> > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
 > =
 
-> Acked-by: Geliang Tang <geliangtang(a)gmail.com>
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 
-Thank you for this new patch!
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============9182483815644975062==--
+Applied, thanks!
+--===============8597837532847781570==--
