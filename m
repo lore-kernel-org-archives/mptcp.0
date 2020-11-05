@@ -1,117 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============3134088170334979030=="
+Content-Type: multipart/mixed; boundary="===============1885225291658992299=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 10/12] selftests: mptcp: add port
- argument for pm_nl_ctl
-Date: Thu, 05 Nov 2020 16:01:10 +0800
-Message-ID: <ea1142d64829c236413519dd57a64cbf269f3e3b.1604562475.git.geliangtang@gmail.com>
-In-Reply-To: 3775ed8cff23c75013c20dcd6e32db64c995a739.1604562475.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 11/12] mptcp: add the mib for
+ ADD_ADDR with port
+Date: Thu, 05 Nov 2020 16:01:11 +0800
+Message-ID: <2447fed3519d7acdbbc1376529bdb36505eb6301.1604562475.git.geliangtang@gmail.com>
+In-Reply-To: ea1142d64829c236413519dd57a64cbf269f3e3b.1604562475.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6554
+X-UID: 6555
 
---===============3134088170334979030==
+--===============1885225291658992299==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new argument for pm_nl_ctl tool. We can use it like
-this:
-
-id 1 flags signal 10.0.2.1 10100
+This patch added the mib for ADD_ADDR with port, named MPTCP_MIB_PORTADD,
+for receiving of the ADD_ADDR suboption with a port number.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 24 +++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ net/mptcp/mib.c     | 1 +
+ net/mptcp/mib.h     | 1 +
+ net/mptcp/options.c | 4 ++++
+ 3 files changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/=
-selftests/net/mptcp/pm_nl_ctl.c
-index b24a2f17d415..cf654a57552b 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -176,8 +176,8 @@ int add_addr(int fd, int pm_family, int argc, char *arg=
-v[])
- 		  1024];
- 	struct rtattr *rta, *nest;
- 	struct nlmsghdr *nh;
-+	u_int32_t flags =3D 0;
- 	u_int16_t family;
--	u_int32_t flags;
- 	int nest_start;
- 	u_int8_t id;
- 	int off =3D 0;
-@@ -223,7 +223,6 @@ int add_addr(int fd, int pm_family, int argc, char *arg=
-v[])
- 			char *tok, *str;
- =
-
- 			/* flags */
--			flags =3D 0;
- 			if (++arg >=3D argc)
- 				error(1, 0, " missing flags value");
- =
-
-@@ -271,6 +270,20 @@ int add_addr(int fd, int pm_family, int argc, char *ar=
-gv[])
- 			rta->rta_len =3D RTA_LENGTH(4);
- 			memcpy(RTA_DATA(rta), &ifindex, 4);
- 			off +=3D NLMSG_ALIGN(rta->rta_len);
-+		} else if (!strcmp(argv[arg], "port")) {
-+			u_int16_t port;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index 84d119436b22..a8744ad62087 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -29,6 +29,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
+ 	SNMP_MIB_ITEM("DuplicateData", MPTCP_MIB_DUPDATA),
+ 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
+ 	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
++	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
+ 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
+ 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
+ 	SNMP_MIB_SENTINEL
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 47bcecce1106..1b07fc1ad1a0 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -22,6 +22,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_DUPDATA,		/* Segments discarded due to duplicate DSS */
+ 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=3D0 */
+ 	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=3D1 */
++	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with port */
+ 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
+ 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
+ 	__MPTCP_MIB_MAX
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 73d594b1e53c..f611fbcbd6d0 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -955,6 +955,10 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb)
+ 			mptcp_pm_del_add_timer(msk, &addr);
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
+ 		}
 +
-+			if (++arg >=3D argc)
-+				error(1, 0, " missing port value");
-+			if (!(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
-+				error(1, 0, " flags must be signal when using port");
++		if (mp_opt.port)
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_PORTADD);
 +
-+			port =3D atoi(argv[arg]);
-+			rta =3D (void *)(data + off);
-+			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_PORT;
-+			rta->rta_len =3D RTA_LENGTH(2);
-+			memcpy(RTA_DATA(rta), &port, 2);
-+			off +=3D NLMSG_ALIGN(rta->rta_len);
- 		} else
- 			error(1, 0, "unknown keyword %s", argv[arg]);
+ 		mp_opt.add_addr =3D 0;
  	}
-@@ -323,6 +336,7 @@ int del_addr(int fd, int pm_family, int argc, char *arg=
-v[])
- static void print_addr(struct rtattr *attrs, int len)
- {
- 	uint16_t family =3D 0;
-+	uint16_t port =3D 0;
- 	char str[1024];
- 	uint32_t flags;
- 	uint8_t id;
-@@ -330,12 +344,16 @@ static void print_addr(struct rtattr *attrs, int len)
- 	while (RTA_OK(attrs, len)) {
- 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_FAMILY)
- 			memcpy(&family, RTA_DATA(attrs), 2);
-+		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_PORT)
-+			memcpy(&port, RTA_DATA(attrs), 2);
- 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ADDR4) {
- 			if (family !=3D AF_INET)
- 				error(1, errno, "wrong IP (v4) for family %d",
- 				      family);
- 			inet_ntop(AF_INET, RTA_DATA(attrs), str, sizeof(str));
- 			printf("%s", str);
-+			if (port)
-+				printf(" %d", port);
- 		}
- 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ADDR6) {
- 			if (family !=3D AF_INET6)
-@@ -343,6 +361,8 @@ static void print_addr(struct rtattr *attrs, int len)
- 				      family);
- 			inet_ntop(AF_INET6, RTA_DATA(attrs), str, sizeof(str));
- 			printf("%s", str);
-+			if (port)
-+				printf(" %d", port);
- 		}
- 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ID) {
- 			memcpy(&id, RTA_DATA(attrs), 1);
+ =
+
 -- =
 
 2.26.2
 
---===============3134088170334979030==--
+--===============1885225291658992299==--
