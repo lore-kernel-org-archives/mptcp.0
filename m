@@ -1,59 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============4334214462169286718=="
+Content-Type: multipart/mixed; boundary="===============4857405494334514532=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 08/12] mptcp: print out port and
- ahmac when receiving ADD_ADDR
-Date: Thu, 05 Nov 2020 16:01:08 +0800
-Message-ID: <cad745590e6ee63e655836915e5ffeddb561108e.1604562475.git.geliangtang@gmail.com>
-In-Reply-To: a6e88cf2f3428c48263561b424a85224d6f84dc0.1604562475.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 09/12] mptcp: deal with
+ MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+Date: Thu, 05 Nov 2020 16:01:09 +0800
+Message-ID: <3775ed8cff23c75013c20dcd6e32db64c995a739.1604562475.git.geliangtang@gmail.com>
+In-Reply-To: cad745590e6ee63e655836915e5ffeddb561108e.1604562475.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6552
+X-UID: 6553
 
---===============4334214462169286718==
+--===============4857405494334514532==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch printed out more debugging information for the ADD_ADDR
-suboption parsing on the incoming path.
+This patch added the MPTCP_PM_ADDR_ATTR_PORT filling and parsing in PM
+netlink.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/options.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/mptcp/pm_netlink.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c05db50b4bc1..73d594b1e53c 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -242,9 +242,6 @@ static void mptcp_parse_option(const struct sk_buff *sk=
-b,
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index ab0e68426c9e..069447424ddb 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -725,6 +725,9 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, str=
+uct genl_info *info,
+ 	if (tb[MPTCP_PM_ADDR_ATTR_FLAGS])
+ 		entry->addr.flags =3D nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]);
  =
 
- 		mp_opt->add_addr =3D 1;
- 		mp_opt->addr_id =3D *ptr++;
--		pr_debug("ADD_ADDR%s: id=3D%d, echo=3D%d",
--			 (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6) ? "6" : "",
--			 mp_opt->addr_id, mp_opt->echo);
- 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
- 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
- 			ptr +=3D 4;
-@@ -269,6 +266,9 @@ static void mptcp_parse_option(const struct sk_buff *sk=
-b,
- 			mp_opt->ahmac =3D get_unaligned_be64(ptr);
- 			ptr +=3D 8;
- 		}
-+		pr_debug("ADD_ADDR%s: id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d",
-+			 (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6) ? "6" : "",
-+			 mp_opt->addr_id, mp_opt->ahmac, mp_opt->echo, mp_opt->port);
- 		break;
++	if (tb[MPTCP_PM_ADDR_ATTR_PORT])
++		entry->addr.port =3D htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]));
++
+ 	return 0;
+ }
  =
 
- 	case MPTCPOPT_RM_ADDR:
+@@ -911,6 +914,8 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
+ =
+
+ 	if (nla_put_u16(skb, MPTCP_PM_ADDR_ATTR_FAMILY, addr->family))
+ 		goto nla_put_failure;
++	if (nla_put_u16(skb, MPTCP_PM_ADDR_ATTR_PORT, ntohs(addr->port)))
++		goto nla_put_failure;
+ 	if (nla_put_u8(skb, MPTCP_PM_ADDR_ATTR_ID, addr->id))
+ 		goto nla_put_failure;
+ 	if (nla_put_u32(skb, MPTCP_PM_ADDR_ATTR_FLAGS, entry->addr.flags))
 -- =
 
 2.26.2
 
---===============4334214462169286718==--
+--===============4857405494334514532==--
