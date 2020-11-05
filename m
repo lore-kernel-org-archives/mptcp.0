@@ -1,51 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5441921825259275120=="
+Content-Type: multipart/mixed; boundary="===============7901182738047629607=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 11/12] mptcp: add the mib for
- ADD_ADDR with port
-Date: Thu, 05 Nov 2020 15:04:43 +0100
-Message-ID: <b3a5f89c-8ec8-981c-6921-98e9537f163b@tessares.net>
-In-Reply-To: 2447fed3519d7acdbbc1376529bdb36505eb6301.1604562475.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH MPTCP 0/5] mptcp: add reset and fastclose option
+ support
+Date: Thu, 05 Nov 2020 18:01:21 +0100
+Message-ID: <20201105170126.5627-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 6567
+X-UID: 6568
 
---===============5441921825259275120==
+--===============7901182738047629607==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+This series adds reset and fast close options.
+Both need common infrastructure:
+ 1. need to parse mptcp option in tcp reset packets, and making
+    them available to the stack
+ 2. ability to add mptcp option to tcp reset packets
 
-On 05/11/2020 09:01, Geliang Tang wrote:
-> This patch added the mib for ADD_ADDR with port, named MPTCP_MIB_PORTADD,
-> for receiving of the ADD_ADDR suboption with a port number.
+First two patches move code around and add mptcp-callsite for
+option deciding from rst packets.
 
-This MIB is useful!
+Patch 3 adds reset support (both decoding and adding them).
+Patch 4 adds the fastclose receive processing.
+Patch 5 sends a fastclose packet when userspace calls close()
+while there is unread data in the mptcp rx queue.
 
-I think what could also be useful is a MIB counter we would increase =
+Patch 2) is not strictly need ATM, I could rework the series
+to remove it and only handle fastclose for the time being.
+Last patch could be removed as well so we only handle the rx case
+(there is nothing in RFC that says we must send fastclose).
 
-when we receive an MP_JOIN to a different port than the original one. =
+Comments welcome.
 
-What do you think?
 
-It can be useful for those using this feature and also for our =
-
-selftests: to validate we correctly receive the SYN+MPJ on a different =
-
-port than the original one as expected, no?
-
-I just see a risk with the new selftests that we don't see the new =
-
-subflow is in fact established to the wrong port, not the one we =
-
-expected. Or do we have a check for that?
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5441921825259275120==--
+--===============7901182738047629607==--
