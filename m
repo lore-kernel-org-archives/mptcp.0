@@ -1,68 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============1529752763121359657=="
+Content-Type: multipart/mixed; boundary="===============1758065887033171901=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 00/12] ADD_ADDR: ports support
-Date: Thu, 05 Nov 2020 16:01:00 +0800
-Message-ID: <cover.1604562475.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 01/12] mptcp: unify ADD_ADDR and
+ echo suboptions writing
+Date: Thu, 05 Nov 2020 16:01:01 +0800
+Message-ID: <51dfee8db6b36b0ed5d4a1fd4e918a801cb04115.1604562475.git.geliangtang@gmail.com>
+In-Reply-To: cover.1604562475.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6544
+X-UID: 6545
 
---===============1529752763121359657==
+--===============1758065887033171901==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-v3:
- - add two new patches, 8 and 11
- - add more IS_ENABLED(CONFIG_MPTCP_IPV6) in patch 2
- - define TCPOLEN_MPTCP_ADD_ADDR_HMAC in patch 4
- - add flags check in patch 10
- - update the testcases
+There are two differences between ADD_ADDR suboption and ADD_ADDR echo
+suboption: The length of the former is 8 octets longer than the length
+of the latter. The former's echo-flag is 0, and latter's echo-flag is 1.
 
-v2:
- - change mptcp_out_options's port field in CPU bype order.
- - keep mptcp_options_received's port field in CPU bype order.
- - add two new patches to simplify ADD_ADDR suboption writing.
- - update mptcp_add_addr_len helper use adding up size.
- - add more commit messages.
+This patch added two local variables, len and echo, to unify ADD_ADDR
+and ADD_ADDR echo suboptions writing.
 
-v1:
- This series is the first version of ADD_ADDR ports support. I have solved
- the listener problem which I mentioned at the meeting on 15th of October
- by adding a new listening socket from the userspace (see patch 8). Up to
- now this patchset works well.
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/options.c | 37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 248e3930c0cb..0fe3f224b00a 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1067,15 +1067,16 @@ void mptcp_write_options(__be32 *ptr, const struct =
+tcp_sock *tp,
+ =
 
-Geliang Tang (12):
-  mptcp: unify ADD_ADDR and echo suboptions writing
-  mptcp: unify ADD_ADDR and ADD_ADDR6 suboptions writing
-  mptcp: add port support for ADD_ADDR suboption writing
-  mptcp: use adding up size to get ADD_ADDR length
-  mptcp: add the outgoing ADD_ADDR port support
-  mptcp: send out dedicated packet for ADD_ADDR using port
-  mptcp: add port parameter for mptcp_pm_announce_addr
-  mptcp: print out port and ahmac when receiving ADD_ADDR
-  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
-  selftests: mptcp: add port argument for pm_nl_ctl
-  mptcp: add the mib for ADD_ADDR with port
-  selftests: mptcp: add testcases for ADD_ADDR with port
+ mp_capable_done:
+ 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+-		if (opts->ahmac)
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR, 0,
+-					      opts->addr_id);
+-		else
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR_BASE,
+-					      MPTCP_ADDR_ECHO,
+-					      opts->addr_id);
++		u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
++		u8 echo =3D MPTCP_ADDR_ECHO;
++
++		if (opts->ahmac) {
++			len +=3D sizeof(opts->ahmac);
++			echo =3D 0;
++		}
++
++		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++				      len, echo, opts->addr_id);
+ 		memcpy((u8 *)ptr, (u8 *)&opts->addr.s_addr, 4);
+ 		ptr +=3D 1;
+ 		if (opts->ahmac) {
+@@ -1086,15 +1087,15 @@ void mptcp_write_options(__be32 *ptr, const struct =
+tcp_sock *tp,
+ =
 
- include/net/mptcp.h                           |   1 +
- net/mptcp/mib.c                               |   1 +
- net/mptcp/mib.h                               |   1 +
- net/mptcp/options.c                           | 104 +++++++++++-------
- net/mptcp/pm.c                                |  14 ++-
- net/mptcp/pm_netlink.c                        |  28 ++++-
- net/mptcp/protocol.h                          |  37 +++++--
- .../testing/selftests/net/mptcp/mptcp_join.sh |  61 +++++++++-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  24 +++-
- 9 files changed, 207 insertions(+), 64 deletions(-)
-
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
+-		if (opts->ahmac)
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR6, 0,
+-					      opts->addr_id);
+-		else
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR6_BASE,
+-					      MPTCP_ADDR_ECHO,
+-					      opts->addr_id);
++		u8 len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
++		u8 echo =3D MPTCP_ADDR_ECHO;
++
++		if (opts->ahmac) {
++			len +=3D sizeof(opts->ahmac);
++			echo =3D 0;
++		}
++		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++				      len, echo, opts->addr_id);
+ 		memcpy((u8 *)ptr, opts->addr6.s6_addr, 16);
+ 		ptr +=3D 4;
+ 		if (opts->ahmac) {
 -- =
 
 2.26.2
 
---===============1529752763121359657==--
+--===============1758065887033171901==--
