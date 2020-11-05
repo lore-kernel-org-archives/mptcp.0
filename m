@@ -1,166 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============0208952274866205582=="
+Content-Type: multipart/mixed; boundary="===============4146971563264833120=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][RFC PATCH mptcp-next 6/6] selftests: mptcp: add
- MP_PRIO check in chk_rm_nr
-Date: Thu, 05 Nov 2020 18:50:23 +0800
-Message-ID: <bf5acd2f111417112ab970bb7d8e11b43cf117aa.1604572610.git.geliangtang@gmail.com>
-In-Reply-To: 97272e9a7c59c402dceec4a86ee96a1c6bac9b8c.1604572610.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 10/10] selftests: mptcp: add
+ testcases for ADD_ADDR with port
+Date: Thu, 05 Nov 2020 14:39:18 +0100
+Message-ID: <5f14bc98-aa5a-3664-e044-c73f2d8f0955@tessares.net>
+In-Reply-To: CA+WQbwuQB17A10UkQA3okn1MBfVVyjBEb7-R0atxo6RayPiLLg@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6563
+X-UID: 6564
 
---===============0208952274866205582==
+--===============4146971563264833120==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the MPTCP_MIB_MPPRIO counter check in chk_rm_nr, since
-before sending the RM_ADDR suboption, we also send the MP_PRIO suboption
-to change the related subflow's priority as backup.
+Hi Geliang,
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 34 +++++++++++++------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+Thank you for the replies!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index f224379ba254..18d488b9c87b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -484,7 +484,8 @@ chk_add_nr()
- chk_rm_nr()
- {
- 	local rm_addr_nr=3D$1
--	local rm_subflow_nr=3D$2
-+	local mp_prio_nr=3D$2
-+	local rm_subflow_nr=3D$3
- 	local count
- 	local dump_stats
- =
+On 05/11/2020 08:16, Geliang Tang wrote:
+> Hi Matt,
+> =
 
-@@ -499,7 +500,18 @@ chk_rm_nr()
- 		echo -n "[ ok ]"
- 	fi
- =
+> Thanks for your review.
+> =
 
--	echo -n " - sf    "
-+	echo -n " - prio  "
-+	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrio | awk '{print=
- $2}'`
-+	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$mp_prio_nr" ]; then
-+		echo "[fail] got $count MP_PRIO[s] expected $mp_prio_nr"
-+		ret=3D1
-+		dump_stats=3D1
-+	else
-+		echo -n "[ ok ]"
-+	fi
-+
-+	echo -n " - sf "
- 	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtRmSubflow | awk '{pr=
-int $2}'`
- 	[ -z "$count" ] && count=3D0
- 	if [ "$count" !=3D "$rm_subflow_nr" ]; then
-@@ -637,7 +649,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow
- chk_join_nr "remove single subflow" 1 1 1
--chk_rm_nr 1 1
-+chk_rm_nr 1 1 1
- =
+> Matthieu Baerts <matthieu.baerts(a)tessares.net =
 
- # multiple subflows, remove
- reset
-@@ -647,7 +659,7 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subfl=
-ow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- run_tests $ns1 $ns2 10.0.1.1 0 0 2 slow
- chk_join_nr "remove multiple subflows" 2 2 2
--chk_rm_nr 2 2
-+chk_rm_nr 2 2 2
- =
+> <mailto:matthieu.baerts(a)tessares.net>> =E4=BA=8E2020=E5=B9=B411=E6=9C=
+=884=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=881:41=E5=86=99=E9=81=93=EF=
+=BC=9A
+> =
 
- # single address, remove
- reset
-@@ -657,7 +669,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
- chk_join_nr "remove single address" 1 1 1
- chk_add_nr 1 1
--chk_rm_nr 0 0
-+chk_rm_nr 0 0 0
- =
+>     On 31/10/2020 16:31, Geliang Tang wrote:
+>      > This patch added a new argument with_port for run_tests and
+>      > do_transfer, and added the testcases for ADD_ADDR with port.
+>      >
+>      > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com
+>     <mailto:geliangtang(a)gmail.com>>
+>      > ---
+>      >=C2=A0 =C2=A0.../testing/selftests/net/mptcp/mptcp_join.sh | 26
+>     ++++++++++++++++++-
+>      >=C2=A0 =C2=A01 file changed, 25 insertions(+), 1 deletion(-)
+>      >
+>      > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>     b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>      > index 0eae628d1ffd..826d662a9bf8 100755
+>      > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>      > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>      > @@ -253,6 +254,11 @@ do_transfer()
+>      >=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0-s ${srv_pro=
+to} ${local_addr} < "$sin" > "$sout" &
+>      >=C2=A0 =C2=A0 =C2=A0 =C2=A0spid=3D$!
+>      >
+>      > +=C2=A0 =C2=A0 =C2=A0if [ "$with_port" -gt 0 ];then
+>      > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ip netns exec ${l=
+istener_ns} $mptcp_connect -t
+>     $timeout -l -p $with_port \
+>      > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0-s ${srv_proto} ${local_addr} < "$sin" >
+>     "$sout" &
+> =
 
- # subflow and signal, remove
- reset
-@@ -668,7 +680,7 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subfl=
-ow
- run_tests $ns1 $ns2 10.0.1.1 0 1 1 slow
- chk_join_nr "remove subflow and signal" 2 2 2
- chk_add_nr 1 1
--chk_rm_nr 1 1
-+chk_rm_nr 1 1 1
- =
+>     Sorry, I am not sure to understand: why do you establish a new
+>     connection if the port is set? Just to make sure we can also initiate=
+ a
+>     new connection directly to this port (I am not sure we want this)?
+> =
 
- # subflows and signal, remove
- reset
-@@ -680,7 +692,7 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subfl=
-ow
- run_tests $ns1 $ns2 10.0.1.1 0 1 2 slow
- chk_join_nr "remove subflows and signal" 3 3 3
- chk_add_nr 1 1
--chk_rm_nr 2 2
-+chk_rm_nr 2 2 2
- =
+> =
 
- # subflow IPv6
- reset
-@@ -723,7 +735,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- run_tests $ns1 $ns2 dead:beef:1::1 0 1 0 slow
- chk_join_nr "remove single address IPv6" 1 1 1
- chk_add_nr 1 1
--chk_rm_nr 0 0
-+chk_rm_nr 0 0 0
- =
+> Here I establish a new connection to listen for the new port. To make sure
+> the peer can connect with it using the new port. If the new port isn't be
+> listened, the peer's connection will fail.
 
- # subflow and signal IPv6, remove
- reset
-@@ -734,7 +746,7 @@ ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags=
- subflow
- run_tests $ns1 $ns2 dead:beef:1::1 0 1 1 slow
- chk_join_nr "remove subflow and signal IPv6" 2 2 2
- chk_add_nr 1 1
--chk_rm_nr 1 1
-+chk_rm_nr 1 1 1
- =
+I see, thank you, I missed the "-l" with mptcp_connect, you are indeed =
 
- # signal address with port
- reset
-@@ -763,7 +775,7 @@ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
- run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow 10100
- chk_join_nr "remove single address with port" 1 1 1
- chk_add_nr 1 1 1
--chk_rm_nr 0 0
-+chk_rm_nr 0 0 0
- =
+in the listener ns, my bad!
+Did we not want to have the kernel (e.g. via instructions given to the =
 
- # subflow and signal with port, remove
- reset
-@@ -774,7 +786,7 @@ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subfl=
-ow
- run_tests $ns1 $ns2 10.0.1.1 0 1 1 slow 10100
- chk_join_nr "remove subflow and signal with port" 2 2 2
- chk_add_nr 1 1 1
--chk_rm_nr 1 1
-+chk_rm_nr 1 1 1
- =
+PM) creating another listening socket?
 
- # single subflow, syncookies
- reset_with_cookies
+I don't know if we can ask to execute 2 binaries doing two listen's on =
+
+different ports, maybe not good in term of security? Maybe safer if the =
+
+same app is doing multiple bind's?
+>     Should we also check we announce the address with a port?
+> =
+
+>     (note that we could also have a MIB counter we increase when we
+>     establish a port on a different port than the original one)
+> =
+
+> =
+
+> I'll add the MIB counter in the next version.
+
+Thanks!
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============0208952274866205582==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============4146971563264833120==--
