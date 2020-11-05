@@ -1,174 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============1974907753776896212=="
+Content-Type: multipart/mixed; boundary="===============4058531089938091797=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 12/12] selftests: mptcp: add
- testcases for ADD_ADDR with port
-Date: Thu, 05 Nov 2020 16:01:12 +0800
-Message-ID: <c100d95a344b1d7afd49a1de6089d303c0ddc02a.1604562475.git.geliangtang@gmail.com>
-In-Reply-To: 2447fed3519d7acdbbc1376529bdb36505eb6301.1604562475.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][RFC PATCH mptcp-next 0/6] MP_PRIO support
+Date: Thu, 05 Nov 2020 18:50:17 +0800
+Message-ID: <cover.1604572610.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6556
+X-UID: 6557
 
---===============1974907753776896212==
+--===============4058531089938091797==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new argument for run_tests. When an address with a port
-number has been added, the new port number will be passed to this with_port
-argument, and then passed to do_transfer.
+This patchset implements the MP_PRIO logic according to the following lines
+in RFC8684:
 
-In do_transfer, if the with_port argument is set, we need to establish a
-new connection to listen for the new port. To make sure the peer can
-connect with it using the new port.
+"""
+Another use of the MP_PRIO option is to set the "B" flag on a subflow to
+cleanly "retire" its use before closing it and removing it with RM_ADDR.
+"""
 
-It checked the MPTcpExtPortAdd MIB counter in chk_add_nr, and added the
-testcases for ADD_ADDR with port.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/51
 
-The output looks like this:
+Geliang Tang (6):
+  mptcp: add the outgoing MP_PRIO support
+  mptcp: add the incoming MP_PRIO support
+  mptcp: add prio_changed flag
+  mptcp: send out MP_PRIO before RM_ADDR
+  mptcp: add the mib for MP_PRIO
+  selftests: mptcp: add MP_PRIO check in chk_rm_nr
 
- 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
- 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
- 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                       rm [ ok ] - sf    [ ok ]
+ include/net/mptcp.h                           |  1 +
+ net/mptcp/mib.c                               |  1 +
+ net/mptcp/mib.h                               |  1 +
+ net/mptcp/options.c                           | 53 +++++++++++++++++++
+ net/mptcp/pm.c                                | 11 ++++
+ net/mptcp/pm_netlink.c                        | 32 +++++++++++
+ net/mptcp/protocol.c                          |  4 +-
+ net/mptcp/protocol.h                          | 14 +++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 34 ++++++++----
+ 9 files changed, 139 insertions(+), 12 deletions(-)
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 61 ++++++++++++++++++-
- 1 file changed, 60 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 0eae628d1ffd..f224379ba254 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -212,6 +212,7 @@ do_transfer()
- 	rm_nr_ns1=3D"$7"
- 	rm_nr_ns2=3D"$8"
- 	speed=3D"$9"
-+	with_port=3D"${10}"
- =
-
- 	port=3D$((10000+$TEST_COUNT))
- 	TEST_COUNT=3D$((TEST_COUNT+1))
-@@ -253,6 +254,11 @@ do_transfer()
- 		-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
- 	spid=3D$!
- =
-
-+	if [ "$with_port" -gt 0 ];then
-+		ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $with_port=
- \
-+			-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
-+	fi
-+
- 	sleep 1
- =
-
- 	if [ "$test_link_fail" -eq 0 ];then
-@@ -348,6 +354,7 @@ run_tests()
- 	rm_nr_ns1=3D"${5:-0}"
- 	rm_nr_ns2=3D"${6:-0}"
- 	speed=3D"${7:-fast}"
-+	with_port=3D"${8:-0}"
- 	lret=3D0
- 	oldin=3D""
- =
-
-@@ -362,7 +369,7 @@ run_tests()
- 	fi
- =
-
- 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
--		${test_linkfail} ${rm_nr_ns1} ${rm_nr_ns2} ${speed}
-+		${test_linkfail} ${rm_nr_ns1} ${rm_nr_ns2} ${speed} ${with_port}
- 	lret=3D$?
- =
-
- 	if [ "$test_linkfail" -eq 1 ];then
-@@ -429,6 +436,7 @@ chk_add_nr()
- {
- 	local add_nr=3D$1
- 	local echo_nr=3D$2
-+	local port_nr=3D${3:-0}
- 	local count
- 	local dump_stats
- =
-
-@@ -450,6 +458,17 @@ chk_add_nr()
- 		echo "[fail] got $count ADD_ADDR echo[s] expected $echo_nr"
- 		ret=3D1
- 		dump_stats=3D1
-+	else
-+		echo -n "[ ok ]"
-+	fi
-+
-+	echo -n " - pt "
-+	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{prin=
-t $2}'`
-+	[ -z "$count" ] && count=3D0
-+	if [ "$count" !=3D "$port_nr" ]; then
-+		echo "[fail] got $count ADD_ADDR with port[s] expected $port_nr"
-+		ret=3D1
-+		dump_stats=3D1
- 	else
- 		echo "[ ok ]"
- 	fi
-@@ -717,6 +736,46 @@ chk_join_nr "remove subflow and signal IPv6" 2 2 2
- chk_add_nr 1 1
- chk_rm_nr 1 1
- =
-
-+# signal address with port
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+run_tests $ns1 $ns2 10.0.1.1 0 0 0 fast 10100
-+chk_join_nr "signal address with port" 1 1 1
-+chk_add_nr 1 1 1
-+
-+# subflow and signal with port
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+run_tests $ns1 $ns2 10.0.1.1 0 0 0 fast 10100
-+chk_join_nr "subflow and signal with port" 2 2 2
-+chk_add_nr 1 1 1
-+
-+# single address with port, remove
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow 10100
-+chk_join_nr "remove single address with port" 1 1 1
-+chk_add_nr 1 1 1
-+chk_rm_nr 0 0
-+
-+# subflow and signal with port, remove
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+run_tests $ns1 $ns2 10.0.1.1 0 1 1 slow 10100
-+chk_join_nr "remove subflow and signal with port" 2 2 2
-+chk_add_nr 1 1 1
-+chk_rm_nr 1 1
-+
- # single subflow, syncookies
- reset_with_cookies
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.26.2
 
---===============1974907753776896212==--
+--===============4058531089938091797==--
