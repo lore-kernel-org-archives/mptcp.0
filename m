@@ -1,357 +1,328 @@
-Content-Type: multipart/mixed; boundary="===============2123141569643653263=="
+Content-Type: multipart/mixed; boundary="===============0326271708396559240=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v1] mptcp: refine MPTCP-level ack scheduling
-Date: Thu, 05 Nov 2020 18:09:28 -0800
-Message-ID: <6036ba51-7155-e25a-102f-fe307fa69b9c@linux.intel.com>
-In-Reply-To: a6f8772ee52668ef70c8673249b4152e8053ccca.1604512047.git.pabeni@redhat.com
+Subject: [MPTCP] [Weekly meetings] MoM - 5th of November 2020
+Date: Fri, 06 Nov 2020 15:16:17 +0100
+Message-ID: <465d6268-d471-62f8-6d60-67893d74b539@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 6574
+X-UID: 6575
 
---===============2123141569643653263==
+--===============0326271708396559240==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 4 Nov 2020, Paolo Abeni wrote:
+Hello everyone,
 
-> Send timely MPTCP-level ack is somewhat when the insertion
+Last Thursday, we had our 123rd meeting with Mat and Ossama (Intel OTC), =
 
-Is there a word missing after 'somewhat'?
+Christoph (Apple), Davide, Paolo and Florian (RedHat) and myself (Tessares).
 
-> into the msk receive level is performed by the worker.
-> It needs TCP-level dup-ack to notify the MPTCP-level
-> ack_seq increase, as both the TCP-level ack seq and the
-> rcv window are unchanged.
->
-> We can actually avoid processing incoming data with the
-> worker, and let the subflow or recevmsg() send ack as needed.
->
-> When recvmsg() moves the skbs inside the msk receive queue,
-> the msk space is still unchanged, so tcp_cleanup_rbuf() could
-> end-up skipping TCP-level ack generation. Anyway, when
-> __mptcp_move_skbs() is invoked, a known amount of bytes is
-> going to be consumed soon: we update rcv wnd computation taking
-> them in account.
->
-> Additionally we need to explicitly trigger tcp_cleanup_rbuf()
-> when recvmsg() consumes a significant amount of the receive buffer.
->
-> Signed-off-by:  Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> RFC -> v1:
-> - removed unneeded deltas in __mptcp_move_skbs()
-> ---
-> net/mptcp/options.c  |  1 +
-> net/mptcp/protocol.c | 66 +++++++++++++++++---------------------------
-> net/mptcp/protocol.h |  7 +++++
-> net/mptcp/subflow.c  |  4 +--
-> 4 files changed, 35 insertions(+), 43 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 248e3930c0cb..8a59b3e44599 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -530,6 +530,7 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
-> 		opts->ext_copy.ack64 =3D 0;
-> 	}
-> 	opts->ext_copy.use_ack =3D 1;
-> +	WRITE_ONCE(msk->old_wspace, __mptcp_space((struct sock *)msk));
->
-> 	/* Add kind/length/subtype/flag overhead if mapping is not populated */
-> 	if (dss_size =3D=3D 0)
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1ef980d4a646..c02760302e46 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -405,7 +405,7 @@ static void mptcp_set_timeout(const struct sock *sk, =
-const struct sock *ssk)
-> 	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
-> }
->
-> -static void mptcp_send_ack(struct mptcp_sock *msk)
-> +static void mptcp_send_ack(struct mptcp_sock *msk, bool force)
-> {
-> 	struct mptcp_subflow_context *subflow;
->
-> @@ -413,8 +413,13 @@ static void mptcp_send_ack(struct mptcp_sock *msk)
-> 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
->
-> 		lock_sock(ssk);
-> -		tcp_send_ack(ssk);
-> +		if (force)
-> +			tcp_send_ack(ssk);
-> +		else
-> +			tcp_cleanup_rbuf(ssk, 1);
-> 		release_sock(ssk);
-> +		if (!force)
-> +			break;
-> 	}
-> }
->
-> @@ -466,7 +471,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
->
-> 		ret =3D true;
-> 		mptcp_set_timeout(sk, NULL);
-> -		mptcp_send_ack(msk);
-> +		mptcp_send_ack(msk, true);
-> 		if (sock_flag(sk, SOCK_DEAD))
-> 			return ret;
->
-> @@ -489,7 +494,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mpt=
-cp_sock *msk,
-> 	unsigned int moved =3D 0;
-> 	bool more_data_avail;
-> 	struct tcp_sock *tp;
-> -	u32 old_copied_seq;
-> 	bool done =3D false;
-> 	int sk_rbuf;
->
-> @@ -506,7 +510,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mpt=
-cp_sock *msk,
->
-> 	pr_debug("msk=3D%p ssk=3D%p", msk, ssk);
-> 	tp =3D tcp_sk(ssk);
-> -	old_copied_seq =3D tp->copied_seq;
-> 	do {
-> 		u32 map_remaining, offset;
-> 		u32 seq =3D tp->copied_seq;
-> @@ -572,9 +575,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mpt=
-cp_sock *msk,
-> 	} while (more_data_avail);
->
-> 	*bytes +=3D moved;
-> -	if (tp->copied_seq !=3D old_copied_seq)
-> -		tcp_cleanup_rbuf(ssk, 1);
-> -
-> 	return done;
-> }
->
-> @@ -678,19 +678,8 @@ void mptcp_data_ready(struct sock *sk, struct sock *=
-ssk)
-> 	if (atomic_read(&sk->sk_rmem_alloc) > sk_rbuf)
-> 		goto wake;
->
-> -	if (move_skbs_to_msk(msk, ssk))
-> -		goto wake;
-> -
-> -	/* mptcp socket is owned, release_cb should retry */
-> -	if (!test_and_set_bit(TCP_DELACK_TIMER_DEFERRED,
-> -			      &sk->sk_tsq_flags)) {
-> -		sock_hold(sk);
-> +	move_skbs_to_msk(msk, ssk);
+Thanks again for this new good meeting!
 
-If the return value of move_skbs_to_msk() isn't needed, it looks like that =
-
-function can be simplified (this is the only caller).
-
->
-> -		/* need to try again, its possible release_cb() has already
-> -		 * been called after the test_and_set_bit() above.
-> -		 */
-> -		move_skbs_to_msk(msk, ssk);
-> -	}
-> wake:
-> 	if (wake)
-> 		sk->sk_data_ready(sk);
-> @@ -1526,7 +1515,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_soc=
-k *msk, int copied)
-> 	msk->rcvq_space.time =3D mstamp;
-> }
->
-> -static bool __mptcp_move_skbs(struct mptcp_sock *msk)
-> +static bool __mptcp_move_skbs(struct mptcp_sock *msk, unsigned int rcv)
-> {
-> 	unsigned int moved =3D 0;
-> 	bool done;
-> @@ -1545,12 +1534,16 @@ static bool __mptcp_move_skbs(struct mptcp_sock *=
-msk)
->
-> 		slowpath =3D lock_sock_fast(ssk);
-> 		done =3D __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
-> +		if (moved && rcv) {
-> +			WRITE_ONCE(msk->rmem_pending, min(rcv, moved));
-> +			tcp_cleanup_rbuf(ssk, 1);
-> +			WRITE_ONCE(msk->rmem_pending, 0);
-
-This seems like a roundabout way to get the rmem_pending value to be used =
-
-by __mptcp_space(), but I don't have any better ideas :)
-
-> +		}
-> 		unlock_sock_fast(ssk, slowpath);
-> 	} while (!done);
->
-> 	if (mptcp_ofo_queue(msk) || moved > 0) {
-> -		if (!mptcp_check_data_fin((struct sock *)msk))
-> -			mptcp_send_ack(msk);
-> +		mptcp_check_data_fin((struct sock *)msk);
-> 		return true;
-> 	}
-> 	return false;
-> @@ -1574,8 +1567,8 @@ static int mptcp_recvmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len,
-> 	target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
-> 	__mptcp_flush_join_list(msk);
->
-> -	while (len > (size_t)copied) {
-> -		int bytes_read;
-> +	for (;;) {
-> +		int bytes_read, old_space;
->
-> 		bytes_read =3D __mptcp_recvmsg_mskq(msk, msg, len - copied);
-> 		if (unlikely(bytes_read < 0)) {
-> @@ -1587,9 +1580,14 @@ static int mptcp_recvmsg(struct sock *sk, struct m=
-sghdr *msg, size_t len,
-> 		copied +=3D bytes_read;
->
-> 		if (skb_queue_empty(&sk->sk_receive_queue) &&
-> -		    __mptcp_move_skbs(msk))
-> +		    __mptcp_move_skbs(msk, len - copied))
-> 			continue;
->
-> +		/* be sure to advertize window change */
-> +		old_space =3D READ_ONCE(msk->old_wspace);
-> +		if ((tcp_space(sk) - old_space) >=3D old_space)
-> +			mptcp_send_ack(msk, false);
-
-Since mptcp_send_ack(msk, false) will now always send the ack on the first =
-
-subflow, if the peer is transmitting only on a different subflow this =
-
-could send a stream of acks on an otherwise inactive subflow. This seems =
-
-like a different class of odd behavior compared to the occasional =
-
-duplicate ack on an otherwise active subflow - seems like it could lead to =
-
-cellular radios having to be more active than they need to be when a =
-
-device is on wifi, for example. Is it worthwhile to add something to =
-
-mptcp_skb_cb to track which subflow data arrived on so we can prefer that =
-
-subflow for the dup ack?
+Here are the minutes of the meeting:
 
 
-Thanks,
 
-Mat
+Accepted patches:
+     - The list of accepted patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
+
+     netdev (if mptcp ML is in cc) (Davide Caratti, Mat Martineau):
+
+1393323  [net-next,v2,7/7] selftests: mptcp: add ADD_ADDR timeout test case
+1393322  [net-next,v2,6/7] docs: networking: mptcp: Add MPTCP sysctl entries
+1393321  [net-next,v2,5/7] mptcp: add a new sysctl add_addr_timeout
+1393318  [net-next,v2,4/7] mptcp: split mptcp_clean_una function
+1393320  [net-next,v2,3/7] tcp: propagate MPTCP skb extensions on xmit =
+
+splits
+1393319  [net-next,v2,2/7] mptcp: use _fast lock version in =
+
+__mptcp_move_skbs
+1393317  [net-next,v2,1/7] mptcp: adjust mptcp receive buffer limit if =
+
+subflow...
+
+1392003  [net] mptcp: token: fix unititialized variable
 
 
-> +
-> 		/* only the master socket status is relevant here. The exit
-> 		 * conditions mirror closely tcp_recvmsg()
-> 		 */
-> @@ -1642,7 +1640,7 @@ static int mptcp_recvmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len,
-> 		/* .. race-breaker: ssk might have gotten new data
-> 		 * after last __mptcp_move_skbs() returned false.
-> 		 */
-> -		if (unlikely(__mptcp_move_skbs(msk)))
-> +		if (unlikely(__mptcp_move_skbs(msk, 0)))
-> 			set_bit(MPTCP_DATA_READY, &msk->flags);
-> 	} else if (unlikely(!test_bit(MPTCP_DATA_READY, &msk->flags))) {
-> 		/* data to read but mptcp_wait_data() cleared DATA_READY */
-> @@ -1874,7 +1872,6 @@ static void mptcp_worker(struct work_struct *work)
-> 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
-> 		__mptcp_close_subflow(msk);
->
-> -	__mptcp_move_skbs(msk);
-> 	if (mptcp_send_head(sk))
-> 		mptcp_push_pending(sk, 0);
->
-> @@ -2496,8 +2493,7 @@ static int mptcp_getsockopt(struct sock *sk, int le=
-vel, int optname,
-> 	return -EOPNOTSUPP;
-> }
->
-> -#define MPTCP_DEFERRED_ALL (TCPF_DELACK_TIMER_DEFERRED | \
-> -			    TCPF_WRITE_TIMER_DEFERRED)
-> +#define MPTCP_DEFERRED_ALL (TCPF_WRITE_TIMER_DEFERRED)
->
-> /* this is very alike tcp_release_cb() but we must handle differently a
->  * different set of events
-> @@ -2515,16 +2511,6 @@ static void mptcp_release_cb(struct sock *sk)
->
-> 	sock_release_ownership(sk);
->
-> -	if (flags & TCPF_DELACK_TIMER_DEFERRED) {
-> -		struct mptcp_sock *msk =3D mptcp_sk(sk);
-> -		struct sock *ssk;
-> -
-> -		ssk =3D mptcp_subflow_recv_lookup(msk);
-> -		if (!ssk || sk->sk_state =3D=3D TCP_CLOSE ||
-> -		    !schedule_work(&msk->work))
-> -			__sock_put(sk);
-> -	}
-> -
-> 	if (flags & TCPF_WRITE_TIMER_DEFERRED) {
-> 		mptcp_retransmit_handler(sk);
-> 		__sock_put(sk);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d29c6a4749eb..d65a4c161945 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -221,10 +221,12 @@ struct mptcp_sock {
-> 	u64		rcv_data_fin_seq;
-> 	struct sock	*last_snd;
-> 	int		snd_burst;
-> +	int		old_wspace;
-> 	atomic64_t	snd_una;
-> 	atomic64_t	wnd_end;
-> 	unsigned long	timer_ival;
-> 	u32		token;
-> +	int		rmem_pending;
-> 	unsigned long	flags;
-> 	bool		can_ack;
-> 	bool		fully_established;
-> @@ -259,6 +261,11 @@ static inline struct mptcp_sock *mptcp_sk(const stru=
-ct sock *sk)
-> 	return (struct mptcp_sock *)sk;
-> }
->
-> +static inline int __mptcp_space(const struct sock *sk)
-> +{
-> +	return tcp_space(sk) + READ_ONCE(mptcp_sk(sk)->rmem_pending);
-> +}
-> +
-> static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *=
-sk)
-> {
-> 	const struct mptcp_sock *msk =3D mptcp_sk(sk);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index fd356dc9d580..02d757e0ddb7 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -850,8 +850,6 @@ static void mptcp_subflow_discard_data(struct sock *s=
-sk, struct sk_buff *skb,
-> 		sk_eat_skb(ssk, skb);
-> 	if (mptcp_subflow_get_map_offset(subflow) >=3D subflow->map_data_len)
-> 		subflow->map_valid =3D 0;
-> -	if (incr)
-> -		tcp_cleanup_rbuf(ssk, incr);
-> }
->
-> static bool subflow_check_data_avail(struct sock *ssk)
-> @@ -973,7 +971,7 @@ void mptcp_space(const struct sock *ssk, int *space, =
-int *full_space)
-> 	const struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
-> 	const struct sock *sk =3D subflow->conn;
->
-> -	*space =3D tcp_space(sk);
-> +	*space =3D __mptcp_space(sk);
-> 	*full_space =3D tcp_full_space(sk);
-> }
->
-> -- =
+     our repo (by: Geliang Tang):
 
-> 2.26.2
+1390711  [v2,mptcp-next] Squash to "mptcp: change add_addr_signal type"
 
---
-Mat Martineau
-Intel
---===============2123141569643653263==--
+
+
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+
+     netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+     our repo (by: Florian Westphal, Geliang Tang, Mat Martineau, Paolo =
+
+Abeni):
+
+1370700: RFC: [RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
+1370701: RFC: [RFC,3/4] mptcp: add mptcp reset option support
+1370702: RFC: [RFC,4/4] tcp: parse tcp options contained in reset packets:
+     - WIP, same as last week
+
+1375893: RFC: [RFC,mptpcp-next] mptcp: add ooo prune support:
+     - WIP, same as last week
+
+1387845: RFC: MPTCP stream performances:
+     - can be drop
+
+1390270: RFC: [RFC] mptcp: refine MPTCP-level ack scheduling:
+     - can be drop, v1 sent
+
+1392576: Changes Requested: [mptcp-next] docs: networking: mptcp: Add =
+
+MPTCP sysctl entries:
+     - applied
+
+1394437: New: [net-next] Squash-to "mptcp: refactor shutdown and close":
+     - depends on some local changes Paolo has on his side
+     - v2 needed to have something building
+
+1394439: New: [v1] mptcp: refine MPTCP-level ack scheduling
+     -  can be reviewed: this has a fix from an issue mentioned earlier
+
+1394788: New: [v3,mptcp-next,01/12] mptcp: unify ADD_ADDR and echo =
+
+suboptions writing
+1394789: New: [v3,mptcp-next,02/12] mptcp: unify ADD_ADDR and ADD_ADDR6 =
+
+suboptions writing
+1394790: New: [v3,mptcp-next,03/12] mptcp: add port support for ADD_ADDR =
+
+suboption writing
+1394791: New: [v3,mptcp-next,04/12] mptcp: use adding up size to get =
+
+ADD_ADDR length
+1394792: New: [v3,mptcp-next,05/12] mptcp: add the outgoing ADD_ADDR =
+
+port support
+1394793: New: [v3,mptcp-next,06/12] mptcp: send out dedicated packet for =
+
+ADD_ADDR using port
+1394794: New: [v3,mptcp-next,07/12] mptcp: add port parameter for =
+
+mptcp_pm_announce_addr
+1394795: New: [v3,mptcp-next,08/12] mptcp: print out port and ahmac when =
+
+receiving ADD_ADDR
+1394796: New: [v3,mptcp-next,09/12] mptcp: deal with =
+
+MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+1394797: New: [v3,mptcp-next,10/12] selftests: mptcp: add port argument =
+
+for pm_nl_ctl
+1394798: New: [v3,mptcp-next,11/12] mptcp: add the mib for ADD_ADDR with =
+
+port
+1394799: New: [v3,mptcp-next,12/12] selftests: mptcp: add testcases for =
+
+ADD_ADDR with port:
+     - for the listen part, we need to bind on another port
+     - should be fine if we make sure the binaries are the same, from =
+
+the same user (maybe problematic) and in the same NS
+     - but can we easily check that? Is it safe?
+     - idea: have mptcpd creating this listen socket (and announce the =
+
+port)?
+     - how can we ensure only trusted application can open these other =
+
+ports?
+     - goal (security): avoid having another app opening a port to =
+
+bypass some rules limiting an app on a specific port
+     - maybe safer: the application should tell the kernel =
+
+(netlink/sockopt) to accept MP_JOIN from another ports (and maybe =
+
+interface/IP) and ask to announce ADD_ADDR over another port
+
+1394896: New: [RFC,mptcp-next,1/6] mptcp: add the outgoing MP_PRIO support
+1394898: New: [RFC,mptcp-next,2/6] mptcp: add the incoming MP_PRIO support
+1394899: New: [RFC,mptcp-next,3/6] mptcp: add prio_changed flag
+1394900: New: [RFC,mptcp-next,4/6] mptcp: send out MP_PRIO before RM_ADDR
+1394901: New: [RFC,mptcp-next,5/6] mptcp: add the mib for MP_PRIO
+1394902: New: [RFC,mptcp-next,6/6] selftests: mptcp: add MP_PRIO check =
+
+in chk_rm_nr
+
+Note:
+     - Florian has some patches related to MP_FASTCLOSE
+     - he will send them after the meeting
+
+
+
+Issues on Github:
+     https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+
+     Recently opened (latest from last week: 104)
+
+   106  [syzkaller] BUG: Bad page state [bug] [syzkaller]:
+       - might be linked to 104 where there is a reproducer
+       - no reproducer for 106 but the trace looks the same as the 104
+
+   105  warning in `mptcp_reset_timer()` with `mptcp_connect.sh -m mmap` =
+
+[bug]:
+       - can be linked to 70
+       - *Matth:* to check
+
+
+     Bugs (opened, flagged as "bug" and assigned)
+
+    94  Packetdrill: after a received DATA_FIN, no new packets can be =
+
+treated [bug] @dcaratti:
+        - WIP
+
+    85  Packetdrill: multiple timeout reported by the CI [bug] @matttbe:
+        - for the moment, only issue with mp_join (timeout after 2 minutes)
+
+
+     Bugs (opened and flagged as "bug" and not assigned)
+
+   106  [syzkaller] BUG: Bad page state [bug] [syzkaller]
+   105  warning in `mptcp_reset_timer()` with `mptcp_connect.sh -m mmap` =
+
+[bug]
+   104  [syzkaller] general protection fault in skb_release_data [bug] =
+
+[syzkaller]
+   103  [syzkaller] WARNING in inet_csk_listen_stop [bug] [syzkaller]
+    99  simult_flows selftest is unstable: remaining sockets in =
+
+TIME-WAIT state [bug]
+    70  [syzkaller] WARNING in mptcp_reset_timer [bug] [syzkaller]
+    65  clearing properly the status in listen() [bug]
+    56  msk connection state set without msk lock [bug]
+
+
+     In Progress (opened and assigned)
+
+   96  Python: add support for IPPROTO_MPTCP [enhancement] @matttbe
+   76  [gs]etsockopt per subflow: BPF [enhancement] @matttbe
+   54  ADD_ADDR: ports support [enhancement] @geliangtang
+   51  MP_PRIO support [enhancement] @geliangtang
+
+   49: MP_FASTCLOSE
+       - Florian is working on that
+
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag =
+
+interface [enhancement] [syzkaller] @cpaasch
+
+
+     Recently closed (since last week)
+
+None.
+
+
+
+Warnings (WARN_ON):
+     - We should be careful about them, especially for the benign ones
+     - It is costly (especially if you have them in a loop)
+     - Some people use a sysctl to panic on a warning
+
+
+
+Refactoring:
+     - Paolo is working on (yet another) refactoring :-)
+     - =E2=86=92 getting rid of a workqueue for the receiving part
+
+
+
+Commits to send to Netdev:
+     - Paolo would like to some patches to be sent
+     - he will send a proposition later
+
+
+
+Davide on Fedora:
+     - goal: send mptcpd to have it in Fedora 34
+     - spec are ready but need to be validated
+     - https://gitlab.com/dcaratti/mptcpd/-/blob/main/mptcpd.spec
+     - not sure if other distro are packaging it
+     - there is a git hook that triggers a build when we commit on the =
+
+gitlab repo
+     - ideally, it could be nice to have a githook from the official =
+
+mptcpd github repo to trigger a build in case of new tag
+     - Could be good to also propose packages for other distro like =
+
+Debian (Ubuntu) =E2=86=92 Matth? :)
+
+
+
+FYI: Current Roadmap:
+     - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+     - Current merge window (5.11): =
+
+https://github.com/multipath-tcp/mptcp_net-next/projects/6
+     - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Extra tests:
+     - news about Syzkaller? (Christoph):
+         - See Github =E2=86=91
+
+     - news about interop with mptcp.org? (Christoph):
+         - Had some issues last week, will retry
+
+     - news about Intel's kbuild? (Mat):
+         - haven't receive any new build report
+         - Mat will investigate why the builds have stopped
+
+     - packetdrill (Davide):
+         - See Github =E2=86=91
+
+     - CI (Matth):
+         - tests looks a bit more stable but still some are failing =
+
+(packetdrill, see above)
+
+
+
+CGroup BPF hook on socket creation:
+     - Mat looked at that
+     - it would be a bit different from the others (we don't have the =
+
+socket, we then cannot retrieve the cgroup from the "usual" way)
+
+
+
+Next meeting:
+     - We propose to have the next meeting on Thursday, the 12th of =
+
+November.
+     - Usual UTC time: 16:00 UTC (8am PST, 5pm CET, Midnight CST)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20201112
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0326271708396559240==--
