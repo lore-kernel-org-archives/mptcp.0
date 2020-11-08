@@ -1,56 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============8609912572276250530=="
+Content-Type: multipart/mixed; boundary="===============3373284889970314584=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 12/12] selftests: mptcp: add
- testcases for ADD_ADDR with port
-Date: Fri, 06 Nov 2020 16:58:14 -0800
-Message-ID: <3df41c98-f229-ff85-8f8-6e3b71c2dab3@linux.intel.com>
-In-Reply-To: c100d95a344b1d7afd49a1de6089d303c0ddc02a.1604562475.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 0/4] Squash to "ADD_ADDR: ports
+ support v3"
+Date: Sun, 08 Nov 2020 22:43:43 +0800
+Message-ID: <cover.1604845519.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6579
+X-UID: 6580
 
---===============8609912572276250530==
+--===============3373284889970314584==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+This patchset includes three squash-to patches and a new patch. They all
+should be squashed into the "ADD_ADDR: ports support" series.
 
-On Thu, 5 Nov 2020, Geliang Tang wrote:
+All three squash-to patches's commit massages need to be updated.
 
-> This patch added a new argument for run_tests. When an address with a port
-> number has been added, the new port number will be passed to this with_po=
-rt
-> argument, and then passed to do_transfer.
->
-> In do_transfer, if the with_port argument is set, we need to establish a
-> new connection to listen for the new port. To make sure the peer can
-> connect with it using the new port.
->
-> It checked the MPTcpExtPortAdd MIB counter in chk_add_nr, and added the
-> testcases for ADD_ADDR with port.
->
-> The output looks like this:
->
-> 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-> 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-> 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ ok ]
->                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
->                                       rm [ ok ] - sf    [ ok ]
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 61 ++++++++++++++++++-
-> 1 file changed, 60 insertions(+), 1 deletion(-)
+The new patch should be inserted into the patchset after the 8th patch
+"mptcp: print out port and ahmac when receiving ADD_ADDR".
 
-I don't have any other comments on patches 4-12, thanks again for the =
 
-series.
+Geliang Tang (4):
+  Squash to "mptcp: add port support for ADD_ADDR suboption writing"
+  mptcp: add port number check for MP_JOIN
+  Squash to "mptcp: add the mib for ADD_ADDR with port"
+  Squash to "selftests: mptcp: add testcases for ADD_ADDR with port"
 
---
-Mat Martineau
-Intel
---===============8609912572276250530==--
+ net/mptcp/mib.c                               |  3 +
+ net/mptcp/mib.h                               |  3 +
+ net/mptcp/options.c                           | 17 +++---
+ net/mptcp/pm_netlink.c                        | 12 ++++
+ net/mptcp/protocol.h                          |  1 +
+ net/mptcp/subflow.c                           | 37 ++++++++++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 56 ++++++++++++++++---
+ 7 files changed, 114 insertions(+), 15 deletions(-)
+
+-- =
+
+2.26.2
+
+--===============3373284889970314584==--
