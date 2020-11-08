@@ -1,140 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============5830741579462186493=="
+Content-Type: multipart/mixed; boundary="===============0535572394250286588=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 4/4] Squash to "selftests: mptcp:
- add testcases for ADD_ADDR with port"
-Date: Sun, 08 Nov 2020 22:43:47 +0800
-Message-ID: <99aa6841f5fd378b65518716f23457f6b52aea0c.1604845519.git.geliangtang@gmail.com>
-In-Reply-To: c4c3b3a3e29e34b67de137edb4b0783f730f190e.1604845519.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH net] mptcp: provide rmem[0] limit
+Date: Sun, 08 Nov 2020 19:49:59 +0100
+Message-ID: <37af798bd46f402fb7c79f57ebbdd00614f5d7fa.1604861097.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6584
+X-UID: 6585
 
---===============5830741579462186493==
+--===============0535572394250286588==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Here is the new commit message, please update it:
-"""
-This patch added a new argument for run_tests. When an address with a port
-number has been added, the new port number will be passed to this with_port
-argument, and then passed to do_transfer.
+The mptcp proto struct currently does not provide the
+required limit for forward memory scheduling. Under
+pressure sk_rmem_schedule() will unconditionally try
+to use such field and will oops.
 
-In do_transfer, if the with_port argument is set, we need to establish a
-new connection to listen for the new port. To make sure the peer can
-connect with it using the new port.
+Address the issue inheriting the tcp limit, as we already
+do for the wmem one.
 
-It checked the ADD_ADDR port related MIB counters in chk_add_nr, and added =
-the
-testcases for ADD_ADDR with port.
-
-The output looks like this:
-
- 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
- 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
- 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       rm [ ok ] - sf    [ ok ]
-"""
-
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Fixes: ("mptcp: add missing memory scheduling in the rx path")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 56 ++++++++++++++++---
- 1 file changed, 48 insertions(+), 8 deletions(-)
+ net/mptcp/protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index f224379ba254..8fe184a5ef25 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -437,6 +437,9 @@ chk_add_nr()
- 	local add_nr=3D$1
- 	local echo_nr=3D$2
- 	local port_nr=3D${3:-0}
-+	local syn_nr=3D$port_nr
-+	local syn_ack_nr=3D$port_nr
-+	local ack_nr=3D$port_nr
- 	local count
- 	local dump_stats
- =
-
-@@ -462,15 +465,52 @@ chk_add_nr()
- 		echo -n "[ ok ]"
- 	fi
- =
-
--	echo -n " - pt "
--	count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{prin=
-t $2}'`
--	[ -z "$count" ] && count=3D0
--	if [ "$count" !=3D "$port_nr" ]; then
--		echo "[fail] got $count ADD_ADDR with port[s] expected $port_nr"
--		ret=3D1
--		dump_stats=3D1
-+	if [ $port_nr -gt 0 ]; then
-+		echo -n " - pt "
-+		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{pri=
-nt $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$port_nr" ]; then
-+			echo "[fail] got $count ADD_ADDR[s] with port expected $port_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo "[ ok ]"
-+		fi
-+
-+		printf "%-39s %s" " " "syn"
-+		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtPortSynRx | awk '{p=
-rint $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$syn_nr" ]; then
-+			echo "[fail] got $count JOIN[s] syn with port expected $syn_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo -n "[ ok ]"
-+		fi
-+
-+		echo -n " - synack"
-+		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortSynAckRx | awk =
-'{print $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$syn_ack_nr" ]; then
-+			echo "[fail] got $count JOIN[s] synack with port expected $syn_ack_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo -n "[ ok ]"
-+		fi
-+
-+		echo -n " - ack"
-+		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtPortAckRx | awk '{p=
-rint $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$ack_nr" ]; then
-+			echo "[fail] got $count JOIN[s] ack with port expected $ack_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo "[ ok ]"
-+		fi
- 	else
--		echo "[ ok ]"
-+		echo ""
- 	fi
- =
-
- 	if [ "${dump_stats}" =3D 1 ]; then
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e7419fd15d84..88f2a7a0ccb8 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2467,6 +2467,7 @@ static struct proto mptcp_prot =3D {
+ 	.memory_pressure	=3D &tcp_memory_pressure,
+ 	.stream_memory_free	=3D mptcp_memory_free,
+ 	.sysctl_wmem_offset	=3D offsetof(struct net, ipv4.sysctl_tcp_wmem),
++	.sysctl_rmem_offset	=3D offsetof(struct net, ipv4.sysctl_tcp_rmem),
+ 	.sysctl_mem	=3D sysctl_tcp_mem,
+ 	.obj_size	=3D sizeof(struct mptcp_sock),
+ 	.slab_flags	=3D SLAB_TYPESAFE_BY_RCU,
 -- =
 
 2.26.2
 
---===============5830741579462186493==--
+--===============0535572394250286588==--
