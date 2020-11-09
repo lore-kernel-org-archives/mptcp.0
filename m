@@ -1,61 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============8599186842906550742=="
+Content-Type: multipart/mixed; boundary="===============0199782678241879240=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net 2/2] mptcp: cleanup for
- mptcp_pm_alloc_anno_list
-Date: Mon, 09 Nov 2020 21:59:22 +0800
-Message-ID: <0f17d2f60c188554d093e820c45caf20fe53aab0.1604930005.git.geliangtang@gmail.com>
-In-Reply-To: ccf004469e02fb5bd7ec822414b9a98b0015f4a3.1604930005.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH][next] mptcp: fix a dereference of pointer before
+ msk is null checked.
+Date: Mon, 09 Nov 2020 22:36:25 +0800
+Message-ID: <CA+WQbwsAn_4160ZR0P50McuhadLG_M_uC9mAvf_85DJLDeoSVQ@mail.gmail.com>
+In-Reply-To: 20201109125215.2080172-1-colin.king@canonical.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6599
+X-UID: 6600
 
---===============8599186842906550742==
+--===============0199782678241879240==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added NULL pointer check for mptcp_pm_alloc_anno_list, and
-avoided similar static checker warnings in mptcp_pm_add_timer.
+Hi Colin,
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-Reviewed-by: Dan Carpenter <dan.carpenter(a)oracle.com>
----
- net/mptcp/pm_netlink.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Thanks for your patch. But this bug is reported by Dan Carpenter to MPTCP
+ML earlier, and I have already sent out a fix in MPTCP ML for review. So
+your fix is duplicated. I'm sorry.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 03f2c28f11f5..dfc1bed4a55f 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -266,7 +266,9 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
-*msk,
- {
- 	struct mptcp_pm_add_entry *add_entry =3D NULL;
- 	struct sock *sk =3D (struct sock *)msk;
--	struct net *net =3D sock_net(sk);
-+
-+	if (!msk)
-+		return false;
- =
+-Geliang
 
- 	if (lookup_anno_list_by_saddr(msk, &entry->addr))
- 		return false;
-@@ -283,7 +285,7 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
-*msk,
- =
+Colin King <colin.king(a)canonical.com> =E4=BA=8E2020=E5=B9=B411=E6=9C=889=
+=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=888:52=E5=86=99=E9=81=93=EF=BC=
+=9A
 
- 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
- 	sk_reset_timer(sk, &add_entry->add_timer,
--		       jiffies + mptcp_get_add_addr_timeout(net));
-+		       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
- =
-
- 	return true;
- }
--- =
-
-2.26.2
-
---===============8599186842906550742==--
+>
+> From: Colin Ian King <colin.king(a)canonical.com>
+>
+> Currently the assignment of pointer net from the sock_net(sk) call
+> is potentially dereferencing a null pointer sk. sk points to the
+> same location as pointer msk and msk is being null checked after
+> the sock_net call.  Fix this by calling sock_net after the null
+> check on pointer msk.
+>
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Signed-off-by: Colin Ian King <colin.king(a)canonical.com>
+> ---
+>  net/mptcp/pm_netlink.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index ed60538df7b2..e76879ea5a30 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -206,13 +206,15 @@ static void mptcp_pm_add_timer(struct timer_list *t=
+imer)
+>         struct mptcp_pm_add_entry *entry =3D from_timer(entry, timer, add=
+_timer);
+>         struct mptcp_sock *msk =3D entry->sock;
+>         struct sock *sk =3D (struct sock *)msk;
+> -       struct net *net =3D sock_net(sk);
+> +       struct net *net;
+>
+>         pr_debug("msk=3D%p", msk);
+>
+>         if (!msk)
+>                 return;
+>
+> +       net =3D sock_net(sk);
+> +
+>         if (inet_sk_state_load(sk) =3D=3D TCP_CLOSE)
+>                 return;
+>
+> --
+> 2.28.0
+>
+--===============0199782678241879240==--
