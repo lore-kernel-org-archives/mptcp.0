@@ -1,67 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============4543557240563942814=="
+Content-Type: multipart/mixed; boundary="===============5973576986082736851=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [bug report] mptcp: retransmit ADD_ADDR when timeout
-Date: Mon, 09 Nov 2020 18:27:08 +0800
-Message-ID: <CA+WQbwvTTt_R_Z7Kq8bWQ2EBY+b5kq=yfmh7qhi5Y4dYcT+Cxw@mail.gmail.com>
-In-Reply-To: 20201109093325.GA2451633@mwanda
+Subject: [MPTCP] [MPTCP][PATCH v2 net] mptcp: fix static checker warnings in
+ mptcp_pm_add_timer
+Date: Mon, 09 Nov 2020 18:44:09 +0800
+Message-ID: <6bedbef3c2cb93ab9f3d15e78bd023043a83acbe.1604918403.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6592
+X-UID: 6593
 
---===============4543557240563942814==
+--===============5973576986082736851==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Dan,
+Fix the following Smatch complaint:
 
-Thanks for reporting this warning.
+     net/mptcp/pm_netlink.c:213 mptcp_pm_add_timer()
+     warn: variable dereferenced before check 'msk' (see line 208)
 
-I have just sent out a patch named "mptcp: fix static checker warnings
-in mptcp_pm_add_timer" to you.
+ net/mptcp/pm_netlink.c
+    207          struct mptcp_sock *msk =3D entry->sock;
+    208          struct sock *sk =3D (struct sock *)msk;
+    209          struct net *net =3D sock_net(sk);
+                                           ^^
+ "msk" dereferenced here.
 
-Could you please test it for me? Since I don't have the Smatch tool you
-mentioned.
+    210
+    211          pr_debug("msk=3D%p", msk);
+    212
+    213          if (!msk)
+                    ^^^^
+ Too late.
 
-Thanks very much.
+    214                  return;
+    215
 
--Geliang
+Fixes: 93f323b9cccc ("mptcp: add a new sysctl add_addr_timeout")
+Reported-by: Dan Carpenter <dan.carpenter(a)oracle.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ v2:
+ - fix mptcp_pm_alloc_anno_list too
+---
+ net/mptcp/pm_netlink.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Dan Carpenter <dan.carpenter(a)oracle.com> =E4=BA=8E2020=E5=B9=B411=E6=9C=
-=889=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=885:33=E5=86=99=E9=81=93=EF=
-=BC=9A
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 6180a8b39a3f..59678e59ff46 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -206,7 +206,6 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	struct mptcp_pm_add_entry *entry =3D from_timer(entry, timer, add_timer);
+ 	struct mptcp_sock *msk =3D entry->sock;
+ 	struct sock *sk =3D (struct sock *)msk;
+-	struct net *net =3D sock_net(sk);
+ =
 
+ 	pr_debug("msk=3D%p", msk);
+ =
 
->
-> Hello Geliang Tang,
->
-> This is a semi-automatic email about new static checker warnings.
->
-> The patch 00cfd77b9063: "mptcp: retransmit ADD_ADDR when timeout"
-> from Sep 24, 2020, leads to the following Smatch complaint:
->
->     net/mptcp/pm_netlink.c:213 mptcp_pm_add_timer()
->     warn: variable dereferenced before check 'msk' (see line 208)
->
-> net/mptcp/pm_netlink.c
->    207          struct mptcp_sock *msk =3D entry->sock;
->    208          struct sock *sk =3D (struct sock *)msk;
->    209          struct net *net =3D sock_net(sk);
->                                            ^^
-> "msk" dereferenced here.
->
->    210
->    211          pr_debug("msk=3D%p", msk);
->    212
->    213          if (!msk)
->                     ^^^^
-> Too late.
->
->    214                  return;
->    215
->
-> regards,
-> dan carpenter
---===============4543557240563942814==--
+@@ -235,7 +234,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ =
+
+ 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+ 		sk_reset_timer(sk, timer,
+-			       jiffies + mptcp_get_add_addr_timeout(net));
++			       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
+ =
+
+ 	spin_unlock_bh(&msk->pm.lock);
+ =
+
+@@ -267,7 +266,6 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
+*msk,
+ {
+ 	struct mptcp_pm_add_entry *add_entry =3D NULL;
+ 	struct sock *sk =3D (struct sock *)msk;
+-	struct net *net =3D sock_net(sk);
+ =
+
+ 	if (lookup_anno_list_by_saddr(msk, &entry->addr))
+ 		return false;
+@@ -284,7 +282,7 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock =
+*msk,
+ =
+
+ 	timer_setup(&add_entry->add_timer, mptcp_pm_add_timer, 0);
+ 	sk_reset_timer(sk, &add_entry->add_timer,
+-		       jiffies + mptcp_get_add_addr_timeout(net));
++		       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
+ =
+
+ 	return true;
+ }
+-- =
+
+2.26.2
+
+--===============5973576986082736851==--
