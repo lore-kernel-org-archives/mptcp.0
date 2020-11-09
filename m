@@ -1,38 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============4487899178408148787=="
+Content-Type: multipart/mixed; boundary="===============7877965271071245101=="
 MIME-Version: 1.0
-From: Dan Carpenter <dan.carpenter at oracle.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH][next] mptcp: fix a dereference of pointer before
- msk is null checked.
-Date: Mon, 09 Nov 2020 17:57:58 +0300
-Message-ID: <20201109145758.GP18329@kadam>
-In-Reply-To: b5c267c1-f116-419c-92c9-88a56f9a3b51@canonical.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 0/2] drop rm_addr_signal flag and
+ more
+Date: Mon, 09 Nov 2020 23:39:33 +0800
+Message-ID: <cover.1604935892.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6603
+X-UID: 6604
 
---===============4487899178408148787==
+--===============7877965271071245101==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 09, 2020 at 02:38:47PM +0000, Colin Ian King wrote:
-> On 09/11/2020 14:36, Geliang Tang wrote:
-> > Hi Colin,
-> > =
+This patchset should be applied after the 'ADD_ADDR: ports support'
+series.
 
-> > Thanks for your patch. But this bug is reported by Dan Carpenter to MPT=
-CP
-> > ML earlier, and I have already sent out a fix in MPTCP ML for review. So
-> > your fix is duplicated. I'm sorry.
-> =
+Geliang Tang (2):
+  mptcp: drop rm_addr_signal flag
+  mptcp: rename add_addr_signal and mptcp_add_addr_status
 
-> Oh I missed Dan's fix. No problem, glad it is fixed. :-)
+ net/mptcp/pm.c         | 18 +++++++++++-------
+ net/mptcp/pm_netlink.c |  4 ++--
+ net/mptcp/protocol.h   | 16 ++++++++--------
+ 3 files changed, 21 insertions(+), 17 deletions(-)
 
-No, I didn't send a fix, just the bug report.  I normally don't send
-bug reports to the kernel-janitors list.
+-- =
 
-regards,
-dan carpenter
+2.26.2
 
---===============4487899178408148787==--
+--===============7877965271071245101==--
