@@ -1,39 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============8211388820203042656=="
+Content-Type: multipart/mixed; boundary="===============4631448454739969927=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: provide rmem[0] limit
-Date: Mon, 09 Nov 2020 18:20:50 +0100
-Message-ID: <d49c966b-e2fe-e0c9-49ea-a7a2475f45cf@tessares.net>
-In-Reply-To: 37af798bd46f402fb7c79f57ebbdd00614f5d7fa.1604861097.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v2] Squash-to "mptcp: refactor shutdown and close"
+Date: Mon, 09 Nov 2020 18:32:16 +0100
+Message-ID: <fd2ac81a-e1dc-f74a-c04c-c85e7c009045@tessares.net>
+In-Reply-To: f4551b5fce944cf69dbbecbacf5ac354999b76fe.1604697929.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6609
+X-UID: 6610
 
---===============8211388820203042656==
+--===============4631448454739969927==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 08/11/2020 19:49, Paolo Abeni wrote:
-> The mptcp proto struct currently does not provide the
-> required limit for forward memory scheduling. Under
-> pressure sk_rmem_schedule() will unconditionally try
-> to use such field and will oops.
-> =
+On 06/11/2020 22:26, Paolo Abeni wrote:
+> The msk status for fallback socket is not tracked correctly.
+> We must switch to close only after the subflow is moved
+> there, or the worker will not run and pending mptcp data
+> will not be spooled after close()
 
-> Address the issue inheriting the tcp limit, as we already
-> do for the wmem one.
-> =
+Thank you for the patch and the review!
 
-> Fixes: ("mptcp: add missing memory scheduling in the rx path")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+- a9dd786ca633: "squashed" in "mptcp: refactor shutdown and close"
+- Results: 3f3a27631edd..42df929e2c92
 
-Good catch, thank you for this patch!
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -41,4 +36,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============8211388820203042656==--
+--===============4631448454739969927==--
