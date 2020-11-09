@@ -1,47 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============0535572394250286588=="
+Content-Type: multipart/mixed; boundary="===============7288722692853328855=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: provide rmem[0] limit
-Date: Sun, 08 Nov 2020 19:49:59 +0100
-Message-ID: <37af798bd46f402fb7c79f57ebbdd00614f5d7fa.1604861097.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 11/12] mptcp: add the mib for
+ ADD_ADDR with port
+Date: Mon, 09 Nov 2020 11:44:19 +0800
+Message-ID: <CA+WQbwu91RptcVW547aLpSx+=sMMF+_yx6Uuob2QHfj-0qzUig@mail.gmail.com>
+In-Reply-To: b3a5f89c-8ec8-981c-6921-98e9537f163b@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6585
+X-UID: 6586
 
---===============0535572394250286588==
+--===============7288722692853328855==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The mptcp proto struct currently does not provide the
-required limit for forward memory scheduling. Under
-pressure sk_rmem_schedule() will unconditionally try
-to use such field and will oops.
+Hi Matt,
 
-Address the issue inheriting the tcp limit, as we already
-do for the wmem one.
+Thanks for your review.
 
-Fixes: ("mptcp: add missing memory scheduling in the rx path")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B411=
+=E6=9C=885=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:04=E5=86=99=E9=
+=81=93=EF=BC=9A
+>
+> Hi Geliang,
+>
+> On 05/11/2020 09:01, Geliang Tang wrote:
+> > This patch added the mib for ADD_ADDR with port, named MPTCP_MIB_PORTAD=
+D,
+> > for receiving of the ADD_ADDR suboption with a port number.
+>
+> This MIB is useful!
+>
+> I think what could also be useful is a MIB counter we would increase
+> when we receive an MP_JOIN to a different port than the original one.
+> What do you think?
+>
+> It can be useful for those using this feature and also for our
+> selftests: to validate we correctly receive the SYN+MPJ on a different
+> port than the original one as expected, no?
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e7419fd15d84..88f2a7a0ccb8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2467,6 +2467,7 @@ static struct proto mptcp_prot =3D {
- 	.memory_pressure	=3D &tcp_memory_pressure,
- 	.stream_memory_free	=3D mptcp_memory_free,
- 	.sysctl_wmem_offset	=3D offsetof(struct net, ipv4.sysctl_tcp_wmem),
-+	.sysctl_rmem_offset	=3D offsetof(struct net, ipv4.sysctl_tcp_rmem),
- 	.sysctl_mem	=3D sysctl_tcp_mem,
- 	.obj_size	=3D sizeof(struct mptcp_sock),
- 	.slab_flags	=3D SLAB_TYPESAFE_BY_RCU,
--- =
+I have sent out two squash-to patches to add more MIBs:
+ Squash to "mptcp: add the mib for ADD_ADDR with port"
+ Squash to "selftests: mptcp: add testcases for ADD_ADDR with port"
 
-2.26.2
+>
+>
+> I just see a risk with the new selftests that we don't see the new
+> subflow is in fact established to the wrong port, not the one we
+> expected. Or do we have a check for that?
 
---===============0535572394250286588==--
+And I have sent out a new patch named "mptcp: add port number check for
+MP_JOIN" to do this check.
+
+-Geliang
+
+>
+>
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+--===============7288722692853328855==--
