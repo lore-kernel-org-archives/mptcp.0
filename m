@@ -1,81 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============0823760691694175796=="
+Content-Type: multipart/mixed; boundary="===============6984884904901006900=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][RFC PATCH mptcp-next 4/6] mptcp: send out MP_PRIO
- before RM_ADDR
-Date: Mon, 09 Nov 2020 18:07:36 -0800
-Message-ID: <c6ec21d-63b4-bfb0-97d6-ccbe17c33fab@linux.intel.com>
-In-Reply-To: 6af87960a4afd05da94429626d240c266c6bab23.1604572610.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][RFC PATCH mptcp-next 5/6] mptcp: add the mib for
+ MP_PRIO
+Date: Mon, 09 Nov 2020 18:09:41 -0800
+Message-ID: <6e91d79b-318f-d96b-55e8-2d724be232fc@linux.intel.com>
+In-Reply-To: 97272e9a7c59c402dceec4a86ee96a1c6bac9b8c.1604572610.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6624
+X-UID: 6625
 
---===============0823760691694175796==
+--===============6984884904901006900==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 5 Nov 2020, Geliang Tang wrote:
 
-> Before sending the RM_ADDR suboption, we also send the MP_PRIO suboption
-> to change the related subflow's priority as backup. So here invoke
-> mptcp_pm_mp_prio_send_ack from mptcp_pm_remove_anno_addr to send the
-> MP_PRIO suboption and check whether the subflow's backup value is changed.
+> This patch added the mib for MP_PRIO, named MPTCP_MIB_MPPRIO, for
+> receiving of the MP_PRIO suboption.
 >
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 
-Geliang,
+Hi Geliang & Matt -
 
-I also think this patch is not needed. The part of RFC 8684 that mentions =
+Do you think it makes sense to also have a MIB for number of MP_PRIOs =
 
-using the backup flag before a close is assuming a much longer period of =
+sent?
 
-time between the ACK that changes priority and the REMOVE_ADDR. It will be =
-
-up to the path manager to coordinate the timing on that.
-
-
-Thanks,
 
 Mat
 
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> net/mptcp/pm_netlink.c | 2 ++
-> 1 file changed, 2 insertions(+)
+> net/mptcp/mib.c     | 1 +
+> net/mptcp/mib.h     | 1 +
+> net/mptcp/options.c | 1 +
+> 3 files changed, 3 insertions(+)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index a243017c4892..f80ebd4f6a29 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -491,6 +491,7 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *=
-msk)
-> 		if (msk->pm.rm_id !=3D subflow->remote_id)
-> 			continue;
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index a8744ad62087..3812c6417c00 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+> @@ -32,6 +32,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
+> 	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
+> 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
+> 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
+> +	SNMP_MIB_ITEM("MPPrio", MPTCP_MIB_MPPRIO),
+> 	SNMP_MIB_SENTINEL
+> };
 >
-> +		WARN_ON_ONCE(!subflow->backup);
-> 		spin_unlock_bh(&msk->pm.lock);
-> 		mptcp_subflow_shutdown(sk, ssk, how);
-> 		__mptcp_close_ssk(sk, ssk, subflow);
-> @@ -830,6 +831,7 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_so=
-ck *msk,
-> 	ret =3D remove_anno_list_by_saddr(msk, addr);
-> 	if (ret || force) {
-> 		spin_lock_bh(&msk->pm.lock);
-> +		mptcp_pm_mp_prio_send_ack(msk, addr, 1);
-> 		mptcp_pm_remove_addr(msk, addr->id);
-> 		spin_unlock_bh(&msk->pm.lock);
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 1b07fc1ad1a0..522b3b191654 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -25,6 +25,7 @@ enum linux_mptcp_mib_field {
+> 	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with port */
+> 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
+> 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
+> +	MPTCP_MIB_MPPRIO,		/* Received MP_PRIO */
+> 	__MPTCP_MIB_MAX
+> };
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index affbadb77faf..c09695dba1e1 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1010,6 +1010,7 @@ void mptcp_incoming_options(struct sock *sk, struct=
+ sk_buff *skb)
+>
+> 	if (mp_opt.mp_prio) {
+> 		mptcp_pm_mp_prio_received(sk, mp_opt.prio_bkup);
+> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIO);
+> 		mp_opt.mp_prio =3D 0;
 > 	}
+>
 > -- =
 
 > 2.26.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
 
 --
 Mat Martineau
 Intel
---===============0823760691694175796==--
+--===============6984884904901006900==--
