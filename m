@@ -1,139 +1,180 @@
-Content-Type: multipart/mixed; boundary="===============5674971629894030143=="
+Content-Type: multipart/mixed; boundary="===============4809911443909300033=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [kselftest UNSTABLE] mptcp/export 1257cb138f ("DO-NOT-MERGE:
- mptcp: enabled by default") (fwd)
-Date: Mon, 09 Nov 2020 16:28:15 -0800
-Message-ID: <f22010e5-59e0-ee38-9097-806198417c31@linux.intel.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 2/4] mptcp: add port number
+ check for MP_JOIN
+Date: Mon, 09 Nov 2020 16:35:08 -0800
+Message-ID: <374c2fb-a95-5dcf-d54d-5cd8d2f338cf@linux.intel.com>
+In-Reply-To: b3625b4816e4bd62a4a2a732d76f9eb4fb2ef8aa.1604845519.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6618
+X-UID: 6619
 
---===============5674971629894030143==
+--===============4809911443909300033==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Sun, 8 Nov 2020, Geliang Tang wrote:
 
-Another data point from the self tests - mptcp_join.sh passed on this one, =
+> This patch added two new helpers, subflow_use_different_sport and
+> subflow_use_different_dport, to check whether the subflow's source or
+> destination port number is different from the msk's port number.
+>
+> When we received the MP_JOIN's SYN/SYNACK/ACK, we do these port number
+> checks. If the subflow's source port number is different, we use another
+> new helper mptcp_pm_sport_in_anno_list to check whether this port number
+> is announced. If it isn't, we need to abort this connection.
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> This patch should be inserted into the "ADD_ADDR: ports support" patchset,
+> after the 8th patch, "mptcp: print out port and ahmac when receiving
+> ADD_ADDR".
+> ---
+> net/mptcp/pm_netlink.c | 12 ++++++++++++
+> net/mptcp/protocol.h   |  1 +
+> net/mptcp/subflow.c    | 34 ++++++++++++++++++++++++++++++++++
+> 3 files changed, 47 insertions(+)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 069447424ddb..00996f410e1c 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -201,6 +201,18 @@ lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+> 	return NULL;
+> }
+>
+> +bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct so=
+ck *sk)
+> +{
+> +	struct mptcp_pm_add_entry *entry;
+> +
+> +	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+> +		if (entry->addr.port =3D=3D inet_sk(sk)->inet_sport)
+> +			return true;
+> +	}
 
-so that test is still intermittent.
+Should msk->pm.lock should be held here? It looks like the pm.lock is held =
+
+in other places the anno_list is iterated over, for example when =
+
+lookup_anno_list_by_saddr() is called.
+
+Thanks,
 
 Mat
 
 
----------- Forwarded message ----------
-Date: Mon, 9 Nov 2020 16:03:23
-From: kernel test robot <lkp(a)intel.com>
-Subject: [kselftest UNSTABLE] mptcp/export 1257cb138f
-     ("DO-NOT-MERGE: mptcp: enabled by default")
+> +
+> +	return false;
+> +}
+> +
+> static void mptcp_pm_add_timer(struct timer_list *timer)
+> {
+> 	struct mptcp_pm_add_entry *entry =3D from_timer(entry, timer, add_timer);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index b01c1fae9d8f..e575823c3077 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -516,6 +516,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
+k,
+> void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
+> void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
+> void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+> +bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct so=
+ck *sk);
+> struct mptcp_pm_add_entry *
+> mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+> 		       struct mptcp_addr_info *addr);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 1e9a72af67dc..32e4be3a7d11 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -112,6 +112,11 @@ static int __subflow_init_req(struct request_sock *r=
+eq, const struct sock *sk_li
+> 	return 0;
+> }
+>
+> +static bool subflow_use_different_sport(struct mptcp_sock *msk, const st=
+ruct sock *sk)
+> +{
+> +	return inet_sk(sk)->inet_sport !=3D inet_sk((struct sock *)msk)->inet_s=
+port;
+> +}
+> +
+> static void subflow_init_req(struct request_sock *req,
+> 			     const struct sock *sk_listener,
+> 			     struct sk_buff *skb)
+> @@ -182,6 +187,16 @@ static void subflow_init_req(struct request_sock *re=
+q,
+>
+> 		pr_debug("token=3D%u, remote_nonce=3D%u msk=3D%p", subflow_req->token,
+> 			 subflow_req->remote_nonce, subflow_req->msk);
+> +
+> +		if (subflow_use_different_sport(subflow_req->msk, sk_listener)) {
+> +			pr_debug("syn inet_sport=3D%d %d",
+> +				 ntohs(inet_sk(sk_listener)->inet_sport),
+> +				 ntohs(inet_sk((struct sock *)subflow_req->msk)->inet_sport));
+> +			if (!mptcp_pm_sport_in_anno_list(subflow_req->msk, sk_listener)) {
+> +				subflow_req->mp_join =3D 0;
+> +				return;
+> +			}
+> +		}
+> 	}
+> }
+>
+> @@ -284,6 +299,11 @@ void mptcp_subflow_reset(struct sock *ssk)
+> 		sock_hold(sk);
+> }
+>
+> +static bool subflow_use_different_dport(struct mptcp_sock *msk, const st=
+ruct sock *sk)
+> +{
+> +	return inet_sk(sk)->inet_dport !=3D inet_sk((struct sock *)msk)->inet_d=
+port;
+> +}
+> +
+> static void subflow_finish_connect(struct sock *sk, const struct sk_buff =
+*skb)
+> {
+> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> @@ -349,6 +369,12 @@ static void subflow_finish_connect(struct sock *sk, =
+const struct sk_buff *skb)
+>
+> 		subflow->mp_join =3D 1;
+> 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
+> +
+> +		if (subflow_use_different_dport(mptcp_sk(parent), sk)) {
+> +			pr_debug("synack inet_dport=3D%d %d",
+> +				 ntohs(inet_sk(sk)->inet_dport),
+> +				 ntohs(inet_sk(parent)->inet_dport));
+> +		}
+> 	} else if (mptcp_check_fallback(sk)) {
+> fallback:
+> 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+> @@ -611,6 +637,14 @@ static struct sock *subflow_syn_recv_sock(const stru=
+ct sock *sk,
+>
+> 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+> 			tcp_rsk(req)->drop_req =3D true;
+> +
+> +			if (subflow_use_different_sport(owner, sk)) {
+> +				pr_debug("ack inet_sport=3D%d %d",
+> +					 ntohs(inet_sk(sk)->inet_sport),
+> +					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
+> +				if (!mptcp_pm_sport_in_anno_list(owner, sk))
+> +					goto out;
+> +			}
+> 		}
+> 	}
+>
+> -- =
 
-Check console output at http://bee.sh.intel.com:8080/job/lkp-mptcp/319/
+> 2.26.2
 
-LINUX COMMIT
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-commit : 1257cb138f186d70f375923bad4a53ee29dd65b2
-subject: DO-NOT-MERGE: mptcp: enabled by default
-date   : 2020-11-10 02:13:16 +0800
-author : Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-
-Test status of 1257cb138f (compared to v5.9)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+--------------------------------------------------------------------------=
-------------------------------+------+------+----------+------+---+--------=
-----+-----+
-|                                                                          =
-                              | pass | fail | unstable | skip | - | regress=
-ion | fix |
-| kselftests-bpf-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x=
-86_64-rhel-7.6-kselftests       |      | 1    |          |      |   | N/A  =
-      |     |
-| kselftests-net-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x=
-86_64-rhel-7.6-kselftests       | 260  | 27   |          | 20   |   | N/A  =
-      | N/A |
-| kselftests-netfilter-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603=
-.cgz/x86_64-rhel-7.6-kselftests | 65   | 1    |          | 16   |   | N/A  =
-      | N/A |
-| kselftests-kvm-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x=
-86_64-rhel-7.6-kselftests       | 24   | 1    |          | 1    |   | N/A  =
-      | N/A |
-| kselftests-mptcp-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz=
-/x86_64-rhel-7.6-kselftests     | 49   |      |          |      |   |      =
-      | N/A |
-| kselftests-cpufreq-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.c=
-gz/x86_64-rhel-7.6-kselftests   | 1    |      |          |      |   |      =
-      | N/A |
-| kselftests-firmware-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.=
-cgz/x86_64-rhel-7.6-kselftests  | 175  |      |          |      |   |      =
-      | N/A |
-+--------------------------------------------------------------------------=
-------------------------------+------+------+----------+------+---+--------=
-----+-----+
-
-Fails
-=3D=3D=3D=3D=3D
-kselftests-bpf-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x86=
-_64-rhel-7.6-kselftests
----
-- kernel-selftests.bpf.make_fail
-
-kselftests-net-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x86=
-_64-rhel-7.6-kselftests
----
-- kernel-selftests.bpf.make_fail
-- kernel-selftests.net.tls.fail
-- kernel-selftests.net.run_netsocktests.fail
-- kernel-selftests.net.rtnetlink.sh.ipsec_offload_netdevsim_doesn't_support=
-_ipsec_offload.fail
-- kernel-selftests.net.rtnetlink.sh.fail
-- kernel-selftests.net.fib_tests.sh.fail
-- kernel-selftests.net.psock_snd.sh.fail
-- kernel-selftests.net.udpgro_bench.sh.fail
-- kernel-selftests.net.udpgro.sh.fail
-- kernel-selftests.net.test_vxlan_under_vrf.sh.fail
-- kernel-selftests.net.fcnal-test.sh.fail
-- kernel-selftests.net.icmp_redirect.sh.legacy_routing.ipv6:_redirect_excep=
-tion.fail
-- kernel-selftests.net.icmp_redirect.sh.legacy_routing.ipv6:_redirect_excep=
-tion_plus_mtu.fail
-- kernel-selftests.net.icmp_redirect.sh.legacy_routing.ipv6:_mtu_exception_=
-plus_redirect.fail
-- kernel-selftests.net.icmp_redirect.sh.legacy_routing_with_vrf.ipv6:_redir=
-ect_exception.fail
-- kernel-selftests.net.icmp_redirect.sh.legacy_routing_with_vrf.ipv6:_redir=
-ect_exception_plus_mtu.fail
-- kernel-selftests.net.icmp_redirect.sh.legacy_routing_with_vrf.ipv6:_mtu_e=
-xception_plus_redirect.fail
-- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects.ipv6:_=
-redirect_exception.fail
-- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects.ipv6:_=
-redirect_exception_plus_mtu.fail
-- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects.ipv6:_=
-mtu_exception_plus_redirect.fail
-- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects_and_vr=
-f.ipv6:_redirect_exception.fail
-- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects_and_vr=
-f.ipv6:_redirect_exception_plus_mtu.fail
-- kernel-selftests.net.icmp_redirect.sh.routing_with_nexthop_objects_and_vr=
-f.ipv6:_mtu_exception_plus_redirect.fail
-- kernel-selftests.net.txtimestamp.sh.fail
-- kernel-selftests.net.vrf-xfrm-tests.sh.fail
-- kernel-selftests.net.vrf_route_leaking.sh.IPv6_(sym_route):_VRF_ICMP_frag=
-mentation_error_route_lookup_ping.Ping_received_ICMP_Packet_too_big.fail
-- kernel-selftests.net.vrf_route_leaking.sh.fail
-
-kselftests-netfilter-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.c=
-gz/x86_64-rhel-7.6-kselftests
----
-- kernel-selftests.netfilter.nft_concat_range.sh.fail
-
-kselftests-kvm-ucode=3D0xdc/lkp-skl-d01/debian-10.4-x86_64-20200603.cgz/x86=
-_64-rhel-7.6-kselftests
----
-- kernel-selftests.kvm.vmx_preemption_timer_test.fail
-
-
---===============5674971629894030143==--
+--
+Mat Martineau
+Intel
+--===============4809911443909300033==--
