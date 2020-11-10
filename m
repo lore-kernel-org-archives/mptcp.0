@@ -1,86 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============6984884904901006900=="
+Content-Type: multipart/mixed; boundary="===============3850801529037639550=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][RFC PATCH mptcp-next 5/6] mptcp: add the mib for
- MP_PRIO
-Date: Mon, 09 Nov 2020 18:09:41 -0800
-Message-ID: <6e91d79b-318f-d96b-55e8-2d724be232fc@linux.intel.com>
-In-Reply-To: 97272e9a7c59c402dceec4a86ee96a1c6bac9b8c.1604572610.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v2 net-next] mptcp: fix static checker warnings
+ in mptcp_pm_add_timer
+Date: Tue, 10 Nov 2020 11:01:43 +0800
+Message-ID: <078a2ef5bdc4e3b2c25ef852461692001f426495.1604976945.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6625
+X-UID: 6626
 
---===============6984884904901006900==
+--===============3850801529037639550==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 5 Nov 2020, Geliang Tang wrote:
+Fix the following Smatch complaint:
 
-> This patch added the mib for MP_PRIO, named MPTCP_MIB_MPPRIO, for
-> receiving of the MP_PRIO suboption.
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+     net/mptcp/pm_netlink.c:213 mptcp_pm_add_timer()
+     warn: variable dereferenced before check 'msk' (see line 208)
 
-Hi Geliang & Matt -
+ net/mptcp/pm_netlink.c
+    207          struct mptcp_sock *msk =3D entry->sock;
+    208          struct sock *sk =3D (struct sock *)msk;
+    209          struct net *net =3D sock_net(sk);
+                                           ^^
+ "msk" dereferenced here.
 
-Do you think it makes sense to also have a MIB for number of MP_PRIOs =
+    210
+    211          pr_debug("msk=3D%p", msk);
+    212
+    213          if (!msk)
+                    ^^^^
+ Too late.
 
-sent?
+    214                  return;
+    215
 
+Fixes: 93f323b9cccc ("mptcp: add a new sysctl add_addr_timeout")
+Reported-by: Dan Carpenter <dan.carpenter(a)oracle.com>
+Reviewed-by: Dan Carpenter <dan.carpenter(a)oracle.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ v2:
+ - drop "mptcp: cleanup for mptcp_pm_alloc_anno_list"
+ - change tag to net-next.
+This patch should be applied to net-next, not -net. Since commit "mptcp:
+add a new sysctl add_addr_timeout" is not applied to -net yet.
+---
+ net/mptcp/pm_netlink.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Mat
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index ed60538df7b2..446ef8f07734 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -206,7 +206,6 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	struct mptcp_pm_add_entry *entry =3D from_timer(entry, timer, add_timer);
+ 	struct mptcp_sock *msk =3D entry->sock;
+ 	struct sock *sk =3D (struct sock *)msk;
+-	struct net *net =3D sock_net(sk);
+ =
 
+ 	pr_debug("msk=3D%p", msk);
+ =
 
-> ---
-> net/mptcp/mib.c     | 1 +
-> net/mptcp/mib.h     | 1 +
-> net/mptcp/options.c | 1 +
-> 3 files changed, 3 insertions(+)
->
-> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-> index a8744ad62087..3812c6417c00 100644
-> --- a/net/mptcp/mib.c
-> +++ b/net/mptcp/mib.c
-> @@ -32,6 +32,7 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
-> 	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
-> 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
-> 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
-> +	SNMP_MIB_ITEM("MPPrio", MPTCP_MIB_MPPRIO),
-> 	SNMP_MIB_SENTINEL
-> };
->
-> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-> index 1b07fc1ad1a0..522b3b191654 100644
-> --- a/net/mptcp/mib.h
-> +++ b/net/mptcp/mib.h
-> @@ -25,6 +25,7 @@ enum linux_mptcp_mib_field {
-> 	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with port */
-> 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
-> 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
-> +	MPTCP_MIB_MPPRIO,		/* Received MP_PRIO */
-> 	__MPTCP_MIB_MAX
-> };
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index affbadb77faf..c09695dba1e1 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -1010,6 +1010,7 @@ void mptcp_incoming_options(struct sock *sk, struct=
- sk_buff *skb)
->
-> 	if (mp_opt.mp_prio) {
-> 		mptcp_pm_mp_prio_received(sk, mp_opt.prio_bkup);
-> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIO);
-> 		mp_opt.mp_prio =3D 0;
-> 	}
->
-> -- =
+@@ -234,7 +233,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ =
 
-> 2.26.2
+ 	if (entry->retrans_times < ADD_ADDR_RETRANS_MAX)
+ 		sk_reset_timer(sk, timer,
+-			       jiffies + mptcp_get_add_addr_timeout(net));
++			       jiffies + mptcp_get_add_addr_timeout(sock_net(sk)));
+ =
 
---
-Mat Martineau
-Intel
---===============6984884904901006900==--
+ 	spin_unlock_bh(&msk->pm.lock);
+ =
+
+-- =
+
+2.26.2
+
+--===============3850801529037639550==--
