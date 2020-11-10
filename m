@@ -1,441 +1,472 @@
-Content-Type: multipart/mixed; boundary="===============5745400371450744942=="
+Content-Type: multipart/mixed; boundary="===============6100319221058228024=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 3/6] mptcp: allocate TX skbs in msk context.
-Date: Tue, 10 Nov 2020 12:25:45 +0100
-Message-ID: <0bce82c52e5e4f828b740449a18bbabd2bddd7d3.1605006569.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 2/6] mptcp: protect the rx path with the msk
+ socket spinlock
+Date: Tue, 10 Nov 2020 12:25:44 +0100
+Message-ID: <d1779b7594d19cfcf84a64e11726f190f14bfa6c.1605006569.git.pabeni@redhat.com>
 In-Reply-To: cover.1605006569.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6646
+X-UID: 6647
 
---===============5745400371450744942==
+--===============6100319221058228024==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Move the TX skbs allocation in mptcp_sendmsg() scope,
-and tentativelly allocate a skbs based on the goal
-size on the last used subflow.
+Such spinlock is currently used only to protect the 'owned'
+flag inside the socket lock itself. With this patch we extend
+it's scope to protect the whole msk receive path and
+sk_forward_memory.
 
-Use the ssk tx skb cache to prevent the subflow allocation.
+Given the above we can always move data into the msk receive queue
+(and OoO queue) from the subflow.
 
-This allows removing the msk skb extension cache and will
-make possible the later patch.
+We leverage the previous commit, so that we need to acquire the
+spinlock in the tx path only when moving fwd memory
+to wfwd and vice versa.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+recvmsg() must now explicitly acquire the socket spinlock
+when moving skbs out of sk_receive_queue. We use a snd rx
+queue and splice the first into the latter to reduce the number locks
+required.
+
+Signed-off-by: <pabeni(a)redhat.com>
 ---
-RFC v3 -> v1:
- - fixed some allocation bugs
+- add __mptcp_mem_reclaim_partial() variant
 ---
- net/mptcp/protocol.c | 193 +++++++++++++++++++++++++++++++++++--------
- net/mptcp/protocol.h |   4 +-
- 2 files changed, 160 insertions(+), 37 deletions(-)
+ net/mptcp/protocol.c | 158 +++++++++++++++++++++++++++++--------------
+ net/mptcp/protocol.h |   4 ++
+ 2 files changed, 113 insertions(+), 49 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c6370aa58ecb..7fa4c7ff911f 100644
+index 7000560c0cd9..c6370aa58ecb 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -784,16 +784,6 @@ static void mptcp_check_for_eof(struct mptcp_sock *msk)
- 		inet_sk_state_store(sk, TCP_CLOSE);
+@@ -270,7 +270,8 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *msk=
+, struct sk_buff *skb)
+ =
+
+ end:
+ 	skb_condense(skb);
+-	skb_set_owner_r(skb, sk);
++	atomic_add(skb->truesize, &sk->sk_rmem_alloc);
++	sk_mem_charge(sk, skb->truesize);
  }
  =
 
--static bool mptcp_ext_cache_refill(struct mptcp_sock *msk)
--{
--	const struct sock *sk =3D (const struct sock *)msk;
--
--	if (!msk->cached_ext)
--		msk->cached_ext =3D __skb_ext_alloc(sk->sk_allocation);
--
--	return !!msk->cached_ext;
--}
--
- static struct sock *mptcp_subflow_recv_lookup(const struct mptcp_sock *msk)
+ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+@@ -310,7 +311,8 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, st=
+ruct sock *ssk,
+ 		if (tail && mptcp_try_coalesce(sk, tail, skb))
+ 			return true;
+ =
+
+-		skb_set_owner_r(skb, sk);
++		atomic_add(skb->truesize, &sk->sk_rmem_alloc);
++		sk_mem_charge(sk, skb->truesize);
+ 		__skb_queue_tail(&sk->sk_receive_queue, skb);
+ 		return true;
+ 	} else if (after64(MPTCP_SKB_CB(skb)->map_seq, msk->ack_seq)) {
+@@ -600,7 +602,7 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp=
+_sock *msk,
+ 	return done;
+ }
+ =
+
+-static bool mptcp_ofo_queue(struct mptcp_sock *msk)
++static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
  {
- 	struct mptcp_subflow_context *subflow;
-@@ -957,19 +947,12 @@ static void mptcp_clean_una_wakeup(struct sock *sk)
- 	}
- }
- =
-
--/* ensure we get enough memory for the frag hdr, beyond some minimal amoun=
-t of
-- * data
-- */
--static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfra=
-g)
-+static void mptcp_enter_memory_pressure(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	bool first =3D true;
- =
-
--	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
--					pfrag, sk->sk_allocation)))
--		return true;
--
- 	sk_stream_moderate_sndbuf(sk);
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-@@ -979,6 +962,18 @@ static bool mptcp_page_frag_refill(struct sock *sk, st=
-ruct page_frag *pfrag)
- 		sk_stream_moderate_sndbuf(ssk);
- 		first =3D false;
- 	}
-+}
-+
-+/* ensure we get enough memory for the frag hdr, beyond some minimal amoun=
-t of
-+ * data
-+ */
-+static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfra=
-g)
-+{
-+	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
-+					pfrag, sk->sk_allocation)))
-+		return true;
-+
-+	mptcp_enter_memory_pressure(sk);
- 	return false;
- }
- =
-
-@@ -1025,6 +1020,116 @@ static int mptcp_check_allowed_size(struct mptcp_so=
-ck *msk, u64 data_seq,
- 	return avail_size;
- }
- =
-
-+static bool __mptcp_add_ext(struct sk_buff *skb, gfp_t gfp)
-+{
-+	struct skb_ext *mpext =3D __skb_ext_alloc(gfp);
-+
-+	if (!mpext)
-+		return false;
-+	__skb_ext_set(skb, SKB_EXT_MPTCP, mpext);
-+	return true;
-+}
-+
-+static struct sk_buff *__mptcp_do_alloc_tx_skb(struct sock *sk)
-+{
-+	struct sk_buff *skb;
-+
-+	skb =3D alloc_skb_fclone(MAX_TCP_HEADER, sk->sk_allocation);
-+	if (likely(skb)) {
-+		if (likely(__mptcp_add_ext(skb, sk->sk_allocation))) {
-+			skb_reserve(skb, MAX_TCP_HEADER);
-+			skb->reserved_tailroom =3D skb->end - skb->tail;
-+			return skb;
-+		}
-+		__kfree_skb(skb);
-+	} else {
-+		mptcp_enter_memory_pressure(sk);
-+	}
-+	return NULL;
-+}
-+
-+static bool mptcp_tx_cache_refill(struct sock *sk, int size)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct sk_buff *skb;
-+	int space_needed;
-+
-+	if (unlikely(tcp_under_memory_pressure(sk)))
-+		mptcp_mem_reclaim_partial(sk);
-+
-+	space_needed =3D msk->tx_pending_data + size -
-+		       msk->skb_tx_cache.qlen * msk->size_goal_cache;
-+	while (space_needed > 0) {
-+		skb =3D __mptcp_do_alloc_tx_skb(sk);
-+		if (!skb)
-+			return false;
-+
-+		if (!mptcp_wmem_alloc(sk, skb->truesize)) {
-+			__kfree_skb(skb);
-+			return false;
-+		}
-+
-+		__skb_queue_tail(&msk->skb_tx_cache, skb);
-+		space_needed -=3D msk->size_goal_cache;
-+	}
-+	return true;
-+}
-+
-+static bool __mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
-+{
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+	struct sk_buff *skb;
-+
-+	if (ssk->sk_tx_skb_cache) {
-+		skb =3D ssk->sk_tx_skb_cache;
-+		if (unlikely(!skb_ext_find(skb, SKB_EXT_MPTCP) &&
-+			     !__mptcp_add_ext(skb, sk->sk_allocation)))
-+			return false;
-+		return true;
-+	}
-+
-+	skb =3D skb_peek(&msk->skb_tx_cache);
-+	if (skb) {
-+		if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
-+			skb =3D __skb_dequeue(&msk->skb_tx_cache);
-+			if (WARN_ON_ONCE(!skb))
-+				return false;
-+
-+			mptcp_wmem_uncharge(sk, skb->truesize);
-+			ssk->sk_tx_skb_cache =3D skb;
-+			return true;
-+		}
-+
-+		/* over memory limit, no point to try to allocate a new skb */
-+		return false;
-+	}
-+
-+	skb =3D __mptcp_do_alloc_tx_skb(sk);
-+	if (!skb)
-+		return false;
-+
-+	if (likely(sk_wmem_schedule(ssk, skb->truesize))) {
-+		ssk->sk_tx_skb_cache =3D skb;
-+		return true;
-+	}
-+	kfree_skb(skb);
-+	return false;
-+}
-+
-+static bool mptcp_must_reclaim_memory(struct sock *sk, struct sock *ssk)
-+{
-+	return !ssk->sk_tx_skb_cache &&
-+	       !skb_peek(&mptcp_sk(sk)->skb_tx_cache) &&
-+	       tcp_under_memory_pressure(sk);
-+}
-+
-+static bool mptcp_alloc_tx_skb(struct sock *sk, struct sock *ssk)
-+{
-+	if (unlikely(mptcp_must_reclaim_memory(sk, ssk)))
-+		mptcp_mem_reclaim_partial(sk);
-+	return __mptcp_alloc_tx_skb(sk, ssk);
-+}
-+
- static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_data_frag *dfrag,
- 			      struct mptcp_sendmsg_info *info)
-@@ -1036,7 +1141,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
+ 	struct sock *sk =3D (struct sock *)msk;
  	struct sk_buff *skb, *tail;
- 	bool can_collapse =3D false;
- 	int avail_size;
--	size_t ret;
-+	size_t ret =3D 0;
+@@ -646,34 +648,24 @@ static bool mptcp_ofo_queue(struct mptcp_sock *msk)
+ /* In most cases we will be able to lock the mptcp socket.  If its already
+  * owned, we need to defer to the work queue to avoid ABBA deadlock.
+  */
+-static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
++static void move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+ {
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	unsigned int moved =3D 0;
  =
 
- 	pr_debug("msk=3D%p ssk=3D%p sending dfrag at seq=3D%lld len=3D%d already =
-sent=3D%d",
- 		 msk, ssk, dfrag->data_seq, dfrag->data_len, info->sent);
-@@ -1044,6 +1149,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 	/* compute send limit */
- 	info->mss_now =3D tcp_send_mss(ssk, &info->size_goal, info->flags);
- 	avail_size =3D info->size_goal;
-+	msk->size_goal_cache =3D info->size_goal;
- 	skb =3D tcp_write_queue_tail(ssk);
- 	if (skb) {
- 		/* Limit the write to the size available in the
-@@ -1092,8 +1198,11 @@ static int mptcp_sendmsg_frag(struct sock *sk, struc=
-t sock *ssk,
- 		goto out;
- 	}
+-	if (READ_ONCE(sk->sk_lock.owned))
+-		return false;
+-
+-	if (unlikely(!spin_trylock_bh(&sk->sk_lock.slock)))
+-		return false;
++	mptcp_data_lock(sk);
  =
 
--	mpext =3D __skb_ext_set(tail, SKB_EXT_MPTCP, msk->cached_ext);
--	msk->cached_ext =3D NULL;
-+	mpext =3D skb_ext_find(tail, SKB_EXT_MPTCP);
-+	if (WARN_ON_ONCE(!mpext)) {
-+		/* should never reach here, stream corrupted */
-+		return -EINVAL;
-+	}
+-	/* must re-check after taking the lock */
+-	if (!READ_ONCE(sk->sk_lock.owned)) {
+-		__mptcp_move_skbs_from_subflow(msk, ssk, &moved);
+-		mptcp_ofo_queue(msk);
+-
+-		/* If the moves have caught up with the DATA_FIN sequence number
+-		 * it's time to ack the DATA_FIN and change socket state, but
+-		 * this is not a good place to change state. Let the workqueue
+-		 * do it.
+-		 */
+-		if (mptcp_pending_data_fin(sk, NULL))
+-			mptcp_schedule_work(sk);
+-	}
++	__mptcp_move_skbs_from_subflow(msk, ssk, &moved);
++	__mptcp_ofo_queue(msk);
  =
 
- 	memset(mpext, 0, sizeof(*mpext));
- 	mpext->data_seq =3D data_seq;
-@@ -1113,6 +1222,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 		tcp_push_pending_frames(ssk);
- 	}
- out:
-+	msk->tx_pending_data -=3D ret;
- 	mptcp_subflow_ctx(ssk)->rel_write_seq +=3D ret;
- 	return ret;
+-	spin_unlock_bh(&sk->sk_lock.slock);
+-
+-	return moved > 0;
++	/* If the moves have caught up with the DATA_FIN sequence number
++	 * it's time to ack the DATA_FIN and change socket state, but
++	 * this is not a good place to change state. Let the workqueue
++	 * do it.
++	 */
++	if (mptcp_pending_data_fin(sk, NULL))
++		mptcp_schedule_work(sk);
++	mptcp_data_unlock(sk);
  }
-@@ -1166,9 +1276,6 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk,
- 	sock_owned_by_me((struct sock *)msk);
  =
 
- 	*sndbuf =3D 0;
--	if (!mptcp_ext_cache_refill(msk))
--		return NULL;
--
- 	if (__mptcp_check_fallback(msk)) {
- 		if (!msk->first)
- 			return NULL;
-@@ -1277,6 +1384,15 @@ static void mptcp_push_pending(struct sock *sk, unsi=
-gned int flags)
- 			if (ssk !=3D prev_ssk || !prev_ssk)
- 				lock_sock(ssk);
+ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+@@ -849,14 +841,18 @@ static bool mptcp_wmem_alloc(struct sock *sk, int siz=
+e)
+ 	if (msk->wforward_alloc >=3D size)
+ 		goto account;
  =
 
-+			/* keep it simple and always provide a new skb for the
-+			 * subflow, even if we will not use it when collapsing
-+			 * on the pending one
-+			 */
-+			if (!mptcp_alloc_tx_skb(sk, ssk)) {
-+				mptcp_push_release(sk, ssk, &info);
-+				goto out;
-+			}
-+
- 			ret =3D mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 			if (ret <=3D 0) {
- 				mptcp_push_release(sk, ssk, &info);
-@@ -1365,6 +1481,9 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		offset =3D dfrag->offset + dfrag->data_len;
- 		psize =3D pfrag->size - offset;
- 		psize =3D min_t(size_t, psize, msg_data_left(msg));
-+		if (!mptcp_tx_cache_refill(sk, psize))
-+			goto wait_for_memory;
-+
- 		if (!mptcp_wmem_alloc(sk, psize + frag_truesize))
- 			goto wait_for_memory;
- =
-
-@@ -1396,8 +1515,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 			 dfrag->data_seq, dfrag->data_len, dfrag->already_sent,
- 			 !dfrag_collapsed);
- =
-
--		if (!mptcp_ext_cache_refill(msk))
--			goto wait_for_memory;
- 		continue;
- =
-
- wait_for_memory:
-@@ -1409,8 +1526,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len)
- 			goto out;
- 	}
- =
-
--	if (copied)
-+	if (copied) {
-+		msk->tx_pending_data +=3D copied;
- 		mptcp_push_pending(sk, msg->msg_flags);
++	mptcp_data_lock(sk);
+ 	ret =3D sk_wmem_schedule(sk, size);
+-	if (!ret)
++	if (!ret) {
++		mptcp_data_unlock(sk);
+ 		return false;
 +	}
  =
 
- out:
- 	release_sock(sk);
-@@ -2001,9 +2120,6 @@ static void mptcp_worker(struct work_struct *work)
- 	if (!dfrag)
- 		goto unlock;
+ 	/* try to keep half fwd alloc memory for each direction */
+ 	amount =3D max(size, sk->sk_forward_alloc >> 1);
+ 	sk->sk_forward_alloc -=3D amount;
+ 	msk->wforward_alloc +=3D amount;
++	mptcp_data_unlock(sk);
  =
 
--	if (!mptcp_ext_cache_refill(msk))
--		goto reset_unlock;
--
- 	ssk =3D mptcp_subflow_get_retrans(msk);
- 	if (!ssk)
- 		goto reset_unlock;
-@@ -2014,6 +2130,9 @@ static void mptcp_worker(struct work_struct *work)
- 	info.sent =3D 0;
- 	info.limit =3D dfrag->already_sent;
- 	while (info.sent < dfrag->already_sent) {
-+		if (!mptcp_alloc_tx_skb(sk, ssk))
-+			break;
+ account:
+ 	msk->wforward_alloc -=3D size;
+@@ -868,12 +864,11 @@ static void mptcp_wmem_uncharge(struct sock *sk, int =
+size)
+ 	mptcp_sk(sk)->wforward_alloc +=3D size;
+ }
+ =
+
+-static void mptcp_mem_reclaim_partial(struct sock *sk)
++static void __mptcp_mem_reclaim_partial(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
+
+ 	sk->sk_forward_alloc +=3D msk->wforward_alloc;
+-	msk->wforward_alloc =3D 0;
+ 	sk_mem_reclaim_partial(sk);
+ =
+
+ 	/* split the remaining fwd allocated memory between rx and tx */
+@@ -881,6 +876,13 @@ static void mptcp_mem_reclaim_partial(struct sock *sk)
+ 	sk->sk_forward_alloc -=3D msk->wforward_alloc;
+ }
+ =
+
++static void mptcp_mem_reclaim_partial(struct sock *sk)
++{
++	mptcp_data_lock(sk);
++	__mptcp_mem_reclaim_partial(sk);
++	mptcp_data_unlock(sk);
++}
 +
- 		ret =3D mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
- 		if (ret <=3D 0)
+ static void dfrag_uncharge(struct sock *sk, int len)
+ {
+ 	mptcp_wmem_uncharge(sk, len);
+@@ -1432,13 +1434,12 @@ static void mptcp_wait_data(struct sock *sk, long *=
+timeo)
+ =
+
+ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 				struct msghdr *msg,
+-				size_t len)
++				size_t len, int *released)
+ {
+-	struct sock *sk =3D (struct sock *)msk;
+ 	struct sk_buff *skb;
+ 	int copied =3D 0;
+ =
+
+-	while ((skb =3D skb_peek(&sk->sk_receive_queue)) !=3D NULL) {
++	while ((skb =3D skb_peek(&msk->receive_queue)) !=3D NULL) {
+ 		u32 offset =3D MPTCP_SKB_CB(skb)->offset;
+ 		u32 data_len =3D skb->len - offset;
+ 		u32 count =3D min_t(size_t, len - copied, data_len);
+@@ -1458,7 +1459,8 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *ms=
+k,
  			break;
-@@ -2021,9 +2140,6 @@ static void mptcp_worker(struct work_struct *work)
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RETRANSSEGS);
- 		copied +=3D ret;
- 		info.sent +=3D ret;
--
--		if (!mptcp_ext_cache_refill(msk))
--			break;
+ 		}
+ =
+
+-		__skb_unlink(skb, &sk->sk_receive_queue);
++		*released +=3D skb->truesize;
++		__skb_unlink(skb, &msk->receive_queue);
+ 		__kfree_skb(skb);
+ =
+
+ 		if (copied >=3D len)
+@@ -1566,25 +1568,49 @@ static void mptcp_rcv_space_adjust(struct mptcp_soc=
+k *msk, int copied)
+ 	msk->rcvq_space.time =3D mstamp;
+ }
+ =
+
+-static bool __mptcp_move_skbs(struct mptcp_sock *msk, unsigned int rcv)
++static void __mptcp_update_rmem(struct sock *sk, int *released)
++{
++	sk_mem_uncharge(sk, *released);
++	atomic_sub(*released, &sk->sk_rmem_alloc);
++	*released =3D 0;
++}
++
++static void mptcp_update_rmem(struct sock *sk, int *released)
+ {
++	if (!released)
++		return;
++
++	mptcp_data_lock(sk);
++	__mptcp_update_rmem(sk, released);
++	mptcp_data_unlock(sk);
++}
++
++static bool __mptcp_move_skbs(struct mptcp_sock *msk, unsigned int rcv, in=
+t *released)
++{
++	struct sock *sk =3D (struct sock *)msk;
+ 	unsigned int moved =3D 0;
+-	bool done;
++	bool ret, done;
+ =
+
+ 	/* avoid looping forever below on racing close */
+-	if (((struct sock *)msk)->sk_state =3D=3D TCP_CLOSE)
+-		return false;
++	if (sk->sk_state =3D=3D TCP_CLOSE)
++		goto chk_splice;
+ =
+
+ 	__mptcp_flush_join_list(msk);
+ 	do {
+ 		struct sock *ssk =3D mptcp_subflow_recv_lookup(msk);
+ 		bool slowpath;
+ =
+
+-		if (!ssk)
++		/* we can have data pending in the subflows only if the msk
++		 * receive buffer was full at subflow_data_ready() time,
++		 * it is an likely slow path
++		 */
++		if (likely(!ssk))
+ 			break;
+ =
+
+ 		slowpath =3D lock_sock_fast(ssk);
++		mptcp_data_lock(sk);
+ 		done =3D __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
++		mptcp_data_unlock(sk);
+ 		if (moved && rcv) {
+ 			WRITE_ONCE(msk->rmem_pending, min(rcv, moved));
+ 			tcp_cleanup_rbuf(ssk, 1);
+@@ -1593,17 +1619,28 @@ static bool __mptcp_move_skbs(struct mptcp_sock *ms=
+k, unsigned int rcv)
+ 		unlock_sock_fast(ssk, slowpath);
+ 	} while (!done);
+ =
+
+-	if (mptcp_ofo_queue(msk) || moved > 0) {
+-		mptcp_check_data_fin((struct sock *)msk);
+-		return true;
++chk_splice:
++	/* acquire the data lock only if some input data is pending */
++	ret =3D moved > 0;
++	if (!RB_EMPTY_ROOT(&msk->out_of_order_queue) ||
++	    !skb_queue_empty_lockless(&sk->sk_receive_queue)) {
++		mptcp_data_lock(sk);
++		__mptcp_update_rmem(sk, released);
++		ret |=3D __mptcp_ofo_queue(msk);
++		skb_queue_splice_tail_init(&sk->sk_receive_queue,
++					   &msk->receive_queue);
++		mptcp_data_unlock(sk);
  	}
- 	if (copied)
- 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
-@@ -2053,9 +2169,12 @@ static int __mptcp_init_sock(struct sock *sk)
+-	return false;
++	if (ret)
++		mptcp_check_data_fin((struct sock *)msk);
++	return !skb_queue_empty(&msk->receive_queue);
+ }
+ =
+
+ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			 int nonblock, int flags, int *addr_len)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	int released =3D 0;
+ 	int copied =3D 0;
+ 	int target;
+ 	long timeo;
+@@ -1621,7 +1658,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ 	for (;;) {
+ 		int bytes_read, old_space;
+ =
+
+-		bytes_read =3D __mptcp_recvmsg_mskq(msk, msg, len - copied);
++		bytes_read =3D __mptcp_recvmsg_mskq(msk, msg, len - copied,
++						  &released);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied =3D bytes_read;
+@@ -1630,8 +1668,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ =
+
+ 		copied +=3D bytes_read;
+ =
+
+-		if (skb_queue_empty(&sk->sk_receive_queue) &&
+-		    __mptcp_move_skbs(msk, len - copied))
++		if (skb_queue_empty(&msk->receive_queue) &&
++		    __mptcp_move_skbs(msk, len - copied, &released))
+ 			continue;
+ =
+
+ 		/* be sure to advertize window change */
+@@ -1661,8 +1699,15 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
+hdr *msg, size_t len,
+ 			if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
+ 				mptcp_check_for_eof(msk);
+ =
+
+-			if (sk->sk_shutdown & RCV_SHUTDOWN)
++			if (sk->sk_shutdown & RCV_SHUTDOWN) {
++				/* race breaker: the shutdown could be after the
++				 * previous receive queue check
++				 */
++				if (__mptcp_move_skbs(msk, len - copied,
++						      &released))
++					continue;
+ 				break;
++			}
+ =
+
+ 			if (sk->sk_state =3D=3D TCP_CLOSE) {
+ 				copied =3D -ENOTCONN;
+@@ -1681,26 +1726,29 @@ static int mptcp_recvmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len,
+ 		}
+ =
+
+ 		pr_debug("block timeout %ld", timeo);
++		mptcp_update_rmem(sk, &released);
+ 		mptcp_wait_data(sk, &timeo);
+ 	}
+ =
+
+-	if (skb_queue_empty(&sk->sk_receive_queue)) {
++	if (skb_queue_empty_lockless(&sk->sk_receive_queue) &&
++	    skb_queue_empty(&msk->receive_queue)) {
+ 		/* entire backlog drained, clear DATA_READY. */
+ 		clear_bit(MPTCP_DATA_READY, &msk->flags);
+ =
+
+ 		/* .. race-breaker: ssk might have gotten new data
+ 		 * after last __mptcp_move_skbs() returned false.
+ 		 */
+-		if (unlikely(__mptcp_move_skbs(msk, 0)))
++		if (unlikely(__mptcp_move_skbs(msk, 0, &released)))
+ 			set_bit(MPTCP_DATA_READY, &msk->flags);
+ 	} else if (unlikely(!test_bit(MPTCP_DATA_READY, &msk->flags))) {
+ 		/* data to read but mptcp_wait_data() cleared DATA_READY */
+ 		set_bit(MPTCP_DATA_READY, &msk->flags);
+ 	}
+ out_err:
++	mptcp_update_rmem(sk, &released);
+ 	pr_debug("msk=3D%p data_ready=3D%d rx queue empty=3D%d copied=3D%d",
+ 		 msk, test_bit(MPTCP_DATA_READY, &msk->flags),
+-		 skb_queue_empty(&sk->sk_receive_queue), copied);
++		 skb_queue_empty_lockless(&sk->sk_receive_queue), copied);
+ 	mptcp_rcv_space_adjust(msk, copied);
+ =
+
+ 	release_sock(sk);
+@@ -2004,6 +2052,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	INIT_LIST_HEAD(&msk->join_list);
  	INIT_LIST_HEAD(&msk->rtx_queue);
  	INIT_WORK(&msk->work, mptcp_worker);
- 	__skb_queue_head_init(&msk->receive_queue);
-+	__skb_queue_head_init(&msk->skb_tx_cache);
++	__skb_queue_head_init(&msk->receive_queue);
  	msk->out_of_order_queue =3D RB_ROOT;
  	msk->first_pending =3D NULL;
  	msk->wforward_alloc =3D 0;
-+	msk->tx_pending_data =3D 0;
-+	msk->size_goal_cache =3D TCP_BASE_MSS;
+@@ -2200,6 +2249,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 	sk->sk_forward_alloc +=3D msk->wforward_alloc;
+ 	msk->wforward_alloc =3D 0;
+ 	sk_stream_kill_queues(sk);
++
+ 	xfrm_sk_free_policy(sk);
+ 	sk_refcnt_debug_release(sk);
+ 	sock_put(sk);
+@@ -2422,7 +2472,17 @@ static struct sock *mptcp_accept(struct sock *sk, in=
+t flags, int *err,
  =
 
- 	msk->ack_hint =3D NULL;
- 	msk->first =3D NULL;
-@@ -2103,12 +2222,17 @@ static void __mptcp_clear_xmit(struct sock *sk)
+ void mptcp_destroy_common(struct mptcp_sock *msk)
  {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_data_frag *dtmp, *dfrag;
+-	skb_rbtree_purge(&msk->out_of_order_queue);
++	struct sock *sk =3D (struct sock *)msk;
 +	struct sk_buff *skb;
- =
-
- 	sk_stop_timer(sk, &msk->sk.icsk_retransmit_timer);
- =
-
- 	WRITE_ONCE(msk->first_pending, NULL);
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list)
- 		dfrag_clear(sk, dfrag);
-+	while ((skb =3D __skb_dequeue(&msk->skb_tx_cache)) !=3D NULL) {
-+		mptcp_wmem_uncharge(sk, skb->truesize);
++	int queued =3D 0;
++
++	skb_queue_splice_tail_init(&sk->sk_receive_queue, &msk->receive_queue);
++	while ((skb =3D __skb_dequeue(&msk->receive_queue)) !=3D NULL) {
++		queued +=3D skb->truesize;
 +		kfree_skb(skb);
 +	}
- }
- =
-
- static void mptcp_cancel_work(struct sock *sk)
-@@ -2491,9 +2615,6 @@ static void mptcp_destroy(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
-
--	if (msk->cached_ext)
--		__skb_ext_put(msk->cached_ext);
--
- 	mptcp_destroy_common(msk);
- 	sk_sockets_allocated_dec(sk);
++	queued +=3D skb_rbtree_purge(&msk->out_of_order_queue);
++	__mptcp_update_rmem(sk, &queued);
+ 	mptcp_token_destroy(msk);
+ 	mptcp_pm_free_anno_list(msk);
  }
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a7107a70badd..ff8489161261 100644
+index 2a842d228950..a7107a70badd 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -240,11 +240,13 @@ struct mptcp_sock {
+@@ -239,6 +239,7 @@ struct mptcp_sock {
+ 	struct work_struct work;
  	struct sk_buff  *ooo_last_skb;
  	struct rb_root  out_of_order_queue;
- 	struct sk_buff_head receive_queue;
-+	struct sk_buff_head skb_tx_cache;	/* this is wmem accounted */
-+	int		tx_pending_data;
-+	int		size_goal_cache;
++	struct sk_buff_head receive_queue;
  	struct list_head conn_list;
  	struct list_head rtx_queue;
  	struct mptcp_data_frag *first_pending;
- 	struct list_head join_list;
--	struct skb_ext	*cached_ext;	/* for the next sendmsg */
- 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
- 	struct sock	*first;
- 	struct mptcp_pm_data	pm;
+@@ -255,6 +256,9 @@ struct mptcp_sock {
+ 	} rcvq_space;
+ };
+ =
+
++#define mptcp_data_lock(sk) spin_lock_bh(&sk->sk_lock.slock)
++#define mptcp_data_unlock(sk) spin_unlock_bh(&sk->sk_lock.slock)
++
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+ 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
+ =
+
 -- =
 
 2.26.2
 
---===============5745400371450744942==--
+--===============6100319221058228024==--
