@@ -1,56 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============7200792434695280323=="
+Content-Type: multipart/mixed; boundary="===============0093780932194173533=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Weekly meeting - 12 November 2020 16:00 UTC (8am PDT,
- 5pm CET, 12pm CST)
-Date: Wed, 11 Nov 2020 18:32:31 +0100
-Message-ID: <78a800944b5ffc88c1155def85866cb28bd327ad.camel@redhat.com>
-In-Reply-To: 2ed2989a-0989-c3bc-d97b-4c0be44ebf42@tessares.net
+Subject: [MPTCP] Re: [PATCH][next] mptcp: fix a dereference of pointer before
+ msk is null checked.
+Date: Wed, 11 Nov 2020 10:49:20 -0800
+Message-ID: <cb9fba1-b399-325f-c956-ede9da1b1b7@linux.intel.com>
+In-Reply-To: 20201109125215.2080172-1-colin.king@canonical.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6659
+X-UID: 6660
 
---===============7200792434695280323==
+--===============0093780932194173533==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-11-11 at 16:09 +0100, Matthieu Baerts wrote:
-> Hello everybody!
-> =
+On Mon, 9 Nov 2020, Colin King wrote:
 
-> Our public MPTCP upstreaming weekly web conference is scheduled for
-> tomorrow.
-> =
+> From: Colin Ian King <colin.king(a)canonical.com>
+>
+> Currently the assignment of pointer net from the sock_net(sk) call
+> is potentially dereferencing a null pointer sk. sk points to the
+> same location as pointer msk and msk is being null checked after
+> the sock_net call.  Fix this by calling sock_net after the null
+> check on pointer msk.
+>
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Signed-off-by: Colin Ian King <colin.king(a)canonical.com>
+> ---
+> net/mptcp/pm_netlink.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
 
-> The list of topics is available here:
-> https://annuel2.framapad.org/p/mptcp_upstreaming_20201112
-> =
+Hi Colin and Jakub -
 
-> Feel free to add/modify topics!
+I noticed that the follow-up discussion on this patch didn't go to the =
 
-I'd like to post upstream the following patches:
+netdev list, so patchwork did not get updated.
 
-mptcp: send explicit ack on delayed ack_seq incr
-mptcp: keep track of advertised windows right edge
-mptcp: rework poll+nospace handling
-mptcp: try to push pending data on snd una updates
-mptcp: move page frag allocation in mptcp_sendmsg()
-mptcp: refactor shutdown and close
-mptcp: introduce MPTCP snd_nxt
-mptcp: add accounting for pending data
-mptcp: reduce the arguments of mptcp_sendmsg_frag
-mptcp: introduce mptcp_schedule_work
-tcp: factor out __tcp_close() helper
-mptcp: use tcp_build_frag()
-tcp: factor out tcp_build_frag()
+This patch is superseded by the following, which already has a Reviewed-by =
 
-in a single series. My plan is let the self-tests run for while on net-
-next plus the above and then post (likely, tomorrow before the mtg).
+tag from Matthieu:
 
-If there are objections or different opinions please let me know!
+http://patchwork.ozlabs.org/project/netdev/patch/078a2ef5bdc4e3b2c25ef85246=
+1692001f426495.1604976945.git.geliangtang(a)gmail.com/
 
-/P
 
---===============7200792434695280323==--
+Thanks!
+
+--
+Mat Martineau
+Intel
+--===============0093780932194173533==--
