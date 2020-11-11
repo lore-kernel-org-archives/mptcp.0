@@ -1,71 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============4824347304253171085=="
+Content-Type: multipart/mixed; boundary="===============7979577413589028392=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 2/6] mptcp: protect the rx path with the
- msk socket spinlock
-Date: Tue, 10 Nov 2020 18:12:25 -0800
-Message-ID: <dbd6ea54-5369-95c7-4526-3ef2926e38a5@linux.intel.com>
-In-Reply-To: d1779b7594d19cfcf84a64e11726f190f14bfa6c.1605006569.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 6/6] mptcp: use mptcp backlog.
+Date: Wed, 11 Nov 2020 10:02:09 +0100
+Message-ID: <19e6933468367fc79a905ec5359a4283debae324.camel@redhat.com>
+In-Reply-To: daab240341b66f74b998b16c4af4a51171bf1064.1605006569.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6654
+X-UID: 6655
 
---===============4824347304253171085==
+--===============7979577413589028392==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Nov 2020, Paolo Abeni wrote:
+hello,
 
-> Such spinlock is currently used only to protect the 'owned'
-> flag inside the socket lock itself. With this patch we extend
-> it's scope to protect the whole msk receive path and
-> sk_forward_memory.
->
+On Tue, 2020-11-10 at 12:25 +0100, Paolo Abeni wrote:
+> We have some tasks triggered by the subflow receive path
+> which require to access the msk socket status, specifically:
+> mptcp_clean_una() and mptcp_push_pending()
+> =
 
-Is it a problem that lock_sock()/release_sock() and the data path will be =
+> We have almost everything in place to use the msk backlog
+> and a standard !owned by user schema for that.
+> =
 
-competing for this spinlock? Just wondering if the choice to use this lock =
+> Introduce a dummy per msk sk_buff to trigger into the backlog
+> as needed.
+> =
 
-is driven by not wanting to add a new lock (which is understandable!). =
+> Since the worker is no more used to clean the acked data,
+> for fallback sockets we need to explicitly call flush them.
+> =
 
-Given that the spinlock is only held for short times hopefully the data =
+> As added bonus we can simplify a lot mptcp_poll() and
+> move the timer update under the data lock
+> =
 
-path is not delaying the regular socket lock calls very much.
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> --
+> rfc v3-> v2:
+> =C2=A0- dfrag_release is always invoked under sock spin lock,
+> =C2=A0=C2=A0=C2=A0must use mem_release
+> =C2=A0- move the mem_reclaim in mptcp_clean_una
+> =C2=A0- cleanup poll, leveraging the previous patch
+> ---
+> =C2=A0net/mptcp/options.c  |  18 +++--
+> =C2=A0net/mptcp/protocol.c | 183 +++++++++++++++++++++++++++-------------=
+---
+> =C2=A0net/mptcp/protocol.h |   8 ++
+> =C2=A03 files changed, 134 insertions(+), 75 deletions(-)
+> =
 
-> Given the above we can always move data into the msk receive queue
-> (and OoO queue) from the subflow.
->
-> We leverage the previous commit, so that we need to acquire the
-> spinlock in the tx path only when moving fwd memory
-> to wfwd and vice versa.
->
-> recvmsg() must now explicitly acquire the socket spinlock
-> when moving skbs out of sk_receive_queue. We use a snd rx
-> queue and splice the first into the latter to reduce the number locks
-> required.
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 3986454a0340..48dd6622a04c 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -189,7 +189,7 @@ static void mptcp_parse_option(const struct sk_buff *=
+skb,
+> =C2=A0				ptr +=3D 4;
+> =C2=A0			}
+> =
 
-To see if I understood this (and the code) correctly:
+> -			pr_debug("data_ack=3D%llu", mp_opt->data_ack);
+> +			pr_debug("64=3D%d data_ack=3D%llx", mp_opt->ack64, mp_opt->data_ack);
 
-For the msk, sk_receive_queue is protected only by the mptcp_data_lock() =
+why are you changing (here and in hunks below) the format specifier of
+DACKs from decimal to hex format? tcpdump and wireshark print it as
+decimal, and we use to compare it with TCP sequence numbers, that are in
+decimal format too: I'd prefer to keep it %llu.
 
-and is where MPTCP-level data is reassembled in-order without holding the =
+WDYT?
+-- =
 
-msk socket lock.
-
-msk->receive_queue is protected by the socket lock, and is where in-order =
-
-skbs are moved so they can be copied to userspace.
-
-
-I still need to take a deeper look at the locking changes but the approach =
-
-looks ok.
+davide
 
 
-
---
-Mat Martineau
-Intel
---===============4824347304253171085==--
+--===============7979577413589028392==--
