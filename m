@@ -1,86 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============7943370752178674325=="
+Content-Type: multipart/mixed; boundary="===============6613651289665596088=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 6/6] mptcp: use mptcp backlog.
-Date: Wed, 11 Nov 2020 10:26:09 +0100
-Message-ID: <3a4b26eab4d26df3a2176d9935c57f2074535606.camel@redhat.com>
-In-Reply-To: 19e6933468367fc79a905ec5359a4283debae324.camel@redhat.com
+Subject: [MPTCP] Weekly meeting - 12 November 2020 16:00 UTC (8am PDT, 5pm CET,
+ 12pm CST)
+Date: Wed, 11 Nov 2020 16:09:13 +0100
+Message-ID: <2ed2989a-0989-c3bc-d97b-4c0be44ebf42@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 6657
+X-UID: 6658
 
---===============7943370752178674325==
+--===============6613651289665596088==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-11-11 at 10:02 +0100, Davide Caratti wrote:
-> hello,
-> =
+Hello everybody!
 
-> On Tue, 2020-11-10 at 12:25 +0100, Paolo Abeni wrote:
-> > We have some tasks triggered by the subflow receive path
-> > which require to access the msk socket status, specifically:
-> > mptcp_clean_una() and mptcp_push_pending()
-> > =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> > We have almost everything in place to use the msk backlog
-> > and a standard !owned by user schema for that.
-> > =
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20201112
 
-> > Introduce a dummy per msk sk_buff to trigger into the backlog
-> > as needed.
-> > =
+Feel free to add/modify topics!
 
-> > Since the worker is no more used to clean the acked data,
-> > for fallback sockets we need to explicitly call flush them.
-> > =
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-> > As added bonus we can simplify a lot mptcp_poll() and
-> > move the timer update under the data lock
-> > =
+Speak to you tomorrow!
+Matt
+-- =
 
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > --
-> > rfc v3-> v2:
-> >  - dfrag_release is always invoked under sock spin lock,
-> >    must use mem_release
-> >  - move the mem_reclaim in mptcp_clean_una
-> >  - cleanup poll, leveraging the previous patch
-> > ---
-> >  net/mptcp/options.c  |  18 +++--
-> >  net/mptcp/protocol.c | 183 +++++++++++++++++++++++++++----------------
-> >  net/mptcp/protocol.h |   8 ++
-> >  3 files changed, 134 insertions(+), 75 deletions(-)
-> > =
-
-> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > index 3986454a0340..48dd6622a04c 100644
-> > --- a/net/mptcp/options.c
-> > +++ b/net/mptcp/options.c
-> > @@ -189,7 +189,7 @@ static void mptcp_parse_option(const struct sk_buff=
- *skb,
-> >  				ptr +=3D 4;
-> >  			}
-> > =
-
-> > -			pr_debug("data_ack=3D%llu", mp_opt->data_ack);
-> > +			pr_debug("64=3D%d data_ack=3D%llx", mp_opt->ack64, mp_opt->data_ack=
-);
-> =
-
-> why are you changing (here and in hunks below) the format specifier of
-> DACKs from decimal to hex format? =
-
-
-whoops, this is an unneeded/unindended change that slipped in - it's
-there as debug hint, fits better my personal preference/setup.
-
-Will be dropped in later iteration.
-
-Cheers,
-
-Paolo
-
---===============7943370752178674325==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============6613651289665596088==--
