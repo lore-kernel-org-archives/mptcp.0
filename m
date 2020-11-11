@@ -1,91 +1,86 @@
-Content-Type: multipart/mixed; boundary="===============7991994081545804921=="
+Content-Type: multipart/mixed; boundary="===============7943370752178674325=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 2/6] mptcp: protect the rx path with the
- msk socket spinlock
-Date: Wed, 11 Nov 2020 10:24:36 +0100
-Message-ID: <93f008493656a238c48c61e59bfb5488fb639028.camel@redhat.com>
-In-Reply-To: dbd6ea54-5369-95c7-4526-3ef2926e38a5@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net-next 6/6] mptcp: use mptcp backlog.
+Date: Wed, 11 Nov 2020 10:26:09 +0100
+Message-ID: <3a4b26eab4d26df3a2176d9935c57f2074535606.camel@redhat.com>
+In-Reply-To: 19e6933468367fc79a905ec5359a4283debae324.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6656
+X-UID: 6657
 
---===============7991994081545804921==
+--===============7943370752178674325==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-11-10 at 18:12 -0800, Mat Martineau wrote:
-> On Tue, 10 Nov 2020, Paolo Abeni wrote:
+On Wed, 2020-11-11 at 10:02 +0100, Davide Caratti wrote:
+> hello,
 > =
 
-> > Such spinlock is currently used only to protect the 'owned'
-> > flag inside the socket lock itself. With this patch we extend
-> > it's scope to protect the whole msk receive path and
-> > sk_forward_memory.
+> On Tue, 2020-11-10 at 12:25 +0100, Paolo Abeni wrote:
+> > We have some tasks triggered by the subflow receive path
+> > which require to access the msk socket status, specifically:
+> > mptcp_clean_una() and mptcp_push_pending()
 > > =
 
-> =
-
-> Is it a problem that lock_sock()/release_sock() and the data path will be =
-
-> competing for this spinlock? Just wondering if the choice to use this loc=
-k =
-
-> is driven by not wanting to add a new lock (which is understandable!). =
-
-> Given that the spinlock is only held for short times hopefully the data =
-
-> path is not delaying the regular socket lock calls very much.
-
-Path 6/6 will shed more light on this. Using the socket spin lock
-allows the hack/trick in such patch.
-
-I don't think contention will be a problem, at least in the short term
-- if contention will become visibile, we will be doing a lot of pps,
-which is good ;). Additionally, in the current code, we already have
-contention on the msk socket lock via trylock.
-
-> > Given the above we can always move data into the msk receive queue
-> > (and OoO queue) from the subflow.
+> > We have almost everything in place to use the msk backlog
+> > and a standard !owned by user schema for that.
 > > =
 
-> > We leverage the previous commit, so that we need to acquire the
-> > spinlock in the tx path only when moving fwd memory
-> > to wfwd and vice versa.
+> > Introduce a dummy per msk sk_buff to trigger into the backlog
+> > as needed.
 > > =
 
-> > recvmsg() must now explicitly acquire the socket spinlock
-> > when moving skbs out of sk_receive_queue. We use a snd rx
-> > queue and splice the first into the latter to reduce the number locks
-> > required.
+> > Since the worker is no more used to clean the acked data,
+> > for fallback sockets we need to explicitly call flush them.
+> > =
+
+> > As added bonus we can simplify a lot mptcp_poll() and
+> > move the timer update under the data lock
+> > =
+
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > --
+> > rfc v3-> v2:
+> >  - dfrag_release is always invoked under sock spin lock,
+> >    must use mem_release
+> >  - move the mem_reclaim in mptcp_clean_una
+> >  - cleanup poll, leveraging the previous patch
+> > ---
+> >  net/mptcp/options.c  |  18 +++--
+> >  net/mptcp/protocol.c | 183 +++++++++++++++++++++++++++----------------
+> >  net/mptcp/protocol.h |   8 ++
+> >  3 files changed, 134 insertions(+), 75 deletions(-)
+> > =
+
+> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > index 3986454a0340..48dd6622a04c 100644
+> > --- a/net/mptcp/options.c
+> > +++ b/net/mptcp/options.c
+> > @@ -189,7 +189,7 @@ static void mptcp_parse_option(const struct sk_buff=
+ *skb,
+> >  				ptr +=3D 4;
+> >  			}
+> > =
+
+> > -			pr_debug("data_ack=3D%llu", mp_opt->data_ack);
+> > +			pr_debug("64=3D%d data_ack=3D%llx", mp_opt->ack64, mp_opt->data_ack=
+);
 > =
 
-> To see if I understood this (and the code) correctly:
-> =
+> why are you changing (here and in hunks below) the format specifier of
+> DACKs from decimal to hex format? =
 
-> For the msk, sk_receive_queue is protected only by the mptcp_data_lock() =
 
-> and is where MPTCP-level data is reassembled in-order without holding the =
+whoops, this is an unneeded/unindended change that slipped in - it's
+there as debug hint, fits better my personal preference/setup.
 
-> msk socket lock.
-> =
+Will be dropped in later iteration.
 
-> msk->receive_queue is protected by the socket lock, and is where in-order =
+Cheers,
 
-> skbs are moved so they can be copied to userspace.
+Paolo
 
-Yes, the above is correct. The introduction of msk->receive_queue
-allows skipping one mptcp_data_lock() in recvmsg() for bulk transfer.
-
-There is a possible follow-up improvement:
-
-Open code lock_sock()/release_sock(), so that we can do mptcp-specific
-operations - e.g. splicing receive_queue, or fwd allocating memory -
- while acquiring the msk socket lock spinlock inside such helper. That
-will avoid up to 2 additional lock operations per recvmsg()/sendmsg().
-
-/P
-
---===============7991994081545804921==--
+--===============7943370752178674325==--
