@@ -1,37 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============6613651289665596088=="
+Content-Type: multipart/mixed; boundary="===============7200792434695280323=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 12 November 2020 16:00 UTC (8am PDT, 5pm CET,
- 12pm CST)
-Date: Wed, 11 Nov 2020 16:09:13 +0100
-Message-ID: <2ed2989a-0989-c3bc-d97b-4c0be44ebf42@tessares.net>
+Subject: [MPTCP] Re: Weekly meeting - 12 November 2020 16:00 UTC (8am PDT,
+ 5pm CET, 12pm CST)
+Date: Wed, 11 Nov 2020 18:32:31 +0100
+Message-ID: <78a800944b5ffc88c1155def85866cb28bd327ad.camel@redhat.com>
+In-Reply-To: 2ed2989a-0989-c3bc-d97b-4c0be44ebf42@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6658
+X-UID: 6659
 
---===============6613651289665596088==
+--===============7200792434695280323==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Wed, 2020-11-11 at 16:09 +0100, Matthieu Baerts wrote:
+> Hello everybody!
+> =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> Our public MPTCP upstreaming weekly web conference is scheduled for
+> tomorrow.
+> =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20201112
+> The list of topics is available here:
+> https://annuel2.framapad.org/p/mptcp_upstreaming_20201112
+> =
 
-Feel free to add/modify topics!
+> Feel free to add/modify topics!
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+I'd like to post upstream the following patches:
 
-Speak to you tomorrow!
-Matt
--- =
+mptcp: send explicit ack on delayed ack_seq incr
+mptcp: keep track of advertised windows right edge
+mptcp: rework poll+nospace handling
+mptcp: try to push pending data on snd una updates
+mptcp: move page frag allocation in mptcp_sendmsg()
+mptcp: refactor shutdown and close
+mptcp: introduce MPTCP snd_nxt
+mptcp: add accounting for pending data
+mptcp: reduce the arguments of mptcp_sendmsg_frag
+mptcp: introduce mptcp_schedule_work
+tcp: factor out __tcp_close() helper
+mptcp: use tcp_build_frag()
+tcp: factor out tcp_build_frag()
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============6613651289665596088==--
+in a single series. My plan is let the self-tests run for while on net-
+next plus the above and then post (likely, tomorrow before the mtg).
+
+If there are objections or different opinions please let me know!
+
+/P
+
+--===============7200792434695280323==--
