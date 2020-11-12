@@ -1,54 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============7079615349037112375=="
+Content-Type: multipart/mixed; boundary="===============5294844649820227853=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 net-next] mptcp: fix static checker
- warnings in mptcp_pm_add_timer
-Date: Thu, 12 Nov 2020 07:55:54 -0800
-Message-ID: <20201112075554.00739ede@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: 078a2ef5bdc4e3b2c25ef852461692001f426495.1604976945.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH net-next 00/13] mptcp: improve multiple xmit
+ streams support
+Date: Thu, 12 Nov 2020 17:49:30 +0100
+Message-ID: <3fd7c25aa80db27949f1f18ece6b77e615955360.camel@redhat.com>
+In-Reply-To: 20201112074025.5b932eaa@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6686
+X-UID: 6687
 
---===============7079615349037112375==
+--===============5294844649820227853==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Nov 2020 11:01:43 +0800 Geliang Tang wrote:
-> Fix the following Smatch complaint:
+On Thu, 2020-11-12 at 07:40 -0800, Jakub Kicinski wrote:
+> On Thu, 12 Nov 2020 11:47:58 +0100 Paolo Abeni wrote:
+> > This series improves MPTCP handling of multiple concurrent
+> > xmit streams.
+> > =
+
+> > The to-be-transmitted data is enqueued to a subflow only when
+> > the send window is open, keeping the subflows xmit queue shorter
+> > and allowing for faster switch-over.
+> > =
+
+> > The above requires a more accurate msk socket state tracking
+> > and some additional infrastructure to allow pushing the data
+> > pending in the msk xmit queue as soon as the MPTCP's send window
+> > opens (patches 6-10).
+> > =
+
+> > As a side effect, the MPTCP socket could enqueue data to subflows
+> > after close() time - to completely spooling the data sitting in the =
+
+> > msk xmit queue. Dealing with the requires some infrastructure and =
+
+> > core TCP changes (patches 1-5)
+> > =
+
+> > Finally, patches 11-12 introduce a more accurate tracking of the other
+> > end's receive window.
+> > =
+
+> > Overall this refactor the MPTCP xmit path, without introducing
+> > new features - the new code is covered by the existing self-tests.
 > =
 
->      net/mptcp/pm_netlink.c:213 mptcp_pm_add_timer()
->      warn: variable dereferenced before check 'msk' (see line 208)
+> Hi Paolo!
 > =
 
->  net/mptcp/pm_netlink.c
->     207          struct mptcp_sock *msk =3D entry->sock;
->     208          struct sock *sk =3D (struct sock *)msk;
->     209          struct net *net =3D sock_net(sk);
->                                            ^^
->  "msk" dereferenced here.
-> =
+> Would you mind resending? Looks like patchwork got confused about patch
+> 6 not belonging to the series.
 
->     210
->     211          pr_debug("msk=3D%p", msk);
->     212
->     213          if (!msk)
->                     ^^^^
->  Too late.
-> =
+Sure, no problem.
 
->     214                  return;
->     215
-> =
+AFAICS, the headers look correct ?!? in 6/13:
 
-> Fixes: 93f323b9cccc ("mptcp: add a new sysctl add_addr_timeout")
-> Reported-by: Dan Carpenter <dan.carpenter(a)oracle.com>
-> Reviewed-by: Dan Carpenter <dan.carpenter(a)oracle.com>
-> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Message-Id: <653b54ab33745d31c601ca0cd0754d181170838f.1605175834.git.pabeni=
+(a)redhat.com>
+In-Reply-To: <cover.1605175834.git.pabeni(a)redhat.com>
 
-Applied, thanks!
---===============7079615349037112375==--
+In 0/13:
+Message-Id: <cover.1605175834.git.pabeni(a)redhat.com>
+
+Cheers,
+
+Paolo
+
+--===============5294844649820227853==--
