@@ -1,96 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============7837914246541680653=="
+Content-Type: multipart/mixed; boundary="===============8766761569071791873=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 02/13] mptcp: use tcp_build_frag()
-Date: Thu, 12 Nov 2020 11:48:00 +0100
-Message-ID: <e9ab4e3eacb3b983110af3cf24b435c183a6193e.1605175834.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 03/13] tcp: factor out __tcp_close() helper
+Date: Thu, 12 Nov 2020 11:48:01 +0100
+Message-ID: <e204ff31d5684799528721a5ce85c43fe4f65ca9.1605175834.git.pabeni@redhat.com>
 In-Reply-To: cover.1605175834.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6672
+X-UID: 6673
 
---===============7837914246541680653==
+--===============8766761569071791873==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-mptcp_push_pending() is called even on orphaned
-msk (and orphaned subflows), if there is outstanding
-data at close() time.
-
-To cope with the above MPTCP needs to handle explicitly
-the allocation failure on xmit. The newly introduced
-do_tcp_sendfrag() allows that, just plug it.
-
-We can additionally drop a couple of sanity checks,
-duplicate in the TCP code.
+unlocked version of protocol level close, will be used by
+MPTCP to allow decouple orphaning and subflow level close.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+ include/net/tcp.h | 1 +
+ net/ipv4/tcp.c    | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b84b84adc9ad..0d712755d7fc 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -992,17 +992,13 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 		psize =3D min_t(size_t, dfrag->data_len, avail_size);
- 	}
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 374d0a2acc4b..f3d42cb626fc 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -395,6 +395,7 @@ void tcp_update_metrics(struct sock *sk);
+ void tcp_init_metrics(struct sock *sk);
+ void tcp_metrics_init(void);
+ bool tcp_peer_is_proven(struct request_sock *req, struct dst_entry *dst);
++void __tcp_close(struct sock *sk, long timeout);
+ void tcp_close(struct sock *sk, long timeout);
+ void tcp_init_sock(struct sock *sk);
+ void tcp_init_transfer(struct sock *sk, int bpf_op, struct sk_buff *skb);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 391705aaa80e..743b71ca0d78 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2420,13 +2420,12 @@ bool tcp_check_oom(struct sock *sk, int shift)
+ 	return too_many_orphans || out_of_socket_memory;
+ }
  =
 
--	/* tell the TCP stack to delay the push so that we can safely
--	 * access the skb after the sendpages call
--	 */
--	ret =3D do_tcp_sendpages(ssk, page, offset, psize,
--			       msg->msg_flags | MSG_SENDPAGE_NOTLAST | MSG_DONTWAIT);
--	if (ret <=3D 0) {
--		if (!retransmission)
--			iov_iter_revert(&msg->msg_iter, psize);
--		return ret;
-+	tail =3D tcp_build_frag(ssk, psize, msg->msg_flags, page, offset, &psize);
-+	if (!tail) {
-+		tcp_remove_empty_skb(sk, tcp_write_queue_tail(ssk));
-+		return -ENOMEM;
- 	}
+-void tcp_close(struct sock *sk, long timeout)
++void __tcp_close(struct sock *sk, long timeout)
+ {
+ 	struct sk_buff *skb;
+ 	int data_was_unread =3D 0;
+ 	int state;
  =
 
-+	ret =3D psize;
- 	frag_truesize +=3D ret;
- 	if (!retransmission) {
- 		if (unlikely(ret < psize))
-@@ -1026,20 +1022,15 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
-ct sock *ssk,
- 		sk->sk_forward_alloc -=3D frag_truesize;
- 	}
+-	lock_sock(sk);
+ 	sk->sk_shutdown =3D SHUTDOWN_MASK;
  =
 
--	/* if the tail skb extension is still the cached one, collapsing
--	 * really happened. Note: we can't check for 'same skb' as the sk_buff
--	 * hdr on tail can be transmitted, freed and re-allocated by the
--	 * do_tcp_sendpages() call
-+	/* if the tail skb is still the cached one, collapsing really happened.
- 	 */
--	tail =3D tcp_write_queue_tail(ssk);
--	if (mpext && tail && mpext =3D=3D skb_ext_find(tail, SKB_EXT_MPTCP)) {
-+	if (skb =3D=3D tail) {
- 		WARN_ON_ONCE(!can_collapse);
- 		mpext->data_len +=3D ret;
- 		goto out;
- 	}
- =
-
--	skb =3D tcp_write_queue_tail(ssk);
--	mpext =3D __skb_ext_set(skb, SKB_EXT_MPTCP, msk->cached_ext);
-+	mpext =3D __skb_ext_set(tail, SKB_EXT_MPTCP, msk->cached_ext);
- 	msk->cached_ext =3D NULL;
- =
-
- 	memset(mpext, 0, sizeof(*mpext));
+ 	if (sk->sk_state =3D=3D TCP_LISTEN) {
+@@ -2590,6 +2589,12 @@ void tcp_close(struct sock *sk, long timeout)
+ out:
+ 	bh_unlock_sock(sk);
+ 	local_bh_enable();
++}
++
++void tcp_close(struct sock *sk, long timeout)
++{
++	lock_sock(sk);
++	__tcp_close(sk, timeout);
+ 	release_sock(sk);
+ 	sock_put(sk);
+ }
 -- =
 
 2.26.2
 
---===============7837914246541680653==--
+--===============8766761569071791873==--
