@@ -1,65 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============0074087569082366292=="
+Content-Type: multipart/mixed; boundary="===============1801646616652433925=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/6] mptcp: just another complete
- datapath refactor
-Date: Thu, 12 Nov 2020 14:28:29 -0800
-Message-ID: <b583f86-7984-3fba-7081-c6aff44691a@linux.intel.com>
-In-Reply-To: c5313bddfb2e9c0752b35f7d5fe29db81cf56fdb.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH MPTCP 0/5] mptcp: add reset and fastclose option
+ support
+Date: Thu, 12 Nov 2020 14:55:31 -0800
+Message-ID: <44ea321-12f2-3c7d-2621-771db8a36fe8@linux.intel.com>
+In-Reply-To: 20201112094817.GK23619@breakpoint.cc
 X-Status: 
 X-Keywords:                  
-X-UID: 6704
+X-UID: 6705
 
---===============0074087569082366292==
+--===============1801646616652433925==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 12 Nov 2020, Paolo Abeni wrote:
+On Thu, 12 Nov 2020, Florian Westphal wrote:
 
-> On Tue, 2020-11-10 at 17:34 -0800, Mat Martineau wrote:
->> On Tue, 10 Nov 2020, Paolo Abeni wrote:
+> Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
+>> I had a couple of minor questions on patch 3, but nothing that would keep
+>> this from going in to the export branch for some more testing. Might be
+>> easier to coordinate with Paolo's refactor changes to the workqueue that
+>> way.
 >>
->>> This series refactor once again the data path, with the
->>> goal of avoding the worker usage for the fast path.
->>>
->>> The worker will still be used to:
->>> - cleanup closed subflows
->>> - handle timeout
->>> - retransmissions
->>> - send the DATA_FIN/DATA_FIN ack.
->>> - fallback eof
->>>
->>> The latters 2 use case could be fourther removed, if we accept/consider
->>> sending DATA_FIN/ack on a single subflow.
->>
->> Sending DATA_FIN/ack on a single subflow looks ok to me in this case.
+>> Do the selftests get any code coverage on this, for example in the
+>> new-subflow-not-allowed case?
 >
-> Excellent! does that applies to the data_fin, too?
+> How would you do that?  I could add a mib counter and check that in the
+> script.  But other than that I do not see how to expose any of this to
+> the script/mptcp_connect.
 
-Sure.
+I meant it in a different sense: not that there's a specific self test =
+
+result that looks at a count of MPTCP_RST, but that there is some self =
+
+test (such as denying an additional subflow due to a configured limit) =
+
+that would cause MPTCP_RST to be sent and processed. That way the new code =
+
+is at least running during self test and, if memory leak =
+
+checks/lockdep/etc. were enabled we would at least know some portion of =
+
+the MPTCP_RST code was being exercised and checked during the tests even =
+
+if they aren't explictly part of the results.
+
+I should just answer my own question by capturing the pcaps during the =
+
+self tests, but I haven't had a chance to build & run the changes yet and =
+
+was curious if you had already checked.
+
+If there are MIBs that make sense for real-world use, that's great and =
+
+would make for better tests, but I'm not pushing for that now.
 
 >
->> It would make sense to send that ack on the active subflow where =
-
->> incoming data is being processed. On the workqueue that we didn't know =
-
->> which subflow would be best to use, and didn't want to pick an inactive =
-
->> and possibly-not-working subflow.
+>> And thanks for looking at packetdrill tests for this,
+>> saw the conversation on IRC.
 >
-> If we can send the data_fin on the subflow reaching the end of
-> sequence, we will not need anymore the workqueue to send the data_fin.
-> And the same for the data fin ack.
+> Yes, I plan to send a pull request for fastclose and reset.
 >
-> We will need the workqueue only for shutting down the subflows after
-> receiving the data_fin ack.
+> As for further direction, I think next step is to add genl notifications
+> so mptcpd can learn about subflows that are added/removed, the reset
+> code could then be exposed to userspace in the 'subflow was reset'
+> case.
 >
 
-And retransmission?
+Good plan. Thanks.
 
 --
 Mat Martineau
 Intel
---===============0074087569082366292==--
+--===============1801646616652433925==--
