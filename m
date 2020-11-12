@@ -1,54 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============1994261043492348867=="
+Content-Type: multipart/mixed; boundary="===============7079615349037112375=="
 MIME-Version: 1.0
 From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 00/13] mptcp: improve multiple xmit
- streams support
-Date: Thu, 12 Nov 2020 07:40:25 -0800
-Message-ID: <20201112074025.5b932eaa@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: cover.1605175834.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 net-next] mptcp: fix static checker
+ warnings in mptcp_pm_add_timer
+Date: Thu, 12 Nov 2020 07:55:54 -0800
+Message-ID: <20201112075554.00739ede@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: 078a2ef5bdc4e3b2c25ef852461692001f426495.1604976945.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6685
+X-UID: 6686
 
---===============1994261043492348867==
+--===============7079615349037112375==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 12 Nov 2020 11:47:58 +0100 Paolo Abeni wrote:
-> This series improves MPTCP handling of multiple concurrent
-> xmit streams.
+On Tue, 10 Nov 2020 11:01:43 +0800 Geliang Tang wrote:
+> Fix the following Smatch complaint:
 > =
 
-> The to-be-transmitted data is enqueued to a subflow only when
-> the send window is open, keeping the subflows xmit queue shorter
-> and allowing for faster switch-over.
+>      net/mptcp/pm_netlink.c:213 mptcp_pm_add_timer()
+>      warn: variable dereferenced before check 'msk' (see line 208)
 > =
 
-> The above requires a more accurate msk socket state tracking
-> and some additional infrastructure to allow pushing the data
-> pending in the msk xmit queue as soon as the MPTCP's send window
-> opens (patches 6-10).
+>  net/mptcp/pm_netlink.c
+>     207          struct mptcp_sock *msk =3D entry->sock;
+>     208          struct sock *sk =3D (struct sock *)msk;
+>     209          struct net *net =3D sock_net(sk);
+>                                            ^^
+>  "msk" dereferenced here.
 > =
 
-> As a side effect, the MPTCP socket could enqueue data to subflows
-> after close() time - to completely spooling the data sitting in the =
-
-> msk xmit queue. Dealing with the requires some infrastructure and =
-
-> core TCP changes (patches 1-5)
+>     210
+>     211          pr_debug("msk=3D%p", msk);
+>     212
+>     213          if (!msk)
+>                     ^^^^
+>  Too late.
 > =
 
-> Finally, patches 11-12 introduce a more accurate tracking of the other
-> end's receive window.
+>     214                  return;
+>     215
 > =
 
-> Overall this refactor the MPTCP xmit path, without introducing
-> new features - the new code is covered by the existing self-tests.
+> Fixes: 93f323b9cccc ("mptcp: add a new sysctl add_addr_timeout")
+> Reported-by: Dan Carpenter <dan.carpenter(a)oracle.com>
+> Reviewed-by: Dan Carpenter <dan.carpenter(a)oracle.com>
+> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 
-Hi Paolo!
-
-Would you mind resending? Looks like patchwork got confused about patch
-6 not belonging to the series.
---===============1994261043492348867==--
+Applied, thanks!
+--===============7079615349037112375==--
