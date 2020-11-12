@@ -1,148 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============7508929230753638280=="
+Content-Type: multipart/mixed; boundary="===============1477783596360366301=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 04/13] mptcp: introduce mptcp_schedule_work
-Date: Thu, 12 Nov 2020 11:48:02 +0100
-Message-ID: <2105b7ac0c1ab8eec4c164cc1f2b33bb3848b621.1605175834.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 06/13] mptcp: add accounting for pending data
+Date: Thu, 12 Nov 2020 11:48:04 +0100
+Message-ID: <653b54ab33745d31c601ca0cd0754d181170838f.1605175834.git.pabeni@redhat.com>
 In-Reply-To: cover.1605175834.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6674
+X-UID: 6675
 
---===============7508929230753638280==
+--===============1477783596360366301==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-remove some of code duplications an allow preventing
-rescheduling on close.
+Preparation patch to track the data pending in the msk
+write queue. No functional change introduced here
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/pm.c       |  3 +--
- net/mptcp/protocol.c | 36 ++++++++++++++++++++++--------------
- net/mptcp/protocol.h |  1 +
- 3 files changed, 24 insertions(+), 16 deletions(-)
-
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index e19e1525ecbb..f9c88e2abb8e 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -89,8 +89,7 @@ static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
- 		return false;
- =
-
- 	msk->pm.status |=3D BIT(new_status);
--	if (schedule_work(&msk->work))
--		sock_hold((struct sock *)msk);
-+	mptcp_schedule_work((struct sock *)msk);
- 	return true;
- }
- =
+ net/mptcp/protocol.c |  1 +
+ net/mptcp/protocol.h | 38 +++++++++++++++++++++++++++++++++++---
+ 2 files changed, 36 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 0d712755d7fc..2efa7817505a 100644
+index 691fdb2071cf..0c07bed2bd28 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -620,9 +620,8 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, st=
-ruct sock *ssk)
- 		 * this is not a good place to change state. Let the workqueue
- 		 * do it.
- 		 */
--		if (mptcp_pending_data_fin(sk, NULL) &&
--		    schedule_work(&msk->work))
--			sock_hold(sk);
-+		if (mptcp_pending_data_fin(sk, NULL))
-+			mptcp_schedule_work(sk);
- 	}
+@@ -1859,6 +1859,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	__set_bit(MPTCP_SEND_SPACE, &msk->flags);
+ 	INIT_WORK(&msk->work, mptcp_worker);
+ 	msk->out_of_order_queue =3D RB_ROOT;
++	msk->first_pending =3D NULL;
  =
 
- 	spin_unlock_bh(&sk->sk_lock.slock);
-@@ -699,23 +698,32 @@ static void mptcp_reset_timer(struct sock *sk)
- 	sk_reset_timer(sk, &icsk->icsk_retransmit_timer, jiffies + tout);
- }
- =
-
-+bool mptcp_schedule_work(struct sock *sk)
-+{
-+	if (inet_sk_state_load(sk) !=3D TCP_CLOSE &&
-+	    schedule_work(&mptcp_sk(sk)->work)) {
-+		/* each subflow already holds a reference to the sk, and the
-+		 * workqueue is invoked by a subflow, so sk can't go away here.
-+		 */
-+		sock_hold(sk);
-+		return true;
-+	}
-+	return false;
-+}
-+
- void mptcp_data_acked(struct sock *sk)
- {
- 	mptcp_reset_timer(sk);
- =
-
- 	if ((!test_bit(MPTCP_SEND_SPACE, &mptcp_sk(sk)->flags) ||
--	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)) &&
--	    schedule_work(&mptcp_sk(sk)->work))
--		sock_hold(sk);
-+	     (inet_sk_state_load(sk) !=3D TCP_ESTABLISHED)))
-+		mptcp_schedule_work(sk);
- }
- =
-
- void mptcp_subflow_eof(struct sock *sk)
- {
--	struct mptcp_sock *msk =3D mptcp_sk(sk);
--
--	if (!test_and_set_bit(MPTCP_WORK_EOF, &msk->flags) &&
--	    schedule_work(&msk->work))
--		sock_hold(sk);
-+	if (!test_and_set_bit(MPTCP_WORK_EOF, &mptcp_sk(sk)->flags))
-+		mptcp_schedule_work(sk);
- }
- =
-
- static void mptcp_check_for_eof(struct mptcp_sock *msk)
-@@ -1620,8 +1628,7 @@ static void mptcp_retransmit_handler(struct sock *sk)
- 		mptcp_stop_timer(sk);
- 	} else {
- 		set_bit(MPTCP_WORK_RTX, &msk->flags);
--		if (schedule_work(&msk->work))
--			sock_hold(sk);
-+		mptcp_schedule_work(sk);
- 	}
- }
- =
-
-@@ -2334,7 +2341,8 @@ static void mptcp_release_cb(struct sock *sk)
- 		struct sock *ssk;
- =
-
- 		ssk =3D mptcp_subflow_recv_lookup(msk);
--		if (!ssk || !schedule_work(&msk->work))
-+		if (!ssk || sk->sk_state =3D=3D TCP_CLOSE ||
-+		    !schedule_work(&msk->work))
- 			__sock_put(sk);
- 	}
- =
-
+ 	msk->first =3D NULL;
+ 	inet_csk(sk)->icsk_sync_mss =3D mptcp_sync_mss;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 278c88c405e8..5211564a533f 100644
+index 5211564a533f..ec17f9c367c5 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -408,6 +408,7 @@ static inline bool mptcp_is_fully_established(struct so=
-ck *sk)
- void mptcp_rcv_space_init(struct mptcp_sock *msk, const struct sock *ssk);
- void mptcp_data_ready(struct sock *sk, struct sock *ssk);
- bool mptcp_finish_join(struct sock *sk);
-+bool mptcp_schedule_work(struct sock *sk);
- void mptcp_data_acked(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
-ool use_64bit);
+@@ -187,9 +187,10 @@ struct mptcp_pm_data {
+ struct mptcp_data_frag {
+ 	struct list_head list;
+ 	u64 data_seq;
+-	int data_len;
+-	int offset;
+-	int overhead;
++	u16 data_len;
++	u16 offset;
++	u16 overhead;
++	u16 already_sent;
+ 	struct page *page;
+ };
+ =
+
+@@ -219,6 +220,7 @@ struct mptcp_sock {
+ 	struct rb_root  out_of_order_queue;
+ 	struct list_head conn_list;
+ 	struct list_head rtx_queue;
++	struct mptcp_data_frag *first_pending;
+ 	struct list_head join_list;
+ 	struct skb_ext	*cached_ext;	/* for the next sendmsg */
+ 	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
+@@ -240,6 +242,36 @@ static inline struct mptcp_sock *mptcp_sk(const struct=
+ sock *sk)
+ 	return (struct mptcp_sock *)sk;
+ }
+ =
+
++static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *s=
+k)
++{
++	const struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	return READ_ONCE(msk->first_pending);
++}
++
++static inline struct mptcp_data_frag *mptcp_send_next(struct sock *sk)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++	struct mptcp_data_frag *cur;
++
++	cur =3D msk->first_pending;
++	return list_is_last(&cur->list, &msk->rtx_queue) ? NULL :
++						     list_next_entry(cur, list);
++}
++
++static inline struct mptcp_data_frag *mptcp_pending_tail(const struct sock=
+ *sk)
++{
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
++
++	if (!msk->first_pending)
++		return NULL;
++
++	if (WARN_ON_ONCE(list_empty(&msk->rtx_queue)))
++		return NULL;
++
++	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
++}
++
+ static inline struct mptcp_data_frag *mptcp_rtx_tail(const struct sock *sk)
+ {
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
 -- =
 
 2.26.2
 
---===============7508929230753638280==--
+--===============1477783596360366301==--
