@@ -1,45 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============2778845448630054642=="
+Content-Type: multipart/mixed; boundary="===============1509346084400998798=="
 MIME-Version: 1.0
-From: Marios Choudary <marios.choudary at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Android phones with MPTCP
-Date: Thu, 12 Nov 2020 19:15:52 +0200
-Message-ID: <CAOenT2MTUxcorJ5bQ1w0OSoMTG_AiJ2GDpgSejPRHJ9jPW1j2w@mail.gmail.com>
+Subject: [MPTCP] [PATCH net-next v2 00/13] mptcp: improve multiple xmit
+ streams support
+Date: Thu, 12 Nov 2020 18:45:20 +0100
+Message-ID: <cover.1605199807.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6689
+X-UID: 6690
 
---===============2778845448630054642==
+--===============1509346084400998798==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+This series improves MPTCP handling of multiple concurrent
+xmit streams.
 
-Could you please help me with a list of Android smartphones that support
-MPTCP ?
+The to-be-transmitted data is enqueued to a subflow only when
+the send window is open, keeping the subflows xmit queue shorter
+and allowing for faster switch-over.
 
-I would prefer to know about recent models, either Samsung or Google Pixel,
-but if there is some comprehensive list that would be great as well.
+The above requires a more accurate msk socket state tracking
+and some additional infrastructure to allow pushing the data
+pending in the msk xmit queue as soon as the MPTCP's send window
+opens (patches 6-10).
 
-Thanks in advance.
+As a side effect, the MPTCP socket could enqueue data to subflows
+after close() time - to completely spooling the data sitting in the =
 
-Best wishes,
-  Marios
+msk xmit queue. Dealing with the requires some infrastructure and =
 
---===============2778845448630054642==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+core TCP changes (patches 1-5)
 
-PGRpdiBkaXI9Imx0ciI+SGVsbG8gZXZlcnlvbmUsPGRpdj48YnI+PC9kaXY+PGRpdj5Db3VsZCB5
-b3UgcGxlYXNlIGhlbHAgbWUgd2l0aCBhIGxpc3Qgb2YgQW5kcm9pZCBzbWFydHBob25lcyB0aGF0
-IHN1cHBvcnQgTVBUQ1AgPzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SSB3b3VsZCBwcmVmZXIg
-dG8ga25vdyBhYm91dCByZWNlbnQgbW9kZWxzLCBlaXRoZXIgU2Ftc3VuZyBvciBHb29nbGUgUGl4
-ZWwsIGJ1dCBpZiB0aGVyZSBpcyBzb21lIGNvbXByZWhlbnNpdmUgbGlzdCB0aGF0IHdvdWxkIGJl
-IGdyZWF0IGFzIHdlbGwuPC9kaXY+PGRpdj48YnI+VGhhbmtzIGluIGFkdmFuY2UuPC9kaXY+PGRp
-dj48YnI+PC9kaXY+PGRpdj5CZXN0IHdpc2hlcyw8L2Rpdj48ZGl2PsKgIE1hcmlvczwvZGl2Pjwv
-ZGl2Pgo=
+Finally, patches 11-12 introduce a more accurate tracking of the other
+end's receive window.
 
---===============2778845448630054642==--
+Overall this refactor the MPTCP xmit path, without introducing
+new features - the new code is covered by the existing self-tests.
+
+v1 -> v2:
+ - this is just a report, to cope with patchwork issues, no changes
+   at all
+
+Florian Westphal (2):
+  mptcp: rework poll+nospace handling
+  mptcp: keep track of advertised windows right edge
+
+Paolo Abeni (11):
+  tcp: factor out tcp_build_frag()
+  mptcp: use tcp_build_frag()
+  tcp: factor out __tcp_close() helper
+  mptcp: introduce mptcp_schedule_work
+  mptcp: reduce the arguments of mptcp_sendmsg_frag
+  mptcp: add accounting for pending data
+  mptcp: introduce MPTCP snd_nxt
+  mptcp: refactor shutdown and close
+  mptcp: move page frag allocation in mptcp_sendmsg()
+  mptcp: try to push pending data on snd una updates
+  mptcp: send explicit ack on delayed ack_seq incr
+
+ include/net/tcp.h      |   4 +
+ net/ipv4/tcp.c         | 128 +++---
+ net/mptcp/options.c    |  30 +-
+ net/mptcp/pm.c         |   3 +-
+ net/mptcp/pm_netlink.c |   6 +-
+ net/mptcp/protocol.c   | 969 ++++++++++++++++++++++++-----------------
+ net/mptcp/protocol.h   |  72 ++-
+ net/mptcp/subflow.c    |  33 +-
+ 8 files changed, 758 insertions(+), 487 deletions(-)
+
+-- =
+
+2.26.2
+
+--===============1509346084400998798==--
