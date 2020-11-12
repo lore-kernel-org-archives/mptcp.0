@@ -1,125 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============3354949036735793892=="
+Content-Type: multipart/mixed; boundary="===============9001799812815818449=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 13/13] mptcp: send explicit ack on delayed
- ack_seq incr
-Date: Thu, 12 Nov 2020 11:48:11 +0100
-Message-ID: <a84d5415f618863823bfa4ab5b238b0f3c9a0df5.1605175834.git.pabeni@redhat.com>
-In-Reply-To: cover.1605175834.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 0/6] mptcp: just another complete
+ datapath refactor
+Date: Thu, 12 Nov 2020 11:57:32 +0100
+Message-ID: <c5313bddfb2e9c0752b35f7d5fe29db81cf56fdb.camel@redhat.com>
+In-Reply-To: b6ad516a-91b2-6ed1-baa0-15c036e26c78@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6683
+X-UID: 6684
 
---===============3354949036735793892==
+--===============9001799812815818449==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When the worker moves some bytes from the OoO queue into
-the receive queue, the msk->ask_seq is updated, the MPTCP-level
-ack carrying that value needs to wait the next ingress packet,
-possibly slowing down or hanging the peer
+On Tue, 2020-11-10 at 17:34 -0800, Mat Martineau wrote:
+> On Tue, 10 Nov 2020, Paolo Abeni wrote:
+> =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+> > This series refactor once again the data path, with the
+> > goal of avoding the worker usage for the fast path.
+> > =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 05daed57ae4a..bb9a0bc7ee33 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -405,13 +405,27 @@ static void mptcp_set_timeout(const struct sock *sk, =
-const struct sock *ssk)
- 	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
- }
- =
+> > The worker will still be used to:
+> > - cleanup closed subflows
+> > - handle timeout
+> > - retransmissions
+> > - send the DATA_FIN/DATA_FIN ack.
+> > - fallback eof
+> > =
 
--static void mptcp_check_data_fin(struct sock *sk)
-+static void mptcp_send_ack(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+		lock_sock(ssk);
-+		tcp_send_ack(ssk);
-+		release_sock(ssk);
-+	}
-+}
-+
-+static bool mptcp_check_data_fin(struct sock *sk)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	u64 rcv_data_fin_seq;
-+	bool ret =3D false;
- =
+> > The latters 2 use case could be fourther removed, if we accept/consider
+> > sending DATA_FIN/ack on a single subflow.
+> =
 
- 	if (__mptcp_check_fallback(msk) || !msk->first)
--		return;
-+		return ret;
- =
+> Sending DATA_FIN/ack on a single subflow looks ok to me in this case. =
 
- 	/* Need to ack a DATA_FIN received from a peer while this side
- 	 * of the connection is in ESTABLISHED, FIN_WAIT1, or FIN_WAIT2.
-@@ -427,8 +441,6 @@ static void mptcp_check_data_fin(struct sock *sk)
- 	 */
- =
 
- 	if (mptcp_pending_data_fin(sk, &rcv_data_fin_seq)) {
--		struct mptcp_subflow_context *subflow;
--
- 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + 1);
- 		WRITE_ONCE(msk->rcv_data_fin, 0);
- =
+Excellent! does that applies to the data_fin, too?
 
-@@ -452,17 +464,11 @@ static void mptcp_check_data_fin(struct sock *sk)
- 			break;
- 		}
- =
+> It =
 
-+		ret =3D true;
- 		mptcp_set_timeout(sk, NULL);
--		mptcp_for_each_subflow(msk, subflow) {
--			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
--
--			lock_sock(ssk);
--			tcp_send_ack(ssk);
--			release_sock(ssk);
--		}
--
-+		mptcp_send_ack(msk);
- 		if (sock_flag(sk, SOCK_DEAD))
--			return;
-+			return ret;
- =
+> would make sense to send that ack on the active subflow where incoming =
 
- 		sk->sk_state_change(sk);
- 		if (sk->sk_shutdown =3D=3D SHUTDOWN_MASK ||
-@@ -471,6 +477,7 @@ static void mptcp_check_data_fin(struct sock *sk)
- 		else
- 			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
- 	}
-+	return ret;
- }
- =
+> data is being processed. On the workqueue that we didn't know which =
 
- static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
-@@ -1542,7 +1549,8 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk)
- 	} while (!done);
- =
+> subflow would be best to use, and didn't want to pick an inactive and =
 
- 	if (mptcp_ofo_queue(msk) || moved > 0) {
--		mptcp_check_data_fin((struct sock *)msk);
-+		if (!mptcp_check_data_fin((struct sock *)msk))
-+			mptcp_send_ack(msk);
- 		return true;
- 	}
- 	return false;
--- =
+> possibly-not-working subflow.
 
-2.26.2
+If we can send the data_fin on the subflow reaching the end of
+sequence, we will not need anymore the workqueue to send the data_fin.
+And the same for the data fin ack.
 
---===============3354949036735793892==--
+We will need the workqueue only for shutting down the subflows after
+receiving the data_fin ack.
+
+Cheers,
+
+Paolo
+
+[sorry, this mail got stuck in my mailbox the whole day]
+
+--===============9001799812815818449==--
