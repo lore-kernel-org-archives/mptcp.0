@@ -1,64 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============3192102440911617311=="
+Content-Type: multipart/mixed; boundary="===============6585854141592717578=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH MPTCP 3/5] mptcp: add mptcp reset option support
-Date: Thu, 12 Nov 2020 10:56:07 +0100
-Message-ID: <20201112095607.GL23619@breakpoint.cc>
-In-Reply-To: CA+WQbws1X2nXF9bGg7-tze+RjXHxdz5WYvqKWK2xU=bDHAisVQ@mail.gmail.com
+Subject: [MPTCP] [PATCH net-next 00/13] mptcp: improve multiple xmit streams
+ support
+Date: Thu, 12 Nov 2020 11:47:58 +0100
+Message-ID: <cover.1605175834.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6669
+X-UID: 6670
 
---===============3192102440911617311==
+--===============6585854141592717578==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Geliang Tang <geliangtang(a)gmail.com> wrote:
-> > diff --git a/include/net/tcp.h b/include/net/tcp.h
-> > index c0fef9e9ba20..899f87346b49 100644
-> > --- a/include/net/tcp.h
-> > +++ b/include/net/tcp.h
-> > @@ -193,6 +193,8 @@ void tcp_time_wait(struct sock *sk, int state, int =
-timeo);
-> >  #define TCPOPT_FASTOPEN_MAGIC  0xF989
-> >  #define TCPOPT_SMC_MAGIC       0xE2D4C3D9
-> >
-> > +/* MPTCP suboptions used in TCP */
-> > +#define MPTCPOPT_RST           8
-> =
+This series improves MPTCP handling of multiple concurrent
+xmit streams.
 
-> And define MPTCPOPT_RST in net/mptcp/protocol.h, together with all other
-> MPTCP suboptions ... ...
+The to-be-transmitted data is enqueued to a subflow only when
+the send window is open, keeping the subflows xmit queue shorter
+and allowing for faster switch-over.
 
-I wanted to avoid entanglements between mptcp and the tcp reset path.
+The above requires a more accurate msk socket state tracking
+and some additional infrastructure to allow pushing the data
+pending in the msk xmit queue as soon as the MPTCP's send window
+opens (patches 6-10).
 
-> > @@ -216,6 +218,7 @@ void tcp_time_wait(struct sock *sk, int state, int =
-timeo);
-> >  #define TCPOLEN_MD5SIG_ALIGNED         20
-> >  #define TCPOLEN_MSS_ALIGNED            4
-> >  #define TCPOLEN_EXP_SMC_BASE_ALIGNED   8
-> > +#define TCPOLEN_MPTCP_RST              4
-> =
+As a side effect, the MPTCP socket could enqueue data to subflows
+after close() time - to completely spooling the data sitting in the =
 
-> And define TCPOLEN_MPTCP_RST in include/net/mptcp.h ... ...
+msk xmit queue. Dealing with the requires some infrastructure and =
 
-Its needed for sizing of the on-stack option array.
+core TCP changes (patches 1-5)
 
-Placing it in include/net/mptcp.h means i would need to include
-that from tcp stack, which then brings other baggage with it.
+Finally, patches 11-12 introduce a more accurate tracking of the other
+end's receive window.
 
-I wanted to avoid that.
+Overall this refactor the MPTCP xmit path, without introducing
+new features - the new code is covered by the existing self-tests.
 
-> > +               rep.opt[0] =3D mptcp_option(MPTCPOPT_RST, TCPOLEN_MPTCP=
-_RST,
-> > +                                         flags, reason);
-> =
+Florian Westphal (2):
+  mptcp: rework poll+nospace handling
+  mptcp: keep track of advertised windows right edge
 
-> And use mptcp_option's wrapper function here ... ...
+Paolo Abeni (11):
+  tcp: factor out tcp_build_frag()
+  mptcp: use tcp_build_frag()
+  tcp: factor out __tcp_close() helper
+  mptcp: introduce mptcp_schedule_work
+  mptcp: reduce the arguments of mptcp_sendmsg_frag
+  mptcp: add accounting for pending data
+  mptcp: introduce MPTCP snd_nxt
+  mptcp: refactor shutdown and close
+  mptcp: move page frag allocation in mptcp_sendmsg()
+  mptcp: try to push pending data on snd una updates
+  mptcp: send explicit ack on delayed ack_seq incr
 
-I wanted to avoid a function for what is 'u32 opt[0] =3D magic | reason'.
+ include/net/tcp.h      |   4 +
+ net/ipv4/tcp.c         | 128 +++---
+ net/mptcp/options.c    |  30 +-
+ net/mptcp/pm.c         |   3 +-
+ net/mptcp/pm_netlink.c |   6 +-
+ net/mptcp/protocol.c   | 969 ++++++++++++++++++++++++-----------------
+ net/mptcp/protocol.h   |  72 ++-
+ net/mptcp/subflow.c    |  33 +-
+ 8 files changed, 758 insertions(+), 487 deletions(-)
 
-I will defer to Matthieu/Mat; I do not have a strong preference.
---===============3192102440911617311==--
+-- =
+
+2.26.2
+
+--===============6585854141592717578==--
