@@ -1,74 +1,214 @@
-Content-Type: multipart/mixed; boundary="===============6585854141592717578=="
+Content-Type: multipart/mixed; boundary="===============1093473665280200472=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 00/13] mptcp: improve multiple xmit streams
- support
-Date: Thu, 12 Nov 2020 11:47:58 +0100
-Message-ID: <cover.1605175834.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 01/13] tcp: factor out tcp_build_frag()
+Date: Thu, 12 Nov 2020 11:47:59 +0100
+Message-ID: <8fcb0ad6f324008ccadfd1811d91b3145bbf95fd.1605175834.git.pabeni@redhat.com>
+In-Reply-To: cover.1605175834.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6670
+X-UID: 6671
 
---===============6585854141592717578==
+--===============1093473665280200472==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series improves MPTCP handling of multiple concurrent
-xmit streams.
+Will be needed by the next patch, as MPTCP needs to handle
+directly the error/memory-allocation-needed path.
 
-The to-be-transmitted data is enqueued to a subflow only when
-the send window is open, keeping the subflows xmit queue shorter
-and allowing for faster switch-over.
+No functional changes intended.
 
-The above requires a more accurate msk socket state tracking
-and some additional infrastructure to allow pushing the data
-pending in the msk xmit queue as soon as the MPTCP's send window
-opens (patches 6-10).
+Additionally let MPTCP code access the tcp_remove_empty_skb()
+helper.
 
-As a side effect, the MPTCP socket could enqueue data to subflows
-after close() time - to completely spooling the data sitting in the =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/net/tcp.h |   3 ++
+ net/ipv4/tcp.c    | 119 ++++++++++++++++++++++++++--------------------
+ 2 files changed, 70 insertions(+), 52 deletions(-)
 
-msk xmit queue. Dealing with the requires some infrastructure and =
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 4aba0f069b05..374d0a2acc4b 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -322,6 +322,7 @@ void tcp_shutdown(struct sock *sk, int how);
+ int tcp_v4_early_demux(struct sk_buff *skb);
+ int tcp_v4_rcv(struct sk_buff *skb);
+ =
 
-core TCP changes (patches 1-5)
++void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb);
+ int tcp_v4_tw_remember_stamp(struct inet_timewait_sock *tw);
+ int tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size);
+ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size);
+@@ -329,6 +330,8 @@ int tcp_sendpage(struct sock *sk, struct page *page, in=
+t offset, size_t size,
+ 		 int flags);
+ int tcp_sendpage_locked(struct sock *sk, struct page *page, int offset,
+ 			size_t size, int flags);
++struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
++			       struct page *page, int offset, size_t *size);
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 		 size_t size, int flags);
+ int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index b2bc3d7fe9e8..391705aaa80e 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -954,7 +954,7 @@ int tcp_send_mss(struct sock *sk, int *size_goal, int f=
+lags)
+  * importantly be able to generate EPOLLOUT for Edge Trigger epoll()
+  * users.
+  */
+-static void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
++void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
+ {
+ 	if (skb && !skb->len) {
+ 		tcp_unlink_write_queue(skb, sk);
+@@ -964,6 +964,68 @@ static void tcp_remove_empty_skb(struct sock *sk, stru=
+ct sk_buff *skb)
+ 	}
+ }
+ =
 
-Finally, patches 11-12 introduce a more accurate tracking of the other
-end's receive window.
++struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
++			       struct page *page, int offset, size_t *size)
++{
++	struct sk_buff *skb =3D tcp_write_queue_tail(sk);
++	struct tcp_sock *tp =3D tcp_sk(sk);
++	bool can_coalesce;
++	int copy, i;
++
++	if (!skb || (copy =3D size_goal - skb->len) <=3D 0 ||
++	    !tcp_skb_can_collapse_to(skb)) {
++new_segment:
++		if (!sk_stream_memory_free(sk))
++			return NULL;
++
++		skb =3D sk_stream_alloc_skb(sk, 0, sk->sk_allocation,
++				tcp_rtx_and_write_queues_empty(sk));
++		if (!skb)
++			return NULL;
++
++#ifdef CONFIG_TLS_DEVICE
++		skb->decrypted =3D !!(flags & MSG_SENDPAGE_DECRYPTED);
++#endif
++		skb_entail(sk, skb);
++		copy =3D size_goal;
++	}
++
++	if (copy > *size)
++		copy =3D *size;
++
++	i =3D skb_shinfo(skb)->nr_frags;
++	can_coalesce =3D skb_can_coalesce(skb, i, page, offset);
++	if (!can_coalesce && i >=3D sysctl_max_skb_frags) {
++		tcp_mark_push(tp, skb);
++		goto new_segment;
++	}
++	if (!sk_wmem_schedule(sk, copy))
++		return NULL;
++
++	if (can_coalesce) {
++		skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
++	} else {
++		get_page(page);
++		skb_fill_page_desc(skb, i, page, offset, copy);
++	}
++
++	if (!(flags & MSG_NO_SHARED_FRAGS))
++		skb_shinfo(skb)->tx_flags |=3D SKBTX_SHARED_FRAG;
++
++	skb->len +=3D copy;
++	skb->data_len +=3D copy;
++	skb->truesize +=3D copy;
++	sk_wmem_queued_add(sk, copy);
++	sk_mem_charge(sk, copy);
++	skb->ip_summed =3D CHECKSUM_PARTIAL;
++	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
++	TCP_SKB_CB(skb)->end_seq +=3D copy;
++	tcp_skb_pcount_set(skb, 0);
++
++	*size =3D copy;
++	return skb;
++}
++
+ ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
+ 			 size_t size, int flags)
+ {
+@@ -999,60 +1061,13 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct pag=
+e *page, int offset,
+ 		goto out_err;
+ =
 
-Overall this refactor the MPTCP xmit path, without introducing
-new features - the new code is covered by the existing self-tests.
+ 	while (size > 0) {
+-		struct sk_buff *skb =3D tcp_write_queue_tail(sk);
+-		int copy, i;
+-		bool can_coalesce;
+-
+-		if (!skb || (copy =3D size_goal - skb->len) <=3D 0 ||
+-		    !tcp_skb_can_collapse_to(skb)) {
+-new_segment:
+-			if (!sk_stream_memory_free(sk))
+-				goto wait_for_space;
+-
+-			skb =3D sk_stream_alloc_skb(sk, 0, sk->sk_allocation,
+-					tcp_rtx_and_write_queues_empty(sk));
+-			if (!skb)
+-				goto wait_for_space;
+-
+-#ifdef CONFIG_TLS_DEVICE
+-			skb->decrypted =3D !!(flags & MSG_SENDPAGE_DECRYPTED);
+-#endif
+-			skb_entail(sk, skb);
+-			copy =3D size_goal;
+-		}
++		struct sk_buff *skb;
++		size_t copy =3D size;
+ =
 
-Florian Westphal (2):
-  mptcp: rework poll+nospace handling
-  mptcp: keep track of advertised windows right edge
+-		if (copy > size)
+-			copy =3D size;
+-
+-		i =3D skb_shinfo(skb)->nr_frags;
+-		can_coalesce =3D skb_can_coalesce(skb, i, page, offset);
+-		if (!can_coalesce && i >=3D sysctl_max_skb_frags) {
+-			tcp_mark_push(tp, skb);
+-			goto new_segment;
+-		}
+-		if (!sk_wmem_schedule(sk, copy))
++		skb =3D tcp_build_frag(sk, size_goal, flags, page, offset, &copy);
++		if (!skb)
+ 			goto wait_for_space;
+ =
 
-Paolo Abeni (11):
-  tcp: factor out tcp_build_frag()
-  mptcp: use tcp_build_frag()
-  tcp: factor out __tcp_close() helper
-  mptcp: introduce mptcp_schedule_work
-  mptcp: reduce the arguments of mptcp_sendmsg_frag
-  mptcp: add accounting for pending data
-  mptcp: introduce MPTCP snd_nxt
-  mptcp: refactor shutdown and close
-  mptcp: move page frag allocation in mptcp_sendmsg()
-  mptcp: try to push pending data on snd una updates
-  mptcp: send explicit ack on delayed ack_seq incr
-
- include/net/tcp.h      |   4 +
- net/ipv4/tcp.c         | 128 +++---
- net/mptcp/options.c    |  30 +-
- net/mptcp/pm.c         |   3 +-
- net/mptcp/pm_netlink.c |   6 +-
- net/mptcp/protocol.c   | 969 ++++++++++++++++++++++++-----------------
- net/mptcp/protocol.h   |  72 ++-
- net/mptcp/subflow.c    |  33 +-
- 8 files changed, 758 insertions(+), 487 deletions(-)
+-		if (can_coalesce) {
+-			skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
+-		} else {
+-			get_page(page);
+-			skb_fill_page_desc(skb, i, page, offset, copy);
+-		}
+-
+-		if (!(flags & MSG_NO_SHARED_FRAGS))
+-			skb_shinfo(skb)->tx_flags |=3D SKBTX_SHARED_FRAG;
+-
+-		skb->len +=3D copy;
+-		skb->data_len +=3D copy;
+-		skb->truesize +=3D copy;
+-		sk_wmem_queued_add(sk, copy);
+-		sk_mem_charge(sk, copy);
+-		skb->ip_summed =3D CHECKSUM_PARTIAL;
+-		WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
+-		TCP_SKB_CB(skb)->end_seq +=3D copy;
+-		tcp_skb_pcount_set(skb, 0);
+-
+ 		if (!copied)
+ 			TCP_SKB_CB(skb)->tcp_flags &=3D ~TCPHDR_PSH;
+ =
 
 -- =
 
 2.26.2
 
---===============6585854141592717578==--
+--===============1093473665280200472==--
