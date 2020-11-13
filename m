@@ -1,55 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============5345772701170380151=="
+Content-Type: multipart/mixed; boundary="===============1183044822171844622=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "mptcp: refactor shutdown and
- close" again
-Date: Fri, 13 Nov 2020 20:18:18 +0100
-Message-ID: <838c3a9c-014e-4a73-e389-ce6eb3469fbe@tessares.net>
-In-Reply-To: 39ea7742090de819ba148c17aa133481ade5ba85.1605290282.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v2] mptcp: refine MPTCP-level ack scheduling
+Date: Fri, 13 Nov 2020 20:35:15 +0100
+Message-ID: <f8ed1992-3da8-bd54-6e87-0348aee812ab@tessares.net>
+In-Reply-To: d46ac556e6140c96c261987ca2d0cbe9bb1c97bd.1605005925.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6725
+X-UID: 6726
 
---===============5345772701170380151==
+--===============1183044822171844622==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 13/11/2020 19:05, Paolo Abeni wrote:
-> fix bad mask and fallback state tracking on shutdown
-> and close.
+On 10/11/2020 11:58, Paolo Abeni wrote:
+> Send timely MPTCP-level ack is somewhat difficult when
+> the insertion into the msk receive level is performed
+> by the worker.
 > =
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> --
-> v1 -> v2:
->   - more fallback status fixes
+> It needs TCP-level dup-ack to notify the MPTCP-level
+> ack_seq increase, as both the TCP-level ack seq and the
+> rcv window are unchanged.
 > =
 
-> Note:
-> - fallback status tracking at close time was almost completely
-> broken. I suspect that was quite hidden by the worker that somehow
-> spooled the data and closed the socket with time. With workqueue
-> removale it's very apparent.
-> - this replaces completely the previous version (is not an incremental
-> change)
+> We can actually avoid processing incoming data with the
+> worker, and let the subflow or recevmsg() send ack as needed.
+> =
 
-Thank you for this new version and fixing + cleaning that part!
+> When recvmsg() moves the skbs inside the msk receive queue,
+> the msk space is still unchanged, so tcp_cleanup_rbuf() could
+> end-up skipping TCP-level ack generation. Anyway, when
+> __mptcp_move_skbs() is invoked, a known amount of bytes is
+> going to be consumed soon: we update rcv wnd computation taking
+> them in account.
+> =
 
-- 349d70b5a824: Revert "Squash-to: "mptcp: refactor shutdown and close" =
+> Additionally we need to explicitly trigger tcp_cleanup_rbuf()
+> when recvmsg() consumes a significant amount of the receive buffer.
 
-again" topic
-- 58c8d69fda40: "squashed" (with conflicts) in "Squash-to: "mptcp: =
+Thank you for the patch and the review!
 
-refactor shutdown and close" again"
-     The conflict was in mptcp_check_data_fin(), see below
-- d8578f2014ae: conflict in =
+> Signed-off-by:  Paolo Abeni <pabeni(a)redhat.com>
 
-t/mptcp-send-explicit-ack-on-delayed-ack_seq-incr
-- Results: 8ad8e1a1ec77..245521ccb46e
+(I removed the extra space here above and added Mat's reviewed-by tag)
+
+Added at the end of the series:
+
+- 988c8c685833: mptcp: refine MPTCP-level ack scheduling
+- Results: 245521ccb46e..ad60a6cb69b
 
 Tests + export are in progress!
 
@@ -59,4 +62,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============5345772701170380151==--
+--===============1183044822171844622==--
