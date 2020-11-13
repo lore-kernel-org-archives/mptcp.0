@@ -1,43 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1085364097882112089=="
+Content-Type: multipart/mixed; boundary="===============5027165406449036950=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: refactor shutdown and
- close" again
-Date: Fri, 13 Nov 2020 17:24:50 +0100
-Message-ID: <46534e77-88c8-b819-37cf-3b4d3db9a4c9@tessares.net>
-In-Reply-To: 9527070ab1b0bb6d890d2a7960ada035a610edae.1605283639.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH v2 0/6] mptcp: just another complete datapath refactor
+Date: Fri, 13 Nov 2020 17:27:30 +0100
+Message-ID: <cover.1605283958.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6714
+X-UID: 6715
 
---===============1085364097882112089==
+--===============5027165406449036950==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+This itration addresses Mat's feedback and bring many bugfixes,
+all noted in the individual patches.
 
-On 13/11/2020 17:07, Paolo Abeni wrote:
-> fix bad mask and fallback shutdown
+Now it survives a few self-test iterations, and I would consider
+this for merging.
 
-Thank you for the patch!
+Note: depend on "mptcp: refine MPTCP-level ack scheduling"
 
-As agreed on IRC, I added your patch after "mptcp: refactor shutdown and =
+Paolo Abeni (6):
+  mptcp: separate accouting for wmem forward alloc mem
+  mptcp: protect the rx path with the msk socket spinlock
+  mptcp: allocate TX skbs in msk context.
+  mptcp: avoid a few atomic ops in the rx path
+  mptcp: simplify mptcp_nospace
+  mptcp: use mptcp backlog.
 
-close". If a v3 is needed for upstream, I can squash this into the =
+ net/mptcp/mptcp_diag.c |   2 +-
+ net/mptcp/options.c    |  47 +--
+ net/mptcp/protocol.c   | 659 +++++++++++++++++++++++++++++------------
+ net/mptcp/protocol.h   |  23 +-
+ net/mptcp/subflow.c    |  31 +-
+ 5 files changed, 534 insertions(+), 228 deletions(-)
 
-parent commit.
-
-- 49c0a2e04f14: Squash-to: "mptcp: refactor shutdown and close" again
-- Results: 220dff67a96e..8ad8e1a1ec77
-
-Tests + export are in progress!
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============1085364097882112089==--
+2.26.2
+
+--===============5027165406449036950==--
