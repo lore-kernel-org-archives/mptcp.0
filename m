@@ -1,51 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============3657538761794232359=="
+Content-Type: multipart/mixed; boundary="===============1085364097882112089=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: refactor shutdown and
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: refactor shutdown and
  close" again
-Date: Fri, 13 Nov 2020 17:07:32 +0100
-Message-ID: <9527070ab1b0bb6d890d2a7960ada035a610edae.1605283639.git.pabeni@redhat.com>
+Date: Fri, 13 Nov 2020 17:24:50 +0100
+Message-ID: <46534e77-88c8-b819-37cf-3b4d3db9a4c9@tessares.net>
+In-Reply-To: 9527070ab1b0bb6d890d2a7960ada035a610edae.1605283639.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6713
+X-UID: 6714
 
---===============3657538761794232359==
+--===============1085364097882112089==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-fix bad mask and fallback shutdown
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+On 13/11/2020 17:07, Paolo Abeni wrote:
+> fix bad mask and fallback shutdown
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1d9c785c278e..90eb50663b7f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2173,13 +2173,9 @@ static void mptcp_close(struct sock *sk, long timeou=
-t)
- 	lock_sock(sk);
- 	sk->sk_shutdown =3D SHUTDOWN_MASK;
- =
+Thank you for the patch!
 
--	if ((1 << sk->sk_state) & (TCPF_LISTEN | TCP_CLOSE)) {
-+	if ((1 << sk->sk_state) & (TCPF_LISTEN | TCPF_CLOSE)) {
- 		inet_sk_state_store(sk, TCP_CLOSE);
- 		goto cleanup;
--	} else if (__mptcp_check_fallback((struct mptcp_sock *)sk)) {
--		if (!mptcp_send_head(sk))
--			inet_sk_state_store(sk, TCP_CLOSE);
--		goto cleanup;
- 	}
- =
+As agreed on IRC, I added your patch after "mptcp: refactor shutdown and =
 
- 	if (mptcp_close_state(sk))
+close". If a v3 is needed for upstream, I can squash this into the =
+
+parent commit.
+
+- 49c0a2e04f14: Squash-to: "mptcp: refactor shutdown and close" again
+- Results: 220dff67a96e..8ad8e1a1ec77
+
+Tests + export are in progress!
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============3657538761794232359==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============1085364097882112089==--
