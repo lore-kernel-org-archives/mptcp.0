@@ -1,55 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============5551775118733886227=="
+Content-Type: multipart/mixed; boundary="===============3062244996767751688=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] bpf: move bpf_mptcp_sock_ fn out of
- CONFIG_INET
-Date: Sat, 14 Nov 2020 09:24:27 +0100
-Message-ID: <40520a9c-539d-7299-7086-cfb8efd0d0e2@tessares.net>
-In-Reply-To: 20201114081936.2617526-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH net-next v2 01/13] tcp: factor out tcp_build_frag()
+Date: Sat, 14 Nov 2020 13:02:39 -0800
+Message-ID: <20201114130239.006cf4c5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: 3a20827d0a695b646579c94b7bbf2a185a3226dc.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6729
+X-UID: 6730
 
---===============5551775118733886227==
+--===============3062244996767751688==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, 13 Nov 2020 11:38:13 +0100 Paolo Abeni wrote:
+> > Is there a chance someone could look into adding annotations to socket
+> > locking?  =
 
-On 14/11/2020 09:19, Matthieu Baerts wrote:
-> If CONFIG_INET is not enabled, our bpf_mptcp_sock_*() functions were not
-> declared as reported by the 0-day bot.
 > =
 
-> We can simply move these bpf_mptcp_sock_*() functions out of
+> Annotating lock_sock_fast()/unlock_sock_fast() as they would
+> unconditionally acquire/release the socket spinlock removes the warning
+> related to fast lock - at least for me;).
 > =
 
->    #ifdef CONFIG_INET
-> =
+> Hopefully that does not interact with lockdep, but perhpas is a bit too
+> extreme/rusty?
 
-> Because these functions are surrounded with:
-> =
+I'm not a sparse expert, do we need both __acquire and __acquires?
 
->    #ifdef CONFIG_MPTCP
-> =
-
-> which depends on CONFIG_INET.
-
-I guess I don't need an external review for this.
-
-Applied in our git tree:
-
-- 1800469e0a75: bpf: move bpf_mptcp_sock_ fn out of CONFIG_INET
-- Results: 39f581445bc2..39fccf50eeb0
-
-Tests + export are in progress!
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5551775118733886227==--
+Would you mind submitting officially and CCing the sparse ML?
+--===============3062244996767751688==--
