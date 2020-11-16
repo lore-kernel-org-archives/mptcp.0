@@ -1,68 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============1127853667917051493=="
+Content-Type: multipart/mixed; boundary="===============5577895743435462262=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: patchwork-bot+netdevbpf at kernel.org
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] mptcp: fix state tracking for fallback socket
-Date: Mon, 16 Nov 2020 19:06:25 +0100
-Message-ID: <037d651140a83d44b997fda1d028f4f1cf8c72d1.1605549970.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH net-next v3 00/13] mptcp: improve multiple xmit
+ streams support
+Date: Mon, 16 Nov 2020 19:30:07 +0000
+Message-ID: <
+ <160555500737.21076.15593778409106734018.git-patchwork-notify@kernel.org>>
+In-Reply-To: cover.1605458224.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6757
+X-UID: 6758
 
---===============1127853667917051493==
+--===============5577895743435462262==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We need to cope with some more state transition for
-fallback sockets, or could still end-up moving to TCP_CLOSE
-too early and avoid spooling some pending data
+Hello:
 
-Fixes: ("mptcp: refactor shutdown and close")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-Unfortunatelly I come-up to this only after v3 upstream.
-I'll send this a follow-up if v3 should be merged, or
-otherwise I'll squash into v4
----
- net/mptcp/protocol.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5f7a43564922..12303b1a491a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -788,7 +788,9 @@ static void mptcp_check_for_eof(struct mptcp_sock *msk)
- 		inet_sk_state_store(sk, TCP_CLOSE_WAIT);
- 		break;
- 	case TCP_FIN_WAIT1:
--		/* fallback sockets skip TCP_CLOSING - TCP will take care */
-+		inet_sk_state_store(sk, TCP_CLOSING);
-+		break;
-+	case TCP_FIN_WAIT2:
- 		inet_sk_state_store(sk, TCP_CLOSE);
- 		break;
- 	default:
-@@ -2110,8 +2112,12 @@ static void __mptcp_check_send_data_fin(struct sock =
-*sk)
- =
+On Mon, 16 Nov 2020 10:48:01 +0100 you wrote:
+> This series improves MPTCP handling of multiple concurrent
+> xmit streams.
+> =
 
- 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
- =
+> The to-be-transmitted data is enqueued to a subflow only when
+> the send window is open, keeping the subflows xmit queue shorter
+> and allowing for faster switch-over.
+> =
 
--	/* fallback socket will not get data_fin/ack, can move to close now */
--	if (__mptcp_check_fallback(msk) && sk->sk_state =3D=3D TCP_LAST_ACK) {
-+	/* fallback socket will not get data_fin/ack, can move to close now
-+	 * Note: we skip the CLOSE_WAIT -> LAST_ACK transition for
-+	 * simplicity's sake
-+	 */
-+	if (__mptcp_check_fallback(msk) &&
-+	    ((1 << sk->sk_state) & (TCPF_CLOSING | TCPF_CLOSE_WAIT))) {
- 		inet_sk_state_store(sk, TCP_CLOSE);
- 		mptcp_close_wake_up(sk);
- 	}
--- =
+> [...]
 
-2.26.2
+Here is the summary with links:
+  - [net-next,v3,01/13] tcp: factor out tcp_build_frag()
+    https://git.kernel.org/netdev/net-next/c/b796d04bd014
+  - [net-next,v3,02/13] mptcp: use tcp_build_frag()
+    https://git.kernel.org/netdev/net-next/c/e2223995a287
+  - [net-next,v3,03/13] tcp: factor out __tcp_close() helper
+    https://git.kernel.org/netdev/net-next/c/77c3c9563752
+  - [net-next,v3,04/13] mptcp: introduce mptcp_schedule_work
+    https://git.kernel.org/netdev/net-next/c/ba8f48f7a4d7
+  - [net-next,v3,05/13] mptcp: reduce the arguments of mptcp_sendmsg_frag
+    https://git.kernel.org/netdev/net-next/c/caf971df01b8
+  - [net-next,v3,06/13] mptcp: add accounting for pending data
+    https://git.kernel.org/netdev/net-next/c/f0e6a4cf11f1
+  - [net-next,v3,07/13] mptcp: introduce MPTCP snd_nxt
+    https://git.kernel.org/netdev/net-next/c/eaa2ffabfc35
+  - [net-next,v3,08/13] mptcp: refactor shutdown and close
+    https://git.kernel.org/netdev/net-next/c/e16163b6e2b7
+  - [net-next,v3,09/13] mptcp: move page frag allocation in mptcp_sendmsg()
+    https://git.kernel.org/netdev/net-next/c/d9ca1de8c0cd
+  - [net-next,v3,10/13] mptcp: try to push pending data on snd una updates
+    https://git.kernel.org/netdev/net-next/c/813e0a683d4c
+  - [net-next,v3,11/13] mptcp: rework poll+nospace handling
+    https://git.kernel.org/netdev/net-next/c/8edf08649eed
+  - [net-next,v3,12/13] mptcp: keep track of advertised windows right edge
+    https://git.kernel.org/netdev/net-next/c/6f8a612a33e4
+  - [net-next,v3,13/13] mptcp: send explicit ack on delayed ack_seq incr
+    https://git.kernel.org/netdev/net-next/c/7ed90803a213
 
---===============1127853667917051493==--
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
+--===============5577895743435462262==--
