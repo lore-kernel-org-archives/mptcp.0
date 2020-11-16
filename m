@@ -1,63 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============5032356191242810929=="
+Content-Type: multipart/mixed; boundary="===============2460926881181911453=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] Squash-to: "mptcp: refactor shutdown and
- close" again
-Date: Sun, 15 Nov 2020 16:52:40 +0100
-Message-ID: <81080bfedb168efc353d05c9f690179f0486b8f8.camel@redhat.com>
-In-Reply-To: 838c3a9c-014e-4a73-e389-ce6eb3469fbe@tessares.net
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 0/3] Squash to "ADD_ADDR: ports
+ support v4"
+Date: Mon, 16 Nov 2020 12:30:58 +0800
+Message-ID: <cover.1605500515.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6733
+X-UID: 6734
 
---===============5032356191242810929==
+--===============2460926881181911453==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-11-13 at 20:18 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
-> =
+This patchset includes a squash-to patch and two new patch. They all
+should be squashed into the "ADD_ADDR: ports support v4" series.
 
-> On 13/11/2020 19:05, Paolo Abeni wrote:
-> > fix bad mask and fallback state tracking on shutdown
-> > and close.
-> > =
+The first new patch should be inserted into the patchset after the 8th
+patch "mptcp: print out port and ahmac when receiving ADD_ADDR".
 
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > --
-> > v1 -> v2:
-> >   - more fallback status fixes
-> > =
+The second new patch should be inserted into the patchset after the 9th
+patch "mptcp: add port number check for MP_JOIN".
 
-> > Note:
-> > - fallback status tracking at close time was almost completely
-> > broken. I suspect that was quite hidden by the worker that somehow
-> > spooled the data and closed the socket with time. With workqueue
-> > removale it's very apparent.
-> > - this replaces completely the previous version (is not an incremental
-> > change)
-> =
+Geliang Tang (3):
+  mptcp: create listening socket for new port
+  mptcp: add new flag listen_new_port
+  Squash to "selftests: mptcp: add testcases for ADD_ADDR with port"
 
-> Thank you for this new version and fixing + cleaning that part!
-> =
+ net/mptcp/pm_netlink.c                        |  3 +
+ net/mptcp/protocol.h                          |  4 +-
+ net/mptcp/subflow.c                           | 59 +++++++++++++++----
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 29 ++++++---
+ 4 files changed, 77 insertions(+), 18 deletions(-)
 
-> - 349d70b5a824: Revert "Squash-to: "mptcp: refactor shutdown and close" =
+-- =
 
-> again" topic
-> - 58c8d69fda40: "squashed" (with conflicts) in "Squash-to: "mptcp: =
+2.26.2
 
-> refactor shutdown and close" again"
->      The conflict was in mptcp_check_data_fin(), see below
-> - d8578f2014ae: conflict in =
-
-> t/mptcp-send-explicit-ack-on-delayed-ack_seq-incr
-> - Results: 8ad8e1a1ec77..245521ccb46e
-> =
-
-> Tests + export are in progress!
-
-As v3 is needed upstream, I' going to squash this in the next iteration
-
---===============5032356191242810929==--
+--===============2460926881181911453==--
