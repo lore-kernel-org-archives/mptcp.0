@@ -1,217 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============4475647507342165145=="
+Content-Type: multipart/mixed; boundary="===============6161691727758930280=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v3 01/13] tcp: factor out tcp_build_frag()
-Date: Mon, 16 Nov 2020 10:48:02 +0100
-Message-ID: <603337b8b53b8a426db568f738a4d4058d535ce2.1605458224.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next v3 03/13] tcp: factor out __tcp_close() helper
+Date: Mon, 16 Nov 2020 10:48:04 +0100
+Message-ID: <42f5d69c2eef1b2cd427f46813f7045909d62b96.1605458224.git.pabeni@redhat.com>
 In-Reply-To: cover.1605458224.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6740
+X-UID: 6741
 
---===============4475647507342165145==
+--===============6161691727758930280==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Will be needed by the next patch, as MPTCP needs to handle
-directly the error/memory-allocation-needed path.
-
-No functional changes intended.
-
-Additionally let MPTCP code access the tcp_remove_empty_skb()
-helper.
+unlocked version of protocol level close, will be used by
+MPTCP to allow decouple orphaning and subflow level close.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-v2 -> v3:
- - fix checkpatch issue - Jakub
----
- include/net/tcp.h |   3 ++
- net/ipv4/tcp.c    | 119 ++++++++++++++++++++++++++--------------------
- 2 files changed, 70 insertions(+), 52 deletions(-)
+ include/net/tcp.h | 1 +
+ net/ipv4/tcp.c    | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d643ee4e4249..8aee43ef0578 100644
+index 8aee43ef0578..d5d22c411918 100644
 --- a/include/net/tcp.h
 +++ b/include/net/tcp.h
-@@ -322,6 +322,7 @@ void tcp_shutdown(struct sock *sk, int how);
- int tcp_v4_early_demux(struct sk_buff *skb);
- int tcp_v4_rcv(struct sk_buff *skb);
- =
-
-+void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb);
- int tcp_v4_tw_remember_stamp(struct inet_timewait_sock *tw);
- int tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size);
- int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size);
-@@ -329,6 +330,8 @@ int tcp_sendpage(struct sock *sk, struct page *page, in=
-t offset, size_t size,
- 		 int flags);
- int tcp_sendpage_locked(struct sock *sk, struct page *page, int offset,
- 			size_t size, int flags);
-+struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
-+			       struct page *page, int offset, size_t *size);
- ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
- 		 size_t size, int flags);
- int tcp_send_mss(struct sock *sk, int *size_goal, int flags);
+@@ -395,6 +395,7 @@ void tcp_update_metrics(struct sock *sk);
+ void tcp_init_metrics(struct sock *sk);
+ void tcp_metrics_init(void);
+ bool tcp_peer_is_proven(struct request_sock *req, struct dst_entry *dst);
++void __tcp_close(struct sock *sk, long timeout);
+ void tcp_close(struct sock *sk, long timeout);
+ void tcp_init_sock(struct sock *sk);
+ void tcp_init_transfer(struct sock *sk, int bpf_op, struct sk_buff *skb);
 diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index b2bc3d7fe9e8..a40981e347c0 100644
+index a40981e347c0..b285b338a019 100644
 --- a/net/ipv4/tcp.c
 +++ b/net/ipv4/tcp.c
-@@ -954,7 +954,7 @@ int tcp_send_mss(struct sock *sk, int *size_goal, int f=
-lags)
-  * importantly be able to generate EPOLLOUT for Edge Trigger epoll()
-  * users.
-  */
--static void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
-+void tcp_remove_empty_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	if (skb && !skb->len) {
- 		tcp_unlink_write_queue(skb, sk);
-@@ -964,6 +964,68 @@ static void tcp_remove_empty_skb(struct sock *sk, stru=
-ct sk_buff *skb)
- 	}
+@@ -2420,13 +2420,12 @@ bool tcp_check_oom(struct sock *sk, int shift)
+ 	return too_many_orphans || out_of_socket_memory;
  }
  =
 
-+struct sk_buff *tcp_build_frag(struct sock *sk, int size_goal, int flags,
-+			       struct page *page, int offset, size_t *size)
-+{
-+	struct sk_buff *skb =3D tcp_write_queue_tail(sk);
-+	struct tcp_sock *tp =3D tcp_sk(sk);
-+	bool can_coalesce;
-+	int copy, i;
-+
-+	if (!skb || (copy =3D size_goal - skb->len) <=3D 0 ||
-+	    !tcp_skb_can_collapse_to(skb)) {
-+new_segment:
-+		if (!sk_stream_memory_free(sk))
-+			return NULL;
-+
-+		skb =3D sk_stream_alloc_skb(sk, 0, sk->sk_allocation,
-+					  tcp_rtx_and_write_queues_empty(sk));
-+		if (!skb)
-+			return NULL;
-+
-+#ifdef CONFIG_TLS_DEVICE
-+		skb->decrypted =3D !!(flags & MSG_SENDPAGE_DECRYPTED);
-+#endif
-+		skb_entail(sk, skb);
-+		copy =3D size_goal;
-+	}
-+
-+	if (copy > *size)
-+		copy =3D *size;
-+
-+	i =3D skb_shinfo(skb)->nr_frags;
-+	can_coalesce =3D skb_can_coalesce(skb, i, page, offset);
-+	if (!can_coalesce && i >=3D sysctl_max_skb_frags) {
-+		tcp_mark_push(tp, skb);
-+		goto new_segment;
-+	}
-+	if (!sk_wmem_schedule(sk, copy))
-+		return NULL;
-+
-+	if (can_coalesce) {
-+		skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
-+	} else {
-+		get_page(page);
-+		skb_fill_page_desc(skb, i, page, offset, copy);
-+	}
-+
-+	if (!(flags & MSG_NO_SHARED_FRAGS))
-+		skb_shinfo(skb)->tx_flags |=3D SKBTX_SHARED_FRAG;
-+
-+	skb->len +=3D copy;
-+	skb->data_len +=3D copy;
-+	skb->truesize +=3D copy;
-+	sk_wmem_queued_add(sk, copy);
-+	sk_mem_charge(sk, copy);
-+	skb->ip_summed =3D CHECKSUM_PARTIAL;
-+	WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
-+	TCP_SKB_CB(skb)->end_seq +=3D copy;
-+	tcp_skb_pcount_set(skb, 0);
-+
-+	*size =3D copy;
-+	return skb;
+-void tcp_close(struct sock *sk, long timeout)
++void __tcp_close(struct sock *sk, long timeout)
+ {
+ 	struct sk_buff *skb;
+ 	int data_was_unread =3D 0;
+ 	int state;
+ =
+
+-	lock_sock(sk);
+ 	sk->sk_shutdown =3D SHUTDOWN_MASK;
+ =
+
+ 	if (sk->sk_state =3D=3D TCP_LISTEN) {
+@@ -2590,6 +2589,12 @@ void tcp_close(struct sock *sk, long timeout)
+ out:
+ 	bh_unlock_sock(sk);
+ 	local_bh_enable();
 +}
 +
- ssize_t do_tcp_sendpages(struct sock *sk, struct page *page, int offset,
- 			 size_t size, int flags)
- {
-@@ -999,60 +1061,13 @@ ssize_t do_tcp_sendpages(struct sock *sk, struct pag=
-e *page, int offset,
- 		goto out_err;
- =
-
- 	while (size > 0) {
--		struct sk_buff *skb =3D tcp_write_queue_tail(sk);
--		int copy, i;
--		bool can_coalesce;
--
--		if (!skb || (copy =3D size_goal - skb->len) <=3D 0 ||
--		    !tcp_skb_can_collapse_to(skb)) {
--new_segment:
--			if (!sk_stream_memory_free(sk))
--				goto wait_for_space;
--
--			skb =3D sk_stream_alloc_skb(sk, 0, sk->sk_allocation,
--					tcp_rtx_and_write_queues_empty(sk));
--			if (!skb)
--				goto wait_for_space;
--
--#ifdef CONFIG_TLS_DEVICE
--			skb->decrypted =3D !!(flags & MSG_SENDPAGE_DECRYPTED);
--#endif
--			skb_entail(sk, skb);
--			copy =3D size_goal;
--		}
-+		struct sk_buff *skb;
-+		size_t copy =3D size;
- =
-
--		if (copy > size)
--			copy =3D size;
--
--		i =3D skb_shinfo(skb)->nr_frags;
--		can_coalesce =3D skb_can_coalesce(skb, i, page, offset);
--		if (!can_coalesce && i >=3D sysctl_max_skb_frags) {
--			tcp_mark_push(tp, skb);
--			goto new_segment;
--		}
--		if (!sk_wmem_schedule(sk, copy))
-+		skb =3D tcp_build_frag(sk, size_goal, flags, page, offset, &copy);
-+		if (!skb)
- 			goto wait_for_space;
- =
-
--		if (can_coalesce) {
--			skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
--		} else {
--			get_page(page);
--			skb_fill_page_desc(skb, i, page, offset, copy);
--		}
--
--		if (!(flags & MSG_NO_SHARED_FRAGS))
--			skb_shinfo(skb)->tx_flags |=3D SKBTX_SHARED_FRAG;
--
--		skb->len +=3D copy;
--		skb->data_len +=3D copy;
--		skb->truesize +=3D copy;
--		sk_wmem_queued_add(sk, copy);
--		sk_mem_charge(sk, copy);
--		skb->ip_summed =3D CHECKSUM_PARTIAL;
--		WRITE_ONCE(tp->write_seq, tp->write_seq + copy);
--		TCP_SKB_CB(skb)->end_seq +=3D copy;
--		tcp_skb_pcount_set(skb, 0);
--
- 		if (!copied)
- 			TCP_SKB_CB(skb)->tcp_flags &=3D ~TCPHDR_PSH;
- =
-
++void tcp_close(struct sock *sk, long timeout)
++{
++	lock_sock(sk);
++	__tcp_close(sk, timeout);
+ 	release_sock(sk);
+ 	sock_put(sk);
+ }
 -- =
 
 2.26.2
 
---===============4475647507342165145==--
+--===============6161691727758930280==--
