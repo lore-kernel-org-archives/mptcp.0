@@ -1,152 +1,181 @@
-Content-Type: multipart/mixed; boundary="===============2147088034412081913=="
+Content-Type: multipart/mixed; boundary="===============6480658263187314287=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 1/6] mptcp: separate accouting for wmem forward
- alloc mem
-Date: Mon, 16 Nov 2020 18:04:57 +0100
-Message-ID: <e023afa8f4ad8536aaaab41584917775beec41ca.camel@redhat.com>
-In-Reply-To: f258529e0cc92e23cda9129216a672ce10e850e7.1605283958.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 1/3] mptcp: create listening
+ socket for new port
+Date: Mon, 16 Nov 2020 18:42:23 +0100
+Message-ID: <2ad1f083006c5489798b19f233badac10b4cf914.camel@redhat.com>
+In-Reply-To: e25c8761f3dcd0a262e0578bf97001c875ca59d2.1605500515.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6754
+X-UID: 6755
 
---===============2147088034412081913==
+--===============6480658263187314287==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-11-13 at 17:27 +0100, Paolo Abeni wrote:
-> Account separatelly the memory forward allocated
-> for write operation. When sendmsg() need more memory
-> it looks at wforward_alloc first and if that is
-> exaused, move more space from sk_forward_alloc.
+On Mon, 2020-11-16 at 12:30 +0800, Geliang Tang wrote:
+> This patch created the listening socket from the kernel side, binded the
+> new port to the listening socket, then listened.
 > =
 
-> This will simplify the next patch
-> =
-
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
->  net/mptcp/protocol.c | 52 +++++++++++++++++++++++++++++++++++++++-----
->  net/mptcp/protocol.h |  1 +
->  2 files changed, 48 insertions(+), 5 deletions(-)
+> mptcp_subflow_create_socket will fail here since the sk->sk_socket is
+> null. I simply dropped this null checking which was been added by Paolo
+> in the commit "adf7341064982 (mptcp: be careful on subflow creation)".
+> ---
+>  net/mptcp/pm_netlink.c |  3 +++
+>  net/mptcp/protocol.h   |  1 +
+>  net/mptcp/subflow.c    | 55 +++++++++++++++++++++++++++++++++++-------
+>  3 files changed, 50 insertions(+), 9 deletions(-)
 > =
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 6397083476e3..87d8659b9bcc 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -852,9 +852,48 @@ static bool mptcp_frag_can_collapse_to(const struct =
-mptcp_sock *msk,
->  		df->data_seq + df->data_len =3D=3D msk->write_seq;
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index b325d04e65e7..b3514e8c01d3 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -347,6 +347,9 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+>  			if (mptcp_pm_alloc_anno_list(msk, local)) {
+>  				msk->pm.add_addr_signaled++;
+>  				mptcp_pm_announce_addr(msk, &local->addr, false, local->addr.port);
+> +				spin_unlock_bh(&msk->pm.lock);
+> +				mptcp_subflow_listen_new_port(msk, local->addr.port);
+> +				spin_lock_bh(&msk->pm.lock);
+>  				mptcp_pm_nl_add_addr_send_ack(msk);
+>  			}
+>  		} else {
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 37c7d77d4376..0ee63f6b54b4 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -445,6 +445,7 @@ void mptcp_subflow_reset(struct sock *ssk);
+>  int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_inf=
+o *loc,
+>  			    const struct mptcp_addr_info *remote);
+>  int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_soc=
+k);
+> +void mptcp_subflow_listen_new_port(struct mptcp_sock *msk, __be16 port);
+>  =
+
+>  static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+>  					      struct mptcp_subflow_context *ctx)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index e83f93d10612..38a77cc98d2b 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1172,6 +1172,46 @@ int __mptcp_subflow_connect(struct sock *sk, const=
+ struct mptcp_addr_info *loc,
+>  	return err;
 >  }
 >  =
 
-> +static bool mptcp_wmem_alloc(struct sock *sk, int size)
+> +void mptcp_subflow_listen_new_port(struct mptcp_sock *msk, __be16 port)
 > +{
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +	int amount;
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	struct mptcp_addr_info local;
+> +	struct sockaddr_storage addr;
+> +	struct socket *sf;
+> +	int backlog =3D 20;
+> +	int addrlen;
+> +	int err;
 > +
-> +	if (msk->wforward_alloc >=3D size)
-> +		goto account;
+> +	if (!port)
+> +		return;
 > +
-> +	if (!sk_wmem_schedule(sk, size))
-> +		return false;
+> +	if (!mptcp_is_fully_established(sk))
+> +		return;
 > +
-> +	/* try to keep half fwd alloc memory for each direction */
-> +	amount =3D max(size, sk->sk_forward_alloc >> 1);
-> +	sk->sk_forward_alloc -=3D amount;
-> +	msk->wforward_alloc +=3D amount;
+> +	err =3D mptcp_subflow_create_socket(sk, &sf);
+> +	if (err)
+> +		return;
 > +
-> +account:
-> +	msk->wforward_alloc -=3D size;
-> +	return true;
+> +	subflow =3D mptcp_subflow_ctx(sf->sk);
+> +	subflow->request_mptcp =3D 1;
+> +
+> +	memset(&local, 0, sizeof(local));
+> +	local.family =3D AF_INET;
+> +	local.port =3D port;
+> +	mptcp_info2sockaddr(&local, &addr);
+> +	addrlen =3D sizeof(struct sockaddr_in);
+> +	err =3D kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+> +	if (err)
+> +		return;
+
+I think there are some problems with this approach:
+
+1) if we have multiple MPTCP sockets, only the first one per netns will
+use the endpoint with the additional ports - the following will try to,
+and bind() will fail.
+
+2) what if the msk socket does fallback to TCP after that the
+additional listening socket is created? =
+
+
+3) ownership for the listening socket could be wrong, see below...
+
+> +
+> +	err =3D sf->ops->listen(sf, backlog);
+> +	if (err)
+> +		return;
+> +
+> +	pr_debug("listen_new_port done");
 > +}
 > +
-> +static void mptcp_wmem_uncharge(struct sock *sk, int size)
-> +{
-> +	mptcp_sk(sk)->wforward_alloc +=3D size;
-> +}
-> +
-> +static void mptcp_mem_reclaim_partial(struct sock *sk)
-> +{
-> +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> +
-> +	sk->sk_forward_alloc +=3D msk->wforward_alloc;
-> +	msk->wforward_alloc =3D 0;
-> +	sk_mem_reclaim_partial(sk);
-> +
-> +	/* split the remaining fwd allocated memory between rx and tx */
-> +	msk->wforward_alloc =3D sk->sk_forward_alloc >> 1;
-> +	sk->sk_forward_alloc -=3D msk->wforward_alloc;
-> +}
-> +
->  static void dfrag_uncharge(struct sock *sk, int len)
+>  static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
 >  {
-> -	sk_mem_uncharge(sk, len);
-> +	mptcp_wmem_uncharge(sk, len);
->  	sk_wmem_queued_add(sk, -len);
->  }
+>  #ifdef CONFIG_SOCK_CGROUP_DATA
+> @@ -1203,12 +1243,6 @@ int mptcp_subflow_create_socket(struct sock *sk, s=
+truct socket **new_sock)
+>  	struct socket *sf;
+>  	int err;
 >  =
 
-> @@ -909,8 +948,8 @@ static void mptcp_clean_una(struct sock *sk)
->  	}
->  =
+> -	/* un-accepted server sockets can reach here - on bad configuration
+> -	 * bail early to avoid greater trouble later
+> -	 */
+> -	if (unlikely(!sk->sk_socket))
+> -		return -EINVAL;
+> -
+>  	err =3D sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
+>  			       &sf);
+>  	if (err)
+> @@ -1241,9 +1275,12 @@ int mptcp_subflow_create_socket(struct sock *sk, s=
+truct socket **new_sock)
+>  	 * procfs/diag interaces really show this one belonging to the correct
+>  	 * user.
+>  	 */
+> -	SOCK_INODE(sf)->i_ino =3D SOCK_INODE(sk->sk_socket)->i_ino;
+> -	SOCK_INODE(sf)->i_uid =3D SOCK_INODE(sk->sk_socket)->i_uid;
+> -	SOCK_INODE(sf)->i_gid =3D SOCK_INODE(sk->sk_socket)->i_gid;
+> +
+> +	if (sk->sk_socket) {
+> +		SOCK_INODE(sf)->i_ino =3D SOCK_INODE(sk->sk_socket)->i_ino;
+> +		SOCK_INODE(sf)->i_uid =3D SOCK_INODE(sk->sk_socket)->i_uid;
+> +		SOCK_INODE(sf)->i_gid =3D SOCK_INODE(sk->sk_socket)->i_gid;
+> +	}
 
->  out:
-> -	if (cleaned)
-> -		sk_mem_reclaim_partial(sk);
-> +	if (cleaned && tcp_under_memory_pressure(sk))
-> +		mptcp_mem_reclaim_partial(sk);
->  }
->  =
+When we hit the !sk->sk_socket scenario, ownership for the newly
+created socket will be uncorrect.
 
->  static void mptcp_clean_una_wakeup(struct sock *sk)
-> @@ -1334,11 +1373,12 @@ static int mptcp_sendmsg(struct sock *sk, struct =
-msghdr *msg, size_t len)
->  		offset =3D dfrag->offset + dfrag->data_len;
->  		psize =3D pfrag->size - offset;
->  		psize =3D min_t(size_t, psize, msg_data_left(msg));
-> -		if (!sk_wmem_schedule(sk, psize + frag_truesize))
-> +		if (!mptcp_wmem_alloc(sk, psize + frag_truesize))
->  			goto wait_for_memory;
+Possibly a more important point: does the above ensure proper isolation
+between processes and sockets ?
 
-As mentioned before, one possible follow-up to this series is open-code =
+If I follow the code correctly, once that additional listening socket
+is created, any join request landing there will be able to attach to
+any msk - even outside the current netns with the current token infra.
 
-a MPTCP-specific variant of lock_sock()/release_sock() which will allow
-performing some additional/MPTCP specific actions under the msk level
-spinlock.
+I'm wondering if we could instead create a single listening socket per
+netns - when the first msk socket is created. That should avoid bind
+and fallback issues. Ownership should probably set explicitly to root,
+and the isolation issue will be still there.
 
-Specifically:
-
-- in recevmsg(), in lock_sock(), splice sk->sk_receive_queue in msk-
->receive_queue
-- still in recvmsg(), in release_sock(), update the bulk freed rmem =
-
-
-Overall this 2 will allow acquiring no additional spinlock at all in
-the average case for recvmsg()
-
-- in sendmsg(), in lock_sock(), move as much memory as needed from
-sk_forward_memory to wforward_memory, eventually allocating it.
-- in sendmsg(), in release_sock(), move again the unused
-wforward_memory to sk_forward_memory.
-
-Overall this 2 will allow acquiring no additional spinlock at all in
-the average case for sendmsg() and will avoid artifacts due to the
-sk_forward_memory/wforward_memory separation.
-
-But they additionally will allow replacing the wforward_memory field
-with a local variable. =
-
-
-So I'm wondering if I should already code the above, to avoid
-introducing this additional new msk field just to remove it in a few
-patches !?!
-
-Any opinion more than welcome!
+Cheers,
 
 Paolo
 
---===============2147088034412081913==--
+--===============6480658263187314287==--
