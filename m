@@ -1,46 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============0935775738242176284=="
+Content-Type: multipart/mixed; boundary="===============9085165834237831111=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 0/7] mptcp: just another complete datapath refactor
-Date: Wed, 18 Nov 2020 19:04:39 +0100
-Message-ID: <cover.1605718134.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v3 1/7] mptcp: open code mptcp variant for lock_sock
+Date: Wed, 18 Nov 2020 19:04:40 +0100
+Message-ID: <f8114368c329aa1d1e872eaaa464637885d53d42.1605718134.git.pabeni@redhat.com>
+In-Reply-To: cover.1605718134.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6785
+X-UID: 6786
 
---===============0935775738242176284==
+--===============9085165834237831111==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This iteration includes many optimizations using the msk
-socket lock to reduce the number of mptcp_data_lock contentions.
+This allows invoking an additional callback under the
+socket spin lock.
 
-It additionally cleans a bit the mptcp_lock_sock() macro definitions
-and fix a few checkpatches issues.
+Will be used by the next patches to avoid additional
+spin lock contention
 
-Still using the backlog, as per ML discussion
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/core/sock.c      |  2 +-
+ net/mptcp/protocol.h | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-Paolo Abeni (7):
-  mptcp: open code mptcp variant for lock_sock
-  mptcp: implement wmem reservation.
-  mptcp: protect the rx path with the msk socket spinlock
-  mptcp: allocate TX skbs in msk context.
-  mptcp: avoid a few atomic ops in the rx path
-  mptcp: simplify mptcp_nospace
-  mptcp: use mptcp backlog.
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 727ea1cc633c..89ee8582bf01 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2486,7 +2486,7 @@ bool sk_page_frag_refill(struct sock *sk, struct page=
+_frag *pfrag)
+ }
+ EXPORT_SYMBOL(sk_page_frag_refill);
+ =
 
- net/core/sock.c        |   2 +-
- net/mptcp/mptcp_diag.c |   2 +-
- net/mptcp/options.c    |  47 +--
- net/mptcp/protocol.c   | 721 ++++++++++++++++++++++++++++++-----------
- net/mptcp/protocol.h   |  39 ++-
- net/mptcp/subflow.c    |  31 +-
- 6 files changed, 613 insertions(+), 229 deletions(-)
+-static void __lock_sock(struct sock *sk)
++void __lock_sock(struct sock *sk)
+ 	__releases(&sk->sk_lock.slock)
+ 	__acquires(&sk->sk_lock.slock)
+ {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 82d5626323b1..e9f553993322 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -253,6 +253,21 @@ struct mptcp_sock {
+ 	} rcvq_space;
+ };
+ =
+
++void __lock_sock(struct sock *sk);
++
++#define mptcp_lock_sock(___sk, cb) do {					\
++	struct sock *__sk =3D (___sk); /* silence macro reuse warning */	\
++	might_sleep();							\
++	spin_lock_bh(&__sk->sk_lock.slock);				\
++	if (__sk->sk_lock.owned)					\
++		__lock_sock(__sk);					\
++	cb;								\
++	__sk->sk_lock.owned =3D 1;					\
++	spin_unlock(&__sk->sk_lock.slock);				\
++	mutex_acquire(&__sk->sk_lock.dep_map, 0, 0, _RET_IP_);		\
++	local_bh_enable();						\
++} while (0)
++
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+ 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
+ =
 
 -- =
 
 2.26.2
 
---===============0935775738242176284==--
+--===============9085165834237831111==--
