@@ -1,79 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============4318051120142651893=="
+Content-Type: multipart/mixed; boundary="===============8740640996710374834=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: fix state tracking for fallback socket
-Date: Tue, 17 Nov 2020 16:51:06 -0800
-Message-ID: <2dbad03d-0f1-69ee-8b58-b53ee8e34c0@linux.intel.com>
-In-Reply-To: b584969e2e46bbc4c1672659737d1d65a09cb36b.1605638677.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 1/6] mptcp: separate accouting for wmem forward
+ alloc mem
+Date: Wed, 18 Nov 2020 10:37:20 +0100
+Message-ID: <007e2c964d8ed2856e33b25309bd38ee1135c788.camel@redhat.com>
+In-Reply-To: 66b2f6a8-315-e498-94c1-229e6164c6cd@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6766
+X-UID: 6767
 
---===============4318051120142651893==
+--===============8740640996710374834==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 17 Nov 2020, Paolo Abeni wrote:
+On Tue, 2020-11-17 at 13:07 -0800, Mat Martineau wrote:
+> On Tue, 17 Nov 2020, Paolo Abeni wrote:
+> =
 
-> We need to cope with some more state transition for
-> fallback sockets, or could still end-up moving to TCP_CLOSE
-> too early and avoid spooling some pending data
->
-> Fixes: ("mptcp: refactor shutdown and close")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> v1 -> v2:
-> - we actually need also the state transition I tried to
->   skip in the previous iteration, otherwise we will
->   keep dangling sockets around
-> ---
-> net/mptcp/protocol.c | 18 +++++++++++++-----
-> 1 file changed, 13 insertions(+), 5 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 5f7a43564922..3908a6445321 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -788,7 +788,9 @@ static void mptcp_check_for_eof(struct mptcp_sock *ms=
-k)
-> 		inet_sk_state_store(sk, TCP_CLOSE_WAIT);
-> 		break;
-> 	case TCP_FIN_WAIT1:
-> -		/* fallback sockets skip TCP_CLOSING - TCP will take care */
-> +		inet_sk_state_store(sk, TCP_CLOSING);
-> +		break;
-> +	case TCP_FIN_WAIT2:
-> 		inet_sk_state_store(sk, TCP_CLOSE);
-> 		break;
-> 	default:
-> @@ -2110,10 +2112,16 @@ static void __mptcp_check_send_data_fin(struct so=
-ck *sk)
->
-> 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
->
-> -	/* fallback socket will not get data_fin/ack, can move to close now */
-> -	if (__mptcp_check_fallback(msk) && sk->sk_state =3D=3D TCP_LAST_ACK) {
-> -		inet_sk_state_store(sk, TCP_CLOSE);
-> -		mptcp_close_wake_up(sk);
-> +	/* fallback socket will not get data_fin/ack, can move to the next
-> +	 * stats now
+> > On Tue, 2020-11-17 at 11:47 +0100, Florian Westphal wrote:
+> > > Paolo Abeni <pabeni(a)redhat.com> wrote:
+> > > > As mentioned before, one possible follow-up to this series is open-=
+code
+> > > > a MPTCP-specific variant of lock_sock()/release_sock() which will a=
+llow
+> > > > performing some additional/MPTCP specific actions under the msk lev=
+el
+> > > > spinlock.
+> > > > =
 
-'state' ?
+> > > > Specifically:
+> > > > =
 
-Other than that, looks good to me. Thanks Paolo.
+> > > > - in recevmsg(), in lock_sock(), splice sk->sk_receive_queue in msk-
+> > > > > receive_queue
+> > > > - still in recvmsg(), in release_sock(), update the bulk freed rmem
+> > > > =
 
-> +	 */
-> +	if (__mptcp_check_fallback(msk)) {
-> +		if ((1 << sk->sk_state) & (TCPF_CLOSING | TCPF_LAST_ACK)) {
-> +			inet_sk_state_store(sk, TCP_CLOSE);
-> +			mptcp_close_wake_up(sk);
-> +		} else if (sk->sk_state =3D=3D TCP_FIN_WAIT1) {
-> +			inet_sk_state_store(sk, TCP_FIN_WAIT2);
-> +		}
+> > > > Overall this 2 will allow acquiring no additional spinlock at all in
+> > > > the average case for recvmsg()
+> > > > =
 
---
-Mat Martineau
-Intel
---===============4318051120142651893==--
+> > > > - in sendmsg(), in lock_sock(), move as much memory as needed from
+> > > > sk_forward_memory to wforward_memory, eventually allocating it.
+> > > > - in sendmsg(), in release_sock(), move again the unused
+> > > > wforward_memory to sk_forward_memory.
+> > > > =
+
+> > > > Overall this 2 will allow acquiring no additional spinlock at all in
+> > > > the average case for sendmsg() and will avoid artifacts due to the
+> > > > sk_forward_memory/wforward_memory separation.
+> > > > =
+
+> > > > But they additionally will allow replacing the wforward_memory field
+> > > > with a local variable.
+> > > > =
+
+> > > > So I'm wondering if I should already code the above, to avoid
+> > > > introducing this additional new msk field just to remove it in a few
+> > > > patches !?!
+> > > =
+
+> > > Tricky.
+> > =
+
+> > The trickest part is probably getting a corret estimate for the wmem we
+> > are going to use. But we don't really need to be very accurate.
+> > =
+
+> > > Do you have hunch of how much additional code churn that
+> > > means?
+> > > =
+
+> > > If its not too much 'rewrite', I would prefer to do it later on
+> > > even if that means axing the newly added field.
+> > > =
+
+> > > If it means to rewrite most of this again then its probably
+> > > better to do it right away.
+> > =
+
+> > eh... the only way I had for a reasonable answer to the above was...
+> > trying to code it, do I did it ;)
+> > =
+
+> > In the end I had to retain the newly added field - with a slightly
+> > different semantic and name:
+> > =
+
+> > https://github.com/pabeni/mptcp/tree/worker_must_die_6
+> > =
+
+> > I think overall it cleans things more than a bit...
+> > =
+
+> =
+
+> Yes, I find the version of this patch in
+> https://github.com/pabeni/mptcp/tree/worker_must_die_6.1 to be cleaner =
+
+> than the version posted here without mptcp_lock_sock().
+
+That was my impression, too ;)
+
+> Did you intend to use __sk in the body of the mptcp_lock_sock() macro?
+
+That is typo on my side! Thanks for finding it. The macro actually
+works only because a 'sk' variable is always available in the scopes
+where the macro is used/invoked. I'll fix that.
+
+Since looks like _6 is a viable option I'll post a v3 with that, ok?
+
+Thanks!
+
+Paolo
+
+--===============8740640996710374834==--
