@@ -1,70 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============0458859289348560000=="
+Content-Type: multipart/mixed; boundary="===============4363840889610894002=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: syzbot <syzbot+42aa53dafb66a07e5a24 at syzkaller.appspotmail.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: WARNING in mptcp_reset_timer
-Date: Wed, 18 Nov 2020 17:08:04 +0100
-Message-ID: <ed19859176b6de825f93fe189c2cc443fb5f2c0e.camel@redhat.com>
-In-Reply-To: 000000000000b7f48605b45f80c5@google.com
+Date: Wed, 18 Nov 2020 08:30:05 -0800
+Message-ID: <000000000000b71b2a05b4641fef@google.com>
+In-Reply-To: 89d3320227621447393b2ad33890770b6b7711af.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6777
+X-UID: 6778
 
---===============0458859289348560000==
+--===============4363840889610894002==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-11-18 at 02:59 -0800, syzbot wrote:
-> Hello,
-> =
+Hello,
 
-> syzbot found the following issue on:
-> =
+syzbot tried to test the proposed patch but the build/boot failed:
 
-> HEAD commit:    7c8ca812 Add linux-next specific files for 20201117
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D14ccfce2500000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dff4bc71371dc5=
-b13
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D42aa53dafb66a07=
-e5a24
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1342e36e500=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D17f29bba500000
-> =
+failed to apply patch:
+can't find file to patch at input line 5
+Perhaps you used the wrong -p or --strip option?
+The text leading up to this was:
+--------------------------
+|diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+|index 8df013daea88..aeda4357de9a 100644
+|--- a/net/mptcp/protocol.c
+|+++ b/net/mptcp/protocol.c
+--------------------------
+No file to patch.  Skipping patch.
+1 out of 1 hunk ignored
 
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+42aa53dafb66a07e5a24(a)syzkaller.appspotmail.com
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git=
- master
----
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8df013daea88..aeda4357de9a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1261,11 +1261,12 @@ static void mptcp_push_pending(struct sock *sk, uns=
-igned int flags)
- 		mptcp_push_release(sk, ssk, &info);
- =
 
- out:
--	/* start the timer, if it's not pending */
--	if (!mptcp_timer_pending(sk))
--		mptcp_reset_timer(sk);
--	if (copied)
-+	if (copied) {
-+		/* start the timer, if it's not pending */
-+		if (!mptcp_timer_pending(sk))
-+			mptcp_reset_timer(sk);
- 		__mptcp_check_send_data_fin(sk);
-+	}
- }
- =
+Tested on:
 
- static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+commit:         4ba5a1c4 Merge branch 'net-next/master'
+git tree:       https://github.com/multipath-tcp/mptcp_net-next.git master
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D42aa53dafb66a07e5=
+a24
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D16cb71ee5000=
+00
 
---===============0458859289348560000==--
+--===============4363840889610894002==--
