@@ -1,39 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============3709478549251713468=="
+Content-Type: multipart/mixed; boundary="===============3198118323244756686=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: drop CANCEL_WORK status bit
-Date: Wed, 18 Nov 2020 18:32:13 +0100
-Message-ID: <3918b547-1bbf-f7c8-4a6d-48660c91c1f1@tessares.net>
-In-Reply-To: 71b1537ee313ad6a9338b676d09b727e03b49d4c.1605717967.git.pabeni@redhat.com
+Subject: [MPTCP] Weekly meeting - 19 November 2020 16:00 UTC (8am PDT, 5pm CET,
+ 12pm CST)
+Date: Wed, 18 Nov 2020 18:54:30 +0100
+Message-ID: <3182c5ea-f5c2-1310-1e0d-a2490e78ca06@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 6783
+X-UID: 6784
 
---===============3709478549251713468==
+--===============3198118323244756686==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hello everybody!
 
-On 18/11/2020 17:47, Paolo Abeni wrote:
-> Only mptcp_close() can actually cancel the workqueue,
-> no need to add and use this flag.
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-Thank you for this fix ( :-D )!
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20201119
 
-Just added at the bottom of the tree:
+Feel free to add/modify topics!
 
-- a72bd49026f0: mptcp: drop CANCEL_WORK status bit
-- Results: 3c06d194dc8b..3507a038db26
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-Tests + export are in progress!
-
-Cheers,
+Speak to you tomorrow!
 Matt
 -- =
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3709478549251713468==--
+--===============3198118323244756686==--
