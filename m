@@ -1,39 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============3733571836877041731=="
+Content-Type: multipart/mixed; boundary="===============5994930031424161558=="
 MIME-Version: 1.0
-From: syzbot <syzbot+42aa53dafb66a07e5a24 at syzkaller.appspotmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: WARNING in mptcp_reset_timer
-Date: Wed, 18 Nov 2020 13:58:05 -0800
-Message-ID: <000000000000ba4a0805b468b464@google.com>
-In-Reply-To: 9f4392dd8cb285774b8558b2dce6d5e391be72a0.camel@redhat.com
+Subject: [MPTCP] [PATCH net-next] mptcp: update rtx timeout only if required.
+Date: Wed, 18 Nov 2020 23:05:34 +0100
+Message-ID: <1a72039f112cae048c44d398ffa14e0a1432db3d.1605737083.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6794
+X-UID: 6795
 
---===============3733571836877041731==
+--===============5994930031424161558==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-syzbot has tested the proposed patch and the reproducer did not trigger any=
- issue:
+We must start the retransmission timer only there are
+pending data in the rtx queue.
+Otherwise we can hit a WARN_ON in mptcp_reset_timer(),
+as syzbot demonstrated.
 
 Reported-and-tested-by: syzbot+42aa53dafb66a07e5a24(a)syzkaller.appspotmail=
 .com
+Fixes: d9ca1de8c0cd ("mptcp: move page frag allocation in mptcp_sendmsg()")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Tested on:
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 8df013daea88..aeda4357de9a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1261,11 +1261,12 @@ static void mptcp_push_pending(struct sock *sk, uns=
+igned int flags)
+ 		mptcp_push_release(sk, ssk, &info);
+ =
 
-commit:         2b8473d2 Documentation: Remove the deleted "framerelay" do..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-=
-next.git master
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df9f2db0042d65d21
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D42aa53dafb66a07e5=
-a24
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D16b5865e5000=
-00
+ out:
+-	/* start the timer, if it's not pending */
+-	if (!mptcp_timer_pending(sk))
+-		mptcp_reset_timer(sk);
+-	if (copied)
++	if (copied) {
++		/* start the timer, if it's not pending */
++		if (!mptcp_timer_pending(sk))
++			mptcp_reset_timer(sk);
+ 		__mptcp_check_send_data_fin(sk);
++	}
+ }
+ =
 
-Note: testing is done by a robot and is best-effort only.
---===============3733571836877041731==--
+ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+-- =
+
+2.26.2
+
+--===============5994930031424161558==--
