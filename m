@@ -1,220 +1,330 @@
-Content-Type: multipart/mixed; boundary="===============3483423571880840760=="
+Content-Type: multipart/mixed; boundary="===============4786243316632321047=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 09/10] mptcp: track window announced to peer
-Date: Thu, 19 Nov 2020 11:46:02 -0800
-Message-ID: <20201119194603.103158-10-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 07/10] mptcp: send out dedicated ADD_ADDR
+ packet
+Date: Thu, 19 Nov 2020 11:46:00 -0800
+Message-ID: <20201119194603.103158-8-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201119194603.103158-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6847
+X-UID: 6848
 
---===============3483423571880840760==
+--===============4786243316632321047==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Florian Westphal <fw(a)strlen.de>
+From: Geliang Tang <geliangtang(a)gmail.com>
 
-OoO handling attempts to detect when packet is out-of-window by testing
-current ack sequence and remaining space vs. sequence number.
+When ADD_ADDR suboption includes an IPv6 address, the size is 28 octets.
+It will not fit when other MPTCP suboptions are included in this packet,
+e.g. DSS. So here we send out an ADD_ADDR dedicated packet to carry only
+ADD_ADDR suboption, no other MPTCP suboptions.
 
-This doesn't work reliably. Store the highest allowed sequence number
-that we've announced and use it to detect oow packets.
+In mptcp_pm_announce_addr, we check whether this is an IPv6 ADD_ADDR.
+If it is, we set the flag MPTCP_ADD_ADDR_IPV6 to true. Then we call
+mptcp_pm_nl_add_addr_send_ack to sent out a new pure ACK packet.
 
-Do this when mptcp options get written to the packet (wire format).
-For this to work we need to move the write_options call until after
-stack selected a new tcp window.
+In mptcp_established_options_add_addr, we check whether this is a pure
+ACK packet for ADD_ADDR. If it is, we drop all other MPTCP suboptions
+in this packet, only put ADD_ADDR suboption in it.
 
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- include/net/mptcp.h   |  3 ++-
- net/ipv4/tcp_output.c | 11 +++++++----
- net/mptcp/options.c   | 22 +++++++++++++++++++++-
- net/mptcp/protocol.c  | 12 +++++++-----
- net/mptcp/protocol.h  |  1 +
- 5 files changed, 38 insertions(+), 11 deletions(-)
+ net/mptcp/options.c    | 25 ++++++++++++++++++++++---
+ net/mptcp/pm.c         | 16 ++++++++++++++--
+ net/mptcp/pm_netlink.c | 29 +++++++++++++++++++++++++++++
+ net/mptcp/protocol.c   |  6 +++++-
+ net/mptcp/protocol.h   | 10 ++++++++++
+ 5 files changed, 80 insertions(+), 6 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 6e706d838e4e..b6cf07143a8a 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -88,7 +88,8 @@ bool mptcp_established_options(struct sock *sk, struct sk=
-_buff *skb,
- 			       struct mptcp_out_options *opts);
- void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index f2d1e27a2bc1..d7afffcc87c1 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -242,7 +242,9 @@ static void mptcp_parse_option(const struct sk_buff *sk=
+b,
  =
 
--void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts);
-+void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-+			 struct mptcp_out_options *opts);
+ 		mp_opt->add_addr =3D 1;
+ 		mp_opt->addr_id =3D *ptr++;
+-		pr_debug("ADD_ADDR: id=3D%d, echo=3D%d", mp_opt->addr_id, mp_opt->echo);
++		pr_debug("ADD_ADDR%s: id=3D%d, echo=3D%d",
++			 (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_6) ? "6" : "",
++			 mp_opt->addr_id, mp_opt->echo);
+ 		if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4) {
+ 			memcpy((u8 *)&mp_opt->addr.s_addr, (u8 *)ptr, 4);
+ 			ptr +=3D 4;
+@@ -573,17 +575,27 @@ static u64 add_addr6_generate_hmac(u64 key1, u64 key2=
+, u8 addr_id,
+ }
+ #endif
  =
 
- /* move the skb extension owership, with the assumption that 'to' is
-  * newly allocated
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 99905bc01d40..41880d3521ed 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -445,11 +445,12 @@ struct tcp_out_options {
- 	struct mptcp_out_options mptcp;
+-static bool mptcp_established_options_add_addr(struct sock *sk,
++static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_=
+buff *skb,
+ 					       unsigned int *size,
+ 					       unsigned int remaining,
+ 					       struct mptcp_out_options *opts)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
++	bool drop_other_suboptions =3D false;
++	unsigned int opt_size =3D *size;
+ 	struct mptcp_addr_info saddr;
+ 	bool echo;
+ 	int len;
+ =
+
++	if (mptcp_pm_should_add_signal_ipv6(msk) &&
++	    skb && skb_is_tcp_pure_ack(skb)) {
++		pr_debug("drop other suboptions");
++		opts->suboptions =3D 0;
++		remaining +=3D opt_size;
++		drop_other_suboptions =3D true;
++	}
++
+ 	if (!mptcp_pm_should_add_signal(msk) ||
+ 	    !(mptcp_pm_add_addr_signal(msk, remaining, &saddr, &echo)))
+ 		return false;
+@@ -593,6 +605,8 @@ static bool mptcp_established_options_add_addr(struct s=
+ock *sk,
+ 		return false;
+ =
+
+ 	*size =3D len;
++	if (drop_other_suboptions)
++		*size -=3D opt_size;
+ 	opts->addr_id =3D saddr.id;
+ 	if (saddr.family =3D=3D AF_INET) {
+ 		opts->suboptions |=3D OPTION_MPTCP_ADD_ADDR;
+@@ -678,7 +692,7 @@ bool mptcp_established_options(struct sock *sk, struct =
+sk_buff *skb,
+ =
+
+ 	*size +=3D opt_size;
+ 	remaining -=3D opt_size;
+-	if (mptcp_established_options_add_addr(sk, &opt_size, remaining, opts)) {
++	if (mptcp_established_options_add_addr(sk, skb, &opt_size, remaining, opt=
+s)) {
+ 		*size +=3D opt_size;
+ 		remaining -=3D opt_size;
+ 		ret =3D true;
+@@ -759,6 +773,11 @@ static bool check_fully_established(struct mptcp_sock =
+*msk, struct sock *ssk,
+ 		goto fully_established;
+ 	}
+ =
+
++	if (mp_opt->add_addr) {
++		WRITE_ONCE(msk->fully_established, true);
++		return true;
++	}
++
+ 	/* If the first established packet does not contain MP_CAPABLE + data
+ 	 * then fallback to TCP. Fallback scenarios requires a reset for
+ 	 * MP_JOIN subflows.
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index c2c12f02a263..75c5040e8d5d 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -24,6 +24,8 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 	add_addr |=3D BIT(MPTCP_ADD_ADDR_SIGNAL);
+ 	if (echo)
+ 		add_addr |=3D BIT(MPTCP_ADD_ADDR_ECHO);
++	if (addr->family =3D=3D AF_INET6)
++		add_addr |=3D BIT(MPTCP_ADD_ADDR_IPV6);
+ 	WRITE_ONCE(msk->pm.add_addr_signal, add_addr);
+ 	return 0;
+ }
+@@ -153,14 +155,24 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
+k,
+ =
+
+ 	spin_lock_bh(&pm->lock);
+ =
+
+-	if (!READ_ONCE(pm->accept_addr))
++	if (!READ_ONCE(pm->accept_addr)) {
+ 		mptcp_pm_announce_addr(msk, addr, true);
+-	else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED))
++		mptcp_pm_add_addr_send_ack(msk);
++	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
+ 		pm->remote =3D *addr;
++	}
+ =
+
+ 	spin_unlock_bh(&pm->lock);
+ }
+ =
+
++void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
++{
++	if (!mptcp_pm_should_add_signal_ipv6(msk))
++		return;
++
++	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
++}
++
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id)
+ {
+ 	struct mptcp_pm_data *pm =3D &msk->pm;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index f8a9d82a0ea8..03f2c28f11f5 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -228,6 +228,7 @@ static void mptcp_pm_add_timer(struct timer_list *timer)
+ 	if (!mptcp_pm_should_add_signal(msk)) {
+ 		pr_debug("retransmit ADD_ADDR id=3D%d", entry->addr.id);
+ 		mptcp_pm_announce_addr(msk, &entry->addr, false);
++		mptcp_pm_add_addr_send_ack(msk);
+ 		entry->retrans_times++;
+ 	}
+ =
+
+@@ -328,6 +329,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
+ct mptcp_sock *msk)
+ 			if (mptcp_pm_alloc_anno_list(msk, local)) {
+ 				msk->pm.add_addr_signaled++;
+ 				mptcp_pm_announce_addr(msk, &local->addr, false);
++				mptcp_pm_nl_add_addr_send_ack(msk);
+ 			}
+ 		} else {
+ 			/* pick failed, avoid fourther attempts later */
+@@ -398,6 +400,33 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *=
+msk)
+ 	spin_lock_bh(&msk->pm.lock);
+ =
+
+ 	mptcp_pm_announce_addr(msk, &remote, true);
++	mptcp_pm_nl_add_addr_send_ack(msk);
++}
++
++void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++
++	if (!mptcp_pm_should_add_signal_ipv6(msk))
++		return;
++
++	__mptcp_flush_join_list(msk);
++	subflow =3D list_first_entry_or_null(&msk->conn_list, typeof(*subflow), n=
+ode);
++	if (subflow) {
++		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++		u8 add_addr;
++
++		spin_unlock_bh(&msk->pm.lock);
++		pr_debug("send ack for add_addr6");
++		lock_sock(ssk);
++		tcp_send_ack(ssk);
++		release_sock(ssk);
++		spin_lock_bh(&msk->pm.lock);
++
++		add_addr =3D READ_ONCE(msk->pm.add_addr_signal);
++		add_addr &=3D ~BIT(MPTCP_ADD_ADDR_IPV6);
++		WRITE_ONCE(msk->pm.add_addr_signal, add_addr);
++	}
+ }
+ =
+
+ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 0e83887efbc8..c2629190b1ce 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -690,7 +690,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 		sk->sk_data_ready(sk);
+ }
+ =
+
+-static void __mptcp_flush_join_list(struct mptcp_sock *msk)
++void __mptcp_flush_join_list(struct mptcp_sock *msk)
+ {
+ 	if (likely(list_empty(&msk->join_list)))
+ 		return;
+@@ -1807,6 +1807,10 @@ static void pm_work(struct mptcp_sock *msk)
+ 		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
+ 		mptcp_pm_nl_add_addr_received(msk);
+ 	}
++	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
++		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
++		mptcp_pm_nl_add_addr_send_ack(msk);
++	}
+ 	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
+ 		pm->status &=3D ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+ 		mptcp_pm_nl_rm_addr_received(msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a62ffae621c2..4d6dd4adaaaf 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -160,6 +160,7 @@ struct mptcp_addr_info {
+ =
+
+ enum mptcp_pm_status {
+ 	MPTCP_PM_ADD_ADDR_RECEIVED,
++	MPTCP_PM_ADD_ADDR_SEND_ACK,
+ 	MPTCP_PM_RM_ADDR_RECEIVED,
+ 	MPTCP_PM_ESTABLISHED,
+ 	MPTCP_PM_SUBFLOW_ESTABLISHED,
+@@ -168,6 +169,7 @@ enum mptcp_pm_status {
+ enum mptcp_add_addr_status {
+ 	MPTCP_ADD_ADDR_SIGNAL,
+ 	MPTCP_ADD_ADDR_ECHO,
++	MPTCP_ADD_ADDR_IPV6,
  };
  =
 
--static void mptcp_options_write(__be32 *ptr, struct tcp_out_options *opts)
-+static void mptcp_options_write(__be32 *ptr, const struct tcp_sock *tp,
-+				struct tcp_out_options *opts)
+ struct mptcp_pm_data {
+@@ -466,6 +468,7 @@ bool mptcp_schedule_work(struct sock *sk);
+ void mptcp_data_acked(struct sock *sk);
+ void mptcp_subflow_eof(struct sock *sk);
+ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
+ool use_64bit);
++void __mptcp_flush_join_list(struct mptcp_sock *msk);
+ static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
  {
- #if IS_ENABLED(CONFIG_MPTCP)
- 	if (unlikely(OPTION_MPTCP & opts->options))
--		mptcp_write_options(ptr, &opts->mptcp);
-+		mptcp_write_options(ptr, tp, &opts->mptcp);
- #endif
+ 	return READ_ONCE(msk->snd_data_fin_enable) &&
+@@ -506,6 +509,7 @@ void mptcp_pm_subflow_established(struct mptcp_sock *ms=
+k,
+ void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
+ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ 				const struct mptcp_addr_info *addr);
++void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
+ void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+ struct mptcp_pm_add_entry *
+@@ -528,6 +532,11 @@ static inline bool mptcp_pm_should_add_signal_echo(str=
+uct mptcp_sock *msk)
+ 	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
  }
  =
 
-@@ -701,7 +702,7 @@ static void tcp_options_write(__be32 *ptr, struct tcp_s=
-ock *tp,
- =
-
- 	smc_options_write(ptr, &options);
- =
-
--	mptcp_options_write(ptr, opts);
-+	mptcp_options_write(ptr, tp, opts);
- }
- =
-
- static void smc_set_option(const struct tcp_sock *tp,
-@@ -1346,7 +1347,6 @@ static int __tcp_transmit_skb(struct sock *sk, struct=
- sk_buff *skb,
- 		}
- 	}
- =
-
--	tcp_options_write((__be32 *)(th + 1), tp, &opts);
- 	skb_shinfo(skb)->gso_type =3D sk->sk_gso_type;
- 	if (likely(!(tcb->tcp_flags & TCPHDR_SYN))) {
- 		th->window      =3D htons(tcp_select_window(sk));
-@@ -1357,6 +1357,9 @@ static int __tcp_transmit_skb(struct sock *sk, struct=
- sk_buff *skb,
- 		 */
- 		th->window	=3D htons(min(tp->rcv_wnd, 65535U));
- 	}
-+
-+	tcp_options_write((__be32 *)(th + 1), tp, &opts);
-+
- #ifdef CONFIG_TCP_MD5SIG
- 	/* Calculate the MD5 hash, as we have all we need now */
- 	if (md5) {
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index d7afffcc87c1..248e3930c0cb 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1010,7 +1010,24 @@ void mptcp_incoming_options(struct sock *sk, struct =
-sk_buff *skb)
- 	}
- }
- =
-
--void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
-+static void mptcp_set_rwin(const struct tcp_sock *tp)
++static inline bool mptcp_pm_should_add_signal_ipv6(struct mptcp_sock *msk)
 +{
-+	const struct sock *ssk =3D (const struct sock *)tp;
-+	const struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk;
-+	u64 ack_seq;
-+
-+	subflow =3D mptcp_subflow_ctx(ssk);
-+	msk =3D mptcp_sk(subflow->conn);
-+
-+	ack_seq =3D READ_ONCE(msk->ack_seq) + tp->rcv_wnd;
-+
-+	if (after64(ack_seq, READ_ONCE(msk->rcv_wnd_sent)))
-+		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
++	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_IPV6);
 +}
 +
-+void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
-+			 struct mptcp_out_options *opts)
+ static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
  {
- 	if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
- 	     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
-@@ -1167,4 +1184,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_ou=
-t_options *opts)
- 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
- 		}
- 	}
-+
-+	if (tp)
-+		mptcp_set_rwin(tp);
- }
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c2629190b1ce..4ae2c4a30e44 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -168,19 +168,19 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *m=
-sk, struct sk_buff *skb)
- 	struct rb_node **p, *parent;
- 	u64 seq, end_seq, max_seq;
- 	struct sk_buff *skb1;
--	int space;
- =
-
- 	seq =3D MPTCP_SKB_CB(skb)->map_seq;
- 	end_seq =3D MPTCP_SKB_CB(skb)->end_seq;
--	space =3D tcp_space(sk);
--	max_seq =3D space > 0 ? space + msk->ack_seq : msk->ack_seq;
-+	max_seq =3D READ_ONCE(msk->rcv_wnd_sent);
- =
-
- 	pr_debug("msk=3D%p seq=3D%llx limit=3D%llx empty=3D%d", msk, seq, max_seq,
- 		 RB_EMPTY_ROOT(&msk->out_of_order_queue));
--	if (after64(seq, max_seq)) {
-+	if (after64(end_seq, max_seq)) {
- 		/* out of window */
- 		mptcp_drop(sk, skb);
--		pr_debug("oow by %ld", (unsigned long)seq - (unsigned long)max_seq);
-+		pr_debug("oow by %lld, rcv_wnd_sent %llu\n",
-+			 (unsigned long long)end_seq - (unsigned long)max_seq,
-+			 (unsigned long long)msk->rcv_wnd_sent);
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_NODSSWINDOW);
- 		return;
- 	}
-@@ -2294,6 +2294,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 		mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
- 		ack_seq++;
- 		WRITE_ONCE(msk->ack_seq, ack_seq);
-+		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
- 	}
- =
-
- 	sock_reset_flag(nsk, SOCK_RCU_FREE);
-@@ -2586,6 +2587,7 @@ void mptcp_finish_connect(struct sock *ssk)
- 	WRITE_ONCE(msk->write_seq, subflow->idsn + 1);
- 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
- 	WRITE_ONCE(msk->ack_seq, ack_seq);
-+	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
- 	WRITE_ONCE(msk->can_ack, 1);
- 	atomic64_set(&msk->snd_una, msk->write_seq);
- =
-
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4d6dd4adaaaf..67f86818203f 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -216,6 +216,7 @@ struct mptcp_sock {
- 	u64		write_seq;
- 	u64		snd_nxt;
- 	u64		ack_seq;
-+	u64		rcv_wnd_sent;
- 	u64		rcv_data_fin_seq;
- 	struct sock	*last_snd;
- 	int		snd_burst;
+ 	return READ_ONCE(msk->pm.rm_addr_signal);
+@@ -552,6 +561,7 @@ void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
+ void mptcp_pm_nl_fully_established(struct mptcp_sock *msk);
+ void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk);
+ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk);
++void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
+ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk);
+ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *s=
+kc);
 -- =
 
 2.29.2
 
---===============3483423571880840760==--
+--===============4786243316632321047==--
