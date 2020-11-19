@@ -1,120 +1,116 @@
-Content-Type: multipart/mixed; boundary="===============8958292099145426144=="
+Content-Type: multipart/mixed; boundary="===============7678151859412220177=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 03/10] mptcp: bind and listen for
- the new port
-Date: Thu, 19 Nov 2020 18:19:43 +0800
-Message-ID: <a9e55d526caf6feb5cc22892a42eee70caa9ec21.1605780306.git.geliangtang@gmail.com>
-In-Reply-To: f16560fc78e2f308ac191511eb2d1b5478ef9f9a.1605780306.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 04/10] mptcp: add port number
+ check for MP_JOIN
+Date: Thu, 19 Nov 2020 18:19:44 +0800
+Message-ID: <98d6d28d73dcb5cb2a7ff40fb3d264dc2af05933.1605780306.git.geliangtang@gmail.com>
+In-Reply-To: a9e55d526caf6feb5cc22892a42eee70caa9ec21.1605780306.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6814
+X-UID: 6815
 
---===============8958292099145426144==
+--===============7678151859412220177==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch called mptcp_pm_get_listen_socket to get the pernet listening
-socket, and binded the new port to the socket, then listened for the
-connection.
+This patch added two new helpers, subflow_use_different_sport and
+subflow_use_different_dport, to check whether the subflow's source or
+destination port number is different from the msk's port number. When
+we received the MP_JOIN's SYN/SYNACK/ACK, we do these port number
+checks and print out the different port numbers.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c |  3 +++
- net/mptcp/protocol.h   |  1 +
- net/mptcp/subflow.c    | 44 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 48 insertions(+)
+ net/mptcp/subflow.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 19d557df4684..1f9583e92d72 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -381,6 +381,9 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 			if (mptcp_pm_alloc_anno_list(msk, local)) {
- 				msk->pm.add_addr_signaled++;
- 				mptcp_pm_announce_addr(msk, &local->addr, false, local->addr.port);
-+				spin_unlock_bh(&msk->pm.lock);
-+				mptcp_bind_and_listen_new_port(msk, local->addr.port);
-+				spin_lock_bh(&msk->pm.lock);
- 				mptcp_pm_nl_add_addr_send_ack(msk);
- 			}
- 		} else {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e713a6d00c77..d6ea2a6a7237 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -446,6 +446,7 @@ int __mptcp_subflow_connect(struct sock *sk, const stru=
-ct mptcp_addr_info *loc,
- int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
- void subflow_drop_ctx(struct sock *ssk);
- int mptcp_create_listen_socket(struct sock *sk, struct socket **new_sock);
-+void mptcp_bind_and_listen_new_port(struct mptcp_sock *msk, __be16 port);
- =
-
- static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
- 					      struct mptcp_subflow_context *ctx)
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 53e3b82b1ade..4a01b394ecf6 100644
+index 4a01b394ecf6..3ae365130a08 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -1135,6 +1135,50 @@ int __mptcp_subflow_connect(struct sock *sk, const s=
-truct mptcp_addr_info *loc,
- 	return err;
+@@ -112,6 +112,11 @@ static int __subflow_init_req(struct request_sock *req=
+, const struct sock *sk_li
+ 	return 0;
  }
  =
 
-+void mptcp_bind_and_listen_new_port(struct mptcp_sock *msk, __be16 port)
++static bool subflow_use_different_sport(struct mptcp_sock *msk, const stru=
+ct sock *sk)
 +{
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct mptcp_addr_info local;
-+	struct sockaddr_storage addr;
-+	struct socket *listener;
-+	int backlog =3D 20;
-+	int addrlen;
-+	int err;
-+
-+	if (!port)
-+		return;
-+
-+	if (!mptcp_is_fully_established(sk))
-+		return;
-+
-+	listener =3D mptcp_pm_get_listen_socket(msk);
-+	if (!listener)
-+		return;
-+
-+	memset(&local, 0, sizeof(local));
-+	local.family =3D ((struct sock_common *)sk)->skc_family;
-+	local.port =3D port;
-+	mptcp_info2sockaddr(&local, &addr);
-+	addrlen =3D sizeof(struct sockaddr_in);
-+	err =3D kernel_bind(listener, (struct sockaddr *)&addr, addrlen);
-+	if (err) {
-+		pr_err("kernel bind error, err=3D%d", err);
-+		goto err;
-+	}
-+
-+	err =3D listener->ops->listen(listener, backlog);
-+	if (err) {
-+		pr_err("listen error, err=3D%d", err);
-+		goto err;
-+	}
-+
-+	pr_debug("bind_and_listen_new_port done");
-+	return;
-+
-+err:
-+	mptcp_pm_free_listen_socket(msk);
++	return inet_sk(sk)->inet_sport !=3D inet_sk((struct sock *)msk)->inet_spo=
+rt;
 +}
 +
- static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
+ static void subflow_init_req(struct request_sock *req,
+ 			     const struct sock *sk_listener,
+ 			     struct sk_buff *skb)
+@@ -182,6 +187,12 @@ static void subflow_init_req(struct request_sock *req,
+ =
+
+ 		pr_debug("token=3D%u, remote_nonce=3D%u msk=3D%p", subflow_req->token,
+ 			 subflow_req->remote_nonce, subflow_req->msk);
++
++		if (subflow_use_different_sport(subflow_req->msk, sk_listener)) {
++			pr_debug("syn inet_sport=3D%d %d",
++				 ntohs(inet_sk(sk_listener)->inet_sport),
++				 ntohs(inet_sk((struct sock *)subflow_req->msk)->inet_sport));
++		}
+ 	}
+ }
+ =
+
+@@ -284,6 +295,11 @@ void mptcp_subflow_reset(struct sock *ssk)
+ 		sock_hold(sk);
+ }
+ =
+
++static bool subflow_use_different_dport(struct mptcp_sock *msk, const stru=
+ct sock *sk)
++{
++	return inet_sk(sk)->inet_dport !=3D inet_sk((struct sock *)msk)->inet_dpo=
+rt;
++}
++
+ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
+skb)
  {
- #ifdef CONFIG_SOCK_CGROUP_DATA
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+@@ -349,6 +365,12 @@ static void subflow_finish_connect(struct sock *sk, co=
+nst struct sk_buff *skb)
+ =
+
+ 		subflow->mp_join =3D 1;
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
++
++		if (subflow_use_different_dport(mptcp_sk(parent), sk)) {
++			pr_debug("synack inet_dport=3D%d %d",
++				 ntohs(inet_sk(sk)->inet_dport),
++				 ntohs(inet_sk(parent)->inet_dport));
++		}
+ 	} else if (mptcp_check_fallback(sk)) {
+ fallback:
+ 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+@@ -611,6 +633,12 @@ static struct sock *subflow_syn_recv_sock(const struct=
+ sock *sk,
+ =
+
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+ 			tcp_rsk(req)->drop_req =3D true;
++
++			if (subflow_use_different_sport(owner, sk)) {
++				pr_debug("ack inet_sport=3D%d %d",
++					 ntohs(inet_sk(sk)->inet_sport),
++					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
++			}
+ 		}
+ 	}
+ =
+
 -- =
 
 2.26.2
 
---===============8958292099145426144==--
+--===============7678151859412220177==--
