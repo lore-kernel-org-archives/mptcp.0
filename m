@@ -1,146 +1,136 @@
-Content-Type: multipart/mixed; boundary="===============2333325920765882654=="
+Content-Type: multipart/mixed; boundary="===============3963517267935060711=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 06/10] mptcp: change add_addr_signal type
-Date: Thu, 19 Nov 2020 11:45:59 -0800
-Message-ID: <20201119194603.103158-7-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 08/10] selftests: mptcp: add ADD_ADDR IPv6
+ test cases
+Date: Thu, 19 Nov 2020 11:46:01 -0800
+Message-ID: <20201119194603.103158-9-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201119194603.103158-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6845
+X-UID: 6846
 
---===============2333325920765882654==
+--===============3963517267935060711==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geliang Tang <geliangtang(a)gmail.com>
 
-This patch changed the 'add_addr_signal' type from bool to char, so that
-we could encode the addr type there.
+This patch added IPv6 support for do_transfer, and the test cases for
+ADD_ADDR IPv6.
 
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
 Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/pm.c       | 15 +++++++++------
- net/mptcp/protocol.h | 15 ++++++++++++---
- 2 files changed, 21 insertions(+), 9 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index f9c88e2abb8e..c2c12f02a263 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -16,11 +16,15 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
- 			   bool echo)
- {
-+	u8 add_addr =3D READ_ONCE(msk->pm.add_addr_signal);
-+
- 	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
- =
-
- 	msk->pm.local =3D *addr;
--	WRITE_ONCE(msk->pm.add_addr_echo, echo);
--	WRITE_ONCE(msk->pm.add_addr_signal, true);
-+	add_addr |=3D BIT(MPTCP_ADD_ADDR_SIGNAL);
-+	if (echo)
-+		add_addr |=3D BIT(MPTCP_ADD_ADDR_ECHO);
-+	WRITE_ONCE(msk->pm.add_addr_signal, add_addr);
- 	return 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index f841ed8186c1..0eae628d1ffd 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -195,6 +195,12 @@ link_failure()
+ 	ip -net "$ns" link set "$veth" down
  }
  =
 
-@@ -182,13 +186,13 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
- unsigned int remaining,
- 	if (!mptcp_pm_should_add_signal(msk))
- 		goto out_unlock;
- =
-
--	*echo =3D READ_ONCE(msk->pm.add_addr_echo);
-+	*echo =3D mptcp_pm_should_add_signal_echo(msk);
- =
-
- 	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
- 		goto out_unlock;
- =
-
- 	*saddr =3D msk->pm.local;
--	WRITE_ONCE(msk->pm.add_addr_signal, false);
-+	WRITE_ONCE(msk->pm.add_addr_signal, 0);
- 	ret =3D true;
- =
-
- out_unlock:
-@@ -232,11 +236,10 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	msk->pm.subflows =3D 0;
- 	msk->pm.rm_id =3D 0;
- 	WRITE_ONCE(msk->pm.work_pending, false);
--	WRITE_ONCE(msk->pm.add_addr_signal, false);
-+	WRITE_ONCE(msk->pm.add_addr_signal, 0);
- 	WRITE_ONCE(msk->pm.rm_addr_signal, false);
- 	WRITE_ONCE(msk->pm.accept_addr, false);
- 	WRITE_ONCE(msk->pm.accept_subflow, false);
--	WRITE_ONCE(msk->pm.add_addr_echo, false);
- 	msk->pm.status =3D 0;
- =
-
- 	spin_lock_init(&msk->pm.lock);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7affaf0b1941..a62ffae621c2 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -165,6 +165,11 @@ enum mptcp_pm_status {
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
- };
- =
-
-+enum mptcp_add_addr_status {
-+	MPTCP_ADD_ADDR_SIGNAL,
-+	MPTCP_ADD_ADDR_ECHO,
-+};
-+
- struct mptcp_pm_data {
- 	struct mptcp_addr_info local;
- 	struct mptcp_addr_info remote;
-@@ -172,13 +177,12 @@ struct mptcp_pm_data {
- =
-
- 	spinlock_t	lock;		/*protects the whole PM data */
- =
-
--	bool		add_addr_signal;
-+	u8		add_addr_signal;
- 	bool		rm_addr_signal;
- 	bool		server_side;
- 	bool		work_pending;
- 	bool		accept_addr;
- 	bool		accept_subflow;
--	bool		add_addr_echo;
- 	u8		add_addr_signaled;
- 	u8		add_addr_accepted;
- 	u8		local_addr_used;
-@@ -516,7 +520,12 @@ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8=
- local_id);
- =
-
- static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
- {
--	return READ_ONCE(msk->pm.add_addr_signal);
-+	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
++# $1: IP address
++is_v6()
++{
++	[ -z "${1##*:*}" ]
 +}
 +
-+static inline bool mptcp_pm_should_add_signal_echo(struct mptcp_sock *msk)
-+{
-+	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
- }
+ do_transfer()
+ {
+ 	listener_ns=3D"$1"
+@@ -236,7 +242,15 @@ do_transfer()
+ 		mptcp_connect=3D"./mptcp_connect -r"
+ 	fi
  =
 
- static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+-	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port -s ${=
+srv_proto} 0.0.0.0 < "$sin" > "$sout" &
++	local local_addr
++	if is_v6 "${connect_addr}"; then
++		local_addr=3D"::"
++	else
++		local_addr=3D"0.0.0.0"
++	fi
++
++	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port \
++		-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
+ 	spid=3D$!
+ =
+
+ 	sleep 1
+@@ -649,6 +663,60 @@ chk_join_nr "remove subflows and signal" 3 3 3
+ chk_add_nr 1 1
+ chk_rm_nr 2 2
+ =
+
++# subflow IPv6
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
++run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
++chk_join_nr "single subflow IPv6" 1 1 1
++
++# add_address, unused IPv6
++reset
++ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
++chk_join_nr "unused signal address IPv6" 0 0 0
++chk_add_nr 1 1
++
++# signal address IPv6
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
++chk_join_nr "single address IPv6" 1 1 1
++chk_add_nr 1 1
++
++# add_addr timeout IPv6
++reset_with_add_addr_timeout 6
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
++chk_join_nr "signal address, ADD_ADDR6 timeout" 1 1 1
++chk_add_nr 4 0
++
++# single address IPv6, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++run_tests $ns1 $ns2 dead:beef:1::1 0 1 0 slow
++chk_join_nr "remove single address IPv6" 1 1 1
++chk_add_nr 1 1
++chk_rm_nr 0 0
++
++# subflow and signal IPv6, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
++run_tests $ns1 $ns2 dead:beef:1::1 0 1 1 slow
++chk_join_nr "remove subflow and signal IPv6" 2 2 2
++chk_add_nr 1 1
++chk_rm_nr 1 1
++
+ # single subflow, syncookies
+ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.29.2
 
---===============2333325920765882654==--
+--===============3963517267935060711==--
