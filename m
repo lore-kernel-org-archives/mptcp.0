@@ -1,75 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============0215004548032135237=="
+Content-Type: multipart/mixed; boundary="===============3467381322818948705=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 00/10] ADD_ADDR: ports support
-Date: Thu, 19 Nov 2020 18:19:40 +0800
-Message-ID: <cover.1605780306.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 01/10] mptcp: create the
+ listening socket
+Date: Thu, 19 Nov 2020 18:19:41 +0800
+Message-ID: <50a92cac666f3359db3c5808690789527a385202.1605780306.git.geliangtang@gmail.com>
+In-Reply-To: cover.1605780306.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6811
+X-UID: 6812
 
---===============0215004548032135237==
+--===============3467381322818948705==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-v5:
- - use the per netns listening socket.
- - First 8 patches in v4 had been merged to the export branch, drop them
-   from this patchset.
+This patch added a new function named mptcp_create_listen_socket to
+create a listening socket in the kernel side.
 
-v4:
- - hold msk->pm.lock in mptcp_pm_sport_in_anno_list.
- - Merge the patchset 'Squash to "ADD_ADDR: ports support v3"' into v4.
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/subflow.c  | 47 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-v3:
- - add two new patches, 8 and 11
- - add more IS_ENABLED(CONFIG_MPTCP_IPV6) in patch 2
- - define TCPOLEN_MPTCP_ADD_ADDR_HMAC in patch 4
- - add flags check in patch 10
- - update the testcases
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index b5647a14ea54..7e40773f6b3d 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -444,6 +444,7 @@ void mptcp_subflow_reset(struct sock *ssk);
+ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
+*loc,
+ 			    const struct mptcp_addr_info *remote);
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
++int mptcp_create_listen_socket(struct sock *sk, struct socket **new_sock);
+ =
 
-v2:
- - change mptcp_out_options's port field in CPU bype order.
- - keep mptcp_options_received's port field in CPU bype order.
- - add two new patches to simplify ADD_ADDR suboption writing.
- - update mptcp_add_addr_len helper use adding up size.
- - add more commit messages.
+ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+ 					      struct mptcp_subflow_context *ctx)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 02d757e0ddb7..86eaf4b76147 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1218,6 +1218,53 @@ int mptcp_subflow_create_socket(struct sock *sk, str=
+uct socket **new_sock)
+ 	return 0;
+ }
+ =
 
-v1:
- This series is the first version of ADD_ADDR ports support. I have solved
- the listener problem which I mentioned at the meeting on 15th of October
- by adding a new listening socket from the userspace (see patch 8). Up to
- now this patchset works well.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
-
-Geliang Tang (10):
-  mptcp: create the listening socket
-  mptcp: add the pernet listening socket operations
-  mptcp: bind and listen for the new port
-  mptcp: add port number check for MP_JOIN
-  mptcp: add port number announced check
-  mptcp: add port number listened in kernel check
-  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
-  selftests: mptcp: add port argument for pm_nl_ctl
-  mptcp: add the mibs for ADD_ADDR with port
-  selftests: mptcp: add testcases for ADD_ADDR with port
-
- net/mptcp/mib.c                               |   4 +
- net/mptcp/mib.h                               |   4 +
- net/mptcp/options.c                           |   4 +
- net/mptcp/pm_netlink.c                        |  80 +++++++++++
- net/mptcp/protocol.c                          |   5 +
- net/mptcp/protocol.h                          |  11 +-
- net/mptcp/subflow.c                           | 134 +++++++++++++++++-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 118 ++++++++++++++-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  24 +++-
- 9 files changed, 378 insertions(+), 6 deletions(-)
-
++int mptcp_create_listen_socket(struct sock *sk, struct socket **new_sock)
++{
++	struct mptcp_subflow_context *subflow;
++	struct net *net =3D sock_net(sk);
++	struct socket *sf;
++	int err;
++
++	err =3D sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
++			       &sf);
++	if (err)
++		return err;
++
++	lock_sock(sf->sk);
++
++	/* the newly created socket has to be in the same cgroup as its parent */
++	mptcp_attach_cgroup(sk, sf->sk);
++
++	/* kernel sockets do not by default acquire net ref, but TCP timer
++	 * needs it.
++	 */
++	sf->sk->sk_net_refcnt =3D 1;
++	get_net(net);
++#ifdef CONFIG_PROC_FS
++	this_cpu_add(*net->core.sock_inuse, 1);
++#endif
++	err =3D tcp_set_ulp(sf->sk, "mptcp");
++	release_sock(sf->sk);
++
++	if (err) {
++		sock_release(sf);
++		return err;
++	}
++
++	SOCK_INODE(sf)->i_uid =3D GLOBAL_ROOT_UID;
++	SOCK_INODE(sf)->i_gid =3D GLOBAL_ROOT_GID;
++
++	subflow =3D mptcp_subflow_ctx(sf->sk);
++	pr_debug("subflow=3D%p", subflow);
++
++	*new_sock =3D sf;
++	sock_hold(sk);
++	subflow->conn =3D sk;
++	subflow->request_mptcp =3D 1;
++
++	return 0;
++}
++
+ static struct mptcp_subflow_context *subflow_create_ctx(struct sock *sk,
+ 							gfp_t priority)
+ {
 -- =
 
 2.26.2
 
---===============0215004548032135237==--
+--===============3467381322818948705==--
