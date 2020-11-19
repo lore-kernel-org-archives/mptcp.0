@@ -1,85 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============9221137016526419001=="
+Content-Type: multipart/mixed; boundary="===============0215004548032135237=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v4 7/7] mptcp: use mptcp backlog.
-Date: Thu, 19 Nov 2020 10:41:28 +0100
-Message-ID: <20201119094128.GE15137@breakpoint.cc>
-In-Reply-To: bd206ee992b0a8bdfe7a23dd09d4a8492bc95704.camel@redhat.com
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 00/10] ADD_ADDR: ports support
+Date: Thu, 19 Nov 2020 18:19:40 +0800
+Message-ID: <cover.1605780306.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6810
+X-UID: 6811
 
---===============9221137016526419001==
+--===============0215004548032135237==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > We still own the socket, so I think its safe, but I am not sure why its
-> > needed.  Only due to GFP_KERNEL alloc in mptcp_push_pending, or is there
-> > more to it?
-> =
+v5:
+ - use the per netns listening socket.
+ - First 8 patches in v4 had been merged to the export branch, drop them
+   from this patchset.
 
-> mptcp_push_pending() acquires the subflow socket lock:
-> =
+v4:
+ - hold msk->pm.lock in mptcp_pm_sport_in_anno_list.
+ - Merge the patchset 'Squash to "ADD_ADDR: ports support v3"' into v4.
 
-> 1) can't be invoked in atomic scope
-> 2) abba deadlock with msk socket spinlock, since the rx datapath
-> acquires the msk socket spinlock while helding the subflow socket lock.
+v3:
+ - add two new patches, 8 and 11
+ - add more IS_ENABLED(CONFIG_MPTCP_IPV6) in patch 2
+ - define TCPOLEN_MPTCP_ADD_ADDR_HMAC in patch 4
+ - add flags check in patch 10
+ - update the testcases
 
-Can you add that to the comment?  Thanks!
+v2:
+ - change mptcp_out_options's port field in CPU bype order.
+ - keep mptcp_options_received's port field in CPU bype order.
+ - add two new patches to simplify ADD_ADDR suboption writing.
+ - update mptcp_add_addr_len helper use adding up size.
+ - add more commit messages.
 
-> > > +	set_bit(MPTCP_NOSPACE, &msk->flags);
-> > > +	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb =
-*/
-> > =
+v1:
+ This series is the first version of ADD_ADDR ports support. I have solved
+ the listener problem which I mentioned at the meeting on 15th of October
+ by adding a new listening socket from the userspace (see patch 8). Up to
+ now this patchset works well.
 
-> > I'm not sure why the barrier is needed.  What load/store needs the orde=
-ring?
-> =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
 
-> Maybe cargo-cult c&p on my side. Now MPTCP write poll code mirrors very
-> closely TCP's one, with s/MPTCP_NOSPACE/SOCK_NOSPACE/, and retains the
-> same barriers.
-> =
+Geliang Tang (10):
+  mptcp: create the listening socket
+  mptcp: add the pernet listening socket operations
+  mptcp: bind and listen for the new port
+  mptcp: add port number check for MP_JOIN
+  mptcp: add port number announced check
+  mptcp: add port number listened in kernel check
+  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+  selftests: mptcp: add port argument for pm_nl_ctl
+  mptcp: add the mibs for ADD_ADDR with port
+  selftests: mptcp: add testcases for ADD_ADDR with port
 
-> My understanding is that is needed in the following scenario:
-> =
+ net/mptcp/mib.c                               |   4 +
+ net/mptcp/mib.h                               |   4 +
+ net/mptcp/options.c                           |   4 +
+ net/mptcp/pm_netlink.c                        |  80 +++++++++++
+ net/mptcp/protocol.c                          |   5 +
+ net/mptcp/protocol.h                          |  11 +-
+ net/mptcp/subflow.c                           | 134 +++++++++++++++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 118 ++++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  24 +++-
+ 9 files changed, 378 insertions(+), 6 deletions(-)
 
-> BH - CPU0				User-space CPU1
-> <rx path>				<poll>
-> =
+-- =
 
-> <free space>				<test write space>
-> <mb>					set_bit(...)
-> if test_bit(...)			<mb>
-> 	sk_stream_write_space(sk)	<test write space>
+2.26.2
 
-You mean:
-
-        set_bit(MPTCP_NOSPACE, &msk->flags);
-        smp_mb__after_atomic();
-
-	/* write_space might have changed right now,
-	 * so we need to re-test.
-	 */
-        if (sk_stream_is_writeable(sk))
-               return EPOLLOUT | EPOLLWRNORM;
-
-> without the memory barrier pairs the 2nd <test write space> could
-> actually miss the update done by <frees space> and test_bit can miss
-> the set_bit() perfomed on the other side due to reordering.
-> =
-
-> Looks like we currently lack the mb() on the rx side ;)
-
-Yes...
-
-> Additionally it would be better move the sk_stream_write_space() from
-> subflow_write_space af the end of mptcp_clean_una, where wspace is
-> actually freed.
-
-Right, there is no guarantee that we can push more data just because
-a subflow has new space.
---===============9221137016526419001==--
+--===============0215004548032135237==--
