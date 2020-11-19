@@ -1,41 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============5309761479107154405=="
+Content-Type: multipart/mixed; boundary="===============8014939504315681483=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v4 7/7] mptcp: use mptcp backlog.
-Date: Thu, 19 Nov 2020 00:11:07 +0100
-Message-ID: <20201118231107.GB15137@breakpoint.cc>
-In-Reply-To: fd0bfb708ae11768dda5546c905fd9fb99af0601.1605737933.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: update rtx timeout only if
+ required.
+Date: Wed, 18 Nov 2020 16:42:44 -0800
+Message-ID: <d69c8138-311b-f94e-74b8-1e759846eec0@linux.intel.com>
+In-Reply-To: 1a72039f112cae048c44d398ffa14e0a1432db3d.1605737083.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6804
+X-UID: 6805
 
---===============5309761479107154405==
+--===============8014939504315681483==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Paolo Abeni <pabeni(a)redhat.com> wrote:
-> @@ -2812,6 +2859,17 @@ static void mptcp_release_cb(struct sock *sk)
->  {
->  	unsigned long flags, nflags;
->  =
 
-> +	/* push_pending may touch wmem_reserved, do it before the later
-> +	 * cleanup
-> +	 */
+On Wed, 18 Nov 2020, Paolo Abeni wrote:
 
-Can you expand here a bit on why the lock break is needed & safe?
+> We must start the retransmission timer only there are
+> pending data in the rtx queue.
+> Otherwise we can hit a WARN_ON in mptcp_reset_timer(),
+> as syzbot demonstrated.
+>
+> Reported-and-tested-by: syzbot+42aa53dafb66a07e5a24(a)syzkaller.appspotma=
+il.com
+> Fixes: d9ca1de8c0cd ("mptcp: move page frag allocation in mptcp_sendmsg()=
+")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/protocol.c | 9 +++++----
+> 1 file changed, 5 insertions(+), 4 deletions(-)
+>
 
-We still own the socket, so I think its safe, but I am not sure why its
-needed.  Only due to GFP_KERNEL alloc in mptcp_push_pending, or is there
-more to it?
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-> +	set_bit(MPTCP_NOSPACE, &msk->flags);
-> +	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb */
-
-I'm not sure why the barrier is needed.  What load/store needs the ordering?
-
-Maybe I'm blind -- nothing catches my eye either here or in
-subflow_write_space.
---===============5309761479107154405==--
+--
+Mat Martineau
+Intel
+--===============8014939504315681483==--
