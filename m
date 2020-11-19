@@ -1,49 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============6770874421677285060=="
+Content-Type: multipart/mixed; boundary="===============0615494013518405155=="
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju at linaro.org>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: update rtx timeout only if
- required.
-Date: Thu, 19 Nov 2020 19:49:16 +0530
-Message-ID: <CA+G9fYstUYSeXh=w2YSmytHfBg2=tnwyAx_hCJtn2Dfi_Ts91g@mail.gmail.com>
-In-Reply-To: d69c8138-311b-f94e-74b8-1e759846eec0@linux.intel.com
+Subject: [MPTCP] Re: [PATCH v5 0/6] mptcp: just another complete datapath
+ refactor
+Date: Thu, 19 Nov 2020 18:07:46 +0100
+Message-ID: <fefef62d-35cf-eae2-24f5-c353edefc6f6@tessares.net>
+In-Reply-To: cover.1605789317.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6834
+X-UID: 6835
 
---===============6770874421677285060==
+--===============0615494013518405155==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Nov 2020 at 06:13, Mat Martineau
-<mathew.j.martineau(a)linux.intel.com> wrote:
->
->
-> On Wed, 18 Nov 2020, Paolo Abeni wrote:
->
-> > We must start the retransmission timer only there are
-> > pending data in the rtx queue.
-> > Otherwise we can hit a WARN_ON in mptcp_reset_timer(),
-> > as syzbot demonstrated.
-> >
-> > Reported-and-tested-by: syzbot+42aa53dafb66a07e5a24(a)syzkaller.appspot=
-mail.com
-> > Fixes: d9ca1de8c0cd ("mptcp: move page frag allocation in mptcp_sendmsg=
-()")
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> > net/mptcp/protocol.c | 9 +++++----
-> > 1 file changed, 5 insertions(+), 4 deletions(-)
-> >
->
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Hi Paolo, Florian, Mat,
 
-Reported-by: Naresh Kamboju <naresh.kamboju(a)linaro.org>
-Tested-by: Naresh Kamboju <naresh.kamboju(a)linaro.org>
+On 19/11/2020 13:38, Paolo Abeni wrote:
+> This iteration introduces some improvement for the wake-up/poll code
+> as discussed on the ML.
+> =
 
-The reported kernel warning was fixed after applying this fix on top of
-Linux next tag  20201119.
+> The last 2 patches in the previous iterations has been merged in a single
+> one, with all the relevant deltas noted there.
+> =
 
-- Naresh
---===============6770874421677285060==--
+> Looking for merge now ;)
+
+Done!
+
+Thank you for your patches and reviews!
+
+I just applied these patches in our tree after having fixed a few =
+
+checkpatch issues (only related to codespell), remove "." at the end of =
+
+the commit title, resolved one conflict with the patch (6/6) due to =
+
+"mptcp: update rtx timeout only if required." patch applied earlier =
+
+today and add Florian's Acked-by.
+
+@Mat: please tell me if you want me to add your Reviewed-by tags on =
+
+these ones ;-)
+
+  - ea8e2035dfab: mptcp: open code mptcp variant for lock_sock
+  - 8983b6ddc2a0: mptcp: implement wmem reservation
+  - 44bb6c6d4e7f: mptcp: protect the rx path with the msk socket spinlock
+  - 3a54a74a3c5b: mptcp: allocate TX skbs in msk context
+  - 7ca128e90452: mptcp: avoid a few atomic ops in the rx path
+  - 6b142355778a: mptcp: use mptcp release_cb for delayed tasks
+
+  - Results: 55b2596bdf31..11818af71ea2
+
+Tests + export are in progress.
+
+Note that I already updated the export branch manually =
+
+(export/20201119T175232) to let Christoph already starting some tests =
+
+with syzkaller.
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============0615494013518405155==--
