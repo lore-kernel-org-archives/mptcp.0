@@ -1,136 +1,220 @@
-Content-Type: multipart/mixed; boundary="===============3963517267935060711=="
+Content-Type: multipart/mixed; boundary="===============3483423571880840760=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 08/10] selftests: mptcp: add ADD_ADDR IPv6
- test cases
-Date: Thu, 19 Nov 2020 11:46:01 -0800
-Message-ID: <20201119194603.103158-9-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 09/10] mptcp: track window announced to peer
+Date: Thu, 19 Nov 2020 11:46:02 -0800
+Message-ID: <20201119194603.103158-10-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201119194603.103158-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6846
+X-UID: 6847
 
---===============3963517267935060711==
+--===============3483423571880840760==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
+From: Florian Westphal <fw(a)strlen.de>
 
-This patch added IPv6 support for do_transfer, and the test cases for
-ADD_ADDR IPv6.
+OoO handling attempts to detect when packet is out-of-window by testing
+current ack sequence and remaining space vs. sequence number.
+
+This doesn't work reliably. Store the highest allowed sequence number
+that we've announced and use it to detect oow packets.
+
+Do this when mptcp options get written to the packet (wire format).
+For this to work we need to move the write_options call until after
+stack selected a new tcp window.
 
 Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 70 ++++++++++++++++++-
- 1 file changed, 69 insertions(+), 1 deletion(-)
+ include/net/mptcp.h   |  3 ++-
+ net/ipv4/tcp_output.c | 11 +++++++----
+ net/mptcp/options.c   | 22 +++++++++++++++++++++-
+ net/mptcp/protocol.c  | 12 +++++++-----
+ net/mptcp/protocol.h  |  1 +
+ 5 files changed, 38 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index f841ed8186c1..0eae628d1ffd 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -195,6 +195,12 @@ link_failure()
- 	ip -net "$ns" link set "$veth" down
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 6e706d838e4e..b6cf07143a8a 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -88,7 +88,8 @@ bool mptcp_established_options(struct sock *sk, struct sk=
+_buff *skb,
+ 			       struct mptcp_out_options *opts);
+ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb);
+ =
+
+-void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts);
++void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
++			 struct mptcp_out_options *opts);
+ =
+
+ /* move the skb extension owership, with the assumption that 'to' is
+  * newly allocated
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 99905bc01d40..41880d3521ed 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -445,11 +445,12 @@ struct tcp_out_options {
+ 	struct mptcp_out_options mptcp;
+ };
+ =
+
+-static void mptcp_options_write(__be32 *ptr, struct tcp_out_options *opts)
++static void mptcp_options_write(__be32 *ptr, const struct tcp_sock *tp,
++				struct tcp_out_options *opts)
+ {
+ #if IS_ENABLED(CONFIG_MPTCP)
+ 	if (unlikely(OPTION_MPTCP & opts->options))
+-		mptcp_write_options(ptr, &opts->mptcp);
++		mptcp_write_options(ptr, tp, &opts->mptcp);
+ #endif
  }
  =
 
-+# $1: IP address
-+is_v6()
+@@ -701,7 +702,7 @@ static void tcp_options_write(__be32 *ptr, struct tcp_s=
+ock *tp,
+ =
+
+ 	smc_options_write(ptr, &options);
+ =
+
+-	mptcp_options_write(ptr, opts);
++	mptcp_options_write(ptr, tp, opts);
+ }
+ =
+
+ static void smc_set_option(const struct tcp_sock *tp,
+@@ -1346,7 +1347,6 @@ static int __tcp_transmit_skb(struct sock *sk, struct=
+ sk_buff *skb,
+ 		}
+ 	}
+ =
+
+-	tcp_options_write((__be32 *)(th + 1), tp, &opts);
+ 	skb_shinfo(skb)->gso_type =3D sk->sk_gso_type;
+ 	if (likely(!(tcb->tcp_flags & TCPHDR_SYN))) {
+ 		th->window      =3D htons(tcp_select_window(sk));
+@@ -1357,6 +1357,9 @@ static int __tcp_transmit_skb(struct sock *sk, struct=
+ sk_buff *skb,
+ 		 */
+ 		th->window	=3D htons(min(tp->rcv_wnd, 65535U));
+ 	}
++
++	tcp_options_write((__be32 *)(th + 1), tp, &opts);
++
+ #ifdef CONFIG_TCP_MD5SIG
+ 	/* Calculate the MD5 hash, as we have all we need now */
+ 	if (md5) {
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index d7afffcc87c1..248e3930c0cb 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1010,7 +1010,24 @@ void mptcp_incoming_options(struct sock *sk, struct =
+sk_buff *skb)
+ 	}
+ }
+ =
+
+-void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
++static void mptcp_set_rwin(const struct tcp_sock *tp)
 +{
-+	[ -z "${1##*:*}" ]
++	const struct sock *ssk =3D (const struct sock *)tp;
++	const struct mptcp_subflow_context *subflow;
++	struct mptcp_sock *msk;
++	u64 ack_seq;
++
++	subflow =3D mptcp_subflow_ctx(ssk);
++	msk =3D mptcp_sk(subflow->conn);
++
++	ack_seq =3D READ_ONCE(msk->ack_seq) + tp->rcv_wnd;
++
++	if (after64(ack_seq, READ_ONCE(msk->rcv_wnd_sent)))
++		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
 +}
 +
- do_transfer()
++void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
++			 struct mptcp_out_options *opts)
  {
- 	listener_ns=3D"$1"
-@@ -236,7 +242,15 @@ do_transfer()
- 		mptcp_connect=3D"./mptcp_connect -r"
- 	fi
+ 	if ((OPTION_MPTCP_MPC_SYN | OPTION_MPTCP_MPC_SYNACK |
+ 	     OPTION_MPTCP_MPC_ACK) & opts->suboptions) {
+@@ -1167,4 +1184,7 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_ou=
+t_options *opts)
+ 					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+ 		}
+ 	}
++
++	if (tp)
++		mptcp_set_rwin(tp);
+ }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c2629190b1ce..4ae2c4a30e44 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -168,19 +168,19 @@ static void mptcp_data_queue_ofo(struct mptcp_sock *m=
+sk, struct sk_buff *skb)
+ 	struct rb_node **p, *parent;
+ 	u64 seq, end_seq, max_seq;
+ 	struct sk_buff *skb1;
+-	int space;
  =
 
--	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port -s ${=
-srv_proto} 0.0.0.0 < "$sin" > "$sout" &
-+	local local_addr
-+	if is_v6 "${connect_addr}"; then
-+		local_addr=3D"::"
-+	else
-+		local_addr=3D"0.0.0.0"
-+	fi
-+
-+	ip netns exec ${listener_ns} $mptcp_connect -t $timeout -l -p $port \
-+		-s ${srv_proto} ${local_addr} < "$sin" > "$sout" &
- 	spid=3D$!
+ 	seq =3D MPTCP_SKB_CB(skb)->map_seq;
+ 	end_seq =3D MPTCP_SKB_CB(skb)->end_seq;
+-	space =3D tcp_space(sk);
+-	max_seq =3D space > 0 ? space + msk->ack_seq : msk->ack_seq;
++	max_seq =3D READ_ONCE(msk->rcv_wnd_sent);
  =
 
- 	sleep 1
-@@ -649,6 +663,60 @@ chk_join_nr "remove subflows and signal" 3 3 3
- chk_add_nr 1 1
- chk_rm_nr 2 2
+ 	pr_debug("msk=3D%p seq=3D%llx limit=3D%llx empty=3D%d", msk, seq, max_seq,
+ 		 RB_EMPTY_ROOT(&msk->out_of_order_queue));
+-	if (after64(seq, max_seq)) {
++	if (after64(end_seq, max_seq)) {
+ 		/* out of window */
+ 		mptcp_drop(sk, skb);
+-		pr_debug("oow by %ld", (unsigned long)seq - (unsigned long)max_seq);
++		pr_debug("oow by %lld, rcv_wnd_sent %llu\n",
++			 (unsigned long long)end_seq - (unsigned long)max_seq,
++			 (unsigned long long)msk->rcv_wnd_sent);
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_NODSSWINDOW);
+ 		return;
+ 	}
+@@ -2294,6 +2294,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 		mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
+ 		ack_seq++;
+ 		WRITE_ONCE(msk->ack_seq, ack_seq);
++		WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
+ 	}
  =
 
-+# subflow IPv6
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
-+run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
-+chk_join_nr "single subflow IPv6" 1 1 1
-+
-+# add_address, unused IPv6
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
-+run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
-+chk_join_nr "unused signal address IPv6" 0 0 0
-+chk_add_nr 1 1
-+
-+# signal address IPv6
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
-+chk_join_nr "single address IPv6" 1 1 1
-+chk_add_nr 1 1
-+
-+# add_addr timeout IPv6
-+reset_with_add_addr_timeout 6
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
-+run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
-+chk_join_nr "signal address, ADD_ADDR6 timeout" 1 1 1
-+chk_add_nr 4 0
-+
-+# single address IPv6, remove
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+run_tests $ns1 $ns2 dead:beef:1::1 0 1 0 slow
-+chk_join_nr "remove single address IPv6" 1 1 1
-+chk_add_nr 1 1
-+chk_rm_nr 0 0
-+
-+# subflow and signal IPv6, remove
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
-+run_tests $ns1 $ns2 dead:beef:1::1 0 1 1 slow
-+chk_join_nr "remove subflow and signal IPv6" 2 2 2
-+chk_add_nr 1 1
-+chk_rm_nr 1 1
-+
- # single subflow, syncookies
- reset_with_cookies
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ 	sock_reset_flag(nsk, SOCK_RCU_FREE);
+@@ -2586,6 +2587,7 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	WRITE_ONCE(msk->write_seq, subflow->idsn + 1);
+ 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
+ 	WRITE_ONCE(msk->ack_seq, ack_seq);
++	WRITE_ONCE(msk->rcv_wnd_sent, ack_seq);
+ 	WRITE_ONCE(msk->can_ack, 1);
+ 	atomic64_set(&msk->snd_una, msk->write_seq);
+ =
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 4d6dd4adaaaf..67f86818203f 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -216,6 +216,7 @@ struct mptcp_sock {
+ 	u64		write_seq;
+ 	u64		snd_nxt;
+ 	u64		ack_seq;
++	u64		rcv_wnd_sent;
+ 	u64		rcv_data_fin_seq;
+ 	struct sock	*last_snd;
+ 	int		snd_burst;
 -- =
 
 2.29.2
 
---===============3963517267935060711==--
+--===============3483423571880840760==--
