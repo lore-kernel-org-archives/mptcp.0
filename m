@@ -1,58 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============2056466019161331282=="
+Content-Type: multipart/mixed; boundary="===============1765491052304916912=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: open code mptcp variant
- for lock_sock"
-Date: Thu, 19 Nov 2020 22:56:29 +0100
-Message-ID: <84985e126b6099383fd86edcc0b0f47ceba5df98.1605822960.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: protect the rx path with
+ the msk socket spinlock"
+Date: Thu, 19 Nov 2020 22:57:32 +0100
+Message-ID: <b1ff505e3dcff29eda4a2f3354c3a9d1223e4390.1605823023.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6850
+X-UID: 6851
 
---===============2056466019161331282==
+--===============1765491052304916912==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-deal with report from kernel test robot
+drop left-over splicing from the join list, we don't need
+it anymore there.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- include/net/sock.h   | 1 +
- net/mptcp/protocol.h | 2 --
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ net/mptcp/protocol.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 1d29aeae74fd..86d074979ca0 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1585,6 +1585,7 @@ static inline void lock_sock(struct sock *sk)
- 	lock_sock_nested(sk, 0);
- }
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f55dc414c403..7c3508dae1c8 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1698,7 +1698,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
  =
 
-+void __lock_sock(struct sock *sk);
- void __release_sock(struct sock *sk);
- void release_sock(struct sock *sk);
+ 	len =3D min_t(size_t, len, INT_MAX);
+ 	target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
+-	__mptcp_flush_join_list(msk);
  =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 93aa60231632..1b50249138d2 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -255,8 +255,6 @@ struct mptcp_sock {
- 	} rcvq_space;
- };
- =
-
--void __lock_sock(struct sock *sk);
--
- #define mptcp_lock_sock(___sk, cb) do {					\
- 	struct sock *__sk =3D (___sk); /* silence macro reuse warning */	\
- 	might_sleep();							\
+ 	for (;;) {
+ 		int bytes_read, old_space;
 -- =
 
 2.26.2
 
---===============2056466019161331282==--
+--===============1765491052304916912==--
