@@ -1,164 +1,146 @@
-Content-Type: multipart/mixed; boundary="===============7238096345196257884=="
+Content-Type: multipart/mixed; boundary="===============2333325920765882654=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 05/10] mptcp: keep unaccepted MPC subflow
- into join list
-Date: Thu, 19 Nov 2020 11:45:58 -0800
-Message-ID: <20201119194603.103158-6-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 06/10] mptcp: change add_addr_signal type
+Date: Thu, 19 Nov 2020 11:45:59 -0800
+Message-ID: <20201119194603.103158-7-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201119194603.103158-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6844
+X-UID: 6845
 
---===============7238096345196257884==
+--===============2333325920765882654==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+From: Geliang Tang <geliangtang(a)gmail.com>
 
-This will simplify all operation dealing with subflows
-before accept time (e.g. data fin processing, add_addr).
+This patch changed the 'add_addr_signal' type from bool to char, so that
+we could encode the addr type there.
 
-The join list is already flushed by mptcp_stream_accept()
-before returning the newly created msk to the user space.
-
-This also fixes an potential bug present into the old code:
-conn_list was manipulated without helding the msk lock
-in mptcp_stream_accept().
-
-Tested-by: Geliang Tang <geliangtang(a)gmail.com>
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 24 ++++++++----------------
- net/mptcp/protocol.h |  9 +++++++++
- net/mptcp/subflow.c  | 10 +++++-----
- 3 files changed, 22 insertions(+), 21 deletions(-)
+ net/mptcp/pm.c       | 15 +++++++++------
+ net/mptcp/protocol.h | 15 ++++++++++++---
+ 2 files changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 806c0658e42f..0e83887efbc8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2342,7 +2342,6 @@ static struct sock *mptcp_accept(struct sock *sk, int=
- flags, int *err,
- 	if (sk_is_mptcp(newsk)) {
- 		struct mptcp_subflow_context *subflow;
- 		struct sock *new_mptcp_sock;
--		struct sock *ssk =3D newsk;
- =
-
- 		subflow =3D mptcp_subflow_ctx(newsk);
- 		new_mptcp_sock =3D subflow->conn;
-@@ -2357,22 +2356,8 @@ static struct sock *mptcp_accept(struct sock *sk, in=
-t flags, int *err,
- =
-
- 		/* acquire the 2nd reference for the owning socket */
- 		sock_hold(new_mptcp_sock);
--
--		local_bh_disable();
--		bh_lock_sock(new_mptcp_sock);
--		msk =3D mptcp_sk(new_mptcp_sock);
--		msk->first =3D newsk;
--
- 		newsk =3D new_mptcp_sock;
--		mptcp_copy_inaddrs(newsk, ssk);
--		list_add(&subflow->node, &msk->conn_list);
--		sock_hold(ssk);
--
--		mptcp_rcv_space_init(msk, ssk);
--		bh_unlock_sock(new_mptcp_sock);
--
--		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
--		local_bh_enable();
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
- 	} else {
- 		MPTCP_INC_STATS(sock_net(sk),
- 				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
-@@ -2823,6 +2808,12 @@ static int mptcp_stream_accept(struct socket *sock, =
-struct socket *newsock,
- 	if (err =3D=3D 0 && !mptcp_is_tcpsk(newsock->sk)) {
- 		struct mptcp_sock *msk =3D mptcp_sk(newsock->sk);
- 		struct mptcp_subflow_context *subflow;
-+		struct sock *newsk =3D newsock->sk;
-+		bool slowpath;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index f9c88e2abb8e..c2c12f02a263 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -16,11 +16,15 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 			   const struct mptcp_addr_info *addr,
+ 			   bool echo)
+ {
++	u8 add_addr =3D READ_ONCE(msk->pm.add_addr_signal);
 +
-+		slowpath =3D lock_sock_fast(newsk);
-+		mptcp_copy_inaddrs(newsk, msk->first);
-+		mptcp_rcv_space_init(msk, msk->first);
+ 	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
  =
 
- 		/* set ssk->sk_socket of accept()ed flows to mptcp socket.
- 		 * This is needed so NOSPACE flag can be set from tcp stack.
-@@ -2834,6 +2825,7 @@ static int mptcp_stream_accept(struct socket *sock, s=
-truct socket *newsock,
- 			if (!ssk->sk_socket)
- 				mptcp_sock_graft(ssk, newsock);
- 		}
-+		unlock_sock_fast(newsk, slowpath);
- 	}
- =
-
- 	if (inet_csk_listen_poll(ssock->sk))
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 10fffc5de9e4..7affaf0b1941 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -403,6 +403,15 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflo=
-w_context *subflow)
- 	return subflow->map_seq + mptcp_subflow_get_map_offset(subflow);
+ 	msk->pm.local =3D *addr;
+-	WRITE_ONCE(msk->pm.add_addr_echo, echo);
+-	WRITE_ONCE(msk->pm.add_addr_signal, true);
++	add_addr |=3D BIT(MPTCP_ADD_ADDR_SIGNAL);
++	if (echo)
++		add_addr |=3D BIT(MPTCP_ADD_ADDR_ECHO);
++	WRITE_ONCE(msk->pm.add_addr_signal, add_addr);
+ 	return 0;
  }
  =
 
-+static inline void mptcp_add_pending_subflow(struct mptcp_sock *msk,
-+					     struct mptcp_subflow_context *subflow)
-+{
-+	sock_hold(mptcp_subflow_tcp_sock(subflow));
-+	spin_lock_bh(&msk->join_list_lock);
-+	list_add_tail(&subflow->node, &msk->join_list);
-+	spin_unlock_bh(&msk->join_list_lock);
+@@ -182,13 +186,13 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
+ unsigned int remaining,
+ 	if (!mptcp_pm_should_add_signal(msk))
+ 		goto out_unlock;
+ =
+
+-	*echo =3D READ_ONCE(msk->pm.add_addr_echo);
++	*echo =3D mptcp_pm_should_add_signal_echo(msk);
+ =
+
+ 	if (remaining < mptcp_add_addr_len(msk->pm.local.family, *echo))
+ 		goto out_unlock;
+ =
+
+ 	*saddr =3D msk->pm.local;
+-	WRITE_ONCE(msk->pm.add_addr_signal, false);
++	WRITE_ONCE(msk->pm.add_addr_signal, 0);
+ 	ret =3D true;
+ =
+
+ out_unlock:
+@@ -232,11 +236,10 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	msk->pm.subflows =3D 0;
+ 	msk->pm.rm_id =3D 0;
+ 	WRITE_ONCE(msk->pm.work_pending, false);
+-	WRITE_ONCE(msk->pm.add_addr_signal, false);
++	WRITE_ONCE(msk->pm.add_addr_signal, 0);
+ 	WRITE_ONCE(msk->pm.rm_addr_signal, false);
+ 	WRITE_ONCE(msk->pm.accept_addr, false);
+ 	WRITE_ONCE(msk->pm.accept_subflow, false);
+-	WRITE_ONCE(msk->pm.add_addr_echo, false);
+ 	msk->pm.status =3D 0;
+ =
+
+ 	spin_lock_init(&msk->pm.lock);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 7affaf0b1941..a62ffae621c2 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -165,6 +165,11 @@ enum mptcp_pm_status {
+ 	MPTCP_PM_SUBFLOW_ESTABLISHED,
+ };
+ =
+
++enum mptcp_add_addr_status {
++	MPTCP_ADD_ADDR_SIGNAL,
++	MPTCP_ADD_ADDR_ECHO,
++};
++
+ struct mptcp_pm_data {
+ 	struct mptcp_addr_info local;
+ 	struct mptcp_addr_info remote;
+@@ -172,13 +177,12 @@ struct mptcp_pm_data {
+ =
+
+ 	spinlock_t	lock;		/*protects the whole PM data */
+ =
+
+-	bool		add_addr_signal;
++	u8		add_addr_signal;
+ 	bool		rm_addr_signal;
+ 	bool		server_side;
+ 	bool		work_pending;
+ 	bool		accept_addr;
+ 	bool		accept_subflow;
+-	bool		add_addr_echo;
+ 	u8		add_addr_signaled;
+ 	u8		add_addr_accepted;
+ 	u8		local_addr_used;
+@@ -516,7 +520,12 @@ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8=
+ local_id);
+ =
+
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
+-	return READ_ONCE(msk->pm.add_addr_signal);
++	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_SIGNAL);
 +}
 +
- int mptcp_is_enabled(struct net *net);
- unsigned int mptcp_get_add_addr_timeout(struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 794259789194..d3c6b3a5ad55 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -578,6 +578,10 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- 			 */
- 			inet_sk_state_store((void *)new_msk, TCP_ESTABLISHED);
++static inline bool mptcp_pm_should_add_signal_echo(struct mptcp_sock *msk)
++{
++	return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_ADD_ADDR_ECHO);
+ }
  =
 
-+			/* link the newly created socket to the msk */
-+			mptcp_add_pending_subflow(mptcp_sk(new_msk), ctx);
-+			WRITE_ONCE(mptcp_sk(new_msk)->first, child);
-+
- 			/* new mpc subflow takes ownership of the newly
- 			 * created mptcp socket
- 			 */
-@@ -1124,11 +1128,7 @@ int __mptcp_subflow_connect(struct sock *sk, const s=
-truct mptcp_addr_info *loc,
- 	if (err && err !=3D -EINPROGRESS)
- 		goto failed;
- =
-
--	sock_hold(ssk);
--	spin_lock_bh(&msk->join_list_lock);
--	list_add_tail(&subflow->node, &msk->join_list);
--	spin_unlock_bh(&msk->join_list_lock);
--
-+	mptcp_add_pending_subflow(msk, subflow);
- 	return err;
- =
-
- failed:
+ static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
 -- =
 
 2.29.2
 
---===============7238096345196257884==--
+--===============2333325920765882654==--
