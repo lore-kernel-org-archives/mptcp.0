@@ -1,131 +1,158 @@
-Content-Type: multipart/mixed; boundary="===============6296208619929823151=="
+Content-Type: multipart/mixed; boundary="===============0881060641537622598=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 1/2] mptcp: drop
- rm_addr_signal flag
-Date: Fri, 20 Nov 2020 18:22:07 +0800
-Message-ID: <CA+WQbwsBanN+QQzYUL++5ZO9d8T9KSmD4hP4KF9Og457A_MZaw@mail.gmail.com>
-In-Reply-To: c5b430251a25d1be23f13bf378fd5a5e647c2ae0.1605840230.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 02/10] mptcp: add the pernet
+ listening socket operations
+Date: Fri, 20 Nov 2020 11:24:39 +0100
+Message-ID: <d4301f95265166734fca79d9919f9f9c8c5faa2c.camel@redhat.com>
+In-Reply-To: f16560fc78e2f308ac191511eb2d1b5478ef9f9a.1605780306.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6876
+X-UID: 6877
 
---===============6296208619929823151==
+--===============0881060641537622598==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch is obsolete since new version of it has been sent out.
+On Thu, 2020-11-19 at 18:19 +0800, Geliang Tang wrote:
+> This patch added three new pernet listening socket operations:
+> =
 
--Geliang
+> mptcp_pm_alloc_listen_socket, mptcp_pm_free_listen_socket and
+> mptcp_pm_get_listen_socket to alloc, free and get the pernet
+> listening socket.
+> =
 
-Geliang Tang <geliangtang(a)gmail.com> =E4=BA=8E2020=E5=B9=B411=E6=9C=8820=
-=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=8810:49=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> This patch reused add_addr_signal for the RM_ADDR announcing signal, by
-> defining a new ADD_ADDR status named MPTCP_RM_ADDR_SIGNAL. Then the flag
-> rm_addr_signal in PM could be dropped.
->
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
->  net/mptcp/pm.c       | 22 +++++++++++++++++-----
->  net/mptcp/protocol.h |  4 ++--
->  2 files changed, 19 insertions(+), 7 deletions(-)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index e63e14f4cf2a..ad9f79991fdf 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -18,7 +18,12 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
->  {
->         u8 add_addr =3D READ_ONCE(msk->pm.add_addr_signal);
->
-> -       pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
-> +       pr_debug("msk=3D%p, local_id=3D%d, add_addr=3D%d", msk, addr->id,=
- add_addr);
-> +
-> +       if (add_addr) {
-> +               pr_warn("addr_signal error.");
-> +               return -EINVAL;
-> +       }
->
->         msk->pm.local =3D *addr;
->         add_addr |=3D BIT(MPTCP_ADD_ADDR_SIGNAL);
-> @@ -34,10 +39,18 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
->
->  int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
->  {
-> -       pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
-> +       u8 rm_addr =3D READ_ONCE(msk->pm.add_addr_signal);
-> +
-> +       pr_debug("msk=3D%p, local_id=3D%d, rm_addr=3D%d", msk, local_id, =
-rm_addr);
-> +
-> +       if (rm_addr) {
-> +               pr_warn("addr_signal error.");
-> +               return -EINVAL;
-> +       }
->
->         msk->pm.rm_id =3D local_id;
-> -       WRITE_ONCE(msk->pm.rm_addr_signal, true);
-> +       rm_addr |=3D BIT(MPTCP_RM_ADDR_SIGNAL);
-> +       WRITE_ONCE(msk->pm.add_addr_signal, rm_addr);
->         return 0;
->  }
->
-> @@ -231,7 +244,7 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, =
-unsigned int remaining,
->                 goto out_unlock;
->
->         *rm_id =3D msk->pm.rm_id;
-> -       WRITE_ONCE(msk->pm.rm_addr_signal, false);
-> +       WRITE_ONCE(msk->pm.add_addr_signal, 0);
->         ret =3D true;
->
->  out_unlock:
-> @@ -253,7 +266,6 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
->         msk->pm.rm_id =3D 0;
->         WRITE_ONCE(msk->pm.work_pending, false);
->         WRITE_ONCE(msk->pm.add_addr_signal, 0);
-> -       WRITE_ONCE(msk->pm.rm_addr_signal, false);
->         WRITE_ONCE(msk->pm.accept_addr, false);
->         WRITE_ONCE(msk->pm.accept_subflow, false);
->         msk->pm.status =3D 0;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d926deae8610..05c853e337a0 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -172,6 +172,7 @@ enum mptcp_add_addr_status {
->         MPTCP_ADD_ADDR_ECHO,
->         MPTCP_ADD_ADDR_IPV6,
->         MPTCP_ADD_ADDR_PORT,
-> +       MPTCP_RM_ADDR_SIGNAL,
+>  net/mptcp/pm_netlink.c | 54 ++++++++++++++++++++++++++++++++++++++++++
+>  net/mptcp/protocol.c   |  5 ++++
+>  net/mptcp/protocol.h   |  5 ++++
+>  net/mptcp/subflow.c    |  2 +-
+>  4 files changed, 65 insertions(+), 1 deletion(-)
+> =
+
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 2560c502356b..19d557df4684 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -45,6 +45,8 @@ struct pm_nl_pernet {
+>  	unsigned int		add_addr_accept_max;
+>  	unsigned int		local_addr_max;
+>  	unsigned int		subflows_max;
+> +	struct socket		*listen_socket;
+> +	bool			sock_created;
+>  	unsigned int		next_id;
 >  };
->
->  struct mptcp_pm_data {
-> @@ -182,7 +183,6 @@ struct mptcp_pm_data {
->         spinlock_t      lock;           /*protects the whole PM data */
->
->         u8              add_addr_signal;
-> -       bool            rm_addr_signal;
->         bool            server_side;
->         bool            work_pending;
->         bool            accept_addr;
-> @@ -564,7 +564,7 @@ static inline bool mptcp_pm_should_add_signal_port(st=
-ruct mptcp_sock *msk)
->
->  static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
->  {
-> -       return READ_ONCE(msk->pm.rm_addr_signal);
-> +       return READ_ONCE(msk->pm.add_addr_signal) & BIT(MPTCP_RM_ADDR_SIG=
-NAL);
+>  =
+
+> @@ -306,6 +308,56 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+>  	}
 >  }
->
->  static inline unsigned int mptcp_add_addr_len(int family, bool echo, boo=
-l port)
-> --
-> 2.26.2
->
---===============6296208619929823151==--
+>  =
+
+> +int mptcp_pm_alloc_listen_socket(struct mptcp_sock *msk)
+> +{
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	struct pm_nl_pernet *pernet;
+> +	bool need_create =3D false;
+> +
+> +	pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
+> +
+> +	spin_lock_bh(&pernet->lock);
+> +	if (!pernet->sock_created) {
+> +		pernet->sock_created =3D true;
+> +		need_create =3D true;
+> +	}
+> +	spin_unlock_bh(&pernet->lock);
+> +
+> +	if (!need_create)
+> +		return 0;
+> +
+> +	return mptcp_create_listen_socket(sk, &pernet->listen_socket);
+> +}
+> +
+> +void mptcp_pm_free_listen_socket(struct mptcp_sock *msk)
+> +{
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	struct pm_nl_pernet *pernet;
+> +
+> +	pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
+> +
+> +	if (!pernet || !pernet->listen_socket || !pernet->listen_socket->sk)
+> +		return;
+> +
+> +	subflow_drop_ctx(pernet->listen_socket->sk);
+> +	sock_release(pernet->listen_socket);
+> +	pernet->listen_socket =3D NULL;
+> +	pernet->sock_created =3D false;
+> +}
+> +
+> +struct socket *mptcp_pm_get_listen_socket(struct mptcp_sock *msk)
+> +{
+> +	struct pm_nl_pernet *pernet;
+> +	struct sock *sk =3D (struct sock *)msk;
+> +
+> +	pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
+> +
+> +	if (!pernet)
+> +		return NULL;
+> +
+> +	return pernet->listen_socket;
+> +}
+> +
+>  static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *ms=
+k)
+>  {
+>  	struct mptcp_addr_info remote =3D { 0 };
+> @@ -885,6 +937,8 @@ static void __reset_counters(struct pm_nl_pernet *per=
+net)
+>  	pernet->add_addr_accept_max =3D 0;
+>  	pernet->local_addr_max =3D 0;
+>  	pernet->addrs =3D 0;
+> +	pernet->listen_socket =3D NULL;
+> +	pernet->sock_created =3D false;
+>  }
+>  =
+
+>  static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_inf=
+o *info)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 7a0364860feb..1a9e895e953e 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2006,6 +2006,10 @@ static int mptcp_init_sock(struct sock *sk)
+>  	if (ret)
+>  		return ret;
+>  =
+
+> +	ret =3D mptcp_pm_alloc_listen_socket(mptcp_sk(sk));
+> +	if (ret)
+> +		return ret;
+> +
+>  	sk_sockets_allocated_inc(sk);
+>  	sk->sk_rcvbuf =3D sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
+>  	sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[1];
+
+I think the listening socket creation and bind should be done at
+endpoint creation time, that is, while handling the
+MPTCP_PM_CMD_ADD_ADDR netlink command.
+
+The socket pointer itself could be stored inside the 'struct
+mptcp_pm_addr_entr'.
+
+That way we will have the socket created only when needed, and deleted
+when unneeded. Additionally we could have several ports per netns, we
+will not have to bind the socket at run-time, and the user space could
+be notified in case of socket creation or bind failure.
+
+Hopefully codying wise should not be a large change WRT the current
+version.
+
+WDYT?
+
+Paolo
+
+--===============0881060641537622598==--
