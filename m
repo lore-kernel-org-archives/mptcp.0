@@ -1,132 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============4374589271347842347=="
+Content-Type: multipart/mixed; boundary="===============7231579225723083913=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "mptcp: create the
- listening socket"
-Date: Fri, 20 Nov 2020 12:29:12 +0800
-Message-ID: <6d5989e448da96358b922f43133129d5f0c85997.1605846421.git.geliangtang@gmail.com>
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: update rtx timeout only if
+ required.
+Date: Thu, 19 Nov 2020 21:55:33 -0800
+Message-ID: <20201119215533.1dff6751@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: CA+G9fYstUYSeXh=w2YSmytHfBg2=tnwyAx_hCJtn2Dfi_Ts91g@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6860
+X-UID: 6861
 
---===============4374589271347842347==
+--===============7231579225723083913==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch defined a new function __mptcp_subflow_create_socket for reuse,
-This fuction is extracted from mptcp_subflow_create_socket, and it could
-be reused by mptcp_subflow_create_socket.
+On Thu, 19 Nov 2020 19:49:16 +0530 Naresh Kamboju wrote:
+> > > We must start the retransmission timer only there are
+> > > pending data in the rtx queue.
+> > > Otherwise we can hit a WARN_ON in mptcp_reset_timer(),
+> > > as syzbot demonstrated.
+> > >
+> > > Reported-and-tested-by: syzbot+42aa53dafb66a07e5a24(a)syzkaller.appsp=
+otmail.com
+> > > Fixes: d9ca1de8c0cd ("mptcp: move page frag allocation in mptcp_sendm=
+sg()")
+> > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> >
+> > Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>  =
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/subflow.c | 55 +++++++++++++++++++--------------------------
- 1 file changed, 23 insertions(+), 32 deletions(-)
+> =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index eace5eb49955..f9aa12cb2bfb 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1234,19 +1234,12 @@ static void mptcp_attach_cgroup(struct sock *parent=
-, struct sock *child)
- #endif /* CONFIG_SOCK_CGROUP_DATA */
- }
- =
+> Reported-by: Naresh Kamboju <naresh.kamboju(a)linaro.org>
+> Tested-by: Naresh Kamboju <naresh.kamboju(a)linaro.org>
 
--int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
-+static int __mptcp_subflow_create_socket(struct sock *sk, struct socket **=
-new_sock)
- {
--	struct mptcp_subflow_context *subflow;
- 	struct net *net =3D sock_net(sk);
- 	struct socket *sf;
- 	int err;
- =
-
--	/* un-accepted server sockets can reach here - on bad configuration
--	 * bail early to avoid greater trouble later
--	 */
--	if (unlikely(!sk->sk_socket))
--		return -EINVAL;
--
- 	err =3D sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
- 			       &sf);
- 	if (err)
-@@ -1273,6 +1266,27 @@ int mptcp_subflow_create_socket(struct sock *sk, str=
-uct socket **new_sock)
- 		return err;
- 	}
- =
-
-+	*new_sock =3D sf;
-+
-+	return 0;
-+}
-+
-+int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct socket *sf;
-+	int err;
-+
-+	/* un-accepted server sockets can reach here - on bad configuration
-+	 * bail early to avoid greater trouble later
-+	 */
-+	if (unlikely(!sk->sk_socket))
-+		return -EINVAL;
-+
-+	err =3D __mptcp_subflow_create_socket(sk, &sf);
-+	if (err)
-+		return err;
-+
- 	/* the newly created socket really belongs to the owning MPTCP master
- 	 * socket, even if for additional subflows the allocation is performed
- 	 * by a kernel workqueue. Adjust inode references, so that the
-@@ -1296,36 +1310,13 @@ int mptcp_subflow_create_socket(struct sock *sk, st=
-ruct socket **new_sock)
- int mptcp_create_listen_socket(struct sock *sk, struct socket **new_sock)
- {
- 	struct mptcp_subflow_context *subflow;
--	struct net *net =3D sock_net(sk);
- 	struct socket *sf;
- 	int err;
- =
-
--	err =3D sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
--			       &sf);
-+	err =3D __mptcp_subflow_create_socket(sk, &sf);
- 	if (err)
- 		return err;
- =
-
--	lock_sock(sf->sk);
--
--	/* the newly created socket has to be in the same cgroup as its parent */
--	mptcp_attach_cgroup(sk, sf->sk);
--
--	/* kernel sockets do not by default acquire net ref, but TCP timer
--	 * needs it.
--	 */
--	sf->sk->sk_net_refcnt =3D 1;
--	get_net(net);
--#ifdef CONFIG_PROC_FS
--	this_cpu_add(*net->core.sock_inuse, 1);
--#endif
--	err =3D tcp_set_ulp(sf->sk, "mptcp");
--	release_sock(sf->sk);
--
--	if (err) {
--		sock_release(sf);
--		return err;
--	}
--
- 	SOCK_INODE(sf)->i_uid =3D GLOBAL_ROOT_UID;
- 	SOCK_INODE(sf)->i_gid =3D GLOBAL_ROOT_GID;
- =
-
--- =
-
-2.26.2
-
---===============4374589271347842347==--
+Applied, thanks!
+--===============7231579225723083913==--
