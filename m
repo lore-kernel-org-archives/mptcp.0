@@ -1,39 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============7231579225723083913=="
+Content-Type: multipart/mixed; boundary="===============5859078789774222979=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: update rtx timeout only if
- required.
-Date: Thu, 19 Nov 2020 21:55:33 -0800
-Message-ID: <20201119215533.1dff6751@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: CA+G9fYstUYSeXh=w2YSmytHfBg2=tnwyAx_hCJtn2Dfi_Ts91g@mail.gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 0/5] MP_PRIO support
+Date: Fri, 20 Nov 2020 15:07:49 +0800
+Message-ID: <cover.1605855783.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6861
+X-UID: 6862
 
---===============7231579225723083913==
+--===============5859078789774222979==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Nov 2020 19:49:16 +0530 Naresh Kamboju wrote:
-> > > We must start the retransmission timer only there are
-> > > pending data in the rtx queue.
-> > > Otherwise we can hit a WARN_ON in mptcp_reset_timer(),
-> > > as syzbot demonstrated.
-> > >
-> > > Reported-and-tested-by: syzbot+42aa53dafb66a07e5a24(a)syzkaller.appsp=
-otmail.com
-> > > Fixes: d9ca1de8c0cd ("mptcp: move page frag allocation in mptcp_sendm=
-sg()")
-> > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> >
-> > Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>  =
+v1:
+ - add MP_PRIO PM netlink support
 
-> =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/51
 
-> Reported-by: Naresh Kamboju <naresh.kamboju(a)linaro.org>
-> Tested-by: Naresh Kamboju <naresh.kamboju(a)linaro.org>
+Geliang Tang (5):
+  mptcp: add the outgoing MP_PRIO support
+  mptcp: add the incoming MP_PRIO support
+  mptcp: deal with MPTCP_PM_ADDR_FLAG_BACKUP in PM netlink
+  mptcp: add the mibs for MP_PRIO
+  selftests: mptcp: add the MP_PRIO testcases
 
-Applied, thanks!
---===============7231579225723083913==--
+ net/mptcp/mib.c                               |  2 +
+ net/mptcp/mib.h                               |  2 +
+ net/mptcp/options.c                           | 56 +++++++++++++
+ net/mptcp/pm.c                                | 19 +++++
+ net/mptcp/pm_netlink.c                        | 81 +++++++++++++++++++
+ net/mptcp/protocol.h                          | 11 +++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 81 ++++++++++++++++++-
+ 7 files changed, 251 insertions(+), 1 deletion(-)
+
+-- =
+
+2.26.2
+
+--===============5859078789774222979==--
