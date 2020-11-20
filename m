@@ -1,78 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============1756832104122415253=="
+Content-Type: multipart/mixed; boundary="===============7784486379587192759=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp] squashto: mptcp: protect the rx path with
- the msk socket spinlock
-Date: Fri, 20 Nov 2020 09:57:47 +0100
-Message-ID: <5f06de0671cc23d9be8723cd9ed7f8a15d21ddeb.camel@redhat.com>
-In-Reply-To: 20201119234714.8519-1-fw@strlen.de
+Subject: [MPTCP] [PATCH net-next] Squash-to: "mptcp: use mptcp release_cb for
+ delayed tasks"
+Date: Fri, 20 Nov 2020 10:07:03 +0100
+Message-ID: <d1c5f67cad16df705f4ac9ab6d830fa02350e0a0.1605863183.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6868
+X-UID: 6869
 
---===============1756832104122415253==
+--===============7784486379587192759==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-11-20 at 00:47 +0100, Florian Westphal wrote:
-> Looks like the arguments are inverted.  Intention seems to move
-> the msk rx queue to the sk one so it can be purged from the destroy
-> function.
+fix uninitialized local variable usage.
 
-Indeed it was!
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+Side notes:
+- not sure why gcc did not complain here
+- if we will use the usual tags propagation schema will not credit
+  the kernel test robot, on the flip side, I'm not sure if a:
 
-> This avoids:
-> unreferenced object 0xffff888105cd3800 (size 512):
->   comm "packetdrill", pid 1648, jiffies 4294677515 (age 433.463s)
->   hex dump (first 32 bytes):
->     3c 33 30 3e 4e 6f 76 20 32 30 20 30 30 3a 32 33  <30>Nov 20 00:23
->     3a 34 38 20 73 79 73 74 65 6d 64 5b 31 5d 3a 20  :48 systemd[1]:
->   backtrace:
->     [<00000000b794d231>] __kmalloc_reserve.isra.0+0x2d/0x90
->     [<000000000421e158>] __alloc_skb+0x90/0x260
->     [<00000000d46c1201>] alloc_skb_with_frags+0x5e/0x250
->     [<00000000357464a5>] sock_alloc_send_pskb+0x265/0x2a0
->     [<00000000a73deb72>] tun_get_user+0x4dc/0x1840
->     [<00000000ba538b49>] tun_chr_write_iter+0x51/0x80
->     [<000000004f72fd7e>] do_iter_readv_writev+0x1c6/0x2b0
->     [<00000000c606f908>] do_iter_write+0xb1/0x230
->     [<0000000088092c0e>] vfs_writev+0xcb/0x130
->     [<00000000f9881e25>] do_writev+0x8c/0x150
->     [<00000000dc31e12e>] do_syscall_64+0x2d/0x40
->     [<0000000019b09572>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> =
+Co-developed-by: kernel test robot <lkp(a)intel.com>
 
-> plus WARN()s from nonzero sk_forward_alloc.
-> ---
->  net/mptcp/protocol.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> =
+  tag is what we want ;)
+---
+ net/mptcp/protocol.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 92236a2ccbea..e62d34034d9e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2707,7 +2707,9 @@ void mptcp_destroy_common(struct mptcp_sock *msk)
->  =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c42f92764ec9..69441ea71411 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1488,7 +1488,6 @@ static void __mptcp_subflow_push_pending(struct sock =
+*sk, struct sock *ssk)
+ 	struct mptcp_sendmsg_info info;
+ 	struct mptcp_data_frag *dfrag;
+ 	int len, copied =3D 0;
+-	u32 sndbuf;
+ =
 
->  	__mptcp_clear_xmit(sk);
->  =
+ 	info.flags =3D 0;
+ 	while ((dfrag =3D mptcp_send_head(sk))) {
+@@ -1500,8 +1499,8 @@ static void __mptcp_subflow_push_pending(struct sock =
+*sk, struct sock *ssk)
+ =
 
-> -	skb_queue_splice_tail_init(&sk->sk_receive_queue, &msk->receive_queue);
-> +	/* move to sk_receive_queue, sk_stream_kill_queues will purge it */
-> +	skb_queue_splice_tail_init(&msk->receive_queue, &sk->sk_receive_queue);
-> +
->  	skb_rbtree_purge(&msk->out_of_order_queue);
->  	mptcp_token_destroy(msk);
->  	mptcp_pm_free_anno_list(msk);
+ 			/* do auto tuning */
+ 			if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK) &&
+-			    sndbuf > READ_ONCE(sk->sk_sndbuf))
+-				WRITE_ONCE(sk->sk_sndbuf, sndbuf);
++			    ssk->sk_sndbuf > READ_ONCE(sk->sk_sndbuf))
++				WRITE_ONCE(sk->sk_sndbuf, ssk->sk_sndbuf);
+ =
 
+ 			if (unlikely(mptcp_must_reclaim_memory(sk, ssk))) {
+ 				__mptcp_update_wmem(sk);
+-- =
 
-LGTM, thanks for catching this!
+2.26.2
 
-Not sure why self-tests did non complain loudly here ?!?
-
-/P
-
---===============1756832104122415253==--
+--===============7784486379587192759==--
