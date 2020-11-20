@@ -1,91 +1,180 @@
-Content-Type: multipart/mixed; boundary="===============3828097459083258602=="
+Content-Type: multipart/mixed; boundary="===============8767293103630035595=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 4/5] mptcp: add the mibs for MP_PRIO
-Date: Fri, 20 Nov 2020 15:07:53 +0800
-Message-ID: <7d895c955dbde5094f6bfc18b17779a75baa5861.1605855783.git.geliangtang@gmail.com>
-In-Reply-To: 07602c6f5da430c0adabdd775380572427a16306.1605855783.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 5/5] selftests: mptcp: add the
+ MP_PRIO testcases
+Date: Fri, 20 Nov 2020 15:07:54 +0800
+Message-ID: <5ab209d6bf791e0f2ada7a4cad56f88f2d614b38.1605855783.git.geliangtang@gmail.com>
+In-Reply-To: 7d895c955dbde5094f6bfc18b17779a75baa5861.1605855783.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6866
+X-UID: 6867
 
---===============3828097459083258602==
+--===============8767293103630035595==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the mibs for MP_PRIO, MPTCP_MIB_MPPRIOTX for transmitting
-of the MP_PRIO suboption, and MPTCP_MIB_MPPRIORX for receiving of it.
+This patch added the MP_PRIO testcases:
+
+Add a new argument bkup for run_tests and do_transfer to mark how many
+times we want to execute the 'pm_nl_ctl flags backup' command.
+
+Add a new function chk_prio_nr to check the MP_PRIO related MIB counters.
+
+The output looks like this:
+
+29 single subflow, backup      syn[ ok ] - synack[ ok ] - ack[ ok ]
+                               ptx[ ok ] - prx   [ ok ]
+30 single address, backup      syn[ ok ] - synack[ ok ] - ack[ ok ]
+                               add[ ok ] - echo  [ ok ]
+                               ptx[ ok ] - prx   [ ok ]
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/mib.c        | 2 ++
- net/mptcp/mib.h        | 2 ++
- net/mptcp/options.c    | 1 +
- net/mptcp/pm_netlink.c | 1 +
- 4 files changed, 6 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 81 ++++++++++++++++++-
+ 1 file changed, 80 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 5e8f7827cfe0..49fb978aeb7e 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -35,6 +35,8 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
- 	SNMP_MIB_ITEM("PortAckRx", MPTCP_MIB_PORTACKRX),
- 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
- 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
-+	SNMP_MIB_ITEM("MPPrioTx", MPTCP_MIB_MPPRIOTX),
-+	SNMP_MIB_ITEM("MPPrioRx", MPTCP_MIB_MPPRIORX),
- 	SNMP_MIB_SENTINEL
- };
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index dd094e3e7f14..84cb4dd0a0eb 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -213,6 +213,7 @@ do_transfer()
+ 	rm_nr_ns2=3D"$8"
+ 	speed=3D"$9"
+ 	with_port=3D"${10}"
++	bkup=3D"${11}"
  =
 
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index b762941d492f..e023d8435d18 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -28,6 +28,8 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_PORTACKRX,		/* Received an ACK + MP_JOIN with port */
- 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
- 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
-+	MPTCP_MIB_MPPRIOTX,		/* Transmit a MP_PRIO */
-+	MPTCP_MIB_MPPRIORX,		/* Received a MP_PRIO */
- 	__MPTCP_MIB_MAX
- };
+ 	port=3D$((10000+$TEST_COUNT))
+ 	TEST_COUNT=3D$((TEST_COUNT+1))
+@@ -294,6 +295,27 @@ do_transfer()
+ 		done
+ 	fi
  =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b1cb43c76be8..3171b620cab1 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1011,6 +1011,7 @@ void mptcp_incoming_options(struct sock *sk, struct s=
-k_buff *skb)
++	if [ $bkup -gt 0 ]; then
++		counter=3D1
++
++		while [ $counter -le $bkup ]
++		do
++			sleep 1
++			for netns in "$ns1" "$ns2";do
++				dump=3D(`ip netns exec $netns ./pm_nl_ctl dump`)
++				num=3D${#dump[@]}
++				while [ $num -gt 0 ]
++				do
++					backup=3D"ip netns exec $netns \
++						./pm_nl_ctl add ${dump[$num - 1]} flags backup"
++					$backup
++					num=3D$(($num - 5))
++				done
++			done
++			let counter+=3D1
++		done
++	fi
++
+ 	wait $cpid
+ 	retc=3D$?
+ 	wait $spid
+@@ -361,6 +383,7 @@ run_tests()
+ 	rm_nr_ns2=3D"${6:-0}"
+ 	speed=3D"${7:-fast}"
+ 	with_port=3D"${8:-0}"
++	bkup=3D${9:-0}
+ 	lret=3D0
+ 	oldin=3D""
  =
 
- 	if (mp_opt.mp_prio) {
- 		mptcp_pm_mp_prio_received(sk, mp_opt.backup);
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIORX);
- 		mp_opt.mp_prio =3D 0;
- 	}
+@@ -375,7 +398,7 @@ run_tests()
+ 	fi
  =
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 58960e1cdc32..90943138da7e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -545,6 +545,7 @@ void mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *ms=
-k,
+ 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
+-		${test_linkfail} ${rm_nr_ns1} ${rm_nr_ns2} ${speed} ${with_port}
++		${test_linkfail} ${rm_nr_ns1} ${rm_nr_ns2} ${speed} ${with_port} ${bkup}
+ 	lret=3D$?
  =
 
- 		subflow->send_mp_prio =3D 1;
- 		subflow->request_bkup =3D bkup;
-+		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPPRIOTX);
+ 	if [ "$test_linkfail" -eq 1 ];then
+@@ -564,6 +587,43 @@ chk_rm_nr()
+ 	fi
+ }
  =
 
- 		spin_unlock_bh(&msk->pm.lock);
- 		pr_debug("send ack for mp_prio");
++chk_prio_nr()
++{
++	local mp_prio_nr_tx=3D$1
++	local mp_prio_nr_rx=3D$2
++	local count
++	local dump_stats
++
++	printf "%-39s %s" " " "ptx"
++	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioTx | awk '{pri=
+nt $2}'`
++	[ -z "$count" ] && count=3D0
++	if [ "$count" !=3D "$mp_prio_nr_tx" ]; then
++		echo "[fail] got $count MP_PRIO[s] TX expected $mp_prio_nr_tx"
++		ret=3D1
++		dump_stats=3D1
++	else
++		echo -n "[ ok ]"
++	fi
++
++	echo -n " - prx   "
++	count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioRx | awk '{pri=
+nt $2}'`
++	[ -z "$count" ] && count=3D0
++	if [ "$count" !=3D "$mp_prio_nr_rx" ]; then
++		echo "[fail] got $count MP_PRIO[s] RX expected $mp_prio_nr_rx"
++		ret=3D1
++		dump_stats=3D1
++	else
++		echo "[ ok ]"
++	fi
++
++	if [ "${dump_stats}" =3D 1 ]; then
++		echo Server ns stats
++		ip netns exec $ns1 nstat -as | grep MPTcp
++		echo Client ns stats
++		ip netns exec $ns2 nstat -as | grep MPTcp
++	fi
++}
++
+ sin=3D$(mktemp)
+ sout=3D$(mktemp)
+ cin=3D$(mktemp)
+@@ -831,6 +891,25 @@ run_tests $ns1 $ns2 10.0.1.1 0 0 0 fast 10100
+ chk_join_nr "signal address with port, userspace" 1 0 0
+ chk_add_nr 1 1 1 0 0 0
+ =
+
++# single subflow, backup
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow 0 1
++chk_join_nr "single subflow, backup" 1 1 1
++chk_prio_nr 0 1
++
++# single address, backup
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow 0 2
++chk_join_nr "single address, backup" 1 1 1
++chk_add_nr 1 1
++chk_prio_nr 2 0
++
+ # single subflow, syncookies
+ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.26.2
 
---===============3828097459083258602==--
+--===============8767293103630035595==--
