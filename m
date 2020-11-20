@@ -1,40 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============3009629236649369358=="
+Content-Type: multipart/mixed; boundary="===============7952885583907996231=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 1/2] mptcp: drop
- rm_addr_signal flag
-Date: Fri, 20 Nov 2020 13:56:15 -0800
-Message-ID: <cb456719-2967-8346-925e-b1722a69be29@linux.intel.com>
-In-Reply-To: 3d9cfa584f992f387bf4722693f4edfc79b9f6af.1605866519.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH net-next 00/10] mptcp: More miscellaneous MPTCP
+ fixes
+Date: Fri, 20 Nov 2020 15:35:25 -0800
+Message-ID: <20201120153525.093a38bb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: 20201119194603.103158-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6885
+X-UID: 6886
 
---===============3009629236649369358==
+--===============7952885583907996231==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Thu, 19 Nov 2020 11:45:53 -0800 Mat Martineau wrote:
+> Here's another batch of fixup and enhancement patches that we have
+> collected in the MPTCP tree.
+> =
 
-On Fri, 20 Nov 2020, Geliang Tang wrote:
+> Patch 1 removes an unnecessary flag and related code.
+> =
 
-> This patch reused add_addr_signal for the RM_ADDR announcing signal, by
-> defining a new ADD_ADDR status named MPTCP_RM_ADDR_SIGNAL. Then the flag
-> rm_addr_signal in PM could be dropped.
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> net/mptcp/pm.c       | 18 +++++++++++++++---
-> net/mptcp/protocol.h |  4 ++--
-> 2 files changed, 17 insertions(+), 5 deletions(-)
->
+> Patch 2 fixes a bug encountered when closing fallback sockets.
+> =
 
-Looks good to me, thanks Geliang.
+> Patches 3 and 4 choose a better transmit subflow, with a self test.
+> =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> Patch 5 adjusts tracking of unaccepted subflows
+> =
 
---
-Mat Martineau
-Intel
---===============3009629236649369358==--
+> Patches 6-8 improve handling of long ADD_ADDR options, with a test.
+> =
+
+> Patch 9 more reliably tracks the MPTCP-level window shared with peers.
+> =
+
+> Patch 10 sends MPTCP-level acknowledgements more aggressively, so the
+> peer can send more data without extra delay.
+
+Applied, thanks!
+--===============7952885583907996231==--
