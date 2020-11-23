@@ -1,210 +1,161 @@
-Content-Type: multipart/mixed; boundary="===============5430611871735650007=="
+Content-Type: multipart/mixed; boundary="===============1811390818639159663=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Eric Dumazet <eric.dumazet at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 02/10] mptcp: add the pernet
- listening socket operations
-Date: Mon, 23 Nov 2020 10:04:56 +0100
-Message-ID: <07797aab1148767be1c4b704d565b0b1ceec9939.camel@redhat.com>
-In-Reply-To: CA+WQbwuqCJRvqbQYhVaMhXt6oohF1uV37o39mhv7rp1AvOe7Ww@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH net-next 10/10] mptcp: refine MPTCP-level ack
+ scheduling
+Date: Mon, 23 Nov 2020 12:57:17 +0100
+Message-ID: <ca0b65f8-7a69-ff4e-9e0d-66a7a923b0c1@gmail.com>
+In-Reply-To: 20201119194603.103158-11-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6893
+X-UID: 6894
 
---===============5430611871735650007==
+--===============1811390818639159663==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-11-23 at 15:57 +0800, Geliang Tang wrote:
-> Hi Paolo,
+
+
+On 11/19/20 8:46 PM, Mat Martineau wrote:
+> From: Paolo Abeni <pabeni(a)redhat.com>
 > =
 
-> Thanks for your suggestions.
+> Send timely MPTCP-level ack is somewhat difficult when
+> the insertion into the msk receive level is performed
+> by the worker.
 > =
 
-> Paolo Abeni <pabeni(a)redhat.com> =E4=BA=8E2020=E5=B9=B411=E6=9C=8820=E6=
-=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=886:24=E5=86=99=E9=81=93=EF=BC=9A
-> > On Thu, 2020-11-19 at 18:19 +0800, Geliang Tang wrote:
-> > > This patch added three new pernet listening socket operations:
-> > > =
-
-> > > mptcp_pm_alloc_listen_socket, mptcp_pm_free_listen_socket and
-> > > mptcp_pm_get_listen_socket to alloc, free and get the pernet
-> > > listening socket.
-> > > =
-
-> > > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> > > ---
-> > >  net/mptcp/pm_netlink.c | 54 ++++++++++++++++++++++++++++++++++++++++=
-++
-> > >  net/mptcp/protocol.c   |  5 ++++
-> > >  net/mptcp/protocol.h   |  5 ++++
-> > >  net/mptcp/subflow.c    |  2 +-
-> > >  4 files changed, 65 insertions(+), 1 deletion(-)
-> > > =
-
-> > > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > > index 2560c502356b..19d557df4684 100644
-> > > --- a/net/mptcp/pm_netlink.c
-> > > +++ b/net/mptcp/pm_netlink.c
-> > > @@ -45,6 +45,8 @@ struct pm_nl_pernet {
-> > >       unsigned int            add_addr_accept_max;
-> > >       unsigned int            local_addr_max;
-> > >       unsigned int            subflows_max;
-> > > +     struct socket           *listen_socket;
-> > > +     bool                    sock_created;
-> > >       unsigned int            next_id;
-> > >  };
-> > > =
-
-> > > @@ -306,6 +308,56 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *=
-msk)
-> > >       }
-> > >  }
-> > > =
-
-> > > +int mptcp_pm_alloc_listen_socket(struct mptcp_sock *msk)
-> > > +{
-> > > +     struct sock *sk =3D (struct sock *)msk;
-> > > +     struct pm_nl_pernet *pernet;
-> > > +     bool need_create =3D false;
-> > > +
-> > > +     pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
-> > > +
-> > > +     spin_lock_bh(&pernet->lock);
-> > > +     if (!pernet->sock_created) {
-> > > +             pernet->sock_created =3D true;
-> > > +             need_create =3D true;
-> > > +     }
-> > > +     spin_unlock_bh(&pernet->lock);
-> > > +
-> > > +     if (!need_create)
-> > > +             return 0;
-> > > +
-> > > +     return mptcp_create_listen_socket(sk, &pernet->listen_socket);
-> > > +}
-> > > +
-> > > +void mptcp_pm_free_listen_socket(struct mptcp_sock *msk)
-> > > +{
-> > > +     struct sock *sk =3D (struct sock *)msk;
-> > > +     struct pm_nl_pernet *pernet;
-> > > +
-> > > +     pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
-> > > +
-> > > +     if (!pernet || !pernet->listen_socket || !pernet->listen_socket=
-->sk)
-> > > +             return;
-> > > +
-> > > +     subflow_drop_ctx(pernet->listen_socket->sk);
-> > > +     sock_release(pernet->listen_socket);
-> > > +     pernet->listen_socket =3D NULL;
-> > > +     pernet->sock_created =3D false;
-> > > +}
-> > > +
-> > > +struct socket *mptcp_pm_get_listen_socket(struct mptcp_sock *msk)
-> > > +{
-> > > +     struct pm_nl_pernet *pernet;
-> > > +     struct sock *sk =3D (struct sock *)msk;
-> > > +
-> > > +     pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
-> > > +
-> > > +     if (!pernet)
-> > > +             return NULL;
-> > > +
-> > > +     return pernet->listen_socket;
-> > > +}
-> > > +
-> > >  static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock=
- *msk)
-> > >  {
-> > >       struct mptcp_addr_info remote =3D { 0 };
-> > > @@ -885,6 +937,8 @@ static void __reset_counters(struct pm_nl_pernet =
-*pernet)
-> > >       pernet->add_addr_accept_max =3D 0;
-> > >       pernet->local_addr_max =3D 0;
-> > >       pernet->addrs =3D 0;
-> > > +     pernet->listen_socket =3D NULL;
-> > > +     pernet->sock_created =3D false;
-> > >  }
-> > > =
-
-> > >  static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl=
-_info *info)
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index 7a0364860feb..1a9e895e953e 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -2006,6 +2006,10 @@ static int mptcp_init_sock(struct sock *sk)
-> > >       if (ret)
-> > >               return ret;
-> > > =
-
-> > > +     ret =3D mptcp_pm_alloc_listen_socket(mptcp_sk(sk));
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > >       sk_sockets_allocated_inc(sk);
-> > >       sk->sk_rcvbuf =3D sock_net(sk)->ipv4.sysctl_tcp_rmem[1];
-> > >       sk->sk_sndbuf =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[1];
+> It needs TCP-level dup-ack to notify the MPTCP-level
+> ack_seq increase, as both the TCP-level ack seq and the
+> rcv window are unchanged.
 > =
 
-> This v5 still has bugs in it, it can't work when we use announced multiple
-> addresses with port, the following new test cases will fail:
-[...]
-
-Yep, with a single socket we can't accomodate multiple ports, we would
-need one socket per port (specifcally one socket per port-based
-endpoint), see below.
-
-> I think the listening socket creation and bind should be done at
-> > endpoint creation time, that is, while handling the
-> > MPTCP_PM_CMD_ADD_ADDR netlink command.
+> We can actually avoid processing incoming data with the
+> worker, and let the subflow or recevmsg() send ack as needed.
 > =
 
-> Do you mean we can do it in mptcp_nl_cmd_add_addr? I had tested moving the
-> creation and bind to mptcp_nl_cmd_add_addr, but it not work. This moment =
-is
-> much earlier for the socket creation. Since we want to create the subflow
-> within a msk, but at this moment, the msk is not created yet.
-
-The idea is that the listening socket is created _before_ we actually
-create the msk or subflow.
-
-Thanks to the destination port number and token checks, already in
-place, that should be fine from security PoV: we will accept connection
-only after a msk is created and fully established.
-
-> I think maybe we can create and bind the listening socket in
-> mptcp_pm_create_subflow_or_signal_addr. Do you think it's OK?
-
-Doing the creation earlier, inside the scope of the user-space process
-doing the netlink configuration:
-- reduces the overhead for subflow creation. =
-
-- allows closing the listening socket ASA the port endpoint is deleted.
-- allows reporting to the user-space any port usage conflict and/or
-other socket creation errors.
-
-It looks the better option to me.
-
-> > The socket pointer itself could be stored inside the 'struct
-> > mptcp_pm_addr_entr'.
+> When recvmsg() moves the skbs inside the msk receive queue,
+> the msk space is still unchanged, so tcp_cleanup_rbuf() could
+> end-up skipping TCP-level ack generation. Anyway, when
+> __mptcp_move_skbs() is invoked, a known amount of bytes is
+> going to be consumed soon: we update rcv wnd computation taking
+> them in account.
 > =
 
-> We have defined another struct mptcp_pm_add_entry, it will be added
-> in
-> anno_list. I think we can stored the socket pointer inside it, instead of
-> mptcp_pm_addr_entry. But in that case, the listening socket is not per
-> netns, it is per announced address. There are several listening sockets
-> per netns. Is this acceptable?
+> Additionally we need to explicitly trigger tcp_cleanup_rbuf()
+> when recvmsg() consumes a significant amount of the receive buffer.
+> =
 
-I mentioned the 'mptcp_pm_addr_entry' struct because it's per netns.
-Why can't we use it? Hopefully should be just a matter of moving the
-socket creation and initialization inside mptcp_nl_cmd_add_addr().
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> ---
+>  net/mptcp/options.c  |   1 +
+>  net/mptcp/protocol.c | 105 +++++++++++++++++++++----------------------
+>  net/mptcp/protocol.h |   8 ++++
+>  net/mptcp/subflow.c  |   4 +-
+>  4 files changed, 61 insertions(+), 57 deletions(-)
+> =
 
-Thanks,
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 248e3930c0cb..8a59b3e44599 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -530,6 +530,7 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+>  		opts->ext_copy.ack64 =3D 0;
+>  	}
+>  	opts->ext_copy.use_ack =3D 1;
+> +	WRITE_ONCE(msk->old_wspace, __mptcp_space((struct sock *)msk));
+>  =
 
-Paolo
+>  	/* Add kind/length/subtype/flag overhead if mapping is not populated */
+>  	if (dss_size =3D=3D 0)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 4ae2c4a30e44..748343f1a968 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -407,16 +407,42 @@ static void mptcp_set_timeout(const struct sock *sk=
+, const struct sock *ssk)
+>  	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
+>  }
+>  =
 
---===============5430611871735650007==--
+> -static void mptcp_send_ack(struct mptcp_sock *msk)
+> +static bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+> +{
+> +	struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> +
+> +	/* can't send if JOIN hasn't completed yet (i.e. is usable for mptcp) */
+> +	if (subflow->request_join && !subflow->fully_established)
+> +		return false;
+> +
+> +	/* only send if our side has not closed yet */
+> +	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
+> +}
+> +
+> +static void mptcp_send_ack(struct mptcp_sock *msk, bool force)
+>  {
+>  	struct mptcp_subflow_context *subflow;
+> +	struct sock *pick =3D NULL;
+>  =
+
+>  	mptcp_for_each_subflow(msk, subflow) {
+>  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+>  =
+
+> -		lock_sock(ssk);
+> -		tcp_send_ack(ssk);
+> -		release_sock(ssk);
+> +		if (force) {
+> +			lock_sock(ssk);
+> +			tcp_send_ack(ssk);
+> +			release_sock(ssk);
+> +			continue;
+> +		}
+> +
+> +		/* if the hintes ssk is still active, use it */
+> +		pick =3D ssk;
+> +		if (ssk =3D=3D msk->ack_hint)
+> +			break;
+> +	}
+> +	if (!force && pick) {
+> +		lock_sock(pick);
+> +		tcp_cleanup_rbuf(pick, 1);
+
+Calling tcp_cleanup_rbuf() on a socket that was never established is going =
+to fail
+with a divide by 0 (mss being 0)
+
+AFAIK, mptcp_recvmsg() can be called right after a socket(AF_INET, SOCK_STR=
+EAM, IPPROTO_MPTCP)
+call.
+
+Probably, after a lock_sock(), you should double check socket state (same a=
+bove before calling tcp_send_ack())
+
+
+
+> +		release_sock(pick);
+>  	}
+>  }
+>  =
+
+
+
+....
+
+>  =
+
+> +		/* be sure to advertise window change */
+> +		old_space =3D READ_ONCE(msk->old_wspace);
+> +		if ((tcp_space(sk) - old_space) >=3D old_space)
+> +			mptcp_send_ack(msk, false);
+> +
+
+Yes, if we call recvmsg() right after socket(), we will end up calling tcp_=
+cleanup_rbuf(),
+while no byte was ever copied/drained.
+
+--===============1811390818639159663==--
