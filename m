@@ -1,97 +1,157 @@
-Content-Type: multipart/mixed; boundary="===============2521818656257051588=="
+Content-Type: multipart/mixed; boundary="===============7259129345340055141=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 10/10] mptcp: refine MPTCP-level ack
- scheduling
-Date: Mon, 23 Nov 2020 15:21:03 +0100
-Message-ID: <88ac6b9ddbdc6cf825ac3d7f65c9e0ee7f5cadd9.camel@redhat.com>
-In-Reply-To: ca0b65f8-7a69-ff4e-9e0d-66a7a923b0c1@gmail.com
+Subject: [MPTCP] [PATCH net-next] mptcp: be careful on MPTCP-level ack.
+Date: Tue, 24 Nov 2020 00:13:19 +0100
+Message-ID: <15ac76ff4bca7d8213d085a735bc9b41cf665e7d.1606171932.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6895
+X-UID: 6896
 
---===============2521818656257051588==
+--===============7259129345340055141==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+We can enter the main mptcp_recvmsg() loop even when
+no sublflows is connected. As note by Eric that would
+result in a divide by zero oops on ack generation.
 
-On Mon, 2020-11-23 at 12:57 +0100, Eric Dumazet wrote:
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 4ae2c4a30e44..748343f1a968 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -407,16 +407,42 @@ static void mptcp_set_timeout(const struct sock *=
-sk, const struct sock *ssk)
-> >  	mptcp_sk(sk)->timer_ival =3D tout > 0 ? tout : TCP_RTO_MIN;
-> >  }
-> >  =
+Address the issue checking the subflow status before
+sending the ack.
 
-> > -static void mptcp_send_ack(struct mptcp_sock *msk)
-> > +static bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-> > +{
-> > +	struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> > +
-> > +	/* can't send if JOIN hasn't completed yet (i.e. is usable for mptcp)=
- */
-> > +	if (subflow->request_join && !subflow->fully_established)
-> > +		return false;
-> > +
-> > +	/* only send if our side has not closed yet */
-> > +	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
-> > +}
-> > +
-> > +static void mptcp_send_ack(struct mptcp_sock *msk, bool force)
-> >  {
-> >  	struct mptcp_subflow_context *subflow;
-> > +	struct sock *pick =3D NULL;
-> >  =
+Additionally protect mptcp_recvmsg() against invocation
+with weird socket states.
 
-> >  	mptcp_for_each_subflow(msk, subflow) {
-> >  		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> >  =
+Reported-and-suggested-by: Eric Dumazet <eric.dumazet(a)gmail.com>
+Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/protocol.c | 67 ++++++++++++++++++++++++++++++++------------
+ 1 file changed, 49 insertions(+), 18 deletions(-)
 
-> > -		lock_sock(ssk);
-> > -		tcp_send_ack(ssk);
-> > -		release_sock(ssk);
-> > +		if (force) {
-> > +			lock_sock(ssk);
-> > +			tcp_send_ack(ssk);
-> > +			release_sock(ssk);
-> > +			continue;
-> > +		}
-> > +
-> > +		/* if the hintes ssk is still active, use it */
-> > +		pick =3D ssk;
-> > +		if (ssk =3D=3D msk->ack_hint)
-> > +			break;
-> > +	}
-> > +	if (!force && pick) {
-> > +		lock_sock(pick);
-> > +		tcp_cleanup_rbuf(pick, 1);
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4b7794835fea..270fee29b260 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -419,31 +419,57 @@ static bool mptcp_subflow_active(struct mptcp_subflow=
+_context *subflow)
+ 	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
+ }
+ =
 
-> Calling tcp_cleanup_rbuf() on a socket that was never established is goin=
-g to fail
-> with a divide by 0 (mss being 0)
-> =
+-static void mptcp_send_ack(struct mptcp_sock *msk, bool force)
++static inline bool tcp_can_send_ack(const struct sock *ssk)
++{
++	return !((1 << inet_sk_state_load(ssk)) &
++	       (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLOSE));
++}
++
++static void mptcp_send_ack(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+-	struct sock *pick =3D NULL;
+ =
 
-> AFAIK, mptcp_recvmsg() can be called right after a socket(AF_INET, SOCK_S=
-TREAM, IPPROTO_MPTCP)
-> call.
-> =
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+ =
 
-> Probably, after a lock_sock(), you should double check socket state (same=
- above before calling tcp_send_ack())
+-		if (force) {
+-			lock_sock(ssk);
++		lock_sock(ssk);
++		if (tcp_can_send_ack(ssk))
+ 			tcp_send_ack(ssk);
+-			release_sock(ssk);
+-			continue;
+-		}
+-
+-		/* if the hintes ssk is still active, use it */
+-		pick =3D ssk;
+-		if (ssk =3D=3D msk->ack_hint)
+-			break;
++		release_sock(ssk);
+ 	}
+-	if (!force && pick) {
+-		lock_sock(pick);
+-		tcp_cleanup_rbuf(pick, 1);
+-		release_sock(pick);
++}
++
++static bool mptcp_do_cleanup_rbuf(struct mptcp_sock *msk, struct sock *ssk)
++{
++	int ret;
++
++	lock_sock(msk->ack_hint);
++	ret =3D tcp_can_send_ack(msk->ack_hint);
++	if (ret)
++		tcp_cleanup_rbuf(msk->ack_hint, 1);
++	release_sock(msk->ack_hint);
++	return ret;
++}
++
++static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++
++	/* if the hinted ssk is still active, try to use it */
++	if (likely(msk->ack_hint)) {
++		mptcp_for_each_subflow(msk, subflow) {
++			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++
++			if (msk->ack_hint =3D=3D ssk &&
++			    mptcp_do_cleanup_rbuf(msk, ssk))
++				return;
++		}
+ 	}
++
++	/* otherwise pick the first active subflow */
++	mptcp_for_each_subflow(msk, subflow)
++		if (mptcp_do_cleanup_rbuf(msk, mptcp_subflow_tcp_sock(subflow)))
++			return;
+ }
+ =
 
-Thank you for looking into this.
+ static bool mptcp_check_data_fin(struct sock *sk)
+@@ -494,7 +520,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
+ =
 
-Indeed you are right! I'll try to cook a fix.
+ 		ret =3D true;
+ 		mptcp_set_timeout(sk, NULL);
+-		mptcp_send_ack(msk, true);
++		mptcp_send_ack(msk);
+ 		mptcp_close_wake_up(sk);
+ 	}
+ 	return ret;
+@@ -1579,6 +1605,11 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
+hdr *msg, size_t len,
+ 		return -EOPNOTSUPP;
+ =
 
-Cheers,
+ 	lock_sock(sk);
++	if (unlikely(sk->sk_state =3D=3D TCP_LISTEN)) {
++		copied =3D -ENOTCONN;
++		goto out_err;
++	}
++
+ 	timeo =3D sock_rcvtimeo(sk, nonblock);
+ =
 
-Paolo
+ 	len =3D min_t(size_t, len, INT_MAX);
+@@ -1604,7 +1635,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ 		/* be sure to advertise window change */
+ 		old_space =3D READ_ONCE(msk->old_wspace);
+ 		if ((tcp_space(sk) - old_space) >=3D old_space)
+-			mptcp_send_ack(msk, false);
++			mptcp_cleanup_rbuf(msk);
+ =
 
---===============2521818656257051588==--
+ 		/* only the master socket status is relevant here. The exit
+ 		 * conditions mirror closely tcp_recvmsg()
+-- =
+
+2.26.2
+
+--===============7259129345340055141==--
