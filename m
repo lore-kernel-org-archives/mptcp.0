@@ -1,15 +1,15 @@
-Content-Type: multipart/mixed; boundary="===============7259129345340055141=="
+Content-Type: multipart/mixed; boundary="===============8533022294164393985=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] mptcp: be careful on MPTCP-level ack.
-Date: Tue, 24 Nov 2020 00:13:19 +0100
-Message-ID: <15ac76ff4bca7d8213d085a735bc9b41cf665e7d.1606171932.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next v2] mptcp: be careful on MPTCP-level ack.
+Date: Tue, 24 Nov 2020 11:23:01 +0100
+Message-ID: <df78ed9c38edfbed50b9d275993e716e4cd14ee7.1606213300.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6896
+X-UID: 6897
 
---===============7259129345340055141==
+--===============8533022294164393985==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -28,11 +28,15 @@ Reported-and-suggested-by: Eric Dumazet <eric.dumazet(a)gmail.com>
 Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
+v1 -> v2:
+ - better naming
+ - fixed a few typos (introducing bad crashes)
+---
  net/mptcp/protocol.c | 67 ++++++++++++++++++++++++++++++++------------
  1 file changed, 49 insertions(+), 18 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4b7794835fea..270fee29b260 100644
+index 4b7794835fea..b50164efb741 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
 @@ -419,31 +419,57 @@ static bool mptcp_subflow_active(struct mptcp_subflow=
@@ -79,15 +83,15 @@ _context *subflow)
 -		release_sock(pick);
 +}
 +
-+static bool mptcp_do_cleanup_rbuf(struct mptcp_sock *msk, struct sock *ssk)
++static bool mptcp_subflow_cleanup_rbuf(struct sock *ssk)
 +{
 +	int ret;
 +
-+	lock_sock(msk->ack_hint);
-+	ret =3D tcp_can_send_ack(msk->ack_hint);
++	lock_sock(ssk);
++	ret =3D tcp_can_send_ack(ssk);
 +	if (ret)
-+		tcp_cleanup_rbuf(msk->ack_hint, 1);
-+	release_sock(msk->ack_hint);
++		tcp_cleanup_rbuf(ssk, 1);
++	release_sock(ssk);
 +	return ret;
 +}
 +
@@ -101,14 +105,14 @@ _context *subflow)
 +			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
 +
 +			if (msk->ack_hint =3D=3D ssk &&
-+			    mptcp_do_cleanup_rbuf(msk, ssk))
++			    mptcp_subflow_cleanup_rbuf(ssk))
 +				return;
 +		}
  	}
 +
 +	/* otherwise pick the first active subflow */
 +	mptcp_for_each_subflow(msk, subflow)
-+		if (mptcp_do_cleanup_rbuf(msk, mptcp_subflow_tcp_sock(subflow)))
++		if (mptcp_subflow_cleanup_rbuf(mptcp_subflow_tcp_sock(subflow)))
 +			return;
  }
  =
@@ -154,4 +158,4 @@ dr *msg, size_t len,
 
 2.26.2
 
---===============7259129345340055141==--
+--===============8533022294164393985==--
