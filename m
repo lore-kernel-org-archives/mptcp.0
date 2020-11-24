@@ -1,24 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============8533022294164393985=="
+Content-Type: multipart/mixed; boundary="===============8555720297025906844=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2] mptcp: be careful on MPTCP-level ack.
-Date: Tue, 24 Nov 2020 11:23:01 +0100
-Message-ID: <df78ed9c38edfbed50b9d275993e716e4cd14ee7.1606213300.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next] mptcp: be careful on MPTCP-level ack.
+Date: Tue, 24 Nov 2020 12:20:11 +0100
+Message-ID: <722e1a13493897c7cc194035e9b394e0dbeeb1af.1606213920.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6897
+X-UID: 6898
 
---===============8533022294164393985==
+--===============8555720297025906844==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 We can enter the main mptcp_recvmsg() loop even when
-no sublflows is connected. As note by Eric that would
+no subflows are connected. As note by Eric, that would
 result in a divide by zero oops on ack generation.
 
-Address the issue checking the subflow status before
+Address the issue by checking the subflow status before
 sending the ack.
 
 Additionally protect mptcp_recvmsg() against invocation
@@ -27,10 +27,6 @@ with weird socket states.
 Reported-and-suggested-by: Eric Dumazet <eric.dumazet(a)gmail.com>
 Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-v1 -> v2:
- - better naming
- - fixed a few typos (introducing bad crashes)
 ---
  net/mptcp/protocol.c | 67 ++++++++++++++++++++++++++++++++------------
  1 file changed, 49 insertions(+), 18 deletions(-)
@@ -158,4 +154,4 @@ dr *msg, size_t len,
 
 2.26.2
 
---===============8533022294164393985==--
+--===============8555720297025906844==--
