@@ -1,71 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============0386234954112748421=="
+Content-Type: multipart/mixed; boundary="===============7542721156964111465=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next] mptcp: put reference in mptcp timeout
- timer
-Date: Tue, 24 Nov 2020 17:42:21 +0100
-Message-ID: <e44300a0567cdec8241c06d1c6b78083cdd4254a.camel@redhat.com>
-In-Reply-To: 20201124162446.11448-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: be careful on MPTCP-level ack.
+Date: Tue, 24 Nov 2020 19:53:10 +0100
+Message-ID: <c110f036c113f3b8154c8671ce376d555b6f2b5a.camel@redhat.com>
+In-Reply-To: 20201124100809.08360e4c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6903
+X-UID: 6904
 
---===============0386234954112748421==
+--===============7542721156964111465==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2020-11-24 at 17:24 +0100, Florian Westphal wrote:
-> On close this timer might be scheduled. mptcp uses sk_reset_timer for
-> this, so the a reference on the mptcp socket is taken.
+On Tue, 2020-11-24 at 10:08 -0800, Jakub Kicinski wrote:
+> On Tue, 24 Nov 2020 12:20:11 +0100 Paolo Abeni wrote:
+> > -static void mptcp_send_ack(struct mptcp_sock *msk, bool force)
+> > +static inline bool tcp_can_send_ack(const struct sock *ssk)
+> > +{
+> > +	return !((1 << inet_sk_state_load(ssk)) &
+> > +	       (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLOSE));
+> > +}
 > =
 
-> This causes a refcount leak which can for example be reproduced
-> with 'mp_join_server_v4.pkt' from the mptcp-packetdrill repo.
+> Does the compiler really not inline this trivial static function?
 
-Whoops, my fault!
+whoops... That is just me adding an unneeded keyword. I'll send a v2.
 
-> The leak has nothing to do with join requests, v1_mp_capable_bind_no_cs.p=
-kt
-> works too when replacing the last ack mpcapable to v1 instead of v0.
-> =
+Thanks,
 
-> unreferenced object 0xffff888109bba040 (size 2744):
->   comm "packetdrill", [..]
->   backtrace:
->     [..] sk_prot_alloc.isra.0+0x2b/0xc0
->     [..] sk_clone_lock+0x2f/0x740
->     [..] mptcp_sk_clone+0x33/0x1a0
->     [..] subflow_syn_recv_sock+0x2b1/0x690 [..]
-> =
+Paolo
 
-> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
-> Cc: Paolo Abeni <pabeni(a)redhat.com>
-> Cc: Davide Caratti <dcaratti(a)redhat.com>
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/protocol.c | 1 +
->  1 file changed, 1 insertion(+)
-> =
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4b7794835fea..dc979571f561 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1710,6 +1710,7 @@ static void mptcp_timeout_timer(struct timer_list *=
-t)
->  	struct sock *sk =3D from_timer(sk, t, sk_timer);
->  =
 
->  	mptcp_schedule_work(sk);
-> +	sock_put(sk);
->  }
->  =
-
->  /* Find an idle subflow.  Return NULL if there is unacked data at tcp
-
-LGTM, thanks!
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-
---===============0386234954112748421==--
+--===============7542721156964111465==--
