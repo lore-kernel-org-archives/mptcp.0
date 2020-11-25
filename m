@@ -1,134 +1,176 @@
-Content-Type: multipart/mixed; boundary="===============1092149687154191299=="
+Content-Type: multipart/mixed; boundary="===============6096323947137992146=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 2/3] tcp: parse mptcp options contained in
- reset packets
-Date: Wed, 25 Nov 2020 18:49:55 +0100
-Message-ID: <20201125174956.9222-3-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 3/3] mptcp: parse and act on incoming
+ FASTCLOSE option
+Date: Wed, 25 Nov 2020 18:49:56 +0100
+Message-ID: <20201125174956.9222-4-fw@strlen.de>
 In-Reply-To: 20201125174956.9222-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 6933
+X-UID: 6934
 
---===============1092149687154191299==
+--===============6096323947137992146==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Because TCP-level resets only affect the subflow, there is a MPTCP
-option to indicate that the MPTCP-level connection should be closed
-immediately without a mptcp-level fin exchange.
+parse the MPTCP FASTCLOSE subtype.
 
-This is the 'MPTCP fast close option'.  It can be carried on ack
-segments or TCP resets.  In the latter case, its needed to parse mptcp
-options also for reset packets so that MPTCP can act accordingly.
+If provided key matches the local one, schedule the work queue to close
+(with tcp reset) all subflows.
 
-Next patch will add receive side fastclose support in MPTCP.
+The MPTCP socket moves to closed state immediately.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- include/net/tcp.h        |  2 +-
- net/ipv4/tcp_input.c     | 13 ++++++++-----
- net/ipv4/tcp_minisocks.c |  2 +-
- 3 files changed, 10 insertions(+), 7 deletions(-)
+ net/mptcp/options.c  | 15 +++++++++++++++
+ net/mptcp/protocol.c | 33 +++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  4 ++++
+ 3 files changed, 52 insertions(+)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index d5d22c411918..be105a5be4ba 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -610,7 +610,7 @@ void tcp_skb_collapse_tstamp(struct sk_buff *skb,
- /* tcp_input.c */
- void tcp_rearm_rto(struct sock *sk);
- void tcp_synack_rtt_meas(struct sock *sk, struct request_sock *req);
--void tcp_reset(struct sock *sk);
-+void tcp_reset(struct sock *sk, struct sk_buff *skb);
- void tcp_skb_mark_lost_uncond_verify(struct tcp_sock *tp, struct sk_buff *=
-skb);
- void tcp_fin(struct sock *sk);
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index d1b4c5d208a9..6088fc80db75 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -281,7 +281,15 @@ static void mptcp_parse_option(const struct sk_buff *s=
+kb,
+ 		mp_opt->rm_id =3D *ptr++;
+ 		pr_debug("RM_ADDR: id=3D%d", mp_opt->rm_id);
+ 		break;
++	case MPTCPOPT_MP_FASTCLOSE:
++		if (opsize !=3D TCPOLEN_MPTCP_FASTCLOSE)
++			break;
  =
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index fb3a7750f623..fb65d3519439 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4217,10 +4217,13 @@ static inline bool tcp_sequence(const struct tcp_so=
-ck *tp, u32 seq, u32 end_seq)
++		ptr +=3D 2;
++		mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
++		ptr +=3D 8;
++		mp_opt->fastclose =3D 1;
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -299,6 +307,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ 	mp_opt->mp_join =3D 0;
+ 	mp_opt->add_addr =3D 0;
+ 	mp_opt->ahmac =3D 0;
++	mp_opt->fastclose =3D 0;
+ 	mp_opt->port =3D 0;
+ 	mp_opt->rm_addr =3D 0;
+ 	mp_opt->dss =3D 0;
+@@ -937,6 +946,12 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
+_buff *skb)
+ 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+ 		return;
+ =
+
++	if (mp_opt.fastclose &&
++	    msk->local_key =3D=3D mp_opt.rcvr_key) {
++		WRITE_ONCE(msk->rcv_fastclose, true);
++		mptcp_schedule_work((struct sock *)msk);
++	}
++
+ 	if (mp_opt.add_addr && add_addr_hmac_valid(msk, &mp_opt)) {
+ 		struct mptcp_addr_info addr;
+ =
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d7875e20f8e7..f6d9a3e4cb33 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2209,6 +2209,36 @@ static bool mptcp_check_close_timeout(const struct s=
+ock *sk)
+ 	return true;
  }
  =
 
- /* When we get a reset we do this. */
--void tcp_reset(struct sock *sk)
-+void tcp_reset(struct sock *sk, struct sk_buff *skb)
- {
- 	trace_tcp_receive_reset(sk);
- =
-
-+	if (sk_is_mptcp(sk))
-+		mptcp_incoming_options(sk, skb);
++static void mptcp_check_fastclose(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow, *tmp;
++	struct sock *sk =3D &msk->sk.icsk_inet.sk;
 +
- 	/* We want the right error as BSD sees it (and indeed as we do). */
- 	switch (sk->sk_state) {
- 	case TCP_SYN_SENT:
-@@ -5603,7 +5606,7 @@ static bool tcp_validate_incoming(struct sock *sk, st=
-ruct sk_buff *skb,
- 						  &tp->last_oow_ack_time))
- 				tcp_send_dupack(sk, skb);
- 		} else if (tcp_reset_check(sk, skb)) {
--			tcp_reset(sk);
-+			tcp_reset(sk, skb);
- 		}
- 		goto discard;
- 	}
-@@ -5639,7 +5642,7 @@ static bool tcp_validate_incoming(struct sock *sk, st=
-ruct sk_buff *skb,
- 		}
++	if (likely(!READ_ONCE(msk->rcv_fastclose)))
++		return;
++
++	mptcp_token_destroy(msk);
++
++	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
++		struct sock *tcp_sk =3D mptcp_subflow_tcp_sock(subflow);
++
++		lock_sock(tcp_sk);
++		if (tcp_sk->sk_state !=3D TCP_CLOSE) {
++			tcp_send_active_reset(tcp_sk, GFP_ATOMIC);
++			tcp_set_state(tcp_sk, TCP_CLOSE);
++		}
++		release_sock(tcp_sk);
++	}
++
++	inet_sk_state_store(sk, TCP_CLOSE);
++	sk->sk_shutdown =3D SHUTDOWN_MASK;
++	smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
++	set_bit(MPTCP_DATA_READY, &msk->flags);
++	set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags);
++
++	mptcp_close_wake_up(sk);
++}
++
+ static void mptcp_worker(struct work_struct *work)
+ {
+ 	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
+@@ -2225,6 +2255,9 @@ static void mptcp_worker(struct work_struct *work)
  =
 
- 		if (rst_seq_match)
--			tcp_reset(sk);
-+			tcp_reset(sk, skb);
- 		else {
- 			/* Disable TFO if RST is out-of-order
- 			 * and no data has been received
-@@ -6076,7 +6079,7 @@ static int tcp_rcv_synsent_state_process(struct sock =
-*sk, struct sk_buff *skb,
- 		 */
+ 	mptcp_check_data_fin_ack(sk);
+ 	__mptcp_flush_join_list(msk);
++
++	mptcp_check_fastclose(msk);
++
+ 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+ 		__mptcp_close_subflow(msk);
  =
 
- 		if (th->rst) {
--			tcp_reset(sk);
-+			tcp_reset(sk, skb);
- 			goto discard;
- 		}
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index f5db6e721fcf..6617cb376795 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -23,6 +23,7 @@
+ #define OPTION_MPTCP_ADD_ADDR	BIT(6)
+ #define OPTION_MPTCP_ADD_ADDR6	BIT(7)
+ #define OPTION_MPTCP_RM_ADDR	BIT(8)
++#define OPTION_MPTCP_FASTCLOSE	BIT(9)
  =
 
-@@ -6518,7 +6521,7 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_=
-buff *skb)
- 			if (TCP_SKB_CB(skb)->end_seq !=3D TCP_SKB_CB(skb)->seq &&
- 			    after(TCP_SKB_CB(skb)->end_seq - th->fin, tp->rcv_nxt)) {
- 				NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPABORTONDATA);
--				tcp_reset(sk);
-+				tcp_reset(sk, skb);
- 				return 1;
- 			}
- 		}
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index 495dda2449fe..0055ae0a3bf8 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -801,7 +801,7 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_b=
-uff *skb,
- 		req->rsk_ops->send_reset(sk, skb);
- 	} else if (fastopen) { /* received a valid RST pkt */
- 		reqsk_fastopen_remove(sk, req, true);
--		tcp_reset(sk);
-+		tcp_reset(sk, skb);
- 	}
- 	if (!fastopen) {
- 		inet_csk_reqsk_queue_drop(sk, req);
+ /* MPTCP option subtypes */
+ #define MPTCPOPT_MP_CAPABLE	0
+@@ -59,6 +60,7 @@
+ #define TCPOLEN_MPTCP_PORT_LEN		4
+ #define TCPOLEN_MPTCP_ADD_ADDR_HMAC	8
+ #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
++#define TCPOLEN_MPTCP_FASTCLOSE		12
+ =
+
+ /* MPTCP MP_JOIN flags */
+ #define MPTCPOPT_BACKUP		BIT(0)
+@@ -111,6 +113,7 @@ struct mptcp_options_received {
+ 	u16	data_len;
+ 	u16	mp_capable : 1,
+ 		mp_join : 1,
++		fastclose : 1,
+ 		dss : 1,
+ 		add_addr : 1,
+ 		rm_addr : 1,
+@@ -237,6 +240,7 @@ struct mptcp_sock {
+ 	bool		fully_established;
+ 	bool		rcv_data_fin;
+ 	bool		snd_data_fin_enable;
++	bool		rcv_fastclose;
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
+ 	spinlock_t	join_list_lock;
+ 	struct sock	*ack_hint;
 -- =
 
 2.26.2
 
---===============1092149687154191299==--
+--===============6096323947137992146==--
