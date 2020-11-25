@@ -1,37 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============0347525062824101441=="
+Content-Type: multipart/mixed; boundary="===============6133339372514710765=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 26 November 2020 16:00 UTC (8am PDT, 5pm CET,
- 12pm CST)
-Date: Wed, 25 Nov 2020 20:05:14 +0100
-Message-ID: <8e2b0ba1-c693-d34c-191c-add34ce987d2@tessares.net>
+Subject: [MPTCP] Re: [PATCH net-next] mptcp: put reference in mptcp timeout
+ timer
+Date: Wed, 25 Nov 2020 12:33:20 -0800
+Message-ID: <20201125123317.678761e6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: e44300a0567cdec8241c06d1c6b78083cdd4254a.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6937
+X-UID: 6938
 
---===============0347525062824101441==
+--===============6133339372514710765==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+On Tue, 24 Nov 2020 17:42:21 +0100 Paolo Abeni wrote:
+> On Tue, 2020-11-24 at 17:24 +0100, Florian Westphal wrote:
+> > On close this timer might be scheduled. mptcp uses sk_reset_timer for
+> > this, so the a reference on the mptcp socket is taken.
+> > =
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+> > This causes a refcount leak which can for example be reproduced
+> > with 'mp_join_server_v4.pkt' from the mptcp-packetdrill repo.  =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20201126
+> =
 
-Feel free to add/modify topics!
+> Whoops, my fault!
+> =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+> > The leak has nothing to do with join requests, v1_mp_capable_bind_no_cs=
+.pkt
+> > works too when replacing the last ack mpcapable to v1 instead of v0.
+> > =
 
-Speak to you tomorrow!
-Matt
--- =
+> > unreferenced object 0xffff888109bba040 (size 2744):
+> >   comm "packetdrill", [..]
+> >   backtrace:
+> >     [..] sk_prot_alloc.isra.0+0x2b/0xc0
+> >     [..] sk_clone_lock+0x2f/0x740
+> >     [..] mptcp_sk_clone+0x33/0x1a0
+> >     [..] subflow_syn_recv_sock+0x2b1/0x690 [..]
+> > =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0347525062824101441==--
+> > Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+> > Cc: Paolo Abeni <pabeni(a)redhat.com>
+> > Cc: Davide Caratti <dcaratti(a)redhat.com>
+> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > ---
+> >  net/mptcp/protocol.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > =
+
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 4b7794835fea..dc979571f561 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -1710,6 +1710,7 @@ static void mptcp_timeout_timer(struct timer_list=
+ *t)
+> >  	struct sock *sk =3D from_timer(sk, t, sk_timer);
+> >  =
+
+> >  	mptcp_schedule_work(sk);
+> > +	sock_put(sk);
+> >  }
+> >  =
+
+> >  /* Find an idle subflow.  Return NULL if there is unacked data at tcp  =
+
+> =
+
+> LGTM, thanks!
+> Acked-by: Paolo Abeni <pabeni(a)redhat.com>
+
+Applied, thanks!
+--===============6133339372514710765==--
