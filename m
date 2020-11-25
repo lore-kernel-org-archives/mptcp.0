@@ -1,115 +1,190 @@
-Content-Type: multipart/mixed; boundary="===============2019015644248132691=="
+Content-Type: multipart/mixed; boundary="===============4503364411167079212=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 8/9] mptcp: add the mibs for
- ADD_ADDR with port
-Date: Wed, 25 Nov 2020 11:01:15 +0800
-Message-ID: <b04b5fa61f8b4e662ddd67208416b5473602a928.1606272852.git.geliangtang@gmail.com>
-In-Reply-To: 9c43a4c55fc629f6879a5e98353b9d4b2173a3f2.1606272852.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 9/9] selftests: mptcp: add
+ testcases for ADD_ADDR with port
+Date: Wed, 25 Nov 2020 11:01:16 +0800
+Message-ID: <e740557e2b2a45a0ef480d362a393132ec0fa685.1606272852.git.geliangtang@gmail.com>
+In-Reply-To: b04b5fa61f8b4e662ddd67208416b5473602a928.1606272852.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6915
+X-UID: 6916
 
---===============2019015644248132691==
+--===============4503364411167079212==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the mibs for ADD_ADDR with port:
+This patch added testcases for ADD_ADDR with port and the related MIB count=
+ers
+check in chk_add_nr. The output looks like this:
 
-MPTCP_MIB_PORTADD for receiving of the ADD_ADDR suboption with a port
-number. MPTCP_MIB_PORTSYNRX, MPTCP_MIB_PORTSYNACKRX, MPTCP_MIB_PORTACKRX,
-for receiving of the MP_JOIN's SYN or SYN/ACK or ACK with a port number
-which is different from the msk's port number.
+ 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+ 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+ 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       rm [ ok ] - sf    [ ok ]
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/mib.c     | 4 ++++
- net/mptcp/mib.h     | 4 ++++
- net/mptcp/options.c | 4 ++++
- net/mptcp/subflow.c | 3 +++
- 4 files changed, 15 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 114 +++++++++++++++++-
+ 1 file changed, 113 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 84d119436b22..5e8f7827cfe0 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -29,6 +29,10 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
- 	SNMP_MIB_ITEM("DuplicateData", MPTCP_MIB_DUPDATA),
- 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
- 	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
-+	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
-+	SNMP_MIB_ITEM("PortSynRx", MPTCP_MIB_PORTSYNRX),
-+	SNMP_MIB_ITEM("PortSynAckRx", MPTCP_MIB_PORTSYNACKRX),
-+	SNMP_MIB_ITEM("PortAckRx", MPTCP_MIB_PORTACKRX),
- 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
- 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
- 	SNMP_MIB_SENTINEL
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 47bcecce1106..b762941d492f 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -22,6 +22,10 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_DUPDATA,		/* Segments discarded due to duplicate DSS */
- 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=3D0 */
- 	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=3D1 */
-+	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with port */
-+	MPTCP_MIB_PORTSYNRX,		/* Received a SYN + MP_JOIN with port */
-+	MPTCP_MIB_PORTSYNACKRX,		/* Received a SYN/ACK + MP_JOIN with port */
-+	MPTCP_MIB_PORTACKRX,		/* Received an ACK + MP_JOIN with port */
- 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
- 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
- 	__MPTCP_MIB_MAX
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index d1b4c5d208a9..9db824b1ed33 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -959,6 +959,10 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
-_buff *skb)
- 			mptcp_pm_del_add_timer(msk, &addr);
- 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
- 		}
-+
-+		if (mp_opt.port)
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_PORTADD);
-+
- 		mp_opt.add_addr =3D 0;
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 0eae628d1ffd..10d702a1e5d3 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -429,6 +429,10 @@ chk_add_nr()
+ {
+ 	local add_nr=3D$1
+ 	local echo_nr=3D$2
++	local port_nr=3D${3:-0}
++	local syn_nr=3D${4:-$port_nr}
++	local syn_ack_nr=3D${5:-$port_nr}
++	local ack_nr=3D${6:-$port_nr}
+ 	local count
+ 	local dump_stats
  =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index cb72327c006a..6193e53d4af1 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -196,6 +196,7 @@ static void subflow_init_req(struct request_sock *req,
- 				subflow_req->mp_join =3D 0;
- 				return;
- 			}
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_PORTSYNRX);
- 		}
- 	}
- }
-@@ -374,6 +375,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 			pr_debug("synack inet_dport=3D%d %d",
- 				 ntohs(inet_sk(sk)->inet_dport),
- 				 ntohs(inet_sk(parent)->inet_dport));
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_PORTSYNACKRX);
- 		}
- 	} else if (mptcp_check_fallback(sk)) {
- fallback:
-@@ -644,6 +646,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
- 				if (!mptcp_pm_sport_in_anno_list(owner, sk))
- 					goto out;
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_PORTACKRX);
- 			}
- 		}
- 	}
+@@ -451,7 +455,55 @@ chk_add_nr()
+ 		ret=3D1
+ 		dump_stats=3D1
+ 	else
+-		echo "[ ok ]"
++		echo -n "[ ok ]"
++	fi
++
++	if [ $port_nr -gt 0 ]; then
++		echo -n " - pt "
++		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{pri=
+nt $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$port_nr" ]; then
++			echo "[fail] got $count ADD_ADDR[s] with port expected $port_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++
++		printf "%-39s %s" " " "syn"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtPortSynRx | awk '{p=
+rint $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$syn_nr" ]; then
++			echo "[fail] got $count JOIN[s] syn with port expected $syn_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - synack"
++		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortSynAckRx | awk =
+'{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$syn_ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] synack with port expected $syn_ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - ack"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtPortAckRx | awk '{p=
+rint $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] ack with port expected $ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++	else
++		echo ""
+ 	fi
+ =
+
+ 	if [ "${dump_stats}" =3D 1 ]; then
+@@ -717,6 +769,66 @@ chk_join_nr "remove subflow and signal IPv6" 2 2 2
+ chk_add_nr 1 1
+ chk_rm_nr 1 1
+ =
+
++# signal address with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "signal address with port" 1 1 1
++chk_add_nr 1 1 1
++
++# subflow and signal with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "subflow and signal with port" 2 2 2
++chk_add_nr 1 1 1
++
++# single address with port, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
++chk_join_nr "remove single address with port" 1 1 1
++chk_add_nr 1 1 1
++chk_rm_nr 0 0
++
++# subflow and signal with port, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 0 1 1 slow
++chk_join_nr "remove subflow and signal with port" 2 2 2
++chk_add_nr 1 1 1
++chk_rm_nr 1 1
++
++# multiple addresses with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple addresses with port" 2 2 2
++chk_add_nr 2 2 2
++
++# multiple addresses with ports
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10101
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple addresses with ports" 2 2 2
++chk_add_nr 2 2 2
++
+ # single subflow, syncookies
+ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.26.2
 
---===============2019015644248132691==--
+--===============4503364411167079212==--
