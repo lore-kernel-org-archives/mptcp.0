@@ -1,118 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============2194224675193556012=="
+Content-Type: multipart/mixed; boundary="===============8604933919259501516=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 1/9] mptcp: create the
- listening socket for new port
-Date: Wed, 25 Nov 2020 10:15:46 +0100
-Message-ID: <873036d6d8e44f56e9062f7320dac1fa150811b7.camel@redhat.com>
-In-Reply-To: 74db8aa5673425f6c9cba9a1be138485b8eaa1c0.1606272852.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 2/9] mptcp: set the listening
+ socket's subflow
+Date: Wed, 25 Nov 2020 10:24:56 +0100
+Message-ID: <f011270ffb2897b12632af508b6d0db6c3be28f4.camel@redhat.com>
+In-Reply-To: a9094a27297f9782b7bf8063e9f41a0eb3a81871.1606272852.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6920
+X-UID: 6921
 
---===============2194224675193556012==
+--===============8604933919259501516==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, 2020-11-25 at 11:01 +0800, Geliang Tang wrote:
-> This patch created a listening socket when a address with a port number
-> is added by PM netlink. Then binded the new port to the socket, and
-> listened for the connection.
+> This patch set the subflow context of the listening socket.
 > =
 
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
->  net/mptcp/pm_netlink.c | 41 +++++++++++++++++++++++++++++++++++++++++
->  net/mptcp/protocol.h   |  2 ++
->  net/mptcp/subflow.c    |  4 ++--
->  3 files changed, 45 insertions(+), 2 deletions(-)
+>  net/mptcp/pm_netlink.c |  5 +++++
+>  net/mptcp/protocol.h   |  1 +
+>  net/mptcp/subflow.c    | 37 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 43 insertions(+)
 > =
 
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 2560c502356b..0d9a3c77fdf1 100644
+> index 0d9a3c77fdf1..39a91fcac403 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -26,6 +26,7 @@ struct mptcp_pm_addr_entry {
->  	struct list_head	list;
->  	struct mptcp_addr_info	addr;
->  	struct rcu_head		rcu;
-> +	struct socket		*lsk;
->  };
+> @@ -330,6 +330,11 @@ static void mptcp_pm_create_subflow_or_signal_addr(s=
+truct mptcp_sock *msk)
+>  			if (mptcp_pm_alloc_anno_list(msk, local)) {
+>  				msk->pm.add_addr_signaled++;
+>  				mptcp_pm_announce_addr(msk, &local->addr, false, local->addr.port);
+> +				if (local->addr.port) {
+> +					spin_unlock_bh(&msk->pm.lock);
+> +					mptcp_pm_set_listen_socket_subflow(sk, local->lsk);
+
+Why it's needed to this at announce time? Why not at lsk creation time?
+Probably more related to the previous patch, why lsk is TCP socket
+instead of an MPTCP one? (I feel the latter would be a more natural
+choice, but it's just a feeling).
+
+> +					spin_lock_bh(&msk->pm.lock);
+> +				}
+>  				mptcp_pm_nl_add_addr_send_ack(msk);
+>  			}
+>  		} else {
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index f202e22058b5..38001b7b0bf6 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -469,6 +469,7 @@ int __mptcp_subflow_connect(struct sock *sk, const st=
+ruct mptcp_addr_info *loc,
+>  int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_soc=
+k);
+>  void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+>  			 struct sockaddr_storage *addr);
+> +int mptcp_pm_set_listen_socket_subflow(struct sock *sk, struct socket *s=
+f);
 >  =
 
->  struct mptcp_pm_add_entry {
-> @@ -732,6 +733,43 @@ static struct pm_nl_pernet *genl_info_pm_nl(struct g=
-enl_info *info)
->  	return net_generic(genl_info_net(info), pm_nl_pernet_id);
+>  static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+>  					      struct mptcp_subflow_context *ctx)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index d4c136f1e754..6053a88c176f 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1208,6 +1208,43 @@ int mptcp_subflow_create_socket(struct sock *sk, s=
+truct socket **new_sock)
+>  	return 0;
 >  }
 >  =
 
-> +static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
-> +					    struct mptcp_pm_addr_entry *entry)
+> +int mptcp_pm_set_listen_socket_subflow(struct sock *sk, struct socket *s=
+f)
 > +{
-> +	struct sockaddr_storage addr;
-> +	int backlog =3D 20;
+> +	struct mptcp_subflow_context *subflow;
+> +	struct net *net =3D sock_net(sk);
 > +	int err;
 > +
-> +	err =3D sock_create_kern(sock_net(sk), entry->addr.family,
-> +			       SOCK_STREAM, IPPROTO_TCP,
-> +			       &entry->lsk);
-> +	if (err)
-> +		return err;
+> +	if (!sf)
+> +		return -EINVAL;
 > +
-> +	SOCK_INODE(entry->lsk)->i_uid =3D GLOBAL_ROOT_UID;
-> +	SOCK_INODE(entry->lsk)->i_gid =3D GLOBAL_ROOT_GID;
+> +	lock_sock(sf->sk);
 > +
-> +	mptcp_info2sockaddr(&entry->addr, &addr);
-> +	err =3D kernel_bind(entry->lsk, (struct sockaddr *)&addr,
-> +			  sizeof(struct sockaddr_in));
-> +	if (err) {
-> +		pr_warn("kernel_bind error, err=3D%d", err);
-> +		goto out;
-> +	}
-> +
-> +	err =3D kernel_listen(entry->lsk, backlog);
-> +	if (err) {
-> +		pr_warn("kernel_listen error, err=3D%d", err);
-> +		goto out;
-> +	}
-> +
-> +	return 0;
-> +
-> +out:
-> +	sock_release(entry->lsk);
-> +	return err;
-> +}
-> +
->  static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *=
-info)
->  {
->  	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
-> @@ -757,6 +795,9 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb,=
- struct genl_info *info)
->  		return ret;
->  	}
->  =
+> +	mptcp_attach_cgroup(sk, sf->sk);
 
-> +	if (entry->addr.port)
-> +		mptcp_pm_nl_create_listen_socket(skb->sk, entry);
+This will likely not work if there are multiple MPTCP sockets using
+this endpoint.
 
-This should be invoked before
-calling mptcp_pm_nl_append_new_local_addr(), in case of
-error mptcp_nl_cmd_add_addr() should fail and the error code should be
-returned to the caller.
+Possibly the cgroup attaching should be done at subflow_syn_recv_sock()
+time, for the child socket, with some custom code - because it must
+override the existing cgroup inherited from the listener.
 
-Moreover, if mptcp_pm_nl_append_new_local_addr() later fails, we should
-dispose the listener socket, if present.
+/P
 
-Also is likely better squash patch 3/9 here, so that after this patch
-we don't leak the listener socket on endpoint deletion (for a couple of
-patches only).
-
-Cheers,
-
-Paolo
-
---===============2194224675193556012==--
+--===============8604933919259501516==--
