@@ -1,36 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============2758485177652066353=="
+Content-Type: multipart/mixed; boundary="===============5822664081251933554=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 8/9] mptcp: add the mibs for
- ADD_ADDR with port
-Date: Wed, 25 Nov 2020 13:15:19 +0100
-Message-ID: <69a4e888a57afadbbf5d79faf623ebfbdb9d4666.camel@redhat.com>
-In-Reply-To: 4d94e1a6-d54a-04c5-d738-8f25716ab566@tessares.net
+Subject: [MPTCP] [PATCH mptcp-next 0/3] mptcp: add fastclose option
+Date: Wed, 25 Nov 2020 18:49:53 +0100
+Message-ID: <20201125174956.9222-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 6930
+X-UID: 6931
 
---===============2758485177652066353==
+--===============5822664081251933554==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-11-25 at 11:31 +0100, Matthieu Baerts wrote:
-> I think it is not a bad thing to have these new counters :)
-> But maybe we should prefix the PORTSYN/SYNACK/ACK ones with JOIN? (e.g. =
+This series adds receive side support for fastclose processing.
+First patch is needed to avoid UAF after enabling option processing
+for tcp resets. Second patch calls mptcp option parsing also for
+reset patckets so fastclose-on-tcp-reset is handled.
 
-> MPTCP_MIB_JOINPORTSYNRX and MPJoinPortSynRx ; or with "Port" at the end)
-> It is still an MP_JOIN we receive but to a different port.
-> =
+Last patch adds fastclose handling.
 
-> Do you mean we might not need them?
+I've submitted a pull request vs. packetdrill to add test cases for
+this: https://github.com/multipath-tcp/packetdrill/pull/25
 
-No, I agree we need them. I was looking for uniform naming and/or
-collected events.
+Those are the three test cases i posted earlier to this list plus
+a 4th test to also cover the 'two subflows closed via fastclose+reset' case.
 
-Cheers,
+I would send the fastclose tx side next.
 
-Paolo
+I plan to hold the MPTCP reset patches back for the time being until
+netlink + mptcpd are aware of its existence.
 
---===============2758485177652066353==--
+ include/net/tcp.h        |    2 +-
+ net/ipv4/tcp_input.c     |   13 ++++++++-----
+ net/ipv4/tcp_minisocks.c |    2 +-
+ net/mptcp/options.c      |   15 +++++++++++++++
+ net/mptcp/protocol.c     |   33 +++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h     |    4 ++++
+ net/mptcp/subflow.c      |    7 ++++++-
+ 7 files changed, 68 insertions(+), 8 deletions(-)
+
+--===============5822664081251933554==--
