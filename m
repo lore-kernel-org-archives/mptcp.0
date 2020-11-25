@@ -1,135 +1,116 @@
-Content-Type: multipart/mixed; boundary="===============4369826612691740510=="
+Content-Type: multipart/mixed; boundary="===============7534506881291690226=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 3/9] mptcp: release the listening
- socket
-Date: Wed, 25 Nov 2020 11:01:10 +0800
-Message-ID: <97eb2990741ef64d6a83232fec404308ed6111b0.1606272852.git.geliangtang@gmail.com>
-In-Reply-To: a9094a27297f9782b7bf8063e9f41a0eb3a81871.1606272852.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 4/9] mptcp: add port number check
+ for MP_JOIN
+Date: Wed, 25 Nov 2020 11:01:11 +0800
+Message-ID: <6cc383068bf2f579da75aec2b54ab3634898c101.1606272852.git.geliangtang@gmail.com>
+In-Reply-To: 97eb2990741ef64d6a83232fec404308ed6111b0.1606272852.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6910
+X-UID: 6911
 
---===============4369826612691740510==
+--===============7534506881291690226==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch releases the listening socket when the address is removed or
-the addresses are flushed by PM netlink.
+This patch added two new helpers, subflow_use_different_sport and
+subflow_use_different_dport, to check whether the subflow's source or
+destination port number is different from the msk's port number. When
+we received the MP_JOIN's SYN/SYNACK/ACK, we do these port number
+checks and print out the different port numbers.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 22 +++++++++++++++++-----
- net/mptcp/protocol.h   |  1 +
- net/mptcp/subflow.c    |  2 +-
- 3 files changed, 19 insertions(+), 6 deletions(-)
+ net/mptcp/subflow.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 39a91fcac403..2b4e7b077bc9 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -908,18 +908,26 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
- struct genl_info *info)
- 	spin_unlock_bh(&pernet->lock);
- =
-
- 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
-+	if (entry->lsk) {
-+		subflow_drop_ctx(entry->lsk->sk);
-+		sock_release(entry->lsk);
-+	}
- 	kfree_rcu(entry, rcu);
- =
-
- 	return ret;
- }
- =
-
--static void __flush_addrs(struct pm_nl_pernet *pernet)
-+static void __flush_addrs(struct list_head *list)
- {
--	while (!list_empty(&pernet->local_addr_list)) {
-+	while (!list_empty(list)) {
- 		struct mptcp_pm_addr_entry *cur;
- =
-
--		cur =3D list_entry(pernet->local_addr_list.next,
-+		cur =3D list_entry(list->next,
- 				 struct mptcp_pm_addr_entry, list);
-+		if (cur->lsk) {
-+			subflow_drop_ctx(cur->lsk->sk);
-+			sock_release(cur->lsk);
-+		}
- 		list_del_rcu(&cur->list);
- 		kfree_rcu(cur, rcu);
- 	}
-@@ -936,11 +944,13 @@ static void __reset_counters(struct pm_nl_pernet *per=
-net)
- static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info =
-*info)
- {
- 	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
-+	LIST_HEAD(free_list);
- =
-
- 	spin_lock_bh(&pernet->lock);
--	__flush_addrs(pernet);
-+	list_splice_init(&pernet->local_addr_list, &free_list);
- 	__reset_counters(pernet);
- 	spin_unlock_bh(&pernet->lock);
-+	__flush_addrs(&free_list);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 9a8341eb7a4d..233ec36aa704 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -112,6 +112,11 @@ static int __subflow_init_req(struct request_sock *req=
+, const struct sock *sk_li
  	return 0;
  }
  =
 
-@@ -1202,10 +1212,12 @@ static void __net_exit pm_nl_exit_net(struct list_h=
-ead *net_list)
- 	struct net *net;
++static bool subflow_use_different_sport(struct mptcp_sock *msk, const stru=
+ct sock *sk)
++{
++	return inet_sk(sk)->inet_sport !=3D inet_sk((struct sock *)msk)->inet_spo=
+rt;
++}
++
+ static void subflow_init_req(struct request_sock *req,
+ 			     const struct sock *sk_listener,
+ 			     struct sk_buff *skb)
+@@ -182,6 +187,12 @@ static void subflow_init_req(struct request_sock *req,
  =
 
- 	list_for_each_entry(net, net_list, exit_list) {
-+		struct pm_nl_pernet *pernet =3D net_generic(net, pm_nl_pernet_id);
+ 		pr_debug("token=3D%u, remote_nonce=3D%u msk=3D%p", subflow_req->token,
+ 			 subflow_req->remote_nonce, subflow_req->msk);
 +
- 		/* net is removed from namespace list, can't race with
- 		 * other modifiers
- 		 */
--		__flush_addrs(net_generic(net, pm_nl_pernet_id));
-+		__flush_addrs(&pernet->local_addr_list);
++		if (subflow_use_different_sport(subflow_req->msk, sk_listener)) {
++			pr_debug("syn inet_sport=3D%d %d",
++				 ntohs(inet_sk(sk_listener)->inet_sport),
++				 ntohs(inet_sk((struct sock *)subflow_req->msk)->inet_sport));
++		}
  	}
  }
  =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 38001b7b0bf6..adf5944ec5c4 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -456,6 +456,7 @@ int mptcp_is_enabled(struct net *net);
- unsigned int mptcp_get_add_addr_timeout(struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
-+void subflow_drop_ctx(struct sock *ssk);
- bool mptcp_subflow_data_available(struct sock *sk);
- void __init mptcp_subflow_init(void);
- void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6053a88c176f..9a8341eb7a4d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -468,7 +468,7 @@ static void subflow_ulp_fallback(struct sock *sk,
- 	tcp_sk(sk)->is_mptcp =3D 0;
+@@ -284,6 +295,11 @@ void mptcp_subflow_reset(struct sock *ssk)
+ 		sock_hold(sk);
  }
  =
 
--static void subflow_drop_ctx(struct sock *ssk)
-+void subflow_drop_ctx(struct sock *ssk)
++static bool subflow_use_different_dport(struct mptcp_sock *msk, const stru=
+ct sock *sk)
++{
++	return inet_sk(sk)->inet_dport !=3D inet_sk((struct sock *)msk)->inet_dpo=
+rt;
++}
++
+ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
+skb)
  {
- 	struct mptcp_subflow_context *ctx =3D mptcp_subflow_ctx(ssk);
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+@@ -349,6 +365,12 @@ static void subflow_finish_connect(struct sock *sk, co=
+nst struct sk_buff *skb)
+ =
+
+ 		subflow->mp_join =3D 1;
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
++
++		if (subflow_use_different_dport(mptcp_sk(parent), sk)) {
++			pr_debug("synack inet_dport=3D%d %d",
++				 ntohs(inet_sk(sk)->inet_dport),
++				 ntohs(inet_sk(parent)->inet_dport));
++		}
+ 	} else if (mptcp_check_fallback(sk)) {
+ fallback:
+ 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+@@ -611,6 +633,12 @@ static struct sock *subflow_syn_recv_sock(const struct=
+ sock *sk,
+ =
+
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+ 			tcp_rsk(req)->drop_req =3D true;
++
++			if (subflow_use_different_sport(owner, sk)) {
++				pr_debug("ack inet_sport=3D%d %d",
++					 ntohs(inet_sk(sk)->inet_sport),
++					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
++			}
+ 		}
+ 	}
  =
 
 -- =
 
 2.26.2
 
---===============4369826612691740510==--
+--===============7534506881291690226==--
