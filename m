@@ -1,44 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============5822664081251933554=="
+Content-Type: multipart/mixed; boundary="===============1322525854963042446=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 0/3] mptcp: add fastclose option
-Date: Wed, 25 Nov 2020 18:49:53 +0100
-Message-ID: <20201125174956.9222-1-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 1/3] mptcp: hold mptcp socket before
+ calling tcp_done
+Date: Wed, 25 Nov 2020 18:49:54 +0100
+Message-ID: <20201125174956.9222-2-fw@strlen.de>
+In-Reply-To: 20201125174956.9222-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 6931
+X-UID: 6932
 
---===============5822664081251933554==
+--===============1322525854963042446==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series adds receive side support for fastclose processing.
-First patch is needed to avoid UAF after enabling option processing
-for tcp resets. Second patch calls mptcp option parsing also for
-reset patckets so fastclose-on-tcp-reset is handled.
+When processing options from tcp reset path its possible that
+tcp_done(ssk) drops the last reference on the mptcp socket which
+results in use-after-free.
 
-Last patch adds fastclose handling.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/subflow.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-I've submitted a pull request vs. packetdrill to add test cases for
-this: https://github.com/multipath-tcp/packetdrill/pull/25
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b6cd42649e5d..ca8db7ae51f0 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -276,12 +276,17 @@ void mptcp_subflow_reset(struct sock *ssk)
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+ 	struct sock *sk =3D subflow->conn;
+ =
 
-Those are the three test cases i posted earlier to this list plus
-a 4th test to also cover the 'two subflows closed via fastclose+reset' case.
++	/* must hold: tcp_done() could drop last reference on parent */
++	sock_hold(sk);
++
+ 	tcp_set_state(ssk, TCP_CLOSE);
+ 	tcp_send_active_reset(ssk, GFP_ATOMIC);
+ 	tcp_done(ssk);
+ 	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags) &&
+ 	    schedule_work(&mptcp_sk(sk)->work))
+-		sock_hold(sk);
++		return; /* worker will put sk for us */
++
++	sock_put(sk);
+ }
+ =
 
-I would send the fastclose tx side next.
+ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *=
+skb)
+-- =
 
-I plan to hold the MPTCP reset patches back for the time being until
-netlink + mptcpd are aware of its existence.
+2.26.2
 
- include/net/tcp.h        |    2 +-
- net/ipv4/tcp_input.c     |   13 ++++++++-----
- net/ipv4/tcp_minisocks.c |    2 +-
- net/mptcp/options.c      |   15 +++++++++++++++
- net/mptcp/protocol.c     |   33 +++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h     |    4 ++++
- net/mptcp/subflow.c      |    7 ++++++-
- 7 files changed, 68 insertions(+), 8 deletions(-)
-
---===============5822664081251933554==--
+--===============1322525854963042446==--
