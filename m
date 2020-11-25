@@ -1,160 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============3502918152997385904=="
+Content-Type: multipart/mixed; boundary="===============4108026670399982292=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2] mptcp: be careful on MPTCP-level ack.
-Date: Tue, 24 Nov 2020 22:51:24 +0100
-Message-ID: <5370c0ae03449239e3d1674ddcfb090cf6f20abe.1606253206.git.pabeni@redhat.com>
+Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 0/9] ADD_ADDR: ports support
+Date: Wed, 25 Nov 2020 11:01:07 +0800
+Message-ID: <cover.1606272852.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6906
+X-UID: 6907
 
---===============3502918152997385904==
+--===============4108026670399982292==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We can enter the main mptcp_recvmsg() loop even when
-no subflows are connected. As note by Eric, that would
-result in a divide by zero oops on ack generation.
+v6:
+ - create and bind the listening socket in mptcp_nl_cmd_add_addr.
+ - drop the patch "mptcp: add port number listened in kernel check" in
+   v5.
 
-Address the issue by checking the subflow status before
-sending the ack.
+v5:
+ - use the per netns listening socket.
+ - First 8 patches in v4 had been merged to the export branch, drop them
+   from this patchset.
 
-Additionally protect mptcp_recvmsg() against invocation
-with weird socket states.
+v4:
+ - hold msk->pm.lock in mptcp_pm_sport_in_anno_list.
+ - Merge the patchset 'Squash to "ADD_ADDR: ports support v3"' into v4.
 
-v1 -> v2:
- - removed unneeded inline keyword - Jakub
+v3:
+ - add two new patches, 8 and 11
+ - add more IS_ENABLED(CONFIG_MPTCP_IPV6) in patch 2
+ - define TCPOLEN_MPTCP_ADD_ADDR_HMAC in patch 4
+ - add flags check in patch 10
+ - update the testcases
 
-Reported-and-suggested-by: Eric Dumazet <eric.dumazet(a)gmail.com>
-Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 67 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 49 insertions(+), 18 deletions(-)
+v2:
+ - change mptcp_out_options's port field in CPU bype order.
+ - keep mptcp_options_received's port field in CPU bype order.
+ - add two new patches to simplify ADD_ADDR suboption writing.
+ - update mptcp_add_addr_len helper use adding up size.
+ - add more commit messages.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4b7794835fea..371a5e691a9a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -419,31 +419,57 @@ static bool mptcp_subflow_active(struct mptcp_subflow=
-_context *subflow)
- 	return ((1 << ssk->sk_state) & (TCPF_ESTABLISHED | TCPF_CLOSE_WAIT));
- }
- =
+v1:
+ This series is the first version of ADD_ADDR ports support. I have solved
+ the listener problem which I mentioned at the meeting on 15th of October
+ by adding a new listening socket from the userspace (see patch 8). Up to
+ now this patchset works well.
 
--static void mptcp_send_ack(struct mptcp_sock *msk, bool force)
-+static bool tcp_can_send_ack(const struct sock *ssk)
-+{
-+	return !((1 << inet_sk_state_load(ssk)) &
-+	       (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_TIME_WAIT | TCPF_CLOSE));
-+}
-+
-+static void mptcp_send_ack(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
--	struct sock *pick =3D NULL;
- =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
- =
+Geliang Tang (9):
+  mptcp: create the listening socket for new port
+  mptcp: set the listening socket's subflow
+  mptcp: release the listening socket
+  mptcp: add port number check for MP_JOIN
+  mptcp: add port number announced check
+  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+  selftests: mptcp: add port argument for pm_nl_ctl
+  mptcp: add the mibs for ADD_ADDR with port
+  selftests: mptcp: add testcases for ADD_ADDR with port
 
--		if (force) {
--			lock_sock(ssk);
-+		lock_sock(ssk);
-+		if (tcp_can_send_ack(ssk))
- 			tcp_send_ack(ssk);
--			release_sock(ssk);
--			continue;
--		}
--
--		/* if the hintes ssk is still active, use it */
--		pick =3D ssk;
--		if (ssk =3D=3D msk->ack_hint)
--			break;
-+		release_sock(ssk);
- 	}
--	if (!force && pick) {
--		lock_sock(pick);
--		tcp_cleanup_rbuf(pick, 1);
--		release_sock(pick);
-+}
-+
-+static bool mptcp_subflow_cleanup_rbuf(struct sock *ssk)
-+{
-+	int ret;
-+
-+	lock_sock(ssk);
-+	ret =3D tcp_can_send_ack(ssk);
-+	if (ret)
-+		tcp_cleanup_rbuf(ssk, 1);
-+	release_sock(ssk);
-+	return ret;
-+}
-+
-+static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+
-+	/* if the hinted ssk is still active, try to use it */
-+	if (likely(msk->ack_hint)) {
-+		mptcp_for_each_subflow(msk, subflow) {
-+			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+			if (msk->ack_hint =3D=3D ssk &&
-+			    mptcp_subflow_cleanup_rbuf(ssk))
-+				return;
-+		}
- 	}
-+
-+	/* otherwise pick the first active subflow */
-+	mptcp_for_each_subflow(msk, subflow)
-+		if (mptcp_subflow_cleanup_rbuf(mptcp_subflow_tcp_sock(subflow)))
-+			return;
- }
- =
+ net/mptcp/mib.c                               |   4 +
+ net/mptcp/mib.h                               |   4 +
+ net/mptcp/options.c                           |   4 +
+ net/mptcp/pm_netlink.c                        |  91 +++++++++++++-
+ net/mptcp/protocol.h                          |   5 +
+ net/mptcp/subflow.c                           |  80 +++++++++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 114 +++++++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  24 +++-
+ 8 files changed, 315 insertions(+), 11 deletions(-)
 
- static bool mptcp_check_data_fin(struct sock *sk)
-@@ -494,7 +520,7 @@ static bool mptcp_check_data_fin(struct sock *sk)
- =
-
- 		ret =3D true;
- 		mptcp_set_timeout(sk, NULL);
--		mptcp_send_ack(msk, true);
-+		mptcp_send_ack(msk);
- 		mptcp_close_wake_up(sk);
- 	}
- 	return ret;
-@@ -1579,6 +1605,11 @@ static int mptcp_recvmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len,
- 		return -EOPNOTSUPP;
- =
-
- 	lock_sock(sk);
-+	if (unlikely(sk->sk_state =3D=3D TCP_LISTEN)) {
-+		copied =3D -ENOTCONN;
-+		goto out_err;
-+	}
-+
- 	timeo =3D sock_rcvtimeo(sk, nonblock);
- =
-
- 	len =3D min_t(size_t, len, INT_MAX);
-@@ -1604,7 +1635,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len,
- 		/* be sure to advertise window change */
- 		old_space =3D READ_ONCE(msk->old_wspace);
- 		if ((tcp_space(sk) - old_space) >=3D old_space)
--			mptcp_send_ack(msk, false);
-+			mptcp_cleanup_rbuf(msk);
- =
-
- 		/* only the master socket status is relevant here. The exit
- 		 * conditions mirror closely tcp_recvmsg()
 -- =
 
 2.26.2
 
---===============3502918152997385904==--
+--===============4108026670399982292==--
