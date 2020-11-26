@@ -1,49 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============0901622004523701749=="
+Content-Type: multipart/mixed; boundary="===============9113971942577319768=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 0/2] drop rm_addr_signal flag
- and more
-Date: Thu, 26 Nov 2020 12:32:55 +0100
-Message-ID: <8bdbfddd-1524-463b-42f0-20fdb44026a4@tessares.net>
-In-Reply-To: CA+WQbwsvcF+80kw6R4FTskw_kdQfyby1tXm1wntHgM_XXrw4xA@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix NULL ptr dereference on bad MPJ
+Date: Thu, 26 Nov 2020 12:42:46 +0100
+Message-ID: <c0cb62594231f5b38fc4c4a92a34d035a5c40356.camel@redhat.com>
+In-Reply-To: 7245da72fb7b1936b2c872c8a8c465012763ed17.1606385694.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6949
+X-UID: 6950
 
---===============0901622004523701749==
+--===============9113971942577319768==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
-
-On 26/11/2020 04:02, Geliang Tang wrote:
-> Hi Matt,
+On Thu, 2020-11-26 at 11:15 +0100, Paolo Abeni wrote:
+> If an msk listener receives an MPJ carrying an invalid token, it
+> will zero the request socket msk entry. That should later
+> cause fallback and subflow reset - as per RFC - at
+> subflow_syn_recv_sock() time due to failing hmac validation.
 > =
 
-> The two patches of v4 are all reviewed by Mat, please help me to merge th=
-em
-> into the export breach with Mat's Reviewed-by tags.
+> Since commit 4cf8b7e48a09 ("subflow: introduce and use
+> mptcp_can_accept_new_subflow()"), we unconditionally dereference
+> - in mptcp_can_accept_new_subflow - the subflow request msk
+> before performing hmac validation. In the above scenario we
+> hit a NULL ptr dereference.
+> =
 
-Thank you for the email, I marked these two patches for me to apply them =
+> Address the issue doing the hmac validation earlier.
+> =
 
-but I forgot to do that this week :)
+> Fixes: 4cf8b7e48a09 ("subflow: introduce and use mptcp_can_accept_new_sub=
+flow()")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-Now done, both have been applied after the other patches you have in the =
+kernel does not crash anymore. It still sends a 0 HMAC, and resets the
+connection after the 3WHS - see https://paste.centos.org/view/d962741c
+(not sure if it's RFC compliant, but for sure it fixes the issue :) )
 
-export branch with Mat's RvB tag!
+Tested-by: Davide Caratti <dcaratti(a)redhat.com>
 
-- effe9d9ec74c: mptcp: drop rm_addr_signal flag
-- 32d22f01564e: mptcp: rename add_addr_signal and mptcp_add_addr_status
-- Results: aad014029dd8..9e11c1d2b8db
 
-Tests + export have been queued.
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0901622004523701749==--
+--===============9113971942577319768==--
