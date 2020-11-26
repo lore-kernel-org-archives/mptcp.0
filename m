@@ -1,46 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============9113971942577319768=="
+Content-Type: multipart/mixed; boundary="===============0915331803546709744=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: fix NULL ptr dereference on bad MPJ
-Date: Thu, 26 Nov 2020 12:42:46 +0100
-Message-ID: <c0cb62594231f5b38fc4c4a92a34d035a5c40356.camel@redhat.com>
-In-Reply-To: 7245da72fb7b1936b2c872c8a8c465012763ed17.1606385694.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH net] mptcp: fix NULL ptr dereference on bad MPJ
+Date: Thu, 26 Nov 2020 15:17:53 +0100
+Message-ID: <03b2cfa3ac80d8fc18272edc6442a9ddf0b1e34e.1606400227.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6950
+X-UID: 6951
 
---===============9113971942577319768==
+--===============0915331803546709744==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2020-11-26 at 11:15 +0100, Paolo Abeni wrote:
-> If an msk listener receives an MPJ carrying an invalid token, it
-> will zero the request socket msk entry. That should later
-> cause fallback and subflow reset - as per RFC - at
-> subflow_syn_recv_sock() time due to failing hmac validation.
-> =
+If an msk listener receives an MPJ carrying an invalid token, it
+will zero the request socket msk entry. That should later
+cause fallback and subflow reset - as per RFC - at
+subflow_syn_recv_sock() time due to failing hmac validation.
 
-> Since commit 4cf8b7e48a09 ("subflow: introduce and use
-> mptcp_can_accept_new_subflow()"), we unconditionally dereference
-> - in mptcp_can_accept_new_subflow - the subflow request msk
-> before performing hmac validation. In the above scenario we
-> hit a NULL ptr dereference.
-> =
+Since commit 4cf8b7e48a09 ("subflow: introduce and use
+mptcp_can_accept_new_subflow()"), we unconditionally dereference
+- in mptcp_can_accept_new_subflow - the subflow request msk
+before performing hmac validation. In the above scenario we
+hit a NULL ptr dereference.
 
-> Address the issue doing the hmac validation earlier.
-> =
+Address the issue doing the hmac validation earlier.
 
-> Fixes: 4cf8b7e48a09 ("subflow: introduce and use mptcp_can_accept_new_sub=
-flow()")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-
-kernel does not crash anymore. It still sends a 0 HMAC, and resets the
-connection after the 3WHS - see https://paste.centos.org/view/d962741c
-(not sure if it's RFC compliant, but for sure it fixes the issue :) )
-
+Fixes: 4cf8b7e48a09 ("subflow: introduce and use mptcp_can_accept_new_subfl=
+ow()")
 Tested-by: Davide Caratti <dcaratti(a)redhat.com>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/subflow.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index ac4a1fe3550b..953906e40742 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -543,9 +543,8 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 			fallback =3D true;
+ 	} else if (subflow_req->mp_join) {
+ 		mptcp_get_options(skb, &mp_opt);
+-		if (!mp_opt.mp_join ||
+-		    !mptcp_can_accept_new_subflow(subflow_req->msk) ||
+-		    !subflow_hmac_valid(req, &mp_opt)) {
++		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
++		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+ 			fallback =3D true;
+ 		}
+-- =
 
---===============9113971942577319768==--
+2.26.2
+
+--===============0915331803546709744==--
