@@ -1,59 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============0915331803546709744=="
+Content-Type: multipart/mixed; boundary="===============4597471313761477178=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: fix NULL ptr dereference on bad MPJ
-Date: Thu, 26 Nov 2020 15:17:53 +0100
-Message-ID: <03b2cfa3ac80d8fc18272edc6442a9ddf0b1e34e.1606400227.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] mptcp: add fastclose option
+Date: Thu, 26 Nov 2020 15:35:03 +0100
+Message-ID: <36da4a96-332b-5d17-54c8-1e37b730af59@tessares.net>
+In-Reply-To: 20201125174956.9222-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 6951
+X-UID: 6952
 
---===============0915331803546709744==
+--===============4597471313761477178==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If an msk listener receives an MPJ carrying an invalid token, it
-will zero the request socket msk entry. That should later
-cause fallback and subflow reset - as per RFC - at
-subflow_syn_recv_sock() time due to failing hmac validation.
+Hi Florian,
 
-Since commit 4cf8b7e48a09 ("subflow: introduce and use
-mptcp_can_accept_new_subflow()"), we unconditionally dereference
-- in mptcp_can_accept_new_subflow - the subflow request msk
-before performing hmac validation. In the above scenario we
-hit a NULL ptr dereference.
+On 25/11/2020 18:49, Florian Westphal wrote:
+> This series adds receive side support for fastclose processing.
+> First patch is needed to avoid UAF after enabling option processing
+> for tcp resets. Second patch calls mptcp option parsing also for
+> reset patckets so fastclose-on-tcp-reset is handled.
+> =
 
-Address the issue doing the hmac validation earlier.
+> Last patch adds fastclose handling.
+> =
 
-Fixes: 4cf8b7e48a09 ("subflow: introduce and use mptcp_can_accept_new_subfl=
-ow()")
-Tested-by: Davide Caratti <dcaratti(a)redhat.com>
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/subflow.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> I've submitted a pull request vs. packetdrill to add test cases for
+> this: https://github.com/multipath-tcp/packetdrill/pull/25
+> =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index ac4a1fe3550b..953906e40742 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -543,9 +543,8 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 			fallback =3D true;
- 	} else if (subflow_req->mp_join) {
- 		mptcp_get_options(skb, &mp_opt);
--		if (!mp_opt.mp_join ||
--		    !mptcp_can_accept_new_subflow(subflow_req->msk) ||
--		    !subflow_hmac_valid(req, &mp_opt)) {
-+		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
-+		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
- 			fallback =3D true;
- 		}
+> Those are the three test cases i posted earlier to this list plus
+> a 4th test to also cover the 'two subflows closed via fastclose+reset' ca=
+se.
+> =
+
+> I would send the fastclose tx side next.
+
+Thank you for these patches, they are very good!
+
+Just added at the end of our tree with my Reviewed-by tag (there were =
+
+other reviewers on the previous patches, I can of course add more tags =
+
+if the new version is OK for others):
+
+- 6766eaff5c84: mptcp: hold mptcp socket before calling tcp_done
+- 37a53605cd6b: tcp: parse mptcp options contained in reset packets
+- 0b9d6f3f5a2b: mptcp: parse and act on incoming FASTCLOSE option
+- Results: 9e11c1d2b8db..ba6c5ecb4ea5
+
+Tests + export are in progress!
+
+> I plan to hold the MPTCP reset patches back for the time being until
+> netlink + mptcpd are aware of its existence.
+
+I certainly missed something here but are you here talking about =
+
+MP_TCPRST support? Or still about the send of fast-close?
+
+If it is about fast-close, why netlink + mptcpd needs to be aware first? =
+
+Could we eventually send fast-close when the userspace app (here using =
+
+packetdrill format) does this:
+
+     setsockopt(<fd>, SOL_SOCKET, SO_LINGER, {onoff=3D1, linger=3D0}, 8);
+     close(<fd>);
+
+(if we accept this socket option)
+No rush of course, just in case these patches were already written :)
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============0915331803546709744==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============4597471313761477178==--
