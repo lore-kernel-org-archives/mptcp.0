@@ -1,49 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============3432593467672107247=="
+Content-Type: multipart/mixed; boundary="===============7327218746180273260=="
 MIME-Version: 1.0
-From: Othman, Ossama <ossama.othman at intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Address ID assignment in netlink PM
-Date: Wed, 25 Nov 2020 21:48:22 +0000
-Message-ID: <e8943d8b731245c5952890dec805fa65@intel.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 0/2] drop rm_addr_signal flag
+ and more
+Date: Thu, 26 Nov 2020 11:02:38 +0800
+Message-ID: <CA+WQbwsvcF+80kw6R4FTskw_kdQfyby1tXm1wntHgM_XXrw4xA@mail.gmail.com>
+In-Reply-To: cover.1605866519.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6941
+X-UID: 6942
 
---===============3432593467672107247==
+--===============7327218746180273260==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Matt,
 
-While debugging a netlink PM "get addr" issue I was having in mptcpd I foun=
-d that the address ID assigned by mptcpd was being overridden by the kernel=
-.  Based on the code in pm_nl_ctl.c in the MPTCP self tests, and the code i=
-n pm_netlink.c in the kernel, the MPTCP_PM_CMD_ADD_ADDR command accepts an =
-optional address ID attribute.  When that attribute is available the ID is =
-stored in the corresponding mptcp_pm_addr_entry instance by mptcp_pm_parse_=
-addr():
+The two patches of v4 are all reviewed by Mat, please help me to merge them
+into the export breach with Mat's Reviewed-by tags.
 
-	if (tb[MPTCP_PM_ADDR_ATTR_ID])
-		entry->addr.id =3D nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
+Thanks.
 
-However, that value is later overridden in mptcp_pm_nl_append_new_local_add=
-r():
+-Geliang
 
-	entry->addr.id =3D pernet->next_id++;
+Geliang Tang <geliangtang(a)gmail.com> =E4=BA=8E2020=E5=B9=B411=E6=9C=8820=
+=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=886:06=E5=86=99=E9=81=93=EF=BC=
+=9A
 
-That causes the userspace to lose track of an address it added with a speci=
-fic ID, at which point the only way to find out the new ID is to dump the a=
-ddrs to find the new ID corresponding to local address in question.  Is thi=
-s the intended behavior?  It seems like userspace- and kernel-based address=
- ID assignment should be mutually exclusive.  Otherwise we run into this so=
-rt of scenario.  Is there a need for the kernel to assign IDs in the netlin=
-k PM case?
-
-Please let me know if I'm misunderstanding how ID assignment is expected to=
- work when using the netlink PM.
-
-Thanks for your help!
--Ossama
-
---===============3432593467672107247==--
+>
+> v4:
+>  - add the current add_addr/rm_addr value for pm_warn
+>
+> v3:
+>  - use pr_warn
+>
+> v2:
+>  - use pr_err instead of WARN_ON_ONCE
+>
+> Geliang Tang (2):
+>   mptcp: drop rm_addr_signal flag
+>   mptcp: rename add_addr_signal and mptcp_add_addr_status
+>
+>  net/mptcp/pm.c         | 26 +++++++++++++++++++-------
+>  net/mptcp/pm_netlink.c |  4 ++--
+>  net/mptcp/protocol.h   | 16 ++++++++--------
+>  3 files changed, 29 insertions(+), 17 deletions(-)
+>
+> --
+> 2.26.2
+>
+--===============7327218746180273260==--
