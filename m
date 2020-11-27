@@ -1,51 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============3130095681947092250=="
+Content-Type: multipart/mixed; boundary="===============3307099292250775200=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 0/6] mptcp: avoid workqueue usage for data
-Date: Fri, 27 Nov 2020 11:10:21 +0100
-Message-ID: <cover.1606413118.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 1/6] mptcp: open code mptcp variant for
+ lock_sock
+Date: Fri, 27 Nov 2020 11:10:22 +0100
+Message-ID: <fd92953c74dde2aa43d34fcdb681392f1a481d1a.1606413118.git.pabeni@redhat.com>
+In-Reply-To: cover.1606413118.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6959
+X-UID: 6960
 
---===============3130095681947092250==
+--===============3307099292250775200==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The current locking schema used to protect the MPTCP data-path
-requires the usage of the MPTCP workqueue to process the incoming
-data, depending on trylock result.
+This allows invoking an additional callback under the
+socket spin lock.
 
-The above poses scalability limits and introduces random delays
-in MPTCP-level acks.
+Will be used by the next patches to avoid additional
+spin lock contention.
 
-With this series we use a single spinlock to protect the MPTCP
-data-path, removing the need for workqueue and delayed ack usage.
+Acked-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ include/net/sock.h   |  1 +
+ net/core/sock.c      |  2 +-
+ net/mptcp/protocol.h | 13 +++++++++++++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-This additionally reduces the number of atomic operations required
-per packet and cleans-up considerably the poll/wake-up code.
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 80469c2c448d..f59764614e30 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1590,6 +1590,7 @@ static inline void lock_sock(struct sock *sk)
+ 	lock_sock_nested(sk, 0);
+ }
+ =
 
-Paolo Abeni (6):
-  mptcp: open code mptcp variant for lock_sock
-  mptcp: implement wmem reservation
-  mptcp: protect the rx path with the msk socket spinlock
-  mptcp: allocate TX skbs in msk context
-  mptcp: avoid a few atomic ops in the rx path
-  mptcp: use mptcp release_cb for delayed tasks
++void __lock_sock(struct sock *sk);
+ void __release_sock(struct sock *sk);
+ void release_sock(struct sock *sk);
+ =
 
- include/net/sock.h     |   1 +
- net/core/sock.c        |   2 +-
- net/mptcp/mptcp_diag.c |   2 +-
- net/mptcp/options.c    |  47 +--
- net/mptcp/protocol.c   | 733 ++++++++++++++++++++++++++++++-----------
- net/mptcp/protocol.h   |  34 +-
- net/mptcp/subflow.c    |  14 +-
- 7 files changed, 598 insertions(+), 235 deletions(-)
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 9badbe7bb4e4..f0f096852876 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2486,7 +2486,7 @@ bool sk_page_frag_refill(struct sock *sk, struct page=
+_frag *pfrag)
+ }
+ EXPORT_SYMBOL(sk_page_frag_refill);
+ =
+
+-static void __lock_sock(struct sock *sk)
++void __lock_sock(struct sock *sk)
+ 	__releases(&sk->sk_lock.slock)
+ 	__acquires(&sk->sk_lock.slock)
+ {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 82d5626323b1..6abac8238de3 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -253,6 +253,19 @@ struct mptcp_sock {
+ 	} rcvq_space;
+ };
+ =
+
++#define mptcp_lock_sock(___sk, cb) do {					\
++	struct sock *__sk =3D (___sk); /* silence macro reuse warning */	\
++	might_sleep();							\
++	spin_lock_bh(&__sk->sk_lock.slock);				\
++	if (__sk->sk_lock.owned)					\
++		__lock_sock(__sk);					\
++	cb;								\
++	__sk->sk_lock.owned =3D 1;					\
++	spin_unlock(&__sk->sk_lock.slock);				\
++	mutex_acquire(&__sk->sk_lock.dep_map, 0, 0, _RET_IP_);		\
++	local_bh_enable();						\
++} while (0)
++
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+ 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
+ =
 
 -- =
 
 2.26.2
 
---===============3130095681947092250==--
+--===============3307099292250775200==--
