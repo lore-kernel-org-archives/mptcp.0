@@ -1,77 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============1692484948986582689=="
+Content-Type: multipart/mixed; boundary="===============8389698827224588055=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Address ID assignment in netlink PM
-Date: Fri, 27 Nov 2020 17:18:23 +0100
-Message-ID: <2897e20eaa066829586e55846c96ab199bb1baa3.camel@redhat.com>
-In-Reply-To: e8943d8b731245c5952890dec805fa65@intel.com
+Subject: [MPTCP] force existing service to use MPTCP
+Date: Fri, 27 Nov 2020 19:43:36 +0100
+Message-ID: <d3a06454529b77757dc27b7157b3f55fee8f25b3.camel@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6966
+X-UID: 6967
 
---===============1692484948986582689==
+--===============8389698827224588055==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-11-25 at 21:48 +0000, Othman, Ossama wrote:
-> Hi Paolo,
-> =
+hello,
 
-> While debugging a netlink PM "get addr" issue I was having in mptcpd
-> I found that the address ID assigned by mptcpd was being overridden
-> by the kernel.  Based on the code in pm_nl_ctl.c in the MPTCP self
-> tests, and the code in pm_netlink.c in the kernel, the
-> MPTCP_PM_CMD_ADD_ADDR command accepts an optional address ID
-> attribute.  When that attribute is available the ID is stored in the
-> corresponding mptcp_pm_addr_entry instance by mptcp_pm_parse_addr():
-> =
+reviving this old topic.
 
-> 	if (tb[MPTCP_PM_ADDR_ATTR_ID])
-> 		entry->addr.id =3D nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
-> =
+I've experimented a bit with the LD_PRELOAD thing.
 
-> However, that value is later overridden in mptcp_pm_nl_append_new_local_a=
-ddr():
-> =
+Looks like at least nginx and apache can be forced to use MPTCP instead
+of TCP with a crafted unit file created automatically from the distro-
+provided one.
 
-> 	entry->addr.id =3D pernet->next_id++;
-> =
+e.g. for nginx, adding:
 
-> That causes the userspace to lose track of an address it added with a
-> specific ID, at which point the only way to find out the new ID is to
-> dump the addrs to find the new ID corresponding to local address in
-> question.  Is this the intended behavior?  =
+Conflicts=3Dnginx.service
+After=3Dnginx.service
 
+into the [unit] section, and:
 
-This is indended. In the current status 'id' is used only for endpoint
-selection while dumping (IIRC).
+Environment=3D"LD_PRELOAD=3D/usr/lib64/use_mptcp.so"
+ExecStartPre=3Dsysctl -w net.mptcp.enabled=3D1
 
-The 'id' override allows for very easy book-keeping on the kernel side,
-otherwise we would need something more complex (alike IDR) to keep
-track of IDs usage.
+into the [Service] section.
 
-> It seems like userspace- and kernel-based address ID assignment
-> should be mutually exclusive.  Otherwise we run into this sort of
-> scenario.  Is there a need for the kernel to assign IDs in the
-> netlink PM case?
+Then I had to fight a bit with selinux. I did not really investigate
+the issue, I think/fear selinux misunderstood mptcp sockets as raw
+ones, so default policy fails. A bunch of:
 
-Not really, it was just to keep the kernel-side implementation easy.
-Since need arise, we can as well swap to a more complete/complex
-schema.
+ausearch -c 'nginx' --raw | audit2allow -M my-nginx
+semodule -i my-nginx.pp
 
-I just filed:
+solved the problem.
 
-https://github.com/multipath-tcp/mptcp_net-next/issues/117
-
-for that. Any volonteer willing to pick the task more than welcome!
+Bottom line:
+- the above looks tecnically viable [at least for some services]. I'm
+looking for a more extended service/daemon list to investigate
+fourther. I think we could/should really consider package the above in
+mptcpd or the like.
+- selinux (surprise, surprise!) can be a problem. Worth looking at it
+(that is independent from the system we will pick to force MPTCP socket
+usage)
 
 Cheers,
 
 Paolo
 
-
-
-
---===============1692484948986582689==--
+--===============8389698827224588055==--
