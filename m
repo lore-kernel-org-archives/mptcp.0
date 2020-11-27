@@ -1,61 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============8389698827224588055=="
+Content-Type: multipart/mixed; boundary="===============7836888623500920977=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] force existing service to use MPTCP
-Date: Fri, 27 Nov 2020 19:43:36 +0100
-Message-ID: <d3a06454529b77757dc27b7157b3f55fee8f25b3.camel@redhat.com>
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix NULL ptr dereference on bad MPJ
+Date: Fri, 27 Nov 2020 11:06:49 -0800
+Message-ID: <20201127110649.62563a6c@kicinski-fedora-pc1c0hjn.DHCP.thefacebook.com>
+In-Reply-To: 2c3eecf9-c3b9-861a-cb8c-2f103496abfc@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 6967
+X-UID: 6968
 
---===============8389698827224588055==
+--===============7836888623500920977==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-hello,
+On Thu, 26 Nov 2020 16:23:08 +0100 Matthieu Baerts wrote:
+> On 26/11/2020 15:17, Paolo Abeni wrote:
+> > If an msk listener receives an MPJ carrying an invalid token, it
+> > will zero the request socket msk entry. That should later
+> > cause fallback and subflow reset - as per RFC - at
+> > subflow_syn_recv_sock() time due to failing hmac validation.
+> > =
 
-reviving this old topic.
+> > Since commit 4cf8b7e48a09 ("subflow: introduce and use
+> > mptcp_can_accept_new_subflow()"), we unconditionally dereference
+> > - in mptcp_can_accept_new_subflow - the subflow request msk
+> > before performing hmac validation. In the above scenario we
+> > hit a NULL ptr dereference.
+> > =
 
-I've experimented a bit with the LD_PRELOAD thing.
+> > Address the issue doing the hmac validation earlier.
+> > =
 
-Looks like at least nginx and apache can be forced to use MPTCP instead
-of TCP with a crafted unit file created automatically from the distro-
-provided one.
+> > Fixes: 4cf8b7e48a09 ("subflow: introduce and use mptcp_can_accept_new_s=
+ubflow()")
+> > Tested-by: Davide Caratti <dcaratti(a)redhat.com>
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>  =
 
-e.g. for nginx, adding:
+> =
 
-Conflicts=3Dnginx.service
-After=3Dnginx.service
+> Good catch! Thank you for the patch!
+> =
 
-into the [unit] section, and:
+> Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-Environment=3D"LD_PRELOAD=3D/usr/lib64/use_mptcp.so"
-ExecStartPre=3Dsysctl -w net.mptcp.enabled=3D1
-
-into the [Service] section.
-
-Then I had to fight a bit with selinux. I did not really investigate
-the issue, I think/fear selinux misunderstood mptcp sockets as raw
-ones, so default policy fails. A bunch of:
-
-ausearch -c 'nginx' --raw | audit2allow -M my-nginx
-semodule -i my-nginx.pp
-
-solved the problem.
-
-Bottom line:
-- the above looks tecnically viable [at least for some services]. I'm
-looking for a more extended service/daemon list to investigate
-fourther. I think we could/should really consider package the above in
-mptcpd or the like.
-- selinux (surprise, surprise!) can be a problem. Worth looking at it
-(that is independent from the system we will pick to force MPTCP socket
-usage)
-
-Cheers,
-
-Paolo
-
---===============8389698827224588055==--
+Applied, thanks!
+--===============7836888623500920977==--
