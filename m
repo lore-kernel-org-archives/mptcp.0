@@ -1,42 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============0559983033507080771=="
+Content-Type: multipart/mixed; boundary="===============5571382854678311375=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 4/6] mptcp: allocate TX skbs in msk
- context
-Date: Mon, 30 Nov 2020 15:44:13 -0800
-Message-ID: <1d213fb6-34a4-668e-e972-47e11f7061b@linux.intel.com>
-In-Reply-To: 2c4eacb182281d8e65cf4cf521e05141e6b011c8.1606413118.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next 5/6] mptcp: avoid a few atomic ops in the
+ rx path
+Date: Mon, 30 Nov 2020 15:44:54 -0800
+Message-ID: <e9ef28f7-814a-1a86-9337-a7d2eddb7754@linux.intel.com>
+In-Reply-To: 46e049b7bf734ed50f5b3c3762ee0278a682c66e.1606413118.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6995
+X-UID: 6996
 
---===============0559983033507080771==
+--===============5571382854678311375==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, 27 Nov 2020, Paolo Abeni wrote:
 
-> Move the TX skbs allocation in mptcp_sendmsg() scope,
-> and tentatively pre-allocate a skbs number proportional
-> to the sendmsg() length.
->
-> Use the ssk tx skb cache to prevent the subflow allocation.
->
-> This allows removing the msk skb extension cache and will
-> make possible the later patches.
+> Extending the data_lock scope in mptcp_incoming_option
+> we can use that to protect both snd_una and wnd_end.
+> In the typical case, we will have a single atomic op instead of 2
 >
 > Acked-by: Florian Westphal <fw(a)strlen.de>
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> net/mptcp/protocol.c | 248 ++++++++++++++++++++++++++++++++++++-------
-> net/mptcp/protocol.h |   4 +-
-> 2 files changed, 210 insertions(+), 42 deletions(-)
+> net/mptcp/mptcp_diag.c |  2 +-
+> net/mptcp/options.c    | 33 +++++++++++++--------------------
+> net/mptcp/protocol.c   | 34 ++++++++++++++++------------------
+> net/mptcp/protocol.h   |  8 ++++----
+> 4 files changed, 34 insertions(+), 43 deletions(-)
 
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============0559983033507080771==--
+--===============5571382854678311375==--
