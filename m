@@ -1,71 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============6696757847562973633=="
+Content-Type: multipart/mixed; boundary="===============4975940298353380224=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next] mptcp: enable use_port when invoke
- addresses_equal
-Date: Mon, 30 Nov 2020 18:47:57 +0800
-Message-ID: <3c45510c7fadc886e30e528501db5f861539c390.1606733035.git.geliangtang@gmail.com>
+Subject: [MPTCP] Re: Address ID assignment in netlink PM
+Date: Mon, 30 Nov 2020 19:52:56 +0800
+Message-ID: <CA+WQbws4QGk5CF+gAb1Ro33v=Aztijnz5AYU1Q_tfQaDc455ZQ@mail.gmail.com>
+In-Reply-To: 2897e20eaa066829586e55846c96ab199bb1baa3.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6986
+X-UID: 6987
 
---===============6696757847562973633==
+--===============4975940298353380224==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When dealing with the addresses list local_addr_list or anno_list, we
-should enables the function addresses_equal's parameter use_port.
+Hi Paolo,
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- The patch should be inserted into the "ADD_ADDR: ports support" patchset
-after the 3rd patch "mptcp: add port number announced check".
----
- net/mptcp/pm_netlink.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Paolo Abeni <pabeni(a)redhat.com> =E4=BA=8E2020=E5=B9=B411=E6=9C=8828=E6=97=
+=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=8812:18=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, 2020-11-25 at 21:48 +0000, Othman, Ossama wrote:
+> > Hi Paolo,
+> >
+> > While debugging a netlink PM "get addr" issue I was having in mptcpd
+> > I found that the address ID assigned by mptcpd was being overridden
+> > by the kernel.  Based on the code in pm_nl_ctl.c in the MPTCP self
+> > tests, and the code in pm_netlink.c in the kernel, the
+> > MPTCP_PM_CMD_ADD_ADDR command accepts an optional address ID
+> > attribute.  When that attribute is available the ID is stored in the
+> > corresponding mptcp_pm_addr_entry instance by mptcp_pm_parse_addr():
+> >
+> >       if (tb[MPTCP_PM_ADDR_ATTR_ID])
+> >               entry->addr.id =3D nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
+> >
+> > However, that value is later overridden in mptcp_pm_nl_append_new_local=
+_addr():
+> >
+> >       entry->addr.id =3D pernet->next_id++;
+> >
+> > That causes the userspace to lose track of an address it added with a
+> > specific ID, at which point the only way to find out the new ID is to
+> > dump the addrs to find the new ID corresponding to local address in
+> > question.  Is this the intended behavior?
+>
+> This is indended. In the current status 'id' is used only for endpoint
+> selection while dumping (IIRC).
+>
+> The 'id' override allows for very easy book-keeping on the kernel side,
+> otherwise we would need something more complex (alike IDR) to keep
+> track of IDs usage.
+>
+> > It seems like userspace- and kernel-based address ID assignment
+> > should be mutually exclusive.  Otherwise we run into this sort of
+> > scenario.  Is there a need for the kernel to assign IDs in the
+> > netlink PM case?
+>
+> Not really, it was just to keep the kernel-side implementation easy.
+> Since need arise, we can as well swap to a more complete/complex
+> schema.
+>
+> I just filed:
+>
+> https://github.com/multipath-tcp/mptcp_net-next/issues/117
+>
+> for that. Any volonteer willing to pick the task more than welcome!
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 119d7abdc997..54c6b6359144 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -122,7 +122,7 @@ static bool lookup_subflow_by_saddr(const struct list_h=
-ead *list,
- 		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
- =
+I can implement this feature. Please assign issue #117 to me.
 
- 		local_address(skc, &cur);
--		if (addresses_equal(&cur, saddr, false))
-+		if (addresses_equal(&cur, saddr, saddr->port))
- 			return true;
- 	}
- =
+Thanks.
 
-@@ -195,7 +195,7 @@ lookup_anno_list_by_saddr(struct mptcp_sock *msk,
- 	struct mptcp_pm_add_entry *entry;
- =
+-Geliang
 
- 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
--		if (addresses_equal(&entry->addr, addr, false))
-+		if (addresses_equal(&entry->addr, addr, true))
- 			return entry;
- 	}
- =
-
-@@ -604,7 +604,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
-ruct sock_common *skc)
- =
-
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (addresses_equal(&entry->addr, &skc_local, false)) {
-+		if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
- 			ret =3D entry->addr.id;
- 			break;
- 		}
--- =
-
-2.26.2
-
---===============6696757847562973633==--
+>
+> Cheers,
+>
+> Paolo
+>
+>
+>
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+--===============4975940298353380224==--
