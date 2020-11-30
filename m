@@ -1,138 +1,224 @@
-Content-Type: multipart/mixed; boundary="===============8546085179103490601=="
+Content-Type: multipart/mixed; boundary="===============6568660090444389535=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v7 mptcp-next 6/7] mptcp: add the mibs for
- ADD_ADDR with port
-Date: Mon, 30 Nov 2020 14:17:54 +0800
-Message-ID: <119365e22834280ba21b71fdaf6b18cf403229bf.1606716547.git.geliangtang@gmail.com>
-In-Reply-To: 883454467503573bd37d633fb12644a67b10d4bf.1606716547.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v7 mptcp-next 7/7] selftests: mptcp: add
+ testcases for ADD_ADDR with port
+Date: Mon, 30 Nov 2020 14:17:55 +0800
+Message-ID: <101dbb1446c4644b44ce043bec596ed0690bcdaa.1606716547.git.geliangtang@gmail.com>
+In-Reply-To: 119365e22834280ba21b71fdaf6b18cf403229bf.1606716547.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 6977
+X-UID: 6978
 
---===============8546085179103490601==
+--===============6568660090444389535==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the mibs for ADD_ADDR with port:
+This patch added testcases for ADD_ADDR with port and the related MIB
+counters check in chk_add_nr. The output looks like this:
 
-MPTCP_MIB_PORTADD for receiving of the ADD_ADDR suboption with a port
-number.
-
-MPTCP_MIB_PORTSYNRX, MPTCP_MIB_PORTSYNACKRX, MPTCP_MIB_PORTACKRX, for
-receiving of the MP_JOIN's SYN or SYN/ACK or ACK with a port number which
-is different from the msk's port number.
-
-MPTCP_MIB_MISMATCHPORTSYNRX and MPTCP_MIB_MISMATCHPORTACKRX, for
-receiving a SYN or ACK MP_JOIN with a mismatched port-number.
+ 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       syn[ ok ] - ack   [ ok ]
+ 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       syn[ ok ] - ack   [ ok ]
+ 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       syn[ ok ] - ack   [ ok ]
+                                       rm [ ok ] - sf    [ ok ]
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/mib.c     | 6 ++++++
- net/mptcp/mib.h     | 6 ++++++
- net/mptcp/options.c | 4 ++++
- net/mptcp/subflow.c | 8 +++++++-
- 4 files changed, 23 insertions(+), 1 deletion(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 148 +++++++++++++++++-
+ 1 file changed, 147 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 84d119436b22..d1d11e000539 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -29,6 +29,12 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
- 	SNMP_MIB_ITEM("DuplicateData", MPTCP_MIB_DUPDATA),
- 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
- 	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
-+	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
-+	SNMP_MIB_ITEM("MPJoinPortSynRx", MPTCP_MIB_JOINPORTSYNRX),
-+	SNMP_MIB_ITEM("MPJoinPortSynAckRx", MPTCP_MIB_JOINPORTSYNACKRX),
-+	SNMP_MIB_ITEM("MPJoinPortAckRx", MPTCP_MIB_JOINPORTACKRX),
-+	SNMP_MIB_ITEM("MismatchPortSynRx", MPTCP_MIB_MISMATCHPORTSYNRX),
-+	SNMP_MIB_ITEM("MismatchPortAckRx", MPTCP_MIB_MISMATCHPORTACKRX),
- 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
- 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
- 	SNMP_MIB_SENTINEL
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 47bcecce1106..447ef50118a3 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -22,6 +22,12 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_DUPDATA,		/* Segments discarded due to duplicate DSS */
- 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=3D0 */
- 	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=3D1 */
-+	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with a port-number */
-+	MPTCP_MIB_JOINPORTSYNRX,	/* Received a SYN MP_JOIN with a different port-=
-number */
-+	MPTCP_MIB_JOINPORTSYNACKRX,	/* Received a SYNACK MP_JOIN with a different=
- port-number */
-+	MPTCP_MIB_JOINPORTACKRX,	/* Received an ACK MP_JOIN with a different port=
--number */
-+	MPTCP_MIB_MISMATCHPORTSYNRX,	/* Received a SYN MP_JOIN with a mismatched =
-port-number */
-+	MPTCP_MIB_MISMATCHPORTACKRX,	/* Received an ACK MP_JOIN with a mismatched=
- port-number */
- 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
- 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
- 	__MPTCP_MIB_MAX
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 6088fc80db75..57b5cf92769b 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -974,6 +974,10 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
-_buff *skb)
- 			mptcp_pm_del_add_timer(msk, &addr);
- 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
- 		}
-+
-+		if (mp_opt.port)
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_PORTADD);
-+
- 		mp_opt.add_addr =3D 0;
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 0eae628d1ffd..38d756f5e366 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -429,6 +429,12 @@ chk_add_nr()
+ {
+ 	local add_nr=3D$1
+ 	local echo_nr=3D$2
++	local port_nr=3D${3:-0}
++	local syn_nr=3D${4:-$port_nr}
++	local syn_ack_nr=3D${5:-$port_nr}
++	local ack_nr=3D${6:-$port_nr}
++	local mis_syn_nr=3D${7:-0}
++	local mis_ack_nr=3D${8:-0}
+ 	local count
+ 	local dump_stats
  =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7da6a00a35a6..9fd330094b76 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -190,8 +190,10 @@ static void subflow_init_req(struct request_sock *req,
- 				tcp_request_sock_ops.destructor(req);
- 				subflow_req->msk =3D NULL;
- 				subflow_req->mp_join =3D 0;
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTSYNRX);
- 				return;
- 			}
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTSYNRX);
- 		}
+@@ -451,7 +457,87 @@ chk_add_nr()
+ 		ret=3D1
+ 		dump_stats=3D1
+ 	else
+-		echo "[ ok ]"
++		echo -n "[ ok ]"
++	fi
++
++	if [ $port_nr -gt 0 ]; then
++		echo -n " - pt "
++		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{pri=
+nt $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$port_nr" ]; then
++			echo "[fail] got $count ADD_ADDR[s] with a port-number expected $port_n=
+r"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++
++		printf "%-39s %s" " " "syn"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortSynRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$syn_nr" ]; then
++			echo "[fail] got $count JOIN[s] syn with a different \
++				port-number expected $syn_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - synack"
++		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtMPJoinPortSynAckRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$syn_ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] synack with a different \
++				port-number expected $syn_ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - ack"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortAckRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] ack with a different \
++				port-number expected $ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++
++		printf "%-39s %s" " " "syn"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortSynRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$mis_syn_nr" ]; then
++			echo "[fail] got $count JOIN[s] syn with a mismatched \
++				port-number expected $mis_syn_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - ack   "
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortAckRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$mis_ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] ack with a mismatched \
++				port-number expected $mis_ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++	else
++		echo ""
+ 	fi
  =
 
- 		if (unlikely(req->syncookie) && subflow_req->msk) {
-@@ -383,6 +385,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 			pr_debug("synack inet_dport=3D%d %d",
- 				 ntohs(inet_sk(sk)->inet_dport),
- 				 ntohs(inet_sk(parent)->inet_dport));
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINPORTSYNACKRX);
- 		}
- 	} else if (mptcp_check_fallback(sk)) {
- fallback:
-@@ -650,8 +653,11 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- 				pr_debug("ack inet_sport=3D%d %d",
- 					 ntohs(inet_sk(sk)->inet_sport),
- 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
--				if (!mptcp_pm_sport_in_anno_list(owner, sk))
-+				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
-+					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
- 					goto out;
-+				}
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTACKRX);
- 			}
- 		}
- 	}
+ 	if [ "${dump_stats}" =3D 1 ]; then
+@@ -717,6 +803,66 @@ chk_join_nr "remove subflow and signal IPv6" 2 2 2
+ chk_add_nr 1 1
+ chk_rm_nr 1 1
+ =
+
++# signal address with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "signal address with port" 1 1 1
++chk_add_nr 1 1 1
++
++# subflow and signal with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "subflow and signal with port" 2 2 2
++chk_add_nr 1 1 1
++
++# single address with port, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
++chk_join_nr "remove single address with port" 1 1 1
++chk_add_nr 1 1 1
++chk_rm_nr 0 0
++
++# subflow and signal with port, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 0 1 1 slow
++chk_join_nr "remove subflow and signal with port" 2 2 2
++chk_add_nr 1 1 1
++chk_rm_nr 1 1
++
++# multiple addresses with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple addresses with port" 2 2 2
++chk_add_nr 2 2 2
++
++# multiple addresses with ports
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10101
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple addresses with ports" 2 2 2
++chk_add_nr 2 2 2
++
+ # single subflow, syncookies
+ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.26.2
 
---===============8546085179103490601==--
+--===============6568660090444389535==--
