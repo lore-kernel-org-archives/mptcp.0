@@ -1,125 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============6370682235269715266=="
+Content-Type: multipart/mixed; boundary="===============0440902679927216747=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 2/2] selftests: mptcp: add the flush
- addrs testcase
-Date: Mon, 30 Nov 2020 14:48:22 +0800
-Message-ID: <94ddd855c2aba608e5a5079aaaa270cb50e48837.1606718512.git.geliangtang@gmail.com>
-In-Reply-To: a826061f6342d5618337b0bc1914cd5ab967c487.1606718512.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 0/2] remove address when netlink
+ flush addrs and testcase
+Date: Mon, 30 Nov 2020 15:11:24 +0800
+Message-ID: <cover.1606719598.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6981
+X-UID: 6982
 
---===============6370682235269715266==
+--===============0440902679927216747==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the flush addrs testcase. In do_transfer, if the number
-of removing addresses is less than 8, use the del addr command to remove
-the addresses one by one. If the number is more than 8, use the flush addrs
-command to remove the addresses.
+v2:
+ - update the testcase.
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 52 +++++++++++++------
- 1 file changed, 37 insertions(+), 15 deletions(-)
+This patchset removes address when netlink do flush addrs command, and
+adds the testcase for flush addrs command.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 38d756f5e366..d2e4e027bbc5 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -264,27 +264,37 @@ do_transfer()
- 	cpid=3D$!
- =
+Geliang Tang (2):
+  mptcp: remove address when netlink flush addrs
+  selftests: mptcp: add the flush addrs testcase
 
- 	if [ $rm_nr_ns1 -gt 0 ]; then
--		counter=3D1
--		sleep 1
-+		if [ $rm_nr_ns1 -lt 8 ]; then
-+			counter=3D1
-+			sleep 1
- =
+ net/mptcp/pm_netlink.c                        | 15 ++++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 50 +++++++++++++------
+ 2 files changed, 46 insertions(+), 19 deletions(-)
 
--		while [ $counter -le $rm_nr_ns1 ]
--		do
--			ip netns exec ${listener_ns} ./pm_nl_ctl del $counter
-+			while [ $counter -le $rm_nr_ns1 ]
-+			do
-+				ip netns exec ${listener_ns} ./pm_nl_ctl del $counter
-+				sleep 1
-+				let counter+=3D1
-+			done
-+		else
- 			sleep 1
--			let counter+=3D1
--		done
-+			ip netns exec ${listener_ns} ./pm_nl_ctl flush
-+		fi
- 	fi
- =
-
- 	if [ $rm_nr_ns2 -gt 0 ]; then
--		counter=3D1
--		sleep 1
-+		if [ $rm_nr_ns2 -lt 8 ]; then
-+			counter=3D1
-+			sleep 1
- =
-
--		while [ $counter -le $rm_nr_ns2 ]
--		do
--			ip netns exec ${connector_ns} ./pm_nl_ctl del $counter
-+			while [ $counter -le $rm_nr_ns2 ]
-+			do
-+				ip netns exec ${connector_ns} ./pm_nl_ctl del $counter
-+				sleep 1
-+				let counter+=3D1
-+			done
-+		else
- 			sleep 1
--			let counter+=3D1
--		done
-+			ip netns exec ${connector_ns} ./pm_nl_ctl flush
-+		fi
- 	fi
- =
-
- 	wait $cpid
-@@ -684,7 +694,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 3
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1 1
-+run_tests $ns1 $ns2 10.0.1.1 0
- chk_join_nr "multiple flows, signal, link failure" 3 3 3
- chk_add_nr 1 1
- =
-
-@@ -749,6 +759,18 @@ chk_join_nr "remove subflows and signal" 3 3 3
- chk_add_nr 1 1
- chk_rm_nr 2 2
- =
-
-+# subflows and signal, flush
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
-+run_tests $ns1 $ns2 10.0.1.1 0 8 8 slow
-+chk_join_nr "flush subflows and signal" 3 3 3
-+chk_add_nr 1 1
-+chk_rm_nr 2 2
-+
- # subflow IPv6
- reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.26.2
 
---===============6370682235269715266==--
+--===============0440902679927216747==--
