@@ -1,164 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============8704808185791051889=="
+Content-Type: multipart/mixed; boundary="===============4219849474716606668=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 3/5] mptcp: deal with
- MPTCP_PM_ADDR_FLAG_BACKUP in PM netlink
-Date: Mon, 30 Nov 2020 10:37:48 +0800
-Message-ID: <CA+WQbwt2S73+2NBsdQ1VRcD_vodrkEBYxdF40L1hz7hdhtTHbw@mail.gmail.com>
-In-Reply-To: a42e6599-d722-656a-78dd-a2737a9a2913@linux.intel.com
+Subject: [MPTCP] [MPTCP][PATCH v7 mptcp-next 0/7] ADD_ADDR: ports support
+Date: Mon, 30 Nov 2020 14:17:48 +0800
+Message-ID: <cover.1606716547.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 6970
+X-UID: 6971
 
---===============8704808185791051889==
+--===============4219849474716606668==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+v7:
+ - use the MPTCP listening socket instead of TCP one
+ - release subflow_req->msk in subflow_init_req
+ - add mismatched port MIBs
+ - use sock_common in source_address
 
-Thanks for your review.
+v6:
+ - create and bind the listening socket in mptcp_nl_cmd_add_addr.
+ - drop the patch "mptcp: add port number listened in kernel check" in
+   v5.
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2020=E5=B9=B4=
-11=E6=9C=8821=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=889:17=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> On Fri, 20 Nov 2020, Geliang Tang wrote:
->
-> > This patch added the MP_PRIO support for PM netlink:
-> >
-> > When PM netlink adds an address, check whether the
-> > MPTCP_PM_ADDR_FLAG_BACKUP flag is set. If it is, check whether this
-> > address had been added in the local address list. If it had been, then
-> > call mptcp_nl_addr_backup to deal with this address.
-> >
-> > In mptcp_nl_addr_backup, we traverse all the existing msk sockets to fi=
-nd
-> > the relevant sockets, and get the backup value according to whether the
-> > MPTCP_PM_ADDR_FLAG_BACKUP flag is set, then call
-> > mptcp_pm_nl_mp_prio_send_ack to send out a MP_PRIO ACK packet.
-> >
-> > In mptcp_pm_nl_mp_prio_send_ack, we set or clear the
-> > MPTCP_PM_ADDR_FLAG_BACKUP flag.
-> >
-> > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> > ---
-> > net/mptcp/pm_netlink.c | 41 +++++++++++++++++++++++++++++++++++++++++
-> > 1 file changed, 41 insertions(+)
-> >
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index dd48af3c5ed5..58960e1cdc32 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -535,6 +535,11 @@ void mptcp_pm_nl_mp_prio_send_ack(struct mptcp_soc=
-k *msk,
-> >                       return;
-> >               }
-> >
-> > +             if (addr->flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> > +                     addr->flags &=3D ~MPTCP_PM_ADDR_FLAG_BACKUP;
-> > +             else
-> > +                     addr->flags |=3D MPTCP_PM_ADDR_FLAG_BACKUP;
-> > +
->
-> Why is the backup bit inverted here? It's not clear why it's changed, and
-> why bkup is passed in based on the value of the bit when read by the
-> calling function.
->
+v5:
+ - use the per netns listening socket.
+ - First 8 patches in v4 had been merged to the export branch, drop them
+   from this patchset.
 
-I think we can use backup command not only to 'turn on' a subflow's backup
-bit, but also to 'turn off' a subflow's backup bit. So the pm_nl_ctl backup
-command will work like this:
+v4:
+ - hold msk->pm.lock in mptcp_pm_sport_in_anno_list.
+ - Merge the patchset 'Squash to "ADD_ADDR: ports support v3"' into v4.
 
-# pm_nl_ctl add 10.0.2.1 flags signal; pm_nl_ctl dump
-id 1 flags signal 10.0.2.1
-# pm_nl_ctl add 10.0.2.1 flags backup; pm_nl_ctl dump
-id 1 flags signal,backup 10.0.2.1
-# pm_nl_ctl add 10.0.2.1 flags backup; pm_nl_ctl dump
-id 1 flags signal 10.0.2.1
+v3:
+ - add two new patches, 8 and 11
+ - add more IS_ENABLED(CONFIG_MPTCP_IPV6) in patch 2
+ - define TCPOLEN_MPTCP_ADD_ADDR_HMAC in patch 4
+ - add flags check in patch 10
+ - update the testcases
 
-> >               subflow->backup =3D bkup;
-> >               mptcp_schedule_work(sk);
-> >
-> > @@ -847,17 +852,53 @@ static struct pm_nl_pernet *genl_info_pm_nl(struc=
-t genl_info *info)
-> >       return net_generic(genl_info_net(info), pm_nl_pernet_id);
-> > }
-> >
-> > +static int mptcp_nl_addr_backup(struct net *net,
-> > +                             struct mptcp_addr_info *addr)
-> > +{
-> > +     long s_slot =3D 0, s_num =3D 0;
-> > +     struct mptcp_sock *msk;
-> > +
-> > +     while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D=
- NULL) {
-> > +             u8 bkup =3D !(addr->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-> > +             struct sock *sk =3D (struct sock *)msk;
-> > +
-> > +             if (list_empty(&msk->conn_list))
-> > +                     goto next;
-> > +
-> > +             lock_sock(sk);
-> > +             spin_lock_bh(&msk->pm.lock);
-> > +             mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
-> > +             spin_unlock_bh(&msk->pm.lock);
-> > +             release_sock(sk);
-> > +
-> > +next:
-> > +             sock_put(sk);
-> > +             cond_resched();
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info =
-*info)
-> > {
-> >       struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
-> >       struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
-> >       struct mptcp_pm_addr_entry addr, *entry;
-> > +     struct net *net =3D sock_net(skb->sk);
-> >       int ret;
-> >
-> >       ret =3D mptcp_pm_parse_addr(attr, info, true, &addr);
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > +     if (addr.addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP) {
-> > +             list_for_each_entry(entry, &pernet->local_addr_list, list=
-) {
-> > +                     if (addresses_equal(&entry->addr, &addr.addr, fal=
-se))
-> > +                             mptcp_nl_addr_backup(net, &entry->addr);
->
-> I think a more strict match should be required here that includes the
-> 'id' as well. There may be multiple endpoints with the same address but
-> different port numbers.
->
+v2:
+ - change mptcp_out_options's port field in CPU bype order.
+ - keep mptcp_options_received's port field in CPU bype order.
+ - add two new patches to simplify ADD_ADDR suboption writing.
+ - update mptcp_add_addr_len helper use adding up size.
+ - add more commit messages.
 
-Adding 'id' match doesn't work, since addr.addr's id is always 0 here.
+v1:
+ This series is the first version of ADD_ADDR ports support. I have solved
+ the listener problem which I mentioned at the meeting on 15th of October
+ by adding a new listening socket from the userspace (see patch 8). Up to
+ now this patchset works well.
 
-I think we can use addresses_equal(&entry->addr, &addr.addr, true) here,
-it's enough to cover the same address with different port numbers case.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
 
+Geliang Tang (7):
+  mptcp: create the listening socket for new port
+  mptcp: add port number check for MP_JOIN
+  mptcp: add port number announced check
+  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+  selftests: mptcp: add port argument for pm_nl_ctl
+  mptcp: add the mibs for ADD_ADDR with port
+  selftests: mptcp: add testcases for ADD_ADDR with port
 
--Geliang
+ net/mptcp/mib.c                               |   6 +
+ net/mptcp/mib.h                               |   6 +
+ net/mptcp/options.c                           |   4 +
+ net/mptcp/pm_netlink.c                        |  97 ++++++++++++
+ net/mptcp/protocol.c                          |   2 +-
+ net/mptcp/protocol.h                          |   4 +
+ net/mptcp/subflow.c                           |  48 +++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 148 +++++++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  24 ++-
+ 9 files changed, 333 insertions(+), 6 deletions(-)
 
+-- =
 
-> > +             }
-> > +             return 0;
-> > +     }
-> > +
-> >       entry =3D kmalloc(sizeof(*entry), GFP_KERNEL);
-> >       if (!entry) {
-> >               GENL_SET_ERR_MSG(info, "can't allocate addr");
-> > --
-> > 2.26.2
->
-> --
-> Mat Martineau
-> Intel
---===============8704808185791051889==--
+2.26.2
+
+--===============4219849474716606668==--
