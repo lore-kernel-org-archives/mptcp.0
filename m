@@ -1,49 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============3062304363830062591=="
+Content-Type: multipart/mixed; boundary="===============0059772149458373252=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v2] mptcp: be careful on MPTCP-level ack.
-Date: Wed, 02 Dec 2020 18:08:11 +0100
-Message-ID: <9d40955d2d33dd36f8bc38067868c19dd8cb5173.camel@redhat.com>
-In-Reply-To: 0c400986125dfdd42990ee4203a60d9b309d29c8.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: address potential infinite loop
+ on receive
+Date: Wed, 02 Dec 2020 11:04:23 -0800
+Message-ID: <3df52a87-8c86-d7f8-c544-3c12233f2c57@linux.intel.com>
+In-Reply-To: 7cc29abe8da61eeb3e6c7bd5d2d8fe1d51dcdd7e.1606924518.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7017
+X-UID: 7018
 
---===============3062304363830062591==
+--===============0059772149458373252==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-12-02 at 17:51 +0100, Paolo Abeni wrote:
-> On Wed, 2020-12-02 at 17:45 +0100, Eric Dumazet wrote:
-> > Packetdrill recvmsg syntax would be something like
-> > =
+On Wed, 2 Dec 2020, Paolo Abeni wrote:
 
-> >    +0	recvmsg(3, {msg_name(...)=3D...,
-> > 		    msg_iov(1)=3D[{..., 0}],
-> > 		    msg_flags=3D0
-> > 		    }, 0) =3D 0
-> =
+> Eric noted the MPTCP recvmsg() loop can iterate multiple
+> times when the argument lenght is 0 and some subflow is
+> feeding new data.
+>
+> Be sure to quite the loop soon moving the exit condition
+> earlier. Additionally move a related comment into the
+> right place.
+>
+> Reported-by: Eric Dumazet <eric.dumazet(a)gmail.com>
+> Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> Note: looking again at the current code, I think that at worst we
+> can do a single additional, unneeded iteration - after the first
+> 'continue' statement __mptcp_move_skbs() will have moved some data
+> into the receive_queue, and we are not going to receive them. On
+> next iteration the receive_queue will be not empty.
+>
+> Unless the peer is crafting some malicious DSS/packets combo I'm
+> unable to foreseen.
+> ---
+> net/mptcp/protocol.c | 14 +++++++-------
+> 1 file changed, 7 insertions(+), 7 deletions(-)
+>
 
-> Thank you very much for all the effort!
-> =
+To close the loop here on the mailing list (based on IRC, patchwork, and =
 
-> Yes, with recvmsg() the packet drill hangs. I agree your proposed fix
-> is correct.
-> =
+netdev), Paolo has tested Eric's fix for the issue and that will be =
 
-> I can test it explicitly later today.
+merged instead:
 
-The proposed fix passes successfully the pktdrill test and there are no
-regressions in the other self-tests.
+https://patchwork.kernel.org/project/netdevbpf/patch/20201202171657.1185108=
+-1-eric.dumazet(a)gmail.com/
 
-Feel free to add:
-
-Tested-by: Paolo Abeni <pabeni(a)redhat.com>
-
-thanks!
-
-Paolo
-
---===============3062304363830062591==--
+--
+Mat Martineau
+Intel
+--===============0059772149458373252==--
