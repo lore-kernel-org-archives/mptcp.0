@@ -1,78 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============6114910006545637926=="
+Content-Type: multipart/mixed; boundary="===============9160238020485314699=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Eric Dumazet <eric.dumazet at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH] selinux: handle MPTCP consistently with TCP
-Date: Wed, 02 Dec 2020 12:17:57 +0100
-Message-ID: <3a5f156da4569957b91bb5aa4d2a316b729a2c69.camel@redhat.com>
-In-Reply-To: 3336b397dda1d15ee9fb87107f9cc21a5d1fe510.1606904940.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net-next v2] mptcp: be careful on MPTCP-level ack.
+Date: Wed, 02 Dec 2020 14:18:53 +0100
+Message-ID: <fdad2c0e-e84e-4a82-7855-fc5a083bb055@gmail.com>
+In-Reply-To: 5370c0ae03449239e3d1674ddcfb090cf6f20abe.1606253206.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7008
+X-UID: 7009
 
---===============6114910006545637926==
+--===============9160238020485314699==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-12-02 at 11:31 +0100, Paolo Abeni wrote:
-> The MPTCP protocol uses a specific protocol value, even if
-> it's an extension to TCP. Additionally, MPTCP sockets
-> could 'fall-back' to TCP at run-time, depending on peer MPTCP
-> support and available resources.
+
+
+On 11/24/20 10:51 PM, Paolo Abeni wrote:
+> We can enter the main mptcp_recvmsg() loop even when
+> no subflows are connected. As note by Eric, that would
+> result in a divide by zero oops on ack generation.
 > =
 
-> As a consequence of the specific protocol number, selinux
-> applies the raw_socket class to MPTCP sockets.
+> Address the issue by checking the subflow status before
+> sending the ack.
 > =
 
-> Existing TCP application converted to MPTCP - or forced to
-> use MPTCP socket with user-space hacks - will need an
-> updated policy to run successfully.
+> Additionally protect mptcp_recvmsg() against invocation
+> with weird socket states.
 > =
 
-> This change lets selinux attach the TCP socket class to
-> MPTCP sockets, too, so that no policy changes are needed in
-> the above scenario.
+> v1 -> v2:
+>  - removed unneeded inline keyword - Jakub
 > =
 
+> Reported-and-suggested-by: Eric Dumazet <eric.dumazet(a)gmail.com>
+> Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
->  security/selinux/hooks.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  net/mptcp/protocol.c | 67 ++++++++++++++++++++++++++++++++------------
+>  1 file changed, 49 insertions(+), 18 deletions(-)
 > =
 
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 6b1826fc3658..9a6b4bf1bc5b 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -1120,7 +1120,8 @@ static inline u16 inode_mode_to_security_class(umod=
-e_t mode)
->  =
 
->  static inline int default_protocol_stream(int protocol)
->  {
-> -	return (protocol =3D=3D IPPROTO_IP || protocol =3D=3D IPPROTO_TCP);
-> +	return (protocol =3D=3D IPPROTO_IP || protocol =3D=3D IPPROTO_TCP ||
-> +		protocol =3D=3D IPPROTO_MPTCP);
->  }
->  =
+Looking at mptcp recvmsg(), it seems that a read(fd, ..., 0) will
+trigger an infinite loop if there is available data in receive queue ?
 
->  static inline int default_protocol_dgram(int protocol)
-> @@ -1152,7 +1153,7 @@ static inline u16 socket_type_to_security_class(int=
- family, int type, int protoc
->  				return SECCLASS_TCP_SOCKET;
->  			else if (extsockclass && protocol =3D=3D IPPROTO_SCTP)
->  				return SECCLASS_SCTP_SOCKET;
-> -			else
-> +			elseextsockclass
+It seems the following is needed, commit ea4ca586b16f removed
+a needed check to catch this condition.
 
-Whoops, my bad! I don't know how this chunk slipped-in. I'll fix it in
-the formal submission for inclusion, if there is agreement on this
-change.
+Untested patch, I can submit it formally if you agree.
 
-Thanks!
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 221f7cdd416bdb681968bf1b3ff2ed1b03cea3ce..57213ff60f784fae14c2a96f391=
+ccdec6249c168 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1921,7 +1921,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+        len =3D min_t(size_t, len, INT_MAX);
+        target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
+ =
 
-Paolo
+-       for (;;) {
++       while (copied < len) {
+                int bytes_read, old_space;
+ =
 
---===============6114910006545637926==--
+                bytes_read =3D __mptcp_recvmsg_mskq(msk, msg, len - copied);
+--===============9160238020485314699==--
