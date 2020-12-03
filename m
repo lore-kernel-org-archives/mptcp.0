@@ -1,41 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============3279742066975525035=="
+Content-Type: multipart/mixed; boundary="===============3609975841800885783=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 0/2] remove address when
- netlink flush addrs and testcase
-Date: Thu, 03 Dec 2020 15:46:03 +0100
-Message-ID: <b732928d7500e649c7f63496d29d09ca3241a87e.camel@redhat.com>
-In-Reply-To: cover.1606719598.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH net-next] mptcp: pm: simplify select_local_address()
+Date: Thu, 03 Dec 2020 16:35:14 +0100
+Message-ID: <41407581af582a6cb0d4e8a5e46c7af7d54b06d3.1607009691.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7024
+X-UID: 7025
 
---===============3279742066975525035==
+--===============3609975841800885783==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-11-30 at 15:11 +0800, Geliang Tang wrote:
-> v2:
->  - update the testcase.
-> =
+There is no need to unconditionally acquire the join list
+lock, we can simply splice the join list into the subflow
+list and traverse only the latter.
 
-> This patchset removes address when netlink do flush addrs command, and
-> adds the testcase for flush addrs command.
-> =
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/pm_netlink.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-> Geliang Tang (2):
->   mptcp: remove address when netlink flush addrs
->   selftests: mptcp: add the flush addrs testcase
-> =
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 5151cfcd6962..e34a0d57947d 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -135,7 +135,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
+ 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
+ =
 
->  net/mptcp/pm_netlink.c                        | 15 ++++--
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 50 +++++++++++++------
->  2 files changed, 46 insertions(+), 19 deletions(-)
+ 	rcu_read_lock();
+-	spin_lock_bh(&msk->join_list_lock);
++	__mptcp_flush_join_list(msk);
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+ 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+ 			continue;
+@@ -144,13 +144,11 @@ select_local_address(const struct pm_nl_pernet *perne=
+t,
+ 		 * pending join
+ 		 */
+ 		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
+-		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
+-		    !lookup_subflow_by_saddr(&msk->join_list, &entry->addr)) {
++		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+ 			ret =3D entry;
+ 			break;
+ 		}
+ 	}
+-	spin_unlock_bh(&msk->join_list_lock);
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+-- =
 
-Both patches LGTM, thanks!
+2.26.2
 
-Paolo
-
---===============3279742066975525035==--
+--===============3609975841800885783==--
