@@ -1,40 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============9055426834492459104=="
+Content-Type: multipart/mixed; boundary="===============6790858653572510404=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: use adding up
- size to get ADD_ADDR length"
-Date: Thu, 03 Dec 2020 18:25:58 +0100
-Message-ID: <3edf68e7-24e5-8b4c-ba44-386cdd17eb35@tessares.net>
-In-Reply-To: e021e1924a8c0e6bd51c7a0253bba471fe3ee0a1.1606898909.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH net-next 1/3] security: add const qualifier to
+ struct sock in various places
+Date: Thu, 03 Dec 2020 14:24:09 -0800
+Message-ID: <20201203142409.3bbc068f@kicinski-fedora-pc1c0hjn.DHCP.thefacebook.com>
+In-Reply-To: alpine.LRH.2.21.2012040407080.9312@namei.org
 X-Status: 
 X-Keywords:                  
-X-UID: 7028
+X-UID: 7029
 
---===============9055426834492459104==
+--===============6790858653572510404==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+On Fri, 4 Dec 2020 04:07:16 +1100 (AEDT) James Morris wrote:
+> On Wed, 2 Dec 2020, Jakub Kicinski wrote:
+> > On Mon, 30 Nov 2020 16:36:29 +0100 Florian Westphal wrote:  =
 
-On 02/12/2020 09:51, Geliang Tang wrote:
-> Drop the duplicate macro TCPOLEN_MPTCP_ADD_ADDR_HMAC, use MPTCPOPT_THMAC_=
-LEN
-> instead.
+> > > A followup change to tcp_request_sock_op would have to drop the 'cons=
+t'
+> > > qualifier from the 'route_req' function as the
+> > > 'security_inet_conn_request' call is moved there - and that function
+> > > expects a 'struct sock *'.
+> > > =
 
-Thank you for the patch and the nice instructions!
+> > > However, it turns out its also possible to add a const qualifier to
+> > > security_inet_conn_request instead.
+> > > =
 
-- 189c4a2779be: "squashed" in mptcp: use adding up size to get ADD_ADDR =
+> > > Signed-off-by: Florian Westphal <fw(a)strlen.de>
+> > > ---
+> > >  The code churn is unfortunate.  Alternative would be to change
+> > >  the function signature of ->route_req:
+> > >  struct dst_entry *(*route_req)(struct sock *sk, ...
+> > >  [ i.e., drop 'const' ].  Thoughts?  =
 
-length
-- 37dd54c02583: conflict in t/mptcp-add-the-outgoing-ADD_ADDR-port-support
-- Results: 9b24e551c22a..fd535b120ea9
+> > =
 
-Cheers,
-Matt
--- =
+> > Security folks - is this okay to merge into net-next?
+> > =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============9055426834492459104==--
+> > We can put it on a branch and pull into both trees if the risk =
+
+> > of conflicts is high.  =
+
+> =
+
+> Acked-by: James Morris <jamorris(a)linux.microsoft.com>
+
+Thank you!
+
+Into net-next it goes..
+--===============6790858653572510404==--
