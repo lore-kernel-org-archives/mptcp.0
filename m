@@ -1,255 +1,119 @@
-Content-Type: multipart/mixed; boundary="===============8303827370267506326=="
+Content-Type: multipart/mixed; boundary="===============3877094711716722252=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] mptcp: link MPC subflow into msk only
- after accept
-Date: Thu, 03 Dec 2020 13:36:49 +0100
-Message-ID: <e699fd8e66e4d8b4080f92768ca41a85eacdda26.1606998810.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] mptcp: add the address ID
+ assignment bitmap
+Date: Thu, 03 Dec 2020 15:41:48 +0100
+Message-ID: <06b47a4071c049ad0595f1bcfa970cec83f4fb6f.camel@redhat.com>
+In-Reply-To: effcae3f6ede9a3c612a0a90c7793232417de2a0.1606823692.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7021
+X-UID: 7022
 
---===============8303827370267506326==
+--===============3877094711716722252==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Christoph reported the following splat:
+On Tue, 2020-12-01 at 19:58 +0800, Geliang Tang wrote:
+> Currently the address ID set by the netlink PM from user-space is
+> overridden by the kernel. This patch added the address ID assignment
+> bitmap to allow user-space to set the address ID.
+> =
 
-WARNING: CPU: 0 PID: 4615 at net/ipv4/inet_connection_sock.c:1031 inet_csk_=
-listen_stop+0x8e8/0xad0 net/ipv4/inet_connection_sock.c:1031
-Modules linked in:
-CPU: 0 PID: 4615 Comm: syz-executor.4 Not tainted 5.9.0 #37
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf=
-21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-RIP: 0010:inet_csk_listen_stop+0x8e8/0xad0 net/ipv4/inet_connection_sock.c:=
-1031
-Code: 03 00 00 00 e8 79 b2 3d ff e9 ad f9 ff ff e8 1f 76 ba fe be 02 00 00 =
-00 4c 89 f7 e8 62 b2 3d ff e9 14 f9 ff ff e8 08 76 ba fe <0f> 0b e9 97 f8 f=
-f ff e8 fc 75 ba fe be 03 00 00 00 4c 89 f7 e8 3f
-RSP: 0018:ffffc900037f7948 EFLAGS: 00010293
-RAX: ffff88810a349c80 RBX: ffff888114ee1b00 RCX: ffffffff827b14cd
-RDX: 0000000000000000 RSI: ffffffff827b1c38 RDI: 0000000000000005
-RBP: ffff88810a2a8000 R08: ffff88810a349c80 R09: fffff520006fef1f
-R10: 0000000000000003 R11: fffff520006fef1e R12: ffff888114ee2d00
-R13: dffffc0000000000 R14: 0000000000000001 R15: ffff888114ee1d68
-FS:  00007f2ac1945700(0000) GS:ffff88811b400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd44798bc0 CR3: 0000000109810002 CR4: 0000000000170ef0
-Call Trace:
- __tcp_close+0xd86/0x1110 net/ipv4/tcp.c:2433
- __mptcp_close_ssk+0x256/0x430 net/mptcp/protocol.c:1761
- __mptcp_destroy_sock+0x49b/0x770 net/mptcp/protocol.c:2127
- mptcp_close+0x62d/0x910 net/mptcp/protocol.c:2184
- inet_release+0xe9/0x1f0 net/ipv4/af_inet.c:434
- __sock_release+0xd2/0x280 net/socket.c:596
- sock_close+0x15/0x20 net/socket.c:1277
- __fput+0x276/0x960 fs/file_table.c:281
- task_work_run+0x109/0x1d0 kernel/task_work.c:151
- get_signal+0xe8f/0x1d40 kernel/signal.c:2561
- arch_do_signal+0x88/0x1b60 arch/x86/kernel/signal.c:811
- exit_to_user_mode_loop kernel/entry/common.c:161 [inline]
- exit_to_user_mode_prepare+0x9b/0xf0 kernel/entry/common.c:191
- syscall_exit_to_user_mode+0x22/0x150 kernel/entry/common.c:266
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f2ac1254469
-Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 =
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
-f 73 01 c3 48 8b 0d ff 49 2b 00 f7 d8 64 89 01 48
-RSP: 002b:00007f2ac1944dc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffbf RBX: 000000000069bf00 RCX: 00007f2ac1254469
-RDX: 0000000000000000 RSI: 0000000000008982 RDI: 0000000000000003
-RBP: 000000000069bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000069bf0c
-R13: 00007ffeb53f178f R14: 00000000004668b0 R15: 0000000000000003
+> Use a per netns bitmask id_bitmap (256 bits) to keep track of in-use IDs.
+> And use next_id to keep track of the highest ID currently in use. If the
+> user-space provides an ID at endpoint creation time, try to use it. If
+> already in use, endpoint creation fails. Otherwise pick the first ID
+> available after the highest currently in use, with wrap-around.
+> =
 
-After commit 0397c6d85f9c ("mptcp: keep unaccepted MPC subflow into
-join list"), the msk's workqueue and/or PM can touch the MPC
-subflow - and acquire its socket lock - even if it's still unaccepted.
+> Test:
+> =
 
-If the above event races with the relevant listener socket close, we
-can end-up with the above splat.
+>  # pm_nl_ctl add 10.0.0.1
+>  # pm_nl_ctl add 10.0.0.2
+>  # pm_nl_ctl add 10.0.0.3 id 100
+>  # pm_nl_ctl add 10.0.0.4
+>  # pm_nl_ctl add 10.0.0.5 id 254
+>  # pm_nl_ctl add 10.0.0.6
+>  # pm_nl_ctl add 10.0.0.7
+>  # pm_nl_ctl add 10.0.0.8
+>  # pm_nl_ctl dump
+>  id 1 flags  10.0.0.1
+>  id 2 flags  10.0.0.2
+>  id 3 flags  10.0.0.7
+>  id 4 flags  10.0.0.8
+>  id 100 flags  10.0.0.3
+>  id 101 flags  10.0.0.4
+>  id 254 flags  10.0.0.5
+>  id 255 flags  10.0.0.6
+> =
 
-This change addresses the issue delaying the MPC socket insertion
-in conn_list at accept time - that is, partially reverting the
-blamed commit.
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/117
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+>  net/mptcp/pm_netlink.c | 63 +++++++++++++++++++++++++++---------------
+>  1 file changed, 41 insertions(+), 22 deletions(-)
+> =
 
-We must additionally ensure that mptcp_pm_fully_established()
-happens after accept() time, or the PM will not be able to
-handle properly such event - conn_list could be empty otherwise.
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 54c6b6359144..0463a6b38633 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -37,6 +37,9 @@ struct mptcp_pm_add_entry {
+>  	u8			retrans_times;
+>  };
+>  =
 
-In the receive path, we check the subflow list node to ensure
-it is out of the listener queue. Be sure client subflows do
-not match transiently such condition moving them into the join
-list earlier at creation time.
+> +#define MAX_ADDR_ID		255
+> +#define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, 8 * sizeof(long))
+						   ^^^^^^^
+You can use the BITS_PER_LONG macro above. Not a big deal anyway.
 
-Since we now have multiple mptcp_pm_fully_established() call sites
-from different code-paths, said helper can now race with itself.
-Use an additional PM status bit to avoid multiple notifications.
+[...]
+> @@ -1076,35 +1092,37 @@ static int mptcp_nl_cmd_dump_addrs(struct sk_buff=
+ *msg,
+>  				   struct netlink_callback *cb)
+>  {
+>  	struct net *net =3D sock_net(msg->sk);
+> -	struct mptcp_pm_addr_entry *entry;
+>  	struct pm_nl_pernet *pernet;
+> -	int id =3D cb->args[0];
 
-Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/103
-Fixes: 0397c6d85f9c ("mptcp: keep unaccepted MPC subflow into join list"),
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/options.c                                |  7 ++++++-
- net/mptcp/pm.c                                     |  8 +++++++-
- net/mptcp/protocol.c                               | 11 +++++++++++
- net/mptcp/protocol.h                               |  1 +
- net/mptcp/subflow.c                                | 14 ++++++++++----
- tools/testing/selftests/net/mptcp/mptcp_connect.sh |  4 ++--
- 6 files changed, 37 insertions(+), 8 deletions(-)
+Why are you ignoring the callback argument? I think this will not work
+if the dump exceeds the a single skbuff size.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 6088fc80db75..17d5ea163ca2 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -811,7 +811,12 @@ static bool check_fully_established(struct mptcp_sock =
-*msk, struct sock *ssk,
- 	mptcp_subflow_fully_established(subflow, mp_opt);
- =
+> -	void *hdr;
+> +	int id;
+>  =
 
- fully_established:
--	if (likely(subflow->pm_notified))
-+	/* if the subflow is not already linked into the conn_list, we can't
-+	 * notify the PM: this subflow is still on the listener queue
-+	 * and the PM possibly acquiring the subflow lock could race with
-+	 * the listener close
-+	 */
-+	if (likely(subflow->pm_notified) || list_empty(&subflow->node))
- 		return true;
- =
+>  	pernet =3D net_generic(net, pm_nl_pernet_id);
+>  =
 
- 	subflow->pm_notified =3D 1;
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 9256bd5d02ed..da2ed576f289 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -126,8 +126,14 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk)
- =
+>  	spin_lock_bh(&pernet->lock);
+> -	list_for_each_entry(entry, &pernet->local_addr_list, list) {
+> -		if (entry->addr.id <=3D id)
+> -			continue;
+> -
+> -		hdr =3D genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> -				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> -				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> -		if (!hdr)
+> -			break;
+> +	for (id =3D 0; id < MAX_ADDR_ID + 1; id++) {
+> +		if (test_bit(id, pernet->id_bitmap)) {
+> +			struct mptcp_pm_addr_entry *entry;
+> +			void *hdr;
 
- 	spin_lock_bh(&pm->lock);
- =
+It's not clear to me why this chunk is needed ?!? We can still traverse
+the existing addresses using the list. There is no guarantee that the
+dumped list will be sorted by id.
 
--	if (READ_ONCE(pm->work_pending))
-+	/* mptcp_pm_fully_established() can be invoked by multiple
-+	 * racing paths - accept() and check_fully_established()
-+	 * be sure to serve this event only once.
-+	 */
-+	if (READ_ONCE(pm->work_pending) &&
-+	    !(msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
- 		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
-+	msk->pm.status |=3D BIT(MPTCP_PM_ALREADY_ESTABLISHED);
- =
+Thanks! =
 
- 	spin_unlock_bh(&pm->lock);
- }
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 54c1ed735eef..d619eb291479 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3255,6 +3255,17 @@ static int mptcp_stream_accept(struct socket *sock, =
-struct socket *newsock,
- 		bool slowpath;
- =
 
- 		slowpath =3D lock_sock_fast(newsk);
-+
-+		/* PM/worker can now acquire the first subflow socket
-+		 * lock without racing with listener queue cleanup,
-+		 * we can notify it, if needed.
-+		 */
-+		subflow =3D mptcp_subflow_ctx(msk->first);
-+		list_add(&subflow->node, &msk->conn_list);
-+		sock_hold(msk->first);
-+		if (mptcp_is_fully_established(newsk))
-+			mptcp_pm_fully_established(msk);
-+
- 		mptcp_copy_inaddrs(newsk, msk->first);
- 		mptcp_rcv_space_init(msk, msk->first);
- =
+Paolo
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 9d8f01aac91c..8b268c617910 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -169,6 +169,7 @@ enum mptcp_pm_status {
- 	MPTCP_PM_ADD_ADDR_SEND_ACK,
- 	MPTCP_PM_RM_ADDR_RECEIVED,
- 	MPTCP_PM_ESTABLISHED,
-+	MPTCP_PM_ALREADY_ESTABLISHED,	/* persistent status, set after ESTABLISHED=
- event */
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
- };
- =
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 96c585f003f8..fe3bc73aa39d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -582,8 +582,9 @@ static struct sock *subflow_syn_recv_sock(const struct =
-sock *sk,
- 			 */
- 			inet_sk_state_store((void *)new_msk, TCP_ESTABLISHED);
- =
-
--			/* link the newly created socket to the msk */
--			mptcp_add_pending_subflow(mptcp_sk(new_msk), ctx);
-+			/* record the newly created socket as the first msk
-+			 * subflow, but don't link it yet into conn_list
-+			 */
- 			WRITE_ONCE(mptcp_sk(new_msk)->first, child);
- =
-
- 			/* new mpc subflow takes ownership of the newly
-@@ -1116,13 +1117,18 @@ int __mptcp_subflow_connect(struct sock *sk, const =
-struct mptcp_addr_info *loc,
- 	subflow->request_bkup =3D !!(loc->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
- 	mptcp_info2sockaddr(remote, &addr);
- =
-
-+	mptcp_add_pending_subflow(msk, subflow);
- 	err =3D kernel_connect(sf, (struct sockaddr *)&addr, addrlen, O_NONBLOCK);
- 	if (err && err !=3D -EINPROGRESS)
--		goto failed;
-+		goto failed_unlink;
- =
-
--	mptcp_add_pending_subflow(msk, subflow);
- 	return err;
- =
-
-+failed_unlink:
-+	spin_lock_bh(&msk->join_list_lock);
-+	list_del(&subflow->node);
-+	spin_unlock_bh(&msk->join_list_lock);
-+
- failed:
- 	subflow->disposable =3D 1;
- 	sock_release(sf);
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 2cfd87d94db8..63e522602b4c 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -604,9 +604,9 @@ run_tests()
- make_file "$cin" "client"
- make_file "$sin" "server"
- =
-
--check_mptcp_disabled
-+# check_mptcp_disabled
- =
-
--check_mptcp_ulp_setsockopt
-+# check_mptcp_ulp_setsockopt
- =
-
- echo "INFO: validating network environment with pings"
- for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
--- =
-
-2.26.2
-
---===============8303827370267506326==--
+--===============3877094711716722252==--
