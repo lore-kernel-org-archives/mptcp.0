@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============1367692451095770190=="
+Content-Type: multipart/mixed; boundary="===============0112583171206314725=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v7 mptcp-next 1/7] mptcp: create the
- listening socket for new port
-Date: Thu, 03 Dec 2020 17:47:10 -0800
-Message-ID: <6816d41f-9856-10f1-8b61-8ca75ac1dbc@linux.intel.com>
-In-Reply-To: 9bfd982aa08d39d84846b7fa655230dc11e91f1c.1606716547.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash to "[MPTCP][PATCH v7
+ mptcp-next 3/7] mptcp: add port number announced check"
+Date: Thu, 03 Dec 2020 17:48:07 -0800
+Message-ID: <a1f532d7-d1fd-8c3-90f4-196414b1ba24@linux.intel.com>
+In-Reply-To: 762b36e0733643c56cc777aad288ad969b0bcf20.1606726150.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7034
+X-UID: 7035
 
---===============1367692451095770190==
+--===============0112583171206314725==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,28 +19,17 @@ Content-Transfer-Encoding: quoted-printable
 
 On Mon, 30 Nov 2020, Geliang Tang wrote:
 
-> This patch created a listening socket when an address with a port-number
-> is added by PM netlink. Then binded the new port to the socket, and
-> listened for the connection.
+> Drop source_address helper.
 >
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> net/mptcp/pm_netlink.c | 58 ++++++++++++++++++++++++++++++++++++++++++
-> net/mptcp/protocol.c   |  2 +-
-> net/mptcp/protocol.h   |  3 +++
-> net/mptcp/subflow.c    |  4 +--
-> 4 files changed, 64 insertions(+), 3 deletions(-)
+> net/mptcp/pm_netlink.c | 17 ++---------------
+> 1 file changed, 2 insertions(+), 15 deletions(-)
 >
 
-Another thing I don't think we discussed yet with this "extra listening =
-
-socket" approach: what do we do about socket options?
-
-Are there any options we should be concerned about on this listening =
-
-socket? Should SO_REUSEADDR be set by default?
+Looks ok to squash in v8
 
 --
 Mat Martineau
 Intel
---===============1367692451095770190==--
+--===============0112583171206314725==--
