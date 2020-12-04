@@ -1,60 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============5958592101030678481=="
+Content-Type: multipart/mixed; boundary="===============3157017961420567218=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Othman, Ossama <ossama.othman at intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v3] mptcp: let MPTCP create max size skbs
-Date: Fri, 04 Dec 2020 19:00:24 +0100
-Message-ID: <df005946-26c0-d80c-a3ac-38ed35de3c84@tessares.net>
-In-Reply-To: d5c7935a21f20d37900cd51fc0f1f88327a0dfdd.1606406237.git.pabeni@redhat.com
+Subject: [MPTCP] Re: force existing service to use MPTCP
+Date: Fri, 04 Dec 2020 19:32:58 +0000
+Message-ID: <ee14d6511a79435ca04752f22524ee6f@intel.com>
+In-Reply-To: d3a06454529b77757dc27b7157b3f55fee8f25b3.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7055
+X-UID: 7056
 
---===============5958592101030678481==
+--===============3157017961420567218==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+Hi Paolo,
 
-On 26/11/2020 16:58, Paolo Abeni wrote:
-> Currently the xmit path of the MPTCP protocol creates smaller-
-> than-max-size skbs, which is suboptimal for the performances.
-> =
+> Bottom line:
+> - the above looks tecnically viable [at least for some services]. I'm
+> looking for a more extended service/daemon list to investigate
+> fourther. I think we could/should really consider package the above in
+> mptcpd or the like.
 
-> There are a few things to improve:
-> - when coalescing to an existing skb, must clear the PUSH flag
-> - tcp_build_frag() expect the available space as an argument.
->    When coalescing is enable MPTCP already subtracted the
->    to-be-coalesced skb len. We must increment said argument
->    accordingly.
-> =
+That's fine.  Mptcpd is licensed under BSD-3-Clause.  Would we able to appl=
+y the same license to the proposed additions?
 
-> Before:
-> ./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
-> [...]
-> 131072  16384  16384    30.00    24414.86
-> =
+Thanks!
+-Ossama
 
-> After:
-> ./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
-> [...]
-> 131072  16384  16384    30.05    28357.69
-> =
+=20
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-
-Thank you for your nice improvement and review!
-
-- 31859991dc0f: mptcp: let MPTCP create max size skbs
-- Results: f8649f5ba21e..54981c30b018
-
-Tests + export have been scheduled!
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5958592101030678481==--
+--===============3157017961420567218==--
