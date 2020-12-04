@@ -1,39 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============2275105626108554691=="
+Content-Type: multipart/mixed; boundary="===============5958592101030678481=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] mptcp: use MPTCPOPT_HMAC_LEN
- macro
-Date: Fri, 04 Dec 2020 18:09:21 +0100
-Message-ID: <050d2b9d-41fa-04a3-4209-1b282334b7c3@tessares.net>
-In-Reply-To: 1ab161c24f9027ce76b3483f025be8bbfa0c7667.1606899179.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH v3] mptcp: let MPTCP create max size skbs
+Date: Fri, 04 Dec 2020 19:00:24 +0100
+Message-ID: <df005946-26c0-d80c-a3ac-38ed35de3c84@tessares.net>
+In-Reply-To: d5c7935a21f20d37900cd51fc0f1f88327a0dfdd.1606406237.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7054
+X-UID: 7055
 
---===============2275105626108554691==
+--===============5958592101030678481==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+Hi Paolo, Mat,
 
-On 02/12/2020 09:54, Geliang Tang wrote:
-> Use the macro MPTCPOPT_HMAC_LEN instead of a constant in struct
-> mptcp_options_received.
+On 26/11/2020 16:58, Paolo Abeni wrote:
+> Currently the xmit path of the MPTCP protocol creates smaller-
+> than-max-size skbs, which is suboptimal for the performances.
 > =
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> There are a few things to improve:
+> - when coalescing to an existing skb, must clear the PUSH flag
+> - tcp_build_frag() expect the available space as an argument.
+>    When coalescing is enable MPTCP already subtracted the
+>    to-be-coalesced skb len. We must increment said argument
+>    accordingly.
+> =
 
-Thank you for the patch and the review!
+> Before:
+> ./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
+> [...]
+> 131072  16384  16384    30.00    24414.86
+> =
 
-This patch has been applied after other patches from Geliang.
+> After:
+> ./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
+> [...]
+> 131072  16384  16384    30.05    28357.69
+> =
 
-- 0ebaa63b1d30: mptcp: use MPTCPOPT_HMAC_LEN macro
-   - With Mat's tag
-- Results: 95b2727396d3..8e81e32d0db6
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-Tests + export are going to be started soon!
+Thank you for your nice improvement and review!
+
+- 31859991dc0f: mptcp: let MPTCP create max size skbs
+- Results: f8649f5ba21e..54981c30b018
+
+Tests + export have been scheduled!
 
 Cheers,
 Matt
@@ -41,4 +57,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============2275105626108554691==--
+--===============5958592101030678481==--
