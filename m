@@ -1,34 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============3157017961420567218=="
+Content-Type: multipart/mixed; boundary="===============2849362442411955534=="
 MIME-Version: 1.0
-From: Othman, Ossama <ossama.othman at intel.com>
+From: Paul Moore <paul at paul-moore.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: force existing service to use MPTCP
-Date: Fri, 04 Dec 2020 19:32:58 +0000
-Message-ID: <ee14d6511a79435ca04752f22524ee6f@intel.com>
-In-Reply-To: d3a06454529b77757dc27b7157b3f55fee8f25b3.camel@redhat.com
+Subject: [MPTCP] Re: [RFC PATCH] selinux: handle MPTCP consistently with TCP
+Date: Fri, 04 Dec 2020 18:22:12 -0500
+Message-ID: <CAHC9VhS9xRSbHMCgDkix0fHYeO=aA_=DVyV1Xdu8qFpggws8Kg@mail.gmail.com>
+In-Reply-To: 8c844984eaa92413066367af69b56194b111ad8f.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7056
+X-UID: 7057
 
---===============3157017961420567218==
+--===============2849362442411955534==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Fri, Dec 4, 2020 at 5:04 AM Paolo Abeni <pabeni(a)redhat.com> wrote:
+>
+> On Thu, 2020-12-03 at 21:24 -0500, Paul Moore wrote:
+> > On Thu, Dec 3, 2020 at 6:54 PM Florian Westphal <fw(a)strlen.de> wrote:
+> > > Paul Moore <paul(a)paul-moore.com> wrote:
+> > > > I'm not very well versed in MPTCP, but this *seems* okay to me, min=
+us
+> > > > the else-crud chunk.  Just to confirm my understanding, while MPTCP
+> > > > allows one TCP connection/stream to be subdivided and distributed
+> > > > across multiple interfaces, it does not allow multiple TCP streams =
+to
+> > > > be multiplexed on a single connection, yes?
+> > >
+> > > Its the latter.  The application sees a TCP interface (socket), but
+> > > data may be carried over multiple individual tcp streams on the wire.
+> >
+> > Hmm, that may complicate things a bit from a SELinux perspective.  Mayb=
+e not.
+> >
+> > Just to make sure I understand, with MPTCP, a client that
+> > traditionally opened multiple TCP sockets to talk to a server would
+> > now just open a single MPTCP socket and create multiple sub-flows
+> > instead of multiple TCP sockets?
+>
+> I expect most clients will not be updated specifically for MPTCP,
+> except changing the protocol number at socket creation time - and we
+> would like to avoid even that.
+>
+> If a given application creates multiple sockets, it will still do that
+> with MPTCP. The kernel, according to the configuration provided by the
+> user-space and/or by the peer, may try to create additional subflows
+> for each MPTCP sockets, using different local or remote address and/or
+> port number. Each subflow is represented inside the kernel as a TCP
+> 'struct sock' with specific ULP operations. No related 'struct socket'
+> is exposed to user-space.
 
-> Bottom line:
-> - the above looks tecnically viable [at least for some services]. I'm
-> looking for a more extended service/daemon list to investigate
-> fourther. I think we could/should really consider package the above in
-> mptcpd or the like.
+Hmm, okay, there are probably a few other things we need to worry
+about then from a SELinux point of view.  Smack may be okay since it
+largely ignores sockets as a security entity, but Casey would be the
+one to comment on that.  I'm not certain of the current AppArmor
+network controls, or the other LSMs for that matter, but they should
+be seeing this conversation on the LSM list so I assume they will
+comment as necessary.
 
-That's fine.  Mptcpd is licensed under BSD-3-Clause.  Would we able to appl=
-y the same license to the proposed additions?
+For SELinux the issue is that we need to track state in the sock
+struct, via sock->sk_security, and that state needs to be initialized
+and set properly.  Similarly with TCP request_sock structs, via
+request_sock->{secid,peer_secid}.  Is the MPTCP code allocating and/or
+otherwise creating socks or request_socks outside of the regular TCP
+code?  We would also be concerned about socket structs, but I'm
+guessing that code reuses the TCP code based on what you've said.
 
-Thanks!
--Ossama
+-- =
 
-=20
-
---===============3157017961420567218==--
+paul moore
+www.paul-moore.com
+--===============2849362442411955534==--
