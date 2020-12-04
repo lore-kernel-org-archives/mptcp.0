@@ -1,61 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============3319612172354507699=="
+Content-Type: multipart/mixed; boundary="===============4448815147125245896=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: link MPC subflow into msk only
- after accept
-Date: Fri, 04 Dec 2020 17:43:14 +0100
-Message-ID: <fbd60118-9729-8880-84dd-b05567c865cd@tessares.net>
-In-Reply-To: e699fd8e66e4d8b4080f92768ca41a85eacdda26.1606998810.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: plug subflow context memory leak
+Date: Fri, 04 Dec 2020 17:46:47 +0100
+Message-ID: <6aef51da-e3a2-5d70-96f0-e844ce17b2da@tessares.net>
+In-Reply-To: 8d57c51a359d2c3867b7a6712af4d431167ecb92.1607081800.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7050
+X-UID: 7051
 
---===============3319612172354507699==
+--===============4448815147125245896==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo,
 
-On 03/12/2020 13:36, Paolo Abeni wrote:
-> Christoph reported the following splat:
-
-Thank you for the patch!
-It looks good to me except a detail:
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index 2cfd87d94db8..63e522602b4c 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -604,9 +604,9 @@ run_tests()
->   make_file "$cin" "client"
->   make_file "$sin" "server"
->   =
-
-> -check_mptcp_disabled
-> +# check_mptcp_disabled
->   =
-
-> -check_mptcp_ulp_setsockopt
-> +# check_mptcp_ulp_setsockopt
->   =
-
->   echo "INFO: validating network environment with pings"
->   for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
+On 04/12/2020 12:37, Paolo Abeni wrote:
+> When a MPTCP listener socket is closed with unaccepted
+> children pending, the ULP release callback will be invoked,
+> but nobody will call into __mptcp_close_ssk() on the
+> corresponding subflow.
 > =
 
+> As a consequence, at ULP release time, the 'disposable' flag
+> will be cleared and the subflow context memory will be leaked.
+> =
 
-I reverted the modification in this file, I guess you didn't want to do =
+> This change addresses the issue always freeing the context if
+> the subflow is still in the accept queue at ULP release time.
+> =
 
-this :)
+> Additionally, this fixes an incorrect code reference in the
+> related comment.
+> =
 
-- 46712436b452: mptcp: link MPC subflow into msk only after accept
-   - With my Reviewed-by tag
-- Results: 7ca534d9bde5..8f87392aa646
+> Note: this fix leverages the changes introduced by the previous
+> commit.
+> =
 
-Tests + export are going to be started soon!
+> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+
+Thank you for this patch!
+
+- b89ebad43317: mptcp: plug subflow context memory leak
+- Results: 3df24f8e9d36..7ca534d9bde5
+
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -63,4 +56,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3319612172354507699==--
+--===============4448815147125245896==--
