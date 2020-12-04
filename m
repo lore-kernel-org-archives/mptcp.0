@@ -1,73 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============8773013084897357773=="
+Content-Type: multipart/mixed; boundary="===============1367692451095770190=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 2/9] mptcp: set the listening
- socket's subflow
-Date: Thu, 03 Dec 2020 17:40:56 -0800
-Message-ID: <9dc3368e-783-9d41-3ad8-b36041e6a7e4@linux.intel.com>
-In-Reply-To: f011270ffb2897b12632af508b6d0db6c3be28f4.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v7 mptcp-next 1/7] mptcp: create the
+ listening socket for new port
+Date: Thu, 03 Dec 2020 17:47:10 -0800
+Message-ID: <6816d41f-9856-10f1-8b61-8ca75ac1dbc@linux.intel.com>
+In-Reply-To: 9bfd982aa08d39d84846b7fa655230dc11e91f1c.1606716547.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7033
+X-UID: 7034
 
---===============8773013084897357773==
+--===============1367692451095770190==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 25 Nov 2020, Paolo Abeni wrote:
 
-> On Wed, 2020-11-25 at 11:01 +0800, Geliang Tang wrote:
->> This patch set the subflow context of the listening socket.
->>
->> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
->> ---
->>  net/mptcp/pm_netlink.c |  5 +++++
->>  net/mptcp/protocol.h   |  1 +
->>  net/mptcp/subflow.c    | 37 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 43 insertions(+)
->>
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index d4c136f1e754..6053a88c176f 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1208,6 +1208,43 @@ int mptcp_subflow_create_socket(struct sock *sk, =
-struct socket **new_sock)
->>  	return 0;
->>  }
->>
->> +int mptcp_pm_set_listen_socket_subflow(struct sock *sk, struct socket *=
-sf)
->> +{
->> +	struct mptcp_subflow_context *subflow;
->> +	struct net *net =3D sock_net(sk);
->> +	int err;
->> +
->> +	if (!sf)
->> +		return -EINVAL;
->> +
->> +	lock_sock(sf->sk);
->> +
->> +	mptcp_attach_cgroup(sk, sf->sk);
+On Mon, 30 Nov 2020, Geliang Tang wrote:
+
+> This patch created a listening socket when an address with a port-number
+> is added by PM netlink. Then binded the new port to the socket, and
+> listened for the connection.
 >
-> This will likely not work if there are multiple MPTCP sockets using
-> this endpoint.
->
-> Possibly the cgroup attaching should be done at subflow_syn_recv_sock()
-> time, for the child socket, with some custom code - because it must
-> override the existing cgroup inherited from the listener.
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/pm_netlink.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+> net/mptcp/protocol.c   |  2 +-
+> net/mptcp/protocol.h   |  3 +++
+> net/mptcp/subflow.c    |  4 +--
+> 4 files changed, 64 insertions(+), 3 deletions(-)
 >
 
-Geliang -
+Another thing I don't think we discussed yet with this "extra listening =
 
-I didn't see the cgroup issue addressed in v7, was it not necessary or is =
+socket" approach: what do we do about socket options?
 
-there more to figure out to get the child socket attached to the right =
+Are there any options we should be concerned about on this listening =
 
-cgroup?
+socket? Should SO_REUSEADDR be set by default?
 
 --
 Mat Martineau
 Intel
---===============8773013084897357773==--
+--===============1367692451095770190==--
