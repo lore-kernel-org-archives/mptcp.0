@@ -1,90 +1,140 @@
-Content-Type: multipart/mixed; boundary="===============4986273908599954264=="
+Content-Type: multipart/mixed; boundary="===============6144464954842773057=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 2/2] selftests: mptcp: add
- testcase for setting the address ID
-Date: Sat, 05 Dec 2020 21:37:12 +0800
-Message-ID: <b8b773e6b7b8be4b85fdda20c50dc3b2f6c981b7.1607174930.git.geliangtang@gmail.com>
-In-Reply-To: 0ba36019c2f3679be412fba62830237c2a40fa66.1607174930.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] mptcp: add the address ID
+ assignment bitmap
+Date: Sat, 05 Dec 2020 21:47:38 +0800
+Message-ID: <CA+WQbws+Y80F3XLeR+M_T0k0mmo+d8jP4KTWfGHvRbCHPhFuDQ@mail.gmail.com>
+In-Reply-To: 06b47a4071c049ad0595f1bcfa970cec83f4fb6f.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7061
+X-UID: 7062
 
---===============4986273908599954264==
+--===============6144464954842773057==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Since the address ID can be set from user-space, some of the tests in
-pm_netlink.sh will fail. This patch fixed the failures, and add the testcase
-for setting the address ID.
+Hi Paolo,
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/pm_netlink.sh | 25 ++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+Thanks for your review.
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testin=
-g/selftests/net/mptcp/pm_netlink.sh
-index 15f4f46ca3a9..b8f96d81f942 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -91,7 +91,7 @@ id 3 flags signal,backup 10.0.1.3" "dump addrs after del"
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3
- check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
- =
+Paolo Abeni <pabeni(a)redhat.com> =E4=BA=8E2020=E5=B9=B412=E6=9C=883=E6=97=
+=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:41=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, 2020-12-01 at 19:58 +0800, Geliang Tang wrote:
+> > Currently the address ID set by the netlink PM from user-space is
+> > overridden by the kernel. This patch added the address ID assignment
+> > bitmap to allow user-space to set the address ID.
+> >
+> > Use a per netns bitmask id_bitmap (256 bits) to keep track of in-use ID=
+s.
+> > And use next_id to keep track of the highest ID currently in use. If the
+> > user-space provides an ID at endpoint creation time, try to use it. If
+> > already in use, endpoint creation fails. Otherwise pick the first ID
+> > available after the highest currently in use, with wrap-around.
+> >
+> > Test:
+> >
+> >  # pm_nl_ctl add 10.0.0.1
+> >  # pm_nl_ctl add 10.0.0.2
+> >  # pm_nl_ctl add 10.0.0.3 id 100
+> >  # pm_nl_ctl add 10.0.0.4
+> >  # pm_nl_ctl add 10.0.0.5 id 254
+> >  # pm_nl_ctl add 10.0.0.6
+> >  # pm_nl_ctl add 10.0.0.7
+> >  # pm_nl_ctl add 10.0.0.8
+> >  # pm_nl_ctl dump
+> >  id 1 flags  10.0.0.1
+> >  id 2 flags  10.0.0.2
+> >  id 3 flags  10.0.0.7
+> >  id 4 flags  10.0.0.8
+> >  id 100 flags  10.0.0.3
+> >  id 101 flags  10.0.0.4
+> >  id 254 flags  10.0.0.5
+> >  id 255 flags  10.0.0.6
+> >
+> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/117
+> > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> > ---
+> >  net/mptcp/pm_netlink.c | 63 +++++++++++++++++++++++++++---------------
+> >  1 file changed, 41 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index 54c6b6359144..0463a6b38633 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> > @@ -37,6 +37,9 @@ struct mptcp_pm_add_entry {
+> >       u8                      retrans_times;
+> >  };
+> >
+> > +#define MAX_ADDR_ID          255
+> > +#define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, 8 * sizeof(long))
+>                                                    ^^^^^^^
+> You can use the BITS_PER_LONG macro above. Not a big deal anyway.
+>
+> [...]
+> > @@ -1076,35 +1092,37 @@ static int mptcp_nl_cmd_dump_addrs(struct sk_bu=
+ff *msg,
+> >                                  struct netlink_callback *cb)
+> >  {
+> >       struct net *net =3D sock_net(msg->sk);
+> > -     struct mptcp_pm_addr_entry *entry;
+> >       struct pm_nl_pernet *pernet;
+> > -     int id =3D cb->args[0];
+>
+> Why are you ignoring the callback argument? I think this will not work
+> if the dump exceeds the a single skbuff size.
 
--ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 id 10 flags signal
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 flags signal
- check "ip netns exec $ns1 ./pm_nl_ctl get 4" "id 4 flags signal 10.0.1.4" =
-"id addr increment"
- =
+Add back the callback argument in v2.
 
- for i in `seq 5 9`; do
-@@ -100,11 +100,12 @@ done
- check "ip netns exec $ns1 ./pm_nl_ctl get 9" "id 9 flags signal 10.0.1.9" =
-"hard addr limit"
- check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
- =
+>
+> > -     void *hdr;
+> > +     int id;
+> >
+> >       pernet =3D net_generic(net, pm_nl_pernet_id);
+> >
+> >       spin_lock_bh(&pernet->lock);
+> > -     list_for_each_entry(entry, &pernet->local_addr_list, list) {
+> > -             if (entry->addr.id <=3D id)
+> > -                     continue;
+> > -
+> > -             hdr =3D genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> > -                               cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> > -                               NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> > -             if (!hdr)
+> > -                     break;
+> > +     for (id =3D 0; id < MAX_ADDR_ID + 1; id++) {
+> > +             if (test_bit(id, pernet->id_bitmap)) {
+> > +                     struct mptcp_pm_addr_entry *entry;
+> > +                     void *hdr;
+>
+> It's not clear to me why this chunk is needed ?!? We can still traverse
+> the existing addresses using the list. There is no guarantee that the
+> dumped list will be sorted by id.
 
--for i in `seq 9 256`; do
-+for i in `seq 9 255`; do
- 	ip netns exec $ns1 ./pm_nl_ctl del $i
--	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $((i+1))
- done
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
-+id 2 flags  10.0.0.9
- id 3 flags signal,backup 10.0.1.3
- id 4 flags signal 10.0.1.4
- id 5 flags signal 10.0.1.5
-@@ -127,4 +128,22 @@ ip netns exec $ns1 ./pm_nl_ctl limits 8 8
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 8
- subflows 8" "set limits"
- =
+The orignal cmd_dump_addrs dosen't work in this case:
 
-+ip netns exec $ns1 ./pm_nl_ctl flush
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 id 100
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.5 id 254
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.6
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.7
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.8
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
-+id 2 flags  10.0.1.2
-+id 3 flags  10.0.1.7
-+id 4 flags  10.0.1.8
-+id 100 flags  10.0.1.3
-+id 101 flags  10.0.1.4
-+id 254 flags  10.0.1.5
-+id 255 flags  10.0.1.6" "set ids"
-+
- exit $ret
--- =
+# pm_nl_ctl add 10.0.0.0 id 100
+# pm_nl_ctl add 10.0.0.1 id 10
+# pm_nl_ctl dump
+id 100 flags  10.0.0.0
 
-2.26.2
+This id 10 item is lost since this code:
 
---===============4986273908599954264==--
+             if (entry->addr.id <=3D id)
+                     continue;
+
+Here id =3D 100, entry->addr.id =3D 10.
+
+So we need to sort the list by id.
+
+-Geliang
+
+>
+> Thanks!
+>
+> Paolo
+>
+--===============6144464954842773057==--
