@@ -1,74 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============2849362442411955534=="
+Content-Type: multipart/mixed; boundary="===============3054502065033588249=="
 MIME-Version: 1.0
-From: Paul Moore <paul at paul-moore.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH] selinux: handle MPTCP consistently with TCP
-Date: Fri, 04 Dec 2020 18:22:12 -0500
-Message-ID: <CAHC9VhS9xRSbHMCgDkix0fHYeO=aA_=DVyV1Xdu8qFpggws8Kg@mail.gmail.com>
-In-Reply-To: 8c844984eaa92413066367af69b56194b111ad8f.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 1/2] mptcp: remove address
+ when netlink flush addrs
+Date: Sat, 05 Dec 2020 08:51:44 +0800
+Message-ID: <CA+WQbwvnqp5cyM=AgnPeZyXpy35b+UYhRuzf0AXLt31YCDxz8Q@mail.gmail.com>
+In-Reply-To: ee48b64b-2a2-36b7-75fa-31adb234567d@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7057
+X-UID: 7058
 
---===============2849362442411955534==
+--===============3054502065033588249==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 4, 2020 at 5:04 AM Paolo Abeni <pabeni(a)redhat.com> wrote:
+Hi Mat,
+
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2020=E5=B9=B4=
+12=E6=9C=884=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=8810:16=E5=86=99=E9=
+=81=93=EF=BC=9A
 >
-> On Thu, 2020-12-03 at 21:24 -0500, Paul Moore wrote:
-> > On Thu, Dec 3, 2020 at 6:54 PM Florian Westphal <fw(a)strlen.de> wrote:
-> > > Paul Moore <paul(a)paul-moore.com> wrote:
-> > > > I'm not very well versed in MPTCP, but this *seems* okay to me, min=
-us
-> > > > the else-crud chunk.  Just to confirm my understanding, while MPTCP
-> > > > allows one TCP connection/stream to be subdivided and distributed
-> > > > across multiple interfaces, it does not allow multiple TCP streams =
-to
-> > > > be multiplexed on a single connection, yes?
-> > >
-> > > Its the latter.  The application sees a TCP interface (socket), but
-> > > data may be carried over multiple individual tcp streams on the wire.
+> On Mon, 30 Nov 2020, Geliang Tang wrote:
+>
+> > When the PM netlink flushs the addresses, invoke the remove address
+> > function mptcp_nl_remove_subflow_and_signal_addr to remove the addresses
+> > and the subflows. Since this function should not be invoked under lock,
+> > move __flush_addrs out of the pernet->lock.
 > >
-> > Hmm, that may complicate things a bit from a SELinux perspective.  Mayb=
-e not.
+> > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> > ---
+> > net/mptcp/pm_netlink.c | 15 ++++++++++-----
+> > 1 file changed, 10 insertions(+), 5 deletions(-)
 > >
-> > Just to make sure I understand, with MPTCP, a client that
-> > traditionally opened multiple TCP sockets to talk to a server would
-> > now just open a single MPTCP socket and create multiple sub-flows
-> > instead of multiple TCP sockets?
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index ba31065ef462..4f1b7f44c03b 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> > @@ -962,13 +962,14 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *=
+skb, struct genl_info *info)
+> >       return ret;
+> > }
+> >
+> > -static void __flush_addrs(struct pm_nl_pernet *pernet)
+> > +static void __flush_addrs(struct net *net, struct list_head *list)
+> > {
+> > -     while (!list_empty(&pernet->local_addr_list)) {
+> > +     while (!list_empty(list)) {
+> >               struct mptcp_pm_addr_entry *cur;
+> >
+> > -             cur =3D list_entry(pernet->local_addr_list.next,
+> > +             cur =3D list_entry(list->next,
+> >                                struct mptcp_pm_addr_entry, list);
+> > +             mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
 >
-> I expect most clients will not be updated specifically for MPTCP,
-> except changing the protocol number at socket creation time - and we
-> would like to avoid even that.
+> I do think it makes sense to treat a 'flush' the same as a
+> MPTCP_PM_CMD_DEL_ADDR on every entry in the list, so the patch is ok with
+> me. I think I'll add an item to next week's meeting to talk about what
+> happens when the last subflow is closed this way.
+
+Do you mean the subflow whose local_id and remote_id are all 0? This
+subflow will not be closed by mptcp_nl_remove_subflow_and_signal_addr.
+This fuction will ignore the zero id, so the zero id subflow will not be cl=
+osed.
+
+-Geliang
+
 >
-> If a given application creates multiple sockets, it will still do that
-> with MPTCP. The kernel, according to the configuration provided by the
-> user-space and/or by the peer, may try to create additional subflows
-> for each MPTCP sockets, using different local or remote address and/or
-> port number. Each subflow is represented inside the kernel as a TCP
-> 'struct sock' with specific ULP operations. No related 'struct socket'
-> is exposed to user-space.
-
-Hmm, okay, there are probably a few other things we need to worry
-about then from a SELinux point of view.  Smack may be okay since it
-largely ignores sockets as a security entity, but Casey would be the
-one to comment on that.  I'm not certain of the current AppArmor
-network controls, or the other LSMs for that matter, but they should
-be seeing this conversation on the LSM list so I assume they will
-comment as necessary.
-
-For SELinux the issue is that we need to track state in the sock
-struct, via sock->sk_security, and that state needs to be initialized
-and set properly.  Similarly with TCP request_sock structs, via
-request_sock->{secid,peer_secid}.  Is the MPTCP code allocating and/or
-otherwise creating socks or request_socks outside of the regular TCP
-code?  We would also be concerned about socket structs, but I'm
-guessing that code reuses the TCP code based on what you've said.
-
--- =
-
-paul moore
-www.paul-moore.com
---===============2849362442411955534==--
+> Mat
+>
+> >               list_del_rcu(&cur->list);
+> >               kfree_rcu(cur, rcu);
+> >       }
+> > @@ -985,11 +986,13 @@ static void __reset_counters(struct pm_nl_pernet =
+*pernet)
+> > static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_in=
+fo *info)
+> > {
+> >       struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
+> > +     LIST_HEAD(free_list);
+> >
+> >       spin_lock_bh(&pernet->lock);
+> > -     __flush_addrs(pernet);
+> > +     list_splice_init(&pernet->local_addr_list, &free_list);
+> >       __reset_counters(pernet);
+> >       spin_unlock_bh(&pernet->lock);
+> > +     __flush_addrs(sock_net(skb->sk), &free_list);
+> >       return 0;
+> > }
+> >
+> > @@ -1253,10 +1256,12 @@ static void __net_exit pm_nl_exit_net(struct li=
+st_head *net_list)
+> >       struct net *net;
+> >
+> >       list_for_each_entry(net, net_list, exit_list) {
+> > +             struct pm_nl_pernet *pernet =3D net_generic(net, pm_nl_pe=
+rnet_id);
+> > +
+> >               /* net is removed from namespace list, can't race with
+> >                * other modifiers
+> >                */
+> > -             __flush_addrs(net_generic(net, pm_nl_pernet_id));
+> > +             __flush_addrs(net, &pernet->local_addr_list);
+> >       }
+> > }
+> >
+> > --
+> > 2.26.2
+>
+> --
+> Mat Martineau
+> Intel
+--===============3054502065033588249==--
