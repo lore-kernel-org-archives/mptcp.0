@@ -1,105 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============3492392933450432734=="
+Content-Type: multipart/mixed; boundary="===============2424395967524534168=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v4 mptcp-next 2/2] selftests: mptcp: add
- testcases for setting the address ID
-Date: Wed, 09 Dec 2020 16:04:34 +0800
-Message-ID: <ea019de699433e4ad796d608a96077f68b9b12fc.1607500712.git.geliangtang@gmail.com>
-In-Reply-To: 8331e8f103d86bbaa577a500c95b5d35560301b7.1607500712.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 0/6] MP_PRIO support
+Date: Wed, 09 Dec 2020 16:15:40 +0800
+Message-ID: <cover.1607501232.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7085
+X-UID: 7086
 
---===============3492392933450432734==
+--===============2424395967524534168==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Since the address ID can be set from user-space, some of the tests in
-pm_netlink.sh will fail. This patch fixed the failures, and add the
-testcases for setting the address ID.
+v3:
+ - drop the MPTCP_PM_ADDR_FLAG_NOBACKUP flag
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/pm_netlink.sh | 41 ++++++++++++++++++-
- 1 file changed, 39 insertions(+), 2 deletions(-)
+v2:
+ - add set_flags command
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testin=
-g/selftests/net/mptcp/pm_netlink.sh
-index 15f4f46ca3a9..a617e293734c 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -91,7 +91,7 @@ id 3 flags signal,backup 10.0.1.3" "dump addrs after del"
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3
- check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
- =
+v1:
+ - add MP_PRIO PM netlink support
 
--ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 id 10 flags signal
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 flags signal
- check "ip netns exec $ns1 ./pm_nl_ctl get 4" "id 4 flags signal 10.0.1.4" =
-"id addr increment"
- =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/51
 
- for i in `seq 5 9`; do
-@@ -102,9 +102,10 @@ check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "abov=
-e hard addr limit"
- =
+Geliang Tang (6):
+  mptcp: add the outgoing MP_PRIO support
+  mptcp: add the incoming MP_PRIO support
+  mptcp: add set_flags command in PM netlink
+  selftests: mptcp: add set_flags command in pm_nl_ctl
+  mptcp: add the mibs for MP_PRIO
+  selftests: mptcp: add the MP_PRIO testcases
 
- for i in `seq 9 256`; do
- 	ip netns exec $ns1 ./pm_nl_ctl del $i
--	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $((i+1))
- done
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
-+id 2 flags  10.0.0.9
- id 3 flags signal,backup 10.0.1.3
- id 4 flags signal 10.0.1.4
- id 5 flags signal 10.0.1.5
-@@ -127,4 +128,40 @@ ip netns exec $ns1 ./pm_nl_ctl limits 8 8
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 8
- subflows 8" "set limits"
- =
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/mib.c                               |   2 +
+ net/mptcp/mib.h                               |   2 +
+ net/mptcp/options.c                           |  56 ++++++++++
+ net/mptcp/pm.c                                |   8 ++
+ net/mptcp/pm_netlink.c                        | 100 ++++++++++++++++++
+ net/mptcp/protocol.h                          |  13 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  72 ++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  85 ++++++++++++++-
+ 9 files changed, 336 insertions(+), 3 deletions(-)
 
-+ip netns exec $ns1 ./pm_nl_ctl flush
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 id 100
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.5 id 254
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.6
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.7
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.8
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
-+id 2 flags  10.0.1.2
-+id 3 flags  10.0.1.7
-+id 4 flags  10.0.1.8
-+id 100 flags  10.0.1.3
-+id 101 flags  10.0.1.4
-+id 254 flags  10.0.1.5
-+id 255 flags  10.0.1.6" "set ids"
-+
-+ip netns exec $ns1 ./pm_nl_ctl flush
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.2 id 254
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.3
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.4
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.5 id 253
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.6
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.7
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.8
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.0.1
-+id 2 flags  10.0.0.4
-+id 3 flags  10.0.0.6
-+id 4 flags  10.0.0.7
-+id 5 flags  10.0.0.8
-+id 253 flags  10.0.0.5
-+id 254 flags  10.0.0.2
-+id 255 flags  10.0.0.3" "wrap-around ids"
-+
- exit $ret
 -- =
 
 2.26.2
 
---===============3492392933450432734==--
+--===============2424395967524534168==--
