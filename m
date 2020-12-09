@@ -1,208 +1,171 @@
-Content-Type: multipart/mixed; boundary="===============6031830016084300877=="
+Content-Type: multipart/mixed; boundary="===============5026734979418120346=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 1/2] mptcp: add the address
- ID assignment bitmap
-Date: Tue, 08 Dec 2020 16:42:00 -0800
-Message-ID: <d1bad7b6-e8fe-cc85-c9c8-1a1b4e5c4df@linux.intel.com>
-In-Reply-To: 672af235a6ac38fef0ac1f3117ce888678480321.1607434427.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 3/6] mptcp: add set_flags
+ command in PM netlink
+Date: Tue, 08 Dec 2020 17:29:31 -0800
+Message-ID: <a2d4a6e1-9491-a867-5898-6937f38626d3@linux.intel.com>
+In-Reply-To: bbe39a20a57cc2798f14a07733ece898a51158d9.1607406914.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7081
+X-UID: 7082
 
---===============6031830016084300877==
+--===============5026734979418120346==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 8 Dec 2020, Geliang Tang wrote:
 
-> Currently the address ID set by the netlink PM from user-space is
-> overridden by the kernel. This patch added the address ID assignment
-> bitmap to allow user-space to set the address ID.
+> This patch added a new command MPTCP_PM_CMD_SET_FLAGS in PM netlink:
 >
-> Use a per netns bitmask id_bitmap (256 bits) to keep track of in-use IDs.
-> And use next_id to keep track of the highest ID currently in use. If the
-> user-space provides an ID at endpoint creation time, try to use it. If
-> already in use, endpoint creation fails. Otherwise pick the first ID
-> available after the highest currently in use, with wrap-around.
+> In mptcp_nl_cmd_set_flags, parse the input address, get the backup value
+> according to whether the address's FLAG_BACKUP or FLAG_NOBACKUP flag is
+> set from the user-space. Then check whether this address had been added
+> in the local address list. If it had been, then call mptcp_nl_addr_backup
+> to deal with this address.
+>
+> In mptcp_nl_addr_backup, traverse all the existing msk sockets to find
+> the relevant sockets, and call mptcp_pm_nl_mp_prio_send_ack to send out
+> a MP_PRIO ACK packet.
+>
+> Finally in mptcp_nl_cmd_set_flags, set or clear the address's FLAG_BACKUP
+> flag.
 >
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> net/mptcp/pm_netlink.c | 65 ++++++++++++++++++++++++++++++------------
-> 1 file changed, 47 insertions(+), 18 deletions(-)
+> include/uapi/linux/mptcp.h |  2 ++
+> net/mptcp/pm_netlink.c     | 67 ++++++++++++++++++++++++++++++++++++++
+> 2 files changed, 69 insertions(+)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index a6d983d80576..e7cafca2d42e 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -36,6 +36,9 @@ struct mptcp_pm_add_entry {
-> 	u8			retrans_times;
-> };
->
-> +#define MAX_ADDR_ID		255
-> +#define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, BITS_PER_LONG)
-> +
-> struct pm_nl_pernet {
-> 	/* protects pernet updates */
-> 	spinlock_t		lock;
-> @@ -46,6 +49,7 @@ struct pm_nl_pernet {
-> 	unsigned int		local_addr_max;
-> 	unsigned int		subflows_max;
-> 	unsigned int		next_id;
-> +	unsigned long		id_bitmap[BITMAP_SZ];
-> };
->
-> #define MPTCP_PM_ADDR_MAX	8
-> @@ -524,10 +528,12 @@ static int mptcp_pm_nl_append_new_local_addr(struct=
- pm_nl_pernet *pernet,
-> 	/* to keep the code simple, don't do IDR-like allocation for address ID,
-> 	 * just bail when we exceed limits
-> 	 */
-> -	if (pernet->next_id > 255)
-> -		goto out;
-> +	if (pernet->next_id =3D=3D MAX_ADDR_ID)
-> +		pernet->next_id =3D 1;
-> 	if (pernet->addrs >=3D MPTCP_PM_ADDR_MAX)
-> 		goto out;
-> +	if (test_bit(entry->addr.id, pernet->id_bitmap))
-> +		goto out;
->
-> 	/* do not insert duplicate address, differentiate on port only
-> 	 * singled addresses
-> @@ -544,7 +550,19 @@ static int mptcp_pm_nl_append_new_local_addr(struct =
-pm_nl_pernet *pernet,
-> 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
-> 		pernet->local_addr_max++;
->
-> -	entry->addr.id =3D pernet->next_id++;
-> +	if (!entry->addr.id) {
-> +find_next:
-> +		entry->addr.id =3D find_next_zero_bit(pernet->id_bitmap,
-> +						    MAX_ADDR_ID + 1,
-> +						    pernet->next_id);
-> +		if (entry->addr.id <=3D 0 || entry->addr.id > MAX_ADDR_ID) {
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index 9762660df741..5470da50f4ac 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -72,6 +72,7 @@ enum {
+> #define MPTCP_PM_ADDR_FLAG_SIGNAL			(1 << 0)
+> #define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
+> #define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
+> +#define MPTCP_PM_ADDR_FLAG_NOBACKUP			(1 << 3)
 
 Hi Geliang -
 
-It looks like pernet->next_id is always 1 or larger, and =
+My understanding of Paolo's suggestion was that 'nobackup' is helpful for =
 
-find_next_zero_bit() returns an unsigned value, so it's not necessary to =
+the 'ip mptcp' command line syntax, but I don't think that means a =
 
-check for 'entry->addr.id <=3D 0'.
-
-Since MAX_ADDR_ID > MPTCP_PM_ADDR_MAX, this shouldn't be an infinite loop. =
-
-Still, there's no reason to check again if pernet->next_id was already 1, =
-
-so I suggest
-
-if (entry_addr.id > MAX_ADDR_ID && pernet->next_id !=3D 1)
-
-to be extra cautious about this loop.
+separate flag at the netlink level is needed.
 
 
 Mat
 
-> +			pernet->next_id =3D 1;
-> +			goto find_next;
+
+>
+> enum {
+> 	MPTCP_PM_CMD_UNSPEC,
+> @@ -82,6 +83,7 @@ enum {
+> 	MPTCP_PM_CMD_FLUSH_ADDRS,
+> 	MPTCP_PM_CMD_SET_LIMITS,
+> 	MPTCP_PM_CMD_GET_LIMITS,
+> +	MPTCP_PM_CMD_SET_FLAGS,
+>
+> 	__MPTCP_PM_CMD_AFTER_LAST
+> };
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index fc61ca6dc04d..761cb5afa922 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1153,6 +1153,68 @@ mptcp_nl_cmd_get_limits(struct sk_buff *skb, struc=
+t genl_info *info)
+> 	return -EMSGSIZE;
+> }
+>
+> +static int mptcp_nl_addr_backup(struct net *net,
+> +				struct mptcp_addr_info *addr,
+> +				u8 bkup)
+> +{
+> +	long s_slot =3D 0, s_num =3D 0;
+> +	struct mptcp_sock *msk;
+> +	int ret =3D -EINVAL;
+> +
+> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
+ {
+> +		struct sock *sk =3D (struct sock *)msk;
+> +
+> +		if (list_empty(&msk->conn_list))
+> +			goto next;
+> +
+> +		lock_sock(sk);
+> +		spin_lock_bh(&msk->pm.lock);
+> +		ret =3D mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
+> +		spin_unlock_bh(&msk->pm.lock);
+> +		release_sock(sk);
+> +
+> +next:
+> +		sock_put(sk);
+> +		cond_resched();
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info =
+*info)
+> +{
+> +	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
+> +	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
+> +	struct mptcp_pm_addr_entry addr, *entry;
+> +	struct net *net =3D sock_net(skb->sk);
+> +	u8 bkup;
+> +	int ret;
+> +
+> +	ret =3D mptcp_pm_parse_addr(attr, info, true, &addr);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (addr.addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
+> +		bkup =3D 1;
+> +	else if (addr.addr.flags & MPTCP_PM_ADDR_FLAG_NOBACKUP)
+> +		bkup =3D 0;
+> +
+> +	list_for_each_entry(entry, &pernet->local_addr_list, list) {
+> +		if (addresses_equal(&entry->addr, &addr.addr, true)) {
+> +			ret =3D mptcp_nl_addr_backup(net, &entry->addr, bkup);
+> +			if (ret)
+> +				return ret;
+> +
+> +			if (bkup)
+> +				entry->addr.flags |=3D MPTCP_PM_ADDR_FLAG_BACKUP;
+> +			else
+> +				entry->addr.flags &=3D ~MPTCP_PM_ADDR_FLAG_BACKUP;
 > +		}
 > +	}
-> +	__set_bit(entry->addr.id, pernet->id_bitmap);
-> +	if (entry->addr.id > pernet->next_id)
-> +		pernet->next_id =3D entry->addr.id;
-> 	pernet->addrs++;
-> 	list_add_tail_rcu(&entry->list, &pernet->local_addr_list);
-> 	ret =3D entry->addr.id;
-> @@ -857,6 +875,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
- struct genl_info *info)
->
-> 	pernet->addrs--;
-> 	list_del_rcu(&entry->list);
-> +	__clear_bit(entry->addr.id, pernet->id_bitmap);
-> 	spin_unlock_bh(&pernet->lock);
->
-> 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
-> @@ -894,6 +913,8 @@ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *s=
-kb, struct genl_info *info)
-> 	spin_lock_bh(&pernet->lock);
-> 	list_splice_init(&pernet->local_addr_list, &free_list);
-> 	__reset_counters(pernet);
-> +	pernet->next_id =3D 1;
-> +	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
-> 	spin_unlock_bh(&pernet->lock);
-> 	__flush_addrs(sock_net(skb->sk), &free_list);
-> 	return 0;
-> @@ -994,27 +1015,34 @@ static int mptcp_nl_cmd_dump_addrs(struct sk_buff =
-*msg,
-> 	struct pm_nl_pernet *pernet;
-> 	int id =3D cb->args[0];
-> 	void *hdr;
-> +	int i;
->
-> 	pernet =3D net_generic(net, pm_nl_pernet_id);
->
-> 	spin_lock_bh(&pernet->lock);
-> -	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> -		if (entry->addr.id <=3D id)
-> -			continue;
-> -
-> -		hdr =3D genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
-> -				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
-> -				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
-> -		if (!hdr)
-> -			break;
-> +	for (i =3D id; i < MAX_ADDR_ID + 1; i++) {
-> +		if (test_bit(i, pernet->id_bitmap)) {
-> +			entry =3D __lookup_addr_by_id(pernet, i);
-> +			if (!entry)
-> +				break;
 > +
-> +			if (entry->addr.id <=3D id)
-> +				continue;
+> +	return 0;
+> +}
 > +
-> +			hdr =3D genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
-> +					  cb->nlh->nlmsg_seq, &mptcp_genl_family,
-> +					  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
-> +			if (!hdr)
-> +				break;
-> +
-> +			if (mptcp_nl_fill_addr(msg, entry) < 0) {
-> +				genlmsg_cancel(msg, hdr);
-> +				break;
-> +			}
+> static const struct genl_small_ops mptcp_pm_ops[] =3D {
+> 	{
+> 		.cmd    =3D MPTCP_PM_CMD_ADD_ADDR,
+> @@ -1183,6 +1245,11 @@ static const struct genl_small_ops mptcp_pm_ops[] =
+=3D {
+> 		.cmd    =3D MPTCP_PM_CMD_GET_LIMITS,
+> 		.doit   =3D mptcp_nl_cmd_get_limits,
+> 	},
+> +	{
+> +		.cmd    =3D MPTCP_PM_CMD_SET_FLAGS,
+> +		.doit   =3D mptcp_nl_cmd_set_flags,
+> +		.flags  =3D GENL_ADMIN_PERM,
+> +	},
+> };
 >
-> -		if (mptcp_nl_fill_addr(msg, entry) < 0) {
-> -			genlmsg_cancel(msg, hdr);
-> -			break;
-> +			id =3D entry->addr.id;
-> +			genlmsg_end(msg, hdr);
-> 		}
-> -
-> -		id =3D entry->addr.id;
-> -		genlmsg_end(msg, hdr);
-> 	}
-> 	spin_unlock_bh(&pernet->lock);
->
-> @@ -1148,6 +1176,7 @@ static int __net_init pm_nl_init_net(struct net *ne=
-t)
-> 	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
-> 	__reset_counters(pernet);
-> 	pernet->next_id =3D 1;
-> +	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
-> 	spin_lock_init(&pernet->lock);
-> 	return 0;
-> }
+> static struct genl_family mptcp_genl_family __ro_after_init =3D {
 > -- =
 
 > 2.26.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
 
 --
 Mat Martineau
 Intel
---===============6031830016084300877==--
+--===============5026734979418120346==--
