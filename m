@@ -1,145 +1,155 @@
-Content-Type: multipart/mixed; boundary="===============4961627185150409186=="
+Content-Type: multipart/mixed; boundary="===============2960587531946042741=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 3/6] mptcp: add set_flags command
- in PM netlink
-Date: Wed, 09 Dec 2020 16:15:43 +0800
-Message-ID: <3639b094ea3ddc00ace88c000285558031d5951e.1607501232.git.geliangtang@gmail.com>
-In-Reply-To: 9ecbaa6fd875c1d78b236fc76406d66797dc1d90.1607501232.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 4/6] selftests: mptcp: add
+ set_flags command in pm_nl_ctl
+Date: Wed, 09 Dec 2020 16:15:44 +0800
+Message-ID: <9eb200514aca66e7293da0549ad0a1303269180c.1607501232.git.geliangtang@gmail.com>
+In-Reply-To: 3639b094ea3ddc00ace88c000285558031d5951e.1607501232.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7089
+X-UID: 7090
 
---===============4961627185150409186==
+--===============2960587531946042741==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new command MPTCP_PM_CMD_SET_FLAGS in PM netlink:
+This patch added the set_flags command in pm_nl_ctl, currently we can only
+set two flags: backup and nobackup. The set_flags command can be used like
+this:
 
-In mptcp_nl_cmd_set_flags, parse the input address, get the backup value
-according to whether the address's FLAG_BACKUP flag is set from the
-user-space. Then check whether this address had been added in the local
-address list. If it had been, then call mptcp_nl_addr_backup to deal with
-this address.
-
-In mptcp_nl_addr_backup, traverse all the existing msk sockets to find
-the relevant sockets, and call mptcp_pm_nl_mp_prio_send_ack to send out
-a MP_PRIO ACK packet.
-
-Finally in mptcp_nl_cmd_set_flags, set or clear the address's FLAG_BACKUP
-flag.
+ # pm_nl_ctl set 10.0.0.1 flags backup
+ # pm_nl_ctl set 10.0.0.1 flags nobackup
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- include/uapi/linux/mptcp.h |  1 +
- net/mptcp/pm_netlink.c     | 65 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 85 ++++++++++++++++++-
+ 1 file changed, 84 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 9762660df741..3674a451a18c 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -82,6 +82,7 @@ enum {
- 	MPTCP_PM_CMD_FLUSH_ADDRS,
- 	MPTCP_PM_CMD_SET_LIMITS,
- 	MPTCP_PM_CMD_GET_LIMITS,
-+	MPTCP_PM_CMD_SET_FLAGS,
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/=
+selftests/net/mptcp/pm_nl_ctl.c
+index b24a2f17d415..a1c9e6bdea65 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -24,10 +24,11 @@
  =
 
- 	__MPTCP_PM_CMD_AFTER_LAST
- };
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index db5de5dd5325..3f8f3052e013 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1164,6 +1164,66 @@ mptcp_nl_cmd_get_limits(struct sk_buff *skb, struct =
-genl_info *info)
- 	return -EMSGSIZE;
+ static void syntax(char *argv[])
+ {
+-	fprintf(stderr, "%s add|get|del|flush|dump|accept [<args>]\n", argv[0]);
++	fprintf(stderr, "%s add|get|set|del|flush|dump|accept [<args>]\n", argv[0=
+]);
+ 	fprintf(stderr, "\tadd [flags signal|subflow|backup] [id <nr>] [dev <name=
+>] <ip>\n");
+ 	fprintf(stderr, "\tdel <id>\n");
+ 	fprintf(stderr, "\tget <id>\n");
++	fprintf(stderr, "\tset <ip> [flags backup|nobackup]\n");
+ 	fprintf(stderr, "\tflush\n");
+ 	fprintf(stderr, "\tdump\n");
+ 	fprintf(stderr, "\tlimits [<rcv addr max> <subflow max>]\n");
+@@ -584,6 +585,86 @@ int get_set_limits(int fd, int pm_family, int argc, ch=
+ar *argv[])
+ 	return 0;
  }
  =
 
-+static int mptcp_nl_addr_backup(struct net *net,
-+				struct mptcp_addr_info *addr,
-+				u8 bkup)
++int set_flags(int fd, int pm_family, int argc, char *argv[])
 +{
-+	long s_slot =3D 0, s_num =3D 0;
-+	struct mptcp_sock *msk;
-+	int ret =3D -EINVAL;
++	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
++		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
++		  1024];
++	struct rtattr *rta, *nest;
++	struct nlmsghdr *nh;
++	u_int32_t flags =3D 0;
++	u_int16_t family;
++	int nest_start;
++	int off =3D 0;
++	int arg;
 +
-+	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL) {
-+		struct sock *sk =3D (struct sock *)msk;
++	memset(data, 0, sizeof(data));
++	nh =3D (void *)data;
++	off =3D init_genl_req(data, pm_family, MPTCP_PM_CMD_SET_FLAGS,
++			    MPTCP_PM_VER);
 +
-+		if (list_empty(&msk->conn_list))
-+			goto next;
++	if (argc < 3)
++		syntax(argv);
 +
-+		lock_sock(sk);
-+		spin_lock_bh(&msk->pm.lock);
-+		ret =3D mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
-+		spin_unlock_bh(&msk->pm.lock);
-+		release_sock(sk);
++	nest_start =3D off;
++	nest =3D (void *)(data + off);
++	nest->rta_type =3D NLA_F_NESTED | MPTCP_PM_ATTR_ADDR;
++	nest->rta_len =3D RTA_LENGTH(0);
++	off +=3D NLMSG_ALIGN(nest->rta_len);
 +
-+next:
-+		sock_put(sk);
-+		cond_resched();
++	/* addr data */
++	rta =3D (void *)(data + off);
++	if (inet_pton(AF_INET, argv[2], RTA_DATA(rta))) {
++		family =3D AF_INET;
++		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR4;
++		rta->rta_len =3D RTA_LENGTH(4);
++	} else if (inet_pton(AF_INET6, argv[2], RTA_DATA(rta))) {
++		family =3D AF_INET6;
++		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR6;
++		rta->rta_len =3D RTA_LENGTH(16);
++	} else
++		error(1, errno, "can't parse ip %s", argv[2]);
++	off +=3D NLMSG_ALIGN(rta->rta_len);
++
++	/* family */
++	rta =3D (void *)(data + off);
++	rta->rta_type =3D MPTCP_PM_ADDR_ATTR_FAMILY;
++	rta->rta_len =3D RTA_LENGTH(2);
++	memcpy(RTA_DATA(rta), &family, 2);
++	off +=3D NLMSG_ALIGN(rta->rta_len);
++
++	for (arg =3D 3; arg < argc; arg++) {
++		if (!strcmp(argv[arg], "flags")) {
++			char *tok, *str;
++
++			/* flags */
++			if (++arg >=3D argc)
++				error(1, 0, " missing flags value");
++
++			/* do not support flag list yet */
++			for (str =3D argv[arg]; (tok =3D strtok(str, ","));
++			     str =3D NULL) {
++				if (!strcmp(tok, "backup"))
++					flags |=3D MPTCP_PM_ADDR_FLAG_BACKUP;
++				else if (strcmp(tok, "nobackup"))
++					error(1, errno,
++					      "unknown flag %s", argv[arg]);
++			}
++
++			rta =3D (void *)(data + off);
++			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_FLAGS;
++			rta->rta_len =3D RTA_LENGTH(4);
++			memcpy(RTA_DATA(rta), &flags, 4);
++			off +=3D NLMSG_ALIGN(rta->rta_len);
++		} else
++			error(1, 0, "unknown keyword %s", argv[arg]);
 +	}
++	nest->rta_len =3D off - nest_start;
 +
-+	return ret;
-+}
-+
-+static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *i=
-nfo)
-+{
-+	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
-+	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
-+	struct mptcp_pm_addr_entry addr, *entry;
-+	struct net *net =3D sock_net(skb->sk);
-+	u8 bkup =3D 0;
-+	int ret;
-+
-+	ret =3D mptcp_pm_parse_addr(attr, info, true, &addr);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (addr.addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-+		bkup =3D 1;
-+
-+	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+		if (addresses_equal(&entry->addr, &addr.addr, true)) {
-+			ret =3D mptcp_nl_addr_backup(net, &entry->addr, bkup);
-+			if (ret)
-+				return ret;
-+
-+			if (bkup)
-+				entry->addr.flags |=3D MPTCP_PM_ADDR_FLAG_BACKUP;
-+			else
-+				entry->addr.flags &=3D ~MPTCP_PM_ADDR_FLAG_BACKUP;
-+		}
-+	}
-+
++	do_nl_req(fd, nh, off, 0);
 +	return 0;
 +}
 +
- static const struct genl_small_ops mptcp_pm_ops[] =3D {
- 	{
- 		.cmd    =3D MPTCP_PM_CMD_ADD_ADDR,
-@@ -1194,6 +1254,11 @@ static const struct genl_small_ops mptcp_pm_ops[] =
-=3D {
- 		.cmd    =3D MPTCP_PM_CMD_GET_LIMITS,
- 		.doit   =3D mptcp_nl_cmd_get_limits,
- 	},
-+	{
-+		.cmd    =3D MPTCP_PM_CMD_SET_FLAGS,
-+		.doit   =3D mptcp_nl_cmd_set_flags,
-+		.flags  =3D GENL_ADMIN_PERM,
-+	},
- };
+ int main(int argc, char *argv[])
+ {
+ 	int fd, pm_family;
+@@ -609,6 +690,8 @@ int main(int argc, char *argv[])
+ 		return dump_addrs(fd, pm_family, argc, argv);
+ 	else if (!strcmp(argv[1], "limits"))
+ 		return get_set_limits(fd, pm_family, argc, argv);
++	else if (!strcmp(argv[1], "set"))
++		return set_flags(fd, pm_family, argc, argv);
  =
 
- static struct genl_family mptcp_genl_family __ro_after_init =3D {
+ 	fprintf(stderr, "unknown sub-command: %s", argv[1]);
+ 	syntax(argv);
 -- =
 
 2.26.2
 
---===============4961627185150409186==--
+--===============2960587531946042741==--
