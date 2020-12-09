@@ -1,141 +1,145 @@
-Content-Type: multipart/mixed; boundary="===============2293334368759046083=="
+Content-Type: multipart/mixed; boundary="===============4961627185150409186=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 2/6] mptcp: add the incoming
- MP_PRIO support
-Date: Wed, 09 Dec 2020 16:15:42 +0800
-Message-ID: <9ecbaa6fd875c1d78b236fc76406d66797dc1d90.1607501232.git.geliangtang@gmail.com>
-In-Reply-To: e503e5549a18de7251fdba393c52c87baf68e328.1607501232.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 3/6] mptcp: add set_flags command
+ in PM netlink
+Date: Wed, 09 Dec 2020 16:15:43 +0800
+Message-ID: <3639b094ea3ddc00ace88c000285558031d5951e.1607501232.git.geliangtang@gmail.com>
+In-Reply-To: 9ecbaa6fd875c1d78b236fc76406d66797dc1d90.1607501232.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7088
+X-UID: 7089
 
---===============2293334368759046083==
+--===============4961627185150409186==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the incoming MP_PRIO logic:
+This patch added a new command MPTCP_PM_CMD_SET_FLAGS in PM netlink:
 
-Added a flag named mp_prio in struct mptcp_options_received, to mark the
-MP_PRIO is received, and save the priority value to struct
-mptcp_options_received's backup member. Then invoke
-mptcp_pm_mp_prio_received with the receiving subsocket and the backup
-value.
+In mptcp_nl_cmd_set_flags, parse the input address, get the backup value
+according to whether the address's FLAG_BACKUP flag is set from the
+user-space. Then check whether this address had been added in the local
+address list. If it had been, then call mptcp_nl_addr_backup to deal with
+this address.
 
-In mptcp_pm_mp_prio_received, get the subflow context according the input
-subsocket, and change the subflow's backup as the incoming priority value.
+In mptcp_nl_addr_backup, traverse all the existing msk sockets to find
+the relevant sockets, and call mptcp_pm_nl_mp_prio_send_ack to send out
+a MP_PRIO ACK packet.
+
+Finally in mptcp_nl_cmd_set_flags, set or clear the address's FLAG_BACKUP
+flag.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/options.c  | 15 +++++++++++++++
- net/mptcp/pm.c       |  8 ++++++++
- net/mptcp/protocol.h |  5 +++++
- 3 files changed, 28 insertions(+)
+ include/uapi/linux/mptcp.h |  1 +
+ net/mptcp/pm_netlink.c     | 65 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 39c7e8c80808..a054a9c36842 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -282,6 +282,15 @@ static void mptcp_parse_option(const struct sk_buff *s=
-kb,
- 		pr_debug("RM_ADDR: id=3D%d", mp_opt->rm_id);
- 		break;
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 9762660df741..3674a451a18c 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -82,6 +82,7 @@ enum {
+ 	MPTCP_PM_CMD_FLUSH_ADDRS,
+ 	MPTCP_PM_CMD_SET_LIMITS,
+ 	MPTCP_PM_CMD_GET_LIMITS,
++	MPTCP_PM_CMD_SET_FLAGS,
  =
 
-+	case MPTCPOPT_MP_PRIO:
-+		if (opsize !=3D TCPOLEN_MPTCP_PRIO)
-+			break;
-+
-+		mp_opt->mp_prio =3D 1;
-+		mp_opt->backup =3D *ptr++ & MPTCP_PRIO_BKUP;
-+		pr_debug("MP_PRIO: prio=3D%d", mp_opt->backup);
-+		break;
-+
- 	case MPTCPOPT_MP_FASTCLOSE:
- 		if (opsize !=3D TCPOLEN_MPTCP_FASTCLOSE)
- 			break;
-@@ -313,6 +322,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 	mp_opt->port =3D 0;
- 	mp_opt->rm_addr =3D 0;
- 	mp_opt->dss =3D 0;
-+	mp_opt->mp_prio =3D 0;
- =
-
- 	length =3D (th->doff * 4) - sizeof(struct tcphdr);
- 	ptr =3D (const unsigned char *)(th + 1);
-@@ -1017,6 +1027,11 @@ void mptcp_incoming_options(struct sock *sk, struct =
-sk_buff *skb)
- 		mp_opt.rm_addr =3D 0;
- 	}
- =
-
-+	if (mp_opt.mp_prio) {
-+		mptcp_pm_mp_prio_received(sk, mp_opt.backup);
-+		mp_opt.mp_prio =3D 0;
-+	}
-+
- 	if (!mp_opt.dss)
- 		return;
- =
-
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index da2ed576f289..0a6ebd0642ec 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -207,6 +207,14 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,=
- u8 rm_id)
- 	spin_unlock_bh(&pm->lock);
+ 	__MPTCP_PM_CMD_AFTER_LAST
+ };
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index db5de5dd5325..3f8f3052e013 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1164,6 +1164,66 @@ mptcp_nl_cmd_get_limits(struct sk_buff *skb, struct =
+genl_info *info)
+ 	return -EMSGSIZE;
  }
  =
 
-+void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup)
++static int mptcp_nl_addr_backup(struct net *net,
++				struct mptcp_addr_info *addr,
++				u8 bkup)
 +{
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
++	long s_slot =3D 0, s_num =3D 0;
++	struct mptcp_sock *msk;
++	int ret =3D -EINVAL;
 +
-+	pr_debug("subflow->backup=3D%d, bkup=3D%d\n", subflow->backup, bkup);
-+	subflow->backup =3D bkup;
++	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL) {
++		struct sock *sk =3D (struct sock *)msk;
++
++		if (list_empty(&msk->conn_list))
++			goto next;
++
++		lock_sock(sk);
++		spin_lock_bh(&msk->pm.lock);
++		ret =3D mptcp_pm_nl_mp_prio_send_ack(msk, addr, bkup);
++		spin_unlock_bh(&msk->pm.lock);
++		release_sock(sk);
++
++next:
++		sock_put(sk);
++		cond_resched();
++	}
++
++	return ret;
 +}
 +
- /* path manager helpers */
- =
-
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 56ca90d8c7fe..aa03d61ea4ee 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -88,6 +88,9 @@
- #define MPTCP_ADDR_IPVERSION_4	4
- #define MPTCP_ADDR_IPVERSION_6	6
- =
-
-+/* MPTCP MP_PRIO flags */
-+#define MPTCP_PRIO_BKUP		BIT(0)
++static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *i=
+nfo)
++{
++	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
++	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
++	struct mptcp_pm_addr_entry addr, *entry;
++	struct net *net =3D sock_net(skb->sk);
++	u8 bkup =3D 0;
++	int ret;
 +
- /* MPTCP socket flags */
- #define MPTCP_DATA_READY	0
- #define MPTCP_NOSPACE		1
-@@ -118,6 +121,7 @@ struct mptcp_options_received {
- 		dss : 1,
- 		add_addr : 1,
- 		rm_addr : 1,
-+		mp_prio : 1,
- 		family : 4,
- 		echo : 1,
- 		backup : 1;
-@@ -553,6 +557,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 				const struct mptcp_addr_info *addr);
- void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
- void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, u8 rm_id);
-+void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
- int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
- 				 struct mptcp_addr_info *addr,
- 				 u8 bkup);
++	ret =3D mptcp_pm_parse_addr(attr, info, true, &addr);
++	if (ret < 0)
++		return ret;
++
++	if (addr.addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
++		bkup =3D 1;
++
++	list_for_each_entry(entry, &pernet->local_addr_list, list) {
++		if (addresses_equal(&entry->addr, &addr.addr, true)) {
++			ret =3D mptcp_nl_addr_backup(net, &entry->addr, bkup);
++			if (ret)
++				return ret;
++
++			if (bkup)
++				entry->addr.flags |=3D MPTCP_PM_ADDR_FLAG_BACKUP;
++			else
++				entry->addr.flags &=3D ~MPTCP_PM_ADDR_FLAG_BACKUP;
++		}
++	}
++
++	return 0;
++}
++
+ static const struct genl_small_ops mptcp_pm_ops[] =3D {
+ 	{
+ 		.cmd    =3D MPTCP_PM_CMD_ADD_ADDR,
+@@ -1194,6 +1254,11 @@ static const struct genl_small_ops mptcp_pm_ops[] =
+=3D {
+ 		.cmd    =3D MPTCP_PM_CMD_GET_LIMITS,
+ 		.doit   =3D mptcp_nl_cmd_get_limits,
+ 	},
++	{
++		.cmd    =3D MPTCP_PM_CMD_SET_FLAGS,
++		.doit   =3D mptcp_nl_cmd_set_flags,
++		.flags  =3D GENL_ADMIN_PERM,
++	},
+ };
+ =
+
+ static struct genl_family mptcp_genl_family __ro_after_init =3D {
 -- =
 
 2.26.2
 
---===============2293334368759046083==--
+--===============4961627185150409186==--
