@@ -1,83 +1,208 @@
-Content-Type: multipart/mixed; boundary="===============8078271338376153058=="
+Content-Type: multipart/mixed; boundary="===============6031830016084300877=="
 MIME-Version: 1.0
-From: Paul Moore <paul at paul-moore.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [RFC PATCH] selinux: handle MPTCP consistently with TCP
-Date: Tue, 08 Dec 2020 18:35:03 -0500
-Message-ID: <CAHC9VhQmZ_Ra8eY3O-qNo-QN9wLXBFP3VHuHvjY8vWOMSfGafA@mail.gmail.com>
-In-Reply-To: 08b7534580e1bdb134ba0c2816977836cd446c5d.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 1/2] mptcp: add the address
+ ID assignment bitmap
+Date: Tue, 08 Dec 2020 16:42:00 -0800
+Message-ID: <d1bad7b6-e8fe-cc85-c9c8-1a1b4e5c4df@linux.intel.com>
+In-Reply-To: 672af235a6ac38fef0ac1f3117ce888678480321.1607434427.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7080
+X-UID: 7081
 
---===============8078271338376153058==
+--===============6031830016084300877==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 8, 2020 at 10:35 AM Paolo Abeni <pabeni(a)redhat.com> wrote:
+On Tue, 8 Dec 2020, Geliang Tang wrote:
+
+> Currently the address ID set by the netlink PM from user-space is
+> overridden by the kernel. This patch added the address ID assignment
+> bitmap to allow user-space to set the address ID.
 >
-> Hello,
+> Use a per netns bitmask id_bitmap (256 bits) to keep track of in-use IDs.
+> And use next_id to keep track of the highest ID currently in use. If the
+> user-space provides an ID at endpoint creation time, try to use it. If
+> already in use, endpoint creation fails. Otherwise pick the first ID
+> available after the highest currently in use, with wrap-around.
 >
-> I'm sorry for the latency, I'll have limited internet access till
-> tomorrow.
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/pm_netlink.c | 65 ++++++++++++++++++++++++++++++------------
+> 1 file changed, 47 insertions(+), 18 deletions(-)
 >
-> On Fri, 2020-12-04 at 18:22 -0500, Paul Moore wrote:
-> > For SELinux the issue is that we need to track state in the sock
-> > struct, via sock->sk_security, and that state needs to be initialized
-> > and set properly.
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index a6d983d80576..e7cafca2d42e 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -36,6 +36,9 @@ struct mptcp_pm_add_entry {
+> 	u8			retrans_times;
+> };
 >
-> As far as I can see, for regular sockets, sk_security is allocated via:
+> +#define MAX_ADDR_ID		255
+> +#define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, BITS_PER_LONG)
+> +
+> struct pm_nl_pernet {
+> 	/* protects pernet updates */
+> 	spinlock_t		lock;
+> @@ -46,6 +49,7 @@ struct pm_nl_pernet {
+> 	unsigned int		local_addr_max;
+> 	unsigned int		subflows_max;
+> 	unsigned int		next_id;
+> +	unsigned long		id_bitmap[BITMAP_SZ];
+> };
 >
-> - sk_prot_alloc() -> security_sk_alloc() for client/listener sockets
-> - sk_clone_lock() -> sock_copy() for server sockets
+> #define MPTCP_PM_ADDR_MAX	8
+> @@ -524,10 +528,12 @@ static int mptcp_pm_nl_append_new_local_addr(struct=
+ pm_nl_pernet *pernet,
+> 	/* to keep the code simple, don't do IDR-like allocation for address ID,
+> 	 * just bail when we exceed limits
+> 	 */
+> -	if (pernet->next_id > 255)
+> -		goto out;
+> +	if (pernet->next_id =3D=3D MAX_ADDR_ID)
+> +		pernet->next_id =3D 1;
+> 	if (pernet->addrs >=3D MPTCP_PM_ADDR_MAX)
+> 		goto out;
+> +	if (test_bit(entry->addr.id, pernet->id_bitmap))
+> +		goto out;
 >
-> MPTCP uses the above helpers, sk_security should be initialized
-> properly.
-
-At least for SELinux, the security_socket_post_create() hook is
-critical too as that is where the SELinux sock/socket state values are
-actually set; see selinux_socket_post_create() for the SELinux hook.
-
-> MPTCP goes through an additional sk_prot_alloc() for each subflow, so
-> each of them will get it's own independent context. The subflows are
-> not exposed to any syscall (accept()/recvmsg()/sendmsg()/poll()/...),
-> so I guess selinux will mostly ignored them right?
-
-SELinux cares quite a bit about the sock structs, they are an
-important part of the per-packet access controls as well as a few
-other things, so we need to make sure the SELinux state is managed
-properly.
-
-From what you have said so far, it is starting to sound like labeling
-the subflows with the same label as the parent socket is a reasonable
-solution.  In that case, it seems like doing a security_sk_clone()
-between the main socket/sock and the new subflow sock should work.
-
-> >  Similarly with TCP request_sock structs, via
-> > request_sock->{secid,peer_secid}.  Is the MPTCP code allocating and/or
-> > otherwise creating socks or request_socks outside of the regular TCP
-> > code?
+> 	/* do not insert duplicate address, differentiate on port only
+> 	 * singled addresses
+> @@ -544,7 +550,19 @@ static int mptcp_pm_nl_append_new_local_addr(struct =
+pm_nl_pernet *pernet,
+> 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
+> 		pernet->local_addr_max++;
 >
-> Request sockets are easier, I guess/hope: MPTCP handles them very
-> closely to plain TCP.
+> -	entry->addr.id =3D pernet->next_id++;
+> +	if (!entry->addr.id) {
+> +find_next:
+> +		entry->addr.id =3D find_next_zero_bit(pernet->id_bitmap,
+> +						    MAX_ADDR_ID + 1,
+> +						    pernet->next_id);
+> +		if (entry->addr.id <=3D 0 || entry->addr.id > MAX_ADDR_ID) {
 
-Are there a calls to security_inet_conn_request() and
-security_inet_csk_clone() in the MPTCP code path?  As an example look
-at tcp_conn_request() and inet_csk_clone_lock() for IPv4.
+Hi Geliang -
 
-> > We would also be concerned about socket structs, but I'm
-> > guessing that code reuses the TCP code based on what you've said.
+It looks like pernet->next_id is always 1 or larger, and =
+
+find_next_zero_bit() returns an unsigned value, so it's not necessary to =
+
+check for 'entry->addr.id <=3D 0'.
+
+Since MAX_ADDR_ID > MPTCP_PM_ADDR_MAX, this shouldn't be an infinite loop. =
+
+Still, there's no reason to check again if pernet->next_id was already 1, =
+
+so I suggest
+
+if (entry_addr.id > MAX_ADDR_ID && pernet->next_id !=3D 1)
+
+to be extra cautious about this loop.
+
+
+Mat
+
+> +			pernet->next_id =3D 1;
+> +			goto find_next;
+> +		}
+> +	}
+> +	__set_bit(entry->addr.id, pernet->id_bitmap);
+> +	if (entry->addr.id > pernet->next_id)
+> +		pernet->next_id =3D entry->addr.id;
+> 	pernet->addrs++;
+> 	list_add_tail_rcu(&entry->list, &pernet->local_addr_list);
+> 	ret =3D entry->addr.id;
+> @@ -857,6 +875,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
+ struct genl_info *info)
 >
-> Only the main MPTCP 'struct socket' is exposed to the user space, and
-> that is allocated via the usual __sys_socket() call-chain. I guess that
-> should be fine. If you could provide some more context (what I should
-> look after) I can dig more.
+> 	pernet->addrs--;
+> 	list_del_rcu(&entry->list);
+> +	__clear_bit(entry->addr.id, pernet->id_bitmap);
+> 	spin_unlock_bh(&pernet->lock);
+>
+> 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
+> @@ -894,6 +913,8 @@ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *s=
+kb, struct genl_info *info)
+> 	spin_lock_bh(&pernet->lock);
+> 	list_splice_init(&pernet->local_addr_list, &free_list);
+> 	__reset_counters(pernet);
+> +	pernet->next_id =3D 1;
+> +	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
+> 	spin_unlock_bh(&pernet->lock);
+> 	__flush_addrs(sock_net(skb->sk), &free_list);
+> 	return 0;
+> @@ -994,27 +1015,34 @@ static int mptcp_nl_cmd_dump_addrs(struct sk_buff =
+*msg,
+> 	struct pm_nl_pernet *pernet;
+> 	int id =3D cb->args[0];
+> 	void *hdr;
+> +	int i;
+>
+> 	pernet =3D net_generic(net, pm_nl_pernet_id);
+>
+> 	spin_lock_bh(&pernet->lock);
+> -	list_for_each_entry(entry, &pernet->local_addr_list, list) {
+> -		if (entry->addr.id <=3D id)
+> -			continue;
+> -
+> -		hdr =3D genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> -				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> -				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> -		if (!hdr)
+> -			break;
+> +	for (i =3D id; i < MAX_ADDR_ID + 1; i++) {
+> +		if (test_bit(i, pernet->id_bitmap)) {
+> +			entry =3D __lookup_addr_by_id(pernet, i);
+> +			if (!entry)
+> +				break;
+> +
+> +			if (entry->addr.id <=3D id)
+> +				continue;
+> +
+> +			hdr =3D genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> +					  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> +					  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> +			if (!hdr)
+> +				break;
+> +
+> +			if (mptcp_nl_fill_addr(msg, entry) < 0) {
+> +				genlmsg_cancel(msg, hdr);
+> +				break;
+> +			}
+>
+> -		if (mptcp_nl_fill_addr(msg, entry) < 0) {
+> -			genlmsg_cancel(msg, hdr);
+> -			break;
+> +			id =3D entry->addr.id;
+> +			genlmsg_end(msg, hdr);
+> 		}
+> -
+> -		id =3D entry->addr.id;
+> -		genlmsg_end(msg, hdr);
+> 	}
+> 	spin_unlock_bh(&pernet->lock);
+>
+> @@ -1148,6 +1176,7 @@ static int __net_init pm_nl_init_net(struct net *ne=
+t)
+> 	INIT_LIST_HEAD_RCU(&pernet->local_addr_list);
+> 	__reset_counters(pernet);
+> 	pernet->next_id =3D 1;
+> +	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
+> 	spin_lock_init(&pernet->lock);
+> 	return 0;
+> }
+> -- =
 
-Hopefully the stuff above should help, if not let me know :)
+> 2.26.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
--- =
-
-paul moore
-www.paul-moore.com
---===============8078271338376153058==--
+--
+Mat Martineau
+Intel
+--===============6031830016084300877==--
