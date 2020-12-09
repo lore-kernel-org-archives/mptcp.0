@@ -1,84 +1,177 @@
-Content-Type: multipart/mixed; boundary="===============5686719206441227578=="
+Content-Type: multipart/mixed; boundary="===============2251228007369516416=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 3/3] mptcp: be careful on subflows shutdown
-Date: Wed, 09 Dec 2020 12:03:31 +0100
-Message-ID: <e270b6f2ab71aa7ce8bf8f7836636332062d78cd.1607508810.git.pabeni@redhat.com>
-In-Reply-To: cover.1607508810.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v7 mptcp-next 1/7] mptcp: create the
+ listening socket for new port
+Date: Wed, 09 Dec 2020 12:13:17 +0100
+Message-ID: <54b4c91f012ff1e47bf7f8f048ae07e95b62d64a.camel@redhat.com>
+In-Reply-To: 20201207063052.GA20630@MiBook
 X-Status: 
 X-Keywords:                  
-X-UID: 7099
+X-UID: 7100
 
---===============5686719206441227578==
+--===============2251228007369516416==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When the workqueue disposes of the msk, the subflows can still
-receive some data from the peer after __mptcp_close_ssk()
-completes.
+On Mon, 2020-12-07 at 14:30 +0800, Geliang Tang wrote:
+> Hi Paolo, Mat,
+> =
 
-The above could trigger a race between the msk receive path and the
-msk destruction. Acquiring the mptcp_data_lock() in __mptcp_destroy_sock()
-will not save the day: the rx path could be reached even after msk
-destruction completes.
+> On Thu, Dec 03, 2020 at 05:36:08PM -0800, Mat Martineau wrote:
+> > On Mon, 30 Nov 2020, Geliang Tang wrote:
+> > =
 
-Instead use the subflow 'disposable' flag to prevent entering
-the msk receive path after __mptcp_close_ssk().
+> > > This patch created a listening socket when an address with a port-num=
+ber
+> > > is added by PM netlink. Then binded the new port to the socket, and
+> > > listened for the connection.
+> > > =
 
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+> > > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> > > ---
+> > > net/mptcp/pm_netlink.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+> > > net/mptcp/protocol.c   |  2 +-
+> > > net/mptcp/protocol.h   |  3 +++
+> > > net/mptcp/subflow.c    |  4 +--
+> > > 4 files changed, 64 insertions(+), 3 deletions(-)
+> > > =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4e29dcf17ecd..2540d82742ac 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -701,6 +701,13 @@ void mptcp_data_ready(struct sock *sk, struct sock *ss=
-k)
- 	int sk_rbuf, ssk_rbuf;
- 	bool wake;
- =
+> > > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > > index 5151cfcd6962..c296927bf167 100644
+> > > --- a/net/mptcp/pm_netlink.c
+> > > +++ b/net/mptcp/pm_netlink.c
+> > > @@ -26,6 +26,7 @@ struct mptcp_pm_addr_entry {
+> > > 	struct list_head	list;
+> > > 	struct mptcp_addr_info	addr;
+> > > 	struct rcu_head		rcu;
+> > > +	struct socket		*lsk;
+> > =
 
-+	/* The peer can send data while we are shutting down this
-+	 * subflow at msk destruction time, but we must avoid enqueuing
-+	 * more data to the msk receive queue
-+	 */
-+	if (unlikely(subflow->disposable))
-+		return;
-+
- 	/* move_skbs_to_msk below can legitly clear the data_avail flag,
- 	 * but we will need later to properly woke the reader, cache its
- 	 * value
-@@ -2119,6 +2126,8 @@ void __mptcp_close_ssk(struct sock *sk, struct sock *=
-ssk,
- 		sock_orphan(ssk);
- 	}
- =
+> > Two things to fix up:
+> > =
 
-+	subflow->disposable =3D 1;
-+
- 	/* if ssk hit tcp_done(), tcp_cleanup_ulp() cleared the related ops
- 	 * the ssk has been already destroyed, we just need to release the
- 	 * reference owned by msk;
-@@ -2126,8 +2135,7 @@ void __mptcp_close_ssk(struct sock *sk, struct sock *=
-ssk,
- 	if (!inet_csk(ssk)->icsk_ulp_ops) {
- 		kfree_rcu(subflow, rcu);
- 	} else {
--		/* otherwise ask tcp do dispose of ssk and subflow ctx */
--		subflow->disposable =3D 1;
-+		/* otherwise tcp will dispose of the ssk and subflow ctx */
- 		__tcp_close(ssk, 0);
- =
+> > Non-zero lsk is not released everywhere mptcp_pm_addr_entry structs are
+> > freed.
+> > =
 
- 		/* close acquired an extra ref */
--- =
+> > lsk is not initialized in mptcp_pm_nl_get_local_id()
+> > =
 
-2.26.2
+> > > };
+> > > =
 
---===============5686719206441227578==--
+> > > struct mptcp_pm_add_entry {
+> > > @@ -732,6 +733,53 @@ static struct pm_nl_pernet *genl_info_pm_nl(stru=
+ct genl_info *info)
+> > > 	return net_generic(genl_info_net(info), pm_nl_pernet_id);
+> > > }
+> > > =
+
+> > > +static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+> > > +					    struct mptcp_pm_addr_entry *entry)
+> > > +{
+> > > +	struct sockaddr_storage addr;
+> > > +	struct mptcp_sock *msk;
+> > > +	struct socket *ssock;
+> > > +	int backlog =3D 20;
+> > =
+
+> > Any comment on the choice of '20' here? Could it be too small for a high
+> > connection rate, or worth a sysctl?
+> > =
+
+> > Thanks,
+> > =
+
+> > Mat
+> > =
+
+> > > +	int err;
+> > > +
+> > > +	err =3D sock_create_kern(sock_net(sk), entry->addr.family,
+> > > +			       SOCK_STREAM, IPPROTO_MPTCP, &entry->lsk);
+> > > +	if (err)
+> > > +		return err;
+> > > +
+> > > +	msk =3D mptcp_sk(entry->lsk->sk);
+> > > +	if (!msk) {
+> > > +		err =3D -EINVAL;
+> > > +		goto out;
+> > > +	}
+> > > +
+> > > +	ssock =3D __mptcp_nmpc_socket(msk);
+> > > +	if (!ssock) {
+> > > +		err =3D -EINVAL;
+> > > +		goto out;
+> > > +	}
+> > > +
+> > > +	mptcp_info2sockaddr(&entry->addr, &addr);
+> > > +	err =3D kernel_bind(ssock, (struct sockaddr *)&addr,
+> > > +			  sizeof(struct sockaddr_in));
+> > > +	if (err) {
+> > > +		pr_warn("kernel_bind error, err=3D%d", err);
+> > > +		goto out;
+> > > +	}
+> > > +
+> > > +	err =3D kernel_listen(ssock, backlog);
+> > > +	if (err) {
+> > > +		pr_warn("kernel_listen error, err=3D%d", err);
+> > > +		goto out;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +
+> > > +out:
+> > > +	sock_release(entry->lsk);
+> =
+
+> I need some help about releasing the MPTCP type listening socket. When I
+> use "sock_release(entry->lsk)" to release it, I'll get a deadlock warning
+> like this:
+> =
+
+> ----
+> =
+
+> [   55.789592] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [   55.789593] WARNING: possible recursive locking detected
+> [   55.789594] 5.10.0-rc6-mptcp+ #742 Not tainted
+> [   55.789595] --------------------------------------------
+> [   55.789596] pm_nl_ctl/5583 is trying to acquire lock:
+> [   55.789597] ffff9ff9883cb960 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: __mp=
+tcp_close_ssk+0x52/0x160
+> [   55.789604]
+>                but task is already holding lock:
+> [   55.789605] ffff9ff949c1c1a0 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptc=
+p_close+0x45/0x320
+> [   55.789608]
+>                other info that might help us debug this:
+> [   55.789609]  Possible unsafe locking scenario:
+> =
+
+> [   55.789610]        CPU0
+> [   55.789610]        ----
+> [   55.789611]   lock(k-sk_lock-AF_INET);
+> [   55.789613]   lock(k-sk_lock-AF_INET);
+> [   55.789614]
+>                 *** DEADLOCK ***
+> =
+
+> [   55.789615]  May be due to missing lock nesting notation
+
+Uhm... this lock warning is quite strange. We already hit that lock
+sequence in several others places, with no splat. The lock sequence per
+se is safe, as the lock is for different 'struct sock'
+
+I'm wondering if you are get any others eariler warning, fooling
+lockdepth ?!?
+
+Thanks,
+
+Paolo
+
+--===============2251228007369516416==--
