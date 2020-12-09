@@ -1,37 +1,128 @@
-Content-Type: multipart/mixed; boundary="===============1882900139621186617=="
+Content-Type: multipart/mixed; boundary="===============1400139385351361144=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 10 December 2020 16:00 UTC (8am PDT, 5pm CET,
- 12pm CST)
-Date: Wed, 09 Dec 2020 17:29:25 +0100
-Message-ID: <bef6d9b5-6195-a69d-021e-c515b1ce01a4@tessares.net>
+Subject: [MPTCP] [PATCH mptcp-next] mptcp: push pending frames when subflow
+ has free space
+Date: Wed, 09 Dec 2020 18:46:41 +0100
+Message-ID: <41eec9f439fdbe2ae5549f6222af4b24f58c0af5.1607535998.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7104
+X-UID: 7105
 
---===============1882900139621186617==
+--===============1400139385351361144==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+When multiple subflows are active, we can receive a
+window update on subflow with no write space available.
+MPTCP will try to push frames on such subflow and will
+fail. Pending frames will be pushed only after receiving
+a window update on a subflow with some wspace available.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+Overall the above could lead to suboptimal aggregate
+bandwidth usage.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20201210
+Instead, we should try to push pending frames as soon as
+the subflow reaches both conditions mentioned above.
 
-Feel free to add/modify topics!
+We can finally enable self-tests with asymmetric links,
+as the above makes them finally pass.
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+---
+ net/mptcp/options.c                               | 13 ++++++++-----
+ net/mptcp/protocol.c                              |  2 +-
+ net/mptcp/protocol.h                              |  2 +-
+ tools/testing/selftests/net/mptcp/simult_flows.sh |  6 +++---
+ 4 files changed, 13 insertions(+), 10 deletions(-)
 
-Speak to you tomorrow!
-Matt
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index f5f4bd04196d..f4e6808691ed 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -876,10 +876,13 @@ static void ack_update_msk(struct mptcp_sock *msk,
+ =
+
+ 	new_wnd_end =3D new_snd_una + tcp_sk(ssk)->snd_wnd;
+ =
+
+-	if (after64(new_wnd_end, msk->wnd_end)) {
++	if (after64(new_wnd_end, msk->wnd_end))
+ 		msk->wnd_end =3D new_wnd_end;
+-		__mptcp_wnd_updated(sk, ssk);
+-	}
++
++	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
++	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)) &&
++	    sk_stream_memory_free(sk))
++		__mptcp_check_push(sk, ssk);
+ =
+
+ 	if (after64(new_snd_una, old_snd_una)) {
+ 		msk->snd_una =3D new_snd_una;
+@@ -945,8 +948,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
+buff *skb)
+ 		 * helpers are cheap.
+ 		 */
+ 		mptcp_data_lock(subflow->conn);
+-		if (mptcp_send_head(subflow->conn))
+-			__mptcp_wnd_updated(subflow->conn, sk);
++		if (sk_stream_memory_free(sk))
++			__mptcp_check_push(subflow->conn, sk);
+ 		__mptcp_data_acked(subflow->conn);
+ 		mptcp_data_unlock(subflow->conn);
+ 		return;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 97210eaaa89e..670d49825499 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2919,7 +2919,7 @@ void __mptcp_data_acked(struct sock *sk)
+ 		mptcp_schedule_work(sk);
+ }
+ =
+
+-void __mptcp_wnd_updated(struct sock *sk, struct sock *ssk)
++void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+ {
+ 	if (!mptcp_send_head(sk))
+ 		return;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index b6feb5340dd0..21474a80efd6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -506,7 +506,7 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, const=
+ struct sock *ssk);
+ void mptcp_data_ready(struct sock *sk, struct sock *ssk);
+ bool mptcp_finish_join(struct sock *sk);
+ bool mptcp_schedule_work(struct sock *sk);
+-void __mptcp_wnd_updated(struct sock *sk, struct sock *ssk);
++void __mptcp_check_push(struct sock *sk, struct sock *ssk);
+ void __mptcp_data_acked(struct sock *sk);
+ void mptcp_subflow_eof(struct sock *sk);
+ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
+ool use_64bit);
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/test=
+ing/selftests/net/mptcp/simult_flows.sh
+index 2f649b431456..f039ee57eb3c 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -287,7 +287,7 @@ run_test 10 10 0 0 "balanced bwidth"
+ run_test 10 10 1 50 "balanced bwidth with unbalanced delay"
+ =
+
+ # we still need some additional infrastructure to pass the following test-=
+cases
+-# run_test 30 10 0 0 "unbalanced bwidth"
+-# run_test 30 10 1 50 "unbalanced bwidth with unbalanced delay"
+-# run_test 30 10 50 1 "unbalanced bwidth with opposed, unbalanced delay"
++run_test 30 10 0 0 "unbalanced bwidth"
++run_test 30 10 1 50 "unbalanced bwidth with unbalanced delay"
++run_test 30 10 50 1 "unbalanced bwidth with opposed, unbalanced delay"
+ exit $ret
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============1882900139621186617==--
+2.26.2
+
+--===============1400139385351361144==--
