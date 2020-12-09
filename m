@@ -1,128 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============1400139385351361144=="
+Content-Type: multipart/mixed; boundary="===============2570816900441470895=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] mptcp: push pending frames when subflow
- has free space
-Date: Wed, 09 Dec 2020 18:46:41 +0100
-Message-ID: <41eec9f439fdbe2ae5549f6222af4b24f58c0af5.1607535998.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net-next 01/11] mptcp: unify ADD_ADDR and echo
+ suboptions writing
+Date: Wed, 09 Dec 2020 15:51:18 -0800
+Message-ID: <20201209235128.175473-2-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20201209235128.175473-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7105
+X-UID: 7106
 
---===============1400139385351361144==
+--===============2570816900441470895==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When multiple subflows are active, we can receive a
-window update on subflow with no write space available.
-MPTCP will try to push frames on such subflow and will
-fail. Pending frames will be pushed only after receiving
-a window update on a subflow with some wspace available.
+From: Geliang Tang <geliangtang(a)gmail.com>
 
-Overall the above could lead to suboptimal aggregate
-bandwidth usage.
+There are two differences between ADD_ADDR suboption and ADD_ADDR echo
+suboption: The length of the former is 8 octets longer than the length
+of the latter. The former's echo-flag is 0, and latter's echo-flag is 1.
 
-Instead, we should try to push pending frames as soon as
-the subflow reaches both conditions mentioned above.
+This patch added two local variables, len and echo, to unify ADD_ADDR
+and ADD_ADDR echo suboptions writing.
 
-We can finally enable self-tests with asymmetric links,
-as the above makes them finally pass.
-
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/options.c                               | 13 ++++++++-----
- net/mptcp/protocol.c                              |  2 +-
- net/mptcp/protocol.h                              |  2 +-
- tools/testing/selftests/net/mptcp/simult_flows.sh |  6 +++---
- 4 files changed, 13 insertions(+), 10 deletions(-)
+ net/mptcp/options.c | 37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index f5f4bd04196d..f4e6808691ed 100644
+index b63f26bf348f..a061b2106cfe 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -876,10 +876,13 @@ static void ack_update_msk(struct mptcp_sock *msk,
+@@ -1076,15 +1076,16 @@ void mptcp_write_options(__be32 *ptr, const struct =
+tcp_sock *tp,
  =
 
- 	new_wnd_end =3D new_snd_una + tcp_sk(ssk)->snd_wnd;
- =
-
--	if (after64(new_wnd_end, msk->wnd_end)) {
-+	if (after64(new_wnd_end, msk->wnd_end))
- 		msk->wnd_end =3D new_wnd_end;
--		__mptcp_wnd_updated(sk, ssk);
--	}
+ mp_capable_done:
+ 	if (OPTION_MPTCP_ADD_ADDR & opts->suboptions) {
+-		if (opts->ahmac)
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR, 0,
+-					      opts->addr_id);
+-		else
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR_BASE,
+-					      MPTCP_ADDR_ECHO,
+-					      opts->addr_id);
++		u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
++		u8 echo =3D MPTCP_ADDR_ECHO;
 +
-+	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
-+	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)) &&
-+	    sk_stream_memory_free(sk))
-+		__mptcp_check_push(sk, ssk);
++		if (opts->ahmac) {
++			len +=3D sizeof(opts->ahmac);
++			echo =3D 0;
++		}
++
++		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++				      len, echo, opts->addr_id);
+ 		memcpy((u8 *)ptr, (u8 *)&opts->addr.s_addr, 4);
+ 		ptr +=3D 1;
+ 		if (opts->ahmac) {
+@@ -1095,15 +1096,15 @@ void mptcp_write_options(__be32 *ptr, const struct =
+tcp_sock *tp,
  =
 
- 	if (after64(new_snd_una, old_snd_una)) {
- 		msk->snd_una =3D new_snd_una;
-@@ -945,8 +948,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb)
- 		 * helpers are cheap.
- 		 */
- 		mptcp_data_lock(subflow->conn);
--		if (mptcp_send_head(subflow->conn))
--			__mptcp_wnd_updated(subflow->conn, sk);
-+		if (sk_stream_memory_free(sk))
-+			__mptcp_check_push(subflow->conn, sk);
- 		__mptcp_data_acked(subflow->conn);
- 		mptcp_data_unlock(subflow->conn);
- 		return;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 97210eaaa89e..670d49825499 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2919,7 +2919,7 @@ void __mptcp_data_acked(struct sock *sk)
- 		mptcp_schedule_work(sk);
- }
- =
-
--void __mptcp_wnd_updated(struct sock *sk, struct sock *ssk)
-+void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- {
- 	if (!mptcp_send_head(sk))
- 		return;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b6feb5340dd0..21474a80efd6 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -506,7 +506,7 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, const=
- struct sock *ssk);
- void mptcp_data_ready(struct sock *sk, struct sock *ssk);
- bool mptcp_finish_join(struct sock *sk);
- bool mptcp_schedule_work(struct sock *sk);
--void __mptcp_wnd_updated(struct sock *sk, struct sock *ssk);
-+void __mptcp_check_push(struct sock *sk, struct sock *ssk);
- void __mptcp_data_acked(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
-ool use_64bit);
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/test=
-ing/selftests/net/mptcp/simult_flows.sh
-index 2f649b431456..f039ee57eb3c 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -287,7 +287,7 @@ run_test 10 10 0 0 "balanced bwidth"
- run_test 10 10 1 50 "balanced bwidth with unbalanced delay"
- =
-
- # we still need some additional infrastructure to pass the following test-=
-cases
--# run_test 30 10 0 0 "unbalanced bwidth"
--# run_test 30 10 1 50 "unbalanced bwidth with unbalanced delay"
--# run_test 30 10 50 1 "unbalanced bwidth with opposed, unbalanced delay"
-+run_test 30 10 0 0 "unbalanced bwidth"
-+run_test 30 10 1 50 "unbalanced bwidth with unbalanced delay"
-+run_test 30 10 50 1 "unbalanced bwidth with opposed, unbalanced delay"
- exit $ret
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	if (OPTION_MPTCP_ADD_ADDR6 & opts->suboptions) {
+-		if (opts->ahmac)
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR6, 0,
+-					      opts->addr_id);
+-		else
+-			*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
+-					      TCPOLEN_MPTCP_ADD_ADDR6_BASE,
+-					      MPTCP_ADDR_ECHO,
+-					      opts->addr_id);
++		u8 len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
++		u8 echo =3D MPTCP_ADDR_ECHO;
++
++		if (opts->ahmac) {
++			len +=3D sizeof(opts->ahmac);
++			echo =3D 0;
++		}
++		*ptr++ =3D mptcp_option(MPTCPOPT_ADD_ADDR,
++				      len, echo, opts->addr_id);
+ 		memcpy((u8 *)ptr, opts->addr6.s6_addr, 16);
+ 		ptr +=3D 4;
+ 		if (opts->ahmac) {
 -- =
 
-2.26.2
+2.29.2
 
---===============1400139385351361144==--
+--===============2570816900441470895==--
