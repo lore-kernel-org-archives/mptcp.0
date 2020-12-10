@@ -1,63 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============5876711019744178375=="
+Content-Type: multipart/mixed; boundary="===============3037748182537695498=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 11/11] mptcp: use the variable sk instead of
- open-coding
-Date: Wed, 09 Dec 2020 15:51:28 -0800
-Message-ID: <20201209235128.175473-12-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20201209235128.175473-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] mptcp: push pending frames when
+ subflow has free space
+Date: Wed, 09 Dec 2020 17:42:04 -0800
+Message-ID: <306ee763-731-c88c-97f0-b9fb28f8a31d@linux.intel.com>
+In-Reply-To: 41eec9f439fdbe2ae5549f6222af4b24f58c0af5.1607535998.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7117
+X-UID: 7118
 
---===============5876711019744178375==
+--===============3037748182537695498==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
 
-Since the local variable sk has been defined, use it instead of
-open-coding.
+On Wed, 9 Dec 2020, Paolo Abeni wrote:
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- net/mptcp/pm_netlink.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> When multiple subflows are active, we can receive a
+> window update on subflow with no write space available.
+> MPTCP will try to push frames on such subflow and will
+> fail. Pending frames will be pushed only after receiving
+> a window update on a subflow with some wspace available.
+>
+> Overall the above could lead to suboptimal aggregate
+> bandwidth usage.
+>
+> Instead, we should try to push pending frames as soon as
+> the subflow reaches both conditions mentioned above.
+>
+> We can finally enable self-tests with asymmetric links,
+> as the above makes them finally pass.
+>
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> net/mptcp/options.c                               | 13 ++++++++-----
+> net/mptcp/protocol.c                              |  2 +-
+> net/mptcp/protocol.h                              |  2 +-
+> tools/testing/selftests/net/mptcp/simult_flows.sh |  6 +++---
+> 4 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 46da9f8c9cba..5151cfcd6962 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -313,7 +313,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 	struct mptcp_pm_addr_entry *local;
- 	struct pm_nl_pernet *pernet;
- =
+Hi Paolo -
 
--	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-+	pernet =3D net_generic(sock_net(sk), pm_nl_pernet_id);
- =
+Looks good!
 
- 	pr_debug("local %d:%d signal %d:%d subflows %d:%d\n",
- 		 msk->pm.local_addr_used, msk->pm.local_addr_max,
-@@ -399,7 +399,7 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
-sk)
- 	local.family =3D remote.family;
- =
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
- 	spin_unlock_bh(&msk->pm.lock);
--	__mptcp_subflow_connect((struct sock *)msk, &local, &remote);
-+	__mptcp_subflow_connect(sk, &local, &remote);
- 	spin_lock_bh(&msk->pm.lock);
- =
-
- 	mptcp_pm_announce_addr(msk, &remote, true, use_port);
--- =
-
-2.29.2
-
---===============5876711019744178375==--
+--
+Mat Martineau
+Intel
+--===============3037748182537695498==--
