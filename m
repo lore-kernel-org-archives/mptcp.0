@@ -1,71 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============2727991541298803766=="
+Content-Type: multipart/mixed; boundary="===============3180803630911336218=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 10th of December 2020
-Date: Thu, 10 Dec 2020 14:18:35 -0800
-Message-ID: <58bc15d2-a3cf-5b4b-2514-3c10f8ddbb4e@linux.intel.com>
-In-Reply-To: 7028988d-259f-fc99-4da2-5939c7720e90@tessares.net
+Subject: [MPTCP] [PATCH net-next 0/9] mptcp: Another set of miscellaneous
+ MPTCP fixes
+Date: Thu, 10 Dec 2020 14:24:57 -0800
+Message-ID: <20201210222506.222251-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7126
+X-UID: 7127
 
---===============2727991541298803766==
+--===============3180803630911336218==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+This is another collection of MPTCP fixes and enhancements that we have
+tested in the MPTCP tree:
 
-On Thu, 10 Dec 2020, Matthieu Baerts wrote:
+Patch 1 cleans up cgroup attachment for in-kernel subflow sockets.
 
-> Patches to send to netdev:
->    - net:
->        - /
->
->    - net-next:
->        - See below: =E2=86=93
->        - Mat can send them
->        - Paolo will send independently the SELinux patch because it will =
-go =
+Patches 2 and 3 make sure that deletion of advertised addresses by an
+MPTCP path manager when flushing all addresses behaves similarly to the
+remove-single-address operation, and adds related tests.
 
-> to different tree/ML
->
-> 58f1c48d7bbd bpf: expose is_mptcp flag to bpf_tcp_sock =E2=86=92 no
->
-> f57f3b5446bb mptcp: attach subflow socket to parent cgroup =E2=86=92 yes
->
-> e1a05f57895d bpf: add 'bpf_mptcp_sock' structure and helper =E2=86=92 no
-> 921a342fed73 bpf:selftests: add MPTCP test base =E2=86=92 no
-> eea7e1d5a580 bpf:selftests: add bpf_mptcp_sock() verifier tests =E2=86=92=
- no
->
-> d27ed1c635bb mptcp: remove address when netlink flushes addrs =E2=86=92 y=
-es
-> 93713a3225de selftests: mptcp: add the flush addrs testcase =E2=86=92 yes
-> 5c5e588b0e93 mptcp: use MPTCPOPT_HMAC_LEN macro =E2=86=92 yes
-> dd635e51b7e0 mptcp: hold mptcp socket before calling tcp_done =E2=86=92 y=
-es
-> 99b4323a4bd4 tcp: parse mptcp options contained in reset packets =E2=86=
-=92 yes
+Patches 4 and 8 do some minor cleanup.
 
-Matthieu, note that I'm modifying your "Reviewed-by" tag on this single =
+Patches 5-7 add MPTCP_FASTCLOSE functionality. Note that patch 6 adds MPTCP
+option parsing to tcp_reset().
 
-patch ("tcp: parse mptcp options...") to "Acked-by" since the affected =
+Patch 9 optimizes skb size for outgoing MPTCP packets.
 
-files are maintained by others.
 
-> 815187eaa4c5 mptcp: parse and act on incoming FASTCLOSE option =E2=86=92 =
-yes
-> 62253eedfcee mptcp: pm: simplify select_local_address() =E2=86=92 yes
-> 205c9df9ee33 mptcp: let MPTCP create max size skbs =E2=86=92 yes
->
-> 20519a8c3383 mptcp: push pending frames when subflow has free space =E2=
-=86=92 no:
->    - can be seen as a fix, we can wait
->
+Florian Westphal (3):
+  mptcp: hold mptcp socket before calling tcp_done
+  tcp: parse mptcp options contained in reset packets
+  mptcp: parse and act on incoming FASTCLOSE option
 
---
-Mat Martineau
-Intel
+Geliang Tang (3):
+  mptcp: remove address when netlink flushes addrs
+  selftests: mptcp: add the flush addrs testcase
+  mptcp: use MPTCPOPT_HMAC_LEN macro
 
---===============2727991541298803766==--
+Nicolas Rybowski (1):
+  mptcp: attach subflow socket to parent cgroup
+
+Paolo Abeni (2):
+  mptcp: pm: simplify select_local_address()
+  mptcp: let MPTCP create max size skbs
+
+ include/net/tcp.h                             |  2 +-
+ net/ipv4/tcp_input.c                          | 13 +++--
+ net/ipv4/tcp_minisocks.c                      |  2 +-
+ net/mptcp/options.c                           | 17 +++++++
+ net/mptcp/pm_netlink.c                        | 21 ++++----
+ net/mptcp/protocol.c                          | 47 +++++++++++++++--
+ net/mptcp/protocol.h                          |  6 ++-
+ net/mptcp/subflow.c                           | 34 ++++++++++++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 50 +++++++++++++------
+ 9 files changed, 155 insertions(+), 37 deletions(-)
+
+
+base-commit: 51e13685bd93654e0e9b2559c8e103d6545ddf95
+-- =
+
+2.29.2
+
+--===============3180803630911336218==--
