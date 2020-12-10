@@ -1,69 +1,99 @@
-Content-Type: multipart/mixed; boundary="===============3180803630911336218=="
+Content-Type: multipart/mixed; boundary="===============1068888176902312835=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 0/9] mptcp: Another set of miscellaneous
- MPTCP fixes
-Date: Thu, 10 Dec 2020 14:24:57 -0800
-Message-ID: <20201210222506.222251-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 1/9] mptcp: attach subflow socket to parent
+ cgroup
+Date: Thu, 10 Dec 2020 14:24:58 -0800
+Message-ID: <20201210222506.222251-2-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20201210222506.222251-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7127
+X-UID: 7128
 
---===============3180803630911336218==
+--===============1068888176902312835==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is another collection of MPTCP fixes and enhancements that we have
-tested in the MPTCP tree:
+From: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
 
-Patch 1 cleans up cgroup attachment for in-kernel subflow sockets.
+It has been observed that the kernel sockets created for the subflows
+(except the first one) are not in the same cgroup as their parents.
+That's because the additional subflows are created by kernel workers.
 
-Patches 2 and 3 make sure that deletion of advertised addresses by an
-MPTCP path manager when flushing all addresses behaves similarly to the
-remove-single-address operation, and adds related tests.
+This is a problem with eBPF programs attached to the parent's
+cgroup won't be executed for the children. But also with any other features
+of CGroup linked to a sk.
 
-Patches 4 and 8 do some minor cleanup.
+This patch fixes this behaviour.
 
-Patches 5-7 add MPTCP_FASTCLOSE functionality. Note that patch 6 adds MPTCP
-option parsing to tcp_reset().
+As the subflow sockets are created by the kernel, we can't use
+'mem_cgroup_sk_alloc' because of the current context being the one of the
+kworker. This is why we have to do low level memcg manipulation, if
+required.
 
-Patch 9 optimizes skb size for outgoing MPTCP packets.
+Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Acked-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Nicolas Rybowski <nicolas.rybowski(a)tessares.net>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ net/mptcp/subflow.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index fefcaf497938..bf808f1fabe5 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1167,6 +1167,30 @@ int __mptcp_subflow_connect(struct sock *sk, const s=
+truct mptcp_addr_info *loc,
+ 	return err;
+ }
+ =
 
-Florian Westphal (3):
-  mptcp: hold mptcp socket before calling tcp_done
-  tcp: parse mptcp options contained in reset packets
-  mptcp: parse and act on incoming FASTCLOSE option
++static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
++{
++#ifdef CONFIG_SOCK_CGROUP_DATA
++	struct sock_cgroup_data *parent_skcd =3D &parent->sk_cgrp_data,
++				*child_skcd =3D &child->sk_cgrp_data;
++
++	/* only the additional subflows created by kworkers have to be modified */
++	if (cgroup_id(sock_cgroup_ptr(parent_skcd)) !=3D
++	    cgroup_id(sock_cgroup_ptr(child_skcd))) {
++#ifdef CONFIG_MEMCG
++		struct mem_cgroup *memcg =3D parent->sk_memcg;
++
++		mem_cgroup_sk_free(child);
++		if (memcg && css_tryget(&memcg->css))
++			child->sk_memcg =3D memcg;
++#endif /* CONFIG_MEMCG */
++
++		cgroup_sk_free(child_skcd);
++		*child_skcd =3D *parent_skcd;
++		cgroup_sk_clone(child_skcd);
++	}
++#endif /* CONFIG_SOCK_CGROUP_DATA */
++}
++
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -1187,6 +1211,9 @@ int mptcp_subflow_create_socket(struct sock *sk, stru=
+ct socket **new_sock)
+ =
 
-Geliang Tang (3):
-  mptcp: remove address when netlink flushes addrs
-  selftests: mptcp: add the flush addrs testcase
-  mptcp: use MPTCPOPT_HMAC_LEN macro
+ 	lock_sock(sf->sk);
+ =
 
-Nicolas Rybowski (1):
-  mptcp: attach subflow socket to parent cgroup
-
-Paolo Abeni (2):
-  mptcp: pm: simplify select_local_address()
-  mptcp: let MPTCP create max size skbs
-
- include/net/tcp.h                             |  2 +-
- net/ipv4/tcp_input.c                          | 13 +++--
- net/ipv4/tcp_minisocks.c                      |  2 +-
- net/mptcp/options.c                           | 17 +++++++
- net/mptcp/pm_netlink.c                        | 21 ++++----
- net/mptcp/protocol.c                          | 47 +++++++++++++++--
- net/mptcp/protocol.h                          |  6 ++-
- net/mptcp/subflow.c                           | 34 ++++++++++++-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 50 +++++++++++++------
- 9 files changed, 155 insertions(+), 37 deletions(-)
-
-
-base-commit: 51e13685bd93654e0e9b2559c8e103d6545ddf95
++	/* the newly created socket has to be in the same cgroup as its parent */
++	mptcp_attach_cgroup(sk, sf->sk);
++
+ 	/* kernel sockets do not by default acquire net ref, but TCP timer
+ 	 * needs it.
+ 	 */
 -- =
 
 2.29.2
 
---===============3180803630911336218==--
+--===============1068888176902312835==--
