@@ -1,106 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============0054871458021717850=="
+Content-Type: multipart/mixed; boundary="===============2397887654976704023=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 9/9] mptcp: let MPTCP create max size skbs
-Date: Thu, 10 Dec 2020 14:25:06 -0800
-Message-ID: <20201210222506.222251-10-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 8/9] mptcp: pm: simplify
+ select_local_address()
+Date: Thu, 10 Dec 2020 14:25:05 -0800
+Message-ID: <20201210222506.222251-9-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201210222506.222251-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7135
+X-UID: 7136
 
---===============0054871458021717850==
+--===============2397887654976704023==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Paolo Abeni <pabeni(a)redhat.com>
 
-Currently the xmit path of the MPTCP protocol creates smaller-
-than-max-size skbs, which is suboptimal for the performances.
-
-There are a few things to improve:
-- when coalescing to an existing skb, must clear the PUSH flag
-- tcp_build_frag() expect the available space as an argument.
-  When coalescing is enable MPTCP already subtracted the
-  to-be-coalesced skb len. We must increment said argument
-  accordingly.
-
-Before:
-./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
-[...]
-131072  16384  16384    30.00    24414.86
-
-After:
-./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
-[...]
-131072  16384  16384    30.05    28357.69
+There is no need to unconditionally acquire the join list
+lock, we can simply splice the join list into the subflow
+list and traverse only the latter.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ net/mptcp/pm_netlink.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cb8b7adf218a..b812aaae8044 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1256,6 +1256,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 	struct mptcp_ext *mpext =3D NULL;
- 	struct sk_buff *skb, *tail;
- 	bool can_collapse =3D false;
-+	int size_bias =3D 0;
- 	int avail_size;
- 	size_t ret =3D 0;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 9cc4eefaf080..a6d983d80576 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -135,7 +135,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
+ 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
  =
 
-@@ -1277,10 +1278,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
-ct sock *ssk,
- 		mpext =3D skb_ext_find(skb, SKB_EXT_MPTCP);
- 		can_collapse =3D (info->size_goal - skb->len > 0) &&
- 			 mptcp_skb_can_collapse_to(data_seq, skb, mpext);
--		if (!can_collapse)
-+		if (!can_collapse) {
- 			TCP_SKB_CB(skb)->eor =3D 1;
--		else
-+		} else {
-+			size_bias =3D skb->len;
- 			avail_size =3D info->size_goal - skb->len;
-+		}
+ 	rcu_read_lock();
+-	spin_lock_bh(&msk->join_list_lock);
++	__mptcp_flush_join_list(msk);
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+ 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+ 			continue;
+@@ -144,13 +144,11 @@ select_local_address(const struct pm_nl_pernet *perne=
+t,
+ 		 * pending join
+ 		 */
+ 		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
+-		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
+-		    !lookup_subflow_by_saddr(&msk->join_list, &entry->addr)) {
++		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+ 			ret =3D entry;
+ 			break;
+ 		}
  	}
- =
-
- 	/* Zero window and all data acked? Probe. */
-@@ -1300,8 +1303,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 		return 0;
- =
-
- 	ret =3D info->limit - info->sent;
--	tail =3D tcp_build_frag(ssk, avail_size, info->flags, dfrag->page,
--			      dfrag->offset + info->sent, &ret);
-+	tail =3D tcp_build_frag(ssk, avail_size + size_bias, info->flags,
-+			      dfrag->page, dfrag->offset + info->sent, &ret);
- 	if (!tail) {
- 		tcp_remove_empty_skb(sk, tcp_write_queue_tail(ssk));
- 		return -ENOMEM;
-@@ -1310,8 +1313,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
- sock *ssk,
- 	/* if the tail skb is still the cached one, collapsing really happened.
- 	 */
- 	if (skb =3D=3D tail) {
--		WARN_ON_ONCE(!can_collapse);
-+		TCP_SKB_CB(tail)->tcp_flags &=3D ~TCPHDR_PSH;
- 		mpext->data_len +=3D ret;
-+		WARN_ON_ONCE(!can_collapse);
- 		WARN_ON_ONCE(zero_window_probe);
- 		goto out;
- 	}
+-	spin_unlock_bh(&msk->join_list_lock);
+ 	rcu_read_unlock();
+ 	return ret;
+ }
 -- =
 
 2.29.2
 
---===============0054871458021717850==--
+--===============2397887654976704023==--
