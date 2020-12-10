@@ -1,181 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============5823952144409949991=="
+Content-Type: multipart/mixed; boundary="===============0054871458021717850=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 7/9] mptcp: parse and act on incoming
- FASTCLOSE option
-Date: Thu, 10 Dec 2020 14:25:04 -0800
-Message-ID: <20201210222506.222251-8-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 9/9] mptcp: let MPTCP create max size skbs
+Date: Thu, 10 Dec 2020 14:25:06 -0800
+Message-ID: <20201210222506.222251-10-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201210222506.222251-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7134
+X-UID: 7135
 
---===============5823952144409949991==
+--===============0054871458021717850==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Florian Westphal <fw(a)strlen.de>
+From: Paolo Abeni <pabeni(a)redhat.com>
 
-parse the MPTCP FASTCLOSE subtype.
+Currently the xmit path of the MPTCP protocol creates smaller-
+than-max-size skbs, which is suboptimal for the performances.
 
-If provided key matches the local one, schedule the work queue to close
-(with tcp reset) all subflows.
+There are a few things to improve:
+- when coalescing to an existing skb, must clear the PUSH flag
+- tcp_build_frag() expect the available space as an argument.
+  When coalescing is enable MPTCP already subtracted the
+  to-be-coalesced skb len. We must increment said argument
+  accordingly.
 
-The MPTCP socket moves to closed state immediately.
+Before:
+./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
+[...]
+131072  16384  16384    30.00    24414.86
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
+After:
+./use_mptcp.sh netperf -H 127.0.0.1 -t TCP_STREAM
+[...]
+131072  16384  16384    30.05    28357.69
+
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/options.c  | 17 +++++++++++++++++
- net/mptcp/protocol.c | 33 +++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h |  4 ++++
- 3 files changed, 54 insertions(+)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1ca60d9da3ef..5e7d7755d1a6 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -282,6 +282,16 @@ static void mptcp_parse_option(const struct sk_buff *s=
-kb,
- 		pr_debug("RM_ADDR: id=3D%d", mp_opt->rm_id);
- 		break;
- =
-
-+	case MPTCPOPT_MP_FASTCLOSE:
-+		if (opsize !=3D TCPOLEN_MPTCP_FASTCLOSE)
-+			break;
-+
-+		ptr +=3D 2;
-+		mp_opt->rcvr_key =3D get_unaligned_be64(ptr);
-+		ptr +=3D 8;
-+		mp_opt->fastclose =3D 1;
-+		break;
-+
- 	default:
- 		break;
- 	}
-@@ -299,6 +309,7 @@ void mptcp_get_options(const struct sk_buff *skb,
- 	mp_opt->mp_join =3D 0;
- 	mp_opt->add_addr =3D 0;
- 	mp_opt->ahmac =3D 0;
-+	mp_opt->fastclose =3D 0;
- 	mp_opt->port =3D 0;
- 	mp_opt->rm_addr =3D 0;
- 	mp_opt->dss =3D 0;
-@@ -942,6 +953,12 @@ void mptcp_incoming_options(struct sock *sk, struct sk=
-_buff *skb)
- 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
- 		return;
- =
-
-+	if (mp_opt.fastclose &&
-+	    msk->local_key =3D=3D mp_opt.rcvr_key) {
-+		WRITE_ONCE(msk->rcv_fastclose, true);
-+		mptcp_schedule_work((struct sock *)msk);
-+	}
-+
- 	if (mp_opt.add_addr && add_addr_hmac_valid(msk, &mp_opt)) {
- 		struct mptcp_addr_info addr;
- =
+ net/mptcp/protocol.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2540d82742ac..cb8b7adf218a 100644
+index cb8b7adf218a..b812aaae8044 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2217,6 +2217,36 @@ static bool mptcp_check_close_timeout(const struct s=
-ock *sk)
- 	return true;
- }
+@@ -1256,6 +1256,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+ 	struct mptcp_ext *mpext =3D NULL;
+ 	struct sk_buff *skb, *tail;
+ 	bool can_collapse =3D false;
++	int size_bias =3D 0;
+ 	int avail_size;
+ 	size_t ret =3D 0;
  =
 
-+static void mptcp_check_fastclose(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow, *tmp;
-+	struct sock *sk =3D &msk->sk.icsk_inet.sk;
-+
-+	if (likely(!READ_ONCE(msk->rcv_fastclose)))
-+		return;
-+
-+	mptcp_token_destroy(msk);
-+
-+	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
-+		struct sock *tcp_sk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+		lock_sock(tcp_sk);
-+		if (tcp_sk->sk_state !=3D TCP_CLOSE) {
-+			tcp_send_active_reset(tcp_sk, GFP_ATOMIC);
-+			tcp_set_state(tcp_sk, TCP_CLOSE);
+@@ -1277,10 +1278,12 @@ static int mptcp_sendmsg_frag(struct sock *sk, stru=
+ct sock *ssk,
+ 		mpext =3D skb_ext_find(skb, SKB_EXT_MPTCP);
+ 		can_collapse =3D (info->size_goal - skb->len > 0) &&
+ 			 mptcp_skb_can_collapse_to(data_seq, skb, mpext);
+-		if (!can_collapse)
++		if (!can_collapse) {
+ 			TCP_SKB_CB(skb)->eor =3D 1;
+-		else
++		} else {
++			size_bias =3D skb->len;
+ 			avail_size =3D info->size_goal - skb->len;
 +		}
-+		release_sock(tcp_sk);
-+	}
-+
-+	inet_sk_state_store(sk, TCP_CLOSE);
-+	sk->sk_shutdown =3D SHUTDOWN_MASK;
-+	smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
-+	set_bit(MPTCP_DATA_READY, &msk->flags);
-+	set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags);
-+
-+	mptcp_close_wake_up(sk);
-+}
-+
- static void mptcp_worker(struct work_struct *work)
- {
- 	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
-@@ -2233,6 +2263,9 @@ static void mptcp_worker(struct work_struct *work)
+ 	}
  =
 
- 	mptcp_check_data_fin_ack(sk);
- 	__mptcp_flush_join_list(msk);
-+
-+	mptcp_check_fastclose(msk);
-+
- 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
- 		__mptcp_close_subflow(msk);
+ 	/* Zero window and all data acked? Probe. */
+@@ -1300,8 +1303,8 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+ 		return 0;
  =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a5bc9599ae5c..7cf9d110b85f 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -23,6 +23,7 @@
- #define OPTION_MPTCP_ADD_ADDR	BIT(6)
- #define OPTION_MPTCP_ADD_ADDR6	BIT(7)
- #define OPTION_MPTCP_RM_ADDR	BIT(8)
-+#define OPTION_MPTCP_FASTCLOSE	BIT(9)
- =
-
- /* MPTCP option subtypes */
- #define MPTCPOPT_MP_CAPABLE	0
-@@ -58,6 +59,7 @@
- #define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
- #define TCPOLEN_MPTCP_PORT_LEN		4
- #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
-+#define TCPOLEN_MPTCP_FASTCLOSE		12
- =
-
- /* MPTCP MP_JOIN flags */
- #define MPTCPOPT_BACKUP		BIT(0)
-@@ -110,6 +112,7 @@ struct mptcp_options_received {
- 	u16	data_len;
- 	u16	mp_capable : 1,
- 		mp_join : 1,
-+		fastclose : 1,
- 		dss : 1,
- 		add_addr : 1,
- 		rm_addr : 1,
-@@ -237,6 +240,7 @@ struct mptcp_sock {
- 	bool		fully_established;
- 	bool		rcv_data_fin;
- 	bool		snd_data_fin_enable;
-+	bool		rcv_fastclose;
- 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
- 	spinlock_t	join_list_lock;
- 	struct sock	*ack_hint;
+ 	ret =3D info->limit - info->sent;
+-	tail =3D tcp_build_frag(ssk, avail_size, info->flags, dfrag->page,
+-			      dfrag->offset + info->sent, &ret);
++	tail =3D tcp_build_frag(ssk, avail_size + size_bias, info->flags,
++			      dfrag->page, dfrag->offset + info->sent, &ret);
+ 	if (!tail) {
+ 		tcp_remove_empty_skb(sk, tcp_write_queue_tail(ssk));
+ 		return -ENOMEM;
+@@ -1310,8 +1313,9 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct=
+ sock *ssk,
+ 	/* if the tail skb is still the cached one, collapsing really happened.
+ 	 */
+ 	if (skb =3D=3D tail) {
+-		WARN_ON_ONCE(!can_collapse);
++		TCP_SKB_CB(tail)->tcp_flags &=3D ~TCPHDR_PSH;
+ 		mpext->data_len +=3D ret;
++		WARN_ON_ONCE(!can_collapse);
+ 		WARN_ON_ONCE(zero_window_probe);
+ 		goto out;
+ 	}
 -- =
 
 2.29.2
 
---===============5823952144409949991==--
+--===============0054871458021717850==--
