@@ -1,65 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============2397887654976704023=="
+Content-Type: multipart/mixed; boundary="===============7663991625336943267=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 8/9] mptcp: pm: simplify
- select_local_address()
-Date: Thu, 10 Dec 2020 14:25:05 -0800
-Message-ID: <20201210222506.222251-9-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20201210222506.222251-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH mptcp-next] Squash-to: "mptcp: push pending frames
+ when subflow has free space"
+Date: Thu, 10 Dec 2020 23:32:15 +0100
+Message-ID: <c389f95f768ed57163765418c1f1670e08bba8e1.1607639386.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7136
+X-UID: 7137
 
---===============2397887654976704023==
+--===============7663991625336943267==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
-
-There is no need to unconditionally acquire the join list
-lock, we can simply splice the join list into the subflow
-list and traverse only the latter.
+whoops, checking the free space on the wrong sock
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/mptcp/options.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 9cc4eefaf080..a6d983d80576 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -135,7 +135,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
- 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index f4e6808691ed..973867f73952 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -881,7 +881,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
  =
 
- 	rcu_read_lock();
--	spin_lock_bh(&msk->join_list_lock);
-+	__mptcp_flush_join_list(msk);
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
- 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
- 			continue;
-@@ -144,13 +144,11 @@ select_local_address(const struct pm_nl_pernet *perne=
-t,
- 		 * pending join
- 		 */
- 		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
--		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
--		    !lookup_subflow_by_saddr(&msk->join_list, &entry->addr)) {
-+		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
- 			ret =3D entry;
- 			break;
- 		}
- 	}
--	spin_unlock_bh(&msk->join_list_lock);
- 	rcu_read_unlock();
- 	return ret;
- }
+ 	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
+ 	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)) &&
+-	    sk_stream_memory_free(sk))
++	    sk_stream_memory_free(ssk))
+ 		__mptcp_check_push(sk, ssk);
+ =
+
+ 	if (after64(new_snd_una, old_snd_una)) {
 -- =
 
-2.29.2
+2.26.2
 
---===============2397887654976704023==--
+--===============7663991625336943267==--
