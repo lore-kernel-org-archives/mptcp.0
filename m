@@ -1,28 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============2632118381009432282=="
+Content-Type: multipart/mixed; boundary="===============6476485218972770028=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 3rd of December 2020
-Date: Thu, 10 Dec 2020 20:13:55 +0100
-Message-ID: <711e4e0e-7246-3c3e-7d0a-6dcfbf1f401a@tessares.net>
+Subject: [MPTCP] [Weekly meetings] MoM - 10th of December 2020
+Date: Thu, 10 Dec 2020 20:36:40 +0100
+Message-ID: <7028988d-259f-fc99-4da2-5939c7720e90@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 7124
+X-UID: 7125
 
---===============2632118381009432282==
+--===============6476485218972770028==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello everyone,
 
-Last Thursday, we had our 127th meeting with Mat and Ossama (Intel), =
+Today, we had our 128th meeting with Mat and Ossama (Intel), Christoph =
 
-Christoph (Apple), Geliang (Xiaomi) and myself (Tessares).
-
-
-Davide, Paolo and Florian all got a red card but not hat.
-
+(Apple), Davide, Paolo and Florian (RedHat) and myself (Tessares).
 
 Thanks again for this new good meeting!
 
@@ -34,21 +30,54 @@ Accepted patches:
      - The list of accepted patches can be seen on PatchWork:
        https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 
-     netdev (if mptcp ML is in cc) (Paolo):
+     netdev (if mptcp ML is in cc) (Geliang Tang, Mat Martineau, Paolo =
 
-1407108  [net-next,6/6] mptcp: use mptcp release_cb for delayed tasks
-1407107  [net-next,5/6] mptcp: avoid a few atomic ops in the rx path
-1407105  [net-next,4/6] mptcp: allocate TX skbs in msk context
-1407106  [net-next,3/6] mptcp: protect the rx path with the msk socket =
+Abeni):
 
-spinlock
-1407102  [net-next,2/6] mptcp: implement wmem reservation
-1407104  [net-next,1/6] mptcp: open code mptcp variant for lock_sock
+1413736  [net-next,11/11] mptcp: use the variable sk instead of open-coding
+1413735  [net-next,10/11] mptcp: rename add_addr_signal and =
+
+mptcp_add_addr_sta...
+1413734  [net-next,09/11] mptcp: drop rm_addr_signal flag
+1413733  [net-next,08/11] mptcp: print out port and ahmac when receiving =
+
+ADD_A...
+1413732  [net-next,07/11] mptcp: add port parameter for =
+
+mptcp_pm_announce_addr
+1413731  [net-next,06/11] mptcp: send out dedicated packet for ADD_ADDR =
+
+using ...
+1413730  [net-next,05/11] mptcp: add the outgoing ADD_ADDR port support
+1413729  [net-next,04/11] mptcp: use adding up size to get ADD_ADDR length
+1413728  [net-next,03/11] mptcp: add port support for ADD_ADDR suboption =
+
+writi...
+1413726  [net-next,02/11] mptcp: unify ADD_ADDR and ADD_ADDR6 suboptions =
+
+writi...
+1413727  [net-next,01/11] mptcp: unify ADD_ADDR and echo suboptions writing
+1413338  [net-next,3/3] mptcp: be careful on subflows shutdown
+1413337  [net-next,2/3] mptcp: plug subflow context memory leak
+1413336  [net-next,1/3] mptcp: link MPC subflow into msk only after accept
 
 
-     our repo (by: /):
+     our repo (by: Geliang Tang, Paolo Abeni):
 
-/
+1413552  [mptcp-next] mptcp: push pending frames when subflow has free space
+1411918  [mptcp-next] Squash to "mptcp: parse and act on incoming =
+
+FASTCLOSE op...
+1410977  [mptcp-next] mptcp: plug subflow context memory leak
+1410476  [net-next] mptcp: pm: simplify select_local_address()
+1410365  [mptcp-next] mptcp: link MPC subflow into msk only after accept
+1409493  [mptcp-next] mptcp: use MPTCPOPT_HMAC_LEN macro
+1409483  [mptcp-next] Squash to "mptcp: use adding up size to get =
+
+ADD_ADDR len...
+1408049  [v2,mptcp-next,2/2] selftests: mptcp: add the flush addrs testcase
+1408047  [v2,mptcp-next,1/2] mptcp: remove address when netlink flush addrs
+1406751  [v3] mptcp: let MPTCP create max size skbs
 
 
 
@@ -56,20 +85,13 @@ Pending patches:
      - The list of pending patches can be seen on PatchWork:
        https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
 
-     netdev (if mptcp ML is in cc) (by: Florian):
+     netdev (if mptcp ML is in cc) (by: /):
 
-1408363: New: [net-next,1/3] security: add const qualifier to struct =
-
-sock in various places
-1408362: New: [net-next,2/3] tcp: merge 'init_req' and 'route_req' functions
-1408365: New: [net-next,3/3] mptcp: emit tcp reset when a join request =
-
-fails:
-     - Waiting for feedback from the security team
-
+/
 
      our repo (by: Florian Westphal, Geliang Tang, Paolo Abeni):
 
+1370700: RFC: [RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
 1370702: RFC: [RFC,4/4] tcp: parse tcp options contained in reset packets
 1375893: RFC: [RFC,mptpcp-next] mptcp: add ooo prune support
 1395128: RFC: [1/5] tcp: make two mptcp helpers available to tcp stack
@@ -77,180 +99,186 @@ fails:
 1395133: RFC: [5/5] mptcp: send fastclose if userspace closes socket =
 
 with unread data:
+     - Any to drop? Replaced by other ones?
      - WIP
 
-1403495: Changes Requested: [mptcp-next,1/5] mptcp: add the outgoing =
+1408030: Changes Requested: [v7,mptcp-next,1/7] mptcp: create the =
 
-MP_PRIO support
-1403497: Changes Requested: [mptcp-next,2/5] mptcp: add the incoming =
+listening socket for new port
+1408031: Changes Requested: [v7,mptcp-next,2/7] mptcp: add port number =
 
-MP_PRIO support
-1403498: Changes Requested: [mptcp-next,3/5] mptcp: deal with =
+check for MP_JOIN
+1408032: Changes Requested: [v7,mptcp-next,3/7] mptcp: add port number =
 
-MPTCP_PM_ADDR_FLAG_BACKUP in PM netlink
-1403499: Changes Requested: [mptcp-next,4/5] mptcp: add the mibs for MP_PRIO
-1403500: Changes Requested: [mptcp-next,5/5] selftests: mptcp: add the =
-
-MP_PRIO testcases:
-     - some questions are still opened
-     - Behaviour with the Netlink interface are still pending
-     - @Paolo: might you have a look at these questions (how to use the =
-
-flags in the Netlink PM) please? =E2=86=92 Done
-     - once replied, should be easy to implement
-
-1406751: Needs Review / ACK: [v3] mptcp: let MPTCP create max size skbs:
-     -  To be applied =E2=86=92 Done
-
-1408030: New: [v7,mptcp-next,1/7] mptcp: create the listening socket for =
-
-new port
-1408031: New: [v7,mptcp-next,2/7] mptcp: add port number check for MP_JOIN
-1408032: New: [v7,mptcp-next,3/7] mptcp: add port number announced check
-1408033: New: [v7,mptcp-next,4/7] mptcp: deal with =
+announced check
+1408033: Changes Requested: [v7,mptcp-next,4/7] mptcp: deal with =
 
 MPTCP_PM_ADDR_ATTR_PORT in PM netlink
-1408034: New: [v7,mptcp-next,5/7] selftests: mptcp: add port argument =
+1408034: Changes Requested: [v7,mptcp-next,5/7] selftests: mptcp: add =
 
-for pm_nl_ctl
-1408035: New: [v7,mptcp-next,6/7] mptcp: add the mibs for ADD_ADDR with port
-1408036: New: [v7,mptcp-next,7/7] selftests: mptcp: add testcases for =
+port argument for pm_nl_ctl
+1408035: Changes Requested: [v7,mptcp-next,6/7] mptcp: add the mibs for =
 
-ADD_ADDR with port:
-     - Mat would like to have a look and test it
-     - v7 should address Paolo's comment from v6
-     - Review needed on these ones =E2=86=92 Done
+ADD_ADDR with port
+1408036: Changes Requested: [v7,mptcp-next,7/7] selftests: mptcp: add =
 
-1408091: New: [mptcp-next] Squash to "[MPTCP][PATCH v7 mptcp-next 3/7] =
+testcases for ADD_ADDR with port
+1408091: Changes Requested: [mptcp-next] Squash to "[MPTCP][PATCH v7 =
 
-mptcp: add port number announced check"
-1408144: New: [mptcp-next] mptcp: enable use_port when invoke =
+mptcp-next 3/7] mptcp: add port number announced check"
+1408144: Changes Requested: [mptcp-next] mptcp: enable use_port when =
 
-addresses_equal:
-     - Part of ADD_ADDR port support patch set
-     - will insert into ADD_ADDR port support v8
-     - need review =E2=86=92 Done
-
-1408800: New: [mptcp-next] mptcp: add the address ID assignment bitmap:
-   - for issue 117
-     - need review =E2=86=92 Done
-
-1408047: New: [v2,mptcp-next,1/2] mptcp: remove address when netlink =
-
-flush addrs
-1408049: New: [v2,mptcp-next,2/2] selftests: mptcp: add the flush addrs =
-
-testcase
-    - these are ready
-    - to be applied =E2=86=92 Done
-
-1409483: New: [mptcp-next] Squash to "mptcp: use adding up size to get =
-
-ADD_ADDR length":
-     - to be squashed in a commit already in the export branch
-     - needs review =E2=86=92 Done
-
-1409493: New: [mptcp-next] mptcp: use MPTCPOPT_HMAC_LEN macro:
-     - is independent to the rest
-     - needs review =E2=86=92 Done
+invoke addresses_equal:
+     - The two last ones can be part of the future v8
+     - Some modifications needed
 
 1409622: Changes Requested: [RFC] selinux: handle MPTCP consistently =
 
 with TCP:
-     - sent upstream
-     - waiting for feedback from upstream =E2=86=92 Done
-     - should be re-sent as non RFC?
-     - patches sent by Florian are still waiting for feedback, maybe =
+     - fixes in MPTCP core will be needed
+     - sk_security is not copied
+     - either we replace sk_clone_lock with another one copying the =
 
-normal and we have to wait more?
+sk_security field
+     - or we do an explicit copy
 
-1409810: Rejected: [mptcp-next] mptcp: address potential infinite loop =
+1410827: Changes Requested: [net-next] mptcp: avoid using the main =
 
-on receive:
-     - replaced by a patch from Eric (not sent to mptcp ml, directly netdev)
+socket to send ack:
+     - Geliang is working on a v2
+     - Paolo is not able to reproduce the issue, probably a different =
 
-1410365: New: [mptcp-next] mptcp: link MPC subflow into msk only after =
+KConfig and we need net-next
+     - But this fix is important
+     - If anybody can reproduce it, it can be useful if Geliang needs help
+     - *@Geliang* : can you reproduce it on the export branch too?
 
-accept
-     - this will likely hide issues/104, but will not fix it (it fixes =
+1413254: New: [v4,mptcp-next,1/2] mptcp: add the address ID assignment =
 
-issues/103)
-     - needs review =E2=86=92 Done
+bitmap
+1413262: New: [v4,mptcp-next,2/2] selftests: mptcp: add testcases for =
 
-1410476: New: [net-next] mptcp: pm: simplify select_local_address():
-     - need reviews =E2=86=92 Done
+setting the address ID:
+     - Review needed
 
+1413268: New: [v3,mptcp-next,1/6] mptcp: add the outgoing MP_PRIO support
+1413269: New: [v3,mptcp-next,2/6] mptcp: add the incoming MP_PRIO support
+1413270: New: [v3,mptcp-next,3/6] mptcp: add set_flags command in PM netlink
+1413271: New: [v3,mptcp-next,4/6] selftests: mptcp: add set_flags =
+
+command in pm_nl_ctl
+1413272: New: [v3,mptcp-next,5/6] mptcp: add the mibs for MP_PRIO
+1413273: New: [v3,mptcp-next,6/6] selftests: mptcp: add the MP_PRIO =
+
+testcases:
+     - Review needed
+     - v2 =E2=86=92 v3 is small
 
 
 
 Issues on Github:
      https://github.com/multipath-tcp/mptcp_net-next/issues/
 
-     Recently opened (latest from last week: 116)
+     Recently opened (latest from last week: 118)
 
-   119  [syzkaller] memory leak in __get_filter:
-       - new, to be analysed
+   124  ./mptcp_connect.sh -m mmap test blocks: regression [bug]:
+       - Happening since: "mptcp: push pending frames when subflow has =
 
-   117  Allow user-space to set endpoint ID [enhancement] [help wanted] =
+free space"
+       - From Paolo: mmh
+       - Paolo didn't have the issue on his environment
+
+   123  sndmsg autotuning is disable [bug] @pabeni:
+       - When investigating low perf between two VMs
+       - Disabled since last sendmsg refactor
+       - When autotuning is not needed, perf are good!
+       - But not easy to re-enable it
+
+   122  PM doesn't create subflow with IPv4 mapped IPv6 socket [bug] =
 
 @geliangtang:
-       - Geliang already sent a patch: mptcp: add the address ID =
+       - kernel_bind() =E2=86=92 inet6_bind() =E2=86=92 error
+       - Geliang is looking at it
+       - Geliang had an issue to compile packetdrill (multiple =
 
-assignment bitmap
-       - v2 might be needed
+definition of `mp_state')
+       - From Davide: mmh
+       - *@Geliang* : do you still have the issue?
+       - Fedora 30 is no longer supported, an upgrade might be needed
+       - If still blocked, please report the issue on Github/IRC
+
+   121  [syzkaller] divide error in __tcp_select_window [bug] [syzkaller]:
+       - It seems similar to #111 but the upstream fix didn't help for =
+
+this one.
+
+   120  [interop] netnext is dropping packets, causing MPTCP-level =
+
+retransmissions on mptcp.org:
+       - Some logs have been added
+
+   119  [syzkaller] memory leak in __get_filter [bug] [syzkaller]:
+       - no repro yet
+
+   125  [syzkaller] KASAN: wild-memory-access Write in =
+
+subflow_req_destructor
+   126  [syzkaller] WARNING in mptcp_reset_timer:
+       - might be linked to #105 (still happening) and #70
+
+   127  [syzkaller] WARNING in corrupted:
+       - all these new ones (125 =E2=86=92 127) are with export from yester=
+day: =
+
+export/20201209T060936
+       - syzkaller config is different, likely validating new stuff
 
 
      Bugs (opened, flagged as "bug" and assigned)
 
+   123  sndmsg autotuning is disable [bug] @pabeni:
+       - See =E2=86=91
+
+   122  PM doesn't create subflow with IPv4 mapped IPv6 socket [bug] =
+
+@geliangtang:
+       - See =E2=86=91
+
    104  [syzkaller] general protection fault in skb_release_data [bug] =
 
 [syzkaller] @geliangtang:
-       - Geliang is able to reproduce the issue
-       - Paolo has a patch -- mptcp: link MPC subflow into msk only =
-
-after accept -- that hides this issue
-       - but still a fix for 104 will be needed
+       - Geliang is working on it
+       - one patch has already been shared
 
     94  Packetdrill: after a received DATA_FIN, no new packets can be =
 
 treated [bug] [packetdrill] @dcaratti:
-        - Davide sent a workaround
-        - Some fix in packetdrill are still needed
+        - workaround pushed. Can we close this?
+        - No, Matth had the issue yesterday
+        - problem: not matching the port =E2=86=92 cannot understand the po=
+rt, =
 
-    85  Packetdrill: multiple timeout reported by the CI [bug] =
-
-[packetdrill] @matttbe:
-        - The situation is better thanks to a modification in run_all.py =
-
-done by Florian
+maybe we can match "any port"
 
 
      Bugs (opened and flagged as "bug" and not assigned)
 
+   124  ./mptcp_connect.sh -m mmap test blocks: regression [bug]
+   121  [syzkaller] divide error in __tcp_select_window [bug] [syzkaller]
+   119  [syzkaller] memory leak in __get_filter [bug] [syzkaller]
    115  [syzkaller] WARNING in sk_stream_kill_queues [bug] [syzkaller]
-     - any repro for this one?
-     - No repro but still happening with the export branch from 3 days =
-
-ago but no repro
-     - possibly related to: =
-
-https://syzkaller.appspot.com/x/repro.syz?x=3D103bf743500000 ???
-
    114  packetdrill: dss tolerance issue to emit the FIN+ACK [bug] =
 
 [packetdrill]
-   112  sporadic failure of mptcp_join.sh selftest 13 [bug]
+
+   112  sporadic failure of mptcp_join.sh selftest 13 [bug]:
+     - could be good to look at this one not to have many bad reports =
+
+from the CIs.
+
    110  [syzkaller] memory leak in __ip_mc_join_group [bug] [syzkaller]
-   109  [syzkaller] memory leak in skb_ext_add [bug] [syzkaller]
-   108  [syzkaller] memory leak in sk_clone_lock [bug] [syzkaller]
    107  Review use of WARN_ON() / WARN_ON_ONCE() [bug]
    106  [syzkaller] BUG: Bad page state [bug] [syzkaller]
-
-   103  [syzkaller] WARNING in inet_csk_listen_stop [bug] [syzkaller] =
-
-[pabeni takes this one]:
-       - TODO: change assigned =E2=86=92 Done
-
     65  clearing properly the status in listen() [bug]
     56  msk connection state set without msk lock [bug]
 
@@ -259,37 +287,30 @@ https://syzkaller.appspot.com/x/repro.syz?x=3D103bf743500000 ???
 
    117  Allow user-space to set endpoint ID [enhancement] [help wanted] =
 
-@geliangtang:
-       - see above
-
+@geliangtang
     96  Python: add support for IPPROTO_MPTCP [enhancement] @matttbe
     76  [gs]etsockopt per subflow: BPF [enhancement] @matttbe
-
-    54  ADD_ADDR: ports support [enhancement] @geliangtang:
-        - see "Patches" section =E2=86=91
-
-    51  MP_PRIO support [enhancement] @geliangtang:
-        - see "Patches" section =E2=86=91
-
+    54  ADD_ADDR: ports support [enhancement] @geliangtang
+    51  MP_PRIO support [enhancement] @geliangtang
     43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag =
 
-interface [enhancement] [syzkaller] @cpaasch:
-        - syzkaller is able to find its way
-        - it seems we could improve it to make sure more is covered
-        - not MPTCP specific issue
-        - TODO: unassign Christoph =E2=86=92 Done
+interface [enhancement] [syzkaller] @cpaasch
 
 
      Recently closed (since last week)
 
-   118  ignore me: sorry for the noise, testing IRC notifications
-   111  [syzkaller] divide error in __tcp_select_window [bug] [syzkaller]
-   105  warning in `mptcp_reset_timer()` with `mptcp_connect.sh -m mmap` =
+   109  [syzkaller] memory leak in skb_ext_add [bug] [syzkaller]
+   108  [syzkaller] memory leak in sk_clone_lock [bug] [syzkaller] @pabeni
+   103  [syzkaller] WARNING in inet_csk_listen_stop [bug] [syzkaller] =
 
-[bug]
-    99  simult_flows selftest is unstable: remaining sockets in =
+@pabeni
+    85  Packetdrill: multiple timeout reported by the CI [bug] =
 
-TIME-WAIT state [bug]
+[packetdrill] @matttbe
+    72  [iproute2] endpoint add with "id" is not persisted [enhancement] =
+
+[iproute2]
+    67  `./mptcp_connect.sh -m mmap` test blocks [bug]
 
 
 
@@ -307,93 +328,138 @@ Patches to send to netdev:
          - /
 
      - net-next:
-         - next patches are from Geliang
-         - We need to squash one patch in "mptcp: use adding up size to =
+         - See below: =E2=86=93
+         - Mat can send them
+         - Paolo will send independently the SELinux patch because it =
 
-get ADD_ADDR length" =E2=86=92 Done
-         - Then we could send the outgoing ADD_ADDR port support series =
+will go to different tree/ML
 
-that is already in the export branch =E2=86=92 Done
-         - @Florian: Or send fast-close support first if they are ready?
+58f1c48d7bbd bpf: expose is_mptcp flag to bpf_tcp_sock =E2=86=92 no
+
+f57f3b5446bb mptcp: attach subflow socket to parent cgroup =E2=86=92 yes
+
+e1a05f57895d bpf: add 'bpf_mptcp_sock' structure and helper =E2=86=92 no
+921a342fed73 bpf:selftests: add MPTCP test base =E2=86=92 no
+eea7e1d5a580 bpf:selftests: add bpf_mptcp_sock() verifier tests =E2=86=92 no
+
+d27ed1c635bb mptcp: remove address when netlink flushes addrs =E2=86=92 yes
+93713a3225de selftests: mptcp: add the flush addrs testcase =E2=86=92 yes
+5c5e588b0e93 mptcp: use MPTCPOPT_HMAC_LEN macro =E2=86=92 yes
+dd635e51b7e0 mptcp: hold mptcp socket before calling tcp_done =E2=86=92 yes
+99b4323a4bd4 tcp: parse mptcp options contained in reset packets =E2=86=92 =
+yes
+815187eaa4c5 mptcp: parse and act on incoming FASTCLOSE option =E2=86=92 yes
+62253eedfcee mptcp: pm: simplify select_local_address() =E2=86=92 yes
+205c9df9ee33 mptcp: let MPTCP create max size skbs =E2=86=92 yes
+
+20519a8c3383 mptcp: push pending frames when subflow has free space =E2=86=
+=92 no:
+     - can be seen as a fix, we can wait
 
 
 
 Extra tests:
      - news about Syzkaller? (Christoph):
-         - See above
+         - See =E2=86=91
+         - syzkaller config is different, likely validating new stuff
 
      - news about interop with mptcp.org? (Christoph):
-         - IPerf test is really slow with last export
-         - Trying to find what caused the regression
-         - It looks like the receiver is dropping data at the MPTCP level
-         - sender is mptcp.org
-         - upstream is receiver
-         - Christoph will open a new bug report =E2=86=92 Done
+         - an issue reported last week (120: [interop] netnext is =
+
+dropping packets, causing MPTCP-level retransmissions on mptcp.org)
+         - it looks like the sender (mptcp.org) is sending more than =
+
+what it should do
+         - pcap captures with the corresponding dmesg log might be needed
+         - *@Christoph* has this and will look at that
 
      - news about Intel's kbuild? (Mat):
-         - Builds still running but still an intermittent MP_JOIN failure
-         - This test is time sensitive
-         - seems to happen less often
+         - less frequent failure on MP_JOIN selftests
+         - ADD_ADDR timeout was detected too
+         - Mat will check at the full logs
 
      - packetdrill (Davide):
-         - Florian fixed an issue in run_all.py
-         - FC tests are back
-         - New tests from Paolo (regression)
-         - Tests for ADD_ADDR with v6 are not passing, to be investigate
+         - Some small modifications to stabilise some tests running on a =
+
+slow env
+         - Also tolerance is multiplied by 10 when running it with a =
+
+debug kernel
 
      - CI (Matth):
-         - Some improvements in IRC notifications
-
-    - stream performances:
-       - looks like east - west traffic is way slower than loopback, =
-
-root cause still to be investigated
-       - between 2 VMs? yep
+         - Tests are more stable! (up to yesterday :) )
 
 
 
-- what about including use_mptcp in mptcpd? and what about some =
+Removing subflows:
+     - If the initial subflow has been closed, do we want the path =
 
-additional script/glue to automatically generate
-MPTCP-enabled systemd units?:
-     - looks fine to add this. Not directly related to mptcpd but linked =
+manager to close the last subflow when an address is removed?
+     - Or leave it open until it's forced closed by an interface being =
 
-to mptcp
-     - Ossama will reply to this email =E2=86=92 Done
+shut down?
+     - Linked to recent modifications done by Geliang
+     - We need to check if the MPTCP connection is left opened in this =
+
+case (PM closes the last subflow):
+         - the msk should still be in Established and can accept/create =
+
+new subflows
+         - maybe safe to close everything by default?
+         - https://github.com/multipath-tcp/mptcp_net-next/issues/128
+         - Note that the situation is different if the msk has been =
+
+closed: if no DATA_FIN is received but all subflows are closed (TCP =
+
+FIN), the msk is closed.
 
 
 
-- [pabeni] should I resend the selinux patch (possibly without the typo) =
-
-removing the RFC tag?:
-     - linked to "selinux: handle MPTCP consistently with TCP" patch
-     - Maybe yes, a non RFC version would be good to "force" feedback
-     - (upstream comments received)
+RPM spec for mptcpd - BSD license:
+     - Davide has a fix for that
+     - (but mptcpd is not compiling anymore)
 
 
 
-- next upstream batch ? ebpf? or port-based endpoint support?:
-     - see the discussion above
+mptcpd doesn't build any more with libell-0.35 (see issue #84)
+     - ugly workaround: build with no plugins =E2=86=92 =
+
+https://paste.centos.org/view/f1218db0
+     - and use libell 0.33 if you want mptcpd functionality
+     - Ossama has a fix but no release
+     - Davide can apply a patch if it can apply on the 0.5 release
+     - *@Ossama* will look at this patch on top of the right version.
+
+
+Next meeting:
+     - starting a bit later? 30 minutes later? (because of conflicting =
+
+meetings)
+     - *@Geliang:* do you plan to participate to the meeting next week? =
+
+Could we start it 15-30 minutes later
 
 
 
 Next meeting:
-     - We propose to have the next meeting on Thursday, the 10th of =
+     - We propose to have the next meeting on Thursday, the 17th of =
 
 December.
-     - Usual UTC time: 16:00 UTC (8am PST, 5pm CET, Midnight CST)
+     - /!\ *NOT* the Usual UTC time: 16:30 UTC (8.30am PST, 5.30pm CET, =
+
+Midnight+30 CST)
      - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20201210
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20201217
 
 
 
 Feel free to comment on these points and propose new ones for the next
 meeting!
 
-Talk to you 3 hours ago,
+Talk to you next Thursday,
 Matt
 -- =
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============2632118381009432282==--
+--===============6476485218972770028==--
