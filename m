@@ -1,98 +1,119 @@
-Content-Type: multipart/mixed; boundary="===============8615542133663739936=="
+Content-Type: multipart/mixed; boundary="===============2685057340516958085=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 2/9] mptcp: remove address when netlink
- flushes addrs
-Date: Thu, 10 Dec 2020 14:24:59 -0800
-Message-ID: <20201210222506.222251-3-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 3/9] selftests: mptcp: add the flush addrs
+ testcase
+Date: Thu, 10 Dec 2020 14:25:00 -0800
+Message-ID: <20201210222506.222251-4-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20201210222506.222251-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7129
+X-UID: 7130
 
---===============8615542133663739936==
+--===============2685057340516958085==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geliang Tang <geliangtang(a)gmail.com>
 
-When the PM netlink flushes the addresses, invoke the remove address
-function mptcp_nl_remove_subflow_and_signal_addr to remove the addresses
-and the subflows. Since this function should not be invoked under lock,
-move __flush_addrs out of the pernet->lock.
+This patch added the flush addrs testcase. In do_transfer, if the number
+of removing addresses is less than 8, use the del addr command to remove
+the addresses one by one. If the number is more than 8, use the flush addrs
+command to remove the addresses.
 
 Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 50 +++++++++++++------
+ 1 file changed, 36 insertions(+), 14 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 5151cfcd6962..9cc4eefaf080 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -867,13 +867,14 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
- struct genl_info *info)
- 	return ret;
- }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 0eae628d1ffd..9aa9624cff97 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -264,27 +264,37 @@ do_transfer()
+ 	cpid=3D$!
  =
 
--static void __flush_addrs(struct pm_nl_pernet *pernet)
-+static void __flush_addrs(struct net *net, struct list_head *list)
- {
--	while (!list_empty(&pernet->local_addr_list)) {
-+	while (!list_empty(list)) {
- 		struct mptcp_pm_addr_entry *cur;
+ 	if [ $rm_nr_ns1 -gt 0 ]; then
+-		counter=3D1
+-		sleep 1
++		if [ $rm_nr_ns1 -lt 8 ]; then
++			counter=3D1
++			sleep 1
  =
 
--		cur =3D list_entry(pernet->local_addr_list.next,
-+		cur =3D list_entry(list->next,
- 				 struct mptcp_pm_addr_entry, list);
-+		mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
- 		list_del_rcu(&cur->list);
- 		kfree_rcu(cur, rcu);
- 	}
-@@ -890,11 +891,13 @@ static void __reset_counters(struct pm_nl_pernet *per=
-net)
- static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info =
-*info)
- {
- 	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
-+	LIST_HEAD(free_list);
+-		while [ $counter -le $rm_nr_ns1 ]
+-		do
+-			ip netns exec ${listener_ns} ./pm_nl_ctl del $counter
++			while [ $counter -le $rm_nr_ns1 ]
++			do
++				ip netns exec ${listener_ns} ./pm_nl_ctl del $counter
++				sleep 1
++				let counter+=3D1
++			done
++		else
+ 			sleep 1
+-			let counter+=3D1
+-		done
++			ip netns exec ${listener_ns} ./pm_nl_ctl flush
++		fi
+ 	fi
  =
 
- 	spin_lock_bh(&pernet->lock);
--	__flush_addrs(pernet);
-+	list_splice_init(&pernet->local_addr_list, &free_list);
- 	__reset_counters(pernet);
- 	spin_unlock_bh(&pernet->lock);
-+	__flush_addrs(sock_net(skb->sk), &free_list);
- 	return 0;
- }
+ 	if [ $rm_nr_ns2 -gt 0 ]; then
+-		counter=3D1
+-		sleep 1
++		if [ $rm_nr_ns2 -lt 8 ]; then
++			counter=3D1
++			sleep 1
  =
 
-@@ -1156,10 +1159,12 @@ static void __net_exit pm_nl_exit_net(struct list_h=
-ead *net_list)
- 	struct net *net;
+-		while [ $counter -le $rm_nr_ns2 ]
+-		do
+-			ip netns exec ${connector_ns} ./pm_nl_ctl del $counter
++			while [ $counter -le $rm_nr_ns2 ]
++			do
++				ip netns exec ${connector_ns} ./pm_nl_ctl del $counter
++				sleep 1
++				let counter+=3D1
++			done
++		else
+ 			sleep 1
+-			let counter+=3D1
+-		done
++			ip netns exec ${connector_ns} ./pm_nl_ctl flush
++		fi
+ 	fi
  =
 
- 	list_for_each_entry(net, net_list, exit_list) {
-+		struct pm_nl_pernet *pernet =3D net_generic(net, pm_nl_pernet_id);
+ 	wait $cpid
+@@ -663,6 +673,18 @@ chk_join_nr "remove subflows and signal" 3 3 3
+ chk_add_nr 1 1
+ chk_rm_nr 2 2
+ =
+
++# subflows and signal, flush
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 3
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++ip netns exec $ns2 ./pm_nl_ctl limits 1 3
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 0 8 8 slow
++chk_join_nr "flush subflows and signal" 3 3 3
++chk_add_nr 1 1
++chk_rm_nr 2 2
 +
- 		/* net is removed from namespace list, can't race with
- 		 * other modifiers
- 		 */
--		__flush_addrs(net_generic(net, pm_nl_pernet_id));
-+		__flush_addrs(net, &pernet->local_addr_list);
- 	}
- }
- =
-
+ # subflow IPv6
+ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.29.2
 
---===============8615542133663739936==--
+--===============2685057340516958085==--
