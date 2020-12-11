@@ -1,73 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============2833738731012556272=="
+Content-Type: multipart/mixed; boundary="===============7030713760585091431=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 10th of December 2020
-Date: Fri, 11 Dec 2020 08:34:40 +0100
-Message-ID: <794869fd-493e-b664-4b8f-795ab088fd77@tessares.net>
-In-Reply-To: 58bc15d2-a3cf-5b4b-2514-3c10f8ddbb4e@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v7 mptcp-next 1/7] mptcp: create the
+ listening socket for new port
+Date: Fri, 11 Dec 2020 16:21:20 +0100
+Message-ID: <8d83a6f809c0856b4488247da8d7d48bea1fa66f.camel@redhat.com>
+In-Reply-To: 20201210034836.GA3190@MiBook
 X-Status: 
 X-Keywords:                  
-X-UID: 7148
+X-UID: 7149
 
---===============2833738731012556272==
+--===============7030713760585091431==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
-
-On 10/12/2020 23:18, Mat Martineau wrote:
+On Thu, 2020-12-10 at 11:48 +0800, Geliang Tang wrote:
+> Hi Paolo,
 > =
 
-> On Thu, 10 Dec 2020, Matthieu Baerts wrote:
+> On Wed, Dec 09, 2020 at 04:25:33PM +0100, Paolo Abeni wrote:
+> > On Wed, 2020-12-09 at 20:33 +0800, Geliang Tang wrote:
+> > > The full log and the patch is attached. Apply this patch and run
+> > > mptcp_join.sh can reproduce the warning.
+> > =
+
+> > I tried applying the v7 posted on the ML, plus some manging to let it
+> > apply on top of current export. The end result is quite alike the patch
+> > attached here.
+> > =
+
+> > Still I can't reproduce the issue.
 > =
 
->> Patches to send to netdev:
->> =C2=A0=C2=A0 - net:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - /
->>
->> =C2=A0=C2=A0 - net-next:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - See below: =E2=86=93
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Mat can send them
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Paolo will send independently the=
- SELinux patch because it =
-
->> will go to different tree/ML
->>
->> 58f1c48d7bbd bpf: expose is_mptcp flag to bpf_tcp_sock =E2=86=92 no
->>
->> f57f3b5446bb mptcp: attach subflow socket to parent cgroup =E2=86=92 yes
->>
->> e1a05f57895d bpf: add 'bpf_mptcp_sock' structure and helper =E2=86=92 no
->> 921a342fed73 bpf:selftests: add MPTCP test base =E2=86=92 no
->> eea7e1d5a580 bpf:selftests: add bpf_mptcp_sock() verifier tests =E2=86=
-=92 no
->>
->> d27ed1c635bb mptcp: remove address when netlink flushes addrs =E2=86=92 =
-yes
->> 93713a3225de selftests: mptcp: add the flush addrs testcase =E2=86=92 yes
->> 5c5e588b0e93 mptcp: use MPTCPOPT_HMAC_LEN macro =E2=86=92 yes
->> dd635e51b7e0 mptcp: hold mptcp socket before calling tcp_done =E2=86=92 =
-yes
->> 99b4323a4bd4 tcp: parse mptcp options contained in reset packets =E2=86=
-=92 yes
+> Thanks for your help.
 > =
 
-> Matthieu, note that I'm modifying your "Reviewed-by" tag on this single =
+> v7 should be added the following code in pm_netlink.c to invoke
+> sock_release to reproduce the issue:
+> =
 
-> patch ("tcp: parse mptcp options...") to "Acked-by" since the affected =
+> @@ -885,6 +968,8 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
+ struct genl_info *info)
+>         spin_unlock_bh(&pernet->lock);
+> =
 
-> files are maintained by others.
+>         mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry=
+->addr);
+> +       if (entry->lsk)
+> +               sock_release(entry->lsk);
+>         kfree_rcu(entry, rcu);
+> =
 
-Good catch! Thanks for the fix, I didn't want to add Reviewed-by for =
+>         return ret;
+> =
 
-this one.
+> > I'm wondering if the kconfig matters here (beyond CONFIG_LOCKDEP=3Dy, I
+> > mean). Could you please share the config you are using ?
 
-Cheers,
-Matt
--- =
+Ok, I can reproduce the issue with the above chunk. Looks like it's
+just a neste lock issue. I'm unsure why lockdep did not splat before -
+the issue has been there since sometime.
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2833738731012556272==--
+Anyhow the following fixes the issue here:
+---
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 56bc1ed94ca7..63f3043c1c1d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2144,7 +2144,7 @@ void __mptcp_close_ssk(struct sock *sk, struct sock *=
+ssk,
+ =
+
+ 	list_del(&subflow->node);
+ =
+
+-	lock_sock(ssk);
++	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+ =
+
+ 	/* if we are invoked by the msk cleanup code, the subflow is
+ 	 * already orphaned
+---
+/P
+
+
+--===============7030713760585091431==--
