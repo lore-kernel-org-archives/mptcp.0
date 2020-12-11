@@ -1,48 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============1749719842981656271=="
+Content-Type: multipart/mixed; boundary="===============0482937693215010681=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [mptcp-net PATCH] mptcp: fix security context on server socket
-Date: Fri, 11 Dec 2020 17:28:10 +0100
-Message-ID: <3a0d657c067957c1dc18310c63179fade8f9a563.1607704071.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH mptcp-net-next] mptcp: fix pending data accounting
+Date: Fri, 11 Dec 2020 17:32:28 +0100
+Message-ID: <108f55ac02616f6ace048488ba4f8456864b7b8c.1607704258.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7150
+X-UID: 7151
 
---===============1749719842981656271==
+--===============0482937693215010681==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently MPTCP is not propagating the security context
-from the ingress request socket to newly created msk
-at clone time.
+When sendmsg() needs to wait for memory, the pending data
+is not updated. That causes a drift in forward memory allocation,
+leading to stall and/or warnings at socket close time.
 
-Address the issue invoking the missing security helper.
+This change addresses the above issue moving the pending data
+counter update inside the sendmsg() main loop.
 
-Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming connections=
-")
+Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 2 ++
- 1 file changed, 2 insertions(+)
+note:
+- will target -net, should net-next close meanwhile
+- this possibly fixes issues/115
+---
+ net/mptcp/protocol.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 88f2a7a0ccb8..967ce9ccfc0d 100644
+index 670d49825499..349134622077 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2081,6 +2081,8 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 	sock_reset_flag(nsk, SOCK_RCU_FREE);
- 	/* will be fully established after successful MPC subflow creation */
- 	inet_sk_state_store(nsk, TCP_SYN_RECV);
-+
-+	security_inet_csk_clone(nsk, req);
- 	bh_unlock_sock(nsk);
+@@ -1658,6 +1658,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 		frag_truesize +=3D psize;
+ 		pfrag->offset +=3D frag_truesize;
+ 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
++		msk->tx_pending_data +=3D copied;
  =
 
- 	/* keep a single reference */
+ 		/* charge data on mptcp pending queue to the msk socket
+ 		 * Note: we charge such data both to sk and ssk
+@@ -1683,10 +1684,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msg=
+hdr *msg, size_t len)
+ 			goto out;
+ 	}
+ =
+
+-	if (copied) {
+-		msk->tx_pending_data +=3D copied;
++	if (copied)
+ 		mptcp_push_pending(sk, msg->msg_flags);
+-	}
+ =
+
+ out:
+ 	release_sock(sk);
 -- =
 
 2.26.2
 
---===============1749719842981656271==--
+--===============0482937693215010681==--
