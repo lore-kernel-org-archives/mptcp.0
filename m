@@ -1,46 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============4016824328847832588=="
+Content-Type: multipart/mixed; boundary="===============7987678062079863289=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] Squash-to: "mptcp: push pending frames
- when subflow has free space"
-Date: Thu, 10 Dec 2020 15:31:03 -0800
-Message-ID: <9c251dd9-954a-b6d7-a5b6-509076a2a516@linux.intel.com>
-In-Reply-To: c389f95f768ed57163765418c1f1670e08bba8e1.1607639386.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 0/2] mptcp: add the address
+ ID assignment bitmap and testcases
+Date: Thu, 10 Dec 2020 16:28:07 -0800
+Message-ID: <b8e6fe97-54ce-cd81-904d-898e503222b@linux.intel.com>
+In-Reply-To: cover.1607500712.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7138
+X-UID: 7139
 
---===============4016824328847832588==
+--===============7987678062079863289==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 10 Dec 2020, Paolo Abeni wrote:
 
-> whoops, checking the free space on the wrong sock
->
+On Wed, 9 Dec 2020, Geliang Tang wrote:
 
-Looks good to squash, thanks for spotting this.
+> v4:
+> - update the find_next code
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> net/mptcp/options.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+v4 looks good for the export branch based on code review and running =
+
+tests. Thanks Geliang!
+
+Mat
+
+
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index f4e6808691ed..973867f73952 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -881,7 +881,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
+> v3:
+> - call find_next_zero_bit() again for the invalid id.
+> - use "for (i =3D id; ..." in mptcp_nl_cmd_dump_addrs.
+> - add a wrap around testcase.
 >
-> 	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
-> 	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)) &&
-> -	    sk_stream_memory_free(sk))
-> +	    sk_stream_memory_free(ssk))
-> 		__mptcp_check_push(sk, ssk);
+> v2:
+> - use BITS_PER_LONG macro.
+> - add back the callback argument in cmd_dump_addrs.
+> - add a testcase.
 >
-> 	if (after64(new_snd_una, old_snd_una)) {
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/117
+>
+> Geliang Tang (2):
+>  mptcp: add the address ID assignment bitmap
+>  selftests: mptcp: add testcases for setting the address ID
+>
+> net/mptcp/pm_netlink.c                        | 71 ++++++++++++++-----
+> .../testing/selftests/net/mptcp/pm_netlink.sh | 41 ++++++++++-
+> 2 files changed, 92 insertions(+), 20 deletions(-)
+>
 > -- =
 
 > 2.26.2
@@ -48,4 +57,4 @@ Looks good to squash, thanks for spotting this.
 --
 Mat Martineau
 Intel
---===============4016824328847832588==--
+--===============7987678062079863289==--
