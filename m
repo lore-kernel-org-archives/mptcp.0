@@ -1,67 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============0482937693215010681=="
+Content-Type: multipart/mixed; boundary="===============5030415728121905287=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net-next] mptcp: fix pending data accounting
-Date: Fri, 11 Dec 2020 17:32:28 +0100
-Message-ID: <108f55ac02616f6ace048488ba4f8456864b7b8c.1607704258.git.pabeni@redhat.com>
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "mptcp: add the address
+ ID assignment bitmap"
+Date: Sun, 13 Dec 2020 09:31:52 +0800
+Message-ID: <8b3705ff8b05e3aae5afdf1cf4d6a6a755941aab.1607823077.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7151
+X-UID: 7152
 
---===============0482937693215010681==
+--===============5030415728121905287==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When sendmsg() needs to wait for memory, the pending data
-is not updated. That causes a drift in forward memory allocation,
-leading to stall and/or warnings at socket close time.
+Initialize addr.id to zero in mptcp_pm_nl_get_local_id, otherwise it will
+be a random number.
 
-This change addresses the above issue moving the pending data
-counter update inside the sendmsg() main loop.
-
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
-note:
-- will target -net, should net-next close meanwhile
-- this possibly fixes issues/115
----
- net/mptcp/protocol.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/mptcp/pm_netlink.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 670d49825499..349134622077 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1658,6 +1658,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		frag_truesize +=3D psize;
- 		pfrag->offset +=3D frag_truesize;
- 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
-+		msk->tx_pending_data +=3D copied;
- =
-
- 		/* charge data on mptcp pending queue to the msk socket
- 		 * Note: we charge such data both to sk and ssk
-@@ -1683,10 +1684,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len)
- 			goto out;
- 	}
- =
-
--	if (copied) {
--		msk->tx_pending_data +=3D copied;
-+	if (copied)
- 		mptcp_push_pending(sk, msg->msg_flags);
--	}
- =
-
- out:
- 	release_sock(sk);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 4aa88a697b74..9b1f6298bbdb 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -656,6 +656,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc)
+ 	entry->addr =3D skc_local;
+ 	entry->addr.ifindex =3D 0;
+ 	entry->addr.flags =3D 0;
++	entry->addr.id =3D 0;
+ 	ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
+ 	if (ret < 0)
+ 		kfree(entry);
 -- =
 
-2.26.2
+2.29.2
 
---===============0482937693215010681==--
+--===============5030415728121905287==--
