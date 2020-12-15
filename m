@@ -1,50 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============5308761773278242285=="
+Content-Type: multipart/mixed; boundary="===============6196800060689504047=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: patchwork-bot+netdevbpf at kernel.org
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net] mptcp: properly annotate nested lock
-Date: Mon, 14 Dec 2020 18:49:21 +0100
-Message-ID: <50af234d94b3b4cd596782e094222837702b7641.1607965491.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH net-next 0/9] mptcp: Another set of miscellaneous
+ MPTCP fixes
+Date: Tue, 15 Dec 2020 01:51:04 +0000
+Message-ID: <
+ <160799706497.8846.3593836390503051441.git-patchwork-notify@kernel.org>>
+In-Reply-To: 20201210222506.222251-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7166
+X-UID: 7167
 
---===============5308761773278242285==
+--===============6196800060689504047==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-MPTCP closes the subflows while holding the msk-level lock.
-While acquiring the subflow socket lock we need to use the
-correct nested annotation, or we can hit a lockdep splat
-at runtime.
+Hello:
 
-Reported-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series was applied to bpf/bpf-next.git (refs/heads/master):
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b372e4b18092..089f084d0ba8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2118,7 +2118,7 @@ void __mptcp_close_ssk(struct sock *sk, struct sock *=
-ssk,
- =
+On Thu, 10 Dec 2020 14:24:57 -0800 you wrote:
+> This is another collection of MPTCP fixes and enhancements that we have
+> tested in the MPTCP tree:
+> =
 
- 	list_del(&subflow->node);
- =
+> Patch 1 cleans up cgroup attachment for in-kernel subflow sockets.
+> =
 
--	lock_sock(ssk);
-+	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
- =
+> Patches 2 and 3 make sure that deletion of advertised addresses by an
+> MPTCP path manager when flushing all addresses behaves similarly to the
+> remove-single-address operation, and adds related tests.
+> =
 
- 	/* if we are invoked by the msk cleanup code, the subflow is
- 	 * already orphaned
--- =
+> [...]
 
-2.26.2
+Here is the summary with links:
+  - [net-next,1/9] mptcp: attach subflow socket to parent cgroup
+    https://git.kernel.org/bpf/bpf-next/c/3764b0c5651e
+  - [net-next,2/9] mptcp: remove address when netlink flushes addrs
+    https://git.kernel.org/bpf/bpf-next/c/141694df6573
+  - [net-next,3/9] selftests: mptcp: add the flush addrs testcase
+    https://git.kernel.org/bpf/bpf-next/c/6fe4ccdc3dab
+  - [net-next,4/9] mptcp: use MPTCPOPT_HMAC_LEN macro
+    https://git.kernel.org/bpf/bpf-next/c/ba34c3de71ce
+  - [net-next,5/9] mptcp: hold mptcp socket before calling tcp_done
+    https://git.kernel.org/bpf/bpf-next/c/ab82e996a1fa
+  - [net-next,6/9] tcp: parse mptcp options contained in reset packets
+    https://git.kernel.org/bpf/bpf-next/c/049fe386d353
+  - [net-next,7/9] mptcp: parse and act on incoming FASTCLOSE option
+    https://git.kernel.org/bpf/bpf-next/c/50c504a20a75
+  - [net-next,8/9] mptcp: pm: simplify select_local_address()
+    https://git.kernel.org/bpf/bpf-next/c/1bc7327b5fea
+  - [net-next,9/9] mptcp: let MPTCP create max size skbs
+    https://git.kernel.org/bpf/bpf-next/c/15e6ca974b14
 
---===============5308761773278242285==--
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
+--===============6196800060689504047==--
