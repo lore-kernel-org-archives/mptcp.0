@@ -1,47 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============0043511887199439975=="
+Content-Type: multipart/mixed; boundary="===============4152348841253504407=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 net-next] mptcp: clear use_ack and
- use_map when dropping other suboptions
-Date: Tue, 15 Dec 2020 10:42:31 +0100
-Message-ID: <a513667f-5d6b-6789-895a-f56e1416e803@tessares.net>
-In-Reply-To: ccca4e8f01457a1b495c5d612ed16c5f7a585706.1608010058.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [mptcp-net PATCH] mptcp: fix security context on server
+ socket
+Date: Tue, 15 Dec 2020 12:44:13 +0100
+Message-ID: <bb4733e0-bf4a-6c83-e3c9-4a67a0f7313f@tessares.net>
+In-Reply-To: 3a0d657c067957c1dc18310c63179fade8f9a563.1607704071.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7172
+X-UID: 7173
 
---===============0043511887199439975==
+--===============4152348841253504407==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Paolo,
+Hi Paolo,
 
-On 15/12/2020 06:32, Geliang Tang wrote:
-> This patch cleared use_ack and use_map when dropping other suboptions to
-> fix the following syzkaller BUG:
+On 11/12/2020 17:28, Paolo Abeni wrote:
+> Currently MPTCP is not propagating the security context
+> from the ingress request socket to newly created msk
+> at clone time.
+> =
 
-(...)
+> Address the issue invoking the missing security helper.
 
-> Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/104
-> Fixes: 84dfe3677a6f (mptcp: send out dedicated ADD_ADDR packet)
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Thank you for this fix! Now in our tree!
 
-Good catch, thank you for this fix and the review!
+- 43befa4d4bfd: mptcp: fix security context on server socket
+- Results: d73b2c933a85..e1e3f281c849
 
-- 281bc5ad92db: mptcp: clear use_ack and use_map when dropping other =
-
-suboptions
-- Results: 663af8abf571..d73b2c933a85
-
-Tests + export have been queued (sync with net-next job is in progress)
-
-> ---
->   Obsoletes: v1 (mptcp: avoid using the main socket to send ack)
-
-Thanks for this note, it is useful for me updating Patchwork!
+Tests + export are going to be started soon!
 
 Cheers,
 Matt
@@ -49,4 +39,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============0043511887199439975==--
+--===============4152348841253504407==--
