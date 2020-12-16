@@ -1,45 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============4981498261133414353=="
+Content-Type: multipart/mixed; boundary="===============5655726617442493047=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] linux: handle MPTCP consistently with TCP
-Date: Wed, 16 Dec 2020 18:22:11 +0100
-Message-ID: <02d190afcb6e32f4aa3d1d228f762ab620f3c406.camel@redhat.com>
-In-Reply-To: 27d6afd1-9a2e-e258-dd09-e943de06f480@schaufler-ca.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 0/2] mptcp: add the address
+ ID assignment bitmap and testcases
+Date: Wed, 16 Dec 2020 22:47:34 +0100
+Message-ID: <c7630e6c-e9bf-fc8d-9887-49cac22e0328@tessares.net>
+In-Reply-To: cover.1607500712.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7195
+X-UID: 7196
 
---===============4981498261133414353==
+--===============5655726617442493047==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Geliang, Mat,
 
-On Wed, 2020-12-16 at 08:31 -0800, Casey Schaufler wrote:
-> On 12/16/2020 3:55 AM, Paolo Abeni wrote:
-> > The MPTCP protocol uses a specific protocol value, even if
-> > it's an extension to TCP. Additionally, MPTCP sockets
-> > could 'fall-back' to TCP at run-time, depending on peer MPTCP
-> > support and available resources.
-> > =
-
-> > As a consequence of the specific protocol number, selinux
-> > applies the raw_socket class to MPTCP sockets.
+On 09/12/2020 09:04, Geliang Tang wrote:
+> v4:
+>   - update the find_next code
 > =
 
-> Have you looked at the implications for Smack?
+> v3:
+>   - call find_next_zero_bit() again for the invalid id.
+>   - use "for (i =3D id; ..." in mptcp_nl_cmd_dump_addrs.
+>   - add a wrap around testcase.
+> =
 
-AFAICS, the only hooks which can be affected is
-smack_socket_post_create() - that is, the only hook with a 'protocol'
-argument coming directly from the socket APIs.
+> v2:
+>   - use BITS_PER_LONG macro.
+>   - add back the callback argument in cmd_dump_addrs.
+>   - add a testcase.
 
-If I read the code correctly, such hook behaves independently from
-'protocol' value. Overall no changes should be needed for smack.
+Thank you for the patches and the reviews!
 
-Thanks!
+Just added in our tree, with Mat's Reviewed-by tags!
 
-Paolo
+- f4b03aa16214: mptcp: add the address ID assignment bitmap
+- 6636ac3e5e80: selftests: mptcp: add testcases for setting the address ID
+- edac8433efa9: "squashed" in "mptcp: add the address ID assignment bitmap"
 
---===============4981498261133414353==--
+Tests + export are going to be started soon
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/117
+
+Thanks for the link!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============5655726617442493047==--
