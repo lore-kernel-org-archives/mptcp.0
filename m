@@ -1,131 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============8640586524801936013=="
+Content-Type: multipart/mixed; boundary="===============8573464198127429000=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 3/4] mptcp: push pending frames when subflow has
- free space
-Date: Wed, 16 Dec 2020 12:48:34 +0100
-Message-ID: <96d38017eb3b407449776e9ae788a4418496e55e.1608114076.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH net 2/4] mptcp: properly annotate nested lock
+Date: Wed, 16 Dec 2020 12:48:33 +0100
+Message-ID: <0cbf6359084bee1187ba382a015d8809e2ce2416.1608114076.git.pabeni@redhat.com>
 In-Reply-To: cover.1608114076.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7190
+X-UID: 7191
 
---===============8640586524801936013==
+--===============8573464198127429000==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When multiple subflows are active, we can receive a
-window update on subflow with no write space available.
-MPTCP will try to push frames on such subflow and will
-fail. Pending frames will be pushed only after receiving
-a window update on a subflow with some wspace available.
+MPTCP closes the subflows while holding the msk-level lock.
+While acquiring the subflow socket lock we need to use the
+correct nested annotation, or we can hit a lockdep splat
+at runtime.
 
-Overall the above could lead to suboptimal aggregate
-bandwidth usage.
-
-Instead, we should try to push pending frames as soon as
-the subflow reaches both conditions mentioned above.
-
-We can finally enable self-tests with asymmetric links,
-as the above makes them finally pass.
-
-Fixes: 6f8a612a33e4 ("mptcp: keep track of advertised windows right edge")
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Reported-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
+Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c                               | 13 ++++++++-----
- net/mptcp/protocol.c                              |  2 +-
- net/mptcp/protocol.h                              |  2 +-
- tools/testing/selftests/net/mptcp/simult_flows.sh |  6 +++---
- 4 files changed, 13 insertions(+), 10 deletions(-)
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c5328f407aab..1fbd305ebd92 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -873,10 +873,13 @@ static void ack_update_msk(struct mptcp_sock *msk,
- =
-
- 	new_wnd_end =3D new_snd_una + tcp_sk(ssk)->snd_wnd;
- =
-
--	if (after64(new_wnd_end, msk->wnd_end)) {
-+	if (after64(new_wnd_end, msk->wnd_end))
- 		msk->wnd_end =3D new_wnd_end;
--		__mptcp_wnd_updated(sk, ssk);
--	}
-+
-+	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
-+	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)) &&
-+	    sk_stream_memory_free(ssk))
-+		__mptcp_check_push(sk, ssk);
- =
-
- 	if (after64(new_snd_una, old_snd_una)) {
- 		msk->snd_una =3D new_snd_una;
-@@ -942,8 +945,8 @@ void mptcp_incoming_options(struct sock *sk, struct sk_=
-buff *skb)
- 		 * helpers are cheap.
- 		 */
- 		mptcp_data_lock(subflow->conn);
--		if (mptcp_send_head(subflow->conn))
--			__mptcp_wnd_updated(subflow->conn, sk);
-+		if (sk_stream_memory_free(sk))
-+			__mptcp_check_push(subflow->conn, sk);
- 		__mptcp_data_acked(subflow->conn);
- 		mptcp_data_unlock(subflow->conn);
- 		return;
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 64c0c54c80e8..b53a91801a6c 100644
+index d24243a28fce..64c0c54c80e8 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2915,7 +2915,7 @@ void __mptcp_data_acked(struct sock *sk)
- 		mptcp_schedule_work(sk);
- }
+@@ -2119,7 +2119,7 @@ void __mptcp_close_ssk(struct sock *sk, struct sock *=
+ssk,
  =
 
--void __mptcp_wnd_updated(struct sock *sk, struct sock *ssk)
-+void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- {
- 	if (!mptcp_send_head(sk))
- 		return;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7cf9d110b85f..d67de793d363 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -503,7 +503,7 @@ void mptcp_rcv_space_init(struct mptcp_sock *msk, const=
- struct sock *ssk);
- void mptcp_data_ready(struct sock *sk, struct sock *ssk);
- bool mptcp_finish_join(struct sock *sk);
- bool mptcp_schedule_work(struct sock *sk);
--void __mptcp_wnd_updated(struct sock *sk, struct sock *ssk);
-+void __mptcp_check_push(struct sock *sk, struct sock *ssk);
- void __mptcp_data_acked(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
-ool use_64bit);
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/test=
-ing/selftests/net/mptcp/simult_flows.sh
-index 2f649b431456..f039ee57eb3c 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -287,7 +287,7 @@ run_test 10 10 0 0 "balanced bwidth"
- run_test 10 10 1 50 "balanced bwidth with unbalanced delay"
+ 	list_del(&subflow->node);
  =
 
- # we still need some additional infrastructure to pass the following test-=
-cases
--# run_test 30 10 0 0 "unbalanced bwidth"
--# run_test 30 10 1 50 "unbalanced bwidth with unbalanced delay"
--# run_test 30 10 50 1 "unbalanced bwidth with opposed, unbalanced delay"
-+run_test 30 10 0 0 "unbalanced bwidth"
-+run_test 30 10 1 50 "unbalanced bwidth with unbalanced delay"
-+run_test 30 10 50 1 "unbalanced bwidth with opposed, unbalanced delay"
- exit $ret
+-	lock_sock(ssk);
++	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+ =
+
+ 	/* if we are invoked by the msk cleanup code, the subflow is
+ 	 * already orphaned
 -- =
 
 2.26.2
 
---===============8640586524801936013==--
+--===============8573464198127429000==--
