@@ -1,66 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============4704538120208578878=="
+Content-Type: multipart/mixed; boundary="===============4981498261133414353=="
 MIME-Version: 1.0
-From: Casey Schaufler <casey at schaufler-ca.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH] linux: handle MPTCP consistently with TCP
-Date: Wed, 16 Dec 2020 08:31:15 -0800
-Message-ID: <27d6afd1-9a2e-e258-dd09-e943de06f480@schaufler-ca.com>
-In-Reply-To: fde38edd69c998624c5eb5be072ca1fa556d312d.1608119587.git.pabeni@redhat.com
+Date: Wed, 16 Dec 2020 18:22:11 +0100
+Message-ID: <02d190afcb6e32f4aa3d1d228f762ab620f3c406.camel@redhat.com>
+In-Reply-To: 27d6afd1-9a2e-e258-dd09-e943de06f480@schaufler-ca.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7194
+X-UID: 7195
 
---===============4704538120208578878==
+--===============4981498261133414353==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/16/2020 3:55 AM, Paolo Abeni wrote:
-> The MPTCP protocol uses a specific protocol value, even if
-> it's an extension to TCP. Additionally, MPTCP sockets
-> could 'fall-back' to TCP at run-time, depending on peer MPTCP
-> support and available resources.
->
-> As a consequence of the specific protocol number, selinux
-> applies the raw_socket class to MPTCP sockets.
+Hello,
 
-Have you looked at the implications for Smack?
+On Wed, 2020-12-16 at 08:31 -0800, Casey Schaufler wrote:
+> On 12/16/2020 3:55 AM, Paolo Abeni wrote:
+> > The MPTCP protocol uses a specific protocol value, even if
+> > it's an extension to TCP. Additionally, MPTCP sockets
+> > could 'fall-back' to TCP at run-time, depending on peer MPTCP
+> > support and available resources.
+> > =
 
->
-> Existing TCP application converted to MPTCP - or forced to
-> use MPTCP socket with user-space hacks - will need an
-> updated policy to run successfully.
->
-> This change lets selinux attach the TCP socket class to
-> MPTCP sockets, too, so that no policy changes are needed in
-> the above scenario.
->
-> Note that the MPTCP is setting, propagating and updating the
-> security context on all the subflows and related request
-> socket.
->
-> Link: https://lore.kernel.org/linux-security-module/CAHC9VhTaK3xx0hEGByD2=
-zxfF7fadyPP1kb-WeWH_YCyq9X-sRg(a)mail.gmail.com/T/#t
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->  security/selinux/hooks.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 6fa593006802..451bded67d9c 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -1120,7 +1120,8 @@ static inline u16 inode_mode_to_security_class(umod=
-e_t mode)
->  =
+> > As a consequence of the specific protocol number, selinux
+> > applies the raw_socket class to MPTCP sockets.
+> =
 
->  static inline int default_protocol_stream(int protocol)
->  {
-> -	return (protocol =3D=3D IPPROTO_IP || protocol =3D=3D IPPROTO_TCP);
-> +	return (protocol =3D=3D IPPROTO_IP || protocol =3D=3D IPPROTO_TCP ||
-> +		protocol =3D=3D IPPROTO_MPTCP);
->  }
->  =
+> Have you looked at the implications for Smack?
 
->  static inline int default_protocol_dgram(int protocol)
---===============4704538120208578878==--
+AFAICS, the only hooks which can be affected is
+smack_socket_post_create() - that is, the only hook with a 'protocol'
+argument coming directly from the socket APIs.
+
+If I read the code correctly, such hook behaves independently from
+'protocol' value. Overall no changes should be needed for smack.
+
+Thanks!
+
+Paolo
+
+--===============4981498261133414353==--
