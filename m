@@ -1,65 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============0719058092973561252=="
+Content-Type: multipart/mixed; boundary="===============8015639326694330327=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 4/4] mptcp: fix pending data accounting
-Date: Wed, 16 Dec 2020 12:48:35 +0100
-Message-ID: <500ca762741cdb005751703f89ffa374c338ae7b.1608114076.git.pabeni@redhat.com>
-In-Reply-To: cover.1608114076.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH] linux: handle MPTCP consistently with TCP
+Date: Wed, 16 Dec 2020 12:55:27 +0100
+Message-ID: <fde38edd69c998624c5eb5be072ca1fa556d312d.1608119587.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7192
+X-UID: 7193
 
---===============0719058092973561252==
+--===============8015639326694330327==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When sendmsg() needs to wait for memory, the pending data
-is not updated. That causes a drift in forward memory allocation,
-leading to stall and/or warnings at socket close time.
+The MPTCP protocol uses a specific protocol value, even if
+it's an extension to TCP. Additionally, MPTCP sockets
+could 'fall-back' to TCP at run-time, depending on peer MPTCP
+support and available resources.
 
-This change addresses the above issue moving the pending data
-counter update inside the sendmsg() main loop.
+As a consequence of the specific protocol number, selinux
+applies the raw_socket class to MPTCP sockets.
 
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Existing TCP application converted to MPTCP - or forced to
+use MPTCP socket with user-space hacks - will need an
+updated policy to run successfully.
+
+This change lets selinux attach the TCP socket class to
+MPTCP sockets, too, so that no policy changes are needed in
+the above scenario.
+
+Note that the MPTCP is setting, propagating and updating the
+security context on all the subflows and related request
+socket.
+
+Link: https://lore.kernel.org/linux-security-module/CAHC9VhTaK3xx0hEGByD2zx=
+fF7fadyPP1kb-WeWH_YCyq9X-sRg(a)mail.gmail.com/T/#t
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ security/selinux/hooks.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b53a91801a6c..09b19aa2f205 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1658,6 +1658,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		frag_truesize +=3D psize;
- 		pfrag->offset +=3D frag_truesize;
- 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
-+		msk->tx_pending_data +=3D psize;
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 6fa593006802..451bded67d9c 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -1120,7 +1120,8 @@ static inline u16 inode_mode_to_security_class(umode_=
+t mode)
  =
 
- 		/* charge data on mptcp pending queue to the msk socket
- 		 * Note: we charge such data both to sk and ssk
-@@ -1683,10 +1684,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msg=
-hdr *msg, size_t len)
- 			goto out;
- 	}
+ static inline int default_protocol_stream(int protocol)
+ {
+-	return (protocol =3D=3D IPPROTO_IP || protocol =3D=3D IPPROTO_TCP);
++	return (protocol =3D=3D IPPROTO_IP || protocol =3D=3D IPPROTO_TCP ||
++		protocol =3D=3D IPPROTO_MPTCP);
+ }
  =
 
--	if (copied) {
--		msk->tx_pending_data +=3D copied;
-+	if (copied)
- 		mptcp_push_pending(sk, msg->msg_flags);
--	}
- =
-
- out:
- 	release_sock(sk);
+ static inline int default_protocol_dgram(int protocol)
 -- =
 
 2.26.2
 
---===============0719058092973561252==--
+--===============8015639326694330327==--
