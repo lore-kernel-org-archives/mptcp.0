@@ -1,385 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============7664684888251207114=="
+Content-Type: multipart/mixed; boundary="===============2032452613584136523=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [Weekly meetings] MoM - 17th of December 2020
-Date: Fri, 18 Dec 2020 00:00:27 +0100
-Message-ID: <38f95e6d-5fb4-9e79-ecd5-3698eb9188d3@tessares.net>
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 1/2] mptcp: convert IPv4
+ address to IPv4-mapped
+Date: Fri, 18 Dec 2020 00:06:51 +0100
+Message-ID: <d3cbdcc0-4471-7a4d-1b1e-d69be80d231c@tessares.net>
+In-Reply-To: f4a83eea-4bb0-87db-c05f-225b2a1f52fe@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7207
+X-UID: 7208
 
---===============7664684888251207114==
+--===============2032452613584136523==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
-
-Today, we had our INT8_MAX+2 th meeting with Mat and Ossama (Intel), =
-
-Christoph (Apple), Davide, Paolo and Florian (RedHat) and myself (Tessares).
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-     - The list of accepted patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
-
-     netdev (if mptcp ML is in cc) (Mat Martineau):
-
-1414602  [net-next,9/9] mptcp: let MPTCP create max size skbs
-1414603  [net-next,8/9] mptcp: pm: simplify select_local_address()
-1414599  [net-next,7/9] mptcp: parse and act on incoming FASTCLOSE optio
-1414600  [net-next,6/9] tcp: parse mptcp options contained in reset pack
-1414601  [net-next,5/9] mptcp: hold mptcp socket before calling tcp_done
-1414598  [net-next,4/9] mptcp: use MPTCPOPT_HMAC_LEN macro
-1414597  [net-next,3/9] selftests: mptcp: add the flush addrs testcase
-1414596  [net-next,2/9] mptcp: remove address when netlink flushes addrs
-1414595  [net-next,1/9] mptcp: attach subflow socket to parent cgroup
-
-1416290  [v2,net-next] mptcp: clear use_ack and use_map when dropping =
-
-other su...
-
-
-     our repo (by: Geliang Tang, Paolo Abeni):
-
-1416111  [mptcp-net] mptcp: properly annotate nested lock
-
-1416006  [mptcp-net,v2] mptcp: fix pending data accounting
-
-1415493  [mptcp-next] Squash to "mptcp: add the address ID assignment =
-
-bitmap"
-
-1415026  [mptcp-net] mptcp: fix security context on server socket
-
-1414708  [mptcp-next] Squash to "[PATCH v3 mptcp-next 1/6] mptcp: add =
-
-the outg...
-
-1414604  [mptcp-next] Squash-to: "mptcp: push pending frames when =
-
-subflow has ...
-
-1413273  [v3,mptcp-next,6/6] selftests: mptcp: add the MP_PRIO testcases
-1413272  [v3,mptcp-next,5/6] mptcp: add the mibs for MP_PRIO
-1413271  [v3,mptcp-next,4/6] selftests: mptcp: add set_flags command in
-1413270  [v3,mptcp-next,3/6] mptcp: add set_flags command in PM netlink
-1413269  [v3,mptcp-next,2/6] mptcp: add the incoming MP_PRIO support
-1413268  [v3,mptcp-next,1/6] mptcp: add the outgoing MP_PRIO support
-
-1413262  [v4,mptcp-next,2/2] selftests: mptcp: add testcases for setting
-1413254  [v4,mptcp-next,1/2] mptcp: add the address ID assignment bitmap
-
-1409622  [RFC] selinux: handle MPTCP consistently with TCP
-
-
-
-Pending patches:
-     - The list of pending patches can be seen on PatchWork:
-       https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
-
-     netdev (if mptcp ML is in cc) (by: Paolo Abeni):
-
-1417092  linux: handle MPTCP consistently with TCP
-
-1417085  [net,4/4] mptcp: fix pending data accounting
-1417080  [net,3/4] mptcp: push pending frames when subflow has free spac
-1417083  [net,2/4] mptcp: properly annotate nested lock
-1417079  [net,1/4] mptcp: fix security context on server socket:
-     - Waiting to be applied upstream
-     - Done just after the meeting
-
-
-     our repo (by: Florian Westphal, Geliang Tang):
-
-1370700: RFC: [RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
-1370702: RFC: [RFC,4/4] tcp: parse tcp options contained in reset packets
-1375893: RFC: [RFC,mptpcp-next] mptcp: add ooo prune support
-1395128: RFC: [1/5] tcp: make two mptcp helpers available to tcp stack
-1395131: RFC: [3/5] mptcp: add mptcp reset option support
-1395133: RFC: [5/5] mptcp: send fastclose if userspace closes socket =
-
-with unread data:
-     - WIP
-
-1415495: New: [v8,mptcp-next,1/8] mptcp: create the listening socket for
-1415496: New: [v8,mptcp-next,2/8] mptcp: add port number check for MP_JO
-1415497: New: [v8,mptcp-next,3/8] mptcp: add port number announced check
-1415498: New: [v8,mptcp-next,4/8] mptcp: enable use_port when invoke add
-1415499: New: [v8,mptcp-next,5/8] mptcp: deal with MPTCP_PM_ADDR_ATTR_PO
-1415500: New: [v8,mptcp-next,6/8] selftests: mptcp: add port argument fo
-1415501: New: [v8,mptcp-next,7/8] mptcp: add the mibs for ADD_ADDR with
-1415502: New: [v8,mptcp-next,8/8] selftests: mptcp: add testcases for A:
-     - Waiting for reviews
-     - Mat will have a look
-
-1416891: Changes Requested: [v2,mptcp-next,1/2] mptcp: convert IPv4 =
-
-address to IPv4-mapped
-1416892: Changes Requested: [v2,mptcp-next,2/2] selftests: mptcp: add =
-
-IPv4-mapped IPv6 testcases:
-     - Changes requested by Mat
-     - Linked to issue 122 on GH
-     - Discussions needed:
-         - Direction taken: modifying entries in the local address
-         - It seems not "clean": it seems more natural not to modify =
-
-stuff for this check, maybe we should change the way the check is done?
-         - i.e. when comparing addresses, we can check for IPv4 mapped
-         - @Geliang: would it be OK to take this direction?
-
-1416976: New: [mptcp-next,1/3] mptcp: create subflow or signal addr for =
-
-newly added address
-1416977: New: [mptcp-next,2/3] selftests: mptcp: use minus value for =
-
-removing address numbers
-1416978: New: [mptcp-next,3/3] selftests: mptcp: add testcases for newly =
-
-added addresses:
-     - Waiting for reviews
-     - Mat started to look
-     - Linked to https://github.com/multipath-tcp/mptcp_net-next/issues/19
-     - The goal of #19 what to allow the Netlink API to use a new =
-
-endpoint (e.g. new WiFi link)
-     - (Maybe later we can add a flag to disable this behaviour)
-     - It makes sense to do that and that's what Geliang is doing here, =
-
-good!
-     - But is it OK to do this iteration there in the code at this place?
-     - Patch: =
-
-https://patchwork.ozlabs.org/project/mptcp/patch/73d430a234a018dbef408242b1=
-b40461e96dfb91.1608111058.git.geliangtang(a)gmail.com/
-     - Mat might need help for the review on this one
-
-
-
-
-Issues on Github:
-     https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-
-     Recently opened (latest from last week: 127)
-
-   130  [syzkaller] WARNING in mptcp_token_destroy_request [bug] =
-
-[syzkaller]:
-       - no repro yet
-
-   129  set subflow socket consistently [bug] [enhancement]:
-       - When looking at buf autotuning, Paolo found not nice to have =
-
-different struct sockets for client/outbound subflows and server/inbound =
-
-subflows.
-       - Sharing a common structure would be nice
-       - Also, we need to traverse the conn_list to set the NOSPACE bit =
-
-on each subflow
-       - We might want to share this structure for [sg]etsockopt
-
-   128  When the last subflow is closed without DATA_FIN and msk =
-
-Established, close msk (after a timeout) [enhancement]:
-       - We might want different behaviours for inbound and outbound =
-
-sockets, e.g.:
-           - client might want to create new subflows over new subflows =
-
-even if there is no existing one
-           - server might want not being stuck and close connections
-         - MPTCP keep alive might be something different, more advanced =
-
-behaviour
-         - A dedicated timeout might be good for now
-         - For the moment, we don't have dedicated MPTCP setsockopt, =
-
-maybe we can also wait
-         - sysctl should be there to configure the default value
-         - should be fine to add new sysctl just for MPTCP if they are =
-
-specific
-         - Or Netlink API but might be more tricky for the end user, =
-
-e.g. when forcing some specific app to create MPTCP sockets instead of =
-
-TCP one with LD_PRELOAD
-
-
-     Bugs (opened, flagged as "bug" and assigned)
-
-   126  [syzkaller] WARNING in mptcp_reset_timer [bug] [syzkaller] =
-
-@dcaratti:
-       - With the repro, we reproduce another issue: 115, all the time :-)
-       - will fix this one and check this 126 happens again.
-       - but maybe linked
-
-   123  sndmsg autotuning is disable [bug] @pabeni:
-       - As soon as autotuning is re-enabled, some selftests are failing =
-
-(multiple xmit)
-       - Very difficult to get complete link utilisation (no longer =
-
-blocked by buffers)
-       - Trying to use mptcp.org, Paolo is interested by BLEST
-       - Min RTT in mptcp.org works fairly well in most scenarios but in =
-
-heterogeneous, we might not fully use all links
-       - sum of the thgput of all subflow * minRTT (?)
-       - best way to try reaching full speed: set very very large TCP =
-
-rcv and snt windows, just to see if we are not blocked because of that
-       - what Paolo sees is: unstable at the beginning and better later. =
-
-So if it is transferring a few small files, it is not great
-       - Christoph: we need early reinjection. To avoid the packets on =
-
-the slow links blocking the whole connection. It is explained there: =
-
-https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/ra=
-iciu
-       - The sender is blocked somehow, best is to analyse pcaps
-
-   122  PM doesn't create subflow with IPv4 mapped IPv6 socket [bug] =
-
-@geliangtang:
-       - See patches above =E2=86=91
-
-    94  Packetdrill: after a received DATA_FIN, no new packets can be =
-
-treated [bug] [packetdrill] @dcaratti:
-        - Davide will check if he can still reproduce it
-
-
-     Bugs (opened and flagged as "bug" and not assigned)
-
-   130  [syzkaller] WARNING in mptcp_token_destroy_request [bug] [syzkaller]
-   129  set subflow socket consistently [bug] [enhancement]
-   127  [syzkaller] WARNING in corrupted [bug] [syzkaller]
-   125  [syzkaller] KASAN: wild-memory-access Write in =
-
-subflow_req_destructor [bug] [syzkaller]
-   121  [syzkaller] divide error in __tcp_select_window [bug] [syzkaller]
-   120  [interop] netnext is dropping packets, causing MPTCP-level =
-
-retransmissions on mptcp.org [bug]
-   119  [syzkaller] memory leak in __get_filter [bug] [syzkaller]
-   115  [syzkaller] WARNING in sk_stream_kill_queues [bug] [syzkaller]
-   112  sporadic failure of mptcp_join.sh selftest 13 [bug]
-   110  [syzkaller] memory leak in __ip_mc_join_group [bug] [syzkaller]
-   107  Review use of WARN_ON() / WARN_ON_ONCE() [bug]
-    65  clearing properly the status in listen() [bug]
-    56  msk connection state set without msk lock [bug]
-
-
-     In Progress (opened and assigned)
-
-    96  Python: add support for IPPROTO_MPTCP [enhancement] @matttbe
-    76  [gs]etsockopt per subflow: BPF [enhancement] @matttbe
-    54  ADD_ADDR: ports support [enhancement] @geliangtang
-    51  MP_PRIO support [enhancement] @geliangtang
-    19  let PM netlink update live sockets on local addresses list =
-
-change [enhancement] @geliangtang
-
-    60  PM: netlink: events per connection [enhancement]
-     - Florian is working on PM to share events
-     - the API will not be exactly the same, prefix different
-     - Florian will try to reduce the modifications
-
-
-     Recently closed (since last week)
-
-   124  ./mptcp_connect.sh -m mmap test blocks: regression [bug]
-   117  Allow user-space to set endpoint ID [enhancement] [help wanted] =
-
-@geliangtang
-   114  packetdrill: dss tolerance issue to emit the FIN+ACK [bug] =
-
-[packetdrill]
-   106  [syzkaller] BUG: Bad page state [bug] [syzkaller]
-   104  [syzkaller] general protection fault in skb_release_data [bug] =
-
-[syzkaller] @geliangtang
-    67  `./mptcp_connect.sh -m mmap` test blocks [bug]
-
-
-
-
-FYI: Current Roadmap:
-     - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
-     - Current merge window (5.11): =
-
-https://github.com/multipath-tcp/mptcp_net-next/projects/6
-     - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
-     - TODO: 5.12
-
-
-
-Patches to send to netdev:
-     - net:
-         - everything has been sent
-
-     - net-next:
-         - / (closed)
-
-
-
-Extra tests:
-     - news about Syzkaller? (Christoph):
-         - See above =E2=86=91
-
-     - news about interop with mptcp.org? (Christoph):
-         - /
-
-     - news about Intel's kbuild? (Mat):
-         - Mat confirms it is the same issue he had with selftests, see =
-
-the meeting notes from last week
-         - Mat has more access now, should be easier to retrieve more =
-
-details about an issue
-
-     - packetdrill (Davide):
-         - /
-
-     - CI (Matth):
-         - /
-
-
-Next meeting:
-     - We cancel the two next ones? =E2=86=92 Yes
-
-
-
-Next meeting:
-     - We propose to have the next meeting in 3 weeks, on Thursday, the =
-
-7th of January 2021.
-     - Usual UTC time: 16:00 UTC (8am PST, 5pm CET, Midnight CST)
-     - Still open to everyone!
-     - https://annuel2.framapad.org/p/mptcp_upstreaming_20210107
-
-
-
-Feel free to comment on these points and propose new ones for the next
-meeting!
-
-Talk to you next year,
+Hi Geliang, Mat,
+
+On 17/12/2020 01:23, Mat Martineau wrote:
+> On Wed, 16 Dec 2020, Geliang Tang wrote:
+> =
+
+>> Currently, PM doesn't create subflow with IPv4-mapped IPv6 socket. This
+>> patch converts the IPv4 address to IPv4-mapped IPv6 address to fix it.
+>>
+>> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+>> ---
+>> net/mptcp/pm_netlink.c | 25 ++++++++++++++++++++++---
+>> 1 file changed, 22 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index cc4ca013a06b..987e83cdee11 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -145,6 +158,8 @@ select_local_address(const struct pm_nl_pernet =
+
+>> *pernet,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(entry->addr.flags & MPT=
+CP_PM_ADDR_FLAG_SUBFLOW))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 conti=
+nue;
+>>
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mptcp_pm_addr_convert_v4mapp=
+ed(msk, &entry->addr);
+>> +
+> =
+
+> This is modifying the contents of pernet->local_addr_list, not a copy of =
+
+> the entry, when the msk has a v4mapped address. I'm not sure that's the =
+
+> way to fix this, and might leave some corner cases unaddressed.
+> =
+
+> Did you look at modifying addresses_equal() so it can detect equivalent =
+
+> IPv4 and v4mapped addresses?
+
+Maybe something like that the patch I joined?
+
+I didn't try much but maybe more what we want?
+
+Cheers,
 Matt
 -- =
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============7664684888251207114==--
+
+--===============2032452613584136523==
+Content-Type: text/x-patch
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="0001-support-v4mappedv6.patch"
+
+RnJvbSAzNmY1ZTFmOWJhZGU1MzI5ZTgyYTg1ZmI2MzMwZGI1N2ExNjVjMDRjIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXR0aGlldSBCYWVydHMgPG1hdHRoaWV1LmJhZXJ0c0B0ZXNz
+YXJlcy5uZXQ+CkRhdGU6IEZyaSwgMTggRGVjIDIwMjAgMDA6MDM6MTIgKzAxMDAKU3ViamVjdDog
+W1BBVENIXSBtcHRjcDogc3VwcG9ydCB2NG1hcHBlZHY2CgpTaWduZWQtb2ZmLWJ5OiBNYXR0aGll
+dSBCYWVydHMgPG1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ+Ci0tLQogbmV0L21wdGNwL3Bt
+X25ldGxpbmsuYyB8IDIyICsrKysrKysrKysrKystLS0tLS0tLS0KIG5ldC9tcHRjcC9zdWJmbG93
+LmMgICAgfCAxNyArKysrKysrKysrKy0tLS0tLQogMiBmaWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRp
+b25zKCspLCAxNSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9uZXQvbXB0Y3AvcG1fbmV0bGlu
+ay5jIGIvbmV0L21wdGNwL3BtX25ldGxpbmsuYwppbmRleCA5YjFmNjI5OGJiZGIuLjZjODlhOWUw
+MDk5YiAxMDA2NDQKLS0tIGEvbmV0L21wdGNwL3BtX25ldGxpbmsuYworKysgYi9uZXQvbXB0Y3Av
+cG1fbmV0bGluay5jCkBAIC02MCwxNSArNjAsMjAgQEAgc3RhdGljIGJvb2wgYWRkcmVzc2VzX2Vx
+dWFsKGNvbnN0IHN0cnVjdCBtcHRjcF9hZGRyX2luZm8gKmEsCiB7CiAJYm9vbCBhZGRyX2VxdWFs
+cyA9IGZhbHNlOwogCi0JaWYgKGEtPmZhbWlseSAhPSBiLT5mYW1pbHkpCi0JCXJldHVybiBmYWxz
+ZTsKLQotCWlmIChhLT5mYW1pbHkgPT0gQUZfSU5FVCkKLQkJYWRkcl9lcXVhbHMgPSBhLT5hZGRy
+LnNfYWRkciA9PSBiLT5hZGRyLnNfYWRkcjsKKwlpZiAoYS0+ZmFtaWx5ID09IGItPmZhbWlseSkg
+eworCQlpZiAoYS0+ZmFtaWx5ID09IEFGX0lORVQpCisJCQlhZGRyX2VxdWFscyA9IGEtPmFkZHIu
+c19hZGRyID09IGItPmFkZHIuc19hZGRyOwogI2lmIElTX0VOQUJMRUQoQ09ORklHX01QVENQX0lQ
+VjYpCi0JZWxzZQotCQlhZGRyX2VxdWFscyA9ICFpcHY2X2FkZHJfY21wKCZhLT5hZGRyNiwgJmIt
+PmFkZHI2KTsKKwkJZWxzZQorCQkJYWRkcl9lcXVhbHMgPSAhaXB2Nl9hZGRyX2NtcCgmYS0+YWRk
+cjYsICZiLT5hZGRyNik7CisJfSBlbHNlIGlmIChhLT5mYW1pbHkgPT0gQUZfSU5FVDYpIHsKKwkJ
+aWYgKGItPmZhbWlseSA9PSBBRl9JTkVUICYmIGlwdjZfYWRkcl92NG1hcHBlZCgmYS0+YWRkcjYp
+KQorCQkJYWRkcl9lcXVhbHMgPSBhLT5hZGRyNi5zNl9hZGRyMzJbM10gPT0gYi0+YWRkci5zX2Fk
+ZHI7CisJfSBlbHNlIGlmIChiLT5mYW1pbHkgPT0gQUZfSU5FVDYpIHsKKwkJaWYgKGEtPmZhbWls
+eSA9PSBBRl9JTkVUICYmIGlwdjZfYWRkcl92NG1hcHBlZCgmYi0+YWRkcjYpKQorCQkJYWRkcl9l
+cXVhbHMgPSBhLT5hZGRyLnNfYWRkciA9PSBiLT5hZGRyNi5zNl9hZGRyMzJbM107CiAjZW5kaWYK
+Kwl9CiAKIAlpZiAoIWFkZHJfZXF1YWxzKQogCQlyZXR1cm4gZmFsc2U7CkBAIC0xNDcsOCArMTUy
+LDcgQEAgc2VsZWN0X2xvY2FsX2FkZHJlc3MoY29uc3Qgc3RydWN0IHBtX25sX3Blcm5ldCAqcGVy
+bmV0LAogCQkvKiBhdm9pZCBhbnkgYWRkcmVzcyBhbHJlYWR5IGluIHVzZSBieSBzdWJmbG93cyBh
+bmQKIAkJICogcGVuZGluZyBqb2luCiAJCSAqLwotCQlpZiAoZW50cnktPmFkZHIuZmFtaWx5ID09
+ICgoc3RydWN0IHNvY2sgKiltc2spLT5za19mYW1pbHkgJiYKLQkJICAgICFsb29rdXBfc3ViZmxv
+d19ieV9zYWRkcigmbXNrLT5jb25uX2xpc3QsICZlbnRyeS0+YWRkcikpIHsKKwkJaWYgKCFsb29r
+dXBfc3ViZmxvd19ieV9zYWRkcigmbXNrLT5jb25uX2xpc3QsICZlbnRyeS0+YWRkcikpIHsKIAkJ
+CXJldCA9IGVudHJ5OwogCQkJYnJlYWs7CiAJCX0KZGlmZiAtLWdpdCBhL25ldC9tcHRjcC9zdWJm
+bG93LmMgYi9uZXQvbXB0Y3Avc3ViZmxvdy5jCmluZGV4IDI3OGNiZTNlNTM5ZS4uMTFjYzBlZjNh
+ZTNjIDEwMDY0NAotLS0gYS9uZXQvbXB0Y3Avc3ViZmxvdy5jCisrKyBiL25ldC9tcHRjcC9zdWJm
+bG93LmMKQEAgLTEwNzQsMTAgKzEwNzQsMTEgQEAgdm9pZCBtcHRjcHY2X2hhbmRsZV9tYXBwZWQo
+c3RydWN0IHNvY2sgKnNrLCBib29sIG1hcHBlZCkKICNlbmRpZgogCiBzdGF0aWMgdm9pZCBtcHRj
+cF9pbmZvMnNvY2thZGRyKGNvbnN0IHN0cnVjdCBtcHRjcF9hZGRyX2luZm8gKmluZm8sCi0JCQkJ
+c3RydWN0IHNvY2thZGRyX3N0b3JhZ2UgKmFkZHIpCisJCQkJc3RydWN0IHNvY2thZGRyX3N0b3Jh
+Z2UgKmFkZHIsCisJCQkJdW5zaWduZWQgc2hvcnQgZmFtaWx5KQogewogCW1lbXNldChhZGRyLCAw
+LCBzaXplb2YoKmFkZHIpKTsKLQlhZGRyLT5zc19mYW1pbHkgPSBpbmZvLT5mYW1pbHk7CisJYWRk
+ci0+c3NfZmFtaWx5ID0gZmFtaWx5OwogCWlmIChhZGRyLT5zc19mYW1pbHkgPT0gQUZfSU5FVCkg
+ewogCQlzdHJ1Y3Qgc29ja2FkZHJfaW4gKmluX2FkZHIgPSAoc3RydWN0IHNvY2thZGRyX2luICop
+YWRkcjsKIApAQCAtMTA4OCw3ICsxMDg5LDExIEBAIHN0YXRpYyB2b2lkIG1wdGNwX2luZm8yc29j
+a2FkZHIoY29uc3Qgc3RydWN0IG1wdGNwX2FkZHJfaW5mbyAqaW5mbywKIAllbHNlIGlmIChhZGRy
+LT5zc19mYW1pbHkgPT0gQUZfSU5FVDYpIHsKIAkJc3RydWN0IHNvY2thZGRyX2luNiAqaW42X2Fk
+ZHIgPSAoc3RydWN0IHNvY2thZGRyX2luNiAqKWFkZHI7CiAKLQkJaW42X2FkZHItPnNpbjZfYWRk
+ciA9IGluZm8tPmFkZHI2OworCQlpZiAoaW5mby0+ZmFtaWx5ID09IEFGX0lORVQpCisJCQlpcHY2
+X2FkZHJfc2V0X3Y0bWFwcGVkKGluZm8tPmFkZHIuc19hZGRyLAorCQkJCQkgICAgICAgJmluNl9h
+ZGRyLT5zaW42X2FkZHIpOworCQllbHNlCisJCQlpbjZfYWRkci0+c2luNl9hZGRyID0gaW5mby0+
+YWRkcjY7CiAJCWluNl9hZGRyLT5zaW42X3BvcnQgPSBpbmZvLT5wb3J0OwogCX0KICNlbmRpZgpA
+QCAtMTEzMiwxMSArMTEzNywxMSBAQCBpbnQgX19tcHRjcF9zdWJmbG93X2Nvbm5lY3Qoc3RydWN0
+IHNvY2sgKnNrLCBjb25zdCBzdHJ1Y3QgbXB0Y3BfYWRkcl9pbmZvICpsb2MsCiAJc3ViZmxvdy0+
+cmVtb3RlX2tleSA9IG1zay0+cmVtb3RlX2tleTsKIAlzdWJmbG93LT5sb2NhbF9rZXkgPSBtc2st
+PmxvY2FsX2tleTsKIAlzdWJmbG93LT50b2tlbiA9IG1zay0+dG9rZW47Ci0JbXB0Y3BfaW5mbzJz
+b2NrYWRkcihsb2MsICZhZGRyKTsKKwltcHRjcF9pbmZvMnNvY2thZGRyKGxvYywgJmFkZHIsIHNz
+ay0+c2tfZmFtaWx5KTsKIAogCWFkZHJsZW4gPSBzaXplb2Yoc3RydWN0IHNvY2thZGRyX2luKTsK
+ICNpZiBJU19FTkFCTEVEKENPTkZJR19NUFRDUF9JUFY2KQotCWlmIChsb2MtPmZhbWlseSA9PSBB
+Rl9JTkVUNikKKwlpZiAoYWRkci5zc19mYW1pbHkgPT0gQUZfSU5FVDYpCiAJCWFkZHJsZW4gPSBz
+aXplb2Yoc3RydWN0IHNvY2thZGRyX2luNik7CiAjZW5kaWYKIAlzc2stPnNrX2JvdW5kX2Rldl9p
+ZiA9IGxvYy0+aWZpbmRleDsKQEAgLTExNTIsNyArMTE1Nyw3IEBAIGludCBfX21wdGNwX3N1YmZs
+b3dfY29ubmVjdChzdHJ1Y3Qgc29jayAqc2ssIGNvbnN0IHN0cnVjdCBtcHRjcF9hZGRyX2luZm8g
+KmxvYywKIAlzdWJmbG93LT5yZW1vdGVfaWQgPSByZW1vdGVfaWQ7CiAJc3ViZmxvdy0+cmVxdWVz
+dF9qb2luID0gMTsKIAlzdWJmbG93LT5yZXF1ZXN0X2JrdXAgPSAhIShsb2MtPmZsYWdzICYgTVBU
+Q1BfUE1fQUREUl9GTEFHX0JBQ0tVUCk7Ci0JbXB0Y3BfaW5mbzJzb2NrYWRkcihyZW1vdGUsICZh
+ZGRyKTsKKwltcHRjcF9pbmZvMnNvY2thZGRyKHJlbW90ZSwgJmFkZHIsIHNzay0+c2tfZmFtaWx5
+KTsKIAogCW1wdGNwX2FkZF9wZW5kaW5nX3N1YmZsb3cobXNrLCBzdWJmbG93KTsKIAllcnIgPSBr
+ZXJuZWxfY29ubmVjdChzZiwgKHN0cnVjdCBzb2NrYWRkciAqKSZhZGRyLCBhZGRybGVuLCBPX05P
+TkJMT0NLKTsKLS0gCjIuMjkuMgoK
+
+--===============2032452613584136523==--
