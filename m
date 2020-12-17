@@ -1,142 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============5044155719587207831=="
+Content-Type: multipart/mixed; boundary="===============2976304086185657053=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 1/2] mptcp: convert IPv4
- address to IPv4-mapped
-Date: Wed, 16 Dec 2020 16:23:40 -0800
-Message-ID: <f4a83eea-4bb0-87db-c05f-225b2a1f52fe@linux.intel.com>
-In-Reply-To: 5df4ef900cea6618e5df0756474ecd5bbae3c9f8.1608102360.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 0/6] MP_PRIO support
+Date: Thu, 17 Dec 2020 09:02:44 +0100
+Message-ID: <6eec2135-ea61-4ab3-6875-5e6ee405a8c0@tessares.net>
+In-Reply-To: 4a678a3e-8616-c9be-6072-10f5cac5fd53@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 7203
+X-UID: 7204
 
---===============5044155719587207831==
+--===============2976304086185657053==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 16 Dec 2020, Geliang Tang wrote:
+Hi Geliang,
 
-> Currently, PM doesn't create subflow with IPv4-mapped IPv6 socket. This
-> patch converts the IPv4 address to IPv4-mapped IPv6 address to fix it.
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> net/mptcp/pm_netlink.c | 25 ++++++++++++++++++++++---
-> 1 file changed, 22 insertions(+), 3 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index cc4ca013a06b..987e83cdee11 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -133,6 +133,19 @@ static bool lookup_subflow_by_saddr(const struct lis=
-t_head *list,
-> 	return false;
-> }
->
-> +static void mptcp_pm_addr_convert_v4mapped(struct mptcp_sock *msk,
-> +					   struct mptcp_addr_info *addr)
-> +{
-> +	struct mptcp_addr_info local;
-> +
-> +	local_address((struct sock_common *)msk, &local);
-> +	if (ipv6_addr_v4mapped(&local.addr6) &&
-> +	    addr->family =3D=3D AF_INET) {
-> +		ipv6_addr_set_v4mapped(addr->addr.s_addr, &addr->addr6);
-> +		addr->family =3D AF_INET6;
-> +	}
-> +}
-> +
-> static struct mptcp_pm_addr_entry *
-> select_local_address(const struct pm_nl_pernet *pernet,
-> 		     struct mptcp_sock *msk)
-> @@ -145,6 +158,8 @@ select_local_address(const struct pm_nl_pernet *perne=
-t,
-> 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
-> 			continue;
->
-> +		mptcp_pm_addr_convert_v4mapped(msk, &entry->addr);
-> +
+On 16/12/2020 23:00, Matthieu Baerts wrote:
+> Hi Geliang, Mat,
+> =
 
-This is modifying the contents of pernet->local_addr_list, not a copy of =
+> On 09/12/2020 09:15, Geliang Tang wrote:
+>> v3:
+>> =C2=A0 - drop the MPTCP_PM_ADDR_FLAG_NOBACKUP flag
+>>
+>> v2:
+>> =C2=A0 - add set_flags command
+>>
+>> v1:
+>> =C2=A0 - add MP_PRIO PM netlink support
+> =
 
-the entry, when the msk has a v4mapped address. I'm not sure that's the =
+> Thank you for the patches and the reviews!
+> =
 
-way to fix this, and might leave some corner cases unaddressed.
+> - a56be1da1447: mptcp: add the outgoing MP_PRIO support
 
-Did you look at modifying addresses_equal() so it can detect equivalent =
+I had to do a small extra modification:
 
-IPv4 and v4mapped addresses?
+- 3614352825d7: mptcp: fix compilation warning
 
-> 		/* avoid any address already in use by subflows and
-> 		 * pending join
-> 		 */
+> - 661b20bcc670: mptcp: add the incoming MP_PRIO support
+> - ef8d4135a450: mptcp: add set_flags command in PM netlink
+> - bda492f95f00: selftests: mptcp: add set_flags command in pm_nl_ctl
+> - cdd087e12b2f: mptcp: add the mibs for MP_PRIO
 
-There's some code just below this comment that would need to be updated - =
+- 3f23b36e8d05: Revert "mptcp: fix compilation warning"
 
-I'm not sure why the address family needs to be checked before calling =
+Now each topic compiles without warning.
 
-lookup_subflow_by_saddr(), except as an optimization.
+- Results: ce539249b370..60eae9e2e048
+(empty, as expected)
 
-I will talk to the group about v4mapped address handling at the meeting =
+Cheers,
+Matt
+-- =
 
-tomorrow to see if there are other opinions on how this should be handled =
-
-(I will check this email thread and =
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/122 for any updates =
-
-first). I'll follow up on the github issue if needed.
-
-Mat
-
-
-> @@ -159,9 +174,11 @@ select_local_address(const struct pm_nl_pernet *pern=
-et,
-> }
->
-> static struct mptcp_pm_addr_entry *
-> -select_signal_address(struct pm_nl_pernet *pernet, unsigned int pos)
-> +select_signal_address(struct pm_nl_pernet *pernet,
-> +		      struct mptcp_sock *msk)
-> {
-> 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
-> +	unsigned int pos =3D msk->pm.add_addr_signaled;
-> 	int i =3D 0;
->
-> 	rcu_read_lock();
-> @@ -173,6 +190,9 @@ select_signal_address(struct pm_nl_pernet *pernet, un=
-signed int pos)
-> 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
-> 			continue;
-> +
-> +		mptcp_pm_addr_convert_v4mapped(msk, &entry->addr);
-> +
-> 		if (i++ =3D=3D pos) {
-> 			ret =3D entry;
-> 			break;
-> @@ -346,8 +366,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
-ruct mptcp_sock *msk)
->
-> 	/* check first for announce */
-> 	if (msk->pm.add_addr_signaled < msk->pm.add_addr_signal_max) {
-> -		local =3D select_signal_address(pernet,
-> -					      msk->pm.add_addr_signaled);
-> +		local =3D select_signal_address(pernet, msk);
->
-> 		if (local) {
-> 			if (mptcp_pm_alloc_anno_list(msk, local)) {
-> -- =
-
-> 2.29.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
-
---
-Mat Martineau
-Intel
---===============5044155719587207831==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============2976304086185657053==--
