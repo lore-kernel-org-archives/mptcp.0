@@ -1,56 +1,163 @@
-Content-Type: multipart/mixed; boundary="===============1547607196767210018=="
+Content-Type: multipart/mixed; boundary="===============1266687150087403918=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 0/3] mptcp: create subflow
- for newly added address and testcases
-Date: Fri, 18 Dec 2020 14:33:38 -0800
-Message-ID: <e619fd52-5ed1-e4bd-ca3d-d25d7f48a457@linux.intel.com>
-In-Reply-To: cover.1608304480.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 1/2] mptcp: convert IPv4
+ address with IPv4-mapped address
+Date: Fri, 18 Dec 2020 15:06:38 -0800
+Message-ID: <22a7fbac-5f17-1222-83f7-46b8a6e85b7@linux.intel.com>
+In-Reply-To: 37a81f89faa38ee33531bc7b795e4fc19377fd85.1608289899.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7221
+X-UID: 7222
 
---===============1547607196767210018==
+--===============1266687150087403918==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
 On Fri, 18 Dec 2020, Geliang Tang wrote:
 
-> v2:
-> - drop the unused addr parameter in mptcp_nl_add_subflow_or_signal_addr
-> - use the pernet *_max values in mptcp_pm_create_subflow_or_signal_addr
-> instead of the per-msk values.
+> Currently, PM doesn't create subflow with IPv4-mapped IPv6 socket. This
+> patch added IPv4-mapped Ipv6 address support, by converting the IPv4
+> address with IPv4-mapped IPv6 address.
 >
+> Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/pm_netlink.c | 21 ++++++++++++---------
+> net/mptcp/subflow.c    | 22 +++++++++++++++-------
+> 2 files changed, 27 insertions(+), 16 deletions(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 9b1f6298bbdb..9c688023f494 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -60,15 +60,19 @@ static bool addresses_equal(const struct mptcp_addr_i=
+nfo *a,
+> {
+> 	bool addr_equals =3D false;
+>
+> -	if (a->family !=3D b->family)
+> -		return false;
+> -
+> -	if (a->family =3D=3D AF_INET)
+> -		addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
+> +	if (a->family =3D=3D b->family) {
+> +		if (a->family =3D=3D AF_INET)
+> +			addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -	else
+> -		addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
+> +		else
+> +			addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
+> +	} else {
+> +		if (a->family =3D=3D AF_INET && ipv6_addr_v4mapped(&b->addr6))
+> +			addr_equals =3D a->addr.s_addr =3D=3D b->addr6.s6_addr32[3];
+> +		if (b->family =3D=3D AF_INET && ipv6_addr_v4mapped(&a->addr6))
+> +			addr_equals =3D a->addr6.s6_addr32[3] =3D=3D b->addr.s_addr;
+> #endif
+> +	}
+>
+> 	if (!addr_equals)
+> 		return false;
+> @@ -147,8 +151,7 @@ select_local_address(const struct pm_nl_pernet *perne=
+t,
+> 		/* avoid any address already in use by subflows and
+> 		 * pending join
+> 		 */
+> -		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
+> -		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+> +		if (!lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+> 			ret =3D entry;
+> 			break;
+> 		}
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 278cbe3e539e..8586d95310e2 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1074,21 +1074,29 @@ void mptcpv6_handle_mapped(struct sock *sk, bool =
+mapped)
+> #endif
+>
+> static void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+> -				struct sockaddr_storage *addr)
+> +				struct sockaddr_storage *addr,
+> +				unsigned short family)
+> {
+> 	memset(addr, 0, sizeof(*addr));
+> -	addr->ss_family =3D info->family;
+> +	addr->ss_family =3D family;
+> 	if (addr->ss_family =3D=3D AF_INET) {
+> 		struct sockaddr_in *in_addr =3D (struct sockaddr_in *)addr;
+>
+> -		in_addr->sin_addr =3D info->addr;
+> +		if (info->family =3D=3D AF_INET)
+> +			in_addr->sin_addr =3D info->addr;
 
-Paolo, do you think the per-msk add_addr_signal_max and local_addr_max are =
+> +		else
+> +			in_addr->sin_addr.s_addr =3D info->addr6.s6_addr32[3];
 
-still needed? It's not clear to me what having pernet and per-msk copies =
+One small fix - addr6 needs CONFIG_MPTCP_IPV6, this breaks non-IPv6 =
 
-of those values will help accomplish.
+builds.
 
-> Address issue 19 "let PM netlink update live sockets on local addresses
-> list change". The removed addresses part of this issue is done, this
-> patchset only implemented the added addresses part.
+The rest looks good to me! Tests pass on my system.
+
+Mat
+
+
+> 		in_addr->sin_port =3D info->port;
+> 	}
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> 	else if (addr->ss_family =3D=3D AF_INET6) {
+> 		struct sockaddr_in6 *in6_addr =3D (struct sockaddr_in6 *)addr;
 >
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/19
+> -		in6_addr->sin6_addr =3D info->addr6;
+> +		if (info->family =3D=3D AF_INET)
+> +			ipv6_addr_set_v4mapped(info->addr.s_addr,
+> +					       &in6_addr->sin6_addr);
+> +		else
+> +			in6_addr->sin6_addr =3D info->addr6;
+> 		in6_addr->sin6_port =3D info->port;
+> 	}
+> #endif
+> @@ -1132,11 +1140,11 @@ int __mptcp_subflow_connect(struct sock *sk, cons=
+t struct mptcp_addr_info *loc,
+> 	subflow->remote_key =3D msk->remote_key;
+> 	subflow->local_key =3D msk->local_key;
+> 	subflow->token =3D msk->token;
+> -	mptcp_info2sockaddr(loc, &addr);
+> +	mptcp_info2sockaddr(loc, &addr, ssk->sk_family);
 >
-> Geliang Tang (3):
->  mptcp: create subflow or signal addr for newly added address
->  selftests: mptcp: use minus value for removing address numbers
->  selftests: mptcp: add testcases for newly added addresses
+> 	addrlen =3D sizeof(struct sockaddr_in);
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -	if (loc->family =3D=3D AF_INET6)
+> +	if (addr.ss_family =3D=3D AF_INET6)
+> 		addrlen =3D sizeof(struct sockaddr_in6);
+> #endif
+> 	ssk->sk_bound_dev_if =3D loc->ifindex;
+> @@ -1152,7 +1160,7 @@ int __mptcp_subflow_connect(struct sock *sk, const =
+struct mptcp_addr_info *loc,
+> 	subflow->remote_id =3D remote_id;
+> 	subflow->request_join =3D 1;
+> 	subflow->request_bkup =3D !!(loc->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+> -	mptcp_info2sockaddr(remote, &addr);
+> +	mptcp_info2sockaddr(remote, &addr, ssk->sk_family);
 >
-> net/mptcp/pm_netlink.c                        |  43 ++++++--
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 101 +++++++++++++++---
-> 2 files changed, 123 insertions(+), 21 deletions(-)
->
+> 	mptcp_add_pending_subflow(msk, subflow);
+> 	err =3D kernel_connect(sf, (struct sockaddr *)&addr, addrlen, O_NONBLOCK=
+);
 > -- =
 
 > 2.29.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
 --
 Mat Martineau
 Intel
---===============1547607196767210018==--
+--===============1266687150087403918==--
