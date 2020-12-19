@@ -1,124 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============9068383884753865406=="
+Content-Type: multipart/mixed; boundary="===============0843090102594286478=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v4 2/3] mptcp: pm nl: support IPv4 mapped
- in v6 addresses
-Date: Sat, 19 Dec 2020 14:06:59 +0100
-Message-ID: <20201219130700.1053584-3-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH mptcp-next v4 3/3] selftests: mptcp: add IPv4-mapped
+ IPv6 testcases
+Date: Sat, 19 Dec 2020 14:07:00 +0100
+Message-ID: <20201219130700.1053584-4-matthieu.baerts@tessares.net>
 In-Reply-To: 20201219130700.1053584-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 7228
+X-UID: 7229
 
---===============9068383884753865406==
+--===============0843090102594286478==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On one side, we can allow the creation of subflows between v4 mapped in
-v6 and v4 addresses. For that we look for v4mapped addresses between the
-local address we want to select and the remote one.
+From: Geliang Tang <geliangtang(a)gmail.com>
 
-On the other side, we also properly deal with received v4mapped
-addresses, either announced ones or set via Netlink.
+Here, we make sure we support IPv4-mapped in IPv6 addresses in different
+contexts:
 
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/122
-Co-developed-by: Geliang Tang <geliangtang(a)gmail.com>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+- a v4-mapped address is received by the PM and can be used as v4.
+- a v4 address is received by the PM and can be used even with a v4
+  mapped socket.
+
+We also make sure we don't try to establish subflows between v4 and v6
+addresses, e.g. if a real v6 address ends with a valid v4 address.
+
+Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 37 +++++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 9b1f6298bbdb..6ef00b3799d4 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -60,15 +60,20 @@ static bool addresses_equal(const struct mptcp_addr_inf=
-o *a,
- {
- 	bool addr_equals =3D false;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index f74cd993b168..eff813819e6a 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -790,6 +790,73 @@ chk_join_nr "remove subflow and signal IPv6" 2 2 2
+ chk_add_nr 1 1
+ chk_rm_nr 1 1
  =
 
--	if (a->family !=3D b->family)
--		return false;
--
--	if (a->family =3D=3D AF_INET)
--		addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
-+	if (a->family =3D=3D b->family) {
-+		if (a->family =3D=3D AF_INET)
-+			addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	else
--		addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
-+		else
-+			addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
-+	} else if (a->family =3D=3D AF_INET) {
-+		if (ipv6_addr_v4mapped(&b->addr6))
-+			addr_equals =3D a->addr.s_addr =3D=3D b->addr6.s6_addr32[3];
-+	} else if (b->family =3D=3D AF_INET) {
-+		if (ipv6_addr_v4mapped(&a->addr6))
-+			addr_equals =3D a->addr6.s6_addr32[3] =3D=3D b->addr.s_addr;
- #endif
-+	}
- =
-
- 	if (!addr_equals)
- 		return false;
-@@ -133,8 +138,8 @@ static bool lookup_subflow_by_saddr(const struct list_h=
-ead *list,
- }
- =
-
- static struct mptcp_pm_addr_entry *
--select_local_address(const struct pm_nl_pernet *pernet,
--		     struct mptcp_sock *msk)
-+select_local_address(const struct pm_nl_pernet *pernet, struct mptcp_sock =
-*msk,
-+		     struct mptcp_addr_info *remote)
- {
- 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
- =
-
-@@ -144,11 +149,19 @@ select_local_address(const struct pm_nl_pernet *perne=
-t,
- 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
- 			continue;
- =
-
-+		if (entry->addr.family !=3D remote->family)
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+			if ((entry->addr.family =3D=3D AF_INET &&
-+			     !ipv6_addr_v4mapped(&remote->addr6)) ||
-+			    (remote->family =3D=3D AF_INET &&
-+			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
-+#endif
-+				continue;
++# subflow IPv4-mapped to IPv4-mapped
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl add "::ffff:10.0.3.2" flags subflow
++run_tests $ns1 $ns2 "::ffff:10.0.1.1"
++chk_join_nr "single subflow IPv4-mapped" 1 1 1
 +
- 		/* avoid any address already in use by subflows and
- 		 * pending join
- 		 */
--		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
--		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
-+		if (!lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
- 			ret =3D entry;
- 			break;
- 		}
-@@ -346,7 +359,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 	    msk->pm.subflows < msk->pm.subflows_max) {
- 		remote_address((struct sock_common *)sk, &remote);
- =
-
--		local =3D select_local_address(pernet, msk);
-+		local =3D select_local_address(pernet, msk, &remote);
- 		if (local) {
- 			msk->pm.local_addr_used++;
- 			msk->pm.subflows++;
++# signal address IPv4-mapped with IPv4-mapped sk
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++ip netns exec $ns1 ./pm_nl_ctl add "::ffff:10.0.2.1" flags signal
++run_tests $ns1 $ns2 "::ffff:10.0.1.1"
++chk_join_nr "signal address IPv4-mapped" 1 1 1
++chk_add_nr 1 1
++
++# subflow v4-map-v6
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 "::ffff:10.0.1.1"
++chk_join_nr "single subflow v4-map-v6" 1 1 1
++
++# signal address v4-map-v6
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++run_tests $ns1 $ns2 "::ffff:10.0.1.1"
++chk_join_nr "signal address v4-map-v6" 1 1 1
++chk_add_nr 1 1
++
++# subflow v6-map-v4
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl add "::ffff:10.0.3.2" flags subflow
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "single subflow v6-map-v4" 1 1 1
++
++# signal address v6-map-v4
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++ip netns exec $ns1 ./pm_nl_ctl add "::ffff:10.0.2.1" flags signal
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "signal address v6-map-v4" 1 1 1
++chk_add_nr 1 1
++
++# no subflow IPv6 to v4 address
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl add dead:beef:2::10.0.3.2 flags subflow
++run_tests $ns1 $ns2 "10.0.1.1"
++chk_join_nr "no JOIN with different families v4-v6" 0 0 0
++
++# no subflow IPv4 to v6 address
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 dead:beef:1::1
++chk_join_nr "no JOIN with different families v6-v4" 0 0 0
++
+ # single subflow, backup
+ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.29.2
 
---===============9068383884753865406==--
+--===============0843090102594286478==--
