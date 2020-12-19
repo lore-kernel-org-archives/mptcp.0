@@ -1,64 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============3223644104342341868=="
+Content-Type: multipart/mixed; boundary="===============9068383884753865406=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v4 0/3] add IPv4-mapped address support
-Date: Sat, 19 Dec 2020 14:06:57 +0100
-Message-ID: <20201219130700.1053584-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH mptcp-next v4 2/3] mptcp: pm nl: support IPv4 mapped
+ in v6 addresses
+Date: Sat, 19 Dec 2020 14:06:59 +0100
+Message-ID: <20201219130700.1053584-3-matthieu.baerts@tessares.net>
+In-Reply-To: 20201219130700.1053584-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 7227
+X-UID: 7228
 
---===============3223644104342341868==
+--===============9068383884753865406==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patchset adds IPv4-mapped address support and testcases.
+On one side, we can allow the creation of subflows between v4 mapped in
+v6 and v4 addresses. For that we look for v4mapped addresses between the
+local address we want to select and the remote one.
 
-v4:
- - do not try to create subflows between v4 and v6 addresses: with v3, we w=
-ould
-   try to do that and it could succeed if the IPv6 address ends with a vali=
-d v4
-   address. See patch 2/3
- - add two testcases checking that in 3/3: the 1st one was failing with v3.
- - add #ifdef MPTCP_IPV6 in patch 1/3 (Mat)
- - split the code I previously sent into two commits to allow backports: to=
- be
-   checked if they can really be considered as "fixes" or "new features".
- - @Geliang: I hope this is OK for you, I quickly did these modifications d=
-uring
-   a lunch break and ran mp_join selftests + mpjoin packetdrill. Please tel=
-l me
-   if I did anything wrong :)
+On the other side, we also properly deal with received v4mapped
+addresses, either announced ones or set via Netlink.
 
-v3:
- - add Matt's code in it.
- - deal with the IPv4-mapped back to IPv4 case too.
- - add two new IPv4-mapped back to IPv4 testcases.
-
-v2:
- - v1 calls mptcp_pm_addr_convert_v4mapped in mptcp_pm_nl_add_addr_received,
-on the receiving side. v2 calls it in select_signal_address, on the
-sending side.
-
+Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
 Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/122
+Co-developed-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ net/mptcp/pm_netlink.c | 37 +++++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
 
-Geliang Tang (1):
-  selftests: mptcp: add IPv4-mapped IPv6 testcases
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 9b1f6298bbdb..6ef00b3799d4 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -60,15 +60,20 @@ static bool addresses_equal(const struct mptcp_addr_inf=
+o *a,
+ {
+ 	bool addr_equals =3D false;
+ =
 
-Matthieu Baerts (2):
-  mptcp: support MPJoin with IPv4 mapped in v6 sk
-  mptcp: pm nl: support IPv4 mapped in v6 addresses
+-	if (a->family !=3D b->family)
+-		return false;
+-
+-	if (a->family =3D=3D AF_INET)
+-		addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
++	if (a->family =3D=3D b->family) {
++		if (a->family =3D=3D AF_INET)
++			addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	else
+-		addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
++		else
++			addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
++	} else if (a->family =3D=3D AF_INET) {
++		if (ipv6_addr_v4mapped(&b->addr6))
++			addr_equals =3D a->addr.s_addr =3D=3D b->addr6.s6_addr32[3];
++	} else if (b->family =3D=3D AF_INET) {
++		if (ipv6_addr_v4mapped(&a->addr6))
++			addr_equals =3D a->addr6.s6_addr32[3] =3D=3D b->addr.s_addr;
+ #endif
++	}
+ =
 
- net/mptcp/pm_netlink.c                        | 37 ++++++----
- net/mptcp/subflow.c                           | 24 +++++--
- .../testing/selftests/net/mptcp/mptcp_join.sh | 67 +++++++++++++++++++
- 3 files changed, 109 insertions(+), 19 deletions(-)
+ 	if (!addr_equals)
+ 		return false;
+@@ -133,8 +138,8 @@ static bool lookup_subflow_by_saddr(const struct list_h=
+ead *list,
+ }
+ =
 
+ static struct mptcp_pm_addr_entry *
+-select_local_address(const struct pm_nl_pernet *pernet,
+-		     struct mptcp_sock *msk)
++select_local_address(const struct pm_nl_pernet *pernet, struct mptcp_sock =
+*msk,
++		     struct mptcp_addr_info *remote)
+ {
+ 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
+ =
+
+@@ -144,11 +149,19 @@ select_local_address(const struct pm_nl_pernet *perne=
+t,
+ 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+ 			continue;
+ =
+
++		if (entry->addr.family !=3D remote->family)
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++			if ((entry->addr.family =3D=3D AF_INET &&
++			     !ipv6_addr_v4mapped(&remote->addr6)) ||
++			    (remote->family =3D=3D AF_INET &&
++			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
++#endif
++				continue;
++
+ 		/* avoid any address already in use by subflows and
+ 		 * pending join
+ 		 */
+-		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
+-		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
++		if (!lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+ 			ret =3D entry;
+ 			break;
+ 		}
+@@ -346,7 +359,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
+ct mptcp_sock *msk)
+ 	    msk->pm.subflows < msk->pm.subflows_max) {
+ 		remote_address((struct sock_common *)sk, &remote);
+ =
+
+-		local =3D select_local_address(pernet, msk);
++		local =3D select_local_address(pernet, msk, &remote);
+ 		if (local) {
+ 			msk->pm.local_addr_used++;
+ 			msk->pm.subflows++;
 -- =
 
 2.29.2
 
---===============3223644104342341868==--
+--===============9068383884753865406==--
