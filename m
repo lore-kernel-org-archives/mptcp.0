@@ -1,120 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============2450667077100222160=="
+Content-Type: multipart/mixed; boundary="===============4919724942754675894=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v4 3/3] selftests: mptcp: add
- IPv4-mapped IPv6 testcases
-Date: Mon, 21 Dec 2020 20:10:13 +0800
-Message-ID: <CA+WQbwu-e3h6hTT9-8-0__nAsQTJSnrszvq9DjaPvOgD2wLYpQ@mail.gmail.com>
-In-Reply-To: f0a0f5c3-c047-44f0-c4bf-3612a31b5515@tessares.net
+Subject: [MPTCP] [PATCH net] net: mptcp: cap forward allocation to 1M
+Date: Mon, 21 Dec 2020 22:07:25 +0100
+Message-ID: <3334d00d8b2faecafdfab9aa593efcbf61442756.1608584474.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7235
+X-UID: 7236
 
---===============2450667077100222160==
+--===============4919724942754675894==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
+the following syzkaller reproducer:
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B412=
-=E6=9C=8821=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=887:49=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> Hi Geliang,
->
-> On 21/12/2020 11:16, Geliang Tang wrote:
-> > Hi Matt,
-> >
-> > Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2020=E5=B9=B4=
-12=E6=9C=8819=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8B=E5=8D=889:07=E5=86=99=E9=
-=81=93=EF=BC=9A
-> >>
-> >> From: Geliang Tang <geliangtang(a)gmail.com>
-> >>
-> >> Here, we make sure we support IPv4-mapped in IPv6 addresses in differe=
-nt
-> >> contexts:
->
-> (...)
->
-> >> +# no subflow IPv6 to v4 address
-> >> +reset
-> >> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> >> +ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-> >> +ip netns exec $ns2 ./pm_nl_ctl add dead:beef:2::10.0.3.2 flags subflow
-> >
-> > dead:beef:2::10.0.3.2 is a invalid address, should we use dead:beef:3::=
-2 here?
->
-> I used "dead:beef:2::10.0.3.2" on purpose just to have a valid and
-> usable IPv4 address at the end of the v6 one. If we try to use the IPv4
-> address at the end of this v6 one, we will send the SYN+MPJ to the
-> correct host (no routing issue). With the previous version of this
-> patchset (v3), this was creating a subflow with 10.0.3.2!
->
+ r0 =3D socket$inet_mptcp(0x2, 0x1, 0x106)
+ bind$inet(r0, &(0x7f0000000080)=3D{0x2, 0x4e24, @multicast2}, 0x10)
+ connect$inet(r0, &(0x7f0000000480)=3D{0x2, 0x4e24, @local}, 0x10)
+ sendto$inet(r0, &(0x7f0000000100)=3D"f6", 0xffffffe7, 0xc000, 0x0, 0x0)
 
-Sorry, I didn't realize you did it on purpose, please keep it here.
+systematically triggers the following warning:
 
-> I should certainly add a new comment here.
-> Maybe you would prefer an additional test with "dead:beef:3::2" as well?
+ WARNING: CPU: 2 PID: 8618 at net/core/stream.c:208 sk_stream_kill_queues+0=
+x3fa/0x580
+ Modules linked in:
+ CPU: 2 PID: 8618 Comm: syz-executor Not tainted 5.10.0+ #334
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-4.modul=
+e+el8.1.0+4066+0f1aadab 04/04
+ RIP: 0010:sk_stream_kill_queues+0x3fa/0x580
+ Code: df 48 c1 ea 03 0f b6 04 02 84 c0 74 04 3c 03 7e 40 8b ab 20 02 00 00=
+ e9 64 ff ff ff e8 df f0 81 2
+ RSP: 0018:ffffc9000290fcb0 EFLAGS: 00010293
+ RAX: ffff888011cb8000 RBX: 0000000000000000 RCX: ffffffff86eecf0e
+ RDX: 0000000000000000 RSI: ffffffff86eecf6a RDI: 0000000000000005
+ RBP: 0000000000000e28 R08: ffff888011cb8000 R09: fffffbfff1f48139
+ R10: ffffffff8fa409c7 R11: fffffbfff1f48138 R12: ffff8880215e6220
+ R13: ffffffff8fa409c0 R14: ffffc9000290fd30 R15: 1ffff92000521fa2
+ FS:  00007f41c78f4800(0000) GS:ffff88802d000000(0000) knlGS:00000000000000=
+00
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f95c803d088 CR3: 0000000025ed2000 CR4: 00000000000006f0
+ Call Trace:
+  __mptcp_destroy_sock+0x4f5/0x8e0
+   mptcp_close+0x5e2/0x7f0
+  inet_release+0x12b/0x270
+  __sock_release+0xc8/0x270
+  sock_close+0x18/0x20
+  __fput+0x272/0x8e0
+  task_work_run+0xe0/0x1a0
+  exit_to_user_mode_prepare+0x1df/0x200
+  syscall_exit_to_user_mode+0x19/0x50
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Please add this additional test.
+userspace programs provide arbitrarily high values of 'len' in sendmsg():
+this is causing integer overflow of 'amount'. Cap forward allocation to 1
+megabyte: higher values are not really useful.
 
->
-> >> +run_tests $ns1 $ns2 "10.0.1.1"
-> >
-> > We can drop the quotation marks here, only the IPv4-mapped address need
-> > the quotation marks.
->
-> Yes, I usually add quotes in Bash for each string but I see we didn't do
-> that for the other tests, I will remove that!
->
-> > And add "0 0 0 slow" behind it, since the test need to slow down when u=
-se
-> > the IPv6 address.
->
-> Do I need to do that here as well even if we don't create v6 subflows?
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Fixes: e93da92896bc ("mptcp: implement wmem reservation")
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/protocol.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I think this can be consistent with other IPv6 tests, but it's up to you :)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 09b19aa2f205..6628d8d74203 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -877,6 +877,9 @@ static void __mptcp_wmem_reserve(struct sock *sk, int s=
+ize)
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ =
 
-Thanks.
+ 	WARN_ON_ONCE(msk->wmem_reserved);
++	if (WARN_ON_ONCE(amount < 0))
++		amount =3D 0;
++
+ 	if (amount <=3D sk->sk_forward_alloc)
+ 		goto reserve;
+ =
 
--Geliang
+@@ -1587,7 +1590,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len)
+ 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+ 		return -EOPNOTSUPP;
+ =
 
->
-> >> +chk_join_nr "no JOIN with different families v4-v6" 0 0 0
-> >
-> > This string is too long, it break the alignment of the output. Can we u=
-se
-> > "diff" here instead of "different"?
->
-> Good point, I didn't check that! I will short "different", good idea!
->
-> >> +
-> >> +# no subflow IPv4 to v6 address
-> >> +reset
-> >> +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> >> +ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-> >> +ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> >> +run_tests $ns1 $ns2 dead:beef:1::1
-> >
-> > Add "0 0 0 slow" here.
->
-> Same here, is it needed if we don't create any IPv6 subflow?
->
-> >> +chk_join_nr "no JOIN with different families v6-v4" 0 0 0
-> >
-> > This string is too long too.
->
-> Will do in v5!
->
-> Thanks for the review!
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
---===============2450667077100222160==--
+-	mptcp_lock_sock(sk, __mptcp_wmem_reserve(sk, len));
++	mptcp_lock_sock(sk, __mptcp_wmem_reserve(sk, min_t(size_t, 1 << 20, len))=
+);
+ =
+
+ 	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+ =
+
+-- =
+
+2.29.2
+
+--===============4919724942754675894==--
