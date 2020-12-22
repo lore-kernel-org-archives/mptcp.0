@@ -1,103 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============4919724942754675894=="
+Content-Type: multipart/mixed; boundary="===============5731927642613355977=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] net: mptcp: cap forward allocation to 1M
-Date: Mon, 21 Dec 2020 22:07:25 +0100
-Message-ID: <3334d00d8b2faecafdfab9aa593efcbf61442756.1608584474.git.dcaratti@redhat.com>
+Subject: [MPTCP] [mptcp-net 0/2] mptcp: fix for issue/121
+Date: Tue, 22 Dec 2020 10:26:49 +0100
+Message-ID: <cover.1608628900.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7236
+X-UID: 7237
 
---===============4919724942754675894==
+--===============5731927642613355977==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-the following syzkaller reproducer:
+The mentioned issues is fixed by any of this 2 patches.
 
- r0 =3D socket$inet_mptcp(0x2, 0x1, 0x106)
- bind$inet(r0, &(0x7f0000000080)=3D{0x2, 0x4e24, @multicast2}, 0x10)
- connect$inet(r0, &(0x7f0000000480)=3D{0x2, 0x4e24, @local}, 0x10)
- sendto$inet(r0, &(0x7f0000000100)=3D"f6", 0xffffffe7, 0xc000, 0x0, 0x0)
+The first one is a minimal fix that could land to stable,
+the second one addresses the an underlaying state-management
+bug, which needs some more complex changes.
 
-systematically triggers the following warning:
+The plan is to send them both to -net.
 
- WARNING: CPU: 2 PID: 8618 at net/core/stream.c:208 sk_stream_kill_queues+0=
-x3fa/0x580
- Modules linked in:
- CPU: 2 PID: 8618 Comm: syz-executor Not tainted 5.10.0+ #334
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-4.modul=
-e+el8.1.0+4066+0f1aadab 04/04
- RIP: 0010:sk_stream_kill_queues+0x3fa/0x580
- Code: df 48 c1 ea 03 0f b6 04 02 84 c0 74 04 3c 03 7e 40 8b ab 20 02 00 00=
- e9 64 ff ff ff e8 df f0 81 2
- RSP: 0018:ffffc9000290fcb0 EFLAGS: 00010293
- RAX: ffff888011cb8000 RBX: 0000000000000000 RCX: ffffffff86eecf0e
- RDX: 0000000000000000 RSI: ffffffff86eecf6a RDI: 0000000000000005
- RBP: 0000000000000e28 R08: ffff888011cb8000 R09: fffffbfff1f48139
- R10: ffffffff8fa409c7 R11: fffffbfff1f48138 R12: ffff8880215e6220
- R13: ffffffff8fa409c0 R14: ffffc9000290fd30 R15: 1ffff92000521fa2
- FS:  00007f41c78f4800(0000) GS:ffff88802d000000(0000) knlGS:00000000000000=
-00
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007f95c803d088 CR3: 0000000025ed2000 CR4: 00000000000006f0
- Call Trace:
-  __mptcp_destroy_sock+0x4f5/0x8e0
-   mptcp_close+0x5e2/0x7f0
-  inet_release+0x12b/0x270
-  __sock_release+0xc8/0x270
-  sock_close+0x18/0x20
-  __fput+0x272/0x8e0
-  task_work_run+0xe0/0x1a0
-  exit_to_user_mode_prepare+0x1df/0x200
-  syscall_exit_to_user_mode+0x19/0x50
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Paolo Abeni (2):
+  mptcp: more strict state checking for acks
+  mptcp: better msk-level shutdown.
 
-userspace programs provide arbitrarily high values of 'len' in sendmsg():
-this is causing integer overflow of 'amount'. Cap forward allocation to 1
-megabyte: higher values are not really useful.
-
-Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
-Fixes: e93da92896bc ("mptcp: implement wmem reservation")
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/protocol.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 09b19aa2f205..6628d8d74203 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -877,6 +877,9 @@ static void __mptcp_wmem_reserve(struct sock *sk, int s=
-ize)
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- =
-
- 	WARN_ON_ONCE(msk->wmem_reserved);
-+	if (WARN_ON_ONCE(amount < 0))
-+		amount =3D 0;
-+
- 	if (amount <=3D sk->sk_forward_alloc)
- 		goto reserve;
- =
-
-@@ -1587,7 +1590,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
- 		return -EOPNOTSUPP;
- =
-
--	mptcp_lock_sock(sk, __mptcp_wmem_reserve(sk, len));
-+	mptcp_lock_sock(sk, __mptcp_wmem_reserve(sk, min_t(size_t, 1 << 20, len))=
-);
- =
-
- 	timeo =3D sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- =
+ net/mptcp/protocol.c | 64 +++++++++++++-------------------------------
+ 1 file changed, 18 insertions(+), 46 deletions(-)
 
 -- =
 
-2.29.2
+2.26.2
 
---===============4919724942754675894==--
+--===============5731927642613355977==--
