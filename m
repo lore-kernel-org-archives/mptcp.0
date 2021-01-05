@@ -1,82 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============5123234292334131189=="
+Content-Type: multipart/mixed; boundary="===============6366940339775700686=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v9 mptcp-next 5/9] mptcp: enable use_port when
- invoke addresses_equal
-Date: Tue, 05 Jan 2021 13:33:26 +0800
-Message-ID: <7d34ed954f24da0f96d43c26d5e036d56c1e8e37.1609820648.git.geliangtang@gmail.com>
-In-Reply-To: 6362757e12a4dbd320abefe4a111afb1e0f869b0.1609820648.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v9 mptcp-next 6/9] mptcp: deal with
+ MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+Date: Tue, 05 Jan 2021 13:33:27 +0800
+Message-ID: <38d90727314b1e688535f6cd76fa4beb5235f107.1609820648.git.geliangtang@gmail.com>
+In-Reply-To: 7d34ed954f24da0f96d43c26d5e036d56c1e8e37.1609820648.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7261
+X-UID: 7262
 
---===============5123234292334131189==
+--===============6366940339775700686==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When dealing with the addresses list local_addr_list or anno_list, we
-should enable the function addresses_equal's parameter use_port. And
-enable it in address_zero too.
+This patch added the MPTCP_PM_ADDR_ATTR_PORT filling and parsing in PM
+netlink.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/mptcp/pm_netlink.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 93d24f9cc881..c763ee466bf9 100644
+index c763ee466bf9..971d159d3b5b 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -91,7 +91,7 @@ static bool address_zero(const struct mptcp_addr_info *ad=
-dr)
- 	memset(&zero, 0, sizeof(zero));
- 	zero.family =3D addr->family;
+@@ -906,6 +906,9 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, str=
+uct genl_info *info,
+ 	if (tb[MPTCP_PM_ADDR_ATTR_FLAGS])
+ 		entry->addr.flags =3D nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]);
  =
 
--	return addresses_equal(addr, &zero, false);
-+	return addresses_equal(addr, &zero, true);
++	if (tb[MPTCP_PM_ADDR_ATTR_PORT])
++		entry->addr.port =3D htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]));
++
+ 	return 0;
  }
  =
 
- static void local_address(const struct sock_common *skc,
-@@ -131,7 +131,7 @@ static bool lookup_subflow_by_saddr(const struct list_h=
-ead *list,
- 		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+@@ -1167,6 +1170,8 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
  =
 
- 		local_address(skc, &cur);
--		if (addresses_equal(&cur, saddr, false))
-+		if (addresses_equal(&cur, saddr, saddr->port))
- 			return true;
- 	}
- =
-
-@@ -245,7 +245,7 @@ lookup_anno_list_by_saddr(struct mptcp_sock *msk,
- 	struct mptcp_pm_add_entry *entry;
- =
-
- 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
--		if (addresses_equal(&entry->addr, addr, false))
-+		if (addresses_equal(&entry->addr, addr, true))
- 			return entry;
- 	}
- =
-
-@@ -768,7 +768,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
-ruct sock_common *skc)
- =
-
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (addresses_equal(&entry->addr, &skc_local, false)) {
-+		if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
- 			ret =3D entry->addr.id;
- 			break;
- 		}
+ 	if (nla_put_u16(skb, MPTCP_PM_ADDR_ATTR_FAMILY, addr->family))
+ 		goto nla_put_failure;
++	if (nla_put_u16(skb, MPTCP_PM_ADDR_ATTR_PORT, ntohs(addr->port)))
++		goto nla_put_failure;
+ 	if (nla_put_u8(skb, MPTCP_PM_ADDR_ATTR_ID, addr->id))
+ 		goto nla_put_failure;
+ 	if (nla_put_u32(skb, MPTCP_PM_ADDR_ATTR_FLAGS, entry->addr.flags))
 -- =
 
 2.29.2
 
---===============5123234292334131189==--
+--===============6366940339775700686==--
