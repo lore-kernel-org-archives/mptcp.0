@@ -1,58 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============1343385829655758364=="
+Content-Type: multipart/mixed; boundary="===============7285387106653125518=="
 MIME-Version: 1.0
-From: Paul Moore <paul at paul-moore.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] linux: handle MPTCP consistently with TCP
-Date: Mon, 04 Jan 2021 19:47:07 -0500
-Message-ID: <CAHC9VhTVOZLPh32mgpV3aC7RFPETNACQU1_EC7iKoFG=pwNRtA@mail.gmail.com>
-In-Reply-To: CAHC9VhTUain0=AXvxu3k7e46DCnFuQtcrgQFrEsz9b0uNQnqtQ@mail.gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 0/4] mptcp: create subflow for
+ newly added address and testcases
+Date: Tue, 05 Jan 2021 12:04:46 +0800
+Message-ID: <cover.1609819265.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7249
+X-UID: 7250
 
---===============1343385829655758364==
+--===============7285387106653125518==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 23, 2020 at 9:53 AM Paul Moore <paul(a)paul-moore.com> wrote:
-> On Wed, Dec 16, 2020 at 6:55 AM Paolo Abeni <pabeni(a)redhat.com> wrote:
-> >
-> > The MPTCP protocol uses a specific protocol value, even if
-> > it's an extension to TCP. Additionally, MPTCP sockets
-> > could 'fall-back' to TCP at run-time, depending on peer MPTCP
-> > support and available resources.
-> >
-> > As a consequence of the specific protocol number, selinux
-> > applies the raw_socket class to MPTCP sockets.
-> >
-> > Existing TCP application converted to MPTCP - or forced to
-> > use MPTCP socket with user-space hacks - will need an
-> > updated policy to run successfully.
-> >
-> > This change lets selinux attach the TCP socket class to
-> > MPTCP sockets, too, so that no policy changes are needed in
-> > the above scenario.
-> >
-> > Note that the MPTCP is setting, propagating and updating the
-> > security context on all the subflows and related request
-> > socket.
-> >
-> > Link: https://lore.kernel.org/linux-security-module/CAHC9VhTaK3xx0hEGBy=
-D2zxfF7fadyPP1kb-WeWH_YCyq9X-sRg(a)mail.gmail.com/T/#t
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> >  security/selinux/hooks.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> Based on our discussion in the previous thread, the patch below seems
-> fine, although it needs to wait until after the merge window closes.
+v3:
+ - add a new patch to drop *_max fields in mptcp_pm_data
 
-I just merged this into my selinux/next tree, you should see it in the
-kernel.org repos later tonight.  Thanks!
+v2:
+ - drop the unused addr parameter in mptcp_nl_add_subflow_or_signal_addr
+ - use the pernet *_max values in mptcp_pm_create_subflow_or_signal_addr
+instead of the per-msk values.
+
+Address issue 19 "let PM netlink update live sockets on local addresses
+list change". The removed addresses part of this issue is done, this
+patchset only implemented the added addresses part.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/19
+
+Geliang Tang (4):
+  mptcp: drop *_max fields in mptcp_pm_data
+  mptcp: create subflow or signal addr for newly added address
+  selftests: mptcp: use minus values for removing address numbers
+  selftests: mptcp: add testcases for newly added addresses
+
+ net/mptcp/pm.c                                |   9 +-
+ net/mptcp/pm_netlink.c                        | 114 ++++++++++++++----
+ net/mptcp/protocol.h                          |   5 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 101 +++++++++++++---
+ 4 files changed, 182 insertions(+), 47 deletions(-)
 
 -- =
 
-paul moore
-www.paul-moore.com
---===============1343385829655758364==--
+2.29.2
+
+--===============7285387106653125518==--
