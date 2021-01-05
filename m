@@ -1,45 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============3369308139671187084=="
+Content-Type: multipart/mixed; boundary="===============1343385829655758364=="
 MIME-Version: 1.0
-From: patchwork-bot+netdevbpf at kernel.org
+From: Paul Moore <paul at paul-moore.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] net: mptcp: cap forward allocation to 1M
-Date: Mon, 28 Dec 2020 22:00:07 +0000
-Message-ID: <
- <160919280713.22170.4812500231632961551.git-patchwork-notify@kernel.org>>
-In-Reply-To: 3334d00d8b2faecafdfab9aa593efcbf61442756.1608584474.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH] linux: handle MPTCP consistently with TCP
+Date: Mon, 04 Jan 2021 19:47:07 -0500
+Message-ID: <CAHC9VhTVOZLPh32mgpV3aC7RFPETNACQU1_EC7iKoFG=pwNRtA@mail.gmail.com>
+In-Reply-To: CAHC9VhTUain0=AXvxu3k7e46DCnFuQtcrgQFrEsz9b0uNQnqtQ@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7248
+X-UID: 7249
 
---===============3369308139671187084==
+--===============1343385829655758364==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Wed, Dec 23, 2020 at 9:53 AM Paul Moore <paul(a)paul-moore.com> wrote:
+> On Wed, Dec 16, 2020 at 6:55 AM Paolo Abeni <pabeni(a)redhat.com> wrote:
+> >
+> > The MPTCP protocol uses a specific protocol value, even if
+> > it's an extension to TCP. Additionally, MPTCP sockets
+> > could 'fall-back' to TCP at run-time, depending on peer MPTCP
+> > support and available resources.
+> >
+> > As a consequence of the specific protocol number, selinux
+> > applies the raw_socket class to MPTCP sockets.
+> >
+> > Existing TCP application converted to MPTCP - or forced to
+> > use MPTCP socket with user-space hacks - will need an
+> > updated policy to run successfully.
+> >
+> > This change lets selinux attach the TCP socket class to
+> > MPTCP sockets, too, so that no policy changes are needed in
+> > the above scenario.
+> >
+> > Note that the MPTCP is setting, propagating and updating the
+> > security context on all the subflows and related request
+> > socket.
+> >
+> > Link: https://lore.kernel.org/linux-security-module/CAHC9VhTaK3xx0hEGBy=
+D2zxfF7fadyPP1kb-WeWH_YCyq9X-sRg(a)mail.gmail.com/T/#t
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > ---
+> >  security/selinux/hooks.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> Based on our discussion in the previous thread, the patch below seems
+> fine, although it needs to wait until after the merge window closes.
 
-This patch was applied to netdev/net.git (refs/heads/master):
+I just merged this into my selinux/next tree, you should see it in the
+kernel.org repos later tonight.  Thanks!
 
-On Mon, 21 Dec 2020 22:07:25 +0100 you wrote:
-> the following syzkaller reproducer:
-> =
+-- =
 
->  r0 =3D socket$inet_mptcp(0x2, 0x1, 0x106)
->  bind$inet(r0, &(0x7f0000000080)=3D{0x2, 0x4e24, @multicast2}, 0x10)
->  connect$inet(r0, &(0x7f0000000480)=3D{0x2, 0x4e24, @local}, 0x10)
->  sendto$inet(r0, &(0x7f0000000100)=3D"f6", 0xffffffe7, 0xc000, 0x0, 0x0)
-> =
-
-> [...]
-
-Here is the summary with links:
-  - [net] net: mptcp: cap forward allocation to 1M
-    https://git.kernel.org/netdev/net/c/e7579d5d5b32
-
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
---===============3369308139671187084==--
+paul moore
+www.paul-moore.com
+--===============1343385829655758364==--
