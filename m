@@ -1,166 +1,133 @@
-Content-Type: multipart/mixed; boundary="===============3229374804663469897=="
+Content-Type: multipart/mixed; boundary="===============4537469793846863637=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 3/4] selftests: mptcp: use minus
- values for removing address numbers
-Date: Tue, 05 Jan 2021 12:04:49 +0800
-Message-ID: <99131c78267160f74add39ea90018921ca58439b.1609819265.git.geliangtang@gmail.com>
-In-Reply-To: 29da0c4ddf5e0af78d3045a264719a3e4b7afebb.1609819265.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 4/4] selftests: mptcp: add
+ testcases for newly added addresses
+Date: Tue, 05 Jan 2021 12:04:50 +0800
+Message-ID: <1161989153b55ca6fadd92927a461d96c40a49f9.1609819265.git.geliangtang@gmail.com>
+In-Reply-To: 99131c78267160f74add39ea90018921ca58439b.1609819265.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7253
+X-UID: 7254
 
---===============3229374804663469897==
+--===============4537469793846863637==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch changed the removing addresses numbers to minus values, left the
-plus values for the adding addresses numbers.
+This patch added the testcases to create subflows or signal addresses
+for the newly added IPv4 or IPv6 addresses.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 32 ++++++++++---------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 73 ++++++++++++++++++-
+ 1 file changed, 71 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
 g/selftests/net/mptcp/mptcp_join.sh
-index 8d20a8a81128..c96fecc45cf6 100755
+index c96fecc45cf6..cf9ae0bd7254 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -209,8 +209,8 @@ do_transfer()
- 	srv_proto=3D"$4"
- 	connect_addr=3D"$5"
- 	test_link_fail=3D"$6"
--	rm_nr_ns1=3D"$7"
--	rm_nr_ns2=3D"$8"
-+	addr_nr_ns1=3D"$7"
-+	addr_nr_ns2=3D"$8"
- 	speed=3D"$9"
- 	bkup=3D"${10}"
- =
-
-@@ -264,7 +264,8 @@ do_transfer()
+@@ -264,7 +264,23 @@ do_transfer()
  	fi
  	cpid=3D$!
  =
 
--	if [ $rm_nr_ns1 -gt 0 ]; then
-+	if [ $addr_nr_ns1 -lt 0 ]; then
-+		let rm_nr_ns1=3D-addr_nr_ns1
+-	if [ $addr_nr_ns1 -lt 0 ]; then
++	if [ $addr_nr_ns1 -gt 0 ]; then
++		let add_nr_ns1=3Daddr_nr_ns1
++		counter=3D2
++		sleep 1
++		while [ $add_nr_ns1 -gt 0 ]; do
++			local addr
++			if is_v6 "${connect_addr}"; then
++				addr=3D"dead:beef:$counter::1"
++			else
++				addr=3D"10.0.$counter.1"
++			fi
++			ip netns exec $ns1 ./pm_nl_ctl add $addr flags signal
++			let counter+=3D1
++			let add_nr_ns1-=3D1
++		done
++		sleep 1
++	elif [ $addr_nr_ns1 -lt 0 ]; then
+ 		let rm_nr_ns1=3D-addr_nr_ns1
  		if [ $rm_nr_ns1 -lt 8 ]; then
  			counter=3D1
- 			sleep 1
-@@ -281,7 +282,8 @@ do_transfer()
+@@ -282,7 +298,23 @@ do_transfer()
  		fi
  	fi
  =
 
--	if [ $rm_nr_ns2 -gt 0 ]; then
-+	if [ $addr_nr_ns2 -lt 0 ]; then
-+		let rm_nr_ns2=3D-addr_nr_ns2
+-	if [ $addr_nr_ns2 -lt 0 ]; then
++	if [ $addr_nr_ns2 -gt 0 ]; then
++		let add_nr_ns2=3Daddr_nr_ns2
++		counter=3D3
++		sleep 1
++		while [ $add_nr_ns2 -gt 0 ]; do
++			local addr
++			if is_v6 "${connect_addr}"; then
++				addr=3D"dead:beef:$counter::2"
++			else
++				addr=3D"10.0.$counter.2"
++			fi
++			ip netns exec $ns2 ./pm_nl_ctl add $addr flags subflow
++			let counter+=3D1
++			let add_nr_ns2-=3D1
++		done
++		sleep 1
++	elif [ $addr_nr_ns2 -lt 0 ]; then
+ 		let rm_nr_ns2=3D-addr_nr_ns2
  		if [ $rm_nr_ns2 -lt 8 ]; then
  			counter=3D1
- 			sleep 1
-@@ -368,8 +370,8 @@ run_tests()
- 	connector_ns=3D"$2"
- 	connect_addr=3D"$3"
- 	test_linkfail=3D"${4:-0}"
--	rm_nr_ns1=3D"${5:-0}"
--	rm_nr_ns2=3D"${6:-0}"
-+	addr_nr_ns1=3D"${5:-0}"
-+	addr_nr_ns2=3D"${6:-0}"
- 	speed=3D"${7:-fast}"
- 	bkup=3D"${8:-""}"
- 	lret=3D0
-@@ -386,7 +388,7 @@ run_tests()
- 	fi
- =
-
- 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
--		${test_linkfail} ${rm_nr_ns1} ${rm_nr_ns2} ${speed} ${bkup}
-+		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${bkup}
- 	lret=3D$?
- =
-
- 	if [ "$test_linkfail" -eq 1 ];then
-@@ -677,7 +679,7 @@ reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl limits 0 1
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow
-+run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
- chk_join_nr "remove single subflow" 1 1 1
- chk_rm_nr 1 1
- =
-
-@@ -687,7 +689,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl limits 0 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1 0 0 2 slow
-+run_tests $ns1 $ns2 10.0.1.1 0 0 -2 slow
- chk_join_nr "remove multiple subflows" 2 2 2
- chk_rm_nr 2 2
- =
-
-@@ -696,7 +698,7 @@ reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 1
--run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
-+run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
- chk_join_nr "remove single address" 1 1 1
- chk_add_nr 1 1
- chk_rm_nr 0 0
-@@ -707,7 +709,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1 0 1 1 slow
-+run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
- chk_join_nr "remove subflow and signal" 2 2 2
- chk_add_nr 1 1
- chk_rm_nr 1 1
-@@ -719,7 +721,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 3
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1 0 1 2 slow
-+run_tests $ns1 $ns2 10.0.1.1 0 -1 -2 slow
- chk_join_nr "remove subflows and signal" 3 3 3
+@@ -738,6 +770,43 @@ chk_join_nr "flush subflows and signal" 3 3 3
  chk_add_nr 1 1
  chk_rm_nr 2 2
-@@ -731,7 +733,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 3
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
- ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
--run_tests $ns1 $ns2 10.0.1.1 0 8 8 slow
-+run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
- chk_join_nr "flush subflows and signal" 3 3 3
- chk_add_nr 1 1
- chk_rm_nr 2 2
-@@ -774,7 +776,7 @@ reset
+ =
+
++# add single subflow
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow
++chk_join_nr "add single subflow" 1 1 1
++
++# add signal address
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
++chk_join_nr "add signal address" 1 1 1
++chk_add_nr 1 1
++
++# add multiple subflows
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++run_tests $ns1 $ns2 10.0.1.1 0 0 2 slow
++chk_join_nr "add multiple subflows" 2 2 2
++
++# add multiple subflows IPv6
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns2 ./pm_nl_ctl limits 0 2
++run_tests $ns1 $ns2 dead:beef:1::1 0 0 2 slow
++chk_join_nr "add multiple subflows IPv6" 2 2 2
++
++# add multiple addresses IPv6
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++run_tests $ns1 $ns2 dead:beef:1::1 0 2 0 slow
++chk_join_nr "add multiple addresses IPv6" 2 2 2
++chk_add_nr 2 2
++
+ # subflow IPv6
+ reset
  ip netns exec $ns1 ./pm_nl_ctl limits 0 1
- ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 1
--run_tests $ns1 $ns2 dead:beef:1::1 0 1 0 slow
-+run_tests $ns1 $ns2 dead:beef:1::1 0 -1 0 slow
- chk_join_nr "remove single address IPv6" 1 1 1
- chk_add_nr 1 1
- chk_rm_nr 0 0
-@@ -785,7 +787,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
- ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
- ip netns exec $ns2 ./pm_nl_ctl limits 1 2
- ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
--run_tests $ns1 $ns2 dead:beef:1::1 0 1 1 slow
-+run_tests $ns1 $ns2 dead:beef:1::1 0 -1 -1 slow
- chk_join_nr "remove subflow and signal IPv6" 2 2 2
- chk_add_nr 1 1
- chk_rm_nr 1 1
 -- =
 
 2.29.2
 
---===============3229374804663469897==--
+--===============4537469793846863637==--
