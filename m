@@ -1,128 +1,114 @@
-Content-Type: multipart/mixed; boundary="===============6712348219301944918=="
+Content-Type: multipart/mixed; boundary="===============6720978409973948669=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 3/5] mptcp: add a new sysctl
- add_addr_urgent
-Date: Wed, 06 Jan 2021 18:22:44 +0800
-Message-ID: <34f227194451100e1c544ac3285c700eb5d38531.1609925558.git.geliangtang@gmail.com>
-In-Reply-To: 5a87151c09e1e20509cc87a7fb1edcad8879b5f5.1609925558.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 4/5] mptcp: add urgent status for
+ ADD_ADDR
+Date: Wed, 06 Jan 2021 18:22:45 +0800
+Message-ID: <38d1059450e7277a4183c6f0a37b10d5e16d82f8.1609925558.git.geliangtang@gmail.com>
+In-Reply-To: 34f227194451100e1c544ac3285c700eb5d38531.1609925558.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7280
+X-UID: 7281
 
---===============6712348219301944918==
+--===============6720978409973948669==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new sysctl named add_addr_urgent, to control whether
-the ADD_ADDR suboption can be sent out immediately in only one round trip.
+This patch added a new status named MPTCP_ADD_ADDR_URGENT in
+mptcp_addr_signal_status. If this status is set, a dedicated ADD_ADDR
+packet also needs to be sent out.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- Documentation/networking/mptcp-sysctl.rst |  8 ++++++++
- net/mptcp/ctrl.c                          | 14 ++++++++++++++
- net/mptcp/protocol.h                      |  1 +
- 3 files changed, 23 insertions(+)
+ net/mptcp/pm.c         | 2 ++
+ net/mptcp/pm_netlink.c | 4 ++++
+ net/mptcp/protocol.h   | 9 ++++++++-
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/netw=
-orking/mptcp-sysctl.rst
-index 6af0196c4297..d7984701e411 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -24,3 +24,11 @@ add_addr_timeout - INTEGER (seconds)
- 	sysctl.
- =
-
- 	Default: 120
-+
-+add_addr_urgent - INTEGER
-+	Control whether the ADD_ADDR suboption can be sent out immediately
-+	in only one round trip.
-+
-+	The default value is zero. This is a per-namespace sysctl.
-+
-+	Default: 0
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 96ba616f59bf..b0af5ff52136 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -19,6 +19,7 @@ struct mptcp_pernet {
- =
-
- 	int mptcp_enabled;
- 	unsigned int add_addr_timeout;
-+	int add_addr_urgent;
- };
- =
-
- static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
-@@ -36,6 +37,11 @@ unsigned int mptcp_get_add_addr_timeout(struct net *net)
- 	return mptcp_get_pernet(net)->add_addr_timeout;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index c22a43b20323..998828990029 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -33,6 +33,8 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 		add_addr |=3D BIT(MPTCP_ADD_ADDR_IPV6);
+ 	if (port)
+ 		add_addr |=3D BIT(MPTCP_ADD_ADDR_PORT);
++	if (mptcp_get_add_addr_urgent(sock_net((struct sock *)msk)))
++		add_addr |=3D BIT(MPTCP_ADD_ADDR_URGENT);
+ 	WRITE_ONCE(msk->pm.addr_signal, add_addr);
+ 	return 0;
  }
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 06c9ec12c538..01cd50646b82 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -509,6 +509,8 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *m=
+sk)
+ 			strcat(buf, "[ipv6]");
+ 		if (mptcp_pm_should_add_signal_port(msk))
+ 			strcat(buf, "[port]");
++		if (mptcp_pm_should_add_signal_urgent(msk))
++			strcat(buf, "[urgent]");
+ 		pr_debug("send ack for add_addr %s", buf);
  =
 
-+bool mptcp_get_add_addr_urgent(struct net *net)
-+{
-+	return mptcp_get_pernet(net)->add_addr_urgent;
-+}
-+
- static struct ctl_table mptcp_sysctl_table[] =3D {
- 	{
- 		.procname =3D "enabled",
-@@ -52,6 +58,12 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
- 		.mode =3D 0644,
- 		.proc_handler =3D proc_dointvec_jiffies,
- 	},
-+	{
-+		.procname =3D "add_addr_urgent",
-+		.maxlen =3D sizeof(int),
-+		.mode =3D 0644,
-+		.proc_handler =3D proc_dointvec,
-+	},
- 	{}
- };
- =
-
-@@ -59,6 +71,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet=
- *pernet)
- {
- 	pernet->mptcp_enabled =3D 1;
- 	pernet->add_addr_timeout =3D TCP_RTO_MAX;
-+	pernet->add_addr_urgent =3D 0;
+ 		lock_sock(ssk);
+@@ -521,6 +523,8 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *m=
+sk)
+ 			add_addr &=3D ~BIT(MPTCP_ADD_ADDR_IPV6);
+ 		if (mptcp_pm_should_add_signal_port(msk))
+ 			add_addr &=3D ~BIT(MPTCP_ADD_ADDR_PORT);
++		if (mptcp_pm_should_add_signal_urgent(msk))
++			add_addr &=3D ~BIT(MPTCP_ADD_ADDR_URGENT);
+ 		WRITE_ONCE(msk->pm.addr_signal, add_addr);
+ 	}
  }
- =
-
- static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pe=
-rnet)
-@@ -75,6 +88,7 @@ static int mptcp_pernet_new_table(struct net *net, struct=
- mptcp_pernet *pernet)
- =
-
- 	table[0].data =3D &pernet->mptcp_enabled;
- 	table[1].data =3D &pernet->add_addr_timeout;
-+	table[2].data =3D &pernet->add_addr_urgent;
- =
-
- 	hdr =3D register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
- 	if (!hdr)
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 964bf66f7221..56e200efec01 100644
+index 56e200efec01..fd1c785bdcdf 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -461,6 +461,7 @@ static inline void mptcp_add_pending_subflow(struct mpt=
-cp_sock *msk,
+@@ -183,6 +183,7 @@ enum mptcp_addr_signal_status {
+ 	MPTCP_ADD_ADDR_ECHO,
+ 	MPTCP_ADD_ADDR_IPV6,
+ 	MPTCP_ADD_ADDR_PORT,
++	MPTCP_ADD_ADDR_URGENT,
+ 	MPTCP_RM_ADDR_SIGNAL,
+ };
  =
 
- int mptcp_is_enabled(struct net *net);
- unsigned int mptcp_get_add_addr_timeout(struct net *net);
-+bool mptcp_get_add_addr_urgent(struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     struct mptcp_options_received *mp_opt);
- bool mptcp_subflow_data_available(struct sock *sk);
+@@ -594,6 +595,11 @@ static inline bool mptcp_pm_should_add_signal_port(str=
+uct mptcp_sock *msk)
+ 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_PORT);
+ }
+ =
+
++static inline bool mptcp_pm_should_add_signal_urgent(struct mptcp_sock *ms=
+k)
++{
++	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_ADD_ADDR_URGENT);
++}
++
+ static inline bool mptcp_pm_should_rm_signal(struct mptcp_sock *msk)
+ {
+ 	return READ_ONCE(msk->pm.addr_signal) & BIT(MPTCP_RM_ADDR_SIGNAL);
+@@ -602,7 +608,8 @@ static inline bool mptcp_pm_should_rm_signal(struct mpt=
+cp_sock *msk)
+ static inline bool mptcp_pm_should_add_signal_send_ack(struct mptcp_sock *=
+msk)
+ {
+ 	return mptcp_pm_should_add_signal_ipv6(msk) ||
+-	       mptcp_pm_should_add_signal_port(msk);
++	       mptcp_pm_should_add_signal_port(msk) ||
++	       mptcp_pm_should_add_signal_urgent(msk);
+ }
+ =
+
+ static inline unsigned int mptcp_add_addr_len(int family, bool echo, bool =
+port)
 -- =
 
 2.29.2
 
---===============6712348219301944918==--
+--===============6720978409973948669==--
