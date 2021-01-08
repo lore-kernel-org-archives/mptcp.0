@@ -1,37 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============2506100030993223496=="
+Content-Type: multipart/mixed; boundary="===============8223984650582609513=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 7 January 2021 16:00 UTC (8am PDT, 5pm CET,
- 12pm CST)
-Date: Wed, 06 Jan 2021 18:32:02 +0100
-Message-ID: <0c152ed4-200f-5737-ce3b-8e28b1482b85@tessares.net>
+Subject: [MPTCP] [PATCH mptcp-next 0/3] mptcp: re-enable snd buf autotune
+Date: Fri, 08 Jan 2021 12:50:00 +0100
+Message-ID: <cover.1610106588.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7283
+X-UID: 7284
 
---===============2506100030993223496==
+--===============8223984650582609513==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+It was lost in a recent refactor.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+With great power come great responsability, so we need a more
+accurate packet scheduler decision, or b/w usage for assimetric links
+will be sub-optimal.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210107
+Patches 2 && 3 are the minimal changes I was able to cook somehow
+addressing the above =
 
-Feel free to add/modify topics!
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+There are still some sporadic self-test failures for assimetric links.
+Looks like they are caused by retransmissions/receiver dropping packets
+due to MPTCP level OoO check.
 
-Speak to you tomorrow!
-Matt
+I'll try to address that asap, but I still consider this series for
+inclusion, so that it can stage a bit in the export branch.
+
+Note: patch 3 re-introduces the workqueue usage for the datapath (yes,
+it makes me feel sick, sad and tired :(. I was unable to avoid it.
+
+There is weird and convoluted schema to possibly avoiding (again) the
+workqueue usage. If you don't feel too scaring using a fake NAPI instance
+to delegate actions to other mptcp subflows, I can try to cook that... =
+
+
+Paolo Abeni (3):
+  mptcp: re-enable sndbuf autotune
+  mptcp: do not queue excessive data on subflows.
+  mptcp: schedule work for better snd subflow selection
+
+ net/mptcp/protocol.c | 85 +++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h | 20 +++++++++++
+ net/mptcp/subflow.c  | 10 +++++-
+ 3 files changed, 77 insertions(+), 38 deletions(-)
+
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2506100030993223496==--
+2.26.2
+
+--===============8223984650582609513==--
