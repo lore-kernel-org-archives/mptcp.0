@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============9138243344580802086=="
+Content-Type: multipart/mixed; boundary="===============0002152535789566809=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 9/9] selftests: mptcp: add
- testcases for ADD_ADDR with port
-Date: Sat, 09 Jan 2021 10:07:31 +0800
-Message-ID: <CA+WQbwtiRjc_vJbXOK52Nz9WSr5qFA010akMEW8zBdSChr_0og@mail.gmail.com>
-In-Reply-To: 75e47be-9a3e-f4c7-c41c-e0aa36ca1d85@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 1/9] mptcp: create the
+ listening socket for new port
+Date: Sat, 09 Jan 2021 10:09:59 +0800
+Message-ID: <CA+WQbwvmAxA9sf-tsnMifb1CTrQrz7HVD_KAMbft1Rn2rS+tbA@mail.gmail.com>
+In-Reply-To: 2819e61a-e973-4e13-4a98-c96a0879936@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7303
+X-UID: 7304
 
---===============9138243344580802086==
+--===============0002152535789566809==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,308 +19,262 @@ Content-Transfer-Encoding: quoted-printable
 Hi Mat,
 
 Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=B4=
-1=E6=9C=889=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=887:01=E5=86=99=E9=
+1=E6=9C=889=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=886:56=E5=86=99=E9=
 =81=93=EF=BC=9A
-
 >
 > On Tue, 5 Jan 2021, Geliang Tang wrote:
 >
-> > This patch added testcases for ADD_ADDR with port and the related MIB
-> > counters check in chk_add_nr. The output looks like this:
+> > This patch created a listening socket when an address with a port-number
+> > is added by PM netlink. Then binded the new port to the socket, and
+> > listened for the connection.
 > >
-> > 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> >                                       add[ ok ] - echo  [ ok ] - pt [ o=
-k ]
-> >                                       syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> >                                       syn[ ok ] - ack   [ ok ]
-> > 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> >                                       add[ ok ] - echo  [ ok ] - pt [ o=
-k ]
-> >                                       syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> >                                       syn[ ok ] - ack   [ ok ]
-> > 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> >                                       add[ ok ] - echo  [ ok ] - pt [ o=
-k ]
-> >                                       syn[ ok ] - synack[ ok ] - ack[ o=
-k ]
-> >                                       syn[ ok ] - ack   [ ok ]
-> >                                       rm [ ok ] - sf    [ ok ]
+> > When the address is removed or the addresses are flushed by PM netlink,
+> > release the listening socket.
 > >
 > > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > > ---
-> > .../testing/selftests/net/mptcp/mptcp_join.sh | 160 +++++++++++++++++-
-> > 1 file changed, 159 insertions(+), 1 deletion(-)
+> > net/mptcp/pm_netlink.c | 96 +++++++++++++++++++++++++++++++++++++++++-
+> > net/mptcp/protocol.c   |  2 +-
+> > net/mptcp/protocol.h   |  4 ++
+> > net/mptcp/subflow.c    |  6 +--
+> > 4 files changed, 102 insertions(+), 6 deletions(-)
 > >
-> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/te=
-sting/selftests/net/mptcp/mptcp_join.sh
-> > index cf9ae0bd7254..f32fa18b4695 100755
-> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > @@ -487,6 +487,12 @@ chk_add_nr()
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index 7dd0dba770fe..d42c659c586a 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> > @@ -26,6 +26,7 @@ struct mptcp_pm_addr_entry {
+> >       struct list_head        list;
+> >       struct mptcp_addr_info  addr;
+> >       struct rcu_head         rcu;
+> > +     struct socket           *lsk;
+> > };
+> >
+> > struct mptcp_pm_add_entry {
+> > @@ -673,6 +674,53 @@ static int mptcp_pm_nl_append_new_local_addr(struc=
+t pm_nl_pernet *pernet,
+> >       return ret;
+> > }
+> >
+> > +static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+> > +                                         struct mptcp_pm_addr_entry *e=
+ntry)
+> > +{
+> > +     struct sockaddr_storage addr;
+> > +     struct mptcp_sock *msk;
+> > +     struct socket *ssock;
+> > +     int backlog =3D 1024;
+> > +     int err;
+> > +
+> > +     err =3D sock_create_kern(sock_net(sk), entry->addr.family,
+> > +                            SOCK_STREAM, IPPROTO_MPTCP, &entry->lsk);
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     msk =3D mptcp_sk(entry->lsk->sk);
+> > +     if (!msk) {
+> > +             err =3D -EINVAL;
+> > +             goto out;
+> > +     }
+> > +
+> > +     ssock =3D __mptcp_nmpc_socket(msk);
+> > +     if (!ssock) {
+> > +             err =3D -EINVAL;
+> > +             goto out;
+> > +     }
+> > +
+> > +     mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
+> > +     err =3D kernel_bind(ssock, (struct sockaddr *)&addr,
+> > +                       sizeof(struct sockaddr_in));
+> > +     if (err) {
+> > +             pr_warn("kernel_bind error, err=3D%d", err);
+> > +             goto out;
+> > +     }
+> > +
+> > +     err =3D kernel_listen(ssock, backlog);
+> > +     if (err) {
+> > +             pr_warn("kernel_listen error, err=3D%d", err);
+> > +             goto out;
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +out:
+> > +     sock_release(entry->lsk);
+> > +     return err;
+> > +}
+> > +
+> > int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common=
+ *skc)
 > > {
-> >       local add_nr=3D$1
-> >       local echo_nr=3D$2
-> > +     local port_nr=3D${3:-0}
-> > +     local syn_nr=3D${4:-$port_nr}
-> > +     local syn_ack_nr=3D${5:-$port_nr}
-> > +     local ack_nr=3D${6:-$port_nr}
-> > +     local mis_syn_nr=3D${7:-0}
-> > +     local mis_ack_nr=3D${8:-0}
-> >       local count
-> >       local dump_stats
+> >       struct mptcp_pm_addr_entry *entry;
+> > @@ -717,6 +765,8 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk=
+, struct sock_common *skc)
+> >       entry->addr.ifindex =3D 0;
+> >       entry->addr.flags =3D 0;
+> >       entry->addr.id =3D 0;
+> > +     entry->addr.port =3D 0;
+> > +     entry->lsk =3D NULL;
+> >       ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
+> >       if (ret < 0)
+> >               kfree(entry);
+> > @@ -886,9 +936,19 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *s=
+kb, struct genl_info *info)
+> >       }
 > >
-> > @@ -509,7 +515,87 @@ chk_add_nr()
-> >               ret=3D1
-> >               dump_stats=3D1
-> >       else
-> > -             echo "[ ok ]"
-> > +             echo -n "[ ok ]"
-> > +     fi
-> > +
-> > +     if [ $port_nr -gt 0 ]; then
->
-> I get a lot of these errors in the existing tests:
->
-> ./mptcp_join.sh: line 524: [: -gt: unary operator expected
->
->
->
-> > +             echo -n " - pt "
-> > +             count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPort=
-Add | awk '{print $2}'`
-> > +             [ -z "$count" ] && count=3D0
-> > +             if [ "$count" !=3D "$port_nr" ]; then
-> > +                     echo "[fail] got $count ADD_ADDR[s] with a port-n=
-umber expected $port_nr"
-> > +                     ret=3D1
-> > +                     dump_stats=3D1
-> > +             else
-> > +                     echo "[ ok ]"
-> > +             fi
-> > +
-> > +             printf "%-39s %s" " " "syn"
-> > +             count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJo=
-inPortSynRx |
-> > +                     awk '{print $2}'`
-> > +             [ -z "$count" ] && count=3D0
-> > +             if [ "$count" !=3D "$syn_nr" ]; then
-> > +                     echo "[fail] got $count JOIN[s] syn with a differ=
-ent \
-> > +                             port-number expected $syn_nr"
-> > +                     ret=3D1
-> > +                     dump_stats=3D1
-> > +             else
-> > +                     echo -n "[ ok ]"
-> > +             fi
-> > +
-> > +             echo -n " - synack"
-> > +             count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtMPJo=
-inPortSynAckRx |
-> > +                     awk '{print $2}'`
-> > +             [ -z "$count" ] && count=3D0
-> > +             if [ "$count" !=3D "$syn_ack_nr" ]; then
-> > +                     echo "[fail] got $count JOIN[s] synack with a dif=
-ferent \
-> > +                             port-number expected $syn_ack_nr"
-> > +                     ret=3D1
-> > +                     dump_stats=3D1
-> > +             else
-> > +                     echo -n "[ ok ]"
-> > +             fi
-> > +
-> > +             echo -n " - ack"
-> > +             count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJo=
-inPortAckRx |
-> > +                     awk '{print $2}'`
-> > +             [ -z "$count" ] && count=3D0
-> > +             if [ "$count" !=3D "$ack_nr" ]; then
-> > +                     echo "[fail] got $count JOIN[s] ack with a differ=
-ent \
-> > +                             port-number expected $ack_nr"
-> > +                     ret=3D1
-> > +                     dump_stats=3D1
-> > +             else
-> > +                     echo "[ ok ]"
-> > +             fi
-> > +
-> > +             printf "%-39s %s" " " "syn"
-> > +             count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMism=
-atchPortSynRx |
-> > +                     awk '{print $2}'`
-> > +             [ -z "$count" ] && count=3D0
-> > +             if [ "$count" !=3D "$mis_syn_nr" ]; then
-> > +                     echo "[fail] got $count JOIN[s] syn with a mismat=
-ched \
-> > +                             port-number expected $mis_syn_nr"
-> > +                     ret=3D1
-> > +                     dump_stats=3D1
-> > +             else
-> > +                     echo -n "[ ok ]"
-> > +             fi
-> > +
-> > +             echo -n " - ack   "
-> > +             count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMism=
-atchPortAckRx |
-> > +                     awk '{print $2}'`
-> > +             [ -z "$count" ] && count=3D0
-> > +             if [ "$count" !=3D "$mis_ack_nr" ]; then
-> > +                     echo "[fail] got $count JOIN[s] ack with a mismat=
-ched \
-> > +                             port-number expected $mis_ack_nr"
-> > +                     ret=3D1
-> > +                     dump_stats=3D1
-> > +             else
-> > +                     echo "[ ok ]"
-> > +             fi
-> > +     else
-> > +             echo ""
-> >       fi
+> >       *entry =3D addr;
+> > +     if (entry->addr.port) {
+> > +             ret =3D mptcp_pm_nl_create_listen_socket(skb->sk, entry);
+> > +             if (ret) {
+> > +                     GENL_SET_ERR_MSG(info, "create listen socket erro=
+r");
+> > +                     kfree(entry);
+> > +                     return ret;
+> > +             }
+> > +     }
+> >       ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
+> >       if (ret < 0) {
+> >               GENL_SET_ERR_MSG(info, "too many addresses or duplicate o=
+ne");
+> > +             if (entry->lsk)
+> > +                     sock_release(entry->lsk);
+> >               kfree(entry);
+> >               return ret;
+> >       }
+> > @@ -972,6 +1032,38 @@ static int mptcp_nl_remove_subflow_and_signal_add=
+r(struct net *net,
+> >       return 0;
+> > }
 > >
-> >       if [ "${dump_stats}" =3D 1 ]; then
-> > @@ -955,6 +1041,78 @@ chk_join_nr "single address, backup" 1 1 1
-> > chk_add_nr 1 1
-> > chk_prio_nr 1 0
-> >
-> > +# signal address with port
-> > +reset
-> > +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> > +ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> > +run_tests $ns1 $ns2 10.0.1.1
-> > +chk_join_nr "signal address with port" 1 1 1
-> > +chk_add_nr 1 1 1
+> > +struct addr_entry_release_work {
+> > +     struct rcu_work rwork;
+> > +     struct mptcp_pm_addr_entry *entry;
+> > +};
 > > +
-> > +# subflow and signal with port
-> > +reset
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> > +ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> > +ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-> > +ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> > +run_tests $ns1 $ns2 10.0.1.1
-> > +chk_join_nr "subflow and signal with port" 2 2 2
-> > +chk_add_nr 1 1 1
+> > +static void mptcp_pm_release_addr_entry(struct work_struct *work)
+> > +{
+> > +     struct addr_entry_release_work *w;
+> > +     struct mptcp_pm_addr_entry *entry;
 > > +
-> > +# single address with port, remove
-> > +reset
-> > +ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> > +ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-> > +run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
-> > +chk_join_nr "remove single address with port" 1 1 1
-> > +chk_add_nr 1 1 1
-> > +chk_rm_nr 0 0
+> > +     w =3D container_of(to_rcu_work(work), struct addr_entry_release_w=
+ork, rwork);
+> > +     entry =3D w->entry;
+> > +     if (entry) {
+> > +             if (entry->lsk)
+> > +                     sock_release(entry->lsk);
+> > +             kfree(entry);
+> > +     }
+> > +     kfree(w);
+> > +}
 > > +
-> > +# subflow and signal with port, remove
-> > +reset
-> > +ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> > +ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-> > +ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> > +run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
-> > +chk_join_nr "remove subflow and signal with port" 2 2 2
-> > +chk_add_nr 1 1 1
-> > +chk_rm_nr 1 1
+> > +static void mptcp_pm_free_addr_entry(struct mptcp_pm_addr_entry *entry)
+> > +{
+> > +     struct addr_entry_release_work *w;
 > > +
-> > +# subflows and signal with port, flush
-> > +reset
-> > +ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> > +ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-> > +ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-> > +ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
-> > +run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
-> > +chk_join_nr "flush subflows and signal with port" 3 3 3
-> > +chk_add_nr 1 1
-> > +chk_rm_nr 2 2
-> > +
+> > +     w =3D kmalloc(sizeof(*w), GFP_ATOMIC);
+> > +     if (w) {
+> > +             INIT_RCU_WORK((struct rcu_work *)w, mptcp_pm_release_addr=
+_entry);
+> > +             w->entry =3D entry;
+> > +             queue_rcu_work(system_wq, (struct rcu_work *)w);
 >
-> These last two tests failed for me:
+> Rather than casting the second arg, please use &w->rwork
 >
-> 38 remove subflow and signal with port  syn[ ok ] - synack[ ok ] - ack[ ok
-> ]
->                                          add[ ok ] - echo  [ ok ]
->                                          rm [fail] got 0 RM_ADDR[s]
-> expected 1
->   - sf    [fail] got 0 RM_SUBFLOW[s] expected 1
-> ./mptcp_join.sh: line 524: [: -gt: unary operator expected
->
-> Server ns stats
-> MPTcpExtMPCapableSYNRX          1                  0.0
-> MPTcpExtMPCapableACKRX          1                  0.0
-> MPTcpExtMPJoinSynRx             2                  0.0
-> MPTcpExtMPJoinAckRx             2                  0.0
-> MPTcpExtEchoAdd                 1                  0.0
-> MPTcpExtPortAdd                 1                  0.0
-> MPTcpExtMPJoinPortSynRx         1                  0.0
-> MPTcpExtMPJoinPortAckRx         1                  0.0
-> Client ns stats
-> MPTcpExtMPJoinSynAckRx          2                  0.0
-> MPTcpExtAddAddr                 1                  0.0
-> MPTcpExtPortAdd                 1                  0.0
-> MPTcpExtMPJoinPortSynAckRx      1                  0.0
-> 39 flush subflows and signal with port  syn[ ok ] - synack[ ok ] - ack[ ok
-> ]
->                                          add[ ok ] - echo  [ ok ]
->                                          rm [fail] got 0 RM_ADDR[s]
-> expected 2
->   - sf    [fail] got 0 RM_SUBFLOW[s] expected 2
-> ./mptcp_join.sh: line 524: [: -gt: unary operator expected
->
-> Server ns stats
-> MPTcpExtMPCapableSYNRX          1                  0.0
-> MPTcpExtMPCapableACKRX          1                  0.0
-> MPTcpExtMPJoinSynRx             3                  0.0
-> MPTcpExtMPJoinAckRx             3                  0.0
-> MPTcpExtEchoAdd                 1                  0.0
-> MPTcpExtPortAdd                 1                  0.0
-> MPTcpExtMPJoinPortSynRx         1                  0.0
-> MPTcpExtMPJoinPortAckRx         1                  0.0
-> Client ns stats
-> MPTcpExtMPJoinSynAckRx          3                  0.0
-> MPTcpExtAddAddr                 1                  0.0
-> MPTcpExtPortAdd                 1                  0.0
-> MPTcpExtMPJoinPortSynAckRx      1                  0.0
->
->
-> Are these passing for you with the latest export branch?
 
-Sorry, please apply the patchset (mptcp: create subflow for newly added
-address and testcases) first, then these testcases will pass.
-
-Thanks,
+May I send a squash-to patch to fix this?
 
 -Geliang
 
 >
+> Thanks,
 >
-> > +# multiple addresses with port
-> > +reset
-> > +ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10100
-> > +ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-> > +run_tests $ns1 $ns2 10.0.1.1
-> > +chk_join_nr "multiple addresses with port" 2 2 2
-> > +chk_add_nr 2 2 2
+> Mat
+>
+>
+> > +     }
+> > +}
 > > +
-> > +# multiple addresses with ports
-> > +reset
-> > +ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-> > +ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10101
-> > +ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-> > +run_tests $ns1 $ns2 10.0.1.1
-> > +chk_join_nr "multiple addresses with ports" 2 2 2
-> > +chk_add_nr 2 2 2
-> > +
-> > # single subflow, syncookies
-> > reset_with_cookies
-> > ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+> > static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info =
+*info)
+> > {
+> >       struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
+> > @@ -1001,7 +1093,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *=
+skb, struct genl_info *info)
+> >       spin_unlock_bh(&pernet->lock);
+> >
+> >       mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry=
+->addr);
+> > -     kfree_rcu(entry, rcu);
+> > +     mptcp_pm_free_addr_entry(entry);
+> >
+> >       return ret;
+> > }
+> > @@ -1015,7 +1107,7 @@ static void __flush_addrs(struct net *net, struct=
+ list_head *list)
+> >                                struct mptcp_pm_addr_entry, list);
+> >               mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
+> >               list_del_rcu(&cur->list);
+> > -             kfree_rcu(cur, rcu);
+> > +             mptcp_pm_free_addr_entry(cur);
+> >       }
+> > }
+> >
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 49384c453950..b15ce0fd996a 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -49,7 +49,7 @@ static void __mptcp_check_send_data_fin(struct sock *=
+sk);
+> >  * completed yet or has failed, return the subflow socket.
+> >  * Otherwise return NULL.
+> >  */
+> > -static struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
+> > +struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
+> > {
+> >       if (!msk->subflow || READ_ONCE(msk->can_ack))
+> >               return NULL;
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index f6ed8dc0a073..7b4ba6597416 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -469,11 +469,15 @@ void mptcp_subflow_shutdown(struct sock *sk, stru=
+ct sock *ssk, int how);
+> > void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> >                      struct mptcp_subflow_context *subflow);
+> > void mptcp_subflow_reset(struct sock *ssk);
+> > +struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
+> >
+> > /* called with sk socket lock held */
+> > int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_in=
+fo *loc,
+> >                           const struct mptcp_addr_info *remote);
+> > int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_so=
+ck);
+> > +void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+> > +                      struct sockaddr_storage *addr,
+> > +                      unsigned short family);
+> >
+> > static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+> >                                             struct mptcp_subflow_contex=
+t *ctx)
+> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > index 8dc4d9f86773..21d569054e01 100644
+> > --- a/net/mptcp/subflow.c
+> > +++ b/net/mptcp/subflow.c
+> > @@ -1073,9 +1073,9 @@ void mptcpv6_handle_mapped(struct sock *sk, bool =
+mapped)
+> > }
+> > #endif
+> >
+> > -static void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+> > -                             struct sockaddr_storage *addr,
+> > -                             unsigned short family)
+> > +void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+> > +                      struct sockaddr_storage *addr,
+> > +                      unsigned short family)
+> > {
+> >       memset(addr, 0, sizeof(*addr));
+> >       addr->ss_family =3D family;
 > > --
 > > 2.29.2
 > > _______________________________________________
@@ -331,4 +285,4 @@ Thanks,
 > --
 > Mat Martineau
 > Intel
---===============9138243344580802086==--
+--===============0002152535789566809==--
