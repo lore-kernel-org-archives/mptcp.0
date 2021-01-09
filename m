@@ -1,54 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============4145414444521446807=="
+Content-Type: multipart/mixed; boundary="===============6996938827946773417=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v9 mptcp-next 0/9] ADD_ADDR: ports support
-Date: Fri, 08 Jan 2021 15:19:03 -0800
-Message-ID: <972f77ce-f994-53d6-fc70-7c692da97021@linux.intel.com>
-In-Reply-To: cover.1609820648.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH net-next 0/8] MPTCP: Add MP_PRIO support and rework
+ local address IDs
+Date: Fri, 08 Jan 2021 16:47:54 -0800
+Message-ID: <20210109004802.341602-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7290
+X-UID: 7291
 
---===============4145414444521446807==
+--===============6996938827946773417==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Here are some patches we've merged in the MPTCP tree that are ready for
+net-next.
 
-On Tue, 5 Jan 2021, Geliang Tang wrote:
+Patches 1 and 2 rework the assignment of local address IDs to allow them
+to be assigned by a userspace path manager, and add corresponding self
+tests.
 
-> v9:
-> - use queue_rcu_work to release the listening socket.
-> - squash v8's patch 2 with patch 3.
-> - add two new patches, "mptcp: drop unused skb in
-> subflow_token_join_request" and "mptcp: add a new helper
-> subflow_req_create_thmac"
->
+Patches 2-8 add the ability to change subflow priority after a subflow
+has been established. Each subflow in a MPTCP connection has a priority
+level: "regular" or "backup". Data should only be sent on backup
+subflows if no regular subflows are available. The priority level can be
+set when the subflow connection is established (as was already
+implemented), or during the life of the connection by sending MP_PRIO in
+the TCP options (as added here). Self tests are included.
 
-Hi Geliang -
 
-I'd like to make a request to make review easier: Please include in the =
+Geliang Tang (8):
+  mptcp: add the address ID assignment bitmap
+  selftests: mptcp: add testcases for setting the address ID
+  mptcp: add the outgoing MP_PRIO support
+  mptcp: add the incoming MP_PRIO support
+  mptcp: add set_flags command in PM netlink
+  selftests: mptcp: add set_flags command in pm_nl_ctl
+  mptcp: add the mibs for MP_PRIO
+  selftests: mptcp: add the MP_PRIO testcases
 
-cover letter the base commit where the patches apply successfully, or a =
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/mib.c                               |   2 +
+ net/mptcp/mib.h                               |   2 +
+ net/mptcp/options.c                           |  56 ++++++
+ net/mptcp/pm.c                                |   8 +
+ net/mptcp/pm_netlink.c                        | 172 ++++++++++++++++--
+ net/mptcp/protocol.h                          |  11 ++
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  72 +++++++-
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  41 ++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  87 ++++++++-
+ 10 files changed, 430 insertions(+), 22 deletions(-)
 
-reference to a public git repo showing the full commit history. It took =
 
-some trial and error to figure out that this patch set only applied on top =
+base-commit: 833d22f2f922bbee6430e558417af060db6bbe9c
+-- =
 
-of the export branch with the "add-IPv4-mapped address support v4" patch =
+2.30.0
 
-set applied too.
-
-For example, referencing the export tag from the mptcp_net-next repo (like =
-
-export/20201217T083536) and the patch set name and revision for any =
-
-prerequisite patch sets would really help.
-
-Thanks!
-
---
-Mat Martineau
-Intel
---===============4145414444521446807==--
+--===============6996938827946773417==--
