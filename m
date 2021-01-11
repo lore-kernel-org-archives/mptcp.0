@@ -1,61 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============3233277074504685492=="
+Content-Type: multipart/mixed; boundary="===============6124184675826970220=="
 MIME-Version: 1.0
-From: patchwork-bot+netdevbpf at kernel.org
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/8] MPTCP: Add MP_PRIO support and
- rework local address IDs
-Date: Sun, 10 Jan 2021 03:10:09 +0000
-Message-ID: <
- <161024820975.15339.2337592500355833538.git-patchwork-notify@kernel.org>>
-In-Reply-To: 20210109004802.341602-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH v2 mptcp-next 0/4] mptcp: re-enable snd buf autotune
+Date: Mon, 11 Jan 2021 11:05:38 +0100
+Message-ID: <cover.1610359105.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7305
+X-UID: 7306
 
---===============3233277074504685492==
+--===============6124184675826970220==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello:
+WRT to the previous iteration, this adds the first patch, which allow
+cleaning-up the existing code and the sndbuf autotuning code more than
+a bit.
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+Relevant bits from the previous cover letter:
 
-On Fri,  8 Jan 2021 16:47:54 -0800 you wrote:
-> Here are some patches we've merged in the MPTCP tree that are ready for
-> net-next.
-> =
+There are still some sporadic self-test failures for assimetric links.
+Looks like they are caused by retransmissions/receiver dropping packets
+due to MPTCP level OoO check.
 
-> Patches 1 and 2 rework the assignment of local address IDs to allow them
-> to be assigned by a userspace path manager, and add corresponding self
-> tests.
-> =
+I'll try to address that asap, but I still consider this series for
+inclusion, so that it can stage a bit in the export branch.
 
-> [...]
+Note: the last patch re-introduces the workqueue usage for the datapath (ye=
+s,
+it makes me feel sick, sad and tired :(. I was unable to avoid it.
 
-Here is the summary with links:
-  - [net-next,1/8] mptcp: add the address ID assignment bitmap
-    https://git.kernel.org/netdev/net-next/c/efd5a4c04e18
-  - [net-next,2/8] selftests: mptcp: add testcases for setting the address =
-ID
-    https://git.kernel.org/netdev/net-next/c/dc8eb10e95a8
-  - [net-next,3/8] mptcp: add the outgoing MP_PRIO support
-    https://git.kernel.org/netdev/net-next/c/067065422fcd
-  - [net-next,4/8] mptcp: add the incoming MP_PRIO support
-    https://git.kernel.org/netdev/net-next/c/40453a5c61f4
-  - [net-next,5/8] mptcp: add set_flags command in PM netlink
-    https://git.kernel.org/netdev/net-next/c/0f9f696a502e
-  - [net-next,6/8] selftests: mptcp: add set_flags command in pm_nl_ctl
-    https://git.kernel.org/netdev/net-next/c/6e8b244a3e9d
-  - [net-next,7/8] mptcp: add the mibs for MP_PRIO
-    https://git.kernel.org/netdev/net-next/c/0be2ac287bcc
-  - [net-next,8/8] selftests: mptcp: add the MP_PRIO testcases
-    https://git.kernel.org/netdev/net-next/c/718eb44e5c1e
+There is weird and convoluted schema to possibly avoiding (again) the
+workqueue usage. If you don't feel too scaring using a fake NAPI instance
+to delegate actions to other mptcp subflows, I can try to cook that...
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Paolo Abeni (4):
+  mptcp: always graft subflow socket to parent.
+  mptcp: re-enable sndbuf autotune
+  mptcp: do not queue excessive data on subflows.
+  mptcp: schedule work for better snd subflow selection
 
+ net/mptcp/protocol.c | 108 ++++++++++++++++++-------------------------
+ net/mptcp/protocol.h |  21 +++++++++
+ net/mptcp/subflow.c  |  13 +++++-
+ 3 files changed, 77 insertions(+), 65 deletions(-)
 
---===============3233277074504685492==--
+-- =
+
+2.26.2
+
+--===============6124184675826970220==--
