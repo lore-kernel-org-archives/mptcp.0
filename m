@@ -1,62 +1,82 @@
-Content-Type: multipart/mixed; boundary="===============6355637644899417146=="
+Content-Type: multipart/mixed; boundary="===============2463909999686305157=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 mptcp-next 3/4] mptcp: do not queue excessive data
- on subflows.
-Date: Mon, 11 Jan 2021 11:05:41 +0100
-Message-ID: <0bd545cbc71005e983baa13f0a62e6d6e90c3920.1610359105.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 mptcp-next 4/4] mptcp: schedule work for better snd
+ subflow selection
+Date: Mon, 11 Jan 2021 11:05:42 +0100
+Message-ID: <e651a00a0e7fbeade6bf9549e5168da1a3bbadb2.1610359105.git.pabeni@redhat.com>
 In-Reply-To: cover.1610359105.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7309
+X-UID: 7310
 
---===============6355637644899417146==
+--===============2463909999686305157==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The current packet scheduler can enqueue up to sndbuf
-data on each subflow. If the send buffer is large and
-the subflows are not symmetric, this could lead to
-suboptimal aggregate bandwidth utilization.
-
-Limit the amount of queued data to the maximum cwnd.
+Otherwise the packet scheduler policy will not be
+enforced when pushing pending data at MPTCP-level
+ack reception time.
 
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm very sad to re-introduce the worker usage for the
+datapath, but I could not find an easy way to avoid it.
+
+I'm thinking of some weird schema involving a dummy percpu
+napi instance serving/processing a queue of mptcp sockets
+instead of actual packets. Any BH user can enqueue an MPTCP
+subflow there to delegate some action to the latter.
+
+The above will require also overriding the tcp_release_cb()
+with something able to process this delegated events.
+
+Yep, crazy, but possibly doable without any core change and
+possibly could be used to avoid the worker usage even for
+data fin processing/sending.
+---
+ net/mptcp/protocol.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a64b2f6fb17b..510b87a3553b 100644
+index 510b87a3553b..0791421a971f 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1390,7 +1390,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk)
- 			continue;
+@@ -2244,6 +2244,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (unlikely(state =3D=3D TCP_CLOSE))
+ 		goto unlock;
  =
 
- 		nr_active +=3D !subflow->backup;
--		if (!sk_stream_memory_free(subflow->tcp_sock))
-+		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
- 			continue;
++	mptcp_push_pending(sk, 0);
+ 	mptcp_check_data_fin_ack(sk);
+ 	__mptcp_flush_join_list(msk);
  =
 
- 		pace =3D READ_ONCE(ssk->sk_pacing_rate);
-@@ -1417,7 +1417,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk)
- 	if (send_info[0].ssk) {
- 		msk->last_snd =3D send_info[0].ssk;
- 		msk->snd_burst =3D min_t(int, MPTCP_SEND_BURST_SIZE,
--				       sk_stream_wspace(msk->last_snd));
-+				       tcp_sk(msk->last_snd)->snd_wnd);
- 		return msk->last_snd;
- 	}
+@@ -2903,10 +2904,14 @@ void __mptcp_check_push(struct sock *sk, struct soc=
+k *ssk)
+ 	if (!mptcp_send_head(sk))
+ 		return;
  =
 
+-	if (!sock_owned_by_user(sk))
+-		__mptcp_subflow_push_pending(sk, ssk);
+-	else
++	if (!sock_owned_by_user(sk)) {
++		if (mptcp_subflow_get_send(mptcp_sk(sk)) =3D=3D ssk)
++			__mptcp_subflow_push_pending(sk, ssk);
++		else
++			mptcp_schedule_work(sk);
++	} else {
+ 		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
++	}
+ }
+ =
+
+ #define MPTCP_DEFERRED_ALL (TCPF_WRITE_TIMER_DEFERRED)
 -- =
 
 2.26.2
 
---===============6355637644899417146==--
+--===============2463909999686305157==--
