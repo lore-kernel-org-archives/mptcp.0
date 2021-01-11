@@ -1,112 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============2049080116669736169=="
+Content-Type: multipart/mixed; boundary="===============3928664362153876964=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH 2/2] mptcp: leverage the deferred actions for
- packet scheduling
-Date: Mon, 11 Jan 2021 23:43:26 +0100
-Message-ID: <34918ed732944158fd7e5ce697f9f88644bb2c59.1610404441.git.pabeni@redhat.com>
-In-Reply-To: cover.1610404441.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] selftests: mptcp: add command
+ line arguments for mptcp_join.sh
+Date: Mon, 11 Jan 2021 15:44:49 -0800
+Message-ID: <af44b35e-91cb-aabe-8cdc-ea86d9f4a2e1@linux.intel.com>
+In-Reply-To: CA+WQbwuLSRnODw4tKS3enehTDZU8XX0bidfWRaxJyp_VDeQn4A@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7314
+X-UID: 7315
 
---===============2049080116669736169==
+--===============3928664362153876964==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This change leverage the infrastructure introduced by
-the previous patch to avoid invoking the MPTCP worker
-to spool the pending data, when the packet scheduler
-picks a subflow other then the one currently processing
-the incoming MPTCP-level ack.
+On Sat, 9 Jan 2021, Geliang Tang wrote:
 
-Additinally we can fourther refine the subflow selection
-invoking the packet scheduler for each chunk of data
-even inside __mptcp_subflow_push_pending()
+> Hi Mat,
+>
+> Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=
+=B41=E6=9C=889=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=889:25=E5=86=99=
+=E9=81=93=EF=BC=9A
+>>
+>>
+>> On Tue, 5 Jan 2021, Geliang Tang wrote:
+>>
+>>> Since the mptcp_join script is becoming too big, this patch split it in=
+to
+>>> several smaller trunks, each of them has been defined in a function as a
+>>> individual test group for several related testcases.
+>>>
+>>> Using bash getopts function to parse command line arguments, and involk
+>>> each function to do the individual test group.
+>>>
+>>> Here are all the arguments:
+>>>  -f subflows_tests
+>>>  -s signal_address_tests
+>>>  -l link_failure_tests
+>>>  -t add_addr_timeout_tests
+>>>  -r remove_tests
+>>>  -a add_tests
+>>>  -6 ipv6_tests
+>>>  -4 v4mapped_tests
+>>>  -b backup_tests
+>>>  -p add_addr_ports_tests
+>>>  -c syncookies_tests
+>>>  -h help
+>>>
+>>> Run mptcp_join.sh with no argument will do all the testcases.
+>>>
+>>
+>> This seems like a good idea to me, but what patchset(s) do I need to app=
+ly
+>> first?
+>>
+>
+> Sorry, here is the commit log with all my patches against
+> export/20210108T061525:
+>
+> ---
+>
+> commit 25b58355f5ad79c2a623179060730b6b77d53cb2
+> Author: Geliang Tang <geliangtang(a)gmail.com>
+> Date:   Fri Dec 25 14:16:19 2020 +0800
+>
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+...
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3d5ac817b2fb..af45affc0a17 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1508,7 +1508,9 @@ static void __mptcp_subflow_push_pending(struct sock =
-*sk, struct sock *ssk)
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_sendmsg_info info;
- 	struct mptcp_data_frag *dfrag;
-+	struct sock *xmit_ssk;
- 	int len, copied =3D 0;
-+	bool first =3D true;
- =
+>
 
- 	info.flags =3D 0;
- 	while ((dfrag =3D mptcp_send_head(sk))) {
-@@ -1518,6 +1520,18 @@ static void __mptcp_subflow_push_pending(struct sock=
- *sk, struct sock *ssk)
- 		while (len > 0) {
- 			int ret =3D 0;
- =
 
-+			/* the caller already invoked the packet scheduler,
-+			 * check for a different subflow usage only after
-+			 * spooling the first chunk of data
-+			 */
-+			xmit_ssk =3D first ? ssk : mptcp_subflow_get_send(mptcp_sk(sk));
-+			if (!xmit_ssk)
-+				goto out;
-+			if (xmit_ssk !=3D ssk) {
-+				mptcp_subflow_defer(mptcp_subflow_ctx(xmit_ssk));
-+				goto out;
-+			}
-+
- 			if (unlikely(mptcp_must_reclaim_memory(sk, ssk))) {
- 				__mptcp_update_wmem(sk);
- 				sk_mem_reclaim_partial(sk);
-@@ -1536,6 +1550,7 @@ static void __mptcp_subflow_push_pending(struct sock =
-*sk, struct sock *ssk)
- 			msk->tx_pending_data -=3D ret;
- 			copied +=3D ret;
- 			len -=3D ret;
-+			first =3D false;
- 		}
- 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
- 	}
-@@ -2244,7 +2259,6 @@ static void mptcp_worker(struct work_struct *work)
- 	if (unlikely(state =3D=3D TCP_CLOSE))
- 		goto unlock;
- =
+Hi Geliang -
 
--	mptcp_push_pending(sk, 0);
- 	mptcp_check_data_fin_ack(sk);
- 	__mptcp_flush_join_list(msk);
- =
+I tried to reproduce the history you listed, and 'git am' still gets stuck =
 
-@@ -2905,10 +2919,12 @@ void __mptcp_check_push(struct sock *sk, struct soc=
-k *ssk)
- 		return;
- =
+based on the most recent patch series in patchwork. I resolved one minor =
 
- 	if (!sock_owned_by_user(sk)) {
--		if (mptcp_subflow_get_send(mptcp_sk(sk)) =3D=3D ssk)
-+		struct sock *xmit_ssk =3D mptcp_subflow_get_send(mptcp_sk(sk));
-+
-+		if (xmit_ssk =3D=3D ssk)
- 			__mptcp_subflow_push_pending(sk, ssk);
--		else
--			mptcp_schedule_work(sk);
-+		else if (xmit_ssk)
-+			mptcp_subflow_defer(mptcp_subflow_ctx(xmit_ssk));
- 	} else {
- 		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
- 	}
--- =
+conflict (just context) in "mptcp: drop *_max fields in mptcp_pm_data", =
 
-2.26.2
+and then "ADD_ADDR: ports support" series applied ok.
 
---===============2049080116669736169==--
+But then this patch ("selftests: mptcp: add command line arguments for =
+
+mptcp_join.sh") failed, and at this point I would just prefer to have all =
+
+these series reposted on the mailing list so we know they apply cleanly:
+
+v5  - mptcp: create subflow for newly added address and testcases
+v10 - ADD_ADDR: ports support (also include the minor fix requested)
+v2  - selftests: mptcp: add command line arguments for mptcp_join.sh
+v2  - add add_addr_urgent
+
+
+I apply each series to a local git workspace before reviewing so I can see =
+
+the changes in context with all the other code, and to be able to build =
+
+and test. I'll continue reviewing when everything easily applies - and =
+
+that way everything will be ready for the topgit tree too.
+
+
+> The first three patches (IPv4mapped patchset) should be sent by Matt, I
+> only added them in the attachment.
+
+Based on the conflict I found, it seems like there are local changes that =
+
+aren't part of the posted v4 for that IPv4mapped patch set.
+
+
+Thanks!
+
+--
+Mat Martineau
+Intel
+
+--===============3928664362153876964==--
