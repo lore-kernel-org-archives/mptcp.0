@@ -1,320 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============5935011056212283420=="
+Content-Type: multipart/mixed; boundary="===============4704419656030619597=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v3 mptcp-next 2/4] mptcp: re-enable sndbuf autotune
-Date: Tue, 12 Jan 2021 12:09:58 +0100
-Message-ID: <2f0e1ebc200de03d985e1dfac7b6f624fb452bf5.1610449705.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v3 mptcp-next 3/4] mptcp: do not queue excessive data
+ on subflows.
+Date: Tue, 12 Jan 2021 12:09:59 +0100
+Message-ID: <771ddde94d0f6bc8f11da5dd3b3d176ee86d6cc4.1610449705.git.pabeni@redhat.com>
 In-Reply-To: cover.1610449705.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7324
+X-UID: 7325
 
---===============5935011056212283420==
+--===============4704419656030619597==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-After commit 6e628cd3a8f7 ("mptcp: use mptcp release_cb for
-delayed tasks"), MPTCP never sets the flag bit SOCK_NOSPACE
-on its subflow. As a side effect, autotune never takes place,
-as it happens inside tcp_new_space(), which in turn is called
-only when the mentioned bit is set.
+The current packet scheduler can enqueue up to sndbuf
+data on each subflow. If the send buffer is large and
+the subflows are not symmetric, this could lead to
+suboptimal aggregate bandwidth utilization.
 
-Let's sendmsg() set the subflows NOSPACE bit when looking for
-more memory. Additionally, cleanup the sndbuf propagation from
-subflow into the msk, leveraging the subflow write space callback
-and dropping a bunch of duplicate code.
+Limit the amount of queued data to the maximum cwnd.
 
-This also makes the SNDBUF_LIMITED chrono relevant again
-for MPTCP subflows.
-
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-v2 -> v3:
- - drop left-over 'use_backup' flag
-
-v1 -> v2:
- - leverage the previous commit, so we can always simply set the nospace
-   bit on the msk/parent socket
----
- net/mptcp/protocol.c | 53 ++++++++++++++++++--------------------------
- net/mptcp/protocol.h | 19 ++++++++++++++++
- net/mptcp/subflow.c  | 10 ++++++++-
- 3 files changed, 49 insertions(+), 33 deletions(-)
+ net/mptcp/protocol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ada69495a51b..ab623e9690f3 100644
+index ab623e9690f3..f2e440d40fbd 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -730,10 +730,14 @@ void mptcp_data_ready(struct sock *sk, struct sock *s=
-sk)
- =
-
- void __mptcp_flush_join_list(struct mptcp_sock *msk)
- {
-+	struct mptcp_subflow_context *subflow;
-+
- 	if (likely(list_empty(&msk->join_list)))
- 		return;
- =
-
- 	spin_lock_bh(&msk->join_list_lock);
-+	list_for_each_entry(subflow, &msk->join_list, node)
-+		mptcp_propagate_sndbuf((struct sock *)msk, mptcp_subflow_tcp_sock(subflo=
-w));
- 	list_splice_tail_init(&msk->join_list, &msk->conn_list);
- 	spin_unlock_bh(&msk->join_list_lock);
- }
-@@ -1033,13 +1037,7 @@ static void __mptcp_clean_una(struct sock *sk)
- 			__mptcp_update_wmem(sk);
- 			sk_mem_reclaim_partial(sk);
- 		}
--
--		if (sk_stream_is_writeable(sk)) {
--			/* pairs with memory barrier in mptcp_poll */
--			smp_mb();
--			if (test_and_clear_bit(MPTCP_NOSPACE, &msk->flags))
--				sk_stream_write_space(sk);
--		}
-+		mptcp_write_space(sk);
- 	}
- =
-
- 	if (snd_una =3D=3D READ_ONCE(msk->snd_nxt)) {
-@@ -1358,8 +1356,7 @@ struct subflow_send_info {
- 	u64 ratio;
- };
- =
-
--static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk,
--					   u32 *sndbuf)
-+static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- {
- 	struct subflow_send_info send_info[2];
- 	struct mptcp_subflow_context *subflow;
-@@ -1370,24 +1367,17 @@ static struct sock *mptcp_subflow_get_send(struct m=
-ptcp_sock *msk,
- =
-
- 	sock_owned_by_me((struct sock *)msk);
- =
-
--	*sndbuf =3D 0;
- 	if (__mptcp_check_fallback(msk)) {
- 		if (!msk->first)
- 			return NULL;
--		*sndbuf =3D msk->first->sk_sndbuf;
- 		return sk_stream_memory_free(msk->first) ? msk->first : NULL;
- 	}
- =
-
- 	/* re-use last subflow, if the burst allow that */
- 	if (msk->last_snd && msk->snd_burst > 0 &&
- 	    sk_stream_memory_free(msk->last_snd) &&
--	    mptcp_subflow_active(mptcp_subflow_ctx(msk->last_snd))) {
--		mptcp_for_each_subflow(msk, subflow) {
--			ssk =3D  mptcp_subflow_tcp_sock(subflow);
--			*sndbuf =3D max(tcp_sk(ssk)->snd_wnd, *sndbuf);
--		}
-+	    mptcp_subflow_active(mptcp_subflow_ctx(msk->last_snd)))
- 		return msk->last_snd;
--	}
- =
-
- 	/* pick the subflow with the lower wmem/wspace ratio */
- 	for (i =3D 0; i < 2; ++i) {
-@@ -1400,7 +1390,6 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk,
+@@ -1390,7 +1390,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
+cp_sock *msk)
  			continue;
  =
 
  		nr_active +=3D !subflow->backup;
--		*sndbuf =3D max(tcp_sk(ssk)->snd_wnd, *sndbuf);
- 		if (!sk_stream_memory_free(subflow->tcp_sock))
+-		if (!sk_stream_memory_free(subflow->tcp_sock))
++		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
  			continue;
  =
 
-@@ -1430,6 +1419,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk,
- 				       sk_stream_wspace(msk->last_snd));
+ 		pace =3D READ_ONCE(ssk->sk_pacing_rate);
+@@ -1416,7 +1416,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
+cp_sock *msk)
+ 	if (send_info[0].ssk) {
+ 		msk->last_snd =3D send_info[0].ssk;
+ 		msk->snd_burst =3D min_t(int, MPTCP_SEND_BURST_SIZE,
+-				       sk_stream_wspace(msk->last_snd));
++				       tcp_sk(msk->last_snd)->snd_wnd);
  		return msk->last_snd;
  	}
-+
- 	return NULL;
- }
  =
 
-@@ -1450,7 +1440,6 @@ static void mptcp_push_pending(struct sock *sk, unsig=
-ned int flags)
- 	};
- 	struct mptcp_data_frag *dfrag;
- 	int len, copied =3D 0;
--	u32 sndbuf;
- =
-
- 	while ((dfrag =3D mptcp_send_head(sk))) {
- 		info.sent =3D dfrag->already_sent;
-@@ -1461,12 +1450,7 @@ static void mptcp_push_pending(struct sock *sk, unsi=
-gned int flags)
- =
-
- 			prev_ssk =3D ssk;
- 			__mptcp_flush_join_list(msk);
--			ssk =3D mptcp_subflow_get_send(msk, &sndbuf);
--
--			/* do auto tuning */
--			if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK) &&
--			    sndbuf > READ_ONCE(sk->sk_sndbuf))
--				WRITE_ONCE(sk->sk_sndbuf, sndbuf);
-+			ssk =3D mptcp_subflow_get_send(msk);
- =
-
- 			/* try to keep the subflow socket lock across
- 			 * consecutive xmit on the same socket
-@@ -1533,11 +1517,6 @@ static void __mptcp_subflow_push_pending(struct sock=
- *sk, struct sock *ssk)
- 		while (len > 0) {
- 			int ret =3D 0;
- =
-
--			/* do auto tuning */
--			if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK) &&
--			    ssk->sk_sndbuf > READ_ONCE(sk->sk_sndbuf))
--				WRITE_ONCE(sk->sk_sndbuf, ssk->sk_sndbuf);
--
- 			if (unlikely(mptcp_must_reclaim_memory(sk, ssk))) {
- 				__mptcp_update_wmem(sk);
- 				sk_mem_reclaim_partial(sk);
-@@ -1575,6 +1554,15 @@ static void __mptcp_subflow_push_pending(struct sock=
- *sk, struct sock *ssk)
- 	}
- }
- =
-
-+static void mptcp_set_nospace(struct sock *sk)
-+{
-+	/* enable autotune */
-+	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
-+
-+	/* will be cleared on avail space */
-+	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
-+}
-+
- static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -1676,7 +1664,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msgh=
-dr *msg, size_t len)
- 		continue;
- =
-
- wait_for_memory:
--		set_bit(MPTCP_NOSPACE, &msk->flags);
-+		mptcp_set_nospace(sk);
- 		mptcp_push_pending(sk, msg->msg_flags);
- 		ret =3D sk_stream_wait_memory(sk, &timeo);
- 		if (ret)
-@@ -3269,6 +3257,7 @@ static int mptcp_stream_accept(struct socket *sock, s=
-truct socket *newsock,
- =
-
- 		mptcp_copy_inaddrs(newsk, msk->first);
- 		mptcp_rcv_space_init(msk, msk->first);
-+		mptcp_propagate_sndbuf(newsk, msk->first);
- =
-
- 		/* set ssk->sk_socket of accept()ed flows to mptcp socket.
- 		 * This is needed so NOSPACE flag can be set from tcp stack.
-@@ -3309,7 +3298,7 @@ static __poll_t mptcp_check_writeable(struct mptcp_so=
-ck *msk)
- 	if (sk_stream_is_writeable(sk))
- 		return EPOLLOUT | EPOLLWRNORM;
- =
-
--	set_bit(MPTCP_NOSPACE, &msk->flags);
-+	mptcp_set_nospace(sk);
- 	smp_mb__after_atomic(); /* msk->flags is changed by write_space cb */
- 	if (sk_stream_is_writeable(sk))
- 		return EPOLLOUT | EPOLLWRNORM;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 65d200a1072b..871534df6140 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -522,6 +522,25 @@ static inline bool mptcp_data_fin_enabled(const struct=
- mptcp_sock *msk)
- 	       READ_ONCE(msk->write_seq) =3D=3D READ_ONCE(msk->snd_nxt);
- }
- =
-
-+static inline bool mptcp_propagate_sndbuf(struct sock *sk, struct sock *ss=
-k)
-+{
-+	if ((sk->sk_userlocks & SOCK_SNDBUF_LOCK) || ssk->sk_sndbuf <=3D READ_ONC=
-E(sk->sk_sndbuf))
-+		return false;
-+
-+	WRITE_ONCE(sk->sk_sndbuf, ssk->sk_sndbuf);
-+	return true;
-+}
-+
-+static inline void mptcp_write_space(struct sock *sk)
-+{
-+	if (sk_stream_is_writeable(sk)) {
-+		/* pairs with memory barrier in mptcp_poll */
-+		smp_mb();
-+		if (test_and_clear_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags))
-+			sk_stream_write_space(sk);
-+	}
-+}
-+
- void mptcp_destroy_common(struct mptcp_sock *msk);
- =
-
- void __init mptcp_token_init(void);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 22313710d769..31cc362a4638 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -343,6 +343,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 	if (subflow->conn_finished)
- 		return;
- =
-
-+	mptcp_propagate_sndbuf(parent, sk);
- 	subflow->rel_write_seq =3D 1;
- 	subflow->conn_finished =3D 1;
- 	subflow->ssn_offset =3D TCP_SKB_CB(skb)->seq;
-@@ -1040,7 +1041,13 @@ static void subflow_data_ready(struct sock *sk)
- =
-
- static void subflow_write_space(struct sock *ssk)
- {
--	/* we take action in __mptcp_clean_una() */
-+	struct socket *sock =3D ssk->sk_socket;
-+
-+	if (mptcp_propagate_sndbuf(mptcp_subflow_ctx(ssk)->conn, ssk))
-+		mptcp_write_space(ssk);
-+
-+	if (sk_stream_is_writeable(ssk) && sock)
-+		clear_bit(SOCK_NOSPACE, &sock->flags);
- }
- =
-
- static struct inet_connection_sock_af_ops *
-@@ -1302,6 +1309,7 @@ static void subflow_state_change(struct sock *sk)
- 	__subflow_state_change(sk);
- =
-
- 	if (subflow_simultaneous_connect(sk)) {
-+		mptcp_propagate_sndbuf(parent, sk);
- 		mptcp_do_fallback(sk);
- 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
- 		pr_fallback(mptcp_sk(parent));
 -- =
 
 2.26.2
 
---===============5935011056212283420==--
+--===============4704419656030619597==--
