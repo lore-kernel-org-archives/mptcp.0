@@ -1,155 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============0194954238004261336=="
+Content-Type: multipart/mixed; boundary="===============1600953658545956121=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 2/2] mptcp: better msk-level shutdown.
-Date: Tue, 12 Jan 2021 18:25:24 +0100
-Message-ID: <4cd18371d7caa6ee4a4e7ef988b50b45e362e177.1610471474.git.pabeni@redhat.com>
-In-Reply-To: cover.1610471474.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH mptcp-next 0/2] mptcp: delegate actions
+Date: Tue, 12 Jan 2021 19:24:30 +0100
+Message-ID: <cover.1610474482.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7330
+X-UID: 7331
 
---===============0194954238004261336==
+--===============1600953658545956121==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Instead of re-implementing most of inet_shutdown, re-use
-such helper, and implement the MPTCP-specific bits at the
-'proto' level.
+This is a somewhat less untested iteration.
+There are a few changes in patch 1, including dummy netdev usage
+instead of loopback, deferred -> delegated name change, and a few
+bugfixes.
 
-The msk-level disconnect() can now be invoked, lets provide a
-suitable implementation.
+Paolo Abeni (2):
+  mptcp: implement delegated action infrastructure
+  mptcp: leverage the deferred actions for packet scheduling
 
-As a side effect, this fixes bad state management for listener
-sockets. The latter could lead to division by 0 oops since
-commit ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling").
+ net/mptcp/protocol.c | 83 +++++++++++++++++++++++++++++++++++++++++---
+ net/mptcp/protocol.h | 52 +++++++++++++++++++++++++++
+ net/mptcp/subflow.c  | 39 +++++++++++++++++++++
+ 3 files changed, 170 insertions(+), 4 deletions(-)
 
-Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state machine")
-Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 62 ++++++++++++--------------------------------
- 1 file changed, 17 insertions(+), 45 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2ff8c7caf74f..81faeff8f3bb 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2642,11 +2642,12 @@ static void mptcp_copy_inaddrs(struct sock *msk, co=
-nst struct sock *ssk)
- =
-
- static int mptcp_disconnect(struct sock *sk, int flags)
- {
--	/* Should never be called.
--	 * inet_stream_connect() calls ->disconnect, but that
--	 * refers to the subflow socket, not the mptcp one.
--	 */
--	WARN_ON_ONCE(1);
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	__mptcp_flush_join_list(msk);
-+	mptcp_for_each_subflow(msk, subflow)
-+		tcp_disconnect(mptcp_subflow_tcp_sock(subflow), flags);
- 	return 0;
- }
- =
-
-@@ -3089,6 +3090,14 @@ bool mptcp_finish_join(struct sock *ssk)
- 	return true;
- }
- =
-
-+static void mptcp_shutdown(struct sock *sk, int how)
-+{
-+	pr_debug("sk=3D%p, how=3D%d", sk, how);
-+
-+	if ((how & SEND_SHUTDOWN) && mptcp_close_state(sk))
-+		__mptcp_wr_shutdown(sk);
-+}
-+
- static struct proto mptcp_prot =3D {
- 	.name		=3D "MPTCP",
- 	.owner		=3D THIS_MODULE,
-@@ -3098,7 +3107,7 @@ static struct proto mptcp_prot =3D {
- 	.accept		=3D mptcp_accept,
- 	.setsockopt	=3D mptcp_setsockopt,
- 	.getsockopt	=3D mptcp_getsockopt,
--	.shutdown	=3D tcp_shutdown,
-+	.shutdown	=3D mptcp_shutdown,
- 	.destroy	=3D mptcp_destroy,
- 	.sendmsg	=3D mptcp_sendmsg,
- 	.recvmsg	=3D mptcp_recvmsg,
-@@ -3344,43 +3353,6 @@ static __poll_t mptcp_poll(struct file *file, struct=
- socket *sock,
- 	return mask;
- }
- =
-
--static int mptcp_shutdown(struct socket *sock, int how)
--{
--	struct mptcp_sock *msk =3D mptcp_sk(sock->sk);
--	struct sock *sk =3D sock->sk;
--	int ret =3D 0;
--
--	pr_debug("sk=3D%p, how=3D%d", msk, how);
--
--	lock_sock(sk);
--
--	how++;
--	if ((how & ~SHUTDOWN_MASK) || !how) {
--		ret =3D -EINVAL;
--		goto out_unlock;
--	}
--
--	if (sock->state =3D=3D SS_CONNECTING) {
--		if ((1 << sk->sk_state) &
--		    (TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_CLOSE))
--			sock->state =3D SS_DISCONNECTING;
--		else
--			sock->state =3D SS_CONNECTED;
--	}
--
--	sk->sk_shutdown |=3D how;
--	if ((how & SEND_SHUTDOWN) && mptcp_close_state(sk))
--		__mptcp_wr_shutdown(sk);
--
--	/* Wake up anyone sleeping in poll. */
--	sk->sk_state_change(sk);
--
--out_unlock:
--	release_sock(sk);
--
--	return ret;
--}
--
- static const struct proto_ops mptcp_stream_ops =3D {
- 	.family		   =3D PF_INET,
- 	.owner		   =3D THIS_MODULE,
-@@ -3394,7 +3366,7 @@ static const struct proto_ops mptcp_stream_ops =3D {
- 	.ioctl		   =3D inet_ioctl,
- 	.gettstamp	   =3D sock_gettstamp,
- 	.listen		   =3D mptcp_listen,
--	.shutdown	   =3D mptcp_shutdown,
-+	.shutdown	   =3D inet_shutdown,
- 	.setsockopt	   =3D sock_common_setsockopt,
- 	.getsockopt	   =3D sock_common_getsockopt,
- 	.sendmsg	   =3D inet_sendmsg,
-@@ -3444,7 +3416,7 @@ static const struct proto_ops mptcp_v6_stream_ops =3D=
- {
- 	.ioctl		   =3D inet6_ioctl,
- 	.gettstamp	   =3D sock_gettstamp,
- 	.listen		   =3D mptcp_listen,
--	.shutdown	   =3D mptcp_shutdown,
-+	.shutdown	   =3D inet_shutdown,
- 	.setsockopt	   =3D sock_common_setsockopt,
- 	.getsockopt	   =3D sock_common_getsockopt,
- 	.sendmsg	   =3D inet6_sendmsg,
 -- =
 
 2.26.2
 
---===============0194954238004261336==--
+--===============1600953658545956121==--
