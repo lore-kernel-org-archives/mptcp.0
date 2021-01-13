@@ -1,94 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============1870990846364840299=="
+Content-Type: multipart/mixed; boundary="===============5575567696341847905=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net 2/2] mptcp: better msk-level shutdown.
-Date: Wed, 13 Jan 2021 16:26:14 +0100
-Message-ID: <e571c016aa3586e6d68741872a0316b051fb8cca.camel@redhat.com>
-In-Reply-To: c863efca-6574-582b-6779-deb9c81dd900@gmail.com
+Subject: [MPTCP] [PATCH mptcp-next v5 0/4] add IPv4-mapped address support
+Date: Wed, 13 Jan 2021 18:54:49 +0100
+Message-ID: <20210113175453.1945886-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 7341
+X-UID: 7342
 
---===============1870990846364840299==
+--===============5575567696341847905==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2021-01-13 at 11:26 +0100, Eric Dumazet wrote:
-> =
+This patchset adds IPv4-mapped address support and testcases.
 
-> On 1/13/21 11:21 AM, Eric Dumazet wrote:
-> > =
+v5:
+ - Add missing Mat' Suggesting-by tag on patch 2/4 (sorry, I forgot that)
+ - Address Geliang's comments (thx for the review! - patches 2-3/4)
+ - Increase selftests timeout (new patch 4/4)
+ - Rebase on latest export branch
 
-> > On 1/12/21 6:25 PM, Paolo Abeni wrote:
-> > > Instead of re-implementing most of inet_shutdown, re-use
-> > > such helper, and implement the MPTCP-specific bits at the
-> > > 'proto' level.
-> > > =
+v4:
+ - do not try to create subflows between v4 and v6 addresses: with v3, we w=
+ould
+   try to do that and it could succeed if the IPv6 address ends with a vali=
+d v4
+   address. See patch 2/3
+ - add two testcases checking that in 3/3: the 1st one was failing with v3.
+ - add #ifdef MPTCP_IPV6 in patch 1/3 (Mat)
+ - split the code I previously sent into two commits to allow backports: to=
+ be
+   checked if they can really be considered as "fixes" or "new features".
+ - @Geliang: I hope this is OK for you, I quickly did these modifications d=
+uring
+   a lunch break and ran mp_join selftests + mpjoin packetdrill. Please tel=
+l me
+   if I did anything wrong :)
 
-> > > The msk-level disconnect() can now be invoked, lets provide a
-> > > suitable implementation.
-> > > =
+v3:
+ - add Matt's code in it.
+ - deal with the IPv4-mapped back to IPv4 case too.
+ - add two new IPv4-mapped back to IPv4 testcases.
 
-> > > As a side effect, this fixes bad state management for listener
-> > > sockets. The latter could lead to division by 0 oops since
-> > > commit ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling").
-> > > =
+v2:
+ - v1 calls mptcp_pm_addr_convert_v4mapped in mptcp_pm_nl_add_addr_received,
+on the receiving side. v2 calls it in select_signal_address, on the
+sending side.
 
-> > > Fixes: 43b54c6ee382 ("mptcp: Use full MPTCP-level disconnect state ma=
-chine")
-> > > Fixes: ea4ca586b16f ("mptcp: refine MPTCP-level ack scheduling")
-> > > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > > ---
-> > >  net/mptcp/protocol.c | 62 ++++++++++++------------------------------=
---
-> > >  1 file changed, 17 insertions(+), 45 deletions(-)
-> > > =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/122
 
-> > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > index 2ff8c7caf74f..81faeff8f3bb 100644
-> > > --- a/net/mptcp/protocol.c
-> > > +++ b/net/mptcp/protocol.c
-> > > @@ -2642,11 +2642,12 @@ static void mptcp_copy_inaddrs(struct sock *m=
-sk, const struct sock *ssk)
-> > >  =
+Geliang Tang (1):
+  selftests: mptcp: add IPv4-mapped IPv6 testcases
 
-> > >  static int mptcp_disconnect(struct sock *sk, int flags)
-> > >  {
-> > > -	/* Should never be called.
-> > > -	 * inet_stream_connect() calls ->disconnect, but that
-> > > -	 * refers to the subflow socket, not the mptcp one.
-> > > -	 */
-> > > -	WARN_ON_ONCE(1);
-> > > +	struct mptcp_subflow_context *subflow;
-> > > +	struct mptcp_sock *msk =3D mptcp_sk(sk);
-> > > +
-> > > +	__mptcp_flush_join_list(msk);
-> > > +	mptcp_for_each_subflow(msk, subflow)
-> > > +		tcp_disconnect(mptcp_subflow_tcp_sock(subflow), flags);
-> > =
+Matthieu Baerts (3):
+  mptcp: support MPJoin with IPv4 mapped in v6 sk
+  mptcp: pm nl: support IPv4 mapped in v6 addresses
+  selftests: increase timeout to 10 min
 
-> > Ouch.
-> > =
+ net/mptcp/pm_netlink.c                        | 39 +++++++---
+ net/mptcp/subflow.c                           | 24 ++++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 75 +++++++++++++++++++
+ tools/testing/selftests/net/mptcp/settings    |  2 +-
+ 4 files changed, 120 insertions(+), 20 deletions(-)
 
-> > tcp_disconnect() is supposed to be called with socket lock being held.
-> > =
+-- =
 
-> > Really, CONFIG_LOCKDEP=3Dy should have warned you :/
-> =
+2.29.2
 
-> Or maybe CONFIG_PROVE_RCU=3Dy is needed to catch the bug.
-
-Thank you for catching this!
-
-Yep, CONFIG_PROVE_RCU=3Dy triggers a 'suspicious RCU usage' warning. I
-should really enable 'panic_on_warn' in batch tests.
-
-I'll send a patch.
-
-Thanks,
-
-Paolo
-
---===============1870990846364840299==--
+--===============5575567696341847905==--
