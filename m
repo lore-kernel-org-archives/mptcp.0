@@ -1,55 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============3848408501861726916=="
+Content-Type: multipart/mixed; boundary="===============4053525994254529423=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: fix locking in mptcp_disconnect()
-Date: Thu, 14 Jan 2021 16:37:37 +0100
-Message-ID: <f818e82b58a556feeb71dcccc8bf1c87aafc6175.1610638176.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH mptcp-next v6 1/5] mptcp: support MPJoin with IPv4
+ mapped in v6 sk
+Date: Thu, 14 Jan 2021 18:29:22 +0100
+Message-ID: <20210114172926.2563610-2-matthieu.baerts@tessares.net>
+In-Reply-To: 20210114172926.2563610-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 7374
+X-UID: 7375
 
---===============3848408501861726916==
+--===============4053525994254529423==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tcp_disconnect() expects the caller acquires the sock lock,
-but mptcp_disconnect() is not doing that. Add the missing
-required lock.
+With an IPv4 mapped in v6 socket, we were trying to call inet6_bind()
+with an IPv4 address resulting in a -EINVAL error because the given
+addr_len -- size of the address structure -- was too short.
 
-Reported-by: Eric Dumazet <eric.dumazet(a)gmail.com>
-Fixes: 76e2a55d1625 ("mptcp: better msk-level shutdown.")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+We now make sure to use address structures for the same family as the
+MPTCP socket for both the bind() and the connect(). It means we convert
+v4 addresses to v4 mapped in v6 or the opposite if needed.
+
+Fixes: ec3edaa7ca6c ("mptcp: Add handling of outgoing MP_JOIN requests")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/122
+Co-developed-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/protocol.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/mptcp/subflow.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 81faeff8f3bb..f998a077c7dd 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2646,8 +2646,13 @@ static int mptcp_disconnect(struct sock *sk, int fla=
-gs)
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 31cc362a4638..7082747b4c0d 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1081,21 +1081,31 @@ void mptcpv6_handle_mapped(struct sock *sk, bool ma=
+pped)
+ #endif
  =
 
- 	__mptcp_flush_join_list(msk);
--	mptcp_for_each_subflow(msk, subflow)
--		tcp_disconnect(mptcp_subflow_tcp_sock(subflow), flags);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+		lock_sock(ssk);
-+		tcp_disconnect(ssk, flags);
-+		release_sock(ssk);
-+	}
- 	return 0;
- }
+ static void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+-				struct sockaddr_storage *addr)
++				struct sockaddr_storage *addr,
++				unsigned short family)
+ {
+ 	memset(addr, 0, sizeof(*addr));
+-	addr->ss_family =3D info->family;
++	addr->ss_family =3D family;
+ 	if (addr->ss_family =3D=3D AF_INET) {
+ 		struct sockaddr_in *in_addr =3D (struct sockaddr_in *)addr;
  =
 
+-		in_addr->sin_addr =3D info->addr;
++		if (info->family =3D=3D AF_INET)
++			in_addr->sin_addr =3D info->addr;
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++		else if (ipv6_addr_v4mapped(&info->addr6))
++			in_addr->sin_addr.s_addr =3D info->addr6.s6_addr32[3];
++#endif
+ 		in_addr->sin_port =3D info->port;
+ 	}
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	else if (addr->ss_family =3D=3D AF_INET6) {
+ 		struct sockaddr_in6 *in6_addr =3D (struct sockaddr_in6 *)addr;
+ =
+
+-		in6_addr->sin6_addr =3D info->addr6;
++		if (info->family =3D=3D AF_INET)
++			ipv6_addr_set_v4mapped(info->addr.s_addr,
++					       &in6_addr->sin6_addr);
++		else
++			in6_addr->sin6_addr =3D info->addr6;
+ 		in6_addr->sin6_port =3D info->port;
+ 	}
+ #endif
+@@ -1139,11 +1149,11 @@ int __mptcp_subflow_connect(struct sock *sk, const =
+struct mptcp_addr_info *loc,
+ 	subflow->remote_key =3D msk->remote_key;
+ 	subflow->local_key =3D msk->local_key;
+ 	subflow->token =3D msk->token;
+-	mptcp_info2sockaddr(loc, &addr);
++	mptcp_info2sockaddr(loc, &addr, ssk->sk_family);
+ =
+
+ 	addrlen =3D sizeof(struct sockaddr_in);
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	if (loc->family =3D=3D AF_INET6)
++	if (addr.ss_family =3D=3D AF_INET6)
+ 		addrlen =3D sizeof(struct sockaddr_in6);
+ #endif
+ 	ssk->sk_bound_dev_if =3D loc->ifindex;
+@@ -1159,7 +1169,7 @@ int __mptcp_subflow_connect(struct sock *sk, const st=
+ruct mptcp_addr_info *loc,
+ 	subflow->remote_id =3D remote_id;
+ 	subflow->request_join =3D 1;
+ 	subflow->request_bkup =3D !!(loc->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+-	mptcp_info2sockaddr(remote, &addr);
++	mptcp_info2sockaddr(remote, &addr, ssk->sk_family);
+ =
+
+ 	mptcp_add_pending_subflow(msk, subflow);
+ 	err =3D kernel_connect(sf, (struct sockaddr *)&addr, addrlen, O_NONBLOCK);
 -- =
 
-2.26.2
+2.29.2
 
---===============3848408501861726916==--
+--===============4053525994254529423==--
