@@ -1,105 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============2418902930079626559=="
+Content-Type: multipart/mixed; boundary="===============0126741180059803016=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Eric Dumazet <eric.dumazet at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp 6/7] genetlink: add CAP_NET_ADMIN test for
- multicast bind
-Date: Thu, 14 Jan 2021 18:36:53 +0100
-Message-ID: <20210114173654.7618-7-fw@strlen.de>
-In-Reply-To: 20210114173654.7618-1-fw@strlen.de
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix locking in mptcp_disconnect()
+Date: Thu, 14 Jan 2021 20:21:48 +0100
+Message-ID: <9cf07f1b-c013-adfc-15b4-58902095cf07@gmail.com>
+In-Reply-To: f818e82b58a556feeb71dcccc8bf1c87aafc6175.1610638176.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7389
+X-UID: 7390
 
---===============2418902930079626559==
+--===============0126741180059803016==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-genetlink sets NL_CFG_F_NONROOT_RECV for its netlink socket so anyone can
-subscribe to multicast messages.
 
-rtnetlink doesn't allow this unconditionally,  rtnetlink_bind() restricts
-bind requests to CAP_NET_ADMIN for a few groups.
 
-This allows to set GENL_UNS_ADMIN_PERM flag on genl mcast groups to
-mandate CAP_NET_ADMIN.
+On 1/14/21 4:37 PM, Paolo Abeni wrote:
+> tcp_disconnect() expects the caller acquires the sock lock,
+> but mptcp_disconnect() is not doing that. Add the missing
+> required lock.
+> =
 
-This will be used by the upcoming mptcp netlink event facility which
-exposes the token (mptcp connection identifier) to userspace.
+> Reported-by: Eric Dumazet <eric.dumazet(a)gmail.com>
+> Fixes: 76e2a55d1625 ("mptcp: better msk-level shutdown.")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>  net/mptcp/protocol.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
----
- include/net/genetlink.h |  1 +
- net/netlink/genetlink.c | 32 ++++++++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 81faeff8f3bb..f998a077c7dd 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2646,8 +2646,13 @@ static int mptcp_disconnect(struct sock *sk, int f=
+lags)
+>  	struct mptcp_sock *msk =3D mptcp_sk(sk);
+>  =
 
-diff --git a/include/net/genetlink.h b/include/net/genetlink.h
-index e55ec1597ce7..7cb3fa8310ed 100644
---- a/include/net/genetlink.h
-+++ b/include/net/genetlink.h
-@@ -14,6 +14,7 @@
-  */
- struct genl_multicast_group {
- 	char			name[GENL_NAMSIZ];
-+	u8			flags;
- };
- =
+>  	__mptcp_flush_join_list(msk);
+> -	mptcp_for_each_subflow(msk, subflow)
+> -		tcp_disconnect(mptcp_subflow_tcp_sock(subflow), flags);
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+> +
+> +		lock_sock(ssk);
+> +		tcp_disconnect(ssk, flags);
+> +		release_sock(ssk);
+> +	}
 
- struct genl_ops;
-diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-index c992424e4d63..9af4d50e197f 100644
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -1360,11 +1360,43 @@ static struct genl_family genl_ctrl __ro_after_init=
- =3D {
- 	.netnsok =3D true,
- };
- =
+Reviewed-by: Eric Dumazet <edumazet(a)google.com>
 
-+static int genl_bind(struct net *net, int group)
-+{
-+	const struct genl_family *family;
-+	unsigned int id;
-+	int ret =3D 0;
-+
-+	genl_lock_all();
-+
-+	idr_for_each_entry(&genl_fam_idr, family, id) {
-+		const struct genl_multicast_group *grp;
-+		int i;
-+
-+		if (family->n_mcgrps =3D=3D 0)
-+			continue;
-+
-+		i =3D group - family->mcgrp_offset;
-+		if (i < 0 || i >=3D family->n_mcgrps)
-+			continue;
-+
-+		grp =3D &family->mcgrps[i];
-+		if ((grp->flags & GENL_UNS_ADMIN_PERM) &&
-+		     !ns_capable(net->user_ns, CAP_NET_ADMIN))
-+			ret =3D -EPERM;
-+
-+		break;
-+	}
-+
-+	genl_unlock_all();
-+	return ret;
-+}
-+
- static int __net_init genl_pernet_init(struct net *net)
- {
- 	struct netlink_kernel_cfg cfg =3D {
- 		.input		=3D genl_rcv,
- 		.flags		=3D NL_CFG_F_NONROOT_RECV,
-+		.bind		=3D genl_bind,
- 	};
- =
+Note that for loops like this one, calling non blocking functions,
+you could use lock_sock_fast()
 
- 	/* we'll bump the group number right afterwards */
--- =
+(Probably does not matter in slow path)
 
-2.26.2
-
---===============2418902930079626559==--
+--===============0126741180059803016==--
