@@ -1,127 +1,139 @@
-Content-Type: multipart/mixed; boundary="===============8592376037716915075=="
+Content-Type: multipart/mixed; boundary="===============6559527447966107353=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp 3/7] mptcp: split __mptcp_close_ssk helper
-Date: Thu, 14 Jan 2021 18:36:50 +0100
-Message-ID: <20210114173654.7618-4-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp 4/7] mptcp: pass subflow socket to a few helpers
+Date: Thu, 14 Jan 2021 18:36:51 +0100
+Message-ID: <20210114173654.7618-5-fw@strlen.de>
 In-Reply-To: 20210114173654.7618-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7384
+X-UID: 7385
 
---===============8592376037716915075==
+--===============6559527447966107353==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Prepare for subflow close events:
-
-When mptcp connection is torn down its enough to send the mptcp socket
-close notification rather than a subflow close event for all of the
-subflows followed by the mptcp close event.
-
-This splits the helper: mptcp_close_ssk() will emit the close
-notification, __mptcp_close_ssk will not.
+Pass the first/initial subflow to the existing functions so they can
+pass this on to the notification handler in the next patch.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/pm_netlink.c |  4 ++--
- net/mptcp/protocol.c   | 12 +++++++++---
- net/mptcp/protocol.h   |  4 ++--
- 3 files changed, 13 insertions(+), 7 deletions(-)
+ net/mptcp/options.c  | 2 +-
+ net/mptcp/pm.c       | 4 ++--
+ net/mptcp/protocol.c | 4 ++--
+ net/mptcp/protocol.h | 4 ++--
+ net/mptcp/subflow.c  | 2 +-
+ 5 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 214b429bf3b8..8d0628590ca8 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -512,7 +512,7 @@ static void mptcp_pm_nl_rm_addr_received(struct mptcp_s=
-ock *msk)
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index c9643344a8d7..d42e61ca8c1e 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -866,7 +866,7 @@ static bool check_fully_established(struct mptcp_sock *=
+msk, struct sock *ssk,
+ 		clear_3rdack_retransmission(ssk);
+ 		mptcp_pm_subflow_established(msk, subflow);
+ 	} else {
+-		mptcp_pm_fully_established(msk);
++		mptcp_pm_fully_established(msk, ssk, GFP_ATOMIC);
+ 	}
+ 	return true;
  =
 
- 		spin_unlock_bh(&msk->pm.lock);
- 		mptcp_subflow_shutdown(sk, ssk, how);
--		__mptcp_close_ssk(sk, ssk, subflow);
-+		mptcp_close_ssk(sk, ssk, subflow);
- 		spin_lock_bh(&msk->pm.lock);
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 192ebd424cd6..309c44f13436 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -68,7 +68,7 @@ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 lo=
+cal_id)
  =
 
- 		msk->pm.add_addr_accepted--;
-@@ -582,7 +582,7 @@ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock =
-*msk, u8 rm_id)
+ /* path manager event handlers */
  =
 
- 		spin_unlock_bh(&msk->pm.lock);
- 		mptcp_subflow_shutdown(sk, ssk, how);
--		__mptcp_close_ssk(sk, ssk, subflow);
-+		mptcp_close_ssk(sk, ssk, subflow);
- 		spin_lock_bh(&msk->pm.lock);
+-void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side)
++void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ss=
+k, int server_side)
+ {
+ 	struct mptcp_pm_data *pm =3D &msk->pm;
  =
 
- 		msk->pm.local_addr_used--;
+@@ -116,7 +116,7 @@ static bool mptcp_pm_schedule_work(struct mptcp_sock *m=
+sk,
+ 	return true;
+ }
+ =
+
+-void mptcp_pm_fully_established(struct mptcp_sock *msk)
++void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock =
+*ssk, gfp_t gfp)
+ {
+ 	struct mptcp_pm_data *pm =3D &msk->pm;
+ =
+
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b1e152196057..ecf440b7ec40 100644
+index ecf440b7ec40..30986c4008c0 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2097,8 +2097,8 @@ static struct sock *mptcp_subflow_get_retrans(const s=
-truct mptcp_sock *msk)
-  * so we need to use tcp_close() after detaching them from the mptcp
-  * parent socket.
-  */
--void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
--		       struct mptcp_subflow_context *subflow)
-+static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-+			      struct mptcp_subflow_context *subflow)
- {
- 	list_del(&subflow->node);
+@@ -2993,7 +2993,7 @@ void mptcp_finish_connect(struct sock *ssk)
+ 	WRITE_ONCE(msk->can_ack, 1);
+ 	WRITE_ONCE(msk->snd_una, msk->write_seq);
  =
 
-@@ -2130,6 +2130,12 @@ void __mptcp_close_ssk(struct sock *sk, struct sock =
-*ssk,
- 	sock_put(ssk);
+-	mptcp_pm_new_connection(msk, 0);
++	mptcp_pm_new_connection(msk, ssk, 0);
+ =
+
+ 	mptcp_rcv_space_init(msk, ssk);
  }
+@@ -3237,7 +3237,7 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ 		list_add(&subflow->node, &msk->conn_list);
+ 		sock_hold(msk->first);
+ 		if (mptcp_is_fully_established(newsk))
+-			mptcp_pm_fully_established(msk);
++			mptcp_pm_fully_established(msk, msk->first, GFP_KERNEL);
  =
 
-+void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-+		     struct mptcp_subflow_context *subflow)
-+{
-+	__mptcp_close_ssk(sk, ssk, subflow);
-+}
-+
- static unsigned int mptcp_sync_mss(struct sock *sk, u32 pmtu)
- {
- 	return 0;
-@@ -2147,7 +2153,7 @@ static void __mptcp_close_subflow(struct mptcp_sock *=
-msk)
- 		if (inet_sk_state_load(ssk) !=3D TCP_CLOSE)
- 			continue;
- =
-
--		__mptcp_close_ssk((struct sock *)msk, ssk, subflow);
-+		mptcp_close_ssk((struct sock *)msk, ssk, subflow);
- 	}
- }
- =
-
+ 		mptcp_copy_inaddrs(newsk, msk->first);
+ 		mptcp_rcv_space_init(msk, msk->first);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 914722b646b3..ac83cc50c981 100644
+index ac83cc50c981..419aff080621 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -475,8 +475,8 @@ void mptcp_subflow_fully_established(struct mptcp_subfl=
-ow_context *subflow,
- bool mptcp_subflow_data_available(struct sock *sk);
- void __init mptcp_subflow_init(void);
- void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
--void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
--		       struct mptcp_subflow_context *subflow);
-+void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-+		     struct mptcp_subflow_context *subflow);
- void mptcp_subflow_reset(struct sock *ssk);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+@@ -571,8 +571,8 @@ void mptcp_crypto_hmac_sha(u64 key1, u64 key2, u8 *msg,=
+ int len, void *hmac);
  =
 
+ void __init mptcp_pm_init(void);
+ void mptcp_pm_data_init(struct mptcp_sock *msk);
+-void mptcp_pm_new_connection(struct mptcp_sock *msk, int server_side);
+-void mptcp_pm_fully_established(struct mptcp_sock *msk);
++void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ss=
+k, int server_side);
++void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock =
+*ssk, gfp_t gfp);
+ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
+ void mptcp_pm_connection_closed(struct mptcp_sock *msk);
+ void mptcp_pm_subflow_established(struct mptcp_sock *msk,
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 31cc362a4638..77b84d3d47ea 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -629,7 +629,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 			 * created mptcp socket
+ 			 */
+ 			new_msk->sk_destruct =3D mptcp_sock_destruct;
+-			mptcp_pm_new_connection(mptcp_sk(new_msk), 1);
++			mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
+ 			mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
+ 			ctx->conn =3D new_msk;
+ 			new_msk =3D NULL;
 -- =
 
 2.26.2
 
---===============8592376037716915075==--
+--===============6559527447966107353==--
