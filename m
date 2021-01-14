@@ -1,133 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============7230507548855839775=="
+Content-Type: multipart/mixed; boundary="===============9167675465862989014=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 5/5] selftests: mptcp: add
- testcases for newly added addresses
-Date: Thu, 14 Jan 2021 12:26:23 +0800
-Message-ID: <b3678bc3d811e0549c1f60f66787d6c206a8a7d0.1610597571.git.geliangtang@gmail.com>
-In-Reply-To: 57882787721754c76388e8ea9d6ba4471757d438.1610597571.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v10 mptcp-next 0/9] ADD_ADDR: ports support
+Date: Thu, 14 Jan 2021 13:24:57 +0800
+Message-ID: <cover.1610598621.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7356
+X-UID: 7357
 
---===============7230507548855839775==
+--===============9167675465862989014==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the testcases to create subflows or signal addresses
-for the newly added IPv4 or IPv6 addresses.
+v10:
+ - use &w->rwork in mptcp_pm_free_addr_entry instead of casting w
+ - rebase on export/20210113T185637
+ - please apply this patchset after the following patchsets:
+    add IPv4-mapped address support (v5)
+    mptcp: create subflow for newly added address and testcases (v5)
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 73 ++++++++++++++++++-
- 1 file changed, 71 insertions(+), 2 deletions(-)
+v9:
+ - use queue_rcu_work to release the listening socket.
+ - squash v8's patch 2 with patch 3.
+ - add two new patches, "mptcp: drop unused skb in
+subflow_token_join_request" and "mptcp: add a new helper
+subflow_req_create_thmac"
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index e5fb2b01f31c..b5cd2a48831e 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -264,7 +264,23 @@ do_transfer()
- 	fi
- 	cpid=3D$!
- =
+v8:
+ - release the listening socket when removing the entry.
+ - initialize addr.port and lsk in mptcp_pm_nl_get_local_id().
+ - change kernel_listen's backlog to 1024.
+ - enable address_zero's use_port.
 
--	if [ $addr_nr_ns1 -lt 0 ]; then
-+	if [ $addr_nr_ns1 -gt 0 ]; then
-+		let add_nr_ns1=3Daddr_nr_ns1
-+		counter=3D2
-+		sleep 1
-+		while [ $add_nr_ns1 -gt 0 ]; do
-+			local addr
-+			if is_v6 "${connect_addr}"; then
-+				addr=3D"dead:beef:$counter::1"
-+			else
-+				addr=3D"10.0.$counter.1"
-+			fi
-+			ip netns exec $ns1 ./pm_nl_ctl add $addr flags signal
-+			let counter+=3D1
-+			let add_nr_ns1-=3D1
-+		done
-+		sleep 1
-+	elif [ $addr_nr_ns1 -lt 0 ]; then
- 		let rm_nr_ns1=3D-addr_nr_ns1
- 		if [ $rm_nr_ns1 -lt 8 ]; then
- 			counter=3D1
-@@ -282,7 +298,23 @@ do_transfer()
- 		fi
- 	fi
- =
+v7:
+ - use the MPTCP listening socket instead of TCP one
+ - release subflow_req->msk in subflow_init_req
+ - add mismatched port MIBs
+ - use sock_common in source_address
 
--	if [ $addr_nr_ns2 -lt 0 ]; then
-+	if [ $addr_nr_ns2 -gt 0 ]; then
-+		let add_nr_ns2=3Daddr_nr_ns2
-+		counter=3D3
-+		sleep 1
-+		while [ $add_nr_ns2 -gt 0 ]; do
-+			local addr
-+			if is_v6 "${connect_addr}"; then
-+				addr=3D"dead:beef:$counter::2"
-+			else
-+				addr=3D"10.0.$counter.2"
-+			fi
-+			ip netns exec $ns2 ./pm_nl_ctl add $addr flags subflow
-+			let counter+=3D1
-+			let add_nr_ns2-=3D1
-+		done
-+		sleep 1
-+	elif [ $addr_nr_ns2 -lt 0 ]; then
- 		let rm_nr_ns2=3D-addr_nr_ns2
- 		if [ $rm_nr_ns2 -lt 8 ]; then
- 			counter=3D1
-@@ -738,6 +770,43 @@ chk_join_nr "flush subflows and signal" 3 3 3
- chk_add_nr 1 1
- chk_rm_nr 2 2
- =
+v6:
+ - create and bind the listening socket in mptcp_nl_cmd_add_addr.
+ - drop the patch "mptcp: add port number listened in kernel check" in
+   v5.
 
-+# add single subflow
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 0 1
-+run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow
-+chk_join_nr "add single subflow" 1 1 1
-+
-+# add signal address
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
-+chk_join_nr "add signal address" 1 1 1
-+chk_add_nr 1 1
-+
-+# add multiple subflows
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+run_tests $ns1 $ns2 10.0.1.1 0 0 2 slow
-+chk_join_nr "add multiple subflows" 2 2 2
-+
-+# add multiple subflows IPv6
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns2 ./pm_nl_ctl limits 0 2
-+run_tests $ns1 $ns2 dead:beef:1::1 0 0 2 slow
-+chk_join_nr "add multiple subflows IPv6" 2 2 2
-+
-+# add multiple addresses IPv6
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+run_tests $ns1 $ns2 dead:beef:1::1 0 2 0 slow
-+chk_join_nr "add multiple addresses IPv6" 2 2 2
-+chk_add_nr 2 2
-+
- # subflow IPv6
- reset
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+v5:
+ - use the per netns listening socket.
+ - First 8 patches in v4 had been merged to the export branch, drop them
+   from this patchset.
+
+v4:
+ - hold msk->pm.lock in mptcp_pm_sport_in_anno_list.
+ - Merge the patchset 'Squash to "ADD_ADDR: ports support v3"' into v4.
+
+v3:
+ - add two new patches, 8 and 11
+ - add more IS_ENABLED(CONFIG_MPTCP_IPV6) in patch 2
+ - define TCPOLEN_MPTCP_ADD_ADDR_HMAC in patch 4
+ - add flags check in patch 10
+ - update the testcases
+
+v2:
+ - change mptcp_out_options's port field in CPU bype order.
+ - keep mptcp_options_received's port field in CPU bype order.
+ - add two new patches to simplify ADD_ADDR suboption writing.
+ - update mptcp_add_addr_len helper use adding up size.
+ - add more commit messages.
+
+v1:
+ This series is the first version of ADD_ADDR ports support. I have solved
+ the listener problem which I mentioned at the meeting on 15th of October
+ by adding a new listening socket from the userspace (see patch 8). Up to
+ now this patchset works well.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
+
+Geliang Tang (9):
+  mptcp: create the listening socket for new port
+  mptcp: drop unused skb in subflow_token_join_request
+  mptcp: add a new helper subflow_req_create_thmac
+  mptcp: add port number check for MP_JOIN
+  mptcp: enable use_port when invoke addresses_equal
+  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+  selftests: mptcp: add port argument for pm_nl_ctl
+  mptcp: add the mibs for ADD_ADDR with port
+  selftests: mptcp: add testcases for ADD_ADDR with port
+
+ net/mptcp/mib.c                               |   6 +
+ net/mptcp/mib.h                               |   6 +
+ net/mptcp/options.c                           |   4 +
+ net/mptcp/pm_netlink.c                        | 132 ++++++++++++++-
+ net/mptcp/protocol.c                          |   2 +-
+ net/mptcp/protocol.h                          |   5 +
+ net/mptcp/subflow.c                           |  79 +++++++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 160 +++++++++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  24 ++-
+ 9 files changed, 393 insertions(+), 25 deletions(-)
+
 -- =
 
 2.29.2
 
---===============7230507548855839775==--
+--===============9167675465862989014==--
