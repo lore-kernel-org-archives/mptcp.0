@@ -1,105 +1,262 @@
-Content-Type: multipart/mixed; boundary="===============9167675465862989014=="
+Content-Type: multipart/mixed; boundary="===============2911654541572001926=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v10 mptcp-next 0/9] ADD_ADDR: ports support
-Date: Thu, 14 Jan 2021 13:24:57 +0800
-Message-ID: <cover.1610598621.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v10 mptcp-next 1/9] mptcp: create the listening
+ socket for new port
+Date: Thu, 14 Jan 2021 13:24:58 +0800
+Message-ID: <c93951b54403b5174c37f239823ef77ca1e60989.1610598621.git.geliangtang@gmail.com>
+In-Reply-To: cover.1610598621.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7357
+X-UID: 7358
 
---===============9167675465862989014==
+--===============2911654541572001926==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-v10:
- - use &w->rwork in mptcp_pm_free_addr_entry instead of casting w
- - rebase on export/20210113T185637
- - please apply this patchset after the following patchsets:
-    add IPv4-mapped address support (v5)
-    mptcp: create subflow for newly added address and testcases (v5)
+This patch created a listening socket when an address with a port-number
+is added by PM netlink. Then binded the new port to the socket, and
+listened for the connection.
 
-v9:
- - use queue_rcu_work to release the listening socket.
- - squash v8's patch 2 with patch 3.
- - add two new patches, "mptcp: drop unused skb in
-subflow_token_join_request" and "mptcp: add a new helper
-subflow_req_create_thmac"
+When the address is removed or the addresses are flushed by PM netlink,
+release the listening socket.
 
-v8:
- - release the listening socket when removing the entry.
- - initialize addr.port and lsk in mptcp_pm_nl_get_local_id().
- - change kernel_listen's backlog to 1024.
- - enable address_zero's use_port.
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/pm_netlink.c | 96 +++++++++++++++++++++++++++++++++++++++++-
+ net/mptcp/protocol.c   |  2 +-
+ net/mptcp/protocol.h   |  4 ++
+ net/mptcp/subflow.c    |  6 +--
+ 4 files changed, 102 insertions(+), 6 deletions(-)
 
-v7:
- - use the MPTCP listening socket instead of TCP one
- - release subflow_req->msk in subflow_init_req
- - add mismatched port MIBs
- - use sock_common in source_address
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 43fb670cabab..2164b016585a 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -26,6 +26,7 @@ struct mptcp_pm_addr_entry {
+ 	struct list_head	list;
+ 	struct mptcp_addr_info	addr;
+ 	struct rcu_head		rcu;
++	struct socket		*lsk;
+ };
+ =
 
-v6:
- - create and bind the listening socket in mptcp_nl_cmd_add_addr.
- - drop the patch "mptcp: add port number listened in kernel check" in
-   v5.
+ struct mptcp_pm_add_entry {
+@@ -677,6 +678,53 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm=
+_nl_pernet *pernet,
+ 	return ret;
+ }
+ =
 
-v5:
- - use the per netns listening socket.
- - First 8 patches in v4 had been merged to the export branch, drop them
-   from this patchset.
++static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
++					    struct mptcp_pm_addr_entry *entry)
++{
++	struct sockaddr_storage addr;
++	struct mptcp_sock *msk;
++	struct socket *ssock;
++	int backlog =3D 1024;
++	int err;
++
++	err =3D sock_create_kern(sock_net(sk), entry->addr.family,
++			       SOCK_STREAM, IPPROTO_MPTCP, &entry->lsk);
++	if (err)
++		return err;
++
++	msk =3D mptcp_sk(entry->lsk->sk);
++	if (!msk) {
++		err =3D -EINVAL;
++		goto out;
++	}
++
++	ssock =3D __mptcp_nmpc_socket(msk);
++	if (!ssock) {
++		err =3D -EINVAL;
++		goto out;
++	}
++
++	mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
++	err =3D kernel_bind(ssock, (struct sockaddr *)&addr,
++			  sizeof(struct sockaddr_in));
++	if (err) {
++		pr_warn("kernel_bind error, err=3D%d", err);
++		goto out;
++	}
++
++	err =3D kernel_listen(ssock, backlog);
++	if (err) {
++		pr_warn("kernel_listen error, err=3D%d", err);
++		goto out;
++	}
++
++	return 0;
++
++out:
++	sock_release(entry->lsk);
++	return err;
++}
++
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *s=
+kc)
+ {
+ 	struct mptcp_pm_addr_entry *entry;
+@@ -721,6 +769,8 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc)
+ 	entry->addr.ifindex =3D 0;
+ 	entry->addr.flags =3D 0;
+ 	entry->addr.id =3D 0;
++	entry->addr.port =3D 0;
++	entry->lsk =3D NULL;
+ 	ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
+ 	if (ret < 0)
+ 		kfree(entry);
+@@ -890,9 +940,19 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, =
+struct genl_info *info)
+ 	}
+ =
 
-v4:
- - hold msk->pm.lock in mptcp_pm_sport_in_anno_list.
- - Merge the patchset 'Squash to "ADD_ADDR: ports support v3"' into v4.
+ 	*entry =3D addr;
++	if (entry->addr.port) {
++		ret =3D mptcp_pm_nl_create_listen_socket(skb->sk, entry);
++		if (ret) {
++			GENL_SET_ERR_MSG(info, "create listen socket error");
++			kfree(entry);
++			return ret;
++		}
++	}
+ 	ret =3D mptcp_pm_nl_append_new_local_addr(pernet, entry);
+ 	if (ret < 0) {
+ 		GENL_SET_ERR_MSG(info, "too many addresses or duplicate one");
++		if (entry->lsk)
++			sock_release(entry->lsk);
+ 		kfree(entry);
+ 		return ret;
+ 	}
+@@ -976,6 +1036,38 @@ static int mptcp_nl_remove_subflow_and_signal_addr(st=
+ruct net *net,
+ 	return 0;
+ }
+ =
 
-v3:
- - add two new patches, 8 and 11
- - add more IS_ENABLED(CONFIG_MPTCP_IPV6) in patch 2
- - define TCPOLEN_MPTCP_ADD_ADDR_HMAC in patch 4
- - add flags check in patch 10
- - update the testcases
++struct addr_entry_release_work {
++	struct rcu_work	rwork;
++	struct mptcp_pm_addr_entry *entry;
++};
++
++static void mptcp_pm_release_addr_entry(struct work_struct *work)
++{
++	struct addr_entry_release_work *w;
++	struct mptcp_pm_addr_entry *entry;
++
++	w =3D container_of(to_rcu_work(work), struct addr_entry_release_work, rwo=
+rk);
++	entry =3D w->entry;
++	if (entry) {
++		if (entry->lsk)
++			sock_release(entry->lsk);
++		kfree(entry);
++	}
++	kfree(w);
++}
++
++static void mptcp_pm_free_addr_entry(struct mptcp_pm_addr_entry *entry)
++{
++	struct addr_entry_release_work *w;
++
++	w =3D kmalloc(sizeof(*w), GFP_ATOMIC);
++	if (w) {
++		INIT_RCU_WORK(&w->rwork, mptcp_pm_release_addr_entry);
++		w->entry =3D entry;
++		queue_rcu_work(system_wq, &w->rwork);
++	}
++}
++
+ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *in=
+fo)
+ {
+ 	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
+@@ -1010,7 +1102,7 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
+ struct genl_info *info)
+ 	spin_unlock_bh(&pernet->lock);
+ =
 
-v2:
- - change mptcp_out_options's port field in CPU bype order.
- - keep mptcp_options_received's port field in CPU bype order.
- - add two new patches to simplify ADD_ADDR suboption writing.
- - update mptcp_add_addr_len helper use adding up size.
- - add more commit messages.
+ 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), &entry->addr);
+-	kfree_rcu(entry, rcu);
++	mptcp_pm_free_addr_entry(entry);
+ =
 
-v1:
- This series is the first version of ADD_ADDR ports support. I have solved
- the listener problem which I mentioned at the meeting on 15th of October
- by adding a new listening socket from the userspace (see patch 8). Up to
- now this patchset works well.
+ 	return ret;
+ }
+@@ -1024,7 +1116,7 @@ static void __flush_addrs(struct net *net, struct lis=
+t_head *list)
+ 				 struct mptcp_pm_addr_entry, list);
+ 		mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
+ 		list_del_rcu(&cur->list);
+-		kfree_rcu(cur, rcu);
++		mptcp_pm_free_addr_entry(cur);
+ 	}
+ }
+ =
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/54
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d538f5a6810c..505a5655640f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -49,7 +49,7 @@ static void __mptcp_check_send_data_fin(struct sock *sk);
+  * completed yet or has failed, return the subflow socket.
+  * Otherwise return NULL.
+  */
+-static struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
++struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
+ {
+ 	if (!msk->subflow || READ_ONCE(msk->can_ack))
+ 		return NULL;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a02996c4c944..486eebf8c7c9 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -470,11 +470,15 @@ void __mptcp_close_ssk(struct sock *sk, struct sock *=
+ssk,
+ 		       struct mptcp_subflow_context *subflow);
+ void mptcp_subflow_reset(struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
++struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
+ =
 
-Geliang Tang (9):
-  mptcp: create the listening socket for new port
-  mptcp: drop unused skb in subflow_token_join_request
-  mptcp: add a new helper subflow_req_create_thmac
-  mptcp: add port number check for MP_JOIN
-  mptcp: enable use_port when invoke addresses_equal
-  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
-  selftests: mptcp: add port argument for pm_nl_ctl
-  mptcp: add the mibs for ADD_ADDR with port
-  selftests: mptcp: add testcases for ADD_ADDR with port
+ /* called with sk socket lock held */
+ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info =
+*loc,
+ 			    const struct mptcp_addr_info *remote);
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
++void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
++			 struct sockaddr_storage *addr,
++			 unsigned short family);
+ =
 
- net/mptcp/mib.c                               |   6 +
- net/mptcp/mib.h                               |   6 +
- net/mptcp/options.c                           |   4 +
- net/mptcp/pm_netlink.c                        | 132 ++++++++++++++-
- net/mptcp/protocol.c                          |   2 +-
- net/mptcp/protocol.h                          |   5 +
- net/mptcp/subflow.c                           |  79 +++++++--
- .../testing/selftests/net/mptcp/mptcp_join.sh | 160 +++++++++++++++++-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  24 ++-
- 9 files changed, 393 insertions(+), 25 deletions(-)
+ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+ 					      struct mptcp_subflow_context *ctx)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 7082747b4c0d..293a09125621 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1080,9 +1080,9 @@ void mptcpv6_handle_mapped(struct sock *sk, bool mapp=
+ed)
+ }
+ #endif
+ =
 
+-static void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+-				struct sockaddr_storage *addr,
+-				unsigned short family)
++void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
++			 struct sockaddr_storage *addr,
++			 unsigned short family)
+ {
+ 	memset(addr, 0, sizeof(*addr));
+ 	addr->ss_family =3D family;
 -- =
 
 2.29.2
 
---===============9167675465862989014==--
+--===============2911654541572001926==--
