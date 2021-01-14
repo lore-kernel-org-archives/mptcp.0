@@ -1,78 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============2798401725355081788=="
+Content-Type: multipart/mixed; boundary="===============2520700704873623704=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next v6 0/5] add IPv4-mapped address support
-Date: Thu, 14 Jan 2021 18:29:21 +0100
-Message-ID: <20210114172926.2563610-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] [PATCH mptcp-next v6 2/5] mptcp: pm nl: support IPv4 mapped
+ in v6 addresses
+Date: Thu, 14 Jan 2021 18:29:23 +0100
+Message-ID: <20210114172926.2563610-3-matthieu.baerts@tessares.net>
+In-Reply-To: 20210114172926.2563610-1-matthieu.baerts@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 7376
+X-UID: 7377
 
---===============2798401725355081788==
+--===============2520700704873623704==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patchset adds IPv4-mapped address support and testcases.
+On one side, we can allow the creation of subflows between v4 mapped in
+v6 and v4 addresses. For that we look for v4mapped addresses between the
+local address we want to select and the remote one.
 
-v6:
- - Extract the modifications to reduce the scope of the 'remote' variable i=
-n a
-   dedicated commit (patch 3/5)
+On the other side, we also properly deal with received v4mapped
+addresses, either announced ones or set via Netlink.
 
-v5:
- - Add missing Mat' Suggesting-by tag on patch 2/4 (sorry, I forgot that)
- - Address Geliang's comments (thx for the review! - patches 2-3/4)
- - Increase selftests timeout (new patch 4/4)
- - Rebase on latest export branch
-
-v4:
- - do not try to create subflows between v4 and v6 addresses: with v3, we w=
-ould
-   try to do that and it could succeed if the IPv6 address ends with a vali=
-d v4
-   address. See patch 2/3
- - add two testcases checking that in 3/3: the 1st one was failing with v3.
- - add #ifdef MPTCP_IPV6 in patch 1/3 (Mat)
- - split the code I previously sent into two commits to allow backports: to=
- be
-   checked if they can really be considered as "fixes" or "new features".
- - @Geliang: I hope this is OK for you, I quickly did these modifications d=
-uring
-   a lunch break and ran mp_join selftests + mpjoin packetdrill. Please tel=
-l me
-   if I did anything wrong :)
-
-v3:
- - add Matt's code in it.
- - deal with the IPv4-mapped back to IPv4 case too.
- - add two new IPv4-mapped back to IPv4 testcases.
-
-v2:
- - v1 calls mptcp_pm_addr_convert_v4mapped in mptcp_pm_nl_add_addr_received,
-on the receiving side. v2 calls it in select_signal_address, on the
-sending side.
-
+Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
 Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/122
+Suggested-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+Co-developed-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-Geliang Tang (1):
-  selftests: mptcp: add IPv4-mapped IPv6 testcases
+Notes:
+    v4 -> v5:
+    - select_local_address(): extract info from sk again instead of using
+      remote
+    - also add explicit braces in select_local_address to avoid confusions
+    - move the declaration of 'remote' to reduce the scope and to do it only
+      when needed.
+    - add missing Mat' suggesting-by tag (sorry, I forgot that earlier)
+    =
 
-Matthieu Baerts (4):
-  mptcp: support MPJoin with IPv4 mapped in v6 sk
-  mptcp: pm nl: support IPv4 mapped in v6 addresses
-  mptcp: pm nl: reduce variable scope
-  selftests: increase timeout to 10 min
+    v5 -> v6:
+    - move the declaration of 'remote' in a dedicated commit, see next patch
+      (Geliang)
 
- net/mptcp/pm_netlink.c                        | 39 +++++++---
- net/mptcp/subflow.c                           | 24 ++++--
- .../testing/selftests/net/mptcp/mptcp_join.sh | 75 +++++++++++++++++++
- tools/testing/selftests/net/mptcp/settings    |  2 +-
- 4 files changed, 120 insertions(+), 20 deletions(-)
+ net/mptcp/pm_netlink.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 9b1f6298bbdb..f0afff6ba015 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -60,15 +60,20 @@ static bool addresses_equal(const struct mptcp_addr_inf=
+o *a,
+ {
+ 	bool addr_equals =3D false;
+ =
+
+-	if (a->family !=3D b->family)
+-		return false;
+-
+-	if (a->family =3D=3D AF_INET)
+-		addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
++	if (a->family =3D=3D b->family) {
++		if (a->family =3D=3D AF_INET)
++			addr_equals =3D a->addr.s_addr =3D=3D b->addr.s_addr;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	else
+-		addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
++		else
++			addr_equals =3D !ipv6_addr_cmp(&a->addr6, &b->addr6);
++	} else if (a->family =3D=3D AF_INET) {
++		if (ipv6_addr_v4mapped(&b->addr6))
++			addr_equals =3D a->addr.s_addr =3D=3D b->addr6.s6_addr32[3];
++	} else if (b->family =3D=3D AF_INET) {
++		if (ipv6_addr_v4mapped(&a->addr6))
++			addr_equals =3D a->addr6.s6_addr32[3] =3D=3D b->addr.s_addr;
+ #endif
++	}
+ =
+
+ 	if (!addr_equals)
+ 		return false;
+@@ -137,6 +142,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
+ 		     struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_addr_entry *entry, *ret =3D NULL;
++	struct sock *sk =3D (struct sock *)msk;
+ =
+
+ 	rcu_read_lock();
+ 	__mptcp_flush_join_list(msk);
+@@ -144,11 +150,20 @@ select_local_address(const struct pm_nl_pernet *perne=
+t,
+ 		if (!(entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+ 			continue;
+ =
+
++		if (entry->addr.family !=3D sk->sk_family) {
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++			if ((entry->addr.family =3D=3D AF_INET &&
++			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
++			    (sk->sk_family =3D=3D AF_INET &&
++			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
++#endif
++				continue;
++		}
++
+ 		/* avoid any address already in use by subflows and
+ 		 * pending join
+ 		 */
+-		if (entry->addr.family =3D=3D ((struct sock *)msk)->sk_family &&
+-		    !lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
++		if (!lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+ 			ret =3D entry;
+ 			break;
+ 		}
 -- =
 
 2.29.2
 
---===============2798401725355081788==--
+--===============2520700704873623704==--
