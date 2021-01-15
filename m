@@ -1,72 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============8155829050797201918=="
+Content-Type: multipart/mixed; boundary="===============7206608238438449895=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] selftests: mptcp: add
- command line arguments for mptcp_join.sh
-Date: Thu, 14 Jan 2021 17:22:25 -0800
-Message-ID: <53806e88-91c9-24c4-db15-6eae9ccf75@linux.intel.com>
-In-Reply-To: 8c077beefbbe778c1055596fdfca323588fb9df8.1610602140.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-next v6 0/5] add IPv4-mapped address support
+Date: Fri, 15 Jan 2021 11:26:08 +0100
+Message-ID: <6f06de9b-ed79-f313-1d6f-c969a4cd6752@tessares.net>
+In-Reply-To: d1c3335-9044-fa6e-f6db-ec5bed83db7@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7396
+X-UID: 7397
 
---===============8155829050797201918==
+--===============7206608238438449895==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 14 Jan 2021, Geliang Tang wrote:
+Hi Geliang, Mat,
 
-> Since the mptcp_join script is becoming too big, this patch split it into
-> several smaller trunks, each of them has been defined in a function as a
-> individual test group for several related testcases.
->
-> Using bash getopts function to parse command line arguments, and involk
+On 15/01/2021 00:13, Mat Martineau wrote:
+> On Thu, 14 Jan 2021, Matthieu Baerts wrote:
+> =
 
-One very minor thing, maybe Matthieu could fix "invoke" in the line above =
+>> This patchset adds IPv4-mapped address support and testcases.
+>>
+>> v6:
+>> - Extract the modifications to reduce the scope of the 'remote' =
 
-when applying?
+>> variable in a
+>> =C2=A0 dedicated commit (patch 3/5)
+>>
+> =
 
-Otherwise, looks good to me.
+> Looks good for the export branch, thanks!
 
-Thanks,
+Thank you for the patches and the reviews!
 
-Mat
+- 862e346ac91b: mptcp: support MPJoin with IPv4 mapped in v6 sk
+- eabdb734a318: mptcp: pm nl: support IPv4 mapped in v6 addresses
+- 15a8c93bdbdd: mptcp: pm nl: reduce variable scope
+- c7617c0b8fe1: selftests: mptcp: add IPv4-mapped IPv6 testcases
+- 2a5a6b08ea4e: selftests: increase timeout to 10 min
+- Results: 9373e4da47c6..5706f3e3dffa
 
+Tests + export are in progress!
+Hopefully, we will have a green build this time!
 
-> each function to do the individual test group.
->
-> Here are all the arguments:
->  -f subflows_tests
->  -s signal_address_tests
->  -l link_failure_tests
->  -t add_addr_timeout_tests
->  -r remove_tests
->  -a add_tests
->  -6 ipv6_tests
->  -4 v4mapped_tests
->  -b backup_tests
->  -p add_addr_ports_tests
->  -c syncookies_tests
->  -h help
->
-> Run mptcp_join.sh with no argument will do all the testcases.
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> v2:
-> - rebase on export/20210113T185637
-> - please apply this patchset after the following patchsets:
->    add IPv4-mapped address support (v5)
->    mptcp: create subflow for newly added address and testcases (v5)
->    ADD_ADDR: ports support (v10)
-> ---
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 1068 +++++++++--------
-> 1 file changed, 590 insertions(+), 478 deletions(-)
->
+Cheers,
+Matt
+-- =
 
---
-Mat Martineau
-Intel
---===============8155829050797201918==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============7206608238438449895==--
