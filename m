@@ -1,67 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============2460729786189905503=="
+Content-Type: multipart/mixed; boundary="===============2536224550948802478=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 2/5] mptcp: simplify
- mptcp_pm_nl_add_addr_send_ack debug log
-Date: Fri, 15 Jan 2021 16:59:22 -0800
-Message-ID: <14718d73-c348-ba1a-c33-64e57c6ef3ab@linux.intel.com>
-In-Reply-To: 7e16f6bc56bb1f0fb9f6253ee67f1f74832f1cce.1610602400.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH net-next] Squash-to: "mptcp: re-enable sndbuf
+ autotune"
+Date: Sat, 16 Jan 2021 09:58:27 +0100
+Message-ID: <835b7ace-b8f3-799b-7639-0135f2ff969d@tessares.net>
+In-Reply-To: b12a934d3ccfa77941c04f19a61fbf02fe733537.1610730637.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7403
+X-UID: 7404
 
---===============2460729786189905503==
+--===============2536224550948802478==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 14 Jan 2021, Geliang Tang wrote:
+Hi Paolo, Mat,
 
-> Print out the debug log of mptcp_pm_nl_add_addr_send_ack in a single line
-> when more than one mptcp_addr_signal_status are set.
->
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> net/mptcp/pm_netlink.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index ed4231efa822..8f4bd2457a97 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -500,13 +500,15 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_soc=
-k *msk)
-> 	subflow =3D list_first_entry_or_null(&msk->conn_list, typeof(*subflow), =
-node);
-> 	if (subflow) {
-> 		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> +		char buf[32] =3D { 0 };
-> 		u8 add_addr;
->
-> 		spin_unlock_bh(&msk->pm.lock);
-> 		if (mptcp_pm_should_add_signal_ipv6(msk))
-> -			pr_debug("send ack for add_addr6");
-> +			strcat(buf, "[ipv6]");
-> 		if (mptcp_pm_should_add_signal_port(msk))
-> -			pr_debug("send ack for add_addr_port");
-> +			strcat(buf, "[port]");
-> +		pr_debug("send ack for add_addr %s", buf);
+On 15/01/2021 18:11, Paolo Abeni wrote:
+> In the current code there are a bunch of bugs, very
+> apparent in unidirectional stream tests with a single
+> flow- which are not covered by the self-test unfortunatelly:
+> =
 
-pr_debug() calls can be compiled out or involve dynamic debug, so it's =
+> __mptcp_clean_una() can clear SOCK_NOSPACE, since that can happen
+> before tcp_data_snd_check()/tcp_new_space()/subflow_write_space,
+> we end-up with no autotune.
+> =
 
-better to avoid using a buffer on the stack and strcat() like this when =
+> subflow_write_space() can clear SOCK_NOSPACE when subflow can send
+> but not the msk, that is wrong and can cause hangup.
+> =
 
-building the debug output.
+> The fix is moving the msk wake in subflow_write_space()
+> =
 
->
-> 		lock_sock(ssk);
-> 		tcp_send_ack(ssk);
-> -- =
+> Commit message should be updated replacing:
 
-> 2.29.2
+(...)
 
---
-Mat Martineau
-Intel
---===============2460729786189905503==--
+Thank you for this patch and the review!
+I had to do a minor fix, nothing important, please see below.
+
+- f8a37f96887a: "squashed" in "mptcp: re-enable sndbuf autotune"
+- 773ad5e3482f: commit message update
+- 4141dc13f017: mptcp: fix compilation warning
+- Results: 49b1f1e13b2b..dd65d1dcd819
+
+Tests + export are in progress!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============2536224550948802478==--
