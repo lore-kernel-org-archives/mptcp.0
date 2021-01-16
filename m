@@ -1,63 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============0477178936543499417=="
+Content-Type: multipart/mixed; boundary="===============0084825542677013654=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v10 mptcp-next 0/9] ADD_ADDR: ports support
-Date: Sat, 16 Jan 2021 12:11:50 +0100
-Message-ID: <64b2d3b3-facf-95da-24f4-f695aedaefe3@tessares.net>
-In-Reply-To: 05257ea0-f26d-2855-243d-59597cc83895@tessares.net
+Subject: [MPTCP] [PATCH mptcp-next] Squash to "mptcp: drop *_max fields in
+ mptcp_pm_data"
+Date: Sat, 16 Jan 2021 12:36:53 +0100
+Message-ID: <20210116113653.3918024-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 7408
+X-UID: 7409
 
---===============0477178936543499417==
+--===============0084825542677013654==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 16/01/2021 12:10, Matthieu Baerts wrote:
-> Hi Geliang, Mat,
-> =
+We need to export these functions that are also used in mptcp_diag.c
+which can be part of a separated module.
 
-> On 15/01/2021 02:18, Mat Martineau wrote:
->> On Thu, 14 Jan 2021, Geliang Tang wrote:
->>
->>> v10:
->>> - use &w->rwork in mptcp_pm_free_addr_entry instead of casting w
->>> - rebase on export/20210113T185637
->>> - please apply this patchset after the following patchsets:
->>> =C2=A0=C2=A0 add IPv4-mapped address support (v5)
->>> =C2=A0=C2=A0 mptcp: create subflow for newly added address and testcase=
-s (v5)
->>>
->>
->> v10 looks ready for the export branch. Thanks for the fixes!
-> =
+We can then avoid these errors:
 
-> Thank you for the nice new feature and reviews!
-> =
+  ERROR: modpost: "mptcp_pm_get_add_addr_accept_max" [net/mptcp/mptcp_diag.=
+ko] undefined!
+  ERROR: modpost: "mptcp_pm_get_add_addr_signal_max" [net/mptcp/mptcp_diag.=
+ko] undefined!
+  ERROR: modpost: "mptcp_pm_get_subflows_max" [net/mptcp/mptcp_diag.ko] und=
+efined!
 
-> Just added in our repo with Mat's RvB tags (and one typo detected by =
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> "checkpatch.pl --codespell").
+Notes:
+    to be squashed in "mptcp: drop *_max fields in mptcp_pm_data"
 
-(I forgot the refs, just in case)
+ net/mptcp/pm_netlink.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-- 439600160048: mptcp: create the listening socket for new port
-- 3122c6542e4f: mptcp: drop unused skb in subflow_token_join_request
-- 9dfc9b337d4f: mptcp: add a new helper subflow_req_create_thmac
-- 551edb8d92ab: mptcp: add port number check for MP_JOIN
-- 3f96f48fbd19: mptcp: enable use_port when invoke addresses_equal
-- 60e993388f4f: mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
-- 7e876f36d164: selftests: mptcp: add port argument for pm_nl_ctl
-- e7b4ca22e5fb: mptcp: add the mibs for ADD_ADDR with port
-- 4eed52217818: selftests: mptcp: add testcases for ADD_ADDR with port
-- Results: 2535f605affc..5f5277ef3bf4
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 42dd576c7b55..d03311b95112 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -203,6 +203,7 @@ unsigned int mptcp_pm_get_add_addr_signal_max(struct mp=
+tcp_sock *msk)
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ 	return READ_ONCE(pernet->add_addr_signal_max);
+ }
++EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_signal_max);
+ =
 
-Cheers,
-Matt
+ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk)
+ {
+@@ -211,6 +212,7 @@ unsigned int mptcp_pm_get_add_addr_accept_max(struct mp=
+tcp_sock *msk)
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ 	return READ_ONCE(pernet->add_addr_accept_max);
+ }
++EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_accept_max);
+ =
+
+ unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
+ {
+@@ -219,6 +221,7 @@ unsigned int mptcp_pm_get_local_addr_max(struct mptcp_s=
+ock *msk)
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ 	return READ_ONCE(pernet->local_addr_max);
+ }
++EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
+ =
+
+ unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk)
+ {
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0477178936543499417==--
+2.29.2
+
+--===============0084825542677013654==--
