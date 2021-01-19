@@ -1,38 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============0977811310966262738=="
+Content-Type: multipart/mixed; boundary="===============0340046023950899092=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] net-next currently broken ?!?
-Date: Tue, 19 Jan 2021 00:06:59 +0100
-Message-ID: <eb713663eac1d8867586cc7b71fe5c3072f52101.camel@redhat.com>
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "mptcp: implement
+ delegated actions"
+Date: Tue, 19 Jan 2021 09:26:35 +0800
+Message-ID: <99135405274e3d94b4eafe6e92eaffc99f436b76.1611019539.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7417
+X-UID: 7418
 
---===============0977811310966262738==
+--===============0340046023950899092==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-(or it's just me lacking coffee?!?)
+Since a new listening socket in kernel for the new port is added, there's
+a lockdep warning in mptcp_subflow_process_delegated. This patch added the
+_nested annotation for the sock lock to fix it.
 
-I just tried plain net-next at
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/138
+Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/protocol.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-commit 213b97b125808aa220ba460a7af09d8f3772f669
-Merge: 20efd2c79afb 1fef8544bf41
-Author: Jakub Kicinski <kuba(a)kernel.org>
-Date:   Sat Jan 16 19:06:01 2021 -0800
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 442ad81d4abc..c750767be898 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2978,13 +2978,14 @@ void mptcp_subflow_process_delegated(struct sock *s=
+sk)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+ 	struct sock *sk =3D subflow->conn;
++	unsigned long flags;
+ =
 
-    Merge branch 'net-fix-the-features-flag-in-sctp_gso_segment'
+-	mptcp_data_lock(sk);
++	spin_lock_irqsave_nested(&sk->sk_lock.slock, flags, SINGLE_DEPTH_NESTING);
+ 	if (!sock_owned_by_user(sk))
+ 		__mptcp_subflow_push_pending(sk, ssk);
+ 	else
+ 		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
+-	mptcp_data_unlock(sk);
++	spin_unlock_irqrestore(&sk->sk_lock.slock, flags);
+ 	mptcp_subflow_delegated_done(subflow);
+ }
+ =
 
-selftests mptcp_connect.sh randomly fail with data corruption: the
-amount of transferred data is correct, the fail contains some chunk of
-random data.
+-- =
 
-Can anybody else replicate the above?
+2.29.2
 
-Thanks,
-
-Paolo
-
---===============0977811310966262738==--
+--===============0340046023950899092==--
