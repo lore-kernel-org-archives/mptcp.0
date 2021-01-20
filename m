@@ -1,64 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============7941243588691359571=="
+Content-Type: multipart/mixed; boundary="===============0350922850883074372=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH mptcp 7/7] mptcp: add netlink event support
-Date: Tue, 19 Jan 2021 22:31:46 +0100
-Message-ID: <85d38d39-fe36-5605-88be-f67ed14864f8@tessares.net>
+Date: Tue, 19 Jan 2021 16:18:14 -0800
+Message-ID: <bfdcd9fc-6d71-ba4d-566d-bc8cb1c9cb69@linux.intel.com>
 In-Reply-To: 20210114173654.7618-8-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7428
+X-UID: 7429
 
---===============7941243588691359571==
+--===============0350922850883074372==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+On Thu, 14 Jan 2021, Florian Westphal wrote:
 
-On 14/01/2021 18:36, Florian Westphal wrote:
 > Allow userspace (mptcpd) to subscribe to mptcp genl multicast events.
 > This implementation reuses the same event API as the mptcp kernel fork
 > to ease integration of existing tools, e.g. mptcpd.
-> =
-
+>
 > Supported events include:
 > 1. start and close of an mptcp connection
 > 2. start and close of subflows (joins)
 > 3. announce and withdrawals of addresses
 > 4. subflow priority (backup/non-backup) change.
+>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 
-Thank you for looking at that, that's really nice! :)
+Thanks for the patch series, Florian. I have a few minor comments below, =
 
-The previous patches look really good to me but I would not mind a =
+and will work with Ossama to get mptcpd listening to the events on the =
 
-second look for the previous patches modifying how the locks are used: =
+upstream kernel and really test things out.
 
-I'm not sure I have a good global view to give a proper review on these =
-
-ones.
-
-My comments for this patch are below if you don't mind looking:
-
+> ---
+> include/uapi/linux/mptcp.h |  70 +++++++++++
+> net/mptcp/pm.c             |  20 +++-
+> net/mptcp/pm_netlink.c     | 234 ++++++++++++++++++++++++++++++++++++-
+> net/mptcp/protocol.c       |   9 +-
+> net/mptcp/protocol.h       |   5 +
+> 5 files changed, 331 insertions(+), 7 deletions(-)
+>
 > diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
 > index 3674a451a18c..7ee275a2cfdd 100644
 > --- a/include/uapi/linux/mptcp.h
 > +++ b/include/uapi/linux/mptcp.h
 > @@ -36,6 +36,7 @@ enum {
->   /* netlink interface */
->   #define MPTCP_PM_NAME		"mptcp_pm"
->   #define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
+> /* netlink interface */
+> #define MPTCP_PM_NAME		"mptcp_pm"
+> #define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
 > +#define MPTCP_PM_EV_GRP_NAME    "mptcp_events"
->   #define MPTCP_PM_VER		0x1
->   =
 
->   /*
+Suggest "mptcp_pm_events" instead.
+
+> #define MPTCP_PM_VER		0x1
+>
+> /*
 > @@ -104,4 +105,73 @@ struct mptcp_info {
->   	__u64	mptcpi_rcv_nxt;
->   };
->   =
-
+> 	__u64	mptcpi_rcv_nxt;
+> };
+>
 > +/*
 > + * MPTCP_EVENT_CREATED: token, family, saddr4 | saddr6, daddr4 | daddr6,
 > + *                         sport, dport
@@ -86,96 +89,291 @@ t]
 > + * MPTCP_EVENT_SUB_ESTABLISHED: token, family, saddr4 | saddr6,
 > + *                              daddr4 | daddr6, sport, dport, backup,
 > + *                              if_idx
-
-Even if it is quite obvious, should we add a comment for this one like =
-
-for the others, e.g.
-
-   A new subflow has been established.
-
-(at least to explain that "sub" stands for "subflow" :) )
-
 > + *
 > + * MPTCP_EVENT_SUB_CLOSED: token, family, saddr4 | saddr6, daddr4 | dadd=
 r6,
 > + *                         sport, dport, backup, if_idx
 > + *    A subflow has been closed.
-
-I noticed that the error (copy of sk_err) is not in the arguments.
-Is it simply because we don't need them in the first version or because =
-
-there is a technical issue?
-
-A PM might want to know why a subflow has been closed: was it closed by =
-
-a RST, timeout, etc.?
-
-No issue for me to add it later (if it is possible) ;-)
-
 > + *
 > + * MPTCP_EVENT_SUB_PRIORITY: token, family, saddr4 | saddr6, daddr4 | da=
 ddr6,
 > + *                              sport, dport, backup, if_idx
 > + */
-
-May we add a short description here too?
-
-   The priority of a subflow has changed.
-
-(...)
-
+> +enum mptcp_event_type {
+> +	MPTCP_EVENT_UNSPEC =3D 0,
+> +	MPTCP_EVENT_CREATED =3D 1,
+> +	MPTCP_EVENT_ESTABLISHED =3D 2,
+> +	MPTCP_EVENT_CLOSED =3D 3,
+> +
+> +	MPTCP_EVENT_ANNOUNCED =3D 6,
+> +	MPTCP_EVENT_REMOVED =3D 7,
+> +
+> +	MPTCP_EVENT_SUB_ESTABLISHED =3D 10,
+> +	MPTCP_EVENT_SUB_CLOSED =3D 11,
+> +
+> +	MPTCP_EVENT_SUB_PRIORITY =3D 13,
+> +};
+> +
+> +enum mptcp_event_attr {
+> +	MPTCP_ATTR_UNSPEC =3D 0,
+> +
+> +	MPTCP_ATTR_TOKEN,	/* u32 */
+> +	MPTCP_ATTR_FAMILY,	/* u16 */
+> +	MPTCP_ATTR_LOC_ID,	/* u8 */
+> +	MPTCP_ATTR_REM_ID,	/* u8 */
+> +	MPTCP_ATTR_SADDR4,	/* be32 */
+> +	MPTCP_ATTR_SADDR6,	/* struct in6_addr */
+> +	MPTCP_ATTR_DADDR4,	/* be32 */
+> +	MPTCP_ATTR_DADDR6,	/* struct in6_addr */
+> +	MPTCP_ATTR_SPORT,	/* be16 */
+> +	MPTCP_ATTR_DPORT,	/* be16 */
+> +	MPTCP_ATTR_BACKUP,	/* u8 */
+> +	MPTCP_ATTR_ERROR,	/* u8 */
+> +	MPTCP_ATTR_FLAGS,	/* u16 */
+> +	MPTCP_ATTR_TIMEOUT,	/* u32 */
+> +	MPTCP_ATTR_IF_IDX,	/* s32 */
+> +
+> +	__MPTCP_ATTR_AFTER_LAST
+> +};
+> +#define MPTCP_ATTR_MAX (__MPTCP_ATTR_AFTER_LAST - 1)
+> +
+> #endif /* _UAPI_MPTCP_H */
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 309c44f13436..dc612d5e2752 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -75,6 +75,7 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, co=
+nst struct sock *ssk, int
+> 	pr_debug("msk=3D%p, token=3D%u side=3D%d", msk, msk->token, server_side);
+>
+> 	WRITE_ONCE(pm->server_side, server_side);
+> +	mptcp_event(MPTCP_EVENT_CREATED, msk, ssk, GFP_ATOMIC);
+> }
+>
+> bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+> @@ -119,13 +120,10 @@ static bool mptcp_pm_schedule_work(struct mptcp_soc=
+k *msk,
+> void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock=
+ *ssk, gfp_t gfp)
+> {
+> 	struct mptcp_pm_data *pm =3D &msk->pm;
+> +	bool announce =3D false;
+>
+> 	pr_debug("msk=3D%p", msk);
+>
+> -	/* try to avoid acquiring the lock below */
+> -	if (!READ_ONCE(pm->work_pending))
+> -		return;
+> -
+> 	spin_lock_bh(&pm->lock);
+>
+> 	/* mptcp_pm_fully_established() can be invoked by multiple
+> @@ -135,9 +133,15 @@ void mptcp_pm_fully_established(struct mptcp_sock *m=
+sk, const struct sock *ssk,
+> 	if (READ_ONCE(pm->work_pending) &&
+> 	    !(msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
+> 		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
+> -	msk->pm.status |=3D BIT(MPTCP_PM_ALREADY_ESTABLISHED);
+>
+> +	if ((msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) =3D=3D 0)
+> +		announce =3D true;
+> +
+> +	msk->pm.status |=3D BIT(MPTCP_PM_ALREADY_ESTABLISHED);
+> 	spin_unlock_bh(&pm->lock);
+> +
+> +	if (announce)
+> +		mptcp_event(MPTCP_EVENT_ESTABLISHED, msk, ssk, gfp);
+> }
+>
+> void mptcp_pm_connection_closed(struct mptcp_sock *msk)
+> @@ -176,6 +180,8 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
+k,
+> 	pr_debug("msk=3D%p remote_id=3D%d accept=3D%d", msk, addr->id,
+> 		 READ_ONCE(pm->accept_addr));
+>
+> +	mptcp_event_addr_announced(msk, addr);
+> +
+> 	spin_lock_bh(&pm->lock);
+>
+> 	if (!READ_ONCE(pm->accept_addr)) {
+> @@ -203,6 +209,8 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk=
+, u8 rm_id)
+>
+> 	pr_debug("msk=3D%p remote_id=3D%d", msk, rm_id);
+>
+> +	mptcp_event_addr_removed(msk, rm_id);
+> +
+> 	spin_lock_bh(&pm->lock);
+> 	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
+> 	pm->rm_id =3D rm_id;
+> @@ -215,6 +223,8 @@ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bk=
+up)
+>
+> 	pr_debug("subflow->backup=3D%d, bkup=3D%d\n", subflow->backup, bkup);
+> 	subflow->backup =3D bkup;
+> +
+> +	mptcp_event(MPTCP_EVENT_SUB_PRIORITY, mptcp_sk(subflow->conn), sk, GFP_=
+ATOMIC);
+> }
+>
+> /* path manager helpers */
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
 > index 8d0628590ca8..8c193e009886 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-
-(...)
-
+> @@ -731,10 +731,14 @@ void mptcp_pm_nl_data_init(struct mptcp_sock *msk)
+> 	WRITE_ONCE(pm->accept_subflow, subflows);
+> }
+>
+> -#define MPTCP_PM_CMD_GRP_OFFSET	0
+> +#define MPTCP_PM_CMD_GRP_OFFSET       0
+> +#define MPTCP_PM_EV_GRP_OFFSET        1
+>
+> static const struct genl_multicast_group mptcp_pm_mcgrps[] =3D {
+> 	[MPTCP_PM_CMD_GRP_OFFSET]	=3D { .name =3D MPTCP_PM_CMD_GRP_NAME, },
+> +	[MPTCP_PM_EV_GRP_OFFSET]        =3D { .name =3D MPTCP_PM_EV_GRP_NAME,
+> +					    .flags =3D GENL_UNS_ADMIN_PERM,
+> +					  },
+> };
+>
+> static const struct nla_policy
+> @@ -1274,6 +1278,234 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff =
+*skb, struct genl_info *info)
+> 	return 0;
+> }
+>
+> +static void mptcp_nl_mcast_send(struct net *net, struct sk_buff *nlskb, =
+gfp_t gfp)
+> +{
+> +	genlmsg_multicast_netns(&mptcp_genl_family, net,
+> +				nlskb, 0, MPTCP_PM_EV_GRP_OFFSET, gfp);
+> +}
+> +
+> +static int mptcp_event_add_subflow(struct sk_buff *skb, const struct soc=
+k *ssk)
+> +{
+> +	const struct inet_sock *issk =3D inet_sk(ssk);
+> +	const struct mptcp_subflow_context *sf;
+> +
+> +	if (nla_put_u16(skb, MPTCP_ATTR_FAMILY, ssk->sk_family))
+> +		return -EMSGSIZE;
+> +
+> +	switch (ssk->sk_family) {
+> +	case AF_INET:
+> +		if (nla_put_in_addr(skb, MPTCP_ATTR_SADDR4, issk->inet_saddr))
+> +			return -EMSGSIZE;
+> +		if (nla_put_in_addr(skb, MPTCP_ATTR_DADDR4, issk->inet_daddr))
+> +			return -EMSGSIZE;
+> +		break;
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +	case AF_INET6: {
+> +		const struct ipv6_pinfo *np =3D inet6_sk(ssk);
+> +
+> +		if (nla_put_in6_addr(skb, MPTCP_ATTR_SADDR6, &np->saddr))
+> +			return -EMSGSIZE;
+> +		if (nla_put_in6_addr(skb, MPTCP_ATTR_DADDR6, &ssk->sk_v6_daddr))
+> +			return -EMSGSIZE;
+> +		break;
+> +	}
+> +#endif
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +		return -EMSGSIZE;
+> +	}
+> +
+> +	if (nla_put_be16(skb, MPTCP_ATTR_SPORT, issk->inet_sport))
+> +		return -EMSGSIZE;
+> +	if (nla_put_be16(skb, MPTCP_ATTR_DPORT, issk->inet_dport))
+> +		return -EMSGSIZE;
+> +
+> +	sf =3D mptcp_subflow_ctx(ssk);
+> +	if (WARN_ON_ONCE(!sf))
+> +		return -EINVAL;
+> +
+> +	if (nla_put_u8(skb, MPTCP_ATTR_LOC_ID, sf->local_id))
+> +		return -EMSGSIZE;
+> +
+> +	if (nla_put_u8(skb, MPTCP_ATTR_REM_ID, sf->remote_id))
+> +		return -EMSGSIZE;
+> +
+> +	return 0;
+> +}
+> +
 > +static int mptcp_event_sub_established(struct sk_buff *skb, const struct=
  mptcp_sock *msk, const struct sock *ssk)
-
-(tiny detail: is it OK to have such long line? Same for the functions =
-
-below. Just to avoid checkpatch warnings but it is maybe not catched by =
-
-checkpatch?)
-
-(...)
-
+> +{
+> +	const struct mptcp_subflow_context *sf;
+> +
+> +	if (nla_put_u32(skb, MPTCP_ATTR_TOKEN, msk->token))
+> +		return -EMSGSIZE;
+> +
+> +	if (mptcp_event_add_subflow(skb, ssk))
+> +		return -EMSGSIZE;
+> +
+> +	sf =3D mptcp_subflow_ctx(ssk);
+> +	if (WARN_ON_ONCE(!sf))
+> +		return -EINVAL;
+> +
+> +	if (nla_put_u8(skb, MPTCP_ATTR_BACKUP, sf->backup))
+> +		return -EMSGSIZE;
+> +
+> +	if (ssk->sk_bound_dev_if && nla_put_s32(skb, MPTCP_ATTR_IF_IDX, ssk->sk=
+_bound_dev_if))
+> +		return -EMSGSIZE;
+> +
+> +	return 0;
+> +}
+> +
 > +static int mptcp_event_sub_closed(struct sk_buff *skb, const struct mptc=
 p_sock *msk, const struct sock *ssk)
 > +{
 > +	if (mptcp_event_sub_established(skb, msk, ssk))
-
-That looks strange to call mptcp_event_sub_established() in =
-
-mptcp_event_sub_closed() but I understand we want to pack the same info :)
-
-(...)
-
+> +		return -EMSGSIZE;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mptcp_event_created(struct sk_buff *skb, const struct mptcp_s=
+ock *msk, const struct sock *ssk)
+> +{
+> +	int err =3D nla_put_u32(skb, MPTCP_ATTR_TOKEN, msk->token);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	return mptcp_event_add_subflow(skb, ssk);
+> +}
+> +
 > +void mptcp_event_addr_removed(const struct mptcp_sock *msk, uint8_t id)
 > +{
 > +	struct net *net =3D sock_net((const struct sock *)msk);
 > +        struct nlmsghdr *nlh;
+> +	struct sk_buff *skb;
+> +
+> +	if (!genl_has_listeners(&mptcp_genl_family, net, MPTCP_PM_EV_GRP_OFFSET=
+))
+> +		return;
+> +
+> +	skb =3D nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_ATOMIC);
+> +	if (!skb)
+> +		return;
+> +
+> +	nlh =3D genlmsg_put(skb, 0, 0, &mptcp_genl_family, 0, MPTCP_EVENT_REMOV=
+ED);
+> +	if (!nlh)
+> +		goto nla_put_failure;
+> +
+> +	if (nla_put_u32(skb, MPTCP_ATTR_TOKEN, msk->token))
+> +		goto nla_put_failure;
+> +
+> +	if (nla_put_u32(skb, MPTCP_ATTR_REM_ID, id))
+> +		goto nla_put_failure;
 
-(detail: the indentation is not correct)
+Matthieu already noted this, but MPTCP_ATTR_REM_ID is a u8.
 
-(...)
-
+> +
+> +	genlmsg_end(skb, nlh);
 > +	return mptcp_nl_mcast_send(net, skb, GFP_ATOMIC);
-
-Just out of curiosity, is it always OK to have a "return f()" here while =
-
-the current function returns a "void"? I am sure it is OK because the =
-
-called function also returns "void" but no issues with some compilers =
-
-(and some options) nor static analytic tools?
-
-(no need to change of course, just I would not have thought about =
-
-writing it like that)
-
 > +
 > +nla_put_failure:
 > +	kfree_skb(skb);
@@ -186,9 +384,6 @@ ct mptcp_addr_info *info)
 > +{
 > +	struct net *net =3D sock_net((const struct sock *)msk);
 > +        struct nlmsghdr *nlh;
-
-(detail: the indentation is not correct)
-
 > +	struct sk_buff *skb;
 > +
 > +	if (!genl_has_listeners(&mptcp_genl_family, net, MPTCP_PM_EV_GRP_OFFSET=
@@ -208,103 +403,12 @@ NCED);
 > +		goto nla_put_failure;
 > +
 > +	if (nla_put_u32(skb, MPTCP_ATTR_REM_ID, info->id))
-
-I think it's a u8 for rem ID.
-Same above in mptcp_event_addr_removed()
-
 > +		goto nla_put_failure;
-> +
-> +	if (nla_put_be16(skb, MPTCP_ATTR_DPORT, info->port))
-> +		goto nla_put_failure;
-> +
-> +	switch (info->family) {
-> +	case AF_INET:
-> +		if (nla_put_in_addr(skb, MPTCP_ATTR_DADDR4, info->addr.s_addr))
 
-(I should not review that late, I blocked here a few seconds thinking =
+Another REM_ID attribute that should be a u8.
 
-you were using the "source" addr for DADDR :) )
 
-> +			goto nla_put_failure;
-> +		break;
-> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +	case AF_INET6:
-> +		if (nla_put_in6_addr(skb, MPTCP_ATTR_DADDR6, &info->addr6))
-> +			goto nla_put_failure;
-> +		break;
-> +#endif
-> +	default:
-> +		WARN_ON_ONCE(1);
-> +		goto nla_put_failure;
-> +	}
-> +
-> +	genlmsg_end(skb, nlh);
-> +	return mptcp_nl_mcast_send(net, skb, GFP_ATOMIC);
-> +
-> +nla_put_failure:
-> +	kfree_skb(skb);
-> +}
-> +
-> +void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *ms=
-k, const struct sock *ssk, gfp_t gfp)
-> +{
-> +	struct net *net =3D sock_net((const struct sock *)msk);
-> +        struct nlmsghdr *nlh;
-
-(detail: the indentation is not correct)
-
-> +	struct sk_buff *skb;
-> +
-> +	if (!genl_has_listeners(&mptcp_genl_family, net, MPTCP_PM_EV_GRP_OFFSET=
-))
-> +		return;
-> +
-> +	skb =3D nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-> +	if (!skb)
-> +		return;
-> +
-> +	nlh =3D genlmsg_put(skb, 0, 0, &mptcp_genl_family, 0, type);
-> +	if (!nlh)
-> +		goto nla_put_failure;
-> +
-> +	switch (type) {
-> +	case MPTCP_EVENT_UNSPEC:
-> +		WARN_ON_ONCE(1);
-> +		break;
-
-Probably useless but should we move this to the end and add "default"?
-
-> +	case MPTCP_EVENT_CREATED:
-> +	case MPTCP_EVENT_ESTABLISHED:
-> +		if (mptcp_event_created(skb, msk, ssk) < 0)
-> +			goto nla_put_failure;
-> +		break;
-> +	case MPTCP_EVENT_CLOSED:
-> +		if (nla_put_u32(skb, MPTCP_ATTR_TOKEN, msk->token) < 0)
-> +			goto nla_put_failure;
-> +		break;
-> +	case MPTCP_EVENT_ANNOUNCED:
-> +	case MPTCP_EVENT_REMOVED:
-> +		/* call mptcp_event_addr_announced()/removed instead */
-> +		WARN_ON_ONCE(1);
-> +		break;
-> +	case MPTCP_EVENT_SUB_ESTABLISHED:
-> +	case MPTCP_EVENT_SUB_PRIORITY:
-> +		if (mptcp_event_sub_established(skb, msk, ssk) < 0)
-> +			goto nla_put_failure;
-> +		break;
-> +	case MPTCP_EVENT_SUB_CLOSED:
-> +		if (mptcp_event_sub_closed(skb, msk, ssk) < 0)
-> +			goto nla_put_failure;
-> +		break;
-> +	}
-
-(...)
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============7941243588691359571==--
+--
+Mat Martineau
+Intel
+--===============0350922850883074372==--
