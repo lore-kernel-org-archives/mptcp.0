@@ -1,64 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============0527905818830879944=="
+Content-Type: multipart/mixed; boundary="===============2660943094036894906=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH v2 net-next 3/5] mptcp: do not queue excessive data on
- subflows
-Date: Wed, 20 Jan 2021 15:39:12 +0100
-Message-ID: <0ee2b775b36e79bbd46828d8fd95b0b4c030928b.1611153172.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH v2 net-next 4/5] mptcp: schedule work for better snd
+ subflow selection
+Date: Wed, 20 Jan 2021 15:39:13 +0100
+Message-ID: <6c4828f44064aaf7e957e5a2419f25e3e6e0f3b1.1611153172.git.pabeni@redhat.com>
 In-Reply-To: cover.1611153172.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7450
+X-UID: 7451
 
---===============0527905818830879944==
+--===============2660943094036894906==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The current packet scheduler can enqueue up to sndbuf
-data on each subflow. If the send buffer is large and
-the subflows are not symmetric, this could lead to
-suboptimal aggregate bandwidth utilization.
-
-Limit the amount of queued data to the maximum send
-window.
+Otherwise the packet scheduler policy will not be
+enforced when pushing pending data at MPTCP-level
+ack reception time.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d07e60330df56..e741201acc98f 100644
+index e741201acc98f..8cb582eee2862 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1389,7 +1389,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk)
- 			continue;
+@@ -2242,6 +2242,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (unlikely(state =3D=3D TCP_CLOSE))
+ 		goto unlock;
  =
 
- 		nr_active +=3D !subflow->backup;
--		if (!sk_stream_memory_free(subflow->tcp_sock))
-+		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
- 			continue;
++	mptcp_push_pending(sk, 0);
+ 	mptcp_check_data_fin_ack(sk);
+ 	__mptcp_flush_join_list(msk);
  =
 
- 		pace =3D READ_ONCE(ssk->sk_pacing_rate);
-@@ -1415,7 +1415,7 @@ static struct sock *mptcp_subflow_get_send(struct mpt=
-cp_sock *msk)
- 	if (send_info[0].ssk) {
- 		msk->last_snd =3D send_info[0].ssk;
- 		msk->snd_burst =3D min_t(int, MPTCP_SEND_BURST_SIZE,
--				       sk_stream_wspace(msk->last_snd));
-+				       tcp_sk(msk->last_snd)->snd_wnd);
- 		return msk->last_snd;
- 	}
+@@ -2899,10 +2900,14 @@ void __mptcp_check_push(struct sock *sk, struct soc=
+k *ssk)
+ 	if (!mptcp_send_head(sk))
+ 		return;
  =
 
+-	if (!sock_owned_by_user(sk))
+-		__mptcp_subflow_push_pending(sk, ssk);
+-	else
++	if (!sock_owned_by_user(sk)) {
++		if (mptcp_subflow_get_send(mptcp_sk(sk)) =3D=3D ssk)
++			__mptcp_subflow_push_pending(sk, ssk);
++		else
++			mptcp_schedule_work(sk);
++	} else {
+ 		set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags);
++	}
+ }
+ =
+
+ #define MPTCP_DEFERRED_ALL (TCPF_WRITE_TIMER_DEFERRED)
 -- =
 
 2.26.2
 
---===============0527905818830879944==--
+--===============2660943094036894906==--
