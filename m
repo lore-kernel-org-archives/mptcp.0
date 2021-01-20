@@ -1,57 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============3145015369071348458=="
+Content-Type: multipart/mixed; boundary="===============2631173828704328150=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp 2/7] mptcp: move pm netlink work into
- pm_netlink
-Date: Wed, 20 Jan 2021 12:38:56 +0100
-Message-ID: <6e322898-ca0e-c556-deee-baf018167501@tessares.net>
-In-Reply-To: afb06ec6-793f-81d3-733c-fc115f9b30b1@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp 7/7] mptcp: add netlink event support
+Date: Wed, 20 Jan 2021 13:18:52 +0100
+Message-ID: <20210120121852.GN19605@breakpoint.cc>
+In-Reply-To: bfdcd9fc-6d71-ba4d-566d-bc8cb1c9cb69@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7439
+X-UID: 7440
 
---===============3145015369071348458==
+--===============2631173828704328150==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Mat,
-
-On 20/01/2021 01:27, Mat Martineau wrote:
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> wrote:
 > On Thu, 14 Jan 2021, Florian Westphal wrote:
 > =
 
->> allows to make some functions static and avoids aquire of the pm spinlock
->> in protocol.c.
->>
->> Signed-off-by: Florian Westphal <fw(a)strlen.de>
->> ---
->> net/mptcp/pm_netlink.c | 45 +++++++++++++++++++++++++++++++++++++-----
->> net/mptcp/protocol.c=C2=A0=C2=A0 | 33 +------------------------------
->> net/mptcp/protocol.h=C2=A0=C2=A0 |=C2=A0 6 +-----
->> 3 files changed, 42 insertions(+), 42 deletions(-)
->>
+> > Allow userspace (mptcpd) to subscribe to mptcp genl multicast events.
+> > This implementation reuses the same event API as the mptcp kernel fork
+> > to ease integration of existing tools, e.g. mptcpd.
+> > =
+
+> > Supported events include:
+> > 1. start and close of an mptcp connection
+> > 2. start and close of subflows (joins)
+> > 3. announce and withdrawals of addresses
+> > 4. subflow priority (backup/non-backup) change.
+> > =
+
+> > Signed-off-by: Florian Westphal <fw(a)strlen.de>
 > =
 
-> Also ok with me to apply this to the export branch.
+> Thanks for the patch series, Florian. I have a few minor comments below, =
+and
+> will work with Ossama to get mptcpd listening to the events on the upstre=
+am
+> kernel and really test things out.
 
-Thank you for the patches and the reviews!
+Thanks, that would help a lot.
 
-Just added the two first patches in our tree with Mat's RvB tag (and I =
+> > #define MPTCP_PM_NAME		"mptcp_pm"
+> > #define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
+> > +#define MPTCP_PM_EV_GRP_NAME    "mptcp_events"
+> =
 
-fixed a typo in the commit message reported by codespell):
+> Suggest "mptcp_pm_events" instead.
 
-- 168b68baccfa: mptcp: pm: add lockdep assertions
-- 6df8f68967a5: mptcp: move pm netlink work into pm_netlink
-- Results: a1d71a555f36..44215ba71300
-
-Tests + export have been queued!
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============3145015369071348458==--
+I don't mind changing it but it would mean one more change needed
+on mptcpd side vs. the out of tree kernel.
+--===============2631173828704328150==--
