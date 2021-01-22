@@ -1,109 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============3423749436947735376=="
+Content-Type: multipart/mixed; boundary="===============6487815594901948827=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 mptcp-next 5/5] mptcp: add netlink event support
-Date: Fri, 22 Jan 2021 11:55:10 +0100
-Message-ID: <d3bf3890-d052-85d7-08df-eea758c05f86@tessares.net>
-In-Reply-To: e9d41ab0-1672-e581-e1e3-495399600011@tessares.net
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next] mptcp: send ack for every
+ add_addr
+Date: Fri, 22 Jan 2021 19:25:18 +0800
+Message-ID: <93f8d1cb4ad54d30539c7a3ec1455afc13388844.1611314528.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7469
+X-UID: 7470
 
---===============3423749436947735376==
+--===============6487815594901948827==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian,
+This patch changes the sending ACK conditions for the ADD_ADDR, send an ACK
+packet for any ADD_ADDR, not just when ipv6 addresses or port numbers
+are included.
 
-On 20/01/2021 18:15, Matthieu Baerts wrote:
-> On 20/01/2021 16:43, Florian Westphal wrote:
-> =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/139
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ v3:
+  - drop the duplicate mptcp_pm_should_add_signal(msk) check in v2.
+ v2:
+  - print out the debug output on one line.
+---
+ net/mptcp/pm.c         |  3 +--
+ net/mptcp/pm_netlink.c | 10 ++++------
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
->  > diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
->  > index 3674a451a18c..4983ced8e1f8 100644
->  > --- a/include/uapi/linux/mptcp.h
->  > +++ b/include/uapi/linux/mptcp.h
->  > @@ -36,6 +36,7 @@ enum {
->  >=C2=A0=C2=A0 /* netlink interface */
->  >=C2=A0=C2=A0 #define MPTCP_PM_NAME=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 "mptcp_pm"
->  >=C2=A0=C2=A0 #define MPTCP_PM_CMD_GRP_NAME=C2=A0=C2=A0=C2=A0 "mptcp_pm_=
-cmds"
->  > +#define MPTCP_PM_EV_GRP_NAME=C2=A0=C2=A0=C2=A0 "mptcp_events"
-> =
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 01a846b25771..3a22e73220b9 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -191,8 +191,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ =
 
-> We will check if it is OK for Ossama :)
+ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
+ {
+-	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
+-	    !mptcp_pm_should_add_signal_port(msk))
++	if (!mptcp_pm_should_add_signal(msk))
+ 		return;
+ =
 
-Just to be sure it is clear for everyone, it was decided yesterday at =
+ 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 39998c521133..37b4c9068f8d 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -496,8 +496,7 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *m=
+sk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ =
 
-the weekly meeting to switch to "mptcp_pm_events".
+-	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
+-	    !mptcp_pm_should_add_signal_port(msk))
++	if (!mptcp_pm_should_add_signal(msk))
+ 		return;
+ =
 
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index e2f40985b450..c2939362f47a 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
-> =
+ 	__mptcp_flush_join_list(msk);
+@@ -507,10 +506,9 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *=
+msk)
+ 		u8 add_addr;
+ =
 
-> (...)
-> =
+ 		spin_unlock_bh(&msk->pm.lock);
+-		if (mptcp_pm_should_add_signal_ipv6(msk))
+-			pr_debug("send ack for add_addr6");
+-		if (mptcp_pm_should_add_signal_port(msk))
+-			pr_debug("send ack for add_addr_port");
++		pr_debug("send ack for add_addr%s%s",
++			 mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
++			 mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
+ =
 
->> +static int mptcp_event_put_token_and_ssk(struct sk_buff *skb,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct mptcp_sock=
- *msk,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct sock *ssk)
->> +{
->> +=C2=A0=C2=A0=C2=A0 const struct sock *sk =3D (const struct sock *)msk;
->> +=C2=A0=C2=A0=C2=A0 const struct mptcp_subflow_context *sf;
->> +=C2=A0=C2=A0=C2=A0 u8 sk_err;
->> +
->> +=C2=A0=C2=A0=C2=A0 if (nla_put_u32(skb, MPTCP_ATTR_TOKEN, msk->token))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EMSGSIZE;
->> +
->> +=C2=A0=C2=A0=C2=A0 if (mptcp_event_add_subflow(skb, ssk))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EMSGSIZE;
->> +
->> +=C2=A0=C2=A0=C2=A0 sf =3D mptcp_subflow_ctx(ssk);
->> +=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(!sf))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->> +
->> +=C2=A0=C2=A0=C2=A0 if (nla_put_u8(skb, MPTCP_ATTR_BACKUP, sf->backup))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EMSGSIZE;
->> +
->> +=C2=A0=C2=A0=C2=A0 if (ssk->sk_bound_dev_if &&
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nla_put_s32(skb, MPTCP_ATTR_=
-IF_IDX, ssk->sk_bound_dev_if))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EMSGSIZE;
->> +
->> +=C2=A0=C2=A0=C2=A0 sk_err =3D ssk->sk_err;
-> =
-
-> Could we have an error set on the msk? (sk->sk_err)
-
-And here, as discussed yesterday, we would keep "ssk->sk_err" and not =
-
-use the one from the msk.
-
-I guess Mat and Ossama prefer to quickly validate it before applying =
-
-these patches, I can wait before applying them. Or maybe I misunderstood =
-
-and I can apply it sooner.
-(And if we only need to change the group name, I can fix that when =
-
-applying it without having to submit a new version ;-) )
-
-For this patch:
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-
-Cheers,
-Matt
+ 		lock_sock(ssk);
+ 		tcp_send_ack(ssk);
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============3423749436947735376==--
+2.29.2
+
+--===============6487815594901948827==--
