@@ -1,97 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============6273691495406814647=="
+Content-Type: multipart/mixed; boundary="===============5662689058858707581=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 net-next 5/5] mptcp: implement delegated actions
-Date: Fri, 22 Jan 2021 09:25:07 +0100
-Message-ID: <e093e7615490baad413ef6ba49154e3e4e98399a.camel@redhat.com>
-In-Reply-To: 20210121173437.1b945b01@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] mptcp: send ack for every
+ add_addr
+Date: Fri, 22 Jan 2021 11:45:23 +0100
+Message-ID: <646875c8907c209d3addf1c2e5897a2b920777e7.camel@redhat.com>
+In-Reply-To: e5e3e55c8caf3cba6b07d0a92ff080792949a41a.1611285417.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7467
+X-UID: 7468
 
---===============6273691495406814647==
+--===============5662689058858707581==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-On Thu, 2021-01-21 at 17:34 -0800, Jakub Kicinski wrote:
-> On Wed, 20 Jan 2021 15:39:14 +0100 Paolo Abeni wrote:
-> > On MPTCP-level ack reception, the packet scheduler
-> > may select a subflow other then the current one.
-> > =
+I'm sorry for the late feeback.
 
-> > Prior to this commit we rely on the workqueue to trigger
-> > action on such subflow.
-> > =
-
-> > This changeset introduces an infrastructure that allows
-> > any MPTCP subflow to schedule actions (MPTCP xmit) on
-> > others subflows without resorting to (multiple) process
-> > reschedule.
+On Fri, 2021-01-22 at 11:18 +0800, Geliang Tang wrote:
+> This patch changes the sending ACK conditions for the ADD_ADDR, send an A=
+CK
+> packet for any ADD_ADDR, not just when ipv6 addresses or port numbers
+> are included.
 > =
 
-> If your work doesn't reschedule there should not be multiple =
-
-> rescheds, no?
-
-Thank you for looking into this.
-
-With the workqueue it would be:
-
-<running process> -> BH -> (process scheduler) -> MPTCP workqueue ->
-(process scheduler) -> <running process>
-
-With this infra is:
-
-<running process> -> BH -> BH -> <running process>
-
-> > A dummy NAPI instance is used instead. When MPTCP needs to
-> > trigger action an a different subflow, it enqueues the target
-> > subflow on the NAPI backlog and schedule such instance as needed.
-> > =
-
-> > The dummy NAPI poll method walks the sockets backlog and tries
-> > to acquire the (BH) socket lock on each of them. If the socket
-> > is owned by the user space, the action will be completed by
-> > the sock release cb, otherwise push is started.
-> > =
-
-> > This change leverages the delegated action infrastructure
-> > to avoid invoking the MPTCP worker to spool the pending data,
-> > when the packet scheduler picks a subflow other then the one
-> > currently processing the incoming MPTCP-level ack.
-> > =
-
-> > Additionally we further refine the subflow selection
-> > invoking the packet scheduler for each chunk of data
-> > even inside __mptcp_subflow_push_pending().
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/139
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+>  v2:
+>   - print out the debug output on one line.
+> ---
+>  net/mptcp/pm.c         |  3 +--
+>  net/mptcp/pm_netlink.c | 12 ++++++------
+>  2 files changed, 7 insertions(+), 8 deletions(-)
 > =
 
-> Is there much precedence for this sort of hijacking of NAPI =
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 01a846b25771..3a22e73220b9 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -191,8 +191,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
+k,
+>  =
 
-> for protocol work? =
+>  void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
+>  {
+> -	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
+> -	    !mptcp_pm_should_add_signal_port(msk))
+> +	if (!mptcp_pm_should_add_signal(msk))
+>  		return;
+>  =
 
+>  	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 39998c521133..369cb787169f 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -496,8 +496,7 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock =
+*msk)
+>  {
+>  	struct mptcp_subflow_context *subflow;
+>  =
 
-AFAICS, xfrm is using a similar trick in the receive path.
+> -	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
+> -	    !mptcp_pm_should_add_signal_port(msk))
+> +	if (!mptcp_pm_should_add_signal(msk))
+>  		return;
+>  =
 
-Note that we uses TX-only NAPIs, so this does not pollute the napi hash
-table.
+>  	__mptcp_flush_join_list(msk);
+> @@ -507,10 +506,11 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_soc=
+k *msk)
+>  		u8 add_addr;
+>  =
 
-> Do you need it because of locking?
+>  		spin_unlock_bh(&msk->pm.lock);
+> -		if (mptcp_pm_should_add_signal_ipv6(msk))
+> -			pr_debug("send ack for add_addr6");
+> -		if (mptcp_pm_should_add_signal_port(msk))
+> -			pr_debug("send ack for add_addr_port");
+> +		if (mptcp_pm_should_add_signal(msk)) {
 
-This infrastructure is used to avoid the workqueue usage in the MPTCP
-receive path (to push pending data). With many mptcp connections
-established that would be very bad for tput and latency. This
-infrastructure is not strictly needed from a functinal PoV, but I was
-unable to find any other way to avoid the workqueue usage.
+Didn't we check mptcp_pm_should_add_signal(msk) eariler in this same
+function? I think we can skip the check here.
 
-Please let me know if the above is clear enough!
-
-Thanks,
+Thanks!
 
 Paolo
 
---===============6273691495406814647==--
+--===============5662689058858707581==--
