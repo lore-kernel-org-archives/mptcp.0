@@ -1,49 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============5916612041269098499=="
+Content-Type: multipart/mixed; boundary="===============2310233346079549898=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next] mptcp: send ack for every
- add_addr
-Date: Fri, 22 Jan 2021 19:08:04 +0100
-Message-ID: <2b5cc55c-49f5-c0f6-f275-feda707468e4@tessares.net>
-In-Reply-To: 93f8d1cb4ad54d30539c7a3ec1455afc13388844.1611314528.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH v2 net-next 5/5] mptcp: implement delegated actions
+Date: Fri, 22 Jan 2021 15:23:55 -0800
+Message-ID: <20210122152355.761ff148@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: e093e7615490baad413ef6ba49154e3e4e98399a.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7472
+X-UID: 7473
 
---===============5916612041269098499==
+--===============2310233346079549898==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Paolo,
+On Fri, 22 Jan 2021 09:25:07 +0100 Paolo Abeni wrote:
+> On Thu, 2021-01-21 at 17:34 -0800, Jakub Kicinski wrote:
+> > On Wed, 20 Jan 2021 15:39:14 +0100 Paolo Abeni wrote:  =
 
-On 22/01/2021 12:25, Geliang Tang wrote:
-> This patch changes the sending ACK conditions for the ADD_ADDR, send an A=
-CK
-> packet for any ADD_ADDR, not just when ipv6 addresses or port numbers
-> are included.
+> > > On MPTCP-level ack reception, the packet scheduler
+> > > may select a subflow other then the current one.
+> > > =
+
+> > > Prior to this commit we rely on the workqueue to trigger
+> > > action on such subflow.
+> > > =
+
+> > > This changeset introduces an infrastructure that allows
+> > > any MPTCP subflow to schedule actions (MPTCP xmit) on
+> > > others subflows without resorting to (multiple) process
+> > > reschedule.  =
+
+> > =
+
+> > If your work doesn't reschedule there should not be multiple =
+
+> > rescheds, no?  =
+
 > =
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/139
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> Thank you for looking into this.
+> =
 
-Thank you for this patch, the Closes tag and the reviews! I added this =
+> With the workqueue it would be:
+> =
 
-patch in the "mptcp: create subflow for newly added address" series. I =
+> <running process> -> BH -> (process scheduler) -> MPTCP workqueue ->
+> (process scheduler) -> <running process>
+> =
 
-had a conflict with one patch from Florian I recently applied, should be OK.
+> With this infra is:
+> =
 
-- 581ac7207e9c: mptcp: send ack for every add_addr
-- 2ee1a4d633eb: conflict in t/mptcp-pm-add-lockdep-assertions
-- Results: 1f3c95152e38..61cbfacafedc
+> <running process> -> BH -> BH -> <running process>
 
-Tests + export are in progress!
+You assume your process is running when you got the Rx IRQ but also
+is RPS enabled? For MPTCP there is no way to do reuseport to match Rx
+CPU to processing thread, right?
 
-Cheers,
-Matt
--- =
+> > > A dummy NAPI instance is used instead. When MPTCP needs to
+> > > trigger action an a different subflow, it enqueues the target
+> > > subflow on the NAPI backlog and schedule such instance as needed.
+> > > =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5916612041269098499==--
+> > > The dummy NAPI poll method walks the sockets backlog and tries
+> > > to acquire the (BH) socket lock on each of them. If the socket
+> > > is owned by the user space, the action will be completed by
+> > > the sock release cb, otherwise push is started.
+> > > =
+
+> > > This change leverages the delegated action infrastructure
+> > > to avoid invoking the MPTCP worker to spool the pending data,
+> > > when the packet scheduler picks a subflow other then the one
+> > > currently processing the incoming MPTCP-level ack.
+> > > =
+
+> > > Additionally we further refine the subflow selection
+> > > invoking the packet scheduler for each chunk of data
+> > > even inside __mptcp_subflow_push_pending().  =
+
+> > =
+
+> > Is there much precedence for this sort of hijacking of NAPI =
+
+> > for protocol work?   =
+
+> =
+
+> AFAICS, xfrm is using a similar trick in the receive path.
+> =
+
+> Note that we uses TX-only NAPIs, so this does not pollute the napi hash
+> table.
+
+Ack, I think what you have should work with busy polling and threaded
+IRQs as well. Just another piece of the puzzle to keep in one's head
+when thinking about NAPI processing :)
+
+> > Do you need it because of locking?  =
+
+> =
+
+> This infrastructure is used to avoid the workqueue usage in the MPTCP
+> receive path (to push pending data). With many mptcp connections
+> established that would be very bad for tput and latency. This
+> infrastructure is not strictly needed from a functinal PoV, but I was
+> unable to find any other way to avoid the workqueue usage.
+
+But it is due to locking or is it not? Because you're running the
+callback in the same context, so otherwise why not just call the
+function directly? Can't be batching, it's after GRO so we won't =
+
+batch much more.
+
+> Please let me know if the above is clear enough!
+
+Sure thing, it just looks like interesting work. I'll apply end =
+
+of the day if nobody has any comments.
+--===============2310233346079549898==--
