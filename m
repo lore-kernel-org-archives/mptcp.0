@@ -1,100 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============5136998684301385671=="
+Content-Type: multipart/mixed; boundary="===============8746552387142538347=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] mptcp: send ack for every
- add_addr
-Date: Thu, 21 Jan 2021 17:19:33 -0800
-Message-ID: <a68ce22c-283-4e2-868d-28538fc41876@linux.intel.com>
-In-Reply-To: 4be0fc0ea68afa7ab32a9132a938b4f6bcd6569b.1611126450.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH v2 net-next 5/5] mptcp: implement delegated actions
+Date: Thu, 21 Jan 2021 17:34:37 -0800
+Message-ID: <20210121173437.1b945b01@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: fbae7709d333eb2afcc79e69a8db3d952292564f.1611153172.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7464
+X-UID: 7465
 
---===============5136998684301385671==
+--===============8746552387142538347==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 20 Jan 2021, Geliang Tang wrote:
+On Wed, 20 Jan 2021 15:39:14 +0100 Paolo Abeni wrote:
+> On MPTCP-level ack reception, the packet scheduler
+> may select a subflow other then the current one.
+> =
 
-> This patch changes the sending ACK conditions for the ADD_ADDR, send an A=
-CK
-> packet for any ADD_ADDR, not just when ipv6 addresses or port numbers
-> are included.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/139
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> Prior to this commit we rely on the workqueue to trigger
+> action on such subflow.
+> =
 
-Thanks Geliang. I'm trying to confirm that kbuild doesn't encounter the =
+> This changeset introduces an infrastructure that allows
+> any MPTCP subflow to schedule actions (MPTCP xmit) on
+> others subflows without resorting to (multiple) process
+> reschedule.
 
-timeout any more, but I have to wait for the build queue.
+If your work doesn't reschedule there should not be multiple =
 
-> ---
-> Obsoletes: "add add_addr_urgent" patchset
-> ---
-> net/mptcp/pm.c         | 3 +--
-> net/mptcp/pm_netlink.c | 9 +++++----
-> 2 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 01a846b25771..3a22e73220b9 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -191,8 +191,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *ms=
-k,
->
-> void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
-> {
-> -	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
-> -	    !mptcp_pm_should_add_signal_port(msk))
-> +	if (!mptcp_pm_should_add_signal(msk))
-> 		return;
->
-> 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 39998c521133..7e6e99abdd33 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -496,8 +496,7 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock =
-*msk)
-> {
-> 	struct mptcp_subflow_context *subflow;
->
-> -	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
-> -	    !mptcp_pm_should_add_signal_port(msk))
-> +	if (!mptcp_pm_should_add_signal(msk))
-> 		return;
->
-> 	__mptcp_flush_join_list(msk);
-> @@ -507,10 +506,12 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_soc=
-k *msk)
-> 		u8 add_addr;
->
-> 		spin_unlock_bh(&msk->pm.lock);
-> +		if (mptcp_pm_should_add_signal(msk))
-> +			pr_debug("send ack for add_addr");
-> 		if (mptcp_pm_should_add_signal_ipv6(msk))
-> -			pr_debug("send ack for add_addr6");
-> +			pr_debug("[ipv6]");
-> 		if (mptcp_pm_should_add_signal_port(msk))
-> -			pr_debug("send ack for add_addr_port");
-> +			pr_debug("[port]");
+rescheds, no?
 
-I suggest getting the debug output to print on one line like this:
+> A dummy NAPI instance is used instead. When MPTCP needs to
+> trigger action an a different subflow, it enqueues the target
+> subflow on the NAPI backlog and schedule such instance as needed.
+> =
 
-if (mptcp_pm_should_add_signal(msk))
- 	pr_debug("send ack for add_addr%s%s",
- 		 mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
- 		 mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
+> The dummy NAPI poll method walks the sockets backlog and tries
+> to acquire the (BH) socket lock on each of them. If the socket
+> is owned by the user space, the action will be completed by
+> the sock release cb, otherwise push is started.
+> =
 
-> 		lock_sock(ssk);
-> 		tcp_send_ack(ssk);
-> -- =
+> This change leverages the delegated action infrastructure
+> to avoid invoking the MPTCP worker to spool the pending data,
+> when the packet scheduler picks a subflow other then the one
+> currently processing the incoming MPTCP-level ack.
+> =
 
-> 2.29.2
+> Additionally we further refine the subflow selection
+> invoking the packet scheduler for each chunk of data
+> even inside __mptcp_subflow_push_pending().
 
---
-Mat Martineau
-Intel
---===============5136998684301385671==--
+Is there much precedence for this sort of hijacking of NAPI =
+
+for protocol work? Do you need it because of locking?
+--===============8746552387142538347==--
