@@ -1,122 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============2310233346079549898=="
+Content-Type: multipart/mixed; boundary="===============6833672669756034708=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: patchwork-bot+netdevbpf at kernel.org
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 net-next 5/5] mptcp: implement delegated actions
-Date: Fri, 22 Jan 2021 15:23:55 -0800
-Message-ID: <20210122152355.761ff148@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: e093e7615490baad413ef6ba49154e3e4e98399a.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 net-next 0/5] mptcp: re-enable sndbuf autotune
+Date: Sat, 23 Jan 2021 03:30:11 +0000
+Message-ID: <
+ <161137261151.31547.3569870182293776976.git-patchwork-notify@kernel.org>>
+In-Reply-To: cover.1611153172.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7473
+X-UID: 7474
 
---===============2310233346079549898==
+--===============6833672669756034708==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 22 Jan 2021 09:25:07 +0100 Paolo Abeni wrote:
-> On Thu, 2021-01-21 at 17:34 -0800, Jakub Kicinski wrote:
-> > On Wed, 20 Jan 2021 15:39:14 +0100 Paolo Abeni wrote:  =
+Hello:
 
-> > > On MPTCP-level ack reception, the packet scheduler
-> > > may select a subflow other then the current one.
-> > > =
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-> > > Prior to this commit we rely on the workqueue to trigger
-> > > action on such subflow.
-> > > =
-
-> > > This changeset introduces an infrastructure that allows
-> > > any MPTCP subflow to schedule actions (MPTCP xmit) on
-> > > others subflows without resorting to (multiple) process
-> > > reschedule.  =
-
-> > =
-
-> > If your work doesn't reschedule there should not be multiple =
-
-> > rescheds, no?  =
-
+On Wed, 20 Jan 2021 15:39:09 +0100 you wrote:
+> The sendbuffer autotuning was unintentionally disabled as a
+> side effect of the recent workqueue removal refactor. These
+> patches re-enable id, with some extra care: with autotuning
+> enable/large send buffer we need a more accurate packet
+> scheduler to be able to use efficiently the available
+> subflow bandwidth, especially when the subflows have
+> different capacities.
 > =
 
-> Thank you for looking into this.
-> =
+> [...]
 
-> With the workqueue it would be:
-> =
+Here is the summary with links:
+  - [v2,net-next,1/5] mptcp: always graft subflow socket to parent
+    https://git.kernel.org/netdev/net-next/c/866f26f2a9c3
+  - [v2,net-next,2/5] mptcp: re-enable sndbuf autotune
+    https://git.kernel.org/netdev/net-next/c/5cf92bbadc58
+  - [v2,net-next,3/5] mptcp: do not queue excessive data on subflows
+    https://git.kernel.org/netdev/net-next/c/ec369c3a337f
+  - [v2,net-next,4/5] mptcp: schedule work for better snd subflow selection
+    https://git.kernel.org/netdev/net-next/c/40dc9416cc95
+  - [v2,net-next,5/5] mptcp: implement delegated actions
+    https://git.kernel.org/netdev/net-next/c/b19bc2945b40
 
-> <running process> -> BH -> (process scheduler) -> MPTCP workqueue ->
-> (process scheduler) -> <running process>
-> =
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> With this infra is:
-> =
 
-> <running process> -> BH -> BH -> <running process>
-
-You assume your process is running when you got the Rx IRQ but also
-is RPS enabled? For MPTCP there is no way to do reuseport to match Rx
-CPU to processing thread, right?
-
-> > > A dummy NAPI instance is used instead. When MPTCP needs to
-> > > trigger action an a different subflow, it enqueues the target
-> > > subflow on the NAPI backlog and schedule such instance as needed.
-> > > =
-
-> > > The dummy NAPI poll method walks the sockets backlog and tries
-> > > to acquire the (BH) socket lock on each of them. If the socket
-> > > is owned by the user space, the action will be completed by
-> > > the sock release cb, otherwise push is started.
-> > > =
-
-> > > This change leverages the delegated action infrastructure
-> > > to avoid invoking the MPTCP worker to spool the pending data,
-> > > when the packet scheduler picks a subflow other then the one
-> > > currently processing the incoming MPTCP-level ack.
-> > > =
-
-> > > Additionally we further refine the subflow selection
-> > > invoking the packet scheduler for each chunk of data
-> > > even inside __mptcp_subflow_push_pending().  =
-
-> > =
-
-> > Is there much precedence for this sort of hijacking of NAPI =
-
-> > for protocol work?   =
-
-> =
-
-> AFAICS, xfrm is using a similar trick in the receive path.
-> =
-
-> Note that we uses TX-only NAPIs, so this does not pollute the napi hash
-> table.
-
-Ack, I think what you have should work with busy polling and threaded
-IRQs as well. Just another piece of the puzzle to keep in one's head
-when thinking about NAPI processing :)
-
-> > Do you need it because of locking?  =
-
-> =
-
-> This infrastructure is used to avoid the workqueue usage in the MPTCP
-> receive path (to push pending data). With many mptcp connections
-> established that would be very bad for tput and latency. This
-> infrastructure is not strictly needed from a functinal PoV, but I was
-> unable to find any other way to avoid the workqueue usage.
-
-But it is due to locking or is it not? Because you're running the
-callback in the same context, so otherwise why not just call the
-function directly? Can't be batching, it's after GRO so we won't =
-
-batch much more.
-
-> Please let me know if the above is clear enough!
-
-Sure thing, it just looks like interesting work. I'll apply end =
-
-of the day if nobody has any comments.
---===============2310233346079549898==--
+--===============6833672669756034708==--
