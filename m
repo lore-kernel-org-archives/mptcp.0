@@ -1,56 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============0011134690375393487=="
+Content-Type: multipart/mixed; boundary="===============4554609871144903031=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 net-next 5/5] mptcp: implement delegated actions
-Date: Sat, 23 Jan 2021 08:10:37 +0100
-Message-ID: <fab5f9f2abdc478702fc7f9a831de418a1234e38.camel@redhat.com>
-In-Reply-To: 20210122152355.761ff148@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com
+Subject: [MPTCP] [PATCH net-next 0/5] MPTCP: IPv4-mapped IPv6 addressing for
+ subflows
+Date: Mon, 25 Jan 2021 10:58:59 -0800
+Message-ID: <20210125185904.6997-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7475
+X-UID: 7476
 
---===============0011134690375393487==
+--===============4554609871144903031==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2021-01-22 at 15:23 -0800, Jakub Kicinski wrote:
-> On Fri, 22 Jan 2021 09:25:07 +0100 Paolo Abeni wrote:
-> > > Do you need it because of locking?  =
+This patch series from the MPTCP tree adds support for IPv4-mapped IPv6
+addressing that was missing when multiple subflows were first
+implemented.
 
-> > =
+Patches 1 and 2 handle the conversion and comparison of the mapped
+addresses.
 
-> > This infrastructure is used to avoid the workqueue usage in the MPTCP
-> > receive path (to push pending data). With many mptcp connections
-> > established that would be very bad for tput and latency. This
-> > infrastructure is not strictly needed from a functinal PoV, but I was
-> > unable to find any other way to avoid the workqueue usage.
-> =
+Patch 3 contains a minor refactor in the path manager's handling of
+addresses.
 
-> But it is due to locking or is it not? Because you're running the
-> callback in the same context, so otherwise why not just call the
-> function directly? Can't be batching, it's after GRO so we won't =
-
-> batch much more.
-
-Thank you for the feedback. =
+Patches 4 and 5 add selftests for the new functionality and adjust the
+selftest timeout.
 
 
-Let me try to elaborate a bit more on this. When processing the input
-packet (MPTCP data ack) on the MPTCP subflow A, under the subflow A
-socket lock, we possibly need to push some data via a different subflow
-B - depending on the MPTCP packet scheduler decision. We can't try to
-acquire the B subflow socket lock due to ABBA deadlock.
+Geliang Tang (1):
+  selftests: mptcp: add IPv4-mapped IPv6 testcases
 
-Either the workqueue usage and this infra avoid the deadlock breaking
-the locks chain.
+Matthieu Baerts (4):
+  mptcp: support MPJoin with IPv4 mapped in v6 sk
+  mptcp: pm nl: support IPv4 mapped in v6 addresses
+  mptcp: pm nl: reduce variable scope
+  selftests: increase timeout to 10 min
 
-Should not have any bad iteraction with threaded NAPI nor busy polling,
-but I don't have experimented yet. Placing that on my TODO list.
+ net/mptcp/pm_netlink.c                        | 39 +++++++---
+ net/mptcp/subflow.c                           | 24 ++++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 75 +++++++++++++++++++
+ tools/testing/selftests/net/mptcp/settings    |  2 +-
+ 4 files changed, 120 insertions(+), 20 deletions(-)
 
-Thanks!
 
-Paolo
+base-commit: a61e4b60761fa7fa2cfde6682760763537ce5549
+-- =
 
---===============0011134690375393487==--
+2.30.0
+--===============4554609871144903031==--
