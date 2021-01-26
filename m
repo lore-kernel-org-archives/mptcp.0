@@ -1,173 +1,208 @@
-Content-Type: multipart/mixed; boundary="===============8482274874908129881=="
+Content-Type: multipart/mixed; boundary="===============5623732496505484048=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][RFC mptcp-next 5/6] mptcp: add tracepoints for PM
- operations
-Date: Tue, 26 Jan 2021 21:21:52 +0800
-Message-ID: <0ee088c09c673fe8b91c1b090b8e4fa189da1dce.1611667027.git.geliangtang@gmail.com>
-In-Reply-To: 54bb5802527e4b8b52f8fc9d0a8e561218e25637.1611667027.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][RFC mptcp-next 6/6] mptcp: add tracepoints for
+ subflow operations
+Date: Tue, 26 Jan 2021 21:21:53 +0800
+Message-ID: <b3a484bf1f07216bdf3f074578643bc506ddb62d.1611667027.git.geliangtang@gmail.com>
+In-Reply-To: 0ee088c09c673fe8b91c1b090b8e4fa189da1dce.1611667027.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7487
+X-UID: 7488
 
---===============8482274874908129881==
+--===============5623732496505484048==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add tracepoints in MPTCP for tracing the path management operations.
+Add tracepoints in MPTCP for tracing the subflow operations.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- include/trace/events/mptcp.h | 73 ++++++++++++++++++++++++++++++++++++
- net/mptcp/pm.c               |  3 ++
- net/mptcp/pm_netlink.c       |  3 ++
- 3 files changed, 79 insertions(+)
+ include/trace/events/mptcp.h | 108 +++++++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c          |   6 ++
+ 2 files changed, 114 insertions(+)
 
 diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 498b116056c1..2d607cecdfa8 100644
+index 2d607cecdfa8..bdcf46e4e28e 100644
 --- a/include/trace/events/mptcp.h
 +++ b/include/trace/events/mptcp.h
-@@ -221,6 +221,79 @@ TRACE_EVENT(mptcp_get_options,
- 	TP_printk("%s", __entry->str)
+@@ -294,6 +294,114 @@ TRACE_EVENT(mptcp_pm_create_subflow_or_signal_addr,
+ 		  __entry->info.mptcpi_add_addr_accepted_max)
  );
  =
 
-+TRACE_EVENT(mptcp_pm_announce_addr,
++/*
++ * mptcp event with arguments subflow_req
++ *
++ * Note: this class requires a valid subflow_req pointer.
++ */
++DECLARE_EVENT_CLASS(mptcp_event_subflow_req,
 +
-+	TP_PROTO(struct mptcp_sock *msk, const struct mptcp_addr_info *addr),
++	TP_PROTO(struct mptcp_subflow_request_sock *subflow_req),
 +
-+	TP_ARGS(msk, addr),
++	TP_ARGS(subflow_req),
 +
 +	TP_STRUCT__entry(
-+		__array(char, str, 100)
++		__array(char, str, 128)
 +	),
 +
 +	TP_fast_assign(
-+		memset(__entry->str, 0, 100);
++		memset(__entry->str, 0, 128);
 +
-+		sprintf(__entry->str, "family=3D%u port=3D%u id=3D%u flags=3D%u",
-+			addr->family, ntohs(addr->port), addr->id, addr->flags);
-+		if (addr->family =3D=3D AF_INET) {
-+			sprintf(__entry->str + strlen(__entry->str),
-+				" addr=3D%pI4", &addr->addr);
-+		}
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+		if (addr->family =3D=3D AF_INET6) {
-+			sprintf(__entry->str + strlen(__entry->str),
-+				" addr6=3D%pI6", &addr->addr6);
-+		}
-+#endif
++		if (subflow_req->mp_capable)
++			sprintf(__entry->str, "subflow_req mp_capable");
++
++		if (subflow_req->mp_join)
++			sprintf(__entry->str, "subflow_req mp_join, token=3D%u remote_nonce=3D%=
+u",
++				subflow_req->token, subflow_req->remote_nonce);
 +	),
 +
 +	TP_printk("%s", __entry->str)
 +);
 +
-+TRACE_EVENT(mptcp_pm_create_subflow_or_signal_addr,
++DEFINE_EVENT(mptcp_event_subflow_req, subflow_init_req,
 +
-+	TP_PROTO(struct mptcp_sock *msk),
++	TP_PROTO(struct mptcp_subflow_request_sock *subflow_req),
 +
-+	TP_ARGS(msk),
++	TP_ARGS(subflow_req)
++);
++
++DEFINE_EVENT(mptcp_event_subflow_req, subflow_syn_recv_sock,
++
++	TP_PROTO(struct mptcp_subflow_request_sock *subflow_req),
++
++	TP_ARGS(subflow_req)
++);
++
++/*
++ * mptcp event with arguments subflow
++ *
++ * Note: this class requires a valid subflow pointer.
++ */
++DECLARE_EVENT_CLASS(mptcp_event_subflow,
++
++	TP_PROTO(struct mptcp_subflow_context *subflow),
++
++	TP_ARGS(subflow),
 +
 +	TP_STRUCT__entry(
-+		__field_struct(struct mptcp_info, info)
++		__array(char, str, 128)
 +	),
 +
 +	TP_fast_assign(
-+		u32 flags =3D 0;
++		memset(__entry->str, 0, 128);
 +
-+		__entry->info.mptcpi_subflows =3D READ_ONCE(msk->pm.subflows);
-+		__entry->info.mptcpi_add_addr_signaled =3D READ_ONCE(msk->pm.add_addr_si=
-gnaled);
-+		__entry->info.mptcpi_add_addr_accepted =3D READ_ONCE(msk->pm.add_addr_ac=
-cepted);
-+		__entry->info.mptcpi_local_addr_used =3D READ_ONCE(msk->pm.local_addr_us=
-ed);
-+		__entry->info.mptcpi_subflows_max =3D mptcp_pm_get_subflows_max(msk);
-+		__entry->info.mptcpi_add_addr_signal_max =3D mptcp_pm_get_add_addr_signa=
-l_max(msk);
-+		__entry->info.mptcpi_add_addr_accepted_max =3D mptcp_pm_get_add_addr_acc=
-ept_max(msk);
-+		__entry->info.mptcpi_local_addr_max =3D mptcp_pm_get_local_addr_max(msk);
-+		if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
-+			flags |=3D MPTCP_INFO_FLAG_FALLBACK;
-+		if (READ_ONCE(msk->can_ack))
-+			flags |=3D MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
-+		__entry->info.mptcpi_flags =3D flags;
-+		__entry->info.mptcpi_token =3D READ_ONCE(msk->token);
-+		__entry->info.mptcpi_write_seq =3D READ_ONCE(msk->write_seq);
-+		__entry->info.mptcpi_snd_una =3D READ_ONCE(msk->snd_una);
-+		__entry->info.mptcpi_rcv_nxt =3D READ_ONCE(msk->ack_seq);
++		if (subflow->mp_capable)
++			sprintf(__entry->str, "remote_key=3D%llu", subflow->remote_key);
++
++		if (subflow->mp_join) {
++			sprintf(__entry->str, "thmac=3D%llu, remote_nonce=3D%u",
++				subflow->thmac, subflow->remote_nonce);
++		}
 +	),
 +
-+	TP_printk("local %d:%d signal %d:%d subflows %d:%d accept %d:%d",
-+		  __entry->info.mptcpi_local_addr_used,
-+		  __entry->info.mptcpi_local_addr_max,
-+		  __entry->info.mptcpi_add_addr_signaled,
-+		  __entry->info.mptcpi_add_addr_signal_max,
-+		  __entry->info.mptcpi_subflows,
-+		  __entry->info.mptcpi_subflows_max,
-+		  __entry->info.mptcpi_add_addr_accepted,
-+		  __entry->info.mptcpi_add_addr_accepted_max)
++	TP_printk("%s", __entry->str)
++);
++
++DEFINE_EVENT(mptcp_event_subflow, subflow_finish_connect,
++
++	TP_PROTO(struct mptcp_subflow_context *subflow),
++
++	TP_ARGS(subflow)
++);
++
++TRACE_EVENT(get_mapping_status,
++
++	TP_PROTO(struct mptcp_ext *mpext),
++
++	TP_ARGS(mpext),
++
++	TP_STRUCT__entry(
++		__field(__u64, data_seq)
++		__field(__u32, subflow_seq)
++		__field(__u16, data_len)
++		__field(__u8, dsn64)
++		__field(__u8, data_fin)
++	),
++
++	TP_fast_assign(
++		__entry->data_seq =3D mpext->data_seq;
++		__entry->subflow_seq =3D mpext->subflow_seq;
++		__entry->data_len =3D mpext->data_len;
++		__entry->dsn64 =3D mpext->dsn64;
++		__entry->data_fin =3D mpext->data_fin;
++	),
++
++	TP_printk("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u dsn64=3D%d data=
+_fin=3D%d",
++		  __entry->data_seq, __entry->subflow_seq,
++		  __entry->data_len, __entry->dsn64,
++		  __entry->data_fin)
 +);
 +
  #endif /* _TRACE_MPTCP_H */
  =
 
  /* This part must be outside protection */
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 1a25003fd8e3..eef85c3a97d1 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -10,6 +10,8 @@
- #include <net/mptcp.h>
- #include "protocol.h"
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 280da418d60b..668a1b1bf049 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -27,6 +27,8 @@
+ =
+
+ static void mptcp_subflow_ops_undo_override(struct sock *ssk);
  =
 
 +#include <trace/events/mptcp.h>
 +
- /* path manager command handlers */
- =
-
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
-@@ -18,6 +20,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ static void SUBFLOW_REQ_INC_STATS(struct request_sock *req,
+ 				  enum linux_mptcp_mib_field field)
  {
- 	u8 add_addr =3D READ_ONCE(msk->pm.addr_signal);
+@@ -223,6 +225,7 @@ static int subflow_init_req(struct request_sock *req,
+ 		pr_debug("token=3D%u, remote_nonce=3D%u msk=3D%p", subflow_req->token,
+ 			 subflow_req->remote_nonce, subflow_req->msk);
+ 	}
++	trace_subflow_init_req(subflow_req);
  =
 
-+	trace_mptcp_pm_announce_addr(msk, addr);
- 	pr_debug("msk=3D%p, local_id=3D%d", msk, addr->id);
+ 	return 0;
+ }
+@@ -439,6 +442,7 @@ static void subflow_finish_connect(struct sock *sk, con=
+st struct sk_buff *skb)
+ fallback:
+ 		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+ 	}
++	trace_subflow_finish_connect(subflow);
+ 	return;
  =
 
- 	lockdep_assert_held(&msk->pm.lock);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b6ee53623005..af7ff6b83483 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -17,6 +17,8 @@
- #include "protocol.h"
- #include "mib.h"
+ do_reset:
+@@ -610,6 +614,7 @@ static struct sock *subflow_syn_recv_sock(const struct =
+sock *sk,
+ 	if (fallback)
+ 		goto create_child;
  =
 
-+#include <trace/events/mptcp.h>
-+
- /* forward declaration */
- static struct genl_family mptcp_genl_family;
++	trace_subflow_syn_recv_sock(subflow_req);
+ 	/* if the sk is MP_CAPABLE, we try to fetch the client key */
+ 	if (subflow_req->mp_capable) {
+ 		if (TCP_SKB_CB(skb)->seq !=3D subflow_req->ssn_offset + 1) {
+@@ -836,6 +841,7 @@ static enum mapping_status get_mapping_status(struct so=
+ck *ssk,
+ 		goto validate_seq;
+ 	}
  =
 
-@@ -404,6 +406,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(stru=
-ct mptcp_sock *msk)
- 	local_addr_max =3D mptcp_pm_get_local_addr_max(msk);
- 	subflows_max =3D mptcp_pm_get_subflows_max(msk);
- =
-
-+	trace_mptcp_pm_create_subflow_or_signal_addr(msk);
- 	pr_debug("local %d:%d signal %d:%d subflows %d:%d\n",
- 		 msk->pm.local_addr_used, local_addr_max,
- 		 msk->pm.add_addr_signaled, add_addr_signal_max,
++	trace_get_mapping_status(mpext);
+ 	pr_debug("seq=3D%llu is64=3D%d ssn=3D%u data_len=3D%u data_fin=3D%d",
+ 		 mpext->data_seq, mpext->dsn64, mpext->subflow_seq,
+ 		 mpext->data_len, mpext->data_fin);
 -- =
 
 2.29.2
 
---===============8482274874908129881==--
+--===============5623732496505484048==--
