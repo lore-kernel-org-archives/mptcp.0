@@ -1,37 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============5285152854124572538=="
+Content-Type: multipart/mixed; boundary="===============7727995401137889233=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 28 January 2021 16:00 UTC (8am PDT, 5pm CET,
- 12pm CST)
-Date: Wed, 27 Jan 2021 18:30:42 +0100
-Message-ID: <09e573ad-2ae5-c40e-171c-4bb6c99d7770@tessares.net>
+Subject: [MPTCP] [PATCH net] net: mptcp: fix length of MP_PRIO sub-option
+Date: Wed, 27 Jan 2021 22:43:21 +0100
+Message-ID: <cf358e0e1e2b22a4951b87d90e71d8b07211c1a6.1611783704.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7496
+X-UID: 7497
 
---===============5285152854124572538==
+--===============7727995401137889233==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+With version 0 of the protocol it was legal to encode the 'Subflow Id' in
+the MP_PRIO suboption, to specify which subflow would change its 'Backup'
+flag. This has been removed from v1 specification: thus, according to RFC
+8684 =C2=A73.3.8, the resulting 'Length' of MP_PRIO changed from 4 to 3 byt=
+es.
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+Current Linux generates / parses MP_PRIO according to the old spec, using
+'Length' equal to 4, and hardcoding 1 as 'Subflow Id'; RFC compliance can
+improve if we change 'Length' in other to become 3, leaving a 'Nop' after
+the MP_PRIO suboption. In this way the kernel will emit and accept *only*
+MP_PRIO suboptions that are compliant to version 1 of the MPTCP protocol.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210128
+ unpatched kernel:
+ $ tcpdump --number -tnnr unpatched.pcap | grep prio
+ reading from file unpatched.pcap, link-type LINUX_SLL (Linux cooked v1), s=
+napshot length 65535
+   76  IP 10.0.1.1.10006 > 10.0.1.2.53982: Flags [.], ack 301, win 256, opt=
+ions [nop,nop,TS val 600859890 ecr 1213685745,mptcp prio non-backup id 1,mp=
+tcp dss ack 13257926699604102366], length 0
+   77  IP 10.0.3.2.40019 > 10.0.1.1.10006: Flags [.], ack 1, win 256, optio=
+ns [nop,nop,TS val 2488720994 ecr 3187547357,mptcp prio non-backup id 1,mpt=
+cp dss ack 4016099686801387019], length 0
 
-Feel free to add/modify topics!
+ patched kernel:
+ $ tcpdump --number -tnnr patched.pcap | grep prio
+ reading from file patched.pcap, link-type LINUX_SLL (Linux cooked v1), sna=
+pshot length 65535
+   77  IP 10.0.1.1.10006 > 10.0.1.2.44058: Flags [.], ack 301, win 509, opt=
+ions [nop,nop,TS val 1313569662 ecr 1198445302,mptcp prio non-backup,nop,mp=
+tcp dss ack 14169869632263667042], length 0
+   78  IP 10.0.3.2.42645 > 10.0.1.1.10006: Flags [.], ack 1, win 502, optio=
+ns [nop,nop,TS val 4000297703 ecr 2471781012,mptcp prio non-backup,nop,mptc=
+p dss ack 5132559192566117977], length 0
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Fixes: 40453a5c61f4 ("mptcp: add the incoming MP_PRIO support")
+Fixes: 067065422fcd ("mptcp: add the outgoing MP_PRIO support")
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/options.c  | 4 ++--
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-See you tomorrow!
-Matt
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 775f0576592e..bb9230dda9fe 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -283,7 +283,7 @@ static void mptcp_parse_option(const struct sk_buff *sk=
+b,
+ 		break;
+ =
+
+ 	case MPTCPOPT_MP_PRIO:
+-		if (opsize !=3D TCPOLEN_MPTCP_PRIO)
++		if (opsize !=3D TCPOLEN_MPTCP_PRIO_NOID)
+ 			break;
+ =
+
+ 		mp_opt->mp_prio =3D 1;
+@@ -1224,7 +1224,7 @@ void mptcp_write_options(__be32 *ptr, const struct tc=
+p_sock *tp,
+ 		subflow->send_mp_prio =3D 0;
+ =
+
+ 		*ptr++ =3D mptcp_option(MPTCPOPT_MP_PRIO,
+-				      TCPOLEN_MPTCP_PRIO,
++				      TCPOLEN_MPTCP_PRIO_NOID,
+ 				      opts->backup, TCPOPT_NOP);
+ 	}
+ =
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 447ce4631b43..7e18bbfe8f43 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -62,6 +62,7 @@
+ #define TCPOLEN_MPTCP_PORT_LEN		4
+ #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
+ #define TCPOLEN_MPTCP_PRIO		4
++#define TCPOLEN_MPTCP_PRIO_NOID		3
+ #define TCPOLEN_MPTCP_FASTCLOSE		12
+ =
+
+ /* MPTCP MP_JOIN flags */
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5285152854124572538==--
+2.29.2
+
+--===============7727995401137889233==--
