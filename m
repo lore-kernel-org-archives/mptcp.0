@@ -1,59 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============6862495624170315171=="
+Content-Type: multipart/mixed; boundary="===============2673651703850231794=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH v2 mptcp-next 0/5] mptcp: netlink event support
-Date: Tue, 26 Jan 2021 21:28:31 +0100
-Message-ID: <6f6e3829-5b4b-bace-7cc1-d783df761dd0@tessares.net>
-In-Reply-To: 5cedb15c-d3f0-be9d-b821-de9c79411f9@linux.intel.com
+Date: Wed, 27 Jan 2021 09:23:24 +0100
+Message-ID: <50659257-6516-d7b8-215e-f16662515467@tessares.net>
+In-Reply-To: 6f6e3829-5b4b-bace-7cc1-d783df761dd0@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 7493
+X-UID: 7494
 
---===============6862495624170315171==
+--===============2673651703850231794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Florian, Mat,
 
-On 26/01/2021 18:01, Mat Martineau wrote:
-> =
+On 26/01/2021 21:28, Matthieu Baerts wrote:
+> - f15cd5fd4c26: mptcp: add netlink event support
 
-> On Wed, 20 Jan 2021, Florian Westphal wrote:
-> =
+I did a small extra modification on top of this patch to keep the =
 
->> This is round 2 of the netlink event series.
->> No changes here except in patch 4 (minor checkpatch format nit)
->> and patch 5.
-> =
+alignment with the rest. Nothing important but still, if you need to =
 
-> Just clarifying tags after my reply to the patch 5 thread, Matthieu =
+copy the content of include/uapi/linux/mptcp.h elsewhere (i.e. iproute2 =
 
-> please tag patches 1, 2, 3, and 5 with:
-> =
+and mptcpd), please make sure to use the latest version :)
 
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> =
+- 1f2bcf78ff83: mptcp: use tab to align mptcp_pm_events
+- (of course no co-dev-by tag added for that)
+- Results: 331067123e0c..1d8e7211c639
 
-> (patch 4 tag is different, in a separate email)
-
-Thank you for the patches and the series!
-
-Just applied to our tree with the RvB and Acked-by tags, the =
-
-modification of the group (mptcp_pm_events) and a micro checkpatch =
-
-format nit (blank line after enum like the previous ones in mptcp.h).
-
-- 57b1e8d7873c: mptcp: split __mptcp_close_ssk helper
-- 37f87493bc63: mptcp: pass subflow socket to a few helpers
-- 5e2330f127b5: mptcp: avoid lock_fast usage in accept path
-- edd4b6f8f6ac: genetlink: add CAP_NET_ADMIN test for multicast bind
-- f15cd5fd4c26: mptcp: add netlink event support
-- Results: de7588363638..daa6a08b00eb
-
-Tests + export are in progress!
+Tests + export are in progress.
 
 Cheers,
 Matt
@@ -61,4 +40,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============6862495624170315171==--
+--===============2673651703850231794==--
