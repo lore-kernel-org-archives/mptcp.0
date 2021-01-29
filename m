@@ -1,104 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============6251732480109391989=="
+Content-Type: multipart/mixed; boundary="===============2216723366312748456=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 6/8] mptcp: remove a list of addrs
- when flushing
-Date: Fri, 29 Jan 2021 18:26:50 +0800
-Message-ID: <dcc70e8d56c91dca07917343fe81eaa075b1f378.1611914854.git.geliangtang@gmail.com>
-In-Reply-To: fcfce1fc8b924f427f682c8ca534dd2a4a1c66c0.1611914854.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 7/8] mptcp: update the netlink event
+ for rm_addr
+Date: Fri, 29 Jan 2021 18:26:51 +0800
+Message-ID: <51b2607d102fec3b1e8edcfef464307e86726e06.1611914854.git.geliangtang@gmail.com>
+In-Reply-To: dcc70e8d56c91dca07917343fe81eaa075b1f378.1611914854.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7529
+X-UID: 7530
 
---===============6251732480109391989==
+--===============2216723366312748456==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch invoked mptcp_nl_remove_addrs_and_subflows to remove a list
-of addresses when the netlink flushes addresses, instead of using
-mptcp_nl_remove_subflow_and_signal_addr to remove them one by one.
-
-Since mptcp_nl_remove_subflow_and_signal_addr was dropped from
-__flush_addrs, __flush_addrs could be invoked under the locks. So
-dropped the useless free_list in mptcp_nl_cmd_flush_addrs and the unused
-parameter net in __flush_addrs.
+Since the parameter id passed to mptcp_event_addr_removed was changed as
+a u64 number, the netlink event for removing addresses needed to be
+updated.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ include/uapi/linux/mptcp.h | 1 +
+ net/mptcp/pm_netlink.c     | 4 ++--
+ net/mptcp/protocol.h       | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index c91578aaab32..227e8edb4a28 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -172,6 +172,7 @@ enum mptcp_event_attr {
+ 	MPTCP_ATTR_FLAGS,	/* u16 */
+ 	MPTCP_ATTR_TIMEOUT,	/* u32 */
+ 	MPTCP_ATTR_IF_IDX,	/* s32 */
++	MPTCP_ATTR_PAD,
+ =
+
+ 	__MPTCP_ATTR_AFTER_LAST
+ };
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index e5d36814909c..3801931ab9ea 100644
+index 3801931ab9ea..bc473ea4fcc2 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1277,14 +1277,13 @@ static void mptcp_nl_remove_addrs_and_subflows(stru=
-ct net *net, u64 rm_ids)
- 	}
+@@ -1705,7 +1705,7 @@ static int mptcp_event_created(struct sk_buff *skb,
+ 	return mptcp_event_add_subflow(skb, ssk);
  }
  =
 
--static void __flush_addrs(struct net *net, struct list_head *list)
-+static void __flush_addrs(struct list_head *list)
+-void mptcp_event_addr_removed(const struct mptcp_sock *msk, uint8_t id)
++void mptcp_event_addr_removed(const struct mptcp_sock *msk, uint64_t ids)
  {
- 	while (!list_empty(list)) {
- 		struct mptcp_pm_addr_entry *cur;
+ 	struct net *net =3D sock_net((const struct sock *)msk);
+ 	struct nlmsghdr *nlh;
+@@ -1725,7 +1725,7 @@ void mptcp_event_addr_removed(const struct mptcp_sock=
+ *msk, uint8_t id)
+ 	if (nla_put_u32(skb, MPTCP_ATTR_TOKEN, msk->token))
+ 		goto nla_put_failure;
  =
 
- 		cur =3D list_entry(list->next,
- 				 struct mptcp_pm_addr_entry, list);
--		mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
- 		list_del_rcu(&cur->list);
- 		mptcp_pm_free_addr_entry(cur);
- 	}
-@@ -1301,15 +1300,25 @@ static void __reset_counters(struct pm_nl_pernet *p=
-ernet)
- static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info =
-*info)
+-	if (nla_put_u8(skb, MPTCP_ATTR_REM_ID, id))
++	if (nla_put_u64_64bit(skb, MPTCP_ATTR_REM_ID, ids, MPTCP_ATTR_PAD))
+ 		goto nla_put_failure;
+ =
+
+ 	genlmsg_end(skb, nlh);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 9dd276cb1f71..af1d70843791 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -674,7 +674,7 @@ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u64=
+ local_ids);
+ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 		 const struct sock *ssk, gfp_t gfp);
+ void mptcp_event_addr_announced(const struct mptcp_sock *msk, const struct=
+ mptcp_addr_info *info);
+-void mptcp_event_addr_removed(const struct mptcp_sock *msk, u8 id);
++void mptcp_event_addr_removed(const struct mptcp_sock *msk, u64 ids);
+ =
+
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
  {
- 	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
--	LIST_HEAD(free_list);
-+	struct mptcp_pm_addr_entry *entry;
-+	u64 rm_ids =3D 0;
-+	u8 *id;
-+
-+	id =3D (u8 *)&rm_ids;
-+	spin_lock_bh(&pernet->lock);
-+	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+		if (entry->addr.id)
-+			*id++ =3D entry->addr.id;
-+	}
-+	spin_unlock_bh(&pernet->lock);
-+	mptcp_nl_remove_addrs_and_subflows(sock_net(skb->sk), rm_ids);
- =
-
- 	spin_lock_bh(&pernet->lock);
--	list_splice_init(&pernet->local_addr_list, &free_list);
-+	__flush_addrs(&pernet->local_addr_list);
- 	__reset_counters(pernet);
- 	pernet->next_id =3D 1;
- 	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
- 	spin_unlock_bh(&pernet->lock);
--	__flush_addrs(sock_net(skb->sk), &free_list);
- 	return 0;
- }
- =
-
-@@ -1906,7 +1915,7 @@ static void __net_exit pm_nl_exit_net(struct list_hea=
-d *net_list)
- 		/* net is removed from namespace list, can't race with
- 		 * other modifiers
- 		 */
--		__flush_addrs(net, &pernet->local_addr_list);
-+		__flush_addrs(&pernet->local_addr_list);
- 	}
- }
- =
-
 -- =
 
 2.29.2
 
---===============6251732480109391989==--
+--===============2216723366312748456==--
