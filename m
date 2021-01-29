@@ -1,140 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============0064709218759369657=="
+Content-Type: multipart/mixed; boundary="===============8121856354249436223=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 14/16] mptcp: add the mibs for ADD_ADDR with
- port
-Date: Thu, 28 Jan 2021 17:11:13 -0800
-Message-ID: <20210129011115.133953-15-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 11/16] mptcp: enable use_port when invoke
+ addresses_equal
+Date: Thu, 28 Jan 2021 17:11:10 -0800
+Message-ID: <20210129011115.133953-12-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210129011115.133953-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7519
+X-UID: 7520
 
---===============0064709218759369657==
+--===============8121856354249436223==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geliang Tang <geliangtang(a)gmail.com>
 
-This patch adds the mibs for ADD_ADDR with port:
-
-MPTCP_MIB_PORTADD for received ADD_ADDR suboption with a port number.
-
-MPTCP_MIB_PORTSYNRX, MPTCP_MIB_PORTSYNACKRX, MPTCP_MIB_PORTACKRX, for
-received MP_JOIN's SYN or SYN/ACK or ACK with a port number which is
-different from the msk's port number.
-
-MPTCP_MIB_MISMATCHPORTSYNRX and MPTCP_MIB_MISMATCHPORTACKRX, for
-received SYN or ACK MP_JOIN with a mismatched port-number.
+When dealing with the addresses list local_addr_list or anno_list, we
+should enable the function addresses_equal's parameter use_port. And
+enable it in address_zero too.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/mib.c     | 6 ++++++
- net/mptcp/mib.h     | 6 ++++++
- net/mptcp/options.c | 4 ++++
- net/mptcp/subflow.c | 8 +++++++-
- 4 files changed, 23 insertions(+), 1 deletion(-)
+ net/mptcp/pm_netlink.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 8ca196489893..3780c29c321d 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -29,6 +29,12 @@ static const struct snmp_mib mptcp_snmp_list[] =3D {
- 	SNMP_MIB_ITEM("DuplicateData", MPTCP_MIB_DUPDATA),
- 	SNMP_MIB_ITEM("AddAddr", MPTCP_MIB_ADDADDR),
- 	SNMP_MIB_ITEM("EchoAdd", MPTCP_MIB_ECHOADD),
-+	SNMP_MIB_ITEM("PortAdd", MPTCP_MIB_PORTADD),
-+	SNMP_MIB_ITEM("MPJoinPortSynRx", MPTCP_MIB_JOINPORTSYNRX),
-+	SNMP_MIB_ITEM("MPJoinPortSynAckRx", MPTCP_MIB_JOINPORTSYNACKRX),
-+	SNMP_MIB_ITEM("MPJoinPortAckRx", MPTCP_MIB_JOINPORTACKRX),
-+	SNMP_MIB_ITEM("MismatchPortSynRx", MPTCP_MIB_MISMATCHPORTSYNRX),
-+	SNMP_MIB_ITEM("MismatchPortAckRx", MPTCP_MIB_MISMATCHPORTACKRX),
- 	SNMP_MIB_ITEM("RmAddr", MPTCP_MIB_RMADDR),
- 	SNMP_MIB_ITEM("RmSubflow", MPTCP_MIB_RMSUBFLOW),
- 	SNMP_MIB_ITEM("MPPrioTx", MPTCP_MIB_MPPRIOTX),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 63914a5ef6a5..72afbc135f8e 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -22,6 +22,12 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_DUPDATA,		/* Segments discarded due to duplicate DSS */
- 	MPTCP_MIB_ADDADDR,		/* Received ADD_ADDR with echo-flag=3D0 */
- 	MPTCP_MIB_ECHOADD,		/* Received ADD_ADDR with echo-flag=3D1 */
-+	MPTCP_MIB_PORTADD,		/* Received ADD_ADDR with a port-number */
-+	MPTCP_MIB_JOINPORTSYNRX,	/* Received a SYN MP_JOIN with a different port-=
-number */
-+	MPTCP_MIB_JOINPORTSYNACKRX,	/* Received a SYNACK MP_JOIN with a different=
- port-number */
-+	MPTCP_MIB_JOINPORTACKRX,	/* Received an ACK MP_JOIN with a different port=
--number */
-+	MPTCP_MIB_MISMATCHPORTSYNRX,	/* Received a SYN MP_JOIN with a mismatched =
-port-number */
-+	MPTCP_MIB_MISMATCHPORTACKRX,	/* Received an ACK MP_JOIN with a mismatched=
- port-number */
- 	MPTCP_MIB_RMADDR,		/* Received RM_ADDR */
- 	MPTCP_MIB_RMSUBFLOW,		/* Remove a subflow */
- 	MPTCP_MIB_MPPRIOTX,		/* Transmit a MP_PRIO */
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c9643344a8d7..331d460d82fa 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1024,6 +1024,10 @@ void mptcp_incoming_options(struct sock *sk, struct =
-sk_buff *skb)
- 			mptcp_pm_del_add_timer(msk, &addr);
- 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ECHOADD);
- 		}
-+
-+		if (mp_opt.port)
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_PORTADD);
-+
- 		mp_opt.add_addr =3D 0;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d6e23e079fb0..5b045023fe15 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -91,7 +91,7 @@ static bool address_zero(const struct mptcp_addr_info *ad=
+dr)
+ 	memset(&zero, 0, sizeof(zero));
+ 	zero.family =3D addr->family;
+ =
+
+-	return addresses_equal(addr, &zero, false);
++	return addresses_equal(addr, &zero, true);
+ }
+ =
+
+ static void local_address(const struct sock_common *skc,
+@@ -131,7 +131,7 @@ static bool lookup_subflow_by_saddr(const struct list_h=
+ead *list,
+ 		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+ =
+
+ 		local_address(skc, &cur);
+-		if (addresses_equal(&cur, saddr, false))
++		if (addresses_equal(&cur, saddr, saddr->port))
+ 			return true;
  	}
  =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index ebfbf6a9b669..280da418d60b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -207,8 +207,10 @@ static int subflow_init_req(struct request_sock *req,
- 				tcp_request_sock_ops.destructor(req);
- 				subflow_req->msk =3D NULL;
- 				subflow_req->mp_join =3D 0;
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTSYNRX);
- 				return -EPERM;
- 			}
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTSYNRX);
- 		}
+@@ -247,7 +247,7 @@ lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+ 	struct mptcp_pm_add_entry *entry;
  =
 
- 		subflow_req_create_thmac(subflow_req);
-@@ -431,6 +433,7 @@ static void subflow_finish_connect(struct sock *sk, con=
-st struct sk_buff *skb)
- 			pr_debug("synack inet_dport=3D%d %d",
- 				 ntohs(inet_sk(sk)->inet_dport),
- 				 ntohs(inet_sk(parent)->inet_dport));
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINPORTSYNACKRX);
- 		}
- 	} else if (mptcp_check_fallback(sk)) {
- fallback:
-@@ -702,8 +705,11 @@ static struct sock *subflow_syn_recv_sock(const struct=
- sock *sk,
- 				pr_debug("ack inet_sport=3D%d %d",
- 					 ntohs(inet_sk(sk)->inet_sport),
- 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
--				if (!mptcp_pm_sport_in_anno_list(owner, sk))
-+				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
-+					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
- 					goto out;
-+				}
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTACKRX);
- 			}
- 		}
+ 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+-		if (addresses_equal(&entry->addr, addr, false))
++		if (addresses_equal(&entry->addr, addr, true))
+ 			return entry;
  	}
+ =
+
+@@ -773,7 +773,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc)
+ =
+
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+-		if (addresses_equal(&entry->addr, &skc_local, false)) {
++		if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
+ 			ret =3D entry->addr.id;
+ 			break;
+ 		}
 -- =
 
 2.30.0
 
---===============0064709218759369657==--
+--===============8121856354249436223==--
