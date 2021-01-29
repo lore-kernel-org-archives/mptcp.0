@@ -1,85 +1,239 @@
-Content-Type: multipart/mixed; boundary="===============8121856354249436223=="
+Content-Type: multipart/mixed; boundary="===============6057979904451980212=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 11/16] mptcp: enable use_port when invoke
- addresses_equal
-Date: Thu, 28 Jan 2021 17:11:10 -0800
-Message-ID: <20210129011115.133953-12-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 15/16] selftests: mptcp: add testcases for
+ ADD_ADDR with port
+Date: Thu, 28 Jan 2021 17:11:14 -0800
+Message-ID: <20210129011115.133953-16-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210129011115.133953-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7520
+X-UID: 7521
 
---===============8121856354249436223==
+--===============6057979904451980212==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geliang Tang <geliangtang(a)gmail.com>
 
-When dealing with the addresses list local_addr_list or anno_list, we
-should enable the function addresses_equal's parameter use_port. And
-enable it in address_zero too.
+This patch adds testcases for ADD_ADDR with port and the related MIB
+counters check in chk_add_nr. The output looks like this:
+
+ 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       syn[ ok ] - ack   [ ok ]
+ 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       syn[ ok ] - ack   [ ok ]
+ 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
+                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       syn[ ok ] - ack   [ ok ]
+                                       rm [ ok ] - sf    [ ok ]
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 160 +++++++++++++++++-
+ 1 file changed, 159 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d6e23e079fb0..5b045023fe15 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -91,7 +91,7 @@ static bool address_zero(const struct mptcp_addr_info *ad=
-dr)
- 	memset(&zero, 0, sizeof(zero));
- 	zero.family =3D addr->family;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index b5cd2a48831e..b8fd924033b1 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -487,6 +487,12 @@ chk_add_nr()
+ {
+ 	local add_nr=3D$1
+ 	local echo_nr=3D$2
++	local port_nr=3D${3:-0}
++	local syn_nr=3D${4:-$port_nr}
++	local syn_ack_nr=3D${5:-$port_nr}
++	local ack_nr=3D${6:-$port_nr}
++	local mis_syn_nr=3D${7:-0}
++	local mis_ack_nr=3D${8:-0}
+ 	local count
+ 	local dump_stats
  =
 
--	return addresses_equal(addr, &zero, false);
-+	return addresses_equal(addr, &zero, true);
- }
+@@ -509,7 +515,87 @@ chk_add_nr()
+ 		ret=3D1
+ 		dump_stats=3D1
+ 	else
+-		echo "[ ok ]"
++		echo -n "[ ok ]"
++	fi
++
++	if [ $port_nr -gt 0 ]; then
++		echo -n " - pt "
++		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{pri=
+nt $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$port_nr" ]; then
++			echo "[fail] got $count ADD_ADDR[s] with a port-number expected $port_n=
+r"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++
++		printf "%-39s %s" " " "syn"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortSynRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$syn_nr" ]; then
++			echo "[fail] got $count JOIN[s] syn with a different \
++				port-number expected $syn_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - synack"
++		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtMPJoinPortSynAckRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$syn_ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] synack with a different \
++				port-number expected $syn_ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - ack"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortAckRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] ack with a different \
++				port-number expected $ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++
++		printf "%-39s %s" " " "syn"
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortSynRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$mis_syn_nr" ]; then
++			echo "[fail] got $count JOIN[s] syn with a mismatched \
++				port-number expected $mis_syn_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo -n "[ ok ]"
++		fi
++
++		echo -n " - ack   "
++		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortAckRx |
++			awk '{print $2}'`
++		[ -z "$count" ] && count=3D0
++		if [ "$count" !=3D "$mis_ack_nr" ]; then
++			echo "[fail] got $count JOIN[s] ack with a mismatched \
++				port-number expected $mis_ack_nr"
++			ret=3D1
++			dump_stats=3D1
++		else
++			echo "[ ok ]"
++		fi
++	else
++		echo ""
+ 	fi
  =
 
- static void local_address(const struct sock_common *skc,
-@@ -131,7 +131,7 @@ static bool lookup_subflow_by_saddr(const struct list_h=
-ead *list,
- 		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+ 	if [ "${dump_stats}" =3D 1 ]; then
+@@ -955,6 +1041,78 @@ chk_join_nr "single address, backup" 1 1 1
+ chk_add_nr 1 1
+ chk_prio_nr 1 0
  =
 
- 		local_address(skc, &cur);
--		if (addresses_equal(&cur, saddr, false))
-+		if (addresses_equal(&cur, saddr, saddr->port))
- 			return true;
- 	}
- =
-
-@@ -247,7 +247,7 @@ lookup_anno_list_by_saddr(struct mptcp_sock *msk,
- 	struct mptcp_pm_add_entry *entry;
- =
-
- 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
--		if (addresses_equal(&entry->addr, addr, false))
-+		if (addresses_equal(&entry->addr, addr, true))
- 			return entry;
- 	}
- =
-
-@@ -773,7 +773,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
-ruct sock_common *skc)
- =
-
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (addresses_equal(&entry->addr, &skc_local, false)) {
-+		if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
- 			ret =3D entry->addr.id;
- 			break;
- 		}
++# signal address with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "signal address with port" 1 1 1
++chk_add_nr 1 1 1
++
++# subflow and signal with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "subflow and signal with port" 2 2 2
++chk_add_nr 1 1 1
++
++# single address with port, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
++chk_join_nr "remove single address with port" 1 1 1
++chk_add_nr 1 1 1
++chk_rm_nr 0 0
++
++# subflow and signal with port, remove
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 1 2
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
++chk_join_nr "remove subflow and signal with port" 2 2 2
++chk_add_nr 1 1 1
++chk_rm_nr 1 1
++
++# subflows and signal with port, flush
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 0 3
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 1 3
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
++chk_join_nr "flush subflows and signal with port" 3 3 3
++chk_add_nr 1 1
++chk_rm_nr 2 2
++
++# multiple addresses with port
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10100
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple addresses with port" 2 2 2
++chk_add_nr 2 2 2
++
++# multiple addresses with ports
++reset
++ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
++ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10101
++ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++run_tests $ns1 $ns2 10.0.1.1
++chk_join_nr "multiple addresses with ports" 2 2 2
++chk_add_nr 2 2 2
++
+ # single subflow, syncookies
+ reset_with_cookies
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
 -- =
 
 2.30.0
 
---===============8121856354249436223==--
+--===============6057979904451980212==--
