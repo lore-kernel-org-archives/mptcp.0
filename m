@@ -1,87 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============3794328780063536202=="
+Content-Type: multipart/mixed; boundary="===============2145004535640374082=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 04/16] mptcp: send ack for every add_addr
-Date: Thu, 28 Jan 2021 17:11:03 -0800
-Message-ID: <20210129011115.133953-5-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20210129011115.133953-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH net-next 00/16] mptcp: ADD_ADDR enhancements
+Date: Thu, 28 Jan 2021 17:10:59 -0800
+Message-ID: <20210129011115.133953-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7510
+X-UID: 7511
 
---===============3794328780063536202==
+--===============2145004535640374082==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
+This patch series from the MPTCP tree contains enhancements and
+associated tests for the ADD_ADDR ("add address") MPTCP option. This
+option allows already-connected MPTCP peers to share additional IP
+addresses with each other, which can then be used to create additional
+subflows within those MPTCP connections.
 
-This patch changes the sending ACK conditions for the ADD_ADDR, send an
-ACK packet for any ADD_ADDR, not just when ipv6 addresses or port
-numbers are included.
+Patches 1 & 2 remove duplicated data in the per-connection path manager
+structure.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/139
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- net/mptcp/pm.c         |  3 +--
- net/mptcp/pm_netlink.c | 10 ++++------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+Patches 3-6 initiate additional subflows when an address is added using
+the netlink path manager interface and improve ADD_ADDR signaling
+reliability, subject to configured limits. Self tests are also updated.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 01a846b25771..3a22e73220b9 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -191,8 +191,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- =
+Patches 7-15 add new support for optional port numbers in ADD_ADDR. This
+includes creating an additional in-kernel TCP listening socket for the
+requested port number, validating the port number when processing
+incoming subflow connections, including the port number in netlink
+interfaces, and adding some new MIBs. New self test cases are added for
+subflows connecting with alternate port numbers.
 
- void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
- {
--	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
--	    !mptcp_pm_should_add_signal_port(msk))
-+	if (!mptcp_pm_should_add_signal(msk))
- 		return;
- =
+Patch 16 refactors the self test script containing the ADD_ADDR test
+cases, allowing developers to quickly run a subset of the tests.
 
- 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d91ea0316a4f..78a157a30c68 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -474,8 +474,7 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *m=
-sk)
- {
- 	struct mptcp_subflow_context *subflow;
- =
+Geliang Tang (16):
+  mptcp: use WRITE_ONCE/READ_ONCE for the pernet *_max
+  mptcp: drop *_max fields in mptcp_pm_data
+  mptcp: create subflow or signal addr for newly added address
+  mptcp: send ack for every add_addr
+  selftests: mptcp: use minus values for removing address numbers
+  selftests: mptcp: add testcases for newly added addresses
+  mptcp: create the listening socket for new port
+  mptcp: drop unused skb in subflow_token_join_request
+  mptcp: add a new helper subflow_req_create_thmac
+  mptcp: add port number check for MP_JOIN
+  mptcp: enable use_port when invoke addresses_equal
+  mptcp: deal with MPTCP_PM_ADDR_ATTR_PORT in PM netlink
+  selftests: mptcp: add port argument for pm_nl_ctl
+  mptcp: add the mibs for ADD_ADDR with port
+  selftests: mptcp: add testcases for ADD_ADDR with port
+  selftests: mptcp: add command line arguments for mptcp_join.sh
 
--	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
--	    !mptcp_pm_should_add_signal_port(msk))
-+	if (!mptcp_pm_should_add_signal(msk))
- 		return;
- =
+ net/mptcp/mib.c                               |    6 +
+ net/mptcp/mib.h                               |    6 +
+ net/mptcp/mptcp_diag.c                        |    6 +-
+ net/mptcp/options.c                           |    4 +
+ net/mptcp/pm.c                                |   12 +-
+ net/mptcp/pm_netlink.c                        |  295 ++++-
+ net/mptcp/protocol.c                          |    2 +-
+ net/mptcp/protocol.h                          |   12 +-
+ net/mptcp/subflow.c                           |   79 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 1095 +++++++++++------
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |   24 +-
+ 11 files changed, 1084 insertions(+), 457 deletions(-)
 
- 	__mptcp_flush_join_list(msk);
-@@ -485,10 +484,9 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *=
-msk)
- 		u8 add_addr;
- =
 
- 		spin_unlock_bh(&msk->pm.lock);
--		if (mptcp_pm_should_add_signal_ipv6(msk))
--			pr_debug("send ack for add_addr6");
--		if (mptcp_pm_should_add_signal_port(msk))
--			pr_debug("send ack for add_addr_port");
-+		pr_debug("send ack for add_addr%s%s",
-+			 mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
-+			 mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
- =
-
- 		lock_sock(ssk);
- 		tcp_send_ack(ssk);
+base-commit: 32e31b78272ba0905c751a0f6ff6ab4c275a780e
 -- =
 
 2.30.0
 
---===============3794328780063536202==--
+--===============2145004535640374082==--
