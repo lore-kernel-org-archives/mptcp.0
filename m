@@ -1,64 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============6157067327817173041=="
+Content-Type: multipart/mixed; boundary="===============4257420118401783086=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][RFC mptcp-next 4/6] mptcp: add
- mptcpi_local_addr_* in mptcp_info
-Date: Fri, 29 Jan 2021 16:39:31 +0100
-Message-ID: <e60345a055ae858211b9186e0cb1907d30419ef7.camel@redhat.com>
-In-Reply-To: 54bb5802527e4b8b52f8fc9d0a8e561218e25637.1611667027.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][RFC mptcp-next 2/6] mptcp: add echo field in
+ mptcp_out_options
+Date: Fri, 29 Jan 2021 16:43:23 +0100
+Message-ID: <8d7345486a031da4dc746710831b83e6502a8ea4.camel@redhat.com>
+In-Reply-To: 2ae1ee585b508fe596788a747dfac676127afa4c.1611667027.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7532
+X-UID: 7533
 
---===============6157067327817173041==
+--===============4257420118401783086==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 2021-01-26 at 21:21 +0800, Geliang Tang wrote:
-> Add mptcpi_local_addr_used and mptcpi_local_addr_max in struct mptcp_info,
-> and rename mptcpi_add_addr_signal to mptcpi_add_addr_signaled.
+> This patch added a new field echo in mptcp_out_options, it will be used
+> when using the trace event to dump the mptcp_out_options info.
 > =
 
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-
-This patch could possibly live by its own merit, independently from the
-tracepoint patches.
-
 > ---
->  include/uapi/linux/mptcp.h | 4 +++-
->  net/mptcp/mptcp_diag.c     | 4 +++-
->  net/mptcp/pm_netlink.c     | 3 ++-
->  net/mptcp/protocol.h       | 1 +
->  4 files changed, 9 insertions(+), 3 deletions(-)
+>  include/net/mptcp.h | 1 +
+>  net/mptcp/options.c | 3 ++-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > =
 
-> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> index 3674a451a18c..43b674458747 100644
-> --- a/include/uapi/linux/mptcp.h
-> +++ b/include/uapi/linux/mptcp.h
-> @@ -92,11 +92,13 @@ enum {
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 5694370be3d4..85b39d901150 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -46,6 +46,7 @@ struct mptcp_out_options {
+>  #endif
+>  	};
+>  	u8 addr_id;
+> +	u8 echo;
+>  	u16 port;
+>  	u64 ahmac;
+>  	u8 rm_id;
+
+This data structure is quite critical for performances, we should avoid
+adding more fields there (note: there is a pending ticket to shrink it
+using union).
+
+I suggest avoiding touching this at all for tracepoint's sake
+
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 331d460d82fa..465144afade8 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -634,6 +634,7 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk, struct sk_buff *
+>  	if (drop_other_suboptions)
+>  		*size -=3D opt_size;
+>  	opts->addr_id =3D saddr.id;
+> +	opts->echo =3D echo;
+>  	if (port)
+>  		opts->port =3D ntohs(saddr.port);
+>  	if (saddr.family =3D=3D AF_INET) {
+> @@ -659,7 +660,7 @@ static bool mptcp_established_options_add_addr(struct=
+ sock *sk, struct sk_buff *
+>  	}
+>  #endif
+>  	pr_debug("addr_id=3D%d, ahmac=3D%llu, echo=3D%d, port=3D%d",
+> -		 opts->addr_id, opts->ahmac, echo, opts->port);
+> +		 opts->addr_id, opts->ahmac, opts->echo, opts->port);
 >  =
 
->  struct mptcp_info {
->  	__u8	mptcpi_subflows;
-> -	__u8	mptcpi_add_addr_signal;
-> +	__u8	mptcpi_add_addr_signaled;
->  	__u8	mptcpi_add_addr_accepted;
-> +	__u8	mptcpi_local_addr_used;
->  	__u8	mptcpi_subflows_max;
->  	__u8	mptcpi_add_addr_signal_max;
->  	__u8	mptcpi_add_addr_accepted_max;
-> +	__u8	mptcpi_local_addr_max;
->  	__u32	mptcpi_flags;
->  	__u32	mptcpi_token;
->  	__u64	mptcpi_write_seq;
+>  	return true;
+>  }
 
-Beware: new fields of uapi exposed struct must be appended, or user
-space tools (e.g. iproute) reading the struct will mis-interpret the
-fields when running on top of kernels with/without this patch.
-
-/P
-
---===============6157067327817173041==--
+--===============4257420118401783086==--
