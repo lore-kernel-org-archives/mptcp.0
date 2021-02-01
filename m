@@ -1,55 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============0546222618031790911=="
+Content-Type: multipart/mixed; boundary="===============8699133375021400908=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next v3] mptcp: fix length of MP_PRIO suboption
-Date: Mon, 01 Feb 2021 11:23:44 +0100
-Message-ID: <cbef80dce9d744aadd3f82866f51de7f414b92bc.camel@redhat.com>
-In-Reply-To: 2db70998-7504-c244-9feb-0abe3055918e@tessares.net
+Subject: [MPTCP] [PATCH mptcp-next 0/2] mptcp: handle socket errors
+Date: Mon, 01 Feb 2021 19:12:12 +0100
+Message-ID: <cover.1612201708.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7553
+X-UID: 7554
 
---===============0546222618031790911==
+--===============8699133375021400908==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2021-01-29 at 18:08 +0100, Matthieu Baerts wrote:
-> Hi Davide, Mat,
-> =
+This introduces the initial support for msk-level socket error
+handling.
 
-> On 28/01/2021 18:34, Davide Caratti wrote:
-[...]
-> Thank you for this new version!
-> =
+Currently subflow socket errors are always ignored. That is almost
+correct - I think - because the single subflow status does not
+affect the msk-level connection.
 
-> Just added in our tree, at the bottom, with Mat and my RvB tag.
-> =
+There a couple of notable exceptions:
+- fallen-back msk
+- error at connect time on the MPC subflow
+both should be propagated at msk level.
 
-> - 91384be37ad9 mptcp: fix length of MP_PRIO suboption
-> =
+patch 1 implement the relevant infra
+patch 2 is actuall a bug fix, for some edge cases that become
+apparent testing the above.
 
-> Tests + export have been almost a success! Simult Flow selftest with a =
+I'll push a bunch of pktdrill test case which will cover the above.  =
 
-> debug kernel was unstable but it is not new, see:
-> =
 
-> =C2=A0=C2=A0=C2=A0https://github.com/multipath-tcp/mptcp_net-next/issues/=
-137
-> =
+Paolo Abeni (2):
+  mptcp: deliver ssk errors to msk
+  mptcp: fix poll after shutdown
 
-> So feel free to send this patch to netdev when you have the opportunity  =
-;-)
-> It doesn't conflict with other pending patches from Geliang that have =
+ net/mptcp/protocol.c | 11 ++++++++++-
+ net/mptcp/protocol.h |  4 ++++
+ net/mptcp/subflow.c  | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 57 insertions(+), 1 deletion(-)
 
-> been recently sent by Mat.
-
-Ok, I'll post it today.
-
-thanks!
 -- =
 
-davide
+2.26.2
 
---===============0546222618031790911==--
+--===============8699133375021400908==--
