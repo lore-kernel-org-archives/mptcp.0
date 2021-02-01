@@ -1,87 +1,169 @@
-Content-Type: multipart/mixed; boundary="===============5370664504710311315=="
+Content-Type: multipart/mixed; boundary="===============6048701723818464421=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 04/15] mptcp: send ack for every add_addr
-Date: Mon, 01 Feb 2021 15:09:09 -0800
-Message-ID: <20210201230920.66027-5-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v2 05/15] selftests: mptcp: use minus values
+ for removing address numbers
+Date: Mon, 01 Feb 2021 15:09:10 -0800
+Message-ID: <20210201230920.66027-6-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210201230920.66027-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7562
+X-UID: 7563
 
---===============5370664504710311315==
+--===============6048701723818464421==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geliang Tang <geliangtang(a)gmail.com>
 
-This patch changes the sending ACK conditions for the ADD_ADDR, send an
-ACK packet for any ADD_ADDR, not just when ipv6 addresses or port
-numbers are included.
+This patch changes the removing addresses numbers to minus values, left
+the plus values for the adding addresses numbers.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/139
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/pm.c         |  3 +--
- net/mptcp/pm_netlink.c | 10 ++++------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 32 ++++++++++---------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 01a846b25771..3a22e73220b9 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -191,8 +191,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index be34b9ccbd20..e5fb2b01f31c 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -209,8 +209,8 @@ do_transfer()
+ 	srv_proto=3D"$4"
+ 	connect_addr=3D"$5"
+ 	test_link_fail=3D"$6"
+-	rm_nr_ns1=3D"$7"
+-	rm_nr_ns2=3D"$8"
++	addr_nr_ns1=3D"$7"
++	addr_nr_ns2=3D"$8"
+ 	speed=3D"$9"
+ 	bkup=3D"${10}"
  =
 
- void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk)
- {
--	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
--	    !mptcp_pm_should_add_signal_port(msk))
-+	if (!mptcp_pm_should_add_signal(msk))
- 		return;
+@@ -264,7 +264,8 @@ do_transfer()
+ 	fi
+ 	cpid=3D$!
  =
 
- 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index f1eb3a512fcb..5d87e475c751 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -474,8 +474,7 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *m=
-sk)
- {
- 	struct mptcp_subflow_context *subflow;
+-	if [ $rm_nr_ns1 -gt 0 ]; then
++	if [ $addr_nr_ns1 -lt 0 ]; then
++		let rm_nr_ns1=3D-addr_nr_ns1
+ 		if [ $rm_nr_ns1 -lt 8 ]; then
+ 			counter=3D1
+ 			sleep 1
+@@ -281,7 +282,8 @@ do_transfer()
+ 		fi
+ 	fi
  =
 
--	if (!mptcp_pm_should_add_signal_ipv6(msk) &&
--	    !mptcp_pm_should_add_signal_port(msk))
-+	if (!mptcp_pm_should_add_signal(msk))
- 		return;
+-	if [ $rm_nr_ns2 -gt 0 ]; then
++	if [ $addr_nr_ns2 -lt 0 ]; then
++		let rm_nr_ns2=3D-addr_nr_ns2
+ 		if [ $rm_nr_ns2 -lt 8 ]; then
+ 			counter=3D1
+ 			sleep 1
+@@ -368,8 +370,8 @@ run_tests()
+ 	connector_ns=3D"$2"
+ 	connect_addr=3D"$3"
+ 	test_linkfail=3D"${4:-0}"
+-	rm_nr_ns1=3D"${5:-0}"
+-	rm_nr_ns2=3D"${6:-0}"
++	addr_nr_ns1=3D"${5:-0}"
++	addr_nr_ns2=3D"${6:-0}"
+ 	speed=3D"${7:-fast}"
+ 	bkup=3D"${8:-""}"
+ 	lret=3D0
+@@ -386,7 +388,7 @@ run_tests()
+ 	fi
  =
 
- 	__mptcp_flush_join_list(msk);
-@@ -485,10 +484,9 @@ void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *=
-msk)
- 		u8 add_addr;
+ 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} \
+-		${test_linkfail} ${rm_nr_ns1} ${rm_nr_ns2} ${speed} ${bkup}
++		${test_linkfail} ${addr_nr_ns1} ${addr_nr_ns2} ${speed} ${bkup}
+ 	lret=3D$?
  =
 
- 		spin_unlock_bh(&msk->pm.lock);
--		if (mptcp_pm_should_add_signal_ipv6(msk))
--			pr_debug("send ack for add_addr6");
--		if (mptcp_pm_should_add_signal_port(msk))
--			pr_debug("send ack for add_addr_port");
-+		pr_debug("send ack for add_addr%s%s",
-+			 mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
-+			 mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
+ 	if [ "$test_linkfail" -eq 1 ];then
+@@ -677,7 +679,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0 0 1 slow
++run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
+ chk_join_nr "remove single subflow" 1 1 1
+ chk_rm_nr 1 1
  =
 
- 		lock_sock(ssk);
- 		tcp_send_ack(ssk);
+@@ -687,7 +689,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0 0 2 slow
++run_tests $ns1 $ns2 10.0.1.1 0 0 -2 slow
+ chk_join_nr "remove multiple subflows" 2 2 2
+ chk_rm_nr 2 2
+ =
+
+@@ -696,7 +698,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+-run_tests $ns1 $ns2 10.0.1.1 0 1 0 slow
++run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
+ chk_join_nr "remove single address" 1 1 1
+ chk_add_nr 1 1
+ chk_rm_nr 0 0
+@@ -707,7 +709,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0 1 1 slow
++run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
+ chk_join_nr "remove subflow and signal" 2 2 2
+ chk_add_nr 1 1
+ chk_rm_nr 1 1
+@@ -719,7 +721,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0 1 2 slow
++run_tests $ns1 $ns2 10.0.1.1 0 -1 -2 slow
+ chk_join_nr "remove subflows and signal" 3 3 3
+ chk_add_nr 1 1
+ chk_rm_nr 2 2
+@@ -731,7 +733,7 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 3
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
+ ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
+-run_tests $ns1 $ns2 10.0.1.1 0 8 8 slow
++run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
+ chk_join_nr "flush subflows and signal" 3 3 3
+ chk_add_nr 1 1
+ chk_rm_nr 2 2
+@@ -774,7 +776,7 @@ reset
+ ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+-run_tests $ns1 $ns2 dead:beef:1::1 0 1 0 slow
++run_tests $ns1 $ns2 dead:beef:1::1 0 -1 0 slow
+ chk_join_nr "remove single address IPv6" 1 1 1
+ chk_add_nr 1 1
+ chk_rm_nr 0 0
+@@ -785,7 +787,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 0 2
+ ip netns exec $ns1 ./pm_nl_ctl add dead:beef:2::1 flags signal
+ ip netns exec $ns2 ./pm_nl_ctl limits 1 2
+ ip netns exec $ns2 ./pm_nl_ctl add dead:beef:3::2 flags subflow
+-run_tests $ns1 $ns2 dead:beef:1::1 0 1 1 slow
++run_tests $ns1 $ns2 dead:beef:1::1 0 -1 -1 slow
+ chk_join_nr "remove subflow and signal IPv6" 2 2 2
+ chk_add_nr 1 1
+ chk_rm_nr 1 1
 -- =
 
 2.30.0
 
---===============5370664504710311315==--
+--===============6048701723818464421==--
