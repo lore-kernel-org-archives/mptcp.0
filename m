@@ -1,85 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============5557541512233292175=="
+Content-Type: multipart/mixed; boundary="===============4963867978817139590=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 11/15] mptcp: enable use_port when invoke
- addresses_equal
-Date: Mon, 01 Feb 2021 15:09:16 -0800
-Message-ID: <20210201230920.66027-12-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next v2 13/15] selftests: mptcp: add port argument
+ for pm_nl_ctl
+Date: Mon, 01 Feb 2021 15:09:18 -0800
+Message-ID: <20210201230920.66027-14-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210201230920.66027-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7569
+X-UID: 7570
 
---===============5557541512233292175==
+--===============4963867978817139590==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geliang Tang <geliangtang(a)gmail.com>
 
-When dealing with the addresses list local_addr_list or anno_list, we
-should enable the function addresses_equal's parameter use_port. And
-enable it in address_zero too.
+This patch adds a new argument for pm_nl_ctl tool. We can use it like
+this:
+
+ # pm_nl_ctl add 10.0.2.1 flags signal port 10100
+ # pm_nl_ctl dump
+ id 1 flags signal 10.0.2.1 10100
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 24 +++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 54f0ca73e68a..c610597bd58b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -91,7 +91,7 @@ static bool address_zero(const struct mptcp_addr_info *ad=
-dr)
- 	memset(&zero, 0, sizeof(zero));
- 	zero.family =3D addr->family;
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/=
+selftests/net/mptcp/pm_nl_ctl.c
+index abc269e96a07..7b4167f3f9a2 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -177,8 +177,8 @@ int add_addr(int fd, int pm_family, int argc, char *arg=
+v[])
+ 		  1024];
+ 	struct rtattr *rta, *nest;
+ 	struct nlmsghdr *nh;
++	u_int32_t flags =3D 0;
+ 	u_int16_t family;
+-	u_int32_t flags;
+ 	int nest_start;
+ 	u_int8_t id;
+ 	int off =3D 0;
+@@ -224,7 +224,6 @@ int add_addr(int fd, int pm_family, int argc, char *arg=
+v[])
+ 			char *tok, *str;
  =
 
--	return addresses_equal(addr, &zero, false);
-+	return addresses_equal(addr, &zero, true);
- }
+ 			/* flags */
+-			flags =3D 0;
+ 			if (++arg >=3D argc)
+ 				error(1, 0, " missing flags value");
  =
 
- static void local_address(const struct sock_common *skc,
-@@ -131,7 +131,7 @@ static bool lookup_subflow_by_saddr(const struct list_h=
-ead *list,
- 		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
- =
-
- 		local_address(skc, &cur);
--		if (addresses_equal(&cur, saddr, false))
-+		if (addresses_equal(&cur, saddr, saddr->port))
- 			return true;
+@@ -272,6 +271,20 @@ int add_addr(int fd, int pm_family, int argc, char *ar=
+gv[])
+ 			rta->rta_len =3D RTA_LENGTH(4);
+ 			memcpy(RTA_DATA(rta), &ifindex, 4);
+ 			off +=3D NLMSG_ALIGN(rta->rta_len);
++		} else if (!strcmp(argv[arg], "port")) {
++			u_int16_t port;
++
++			if (++arg >=3D argc)
++				error(1, 0, " missing port value");
++			if (!(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
++				error(1, 0, " flags must be signal when using port");
++
++			port =3D atoi(argv[arg]);
++			rta =3D (void *)(data + off);
++			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_PORT;
++			rta->rta_len =3D RTA_LENGTH(2);
++			memcpy(RTA_DATA(rta), &port, 2);
++			off +=3D NLMSG_ALIGN(rta->rta_len);
+ 		} else
+ 			error(1, 0, "unknown keyword %s", argv[arg]);
  	}
- =
-
-@@ -247,7 +247,7 @@ lookup_anno_list_by_saddr(struct mptcp_sock *msk,
- 	struct mptcp_pm_add_entry *entry;
- =
-
- 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
--		if (addresses_equal(&entry->addr, addr, false))
-+		if (addresses_equal(&entry->addr, addr, true))
- 			return entry;
- 	}
- =
-
-@@ -773,7 +773,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
-ruct sock_common *skc)
- =
-
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (addresses_equal(&entry->addr, &skc_local, false)) {
-+		if (addresses_equal(&entry->addr, &skc_local, entry->addr.port)) {
- 			ret =3D entry->addr.id;
- 			break;
+@@ -324,6 +337,7 @@ int del_addr(int fd, int pm_family, int argc, char *arg=
+v[])
+ static void print_addr(struct rtattr *attrs, int len)
+ {
+ 	uint16_t family =3D 0;
++	uint16_t port =3D 0;
+ 	char str[1024];
+ 	uint32_t flags;
+ 	uint8_t id;
+@@ -331,12 +345,16 @@ static void print_addr(struct rtattr *attrs, int len)
+ 	while (RTA_OK(attrs, len)) {
+ 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_FAMILY)
+ 			memcpy(&family, RTA_DATA(attrs), 2);
++		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_PORT)
++			memcpy(&port, RTA_DATA(attrs), 2);
+ 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ADDR4) {
+ 			if (family !=3D AF_INET)
+ 				error(1, errno, "wrong IP (v4) for family %d",
+ 				      family);
+ 			inet_ntop(AF_INET, RTA_DATA(attrs), str, sizeof(str));
+ 			printf("%s", str);
++			if (port)
++				printf(" %d", port);
  		}
+ 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ADDR6) {
+ 			if (family !=3D AF_INET6)
+@@ -344,6 +362,8 @@ static void print_addr(struct rtattr *attrs, int len)
+ 				      family);
+ 			inet_ntop(AF_INET6, RTA_DATA(attrs), str, sizeof(str));
+ 			printf("%s", str);
++			if (port)
++				printf(" %d", port);
+ 		}
+ 		if (attrs->rta_type =3D=3D MPTCP_PM_ADDR_ATTR_ID) {
+ 			memcpy(&id, RTA_DATA(attrs), 1);
 -- =
 
 2.30.0
 
---===============5557541512233292175==--
+--===============4963867978817139590==--
