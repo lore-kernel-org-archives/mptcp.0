@@ -1,60 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============8045137958632548587=="
+Content-Type: multipart/mixed; boundary="===============3241473560006344427=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 2/2] mptcp: fix poll after shutdown
-Date: Mon, 01 Feb 2021 19:12:14 +0100
-Message-ID: <4c7cb8a5236d7e4bee04812805deeb8603dfdee1.1612201708.git.pabeni@redhat.com>
-In-Reply-To: cover.1612201708.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: use
+ WRITE_ONCE/READ_ONCE for the pernet *_max"
+Date: Mon, 01 Feb 2021 14:21:57 -0800
+Message-ID: <13ed1e0-4d0-ced2-199d-a86394a78c1b@linux.intel.com>
+In-Reply-To: 3dae331b8fe7af727433d1d0eb0043538747f92e.1612053047.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7556
+X-UID: 7557
 
---===============8045137958632548587==
+--===============3241473560006344427==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The current mptcp_poll() implementation gives unexpected
-results after shutdown(SEND_SHUTDOWN) and after receiving
-a MP_RESET.
+On Sun, 31 Jan 2021, Geliang Tang wrote:
 
-Set the correct mask.
+> As Jakub suggested, drop all the READ_ONCEs in the original patch.
+>
+> And the commit message needs to be updated too:
+>
+> -
+>
+> Subject: mptcp: use WRITE_ONCE for the pernet *_max
+>
+> This patch uses WRITE_ONCE() for all the pernet add_addr_signal_max,
+> add_addr_accept_max, local_addr_max and subflows_max fields in struct
+> pm_nl_pernet to avoid concurrency issues.
+>
+> -
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/pm_netlink.c | 12 ++++++------
+> 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Yes, Jakub was correct to point out that READ_ONCE() isn't needed when all =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index fdd2a30118978..305d25cbc216a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3322,7 +3322,7 @@ static __poll_t mptcp_check_writeable(struct mptcp_so=
-ck *msk)
- 	struct sock *sk =3D (struct sock *)msk;
- =
+of the writes are done with the lock held.
 
- 	if (unlikely(sk->sk_shutdown & SEND_SHUTDOWN))
--		return 0;
-+		return EPOLLOUT | EPOLLWRNORM;
- =
+I'll go ahead and apply this locally and resubmit v2 now. Matthieu, I =
 
- 	if (sk_stream_is_writeable(sk))
- 		return EPOLLOUT | EPOLLWRNORM;
-@@ -3355,6 +3355,8 @@ static __poll_t mptcp_poll(struct file *file, struct =
-socket *sock,
- 		mask |=3D mptcp_check_readable(msk);
- 		mask |=3D mptcp_check_writeable(msk);
- 	}
-+	if (sk->sk_shutdown =3D=3D SHUTDOWN_MASK || state =3D=3D TCP_CLOSE)
-+		mask |=3D EPOLLHUP;
- 	if (sk->sk_shutdown & RCV_SHUTDOWN)
- 		mask |=3D EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
- =
+guess you should apply as well so the topgit tree updates correctly when =
 
--- =
+the patches are applied on net-next.
 
-2.26.2
+Mat
 
---===============8045137958632548587==--
+
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 7d6081d9a1db..c429bd82313e 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -616,11 +616,11 @@ static int mptcp_pm_nl_append_new_local_addr(struct=
+ pm_nl_pernet *pernet,
+> 		pernet->next_id =3D entry->addr.id;
+>
+> 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
+> -		addr_max =3D READ_ONCE(pernet->add_addr_signal_max);
+> +		addr_max =3D pernet->add_addr_signal_max;
+> 		WRITE_ONCE(pernet->add_addr_signal_max, addr_max + 1);
+> 	}
+> 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+> -		addr_max =3D READ_ONCE(pernet->local_addr_max);
+> +		addr_max =3D pernet->local_addr_max;
+> 		WRITE_ONCE(pernet->local_addr_max, addr_max + 1);
+> 	}
+>
+> @@ -932,11 +932,11 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *sk=
+b, struct genl_info *info)
+> 		return -EINVAL;
+> 	}
+> 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
+> -		addr_max =3D READ_ONCE(pernet->add_addr_signal_max);
+> +		addr_max =3D pernet->add_addr_signal_max;
+> 		WRITE_ONCE(pernet->add_addr_signal_max, addr_max - 1);
+> 	}
+> 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+> -		addr_max =3D READ_ONCE(pernet->local_addr_max);
+> +		addr_max =3D pernet->local_addr_max;
+> 		WRITE_ONCE(pernet->local_addr_max, addr_max - 1);
+> 	}
+>
+> @@ -1140,12 +1140,12 @@ mptcp_nl_cmd_set_limits(struct sk_buff *skb, stru=
+ct genl_info *info)
+> 	int ret;
+>
+> 	spin_lock_bh(&pernet->lock);
+> -	rcv_addrs =3D READ_ONCE(pernet->add_addr_accept_max);
+> +	rcv_addrs =3D pernet->add_addr_accept_max;
+> 	ret =3D parse_limit(info, MPTCP_PM_ATTR_RCV_ADD_ADDRS, &rcv_addrs);
+> 	if (ret)
+> 		goto unlock;
+>
+> -	subflows =3D READ_ONCE(pernet->subflows_max);
+> +	subflows =3D pernet->subflows_max;
+> 	ret =3D parse_limit(info, MPTCP_PM_ATTR_SUBFLOWS, &subflows);
+> 	if (ret)
+> 		goto unlock;
+> -- =
+
+> 2.29.2
+
+--
+Mat Martineau
+Intel
+--===============3241473560006344427==--
