@@ -1,96 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============5053696731222865097=="
+Content-Type: multipart/mixed; boundary="===============4614191969392071997=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "mptcp: use
- WRITE_ONCE/READ_ONCE for the pernet *_max"
-Date: Sun, 31 Jan 2021 08:52:24 +0800
-Message-ID: <3dae331b8fe7af727433d1d0eb0043538747f92e.1612053047.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 0/7] RM_ADDR: remove a list of
+ addrs
+Date: Mon, 01 Feb 2021 15:11:09 +0800
+Message-ID: <cover.1612163150.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7542
+X-UID: 7543
 
---===============5053696731222865097==
+--===============4614191969392071997==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-As Jakub suggested, drop all the READ_ONCEs in the original patch.
+v2:
+ - use an array of ids instead of a u64 map
+ - drop "mptcp: update the netlink event for rm_addr" in v1
+ - tag: export/20210131T062218
 
-And the commit message needs to be updated too:
+This patchset added the removing a list of addresses support for
+RM_ADDR. It addressed issue #140.
 
--
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
 
-Subject: mptcp: use WRITE_ONCE for the pernet *_max
+Geliang Tang (7):
+  mptcp: remove multi addrs on outgoing path
+  mptcp: remove multi addrs on incoming path
+  mptcp: remove multi addresses in PM
+  mptcp: remove multi subflows in PM
+  mptcp: implement mptcp_nl_remove_addrs_and_subflows
+  mptcp: remove a list of addrs when flushing
+  selftests: mptcp: add testcases for removing addrs
 
-This patch uses WRITE_ONCE() for all the pernet add_addr_signal_max,
-add_addr_accept_max, local_addr_max and subflows_max fields in struct
-pm_nl_pernet to avoid concurrency issues.
+ include/net/mptcp.h                           |   4 +-
+ net/mptcp/options.c                           |  55 +++--
+ net/mptcp/pm.c                                |  28 +--
+ net/mptcp/pm_netlink.c                        | 190 ++++++++++++++----
+ net/mptcp/protocol.h                          |  26 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  23 +++
+ 6 files changed, 252 insertions(+), 74 deletions(-)
 
--
-
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/pm_netlink.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 7d6081d9a1db..c429bd82313e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -616,11 +616,11 @@ static int mptcp_pm_nl_append_new_local_addr(struct p=
-m_nl_pernet *pernet,
- 		pernet->next_id =3D entry->addr.id;
- =
-
- 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
--		addr_max =3D READ_ONCE(pernet->add_addr_signal_max);
-+		addr_max =3D pernet->add_addr_signal_max;
- 		WRITE_ONCE(pernet->add_addr_signal_max, addr_max + 1);
- 	}
- 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
--		addr_max =3D READ_ONCE(pernet->local_addr_max);
-+		addr_max =3D pernet->local_addr_max;
- 		WRITE_ONCE(pernet->local_addr_max, addr_max + 1);
- 	}
- =
-
-@@ -932,11 +932,11 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb,=
- struct genl_info *info)
- 		return -EINVAL;
- 	}
- 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
--		addr_max =3D READ_ONCE(pernet->add_addr_signal_max);
-+		addr_max =3D pernet->add_addr_signal_max;
- 		WRITE_ONCE(pernet->add_addr_signal_max, addr_max - 1);
- 	}
- 	if (entry->addr.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
--		addr_max =3D READ_ONCE(pernet->local_addr_max);
-+		addr_max =3D pernet->local_addr_max;
- 		WRITE_ONCE(pernet->local_addr_max, addr_max - 1);
- 	}
- =
-
-@@ -1140,12 +1140,12 @@ mptcp_nl_cmd_set_limits(struct sk_buff *skb, struct=
- genl_info *info)
- 	int ret;
- =
-
- 	spin_lock_bh(&pernet->lock);
--	rcv_addrs =3D READ_ONCE(pernet->add_addr_accept_max);
-+	rcv_addrs =3D pernet->add_addr_accept_max;
- 	ret =3D parse_limit(info, MPTCP_PM_ATTR_RCV_ADD_ADDRS, &rcv_addrs);
- 	if (ret)
- 		goto unlock;
- =
-
--	subflows =3D READ_ONCE(pernet->subflows_max);
-+	subflows =3D pernet->subflows_max;
- 	ret =3D parse_limit(info, MPTCP_PM_ATTR_SUBFLOWS, &subflows);
- 	if (ret)
- 		goto unlock;
 -- =
 
 2.29.2
 
---===============5053696731222865097==--
+--===============4614191969392071997==--
