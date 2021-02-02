@@ -1,54 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============3026039383662790824=="
+Content-Type: multipart/mixed; boundary="===============1779573969563904525=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp 1/3] mptcp: schedule worker when subflow is
- closed
-Date: Tue, 02 Feb 2021 18:47:52 +0100
-Message-ID: <20210202174754.6861-2-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp 2/3] mptcp: skip MPTCP_EVENT_SUB_CLOSED event
+ when mptcp socket isn't established
+Date: Tue, 02 Feb 2021 18:47:53 +0100
+Message-ID: <20210202174754.6861-3-fw@strlen.de>
 In-Reply-To: 20210202174754.6861-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7595
+X-UID: 7596
 
---===============3026039383662790824==
+--===============1779573969563904525==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When remote side closes a subflow we should schedule the worker to
-dispose of the subflow in a timely manner.
-
-Otherwise, SF_CLOSED event won't be generated until the mptcp
-socket itself is closing or local side is closing another subflow.
+A CLOSE event will be sent when the logical mptcp socket is closing.
+Thus there is no need to generate individual subflow close events
+if the mptcp socket isn't established anymore.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/subflow.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/mptcp/protocol.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index b8b670cb6116..57f6361eb07c 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1413,6 +1413,13 @@ static void subflow_state_change(struct sock *sk)
- 	if (mptcp_subflow_data_available(sk))
- 		mptcp_data_ready(parent, sk);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b5ba832ca58b..24eb42a60844 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2150,7 +2150,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct=
+ sock *ssk,
+ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow)
+ {
+-	mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
++	if (sk->sk_state =3D=3D TCP_ESTABLISHED)
++		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
+ 	__mptcp_close_ssk(sk, ssk, subflow);
+ }
  =
 
-+	if (sk->sk_state =3D=3D TCP_CLOSE &&
-+	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(parent)->flags)=
-) {
-+		sock_hold(parent);
-+		if (!schedule_work(&mptcp_sk(parent)->work))
-+			sock_put(parent);
-+	}
-+
- 	if (__mptcp_check_fallback(mptcp_sk(parent)) &&
- 	    !subflow->rx_eof && subflow_is_done(sk)) {
- 		subflow->rx_eof =3D 1;
 -- =
 
 2.26.2
 
---===============3026039383662790824==--
+--===============1779573969563904525==--
