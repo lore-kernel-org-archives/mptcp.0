@@ -1,239 +1,218 @@
-Content-Type: multipart/mixed; boundary="===============2848098172973119117=="
+Content-Type: multipart/mixed; boundary="===============1873882910745865190=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next v2 15/15] selftests: mptcp: add testcases for
- ADD_ADDR with port
-Date: Mon, 01 Feb 2021 15:09:20 -0800
-Message-ID: <20210201230920.66027-16-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20210201230920.66027-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 1/7] mptcp: remove multi
+ addrs on outgoing path
+Date: Mon, 01 Feb 2021 17:21:54 -0800
+Message-ID: <3f81b6a4-6780-f9cb-55f4-8e30c798c7db@linux.intel.com>
+In-Reply-To: df9a9acb5128c40834c366c382a22fcc36223ab3.1612163150.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7573
+X-UID: 7574
 
---===============2848098172973119117==
+--===============1873882910745865190==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
+On Mon, 1 Feb 2021, Geliang Tang wrote:
 
-This patch adds testcases for ADD_ADDR with port and the related MIB
-counters check in chk_add_nr. The output looks like this:
+> This patch changed the member rm_id of struct mptcp_out_options as an
+> array of the removing address ids, and renamed it to rm_ids. The array
+> size was definced as a new macro MPTCP_RM_IDS_MAX.
+>
+> Added a new function named mptcp_get_rm_ids_nr to get the number of
+> address ids in the ids array.
+>
+> In mptcp_established_options_rm_addr, invoked mptcp_pm_rm_addr_signal to
+> get the ids array. According the number of addresses in it, calculated
+> the padded RM_ADDR suboption length. And saved the ids array in struct
+> mptcp_out_options's rm_ids member.
+>
+> In mptcp_write_options, iterated each address id from struct
+> mptcp_out_options's rm_ids member, set the zero ones as TCPOPT_NOP,
+> then filled them into the RM_ADDR suboption.
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> include/net/mptcp.h  |  4 +++-
+> net/mptcp/options.c  | 40 ++++++++++++++++++++++++++++++++--------
+> net/mptcp/pm.c       |  3 +--
+> net/mptcp/protocol.h | 14 ++++++++++++--
+> 4 files changed, 48 insertions(+), 13 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 5694370be3d4..1d33fea674d2 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -34,6 +34,8 @@ struct mptcp_ext {
+> 	/* one byte hole */
+> };
+>
+> +#define MPTCP_RM_IDS_MAX	8
+> +
+> struct mptcp_out_options {
+> #if IS_ENABLED(CONFIG_MPTCP)
+> 	u16 suboptions;
+> @@ -48,7 +50,7 @@ struct mptcp_out_options {
+> 	u8 addr_id;
+> 	u16 port;
+> 	u64 ahmac;
+> -	u8 rm_id;
+> +	u8 rm_ids[MPTCP_RM_IDS_MAX];
+> 	u8 join_id;
+> 	u8 backup;
+> 	u32 nonce;
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index bb874c5d663a..3ce7917327d1 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -671,20 +671,27 @@ static bool mptcp_established_options_rm_addr(struc=
+t sock *sk,
+> {
+> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> -	u8 rm_id;
+> +	u8 rm_ids[MPTCP_RM_IDS_MAX], i, nr, align;
+>
+> 	if (!mptcp_pm_should_rm_signal(msk) ||
+> -	    !(mptcp_pm_rm_addr_signal(msk, remaining, &rm_id)))
+> +	    !(mptcp_pm_rm_addr_signal(msk, remaining, rm_ids)))
+> 		return false;
+>
+> -	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
+> +	nr =3D mptcp_get_rm_ids_nr(rm_ids);
+> +	if (nr > 1)
+> +		align =3D 5;
+> +	if (nr > 5)
+> +		align =3D 9;
+> +
+> +	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE + align)
+> 		return false;
+>
+> -	*size =3D TCPOLEN_MPTCP_RM_ADDR_BASE;
+> +	*size =3D TCPOLEN_MPTCP_RM_ADDR_BASE + align;
+> 	opts->suboptions |=3D OPTION_MPTCP_RM_ADDR;
+> -	opts->rm_id =3D rm_id;
+> +	memcpy(opts->rm_ids, rm_ids, MPTCP_RM_IDS_MAX);
+>
+> -	pr_debug("rm_id=3D%d", opts->rm_id);
+> +	for (i =3D 0; i < nr; i++)
+> +		pr_debug("rm_ids[%d]=3D%d", i, opts->rm_ids[i]);
+>
+> 	return true;
+> }
+> @@ -1212,9 +1219,26 @@ void mptcp_write_options(__be32 *ptr, const struct=
+ tcp_sock *tp,
+> 	}
+>
+> 	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
+> +		u8 i, nr;
+> +
+> +		nr =3D mptcp_get_rm_ids_nr(opts->rm_ids);
+> +		for (i =3D 0; i < MPTCP_RM_IDS_MAX; i++) {
+> +			if (!opts->rm_ids[i])
+> +				opts->rm_ids[i] =3D TCPOPT_NOP;
+> +		}
 
- 24 signal address with port           syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       syn[ ok ] - ack   [ ok ]
- 25 subflow and signal with port       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       syn[ ok ] - ack   [ ok ]
- 26 remove single address with port    syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                       syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       syn[ ok ] - ack   [ ok ]
-                                       rm [ ok ] - sf    [ ok ]
+Could also use this for loop to add up 'nr' rather than looping twice (the =
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 160 +++++++++++++++++-
- 1 file changed, 159 insertions(+), 1 deletion(-)
+loop here and the one inside mptcp_get_rm_ids_nr()).
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index b5cd2a48831e..b8fd924033b1 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -487,6 +487,12 @@ chk_add_nr()
- {
- 	local add_nr=3D$1
- 	local echo_nr=3D$2
-+	local port_nr=3D${3:-0}
-+	local syn_nr=3D${4:-$port_nr}
-+	local syn_ack_nr=3D${5:-$port_nr}
-+	local ack_nr=3D${6:-$port_nr}
-+	local mis_syn_nr=3D${7:-0}
-+	local mis_ack_nr=3D${8:-0}
- 	local count
- 	local dump_stats
- =
+> 		*ptr++ =3D mptcp_option(MPTCPOPT_RM_ADDR,
+> -				      TCPOLEN_MPTCP_RM_ADDR_BASE,
+> -				      0, opts->rm_id);
+> +				      TCPOLEN_MPTCP_RM_ADDR_BASE + nr,
+> +				      0, opts->rm_ids[0]);
+> +		if (nr > 1) {
+> +			put_unaligned_be32(opts->rm_ids[1] << 24 | opts->rm_ids[2] << 16 |
+> +					   opts->rm_ids[3] << 8 | opts->rm_ids[4], ptr);
+> +			ptr +=3D 1;
+> +		}
+> +		if (nr > 5) {
+> +			put_unaligned_be32(opts->rm_ids[5] << 24 | opts->rm_ids[6] << 16 |
+> +					   opts->rm_ids[7] << 8 | TCPOPT_NOP, ptr);
+> +			ptr +=3D 1;
+> +		}
+> 	}
+>
+> 	if (OPTION_MPTCP_PRIO & opts->suboptions) {
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 6fd4b2c1b076..764cd62c59ba 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -258,7 +258,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
+ unsigned int remaining,
+> }
+>
+> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
+> -			     u8 *rm_id)
+> +			     u8 rm_ids[])
+> {
+> 	int ret =3D false;
+>
+> @@ -271,7 +271,6 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, =
+unsigned int remaining,
+> 	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
+> 		goto out_unlock;
+>
+> -	*rm_id =3D msk->pm.rm_id;
+> 	WRITE_ONCE(msk->pm.addr_signal, 0);
+> 	ret =3D true;
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index d31edbae8da8..411af3334a25 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -60,7 +60,7 @@
+> #define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
+> #define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
+> #define TCPOLEN_MPTCP_PORT_LEN		4
+> -#define TCPOLEN_MPTCP_RM_ADDR_BASE	4
+> +#define TCPOLEN_MPTCP_RM_ADDR_BASE	3
+> #define TCPOLEN_MPTCP_PRIO		3
+> #define TCPOLEN_MPTCP_PRIO_ALIGN	4
+> #define TCPOLEN_MPTCP_FASTCLOSE		12
+> @@ -289,6 +289,16 @@ struct mptcp_sock {
+> #define mptcp_for_each_subflow(__msk, __subflow)			\
+> 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
+>
+> +static inline u8 mptcp_get_rm_ids_nr(u8 rm_ids[])
+> +{
+> +	int i, nr =3D 0;
+> +
+> +	for (i =3D 0; i < MPTCP_RM_IDS_MAX && rm_ids[i]; i++)
+> +		nr++;
 
-@@ -509,7 +515,87 @@ chk_add_nr()
- 		ret=3D1
- 		dump_stats=3D1
- 	else
--		echo "[ ok ]"
-+		echo -n "[ ok ]"
-+	fi
-+
-+	if [ $port_nr -gt 0 ]; then
-+		echo -n " - pt "
-+		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{pri=
-nt $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$port_nr" ]; then
-+			echo "[fail] got $count ADD_ADDR[s] with a port-number expected $port_n=
-r"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo "[ ok ]"
-+		fi
-+
-+		printf "%-39s %s" " " "syn"
-+		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortSynRx |
-+			awk '{print $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$syn_nr" ]; then
-+			echo "[fail] got $count JOIN[s] syn with a different \
-+				port-number expected $syn_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo -n "[ ok ]"
-+		fi
-+
-+		echo -n " - synack"
-+		count=3D`ip netns exec $ns2 nstat -as | grep MPTcpExtMPJoinPortSynAckRx |
-+			awk '{print $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$syn_ack_nr" ]; then
-+			echo "[fail] got $count JOIN[s] synack with a different \
-+				port-number expected $syn_ack_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo -n "[ ok ]"
-+		fi
-+
-+		echo -n " - ack"
-+		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortAckRx |
-+			awk '{print $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$ack_nr" ]; then
-+			echo "[fail] got $count JOIN[s] ack with a different \
-+				port-number expected $ack_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo "[ ok ]"
-+		fi
-+
-+		printf "%-39s %s" " " "syn"
-+		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortSynRx |
-+			awk '{print $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$mis_syn_nr" ]; then
-+			echo "[fail] got $count JOIN[s] syn with a mismatched \
-+				port-number expected $mis_syn_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo -n "[ ok ]"
-+		fi
-+
-+		echo -n " - ack   "
-+		count=3D`ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortAckRx |
-+			awk '{print $2}'`
-+		[ -z "$count" ] && count=3D0
-+		if [ "$count" !=3D "$mis_ack_nr" ]; then
-+			echo "[fail] got $count JOIN[s] ack with a mismatched \
-+				port-number expected $mis_ack_nr"
-+			ret=3D1
-+			dump_stats=3D1
-+		else
-+			echo "[ ok ]"
-+		fi
-+	else
-+		echo ""
- 	fi
- =
+'nr' isn't needed, can return i instead.
 
- 	if [ "${dump_stats}" =3D 1 ]; then
-@@ -955,6 +1041,78 @@ chk_join_nr "single address, backup" 1 1 1
- chk_add_nr 1 1
- chk_prio_nr 1 0
- =
+> +
+> +	return nr;
+> +}
+> +
+> static inline void msk_owned_by_me(const struct mptcp_sock *msk)
+> {
+> 	sock_owned_by_me((const struct sock *)msk);
+> @@ -714,7 +724,7 @@ static inline unsigned int mptcp_add_addr_len(int fam=
+ily, bool echo, bool port)
+> bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remain=
+ing,
+> 			      struct mptcp_addr_info *saddr, bool *echo, bool *port);
+> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
+> -			     u8 *rm_id);
+> +			     u8 rm_ids[]);
+> int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc=
+);
+>
+> void __init mptcp_pm_nl_init(void);
+> -- =
 
-+# signal address with port
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+run_tests $ns1 $ns2 10.0.1.1
-+chk_join_nr "signal address with port" 1 1 1
-+chk_add_nr 1 1 1
-+
-+# subflow and signal with port
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+run_tests $ns1 $ns2 10.0.1.1
-+chk_join_nr "subflow and signal with port" 2 2 2
-+chk_add_nr 1 1 1
-+
-+# single address with port, remove
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 1
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 1
-+run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
-+chk_join_nr "remove single address with port" 1 1 1
-+chk_add_nr 1 1 1
-+chk_rm_nr 0 0
-+
-+# subflow and signal with port, remove
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 2
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+run_tests $ns1 $ns2 10.0.1.1 0 -1 -1 slow
-+chk_join_nr "remove subflow and signal with port" 2 2 2
-+chk_add_nr 1 1 1
-+chk_rm_nr 1 1
-+
-+# subflows and signal with port, flush
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns2 ./pm_nl_ctl limits 1 3
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
-+run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
-+chk_join_nr "flush subflows and signal with port" 3 3 3
-+chk_add_nr 1 1
-+chk_rm_nr 2 2
-+
-+# multiple addresses with port
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10100
-+ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+run_tests $ns1 $ns2 10.0.1.1
-+chk_join_nr "multiple addresses with port" 2 2 2
-+chk_add_nr 2 2 2
-+
-+# multiple addresses with ports
-+reset
-+ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal port 10100
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal port 10101
-+ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+run_tests $ns1 $ns2 10.0.1.1
-+chk_join_nr "multiple addresses with ports" 2 2 2
-+chk_add_nr 2 2 2
-+
- # single subflow, syncookies
- reset_with_cookies
- ip netns exec $ns1 ./pm_nl_ctl limits 0 1
--- =
+> 2.29.2
 
-2.30.0
-
---===============2848098172973119117==--
+--
+Mat Martineau
+Intel
+--===============1873882910745865190==--
