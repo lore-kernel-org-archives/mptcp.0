@@ -1,60 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============2467874818433239319=="
+Content-Type: multipart/mixed; boundary="===============3994639278450226918=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/2] mptcp: handle socket errors
-Date: Tue, 02 Feb 2021 15:58:50 -0800
-Message-ID: <a82e7bd0-a56b-1333-2196-f12a8765234@linux.intel.com>
-In-Reply-To: cover.1612201708.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp 0/3] mptcp: netlink event fixes
+Date: Tue, 02 Feb 2021 17:28:33 -0800
+Message-ID: <695d572f-3a1b-f687-cf31-d26e684f6a74@linux.intel.com>
+In-Reply-To: 20210202174754.6861-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7600
+X-UID: 7601
 
---===============2467874818433239319==
+--===============3994639278450226918==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 1 Feb 2021, Paolo Abeni wrote:
+On Tue, 2 Feb 2021, Florian Westphal wrote:
 
-> This introduces the initial support for msk-level socket error
-> handling.
+> While testing upcoming mptcp reset option support i found a few
+> issues with netlink events.
 >
-> Currently subflow socket errors are always ignored. That is almost
-> correct - I think - because the single subflow status does not
-> affect the msk-level connection.
+> 1. When remote side is closing, the subflow close event will
+> be delayed until after the mptcp socket has shut down.
 >
-> There a couple of notable exceptions:
-> - fallen-back msk
-> - error at connect time on the MPC subflow
-> both should be propagated at msk level.
+> Schedule the worker to do a cleanup scan to avoid this.
 >
-> patch 1 implement the relevant infra
-> patch 2 is actuall a bug fix, for some edge cases that become
-> apparent testing the above.
+> 2. When the mptcp socket is closing we can avoid sending
+>   individual 'subflow is closing' events; entire connection
+>   is going down so might as well wait for the normal mptcp-level
+>   close event.
 >
-> I'll push a bunch of pktdrill test case which will cover the above.
+
+Those two fixes look good for the export branch.
+
+> 3. Move the subflow close loop after dead check.
+>   This is not a fix, it would be fine to leave things as-is
+>   if you prefer -- its just that the extra conn_list walk
+>   can be avoided if the msk is already dead.
+
+This also skips the MPTCP_EVENT_SUB_CLOSED events when the whole socket is =
+
+closed, right? That's worthwhile. It doesn't look like delaying the ssk =
+
+close(s) will change the other calls that might happen for the PM / EOF / =
+
+DATA_FIN stuff, so I think the patch is ok. If there's a problem we can =
+
+drop it from the export branch.
+
+Thanks!
+
+Mat
+
+
 >
-> Paolo Abeni (2):
->  mptcp: deliver ssk errors to msk
->  mptcp: fix poll after shutdown
+> Florian Westphal (3):
+>  mptcp: schedule worker when subflow is closed
+>  mptcp: skip MPTCP_EVENT_SUB_CLOSED event when mptcp socket isn't
+>    established
+>  mptcp: move subflow close loop after sk close check
 >
-> net/mptcp/protocol.c | 11 ++++++++++-
-> net/mptcp/protocol.h |  4 ++++
-> net/mptcp/subflow.c  | 43 +++++++++++++++++++++++++++++++++++++++++++
-> 3 files changed, 57 insertions(+), 1 deletion(-)
+> net/mptcp/protocol.c | 9 +++++----
+> net/mptcp/subflow.c  | 7 +++++++
+> 2 files changed, 12 insertions(+), 4 deletions(-)
 >
 > -- =
 
 > 2.26.2
 
-Hi Paolo -
-
-Both patches look good to me, and local build & selftests were good. =
-
-Thanks!
-
 --
 Mat Martineau
 Intel
---===============2467874818433239319==--
+--===============3994639278450226918==--
