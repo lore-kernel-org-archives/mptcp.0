@@ -1,134 +1,173 @@
-Content-Type: multipart/mixed; boundary="===============3588989045505171358=="
+Content-Type: multipart/mixed; boundary="===============1294396144649090674=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net v2] mptcp: fix spurious retransmissions
-Date: Wed, 03 Feb 2021 15:12:15 +0100
-Message-ID: <451311adaceb5d5c4f69b12c22fd321b8d907bed.1612361402.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH mptcp-net] mptcp: init mptcp request socket earlier
+Date: Wed, 03 Feb 2021 17:28:11 +0100
+Message-ID: <f512d230984510ab2ccbc4e778da4474bd2e1078.1612367293.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7608
+X-UID: 7610
 
---===============3588989045505171358==
+--===============1294396144649090674==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Syzkaller was able to trigger again the following splat:
+The mptcp subflow route_req() callback performs the subflow
+req initialization after the route_req() check. If the latter
+fails, mptcp-specific bits of the current request sockets
+are left uninitialized.
 
-WARNING: CPU: 1 PID: 12512 at net/mptcp/protocol.c:761 mptcp_reset_timer+0x=
-12a/0x160 net/mptcp/protocol.c:761
-Modules linked in:
-CPU: 1 PID: 12512 Comm: kworker/1:6 Not tainted 5.10.0-rc6 #52
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf=
-21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-Workqueue: events mptcp_worker
-RIP: 0010:mptcp_reset_timer+0x12a/0x160 net/mptcp/protocol.c:761
-Code: e8 4b 0c ad ff e8 56 21 88 fe 48 b8 00 00 00 00 00 fc ff df 48 c7 04 =
-03 00 00 00 00 48 83 c4 40 5b 5d 41 5c c3 e8 36 21 88 fe <0f> 0b 41 bc c8 0=
-0 00 00 eb 98 e8 e7 b1 af fe e9 30 ff ff ff 48 c7
-RSP: 0018:ffffc900018c7c68 EFLAGS: 00010293
-RAX: ffff888108cb1c80 RBX: 1ffff92000318f8d RCX: ffffffff82ad0307
-RDX: 0000000000000000 RSI: ffffffff82ad036a RDI: 0000000000000007
-RBP: ffff888113e2d000 R08: ffff888108cb1c80 R09: ffffed10227c5ab7
-R10: ffff888113e2d5b7 R11: ffffed10227c5ab6 R12: 0000000000000000
-R13: ffff88801f100000 R14: ffff888113e2d5b0 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff88811b500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd76a874ef8 CR3: 000000001689c005 CR4: 0000000000170ee0
-Call Trace:
- mptcp_worker+0xaa4/0x1560 net/mptcp/protocol.c:2334
- process_one_work+0x8d3/0x1200 kernel/workqueue.c:2272
- worker_thread+0x9c/0x1090 kernel/workqueue.c:2418
- kthread+0x303/0x410 kernel/kthread.c:292
- ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:296
+The above causes bad things at req socket disposal time, when
+the mptcp resources are cleared.
 
-The mptcp_worker tries to update the MPTCP retransmission timer
-even if such timer is not currently scheduled.
-
-The mptcp_rtx_head() return value is bogus: we can have enqueued
-data not yet transmitted. The above may additionally cause spurious,
-unneeded MPTCP-level retransmissions.
-
-Fix the issue adding an explicit clearing the rtx queue before
-trying to retransmit and checking for unacked data
-Additionally drop an unneeded timer stop call and the unused
-mptcp_rtx_tail() helper.
+This change addresses the issue by splitting subflow_init_req()
+into the actual initialization and the mptcp-specific checks.
+The initialization is moved before any possibly failing check.
 
 Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
+Fixes: 7ea851d19b23 ("tcp: merge 'init_req' and 'route_req' functions")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-v1 -> v2:
- add sanity check in mptcp_rtx_head() - I missed the fact that
- msk->rtx_queue can still be not empty even with all outstanding
- data acked. =
-
- @Christoph, I'm sorry to bug you again, could you please give this
- 2nd variant another try?
+Should fix issues/125 && 130. Even syzkaller would proof the
+opposite, the problem described above looks real.
+@Christoph: could you please... ? (additional free coffee for your
+upcoming holiday in Tuscany ;)
 ---
- net/mptcp/protocol.c | 3 +--
- net/mptcp/protocol.h | 9 +--------
- 2 files changed, 2 insertions(+), 10 deletions(-)
+ net/mptcp/subflow.c | 39 ++++++++++++++++-----------------------
+ 1 file changed, 16 insertions(+), 23 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 305d25cbc216a..88a6fb6f7ecc8 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -363,8 +363,6 @@ static void mptcp_check_data_fin_ack(struct sock *sk)
- =
-
- 	/* Look for an acknowledged DATA_FIN */
- 	if (mptcp_pending_data_fin_ack(sk)) {
--		mptcp_stop_timer(sk);
--
- 		WRITE_ONCE(msk->snd_data_fin_enable, 0);
- =
-
- 		switch (sk->sk_state) {
-@@ -2270,6 +2268,7 @@ static void mptcp_worker(struct work_struct *work)
- 	if (!test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
- 		goto unlock;
- =
-
-+	__mptcp_clean_una(sk);
- 	dfrag =3D mptcp_rtx_head(sk);
- 	if (!dfrag)
- 		goto unlock;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1024ea1512d2b..71ca3f039112c 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -335,20 +335,13 @@ static inline struct mptcp_data_frag *mptcp_pending_t=
-ail(const struct sock *sk)
- 	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 7a5518f751105..26129172f5acd 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -100,7 +100,7 @@ static struct mptcp_sock *subflow_token_join_request(st=
+ruct request_sock *req)
+ 	return msk;
  }
  =
 
--static inline struct mptcp_data_frag *mptcp_rtx_tail(const struct sock *sk)
-+static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+-static int __subflow_init_req(struct request_sock *req, const struct sock =
+*sk_listener)
++static void subflow_init_req(struct request_sock *req, const struct sock *=
+sk_listener)
  {
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+ 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
  =
 
- 	if (!before64(msk->snd_nxt, READ_ONCE(msk->snd_una)))
+@@ -108,16 +108,6 @@ static int __subflow_init_req(struct request_sock *req=
+, const struct sock *sk_li
+ 	subflow_req->mp_join =3D 0;
+ 	subflow_req->msk =3D NULL;
+ 	mptcp_token_init_request(req);
+-
+-#ifdef CONFIG_TCP_MD5SIG
+-	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
+-	 * TCP option space.
+-	 */
+-	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
+-		return -EINVAL;
+-#endif
+-
+-	return 0;
+ }
+ =
+
+ static bool subflow_use_different_sport(struct mptcp_sock *msk, const stru=
+ct sock *sk)
+@@ -130,9 +120,9 @@ static bool subflow_use_different_sport(struct mptcp_so=
+ck *msk, const struct soc
+  * Returns an error code if a JOIN has failed and a TCP reset
+  * should be sent.
+  */
+-static int subflow_init_req(struct request_sock *req,
+-			    const struct sock *sk_listener,
+-			    struct sk_buff *skb)
++static int subflow_check_req(struct request_sock *req,
++			     const struct sock *sk_listener,
++			     struct sk_buff *skb)
+ {
+ 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
+ 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
+@@ -141,9 +131,13 @@ static int subflow_init_req(struct request_sock *req,
+ =
+
+ 	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
+ =
+
+-	ret =3D __subflow_init_req(req, sk_listener);
+-	if (ret)
+-		return 0;
++#ifdef CONFIG_TCP_MD5SIG
++	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
++	 * TCP option space.
++	 */
++	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
++		return -EINVAL;
++#endif
+ =
+
+ 	mptcp_get_options(skb, &mp_opt);
+ =
+
+@@ -236,10 +230,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock =
+*req,
+ 	struct mptcp_options_received mp_opt;
+ 	int err;
+ =
+
+-	err =3D __subflow_init_req(req, sk_listener);
+-	if (err)
+-		return err;
+-
++	subflow_init_req(req, sk_listener);
+ 	mptcp_get_options(skb, &mp_opt);
+ =
+
+ 	if (mp_opt.mp_capable && mp_opt.mp_join)
+@@ -279,12 +270,13 @@ static struct dst_entry *subflow_v4_route_req(const s=
+truct sock *sk,
+ 	int err;
+ =
+
+ 	tcp_rsk(req)->is_mptcp =3D 1;
++	subflow_init_req(req, sk);
+ =
+
+ 	dst =3D tcp_request_sock_ipv4_ops.route_req(sk, skb, fl, req);
+ 	if (!dst)
  		return NULL;
  =
 
--	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
--}
--
--static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
--{
--	struct mptcp_sock *msk =3D mptcp_sk(sk);
--
- 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, =
-list);
- }
+-	err =3D subflow_init_req(req, sk, skb);
++	err =3D subflow_check_req(req, sk, skb);
+ 	if (err =3D=3D 0)
+ 		return dst;
+ =
+
+@@ -304,12 +296,13 @@ static struct dst_entry *subflow_v6_route_req(const s=
+truct sock *sk,
+ 	int err;
+ =
+
+ 	tcp_rsk(req)->is_mptcp =3D 1;
++	subflow_init_req(req, sk);
+ =
+
+ 	dst =3D tcp_request_sock_ipv6_ops.route_req(sk, skb, fl, req);
+ 	if (!dst)
+ 		return NULL;
+ =
+
+-	err =3D subflow_init_req(req, sk, skb);
++	err =3D subflow_check_req(req, sk, skb);
+ 	if (err =3D=3D 0)
+ 		return dst;
  =
 
 -- =
 
 2.26.2
 
---===============3588989045505171358==--
+--===============1294396144649090674==--
