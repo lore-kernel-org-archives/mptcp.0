@@ -1,49 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============1912145167514540906=="
+Content-Type: multipart/mixed; boundary="===============8117222757964962646=="
 MIME-Version: 1.0
-From: Christoph Paasch <cpaasch at apple.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: init mptcp request socket earlier
-Date: Wed, 03 Feb 2021 09:26:20 -0800
-Message-ID: <20210203172620.GG43803@MacBook-Pro.local>
-In-Reply-To: f512d230984510ab2ccbc4e778da4474bd2e1078.1612367293.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp 0/3] mptcp: netlink event fixes
+Date: Wed, 03 Feb 2021 20:19:16 +0100
+Message-ID: <d9fb6fea-53da-eb48-e5b7-31e87619e8bf@tessares.net>
+In-Reply-To: 20210202174754.6861-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7613
+X-UID: 7614
 
---===============1912145167514540906==
+--===============8117222757964962646==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 02/03/21 - 17:28, Paolo Abeni wrote:
-> The mptcp subflow route_req() callback performs the subflow
-> req initialization after the route_req() check. If the latter
-> fails, mptcp-specific bits of the current request sockets
-> are left uninitialized.
-> =
+Hi Florian, Mat,
 
-> The above causes bad things at req socket disposal time, when
-> the mptcp resources are cleared.
-> =
+On 02/02/2021 18:47, Florian Westphal wrote:
+> While testing upcoming mptcp reset option support i found a few
+> issues with netlink events.
 
-> This change addresses the issue by splitting subflow_init_req()
-> into the actual initialization and the mptcp-specific checks.
-> The initialization is moved before any possibly failing check.
-> =
+Thank you for the patches and the reviews!
 
-> Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-> Fixes: 7ea851d19b23 ("tcp: merge 'init_req' and 'route_req' functions")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> Should fix issues/125 && 130. Even syzkaller would proof the
-> opposite, the problem described above looks real.
-> @Christoph: could you please... ? (additional free coffee for your
-> upcoming holiday in Tuscany ;)
+As discussed on IRC, I squashed patch 2/3 in "mptcp: add netlink event =
 
-Looking forward to the coffee!!! :-) I hope coffee translates to red wine
-later in the day!
+support":
 
+- 51e4bae2c6c9: "squashed" patch 2/3 in "mptcp: add netlink event support"
+- Results: f3a1a5d5ef41..eee71bc20e17
 
-Christoph
+Then I added patches 1/3 and 3/3/ in our tree between "mptcp: split =
 
---===============1912145167514540906==--
+__mptcp_close_ssk helper" and "mptcp: pass subflow socket to a few =
+
+helpers". I also added Mat's RvB tags:
+
+- 95fc52697bf7: mptcp: schedule worker when subflow is closed
+- 74975e28f8ec: mptcp: move subflow close loop after sk close check
+- Results: eee71bc20e17..7b3ea53ce791
+
+Tests + export are in progress!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============8117222757964962646==--
