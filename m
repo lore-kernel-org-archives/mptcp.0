@@ -1,173 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============1294396144649090674=="
+Content-Type: multipart/mixed; boundary="===============1306023063141425254=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net] mptcp: init mptcp request socket earlier
-Date: Wed, 03 Feb 2021 17:28:11 +0100
-Message-ID: <f512d230984510ab2ccbc4e778da4474bd2e1078.1612367293.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [bug report] the test cases for signaling invalid
+ addresses don't work
+Date: Wed, 03 Feb 2021 18:24:04 +0100
+Message-ID: <30e490d065f6181ca058f2ba3f5f0b9ef98e2b7b.camel@redhat.com>
+In-Reply-To: CA+WQbwuPyd6cMTZgxfZVtoDR-aaNkgRYNzA_dFe9oyjRxSoqVA@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7610
+X-UID: 7611
 
---===============1294396144649090674==
+--===============1306023063141425254==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The mptcp subflow route_req() callback performs the subflow
-req initialization after the route_req() check. If the latter
-fails, mptcp-specific bits of the current request sockets
-are left uninitialized.
+On Wed, 2021-02-03 at 19:30 +0800, Geliang Tang wrote:
+> I added two test cases for signaling multi addresses today:
+> =
 
-The above causes bad things at req socket disposal time, when
-the mptcp resources are cleared.
+>          # signal addresses
+>          reset
+>          ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+>          ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+>          ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+>          ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
+>          ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+>          run_tests $ns1 $ns2 10.0.1.1
+>          chk_join_nr "signal addresses" 3 3 3
+>          chk_add_nr 3 3
+> =
 
-This change addresses the issue by splitting subflow_init_req()
-into the actual initialization and the mptcp-specific checks.
-The initialization is moved before any possibly failing check.
+>          # signal invalid addresses
+>          reset
+>          ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+>          ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+>          ip netns exec $ns1 ./pm_nl_ctl add 10.0.13.1 flags signal
+>          ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
+>          ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+>          run_tests $ns1 $ns2 10.0.1.1
+>          chk_join_nr "signal invalid addresses" 0 0 0
+>          chk_add_nr 1 1
+> =
 
-Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-Fixes: 7ea851d19b23 ("tcp: merge 'init_req' and 'route_req' functions")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-Should fix issues/125 && 130. Even syzkaller would proof the
-opposite, the problem described above looks real.
-@Christoph: could you please... ? (additional free coffee for your
-upcoming holiday in Tuscany ;)
----
- net/mptcp/subflow.c | 39 ++++++++++++++++-----------------------
- 1 file changed, 16 insertions(+), 23 deletions(-)
+> The 1st one works well, the 2nd one added three invalid addresses, but
+> only got 1 ADD_ADDR and 1 ECHO. I thought it should be 0 ADD_ADDR or
+> 3 ADD_ADDRs.
+> =
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7a5518f751105..26129172f5acd 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -100,7 +100,7 @@ static struct mptcp_sock *subflow_token_join_request(st=
-ruct request_sock *req)
- 	return msk;
- }
- =
+> In the 2nd test case, mptcp_pm_create_subflow_or_signal_addr was only
+> triggered once when the msk is established. Since the first address is an
+> invalid one, the subflow for it cannot be created successfully. So
+> mptcp_pm_nl_subflow_established could not be invoked. The last two
+> addresses didn't have a chance to be announced. I think this behavior is
+> incorrect.
+> =
 
--static int __subflow_init_req(struct request_sock *req, const struct sock =
-*sk_listener)
-+static void subflow_init_req(struct request_sock *req, const struct sock *=
-sk_listener)
- {
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
- =
+> I have several questions about this:
+> =
 
-@@ -108,16 +108,6 @@ static int __subflow_init_req(struct request_sock *req=
-, const struct sock *sk_li
- 	subflow_req->mp_join =3D 0;
- 	subflow_req->msk =3D NULL;
- 	mptcp_token_init_request(req);
--
--#ifdef CONFIG_TCP_MD5SIG
--	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
--	 * TCP option space.
--	 */
--	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
--		return -EINVAL;
--#endif
--
--	return 0;
- }
- =
+> 1. Is this an known issue? Is it worth creating a new issue on github and
+> fixing it?
 
- static bool subflow_use_different_sport(struct mptcp_sock *msk, const stru=
-ct sock *sk)
-@@ -130,9 +120,9 @@ static bool subflow_use_different_sport(struct mptcp_so=
-ck *msk, const struct soc
-  * Returns an error code if a JOIN has failed and a TCP reset
-  * should be sent.
-  */
--static int subflow_init_req(struct request_sock *req,
--			    const struct sock *sk_listener,
--			    struct sk_buff *skb)
-+static int subflow_check_req(struct request_sock *req,
-+			     const struct sock *sk_listener,
-+			     struct sk_buff *skb)
- {
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
-@@ -141,9 +131,13 @@ static int subflow_init_req(struct request_sock *req,
- =
+I think filing a github issue is the correct thing to do, so that we
+don't lose track of this in the ML. =
 
- 	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
- =
 
--	ret =3D __subflow_init_req(req, sk_listener);
--	if (ret)
--		return 0;
-+#ifdef CONFIG_TCP_MD5SIG
-+	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-+	 * TCP option space.
-+	 */
-+	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
-+		return -EINVAL;
-+#endif
- =
+Even if I must admit it looks a low prio item to me.
 
- 	mptcp_get_options(skb, &mp_opt);
- =
+> 2. What do we expect for the 2nd test case, 0 ADD_ADDR or 3 ADD_ADDRs?
+> 3. Should we skip announcing the invalid addresses?
+> 4. Or should we change the logic of mptcp_pm_create_subflow_or_signal_addr
+> to announce all the invalid addresses?
 
-@@ -236,10 +230,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock =
-*req,
- 	struct mptcp_options_received mp_opt;
- 	int err;
- =
+I think the "correct" behaviour would be announcing 3 addresses.
+Setting and maintaining correct list of addresses is up to the user-
+space/path-manger.
 
--	err =3D __subflow_init_req(req, sk_listener);
--	if (err)
--		return err;
--
-+	subflow_init_req(req, sk_listener);
- 	mptcp_get_options(skb, &mp_opt);
- =
+The kernel could teorerically watch out for local IP address changes,
+but even announcing only IPs that are locally available would not
+guarantee the related subflow to be established - for a gazilion of
+reasons, last but not least the address could be removed by the admin
+after being announced and before subflow creation.
 
- 	if (mp_opt.mp_capable && mp_opt.mp_join)
-@@ -279,12 +270,13 @@ static struct dst_entry *subflow_v4_route_req(const s=
-truct sock *sk,
- 	int err;
- =
+Overall I think the kernel should not filter the addresses to be
+annonced in any way.
 
- 	tcp_rsk(req)->is_mptcp =3D 1;
-+	subflow_init_req(req, sk);
- =
+Eventually we could change how add_addr events are scheduled, e.g.
+moving to the next address after that the previous one has been echoed
+by the peer.
 
- 	dst =3D tcp_request_sock_ipv4_ops.route_req(sk, skb, fl, req);
- 	if (!dst)
- 		return NULL;
- =
+As I said I think it's not an huge priority, we have planty of bugs to
+fix first ;) So I would just keep the current result, possibly adding a
+TODO/FIXME note in the test and/or in the relevant kernel code.
 
--	err =3D subflow_init_req(req, sk, skb);
-+	err =3D subflow_check_req(req, sk, skb);
- 	if (err =3D=3D 0)
- 		return dst;
- =
+All the above IMHO.
 
-@@ -304,12 +296,13 @@ static struct dst_entry *subflow_v6_route_req(const s=
-truct sock *sk,
- 	int err;
- =
+Cheers,
 
- 	tcp_rsk(req)->is_mptcp =3D 1;
-+	subflow_init_req(req, sk);
- =
+Paolo
 
- 	dst =3D tcp_request_sock_ipv6_ops.route_req(sk, skb, fl, req);
- 	if (!dst)
- 		return NULL;
- =
-
--	err =3D subflow_init_req(req, sk, skb);
-+	err =3D subflow_check_req(req, sk, skb);
- 	if (err =3D=3D 0)
- 		return dst;
- =
-
--- =
-
-2.26.2
-
---===============1294396144649090674==--
+--===============1306023063141425254==--
