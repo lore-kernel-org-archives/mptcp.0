@@ -1,61 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============6985304162119508971=="
+Content-Type: multipart/mixed; boundary="===============7675552840509918495=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/2] mptcp: handle socket errors
-Date: Wed, 03 Feb 2021 12:24:01 +0100
-Message-ID: <55e7a762-e819-b2f0-ca44-dc66da6192f6@tessares.net>
-In-Reply-To: cover.1612201708.git.pabeni@redhat.com
+Subject: [MPTCP] [bug report] the test cases for signaling invalid addresses
+ don't work
+Date: Wed, 03 Feb 2021 19:30:19 +0800
+Message-ID: <CA+WQbwuPyd6cMTZgxfZVtoDR-aaNkgRYNzA_dFe9oyjRxSoqVA@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7606
+X-UID: 7607
 
---===============6985304162119508971==
+--===============7675552840509918495==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+I added two test cases for signaling multi addresses today:
 
-On 01/02/2021 19:12, Paolo Abeni wrote:
-> This introduces the initial support for msk-level socket error
-> handling.
-> =
+         # signal addresses
+         reset
+         ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+         ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+         ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+         ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
+         ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+         run_tests $ns1 $ns2 10.0.1.1
+         chk_join_nr "signal addresses" 3 3 3
+         chk_add_nr 3 3
 
-> Currently subflow socket errors are always ignored. That is almost
-> correct - I think - because the single subflow status does not
-> affect the msk-level connection.
-> =
+         # signal invalid addresses
+         reset
+         ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+         ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+         ip netns exec $ns1 ./pm_nl_ctl add 10.0.13.1 flags signal
+         ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
+         ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+         run_tests $ns1 $ns2 10.0.1.1
+         chk_join_nr "signal invalid addresses" 0 0 0
+         chk_add_nr 1 1
 
-> There a couple of notable exceptions:
-> - fallen-back msk
-> - error at connect time on the MPC subflow
-> both should be propagated at msk level.
-> =
+The 1st one works well, the 2nd one added three invalid addresses, but
+only got 1 ADD_ADDR and 1 ECHO. I thought it should be 0 ADD_ADDR or
+3 ADD_ADDRs.
 
-> patch 1 implement the relevant infra
-> patch 2 is actuall a bug fix, for some edge cases that become
-> apparent testing the above.
-> =
+In the 2nd test case, mptcp_pm_create_subflow_or_signal_addr was only
+triggered once when the msk is established. Since the first address is an
+invalid one, the subflow for it cannot be created successfully. So
+mptcp_pm_nl_subflow_established could not be invoked. The last two
+addresses didn't have a chance to be announced. I think this behavior is
+incorrect.
 
-> I'll push a bunch of pktdrill test case which will cover the above.
+I have several questions about this:
 
-Thank you for your patches, new pktdrill tests and the reviews! I just =
+1. Is this an known issue? Is it worth creating a new issue on github and
+fixing it?
 
-added them in our tree with Mat's RvB tags (and slightly modified the =
+2. What do we expect for the 2nd test case, 0 ADD_ADDR or 3 ADD_ADDRs?
 
-commit message of patch 2/2 as discussed on IRC).
+3. Should we skip announcing the invalid addresses?
 
-- d55492a9942b: mptcp: deliver ssk errors to msk
-- 330d6265d893: mptcp: fix poll after shutdown
-- Results: 130bfe7ce033..f3a1a5d5ef41
+4. Or should we change the logic of mptcp_pm_create_subflow_or_signal_addr
+to announce all the invalid addresses?
 
-Tests + export are in progress!
+Please give me some suggestions about this.
 
-Cheers,
-Matt
--- =
+Thanks.
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============6985304162119508971==--
+-Geliang
+--===============7675552840509918495==--
