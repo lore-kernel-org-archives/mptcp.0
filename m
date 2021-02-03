@@ -1,74 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============3994639278450226918=="
+Content-Type: multipart/mixed; boundary="===============5695819933144302027=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp 0/3] mptcp: netlink event fixes
-Date: Tue, 02 Feb 2021 17:28:33 -0800
-Message-ID: <695d572f-3a1b-f687-cf31-d26e684f6a74@linux.intel.com>
-In-Reply-To: 20210202174754.6861-1-fw@strlen.de
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next] mptcp: add local addr info in
+ mptcp_info
+Date: Wed, 03 Feb 2021 10:30:56 +0800
+Message-ID: <074e92470b7b18bbaf55b56d114e6616ed437a45.1612319252.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7601
+X-UID: 7602
 
---===============3994639278450226918==
+--===============5695819933144302027==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2 Feb 2021, Florian Westphal wrote:
+Add mptcpi_local_addr_used and mptcpi_local_addr_max in struct mptcp_info.
 
-> While testing upcoming mptcp reset option support i found a few
-> issues with netlink events.
->
-> 1. When remote side is closing, the subflow close event will
-> be delayed until after the mptcp socket has shut down.
->
-> Schedule the worker to do a cleanup scan to avoid this.
->
-> 2. When the mptcp socket is closing we can avoid sending
->   individual 'subflow is closing' events; entire connection
->   is going down so might as well wait for the normal mptcp-level
->   close event.
->
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ v3:
+ - keep mptcpi_add_addr_signal unchanged
 
-Those two fixes look good for the export branch.
+ v2:
+ - append new fields in the end of struct mptcp_info.
+ - This patch is split from "add trace events" patch set as a single one
+as Paolo suggested.
+ - tag: export/20210131T062218
+---
+ include/uapi/linux/mptcp.h | 2 ++
+ net/mptcp/mptcp_diag.c     | 2 ++
+ net/mptcp/pm_netlink.c     | 3 ++-
+ net/mptcp/protocol.h       | 1 +
+ 4 files changed, 7 insertions(+), 1 deletion(-)
 
-> 3. Move the subflow close loop after dead check.
->   This is not a fix, it would be fine to leave things as-is
->   if you prefer -- its just that the extra conn_list walk
->   can be avoided if the msk is already dead.
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index c91578aaab32..e1172c1ffdfd 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -103,6 +103,8 @@ struct mptcp_info {
+ 	__u64	mptcpi_write_seq;
+ 	__u64	mptcpi_snd_una;
+ 	__u64	mptcpi_rcv_nxt;
++	__u8	mptcpi_local_addr_used;
++	__u8	mptcpi_local_addr_max;
+ };
+ =
 
-This also skips the MPTCP_EVENT_SUB_CLOSED events when the whole socket is =
+ /*
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 00ed742f48a4..f16d9b5ee978 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -128,11 +128,13 @@ static void mptcp_diag_get_info(struct sock *sk, stru=
+ct inet_diag_msg *r,
+ 	info->mptcpi_subflows =3D READ_ONCE(msk->pm.subflows);
+ 	info->mptcpi_add_addr_signal =3D READ_ONCE(msk->pm.add_addr_signaled);
+ 	info->mptcpi_add_addr_accepted =3D READ_ONCE(msk->pm.add_addr_accepted);
++	info->mptcpi_local_addr_used =3D READ_ONCE(msk->pm.local_addr_used);
+ 	info->mptcpi_subflows_max =3D mptcp_pm_get_subflows_max(msk);
+ 	val =3D mptcp_pm_get_add_addr_signal_max(msk);
+ 	info->mptcpi_add_addr_signal_max =3D val;
+ 	val =3D mptcp_pm_get_add_addr_accept_max(msk);
+ 	info->mptcpi_add_addr_accepted_max =3D val;
++	info->mptcpi_local_addr_max =3D mptcp_pm_get_local_addr_max(msk);
+ 	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
+ 		flags |=3D MPTCP_INFO_FLAG_FALLBACK;
+ 	if (READ_ONCE(msk->can_ack))
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 6b6dacd0e03a..75ab3d308ab5 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -228,13 +228,14 @@ unsigned int mptcp_pm_get_subflows_max(struct mptcp_s=
+ock *msk)
+ }
+ EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
+ =
 
-closed, right? That's worthwhile. It doesn't look like delaying the ssk =
+-static unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
++unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
+ {
+ 	struct pm_nl_pernet *pernet;
+ =
 
-close(s) will change the other calls that might happen for the PM / EOF / =
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ 	return READ_ONCE(pernet->local_addr_max);
+ }
++EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
+ =
 
-DATA_FIN stuff, so I think the patch is ok. If there's a problem we can =
+ static void check_work_pending(struct mptcp_sock *msk)
+ {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 92658c34f091..d385651ff6a9 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -736,6 +736,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc);
+ unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
+ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
+ unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
++unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
+ =
 
-drop it from the export branch.
+ static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
+ {
+-- =
 
-Thanks!
+2.29.2
 
-Mat
-
-
->
-> Florian Westphal (3):
->  mptcp: schedule worker when subflow is closed
->  mptcp: skip MPTCP_EVENT_SUB_CLOSED event when mptcp socket isn't
->    established
->  mptcp: move subflow close loop after sk close check
->
-> net/mptcp/protocol.c | 9 +++++----
-> net/mptcp/subflow.c  | 7 +++++++
-> 2 files changed, 12 insertions(+), 4 deletions(-)
->
-> -- =
-
-> 2.26.2
-
---
-Mat Martineau
-Intel
---===============3994639278450226918==--
+--===============5695819933144302027==--
