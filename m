@@ -1,104 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============1306023063141425254=="
+Content-Type: multipart/mixed; boundary="===============8846399320407865373=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [bug report] the test cases for signaling invalid
- addresses don't work
-Date: Wed, 03 Feb 2021 18:24:04 +0100
-Message-ID: <30e490d065f6181ca058f2ba3f5f0b9ef98e2b7b.camel@redhat.com>
-In-Reply-To: CA+WQbwuPyd6cMTZgxfZVtoDR-aaNkgRYNzA_dFe9oyjRxSoqVA@mail.gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-net v2] mptcp: fix spurious retransmissions
+Date: Wed, 03 Feb 2021 09:25:18 -0800
+Message-ID: <20210203172518.GF43803@MacBook-Pro.local>
+In-Reply-To: 451311adaceb5d5c4f69b12c22fd321b8d907bed.1612361402.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7611
+X-UID: 7612
 
---===============1306023063141425254==
+--===============8846399320407865373==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2021-02-03 at 19:30 +0800, Geliang Tang wrote:
-> I added two test cases for signaling multi addresses today:
+On 02/03/21 - 15:12, Paolo Abeni wrote:
+> Syzkaller was able to trigger again the following splat:
 > =
 
->          # signal addresses
->          reset
->          ip netns exec $ns1 ./pm_nl_ctl limits 3 3
->          ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
->          ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
->          ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
->          ip netns exec $ns2 ./pm_nl_ctl limits 3 3
->          run_tests $ns1 $ns2 10.0.1.1
->          chk_join_nr "signal addresses" 3 3 3
->          chk_add_nr 3 3
+> WARNING: CPU: 1 PID: 12512 at net/mptcp/protocol.c:761 mptcp_reset_timer+=
+0x12a/0x160 net/mptcp/protocol.c:761
+> Modules linked in:
+> CPU: 1 PID: 12512 Comm: kworker/1:6 Not tainted 5.10.0-rc6 #52
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-=
+gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+> Workqueue: events mptcp_worker
+> RIP: 0010:mptcp_reset_timer+0x12a/0x160 net/mptcp/protocol.c:761
+> Code: e8 4b 0c ad ff e8 56 21 88 fe 48 b8 00 00 00 00 00 fc ff df 48 c7 0=
+4 03 00 00 00 00 48 83 c4 40 5b 5d 41 5c c3 e8 36 21 88 fe <0f> 0b 41 bc c8=
+ 00 00 00 eb 98 e8 e7 b1 af fe e9 30 ff ff ff 48 c7
+> RSP: 0018:ffffc900018c7c68 EFLAGS: 00010293
+> RAX: ffff888108cb1c80 RBX: 1ffff92000318f8d RCX: ffffffff82ad0307
+> RDX: 0000000000000000 RSI: ffffffff82ad036a RDI: 0000000000000007
+> RBP: ffff888113e2d000 R08: ffff888108cb1c80 R09: ffffed10227c5ab7
+> R10: ffff888113e2d5b7 R11: ffffed10227c5ab6 R12: 0000000000000000
+> R13: ffff88801f100000 R14: ffff888113e2d5b0 R15: 0000000000000001
+> FS:  0000000000000000(0000) GS:ffff88811b500000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fd76a874ef8 CR3: 000000001689c005 CR4: 0000000000170ee0
+> Call Trace:
+>  mptcp_worker+0xaa4/0x1560 net/mptcp/protocol.c:2334
+>  process_one_work+0x8d3/0x1200 kernel/workqueue.c:2272
+>  worker_thread+0x9c/0x1090 kernel/workqueue.c:2418
+>  kthread+0x303/0x410 kernel/kthread.c:292
+>  ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:296
 > =
 
->          # signal invalid addresses
->          reset
->          ip netns exec $ns1 ./pm_nl_ctl limits 3 3
->          ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
->          ip netns exec $ns1 ./pm_nl_ctl add 10.0.13.1 flags signal
->          ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
->          ip netns exec $ns2 ./pm_nl_ctl limits 3 3
->          run_tests $ns1 $ns2 10.0.1.1
->          chk_join_nr "signal invalid addresses" 0 0 0
->          chk_add_nr 1 1
+> The mptcp_worker tries to update the MPTCP retransmission timer
+> even if such timer is not currently scheduled.
 > =
 
-> The 1st one works well, the 2nd one added three invalid addresses, but
-> only got 1 ADD_ADDR and 1 ECHO. I thought it should be 0 ADD_ADDR or
-> 3 ADD_ADDRs.
+> The mptcp_rtx_head() return value is bogus: we can have enqueued
+> data not yet transmitted. The above may additionally cause spurious,
+> unneeded MPTCP-level retransmissions.
 > =
 
-> In the 2nd test case, mptcp_pm_create_subflow_or_signal_addr was only
-> triggered once when the msk is established. Since the first address is an
-> invalid one, the subflow for it cannot be created successfully. So
-> mptcp_pm_nl_subflow_established could not be invoked. The last two
-> addresses didn't have a chance to be announced. I think this behavior is
-> incorrect.
+> Fix the issue adding an explicit clearing the rtx queue before
+> trying to retransmit and checking for unacked data
+> Additionally drop an unneeded timer stop call and the unused
+> mptcp_rtx_tail() helper.
 > =
 
-> I have several questions about this:
-> =
+> Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+> Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> v1 -> v2:
+>  add sanity check in mptcp_rtx_head() - I missed the fact that
+>  msk->rtx_queue can still be not empty even with all outstanding
+>  data acked. =
 
-> 1. Is this an known issue? Is it worth creating a new issue on github and
-> fixing it?
+>  @Christoph, I'm sorry to bug you again, could you please give this
+>  2nd variant another try?
 
-I think filing a github issue is the correct thing to do, so that we
-don't lose track of this in the ML. =
+Sure! Running now.
 
 
-Even if I must admit it looks a low prio item to me.
+Christoph
 
-> 2. What do we expect for the 2nd test case, 0 ADD_ADDR or 3 ADD_ADDRs?
-> 3. Should we skip announcing the invalid addresses?
-> 4. Or should we change the logic of mptcp_pm_create_subflow_or_signal_addr
-> to announce all the invalid addresses?
-
-I think the "correct" behaviour would be announcing 3 addresses.
-Setting and maintaining correct list of addresses is up to the user-
-space/path-manger.
-
-The kernel could teorerically watch out for local IP address changes,
-but even announcing only IPs that are locally available would not
-guarantee the related subflow to be established - for a gazilion of
-reasons, last but not least the address could be removed by the admin
-after being announced and before subflow creation.
-
-Overall I think the kernel should not filter the addresses to be
-annonced in any way.
-
-Eventually we could change how add_addr events are scheduled, e.g.
-moving to the next address after that the previous one has been echoed
-by the peer.
-
-As I said I think it's not an huge priority, we have planty of bugs to
-fix first ;) So I would just keep the current result, possibly adding a
-TODO/FIXME note in the test and/or in the relevant kernel code.
-
-All the above IMHO.
-
-Cheers,
-
-Paolo
-
---===============1306023063141425254==--
+--===============8846399320407865373==--
