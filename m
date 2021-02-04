@@ -1,126 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============0865592167953553730=="
+Content-Type: multipart/mixed; boundary="===============3325518526402962364=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next] mptcp: add local addr info
- in mptcp_info
-Date: Wed, 03 Feb 2021 16:00:22 -0800
-Message-ID: <72e6de2-a737-a1fd-b9fa-5c879213c8@linux.intel.com>
-In-Reply-To: 074e92470b7b18bbaf55b56d114e6616ed437a45.1612319252.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [bug report] the test cases for signaling invalid
+ addresses don't work
+Date: Thu, 04 Feb 2021 11:15:34 +0800
+Message-ID: <CA+WQbwvQU+8mSGy7-F+1L-tdEqyZy5cm7dvv-srUx-MoR63ymA@mail.gmail.com>
+In-Reply-To: 30e490d065f6181ca058f2ba3f5f0b9ef98e2b7b.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7616
+X-UID: 7617
 
---===============0865592167953553730==
+--===============3325518526402962364==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 3 Feb 2021, Geliang Tang wrote:
+Hi Paolo,
 
-> Add mptcpi_local_addr_used and mptcpi_local_addr_max in struct mptcp_info.
+Paolo Abeni <pabeni(a)redhat.com> =E4=BA=8E2021=E5=B9=B42=E6=9C=884=E6=97=
+=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=881:24=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> v3:
-> - keep mptcpi_add_addr_signal unchanged
-
-Looks good for the export branch, thanks!
-
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-
-
-Mat
-
-
+> On Wed, 2021-02-03 at 19:30 +0800, Geliang Tang wrote:
+> > I added two test cases for signaling multi addresses today:
+> >
+> >          # signal addresses
+> >          reset
+> >          ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+> >          ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+> >          ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
+> >          ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
+> >          ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+> >          run_tests $ns1 $ns2 10.0.1.1
+> >          chk_join_nr "signal addresses" 3 3 3
+> >          chk_add_nr 3 3
+> >
+> >          # signal invalid addresses
+> >          reset
+> >          ip netns exec $ns1 ./pm_nl_ctl limits 3 3
+> >          ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
+> >          ip netns exec $ns1 ./pm_nl_ctl add 10.0.13.1 flags signal
+> >          ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
+> >          ip netns exec $ns2 ./pm_nl_ctl limits 3 3
+> >          run_tests $ns1 $ns2 10.0.1.1
+> >          chk_join_nr "signal invalid addresses" 0 0 0
+> >          chk_add_nr 1 1
+> >
+> > The 1st one works well, the 2nd one added three invalid addresses, but
+> > only got 1 ADD_ADDR and 1 ECHO. I thought it should be 0 ADD_ADDR or
+> > 3 ADD_ADDRs.
+> >
+> > In the 2nd test case, mptcp_pm_create_subflow_or_signal_addr was only
+> > triggered once when the msk is established. Since the first address is =
+an
+> > invalid one, the subflow for it cannot be created successfully. So
+> > mptcp_pm_nl_subflow_established could not be invoked. The last two
+> > addresses didn't have a chance to be announced. I think this behavior is
+> > incorrect.
+> >
+> > I have several questions about this:
+> >
+> > 1. Is this an known issue? Is it worth creating a new issue on github a=
+nd
+> > fixing it?
 >
-> v2:
-> - append new fields in the end of struct mptcp_info.
-> - This patch is split from "add trace events" patch set as a single one
-> as Paolo suggested.
-> - tag: export/20210131T062218
-> ---
-> include/uapi/linux/mptcp.h | 2 ++
-> net/mptcp/mptcp_diag.c     | 2 ++
-> net/mptcp/pm_netlink.c     | 3 ++-
-> net/mptcp/protocol.h       | 1 +
-> 4 files changed, 7 insertions(+), 1 deletion(-)
+> I think filing a github issue is the correct thing to do, so that we
+> don't lose track of this in the ML.
 >
-> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> index c91578aaab32..e1172c1ffdfd 100644
-> --- a/include/uapi/linux/mptcp.h
-> +++ b/include/uapi/linux/mptcp.h
-> @@ -103,6 +103,8 @@ struct mptcp_info {
-> 	__u64	mptcpi_write_seq;
-> 	__u64	mptcpi_snd_una;
-> 	__u64	mptcpi_rcv_nxt;
-> +	__u8	mptcpi_local_addr_used;
-> +	__u8	mptcpi_local_addr_max;
-> };
+> Even if I must admit it looks a low prio item to me.
 >
-> /*
-> diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-> index 00ed742f48a4..f16d9b5ee978 100644
-> --- a/net/mptcp/mptcp_diag.c
-> +++ b/net/mptcp/mptcp_diag.c
-> @@ -128,11 +128,13 @@ static void mptcp_diag_get_info(struct sock *sk, st=
-ruct inet_diag_msg *r,
-> 	info->mptcpi_subflows =3D READ_ONCE(msk->pm.subflows);
-> 	info->mptcpi_add_addr_signal =3D READ_ONCE(msk->pm.add_addr_signaled);
-> 	info->mptcpi_add_addr_accepted =3D READ_ONCE(msk->pm.add_addr_accepted);
-> +	info->mptcpi_local_addr_used =3D READ_ONCE(msk->pm.local_addr_used);
-> 	info->mptcpi_subflows_max =3D mptcp_pm_get_subflows_max(msk);
-> 	val =3D mptcp_pm_get_add_addr_signal_max(msk);
-> 	info->mptcpi_add_addr_signal_max =3D val;
-> 	val =3D mptcp_pm_get_add_addr_accept_max(msk);
-> 	info->mptcpi_add_addr_accepted_max =3D val;
-> +	info->mptcpi_local_addr_max =3D mptcp_pm_get_local_addr_max(msk);
-> 	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
-> 		flags |=3D MPTCP_INFO_FLAG_FALLBACK;
-> 	if (READ_ONCE(msk->can_ack))
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 6b6dacd0e03a..75ab3d308ab5 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -228,13 +228,14 @@ unsigned int mptcp_pm_get_subflows_max(struct mptcp=
-_sock *msk)
-> }
-> EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
+> > 2. What do we expect for the 2nd test case, 0 ADD_ADDR or 3 ADD_ADDRs?
+> > 3. Should we skip announcing the invalid addresses?
+> > 4. Or should we change the logic of mptcp_pm_create_subflow_or_signal_a=
+ddr
+> > to announce all the invalid addresses?
 >
-> -static unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
-> +unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
-> {
-> 	struct pm_nl_pernet *pernet;
+> I think the "correct" behaviour would be announcing 3 addresses.
+> Setting and maintaining correct list of addresses is up to the user-
+> space/path-manger.
 >
-> 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-> 	return READ_ONCE(pernet->local_addr_max);
-> }
-> +EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
+> The kernel could teorerically watch out for local IP address changes,
+> but even announcing only IPs that are locally available would not
+> guarantee the related subflow to be established - for a gazilion of
+> reasons, last but not least the address could be removed by the admin
+> after being announced and before subflow creation.
 >
-> static void check_work_pending(struct mptcp_sock *msk)
-> {
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 92658c34f091..d385651ff6a9 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -736,6 +736,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, =
-struct sock_common *skc);
-> unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
-> unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
-> unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
-> +unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
+> Overall I think the kernel should not filter the addresses to be
+> annonced in any way.
 >
-> static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
-> {
-> -- =
-
-> 2.29.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+> Eventually we could change how add_addr events are scheduled, e.g.
+> moving to the next address after that the previous one has been echoed
+> by the peer.
+>
+> As I said I think it's not an huge priority, we have planty of bugs to
+> fix first ;) So I would just keep the current result, possibly adding a
+> TODO/FIXME note in the test and/or in the relevant kernel code.
+>
+> All the above IMHO.
 >
 
---
-Mat Martineau
-Intel
---===============0865592167953553730==--
+Thanks for your suggestions. I had created issues #151 for this and
+assigned it to myself. I'll try to fix it recently.
+
+-Geliang
+
+> Cheers,
+>
+> Paolo
+>
+--===============3325518526402962364==--
