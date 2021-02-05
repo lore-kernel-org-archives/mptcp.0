@@ -1,174 +1,214 @@
-Content-Type: multipart/mixed; boundary="===============1172415978505453882=="
+Content-Type: multipart/mixed; boundary="===============6501537627059433987=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net 2/5] mptcp: init mptcp request socket earlier
-Date: Fri, 05 Feb 2021 17:55:11 +0100
-Message-ID: <6c8e104ef13d000f55aeb58e995a34cda2617ca3.1612543972.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH mptcp-net 3/5] mptcp: better msk receive window updates
+Date: Fri, 05 Feb 2021 17:55:12 +0100
+Message-ID: <ed9a2c374017420a4315c7b23121ed08becf866e.1612543972.git.pabeni@redhat.com>
 In-Reply-To: cover.1612543972.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7652
+X-UID: 7653
 
---===============1172415978505453882==
+--===============6501537627059433987==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The mptcp subflow route_req() callback performs the subflow
-req initialization after the route_req() check. If the latter
-fails, mptcp-specific bits of the current request sockets
-are left uninitialized.
+Move mptcp_cleanup_rbuf() related checks inside the mentioned
+helper and extend them to mirror more closely TCP ones.
 
-The above causes bad things at req socket disposal time, when
-the mptcp resources are cleared.
+Additionally drop the 'rmem_pending' hack, since commit 879526030c8b
+("mptcp: protect the rx path with the msk socket spinlock") we
+can use instead 'rmem_released'.
 
-This change addresses the issue by splitting subflow_init_req()
-into the actual initialization and the mptcp-specific checks.
-The initialization is moved before any possibly failing check.
-
-Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-Fixes: 7ea851d19b23 ("tcp: merge 'init_req' and 'route_req' functions")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
-v1 -> v2:
- - fixed compile warn, dropping unused variable, no need to additional
-tests,
----
- net/mptcp/subflow.c | 40 ++++++++++++++++------------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+ net/mptcp/options.c  |  7 ++++---
+ net/mptcp/protocol.c | 38 ++++++++++++++++++++++----------------
+ net/mptcp/protocol.h |  3 +--
+ 3 files changed, 27 insertions(+), 21 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 33279235cd32a..16c391ee8e0f8 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -100,7 +100,7 @@ static struct mptcp_sock *subflow_token_join_request(st=
-ruct request_sock *req)
- 	return msk;
- }
- =
-
--static int __subflow_init_req(struct request_sock *req, const struct sock =
-*sk_listener)
-+static void subflow_init_req(struct request_sock *req, const struct sock *=
-sk_listener)
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index bb874c5d663a9..331967d709de5 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -508,8 +508,8 @@ static bool mptcp_established_options_dss(struct sock *=
+sk, struct sk_buff *skb,
  {
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
++	u64 snd_data_fin_enable, ack_seq;
+ 	unsigned int dss_size =3D 0;
+-	u64 snd_data_fin_enable;
+ 	struct mptcp_ext *mpext;
+ 	unsigned int ack_size;
+ 	bool ret =3D false;
+@@ -541,13 +541,14 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ 		return ret;
+ 	}
  =
 
-@@ -108,16 +108,6 @@ static int __subflow_init_req(struct request_sock *req=
-, const struct sock *sk_li
- 	subflow_req->mp_join =3D 0;
- 	subflow_req->msk =3D NULL;
- 	mptcp_token_init_request(req);
--
--#ifdef CONFIG_TCP_MD5SIG
--	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
--	 * TCP option space.
--	 */
--	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
--		return -EINVAL;
--#endif
--
--	return 0;
- }
- =
-
- static bool subflow_use_different_sport(struct mptcp_sock *msk, const stru=
-ct sock *sk)
-@@ -130,20 +120,23 @@ static bool subflow_use_different_sport(struct mptcp_=
-sock *msk, const struct soc
-  * Returns an error code if a JOIN has failed and a TCP reset
-  * should be sent.
-  */
--static int subflow_init_req(struct request_sock *req,
--			    const struct sock *sk_listener,
--			    struct sk_buff *skb)
-+static int subflow_check_req(struct request_sock *req,
-+			     const struct sock *sk_listener,
-+			     struct sk_buff *skb)
++	ack_seq =3D READ_ONCE(msk->ack_seq);
+ 	if (READ_ONCE(msk->use_64bit_ack)) {
+ 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK64;
+-		opts->ext_copy.data_ack =3D READ_ONCE(msk->ack_seq);
++		opts->ext_copy.data_ack =3D ack_seq;
+ 		opts->ext_copy.ack64 =3D 1;
+ 	} else {
+ 		ack_size =3D TCPOLEN_MPTCP_DSS_ACK32;
+-		opts->ext_copy.data_ack32 =3D (uint32_t)READ_ONCE(msk->ack_seq);
++		opts->ext_copy.data_ack32 =3D (uint32_t)ack_seq;
+ 		opts->ext_copy.ack64 =3D 0;
+ 	}
+ 	opts->ext_copy.use_ack =3D 1;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 60378e6a24540..5e75e89931915 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -456,7 +456,18 @@ static bool mptcp_subflow_cleanup_rbuf(struct sock *ss=
+k)
+ static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
  {
- 	struct mptcp_subflow_context *listener =3D mptcp_subflow_ctx(sk_listener);
- 	struct mptcp_subflow_request_sock *subflow_req =3D mptcp_subflow_rsk(req);
- 	struct mptcp_options_received mp_opt;
--	int ret;
- =
-
- 	pr_debug("subflow_req=3D%p, listener=3D%p", subflow_req, listener);
- =
-
--	ret =3D __subflow_init_req(req, sk_listener);
--	if (ret)
--		return 0;
-+#ifdef CONFIG_TCP_MD5SIG
-+	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-+	 * TCP option space.
+ 	struct sock *ack_hint =3D READ_ONCE(msk->ack_hint);
++	int old_space =3D READ_ONCE(msk->old_wspace);
+ 	struct mptcp_subflow_context *subflow;
++	struct sock *sk =3D (struct sock *)msk;
++	bool cleanup;
++
++	/* this is a simple superset of what tcp_cleanup_rbuf() implements
++	 * so that we don't have to acquire the ssk socket lock most of the time
++	 * to do actually nothing
 +	 */
-+	if (rcu_access_pointer(tcp_sk(sk_listener)->md5sig_info))
-+		return -EINVAL;
-+#endif
++	cleanup =3D __mptcp_space(sk) - old_space >=3D max(0, old_space);
++	if (!cleanup)
++		return;
  =
 
- 	mptcp_get_options(skb, &mp_opt);
+ 	/* if the hinted ssk is still active, try to use it */
+ 	if (likely(ack_hint)) {
+@@ -1866,7 +1877,7 @@ static void __mptcp_splice_receive_queue(struct sock =
+*sk)
+ 	skb_queue_splice_tail_init(&sk->sk_receive_queue, &msk->receive_queue);
+ }
  =
 
-@@ -236,10 +229,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock =
-*req,
- 	struct mptcp_options_received mp_opt;
- 	int err;
+-static bool __mptcp_move_skbs(struct mptcp_sock *msk, unsigned int rcv)
++static bool __mptcp_move_skbs(struct mptcp_sock *msk)
+ {
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	unsigned int moved =3D 0;
+@@ -1886,13 +1897,10 @@ static bool __mptcp_move_skbs(struct mptcp_sock *ms=
+k, unsigned int rcv)
  =
 
--	err =3D __subflow_init_req(req, sk_listener);
--	if (err)
--		return err;
+ 		slowpath =3D lock_sock_fast(ssk);
+ 		mptcp_data_lock(sk);
++		__mptcp_update_rmem(sk);
+ 		done =3D __mptcp_move_skbs_from_subflow(msk, ssk, &moved);
+ 		mptcp_data_unlock(sk);
+-		if (moved && rcv) {
+-			WRITE_ONCE(msk->rmem_pending, min(rcv, moved));
+-			tcp_cleanup_rbuf(ssk, 1);
+-			WRITE_ONCE(msk->rmem_pending, 0);
+-		}
++		tcp_cleanup_rbuf(ssk, moved);
+ 		unlock_sock_fast(ssk, slowpath);
+ 	} while (!done);
+ =
+
+@@ -1905,6 +1913,7 @@ static bool __mptcp_move_skbs(struct mptcp_sock *msk,=
+ unsigned int rcv)
+ 		ret |=3D __mptcp_ofo_queue(msk);
+ 		__mptcp_splice_receive_queue(sk);
+ 		mptcp_data_unlock(sk);
++		mptcp_cleanup_rbuf(msk);
+ 	}
+ 	if (ret)
+ 		mptcp_check_data_fin((struct sock *)msk);
+@@ -1934,7 +1943,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ 	target =3D sock_rcvlowat(sk, flags & MSG_WAITALL, len);
+ =
+
+ 	while (copied < len) {
+-		int bytes_read, old_space;
++		int bytes_read;
+ =
+
+ 		bytes_read =3D __mptcp_recvmsg_mskq(msk, msg, len - copied);
+ 		if (unlikely(bytes_read < 0)) {
+@@ -1945,14 +1954,11 @@ static int mptcp_recvmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len,
+ =
+
+ 		copied +=3D bytes_read;
+ =
+
+-		if (skb_queue_empty(&msk->receive_queue) &&
+-		    __mptcp_move_skbs(msk, len - copied))
+-			continue;
 -
-+	subflow_init_req(req, sk_listener);
- 	mptcp_get_options(skb, &mp_opt);
+ 		/* be sure to advertise window change */
+-		old_space =3D READ_ONCE(msk->old_wspace);
+-		if ((tcp_space(sk) - old_space) >=3D old_space)
+-			mptcp_cleanup_rbuf(msk);
++		mptcp_cleanup_rbuf(msk);
++
++		if (skb_queue_empty(&msk->receive_queue) && __mptcp_move_skbs(msk))
++			continue;
  =
 
- 	if (mp_opt.mp_capable && mp_opt.mp_join)
-@@ -279,12 +269,13 @@ static struct dst_entry *subflow_v4_route_req(const s=
-truct sock *sk,
- 	int err;
+ 		/* only the master socket status is relevant here. The exit
+ 		 * conditions mirror closely tcp_recvmsg()
+@@ -1980,7 +1986,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ 				/* race breaker: the shutdown could be after the
+ 				 * previous receive queue check
+ 				 */
+-				if (__mptcp_move_skbs(msk, len - copied))
++				if (__mptcp_move_skbs(msk))
+ 					continue;
+ 				break;
+ 			}
+@@ -2013,7 +2019,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msgh=
+dr *msg, size_t len,
+ 		/* .. race-breaker: ssk might have gotten new data
+ 		 * after last __mptcp_move_skbs() returned false.
+ 		 */
+-		if (unlikely(__mptcp_move_skbs(msk, 0)))
++		if (unlikely(__mptcp_move_skbs(msk)))
+ 			set_bit(MPTCP_DATA_READY, &msk->flags);
+ 	} else if (unlikely(!test_bit(MPTCP_DATA_READY, &msk->flags))) {
+ 		/* data to read but mptcp_wait_data() cleared DATA_READY */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d04d2a96fd4bf..5282a7d9f1443 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -238,7 +238,6 @@ struct mptcp_sock {
+ 	u64		wnd_end;
+ 	unsigned long	timer_ival;
+ 	u32		token;
+-	int		rmem_pending;
+ 	int		rmem_released;
+ 	unsigned long	flags;
+ 	bool		can_ack;
+@@ -302,7 +301,7 @@ static inline struct mptcp_sock *mptcp_sk(const struct =
+sock *sk)
  =
 
- 	tcp_rsk(req)->is_mptcp =3D 1;
-+	subflow_init_req(req, sk);
+ static inline int __mptcp_space(const struct sock *sk)
+ {
+-	return tcp_space(sk) + READ_ONCE(mptcp_sk(sk)->rmem_pending);
++	return tcp_space(sk) + READ_ONCE(mptcp_sk(sk)->rmem_released);
+ }
  =
 
- 	dst =3D tcp_request_sock_ipv4_ops.route_req(sk, skb, fl, req);
- 	if (!dst)
- 		return NULL;
- =
-
--	err =3D subflow_init_req(req, sk, skb);
-+	err =3D subflow_check_req(req, sk, skb);
- 	if (err =3D=3D 0)
- 		return dst;
- =
-
-@@ -304,12 +295,13 @@ static struct dst_entry *subflow_v6_route_req(const s=
-truct sock *sk,
- 	int err;
- =
-
- 	tcp_rsk(req)->is_mptcp =3D 1;
-+	subflow_init_req(req, sk);
- =
-
- 	dst =3D tcp_request_sock_ipv6_ops.route_req(sk, skb, fl, req);
- 	if (!dst)
- 		return NULL;
- =
-
--	err =3D subflow_init_req(req, sk, skb);
-+	err =3D subflow_check_req(req, sk, skb);
- 	if (err =3D=3D 0)
- 		return dst;
- =
-
+ static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *s=
+k)
 -- =
 
 2.26.2
 
---===============1172415978505453882==--
+--===============6501537627059433987==--
