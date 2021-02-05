@@ -1,69 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============6296696715221151774=="
+Content-Type: multipart/mixed; boundary="===============0561446108826606769=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net 4/5] mptcp: add a missing retransmission
- timer scheduling
-Date: Fri, 05 Feb 2021 17:55:13 +0100
-Message-ID: <a04175fe2ff0a2414af090bdd2817593c711ec85.1612543972.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH mptcp-net 5/5] selftests: mptcp: dump more info on
+ errors
+Date: Fri, 05 Feb 2021 17:55:14 +0100
+Message-ID: <1eda5017066883f1bd0f59598477b817313458c1.1612543972.git.pabeni@redhat.com>
 In-Reply-To: cover.1612543972.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7654
+X-UID: 7655
 
---===============6296696715221151774==
+--===============0561446108826606769==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we do not schedule the MPTCP retransmission
-timer after pushing the data when such action happens
-in the subflow context.
+Even if that may sound completely unlikely, the mptcp implementation
+is not perfect, yet.
 
-This may cause hang-up on active-backup scenarios, or
-even when only single subflow msks are involved, if we lost
-some peer's ack.
+When the self-tests report an error we usually need more information
+of what the scripts currently report. iproute allow provides
+some additional goodies since a few releases, let's dump them.
 
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/options.c  | 3 +--
- net/mptcp/protocol.c | 3 +++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 331967d709de5..b63574d6b812e 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -919,8 +919,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 		msk->wnd_end =3D new_wnd_end;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index 2cfd87d94db89..9dae77f3aa2a9 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -128,6 +128,7 @@ cleanup()
+ 	local netns
+ 	for netns in "$ns1" "$ns2" "$ns3" "$ns4";do
+ 		ip netns del $netns
++		rm -f /tmp/$netns.{nstat,out}
+ 	done
+ }
  =
 
- 	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
--	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)) &&
--	    sk_stream_memory_free(ssk))
-+	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)))
- 		__mptcp_check_push(sk, ssk);
+@@ -438,16 +439,20 @@ do_transfer()
+ 		kill ${cappid_connector}
+ 	fi
  =
 
- 	if (after64(new_snd_una, old_snd_una)) {
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5e75e89931915..b5d290c8d998f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1574,6 +1574,9 @@ static void __mptcp_subflow_push_pending(struct sock =
-*sk, struct sock *ssk)
- 		mptcp_set_timeout(sk, ssk);
- 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
- 			 info.size_goal);
-+		if (!mptcp_timer_pending(sk))
-+			mptcp_reset_timer(sk);
++	NSTAT_HISTORY=3D/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} ns=
+tat |grep Tcp > /tmp/${listener_ns}.out
++	[ ${listener_ns} !=3D ${connector_ns} ] && NSTAT_HISTORY=3D/tmp/${connect=
+or_ns}.nstat ip netns exec ${connector_ns} nstat -s |grep Tcp > /tmp/${conn=
+ector_ns}.out
 +
- 		if (msk->snd_data_fin_enable &&
- 		    msk->snd_nxt + 1 =3D=3D msk->write_seq)
- 			mptcp_schedule_work(sk);
+ 	local duration
+ 	duration=3D$((stop-start))
+ 	duration=3D$(printf "(duration %05sms)" $duration)
+ 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+ 		echo "$duration [ FAIL ] client exit code $retc, server $rets" 1>&2
+ 		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
+-		ip netns exec ${listener_ns} ss -nita 1>&2 -o "sport =3D :$port"
++		ip netns exec ${listener_ns} ss -Menita 1>&2 -o "sport =3D :$port"
++		cat /tmp/${listener_ns}.out
+ 		echo -e "\nnetns ${connector_ns} socket stat for ${port}:" 1>&2
+-		ip netns exec ${connector_ns} ss -nita 1>&2 -o "dport =3D :$port"
+-
++		ip netns exec ${connector_ns} ss -Menita 1>&2 -o "dport =3D :$port"
++		[ ${listener_ns} !=3D ${connector_ns} ] && cat /tmp/${connector_ns}.out
+ 		cat "$capout"
+ 		return 1
+ 	fi
 -- =
 
 2.26.2
 
---===============6296696715221151774==--
+--===============0561446108826606769==--
