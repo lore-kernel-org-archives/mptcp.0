@@ -1,146 +1,163 @@
-Content-Type: multipart/mixed; boundary="===============6310314127746176867=="
+Content-Type: multipart/mixed; boundary="===============4174431960747003537=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 8/9] mptcp: remove a list of
- addrs when flushing
-Date: Thu, 04 Feb 2021 17:53:35 -0800
-Message-ID: <c4fa9252-3d92-18df-53e9-89c9adcaed26@linux.intel.com>
-In-Reply-To: 8fa90a27985eac53a009842d2aa922a5ce79e0ad.1612250255.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 7/9] mptcp: remove multi
+ addresses and subflows in PM
+Date: Thu, 04 Feb 2021 17:56:49 -0800
+Message-ID: <75d0c38d-af16-7638-df23-3cd4ae07411@linux.intel.com>
+In-Reply-To: 4b5492b0234a4d53c9e8bf93a561cd13b5d5d403.1612250255.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7629
+X-UID: 7630
 
---===============6310314127746176867==
+--===============4174431960747003537==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 2 Feb 2021, Geliang Tang wrote:
 
-> This patch invoked mptcp_nl_remove_addrs_and_subflows to remove a list
-> of addresses when the netlink flushes addresses, instead of using
-> mptcp_nl_remove_subflow_and_signal_addr to remove them one by one.
+> This patch implemented the function to remove a list of addresses and
+> subflows, named mptcp_nl_remove_addrs_and_subflows, which had a input
+> parameter rm_ids as an ids array.
 >
-> Since mptcp_nl_remove_subflow_and_signal_addr was dropped from
-> __flush_addrs, __flush_addrs could be invoked under the locks. So
-> dropped the useless free_list in mptcp_nl_cmd_flush_addrs and the unused
-> parameter net in __flush_addrs.
+> If the msk->conn_list is empty, only invoke mptcp_pm_remove_anno_addrs
+> to remove the announced addresses. If it's not empty, invoke
+> mptcp_pm_remove_anno_addrs_and_subflows to remove the announced
+> addresses and the subflows.
 >
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> net/mptcp/pm_netlink.c | 19 +++++++++++++------
-> 1 file changed, 13 insertions(+), 6 deletions(-)
+> net/mptcp/pm_netlink.c | 89 ++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 89 insertions(+)
 >
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index e942b4ccaa76..6b6dacd0e03a 100644
+> index c11d36bb172c..e942b4ccaa76 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -1287,14 +1287,13 @@ static void mptcp_nl_remove_addrs_and_subflows(st=
-ruct net *net, u8 rm_ids[])
-> 	}
+> @@ -1198,6 +1198,95 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *s=
+kb, struct genl_info *info)
+> 	return ret;
 > }
 >
-> -static void __flush_addrs(struct net *net, struct list_head *list)
-> +static void __flush_addrs(struct list_head *list)
-> {
-> 	while (!list_empty(list)) {
-> 		struct mptcp_pm_addr_entry *cur;
->
-> 		cur =3D list_entry(list->next,
-> 				 struct mptcp_pm_addr_entry, list);
-> -		mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
-> 		list_del_rcu(&cur->list);
-> 		mptcp_pm_free_addr_entry(cur);
-> 	}
-> @@ -1311,15 +1310,23 @@ static void __reset_counters(struct pm_nl_pernet =
-*pernet)
-> static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info=
- *info)
-> {
-> 	struct pm_nl_pernet *pernet =3D genl_info_pm_nl(info);
-> -	LIST_HEAD(free_list);
-> +	u8 rm_ids[MPTCP_RM_IDS_MAX] =3D { 0 }, i =3D 0;
-> +	struct mptcp_pm_addr_entry *entry;
+> +static void mptcp_pm_remove_anno_addrs(struct mptcp_sock *msk, u8 rm_ids=
+[])
+> +{
+> +	u8 active_ids[MPTCP_RM_IDS_MAX] =3D { 0 }, i;
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	struct net *net =3D sock_net(sk);
+> +	struct pm_nl_pernet *pernet;
 > +
+> +	pernet =3D net_generic(net, pm_nl_pernet_id);
 > +	spin_lock_bh(&pernet->lock);
-> +	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> +		if (entry->addr.id && i < MPTCP_RM_IDS_MAX)
-> +			rm_ids[i++] =3D entry->addr.id;
+> +	for (i =3D 0; i < MPTCP_RM_IDS_MAX && rm_ids[i]; i++) {
+> +		struct mptcp_pm_addr_entry *entry;
+> +
+> +		entry =3D __lookup_addr_by_id(pernet, rm_ids[i]);
+> +		if (entry && remove_anno_list_by_saddr(msk, &entry->addr))
+> +			active_ids[i] =3D rm_ids[i];
 > +	}
 > +	spin_unlock_bh(&pernet->lock);
-> +	mptcp_nl_remove_addrs_and_subflows(sock_net(skb->sk), rm_ids);
->
-> 	spin_lock_bh(&pernet->lock);
-> -	list_splice_init(&pernet->local_addr_list, &free_list);
-> +	__flush_addrs(&pernet->local_addr_list);
-> 	__reset_counters(pernet);
-> 	pernet->next_id =3D 1;
-> 	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
-> 	spin_unlock_bh(&pernet->lock);
-> -	__flush_addrs(sock_net(skb->sk), &free_list);
+> +
+> +	if (!mptcp_get_rm_ids_nr(active_ids))
+> +		return;
+> +
+> +	spin_lock_bh(&msk->pm.lock);
+> +	mptcp_pm_remove_addr(msk, active_ids);
+> +	spin_unlock_bh(&msk->pm.lock);
+> +}
 
-With the pernet lock reacquired so many times, there's a lot of room for =
+It seems like this function is a subset of =
 
-the local_addr_list to change while the lock is not held. And the pernet =
+mptcp_pm_remove_anno_addrs_and_subflows(), could both cases be handled by =
 
-lock is held for a longer time.
+one function?
 
-It looks like the main idea is to change from this -
+(but be sure to read reply to patch 8 first).
 
-// Old code
-for each announced address id:
-   for each msk:
-     close one subflow matching the announced address id
+Mat
 
 
-to this -
-
-// New code
-get the list of announced address ids
-for each msk:
-   send rm_addr with list of subflow ids
-   close subflows matching list of subflow ids
-free list of address ids directly from pernet
-
-
-My suggestion is to instead keep mptcp_nl_cmd_flush_addrs() mostly =
-
-unchanged. free_list can then be used for two things at the end of the =
-
-function:
-
-1. It can be passed to a mptcp_nl_* function that will iterate over each =
-
-msk. Use free_list instead of pernet->local_addr_list for each msk to =
-
-build the list of rm_ids, and also to remove the necessary subflows. The =
-
-pernet lock won't be needed.
-
-2. After iterating over all the msks, deallocate the free_list (like your =
-
-modified __flush_addrs() does).
-
-
-> 	return 0;
-> }
->
-> @@ -1916,7 +1923,7 @@ static void __net_exit pm_nl_exit_net(struct list_h=
-ead *net_list)
-> 		/* net is removed from namespace list, can't race with
-> 		 * other modifiers
-> 		 */
-> -		__flush_addrs(net, &pernet->local_addr_list);
-> +		__flush_addrs(&pernet->local_addr_list);
-> 	}
-> }
->
+> +
+> +static void mptcp_pm_remove_anno_addrs_and_subflows(struct mptcp_sock *m=
+sk, u8 local_ids[])
+> +{
+> +	u8 subflow_ids[MPTCP_RM_IDS_MAX] =3D { 0 };
+> +	u8 address_ids[MPTCP_RM_IDS_MAX] =3D { 0 };
+> +	struct sock *sk =3D (struct sock *)msk;
+> +	struct net *net =3D sock_net(sk);
+> +	struct pm_nl_pernet *pernet;
+> +	int i;
+> +
+> +	pernet =3D net_generic(net, pm_nl_pernet_id);
+> +	spin_lock_bh(&pernet->lock);
+> +	for (i =3D 0; i < MPTCP_RM_IDS_MAX && local_ids[i]; i++) {
+> +		struct mptcp_pm_addr_entry *entry;
+> +
+> +		entry =3D __lookup_addr_by_id(pernet, local_ids[i]);
+> +		if (entry && lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
+> +			subflow_ids[i] =3D local_ids[i];
+> +		else if (entry && remove_anno_list_by_saddr(msk, &entry->addr))
+> +			address_ids[i] =3D local_ids[i];
+> +	}
+> +	spin_unlock_bh(&pernet->lock);
+> +
+> +	if (mptcp_get_rm_ids_nr(subflow_ids)) {
+> +		spin_lock_bh(&msk->pm.lock);
+> +		mptcp_pm_remove_addr(msk, subflow_ids);
+> +		spin_unlock_bh(&msk->pm.lock);
+> +		mptcp_pm_remove_subflow(msk, subflow_ids);
+> +	}
+> +	if (mptcp_get_rm_ids_nr(address_ids)) {
+> +		spin_lock_bh(&msk->pm.lock);
+> +		mptcp_pm_remove_addr(msk, address_ids);
+> +		spin_unlock_bh(&msk->pm.lock);
+> +	}
+> +}
+> +
+> +static void mptcp_nl_remove_addrs_and_subflows(struct net *net, u8 rm_id=
+s[])
+> +{
+> +	long s_slot =3D 0, s_num =3D 0;
+> +	struct mptcp_sock *msk;
+> +
+> +	pr_debug("rm_ids_nr=3D%d", mptcp_get_rm_ids_nr(rm_ids));
+> +
+> +	if (!mptcp_get_rm_ids_nr(rm_ids))
+> +		return;
+> +
+> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
+ {
+> +		struct sock *sk =3D (struct sock *)msk;
+> +
+> +		if (list_empty(&msk->conn_list)) {
+> +			mptcp_pm_remove_anno_addrs(msk, rm_ids);
+> +			goto next;
+> +		}
+> +
+> +		lock_sock(sk);
+> +		mptcp_pm_remove_anno_addrs_and_subflows(msk, rm_ids);
+> +		release_sock(sk);
+> +
+> +next:
+> +		sock_put(sk);
+> +		cond_resched();
+> +	}
+> +}
+> +
+> static void __flush_addrs(struct net *net, struct list_head *list)
+> {
+> 	while (!list_empty(list)) {
 > -- =
 
 > 2.29.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
 --
 Mat Martineau
 Intel
---===============6310314127746176867==--
+--===============4174431960747003537==--
