@@ -1,58 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============3538231505382081850=="
+Content-Type: multipart/mixed; boundary="===============1200309445407757850=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net 0/5] mptcp: mix fixes
-Date: Fri, 05 Feb 2021 17:35:01 -0800
-Message-ID: <e098f272-c1e2-3824-2d8c-27b21765cfde@linux.intel.com>
-In-Reply-To: cover.1612543972.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next] mptcp: add local addr info
+ in mptcp_info
+Date: Sat, 06 Feb 2021 11:49:46 +0100
+Message-ID: <aaf3d6f7-7622-3174-514a-5d1aea968e90@tessares.net>
+In-Reply-To: 074e92470b7b18bbaf55b56d114e6616ed437a45.1612319252.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7659
+X-UID: 7660
 
---===============3538231505382081850==
+--===============1200309445407757850==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 5 Feb 2021, Paolo Abeni wrote:
+Hi Geliang, Mat, Paolo,
 
-> This includes new versions of 2 already posted patches (1/5 && 2/5)
-> a rewrite of an already posted RFC patch (3/5) and a new fix.
->
-> Patch 1 should address issues/126
-> Patch 2 should address issues/130 && 125
-> Patch 3 is mostly a clean-up, possibly could land to net-next
-> Patch 4 should fix issue 146
-> Finally patch 5 allow mptcp_connect to dump more info when errors happen
->
-> Paolo Abeni (5):
->  mptcp: fix spurious retransmissions
->  mptcp: init mptcp request socket earlier
->  mptcp: better msk receive window updates
->  mptcp: add a missing retransmission timer scheduling
->  selftests: mptcp: dump more info on errors
->
-> net/mptcp/options.c                           | 10 ++---
-> net/mptcp/protocol.c                          | 44 +++++++++++--------
-> net/mptcp/protocol.h                          | 14 ++----
-> net/mptcp/subflow.c                           | 40 +++++++----------
-> .../selftests/net/mptcp/mptcp_connect.sh      | 11 +++--
-> 5 files changed, 58 insertions(+), 61 deletions(-)
->
-> -- =
+On 03/02/2021 03:30, Geliang Tang wrote:
+> Add mptcpi_local_addr_used and mptcpi_local_addr_max in struct mptcp_info.
+> =
 
-> 2.26.2
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 
-Given the discussion on IRC, does it make sense to apply these on the =
+Thank you for this patch and the reviews!
 
-export branch and continue testing? Not sure if the error Matthieu =
+- e883b6ef770e: mptcp: add local addr info in mptcp_info
+- Results: 5b0efe263fdc..d74233042997
 
-encountered was introduced here or possibly an existing issue.
+Tests + export are in progress!
 
-From a code review perspective, I don't have any changes to suggest.
+Cheers,
+Matt
+-- =
 
---
-Mat Martineau
-Intel
---===============3538231505382081850==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============1200309445407757850==--
