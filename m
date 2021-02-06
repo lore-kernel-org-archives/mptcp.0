@@ -1,129 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============2229757616003232801=="
+Content-Type: multipart/mixed; boundary="===============3538231505382081850=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 7/9] mptcp: remove multi
- addresses and subflows in PM
-Date: Fri, 05 Feb 2021 17:20:32 -0800
-Message-ID: <dff04812-e425-9129-f0c6-624a543858b@linux.intel.com>
-In-Reply-To: 2e1e50023c1ca80e9737681fad83623f0be05a6f.1612534634.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-net 0/5] mptcp: mix fixes
+Date: Fri, 05 Feb 2021 17:35:01 -0800
+Message-ID: <e098f272-c1e2-3824-2d8c-27b21765cfde@linux.intel.com>
+In-Reply-To: cover.1612543972.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7658
+X-UID: 7659
 
---===============2229757616003232801==
+--===============3538231505382081850==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 5 Feb 2021, Geliang Tang wrote:
+On Fri, 5 Feb 2021, Paolo Abeni wrote:
 
-> This patch implemented the function to remove a list of addresses and
-> subflows, named mptcp_nl_remove_addrs_list, which had a input parameter
-> rm_list as the removing addresses list.
+> This includes new versions of 2 already posted patches (1/5 && 2/5)
+> a rewrite of an already posted RFC patch (3/5) and a new fix.
 >
-> In mptcp_nl_remove_addrs_list, traverse all the existing msk sockets to
-> invoke mptcp_pm_remove_addrs_and_subflows to remove a list of addresses
-> for each msk socket.
+> Patch 1 should address issues/126
+> Patch 2 should address issues/130 && 125
+> Patch 3 is mostly a clean-up, possibly could land to net-next
+> Patch 4 should fix issue 146
+> Finally patch 5 allow mptcp_connect to dump more info when errors happen
 >
-> In mptcp_pm_remove_addrs_and_subflows, traverse all the addresses in the
-> removing addresses list, to find whether this address is in the conn_list
-> or anno_list. If it is, put the address ID into the removing address ids
-> array, and pass the array to mptcp_pm_remove_addr or
-> mptcp_pm_remove_subflow.
+> Paolo Abeni (5):
+>  mptcp: fix spurious retransmissions
+>  mptcp: init mptcp request socket earlier
+>  mptcp: better msk receive window updates
+>  mptcp: add a missing retransmission timer scheduling
+>  selftests: mptcp: dump more info on errors
 >
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> net/mptcp/pm_netlink.c | 52 ++++++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 52 insertions(+)
+> net/mptcp/options.c                           | 10 ++---
+> net/mptcp/protocol.c                          | 44 +++++++++++--------
+> net/mptcp/protocol.h                          | 14 ++----
+> net/mptcp/subflow.c                           | 40 +++++++----------
+> .../selftests/net/mptcp/mptcp_connect.sh      | 11 +++--
+> 5 files changed, 58 insertions(+), 61 deletions(-)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index b4d6f7b56a65..392aa4dc0834 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1213,6 +1213,58 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *s=
-kb, struct genl_info *info)
-> 	return ret;
-> }
->
-> +static void mptcp_pm_remove_addrs_and_subflows(struct mptcp_sock *msk,
-> +					       struct list_head *rm_list)
-> +{
-> +	struct mptcp_pm_addr_entry *entry;
-> +	u8 subflow_ids[MPTCP_RM_IDS_MAX];
-> +	u8 address_ids[MPTCP_RM_IDS_MAX];
-> +	int i =3D 0, j =3D 0;
-> +
-> +	memset(subflow_ids, MAX_ADDR_ID, MPTCP_RM_IDS_MAX);
-> +	memset(address_ids, MAX_ADDR_ID, MPTCP_RM_IDS_MAX);
-> +
-> +	list_for_each_entry(entry, rm_list, list) {
-> +		if (lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) && i < MPTC=
-P_RM_IDS_MAX)
-> +			subflow_ids[i++] =3D entry->addr.id;
-> +		else if (remove_anno_list_by_saddr(msk, &entry->addr) && j < MPTCP_RM_=
-IDS_MAX)
-> +			address_ids[j++] =3D entry->addr.id;
-> +	}
-> +
-> +	if (mptcp_get_rm_ids_nr(subflow_ids)) {
-> +		spin_lock_bh(&msk->pm.lock);
-> +		mptcp_pm_remove_addr(msk, subflow_ids);
-> +		spin_unlock_bh(&msk->pm.lock);
-> +		mptcp_pm_remove_subflow(msk, subflow_ids);
-> +	}
-> +	if (mptcp_get_rm_ids_nr(address_ids)) {
-> +		spin_lock_bh(&msk->pm.lock);
-> +		mptcp_pm_remove_addr(msk, address_ids);
-> +		spin_unlock_bh(&msk->pm.lock);
-> +	}
-
-This would send two RM_ADDR options (or overwrite some of the ids?), when =
-
-it seems like the list of 8 is enough to hold all the of addresses that =
-
-would have been advertised.
-
-If you use one list to store *all* address ids to pass to =
-
-mptcp_pm_remove_subflow(), and one list to store only the subflows that =
-
-need to be passed to mptcp_pm_remove_subflow(), then only one option is =
-
-sent and there's less duplicate code in the two 'if' statements.
-
-> +}
-> +
-> +static void mptcp_nl_remove_addrs_list(struct net *net,
-> +				       struct list_head *rm_list)
-> +{
-> +	long s_slot =3D 0, s_num =3D 0;
-> +	struct mptcp_sock *msk;
-> +
-> +	if (list_empty(rm_list))
-> +		return;
-> +
-> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
- {
-> +		struct sock *sk =3D (struct sock *)msk;
-> +
-> +		lock_sock(sk);
-> +		mptcp_pm_remove_addrs_and_subflows(msk, rm_list);
-> +		release_sock(sk);
-> +
-> +		sock_put(sk);
-> +		cond_resched();
-> +	}
-> +}
-> +
-> static void __flush_addrs(struct net *net, struct list_head *list)
-> {
-> 	while (!list_empty(list)) {
 > -- =
 
-> 2.29.2
+> 2.26.2
+
+Given the discussion on IRC, does it make sense to apply these on the =
+
+export branch and continue testing? Not sure if the error Matthieu =
+
+encountered was introduced here or possibly an existing issue.
+
+From a code review perspective, I don't have any changes to suggest.
 
 --
 Mat Martineau
 Intel
---===============2229757616003232801==--
+--===============3538231505382081850==--
