@@ -1,79 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============1684723455324472834=="
+Content-Type: multipart/mixed; boundary="===============5247823258493963995=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 9/9] selftests: mptcp: add
- testcases for removing addrs
-Date: Mon, 08 Feb 2021 22:54:17 +0800
-Message-ID: <e689ce21c1630e3af37e5a2fa6442c952d61c23c.1612795651.git.geliangtang@gmail.com>
-In-Reply-To: f47ac92f846dd06826a314fbb10a64e7e5b71f0b.1612795651.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH mptcp-next 0/3] SYNRX: MPTCP -> MPTCP: expect x, got y
+Date: Mon, 08 Feb 2021 18:45:45 +0100
+Message-ID: <20210208174548.493800-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 7682
+X-UID: 7683
 
---===============1684723455324472834==
+--===============5247823258493963995==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the testcases for removing a list of addresses. Used
-the netlink to flush the addresses in the testcases.
+While working on issue #148, I also found a small typo: SYN info were
+printed instead of ACK ones, see patch 1/3.
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Then I put everything on one line and remove duplicated code, see patch
+2/3.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index b0af4f8c3b02..5d7f940bceac 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -936,6 +936,41 @@ remove_tests()
- 	chk_join_nr "flush subflows and signal" 3 3 3
- 	chk_add_nr 1 1
- 	chk_rm_nr 2 2
-+
-+	# subflows flush
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow id 150
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
-+	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
-+	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
-+	chk_join_nr "flush subflows" 3 3 3
-+	chk_rm_nr 3 3
-+
-+	# addresses flush
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
-+	chk_join_nr "flush addresses" 3 3 3
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 3 invert
-+
-+	# invalid addresses flush
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -8 0 slow
-+	chk_join_nr "flush invalid addresses" 1 1 1
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 1 invert
- }
- =
+The last patch marks the test as failed if we found less MPC SYN/3rd
+ACK than expected. This will close:
 
- add_tests()
+  https://github.com/multipath-tcp/mptcp_net-next/issues/148
+
+But at the end, just some small Bash modifications, nothing important
+;-)
+
+Matthieu Baerts (3):
+  selftests: mptcp: fix ACKRX debug message
+  selftests: mptcp: display warnings on one line
+  selftests: mptcp: fail if not enough SYN/3rd ACK
+
+ .../selftests/net/mptcp/mptcp_connect.sh      | 80 +++++++++++++------
+ 1 file changed, 54 insertions(+), 26 deletions(-)
+
 -- =
 
 2.29.2
 
---===============1684723455324472834==--
+--===============5247823258493963995==--
