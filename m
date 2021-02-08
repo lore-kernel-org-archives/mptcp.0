@@ -1,67 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============4321323328276540278=="
+Content-Type: multipart/mixed; boundary="===============4888017605510720352=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net 0/5] mptcp: mix fixes
-Date: Mon, 08 Feb 2021 10:33:54 +0100
-Message-ID: <733af518d4bf037c8bf4c7e6d608c81c18476135.camel@redhat.com>
-In-Reply-To: e098f272-c1e2-3824-2d8c-27b21765cfde@linux.intel.com
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 0/4] move to next addr and
+ testcases
+Date: Mon, 08 Feb 2021 22:44:08 +0800
+Message-ID: <cover.1612795124.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7667
+X-UID: 7668
 
---===============4321323328276540278==
+--===============4888017605510720352==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2021-02-05 at 17:35 -0800, Mat Martineau wrote:
-> On Fri, 5 Feb 2021, Paolo Abeni wrote:
-> =
+v2:
+ - add patch 2 and 3 for removing testcases.
+ - tag: export/20210207T062839.
 
-> > This includes new versions of 2 already posted patches (1/5 && 2/5)
-> > a rewrite of an already posted RFC patch (3/5) and a new fix.
-> > =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/151
 
-> > Patch 1 should address issues/126
-> > Patch 2 should address issues/130 && 125
-> > Patch 3 is mostly a clean-up, possibly could land to net-next
-> > Patch 4 should fix issue 146
-> > Finally patch 5 allow mptcp_connect to dump more info when errors happen
-> > =
+Geliang Tang (4):
+  mptcp: move to next addr when subflow creation fail
+  selftests: mptcp: add invert argument for chk_rm_nr
+  selftests: mptcp: set addr id for removing testcases
+  selftests: mptcp: signal addresses testcases
 
-> > Paolo Abeni (5):
-> >  mptcp: fix spurious retransmissions
-> >  mptcp: init mptcp request socket earlier
-> >  mptcp: better msk receive window updates
-> >  mptcp: add a missing retransmission timer scheduling
-> >  selftests: mptcp: dump more info on errors
-> > =
+ net/mptcp/options.c                           |   1 +
+ net/mptcp/pm.c                                |  15 +++
+ net/mptcp/pm_netlink.c                        |  13 ++-
+ net/mptcp/protocol.h                          |   4 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 105 ++++++++++++++----
+ 5 files changed, 117 insertions(+), 21 deletions(-)
 
-> > net/mptcp/options.c                           | 10 ++---
-> > net/mptcp/protocol.c                          | 44 +++++++++++--------
-> > net/mptcp/protocol.h                          | 14 ++----
-> > net/mptcp/subflow.c                           | 40 +++++++----------
-> > .../selftests/net/mptcp/mptcp_connect.sh      | 11 +++--
-> > 5 files changed, 58 insertions(+), 61 deletions(-)
-> > =
+-- =
 
-> > -- =
+2.29.2
 
-> > 2.26.2
-> =
-
-> Given the discussion on IRC, does it make sense to apply these on the =
-
-> export branch and continue testing? Not sure if the error Matthieu =
-
-> encountered was introduced here or possibly an existing issue.
-
-I suggest applying these ones. The issue reported by matttbe looks
-really a different one sharing the same synthoms as issues/147.
-
-Thanks,
-
-Paolo
-
---===============4321323328276540278==--
+--===============4888017605510720352==--
