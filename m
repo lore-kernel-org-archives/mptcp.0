@@ -1,98 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============8235358815067123394=="
+Content-Type: multipart/mixed; boundary="===============7364554807926024987=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 4/4] selftests: mptcp: signal
- addresses testcases
-Date: Mon, 08 Feb 2021 22:44:12 +0800
-Message-ID: <e023ba6a148aaa1e7467b1538f0bd980fb7fc581.1612795124.git.geliangtang@gmail.com>
-In-Reply-To: ea2ed13cea8168e636137ba3afabd565b5e0df8b.1612795124.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 0/9] RM_ADDR: remove a list of
+ addrs
+Date: Mon, 08 Feb 2021 22:54:08 +0800
+Message-ID: <cover.1612795651.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7672
+X-UID: 7673
 
---===============8235358815067123394==
+--===============7364554807926024987==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added testcases for signalling multi valid and invalid addresses
-for both signal_address_tests and remove_tests.
+v5:
+ - use struct mptcp_rm_list instead of the ids array.
+ - simplify mptcp_pm_remove_addrs_and_subflows.
+ - apply: tag export/20210207T062839 + patchset "move to next addr and
+testcases".
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
+v4:
+ - use MAX_ADDR_ID as the default value in the rm_ids array.
+ - keep the free_list and pass it to mptcp_nl_remove_addrs_list.
+ - handle remove anno_addrs and subflows in one function.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 6782a891b3e7..b0af4f8c3b02 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -788,6 +788,28 @@ signal_address_tests()
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "multiple subflows and signal" 3 3 3
- 	chk_add_nr 1 1
-+
-+	# signal addresses
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal addresses" 3 3 3
-+	chk_add_nr 3 3
-+
-+	# signal invalid addresses
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal invalid addresses" 1 1 1
-+	chk_add_nr 3 3
- }
- =
+v3:
+ - avoid looping twice in mptcp_write_options
+ - drop nr in mptcp_get_rm_ids_nr
+ - use rm_ids[0] in patch 1 and patch 3
+ - separate pm.rm_ids for incoming and outgoing
+ - tag: export/20210131T062218
 
- link_failure_tests()
-@@ -879,6 +901,30 @@ remove_tests()
- 	chk_add_nr 1 1
- 	chk_rm_nr 2 2
- =
+v2:
+ - use an array of ids instead of a u64 map
+ - drop "mptcp: update the netlink event for rm_addr" in v1
+ - tag: export/20210131T062218
 
-+	# addresses remove
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
-+	chk_join_nr "remove addresses" 3 3 3
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 3 invert
-+
-+	# invalid addresses remove
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
-+	chk_join_nr "remove invalid addresses" 1 1 1
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 1 invert
-+
- 	# subflows and signal, flush
- 	reset
- 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
+This patchset added the removing a list of addresses support for
+RM_ADDR. It addressed issue #140.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+
+Geliang Tang (9):
+  mptcp: add rm_list in mptcp_out_options
+  mptcp: add rm_list_tx in mptcp_pm_data
+  mptcp: add rm_list in mptcp_options_received
+  mptcp: add rm_list_rx in mptcp_pm_data
+  mptcp: remove multi addresses in PM
+  mptcp: remove multi subflows in PM
+  mptcp: remove multi addresses and subflows in PM
+  mptcp: remove a list of addrs when flushing
+  selftests: mptcp: add testcases for removing addrs
+
+ include/net/mptcp.h                           |   9 +-
+ net/mptcp/options.c                           |  49 +++++--
+ net/mptcp/pm.c                                |  29 ++--
+ net/mptcp/pm_netlink.c                        | 138 +++++++++++++-----
+ net/mptcp/protocol.h                          |  17 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  35 +++++
+ 6 files changed, 205 insertions(+), 72 deletions(-)
+
 -- =
 
 2.29.2
 
---===============8235358815067123394==--
+--===============7364554807926024987==--
