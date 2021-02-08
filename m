@@ -1,80 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============3293688808165883385=="
+Content-Type: multipart/mixed; boundary="===============1684723455324472834=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 8/9] mptcp: remove a list of
- addrs when flushing
-Date: Mon, 08 Feb 2021 22:54:16 +0800
-Message-ID: <f47ac92f846dd06826a314fbb10a64e7e5b71f0b.1612795651.git.geliangtang@gmail.com>
-In-Reply-To: a6452c92bc3de65a9e2763baed48830d96deed15.1612795651.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 9/9] selftests: mptcp: add
+ testcases for removing addrs
+Date: Mon, 08 Feb 2021 22:54:17 +0800
+Message-ID: <e689ce21c1630e3af37e5a2fa6442c952d61c23c.1612795651.git.geliangtang@gmail.com>
+In-Reply-To: f47ac92f846dd06826a314fbb10a64e7e5b71f0b.1612795651.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7681
+X-UID: 7682
 
---===============3293688808165883385==
+--===============1684723455324472834==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch invoked mptcp_nl_remove_addrs_list to remove a list of addresses
-when the netlink flushes addresses, instead of using
-mptcp_nl_remove_subflow_and_signal_addr to remove them one by one.
-
-And dropped the unused parameter net in __flush_addrs too.
+This patch added the testcases for removing a list of addresses. Used
+the netlink to flush the addresses in the testcases.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 3dc5b6074ae5..12284c4fc78c 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1256,14 +1256,13 @@ static void mptcp_nl_remove_addrs_list(struct net *=
-net,
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index b0af4f8c3b02..5d7f940bceac 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -936,6 +936,41 @@ remove_tests()
+ 	chk_join_nr "flush subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
+ 	chk_rm_nr 2 2
++
++	# subflows flush
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.2.2 flags subflow id 150
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.4.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
++	chk_join_nr "flush subflows" 3 3 3
++	chk_rm_nr 3 3
++
++	# addresses flush
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
++	chk_join_nr "flush addresses" 3 3 3
++	chk_add_nr 3 3
++	chk_rm_nr 3 3 invert
++
++	# invalid addresses flush
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1 0 -8 0 slow
++	chk_join_nr "flush invalid addresses" 1 1 1
++	chk_add_nr 3 3
++	chk_rm_nr 3 1 invert
  }
  =
 
--static void __flush_addrs(struct net *net, struct list_head *list)
-+static void __flush_addrs(struct list_head *list)
- {
- 	while (!list_empty(list)) {
- 		struct mptcp_pm_addr_entry *cur;
- =
-
- 		cur =3D list_entry(list->next,
- 				 struct mptcp_pm_addr_entry, list);
--		mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
- 		list_del_rcu(&cur->list);
- 		mptcp_pm_free_addr_entry(cur);
- 	}
-@@ -1288,7 +1287,8 @@ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *s=
-kb, struct genl_info *info)
- 	pernet->next_id =3D 1;
- 	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
- 	spin_unlock_bh(&pernet->lock);
--	__flush_addrs(sock_net(skb->sk), &free_list);
-+	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
-+	__flush_addrs(&free_list);
- 	return 0;
- }
- =
-
-@@ -1885,7 +1885,7 @@ static void __net_exit pm_nl_exit_net(struct list_hea=
-d *net_list)
- 		/* net is removed from namespace list, can't race with
- 		 * other modifiers
- 		 */
--		__flush_addrs(net, &pernet->local_addr_list);
-+		__flush_addrs(&pernet->local_addr_list);
- 	}
- }
- =
-
+ add_tests()
 -- =
 
 2.29.2
 
---===============3293688808165883385==--
+--===============1684723455324472834==--
