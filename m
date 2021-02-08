@@ -1,91 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============2945313069686338161=="
+Content-Type: multipart/mixed; boundary="===============8235358815067123394=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 3/4] selftests: mptcp: set addr
- id for removing testcases
-Date: Mon, 08 Feb 2021 22:44:11 +0800
-Message-ID: <ea2ed13cea8168e636137ba3afabd565b5e0df8b.1612795124.git.geliangtang@gmail.com>
-In-Reply-To: ef53591d510bca9abd4b019e2f0e9fa4fdff8a10.1612795124.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 4/4] selftests: mptcp: signal
+ addresses testcases
+Date: Mon, 08 Feb 2021 22:44:12 +0800
+Message-ID: <e023ba6a148aaa1e7467b1538f0bd980fb7fc581.1612795124.git.geliangtang@gmail.com>
+In-Reply-To: ea2ed13cea8168e636137ba3afabd565b5e0df8b.1612795124.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7671
+X-UID: 7672
 
---===============2945313069686338161==
+--===============8235358815067123394==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The removing testcases can only delete the addresses from id 1, this
-patch added the support for deleting the addresses from any id that user
-set.
+This patch added testcases for signalling multi valid and invalid addresses
+for both signal_address_tests and remove_tests.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 38 ++++++++++++-------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
 g/selftests/net/mptcp/mptcp_join.sh
-index 15b71ddee615..6782a891b3e7 100755
+index 6782a891b3e7..b0af4f8c3b02 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -284,14 +284,19 @@ do_transfer()
- 		let rm_nr_ns1=3D-addr_nr_ns1
- 		if [ $rm_nr_ns1 -lt 8 ]; then
- 			counter=3D1
--			sleep 1
--
--			while [ $counter -le $rm_nr_ns1 ]
--			do
--				ip netns exec ${listener_ns} ./pm_nl_ctl del $counter
-+			dump=3D(`ip netns exec ${listener_ns} ./pm_nl_ctl dump`)
-+			if [ ${#dump[@]} -gt 0 ]; then
-+				id=3D${dump[1]}
- 				sleep 1
--				let counter+=3D1
--			done
+@@ -788,6 +788,28 @@ signal_address_tests()
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "multiple subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
 +
-+				while [ $counter -le $rm_nr_ns1 ]
-+				do
-+					ip netns exec ${listener_ns} ./pm_nl_ctl del $id
-+					sleep 1
-+					let counter+=3D1
-+					let id+=3D1
-+				done
-+			fi
- 		else
- 			sleep 1
- 			ip netns exec ${listener_ns} ./pm_nl_ctl flush
-@@ -318,14 +323,19 @@ do_transfer()
- 		let rm_nr_ns2=3D-addr_nr_ns2
- 		if [ $rm_nr_ns2 -lt 8 ]; then
- 			counter=3D1
--			sleep 1
--
--			while [ $counter -le $rm_nr_ns2 ]
--			do
--				ip netns exec ${connector_ns} ./pm_nl_ctl del $counter
-+			dump=3D(`ip netns exec ${connector_ns} ./pm_nl_ctl dump`)
-+			if [ ${#dump[@]} -gt 0 ]; then
-+				id=3D${dump[1]}
- 				sleep 1
--				let counter+=3D1
--			done
++	# signal addresses
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "signal addresses" 3 3 3
++	chk_add_nr 3 3
 +
-+				while [ $counter -le $rm_nr_ns2 ]
-+				do
-+					ip netns exec ${connector_ns} ./pm_nl_ctl del $id
-+					sleep 1
-+					let counter+=3D1
-+					let id+=3D1
-+				done
-+			fi
- 		else
- 			sleep 1
- 			ip netns exec ${connector_ns} ./pm_nl_ctl flush
++	# signal invalid addresses
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "signal invalid addresses" 1 1 1
++	chk_add_nr 3 3
+ }
+ =
+
+ link_failure_tests()
+@@ -879,6 +901,30 @@ remove_tests()
+ 	chk_add_nr 1 1
+ 	chk_rm_nr 2 2
+ =
+
++	# addresses remove
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
++	chk_join_nr "remove addresses" 3 3 3
++	chk_add_nr 3 3
++	chk_rm_nr 3 3 invert
++
++	# invalid addresses remove
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
++	chk_join_nr "remove invalid addresses" 1 1 1
++	chk_add_nr 3 3
++	chk_rm_nr 3 1 invert
++
+ 	# subflows and signal, flush
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
 -- =
 
 2.29.2
 
---===============2945313069686338161==--
+--===============8235358815067123394==--
