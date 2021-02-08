@@ -1,72 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============7518863698690736919=="
+Content-Type: multipart/mixed; boundary="===============0377645949312306366=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 4/9] mptcp: add rm_list_rx in
- mptcp_pm_data
-Date: Mon, 08 Feb 2021 22:54:12 +0800
-Message-ID: <42b788d34d194418ca7fe4223bc5b0c534830783.1612795651.git.geliangtang@gmail.com>
-In-Reply-To: e41d536d8c33632fb56a82eec5fbcd8e15283de7.1612795651.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 5/9] mptcp: remove multi
+ addresses in PM
+Date: Mon, 08 Feb 2021 22:54:13 +0800
+Message-ID: <893b28cde7b77ea302ae1e33b8e7a33212647cf9.1612795651.git.geliangtang@gmail.com>
+In-Reply-To: 42b788d34d194418ca7fe4223bc5b0c534830783.1612795651.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7677
+X-UID: 7678
 
---===============7518863698690736919==
+--===============0377645949312306366==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added a new member rm_list_rx for struct mptcp_pm_data as an
-list of the removing address ids on the incoming direction. Initialized
-its nr field to zero in mptcp_pm_data_init.
+This patch dropped the member rm_id of struct mptcp_pm_data. Use
+rm_list_rx in mptcp_pm_nl_rm_addr_received instead of using rm_id.
 
-In mptcp_pm_rm_addr_received, set it as the input rm_list.
+In mptcp_pm_nl_rm_addr_received, iterated each address id from
+pm.rm_list_rx, then shut down and closed each address id's subsocket.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm.c       | 3 ++-
- net/mptcp/protocol.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ net/mptcp/pm_netlink.c | 36 ++++++++++++++++++++----------------
+ net/mptcp/protocol.h   |  1 -
+ 2 files changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c8b7295cb522..6ee6d3340ed5 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -232,7 +232,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, =
-struct mptcp_rm_list rm_l
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 92bc355f35bc..ac0601f428ae 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -575,36 +575,40 @@ static void mptcp_pm_nl_rm_addr_received(struct mptcp=
+_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct sock *sk =3D (struct sock *)msk;
++	u8 i;
  =
 
- 	spin_lock_bh(&pm->lock);
- 	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
--	pm->rm_id =3D rm_list.ids[0];
-+	pm->rm_list_rx =3D rm_list;
- 	spin_unlock_bh(&pm->lock);
+-	pr_debug("address rm_id %d", msk->pm.rm_id);
++	pr_debug("address rm_list_nr %d", msk->pm.rm_list_rx.nr);
+ =
+
+ 	msk_owned_by_me(msk);
+ =
+
+-	if (!msk->pm.rm_id)
++	if (!msk->pm.rm_list_rx.nr)
+ 		return;
+ =
+
+ 	if (list_empty(&msk->conn_list))
+ 		return;
+ =
+
+-	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+-		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+-		int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
++	for (i =3D 0; i < msk->pm.rm_list_rx.nr; i++) {
++		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
++			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++			int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
+ =
+
+-		if (msk->pm.rm_id !=3D subflow->remote_id)
+-			continue;
++			if (msk->pm.rm_list_rx.ids[i] !=3D subflow->remote_id)
++				continue;
+ =
+
+-		spin_unlock_bh(&msk->pm.lock);
+-		mptcp_subflow_shutdown(sk, ssk, how);
+-		mptcp_close_ssk(sk, ssk, subflow);
+-		spin_lock_bh(&msk->pm.lock);
++			pr_debug(" -> address rm_list_ids[%d]=3D%u", i, msk->pm.rm_list_rx.ids[=
+i]);
++			spin_unlock_bh(&msk->pm.lock);
++			mptcp_subflow_shutdown(sk, ssk, how);
++			mptcp_close_ssk(sk, ssk, subflow);
++			spin_lock_bh(&msk->pm.lock);
+ =
+
+-		msk->pm.add_addr_accepted--;
+-		msk->pm.subflows--;
+-		WRITE_ONCE(msk->pm.accept_addr, true);
++			msk->pm.add_addr_accepted--;
++			msk->pm.subflows--;
++			WRITE_ONCE(msk->pm.accept_addr, true);
+ =
+
+-		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
++			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
+ =
+
+-		break;
++			break;
++		}
+ 	}
  }
  =
 
-@@ -309,6 +309,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- 	msk->pm.local_addr_used =3D 0;
- 	msk->pm.subflows =3D 0;
- 	msk->pm.rm_list_tx.nr =3D 0;
-+	msk->pm.rm_list_rx.nr =3D 0;
- 	WRITE_ONCE(msk->pm.work_pending, false);
- 	WRITE_ONCE(msk->pm.addr_signal, 0);
- 	WRITE_ONCE(msk->pm.accept_addr, false);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f24482242f9e..5a2b59d055e9 100644
+index 5a2b59d055e9..8b5bdb7c5779 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -208,6 +208,7 @@ struct mptcp_pm_data {
- 	u8		subflows;
+@@ -209,7 +209,6 @@ struct mptcp_pm_data {
  	u8		status;
  	struct mptcp_rm_list rm_list_tx;
-+	struct mptcp_rm_list rm_list_rx;
- 	u8		rm_id;
+ 	struct mptcp_rm_list rm_list_rx;
+-	u8		rm_id;
  };
  =
 
+ struct mptcp_data_frag {
 -- =
 
 2.29.2
 
---===============7518863698690736919==--
+--===============0377645949312306366==--
