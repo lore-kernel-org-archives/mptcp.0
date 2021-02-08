@@ -1,206 +1,139 @@
-Content-Type: multipart/mixed; boundary="===============5722479322170322943=="
+Content-Type: multipart/mixed; boundary="===============0744183245852179642=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 1/9] mptcp: add rm_list in
- mptcp_out_options
-Date: Mon, 08 Feb 2021 22:54:09 +0800
-Message-ID: <428b26338731f85b705a42ceb52d63376d432444.1612795651.git.geliangtang@gmail.com>
-In-Reply-To: cover.1612795651.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 2/9] mptcp: add rm_list_tx in
+ mptcp_pm_data
+Date: Mon, 08 Feb 2021 22:54:10 +0800
+Message-ID: <8e14323ed1796be8d670093b4f899d7d86b59acf.1612795651.git.geliangtang@gmail.com>
+In-Reply-To: 428b26338731f85b705a42ceb52d63376d432444.1612795651.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7674
+X-UID: 7675
 
---===============5722479322170322943==
+--===============0744183245852179642==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch defined a new struct mptcp_rm_list, the ids field was an
-array of the removing address ids, the nr field was the valid number of
-removing address ids in the array. The array size was definced as a new
-macro MPTCP_RM_IDS_MAX. Changed the member rm_id of struct
-mptcp_out_options to rm_list.
+This patch added a new member rm_list_tx for struct mptcp_pm_data as the
+removing address list on the outgoing direction. Initialize its nr field
+to zero in mptcp_pm_data_init.
 
-In mptcp_established_options_rm_addr, invoked mptcp_pm_rm_addr_signal to
-get the rm_list. According the number of addresses in it, calculated
-the padded RM_ADDR suboption length. And saved the ids array in struct
-mptcp_out_options's rm_list member.
+In mptcp_pm_remove_anno_addr, put the single address id into an removing
+list, and passed it to mptcp_pm_remove_addr.
 
-In mptcp_write_options, iterated each address id from struct
-mptcp_out_options's rm_list member, set the invalid ones as TCPOPT_NOP,
-then filled them into the RM_ADDR suboption.
-
-Changed TCPOLEN_MPTCP_RM_ADDR_BASE from 4 to 3.
+In mptcp_pm_remove_addr, save the input rm_list to rm_list_tx in struct
+mptcp_pm_data.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- include/net/mptcp.h  |  9 ++++++++-
- net/mptcp/options.c  | 37 +++++++++++++++++++++++++++++--------
- net/mptcp/pm.c       |  4 ++--
- net/mptcp/protocol.h |  4 ++--
- 4 files changed, 41 insertions(+), 13 deletions(-)
+ net/mptcp/pm.c         | 10 +++++-----
+ net/mptcp/pm_netlink.c |  5 ++++-
+ net/mptcp/protocol.h   |  3 ++-
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 5694370be3d4..cea69c801595 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -34,6 +34,13 @@ struct mptcp_ext {
- 	/* one byte hole */
- };
- =
-
-+#define MPTCP_RM_IDS_MAX	8
-+
-+struct mptcp_rm_list {
-+	u8 ids[MPTCP_RM_IDS_MAX];
-+	u8 nr;
-+};
-+
- struct mptcp_out_options {
- #if IS_ENABLED(CONFIG_MPTCP)
- 	u16 suboptions;
-@@ -48,7 +55,7 @@ struct mptcp_out_options {
- 	u8 addr_id;
- 	u16 port;
- 	u64 ahmac;
--	u8 rm_id;
-+	struct mptcp_rm_list rm_list;
- 	u8 join_id;
- 	u8 backup;
- 	u32 nonce;
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1c5c99c06951..9e9bbe88b58f 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -671,20 +671,27 @@ static bool mptcp_established_options_rm_addr(struct =
-sock *sk,
- {
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
--	u8 rm_id;
-+	struct mptcp_rm_list rm_list;
-+	u8 i, align;
- =
-
- 	if (!mptcp_pm_should_rm_signal(msk) ||
--	    !(mptcp_pm_rm_addr_signal(msk, remaining, &rm_id)))
-+	    !(mptcp_pm_rm_addr_signal(msk, remaining, &rm_list)))
- 		return false;
- =
-
--	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
-+	if (rm_list.nr > 1)
-+		align =3D 5;
-+	if (rm_list.nr > 5)
-+		align =3D 9;
-+
-+	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE + align)
- 		return false;
- =
-
--	*size =3D TCPOLEN_MPTCP_RM_ADDR_BASE;
-+	*size =3D TCPOLEN_MPTCP_RM_ADDR_BASE + align;
- 	opts->suboptions |=3D OPTION_MPTCP_RM_ADDR;
--	opts->rm_id =3D rm_id;
-+	opts->rm_list =3D rm_list;
- =
-
--	pr_debug("rm_id=3D%d", opts->rm_id);
-+	for (i =3D 0; i < opts->rm_list.nr; i++)
-+		pr_debug("rm_list_ids[%d]=3D%d", i, opts->rm_list.ids[i]);
- =
-
- 	return true;
- }
-@@ -1213,9 +1220,23 @@ void mptcp_write_options(__be32 *ptr, const struct t=
-cp_sock *tp,
- 	}
- =
-
- 	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
-+		u8 i;
-+
-+		for (i =3D opts->rm_list.nr; i < MPTCP_RM_IDS_MAX; i++)
-+			opts->rm_list.ids[i] =3D TCPOPT_NOP;
- 		*ptr++ =3D mptcp_option(MPTCPOPT_RM_ADDR,
--				      TCPOLEN_MPTCP_RM_ADDR_BASE,
--				      0, opts->rm_id);
-+				      TCPOLEN_MPTCP_RM_ADDR_BASE + opts->rm_list.nr,
-+				      0, opts->rm_list.ids[0]);
-+		if (opts->rm_list.nr > 1) {
-+			put_unaligned_be32(opts->rm_list.ids[1] << 24 | opts->rm_list.ids[2] <<=
- 16 |
-+					   opts->rm_list.ids[3] << 8 | opts->rm_list.ids[4], ptr);
-+			ptr +=3D 1;
-+		}
-+		if (opts->rm_list.nr > 5) {
-+			put_unaligned_be32(opts->rm_list.ids[5] << 24 | opts->rm_list.ids[6] <<=
- 16 |
-+					   opts->rm_list.ids[7] << 8 | TCPOPT_NOP, ptr);
-+			ptr +=3D 1;
-+		}
- 	}
- =
-
- 	if (OPTION_MPTCP_PRIO & opts->suboptions) {
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index a6d068d801d0..bc68d886c31d 100644
+index bc68d886c31d..d3f3792c37ac 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -273,7 +273,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
+@@ -39,18 +39,18 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 	return 0;
  }
  =
 
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
-g,
--			     u8 *rm_id)
-+			     struct mptcp_rm_list *rm_list)
+-int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id)
++int mptcp_pm_remove_addr(struct mptcp_sock *msk, struct mptcp_rm_list rm_l=
+ist)
  {
- 	int ret =3D false;
+ 	u8 rm_addr =3D READ_ONCE(msk->pm.addr_signal);
  =
 
+-	pr_debug("msk=3D%p, local_id=3D%d", msk, local_id);
++	pr_debug("msk=3D%p, rm_list_nr=3D%d", msk, rm_list.nr);
+ =
+
+ 	if (rm_addr) {
+ 		pr_warn("addr_signal error, rm_addr=3D%d", rm_addr);
+ 		return -EINVAL;
+ 	}
+ =
+
+-	msk->pm.rm_id =3D local_id;
++	msk->pm.rm_list_tx =3D rm_list;
+ 	rm_addr |=3D BIT(MPTCP_RM_ADDR_SIGNAL);
+ 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+ 	return 0;
 @@ -286,7 +286,7 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, un=
 signed int remaining,
  	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
  		goto out_unlock;
  =
 
--	*rm_id =3D msk->pm.rm_id;
-+	rm_list->ids[0] =3D msk->pm.rm_id;
+-	rm_list->ids[0] =3D msk->pm.rm_id;
++	*rm_list =3D msk->pm.rm_list_tx;
  	WRITE_ONCE(msk->pm.addr_signal, 0);
  	ret =3D true;
  =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7ad0dfef36bd..8f5dede1de81 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -60,7 +60,7 @@
- #define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
- #define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
- #define TCPOLEN_MPTCP_PORT_LEN		4
--#define TCPOLEN_MPTCP_RM_ADDR_BASE	4
-+#define TCPOLEN_MPTCP_RM_ADDR_BASE	3
- #define TCPOLEN_MPTCP_PRIO		3
- #define TCPOLEN_MPTCP_PRIO_ALIGN	4
- #define TCPOLEN_MPTCP_FASTCLOSE		12
-@@ -722,7 +722,7 @@ static inline unsigned int mptcp_add_addr_len(int famil=
-y, bool echo, bool port)
- bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
- 			      struct mptcp_addr_info *saddr, bool *echo, bool *port);
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
-g,
--			     u8 *rm_id);
-+			     struct mptcp_rm_list *rm_list);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+@@ -306,7 +306,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	msk->pm.add_addr_accepted =3D 0;
+ 	msk->pm.local_addr_used =3D 0;
+ 	msk->pm.subflows =3D 0;
+-	msk->pm.rm_id =3D 0;
++	msk->pm.rm_list_tx.nr =3D 0;
+ 	WRITE_ONCE(msk->pm.work_pending, false);
+ 	WRITE_ONCE(msk->pm.addr_signal, 0);
+ 	WRITE_ONCE(msk->pm.accept_addr, false);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d9eaee2037bd..92bc355f35bc 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1080,12 +1080,15 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_=
+sock *msk,
+ 				      struct mptcp_addr_info *addr,
+ 				      bool force)
+ {
++	struct mptcp_rm_list list =3D { .nr =3D 0 };
+ 	bool ret;
  =
 
- void __init mptcp_pm_nl_init(void);
++	list.ids[list.nr++] =3D addr->id;
++
+ 	ret =3D remove_anno_list_by_saddr(msk, addr);
+ 	if (ret || force) {
+ 		spin_lock_bh(&msk->pm.lock);
+-		mptcp_pm_remove_addr(msk, addr->id);
++		mptcp_pm_remove_addr(msk, list);
+ 		spin_unlock_bh(&msk->pm.lock);
+ 	}
+ 	return ret;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 8f5dede1de81..a7fe6b87ef49 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -207,6 +207,7 @@ struct mptcp_pm_data {
+ 	u8		local_addr_used;
+ 	u8		subflows;
+ 	u8		status;
++	struct mptcp_rm_list rm_list_tx;
+ 	u8		rm_id;
+ };
+ =
+
+@@ -672,7 +673,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 			   const struct mptcp_addr_info *addr,
+ 			   bool echo, bool port);
+-int mptcp_pm_remove_addr(struct mptcp_sock *msk, u8 local_id);
++int mptcp_pm_remove_addr(struct mptcp_sock *msk, struct mptcp_rm_list rm_l=
+ist);
+ int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id);
+ =
+
+ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
 -- =
 
 2.29.2
 
---===============5722479322170322943==--
+--===============0744183245852179642==--
