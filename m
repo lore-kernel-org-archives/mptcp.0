@@ -1,75 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============3970920444563073073=="
+Content-Type: multipart/mixed; boundary="===============2527349673966408023=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net 5/5] selftests: mptcp: dump more info on
- errors
-Date: Mon, 08 Feb 2021 20:09:44 +0100
-Message-ID: <f8e3a296-6029-b528-b7be-0cb9f6a8e177@tessares.net>
-In-Reply-To: 1eda5017066883f1bd0f59598477b817313458c1.1612543972.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-net 0/5] mptcp: mix fixes
+Date: Mon, 08 Feb 2021 20:29:53 +0100
+Message-ID: <7cc45946-5c18-3528-96aa-8f2854cb9ed1@tessares.net>
+In-Reply-To: 733af518d4bf037c8bf4c7e6d608c81c18476135.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7687
+X-UID: 7688
 
---===============3970920444563073073==
+--===============2527349673966408023==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 05/02/2021 17:55, Paolo Abeni wrote:
-> Even if that may sound completely unlikely, the mptcp implementation
-> is not perfect, yet.
+On 08/02/2021 10:33, Paolo Abeni wrote:
+> On Fri, 2021-02-05 at 17:35 -0800, Mat Martineau wrote:
+>> On Fri, 5 Feb 2021, Paolo Abeni wrote:
+>>
+>>> This includes new versions of 2 already posted patches (1/5 && 2/5)
+>>> a rewrite of an already posted RFC patch (3/5) and a new fix.
+>>>
+>>> Patch 1 should address issues/126
+>>> Patch 2 should address issues/130 && 125
+>>> Patch 3 is mostly a clean-up, possibly could land to net-next
+>>> Patch 4 should fix issue 146
+>>> Finally patch 5 allow mptcp_connect to dump more info when errors happen
+>>>
+>>> Paolo Abeni (5):
+>>>   mptcp: fix spurious retransmissions
+>>>   mptcp: init mptcp request socket earlier
+>>>   mptcp: better msk receive window updates
+>>>   mptcp: add a missing retransmission timer scheduling
+>>>   selftests: mptcp: dump more info on errors
+>>>
+>>> net/mptcp/options.c                           | 10 ++---
+>>> net/mptcp/protocol.c                          | 44 +++++++++++--------
+>>> net/mptcp/protocol.h                          | 14 ++----
+>>> net/mptcp/subflow.c                           | 40 +++++++----------
+>>> .../selftests/net/mptcp/mptcp_connect.sh      | 11 +++--
+>>> 5 files changed, 58 insertions(+), 61 deletions(-)
+>>>
+>>> -- =
+
+>>> 2.26.2
+>>
+>> Given the discussion on IRC, does it make sense to apply these on the
+>> export branch and continue testing? Not sure if the error Matthieu
+>> encountered was introduced here or possibly an existing issue.
 > =
 
-> When the self-tests report an error we usually need more information
-> of what the scripts currently report. iproute allow provides
-> some additional goodies since a few releases, let's dump them.
-> =
+> I suggest applying these ones. The issue reported by matttbe looks
+> really a different one sharing the same synthoms as issues/147.
 
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
->   tools/testing/selftests/net/mptcp/mptcp_connect.sh | 11 ++++++++---
->   1 file changed, 8 insertions(+), 3 deletions(-)
-> =
+Thank you for the patches and the reviews!
+Just applied in our tree with Mat's RvB tag and a small modification, =
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_connect.sh
-> index 2cfd87d94db89..9dae77f3aa2a9 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -128,6 +128,7 @@ cleanup()
->   	local netns
->   	for netns in "$ns1" "$ns2" "$ns3" "$ns4";do
->   		ip netns del $netns
-> +		rm -f /tmp/$netns.{nstat,out}
->   	done
->   }
->   =
+see below:
 
-> @@ -438,16 +439,20 @@ do_transfer()
->   		kill ${cappid_connector}
->   	fi
->   =
+- f880caea34bf: mptcp: fix spurious retransmissions
+- 2195b4539cdb: mptcp: init mptcp request socket earlier
+- 980b6b800d23: mptcp: better msk receive window updates
+- 773725f66d5c: mptcp: add a missing retransmission timer scheduling
+- 7580f0d0573e: selftests: mptcp: dump more info on errors:
+   - Small modification, see my comment in 5/5 patch
+   - 4e11f1e2d526: selftests: mptcp: update nstat history
+- Results: 3335749a2aa4..0976cfad9f6a
 
-> +	NSTAT_HISTORY=3D/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} =
-nstat |grep Tcp > /tmp/${listener_ns}.out
-> +	[ ${listener_ns} !=3D ${connector_ns} ] && NSTAT_HISTORY=3D/tmp/${conne=
-ctor_ns}.nstat ip netns exec ${connector_ns} nstat -s |grep Tcp > /tmp/${co=
-nnector_ns}.out
-
-When looking at applying it, "checkpatch" complained about the line =
-
-length. It's not really an issue here with Bash but still I was thinking =
-
-about going to the new line to improve the readability maybe.
-
-But then I realised that the 2nd "nstat" is with "-s" but not the first =
-
-one. Is it normal?
-
-I suggest to apply it like that and fix it tomorrow if needed.
+Tests + exports are in progress!
 
 Cheers,
 Matt
@@ -77,4 +78,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3970920444563073073==--
+--===============2527349673966408023==--
