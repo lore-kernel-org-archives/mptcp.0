@@ -1,98 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============0218936673286497002=="
+Content-Type: multipart/mixed; boundary="===============3970920444563073073=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 3/3] selftests: mptcp: fail if not enough
- SYN/3rd ACK
-Date: Mon, 08 Feb 2021 18:45:48 +0100
-Message-ID: <20210208174548.493800-4-matthieu.baerts@tessares.net>
-In-Reply-To: 20210208174548.493800-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH mptcp-net 5/5] selftests: mptcp: dump more info on
+ errors
+Date: Mon, 08 Feb 2021 20:09:44 +0100
+Message-ID: <f8e3a296-6029-b528-b7be-0cb9f6a8e177@tessares.net>
+In-Reply-To: 1eda5017066883f1bd0f59598477b817313458c1.1612543972.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7686
+X-UID: 7687
 
---===============0218936673286497002==
+--===============3970920444563073073==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If we receive less MPCapable SYN or 3rd ACK than expected, we now mark
-the test as failed.
+Hi Paolo,
 
-On the other hand, if we receive more, we keep the warning but we add a
-hint that it is probably due to retransmissions and that's why we don't
-mark the test as failed.
+On 05/02/2021 17:55, Paolo Abeni wrote:
+> Even if that may sound completely unlikely, the mptcp implementation
+> is not perfect, yet.
+> =
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/148
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
- .../selftests/net/mptcp/mptcp_connect.sh      | 28 +++++++++++++------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+> When the self-tests report an error we usually need more information
+> of what the scripts currently report. iproute allow provides
+> some additional goodies since a few releases, let's dump them.
+> =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 0294ada751cf..e4e9b2bf058c 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -473,10 +473,6 @@ do_transfer()
- 	check_transfer $cin $sout "file received by server"
- 	rets=3D$?
- =
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+>   tools/testing/selftests/net/mptcp/mptcp_connect.sh | 11 ++++++++---
+>   1 file changed, 8 insertions(+), 3 deletions(-)
+> =
 
--	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
--		printf "[ OK ]"
--	fi
--
- 	local stat_synrx_now_l=3D$(get_mib_counter "${listener_ns}" "MPTcpExtMPCa=
-pableSYNRX")
- 	local stat_ackrx_now_l=3D$(get_mib_counter "${listener_ns}" "MPTcpExtMPCa=
-pableACKRX")
- 	local stat_cookietx_now=3D$(get_mib_counter "${listener_ns}" "TcpExtSynco=
-okiesSent")
-@@ -492,6 +488,22 @@ do_transfer()
- 		expect_synrx=3D$((stat_synrx_last_l+1))
- 		expect_ackrx=3D$((stat_ackrx_last_l+1))
- 	fi
-+
-+	if [ ${expect_synrx} -lt ${stat_synrx_now_l} ]; then
-+		printf "[ FAIL ] lower MPC SYN rx than expected: %d -> %d\n" \
-+			"${expect_synrx}" "${stat_synrx_now_l}" 1>&2
-+		retc=3D1
-+	fi
-+	if [ ${expect_ackrx} -lt ${stat_ackrx_now_l} ]; then
-+		printf "[ FAIL ] lower MPC ACK rx than expected: %d -> %d\n" \
-+			"${expect_ackrx}" "${stat_ackrx_now_l}" 1>&2
-+		rets=3D1
-+	fi
-+
-+	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
-+		printf "[ OK ]"
-+	fi
-+
- 	if [ $cookies -eq 2 ];then
- 		if [ $stat_cookietx_last -ge $stat_cookietx_now ] ;then
- 			printf " WARN: CookieSent: did not advance"
-@@ -508,12 +520,12 @@ do_transfer()
- 		fi
- 	fi
- =
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/t=
+esting/selftests/net/mptcp/mptcp_connect.sh
+> index 2cfd87d94db89..9dae77f3aa2a9 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -128,6 +128,7 @@ cleanup()
+>   	local netns
+>   	for netns in "$ns1" "$ns2" "$ns3" "$ns4";do
+>   		ip netns del $netns
+> +		rm -f /tmp/$netns.{nstat,out}
+>   	done
+>   }
+>   =
 
--	if [ $expect_synrx -ne $stat_synrx_now_l ] ;then
--		printf " WARN: SYNRX: expect %d, got %d" \
-+	if [ $expect_synrx -gt $stat_synrx_now_l ]; then
-+		printf " WARN: SYNRX: expect %d, got %d (probably retransmissions)" \
- 			"${expect_synrx}" "${stat_synrx_now_l}"
- 	fi
--	if [ $expect_ackrx -ne $stat_ackrx_now_l ] ;then
--		printf " WARN: ACKRX: expect %d, got %d" \
-+	if [ $expect_ackrx -gt $stat_ackrx_now_l ]; then
-+		printf " WARN: ACKRX: expect %d, got %d (probably retransmissions)" \
- 			"${expect_ackrx}" "${stat_ackrx_now_l}"
- 	fi
- =
+> @@ -438,16 +439,20 @@ do_transfer()
+>   		kill ${cappid_connector}
+>   	fi
+>   =
 
+> +	NSTAT_HISTORY=3D/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} =
+nstat |grep Tcp > /tmp/${listener_ns}.out
+> +	[ ${listener_ns} !=3D ${connector_ns} ] && NSTAT_HISTORY=3D/tmp/${conne=
+ctor_ns}.nstat ip netns exec ${connector_ns} nstat -s |grep Tcp > /tmp/${co=
+nnector_ns}.out
+
+When looking at applying it, "checkpatch" complained about the line =
+
+length. It's not really an issue here with Bash but still I was thinking =
+
+about going to the new line to improve the readability maybe.
+
+But then I realised that the 2nd "nstat" is with "-s" but not the first =
+
+one. Is it normal?
+
+I suggest to apply it like that and fix it tomorrow if needed.
+
+Cheers,
+Matt
 -- =
 
-2.29.2
-
---===============0218936673286497002==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============3970920444563073073==--
