@@ -1,124 +1,145 @@
-Content-Type: multipart/mixed; boundary="===============4618383585715613354=="
+Content-Type: multipart/mixed; boundary="===============5464693588478089543=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 2/3] mptcp: fix race in release_cb
-Date: Tue, 09 Feb 2021 12:42:40 +0100
-Message-ID: <45298408838519faf5eb1ca8e39593c3a5d4bac9.1612869198.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH mptcp-next 3/3] mptcp: clean-up the rtx path.
+Date: Tue, 09 Feb 2021 12:42:41 +0100
+Message-ID: <0d386ad2007d7b0a151fe4a07dbf7f72ee39f85d.1612869198.git.pabeni@redhat.com>
 In-Reply-To: cover.1612869198.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7703
+X-UID: 7704
 
---===============4618383585715613354==
+--===============5464693588478089543==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If we receive a MPTCP_PUSH_PENDING even from a subflow when
-mptcp_release_cb() is serving the previous one, the latter
-will be delayed up to the next release_sock(msk).
+After the previous patch we can easily avoid invoking
+the workqueue to perform the retransmission, if the
+msk socket lock is held at rtx timer expiration.
 
-Address the issue implementing a test/serve loop for such
-event.
+This also simplifies the relevant code.
 
-Additionally rename the push helper to __mptcp_push_pending()
-to be more consistent with the existing code.
-
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/protocol.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+ net/mptcp/protocol.c | 42 +++++++++++-------------------------------
+ net/mptcp/protocol.h |  1 +
+ 2 files changed, 12 insertions(+), 31 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7e5016903e11c..0393cef5a08d8 100644
+index 0393cef5a08d8..646f91e1c792e 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1442,7 +1442,7 @@ static void mptcp_push_release(struct sock *sk, struc=
-t sock *ssk,
- 	release_sock(ssk);
+@@ -2038,28 +2038,21 @@ static int mptcp_recvmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len,
+ 	return copied;
  }
  =
 
--static void mptcp_push_pending(struct sock *sk, unsigned int flags)
-+static void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+-static void mptcp_retransmit_handler(struct sock *sk)
+-{
+-	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-
+-	set_bit(MPTCP_WORK_RTX, &msk->flags);
+-	mptcp_schedule_work(sk);
+-}
+-
+ static void mptcp_retransmit_timer(struct timer_list *t)
  {
- 	struct sock *prev_ssk =3D NULL, *ssk =3D NULL;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -1694,14 +1694,14 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len)
+ 	struct inet_connection_sock *icsk =3D from_timer(icsk, t,
+ 						       icsk_retransmit_timer);
+ 	struct sock *sk =3D &icsk->icsk_inet.sk;
++	struct mptcp_sock *msk =3D mptcp_sk(sk);
  =
 
- wait_for_memory:
- 		mptcp_set_nospace(sk);
--		mptcp_push_pending(sk, msg->msg_flags);
-+		__mptcp_push_pending(sk, msg->msg_flags);
- 		ret =3D sk_stream_wait_memory(sk, &timeo);
- 		if (ret)
- 			goto out;
+ 	bh_lock_sock(sk);
+ 	if (!sock_owned_by_user(sk)) {
+-		mptcp_retransmit_handler(sk);
++		/* we need a process context to retransmit */
++		if (!test_and_set_bit(MPTCP_WORK_RTX, &msk->flags))
++			mptcp_schedule_work(sk);
+ 	} else {
+ 		/* delegate our work to tcp_release_cb() */
+-		if (!test_and_set_bit(TCP_WRITE_TIMER_DEFERRED,
+-				      &sk->sk_tsq_flags))
+-			sock_hold(sk);
++		set_bit(MPTCP_RETRANSMIT, &msk->flags);
  	}
+ 	bh_unlock_sock(sk);
+ 	sock_put(sk);
+@@ -2935,17 +2928,16 @@ void __mptcp_check_push(struct sock *sk, struct soc=
+k *ssk)
+ 	}
+ }
  =
 
- 	if (copied)
--		mptcp_push_pending(sk, msg->msg_flags);
-+		__mptcp_push_pending(sk, msg->msg_flags);
- =
-
- out:
- 	release_sock(sk);
-@@ -2942,13 +2942,14 @@ static void mptcp_release_cb(struct sock *sk)
+-#define MPTCP_DEFERRED_ALL (TCPF_WRITE_TIMER_DEFERRED)
+-
+ /* processes deferred events and flush wmem */
+ static void mptcp_release_cb(struct sock *sk)
  {
- 	unsigned long flags, nflags;
- =
-
--	/* push_pending may touch wmem_reserved, do it before the later
--	 * cleanup
--	 */
--	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
--		__mptcp_clean_una(sk);
--	if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags)) {
--		/* mptcp_push_pending() acquires the subflow socket lock
-+	for (;;) {
-+		flags =3D 0;
-+		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
-+			flags |=3D MPTCP_PUSH_PENDING;
-+		if (!flags)
-+			break;
+-	unsigned long flags, nflags;
+-
+ 	for (;;) {
+-		flags =3D 0;
++		unsigned long flags =3D 0;
 +
-+		/* the following actions acquire the subflow socket lock
- 		 *
- 		 * 1) can't be invoked in atomic scope
- 		 * 2) must avoid ABBA deadlock with msk socket spinlock: the RX
-@@ -2957,13 +2958,21 @@ static void mptcp_release_cb(struct sock *sk)
- 		 */
+ 		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
+ 			flags |=3D MPTCP_PUSH_PENDING;
++		if (test_and_clear_bit(MPTCP_RETRANSMIT, &mptcp_sk(sk)->flags))
++			flags |=3D MPTCP_RETRANSMIT;
+ 		if (!flags)
+ 			break;
  =
 
+@@ -2960,6 +2952,8 @@ static void mptcp_release_cb(struct sock *sk)
  		spin_unlock_bh(&sk->sk_lock.slock);
--		mptcp_push_pending(sk, 0);
-+		if (flags & MPTCP_PUSH_PENDING)
-+			__mptcp_push_pending(sk, 0);
-+
-+		cond_resched();
- 		spin_lock_bh(&sk->sk_lock.slock);
- 	}
-+
-+	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
-+		__mptcp_clean_una(sk);
- 	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
- 		__mptcp_error_report(sk);
+ 		if (flags & MPTCP_PUSH_PENDING)
+ 			__mptcp_push_pending(sk, 0);
++		if (flags & MPTCP_RETRANSMIT)
++			__mptcp_retrans(sk);
  =
 
--	/* clear any wmem reservation and errors */
-+	/* push_pending may touch wmem_reserved, ensure we do the cleanup
-+	 * later
-+	 */
+ 		cond_resched();
+ 		spin_lock_bh(&sk->sk_lock.slock);
+@@ -2975,20 +2969,6 @@ static void mptcp_release_cb(struct sock *sk)
+ 	 */
  	__mptcp_update_wmem(sk);
  	__mptcp_update_rmem(sk);
+-
+-	do {
+-		flags =3D sk->sk_tsq_flags;
+-		if (!(flags & MPTCP_DEFERRED_ALL))
+-			return;
+-		nflags =3D flags & ~MPTCP_DEFERRED_ALL;
+-	} while (cmpxchg(&sk->sk_tsq_flags, flags, nflags) !=3D flags);
+-
+-	sock_release_ownership(sk);
+-
+-	if (flags & TCPF_WRITE_TIMER_DEFERRED) {
+-		mptcp_retransmit_handler(sk);
+-		__sock_put(sk);
+-	}
+ }
  =
 
+ void mptcp_subflow_process_delegated(struct sock *ssk)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 91827d9497669..9fc34f3479b75 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -103,6 +103,7 @@
+ #define MPTCP_PUSH_PENDING	6
+ #define MPTCP_CLEAN_UNA		7
+ #define MPTCP_ERROR_REPORT	8
++#define MPTCP_RETRANSMIT	9
+ =
+
+ static inline bool before64(__u64 seq1, __u64 seq2)
+ {
 -- =
 
 2.26.2
 
---===============4618383585715613354==--
+--===============5464693588478089543==--
