@@ -1,57 +1,138 @@
-Content-Type: multipart/mixed; boundary="===============1252917187537977065=="
+Content-Type: multipart/mixed; boundary="===============8437489536146653684=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] mptcp: improve mptcp release
- callback
-Date: Wed, 10 Feb 2021 12:37:00 +0100
-Message-ID: <d665c726-e2d4-0fa6-7613-b28f06cdf14b@tessares.net>
-In-Reply-To: cover.1612869198.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH] squashto: mptcp: schedule worker when subflow is
+ closed
+Date: Wed, 10 Feb 2021 13:47:08 +0100
+Message-ID: <20210210124708.11899-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 7745
+X-UID: 7747
 
---===============1252917187537977065==
+--===============8437489536146653684==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+When remote side closes a subflow we should schedule the worker to
+dispose of the subflow in a timely manner.
 
-On 09/02/2021 12:42, Paolo Abeni wrote:
-> The current callback implementation is probe to some race
-> and still use some suboptimal code from older times.
-> =
+Otherwise, SF_CLOSED event won't be generated until the mptcp
+socket itself is closing or local side is closing another subflow.
 
-> This series clean-up the code a bit, fixing the race
-> and hopefully simplifying future wider usage of delegated
-> actions
-> =
+As noted by Paolo and Matthieu, a subflow that moves to TCP_CLOSE state
+might still have data in its rx queue.
 
-> Paolo Abeni (3):
->    mptcp: factor out __mptcp_retrans helper()
->    mptcp: fix race in release_cb
->    mptcp: clean-up the rtx path.
+Add a helper to only schedule the work queue once the subflow is empty.
 
-Thank you for the patches and the reviews!
+For subflows that still have data, we can do same schedule check
+in subflow_check_data_avail().
 
-It is now in our tree without a dot at the end of the last patch' =
+In case we have multiple subflows closing at the same time,
+also make the work queue skip subflows that are TCP_CLOSE with
+pending data.
 
-subject and Mat's RvB tags:
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c |  4 ++++
+ net/mptcp/subflow.c  | 30 ++++++++++++++++++++++--------
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
-- 1a97b665b9ee: mptcp: factor out __mptcp_retrans helper()
-- f1c293d570e1: mptcp: fix race in release_cb
-- 711d7b99ea0a: mptcp: clean-up the rtx path
-- Results: b72113120e91..9c096197d99f
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 646f91e1c792..d49e0efbdd50 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2172,6 +2172,10 @@ static void __mptcp_close_subflow(struct mptcp_sock =
+*msk)
+ 		if (inet_sk_state_load(ssk) !=3D TCP_CLOSE)
+ 			continue;
+ =
 
-Tests + export are all good!
++		/* 'subflow_data_ready' will re-sched once rx queue is empty */
++		if (!skb_queue_empty_lockless(&ssk->sk_receive_queue))
++			continue;
++
+ 		mptcp_close_ssk((struct sock *)msk, ssk, subflow);
+ 	}
+ }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 16c391ee8e0f..06e233410e0e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -945,6 +945,22 @@ static void mptcp_subflow_discard_data(struct sock *ss=
+k, struct sk_buff *skb,
+ 		subflow->map_valid =3D 0;
+ }
+ =
 
-Cheers,
-Matt
++/* sched mptcp worker to remove the subflow if no more data is pending */
++static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct so=
+ck *ssk)
++{
++	struct sock *sk =3D (struct sock *)msk;
++
++	if (likely(ssk->sk_state !=3D TCP_CLOSE))
++		return;
++
++	if (skb_queue_empty(&ssk->sk_receive_queue) &&
++	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags)) {
++		sock_hold(sk);
++		if (!schedule_work(&msk->work))
++			sock_put(sk);
++	}
++}
++
+ static bool subflow_check_data_avail(struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+@@ -983,11 +999,11 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		}
+ =
+
+ 		if (status !=3D MAPPING_OK)
+-			return false;
++			goto no_data;
+ =
+
+ 		skb =3D skb_peek(&ssk->sk_receive_queue);
+ 		if (WARN_ON_ONCE(!skb))
+-			return false;
++			goto no_data;
+ =
+
+ 		/* if msk lacks the remote key, this subflow must provide an
+ 		 * MP_CAPABLE-based mapping
+@@ -1021,6 +1037,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 	}
+ 	return true;
+ =
+
++no_data:
++	subflow_sched_work_if_closed(msk, ssk);
++	return false;
+ fatal:
+ 	/* fatal protocol error, close the socket */
+ 	/* This barrier is coupled with smp_rmb() in tcp_poll() */
+@@ -1445,12 +1464,7 @@ static void subflow_state_change(struct sock *sk)
+ 	if (mptcp_subflow_data_available(sk))
+ 		mptcp_data_ready(parent, sk);
+ =
+
+-	if (sk->sk_state =3D=3D TCP_CLOSE &&
+-	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(parent)->flags)=
+) {
+-		sock_hold(parent);
+-		if (!schedule_work(&mptcp_sk(parent)->work))
+-			sock_put(parent);
+-	}
++	subflow_sched_work_if_closed(mptcp_sk(parent), sk);
+ =
+
+ 	if (__mptcp_check_fallback(mptcp_sk(parent)) &&
+ 	    !subflow->rx_eof && subflow_is_done(sk)) {
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.26.2
 
-
---===============1252917187537977065==--
+--===============8437489536146653684==--
