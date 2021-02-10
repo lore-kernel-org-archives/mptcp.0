@@ -1,57 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============2695465805028968942=="
+Content-Type: multipart/mixed; boundary="===============0836253508202031099=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] SYNRX: MPTCP -> MPTCP: expect x,
- got y
-Date: Tue, 09 Feb 2021 16:39:06 -0800
-Message-ID: <af402368-90d2-c58c-62d0-d2e7ae736cd6@linux.intel.com>
-In-Reply-To: 20210208174548.493800-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] mptcp: improve mptcp release
+ callback
+Date: Tue, 09 Feb 2021 17:09:47 -0800
+Message-ID: <2442fc5f-7932-5c75-377f-9e67a31db5e8@linux.intel.com>
+In-Reply-To: cover.1612869198.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7727
+X-UID: 7728
 
---===============2695465805028968942==
+--===============0836253508202031099==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Mon, 8 Feb 2021, Matthieu Baerts wrote:
+On Tue, 9 Feb 2021, Paolo Abeni wrote:
 
-> While working on issue #148, I also found a small typo: SYN info were
-> printed instead of ACK ones, see patch 1/3.
+> The current callback implementation is probe to some race
+> and still use some suboptimal code from older times.
 >
-> Then I put everything on one line and remove duplicated code, see patch
-> 2/3.
+> This series clean-up the code a bit, fixing the race
+> and hopefully simplifying future wider usage of delegated
+> actions
 >
-> The last patch marks the test as failed if we found less MPC SYN/3rd
-> ACK than expected. This will close:
+> Paolo Abeni (3):
+>  mptcp: factor out __mptcp_retrans helper()
+>  mptcp: fix race in release_cb
+>  mptcp: clean-up the rtx path.
 >
->  https://github.com/multipath-tcp/mptcp_net-next/issues/148
->
-> But at the end, just some small Bash modifications, nothing important
-> ;-)
->
-> Matthieu Baerts (3):
->  selftests: mptcp: fix ACKRX debug message
->  selftests: mptcp: display warnings on one line
->  selftests: mptcp: fail if not enough SYN/3rd ACK
->
-> .../selftests/net/mptcp/mptcp_connect.sh      | 80 +++++++++++++------
-> 1 file changed, 54 insertions(+), 26 deletions(-)
+> net/mptcp/protocol.c | 164 +++++++++++++++++++++----------------------
+> net/mptcp/protocol.h |   1 +
+> 2 files changed, 81 insertions(+), 84 deletions(-)
 >
 > -- =
 
-> 2.29.2
+> 2.26.2
 
-Series looks good to me, had to modify mptcp_connect.sh to force =
-
-some error output on my VM. Thanks Matthieu.
+Thanks Paolo, series looks good:
 
 Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============2695465805028968942==--
+--===============0836253508202031099==--
