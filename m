@@ -1,101 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============3888271758116644808=="
+Content-Type: multipart/mixed; boundary="===============1252917187537977065=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 0/9] RM_ADDR: remove a list
- of addrs
-Date: Wed, 10 Feb 2021 10:29:22 +0800
-Message-ID: <CA+WQbwuVy0DkDssG6X8myw_k5Hqei0f3WQWcJ3jbuMvGmW=uxQ@mail.gmail.com>
-In-Reply-To: d12239e8-a1ed-edd0-148d-c77b510de75@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] mptcp: improve mptcp release
+ callback
+Date: Wed, 10 Feb 2021 12:37:00 +0100
+Message-ID: <d665c726-e2d4-0fa6-7613-b28f06cdf14b@tessares.net>
+In-Reply-To: cover.1612869198.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7742
+X-UID: 7745
 
---===============3888271758116644808==
+--===============1252917187537977065==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Paolo, Mat,
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=B4=
-2=E6=9C=8810=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=889:18=E5=86=99=E9=
-=81=93=EF=BC=9A
->
->
-> On Tue, 9 Feb 2021, Geliang Tang wrote:
->
-> > v6:
-> > - add "rm_list->nr =3D 1" in patch 1.
-> > - apply: tag export/20210209T062213 + patchset "move to next addr and
-> > testcases" v3.
->
-> v6 looks ok for the export branch, thanks. It applied cleanly without the
-> "move to next addr and testcases" series.
->
+On 09/02/2021 12:42, Paolo Abeni wrote:
+> The current callback implementation is probe to some race
+> and still use some suboptimal code from older times.
+> =
 
-The selftests will fail without the "move to next addr and testcases"
-series, I fixed this in v7. v7 can apply without the "move to next addr
-and testcases" series.
+> This series clean-up the code a bit, fixing the race
+> and hopefully simplifying future wider usage of delegated
+> actions
+> =
 
-Thanks.
+> Paolo Abeni (3):
+>    mptcp: factor out __mptcp_retrans helper()
+>    mptcp: fix race in release_cb
+>    mptcp: clean-up the rtx path.
 
--Geliang
+Thank you for the patches and the reviews!
 
-> Mat
->
-> >
-> > v5:
-> > - use struct mptcp_rm_list instead of the ids array.
-> > - simplify mptcp_pm_remove_addrs_and_subflows.
-> > - apply: tag export/20210207T062839 + patchset "move to next addr and
-> > testcases".
-> >
-> > v4:
-> > - use MAX_ADDR_ID as the default value in the rm_ids array.
-> > - keep the free_list and pass it to mptcp_nl_remove_addrs_list.
-> > - handle remove anno_addrs and subflows in one function.
-> >
-> > v3:
-> > - avoid looping twice in mptcp_write_options
-> > - drop nr in mptcp_get_rm_ids_nr
-> > - use rm_ids[0] in patch 1 and patch 3
-> > - separate pm.rm_ids for incoming and outgoing
-> > - tag: export/20210131T062218
-> >
-> > v2:
-> > - use an array of ids instead of a u64 map
-> > - drop "mptcp: update the netlink event for rm_addr" in v1
-> > - tag: export/20210131T062218
-> >
-> > This patchset added the removing a list of addresses support for
-> > RM_ADDR. It addressed issue #140.
-> >
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
-> >
-> > Geliang Tang (9):
-> >  mptcp: add rm_list in mptcp_out_options
-> >  mptcp: add rm_list_tx in mptcp_pm_data
-> >  mptcp: add rm_list in mptcp_options_received
-> >  mptcp: add rm_list_rx in mptcp_pm_data
-> >  mptcp: remove multi addresses in PM
-> >  mptcp: remove multi subflows in PM
-> >  mptcp: remove multi addresses and subflows in PM
-> >  mptcp: remove a list of addrs when flushing
-> >  selftests: mptcp: add testcases for removing addrs
-> >
-> > include/net/mptcp.h                           |   9 +-
-> > net/mptcp/options.c                           |  49 +++++--
-> > net/mptcp/pm.c                                |  29 ++--
-> > net/mptcp/pm_netlink.c                        | 138 +++++++++++++-----
-> > net/mptcp/protocol.h                          |  17 ++-
-> > .../testing/selftests/net/mptcp/mptcp_join.sh |  35 +++++
-> > 6 files changed, 205 insertions(+), 72 deletions(-)
-> >
-> > --
-> > 2.29.2
->
-> --
-> Mat Martineau
-> Intel
---===============3888271758116644808==--
+It is now in our tree without a dot at the end of the last patch' =
+
+subject and Mat's RvB tags:
+
+- 1a97b665b9ee: mptcp: factor out __mptcp_retrans helper()
+- f1c293d570e1: mptcp: fix race in release_cb
+- 711d7b99ea0a: mptcp: clean-up the rtx path
+- Results: b72113120e91..9c096197d99f
+
+Tests + export are all good!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+
+
+--===============1252917187537977065==--
