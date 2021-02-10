@@ -1,49 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============0836253508202031099=="
+Content-Type: multipart/mixed; boundary="===============0834678058503078735=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] mptcp: improve mptcp release
- callback
-Date: Tue, 09 Feb 2021 17:09:47 -0800
-Message-ID: <2442fc5f-7932-5c75-377f-9e67a31db5e8@linux.intel.com>
-In-Reply-To: cover.1612869198.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 0/9] RM_ADDR: remove a list
+ of addrs
+Date: Tue, 09 Feb 2021 17:18:53 -0800
+Message-ID: <d12239e8-a1ed-edd0-148d-c77b510de75@linux.intel.com>
+In-Reply-To: cover.1612882689.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7728
+X-UID: 7729
 
---===============0836253508202031099==
+--===============0834678058503078735==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Tue, 9 Feb 2021, Paolo Abeni wrote:
+On Tue, 9 Feb 2021, Geliang Tang wrote:
 
-> The current callback implementation is probe to some race
-> and still use some suboptimal code from older times.
+> v6:
+> - add "rm_list->nr =3D 1" in patch 1.
+> - apply: tag export/20210209T062213 + patchset "move to next addr and
+> testcases" v3.
+
+v6 looks ok for the export branch, thanks. It applied cleanly without the =
+
+"move to next addr and testcases" series.
+
+Mat
+
 >
-> This series clean-up the code a bit, fixing the race
-> and hopefully simplifying future wider usage of delegated
-> actions
+> v5:
+> - use struct mptcp_rm_list instead of the ids array.
+> - simplify mptcp_pm_remove_addrs_and_subflows.
+> - apply: tag export/20210207T062839 + patchset "move to next addr and
+> testcases".
 >
-> Paolo Abeni (3):
->  mptcp: factor out __mptcp_retrans helper()
->  mptcp: fix race in release_cb
->  mptcp: clean-up the rtx path.
+> v4:
+> - use MAX_ADDR_ID as the default value in the rm_ids array.
+> - keep the free_list and pass it to mptcp_nl_remove_addrs_list.
+> - handle remove anno_addrs and subflows in one function.
 >
-> net/mptcp/protocol.c | 164 +++++++++++++++++++++----------------------
-> net/mptcp/protocol.h |   1 +
-> 2 files changed, 81 insertions(+), 84 deletions(-)
+> v3:
+> - avoid looping twice in mptcp_write_options
+> - drop nr in mptcp_get_rm_ids_nr
+> - use rm_ids[0] in patch 1 and patch 3
+> - separate pm.rm_ids for incoming and outgoing
+> - tag: export/20210131T062218
+>
+> v2:
+> - use an array of ids instead of a u64 map
+> - drop "mptcp: update the netlink event for rm_addr" in v1
+> - tag: export/20210131T062218
+>
+> This patchset added the removing a list of addresses support for
+> RM_ADDR. It addressed issue #140.
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+>
+> Geliang Tang (9):
+>  mptcp: add rm_list in mptcp_out_options
+>  mptcp: add rm_list_tx in mptcp_pm_data
+>  mptcp: add rm_list in mptcp_options_received
+>  mptcp: add rm_list_rx in mptcp_pm_data
+>  mptcp: remove multi addresses in PM
+>  mptcp: remove multi subflows in PM
+>  mptcp: remove multi addresses and subflows in PM
+>  mptcp: remove a list of addrs when flushing
+>  selftests: mptcp: add testcases for removing addrs
+>
+> include/net/mptcp.h                           |   9 +-
+> net/mptcp/options.c                           |  49 +++++--
+> net/mptcp/pm.c                                |  29 ++--
+> net/mptcp/pm_netlink.c                        | 138 +++++++++++++-----
+> net/mptcp/protocol.h                          |  17 ++-
+> .../testing/selftests/net/mptcp/mptcp_join.sh |  35 +++++
+> 6 files changed, 205 insertions(+), 72 deletions(-)
 >
 > -- =
 
-> 2.26.2
-
-Thanks Paolo, series looks good:
-
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> 2.29.2
 
 --
 Mat Martineau
 Intel
---===============0836253508202031099==--
+--===============0834678058503078735==--
