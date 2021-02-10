@@ -1,77 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============7965432513373884851=="
+Content-Type: multipart/mixed; boundary="===============8022396811718182175=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] SYNRX: MPTCP -> MPTCP: expect x,
- got y
-Date: Wed, 10 Feb 2021 20:21:43 +0100
-Message-ID: <139ebc53-21fb-cd3f-c970-03bb24138cc3@tessares.net>
-In-Reply-To: af402368-90d2-c58c-62d0-d2e7ae736cd6@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v7 mptcp-next 00/11] RM_ADDR: remove a list
+ of addrs
+Date: Wed, 10 Feb 2021 11:42:49 -0800
+Message-ID: <e456a97f-5e6b-681d-ced0-e633b7bc3db3@linux.intel.com>
+In-Reply-To: cover.1612922705.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7753
+X-UID: 7754
 
---===============7965432513373884851==
+--===============8022396811718182175==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+On Wed, 10 Feb 2021, Geliang Tang wrote:
 
-On 10/02/2021 01:39, Mat Martineau wrote:
-> =
+> v7:
+> - only changed the selftests.
+> - add patch 9 and 10 from patchset "move to next addr and testcases".
+> - drop "invalid addresses flush" in in patch 11, move it to patchset
+> "move to next addr and testcases"
+> - tag: export/20210209T062213
 
-> On Mon, 8 Feb 2021, Matthieu Baerts wrote:
-> =
+Geliang -
 
->> While working on issue #148, I also found a small typo: SYN info were
->> printed instead of ACK ones, see patch 1/3.
->>
->> Then I put everything on one line and remove duplicated code, see patch
->> 2/3.
->>
->> The last patch marks the test as failed if we found less MPC SYN/3rd
->> ACK than expected. This will close:
->>
->> =C2=A0https://github.com/multipath-tcp/mptcp_net-next/issues/148
->>
->> But at the end, just some small Bash modifications, nothing important
->> ;-)
->>
->> Matthieu Baerts (3):
->> =C2=A0selftests: mptcp: fix ACKRX debug message
->> =C2=A0selftests: mptcp: display warnings on one line
->> =C2=A0selftests: mptcp: fail if not enough SYN/3rd ACK
->>
->> .../selftests/net/mptcp/mptcp_connect.sh=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 80 +++++++++++++------
->> 1 file changed, 54 insertions(+), 26 deletions(-)
->>
->> -- =
+Thanks for reposting with the test changes. Self tests pass here and I =
 
->> 2.29.2
-> =
+reviewed the pcaps and debug logs too, looks good for the export branch.
 
-> Series looks good to me, had to modify mptcp_connect.sh to force some =
+Mat
 
-> error output on my VM. Thanks Matthieu.
-> =
 
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>
+> v6:
+> - add "rm_list->nr =3D 1" in patch 1.
+> - apply: tag export/20210209T062213 + patchset "move to next addr and
+> testcases" v3.
+>
+> v5:
+> - use struct mptcp_rm_list instead of the ids array.
+> - simplify mptcp_pm_remove_addrs_and_subflows.
+> - apply: tag export/20210207T062839 + patchset "move to next addr and
+> testcases".
+>
+> v4:
+> - use MAX_ADDR_ID as the default value in the rm_ids array.
+> - keep the free_list and pass it to mptcp_nl_remove_addrs_list.
+> - handle remove anno_addrs and subflows in one function.
+>
+> v3:
+> - avoid looping twice in mptcp_write_options
+> - drop nr in mptcp_get_rm_ids_nr
+> - use rm_ids[0] in patch 1 and patch 3
+> - separate pm.rm_ids for incoming and outgoing
+> - tag: export/20210131T062218
+>
+> v2:
+> - use an array of ids instead of a u64 map
+> - drop "mptcp: update the netlink event for rm_addr" in v1
+> - tag: export/20210131T062218
+>
+> This patchset added the removing a list of addresses support for
+> RM_ADDR. It addressed issue #140.
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+>
+> Geliang Tang (11):
+>  mptcp: add rm_list in mptcp_out_options
+>  mptcp: add rm_list_tx in mptcp_pm_data
+>  mptcp: add rm_list in mptcp_options_received
+>  mptcp: add rm_list_rx in mptcp_pm_data
+>  mptcp: remove multi addresses in PM
+>  mptcp: remove multi subflows in PM
+>  mptcp: remove multi addresses and subflows in PM
+>  mptcp: remove a list of addrs when flushing
+>  selftests: mptcp: add invert argument for chk_rm_nr
+>  selftests: mptcp: set addr id for removing testcases
+>  selftests: mptcp: add testcases for removing addrs
+>
+> include/net/mptcp.h                           |   9 +-
+> net/mptcp/options.c                           |  49 +++++--
+> net/mptcp/pm.c                                |  29 ++--
+> net/mptcp/pm_netlink.c                        | 138 +++++++++++++-----
+> net/mptcp/protocol.h                          |  17 ++-
+> .../testing/selftests/net/mptcp/mptcp_join.sh |  82 ++++++++---
+> 6 files changed, 233 insertions(+), 91 deletions(-)
+>
+> -- =
 
-Thank you for your reviews and validations!
+> 2.29.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
-Just applied in our tree with your RvB tag:
-
-- b628da33c6e3: selftests: mptcp: fix ACKRX debug message
-- 41d182f0810b: selftests: mptcp: display warnings on one line
-- f29144f39ccc: selftests: mptcp: fail if not enough SYN/3rd ACK
-- Results: 36c9c494faa9..aaf3af15da09
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============7965432513373884851==--
+--
+Mat Martineau
+Intel
+--===============8022396811718182175==--
