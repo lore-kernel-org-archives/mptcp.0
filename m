@@ -1,185 +1,131 @@
-Content-Type: multipart/mixed; boundary="===============4654937661248467999=="
+Content-Type: multipart/mixed; boundary="===============3939861585694952394=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 1/6] mptcp: deliver ssk errors to msk
-Date: Thu, 11 Feb 2021 15:30:37 -0800
-Message-ID: <20210211233042.304878-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net 3/6] mptcp: fix spurious retransmissions
+Date: Thu, 11 Feb 2021 15:30:39 -0800
+Message-ID: <20210211233042.304878-4-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210211233042.304878-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7760
+X-UID: 7761
 
---===============4654937661248467999==
+--===============3939861585694952394==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Paolo Abeni <pabeni(a)redhat.com>
 
-Currently all errors received on msk subflows are ignored.
-We need to catch at least the errors on connect() and
-on fallback sockets.
+Syzkaller was able to trigger the following splat again:
 
-Use a custom sk_error_report callback at subflow level,
-and do the real action under the msk socket lock - via
-the usual sock_owned_by_user()/release_callback() schema.
+WARNING: CPU: 1 PID: 12512 at net/mptcp/protocol.c:761 mptcp_reset_timer+0x=
+12a/0x160 net/mptcp/protocol.c:761
+Modules linked in:
+CPU: 1 PID: 12512 Comm: kworker/1:6 Not tainted 5.10.0-rc6 #52
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf=
+21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+Workqueue: events mptcp_worker
+RIP: 0010:mptcp_reset_timer+0x12a/0x160 net/mptcp/protocol.c:761
+Code: e8 4b 0c ad ff e8 56 21 88 fe 48 b8 00 00 00 00 00 fc ff df 48 c7 04 =
+03 00 00 00 00 48 83 c4 40 5b 5d 41 5c c3 e8 36 21 88 fe <0f> 0b 41 bc c8 0=
+0 00 00 eb 98 e8 e7 b1 af fe e9 30 ff ff ff 48 c7
+RSP: 0018:ffffc900018c7c68 EFLAGS: 00010293
+RAX: ffff888108cb1c80 RBX: 1ffff92000318f8d RCX: ffffffff82ad0307
+RDX: 0000000000000000 RSI: ffffffff82ad036a RDI: 0000000000000007
+RBP: ffff888113e2d000 R08: ffff888108cb1c80 R09: ffffed10227c5ab7
+R10: ffff888113e2d5b7 R11: ffffed10227c5ab6 R12: 0000000000000000
+R13: ffff88801f100000 R14: ffff888113e2d5b0 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff88811b500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd76a874ef8 CR3: 000000001689c005 CR4: 0000000000170ee0
+Call Trace:
+ mptcp_worker+0xaa4/0x1560 net/mptcp/protocol.c:2334
+ process_one_work+0x8d3/0x1200 kernel/workqueue.c:2272
+ worker_thread+0x9c/0x1090 kernel/workqueue.c:2418
+ kthread+0x303/0x410 kernel/kthread.c:292
+ ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:296
 
+The mptcp_worker tries to update the MPTCP retransmission timer
+even if such timer is not currently scheduled.
+
+The mptcp_rtx_head() return value is bogus: we can have enqueued
+data not yet transmitted. The above may additionally cause spurious,
+unneeded MPTCP-level retransmissions.
+
+Fix the issue adding an explicit clearing of the rtx queue before
+trying to retransmit and checking for unacked data.
+Additionally drop an unneeded timer stop call and the unused
+mptcp_rtx_tail() helper.
+
+Reported-by: Christoph Paasch <cpaasch(a)apple.com>
 Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c |  7 +++++++
- net/mptcp/protocol.h |  4 ++++
- net/mptcp/subflow.c  | 43 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 54 insertions(+)
+ net/mptcp/protocol.c |  3 +--
+ net/mptcp/protocol.h | 11 ++---------
+ 2 files changed, 3 insertions(+), 11 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f998a077c7dd..9eecd1383d24 100644
+index 42ca49954bdd..c11fcf6f5faf 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2959,6 +2959,8 @@ static void mptcp_release_cb(struct sock *sk)
- 		mptcp_push_pending(sk, 0);
- 		spin_lock_bh(&sk->sk_lock.slock);
- 	}
-+	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
-+		__mptcp_error_report(sk);
+@@ -364,8 +364,6 @@ static void mptcp_check_data_fin_ack(struct sock *sk)
  =
 
- 	/* clear any wmem reservation and errors */
- 	__mptcp_update_wmem(sk);
-@@ -3355,6 +3357,11 @@ static __poll_t mptcp_poll(struct file *file, struct=
- socket *sock,
- 	if (sk->sk_shutdown & RCV_SHUTDOWN)
- 		mask |=3D EPOLLIN | EPOLLRDNORM | EPOLLRDHUP;
+ 	/* Look for an acknowledged DATA_FIN */
+ 	if (mptcp_pending_data_fin_ack(sk)) {
+-		mptcp_stop_timer(sk);
+-
+ 		WRITE_ONCE(msk->snd_data_fin_enable, 0);
  =
 
-+	/* This barrier is coupled with smp_wmb() in tcp_reset() */
-+	smp_rmb();
-+	if (sk->sk_err)
-+		mask |=3D EPOLLERR;
-+
- 	return mask;
- }
+ 		switch (sk->sk_state) {
+@@ -2299,6 +2297,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (!test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
+ 		goto unlock;
  =
 
++	__mptcp_clean_una(sk);
+ 	dfrag =3D mptcp_rtx_head(sk);
+ 	if (!dfrag)
+ 		goto unlock;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d67de793d363..0743f48a0644 100644
+index 0743f48a0644..6a164add5b6f 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -95,6 +95,7 @@
- #define MPTCP_WORK_CLOSE_SUBFLOW 5
- #define MPTCP_PUSH_PENDING	6
- #define MPTCP_CLEAN_UNA		7
-+#define MPTCP_ERROR_REPORT	8
+@@ -326,20 +326,13 @@ static inline struct mptcp_data_frag *mptcp_pending_t=
+ail(const struct sock *sk)
+ 	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
+ }
  =
 
- static inline bool before64(__u64 seq1, __u64 seq2)
+-static inline struct mptcp_data_frag *mptcp_rtx_tail(const struct sock *sk)
++static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
  {
-@@ -414,6 +415,7 @@ struct mptcp_subflow_context {
- 	void	(*tcp_data_ready)(struct sock *sk);
- 	void	(*tcp_state_change)(struct sock *sk);
- 	void	(*tcp_write_space)(struct sock *sk);
-+	void	(*tcp_error_report)(struct sock *sk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
  =
 
- 	struct	rcu_head rcu;
- };
-@@ -478,6 +480,7 @@ static inline void mptcp_subflow_tcp_fallback(struct so=
-ck *sk,
- 	sk->sk_data_ready =3D ctx->tcp_data_ready;
- 	sk->sk_state_change =3D ctx->tcp_state_change;
- 	sk->sk_write_space =3D ctx->tcp_write_space;
-+	sk->sk_error_report =3D ctx->tcp_error_report;
+-	if (!before64(msk->snd_nxt, READ_ONCE(msk->snd_una)))
++	if (msk->snd_una =3D=3D READ_ONCE(msk->snd_nxt))
+ 		return NULL;
  =
 
- 	inet_csk(sk)->icsk_af_ops =3D ctx->icsk_af_ops;
+-	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
+-}
+-
+-static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+-{
+-	struct mptcp_sock *msk =3D mptcp_sk(sk);
+-
+ 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, =
+list);
  }
-@@ -505,6 +508,7 @@ bool mptcp_finish_join(struct sock *sk);
- bool mptcp_schedule_work(struct sock *sk);
- void __mptcp_check_push(struct sock *sk, struct sock *ssk);
- void __mptcp_data_acked(struct sock *sk);
-+void __mptcp_error_report(struct sock *sk);
- void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, b=
-ool use_64bit);
- void __mptcp_flush_join_list(struct mptcp_sock *msk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 278cbe3e539e..0ec3ccac6bb4 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1043,6 +1043,46 @@ static void subflow_write_space(struct sock *ssk)
- 	/* we take action in __mptcp_clean_una() */
- }
- =
-
-+void __mptcp_error_report(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-+		int err =3D sock_error(ssk);
-+
-+		if (!err)
-+			continue;
-+
-+		/* only propagate errors on fallen-back sockets or
-+		 * on MPC connect
-+		 */
-+		if (sk->sk_state !=3D TCP_SYN_SENT && !__mptcp_check_fallback(msk))
-+			continue;
-+
-+		inet_sk_state_store(sk, inet_sk_state_load(ssk));
-+		sk->sk_err =3D -err;
-+
-+		/* This barrier is coupled with smp_rmb() in mptcp_poll() */
-+		smp_wmb();
-+		sk->sk_error_report(sk);
-+		break;
-+	}
-+}
-+
-+static void subflow_error_report(struct sock *ssk)
-+{
-+	struct sock *sk =3D mptcp_subflow_ctx(ssk)->conn;
-+
-+	mptcp_data_lock(sk);
-+	if (!sock_owned_by_user(sk))
-+		__mptcp_error_report(sk);
-+	else
-+		set_bit(MPTCP_ERROR_REPORT,  &mptcp_sk(sk)->flags);
-+	mptcp_data_unlock(sk);
-+}
-+
- static struct inet_connection_sock_af_ops *
- subflow_default_af_ops(struct sock *sk)
- {
-@@ -1352,9 +1392,11 @@ static int subflow_ulp_init(struct sock *sk)
- 	ctx->tcp_data_ready =3D sk->sk_data_ready;
- 	ctx->tcp_state_change =3D sk->sk_state_change;
- 	ctx->tcp_write_space =3D sk->sk_write_space;
-+	ctx->tcp_error_report =3D sk->sk_error_report;
- 	sk->sk_data_ready =3D subflow_data_ready;
- 	sk->sk_write_space =3D subflow_write_space;
- 	sk->sk_state_change =3D subflow_state_change;
-+	sk->sk_error_report =3D subflow_error_report;
- out:
- 	return err;
- }
-@@ -1407,6 +1449,7 @@ static void subflow_ulp_clone(const struct request_so=
-ck *req,
- 	new_ctx->tcp_data_ready =3D old_ctx->tcp_data_ready;
- 	new_ctx->tcp_state_change =3D old_ctx->tcp_state_change;
- 	new_ctx->tcp_write_space =3D old_ctx->tcp_write_space;
-+	new_ctx->tcp_error_report =3D old_ctx->tcp_error_report;
- 	new_ctx->rel_write_seq =3D 1;
- 	new_ctx->tcp_sock =3D newsk;
  =
 
 -- =
 
 2.30.1
 
---===============4654937661248467999==--
+--===============3939861585694952394==--
