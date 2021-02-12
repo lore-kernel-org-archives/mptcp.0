@@ -1,80 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============2120355145692996171=="
+Content-Type: multipart/mixed; boundary="===============8489893522174323970=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] Squash to "selftests: mptcp: fail if not
- enough SYN/3rd ACK"
-Date: Fri, 12 Feb 2021 09:35:28 +0100
-Message-ID: <20210212083528.84431-1-matthieu.baerts@tessares.net>
+Subject: [MPTCP] Re: [PATCH v2 2/2] mptcp: dispose initial struct socket when
+ its subflow is closed
+Date: Fri, 12 Feb 2021 11:04:43 +0100
+Message-ID: <0e4a22d91ecaaca87929dee8a47e543290db8566.camel@redhat.com>
+In-Reply-To: 20210211234245.31961-2-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7771
+X-UID: 7772
 
---===============2120355145692996171==
+--===============8489893522174323970==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We should check the opposite: 'now' lower than 'expected' and not the
-opposite ('expected' lower than 'now') to consider the test as failed.
+On Fri, 2021-02-12 at 00:42 +0100, Florian Westphal wrote:
+> Christoph Paasch reported following crash:
+> dst_release underflow
+> WARNING: CPU: 0 PID: 1319 at net/core/dst.c:175 dst_release+0xc1/0xd0 net=
+/core/dst.c:175
+> CPU: 0 PID: 1319 Comm: syz-executor217 Not tainted 5.11.0-rc6af8e85128b4d=
+0d24083c5cac646e891227052e0c #70
+> Call Trace:
+>  rt_cache_route+0x12e/0x140 net/ipv4/route.c:1503
+>  rt_set_nexthop.constprop.0+0x1fc/0x590 net/ipv4/route.c:1612
+>  __mkroute_output net/ipv4/route.c:2484 [inline]
+> ...
+> =
 
-I also modified the failed message to make it clearer but also because
-my TAP parser is rendering the '>' with '&gt;'... XML is still alive!
+> The worker leaves msk->subflow alone even when it
+> happened to close the subflow ssk associated with it.
+> =
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
+> v2: fix helper function name
+> =
 
-Notes:
-    to be squashed in "selftests: mptcp: fail if not enough SYN/3rd ACK"
+> Fixes: 866f26f2a9c33b ("mptcp: always graft subflow socket to parent")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/157
+> Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+> Signed-off-by: Florian Westphal <fw(a)strlen.de>
 
- .../testing/selftests/net/mptcp/mptcp_connect.sh | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Both patches LGTM, thanks!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 48c3db252c78..10a030b53b23 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -499,14 +499,14 @@ do_transfer()
- 		expect_ackrx=3D$((stat_ackrx_last_l+1))
- 	fi
- =
+perhaps we can drop the changelog info for upstream submission? (in any
+case no need for a v3, I guess commit messages can shaped at submission
+time)
 
--	if [ ${expect_synrx} -lt ${stat_synrx_now_l} ]; then
--		printf "[ FAIL ] lower MPC SYN rx than expected: %d -> %d\n" \
--			"${expect_synrx}" "${stat_synrx_now_l}" 1>&2
-+	if [ ${stat_synrx_now_l} -lt ${expect_synrx} ]; then
-+		printf "[ FAIL ] lower MPC SYN rx (%d) than expected (%d)\n" \
-+			"${stat_synrx_now_l}" "${expect_synrx}" 1>&2
- 		retc=3D1
- 	fi
--	if [ ${expect_ackrx} -lt ${stat_ackrx_now_l} ]; then
--		printf "[ FAIL ] lower MPC ACK rx than expected: %d -> %d\n" \
--			"${expect_ackrx}" "${stat_ackrx_now_l}" 1>&2
-+	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ]; then
-+		printf "[ FAIL ] lower MPC ACK rx (%d) than expected (%d)\n" \
-+			"${stat_ackrx_now_l}" "${expect_ackrx}" 1>&2
- 		rets=3D1
- 	fi
- =
+Cheers,
 
-@@ -530,11 +530,11 @@ do_transfer()
- 		fi
- 	fi
- =
+Paolo
 
--	if [ $expect_synrx -gt $stat_synrx_now_l ]; then
-+	if [ ${stat_synrx_now_l} -gt ${expect_synrx} ]; then
- 		printf " WARN: SYNRX: expect %d, got %d (probably retransmissions)" \
- 			"${expect_synrx}" "${stat_synrx_now_l}"
- 	fi
--	if [ $expect_ackrx -gt $stat_ackrx_now_l ]; then
-+	if [ ${stat_ackrx_now_l} -gt ${expect_ackrx} ]; then
- 		printf " WARN: ACKRX: expect %d, got %d (probably retransmissions)" \
- 			"${expect_ackrx}" "${stat_ackrx_now_l}"
- 	fi
--- =
-
-2.30.0
-
---===============2120355145692996171==--
+--===============8489893522174323970==--
