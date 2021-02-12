@@ -1,44 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============3672316221857137654=="
+Content-Type: multipart/mixed; boundary="===============2764873185904909232=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] Squash to "selftests: mptcp: fail if
- not enough SYN/3rd ACK"
-Date: Fri, 12 Feb 2021 20:53:58 +0100
-Message-ID: <9e49303c-6086-6b2d-82c3-286420b26a22@tessares.net>
-In-Reply-To: 20210212083528.84431-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] [PATCH net-next 0/4] mptcp: Selftest enhancement and fixes
+Date: Fri, 12 Feb 2021 15:20:26 -0800
+Message-ID: <20210212232030.377261-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7777
+X-UID: 7778
 
---===============3672316221857137654==
+--===============2764873185904909232==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+This is a collection of selftest updates from the MPTCP tree.
 
-On 12/02/2021 09:35, Matthieu Baerts wrote:
-> We should check the opposite: 'now' lower than 'expected' and not the
-> opposite ('expected' lower than 'now') to consider the test as failed.
-> =
+Patch 1 uses additional 'ss' command line parameters and 'nstat' to
+improve output when certain MPTCP tests fail.
 
-> I also modified the failed message to make it clearer but also because
-> my TAP parser is rendering the '>' with '&gt;'... XML is still alive!
+Patches 2 & 3 fix a copy/paste error and some output formatting.
 
-To avoid wrong errors reported by CI or anybody launching our selftests, =
+Patch 4 makes sure tests still pass if certain connection-related
+packets are retransmitted.
 
-certainly best to apply it ASAP :)
+Matthieu Baerts (3):
+  selftests: mptcp: fix ACKRX debug message
+  selftests: mptcp: display warnings on one line
+  selftests: mptcp: fail if not enough SYN/3rd ACK
 
-- 7edabb5edac1: "squashed" in "selftests: mptcp: fail if not enough =
+Paolo Abeni (1):
+  selftests: mptcp: dump more info on errors
 
-SYN/3rd ACK"
-- Results: 8ea9c48639fd..5efc57c1d1d5
+ .../selftests/net/mptcp/mptcp_connect.sh      | 94 +++++++++++++------
+ 1 file changed, 66 insertions(+), 28 deletions(-)
 
-Cheers,
-Matt
+
+base-commit: c3ff3b02e99c691197a05556ef45f5c3dd2ed3d6
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============3672316221857137654==--
+2.30.1
+
+--===============2764873185904909232==--
