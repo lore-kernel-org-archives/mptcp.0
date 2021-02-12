@@ -1,79 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============0773449000163356900=="
+Content-Type: multipart/mixed; boundary="===============2120355145692996171=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH net-next] mptcp: free resources when the port
- number is mismatched
-Date: Fri, 12 Feb 2021 14:43:35 +0800
-Message-ID: <c79259641c0fda0a0df41c25f58ae0a1da1e3839.1613112149.git.geliangtang@gmail.com>
+Subject: [MPTCP] [PATCH mptcp-next] Squash to "selftests: mptcp: fail if not
+ enough SYN/3rd ACK"
+Date: Fri, 12 Feb 2021 09:35:28 +0100
+Message-ID: <20210212083528.84431-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 7770
+X-UID: 7771
 
---===============0773449000163356900==
+--===============2120355145692996171==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When the port number is mismatched with the announced ones, use
-'goto dispose_child' to free the resources instead of using 'goto out'.
+We should check the opposite: 'now' lower than 'expected' and not the
+opposite ('expected' lower than 'now') to consider the test as failed.
 
-This patch also moves the port number checking code in
-subflow_syn_recv_sock before the setting of ctx->conn, otherwise
-subflow_drop_ctx will fail in dispose_child.
+I also modified the failed message to make it clearer but also because
+my TAP parser is rendering the '>' with '&gt;'... XML is still alive!
 
-Fixes: 5bc56388c74f ("mptcp: add port number check for MP_JOIN")
-Reported-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 ---
- net/mptcp/subflow.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 280da418d60b..a9c8daf72768 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -692,25 +692,25 @@ static struct sock *subflow_syn_recv_sock(const struc=
-t sock *sk,
- 			if (!owner)
- 				goto dispose_child;
+Notes:
+    to be squashed in "selftests: mptcp: fail if not enough SYN/3rd ACK"
+
+ .../testing/selftests/net/mptcp/mptcp_connect.sh | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
+ting/selftests/net/mptcp/mptcp_connect.sh
+index 48c3db252c78..10a030b53b23 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -499,14 +499,14 @@ do_transfer()
+ 		expect_ackrx=3D$((stat_ackrx_last_l+1))
+ 	fi
  =
 
--			/* move the msk reference ownership to the subflow */
--			subflow_req->msk =3D NULL;
--			ctx->conn =3D (struct sock *)owner;
--			if (!mptcp_finish_join(child))
--				goto dispose_child;
--
--			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
--			tcp_rsk(req)->drop_req =3D true;
--
- 			if (subflow_use_different_sport(owner, sk)) {
- 				pr_debug("ack inet_sport=3D%d %d",
- 					 ntohs(inet_sk(sk)->inet_sport),
- 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
- 				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
- 					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
--					goto out;
-+					goto dispose_child;
- 				}
- 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTACKRX);
- 			}
-+
-+			/* move the msk reference ownership to the subflow */
-+			subflow_req->msk =3D NULL;
-+			ctx->conn =3D (struct sock *)owner;
-+			if (!mptcp_finish_join(child))
-+				goto dispose_child;
-+
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
-+			tcp_rsk(req)->drop_req =3D true;
- 		}
- 	}
+-	if [ ${expect_synrx} -lt ${stat_synrx_now_l} ]; then
+-		printf "[ FAIL ] lower MPC SYN rx than expected: %d -> %d\n" \
+-			"${expect_synrx}" "${stat_synrx_now_l}" 1>&2
++	if [ ${stat_synrx_now_l} -lt ${expect_synrx} ]; then
++		printf "[ FAIL ] lower MPC SYN rx (%d) than expected (%d)\n" \
++			"${stat_synrx_now_l}" "${expect_synrx}" 1>&2
+ 		retc=3D1
+ 	fi
+-	if [ ${expect_ackrx} -lt ${stat_ackrx_now_l} ]; then
+-		printf "[ FAIL ] lower MPC ACK rx than expected: %d -> %d\n" \
+-			"${expect_ackrx}" "${stat_ackrx_now_l}" 1>&2
++	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ]; then
++		printf "[ FAIL ] lower MPC ACK rx (%d) than expected (%d)\n" \
++			"${stat_ackrx_now_l}" "${expect_ackrx}" 1>&2
+ 		rets=3D1
+ 	fi
  =
 
+@@ -530,11 +530,11 @@ do_transfer()
+ 		fi
+ 	fi
+ =
+
+-	if [ $expect_synrx -gt $stat_synrx_now_l ]; then
++	if [ ${stat_synrx_now_l} -gt ${expect_synrx} ]; then
+ 		printf " WARN: SYNRX: expect %d, got %d (probably retransmissions)" \
+ 			"${expect_synrx}" "${stat_synrx_now_l}"
+ 	fi
+-	if [ $expect_ackrx -gt $stat_ackrx_now_l ]; then
++	if [ ${stat_ackrx_now_l} -gt ${expect_ackrx} ]; then
+ 		printf " WARN: ACKRX: expect %d, got %d (probably retransmissions)" \
+ 			"${expect_ackrx}" "${stat_ackrx_now_l}"
+ 	fi
 -- =
 
-2.29.2
+2.30.0
 
---===============0773449000163356900==--
+--===============2120355145692996171==--
