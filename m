@@ -1,82 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============8148284187607306480=="
+Content-Type: multipart/mixed; boundary="===============7887881646251899147=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 1/4] selftests: mptcp: dump more info on
- errors
-Date: Fri, 12 Feb 2021 15:20:27 -0800
-Message-ID: <20210212232030.377261-2-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 2/4] selftests: mptcp: fix ACKRX debug message
+Date: Fri, 12 Feb 2021 15:20:28 -0800
+Message-ID: <20210212232030.377261-3-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210212232030.377261-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7779
+X-UID: 7780
 
---===============8148284187607306480==
+--===============7887881646251899147==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 
-Even if that may sound completely unlikely, the mptcp implementation
-is not perfect, yet.
+Info from received MPCapable SYN were printed instead of the ones from
+received MPCapable 3rd ACK.
 
-When the self-tests report an error we usually need more information
-of what the scripts currently report. iproute allow provides
-some additional goodies since a few releases, let's dump them.
-
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+Fixes: fed61c4b584c ("selftests: mptcp: make 2nd net namespace use tcp syn =
+cookies unconditionally")
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_connect.sh  | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
 ting/selftests/net/mptcp/mptcp_connect.sh
-index 2cfd87d94db8..0c6b9d3c03c0 100755
+index 0c6b9d3c03c0..9ab35ae41628 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -128,6 +128,7 @@ cleanup()
- 	local netns
- 	for netns in "$ns1" "$ns2" "$ns3" "$ns4";do
- 		ip netns del $netns
-+		rm -f /tmp/$netns.{nstat,out}
- 	done
- }
- =
-
-@@ -438,16 +439,24 @@ do_transfer()
- 		kill ${cappid_connector}
+@@ -502,7 +502,7 @@ do_transfer()
+ 		echo "${listener_ns} SYNRX: ${cl_proto} -> ${srv_proto}: expect ${expect=
+_synrx}, got ${stat_synrx_now_l}"
+ 	fi
+ 	if [ $expect_ackrx -ne $stat_ackrx_now_l ] ;then
+-		echo "${listener_ns} ACKRX: ${cl_proto} -> ${srv_proto}: expect ${expect=
+_synrx}, got ${stat_synrx_now_l}"
++		echo "${listener_ns} ACKRX: ${cl_proto} -> ${srv_proto}: expect ${expect=
+_ackrx}, got ${stat_ackrx_now_l} "
  	fi
  =
 
-+	NSTAT_HISTORY=3D/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
-+		nstat | grep Tcp > /tmp/${listener_ns}.out
-+	if [ ${listener_ns} !=3D ${connector_ns} ]; then
-+		NSTAT_HISTORY=3D/tmp/${connector_ns}.nstat ip netns exec ${connector_ns}=
- \
-+			nstat | grep Tcp > /tmp/${connector_ns}.out
-+	fi
-+
- 	local duration
- 	duration=3D$((stop-start))
- 	duration=3D$(printf "(duration %05sms)" $duration)
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		echo "$duration [ FAIL ] client exit code $retc, server $rets" 1>&2
- 		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
--		ip netns exec ${listener_ns} ss -nita 1>&2 -o "sport =3D :$port"
-+		ip netns exec ${listener_ns} ss -Menita 1>&2 -o "sport =3D :$port"
-+		cat /tmp/${listener_ns}.out
- 		echo -e "\nnetns ${connector_ns} socket stat for ${port}:" 1>&2
--		ip netns exec ${connector_ns} ss -nita 1>&2 -o "dport =3D :$port"
--
-+		ip netns exec ${connector_ns} ss -Menita 1>&2 -o "dport =3D :$port"
-+		[ ${listener_ns} !=3D ${connector_ns} ] && cat /tmp/${connector_ns}.out
- 		cat "$capout"
- 		return 1
- 	fi
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
 -- =
 
 2.30.1
 
---===============8148284187607306480==--
+--===============7887881646251899147==--
