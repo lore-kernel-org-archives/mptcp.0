@@ -1,57 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============5084047909661837610=="
+Content-Type: multipart/mixed; boundary="===============0773449000163356900=="
 MIME-Version: 1.0
-From: patchwork-bot+netdevbpf at kernel.org
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net 0/6] mptcp: Miscellaneous fixes
-Date: Fri, 12 Feb 2021 02:50:08 +0000
-Message-ID: <
- <161309820822.25329.1992173657859048208.git-patchwork-notify@kernel.org>>
-In-Reply-To: 20210211233042.304878-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [MPTCP][PATCH net-next] mptcp: free resources when the port
+ number is mismatched
+Date: Fri, 12 Feb 2021 14:43:35 +0800
+Message-ID: <c79259641c0fda0a0df41c25f58ae0a1da1e3839.1613112149.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7769
+X-UID: 7770
 
---===============5084047909661837610==
+--===============0773449000163356900==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello:
+When the port number is mismatched with the announced ones, use
+'goto dispose_child' to free the resources instead of using 'goto out'.
 
-This series was applied to netdev/net.git (refs/heads/master):
+This patch also moves the port number checking code in
+subflow_syn_recv_sock before the setting of ctx->conn, otherwise
+subflow_drop_ctx will fail in dispose_child.
 
-On Thu, 11 Feb 2021 15:30:36 -0800 you wrote:
-> Here are some MPTCP fixes for the -net tree, addressing various issues
-> we have seen thanks to syzkaller and other testing:
-> =
+Fixes: 5bc56388c74f ("mptcp: add port number check for MP_JOIN")
+Reported-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/subflow.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-> Patch 1 correctly propagates errors at connection time and for TCP
-> fallback connections.
-> =
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 280da418d60b..a9c8daf72768 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -692,25 +692,25 @@ static struct sock *subflow_syn_recv_sock(const struc=
+t sock *sk,
+ 			if (!owner)
+ 				goto dispose_child;
+ =
 
-> Patch 2 sets the expected poll() events on SEND_SHUTDOWN.
-> =
+-			/* move the msk reference ownership to the subflow */
+-			subflow_req->msk =3D NULL;
+-			ctx->conn =3D (struct sock *)owner;
+-			if (!mptcp_finish_join(child))
+-				goto dispose_child;
+-
+-			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+-			tcp_rsk(req)->drop_req =3D true;
+-
+ 			if (subflow_use_different_sport(owner, sk)) {
+ 				pr_debug("ack inet_sport=3D%d %d",
+ 					 ntohs(inet_sk(sk)->inet_sport),
+ 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
+ 				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
+ 					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
+-					goto out;
++					goto dispose_child;
+ 				}
+ 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTACKRX);
+ 			}
++
++			/* move the msk reference ownership to the subflow */
++			subflow_req->msk =3D NULL;
++			ctx->conn =3D (struct sock *)owner;
++			if (!mptcp_finish_join(child))
++				goto dispose_child;
++
++			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
++			tcp_rsk(req)->drop_req =3D true;
+ 		}
+ 	}
+ =
 
-> [...]
+-- =
 
-Here is the summary with links:
-  - [net,1/6] mptcp: deliver ssk errors to msk
-    https://git.kernel.org/netdev/net/c/15cc10453398
-  - [net,2/6] mptcp: fix poll after shutdown
-    https://git.kernel.org/netdev/net/c/dd913410b0a4
-  - [net,3/6] mptcp: fix spurious retransmissions
-    https://git.kernel.org/netdev/net/c/64b9cea7a0af
-  - [net,4/6] mptcp: init mptcp request socket earlier
-    https://git.kernel.org/netdev/net/c/d8b59efa6406
-  - [net,5/6] mptcp: better msk receive window updates
-    https://git.kernel.org/netdev/net/c/e3859603ba13
-  - [net,6/6] mptcp: add a missing retransmission timer scheduling
-    https://git.kernel.org/netdev/net/c/d09d818ec2ed
+2.29.2
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
---===============5084047909661837610==--
+--===============0773449000163356900==--
