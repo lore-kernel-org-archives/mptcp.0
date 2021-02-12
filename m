@@ -1,66 +1,214 @@
-Content-Type: multipart/mixed; boundary="===============0861931693460132548=="
+Content-Type: multipart/mixed; boundary="===============1579183341961339295=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 0/8] mptcp: Add genl events for connection
- info
-Date: Fri, 12 Feb 2021 15:59:53 -0800
-Message-ID: <20210213000001.379332-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 1/8] mptcp: move pm netlink work into
+ pm_netlink
+Date: Fri, 12 Feb 2021 15:59:54 -0800
+Message-ID: <20210213000001.379332-2-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20210213000001.379332-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7783
+X-UID: 7784
 
---===============0861931693460132548==
+--===============1579183341961339295==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This series from the MPTCP tree adds genl multicast events that are
-important for implementing a userspace path manager. In MPTCP, a path
-manager is responsible for adding or removing additional subflows on
-each MPTCP connection. The in-kernel path manager (already part of the
-kernel) is a better fit for many server use cases, but the additional
-flexibility of userspace path managers is often useful for client
-devices.
+From: Florian Westphal <fw(a)strlen.de>
 
-Patches 1, 2, 4, 5, and 6 do some refactoring to streamline the netlink
-event implementation in the final patch.
+Allows to make some functions static and avoids acquire of the pm
+spinlock in protocol.c.
 
-Patch 3 improves the timeliness of subflow destruction to ensure the
-'subflow closed' event will be sent soon enough.
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ net/mptcp/pm_netlink.c | 45 +++++++++++++++++++++++++++++++++++++-----
+ net/mptcp/protocol.c   | 33 +------------------------------
+ net/mptcp/protocol.h   |  6 +-----
+ 3 files changed, 42 insertions(+), 42 deletions(-)
 
-Patch 7 allows use of the GENL_UNS_ADMIN_PERM flag on genl mcast groups
-to mandate CAP_NET_ADMIN, which is important to protect token information
-in the MPTCP events. This is a genetlink change.
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 23780a13b934..8f2fd6874d85 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -56,6 +56,8 @@ struct pm_nl_pernet {
+ #define MPTCP_PM_ADDR_MAX	8
+ #define ADD_ADDR_RETRANS_MAX	3
+ =
 
-Patch 8 adds the MPTCP netlink events.
++static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
++
+ static bool addresses_equal(const struct mptcp_addr_info *a,
+ 			    struct mptcp_addr_info *b, bool use_port)
+ {
+@@ -448,17 +450,17 @@ static void mptcp_pm_create_subflow_or_signal_addr(st=
+ruct mptcp_sock *msk)
+ 	}
+ }
+ =
 
+-void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
++static void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
+ {
+ 	mptcp_pm_create_subflow_or_signal_addr(msk);
+ }
+ =
 
-Florian Westphal (8):
-  mptcp: move pm netlink work into pm_netlink
-  mptcp: split __mptcp_close_ssk helper
-  mptcp: schedule worker when subflow is closed
-  mptcp: move subflow close loop after sk close check
-  mptcp: pass subflow socket to a few helpers
-  mptcp: avoid lock_fast usage in accept path
-  genetlink: add CAP_NET_ADMIN test for multicast bind
-  mptcp: add netlink event support
+-void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
++static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+ {
+ 	mptcp_pm_create_subflow_or_signal_addr(msk);
+ }
+ =
 
- include/net/genetlink.h    |   1 +
- include/uapi/linux/mptcp.h |  74 +++++++++
- net/mptcp/options.c        |   2 +-
- net/mptcp/pm.c             |  24 ++-
- net/mptcp/pm_netlink.c     | 310 ++++++++++++++++++++++++++++++++++++-
- net/mptcp/protocol.c       |  72 ++++-----
- net/mptcp/protocol.h       |  20 +--
- net/mptcp/subflow.c        |  27 +++-
- net/netlink/genetlink.c    |  32 ++++
- 9 files changed, 491 insertions(+), 71 deletions(-)
+-void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
++static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ {
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	unsigned int add_addr_accept_max;
+@@ -498,7 +500,7 @@ void mptcp_pm_nl_add_addr_received(struct mptcp_sock *m=
+sk)
+ 	mptcp_pm_nl_add_addr_send_ack(msk);
+ }
+ =
 
+-void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
++static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ =
 
-base-commit: c3ff3b02e99c691197a05556ef45f5c3dd2ed3d6
+@@ -568,7 +570,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+ 	return -EINVAL;
+ }
+ =
+
+-void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
++static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct sock *sk =3D (struct sock *)msk;
+@@ -605,6 +607,39 @@ void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *m=
+sk)
+ 	}
+ }
+ =
+
++void mptcp_pm_nl_work(struct mptcp_sock *msk)
++{
++	struct mptcp_pm_data *pm =3D &msk->pm;
++
++	msk_owned_by_me(msk);
++
++	spin_lock_bh(&msk->pm.lock);
++
++	pr_debug("msk=3D%p status=3D%x", msk, pm->status);
++	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_RECEIVED)) {
++		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
++		mptcp_pm_nl_add_addr_received(msk);
++	}
++	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
++		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
++		mptcp_pm_nl_add_addr_send_ack(msk);
++	}
++	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
++		pm->status &=3D ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
++		mptcp_pm_nl_rm_addr_received(msk);
++	}
++	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
++		pm->status &=3D ~BIT(MPTCP_PM_ESTABLISHED);
++		mptcp_pm_nl_fully_established(msk);
++	}
++	if (pm->status & BIT(MPTCP_PM_SUBFLOW_ESTABLISHED)) {
++		pm->status &=3D ~BIT(MPTCP_PM_SUBFLOW_ESTABLISHED);
++		mptcp_pm_nl_subflow_established(msk);
++	}
++
++	spin_unlock_bh(&msk->pm.lock);
++}
++
+ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b9f16a1535d2..93134b72490a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2152,37 +2152,6 @@ static unsigned int mptcp_sync_mss(struct sock *sk, =
+u32 pmtu)
+ 	return 0;
+ }
+ =
+
+-static void pm_work(struct mptcp_sock *msk)
+-{
+-	struct mptcp_pm_data *pm =3D &msk->pm;
+-
+-	spin_lock_bh(&msk->pm.lock);
+-
+-	pr_debug("msk=3D%p status=3D%x", msk, pm->status);
+-	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_RECEIVED)) {
+-		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
+-		mptcp_pm_nl_add_addr_received(msk);
+-	}
+-	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
+-		pm->status &=3D ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
+-		mptcp_pm_nl_add_addr_send_ack(msk);
+-	}
+-	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
+-		pm->status &=3D ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+-		mptcp_pm_nl_rm_addr_received(msk);
+-	}
+-	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
+-		pm->status &=3D ~BIT(MPTCP_PM_ESTABLISHED);
+-		mptcp_pm_nl_fully_established(msk);
+-	}
+-	if (pm->status & BIT(MPTCP_PM_SUBFLOW_ESTABLISHED)) {
+-		pm->status &=3D ~BIT(MPTCP_PM_SUBFLOW_ESTABLISHED);
+-		mptcp_pm_nl_subflow_established(msk);
+-	}
+-
+-	spin_unlock_bh(&msk->pm.lock);
+-}
+-
+ static void __mptcp_close_subflow(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+@@ -2271,7 +2240,7 @@ static void mptcp_worker(struct work_struct *work)
+ 		__mptcp_close_subflow(msk);
+ =
+
+ 	if (msk->pm.status)
+-		pm_work(msk);
++		mptcp_pm_nl_work(msk);
+ =
+
+ 	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
+ 		mptcp_check_for_eof(msk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 73a923d02aad..702dbfefa093 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -713,11 +713,7 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, stru=
+ct sock_common *skc);
+ =
+
+ void __init mptcp_pm_nl_init(void);
+ void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
+-void mptcp_pm_nl_fully_established(struct mptcp_sock *msk);
+-void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk);
+-void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk);
+-void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
+-void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk);
++void mptcp_pm_nl_work(struct mptcp_sock *msk);
+ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *s=
+kc);
+ unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
 -- =
 
 2.30.1
 
---===============0861931693460132548==--
+--===============1579183341961339295==--
