@@ -1,101 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============8840811711921493816=="
+Content-Type: multipart/mixed; boundary="===============0861931693460132548=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 4/4] selftests: mptcp: fail if not enough
- SYN/3rd ACK
-Date: Fri, 12 Feb 2021 15:20:30 -0800
-Message-ID: <20210212232030.377261-5-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20210212232030.377261-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH net-next 0/8] mptcp: Add genl events for connection
+ info
+Date: Fri, 12 Feb 2021 15:59:53 -0800
+Message-ID: <20210213000001.379332-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7782
+X-UID: 7783
 
---===============8840811711921493816==
+--===============0861931693460132548==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+This series from the MPTCP tree adds genl multicast events that are
+important for implementing a userspace path manager. In MPTCP, a path
+manager is responsible for adding or removing additional subflows on
+each MPTCP connection. The in-kernel path manager (already part of the
+kernel) is a better fit for many server use cases, but the additional
+flexibility of userspace path managers is often useful for client
+devices.
 
-If we receive less MPCapable SYN or 3rd ACK than expected, we now mark
-the test as failed.
+Patches 1, 2, 4, 5, and 6 do some refactoring to streamline the netlink
+event implementation in the final patch.
 
-On the other hand, if we receive more, we keep the warning but we add a
-hint that it is probably due to retransmissions and that's why we don't
-mark the test as failed.
+Patch 3 improves the timeliness of subflow destruction to ensure the
+'subflow closed' event will be sent soon enough.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/148
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- .../selftests/net/mptcp/mptcp_connect.sh      | 28 +++++++++++++------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+Patch 7 allows use of the GENL_UNS_ADMIN_PERM flag on genl mcast groups
+to mandate CAP_NET_ADMIN, which is important to protect token information
+in the MPTCP events. This is a genetlink change.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/tes=
-ting/selftests/net/mptcp/mptcp_connect.sh
-index 362e891f89cf..10a030b53b23 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -483,10 +483,6 @@ do_transfer()
- 	check_transfer $cin $sout "file received by server"
- 	rets=3D$?
- =
+Patch 8 adds the MPTCP netlink events.
 
--	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
--		printf "[ OK ]"
--	fi
--
- 	local stat_synrx_now_l=3D$(get_mib_counter "${listener_ns}" "MPTcpExtMPCa=
-pableSYNRX")
- 	local stat_ackrx_now_l=3D$(get_mib_counter "${listener_ns}" "MPTcpExtMPCa=
-pableACKRX")
- 	local stat_cookietx_now=3D$(get_mib_counter "${listener_ns}" "TcpExtSynco=
-okiesSent")
-@@ -502,6 +498,22 @@ do_transfer()
- 		expect_synrx=3D$((stat_synrx_last_l+1))
- 		expect_ackrx=3D$((stat_ackrx_last_l+1))
- 	fi
-+
-+	if [ ${stat_synrx_now_l} -lt ${expect_synrx} ]; then
-+		printf "[ FAIL ] lower MPC SYN rx (%d) than expected (%d)\n" \
-+			"${stat_synrx_now_l}" "${expect_synrx}" 1>&2
-+		retc=3D1
-+	fi
-+	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ]; then
-+		printf "[ FAIL ] lower MPC ACK rx (%d) than expected (%d)\n" \
-+			"${stat_ackrx_now_l}" "${expect_ackrx}" 1>&2
-+		rets=3D1
-+	fi
-+
-+	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
-+		printf "[ OK ]"
-+	fi
-+
- 	if [ $cookies -eq 2 ];then
- 		if [ $stat_cookietx_last -ge $stat_cookietx_now ] ;then
- 			printf " WARN: CookieSent: did not advance"
-@@ -518,12 +530,12 @@ do_transfer()
- 		fi
- 	fi
- =
 
--	if [ $expect_synrx -ne $stat_synrx_now_l ] ;then
--		printf " WARN: SYNRX: expect %d, got %d" \
-+	if [ ${stat_synrx_now_l} -gt ${expect_synrx} ]; then
-+		printf " WARN: SYNRX: expect %d, got %d (probably retransmissions)" \
- 			"${expect_synrx}" "${stat_synrx_now_l}"
- 	fi
--	if [ $expect_ackrx -ne $stat_ackrx_now_l ] ;then
--		printf " WARN: ACKRX: expect %d, got %d" \
-+	if [ ${stat_ackrx_now_l} -gt ${expect_ackrx} ]; then
-+		printf " WARN: ACKRX: expect %d, got %d (probably retransmissions)" \
- 			"${expect_ackrx}" "${stat_ackrx_now_l}"
- 	fi
- =
+Florian Westphal (8):
+  mptcp: move pm netlink work into pm_netlink
+  mptcp: split __mptcp_close_ssk helper
+  mptcp: schedule worker when subflow is closed
+  mptcp: move subflow close loop after sk close check
+  mptcp: pass subflow socket to a few helpers
+  mptcp: avoid lock_fast usage in accept path
+  genetlink: add CAP_NET_ADMIN test for multicast bind
+  mptcp: add netlink event support
 
+ include/net/genetlink.h    |   1 +
+ include/uapi/linux/mptcp.h |  74 +++++++++
+ net/mptcp/options.c        |   2 +-
+ net/mptcp/pm.c             |  24 ++-
+ net/mptcp/pm_netlink.c     | 310 ++++++++++++++++++++++++++++++++++++-
+ net/mptcp/protocol.c       |  72 ++++-----
+ net/mptcp/protocol.h       |  20 +--
+ net/mptcp/subflow.c        |  27 +++-
+ net/netlink/genetlink.c    |  32 ++++
+ 9 files changed, 491 insertions(+), 71 deletions(-)
+
+
+base-commit: c3ff3b02e99c691197a05556ef45f5c3dd2ed3d6
 -- =
 
 2.30.1
 
---===============8840811711921493816==--
+--===============0861931693460132548==--
