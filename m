@@ -1,108 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============1551150399500642706=="
+Content-Type: multipart/mixed; boundary="===============6218213500360952449=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: patchwork-bot+netdevbpf at kernel.org
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 7/8] genetlink: add CAP_NET_ADMIN test for
- multicast bind
-Date: Fri, 12 Feb 2021 16:00:00 -0800
-Message-ID: <20210213000001.379332-8-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20210213000001.379332-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net-next 0/4] mptcp: Selftest enhancement and fixes
+Date: Sat, 13 Feb 2021 00:40:08 +0000
+Message-ID: <
+ <161317680873.1512.11792332135664461831.git-patchwork-notify@kernel.org>>
+In-Reply-To: 20210212232030.377261-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7791
+X-UID: 7792
 
---===============1551150399500642706==
+--===============6218213500360952449==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Florian Westphal <fw(a)strlen.de>
+Hello:
 
-genetlink sets NL_CFG_F_NONROOT_RECV for its netlink socket so anyone can
-subscribe to multicast messages.
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-rtnetlink doesn't allow this unconditionally,  rtnetlink_bind() restricts
-bind requests to CAP_NET_ADMIN for a few groups.
+On Fri, 12 Feb 2021 15:20:26 -0800 you wrote:
+> This is a collection of selftest updates from the MPTCP tree.
+> =
 
-This allows to set GENL_UNS_ADMIN_PERM flag on genl mcast groups to
-mandate CAP_NET_ADMIN.
+> Patch 1 uses additional 'ss' command line parameters and 'nstat' to
+> improve output when certain MPTCP tests fail.
+> =
 
-This will be used by the upcoming mptcp netlink event facility which
-exposes the token (mptcp connection identifier) to userspace.
+> Patches 2 & 3 fix a copy/paste error and some output formatting.
+> =
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- include/net/genetlink.h |  1 +
- net/netlink/genetlink.c | 32 ++++++++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+> [...]
 
-diff --git a/include/net/genetlink.h b/include/net/genetlink.h
-index e55ec1597ce7..7cb3fa8310ed 100644
---- a/include/net/genetlink.h
-+++ b/include/net/genetlink.h
-@@ -14,6 +14,7 @@
-  */
- struct genl_multicast_group {
- 	char			name[GENL_NAMSIZ];
-+	u8			flags;
- };
- =
+Here is the summary with links:
+  - [net-next,1/4] selftests: mptcp: dump more info on errors
+    https://git.kernel.org/netdev/net-next/c/767389c8dd55
+  - [net-next,2/4] selftests: mptcp: fix ACKRX debug message
+    https://git.kernel.org/netdev/net-next/c/f384221a3817
+  - [net-next,3/4] selftests: mptcp: display warnings on one line
+    https://git.kernel.org/netdev/net-next/c/45759a871593
+  - [net-next,4/4] selftests: mptcp: fail if not enough SYN/3rd ACK
+    https://git.kernel.org/netdev/net-next/c/5f88117f2565
 
- struct genl_ops;
-diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-index c992424e4d63..2d6fdf40df66 100644
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -1360,11 +1360,43 @@ static struct genl_family genl_ctrl __ro_after_init=
- =3D {
- 	.netnsok =3D true,
- };
- =
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-+static int genl_bind(struct net *net, int group)
-+{
-+	const struct genl_family *family;
-+	unsigned int id;
-+	int ret =3D 0;
-+
-+	genl_lock_all();
-+
-+	idr_for_each_entry(&genl_fam_idr, family, id) {
-+		const struct genl_multicast_group *grp;
-+		int i;
-+
-+		if (family->n_mcgrps =3D=3D 0)
-+			continue;
-+
-+		i =3D group - family->mcgrp_offset;
-+		if (i < 0 || i >=3D family->n_mcgrps)
-+			continue;
-+
-+		grp =3D &family->mcgrps[i];
-+		if ((grp->flags & GENL_UNS_ADMIN_PERM) &&
-+		    !ns_capable(net->user_ns, CAP_NET_ADMIN))
-+			ret =3D -EPERM;
-+
-+		break;
-+	}
-+
-+	genl_unlock_all();
-+	return ret;
-+}
-+
- static int __net_init genl_pernet_init(struct net *net)
- {
- 	struct netlink_kernel_cfg cfg =3D {
- 		.input		=3D genl_rcv,
- 		.flags		=3D NL_CFG_F_NONROOT_RECV,
-+		.bind		=3D genl_bind,
- 	};
- =
 
- 	/* we'll bump the group number right afterwards */
--- =
-
-2.30.1
-
---===============1551150399500642706==--
+--===============6218213500360952449==--
