@@ -1,78 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============2919957913672191443=="
+Content-Type: multipart/mixed; boundary="===============5756884171521662783=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next] mptcp: drop unused subflow in
- mptcp_pm_subflow_established
-Date: Sat, 13 Feb 2021 10:48:30 +0800
-Message-ID: <0c4e5341b9f9e8bbd38c3b882284f58babf786b8.1613183930.git.geliangtang@gmail.com>
+Subject: [MPTCP] Re: [PATCH net-next 0/8] mptcp: Add genl events for
+ connection info
+Date: Fri, 12 Feb 2021 20:46:30 -0800
+Message-ID: <b89e4be5-cac-af1d-1c1-2ce92fa55e10@linux.intel.com>
+In-Reply-To: 20210213000001.379332-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7795
+X-UID: 7796
 
---===============2919957913672191443==
+--===============5756884171521662783==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch drops the unused parameter subflow in
-mptcp_pm_subflow_established().
+On Fri, 12 Feb 2021, Mat Martineau wrote:
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/options.c  | 2 +-
- net/mptcp/pm.c       | 3 +--
- net/mptcp/protocol.h | 3 +--
- 3 files changed, 3 insertions(+), 5 deletions(-)
+> This series from the MPTCP tree adds genl multicast events that are
+> important for implementing a userspace path manager. In MPTCP, a path
+> manager is responsible for adding or removing additional subflows on
+> each MPTCP connection. The in-kernel path manager (already part of the
+> kernel) is a better fit for many server use cases, but the additional
+> flexibility of userspace path managers is often useful for client
+> devices.
+>
+> Patches 1, 2, 4, 5, and 6 do some refactoring to streamline the netlink
+> event implementation in the final patch.
+>
+> Patch 3 improves the timeliness of subflow destruction to ensure the
+> 'subflow closed' event will be sent soon enough.
+>
+> Patch 7 allows use of the GENL_UNS_ADMIN_PERM flag on genl mcast groups
+> to mandate CAP_NET_ADMIN, which is important to protect token information
+> in the MPTCP events. This is a genetlink change.
+>
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ea4cacff0f5f..95d67e2eefeb 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -877,7 +877,7 @@ static bool check_fully_established(struct mptcp_sock *=
-msk, struct sock *ssk,
- 	subflow->pm_notified =3D 1;
- 	if (subflow->mp_join) {
- 		clear_3rdack_retransmission(ssk);
--		mptcp_pm_subflow_established(msk, subflow);
-+		mptcp_pm_subflow_established(msk);
- 	} else {
- 		mptcp_pm_fully_established(msk, ssk, GFP_ATOMIC);
- 	}
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 880c9cffe707..a15ce9704fda 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -152,8 +152,7 @@ void mptcp_pm_connection_closed(struct mptcp_sock *msk)
- 	pr_debug("msk=3D%p", msk);
- }
- =
+David -
 
--void mptcp_pm_subflow_established(struct mptcp_sock *msk,
--				  struct mptcp_subflow_context *subflow)
-+void mptcp_pm_subflow_established(struct mptcp_sock *msk)
- {
- 	struct mptcp_pm_data *pm =3D &msk->pm;
- =
+I noticed that this series got merged to net-next and shows as "Accepted" =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 593085610971..d24e2829b0cb 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -642,8 +642,7 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, co=
-nst struct sock *ssk, int
- void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock =
-*ssk, gfp_t gfp);
- bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
- void mptcp_pm_connection_closed(struct mptcp_sock *msk);
--void mptcp_pm_subflow_established(struct mptcp_sock *msk,
--				  struct mptcp_subflow_context *subflow);
-+void mptcp_pm_subflow_established(struct mptcp_sock *msk);
- void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8 id);
- void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- 				const struct mptcp_addr_info *addr);
--- =
+in patchwork:
 
-2.29.2
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/=
+?id=3D0a2f6b32cc45e3918321779fe90c28f1ed27d2af
 
---===============2919957913672191443==--
+
+However, somehow patch 7 did not propagate through the netdev list and =
+
+does not show up in patchwork or the merged series!
+
+
+It did get archived on the cc'd mptcp list =
+
+(https://lists.01.org/hyperkitty/list/mptcp(a)lists.01.org/message/KBY6UIFE=
+TMXCAOHNXQLYWKXNCHSGJ7AG/) =
+
+so hopefully your directly-addressed copy also arrived. The missing patch =
+
+won't cause a build error but does lead to a token getting exposed to =
+
+non-admin users.
+
+I will re-send it with an extra note about where it originally fit in.
+
+
+Mat
+
+
+> Patch 8 adds the MPTCP netlink events.
+>
+>
+> Florian Westphal (8):
+>  mptcp: move pm netlink work into pm_netlink
+>  mptcp: split __mptcp_close_ssk helper
+>  mptcp: schedule worker when subflow is closed
+>  mptcp: move subflow close loop after sk close check
+>  mptcp: pass subflow socket to a few helpers
+>  mptcp: avoid lock_fast usage in accept path
+>  genetlink: add CAP_NET_ADMIN test for multicast bind
+>  mptcp: add netlink event support
+>
+> include/net/genetlink.h    |   1 +
+> include/uapi/linux/mptcp.h |  74 +++++++++
+> net/mptcp/options.c        |   2 +-
+> net/mptcp/pm.c             |  24 ++-
+> net/mptcp/pm_netlink.c     | 310 ++++++++++++++++++++++++++++++++++++-
+> net/mptcp/protocol.c       |  72 ++++-----
+> net/mptcp/protocol.h       |  20 +--
+> net/mptcp/subflow.c        |  27 +++-
+> net/netlink/genetlink.c    |  32 ++++
+> 9 files changed, 491 insertions(+), 71 deletions(-)
+>
+>
+> base-commit: c3ff3b02e99c691197a05556ef45f5c3dd2ed3d6
+> -- =
+
+> 2.30.1
+>
+>
+
+--
+Mat Martineau
+Intel
+--===============5756884171521662783==--
