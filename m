@@ -1,52 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============6218213500360952449=="
+Content-Type: multipart/mixed; boundary="===============4836955321210477077=="
 MIME-Version: 1.0
-From: patchwork-bot+netdevbpf at kernel.org
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/4] mptcp: Selftest enhancement and fixes
-Date: Sat, 13 Feb 2021 00:40:08 +0000
-Message-ID: <
- <161317680873.1512.11792332135664461831.git-patchwork-notify@kernel.org>>
-In-Reply-To: 20210212232030.377261-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH net-next] mptcp: add local addr info in mptcp_info
+Date: Fri, 12 Feb 2021 16:52:02 -0800
+Message-ID: <20210213005202.381848-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7792
+X-UID: 7793
 
---===============6218213500360952449==
+--===============4836955321210477077==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello:
+From: Geliang Tang <geliangtang(a)gmail.com>
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+Add mptcpi_local_addr_used and mptcpi_local_addr_max in struct mptcp_info.
 
-On Fri, 12 Feb 2021 15:20:26 -0800 you wrote:
-> This is a collection of selftest updates from the MPTCP tree.
-> =
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ include/uapi/linux/mptcp.h | 2 ++
+ net/mptcp/mptcp_diag.c     | 2 ++
+ net/mptcp/pm_netlink.c     | 3 ++-
+ net/mptcp/protocol.h       | 1 +
+ 4 files changed, 7 insertions(+), 1 deletion(-)
 
-> Patch 1 uses additional 'ss' command line parameters and 'nstat' to
-> improve output when certain MPTCP tests fail.
-> =
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 3674a451a18c..f54a082563ec 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -102,5 +102,7 @@ struct mptcp_info {
+ 	__u64	mptcpi_write_seq;
+ 	__u64	mptcpi_snd_una;
+ 	__u64	mptcpi_rcv_nxt;
++	__u8	mptcpi_local_addr_used;
++	__u8	mptcpi_local_addr_max;
+ };
+ =
 
-> Patches 2 & 3 fix a copy/paste error and some output formatting.
-> =
+diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
+index 00ed742f48a4..f16d9b5ee978 100644
+--- a/net/mptcp/mptcp_diag.c
++++ b/net/mptcp/mptcp_diag.c
+@@ -128,11 +128,13 @@ static void mptcp_diag_get_info(struct sock *sk, stru=
+ct inet_diag_msg *r,
+ 	info->mptcpi_subflows =3D READ_ONCE(msk->pm.subflows);
+ 	info->mptcpi_add_addr_signal =3D READ_ONCE(msk->pm.add_addr_signaled);
+ 	info->mptcpi_add_addr_accepted =3D READ_ONCE(msk->pm.add_addr_accepted);
++	info->mptcpi_local_addr_used =3D READ_ONCE(msk->pm.local_addr_used);
+ 	info->mptcpi_subflows_max =3D mptcp_pm_get_subflows_max(msk);
+ 	val =3D mptcp_pm_get_add_addr_signal_max(msk);
+ 	info->mptcpi_add_addr_signal_max =3D val;
+ 	val =3D mptcp_pm_get_add_addr_accept_max(msk);
+ 	info->mptcpi_add_addr_accepted_max =3D val;
++	info->mptcpi_local_addr_max =3D mptcp_pm_get_local_addr_max(msk);
+ 	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
+ 		flags |=3D MPTCP_INFO_FLAG_FALLBACK;
+ 	if (READ_ONCE(msk->can_ack))
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 23780a13b934..99fc51fb2872 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -226,13 +226,14 @@ unsigned int mptcp_pm_get_subflows_max(struct mptcp_s=
+ock *msk)
+ }
+ EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
+ =
 
-> [...]
+-static unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
++unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
+ {
+ 	struct pm_nl_pernet *pernet;
+ =
 
-Here is the summary with links:
-  - [net-next,1/4] selftests: mptcp: dump more info on errors
-    https://git.kernel.org/netdev/net-next/c/767389c8dd55
-  - [net-next,2/4] selftests: mptcp: fix ACKRX debug message
-    https://git.kernel.org/netdev/net-next/c/f384221a3817
-  - [net-next,3/4] selftests: mptcp: display warnings on one line
-    https://git.kernel.org/netdev/net-next/c/45759a871593
-  - [net-next,4/4] selftests: mptcp: fail if not enough SYN/3rd ACK
-    https://git.kernel.org/netdev/net-next/c/5f88117f2565
+ 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+ 	return READ_ONCE(pernet->local_addr_max);
+ }
++EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
+ =
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+ static void check_work_pending(struct mptcp_sock *msk)
+ {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 73a923d02aad..08562b19ddc3 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -723,6 +723,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
+ruct sock_common *skc);
+ unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
+ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
+ unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
++unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
+ =
 
+ static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
+ {
 
---===============6218213500360952449==--
+base-commit: c3ff3b02e99c691197a05556ef45f5c3dd2ed3d6
+-- =
+
+2.30.1
+
+--===============4836955321210477077==--
