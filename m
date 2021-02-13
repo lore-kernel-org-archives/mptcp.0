@@ -1,106 +1,167 @@
-Content-Type: multipart/mixed; boundary="===============4836955321210477077=="
+Content-Type: multipart/mixed; boundary="===============4182324108589419998=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next] mptcp: add local addr info in mptcp_info
-Date: Fri, 12 Feb 2021 16:52:02 -0800
-Message-ID: <20210213005202.381848-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix DATA_FIN generation on early
+ shutdown.
+Date: Fri, 12 Feb 2021 17:06:55 -0800
+Message-ID: <6525cc44-63f-655b-453a-2c8d8219f0bf@linux.intel.com>
+In-Reply-To: 23fa447e02e5b0a342408a2065d15281c223e32b.1613081583.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7793
+X-UID: 7794
 
---===============4836955321210477077==
+--===============4182324108589419998==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliangtang(a)gmail.com>
 
-Add mptcpi_local_addr_used and mptcpi_local_addr_max in struct mptcp_info.
+On Thu, 11 Feb 2021, Paolo Abeni wrote:
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- include/uapi/linux/mptcp.h | 2 ++
- net/mptcp/mptcp_diag.c     | 2 ++
- net/mptcp/pm_netlink.c     | 3 ++-
- net/mptcp/protocol.h       | 1 +
- 4 files changed, 7 insertions(+), 1 deletion(-)
+> If the msk is closed before sending or receiving any data,
+> no DATA_FIN is generated, instead an MPC ack packet is
+> crafted out.
+>
+> In the above scenario, the MPTCP protocol create and send a
+> pure ack and such packets matches also the criteria for an
+> MPC ack and the protocol tries first to insert MPC options,
+> leading the described error.
+>
+> This change address the issue skipping MPC option for DATA_FIN
+> packets or if the subflow is not established.
+>
+> To avoid doing multiple times the same test, fetch the data_fin
+> flag in a bool variable and pass it to both the interested
+> helpers.
+>
+> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data pac=
+kets")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> The scenario is tested by a specific pktdrill tested,
+> already pushed
+> ---
+> net/mptcp/options.c | 23 ++++++++++++++---------
+> 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 3674a451a18c..f54a082563ec 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -102,5 +102,7 @@ struct mptcp_info {
- 	__u64	mptcpi_write_seq;
- 	__u64	mptcpi_snd_una;
- 	__u64	mptcpi_rcv_nxt;
-+	__u8	mptcpi_local_addr_used;
-+	__u8	mptcpi_local_addr_max;
- };
- =
+Hi Paolo -
 
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index 00ed742f48a4..f16d9b5ee978 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -128,11 +128,13 @@ static void mptcp_diag_get_info(struct sock *sk, stru=
-ct inet_diag_msg *r,
- 	info->mptcpi_subflows =3D READ_ONCE(msk->pm.subflows);
- 	info->mptcpi_add_addr_signal =3D READ_ONCE(msk->pm.add_addr_signaled);
- 	info->mptcpi_add_addr_accepted =3D READ_ONCE(msk->pm.add_addr_accepted);
-+	info->mptcpi_local_addr_used =3D READ_ONCE(msk->pm.local_addr_used);
- 	info->mptcpi_subflows_max =3D mptcp_pm_get_subflows_max(msk);
- 	val =3D mptcp_pm_get_add_addr_signal_max(msk);
- 	info->mptcpi_add_addr_signal_max =3D val;
- 	val =3D mptcp_pm_get_add_addr_accept_max(msk);
- 	info->mptcpi_add_addr_accepted_max =3D val;
-+	info->mptcpi_local_addr_max =3D mptcp_pm_get_local_addr_max(msk);
- 	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
- 		flags |=3D MPTCP_INFO_FLAG_FALLBACK;
- 	if (READ_ONCE(msk->can_ack))
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 23780a13b934..99fc51fb2872 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -226,13 +226,14 @@ unsigned int mptcp_pm_get_subflows_max(struct mptcp_s=
-ock *msk)
- }
- EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
- =
+Change looks good to me:
 
--static unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
-+unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
- {
- 	struct pm_nl_pernet *pernet;
- =
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
- 	pernet =3D net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
- 	return READ_ONCE(pernet->local_addr_max);
- }
-+EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
- =
+Were you intending this for the export branch or the -net tree? (Unsure =
 
- static void check_work_pending(struct mptcp_sock *msk)
- {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 73a923d02aad..08562b19ddc3 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -723,6 +723,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, st=
-ruct sock_common *skc);
- unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
-+unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
- =
+due to the [PATCH mptcp-net] prefix)
 
- static inline struct mptcp_ext *mptcp_get_ext(struct sk_buff *skb)
- {
 
-base-commit: c3ff3b02e99c691197a05556ef45f5c3dd2ed3d6
--- =
+Thanks,
 
-2.30.1
+Mat
 
---===============4836955321210477077==--
+
+
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index b63574d6b812e..444a38681e93e 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -411,6 +411,7 @@ static void clear_3rdack_retransmission(struct sock *=
+sk)
+> }
+>
+> static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff =
+*skb,
+> +					 bool snd_data_fin_enable,
+> 					 unsigned int *size,
+> 					 unsigned int remaining,
+> 					 struct mptcp_out_options *opts)
+> @@ -428,9 +429,10 @@ static bool mptcp_established_options_mp(struct sock=
+ *sk, struct sk_buff *skb,
+> 	if (!skb)
+> 		return false;
+>
+> -	/* MPC/MPJ needed only on 3rd ack packet */
+> -	if (subflow->fully_established ||
+> -	    subflow->snd_isn !=3D TCP_SKB_CB(skb)->seq)
+> +	/* MPC/MPJ needed only on 3rd ack packet, DATA_FIN and TCP shutdown tak=
+e precedence */
+> +	if (subflow->fully_established || snd_data_fin_enable ||
+> +	    subflow->snd_isn !=3D TCP_SKB_CB(skb)->seq ||
+> +	    sk->sk_state !=3D TCP_ESTABLISHED)
+> 		return false;
+>
+> 	if (subflow->mp_capable) {
+> @@ -502,20 +504,20 @@ static void mptcp_write_data_fin(struct mptcp_subfl=
+ow_context *subflow,
+> }
+>
+> static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff=
+ *skb,
+> +					  bool snd_data_fin_enable,
+> 					  unsigned int *size,
+> 					  unsigned int remaining,
+> 					  struct mptcp_out_options *opts)
+> {
+> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> -	u64 snd_data_fin_enable, ack_seq;
+> 	unsigned int dss_size =3D 0;
+> 	struct mptcp_ext *mpext;
+> 	unsigned int ack_size;
+> 	bool ret =3D false;
+> +	u64 ack_seq;
+>
+> 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
+> -	snd_data_fin_enable =3D mptcp_data_fin_enabled(msk);
+>
+> 	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
+> 		unsigned int map_size;
+> @@ -717,12 +719,15 @@ bool mptcp_established_options(struct sock *sk, str=
+uct sk_buff *skb,
+> 			       unsigned int *size, unsigned int remaining,
+> 			       struct mptcp_out_options *opts)
+> {
+> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> +	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+> 	unsigned int opt_size =3D 0;
+> +	bool snd_data_fin;
+> 	bool ret =3D false;
+>
+> 	opts->suboptions =3D 0;
+>
+> -	if (unlikely(mptcp_check_fallback(sk)))
+> +	if (unlikely(__mptcp_check_fallback(msk)))
+> 		return false;
+>
+> 	/* prevent adding of any MPTCP related options on reset packet
+> @@ -731,10 +736,10 @@ bool mptcp_established_options(struct sock *sk, str=
+uct sk_buff *skb,
+> 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST))
+> 		return false;
+>
+> -	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining, opts))
+> +	snd_data_fin =3D mptcp_data_fin_enabled(msk);
+> +	if (mptcp_established_options_mp(sk, skb, snd_data_fin, &opt_size, rema=
+ining, opts))
+> 		ret =3D true;
+> -	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
+> -					       opts))
+> +	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, &opt_size=
+, remaining, opts))
+> 		ret =3D true;
+>
+> 	/* we reserved enough space for the above options, and exceeding the
+> -- =
+
+> 2.26.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
+
+--
+Mat Martineau
+Intel
+--===============4182324108589419998==--
