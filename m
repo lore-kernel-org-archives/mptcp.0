@@ -1,61 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============1812992527809908142=="
+Content-Type: multipart/mixed; boundary="===============8116345027885176779=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-net] mptcp: fix DATA_FIN processing for orphaned
- sockets.
-Date: Mon, 15 Feb 2021 15:14:18 +0100
-Message-ID: <723de05edd19a88776331f585deb6ce72d959eca.1613398456.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix DATA_FIN generation on early
+ shutdown.
+Date: Mon, 15 Feb 2021 16:29:06 +0100
+Message-ID: <d56e9a35-952c-8b2b-7665-c3a56fcd7147@tessares.net>
+In-Reply-To: 23fa447e02e5b0a342408a2065d15281c223e32b.1613081583.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7806
+X-UID: 7807
 
---===============1812992527809908142==
+--===============8116345027885176779==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Currently we move orphaned msk socket directly from FIN_WAIT2
-state to close, with the rationale that incoming additional
-data could be just dropped by the TCP stack/TW sockets.
+Hi Paolo, Mat,
 
-Anyhow we miss sending MPTCP-level ack on incoming DATA_FIN,
-and that may hang the peers.
+On 11/02/2021 23:13, Paolo Abeni wrote:
+> If the msk is closed before sending or receiving any data,
+> no DATA_FIN is generated, instead an MPC ack packet is
+> crafted out.
+> =
 
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
-I hope nobody is keeping track of nr of follow-ups x commit,
-because the referenced one could score a world record :(((
----
- net/mptcp/protocol.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+> In the above scenario, the MPTCP protocol create and send a
+> pure ack and such packets matches also the criteria for an
+> MPC ack and the protocol tries first to insert MPC options,
+> leading the described error.
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index ee5a2981df6da..f15c79ff6a53c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2297,13 +2297,12 @@ static void mptcp_worker(struct work_struct *work)
- 	__mptcp_check_send_data_fin(sk);
- 	mptcp_check_data_fin(sk);
- =
+> This change address the issue skipping MPC option for DATA_FIN
+> packets or if the subflow is not established.
+> =
 
--	/* if the msk data is completely acked, or the socket timedout,
--	 * there is no point in keeping around an orphaned sk
-+	/* There is no point in keeping aroud an orphaned sk timedout or closed,
-+	 * but we need the msk around to reply to incoming DATA_FIN, even if
-+	 * orphaned and in FIN_WAIT2 state
- 	 */
- 	if (sock_flag(sk, SOCK_DEAD) &&
--	    (mptcp_check_close_timeout(sk) ||
--	    (state !=3D sk->sk_state &&
--	    ((1 << inet_sk_state_load(sk)) & (TCPF_CLOSE | TCPF_FIN_WAIT2))))) {
-+	    (mptcp_check_close_timeout(sk) || sk->sk_state =3D=3D TCP_CLOSE)) {
- 		inet_sk_state_store(sk, TCP_CLOSE);
- 		__mptcp_destroy_sock(sk);
- 		goto unlock;
+> To avoid doing multiple times the same test, fetch the data_fin
+> flag in a bool variable and pass it to both the interested
+> helpers.
+> =
+
+> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data pac=
+kets")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+
+Thank you for the patch and the review!
+
+> ---
+> The scenario is tested by a specific pktdrill tested,
+> already pushed
+
+Thank you for that! (and for having use "mptcp-net" :) even if we can =
+
+change that if it is not OK).
+I just applied your patch at the bottom of the tree, after a patch from =
+
+Florian (mptcp: reset last_snd on subflow close). With Mat's RvB tag and =
+
+without a dot at the end of the title:
+
+- b7ee76d557c4: mptcp: fix DATA_FIN generation on early shutdown
+- Results: 655ef2e493c8..82aaf8587e26
+
+Tests + export are in progress!
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============1812992527809908142==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============8116345027885176779==--
