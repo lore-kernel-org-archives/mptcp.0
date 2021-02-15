@@ -1,136 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============7688347765865550254=="
+Content-Type: multipart/mixed; boundary="===============7439419470611050498=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp] mptcp: provide subflow aware release
- function
-Date: Mon, 15 Feb 2021 16:44:40 +0100
-Message-ID: <20d2c80ba4112c7b26ba117bb984457443e88728.camel@redhat.com>
-In-Reply-To: 20210215153623.7406-1-fw@strlen.de
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: add rm_list in
+ mptcp_out_options"
+Date: Tue, 16 Feb 2021 00:04:26 +0800
+Message-ID: <cb5c8d16d873790895608fd0789cf6adbcaeb3d1.1613404578.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7809
+X-UID: 7810
 
---===============7688347765865550254==
+--===============7439419470611050498==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2021-02-15 at 16:36 +0100, Florian Westphal wrote:
-> mptcp re-used inet(6)_release, so the subflow sockets are ignored.
-> Need to invoke ip(v6)_mc_drop_socket function to ensure mcast join
-> resources get free'd.
-> =
+This patch fixed the following smatch warnings:
+net/mptcp/options.c:687 mptcp_established_options_rm_addr() error: uninitia=
+lized symbol 'align'.
 
-> Fixes: 717e79c867ca5 ("mptcp: Add setsockopt()/getsockopt() socket operat=
-ions")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/110
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
-> ---
->  net/mptcp/protocol.c | 55 ++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 53 insertions(+), 2 deletions(-)
-> =
+Reported-by: kernel test robot <lkp(a)intel.com>
+Reported-by: Dan Carpenter <dan.carpenter(a)oracle.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ v2:
+ - use roundup in mptcp_rm_addr_len
+---
+ net/mptcp/options.c  | 14 ++++++--------
+ net/mptcp/protocol.h |  8 ++++++++
+ 2 files changed, 14 insertions(+), 8 deletions(-)
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 19faa43be2f8..d811f60a867b 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -11,6 +11,7 @@
->  #include <linux/netdevice.h>
->  #include <linux/sched/signal.h>
->  #include <linux/atomic.h>
-> +#include <linux/igmp.h>
->  #include <net/sock.h>
->  #include <net/inet_common.h>
->  #include <net/inet_hashtables.h>
-> @@ -19,6 +20,7 @@
->  #include <net/tcp_states.h>
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  #include <net/transp_v6.h>
-> +#include <net/addrconf.h>
->  #endif
->  #include <net/mptcp.h>
->  #include <net/xfrm.h>
-> @@ -3388,10 +3390,34 @@ static __poll_t mptcp_poll(struct file *file, str=
-uct socket *sock,
->  	return mask;
->  }
->  =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index e41410475f0e..73c712a5c6e6 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -673,21 +673,19 @@ static bool mptcp_established_options_rm_addr(struct =
+sock *sk,
+ 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+ 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
+ 	struct mptcp_rm_list rm_list;
+-	u8 i, align;
++	int i, len;
+ =
 
-> +static int mptcp_release(struct socket *sock)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct sock *sk =3D sock->sk;
-> +	struct mptcp_sock *msk;
-> +
-> +	if (!sk)
-> +		return 0;
-> +
-> +	lock_sock(sk);
-> +
-> +	msk =3D mptcp_sk(sk);
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> +
-> +		ip_mc_drop_socket(ssk);
-> +	}
-> +
-> +	release_sock(sk);
-> +
-> +	return inet_release(sock);
-> +}
-> +
->  static const struct proto_ops mptcp_stream_ops =3D {
->  	.family		   =3D PF_INET,
->  	.owner		   =3D THIS_MODULE,
-> -	.release	   =3D inet_release,
-> +	.release	   =3D mptcp_release,
->  	.bind		   =3D mptcp_bind,
->  	.connect	   =3D mptcp_stream_connect,
->  	.socketpair	   =3D sock_no_socketpair,
-> @@ -3489,10 +3515,35 @@ void __init mptcp_proto_init(void)
->  }
->  =
+ 	if (!mptcp_pm_should_rm_signal(msk) ||
+ 	    !(mptcp_pm_rm_addr_signal(msk, remaining, &rm_list)))
+ 		return false;
+ =
 
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> +static int mptcp6_release(struct socket *sock)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_sock *msk;
-> +	struct sock *sk =3D sock->sk;
-> +
-> +	if (!sk)
-> +		return 0;
-> +
-> +	lock_sock(sk);
-> +
-> +	msk =3D mptcp_sk(sk);
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
-> +
-> +		ip_mc_drop_socket(ssk);
-> +		ipv6_sock_mc_close(ssk);
-> +		ipv6_sock_ac_close(ssk);
-> +	}
-> +
-> +	release_sock(sk);
-> +	return inet6_release(sock);
-> +}
-> +
->  static const struct proto_ops mptcp_v6_stream_ops =3D {
->  	.family		   =3D PF_INET6,
->  	.owner		   =3D THIS_MODULE,
-> -	.release	   =3D inet6_release,
-> +	.release	   =3D mptcp6_release,
->  	.bind		   =3D mptcp_bind,
->  	.connect	   =3D mptcp_stream_connect,
->  	.socketpair	   =3D sock_no_socketpair,
+-	if (rm_list.nr > 1)
+-		align =3D 5;
+-	if (rm_list.nr > 5)
+-		align =3D 9;
+-
+-	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE + align)
++	len =3D mptcp_rm_addr_len(rm_list);
++	if (len < 0)
++		return false;
++	if (remaining < len)
+ 		return false;
+ =
 
+-	*size =3D TCPOLEN_MPTCP_RM_ADDR_BASE + align;
++	*size =3D len;
+ 	opts->suboptions |=3D OPTION_MPTCP_RM_ADDR;
+ 	opts->rm_list =3D rm_list;
+ =
 
-Nice, LGTM. Thanks Florian!
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index dd6bc475f848..3f42b6f55f02 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -708,6 +708,14 @@ static inline unsigned int mptcp_add_addr_len(int fami=
+ly, bool echo, bool port)
+ 	return len;
+ }
+ =
 
-/P
++static inline int mptcp_rm_addr_len(struct mptcp_rm_list rm_list)
++{
++	if (rm_list.nr =3D=3D 0 || rm_list.nr >=3D MPTCP_RM_IDS_MAX)
++		return -EINVAL;
++
++	return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list.nr - 1, 4) + 1;
++}
++
+ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
+ 			      struct mptcp_addr_info *saddr, bool *echo, bool *port);
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
+g,
+-- =
 
---===============7688347765865550254==--
+2.29.2
+
+--===============7439419470611050498==--
