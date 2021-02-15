@@ -1,65 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============7029048794713854100=="
+Content-Type: multipart/mixed; boundary="===============0843256083949206298=="
 MIME-Version: 1.0
-From: David Miller <davem at davemloft.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net-next 0/8] mptcp: Add genl events for
- connection info
-Date: Sat, 13 Feb 2021 14:23:26 -0800
-Message-ID: <20210213.142326.2016470334339829024.davem@davemloft.net>
-In-Reply-To: b89e4be5-cac-af1d-1c1-2ce92fa55e10@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix DATA_FIN generation on early
+ shutdown.
+Date: Mon, 15 Feb 2021 10:44:39 +0100
+Message-ID: <f90087d8e873c04b5da081d7a44b180e2a7e2294.camel@redhat.com>
+In-Reply-To: 6525cc44-63f-655b-453a-2c8d8219f0bf@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7798
+X-UID: 7802
 
---===============7029048794713854100==
+--===============0843256083949206298==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Date: Fri, 12 Feb 2021 20:46:30 -0800 (PST)
-
-> On Fri, 12 Feb 2021, Mat Martineau wrote:
+On Fri, 2021-02-12 at 17:06 -0800, Mat Martineau wrote:
+> On Thu, 11 Feb 2021, Paolo Abeni wrote:
 > =
 
->> This series from the MPTCP tree adds genl multicast events that are
->> important for implementing a userspace path manager. In MPTCP, a path
->> manager is responsible for adding or removing additional subflows on
->> each MPTCP connection. The in-kernel path manager (already part of the
->> kernel) is a better fit for many server use cases, but the additional
->> flexibility of userspace path managers is often useful for client
->> devices.
->>
->> Patches 1, 2, 4, 5, and 6 do some refactoring to streamline the
->> netlink
->> event implementation in the final patch.
->>
->> Patch 3 improves the timeliness of subflow destruction to ensure the
->> 'subflow closed' event will be sent soon enough.
->>
->> Patch 7 allows use of the GENL_UNS_ADMIN_PERM flag on genl mcast
->> groups
->> to mandate CAP_NET_ADMIN, which is important to protect token
->> information
->> in the MPTCP events. This is a genetlink change.
->>
+> > If the msk is closed before sending or receiving any data,
+> > no DATA_FIN is generated, instead an MPC ack packet is
+> > crafted out.
+> > =
+
+> > In the above scenario, the MPTCP protocol create and send a
+> > pure ack and such packets matches also the criteria for an
+> > MPC ack and the protocol tries first to insert MPC options,
+> > leading the described error.
+> > =
+
+> > This change address the issue skipping MPC option for DATA_FIN
+> > packets or if the subflow is not established.
+> > =
+
+> > To avoid doing multiple times the same test, fetch the data_fin
+> > flag in a bool variable and pass it to both the interested
+> > helpers.
+> > =
+
+> > Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data p=
+ackets")
+> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> > ---
+> > The scenario is tested by a specific pktdrill tested,
+> > already pushed
+> > ---
+> > net/mptcp/options.c | 23 ++++++++++++++---------
+> > 1 file changed, 14 insertions(+), 9 deletions(-)
 > =
 
-> David -
+> Hi Paolo -
 > =
 
-> I noticed that this series got merged to net-next and shows as
-> "Accepted" in patchwork:
+> Change looks good to me:
 > =
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commi=
-t/?id=3D0a2f6b32cc45e3918321779fe90c28f1ed27d2af
-> =
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-> =
+Thanks! =
 
-> However, somehow patch 7 did not propagate through the netdev list and
-> does not show up in patchwork or the merged series!
 
-I did put patch 7 into the commit, so no worries...
---===============7029048794713854100==--
+> Were you intending this for the export branch or the -net tree? (Unsure =
+
+> due to the [PATCH mptcp-net] prefix)
+
+I'm trying to follow the rules listed here:
+
+https://annuel2.framapad.org/p/mptcp_upstreaming_20201126
+
+(starting from line 188). 'mptcp-net' is targeting the -net tree after
+being staged in the export branch.
+
+Cheers,
+
+Paolo
+
+
+--===============0843256083949206298==--
