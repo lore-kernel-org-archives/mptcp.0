@@ -1,72 +1,129 @@
-Content-Type: multipart/mixed; boundary="===============8116345027885176779=="
+Content-Type: multipart/mixed; boundary="===============5164006594235572718=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix DATA_FIN generation on early
- shutdown.
-Date: Mon, 15 Feb 2021 16:29:06 +0100
-Message-ID: <d56e9a35-952c-8b2b-7665-c3a56fcd7147@tessares.net>
-In-Reply-To: 23fa447e02e5b0a342408a2065d15281c223e32b.1613081583.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH mptcp] mptcp: provide subflow aware release function
+Date: Mon, 15 Feb 2021 16:36:23 +0100
+Message-ID: <20210215153623.7406-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 7807
+X-UID: 7808
 
---===============8116345027885176779==
+--===============5164006594235572718==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+mptcp re-used inet(6)_release, so the subflow sockets are ignored.
+Need to invoke ip(v6)_mc_drop_socket function to ensure mcast join
+resources get free'd.
 
-On 11/02/2021 23:13, Paolo Abeni wrote:
-> If the msk is closed before sending or receiving any data,
-> no DATA_FIN is generated, instead an MPC ack packet is
-> crafted out.
-> =
+Fixes: 717e79c867ca5 ("mptcp: Add setsockopt()/getsockopt() socket operatio=
+ns")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/110
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/protocol.c | 55 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 2 deletions(-)
 
-> In the above scenario, the MPTCP protocol create and send a
-> pure ack and such packets matches also the criteria for an
-> MPC ack and the protocol tries first to insert MPC options,
-> leading the described error.
-> =
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 19faa43be2f8..d811f60a867b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -11,6 +11,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/sched/signal.h>
+ #include <linux/atomic.h>
++#include <linux/igmp.h>
+ #include <net/sock.h>
+ #include <net/inet_common.h>
+ #include <net/inet_hashtables.h>
+@@ -19,6 +20,7 @@
+ #include <net/tcp_states.h>
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ #include <net/transp_v6.h>
++#include <net/addrconf.h>
+ #endif
+ #include <net/mptcp.h>
+ #include <net/xfrm.h>
+@@ -3388,10 +3390,34 @@ static __poll_t mptcp_poll(struct file *file, struc=
+t socket *sock,
+ 	return mask;
+ }
+ =
 
-> This change address the issue skipping MPC option for DATA_FIN
-> packets or if the subflow is not established.
-> =
++static int mptcp_release(struct socket *sock)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk =3D sock->sk;
++	struct mptcp_sock *msk;
++
++	if (!sk)
++		return 0;
++
++	lock_sock(sk);
++
++	msk =3D mptcp_sk(sk);
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++
++		ip_mc_drop_socket(ssk);
++	}
++
++	release_sock(sk);
++
++	return inet_release(sock);
++}
++
+ static const struct proto_ops mptcp_stream_ops =3D {
+ 	.family		   =3D PF_INET,
+ 	.owner		   =3D THIS_MODULE,
+-	.release	   =3D inet_release,
++	.release	   =3D mptcp_release,
+ 	.bind		   =3D mptcp_bind,
+ 	.connect	   =3D mptcp_stream_connect,
+ 	.socketpair	   =3D sock_no_socketpair,
+@@ -3489,10 +3515,35 @@ void __init mptcp_proto_init(void)
+ }
+ =
 
-> To avoid doing multiple times the same test, fetch the data_fin
-> flag in a bool variable and pass it to both the interested
-> helpers.
-> =
-
-> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data pac=
-kets")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-
-Thank you for the patch and the review!
-
-> ---
-> The scenario is tested by a specific pktdrill tested,
-> already pushed
-
-Thank you for that! (and for having use "mptcp-net" :) even if we can =
-
-change that if it is not OK).
-I just applied your patch at the bottom of the tree, after a patch from =
-
-Florian (mptcp: reset last_snd on subflow close). With Mat's RvB tag and =
-
-without a dot at the end of the title:
-
-- b7ee76d557c4: mptcp: fix DATA_FIN generation on early shutdown
-- Results: 655ef2e493c8..82aaf8587e26
-
-Tests + export are in progress!
-
-Cheers,
-Matt
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
++static int mptcp6_release(struct socket *sock)
++{
++	struct mptcp_subflow_context *subflow;
++	struct mptcp_sock *msk;
++	struct sock *sk =3D sock->sk;
++
++	if (!sk)
++		return 0;
++
++	lock_sock(sk);
++
++	msk =3D mptcp_sk(sk);
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++
++		ip_mc_drop_socket(ssk);
++		ipv6_sock_mc_close(ssk);
++		ipv6_sock_ac_close(ssk);
++	}
++
++	release_sock(sk);
++	return inet6_release(sock);
++}
++
+ static const struct proto_ops mptcp_v6_stream_ops =3D {
+ 	.family		   =3D PF_INET6,
+ 	.owner		   =3D THIS_MODULE,
+-	.release	   =3D inet6_release,
++	.release	   =3D mptcp6_release,
+ 	.bind		   =3D mptcp_bind,
+ 	.connect	   =3D mptcp_stream_connect,
+ 	.socketpair	   =3D sock_no_socketpair,
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============8116345027885176779==--
+2.26.2
+
+--===============5164006594235572718==--
