@@ -1,62 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============8257241349567016414=="
+Content-Type: multipart/mixed; boundary="===============1812992527809908142=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "mptcp: add rm_list_tx in
- mptcp_pm_data"
-Date: Mon, 15 Feb 2021 22:04:21 +0800
-Message-ID: <8557847ae1d94d4b4cb4067407253011925c46f7.1613397714.git.geliangtang@gmail.com>
-In-Reply-To: 63b2db13675a3030ae18229a63c5af926052b002.1613397693.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH mptcp-net] mptcp: fix DATA_FIN processing for orphaned
+ sockets.
+Date: Mon, 15 Feb 2021 15:14:18 +0100
+Message-ID: <723de05edd19a88776331f585deb6ce72d959eca.1613398456.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7805
+X-UID: 7806
 
---===============8257241349567016414==
+--===============1812992527809908142==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Fix the length of RM_ADDR suboption in mptcp_pm_rm_addr_signal.
+Currently we move orphaned msk socket directly from FIN_WAIT2
+state to close, with the rationale that incoming additional
+data could be just dropped by the TCP stack/TW sockets.
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Anyhow we miss sending MPTCP-level ack on incoming DATA_FIN,
+and that may hang the peers.
+
+Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 ---
- net/mptcp/pm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+I hope nobody is keeping track of nr of follow-ups x commit,
+because the referenced one could score a world record :(((
+---
+ net/mptcp/protocol.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 32f203f186a2..8e97f90cbdec 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -260,7 +260,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
-g,
- 			     struct mptcp_rm_list *rm_list)
- {
--	int ret =3D false;
-+	int ret =3D false, len;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ee5a2981df6da..f15c79ff6a53c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2297,13 +2297,12 @@ static void mptcp_worker(struct work_struct *work)
+ 	__mptcp_check_send_data_fin(sk);
+ 	mptcp_check_data_fin(sk);
  =
 
- 	spin_lock_bh(&msk->pm.lock);
- =
-
-@@ -268,7 +268,10 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
- 	if (!mptcp_pm_should_rm_signal(msk))
- 		goto out_unlock;
- =
-
--	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
-+	len =3D mptcp_rm_addr_len(msk->pm.rm_list_tx);
-+	if (len < 0)
-+		goto out_unlock;
-+	if (remaining < len)
- 		goto out_unlock;
- =
-
- 	*rm_list =3D msk->pm.rm_list_tx;
+-	/* if the msk data is completely acked, or the socket timedout,
+-	 * there is no point in keeping around an orphaned sk
++	/* There is no point in keeping aroud an orphaned sk timedout or closed,
++	 * but we need the msk around to reply to incoming DATA_FIN, even if
++	 * orphaned and in FIN_WAIT2 state
+ 	 */
+ 	if (sock_flag(sk, SOCK_DEAD) &&
+-	    (mptcp_check_close_timeout(sk) ||
+-	    (state !=3D sk->sk_state &&
+-	    ((1 << inet_sk_state_load(sk)) & (TCPF_CLOSE | TCPF_FIN_WAIT2))))) {
++	    (mptcp_check_close_timeout(sk) || sk->sk_state =3D=3D TCP_CLOSE)) {
+ 		inet_sk_state_store(sk, TCP_CLOSE);
+ 		__mptcp_destroy_sock(sk);
+ 		goto unlock;
 -- =
 
-2.29.2
+2.26.2
 
---===============8257241349567016414==--
+--===============1812992527809908142==--
