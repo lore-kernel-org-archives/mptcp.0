@@ -1,55 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============2814389710623264107=="
+Content-Type: multipart/mixed; boundary="===============0194721078035038823=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix DATA_FIN processing for
- orphaned sockets.
-Date: Wed, 17 Feb 2021 14:57:53 +0100
-Message-ID: <b800fb80daeca232b7a5d83298e7c0aa2f7f15ca.camel@redhat.com>
-In-Reply-To: f59d8596-3ca-78d4-8a9f-8e50d3d08357@linux.intel.com
+Subject: [MPTCP] [PATCH mptcp] mptcp: put subflow sock on connect error
+Date: Wed, 17 Feb 2021 16:42:05 +0100
+Message-ID: <20210217154205.7379-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 7821
+X-UID: 7822
 
---===============2814389710623264107==
+--===============0194721078035038823==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2021-02-16 at 18:05 -0800, Mat Martineau wrote:
-> On Mon, 15 Feb 2021, Paolo Abeni wrote:
-> =
+mptcp_add_pending_subflow() performs a sock_hold() on the subflow,
+then adds the subflow to the join list.
 
-> > Currently we move orphaned msk socket directly from FIN_WAIT2
-> > state to close, with the rationale that incoming additional
-> > data could be just dropped by the TCP stack/TW sockets.
-> > =
+Without a sock_put the subflow sk won't be freed in case connect() fails.
 
-> > Anyhow we miss sending MPTCP-level ack on incoming DATA_FIN,
-> > and that may hang the peers.
-> > =
+unreferenced object 0xffff88810c03b100 (size 3000):
+[..]
+    sk_prot_alloc.isra.0+0x2f/0x110
+    sk_alloc+0x5d/0xc20
+    inet6_create+0x2b7/0xd30
+    __sock_create+0x17f/0x410
+    mptcp_subflow_create_socket+0xff/0x9c0
+    __mptcp_subflow_connect+0x1da/0xaf0
+    mptcp_pm_nl_work+0x6e0/0x1120
+    mptcp_worker+0x508/0x9a0
 
-> > Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
-> > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> > ---
-> > I hope nobody is keeping track of nr of follow-ups x commit,
-> > because the referenced one could score a world record :(((
-> > ---
-> > net/mptcp/protocol.c | 9 ++++-----
-> > 1 file changed, 4 insertions(+), 5 deletions(-)
-> > =
+Fixes: 5b950ff4331ddda ("mptcp: link MPC subflow into msk only after accept=
+")
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ net/mptcp/subflow.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> =
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 06e233410e0e..e411be079c44 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1291,6 +1291,7 @@ int __mptcp_subflow_connect(struct sock *sk, const st=
+ruct mptcp_addr_info *loc,
+ 	spin_lock_bh(&msk->join_list_lock);
+ 	list_del(&subflow->node);
+ 	spin_unlock_bh(&msk->join_list_lock);
++	sock_put(mptcp_subflow_tcp_sock(subflow));
+ =
 
-> Thanks for catching this. Fix looks ready for the export branch, and -net =
+ failed:
+ 	subflow->disposable =3D 1;
+-- =
 
-> (if tests are good). Also a candidate for 5.11-stable?
+2.26.2
 
-I guess so, since the fixed commit in is since 5.11-rc1. I usually let
-the fix be propagated according to the fixes tag.
-
-Cheers,
-
-Paolo
-
---===============2814389710623264107==--
+--===============0194721078035038823==--
