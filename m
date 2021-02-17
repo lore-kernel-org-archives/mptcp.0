@@ -1,37 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============7482520454363332315=="
+Content-Type: multipart/mixed; boundary="===============7506779186542666280=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 18 February 2021 16:00 UTC (8am PDT, 5pm CET,
- 12pm CST)
-Date: Wed, 17 Feb 2021 19:43:31 +0100
-Message-ID: <27b3da84-bf22-18d1-6f8e-f3e05d9e9194@tessares.net>
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: add
+ rm_list in mptcp_out_options"
+Date: Wed, 17 Feb 2021 20:37:20 +0100
+Message-ID: <1cdc24ff-5f07-7d6f-2ab7-32774f287cb1@tessares.net>
+In-Reply-To: 81d81d67-a9f5-d858-e54-7e8bc89f6542@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7829
+X-UID: 7831
 
---===============7482520454363332315==
+--===============7506779186542666280==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+Hi Geliang, Mat,
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+On 17/02/2021 02:39, Mat Martineau wrote:
+> On Tue, 16 Feb 2021, Geliang Tang wrote:
+> =
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210218
+>> This patch fixed the following smatch warnings:
+>> net/mptcp/options.c:687 mptcp_established_options_rm_addr() error: =
 
-Feel free to add/modify topics!
+>> uninitialized symbol 'align'.
+>>
+>> Reported-by: kernel test robot <lkp(a)intel.com>
+>> Reported-by: Dan Carpenter <dan.carpenter(a)oracle.com>
+>> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+>> ---
+>> v2:
+>> - use roundup in mptcp_rm_addr_len
+> =
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+> v2 looks good, thanks Geliang.
 
-See you tomorrow!
+Thank you for the patch, the review and having reported the bug!
+
+Now in our tree:
+
+- 205001dc32f7: "squashed" in "mptcp: add rm_list in mptcp_out_options"
+- Results: 3f93745ba205..230a407eae19
+
+Tests + export have been queued!
+
+Cheers,
 Matt
 -- =
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============7482520454363332315==--
+--===============7506779186542666280==--
