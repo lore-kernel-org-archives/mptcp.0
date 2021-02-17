@@ -1,41 +1,105 @@
-Content-Type: multipart/mixed; boundary="===============6471172950297459195=="
+Content-Type: multipart/mixed; boundary="===============2732356864923305751=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: syzbot <syzbot+409b0354a6ba83a86aaf at syzkaller.appspotmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] insonsistend subflow creation policy ?!?
-Date: Wed, 17 Feb 2021 17:42:16 +0100
-Message-ID: <1f2bbfaba037c836d7c718eb6ac1aa8266ec83a0.camel@redhat.com>
+Subject: [MPTCP] general protection fault in mptcp_sendmsg_frag
+Date: Wed, 17 Feb 2021 09:30:22 -0800
+Message-ID: <000000000000e29ec405bb8b9251@google.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7823
+X-UID: 7825
 
---===============6471172950297459195==
+--===============2732356864923305751==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-I just noted that the pm_netlink subflow creation policy is
-inconsistent (or perhaps simply different ?!?) between signal and
-add_addr subflows.
+syzbot found the following issue on:
 
-When the MPTCP socket tries to create additional subflow due an
-'subflow' endpoint, it will filter out local addresses already in use
-by existing subflow.
+HEAD commit:    773dc50d Merge branch 'Xilinx-axienet-updates'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D1744ba4cd00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Ddbc1ca9e55dc1f9f
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D409b0354a6ba83a86=
+aaf
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D16548404d00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D150c2914d00000
 
-When MPTCP tries to create an additional subflow due to an incoming
-'ADD_ADDR' option, it will try to create it regardless any existing
-subflow using the relevant remote address (and port).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+409b0354a6ba83a86aaf(a)syzkaller.appspotmail.com
 
-Should we change the above ?!? (e.g. applying some filters even for
-ADD_ADDR). Or perhpas add some additional policy flag (like 'unique' or
-'none') ?
+general protection fault, probably for non-canonical address 0xdffffc000000=
+0007: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000038-0x000000000000003f]
+CPU: 0 PID: 8763 Comm: syz-executor836 Not tainted 5.11.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 01/01/2011
+RIP: 0010:mptcp_sendmsg_frag+0xa3f/0x1220 net/mptcp/protocol.c:1330
+Code: 80 3c 02 00 0f 85 04 07 00 00 48 8b 04 24 48 8b 98 20 07 00 00 48 b8 =
+00 00 00 00 00 fc ff df 48 8d 7b 38 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c=
+0 74 08 3c 03 0f 8e d6 04 00 00 48 8d 7d 10 44 8b
+RSP: 0018:ffffc90001dff7e8 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000007 RSI: 0000000000000000 RDI: 0000000000000038
+RBP: ffff8880120d9e10 R08: 0000000000000001 R09: ffff8880120d9e10
+R10: ffffed100241b3c4 R11: 0000000000000000 R12: ffff88801bf51800
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000008000
+FS:  00007f0f56768700(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000084 CR3: 000000001b547000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ mptcp_push_pending+0x2cc/0x650 net/mptcp/protocol.c:1477
+ mptcp_sendmsg+0x1ffb/0x2830 net/mptcp/protocol.c:1692
+ inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:638
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ sock_write_iter+0x289/0x3c0 net/socket.c:999
+ call_write_iter include/linux/fs.h:1901 [inline]
+ new_sync_write+0x426/0x650 fs/read_write.c:518
+ vfs_write+0x791/0xa30 fs/read_write.c:605
+ ksys_write+0x1ee/0x250 fs/read_write.c:658
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4492d9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 a1 15 00 00 90 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f0f56768318 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000004cf4c8 RCX: 00000000004492d9
+RDX: 0000000000000001 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 00000000004cf4c0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004cf4cc
+R13: 00007fff4b6baf0f R14: 00007f0f56768400 R15: 0000000000022000
+Modules linked in:
+---[ end trace a30ad1b3e9650ce6 ]---
+RIP: 0010:mptcp_sendmsg_frag+0xa3f/0x1220 net/mptcp/protocol.c:1330
+Code: 80 3c 02 00 0f 85 04 07 00 00 48 8b 04 24 48 8b 98 20 07 00 00 48 b8 =
+00 00 00 00 00 fc ff df 48 8d 7b 38 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c=
+0 74 08 3c 03 0f 8e d6 04 00 00 48 8d 7d 10 44 8b
+RSP: 0018:ffffc90001dff7e8 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000007 RSI: 0000000000000000 RDI: 0000000000000038
+RBP: ffff8880120d9e10 R08: 0000000000000001 R09: ffff8880120d9e10
+R10: ffffed100241b3c4 R11: 0000000000000000 R12: ffff88801bf51800
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000008000
+FS:  00007f0f56768700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f97dbf78000 CR3: 000000001b547000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-WDYT?
 
-Thanks!
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller(a)googlegroups.com.
 
-Paolo
-
---===============6471172950297459195==--
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
+--===============2732356864923305751==--
