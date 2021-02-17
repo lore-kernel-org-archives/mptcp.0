@@ -1,48 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============7506779186542666280=="
+Content-Type: multipart/mixed; boundary="===============2123493094515360971=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: add
- rm_list in mptcp_out_options"
-Date: Wed, 17 Feb 2021 20:37:20 +0100
-Message-ID: <1cdc24ff-5f07-7d6f-2ab7-32774f287cb1@tessares.net>
-In-Reply-To: 81d81d67-a9f5-d858-e54-7e8bc89f6542@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix DATA_FIN processing for
+ orphaned sockets.
+Date: Wed, 17 Feb 2021 20:50:29 +0100
+Message-ID: <6785d6bd-f2b7-d2f5-09f2-9757f305ea26@tessares.net>
+In-Reply-To: 723de05edd19a88776331f585deb6ce72d959eca.1613398456.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7831
+X-UID: 7832
 
---===============7506779186542666280==
+--===============2123493094515360971==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+Hi Paolo, Mat,
 
-On 17/02/2021 02:39, Mat Martineau wrote:
-> On Tue, 16 Feb 2021, Geliang Tang wrote:
+On 15/02/2021 15:14, Paolo Abeni wrote:
+> Currently we move orphaned msk socket directly from FIN_WAIT2
+> state to close, with the rationale that incoming additional
+> data could be just dropped by the TCP stack/TW sockets.
 > =
 
->> This patch fixed the following smatch warnings:
->> net/mptcp/options.c:687 mptcp_established_options_rm_addr() error: =
-
->> uninitialized symbol 'align'.
->>
->> Reported-by: kernel test robot <lkp(a)intel.com>
->> Reported-by: Dan Carpenter <dan.carpenter(a)oracle.com>
->> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
->> ---
->> v2:
->> - use roundup in mptcp_rm_addr_len
+> Anyhow we miss sending MPTCP-level ack on incoming DATA_FIN,
+> and that may hang the peers.
 > =
 
-> v2 looks good, thanks Geliang.
+> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 
-Thank you for the patch, the review and having reported the bug!
+Thank you for the patch and the review!
 
-Now in our tree:
+Just applied in our tree with Mat's RvB tag, without the dot at the end =
 
-- 205001dc32f7: "squashed" in "mptcp: add rm_list in mptcp_out_options"
-- Results: 3f93745ba205..230a407eae19
+of the commit title and typos spotted by codespell.
+@Paolo: please use this version if you send that to netdev :)
+
+- 97e35721a7af: mptcp: fix DATA_FIN processing for orphaned sockets
+- Results: 230a407eae19..afc69f9d3c92
 
 Tests + export have been queued!
 
@@ -52,4 +49,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============7506779186542666280==--
+--===============2123493094515360971==--
