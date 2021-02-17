@@ -1,73 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============7850078500648875255=="
+Content-Type: multipart/mixed; boundary="===============3582307743094374279=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash to "mptcp: add
- rm_list_tx in mptcp_pm_data"
-Date: Tue, 16 Feb 2021 17:57:14 -0800
-Message-ID: <59205b74-e198-abc-b857-8938e9d3953@linux.intel.com>
-In-Reply-To: 8557847ae1d94d4b4cb4067407253011925c46f7.1613397714.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix DATA_FIN processing for
+ orphaned sockets.
+Date: Tue, 16 Feb 2021 18:05:46 -0800
+Message-ID: <f59d8596-3ca-78d4-8a9f-8e50d3d08357@linux.intel.com>
+In-Reply-To: 723de05edd19a88776331f585deb6ce72d959eca.1613398456.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7818
+X-UID: 7819
 
---===============7850078500648875255==
+--===============3582307743094374279==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 15 Feb 2021, Geliang Tang wrote:
+On Mon, 15 Feb 2021, Paolo Abeni wrote:
 
-> Fix the length of RM_ADDR suboption in mptcp_pm_rm_addr_signal.
+> Currently we move orphaned msk socket directly from FIN_WAIT2
+> state to close, with the rationale that incoming additional
+> data could be just dropped by the TCP stack/TW sockets.
 >
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> Anyhow we miss sending MPTCP-level ack on incoming DATA_FIN,
+> and that may hang the peers.
+>
+> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> net/mptcp/pm.c | 7 +++++--
-> 1 file changed, 5 insertions(+), 2 deletions(-)
+> I hope nobody is keeping track of nr of follow-ups x commit,
+> because the referenced one could score a world record :(((
+> ---
+> net/mptcp/protocol.c | 9 ++++-----
+> 1 file changed, 4 insertions(+), 5 deletions(-)
 >
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 32f203f186a2..8e97f90cbdec 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -260,7 +260,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
- unsigned int remaining,
-> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
-ng,
-> 			     struct mptcp_rm_list *rm_list)
-> {
-> -	int ret =3D false;
-> +	int ret =3D false, len;
+
+Thanks for catching this. Fix looks ready for the export branch, and -net =
+
+(if tests are good). Also a candidate for 5.11-stable?
+
+
+Mat
+
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ee5a2981df6da..f15c79ff6a53c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2297,13 +2297,12 @@ static void mptcp_worker(struct work_struct *work)
+> 	__mptcp_check_send_data_fin(sk);
+> 	mptcp_check_data_fin(sk);
 >
-> 	spin_lock_bh(&msk->pm.lock);
->
-> @@ -268,7 +268,10 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk,=
- unsigned int remaining,
-> 	if (!mptcp_pm_should_rm_signal(msk))
-> 		goto out_unlock;
->
-> -	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
-
-Thanks for catching that.
-
-> +	len =3D mptcp_rm_addr_len(msk->pm.rm_list_tx);
-> +	if (len < 0)
-> +		goto out_unlock;
-
-Should this also clear msk->pm.addr_signal in this error case? Otherwise =
-
-the bad rm_list will be stuck forever. We shouldn't really run in to this =
-
-error path since it's our code setting rm_list_tx.
-
-> +	if (remaining < len)
-> 		goto out_unlock;
->
-> 	*rm_list =3D msk->pm.rm_list_tx;
+> -	/* if the msk data is completely acked, or the socket timedout,
+> -	 * there is no point in keeping around an orphaned sk
+> +	/* There is no point in keeping aroud an orphaned sk timedout or closed,
+> +	 * but we need the msk around to reply to incoming DATA_FIN, even if
+> +	 * orphaned and in FIN_WAIT2 state
+> 	 */
+> 	if (sock_flag(sk, SOCK_DEAD) &&
+> -	    (mptcp_check_close_timeout(sk) ||
+> -	    (state !=3D sk->sk_state &&
+> -	    ((1 << inet_sk_state_load(sk)) & (TCPF_CLOSE | TCPF_FIN_WAIT2))))) {
+> +	    (mptcp_check_close_timeout(sk) || sk->sk_state =3D=3D TCP_CLOSE)) {
+> 		inet_sk_state_store(sk, TCP_CLOSE);
+> 		__mptcp_destroy_sock(sk);
+> 		goto unlock;
 > -- =
 
-> 2.29.2
+> 2.26.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
 --
 Mat Martineau
 Intel
---===============7850078500648875255==--
+--===============3582307743094374279==--
