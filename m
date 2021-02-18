@@ -1,135 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============2583355387486086363=="
+Content-Type: multipart/mixed; boundary="===============8292447905276104115=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH iproute2-next] mptcp: add support for port based
- endpoint
-Date: Thu, 18 Feb 2021 16:49:50 +0100
-Message-ID: <868cfad6ab2fbd7f4b2ac6522b3ec62fce858fed.1613663358.git.pabeni@redhat.com>
+Subject: [MPTCP] [PATCH] mptcp: reset 'first' and ack_hint on subflow close
+Date: Thu, 18 Feb 2021 16:59:46 +0100
+Message-ID: <20210218155946.18540-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 7846
+X-UID: 7847
 
---===============2583355387486086363==
+--===============8292447905276104115==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The feature is supported by the kernel since 5.11-net-next,
-let's allow user-space to use it.
+Just like with last_snd, we have to NULL 'first' on subflow close.
 
-Just parse and dump an additional, per endpoint, u16 attribute
+ack_hint isn't strictly required (its never dereferenced), but better to
+clear this as well.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+msk->first is dereferenced unconditionally at accept time, but
+at that point the ssk is not on the conn_list yet -- this means
+worker can't see it when iterating the conn_list.
+
+Reported-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- ip/ipmptcp.c        | 16 ++++++++++++++--
- man/man8/ip-mptcp.8 |  8 ++++++++
- 2 files changed, 22 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-index e1ffafb3..5f659b59 100644
---- a/ip/ipmptcp.c
-+++ b/ip/ipmptcp.c
-@@ -17,7 +17,7 @@ static void usage(void)
- {
- 	fprintf(stderr,
- 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
--		"				      [ FLAG-LIST ]\n"
-+		"				      [ port NR ] [ FLAG-LIST ]\n"
- 		"	ip mptcp endpoint delete id ID\n"
- 		"	ip mptcp endpoint show [ id ID ]\n"
- 		"	ip mptcp endpoint flush\n"
-@@ -97,6 +97,7 @@ static int mptcp_parse_opt(int argc, char **argv, struct =
-nlmsghdr *n,
- 	bool id_set =3D false;
- 	__u32 index =3D 0;
- 	__u32 flags =3D 0;
-+	__u16 port =3D 0;
- 	__u8 id =3D 0;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d811f60a867b..acbd2e554ede 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2161,6 +2161,12 @@ static void __mptcp_close_ssk(struct sock *sk, struc=
+t sock *ssk,
+ 	if (ssk =3D=3D msk->last_snd)
+ 		msk->last_snd =3D NULL;
  =
 
- 	ll_init_map(&rth);
-@@ -123,6 +124,10 @@ static int mptcp_parse_opt(int argc, char **argv, stru=
-ct nlmsghdr *n,
- 			if (!index)
- 				invarg("device does not exist\n", ifname);
- =
-
-+		} else if (matches(*argv, "port") =3D=3D 0) {
-+			NEXT_ARG();
-+			if (get_u16(&port, *argv, 0))
-+				invarg("expected port", *argv);
- 		} else if (get_addr(&address, *argv, AF_UNSPEC) =3D=3D 0) {
- 			addr_set =3D true;
- 		} else {
-@@ -145,6 +150,8 @@ static int mptcp_parse_opt(int argc, char **argv, struc=
-t nlmsghdr *n,
- 		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_FLAGS, flags);
- 	if (index)
- 		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_IF_IDX, index);
-+	if (port)
-+		addattr16(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_PORT, port);
- 	if (addr_set) {
- 		int type;
- =
-
-@@ -181,8 +188,8 @@ static int print_mptcp_addrinfo(struct rtattr *addrinfo)
- 	__u8 family =3D AF_UNSPEC, addr_attr_type;
- 	const char *ifname;
- 	unsigned int flags;
-+	__u16 id, port;
- 	int index;
--	__u16 id;
- =
-
- 	parse_rtattr_nested(tb, MPTCP_PM_ADDR_ATTR_MAX, addrinfo);
- =
-
-@@ -196,6 +203,11 @@ static int print_mptcp_addrinfo(struct rtattr *addrinf=
-o)
- 		print_string(PRINT_ANY, "address", "%s ",
- 			     format_host_rta(family, tb[addr_attr_type]));
- 	}
-+	if (tb[MPTCP_PM_ADDR_ATTR_PORT]) {
-+		port =3D rta_getattr_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]);
-+		if (port)
-+			print_uint(PRINT_ANY, "port", "port %u ", port);
-+	}
- 	if (tb[MPTCP_PM_ADDR_ATTR_ID]) {
- 		id =3D rta_getattr_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
- 		print_uint(PRINT_ANY, "id", "id %u ", id);
-diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-index ef8409ea..98cb93b9 100644
---- a/man/man8/ip-mptcp.8
-+++ b/man/man8/ip-mptcp.8
-@@ -20,6 +20,8 @@ ip-mptcp \- MPTCP path manager configuration
- .ti -8
- .BR "ip mptcp endpoint add "
- .IR IFADDR
-+.RB "[ " port
-+.IR PORT " ]"
- .RB "[ " dev
- .IR IFNAME " ]"
- .RB "[ " id
-@@ -87,6 +89,12 @@ ip mptcp endpoint flush	flush all existing MPTCP endpoin=
-ts
- .TE
- =
-
- .TP
-+.IR PORT
-+When a port number is specified, incoming MPTCP subflows for already
-+established MPTCP sockets will be accepted on the specified port, regardle=
-ss
-+the original listener port accepting the first MPTCP subflow and/or
-+this peer being actually on the client side.
++	if (ssk =3D=3D msk->ack_hint)
++		msk->ack_hint =3D NULL;
 +
- .IR ID
- is a unique numeric identifier for the given endpoint
- =
-
++	if (ssk =3D=3D msk->first)
++		msk->first =3D NULL;
++
+ 	if (msk->subflow && ssk =3D=3D msk->subflow->sk)
+ 		mptcp_dispose_initial_subflow(msk);
+ }
 -- =
 
 2.26.2
 
---===============2583355387486086363==--
+--===============8292447905276104115==--
