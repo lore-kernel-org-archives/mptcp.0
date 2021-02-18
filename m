@@ -1,66 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============0728152699951424251=="
+Content-Type: multipart/mixed; boundary="===============8206321289428484775=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: add rm_list_tx
- in mptcp_pm_data"
-Date: Thu, 18 Feb 2021 11:07:22 +0800
-Message-ID: <a288a61577bc79178e8ebb8aad8cb24a5d5ee5ae.1613617491.git.geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next] mptcp: free resources when the
+ port number is mismatched
+Date: Thu, 18 Feb 2021 12:04:34 +0800
+Message-ID: <1080938f95ce04a83fcf6e874862b49f60ce7a82.1613620817.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7836
+X-UID: 7838
 
---===============0728152699951424251==
+--===============8206321289428484775==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Fix the length of RM_ADDR suboption in mptcp_pm_rm_addr_signal.
+When the port number is mismatched with the announced ones, use
+'goto dispose_child' to free the resources instead of using 'goto out'.
 
+This patch also moves the port number checking code in
+subflow_syn_recv_sock before mptcp_finish_join, otherwise subflow_drop_ctx
+will fail in dispose_child.
+
+Fixes: 5bc56388c74f ("mptcp: add port number check for MP_JOIN")
+Reported-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
  v2:
- - clear msk->pm.addr_signal in the error case.
+ - move the port number check code defore mptcp_finish_join.
 ---
- net/mptcp/pm.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/mptcp/subflow.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 32f203f186a2..f3db3adfe3fc 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -260,7 +260,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remainin=
-g,
- 			     struct mptcp_rm_list *rm_list)
- {
--	int ret =3D false;
-+	int ret =3D false, len;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 06e233410e0e..82ec174e2bac 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -687,11 +687,6 @@ static struct sock *subflow_syn_recv_sock(const struct=
+ sock *sk,
+ 			/* move the msk reference ownership to the subflow */
+ 			subflow_req->msk =3D NULL;
+ 			ctx->conn =3D (struct sock *)owner;
+-			if (!mptcp_finish_join(child))
+-				goto dispose_child;
+-
+-			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+-			tcp_rsk(req)->drop_req =3D true;
  =
 
- 	spin_lock_bh(&msk->pm.lock);
+ 			if (subflow_use_different_sport(owner, sk)) {
+ 				pr_debug("ack inet_sport=3D%d %d",
+@@ -699,10 +694,16 @@ static struct sock *subflow_syn_recv_sock(const struc=
+t sock *sk,
+ 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
+ 				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
+ 					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
+-					goto out;
++					goto dispose_child;
+ 				}
+ 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTACKRX);
+ 			}
++
++			if (!mptcp_finish_join(child))
++				goto dispose_child;
++
++			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
++			tcp_rsk(req)->drop_req =3D true;
+ 		}
+ 	}
  =
 
-@@ -268,7 +268,12 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, u=
-nsigned int remaining,
- 	if (!mptcp_pm_should_rm_signal(msk))
- 		goto out_unlock;
- =
-
--	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
-+	len =3D mptcp_rm_addr_len(msk->pm.rm_list_tx);
-+	if (len < 0) {
-+		WRITE_ONCE(msk->pm.addr_signal, 0);
-+		goto out_unlock;
-+	}
-+	if (remaining < len)
- 		goto out_unlock;
- =
-
- 	*rm_list =3D msk->pm.rm_list_tx;
 -- =
 
 2.29.2
 
---===============0728152699951424251==--
+--===============8206321289428484775==--
