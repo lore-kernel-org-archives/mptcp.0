@@ -1,118 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============8367094534682704177=="
+Content-Type: multipart/mixed; boundary="===============7749556427685610612=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v4 mptcp-next 2/2] selftests: mptcp: signal
- addresses testcases
-Date: Thu, 18 Feb 2021 16:22:16 +0800
-Message-ID: <b323330ca1446bfae2b532aff0f8122d78b61ed9.1613635984.git.geliangtang@gmail.com>
-In-Reply-To: 6c7bfe691300545ab0b1d1cda2782f8b330a1d82.1613635984.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: possible deadlock in mptcp_push_pending
+Date: Thu, 18 Feb 2021 13:41:44 +0100
+Message-ID: <639082dd7bddce31122200cc0e587c482379d1a7.camel@redhat.com>
+In-Reply-To: 000000000000787b8805bb8b96ce@google.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7841
+X-UID: 7842
 
---===============8367094534682704177==
+--===============7749556427685610612==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added testcases for signalling multi valid and invalid addresses
-for both signal_address_tests and remove_tests.
+On Wed, 2021-02-17 at 09:31 -0800, syzbot wrote:
+> syzbot found the following issue on:
+> =
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 58 +++++++++++++++++++
- 1 file changed, 58 insertions(+)
+> HEAD commit:    c48f8607 Merge branch 'PTP-for-DSA-tag_ocelot_8021q'
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D16525cb0d00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Ddbc1ca9e55dc1=
+f9f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dd1b1723faccb7a4=
+3f6d1
+> =
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 191303b652a6..5d7f940bceac 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -788,6 +788,28 @@ signal_address_tests()
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "multiple subflows and signal" 3 3 3
- 	chk_add_nr 1 1
-+
-+	# signal addresses
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal addresses" 3 3 3
-+	chk_add_nr 3 3
-+
-+	# signal invalid addresses
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal invalid addresses" 1 1 1
-+	chk_add_nr 3 3
- }
- =
+> Unfortunately, I don't have any reproducer for this issue yet.
+> =
 
- link_failure_tests()
-@@ -879,6 +901,30 @@ remove_tests()
- 	chk_add_nr 1 1
- 	chk_rm_nr 2 2
- =
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+d1b1723faccb7a43f6d1(a)syzkaller.appspotmail.com
+> =
 
-+	# addresses remove
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
-+	chk_join_nr "remove addresses" 3 3 3
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 3 invert
-+
-+	# invalid addresses remove
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
-+	chk_join_nr "remove invalid addresses" 1 1 1
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 1 invert
-+
- 	# subflows and signal, flush
- 	reset
- 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-@@ -913,6 +959,18 @@ remove_tests()
- 	chk_join_nr "flush addresses" 3 3 3
- 	chk_add_nr 3 3
- 	chk_rm_nr 3 3 invert
-+
-+	# invalid addresses flush
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -8 0 slow
-+	chk_join_nr "flush invalid addresses" 1 1 1
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 1 invert
- }
- =
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> WARNING: possible recursive locking detected
+> 5.11.0-rc7-syzkaller #0 Not tainted
+> --------------------------------------------
+> syz-executor.1/15600 is trying to acquire lock:
+> ffff888057303220 (sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/ne=
+t/sock.h:1598 [inline]
+> ffff888057303220 (sk_lock-AF_INET6){+.+.}-{0:0}, at: mptcp_push_pending+0=
+x28b/0x650 net/mptcp/protocol.c:1466
 
- add_tests()
--- =
+Even this one is suspected to be a dup of 'WARNING in dst_release': the
+subflow socket lock family is reported to be 'sk_lock-AF_INET6', but
+subflows are created in kernel, and get 'k-sk_lock-AF_INET6'. This
+looks like [re]use after free, likely via msk->first, as in the
+suspected dup issue. Lacking a repro, I'm not 110% sure.
 
-2.29.2
+@Dmitry, I'm wondering which is the preferred course of action here:
+tentatively marking this one as a dup, or leaving it alone till we get
+a reproducer?
 
---===============8367094534682704177==--
+Thanks!
+
+Paolo
+
+--===============7749556427685610612==--
