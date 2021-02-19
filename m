@@ -1,68 +1,146 @@
-Content-Type: multipart/mixed; boundary="===============4567421079441430097=="
+Content-Type: multipart/mixed; boundary="===============5547367619435349180=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: do not wakeup listener for MPJ
- subflows
-Date: Thu, 18 Feb 2021 17:55:31 -0800
-Message-ID: <6a662187-b773-a0ef-7a83-ebfb9f68d0d7@linux.intel.com>
-In-Reply-To: 78c7489cd28150c0c8a1433d3dd1546559688c20.1613652328.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH iproute2-next] mptcp: add support for port based
+ endpoint
+Date: Thu, 18 Feb 2021 18:04:46 -0800
+Message-ID: <20f33013-56aa-cfda-f02a-a8512ae33836@linux.intel.com>
+In-Reply-To: 868cfad6ab2fbd7f4b2ac6522b3ec62fce858fed.1613663358.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7854
+X-UID: 7855
 
---===============4567421079441430097==
+--===============5547367619435349180==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 18 Feb 2021, Paolo Abeni wrote:
 
-> MPJ subflows are not exposed as fds to user spaces. As such,
-> incoming MPJ subflows are removed from the accept queue by
-> tcp_check_req()/tcp_get_cookie_sock().
+> The feature is supported by the kernel since 5.11-net-next,
+> let's allow user-space to use it.
 >
-> Later tcp_child_process() invokes subflow_data_ready() on the
-> parent socket regardless of the subflow kind, leading to poll
-> wakeups even if the later accept will block.
+> Just parse and dump an additional, per endpoint, u16 attribute
 >
-> Address the issue double checking the queue state before
-> waking the user-space.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/164
-> Reported-by: Dr. David Alan Gilbert <dgilbert(a)redhat.com>
-> Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
 > Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 > ---
-> net/mptcp/subflow.c | 6 ++++++
-> 1 file changed, 6 insertions(+)
+
+Built this and tried it out - works for me with latest export branch.
+
+
+Mat
+
+
+> ip/ipmptcp.c        | 16 ++++++++++++++--
+> man/man8/ip-mptcp.8 |  8 ++++++++
+> 2 files changed, 22 insertions(+), 2 deletions(-)
 >
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 7b32214a039b5..3cad8aa0c2d67 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1100,6 +1100,12 @@ static void subflow_data_ready(struct sock *sk)
+> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+> index e1ffafb3..5f659b59 100644
+> --- a/ip/ipmptcp.c
+> +++ b/ip/ipmptcp.c
+> @@ -17,7 +17,7 @@ static void usage(void)
+> {
+> 	fprintf(stderr,
+> 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
+> -		"				      [ FLAG-LIST ]\n"
+> +		"				      [ port NR ] [ FLAG-LIST ]\n"
+> 		"	ip mptcp endpoint delete id ID\n"
+> 		"	ip mptcp endpoint show [ id ID ]\n"
+> 		"	ip mptcp endpoint flush\n"
+> @@ -97,6 +97,7 @@ static int mptcp_parse_opt(int argc, char **argv, struc=
+t nlmsghdr *n,
+> 	bool id_set =3D false;
+> 	__u32 index =3D 0;
+> 	__u32 flags =3D 0;
+> +	__u16 port =3D 0;
+> 	__u8 id =3D 0;
 >
-> 	msk =3D mptcp_sk(parent);
-> 	if (state & TCPF_LISTEN) {
-> +		/* MPJ subflow are removed from accept queue before reaching here,
-> +		 * avoid stray wakeups
-> +		 */
-> +		if (reqsk_queue_empty(&inet_csk(sk)->icsk_accept_queue))
-> +			return;
+> 	ll_init_map(&rth);
+> @@ -123,6 +124,10 @@ static int mptcp_parse_opt(int argc, char **argv, st=
+ruct nlmsghdr *n,
+> 			if (!index)
+> 				invarg("device does not exist\n", ifname);
+>
+> +		} else if (matches(*argv, "port") =3D=3D 0) {
+> +			NEXT_ARG();
+> +			if (get_u16(&port, *argv, 0))
+> +				invarg("expected port", *argv);
+> 		} else if (get_addr(&address, *argv, AF_UNSPEC) =3D=3D 0) {
+> 			addr_set =3D true;
+> 		} else {
+> @@ -145,6 +150,8 @@ static int mptcp_parse_opt(int argc, char **argv, str=
+uct nlmsghdr *n,
+> 		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_FLAGS, flags);
+> 	if (index)
+> 		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_IF_IDX, index);
+> +	if (port)
+> +		addattr16(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_PORT, port);
+> 	if (addr_set) {
+> 		int type;
+>
+> @@ -181,8 +188,8 @@ static int print_mptcp_addrinfo(struct rtattr *addrin=
+fo)
+> 	__u8 family =3D AF_UNSPEC, addr_attr_type;
+> 	const char *ifname;
+> 	unsigned int flags;
+> +	__u16 id, port;
+> 	int index;
+> -	__u16 id;
+>
+> 	parse_rtattr_nested(tb, MPTCP_PM_ADDR_ATTR_MAX, addrinfo);
+>
+> @@ -196,6 +203,11 @@ static int print_mptcp_addrinfo(struct rtattr *addri=
+nfo)
+> 		print_string(PRINT_ANY, "address", "%s ",
+> 			     format_host_rta(family, tb[addr_attr_type]));
+> 	}
+> +	if (tb[MPTCP_PM_ADDR_ATTR_PORT]) {
+> +		port =3D rta_getattr_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]);
+> +		if (port)
+> +			print_uint(PRINT_ANY, "port", "port %u ", port);
+> +	}
+> 	if (tb[MPTCP_PM_ADDR_ATTR_ID]) {
+> 		id =3D rta_getattr_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
+> 		print_uint(PRINT_ANY, "id", "id %u ", id);
+> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+> index ef8409ea..98cb93b9 100644
+> --- a/man/man8/ip-mptcp.8
+> +++ b/man/man8/ip-mptcp.8
+> @@ -20,6 +20,8 @@ ip-mptcp \- MPTCP path manager configuration
+> .ti -8
+> .BR "ip mptcp endpoint add "
+> .IR IFADDR
+> +.RB "[ " port
+> +.IR PORT " ]"
+> .RB "[ " dev
+> .IR IFNAME " ]"
+> .RB "[ " id
+> @@ -87,6 +89,12 @@ ip mptcp endpoint flush	flush all existing MPTCP endpo=
+ints
+> .TE
+>
+> .TP
+> +.IR PORT
+> +When a port number is specified, incoming MPTCP subflows for already
+> +established MPTCP sockets will be accepted on the specified port, regard=
+less
+> +the original listener port accepting the first MPTCP subflow and/or
+> +this peer being actually on the client side.
 > +
-> 		set_bit(MPTCP_DATA_READY, &msk->flags);
-> 		parent->sk_data_ready(parent);
-> 		return;
+> .IR ID
+> is a unique numeric identifier for the given endpoint
+>
 > -- =
 
 > 2.26.2
-
-Thanks Paolo, looks good to me.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
 --
 Mat Martineau
 Intel
---===============4567421079441430097==--
+--===============5547367619435349180==--
