@@ -1,135 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============5816680940725833756=="
+Content-Type: multipart/mixed; boundary="===============3539838734331057560=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Christoph Paasch <cpaasch at apple.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH iproute2-next] mptcp: add support for port based
- endpoint
-Date: Fri, 19 Feb 2021 21:42:55 +0100
-Message-ID: <868cfad6ab2fbd7f4b2ac6522b3ec62fce858fed.1613767061.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix memory accounting on
+ allocation error
+Date: Fri, 19 Feb 2021 15:43:33 -0800
+Message-ID: <20210219234333.GC41073@MacBook-Pro.local>
+In-Reply-To: f3643a261e8467e56de23145f48b28fb641f5686.1613760037.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7870
+X-UID: 7872
 
---===============5816680940725833756==
+--===============3539838734331057560==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The feature is supported by the kernel since 5.11-net-next,
-let's allow user-space to use it.
+On 02/19/21 - 19:42, Paolo Abeni wrote:
+> In case of memory pressure the MPTCP xmit path keeps
+> at most a single skb in the tx cache, eventually freeing
+> additional ones.
+> =
 
-Just parse and dump an additional, per endpoint, u16 attribute
+> The associated counter for forward memory is not update
+> accordingly, and that causes the following splat:
+> =
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- ip/ipmptcp.c        | 16 ++++++++++++++--
- man/man8/ip-mptcp.8 |  8 ++++++++
- 2 files changed, 22 insertions(+), 2 deletions(-)
+> WARNING: CPU: 0 PID: 12 at net/core/stream.c:208 sk_stream_kill_queues+0x=
+3ca/0x530 net/core/stream.c:208
+> Modules linked in:
+> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.11.0-rc2 #59
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-=
+gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+> Workqueue: events mptcp_worker
+> RIP: 0010:sk_stream_kill_queues+0x3ca/0x530 net/core/stream.c:208
+> Code: 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e 63 01 00 00 8b ab 00 01 00 0=
+0 e9 60 ff ff ff e8 2f 24 d3 fe 0f 0b eb 97 e8 26 24 d3 fe <0f> 0b eb a0 e8=
+ 1d 24 d3 fe 0f 0b e9 a5 fe ff ff 4c 89 e7 e8 0e d0
+> RSP: 0018:ffffc900000c7bc8 EFLAGS: 00010293
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: ffff88810030ac40 RSI: ffffffff8262ca4a RDI: 0000000000000003
+> RBP: 0000000000000d00 R08: 0000000000000000 R09: ffffffff85095aa7
+> R10: ffffffff8262c9ea R11: 0000000000000001 R12: ffff888108908100
+> R13: ffffffff85095aa0 R14: ffffc900000c7c48 R15: 1ffff92000018f85
+> FS:  0000000000000000(0000) GS:ffff88811b200000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fa7444baef8 CR3: 0000000035ee9005 CR4: 0000000000170ef0
+> Call Trace:
+>  __mptcp_destroy_sock+0x4a7/0x6c0 net/mptcp/protocol.c:2547
+>  mptcp_worker+0x7dd/0x1610 net/mptcp/protocol.c:2272
+>  process_one_work+0x896/0x1170 kernel/workqueue.c:2275
+>  worker_thread+0x605/0x1350 kernel/workqueue.c:2421
+>  kthread+0x344/0x410 kernel/kthread.c:292
+>  ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:296
+> =
 
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-index e1ffafb3..5f659b59 100644
---- a/ip/ipmptcp.c
-+++ b/ip/ipmptcp.c
-@@ -17,7 +17,7 @@ static void usage(void)
- {
- 	fprintf(stderr,
- 		"Usage:	ip mptcp endpoint add ADDRESS [ dev NAME ] [ id ID ]\n"
--		"				      [ FLAG-LIST ]\n"
-+		"				      [ port NR ] [ FLAG-LIST ]\n"
- 		"	ip mptcp endpoint delete id ID\n"
- 		"	ip mptcp endpoint show [ id ID ]\n"
- 		"	ip mptcp endpoint flush\n"
-@@ -97,6 +97,7 @@ static int mptcp_parse_opt(int argc, char **argv, struct =
-nlmsghdr *n,
- 	bool id_set =3D false;
- 	__u32 index =3D 0;
- 	__u32 flags =3D 0;
-+	__u16 port =3D 0;
- 	__u8 id =3D 0;
- =
+> At close time, as reported by syzkaller/Christoph.
+> =
 
- 	ll_init_map(&rth);
-@@ -123,6 +124,10 @@ static int mptcp_parse_opt(int argc, char **argv, stru=
-ct nlmsghdr *n,
- 			if (!index)
- 				invarg("device does not exist\n", ifname);
- =
+> This change address the issue properly updating the fwd
+> allocated memory counter in the error path.
+> =
 
-+		} else if (matches(*argv, "port") =3D=3D 0) {
-+			NEXT_ARG();
-+			if (get_u16(&port, *argv, 0))
-+				invarg("expected port", *argv);
- 		} else if (get_addr(&address, *argv, AF_UNSPEC) =3D=3D 0) {
- 			addr_set =3D true;
- 		} else {
-@@ -145,6 +150,8 @@ static int mptcp_parse_opt(int argc, char **argv, struc=
-t nlmsghdr *n,
- 		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_FLAGS, flags);
- 	if (index)
- 		addattr32(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_IF_IDX, index);
-+	if (port)
-+		addattr16(n, MPTCP_BUFLEN, MPTCP_PM_ADDR_ATTR_PORT, port);
- 	if (addr_set) {
- 		int type;
- =
+> Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/136
+> Fixes: 724cfd2ee8aa ("mptcp: allocate TX skbs in msk context")
+> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+> ---
+> @Christoph: could you please give this one a spin in your
+> testbed vs the repro?
 
-@@ -181,8 +188,8 @@ static int print_mptcp_addrinfo(struct rtattr *addrinfo)
- 	__u8 family =3D AF_UNSPEC, addr_attr_type;
- 	const char *ifname;
- 	unsigned int flags;
-+	__u16 id, port;
- 	int index;
--	__u16 id;
- =
+Works for me!!! That must have been hell of a good beer! :-)
 
- 	parse_rtattr_nested(tb, MPTCP_PM_ADDR_ATTR_MAX, addrinfo);
- =
 
-@@ -196,6 +203,11 @@ static int print_mptcp_addrinfo(struct rtattr *addrinf=
-o)
- 		print_string(PRINT_ANY, "address", "%s ",
- 			     format_host_rta(family, tb[addr_attr_type]));
- 	}
-+	if (tb[MPTCP_PM_ADDR_ATTR_PORT]) {
-+		port =3D rta_getattr_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]);
-+		if (port)
-+			print_uint(PRINT_ANY, "port", "port %u ", port);
-+	}
- 	if (tb[MPTCP_PM_ADDR_ATTR_ID]) {
- 		id =3D rta_getattr_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
- 		print_uint(PRINT_ANY, "id", "id %u ", id);
-diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-index ef8409ea..98cb93b9 100644
---- a/man/man8/ip-mptcp.8
-+++ b/man/man8/ip-mptcp.8
-@@ -20,6 +20,8 @@ ip-mptcp \- MPTCP path manager configuration
- .ti -8
- .BR "ip mptcp endpoint add "
- .IR IFADDR
-+.RB "[ " port
-+.IR PORT " ]"
- .RB "[ " dev
- .IR IFNAME " ]"
- .RB "[ " id
-@@ -87,6 +89,12 @@ ip mptcp endpoint flush	flush all existing MPTCP endpoin=
-ts
- .TE
- =
+Christoph
 
- .TP
-+.IR PORT
-+When a port number is specified, incoming MPTCP subflows for already
-+established MPTCP sockets will be accepted on the specified port, regardle=
-ss
-+the original listener port accepting the first MPTCP subflow and/or
-+this peer being actually on the client side.
-+
- .IR ID
- is a unique numeric identifier for the given endpoint
- =
-
--- =
-
-2.26.2
-
---===============5816680940725833756==--
+--===============3539838734331057560==--
