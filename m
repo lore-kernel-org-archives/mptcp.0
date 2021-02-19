@@ -1,118 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============2220936135674276922=="
+Content-Type: multipart/mixed; boundary="===============7633278896649567233=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 3/3] selftests: mptcp: signal
- addresses testcases
-Date: Fri, 19 Feb 2021 11:09:37 +0800
-Message-ID: <8f37ff2be5a944d101ae48ab713c1464f5b6c08b.1613703548.git.geliangtang@gmail.com>
-In-Reply-To: 726b3e1fa90f601526b51d0ec90d69d080c49d12.1613703548.git.geliangtang@gmail.com
+Subject: [MPTCP] [PATCH net 0/4] mptcp: a bunch of fixes
+Date: Fri, 19 Feb 2021 18:35:36 +0100
+Message-ID: <cover.1613755058.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7859
+X-UID: 7862
 
---===============2220936135674276922==
+--===============7633278896649567233==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added testcases for signalling multi valid and invalid addresses
-for both signal_address_tests and remove_tests.
+This series bundle a few MPTCP fixes for the current net tree.
+They have been detected via syzkaller and packetdrill
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 58 +++++++++++++++++++
- 1 file changed, 58 insertions(+)
+Patch 1 fixes a slow close for orphaned sockets
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 191303b652a6..5d7f940bceac 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -788,6 +788,28 @@ signal_address_tests()
- 	run_tests $ns1 $ns2 10.0.1.1
- 	chk_join_nr "multiple subflows and signal" 3 3 3
- 	chk_add_nr 1 1
-+
-+	# signal addresses
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal addresses" 3 3 3
-+	chk_add_nr 3 3
-+
-+	# signal invalid addresses
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1
-+	chk_join_nr "signal invalid addresses" 1 1 1
-+	chk_add_nr 3 3
- }
- =
+Patch 2 fixes another hangup at close time, when no
+data was actually transmitted before close
 
- link_failure_tests()
-@@ -879,6 +901,30 @@ remove_tests()
- 	chk_add_nr 1 1
- 	chk_rm_nr 2 2
- =
+Patch 3 fixes a memory leak with unusual sockopts
 
-+	# addresses remove
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
-+	chk_join_nr "remove addresses" 3 3 3
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 3 invert
-+
-+	# invalid addresses remove
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
-+	chk_join_nr "remove invalid addresses" 1 1 1
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 1 invert
-+
- 	# subflows and signal, flush
- 	reset
- 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
-@@ -913,6 +959,18 @@ remove_tests()
- 	chk_join_nr "flush addresses" 3 3 3
- 	chk_add_nr 3 3
- 	chk_rm_nr 3 3 invert
-+
-+	# invalid addresses flush
-+	reset
-+	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	run_tests $ns1 $ns2 10.0.1.1 0 -8 0 slow
-+	chk_join_nr "flush invalid addresses" 1 1 1
-+	chk_add_nr 3 3
-+	chk_rm_nr 3 1 invert
- }
- =
+Patch 4 fixes stray wake-ups on listener sockets
 
- add_tests()
+Florian Westphal (1):
+  mptcp: provide subflow aware release function
+
+Paolo Abeni (3):
+  mptcp: fix DATA_FIN processing for orphaned sockets
+  mptcp: fix DATA_FIN generation on early shutdown
+  mptcp: do not wakeup listener for MPJ subflows
+
+ net/mptcp/options.c  | 23 +++++++++-------
+ net/mptcp/protocol.c | 64 +++++++++++++++++++++++++++++++++++++++-----
+ net/mptcp/subflow.c  |  6 +++++
+ 3 files changed, 77 insertions(+), 16 deletions(-)
+
 -- =
 
-2.29.2
+2.26.2
 
---===============2220936135674276922==--
+--===============7633278896649567233==--
