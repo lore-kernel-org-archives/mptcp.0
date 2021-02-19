@@ -1,64 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============0316986479053167810=="
+Content-Type: multipart/mixed; boundary="===============7642015933288372525=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: reset 'first' and ack_hint on subflow close
-Date: Thu, 18 Feb 2021 17:32:51 +0100
-Message-ID: <91d1ee0b9652cb8e81de9e1cc4a0788f97f13cb1.camel@redhat.com>
-In-Reply-To: 20210218162343.GE22944@breakpoint.cc
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: add
+ rm_list_tx in mptcp_pm_data"
+Date: Thu, 18 Feb 2021 17:14:54 -0800
+Message-ID: <2776e3c-1f2a-38db-63ec-2f508bb9af55@linux.intel.com>
+In-Reply-To: a288a61577bc79178e8ebb8aad8cb24a5d5ee5ae.1613617491.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7850
+X-UID: 7851
 
---===============0316986479053167810==
+--===============7642015933288372525==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2021-02-18 at 17:23 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Thu, 2021-02-18 at 16:59 +0100, Florian Westphal wrote:
-> > > Just like with last_snd, we have to NULL 'first' on subflow close.
-> > > =
+On Thu, 18 Feb 2021, Geliang Tang wrote:
 
-> > > ack_hint isn't strictly required (its never dereferenced), but better=
- to
-> > > clear this as well.
-> > > =
+> Fix the length of RM_ADDR suboption in mptcp_pm_rm_addr_signal.
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> v2:
+> - clear msk->pm.addr_signal in the error case.
+> ---
+> net/mptcp/pm.c | 9 +++++++--
+> 1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 32f203f186a2..f3db3adfe3fc 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -260,7 +260,7 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk,=
+ unsigned int remaining,
+> bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaini=
+ng,
+> 			     struct mptcp_rm_list *rm_list)
+> {
+> -	int ret =3D false;
+> +	int ret =3D false, len;
+>
+> 	spin_lock_bh(&msk->pm.lock);
+>
+> @@ -268,7 +268,12 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk,=
+ unsigned int remaining,
+> 	if (!mptcp_pm_should_rm_signal(msk))
+> 		goto out_unlock;
+>
+> -	if (remaining < TCPOLEN_MPTCP_RM_ADDR_BASE)
+> +	len =3D mptcp_rm_addr_len(msk->pm.rm_list_tx);
+> +	if (len < 0) {
+> +		WRITE_ONCE(msk->pm.addr_signal, 0);
+> +		goto out_unlock;
+> +	}
+> +	if (remaining < len)
+> 		goto out_unlock;
+>
+> 	*rm_list =3D msk->pm.rm_list_tx;
+> -- =
 
-> > > msk->first is dereferenced unconditionally at accept time, but
-> > > at that point the ssk is not on the conn_list yet -- this means
-> > > worker can't see it when iterating the conn_list.
-> > =
+> 2.29.2
 
-> > There is a __mptcp_flush_join_list() before __mptcp_close_subflow(),
-> > could that matter? IIRC even the PM can move the subflow from join_list
-> > to conn_list to take some actions.
-> > =
+Thanks for the v2, looks ready to squash.
 
-> > not 110% related, we have a couple of !msk->first in =
-
-> > mptcp_update_rcv_data_fin() and mptcp_check_data_fin() which are likely
-> > obsoleted/to be removed.
-> =
-
-> Hmm, if those are redunant, what exactly do we need msk->first for?
-> Fallback mode could just fetch the subflow off conn_list.
-
-AFAICS it mostly avoids traversing the conn_list in some scenarios ;)
-IIRC I added that thing as early optimization (=3D=3D root of all evil)
-
-> =
-
-> Matthieu, please ignore this patch for now, I'd prefer to remove
-> msk->first completely if possible.
-
-I would love this latter option!
-
-(in the long term I think it would be nice also remote ->subflow)
-
-Thanks!
-
-Paolo
-
---===============0316986479053167810==--
+--
+Mat Martineau
+Intel
+--===============7642015933288372525==--
