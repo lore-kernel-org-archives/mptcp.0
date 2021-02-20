@@ -1,77 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============8886900300439569825=="
+Content-Type: multipart/mixed; boundary="===============5729267026518524011=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 0/3] move to next addr and
- testcases
-Date: Fri, 19 Feb 2021 16:07:02 -0800
-Message-ID: <55e0620-12cb-e0c7-69b7-2e416438d56@linux.intel.com>
-In-Reply-To: cover.1613703548.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix memory accounting on
+ allocation error
+Date: Fri, 19 Feb 2021 16:17:06 -0800
+Message-ID: <70ac2478-914-607b-55a-31e71c5180c@linux.intel.com>
+In-Reply-To: 20210219234333.GC41073@MacBook-Pro.local
 X-Status: 
 X-Keywords:                  
-X-UID: 7873
+X-UID: 7874
 
---===============8886900300439569825==
+--===============5729267026518524011==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 19 Feb 2021, Geliang Tang wrote:
+On Fri, 19 Feb 2021, Christoph Paasch wrote:
 
-> v5:
-> - rename lookup_anno_list_by_saddr to mptcp_lookup_anno_list_by_saddr.
+> On 02/19/21 - 19:42, Paolo Abeni wrote:
+>> In case of memory pressure the MPTCP xmit path keeps
+>> at most a single skb in the tx cache, eventually freeing
+>> additional ones.
+>>
+>> The associated counter for forward memory is not update
+>> accordingly, and that causes the following splat:
+>>
+>> WARNING: CPU: 0 PID: 12 at net/core/stream.c:208 sk_stream_kill_queues+0=
+x3ca/0x530 net/core/stream.c:208
+>> Modules linked in:
+>> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.11.0-rc2 #59
+>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0=
+-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+>> Workqueue: events mptcp_worker
+>> RIP: 0010:sk_stream_kill_queues+0x3ca/0x530 net/core/stream.c:208
+>> Code: 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e 63 01 00 00 8b ab 00 01 00 =
+00 e9 60 ff ff ff e8 2f 24 d3 fe 0f 0b eb 97 e8 26 24 d3 fe <0f> 0b eb a0 e=
+8 1d 24 d3 fe 0f 0b e9 a5 fe ff ff 4c 89 e7 e8 0e d0
+>> RSP: 0018:ffffc900000c7bc8 EFLAGS: 00010293
+>> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+>> RDX: ffff88810030ac40 RSI: ffffffff8262ca4a RDI: 0000000000000003
+>> RBP: 0000000000000d00 R08: 0000000000000000 R09: ffffffff85095aa7
+>> R10: ffffffff8262c9ea R11: 0000000000000001 R12: ffff888108908100
+>> R13: ffffffff85095aa0 R14: ffffc900000c7c48 R15: 1ffff92000018f85
+>> FS:  0000000000000000(0000) GS:ffff88811b200000(0000) knlGS:000000000000=
+0000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00007fa7444baef8 CR3: 0000000035ee9005 CR4: 0000000000170ef0
+>> Call Trace:
+>>  __mptcp_destroy_sock+0x4a7/0x6c0 net/mptcp/protocol.c:2547
+>>  mptcp_worker+0x7dd/0x1610 net/mptcp/protocol.c:2272
+>>  process_one_work+0x896/0x1170 kernel/workqueue.c:2275
+>>  worker_thread+0x605/0x1350 kernel/workqueue.c:2421
+>>  kthread+0x344/0x410 kernel/kthread.c:292
+>>  ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:296
+>>
+>> At close time, as reported by syzkaller/Christoph.
+>>
+>> This change address the issue properly updating the fwd
+>> allocated memory counter in the error path.
+>>
+>> Reported-by: Christoph Paasch <cpaasch(a)apple.com>
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/136
+>> Fixes: 724cfd2ee8aa ("mptcp: allocate TX skbs in msk context")
+>> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+>> ---
+>> @Christoph: could you please give this one a spin in your
+>> testbed vs the repro?
+>
+> Works for me!!! That must have been hell of a good beer! :-)
 >
 
-Thanks Geliang, v5 is good to merge in the export branch.
+The fix works in my syzkaller setup too, thanks Paolo.
 
-Before we close #151, what happens if the peer does not send echoes or =
-
-echoes are lost? Should there be another patch to also call =
-
-mptcp_pm_create_subflow_or_signal_addr when an ADD_ADDR has been =
-
-retransmitted the maximum number of times?
-
-
-Mat
-
-
-> v4:
-> - use lookup_anno_list_by_saddr instead of lookup_subflow_by_saddr.
-> - use MPTCP_PM_SUBFLOW_ESTABLISHED instead of MPTCP_PM_ESTABLISHED.
->
-> v3:
-> - drop MPTCP_PM_NEXT_ADDR, use MPTCP_PM_ESTABLISHED instead.
-> - hold the msk lock in mptcp_pm_add_addr_echoed.
-> - tag: export/20210209T062213
->
-> v2:
-> - add patch 2 and 3 for removing testcases.
-> - tag: export/20210207T062839.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/151
->
-> Geliang Tang (3):
->  mptcp: export lookup_anno_list_by_saddr
->  mptcp: move to next addr when subflow creation fail
->  selftests: mptcp: signal addresses testcases
->
-> net/mptcp/options.c                           |  1 +
-> net/mptcp/pm.c                                | 15 +++++
-> net/mptcp/pm_netlink.c                        | 10 ++--
-> net/mptcp/protocol.h                          |  5 ++
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 58 +++++++++++++++++++
-> 5 files changed, 84 insertions(+), 5 deletions(-)
->
-> -- =
-
-> 2.29.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
 
 --
 Mat Martineau
 Intel
---===============8886900300439569825==--
+--===============5729267026518524011==--
