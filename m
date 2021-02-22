@@ -1,32 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============7327899919523614312=="
+Content-Type: multipart/mixed; boundary="===============8436220600593541957=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: add
- rm_list_tx in mptcp_pm_data"
-Date: Mon, 22 Feb 2021 18:10:19 +0100
-Message-ID: <f4b44c5a-453a-5c10-ba9d-e7238a8f84ec@tessares.net>
-In-Reply-To: a288a61577bc79178e8ebb8aad8cb24a5d5ee5ae.1613617491.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp] mptcp: put subflow sock on connect error
+Date: Mon, 22 Feb 2021 18:15:47 +0100
+Message-ID: <68ee2196-9ba0-c667-317c-2ecafc46733a@tessares.net>
+In-Reply-To: 20210217154205.7379-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7898
+X-UID: 7899
 
---===============7327899919523614312==
+--===============8436220600593541957==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+Hi Florian, Mat,
 
-On 18/02/2021 04:07, Geliang Tang wrote:
-> Fix the length of RM_ADDR suboption in mptcp_pm_rm_addr_signal.
+On 17/02/2021 16:42, Florian Westphal wrote:
+> mptcp_add_pending_subflow() performs a sock_hold() on the subflow,
+> then adds the subflow to the join list.
+> =
+
+> Without a sock_put the subflow sk won't be freed in case connect() fails.
 
 Thank you for the patch and the review!
 
-- 2435fca3083c: "squashed" in "mptcp: add rm_list_tx in mptcp_pm_data"
-- Results: 98202724d8a6..253897668c44
+With a bit of delay, sorry for that, it is now in our tree with Mat's =
 
-Tests + export are going to be started soon!
+RvB tag:
+
+- b2dc043f86c3: mptcp: put subflow sock on connect error
+- Results: 253897668c44..356eae3ba43b
+
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -34,4 +41,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============7327899919523614312==--
+--===============8436220600593541957==--
