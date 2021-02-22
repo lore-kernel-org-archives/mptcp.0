@@ -1,54 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============1521864624071195545=="
+Content-Type: multipart/mixed; boundary="===============2536534017342027597=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH] mptcp: reset 'first' and ack_hint on subflow close
-Date: Mon, 22 Feb 2021 16:58:33 +0100
-Message-ID: <da04d45124f68d7e5518d05cb31055b88781581f.camel@redhat.com>
-In-Reply-To: 20210222082859.GJ22944@breakpoint.cc
+Subject: [MPTCP] [PATCH v2] mptcp: reset 'first' and ack_hint on subflow close
+Date: Mon, 22 Feb 2021 17:18:15 +0100
+Message-ID: <20210222161815.27469-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 7891
+X-UID: 7893
 
---===============1521864624071195545==
+--===============2536534017342027597==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2021-02-22 at 09:28 +0100, Florian Westphal wrote:
-> Paolo Abeni <pabeni(a)redhat.com> wrote:
-> > On Thu, 2021-02-18 at 16:59 +0100, Florian Westphal wrote:
-> > > Just like with last_snd, we have to NULL 'first' on subflow close.
-> > > =
+Just like with last_snd, we have to NULL 'first' on subflow close.
 
-> > > ack_hint isn't strictly required (its never dereferenced), but better=
- to
-> > > clear this as well.
-> > > =
+ack_hint isn't strictly required (its never dereferenced), but better to
+clear this explicitly as well instead of making it an exception.
 
-> > > msk->first is dereferenced unconditionally at accept time, but
-> > > at that point the ssk is not on the conn_list yet -- this means
-> > > worker can't see it when iterating the conn_list.
-> > =
+msk->first is dereferenced unconditionally at accept time, but
+at that point the ssk is not on the conn_list yet -- this means
+worker can't see it when iterating the conn_list.
 
-> > There is a __mptcp_flush_join_list() before __mptcp_close_subflow(),
-> > could that matter? IIRC even the PM can move the subflow from join_list
-> > to conn_list to take some actions.
-> =
+Reported-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Florian Westphal <fw(a)strlen.de>
+---
+ v2: add comment to clarify msk->first access in accept()
+ is safe even if tcp connection has been closed already.
 
-> AFAICS msk->first gets set/used to avoid use of join_list.
-> The latter is only used for incoming mp_join, not mp_capable.
+ net/mptcp/protocol.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Sharing here private conversation.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6b4eac26256f..e3865d59009b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2161,6 +2161,12 @@ static void __mptcp_close_ssk(struct sock *sk, struc=
+t sock *ssk,
+ 	if (ssk =3D=3D msk->last_snd)
+ 		msk->last_snd =3D NULL;
+ =
 
-If msk->first is closed before accept, accept will still return an
-established msk socket, with msk->first still valid and pointing to the
-original subflow, in TCP_CLOSE status (and still with a valid refcnt
-[=3D=3D1])
++	if (ssk =3D=3D msk->ack_hint)
++		msk->ack_hint =3D NULL;
++
++	if (ssk =3D=3D msk->first)
++		msk->first =3D NULL;
++
+ 	if (msk->subflow && ssk =3D=3D msk->subflow->sk)
+ 		mptcp_dispose_initial_subflow(msk);
+ }
+@@ -3298,6 +3304,9 @@ static int mptcp_stream_accept(struct socket *sock, s=
+truct socket *newsock,
+ 		/* PM/worker can now acquire the first subflow socket
+ 		 * lock without racing with listener queue cleanup,
+ 		 * we can notify it, if needed.
++		 *
++		 * Even if remote has reset the initial subflow by now
++		 * the refcnt is still at least one.
+ 		 */
+ 		subflow =3D mptcp_subflow_ctx(msk->first);
+ 		list_add(&subflow->node, &msk->conn_list);
+-- =
 
-TL;DR: the patch looks safe, no need for a complex codying to remove
-msk->first field.
+2.26.2
 
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-
---===============1521864624071195545==--
+--===============2536534017342027597==--
