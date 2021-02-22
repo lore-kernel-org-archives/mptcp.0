@@ -1,83 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============7561278470775302059=="
+Content-Type: multipart/mixed; boundary="===============2792178954385517265=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 4/4] selftests: mptcp: timeout
- testcases for multi addresses
-Date: Mon, 22 Feb 2021 11:50:56 +0800
-Message-ID: <abd367651f02ab1628dd784ad29abf5abaf6ad55.1613965565.git.geliangtang@gmail.com>
-In-Reply-To: 4bd05617494686e9dabaf4b0a0e12b475a7529ce.1613965565.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 0/2] remove id 0 address
+Date: Mon, 22 Feb 2021 12:05:59 +0800
+Message-ID: <cover.1613966113.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7880
+X-UID: 7881
 
---===============7561278470775302059==
+--===============2792178954385517265==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the timeout testcases for multi addresses, valid and
-invalid.
+I used this patch to test:
 
-These testcases need to transmit 8 ADD_ADDRs, so add a new speed level
-'least' to set 10 to mptcp_connect to slow down the transmitting process.
-The original speed level 'slow' still uses 50.
-
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 5d7f940bceac..62f4fb046645 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -239,8 +239,10 @@ do_transfer()
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 7a5e347a42a3..822281bb3c5f 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1235,6 +1235,8 @@ static void mptcp_pm_remove_addrs_and_subflows(struct=
+ mptcp_sock *msk,
+                }
+        }
  =
 
- 	if [ $speed =3D "fast" ]; then
- 		mptcp_connect=3D"./mptcp_connect -j"
--	else
--		mptcp_connect=3D"./mptcp_connect -r"
-+	elif [ $speed =3D "slow" ]; then
-+		mptcp_connect=3D"./mptcp_connect -r 50"
-+	elif [ $speed =3D "least" ]; then
-+		mptcp_connect=3D"./mptcp_connect -r 10"
- 	fi
- =
-
- 	local local_addr
-@@ -845,6 +847,26 @@ add_addr_timeout_tests()
- 	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
- 	chk_join_nr "signal address, ADD_ADDR6 timeout" 1 1 1
- 	chk_add_nr 4 0
++       alist.ids[alist.nr++] =3D 0;
 +
-+	# signal addresses timeout
-+	reset_with_add_addr_timeout
-+	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
-+	chk_join_nr "signal addresses, ADD_ADDR timeout" 2 2 2
-+	chk_add_nr 8 0
-+
-+	# signal invalid addresses timeout
-+	reset_with_add_addr_timeout
-+	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
-+	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
-+	chk_join_nr "invalid address, ADD_ADDR timeout" 1 1 1
-+	chk_add_nr 8 0
- }
- =
+        if (alist.nr) {
+                spin_lock_bh(&msk->pm.lock);
+                mptcp_pm_remove_addr(msk, alist);
 
- remove_tests()
+---
+
+apply: tag: export/20210218T061505
+       move to next addr and testcases
+       move to next addr when timeout
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+
+Geliang Tang (2):
+  mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+  mptcp: remove id 0 address
+
+ net/mptcp/pm_netlink.c | 97 ++++++++++++++++++++----------------------
+ net/mptcp/protocol.c   |  2 +-
+ net/mptcp/protocol.h   |  1 +
+ 3 files changed, 47 insertions(+), 53 deletions(-)
+
 -- =
 
 2.29.2
 
---===============7561278470775302059==--
+--===============2792178954385517265==--
