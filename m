@@ -1,95 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============7623210550412994443=="
+Content-Type: multipart/mixed; boundary="===============8310827594217394718=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 3/3] mptcp: add tracepoint for
- subflow_check_data_avail
-Date: Mon, 22 Feb 2021 15:30:33 +0800
-Message-ID: <17cc2a04d179090f095f22300aba6c8bbc868ba4.1613978710.git.geliangtang@gmail.com>
-In-Reply-To: 0db05b909b602f18d84f07de6a8641eaa9daf070.1613978710.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH] mptcp: reset 'first' and ack_hint on subflow close
+Date: Mon, 22 Feb 2021 09:28:59 +0100
+Message-ID: <20210222082859.GJ22944@breakpoint.cc>
+In-Reply-To: 4b24aff6aee0a095f295e0c44fdd708a28e7914d.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7887
+X-UID: 7888
 
---===============7623210550412994443==
+--===============8310827594217394718==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch added the tracepoint for subflow_check_data_avail to show the
-mapping status.
+Paolo Abeni <pabeni(a)redhat.com> wrote:
+> On Thu, 2021-02-18 at 16:59 +0100, Florian Westphal wrote:
+> > Just like with last_snd, we have to NULL 'first' on subflow close.
+> > =
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- include/trace/events/mptcp.h | 26 ++++++++++++++++++++++++++
- net/mptcp/subflow.c          |  2 +-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+> > ack_hint isn't strictly required (its never dereferenced), but better to
+> > clear this as well.
+> > =
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index f06a7d33b237..29570009a7e4 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -7,6 +7,14 @@
- =
+> > msk->first is dereferenced unconditionally at accept time, but
+> > at that point the ssk is not on the conn_list yet -- this means
+> > worker can't see it when iterating the conn_list.
+> =
 
- #include <linux/tracepoint.h>
- =
+> There is a __mptcp_flush_join_list() before __mptcp_close_subflow(),
+> could that matter? IIRC even the PM can move the subflow from join_list
+> to conn_list to take some actions.
 
-+#define show_mapping_status(status)					\
-+	__print_symbolic(status,					\
-+		{ 0, "MAPPING_OK" },					\
-+		{ 1, "MAPPING_INVALID" },				\
-+		{ 2, "MAPPING_EMPTY" },					\
-+		{ 3, "MAPPING_DATA_FIN" },				\
-+		{ 4, "MAPPING_DUMMY" })
-+
- TRACE_EVENT(mptcp_subflow_get_send,
- =
+AFAICS msk->first gets set/used to avoid use of join_list.
+The latter is only used for incoming mp_join, not mp_capable.
 
- 	TP_PROTO(struct mptcp_sock *msk, int nr_active,
-@@ -90,6 +98,24 @@ TRACE_EVENT(get_mapping_status,
- 	TP_printk("%s", __entry->str)
- );
- =
+I guess we can use the join_list but we whould have to stop splicing it
+to the conn_list unconditionally -- we would need to keep mp_capable one
+on the join_list until accept() time.
 
-+TRACE_EVENT(subflow_check_data_avail,
-+
-+	TP_PROTO(__u8 status),
-+
-+	TP_ARGS(status),
-+
-+	TP_STRUCT__entry(
-+		__field(__u8, status)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->status =3D status;
-+	),
-+
-+	TP_printk("mapping_status =3D %s",
-+		  show_mapping_status(__entry->status))
-+);
-+
- #endif /* _TRACE_MPTCP_H */
- =
-
- /* This part must be outside protection */
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6f4145abd85e..0c5e1ec0d418 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -975,7 +975,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		u64 old_ack;
- =
-
- 		status =3D get_mapping_status(ssk, msk);
--		pr_debug("msk=3D%p ssk=3D%p status=3D%d", msk, ssk, status);
-+		trace_subflow_check_data_avail(status);
- 		if (status =3D=3D MAPPING_INVALID) {
- 			ssk->sk_err =3D EBADMSG;
- 			goto fatal;
--- =
-
-2.29.2
-
---===============7623210550412994443==--
+I think its better to apply this as-is at the moment, removing of
+->first seems possible but the naive approach un-does several fixes
+you made to avoid exposure of the first subflow to the work queue.
+--===============8310827594217394718==--
