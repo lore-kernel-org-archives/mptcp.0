@@ -1,88 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============8564210339558504173=="
+Content-Type: multipart/mixed; boundary="===============2746425442041508897=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 3/4] selftests: mptcp: add
- cfg_do_w for cfg_remove
-Date: Mon, 22 Feb 2021 16:59:09 -0800
-Message-ID: <6c18382c-5ee3-fb92-e44a-7f792f962af@linux.intel.com>
-In-Reply-To: 4bd05617494686e9dabaf4b0a0e12b475a7529ce.1613965565.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 2/2] mptcp: remove id 0 address
+Date: Mon, 22 Feb 2021 17:13:37 -0800
+Message-ID: <a6b27656-e0ec-3f1a-b4af-1be614b98554@linux.intel.com>
+In-Reply-To: dbb2a7fe32a3fececf541f42162bbb059c8c6e2f.1613966113.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7903
+X-UID: 7904
 
---===============8564210339558504173==
+--===============2746425442041508897==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 22 Feb 2021, Geliang Tang wrote:
 
-> In some testcases, we need to slow down the transmitting process. This
-> patch added a new argument named cfg_do_w for cfg_remove to allow the
-> caller to pass an argument to cfg_remove.
->
-> In do_rnd_write, use this cfg_do_w to control the transmitting speed.
+> If the removing address id is 0, invoke __mptcp_wr_shutdown to shutdown
+> the initial subflow.
 >
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +++++---
-> 1 file changed, 5 insertions(+), 3 deletions(-)
+> net/mptcp/pm_netlink.c | 8 ++++++--
+> net/mptcp/protocol.c   | 2 +-
+> net/mptcp/protocol.h   | 1 +
+> 3 files changed, 8 insertions(+), 3 deletions(-)
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
-sting/selftests/net/mptcp/mptcp_connect.c
-> index 77bb62feb872..533c3d8dc1cd 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -55,6 +55,7 @@ static int cfg_sndbuf;
-> static int cfg_rcvbuf;
-> static bool cfg_join;
-> static bool cfg_remove;
-> +static unsigned int cfg_do_w;
-> static int cfg_wait;
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index d5cdfc18b40a..7a5e347a42a3 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -634,8 +634,12 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mp=
+tcp_sock *msk,
+> 			pr_debug(" -> %s rm_list_ids[%d]=3D%u",
+> 				 type =3D=3D RM_ADDR ? "address" : "subflow", i, rm_list.ids[i]);
+> 			spin_unlock_bh(&msk->pm.lock);
+> -			mptcp_subflow_shutdown(sk, ssk, how);
+> -			mptcp_close_ssk(sk, ssk, subflow);
+> +			if (rm_list.ids[i]) {
+> +				mptcp_subflow_shutdown(sk, ssk, how);
+> +				mptcp_close_ssk(sk, ssk, subflow);
+> +			} else {
+> +				__mptcp_wr_shutdown(sk);
+
+__mptcp_wr_shutdown will send DATA_FIN for the whole MPTCP connection, not =
+
+just the initial subflow. In your test does the MPTCP connection stay open =
+
+using other subflows?
+
+Mat
+
+
+> +			}
+> 			spin_lock_bh(&msk->pm.lock);
 >
-> static void die_usage(void)
-> @@ -272,8 +273,8 @@ static size_t do_rnd_write(const int fd, char *buf, c=
-onst size_t len)
-> 	if (cfg_join && first && do_w > 100)
-> 		do_w =3D 100;
+> 			if (type =3D=3D RM_ADDR) {
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 6b4eac26256f..ec808187fa0e 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2518,7 +2518,7 @@ static void __mptcp_check_send_data_fin(struct sock=
+ *sk)
+> 	}
+> }
 >
-> -	if (cfg_remove && do_w > 50)
-> -		do_w =3D 50;
-> +	if (cfg_remove && do_w > cfg_do_w)
-> +		do_w =3D cfg_do_w;
->
-> 	bw =3D write(fd, buf, do_w);
-> 	if (bw < 0)
-> @@ -829,7 +830,7 @@ static void parse_opts(int argc, char **argv)
+> -static void __mptcp_wr_shutdown(struct sock *sk)
+> +void __mptcp_wr_shutdown(struct sock *sk)
 > {
-> 	int c;
+> 	struct mptcp_sock *msk =3D mptcp_sk(sk);
 >
-> -	while ((c =3D getopt(argc, argv, "6jrlp:s:hut:m:S:R:w:")) !=3D -1) {
-> +	while ((c =3D getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:")) !=3D -1) {
-> 		switch (c) {
-> 		case 'j':
-> 			cfg_join =3D true;
-> @@ -840,6 +841,7 @@ static void parse_opts(int argc, char **argv)
-> 			cfg_remove =3D true;
-> 			cfg_mode =3D CFG_MODE_POLL;
-> 			cfg_wait =3D 400000;
-> +			cfg_do_w =3D atoi(optarg);
-
-Even though this program is only driven by the test scripts, I think it =
-
-would still be good to do a sanity check on the value of cfg_do_w. At =
-
-least make sure it's greater than zero?
-
-> 			break;
-> 		case 'l':
-> 			listen_mode =3D true;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 6af3e259fa05..e63ba987ab78 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -538,6 +538,7 @@ void __init mptcp_subflow_init(void);
+> void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how);
+> void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> 		     struct mptcp_subflow_context *subflow);
+> +void __mptcp_wr_shutdown(struct sock *sk);
+> void mptcp_subflow_reset(struct sock *ssk);
+> void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+> struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
 > -- =
 
 > 2.29.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
 --
 Mat Martineau
 Intel
---===============8564210339558504173==--
+--===============2746425442041508897==--
