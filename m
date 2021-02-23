@@ -1,47 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============2193736160751160411=="
+Content-Type: multipart/mixed; boundary="===============0402003908877111727=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] mptcp: fix memory accounting on
- allocation error
-Date: Tue, 23 Feb 2021 08:30:45 +0100
-Message-ID: <bf698fbc-55a5-2f6a-fad6-cf2f714b0169@tessares.net>
-In-Reply-To: f3643a261e8467e56de23145f48b28fb641f5686.1613760037.git.pabeni@redhat.com
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 0/3] remove id 0 address
+Date: Tue, 23 Feb 2021 16:26:11 +0800
+Message-ID: <cover.1614068181.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7914
+X-UID: 7915
 
---===============2193736160751160411==
+--===============0402003908877111727==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat, Christoph,
+The RM_ADDR selftests will fail when the removing address id is 0:
 
-On 19/02/2021 19:42, Paolo Abeni wrote:
-> In case of memory pressure the MPTCP xmit path keeps
-> at most a single skb in the tx cache, eventually freeing
-> additional ones.
-> =
+copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
+copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
+ client exit code 2, server 2
 
-> The associated counter for forward memory is not update
-> accordingly, and that causes the following splat:
+netns ns1-0-7z6ol9 socket stat for 10009:
+State                      Recv-Q                       Send-Q             =
+                                Local Address:Port                         =
+                    Peer Address:Port                      Process         =
+             =
 
-Thank you for the patch, validation and review!
 
-With a bit of delay, sorry for that, it is now in our tree with Mat's =
+netns ns2-0-7z6ol9 socket stat for 10009:
+State                       Recv-Q                   Send-Q                =
+                      Local Address:Port                                   =
+     Peer Address:Port                    Process                          =
+             =
 
-RvB tag:
+TIME-WAIT                   0                        0                     =
+                           10.0.2.2:33225                                  =
+         10.0.2.1:10009                    timer:(timewait,26sec,0)
 
-- 8c45b9293d02: mptcp: fix memory accounting on allocation error
-- Results: f6e0fb5d6125..b5622a37311b
+TIME-WAIT                   0                        0                     =
+                           10.0.4.2:44309                                  =
+         10.0.4.1:10009                    timer:(timewait,26sec,0)
 
-Tests + export are in progress!
+TIME-WAIT                   0                        0                     =
+                           10.0.3.2:53671                                  =
+         10.0.3.1:10009                    timer:(timewait,26sec,0)
 
-Cheers,
-Matt
+10 flush addresses                      syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                        add[ ok ] - echo  [ ok ]
+                                        rm [ ok ] - sf    [ ok ]
+
+This patchset fixed this bug.
+
+v2:
+ - drop __mptcp_wr_shutdown in v1.
+
+apply: export/20210222T184014
+       move to next addr and testcases
+       move to next addr when timeout
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+
+Geliang Tang (3):
+  mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+  mptcp: skip closing the initial subsocket
+  DO-NOT-MERGE: mptcp: remove id 0 test
+
+ net/mptcp/pm_netlink.c                        | 94 +++++++++----------
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  8 +-
+ 2 files changed, 47 insertions(+), 55 deletions(-)
+
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2193736160751160411==--
+2.29.2
+
+--===============0402003908877111727==--
