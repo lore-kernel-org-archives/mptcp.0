@@ -1,44 +1,89 @@
-Content-Type: multipart/mixed; boundary="===============8436220600593541957=="
+Content-Type: multipart/mixed; boundary="===============0116688197166486628=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp] mptcp: put subflow sock on connect error
-Date: Mon, 22 Feb 2021 18:15:47 +0100
-Message-ID: <68ee2196-9ba0-c667-317c-2ecafc46733a@tessares.net>
-In-Reply-To: 20210217154205.7379-1-fw@strlen.de
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 1/4] mptcp: skip connecting the
+ connected address
+Date: Mon, 22 Feb 2021 16:54:05 -0800
+Message-ID: <fed5780-b993-959c-539a-5a33357f21ff@linux.intel.com>
+In-Reply-To: 75805ea33291f243d15785862ff2f41d9931a3bf.1613965565.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7899
+X-UID: 7902
 
---===============8436220600593541957==
+--===============0116688197166486628==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Mat,
+On Mon, 22 Feb 2021, Geliang Tang wrote:
 
-On 17/02/2021 16:42, Florian Westphal wrote:
-> mptcp_add_pending_subflow() performs a sock_hold() on the subflow,
-> then adds the subflow to the join list.
-> =
+> This patch added a new helper named lookup_subflow_by_daddr to find
+> whether the destination address is in the msk's conn_list.
+>
+> In mptcp_pm_nl_add_addr_received, use lookup_subflow_by_daddr to check
+> whether the announced address is already connected. If it is, skip
+> connecting this address.
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/pm_netlink.c | 22 ++++++++++++++++++++++
+> 1 file changed, 22 insertions(+)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 55fdcb1b5281..9396f9635231 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -140,6 +140,24 @@ static bool lookup_subflow_by_saddr(const struct lis=
+t_head *list,
+> 	return false;
+> }
+>
+> +static bool lookup_subflow_by_daddr(const struct list_head *list,
+> +				    struct mptcp_addr_info *daddr)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +	struct mptcp_addr_info cur;
+> +	struct sock_common *skc;
+> +
+> +	list_for_each_entry(subflow, list, node) {
+> +		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+> +
+> +		remote_address(skc, &cur);
+> +		if (addresses_equal(&cur, daddr, daddr->port))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> static struct mptcp_pm_addr_entry *
+> select_local_address(const struct pm_nl_pernet *pernet,
+> 		     struct mptcp_sock *msk)
+> @@ -476,6 +494,10 @@ static void mptcp_pm_nl_add_addr_received(struct mpt=
+cp_sock *msk)
+> 	pr_debug("accepted %d:%d remote family %d",
+> 		 msk->pm.add_addr_accepted, add_addr_accept_max,
+> 		 msk->pm.remote.family);
+> +
+> +	if (lookup_subflow_by_daddr(&msk->conn_list, &msk->pm.remote))
+> +		return;
+> +
 
-> Without a sock_put the subflow sk won't be freed in case connect() fails.
+If the subflow exists, the incoming ADD_ADDR should be treated the same as =
 
-Thank you for the patch and the review!
+if pm->accept_addr was false (see mptcp_pm_add_addr_received()). We need =
 
-With a bit of delay, sorry for that, it is now in our tree with Mat's =
+to send the ADD_ADDR echo so the peer doesn't retransmit the ADD_ADDR.
 
-RvB tag:
+> 	msk->pm.add_addr_accepted++;
+> 	msk->pm.subflows++;
+> 	if (msk->pm.add_addr_accepted >=3D add_addr_accept_max ||
+> -- =
 
-- b2dc043f86c3: mptcp: put subflow sock on connect error
-- Results: 253897668c44..356eae3ba43b
+> 2.29.2
 
-Tests + export are in progress!
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============8436220600593541957==--
+--
+Mat Martineau
+Intel
+--===============0116688197166486628==--
