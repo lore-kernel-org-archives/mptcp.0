@@ -1,53 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============7635859637267565592=="
+Content-Type: multipart/mixed; boundary="===============0750567829908006800=="
 MIME-Version: 1.0
-From: patchwork-bot+netdevbpf at kernel.org
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net 0/4] mptcp: a bunch of fixes
-Date: Tue, 23 Feb 2021 03:10:08 +0000
-Message-ID: <
- <161404980823.7081.9095170388881116560.git-patchwork-notify@kernel.org>>
-In-Reply-To: cover.1613755058.git.pabeni@redhat.com
+Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 0/4] move to next addr when
+ timeout
+Date: Tue, 23 Feb 2021 12:29:54 +0800
+Message-ID: <cover.1614053997.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7906
+X-UID: 7907
 
---===============7635859637267565592==
+--===============0750567829908006800==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello:
+v2:
+ - invoke lookup_subflow_by_daddr in mptcp_pm_add_addr_received, not in
+ mptcp_pm_nl_add_addr_received.
+ - add a sanity check on cfg_do_w.
 
-This series was applied to netdev/net.git (refs/heads/master):
+apply: export/20210222T184014
+       move to next addr and testcases
 
-On Fri, 19 Feb 2021 18:35:36 +0100 you wrote:
-> This series bundle a few MPTCP fixes for the current net tree.
-> They have been detected via syzkaller and packetdrill
-> =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/151
 
-> Patch 1 fixes a slow close for orphaned sockets
-> =
+Geliang Tang (4):
+  mptcp: skip connecting the connected address
+  mptcp: move to next addr when timeout
+  selftests: mptcp: add cfg_do_w for cfg_remove
+  selftests: mptcp: timeout testcases for multi addresses
 
-> Patch 2 fixes another hangup at close time, when no
-> data was actually transmitted before close
-> =
+ net/mptcp/pm.c                                |  3 ++-
+ net/mptcp/pm_netlink.c                        | 23 +++++++++++++++-
+ net/mptcp/protocol.h                          |  2 ++
+ .../selftests/net/mptcp/mptcp_connect.c       | 10 ++++---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++++++++++--
+ 5 files changed, 57 insertions(+), 7 deletions(-)
 
-> [...]
+-- =
 
-Here is the summary with links:
-  - [net,1/4] mptcp: fix DATA_FIN processing for orphaned sockets
-    https://git.kernel.org/netdev/net/c/341c65242fe1
-  - [net,2/4] mptcp: fix DATA_FIN generation on early shutdown
-    https://git.kernel.org/netdev/net/c/d87903b63e3c
-  - [net,3/4] mptcp: provide subflow aware release function
-    https://git.kernel.org/netdev/net/c/ad98dd37051e
-  - [net,4/4] mptcp: do not wakeup listener for MPJ subflows
-    https://git.kernel.org/netdev/net/c/52557dbc7538
+2.29.2
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
---===============7635859637267565592==--
+--===============0750567829908006800==--
