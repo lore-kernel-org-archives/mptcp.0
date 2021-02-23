@@ -1,49 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============1464158517932477263=="
+Content-Type: multipart/mixed; boundary="===============2511040300863668263=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2] mptcp: reset 'first' and ack_hint on subflow
- close
-Date: Tue, 23 Feb 2021 10:24:09 +0100
-Message-ID: <47ed53d2-fe50-73ef-043a-a6c6161a8b88@tessares.net>
-In-Reply-To: 20210222161815.27469-1-fw@strlen.de
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] mptcp: free resources when
+ the port number is mismatched
+Date: Tue, 23 Feb 2021 10:45:52 +0100
+Message-ID: <b45e487f-560c-8576-ed25-5641c7e1d189@tessares.net>
+In-Reply-To: 1080938f95ce04a83fcf6e874862b49f60ce7a82.1613620817.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7919
+X-UID: 7920
 
---===============1464158517932477263==
+--===============2511040300863668263==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Florian, Paolo,
+Hi Geliang, Mat,
 
-On 22/02/2021 17:18, Florian Westphal wrote:
-> Just like with last_snd, we have to NULL 'first' on subflow close.
+On 18/02/2021 05:04, Geliang Tang wrote:
+> When the port number is mismatched with the announced ones, use
+> 'goto dispose_child' to free the resources instead of using 'goto out'.
 > =
 
-> ack_hint isn't strictly required (its never dereferenced), but better to
-> clear this explicitly as well instead of making it an exception.
-> =
+> This patch also moves the port number checking code in
+> subflow_syn_recv_sock before mptcp_finish_join, otherwise subflow_drop_ctx
+> will fail in dispose_child.
 
-> msk->first is dereferenced unconditionally at accept time, but
-> at that point the ssk is not on the conn_list yet -- this means
-> worker can't see it when iterating the conn_list.
-> =
+Thank you for the patch and the review!
 
-> Reported-by: Paolo Abeni <pabeni(a)redhat.com>
-> Signed-off-by: Florian Westphal <fw(a)strlen.de>
+With a bit of delay, sorry for that, it is now in our tree with Mat's =
 
-Thank you for this patch!
+RvB tag:
 
-Just applied in our tree, after "mptcp: dispose initial struct socket =
+- f1d648a8fc68: mptcp: free resources when the port number is mismatched
+- Results: 45795e8f868e..08fd790ee3b7
 
-when its subflow is closed" with my RvB tag.
-
-- 15d29d726a6e: mptcp: reset 'first' and ack_hint on subflow close
-- Results: b5622a37311b..45795e8f868e
-
-Tests + export are in progress!
+Tests + export have been queued!
 
 Cheers,
 Matt
@@ -51,4 +44,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1464158517932477263==--
+--===============2511040300863668263==--
