@@ -1,84 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============0116688197166486628=="
+Content-Type: multipart/mixed; boundary="===============8564210339558504173=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 1/4] mptcp: skip connecting the
- connected address
-Date: Mon, 22 Feb 2021 16:54:05 -0800
-Message-ID: <fed5780-b993-959c-539a-5a33357f21ff@linux.intel.com>
-In-Reply-To: 75805ea33291f243d15785862ff2f41d9931a3bf.1613965565.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 3/4] selftests: mptcp: add
+ cfg_do_w for cfg_remove
+Date: Mon, 22 Feb 2021 16:59:09 -0800
+Message-ID: <6c18382c-5ee3-fb92-e44a-7f792f962af@linux.intel.com>
+In-Reply-To: 4bd05617494686e9dabaf4b0a0e12b475a7529ce.1613965565.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7902
+X-UID: 7903
 
---===============0116688197166486628==
+--===============8564210339558504173==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 22 Feb 2021, Geliang Tang wrote:
 
-> This patch added a new helper named lookup_subflow_by_daddr to find
-> whether the destination address is in the msk's conn_list.
+> In some testcases, we need to slow down the transmitting process. This
+> patch added a new argument named cfg_do_w for cfg_remove to allow the
+> caller to pass an argument to cfg_remove.
 >
-> In mptcp_pm_nl_add_addr_received, use lookup_subflow_by_daddr to check
-> whether the announced address is already connected. If it is, skip
-> connecting this address.
+> In do_rnd_write, use this cfg_do_w to control the transmitting speed.
 >
 > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 > ---
-> net/mptcp/pm_netlink.c | 22 ++++++++++++++++++++++
-> 1 file changed, 22 insertions(+)
+> tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +++++---
+> 1 file changed, 5 insertions(+), 3 deletions(-)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 55fdcb1b5281..9396f9635231 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -140,6 +140,24 @@ static bool lookup_subflow_by_saddr(const struct lis=
-t_head *list,
-> 	return false;
-> }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/te=
+sting/selftests/net/mptcp/mptcp_connect.c
+> index 77bb62feb872..533c3d8dc1cd 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -55,6 +55,7 @@ static int cfg_sndbuf;
+> static int cfg_rcvbuf;
+> static bool cfg_join;
+> static bool cfg_remove;
+> +static unsigned int cfg_do_w;
+> static int cfg_wait;
 >
-> +static bool lookup_subflow_by_daddr(const struct list_head *list,
-> +				    struct mptcp_addr_info *daddr)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_addr_info cur;
-> +	struct sock_common *skc;
-> +
-> +	list_for_each_entry(subflow, list, node) {
-> +		skc =3D (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
-> +
-> +		remote_address(skc, &cur);
-> +		if (addresses_equal(&cur, daddr, daddr->port))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> static struct mptcp_pm_addr_entry *
-> select_local_address(const struct pm_nl_pernet *pernet,
-> 		     struct mptcp_sock *msk)
-> @@ -476,6 +494,10 @@ static void mptcp_pm_nl_add_addr_received(struct mpt=
-cp_sock *msk)
-> 	pr_debug("accepted %d:%d remote family %d",
-> 		 msk->pm.add_addr_accepted, add_addr_accept_max,
-> 		 msk->pm.remote.family);
-> +
-> +	if (lookup_subflow_by_daddr(&msk->conn_list, &msk->pm.remote))
-> +		return;
-> +
+> static void die_usage(void)
+> @@ -272,8 +273,8 @@ static size_t do_rnd_write(const int fd, char *buf, c=
+onst size_t len)
+> 	if (cfg_join && first && do_w > 100)
+> 		do_w =3D 100;
+>
+> -	if (cfg_remove && do_w > 50)
+> -		do_w =3D 50;
+> +	if (cfg_remove && do_w > cfg_do_w)
+> +		do_w =3D cfg_do_w;
+>
+> 	bw =3D write(fd, buf, do_w);
+> 	if (bw < 0)
+> @@ -829,7 +830,7 @@ static void parse_opts(int argc, char **argv)
+> {
+> 	int c;
+>
+> -	while ((c =3D getopt(argc, argv, "6jrlp:s:hut:m:S:R:w:")) !=3D -1) {
+> +	while ((c =3D getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:")) !=3D -1) {
+> 		switch (c) {
+> 		case 'j':
+> 			cfg_join =3D true;
+> @@ -840,6 +841,7 @@ static void parse_opts(int argc, char **argv)
+> 			cfg_remove =3D true;
+> 			cfg_mode =3D CFG_MODE_POLL;
+> 			cfg_wait =3D 400000;
+> +			cfg_do_w =3D atoi(optarg);
 
-If the subflow exists, the incoming ADD_ADDR should be treated the same as =
+Even though this program is only driven by the test scripts, I think it =
 
-if pm->accept_addr was false (see mptcp_pm_add_addr_received()). We need =
+would still be good to do a sanity check on the value of cfg_do_w. At =
 
-to send the ADD_ADDR echo so the peer doesn't retransmit the ADD_ADDR.
+least make sure it's greater than zero?
 
-> 	msk->pm.add_addr_accepted++;
-> 	msk->pm.subflows++;
-> 	if (msk->pm.add_addr_accepted >=3D add_addr_accept_max ||
+> 			break;
+> 		case 'l':
+> 			listen_mode =3D true;
 > -- =
 
 > 2.29.2
@@ -86,4 +85,4 @@ to send the ADD_ADDR echo so the peer doesn't retransmit the ADD_ADDR.
 --
 Mat Martineau
 Intel
---===============0116688197166486628==--
+--===============8564210339558504173==--
