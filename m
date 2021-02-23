@@ -1,49 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============0163709183507861815=="
+Content-Type: multipart/mixed; boundary="===============7635859637267565592=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: patchwork-bot+netdevbpf at kernel.org
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] mptcp: misc stuff
-Date: Mon, 22 Feb 2021 17:26:18 -0800
-Message-ID: <2986dfda-9293-6a8b-8515-3727dccadd5c@linux.intel.com>
-In-Reply-To: cover.1614013455.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [PATCH net 0/4] mptcp: a bunch of fixes
+Date: Tue, 23 Feb 2021 03:10:08 +0000
+Message-ID: <
+ <161404980823.7081.9095170388881116560.git-patchwork-notify@kernel.org>>
+In-Reply-To: cover.1613755058.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7905
+X-UID: 7906
 
---===============0163709183507861815==
+--===============7635859637267565592==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello:
 
-On Mon, 22 Feb 2021, Paolo Abeni wrote:
+This series was applied to netdev/net.git (refs/heads/master):
 
-> A bunch of patches I kept sitting in my local three for a while
-> The first 2 add a few more MIBs counters, for client and error
-> detection's sake.
-> The last one cleans-up a bit msk->first usage.
->
-> Paolo Abeni (3):
->  mptcp: add mib for token creation fallback
->  mptcp: add active MPC mibs
->  mptcp: remove unneeded check on first subflow
->
-> net/mptcp/mib.c      | 3 +++
-> net/mptcp/mib.h      | 3 +++
-> net/mptcp/options.c  | 2 +-
-> net/mptcp/protocol.c | 8 ++++++--
-> net/mptcp/subflow.c  | 4 ++++
-> 5 files changed, 17 insertions(+), 3 deletions(-)
->
-> -- =
+On Fri, 19 Feb 2021 18:35:36 +0100 you wrote:
+> This series bundle a few MPTCP fixes for the current net tree.
+> They have been detected via syzkaller and packetdrill
+> =
 
-> 2.26.2
+> Patch 1 fixes a slow close for orphaned sockets
+> =
 
-These look good for the export branch, thanks Paolo.
+> Patch 2 fixes another hangup at close time, when no
+> data was actually transmitted before close
+> =
 
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> [...]
 
+Here is the summary with links:
+  - [net,1/4] mptcp: fix DATA_FIN processing for orphaned sockets
+    https://git.kernel.org/netdev/net/c/341c65242fe1
+  - [net,2/4] mptcp: fix DATA_FIN generation on early shutdown
+    https://git.kernel.org/netdev/net/c/d87903b63e3c
+  - [net,3/4] mptcp: provide subflow aware release function
+    https://git.kernel.org/netdev/net/c/ad98dd37051e
+  - [net,4/4] mptcp: do not wakeup listener for MPJ subflows
+    https://git.kernel.org/netdev/net/c/52557dbc7538
+
+You are awesome, thank you!
 --
-Mat Martineau
-Intel
---===============0163709183507861815==--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
+--===============7635859637267565592==--
