@@ -1,82 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============0802534455398491370=="
+Content-Type: multipart/mixed; boundary="===============9181540582823300190=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 4/5] selftests: mptcp: add
- cfg_do_w for cfg_remove
-Date: Wed, 24 Feb 2021 11:56:57 +0800
-Message-ID: <90326d42a6c454e156f7ea7f78f7d8575559d21b.1614138509.git.geliangtang@gmail.com>
-In-Reply-To: 6492f78910e7ef643281ab3ffcdcf06a2c7a5ca2.1614138509.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 5/5] selftests: mptcp: timeout
+ testcases for multi addresses
+Date: Wed, 24 Feb 2021 11:56:58 +0800
+Message-ID: <c27591b5424d101f0aead2345970b1dafa78b27c.1614138509.git.geliangtang@gmail.com>
+In-Reply-To: 90326d42a6c454e156f7ea7f78f7d8575559d21b.1614138509.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7931
+X-UID: 7932
 
---===============0802534455398491370==
+--===============9181540582823300190==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In some testcases, we need to slow down the transmitting process. This
-patch added a new argument named cfg_do_w for cfg_remove to allow the
-caller to pass an argument to cfg_remove.
+This patch added the timeout testcases for multi addresses, valid and
+invalid.
 
-In do_rnd_write, use this cfg_do_w to control the transmitting speed.
+These testcases need to transmit 8 ADD_ADDRs, so add a new speed level
+'least' to set 10 to mptcp_connect to slow down the transmitting process.
+The original speed level 'slow' still uses 50.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/test=
-ing/selftests/net/mptcp/mptcp_connect.c
-index 77bb62feb872..69d89b5d666f 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -55,6 +55,7 @@ static int cfg_sndbuf;
- static int cfg_rcvbuf;
- static bool cfg_join;
- static bool cfg_remove;
-+static unsigned int cfg_do_w;
- static int cfg_wait;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 5d7f940bceac..62f4fb046645 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -239,8 +239,10 @@ do_transfer()
  =
 
- static void die_usage(void)
-@@ -272,8 +273,8 @@ static size_t do_rnd_write(const int fd, char *buf, con=
-st size_t len)
- 	if (cfg_join && first && do_w > 100)
- 		do_w =3D 100;
+ 	if [ $speed =3D "fast" ]; then
+ 		mptcp_connect=3D"./mptcp_connect -j"
+-	else
+-		mptcp_connect=3D"./mptcp_connect -r"
++	elif [ $speed =3D "slow" ]; then
++		mptcp_connect=3D"./mptcp_connect -r 50"
++	elif [ $speed =3D "least" ]; then
++		mptcp_connect=3D"./mptcp_connect -r 10"
+ 	fi
  =
 
--	if (cfg_remove && do_w > 50)
--		do_w =3D 50;
-+	if (cfg_remove && do_w > cfg_do_w)
-+		do_w =3D cfg_do_w;
+ 	local local_addr
+@@ -845,6 +847,26 @@ add_addr_timeout_tests()
+ 	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
+ 	chk_join_nr "signal address, ADD_ADDR6 timeout" 1 1 1
+ 	chk_add_nr 4 0
++
++	# signal addresses timeout
++	reset_with_add_addr_timeout
++	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
++	chk_join_nr "signal addresses, ADD_ADDR timeout" 2 2 2
++	chk_add_nr 8 0
++
++	# signal invalid addresses timeout
++	reset_with_add_addr_timeout
++	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
++	chk_join_nr "invalid address, ADD_ADDR timeout" 1 1 1
++	chk_add_nr 8 0
+ }
  =
 
- 	bw =3D write(fd, buf, do_w);
- 	if (bw < 0)
-@@ -829,7 +830,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- =
-
--	while ((c =3D getopt(argc, argv, "6jrlp:s:hut:m:S:R:w:")) !=3D -1) {
-+	while ((c =3D getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:")) !=3D -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join =3D true;
-@@ -840,6 +841,9 @@ static void parse_opts(int argc, char **argv)
- 			cfg_remove =3D true;
- 			cfg_mode =3D CFG_MODE_POLL;
- 			cfg_wait =3D 400000;
-+			cfg_do_w =3D atoi(optarg);
-+			if (cfg_do_w <=3D 0)
-+				cfg_do_w =3D 50;
- 			break;
- 		case 'l':
- 			listen_mode =3D true;
+ remove_tests()
 -- =
 
 2.29.2
 
---===============0802534455398491370==--
+--===============9181540582823300190==--
