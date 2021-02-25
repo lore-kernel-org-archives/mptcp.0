@@ -1,55 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============5956171618358343183=="
+Content-Type: multipart/mixed; boundary="===============6188790621719470011=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 0/5] move to next addr when
- timeout
-Date: Thu, 25 Feb 2021 16:01:51 +0100
-Message-ID: <01e5e8a4-d03f-1395-cdee-8aa004706233@tessares.net>
-In-Reply-To: cover.1614138509.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH v2] mptcp: add mptcp reset option support
+Date: Thu, 25 Feb 2021 16:58:01 +0100
+Message-ID: <f83318a5-c8b8-bb94-556f-da1a54531d45@tessares.net>
+In-Reply-To: 20210224140338.978-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 7955
+X-UID: 7956
 
---===============5956171618358343183==
+--===============6188790621719470011==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+Hi Florian, Mat,
 
-On 24/02/2021 04:56, Geliang Tang wrote:
-> v3:
->   - invoke lookup_subflow_by_daddr in mptcp_pm_nl_add_addr_received.
->   - add a new patch "drop argument port from mptcp_pm_announce_addr".
+On 24/02/2021 15:03, Florian Westphal wrote:
+> The MPTCP reset option allows to carry a mptcp-specific error code that
+> provides more information on the nature of a connection reset.
 > =
 
-> v2:
->   - invoke lookup_subflow_by_daddr in mptcp_pm_add_addr_received, not in
->   mptcp_pm_nl_add_addr_received.
->   - add a sanity check on cfg_do_w.
+> Reset option data received gets stored in the subflow context so it can
+> be sent to userspace via the 'subflow closed' netlink event.
 > =
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/151
+> When a subflow is closed, the desired error code that should be sent to
+> the peer is also placed in the subflow context structure.
+> =
 
-Thank you for the patches and the reviews!
-I just added them in our tree with Mat's RvB tag:
+> If a reset is sent before subflow establishment could complete, e.g. on
+> HMAC failure during an MP_JOIN operation, the mptcp skb extension is
+> used to store the reset information.
 
-Patches 1/5 and 2/5 have been added before "mptcp: drop unused subflow =
+Thank you for the patch and the review!
 
-in mptcp_pm_subflow_established":
+Now in our tree with Mat's RvB tag:
 
-- d63677a633cf: mptcp: drop argument port from mptcp_pm_announce_addr
-- c7ef42ed2451: mptcp: skip connecting the connected address
-- a681ac4046d5: conflict in t/mptcp-add-rm_list_tx-in-mptcp_pm_data
-- Results: de59595c18b3..52c9bb446e5d
-
-The rest just after the mentioned patch:
-
-- 1d7d152ed66f: mptcp: move to next addr when timeout
-- 9f635adaa8c3: selftests: mptcp: add cfg_do_w for cfg_remove
-- da596d8d5312: selftests: mptcp: timeout testcases for multi addresses
-- Results: 52c9bb446e5d..8a82f6b7cf01
+- 787b0423eb63: mptcp: add mptcp reset option support
+- Results: 8a82f6b7cf01..99476ba54610
 
 Tests + export have been queued!
 
@@ -59,4 +49,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============5956171618358343183==--
+--===============6188790621719470011==--
