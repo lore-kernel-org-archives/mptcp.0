@@ -1,75 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============1464888354958273584=="
+Content-Type: multipart/mixed; boundary="===============5386822179741103012=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 0/5] move to next addr when
- timeout
-Date: Fri, 26 Feb 2021 16:24:54 +0800
-Message-ID: <CA+WQbwsni9oZm5v62PqpMoFg+iULYcfEanRuHwdve+4ZTyOVew@mail.gmail.com>
-In-Reply-To: c5e12e4b-30b4-72d5-82d4-79053a881dd4@tessares.net
+Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] selftests: mptcp: report more
+ errors and details
+Date: Fri, 26 Feb 2021 18:51:28 +0100
+Message-ID: <373a011c-be9e-23ba-3e2e-267e7290963f@tessares.net>
+In-Reply-To: 1df1aece-fb8e-35c-f763-23d27c87377@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7963
+X-UID: 7965
 
---===============1464888354958273584==
+--===============5386822179741103012==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
+Hi Mat,
 
-Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B42=E6=
-=9C=8826=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=883:58=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> Hi Geliang,
->
-> On 26/02/2021 04:42, Geliang Tang wrote:
-> > Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B4=
-2=E6=9C=8825=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8811:01=E5=86=99=E9=
-=81=93=EF=BC=9A
-> >> Tests + export have been queued!
-> >
-> > I'm sorry to bring you extra work and trouble. But my patches on the
-> > export/20210225T204843 branch still need to be adjusted the order.
-> >
-> > This series "move to next addr when timeout" should be put after the
-> > series "move to next addr and testcases" like this:
->
-> I can sure change the order but do we need to change it because some
-> patches depends on others that are set after?
->
-> I should certainly explain why it is in this order:
->
-> - Initially I put the "rm list" series
->
-> - Then I added "mptcp: free resources when the port number is
-> mismatched" and "mptcp: drop unused subflow in
-> mptcp_pm_subflow_established" because they were looking like fixes for
-> net-next
->
-> - Then I had to put "move to next addr when timeout" series before "rm
-> list" because some patches had to be inserted before "mptcp: drop unused
-> subflow in mptcp_pm_subflow_established"
->
-> But I can understand if the dependences are not OK. If it is, that's not
-> an issue to change the order. If not, I guess we can leave it like that.
-> We will end up sending everything at the next merge window anyway.
+On 26/02/2021 01:46, Mat Martineau wrote:
+> On Wed, 24 Feb 2021, Matthieu Baerts wrote:
+> =
 
-The dependence is fine, only the "move to next addr" series (issue 151) had
-been cut off into two parts by the "rm list" series. It looks a little
-strange. I thought some selftests would fail, but I just tested them, they
-all work well. So if we can accept the cut-off series, let's leave it
-there. :)
+>> To help analysing unstable selftests, the scripts are now launching
+>> 'mptcp_connect' with a timeout in order to avoid stalled tests and print
+>> more details if supported (patch 1).
+>> 'nstat' history is also cleared just before starting a test -- just in
+>> case -- (patch 2) and more info is printed in case of errors in
+>> mptcp_join.sh
+>>
+>> Matthieu Baerts (3):
+>> =C2=A0selftests: mptcp: launch mptcp_connect with timeout
+>> =C2=A0selftests: mptcp: init nstat history
+>> =C2=A0selftests: mptcp: dump more info on mpjoin errors
+>>
+>> tools/testing/selftests/net/mptcp/diag.sh=C2=A0=C2=A0=C2=A0=C2=A0 | 38 +=
+++++++++++++++---
+>> .../selftests/net/mptcp/mptcp_connect.sh=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+ 22 +++++++++--
+>> .../testing/selftests/net/mptcp/mptcp_join.sh | 39 +++++++++++++++----
+>> .../selftests/net/mptcp/simult_flows.sh=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 13 +++++--
+>> 4 files changed, 91 insertions(+), 21 deletions(-)
+>>
+>> -- =
 
-Thanks.
+>> 2.30.0
+> =
 
--Geliang
+> Helpful info to have in the results, thanks for adding! Please add them =
 
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
---===============1464888354958273584==--
+> to the export branch.
+> =
+
+> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+
+Thank you for the review!
+
+Just added at the end of our tree with your RvB tags:
+
+- 39ab1c2fe133: selftests: mptcp: launch mptcp_connect with timeout
+- e662b9465461: selftests: mptcp: init nstat history
+- 17352f3bfa05: selftests: mptcp: dump more info on mpjoin errors
+- Results: 99476ba54610..11f3b41fadd1
+
+Tests + export are in progress!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============5386822179741103012==--
