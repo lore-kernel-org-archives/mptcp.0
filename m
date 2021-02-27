@@ -1,75 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============5386822179741103012=="
+Content-Type: multipart/mixed; boundary="===============3726355811550917591=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next 0/3] selftests: mptcp: report more
- errors and details
-Date: Fri, 26 Feb 2021 18:51:28 +0100
-Message-ID: <373a011c-be9e-23ba-3e2e-267e7290963f@tessares.net>
-In-Reply-To: 1df1aece-fb8e-35c-f763-23d27c87377@linux.intel.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 0/3] remove id 0 address
+Date: Fri, 26 Feb 2021 17:32:31 -0800
+Message-ID: <7384f8ee-5096-9611-7262-97e948e4f8a0@linux.intel.com>
+In-Reply-To: cover.1614068181.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7965
+X-UID: 7966
 
---===============5386822179741103012==
+--===============3726355811550917591==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
 
-On 26/02/2021 01:46, Mat Martineau wrote:
-> On Wed, 24 Feb 2021, Matthieu Baerts wrote:
-> =
+On Tue, 23 Feb 2021, Geliang Tang wrote:
 
->> To help analysing unstable selftests, the scripts are now launching
->> 'mptcp_connect' with a timeout in order to avoid stalled tests and print
->> more details if supported (patch 1).
->> 'nstat' history is also cleared just before starting a test -- just in
->> case -- (patch 2) and more info is printed in case of errors in
->> mptcp_join.sh
->>
->> Matthieu Baerts (3):
->> =C2=A0selftests: mptcp: launch mptcp_connect with timeout
->> =C2=A0selftests: mptcp: init nstat history
->> =C2=A0selftests: mptcp: dump more info on mpjoin errors
->>
->> tools/testing/selftests/net/mptcp/diag.sh=C2=A0=C2=A0=C2=A0=C2=A0 | 38 +=
-++++++++++++++---
->> .../selftests/net/mptcp/mptcp_connect.sh=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 22 +++++++++--
->> .../testing/selftests/net/mptcp/mptcp_join.sh | 39 +++++++++++++++----
->> .../selftests/net/mptcp/simult_flows.sh=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 13 +++++--
->> 4 files changed, 91 insertions(+), 21 deletions(-)
->>
->> -- =
+> The RM_ADDR selftests will fail when the removing address id is 0:
+>
+> copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
+> copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 0)
+> client exit code 2, server 2
+>
+> netns ns1-0-7z6ol9 socket stat for 10009:
+> State                      Recv-Q                       Send-Q           =
+                                  Local Address:Port                       =
+                      Peer Address:Port                      Process
+>
+> netns ns2-0-7z6ol9 socket stat for 10009:
+> State                       Recv-Q                   Send-Q              =
+                        Local Address:Port                                 =
+       Peer Address:Port                    Process
+> TIME-WAIT                   0                        0                   =
+                             10.0.2.2:33225                                =
+           10.0.2.1:10009                    timer:(timewait,26sec,0)
+>
+> TIME-WAIT                   0                        0                   =
+                             10.0.4.2:44309                                =
+           10.0.4.1:10009                    timer:(timewait,26sec,0)
+>
+> TIME-WAIT                   0                        0                   =
+                             10.0.3.2:53671                                =
+           10.0.3.1:10009                    timer:(timewait,26sec,0)
+>
+> 10 flush addresses                      syn[ ok ] - synack[ ok ] - ack[ o=
+k ]
+>                                        add[ ok ] - echo  [ ok ]
+>                                        rm [ ok ] - sf    [ ok ]
+>
+> This patchset fixed this bug.
+>
+> v2:
+> - drop __mptcp_wr_shutdown in v1.
+>
+> apply: export/20210222T184014
+>       move to next addr and testcases
+>       move to next addr when timeout
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+>
+> Geliang Tang (3):
+>  mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+>  mptcp: skip closing the initial subsocket
+>  DO-NOT-MERGE: mptcp: remove id 0 test
+>
+> net/mptcp/pm_netlink.c                        | 94 +++++++++----------
+> .../testing/selftests/net/mptcp/mptcp_join.sh |  8 +-
+> 2 files changed, 47 insertions(+), 55 deletions(-)
+>
+> -- =
 
->> 2.30.0
-> =
+> 2.29.2
 
-> Helpful info to have in the results, thanks for adding! Please add them =
+Hi Geliang -
 
-> to the export branch.
-> =
+I ran mp_join.sh and looked at the pcap files, but didn't see that the =
 
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+initial subflow was getting closed. I uploaded an example pcap at
+https://github.com/multipath-tcp/mptcp_net-next/issues/140
 
-Thank you for the review!
+Is the goal of this fix only to prevent the poll timeout? What behavior =
 
-Just added at the end of our tree with your RvB tags:
+should we see in the pcap when RM_ADDR 0 is sent & received?
 
-- 39ab1c2fe133: selftests: mptcp: launch mptcp_connect with timeout
-- e662b9465461: selftests: mptcp: init nstat history
-- 17352f3bfa05: selftests: mptcp: dump more info on mpjoin errors
-- Results: 99476ba54610..11f3b41fadd1
-
-Tests + export are in progress!
-
-Cheers,
-Matt
--- =
-
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5386822179741103012==--
+--
+Mat Martineau
+Intel
+--===============3726355811550917591==--
