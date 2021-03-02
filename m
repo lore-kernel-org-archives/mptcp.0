@@ -1,66 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============0632241390818394592=="
+Content-Type: multipart/mixed; boundary="===============6234774434211690550=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: possible deadlock in ipv6_sock_mc_close
-Date: Mon, 01 Mar 2021 16:04:13 +0100
-Message-ID: <26b3858e-6e5e-d782-118b-c4d64e2532f2@tessares.net>
-In-Reply-To: 974A6057-4DE8-4C9A-A71E-4EC08BD8E81B@oracle.com
+Subject: [MPTCP] [MPTCP][PATCH v3 mptcp-next 0/3] remove id 0 address
+Date: Tue, 02 Mar 2021 16:12:46 +0800
+Message-ID: <cover.1614672171.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7974
+X-UID: 7975
 
---===============0632241390818394592==
+--===============6234774434211690550==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Chuck,
+v3:
+ - print subflow ids in patch 1;
+ - add the initial subflow's ids check in patch 2;
+ - update the test in patch 3;
+ - tag: export/20210226T185626.
 
-(+ cc: MPTCP list)
+v2:
+ - drop __mptcp_wr_shutdown in v1.
 
-On 01/03/2021 15:52, Chuck Lever wrote:
->> On Mar 1, 2021, at 8:49 AM, syzbot <syzbot+e2fa57709a385e6db10f(a)syzkal=
-ler.appspotmail.com> wrote:
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
 
-(...)
+Geliang Tang (3):
+  mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+  mptcp: check the removing initial subflow
+  DO-NOT-MERGE: mptcp: remove id 0 test
 
->> syzbot found the following issue on:
+ net/mptcp/pm_netlink.c                        | 99 +++++++++----------
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 10 +-
+ 2 files changed, 52 insertions(+), 57 deletions(-)
 
-(...)
-
-> Hi, thanks for the report.
-> =
-
-> Initial analysis:
-> =
-
-> c8e88e3aa738 ("NFSD: Replace READ* macros in nfsd4_decode_layoutget()"
-> changes code several layers above the network layer. In addition,
-> neither of the stack traces contain NFSD functions. And, repro.c does
-> not appear to exercise any filesystem code.
-> =
-
-> Therefore the bisect result looks implausible to me. I don't see any
-> obvious connection between the lockdep splat and c8e88e3aa738. (If
-> someone else does, please let me know where to look).
-
- From what I can see from the bisect logs, it looks like this issue is =
-
-difficult to reproduce. But it really looks like the issue is on MPTCP =
-
-side and not directly related to your patch.
-
-Thanks to the syzbot team for reporting this!
-
-It doesn't look very simple to fix but we are tracking this on our side: =
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/170
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0632241390818394592==--
+2.29.2
+
+--===============6234774434211690550==--
