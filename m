@@ -1,129 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============5613461875842875661=="
+Content-Type: multipart/mixed; boundary="===============1121287643147862909=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC v2 PATCH 2/2] mptcp: revert "mptcp: provide subflow
- aware release function"$ ....$
-Date: Wed, 03 Mar 2021 19:43:39 +0100
-Message-ID: <30e5b4c37fb98deb22b63f1eb6423de321f46222.1614796802.git.pabeni@redhat.com>
-In-Reply-To: cover.1614796802.git.pabeni@redhat.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 0/5] remove id 0 address
+Date: Wed, 03 Mar 2021 19:47:50 +0100
+Message-ID: <1df99b7d85cb604ed2326a16d920cdb537f3e4d7.camel@redhat.com>
+In-Reply-To: cover.1614776769.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8003
+X-UID: 8004
 
---===============5613461875842875661==
+--===============1121287643147862909==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This commit reverts ad98dd37051e ("mptcp: provide subflow aware
-release function"). The latter introduced a deadlock spotted by
-syzkaller and is not needed anymore after the previous commit.
+On Wed, 2021-03-03 at 21:13 +0800, Geliang Tang wrote:
+> v5:
+>  - add patch 1 "avoid passing rm_list as a struct".
+>  - re-use MPTCP_MIB_RMADDR/MPTCP_MIB_RMSUBFLOW in patch 3.
+>  - use (id =3D=3D 0) instead of (!id) in patch 4.
+>  - tag: export/20210226T185626.
+> =
 
-Fixes: ad98dd37051e ("mptcp: provide subflow aware release function")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>$
----
- net/mptcp/protocol.c | 55 ++------------------------------------------
- 1 file changed, 2 insertions(+), 53 deletions(-)
+> v4:
+>  - add new function mptcp_nl_remove_id_zero_address.
+>  - add new testcases.
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6a8c3f46f30a4..911050373ff62 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -11,7 +11,6 @@
- #include <linux/netdevice.h>
- #include <linux/sched/signal.h>
- #include <linux/atomic.h>
--#include <linux/igmp.h>
- #include <net/sock.h>
- #include <net/inet_common.h>
- #include <net/inet_hashtables.h>
-@@ -20,7 +19,6 @@
- #include <net/tcp_states.h>
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- #include <net/transp_v6.h>
--#include <net/addrconf.h>
- #endif
- #include <net/mptcp.h>
- #include <net/xfrm.h>
-@@ -3630,34 +3628,10 @@ static __poll_t mptcp_poll(struct file *file, struc=
-t socket *sock,
- 	return mask;
- }
- =
+> v3:
+>  - print subflow ids in patch 1;
+>  - add the initial subflow's ids check in patch 2;
+>  - update the test in patch 3;
+> =
 
--static int mptcp_release(struct socket *sock)
--{
--	struct mptcp_subflow_context *subflow;
--	struct sock *sk =3D sock->sk;
--	struct mptcp_sock *msk;
--
--	if (!sk)
--		return 0;
--
--	lock_sock(sk);
--
--	msk =3D mptcp_sk(sk);
--
--	mptcp_for_each_subflow(msk, subflow) {
--		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
--
--		ip_mc_drop_socket(ssk);
--	}
--
--	release_sock(sk);
--
--	return inet_release(sock);
--}
--
- static const struct proto_ops mptcp_stream_ops =3D {
- 	.family		   =3D PF_INET,
- 	.owner		   =3D THIS_MODULE,
--	.release	   =3D mptcp_release,
-+	.release	   =3D inet_release,
- 	.bind		   =3D mptcp_bind,
- 	.connect	   =3D mptcp_stream_connect,
- 	.socketpair	   =3D sock_no_socketpair,
-@@ -3755,35 +3729,10 @@ void __init mptcp_proto_init(void)
- }
- =
+> v2:
+>  - drop __mptcp_wr_shutdown in v1.
+> =
 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
--static int mptcp6_release(struct socket *sock)
--{
--	struct mptcp_subflow_context *subflow;
--	struct mptcp_sock *msk;
--	struct sock *sk =3D sock->sk;
--
--	if (!sk)
--		return 0;
--
--	lock_sock(sk);
--
--	msk =3D mptcp_sk(sk);
--
--	mptcp_for_each_subflow(msk, subflow) {
--		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
--
--		ip_mc_drop_socket(ssk);
--		ipv6_sock_mc_close(ssk);
--		ipv6_sock_ac_close(ssk);
--	}
--
--	release_sock(sk);
--	return inet6_release(sock);
--}
--
- static const struct proto_ops mptcp_v6_stream_ops =3D {
- 	.family		   =3D PF_INET6,
- 	.owner		   =3D THIS_MODULE,
--	.release	   =3D mptcp6_release,
-+	.release	   =3D inet6_release,
- 	.bind		   =3D mptcp_bind,
- 	.connect	   =3D mptcp_stream_connect,
- 	.socketpair	   =3D sock_no_socketpair,
--- =
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+> =
 
-2.26.2
+> Geliang Tang (5):
+>   mptcp: avoid passing rm_list as a struct
+>   mptcp: remove all subflows involving id 0 address
+>   mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+>   mptcp: remove id 0 address
+>   selftests: mptcp: remove id 0 address testcases
+> =
 
---===============5613461875842875661==--
+>  net/mptcp/options.c                           |   4 +-
+>  net/mptcp/pm.c                                |  23 ++--
+>  net/mptcp/pm_netlink.c                        | 128 ++++++++++--------
+>  net/mptcp/protocol.h                          |  16 ++-
+>  .../testing/selftests/net/mptcp/mptcp_join.sh |  29 +++-
+>  5 files changed, 122 insertions(+), 78 deletions(-)
+
+LGTM! =
+
+
+I think patch 1/5 could be squashed into "mptcp: add rm_list_tx in
+mptcp_pm_data" or some later patch, WDYT? possibly even after merging
+into the export branch.
+
+Cheers,
+
+Paolo
+
+--===============1121287643147862909==--
