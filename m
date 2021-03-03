@@ -1,113 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============2389668776143978866=="
+Content-Type: multipart/mixed; boundary="===============0322381754999506201=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v4 mptcp-next 3/4] mptcp: remove id zero
- address
-Date: Wed, 03 Mar 2021 11:28:53 +0100
-Message-ID: <76cb1405-238d-63d4-e45d-16196bb114c8@tessares.net>
-In-Reply-To: 556d8bab7ecf975121bdefeef6837536cbdf13e5.camel@redhat.com
+Subject: [MPTCP] [MPTCP][PATCH v5 mptcp-next 0/5] remove id 0 address
+Date: Wed, 03 Mar 2021 21:13:15 +0800
+Message-ID: <cover.1614776769.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 7993
+X-UID: 7994
 
---===============2389668776143978866==
+--===============0322381754999506201==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Geliang,
+v5:
+ - add patch 1 "avoid passing rm_list as a struct".
+ - re-use MPTCP_MIB_RMADDR/MPTCP_MIB_RMSUBFLOW in patch 3.
+ - use (id =3D=3D 0) instead of (!id) in patch 4.
+ - tag: export/20210226T185626.
 
-On 03/03/2021 11:19, Paolo Abeni wrote:
-> On Wed, 2021-03-03 at 15:49 +0800, Geliang Tang wrote:
->> This patch added a new function mptcp_nl_remove_id_zero_address to
->> remove the id 0 address.
->>
->> In this function, fill the remove list with the id 0, and pass it to
->> mptcp_pm_remove_addr and mptcp_pm_remove_subflow.
->>
->> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
->> ---
->>   net/mptcp/pm_netlink.c | 30 ++++++++++++++++++++++++++++++
->>   1 file changed, 30 insertions(+)
->>
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 419b643bd6fe..eeef36663679 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -1171,6 +1171,33 @@ static void mptcp_pm_free_addr_entry(struct mptcp=
-_pm_addr_entry *entry)
->>   	}
->>   }
->>   =
+v4:
+ - add new function mptcp_nl_remove_id_zero_address.
+ - add new testcases.
 
->> +static int mptcp_nl_remove_id_zero_address(struct net *net)
->> +{
->> +	struct mptcp_sock *msk;
->> +	long s_slot =3D 0, s_num =3D 0;
->> +	struct mptcp_rm_list list =3D { .nr =3D 0 };
->> +
->> +	list.ids[list.nr++] =3D 0;
->> +
->> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL=
-) {
->> +		struct sock *sk =3D (struct sock *)msk;
->> +
->> +		if (list_empty(&msk->conn_list))
->> +			goto next;
->> +
->> +		lock_sock(sk);
->> +		mptcp_pm_remove_addr(msk, list);
->> +		mptcp_pm_remove_subflow(msk, list);
->> +		release_sock(sk);
->> +
->> +next:
->> +		sock_put(sk);
->> +		cond_resched();
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info=
- *info)
->>   {
->>   	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
->> @@ -1183,6 +1210,9 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *s=
-kb, struct genl_info *info)
->>   	if (ret < 0)
->>   		return ret;
->>   =
+v3:
+ - print subflow ids in patch 1;
+ - add the initial subflow's ids check in patch 2;
+ - update the test in patch 3;
 
->> +	if (!addr.addr.id)
->> +		return mptcp_nl_remove_id_zero_address(sock_net(skb->sk));
-> =
+v2:
+ - drop __mptcp_wr_shutdown in v1.
 
-> I think this deserve a comment explaning why the generic addr removal
-> code below is ineffective, something alike:
-> =
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
 
-> /* the zero id address is special: the first address used by the msk
->   * always get such id, so different subflows can have different
->   * zero id address. Additionally zero id is not accounted in id_bitmap.
->   * Let's use an 'mptcp_rm_list' instead of the common remove code.
->   */
-> =
+Geliang Tang (5):
+  mptcp: avoid passing rm_list as a struct
+  mptcp: remove all subflows involving id 0 address
+  mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+  mptcp: remove id 0 address
+  selftests: mptcp: remove id 0 address testcases
 
-> [minus grammar/syntax errors on my side ;)]
+ net/mptcp/options.c                           |   4 +-
+ net/mptcp/pm.c                                |  23 ++--
+ net/mptcp/pm_netlink.c                        | 128 ++++++++++--------
+ net/mptcp/protocol.h                          |  16 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  29 +++-
+ 5 files changed, 122 insertions(+), 78 deletions(-)
 
-Good idea! And while at it, it is maybe clearer with:
-
-   if (addr.addr.id =3D=3D 0)
-
-"!" is often confusing when used with numbers, i.e. something else than =
-
-pointers and booleans. Especially "if (!ret) success();" :)
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2389668776143978866==--
+2.29.2
+
+--===============0322381754999506201==--
