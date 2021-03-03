@@ -1,112 +1,129 @@
-Content-Type: multipart/mixed; boundary="===============7984305622860323394=="
+Content-Type: multipart/mixed; boundary="===============5189390756566941289=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: fix length of ADD_ADDR with port suboption
-Date: Wed, 03 Mar 2021 20:56:49 +0100
-Message-ID: <1b943ed676d393e8cdf99813aee059909770cf7b.1614801327.git.dcaratti@redhat.com>
+Subject: [MPTCP] Re: [MPTCP][PATCH v5 mptcp-next 4/5] mptcp: remove id 0
+ address
+Date: Wed, 03 Mar 2021 12:09:02 -0800
+Message-ID: <4f5cbae0-ff9a-fa76-7dd5-d29dd6a8ea6@linux.intel.com>
+In-Reply-To: 96af88c9f74f6c75d307d1297d3c7293495b930f.1614776769.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8006
+X-UID: 8007
 
---===============7984305622860323394==
+--===============5189390756566941289==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-in current Linux, MPTCP peers advertising endpoints with port numbers use
-a sub-option length that wrongly accounts for the trailing TCP NOP. Also,
-receivers will only process incoming ADD_ADDR with port having such wrong
-sub-option length. Fix this, making ADD_ADDR compliant to RFC8684 =C2=A73.4=
-.1.
+On Wed, 3 Mar 2021, Geliang Tang wrote:
 
-this can be verified running tcpdump on the kselftests artifacts:
+> This patch added a new function mptcp_nl_remove_id_zero_address to
+> remove the id 0 address.
+>
+> In this function, fill the remove list with the id 0, and pass it to
+> mptcp_pm_remove_addr and mptcp_pm_remove_subflow.
+>
+> Suggested-by: Paolo Abeni <pabeni(a)redhat.com>
+> Suggested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> net/mptcp/pm_netlink.c | 35 +++++++++++++++++++++++++++++++++++
+> 1 file changed, 35 insertions(+)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 2bd61d55186b..6d04f5f77c61 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1164,6 +1164,33 @@ static void mptcp_pm_free_addr_entry(struct mptcp_=
+pm_addr_entry *entry)
+> 	}
+> }
+>
+> +static int mptcp_nl_remove_id_zero_address(struct net *net)
+> +{
+> +	struct mptcp_sock *msk;
+> +	long s_slot =3D 0, s_num =3D 0;
+> +	struct mptcp_rm_list list =3D { .nr =3D 0 };
+> +
+> +	list.ids[list.nr++] =3D 0;
+> +
+> +	while ((msk =3D mptcp_token_iter_next(net, &s_slot, &s_num)) !=3D NULL)=
+ {
+> +		struct sock *sk =3D (struct sock *)msk;
+> +
+> +		if (list_empty(&msk->conn_list))
+> +			goto next;
+> +
+> +		lock_sock(sk);
+> +		mptcp_pm_remove_addr(msk, &list);
+> +		mptcp_pm_remove_subflow(msk, &list);
+> +		release_sock(sk);
+> +
+> +next:
+> +		sock_put(sk);
+> +		cond_resched();
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *i=
+nfo)
+> {
+> 	struct nlattr *attr =3D info->attrs[MPTCP_PM_ATTR_ADDR];
+> @@ -1176,6 +1203,14 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *s=
+kb, struct genl_info *info)
+> 	if (ret < 0)
+> 		return ret;
+>
+> +	/* the zero id address is special: the first address used by the msk
+> +	 * always gets such an id, so different subflows can have different zero
+> +	 * id addresses. Additionally zero id is not accounted for in id_bitmap.
+> +	 * Let's use an 'mptcp_rm_list' instead of the common remove code.
+> +	 */
+> +	if (addr.addr.id =3D=3D 0)
+> +		return mptcp_nl_remove_id_zero_address(sock_net(skb->sk));
+> +
 
- unpatched kernel:
- [root(a)bottarga mptcp]# tcpdump -tnnr unpatched.pcap | grep add-addr
- reading from file mp_join-01-ns1-0-CnJXtE.pcap, link-type LINUX_SLL (Linux=
- cooked v1), snapshot length 65535
- IP 10.0.1.1.10000 > 10.0.1.2.53078: Flags [.], ack 101, win 509, options [=
-nop,nop,TS val 214459678 ecr 521312851,mptcp add-addr v1 id 1 a00:201:2774:=
-2d88:7436:85c3:17fd:101], length 0
- IP 10.0.1.2.53078 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
-nop,nop,TS val 521312852 ecr 214459678,mptcp add-addr[bad opt]]
+For nonzero address IDs, we know that the ID maps to a single IP address =
 
- patched kernel:
- [root(a)bottarga mptcp]# tcpdump -tnnr patched.pcap | grep add-addr
- reading from file mp_join-01-ns1-0-pVuVxp.pcap, link-type LINUX_SLL (Linux=
- cooked v1), snapshot length 65535
- IP 10.0.1.1.10000 > 10.0.1.2.38178: Flags [.], ack 101, win 509, options [=
-nop,nop,TS val 3728873902 ecr 2732713192,mptcp add-addr v1 id 1 10.0.2.1:10=
-100 hmac 0xbccdfcbe59292a1f,nop,nop], length 0
- IP 10.0.1.2.38178 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
-nop,nop,TS val 2732713195 ecr 3728873902,mptcp add-addr v1-echo id 1 10.0.2=
-.1:10100,nop,nop], length 0
+for all MPTCP connections in the namespace.
 
-Fixes: 22fb85ffaefb ("mptcp: add port support for ADD_ADDR suboption writin=
-g")
-CC: stable(a)vger.kernel.org # 5.11+
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/options.c  |  2 ++
- net/mptcp/protocol.h | 14 ++++++++------
- 2 files changed, 10 insertions(+), 6 deletions(-)
+For address ID =3D=3D 0, different MPTCP connections could be using differe=
+nt =
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 444a38681e93..c8a7270dc61c 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1196,6 +1196,8 @@ void mptcp_write_options(__be32 *ptr, const struct tc=
-p_sock *tp,
- 				ptr +=3D 2;
- 			}
- 		} else {
-+			/* account for 2 trailing 'nop' options */
-+			len +=3D TCPOLEN_MPTCP_PORT_ALIGN;
- 			if (opts->ahmac) {
- 				u8 *bptr =3D (u8 *)ptr;
- =
+IP addresses for id 0:
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 91827d949766..e21a5bc36cf0 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -52,14 +52,15 @@
- #define TCPOLEN_MPTCP_DSS_MAP64		14
- #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
- #define TCPOLEN_MPTCP_ADD_ADDR		16
--#define TCPOLEN_MPTCP_ADD_ADDR_PORT	20
-+#define TCPOLEN_MPTCP_ADD_ADDR_PORT	18
- #define TCPOLEN_MPTCP_ADD_ADDR_BASE	8
--#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	12
-+#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	10
- #define TCPOLEN_MPTCP_ADD_ADDR6		28
--#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	32
-+#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	30
- #define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
--#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
--#define TCPOLEN_MPTCP_PORT_LEN		4
-+#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	22
-+#define TCPOLEN_MPTCP_PORT_LEN		2
-+#define TCPOLEN_MPTCP_PORT_ALIGN	2
- #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
- #define TCPOLEN_MPTCP_PRIO		3
- #define TCPOLEN_MPTCP_PRIO_ALIGN	4
-@@ -701,8 +702,9 @@ static inline unsigned int mptcp_add_addr_len(int famil=
-y, bool echo, bool port)
- 		len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
- 	if (!echo)
- 		len +=3D MPTCPOPT_THMAC_LEN;
-+	/* account for 2 trailing 'nop' options */
- 	if (port)
--		len +=3D TCPOLEN_MPTCP_PORT_LEN;
-+		len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
- =
+Socket A: using IP 1.2.3.4 for id 0, IP 11.22.33.44 for id 1
+Socket B: using IP 5.6.7.8 for id 0, IP 11.22.33.44 for id 1
 
- 	return len;
- }
--- =
+I don't think there is a use case for userspace asking to "delete all =
 
-2.29.2
+subflows with local ID 0 regardless of IP address".
 
---===============7984305622860323394==--
+Instead, I suggest that the del_addr netlink command require the full IP =
+
+address when using id 0. If you pass the address in to =
+
+mptcp_nl_remove_id_zero_address(), it can then remove only subflows using =
+
+id 0 and the exact IP.
+
+
+Thanks for the revisions, the first three patches look good!
+
+Mat
+
+
+> 	spin_lock_bh(&pernet->lock);
+> 	entry =3D __lookup_addr_by_id(pernet, addr.addr.id);
+> 	if (!entry) {
+> -- =
+
+> 2.29.2
+
+--
+Mat Martineau
+Intel
+--===============5189390756566941289==--
