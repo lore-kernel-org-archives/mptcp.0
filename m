@@ -1,70 +1,185 @@
-Content-Type: multipart/mixed; boundary="===============6356659267081742427=="
+Content-Type: multipart/mixed; boundary="===============5191756730039477646=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v4 mptcp-next 1/4] mptcp: remove all subflows
- involving id 0 address
-Date: Wed, 03 Mar 2021 15:48:58 +0800
-Message-ID: <751c42fd164f37ff6f7af4f009285c7c7a920470.1614757087.git.geliangtang@gmail.com>
-In-Reply-To: cover.1614757087.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v4 mptcp-next 2/4] mptcp: unify RM_ADDR and
+ RM_SUBFLOW receiving
+Date: Wed, 03 Mar 2021 15:48:59 +0800
+Message-ID: <06d4bf11abca96d8b060d8ffec7923c54ece2654.1614757087.git.geliangtang@gmail.com>
+In-Reply-To: 751c42fd164f37ff6f7af4f009285c7c7a920470.1614757087.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 7986
+X-UID: 7987
 
---===============6356659267081742427==
+--===============5191756730039477646==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-There's only one subflow involving the non-zero id address, but there
-may be multi subflows involving the id 0 address.
-
-Here's an example:
-
- local_id=3D0, remote_id=3D0
- local_id=3D1, remote_id=3D0
- local_id=3D0, remote_id=3D1
-
-If the removing address id is 0, all the subflows involving the id 0
-address need to be removed.
-
-In mptcp_pm_nl_rm_addr_received/mptcp_pm_nl_rm_subflow_received, the
-"break" prevents the iteration to the next subflow, so this patch
-dropped them.
+There are some duplicate code in mptcp_pm_nl_rm_addr_received and
+mptcp_pm_nl_rm_subflow_received. This patch unifies them into a new
+function named mptcp_pm_nl_rm_addr_or_subflow. In it, use the input
+parameter type to identify it's now removing an address or a subflow.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm_netlink.c | 4 ----
- 1 file changed, 4 deletions(-)
+ net/mptcp/pm_netlink.c | 88 +++++++++++++++++++-----------------------
+ 1 file changed, 40 insertions(+), 48 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 328fdcc35bfd..1cad39edde31 100644
+index 1cad39edde31..419b643bd6fe 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -629,8 +629,6 @@ static void mptcp_pm_nl_rm_addr_received(struct mptcp_s=
-ock *msk)
- 			WRITE_ONCE(msk->pm.accept_addr, true);
+@@ -594,45 +594,75 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *m=
+sk,
+ 	return -EINVAL;
+ }
  =
 
- 			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
--
--			break;
+-static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
++enum rm_type {
++	RM_ADDR,
++	RM_SUBFLOW,
++};
++
++static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
++					   struct mptcp_rm_list rm_list,
++					   enum rm_type type)
+ {
+ 	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct sock *sk =3D (struct sock *)msk;
+ 	u8 i;
+ =
+
+-	pr_debug("address rm_list_nr %d", msk->pm.rm_list_rx.nr);
++	pr_debug("%s rm_list_nr %d", type =3D=3D RM_ADDR ? "address" : "subflow",=
+ rm_list.nr);
+ =
+
+ 	msk_owned_by_me(msk);
+ =
+
+-	if (!msk->pm.rm_list_rx.nr)
++	if (!rm_list.nr)
+ 		return;
+ =
+
+ 	if (list_empty(&msk->conn_list))
+ 		return;
+ =
+
+-	for (i =3D 0; i < msk->pm.rm_list_rx.nr; i++) {
++	for (i =3D 0; i < rm_list.nr; i++) {
+ 		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+ 			int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
++			u8 id =3D subflow->local_id;
++
++			if (type =3D=3D RM_ADDR)
++				id =3D subflow->remote_id;
+ =
+
+-			if (msk->pm.rm_list_rx.ids[i] !=3D subflow->remote_id)
++			if (rm_list.ids[i] !=3D id)
+ 				continue;
+ =
+
+-			pr_debug(" -> address rm_list_ids[%d]=3D%u", i, msk->pm.rm_list_rx.ids[=
+i]);
++			pr_debug(" -> %s rm_list_ids[%d]=3D%u local_id=3D%u remote_id=3D%u",
++				 type =3D=3D RM_ADDR ? "address" : "subflow", i, rm_list.ids[i],
++				 subflow->local_id, subflow->remote_id);
+ 			spin_unlock_bh(&msk->pm.lock);
+ 			mptcp_subflow_shutdown(sk, ssk, how);
+ 			mptcp_close_ssk(sk, ssk, subflow);
+ 			spin_lock_bh(&msk->pm.lock);
+ =
+
+-			msk->pm.add_addr_accepted--;
+-			msk->pm.subflows--;
+-			WRITE_ONCE(msk->pm.accept_addr, true);
++			if (type =3D=3D RM_ADDR) {
++				msk->pm.add_addr_accepted--;
++				msk->pm.subflows--;
++				WRITE_ONCE(msk->pm.accept_addr, true);
+ =
+
+-			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
++				__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
++			} else if (type =3D=3D RM_SUBFLOW) {
++				msk->pm.local_addr_used--;
++				msk->pm.subflows--;
++
++				__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
++			}
  		}
  	}
  }
-@@ -702,8 +700,6 @@ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock =
-*msk, struct mptcp_rm_lis
- 			msk->pm.subflows--;
  =
 
- 			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
--
--			break;
- 		}
- 	}
++static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
++{
++	mptcp_pm_nl_rm_addr_or_subflow(msk, msk->pm.rm_list_rx, RM_ADDR);
++}
++
++void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, struct mptcp_=
+rm_list rm_list)
++{
++	mptcp_pm_nl_rm_addr_or_subflow(msk, rm_list, RM_SUBFLOW);
++}
++
+ void mptcp_pm_nl_work(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_data *pm =3D &msk->pm;
+@@ -666,44 +696,6 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk)
+ 	spin_unlock_bh(&msk->pm.lock);
  }
+ =
+
+-void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, struct mptcp_=
+rm_list rm_list)
+-{
+-	struct mptcp_subflow_context *subflow, *tmp;
+-	struct sock *sk =3D (struct sock *)msk;
+-	u8 i;
+-
+-	pr_debug("subflow rm_list_nr %d", rm_list.nr);
+-
+-	msk_owned_by_me(msk);
+-
+-	if (!rm_list.nr)
+-		return;
+-
+-	if (list_empty(&msk->conn_list))
+-		return;
+-
+-	for (i =3D 0; i < rm_list.nr; i++) {
+-		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+-			struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
+-			int how =3D RCV_SHUTDOWN | SEND_SHUTDOWN;
+-
+-			if (rm_list.ids[i] !=3D subflow->local_id)
+-				continue;
+-
+-			pr_debug(" -> subflow rm_list_ids[%d]=3D%u", i, rm_list.ids[i]);
+-			spin_unlock_bh(&msk->pm.lock);
+-			mptcp_subflow_shutdown(sk, ssk, how);
+-			mptcp_close_ssk(sk, ssk, subflow);
+-			spin_lock_bh(&msk->pm.lock);
+-
+-			msk->pm.local_addr_used--;
+-			msk->pm.subflows--;
+-
+-			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
+-		}
+-	}
+-}
+-
+ static bool address_use_port(struct mptcp_pm_addr_entry *entry)
+ {
+ 	return (entry->addr.flags &
 -- =
 
 2.29.2
 
---===============6356659267081742427==--
+--===============5191756730039477646==--
