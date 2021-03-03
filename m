@@ -1,123 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============8476456524154134296=="
+Content-Type: multipart/mixed; boundary="===============7984305622860323394=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 2/3] mptcp: check the
- removing initial subflow
-Date: Wed, 03 Mar 2021 11:42:42 -0800
-Message-ID: <e2db5c8c-898-85c9-4f98-d6de4970176b@linux.intel.com>
-In-Reply-To: CA+WQbwsqjN+rQT6gE76_dabz-dP2TtnX34N5iA4-j5rmKbYSAA@mail.gmail.com
+Subject: [MPTCP] [PATCH net] mptcp: fix length of ADD_ADDR with port suboption
+Date: Wed, 03 Mar 2021 20:56:49 +0100
+Message-ID: <1b943ed676d393e8cdf99813aee059909770cf7b.1614801327.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8005
+X-UID: 8006
 
---===============8476456524154134296==
+--===============7984305622860323394==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 3 Mar 2021, Geliang Tang wrote:
+in current Linux, MPTCP peers advertising endpoints with port numbers use
+a sub-option length that wrongly accounts for the trailing TCP NOP. Also,
+receivers will only process incoming ADD_ADDR with port having such wrong
+sub-option length. Fix this, making ADD_ADDR compliant to RFC8684 =C2=A73.4=
+.1.
 
-> Hi Mat,
->
-> Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=
-=B43=E6=9C=883=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=889:44=E5=86=99=
-=E9=81=93=EF=BC=9A
->>
->> On Tue, 2 Mar 2021, Geliang Tang wrote:
->>
->>> If the removing address id is 0, the initial subflow needs to be remove=
-d.
->>> Since the initial subflow's both local_id and remote_id are all zeros,
->>> this patch checks them to make sure it's now removing the right subflow.
->>>
->>> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
->>> ---
->>> net/mptcp/pm_netlink.c | 5 +++++
->>> 1 file changed, 5 insertions(+)
->>>
->>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->>> index eaac9824f444..439c9ee57566 100644
->>> --- a/net/mptcp/pm_netlink.c
->>> +++ b/net/mptcp/pm_netlink.c
->>> @@ -629,6 +629,11 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct =
-mptcp_sock *msk,
->>>                       if (rm_list.ids[i] !=3D id)
->>>                               continue;
->>>
->>> +                     if (!rm_list.ids[i]) {
->>> +                             if (subflow->local_id || subflow->remote_=
-id)
->>> +                                     continue;
->>> +                     }
->>> +
->>
->> In my reply to v2, I commented that I did not see the initial subflow
->> closed. But that does not mean that RM_ADDR 0 should only affect the
->> initial subflow. There may be other subflows involving that address id
->> that need to be closed.
->>
->> Without this commit, do some self tests fail only because all of the
->> subflows got closed?  <--- (I am interested in the answer to this and
->> having a discussion before making more code changes)
->
-> When I ran the test in v2, some self tests got the poll timeout failures
-> since all of the subflows got closed. When I ran the test in v3, without
-> this commit, no self test fail.
->
-> The original removing code can deal with id 0 address well, only the
-> "break" in mptcp_pm_nl_rm_addr_or_subflow needs to be dropped. Since this
-> "break" prevents the iteration to the next subflow involving that address.
-> I fixed this in v4.
+this can be verified running tcpdump on the kselftests artifacts:
 
-Ok, thanks for this information!
+ unpatched kernel:
+ [root(a)bottarga mptcp]# tcpdump -tnnr unpatched.pcap | grep add-addr
+ reading from file mp_join-01-ns1-0-CnJXtE.pcap, link-type LINUX_SLL (Linux=
+ cooked v1), snapshot length 65535
+ IP 10.0.1.1.10000 > 10.0.1.2.53078: Flags [.], ack 101, win 509, options [=
+nop,nop,TS val 214459678 ecr 521312851,mptcp add-addr v1 id 1 a00:201:2774:=
+2d88:7436:85c3:17fd:101], length 0
+ IP 10.0.1.2.53078 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
+nop,nop,TS val 521312852 ecr 214459678,mptcp add-addr[bad opt]]
 
+ patched kernel:
+ [root(a)bottarga mptcp]# tcpdump -tnnr patched.pcap | grep add-addr
+ reading from file mp_join-01-ns1-0-pVuVxp.pcap, link-type LINUX_SLL (Linux=
+ cooked v1), snapshot length 65535
+ IP 10.0.1.1.10000 > 10.0.1.2.38178: Flags [.], ack 101, win 509, options [=
+nop,nop,TS val 3728873902 ecr 2732713192,mptcp add-addr v1 id 1 10.0.2.1:10=
+100 hmac 0xbccdfcbe59292a1f,nop,nop], length 0
+ IP 10.0.1.2.38178 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
+nop,nop,TS val 2732713195 ecr 3728873902,mptcp add-addr v1-echo id 1 10.0.2=
+.1:10100,nop,nop], length 0
 
-Mat
+Fixes: 22fb85ffaefb ("mptcp: add port support for ADD_ADDR suboption writin=
+g")
+CC: stable(a)vger.kernel.org # 5.11+
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/options.c  |  2 ++
+ net/mptcp/protocol.h | 14 ++++++++------
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
->
->>
->> If peer A sends RM_ADDR 0 and all of the subflows are using local_id 0 on
->> peer A's side, then it seems like it is expected that all of the subflow=
-s will
->> close. We would want to test RM_ADDR 0 when there are subflows that will
->> stay open because they do not use ID 0 on the side that is sending
->> RM_ADDR. Is this what is going on with the tests or is there a different
->> issue that is solved by the added code in this patch?
->
-> I thought that removing id 0 was just removing the initial subflow, so I
-> added this patch. As mentioned above, all the subflows involving the id 0
-> address need to be removed. So this patch need to be dropped.
->
-> Thanks.
->
-> -Geliang
->
->>
->> Thanks,
->>
->> Mat
->>
->>
->>>                       pr_debug(" -> %s rm_list_ids[%d]=3D%u local_id=3D=
-%u remote_id=3D%u",
->>>                                type =3D=3D RM_ADDR ? "address" : "subfl=
-ow", i, rm_list.ids[i],
->>>                                subflow->local_id, subflow->remote_id);
->>> --
->>> 2.29.2
->>> _______________________________________________
->>> mptcp mailing list -- mptcp(a)lists.01.org
->>> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->>>
->>
->> --
->> Mat Martineau
->> Intel
->
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 444a38681e93..c8a7270dc61c 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1196,6 +1196,8 @@ void mptcp_write_options(__be32 *ptr, const struct tc=
+p_sock *tp,
+ 				ptr +=3D 2;
+ 			}
+ 		} else {
++			/* account for 2 trailing 'nop' options */
++			len +=3D TCPOLEN_MPTCP_PORT_ALIGN;
+ 			if (opts->ahmac) {
+ 				u8 *bptr =3D (u8 *)ptr;
+ =
 
---
-Mat Martineau
-Intel
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 91827d949766..e21a5bc36cf0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -52,14 +52,15 @@
+ #define TCPOLEN_MPTCP_DSS_MAP64		14
+ #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
+ #define TCPOLEN_MPTCP_ADD_ADDR		16
+-#define TCPOLEN_MPTCP_ADD_ADDR_PORT	20
++#define TCPOLEN_MPTCP_ADD_ADDR_PORT	18
+ #define TCPOLEN_MPTCP_ADD_ADDR_BASE	8
+-#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	12
++#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	10
+ #define TCPOLEN_MPTCP_ADD_ADDR6		28
+-#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	32
++#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	30
+ #define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
+-#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
+-#define TCPOLEN_MPTCP_PORT_LEN		4
++#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	22
++#define TCPOLEN_MPTCP_PORT_LEN		2
++#define TCPOLEN_MPTCP_PORT_ALIGN	2
+ #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
+ #define TCPOLEN_MPTCP_PRIO		3
+ #define TCPOLEN_MPTCP_PRIO_ALIGN	4
+@@ -701,8 +702,9 @@ static inline unsigned int mptcp_add_addr_len(int famil=
+y, bool echo, bool port)
+ 		len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+ 	if (!echo)
+ 		len +=3D MPTCPOPT_THMAC_LEN;
++	/* account for 2 trailing 'nop' options */
+ 	if (port)
+-		len +=3D TCPOLEN_MPTCP_PORT_LEN;
++		len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
+ =
 
---===============8476456524154134296==--
+ 	return len;
+ }
+-- =
+
+2.29.2
+
+--===============7984305622860323394==--
