@@ -1,37 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============4770297447890257970=="
+Content-Type: multipart/mixed; boundary="===============2381600244942607859=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Weekly meeting - 4 March 2021 16:00 UTC (8am PDT, 5pm CET,
- 12pm CST)
-Date: Wed, 03 Mar 2021 17:16:29 +0100
-Message-ID: <ef3b9166-107e-e681-1918-09c3ab0d5981@tessares.net>
+Subject: [MPTCP] [RFC v2 PATCH 0/2] mptcp: fix deadlock in mptcp{,6}_release
+Date: Wed, 03 Mar 2021 19:43:37 +0100
+Message-ID: <cover.1614796802.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8000
+X-UID: 8001
 
---===============4770297447890257970==
+--===============2381600244942607859==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everybody!
+This address the issue the easy way: removing the bugged features
+(a lot of setsockopt including all mcast related).
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+As suggested by Mat(s) this switch to a whitelist. Assembling the
+whilelist itself is quite complex/tedious/errorprone so still RFC.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210304
+Please have a look at 1/2 for the details
 
-Feel free to add/modify topics!
+Paolo Abeni (2):
+  mptcp: only admit explicitly supported sockopt
+  mptcp: revert "mptcp: provide subflow aware release function"$ ....$
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+ net/mptcp/protocol.c | 270 ++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 217 insertions(+), 53 deletions(-)
 
-See/Speak to you tomorrow!
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4770297447890257970==--
+2.26.2
+
+--===============2381600244942607859==--
