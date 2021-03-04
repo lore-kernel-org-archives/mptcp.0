@@ -1,66 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============5616388744904016935=="
+Content-Type: multipart/mixed; boundary="===============7911846673216702014=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 1/9] mptcp: reset last_snd on subflow close
-Date: Thu, 04 Mar 2021 13:32:08 -0800
-Message-ID: <20210304213216.205472-2-mathew.j.martineau@linux.intel.com>
-In-Reply-To: 20210304213216.205472-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH net 0/9] mptcp: Fixes for v5.12
+Date: Thu, 04 Mar 2021 13:32:07 -0800
+Message-ID: <20210304213216.205472-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8027
+X-UID: 8028
 
---===============5616388744904016935==
+--===============7911846673216702014==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Florian Westphal <fw(a)strlen.de>
+These patches from the MPTCP tree fix a few multipath TCP issues:
 
-Send logic caches last active subflow in the msk, so it needs to be
-cleared when the cached subflow is closed.
 
-Fixes: d5f49190def61c ("mptcp: allow picking different xmit subflows")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/155
-Reported-by: Christoph Paasch <cpaasch(a)apple.com>
-Acked-by: Paolo Abeni <pabeni(a)redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- net/mptcp/protocol.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Patches 1 and 5 clear some stale pointers when subflows close.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c5d5e68940ea..7362a536cbc0 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2126,6 +2126,8 @@ static struct sock *mptcp_subflow_get_retrans(const s=
-truct mptcp_sock *msk)
- static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 			      struct mptcp_subflow_context *subflow)
- {
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
-+
- 	list_del(&subflow->node);
- =
+Patches 2, 4, and 9 plug some memory leaks.
 
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-@@ -2154,6 +2156,9 @@ static void __mptcp_close_ssk(struct sock *sk, struct=
- sock *ssk,
- 	release_sock(ssk);
- =
+Patch 3 fixes a memory accounting error identified by syzkaller.
 
- 	sock_put(ssk);
-+
-+	if (ssk =3D=3D msk->last_snd)
-+		msk->last_snd =3D NULL;
- }
- =
+Patches 6 and 7 fix a race condition that slowed data transmission.
 
- void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+Patch 8 adds missing wakeups when write buffer space is freed.
+
+
+Florian Westphal (4):
+  mptcp: reset last_snd on subflow close
+  mptcp: put subflow sock on connect error
+  mptcp: dispose initial struct socket when its subflow is closed
+  mptcp: reset 'first' and ack_hint on subflow close
+
+Geliang Tang (1):
+  mptcp: free resources when the port number is mismatched
+
+Paolo Abeni (4):
+  mptcp: fix memory accounting on allocation error
+  mptcp: factor out __mptcp_retrans helper()
+  mptcp: fix race in release_cb
+  mptcp: fix missing wakeup
+
+ net/mptcp/protocol.c | 165 +++++++++++++++++++++++++++----------------
+ net/mptcp/subflow.c  |  14 ++--
+ 2 files changed, 112 insertions(+), 67 deletions(-)
+
+
+base-commit: a9ecb0cbf03746b17a7c13bd8e3464e6789f73e8
 -- =
 
 2.30.1
 
---===============5616388744904016935==--
+--===============7911846673216702014==--
