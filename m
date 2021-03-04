@@ -1,165 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============8073462010287644284=="
+Content-Type: multipart/mixed; boundary="===============8469811544169554601=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 6/9] mptcp: factor out __mptcp_retrans helper()
-Date: Thu, 04 Mar 2021 13:32:13 -0800
-Message-ID: <20210304213216.205472-7-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net 9/9] mptcp: free resources when the port number is
+ mismatched
+Date: Thu, 04 Mar 2021 13:32:16 -0800
+Message-ID: <20210304213216.205472-10-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210304213216.205472-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8033
+X-UID: 8034
 
---===============8073462010287644284==
+--===============8469811544169554601==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+From: Geliang Tang <geliangtang(a)gmail.com>
 
-Will simplify the following patch, no functional change
-intended.
+When the port number is mismatched with the announced ones, use
+'goto dispose_child' to free the resources instead of using 'goto out'.
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
+This patch also moves the port number checking code in
+subflow_syn_recv_sock before mptcp_finish_join, otherwise subflow_drop_ctx
+will fail in dispose_child.
+
+Fixes: 5bc56388c74f ("mptcp: add port number check for MP_JOIN")
+Reported-by: Paolo Abeni <pabeni(a)redhat.com>
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 93 ++++++++++++++++++++++++--------------------
- 1 file changed, 50 insertions(+), 43 deletions(-)
+ net/mptcp/subflow.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3dcb564b03ad..67aaf7154dca 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2261,59 +2261,23 @@ static void mptcp_check_fastclose(struct mptcp_sock=
- *msk)
- 	mptcp_close_wake_up(sk);
- }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 41695e26c374..3d47d670e665 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -687,11 +687,6 @@ static struct sock *subflow_syn_recv_sock(const struct=
+ sock *sk,
+ 			/* move the msk reference ownership to the subflow */
+ 			subflow_req->msk =3D NULL;
+ 			ctx->conn =3D (struct sock *)owner;
+-			if (!mptcp_finish_join(child))
+-				goto dispose_child;
+-
+-			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+-			tcp_rsk(req)->drop_req =3D true;
  =
 
--static void mptcp_worker(struct work_struct *work)
-+static void __mptcp_retrans(struct sock *sk)
- {
--	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
--	struct sock *ssk, *sk =3D &msk->sk.icsk_inet.sk;
-+	struct mptcp_sock *msk =3D mptcp_sk(sk);
- 	struct mptcp_sendmsg_info info =3D {};
- 	struct mptcp_data_frag *dfrag;
- 	size_t copied =3D 0;
--	int state, ret;
--
--	lock_sock(sk);
--	state =3D sk->sk_state;
--	if (unlikely(state =3D=3D TCP_CLOSE))
--		goto unlock;
--
--	mptcp_check_data_fin_ack(sk);
--	__mptcp_flush_join_list(msk);
--
--	mptcp_check_fastclose(msk);
--
--	if (msk->pm.status)
--		mptcp_pm_nl_work(msk);
--
--	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
--		mptcp_check_for_eof(msk);
--
--	__mptcp_check_send_data_fin(sk);
--	mptcp_check_data_fin(sk);
--
--	/* There is no point in keeping around an orphaned sk timedout or
--	 * closed, but we need the msk around to reply to incoming DATA_FIN,
--	 * even if it is orphaned and in FIN_WAIT2 state
--	 */
--	if (sock_flag(sk, SOCK_DEAD) &&
--	    (mptcp_check_close_timeout(sk) || sk->sk_state =3D=3D TCP_CLOSE)) {
--		inet_sk_state_store(sk, TCP_CLOSE);
--		__mptcp_destroy_sock(sk);
--		goto unlock;
--	}
--
--	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
--		__mptcp_close_subflow(msk);
--
--	if (!test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
--		goto unlock;
-+	struct sock *ssk;
-+	int ret;
+ 			if (subflow_use_different_sport(owner, sk)) {
+ 				pr_debug("ack inet_sport=3D%d %d",
+@@ -699,10 +694,16 @@ static struct sock *subflow_syn_recv_sock(const struc=
+t sock *sk,
+ 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
+ 				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
+ 					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
+-					goto out;
++					goto dispose_child;
+ 				}
+ 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTACKRX);
+ 			}
++
++			if (!mptcp_finish_join(child))
++				goto dispose_child;
++
++			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
++			tcp_rsk(req)->drop_req =3D true;
+ 		}
+ 	}
  =
 
- 	__mptcp_clean_una(sk);
- 	dfrag =3D mptcp_rtx_head(sk);
- 	if (!dfrag)
--		goto unlock;
-+		return;
- =
-
- 	ssk =3D mptcp_subflow_get_retrans(msk);
- 	if (!ssk)
--		goto reset_unlock;
-+		goto reset_timer;
- =
-
- 	lock_sock(ssk);
- =
-
-@@ -2339,9 +2303,52 @@ static void mptcp_worker(struct work_struct *work)
- 	mptcp_set_timeout(sk, ssk);
- 	release_sock(ssk);
- =
-
--reset_unlock:
-+reset_timer:
- 	if (!mptcp_timer_pending(sk))
- 		mptcp_reset_timer(sk);
-+}
-+
-+static void mptcp_worker(struct work_struct *work)
-+{
-+	struct mptcp_sock *msk =3D container_of(work, struct mptcp_sock, work);
-+	struct sock *sk =3D &msk->sk.icsk_inet.sk;
-+	int state;
-+
-+	lock_sock(sk);
-+	state =3D sk->sk_state;
-+	if (unlikely(state =3D=3D TCP_CLOSE))
-+		goto unlock;
-+
-+	mptcp_check_data_fin_ack(sk);
-+	__mptcp_flush_join_list(msk);
-+
-+	mptcp_check_fastclose(msk);
-+
-+	if (msk->pm.status)
-+		mptcp_pm_nl_work(msk);
-+
-+	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
-+		mptcp_check_for_eof(msk);
-+
-+	__mptcp_check_send_data_fin(sk);
-+	mptcp_check_data_fin(sk);
-+
-+	/* There is no point in keeping around an orphaned sk timedout or
-+	 * closed, but we need the msk around to reply to incoming DATA_FIN,
-+	 * even if it is orphaned and in FIN_WAIT2 state
-+	 */
-+	if (sock_flag(sk, SOCK_DEAD) &&
-+	    (mptcp_check_close_timeout(sk) || sk->sk_state =3D=3D TCP_CLOSE)) {
-+		inet_sk_state_store(sk, TCP_CLOSE);
-+		__mptcp_destroy_sock(sk);
-+		goto unlock;
-+	}
-+
-+	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
-+		__mptcp_close_subflow(msk);
-+
-+	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
-+		__mptcp_retrans(sk);
- =
-
- unlock:
- 	release_sock(sk);
 -- =
 
 2.30.1
 
---===============8073462010287644284==--
+--===============8469811544169554601==--
