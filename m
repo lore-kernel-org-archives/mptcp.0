@@ -1,127 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============7012881888732140977=="
+Content-Type: multipart/mixed; boundary="===============4712233266707311073=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: patchwork-bot+netdevbpf at kernel.org
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 7/9] mptcp: fix race in release_cb
-Date: Thu, 04 Mar 2021 13:32:14 -0800
-Message-ID: <20210304213216.205472-8-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] Re: [PATCH net 0/9] mptcp: Fixes for v5.12
+Date: Thu, 04 Mar 2021 22:40:08 +0000
+Message-ID: <
+ <161489760875.17160.2919416232115076199.git-patchwork-notify@kernel.org>>
 In-Reply-To: 20210304213216.205472-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8036
+X-UID: 8037
 
---===============7012881888732140977==
+--===============4712233266707311073==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+Hello:
 
-If we receive a MPTCP_PUSH_PENDING even from a subflow when
-mptcp_release_cb() is serving the previous one, the latter
-will be delayed up to the next release_sock(msk).
+This series was applied to netdev/net.git (refs/heads/master):
 
-Address the issue implementing a test/serve loop for such
-event.
+On Thu,  4 Mar 2021 13:32:07 -0800 you wrote:
+> These patches from the MPTCP tree fix a few multipath TCP issues:
+> =
 
-Additionally rename the push helper to __mptcp_push_pending()
-to be more consistent with the existing code.
+> =
 
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- net/mptcp/protocol.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+> Patches 1 and 5 clear some stale pointers when subflows close.
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 67aaf7154dca..d2a2169e6d9e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1445,7 +1445,7 @@ static void mptcp_push_release(struct sock *sk, struc=
-t sock *ssk,
- 	release_sock(ssk);
- }
- =
+> Patches 2, 4, and 9 plug some memory leaks.
+> =
 
--static void mptcp_push_pending(struct sock *sk, unsigned int flags)
-+static void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- {
- 	struct sock *prev_ssk =3D NULL, *ssk =3D NULL;
- 	struct mptcp_sock *msk =3D mptcp_sk(sk);
-@@ -1697,14 +1697,14 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
-ghdr *msg, size_t len)
- =
+> [...]
 
- wait_for_memory:
- 		mptcp_set_nospace(sk);
--		mptcp_push_pending(sk, msg->msg_flags);
-+		__mptcp_push_pending(sk, msg->msg_flags);
- 		ret =3D sk_stream_wait_memory(sk, &timeo);
- 		if (ret)
- 			goto out;
- 	}
- =
+Here is the summary with links:
+  - [net,1/9] mptcp: reset last_snd on subflow close
+    https://git.kernel.org/netdev/net/c/e0be4931f3fe
+  - [net,2/9] mptcp: put subflow sock on connect error
+    https://git.kernel.org/netdev/net/c/f07157792c63
+  - [net,3/9] mptcp: fix memory accounting on allocation error
+    https://git.kernel.org/netdev/net/c/eaeef1ce55ec
+  - [net,4/9] mptcp: dispose initial struct socket when its subflow is clos=
+ed
+    https://git.kernel.org/netdev/net/c/17aee05dc882
+  - [net,5/9] mptcp: reset 'first' and ack_hint on subflow close
+    https://git.kernel.org/netdev/net/c/c8fe62f0768c
+  - [net,6/9] mptcp: factor out __mptcp_retrans helper()
+    https://git.kernel.org/netdev/net/c/2948d0a1e5ae
+  - [net,7/9] mptcp: fix race in release_cb
+    https://git.kernel.org/netdev/net/c/c2e6048fa1cf
+  - [net,8/9] mptcp: fix missing wakeup
+    https://git.kernel.org/netdev/net/c/417789df4a03
+  - [net,9/9] mptcp: free resources when the port number is mismatched
+    https://git.kernel.org/netdev/net/c/9238e900d6ec
 
- 	if (copied)
--		mptcp_push_pending(sk, msg->msg_flags);
-+		__mptcp_push_pending(sk, msg->msg_flags);
- =
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
- out:
- 	release_sock(sk);
-@@ -2959,13 +2959,14 @@ static void mptcp_release_cb(struct sock *sk)
- {
- 	unsigned long flags, nflags;
- =
 
--	/* push_pending may touch wmem_reserved, do it before the later
--	 * cleanup
--	 */
--	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
--		__mptcp_clean_una(sk);
--	if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags)) {
--		/* mptcp_push_pending() acquires the subflow socket lock
-+	for (;;) {
-+		flags =3D 0;
-+		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
-+			flags |=3D MPTCP_PUSH_PENDING;
-+		if (!flags)
-+			break;
-+
-+		/* the following actions acquire the subflow socket lock
- 		 *
- 		 * 1) can't be invoked in atomic scope
- 		 * 2) must avoid ABBA deadlock with msk socket spinlock: the RX
-@@ -2974,13 +2975,21 @@ static void mptcp_release_cb(struct sock *sk)
- 		 */
- =
-
- 		spin_unlock_bh(&sk->sk_lock.slock);
--		mptcp_push_pending(sk, 0);
-+		if (flags & MPTCP_PUSH_PENDING)
-+			__mptcp_push_pending(sk, 0);
-+
-+		cond_resched();
- 		spin_lock_bh(&sk->sk_lock.slock);
- 	}
-+
-+	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
-+		__mptcp_clean_una(sk);
- 	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
- 		__mptcp_error_report(sk);
- =
-
--	/* clear any wmem reservation and errors */
-+	/* push_pending may touch wmem_reserved, ensure we do the cleanup
-+	 * later
-+	 */
- 	__mptcp_update_wmem(sk);
- 	__mptcp_update_rmem(sk);
- =
-
--- =
-
-2.30.1
-
---===============7012881888732140977==--
+--===============4712233266707311073==--
