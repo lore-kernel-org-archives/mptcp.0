@@ -1,83 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============1382461530872360576=="
+Content-Type: multipart/mixed; boundary="===============7012881888732140977=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net 8/9] mptcp: fix missing wakeup
-Date: Thu, 04 Mar 2021 13:32:15 -0800
-Message-ID: <20210304213216.205472-9-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net 7/9] mptcp: fix race in release_cb
+Date: Thu, 04 Mar 2021 13:32:14 -0800
+Message-ID: <20210304213216.205472-8-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210304213216.205472-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8035
+X-UID: 8036
 
---===============1382461530872360576==
+--===============7012881888732140977==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Paolo Abeni <pabeni(a)redhat.com>
 
-__mptcp_clean_una() can free write memory and should wake-up
-user-space processes when needed.
+If we receive a MPTCP_PUSH_PENDING even from a subflow when
+mptcp_release_cb() is serving the previous one, the latter
+will be delayed up to the next release_sock(msk).
 
-When such function is invoked by the MPTCP receive path, the wakeup
-is not needed, as the TCP stack will later trigger subflow_write_space
-which will do the wakeup as needed.
+Address the issue implementing a test/serve loop for such
+event.
 
-Other __mptcp_clean_una() call sites need an additional wakeup check
-Let's bundle the relevant code in a new helper and use it.
+Additionally rename the push helper to __mptcp_push_pending()
+to be more consistent with the existing code.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/165
 Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
-Fixes: 64b9cea7a0af ("mptcp: fix spurious retransmissions")
-Tested-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
 Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/protocol.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d2a2169e6d9e..76958570ae7f 100644
+index 67aaf7154dca..d2a2169e6d9e 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1061,6 +1061,12 @@ static void __mptcp_clean_una(struct sock *sk)
- 	}
+@@ -1445,7 +1445,7 @@ static void mptcp_push_release(struct sock *sk, struc=
+t sock *ssk,
+ 	release_sock(ssk);
  }
  =
 
-+static void __mptcp_clean_una_wakeup(struct sock *sk)
-+{
-+	__mptcp_clean_una(sk);
-+	mptcp_write_space(sk);
-+}
-+
- static void mptcp_enter_memory_pressure(struct sock *sk)
+-static void mptcp_push_pending(struct sock *sk, unsigned int flags)
++static void __mptcp_push_pending(struct sock *sk, unsigned int flags)
  {
- 	struct mptcp_subflow_context *subflow;
-@@ -2270,7 +2276,7 @@ static void __mptcp_retrans(struct sock *sk)
- 	struct sock *ssk;
- 	int ret;
+ 	struct sock *prev_ssk =3D NULL, *ssk =3D NULL;
+ 	struct mptcp_sock *msk =3D mptcp_sk(sk);
+@@ -1697,14 +1697,14 @@ static int mptcp_sendmsg(struct sock *sk, struct ms=
+ghdr *msg, size_t len)
  =
 
--	__mptcp_clean_una(sk);
-+	__mptcp_clean_una_wakeup(sk);
- 	dfrag =3D mptcp_rtx_head(sk);
- 	if (!dfrag)
- 		return;
-@@ -2983,7 +2989,7 @@ static void mptcp_release_cb(struct sock *sk)
+ wait_for_memory:
+ 		mptcp_set_nospace(sk);
+-		mptcp_push_pending(sk, msg->msg_flags);
++		__mptcp_push_pending(sk, msg->msg_flags);
+ 		ret =3D sk_stream_wait_memory(sk, &timeo);
+ 		if (ret)
+ 			goto out;
  	}
  =
 
- 	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
+ 	if (copied)
+-		mptcp_push_pending(sk, msg->msg_flags);
++		__mptcp_push_pending(sk, msg->msg_flags);
+ =
+
+ out:
+ 	release_sock(sk);
+@@ -2959,13 +2959,14 @@ static void mptcp_release_cb(struct sock *sk)
+ {
+ 	unsigned long flags, nflags;
+ =
+
+-	/* push_pending may touch wmem_reserved, do it before the later
+-	 * cleanup
+-	 */
+-	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
 -		__mptcp_clean_una(sk);
-+		__mptcp_clean_una_wakeup(sk);
+-	if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags)) {
+-		/* mptcp_push_pending() acquires the subflow socket lock
++	for (;;) {
++		flags =3D 0;
++		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
++			flags |=3D MPTCP_PUSH_PENDING;
++		if (!flags)
++			break;
++
++		/* the following actions acquire the subflow socket lock
+ 		 *
+ 		 * 1) can't be invoked in atomic scope
+ 		 * 2) must avoid ABBA deadlock with msk socket spinlock: the RX
+@@ -2974,13 +2975,21 @@ static void mptcp_release_cb(struct sock *sk)
+ 		 */
+ =
+
+ 		spin_unlock_bh(&sk->sk_lock.slock);
+-		mptcp_push_pending(sk, 0);
++		if (flags & MPTCP_PUSH_PENDING)
++			__mptcp_push_pending(sk, 0);
++
++		cond_resched();
+ 		spin_lock_bh(&sk->sk_lock.slock);
+ 	}
++
++	if (test_and_clear_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->flags))
++		__mptcp_clean_una(sk);
  	if (test_and_clear_bit(MPTCP_ERROR_REPORT, &mptcp_sk(sk)->flags))
  		__mptcp_error_report(sk);
+ =
+
+-	/* clear any wmem reservation and errors */
++	/* push_pending may touch wmem_reserved, ensure we do the cleanup
++	 * later
++	 */
+ 	__mptcp_update_wmem(sk);
+ 	__mptcp_update_rmem(sk);
  =
 
 -- =
 
 2.30.1
 
---===============1382461530872360576==--
+--===============7012881888732140977==--
