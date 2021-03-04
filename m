@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============1963406688639405125=="
+Content-Type: multipart/mixed; boundary="===============2462749153814958450=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 2/6] Squash to "mptcp: add
- rm_list_tx in mptcp_pm_data"
-Date: Thu, 04 Mar 2021 14:42:44 +0800
-Message-ID: <20210304064248.9636-3-geliangtang@gmail.com>
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 3/6] Squash to "mptcp: add rm_list
+ in mptcp_options_received"
+Date: Thu, 04 Mar 2021 14:42:45 +0800
+Message-ID: <20210304064248.9636-4-geliangtang@gmail.com>
 In-Reply-To: 20210304064248.9636-1-geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8011
+X-UID: 8012
 
---===============1963406688639405125==
+--===============2462749153814958450==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -21,86 +21,82 @@ rm_list" to "const struct mptcp_rm_list *rm_list".
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- net/mptcp/pm.c         | 8 ++++----
- net/mptcp/pm_netlink.c | 2 +-
- net/mptcp/protocol.h   | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ net/mptcp/options.c  |  2 +-
+ net/mptcp/pm.c       | 11 ++++++-----
+ net/mptcp/protocol.h |  3 ++-
+ 3 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 0aae63bc4f7d..55b5b13f4c9b 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1047,7 +1047,7 @@ void mptcp_incoming_options(struct sock *sk, struct s=
+k_buff *skb)
+ 	}
+ =
+
+ 	if (mp_opt.rm_addr) {
+-		mptcp_pm_rm_addr_received(msk, mp_opt.rm_list);
++		mptcp_pm_rm_addr_received(msk, &mp_opt.rm_list);
+ 		mp_opt.rm_addr =3D 0;
+ 	}
+ =
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 67b5a0390bf0..a234e149c9c2 100644
+index 9a97992a44cd..0cd06743ed3f 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -39,18 +39,18 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 	return 0;
+@@ -204,19 +204,20 @@ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *ms=
+k)
+ 	mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_SEND_ACK);
  }
  =
 
--int mptcp_pm_remove_addr(struct mptcp_sock *msk, struct mptcp_rm_list rm_l=
-ist)
-+int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_lis=
-t *rm_list)
+-void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, struct mptcp_rm_lis=
+t rm_list)
++void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
++			       const struct mptcp_rm_list *rm_list)
  {
- 	u8 rm_addr =3D READ_ONCE(msk->pm.addr_signal);
+ 	struct mptcp_pm_data *pm =3D &msk->pm;
+ 	u8 i;
  =
 
--	pr_debug("msk=3D%p, rm_list_nr=3D%d", msk, rm_list.nr);
-+	pr_debug("msk=3D%p, rm_list_nr=3D%d", msk, rm_list->nr);
+-	pr_debug("msk=3D%p remote_ids_nr=3D%d", msk, rm_list.nr);
++	pr_debug("msk=3D%p remote_ids_nr=3D%d", msk, rm_list->nr);
  =
 
- 	if (rm_addr) {
- 		pr_warn("addr_signal error, rm_addr=3D%d", rm_addr);
- 		return -EINVAL;
- 	}
+-	for (i =3D 0; i < rm_list.nr; i++)
+-		mptcp_event_addr_removed(msk, rm_list.ids[i]);
++	for (i =3D 0; i < rm_list->nr; i++)
++		mptcp_event_addr_removed(msk, rm_list->ids[i]);
  =
 
--	msk->pm.rm_list_tx =3D rm_list;
-+	msk->pm.rm_list_tx =3D *rm_list;
- 	rm_addr |=3D BIT(MPTCP_RM_ADDR_SIGNAL);
- 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
- 	return 0;
-@@ -267,7 +267,7 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, un=
-signed int remaining,
- 	if (!mptcp_pm_should_rm_signal(msk))
- 		goto out_unlock;
+ 	spin_lock_bh(&pm->lock);
+ 	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
+-	pm->rm_id =3D rm_list.ids[0];
++	pm->rm_id =3D rm_list->ids[0];
+ 	spin_unlock_bh(&pm->lock);
+ }
  =
 
--	len =3D mptcp_rm_addr_len(msk->pm.rm_list_tx);
-+	len =3D mptcp_rm_addr_len(&msk->pm.rm_list_tx);
- 	if (len < 0) {
- 		WRITE_ONCE(msk->pm.addr_signal, 0);
- 		goto out_unlock;
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 071928a96012..d73e813a6553 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1102,7 +1102,7 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_so=
-ck *msk,
- 	ret =3D remove_anno_list_by_saddr(msk, addr);
- 	if (ret || force) {
- 		spin_lock_bh(&msk->pm.lock);
--		mptcp_pm_remove_addr(msk, list);
-+		mptcp_pm_remove_addr(msk, &list);
- 		spin_unlock_bh(&msk->pm.lock);
- 	}
- 	return ret;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 4b4cc538e490..49169a42abe9 100644
+index bf270538ebe9..cd3d4eea6b57 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -661,7 +661,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
- 			   bool echo);
--int mptcp_pm_remove_addr(struct mptcp_sock *msk, struct mptcp_rm_list rm_l=
-ist);
-+int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_lis=
-t *rm_list);
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, u8 local_id);
- =
-
- void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+@@ -647,7 +647,8 @@ void mptcp_pm_subflow_closed(struct mptcp_sock *msk, u8=
+ id);
+ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ 				const struct mptcp_addr_info *addr);
+ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
+-void mptcp_pm_rm_addr_received(struct mptcp_sock *msk, struct mptcp_rm_lis=
+t rm_list);
++void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
++			       const struct mptcp_rm_list *rm_list);
+ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
+ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+ 				 struct mptcp_addr_info *addr,
 -- =
 
 2.29.2
 
---===============1963406688639405125==--
+--===============2462749153814958450==--
