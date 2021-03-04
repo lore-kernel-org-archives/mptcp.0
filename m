@@ -1,121 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============4594094792388995272=="
+Content-Type: multipart/mixed; boundary="===============3395410573485353057=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-net] selftests: mptcp: Restore packet
- capture option in join tests
-Date: Thu, 04 Mar 2021 18:58:06 +0800
-Message-ID: <CA+WQbwvf_ZiKdbhVRWoGry5XOxp-7y20x5Twa04mtDFZXd2cxQ@mail.gmail.com>
-In-Reply-To: 20210303224300.95599-1-mathew.j.martineau@linux.intel.com
+Subject: [MPTCP] [PATCH net v2] mptcp: fix length of ADD_ADDR with port
+ suboption
+Date: Thu, 04 Mar 2021 17:23:23 +0100
+Message-ID: <dfea8e080c5e8bbcbeefa64a4b8d7ff2becea639.1614874814.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8024
+X-UID: 8025
 
---===============4594094792388995272==
+--===============3395410573485353057==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+in current Linux, MPTCP peers advertising endpoints with port numbers use
+a sub-option length that wrongly accounts for the trailing TCP NOP. Also,
+receivers will only process incoming ADD_ADDR with port having such wrong
+sub-option length. Fix this, making ADD_ADDR compliant to RFC8684 =C2=A73.4=
+.1.
 
-I tested this patch, it works well. Thanks.
+this can be verified running tcpdump on the kselftests artifacts:
 
-Acked-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
+ unpatched kernel:
+ [root(a)bottarga mptcp]# tcpdump -tnnr unpatched.pcap | grep add-addr
+ reading from file unpatched.pcap, link-type LINUX_SLL (Linux cooked v1), s=
+napshot length 65535
+ IP 10.0.1.1.10000 > 10.0.1.2.53078: Flags [.], ack 101, win 509, options [=
+nop,nop,TS val 214459678 ecr 521312851,mptcp add-addr v1 id 1 a00:201:2774:=
+2d88:7436:85c3:17fd:101], length 0
+ IP 10.0.1.2.53078 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
+nop,nop,TS val 521312852 ecr 214459678,mptcp add-addr[bad opt]]
 
--Geliang
+ patched kernel:
+ [root(a)bottarga mptcp]# tcpdump -tnnr patched.pcap | grep add-addr
+ reading from file patched.pcap, link-type LINUX_SLL (Linux cooked v1), sna=
+pshot length 65535
+ IP 10.0.1.1.10000 > 10.0.1.2.38178: Flags [.], ack 101, win 509, options [=
+nop,nop,TS val 3728873902 ecr 2732713192,mptcp add-addr v1 id 1 10.0.2.1:10=
+100 hmac 0xbccdfcbe59292a1f,nop,nop], length 0
+ IP 10.0.1.2.38178 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
+nop,nop,TS val 2732713195 ecr 3728873902,mptcp add-addr v1-echo id 1 10.0.2=
+.1:10100,nop,nop], length 0
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=B4=
-3=E6=9C=884=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=886:43=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> The join self tests previously used the '-c' command line option to
-> enable creation of pcap files for the tests that run, but the change to
-> allow running a subset of the join tests made overlapping use of that
-> option.
->
-> Restore the capture functionality with '-c' and move the syncookie test
-> option to '-k'.
->
-> Fixes: 1002b89f23ea ("selftests: mptcp: add command line arguments for mp=
-tcp_join.sh")
-> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 26 ++++++++++++-------
->  1 file changed, 16 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index 96379ede5925..4d7dab0bce7a 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -12,6 +12,7 @@ timeout_poll=3D30
->  timeout_test=3D$((timeout_poll * 2 + 1))
->  mptcp_connect=3D""
->  capture=3D0
-> +do_all_tests=3D1
->
->  TEST_COUNT=3D0
->
-> @@ -123,12 +124,6 @@ reset_with_add_addr_timeout()
->                 -j DROP
->  }
->
-> -for arg in "$@"; do
-> -       if [ "$arg" =3D "-c" ]; then
-> -               capture=3D1
-> -       fi
-> -done
-> -
->  ip -Version > /dev/null 2>&1
->  if [ $? -ne 0 ];then
->         echo "SKIP: Could not run test without ip tool"
-> @@ -1368,7 +1363,8 @@ usage()
->         echo "  -4 v4mapped_tests"
->         echo "  -b backup_tests"
->         echo "  -p add_addr_ports_tests"
-> -       echo "  -c syncookies_tests"
-> +       echo "  -k syncookies_tests"
-> +       echo "  -c capture pcap files"
->         echo "  -h help"
->  }
->
-> @@ -1382,12 +1378,20 @@ make_file "$cin" "client" 1
->  make_file "$sin" "server" 1
->  trap cleanup EXIT
->
-> -if [ -z $1 ]; then
-> +for arg in "$@"; do
-> +       if [ "$arg" =3D "-c" ]; then
-> +               capture=3D1
-> +       else
-> +               do_all_tests=3D0
-> +       fi
-> +done
-> +
-> +if [ $do_all_tests -eq 1 ]; then
->         all_tests
->         exit $ret
->  fi
->
-> -while getopts 'fsltra64bpch' opt; do
-> +while getopts 'fsltra64bpkch' opt; do
->         case $opt in
->                 f)
->                         subflows_tests
-> @@ -1419,9 +1423,11 @@ while getopts 'fsltra64bpch' opt; do
->                 p)
->                         add_addr_ports_tests
->                         ;;
-> -               c)
-> +               k)
->                         syncookies_tests
->                         ;;
-> +               c)
-> +                       ;;
->                 h | *)
->                         usage
->                         ;;
-> --
-> 2.30.1
->
---===============4594094792388995272==--
+Fixes: 22fb85ffaefb ("mptcp: add port support for ADD_ADDR suboption writin=
+g")
+CC: stable(a)vger.kernel.org # 5.11+
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/protocol.h | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 91827d949766..e21a5bc36cf0 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -52,14 +52,15 @@
+ #define TCPOLEN_MPTCP_DSS_MAP64		14
+ #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
+ #define TCPOLEN_MPTCP_ADD_ADDR		16
+-#define TCPOLEN_MPTCP_ADD_ADDR_PORT	20
++#define TCPOLEN_MPTCP_ADD_ADDR_PORT	18
+ #define TCPOLEN_MPTCP_ADD_ADDR_BASE	8
+-#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	12
++#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	10
+ #define TCPOLEN_MPTCP_ADD_ADDR6		28
+-#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	32
++#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	30
+ #define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
+-#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
+-#define TCPOLEN_MPTCP_PORT_LEN		4
++#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	22
++#define TCPOLEN_MPTCP_PORT_LEN		2
++#define TCPOLEN_MPTCP_PORT_ALIGN	2
+ #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
+ #define TCPOLEN_MPTCP_PRIO		3
+ #define TCPOLEN_MPTCP_PRIO_ALIGN	4
+@@ -701,8 +702,9 @@ static inline unsigned int mptcp_add_addr_len(int famil=
+y, bool echo, bool port)
+ 		len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+ 	if (!echo)
+ 		len +=3D MPTCPOPT_THMAC_LEN;
++	/* account for 2 trailing 'nop' options */
+ 	if (port)
+-		len +=3D TCPOLEN_MPTCP_PORT_LEN;
++		len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
+ =
+
+ 	return len;
+ }
+-- =
+
+2.29.2
+
+--===============3395410573485353057==--
