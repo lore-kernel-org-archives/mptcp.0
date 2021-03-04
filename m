@@ -1,112 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============2908582566804235854=="
+Content-Type: multipart/mixed; boundary="===============6012457738415104352=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 4/5] selftests: mptcp: add addr
- argument for del_addr
-Date: Thu, 04 Mar 2021 17:33:35 +0800
-Message-ID: <481b4472959ca412d8cc77b7ac46ab56253ec464.1614849685.git.geliangtang@gmail.com>
-In-Reply-To: fc3f30d0aaf04464e764a2802e457b50fef0fb98.1614849685.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH v6 mptcp-next 5/5] selftests: mptcp: remove id
+ 0 address testcases
+Date: Thu, 04 Mar 2021 17:33:36 +0800
+Message-ID: <c891a760d2bfd3607fcc73569198ec8534beb865.1614849685.git.geliangtang@gmail.com>
+In-Reply-To: 481b4472959ca412d8cc77b7ac46ab56253ec464.1614849685.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8020
+X-UID: 8021
 
---===============2908582566804235854==
+--===============6012457738415104352==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-For the id 0 address, different MPTCP connections could be using
-different IP addresses for id 0.
+This patch added the testcases for removing the id 0 subflow and the id 0
+address.
 
-This patch added an extra argument IP address for del_addr when
-using id 0.
+In do_transfer, use the removing addresses number '9' for deleting the id
+0 address.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 33 +++++++++++++++++--
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 35 +++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/=
-selftests/net/mptcp/pm_nl_ctl.c
-index 7b4167f3f9a2..3a627895e03d 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -26,7 +26,7 @@ static void syntax(char *argv[])
- {
- 	fprintf(stderr, "%s add|get|set|del|flush|dump|accept [<args>]\n", argv[0=
-]);
- 	fprintf(stderr, "\tadd [flags signal|subflow|backup] [id <nr>] [dev <name=
->] <ip>\n");
--	fprintf(stderr, "\tdel <id>\n");
-+	fprintf(stderr, "\tdel <id> [<ip>]\n");
- 	fprintf(stderr, "\tget <id>\n");
- 	fprintf(stderr, "\tset <ip> [flags backup|nobackup]\n");
- 	fprintf(stderr, "\tflush\n");
-@@ -301,6 +301,7 @@ int del_addr(int fd, int pm_family, int argc, char *arg=
-v[])
- 		  1024];
- 	struct rtattr *rta, *nest;
- 	struct nlmsghdr *nh;
-+	u_int16_t family;
- 	int nest_start;
- 	u_int8_t id;
- 	int off =3D 0;
-@@ -310,11 +311,14 @@ int del_addr(int fd, int pm_family, int argc, char *a=
-rgv[])
- 	off =3D init_genl_req(data, pm_family, MPTCP_PM_CMD_DEL_ADDR,
- 			    MPTCP_PM_VER);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 96379ede5925..1ee9b66dcded 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -315,9 +315,12 @@ do_transfer()
+ 					let id+=3D1
+ 				done
+ 			fi
+-		else
++		elif [ $rm_nr_ns1 -eq 8 ]; then
+ 			sleep 1
+ 			ip netns exec ${listener_ns} ./pm_nl_ctl flush
++		elif [ $rm_nr_ns1 -eq 9 ]; then
++			sleep 1
++			ip netns exec ${listener_ns} ./pm_nl_ctl del 0 ${connect_addr}
+ 		fi
+ 	fi
  =
 
--	/* the only argument is the address id */
--	if (argc !=3D 3)
-+	/* the only argument is the address id (nonzero) */
-+	if (argc !=3D 3 && argc !=3D 4)
- 		syntax(argv);
+@@ -354,9 +357,18 @@ do_transfer()
+ 					let id+=3D1
+ 				done
+ 			fi
+-		else
++		elif [ $rm_nr_ns2 -eq 8 ]; then
+ 			sleep 1
+ 			ip netns exec ${connector_ns} ./pm_nl_ctl flush
++		elif [ $rm_nr_ns2 -eq 9 ]; then
++			local addr
++			if is_v6 "${connect_addr}"; then
++				addr=3D"dead:beef:1::2"
++			else
++				addr=3D"10.0.1.2"
++			fi
++			sleep 1
++			ip netns exec ${connector_ns} ./pm_nl_ctl del 0 $addr
+ 		fi
+ 	fi
  =
 
- 	id =3D atoi(argv[2]);
-+	/* zero id with the IP address */
-+	if (!id && argc !=3D 4)
-+		syntax(argv);
- =
-
- 	nest_start =3D off;
- 	nest =3D (void *)(data + off);
-@@ -328,6 +332,29 @@ int del_addr(int fd, int pm_family, int argc, char *ar=
-gv[])
- 	rta->rta_len =3D RTA_LENGTH(1);
- 	memcpy(RTA_DATA(rta), &id, 1);
- 	off +=3D NLMSG_ALIGN(rta->rta_len);
+@@ -1016,6 +1028,25 @@ remove_tests()
+ 	chk_join_nr "flush invalid addresses" 1 1 1
+ 	chk_add_nr 3 3
+ 	chk_rm_nr 3 1 invert
 +
-+	if (!id) {
-+		/* addr data */
-+		rta =3D (void *)(data + off);
-+		if (inet_pton(AF_INET, argv[3], RTA_DATA(rta))) {
-+			family =3D AF_INET;
-+			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR4;
-+			rta->rta_len =3D RTA_LENGTH(4);
-+		} else if (inet_pton(AF_INET6, argv[3], RTA_DATA(rta))) {
-+			family =3D AF_INET6;
-+			rta->rta_type =3D MPTCP_PM_ADDR_ATTR_ADDR6;
-+			rta->rta_len =3D RTA_LENGTH(16);
-+		} else
-+			error(1, errno, "can't parse ip %s", argv[3]);
-+		off +=3D NLMSG_ALIGN(rta->rta_len);
++	# remove id 0 subflow
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns2 ./pm_nl_ctl add 10.0.3.2 flags subflow
++	run_tests $ns1 $ns2 10.0.1.1 0 0 -9 slow
++	chk_join_nr "remove id 0 subflow" 1 1 1
++	chk_rm_nr 1 1
 +
-+		/* family */
-+		rta =3D (void *)(data + off);
-+		rta->rta_type =3D MPTCP_PM_ADDR_ATTR_FAMILY;
-+		rta->rta_len =3D RTA_LENGTH(2);
-+		memcpy(RTA_DATA(rta), &family, 2);
-+		off +=3D NLMSG_ALIGN(rta->rta_len);
-+	}
- 	nest->rta_len =3D off - nest_start;
++	# remove id 0 address
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	run_tests $ns1 $ns2 10.0.1.1 0 -9 0 slow
++	chk_join_nr "remove id 0 address" 1 1 1
++	chk_add_nr 1 1
++	chk_rm_nr 1 1 invert
+ }
  =
 
- 	do_nl_req(fd, nh, off, 0);
+ add_tests()
 -- =
 
 2.29.2
 
---===============2908582566804235854==--
+--===============6012457738415104352==--
