@@ -1,119 +1,423 @@
-Content-Type: multipart/mixed; boundary="===============6923053780023765194=="
+Content-Type: multipart/mixed; boundary="===============6260020945174111664=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net v2] mptcp: fix length of ADD_ADDR with port
- suboption
-Date: Fri, 05 Mar 2021 10:14:08 +0800
-Message-ID: <CA+WQbwtm2FXSQL1MX2OToa4hC+P1svdw4JDdLwSjuGEPBWjU2w@mail.gmail.com>
-In-Reply-To: bc0a1f5-8dc3-6212-7884-4c51b6a61ba@linux.intel.com
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 4th of March 2021
+Date: Fri, 05 Mar 2021 10:28:14 +0800
+Message-ID: <CA+WQbwuZsU8WR6vswpDixm6Q46Y_QO_768oi0RHEra80BtHPzQ@mail.gmail.com>
+In-Reply-To: 8a568102-5ff5-f7c1-e234-46f523d5cafc@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 8042
+X-UID: 8043
 
---===============6923053780023765194==
+--===============6260020945174111664==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=B4=
-3=E6=9C=885=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=888:28=E5=86=99=E9=
-=81=93=EF=BC=9A
+Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B43=E6=
+=9C=885=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:40=E5=86=99=E9=81=93=
+=EF=BC=9A
+>
+> Hello everyone,
+>
+> Today, we just had our 138th meeting with Mat and Ossama (Intel),
+> Christoph (Apple), Paolo, Davide and Florian (RedHat) and myself (Tessare=
+s).
+>
+> Thanks again for this new good meeting!
+>
+> Here are the minutes of the meeting:
 >
 >
-> On Thu, 4 Mar 2021, Davide Caratti wrote:
 >
-> > in current Linux, MPTCP peers advertising endpoints with port numbers u=
-se
-> > a sub-option length that wrongly accounts for the trailing TCP NOP. Als=
-o,
-> > receivers will only process incoming ADD_ADDR with port having such wro=
-ng
-> > sub-option length. Fix this, making ADD_ADDR compliant to RFC8684 =C2=
-=A73.4.1.
-> >
-> > this can be verified running tcpdump on the kselftests artifacts:
-> >
-> > unpatched kernel:
-> > [root(a)bottarga mptcp]# tcpdump -tnnr unpatched.pcap | grep add-addr
-> > reading from file unpatched.pcap, link-type LINUX_SLL (Linux cooked v1)=
-, snapshot length 65535
-> > IP 10.0.1.1.10000 > 10.0.1.2.53078: Flags [.], ack 101, win 509, option=
-s [nop,nop,TS val 214459678 ecr 521312851,mptcp add-addr v1 id 1 a00:201:27=
-74:2d88:7436:85c3:17fd:101], length 0
-> > IP 10.0.1.2.53078 > 10.0.1.1.10000: Flags [.], ack 101, win 502, option=
-s [nop,nop,TS val 521312852 ecr 214459678,mptcp add-addr[bad opt]]
-> >
-> > patched kernel:
-> > [root(a)bottarga mptcp]# tcpdump -tnnr patched.pcap | grep add-addr
-> > reading from file patched.pcap, link-type LINUX_SLL (Linux cooked v1), =
-snapshot length 65535
-> > IP 10.0.1.1.10000 > 10.0.1.2.38178: Flags [.], ack 101, win 509, option=
-s [nop,nop,TS val 3728873902 ecr 2732713192,mptcp add-addr v1 id 1 10.0.2.1=
-:10100 hmac 0xbccdfcbe59292a1f,nop,nop], length 0
-> > IP 10.0.1.2.38178 > 10.0.1.1.10000: Flags [.], ack 101, win 502, option=
-s [nop,nop,TS val 2732713195 ecr 3728873902,mptcp add-addr v1-echo id 1 10.=
-0.2.1:10100,nop,nop], length 0
-> >
-> > Fixes: 22fb85ffaefb ("mptcp: add port support for ADD_ADDR suboption wr=
-iting")
-> > CC: stable(a)vger.kernel.org # 5.11+
-> > Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
-> > ---
-> > net/mptcp/protocol.h | 14 ++++++++------
-> > 1 file changed, 8 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 91827d949766..e21a5bc36cf0 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -52,14 +52,15 @@
-> > #define TCPOLEN_MPTCP_DSS_MAP64               14
-> > #define TCPOLEN_MPTCP_DSS_CHECKSUM    2
-> > #define TCPOLEN_MPTCP_ADD_ADDR                16
-> > -#define TCPOLEN_MPTCP_ADD_ADDR_PORT  20
-> > +#define TCPOLEN_MPTCP_ADD_ADDR_PORT  18
-> > #define TCPOLEN_MPTCP_ADD_ADDR_BASE   8
-> > -#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT     12
-> > +#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT     10
-> > #define TCPOLEN_MPTCP_ADD_ADDR6               28
-> > -#define TCPOLEN_MPTCP_ADD_ADDR6_PORT 32
-> > +#define TCPOLEN_MPTCP_ADD_ADDR6_PORT 30
-> > #define TCPOLEN_MPTCP_ADD_ADDR6_BASE  20
-> > -#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT    24
-> > -#define TCPOLEN_MPTCP_PORT_LEN               4
-> > +#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT    22
-> > +#define TCPOLEN_MPTCP_PORT_LEN               2
-> > +#define TCPOLEN_MPTCP_PORT_ALIGN     2
-> > #define TCPOLEN_MPTCP_RM_ADDR_BASE    4
-> > #define TCPOLEN_MPTCP_PRIO            3
-> > #define TCPOLEN_MPTCP_PRIO_ALIGN      4
-> > @@ -701,8 +702,9 @@ static inline unsigned int mptcp_add_addr_len(int f=
-amily, bool echo, bool port)
-> >               len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> >       if (!echo)
-> >               len +=3D MPTCPOPT_THMAC_LEN;
-> > +     /* account for 2 trailing 'nop' options */
-> >       if (port)
-> > -             len +=3D TCPOLEN_MPTCP_PORT_LEN;
-> > +             len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIG=
-N;
-> >
-> >       return len;
-> > }
-> > --
-> > 2.29.2
+> Accepted patches:
+>      - The list of accepted patches can be seen on PatchWork:
+>        https://patchwork.ozlabs.org/project/mptcp/list/?state=3D3
 >
-> Thanks Davide - fix looks good to me for -net and stable.
 >
-> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+>      netdev (if mptcp ML is in cc) (Paolo Abeni):
+>
+> 1442446  [iproute2-next] mptcp: add support for port based endpoint
+>
+>
+>      our repo (by: Matthieu Baerts):
+>
+> 1443968  [mptcp-next,3/3] selftests: mptcp: dump more info on mpjoin erro=
+rs
+> 1443970  [mptcp-next,2/3] selftests: mptcp: init nstat history
+> 1443967  [mptcp-next,1/3] selftests: mptcp: launch mptcp_connect with tim=
+eou
+>
+>
+>
+> Pending patches:
+>      - The list of pending patches can be seen on PatchWork:
+>        https://patchwork.ozlabs.org/project/mptcp/list/?state=3D*
+>
+>
+>      netdev (if mptcp ML is in cc) (by: /):
+>
+> /
+>
+>
+>      our repo (by: Davide Caratti, Florian Westphal, Geliang Tang, Mat
+> Martineau, Paolo Abeni):
+>
+> 1370700: RFC: [RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h:
+>      - WIP
+>
+> 1370702: RFC: [RFC,4/4] tcp: parse tcp options contained in reset packets:
+>      - WIP
+>
+> 1375893: RFC: [RFC,mptpcp-next] mptcp: add ooo prune support:
+>      - WIP
+>
+> 1395128: RFC: [1/5] tcp: make two mptcp helpers available to tcp stack
+> 1395133: RFC: [5/5] mptcp: send fastclose if userspace closes socket
+> with unread data:
+>      - WIP
+>
+> 1426554: Changes Requested: [PATCH,iproute2] mptcp: add support for
+> event monitoring:
+>      - WIP
+>
+> 1442954: Needs Review / ACK: [mptcp-next,1/3] mptcp: add tracepoint for
+> mptcp_subflow_get_send
+> 1442956: Needs Review / ACK: [mptcp-next,2/3] mptcp: add tracepoint for
+> get_mapping_status
+> 1442957: Needs Review / ACK: [mptcp-next,3/3] mptcp: add tracepoint for
+> subflow_check_data_avail:
+>      - *Paolo* will have a look at this series (probably not this week)
+>
+> 1446805: RFC: [RFC,v2,1/2] mptcp: only admit explicitly supported sockopt
+> 1446803: RFC: [RFC,v2,2/2] mptcp: revert "mptcp: provide subflow aware
+> release function"$ ....$:
+>      - (mainly for patch 1)
+>      - For the moment we allow sockopt that does not crash the system
+>      - Some are NOOP for TCP, we imitate that
+>      - For some (e.g. buf related) makes sense on subflows but not the
+> MPTCP socket
+>      - Should we start with this long(ish) list or a shorter one?
+>
+>      - Florian:
+>          - was looking at supporting sockopt for subflows coming later but
+>          - but not obvious, sockopt can come from userspace and kernel,
+> we cannot deal with them the same way
+>          - maybe best to move this to a new file not to have a huge list
+> in protocol.c which is already (too) big
+>
+>      - About copying data to new outgoing/incoming subflows:
+>          - having a new helper
+>          - keeping a list
+>          - not using a workqueue?:
+>              - to avoid "out of sync". Is it possible to avoid? We need
+> sync here or it would have an impact on TCP code (to allow reading
+> without locks) + complexity
+>              - perf impact?
+>              - process context needed to copy data from userspace
+>          - *Paolo* will start a new thread of discussion
+>
+> 1446833: Changes Requested: [net] mptcp: fix length of ADD_ADDR with
+> port suboption:
+>      - v2 in preparation =E2=86=92 just sent
+>      - affecting all ADD_ADDR with ports (with and without echo bit)
+>
+> 1446930: Awaiting Upstream: [mptcp-net] selftests: mptcp: Restore packet
+> capture option in join tests:
+>      - TODO: to be applied (once *Matth* has finished modifying the tree)
+>      - reviewed by Geliang
+>
+> 1447130: New: [mptcp-next,1/6] Squash to "mptcp: add rm_list in
+> mptcp_out_options"
+> 1447132: New: [mptcp-next,2/6] Squash to "mptcp: add rm_list_tx in
+> mptcp_pm_data"
+> 1447133: New: [mptcp-next,3/6] Squash to "mptcp: add rm_list in
+> mptcp_options_received"
+> 1447134: New: [mptcp-next,4/6] Squash to "mptcp: add rm_list_rx in
+> mptcp_pm_data"
+> 1447135: New: [mptcp-next,5/6] Squash to "mptcp: remove multi subflows
+> in PM"
+> 1447136: New: [mptcp-next,6/6] Squash to "mptcp: remove multi addresses
+> and subflows in PM":
+>      - was a patch in the v5 of the following series
+>      - to avoid passing a structure but just a pointer
+>      - better to squash than creating a new commit on top to fix
+> previous patches
+>
+> 1447188: New: [v6,mptcp-next,1/5] mptcp: remove all subflows involving
+> id 0 address
+> 1447190: New: [v6,mptcp-next,2/5] mptcp: unify RM_ADDR and RM_SUBFLOW
+> receiving
+> 1447191: New: [v6,mptcp-next,3/5] mptcp: remove id 0 address
+> 1447192: New: [v6,mptcp-next,4/5] selftests: mptcp: add addr argument
+> for del_addr
+> 1447193: New: [v6,mptcp-next,5/5] selftests: mptcp: remove id 0 address
+> testcases:
+>      - new v6
+>      - *Mat* is going to test the whole series first.
+>      - We will need to modify the IPRoute code too to delete the ID 0:
+> we need to specify the ADDR:
+>          - for ID0, we can have different addresses (it depends on the
+> interface)
+>          - it is different from the other IDs
+>          - we then need a special case
+>          - which is done with pm utility in the selftests but not in
+> IPRoute2 yet
+>          - *Geliang* : do you plan to do it? Should we create a new
+> ticket for this part?
 >
 
-Acked-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
+Hi Matt, I didn't plan to do this since I'm not good at modifying the
+IPRoute code. Please add a new ticket and close #140.
+
+Thanks.
 
 -Geliang
 
+
+>
+>
+> Issues on Github:
+>      https://github.com/multipath-tcp/mptcp_net-next/issues/
+>
+>
+>      Recently opened (latest from last week: 169)
+>
+>    170  possible deadlock in ipv6_sock_mc_close [bug] [syzkaller] @pabeni:
+>        - See the discussion with the RFC patches here above
+>
+>
+>      Bugs (opened, flagged as "bug" and assigned)
+>
+>    170  possible deadlock in ipv6_sock_mc_close [bug] [syzkaller] @pabeni:
+>        - See above
+>
+>    146  DATA_FIN is not retransmitted on timeout [bug] @mjmartineau :
+>        - packetdrill should help here.
+>        - *Paolo* can share a packetdrill script
+>        - (in theory, removing the replied injected (<) by Packetdrill
+> and add a new expected (>) packetdrill sent by the kernel after a few ms)
+>
+>        - Note: for the moment we don't use the TIME_WAIT socket for
+> MPTCP. If the very last DATA_FIN ack is lost, it is not retransmitted
+> even if the other DATA_FIN is retransmitted:
+>            > DATA_FIN
+>            < X lost DATA_FIN ack
+>            > DATA_FIN
+>            / =E2=86=92 nothing
+>        - =E2=86=92 should be handled separately
+>
+>
+>      Bugs (opened and flagged as "bug" and not assigned)
+>
+>    168  [syzkaller] WARNING in dst_release [bug] [syzkaller]:
+>        - Not happening for at least a week
+>        - Should be fixed thanks to a patch from Florian
+>        - TODO: can be closed then =E2=86=92 Done
+>
+>    162  sendmsg()/recvmsg() fail when an unknown CMSG argument is
+> provided [bug]
+>
+>    156  [syzkaller] WARNING: refcount bug in __tcp_transmit_skb [bug]
+> [syzkaller]
+>        - Not happening for at least a week
+>        - Should be fixed thanks to a patch from Florian
+>        - TODO: can be closed then =E2=86=92 Done
+>
+>    153  [syzkaller] WARNING: refcount bug in mptcp_incoming_options
+> [bug] [syzkaller]
+>        - Not happening for at least a week
+>        - Should be fixed thanks to a patch from Florian
+>        - TODO: can be closed then =E2=86=92 Done
+>
+>    137  selftests: simult_flows.sh: unbalanced bwidth tests are unstable
+> [bug]
+>    120  [interop] netnext is dropping packets, causing MPTCP-level
+> retransmissions on mptcp.org [bug]
+>
+>    119  [syzkaller] memory leak in __get_filter [bug] [syzkaller]:
+>        - Was not seen because kmemleak had been temp disabled
+>        - *Christoph* can re-enable it to check if it is still there
+>
+>    107  Review use of WARN_ON() / WARN_ON_ONCE() [bug]
+>     65  clearing properly the status in listen() [bug]
+>     56  msk connection state set without msk lock [bug]
+>
+>
+>      In Progress (opened and assigned)
+>
+>    167  packetdrill: add coverage for RM_ADDR [enhancement]
+> [packetdrill] @dcaratti
+>
+>    166  iproute2: ADD_ADDR: ports support [enhancement] [iproute2] @paben=
+i:
+>        - TODO: Can be closed =E2=86=92 Done
+>
+>    158  iproute2: change backup mode (MP_PRIO) for active connections
+> [enhancement] [iproute2] @dcaratti
+>    140  RM_ADDR: remove a list of addresses [enhancement] @geliangtang
+>    134  Checksum support [enhancement] @geliangtang
+>    131  replace some/most pr_debug with trace events [enhancement]
+> @geliangtang
+>     96  Python: add support for IPPROTO_MPTCP [enhancement] @matttbe
+>     53  MP_TCPRST support [enhancement] @fw-strlen
+>     52  MP_FAIL support [enhancement] @geliangtang
+>
+>
+>      Recently closed (since last week)
+>
+>    165  Intermittent copyfd_io_poll: poll timed out in mptcp_join.sh
+> [bug] @pabeni
+>    160  `./mptcp_connect.sh -m mmap` test blocks [bug] @matttbe
+>    151  Only 1 ADD_ADDR has been sent when signalling multi invalid
+> addresses [bug] @geliangtang
+>    142  packetdrill: support injecting ADD_ADDR echo bit [enhancement]
+> [packetdrill] @dcaratti
+>     54  ADD_ADDR: ports support [enhancement] @geliangtang
+>
+>
+>
+> FYI: Current Roadmap:
+>      - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+>      - Current/Coming merge window (5.13):
+> https://github.com/multipath-tcp/mptcp_net-next/projects/8
+>      - For later: https://github.com/multipath-tcp/mptcp_net-next/project=
+s/4
+>
+>
+>
+> Patches to send to netdev:
+>      - net:
+>          - 1ba62b635bbd mptcp: free resources when the port number is
+> mismatched
+>          - a6357ff02125 mptcp: fix missing wakeup
+>          - 94dda66a8653 mptcp: fix race in release_cb
+>          - 1318d54d7d3b mptcp: factor out __mptcp_retrans helper()
+>          - 2686750409a2 mptcp: reset 'first' and ack_hint on subflow close
+>          - 5c4c3a378e76 mptcp: dispose initial struct socket when its
+> subflow is closed
+>          - 92498a4f2073 mptcp: fix memory accounting on allocation error
+>          - 78ef8ee57c8a mptcp: put subflow sock on connect error
+>          - 193adf5acf56 mptcp: reset last_snd on subflow close:
+>
+>          - *Mat* is going to send them now that netdev ML (vger) seems
+> working fine again
+>
+>      - net-next:
+>          - /
+>
+>
+>
+> Issues with vger:
+>      - Any idea how to know when there are issues with
+> http://vger.kernel.org/ ?
+>      - Any other channel to follow to know when it is broken? (apart
+> from looking at non received emails :) )
+>
+>
+>
+> Extra tests:
+>      - news about Syzkaller? (Christoph):
+>          - See above (Github section)
+>
+>      - news about interop with mptcp.org? (Christoph):
+>          - /
+>
+>      - news about Intel's kbuild? (Mat):
+>          - Build steps are going OK
+>          - There was an internal issue with archiving but on MPTCP side,
+> everything seems OK
+>
+>      - packetdrill (Davide):
+>          - Davide working on ADD_ADDR+port and RM_ADDR
+>          - Davide added support for injecting ADD_ADDR echo (with
+> explicit "addr_echo" keyword)
+>
+>      - CI (Matth):
+>          - Is it OK to sync with net-next and push without compiling the
+> tree if there is no conflict?
+>          - Goal: to decouple CI tasks:
+>              - sync with upstream (or export in case of changes in the
+> tree) =E2=86=92 re-create "export"
+>              - validate build (+ sparse) of each commit of the export bra=
+nch
+>              - validate build (+ sparse) of any branch ("PR")
+>          - Reason: We can only have 2 cores per job but have multiple
+> jobs in parallel
+>          - Seems OK: devs can use previous tags if the last version is
+> broken
+>          - If really it is an issue: deal with a temporary task and
+> publish at the end. (increasing a bit the total time if we need to
+> re-clone a full repo again)
+>          - GH Action in progress
+>          - Next: KVM tests
+>          - Next: patchew (or start that in parallel once we are really
+> to validate one commit/series with GH Action?)
+>
+>
+> Checksum support:
+>      - enabled by default?
+>      - NIC offload?:
+>          - check with NIC vendors? (Intel, Mellanox, Broadcom,
+> Netronome, etc.?)
+>      - checksum cover the whole data and could be split in different
+> packets (linked to DSS coverage)
+>      - maybe difficult to offload that if it is on multiple packets...
+>      - maybe we could have a mix: some done by NIC, some by kernel?
+>      - *Mat* can contact people at Intel
+>
+>
+>
+> net stable:
+>      - FYI: Netdev maintainers are no longer selecting patches for stable.
+>      - We can cc stable if needed
+>      -
+> https://patchwork.kernel.org/project/netdevbpf/patch/20210303024643.10768=
+46-1-kuba(a)kernel.org/
+>
+>
+>
+> One patch didn't apply on stable:
+>      - Only Mat and Paolo were in cc (+stable ML)
+>      - "mptcp: fix DATA_FIN generation on early shutdown" patch
+>      - *Mat* / *Paolo* : check what to do
+>
+>
+>
+> mptcpd:
+>      - Paolo was looking at 0.6 version
+>      - Maybe an issue with "endpoint": they are created any flags
+> (MPTCP_PM_ADDR_ATTR_FLAGS):
+>          - MPTCP_PM_ADDR_FLAG_SIGNAL
+>          - MPTCP_PM_ADDR_FLAG_SUBFLOW
+>          - MPTCP_PM_ADDR_FLAG_BACKUP
+>      - Endpoints are created and are visible but will not be used to
+> create and accept new subflows
+>      - From Ossama to *Paolo* : were you referring to the two existing
+> plugins passing a dummy zero flags value to the add_addr command?
+> Assuming that is the case, you're indeed correct.  Both plugins need
+> some work.
+>
+>
+>
+> Next meeting:
+>      - On Thursday, the 11th of March.
+>      - Usual UTC time: 16:00 UTC (8am PST, 5pm CET, Midnight CST)
+>      - Still open to everyone!
+>      - https://annuel2.framapad.org/p/mptcp_upstreaming_20210311
+>
+>
+>
+> Feel free to comment on these points and propose new ones for the next
+> meeting!
+>
+> Talk to you on Thursday,
+> Matt
 > --
-> Mat Martineau
-> Intel
---===============6923053780023765194==--
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+--===============6260020945174111664==--
