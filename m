@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============4139051068182610222=="
+Content-Type: multipart/mixed; boundary="===============7414799709098120008=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 3/3] mptcp: only admit explicitly supported
+Subject: [MPTCP] [PATCH mptcp-next 2/3] mptcp: only admit explicitly supported
  sockopt
-Date: Fri, 05 Mar 2021 18:20:46 +0100
-Message-ID: <6bde45df6832e151e57ef75e493b6375cbac9384.1614964581.git.pabeni@redhat.com>
-In-Reply-To: cover.1614964581.git.pabeni@redhat.com
+Date: Fri, 05 Mar 2021 18:20:45 +0100
+Message-ID: <6bde45df6832e151e57ef75e493b6375cbac9384.1614964777.git.pabeni@redhat.com>
+In-Reply-To: cover.1614964777.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8048
+X-UID: 8049
 
---===============4139051068182610222==
+--===============7414799709098120008==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -310,4 +310,4 @@ name,
 
 2.26.2
 
---===============4139051068182610222==--
+--===============7414799709098120008==--
