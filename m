@@ -1,78 +1,108 @@
-Content-Type: multipart/mixed; boundary="===============6864986470294694807=="
+Content-Type: multipart/mixed; boundary="===============6398073749030419561=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 0/5] remove id 0 address
-Date: Thu, 04 Mar 2021 16:18:49 -0800
-Message-ID: <ded2f15-65b-f91e-fa17-7cf8398d216d@linux.intel.com>
-In-Reply-To: cover.1614849685.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH net v2] mptcp: fix length of ADD_ADDR with port
+ suboption
+Date: Thu, 04 Mar 2021 16:28:54 -0800
+Message-ID: <bc0a1f5-8dc3-6212-7884-4c51b6a61ba@linux.intel.com>
+In-Reply-To: dfea8e080c5e8bbcbeefa64a4b8d7ff2becea639.1614874814.git.dcaratti@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8040
+X-UID: 8041
 
---===============6864986470294694807==
+--===============6398073749030419561==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-On Thu, 4 Mar 2021, Geliang Tang wrote:
+On Thu, 4 Mar 2021, Davide Caratti wrote:
 
-> v6:
-> - add addr argument for del_addr.
-> - tag: export/20210226T185626
-> - need to apply the squash-to patchset "avoid passing rm_list as a struct"
-> or the single patch "avoid passing rm_list as a struct" in v5 first.
+> in current Linux, MPTCP peers advertising endpoints with port numbers use
+> a sub-option length that wrongly accounts for the trailing TCP NOP. Also,
+> receivers will only process incoming ADD_ADDR with port having such wrong
+> sub-option length. Fix this, making ADD_ADDR compliant to RFC8684 =C2=A73=
+.4.1.
 >
-
-Thanks, Geliang. v6 looks ready for the export branch.
-
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-
-
--Mat
-
-
-> v5:
-> - add patch 1 "avoid passing rm_list as a struct".
-> - re-use MPTCP_MIB_RMADDR/MPTCP_MIB_RMSUBFLOW in patch 3.
-> - use (id =3D=3D 0) instead of (!id) in patch 4.
+> this can be verified running tcpdump on the kselftests artifacts:
 >
-> v4:
-> - add new function mptcp_nl_remove_id_zero_address.
-> - add new testcases.
+> unpatched kernel:
+> [root(a)bottarga mptcp]# tcpdump -tnnr unpatched.pcap | grep add-addr
+> reading from file unpatched.pcap, link-type LINUX_SLL (Linux cooked v1), =
+snapshot length 65535
+> IP 10.0.1.1.10000 > 10.0.1.2.53078: Flags [.], ack 101, win 509, options =
+[nop,nop,TS val 214459678 ecr 521312851,mptcp add-addr v1 id 1 a00:201:2774=
+:2d88:7436:85c3:17fd:101], length 0
+> IP 10.0.1.2.53078 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options =
+[nop,nop,TS val 521312852 ecr 214459678,mptcp add-addr[bad opt]]
 >
-> v3:
-> - print subflow ids in patch 1;
-> - add the initial subflow's ids check in patch 2;
-> - update the test in patch 3;
+> patched kernel:
+> [root(a)bottarga mptcp]# tcpdump -tnnr patched.pcap | grep add-addr
+> reading from file patched.pcap, link-type LINUX_SLL (Linux cooked v1), sn=
+apshot length 65535
+> IP 10.0.1.1.10000 > 10.0.1.2.38178: Flags [.], ack 101, win 509, options =
+[nop,nop,TS val 3728873902 ecr 2732713192,mptcp add-addr v1 id 1 10.0.2.1:1=
+0100 hmac 0xbccdfcbe59292a1f,nop,nop], length 0
+> IP 10.0.1.2.38178 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options =
+[nop,nop,TS val 2732713195 ecr 3728873902,mptcp add-addr v1-echo id 1 10.0.=
+2.1:10100,nop,nop], length 0
 >
-> v2:
-> - drop __mptcp_wr_shutdown in v1.
+> Fixes: 22fb85ffaefb ("mptcp: add port support for ADD_ADDR suboption writ=
+ing")
+> CC: stable(a)vger.kernel.org # 5.11+
+> Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+> ---
+> net/mptcp/protocol.h | 14 ++++++++------
+> 1 file changed, 8 insertions(+), 6 deletions(-)
 >
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 91827d949766..e21a5bc36cf0 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -52,14 +52,15 @@
+> #define TCPOLEN_MPTCP_DSS_MAP64		14
+> #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
+> #define TCPOLEN_MPTCP_ADD_ADDR		16
+> -#define TCPOLEN_MPTCP_ADD_ADDR_PORT	20
+> +#define TCPOLEN_MPTCP_ADD_ADDR_PORT	18
+> #define TCPOLEN_MPTCP_ADD_ADDR_BASE	8
+> -#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	12
+> +#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	10
+> #define TCPOLEN_MPTCP_ADD_ADDR6		28
+> -#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	32
+> +#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	30
+> #define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
+> -#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
+> -#define TCPOLEN_MPTCP_PORT_LEN		4
+> +#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	22
+> +#define TCPOLEN_MPTCP_PORT_LEN		2
+> +#define TCPOLEN_MPTCP_PORT_ALIGN	2
+> #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
+> #define TCPOLEN_MPTCP_PRIO		3
+> #define TCPOLEN_MPTCP_PRIO_ALIGN	4
+> @@ -701,8 +702,9 @@ static inline unsigned int mptcp_add_addr_len(int fam=
+ily, bool echo, bool port)
+> 		len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
+> 	if (!echo)
+> 		len +=3D MPTCPOPT_THMAC_LEN;
+> +	/* account for 2 trailing 'nop' options */
+> 	if (port)
+> -		len +=3D TCPOLEN_MPTCP_PORT_LEN;
+> +		len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
 >
-> Geliang Tang (5):
->  mptcp: remove all subflows involving id 0 address
->  mptcp: unify RM_ADDR and RM_SUBFLOW receiving
->  mptcp: remove id 0 address
->  selftests: mptcp: add addr argument for del_addr
->  selftests: mptcp: remove id 0 address testcases
->
-> net/mptcp/pm_netlink.c                        | 127 ++++++++++--------
-> .../testing/selftests/net/mptcp/mptcp_join.sh |  35 ++++-
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  33 ++++-
-> 3 files changed, 137 insertions(+), 58 deletions(-)
->
+> 	return len;
+> }
 > -- =
 
 > 2.29.2
-> _______________________________________________
-> mptcp mailing list -- mptcp(a)lists.01.org
-> To unsubscribe send an email to mptcp-leave(a)lists.01.org
->
+
+Thanks Davide - fix looks good to me for -net and stable.
+
+Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
 --
 Mat Martineau
 Intel
---===============6864986470294694807==--
+
+--===============6398073749030419561==--
