@@ -1,17 +1,17 @@
-Content-Type: multipart/mixed; boundary="===============8696935937983470779=="
+Content-Type: multipart/mixed; boundary="===============3748092335476306921=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 1/3] mptcp: move sockopt function into a
+Subject: [MPTCP] [PATCH mptcp-next 2/3] mptcp: move sockopt function into a
  new file
-Date: Fri, 05 Mar 2021 18:20:43 +0100
-Message-ID: <f9fc06da1fdf85dc81398f44f57aa38033fece93.1614964777.git.pabeni@redhat.com>
-In-Reply-To: cover.1614964777.git.pabeni@redhat.com
+Date: Fri, 05 Mar 2021 18:20:44 +0100
+Message-ID: <f9fc06da1fdf85dc81398f44f57aa38033fece93.1614964581.git.pabeni@redhat.com>
+In-Reply-To: cover.1614964581.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8046
+X-UID: 8047
 
---===============8696935937983470779==
+--===============3748092335476306921==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -334,4 +334,4 @@ index 0000000000000..479f756539693
 
 2.26.2
 
---===============8696935937983470779==--
+--===============3748092335476306921==--
