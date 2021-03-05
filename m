@@ -1,43 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============0466105607495935582=="
+Content-Type: multipart/mixed; boundary="===============3024236176102582381=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 1/3] DO-NOT-MERGE: mptcp: enabled by default
-Date: Fri, 05 Mar 2021 18:20:42 +0100
-Message-ID: <4dc9bac4227796db1c5046500a4d3253f2c23840.1614964581.git.pabeni@redhat.com>
-In-Reply-To: cover.1614964581.git.pabeni@redhat.com
+Subject: [MPTCP] [PATCH mptcp-next 0/3] mptcp: use whitlist for sockopt
+Date: Fri, 05 Mar 2021 18:20:41 +0100
+Message-ID: <cover.1614964777.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8044
+X-UID: 8045
 
---===============0466105607495935582==
+--===============3024236176102582381==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+This is the first non RFC istallment of the patch series trying
+to addressing issues/170.
 
-This commit is useful for automated builds, e.g. from Intel's kbuild.
+Changes from RFC v2:
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
----
- net/mptcp/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+- move sockopt related helper in a new file
+- rebased on top of the above
 
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index a014149aa3233..739dc22f27b34 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -5,6 +5,7 @@ config MPTCP
- 	select SKB_EXTENSIONS
- 	select CRYPTO_LIB_SHA256
- 	select CRYPTO
-+	default y
- 	help
- 	  Multipath TCP (MPTCP) connections send and receive data over multiple
- 	  subflows in order to utilize multiple network paths. Each subflow
+Paolo Abeni (3):
+  mptcp: move sockopt function into a new file
+  mptcp: only admit explicitly supported sockopt
+  mptcp: revert "mptcp: provide subflow aware release function"
+
+ net/mptcp/Makefile   |   2 +-
+ net/mptcp/protocol.c | 165 +-------------------
+ net/mptcp/protocol.h |   5 +
+ net/mptcp/sockopt.c  | 351 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 359 insertions(+), 164 deletions(-)
+ create mode 100644 net/mptcp/sockopt.c
+
 -- =
 
 2.26.2
 
---===============0466105607495935582==--
+--===============3024236176102582381==--
