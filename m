@@ -1,58 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============6205910002541175472=="
+Content-Type: multipart/mixed; boundary="===============1886658908388815167=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 0/6] mptcp: avoid passing
- rm_list as a struct
-Date: Sat, 06 Mar 2021 09:58:47 +0100
-Message-ID: <8b9c320b-e095-280e-452b-e5dbad946b76@tessares.net>
-In-Reply-To: 20210304064248.9636-1-geliangtang@gmail.com
+Subject: [MPTCP] Re: [PATCH mptcp-net] selftests: mptcp: Restore packet
+ capture option in join tests
+Date: Sat, 06 Mar 2021 10:16:06 +0100
+Message-ID: <c8c718e3-2ec2-4f62-4f84-4d6ec7264b5c@tessares.net>
+In-Reply-To: 20210303224300.95599-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8059
+X-UID: 8060
 
---===============6205910002541175472==
+--===============1886658908388815167==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+Hi Mat, Geliang,
 
-On 04/03/2021 07:42, Geliang Tang wrote:
-> Split into 6 squash-to patches as Paolo suggested.
+On 03/03/2021 23:43, Mat Martineau wrote:
+> The join self tests previously used the '-c' command line option to
+> enable creation of pcap files for the tests that run, but the change to
+> allow running a subset of the join tests made overlapping use of that
+> option.
 > =
 
-> Geliang Tang (6):
->    Squash to "mptcp: add rm_list in mptcp_out_options"
->    Squash to "mptcp: add rm_list_tx in mptcp_pm_data"
->    Squash to "mptcp: add rm_list in mptcp_options_received"
->    Squash to "mptcp: add rm_list_rx in mptcp_pm_data"
->    Squash to "mptcp: remove multi subflows in PM"
->    Squash to "mptcp: remove multi addresses and subflows in PM"
+> Restore the capture functionality with '-c' and move the syncookie test
+> option to '-k'.
+> =
 
-Thank you for these patches and review!
+> Fixes: 1002b89f23ea ("selftests: mptcp: add command line arguments for mp=
+tcp_join.sh")
+> Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 
-- b9985d924015: "squashed" patch 1/6 in "mptcp: add rm_list in =
+Thank you for this patch and the review!
+Just applied in our tree with Geliang's Ack+Test tag and my RvB one:
 
-mptcp_out_options"
-- 15f713ee5257: "squashed" patch 2/6 in "mptcp: add rm_list_tx in =
+- ac06939a6d2b: selftests: mptcp: Restore packet capture option in join =
 
-mptcp_pm_data"
-- 9bbec2f8dccd: "squashed" patch 3/6 in "mptcp: add rm_list in =
+tests
+- Results: 20b4296239fa..31d85a0e0974
 
-mptcp_options_received"
-- 33f3492800e3: conflict in t/mptcp-add-rm_list_rx-in-mptcp_pm_data
-- b7b6189037d6: "squashed" patch 4/6 in "mptcp: add rm_list_rx in =
-
-mptcp_pm_data"
-- a741d28da559: conflict in t/mptcp-remove-multi-subflows-in-PM
-- 0707c761b750: "squashed" patch 5/6 in "mptcp: remove multi subflows in PM"
-- 10b536ddc721: "squashed" patch 6/6 in "mptcp: remove multi addresses =
-
-and subflows in PM"
-- Results: d5316810240e..20b4296239fa
-
-Tests + export are in progress!
+Tests + export have been queued!
 
 Cheers,
 Matt
@@ -60,4 +49,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============6205910002541175472==--
+--===============1886658908388815167==--
