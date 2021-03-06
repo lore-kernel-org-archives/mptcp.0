@@ -1,53 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============1275200910547326059=="
+Content-Type: multipart/mixed; boundary="===============6205910002541175472=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 4th of March 2021
-Date: Sat, 06 Mar 2021 08:50:44 +0100
-Message-ID: <c5846e56-5c37-91a7-8be4-504195d8da92@tessares.net>
-In-Reply-To: CA+WQbwuZsU8WR6vswpDixm6Q46Y_QO_768oi0RHEra80BtHPzQ@mail.gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next 0/6] mptcp: avoid passing
+ rm_list as a struct
+Date: Sat, 06 Mar 2021 09:58:47 +0100
+Message-ID: <8b9c320b-e095-280e-452b-e5dbad946b76@tessares.net>
+In-Reply-To: 20210304064248.9636-1-geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8058
+X-UID: 8059
 
---===============1275200910547326059==
+--===============6205910002541175472==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+Hi Geliang, Mat,
 
-On 05/03/2021 03:28, Geliang Tang wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B43=
-=E6=9C=885=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:40=E5=86=99=E9=81=
-=93=EF=BC=9A
-
-(...)
-
->>       - We will need to modify the IPRoute code too to delete the ID 0:
->> we need to specify the ADDR:
->>           - for ID0, we can have different addresses (it depends on the
->> interface)
->>           - it is different from the other IDs
->>           - we then need a special case
->>           - which is done with pm utility in the selftests but not in
->> IPRoute2 yet
->>           - *Geliang* : do you plan to do it? Should we create a new
->> ticket for this part?
->>
+On 04/03/2021 07:42, Geliang Tang wrote:
+> Split into 6 squash-to patches as Paolo suggested.
 > =
 
-> Hi Matt, I didn't plan to do this since I'm not good at modifying the
-> IPRoute code. Please add a new ticket and close #140.
+> Geliang Tang (6):
+>    Squash to "mptcp: add rm_list in mptcp_out_options"
+>    Squash to "mptcp: add rm_list_tx in mptcp_pm_data"
+>    Squash to "mptcp: add rm_list in mptcp_options_received"
+>    Squash to "mptcp: add rm_list_rx in mptcp_pm_data"
+>    Squash to "mptcp: remove multi subflows in PM"
+>    Squash to "mptcp: remove multi addresses and subflows in PM"
 
-I'm sure you would be good at it :)
-But anyway, it makes sense to open a new ticket just for that and close =
+Thank you for these patches and review!
 
-#140 once the different kernel patches have been merged. So here is the =
+- b9985d924015: "squashed" patch 1/6 in "mptcp: add rm_list in =
 
-new ticket:
+mptcp_out_options"
+- 15f713ee5257: "squashed" patch 2/6 in "mptcp: add rm_list_tx in =
 
-   https://github.com/multipath-tcp/mptcp_net-next/issues/171
+mptcp_pm_data"
+- 9bbec2f8dccd: "squashed" patch 3/6 in "mptcp: add rm_list in =
+
+mptcp_options_received"
+- 33f3492800e3: conflict in t/mptcp-add-rm_list_rx-in-mptcp_pm_data
+- b7b6189037d6: "squashed" patch 4/6 in "mptcp: add rm_list_rx in =
+
+mptcp_pm_data"
+- a741d28da559: conflict in t/mptcp-remove-multi-subflows-in-PM
+- 0707c761b750: "squashed" patch 5/6 in "mptcp: remove multi subflows in PM"
+- 10b536ddc721: "squashed" patch 6/6 in "mptcp: remove multi addresses =
+
+and subflows in PM"
+- Results: d5316810240e..20b4296239fa
+
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -55,4 +60,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1275200910547326059==--
+--===============6205910002541175472==--
