@@ -1,102 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============4873199453487653571=="
+Content-Type: multipart/mixed; boundary="===============1275200910547326059=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [Weekly meetings] MoM - 4th of March 2021
-Date: Sat, 06 Mar 2021 08:43:19 +0100
-Message-ID: <d412b65b-93b1-3448-852b-fe00d574993c@tessares.net>
-In-Reply-To: b331fa8c-89ed-4e42-08b-9bb08db3be3f@linux.intel.com
+Date: Sat, 06 Mar 2021 08:50:44 +0100
+Message-ID: <c5846e56-5c37-91a7-8be4-504195d8da92@tessares.net>
+In-Reply-To: CA+WQbwuZsU8WR6vswpDixm6Q46Y_QO_768oi0RHEra80BtHPzQ@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8057
+X-UID: 8058
 
---===============4873199453487653571==
+--===============1275200910547326059==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Geliang,
 
-On 05/03/2021 00:26, Mat Martineau wrote:
-> On Thu, 4 Mar 2021, Matthieu Baerts wrote:
+On 05/03/2021 03:28, Geliang Tang wrote:
+> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B43=
+=E6=9C=885=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:40=E5=86=99=E9=81=
+=93=EF=BC=9A
+
+(...)
+
+>>       - We will need to modify the IPRoute code too to delete the ID 0:
+>> we need to specify the ADDR:
+>>           - for ID0, we can have different addresses (it depends on the
+>> interface)
+>>           - it is different from the other IDs
+>>           - we then need a special case
+>>           - which is done with pm utility in the selftests but not in
+>> IPRoute2 yet
+>>           - *Geliang* : do you plan to do it? Should we create a new
+>> ticket for this part?
+>>
 > =
 
->> =C2=A0=C2=A0 - CI (Matth):
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Is it OK to sync with net-next an=
-d push without compiling the =
+> Hi Matt, I didn't plan to do this since I'm not good at modifying the
+> IPRoute code. Please add a new ticket and close #140.
 
->> tree if there is no conflict?
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Goal: to decouple CI tasks:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - sync with=
- upstream (or export in case of changes in the =
+I'm sure you would be good at it :)
+But anyway, it makes sense to open a new ticket just for that and close =
 
->> tree) =E2=86=92 re-create "export"
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - validate =
-build (+ sparse) of each commit of the export =
+#140 once the different kernel patches have been merged. So here is the =
 
->> branch
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - validate =
-build (+ sparse) of any branch ("PR")
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Reason: We can only have 2 cores =
-per job but have multiple =
+new ticket:
 
->> jobs in parallel
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Seems OK: devs can use previous t=
-ags if the last version is =
-
->> broken
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - If really it is an issue: deal wi=
-th a temporary task and =
-
->> publish at the end. (increasing a bit the total time if we need to =
-
->> re-clone a full repo again)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - GH Action in progress
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Next: KVM tests
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Next: patchew (or start that in p=
-arallel once we are really =
-
->> to validate one commit/series with GH Action?)
-> =
-
-> Matthieu -
-> =
-
-> You mentioned in the meeting that one challenge was quickly cloning the =
-
-> kernel repo when a shallow clone would not work. I stumbled across the =
-
-> linux-bundle-clone script in =
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/mricon/korg-helpers.git/ =
-
-> today, though it might help.
-> =
-
-> (Konstantin/mricon leads the kernel.org admin team)
-> =
-
-> It uses git bundle files hosted by kernel.org to speed up cloning a full =
-
-> repo in CI environments.
-
-Thank you for the pointer, that looks interesting, I never used 'git =
-
-bundle'.
-
-Unfortunately I don't see how to use that with our repo hosted on Github.
-
-For some jobs, I can use a "shallow clone" with a history truncated to a =
-
-specified number of commits. I don't need the full history to validate =
-
-the build of our each commit of our export branch. But I need to fetch =
-
-many branches to manage the TopGit tree. Which is probably fine because =
-
-we don't often modify the tree while we could "often" validate new =
-
-commits on top of the export branch.
+   https://github.com/multipath-tcp/mptcp_net-next/issues/171
 
 Cheers,
 Matt
@@ -104,4 +55,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============4873199453487653571==--
+--===============1275200910547326059==--
