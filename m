@@ -1,73 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============1927775139612980054=="
+Content-Type: multipart/mixed; boundary="===============4607470561430972688=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v6 mptcp-next 0/5] remove id 0 address
-Date: Sat, 06 Mar 2021 10:26:44 +0100
-Message-ID: <2bbe443e-a3ca-a68c-32fd-996e9ff33236@tessares.net>
-In-Reply-To: cover.1614849685.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "mptcp: add rm_list in
+ mptcp_out_options" - fix RM_ADDR option writing
+Date: Sun, 07 Mar 2021 00:40:30 +0800
+Message-ID: <52fb04d94e8afc909702fc670442491d69cf0788.1615048750.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8061
+X-UID: 8062
 
---===============1927775139612980054==
+--===============4607470561430972688==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+The original RM_ADDR option writing can only deal with 8 addresses, this
+patch fixed it.
 
-On 04/03/2021 10:33, Geliang Tang wrote:
-> v6:
->   - add addr argument for del_addr.
->   - tag: export/20210226T185626
->   - need to apply the squash-to patchset "avoid passing rm_list as a stru=
-ct"
-> or the single patch "avoid passing rm_list as a struct" in v5 first.
-> =
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ net/mptcp/options.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-> v5:
->   - add patch 1 "avoid passing rm_list as a struct".
->   - re-use MPTCP_MIB_RMADDR/MPTCP_MIB_RMSUBFLOW in patch 3.
->   - use (id =3D=3D 0) instead of (!id) in patch 4.
-> =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 595b4b4279f7..46b5b276160e 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1222,22 +1222,21 @@ void mptcp_write_options(__be32 *ptr, const struct =
+tcp_sock *tp,
+ 	}
+ =
 
-> v4:
->   - add new function mptcp_nl_remove_id_zero_address.
->   - add new testcases.
-> =
+ 	if (OPTION_MPTCP_RM_ADDR & opts->suboptions) {
+-		u8 i;
++		u8 i =3D 0;
+ =
 
-> v3:
->   - print subflow ids in patch 1;
->   - add the initial subflow's ids check in patch 2;
->   - update the test in patch 3;
-> =
+-		for (i =3D opts->rm_list.nr; i < MPTCP_RM_IDS_MAX; i++)
+-			opts->rm_list.ids[i] =3D TCPOPT_NOP;
+ 		*ptr++ =3D mptcp_option(MPTCPOPT_RM_ADDR,
+ 				      TCPOLEN_MPTCP_RM_ADDR_BASE + opts->rm_list.nr,
+-				      0, opts->rm_list.ids[0]);
+-		if (opts->rm_list.nr > 1) {
+-			put_unaligned_be32(opts->rm_list.ids[1] << 24 | opts->rm_list.ids[2] <<=
+ 16 |
+-					   opts->rm_list.ids[3] << 8 | opts->rm_list.ids[4], ptr);
+-			ptr +=3D 1;
+-		}
+-		if (opts->rm_list.nr > 5) {
+-			put_unaligned_be32(opts->rm_list.ids[5] << 24 | opts->rm_list.ids[6] <<=
+ 16 |
+-					   opts->rm_list.ids[7] << 8 | TCPOPT_NOP, ptr);
++				      0, opts->rm_list.ids[i++]);
++		while (i < opts->rm_list.nr) {
++			u8 id1, id2, id3, id4;
++
++			id1 =3D opts->rm_list.ids[i];
++			id2 =3D i + 1 < opts->rm_list.nr ? opts->rm_list.ids[i + 1] : TCPOPT_NO=
+P;
++			id3 =3D i + 2 < opts->rm_list.nr ? opts->rm_list.ids[i + 2] : TCPOPT_NO=
+P;
++			id4 =3D i + 3 < opts->rm_list.nr ? opts->rm_list.ids[i + 3] : TCPOPT_NO=
+P;
++			put_unaligned_be32(id1 << 24 | id2 << 16 | id3 << 8 | id4, ptr);
+ 			ptr +=3D 1;
++			i +=3D 4;
+ 		}
+ 	}
+ =
 
-> v2:
->   - drop __mptcp_wr_shutdown in v1.
-> =
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/140
-
-Thank you for the patches and reviews!
-
-Just added in our tree with Mat's RvB tag and a small modification in =
-
-patch 4/5 to remove a checkpatch warning.
-
-- efa9a9885fe7: mptcp: remove all subflows involving id 0 address
-- e753cdf39596: mptcp: unify RM_ADDR and RM_SUBFLOW receiving
-- 01a0acddf9ee: mptcp: remove id 0 address
-- 1cfe9d6a9351: selftests: mptcp: add addr argument for del_addr
-- 52221e28e3ef: selftests: mptcp: remove id 0 address testcases
-- Results: 31d85a0e0974..b6772f0348c6
-
-Tests + export have been queued!
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============1927775139612980054==--
+2.29.2
+
+--===============4607470561430972688==--
