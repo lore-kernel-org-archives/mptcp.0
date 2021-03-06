@@ -1,100 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============3143183502687601586=="
+Content-Type: multipart/mixed; boundary="===============4873199453487653571=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/3] mptcp: only admit explicitly
- supported sockopt
-Date: Sat, 06 Mar 2021 08:30:13 +0100
-Message-ID: <f08b6167-4091-e301-d734-c7128045f317@tessares.net>
-In-Reply-To: 97149f97-86c1-6970-8893-bc5e3a81a2ee@linux.intel.com
+Subject: [MPTCP] Re: [Weekly meetings] MoM - 4th of March 2021
+Date: Sat, 06 Mar 2021 08:43:19 +0100
+Message-ID: <d412b65b-93b1-3448-852b-fe00d574993c@tessares.net>
+In-Reply-To: b331fa8c-89ed-4e42-08b-9bb08db3be3f@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8056
+X-UID: 8057
 
---===============3143183502687601586==
+--===============4873199453487653571==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo, Mat,
+Hi Mat,
 
-On 06/03/2021 00:39, Mat Martineau wrote:
-> On Fri, 5 Mar 2021, Paolo Abeni wrote:
-
-Thank you for the nice work and the reviews!
-
-(...)
-
- >> +        /* the following 23 need a better implementation,
- >> +         * but are quite common we want to preserve them
- >> +         */
-
-Maybe we should avoid writing numbers (23) here. It is likely something =
-
-we will forget to update and I don't think they are needed. Same below: =
-
-ten, nine, 14, one, 2, 18.
-
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_OOBINLINE is not suppo=
-rted, let's avoid the related =
-
->> mess */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_ATTACH_FILTER, SO_ATTA=
-CH_BPF, SO_ATTACH_REUSEPORT_CBPF,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * SO_DETACH_REUSEPORT_=
-BPF, SO_DETACH_FILTER, SO_LOCK_FILTER,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * we must be careful w=
-ith subflows
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_ATTACH_REUSEPORT_EBPF =
-is not supported, at it checks
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * explicitly the sk_pr=
-otocol field
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_PEEK_OFF is unsupporte=
-d, as it is for plain TCP */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_MAX_PACING_RATE is uns=
-upported, we must be careful with =
-
->> subflows */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_CNX_ADVICE is currentl=
-y unsupported, could possibly be =
-
->> relevant,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * but likely needs car=
-eful design
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_ZEROCOPY is currently =
-unsupported, TODO in sndmsg */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* SO_TXTIME is currently un=
-supported */
+On 05/03/2021 00:26, Mat Martineau wrote:
+> On Thu, 4 Mar 2021, Matthieu Baerts wrote:
 > =
 
-> The formatting here made the intent less clear - if you move the above =
+>> =C2=A0=C2=A0 - CI (Matth):
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Is it OK to sync with net-next an=
+d push without compiling the =
 
-> block comments were after these lines:
+>> tree if there is no conflict?
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Goal: to decouple CI tasks:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - sync with=
+ upstream (or export in case of changes in the =
+
+>> tree) =E2=86=92 re-create "export"
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - validate =
+build (+ sparse) of each commit of the export =
+
+>> branch
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - validate =
+build (+ sparse) of any branch ("PR")
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Reason: We can only have 2 cores =
+per job but have multiple =
+
+>> jobs in parallel
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Seems OK: devs can use previous t=
+ags if the last version is =
+
+>> broken
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - If really it is an issue: deal wi=
+th a temporary task and =
+
+>> publish at the end. (increasing a bit the total time if we need to =
+
+>> re-clone a full repo again)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - GH Action in progress
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Next: KVM tests
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - Next: patchew (or start that in p=
+arallel once we are really =
+
+>> to validate one commit/series with GH Action?)
 > =
 
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
-rn true;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> Matthieu -
 > =
 
-> ...it would be a lot more clear that the mentioned options are attached =
+> You mentioned in the meeting that one challenge was quickly cloning the =
 
-> to the "return false;", and the case labels are for the "return true".
+> kernel repo when a shallow clone would not work. I stumbled across the =
+
+> linux-bundle-clone script in =
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/mricon/korg-helpers.git/ =
+
+> today, though it might help.
 > =
 
-> (this applies to the other SOL levels too)
+> (Konstantin/mricon leads the kernel.org admin team)
+> =
 
-Should we eventually add notes somewhere -- socket.h, in.h, in6.h, tcp.h =
+> It uses git bundle files hosted by kernel.org to speed up cloning a full =
 
--- to ask other devs to eventually contact us when new sockopt are being =
+> repo in CI environments.
 
-added?
-Not sure it is something common to do but it can be useful for us and =
+Thank you for the pointer, that looks interesting, I never used 'git =
 
-these devs.
+bundle'.
+
+Unfortunately I don't see how to use that with our repo hosted on Github.
+
+For some jobs, I can use a "shallow clone" with a history truncated to a =
+
+specified number of commits. I don't need the full history to validate =
+
+the build of our each commit of our export branch. But I need to fetch =
+
+many branches to manage the TopGit tree. Which is probably fine because =
+
+we don't often modify the tree while we could "often" validate new =
+
+commits on top of the export branch.
 
 Cheers,
 Matt
@@ -102,4 +104,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============3143183502687601586==--
+--===============4873199453487653571==--
