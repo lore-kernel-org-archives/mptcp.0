@@ -1,98 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============7393844399441347901=="
+Content-Type: multipart/mixed; boundary="===============7823774614933487308=="
 MIME-Version: 1.0
-From: Davide Caratti <dcaratti at redhat.com>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: fix length of ADD_ADDR with port sub-option
-Date: Mon, 08 Mar 2021 10:00:04 +0100
-Message-ID: <66b3a2eec724af07ffdb04fefc6c7d50b85f296b.1615191605.git.dcaratti@redhat.com>
+Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/3] mptcp: only admit explicitly
+ supported sockopt
+Date: Mon, 08 Mar 2021 10:07:13 +0100
+Message-ID: <e046688633b4689572e35754cbacbb8ac92e3894.camel@redhat.com>
+In-Reply-To: f08b6167-4091-e301-d734-c7128045f317@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 8064
+X-UID: 8065
 
---===============7393844399441347901==
+--===============7823774614933487308==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-in current Linux, MPTCP peers advertising endpoints with port numbers use
-a sub-option length that wrongly accounts for the trailing TCP NOP. Also,
-receivers will only process incoming ADD_ADDR with port having such wrong
-sub-option length. Fix this, making ADD_ADDR compliant to RFC8684 =C2=A73.4=
-.1.
+On Sat, 2021-03-06 at 08:30 +0100, Matthieu Baerts wrote:
+> Hi Paolo, Mat,
+> =
 
-this can be verified running tcpdump on the kselftests artifacts:
+> On 06/03/2021 00:39, Mat Martineau wrote:
+> > On Fri, 5 Mar 2021, Paolo Abeni wrote:
+> =
 
- unpatched kernel:
- [root(a)bottarga mptcp]# tcpdump -tnnr unpatched.pcap | grep add-addr
- reading from file unpatched.pcap, link-type LINUX_SLL (Linux cooked v1), s=
-napshot length 65535
- IP 10.0.1.1.10000 > 10.0.1.2.53078: Flags [.], ack 101, win 509, options [=
-nop,nop,TS val 214459678 ecr 521312851,mptcp add-addr v1 id 1 a00:201:2774:=
-2d88:7436:85c3:17fd:101], length 0
- IP 10.0.1.2.53078 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
-nop,nop,TS val 521312852 ecr 214459678,mptcp add-addr[bad opt]]
+> Thank you for the nice work and the reviews!
+> =
 
- patched kernel:
- [root(a)bottarga mptcp]# tcpdump -tnnr patched.pcap | grep add-addr
- reading from file patched.pcap, link-type LINUX_SLL (Linux cooked v1), sna=
-pshot length 65535
- IP 10.0.1.1.10000 > 10.0.1.2.38178: Flags [.], ack 101, win 509, options [=
-nop,nop,TS val 3728873902 ecr 2732713192,mptcp add-addr v1 id 1 10.0.2.1:10=
-100 hmac 0xbccdfcbe59292a1f,nop,nop], length 0
- IP 10.0.1.2.38178 > 10.0.1.1.10000: Flags [.], ack 101, win 502, options [=
-nop,nop,TS val 2732713195 ecr 3728873902,mptcp add-addr v1-echo id 1 10.0.2=
-.1:10100,nop,nop], length 0
+> (...)
+> =
 
-Fixes: 22fb85ffaefb ("mptcp: add port support for ADD_ADDR suboption writin=
-g")
-CC: stable(a)vger.kernel.org # 5.11+
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Acked-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
-Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
----
- net/mptcp/protocol.h | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+>  >> +        /* the following 23 need a better implementation,
+>  >> +         * but are quite common we want to preserve them
+>  >> +         */
+> =
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 91827d949766..e21a5bc36cf0 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -52,14 +52,15 @@
- #define TCPOLEN_MPTCP_DSS_MAP64		14
- #define TCPOLEN_MPTCP_DSS_CHECKSUM	2
- #define TCPOLEN_MPTCP_ADD_ADDR		16
--#define TCPOLEN_MPTCP_ADD_ADDR_PORT	20
-+#define TCPOLEN_MPTCP_ADD_ADDR_PORT	18
- #define TCPOLEN_MPTCP_ADD_ADDR_BASE	8
--#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	12
-+#define TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT	10
- #define TCPOLEN_MPTCP_ADD_ADDR6		28
--#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	32
-+#define TCPOLEN_MPTCP_ADD_ADDR6_PORT	30
- #define TCPOLEN_MPTCP_ADD_ADDR6_BASE	20
--#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	24
--#define TCPOLEN_MPTCP_PORT_LEN		4
-+#define TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT	22
-+#define TCPOLEN_MPTCP_PORT_LEN		2
-+#define TCPOLEN_MPTCP_PORT_ALIGN	2
- #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
- #define TCPOLEN_MPTCP_PRIO		3
- #define TCPOLEN_MPTCP_PRIO_ALIGN	4
-@@ -701,8 +702,9 @@ static inline unsigned int mptcp_add_addr_len(int famil=
-y, bool echo, bool port)
- 		len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
- 	if (!echo)
- 		len +=3D MPTCPOPT_THMAC_LEN;
-+	/* account for 2 trailing 'nop' options */
- 	if (port)
--		len +=3D TCPOLEN_MPTCP_PORT_LEN;
-+		len +=3D TCPOLEN_MPTCP_PORT_LEN + TCPOLEN_MPTCP_PORT_ALIGN;
- =
+> Maybe we should avoid writing numbers (23) here. It is likely something =
 
- 	return len;
- }
--- =
+> we will forget to update and I don't think they are needed. Same below: =
 
-2.29.2
+> ten, nine, 14, one, 2, 18.
+> =
 
---===============7393844399441347901==--
+> > > +        /* SO_OOBINLINE is not supported, let's avoid the related =
+
+> > > mess */
+> > > +        /* SO_ATTACH_FILTER, SO_ATTACH_BPF, SO_ATTACH_REUSEPORT_CBPF,
+> > > +         * SO_DETACH_REUSEPORT_BPF, SO_DETACH_FILTER, SO_LOCK_FILTER,
+> > > +         * we must be careful with subflows
+> > > +         */
+> > > +        /* SO_ATTACH_REUSEPORT_EBPF is not supported, at it checks
+> > > +         * explicitly the sk_protocol field
+> > > +         */
+> > > +        /* SO_PEEK_OFF is unsupported, as it is for plain TCP */
+> > > +        /* SO_MAX_PACING_RATE is unsupported, we must be careful wit=
+h =
+
+> > > subflows */
+> > > +        /* SO_CNX_ADVICE is currently unsupported, could possibly be =
+
+> > > relevant,
+> > > +         * but likely needs careful design
+> > > +         */
+> > > +        /* SO_ZEROCOPY is currently unsupported, TODO in sndmsg */
+> > > +        /* SO_TXTIME is currently unsupported */
+> > =
+
+> > The formatting here made the intent less clear - if you move the above =
+
+> > block comments were after these lines:
+> > =
+
+> > > +            return true;
+> > > +        }
+> > =
+
+> > ...it would be a lot more clear that the mentioned options are attached =
+
+> > to the "return false;", and the case labels are for the "return true".
+> > =
+
+> > (this applies to the other SOL levels too)
+> =
+
+> Should we eventually add notes somewhere -- socket.h, in.h, in6.h, tcp.h =
+
+> -- to ask other devs to eventually contact us when new sockopt are being =
+
+> added?
+> Not sure it is something common to do but it can be useful for us and =
+
+> these devs.
+
+Replying to this point here, as it will be the only comment I plan to
+not include in the next iteration: I think this is on us for the time
+being. I would avoid core networking changes.
+
+Additionally, if a new socket option is added, the whitelist model will
+fit gracefully, as the new socket option will be unimplemented for
+MPTCP and user-space will get back a resonable error code.
+
+Cheers,
+
+Paolo
+
+--===============7823774614933487308==--
