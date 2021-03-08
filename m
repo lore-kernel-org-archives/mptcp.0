@@ -1,59 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============0098569185054243104=="
+Content-Type: multipart/mixed; boundary="===============1093244564311477135=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/3] mptcp: only admit explicitly
- supported sockopt
-Date: Mon, 08 Mar 2021 12:30:34 +0100
-Message-ID: <f9e168f5-5ceb-fe66-9a26-6765c3f6f696@tessares.net>
-In-Reply-To: e046688633b4689572e35754cbacbb8ac92e3894.camel@redhat.com
+Subject: [MPTCP] [PATCH mptcp-next] selftests: mptcp: support capture with
+ other options
+Date: Mon, 08 Mar 2021 14:51:31 +0100
+Message-ID: <20210308135131.2517940-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 8074
+X-UID: 8075
 
---===============0098569185054243104==
+--===============1093244564311477135==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+A capture was not started when multiple short options were combined,
+e.g.
 
-On 08/03/2021 10:07, Paolo Abeni wrote:
-> On Sat, 2021-03-06 at 08:30 +0100, Matthieu Baerts wrote:
->> On 06/03/2021 00:39, Mat Martineau wrote:
->>>
->>> ...it would be a lot more clear that the mentioned options are attached
->>> to the "return false;", and the case labels are for the "return true".
->>>
->>> (this applies to the other SOL levels too)
->>
->> Should we eventually add notes somewhere -- socket.h, in.h, in6.h, tcp.h
->> -- to ask other devs to eventually contact us when new sockopt are being
->> added?
->> Not sure it is something common to do but it can be useful for us and
->> these devs.
-> =
+  ./mptcp_join.sh -fc
 
-> Replying to this point here, as it will be the only comment I plan to
-> not include in the next iteration: I think this is on us for the time
-> being. I would avoid core networking changes.
+A regex is now used to handle this case.
 
-I understand if we cannot do that.
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-> Additionally, if a new socket option is added, the whitelist model will
-> fit gracefully, as the new socket option will be unimplemented for
-> MPTCP and user-space will get back a resonable error code.
+Notes:
+    If we want to reduce the number of commits, we might want to squash this
+    one in "selftests: mptcp: Restore packet capture option in join tests"
+    commit we have in our tree.
+    Either is fine for me.
 
-That's fine then. We might allow one option with a delay because I guess =
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-we are not going to monitor all changes with these sockopt but I guess =
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index ca5bf22ca204..abeb24b7f8ec 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1410,9 +1410,13 @@ make_file "$sin" "server" 1
+ trap cleanup EXIT
+ =
 
-that's fine. At least an error code will be provided.
-
-Cheers,
-Matt
+ for arg in "$@"; do
+-	if [ "$arg" =3D "-c" ]; then
++	# check for "capture" arg before launching tests
++	if [[ "${arg}" =3D~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
+ 		capture=3D1
+-	else
++	fi
++
++	# exception for the capture option, the rest means: a part of the tests
++	if [ "${arg}" !=3D "-c" ]; then
+ 		do_all_tests=3D0
+ 	fi
+ done
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0098569185054243104==--
+2.30.1
+
+--===============1093244564311477135==--
