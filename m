@@ -1,55 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============7098470740078478432=="
+Content-Type: multipart/mixed; boundary="===============0098569185054243104=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] Squash to "selftests: mptcp: launch
- mptcp_connect with timeout"
-Date: Mon, 08 Mar 2021 11:55:14 +0100
-Message-ID: <72dcb22e-8c23-b896-2c6a-76ac9982bf14@tessares.net>
-In-Reply-To: 7049c3e9920228c47a74d2b7d58910c9d5ca57f0.camel@redhat.com
+Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/3] mptcp: only admit explicitly
+ supported sockopt
+Date: Mon, 08 Mar 2021 12:30:34 +0100
+Message-ID: <f9e168f5-5ceb-fe66-9a26-6765c3f6f696@tessares.net>
+In-Reply-To: e046688633b4689572e35754cbacbb8ac92e3894.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8073
+X-UID: 8074
 
---===============7098470740078478432==
+--===============0098569185054243104==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi Paolo,
 
-On 08/03/2021 11:23, Paolo Abeni wrote:
-> On Mon, 2021-03-08 at 11:16 +0100, Matthieu Baerts wrote:
->> In diag.sh, we want to send signals to mptcp_connect instances that have
->> been started in the netns. But we cannot send this signal to 'timeout'
->> otherwise that will stop the timeout and print something like:
+On 08/03/2021 10:07, Paolo Abeni wrote:
+> On Sat, 2021-03-06 at 08:30 +0100, Matthieu Baerts wrote:
+>> On 06/03/2021 00:39, Mat Martineau wrote:
+>>>
+>>> ...it would be a lot more clear that the mentioned options are attached
+>>> to the "return false;", and the case labels are for the "return true".
+>>>
+>>> (this applies to the other SOL levels too)
 >>
->>    # ./diag.sh: line 1: 9536 Done echo a
->>    # 9537 User defined signal 1 | timeout ${timeout_test} ip netns (...)
->>
->> Instead of trying to find the right PID and storing them in an array, we
->> can simply use the output of 'ip netns pids' and send a signal to all
->> these PIDs.
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> ---
->>
->> Notes:
->>      to be squashed in "selftests: mptcp: launch mptcp_connect with time=
-out"
+>> Should we eventually add notes somewhere -- socket.h, in.h, in6.h, tcp.h
+>> -- to ask other devs to eventually contact us when new sockopt are being
+>> added?
+>> Not sure it is something common to do but it can be useful for us and
+>> these devs.
 > =
 
-> Nice cleanup! LGTM!
+> Replying to this point here, as it will be the only comment I plan to
+> not include in the next iteration: I think this is on us for the time
+> being. I would avoid core networking changes.
 
-Thank you for the quick review!
+I understand if we cannot do that.
 
-- 908234a713ef: "squashed" in "selftests: mptcp: launch mptcp_connect =
+> Additionally, if a new socket option is added, the whitelist model will
+> fit gracefully, as the new socket option will be unimplemented for
+> MPTCP and user-space will get back a resonable error code.
 
-with timeout"
-- 0e661d1c15c6: tg:msg: notice about diag.sh modif
-- Results: ec0b131d1b83..917144c5a66a
+That's fine then. We might allow one option with a delay because I guess =
 
-Tests + export have been started!
+we are not going to monitor all changes with these sockopt but I guess =
+
+that's fine. At least an error code will be provided.
 
 Cheers,
 Matt
@@ -57,4 +56,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============7098470740078478432==--
+--===============0098569185054243104==--
