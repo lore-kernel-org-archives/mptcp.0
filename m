@@ -1,46 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============2958630319222163243=="
+Content-Type: multipart/mixed; boundary="===============7098470740078478432=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net v2] mptcp: fix length of ADD_ADDR with port
- suboption
-Date: Mon, 08 Mar 2021 11:49:22 +0100
-Message-ID: <614f4ddb-fdc5-1cd7-b651-570cdcbd72e6@tessares.net>
-In-Reply-To: dfea8e080c5e8bbcbeefa64a4b8d7ff2becea639.1614874814.git.dcaratti@redhat.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] Squash to "selftests: mptcp: launch
+ mptcp_connect with timeout"
+Date: Mon, 08 Mar 2021 11:55:14 +0100
+Message-ID: <72dcb22e-8c23-b896-2c6a-76ac9982bf14@tessares.net>
+In-Reply-To: 7049c3e9920228c47a74d2b7d58910c9d5ca57f0.camel@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8072
+X-UID: 8073
 
---===============2958630319222163243==
+--===============7098470740078478432==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide, Geliang, Mat,
+Hi Paolo,
 
-On 04/03/2021 17:23, Davide Caratti wrote:
-> in current Linux, MPTCP peers advertising endpoints with port numbers use
-> a sub-option length that wrongly accounts for the trailing TCP NOP. Also,
-> receivers will only process incoming ADD_ADDR with port having such wrong
-> sub-option length. Fix this, making ADD_ADDR compliant to RFC8684 =C2=A73=
-.4.1.
+On 08/03/2021 11:23, Paolo Abeni wrote:
+> On Mon, 2021-03-08 at 11:16 +0100, Matthieu Baerts wrote:
+>> In diag.sh, we want to send signals to mptcp_connect instances that have
+>> been started in the netns. But we cannot send this signal to 'timeout'
+>> otherwise that will stop the timeout and print something like:
+>>
+>>    # ./diag.sh: line 1: 9536 Done echo a
+>>    # 9537 User defined signal 1 | timeout ${timeout_test} ip netns (...)
+>>
+>> Instead of trying to find the right PID and storing them in an array, we
+>> can simply use the output of 'ip netns pids' and send a signal to all
+>> these PIDs.
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>> ---
+>>
+>> Notes:
+>>      to be squashed in "selftests: mptcp: launch mptcp_connect with time=
+out"
 > =
 
-> this can be verified running tcpdump on the kselftests artifacts:
+> Nice cleanup! LGTM!
 
-Thank you for the patch, review and testing!
+Thank you for the quick review!
 
-Sorry for the delay to apply it, I was doing other modifications in the =
+- 908234a713ef: "squashed" in "selftests: mptcp: launch mptcp_connect =
 
-tree to ease CI scripts and because I got a conflict with the export =
+with timeout"
+- 0e661d1c15c6: tg:msg: notice about diag.sh modif
+- Results: ec0b131d1b83..917144c5a66a
 
-branch, I didn't apply it before :)
-
-- 268780afbf25: mptcp: fix length of ADD_ADDR with port sub-option
-- d16c1995a017: conflict in t/mptcp-add-rm_list-in-mptcp_out_options
-- Results: b6772f0348c6..ec0b131d1b83
-
-Tests + export are going to be started soon!
+Tests + export have been started!
 
 Cheers,
 Matt
@@ -48,4 +57,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============2958630319222163243==--
+--===============7098470740078478432==--
