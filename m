@@ -1,107 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============7823774614933487308=="
+Content-Type: multipart/mixed; boundary="===============4698283126507814820=="
 MIME-Version: 1.0
 From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/3] mptcp: only admit explicitly
- supported sockopt
-Date: Mon, 08 Mar 2021 10:07:13 +0100
-Message-ID: <e046688633b4689572e35754cbacbb8ac92e3894.camel@redhat.com>
-In-Reply-To: f08b6167-4091-e301-d734-c7128045f317@tessares.net
+Subject: [MPTCP] [PATCH net-next v3 0/3] mptcp: use whitlist for sockopt
+Date: Mon, 08 Mar 2021 11:05:33 +0100
+Message-ID: <cover.1615197863.git.pabeni@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8065
+X-UID: 8066
 
---===============7823774614933487308==
+--===============4698283126507814820==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2021-03-06 at 08:30 +0100, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
-> =
+In this iteration I tried to address the comments from Mat && Mat
+on patch 2/3. Other patches are unchanged.
 
-> On 06/03/2021 00:39, Mat Martineau wrote:
-> > On Fri, 5 Mar 2021, Paolo Abeni wrote:
-> =
+Changes from v2:
+- many layout/comments fixup in patch 2/3, see the indivdual
+  patch changelog for the details
 
-> Thank you for the nice work and the reviews!
-> =
+Changes from V1:
+- none, just repost to hopefully not confuse patchwork
+  (and surely spam you more, sorry)
 
-> (...)
-> =
+Changes from RFC v2:
 
->  >> +        /* the following 23 need a better implementation,
->  >> +         * but are quite common we want to preserve them
->  >> +         */
-> =
+- move sockopt related helper in a new file
+- rebased on top of the above
 
-> Maybe we should avoid writing numbers (23) here. It is likely something =
+Paolo Abeni (3):
+  mptcp: move sockopt function into a new file
+  mptcp: only admit explicitly supported sockopt
+  mptcp: revert "mptcp: provide subflow aware release function"
 
-> we will forget to update and I don't think they are needed. Same below: =
+ net/mptcp/Makefile   |   2 +-
+ net/mptcp/protocol.c | 165 +-------------------
+ net/mptcp/protocol.h |   5 +
+ net/mptcp/sockopt.c  | 349 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 357 insertions(+), 164 deletions(-)
+ create mode 100644 net/mptcp/sockopt.c
 
-> ten, nine, 14, one, 2, 18.
-> =
+-- =
 
-> > > +        /* SO_OOBINLINE is not supported, let's avoid the related =
+2.26.2
 
-> > > mess */
-> > > +        /* SO_ATTACH_FILTER, SO_ATTACH_BPF, SO_ATTACH_REUSEPORT_CBPF,
-> > > +         * SO_DETACH_REUSEPORT_BPF, SO_DETACH_FILTER, SO_LOCK_FILTER,
-> > > +         * we must be careful with subflows
-> > > +         */
-> > > +        /* SO_ATTACH_REUSEPORT_EBPF is not supported, at it checks
-> > > +         * explicitly the sk_protocol field
-> > > +         */
-> > > +        /* SO_PEEK_OFF is unsupported, as it is for plain TCP */
-> > > +        /* SO_MAX_PACING_RATE is unsupported, we must be careful wit=
-h =
-
-> > > subflows */
-> > > +        /* SO_CNX_ADVICE is currently unsupported, could possibly be =
-
-> > > relevant,
-> > > +         * but likely needs careful design
-> > > +         */
-> > > +        /* SO_ZEROCOPY is currently unsupported, TODO in sndmsg */
-> > > +        /* SO_TXTIME is currently unsupported */
-> > =
-
-> > The formatting here made the intent less clear - if you move the above =
-
-> > block comments were after these lines:
-> > =
-
-> > > +            return true;
-> > > +        }
-> > =
-
-> > ...it would be a lot more clear that the mentioned options are attached =
-
-> > to the "return false;", and the case labels are for the "return true".
-> > =
-
-> > (this applies to the other SOL levels too)
-> =
-
-> Should we eventually add notes somewhere -- socket.h, in.h, in6.h, tcp.h =
-
-> -- to ask other devs to eventually contact us when new sockopt are being =
-
-> added?
-> Not sure it is something common to do but it can be useful for us and =
-
-> these devs.
-
-Replying to this point here, as it will be the only comment I plan to
-not include in the next iteration: I think this is on us for the time
-being. I would avoid core networking changes.
-
-Additionally, if a new socket option is added, the whitelist model will
-fit gracefully, as the new socket option will be unimplemented for
-MPTCP and user-space will get back a resonable error code.
-
-Cheers,
-
-Paolo
-
---===============7823774614933487308==--
+--===============4698283126507814820==--
