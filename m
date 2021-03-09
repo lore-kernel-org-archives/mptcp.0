@@ -1,62 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============8852642916186885672=="
+Content-Type: multipart/mixed; boundary="===============3143322916399313881=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] selftests: mptcp: support capture with
- other options
-Date: Tue, 09 Mar 2021 23:27:23 +0100
-Message-ID: <174ef962-253e-6e72-1a9a-0e9229f8b24a@tessares.net>
-In-Reply-To: 2cea1861-6798-da83-432c-7cc4868fec5@linux.intel.com
+Subject: [MPTCP] Re: [PATCH mptcp-next] Squash-to: "mptcp: move sockopt
+ function into a new file"
+Date: Tue, 09 Mar 2021 23:28:08 +0100
+Message-ID: <415cf0b2-8576-d09b-c649-c5df6f6c6073@tessares.net>
+In-Reply-To: b984e1a9dda4a47ce1b2ed949434a290a50fcf18.1615286805.git.pabeni@redhat.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8082
+X-UID: 8083
 
---===============8852642916186885672==
+--===============3143322916399313881==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+Hi Paolo, Mat,
 
-On 08/03/2021 20:11, Mat Martineau wrote:
-> =
+On 09/03/2021 11:47, Paolo Abeni wrote:
+> Mat noted I left over an helper function in protocol.c.
+> Just drop it.
 
-> On Mon, 8 Mar 2021, Matthieu Baerts wrote:
-> =
+Thank you for the patches and the reviews!
 
->> A capture was not started when multiple short options were combined,
->> e.g.
->>
->> =C2=A0./mptcp_join.sh -fc
->>
->> A regex is now used to handle this case.
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
->> ---
->>
->> Notes:
->> =C2=A0=C2=A0 If we want to reduce the number of commits, we might want t=
-o squash =
+Just applied the "mptcp: use whitlist for sockopt" series and this patch =
 
->> this
->> =C2=A0=C2=A0 one in "selftests: mptcp: Restore packet capture option in =
-join tests"
->> =C2=A0=C2=A0 commit we have in our tree.
->> =C2=A0=C2=A0 Either is fine for me.
->>
-> =
+with Mat's RvB tags and a few modifications linked to checkpatch's =
 
-> Thanks for fixing that - would be best to squash it, please update tags =
+output (+ an extra sentence on patch 2/3 to explain we forbid more than =
 
-> for attribution!
+just the ones linked to mcast):
 
-Thank you for the review!
+- 7c0df94ad1dc: mptcp: move sockopt function into a new file
+- ce35fc3cba0b: mptcp: only admit explicitly supported sockopt
+- f1726b98fee5: mptcp: revert "mptcp: provide subflow aware release =
 
-- e2c177867c77: "squashed" in "selftests: mptcp: Restore packet capture =
+function"
+- Results: 917144c5a66a..fd254f313de3
 
-option in join tests"
-- 9d1789345096: "Signed-off-by" + "Co-developed-by"
-- Results: 433f124e57a9..808bd0248f2f
+- c42dc5a97662: "squashed" in "mptcp: move sockopt function into a new file"
+- Results: fd254f313de3..433f124e57a9
+
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -64,4 +50,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============8852642916186885672==--
+--===============3143322916399313881==--
