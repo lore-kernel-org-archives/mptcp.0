@@ -1,52 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============7290587634024432674=="
+Content-Type: multipart/mixed; boundary="===============8852642916186885672=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next] Squash-to: "mptcp: move sockopt function
- into a new file"
-Date: Tue, 09 Mar 2021 11:47:05 +0100
-Message-ID: <b984e1a9dda4a47ce1b2ed949434a290a50fcf18.1615286805.git.pabeni@redhat.com>
+Subject: [MPTCP] Re: [PATCH mptcp-next] selftests: mptcp: support capture with
+ other options
+Date: Tue, 09 Mar 2021 23:27:23 +0100
+Message-ID: <174ef962-253e-6e72-1a9a-0e9229f8b24a@tessares.net>
+In-Reply-To: 2cea1861-6798-da83-432c-7cc4868fec5@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8081
+X-UID: 8082
 
---===============7290587634024432674==
+--===============8852642916186885672==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Mat noted I left over an helper function in protocol.c.
-Just drop it.
+Hi Mat,
 
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
- net/mptcp/protocol.c | 10 ----------
- 1 file changed, 10 deletions(-)
+On 08/03/2021 20:11, Mat Martineau wrote:
+> =
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 915cb1fc6bfb6..be6b318527497 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -90,16 +90,6 @@ static bool mptcp_is_tcpsk(struct sock *sk)
- 	return false;
- }
- =
+> On Mon, 8 Mar 2021, Matthieu Baerts wrote:
+> =
 
--static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
--{
--	sock_owned_by_me((const struct sock *)msk);
--
--	if (likely(!__mptcp_check_fallback(msk)))
--		return NULL;
--
--	return msk->first;
--}
--
- static int __mptcp_socket_create(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
+>> A capture was not started when multiple short options were combined,
+>> e.g.
+>>
+>> =C2=A0./mptcp_join.sh -fc
+>>
+>> A regex is now used to handle this case.
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+>> ---
+>>
+>> Notes:
+>> =C2=A0=C2=A0 If we want to reduce the number of commits, we might want t=
+o squash =
+
+>> this
+>> =C2=A0=C2=A0 one in "selftests: mptcp: Restore packet capture option in =
+join tests"
+>> =C2=A0=C2=A0 commit we have in our tree.
+>> =C2=A0=C2=A0 Either is fine for me.
+>>
+> =
+
+> Thanks for fixing that - would be best to squash it, please update tags =
+
+> for attribution!
+
+Thank you for the review!
+
+- e2c177867c77: "squashed" in "selftests: mptcp: Restore packet capture =
+
+option in join tests"
+- 9d1789345096: "Signed-off-by" + "Co-developed-by"
+- Results: 433f124e57a9..808bd0248f2f
+
+Cheers,
+Matt
 -- =
 
-2.26.2
-
---===============7290587634024432674==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============8852642916186885672==--
