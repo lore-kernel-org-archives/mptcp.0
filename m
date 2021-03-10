@@ -1,43 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============2675389599670190718=="
+Content-Type: multipart/mixed; boundary="===============6246517460607428277=="
 MIME-Version: 1.0
-From: Paolo Abeni <pabeni at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: Stable backport for DATA_FIN fix?
-Date: Wed, 10 Mar 2021 11:02:07 +0100
-Message-ID: <3275c3586559beb4dea23af7345d96d12a9e00b4.camel@redhat.com>
-In-Reply-To: cec5e9c-b83-3880-f73a-5ba74b9d9844@linux.intel.com
+Subject: [MPTCP] [MPTCP][RFC PATCH 0/2] DSS checksum and MP_FAIL support
+Date: Wed, 10 Mar 2021 20:39:32 +0800
+Message-ID: <cover.1615378283.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8087
+X-UID: 8088
 
---===============2675389599670190718==
+--===============6246517460607428277==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2021-03-09 at 17:59 -0800, Mat Martineau wrote:
-> Greg KH hit a conflict when applying "mptcp: fix DATA_FIN generation on =
+This is the first RFC version of adding DSS checksum and MP_FAIL support,
+addressed issue #134 and #52. It's not finish yet. Patch 1 had a bug in
+it. The self test script mptcp_join.sh could pass, but mptcp_connect.sh
+will fail sometimes. Patch 2 didn't implement the logic of receiving the
+MP_FAIL, where I marked it with a TODO label.
+ =
 
-> early shutdown" to 5.10-stable.
-> =
+I need some suggestions to improve this patchset.
 
-> (upstream commit for reference: =
+Thanks.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=
-=3Dd87903b63e3ce1eafaa701aec5cc1d0ecd0d84dc =
+Geliang Tang (2):
+  mptcp: DSS checksum support
+  mptcp: add MP_FAIL support
 
-> )
-> =
+ include/net/mptcp.h  |   2 +
+ net/mptcp/options.c  | 122 +++++++++++++++++++++++++++++++++++++++----
+ net/mptcp/protocol.h |  13 +++++
+ net/mptcp/subflow.c  |  42 ++++++++++++++-
+ 4 files changed, 169 insertions(+), 10 deletions(-)
 
-> The conflict is fairly simple to resolve, do you think that one is worth =
+-- =
 
-> the effort for v5.10.x? I can handle the backport.
+2.29.2
 
-No objection on my side ;) but also no available CPU cycles here :( So
-if you can go ahead, I would appreciate that!
-
-Thanks!
-
-Paolo
-
---===============2675389599670190718==--
+--===============6246517460607428277==--
