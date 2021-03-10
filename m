@@ -1,41 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============1432304300387125961=="
+Content-Type: multipart/mixed; boundary="===============3167894265638366314=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next] Squash to "mptcp: add
- rm_list in mptcp_out_options" - bugfix
-Date: Wed, 10 Mar 2021 15:04:03 +0100
-Message-ID: <d2a39f62-7295-9ba6-9f6f-1fb16b4ae3ad@tessares.net>
-In-Reply-To: 1013371d28c0219e3bdd904539094a90d7d3ffae.1615260023.git.geliangtang@gmail.com
+Subject: [MPTCP] Weekly meeting - 11 March 2021 16:00 UTC (8am PDT, 5pm CET,
+ 12pm CST)
+Date: Wed, 10 Mar 2021 21:36:48 +0100
+Message-ID: <e8ab87b3-e99a-1ce7-8452-087b79a700ef@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 8091
+X-UID: 8092
 
---===============1432304300387125961==
+--===============3167894265638366314==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat
+Hello everybody!
 
-On 09/03/2021 04:30, Geliang Tang wrote:
-> The original RM_ADDR option writing can only deal with 8 addresses, this
-> patch fixed it.
-> =
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-> It also fixed a bug in mptcp_rm_addr_len too.
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20210311
 
-Thank you for the patch and the review!
+Feel free to add/modify topics!
 
-- aa3d2ca0ec3a: "squashed" in "mptcp: add rm_list in mptcp_out_options"
-- Results: 0d134d561988..6944cd8f9fbe
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-Tests + export have been queued.
-
-Cheers,
+See/Speak to you tomorrow!
 Matt
 -- =
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============1432304300387125961==--
+--===============3167894265638366314==--
