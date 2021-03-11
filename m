@@ -1,99 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============0828404084902173588=="
+Content-Type: multipart/mixed; boundary="===============5048428018200995680=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Paolo Abeni <pabeni at redhat.com>
 To: mptcp at lists.01.org
 Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/3] mptcp: only admit explicitly
  supported sockopt
-Date: Thu, 11 Mar 2021 09:25:34 +0100
-Message-ID: <05d59b20-0e7f-77d4-0d39-b8b0c1572e10@tessares.net>
-In-Reply-To: 6bde45df6832e151e57ef75e493b6375cbac9384.1614965103.git.pabeni@redhat.com
+Date: Thu, 11 Mar 2021 10:25:01 +0100
+Message-ID: <5e465bd5f4b3f7e883e09e3f4bc5a566edba045f.camel@redhat.com>
+In-Reply-To: 05d59b20-0e7f-77d4-0d39-b8b0c1572e10@tessares.net
 X-Status: 
 X-Keywords:                  
-X-UID: 8094
+X-UID: 8095
 
---===============0828404084902173588==
+--===============5048428018200995680==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Thu, 2021-03-11 at 09:25 +0100, Matthieu Baerts wrote:
+> On 05/03/2021 18:31, Paolo Abeni wrote:
+> > A note on optname order. For each sol level, I tried to follow the
+> > order used by the corresponding relevant setsockopt(), with the
+> > following additional contraint:
+> > [1] opt which should currently work correctly with no changes come first
+> > [2] than opt that need some impl effort, but should not cause bugs/splat
+> >    ATM
+> > [3] then opt that are really a no-op - and currently work as intended
+> > [4] (commented out) unsupported opt come last, with related reasoning.
+> > =
 
-On 05/03/2021 18:31, Paolo Abeni wrote:
-> Unrolling mcast state at msk dismantel time is bug prone, as
-> syzkaller reported:
+> > Note that [2] is likely too wide. This is intended as to start discussi=
+on.
+> > Looks like fixing issue/170 will require a bit of time :(
 > =
 
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> WARNING: possible circular locking dependency detected
-> 5.11.0-syzkaller #0 Not tainted
-> ------------------------------------------------------
-> syz-executor905/8822 is trying to acquire lock:
-> ffffffff8d678fe8 (rtnl_mutex){+.+.}-{3:3}, at: ipv6_sock_mc_close+0xd7/0x=
-110 net/ipv6/mcast.c:323
+> Out of curiosity, how did you define this first list? =
+
+
+Manual review of:
+- sock_setsockopt() in net/core/sock.c
+- do_ip_setsockopt() in net/ipv4/ip_sockglue.c
+- do_ipv6_setsockopt() in net/ipv6/ipv6_sockglue.c
+- do_tcp_setsockopt() in net/ipv4/tcp.c
+
+as such is error prone :(
+
+> I mean: is it =
+
+> normal that some sockopts are not present there: not in a "case" or in =
+
+> the comments?
+
+Well, it depends on how much do you consider and error being "normal":)
+
+I intentionally omitted only nft and bpf stuff.
+
+> For example, Geliang noticed that when launching eBPF selftests, =
+
+> SO_SNDTIMEO* was not allowed for MPTCP sockets. But there is nothing =
+
+> about them.
 > =
 
-> but task is already holding lock:
-> ffff888024390120 (sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/ne=
-t/sock.h:1600 [inline]
-> ffff888024390120 (sk_lock-AF_INET6){+.+.}-{0:0}, at: mptcp6_release+0x57/=
-0x130 net/mptcp/protocol.c:3507
-> =
+> Maybe this patch is enough: https://paste.centos.org/view/854d7e07
 
-> which lock already depends on the new lock.
-> =
+Yep, that is needed for sure.
 
-> Instead we can simply forbit any mcast-related setsockopt
-> =
+> It is under testing by Geliang. At least to have the test passing, not =
 
-> Fixes: 717e79c867ca5 ("mptcp: Add setsockopt()/getsockopt() socket operat=
-ions")
-> Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
-> ---
-> v1 -> v2:
->   - switch from blacklist to whitelist
-> =
+> sure if SO_SNDTIMEO is properly supported yet :)
 
-> A note on optname order. For each sol level, I tried to follow the
-> order used by the corresponding relevant setsockopt(), with the
-> following additional contraint:
-> [1] opt which should currently work correctly with no changes come first
-> [2] than opt that need some impl effort, but should not cause bugs/splat
->    ATM
-> [3] then opt that are really a no-op - and currently work as intended
-> [4] (commented out) unsupported opt come last, with related reasoning.
-> =
+Looks like 'SO_SNDTIMEO' still will not work as expected, because the
+setting is applied only to the first subflow, while
+mptcp_recvmsg()/mptcp_sendmsg() will look for the timeout value in the
+msk socket.
 
-> Note that [2] is likely too wide. This is intended as to start discussion.
-> Looks like fixing issue/170 will require a bit of time :(
+@Florian: do you think the above could be addressed by the sockopt()
+improvements?
 
-Out of curiosity, how did you define this first list? I mean: is it =
+> But should we check (and have a test executed by the CI) to make sure =
 
-normal that some sockopts are not present there: not in a "case" or in =
+> all sockopts are at least written somewhere in the new sockopt.c file?
 
-the comments?
+Uhmm... do you mean something alike a BUILD_BUG_ON()???
 
-For example, Geliang noticed that when launching eBPF selftests, =
-
-SO_SNDTIMEO* was not allowed for MPTCP sockets. But there is nothing =
-
-about them.
-
-Maybe this patch is enough: https://paste.centos.org/view/854d7e07
-
-It is under testing by Geliang. At least to have the test passing, not =
-
-sure if SO_SNDTIMEO is properly supported yet :)
-
-But should we check (and have a test executed by the CI) to make sure =
-
-all sockopts are at least written somewhere in the new sockopt.c file?
+I *think* it would be better more coverage via packetdrill ;)
 
 Cheers,
-Matt
--- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0828404084902173588==--
+Paolo
+
+--===============5048428018200995680==--
