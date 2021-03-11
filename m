@@ -1,31 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============3002885318451915016=="
+Content-Type: multipart/mixed; boundary="===============6670888696367281721=="
 MIME-Version: 1.0
-From: Florian Westphal <fwestpha at redhat.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH v2 mptcp-next 2/3] mptcp: only admit explicitly
- supported sockopt
-Date: Thu, 11 Mar 2021 12:34:44 +0100
-Message-ID: <4593ff4f-5056-8e54-6be5-733e6cd27101@redhat.com>
-In-Reply-To: 5e465bd5f4b3f7e883e09e3f4bc5a566edba045f.camel@redhat.com
+Subject: [MPTCP] [MPTCP][bug report] bpf test error: Attempt to release TCP
+ socket in state 8
+Date: Thu, 11 Mar 2021 19:48:24 +0800
+Message-ID: <CA+WQbwtmg2=fymqK=v7U3UQRF4sTjTRAfbHf-PREWf9tiLRcOw@mail.gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8100
+X-UID: 8101
 
---===============3002885318451915016==
+--===============6670888696367281721==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 3/11/21 10:25 AM, Paolo Abeni wrote:
-> Looks like 'SO_SNDTIMEO' still will not work as expected, because the
-> setting is applied only to the first subflow, while
-> mptcp_recvmsg()/mptcp_sendmsg() will look for the timeout value in the
-> msk socket.
-> =
+Hi Matt,
 
-> @Florian: do you think the above could be addressed by the sockopt()
-> improvements?
+When I ran the bpf mptcp test "sudo ./test_progs -n 66", I got another
+error in kernel log:
 
-Sure.
+[   77.934592] MPTCP: subflow=3D00000000e0654941
+[   77.934607] MPTCP: subflow=3D00000000e0654941, family=3D2
+[   77.934610] MPTCP: subflow=3D00000000e0654941
+[   77.934669] MPTCP: msk=3D000000004c748421
+[   77.934675] MPTCP: msk=3D000000004c748421
+[   77.934713] MPTCP: msk=3D000000004c748421
+[   77.936531] MPTCP: subflow=3D00000000251d40ff
+[   77.936534] MPTCP: subflow=3D00000000251d40ff, family=3D2
+[   77.936537] MPTCP: subflow=3D00000000251d40ff
+[   77.936570] MPTCP: msk=3D000000000719adf6
+[   77.936574] MPTCP: msk=3D000000000719adf6
+[   77.936608] MPTCP: ssk=3D000000000b842750, local_key=3D0, token=3D0, ids=
+n=3D0
+[   77.937208] MPTCP: subflow=3D00000000e0654941
+[   77.937236] MPTCP: subflow_req=3D0000000044a047b7, listener=3D00000000e0=
+654941
+[   77.937238] MPTCP: MP_CAPABLE version=3D1, flags=3D1, optlen=3D4
+sndr=3D18446744071929286208, rcvr=3D18446744071926618176 len=3D65535
+[   77.937243] MPTCP: req=3D0000000044a047b7
+local_key=3D2985301457274662401, token=3D2886416874,
+idsn=3D10131319275245579311
+[   77.937262] MPTCP: subflow_req=3D0000000044a047b7,
+local_key=3D2985301457274662401
+[   77.937720] MPTCP: subflow=3D00000000251d40ff synack seq=3Ddb401b8a
+[   77.937731] MPTCP: MP_CAPABLE version=3D1, flags=3D1, optlen=3D12
+sndr=3D2985301457274662401, rcvr=3D0 len=3D1
+[   77.937734] MPTCP: subflow=3D00000000251d40ff, remote_key=3D298530145727=
+4662401
+[   77.937736] MPTCP: msk=3D000000000719adf6, token=3D3228008563
+[   77.937738] MPTCP: msk=3D000000000719adf6, token=3D3228008563 side=3D0
+[   77.937744] MPTCP: msk=3D000000000719adf6 ssk=3D000000000b842750
+data_avail=3D0 skb=3D0000000000000000
+[   77.937747] MPTCP: msk=3D000000000719adf6 ssk=3D000000000b842750 status=
+=3D2
+[   77.937753] MPTCP: subflow=3D00000000251d40ff,
+local_key=3D18238671200230564764, remote_key=3D2985301457274662401
+map_len=3D0
+[   77.937776] MPTCP: listener=3D00000000e0654941, req=3D0000000044a047b7,
+conn=3D000000004c748421
+[   77.937778] MPTCP: msk=3D000000000719adf6 snd_data_fin_enable=3D0
+shutdown=3D3 state=3D4 pending=3D0
+[   77.937782] MPTCP: MP_CAPABLE version=3D1, flags=3D1, optlen=3D20
+sndr=3D18238671200230564764, rcvr=3D2985301457274662401 len=3D65535
+[   77.937794] MPTCP: msk=3D000000000719adf6 snd_data_fin_enable=3D1
+pending=3D0 snd_nxt=3D8514713421947747319 write_seq=3D8514713421947747320
+[   77.937808] MPTCP: Sending DATA_FIN on subflow 000000000b842750
+[   77.937818] MPTCP: subflow=3D000000004d4af92e
+[   77.937866] MPTCP: listener=3D00000000e0654941, req=3D0000000044a047b7,
+conn=3D000000004c748421
+[   77.937870] MPTCP: DSS
+[   77.937871] MPTCP: data_fin=3D1 dsn64=3D1 use_map=3D1 ack64=3D0 use_ack=
+=3D1
+[   77.937873] MPTCP: data_ack=3D3944000560
+[   77.937875] MPTCP: data_seq=3D8514713421947747319 subflow_seq=3D0 data_l=
+en=3D1
+[   77.937889] MPTCP: subflow=3D00000000e168971a
+[   77.938028] MPTCP: msk=3D00000000e58fbe96, token=3D2886416874 side=3D1
+[   77.938573] MPTCP: msk=3D00000000e58fbe96 ssk=3D00000000de73ae65
+data_avail=3D0 skb=3D0000000000000000
+[   77.938576] MPTCP: msk=3D00000000e58fbe96 ssk=3D00000000de73ae65 status=
+=3D2
+[   77.938578] MPTCP: MP_CAPABLE version=3D1, flags=3D1, optlen=3D20
+sndr=3D18238671200230564764, rcvr=3D2985301457274662401 len=3D0
+[   77.938590] MPTCP: DSS
+[   77.938593] MPTCP: data_fin=3D1 dsn64=3D1 use_map=3D1 ack64=3D0 use_ack=
+=3D1
+[   77.938595] MPTCP: data_ack=3D3944000560
+[   77.938597] MPTCP: data_seq=3D8514713421947747319 subflow_seq=3D0 data_l=
+en=3D1
+[   77.939192] MPTCP: msk=3D00000000e58fbe96 snd_data_fin_enable=3D0
+pending=3D0 snd_nxt=3D10131319275245579312 write_seq=3D10131319275245579312
+[   77.939294] MPTCP: msk=3D000000000719adf6 state=3D4
+[   77.939347] MPTCP: msk=3D000000004c748421 state=3D7
+[   77.939350] MPTCP: msk=3D000000004c748421
+[   77.939497] MPTCP: msk=3D00000000e58fbe96
+[   77.939534] IPv4: Attempt to release TCP socket in state 8 00000000e58fb=
+e96
+[   77.939807] MPTCP: subflow_req=3D0000000044a047b7
+[   77.939818] MPTCP: check_fully_established:fallback to TCP
+(msk=3D000000000719adf6)
+[   77.940238] MPTCP: msk=3D000000004c748421
+[  140.366959] MPTCP: msk=3D000000000719adf6 snd_data_fin_enable=3D1
+pending=3D0 snd_nxt=3D8514713421947747320 write_seq=3D8514713421947747320
+[  140.366984] MPTCP: msk=3D000000000719adf6
 
---===============3002885318451915016==--
+It seems that the mptcp socket isn't closed properly.
+
+-Geliang
+--===============6670888696367281721==--
