@@ -1,74 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============4563826210013686058=="
+Content-Type: multipart/mixed; boundary="===============1691187382292723392=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add addr
- argument for del_addr"
-Date: Fri, 12 Mar 2021 15:55:47 +0100
-Message-ID: <bdb08496-476d-4486-ffca-d97c8bbdb4d7@tessares.net>
-In-Reply-To: CA+WQbwucg0LrQMikAjWSLxH8XwemL5K2qaaMv_hXx7smsXENmQ@mail.gmail.com
+Subject: [MPTCP] [PATCH mptcp-next] selftests: mptcp: avoid calling pm_nl_ctl
+ with bad IDs
+Date: Fri, 12 Mar 2021 16:13:58 +0100
+Message-ID: <20210312151358.3426301-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 8120
+X-UID: 8121
 
---===============4563826210013686058==
+--===============1691187382292723392==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+IDs are supposed to be between 0 and 255.
 
-On 12/03/2021 15:50, Geliang Tang wrote:
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B43=
-=E6=9C=8812=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8810:36=E5=86=99=E9=
-=81=93=EF=BC=9A
->> On 12/03/2021 15:28, Geliang Tang wrote:
->>> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B4=
-3=E6=9C=8812=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8810:11=E5=86=99=E9=
-=81=93=EF=BC=9A
->>>> On 12/03/2021 15:06, Geliang Tang wrote:
->>>>> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=
-=B43=E6=9C=8812=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=888:54=E5=86=99=
-=E9=81=93=EF=BC=9A
->>
->> (...)
->>
->>>>>> Notes:
->>>>>>        to be squashed in "selftests: mptcp: add addr argument for de=
-l_addr"
->>>>>
->>>>> I think this patch should be a single standalone patch, not a squash-=
-to
->>>>> one.
->>>>
->>>> If I do the modification you propose, should I not keep this as a
->>>> squash-to patch?
->>>
->>> I think a standalone patch is better. Or squash to the other commit
->>> "selftests: mptcp: remove id 0 address testcases", not "selftests: mptc=
-p:
->>> add addr argument for del_addr", WDYT?
->>
->> The issue was visible with "selftests: mptcp: add addr argument for
->> del_addr" but I understand the issue was already there before.
->>
->> I can write a new patch to place before "selftests: mptcp: remove id 0
->> address testcases".
-> =
+In pm_nl_ctl, for both the 'add' and 'get' instruction, the ID is casted
+in a u_int8_t. So if we give 256, we will delete ID 0. Obviously, the
+goal is not to delete this ID by giving 256.
 
-> Thanks Matt, please add my tag on the new patch:
-> =
+We could modify pm_nl_ctl and stop if the ID is negative or higher than
+255 but probably better not to increase the number of lines for such
+things in this tool which is only used in selftests. Instead, we use it
+within the limits.
 
-> Acked-by: Geliang Tang <geliangtang(a)gmail.com>
+This modification also means that we will no longer add a new ID for the
+2nd entry. That's why we removed an expected entry from the dump and =
 
-Because the new patch is going to be slightly different, I prefer you to =
+introduced with
+commit dc8eb10e95a8 ("selftests: mptcp: add testcases for setting the addre=
+ss ID").
 
-give an Acked-by on the new patch if you don't mind :)
+So now we delete ID 9 like before and we add entries for IDs 10 to 255
+that are deleted just after.
 
-Cheers,
-Matt
+Note that this could be seen as a fix but it was not really an issue so
+far: we were simply playing with ID 0/1 once again. With the following
+commit ("selftests: mptcp: add addr argument for del_addr"), it will be
+different because ID 0 is going to required an address. We don't want
+errors when trying to delete ID 0 without the address argument.
+
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testin=
+g/selftests/net/mptcp/pm_netlink.sh
+index a617e293734c..3c741abe034e 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -100,12 +100,12 @@ done
+ check "ip netns exec $ns1 ./pm_nl_ctl get 9" "id 9 flags signal 10.0.1.9" =
+"hard addr limit"
+ check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
+ =
+
+-for i in `seq 9 256`; do
++ip netns exec $ns1 ./pm_nl_ctl del 9
++for i in `seq 10 255`; do
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $i
+ 	ip netns exec $ns1 ./pm_nl_ctl del $i
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $((i+1))
+ done
+ check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
+-id 2 flags  10.0.0.9
+ id 3 flags signal,backup 10.0.1.3
+ id 4 flags signal 10.0.1.4
+ id 5 flags signal 10.0.1.5
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============4563826210013686058==--
+2.30.2
+
+--===============1691187382292723392==--
