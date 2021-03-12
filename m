@@ -1,86 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============5935354842612591410=="
+Content-Type: multipart/mixed; boundary="===============1896204437712862685=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next v2] Squash to "selftests: mptcp: add
- addr argument for del_addr"
-Date: Fri, 12 Mar 2021 11:01:40 -0800
-Message-ID: <86ce39db-8474-4dc1-5e12-42a9a4ecc12f@linux.intel.com>
-In-Reply-To: 20210312141745.3326786-1-matthieu.baerts@tessares.net
+Subject: [MPTCP] kbuild is working again, found a failure
+Date: Fri, 12 Mar 2021 11:19:17 -0800
+Message-ID: <885b44af-ca88-bea8-c824-f5cc8a89e2d@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8126
+X-UID: 8127
 
---===============5935354842612591410==
+--===============1896204437712862685==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 12 Mar 2021, Matthieu Baerts wrote:
 
-> Avoid calling pm_nl_ctl with id > 255.
->
-> Without this patch, we can see this when running the selftests:
->
->  selftests: net/mptcp: pm_netlink.sh
->  (...)
->  above hard addr limit                              [ OK ]
->  ./pm_nl_ctl add|get|set|del|flush|dump|accept
->   add [flags signal|subflow|backup] [id <nr>] [dev <name>] <ip>
->  del <id>
->   get <id>
->   set <ip> [flags backup|nobackup]
->   flush
->   dump
->  limits [<rcv addr max> <subflow max>]
->
->  id limit                                           [ OK ]
->  (...)
->
-> That's because we were calling:
->
->  $ pm_nl_ctl del 256
->
-> In the code, the parsed ID is written in a u_int8_t. Then the value
-> "256" is stored as "0" which is now a special case and requires an IP.
->
-> We could modify pm_nl_ctl and stop if the ID is negative or higher than
-> 255 but not sure we need this for a tool only used in selftests.
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> ---
->
-> Notes:
->    to be squashed in "selftests: mptcp: add addr argument for del_addr"
->
->    v2:
->      - only modify the for-loop higher limit. (Geliang)
->
-> tools/testing/selftests/net/mptcp/pm_netlink.sh | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/test=
-ing/selftests/net/mptcp/pm_netlink.sh
-> index a617e293734c..2ba91c63f24e 100755
-> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> @@ -100,7 +100,7 @@ done
-> check "ip netns exec $ns1 ./pm_nl_ctl get 9" "id 9 flags signal 10.0.1.9"=
- "hard addr limit"
-> check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
->
-> -for i in `seq 9 256`; do
-> +for i in `seq 9 255`; do
-> 	ip netns exec $ns1 ./pm_nl_ctl del $i
-> 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $((i+1))
-> done
-> -- =
+Hello -
 
-> 2.30.2
+Thanks Matthieu for adding the "static_call: Fix the module key fixup" =
 
-Thanks for the fix Matthieu, looks good to me.
+commit to the mptcp_net-next repository, the kbuild tests are now running =
+
+again.
+
+There was a failure in mptcp_join.sh:
+
+user  :notice: [  380.427338] # 24 remove invalid addresses             syn=
+[ ok ] - synack[ ok ] - ack[ ok ]
+user  :notice: [  380.456500] #                                         add=
+[ ok ] - echo  [ ok ]
+user  :notice: [  380.472445] #                                         rm =
+[fail] got 2 RM_ADDR[s] expected 3
+user  :notice: [  380.488441] #  - sf    [ ok ]
+user  :notice: [  380.493351] # Server ns stats
+user  :notice: [  380.499668] # MPTcpExtMPCapableSYNRX          1          =
+        0.0
+user  :notice: [  380.508705] # MPTcpExtMPCapableACKRX          1          =
+        0.0
+user  :notice: [  380.518042] # MPTcpExtMPJoinSynRx             1          =
+        0.0
+user  :notice: [  380.527101] # MPTcpExtMPJoinAckRx             1          =
+        0.0
+user  :notice: [  380.536145] # MPTcpExtEchoAdd                 3          =
+        0.0
+user  :notice: [  380.545105] # MPTcpExtRmSubflow               1          =
+        0.0
+user  :notice: [  380.553759] # Client ns stats
+user  :notice: [  380.559474] # MPTcpExtMPCapableSYNTX          1          =
+        0.0
+user  :notice: [  380.568482] # MPTcpExtMPCapableSYNACKRX       1          =
+        0.0
+user  :notice: [  380.577496] # MPTcpExtMPJoinSynAckRx          1          =
+        0.0
+user  :notice: [  380.586552] # MPTcpExtAddAddr                 3          =
+        0.0
+user  :notice: [  380.595546] # MPTcpExtRmAddr                  2          =
+        0.0
 
 --
 Mat Martineau
 Intel
---===============5935354842612591410==--
+--===============1896204437712862685==--
