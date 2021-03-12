@@ -1,63 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============1896204437712862685=="
+Content-Type: multipart/mixed; boundary="===============1429145221628274082=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Davide Caratti <dcaratti at redhat.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] kbuild is working again, found a failure
-Date: Fri, 12 Mar 2021 11:19:17 -0800
-Message-ID: <885b44af-ca88-bea8-c824-f5cc8a89e2d@linux.intel.com>
+Subject: [MPTCP] [PATCH net] mptcp: fix ADD_ADDR HMAC in case port is specified
+Date: Fri, 12 Mar 2021 22:32:18 +0100
+Message-ID: <74f12b1cf1e60fbfba1b737b8949526346afb983.1615584629.git.dcaratti@redhat.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8127
+X-UID: 8128
 
---===============1896204437712862685==
+--===============1429145221628274082==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Currently, Linux computes the HMAC contained in ADD_ADDR sub-option using
+the Address Id and the IP Address, and hardcodes a destination port equal
+to zero. This is not ok for ADD_ADDR with port: ensure to account for the
+endpoint port when computing the HMAC, in compliance with RFC8684 =C2=A73.4=
+.1.
 
-Hello -
+Fixes: 22fb85ffaefb ("mptcp: add port support for ADD_ADDR suboption writin=
+g")
+Signed-off-by: Davide Caratti <dcaratti(a)redhat.com>
+---
+ net/mptcp/options.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-Thanks Matthieu for adding the "static_call: Fix the module key fixup" =
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 444a38681e93..89a4225ed321 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -567,15 +567,15 @@ static bool mptcp_established_options_dss(struct sock=
+ *sk, struct sk_buff *skb,
+ }
+ =
 
-commit to the mptcp_net-next repository, the kbuild tests are now running =
+ static u64 add_addr_generate_hmac(u64 key1, u64 key2, u8 addr_id,
+-				  struct in_addr *addr)
++				  struct in_addr *addr, u16 port)
+ {
+ 	u8 hmac[SHA256_DIGEST_SIZE];
+ 	u8 msg[7];
+ =
 
-again.
+ 	msg[0] =3D addr_id;
+ 	memcpy(&msg[1], &addr->s_addr, 4);
+-	msg[5] =3D 0;
+-	msg[6] =3D 0;
++	msg[5] =3D port >> 8;
++	msg[6] =3D port & 0xFF;
+ =
 
-There was a failure in mptcp_join.sh:
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 7, hmac);
+ =
 
-user  :notice: [  380.427338] # 24 remove invalid addresses             syn=
-[ ok ] - synack[ ok ] - ack[ ok ]
-user  :notice: [  380.456500] #                                         add=
-[ ok ] - echo  [ ok ]
-user  :notice: [  380.472445] #                                         rm =
-[fail] got 2 RM_ADDR[s] expected 3
-user  :notice: [  380.488441] #  - sf    [ ok ]
-user  :notice: [  380.493351] # Server ns stats
-user  :notice: [  380.499668] # MPTcpExtMPCapableSYNRX          1          =
-        0.0
-user  :notice: [  380.508705] # MPTcpExtMPCapableACKRX          1          =
-        0.0
-user  :notice: [  380.518042] # MPTcpExtMPJoinSynRx             1          =
-        0.0
-user  :notice: [  380.527101] # MPTcpExtMPJoinAckRx             1          =
-        0.0
-user  :notice: [  380.536145] # MPTcpExtEchoAdd                 3          =
-        0.0
-user  :notice: [  380.545105] # MPTcpExtRmSubflow               1          =
-        0.0
-user  :notice: [  380.553759] # Client ns stats
-user  :notice: [  380.559474] # MPTcpExtMPCapableSYNTX          1          =
-        0.0
-user  :notice: [  380.568482] # MPTcpExtMPCapableSYNACKRX       1          =
-        0.0
-user  :notice: [  380.577496] # MPTcpExtMPJoinSynAckRx          1          =
-        0.0
-user  :notice: [  380.586552] # MPTcpExtAddAddr                 3          =
-        0.0
-user  :notice: [  380.595546] # MPTcpExtRmAddr                  2          =
-        0.0
+@@ -584,15 +584,15 @@ static u64 add_addr_generate_hmac(u64 key1, u64 key2,=
+ u8 addr_id,
+ =
 
---
-Mat Martineau
-Intel
---===============1896204437712862685==--
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ static u64 add_addr6_generate_hmac(u64 key1, u64 key2, u8 addr_id,
+-				   struct in6_addr *addr)
++				   struct in6_addr *addr, u16 port)
+ {
+ 	u8 hmac[SHA256_DIGEST_SIZE];
+ 	u8 msg[19];
+ =
+
+ 	msg[0] =3D addr_id;
+ 	memcpy(&msg[1], &addr->s6_addr, 16);
+-	msg[17] =3D 0;
+-	msg[18] =3D 0;
++	msg[17] =3D port >> 8;
++	msg[18] =3D port & 0xFF;
+ =
+
+ 	mptcp_crypto_hmac_sha(key1, key2, msg, 19, hmac);
+ =
+
+@@ -646,7 +646,8 @@ static bool mptcp_established_options_add_addr(struct s=
+ock *sk, struct sk_buff *
+ 			opts->ahmac =3D add_addr_generate_hmac(msk->local_key,
+ 							     msk->remote_key,
+ 							     opts->addr_id,
+-							     &opts->addr);
++							     &opts->addr,
++							     opts->port);
+ 		}
+ 	}
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+@@ -657,7 +658,8 @@ static bool mptcp_established_options_add_addr(struct s=
+ock *sk, struct sk_buff *
+ 			opts->ahmac =3D add_addr6_generate_hmac(msk->local_key,
+ 							      msk->remote_key,
+ 							      opts->addr_id,
+-							      &opts->addr6);
++							      &opts->addr6,
++							      opts->port);
+ 		}
+ 	}
+ #endif
+@@ -962,12 +964,14 @@ static bool add_addr_hmac_valid(struct mptcp_sock *ms=
+k,
+ 	if (mp_opt->family =3D=3D MPTCP_ADDR_IPVERSION_4)
+ 		hmac =3D add_addr_generate_hmac(msk->remote_key,
+ 					      msk->local_key,
+-					      mp_opt->addr_id, &mp_opt->addr);
++					      mp_opt->addr_id, &mp_opt->addr,
++					      mp_opt->port);
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	else
+ 		hmac =3D add_addr6_generate_hmac(msk->remote_key,
+ 					       msk->local_key,
+-					       mp_opt->addr_id, &mp_opt->addr6);
++					       mp_opt->addr_id, &mp_opt->addr6,
++					       mp_opt->port);
+ #endif
+ =
+
+ 	pr_debug("msk=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
+-- =
+
+2.29.2
+
+--===============1429145221628274082==--
