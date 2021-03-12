@@ -1,181 +1,304 @@
-Content-Type: multipart/mixed; boundary="===============1014639103001112547=="
+Content-Type: multipart/mixed; boundary="===============8573444650506990315=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [RFC PATCH mptcp-backport] mptcp: fix DATA_FIN generation on
- early shutdown
-Date: Thu, 11 Mar 2021 17:21:46 -0800
-Message-ID: <20210312012146.108482-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] Re: [MPTCP][RFC PATCH 1/2] mptcp: DSS checksum support
+Date: Thu, 11 Mar 2021 17:32:26 -0800
+Message-ID: <13306aad-4a77-ae3d-65b2-ad5b574fe9b3@linux.intel.com>
+In-Reply-To: cc7e44b081dc7b02f9b7b9d14175acad361ea18e.1615378283.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8104
+X-UID: 8105
 
---===============1014639103001112547==
+--===============8573444650506990315==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni(a)redhat.com>
+On Wed, 10 Mar 2021, Geliang Tang wrote:
 
-If the msk is closed before sending or receiving any data,
-no DATA_FIN is generated, instead an MPC ack packet is
-crafted out.
+> Add DSS checksum support.
+>
 
-In the above scenario, the MPTCP protocol creates and sends a
-pure ack and such packets matches also the criteria for an
-MPC ack and the protocol tries first to insert MPC options,
-leading to the described error.
+Hi Geliang,
 
-This change addresses the issue by avoiding the insertion of an
-MPC option for DATA_FIN packets or if the sub-flow is not
-established.
+Thanks for working on this feature!
 
-To avoid doing multiple times the same test, fetch the data_fin
-flag in a bool variable and pass it to both the interested
-helpers.
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/134
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> include/net/mptcp.h  |  1 +
+> net/mptcp/options.c  | 61 ++++++++++++++++++++++++++++++++++++++------
+> net/mptcp/protocol.h |  8 ++++++
+> net/mptcp/subflow.c  | 38 ++++++++++++++++++++++++++-
+> 4 files changed, 99 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 16fe34d139c3..de88f38e60b1 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -32,6 +32,7 @@ struct mptcp_ext {
+> 			frozen:1,
+> 			reset_transient:1;
+> 	u8		reset_reason:4;
+> +	u16		csum;
+> };
+>
+> #define MPTCP_RM_IDS_MAX	8
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index bf1b8497e091..9df26291cf9a 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -69,11 +69,9 @@ static void mptcp_parse_option(const struct sk_buff *s=
+kb,
+> 		 * "If a checksum is not present when its use has been
+> 		 * negotiated, the receiver MUST close the subflow with a RST as
+> 		 * it is considered broken."
+> -		 *
+> -		 * We don't implement DSS checksum - fall back to TCP.
+> 		 */
+> 		if (flags & MPTCP_CAP_CHECKSUM_REQD)
+> -			break;
+> +			;
 
-Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packe=
-ts")
-Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
-Signed-off-by: Paolo Abeni <pabeni(a)redhat.com>
----
+We need to keep track of whether checksums are in use on this socket. If =
 
-This is a backport of d87903b63e3ce1eafaa701aec5cc1d0ecd0d84dc to the
-v5.10-stable tree. Paolo and I got email from Greg KH saying the commit
-did not apply cleanly on v5.10.
+the peer requests checksums with this flag, then checksums are required. =
 
-The main reason for that was a call to mptcp_data_fin_enabled(), which
-was added as part of "mptcp: refactor shutdown and close":
+They are also required if configured locally on this socket.
 
-static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
-{
-       return READ_ONCE(msk->snd_data_fin_enable) &&
-              READ_ONCE(msk->write_seq) =3D=3D READ_ONCE(msk->snd_nxt);
-}
+I think the mptcp_sock needs a field to record whether checksums are =
 
-That code depends on the introduction of msk->snd_nxt in the same patch
-series for v5.11. In this backport I just used
-READ_ONCE(msk->snd_data_fin_enable).
+enabled. This could be enabled locally with a sysctl for the checksum =
 
-This only changes v5.10 behavior before sending any data, so it *seems*
-like this approach to the backport is workable. The self tests are
-successful but don't have coverage for this fix.
+default enable/disable, or a sockopt (if the sockopt is set before =
 
-What do you think Paolo?
+connecting), and also enabled at connection time if the peer sends this =
 
+MPTCP_CAP_CHECKSUM_REQD flag.
 
-Thanks,
-
-Mat
-
-
-
- net/mptcp/options.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index a044dd43411d..78f9c7fecbc9 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -388,6 +388,7 @@ static void clear_3rdack_retransmission(struct sock *sk)
- }
- =
-
- static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *=
-skb,
-+					 bool snd_data_fin_enable,
- 					 unsigned int *size,
- 					 unsigned int remaining,
- 					 struct mptcp_out_options *opts)
-@@ -405,9 +406,10 @@ static bool mptcp_established_options_mp(struct sock *=
-sk, struct sk_buff *skb,
- 	if (!skb)
- 		return false;
- =
-
--	/* MPC/MPJ needed only on 3rd ack packet */
--	if (subflow->fully_established ||
--	    subflow->snd_isn !=3D TCP_SKB_CB(skb)->seq)
-+	/* MPC/MPJ needed only on 3rd ack packet, DATA_FIN and TCP shutdown take =
-precedence */
-+	if (subflow->fully_established || snd_data_fin_enable ||
-+	    subflow->snd_isn !=3D TCP_SKB_CB(skb)->seq ||
-+	    sk->sk_state !=3D TCP_ESTABLISHED)
- 		return false;
- =
-
- 	if (subflow->mp_capable) {
-@@ -479,6 +481,7 @@ static void mptcp_write_data_fin(struct mptcp_subflow_c=
-ontext *subflow,
- }
- =
-
- static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff =
+>
+> 		mp_opt->mp_capable =3D 1;
+> 		if (opsize >=3D TCPOLEN_MPTCP_MPC_SYNACK) {
+> @@ -208,9 +206,14 @@ static void mptcp_parse_option(const struct sk_buff =
 *skb,
-+					  bool snd_data_fin_enable,
- 					  unsigned int *size,
- 					  unsigned int remaining,
- 					  struct mptcp_out_options *opts)
-@@ -486,13 +489,11 @@ static bool mptcp_established_options_dss(struct sock=
- *sk, struct sk_buff *skb,
- 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
- 	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
- 	unsigned int dss_size =3D 0;
--	u64 snd_data_fin_enable;
- 	struct mptcp_ext *mpext;
- 	unsigned int ack_size;
- 	bool ret =3D false;
- =
+> 			mp_opt->data_len =3D get_unaligned_be16(ptr);
+> 			ptr +=3D 2;
+>
+> -			pr_debug("data_seq=3D%llu subflow_seq=3D%u data_len=3D%u",
+> +			if (opsize =3D=3D expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
+> +				mp_opt->csum =3D get_unaligned_be16(ptr);
+> +				ptr +=3D 2;
+> +			}
+> +
+> +			pr_debug("%s data_seq=3D%llu subflow_seq=3D%u data_len=3D%u csum=3D%u=
+", __func__,
+> 				 mp_opt->data_seq, mp_opt->subflow_seq,
+> -				 mp_opt->data_len);
+> +				 mp_opt->data_len, mp_opt->csum);
+> 		}
+>
+> 		break;
+> @@ -340,6 +343,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+> 	mp_opt->dss =3D 0;
+> 	mp_opt->mp_prio =3D 0;
+> 	mp_opt->reset =3D 0;
+> +	mp_opt->csum =3D 0;
+>
+> 	length =3D (th->doff * 4) - sizeof(struct tcphdr);
+> 	ptr =3D (const unsigned char *)(th + 1);
+> @@ -520,6 +524,34 @@ static void mptcp_write_data_fin(struct mptcp_subflo=
+w_context *subflow,
+> 	}
+> }
+>
+> +static u16 mptcp_generate_dss_csum(struct sk_buff *skb)
+> +{
+> +	struct mptcp_ext *mpext;
+> +
+> +	if (!skb)
+> +		return 0;
+> +
+> +	mpext =3D mptcp_get_ext(skb);
+> +	if (mpext && mpext->use_map) {
+> +		struct csum_pseudo_header header;
+> +		__wsum csum;
+> +
+> +		header.data_seq =3D mpext->data_seq;
+> +		header.subflow_seq =3D mpext->subflow_seq;
+> +		header.data_len =3D mpext->data_len;
+> +		header.csum =3D 0;
+> +
+> +		csum =3D skb_checksum(skb, 0, skb->len, 0);
+> +		csum =3D csum_partial(&header, sizeof(header), csum);
+> +
+> +		pr_debug("%s data_seq=3D%llu subflow_seq=3D%u data_len=3D%u csum=3D%u\=
+n",
+> +			 __func__, header.data_seq, header.subflow_seq, header.data_len, csum=
+_fold(csum));
+> +		return csum_fold(csum);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff=
+ *skb,
+> 					  bool snd_data_fin_enable,
+> 					  unsigned int *size,
+> @@ -543,8 +575,10 @@ static bool mptcp_established_options_dss(struct soc=
+k *sk, struct sk_buff *skb,
+>
+> 		remaining -=3D map_size;
+> 		dss_size =3D map_size;
+> -		if (mpext)
+> +		if (mpext) {
+> +			mpext->csum =3D mptcp_generate_dss_csum(skb);
 
- 	mpext =3D skb ? mptcp_get_ext(skb) : NULL;
--	snd_data_fin_enable =3D READ_ONCE(msk->snd_data_fin_enable);
- =
+The checksum should only be calculated if it is enabled on this MPTCP =
 
- 	if (!skb || (mpext && mpext->use_map) || snd_data_fin_enable) {
- 		unsigned int map_size;
-@@ -650,12 +651,15 @@ bool mptcp_established_options(struct sock *sk, struc=
-t sk_buff *skb,
- 			       unsigned int *size, unsigned int remaining,
- 			       struct mptcp_out_options *opts)
- {
-+	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
-+	struct mptcp_sock *msk =3D mptcp_sk(subflow->conn);
- 	unsigned int opt_size =3D 0;
-+	bool snd_data_fin;
- 	bool ret =3D false;
- =
+connection.
 
- 	opts->suboptions =3D 0;
- =
+> 			opts->ext_copy =3D *mpext;
+> +		}
+>
+> 		if (skb && snd_data_fin_enable)
+> 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
+> @@ -1141,6 +1175,9 @@ void mptcp_incoming_options(struct sock *sk, struct=
+ sk_buff *skb)
+> 		}
+> 		mpext->data_len =3D mp_opt.data_len;
+> 		mpext->use_map =3D 1;
+> +
+> +		if (!subflow->mpc_map)
+> +			mpext->csum =3D mp_opt.csum;
+> 	}
+> }
+>
+> @@ -1349,6 +1386,9 @@ void mptcp_write_options(__be32 *ptr, const struct =
+tcp_sock *tp,
+> 			flags |=3D MPTCP_DSS_HAS_MAP | MPTCP_DSS_DSN64;
+> 			if (mpext->data_fin)
+> 				flags |=3D MPTCP_DSS_DATA_FIN;
+> +
+> +			if (mpext->csum)
+> +				len +=3D TCPOLEN_MPTCP_DSS_CHECKSUM;
+> 		}
+>
+> 		*ptr++ =3D mptcp_option(MPTCPOPT_DSS, len, 0, flags);
+> @@ -1368,8 +1408,13 @@ void mptcp_write_options(__be32 *ptr, const struct=
+ tcp_sock *tp,
+> 			ptr +=3D 2;
+> 			put_unaligned_be32(mpext->subflow_seq, ptr);
+> 			ptr +=3D 1;
+> -			put_unaligned_be32(mpext->data_len << 16 |
+> -					   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+> +			if (mpext->csum) {
+> +				put_unaligned_be32(mpext->data_len << 16 |
+> +						   mpext->csum, ptr);
+> +			} else {
+> +				put_unaligned_be32(mpext->data_len << 16 |
+> +						   TCPOPT_NOP << 8 | TCPOPT_NOP, ptr);
+> +			}
+> 		}
+> 	}
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index f9dcf49ffe33..24b4e1f6d23f 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -126,6 +126,7 @@ struct mptcp_options_received {
+> 	u64	data_seq;
+> 	u32	subflow_seq;
+> 	u16	data_len;
+> +	u16	csum;
+> 	u16	mp_capable : 1,
+> 		mp_join : 1,
+> 		fastclose : 1,
+> @@ -356,6 +357,13 @@ static inline struct mptcp_data_frag *mptcp_rtx_head=
+(const struct sock *sk)
+> 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag,=
+ list);
+> }
+>
+> +struct csum_pseudo_header {
+> +	u64 data_seq;
+> +	u32 subflow_seq;
+> +	u16 data_len;
+> +	u16 csum;
+> +};
+> +
+> struct mptcp_subflow_request_sock {
+> 	struct	tcp_request_sock sk;
+> 	u16	mp_capable : 1,
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index bedbae99df2c..b597811a2f8d 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -796,6 +796,42 @@ static bool skb_is_fully_mapped(struct sock *ssk, st=
+ruct sk_buff *skb)
+> 					  mptcp_subflow_get_map_offset(subflow);
+> }
+>
+> +static bool validate_dss_csum(struct sock *ssk, struct sk_buff *skb)
+> +{
+> +	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> +	struct csum_pseudo_header header;
+> +	struct mptcp_ext *mpext;
+> +	__wsum csum;
+> +
+> +	if (subflow->mpc_map)
+> +		goto out;
+> +	if (!skb)
+> +		goto out;
+> +
+> +	mpext =3D mptcp_get_ext(skb);
+> +	if (mpext && mpext->use_map && mpext->csum) {
+> +		header.data_seq =3D subflow->map_seq;
+> +		header.subflow_seq =3D subflow->map_subflow_seq;
+> +		header.data_len =3D subflow->map_data_len;
+> +		header.csum =3D mpext->csum;
+> +
+> +		csum =3D skb_checksum(skb, 0, skb->len, 0);
+> +		csum =3D csum_partial(&header, sizeof(header), csum);
+> +
+> +		pr_debug("%s data_seq=3D%llu subflow_seq=3D%u data_len=3D%u csum=3D%u",
+> +			 __func__, header.data_seq, header.subflow_seq, header.data_len, head=
+er.csum);
+> +
+> +		if (csum_fold(csum)) {
+> +			pr_err("%s DSS checksum error csum=3D%u!", __func__, csum_fold(csum));
+> +			return true; //false;
+> +		}
+> +		pr_debug("%s DSS checksum done", __func__);
+> +	}
+> +
+> +out:
+> +	return true;
+> +}
+> +
+> static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
+> {
+> 	struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> @@ -814,7 +850,7 @@ static bool validate_mapping(struct sock *ssk, struct=
+ sk_buff *skb)
+> 		warn_bad_map(subflow, ssn + skb->len);
+> 		return false;
+> 	}
+> -	return true;
+> +	return validate_dss_csum(ssk, skb);
 
--	if (unlikely(mptcp_check_fallback(sk)))
-+	if (unlikely(__mptcp_check_fallback(msk)))
- 		return false;
- =
+Also only validate if checksums are enabled for this msk.
 
- 	/* prevent adding of any MPTCP related options on reset packet
-@@ -664,10 +668,11 @@ bool mptcp_established_options(struct sock *sk, struc=
-t sk_buff *skb,
- 	if (unlikely(skb && TCP_SKB_CB(skb)->tcp_flags & TCPHDR_RST))
- 		return false;
- =
+> }
+>
+> static enum mapping_status get_mapping_status(struct sock *ssk,
+> -- =
 
--	if (mptcp_established_options_mp(sk, skb, &opt_size, remaining, opts))
-+	snd_data_fin =3D READ_ONCE(msk->snd_data_fin_enable);
-+
-+	if (mptcp_established_options_mp(sk, skb, snd_data_fin, &opt_size, remain=
-ing, opts))
- 		ret =3D true;
--	else if (mptcp_established_options_dss(sk, skb, &opt_size, remaining,
--					       opts))
-+	else if (mptcp_established_options_dss(sk, skb, snd_data_fin, &opt_size, =
-remaining, opts))
- 		ret =3D true;
- =
+> 2.29.2
 
- 	/* we reserved enough space for the above options, and exceeding the
--- =
-
-2.30.2
-
---===============1014639103001112547==--
+--
+Mat Martineau
+Intel
+--===============8573444650506990315==--
