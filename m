@@ -1,82 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============5810286304004719370=="
+Content-Type: multipart/mixed; boundary="===============7133026999304548624=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] selftests: mptcp: avoid calling
- pm_nl_ctl with bad IDs
-Date: Fri, 12 Mar 2021 17:06:12 +0100
-Message-ID: <29b7ee8f-25c1-e719-d43b-2471fb0ac769@tessares.net>
-In-Reply-To: CA+WQbwuTn0pSGr7+eaD9zNDQYX+MN3ZoguYCW5RamkyfC1MneA@mail.gmail.com
+Subject: [MPTCP] [PATCH mptcp-next] Squash to "selftests: mptcp: add addr
+ argument for del_addr"
+Date: Fri, 12 Mar 2021 13:54:25 +0100
+Message-ID: <20210312125425.3199991-1-matthieu.baerts@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 8123
+X-UID: 8124
 
---===============5810286304004719370==
+--===============7133026999304548624==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+Avoid calling pm_nl_ctl with id > 255.
 
-On 12/03/2021 16:27, Geliang Tang wrote:
-> Hi Matt,
-> =
+Without this patch, we can see this when running the selftests:
 
-> Matthieu Baerts <matthieu.baerts(a)tessares.net> =E4=BA=8E2021=E5=B9=B43=
-=E6=9C=8812=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=8811:14=E5=86=99=E9=
-=81=93=EF=BC=9A
-> =
+  selftests: net/mptcp: pm_netlink.sh
+  (...)
+  above hard addr limit                              [ OK ]
+  ./pm_nl_ctl add|get|set|del|flush|dump|accept
+   add [flags signal|subflow|backup] [id <nr>] [dev <name>] <ip>
+  del <id>
+   get <id>
+   set <ip> [flags backup|nobackup]
+   flush
+   dump
+  limits [<rcv addr max> <subflow max>]
 
->>
->> IDs are supposed to be between 0 and 255.
->>
->> In pm_nl_ctl, for both the 'add' and 'get' instruction, the ID is casted
->> in a u_int8_t. So if we give 256, we will delete ID 0. Obviously, the
->> goal is not to delete this ID by giving 256.
->>
->> We could modify pm_nl_ctl and stop if the ID is negative or higher than
->> 255 but probably better not to increase the number of lines for such
->> things in this tool which is only used in selftests. Instead, we use it
->> within the limits.
->>
->> This modification also means that we will no longer add a new ID for the
->> 2nd entry. That's why we removed an expected entry from the dump and
->> introduced with
->> commit dc8eb10e95a8 ("selftests: mptcp: add testcases for setting the ad=
-dress ID").
->>
->> So now we delete ID 9 like before and we add entries for IDs 10 to 255
->> that are deleted just after.
->>
->> Note that this could be seen as a fix but it was not really an issue so
->> far: we were simply playing with ID 0/1 once again. With the following
->> commit ("selftests: mptcp: add addr argument for del_addr"), it will be
->> different because ID 0 is going to required an address. We don't want
->> errors when trying to delete ID 0 without the address argument.
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-> =
+  id limit                                           [ OK ]
+  (...)
 
-> Thanks for your patch.
-> =
+That's because we were calling:
 
-> Acked-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
+  $ pm_nl_ctl del 256
 
-Thank you for the review and the validation!
+In the code, the parsed ID is written in a u_int8_t. Then the value
+"256" is stored as "0" which is now a special case and requires an IP.
 
-Now in our tree just before "selftests: mptcp: add testcases for setting =
+We could modify pm_nl_ctl but stop if the ID is negative or higher than
+255 but not sure we need this for a tool only used in selftests.
 
-the address ID" commit:
+Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+---
 
-- efefe960f11c: selftests: mptcp: avoid calling pm_nl_ctl with bad IDs
-- Results: 92c965f2a9d7..833f13d2c126
+Notes:
+    to be squashed in "selftests: mptcp: add addr argument for del_addr"
 
-Tests + export are in progress!
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Cheers,
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testin=
+g/selftests/net/mptcp/pm_netlink.sh
+index a617e293734c..365ba4611ae7 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -100,9 +100,10 @@ done
+ check "ip netns exec $ns1 ./pm_nl_ctl get 9" "id 9 flags signal 10.0.1.9" =
+"hard addr limit"
+ check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
+ =
+
+-for i in `seq 9 256`; do
++ip netns exec $ns1 ./pm_nl_ctl del 9
++for i in `seq 10 255`; do
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $i
+ 	ip netns exec $ns1 ./pm_nl_ctl del $i
+-	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $((i+1))
+ done
+ check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
+ id 2 flags  10.0.0.9
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============5810286304004719370==--
+2.30.2
+
+--===============7133026999304548624==--
