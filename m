@@ -1,49 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============0572413718872347426=="
+Content-Type: multipart/mixed; boundary="===============3478226787493752527=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH mptcp-next] Squash to "mptcp: clean-up the rtx
- path"
-Date: Fri, 12 Mar 2021 14:03:55 +0100
-Message-ID: <5e0bdf02-db39-cfcc-c099-78db60439d48@tessares.net>
-In-Reply-To: ff57363a4812e030679ea4313a8994d2e6d96c07.camel@redhat.com
+Subject: [MPTCP] Re: [MPTCP][bug report] bpf test error: Attempt to release
+ TCP socket in state 8
+Date: Fri, 12 Mar 2021 15:03:12 +0100
+Message-ID: <c905463d-e5fa-88ab-2f82-4aaecceeda8b@tessares.net>
+In-Reply-To: CA+WQbwtmg2=fymqK=v7U3UQRF4sTjTRAfbHf-PREWf9tiLRcOw@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8113
+X-UID: 8114
 
---===============0572413718872347426==
+--===============3478226787493752527==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Hi Geliang,
 
-On 12/03/2021 10:35, Paolo Abeni wrote:
-> On Fri, 2021-03-12 at 09:35 +0100, Matthieu Baerts wrote:
->> The MPTCP_RETRANSMIT define is 9 and these tests should be testing if
->> BIT(9) is set instead of taking the number 9.
->>
->> This fix is similar to
->> commit fe202ab685d5 ("mptcp: fix bit MPTCP_PUSH_PENDING tests") by Dan
->> Carpenter.
->>
->> Luckily everything was OK before because the only other flag that was
->> set was "6", using different bits than "9". Note that BIT(6) is also
->> using different bits than "9".
+On 11/03/2021 12:48, Geliang Tang wrote:
+> Hi Matt,
+> =
+
+> When I ran the bpf mptcp test "sudo ./test_progs -n 66", I got another
+> error in kernel log:
 
 (...)
 
-> =
+> It seems that the mptcp socket isn't closed properly.
 
-> LGTM, thanks for the quick turnaround!
+I'm not sure what's wrong. I didn't write the test program but from what =
 
-Thank you for the quick review!
+I see, we are only reading info from BPF, we don't modify behaviours =
 
-- 9afba9d654d0: "squashed" in "mptcp: clean-up the rtx path"
-- 9509b50c18f1: "Signed-off-by" + "Co-developed-by"
-- Results: 932a56a08a15..92c965f2a9d7
+using BPF.
 
-Tests + export are in progress!
+Or at least, not directly. Maybe the test environment is using BPF for =
+
+other tasks and this is not supported with an MPTCP socket. Something is =
+
+maybe missing on our side.
+
+Is the test succeeding? Maybe this message was there from the beginning, =
+
+I could not tell.
+
+I'm sorry not to be able to help more.
 
 Cheers,
 Matt
@@ -51,4 +53,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============0572413718872347426==--
+--===============3478226787493752527==--
