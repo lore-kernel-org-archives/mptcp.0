@@ -1,55 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============5933898748579610755=="
+Content-Type: multipart/mixed; boundary="===============4070582947811352161=="
 MIME-Version: 1.0
-From: Dan Carpenter <dan.carpenter at oracle.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] mptcp: fix bit MPTCP_PUSH_PENDING tests
-Date: Fri, 12 Mar 2021 10:41:12 +0300
-Message-ID: <YEsbGCmx4Jh3fApi@mwanda>
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix bit MPTCP_PUSH_PENDING tests
+Date: Fri, 12 Mar 2021 09:11:17 +0100
+Message-ID: <00ef3b75-bc38-a55d-ddcb-cc100dc20e79@tessares.net>
+In-Reply-To: YEsbGCmx4Jh3fApi@mwanda
 X-Status: 
 X-Keywords:                  
-X-UID: 8106
+X-UID: 8107
 
---===============5933898748579610755==
+--===============4070582947811352161==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The MPTCP_PUSH_PENDING define is 6 and these tests should be testing if
-BIT(6) is set.
+Hi Dan,
 
-Fixes: c2e6048fa1cf ("mptcp: fix race in release_cb")
-Signed-off-by: Dan Carpenter <dan.carpenter(a)oracle.com>
----
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 12/03/2021 08:41, Dan Carpenter wrote:
+> The MPTCP_PUSH_PENDING define is 6 and these tests should be testing if
+> BIT(6) is set.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 76958570ae7f..1590b9d4cde2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2968,7 +2968,7 @@ static void mptcp_release_cb(struct sock *sk)
- 	for (;;) {
- 		flags =3D 0;
- 		if (test_and_clear_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->flags))
--			flags |=3D MPTCP_PUSH_PENDING;
-+			flags |=3D BIT(MPTCP_PUSH_PENDING);
- 		if (!flags)
- 			break;
- =
+Good catch, indeed, BIT() macro is missing!
 
-@@ -2981,7 +2981,7 @@ static void mptcp_release_cb(struct sock *sk)
- 		 */
- =
+It was not detected by our tests suite because in -net, that's the only =
 
- 		spin_unlock_bh(&sk->sk_lock.slock);
--		if (flags & MPTCP_PUSH_PENDING)
-+		if (flags & BIT(MPTCP_PUSH_PENDING))
- 			__mptcp_push_pending(sk, 0);
- =
+flag that is set.
 
- 		cond_resched();
+But another patch for net-next is coming and another flag can be set as =
+
+well. What's funny is that this other flag is "9" which works well with =
+
+"6" because their bits are not overlapping :)
+Anyway, better with "BIT()" macro!
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
+
+Cheers,
+Matt
 -- =
 
-2.30.1
-
---===============5933898748579610755==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============4070582947811352161==--
