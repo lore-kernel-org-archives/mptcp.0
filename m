@@ -1,62 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============4884469711473560984=="
+Content-Type: multipart/mixed; boundary="===============5594487761050332589=="
 MIME-Version: 1.0
 From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [Weekly meetings] MoM - 11th of March 2021
-Date: Fri, 12 Mar 2021 09:16:50 +0100
-Message-ID: <a3fc133d-9f62-0344-0212-ca4fb1b8b60c@tessares.net>
-In-Reply-To: 865b24d1-aefd-1b85-a8c9-79ada156f5eb@linux.intel.com
+Subject: [MPTCP] Re: [PATCH net] mptcp: fix bit MPTCP_PUSH_PENDING tests
+Date: Fri, 12 Mar 2021 09:25:11 +0100
+Message-ID: <abde7928-23dd-cef3-647e-99f6d85d9a60@tessares.net>
+In-Reply-To: YEsbGCmx4Jh3fApi@mwanda
 X-Status: 
 X-Keywords:                  
-X-UID: 8108
+X-UID: 8109
 
---===============4884469711473560984==
+--===============5594487761050332589==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mat,
+(MPTCP ML only)
 
-On 12/03/2021 00:07, Mat Martineau wrote:
-> On Thu, 11 Mar 2021, Matthieu Baerts wrote:
+On 12/03/2021 08:41, Dan Carpenter wrote:
+> The MPTCP_PUSH_PENDING define is 6 and these tests should be testing if
+> BIT(6) is set.
 > =
 
->> =C2=A0=C2=A0 - news about Intel's kbuild? (Mat):
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - some troubles that are not caused=
- by our stuff
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - no need to worry, they are fixing=
- that
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - report should be back soon
->>
-> =
+> Fixes: c2e6048fa1cf ("mptcp: fix race in release_cb")
+> Signed-off-by: Dan Carpenter <dan.carpenter(a)oracle.com>
 
-> Matthieu -
-> =
+This patch is now in our tree:
 
-> Could you cherry-pick this in to the export branch in the "fixes other =
+- fe202ab685d5: mptcp: fix bit MPTCP_PUSH_PENDING tests
+- 09d2582abdb4: conflict in t/mptcp-clean-up-the-rtx-path
+- Results: c1ab0a28e2b1..932a56a08a15
 
-> trees" section?
-> =
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=3Dl=
-ocking/urgent&id=3D50bf8080a94d171e843fc013abec19d8ab9f50ae =
-
-> =
-
-> =
-
-> The kbuild team says that commit should get their automated tests =
-
-> running again.
-
-Sure, easy to do!
-
-- 3c04b4de6139: static_call: Fix the module key fixup
-- Results: 56fa72b41205..c1ab0a28e2b1
-
-Tests + export are going to be started soon! (just after having applied =
-
-a patch from Dan)
+Tests + export are in progress!
 
 Cheers,
 Matt
@@ -64,4 +39,4 @@ Matt
 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
---===============4884469711473560984==--
+--===============5594487761050332589==--
