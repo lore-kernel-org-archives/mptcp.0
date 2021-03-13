@@ -1,66 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============5562136707128438371=="
+Content-Type: multipart/mixed; boundary="===============5567021039665252582=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 00/11] mptcp: Include multiple address ids in
- RM_ADDR
-Date: Fri, 12 Mar 2021 17:16:10 -0800
-Message-ID: <20210313011621.211661-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 04/11] mptcp: add rm_list_rx in mptcp_pm_data
+Date: Fri, 12 Mar 2021 17:16:14 -0800
+Message-ID: <20210313011621.211661-5-mathew.j.martineau@linux.intel.com>
+In-Reply-To: 20210313011621.211661-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8131
+X-UID: 8132
 
---===============5562136707128438371==
+--===============5567021039665252582==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Here's a patch series from the MPTCP tree that extends the capabilities
-of the MPTCP RM_ADDR header.
+From: Geliang Tang <geliangtang(a)gmail.com>
 
-MPTCP peers can exchange information about their IP addresses that are
-available for additional MPTCP subflows. IP addresses are advertised
-with an ADD_ADDR header type, and those advertisements are revoked with
-the RM_ADDR header type. RFC 8684 allows the RM_ADDR header to include
-more than one address ID, so multiple advertisements can be revoked in a
-single header. Previous kernel versions have only used RM_ADDR with a
-single address ID, so multiple removals required multiple packets.
+This patch added a new member rm_list_rx for struct mptcp_pm_data as an
+list of the removing address ids on the incoming direction. Initialized
+its nr field to zero in mptcp_pm_data_init.
 
-Patches 1-4 plumb address id list structures around the MPTCP code,
-where before only a single address ID was passed.
+In mptcp_pm_rm_addr_received, set it as the input rm_list.
 
-Patches 5-8 make use of the address lists at the path manager layer that
-tracks available addresses for both peers.
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+---
+ net/mptcp/pm.c       | 3 ++-
+ net/mptcp/protocol.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Patches 9-11 update the selftests to cover the new use of RM_ADDR with
-multiple address IDs.
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 7553f82076ca..a47436205d88 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -218,7 +218,7 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+ =
 
+ 	spin_lock_bh(&pm->lock);
+ 	mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED);
+-	pm->rm_id =3D rm_list->ids[0];
++	pm->rm_list_rx =3D *rm_list;
+ 	spin_unlock_bh(&pm->lock);
+ }
+ =
 
-Geliang Tang (11):
-  mptcp: add rm_list in mptcp_out_options
-  mptcp: add rm_list_tx in mptcp_pm_data
-  mptcp: add rm_list in mptcp_options_received
-  mptcp: add rm_list_rx in mptcp_pm_data
-  mptcp: remove multi addresses in PM
-  mptcp: remove multi subflows in PM
-  mptcp: remove multi addresses and subflows in PM
-  mptcp: remove a list of addrs when flushing
-  selftests: mptcp: add invert argument for chk_rm_nr
-  selftests: mptcp: set addr id for removing testcases
-  selftests: mptcp: add testcases for removing addrs
+@@ -300,6 +300,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	msk->pm.local_addr_used =3D 0;
+ 	msk->pm.subflows =3D 0;
+ 	msk->pm.rm_list_tx.nr =3D 0;
++	msk->pm.rm_list_rx.nr =3D 0;
+ 	WRITE_ONCE(msk->pm.work_pending, false);
+ 	WRITE_ONCE(msk->pm.addr_signal, 0);
+ 	WRITE_ONCE(msk->pm.accept_addr, false);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d7daf7e0d5d2..82a63abf2c7e 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -208,6 +208,7 @@ struct mptcp_pm_data {
+ 	u8		subflows;
+ 	u8		status;
+ 	struct mptcp_rm_list rm_list_tx;
++	struct mptcp_rm_list rm_list_rx;
+ 	u8		rm_id;
+ };
+ =
 
- include/net/mptcp.h                           |   9 +-
- net/mptcp/options.c                           |  47 ++++--
- net/mptcp/pm.c                                |  39 +++--
- net/mptcp/pm_netlink.c                        | 139 +++++++++++++-----
- net/mptcp/protocol.h                          |  27 +++-
- .../testing/selftests/net/mptcp/mptcp_join.sh |  82 ++++++++---
- 6 files changed, 250 insertions(+), 93 deletions(-)
-
-
-base-commit: 26d2e0426aacaf4c128dc57111f0d460ab20e8b5
 -- =
 
 2.30.2
 
---===============5562136707128438371==--
+--===============5567021039665252582==--
