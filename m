@@ -1,83 +1,94 @@
-Content-Type: multipart/mixed; boundary="===============7713543468925735417=="
+Content-Type: multipart/mixed; boundary="===============4689008197688175577=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net-next 08/11] mptcp: remove a list of addrs when
- flushing
-Date: Fri, 12 Mar 2021 17:16:18 -0800
-Message-ID: <20210313011621.211661-9-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 10/11] selftests: mptcp: set addr id for
+ removing testcases
+Date: Fri, 12 Mar 2021 17:16:20 -0800
+Message-ID: <20210313011621.211661-11-mathew.j.martineau@linux.intel.com>
 In-Reply-To: 20210313011621.211661-1-mathew.j.martineau@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8140
+X-UID: 8141
 
---===============7713543468925735417==
+--===============4689008197688175577==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 From: Geliang Tang <geliangtang(a)gmail.com>
 
-This patch invoked mptcp_nl_remove_addrs_list to remove a list of addresses
-when the netlink flushes addresses, instead of using
-mptcp_nl_remove_subflow_and_signal_addr to remove them one by one.
-
-And dropped the unused parameter net in __flush_addrs too.
+The removing testcases can only delete the addresses from id 1, this
+patch added the support for deleting the addresses from any id that user
+set.
 
 Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 38 ++++++++++++-------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a5f6ab96a1b4..5857b82c88bf 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1248,14 +1248,13 @@ static void mptcp_nl_remove_addrs_list(struct net *=
-net,
- 	}
- }
- =
-
--static void __flush_addrs(struct net *net, struct list_head *list)
-+static void __flush_addrs(struct list_head *list)
- {
- 	while (!list_empty(list)) {
- 		struct mptcp_pm_addr_entry *cur;
- =
-
- 		cur =3D list_entry(list->next,
- 				 struct mptcp_pm_addr_entry, list);
--		mptcp_nl_remove_subflow_and_signal_addr(net, &cur->addr);
- 		list_del_rcu(&cur->list);
- 		mptcp_pm_free_addr_entry(cur);
- 	}
-@@ -1280,7 +1279,8 @@ static int mptcp_nl_cmd_flush_addrs(struct sk_buff *s=
-kb, struct genl_info *info)
- 	pernet->next_id =3D 1;
- 	bitmap_zero(pernet->id_bitmap, MAX_ADDR_ID + 1);
- 	spin_unlock_bh(&pernet->lock);
--	__flush_addrs(sock_net(skb->sk), &free_list);
-+	mptcp_nl_remove_addrs_list(sock_net(skb->sk), &free_list);
-+	__flush_addrs(&free_list);
- 	return 0;
- }
- =
-
-@@ -1877,7 +1877,7 @@ static void __net_exit pm_nl_exit_net(struct list_hea=
-d *net_list)
- 		/* net is removed from namespace list, can't race with
- 		 * other modifiers
- 		 */
--		__flush_addrs(net, &pernet->local_addr_list);
-+		__flush_addrs(&pernet->local_addr_list);
- 	}
- }
- =
-
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
+g/selftests/net/mptcp/mptcp_join.sh
+index 15b71ddee615..6782a891b3e7 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -284,14 +284,19 @@ do_transfer()
+ 		let rm_nr_ns1=3D-addr_nr_ns1
+ 		if [ $rm_nr_ns1 -lt 8 ]; then
+ 			counter=3D1
+-			sleep 1
+-
+-			while [ $counter -le $rm_nr_ns1 ]
+-			do
+-				ip netns exec ${listener_ns} ./pm_nl_ctl del $counter
++			dump=3D(`ip netns exec ${listener_ns} ./pm_nl_ctl dump`)
++			if [ ${#dump[@]} -gt 0 ]; then
++				id=3D${dump[1]}
+ 				sleep 1
+-				let counter+=3D1
+-			done
++
++				while [ $counter -le $rm_nr_ns1 ]
++				do
++					ip netns exec ${listener_ns} ./pm_nl_ctl del $id
++					sleep 1
++					let counter+=3D1
++					let id+=3D1
++				done
++			fi
+ 		else
+ 			sleep 1
+ 			ip netns exec ${listener_ns} ./pm_nl_ctl flush
+@@ -318,14 +323,19 @@ do_transfer()
+ 		let rm_nr_ns2=3D-addr_nr_ns2
+ 		if [ $rm_nr_ns2 -lt 8 ]; then
+ 			counter=3D1
+-			sleep 1
+-
+-			while [ $counter -le $rm_nr_ns2 ]
+-			do
+-				ip netns exec ${connector_ns} ./pm_nl_ctl del $counter
++			dump=3D(`ip netns exec ${connector_ns} ./pm_nl_ctl dump`)
++			if [ ${#dump[@]} -gt 0 ]; then
++				id=3D${dump[1]}
+ 				sleep 1
+-				let counter+=3D1
+-			done
++
++				while [ $counter -le $rm_nr_ns2 ]
++				do
++					ip netns exec ${connector_ns} ./pm_nl_ctl del $id
++					sleep 1
++					let counter+=3D1
++					let id+=3D1
++				done
++			fi
+ 		else
+ 			sleep 1
+ 			ip netns exec ${connector_ns} ./pm_nl_ctl flush
 -- =
 
 2.30.2
 
---===============7713543468925735417==--
+--===============4689008197688175577==--
