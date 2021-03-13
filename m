@@ -1,124 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============2001470060749554730=="
+Content-Type: multipart/mixed; boundary="===============5562136707128438371=="
 MIME-Version: 1.0
 From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] selftests: mptcp: Restore packet capture option
- in join tests
-Date: Fri, 12 Mar 2021 16:43:52 -0800
-Message-ID: <20210313004352.209906-1-mathew.j.martineau@linux.intel.com>
+Subject: [MPTCP] [PATCH net-next 00/11] mptcp: Include multiple address ids in
+ RM_ADDR
+Date: Fri, 12 Mar 2021 17:16:10 -0800
+Message-ID: <20210313011621.211661-1-mathew.j.martineau@linux.intel.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8130
+X-UID: 8131
 
---===============2001470060749554730==
+--===============5562136707128438371==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The join self tests previously used the '-c' command line option to
-enable creation of pcap files for the tests that run, but the change to
-allow running a subset of the join tests made overlapping use of that
-option.
+Here's a patch series from the MPTCP tree that extends the capabilities
+of the MPTCP RM_ADDR header.
 
-Restore the capture functionality with '-c' and move the syncookie test
-option to '-k'.
+MPTCP peers can exchange information about their IP addresses that are
+available for additional MPTCP subflows. IP addresses are advertised
+with an ADD_ADDR header type, and those advertisements are revoked with
+the RM_ADDR header type. RFC 8684 allows the RM_ADDR header to include
+more than one address ID, so multiple advertisements can be revoked in a
+single header. Previous kernel versions have only used RM_ADDR with a
+single address ID, so multiple removals required multiple packets.
 
-Fixes: 1002b89f23ea ("selftests: mptcp: add command line arguments for mptc=
-p_join.sh")
-Acked-and-tested-by: Geliang Tang <geliangtang(a)gmail.com>
-Co-developed-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts(a)tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 30 ++++++++++++-------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+Patches 1-4 plumb address id list structures around the MPTCP code,
+where before only a single address ID was passed.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testin=
-g/selftests/net/mptcp/mptcp_join.sh
-index 964db9ed544f..ad32240fbfda 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -11,6 +11,7 @@ ksft_skip=3D4
- timeout=3D30
- mptcp_connect=3D""
- capture=3D0
-+do_all_tests=3D1
- =
+Patches 5-8 make use of the address lists at the path manager layer that
+tracks available addresses for both peers.
 
- TEST_COUNT=3D0
- =
+Patches 9-11 update the selftests to cover the new use of RM_ADDR with
+multiple address IDs.
 
-@@ -121,12 +122,6 @@ reset_with_add_addr_timeout()
- 		-j DROP
- }
- =
 
--for arg in "$@"; do
--	if [ "$arg" =3D "-c" ]; then
--		capture=3D1
--	fi
--done
--
- ip -Version > /dev/null 2>&1
- if [ $? -ne 0 ];then
- 	echo "SKIP: Could not run test without ip tool"
-@@ -1221,7 +1216,8 @@ usage()
- 	echo "  -4 v4mapped_tests"
- 	echo "  -b backup_tests"
- 	echo "  -p add_addr_ports_tests"
--	echo "  -c syncookies_tests"
-+	echo "  -k syncookies_tests"
-+	echo "  -c capture pcap files"
- 	echo "  -h help"
- }
- =
+Geliang Tang (11):
+  mptcp: add rm_list in mptcp_out_options
+  mptcp: add rm_list_tx in mptcp_pm_data
+  mptcp: add rm_list in mptcp_options_received
+  mptcp: add rm_list_rx in mptcp_pm_data
+  mptcp: remove multi addresses in PM
+  mptcp: remove multi subflows in PM
+  mptcp: remove multi addresses and subflows in PM
+  mptcp: remove a list of addrs when flushing
+  selftests: mptcp: add invert argument for chk_rm_nr
+  selftests: mptcp: set addr id for removing testcases
+  selftests: mptcp: add testcases for removing addrs
 
-@@ -1235,12 +1231,24 @@ make_file "$cin" "client" 1
- make_file "$sin" "server" 1
- trap cleanup EXIT
- =
+ include/net/mptcp.h                           |   9 +-
+ net/mptcp/options.c                           |  47 ++++--
+ net/mptcp/pm.c                                |  39 +++--
+ net/mptcp/pm_netlink.c                        | 139 +++++++++++++-----
+ net/mptcp/protocol.h                          |  27 +++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  82 ++++++++---
+ 6 files changed, 250 insertions(+), 93 deletions(-)
 
--if [ -z $1 ]; then
-+for arg in "$@"; do
-+	# check for "capture" arg before launching tests
-+	if [[ "${arg}" =3D~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
-+		capture=3D1
-+	fi
-+
-+	# exception for the capture option, the rest means: a part of the tests
-+	if [ "${arg}" !=3D "-c" ]; then
-+		do_all_tests=3D0
-+	fi
-+done
-+
-+if [ $do_all_tests -eq 1 ]; then
- 	all_tests
- 	exit $ret
- fi
- =
 
--while getopts 'fsltra64bpch' opt; do
-+while getopts 'fsltra64bpkch' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1272,9 +1280,11 @@ while getopts 'fsltra64bpch' opt; do
- 		p)
- 			add_addr_ports_tests
- 			;;
--		c)
-+		k)
- 			syncookies_tests
- 			;;
-+		c)
-+			;;
- 		h | *)
- 			usage
- 			;;
-
-base-commit: 080bfa1e6d928a5d1f185cc44e5f3c251df06df5
+base-commit: 26d2e0426aacaf4c128dc57111f0d460ab20e8b5
 -- =
 
 2.30.2
 
---===============2001470060749554730==--
+--===============5562136707128438371==--
