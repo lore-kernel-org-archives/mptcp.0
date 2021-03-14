@@ -1,43 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============0776112421707742203=="
+Content-Type: multipart/mixed; boundary="===============4281052108696218164=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] mptcp: fix ADD_ADDR HMAC in case port is
- specified
-Date: Sat, 13 Mar 2021 11:28:33 +0100
-Message-ID: <d82f0041-7889-a189-bb7b-4dfec74e8120@tessares.net>
-In-Reply-To: 74f12b1cf1e60fbfba1b737b8949526346afb983.1615584629.git.dcaratti@redhat.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next 0/7] refactor mptcp_addr_info and
+ cleanups
+Date: Sun, 14 Mar 2021 22:22:50 +0800
+Message-ID: <cover.1615731165.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8147
+X-UID: 8148
 
---===============0776112421707742203==
+--===============4281052108696218164==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide, Geliang, Mat,
+The patch set refactored struct mptcp_addr_info, and use it in both
+mptcp_out_options and mptcp_out_options. Then drop the duplicate code
+and do cleanups.
 
-On 12/03/2021 22:32, Davide Caratti wrote:
-> Currently, Linux computes the HMAC contained in ADD_ADDR sub-option using
-> the Address Id and the IP Address, and hardcodes a destination port equal
-> to zero. This is not ok for ADD_ADDR with port: ensure to account for the
-> endpoint port when computing the HMAC, in compliance with RFC8684 =C2=A73=
-.4.1.
+Geliang Tang (7):
+  mptcp: move ifindex and flags out of mptcp_addr_info
+  mptcp: use mptcp_addr_info in mptcp_out_options
+  mptcp: use mptcp_addr_info in mptcp_options_received
+  mptcp: drop MPTCP_ADDR_IPVERSION_4/6
+  mptcp: unify add_addr(6)_generate_hmac
+  mptcp: drop OPTION_MPTCP_ADD_ADDR6
+  mptcp: drop unnecessary CONFIG_MPTCP_IPV6
 
-Thank you for the patch and the reviews!
+ include/net/mptcp.h    |  21 +++--
+ net/mptcp/options.c    | 175 +++++++++++++----------------------------
+ net/mptcp/pm_netlink.c |  55 +++++--------
+ net/mptcp/protocol.h   |  38 +++------
+ net/mptcp/subflow.c    |   6 +-
+ 5 files changed, 104 insertions(+), 191 deletions(-)
 
-Now in our tree with Mat's RvB and Geliang's ACK:
-
-- 442a009d990c: mptcp: fix ADD_ADDR HMAC in case port is specified
-- Results: f1ac0c54f494..0f8f3b7b5e58
-
-Tests + export have been queued!
-
-Cheers,
-Matt
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============0776112421707742203==--
+2.30.2
+
+--===============4281052108696218164==--
