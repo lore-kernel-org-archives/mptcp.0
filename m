@@ -1,107 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============4152970295607331545=="
+Content-Type: multipart/mixed; boundary="===============0594579238784057146=="
 MIME-Version: 1.0
 From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH mptcp-next 7/7] mptcp: drop unnecessary
- CONFIG_MPTCP_IPV6
-Date: Sun, 14 Mar 2021 22:22:57 +0800
-Message-ID: <255eec6750e3dd702363e8d3877480f416eb76c7.1615731165.git.geliangtang@gmail.com>
-In-Reply-To: 7b6d6574160e98b770e537275175f208cebcae34.1615731165.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: kbuild is working again, found a failure
+Date: Mon, 15 Mar 2021 15:49:16 +0800
+Message-ID: <CA+WQbwsSPEQt9=ucOr4eHwJWt2Z1MmarNXWtzvshirHO4GVUWQ@mail.gmail.com>
+In-Reply-To: 885b44af-ca88-bea8-c824-f5cc8a89e2d@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8155
+X-UID: 8156
 
---===============4152970295607331545==
+--===============0594579238784057146==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch dropped all the unnecessary '#if IS_ENABLED(CONFIG_MPTCP_IPV6)'
-and '#endif'.
+Hi Mat, Matt,
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/options.c    | 6 ------
- net/mptcp/pm_netlink.c | 8 +-------
- 2 files changed, 1 insertion(+), 13 deletions(-)
+I had reproduced this failure. So I created a new issue #173 "remove
+invalid addresses testcase fail" to trace it.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index e3fcd2b0ffd7..913cfc83bae4 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -221,22 +221,18 @@ static void mptcp_parse_option(const struct sk_buff *=
-skb,
- 			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR ||
- 			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_PORT)
- 				mp_opt->addr.family =3D AF_INET;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6 ||
- 				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_PORT)
- 				mp_opt->addr.family =3D AF_INET6;
--#endif
- 			else
- 				break;
- 		} else {
- 			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE ||
- 			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT)
- 				mp_opt->addr.family =3D AF_INET;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE ||
- 				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT)
- 				mp_opt->addr.family =3D AF_INET6;
--#endif
- 			else
- 				break;
- 		}
-@@ -1155,10 +1151,8 @@ void mptcp_write_options(__be32 *ptr, const struct t=
-cp_sock *tp,
- 		u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
- 		u8 echo =3D MPTCP_ADDR_ECHO;
- =
+I had assigned this issue to myself, and I'll try to fix it recently.
 
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		if (opts->addr.family =3D=3D AF_INET6)
- 			len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
--#endif
- =
+Thanks.
 
- 		if (opts->addr.port)
- 			len +=3D TCPOLEN_MPTCP_PORT_LEN;
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 812e0874e276..a24f35dc0217 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -897,10 +897,8 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_P=
-M_ATTR_MAX + 1] =3D {
- =
+-Geliang
 
- static int mptcp_pm_family_to_addr(int family)
- {
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	if (family =3D=3D AF_INET6)
- 		return MPTCP_PM_ADDR_ATTR_ADDR6;
--#endif
- 	return MPTCP_PM_ADDR_ATTR_ADDR4;
- }
- =
-
-@@ -933,11 +931,7 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, st=
-ruct genl_info *info,
- 	}
- =
-
- 	entry->addr.family =3D nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_FAMILY]);
--	if (entry->addr.family !=3D AF_INET
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	    && entry->addr.family !=3D AF_INET6
--#endif
--	    ) {
-+	if (entry->addr.family !=3D AF_INET && entry->addr.family !=3D AF_INET6) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr,
- 				    "unknown address family");
- 		return -EINVAL;
--- =
-
-2.30.2
-
---===============4152970295607331545==--
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=B4=
+3=E6=9C=8813=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=883:19=E5=86=99=E9=
+=81=93=EF=BC=9A
+>
+>
+> Hello -
+>
+> Thanks Matthieu for adding the "static_call: Fix the module key fixup"
+> commit to the mptcp_net-next repository, the kbuild tests are now running
+> again.
+>
+> There was a failure in mptcp_join.sh:
+>
+> user  :notice: [  380.427338] # 24 remove invalid addresses             s=
+yn[ ok ] - synack[ ok ] - ack[ ok ]
+> user  :notice: [  380.456500] #                                         a=
+dd[ ok ] - echo  [ ok ]
+> user  :notice: [  380.472445] #                                         r=
+m [fail] got 2 RM_ADDR[s] expected 3
+> user  :notice: [  380.488441] #  - sf    [ ok ]
+> user  :notice: [  380.493351] # Server ns stats
+> user  :notice: [  380.499668] # MPTcpExtMPCapableSYNRX          1        =
+          0.0
+> user  :notice: [  380.508705] # MPTcpExtMPCapableACKRX          1        =
+          0.0
+> user  :notice: [  380.518042] # MPTcpExtMPJoinSynRx             1        =
+          0.0
+> user  :notice: [  380.527101] # MPTcpExtMPJoinAckRx             1        =
+          0.0
+> user  :notice: [  380.536145] # MPTcpExtEchoAdd                 3        =
+          0.0
+> user  :notice: [  380.545105] # MPTcpExtRmSubflow               1        =
+          0.0
+> user  :notice: [  380.553759] # Client ns stats
+> user  :notice: [  380.559474] # MPTcpExtMPCapableSYNTX          1        =
+          0.0
+> user  :notice: [  380.568482] # MPTcpExtMPCapableSYNACKRX       1        =
+          0.0
+> user  :notice: [  380.577496] # MPTcpExtMPJoinSynAckRx          1        =
+          0.0
+> user  :notice: [  380.586552] # MPTcpExtAddAddr                 3        =
+          0.0
+> user  :notice: [  380.595546] # MPTcpExtRmAddr                  2        =
+          0.0
+>
+> --
+> Mat Martineau
+> Intel
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+--===============0594579238784057146==--
