@@ -1,107 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============6708286093156532321=="
+Content-Type: multipart/mixed; boundary="===============7283203346147415746=="
 MIME-Version: 1.0
-From: Geliang Tang <geliangtang at gmail.com>
+From: Mat Martineau <mathew.j.martineau at linux.intel.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [MPTCP][PATCH v2 mptcp-next 7/7] mptcp: drop unnecessary
- CONFIG_MPTCP_IPV6
-Date: Tue, 16 Mar 2021 15:16:33 +0800
-Message-ID: <a9e630765f70579375d3faf731e4b62d78fd1dfa.1615878331.git.geliangtang@gmail.com>
-In-Reply-To: 95871b1ddee7714a1789b7607dafd4210cf88c07.1615878331.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: remove id
+ 0 address"
+Date: Tue, 16 Mar 2021 15:23:30 -0700
+Message-ID: <912874c9-605-a63e-24b7-55d6fbc85b90@linux.intel.com>
+In-Reply-To: be80ad2d5230a0e414a263c871172a4c5b3eaf50.1615871767.git.geliangtang@gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8173
+X-UID: 8174
 
---===============6708286093156532321==
+--===============7283203346147415746==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch dropped all the unnecessary '#if IS_ENABLED(CONFIG_MPTCP_IPV6)'
-and '#endif'.
+On Tue, 16 Mar 2021, Geliang Tang wrote:
 
-Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
----
- net/mptcp/options.c    | 6 ------
- net/mptcp/pm_netlink.c | 8 +-------
- 2 files changed, 1 insertion(+), 13 deletions(-)
+> Hold msk->pm.lock when invoking mptcp_pm_remove_addr.
+>
+> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> ---
+> v2:
+> - use mptcp_pm_nl_rm_subflow_received instead of
+>   mptcp_pm_remove_subflow.
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index e3fcd2b0ffd7..913cfc83bae4 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -221,22 +221,18 @@ static void mptcp_parse_option(const struct sk_buff *=
-skb,
- 			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR ||
- 			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_PORT)
- 				mp_opt->addr.family =3D AF_INET;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6 ||
- 				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_PORT)
- 				mp_opt->addr.family =3D AF_INET6;
--#endif
- 			else
- 				break;
- 		} else {
- 			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE ||
- 			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT)
- 				mp_opt->addr.family =3D AF_INET;
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE ||
- 				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT)
- 				mp_opt->addr.family =3D AF_INET6;
--#endif
- 			else
- 				break;
- 		}
-@@ -1155,10 +1151,8 @@ void mptcp_write_options(__be32 *ptr, const struct t=
-cp_sock *tp,
- 		u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
- 		u8 echo =3D MPTCP_ADDR_ECHO;
- =
+Thanks Geliang! v2 looks good to squash.
 
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 		if (opts->addr.family =3D=3D AF_INET6)
- 			len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
--#endif
- =
+Mat
 
- 		if (opts->addr.port)
- 			len +=3D TCPOLEN_MPTCP_PORT_LEN;
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 181d8048cac1..5691ad101a95 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -889,10 +889,8 @@ static const struct nla_policy mptcp_pm_policy[MPTCP_P=
-M_ATTR_MAX + 1] =3D {
- =
 
- static int mptcp_pm_family_to_addr(int family)
- {
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	if (family =3D=3D AF_INET6)
- 		return MPTCP_PM_ADDR_ATTR_ADDR6;
--#endif
- 	return MPTCP_PM_ADDR_ATTR_ADDR4;
- }
- =
+> ---
+> net/mptcp/pm_netlink.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index c73b7cfc7ae9..f9606934104d 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1185,8 +1185,10 @@ static int mptcp_nl_remove_id_zero_address(struct =
+net *net,
+> 			goto next;
+>
+> 		lock_sock(sk);
+> +		spin_lock_bh(&msk->pm.lock);
+> 		mptcp_pm_remove_addr(msk, &list);
+> -		mptcp_pm_remove_subflow(msk, &list);
+> +		mptcp_pm_nl_rm_subflow_received(msk, &list);
+> +		spin_unlock_bh(&msk->pm.lock);
+> 		release_sock(sk);
+>
+> next:
+> -- =
 
-@@ -925,11 +923,7 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, st=
-ruct genl_info *info,
- 	}
- =
+> 2.30.2
+> _______________________________________________
+> mptcp mailing list -- mptcp(a)lists.01.org
+> To unsubscribe send an email to mptcp-leave(a)lists.01.org
+>
 
- 	entry->addr.family =3D nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_FAMILY]);
--	if (entry->addr.family !=3D AF_INET
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--	    && entry->addr.family !=3D AF_INET6
--#endif
--	    ) {
-+	if (entry->addr.family !=3D AF_INET && entry->addr.family !=3D AF_INET6) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr,
- 				    "unknown address family");
- 		return -EINVAL;
--- =
-
-2.30.2
-
---===============6708286093156532321==--
+--
+Mat Martineau
+Intel
+--===============7283203346147415746==--
