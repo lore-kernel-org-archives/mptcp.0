@@ -1,126 +1,153 @@
-Content-Type: multipart/mixed; boundary="===============8374031805154663725=="
+Content-Type: multipart/mixed; boundary="===============2046939637922837098=="
 MIME-Version: 1.0
-From: Mat Martineau <mathew.j.martineau at linux.intel.com>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 7/7] mptcp: drop unnecessary
- CONFIG_MPTCP_IPV6
-Date: Tue, 16 Mar 2021 17:55:46 -0700
-Message-ID: <3885dfb7-8772-cfa2-88a7-4beba08741f8@linux.intel.com>
-In-Reply-To: a9e630765f70579375d3faf731e4b62d78fd1dfa.1615878331.git.geliangtang@gmail.com
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 2/3] mptcp: send ack for
+ rm_addr
+Date: Wed, 17 Mar 2021 12:09:17 +0800
+Message-ID: <CA+WQbwviKpyzH=11BFTAmDz5wpbEpaJOSvLQN-tGTM0zEXsvUg@mail.gmail.com>
+In-Reply-To: f2981983-c08d-4c21-93f2-5fb7a9b58ea4@linux.intel.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8177
+X-UID: 8178
 
---===============8374031805154663725==
+--===============2046939637922837098==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 16 Mar 2021, Geliang Tang wrote:
+Hi Mat,
 
-> This patch dropped all the unnecessary '#if IS_ENABLED(CONFIG_MPTCP_IPV6)'
-> and '#endif'.
+Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=B4=
+3=E6=9C=8817=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=888:31=E5=86=99=E9=
+=81=93=EF=BC=9A
 >
-
-If IPV6 is not enabled, what's the benefit of including the extra IPV6 =
-
-code? I can see a possible benefit to parsing and sending echo responses =
-
-to peers that might send ADD_ADDR with IPv6 (because they would not know =
-
-that the other peer does not have IPv6 enabled), but I don't think that =
-
-accounts for all the removals in this commit. It would help to explain the =
-
-motivation in the commit message!
-
-Thanks,
-
-Mat
-
-
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
-> ---
-> net/mptcp/options.c    | 6 ------
-> net/mptcp/pm_netlink.c | 8 +-------
-> 2 files changed, 1 insertion(+), 13 deletions(-)
+> On Tue, 16 Mar 2021, Geliang Tang wrote:
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index e3fcd2b0ffd7..913cfc83bae4 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -221,22 +221,18 @@ static void mptcp_parse_option(const struct sk_buff=
- *skb,
-> 			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR ||
-> 			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_PORT)
-> 				mp_opt->addr.family =3D AF_INET;
-> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6 ||
-> 				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_PORT)
-> 				mp_opt->addr.family =3D AF_INET6;
-> -#endif
-> 			else
-> 				break;
-> 		} else {
-> 			if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE ||
-> 			    opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE_PORT)
-> 				mp_opt->addr.family =3D AF_INET;
-> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 			else if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE ||
-> 				 opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE_PORT)
-> 				mp_opt->addr.family =3D AF_INET6;
-> -#endif
-> 			else
-> 				break;
-> 		}
-> @@ -1155,10 +1151,8 @@ void mptcp_write_options(__be32 *ptr, const struct=
- tcp_sock *tp,
-> 		u8 len =3D TCPOLEN_MPTCP_ADD_ADDR_BASE;
-> 		u8 echo =3D MPTCP_ADDR_ECHO;
+> > This patch changes the sending ACK conditions for the ADD_ADDR, send an
+> > ACK packet for RM_ADDR too.
+> >
+> > In mptcp_pm_remove_addr, invoke mptcp_pm_nl_add_addr_send_ack to send
+> > the ACK packet.
+> >
+> > Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+> > ---
+> > net/mptcp/pm.c         |  1 +
+> > net/mptcp/pm_netlink.c | 10 +++++-----
+> > net/mptcp/protocol.h   |  1 +
+> > 3 files changed, 7 insertions(+), 5 deletions(-)
+> >
 >
-> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 		if (opts->addr.family =3D=3D AF_INET6)
-> 			len =3D TCPOLEN_MPTCP_ADD_ADDR6_BASE;
-> -#endif
+> Thanks for the v2 update!
 >
-> 		if (opts->addr.port)
-> 			len +=3D TCPOLEN_MPTCP_PORT_LEN;
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 181d8048cac1..5691ad101a95 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -889,10 +889,8 @@ static const struct nla_policy mptcp_pm_policy[MPTCP=
-_PM_ATTR_MAX + 1] =3D {
->
-> static int mptcp_pm_family_to_addr(int family)
-> {
-> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 	if (family =3D=3D AF_INET6)
-> 		return MPTCP_PM_ADDR_ATTR_ADDR6;
-> -#endif
-> 	return MPTCP_PM_ADDR_ATTR_ADDR4;
-> }
->
-> @@ -925,11 +923,7 @@ static int mptcp_pm_parse_addr(struct nlattr *attr, =
-struct genl_info *info,
-> 	}
->
-> 	entry->addr.family =3D nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_FAMILY]);
-> -	if (entry->addr.family !=3D AF_INET
-> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -	    && entry->addr.family !=3D AF_INET6
-> -#endif
-> -	    ) {
-> +	if (entry->addr.family !=3D AF_INET && entry->addr.family !=3D AF_INET6=
-) {
-> 		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-> 				    "unknown address family");
-> 		return -EINVAL;
-> -- =
+> The code looked ok on visual inspection, but I ran in to problems with
+> mptcp_join.sh tests (looks like the "remove id 0 address" test that
+> triggers it):
 
-> 2.30.2
+Did you apply the patch (Squash to "mptcp: remove id 0 address") before
+applying this patch set? We need to apply the squash-to patch first.
 
---
-Mat Martineau
-Intel
---===============8374031805154663725==--
+I didn't get this "bad unlock balance" warning on my test, could you please
+share your kconfig file to me?
+
+Thanks.
+
+
+-Geliang
+
+>
+> [  286.809888] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [  286.810818] WARNING: bad unlock balance detected!
+> [  286.811921] 5.12.0-rc2+ #5 Tainted: G        W
+> [  286.813119] -------------------------------------
+> [  286.814218] pm_nl_ctl/3445 is trying to release lock (&msk->pm.lock)
+> at:
+> [  286.815822] [<ffffffffa5ede78b>] mptcp_pm_nl_addr_send_ack+0xab/0x1a0
+> [  286.816979] but there are no more locks to release!
+> [  286.817795]
+> [  286.817795] other info that might help us debug this:
+> [  286.818874] 3 locks held by pm_nl_ctl/3445:
+> [  286.819598]  #0: ffffffffa7514770 (cb_lock){++++}-{3:3}, at:
+> genl_rcv+0x10/0x30
+> [  286.820982]  #1: ffffffffa7514828 (genl_mutex){+.+.}-{3:3}, at:
+> genl_rcv_msg+0x1f5/0x2c0
+> [  286.822520]  #2: ffff888104840120 (sk_lock-AF_INET){+.+.}-{0:0}, at:
+> mptcp_nl_remove_id_zero_address+0x10f/0x280
+> [  286.824648]
+> [  286.824648] stack backtrace:
+> [  286.825355] CPU: 1 PID: 3445 Comm: pm_nl_ctl Tainted: G        W
+> 5.12.0-rc2+ #5
+> [  286.826666] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> 1.14.0-1.fc33 04/01/2014
+> [  286.828234] Call Trace:
+> [  286.828688]  dump_stack+0x93/0xc2
+> [  286.829296]  lock_release.cold+0x10/0x4e
+> [  286.830000]  ? mptcp_pm_nl_addr_send_ack+0xab/0x1a0
+> [  286.830833]  ? lock_downgrade+0x390/0x390
+> [  286.831553]  ? __mptcp_flush_join_list+0x20/0x180
+> [  286.832480]  _raw_spin_unlock_bh+0x12/0x30
+> [  286.833409]  mptcp_pm_nl_addr_send_ack+0xab/0x1a0
+> [  286.834453]  mptcp_pm_remove_addr+0x7a/0xb0
+> [  286.835203]  mptcp_nl_remove_id_zero_address+0x11f/0x280
+> [  286.836204]  ? lookup_subflow_by_saddr+0x1a0/0x1a0
+> [  286.837116]  ? mptcp_nl_fill_addr+0x320/0x320
+> [  286.837848]  ? lock_release+0x1d0/0x400
+> [  286.838565]  ? lock_release+0x1d0/0x400
+> [  286.839302]  mptcp_nl_cmd_del_addr+0x497/0x5e0
+> [  286.840130]  ? mptcp_pm_remove_anno_addr.isra.0+0x180/0x180
+> [  286.841165]  ? nla_get_range_signed+0x1c0/0x1c0
+> [  286.842053]  ? lock_is_held_type+0x98/0x110
+> [  286.842820]  ? __nla_parse+0x22/0x30
+> [  286.843503]  ? genl_family_rcv_msg_attrs_parse.constprop.0+0xd1/0x130
+> [  286.844739]  genl_family_rcv_msg_doit+0x17a/0x200
+> [  286.845641]  ? genl_family_rcv_msg_attrs_parse.constprop.0+0x130/0x130
+> [  286.847167]  ? security_capable+0x48/0x60
+> [  286.848086]  genl_rcv_msg+0x18d/0x2c0
+> [  286.848873]  ? genl_get_cmd+0x1b0/0x1b0
+> [  286.849780]  ? genl_rcv+0x10/0x30
+> [  286.850730]  ? mptcp_pm_remove_anno_addr.isra.0+0x180/0x180
+> [  286.852074]  ? netlink_deliver_tap+0xa6/0x570
+> [  286.852801]  netlink_rcv_skb+0xc4/0x1f0
+> [  286.853434]  ? find_held_lock+0x85/0xa0
+> [  286.854074]  ? genl_get_cmd+0x1b0/0x1b0
+> [  286.854713]  ? netlink_ack+0x4f0/0x4f0
+> [  286.855336]  genl_rcv+0x1f/0x30
+> [  286.855863]  netlink_unicast+0x2d3/0x410
+> [  286.856516]  ? netlink_attachskb+0x400/0x400
+> [  286.857219]  ? _copy_from_iter_full+0xd8/0x360
+> [  286.857986]  netlink_sendmsg+0x394/0x670
+> [  286.858644]  ? netlink_unicast+0x410/0x410
+> [  286.859343]  ? netlink_unicast+0x410/0x410
+> [  286.860256]  sock_sendmsg+0x91/0xa0
+> [  286.861032]  __sys_sendto+0x16e/0x210
+> [  286.861881]  ? __ia32_sys_getpeername+0x40/0x40
+> [  286.862902]  ? handle_mm_fault+0x103/0x270
+> [  286.863807]  ? do_user_addr_fault+0x3f0/0x950
+> [  286.864781]  ? trace_page_fault_kernel+0x110/0x110
+> [  286.865862]  ? mark_held_locks+0x24/0x90
+> [  286.866777]  __x64_sys_sendto+0x6f/0x80
+> [  286.867621]  do_syscall_64+0x33/0x40
+> [  286.868504]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> [  286.869788] RIP: 0033:0x7f1279a1014a
+> [  286.870857] Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb b8 0f 1f 00 f3 0f
+> 1e fa 41 89 ca 64 8b 04 25 18 00 00 00 85 c0 75 15 b8 2c 00 00 00 0f 05
+> <48> 3d 00 f0 ff ff 77 76 c3 0f 1f 44 00 00 55 48 83 ec 30 44 89 4c
+> [  286.875110] RSP: 002b:00007ffe1a791af8 EFLAGS: 00000246 ORIG_RAX: 0000=
+00000000002c
+> [  286.876758] RAX: ffffffffffffffda RBX: 00007ffe1a791b40 RCX: 00007f127=
+9a1014a
+> [  286.878317] RDX: 0000000000000030 RSI: 00007ffe1a791b40 RDI: 000000000=
+0000003
+> [  286.879885] RBP: 0000000000000030 R08: 00007ffe1a791b04 R09: 000000000=
+000000c
+> [  286.881537] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000=
+0000000
+> [  286.883189] R13: 0000000000000003 R14: 0000000000000000 R15: 000000000=
+0000000
+>
+>
+> --
+> Mat Martineau
+> Intel
+--===============2046939637922837098==--
