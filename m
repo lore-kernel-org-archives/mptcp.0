@@ -1,148 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============4490001866877770431=="
+Content-Type: multipart/mixed; boundary="===============4660717574094506948=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 8/9] mptcp: sockopt: add TCP_CONGESTION
-Date: Wed, 17 Mar 2021 17:38:27 +0100
-Message-ID: <20210317163828.27406-9-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 9/9] mptcp: sockopt: handle TCP_INFO
+Date: Wed, 17 Mar 2021 17:38:28 +0100
+Message-ID: <20210317163828.27406-10-fw@strlen.de>
 In-Reply-To: 20210317163828.27406-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 8198
+X-UID: 8199
 
---===============4490001866877770431==
+--===============4660717574094506948==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Make this interact with the initial subflow only, as that is the one
-exposed to userspace (connect, bind).
+Tries to follow the subflow most recently used from transmit.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/sockopt.c | 83 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+ net/mptcp/sockopt.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 3ba31f4a73e3..c1ffc3603b4f 100644
+index c1ffc3603b4f..27ea5b1ea57e 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -556,6 +556,46 @@ static bool mptcp_supported_sockopt(int level, int opt=
-name)
- 	return false;
+@@ -657,6 +657,28 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp=
+_sock *msk, int level, int
+ 	return ret;
  }
  =
 
-+static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int leve=
-l, int optname,
-+					  sockptr_t optval, unsigned int optlen)
++static int mptcp_getsockopt_tcp_info(struct mptcp_sock *msk, char __user *=
+optval, int __user *optlen)
 +{
++	struct mptcp_subflow_context *subflow;
 +	struct sock *sk =3D (struct sock *)msk;
-+	struct socket *ssock;
-+	int ret =3D -EINVAL;
-+	struct sock *ssk;
++	struct sock *ssk =3D NULL;
++	int ret =3D -EOPNOTSUPP;
 +
 +	lock_sock(sk);
-+	ssk =3D msk->first;
++	mptcp_for_each_subflow(msk, subflow) {
++		ssk =3D mptcp_subflow_tcp_sock(subflow);
++
++		if (ssk =3D=3D msk->last_snd)
++			break;
++	}
++
 +	if (ssk)
-+		goto do_sockopt;
-+
-+	ssock =3D __mptcp_nmpc_socket(msk);
-+	if (!ssock)
-+		goto out;
-+
-+	ssk =3D ssock->sk;
-+do_sockopt:
-+	ret =3D tcp_setsockopt(ssk, level, optname, optval, optlen);
-+out:
++		ret =3D tcp_getsockopt(ssk, SOL_TCP, TCP_INFO, optval, optlen);
 +
 +	release_sock(sk);
 +	return ret;
 +}
 +
-+static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-+				    sockptr_t optval, unsigned int optlen)
-+{
-+	switch (optname) {
-+	case TCP_ULP:
-+		return -EOPNOTSUPP;
-+	case TCP_CONGESTION:
-+		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
-+						      optval, optlen);
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
- int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 		     sockptr_t optval, unsigned int optlen)
+ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    char __user *optval, int __user *optlen)
  {
-@@ -585,6 +625,47 @@ int mptcp_setsockopt(struct sock *sk, int level, int o=
-ptname,
- 	if (level =3D=3D SOL_IPV6)
- 		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
- =
-
-+	if (level =3D=3D SOL_TCP)
-+		return mptcp_setsockopt_sol_tcp(msk, optname, optval, optlen);
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int leve=
-l, int optname,
-+					  char __user *optval, int __user *optlen)
-+{
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct socket *ssock;
-+	int ret =3D -EINVAL;
-+	struct sock *ssk;
-+
-+	lock_sock(sk);
-+	ssk =3D msk->first;
-+	if (ssk) {
-+		ret =3D tcp_getsockopt(ssk, level, optname, optval, optlen);
-+		goto out;
-+	}
-+
-+	ssock =3D __mptcp_nmpc_socket(msk);
-+	if (!ssock)
-+		goto out;
-+
-+	ret =3D tcp_getsockopt(ssock->sk, level, optname, optval, optlen);
-+
-+out:
-+	release_sock(sk);
-+	return ret;
-+}
-+
-+static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-+				    char __user *optval, int __user *optlen)
-+{
-+	switch (optname) {
-+	case TCP_ULP:
-+	case TCP_CONGESTION:
-+		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
-+						      optval, optlen);
-+	}
+@@ -665,6 +687,8 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *=
+msk, int optname,
+ 	case TCP_CONGESTION:
+ 		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
+ 						      optval, optlen);
++	case TCP_INFO:
++		return mptcp_getsockopt_tcp_info(msk, optval, optlen);
+ 	}
  	return -EOPNOTSUPP;
  }
- =
-
-@@ -608,6 +689,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int op=
-tname,
- 	if (ssk)
- 		return tcp_getsockopt(ssk, level, optname, optval, option);
- =
-
-+	if (level =3D=3D SOL_TCP)
-+		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
- 	return -EOPNOTSUPP;
- }
- =
-
 -- =
 
 2.26.2
 
---===============4490001866877770431==--
+--===============4660717574094506948==--
