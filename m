@@ -1,136 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============4822665821611291888=="
+Content-Type: multipart/mixed; boundary="===============4313096581053539747=="
 MIME-Version: 1.0
-From: Jakub Kicinski <kuba at kernel.org>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH net] ipv6: weaken the v4mapped source check
-Date: Wed, 17 Mar 2021 09:55:15 -0700
-Message-ID: <20210317165515.1914146-1-kuba@kernel.org>
+Subject: [MPTCP] Weekly meeting - 18 March 2021 /!\ 15:00 UTC (8am PDT, 4pm CET,
+ 11pm CST)
+Date: Wed, 17 Mar 2021 18:46:33 +0100
+Message-ID: <a2a8dbc3-bcd2-299c-f27f-9740401fd432@tessares.net>
 X-Status: 
 X-Keywords:                  
-X-UID: 8200
+X-UID: 8201
 
---===============4822665821611291888==
+--===============4313096581053539747==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This reverts commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3.
+Hello everybody!
 
-Commit 6af1799aaf3f ("ipv6: drop incoming packets having a v4mapped
-source address") introduced an input check against v4mapped addresses.
-Use of such addresses on the wire is indeed questionable and not
-allowed on public Internet. As the commit pointed out
+Our public MPTCP upstreaming weekly web conference is scheduled for
+tomorrow.
 
-  https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
+/!\ Possibly at a different time /!\
 
-lists potential issues.
+=3D=3D> From this week, we switch from 16:00 to 15:00 UTC.
+=3D=3D> It means: 8am PDT, 4pm CET, 11pm CST
 
-Unfortunately there are applications which use v4mapped addresses,
-and breaking them is a clear regression. For example v4mapped
-addresses (or any semi-valid addresses, really) may be used
-for uni-direction event streams or packet export.
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20210318
 
-Since the issue which sparked the addition of the check was with
-TCP and request_socks in particular push the check down to TCPv6
-and DCCP. This restores the ability to receive UDPv6 packets with
-v4mapped address as the source.
+Feel free to add/modify topics!
 
-Keep using the IPSTATS_MIB_INHDRERRORS statistic to minimize the
-user-visible changes.
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-Fixes: 6af1799aaf3f ("ipv6: drop incoming packets having a v4mapped source =
-address")
-Reported-by: Sunyi Shao <sunyishao(a)fb.com>
-Signed-off-by: Jakub Kicinski <kuba(a)kernel.org>
----
- net/dccp/ipv6.c      |  5 +++++
- net/ipv6/ip6_input.c | 10 ----------
- net/ipv6/tcp_ipv6.c  |  5 +++++
- net/mptcp/subflow.c  |  5 +++++
- 4 files changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
-index 1f73603913f5..2be5c69824f9 100644
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -319,6 +319,11 @@ static int dccp_v6_conn_request(struct sock *sk, struc=
-t sk_buff *skb)
- 	if (!ipv6_unicast_destination(skb))
- 		return 0;	/* discard, don't send a reset here */
- =
-
-+	if (ipv6_addr_v4mapped(&ipv6_hdr(skb)->saddr)) {
-+		__IP6_INC_STATS(sock_net(sk), NULL, IPSTATS_MIB_INHDRERRORS);
-+		return 0;
-+	}
-+
- 	if (dccp_bad_service_code(sk, service)) {
- 		dcb->dccpd_reset_code =3D DCCP_RESET_CODE_BAD_SERVICE_CODE;
- 		goto drop;
-diff --git a/net/ipv6/ip6_input.c b/net/ipv6/ip6_input.c
-index e9d2a4a409aa..80256717868e 100644
---- a/net/ipv6/ip6_input.c
-+++ b/net/ipv6/ip6_input.c
-@@ -245,16 +245,6 @@ static struct sk_buff *ip6_rcv_core(struct sk_buff *sk=
-b, struct net_device *dev,
- 	if (ipv6_addr_is_multicast(&hdr->saddr))
- 		goto err;
- =
-
--	/* While RFC4291 is not explicit about v4mapped addresses
--	 * in IPv6 headers, it seems clear linux dual-stack
--	 * model can not deal properly with these.
--	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
--	 *
--	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
--	 */
--	if (ipv6_addr_v4mapped(&hdr->saddr))
--		goto err;
--
- 	skb->transport_header =3D skb->network_header + sizeof(*hdr);
- 	IP6CB(skb)->nhoff =3D offsetof(struct ipv6hdr, nexthdr);
- =
-
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index bd44ded7e50c..d0f007741e8e 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1175,6 +1175,11 @@ static int tcp_v6_conn_request(struct sock *sk, stru=
-ct sk_buff *skb)
- 	if (!ipv6_unicast_destination(skb))
- 		goto drop;
- =
-
-+	if (ipv6_addr_v4mapped(&ipv6_hdr(skb)->saddr)) {
-+		__IP6_INC_STATS(sock_net(sk), NULL, IPSTATS_MIB_INHDRERRORS);
-+		return 0;
-+	}
-+
- 	return tcp_conn_request(&tcp6_request_sock_ops,
- 				&tcp_request_sock_ipv6_ops, sk, skb);
- =
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 3d47d670e665..d17d39ccdf34 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -477,6 +477,11 @@ static int subflow_v6_conn_request(struct sock *sk, st=
-ruct sk_buff *skb)
- 	if (!ipv6_unicast_destination(skb))
- 		goto drop;
- =
-
-+	if (ipv6_addr_v4mapped(&ipv6_hdr(skb)->saddr)) {
-+		__IP6_INC_STATS(sock_net(sk), NULL, IPSTATS_MIB_INHDRERRORS);
-+		return 0;
-+	}
-+
- 	return tcp_conn_request(&mptcp_subflow_request_sock_ops,
- 				&subflow_request_sock_ipv6_ops, sk, skb);
- =
-
+See/Speak to you tomorrow!
+Matt
 -- =
 
-2.30.2
-
---===============4822665821611291888==--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============4313096581053539747==--
