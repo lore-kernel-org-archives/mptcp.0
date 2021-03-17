@@ -1,42 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============6896119960988348806=="
+Content-Type: multipart/mixed; boundary="===============2783353926986079222=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Geliang Tang <geliangtang at gmail.com>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next] Squash to "mptcp: remove id
- 0 address"
-Date: Wed, 17 Mar 2021 11:35:25 +0100
-Message-ID: <381120d3-ce02-cfd2-84d9-21c57ec75070@tessares.net>
-In-Reply-To: be80ad2d5230a0e414a263c871172a4c5b3eaf50.1615871767.git.geliangtang@gmail.com
+Subject: [MPTCP] [MPTCP][PATCH mptcp-next] Squash to "bpf:selftests: add MPTCP
+ test base"
+Date: Wed, 17 Mar 2021 20:11:58 +0800
+Message-ID: <70cec4a8462feb0ad4771dd1a0d75f3163800059.1615983074.git.geliangtang@gmail.com>
 X-Status: 
 X-Keywords:                  
-X-UID: 8187
+X-UID: 8188
 
---===============6896119960988348806==
+--===============2783353926986079222==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Mat,
+When I ran the bpf mptcp test "./test_progs -n 67", I got a "fallback to
+TCP" error in kernel log:
 
-On 16/03/2021 06:18, Geliang Tang wrote:
-> Hold msk->pm.lock when invoking mptcp_pm_remove_addr.
-> =
+ [   77.939497] MPTCP: msk=3D00000000e58fbe96
+ [   77.939534] IPv4: Attempt to release TCP socket in state 8 00000000e58f=
+be96
+ [   77.939807] MPTCP: subflow_req=3D0000000044a047b7
+ [   77.939818] MPTCP: check_fully_established:fallback to TCP (msk=3D00000=
+0000719adf6)
+ [   77.940238] MPTCP: msk=3D000000004c748421
+ [  140.366959] MPTCP: msk=3D000000000719adf6 snd_data_fin_enable=3D1 pendi=
+ng=3D0 snd_nxt=3D8514713421947747320 write_seq=3D8514713421947747320
+ [  140.366984] MPTCP: msk=3D000000000719adf6
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+This patch fixed it.
 
-Thank you for the patch and the review!
+send_byte() is copied from tools/testing/selftests/bpf/prog_tests/tcp_rtt.c.
 
-Now in our tree:
+Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+---
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-- 03d95186eb42: "squashed" in "mptcp: remove id 0 address"
-- Results: 19f890a6dd32..a4aed0922265
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing=
+/selftests/bpf/prog_tests/mptcp.c
+index 0e65d64868e9..fc97131ca397 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -8,6 +8,14 @@ struct mptcp_storage {
+ 	__u32 is_mptcp;
+ };
+ =
 
-Tests + export are in progress!
++static void send_byte(int fd)
++{
++	char b =3D 0x55;
++
++	if (CHECK_FAIL(write(fd, &b, sizeof(b)) !=3D 1))
++		perror("Failed to send single byte");
++}
++
+ static int verify_sk(int map_fd, int client_fd, const char *msg, __u32 is_=
+mptcp)
+ {
+ 	int err =3D 0, cfd =3D client_fd;
+@@ -76,6 +84,8 @@ static int run_test(int cgroup_fd, int server_fd, bool is=
+_mptcp)
+ 		goto close_client_fd;
+ 	}
+ =
 
-Cheers,
-Matt
++	send_byte(client_fd);
++
+ 	err +=3D is_mptcp ? verify_sk(map_fd, client_fd, "MPTCP subflow socket", =
+1) :
+ 			  verify_sk(map_fd, client_fd, "plain TCP socket", 0);
+ =
+
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============6896119960988348806==--
+2.30.2
+
+--===============2783353926986079222==--
