@@ -1,91 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============4425436181944275739=="
+Content-Type: multipart/mixed; boundary="===============1117940363360939880=="
 MIME-Version: 1.0
 From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 6/9] mptcp: setsockopt: add SO_INCOMING_CPU
-Date: Wed, 17 Mar 2021 17:38:25 +0100
-Message-ID: <20210317163828.27406-7-fw@strlen.de>
+Subject: [MPTCP] [PATCH mptcp-next 7/9] mptcp: setsockopt: SO_DEBUG and no-op
+ options
+Date: Wed, 17 Mar 2021 17:38:26 +0100
+Message-ID: <20210317163828.27406-8-fw@strlen.de>
 In-Reply-To: 20210317163828.27406-1-fw@strlen.de
 X-Status: 
 X-Keywords:                  
-X-UID: 8196
+X-UID: 8197
 
---===============4425436181944275739==
+--===============1117940363360939880==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Replicate to all subflows.
+Handle SO_DEBUG and set it on all subflows.
+Ignore those values not implemented on TCP sockets.
 
 Signed-off-by: Florian Westphal <fw(a)strlen.de>
 ---
- net/mptcp/sockopt.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ net/mptcp/sockopt.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index face38d5e149..e2cc6e11e777 100644
+index e2cc6e11e777..3ba31f4a73e3 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -110,6 +110,23 @@ static int mptcp_so_priority(struct mptcp_sock *msk, i=
-nt val)
+@@ -35,6 +35,32 @@ static int mptcp_get_int_option(struct mptcp_sock *msk, =
+sockptr_t optval, unsign
  	return 0;
  }
  =
 
-+static void mptcp_so_incoming_cpu(struct mptcp_sock *msk, int val)
++static int mptcp_so_debug(struct mptcp_sock *msk, int val)
 +{
++	sockptr_t optval =3D KERNEL_SOCKPTR(&val);
 +	struct mptcp_subflow_context *subflow;
 +	struct sock *sk =3D (struct sock *)msk;
++	int ret;
 +
-+	WRITE_ONCE(sk->sk_incoming_cpu, val);
++	ret =3D sock_setsockopt(sk->sk_socket, SOL_SOCKET, SO_DEBUG,
++			      optval, sizeof(val));
++	if (ret)
++		return ret;
 +
 +	lock_sock(sk);
++
 +	mptcp_for_each_subflow(msk, subflow) {
 +		struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
++		bool slow =3D lock_sock_fast(ssk);
 +
-+		WRITE_ONCE(ssk->sk_incoming_cpu, val);
++		sock_valbool_flag(ssk, SOCK_DBG, !!val);
++		unlock_sock_fast(ssk, slow);
 +	}
 +
 +	release_sock(sk);
++	return 0;
 +}
 +
- static int mptcp_so_sndrcvbuf(struct mptcp_sock *msk, int optname, int val)
+ static int mptcp_so_mark(struct mptcp_sock *msk, int val)
  {
  	sockptr_t optval =3D KERNEL_SOCKPTR(&val);
-@@ -164,6 +181,9 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp=
+@@ -169,6 +195,8 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp=
 _sock *msk, int optname,
- 	case SO_RCVBUF:
+ 		return ret;
+ =
+
+ 	switch (optname) {
++	case SO_DEBUG:
++		return mptcp_so_debug(msk, val);
+ 	case SO_MARK:
+ 		return mptcp_so_mark(msk, val);
+ 	case SO_KEEPALIVE:
+@@ -268,9 +296,21 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_so=
+ck *msk, int optname,
  	case SO_RCVBUFFORCE:
- 		return mptcp_so_sndrcvbuf(msk, optname, val);
-+	case SO_INCOMING_CPU:
-+		mptcp_so_incoming_cpu(msk, val);
+ 	case SO_MARK:
+ 	case SO_INCOMING_CPU:
++	case SO_DEBUG:
+ 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
+ 	case SO_LINGER:
+ 		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
++	case SO_NO_CHECK:
++	case SO_DONTROUTE:
++	case SO_BROADCAST:
++	case SO_BSDCOMPAT:
++	case SO_PASSCRED:
++	case SO_PASSSEC:
++	case SO_RXQ_OVFL:
++	case SO_WIFI_STATUS:
++	case SO_NOFCS:
++	case SO_SELECT_ERR_QUEUE:
 +		return 0;
  	}
  =
 
- 	return -ENOPROTOOPT;
-@@ -247,6 +267,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_soc=
-k *msk, int optname,
- 	case SO_RCVBUF:
- 	case SO_RCVBUFFORCE:
- 	case SO_MARK:
-+	case SO_INCOMING_CPU:
- 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
- 	case SO_LINGER:
- 		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
-@@ -564,6 +585,7 @@ static void sync_socket_options(struct mptcp_sock *msk,=
+ 	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen=
+);
+@@ -602,6 +642,7 @@ static void sync_socket_options(struct mptcp_sock *msk,=
  struct sock *ssk)
+ 		sk_dst_reset(ssk);
+ 	}
  =
 
- 	ssk->sk_priority =3D sk->sk_priority;
- 	ssk->sk_bound_dev_if =3D sk->sk_bound_dev_if;
-+	ssk->sk_incoming_cpu =3D sk->sk_incoming_cpu;
++	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
+ 	unlock_sock_fast(ssk, slow);
+ }
  =
 
- 	WRITE_ONCE(ssk->sk_sndbuf, sk->sk_sndbuf);
- 	WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
 -- =
 
 2.26.2
 
---===============4425436181944275739==--
+--===============1117940363360939880==--
