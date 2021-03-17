@@ -1,75 +1,136 @@
-Content-Type: multipart/mixed; boundary="===============4660717574094506948=="
+Content-Type: multipart/mixed; boundary="===============4822665821611291888=="
 MIME-Version: 1.0
-From: Florian Westphal <fw at strlen.de>
+From: Jakub Kicinski <kuba at kernel.org>
 To: mptcp at lists.01.org
-Subject: [MPTCP] [PATCH mptcp-next 9/9] mptcp: sockopt: handle TCP_INFO
-Date: Wed, 17 Mar 2021 17:38:28 +0100
-Message-ID: <20210317163828.27406-10-fw@strlen.de>
-In-Reply-To: 20210317163828.27406-1-fw@strlen.de
+Subject: [MPTCP] [PATCH net] ipv6: weaken the v4mapped source check
+Date: Wed, 17 Mar 2021 09:55:15 -0700
+Message-ID: <20210317165515.1914146-1-kuba@kernel.org>
 X-Status: 
 X-Keywords:                  
-X-UID: 8199
+X-UID: 8200
 
---===============4660717574094506948==
+--===============4822665821611291888==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Tries to follow the subflow most recently used from transmit.
+This reverts commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3.
 
-Signed-off-by: Florian Westphal <fw(a)strlen.de>
+Commit 6af1799aaf3f ("ipv6: drop incoming packets having a v4mapped
+source address") introduced an input check against v4mapped addresses.
+Use of such addresses on the wire is indeed questionable and not
+allowed on public Internet. As the commit pointed out
+
+  https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
+
+lists potential issues.
+
+Unfortunately there are applications which use v4mapped addresses,
+and breaking them is a clear regression. For example v4mapped
+addresses (or any semi-valid addresses, really) may be used
+for uni-direction event streams or packet export.
+
+Since the issue which sparked the addition of the check was with
+TCP and request_socks in particular push the check down to TCPv6
+and DCCP. This restores the ability to receive UDPv6 packets with
+v4mapped address as the source.
+
+Keep using the IPSTATS_MIB_INHDRERRORS statistic to minimize the
+user-visible changes.
+
+Fixes: 6af1799aaf3f ("ipv6: drop incoming packets having a v4mapped source =
+address")
+Reported-by: Sunyi Shao <sunyishao(a)fb.com>
+Signed-off-by: Jakub Kicinski <kuba(a)kernel.org>
 ---
- net/mptcp/sockopt.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ net/dccp/ipv6.c      |  5 +++++
+ net/ipv6/ip6_input.c | 10 ----------
+ net/ipv6/tcp_ipv6.c  |  5 +++++
+ net/mptcp/subflow.c  |  5 +++++
+ 4 files changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index c1ffc3603b4f..27ea5b1ea57e 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -657,6 +657,28 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp=
-_sock *msk, int level, int
- 	return ret;
- }
+diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
+index 1f73603913f5..2be5c69824f9 100644
+--- a/net/dccp/ipv6.c
++++ b/net/dccp/ipv6.c
+@@ -319,6 +319,11 @@ static int dccp_v6_conn_request(struct sock *sk, struc=
+t sk_buff *skb)
+ 	if (!ipv6_unicast_destination(skb))
+ 		return 0;	/* discard, don't send a reset here */
  =
 
-+static int mptcp_getsockopt_tcp_info(struct mptcp_sock *msk, char __user *=
-optval, int __user *optlen)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk =3D (struct sock *)msk;
-+	struct sock *ssk =3D NULL;
-+	int ret =3D -EOPNOTSUPP;
-+
-+	lock_sock(sk);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		ssk =3D mptcp_subflow_tcp_sock(subflow);
-+
-+		if (ssk =3D=3D msk->last_snd)
-+			break;
++	if (ipv6_addr_v4mapped(&ipv6_hdr(skb)->saddr)) {
++		__IP6_INC_STATS(sock_net(sk), NULL, IPSTATS_MIB_INHDRERRORS);
++		return 0;
 +	}
 +
-+	if (ssk)
-+		ret =3D tcp_getsockopt(ssk, SOL_TCP, TCP_INFO, optval, optlen);
+ 	if (dccp_bad_service_code(sk, service)) {
+ 		dcb->dccpd_reset_code =3D DCCP_RESET_CODE_BAD_SERVICE_CODE;
+ 		goto drop;
+diff --git a/net/ipv6/ip6_input.c b/net/ipv6/ip6_input.c
+index e9d2a4a409aa..80256717868e 100644
+--- a/net/ipv6/ip6_input.c
++++ b/net/ipv6/ip6_input.c
+@@ -245,16 +245,6 @@ static struct sk_buff *ip6_rcv_core(struct sk_buff *sk=
+b, struct net_device *dev,
+ 	if (ipv6_addr_is_multicast(&hdr->saddr))
+ 		goto err;
+ =
+
+-	/* While RFC4291 is not explicit about v4mapped addresses
+-	 * in IPv6 headers, it seems clear linux dual-stack
+-	 * model can not deal properly with these.
+-	 * Security models could be fooled by ::ffff:127.0.0.1 for example.
+-	 *
+-	 * https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
+-	 */
+-	if (ipv6_addr_v4mapped(&hdr->saddr))
+-		goto err;
+-
+ 	skb->transport_header =3D skb->network_header + sizeof(*hdr);
+ 	IP6CB(skb)->nhoff =3D offsetof(struct ipv6hdr, nexthdr);
+ =
+
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index bd44ded7e50c..d0f007741e8e 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1175,6 +1175,11 @@ static int tcp_v6_conn_request(struct sock *sk, stru=
+ct sk_buff *skb)
+ 	if (!ipv6_unicast_destination(skb))
+ 		goto drop;
+ =
+
++	if (ipv6_addr_v4mapped(&ipv6_hdr(skb)->saddr)) {
++		__IP6_INC_STATS(sock_net(sk), NULL, IPSTATS_MIB_INHDRERRORS);
++		return 0;
++	}
 +
-+	release_sock(sk);
-+	return ret;
-+}
+ 	return tcp_conn_request(&tcp6_request_sock_ops,
+ 				&tcp_request_sock_ipv6_ops, sk, skb);
+ =
+
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 3d47d670e665..d17d39ccdf34 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -477,6 +477,11 @@ static int subflow_v6_conn_request(struct sock *sk, st=
+ruct sk_buff *skb)
+ 	if (!ipv6_unicast_destination(skb))
+ 		goto drop;
+ =
+
++	if (ipv6_addr_v4mapped(&ipv6_hdr(skb)->saddr)) {
++		__IP6_INC_STATS(sock_net(sk), NULL, IPSTATS_MIB_INHDRERRORS);
++		return 0;
++	}
 +
- static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    char __user *optval, int __user *optlen)
- {
-@@ -665,6 +687,8 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *=
-msk, int optname,
- 	case TCP_CONGESTION:
- 		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
- 						      optval, optlen);
-+	case TCP_INFO:
-+		return mptcp_getsockopt_tcp_info(msk, optval, optlen);
- 	}
- 	return -EOPNOTSUPP;
- }
+ 	return tcp_conn_request(&mptcp_subflow_request_sock_ops,
+ 				&subflow_request_sock_ipv6_ops, sk, skb);
+ =
+
 -- =
 
-2.26.2
+2.30.2
 
---===============4660717574094506948==--
+--===============4822665821611291888==--
