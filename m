@@ -1,118 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============2920335789373422190=="
+Content-Type: multipart/mixed; boundary="===============8834275579873725854=="
 MIME-Version: 1.0
-From: Matthieu Baerts <matthieu.baerts at tessares.net>
+From: Florian Westphal <fw at strlen.de>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [MPTCP][PATCH mptcp-next] Squash to "bpf:selftests: add
- MPTCP test base"
-Date: Wed, 17 Mar 2021 15:45:32 +0100
-Message-ID: <5640c9c8-ec11-7706-44e3-14d4317f8235@tessares.net>
-In-Reply-To: 70cec4a8462feb0ad4771dd1a0d75f3163800059.1615983074.git.geliangtang@gmail.com
+Subject: [MPTCP] [RFC PATCH mptcp-next 0/9] initial SOL_SOCKET support
+Date: Wed, 17 Mar 2021 17:38:19 +0100
+Message-ID: <20210317163828.27406-1-fw@strlen.de>
 X-Status: 
 X-Keywords:                  
-X-UID: 8189
+X-UID: 8190
 
---===============2920335789373422190==
+--===============8834275579873725854==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+This patch set improves support for several SOL_SOCKET tuneables.
 
-On 17/03/2021 13:11, Geliang Tang wrote:
-> When I ran the bpf mptcp test "./test_progs -n 67", I got a "fallback to
-> TCP" error in kernel log:
-> =
+First patch adds skeleton synchronization functions to copy mptcp socket
+settings to a subflow socket.
 
->   [   77.939497] MPTCP: msk=3D00000000e58fbe96
->   [   77.939534] IPv4: Attempt to release TCP socket in state 8 00000000e=
-58fbe96
->   [   77.939807] MPTCP: subflow_req=3D0000000044a047b7
->   [   77.939818] MPTCP: check_fully_established:fallback to TCP (msk=3D00=
-0000000719adf6)
->   [   77.940238] MPTCP: msk=3D000000004c748421
->   [  140.366959] MPTCP: msk=3D000000000719adf6 snd_data_fin_enable=3D1 pe=
-nding=3D0 snd_nxt=3D8514713421947747320 write_seq=3D8514713421947747320
->   [  140.366984] MPTCP: msk=3D000000000719adf6
-> =
+For the incoming connection case a work queue based synchronization
+point is added.
 
-> This patch fixed it.
-> =
+A sequence number tells which subflows are out-of-sync and need
+updating.
 
-> send_byte() is copied from tools/testing/selftests/bpf/prog_tests/tcp_rtt=
-.c.
-> =
+setsockopt SOL_SOCKET gets extended to handle several
+tuneables.
 
-> Signed-off-by: Geliang Tang <geliangtang(a)gmail.com>
+Some of these get copied to all subflows:
+- keepalive
+- packet mark (influences routing decision)
+- SO_LINGER
 
-Thank you for the patch!
+Others are only set on the initial socket, e.g.
+BINDTODEVICE.
 
-> ---
->   tools/testing/selftests/bpf/prog_tests/mptcp.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> =
+Some of these are debateable, for instance SO_INCOMING_CPU.
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testi=
-ng/selftests/bpf/prog_tests/mptcp.c
-> index 0e65d64868e9..fc97131ca397 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -8,6 +8,14 @@ struct mptcp_storage {
->   	__u32 is_mptcp;
->   };
->   =
+Last two patches add support for two TCP sockopts, TCP_CONGESTION
+and TCP_INFO.
 
-> +static void send_byte(int fd)
-> +{
-> +	char b =3D 0x55;
-> +
-> +	if (CHECK_FAIL(write(fd, &b, sizeof(b)) !=3D 1))
-> +		perror("Failed to send single byte");
-> +}
-> +
->   static int verify_sk(int map_fd, int client_fd, const char *msg, __u32 =
-is_mptcp)
->   {
->   	int err =3D 0, cfd =3D client_fd;
-> @@ -76,6 +84,8 @@ static int run_test(int cgroup_fd, int server_fd, bool =
-is_mptcp)
->   		goto close_client_fd;
->   	}
->   =
+The former is only set for the initial subflow, since that is what
+userspace program knows about (bind/connect address).
 
-> +	send_byte(client_fd);
+It seems better to allow mptcpd/iproute2 to augment subflows
+with TCPcc info instead.
 
-I don't see the link with the error you have. Is this a workaround? :)
+TCP_INFO is another item open for debate.
+The patch here will take the TCP info from the subflow that was
+last used to send data.
 
-I tried to reproduce the issue with packetdrill but I might need a =
+This may not be what is expected, however.
+Since the struct format is fixed, there are not many alternatives:
+1. - always fail with -EOPNOTSUPP
+2. - try to artificially synthesize TCP_INFO record based on mptcp
+level sequence numbers, etc.
+3. - always follow the initial subflow only.
 
-packet trace and maybe info from strace to understand why you have this =
+Comments welcome.
 
-warning.
+Furthermore, support for various SO_TIMESTAMP* settings will need
+cmsg support in mptcp to be useful.  Let me know if anyone is already
+looking at that.
 
-I guess that sending a byte forces the MPTCP connection to be in "fully =
+Florian Westphal (9):
+  mptcp: add skeleton to sync msk socket options to subflows
+  mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY
+  mptcp: setsockopt: handle receive/send buffer and device bind
+  mptcp: setsockopt: support SO_LINGER
+  mptcp: setsockopt: add SO_MARK support
+  mptcp: setsockopt: add SO_INCOMING_CPU
+  mptcp: setsockopt: SO_DEBUG and no-op options
+  mptcp: sockopt: add TCP_CONGESTION
+  mptcp: sockopt: handle TCP_INFO
 
-established" mode which is not the case without and somehow caused the =
-
-warning, no? Then here we are going through another path not to have the =
-
-warning but there is still something wrong somewhere we might want to =
-
-fix, no?
-
-Cheers,
-Matt
-
-> +
->   	err +=3D is_mptcp ? verify_sk(map_fd, client_fd, "MPTCP subflow socket=
-", 1) :
->   			  verify_sk(map_fd, client_fd, "plain TCP socket", 0);
->   =
-
-> =
-
+ net/mptcp/protocol.c |  31 +++-
+ net/mptcp/protocol.h |  12 ++
+ net/mptcp/sockopt.c  | 431 +++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c  |   1 +
+ 4 files changed, 472 insertions(+), 3 deletions(-)
 
 -- =
 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
---===============2920335789373422190==--
+2.26.2
+
+--===============8834275579873725854==--
