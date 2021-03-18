@@ -1,54 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============0469208396571922992=="
+Content-Type: multipart/mixed; boundary="===============2449840188382990233=="
 MIME-Version: 1.0
-From: Eric Dumazet <edumazet at google.com>
+From: Matthieu Baerts <matthieu.baerts at tessares.net>
 To: mptcp at lists.01.org
-Subject: [MPTCP] Re: [PATCH net] ipv6: weaken the v4mapped source check
-Date: Thu, 18 Mar 2021 10:45:50 +0100
-Message-ID: <CANn89iLFMpSOwvhuT3_-yCZS1Ff7Vc5RPuO_DCNyYon3VSQW+w@mail.gmail.com>
-In-Reply-To: 20210317165515.1914146-1-kuba@kernel.org
+Subject: [MPTCP] Re: [MPTCP][PATCH v2 mptcp-next 0/3] send ack for rm_addr and
+ cleanups
+Date: Thu, 18 Mar 2021 15:59:07 +0100
+Message-ID: <c5f07c14-cdc5-8c3b-fbab-1fd52c5406b5@tessares.net>
+In-Reply-To: CA+WQbwtZC4k9ZrGntF5neJzR4wQ8h9KUPfuLkZj1j-o1qFZi7w@mail.gmail.com
 X-Status: 
 X-Keywords:                  
-X-UID: 8208
+X-UID: 8209
 
---===============0469208396571922992==
+--===============2449840188382990233==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 17, 2021 at 5:55 PM Jakub Kicinski <kuba(a)kernel.org> wrote:
->
-> This reverts commit 6af1799aaf3f1bc8defedddfa00df3192445bbf3.
->
-> Commit 6af1799aaf3f ("ipv6: drop incoming packets having a v4mapped
-> source address") introduced an input check against v4mapped addresses.
-> Use of such addresses on the wire is indeed questionable and not
-> allowed on public Internet. As the commit pointed out
->
->   https://tools.ietf.org/html/draft-itojun-v6ops-v4mapped-harmful-02
->
-> lists potential issues.
->
-> Unfortunately there are applications which use v4mapped addresses,
-> and breaking them is a clear regression. For example v4mapped
-> addresses (or any semi-valid addresses, really) may be used
-> for uni-direction event streams or packet export.
->
-> Since the issue which sparked the addition of the check was with
-> TCP and request_socks in particular push the check down to TCPv6
-> and DCCP. This restores the ability to receive UDPv6 packets with
-> v4mapped address as the source.
->
-> Keep using the IPSTATS_MIB_INHDRERRORS statistic to minimize the
-> user-visible changes.
->
-> Fixes: 6af1799aaf3f ("ipv6: drop incoming packets having a v4mapped sourc=
-e address")
-> Reported-by: Sunyi Shao <sunyishao(a)fb.com>
-> Signed-off-by: Jakub Kicinski <kuba(a)kernel.org>
-> ---
+Hi Geliang, Mat,
 
+On 18/03/2021 03:14, Geliang Tang wrote:
+> Hi Matt,
+> =
 
-Reviewed-by: Eric Dumazet <edumazet(a)google.com>
+> Mat Martineau <mathew.j.martineau(a)linux.intel.com> =E4=BA=8E2021=E5=B9=
+=B43=E6=9C=8818=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=888:09=E5=86=99=
+=E9=81=93=EF=BC=9A
+>>
+>> On Tue, 16 Mar 2021, Geliang Tang wrote:
+>>
+>>> v2:
+>>> - add patch 1 and patch 3.
+>>> - update the debug output in patch 2.
+>>> - tag: export/20210315T064655.
+>>>
+>>> Note:
+>>> - Please insert this patchset between the commit "mptcp: move to next
+>>> addr when subflow creation fail" and the commit "selftests: mptcp: sign=
+al
+>>> addresses testcases" when merging it.
+>>>
+>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/173
+>>>
+>>> Geliang Tang (3):
+>>>   mptcp: drop useless addr_signal clear
+>>>   mptcp: send ack for rm_addr
+>>>   mptcp: rename mptcp_pm_nl_add_addr_send_ack
+>>>
+>>> net/mptcp/pm.c         |  1 +
+>>> net/mptcp/pm_netlink.c | 24 ++++++++----------------
+>>> net/mptcp/protocol.h   |  1 +
+>>> 3 files changed, 10 insertions(+), 16 deletions(-)
+>>>
+>>> --
+>>> 2.30.2
+>>
+>> Geliang -
+>>
+>> Thanks for pointing out the dependency I missed when testing. Patch set
+>> looks good for the export branch.
+>>
+>> Reviewed-by: Mat Martineau <mathew.j.martineau(a)linux.intel.com>
+> =
 
-Thanks !
---===============0469208396571922992==--
+> Please insert this patchset between the commit "mptcp: move to next
+> addr when subflow creation fail" and the commit "selftests: mptcp: signal
+> addresses testcases" when merging it into the export branch.
+
+Thank you for the patch, the review and the reminder!
+
+Now in our tree with Mat's RvB tag and placed before "selftests: mptcp: =
+
+signal addresses testcases":
+
+- 66d562873299: mptcp: drop useless addr_signal clear
+- 8c3e5d0c47d0: mptcp: send ack for rm_addr
+- 1790775f4e49: mptcp: rename mptcp_pm_nl_add_addr_send_ack
+- Results: 1a2847789704..c11e1a8e9572
+
+Tests + export are in progress!
+
+Cheers,
+Matt
+-- =
+
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
+--===============2449840188382990233==--
