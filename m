@@ -1,64 +1,57 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFDA5F
-	for <mptcp@lists.linux.dev>; Fri, 19 Mar 2021 21:00:09 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 160C56196E;
-	Fri, 19 Mar 2021 21:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1616187609;
-	bh=plvMQbtQNGCxO10lqp8q08imJA8nh32wQTnFtQLWYeM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BikuHaR81qb7nBuJjuwTJzkTj5VjX8oMd1A/567RTj9+UMQhyq10xpkvcA1vwSKZP
-	 K2UcTOiwB9oBPYFC6FEsPo4tQNDlMhIEwB0vhj6nu6Iej2qN14bxBsIRXDaw0D2KDS
-	 yd6yav5OJMZbN84c+DZ3uCl6TpPdS0V6RIwMi74fyqpoRPZIqbL5BgoEdEJGYx/7Tk
-	 v584mAPPhbDEs5S3L4BmzubcIhtXqN0TO6BzNVvhl7F8ECHDENy+obdc3f60F4iIIw
-	 UGsdnHIIZX6dSSe+QE1Wq1QswGQk3p3cEjLe83A4CJI8YgoYdh0jFtXI1dQMEn6wpj
-	 IyLEgJSE5sudg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 07C4E626ED;
-	Fri, 19 Mar 2021 21:00:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6649A5F
+	for <mptcp@lists.linux.dev>; Fri, 19 Mar 2021 21:08:43 +0000 (UTC)
+IronPort-SDR: xypqKrrcd+KXsoMavVsPYRgR9pjDjjRwPPKszn6KHS6pxtIpVDcVvGfR3a3DqXahp/zg4EdWhR
+ vdhqRvvV6Fgg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9928"; a="177553958"
+X-IronPort-AV: E=Sophos;i="5.81,262,1610438400"; 
+   d="scan'208";a="177553958"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2021 14:08:42 -0700
+IronPort-SDR: ZcM0s4S1hFRyNKkUH87311cGkCCaSxSeZ3NcFxrcvOC7bPFzVeGiGcGMl2byi0pqYo4bBAbsQG
+ /PNivBSCdhPA==
+X-IronPort-AV: E=Sophos;i="5.81,262,1610438400"; 
+   d="scan'208";a="413660147"
+Received: from johnmc3x-mobl1.amr.corp.intel.com ([10.255.228.189])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2021 14:08:42 -0700
+Date: Fri, 19 Mar 2021 14:08:42 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: mptcp@lists.linux.dev, mptcp@lists.01.org
+cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliangtang@gmail.com>, 
+    Florian Westphal <fw@strlen.de>, 
+    Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    Davide Caratti <dcaratti@redhat.com>, 
+    Ossama Othman <ossama.othman@intel.com>, 
+    Christoph Paasch <cpaasch@apple.com>
+Subject: MPTCP Linux mailing list transition
+Message-ID: <cccc879d-d729-9043-38c5-3996c7c66d@linux.intel.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: Change mailing list address
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <161618760902.12397.8037848408394783798.git-patchwork-notify@kernel.org>
-Date: Fri, 19 Mar 2021 21:00:09 +0000
-References: <20210319183302.137063-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210319183302.137063-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- mptcp@lists.01.org, mptcp@lists.linux.dev, matthieu.baerts@tessares.net
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hello:
 
-This patch was applied to netdev/net.git (refs/heads/master):
+Hello -
 
-On Fri, 19 Mar 2021 11:33:02 -0700 you wrote:
-> The mailing list for MPTCP maintenance has moved to the
-> kernel.org-supported mptcp@lists.linux.dev address.
-> 
-> Complete, combined archives for both lists are now hosted at
-> https://lore.kernel.org/mptcp
-> 
-> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> 
-> [...]
+We're in the middle of a transition to a new mailing list at 
+mptcp@lists.linux.dev, with a couple of steps to go:
 
-Here is the summary with links:
-  - [net] mptcp: Change mailing list address
-    https://git.kernel.org/netdev/net/c/ef2ef02cd9c2
+  * Updating patchwork to use the new address (request is pending)
 
-You are awesome, thank you!
+  * Re-subscribe everyone to the new list
+
+
+For now, please cc patches to both lists so we can be sure they are 
+tracked with patchwork.
+
+If you would like to immediately subscribe to the new list, send a message 
+to mptcp+subscribe@lists.linux.dev . I will bulk subscribe based on the 
+existing 01.org subscriber list in the next several days.
+
 --
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Mat Martineau
+Intel
