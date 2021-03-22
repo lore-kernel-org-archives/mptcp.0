@@ -1,110 +1,124 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E579C5F
-	for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 13:44:45 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id j3so19362658edp.11
-        for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 06:44:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC286E
+	for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 16:21:52 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id l4so22241465ejc.10
+        for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 09:21:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UGQ3VqXHuBHwm61X01LflHH+tl7OzYNGvS8cksQ0eTc=;
-        b=nJGF6Wtar95iFQXzjoGgWw38ci4lbJD1/fw/RsPuBwaSm+ybTRrTGX8mGQvy0TSQum
-         ygPo64RaTi4H0OCjYJ9NNk/PdtVD2OccFAI0WilO92o0sP/fRGWmDsvSw1gzJ7T8INP+
-         vrnPtPCZkg//xQkMcdLQBO6sVBOK01yuD2aTvV/xTnj2GhoPZUx++WOIYWRFugR8NhE9
-         z8F+VB+KINRQxZDAEyXxEq0C6j0xa74LISz+r2F+n586t6xm9SfWRCUqGyi5PELLQtov
-         UQcCgPaBVDHwTNalz7hoWJieQBOhWFrXQregemBViTQxrG/9K2J04X0aWByttBWHLlxn
-         jOJQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OA/pxSDvPxWIvDlU3QWRf+aNoo3yE9sfWQ77OD3tFG8=;
+        b=YNUaBa+ThjcTqgOCEpMY7N7LoVFMDnNhT5+iuNVcNUc5UkCSPtyZI03YqGqMFtOUL0
+         DfDEbjvZl8W746mQh8HDo1hYbhPAX3r+Mrqp8RxdvUeciMWPSz1355a3CsEeDzOmXaqB
+         zz7TjDtSmmckVyRjWDLJ5rxZThR+coScarIdbF7mF5xFYaJvZWF5GrX1TFPkHsCQs6xH
+         tddORjHtmw1a2HkME0LmVpNvsbyQ7qEWKgHlpOXEPaV5cjhQJ+rHyJhC1cuTKOyJbmcu
+         +mu/HaDVwF7DqpGG0MbGAG0DTXEvNU54ly0rEJDF4PhxBa3KiLkOpt2L84VFbqxBN4NL
+         /8OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UGQ3VqXHuBHwm61X01LflHH+tl7OzYNGvS8cksQ0eTc=;
-        b=NVLaGvKYdIbpONV1oYXKrKMNyL4lxQtNAQsU8/mKuQZVH51Boy5jBizrZOWd0W/uEX
-         D2G9mamz2P3mvH1FAy2wJ+D2ndZ7LZ/T5z8aoYJq9TnpRdl+CfgeCY55djXM71IHbIlW
-         Tq4YeJDMq76ejjHfhKlpbaJIsaQJTB637yzLmyNKm2HvqZxWNdReLmaM6I0HN5X2aZBj
-         jLCilKPAeZoXUPAlDzOh6kmbOuLcCFgA636BaJ0oHRuzgnB7TReYI/v1CItF8kzDZhFS
-         skY28OihdFJ1OQ7aTP3kEvq2p9u/vrcA8neyJPXMggLFelT19B40yQ0mZOdZJH+HjCJU
-         X5sg==
-X-Gm-Message-State: AOAM533JDmWwkKUmfIveMu98ZpGgK2cGc2ccQA2zjkWepkA6+A/NDeSq
-	is8KUzrmNehG12L3cDGzWx1O3QHMPKuelw==
-X-Google-Smtp-Source: ABdhPJzNnD+IYLKX2BbVtsd5xMLp0Uu8HQBjbQTjbnxlOrBe38iID5weMRVbNqSHNdSmV8ZVOdJioA==
-X-Received: by 2002:a05:6402:170f:: with SMTP id y15mr25800819edu.127.1616420683930;
-        Mon, 22 Mar 2021 06:44:43 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:2747:b141:c895:b440])
-        by smtp.gmail.com with ESMTPSA id m9sm9657553ejo.65.2021.03.22.06.44.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Mar 2021 06:44:43 -0700 (PDT)
-Subject: Re: [MPTCP] Re: [MPTCP][PATCH v3 mptcp-next 0/7] refactor
- mptcp_addr_info and cleanups
+        bh=OA/pxSDvPxWIvDlU3QWRf+aNoo3yE9sfWQ77OD3tFG8=;
+        b=UalQ5vC1nG62VNqDAYBp+8k1MJomK+wxpgRBmPIPS56pajhpHjUn76IDfhKX938qBd
+         cDlNwthCGF6Z9HvFAy7bpn29IPEWOZwNHYLrBVJ+MfwydWFRi2eHZkkepDLYu9YRoWs3
+         ohdsZC7kod1bLDgstQ8EkJFpD5n8l/Ia4roccYiuZheKYFUVePQs0cRxqDzglUEkQZ4I
+         FHg5waudahNyMQzdszlY1ZeyitEBTGOn9oZhHK1zSsNSxd6vIck8MkzKSYr6Nm8IdGBm
+         Lbgw16F2JohS3EJ4DJbHo13TbstMV29/KcHah+k+oxDRx+iP9xAlzUC8Kg6o7GajOJLV
+         aU2A==
+X-Gm-Message-State: AOAM530YaCBXzW43vtfrCV5DOsvAlClnrRZB14eSdfJ4HMyvSqrLqcr7
+	Yrkwzr0PwQWLtjs7Zh99yyFBNwjkZG3PVefw
+X-Google-Smtp-Source: ABdhPJxzA8Vd5eH5361TNJfsyA7yhpouxKpjp3HnJi19KRLXQ39oVqki/he3I5GfMb8JdGkpYiDfYA==
+X-Received: by 2002:a17:906:1792:: with SMTP id t18mr605971eje.378.1616430110767;
+        Mon, 22 Mar 2021 09:21:50 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id wr20sm5694136ejb.111.2021.03.22.09.21.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Mar 2021 09:21:50 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Geliang Tang <geliangtang@gmail.com>
-Cc: mptcp@lists.01.org, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <cover.1615966219.git.geliangtang@gmail.com>
- <22cecfe9-709a-f4f2-b137-63df1227ed43@linux.intel.com>
- <76cc940b-096b-91f3-6cd0-23def55d5ba1@tessares.net>
-Message-ID: <4d1b4dcb-67dd-742c-25fe-6af5f12d9e4b@tessares.net>
-Date: Mon, 22 Mar 2021 14:44:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+To: mptcp@lists.linux.dev,
+	mptcp@lists.01.org
+Cc: Geliang Tang <geliangtang@gmail.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next 1/3] Squash to "mptcp: use mptcp_addr_info in mptcp_out_options"
+Date: Mon, 22 Mar 2021 17:21:30 +0100
+Message-Id: <20210322162132.2471823-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <76cc940b-096b-91f3-6cd0-23def55d5ba1@tessares.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Fix issues reported by sparse because we were doing non explicit casting
+from __be16 to u16.
 
-On 20/03/2021 12:13, Matthieu Baerts wrote:
-> Hi Geliang, Mat,
-> 
-> On 19/03/2021 22:49, Mat Martineau wrote:
->> On Wed, 17 Mar 2021, Geliang Tang wrote:
->>
->>> v3:
->>> - Add new parameters flags and ifindex to __mptcp_subflow_connect.
->>> - Drop the patch "mptcp: drop unnecessary CONFIG_MPTCP_IPV6" in v2.
->>> - Add a new selftest patch.
->>>
->>
->> Thanks, Geliang. v3 with the squash-to patch from today looks good to 
->> merge.
->>
->> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> 
-> Thank you for the patches and the reviews!
-> 
-> These patches have been added to the tree with Mat's RvB tag:
-> 
-> - 7d9c5e39d716: mptcp: move flags and ifindex out of mptcp_addr_info
-> - adbca536f2e0: mptcp: use mptcp_addr_info in mptcp_out_options
-> - f7431619f09f: mptcp: drop OPTION_MPTCP_ADD_ADDR6
-> - d535bedb2c1d: mptcp: use mptcp_addr_info in mptcp_options_received
-> - 5f105703ff28: mptcp: drop MPTCP_ADDR_IPVERSION_4/6
-> - 3f11612d8302: mptcp: unify add_addr(6)_generate_hmac
-> - aa87ce506334: selftests: mptcp: add the net device name testcase
-> - Results: 6fc4aa6765fd..9bc1436cd72d
-> 
-> And the squash-to one:
-> 
-> - 79c9e16f9824: "squashed" in "mptcp: use mptcp_addr_info in 
-> mptcp_out_options"
-> - Results: 9bc1436cd72d..7a40c945f992
-> 
-> Tests + export are in progress!
+  net/mptcp/options.c:662:72: warning: incorrect type in argument 5 (different base types)
+  net/mptcp/options.c:662:72:    expected unsigned short [usertype] port
+  net/mptcp/options.c:662:72:    got restricted __be16 [usertype] port
+  net/mptcp/options.c:673:73: warning: incorrect type in argument 5 (different base types)
+  net/mptcp/options.c:673:73:    expected unsigned short [usertype] port
+  net/mptcp/options.c:673:73:    got restricted __be16 [usertype] port
+  net/mptcp/options.c:1244:62: warning: incorrect type in argument 1 (different base types)
+  net/mptcp/options.c:1244:62:    expected unsigned short [usertype] val
+  net/mptcp/options.c:1244:62:    got restricted __be16 [usertype] port
+  net/mptcp/options.c:1253:62: warning: restricted __be16 degrades to integer
 
-FYI, the export has failed because there are some new sparse warnings. 
-I'm looking at them.
+Before the mentioned commit, we were using port in u16 in
+mptcp_out_options, everything was OK.
 
-Cheers,
-Matt
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ net/mptcp/options.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 7e01f44ed885..03019a6d5059 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -659,7 +659,7 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 							     msk->remote_key,
+ 							     opts->addr.id,
+ 							     &opts->addr.addr,
+-							     opts->addr.port);
++							     be16_to_cpu(opts->addr.port));
+ 		}
+ 	}
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+@@ -670,7 +670,7 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 							      msk->remote_key,
+ 							      opts->addr.id,
+ 							      &opts->addr.addr6,
+-							      opts->addr.port);
++							      be16_to_cpu(opts->addr.port));
+ 		}
+ 	}
+ #endif
+@@ -1238,10 +1238,12 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 				ptr += 2;
+ 			}
+ 		} else {
++			u16 port = be16_to_cpu(opts->addr.port);
++
+ 			if (opts->ahmac) {
+ 				u8 *bptr = (u8 *)ptr;
+ 
+-				put_unaligned_be16(opts->addr.port, bptr);
++				put_unaligned_be16(port, bptr);
+ 				bptr += 2;
+ 				put_unaligned_be64(opts->ahmac, bptr);
+ 				bptr += 8;
+@@ -1250,7 +1252,7 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
+ 
+ 				ptr += 3;
+ 			} else {
+-				put_unaligned_be32(opts->addr.port << 16 |
++				put_unaligned_be32(port << 16 |
+ 						   TCPOPT_NOP << 8 |
+ 						   TCPOPT_NOP, ptr);
+ 				ptr += 1;
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.30.2
+
