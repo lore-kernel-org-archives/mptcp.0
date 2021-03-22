@@ -1,57 +1,79 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6649A5F
-	for <mptcp@lists.linux.dev>; Fri, 19 Mar 2021 21:08:43 +0000 (UTC)
-IronPort-SDR: xypqKrrcd+KXsoMavVsPYRgR9pjDjjRwPPKszn6KHS6pxtIpVDcVvGfR3a3DqXahp/zg4EdWhR
- vdhqRvvV6Fgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9928"; a="177553958"
-X-IronPort-AV: E=Sophos;i="5.81,262,1610438400"; 
-   d="scan'208";a="177553958"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2021 14:08:42 -0700
-IronPort-SDR: ZcM0s4S1hFRyNKkUH87311cGkCCaSxSeZ3NcFxrcvOC7bPFzVeGiGcGMl2byi0pqYo4bBAbsQG
- /PNivBSCdhPA==
-X-IronPort-AV: E=Sophos;i="5.81,262,1610438400"; 
-   d="scan'208";a="413660147"
-Received: from johnmc3x-mobl1.amr.corp.intel.com ([10.255.228.189])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2021 14:08:42 -0700
-Date: Fri, 19 Mar 2021 14:08:42 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev, mptcp@lists.01.org
-cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliangtang@gmail.com>, 
-    Florian Westphal <fw@strlen.de>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>, 
-    Davide Caratti <dcaratti@redhat.com>, 
-    Ossama Othman <ossama.othman@intel.com>, 
-    Christoph Paasch <cpaasch@apple.com>
-Subject: MPTCP Linux mailing list transition
-Message-ID: <cccc879d-d729-9043-38c5-3996c7c66d@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D467A6E
+	for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 11:37:35 +0000 (UTC)
+Received: by mail-pj1-f50.google.com with SMTP id kk2-20020a17090b4a02b02900c777aa746fso8358383pjb.3
+        for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 04:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vr0480u7dXTjWK8VNKMWPgRc7SD42QuTjCUlSviI0fY=;
+        b=XoP9MsGyIs6iMeHOf1PK+XsxOZCHg6fRMlQpJIsWBSE7LgJvrQFJaoT2u/EOGhCvaa
+         JteI0uFGM0Pdu8neaoaeFC+djUWHF5XPerf5gI8YoVbwuiJbj6JpRfLVke2Z9M0dHjQ7
+         TxomREpB/cvdtlQzQIBVbgAHXO63rGbkG5JsXLSxgTbqNzKGV2Fej/NA8HmqZNlcGMDu
+         qcy+AV2QT38/tRkZ8nXXKIx/3ZDInAy3ZcY1ul2jCNU7TPtc8j4D6JUZudCz9/JRC/rh
+         T0u7J0o4YWTuONrizOXBT8nZJbM5IcBC2gXY07O9EpGNQHGCMT5G4TK9nGaU7qpEhx+G
+         ylaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vr0480u7dXTjWK8VNKMWPgRc7SD42QuTjCUlSviI0fY=;
+        b=Q1xdwmUDx0jhYT7pyQh0qL4h6nEV7wb6rEz6mVLtTl17TAStXeUxjQIXdsOAM+f11e
+         LsTeTGWcagIfPX2hwx/VjgwK471orEVJRvNEa7WvDJSEGr8munLKAO0HEamhhw4smkls
+         L5KLGNSnD7I/v5xLaGVESyTvnFsTpGWwQcTPTN0ySyb9Idv3tRBGSCh3N/9qgeYU46yU
+         l5OxZzJN5Ue+kNysvzmJixRjjcuGy6ps17Bh9okxrNp2FEb3l7cyW3b6YTZF3MfhmbCA
+         j9CjFNb4cY/ONUg+OkI7+yetp95c0GpC6/haTEA3vVP8ToZN+EvBEhEbFLQ29s1ULg09
+         MJHw==
+X-Gm-Message-State: AOAM533HHsG7hSjLNhC5OGEyalc68lY8Ppv+IttagPprWvKRB4Qd7hpQ
+	uVt11i4OkWmRYnRy2sUWEFE=
+X-Google-Smtp-Source: ABdhPJyLi9fa7xGRiPOeIqJyOIPkyq8iKtTU6/DV25fT891QZq1KoWEk7XFfihjTRd8flV1IYxQeRg==
+X-Received: by 2002:a17:90b:4008:: with SMTP id ie8mr13359874pjb.231.1616413055396;
+        Mon, 22 Mar 2021 04:37:35 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id k17sm13177854pfa.68.2021.03.22.04.37.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Mar 2021 04:37:34 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.01.org,
+	mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next 0/6] DSS checksum support
+Date: Mon, 22 Mar 2021 19:37:24 +0800
+Message-Id: <cover.1616412490.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
+apply: export/20210320T065116 + "refactor mptcp_addr_info and cleanups"
 
-Hello -
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/134
 
-We're in the middle of a transition to a new mailing list at 
-mptcp@lists.linux.dev, with a couple of steps to go:
+Geliang Tang (6):
+  mptcp: add a new sysctl checksum_enabled
+  mptcp: add csum_enabled in mptcp_out_options
+  mptcp: add the csum_reqd fields
+  mptcp: add the DSS checksum sending
+  mptcp: add the DSS checksum receiving
+  mptcp: add trace event for DSS checksum
 
-  * Updating patchwork to use the new address (request is pending)
+ Documentation/networking/mptcp-sysctl.rst |  8 +++
+ include/net/mptcp.h                       |  4 +-
+ include/trace/events/mptcp.h              | 51 +++++++++++++++
+ net/mptcp/ctrl.c                          | 14 +++++
+ net/mptcp/options.c                       | 76 ++++++++++++++++++++---
+ net/mptcp/protocol.c                      |  4 ++
+ net/mptcp/protocol.h                      | 14 ++++-
+ net/mptcp/subflow.c                       | 46 ++++++++++++++
+ 8 files changed, 205 insertions(+), 12 deletions(-)
+ create mode 100644 include/trace/events/mptcp.h
 
-  * Re-subscribe everyone to the new list
+-- 
+2.30.2
 
-
-For now, please cc patches to both lists so we can be sure they are 
-tracked with patchwork.
-
-If you would like to immediately subscribe to the new list, send a message 
-to mptcp+subscribe@lists.linux.dev . I will bulk subscribe based on the 
-existing 01.org subscriber list in the next several days.
-
---
-Mat Martineau
-Intel
