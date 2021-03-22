@@ -1,31 +1,30 @@
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800CD6E
-	for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 23:40:49 +0000 (UTC)
-IronPort-SDR: wM5bIfgigAlnzv28gGn0tV07SLpco2aeND5cp862ZA1PNRvzjvcaLRJTZmse1/fw+oj61QtDZZ
- l8sK4DlR128g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9931"; a="251722612"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5708C6E
+	for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 23:46:53 +0000 (UTC)
+IronPort-SDR: Ir1fUkwqrs+mRNNVARVVkqVdaWNYNYvQzW7iNAuA/F0ApLZn/J5zeld20tYe+bibXkcRj2VPgN
+ A0F67EeTf5CQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9931"; a="177498821"
 X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="251722612"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:40:48 -0700
-IronPort-SDR: MJBzu7KFcwuYpl2yHssUU3FZ9Do3sFzQFmZJKWTl1jdo2BavtiRhmBqT2kGF8OwYFchmeo66MM
- CdQxc7knUhYQ==
+   d="scan'208";a="177498821"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:46:52 -0700
+IronPort-SDR: 3brmC1h360UTFr45lFbXh97b1OIYzw77bst4e+zTBxDUX6nQ4O0DYkjgTVCgbXT69lUG7qoQL0
+ fQzu6zspYCLA==
 X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="607518590"
+   d="scan'208";a="414705337"
 Received: from shahinam-mobl2.amr.corp.intel.com ([10.252.128.161])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:40:48 -0700
-Date: Mon, 22 Mar 2021 16:40:47 -0700 (PDT)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:46:52 -0700
+Date: Mon, 22 Mar 2021 16:46:52 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliangtang@gmail.com>
 cc: mptcp@lists.01.org, mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH mptcp-next 5/6] mptcp: add the DSS checksum
- receiving
-In-Reply-To: <7762b80e2310ae0f1a09ec5a4324293d8e9943eb.1616412490.git.geliangtang@gmail.com>
-Message-ID: <5cff4d79-a754-c99d-976f-ea2a89541781@linux.intel.com>
-References: <cover.1616412490.git.geliangtang@gmail.com> <e56c579836e40e330bfd24a191fd0c313a9e4634.1616412490.git.geliangtang@gmail.com> <7ad133370d4bb939ba69e35203797494181873b0.1616412490.git.geliangtang@gmail.com>
- <33da8b854a7397e7ecc807b335a0c7e69e023ca6.1616412490.git.geliangtang@gmail.com> <643a31ae30f00dd0d1d49834f6e996b3fe637c47.1616412490.git.geliangtang@gmail.com> <7762b80e2310ae0f1a09ec5a4324293d8e9943eb.1616412490.git.geliangtang@gmail.com>
+Subject: Re: [MPTCP][PATCH mptcp-next 1/6] mptcp: add a new sysctl
+ checksum_enabled
+In-Reply-To: <a5f8a6d0-e4bf-e769-7649-43d1f324b2d6@linux.intel.com>
+Message-ID: <926f2950-c8cb-941d-b3f9-4868da4936b2@linux.intel.com>
+References: <cover.1616412490.git.geliangtang@gmail.com> <e56c579836e40e330bfd24a191fd0c313a9e4634.1616412490.git.geliangtang@gmail.com> <a5f8a6d0-e4bf-e769-7649-43d1f324b2d6@linux.intel.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -33,186 +32,128 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 22 Mar 2021, Geliang Tang wrote:
+On Mon, 22 Mar 2021, Mat Martineau wrote:
 
-> This patch added a new member csum in struct mptcp_options_received. In
-> mptcp_parse_option, parse the checksum value from the receiving DSS, and
-> save it in mp_opt->csum. In mptcp_incoming_options, pass it to
-> mpext->csum.
 >
-> In validate_mapping, use the new function validate_dss_csum to validata
-> the DSS checksum.
+> On Mon, 22 Mar 2021, Geliang Tang wrote:
 >
-> In validate_dss_csum, if the data has been split in different packets,
-> skip validating.
+>> This patch added a new sysctl, named checksum_enabled, to control
+>> whether DSS checksum can be enabled.
+>> 
+>> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+>> ---
+>> Documentation/networking/mptcp-sysctl.rst |  8 ++++++++
+>> net/mptcp/ctrl.c                          | 14 ++++++++++++++
+>> net/mptcp/protocol.h                      |  1 +
+>> 3 files changed, 23 insertions(+)
+>> 
+>> diff --git a/Documentation/networking/mptcp-sysctl.rst 
+>> b/Documentation/networking/mptcp-sysctl.rst
+>> index 6af0196c4297..1128e09d6c4d 100644
+>> --- a/Documentation/networking/mptcp-sysctl.rst
+>> +++ b/Documentation/networking/mptcp-sysctl.rst
+>> @@ -24,3 +24,11 @@ add_addr_timeout - INTEGER (seconds)
+>> 	sysctl.
+>>
+>> 	Default: 120
+>> +
+>> +checksum_enabled - INTEGER
+>> +	Control whether DSS checksum can be enabled.
+>> +
+>> +	DSS checksum can be enabled if the value is nonzero. This is a
+>> +	per-namespace sysctl.
+>> +
+>> +	Default: 1
 >
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
-> net/mptcp/options.c  | 13 +++++++++++--
-> net/mptcp/protocol.h |  1 +
-> net/mptcp/subflow.c  | 37 +++++++++++++++++++++++++++++++++++++
-> 3 files changed, 49 insertions(+), 2 deletions(-)
+> In my opinion, this should default to 0 for compatibility with previous 
+> upstream kernel versions and because it sounds like checksums aren't used as 
+> much in practice. But I'm not totally committed to that - what do those of 
+> you with more MPTCP deployment experience think?
 >
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 69eb15ef9385..ed89f6c2ed49 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -206,9 +206,14 @@ static void mptcp_parse_option(const struct sk_buff *skb,
-> 			mp_opt->data_len = get_unaligned_be16(ptr);
-> 			ptr += 2;
+> Mat
 >
-> -			pr_debug("data_seq=%llu subflow_seq=%u data_len=%u",
-> +			if (opsize == expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM) {
-
-Now that more of the checksum code has been added, I think that 
-expected_opsize should be set to the exact value that is needed - either 
-expect the checksum, or don't expect the checksum.
-
-RFC 6824 said: "If a checksum is present, but its use had not been 
-negotiated in the MP_CAPABLE handshake, the checksum field MUST be 
-ignored."
-
-RFC 8684 says: "If a checksum is present but its use had
-not been negotiated in the MP_CAPABLE handshake, the receiver MUST
-close the subflow with a RST, as it is not behaving as negotiated.
-If a checksum is not present when its use has been negotiated, the
-receiver MUST close the subflow with a RST, as it is considered
-broken."
-
-There's some old RFC 6824-based code earlier in the function:
-
- 		if (opsize != expected_opsize &&
- 		    opsize != expected_opsize + TCPOLEN_MPTCP_DSS_CHECKSUM)
- 			break;
-
-That needs to be changed to:
-
- 		if (opsize != expected_opsize)
- 			break;
-
-and expected_opsize should include TCPOLEN_MPTCP_DSS_CHECKSUM only if the 
-checksum is enabled.
-
-> +				mp_opt->csum = get_unaligned_be16(ptr);
-> +				ptr += 2;
-> +			}
-> +
-> +			pr_debug("data_seq=%llu subflow_seq=%u data_len=%u csum=%u",
-> 				 mp_opt->data_seq, mp_opt->subflow_seq,
-> -				 mp_opt->data_len);
-> +				 mp_opt->data_len, mp_opt->csum);
-> 		}
 >
-> 		break;
-> @@ -339,6 +344,7 @@ void mptcp_get_options(const struct sk_buff *skb,
-> 	mp_opt->mp_prio = 0;
-> 	mp_opt->reset = 0;
-> 	mp_opt->csum_reqd = 0;
-> +	mp_opt->csum = 0;
->
-> 	length = (th->doff * 4) - sizeof(struct tcphdr);
-> 	ptr = (const unsigned char *)(th + 1);
-> @@ -1124,6 +1130,9 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
-> 		}
-> 		mpext->data_len = mp_opt.data_len;
-> 		mpext->use_map = 1;
-> +
-> +		if (READ_ONCE(msk->csum_reqd))
-> +			mpext->csum = mp_opt.csum;
-> 	}
-> }
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index f62cea8635f0..51ef3173a2e5 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -123,6 +123,7 @@ struct mptcp_options_received {
-> 	u64	data_seq;
-> 	u32	subflow_seq;
-> 	u16	data_len;
-> +	u16	csum;
-> 	u16	mp_capable : 1,
-> 		mp_join : 1,
-> 		fastclose : 1,
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 9fec1a273100..2eeea7d527f0 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -799,10 +799,45 @@ static bool skb_is_fully_mapped(struct sock *ssk, struct sk_buff *skb)
-> 					  mptcp_subflow_get_map_offset(subflow);
-> }
->
-> +static bool validate_dss_csum(struct sock *ssk, struct sk_buff *skb)
-> +{
-> +	struct csum_pseudo_header header;
-> +	struct mptcp_ext *mpext;
-> +	__wsum csum;
-> +
-> +	if (!skb)
-> +		goto out;
-> +
-> +	mpext = mptcp_get_ext(skb);
-> +	if (!mpext || !mpext->use_map || !mpext->csum ||
-> +	    mpext->data_len != skb->len)
-> +		goto out;
-> +
-> +	header.data_seq = mpext->data_seq;
-> +	header.subflow_seq = mpext->subflow_seq;
-> +	header.data_len = mpext->data_len;
-> +	header.csum = mpext->csum;
-> +
-> +	csum = skb_checksum(skb, 0, skb->len, 0);
+>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+>> index 96ba616f59bf..115cebc8c02a 100644
+>> --- a/net/mptcp/ctrl.c
+>> +++ b/net/mptcp/ctrl.c
+>> @@ -19,6 +19,7 @@ struct mptcp_pernet {
+>>
+>> 	int mptcp_enabled;
+>> 	unsigned int add_addr_timeout;
+>> +	int checksum_enabled;
+>> };
+>> 
+>> static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
+>> @@ -36,6 +37,11 @@ unsigned int mptcp_get_add_addr_timeout(struct net *net)
+>> 	return mptcp_get_pernet(net)->add_addr_timeout;
+>> }
+>> 
+>> +int mptcp_is_checksum_enabled(struct net *net)
+>> +{
+>> +	return mptcp_get_pernet(net)->checksum_enabled;
+>> +}
+>> +
 
-The checksum isn't calculated using the data from a single skb, it 
-requires the complete reassembled data for the current mapping. If we're 
-lucky, GRO has placed everything in one skb. But that can't be assumed.
+One more thing, it would be good to have the checksum functionality forced 
+off until all the code is in place. It would be more git-bisect-compatible 
+if mptcp_is_checksum_enabled() always returns false and the incoming 
+checksum flag is rejected until the last patch in the series.
 
-The checksum can be calculated incrementally as skbs arrive, but checksum 
-verification will require changes to data reassembly and MPTCP-level 
-acknowledgements, and will delay movement of data to the msk until the 
-checksum is verified. Also review my comments on the MP_FAIL RFC patch:
-
-https://lists.01.org/hyperkitty/list/mptcp@lists.01.org/message/KSEEB5Q4ND3GKOW7S3FZ32PHCWWON5QC/
-
-
-Thanks for the patch set!
 
 Mat
 
 
-> +	csum = csum_partial(&header, sizeof(header), csum);
-> +
-> +	if (csum_fold(csum)) {
-> +		pr_err("DSS checksum error! data_seq=%llu subflow_seq=%u data_len=%u csum=%u %u",
-> +		       header.data_seq, header.subflow_seq, header.data_len,
-> +		       header.csum, csum_fold(csum));
-> +
-> +		return false;
-> +	}
-> +
-> +out:
-> +	return true;
-> +}
-> +
-> static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
-> {
-> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-> 	u32 ssn = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
-> +	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
->
-> 	if (unlikely(before(ssn, subflow->map_subflow_seq))) {
-> 		/* Mapping covers data later in the subflow stream,
-> @@ -817,6 +852,8 @@ static bool validate_mapping(struct sock *ssk, struct sk_buff *skb)
-> 		warn_bad_map(subflow, ssn + skb->len);
-> 		return false;
-> 	}
-> +	if (READ_ONCE(msk->csum_reqd))
-> +		validate_dss_csum(ssk, skb);
-> 	return true;
-> }
->
-> -- 
-> 2.30.2
+>> static struct ctl_table mptcp_sysctl_table[] = {
+>> 	{
+>> 		.procname = "enabled",
+>> @@ -52,6 +58,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
+>> 		.mode = 0644,
+>> 		.proc_handler = proc_dointvec_jiffies,
+>> 	},
+>> +	{
+>> +		.procname = "checksum_enabled",
+>> +		.maxlen = sizeof(int),
+>> +		.mode = 0644,
+>> +		.proc_handler = proc_dointvec,
+>> +	},
+>> 	{}
+>> };
+>> 
+>> @@ -59,6 +71,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet 
+>> *pernet)
+>> {
+>> 	pernet->mptcp_enabled = 1;
+>> 	pernet->add_addr_timeout = TCP_RTO_MAX;
+>> +	pernet->checksum_enabled = 1;
+>> }
+>> 
+>> static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet 
+>> *pernet)
+>> @@ -75,6 +88,7 @@ static int mptcp_pernet_new_table(struct net *net, struct 
+>> mptcp_pernet *pernet)
+>>
+>> 	table[0].data = &pernet->mptcp_enabled;
+>> 	table[1].data = &pernet->add_addr_timeout;
+>> +	table[2].data = &pernet->checksum_enabled;
+>>
+>> 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
+>> 	if (!hdr)
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index 14f0114be17a..fd36239d8905 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -519,6 +519,7 @@ static inline void mptcp_subflow_delegated_done(struct 
+>> mptcp_subflow_context *su
+>> 
+>> int mptcp_is_enabled(struct net *net);
+>> unsigned int mptcp_get_add_addr_timeout(struct net *net);
+>> +int mptcp_is_checksum_enabled(struct net *net);
+>> void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+>> 				     struct mptcp_options_received *mp_opt);
+>> bool mptcp_subflow_data_available(struct sock *sk);
+>> -- 
+>> 2.30.2
 
 --
 Mat Martineau
