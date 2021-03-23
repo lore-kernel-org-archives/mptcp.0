@@ -1,159 +1,130 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7332C6E
-	for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 04:02:36 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id u9so24809756ejj.7
-        for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 21:02:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AAB6E
+	for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 07:59:52 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id j3so22300983edp.11
+        for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 00:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ud53a8NTOH0FejyhXWVnnyX2i2mDzwRVT8SKiF41R3g=;
-        b=Vhp488ZPo2tnDmtfHus7WF9yCwoEa/FqC4lisVNkm7XkNGJmlQCy1gP8LwBKxiL121
-         RRcoeYMkxDbZaVr9wvz8F2FZTbknhXzy0Fgh/Mc6sapnQZV1BhWG5I16+RHT65pun7e+
-         8xSEmvO/CFRokTtPjTQNCnkOA+gITL767Zm7aV4+5VIpREjXUMgJIneWPvGwhugMKaDQ
-         wbfB5O0yV2tiayvSJJAnYJnzx50e5KWdPyRM911O+jEcT59NphrTN0uIii9tNTXFeqKZ
-         dtBmQGY8fve8xuvtMUoC7XjTd1k4VKZ2qycr2Z/TTXlgRm9jLfbFz+yygqMKzdFXm+OM
-         zf6g==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FQ53gL8bvKobT1jqAjYY491Dv/F+tkloXkRyxmtH5Iw=;
+        b=rVBceuVM8NqHV0ID1XWaohSjOYOx95JTGIJCCgECO+5fkRu/B4ARwpNQIq7Mbx09oW
+         ehwPjexzXYuZegVGnB6sOlag7A6htGKGcGv27kBL2x9R+bmSUW32YN+Ku7HAogS3bNJ0
+         O9QilActFL8zHsw03EGyXLCBlgs5FlO15a4TQRPWkDN63wTH4gjZtShhxk95pUxQUydk
+         yxxXbus4KtZWxRekM+lWJRUJ0Yoc3rReUmzKrWDy24+2Nbju6u67tcWe7clnU+K32UZS
+         VExRqoKn08zJ/anONUgq6kIfOMmTVOV/LuT2/4aPHSa9QF1qMVK5r3dwdqEZKFx9Aij5
+         qncA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ud53a8NTOH0FejyhXWVnnyX2i2mDzwRVT8SKiF41R3g=;
-        b=q5DYb09Y+Pd5NVo2Ay2iaXI7toE8f6j1ZEfCw8qYBg96zas33gUVc18Ci7A5w0o/e0
-         jMfraTuThge5GYqD9jvSDFqB8fCkAZWlWAj6S2Z/BSJPsvxbcnWTUXPKI7P/+Dk4kq59
-         dS25QGMPzm9fDsbhhkYgtkYWZhOfAynOZY+apQUi3bVeLUBQIVKgDgvXCSGvPSoQnyBJ
-         AEfG0Jytb79Vt3Kk+kiIZ/sX2sBmNGGrrtejWb3jT0GqeKYJV+6LByNbhUzS4gwuDRAY
-         ZaiWa3CO6hHV0GbQa7Oa7fXWfJLMu+sCF5RA+JfZMr4Lg7VVEZclDxS77ZBtEAgjEW+x
-         Tk5g==
-X-Gm-Message-State: AOAM530/Rz5af3k1pTY7t5U5YT9UL/xvycZNPzSHZrsL2mC/AaLuxikr
-	aKbbT8x6obC88wFw0ExngPLQUeBKofuE7kKiL6OwShjESKYW0w==
-X-Google-Smtp-Source: ABdhPJwgpqTy30x3fdEShSi2UE9kICIkt4z9vrYI0E4nqLV8q/giZxEE6DKyy6pSbijbkN+5BwA4TSZFwbuSOrjbaYM=
-X-Received: by 2002:a17:907:77d4:: with SMTP id kz20mr2897990ejc.93.1616472155015;
- Mon, 22 Mar 2021 21:02:35 -0700 (PDT)
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FQ53gL8bvKobT1jqAjYY491Dv/F+tkloXkRyxmtH5Iw=;
+        b=HE4hGLPWnLpdR4vMMd5Azt76YhaSSnuw8iVxnspLYDwvT9G5zoCIT59LAt4iP6HAHp
+         Rxi0QnbL8XfWvFQNpGaCRqnn4jj+eMAXr/waeg3i3LvgqRY5QBc140x7hGpURpriUzwT
+         Sdg9qhpx2WKIIlZ0QyAwHFRsNWk4+BGnFo6NSAIzBsj3uLoRS9wez9cOWmpW/o9wa07B
+         nFslp8MlPfd2kA4G+uU34zHBNxbPt5e5gqa2l6IfvsasuudXrwo9prU/5KPtqtpe6Irs
+         rUIHYdYMpe+2p0gEPp/uEoA1PSclCSJW6eCLZ3V0wmDvyKzU+vBiX7SaKTckFtvS/+DN
+         Mqqw==
+X-Gm-Message-State: AOAM530iTTuv6Bm1/E/Gg/fB9D9GKPCVi6EEhw0ycN2x3je/rJBnKtXM
+	NQP/cBmEGkLPO2QV6Qdyvq/xEQ==
+X-Google-Smtp-Source: ABdhPJyQoBSX2lRplraA8Y2Xke9+hbL9TBybGngOsSDp/+tZxyBmWCFvcl4dZyqJbAWPAfO92Gj/EA==
+X-Received: by 2002:aa7:cd64:: with SMTP id ca4mr3287880edb.334.1616486390813;
+        Tue, 23 Mar 2021 00:59:50 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:5b6b:b53e:da10:3507])
+        by smtp.gmail.com with ESMTPSA id gz20sm10965711ejc.25.2021.03.23.00.59.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Mar 2021 00:59:50 -0700 (PDT)
+To: Geliang Tang <geliangtang@gmail.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, mptcp <mptcp@lists.01.org>
+References: <20210322162132.2471823-1-matthieu.baerts@tessares.net>
+ <20210322162132.2471823-3-matthieu.baerts@tessares.net>
+ <502b4037-3ca0-1fb9-8985-5fbc7fdb2e2@linux.intel.com>
+ <CA+WQbwt0XaT5EfTi9LR8ZDroNk=74cHA5Yf7_RgKarHGtNWBUw@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next 3/3] Squash to "mptcp: drop
+ MPTCP_ADDR_IPVERSION_4/6"
+Message-ID: <946858fc-f303-52a3-65c0-1f9c76316703@tessares.net>
+Date: Tue, 23 Mar 2021 08:59:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20210322162132.2471823-1-matthieu.baerts@tessares.net> <20210322162132.2471823-2-matthieu.baerts@tessares.net>
-In-Reply-To: <20210322162132.2471823-2-matthieu.baerts@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue, 23 Mar 2021 12:02:23 +0800
-Message-ID: <CA+WQbwvbHa_KxteV=2LTS2m5uBez9cxKa0WnHUDRAvo6D18JWQ@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next 2/3] Squash to "mptcp: use mptcp_addr_info in mptcp_options_received"
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, mptcp <mptcp@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CA+WQbwt0XaT5EfTi9LR8ZDroNk=74cHA5Yf7_RgKarHGtNWBUw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Geliang, Mat,
 
-Please update the commit log too:
+Thank you for the reviews!
 
----
-Since the port number became as a big-endian order now, use ntohs to
-convert it before printing it out.
----
+On 23/03/2021 04:06, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for your patches.
+> 
+> Mat Martineau <mathew.j.martineau@linux.intel.com> 于2021年3月23日周二 上午5:56写道：
+>>
+>>
+>> On Mon, 22 Mar 2021, Matthieu Baerts wrote:
+>>
+>>> Fix issues reported by sparse because we are doing non explicit casting
+>>> from __be16 to integer.
+>>>
+>>>   net/mptcp/options.c:604:24: warning: restricted __be16 degrades to integer
+>>>   net/mptcp/options.c:605:24: warning: restricted __be16 degrades to integer
+>>>
+>>> Before the mentioned commit, we were using port in u16 given in argument
+>>> of add_addr_generate_hmac function, everything was OK.
+>>>
+>>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>>> ---
+>>> net/mptcp/options.c | 5 +++--
+>>> 1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> I think the subject line is incorrect on this one (it applies cleanly to
+>> "mptcp: unify add_addr(6)_generate_hmac" instead)
 
- ->
+Oh yes sorry, I picked the wrong commit, thank you for noticing that :)
 
----
-Since the port number became big-endian now, use htons to convert the
-incoming port number to it. Also use ntohs to convert it when passing
-it to add_addr_generate_hmac or printing it out.
----
+>> , but other than that all
+>> three patches look good to squash. Thanks!
+>>
+>> Mat
+>>
+>>
+>>>
+>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>> index 071b446aa2c9..d9e5f864d774 100644
+>>> --- a/net/mptcp/options.c
+>>> +++ b/net/mptcp/options.c
+>>> @@ -586,6 +586,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>>> static u64 add_addr_generate_hmac(u64 key1, u64 key2,
+>>>                                  struct mptcp_addr_info *addr)
+>>> {
+>>> +     u16 port = be16_to_cpu(addr->port);
+> 
+> I prefer to use ntohs/htons instead of be16_to_cpu/cpu_to_be16 in these
+> three patches to keep the consistency of the port number converting.
+> 
+> WDYT?
 
-Thanks.
+No you are right, I don't know why I didn't use ntohs/htons, I think I 
+was focused on the compiler issue forgetting the network env :)
 
--Geliang
+I hope you don't mind if I apply the modifications (code and commit 
+messages) directly without sending a v2. Then I would be able to unblock 
+the CI to have new versions of the export branch.
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2021=E5=B9=B43=E6=
-=9C=8823=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=8812:21=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> Fix issues reported by sparse because we were doing non explicit casting
-> from __be16 to u16 and the opposite.
->
->   net/mptcp/options.c:251:51: warning: incorrect type in assignment (diff=
-erent base types)
->   net/mptcp/options.c:251:51:    expected restricted __be16 [usertype] po=
-rt
->   net/mptcp/options.c:251:51:    got unsigned short
->   net/mptcp/options.c:261:51: warning: incorrect type in assignment (diff=
-erent base types)
->   net/mptcp/options.c:261:51:    expected restricted __be16 [usertype] po=
-rt
->   net/mptcp/options.c:261:51:    got unsigned short
->   net/mptcp/options.c:998:59: warning: incorrect type in argument 5 (diff=
-erent base types)
->   net/mptcp/options.c:998:59:    expected unsigned short [usertype] port
->   net/mptcp/options.c:998:59:    got restricted __be16 [usertype] port
->   net/mptcp/options.c:1004:60: warning: incorrect type in argument 5 (dif=
-ferent base types)
->   net/mptcp/options.c:1004:60:    expected unsigned short [usertype] port
->   net/mptcp/options.c:1004:60:    got restricted __be16 [usertype] port
->
-> Before the mentioned commit, we were using port in u16 in
-> mptcp_options_received, everything was OK.
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->  net/mptcp/options.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 7fd40512df7f..43b85f2a5be1 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -248,7 +248,7 @@ static void mptcp_parse_option(const struct sk_buff *=
-skb,
->                         ptr +=3D 4;
->                         if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_PORT ||
->                             opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR_BASE_POR=
-T) {
-> -                               mp_opt->addr.port =3D get_unaligned_be16(=
-ptr);
-> +                               mp_opt->addr.port =3D cpu_to_be16(get_una=
-ligned_be16(ptr));
->                                 ptr +=3D 2;
->                         }
->                 }
-> @@ -258,7 +258,7 @@ static void mptcp_parse_option(const struct sk_buff *=
-skb,
->                         ptr +=3D 16;
->                         if (opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_PORT ||
->                             opsize =3D=3D TCPOLEN_MPTCP_ADD_ADDR6_BASE_PO=
-RT) {
-> -                               mp_opt->addr.port =3D get_unaligned_be16(=
-ptr);
-> +                               mp_opt->addr.port =3D cpu_to_be16(get_una=
-ligned_be16(ptr));
->                                 ptr +=3D 2;
->                         }
->                 }
-> @@ -995,13 +995,13 @@ static bool add_addr_hmac_valid(struct mptcp_sock *=
-msk,
->                 hmac =3D add_addr_generate_hmac(msk->remote_key,
->                                               msk->local_key,
->                                               mp_opt->addr.id, &mp_opt->a=
-ddr.addr,
-> -                                             mp_opt->addr.port);
-> +                                             be16_to_cpu(mp_opt->addr.po=
-rt));
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->         else
->                 hmac =3D add_addr6_generate_hmac(msk->remote_key,
->                                                msk->local_key,
->                                                mp_opt->addr.id, &mp_opt->=
-addr.addr6,
-> -                                              mp_opt->addr.port);
-> +                                              be16_to_cpu(mp_opt->addr.p=
-ort));
->  #endif
->
->         pr_debug("msk=3D%p, ahmac=3D%llu, mp_opt->ahmac=3D%llu\n",
-> --
-> 2.30.2
->
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
