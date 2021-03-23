@@ -1,77 +1,36 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2B4D6F
-	for <mptcp@lists.linux.dev>; Wed, 31 Mar 2021 09:06:05 +0000 (UTC)
-HMM_SOURCE_IP:172.18.8.23:46646.1704381463
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.9?logid-922acda26c344908bb2d98ea6f97fad9 (unknown [172.18.8.23])
-	by chinatelecom.cn (HERMES) with SMTP id E12622800B4;
-	Wed, 31 Mar 2021 16:57:27 +0800 (CST)
-X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
-Received: from  ([172.18.0.35])
-	by filter001 with ESMTP id 922acda26c344908bb2d98ea6f97fad9 for mptcp@lists.linux.dev;
-	Wed Mar 31 16:57:35 2021
-X-Transaction-ID: 922acda26c344908bb2d98ea6f97fad9
-X-filter-score:  filter<0>
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.0.35
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-From: lyl <liyonglong@chinatelecom.cn>
-To: mptcp@lists.linux.dev,
-	mptcp@lists.01.org
-Cc: mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net,
-	fw@strlen.de,
-	pabeni@redhat.com,
-	lyl <liyonglong@chinatelecom.cn>
-Subject: [PATCH] mptcp: ensure there is unacked data at all subflow
-Date: Wed, 31 Mar 2021 16:57:18 +0800
-Message-Id: <1617181038-185283-1-git-send-email-liyonglong@chinatelecom.cn>
-X-Mailer: git-send-email 1.8.3.1
+Received: from m12-17.163.com (m12-17.163.com [220.181.12.17])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A345F
+	for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 09:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Message-ID:Date:MIME-Version; bh=bIkL3
+	j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=; b=XfaHdmwfdoU1JTA0lGGH4
+	9Rui5CzExlJMPfTjO77H86Q+20Zgw1mIvs0ZbQXRzO8t5D76zxCVcjewG6OOQy5V
+	/5kL/s6lHhpklOfV/Wzhjs2QIhcOoREufVdPA6pmQemgQCiw3Mc87RpksacXPs0O
+	naSFDeshmzdee1CFwtOFJQ=
+Received: from [192.168.5.3] (unknown [120.36.250.151])
+	by smtp13 (Coremail) with SMTP id EcCowAAnI7DXsFlgWbMNrg--.20387S2;
+	Tue, 23 Mar 2021 17:11:51 +0800 (CST)
+To: mptcp@lists.linux.dev
+From: Jianguo Wu <wujianguo106@163.com>
+Subject: subscribe
+Message-ID: <f1f74715-830d-ce3b-aa9b-07824ce62253@163.com>
+Date: Tue, 23 Mar 2021 17:11:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:EcCowAAnI7DXsFlgWbMNrg--.20387S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUhYFADUUUU
+X-Originating-IP: [120.36.250.151]
+X-CM-SenderInfo: 5zxmxt5qjx0iiqw6il2tof0z/xtbB+A9ekF2MYR-g0wAAsl
 
-MPTCP-level retransmit may take place if first subflow
-without data in its write queue and second subflow is likely to
-have unacked data left in its write queue. In this condition data
-maybe double retransmited.
-
-Signed-off-by: lyl <liyonglong@chinatelecom.cn>
----
- net/mptcp/protocol.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9d7e7e1..40a6703 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2072,6 +2072,7 @@ static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *backup = NULL;
-+	struct sock *idle = NULL;
- 
- 	sock_owned_by_me((const struct sock *)msk);
- 
-@@ -2097,10 +2098,10 @@ static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
- 			continue;
- 		}
- 
--		return ssk;
-+		idle = ssk;
- 	}
- 
--	return backup;
-+	return idle ? : backup;
- }
- 
- static void mptcp_dispose_initial_subflow(struct mptcp_sock *msk)
--- 
-1.8.3.1
+subscribe
 
