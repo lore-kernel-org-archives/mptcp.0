@@ -1,160 +1,131 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5708C6E
-	for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 23:46:53 +0000 (UTC)
-IronPort-SDR: Ir1fUkwqrs+mRNNVARVVkqVdaWNYNYvQzW7iNAuA/F0ApLZn/J5zeld20tYe+bibXkcRj2VPgN
- A0F67EeTf5CQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9931"; a="177498821"
-X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="177498821"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:46:52 -0700
-IronPort-SDR: 3brmC1h360UTFr45lFbXh97b1OIYzw77bst4e+zTBxDUX6nQ4O0DYkjgTVCgbXT69lUG7qoQL0
- fQzu6zspYCLA==
-X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="414705337"
-Received: from shahinam-mobl2.amr.corp.intel.com ([10.252.128.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:46:52 -0700
-Date: Mon, 22 Mar 2021 16:46:52 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliangtang@gmail.com>
-cc: mptcp@lists.01.org, mptcp@lists.linux.dev
-Subject: Re: [MPTCP][PATCH mptcp-next 1/6] mptcp: add a new sysctl
- checksum_enabled
-In-Reply-To: <a5f8a6d0-e4bf-e769-7649-43d1f324b2d6@linux.intel.com>
-Message-ID: <926f2950-c8cb-941d-b3f9-4868da4936b2@linux.intel.com>
-References: <cover.1616412490.git.geliangtang@gmail.com> <e56c579836e40e330bfd24a191fd0c313a9e4634.1616412490.git.geliangtang@gmail.com> <a5f8a6d0-e4bf-e769-7649-43d1f324b2d6@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BEF6E
+	for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 03:06:21 +0000 (UTC)
+Received: by mail-qt1-f169.google.com with SMTP id h7so13981024qtx.3
+        for <mptcp@lists.linux.dev>; Mon, 22 Mar 2021 20:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EBgcVDpy4s1jdOaycEbwkuPsU7C+r9zIb2hrMOiKf+s=;
+        b=GtHrrvFxjB/DOp8zk8vdzkePgKOeM34zdGTsggnGH0hvLBBjcWM6k2ySn68MMy8z8z
+         nCT3y2cb9cR77uFBLursLuAl65YWvc+qLY1cNCrXKqRp5urJUVd2hm85sJMVu1c2Uiaw
+         d04s8R43BuHljOisibJ4uLpcGRTknDnSHevO7liCTSbXTwchYSNVGWZGQmUinqnQbALN
+         We/m4OsMdlYrxPFPz6/FKMH3Bl+PCbrwzVj30fYcR1/G7rHAu6KS94BwS+kMBXs1tVUs
+         PvES4dgnNtyeLG5yObwDzTj6lZ1ppzCzOvSJo/ysFuRFFTKIlcecCoysKPhg3S0fr1iR
+         qJAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EBgcVDpy4s1jdOaycEbwkuPsU7C+r9zIb2hrMOiKf+s=;
+        b=PFFwRSntnvpanQMYNB1qQJuAB/q8mW50LYvZclMoXik+rT9P+2XncycqdZMQOI+2nf
+         TW+1xNhtInKvANHcoyQpkaIdAT7k68e3Ao3GTOeaXrBCHx2p9oFkYukm2ZRMtC/x+BeN
+         CVPacv/1AHt5Km+TRXts7sIOOrQUr2kJvKgSNGSESlz+J/++ZmYx3eq1xHC+a4l7ly/3
+         hnpjdMFq25KKjS8LpzjoJNWIS7hlF9//gNtj4HUkpXW/1v7qWJoIj+n9ReDanB0uy53R
+         9wL2xfPGOjGou2JLpn/5/+NA3v0kNOmbkJAcXbCZqBCHCmPIQ68noX5jbE1DzEFD95r5
+         rQHA==
+X-Gm-Message-State: AOAM533w8r9YsgTxNCBG0hn++/nKdEamLsKyBS7YIlM5fASj682ibaub
+	xru3NGo9VdH/k4eDkolzfxwMUh+5KEvJnohAgQKTdGe1OJM=
+X-Google-Smtp-Source: ABdhPJxA9Zhq7M7/c0A+sY7K8+l6aPNsX2PhgY1mCi+4XskKlqOYMTOWdQMnrS9d4Aahc1q9P01gHFxcOYR+Qpda9Yk=
+X-Received: by 2002:ac8:7d52:: with SMTP id h18mr2723076qtb.175.1616468780330;
+ Mon, 22 Mar 2021 20:06:20 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20210322162132.2471823-1-matthieu.baerts@tessares.net>
+ <20210322162132.2471823-3-matthieu.baerts@tessares.net> <502b4037-3ca0-1fb9-8985-5fbc7fdb2e2@linux.intel.com>
+In-Reply-To: <502b4037-3ca0-1fb9-8985-5fbc7fdb2e2@linux.intel.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Tue, 23 Mar 2021 11:06:08 +0800
+Message-ID: <CA+WQbwt0XaT5EfTi9LR8ZDroNk=74cHA5Yf7_RgKarHGtNWBUw@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next 3/3] Squash to "mptcp: drop MPTCP_ADDR_IPVERSION_4/6"
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev, 
+	mptcp <mptcp@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 22 Mar 2021, Mat Martineau wrote:
+Hi Matt,
 
+Thanks for your patches.
+
+Mat Martineau <mathew.j.martineau@linux.intel.com> =E4=BA=8E2021=E5=B9=B43=
+=E6=9C=8823=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=885:56=E5=86=99=E9=
+=81=93=EF=BC=9A
 >
-> On Mon, 22 Mar 2021, Geliang Tang wrote:
 >
->> This patch added a new sysctl, named checksum_enabled, to control
->> whether DSS checksum can be enabled.
->> 
->> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
->> ---
->> Documentation/networking/mptcp-sysctl.rst |  8 ++++++++
->> net/mptcp/ctrl.c                          | 14 ++++++++++++++
->> net/mptcp/protocol.h                      |  1 +
->> 3 files changed, 23 insertions(+)
->> 
->> diff --git a/Documentation/networking/mptcp-sysctl.rst 
->> b/Documentation/networking/mptcp-sysctl.rst
->> index 6af0196c4297..1128e09d6c4d 100644
->> --- a/Documentation/networking/mptcp-sysctl.rst
->> +++ b/Documentation/networking/mptcp-sysctl.rst
->> @@ -24,3 +24,11 @@ add_addr_timeout - INTEGER (seconds)
->> 	sysctl.
->>
->> 	Default: 120
->> +
->> +checksum_enabled - INTEGER
->> +	Control whether DSS checksum can be enabled.
->> +
->> +	DSS checksum can be enabled if the value is nonzero. This is a
->> +	per-namespace sysctl.
->> +
->> +	Default: 1
+> On Mon, 22 Mar 2021, Matthieu Baerts wrote:
 >
-> In my opinion, this should default to 0 for compatibility with previous 
-> upstream kernel versions and because it sounds like checksums aren't used as 
-> much in practice. But I'm not totally committed to that - what do those of 
-> you with more MPTCP deployment experience think?
+> > Fix issues reported by sparse because we are doing non explicit casting
+> > from __be16 to integer.
+> >
+> >  net/mptcp/options.c:604:24: warning: restricted __be16 degrades to int=
+eger
+> >  net/mptcp/options.c:605:24: warning: restricted __be16 degrades to int=
+eger
+> >
+> > Before the mentioned commit, we were using port in u16 given in argumen=
+t
+> > of add_addr_generate_hmac function, everything was OK.
+> >
+> > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> > ---
+> > net/mptcp/options.c | 5 +++--
+> > 1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> I think the subject line is incorrect on this one (it applies cleanly to
+> "mptcp: unify add_addr(6)_generate_hmac" instead), but other than that al=
+l
+> three patches look good to squash. Thanks!
 >
 > Mat
 >
 >
->> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
->> index 96ba616f59bf..115cebc8c02a 100644
->> --- a/net/mptcp/ctrl.c
->> +++ b/net/mptcp/ctrl.c
->> @@ -19,6 +19,7 @@ struct mptcp_pernet {
->>
->> 	int mptcp_enabled;
->> 	unsigned int add_addr_timeout;
->> +	int checksum_enabled;
->> };
->> 
->> static struct mptcp_pernet *mptcp_get_pernet(struct net *net)
->> @@ -36,6 +37,11 @@ unsigned int mptcp_get_add_addr_timeout(struct net *net)
->> 	return mptcp_get_pernet(net)->add_addr_timeout;
->> }
->> 
->> +int mptcp_is_checksum_enabled(struct net *net)
->> +{
->> +	return mptcp_get_pernet(net)->checksum_enabled;
->> +}
->> +
+> >
+> > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> > index 071b446aa2c9..d9e5f864d774 100644
+> > --- a/net/mptcp/options.c
+> > +++ b/net/mptcp/options.c
+> > @@ -586,6 +586,7 @@ static bool mptcp_established_options_dss(struct so=
+ck *sk, struct sk_buff *skb,
+> > static u64 add_addr_generate_hmac(u64 key1, u64 key2,
+> >                                 struct mptcp_addr_info *addr)
+> > {
+> > +     u16 port =3D be16_to_cpu(addr->port);
 
-One more thing, it would be good to have the checksum functionality forced 
-off until all the code is in place. It would be more git-bisect-compatible 
-if mptcp_is_checksum_enabled() always returns false and the incoming 
-checksum flag is rejected until the last patch in the series.
+I prefer to use ntohs/htons instead of be16_to_cpu/cpu_to_be16 in these
+three patches to keep the consistency of the port number converting.
 
+WDYT?
 
-Mat
+-Geliang
 
-
->> static struct ctl_table mptcp_sysctl_table[] = {
->> 	{
->> 		.procname = "enabled",
->> @@ -52,6 +58,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
->> 		.mode = 0644,
->> 		.proc_handler = proc_dointvec_jiffies,
->> 	},
->> +	{
->> +		.procname = "checksum_enabled",
->> +		.maxlen = sizeof(int),
->> +		.mode = 0644,
->> +		.proc_handler = proc_dointvec,
->> +	},
->> 	{}
->> };
->> 
->> @@ -59,6 +71,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet 
->> *pernet)
->> {
->> 	pernet->mptcp_enabled = 1;
->> 	pernet->add_addr_timeout = TCP_RTO_MAX;
->> +	pernet->checksum_enabled = 1;
->> }
->> 
->> static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet 
->> *pernet)
->> @@ -75,6 +88,7 @@ static int mptcp_pernet_new_table(struct net *net, struct 
->> mptcp_pernet *pernet)
->>
->> 	table[0].data = &pernet->mptcp_enabled;
->> 	table[1].data = &pernet->add_addr_timeout;
->> +	table[2].data = &pernet->checksum_enabled;
->>
->> 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
->> 	if (!hdr)
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 14f0114be17a..fd36239d8905 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -519,6 +519,7 @@ static inline void mptcp_subflow_delegated_done(struct 
->> mptcp_subflow_context *su
->> 
->> int mptcp_is_enabled(struct net *net);
->> unsigned int mptcp_get_add_addr_timeout(struct net *net);
->> +int mptcp_is_checksum_enabled(struct net *net);
->> void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
->> 				     struct mptcp_options_received *mp_opt);
->> bool mptcp_subflow_data_available(struct sock *sk);
->> -- 
->> 2.30.2
-
---
-Mat Martineau
-Intel
+> >       u8 hmac[SHA256_DIGEST_SIZE];
+> >       u8 msg[19];
+> >       int i =3D 0;
+> > @@ -601,8 +602,8 @@ static u64 add_addr_generate_hmac(u64 key1, u64 key=
+2,
+> >               i +=3D 16;
+> >       }
+> > #endif
+> > -     msg[i++] =3D addr->port >> 8;
+> > -     msg[i++] =3D addr->port & 0xFF;
+> > +     msg[i++] =3D port >> 8;
+> > +     msg[i++] =3D port & 0xFF;
+> >
+> >       mptcp_crypto_hmac_sha(key1, key2, msg, i, hmac);
+> >
+> > --
+> > 2.30.2
+> >
+> >
+> >
+>
+> --
+> Mat Martineau
+> Intel
