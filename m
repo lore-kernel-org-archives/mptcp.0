@@ -1,165 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4199A5F
-	for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 10:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1616494357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DZOorljexBWNX8Je2eueoeLIpGuIhsRxtvbeLnQvwzI=;
-	b=JtF0TFDbYv1Fwc3aDRnJUcmMf6SMxQLUOMdzYxyrgtUj7C8pe2rZVZE0tsVLKTFNOQD+Jv
-	9qqakkyqzIhltnX/Y0iRTfX6Auhg8duSGYuRnxzzzYSyZ/i04LReMfovjYcRGa6aZfXTdb
-	4kU+7qjZGbrzlC3dGxy1+UoLvv6mFsw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-n07Gk5JaMfK7nFnqzFL1Gg-1; Tue, 23 Mar 2021 06:12:34 -0400
-X-MC-Unique: n07Gk5JaMfK7nFnqzFL1Gg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8873980006E;
-	Tue, 23 Mar 2021 10:12:33 +0000 (UTC)
-Received: from ovpn-114-241.ams2.redhat.com (ovpn-114-241.ams2.redhat.com [10.36.114.241])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4B5833805;
-	Tue, 23 Mar 2021 10:12:32 +0000 (UTC)
-Message-ID: <4e71ee0d3af1cac20d27c5b200bb615395630b51.camel@redhat.com>
-Subject: Re: [MPTCP] [MPTCP][PATCH mptcp-next 3/6] mptcp: add the csum_reqd
- fields
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.01.org, 
-	mptcp@lists.linux.dev, Florian Westphal <fwestpha@redhat.com>
-Date: Tue, 23 Mar 2021 11:12:31 +0100
-In-Reply-To: <33da8b854a7397e7ecc807b335a0c7e69e023ca6.1616412490.git.geliangtang@gmail.com>
-References: <cover.1616412490.git.geliangtang@gmail.com>
-	 <e56c579836e40e330bfd24a191fd0c313a9e4634.1616412490.git.geliangtang@gmail.com>
-	 <7ad133370d4bb939ba69e35203797494181873b0.1616412490.git.geliangtang@gmail.com>
-	 <33da8b854a7397e7ecc807b335a0c7e69e023ca6.1616412490.git.geliangtang@gmail.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5455F
+	for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 10:19:56 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id b16so22810404eds.7
+        for <mptcp@lists.linux.dev>; Tue, 23 Mar 2021 03:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CTRIfkSk4J2bq98G/iENGuAM1nULflA53YUPrypmW1w=;
+        b=HbmAKsjWfZgs4PfPWTSd2q4apg3TBZVLVFgLhO/llfSzgWhuRJU8oVkVPYOltqbfgj
+         cYaX2itDu/rEa6aHnqMSIWLVYz0sFydG+dAs7tpg5nKz/tjSpwQuTJ0vs6Tf4bX+gFIT
+         67EqXTWxUwT4p7juD+igz0P2ZvaYgmIN/h9HUVhvWKgORzfxEelh6uk9+AoKk125NinE
+         MgH09E+3pB2qCckLxWjuDdNflmCF5K7FrwUVzZkVzs4stoXV2FN8VRqYb9y4+H6XHfFY
+         lV2O1SwgzsfD5t8f0AlszBXdCDEZ11mComSei23lO0hRp96dXtTLNJaKpdgYQ6jNsIeM
+         hNkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CTRIfkSk4J2bq98G/iENGuAM1nULflA53YUPrypmW1w=;
+        b=YYUrEYSF1cC1XoPgqT0AwslMq2NTHxAinmjuIOhLplQdgUx9x72xR8jsgSk7OAs883
+         dYxkIQecxiCeA0lC08WeQl2rOKL7cpUYKFxUIBt3W9Hxg1+aBUEvmUDssALHmkwWfNoD
+         dpiLe2E5z3x1aqwj5uouqYVxmfoeWVjvo14Ae01PcWQgZXsxWjXNYW0fXQpUsDdDsoMV
+         PjaS0CLjNi0hhDYq1XiXijwLbZJeXXeVn4FG9oRfwdVXQqA+SOPoNBOeWMvdHjNtUqi+
+         Vx6x/T/Tmwr5CsQ7ytYtAnaYjb4uhTxJcrSWgQzPLYpq30GvzduEhNxW8EW0oMhUEUAs
+         zJ4g==
+X-Gm-Message-State: AOAM531rASRdnKatP+cfCe6di4ZG4lH4K8J1QlTUcTDI0wCygEs1AG1h
+	2pwPJjkNhGAJ31Mlk4SI9rlPcA==
+X-Google-Smtp-Source: ABdhPJw1OpUDBFmlj6sUvKiW/9g8+PHKRvZEdMZ9MK7vNlj3jsXl6xj8QoF8O/ulojNn0ftMiZrRlw==
+X-Received: by 2002:aa7:cd6a:: with SMTP id ca10mr3858604edb.7.1616494794617;
+        Tue, 23 Mar 2021 03:19:54 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:5b6b:b53e:da10:3507])
+        by smtp.gmail.com with ESMTPSA id ga28sm6423181ejc.82.2021.03.23.03.19.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Mar 2021 03:19:54 -0700 (PDT)
+To: Geliang Tang <geliangtang@gmail.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, mptcp <mptcp@lists.01.org>
+References: <20210322162132.2471823-1-matthieu.baerts@tessares.net>
+ <20210322162132.2471823-3-matthieu.baerts@tessares.net>
+ <502b4037-3ca0-1fb9-8985-5fbc7fdb2e2@linux.intel.com>
+ <CA+WQbwt0XaT5EfTi9LR8ZDroNk=74cHA5Yf7_RgKarHGtNWBUw@mail.gmail.com>
+ <946858fc-f303-52a3-65c0-1f9c76316703@tessares.net>
+ <CA+WQbwtBpbh8Y++JyHOK69J36tOA50z5XWo5yDQzDfLE6RHcpQ@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next 3/3] Squash to "mptcp: drop
+ MPTCP_ADDR_IPVERSION_4/6"
+Message-ID: <13754e25-4860-cd1f-09ca-7d5d0778aa49@tessares.net>
+Date: Tue, 23 Mar 2021 11:19:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CA+WQbwtBpbh8Y++JyHOK69J36tOA50z5XWo5yDQzDfLE6RHcpQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2021-03-22 at 19:37 +0800, Geliang Tang wrote:
-> This patch added a new flag csum_reqd in struct mptcp_options_received, if
-> the flag MPTCP_CAP_CHECKSUM_REQD is set in the receiving MP_CAPABLE
-> suboption, set this csum_reqd flag.
+Hi Geliang, Mat,
+
+On 23/03/2021 09:09, Geliang Tang wrote:
+> Matthieu Baerts <matthieu.baerts@tessares.net> 于2021年3月23日周二 下午3:59写道：
+>> On 23/03/2021 04:06, Geliang Tang wrote:
+>>> Mat Martineau <mathew.j.martineau@linux.intel.com> 于2021年3月23日周二 上午5:56写道：
+>>>> On Mon, 22 Mar 2021, Matthieu Baerts wrote:
+>>>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>>>> index 071b446aa2c9..d9e5f864d774 100644
+>>>>> --- a/net/mptcp/options.c
+>>>>> +++ b/net/mptcp/options.c
+>>>>> @@ -586,6 +586,7 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
+>>>>> static u64 add_addr_generate_hmac(u64 key1, u64 key2,
+>>>>>                                   struct mptcp_addr_info *addr)
+>>>>> {
+>>>>> +     u16 port = be16_to_cpu(addr->port);
+>>>
+>>> I prefer to use ntohs/htons instead of be16_to_cpu/cpu_to_be16 in these
+>>> three patches to keep the consistency of the port number converting.
+>>>
+>>> WDYT?
+>>
+>> No you are right, I don't know why I didn't use ntohs/htons, I think I
+>> was focused on the compiler issue forgetting the network env :)
+>>
+>> I hope you don't mind if I apply the modifications (code and commit
+>> messages) directly without sending a v2. Then I would be able to unblock
+>> the CI to have new versions of the export branch.
 > 
-> It also added another new csum_reqd member in struct mptcp_sock too, if the
-> csum_reqd flag in mptcp_options_received is set, set this member to true.
-> 
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
->  net/mptcp/options.c  | 8 +++++---
->  net/mptcp/protocol.c | 1 +
->  net/mptcp/protocol.h | 2 ++
->  net/mptcp/subflow.c  | 4 ++++
->  4 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index f45bebb923dc..bdced173edff 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -69,11 +69,9 @@ static void mptcp_parse_option(const struct sk_buff *skb,
->  		 * "If a checksum is not present when its use has been
->  		 * negotiated, the receiver MUST close the subflow with a RST as
->  		 * it is considered broken."
-> -		 *
-> -		 * We don't implement DSS checksum - fall back to TCP.
->  		 */
->  		if (flags & MPTCP_CAP_CHECKSUM_REQD)
-> -			break;
-> +			mp_opt->csum_reqd = 1;
->  
->  		mp_opt->mp_capable = 1;
->  		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
-> @@ -340,6 +338,7 @@ void mptcp_get_options(const struct sk_buff *skb,
->  	mp_opt->dss = 0;
->  	mp_opt->mp_prio = 0;
->  	mp_opt->reset = 0;
-> +	mp_opt->csum_reqd = 0;
->  
->  	length = (th->doff * 4) - sizeof(struct tcphdr);
->  	ptr = (const unsigned char *)(th + 1);
-> @@ -1013,6 +1012,9 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
->  		mptcp_schedule_work((struct sock *)msk);
->  	}
->  
-> +	if (mp_opt.csum_reqd)
-> +		WRITE_ONCE(msk->csum_reqd, true);
-> +
->  	if (mp_opt.add_addr && add_addr_hmac_valid(msk, &mp_opt)) {
->  		if (!mp_opt.echo) {
->  			mptcp_pm_add_addr_received(msk, &mp_opt.addr);
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 9d7e7e13fba8..94c3568c7a60 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2364,6 +2364,7 @@ static int __mptcp_init_sock(struct sock *sk)
->  	msk->ack_hint = NULL;
->  	msk->first = NULL;
->  	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-> +	WRITE_ONCE(msk->csum_reqd, mptcp_is_checksum_enabled(sock_net(sk)));
->  
->  	mptcp_pm_data_init(msk);
->  
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 14f1e2fd3c08..4fc4871595ef 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -132,6 +132,7 @@ struct mptcp_options_received {
->  		rm_addr : 1,
->  		mp_prio : 1,
->  		echo : 1,
-> +		csum_reqd : 1,
->  		backup : 1;
->  	u32	token;
->  	u32	nonce;
-> @@ -233,6 +234,7 @@ struct mptcp_sock {
->  	bool		snd_data_fin_enable;
->  	bool		rcv_fastclose;
->  	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
-> +	bool		csum_reqd;
->  	spinlock_t	join_list_lock;
->  	struct sock	*ack_hint;
->  	struct work_struct work;
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index e2e9cc34713d..9fec1a273100 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -403,6 +403,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
->  			goto fallback;
->  		}
->  
-> +		if (mp_opt.csum_reqd)
-> +			WRITE_ONCE(mptcp_sk(parent)->csum_reqd, true);
->  		subflow->mp_capable = 1;
->  		subflow->can_ack = 1;
->  		subflow->remote_key = mp_opt.sndr_key;
-> @@ -643,6 +645,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
->  		new_msk = mptcp_sk_clone(listener->conn, &mp_opt, req);
->  		if (!new_msk)
->  			fallback = true;
-> +		else if (mp_opt.csum_reqd)
-> +			WRITE_ONCE(mptcp_sk(new_msk)->csum_reqd, true);
+> Great, please apply them directly.
 
-I think this chunk would be better located inside mptcp_sk_clone(). 
+These 3 patches have been applied in our tree:
 
-@Mat, @Florian, slighly related: if we do the assignment there, the
-WRITE_ONCE will not be required, right? - since that functions runs
-under msk lock. We already have a few WRITE_ONCE there which are likely
-not really needed...
+- 8759990266aa: "squashed" patch 1/3 in "mptcp: use mptcp_addr_info in 
+mptcp_out_options"
+- 1d75960e024f: "Signed-off-by" + "Co-developed-by"
+- 57de81e7976c: mptcp: switch from be16_to_cpu to ntohs
+- a22ece40c7b5: tg:msg: ntohs is used in more places
 
-/P
+- 4b727db7b8d8: "squashed" patch 2/3 in "mptcp: use mptcp_addr_info in 
+mptcp_options_received"
+- 9306df23ef10: "Signed-off-by" + "Co-developed-by"
+- d04e57dd8194: mptcp: switch from be16_to_cpu to ntohs
+- 6ae92a7f3931: tg:msg: ntohs and htons are used in more places
 
+- f2a9929ffe7b: conflict in t/mptcp-unify-add_addr-6-_generate_hmac
+- fcd019ff3bb7: "squashed" patch 3/3 in "mptcp: unify 
+add_addr(6)_generate_hmac"
+- 1b3803eed9bd: "Signed-off-by" + "Co-developed-by"
+- 49306de67569: mptcp: switch from be16_to_cpu to ntohs
+- (commit message doesn't need to be modified)
+
+- Results: 7a40c945f992..158c472c9dd4
+
+Tests + export are in progress!
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
