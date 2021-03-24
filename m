@@ -1,140 +1,81 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922786F
-	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 01:07:40 +0000 (UTC)
-IronPort-SDR: SbcT4rFx9zjTsGSkcHYMhkPS7slKd7qiL8MjQk3ZuBlZO+oxZewNE8PIX3C1nSD+ON+0mEdsLj
- NJT5WNZWiNqw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9932"; a="188281034"
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="188281034"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 18:07:39 -0700
-IronPort-SDR: ylMVX0UAAKfpD/MkwsWUGzj+iwapX4/8xIwVPKYO3k/TvdpwvDmtgo7yl+iTEcOgse6jRE/A0L
- ElZp9G91XeYw==
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="391103701"
-Received: from dnwagbuo-mobl1.amr.corp.intel.com ([10.252.143.194])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 18:07:39 -0700
-Date: Tue, 23 Mar 2021 18:07:39 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.01.org, 
-    mptcp@lists.linux.dev
-Subject: Re: [MPTCP] Re: [MPTCP][PATCH mptcp-next 4/6] mptcp: add the DSS
- checksum sending
-In-Reply-To: <4ca665eeba3d66ee4d213eba2eb5e91ef2ceed95.camel@redhat.com>
-Message-ID: <cf47f387-8561-67bb-9ca8-984fcf18ba2b@linux.intel.com>
-References: <cover.1616412490.git.geliangtang@gmail.com>  <e56c579836e40e330bfd24a191fd0c313a9e4634.1616412490.git.geliangtang@gmail.com>  <7ad133370d4bb939ba69e35203797494181873b0.1616412490.git.geliangtang@gmail.com> 
- <33da8b854a7397e7ecc807b335a0c7e69e023ca6.1616412490.git.geliangtang@gmail.com>  <643a31ae30f00dd0d1d49834f6e996b3fe637c47.1616412490.git.geliangtang@gmail.com>  <41604ba7-65b8-7675-3f12-bfb6c124c61d@linux.intel.com>
- <4ca665eeba3d66ee4d213eba2eb5e91ef2ceed95.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA79C6F
+	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 08:51:43 +0000 (UTC)
+Received: by mail-pj1-f48.google.com with SMTP id nh23-20020a17090b3657b02900c0d5e235a8so838512pjb.0
+        for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 01:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TLE63/cvWu2yjmwz8tDmkePM2ofbH+hRIBHUyYqXCV4=;
+        b=pblQVxuV1Brun4vzkvAN58JVhl77H0f9D+DdFAaOWjlpjXZQXdi7BqIjswzSoLIZ3Z
+         DBvSuakc+6E4ydlGQCdkaqgzZ9OtWr9HEjVyLk6OGngofO4XEChj4Jkiw7lW0ZMmoBT+
+         ju+4nZqrdOo6/Dr+tFvQijIFa/r1xdyciw0YODPRFbepS5eb1sUkQc/Zx2tsVmNdm+rq
+         AmnCs+lopzKOV6+YHtiC/MgYrMEPaP/MeidBoy0HpjwS0fH84siNwLxpZ5sxQYpTcBWl
+         Ax5J86kuXViy35N2LqzL/58izI4m0AO+qcwhQEVZoOg+PH5a2g7B2p6iQjRhGgDIwCDM
+         +g4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TLE63/cvWu2yjmwz8tDmkePM2ofbH+hRIBHUyYqXCV4=;
+        b=BZuWtBeoZZ9mAaBXOpscBG9qa13vDsQ+EX5r16VxjYZmW0W3Eedqx7MX61MgJ9dEvo
+         18pLbW70IFmpWsrOlg/dCGEeTBHzBYvo9mbsvMUUdFqz8wjBGqcn40C7vuqfYNktduC+
+         +Mt5fQNWO5hbeTjjPeWfiUeslLKYPwyS24IppCzALK36AKlwznAye0nceagRcjLH/SPU
+         Qx+v/aehpxGHw+Lgmkwvu/0oN+tmUOCVgX2EaNMDcv4rsBWg1Y5DBI7qew4Jupzwg+IK
+         p2QO/GDewT6tdK150+VrdsvUHY7ScsrwGBfzWcwoH8uoMRTTD/MXE+2kT3N+oDgyHiOb
+         pdPw==
+X-Gm-Message-State: AOAM532AsALyZj6gEc/GdfPqMzSXe5gsI+TRY2BvVdWNlfZ7SgpxercE
+	U0dphroYr2wlYLWrWELbEVI=
+X-Google-Smtp-Source: ABdhPJzGfAdmkA4lKP4H2AAqTiSITCeKXx6llY1dzVIrL5AwbZ8b6fFUjqiHDf3fIzfsHLE3C+KAlg==
+X-Received: by 2002:a17:90b:a0d:: with SMTP id gg13mr2303401pjb.29.1616575903407;
+        Wed, 24 Mar 2021 01:51:43 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id ch15sm1609988pjb.46.2021.03.24.01.51.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Mar 2021 01:51:42 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.01.org,
+	mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 0/5] add tracepoints
+Date: Wed, 24 Mar 2021 16:51:34 +0800
+Message-Id: <cover.1616575602.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 23 Mar 2021, Paolo Abeni wrote:
+v2:
+ - add two new patches.
+ - update the patch set as Paolo suggested.
 
-> On Mon, 2021-03-22 at 16:10 -0700, Mat Martineau wrote:
->> On Mon, 22 Mar 2021, Geliang Tang wrote:
->>
->>> In mptcp_established_options_dss, use the new function
->>> mptcp_generate_dss_csum to generate the DSS checksum value.
->>>
->>> In mptcp_write_options, send out DSS with the checksum value.
->>>
->>> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
->>> ---
->>> include/net/mptcp.h  |  1 +
->>> net/mptcp/options.c  | 41 ++++++++++++++++++++++++++++++++++++++---
->>> net/mptcp/protocol.h |  7 +++++++
->>> 3 files changed, 46 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->>> index 36fb6907aa6f..869a6d98a72e 100644
->>> --- a/include/net/mptcp.h
->>> +++ b/include/net/mptcp.h
->>> @@ -32,6 +32,7 @@ struct mptcp_ext {
->>> 			frozen:1,
->>> 			reset_transient:1;
->>> 	u8		reset_reason:4;
->>> +	u16		csum;
->>> };
->>>
->>> #define MPTCP_RM_IDS_MAX	8
->>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
->>> index bdced173edff..69eb15ef9385 100644
->>> --- a/net/mptcp/options.c
->>> +++ b/net/mptcp/options.c
->>> @@ -521,6 +521,30 @@ static void mptcp_write_data_fin(struct mptcp_subflow_context *subflow,
->>> 	}
->>> }
->>>
->>> +static u16 mptcp_generate_dss_csum(struct sk_buff *skb)
->>> +{
->>> +	struct csum_pseudo_header header;
->>> +	struct mptcp_ext *mpext;
->>> +	__wsum csum;
->>> +
->>> +	if (!skb)
->>> +		return 0;
->>> +
->>> +	mpext = mptcp_get_ext(skb);
->>> +	if (!mpext || !mpext->use_map)
->>> +		return 0;
->>> +
->>> +	header.data_seq = mpext->data_seq;
->>> +	header.subflow_seq = mpext->subflow_seq;
->>> +	header.data_len = mpext->data_len;
->>> +	header.csum = 0;
->>> +
->>> +	csum = skb_checksum(skb, 0, skb->len, 0);
->>> +	csum = csum_partial(&header, sizeof(header), csum);
->>> +
->>> +	return csum_fold(csum);
->>> +}
->>> +
->>> static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->>> 					  bool snd_data_fin_enable,
->>> 					  unsigned int *size,
->>> @@ -544,8 +568,11 @@ static bool mptcp_established_options_dss(struct sock *sk, struct sk_buff *skb,
->>>
->>> 		remaining -= map_size;
->>> 		dss_size = map_size;
->>> -		if (mpext)
->>> +		if (mpext) {
->>> +			if (msk->csum_reqd)
->>> +				mpext->csum = mptcp_generate_dss_csum(skb);
->>> 			opts->ext_copy = *mpext;
->>> +		}
->>>
->>> 		if (skb && snd_data_fin_enable)
->>> 			mptcp_write_data_fin(subflow, skb, &opts->ext_copy);
->>> @@ -1304,6 +1331,9 @@ void mptcp_write_options(__be32 *ptr, const struct tcp_sock *tp,
->>> 			flags |= MPTCP_DSS_HAS_MAP | MPTCP_DSS_DSN64;
->>> 			if (mpext->data_fin)
->>> 				flags |= MPTCP_DSS_DATA_FIN;
->>> +
->>> +			if (mpext->csum)
->>
->> Instead of relying on a non-zero mpext->csum, what about using
->> opts->csum_enabled instead? (Would have to make sure that flag is set in
->> mptcp_out_options for data packets too)
->>
->> This would be more compatible with hardware offload if that gets added
->> later.
->
-> Side note, not sure if already discussed in the last mtgs, xmit csum
-> offload looks doable, togethar with TSO !?! The nic have all the pieces
-> in place/available to compute it...
->
+This patchset addressed issues 131, replace some/most pr_debug with trace
+events. As Paolo suggested, we should add the tracepoints at "the packet
+scheduler and the mapping status" first.
 
-Yes, I did talk about this with one of the NIC maintainers and the tx side 
-seemed doable. See notes near the end of 
-https://lore.kernel.org/mptcp/e308928e-872d-a7b3-2b0b-751572915de2@tessares.net/
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/131
 
---
-Mat Martineau
-Intel
+Geliang Tang (5):
+  mptcp: export mptcp_subflow_active
+  mptcp: add tracepoint in mptcp_subflow_get_send
+  mptcp: add tracepoint in get_mapping_status
+  mptcp: add tracepoint in ack_update_msk
+  mptcp: add tracepoint in subflow_check_data_avail
+
+ include/trace/events/mptcp.h | 151 +++++++++++++++++++++++++++++++++++
+ net/mptcp/options.c          |   3 +
+ net/mptcp/protocol.c         |   6 +-
+ net/mptcp/protocol.h         |   1 +
+ net/mptcp/subflow.c          |  10 +--
+ 5 files changed, 164 insertions(+), 7 deletions(-)
+ create mode 100644 include/trace/events/mptcp.h
+
+-- 
+2.30.2
+
