@@ -1,18 +1,18 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419406F
-	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 13:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202406F
+	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 13:16:31 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lP3N3-0003lb-Ff; Wed, 24 Mar 2021 14:16:25 +0100
+	id 1lP3N7-0003ll-M0; Wed, 24 Mar 2021 14:16:29 +0100
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: <mptcp@lists.01.org>,
 	Florian Westphal <fw@strlen.de>
-Subject: [RFC PATCH mptcp-next v2 7/8] mptcp: setsockopt: SO_DEBUG and no-op options
-Date: Wed, 24 Mar 2021 14:15:45 +0100
-Message-Id: <20210324131546.13730-8-fw@strlen.de>
+Subject: [RFC PATCH mptcp-next v2 8/8] mptcp: sockopt: add TCP_CONGESTION and TCP_INFO
+Date: Wed, 24 Mar 2021 14:15:46 +0100
+Message-Id: <20210324131546.13730-9-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210324131546.13730-1-fw@strlen.de>
 References: <20210324131546.13730-1-fw@strlen.de>
@@ -23,64 +23,176 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Handle SO_DEBUG and set it on all subflows.
-Ignore those values not implemented on TCP sockets.
+TCP_CONGESTION is set for all subflows.
+The mptcp socket gains icsk_ca_ops too so it can be used to keep the
+authoritative state that should be set on new/future subflows.
+
+TCP_INFO will return first subflow only.
+The out-of-tree kernel has a MPTCP_INFO getsockopt, this could be added
+later on.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- net/mptcp/sockopt.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ net/mptcp/protocol.c |   4 ++
+ net/mptcp/sockopt.c  | 105 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 109 insertions(+)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 15beb99f559d..3aefc52ab8f1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2402,6 +2402,8 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+ 	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
+ 
++	tcp_assign_congestion_control(sk);
++
+ #if IS_ENABLED(CONFIG_KASAN)
+ 	sock_set_flag(sk, SOCK_RCU_FREE);
+ #endif
+@@ -2598,6 +2600,8 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 	WARN_ON_ONCE(msk->rmem_released);
+ 	sk_stream_kill_queues(sk);
+ 	xfrm_sk_free_policy(sk);
++
++	tcp_cleanup_congestion_control(sk);
+ 	sk_refcnt_debug_release(sk);
+ 	mptcp_dispose_initial_subflow(msk);
+ 	sock_put(sk);
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 6d59b25f3658..d345ebc3947a 100644
+index d345ebc3947a..2c9aabe631c2 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -48,6 +48,9 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 		bool slow = lock_sock_fast(ssk);
+@@ -481,6 +481,63 @@ static bool mptcp_supported_sockopt(int level, int optname)
+ 	return false;
+ }
  
- 		switch (optname) {
-+		case SO_DEBUG:
-+			sock_valbool_flag(ssk, SOCK_DBG, !!val);
-+			break;
- 		case SO_KEEPALIVE:
- 			if (ssk->sk_prot->keepalive)
- 				ssk->sk_prot->keepalive(ssk, !!val);
-@@ -121,6 +124,7 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
- 	case SO_KEEPALIVE:
- 		mptcp_sol_socket_sync_intval(msk, optname, val);
- 		return 0;
-+	case SO_DEBUG:
- 	case SO_MARK:
- 	case SO_PRIORITY:
- 	case SO_SNDBUF:
-@@ -217,9 +221,21 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	case SO_RCVBUFFORCE:
- 	case SO_MARK:
- 	case SO_INCOMING_CPU:
-+	case SO_DEBUG:
- 		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
- 	case SO_LINGER:
- 		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
-+	case SO_NO_CHECK:
-+	case SO_DONTROUTE:
-+	case SO_BROADCAST:
-+	case SO_BSDCOMPAT:
-+	case SO_PASSCRED:
-+	case SO_PASSSEC:
-+	case SO_RXQ_OVFL:
-+	case SO_WIFI_STATUS:
-+	case SO_NOFCS:
-+	case SO_SELECT_ERR_QUEUE:
-+		return 0;
- 	}
- 
- 	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen);
-@@ -551,6 +567,8 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 		ssk->sk_mark = sk->sk_mark;
- 		sk_dst_reset(ssk);
- 	}
++static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t optval,
++					       unsigned int optlen)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	char name[TCP_CA_NAME_MAX];
++	bool cap_net_admin;
++	int ret;
 +
-+	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
++	if (optlen < 1)
++		return -EINVAL;
++
++	ret = strncpy_from_sockptr(name, optval,
++				min_t(long, TCP_CA_NAME_MAX-1, optlen));
++	if (ret < 0)
++		return -EFAULT;
++
++	name[ret] = 0;
++
++	cap_net_admin = ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN);
++
++	ret = 0;
++	lock_sock(sk);
++	msk->setsockopt_seq++;
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		int err;
++
++		lock_sock(ssk);
++		err = tcp_set_congestion_control(ssk, name, true, cap_net_admin);
++		if (err < 0 && ret == 0)
++			ret = err;
++		subflow->setsockopt_seq = msk->setsockopt_seq;
++		release_sock(ssk);
++	}
++
++	if (ret == 0)
++		tcp_set_congestion_control(sk, name, false, cap_net_admin);
++
++	release_sock(sk);
++	return ret;
++}
++
++
++static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
++				    sockptr_t optval, unsigned int optlen)
++{
++	switch (optname) {
++	case TCP_ULP:
++		return -EOPNOTSUPP;
++	case TCP_CONGESTION:
++		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
++	}
++
++	return -EOPNOTSUPP;
++}
++
+ int mptcp_setsockopt(struct sock *sk, int level, int optname,
+ 		     sockptr_t optval, unsigned int optlen)
+ {
+@@ -510,6 +567,49 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
+ 	if (level == SOL_IPV6)
+ 		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
+ 
++	if (level == SOL_TCP)
++		return mptcp_setsockopt_sol_tcp(msk, optname, optval, optlen);
++
++	return -EOPNOTSUPP;
++}
++
++static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
++					  char __user *optval, int __user *optlen)
++{
++	struct sock *sk = (struct sock *)msk;
++	struct socket *ssock;
++	int ret = -EINVAL;
++	struct sock *ssk;
++
++	lock_sock(sk);
++	ssk = msk->first;
++	if (ssk) {
++		ret = tcp_getsockopt(ssk, level, optname, optval, optlen);
++		goto out;
++	}
++
++	ssock = __mptcp_nmpc_socket(msk);
++	if (!ssock)
++		goto out;
++
++	ret = tcp_getsockopt(ssock->sk, level, optname, optval, optlen);
++
++out:
++	release_sock(sk);
++	return ret;
++}
++
++static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
++				    char __user *optval, int __user *optlen)
++{
++	switch (optname) {
++	case TCP_ULP:
++	case TCP_CONGESTION:
++	case TCP_INFO:
++	case TCP_CC_INFO:
++		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
++						      optval, optlen);
++	}
+ 	return -EOPNOTSUPP;
+ }
+ 
+@@ -533,6 +633,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 	if (ssk)
+ 		return tcp_getsockopt(ssk, level, optname, optval, option);
+ 
++	if (level == SOL_TCP)
++		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
+ 	return -EOPNOTSUPP;
+ }
+ 
+@@ -569,6 +671,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	}
+ 
+ 	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
++
++	if (inet_csk(sk)->icsk_ca_ops != inet_csk(ssk)->icsk_ca_ops)
++		tcp_set_congestion_control(ssk, inet_csk(sk)->icsk_ca_ops->name, false, true);
  }
  
  void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
