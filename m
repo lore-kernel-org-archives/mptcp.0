@@ -1,73 +1,116 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3546F
-	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 17:22:36 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id a7so34173101ejs.3
-        for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 10:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=nEYtIK0kmiDUYpjZhZKCYsCgmB7wMJ3b+yLu/dzBmxU=;
-        b=ywYz+aiJa7aJd7WDiO7CgsVozkIUW4g8oOKhhM1dC//aCp1vw1JEqaX+0OYdxm3T2f
-         0rWMDOrjj7l8m0oBcmj2pvOpvAXRm6adp0923F5mFth5W0QglpuzqCdrLUUf2h6CsohW
-         eRNeqShNSfgDRDO3gQFnesMRMQADl2QFV4PZXSaPotPsjf6QG0vdvCAjBhTIrQjLZF8q
-         n7Pzy6FBkLAeU2FSwc1lhQnE5wXEeMpWT/JJYGNScDcWvrwLE7+iD+nfNen73lhTXI8A
-         TuGOOqnSLFfrVMM9Lwu3RWlsuUVRN/qa9ONpz3Do42fx0VHDXH5XZJqWFypp6UWcL4Eo
-         pXkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=nEYtIK0kmiDUYpjZhZKCYsCgmB7wMJ3b+yLu/dzBmxU=;
-        b=RFaRjhVhre61zy4F8nKE/w023FnVXjAGCWagwgA13vPYqsa29TQq+FKyQB7Owfg1Y8
-         aMXklEzA7O4ok/wStI/ZndCYOqmhrLYYVUGFCD8yldKNdQhjvn6zvgeweJ10AKGYTM90
-         POcY8jsGBd9l5ZR07RSa++Y/ZFTjy7yOIOuulYQz4riEzhasgFIf8XUVQrl58o2xsNs4
-         eRl+M53Ffjb2dB75XkvTmoPbAoKDX4CyjFw5dTSOq4neZHqRsJXhEaRH+JgAXszBGXcB
-         GfkdTsKosaahrcoDhSauQ6I4VjERsF+N16w3NFCkVuj7pkreuvc1935mdFTp1JD7VZjA
-         dAEA==
-X-Gm-Message-State: AOAM530K2cPeiTQiRdlTVWpD6ZLG7j2qV+c5+mFGlnuX/aBz8O67Hjd4
-	7FNGhV8gytEalb6s+Le9u8tp/ejGnJb7BIjo
-X-Google-Smtp-Source: ABdhPJzlgy7uhBSIs/4N24YAP3JFeTqT7vPlviVhPuI0A0i+nx4zqfIJyfOsVdBF7GcvP45GrgJohQ==
-X-Received: by 2002:a17:906:95d1:: with SMTP id n17mr4778662ejy.394.1616606555407;
-        Wed, 24 Mar 2021 10:22:35 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([84.17.46.26])
-        by smtp.gmail.com with ESMTPSA id w24sm1439722edt.44.2021.03.24.10.22.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Mar 2021 10:22:35 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: MPTCP Upstream <mptcp@lists.01.org>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Weekly meeting - 25 March 2021 15:00 UTC (8am PDT, 4pm CET, 11pm CST)
-Message-ID: <5db38a16-3c59-0a9c-63ab-2ad6c94a0983@tessares.net>
-Date: Wed, 24 Mar 2021 18:22:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96816F
+	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 17:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1616607544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OMWlA6C38qnv5YRGDF3LCYlsA/b2GCTarCP/GmRvCew=;
+	b=QYUKhnHcOLxYleOcN0eaNjYx1OZXsZ4vBGkROZF8oSC84KG3sZDKu+AaWPQElC6r5/ljAJ
+	+iXDEd5yFE5IIC3qRPVegoipBWy36C81/oqHcj2SMaDunQNqumUKcTlFkDywY7xBJa8TvF
+	KcfNIJ1PipLQ7z4M3GKW73VbtDy9+Qw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-N9wy0HjtM0G6P1-EbUeOgw-1; Wed, 24 Mar 2021 13:39:01 -0400
+X-MC-Unique: N9wy0HjtM0G6P1-EbUeOgw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7666680006E;
+	Wed, 24 Mar 2021 17:39:00 +0000 (UTC)
+Received: from ovpn-114-21.ams2.redhat.com (ovpn-114-21.ams2.redhat.com [10.36.114.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 71AEB62677;
+	Wed, 24 Mar 2021 17:38:59 +0000 (UTC)
+Message-ID: <85febbb1c0b4dc7b73861fabdc846194f468f127.camel@redhat.com>
+Subject: Re: [MPTCP] [RFC PATCH mptcp-next v2 1/8] mptcp: add skeleton to
+ sync msk socket options to subflows
+From: Paolo Abeni <pabeni@redhat.com>
+To: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+Cc: mptcp@lists.01.org
+Date: Wed, 24 Mar 2021 18:38:58 +0100
+In-Reply-To: <20210324131546.13730-2-fw@strlen.de>
+References: <20210324131546.13730-1-fw@strlen.de>
+	 <20210324131546.13730-2-fw@strlen.de>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hello everybody!
+On Wed, 2021-03-24 at 14:15 +0100, Florian Westphal wrote:
+> Handle following cases:
+> 1. setsockopt is called with multiple subflows.
+>    Change might have to be mirrored to all of them.
+>    This is done directly in process context/setsockopt call.
+> 2. Outgoing subflow is created after one or several setsockopt()
+>    calls have been made.  Old setsockopt changes should be
+>    synced to the new socket.
+> 3. Incoming subflow, after setsockopt call(s).
+> 
+> Cases 2 and 3 are handled right after the join list is spliced to the
+> conn list.
+> 
+> Because splicing is sometimes done from non-preemptible context, the
+> sync action can be deferred to the work queue.
+> 
+> Add sequence numbers to subflow context and mptcp socket so
+> synchronization functions know which subflow is already updated
+> and which are not.
+> 
+> seqno is re-set to 1 in mptcp_sockopt_sync_all(), at this point
+> the list of subflows is up to date.
+> 
+> A setsockopt sequence count of 0 means that no setsockopt call
+> was made so no synchronization is needed.
+> 
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+If I read correctly, each incoming subflow always get setsockopt_seq =
+0 at accept time, while outgoing subflow are always synced at creation
+time.
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210325
+It looks like we have 2 semantically different 'msk->setsockopt_seq'
+values:
+* 0 -> no sync required
+* any value greater than 0 -> sync required for incoming subflows.
 
-Feel free to add/modify topics!
+If so, setsockopt could always set msk->setsockopt_seq to 1 and no need
+to reset after sync_all.
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+Somewhat related, in the following scenario:
 
-See/Speak to you tomorrow!
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+socket()
+sesockopt()
+listen()
+// msks is accepted, msk->setsockopt_seq != 0
+// mpj subflow is accepted, ssk->setsockopt_seq == 0, the mpj ssk
+inherited from the listener socket the same sockoptions of the msk/mpc
+subflow
+
+we will do an unneeded synchronization for the MPJ subflow.
+
+I think we could avoid that, on top of the above. e.g. in setsockopt
+setting msk->setsockopt_seq to some value depending on msk->sk_state,
+and copying msk->setsockopt_seq into ssk->setsockopt_seq at accept
+time.
+
+Not sure if the latter would be overkill?!? the above scenario looks
+like a common one.
+
+Cheers,
+
+Paolo
+
+
