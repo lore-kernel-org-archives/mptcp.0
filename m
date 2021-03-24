@@ -1,52 +1,52 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E276F
-	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 08:51:51 +0000 (UTC)
-Received: by mail-pg1-f173.google.com with SMTP id u19so14161544pgh.10
-        for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 01:51:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7149D6F
+	for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 08:51:54 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id g15so16831600pfq.3
+        for <mptcp@lists.linux.dev>; Wed, 24 Mar 2021 01:51:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vKxZBs9xTEh65g3JhtIa2npNFdBBWHcflY7T3usK1ww=;
-        b=WVJ3q85pcj0lne8/Jtw/EwX3cyH/z9Idy0GWZM+wXIZ3ResVju6tSg0XB7MBjTbK+J
-         ZcVvaPonukcZiDELYY+n9pqOGSMgvT40xGxImJsqL0j4pdJ5CM5yeYdpAuK1lBw5v7Zl
-         8yZP4R8qYokbeL//+54QMS560v5LQVS/cLufC7XGNyPO8KOWiXk308aAFzqRPDeIeOoC
-         MOAJPW+A8vQyQKIhP+bLgYVqURmw8U1Kyyux5sF45WBQFK/5N8xHxxnvWgWkIqvN7UNB
-         +4szWQ7ORRsQORFhCKvzb36dkRTSUsJKBTm55C26UFqQ/x0qkmf5Hr+exKJEVjFQ7Ruj
-         6jfQ==
+        bh=biJr7IG3EcBGhkplBVy525/1CvRfPrf8UuvfC5TPsIk=;
+        b=MchZKbpBnGuJ01g+hmaYSTpTQ8qUqwOaeulvTQcH+ZGiEa+gO5uQZ/1+YhBuJcL687
+         vRECkfJh3Br3JOsrrnGX/pt7FUza74Rn2wiNZNknLDe7YQTYmzzDh2fpAQMDGmGdnmuh
+         4YhFdZuUROy8TsfIdOv/1/YRv8wBd+dIvp82gb1QEghxCWF8dzYpdQkM7GVAyjly5oLD
+         8Xk0v8D9gDX29FGyDqL7LwwJ3yO4Q3hzawah9fBSgg+HbDQZbW7zNof1ai+SW7kW/eh+
+         0DI+aMadWiDcI/HMbOnFDPc77c6BE1qQO2c9GmQj6RpcXNMrlTRXCa8m6VmwNXBjMyI1
+         smEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vKxZBs9xTEh65g3JhtIa2npNFdBBWHcflY7T3usK1ww=;
-        b=ENKjRKm6hFZ3GFYah69yFmDsM2+8Uc648QiiHxOtmhI/W1aAbf7k9p/FsZItn9PAhw
-         it1Vzh1tcEDZJ/iJ2nRyQCritd8wcQm5TyP8aKlePHES5Ca22EKLeXIzPAdLc3StGD8V
-         iijimzKHiBdtgA023iCDkfjjyo2hgDkxgZrOflp8LqZUw7JDdgotZr9/nM0o7SUIAnWA
-         HYkJRo4YAQfxdUl1tOvKbPgZx+x9pe6mb/gnL2MrbNGrDRdXDH64c/evvxCwP9gHp4NE
-         8hPtWJMgV/jxos/PUbFPouQfYFtD44QNL9cGvCKczLPkjgNB1hmnzuMhbC8SC9Am6+Gk
-         M8GQ==
-X-Gm-Message-State: AOAM533plf5zKtXiprxWQpdMglbMwUsgk7RBnIzP2vt1hiLq7+yLhuK7
-	a0gDzg/m9I1m+p366vcWeK0=
-X-Google-Smtp-Source: ABdhPJyoFdMnOIZpnqUrv7UUUo3Uw6mM9lqg1fFprxScr/CMkPunakcLcnu7gEhFijtvvcRdM21dQg==
-X-Received: by 2002:a63:fb18:: with SMTP id o24mr2062723pgh.55.1616575910674;
-        Wed, 24 Mar 2021 01:51:50 -0700 (PDT)
+        bh=biJr7IG3EcBGhkplBVy525/1CvRfPrf8UuvfC5TPsIk=;
+        b=c2i/QilErYPJXtjC0xvZlt1AlNEaXH2mv92AexSrtCVst+Fva+sIZDdyT7QyCGU2ER
+         KjGTlJpgvKtVVT/e1yhUvg7wWT/Yk/f1AhSnNCwjW5rrFXeoMvAIg4SM/caQZU67uMcC
+         IeYJwws4VYQI1uSwqCwGOxssF89W48oTJc8MEZd6jtJbr4tnpDmSOn4OBLPIG3b2esN2
+         2i3gLtvDRKlesR9q63LJeD2DfLNwkTKUYV9s3cuhXQUo+X7im+kMrNAP1tmd4+DsxxCg
+         M2NWp2ZYA7ir2pAGVlf6RML6Ti9oqFQYAdXWBiUYfL1j8c6dX96ZeWcNmqidlBqTXafm
+         KUxg==
+X-Gm-Message-State: AOAM530BbICV+UiUmamwMsHTFCxOG2j/fkq9z7LnJ+atDXxG+eDuDl/7
+	fUH+nuRyTBAfp24OpPdFnkNRq4NW/ujTHA==
+X-Google-Smtp-Source: ABdhPJwgPRa4Meo/KuLMwHCLhAEoKC/6vneJxkD8YMwuWO6scKhvtdaXszPF+pGfvvQFy85OkdAOmQ==
+X-Received: by 2002:a63:f00d:: with SMTP id k13mr2131368pgh.295.1616575913920;
+        Wed, 24 Mar 2021 01:51:53 -0700 (PDT)
 Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id d2sm1651461pjx.42.2021.03.24.01.51.49
+        by smtp.gmail.com with ESMTPSA id j13sm1679245pfn.103.2021.03.24.01.51.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Mar 2021 01:51:50 -0700 (PDT)
+        Wed, 24 Mar 2021 01:51:53 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.01.org,
 	mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>,
 	Paolo Abeni <pabeni@redhat.com>
-Subject: [MPTCP][PATCH v2 mptcp-next 2/5] mptcp: add tracepoint in mptcp_subflow_get_send
-Date: Wed, 24 Mar 2021 16:51:36 +0800
-Message-Id: <ffa353e9982d4795058abc87f1e2f52bc29e430b.1616575602.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 3/5] mptcp: add tracepoint in get_mapping_status
+Date: Wed, 24 Mar 2021 16:51:37 +0800
+Message-Id: <9b74169474a157c54953de796bc35ef54a710a18.1616575602.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <6e606e2aeb7ea4bdd1618783cb24675bcde693b2.1616575602.git.geliangtang@gmail.com>
-References: <cover.1616575602.git.geliangtang@gmail.com> <6e606e2aeb7ea4bdd1618783cb24675bcde693b2.1616575602.git.geliangtang@gmail.com>
+In-Reply-To: <ffa353e9982d4795058abc87f1e2f52bc29e430b.1616575602.git.geliangtang@gmail.com>
+References: <cover.1616575602.git.geliangtang@gmail.com> <6e606e2aeb7ea4bdd1618783cb24675bcde693b2.1616575602.git.geliangtang@gmail.com> <ffa353e9982d4795058abc87f1e2f52bc29e430b.1616575602.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -54,88 +54,105 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added a tracepoint in the packet scheduler function
-mptcp_subflow_get_send().
+This patch added a tracepoint in the mapping status function
+get_mapping_status() to dump every mpext field.
 
 Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- include/trace/events/mptcp.h | 43 ++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c         |  4 ++++
- 2 files changed, 47 insertions(+)
- create mode 100644 include/trace/events/mptcp.h
+ include/trace/events/mptcp.h | 54 ++++++++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c          |  6 ++--
+ 2 files changed, 57 insertions(+), 3 deletions(-)
 
 diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-new file mode 100644
-index 000000000000..06908ea6afb4
---- /dev/null
+index 06908ea6afb4..503a6098909d 100644
+--- a/include/trace/events/mptcp.h
 +++ b/include/trace/events/mptcp.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM mptcp
+@@ -37,6 +37,60 @@ TRACE_EVENT(mptcp_subflow_get_send,
+ 		  __entry->backup, __entry->ratio)
+ );
+ 
++DECLARE_EVENT_CLASS(mptcp_dump_mpext,
 +
-+#if !defined(_TRACE_MPTCP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_MPTCP_H
++	TP_PROTO(struct mptcp_ext *mpext),
 +
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(mptcp_subflow_get_send,
-+
-+	TP_PROTO(struct mptcp_subflow_context *subflow, struct sock *ssk),
-+
-+	TP_ARGS(subflow, ssk),
++	TP_ARGS(mpext),
 +
 +	TP_STRUCT__entry(
-+		__field(bool, active)
-+		__field(bool, free)
-+		__field(u32, snd_wnd)
-+		__field(u32, pace)
-+		__field(u8, backup)
-+		__field(u64, ratio)
++		__field(u64, data_ack)
++		__field(u32, data_ack32)
++		__field(u64, data_seq)
++		__field(u32, subflow_seq)
++		__field(u16, data_len)
++		__field(u8, use_map)
++		__field(u8, dsn64)
++		__field(u8, data_fin)
++		__field(u8, use_ack)
++		__field(u8, ack64)
++		__field(u8, mpc_map)
++		__field(u8, frozen)
++		__field(u8, reset_transient)
++		__field(u8, reset_reason)
 +	),
 +
 +	TP_fast_assign(
-+		__entry->active = mptcp_subflow_active(subflow);
-+		__entry->free = sk_stream_memory_free(subflow->tcp_sock);
-+		__entry->snd_wnd = tcp_sk(ssk)->snd_wnd;
-+		__entry->pace = ssk->sk_pacing_rate;
-+		__entry->backup = subflow->backup;
-+		__entry->ratio = div_u64((u64)ssk->sk_wmem_queued << 32, __entry->pace);
++		__entry->data_ack = mpext->data_ack;
++		__entry->data_ack32 = mpext->data_ack32;
++		__entry->data_seq = mpext->data_seq;
++		__entry->subflow_seq = mpext->subflow_seq;
++		__entry->data_len = mpext->data_len;
++		__entry->use_map = mpext->use_map;
++		__entry->dsn64 = mpext->dsn64;
++		__entry->data_fin = mpext->data_fin;
++		__entry->use_ack = mpext->use_ack;
++		__entry->ack64 = mpext->ack64;
++		__entry->mpc_map = mpext->mpc_map;
++		__entry->frozen = mpext->frozen;
++		__entry->reset_transient = mpext->reset_transient;
++		__entry->reset_reason = mpext->reset_reason;
 +	),
 +
-+	TP_printk("active=%d free=%d snd_wnd=%u pace=%u backup=%u ratio=%llu",
-+		  __entry->active, __entry->free,
-+		  __entry->snd_wnd, __entry->pace,
-+		  __entry->backup, __entry->ratio)
++	TP_printk("data_ack=%llu data_ack32=%u data_seq=%llu subflow_seq=%u data_len=%u use_map=%u dsn64=%u data_fin=%u use_ack=%u ack64=%u mpc_map=%u frozen=%u reset_transient=%u reset_reason=%u",
++		  __entry->data_ack, __entry->data_ack32,
++		  __entry->data_seq, __entry->subflow_seq,
++		  __entry->data_len, __entry->use_map,
++		  __entry->dsn64, __entry->data_fin,
++		  __entry->use_ack, __entry->ack64,
++		  __entry->mpc_map, __entry->frozen,
++		  __entry->reset_transient, __entry->reset_reason)
 +);
 +
-+#endif /* _TRACE_MPTCP_H */
++DEFINE_EVENT(mptcp_dump_mpext, get_mapping_status,
++	TP_PROTO(struct mptcp_ext *mpext),
++	TP_ARGS(mpext));
 +
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3ad236689480..0265b8be0f84 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -25,6 +25,9 @@
+ #endif /* _TRACE_MPTCP_H */
+ 
+ /* This part must be outside protection */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 5fc3cada11dd..dc08e5de807e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -25,6 +25,8 @@
  #include "protocol.h"
  #include "mib.h"
  
-+#define CREATE_TRACE_POINTS
 +#include <trace/events/mptcp.h>
 +
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- struct mptcp6_sock {
- 	struct mptcp_sock msk;
-@@ -1394,6 +1397,7 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	}
- 	mptcp_for_each_subflow(msk, subflow) {
- 		ssk =  mptcp_subflow_tcp_sock(subflow);
-+		trace_mptcp_subflow_get_send(subflow, ssk);
- 		if (!mptcp_subflow_active(subflow))
- 			continue;
+ static void mptcp_subflow_ops_undo_override(struct sock *ssk);
  
+ static void SUBFLOW_REQ_INC_STATS(struct request_sock *req,
+@@ -853,9 +855,7 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 		goto validate_seq;
+ 	}
+ 
+-	pr_debug("seq=%llu is64=%d ssn=%u data_len=%u data_fin=%d",
+-		 mpext->data_seq, mpext->dsn64, mpext->subflow_seq,
+-		 mpext->data_len, mpext->data_fin);
++	trace_get_mapping_status(mpext);
+ 
+ 	data_len = mpext->data_len;
+ 	if (data_len == 0) {
 -- 
 2.30.2
 
