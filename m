@@ -1,21 +1,21 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5C317F
-	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:27:35 +0000 (UTC)
-IronPort-SDR: xv5SllL10RKz8uXw7Zqt9R1fOSSA9FfnX6LNN6mQLMF571aCI9B8e93Wkw4cZ/7z90UOyTlOtK
- e8ZJ09o9OyRQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="276342990"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E9772
+	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:27:36 +0000 (UTC)
+IronPort-SDR: 2vZ+KV5fjq7FgEKP/Z2dAI9v1jiBEclq2EdglkPCkCo3MAKfrx61kuUmgiuHNAGoQ1C61LrnQN
+ Cs0YVnAn053A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="211365153"
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="276342990"
+   d="scan'208";a="211365153"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:34 -0700
-IronPort-SDR: q2Z2A5R/VTNeGI4xm5ZZ6CxEMMVWRLvri6GXFikZnHKvQrPkwQRu65Xu4oBr3T7q7LZToQM3Nl
- leV64hCGTc+Q==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:35 -0700
+IronPort-SDR: sRDywhDIWe+NaqBL6ARE2DVshJn+rqfQG/53KvRRu3NW5X08hIFGDAkaeYa3NvQusLmvkI+6pH
+ sLh3aMkk7OSQ==
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="443456545"
+   d="scan'208";a="443456552"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.24.139])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:34 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:35 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliangtang@gmail.com>,
@@ -24,9 +24,9 @@ Cc: Geliang Tang <geliangtang@gmail.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 03/13] mptcp: skip connecting the connected address
-Date: Fri, 26 Mar 2021 11:26:32 -0700
-Message-Id: <20210326182642.136419-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 07/13] selftests: mptcp: timeout testcases for multi addresses
+Date: Fri, 26 Mar 2021 11:26:36 -0700
+Message-Id: <20210326182642.136419-7-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20210326182642.136419-1-mathew.j.martineau@linux.intel.com>
 References: <20210326182307.136256-1-mathew.j.martineau@linux.intel.com>
@@ -40,67 +40,63 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch added a new helper named lookup_subflow_by_daddr to find
-whether the destination address is in the msk's conn_list.
+This patch added the timeout testcases for multi addresses, valid and
+invalid.
 
-In mptcp_pm_nl_add_addr_received, use lookup_subflow_by_daddr to check
-whether the announced address is already connected. If it is, skip
-connecting this address and send out the echo.
+These testcases need to transmit 8 ADD_ADDRs, so add a new speed level
+'least' to set 10 to mptcp_connect to slow down the transmitting process.
+The original speed level 'slow' still uses 50.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm_netlink.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 53c09db08058..4b4b87803f33 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -140,6 +140,24 @@ static bool lookup_subflow_by_saddr(const struct list_head *list,
- 	return false;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index fe990d8696a9..32379efa2276 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -234,8 +234,10 @@ do_transfer()
+ 
+ 	if [ $speed = "fast" ]; then
+ 		mptcp_connect="./mptcp_connect -j"
+-	else
+-		mptcp_connect="./mptcp_connect -r"
++	elif [ $speed = "slow" ]; then
++		mptcp_connect="./mptcp_connect -r 50"
++	elif [ $speed = "least" ]; then
++		mptcp_connect="./mptcp_connect -r 10"
+ 	fi
+ 
+ 	local local_addr
+@@ -818,6 +820,26 @@ add_addr_timeout_tests()
+ 	run_tests $ns1 $ns2 dead:beef:1::1 0 0 0 slow
+ 	chk_join_nr "signal address, ADD_ADDR6 timeout" 1 1 1
+ 	chk_add_nr 4 0
++
++	# signal addresses timeout
++	reset_with_add_addr_timeout
++	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
++	chk_join_nr "signal addresses, ADD_ADDR timeout" 2 2 2
++	chk_add_nr 8 0
++
++	# signal invalid addresses timeout
++	reset_with_add_addr_timeout
++	ip netns exec $ns1 ./pm_nl_ctl limits 2 2
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 least
++	chk_join_nr "invalid address, ADD_ADDR timeout" 1 1 1
++	chk_add_nr 8 0
  }
  
-+static bool lookup_subflow_by_daddr(const struct list_head *list,
-+				    struct mptcp_addr_info *daddr)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_addr_info cur;
-+	struct sock_common *skc;
-+
-+	list_for_each_entry(subflow, list, node) {
-+		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
-+
-+		remote_address(skc, &cur);
-+		if (addresses_equal(&cur, daddr, daddr->port))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static struct mptcp_pm_addr_entry *
- select_local_address(const struct pm_nl_pernet *pernet,
- 		     struct mptcp_sock *msk)
-@@ -475,6 +493,10 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	pr_debug("accepted %d:%d remote family %d",
- 		 msk->pm.add_addr_accepted, add_addr_accept_max,
- 		 msk->pm.remote.family);
-+
-+	if (lookup_subflow_by_daddr(&msk->conn_list, &msk->pm.remote))
-+		goto add_addr_echo;
-+
- 	msk->pm.add_addr_accepted++;
- 	msk->pm.subflows++;
- 	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
-@@ -494,6 +516,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	__mptcp_subflow_connect(sk, &local, &remote);
- 	spin_lock_bh(&msk->pm.lock);
- 
-+add_addr_echo:
- 	mptcp_pm_announce_addr(msk, &msk->pm.remote, true);
- 	mptcp_pm_nl_add_addr_send_ack(msk);
- }
+ remove_tests()
 -- 
 2.31.0
 
