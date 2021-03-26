@@ -1,117 +1,75 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7E76D0D
-	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:27:40 +0000 (UTC)
-IronPort-SDR: 91931G+V/w9NFHZc9pWgq4M0vDd6zftVtysz19iPb+ni20ur3RoyB379BP6ar6Yy6VTCRqcTeW
- tXb7kRguv1aw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="211365160"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B519F5F
+	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:39:18 +0000 (UTC)
+IronPort-SDR: /BdvG8PiheVvYO3HkxZYNYPaX4AHOm9mvvXZK0lUxI54RPHsUtFXYvoa97MqENfHfA4Z+pRj9P
+ 7f5AXeuQK0Og==
+X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="170581114"
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="211365160"
+   d="scan'208";a="170581114"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:37 -0700
-IronPort-SDR: tghsuYtJHTlaNJ58nrjgPnecVhkCoVG9aDCtjQ6YXx/hWopvcCoP05JmaEZveolWwJEr8w8MKq
- +2ip5rHvQV2w==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:39:18 -0700
+IronPort-SDR: zR70JK7PVgmwPNDBIf6bNm+7ch7hD0oCgu4LCCfplSWL1oStrQkWs/wNjvFlaZFayy0TpwLeu8
+ QkjOJex1QjuA==
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="443456575"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.24.139])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:37 -0700
+   d="scan'208";a="443461279"
+Received: from hhussin-mobl.gar.corp.intel.com ([10.251.24.138])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:39:17 -0700
+Date: Fri, 26 Mar 2021 11:39:17 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliangtang@gmail.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 12/13] mptcp: rename mptcp_pm_nl_add_addr_send_ack
-Date: Fri, 26 Mar 2021 11:26:41 -0700
-Message-Id: <20210326182642.136419-12-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20210326182642.136419-1-mathew.j.martineau@linux.intel.com>
-References: <20210326182307.136256-1-mathew.j.martineau@linux.intel.com>
- <20210326182642.136419-1-mathew.j.martineau@linux.intel.com>
+To: Davide Caratti <dcaratti@redhat.com>
+cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    mptcp@lists.01.org
+Subject: Re: [PATCH net-next] mptcp: drop all sub-options except ADD_ADDR
+ when the echo bit is set
+In-Reply-To: <aeb4b7f3044e2f869ae026f950eb70c4398dad63.1616761454.git.dcaratti@redhat.com>
+Message-ID: <5e58a6a0-7470-7498-4f45-a61641c3691@linux.intel.com>
+References: <aeb4b7f3044e2f869ae026f950eb70c4398dad63.1616761454.git.dcaratti@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Geliang Tang <geliangtang@gmail.com>
 
-Since mptcp_pm_nl_add_addr_send_ack is now used for both ADD_ADDR and
-RM_ADDR cases, rename it to mptcp_pm_nl_addr_send_ack.
+On Fri, 26 Mar 2021, Davide Caratti wrote:
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/pm.c         | 2 +-
- net/mptcp/pm_netlink.c | 8 ++++----
- net/mptcp/protocol.h   | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+> Current Linux carries echo-ed ADD_ADDR over pure TCP ACKs, so there is no
+> need to add a DSS element that would fit only ADD_ADDR with IPv4 address.
+> Drop the DSS from echo-ed ADD_ADDR, regardless of the IP version.
+>
+> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> ---
+> net/mptcp/options.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index efa7deb96139..9d00fa6d22e9 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -53,7 +53,7 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
- 	msk->pm.rm_list_tx = *rm_list;
- 	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
- 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
--	mptcp_pm_nl_add_addr_send_ack(msk);
-+	mptcp_pm_nl_addr_send_ack(msk);
- 	return 0;
- }
- 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index f71e910670bf..73b9245c87b2 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -437,7 +437,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 			if (mptcp_pm_alloc_anno_list(msk, local)) {
- 				msk->pm.add_addr_signaled++;
- 				mptcp_pm_announce_addr(msk, &local->addr, false);
--				mptcp_pm_nl_add_addr_send_ack(msk);
-+				mptcp_pm_nl_addr_send_ack(msk);
- 			}
- 		} else {
- 			/* pick failed, avoid fourther attempts later */
-@@ -519,10 +519,10 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 
- add_addr_echo:
- 	mptcp_pm_announce_addr(msk, &msk->pm.remote, true);
--	mptcp_pm_nl_add_addr_send_ack(msk);
-+	mptcp_pm_nl_addr_send_ack(msk);
- }
- 
--void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
-+void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
- 
-@@ -642,7 +642,7 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk)
- 	}
- 	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
- 		pm->status &= ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
--		mptcp_pm_nl_add_addr_send_ack(msk);
-+		mptcp_pm_nl_addr_send_ack(msk);
- 	}
- 	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
- 		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6ce6ef58f092..e8c5ff2b8ace 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -650,7 +650,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
- 			      struct mptcp_addr_info *addr);
- void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
--void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
-+void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk);
- void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
- 			       const struct mptcp_rm_list *rm_list);
- void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
--- 
-2.31.0
+Thanks Davide, looks good to me. This didn't land in patchwork without the 
+mptcp@lists.01.org cc, but we should have mptcp@lists.linux.dev routed in 
+to patchwork by Monday (Australia time).
 
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index c7eb61d0564c..d51c3ad54d9a 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -624,7 +624,8 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+> 	int len;
+>
+> 	if ((mptcp_pm_should_add_signal_ipv6(msk) ||
+> -	     mptcp_pm_should_add_signal_port(msk)) &&
+> +	     mptcp_pm_should_add_signal_port(msk) ||
+> +	     mptcp_pm_should_add_signal_echo(msk)) &&
+> 	    skb && skb_is_tcp_pure_ack(skb)) {
+> 		pr_debug("drop other suboptions");
+> 		opts->suboptions = 0;
+> -- 
+> 2.30.2
+
+--
+Mat Martineau
+Intel
