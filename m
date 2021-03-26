@@ -1,21 +1,21 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6DF6D0E
-	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:27:37 +0000 (UTC)
-IronPort-SDR: L+QPZq9TPdmDnQxwrsa8VMabQYkHenfDHXICI/JtbitAyl98eNjHv8E3RxmxeeL1gVCvwQ+zTl
- /J6SnAoV4JsA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="211365154"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2AE72
+	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:27:39 +0000 (UTC)
+IronPort-SDR: FS3fud0SCfkC48cddPCT2LeNrXkiDT+yulnDCACj17T/UI6qM+3yNUPk7BZXG4DbM9OGErP8GU
+ Awcz0kr3gpVA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="211365159"
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="211365154"
+   d="scan'208";a="211365159"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:36 -0700
-IronPort-SDR: YfBX/v9d2ghUqqTSLI5T3Tb37AtnafMYlsYEQ3FJc1V2j4zVylDbdKnY10bPxXyakO5a4dWdaB
- h38KU1/hwDfg==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:37 -0700
+IronPort-SDR: 6UneWHQTMUMz4ipzh1yDnqKfCy6zImoD7RuYS4gDpYniWO9e5okTVXmv/FulxNEzHaaaaF3sk0
+ FZeklBXIr+JA==
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="443456553"
+   d="scan'208";a="443456570"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.24.139])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:35 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:36 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliangtang@gmail.com>,
@@ -24,9 +24,9 @@ Cc: Geliang Tang <geliangtang@gmail.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 08/13] mptcp: export lookup_anno_list_by_saddr
-Date: Fri, 26 Mar 2021 11:26:37 -0700
-Message-Id: <20210326182642.136419-8-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 11/13] mptcp: send ack for rm_addr
+Date: Fri, 26 Mar 2021 11:26:40 -0700
+Message-Id: <20210326182642.136419-11-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20210326182642.136419-1-mathew.j.martineau@linux.intel.com>
 References: <20210326182307.136256-1-mathew.j.martineau@linux.intel.com>
@@ -40,65 +40,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch exported the static function lookup_anno_list_by_saddr, and
-renamed it to mptcp_lookup_anno_list_by_saddr.
+This patch changes the sending ACK conditions for the ADD_ADDR, send an
+ACK packet for RM_ADDR too.
+
+In mptcp_pm_remove_addr, invoke mptcp_pm_nl_add_addr_send_ack to send
+the ACK packet.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
+ net/mptcp/pm.c         |  1 +
  net/mptcp/pm_netlink.c | 10 +++++-----
- net/mptcp/protocol.h   |  3 +++
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ net/mptcp/protocol.h   |  1 +
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c0c942c101cb..56d479b24803 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -263,9 +263,9 @@ static void check_work_pending(struct mptcp_sock *msk)
- 		WRITE_ONCE(msk->pm.work_pending, false);
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 966942d1013f..efa7deb96139 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -53,6 +53,7 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+ 	msk->pm.rm_list_tx = *rm_list;
+ 	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
+ 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
++	mptcp_pm_nl_add_addr_send_ack(msk);
+ 	return 0;
  }
  
--static struct mptcp_pm_add_entry *
--lookup_anno_list_by_saddr(struct mptcp_sock *msk,
--			  struct mptcp_addr_info *addr)
-+struct mptcp_pm_add_entry *
-+mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
-+				struct mptcp_addr_info *addr)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 743bd23b1f78..f71e910670bf 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -56,8 +56,6 @@ struct pm_nl_pernet {
+ #define MPTCP_PM_ADDR_MAX	8
+ #define ADD_ADDR_RETRANS_MAX	3
+ 
+-static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
+-
+ static bool addresses_equal(const struct mptcp_addr_info *a,
+ 			    struct mptcp_addr_info *b, bool use_port)
  {
- 	struct mptcp_pm_add_entry *entry;
+@@ -524,14 +522,15 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ 	mptcp_pm_nl_add_addr_send_ack(msk);
+ }
  
-@@ -352,7 +352,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 	struct sock *sk = (struct sock *)msk;
+-static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
++void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow;
  
- 	spin_lock_bh(&msk->pm.lock);
--	entry = lookup_anno_list_by_saddr(msk, addr);
-+	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
- 	if (entry)
- 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
- 	spin_unlock_bh(&msk->pm.lock);
-@@ -372,7 +372,7 @@ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
- 
+ 	msk_owned_by_me(msk);
  	lockdep_assert_held(&msk->pm.lock);
  
--	if (lookup_anno_list_by_saddr(msk, &entry->addr))
-+	if (mptcp_lookup_anno_list_by_saddr(msk, &entry->addr))
- 		return false;
+-	if (!mptcp_pm_should_add_signal(msk))
++	if (!mptcp_pm_should_add_signal(msk) &&
++	    !mptcp_pm_should_rm_signal(msk))
+ 		return;
  
- 	add_entry = kmalloc(sizeof(*add_entry), GFP_ATOMIC);
+ 	__mptcp_flush_join_list(msk);
+@@ -540,7 +539,8 @@ static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+ 		spin_unlock_bh(&msk->pm.lock);
+-		pr_debug("send ack for add_addr%s%s",
++		pr_debug("send ack for %s%s%s",
++			 mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr",
+ 			 mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
+ 			 mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
+ 
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d04161ec1cb2..9c51444b26cf 100644
+index b417b3591e07..6ce6ef58f092 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -659,6 +659,9 @@ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
- struct mptcp_pm_add_entry *
- mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 		       struct mptcp_addr_info *addr);
-+struct mptcp_pm_add_entry *
-+mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
-+				struct mptcp_addr_info *addr);
- 
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
+@@ -650,6 +650,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
+ 			      struct mptcp_addr_info *addr);
+ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
++void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+ 			       const struct mptcp_rm_list *rm_list);
+ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
 -- 
 2.31.0
 
