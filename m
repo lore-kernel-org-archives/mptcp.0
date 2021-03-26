@@ -1,21 +1,21 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2AE72
-	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:27:39 +0000 (UTC)
-IronPort-SDR: FS3fud0SCfkC48cddPCT2LeNrXkiDT+yulnDCACj17T/UI6qM+3yNUPk7BZXG4DbM9OGErP8GU
- Awcz0kr3gpVA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="211365159"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826A76D0E
+	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:27:40 +0000 (UTC)
+IronPort-SDR: z/7H9xQt43oI5fYLsRwLRbEJrWX9N5xe4j5HO1dducMV53qSppxltUPBnY39w2w5fZOLcwzKo0
+ IElOxFy4zfBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="211365162"
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="211365159"
+   d="scan'208";a="211365162"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:37 -0700
-IronPort-SDR: 6UneWHQTMUMz4ipzh1yDnqKfCy6zImoD7RuYS4gDpYniWO9e5okTVXmv/FulxNEzHaaaaF3sk0
- FZeklBXIr+JA==
+IronPort-SDR: 4Q3Zh7p9Q0wf+CrOSBkNmztcUVoO+QtPAxUspI5FP0yFf396rb2KxFQw+3EU0CN96rscVOyF6n
+ s+pFNSKgh5Fg==
 X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
-   d="scan'208";a="443456570"
+   d="scan'208";a="443456578"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.24.139])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:36 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:27:37 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliangtang@gmail.com>,
@@ -24,9 +24,9 @@ Cc: Geliang Tang <geliangtang@gmail.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 11/13] mptcp: send ack for rm_addr
-Date: Fri, 26 Mar 2021 11:26:40 -0700
-Message-Id: <20210326182642.136419-11-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 13/13] selftests: mptcp: signal addresses testcases
+Date: Fri, 26 Mar 2021 11:26:42 -0700
+Message-Id: <20210326182642.136419-13-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20210326182642.136419-1-mathew.j.martineau@linux.intel.com>
 References: <20210326182307.136256-1-mathew.j.martineau@linux.intel.com>
@@ -40,85 +40,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-This patch changes the sending ACK conditions for the ADD_ADDR, send an
-ACK packet for RM_ADDR too.
-
-In mptcp_pm_remove_addr, invoke mptcp_pm_nl_add_addr_send_ack to send
-the ACK packet.
+This patch adds testcases for signalling multi valid and invalid
+addresses for both signal_address_tests and remove_tests.
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/pm.c         |  1 +
- net/mptcp/pm_netlink.c | 10 +++++-----
- net/mptcp/protocol.h   |  1 +
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 58 +++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 966942d1013f..efa7deb96139 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -53,6 +53,7 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
- 	msk->pm.rm_list_tx = *rm_list;
- 	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
- 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
-+	mptcp_pm_nl_add_addr_send_ack(msk);
- 	return 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 32379efa2276..679de3abaf34 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -785,6 +785,28 @@ signal_address_tests()
+ 	run_tests $ns1 $ns2 10.0.1.1
+ 	chk_join_nr "multiple subflows and signal" 3 3 3
+ 	chk_add_nr 1 1
++
++	# signal addresses
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "signal addresses" 3 3 3
++	chk_add_nr 3 3
++
++	# signal invalid addresses
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1
++	chk_join_nr "signal invalid addresses" 1 1 1
++	chk_add_nr 3 3
  }
  
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 743bd23b1f78..f71e910670bf 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -56,8 +56,6 @@ struct pm_nl_pernet {
- #define MPTCP_PM_ADDR_MAX	8
- #define ADD_ADDR_RETRANS_MAX	3
+ link_failure_tests()
+@@ -896,6 +918,30 @@ remove_tests()
+ 	chk_add_nr 1 1
+ 	chk_rm_nr 2 2
  
--static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
--
- static bool addresses_equal(const struct mptcp_addr_info *a,
- 			    struct mptcp_addr_info *b, bool use_port)
- {
-@@ -524,14 +522,15 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	mptcp_pm_nl_add_addr_send_ack(msk);
++	# addresses remove
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal id 250
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.4.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
++	chk_join_nr "remove addresses" 3 3 3
++	chk_add_nr 3 3
++	chk_rm_nr 3 3 invert
++
++	# invalid addresses remove
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
++	chk_join_nr "remove invalid addresses" 1 1 1
++	chk_add_nr 3 3
++	chk_rm_nr 3 1 invert
++
+ 	# subflows and signal, flush
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 3
+@@ -930,6 +976,18 @@ remove_tests()
+ 	chk_join_nr "flush addresses" 3 3 3
+ 	chk_add_nr 3 3
+ 	chk_rm_nr 3 3 invert
++
++	# invalid addresses flush
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.14.1 flags signal
++	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
++	run_tests $ns1 $ns2 10.0.1.1 0 -8 0 slow
++	chk_join_nr "flush invalid addresses" 1 1 1
++	chk_add_nr 3 3
++	chk_rm_nr 3 1 invert
  }
  
--static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
-+void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
- 
- 	msk_owned_by_me(msk);
- 	lockdep_assert_held(&msk->pm.lock);
- 
--	if (!mptcp_pm_should_add_signal(msk))
-+	if (!mptcp_pm_should_add_signal(msk) &&
-+	    !mptcp_pm_should_rm_signal(msk))
- 		return;
- 
- 	__mptcp_flush_join_list(msk);
-@@ -540,7 +539,8 @@ static void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk)
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
- 		spin_unlock_bh(&msk->pm.lock);
--		pr_debug("send ack for add_addr%s%s",
-+		pr_debug("send ack for %s%s%s",
-+			 mptcp_pm_should_add_signal(msk) ? "add_addr" : "rm_addr",
- 			 mptcp_pm_should_add_signal_ipv6(msk) ? " [ipv6]" : "",
- 			 mptcp_pm_should_add_signal_port(msk) ? " [port]" : "");
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b417b3591e07..6ce6ef58f092 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -650,6 +650,7 @@ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
- void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
- 			      struct mptcp_addr_info *addr);
- void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
-+void mptcp_pm_nl_add_addr_send_ack(struct mptcp_sock *msk);
- void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
- 			       const struct mptcp_rm_list *rm_list);
- void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
+ add_tests()
 -- 
 2.31.0
 
