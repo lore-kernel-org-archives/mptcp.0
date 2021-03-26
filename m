@@ -1,108 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7DF70
-	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 13:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1616767053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OwtyLHJL6UBD++LWf74xs3/iRAS3aMkppWr1XbW9Wzo=;
-	b=XnkYvxssGrtG0vVrho/F61H+aMtb7R9HSXpqheP8IBtK6c5aFhX/QI665qgksjDumK9Xjh
-	0pXhI4U1uKKuYQn089E9ywD81rOtBINcm6L+IV9WUhZFJworkb88i4Kx3XNDkhGigxOPpg
-	0w3lo1V7D4MjJToQrHnPYrTI7dwcfnQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-ZOaXetmfP7Ct-2OB1xDEBw-1; Fri, 26 Mar 2021 09:57:30 -0400
-X-MC-Unique: ZOaXetmfP7Ct-2OB1xDEBw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97BD3EC1A0;
-	Fri, 26 Mar 2021 13:57:29 +0000 (UTC)
-Received: from [10.40.194.217] (unknown [10.40.194.217])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A8A3C13441;
-	Fri, 26 Mar 2021 13:57:28 +0000 (UTC)
-Message-ID: <1f0281f6f7c57b3ff142e3322fc32a1873e01d07.camel@redhat.com>
-Subject: Re: [PATCH net-next] mptcp: drop all sub-options except ADD_ADDR
- when the echo bit is set
-From: Davide Caratti <dcaratti@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <aeb4b7f3044e2f869ae026f950eb70c4398dad63.1616761454.git.dcaratti@redhat.com>
-References: <aeb4b7f3044e2f869ae026f950eb70c4398dad63.1616761454.git.dcaratti@redhat.com>
-Organization: red hat
-Date: Fri, 26 Mar 2021 14:57:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B1470
+	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 18:23:26 +0000 (UTC)
+IronPort-SDR: SpE1qkha0z7gfvZvwWg9HOgKnmptemkO4xT97t26alOdWJuq5m4Jd7KYaUtnNizrBvxfJn4BOh
+ CWGawO4DVAhw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9935"; a="190642205"
+X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
+   d="scan'208";a="190642205"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:23:26 -0700
+IronPort-SDR: eAWEsXw6dwFPZ6kKBsBbDMX+IlknhR8uR4Yl+Gxi4Y1cVg8kDPkRImzbh8R2Fw0BoUr1BmSShB
+ Trx30JxvBExw==
+X-IronPort-AV: E=Sophos;i="5.81,281,1610438400"; 
+   d="scan'208";a="375569737"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.24.139])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2021 11:23:25 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 00/13] MPTCP: Cleanup and address advertisement fixes
+Date: Fri, 26 Mar 2021 11:23:07 -0700
+Message-Id: <20210326182307.136256-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.31.0
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dcaratti@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 2021-03-26 at 13:28 +0100, Davide Caratti wrote:
-> Current Linux carries echo-ed ADD_ADDR over pure TCP ACKs, so there is no
-> need to add a DSS element that would fit only ADD_ADDR with IPv4 address.
-> Drop the DSS from echo-ed ADD_ADDR, regardless of the IP version.
-> 
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+This patch series contains cleanup and fixes we have been testing in the
+MPTCP tree. MPTCP uses TCP option headers to advertise additional
+address information after an initial connection is established. The main
+fixes here deal with making those advertisements more reliable and
+improving the way subflows are created after an advertisement is
+received.
 
-please note: testing this commit with current packetdrill will fail,
-because the expected format of outbound echoed ADD_ADDR will fail.
 
-In parallel with this "harmonization" of IPv4 / IPv6 echo-ed ADD_ADDRs
-the kernel, I'm working on packetdrill to fix the support for IPv6 in
-ADD_ADDR [1]. Non-echoed ADD_ADDRs are still "non-harmonized", so you
-will notice the DSS sub-option on IPv4 and no other sub-option except
-ADD_ADDR on IPv6.
+Patches 1, 2, 4, 10, and 12 are for various cleanup or refactoring.
 
-So, server scripts using ADD_ADDR will still need 2 separate files for
-IPv4 and IPv6, while it will be possible to run the same client script
-on IPv4 and IPv6.
+Patch 3 skips an extra connection attempt if there's already a subflow
+connection for the newly received advertisement.
 
-@matthieu, just writing few notes here as probably the CI you are
-running will be "glitching" because of these changes. Sorry for the
-inconvenience :]
+Patches 5, 6, and 7 make sure that the next address is advertised when
+there are multiple addresses to share, the advertisement has been
+retried, and the peer has not echoed the advertisement. Self tests are
+updated.
 
+Patches 8 and 9 fix a problem similar to 5/6/7, but covers a case where
+the failure was due to a subflow connection not completing.
+
+Patches 11 and 13 send a bare ack to revoke an advertisement rather than
+waiting for other activity to trigger a packet send. This mirrors the
+way acks are sent for new advertisements. Self test is included.
+
+
+Geliang Tang (12):
+  mptcp: drop argument port from mptcp_pm_announce_addr
+  mptcp: skip connecting the connected address
+  mptcp: drop unused subflow in mptcp_pm_subflow_established
+  mptcp: move to next addr when timeout
+  selftests: mptcp: add cfg_do_w for cfg_remove
+  selftests: mptcp: timeout testcases for multi addresses
+  mptcp: export lookup_anno_list_by_saddr
+  mptcp: move to next addr when subflow creation fail
+  mptcp: drop useless addr_signal clear
+  mptcp: send ack for rm_addr
+  mptcp: rename mptcp_pm_nl_add_addr_send_ack
+  selftests: mptcp: signal addresses testcases
+
+Paolo Abeni (1):
+  mptcp: clean-up the rtx path
+
+ net/mptcp/options.c                           |  3 +-
+ net/mptcp/pm.c                                | 25 ++++--
+ net/mptcp/pm_netlink.c                        | 69 +++++++++------
+ net/mptcp/protocol.c                          | 42 +++-------
+ net/mptcp/protocol.h                          | 12 ++-
+ .../selftests/net/mptcp/mptcp_connect.c       | 10 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 84 ++++++++++++++++++-
+ 7 files changed, 173 insertions(+), 72 deletions(-)
+
+
+base-commit: 6c996e19949b34d7edebed4f6b0511145c036404
 -- 
-davide
-
-[1] https://github.com/multipath-tcp/packetdrill/pull/49
-
-
-
-
-
-
-> ---
->  net/mptcp/options.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index c7eb61d0564c..d51c3ad54d9a 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -624,7 +624,8 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
->  	int len;
->  
-> 
-> 
-> 
->  	if ((mptcp_pm_should_add_signal_ipv6(msk) ||
-> -	     mptcp_pm_should_add_signal_port(msk)) &&
-> +	     mptcp_pm_should_add_signal_port(msk) ||
-> +	     mptcp_pm_should_add_signal_echo(msk)) &&
->  	    skb && skb_is_tcp_pure_ack(skb)) {
->  		pr_debug("drop other suboptions");
->  		opts->suboptions = 0;
-
+2.31.0
 
