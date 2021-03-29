@@ -1,49 +1,49 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2589A5F
-	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 10:41:44 +0000 (UTC)
-Received: by mail-pf1-f180.google.com with SMTP id h3so9581238pfr.12
-        for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 03:41:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139876F
+	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 10:41:48 +0000 (UTC)
+Received: by mail-pj1-f44.google.com with SMTP id q6-20020a17090a4306b02900c42a012202so5706442pjg.5
+        for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 03:41:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z+nS8NS0KjPy6BEVAX+1RaribBZtTUnh8WIyqflfypg=;
-        b=sNACFfP0JiKCP3sm04bn7+u4eaQM2OtGZT9ef+oFTIYTyP12VVDxiUDJE9UvK6aWDw
-         ltB9Vikxe9O55azsjXl3CqrTrweVrpwSq5qh6l6KR0Jn4udtjBsAtcYuKRPx7ntzAFQP
-         c4gPDUWa6pm9rGKOHzMJrXJyTnN6N+qivp9+yQqDVqlzGNqhYhCvZ+H2k9z60o1ryj5O
-         9+FKwvGRSXqql/TbVBd0ZLb2L3G1yrt8pNXAr6eX9uLPZ2RIvAkWDOm2udExVWJI0GqS
-         nRJITBM4Js8gZ+U9GWcMk01G40saiahRBD5kco0oBpmgtCPNGhCd7hk8DyID5AmXmk0O
-         XJsw==
+        bh=zznaWsjWT7GzfWDIUkgAMr8RnCnd72vJQXQnzszEOZw=;
+        b=CLnx3ZBCtNPaumnyWOt/EIPTzpXO75ER3b2EMVprSiv4Rr6XxbzzHg4TwkMwAxEgxL
+         U82xIEFb9EngDNBSc1ayJBE9vsYE3b92hKmqFikHdOYTtu1vkaX52edmxI6vpp9N1+Fv
+         5KzBRtXTVeRFDbI7oH+1PwU2jTqnZeRsPORVHDAznZ4nYjilLEUDEOIzYyok+14PMsMl
+         a90nUU40pRJ9nlH046aSnki/BxIOUykieC39yYgKxVGEo/pvjQZVUEj5vFX7DuAd6Gt4
+         jdXIcsxpx8Ir2srL6yq1pyAfSkUFMoRXENG7Vb8CTR1e7KDtPgK50esvW3YNn2Xqz5ZX
+         VqIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z+nS8NS0KjPy6BEVAX+1RaribBZtTUnh8WIyqflfypg=;
-        b=fDBi3JnlK+B97BqD2nYvdZq8NV7pj4nWgWB2JJbaXWVI0SieCwjkIkWTfp/p5KVxl5
-         sHFulSxnTgyABKSUW0Zm/AcDPbKUIaRYhUyyE8PfjA0uL2nPP1lG7ZAPb3z1gSlZoaZG
-         H5LiIQC/NoFzL+uGDVmnOFVT8vDrdT+++WRoeor4XUrIKkYxnH8VktFYyKA6ScOysr0Y
-         cx5gsnrrKtxfGwrbncr/C94d34DvAES14slghKFuDxNrq5rYp8SGcTWm/PJNMHA6rikb
-         UZrtGis9HHgStV4s9A/cQFfRoNJyFSBeMtElnayJCLB4Q4SIHg93YsiFDwTk7XWp1cCu
-         v+gQ==
-X-Gm-Message-State: AOAM533hWO6X/6TSoEz19hErbuA5bXpAsGHJ0IV9FpiAigyXrUORhWdV
-	lsZZ2+Gb4aBObduASK0y7M4/jViBtlBEGg==
-X-Google-Smtp-Source: ABdhPJx112ac78kRYohFmLxT34pUZL6w7cyPR5DHJBOOiETXDSY6MQveGBshjyLQJhrTVIaE2m2Whw==
-X-Received: by 2002:a62:8857:0:b029:203:4d7a:ae8d with SMTP id l84-20020a6288570000b02902034d7aae8dmr25360409pfd.16.1617014503363;
-        Mon, 29 Mar 2021 03:41:43 -0700 (PDT)
+        bh=zznaWsjWT7GzfWDIUkgAMr8RnCnd72vJQXQnzszEOZw=;
+        b=r7pNuHQkseABUqrGhpuE4q+Mi+LgqqpFtJi8495HcnW6gVWXk8/Ob1qPhTPQBTBAsU
+         LwAbhwSbALd+UMXR/hdhyNEwmWk4K6x4Hk24deeD8iNqs8ueAgOXXONEBWnpZUZzJ05o
+         0Kv7YTEu2tmgJrvcKcx8S7tBdJEL6OqqYaPDZpR5UmKl6fod/JGJsFfKWcwzKVTRxygV
+         8E0LunFNQK8SVH5Ec0XWT018VPREmA+s7UWn8Ud8auQ6kcvnjvp7MvMc81cL2A5H15Mo
+         A7WxGMYYxpatNpVpGsagOY0zraLfPCGD0c9+3tcTMrc0HBGuY2v8+DIpclelvMcQVtoi
+         el/w==
+X-Gm-Message-State: AOAM533uv1C5GnCzLo3JIXSrph7u2CF+wdLQUqKJb0SD9gUXurkNm+yI
+	V1NVGViZRH5bwWuLumBQ2q2lbLFglmIOpQ==
+X-Google-Smtp-Source: ABdhPJxd6jC+qAyHIrzXZn2JDoNxsbuThDbkPDmtRk+YXJGH2hSVHTf0eMSfn3L0cvGl2b/13C8kkg==
+X-Received: by 2002:a17:902:c154:b029:e5:e7cf:9627 with SMTP id 20-20020a170902c154b02900e5e7cf9627mr27710810plj.68.1617014507328;
+        Mon, 29 Mar 2021 03:41:47 -0700 (PDT)
 Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id s15sm16626567pgs.28.2021.03.29.03.41.42
+        by smtp.gmail.com with ESMTPSA id y4sm16132019pfn.67.2021.03.29.03.41.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Mar 2021 03:41:42 -0700 (PDT)
+        Mon, 29 Mar 2021 03:41:46 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v2 mptcp-next 15/16] selftests: mptcp: enable checksum in mptcp_connect.sh
-Date: Mon, 29 Mar 2021 18:40:46 +0800
-Message-Id: <fa2e5e2e8eee03798175cc42e73810518b47d29b.1617014019.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 16/16] selftests: mptcp: enable checksum in mptcp_join.sh
+Date: Mon, 29 Mar 2021 18:40:47 +0800
+Message-Id: <3e75bdccce3b88e974ffc3f90a9b7b74ac6b067c.1617014019.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <c231d3aa6b38374c1e28709e4d4b94e179c6e13c.1617014019.git.geliangtang@gmail.com>
+In-Reply-To: <fa2e5e2e8eee03798175cc42e73810518b47d29b.1617014019.git.geliangtang@gmail.com>
 References: <cover.1617014019.git.geliangtang@gmail.com> <ee1d26bf90397d9cbec5e4a165fc369ffab60d3e.1617014019.git.geliangtang@gmail.com>
  <26ccf630ac9be0aee87f4ccfcefc46515c9d61e8.1617014019.git.geliangtang@gmail.com>
  <a138746729a11cf08e8236d2c8cdf91226936690.1617014019.git.geliangtang@gmail.com>
@@ -58,6 +58,7 @@ References: <cover.1617014019.git.geliangtang@gmail.com> <ee1d26bf90397d9cbec5e4
  <44262de5d6a76c02e585ba148117af9b81355d0d.1617014019.git.geliangtang@gmail.com>
  <5364f608199436bf7125d8f89a4fefcaad2b5eb3.1617014019.git.geliangtang@gmail.com>
  <c231d3aa6b38374c1e28709e4d4b94e179c6e13c.1617014019.git.geliangtang@gmail.com>
+ <fa2e5e2e8eee03798175cc42e73810518b47d29b.1617014019.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -65,66 +66,120 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch added a new argument "C" for mptcp_connect.sh script to
-set the sysctl checksum_enabled to 1 to enable the data checksum.
+This patch added a new argument "C" for mptcp_join.sh script to set the
+sysctl checksum_enabled to 1 to enable the data checksum.
+
+In chk_join_nr, check the counter of the mib for the data checksum.
+
+The output looks like this:
+
+ 01 no JOIN                            syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       sum[ ok ] - csum  [ ok ]
+ 02 single subflow, limited by client  syn[ ok ] - synack[ ok ] - ack[ ok ]
+                                       sum[ ok ] - csum  [ ok ]
 
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 40 +++++++++++++++++--
+ 1 file changed, 36 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 385cdc98aed8..c769f1e962bd 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -3,7 +3,7 @@
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index fd99485cf2a4..b98ff993bcfe 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -12,6 +12,7 @@ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+ mptcp_connect=""
+ capture=0
++checksum=0
+ do_all_tests=1
  
- time_start=$(date +%s)
+ TEST_COUNT=0
+@@ -49,6 +50,9 @@ init()
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
++		if [ $checksum -eq 1 ]; then
++			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
++		fi
+ 	done
  
--optstring="S:R:d:e:l:r:h4cm:f:t"
-+optstring="S:R:d:e:l:r:h4cm:f:tC"
- ret=0
- sin=""
- sout=""
-@@ -22,6 +22,7 @@ sndbuf=0
- rcvbuf=0
- options_log=true
- do_tcp=0
-+checksum=false
- filesize=0
- 
- if [ $tc_loss -eq 100 ];then
-@@ -47,6 +48,7 @@ usage() {
- 	echo -e "\t-R: set rcvbuf value (default: use kernel default)"
- 	echo -e "\t-m: test mode (poll, sendfile; default: poll)"
- 	echo -e "\t-t: also run tests with TCP (use twice to non-fallback tcp)"
-+	echo -e "\t-C: enable the MPTCP data checksum"
+ 	#  ns1              ns2
+@@ -517,6 +521,28 @@ chk_join_nr()
+ 	else
+ 		echo "[ ok ]"
+ 	fi
++	if [ $checksum -eq 1 ]; then
++		printf "%-39s %s" " " "sum"
++		count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDSSCsumErr | awk '{print $2}'`
++		[ -z "$count" ] && count=0
++		if [ "$count" != 0 ]; then
++			echo "[fail] got $count data checksum error[s] expected 0"
++			ret=1
++			dump_stats=1
++		else
++			echo -n "[ ok ]"
++		fi
++		echo -n " - csum  "
++		count=`ip netns exec $ns2 nstat -as | grep MPTcpExtDSSCsumErr | awk '{print $2}'`
++		[ -z "$count" ] && count=0
++		if [ "$count" != 0 ]; then
++			echo "[fail] got $count data checksum error[s] expected 0"
++			ret=1
++			dump_stats=1
++		else
++			echo "[ ok ]"
++		fi
++	fi
+ 	if [ "${dump_stats}" = 1 ]; then
+ 		echo Server ns stats
+ 		ip netns exec $ns1 nstat -as | grep MPTcp
+@@ -1404,6 +1430,7 @@ usage()
+ 	echo "  -p add_addr_ports_tests"
+ 	echo "  -k syncookies_tests"
+ 	echo "  -c capture pcap files"
++	echo "  -C enable data checksum"
+ 	echo "  -h help"
  }
  
- while getopts "$optstring" option;do
-@@ -104,6 +106,9 @@ while getopts "$optstring" option;do
- 	"t")
- 		do_tcp=$((do_tcp+1))
- 		;;
-+	"C")
-+		checksum=true
-+		;;
- 	"?")
- 		usage $0
- 		exit 1
-@@ -200,6 +205,12 @@ ip -net "$ns4" route add default via dead:beef:3::2
- # use TCP syn cookies, even if no flooding was detected.
- ip netns exec "$ns2" sysctl -q net.ipv4.tcp_syncookies=2
+@@ -1418,13 +1445,16 @@ make_file "$sin" "server" 1
+ trap cleanup EXIT
  
-+if $checksum; then
-+	for i in "$ns1" "$ns2" "$ns3" "$ns4";do
-+		ip netns exec $i sysctl -q net.mptcp.checksum_enabled=1
-+	done
-+fi
-+
- set_ethtool_flags() {
- 	local ns="$1"
- 	local dev="$2"
+ for arg in "$@"; do
+-	# check for "capture" arg before launching tests
++	# check for "capture/checksum" args before launching tests
+ 	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
+ 		capture=1
+ 	fi
++	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
++		checksum=1
++	fi
+ 
+-	# exception for the capture option, the rest means: a part of the tests
+-	if [ "${arg}" != "-c" ]; then
++	# exception for the capture/checksum options, the rest means: a part of the tests
++	if [ "${arg}" != "-c" ] && [ "${arg}" != "-C" ]; then
+ 		do_all_tests=0
+ 	fi
+ done
+@@ -1434,7 +1464,7 @@ if [ $do_all_tests -eq 1 ]; then
+ 	exit $ret
+ fi
+ 
+-while getopts 'fsltra64bpkch' opt; do
++while getopts 'fsltra64bpkchC' opt; do
+ 	case $opt in
+ 		f)
+ 			subflows_tests
+@@ -1471,6 +1501,8 @@ while getopts 'fsltra64bpkch' opt; do
+ 			;;
+ 		c)
+ 			;;
++		C)
++			;;
+ 		h | *)
+ 			usage
+ 			;;
 -- 
 2.30.2
 
