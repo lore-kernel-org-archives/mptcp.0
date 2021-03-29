@@ -1,86 +1,99 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B4770
-	for <mptcp@lists.linux.dev>; Fri, 26 Mar 2021 22:10:17 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 07F4C61A2B;
-	Fri, 26 Mar 2021 22:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1616796617;
-	bh=gWJKmTMRA716KbO7g9u07UDcjg14ZIrEtd4DRFF4eoA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=R3Dd7qiSUq2nbDz56atTswiqIkJZ6ZUaeQeT0PNDqDGyWFm0L+EjDEYXNjbt/JyaR
-	 y6HeQOTWnahfsMtwJ5e5KbDtJPSmnNVJW2DjAPTi47U0SEfUQfoK/r1DA4rFGzst+f
-	 h8epH2L0n17uaSmABz7GyT6gN558j0Z9ZcKzwn8lFZpYNgotav8t7T5o6W6aTh4Cc6
-	 5iOU0QzHGTE+OX2Fyr/+ZBG+uOsH9DgNrBY3i2kdAYTXbzBEOfrdBEXHgqnt8PMzrk
-	 bw50/RhUR+iyDTCNYkjKFdXDk5WP9xNNpFpQSt8l8qHfgP+qEvXH541mhAwQN3p2Qn
-	 rxzOK2ei3AAjw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id C081A6096E;
-	Fri, 26 Mar 2021 22:10:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759975F
+	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 10:40:53 +0000 (UTC)
+Received: by mail-pj1-f42.google.com with SMTP id a22-20020a17090aa516b02900c1215e9b33so7487607pjq.5
+        for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 03:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MBzVBOiT33o/wDxCK+NAa0svRhck48DKTgyyObhXTPE=;
+        b=g5TT0G1hEWWyFNQKyX7hAF2QgFZhi76KbTqt7ryk3Ng8Z7d9BaNj36Cgj+aTFb7Hz6
+         +77Z0OSlWKof9WVHYHcQqimDKkMUE2ufEPZHmJCqE+c8KyxQJTu2ZUdfWA9X0G1l0+Qc
+         KipdwQMsoH0KZsQD4aKGPMtkWMoysHSup+qL+9/aUBfbYwr9WOuAW35Bh4+IYcI+LvjY
+         2gFdsO+J+tow4z6m+NTds8+bWX7r1N/rqmm1Dd7oDron40fg1AlO43vRMck7vEf53szk
+         NZcZas/kCdnBpObfaRrla8Krax5HOF7/ykekVB/tIVstj2vhnytyW1LG2hU55k6GhVZk
+         Eihw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MBzVBOiT33o/wDxCK+NAa0svRhck48DKTgyyObhXTPE=;
+        b=lgydgU2B4xjwWHpI/swu+Ny9ZuLhtSIppVwWMlXMjEhIMSEf71LZDqDBrSTO+UBvLE
+         f/eudP3pxfSOYcOGRMcqYT3yPwsI+FFcd/L2RWm9ZhB5BqjEwLmJy2VSXhFpe+8OtH17
+         ILHdG1hWRe8T654iJ5uN6vLtyOtSgWX7xRA2Hndgv9dmEm4VGLjcokeQIKbQfvOxKKpU
+         QVYZVPEXZQElQd7N3cNGqsdXXNLEuVpyVhG4nBTNFQnAMLypW7KtiDh5EAPrBydZDN8W
+         vtWdilnFxlFueGExsFJ7lEw+Nr3sKdWS9LvbtIegLVXTJF+33BjX5k9J2+GOAlG1prtt
+         Gy1Q==
+X-Gm-Message-State: AOAM531zU2xj52AmkIjBH2Fqx/+c0KzPrdG5Mdm34wq2BRt89pt/Qoc3
+	dOAY6xq8iB3kZ/ouVqhoWu2VxMd2P9jHJQ==
+X-Google-Smtp-Source: ABdhPJwAEuJm0B7R1EzlfNUYBlod16FVzGYPGn8yg2wkujHL06AGzaBYBx3+6CVw2d5TdLc5HC4WHQ==
+X-Received: by 2002:a17:902:8497:b029:e6:f01d:9c9f with SMTP id c23-20020a1709028497b02900e6f01d9c9fmr28091790plo.7.1617014452270;
+        Mon, 29 Mar 2021 03:40:52 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id q34sm16414474pgl.92.2021.03.29.03.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Mar 2021 03:40:51 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 00/16] data checksum support
+Date: Mon, 29 Mar 2021 18:40:31 +0800
+Message-Id: <cover.1617014019.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/13] MPTCP: Cleanup and address advertisement fixes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <161679661678.26244.6014812864130596120.git-patchwork-notify@kernel.org>
-Date: Fri, 26 Mar 2021 22:10:16 +0000
-References: <20210326182307.136256-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210326182307.136256-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hello:
+v2:
+ - add the checksum support for MP_CAPABLE + data too.
+ - validate the data that has been split in different skbs too.
+ - add more patches.
+ - tag: export/20210329T052816
+ - patch 14 ("mptcp: add trace event for data checksum") depends on the
+"add tracepoints" series.
+ 
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/134
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+Geliang Tang (16):
+  mptcp: add csum_enabled in mptcp_sock
+  mptcp: generate the data checksum
+  mptcp: add csum_reqd in mptcp_out_options
+  mptcp: send out checksum for MP_CAPABLE with data
+  mptcp: send out checksum for DSS
+  mptcp: add csum_reqd in mptcp_options_received
+  mptcp: add sk parameter for mptcp_parse_option
+  mptcp: receive checksum for MP_CAPABLE with data
+  mptcp: receive checksum for DSS
+  mptcp: validate the data checksum
+  mptcp: add the mib for data checksum
+  mptcp: add a new sysctl checksum_enabled
+  mptcp: add mptcpi_csum_enabled in mptcp_info
+  mptcp: add trace event for data checksum
+  selftests: mptcp: enable checksum in mptcp_connect.sh
+  selftests: mptcp: enable checksum in mptcp_join.sh
 
-On Fri, 26 Mar 2021 11:23:07 -0700 you wrote:
-> This patch series contains cleanup and fixes we have been testing in the
-> MPTCP tree. MPTCP uses TCP option headers to advertise additional
-> address information after an initial connection is established. The main
-> fixes here deal with making those advertisements more reliable and
-> improving the way subflows are created after an advertisement is
-> received.
-> 
-> [...]
+ Documentation/networking/mptcp-sysctl.rst     |   8 ++
+ include/net/mptcp.h                           |   4 +-
+ include/trace/events/mptcp.h                  |  38 ++++++
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/ctrl.c                              |  14 +++
+ net/mptcp/mib.c                               |   1 +
+ net/mptcp/mib.h                               |   1 +
+ net/mptcp/mptcp_diag.c                        |   1 +
+ net/mptcp/options.c                           | 112 +++++++++++++-----
+ net/mptcp/protocol.c                          |  65 ++++++++++
+ net/mptcp/protocol.h                          |  20 +++-
+ net/mptcp/subflow.c                           |  20 ++--
+ .../selftests/net/mptcp/mptcp_connect.sh      |  13 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  40 ++++++-
+ 14 files changed, 294 insertions(+), 44 deletions(-)
 
-Here is the summary with links:
-  - [net-next,01/13] mptcp: clean-up the rtx path
-    https://git.kernel.org/netdev/net-next/c/2d6f5a2b5720
-  - [net-next,02/13] mptcp: drop argument port from mptcp_pm_announce_addr
-    https://git.kernel.org/netdev/net-next/c/f7efc7771eac
-  - [net-next,03/13] mptcp: skip connecting the connected address
-    https://git.kernel.org/netdev/net-next/c/d84ad04941c3
-  - [net-next,04/13] mptcp: drop unused subflow in mptcp_pm_subflow_established
-    https://git.kernel.org/netdev/net-next/c/62535200be17
-  - [net-next,05/13] mptcp: move to next addr when timeout
-    https://git.kernel.org/netdev/net-next/c/348d5c1dec60
-  - [net-next,06/13] selftests: mptcp: add cfg_do_w for cfg_remove
-    https://git.kernel.org/netdev/net-next/c/2e580a63b5c2
-  - [net-next,07/13] selftests: mptcp: timeout testcases for multi addresses
-    https://git.kernel.org/netdev/net-next/c/8da6229b9524
-  - [net-next,08/13] mptcp: export lookup_anno_list_by_saddr
-    https://git.kernel.org/netdev/net-next/c/d88c476f4a7d
-  - [net-next,09/13] mptcp: move to next addr when subflow creation fail
-    https://git.kernel.org/netdev/net-next/c/557963c383e8
-  - [net-next,10/13] mptcp: drop useless addr_signal clear
-    https://git.kernel.org/netdev/net-next/c/b65d95adb802
-  - [net-next,11/13] mptcp: send ack for rm_addr
-    https://git.kernel.org/netdev/net-next/c/8dd5efb1f91b
-  - [net-next,12/13] mptcp: rename mptcp_pm_nl_add_addr_send_ack
-    https://git.kernel.org/netdev/net-next/c/b46a02381093
-  - [net-next,13/13] selftests: mptcp: signal addresses testcases
-    https://git.kernel.org/netdev/net-next/c/ef360019db40
-
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+-- 
+2.30.2
 
