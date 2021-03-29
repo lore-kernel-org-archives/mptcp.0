@@ -1,185 +1,122 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139876F
-	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 10:41:48 +0000 (UTC)
-Received: by mail-pj1-f44.google.com with SMTP id q6-20020a17090a4306b02900c42a012202so5706442pjg.5
-        for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 03:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zznaWsjWT7GzfWDIUkgAMr8RnCnd72vJQXQnzszEOZw=;
-        b=CLnx3ZBCtNPaumnyWOt/EIPTzpXO75ER3b2EMVprSiv4Rr6XxbzzHg4TwkMwAxEgxL
-         U82xIEFb9EngDNBSc1ayJBE9vsYE3b92hKmqFikHdOYTtu1vkaX52edmxI6vpp9N1+Fv
-         5KzBRtXTVeRFDbI7oH+1PwU2jTqnZeRsPORVHDAznZ4nYjilLEUDEOIzYyok+14PMsMl
-         a90nUU40pRJ9nlH046aSnki/BxIOUykieC39yYgKxVGEo/pvjQZVUEj5vFX7DuAd6Gt4
-         jdXIcsxpx8Ir2srL6yq1pyAfSkUFMoRXENG7Vb8CTR1e7KDtPgK50esvW3YNn2Xqz5ZX
-         VqIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zznaWsjWT7GzfWDIUkgAMr8RnCnd72vJQXQnzszEOZw=;
-        b=r7pNuHQkseABUqrGhpuE4q+Mi+LgqqpFtJi8495HcnW6gVWXk8/Ob1qPhTPQBTBAsU
-         LwAbhwSbALd+UMXR/hdhyNEwmWk4K6x4Hk24deeD8iNqs8ueAgOXXONEBWnpZUZzJ05o
-         0Kv7YTEu2tmgJrvcKcx8S7tBdJEL6OqqYaPDZpR5UmKl6fod/JGJsFfKWcwzKVTRxygV
-         8E0LunFNQK8SVH5Ec0XWT018VPREmA+s7UWn8Ud8auQ6kcvnjvp7MvMc81cL2A5H15Mo
-         A7WxGMYYxpatNpVpGsagOY0zraLfPCGD0c9+3tcTMrc0HBGuY2v8+DIpclelvMcQVtoi
-         el/w==
-X-Gm-Message-State: AOAM533uv1C5GnCzLo3JIXSrph7u2CF+wdLQUqKJb0SD9gUXurkNm+yI
-	V1NVGViZRH5bwWuLumBQ2q2lbLFglmIOpQ==
-X-Google-Smtp-Source: ABdhPJxd6jC+qAyHIrzXZn2JDoNxsbuThDbkPDmtRk+YXJGH2hSVHTf0eMSfn3L0cvGl2b/13C8kkg==
-X-Received: by 2002:a17:902:c154:b029:e5:e7cf:9627 with SMTP id 20-20020a170902c154b02900e5e7cf9627mr27710810plj.68.1617014507328;
-        Mon, 29 Mar 2021 03:41:47 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id y4sm16132019pfn.67.2021.03.29.03.41.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Mar 2021 03:41:46 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v2 mptcp-next 16/16] selftests: mptcp: enable checksum in mptcp_join.sh
-Date: Mon, 29 Mar 2021 18:40:47 +0800
-Message-Id: <3e75bdccce3b88e974ffc3f90a9b7b74ac6b067c.1617014019.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <fa2e5e2e8eee03798175cc42e73810518b47d29b.1617014019.git.geliangtang@gmail.com>
-References: <cover.1617014019.git.geliangtang@gmail.com> <ee1d26bf90397d9cbec5e4a165fc369ffab60d3e.1617014019.git.geliangtang@gmail.com>
- <26ccf630ac9be0aee87f4ccfcefc46515c9d61e8.1617014019.git.geliangtang@gmail.com>
- <a138746729a11cf08e8236d2c8cdf91226936690.1617014019.git.geliangtang@gmail.com>
- <14b6923c9fd052b140d5af261dfd2575d94b3e05.1617014019.git.geliangtang@gmail.com>
- <08ab4ce9f13e954b45d24c9e7842f7a6a9798d54.1617014019.git.geliangtang@gmail.com>
- <d8a242cfe08b2ab0ccb4752a15c8ea8ef0226ac1.1617014019.git.geliangtang@gmail.com>
- <1c0a240472edcc1afbcb822bd9af3cf03800759e.1617014019.git.geliangtang@gmail.com>
- <4c7e346e9d1005e8838dd8cf742d8324ef7553c0.1617014019.git.geliangtang@gmail.com>
- <4a289b981d90fcfda872ade12ec94d27d47bc01f.1617014019.git.geliangtang@gmail.com>
- <07856073b42a0343f81e6b6e468d6965b693fc5d.1617014019.git.geliangtang@gmail.com>
- <95dff6615e84496cab649de3d74917790f6a571f.1617014019.git.geliangtang@gmail.com>
- <44262de5d6a76c02e585ba148117af9b81355d0d.1617014019.git.geliangtang@gmail.com>
- <5364f608199436bf7125d8f89a4fefcaad2b5eb3.1617014019.git.geliangtang@gmail.com>
- <c231d3aa6b38374c1e28709e4d4b94e179c6e13c.1617014019.git.geliangtang@gmail.com>
- <fa2e5e2e8eee03798175cc42e73810518b47d29b.1617014019.git.geliangtang@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A505F70
+	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 13:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1617025935;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c8foLo8YmIqZbHWe1okxmTCK/YRLU0buTHRgteIVeXI=;
+	b=bfchaVRM3lk2c+AhtXgoMoHZv53wsEiazuntPnx1GFGW0nUo4DT/2cE72Vh1Pa+0ND5KiG
+	50vrrVZQd8jDVPJz1bigbJkGyO6LvAv72q0vJTXdBnqVGOYqHt5a8Mp/tWpSASHFylP1dK
+	pGBYCggyb1d8OxVFTp3WnnDcYyievHo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-X5Nq-A6KMgSNxWXM-BovKg-1; Mon, 29 Mar 2021 09:52:14 -0400
+X-MC-Unique: X5Nq-A6KMgSNxWXM-BovKg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD5F419251A0;
+	Mon, 29 Mar 2021 13:52:12 +0000 (UTC)
+Received: from ovpn-114-151.ams2.redhat.com (ovpn-114-151.ams2.redhat.com [10.36.114.151])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A118A60C03;
+	Mon, 29 Mar 2021 13:52:11 +0000 (UTC)
+Message-ID: <3bd1de25c30c16a76cdb2883b68fc1991002235a.camel@redhat.com>
+Subject: Re: [MPTCP][PATCH v2 mptcp-next 2/5] mptcp: add tracepoint in
+ mptcp_subflow_get_send
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.01.org, 
+	mptcp@lists.linux.dev
+Date: Mon, 29 Mar 2021 15:52:10 +0200
+In-Reply-To: <ffa353e9982d4795058abc87f1e2f52bc29e430b.1616575602.git.geliangtang@gmail.com>
+References: <cover.1616575602.git.geliangtang@gmail.com>
+	 <6e606e2aeb7ea4bdd1618783cb24675bcde693b2.1616575602.git.geliangtang@gmail.com>
+	 <ffa353e9982d4795058abc87f1e2f52bc29e430b.1616575602.git.geliangtang@gmail.com>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This patch added a new argument "C" for mptcp_join.sh script to set the
-sysctl checksum_enabled to 1 to enable the data checksum.
+On Wed, 2021-03-24 at 16:51 +0800, Geliang Tang wrote:
+> This patch added a tracepoint in the packet scheduler function
+> mptcp_subflow_get_send().
+> 
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> ---
+>  include/trace/events/mptcp.h | 43 ++++++++++++++++++++++++++++++++++++
+>  net/mptcp/protocol.c         |  4 ++++
+>  2 files changed, 47 insertions(+)
+>  create mode 100644 include/trace/events/mptcp.h
+> 
+> diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
+> new file mode 100644
+> index 000000000000..06908ea6afb4
+> --- /dev/null
+> +++ b/include/trace/events/mptcp.h
+> @@ -0,0 +1,43 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM mptcp
+> +
+> +#if !defined(_TRACE_MPTCP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_MPTCP_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(mptcp_subflow_get_send,
+> +
+> +	TP_PROTO(struct mptcp_subflow_context *subflow, struct sock *ssk),
+> +
+> +	TP_ARGS(subflow, ssk),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(bool, active)
+> +		__field(bool, free)
+> +		__field(u32, snd_wnd)
+> +		__field(u32, pace)
+> +		__field(u8, backup)
+> +		__field(u64, ratio)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->active = mptcp_subflow_active(subflow);
+> +		__entry->free = sk_stream_memory_free(subflow->tcp_sock);
 
-In chk_join_nr, check the counter of the mib for the data checksum.
+I'm sorry for not noticing the thing before, but subflow->tcp_sock can
+be potentially a TIME_WAIT socket. We need to do:
 
-The output looks like this:
+	sk = sk_fullsock(subflow->tcp_sock);
 
- 01 no JOIN                            syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       sum[ ok ] - csum  [ ok ]
- 02 single subflow, limited by client  syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                       sum[ ok ] - csum  [ ok ]
+and checking for sk being != NULL before accessing any tcp_sock or sock
+fields.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 40 +++++++++++++++++--
- 1 file changed, 36 insertions(+), 4 deletions(-)
+Note that the caller don't need such thing explicitly, because it
+accesses such fields only for mptcp_subflow_active() sockets - which
+are NOT TIME_WAIT ones.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fd99485cf2a4..b98ff993bcfe 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -12,6 +12,7 @@ timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- mptcp_connect=""
- capture=0
-+checksum=0
- do_all_tests=1
- 
- TEST_COUNT=0
-@@ -49,6 +50,9 @@ init()
- 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
- 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
- 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
-+		if [ $checksum -eq 1 ]; then
-+			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
-+		fi
- 	done
- 
- 	#  ns1              ns2
-@@ -517,6 +521,28 @@ chk_join_nr()
- 	else
- 		echo "[ ok ]"
- 	fi
-+	if [ $checksum -eq 1 ]; then
-+		printf "%-39s %s" " " "sum"
-+		count=`ip netns exec $ns1 nstat -as | grep MPTcpExtDSSCsumErr | awk '{print $2}'`
-+		[ -z "$count" ] && count=0
-+		if [ "$count" != 0 ]; then
-+			echo "[fail] got $count data checksum error[s] expected 0"
-+			ret=1
-+			dump_stats=1
-+		else
-+			echo -n "[ ok ]"
-+		fi
-+		echo -n " - csum  "
-+		count=`ip netns exec $ns2 nstat -as | grep MPTcpExtDSSCsumErr | awk '{print $2}'`
-+		[ -z "$count" ] && count=0
-+		if [ "$count" != 0 ]; then
-+			echo "[fail] got $count data checksum error[s] expected 0"
-+			ret=1
-+			dump_stats=1
-+		else
-+			echo "[ ok ]"
-+		fi
-+	fi
- 	if [ "${dump_stats}" = 1 ]; then
- 		echo Server ns stats
- 		ip netns exec $ns1 nstat -as | grep MPTcp
-@@ -1404,6 +1430,7 @@ usage()
- 	echo "  -p add_addr_ports_tests"
- 	echo "  -k syncookies_tests"
- 	echo "  -c capture pcap files"
-+	echo "  -C enable data checksum"
- 	echo "  -h help"
- }
- 
-@@ -1418,13 +1445,16 @@ make_file "$sin" "server" 1
- trap cleanup EXIT
- 
- for arg in "$@"; do
--	# check for "capture" arg before launching tests
-+	# check for "capture/checksum" args before launching tests
- 	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"c"[0-9a-zA-Z]*$ ]]; then
- 		capture=1
- 	fi
-+	if [[ "${arg}" =~ ^"-"[0-9a-zA-Z]*"C"[0-9a-zA-Z]*$ ]]; then
-+		checksum=1
-+	fi
- 
--	# exception for the capture option, the rest means: a part of the tests
--	if [ "${arg}" != "-c" ]; then
-+	# exception for the capture/checksum options, the rest means: a part of the tests
-+	if [ "${arg}" != "-c" ] && [ "${arg}" != "-C" ]; then
- 		do_all_tests=0
- 	fi
- done
-@@ -1434,7 +1464,7 @@ if [ $do_all_tests -eq 1 ]; then
- 	exit $ret
- fi
- 
--while getopts 'fsltra64bpkch' opt; do
-+while getopts 'fsltra64bpkchC' opt; do
- 	case $opt in
- 		f)
- 			subflows_tests
-@@ -1471,6 +1501,8 @@ while getopts 'fsltra64bpkch' opt; do
- 			;;
- 		c)
- 			;;
-+		C)
-+			;;
- 		h | *)
- 			usage
- 			;;
--- 
-2.30.2
+> +		__entry->snd_wnd = tcp_sk(ssk)->snd_wnd;
+> +		__entry->pace = ssk->sk_pacing_rate;
+> +		__entry->backup = subflow->backup;
+> +		__entry->ratio = div_u64((u64)ssk->sk_wmem_queued << 32, __entry->pace);
+
+Here we need to check for !__entry->pace, to avoid possible division by
+0.
+
+Thanks!
+
+Paolo
 
