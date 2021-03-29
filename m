@@ -1,48 +1,50 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759975F
-	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 10:40:53 +0000 (UTC)
-Received: by mail-pj1-f42.google.com with SMTP id a22-20020a17090aa516b02900c1215e9b33so7487607pjq.5
-        for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 03:40:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479CF5F
+	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 10:40:56 +0000 (UTC)
+Received: by mail-pj1-f48.google.com with SMTP id q6-20020a17090a4306b02900c42a012202so5705575pjg.5
+        for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 03:40:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MBzVBOiT33o/wDxCK+NAa0svRhck48DKTgyyObhXTPE=;
-        b=g5TT0G1hEWWyFNQKyX7hAF2QgFZhi76KbTqt7ryk3Ng8Z7d9BaNj36Cgj+aTFb7Hz6
-         +77Z0OSlWKof9WVHYHcQqimDKkMUE2ufEPZHmJCqE+c8KyxQJTu2ZUdfWA9X0G1l0+Qc
-         KipdwQMsoH0KZsQD4aKGPMtkWMoysHSup+qL+9/aUBfbYwr9WOuAW35Bh4+IYcI+LvjY
-         2gFdsO+J+tow4z6m+NTds8+bWX7r1N/rqmm1Dd7oDron40fg1AlO43vRMck7vEf53szk
-         NZcZas/kCdnBpObfaRrla8Krax5HOF7/ykekVB/tIVstj2vhnytyW1LG2hU55k6GhVZk
-         Eihw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gr19O/KR3TgER2zbnwZ3lflTbpA6uf1N1OMR65tI024=;
+        b=dOAzciQlXypNpUUsREzDjCBuFSUkRUxAr98K2+6WFKXEsVLRx66eJskqIG6PcFhNoQ
+         Z41DudMpgqZK9qhFUDr0KSYi/MKNtvCR0Ukit6vdyhTS8uVPs8Vrfcr+/TEyU9kF4N7H
+         yGtv1W9QSjZQt42bhMIYg30J1IQP4dsFvrE0RAS2IVyK9nax4iQrxzwa7TzrRMQWKmoc
+         HQcMaNVgMhxcimBkKDJAt7PIwYFL2u6cj+VwusBFkQr6V55eqNB32sKy4aWpbM8HzUXZ
+         Bp5bE6n2jrCdNvycWtm/DjPiZ9ZzR1pZ1cBENzQWm5H7KxqhogzGbgpkUYGy0LYzyW+q
+         Gh9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MBzVBOiT33o/wDxCK+NAa0svRhck48DKTgyyObhXTPE=;
-        b=lgydgU2B4xjwWHpI/swu+Ny9ZuLhtSIppVwWMlXMjEhIMSEf71LZDqDBrSTO+UBvLE
-         f/eudP3pxfSOYcOGRMcqYT3yPwsI+FFcd/L2RWm9ZhB5BqjEwLmJy2VSXhFpe+8OtH17
-         ILHdG1hWRe8T654iJ5uN6vLtyOtSgWX7xRA2Hndgv9dmEm4VGLjcokeQIKbQfvOxKKpU
-         QVYZVPEXZQElQd7N3cNGqsdXXNLEuVpyVhG4nBTNFQnAMLypW7KtiDh5EAPrBydZDN8W
-         vtWdilnFxlFueGExsFJ7lEw+Nr3sKdWS9LvbtIegLVXTJF+33BjX5k9J2+GOAlG1prtt
-         Gy1Q==
-X-Gm-Message-State: AOAM531zU2xj52AmkIjBH2Fqx/+c0KzPrdG5Mdm34wq2BRt89pt/Qoc3
-	dOAY6xq8iB3kZ/ouVqhoWu2VxMd2P9jHJQ==
-X-Google-Smtp-Source: ABdhPJwAEuJm0B7R1EzlfNUYBlod16FVzGYPGn8yg2wkujHL06AGzaBYBx3+6CVw2d5TdLc5HC4WHQ==
-X-Received: by 2002:a17:902:8497:b029:e6:f01d:9c9f with SMTP id c23-20020a1709028497b02900e6f01d9c9fmr28091790plo.7.1617014452270;
-        Mon, 29 Mar 2021 03:40:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gr19O/KR3TgER2zbnwZ3lflTbpA6uf1N1OMR65tI024=;
+        b=dKR5UlIuLg/8J1yrMv4M0Ma+150G7quwStslryuBEKGxg1x6zvXVnzqIGT0ailvVv1
+         IMiP2jL8JCOU/3WaOAG0c/PgeCjP3p0rUm64KvgRHy/HrR2X6EGck6mQaWm55Pse+12R
+         63ZgTJ6TGkDep4sp60KuJzzdmgGcr6vPDZVaAnOnCPpay0jBRKdTIRtox6N3S7TeMDgX
+         pN1bZwLm0JiQ9Ik4gb+7tjJTmwom/GR+CsugBLv6oe4Y5dpTbqTWhGKLp4kxlMH4SILa
+         AQpzgLRVTvQCOAIg4Hxby3WXS06SXHkuRiK/EMRIWy3UKlISPNaN1B6mEL/Hu7BVnytd
+         XG6Q==
+X-Gm-Message-State: AOAM531Racjq/PqVD6sJEl94ff4hH+Zc5g1Z3jKr0ACqfErvZu9QhD83
+	oZBXajmjd8tqU6mOH/dNfwR0RzW5cd7vgg==
+X-Google-Smtp-Source: ABdhPJyll3F6TDjyS+cWw58wARZDgiwfWT5zApaRdOzrN6aP0yMkV6kBmvh2/Kq0Yxb2ugzATwOmqQ==
+X-Received: by 2002:a17:90a:8908:: with SMTP id u8mr25080337pjn.135.1617014455577;
+        Mon, 29 Mar 2021 03:40:55 -0700 (PDT)
 Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id q34sm16414474pgl.92.2021.03.29.03.40.51
+        by smtp.gmail.com with ESMTPSA id f23sm16322861pfa.85.2021.03.29.03.40.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Mar 2021 03:40:51 -0700 (PDT)
+        Mon, 29 Mar 2021 03:40:55 -0700 (PDT)
 From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliangtang@gmail.com>
-Subject: [MPTCP][PATCH v2 mptcp-next 00/16] data checksum support
-Date: Mon, 29 Mar 2021 18:40:31 +0800
-Message-Id: <cover.1617014019.git.geliangtang@gmail.com>
+Subject: [MPTCP][PATCH v2 mptcp-next 01/16] mptcp: add csum_enabled in mptcp_sock
+Date: Mon, 29 Mar 2021 18:40:32 +0800
+Message-Id: <ee1d26bf90397d9cbec5e4a165fc369ffab60d3e.1617014019.git.geliangtang@gmail.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <cover.1617014019.git.geliangtang@gmail.com>
+References: <cover.1617014019.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -50,50 +52,47 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v2:
- - add the checksum support for MP_CAPABLE + data too.
- - validate the data that has been split in different skbs too.
- - add more patches.
- - tag: export/20210329T052816
- - patch 14 ("mptcp: add trace event for data checksum") depends on the
-"add tracepoints" series.
+This patch added a new member named csum_enabled in struct mptcp_sock,
+used a dummy mptcp_is_checksum_enabled() helper to initialize it.
+
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ net/mptcp/protocol.c | 1 +
+ net/mptcp/protocol.h | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 0265b8be0f84..56103814afed 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2368,6 +2368,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	msk->ack_hint = NULL;
+ 	msk->first = NULL;
+ 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
++	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
  
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/134
-
-Geliang Tang (16):
-  mptcp: add csum_enabled in mptcp_sock
-  mptcp: generate the data checksum
-  mptcp: add csum_reqd in mptcp_out_options
-  mptcp: send out checksum for MP_CAPABLE with data
-  mptcp: send out checksum for DSS
-  mptcp: add csum_reqd in mptcp_options_received
-  mptcp: add sk parameter for mptcp_parse_option
-  mptcp: receive checksum for MP_CAPABLE with data
-  mptcp: receive checksum for DSS
-  mptcp: validate the data checksum
-  mptcp: add the mib for data checksum
-  mptcp: add a new sysctl checksum_enabled
-  mptcp: add mptcpi_csum_enabled in mptcp_info
-  mptcp: add trace event for data checksum
-  selftests: mptcp: enable checksum in mptcp_connect.sh
-  selftests: mptcp: enable checksum in mptcp_join.sh
-
- Documentation/networking/mptcp-sysctl.rst     |   8 ++
- include/net/mptcp.h                           |   4 +-
- include/trace/events/mptcp.h                  |  38 ++++++
- include/uapi/linux/mptcp.h                    |   1 +
- net/mptcp/ctrl.c                              |  14 +++
- net/mptcp/mib.c                               |   1 +
- net/mptcp/mib.h                               |   1 +
- net/mptcp/mptcp_diag.c                        |   1 +
- net/mptcp/options.c                           | 112 +++++++++++++-----
- net/mptcp/protocol.c                          |  65 ++++++++++
- net/mptcp/protocol.h                          |  20 +++-
- net/mptcp/subflow.c                           |  20 ++--
- .../selftests/net/mptcp/mptcp_connect.sh      |  13 +-
- .../testing/selftests/net/mptcp/mptcp_join.sh |  40 ++++++-
- 14 files changed, 294 insertions(+), 44 deletions(-)
-
+ 	mptcp_pm_data_init(msk);
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 20770fe39ea5..826019bb2093 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -233,6 +233,7 @@ struct mptcp_sock {
+ 	bool		snd_data_fin_enable;
+ 	bool		rcv_fastclose;
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
++	bool		csum_enabled;
+ 	spinlock_t	join_list_lock;
+ 	struct sock	*ack_hint;
+ 	struct work_struct work;
+@@ -519,6 +520,7 @@ static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *su
+ 
+ int mptcp_is_enabled(struct net *net);
+ unsigned int mptcp_get_add_addr_timeout(struct net *net);
++static inline int mptcp_is_checksum_enabled(struct net *net) { return false; }
+ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+ 				     struct mptcp_options_received *mp_opt);
+ bool mptcp_subflow_data_available(struct sock *sk);
 -- 
 2.30.2
 
