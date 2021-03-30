@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9321C72
-	for <mptcp@lists.linux.dev>; Tue, 30 Mar 2021 13:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED94170
+	for <mptcp@lists.linux.dev>; Tue, 30 Mar 2021 17:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1617112305;
+	s=mimecast20190719; t=1617125186;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Uq5DcIeoBnhZjXt1cZIhx9yJSKCvXvh+nwqZXvsrisY=;
-	b=UmZl/8ik4LqAbWD6rgJczliAvxqrQ2EEtQWvvE0UtElNHDdNkR2F95pqGcdwxkZluS/M3b
-	LIm6ymCGs5czaIMMBiIOqVW5tzFMz9WCxbKg+guFT5ldLK6f5gYEMnpum5AlIUi4Qq0nve
-	9I08SDh2cgj3c4GA+PIwkYEoU7hUS0Y=
+	bh=smhjpuDkk9O3QxF1C7VS48M21BkPBERtVnOKOYVY/V0=;
+	b=T1PBiDG+iyQXk6QiwG5amMmuPqaazxO1Zb7PORkQ4gqEQ0Thzt15uDo9+UgagmnNWHBOtx
+	4D++ZvClqOvTHYwf8sDb7vvpcVZgt/tgJC9AdjXNOy87keXLAai+8FV7BB0RrIS0nZGGeM
+	gGZlZCqfJveP60k1jqFb+ozcxwjl4Dc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-_Xs6g6uDOYuZHZi2kKiEKQ-1; Tue, 30 Mar 2021 09:51:43 -0400
-X-MC-Unique: _Xs6g6uDOYuZHZi2kKiEKQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-417-Ib92LVC5NQy9UaNIbjxjkw-1; Tue, 30 Mar 2021 13:26:24 -0400
+X-MC-Unique: Ib92LVC5NQy9UaNIbjxjkw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CCB4F835B64;
-	Tue, 30 Mar 2021 13:51:42 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8EFAD190B2B0;
+	Tue, 30 Mar 2021 17:26:23 +0000 (UTC)
 Received: from ovpn-115-56.ams2.redhat.com (ovpn-115-56.ams2.redhat.com [10.36.115.56])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EC38E60861;
-	Tue, 30 Mar 2021 13:51:41 +0000 (UTC)
-Message-ID: <b0cbe100fd42007cf3798911da4c4c932c991b4d.camel@redhat.com>
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A576819C44;
+	Tue, 30 Mar 2021 17:26:22 +0000 (UTC)
+Message-ID: <59e6d2e5fb0607a88ba1ee7da66182bf08559044.camel@redhat.com>
 Subject: Re: [MPTCP][PATCH v3 mptcp-next 1/4] mptcp: add tracepoint in
  mptcp_subflow_get_send
 From: Paolo Abeni <pabeni@redhat.com>
 To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.linux.dev
-Date: Tue, 30 Mar 2021 15:51:40 +0200
+Date: Tue, 30 Mar 2021 19:26:21 +0200
 In-Reply-To: <c69ce9cc277fd134a5254dee68436f6035ab594e.1617095554.git.geliangtang@gmail.com>
 References: <cover.1617095554.git.geliangtang@gmail.com>
 	 <c69ce9cc277fd134a5254dee68436f6035ab594e.1617095554.git.geliangtang@gmail.com>
@@ -40,7 +40,7 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Authentication-Results: relay.mimecast.com;
 	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
 X-Mimecast-Spam-Score: 0
@@ -133,20 +133,16 @@ On Tue, 2021-03-30 at 17:16 +0800, Geliang Tang wrote:
 > +					     sk_stream_memory_free(subflow->tcp_sock),
 > +					     tcp_sk(ssk)->snd_wnd, pace,
 > +					     subflow->backup, ratio);
+>  	}
+>  
+>  	pr_debug("msk=%p nr_active=%d ssk=%p:%lld backup=%p:%lld",
 
-If I read correctly, here 'mptcp_subflow_active(subflow)' should be
-always true. That means we actually don't trace some data: we don'
-trace not active subflows, subflows with 0 pacing_rate etc.
-
-We should instead get the info even for them.
-
-I think it would be better move the tracepoint just after the loop
-start, move mptcp_subflow_active() to the header file, and do the
-relevant check inside the tracepoint.
+I almost forgot! With the newly added tracepoint, we can drop this
+printk and the later one - still in mptcp_subflow_get_send().
 
 Thanks!
 
-Side note: the other patches LGTM, thanks !
-
 Paolo
+
+
 
