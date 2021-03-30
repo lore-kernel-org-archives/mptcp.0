@@ -1,128 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FA170
-	for <mptcp@lists.linux.dev>; Mon, 29 Mar 2021 14:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1617026628;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G/agwjUCyBtUHhqS5G+t6ls0k8Xg3Fkvz/DEaGi/A0Q=;
-	b=BqA2L4F5P3djtU2NpkE+3ZNGRZDmxhaZvJCTUxnX7yipab12scVW8VTuuv3iiLJc2YTW/G
-	4xOY0IwO9jfS6e/bxmD2hZ6Ff1+g7p9fI3VEvrPPQPj7hYjjDSMR+uGA6sO51W97RW6+zj
-	KcCup9gbg21G6jbeOM3U2PCrE2M7T4Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-f5QI2GgkP7WQHBubXZxj6g-1; Mon, 29 Mar 2021 10:03:06 -0400
-X-MC-Unique: f5QI2GgkP7WQHBubXZxj6g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4621A0CA7;
-	Mon, 29 Mar 2021 14:03:05 +0000 (UTC)
-Received: from ovpn-114-151.ams2.redhat.com (ovpn-114-151.ams2.redhat.com [10.36.114.151])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C6E9760C28;
-	Mon, 29 Mar 2021 14:03:04 +0000 (UTC)
-Message-ID: <53c0bcd6a552191a70ee1d2675dd0054bb75d099.camel@redhat.com>
-Subject: Re: [MPTCP][PATCH v2 mptcp-next 4/5] mptcp: add tracepoint in
- ack_update_msk
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliangtang@gmail.com>, mptcp@lists.01.org, 
-	mptcp@lists.linux.dev
-Date: Mon, 29 Mar 2021 16:03:03 +0200
-In-Reply-To: <0662c0637222901b447135bb10aaad7dea9b4a49.1616575602.git.geliangtang@gmail.com>
-References: <cover.1616575602.git.geliangtang@gmail.com>
-	 <6e606e2aeb7ea4bdd1618783cb24675bcde693b2.1616575602.git.geliangtang@gmail.com>
-	 <ffa353e9982d4795058abc87f1e2f52bc29e430b.1616575602.git.geliangtang@gmail.com>
-	 <9b74169474a157c54953de796bc35ef54a710a18.1616575602.git.geliangtang@gmail.com>
-	 <0662c0637222901b447135bb10aaad7dea9b4a49.1616575602.git.geliangtang@gmail.com>
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E576F
+	for <mptcp@lists.linux.dev>; Tue, 30 Mar 2021 00:15:44 +0000 (UTC)
+IronPort-SDR: RwcS3WMGj2Ir7WYpvNm8JDHoEgxs0YL/fiJ/7EhKOT1ttel/zN9oUa4BMuxsdax1+V2HGJPWVJ
+ A9rhuwRZ6DyQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="178784868"
+X-IronPort-AV: E=Sophos;i="5.81,289,1610438400"; 
+   d="scan'208";a="178784868"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 17:15:42 -0700
+IronPort-SDR: vAKBK0jBEnm5nfP63Dc5ZOrBeh4xrq4o1FazlhGOx9ilPTdOKebbpRONhhv6f7PQh5f8JCunDZ
+ 0Ve7KpTZh9qw==
+X-IronPort-AV: E=Sophos;i="5.81,289,1610438400"; 
+   d="scan'208";a="411339428"
+Received: from erwebste-mobl.amr.corp.intel.com ([10.251.11.21])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 17:15:42 -0700
+Date: Mon, 29 Mar 2021 17:15:41 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliangtang@gmail.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [MPTCP][PATCH v2 mptcp-next 07/16] mptcp: add sk parameter for
+ mptcp_parse_option
+In-Reply-To: <1c0a240472edcc1afbcb822bd9af3cf03800759e.1617014019.git.geliangtang@gmail.com>
+Message-ID: <ec8eb233-b71d-c783-8f35-16b1c01ddf28@linux.intel.com>
+References: <cover.1617014019.git.geliangtang@gmail.com> <ee1d26bf90397d9cbec5e4a165fc369ffab60d3e.1617014019.git.geliangtang@gmail.com> <26ccf630ac9be0aee87f4ccfcefc46515c9d61e8.1617014019.git.geliangtang@gmail.com>
+ <a138746729a11cf08e8236d2c8cdf91226936690.1617014019.git.geliangtang@gmail.com> <14b6923c9fd052b140d5af261dfd2575d94b3e05.1617014019.git.geliangtang@gmail.com> <08ab4ce9f13e954b45d24c9e7842f7a6a9798d54.1617014019.git.geliangtang@gmail.com>
+ <d8a242cfe08b2ab0ccb4752a15c8ea8ef0226ac1.1617014019.git.geliangtang@gmail.com> <1c0a240472edcc1afbcb822bd9af3cf03800759e.1617014019.git.geliangtang@gmail.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 2021-03-24 at 16:51 +0800, Geliang Tang wrote:
-> This patch added a tracepoint in ack_update_msk() to track the
-> incoming data_ack and window/snd_una updates.
-> 
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+On Mon, 29 Mar 2021, Geliang Tang wrote:
+
+> This patch added a new parameter name sk in mptcp_parse_option() and
+> mptcp_get_options().
+>
 > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 > ---
->  include/trace/events/mptcp.h | 25 +++++++++++++++++++++++++
->  net/mptcp/options.c          |  3 +++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-> index 503a6098909d..2b8ae5e81cd1 100644
-> --- a/include/trace/events/mptcp.h
-> +++ b/include/trace/events/mptcp.h
-> @@ -91,6 +91,31 @@ DEFINE_EVENT(mptcp_dump_mpext, get_mapping_status,
->  	TP_PROTO(struct mptcp_ext *mpext),
->  	TP_ARGS(mpext));
->  
-> +TRACE_EVENT(ack_update_msk,
-> +
-> +	TP_PROTO(u64 data_ack, u64 old_snd_una, u64 new_snd_una, u64 new_wnd_end),
-> +
-> +	TP_ARGS(data_ack, old_snd_una, new_snd_una, new_wnd_end),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(u64, data_ack)
-> +		__field(u64, old_snd_una)
-> +		__field(u64, new_snd_una)
-> +		__field(u64, new_wnd_end)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->data_ack = data_ack;
-> +		__entry->old_snd_una = old_snd_una;
-> +		__entry->new_snd_una = new_snd_una;
-> +		__entry->new_wnd_end = new_wnd_end;
-> +	),
-> +
-> +	TP_printk("data_ack=%llu old_snd_una=%llu new_snd_una=%llu new_wnd_end=%llu",
-> +		  __entry->data_ack, __entry->old_snd_una,
-> +		  __entry->new_snd_una, __entry->new_wnd_end)
-> +);
-> +
->  #endif /* _TRACE_MPTCP_H */
->  
->  /* This part must be outside protection */
+
+Could you squash patches 7, 8, and 9 to help keep the patch set size under 
+15 (netdev patchwork flags patchsets longer than that)?
+
+Thanks,
+
+Mat
+
+
+> net/mptcp/options.c  | 10 ++++++----
+> net/mptcp/protocol.h |  3 ++-
+> net/mptcp/subflow.c  | 10 +++++-----
+> 3 files changed, 13 insertions(+), 10 deletions(-)
+>
 > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index c7eb61d0564c..87bd1bfde964 100644
+> index 6acb7469bae9..cb423cba5c3b 100644
 > --- a/net/mptcp/options.c
 > +++ b/net/mptcp/options.c
-> @@ -13,6 +13,8 @@
->  #include "protocol.h"
->  #include "mib.h"
->  
-> +#include <trace/events/mptcp.h>
-> +
->  static bool mptcp_cap_flag_sha256(u8 flags)
->  {
->  	return (flags & MPTCP_CAP_FLAG_MASK) == MPTCP_CAP_HMAC_SHA256;
-> @@ -942,6 +944,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
->  		__mptcp_data_acked(sk);
->  	}
->  	mptcp_data_unlock(sk);
-> +	trace_ack_update_msk(mp_opt->data_ack, old_snd_una, new_snd_una, new_wnd_end);
+> @@ -20,7 +20,8 @@ static bool mptcp_cap_flag_sha256(u8 flags)
+> 	return (flags & MPTCP_CAP_FLAG_MASK) == MPTCP_CAP_HMAC_SHA256;
+> }
+>
+> -static void mptcp_parse_option(const struct sk_buff *skb,
+> +static void mptcp_parse_option(const struct sock *sk,
+> +			       const struct sk_buff *skb,
+> 			       const unsigned char *ptr, int opsize,
+> 			       struct mptcp_options_received *mp_opt)
+> {
+> @@ -322,7 +323,8 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+> 	}
+> }
+>
+> -void mptcp_get_options(const struct sk_buff *skb,
+> +void mptcp_get_options(const struct sock *sk,
+> +		       const struct sk_buff *skb,
+> 		       struct mptcp_options_received *mp_opt)
+> {
+> 	const struct tcphdr *th = tcp_hdr(skb);
+> @@ -362,7 +364,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+> 			if (opsize > length)
+> 				return;	/* don't parse partial options */
+> 			if (opcode == TCPOPT_MPTCP)
+> -				mptcp_parse_option(skb, ptr, opsize, mp_opt);
+> +				mptcp_parse_option(sk, skb, ptr, opsize, mp_opt);
+> 			ptr += opsize - 2;
+> 			length -= opsize;
+> 		}
+> @@ -1016,7 +1018,7 @@ void mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
+> 		return;
+> 	}
+>
+> -	mptcp_get_options(skb, &mp_opt);
+> +	mptcp_get_options(sk, skb, &mp_opt);
+> 	if (!check_fully_established(msk, sk, subflow, skb, &mp_opt))
+> 		return;
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index ae7d47352d09..cfdecfb90776 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -570,7 +570,8 @@ int __init mptcp_proto_v6_init(void);
+> struct sock *mptcp_sk_clone(const struct sock *sk,
+> 			    const struct mptcp_options_received *mp_opt,
+> 			    struct request_sock *req);
+> -void mptcp_get_options(const struct sk_buff *skb,
+> +void mptcp_get_options(const struct sock *sk,
+> +		       const struct sk_buff *skb,
+> 		       struct mptcp_options_received *mp_opt);
+>
+> void mptcp_finish_connect(struct sock *sk);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index cbdfa5a6f8f6..75664da251a6 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -151,7 +151,7 @@ static int subflow_check_req(struct request_sock *req,
+> 		return -EINVAL;
+> #endif
+>
+> -	mptcp_get_options(skb, &mp_opt);
+> +	mptcp_get_options(sk_listener, skb, &mp_opt);
+>
+> 	if (mp_opt.mp_capable) {
+> 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
+> @@ -248,7 +248,7 @@ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+> 	int err;
+>
+> 	subflow_init_req(req, sk_listener);
+> -	mptcp_get_options(skb, &mp_opt);
+> +	mptcp_get_options(sk_listener, skb, &mp_opt);
+>
+> 	if (mp_opt.mp_capable && mp_opt.mp_join)
+> 		return -EINVAL;
+> @@ -395,7 +395,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+> 	subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
+> 	pr_debug("subflow=%p synack seq=%x", subflow, subflow->ssn_offset);
+>
+> -	mptcp_get_options(skb, &mp_opt);
+> +	mptcp_get_options(sk, skb, &mp_opt);
+> 	if (subflow->request_mptcp) {
+> 		if (!mp_opt.mp_capable) {
+> 			MPTCP_INC_STATS(sock_net(sk),
+> @@ -642,7 +642,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+> 			goto create_msk;
+> 		}
+>
+> -		mptcp_get_options(skb, &mp_opt);
+> +		mptcp_get_options(sk, skb, &mp_opt);
+> 		if (!mp_opt.mp_capable) {
+> 			fallback = true;
+> 			goto create_child;
+> @@ -653,7 +653,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+> 		if (!new_msk)
+> 			fallback = true;
+> 	} else if (subflow_req->mp_join) {
+> -		mptcp_get_options(skb, &mp_opt);
+> +		mptcp_get_options(sk, skb, &mp_opt);
+> 		if (!mp_opt.mp_join || !subflow_hmac_valid(req, &mp_opt) ||
+> 		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
+> 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
+> -- 
+> 2.30.2
+>
+>
+>
 
-Here it would be nice add also 'msk->wnd_end' as an argument and dump
-it in the trace event, so that trace point could tell us always the new
-windows end value.
-
-Thanks!
-
-Paolo
-
+--
+Mat Martineau
+Intel
