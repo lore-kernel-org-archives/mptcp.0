@@ -1,21 +1,21 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA8C70
-	for <mptcp@lists.linux.dev>; Wed, 31 Mar 2021 00:09:05 +0000 (UTC)
-IronPort-SDR: 4l3UYVeEhGiAP0iJZNgG16dgSFkSESqpwLW3b3lwC/B/8FEL1HRBcOuddB+0qgPJmxKfsR712J
- P+Bn6FVPTYWg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="191357749"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D366D5F
+	for <mptcp@lists.linux.dev>; Wed, 31 Mar 2021 00:09:04 +0000 (UTC)
+IronPort-SDR: vkeo30TN7exOeYt1dC/XcMaNkWbQV18SH2856NqGLPnQZDgC3kBk24TAfqx9aU3U5boGJ+kL4z
+ HVj+Bi6K3FmQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="179012031"
 X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="191357749"
+   d="scan'208";a="179012031"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
-IronPort-SDR: /yTy4aUtwoG44/qamjaqFlr7xezLgfxHstXD8rvNqN6YGKZYviasz+3Ljb/Rq368Hq2qgQ0p3j
- Aqs/1YyG6v5A==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
+IronPort-SDR: ZhY/kRe+zKxh2m6NDhj0c17+FX+32e2RFsIeheopsjY+KN+qyJ5d7Gw1sj80IMA1HFGnd0X31i
+ 5qJ1yXjm+g7g==
 X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="378682556"
+   d="scan'208";a="378682561"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.25.43])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:01 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Geliang Tang <geliangtang@gmail.com>,
@@ -24,9 +24,9 @@ Cc: Geliang Tang <geliangtang@gmail.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 1/6] mptcp: remove all subflows involving id 0 address
-Date: Tue, 30 Mar 2021 17:08:51 -0700
-Message-Id: <20210331000856.117636-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 5/6] selftests: mptcp: add addr argument for del_addr
+Date: Tue, 30 Mar 2021 17:08:55 -0700
+Message-Id: <20210331000856.117636-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
 References: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
@@ -39,50 +39,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-There's only one subflow involving the non-zero id address, but there
-may be multi subflows involving the id 0 address.
+For the id 0 address, different MPTCP connections could be using
+different IP addresses for id 0.
 
-Here's an example:
-
- local_id=0, remote_id=0
- local_id=1, remote_id=0
- local_id=0, remote_id=1
-
-If the removing address id is 0, all the subflows involving the id 0
-address need to be removed.
-
-In mptcp_pm_nl_rm_addr_received/mptcp_pm_nl_rm_subflow_received, the
-"break" prevents the iteration to the next subflow, so this patch
-dropped them.
+This patch added an extra argument IP address for del_addr when
+using id 0.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- net/mptcp/pm_netlink.c | 4 ----
- 1 file changed, 4 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 34 +++++++++++++++++--
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 73b9245c87b2..87a6133fd778 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -621,8 +621,6 @@ static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
- 			WRITE_ONCE(msk->pm.accept_addr, true);
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 7b4167f3f9a2..115decfdc1ef 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -26,7 +26,7 @@ static void syntax(char *argv[])
+ {
+ 	fprintf(stderr, "%s add|get|set|del|flush|dump|accept [<args>]\n", argv[0]);
+ 	fprintf(stderr, "\tadd [flags signal|subflow|backup] [id <nr>] [dev <name>] <ip>\n");
+-	fprintf(stderr, "\tdel <id>\n");
++	fprintf(stderr, "\tdel <id> [<ip>]\n");
+ 	fprintf(stderr, "\tget <id>\n");
+ 	fprintf(stderr, "\tset <ip> [flags backup|nobackup]\n");
+ 	fprintf(stderr, "\tflush\n");
+@@ -301,6 +301,7 @@ int del_addr(int fd, int pm_family, int argc, char *argv[])
+ 		  1024];
+ 	struct rtattr *rta, *nest;
+ 	struct nlmsghdr *nh;
++	u_int16_t family;
+ 	int nest_start;
+ 	u_int8_t id;
+ 	int off = 0;
+@@ -310,11 +311,14 @@ int del_addr(int fd, int pm_family, int argc, char *argv[])
+ 	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_DEL_ADDR,
+ 			    MPTCP_PM_VER);
  
- 			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
--
--			break;
- 		}
- 	}
- }
-@@ -695,8 +693,6 @@ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
- 			msk->pm.subflows--;
+-	/* the only argument is the address id */
+-	if (argc != 3)
++	/* the only argument is the address id (nonzero) */
++	if (argc != 3 && argc != 4)
+ 		syntax(argv);
  
- 			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
--
--			break;
- 		}
- 	}
- }
+ 	id = atoi(argv[2]);
++	/* zero id with the IP address */
++	if (!id && argc != 4)
++		syntax(argv);
+ 
+ 	nest_start = off;
+ 	nest = (void *)(data + off);
+@@ -328,6 +332,30 @@ int del_addr(int fd, int pm_family, int argc, char *argv[])
+ 	rta->rta_len = RTA_LENGTH(1);
+ 	memcpy(RTA_DATA(rta), &id, 1);
+ 	off += NLMSG_ALIGN(rta->rta_len);
++
++	if (!id) {
++		/* addr data */
++		rta = (void *)(data + off);
++		if (inet_pton(AF_INET, argv[3], RTA_DATA(rta))) {
++			family = AF_INET;
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR4;
++			rta->rta_len = RTA_LENGTH(4);
++		} else if (inet_pton(AF_INET6, argv[3], RTA_DATA(rta))) {
++			family = AF_INET6;
++			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR6;
++			rta->rta_len = RTA_LENGTH(16);
++		} else {
++			error(1, errno, "can't parse ip %s", argv[3]);
++		}
++		off += NLMSG_ALIGN(rta->rta_len);
++
++		/* family */
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_FAMILY;
++		rta->rta_len = RTA_LENGTH(2);
++		memcpy(RTA_DATA(rta), &family, 2);
++		off += NLMSG_ALIGN(rta->rta_len);
++	}
+ 	nest->rta_len = off - nest_start;
+ 
+ 	do_nl_req(fd, nh, off, 0);
 -- 
 2.31.1
 
