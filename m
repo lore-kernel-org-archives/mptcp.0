@@ -1,121 +1,75 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1F570
-	for <mptcp@lists.linux.dev>; Wed, 31 Mar 2021 00:09:06 +0000 (UTC)
-IronPort-SDR: VGofcx2s9iiBrX8v/oobQeyznshR3Jb8CPoigfqIh3HKTzgYES98uESzVdQ+7Wq2NIbynVcrSf
- aTeNLaQNiWfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="191357754"
-X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="191357754"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
-IronPort-SDR: d+YndaaNTIY/LqsdCnMPcsmJAhJCtRCg+mAVXq/mApndMUeXop524xsD9lhiEmTNxN7HFfpSki
- LJK+WLQNVKSQ==
-X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="378682558"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.25.43])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Geliang Tang <geliangtang@gmail.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	matthieu.baerts@tessares.net,
-	mptcp@lists.linux.dev,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 3/6] mptcp: remove id 0 address
-Date: Tue, 30 Mar 2021 17:08:53 -0700
-Message-Id: <20210331000856.117636-4-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
-References: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450B66F
+	for <mptcp@lists.linux.dev>; Wed, 31 Mar 2021 00:50:10 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id D2817619DB;
+	Wed, 31 Mar 2021 00:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1617151809;
+	bh=Rj5kyax0oRrJSwxVrB0DmuTHLjaUVZ3Fldy1o44zbL0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Tg0u0BGSJ3ebPr/9e0LjULwbZkStsHepj5puNpfPWY+8kX73I6pgWTHno966sp9rG
+	 m81OH1ZjGD+KBmOEPof+8qEaDtBmmqGC7Ay5tjhZD8/U/iTiUDr76PFR84IzBf/3cX
+	 FQA3G1LqWhg2Er6X1IPF196w5H2sX/8f/atsPRxy9BlEdvXa73dnDgToDTqe3BuRFL
+	 QENvKdfVwPK827oV+DXjjF+/hX5GbJgPBtaAObEzzW/Kuvi5VmrYuQNWCjVuXT0LW+
+	 B1OPEkE30TyRWJcV+kWvFhnHhNxHE457kJLCPvfXqfSgcA7sosGA72O/Q2b8AEhleA
+	 fkBXAGjR8WAeQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id CD16C60A56;
+	Wed, 31 Mar 2021 00:50:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] MPTCP: Allow initial subflow to be disconnected
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <161715180983.15741.2464125249248249842.git-patchwork-notify@kernel.org>
+Date: Wed, 31 Mar 2021 00:50:09 +0000
+References: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-From: Geliang Tang <geliangtang@gmail.com>
+Hello:
 
-This patch added a new function mptcp_nl_remove_id_zero_address to
-remove the id 0 address.
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-In this function, traverse all the existing msk sockets to find the
-msk matched the input IP address. Then fill the removing list with
-id 0, and pass it to mptcp_pm_remove_addr and mptcp_pm_remove_subflow.
+On Tue, 30 Mar 2021 17:08:50 -0700 you wrote:
+> An MPTCP connection is aggregated from multiple TCP subflows, and can
+> involve multiple IP addresses on either peer. The addresses used in the
+> initial subflow connection are assigned address id 0 on each side of the
+> link. More addresses can be added and shared with the peer using address
+> IDs of 1 or larger. MPTCP in Linux shares non-zero address IDs across
+> all MPTCP connections in a net namespace, which allows userspace to
+> manage subflow connections across a number of sockets. However, this
+> makes the address with id 0 a special case, since the IP address
+> associated with id 0 is potentially different for each socket.
+> 
+> [...]
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/mptcp/pm_netlink.c | 43 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+Here is the summary with links:
+  - [net-next,1/6] mptcp: remove all subflows involving id 0 address
+    https://git.kernel.org/netdev/net-next/c/774c8a8dcb3c
+  - [net-next,2/6] mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+    https://git.kernel.org/netdev/net-next/c/9f12e97bf16c
+  - [net-next,3/6] mptcp: remove id 0 address
+    https://git.kernel.org/netdev/net-next/c/740d798e8767
+  - [net-next,4/6] selftests: mptcp: avoid calling pm_nl_ctl with bad IDs
+    https://git.kernel.org/netdev/net-next/c/6254ad408820
+  - [net-next,5/6] selftests: mptcp: add addr argument for del_addr
+    https://git.kernel.org/netdev/net-next/c/2d121c9a882a
+  - [net-next,6/6] selftests: mptcp: remove id 0 address testcases
+    https://git.kernel.org/netdev/net-next/c/5e287fe76149
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index e00397f2abf1..cadafafa1049 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1156,6 +1156,41 @@ static void mptcp_pm_free_addr_entry(struct mptcp_pm_addr_entry *entry)
- 	}
- }
- 
-+static int mptcp_nl_remove_id_zero_address(struct net *net,
-+					   struct mptcp_addr_info *addr)
-+{
-+	struct mptcp_rm_list list = { .nr = 0 };
-+	long s_slot = 0, s_num = 0;
-+	struct mptcp_sock *msk;
-+
-+	list.ids[list.nr++] = 0;
-+
-+	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
-+		struct sock *sk = (struct sock *)msk;
-+		struct mptcp_addr_info msk_local;
-+
-+		if (list_empty(&msk->conn_list))
-+			goto next;
-+
-+		local_address((struct sock_common *)msk, &msk_local);
-+		if (!addresses_equal(&msk_local, addr, addr->port))
-+			goto next;
-+
-+		lock_sock(sk);
-+		spin_lock_bh(&msk->pm.lock);
-+		mptcp_pm_remove_addr(msk, &list);
-+		mptcp_pm_nl_rm_subflow_received(msk, &list);
-+		spin_unlock_bh(&msk->pm.lock);
-+		release_sock(sk);
-+
-+next:
-+		sock_put(sk);
-+		cond_resched();
-+	}
-+
-+	return 0;
-+}
-+
- static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-@@ -1168,6 +1203,14 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 
-+	/* the zero id address is special: the first address used by the msk
-+	 * always gets such an id, so different subflows can have different zero
-+	 * id addresses. Additionally zero id is not accounted for in id_bitmap.
-+	 * Let's use an 'mptcp_rm_list' instead of the common remove code.
-+	 */
-+	if (addr.addr.id == 0)
-+		return mptcp_nl_remove_id_zero_address(sock_net(skb->sk), &addr.addr);
-+
- 	spin_lock_bh(&pernet->lock);
- 	entry = __lookup_addr_by_id(pernet, addr.addr.id);
- 	if (!entry) {
--- 
-2.31.1
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
