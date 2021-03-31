@@ -1,19 +1,19 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D366D5F
-	for <mptcp@lists.linux.dev>; Wed, 31 Mar 2021 00:09:04 +0000 (UTC)
-IronPort-SDR: vkeo30TN7exOeYt1dC/XcMaNkWbQV18SH2856NqGLPnQZDgC3kBk24TAfqx9aU3U5boGJ+kL4z
- HVj+Bi6K3FmQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="179012031"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E962917F
+	for <mptcp@lists.linux.dev>; Wed, 31 Mar 2021 00:09:05 +0000 (UTC)
+IronPort-SDR: HdmwZR/bpYO4lo8PrMZ4hk54bXI2HJLMdJ2oIv6VnhMPAsInUp/sM3wYDib8kMvPPPKNARt+ve
+ I+hyqiblwpwg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="191357750"
 X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="179012031"
+   d="scan'208";a="191357750"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
-IronPort-SDR: ZhY/kRe+zKxh2m6NDhj0c17+FX+32e2RFsIeheopsjY+KN+qyJ5d7Gw1sj80IMA1HFGnd0X31i
- 5qJ1yXjm+g7g==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
+IronPort-SDR: HeiqdIO/OcKRWOuul2yEYG5iB8OYmQN1pRzRvSGfkBS7frZmV2+iFxpZmqNcomTUEpCUrvQgdd
+ hDPm7KTHOo4g==
 X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="378682561"
+   d="scan'208";a="378682557"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.251.25.43])
   by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 17:09:02 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -23,10 +23,11 @@ Cc: Geliang Tang <geliangtang@gmail.com>,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
+	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 5/6] selftests: mptcp: add addr argument for del_addr
-Date: Tue, 30 Mar 2021 17:08:55 -0700
-Message-Id: <20210331000856.117636-6-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 2/6] mptcp: unify RM_ADDR and RM_SUBFLOW receiving
+Date: Tue, 30 Mar 2021 17:08:52 -0700
+Message-Id: <20210331000856.117636-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
 References: <20210331000856.117636-1-mathew.j.martineau@linux.intel.com>
@@ -39,87 +40,147 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliangtang@gmail.com>
 
-For the id 0 address, different MPTCP connections could be using
-different IP addresses for id 0.
+There are some duplicate code in mptcp_pm_nl_rm_addr_received and
+mptcp_pm_nl_rm_subflow_received. This patch unifies them into a new
+function named mptcp_pm_nl_rm_addr_or_subflow. In it, use the input
+parameter rm_type to identify it's now removing an address or a subflow.
 
-This patch added an extra argument IP address for del_addr when
-using id 0.
-
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 34 +++++++++++++++++--
- 1 file changed, 31 insertions(+), 3 deletions(-)
+ net/mptcp/pm_netlink.c | 82 +++++++++++++++++-------------------------
+ 1 file changed, 33 insertions(+), 49 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 7b4167f3f9a2..115decfdc1ef 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -26,7 +26,7 @@ static void syntax(char *argv[])
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 87a6133fd778..e00397f2abf1 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -586,45 +586,68 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+ 	return -EINVAL;
+ }
+ 
+-static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
++static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
++					   const struct mptcp_rm_list *rm_list,
++					   enum linux_mptcp_mib_field rm_type)
  {
- 	fprintf(stderr, "%s add|get|set|del|flush|dump|accept [<args>]\n", argv[0]);
- 	fprintf(stderr, "\tadd [flags signal|subflow|backup] [id <nr>] [dev <name>] <ip>\n");
--	fprintf(stderr, "\tdel <id>\n");
-+	fprintf(stderr, "\tdel <id> [<ip>]\n");
- 	fprintf(stderr, "\tget <id>\n");
- 	fprintf(stderr, "\tset <ip> [flags backup|nobackup]\n");
- 	fprintf(stderr, "\tflush\n");
-@@ -301,6 +301,7 @@ int del_addr(int fd, int pm_family, int argc, char *argv[])
- 		  1024];
- 	struct rtattr *rta, *nest;
- 	struct nlmsghdr *nh;
-+	u_int16_t family;
- 	int nest_start;
- 	u_int8_t id;
- 	int off = 0;
-@@ -310,11 +311,14 @@ int del_addr(int fd, int pm_family, int argc, char *argv[])
- 	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_DEL_ADDR,
- 			    MPTCP_PM_VER);
+ 	struct mptcp_subflow_context *subflow, *tmp;
+ 	struct sock *sk = (struct sock *)msk;
+ 	u8 i;
  
--	/* the only argument is the address id */
--	if (argc != 3)
-+	/* the only argument is the address id (nonzero) */
-+	if (argc != 3 && argc != 4)
- 		syntax(argv);
+-	pr_debug("address rm_list_nr %d", msk->pm.rm_list_rx.nr);
++	pr_debug("%s rm_list_nr %d",
++		 rm_type == MPTCP_MIB_RMADDR ? "address" : "subflow", rm_list->nr);
  
- 	id = atoi(argv[2]);
-+	/* zero id with the IP address */
-+	if (!id && argc != 4)
-+		syntax(argv);
+ 	msk_owned_by_me(msk);
  
- 	nest_start = off;
- 	nest = (void *)(data + off);
-@@ -328,6 +332,30 @@ int del_addr(int fd, int pm_family, int argc, char *argv[])
- 	rta->rta_len = RTA_LENGTH(1);
- 	memcpy(RTA_DATA(rta), &id, 1);
- 	off += NLMSG_ALIGN(rta->rta_len);
+-	if (!msk->pm.rm_list_rx.nr)
++	if (!rm_list->nr)
+ 		return;
+ 
+ 	if (list_empty(&msk->conn_list))
+ 		return;
+ 
+-	for (i = 0; i < msk->pm.rm_list_rx.nr; i++) {
++	for (i = 0; i < rm_list->nr; i++) {
+ 		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
++			u8 id = subflow->local_id;
 +
-+	if (!id) {
-+		/* addr data */
-+		rta = (void *)(data + off);
-+		if (inet_pton(AF_INET, argv[3], RTA_DATA(rta))) {
-+			family = AF_INET;
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR4;
-+			rta->rta_len = RTA_LENGTH(4);
-+		} else if (inet_pton(AF_INET6, argv[3], RTA_DATA(rta))) {
-+			family = AF_INET6;
-+			rta->rta_type = MPTCP_PM_ADDR_ATTR_ADDR6;
-+			rta->rta_len = RTA_LENGTH(16);
-+		} else {
-+			error(1, errno, "can't parse ip %s", argv[3]);
-+		}
-+		off += NLMSG_ALIGN(rta->rta_len);
-+
-+		/* family */
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ADDR_ATTR_FAMILY;
-+		rta->rta_len = RTA_LENGTH(2);
-+		memcpy(RTA_DATA(rta), &family, 2);
-+		off += NLMSG_ALIGN(rta->rta_len);
-+	}
- 	nest->rta_len = off - nest_start;
++			if (rm_type == MPTCP_MIB_RMADDR)
++				id = subflow->remote_id;
  
- 	do_nl_req(fd, nh, off, 0);
+-			if (msk->pm.rm_list_rx.ids[i] != subflow->remote_id)
++			if (rm_list->ids[i] != id)
+ 				continue;
+ 
+-			pr_debug(" -> address rm_list_ids[%d]=%u", i, msk->pm.rm_list_rx.ids[i]);
++			pr_debug(" -> %s rm_list_ids[%d]=%u local_id=%u remote_id=%u",
++				 rm_type == MPTCP_MIB_RMADDR ? "address" : "subflow",
++				 i, rm_list->ids[i], subflow->local_id, subflow->remote_id);
+ 			spin_unlock_bh(&msk->pm.lock);
+ 			mptcp_subflow_shutdown(sk, ssk, how);
+ 			mptcp_close_ssk(sk, ssk, subflow);
+ 			spin_lock_bh(&msk->pm.lock);
+ 
+-			msk->pm.add_addr_accepted--;
++			if (rm_type == MPTCP_MIB_RMADDR) {
++				msk->pm.add_addr_accepted--;
++				WRITE_ONCE(msk->pm.accept_addr, true);
++			} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
++				msk->pm.local_addr_used--;
++			}
+ 			msk->pm.subflows--;
+-			WRITE_ONCE(msk->pm.accept_addr, true);
+-
+-			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
++			__MPTCP_INC_STATS(sock_net(sk), rm_type);
+ 		}
+ 	}
+ }
+ 
++static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
++{
++	mptcp_pm_nl_rm_addr_or_subflow(msk, &msk->pm.rm_list_rx, MPTCP_MIB_RMADDR);
++}
++
++void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
++				     const struct mptcp_rm_list *rm_list)
++{
++	mptcp_pm_nl_rm_addr_or_subflow(msk, rm_list, MPTCP_MIB_RMSUBFLOW);
++}
++
+ void mptcp_pm_nl_work(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_data *pm = &msk->pm;
+@@ -658,45 +681,6 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk)
+ 	spin_unlock_bh(&msk->pm.lock);
+ }
+ 
+-void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
+-				     const struct mptcp_rm_list *rm_list)
+-{
+-	struct mptcp_subflow_context *subflow, *tmp;
+-	struct sock *sk = (struct sock *)msk;
+-	u8 i;
+-
+-	pr_debug("subflow rm_list_nr %d", rm_list->nr);
+-
+-	msk_owned_by_me(msk);
+-
+-	if (!rm_list->nr)
+-		return;
+-
+-	if (list_empty(&msk->conn_list))
+-		return;
+-
+-	for (i = 0; i < rm_list->nr; i++) {
+-		list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+-			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+-			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
+-
+-			if (rm_list->ids[i] != subflow->local_id)
+-				continue;
+-
+-			pr_debug(" -> subflow rm_list_ids[%d]=%u", i, rm_list->ids[i]);
+-			spin_unlock_bh(&msk->pm.lock);
+-			mptcp_subflow_shutdown(sk, ssk, how);
+-			mptcp_close_ssk(sk, ssk, subflow);
+-			spin_lock_bh(&msk->pm.lock);
+-
+-			msk->pm.local_addr_used--;
+-			msk->pm.subflows--;
+-
+-			__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
+-		}
+-	}
+-}
+-
+ static bool address_use_port(struct mptcp_pm_addr_entry *entry)
+ {
+ 	return (entry->addr.flags &
 -- 
 2.31.1
 
