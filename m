@@ -1,118 +1,77 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0277B70
-	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 07:56:32 +0000 (UTC)
-HMM_SOURCE_IP:172.18.8.226:44084.878307242
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.26?logid-b4ad7a9888594f73833bc89de6af6c17 (unknown [172.18.8.226])
-	by chinatelecom.cn (HERMES) with SMTP id ED03B2800BF;
-	Thu,  1 Apr 2021 15:49:59 +0800 (CST)
-X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
-Received: from  ([172.18.1.38])
-	by filter002 with ESMTP id b4ad7a9888594f73833bc89de6af6c17 for pabeni@redhat.com;
-	Thu Apr  1 15:50:04 2021
-X-Transaction-ID: b4ad7a9888594f73833bc89de6af6c17
-X-filter-score:  filter<0>
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.1.38
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-Subject: Re: [PATCH v2] mptcp: ensure there is unacked data at all subflow
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: mptcp@lists.linux.dev, mptcp <mptcp@lists.01.org>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Matthieu Baerts <matthieu.baerts@tessares.net>,
- Florian Westphal <fw@strlen.de>, Paolo Abeni <pabeni@redhat.com>
-References: <1617258890-11776-1-git-send-email-liyonglong@chinatelecom.cn>
- <CA+WQbwuXj1yWWyzG5FtgAr2Urg=ubQ9qLOub2dxufMjrrp7gUA@mail.gmail.com>
-From: Yonglong Li <liyonglong@chinatelecom.cn>
-Message-ID: <acc072c9-54de-095d-549a-1ceeb3beff3c@chinatelecom.cn>
-Date: Thu, 1 Apr 2021 15:49:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639375F
+	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 10:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1617271740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UBVi5eVIaf+AnKjCAj3vcKav7e/w1AKQ7BBt5uJZ5qg=;
+	b=Cbj0y8/UsueZPTmnoaCXjLz0NoS+Qg1MBBDIXVmOVXuqAg+I9dQf38smGlVIl7moSIieWv
+	qD+3kpG5dWzEvQmBJxpFiiaeWSfF4II5d/OnXbl+ZVFJX58cGrIZqNRXRZxtUJEq9yvDGp
+	aPb0lY9XcnXaBBbTRNehXzpScEbVc7g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-bTytz3x0OEONbtzNwCicQw-1; Thu, 01 Apr 2021 06:08:56 -0400
+X-MC-Unique: bTytz3x0OEONbtzNwCicQw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 066751018F70;
+	Thu,  1 Apr 2021 10:08:54 +0000 (UTC)
+Received: from ovpn-114-240.ams2.redhat.com (ovpn-114-240.ams2.redhat.com [10.36.114.240])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2851210023AC;
+	Thu,  1 Apr 2021 10:08:48 +0000 (UTC)
+Message-ID: <fe23f101aff3cbbe94a496374c4f7c3109d3eb2c.camel@redhat.com>
+Subject: Re: [PATCH v3] mptcp: ensure there is unacked data at all subflow
+From: Paolo Abeni <pabeni@redhat.com>
+To: Yonglong Li <liyonglong@chinatelecom.cn>, mptcp@lists.linux.dev, 
+	mptcp@lists.01.org
+Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
+	fw@strlen.de
+Date: Thu, 01 Apr 2021 12:08:48 +0200
+In-Reply-To: <1617263626-66920-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1617263626-66920-1-git-send-email-liyonglong@chinatelecom.cn>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CA+WQbwuXj1yWWyzG5FtgAr2Urg=ubQ9qLOub2dxufMjrrp7gUA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-Got it. Thanks for your review.
+I'm sorry for the late feeback.
 
-On 2021/4/1 15:28, Geliang Tang wrote:
-> Hi Yonglong,
-> 
-> Thanks for this v2, I have some comments here.
-> 
-> 1. There's a checkpatch.sh warning in your patch:
-> 
-> WARNING: 'retransmited' may be misspelled - perhaps 'retransmitted'?
-> #9:
-> maybe double retransmited.
->              ^^^^^^^^^^^^
-> 
-> total: 0 errors, 1 warnings, 0 checks, 20 lines checked
-> 
-> Please fix this warning in v3. And always remember to run checkpatch.sh
-> before sending out a patch.
-> 
-> Yonglong Li <liyonglong@chinatelecom.cn> 于2021年4月1日周四 下午2:45写道：
->>
->> MPTCP-level retransmit may take place if first subflow
->> without data in its write queue and second subflow is likely to
->> have unacked data left in its write queue. In this condition data
->> maybe double retransmited.
-> 
-> 2. The commit log should follow the "wrap at 75 columns" rule, a maximum
-> 75 chars per line. (See Documentation/process/submitting-patches.rst for
-> more details)
-> 
-> 3. Please send out the v3 patch as a new email thread, don't reply it to
-> this v2 one.
-> 
-> Thanks.
-> 
-> -Geliang
-> 
->>
->> Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
->> ---
->>  net/mptcp/protocol.c | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 9d7e7e1..66707ab 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -2072,6 +2072,7 @@ static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
->>  {
->>         struct mptcp_subflow_context *subflow;
->>         struct sock *backup = NULL;
->> +       struct sock *idle = NULL;
->>
->>         sock_owned_by_me((const struct sock *)msk);
->>
->> @@ -2097,10 +2098,11 @@ static struct sock *mptcp_subflow_get_retrans(const struct mptcp_sock *msk)
->>                         continue;
->>                 }
->>
->> -               return ssk;
->> +               if (!idle)
->> +                       idle = ssk;
->>         }
->>
->> -       return backup;
->> +       return idle ? : backup;
->>  }
->>
->>  static void mptcp_dispose_initial_subflow(struct mptcp_sock *msk)
->> --
->> 1.8.3.1
->>
->>
-> 
+On Thu, 2021-04-01 at 15:53 +0800, Yonglong Li wrote:
+> MPTCP-level retransmit may take place if first subflow without data in
+> its write queue and second subflow is likely to have unacked data left
+> in its write queue. In this condition datamaybe double retransmitted.
+
+Note that the above does not cause problems at the byte stream level,
+and can improve the aggregate tput in some cases, as it could allow
+faster forward progress when e.g. the substream which originally
+handled the relevant data has experienced some congestion.
+
+Do you have any specific scenario which is badly affected by the
+current code? How does the self-tests behave on top of this patch?
+(specifically: simult_flows.sh)
+
+Side note: we could improve re-injection keeping explicit track at the
+ mptcp_data_frag level of the already used subflows, and avoding them
+at mptcp_subflow_get_retrans() time.
+
+Thanks!
+
+Paolo
+
