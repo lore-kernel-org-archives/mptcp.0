@@ -1,64 +1,88 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553DF5F
-	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 23:10:09 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id CE47D610FC;
-	Thu,  1 Apr 2021 23:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1617318608;
-	bh=Y+ae4vE+FskqQEGrUAyD4C6AHKzc1GipMQ2rbkQeqJs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=J0H7meUz9HDvY5Smx6ga3Zm9g20ZKfqDz8SnJvzAlHUe+kwzdAIf22UCnsHsA0r97
-	 E5uYM5IxgdqKGDEA5xpp/xa5UWa1aseABtbv0Px92qdhCEU3LrtfB/3w3l1NTjxLNR
-	 YJqB2JAD0v+UoJz8yNdXBlyQQxWwaaXok5OGlXtRpmpWiRbcVcDlrlhxKg35GjdyH/
-	 cC/C4JekBzC15griDv6g8KeWTOspOwHd74/mZN05JQBSe7UuUPXlfBv5EfdPucdOEl
-	 +EZYBF2Ombm60iRivjQmshkm7BFhXOhuPTZYx5gCZVfOy86RzhtCt3JWEd3IRa9m5k
-	 oFDhit9QNFMZA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id BCCA4609CD;
-	Thu,  1 Apr 2021 23:10:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BED5F
+	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 23:19:52 +0000 (UTC)
+IronPort-SDR: RD8fXcHEg4hfZQTfUR3F/4qyk2gIsgLwnLxLCSqrQ4mFFr0NkoOd3KzxOEi+Rtwi6/t8IMeE/M
+ kJ4duLwfHqKw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="277537228"
+X-IronPort-AV: E=Sophos;i="5.81,298,1610438400"; 
+   d="scan'208";a="277537228"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 16:19:52 -0700
+IronPort-SDR: 4JS3CCvQwCj8MYHVRpD7UoySHalZIT+eMblnD3YdL5FmZ1NiSamSr+Ku9MCn9YShj8k8TGcikc
+ AyVLKEvm2Row==
+X-IronPort-AV: E=Sophos;i="5.81,298,1610438400"; 
+   d="scan'208";a="446269181"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.252.128.105])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 16:19:51 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/7] MPTCP: Miscellaneous changes
+Date: Thu,  1 Apr 2021 16:19:40 -0700
+Message-Id: <20210401231947.162836-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] mptcp: mptcp: fix deadlock in mptcp{,6}_release
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <161731860876.11591.13180900206221380898.git-patchwork-notify@kernel.org>
-Date: Thu, 01 Apr 2021 23:10:08 +0000
-References: <cover.1617295578.git.pabeni@redhat.com>
-In-Reply-To: <cover.1617295578.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, davem@davemloft.net,
- kuba@kernel.org
 
-Hello:
+Here is a collection of patches from the MPTCP tree:
 
-This series was applied to netdev/net.git (refs/heads/master):
 
-On Thu,  1 Apr 2021 18:57:43 +0200 you wrote:
-> syzkaller has reported a few deadlock triggered by
-> mptcp{,6}_release.
-> 
-> These patches address the issue in the easy way - blocking
-> the relevant, multicast related, sockopt options on MPTCP
-> sockets.
-> 
-> [...]
+Patches 1 and 2 add some helpful MIB counters for connection
+information.
 
-Here is the summary with links:
-  - [net,1/2] mptcp: forbit mcast-related sockopt on MPTCP sockets
-    https://git.kernel.org/netdev/net/c/86581852d771
-  - [net,2/2] mptcp: revert "mptcp: provide subflow aware release function"
-    https://git.kernel.org/netdev/net/c/0a3cc57978d1
+Patch 3 cleans up some unnecessary checks.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Patch 4 is a new feature, support for the MP_TCPRST option. This option
+is used when resetting one subflow within a MPTCP connection, and
+provides a reason code that the recipient can use when deciding how to
+adapt to the lost subflow.
 
+Patches 5-7 update the existing MPTCP selftests to improve timeout
+handling and to share better information when tests fail.
+
+
+Florian Westphal (1):
+  mptcp: add mptcp reset option support
+
+Matthieu Baerts (3):
+  selftests: mptcp: launch mptcp_connect with timeout
+  selftests: mptcp: init nstat history
+  selftests: mptcp: dump more info on mpjoin errors
+
+Paolo Abeni (3):
+  mptcp: add mib for token creation fallback
+  mptcp: add active MPC mibs
+  mptcp: remove unneeded check on first subflow
+
+ include/net/mptcp.h                           | 18 ++++-
+ include/uapi/linux/mptcp.h                    | 11 +++
+ net/ipv4/tcp_ipv4.c                           | 21 +++++-
+ net/ipv6/tcp_ipv6.c                           | 14 +++-
+ net/mptcp/mib.c                               |  3 +
+ net/mptcp/mib.h                               |  3 +
+ net/mptcp/options.c                           | 69 +++++++++++++++++--
+ net/mptcp/pm_netlink.c                        | 12 ++++
+ net/mptcp/protocol.c                          | 20 ++++--
+ net/mptcp/protocol.h                          | 14 +++-
+ net/mptcp/subflow.c                           | 34 +++++++--
+ tools/testing/selftests/net/mptcp/diag.sh     | 55 +++++++++------
+ .../selftests/net/mptcp/mptcp_connect.sh      | 22 ++++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 39 ++++++++---
+ .../selftests/net/mptcp/simult_flows.sh       | 13 +++-
+ 15 files changed, 291 insertions(+), 57 deletions(-)
+
+
+base-commit: 247ca657e20460375bf3217073d6477440f48025
+-- 
+2.31.1
 
