@@ -1,19 +1,19 @@
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A27259F
-	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 23:19:53 +0000 (UTC)
-IronPort-SDR: 08UG2cpdJbDdizLLIwO6FEBC6MLeBA71GI3suBu92O1yW+/HMBGY3heF8ZuimuoSjEn/i3quuv
- suyzBPX4UbIA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="277537233"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368895F
+	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 23:19:54 +0000 (UTC)
+IronPort-SDR: 2Ia9EnpJQxovzvl31XPxM/jb6QnXBcqDu+7EuPFQmzAQqFa0b9/JBxMZvG0jZDxkOHj5puHZt9
+ H36uEjJC7dFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9941"; a="277537234"
 X-IronPort-AV: E=Sophos;i="5.81,298,1610438400"; 
-   d="scan'208";a="277537233"
+   d="scan'208";a="277537234"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 16:19:52 -0700
-IronPort-SDR: 4AWNG12Iypa19vUT9P7oPRn+oQz6L2IZkd8hDfhDcNHfi7KgUucLMdoNQ/iAG2yTZm//FL9MJy
- UBZArSGzMOjQ==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 16:19:53 -0700
+IronPort-SDR: +HHGjp+Fo/zfZdsVmN3Ovsf4J5BA2xf9BCAlpmz6fVRYbZ+YFpMITIBNbXR7VU72kaHEuKGeB4
+ 4vEWWx2Eo+kw==
 X-IronPort-AV: E=Sophos;i="5.81,298,1610438400"; 
-   d="scan'208";a="446269182"
+   d="scan'208";a="446269185"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.252.128.105])
   by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2021 16:19:52 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -24,9 +24,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 1/7] mptcp: add mib for token creation fallback
-Date: Thu,  1 Apr 2021 16:19:41 -0700
-Message-Id: <20210401231947.162836-2-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 2/7] mptcp: add active MPC mibs
+Date: Thu,  1 Apr 2021 16:19:42 -0700
+Message-Id: <20210401231947.162836-3-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210401231947.162836-1-mathew.j.martineau@linux.intel.com>
 References: <20210401231947.162836-1-mathew.j.martineau@linux.intel.com>
@@ -39,80 +39,69 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-If the MPTCP protocol is unable to create a new token,
-the socket fallback to plain TCP, let's keep track
-of such events via a specific MIB.
+We are not currently tracking the active MPTCP connection
+attempts. Let's add the related counters.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/mib.c      | 1 +
- net/mptcp/mib.h      | 1 +
- net/mptcp/protocol.c | 4 +++-
- net/mptcp/subflow.c  | 3 +++
- 4 files changed, 8 insertions(+), 1 deletion(-)
+ net/mptcp/mib.c      | 2 ++
+ net/mptcp/mib.h      | 2 ++
+ net/mptcp/protocol.c | 2 ++
+ net/mptcp/subflow.c  | 1 +
+ 4 files changed, 7 insertions(+)
 
 diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 3780c29c321d..b0429aca4f76 100644
+index b0429aca4f76..eb2dc6dbe212 100644
 --- a/net/mptcp/mib.c
 +++ b/net/mptcp/mib.c
-@@ -13,6 +13,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+@@ -10,6 +10,8 @@
+ 
+ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPCapableSYNRX", MPTCP_MIB_MPCAPABLEPASSIVE),
++	SNMP_MIB_ITEM("MPCapableSYNTX", MPTCP_MIB_MPCAPABLEACTIVE),
++	SNMP_MIB_ITEM("MPCapableSYNACKRX", MPTCP_MIB_MPCAPABLEACTIVEACK),
  	SNMP_MIB_ITEM("MPCapableACKRX", MPTCP_MIB_MPCAPABLEPASSIVEACK),
  	SNMP_MIB_ITEM("MPCapableFallbackACK", MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK),
  	SNMP_MIB_ITEM("MPCapableFallbackSYNACK", MPTCP_MIB_MPCAPABLEACTIVEFALLBACK),
-+	SNMP_MIB_ITEM("MPFallbackTokenInit", MPTCP_MIB_TOKENFALLBACKINIT),
- 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
- 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
- 	SNMP_MIB_ITEM("MPJoinSynRx", MPTCP_MIB_JOINSYNRX),
 diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 72afbc135f8e..50e1668c9a01 100644
+index 50e1668c9a01..f0da4f060fe1 100644
 --- a/net/mptcp/mib.h
 +++ b/net/mptcp/mib.h
-@@ -6,6 +6,7 @@ enum linux_mptcp_mib_field {
+@@ -3,6 +3,8 @@
+ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_NUM = 0,
+ 	MPTCP_MIB_MPCAPABLEPASSIVE,	/* Received SYN with MP_CAPABLE */
++	MPTCP_MIB_MPCAPABLEACTIVE,	/* Sent SYN with MP_CAPABLE */
++	MPTCP_MIB_MPCAPABLEACTIVEACK,	/* Received SYN/ACK with MP_CAPABLE */
  	MPTCP_MIB_MPCAPABLEPASSIVEACK,	/* Received third ACK with MP_CAPABLE */
  	MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK,/* Server-side fallback during 3-way handshake */
  	MPTCP_MIB_MPCAPABLEACTIVEFALLBACK, /* Client-side fallback during 3-way handshake */
-+	MPTCP_MIB_TOKENFALLBACKINIT,	/* Could not init/allocate token */
- 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
- 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
- 	MPTCP_MIB_JOINSYNRX,		/* Received a SYN + MP_JOIN */
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 171b77537dcb..3b50e8cc0c5f 100644
+index 3b50e8cc0c5f..0c916d48cad8 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3224,8 +3224,10 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- 	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
+@@ -3228,6 +3228,8 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ 		MPTCP_INC_STATS(sock_net(ssock->sk), MPTCP_MIB_TOKENFALLBACKINIT);
  		mptcp_subflow_early_fallback(msk, subflow);
- #endif
--	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk))
-+	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk)) {
-+		MPTCP_INC_STATS(sock_net(ssock->sk), MPTCP_MIB_TOKENFALLBACKINIT);
- 		mptcp_subflow_early_fallback(msk, subflow);
-+	}
+ 	}
++	if (likely(!__mptcp_check_fallback(msk)))
++		MPTCP_INC_STATS(sock_net(sock->sk), MPTCP_MIB_MPCAPABLEACTIVE);
  
  do_connect:
  	err = ssock->ops->connect(ssock, uaddr, addr_len, flags);
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6c074d3db0ed..b96e8dc01f08 100644
+index b96e8dc01f08..7a5f50d00d4b 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -165,6 +165,7 @@ static int subflow_check_req(struct request_sock *req,
- 			if (mptcp_token_exists(subflow_req->token)) {
- 				if (retries-- > 0)
- 					goto again;
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_TOKENFALLBACKINIT);
- 			} else {
- 				subflow_req->mp_capable = 1;
- 			}
-@@ -176,6 +177,8 @@ static int subflow_check_req(struct request_sock *req,
- 			subflow_req->mp_capable = 1;
- 		else if (retries-- > 0)
- 			goto again;
-+		else
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_TOKENFALLBACKINIT);
- 
- 	} else if (mp_opt.mp_join && listener->request_mptcp) {
- 		subflow_req->ssn_offset = TCP_SKB_CB(skb)->seq;
+@@ -395,6 +395,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 		subflow->remote_key = mp_opt.sndr_key;
+ 		pr_debug("subflow=%p, remote_key=%llu", subflow,
+ 			 subflow->remote_key);
++		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEACK);
+ 		mptcp_finish_connect(sk);
+ 	} else if (subflow->request_join) {
+ 		u8 hmac[SHA256_DIGEST_SIZE];
 -- 
 2.31.1
 
