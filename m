@@ -1,108 +1,62 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64BA5F
-	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 16:54:49 +0000 (UTC)
-Received: by mail-pj1-f50.google.com with SMTP id j6-20020a17090adc86b02900cbfe6f2c96so1346740pjv.1
-        for <mptcp@lists.linux.dev>; Thu, 01 Apr 2021 09:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9G5HaIvwR5ZoF5OR9NxbRiF+cZZ95i6AuFC0RbhnXy8=;
-        b=nN36wJaFXTK421QKZOlr5iGnRMqaSG7z6pmrYUhp+fC2QPnY0ktcgRSfjX6dc2l8dJ
-         W4sjAbfALfpWq0bl7vic/4JQPH7u12RYhUF6jidJiGGTX9XgAa0U/QW/l8YWJaquER6f
-         nIZ+07miiEc/eW9CxkR7efguFOittPTzh2QaUDOjYzd+r80hs8xAEXtzRubMjtkzLe+f
-         CUB5Fa6QgtLZyaqG32bstLNutFknmmqAk3rL7O+ZJYB0ONLMBw3m6aKXy0mj53P5gw7q
-         djbKRfIaEXuLdTk+4wAUX6GzenGud4eWnWvp/29n2ZVsGDM3DTD2xS2URtu8kcQCPxbl
-         f1MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9G5HaIvwR5ZoF5OR9NxbRiF+cZZ95i6AuFC0RbhnXy8=;
-        b=baqQgrGc1k7Oishw85QxM/PkY1VGo1bKtprlEUjovvAZY8aOxSwbILvTBYZVm7GTlg
-         c6ATdibkAwTMZbQgbgV1wWCD95E1rR9FWGpwUlwbLyrAzHAcY8do88xFOVjefPvpiwVN
-         us55DqMgUv7kIopf2j8D7GgQOQQN3k4kpTNMu5bCuxiOZBiwEz1iy529RQTyLPIeoSCh
-         MmtLDejFzBEM5acy7gQ2eyKdphuel5h5rTJvr1Yta4ZYzis+lmZziVG4t/cSdQmpVj5k
-         aBAuI/342Vdiw+nJBcaQiy/AmiQFEf+AkSz/+dWm7Ko8SUCZErzkek9zftFqBDTDPeAk
-         TynQ==
-X-Gm-Message-State: AOAM531atlnS2cHMTG6ZWvV+uGHRcJ2g63UiTI0yQt8UeyKIkEPYfw8j
-	dMyWhMUvx96oNCOTrlCHfcNJgOEC7sU=
-X-Google-Smtp-Source: ABdhPJzsGCcjGI9dABEELrJOQL3HICEuRiEdPLbhLVywkpy3H15nXiEiBPP/9842svMTPQ3vJQ2KQw==
-X-Received: by 2002:a17:90a:7a8b:: with SMTP id q11mr9881409pjf.215.1617296088453;
-        Thu, 01 Apr 2021 09:54:48 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id d21sm5701502pgj.62.2021.04.01.09.54.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 09:54:46 -0700 (PDT)
-From: Geliang Tang <geliangtang@gmail.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliangtang@gmail.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [MPTCP][PATCH v3 mptcp-next] Squash to "mptcp: add tracepoint in mptcp_subflow_get_send"
-Date: Fri,  2 Apr 2021 00:54:44 +0800
-Message-Id: <77e57026944d545dc4aaf9a6199ffa39485e1f43.1617296035.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.30.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E64971
+	for <mptcp@lists.linux.dev>; Thu,  1 Apr 2021 16:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1617296292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BNxjjSggvaGqqbW1N4ymXDNSnuDdNSwnCnFTODCH6lA=;
+	b=aEQQgvKcJle5+hbyLovhY4b4r/65J4/mILf+dsDhrGvFseqwbZWzFOpcPZstEGrnP5q/cU
+	rFftiJennX1M8NuNpPDMDH6SJ/JX4fBUH/RJfQccEGtmh4k9/J0IvnZ9NBqxgeQZOBAaH9
+	Zlb792zCi41HQb0SYVmTxWh1If7lxuU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-OHCYwUDDMwSCGkcnNMIA3g-1; Thu, 01 Apr 2021 12:58:09 -0400
+X-MC-Unique: OHCYwUDDMwSCGkcnNMIA3g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D5A7190B2A0;
+	Thu,  1 Apr 2021 16:58:08 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-114-240.ams2.redhat.com [10.36.114.240])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C67BD19C46;
+	Thu,  1 Apr 2021 16:58:06 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: netdev@vger.kernel.org
+Cc: mptcp@lists.linux.dev,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH net 0/2] mptcp: mptcp: fix deadlock in mptcp{,6}_release
+Date: Thu,  1 Apr 2021 18:57:43 +0200
+Message-Id: <cover.1617295578.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 
-Reduce the indentation level and zero the uninitialized fields.
+syzkaller has reported a few deadlock triggered by
+mptcp{,6}_release.
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- include/trace/events/mptcp.h | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+These patches address the issue in the easy way - blocking
+the relevant, multicast related, sockopt options on MPTCP
+sockets.
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index f1c836573744..b1617a0162da 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -23,22 +23,29 @@ TRACE_EVENT(mptcp_subflow_get_send,
- 	),
- 
- 	TP_fast_assign(
--		bool sk = sk_fullsock(subflow->tcp_sock);
-+		struct sock *ssk;
- 
- 		__entry->active = mptcp_subflow_active(subflow);
- 		__entry->backup = subflow->backup;
--		if (sk) {
--			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
-+		if (subflow->tcp_sock && sk_fullsock(subflow->tcp_sock))
- 			__entry->free = sk_stream_memory_free(subflow->tcp_sock);
--			if (ssk) {
--				__entry->snd_wnd = tcp_sk(ssk)->snd_wnd;
--				__entry->pace = ssk->sk_pacing_rate;
--				if (__entry->pace)
--					__entry->ratio = div_u64((u64)ssk->sk_wmem_queued << 32,
--								 __entry->pace);
--			}
-+		else
-+			__entry->free = 0;
-+
-+		ssk = mptcp_subflow_tcp_sock(subflow);
-+		if (ssk && sk_fullsock(ssk)) {
-+			__entry->snd_wnd = tcp_sk(ssk)->snd_wnd;
-+			__entry->pace = ssk->sk_pacing_rate;
-+		} else {
-+			__entry->snd_wnd = 0;
-+			__entry->pace = 0;
- 		}
-+
-+		if (ssk && sk_fullsock(ssk) && __entry->pace)
-+			__entry->ratio = div_u64((u64)ssk->sk_wmem_queued << 32, __entry->pace);
-+		else
-+			__entry->ratio = 0;
- 	),
- 
- 	TP_printk("active=%d free=%d snd_wnd=%u pace=%u backup=%u ratio=%llu",
+Note that later on net-next we are going to revert patch 1/2,
+as a part of a larger MPTCP sockopt implementation refactor 
+
+Paolo Abeni (2):
+  mptcp: forbit mcast-related sockopt on MPTCP sockets
+  mptcp: revert "mptcp: provide subflow aware release function"
+
+ net/mptcp/protocol.c | 100 ++++++++++++++++++++-----------------------
+ 1 file changed, 47 insertions(+), 53 deletions(-)
+
 -- 
-2.30.2
+2.26.2
 
