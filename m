@@ -1,82 +1,75 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380B570
-	for <mptcp@lists.linux.dev>; Fri,  2 Apr 2021 19:18:10 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id u21so8591086ejo.13
-        for <mptcp@lists.linux.dev>; Fri, 02 Apr 2021 12:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eFB0yUxdAtmrud+f+z++USvOAcFQZf+xx1jMM0ULHEs=;
-        b=xX474NvUA9aPsBqNGS62P20M6lE05a3ZP9spVbhwOWuant9j0h0HQ6Oa8f+Ioes2Bm
-         /JNF1x8oreE13sO0IZ4xr5r1zdLeVIx5QnxC7tz2gMdtdABfZZgkiXD+v45t/haZovEt
-         9IDAsrfpsvCJHURGu1NB13zozWeti2SGtUriiovuIyw3wWe6e3m13BplkcLR6rGvrQVF
-         JYxx/EMG+Di8tXYTSDU7ZAObmr7vTugksFQ2iVUnVyjLPlDtNG6dNY+uIRUuRZr4alt+
-         e3d7y50LHjNfaOaKr+DzpQRjVIkzyF/GsGd2au211aJbN0rsmbfTQx7N3CctwXF53ep0
-         dg9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eFB0yUxdAtmrud+f+z++USvOAcFQZf+xx1jMM0ULHEs=;
-        b=T9eaHTGdAdYuDVWPFn5zGbgxQWxm9lOxrpeLP0RhSb3g58Kn+Aukr1RQsbiko8HhW7
-         sVSdVxxXm8KD5DoTXM2xOE5VTUbid5mcZTO3pE5CaRtZKgNDxVztXVkEcthwj53wPW4A
-         L5DS8C31k0W+o9kmDhWIqeMMhg1vd6mCSwclgUMdhEtiCzBpeEilkR9QGtsKhkrbSZbJ
-         N3e8FZysPV9xdI+xABwxOaOrgtQ3XwPqWes83LwUA1WkAVx+TF4zfo4RA0ScfRYNcfzm
-         tnGrlZUwMBt4C82GUQObXz2qxWPsCOUeeEI1oRAsDyfDSWu7GsV5QyPEeJyrlLrni2L/
-         i+UQ==
-X-Gm-Message-State: AOAM532zbmCLUds/wrFamY6YYgZP+SA6GWDstyu71NBy6zFP75oMbf5R
-	CBpMdORvDXm+L6HUjtDfLyU8pWrD0GlX4Q==
-X-Google-Smtp-Source: ABdhPJxqNR8vQayzL47WvzuOgAuYjp3ydD4uHM5Y8NgipnnjEzuB+D2wYTWQONK3YMkcUmiSesQYpg==
-X-Received: by 2002:a17:906:1155:: with SMTP id i21mr15338466eja.218.1617391089114;
-        Fri, 02 Apr 2021 12:18:09 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8dc4:b2ca:ed3c:37c])
-        by smtp.gmail.com with ESMTPSA id dg26sm5849903edb.88.2021.04.02.12.18.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Apr 2021 12:18:08 -0700 (PDT)
-To: Geliang Tang <geliangtang@gmail.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <77e57026944d545dc4aaf9a6199ffa39485e1f43.1617296035.git.geliangtang@gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [MPTCP][PATCH v3 mptcp-next] Squash to "mptcp: add tracepoint in
- mptcp_subflow_get_send"
-Message-ID: <a9039284-c40a-e67d-d12c-6f2c9ccff958@tessares.net>
-Date: Fri, 2 Apr 2021 21:18:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420B1259E
+	for <mptcp@lists.linux.dev>; Fri,  2 Apr 2021 21:30:13 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id 9EA0F61181;
+	Fri,  2 Apr 2021 21:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1617399012;
+	bh=v5tf32z6nm/OFLA4CZvfIYWZwoEOphu58Ri8f797QnE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hGTY4SUfrew/99ARvjDx3bveh4sIMJNV5RkGRRoQbD0XweRK+9wGmC1maJjydolpX
+	 O5ousvlcjjW4PBH60r3v82Qv87K/65n9852+vxda2lIt3q+Kb/tA3/ogI0ActseACt
+	 XMUbXi4TipTIzdIeqZZ+p83AdGNZEDTfMhoZQWAhuOwQcjdCU7Sv5ZzKZZDXTgxm9u
+	 T/TOwQ/MLFOAk7699nJ3RJxOf0pYg8AkRVZwM+xQwxXeZqRBZkom1KLM16MyrsGvZC
+	 +9gv9b0Dl7/A/Yb283Yo7sscxgxw6pBplYIM10MPRdFFiSI3FC55qdwDlOiKnxORgC
+	 cPgfsKn20fD/Q==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 964F3609E6;
+	Fri,  2 Apr 2021 21:30:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <77e57026944d545dc4aaf9a6199ffa39485e1f43.1617296035.git.geliangtang@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/7] MPTCP: Miscellaneous changes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <161739901261.1946.14359498630889237518.git-patchwork-notify@kernel.org>
+Date: Fri, 02 Apr 2021 21:30:12 +0000
+References: <20210401231947.162836-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210401231947.162836-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hi Geliang, Paolo,
+Hello:
 
-On 01/04/2021 18:54, Geliang Tang wrote:
-> Reduce the indentation level and zero the uninitialized fields.
+This series was applied to netdev/net-next.git (refs/heads/master):
+
+On Thu,  1 Apr 2021 16:19:40 -0700 you wrote:
+> Here is a collection of patches from the MPTCP tree:
 > 
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> 
+> Patches 1 and 2 add some helpful MIB counters for connection
+> information.
+> 
+> Patch 3 cleans up some unnecessary checks.
+> 
+> [...]
 
-Thank you for the squash-to patch and the review!
+Here is the summary with links:
+  - [net-next,1/7] mptcp: add mib for token creation fallback
+    https://git.kernel.org/netdev/net-next/c/a16195e35cd0
+  - [net-next,2/7] mptcp: add active MPC mibs
+    https://git.kernel.org/netdev/net-next/c/5695eb8891f9
+  - [net-next,3/7] mptcp: remove unneeded check on first subflow
+    https://git.kernel.org/netdev/net-next/c/781bf13d4f3b
+  - [net-next,4/7] mptcp: add mptcp reset option support
+    https://git.kernel.org/netdev/net-next/c/dc87efdb1a5c
+  - [net-next,5/7] selftests: mptcp: launch mptcp_connect with timeout
+    https://git.kernel.org/netdev/net-next/c/5888a61cb4e0
+  - [net-next,6/7] selftests: mptcp: init nstat history
+    https://git.kernel.org/netdev/net-next/c/76e5e27ca987
+  - [net-next,7/7] selftests: mptcp: dump more info on mpjoin errors
+    https://git.kernel.org/netdev/net-next/c/c2a55e8fd80f
 
-Now in our tree:
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-- 8c49e105a00a: "squashed" in "mptcp: add tracepoint in 
-mptcp_subflow_get_send"
-- Results: 9f7fd6e1752e..f6973d0e03b2
 
-Tests + export have been started!
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
