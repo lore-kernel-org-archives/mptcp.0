@@ -1,29 +1,48 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920CF70
-	for <mptcp@lists.linux.dev>; Tue,  6 Apr 2021 00:48:08 +0000 (UTC)
-IronPort-SDR: /BkusIj3cQwWmpAkYLw0U2n+KFA3Nh6SjnvkraHBXU9SFLfKGdPasrEW+nuVlxfUA+BgMfPIs0
- 05eF4BR/HIaQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9945"; a="180083592"
-X-IronPort-AV: E=Sophos;i="5.81,308,1610438400"; 
-   d="scan'208";a="180083592"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2021 17:48:05 -0700
-IronPort-SDR: cdAtzmz7VlU8K077BgNQLThYBipZiqEFYq5E2JmchqFKq/t5zsX6OaRfDI1UqWMFGkdOWdI2mv
- iuJHfA+ONZNQ==
-X-IronPort-AV: E=Sophos;i="5.81,308,1610438400"; 
-   d="scan'208";a="379173379"
-Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.255.228.70])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2021 17:47:55 -0700
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DE229DE
+	for <mptcp@lists.linux.dev>; Tue,  6 Apr 2021 10:03:51 +0000 (UTC)
+Received: by mail-pj1-f42.google.com with SMTP id il9-20020a17090b1649b0290114bcb0d6c2so9392764pjb.0
+        for <mptcp@lists.linux.dev>; Tue, 06 Apr 2021 03:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7sjPCpIYfjpQ9NPOfg4EQ8oW3eRbu3jjjHVyD8bAi2w=;
+        b=decHLpmKX8RxdmFVYnSnKtMtfVjgyDMZH6NT2dRpkezJVUGCTFe9EEqbitFd3LFzRm
+         AIabijwuQ3NpJJb5O3rwga558utCkhIMVALEY7yP5yOWjXvLwAWGgndqERQ6cjVqiOmg
+         WDsnGMWWl5dxmJLDl7i624+YSr+58aziCagPOE+Fa4EnT/0/cCw1m3V5iE6w6lwSyQiu
+         W+4FEfkGTz15hi9aMvMzHsInUe1m7vWhOQ1cqU+Me4nLqmsGLsYdh/MpbxViYXHlFMUz
+         zaZPYzQbKBgJA5wO5EKlkOfL3nscNi9lSBDhBFOxgT8ySl9JVDgnLG5zYp+04tmlSvFH
+         hT5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7sjPCpIYfjpQ9NPOfg4EQ8oW3eRbu3jjjHVyD8bAi2w=;
+        b=qXWyWkRZGZrtbGCf+0xVsTo5Tb35JfDl2/X+8JfXfo5M6rLtsW4wxv00ZpnPq8ApSD
+         ckS9rXti75X28WA604fTbuYEXf5JhEDkAA0vMRiJrhBol2Iu7j6wLlNLHLRrG098otr+
+         cmDhYs0q9oWfmHjGjcxK/JMC4FSOY/SRscU2dN00tVBaa2Qozocxry6QVrzk77VT2eX+
+         PuaOEXbjmprBnYnm9LI9s6aBLSBGoPSnjTkhL9hwzjNggr9GIoqVVlmNUQoh/sOSCxL7
+         knCak+cEnX9xu78Aan20a9aOUBizxXtwQZtB2ggQ35ocnkGYEQE+i7XwopJxib+GcApe
+         Sr+w==
+X-Gm-Message-State: AOAM532tzvT1d0jzbYx4Yeoh+tsN3qacGIYrhUMDoY8t+JXi+igvX84E
+	HJkDyqsBZ2yLDCWvoX6LizPbG+Xms3ez0w==
+X-Google-Smtp-Source: ABdhPJy8lMROM/TDdOzv6sfISQho/TrQ5KzL7hk7Q1DcLmscV+mLSHpJUgoSNqM6epl5SGhTuhRKDA==
+X-Received: by 2002:a17:90b:1c0e:: with SMTP id oc14mr3589274pjb.188.1617703430203;
+        Tue, 06 Apr 2021 03:03:50 -0700 (PDT)
+Received: from localhost ([209.9.72.213])
+        by smtp.gmail.com with ESMTPSA id h1sm18591601pfq.137.2021.04.06.03.03.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Apr 2021 03:03:49 -0700 (PDT)
+From: Geliang Tang <geliangtang@gmail.com>
 To: mptcp@lists.linux.dev
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	pabeni@redhat.com
-Subject: [RFC PATCH mptcp-next] mptcp: Retransmit DATA_FIN
-Date: Mon,  5 Apr 2021 17:47:50 -0700
-Message-Id: <20210406004750.14212-1-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+Cc: Geliang Tang <geliangtang@gmail.com>
+Subject: [MPTCP][PATCH mptcp-next 0/2] mptcp_for_each_* cleanups
+Date: Tue,  6 Apr 2021 18:03:42 +0800
+Message-Id: <cover.1617703144.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.30.2
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -31,59 +50,16 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With this change, the MPTCP-level retransmission timer is used to resend
-DATA_FIN. The retranmit timer is not stopped while waiting for a
-MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
-subflows.
+Two small cleanups using the macro helpers mptcp_for_each_*.
 
-There are still important things to address to move this beyond a RFC
-patch:
+Geliang Tang (2):
+  mptcp: add mptcp_for_each_msk helper
+  mptcp: use mptcp_for_each_subflow in mptcp_close
 
-1. Additional limits on the time that an MPTCP socket waits for a
-DATA_FIN. Do we need to support TCP_LINGER2?
+ net/mptcp/pm_netlink.c | 39 +++++++++++++++++----------------------
+ net/mptcp/protocol.c   |  2 +-
+ 2 files changed, 18 insertions(+), 23 deletions(-)
 
-2. Retransmission rate. In testing, it looks like TCP_RTO_MIN is used,
-so DATA_FIN is resent every 200ms. Too fast?
-
-3. Testing. Rely on packetdrill?
-
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2d895c3c8746..ca34b2828fc3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1032,7 +1032,8 @@ static void __mptcp_clean_una(struct sock *sk)
- 		}
- 	}
- 
--	if (snd_una == READ_ONCE(msk->snd_nxt)) {
-+	if (snd_una == READ_ONCE(msk->snd_nxt) &&
-+	    !mptcp_data_fin_enabled(msk)) {
- 		if (msk->timer_ival)
- 			mptcp_stop_timer(sk);
- 	} else {
-@@ -2247,8 +2248,16 @@ static void __mptcp_retrans(struct sock *sk)
- 
- 	__mptcp_clean_una_wakeup(sk);
- 	dfrag = mptcp_rtx_head(sk);
--	if (!dfrag)
-+	if (!dfrag) {
-+		if (mptcp_data_fin_enabled(msk)) {
-+			mptcp_set_timeout(sk, NULL);
-+			mptcp_send_ack(msk);
-+
-+			goto reset_timer;
-+		}
-+
- 		return;
-+	}
- 
- 	ssk = mptcp_subflow_get_retrans(msk);
- 	if (!ssk)
 -- 
-2.31.1
+2.30.2
 
