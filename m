@@ -1,75 +1,89 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420B1259E
-	for <mptcp@lists.linux.dev>; Fri,  2 Apr 2021 21:30:13 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPS id 9EA0F61181;
-	Fri,  2 Apr 2021 21:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1617399012;
-	bh=v5tf32z6nm/OFLA4CZvfIYWZwoEOphu58Ri8f797QnE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hGTY4SUfrew/99ARvjDx3bveh4sIMJNV5RkGRRoQbD0XweRK+9wGmC1maJjydolpX
-	 O5ousvlcjjW4PBH60r3v82Qv87K/65n9852+vxda2lIt3q+Kb/tA3/ogI0ActseACt
-	 XMUbXi4TipTIzdIeqZZ+p83AdGNZEDTfMhoZQWAhuOwQcjdCU7Sv5ZzKZZDXTgxm9u
-	 T/TOwQ/MLFOAk7699nJ3RJxOf0pYg8AkRVZwM+xQwxXeZqRBZkom1KLM16MyrsGvZC
-	 +9gv9b0Dl7/A/Yb283Yo7sscxgxw6pBplYIM10MPRdFFiSI3FC55qdwDlOiKnxORgC
-	 cPgfsKn20fD/Q==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 964F3609E6;
-	Fri,  2 Apr 2021 21:30:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920CF70
+	for <mptcp@lists.linux.dev>; Tue,  6 Apr 2021 00:48:08 +0000 (UTC)
+IronPort-SDR: /BkusIj3cQwWmpAkYLw0U2n+KFA3Nh6SjnvkraHBXU9SFLfKGdPasrEW+nuVlxfUA+BgMfPIs0
+ 05eF4BR/HIaQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9945"; a="180083592"
+X-IronPort-AV: E=Sophos;i="5.81,308,1610438400"; 
+   d="scan'208";a="180083592"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2021 17:48:05 -0700
+IronPort-SDR: cdAtzmz7VlU8K077BgNQLThYBipZiqEFYq5E2JmchqFKq/t5zsX6OaRfDI1UqWMFGkdOWdI2mv
+ iuJHfA+ONZNQ==
+X-IronPort-AV: E=Sophos;i="5.81,308,1610438400"; 
+   d="scan'208";a="379173379"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.255.228.70])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2021 17:47:55 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	pabeni@redhat.com
+Subject: [RFC PATCH mptcp-next] mptcp: Retransmit DATA_FIN
+Date: Mon,  5 Apr 2021 17:47:50 -0700
+Message-Id: <20210406004750.14212-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/7] MPTCP: Miscellaneous changes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <161739901261.1946.14359498630889237518.git-patchwork-notify@kernel.org>
-Date: Fri, 02 Apr 2021 21:30:12 +0000
-References: <20210401231947.162836-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20210401231947.162836-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hello:
+With this change, the MPTCP-level retransmission timer is used to resend
+DATA_FIN. The retranmit timer is not stopped while waiting for a
+MPTCP-level ACK of DATA_FIN, and retransmitted DATA_FINs are sent on all
+subflows.
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+There are still important things to address to move this beyond a RFC
+patch:
 
-On Thu,  1 Apr 2021 16:19:40 -0700 you wrote:
-> Here is a collection of patches from the MPTCP tree:
-> 
-> 
-> Patches 1 and 2 add some helpful MIB counters for connection
-> information.
-> 
-> Patch 3 cleans up some unnecessary checks.
-> 
-> [...]
+1. Additional limits on the time that an MPTCP socket waits for a
+DATA_FIN. Do we need to support TCP_LINGER2?
 
-Here is the summary with links:
-  - [net-next,1/7] mptcp: add mib for token creation fallback
-    https://git.kernel.org/netdev/net-next/c/a16195e35cd0
-  - [net-next,2/7] mptcp: add active MPC mibs
-    https://git.kernel.org/netdev/net-next/c/5695eb8891f9
-  - [net-next,3/7] mptcp: remove unneeded check on first subflow
-    https://git.kernel.org/netdev/net-next/c/781bf13d4f3b
-  - [net-next,4/7] mptcp: add mptcp reset option support
-    https://git.kernel.org/netdev/net-next/c/dc87efdb1a5c
-  - [net-next,5/7] selftests: mptcp: launch mptcp_connect with timeout
-    https://git.kernel.org/netdev/net-next/c/5888a61cb4e0
-  - [net-next,6/7] selftests: mptcp: init nstat history
-    https://git.kernel.org/netdev/net-next/c/76e5e27ca987
-  - [net-next,7/7] selftests: mptcp: dump more info on mpjoin errors
-    https://git.kernel.org/netdev/net-next/c/c2a55e8fd80f
+2. Retransmission rate. In testing, it looks like TCP_RTO_MIN is used,
+so DATA_FIN is resent every 200ms. Too fast?
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+3. Testing. Rely on packetdrill?
 
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
+ net/mptcp/protocol.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2d895c3c8746..ca34b2828fc3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1032,7 +1032,8 @@ static void __mptcp_clean_una(struct sock *sk)
+ 		}
+ 	}
+ 
+-	if (snd_una == READ_ONCE(msk->snd_nxt)) {
++	if (snd_una == READ_ONCE(msk->snd_nxt) &&
++	    !mptcp_data_fin_enabled(msk)) {
+ 		if (msk->timer_ival)
+ 			mptcp_stop_timer(sk);
+ 	} else {
+@@ -2247,8 +2248,16 @@ static void __mptcp_retrans(struct sock *sk)
+ 
+ 	__mptcp_clean_una_wakeup(sk);
+ 	dfrag = mptcp_rtx_head(sk);
+-	if (!dfrag)
++	if (!dfrag) {
++		if (mptcp_data_fin_enabled(msk)) {
++			mptcp_set_timeout(sk, NULL);
++			mptcp_send_ack(msk);
++
++			goto reset_timer;
++		}
++
+ 		return;
++	}
+ 
+ 	ssk = mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+-- 
+2.31.1
 
