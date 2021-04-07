@@ -1,73 +1,78 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70036D0E
-	for <mptcp@lists.linux.dev>; Wed,  7 Apr 2021 15:27:56 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id s21so3595500eju.8
-        for <mptcp@lists.linux.dev>; Wed, 07 Apr 2021 08:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=+Eu35afXUfq1SwQQ0TLwOcBDTpPMsGNWhdRf/xMdNoQ=;
-        b=eBSSuXsxMteLgshYHlm0cH0S2sd52m3GM77VjaJ6ycyiJDzRnBk0KX73NNR9nKuKli
-         T4Jv0vGCzauOd06Ml4RvJ/2QDIXOt5SUurrEIwfx0RC2clqD7W2yAiPSjPr6oOQ9ooYr
-         IakQDcWYQ+XkMbCHR4u5i6ZDZwmubKaWhSbziBktgB/qrMFU9+ZMrs1mdE6opwmFRkly
-         suA4zph6XSPMbAfXC9sw4r2fO6cTeIh5ONj5xM1lzSMg+qFZheDgTNz4SxMwMgBlsIyo
-         0SQBT1aRkJSiJDwbGVHyLCHADxp1CD6tZbN/nfc+u2g7W+6ALxJHCUgX1GFMdKUjZ+eY
-         T2lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=+Eu35afXUfq1SwQQ0TLwOcBDTpPMsGNWhdRf/xMdNoQ=;
-        b=lCPxDPUufqm8SwRxSWwJT/7tJVMWmU18xz6peBwkiBlAo8ymsIPTpX3i9BMyHL4Q3w
-         nISSt39s+CpzU0x6Q5T3XhTtq8NxHBT2J6aQWBI+yDh61CxmcfMjPIBgsHJLQsqYrszG
-         R6/HArd6ruqG/aKNZkmzQLqm2bVtddm7Lh+M9XKvKhHoHLg3nw7n0nORWeDsz9pxwYF3
-         xo/mW5wI9WQd3L7scn/5TaeCfGGQooUn0ZgMHCfAbOHJ/CvXo8DieW3cIpc9HSlKmK/1
-         6gm6dlkn2wcr0hXA9Q7ndZrVYB1/4hA219Bsqle1bgkzUqRJCyMAOygGHswneXRax8e6
-         f64g==
-X-Gm-Message-State: AOAM531fNWBAriWRaqH8W4HUcMFvNbP4ukrUM6wmGOKyB5rZ0ylraNv/
-	MZPrhwyTZu+WY8smKjVm2qG39KziO3/AFg==
-X-Google-Smtp-Source: ABdhPJy9v7aewKs4JGSSk5iftpKA90hnypp23cgSgwtGgKX+NF6EZu0fbeGmg0SBy4kifREvkkTx8g==
-X-Received: by 2002:a17:906:552:: with SMTP id k18mr4213509eja.508.1617809274991;
-        Wed, 07 Apr 2021 08:27:54 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:1164:2c6f:d233:7afd])
-        by smtp.gmail.com with ESMTPSA id u1sm15570128edv.90.2021.04.07.08.27.54
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Apr 2021 08:27:54 -0700 (PDT)
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Weekly meeting - 8 April 2021 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
-Message-ID: <f916e3e3-468d-f171-3c3c-12f3fa827539@tessares.net>
-Date: Wed, 7 Apr 2021 17:27:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1801B6D11
+	for <mptcp@lists.linux.dev>; Wed,  7 Apr 2021 21:20:10 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPS id A617F61165;
+	Wed,  7 Apr 2021 21:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1617830409;
+	bh=pCLMyqnJDD1VVCk4gXA8cCqi7eNQ1EAd+hUO4lutMb0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hywaqpTYYWkljPws9vanzh+WDZToQRLX2kKUu8vF2KNFaIyHUMLz5eEPUTO+shNCh
+	 PO9zXJ4vh00LJs1Phhtj9tDR9bYpqimMlUM1uWJq/xg/eTRF6lNoHAyaZseClfHlIr
+	 z8vhZ5Em3y4+In/EqeqE6WjDH412FAzqLKr0gStaYFluxq++0KHNA9z9/95yXtt8xX
+	 9Z8Pry2N9xCDY05fcHtAfuDHGplOP/M3ekNmXijjIKcWxHbBQIyugPc1Yf/m97E4+w
+	 uKM9DwttIuwct6q0RS+TvesUkx7MJZgFtH7gAP5pvYWyPUaufDzmjWQxNCgJNKom+k
+	 J5/yXFkn6p9cw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 9C596609B6;
+	Wed,  7 Apr 2021 21:20:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/8] mptcp: Cleanup, a new test case,
+ and header trimming
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <161783040963.17539.8738946559411722537.git-patchwork-notify@kernel.org>
+Date: Wed, 07 Apr 2021 21:20:09 +0000
+References: <20210407001604.85071-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20210407001604.85071-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hello everybody!
+Hello:
 
-Our public MPTCP upstreaming weekly web conference is scheduled for
-tomorrow.
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-The list of topics is available here:
-https://annuel2.framapad.org/p/mptcp_upstreaming_20210408
+On Tue,  6 Apr 2021 17:15:56 -0700 you wrote:
+> Some more patches to include from the MPTCP tree:
+> 
+> Patches 1-6 refactor an address-related data structure and reduce some
+> duplicate code that handles IPv4 and IPv6 addresses.
+> 
+> Patch 7 adds a test case for the MPTCP netlink interface, passing a
+> specific ifindex to the kernel.
+> 
+> [...]
 
-Feel free to add/modify topics!
+Here is the summary with links:
+  - [net-next,1/8] mptcp: move flags and ifindex out of mptcp_addr_info
+    https://git.kernel.org/netdev/net-next/c/daa83ab03954
+  - [net-next,2/8] mptcp: use mptcp_addr_info in mptcp_out_options
+    https://git.kernel.org/netdev/net-next/c/30f60bae8092
+  - [net-next,3/8] mptcp: drop OPTION_MPTCP_ADD_ADDR6
+    https://git.kernel.org/netdev/net-next/c/fef6b7ecfbd4
+  - [net-next,4/8] mptcp: use mptcp_addr_info in mptcp_options_received
+    https://git.kernel.org/netdev/net-next/c/f7dafee18538
+  - [net-next,5/8] mptcp: drop MPTCP_ADDR_IPVERSION_4/6
+    https://git.kernel.org/netdev/net-next/c/1b1a6ef597c7
+  - [net-next,6/8] mptcp: unify add_addr(6)_generate_hmac
+    https://git.kernel.org/netdev/net-next/c/761c124ed969
+  - [net-next,7/8] selftests: mptcp: add the net device name testcase
+    https://git.kernel.org/netdev/net-next/c/c3eaa5f667cb
+  - [net-next,8/8] mptcp: drop all sub-options except ADD_ADDR when the echo bit is set
+    https://git.kernel.org/netdev/net-next/c/07f8252fe0e3
 
-Anybody can join the meeting using Google Meet website/app/phone:
-https://meet.google.com/edk-rkrk-vaj
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-See/Speak to you tomorrow!
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
