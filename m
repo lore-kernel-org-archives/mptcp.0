@@ -1,88 +1,72 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA7C70
-	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 15:48:38 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id f8so2990663edd.11
-        for <mptcp@lists.linux.dev>; Thu, 08 Apr 2021 08:48:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=3rI0oy2y/b2xG5cJ3yyuD1zAiQRc+JfIWOE0fw0RJ2w=;
-        b=J4dx6m7fXgO5h5Ns35sqYS9qwJz2PL1DyU10K5vwf6j5RIpNNgj8ikcdw2UJJRL+5l
-         bU8yiJ4M47sDixRuBDZAUJc50ZG69DdHT53AY10hEsIoh7MlWx2Ly9rAtAP9varQ5XRD
-         5c5s3wXwuPBss0xkZASYqjpSAcIWeDCIr57YeoPYdxi+tMqBpQ9pM2PzJlFLCP+1W/50
-         MT3mroNCQ8wkluj5aDaZ/voZeudRFppM3dOq7HMfum58Xk0N53BsmcSgqKWnai8gAF9F
-         70a1cZL1FTLpoDX8FBKoCJsJwnnh1ycuSRO98dPdHoKF1/QUlZDs3Rh2F8sDxCQ2LWSo
-         S7ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=3rI0oy2y/b2xG5cJ3yyuD1zAiQRc+JfIWOE0fw0RJ2w=;
-        b=DZjwMY52P8HTtVRpW38qEs3TJlBmuie1M6znnQvWbQkzJ6HlW6da9zujZi1AcXRr8P
-         KNm9gkrP0ToS+PMi0NHo1moMfX8oCTQzIq7hXk1yE8RAz6vvoD/tpY51v4qf+UE7cnga
-         8ZcfjXOcHYtRY04QOFW36SxE2ZTzthYcAPNj8ezUSiQDBxjb29fwmZrPjfYRguqpc3pd
-         QtcoJFxJeZHQU0wRJgAt2WAxcUMZjo8Qlh8O1OW5u/JJhbj/B9lhDXFI8b9UM9IvyYdG
-         lKP1zhfdqxEWCvbbVP+pFioVqnYO/Ul/h0kJWkgGD7Hnsn2ojlK9zBQw58wxCoTbA7ny
-         JHpQ==
-X-Gm-Message-State: AOAM530pf6HZNdw4LvZZ7/Cy7UrADirlGb2S1LZRnVjFT4AeK+Z/YMch
-	Tb3KzC1O8xnr9jsSP/dDyNo8Y1+Af3h1TrW1O3Ak/4+3
-X-Google-Smtp-Source: ABdhPJwxXNVz4g1YldvlLBaCy4PR2MlyjV+MyV4GvbW9s3zZxo3v+nimtUxvzHChGIAnImbl6iJdArpR0Xbvl5fp9NY=
-X-Received: by 2002:a05:6402:2787:: with SMTP id b7mr12234779ede.225.1617896917370;
- Thu, 08 Apr 2021 08:48:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AA66D00
+	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 18:49:56 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@breakpoint.cc>)
+	id 1lUZiv-00015F-2s; Thu, 08 Apr 2021 20:49:49 +0200
+From: Florian Westphal <fw@strlen.de>
+To: <mptcp@lists.linux.dev>
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH mptcp 00/10] mptcp: add SOL_SOCKET support
+Date: Thu,  8 Apr 2021 20:49:26 +0200
+Message-Id: <20210408184936.6245-1-fw@strlen.de>
+X-Mailer: git-send-email 2.26.3
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1617703144.git.geliangtang@gmail.com> <ba5b4db66f47311d65703f5ea25430a5957106a9.1617703144.git.geliangtang@gmail.com>
- <ce612a158a171e421dda4f08bcb99894bb7c2991.1617703144.git.geliangtang@gmail.com>
-In-Reply-To: <ce612a158a171e421dda4f08bcb99894bb7c2991.1617703144.git.geliangtang@gmail.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Thu, 8 Apr 2021 23:48:26 +0800
-Message-ID: <CA+WQbwv7mtB1Fdp0AWsTjLdK8qMs5yiQnESYHQoNUR-xOL3U3A@mail.gmail.com>
-Subject: Re: [MPTCP][PATCH mptcp-next 2/2] mptcp: use mptcp_for_each_subflow
- in mptcp_close
-To: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+This patch set improves support for several SOL_SOCKET tuneables,
+addressing comments received for v1 patch set.
 
-I think this cleanup patch is still valid, isn't it?
+First patch adds skeleton synchronization functions to copy mptcp socket
+settings to a subflow socket.
 
-Thanks.
+Second patch adds sequence counting scheme to avoid re-sync when subflow
+and mptcp-level socket are known to have the same setting applied.
 
--Geliang
+Notable changes:
+I removed the sequence number from patch 1 and split it into second
+patch to make those bits clearer.
 
-Geliang Tang <geliangtang@gmail.com> =E4=BA=8E2021=E5=B9=B44=E6=9C=886=E6=
-=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=886:03=E5=86=99=E9=81=93=EF=BC=9A
+TCP_CONGESTION is now applied to all subflows.
 
->
-> This patch used the macro helper mptcp_for_each_subflow() instead of
-> list_for_each_entry() in mptcp_close.
->
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> ---
->  net/mptcp/protocol.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 2d895c3c8746..3b7d1df8d019 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2581,7 +2581,7 @@ static void mptcp_close(struct sock *sk, long timeo=
-ut)
->  cleanup:
->         /* orphan all the subflows */
->         inet_csk(sk)->icsk_mtup.probe_timestamp =3D tcp_jiffies32;
-> -       list_for_each_entry(subflow, &mptcp_sk(sk)->conn_list, node) {
-> +       mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
->                 struct sock *ssk =3D mptcp_subflow_tcp_sock(subflow);
->                 bool slow =3D lock_sock_fast(ssk);
->
-> --
-> 2.30.2
->
+TCP_INFO retrieves info from the first subflow.  It seems better to
+add MPTCP_INFO from out-of-tree patch set in a future change for
+userspace that wants mptcp-level flow statistics.
+
+I've not changed SO_LINGER either, this should be updated in a
+future change to send a FASTCLOSE when mptcp socket gets closed
+while the linger time is 0.
+
+The last patch adds a simple test to check SO_MARK replication.
+
+Florian Westphal (10):
+  mptcp: add skeleton to sync msk socket options to subflows
+  mptcp: tag sequence_seq with socket state
+  mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY
+  mptcp: setsockopt: handle receive/send buffer and device bind
+  mptcp: setsockopt: support SO_LINGER
+  mptcp: setsockopt: add SO_MARK support
+  mptcp: setsockopt: add SO_INCOMING_CPU
+  mptcp: setsockopt: SO_DEBUG and no-op options
+  mptcp: sockopt: add TCP_CONGESTION and TCP_INFO
+  selftests: mptcp: add packet mark test case
+
+ net/mptcp/protocol.c                          |  55 ++-
+ net/mptcp/protocol.h                          |  11 +
+ net/mptcp/sockopt.c                           | 404 ++++++++++++++++++
+ net/mptcp/subflow.c                           |   5 +
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ .../selftests/net/mptcp/mptcp_connect.c       |  23 +-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      | 276 ++++++++++++
+ 7 files changed, 765 insertions(+), 11 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+
+-- 
+2.26.3
+
