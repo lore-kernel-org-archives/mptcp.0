@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570636D00
-	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 18:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B806D00
+	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 18:50:22 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lUZjL-00017C-UO; Thu, 08 Apr 2021 20:50:15 +0200
+	id 1lUZjQ-00017U-D4; Thu, 08 Apr 2021 20:50:20 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp 06/10] mptcp: setsockopt: add SO_MARK support
-Date: Thu,  8 Apr 2021 20:49:32 +0200
-Message-Id: <20210408184936.6245-7-fw@strlen.de>
+Subject: [PATCH mptcp 07/10] mptcp: setsockopt: add SO_INCOMING_CPU
+Date: Thu,  8 Apr 2021 20:49:33 +0200
+Message-Id: <20210408184936.6245-8-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210408184936.6245-1-fw@strlen.de>
 References: <20210408184936.6245-1-fw@strlen.de>
@@ -22,43 +22,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Value is synced to all subflows.
+Replicate to all subflows.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- net/mptcp/sockopt.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/mptcp/sockopt.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 90a0282520c6..effc7c1efbac 100644
+index effc7c1efbac..6be8abbed6eb 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -95,6 +95,12 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 			ssk->sk_userlocks |= SOCK_RCVBUF_LOCK;
- 			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
+@@ -101,6 +101,9 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
+ 				sk_dst_reset(ssk);
+ 			}
  			break;
-+		case SO_MARK:
-+			if (READ_ONCE(ssk->sk_mark) != sk->sk_mark) {
-+				ssk->sk_mark = sk->sk_mark;
-+				sk_dst_reset(ssk);
-+			}
++		case SO_INCOMING_CPU:
++			WRITE_ONCE(ssk->sk_incoming_cpu, val);
 +			break;
  		}
  
  		subflow->setsockopt_seq = msk->setsockopt_seq;
-@@ -132,6 +138,7 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
- 	case SO_KEEPALIVE:
- 		mptcp_sol_socket_sync_intval(msk, optname, val);
- 		return 0;
-+	case SO_MARK:
- 	case SO_PRIORITY:
- 	case SO_SNDBUF:
- 	case SO_SNDBUFFORCE:
-@@ -222,6 +229,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
- 	case SO_SNDBUFFORCE:
+@@ -125,6 +128,15 @@ static int mptcp_sol_socket_intval(struct mptcp_sock *msk, int optname, int val)
+ 	return 0;
+ }
+ 
++static void mptcp_so_incoming_cpu(struct mptcp_sock *msk, int val)
++{
++	struct sock *sk = (struct sock *)msk;
++
++	WRITE_ONCE(sk->sk_incoming_cpu, val);
++
++	mptcp_sol_socket_sync_intval(msk, SO_INCOMING_CPU, val);
++}
++
+ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
+ 					   sockptr_t optval, unsigned int optlen)
+ {
+@@ -145,6 +157,9 @@ static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
  	case SO_RCVBUF:
  	case SO_RCVBUFFORCE:
-+	case SO_MARK:
+ 		return mptcp_sol_socket_intval(msk, optname, val);
++	case SO_INCOMING_CPU:
++		mptcp_so_incoming_cpu(msk, val);
++		return 0;
+ 	}
+ 
+ 	return -ENOPROTOOPT;
+@@ -230,6 +245,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 	case SO_RCVBUF:
+ 	case SO_RCVBUFFORCE:
+ 	case SO_MARK:
++	case SO_INCOMING_CPU:
  		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
  	case SO_LINGER:
  		return mptcp_setsockopt_sol_socket_linger(msk, optval, optlen);
