@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF57D6D13
-	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 18:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4417C6D00
+	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 18:50:35 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lUZjZ-00018K-Af; Thu, 08 Apr 2021 20:50:29 +0200
+	id 1lUZjd-00018e-Ou; Thu, 08 Apr 2021 20:50:33 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp 09/10] mptcp: sockopt: add TCP_CONGESTION and TCP_INFO
-Date: Thu,  8 Apr 2021 20:49:35 +0200
-Message-Id: <20210408184936.6245-10-fw@strlen.de>
+Subject: [PATCH mptcp 10/10] selftests: mptcp: add packet mark test case
+Date: Thu,  8 Apr 2021 20:49:36 +0200
+Message-Id: <20210408184936.6245-11-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210408184936.6245-1-fw@strlen.de>
 References: <20210408184936.6245-1-fw@strlen.de>
@@ -22,168 +22,395 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-TCP_CONGESTION is set for all subflows.
-The mptcp socket gains icsk_ca_ops too so it can be used to keep the
-authoritative state that should be set on new/future subflows.
+Extend mptcp_connect tool with SO_MARK support (-M <value>) and
+add a test case that checks that the packet mark gets copied to all
+subflows.
 
-TCP_INFO will return first subflow only.
-The out-of-tree kernel has a MPTCP_INFO getsockopt, this could be added
-later on.
+This is done by only allowing packets with either skb->mark 1 or 2
+via iptables.
+
+DROP rule packet counter is checked; if its not zero, print an error
+message and fail the test case.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- net/mptcp/protocol.c |   4 ++
- net/mptcp/sockopt.c  | 101 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 105 insertions(+)
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ .../selftests/net/mptcp/mptcp_connect.c       |  23 +-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      | 276 ++++++++++++++++++
+ 3 files changed, 299 insertions(+), 2 deletions(-)
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 26e3ffe8840e..302419e2d92c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2390,6 +2390,8 @@ static int __mptcp_init_sock(struct sock *sk)
- 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
- 	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+index 00bb158b4a5d..f1464f09b080 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -6,7 +6,7 @@ KSFT_KHDR_INSTALL := 1
+ CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
  
-+	tcp_assign_congestion_control(sk);
-+
- #if IS_ENABLED(CONFIG_KASAN)
- 	sock_set_flag(sk, SOCK_RCU_FREE);
- #endif
-@@ -2586,6 +2588,8 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	WARN_ON_ONCE(msk->rmem_released);
- 	sk_stream_kill_queues(sk);
- 	xfrm_sk_free_policy(sk);
-+
-+	tcp_cleanup_congestion_control(sk);
- 	sk_refcnt_debug_release(sk);
- 	mptcp_dispose_initial_subflow(msk);
- 	sock_put(sk);
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index e7a710d1d1de..ab9eb728e649 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -510,6 +510,62 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 	return false;
- }
+ TEST_PROGS := mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh \
+-	      simult_flows.sh
++	      simult_flows.sh mptcp_sockopt.sh
  
-+static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t optval,
-+					       unsigned int optlen)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	char name[TCP_CA_NAME_MAX];
-+	bool cap_net_admin;
-+	int ret;
-+
-+	if (optlen < 1)
-+		return -EINVAL;
-+
-+	ret = strncpy_from_sockptr(name, optval,
-+				   min_t(long, TCP_CA_NAME_MAX - 1, optlen));
-+	if (ret < 0)
-+		return -EFAULT;
-+
-+	name[ret] = 0;
-+
-+	cap_net_admin = ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN);
-+
-+	ret = 0;
-+	lock_sock(sk);
-+	sockopt_seq_inc(msk);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		int err;
-+
-+		lock_sock(ssk);
-+		err = tcp_set_congestion_control(ssk, name, true, cap_net_admin);
-+		if (err < 0 && ret == 0)
-+			ret = err;
-+		subflow->setsockopt_seq = msk->setsockopt_seq;
-+		release_sock(ssk);
-+	}
-+
-+	if (ret == 0)
-+		tcp_set_congestion_control(sk, name, false, cap_net_admin);
-+
-+	release_sock(sk);
-+	return ret;
-+}
-+
-+static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-+				    sockptr_t optval, unsigned int optlen)
-+{
-+	switch (optname) {
-+	case TCP_ULP:
-+		return -EOPNOTSUPP;
-+	case TCP_CONGESTION:
-+		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
- int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 		     sockptr_t optval, unsigned int optlen)
+ TEST_GEN_FILES = mptcp_connect pm_nl_ctl
+ 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 69d89b5d666f..2f207cf33661 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -57,6 +57,7 @@ static bool cfg_join;
+ static bool cfg_remove;
+ static unsigned int cfg_do_w;
+ static int cfg_wait;
++static uint32_t cfg_mark;
+ 
+ static void die_usage(void)
  {
-@@ -539,6 +595,49 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 	if (level == SOL_IPV6)
- 		return mptcp_setsockopt_v6(msk, optname, optval, optlen);
- 
-+	if (level == SOL_TCP)
-+		return mptcp_setsockopt_sol_tcp(msk, optname, optval, optlen);
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
-+					  char __user *optval, int __user *optlen)
-+{
-+	struct sock *sk = (struct sock *)msk;
-+	struct socket *ssock;
-+	int ret = -EINVAL;
-+	struct sock *ssk;
-+
-+	lock_sock(sk);
-+	ssk = msk->first;
-+	if (ssk) {
-+		ret = tcp_getsockopt(ssk, level, optname, optval, optlen);
-+		goto out;
-+	}
-+
-+	ssock = __mptcp_nmpc_socket(msk);
-+	if (!ssock)
-+		goto out;
-+
-+	ret = tcp_getsockopt(ssock->sk, level, optname, optval, optlen);
-+
-+out:
-+	release_sock(sk);
-+	return ret;
-+}
-+
-+static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
-+				    char __user *optval, int __user *optlen)
-+{
-+	switch (optname) {
-+	case TCP_ULP:
-+	case TCP_CONGESTION:
-+	case TCP_INFO:
-+	case TCP_CC_INFO:
-+		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
-+						      optval, optlen);
-+	}
- 	return -EOPNOTSUPP;
+@@ -69,6 +70,7 @@ static void die_usage(void)
+ 	fprintf(stderr, "\t-p num -- use port num\n");
+ 	fprintf(stderr, "\t-s [MPTCP|TCP] -- use mptcp(default) or tcp sockets\n");
+ 	fprintf(stderr, "\t-m [poll|mmap|sendfile] -- use poll(default)/mmap+write/sendfile\n");
++	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
+ 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
+ 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
+ 	exit(1);
+@@ -140,6 +142,17 @@ static void set_sndbuf(int fd, unsigned int size)
+ 	}
  }
  
-@@ -562,6 +661,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
- 	if (ssk)
- 		return tcp_getsockopt(ssk, level, optname, optval, option);
++static void set_mark(int fd, uint32_t mark)
++{
++	int err;
++
++	err = setsockopt(fd, SOL_SOCKET, SO_MARK, &mark, sizeof(mark));
++	if (err) {
++		perror("set SO_MARK");
++		exit(1);
++	}
++}
++
+ static int sock_listen_mptcp(const char * const listenaddr,
+ 			     const char * const port)
+ {
+@@ -248,6 +261,9 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 			continue;
+ 		}
  
-+	if (level == SOL_TCP)
-+		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
- 	return -EOPNOTSUPP;
- }
++		if (cfg_mark)
++			set_mark(sock, cfg_mark);
++
+ 		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
+ 			break; /* success */
  
+@@ -830,7 +846,7 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ 
+-	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:")) != -1) {
++	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:")) != -1) {
+ 		switch (c) {
+ 		case 'j':
+ 			cfg_join = true;
+@@ -880,6 +896,9 @@ static void parse_opts(int argc, char **argv)
+ 		case 'w':
+ 			cfg_wait = atoi(optarg)*1000000;
+ 			break;
++		case 'M':
++			cfg_mark = strtol(optarg, NULL, 0);
++			break;
+ 		}
+ 	}
+ 
+@@ -911,6 +930,8 @@ int main(int argc, char *argv[])
+ 			set_rcvbuf(fd, cfg_rcvbuf);
+ 		if (cfg_sndbuf)
+ 			set_sndbuf(fd, cfg_sndbuf);
++		if (cfg_mark)
++			set_mark(fd, cfg_mark);
+ 
+ 		return main_loop_s(fd);
+ 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+new file mode 100755
+index 000000000000..2fa13946ac04
+--- /dev/null
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -0,0 +1,276 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++ret=0
++sin=""
++sout=""
++cin=""
++cout=""
++ksft_skip=4
++timeout_poll=30
++timeout_test=$((timeout_poll * 2 + 1))
++mptcp_connect=""
++do_all_tests=1
++
++add_mark_rules()
++{
++	local ns=$1
++	local m=$2
++
++	for t in iptables ip6tables; do
++		# just to debug: check we have multiple subflows connection requests
++		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
++
++		# RST packets might be handled by a internal dummy socket
++		ip netns exec $ns $t -A OUTPUT -p tcp --tcp-flags RST RST -m mark --mark 0 -j ACCEPT
++
++		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark $m -j ACCEPT
++		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark 0 -j DROP
++	done
++}
++
++init()
++{
++	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
++
++	ns1="ns1-$rndh"
++	ns2="ns2-$rndh"
++
++	for netns in "$ns1" "$ns2";do
++		ip netns add $netns || exit $ksft_skip
++		ip -net $netns link set lo up
++		ip netns exec $netns sysctl -q net.mptcp.enabled=1
++		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
++		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
++	done
++
++	for i in `seq 1 4`; do
++		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
++		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
++		ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
++		ip -net "$ns1" link set ns1eth$i up
++
++		ip -net "$ns2" addr add 10.0.$i.2/24 dev ns2eth$i
++		ip -net "$ns2" addr add dead:beef:$i::2/64 dev ns2eth$i nodad
++		ip -net "$ns2" link set ns2eth$i up
++
++		# let $ns2 reach any $ns1 address from any interface
++		ip -net "$ns2" route add default via 10.0.$i.1 dev ns2eth$i metric 10$i
++
++		ip netns exec $ns1 ./pm_nl_ctl add 10.0.$i.1 flags signal
++		ip netns exec $ns1 ./pm_nl_ctl add dead:beef:$i::1 flags signal
++
++		ip netns exec $ns2 ./pm_nl_ctl add 10.0.$i.2 flags signal
++		ip netns exec $ns2 ./pm_nl_ctl add dead:beef:$i::2 flags signal
++	done
++
++	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
++	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
++
++	add_mark_rules $ns1 1
++	add_mark_rules $ns2 2
++}
++
++cleanup()
++{
++	for netns in "$ns1" "$ns2"; do
++		ip netns del $netns
++	done
++	rm -f "$cin" "$cout"
++	rm -f "$sin" "$sout"
++}
++
++ip -Version > /dev/null 2>&1
++if [ $? -ne 0 ];then
++	echo "SKIP: Could not run test without ip tool"
++	exit $ksft_skip
++fi
++
++iptables -V > /dev/null 2>&1
++if [ $? -ne 0 ];then
++	echo "SKIP: Could not run all tests without iptables tool"
++	exit $ksft_skip
++fi
++
++ip6tables -V > /dev/null 2>&1
++if [ $? -ne 0 ];then
++	echo "SKIP: Could not run all tests without ip6tables tool"
++	exit $ksft_skip
++fi
++
++check_mark()
++{
++	local ns=$1
++	local af=$2
++
++	tables=iptables
++
++	if [ $af -eq 6 ];then
++		tables=ip6tables
++	fi
++
++	counters=$(ip netns exec $ns $tables -v -L OUTPUT | grep DROP)
++	values=${counters%DROP*}
++
++	for v in $values; do
++		if [ $v -ne 0 ]; then
++			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
++			return 1
++		fi
++	done
++
++	return 0
++}
++
++print_file_err()
++{
++	ls -l "$1" 1>&2
++	echo "Trailing bytes are: "
++	tail -c 27 "$1"
++}
++
++check_transfer()
++{
++	in=$1
++	out=$2
++	what=$3
++
++	cmp "$in" "$out" > /dev/null 2>&1
++	if [ $? -ne 0 ] ;then
++		echo "[ FAIL ] $what does not match (in, out):"
++		print_file_err "$in"
++		print_file_err "$out"
++		ret=1
++
++		return 1
++	fi
++
++	return 0
++}
++
++# $1: IP address
++is_v6()
++{
++	[ -z "${1##*:*}" ]
++}
++
++do_transfer()
++{
++	listener_ns="$1"
++	connector_ns="$2"
++	cl_proto="$3"
++	srv_proto="$4"
++	connect_addr="$5"
++
++	port=12001
++
++	:> "$cout"
++	:> "$sout"
++
++	mptcp_connect="./mptcp_connect -r 20"
++
++	local local_addr
++	if is_v6 "${connect_addr}"; then
++		local_addr="::"
++	else
++		local_addr="0.0.0.0"
++	fi
++
++	timeout ${timeout_test} \
++		ip netns exec ${listener_ns} \
++			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} \
++				${local_addr} < "$sin" > "$sout" &
++	spid=$!
++
++	sleep 1
++
++	timeout ${timeout_test} \
++		ip netns exec ${connector_ns} \
++			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} \
++				$connect_addr < "$cin" > "$cout" &
++
++	cpid=$!
++
++	wait $cpid
++	retc=$?
++	wait $spid
++	rets=$?
++
++	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
++		echo " client exit code $retc, server $rets" 1>&2
++		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
++		ip netns exec ${listener_ns} ss -Menita 1>&2 -o "sport = :$port"
++
++		echo -e "\nnetns ${connector_ns} socket stat for ${port}:" 1>&2
++		ip netns exec ${connector_ns} ss -Menita 1>&2 -o "dport = :$port"
++
++		ret=1
++		return 1
++	fi
++
++	if [ $local_addr = "::" ];then
++		check_mark $listener_ns 6
++		check_mark $connector_ns 6
++	else
++		check_mark $listener_ns 4
++		check_mark $connector_ns 4
++	fi
++
++	check_transfer $cin $sout "file received by server"
++
++	rets=$?
++
++	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
++		return 0
++	fi
++
++	return 1
++}
++
++make_file()
++{
++	name=$1
++	who=$2
++	size=$3
++
++	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
++	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
++
++	echo "Created $name (size $size KB) containing data sent by $who"
++}
++
++run_tests()
++{
++	listener_ns="$1"
++	connector_ns="$2"
++	connect_addr="$3"
++	lret=0
++
++	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
++
++	lret=$?
++
++	if [ $lret -ne 0 ]; then
++		ret=$lret
++		return
++	fi
++}
++
++sin=$(mktemp)
++sout=$(mktemp)
++cin=$(mktemp)
++cout=$(mktemp)
++init
++make_file "$cin" "client" 1
++make_file "$sin" "server" 1
++trap cleanup EXIT
++
++run_tests $ns1 $ns2 10.0.1.1
++run_tests $ns1 $ns2 dead:beef:1::1
++
++
++if [ $ret -eq 0 ];then
++	echo "PASS: all packets had packet mark set"
++fi
++
++exit $ret
 -- 
 2.26.3
 
