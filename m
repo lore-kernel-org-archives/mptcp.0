@@ -1,416 +1,406 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4417C6D00
-	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 18:50:35 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1lUZjd-00018e-Ou; Thu, 08 Apr 2021 20:50:33 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <mptcp@lists.linux.dev>
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp 10/10] selftests: mptcp: add packet mark test case
-Date: Thu,  8 Apr 2021 20:49:36 +0200
-Message-Id: <20210408184936.6245-11-fw@strlen.de>
-X-Mailer: git-send-email 2.26.3
-In-Reply-To: <20210408184936.6245-1-fw@strlen.de>
-References: <20210408184936.6245-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDD46D00
+	for <mptcp@lists.linux.dev>; Thu,  8 Apr 2021 19:50:50 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id n2so5019481ejy.7
+        for <mptcp@lists.linux.dev>; Thu, 08 Apr 2021 12:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=+q7dMhyjApXHD9VZnZapBLGHd6QpBRTEUTOknk8MUEY=;
+        b=XYEzEOSvtXa8so9us/n+lobER9V85/TtkqIDcDD+aKef7ZRixpjXvjcDm2TeEwnlhX
+         fkGCCYqL3MDOUos6eHgCauH7dveRBmNuBgdOM1qemy+VeLudxySpwzSDai0Dmv61ObaB
+         BBar3YO3stEH7PG1ztoHrxwRvj4PPpQba6fHsljcV8e9w0Z905f5Lh4DVFC93QlGTCSr
+         q3DNh5H/e0pcF+Qq3z2Nxn2XYSEkXKPqxYXqZDAoBxPMDlsrAPOJXkHvsCbosV8LMOet
+         ksmGYHcpeh0/jsrvpj3xtIjbhsA7p1ONchZxZA4wjLQko89rQjfTXrj4/Ffy6YWnCxQj
+         +ePw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=+q7dMhyjApXHD9VZnZapBLGHd6QpBRTEUTOknk8MUEY=;
+        b=cXCvAhZDaxJGActULaK3qpp8MDawOV6H84ppL/5RM9fBNuNSwCgFcT7WnxqPrmqfbB
+         AK0obsqXf0dKMPt7Yc2wblS3GPhjNpZWcAHFHx9VbftM8G8gOxUD7TN6+qc3clNZ3jFx
+         WqCaAxU+IXCVvlvHT+3QAoinUQFChSBJV6Prl+PJ84c+wG4MasuYKWsg6MhCN3PsfS9A
+         2Ssnc+4z38XwBrP1BRZe1BqOWhhZdWBn0CYMvfif/bBzODsQsL737hgSpL+MdW/AB/4H
+         OprGpewaFbUI3GjIoxSVpcWCeeows4PS3DIJrswDIJN68uHrwIy6p1Bip5q0zBOgPfBY
+         YeLg==
+X-Gm-Message-State: AOAM531xFkECE9aJwNTCuo+DxyZ4svWQKJ18epGKkfBSWn3h+SAFMftP
+	zHi2k+oQFKwY/eSNYNIV779eWIgd343zPA==
+X-Google-Smtp-Source: ABdhPJyEEPg4yfAyljiiDkaooJWzeliCJknusDIQ4AWzuv6/qlLhVQFjBgJsYK6k5BPecIK1+CNFPA==
+X-Received: by 2002:a17:906:d9cf:: with SMTP id qk15mr12947208ejb.415.1617911448517;
+        Thu, 08 Apr 2021 12:50:48 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:7e71:193d:b71f:64fd])
+        by smtp.gmail.com with ESMTPSA id bm21sm168732ejb.36.2021.04.08.12.50.47
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Apr 2021 12:50:48 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: [Weekly meetings] MoM - 8th of April 2021
+Message-ID: <050482ae-aed1-6c0d-8955-586483df3ce0@tessares.net>
+Date: Thu, 8 Apr 2021 21:50:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 
-Extend mptcp_connect tool with SO_MARK support (-M <value>) and
-add a test case that checks that the packet mark gets copied to all
-subflows.
+Hello everyone,
 
-This is done by only allowing packets with either skb->mark 1 or 2
-via iptables.
+Today, we just had our 143rd meeting with Mat (Intel), Christoph 
+(Apple), Florian, Paolo and Davide (RedHat), Geliang (Xiaomi) and myself 
+(Tessares).
 
-DROP rule packet counter is checked; if its not zero, print an error
-message and fail the test case.
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- tools/testing/selftests/net/mptcp/Makefile    |   2 +-
- .../selftests/net/mptcp/mptcp_connect.c       |  23 +-
- .../selftests/net/mptcp/mptcp_sockopt.sh      | 276 ++++++++++++++++++
- 3 files changed, 299 insertions(+), 2 deletions(-)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+Thanks again for this new good meeting!
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 00bb158b4a5d..f1464f09b080 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -6,7 +6,7 @@ KSFT_KHDR_INSTALL := 1
- CFLAGS =  -Wall -Wl,--no-as-needed -O2 -g  -I$(top_srcdir)/usr/include
+Here are the minutes of the meeting:
+
+     netdev (if mptcp ML is in cc) (Mat Martineau, Paolo Abeni):
+
+1463069  [net-next,8/8] mptcp: drop all sub-options except ADD_ADDR when 
+the e...
+1463070  [net-next,7/8] selftests: mptcp: add the net device name testcase
+1463068  [net-next,6/8] mptcp: unify add_addr(6)_generate_hmac
+1463067  [net-next,5/8] mptcp: drop MPTCP_ADDR_IPVERSION_4/6
+1463065  [net-next,4/8] mptcp: use mptcp_addr_info in 
+mptcp_options_received
+1463066  [net-next,3/8] mptcp: drop OPTION_MPTCP_ADD_ADDR6
+1463064  [net-next,2/8] mptcp: use mptcp_addr_info in mptcp_out_options
+1463062  [net-next,1/8] mptcp: move flags and ifindex out of 
+mptcp_addr_info
+
+1461430  [net-next,7/7] selftests: mptcp: dump more info on mpjoin errors
+1461429  [net-next,6/7] selftests: mptcp: init nstat history
+1461428  [net-next,5/7] selftests: mptcp: launch mptcp_connect with timeout
+1461434  [net-next,4/7] mptcp: add mptcp reset option support
+1461427  [net-next,3/7] mptcp: remove unneeded check on first subflow
+1461433  [net-next,2/7] mptcp: add active MPC mibs
+1461432  [net-next,1/7] mptcp: add mib for token creation fallback
+
+1461195  [net,2/2] mptcp: revert "mptcp: provide subflow aware release 
+functio...
+1461194  [net,1/2] mptcp: forbit mcast-related sockopt on MPTCP sockets
+
+
+     our repo (by: Geliang Tang):
+
+1461192  [v3,mptcp-next] Squash to "mptcp: add tracepoint in 
+mptcp_subflow_get...
+
+1460370  [v4,mptcp-next,5/5] mptcp: add tracepoint in 
+subflow_check_data_avail
+1460369  [v4,mptcp-next,4/5] mptcp: add tracepoint in ack_update_msk
+1460368  [v4,mptcp-next,3/5] mptcp: add tracepoint in get_mapping_status
+1460367  [v4,mptcp-next,2/5] mptcp: add tracepoint in 
+mptcp_subflow_get_send
+1460366  [v4,mptcp-next,1/5] mptcp: export mptcp_subflow_active
+
+
+
+
+Pending patches:
+     - The list of pending patches can be seen on PatchWork:
+       https://patchwork.ozlabs.org/project/mptcp/list/?state=*
+
+     netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+     our repo (by: Florian Westphal, Geliang Tang, Mat Martineau, 
+Yonglong Li):
+
+1370700: RFC: [RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
+1370702: RFC: [RFC,4/4] tcp: parse tcp options contained in reset packets:
+     - Same status as last week, WIP
+
+1375893: RFC: [RFC,mptpcp-next] mptcp: add ooo prune support:
+     - Same status as last week, WIP
+
+1395128: RFC: [1/5] tcp: make two mptcp helpers available to tcp stack
+1395133: RFC: [5/5] mptcp: send fastclose if userspace closes socket 
+with unread data:
+     - Same status as last week, WIP
+
+1426554: Changes Requested: [PATCHi,iproute2] mptcp: add support for 
+event monitoring:
+     - Same status as last week, WIP
+
+1450496: RFC: [RFC,2/2] mptcp: add MP_FAIL support:
+     - Same status as last week, WIP
+
+1457879: Changes Requested: [RFC,mptcp-next,v2,1/8] mptcp: add skeleton 
+to sync msk socket options to subflows
+1457878: Changes Requested: [RFC,mptcp-next,v2,2/8] mptcp: setsockopt: 
+handle SO_KEEPALIVE and SO_PRIORITY
+1457880: Changes Requested: [RFC,mptcp-next,v2,3/8] mptcp: setsockopt: 
+handle receive/send buffer and device bind
+1457881: Changes Requested: [RFC,mptcp-next,v2,4/8] mptcp: setsockopt: 
+support SO_LINGER
+1457882: Changes Requested: [RFC,mptcp-next,v2,5/8] mptcp: setsockopt: 
+add SO_MARK support
+1457883: Changes Requested: [RFC,mptcp-next,v2,6/8] mptcp: setsockopt: 
+add SO_INCOMING_CPU
+1457884: Changes Requested: [RFC,mptcp-next,v2,7/8] mptcp: setsockopt: 
+SO_DEBUG and no-op options
+1457885: Changes Requested: [RFC,mptcp-next,v2,8/8] mptcp: sockopt: add 
+TCP_CONGESTION and TCP_INFO:
+     - Same status as last week, WIP
+
+1459518: Changes Requested: [v2,mptcp-next,01/16] mptcp: add 
+csum_enabled in mptcp_sock
+1459520: Changes Requested: [v2,mptcp-next,02/16] mptcp: generate the 
+data checksum
+1459519: Changes Requested: [v2,mptcp-next,03/16] mptcp: add csum_reqd 
+in mptcp_out_options
+1459521: Changes Requested: [v2,mptcp-next,04/16] mptcp: send out 
+checksum for MP_CAPABLE with data
+1459522: Changes Requested: [v2,mptcp-next,05/16] mptcp: send out 
+checksum for DSS
+1459523: Changes Requested: [v2,mptcp-next,06/16] mptcp: add csum_reqd 
+in mptcp_options_received
+1459524: Changes Requested: [v2,mptcp-next,07/16] mptcp: add sk 
+parameter for mptcp_parse_option
+1459525: Changes Requested: [v2,mptcp-next,08/16] mptcp: receive 
+checksum for MP_CAPABLE with data
+1459526: Changes Requested: [v2,mptcp-next,09/16] mptcp: receive 
+checksum for DSS
+1459527: Changes Requested: [v2,mptcp-next,10/16] mptcp: validate the 
+data checksum
+1459528: Changes Requested: [v2,mptcp-next,11/16] mptcp: add the mib for 
+data checksum
+1459529: Changes Requested: [v2,mptcp-next,12/16] mptcp: add a new 
+sysctl checksum_enabled
+1459530: Changes Requested: [v2,mptcp-next,13/16] mptcp: add 
+mptcpi_csum_enabled in mptcp_info
+1459531: Changes Requested: [v2,mptcp-next,14/16] mptcp: add trace event 
+for data checksum
+1459532: Changes Requested: [v2,mptcp-next,15/16] selftests: mptcp: 
+enable checksum in mptcp_connect.sh
+1459533: Changes Requested: [v2,mptcp-next,16/16] selftests: mptcp: 
+enable checksum in mptcp_join.sh:
+     - Same status as last week, WIP
+
+1460888: Changes Requested: [v3] mptcp: ensure there is unacked data at 
+all subflow:
+     - Same status as last week
+
+1462554: RFC: [RFC,mptcp-next] mptcp: Retransmit DATA_FIN:
+     - A few topics to discuss / to do in the cover-letter
+     - First look from Paolo: seems good, *Paolo* will try to look at 
+this in more details later
+     - Retransmission rate:
+         - not sure if it is normal
+         - we are in shutdown phase, maybe normal to be quick to retransmit
+         - exponential backoff? → function for that, *Mat* will check
+     - We do need packetdrill to validate that
+
+1462711: Rejected: [mptcp-next,1/2] mptcp: add mptcp_for_each_msk helper
+1462712: Rejected: [mptcp-next,2/2] mptcp: use mptcp_for_each_subflow in 
+mptcp_close:
+     - maybe not a good idea to declare new vars in a macro
+     - seems OK not to have it
+     - *EDIT* this makes sense for patch 1/2. Patch 2/2 is not using the 
+new macro.
+
+
+
+Issues on Github:
+     https://github.com/multipath-tcp/mptcp_net-next/issues/
+
+
+     Recently opened (latest from last week: 176)
+
+   178  Server hang when proxying over multiple subflows [bug] [v5.11] 
+[v5.12]:
+       - visible on v5.11 & v5.12
+       - but not on v5.10
+       - apparently easy to repro
+       - would be interesting to validate that with latest net-next / 
+export branch
+       - Matth: TODO: reply that we will check → done
+
+   177  improve retransmit subflow selection [enhancement]:
+       - Paolo opened this after the discussion we had at the last meeting
+       - related to the patch: "mptcp: ensure there is unacked data at 
+all subflow"
+
+
+     Bugs (opened, flagged as "bug" and assigned)
+
+   176  BPF selftest got "fallback to TCP" and "Attempt to release TCP 
+socket in state 8" errors [bug] @geliangtang
+
+   146  DATA_FIN is not retransmitted on timeout [bug] @mjmartineau:
+       - See above
+
+
+     Bugs (opened and flagged as "bug" and not assigned)
+
+   178  Server hang when proxying over multiple subflows [bug] [v5.11] 
+[v5.12]:
+       - See above
+
+   172  WARNING in sk_stream_kill_queues [bug]
+   162  sendmsg()/recvmsg() fail when an unknown CMSG argument is 
+provided [bug]
+   137  selftests: simult_flows.sh: unbalanced bwidth tests are unstable 
+[bug]
+   120  [interop] netnext is dropping packets, causing MPTCP-level 
+retransmissions on mptcp.org [bug]
+   107  Review use of WARN_ON() / WARN_ON_ONCE() [bug]
+    65  clearing properly the status in listen() [bug]
+    56  msk connection state set without msk lock [bug]
+
+
+     In Progress (opened and assigned)
+
+   167  packetdrill: add coverage for RM_ADDR [enhancement] 
+[packetdrill] @dcaratti
+
+   158  iproute2: change backup mode (MP_PRIO) for active connections 
+[enhancement] [iproute2] @dcaratti:
+       - with the current implem:
+           - we need to use addr+port but not the ID like the others → 
+why is backup different? Probably an inconsistency, not on purpose
+           - do we need something similar to pm_nl or something different?:
+               → we can do something different
+               - pm_nl was for the tests only, it might not fit with 
+real use cases
+     - Davide will do some propositions on Github
+
+   143  Packetdrill: ADD_ADDR for v6 only socket should only contain v6 
+addresses [enhancement] [packetdrill] @dcaratti
+   134  Checksum support [enhancement] @geliangtang
+    96  Python: add support for IPPROTO_MPTCP [enhancement] @matttbe
+    53  MP_TCPRST support [enhancement] @fw-strlen
+    52  MP_FAIL support [enhancement] @geliangtang
+
+
+     Recently closed (since last week)
+
+   175  [5.10] mptcp: put subflow sock on connect error [bug]
+   174  [syzkaller] memory leak in tcp_md5_do_add [bug] [syzkaller]
+   131  replace some/most pr_debug with trace events [enhancement] 
+@geliangtang
+
+
+
+FYI: Current Roadmap:
+     - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+     - Current/Coming merge window (5.13): 
+https://github.com/multipath-tcp/mptcp_net-next/projects/8
+     - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Patches to send to netdev:
+     - net:
+         - /
+
+     - net-next:
+         - 2 series in our export branch:
+             - sockopt: we need to wait for a sync with -net tree to 
+avoid a conflict
+             - tracepoints: best to wait to have more feedback + 
+squash-to patches might come + some related patches in the checksum series
+
+
+
+Extra tests:
+     - news about Syzkaller? (Christoph):
+         - didn't find any new MPTCP issues
+         - restarting now with latest export branch
+
+     - news about interop with mptcp.org? (Christoph):
+         - /
+
+     - news about Intel's kbuild? (Mat):
+         - last week: got a timeout with the selftests
+         - some issues but not related to MPTCP (but with eBPF)
+
+     - packetdrill (Davide):
+         - *Davide* is looking for a support for subflow endpoints:
+             - adding the possibility to allow MPJ even if an ADD_ADDR 
+was not exchanged
+             - for the moment, we allow MPJ if an ADD_ADDR was exchanged
+             - → probably best to extract the IP from the script but not 
+easy to do with inbound addresses:
+                 - no address at the moment
+                 - source IP is OK
+                 - but dest IP might be difficult
+                 - maybe we would need to add an option: v4/v6
+                 - or call iproute/netlink to get the endpoints
+                 - for the server.sh script, we read env vars in this 
+script and set a new endpoint → but not possible to do that for injected 
+packets without real socket.
+
+     - CI (Matth):
+         - See below
+
+
+
+CI: new job to validate tests:
+     - e.g.:
+         - "normal": https://cirrus-ci.com/task/5464962844852224
+         - "debug": https://cirrus-ci.com/task/6590862751694848
+
+     - A "Summary" file should always be produced, e.g.:
  
- TEST_PROGS := mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh \
--	      simult_flows.sh
-+	      simult_flows.sh mptcp_sockopt.sh
- 
- TEST_GEN_FILES = mptcp_connect pm_nl_ctl
- 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 69d89b5d666f..2f207cf33661 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -57,6 +57,7 @@ static bool cfg_join;
- static bool cfg_remove;
- static unsigned int cfg_do_w;
- static int cfg_wait;
-+static uint32_t cfg_mark;
- 
- static void die_usage(void)
- {
-@@ -69,6 +70,7 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-p num -- use port num\n");
- 	fprintf(stderr, "\t-s [MPTCP|TCP] -- use mptcp(default) or tcp sockets\n");
- 	fprintf(stderr, "\t-m [poll|mmap|sendfile] -- use poll(default)/mmap+write/sendfile\n");
-+	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
- 	exit(1);
-@@ -140,6 +142,17 @@ static void set_sndbuf(int fd, unsigned int size)
- 	}
- }
- 
-+static void set_mark(int fd, uint32_t mark)
-+{
-+	int err;
-+
-+	err = setsockopt(fd, SOL_SOCKET, SO_MARK, &mark, sizeof(mark));
-+	if (err) {
-+		perror("set SO_MARK");
-+		exit(1);
-+	}
-+}
-+
- static int sock_listen_mptcp(const char * const listenaddr,
- 			     const char * const port)
- {
-@@ -248,6 +261,9 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 			continue;
- 		}
- 
-+		if (cfg_mark)
-+			set_mark(sock, cfg_mark);
-+
- 		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0)
- 			break; /* success */
- 
-@@ -830,7 +846,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -880,6 +896,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'w':
- 			cfg_wait = atoi(optarg)*1000000;
- 			break;
-+		case 'M':
-+			cfg_mark = strtol(optarg, NULL, 0);
-+			break;
- 		}
- 	}
- 
-@@ -911,6 +930,8 @@ int main(int argc, char *argv[])
- 			set_rcvbuf(fd, cfg_rcvbuf);
- 		if (cfg_sndbuf)
- 			set_sndbuf(fd, cfg_sndbuf);
-+		if (cfg_mark)
-+			set_mark(fd, cfg_mark);
- 
- 		return main_loop_s(fd);
- 	}
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-new file mode 100755
-index 000000000000..2fa13946ac04
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -0,0 +1,276 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+ret=0
-+sin=""
-+sout=""
-+cin=""
-+cout=""
-+ksft_skip=4
-+timeout_poll=30
-+timeout_test=$((timeout_poll * 2 + 1))
-+mptcp_connect=""
-+do_all_tests=1
-+
-+add_mark_rules()
-+{
-+	local ns=$1
-+	local m=$2
-+
-+	for t in iptables ip6tables; do
-+		# just to debug: check we have multiple subflows connection requests
-+		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
-+
-+		# RST packets might be handled by a internal dummy socket
-+		ip netns exec $ns $t -A OUTPUT -p tcp --tcp-flags RST RST -m mark --mark 0 -j ACCEPT
-+
-+		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark $m -j ACCEPT
-+		ip netns exec $ns $t -A OUTPUT -p tcp -m mark --mark 0 -j DROP
-+	done
-+}
-+
-+init()
-+{
-+	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
-+
-+	ns1="ns1-$rndh"
-+	ns2="ns2-$rndh"
-+
-+	for netns in "$ns1" "$ns2";do
-+		ip netns add $netns || exit $ksft_skip
-+		ip -net $netns link set lo up
-+		ip netns exec $netns sysctl -q net.mptcp.enabled=1
-+		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
-+		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
-+	done
-+
-+	for i in `seq 1 4`; do
-+		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
-+		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
-+		ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
-+		ip -net "$ns1" link set ns1eth$i up
-+
-+		ip -net "$ns2" addr add 10.0.$i.2/24 dev ns2eth$i
-+		ip -net "$ns2" addr add dead:beef:$i::2/64 dev ns2eth$i nodad
-+		ip -net "$ns2" link set ns2eth$i up
-+
-+		# let $ns2 reach any $ns1 address from any interface
-+		ip -net "$ns2" route add default via 10.0.$i.1 dev ns2eth$i metric 10$i
-+
-+		ip netns exec $ns1 ./pm_nl_ctl add 10.0.$i.1 flags signal
-+		ip netns exec $ns1 ./pm_nl_ctl add dead:beef:$i::1 flags signal
-+
-+		ip netns exec $ns2 ./pm_nl_ctl add 10.0.$i.2 flags signal
-+		ip netns exec $ns2 ./pm_nl_ctl add dead:beef:$i::2 flags signal
-+	done
-+
-+	ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-+	ip netns exec $ns2 ./pm_nl_ctl limits 8 8
-+
-+	add_mark_rules $ns1 1
-+	add_mark_rules $ns2 2
-+}
-+
-+cleanup()
-+{
-+	for netns in "$ns1" "$ns2"; do
-+		ip netns del $netns
-+	done
-+	rm -f "$cin" "$cout"
-+	rm -f "$sin" "$sout"
-+}
-+
-+ip -Version > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run test without ip tool"
-+	exit $ksft_skip
-+fi
-+
-+iptables -V > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run all tests without iptables tool"
-+	exit $ksft_skip
-+fi
-+
-+ip6tables -V > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run all tests without ip6tables tool"
-+	exit $ksft_skip
-+fi
-+
-+check_mark()
-+{
-+	local ns=$1
-+	local af=$2
-+
-+	tables=iptables
-+
-+	if [ $af -eq 6 ];then
-+		tables=ip6tables
-+	fi
-+
-+	counters=$(ip netns exec $ns $tables -v -L OUTPUT | grep DROP)
-+	values=${counters%DROP*}
-+
-+	for v in $values; do
-+		if [ $v -ne 0 ]; then
-+			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
-+			return 1
-+		fi
-+	done
-+
-+	return 0
-+}
-+
-+print_file_err()
-+{
-+	ls -l "$1" 1>&2
-+	echo "Trailing bytes are: "
-+	tail -c 27 "$1"
-+}
-+
-+check_transfer()
-+{
-+	in=$1
-+	out=$2
-+	what=$3
-+
-+	cmp "$in" "$out" > /dev/null 2>&1
-+	if [ $? -ne 0 ] ;then
-+		echo "[ FAIL ] $what does not match (in, out):"
-+		print_file_err "$in"
-+		print_file_err "$out"
-+		ret=1
-+
-+		return 1
-+	fi
-+
-+	return 0
-+}
-+
-+# $1: IP address
-+is_v6()
-+{
-+	[ -z "${1##*:*}" ]
-+}
-+
-+do_transfer()
-+{
-+	listener_ns="$1"
-+	connector_ns="$2"
-+	cl_proto="$3"
-+	srv_proto="$4"
-+	connect_addr="$5"
-+
-+	port=12001
-+
-+	:> "$cout"
-+	:> "$sout"
-+
-+	mptcp_connect="./mptcp_connect -r 20"
-+
-+	local local_addr
-+	if is_v6 "${connect_addr}"; then
-+		local_addr="::"
-+	else
-+		local_addr="0.0.0.0"
-+	fi
-+
-+	timeout ${timeout_test} \
-+		ip netns exec ${listener_ns} \
-+			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} \
-+				${local_addr} < "$sin" > "$sout" &
-+	spid=$!
-+
-+	sleep 1
-+
-+	timeout ${timeout_test} \
-+		ip netns exec ${connector_ns} \
-+			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} \
-+				$connect_addr < "$cin" > "$cout" &
-+
-+	cpid=$!
-+
-+	wait $cpid
-+	retc=$?
-+	wait $spid
-+	rets=$?
-+
-+	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
-+		echo " client exit code $retc, server $rets" 1>&2
-+		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
-+		ip netns exec ${listener_ns} ss -Menita 1>&2 -o "sport = :$port"
-+
-+		echo -e "\nnetns ${connector_ns} socket stat for ${port}:" 1>&2
-+		ip netns exec ${connector_ns} ss -Menita 1>&2 -o "dport = :$port"
-+
-+		ret=1
-+		return 1
-+	fi
-+
-+	if [ $local_addr = "::" ];then
-+		check_mark $listener_ns 6
-+		check_mark $connector_ns 6
-+	else
-+		check_mark $listener_ns 4
-+		check_mark $connector_ns 4
-+	fi
-+
-+	check_transfer $cin $sout "file received by server"
-+
-+	rets=$?
-+
-+	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
-+		return 0
-+	fi
-+
-+	return 1
-+}
-+
-+make_file()
-+{
-+	name=$1
-+	who=$2
-+	size=$3
-+
-+	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
-+	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
-+
-+	echo "Created $name (size $size KB) containing data sent by $who"
-+}
-+
-+run_tests()
-+{
-+	listener_ns="$1"
-+	connector_ns="$2"
-+	connect_addr="$3"
-+	lret=0
-+
-+	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr}
-+
-+	lret=$?
-+
-+	if [ $lret -ne 0 ]; then
-+		ret=$lret
-+		return
-+	fi
-+}
-+
-+sin=$(mktemp)
-+sout=$(mktemp)
-+cin=$(mktemp)
-+cout=$(mktemp)
-+init
-+make_file "$cin" "client" 1
-+make_file "$sin" "server" 1
-+trap cleanup EXIT
-+
-+run_tests $ns1 $ns2 10.0.1.1
-+run_tests $ns1 $ns2 dead:beef:1::1
-+
-+
-+if [ $ret -eq 0 ];then
-+	echo "PASS: all packets had packet mark set"
-+fi
-+
-+exit $ret
+https://api.cirrus-ci.com/v1/artifact/task/6590862751694848/summary/.virtme/results/debug/summary.txt
+
+     - Notification on IRC
+     - Triggered when a new tag is created: new export branch, useful 
+later for Patchew.
+
+     - But: Unstable, e.g.
+         - 
+https://api.cirrus-ci.com/v1/artifact/task/6590862751694848/tap_result/.virtme/results/debug/selftest_mptcp_join.tap
+         - 
+https://api.cirrus-ci.com/v1/artifact/task/6590862751694848/tap_result/.virtme/results/debug/selftest_simult_flows.tap
+
+     - Probably because the server can be used for other tasks and we 
+get what is left.
+     - Tests should probably cope with that, e.g.
+         - wait for an action (new IP available) instead of wait for a 
+fixed time.
+         - being more tolerant for simult flows test case (except if 
+there is really a bug?)
+
+
+
+LPC 2021:
+     - Networking and BPF Track CFP → now open
+     - 
+https://lore.kernel.org/bpf/6d225920-9ecc-ef24-2bf8-848ca86c7fb0@iogearbox.net/T/
+     - Open until August:
+         - we have time to know more about how it will be organised
+         - and what subject we might want to propose
+
+
+
+Next meeting:
+     - On Thursday, the 15th of April.
+     - *Usual* UTC time: 15:00 UTC (8am PDT, 5pm CEST, 11pm CST)
+     - Still open to everyone!
+     - https://annuel2.framapad.org/p/mptcp_upstreaming_20210415
+
+
+
+Feel free to comment on these points and propose new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
 -- 
-2.26.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
