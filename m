@@ -1,47 +1,117 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8800270
-	for <mptcp@lists.linux.dev>; Mon, 12 Apr 2021 08:05:42 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1lVrZb-0004EP-Bk; Mon, 12 Apr 2021 10:05:31 +0200
-Date: Mon, 12 Apr 2021 10:05:31 +0200
-From: Florian Westphal <fw@strlen.de>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: Florian Westphal <fw@strlen.de>, Paolo Abeni <pabeni@redhat.com>,
-	mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp 02/10] mptcp: tag sequence_seq with socket state
-Message-ID: <20210412080531.GA14932@breakpoint.cc>
-References: <20210408184936.6245-1-fw@strlen.de>
- <20210408184936.6245-3-fw@strlen.de>
- <9f60e0e9-a44f-b659-14f6-f91161cf6569@linux.intel.com>
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.228])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA5170
+	for <mptcp@lists.linux.dev>; Tue, 13 Apr 2021 07:36:35 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.218:41288.1192370033
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.9?logid-ed7c158c3ac642acbe1e6921b8b4865b (unknown [172.18.0.218])
+	by chinatelecom.cn (HERMES) with SMTP id CF5012800C3;
+	Tue, 13 Apr 2021 15:24:59 +0800 (CST)
+X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.218])
+	by app0025 with ESMTP id ed7c158c3ac642acbe1e6921b8b4865b for mptcp@lists.linux.dev;
+	Tue Apr 13 15:25:01 2021
+X-Transaction-ID: ed7c158c3ac642acbe1e6921b8b4865b
+X-filter-score:  filter<0>
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.218
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+To: mptcp@lists.linux.dev,
+	mptcp@lists.01.org
+Cc: mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net,
+	fw@strlen.de,
+	pabeni@redhat.com,
+	Yonglong Li <liyonglong@chinatelecom.cn>
+Subject: [PATCH] mptcp: add MSG_PEEK support
+Date: Tue, 13 Apr 2021 15:24:16 +0800
+Message-Id: <1618298656-123756-1-git-send-email-liyonglong@chinatelecom.cn>
+X-Mailer: git-send-email 1.8.3.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f60e0e9-a44f-b659-14f6-f91161cf6569@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Mat Martineau <mathew.j.martineau@linux.intel.com> wrote:
-> On Thu, 8 Apr 2021, Florian Westphal wrote:
-> 
-> > +	return sk->sk_state << 24u;
-> 
-> I think this works because sk->sk_state gets automatically promoted to an
-> int, but maybe "(u32)sk->sk_state << 24" is the intent?
+This patch adds support for MSG_PEEK flag. Packets are not removed
+from the receive_queue if MSG_PEEK set in recv() system call.
 
-Yes, I can add an explicit cast.
+Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+---
+ net/mptcp/protocol.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-> What I didn't realize at that time was that mptcp_sockopt_sync_all() might
-> not be called for a very long time (or at all?) if there are no joins to
-> trigger it. To really protect against overflow, mptcp_setsockopt() can call
-> (or schedule) mptcp_sockopt_sync_all() if the non-sk_state bits of
-> msk->setsockopt_seq exceed a threshold.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2d895c3..65448e1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1710,12 +1710,13 @@ static void mptcp_wait_data(struct sock *sk, long *timeo)
+ 
+ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 				struct msghdr *msg,
+-				size_t len)
++				size_t len, int flags)
+ {
+ 	struct sk_buff *skb;
+ 	int copied = 0;
+ 
+-	while ((skb = skb_peek(&msk->receive_queue)) != NULL) {
++	skb = skb_peek(&msk->receive_queue);
++	while (!(skb == NULL || skb == (struct sk_buff *)(&msk->receive_queue))) {
+ 		u32 offset = MPTCP_SKB_CB(skb)->offset;
+ 		u32 data_len = skb->len - offset;
+ 		u32 count = min_t(size_t, len - copied, data_len);
+@@ -1731,15 +1732,21 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 		copied += count;
+ 
+ 		if (count < data_len) {
+-			MPTCP_SKB_CB(skb)->offset += count;
++			if (!(flags & MSG_PEEK))
++				MPTCP_SKB_CB(skb)->offset += count;
+ 			break;
+ 		}
+ 
+-		/* we will bulk release the skb memory later */
+-		skb->destructor = NULL;
+-		msk->rmem_released += skb->truesize;
+-		__skb_unlink(skb, &msk->receive_queue);
+-		__kfree_skb(skb);
++		if (!(flags & MSG_PEEK))
++			/* we will bulk release the skb memory later */
++			skb->destructor = NULL;
++			msk->rmem_released += skb->truesize;
++			__skb_unlink(skb, &msk->receive_queue);
++			__kfree_skb(skb);
++			skb = skb_peek(&msk->receive_queue);
++		}else{
++		    skb = skb->next;
++		}
+ 
+ 		if (copied >= len)
+ 			break;
+@@ -1933,7 +1940,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	while (copied < len) {
+ 		int bytes_read;
+ 
+-		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied);
++		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
+@@ -2017,7 +2024,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	pr_debug("msk=%p data_ready=%d rx queue empty=%d copied=%d",
+ 		 msk, test_bit(MPTCP_DATA_READY, &msk->flags),
+ 		 skb_queue_empty_lockless(&sk->sk_receive_queue), copied);
+-	mptcp_rcv_space_adjust(msk, copied);
++	if (!(flags & MSG_PEEK))
++		mptcp_rcv_space_adjust(msk, copied);
+ 
+ 	release_sock(sk);
+ 	return copied;
+-- 
+1.8.3.1
 
-Next patch adds sockopt_seq_inc() which is supposed to guarantee that it
-never wraps to 0.  I can change it so it will wrap in the 24bit sequence
-space only, so it would cycle back to sk->sk_state << 24u.
