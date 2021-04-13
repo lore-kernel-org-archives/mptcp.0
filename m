@@ -1,17 +1,17 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBA270
-	for <mptcp@lists.linux.dev>; Tue, 13 Apr 2021 15:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26E070
+	for <mptcp@lists.linux.dev>; Tue, 13 Apr 2021 15:55:06 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@breakpoint.cc>)
-	id 1lWLNV-0006rL-4v; Tue, 13 Apr 2021 17:55:01 +0200
+	id 1lWLNZ-0006rb-9S; Tue, 13 Apr 2021 17:55:05 +0200
 From: Florian Westphal <fw@strlen.de>
 To: <mptcp@lists.linux.dev>
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH mptcp-next v2 02/10] mptcp: tag sequence_seq with socket state
-Date: Tue, 13 Apr 2021 17:54:39 +0200
-Message-Id: <20210413155447.14043-3-fw@strlen.de>
+Subject: [PATCH mptcp-next v2 03/10] mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY
+Date: Tue, 13 Apr 2021 17:54:40 +0200
+Message-Id: <20210413155447.14043-4-fw@strlen.de>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20210413155447.14043-1-fw@strlen.de>
 References: <20210413155447.14043-1-fw@strlen.de>
@@ -22,188 +22,147 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Paolo Abeni suggested to avoid re-syncing new subflows because
-they inherit options from listener. In case options were set on
-listener but are not set on mptcp-socket there is no need to
-do any synchronisation for new subflows.
-
-This change sets sockopt_seq of new mptcp sockets to the seq of
-the mptcp listener sock.
-
-Subflow sequence is set to the embedded tcp listener sk.
-Add a comment explaing why sk_state is involved in sockopt_seq
-generation.
+start with something simple: both take an integer value, both
+need to be mirrored to all subflows.
 
 Signed-off-by: Florian Westphal <fw@strlen.de>
 ---
- net/mptcp/protocol.c | 12 ++++++++---
- net/mptcp/protocol.h |  4 ++++
- net/mptcp/sockopt.c  | 47 ++++++++++++++++++++++++++++++++++++++++++--
- net/mptcp/subflow.c  |  4 ++++
- 4 files changed, 62 insertions(+), 5 deletions(-)
+ net/mptcp/sockopt.c | 106 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b8036d508c46..ffc9dbb4c07e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -724,18 +724,23 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
- static bool mptcp_do_flush_join_list(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
-+	bool ret = false;
- 
- 	if (likely(list_empty(&msk->join_list)))
- 		return false;
- 
- 	spin_lock_bh(&msk->join_list_lock);
--	list_for_each_entry(subflow, &msk->join_list, node)
--		mptcp_propagate_sndbuf((struct sock *)msk, mptcp_subflow_tcp_sock(subflow));
-+	list_for_each_entry(subflow, &msk->join_list, node) {
-+		u32 sseq = READ_ONCE(subflow->setsockopt_seq);
- 
-+		mptcp_propagate_sndbuf((struct sock *)msk, mptcp_subflow_tcp_sock(subflow));
-+		if (READ_ONCE(msk->setsockopt_seq) != sseq)
-+			ret = true;
-+	}
- 	list_splice_tail_init(&msk->join_list, &msk->conn_list);
- 	spin_unlock_bh(&msk->join_list_lock);
- 
--	return true;
-+	return ret;
- }
- 
- void __mptcp_flush_join_list(struct mptcp_sock *msk)
-@@ -2710,6 +2715,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 	msk->snd_nxt = msk->write_seq;
- 	msk->snd_una = msk->write_seq;
- 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
-+	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
- 
- 	if (mp_opt->mp_capable) {
- 		msk->can_ack = true;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 55fe05a40216..edc0128730df 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -256,6 +256,8 @@ struct mptcp_sock {
- 		u64	time;	/* start time of measurement window */
- 		u64	rtt_us; /* last maximum rtt of subflows */
- 	} rcvq_space;
-+
-+	u32 setsockopt_seq;
- };
- 
- #define mptcp_lock_sock(___sk, cb) do {					\
-@@ -414,6 +416,8 @@ struct mptcp_subflow_context {
- 	long	delegated_status;
- 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
- 
-+	u32 setsockopt_seq;
-+
- 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
- 	struct	sock *conn;	    /* parent mptcp_sock */
- 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 4fdc0ad6acf7..27b49543fc58 100644
+index 27b49543fc58..9be4c94ff4d4 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -24,6 +24,27 @@ static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
- 	return msk->first;
+@@ -45,6 +45,90 @@ static u32 sockopt_seq_reset(const struct sock *sk)
+ 	return (u32)sk->sk_state << 24u;
  }
  
-+static u32 sockopt_seq_reset(const struct sock *sk)
++static void sockopt_seq_inc(struct mptcp_sock *msk)
 +{
-+	sock_owned_by_me(sk);
++	u32 seq = (msk->setsockopt_seq + 1) & 0x00ffffff;
 +
-+	/* Highbits contain state.  Allows to distinguish sockopt_seq
-+	 * of listener and established:
-+	 * s0 = new_listener()
-+	 * sockopt(s0) - seq is 1
-+	 * s1 = accept(s0) - s1 inherits seq 1 if listener sk (s0)
-+	 * sockopt(s0) - seq increments to 2 on s0
-+	 * sockopt(s1) // seq increments to 2 on s1 (different option)
-+	 * new ssk completes join, inherits options from s0 // seq 2
-+	 * Needs sync from mptcp join logic, but ssk->seq == msk->seq
-+	 *
-+	 * Set High order bits to sk_state so ssk->seq == msk->seq test
-+	 * will fail.
-+	 */
++	msk->setsockopt_seq = sockopt_seq_reset((struct sock *)msk) + seq;
++}
 +
-+	return (u32)sk->sk_state << 24u;
++static int mptcp_get_int_option(struct mptcp_sock *msk, sockptr_t optval,
++				unsigned int optlen, int *val)
++{
++	if (optlen < sizeof(int))
++		return -EINVAL;
++
++	if (copy_from_sockptr(val, optval, sizeof(*val)))
++		return -EFAULT;
++
++	return 0;
++}
++
++static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, int val)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++
++	lock_sock(sk);
++	sockopt_seq_inc(msk);
++
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		bool slow = lock_sock_fast(ssk);
++
++		switch (optname) {
++		case SO_KEEPALIVE:
++			if (ssk->sk_prot->keepalive)
++				ssk->sk_prot->keepalive(ssk, !!val);
++			sock_valbool_flag(ssk, SOCK_KEEPOPEN, !!val);
++			break;
++		case SO_PRIORITY:
++			ssk->sk_priority = val;
++			break;
++		}
++
++		subflow->setsockopt_seq = msk->setsockopt_seq;
++		unlock_sock_fast(ssk, slow);
++	}
++
++	release_sock(sk);
++}
++
++static int mptcp_sol_socket_intval(struct mptcp_sock *msk, int optname, int val)
++{
++	sockptr_t optval = KERNEL_SOCKPTR(&val);
++	struct sock *sk = (struct sock *)msk;
++	int ret;
++
++	ret = sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname,
++			      optval, sizeof(val));
++	if (ret)
++		return ret;
++
++	mptcp_sol_socket_sync_intval(msk, optname, val);
++	return 0;
++}
++
++static int mptcp_setsockopt_sol_socket_int(struct mptcp_sock *msk, int optname,
++					   sockptr_t optval, unsigned int optlen)
++{
++	int val, ret;
++
++	ret = mptcp_get_int_option(msk, optval, optlen, &val);
++	if (ret)
++		return ret;
++
++	switch (optname) {
++	case SO_KEEPALIVE:
++		mptcp_sol_socket_sync_intval(msk, optname, val);
++		return 0;
++	case SO_PRIORITY:
++		return mptcp_sol_socket_intval(msk, optname, val);
++	}
++
++	return -ENOPROTOOPT;
 +}
 +
  static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
  				       sockptr_t optval, unsigned int optlen)
  {
-@@ -350,22 +371,44 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+@@ -71,6 +155,9 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 		}
+ 		release_sock(sk);
+ 		return ret;
++	case SO_KEEPALIVE:
++	case SO_PRIORITY:
++		return mptcp_setsockopt_sol_socket_int(msk, optname, optval, optlen);
+ 	}
+ 
+ 	return sock_setsockopt(sk->sk_socket, SOL_SOCKET, optname, optval, optlen);
+@@ -371,8 +458,27 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
  	return -EOPNOTSUPP;
  }
  
-+static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
++static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
 +{
++	struct sock *sk = (struct sock *)msk;
++
++	if (ssk->sk_prot->keepalive) {
++		if (sock_flag(sk, SOCK_KEEPOPEN))
++			ssk->sk_prot->keepalive(ssk, 1);
++		else
++			ssk->sk_prot->keepalive(ssk, 0);
++	}
++
++	ssk->sk_priority = sk->sk_priority;
 +}
 +
+ static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
+ {
++	bool slow = lock_sock_fast(ssk);
++
++	sync_socket_options(msk, ssk);
++
++	unlock_sock_fast(ssk, slow);
+ }
+ 
  void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
- {
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+
- 	msk_owned_by_me(msk);
-+
-+	if (READ_ONCE(subflow->setsockopt_seq) != msk->setsockopt_seq) {
-+		__mptcp_sockopt_sync(msk, ssk);
-+
-+		subflow->setsockopt_seq = msk->setsockopt_seq;
-+	}
- }
- 
- void mptcp_sockopt_sync_all(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	u32 seq;
- 
--	msk_owned_by_me(msk);
-+	seq = sockopt_seq_reset(sk);
- 
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		u32 sseq = READ_ONCE(subflow->setsockopt_seq);
- 
--		mptcp_sockopt_sync(msk, ssk);
-+		if (sseq != msk->setsockopt_seq) {
-+			__mptcp_sockopt_sync(msk, ssk);
-+			WRITE_ONCE(subflow->setsockopt_seq, seq);
-+		} else if (sseq != seq) {
-+			WRITE_ONCE(subflow->setsockopt_seq, seq);
-+		}
- 
- 		cond_resched();
- 	}
-+
-+	msk->setsockopt_seq = seq;
- }
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index fc7107f8d81b..82e91b00ad39 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -681,6 +681,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			goto out;
- 		}
- 
-+		/* ssk inherits options of listener sk */
-+		ctx->setsockopt_seq = listener->setsockopt_seq;
-+
- 		if (ctx->mp_capable) {
- 			/* this can't race with mptcp_close(), as the msk is
- 			 * not yet exposted to user-space
-@@ -696,6 +699,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			 * created mptcp socket
- 			 */
- 			new_msk->sk_destruct = mptcp_sock_destruct;
-+			mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
- 			mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
- 			mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
- 			ctx->conn = new_msk;
 -- 
 2.26.3
 
