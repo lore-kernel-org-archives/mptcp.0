@@ -1,29 +1,30 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010046D14
-	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 08:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FE66D18
+	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 08:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1618390722;
+	s=mimecast20190719; t=1618390723;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cUcglsxOYfuHKKMr/TtJ0G52JdWYf/U06GoeD6nm1EM=;
-	b=ewDR+pVO+18zyucB8uhi0eokLkkdf1iUIzoBgGnzLsNftQ8PrGj2NXnAA0rVZsZT6Kdj3y
-	VZBlMcOspJ+8yV8BviqbrYL6ofNFFidyrmPQQBTIzCLfRrI45dob09J1tC5NRxmxi/D50/
-	CT8zxwwOrUnQvdUDgqG0BXb+JIk4+nU=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TEp5EMAVm24nx2qah+gDcXQEPkr6Mgmzt2H3gu4gLOI=;
+	b=ahz30U81mPKNvt1CFkIMb1RQc0ABAGo8wkqt54iXWL0pPLyn9aghAhUmIbKlkbANaqBOv1
+	+79W9vkrO3zbWqGLygIng2hD+cSuXdu/dg4lCh0Dl2IGpjagO5OfaXkQMl6Xli3g15g9gU
+	HSx685HVVLQRImsmvqz7+ObDsebppj0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-tfVLFSjyP_Ksiv20bRDWxQ-1; Wed, 14 Apr 2021 04:58:39 -0400
-X-MC-Unique: tfVLFSjyP_Ksiv20bRDWxQ-1
+ us-mta-243-VArnQOmGORuqLgkb8UeZrQ-1; Wed, 14 Apr 2021 04:58:41 -0400
+X-MC-Unique: VArnQOmGORuqLgkb8UeZrQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D39E79EC0;
-	Wed, 14 Apr 2021 08:58:37 +0000 (UTC)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CAD6195D56E;
+	Wed, 14 Apr 2021 08:58:39 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-112-67.rdu2.redhat.com [10.10.112.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id AC06262A22;
-	Wed, 14 Apr 2021 08:58:34 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7D7525D71D;
+	Wed, 14 Apr 2021 08:58:37 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: brendanhiggins@google.com,
@@ -41,9 +42,11 @@ Cc: brendanhiggins@google.com,
 	davidgow@google.com,
 	skhan@linuxfoundation.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH v2 0/6] kunit: Fix formatting of KUNIT tests to meet the standard
-Date: Wed, 14 Apr 2021 04:58:03 -0400
-Message-Id: <cover.1618388989.git.npache@redhat.com>
+Subject: [PATCH v2 1/6] kunit: ASoC: topology: adhear to KUNIT formatting standard
+Date: Wed, 14 Apr 2021 04:58:04 -0400
+Message-Id: <dcf79e592f9a7e14483dde32ac561f6af2632e50.1618388989.git.npache@redhat.com>
+In-Reply-To: <cover.1618388989.git.npache@redhat.com>
+References: <cover.1618388989.git.npache@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -52,58 +55,45 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 
-There are few instances of KUNIT tests that are not properly defined.
-This commit focuses on correcting these issues to match the standard
-defined in the Documentation.
+Drop 'S' from end of SND_SOC_TOPOLOGY_KUNIT_TESTS inorder to adhear to
+ the KUNIT *_KUNIT_TEST config name format.
 
-Issues Fixed:
- - tests should end in KUNIT_TEST, some fixes have been applied to
-   correct issues were KUNIT_TESTS is used or KUNIT is not mentioned.
- - Tests should default to KUNIT_ALL_TESTS
- - Tests configs tristate should have if !KUNIT_ALL_TESTS
+Fixes: d52bbf747cfa (ASoC: topology: KUnit: Add KUnit tests passing various...)
+Signed-off-by: Nico Pache <npache@redhat.com>
+---
+ sound/soc/Kconfig  | 2 +-
+ sound/soc/Makefile | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-No functional changes other than CONFIG name changes
-
-Changes since v2:
- - Split patch 1 by subcomponents
- - fix issues where config was *KUNIT_TEST_TEST
- - properly threaded/chained messages
-
-Nico Pache (6):
-  kunit: ASoC: topology: adhear to KUNIT formatting standard
-  kunit: software node: adhear to KUNIT formatting standard
-  kunit: ext4: adhear to KUNIT formatting standard
-  kunit: lib: adhear to KUNIT formatting standard
-  kunit: mptcp: adhear to KUNIT formatting standard
-  m68k: update configs to match the proper KUNIT syntax
-
- arch/m68k/configs/amiga_defconfig    |  6 +++---
- arch/m68k/configs/apollo_defconfig   |  6 +++---
- arch/m68k/configs/atari_defconfig    |  6 +++---
- arch/m68k/configs/bvme6000_defconfig |  6 +++---
- arch/m68k/configs/hp300_defconfig    |  6 +++---
- arch/m68k/configs/mac_defconfig      |  6 +++---
- arch/m68k/configs/multi_defconfig    |  6 +++---
- arch/m68k/configs/mvme147_defconfig  |  6 +++---
- arch/m68k/configs/mvme16x_defconfig  |  6 +++---
- arch/m68k/configs/q40_defconfig      |  6 +++---
- arch/m68k/configs/sun3_defconfig     |  6 +++---
- arch/m68k/configs/sun3x_defconfig    |  6 +++---
- drivers/base/test/Kconfig            |  2 +-
- drivers/base/test/Makefile           |  2 +-
- fs/ext4/.kunitconfig                 |  2 +-
- fs/ext4/Kconfig                      |  2 +-
- fs/ext4/Makefile                     |  2 +-
- lib/Kconfig.debug                    | 21 +++++++++++++--------
- lib/Makefile                         |  6 +++---
- net/mptcp/Kconfig                    |  2 +-
- net/mptcp/Makefile                   |  2 +-
- net/mptcp/crypto.c                   |  2 +-
- net/mptcp/token.c                    |  2 +-
- sound/soc/Kconfig                    |  2 +-
- sound/soc/Makefile                   |  4 ++--
- 25 files changed, 64 insertions(+), 59 deletions(-)
-
+diff --git a/sound/soc/Kconfig b/sound/soc/Kconfig
+index 640494f76cbd..8a13462e1a63 100644
+--- a/sound/soc/Kconfig
++++ b/sound/soc/Kconfig
+@@ -37,7 +37,7 @@ config SND_SOC_COMPRESS
+ config SND_SOC_TOPOLOGY
+ 	bool
+ 
+-config SND_SOC_TOPOLOGY_KUNIT_TESTS
++config SND_SOC_TOPOLOGY_KUNIT_TEST
+ 	tristate "KUnit tests for SoC topology"
+ 	depends on KUNIT
+ 	depends on SND_SOC_TOPOLOGY
+diff --git a/sound/soc/Makefile b/sound/soc/Makefile
+index f56ad996eae8..a7b37c06dc43 100644
+--- a/sound/soc/Makefile
++++ b/sound/soc/Makefile
+@@ -7,9 +7,9 @@ ifneq ($(CONFIG_SND_SOC_TOPOLOGY),)
+ snd-soc-core-objs += soc-topology.o
+ endif
+ 
+-ifneq ($(CONFIG_SND_SOC_TOPOLOGY_KUNIT_TESTS),)
++ifneq ($(CONFIG_SND_SOC_TOPOLOGY_KUNIT_TEST),)
+ # snd-soc-test-objs := soc-topology-test.o
+-obj-$(CONFIG_SND_SOC_TOPOLOGY_KUNIT_TESTS) := soc-topology-test.o
++obj-$(CONFIG_SND_SOC_TOPOLOGY_KUNIT_TEST) := soc-topology-test.o
+ endif
+ 
+ ifneq ($(CONFIG_SND_SOC_GENERIC_DMAENGINE_PCM),)
 -- 
 2.30.2
 
