@@ -1,91 +1,75 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2346D13
-	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 13:52:57 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id r12so31559831ejr.5
-        for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 06:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dEgvnzmuOcIRUaCTU6rKgJtIBQo/aO+v77CwK2QMBZw=;
-        b=PhoMtHNBd2j0y7udmrzuX1WZzUSgvv3oqnQKDDncEmER/mfPpBf89c0Jz0TVhqVQmZ
-         ATy/USBZLKhGWJTEuNGAO4f0vuFwURqJkztLSlYh0VRB08vRWpnVu/cpEauxIg8uJfW9
-         LchRMr+2Mn19z2imumZdm+JygTen9E4U/ejAO03t1u4aoFpKQZ5T3o9EZeVE+j4u1HLc
-         8xwWDu/sfgXphlZNebQynruUdfRYc6sRtvC+iFd5oQScOxbYOfQaaNK7ih7yqP3laVVp
-         zBUj5AkpyDEFHH0qRG9jf1iL9ECu7fSY5hrYtc5dLPOUADr9/5DH94Fz8QfyYydpa4Kl
-         2a0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dEgvnzmuOcIRUaCTU6rKgJtIBQo/aO+v77CwK2QMBZw=;
-        b=W/ZWFKmUXodyxYmIzLYLqexojU/ewKYRzCLPZU/ZsY8QeBh36yExe74oRB44fTJvdR
-         HWMZvDITHI1fMIEaaMkHmiyDYktsASMl49saj/eUZDuYfB2IhpgxbO+G2dRBEORIHiic
-         E1r6YTxvY6q7bhysAM7CnXyQywDJjuC0kSrFesW+qNKBh19+uCNhHjR2X/5/UgFU5GSh
-         AncekadAdGHjwRlop5PZ0/bKZbZnyobIPszm+376FQiGSWoyQgKM4MbypwUeuG1yNT9i
-         kyP9lTkPO+Nn0VLNFW3LSfoaHkj8oZC/oXwSujNp6m80Coonx390Ac3ESYo0u9nU+Rbp
-         Ll7A==
-X-Gm-Message-State: AOAM5307j25qUDi1tpfG6la41Yhk7gFbdnzKFn7W/AWeLtyfyKJ3uJ4L
-	0FCcu4w9HkjOu8N3Bq2Qco8IFjjw/MCvnQ==
-X-Google-Smtp-Source: ABdhPJxc1BUga2WRaqCmBwtaBwhPIh12sWzVJB+VULkYm/1jGEZHsE60rbikryyiVT/MBdRsh1mP0w==
-X-Received: by 2002:a17:907:2bcb:: with SMTP id gv11mr3703164ejc.353.1618408375983;
-        Wed, 14 Apr 2021 06:52:55 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:bfbf:e0a9:a746:c4b9])
-        by smtp.gmail.com with ESMTPSA id ga27sm2075407ejc.87.2021.04.14.06.52.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Apr 2021 06:52:55 -0700 (PDT)
-Subject: Re: [MPTCP][PATCH mptcp-next 2/2] mptcp: use mptcp_for_each_subflow
- in mptcp_close
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Geliang Tang <geliangtang@gmail.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1617703144.git.geliangtang@gmail.com>
- <ba5b4db66f47311d65703f5ea25430a5957106a9.1617703144.git.geliangtang@gmail.com>
- <ce612a158a171e421dda4f08bcb99894bb7c2991.1617703144.git.geliangtang@gmail.com>
- <fd3d840-0b0-7d9-637-ecfcaa8a95@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <ffe3f420-a063-f877-6c6e-309a2862e07b@tessares.net>
-Date: Wed, 14 Apr 2021 15:52:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2FB6D13
+	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 14:20:39 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2632861019;
+	Wed, 14 Apr 2021 14:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1618410038;
+	bh=DykQO4BQxTHccj2c0RU/3WhmZd1h8XFYW7G9mDIAu20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PSuRbnLqSceeRXtJOmVbK2ImrfOgaaxVevo2l0FliVCtz6IapYN6ta3q8ZDOxTOyf
+	 9PIh4JXcGsdm3oUf474ro0pblftH6gjuJ/70YDYDFYQJDbFzyXiuVd9mRbyCMGOgmH
+	 W1Ssg8FbNI9Ym7O4ohirhw+9mVR24wEb6/gxCBFENBF0ivN7OHSIe5ohF7HvBz12at
+	 ThwiA9XHnPqXvtRSSC0NzL3LZ8I/BHrmxQ3NaY9oPLFMjiAzEVjmXKqiwUN6h0mxL4
+	 yJsnj4ZhMGGXIkmgdrFy0jJPJlSR+bSdf9RRa302+2rabt7hxc5S8hOnvT+H5HDwFq
+	 3hq79rq5V6MYw==
+Date: Wed, 14 Apr 2021 15:20:16 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+	gregkh@linuxfoundation.org, linux-ext4@vger.kernel.org,
+	netdev@vger.kernel.org, rafael@kernel.org,
+	linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
+	tytso@mit.edu, mathew.j.martineau@linux.intel.com,
+	davem@davemloft.net, davidgow@google.com, skhan@linuxfoundation.org,
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 1/6] kunit: ASoC: topology: adhear to KUNIT formatting
+ standard
+Message-ID: <20210414142016.GE4535@sirena.org.uk>
+References: <cover.1618388989.git.npache@redhat.com>
+ <dcf79e592f9a7e14483dde32ac561f6af2632e50.1618388989.git.npache@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <fd3d840-0b0-7d9-637-ecfcaa8a95@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
+Content-Disposition: inline
+In-Reply-To: <dcf79e592f9a7e14483dde32ac561f6af2632e50.1618388989.git.npache@redhat.com>
+X-Cookie: George Orwell was an optimist.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Geliang, Mat,
 
-On 08/04/2021 23:14, Mat Martineau wrote:
-> On Tue, 6 Apr 2021, Geliang Tang wrote:
-> 
->> This patch used the macro helper mptcp_for_each_subflow() instead of
->> list_for_each_entry() in mptcp_close.
->>
->> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
->> ---
->> net/mptcp/protocol.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
-> 
-> Thanks for the reminder Geliang. Yes, this patch is good!
+--imjhCm/Pyz7Rq5F2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you for the patch and the review!
+On Wed, Apr 14, 2021 at 04:58:04AM -0400, Nico Pache wrote:
+> Drop 'S' from end of SND_SOC_TOPOLOGY_KUNIT_TESTS inorder to adhear to
+>  the KUNIT *_KUNIT_TEST config name format.
 
-Just applied in our tree:
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
 
-- 2f4679e077b6: mptcp: use mptcp_for_each_subflow in mptcp_close
-- Results: 04d87efa6919..f90b3d445732
+--imjhCm/Pyz7Rq5F2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmB2+h8ACgkQJNaLcl1U
+h9C5ygf/f+BNG8PCz0e3sGq/F/lIAmu23fPiN7lzXIQ/7/mdT3MwGiTHu9temsXL
+0d99SUvGT3MUczcKW+6Vj6faDQZGBXKBsKMW7rOq5h7Ns2tvw5MyvWwSYhHLj/Zt
+Ojkg3tN7GXemTVGC+TZyHVqWgh2q2wWvqJHeNzKY/9WPDcQo5BqoHlvO0xm9iF+L
+w3XI2y5+R6HulHM9PNNH18x3QiPWrjIjDAn2INWfPuPsAwu9+GpPf16ZK6CusCmZ
+ugX0b36XCpwrS2aNmb6SrjAA7GiQGnNXTZZ290lLhaN+ams3aM2pCePDkPjQU5EI
+ASor0godC7IdsihlvPd4BHIRP07Sdw==
+=U3R8
+-----END PGP SIGNATURE-----
+
+--imjhCm/Pyz7Rq5F2--
