@@ -1,75 +1,87 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2FB6D13
-	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 14:20:39 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2632861019;
-	Wed, 14 Apr 2021 14:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1618410038;
-	bh=DykQO4BQxTHccj2c0RU/3WhmZd1h8XFYW7G9mDIAu20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PSuRbnLqSceeRXtJOmVbK2ImrfOgaaxVevo2l0FliVCtz6IapYN6ta3q8ZDOxTOyf
-	 9PIh4JXcGsdm3oUf474ro0pblftH6gjuJ/70YDYDFYQJDbFzyXiuVd9mRbyCMGOgmH
-	 W1Ssg8FbNI9Ym7O4ohirhw+9mVR24wEb6/gxCBFENBF0ivN7OHSIe5ohF7HvBz12at
-	 ThwiA9XHnPqXvtRSSC0NzL3LZ8I/BHrmxQ3NaY9oPLFMjiAzEVjmXKqiwUN6h0mxL4
-	 yJsnj4ZhMGGXIkmgdrFy0jJPJlSR+bSdf9RRa302+2rabt7hxc5S8hOnvT+H5HDwFq
-	 3hq79rq5V6MYw==
-Date: Wed, 14 Apr 2021 15:20:16 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Nico Pache <npache@redhat.com>
-Cc: linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-	gregkh@linuxfoundation.org, linux-ext4@vger.kernel.org,
-	netdev@vger.kernel.org, rafael@kernel.org,
-	linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
-	tytso@mit.edu, mathew.j.martineau@linux.intel.com,
-	davem@davemloft.net, davidgow@google.com, skhan@linuxfoundation.org,
-	mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 1/6] kunit: ASoC: topology: adhear to KUNIT formatting
- standard
-Message-ID: <20210414142016.GE4535@sirena.org.uk>
-References: <cover.1618388989.git.npache@redhat.com>
- <dcf79e592f9a7e14483dde32ac561f6af2632e50.1618388989.git.npache@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D16D6D28
+	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 15:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1618413839;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rM193jpSn99K6IZckUB0pfghkwzJTdUMlovlihhFq08=;
+	b=WhWgdpEd4L5fEYqwZ0KlhGJOMLZpqF+47mmQbRH8Tk4SAiZ2Mpuvy3f/FJusav+YEKRuz6
+	g/FxgQrRZp4+mVnMrcfz257wwhCy2Kk4y28pasVMqNMA8u5B0QWlXoh855fTzYEpXSc/Ah
+	BeY1Zl6Cfn76Y0lbF7l8l1jNc5V/bNY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-wOrvJme3PTmMMEEpKgzfCg-1; Wed, 14 Apr 2021 11:23:55 -0400
+X-MC-Unique: wOrvJme3PTmMMEEpKgzfCg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFF63107ACE6
+	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 15:23:54 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-113-255.ams2.redhat.com [10.36.113.255])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 484EA60877
+	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 15:23:54 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next] mptcp: ignore unsupported msg flags
+Date: Wed, 14 Apr 2021 17:23:19 +0200
+Message-Id: <fb3746774c97c3042beb7d76cf9f23e57d7f85e1.1618413785.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
-Content-Disposition: inline
-In-Reply-To: <dcf79e592f9a7e14483dde32ac561f6af2632e50.1618388989.git.npache@redhat.com>
-X-Cookie: George Orwell was an optimist.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
+Currently mptcp_sendmsg()/mptcp_recvmsg() fail with EOPNOTSUPP
+if the user-space provides some unsupported flag. That is
+unexpected and may foul existing applications migrated to MPTCP,
+which expect a different behavior.
 
---imjhCm/Pyz7Rq5F2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Change the mentioned function to silently ignore the unsupported
+flags.
 
-On Wed, Apr 14, 2021 at 04:58:04AM -0400, Nico Pache wrote:
-> Drop 'S' from end of SND_SOC_TOPOLOGY_KUNIT_TESTS inorder to adhear to
->  the KUNIT *_KUNIT_TEST config name format.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/162
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2d895c3c8746..bdec946b9b04 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1585,8 +1585,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	int ret = 0;
+ 	long timeo;
+ 
+-	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+-		return -EOPNOTSUPP;
++	/* ignore unsupported flags */
++	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
+ 
+ 	mptcp_lock_sock(sk, __mptcp_wmem_reserve(sk, min_t(size_t, 1 << 20, len)));
+ 
+@@ -1916,8 +1916,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	int target;
+ 	long timeo;
+ 
+-	if (msg->msg_flags & ~(MSG_WAITALL | MSG_DONTWAIT))
+-		return -EOPNOTSUPP;
++	/* ignore unsupported flags */
++	msg->msg_flags &= MSG_WAITALL | MSG_DONTWAIT;
+ 
+ 	mptcp_lock_sock(sk, __mptcp_splice_receive_queue(sk));
+ 	if (unlikely(sk->sk_state == TCP_LISTEN)) {
+-- 
+2.26.2
 
---imjhCm/Pyz7Rq5F2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmB2+h8ACgkQJNaLcl1U
-h9C5ygf/f+BNG8PCz0e3sGq/F/lIAmu23fPiN7lzXIQ/7/mdT3MwGiTHu9temsXL
-0d99SUvGT3MUczcKW+6Vj6faDQZGBXKBsKMW7rOq5h7Ns2tvw5MyvWwSYhHLj/Zt
-Ojkg3tN7GXemTVGC+TZyHVqWgh2q2wWvqJHeNzKY/9WPDcQo5BqoHlvO0xm9iF+L
-w3XI2y5+R6HulHM9PNNH18x3QiPWrjIjDAn2INWfPuPsAwu9+GpPf16ZK6CusCmZ
-ugX0b36XCpwrS2aNmb6SrjAA7GiQGnNXTZZ290lLhaN+ams3aM2pCePDkPjQU5EI
-ASor0godC7IdsihlvPd4BHIRP07Sdw==
-=U3R8
------END PGP SIGNATURE-----
-
---imjhCm/Pyz7Rq5F2--
