@@ -1,95 +1,122 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1DA6D28
-	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 16:07:12 +0000 (UTC)
-Received: by mail-ed1-f50.google.com with SMTP id m3so24370231edv.5
-        for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 09:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=to:references:cc:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eezzS+bu+xdrsjiGBL2I8GftIkeUle4uhxWsQgQETnM=;
-        b=JgJXgrNv0nPeMQYcK6Bkrr/x7Cy04UP+47yDF/ze1XemmBi/SwChcj3W+p0rElRI8e
-         iKJXw4FuraTUid0yQ45ZzWXD01nOwp5jjuXjPx57hCMnL5mLT4z5apDbsorSsvWOoVjb
-         Vx3Oarpi7Ihjl5FywD2LrVkei4tpmKrhTkSh87eP/4gdewLslPtGxNBA3X1WI0Kv841r
-         SC9yuy/d93NudpJMWT1NXMS4S421Zr+vt0n2aZKejUDNExrq1+aTn6uguM6nFhyYH5Fe
-         s+wicQQ31v5dNrJxnZUoJE0FyTtRYJuEsXL9PwI1pEMJA+Vxni+s5L2pAoaNDRakx+4Z
-         ngVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:cc:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eezzS+bu+xdrsjiGBL2I8GftIkeUle4uhxWsQgQETnM=;
-        b=o6hZU9wy1Zik+yJqFgC/E4D+u0OOw2+BbKjxJi7N8r/aCGPaFpOAGWFmbAuZdEKz0S
-         TSnTp+D6nzCmMOQI5rmPSuIQO3Db+i7vlF44XOQEW1laTsmQVHy/2yYhDz+d1Lj/m5/U
-         +c9YnurINrgFf5L4i3PbEyTndO7hxiqrQnDYBSi2rxZzxrG1A95wEjEwNcX5BHrzjIYB
-         4kNl71qaQSZTNJC/Ky6jzKsh+r7B0EZSx4XTgLv796n957ZHOsmSn6+BgahVvv+WdtIH
-         vk1wUFkLRLWWJ5cezJtjkR4jREm0iQ5jvI5qKQsYNEp18izn23GQBfmljx507xJD3edV
-         IaOw==
-X-Gm-Message-State: AOAM5338BgvlXUqBdboYLL+G1SB76GEmv7HKUg9NPcYedddToqPlZHeS
-	UnDOF066NXLy2jD0cWyu1yxsRmp7NASt6w==
-X-Google-Smtp-Source: ABdhPJxrj5UZx3Wj6PWj1bVxsSWglimt9ZIk/un741KwzBhDWrU8e/WGBO4fvQKTaJK3BN01kYZWQw==
-X-Received: by 2002:a05:6402:518b:: with SMTP id q11mr41787032edd.151.1618416430506;
-        Wed, 14 Apr 2021 09:07:10 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:29e9:f851:10c:9912])
-        by smtp.gmail.com with ESMTPSA id r19sm10192766ejr.55.2021.04.14.09.07.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Apr 2021 09:07:10 -0700 (PDT)
-To: Florian Westphal <fw@strlen.de>, Paolo Abeni <pabeni@redhat.com>
-References: <20210413155447.14043-1-fw@strlen.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF0429CA
+	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 16:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1618416483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s+Ux+58CR4iMCtda9Tn+7E+kjt0GegfdlkqH1Z6v+nc=;
+	b=Pgyjm5b2cBAIdx2cziowRIDFOK0O/bOtLqE3zxkX6TpquTsjjxJvkA6xYySlA0q77x8iGO
+	y/6cp+fiT63FwQT396oaEUPMJUyaVQGGcsn95XKSLCJ67D2m357u0CUEdMMGR/3AOpmZ/c
+	4ocvdAglM2W2B8N5AIGiCZxOn0DWLWM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-559-voesO9reMUaebwL-aqcsMw-1; Wed, 14 Apr 2021 12:08:00 -0400
+X-MC-Unique: voesO9reMUaebwL-aqcsMw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21DF1C73A5;
+	Wed, 14 Apr 2021 16:07:59 +0000 (UTC)
+Received: from ovpn-113-255.ams2.redhat.com (ovpn-113-255.ams2.redhat.com [10.36.113.255])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 616065D9D0;
+	Wed, 14 Apr 2021 16:07:58 +0000 (UTC)
+Message-ID: <d75da6f043ccb23b6dc0ef422cd25614427593ac.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next] mptcp: ignore unsupported msg flags
+From: Paolo Abeni <pabeni@redhat.com>
+To: Florian Westphal <fw@strlen.de>
 Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-next v2 00/10] mptcp: add SOL_SOCKET support
-Message-ID: <e0e79a1e-537f-632b-1157-e25e70bd817e@tessares.net>
-Date: Wed, 14 Apr 2021 18:07:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+Date: Wed, 14 Apr 2021 18:07:57 +0200
+In-Reply-To: <20210414155151.GG14932@breakpoint.cc>
+References: <fb3746774c97c3042beb7d76cf9f23e57d7f85e1.1618413785.git.pabeni@redhat.com>
+	 <20210414155151.GG14932@breakpoint.cc>
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20210413155447.14043-1-fw@strlen.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Florian, Paolo,
-
-On 13/04/2021 17:54, Florian Westphal wrote:
-> This patch set improves support for several SOL_SOCKET tuneables,
-> addressing comments received for v1 patch set.
+On Wed, 2021-04-14 at 17:51 +0200, Florian Westphal wrote:
+> Paolo Abeni <pabeni@redhat.com> wrote:
+> > Currently mptcp_sendmsg()/mptcp_recvmsg() fail with EOPNOTSUPP
+> > if the user-space provides some unsupported flag. That is
+> > unexpected and may foul existing applications migrated to MPTCP,
+> > which expect a different behavior.
+> > 
+> > Change the mentioned function to silently ignore the unsupported
+> > flags.
+> > 
+> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/162
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> >  net/mptcp/protocol.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 2d895c3c8746..bdec946b9b04 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -1585,8 +1585,8 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> >  	int ret = 0;
+> >  	long timeo;
+> >  
+> > -	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
+> > -		return -EOPNOTSUPP;
+> > +	/* ignore unsupported flags */
+> > +	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
 > 
-> Changes since v1:
->   - In patch 1, move addition of a variable to patch 2 (Paolo)
->   - In patch 2, restrict overflow of sequence count to lower 24 bits (Mat)
->   - In patch 2, remove a obsolete check on msk->setsockopt_check (Paolo)
+> Ignoring MSG_MORE is fine, but DONTWAIT and NOSIGNAL?
 
-Thank you for the patches and the reviews!
+The intent of this patch is ignoring the unsupported flags. For sendmsg
+that is all of them except MSG_MORE, MSG_DONTWAIT, MSG_NOSIGNAL:
 
-Just applied in our tree with Paolo's Acked-by tags and a small conflict 
-resolution:
+MSG_OOB
+MSG_PEEK
+MSG_DONTROUTE
+MSG_TRYHARD
+MSG_CTRUNC
+MSG_PROBE
+MSG_TRUNC
+MSG_EOR
+MSG_FIN
+MSG_SYN
+MSG_CONFIRM
+MSG_RST
+MSG_ERRQUEUE
+MSG_WAITFORONE
+MSG_SENDPAGE_NOPOLICY
+MSG_SENDPAGE_NOTLAST
+MSG_BATCH
+MSG_EOF
+MSG_NO_SHARED_FRAGS
+MSG_SENDPAGE_DECRYPTED
+MSG_ZEROCOPY
+MSG_FASTOPEN
+MSG_CMSG_CLOEXEC
 
-- 6a63626d8b65: mptcp: add skeleton to sync msk socket options to subflows
-- 8d64e3af6a01: mptcp: tag sequence_seq with socket state
-- d3123e0f11d5: mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY
-- 312dafe0427f: mptcp: setsockopt: handle receive/send buffer and device 
-bind
-- 0c26e2e19d8c: mptcp: setsockopt: support SO_LINGER
-- 796f06044fcd: mptcp: setsockopt: add SO_MARK support
-- 5380a8b59dd4: mptcp: setsockopt: add SO_INCOMING_CPU
-- 56063458e089: mptcp: setsockopt: SO_DEBUG and no-op options
-- a403361b4aca: mptcp: sockopt: add TCP_CONGESTION and TCP_INFO
-- 2857df86a4b9: selftests: mptcp: add packet mark test case
-- 0d4cddd31dc4: conflict in t/DO-NOT-MERGE-mptcp-use-kmalloc-on-kasan-build
-- Results: f90b3d445732..f15eff9346bc
+> I'd prefer hard errors for those until mptcp does the right thing for
+> them.
 
-Export + builds are in progress!
+should we define a 'bail on use' mask with a subset of the above? The
+candidates I see are:
 
-Cheers,
-Matt
---
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MSG_TRUNC
+MSG_PEEK
+MSG_OOB
+
+Thanks,
+
+Paolo
+
