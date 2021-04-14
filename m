@@ -1,305 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCA56D14
-	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 08:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1618390735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oQDjPtD3WvuvXM4eQvNcLKFd7+TjM2tF15O9Rwlosks=;
-	b=AVmBykbzcigjAQhqRg+wg5x6SCGjJH9ly5La+9RMSkEq5ETTQgHq5TbsTkyPvWrdOp76c0
-	Bxvx0xyRUPZMOxLJAG3rKGgYIWLdFCE0XXDqiw/lROjJCerngJ875bQRiZP6bxqhRmU+O1
-	hnJiNAOsFmDDyhZY7ZG2PUC+G6lWVos=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-VVCRoKS2MlmbPvCm-DEMpQ-1; Wed, 14 Apr 2021 04:58:51 -0400
-X-MC-Unique: VVCRoKS2MlmbPvCm-DEMpQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1615A802B62;
-	Wed, 14 Apr 2021 08:58:49 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-112-67.rdu2.redhat.com [10.10.112.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4F49E5D76F;
-	Wed, 14 Apr 2021 08:58:47 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: brendanhiggins@google.com,
-	gregkh@linuxfoundation.org,
-	linux-ext4@vger.kernel.org,
-	netdev@vger.kernel.org,
-	rafael@kernel.org,
-	npache@redhat.com,
-	linux-m68k@lists.linux-m68k.org,
-	geert@linux-m68k.org,
-	tytso@mit.edu,
-	mathew.j.martineau@linux.intel.com,
-	davem@davemloft.net,
-	broonie@kernel.org,
-	davidgow@google.com,
-	skhan@linuxfoundation.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH v2 6/6] m68k: update configs to match the proper KUNIT syntax
-Date: Wed, 14 Apr 2021 04:58:09 -0400
-Message-Id: <993949de9baa8e6d42731cc40f786e24aca858b8.1618388989.git.npache@redhat.com>
-In-Reply-To: <cover.1618388989.git.npache@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4306D14
+	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 09:25:07 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id d21so2720715edv.9
+        for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 02:25:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gHbX9CNZcLaiMHXNZmBKODRDqd/reEdwnJR9AYcgnvs=;
+        b=gINN1R9lI5tCoYH2ZPewi+utvLw1oNr+AYOfDMNtw/hKaSHIjWFrbHQ2mEP/s050tD
+         g448CE9NUc6LD5cIHE915wtYMuh12ELdt/BZzVJtfcbRlcZzDt0CH8Ve04xqPwET4Rh5
+         BHdMYM5h1f/E2uWaCn6cX9rtXlGY2VM249gpU+JczEOZGYRnqBdk5vjJ2O5+ToJ3ERbh
+         U3FM3+/YLy3sEwiHrE30IVFtoFTTLn4R1GTNSu4oQJjn/xhueIXu1t9NC5c0QjPFa4VI
+         mHQlWeb7xSouf3EcOgTxrw7wUrUZIGalS4Ba2F808A+YtDSZwP171zeWniTOjTgCp8d7
+         ejDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gHbX9CNZcLaiMHXNZmBKODRDqd/reEdwnJR9AYcgnvs=;
+        b=ag6GbrQbvy31N9cuvHxnbGNcvwN5ykGGWQEaMQxobSB9sJusfm8/BR5wu9fwdkRopB
+         Ploj21lczkNpbxDt5QCoz02zPU+m8ES9RLu5Rsh8/Ll0SuunnnKJrJdiH4CGrQVAzZSS
+         Vux9pAhRxzWf4/R+n4LTP3BD45455btVbZxymodHCjoMKEXBFkeWVPzKUlqc5jUtsJwh
+         uiNXwNtbbuDFIw/EfbcVcbTzmnkXoNWjT9Jm2ichRn5GFBHMtYAv1AERu5q9Q9I/5chE
+         INKYtMYFFOH/L00x2dAYyHKj+NY8YrgBiYPllMlIWVJmd+sQpa6aD84ySHC7UZCy9/VR
+         jJtw==
+X-Gm-Message-State: AOAM533pV7zpfA+Eg4GUX/ws6vxoUD4+Ismk0qY+0+yS0l0+057DJvT2
+	XE0dTRBlQJjNqkcoUa1Uihf1MIOXIJuLhQ==
+X-Google-Smtp-Source: ABdhPJwKI3fyWANihaNxRNJcYcXaOIyeXGZHEp2xOggKD3L098p3onGrqOxzTlf7HKaohGrVesV2FQ==
+X-Received: by 2002:aa7:c907:: with SMTP id b7mr40534459edt.37.1618392305540;
+        Wed, 14 Apr 2021 02:25:05 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:bfbf:e0a9:a746:c4b9])
+        by smtp.gmail.com with ESMTPSA id t14sm9473304ejc.121.2021.04.14.02.25.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Apr 2021 02:25:05 -0700 (PDT)
+To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org
+Cc: brendanhiggins@google.com, gregkh@linuxfoundation.org,
+ linux-ext4@vger.kernel.org, netdev@vger.kernel.org, rafael@kernel.org,
+ linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org, tytso@mit.edu,
+ mathew.j.martineau@linux.intel.com, davem@davemloft.net, broonie@kernel.org,
+ davidgow@google.com, skhan@linuxfoundation.org, mptcp@lists.linux.dev
 References: <cover.1618388989.git.npache@redhat.com>
+ <0fa191715b236766ad13c5f786d8daf92a9a0cf2.1618388989.git.npache@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH v2 5/6] kunit: mptcp: adhear to KUNIT formatting standard
+Message-ID: <e26fbcc8-ba3e-573a-523d-9c5d5f84bc46@tessares.net>
+Date: Wed, 14 Apr 2021 11:25:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <0fa191715b236766ad13c5f786d8daf92a9a0cf2.1618388989.git.npache@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 
-No functional changes other than CONFIG name changes
-Signed-off-by: Nico Pache <npache@redhat.com>
----
- arch/m68k/configs/amiga_defconfig    | 6 +++---
- arch/m68k/configs/apollo_defconfig   | 6 +++---
- arch/m68k/configs/atari_defconfig    | 6 +++---
- arch/m68k/configs/bvme6000_defconfig | 6 +++---
- arch/m68k/configs/hp300_defconfig    | 6 +++---
- arch/m68k/configs/mac_defconfig      | 6 +++---
- arch/m68k/configs/multi_defconfig    | 6 +++---
- arch/m68k/configs/mvme147_defconfig  | 6 +++---
- arch/m68k/configs/mvme16x_defconfig  | 6 +++---
- arch/m68k/configs/q40_defconfig      | 6 +++---
- arch/m68k/configs/sun3_defconfig     | 6 +++---
- arch/m68k/configs/sun3x_defconfig    | 6 +++---
- 12 files changed, 36 insertions(+), 36 deletions(-)
+Hi Nico,
 
-diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
-index 786656090c50..77cc4ff7ae3a 100644
---- a/arch/m68k/configs/amiga_defconfig
-+++ b/arch/m68k/configs/amiga_defconfig
-@@ -655,11 +655,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
-index 9bb12be4a38e..86913bdb265b 100644
---- a/arch/m68k/configs/apollo_defconfig
-+++ b/arch/m68k/configs/apollo_defconfig
-@@ -611,11 +611,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
-index 413232626d9d..6b5c35e7be44 100644
---- a/arch/m68k/configs/atari_defconfig
-+++ b/arch/m68k/configs/atari_defconfig
-@@ -633,11 +633,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
-index 819cc70b06d8..8fbd238d9d29 100644
---- a/arch/m68k/configs/bvme6000_defconfig
-+++ b/arch/m68k/configs/bvme6000_defconfig
-@@ -604,11 +604,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
-index 8f8d5968713b..dbebbc079611 100644
---- a/arch/m68k/configs/hp300_defconfig
-+++ b/arch/m68k/configs/hp300_defconfig
-@@ -613,11 +613,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
-index bf15e6c1c939..3ccafd1db067 100644
---- a/arch/m68k/configs/mac_defconfig
-+++ b/arch/m68k/configs/mac_defconfig
-@@ -636,11 +636,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
-index 5466d48fcd9d..572c95f1c8d7 100644
---- a/arch/m68k/configs/multi_defconfig
-+++ b/arch/m68k/configs/multi_defconfig
-@@ -722,11 +722,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
-index 93c305918838..a92d6c4ab9ff 100644
---- a/arch/m68k/configs/mvme147_defconfig
-+++ b/arch/m68k/configs/mvme147_defconfig
-@@ -603,11 +603,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
-index cacd6c617f69..e1dbe9208a92 100644
---- a/arch/m68k/configs/mvme16x_defconfig
-+++ b/arch/m68k/configs/mvme16x_defconfig
-@@ -604,11 +604,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
-index 3ae421cb24a4..957aa0277c3c 100644
---- a/arch/m68k/configs/q40_defconfig
-+++ b/arch/m68k/configs/q40_defconfig
-@@ -622,11 +622,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
-index 6da97e28c48e..ebe23c0414fb 100644
---- a/arch/m68k/configs/sun3_defconfig
-+++ b/arch/m68k/configs/sun3_defconfig
-@@ -605,11 +605,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
-diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
-index f54481bb789a..c913aa7635d8 100644
---- a/arch/m68k/configs/sun3x_defconfig
-+++ b/arch/m68k/configs/sun3x_defconfig
-@@ -605,11 +605,11 @@ CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_FIND_BIT_BENCHMARK=m
- CONFIG_TEST_FIRMWARE=m
- CONFIG_TEST_SYSCTL=m
--CONFIG_BITFIELD_KUNIT=m
-+CONFIG_BITFIELD_KUNIT_TEST=m
- CONFIG_RESOURCE_KUNIT_TEST=m
--CONFIG_LINEAR_RANGES_TEST=m
-+CONFIG_LINEAR_RANGES_KUNIT_TEST=m
- CONFIG_CMDLINE_KUNIT_TEST=m
--CONFIG_BITS_TEST=m
-+CONFIG_BITS_KUNIT_TEST=m
- CONFIG_TEST_UDELAY=m
- CONFIG_TEST_STATIC_KEYS=m
- CONFIG_TEST_KMOD=m
+On 14/04/2021 10:58, Nico Pache wrote:
+> Drop 'S' from end of CONFIG_MPTCP_KUNIT_TESTS inorder to adhear to the
+> KUNIT *_KUNIT_TEST config name format.
+
+For MPTCP, we have multiple KUnit tests: crypto and token. That's why we 
+wrote TESTS with a S.
+
+I'm fine without S if we need to stick with KUnit' standard. But maybe 
+the standard wants us to split the two tests and create 
+MPTCP_TOKEN_KUNIT_TEST and MPTCP_TOKEN_KUNIT_TEST config?
+
+In this case, we could eventually keep MPTCP_KUNIT_TESTS which will in 
+charge of selecting the two new ones.
+
+Up to the KUnit maintainers to decide ;-)
+
+Cheers,
+Matt
 -- 
-2.30.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
