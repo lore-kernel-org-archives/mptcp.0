@@ -1,97 +1,118 @@
-Received: from rn-mailsvcp-ppex-lapp14.apple.com (rn-mailsvcp-ppex-lapp14.rno.apple.com [17.179.253.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2911D6D32
-	for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 17:49:37 +0000 (UTC)
-Received: from pps.filterd (rn-mailsvcp-ppex-lapp14.rno.apple.com [127.0.0.1])
-	by rn-mailsvcp-ppex-lapp14.rno.apple.com (8.16.1.2/8.16.1.2) with SMTP id 13EH3Rvp013508;
-	Wed, 14 Apr 2021 10:03:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=20180706; bh=bJjGdM888wnQGpAkOxUpzHNjOMYzBmpN4eHL9BMUNl4=;
- b=fuPunzRqnCTLw2j+CgY6u1r7Ek5Qmz372/KRsCBTengH65xKQnSPpXf+t+f9AuE3tIug
- yyLpczfAEUx/GeGI7QXWx6NXoRCgoXaY5Tv/P64wcXezvy8phFS02vcgwyIcLdfA1xpU
- HwjQ31c+2IxRCm+300masLQG0n3i7ksb53HJgY/rdTJU/PzAIWLtN9QTdZLmUy8N10pa
- 6P2CLP4Mph3R8QJLKvOcg3W+yxWp/I1NCHsC2+JZqcLXUnVaqEDQbU04YDXEfbyHCPWy
- CY0DEzrAQx4/8WXnvir9lhU+e8havs12of2o7v3kWwc2U6Lt/PHQFgSicugaJjo/OkV9 fQ== 
-Received: from rn-mailsvcp-mta-lapp02.rno.apple.com (rn-mailsvcp-mta-lapp02.rno.apple.com [10.225.203.150])
-	by rn-mailsvcp-ppex-lapp14.rno.apple.com with ESMTP id 37u8wbdnem-9
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-	Wed, 14 Apr 2021 10:03:28 -0700
-Received: from rn-mailsvcp-mmp-lapp03.rno.apple.com
- (rn-mailsvcp-mmp-lapp03.rno.apple.com [17.179.253.16])
- by rn-mailsvcp-mta-lapp02.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.7.20201203 64bit (built Dec  3
- 2020)) with ESMTPS id <0QRK0113TCPQQO70@rn-mailsvcp-mta-lapp02.rno.apple.com>;
- Wed, 14 Apr 2021 10:03:26 -0700 (PDT)
-Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp03.rno.apple.com by
- rn-mailsvcp-mmp-lapp03.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.7.20201203 64bit (built Dec  3
- 2020)) id <0QRK00O00COH3300@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Wed,
- 14 Apr 2021 10:03:26 -0700 (PDT)
-X-Va-A: 
-X-Va-T-CD: 14b2d5c3db080b9848858d1403c630a3
-X-Va-E-CD: 9b0de5c0cefe224ea7f69f68417f168d
-X-Va-R-CD: 5a5adb75ad4b1905f4cd4a6a1d5fad0c
-X-Va-CD: 0
-X-Va-ID: 40176fdc-6b53-46f5-88b5-959445ad63e3
-X-V-A: 
-X-V-T-CD: 14b2d5c3db080b9848858d1403c630a3
-X-V-E-CD: 9b0de5c0cefe224ea7f69f68417f168d
-X-V-R-CD: 5a5adb75ad4b1905f4cd4a6a1d5fad0c
-X-V-CD: 0
-X-V-ID: 26c958c0-808f-4bae-8812-359ae3a1ea08
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-14_10:2021-04-14,2021-04-14 signatures=0
-Received: from localhost ([17.234.73.16])
- by rn-mailsvcp-mmp-lapp03.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.7.20201203 64bit (built Dec  3
- 2020))
- with ESMTPSA id <0QRK00B89CPP3S00@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Wed,
- 14 Apr 2021 10:03:25 -0700 (PDT)
-Date: Wed, 14 Apr 2021 10:03:25 -0700
-From: Christoph Paasch <cpaasch@apple.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: Weekly meeting - 15 April 2021 15:00 UTC (8am PDT, 5pm CEST,
- 11pm CST)
-Message-id: <YHcgXdMvuX4xsIh5@MacBook-Pro.local>
-References: <e1d0b3b9-eed8-06dc-b26f-a3ad9ead93c4@tessares.net>
+Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95F5E6D32
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 01:59:44 +0000 (UTC)
+HMM_SOURCE_IP:172.18.0.48:54452.1147090965
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-36.111.140.9?logid-a24984fa52b0421db8890352ca924471 (unknown [172.18.0.48])
+	by chinatelecom.cn (HERMES) with SMTP id 104412800EC;
+	Thu, 15 Apr 2021 09:59:45 +0800 (CST)
+X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
+Received: from  ([172.18.0.48])
+	by app0024 with ESMTP id a24984fa52b0421db8890352ca924471 for mptcp@lists.linux.dev;
+	Thu Apr 15 09:59:42 2021
+X-Transaction-ID: a24984fa52b0421db8890352ca924471
+X-filter-score:  filter<0>
+X-Real-From: liyonglong@chinatelecom.cn
+X-Receive-IP: 172.18.0.48
+X-MEDUSA-Status: 0
+Sender: liyonglong@chinatelecom.cn
+From: Yonglong Li <liyonglong@chinatelecom.cn>
+To: mptcp@lists.linux.dev,
+	liyonglong@chinatelecom.cn
+Subject: [PATCH v2 1/2] mptcp: add MSG_PEEK support
+Date: Thu, 15 Apr 2021 09:58:54 +0800
+Message-Id: <1618451935-78322-1-git-send-email-liyonglong@chinatelecom.cn>
+X-Mailer: git-send-email 1.8.3.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-version: 1.0
-Content-type: text/plain; charset=us-ascii
-Content-disposition: inline
-In-reply-to: <e1d0b3b9-eed8-06dc-b26f-a3ad9ead93c4@tessares.net>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-14_10:2021-04-14,2021-04-14 signatures=0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This patch adds support for MSG_PEEK flag. Packets are not removed
+from the receive_queue if MSG_PEEK set in recv() system call.
 
-I have a conflicting meeting and won't be able to attend this week's weekly.
+Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
+---
+ net/mptcp/protocol.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2d895c3..93367ff 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1710,12 +1710,12 @@ static void mptcp_wait_data(struct sock *sk, long *timeo)
+ 
+ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 				struct msghdr *msg,
+-				size_t len)
++				size_t len, int flags)
+ {
+-	struct sk_buff *skb;
++	struct sk_buff *skb, *tmp;
+ 	int copied = 0;
+ 
+-	while ((skb = skb_peek(&msk->receive_queue)) != NULL) {
++	skb_queue_walk_safe(&msk->receive_queue, skb, tmp) {
+ 		u32 offset = MPTCP_SKB_CB(skb)->offset;
+ 		u32 data_len = skb->len - offset;
+ 		u32 count = min_t(size_t, len - copied, data_len);
+@@ -1731,15 +1731,18 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 		copied += count;
+ 
+ 		if (count < data_len) {
+-			MPTCP_SKB_CB(skb)->offset += count;
++			if (!(flags & MSG_PEEK))
++				MPTCP_SKB_CB(skb)->offset += count;
+ 			break;
+ 		}
+ 
+-		/* we will bulk release the skb memory later */
+-		skb->destructor = NULL;
+-		msk->rmem_released += skb->truesize;
+-		__skb_unlink(skb, &msk->receive_queue);
+-		__kfree_skb(skb);
++		if (!(flags & MSG_PEEK)) {
++			/* we will bulk release the skb memory later */
++			skb->destructor = NULL;
++			msk->rmem_released += skb->truesize;
++			__skb_unlink(skb, &msk->receive_queue);
++			__kfree_skb(skb);
++		}
+ 
+ 		if (copied >= len)
+ 			break;
+@@ -1916,7 +1919,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	int target;
+ 	long timeo;
+ 
+-	if (msg->msg_flags & ~(MSG_WAITALL | MSG_DONTWAIT))
++	if (flags & ~(MSG_PEEK | MSG_WAITALL | MSG_DONTWAIT))
+ 		return -EOPNOTSUPP;
+ 
+ 	mptcp_lock_sock(sk, __mptcp_splice_receive_queue(sk));
+@@ -1933,7 +1936,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	while (copied < len) {
+ 		int bytes_read;
+ 
+-		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied);
++		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
+@@ -2017,7 +2020,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	pr_debug("msk=%p data_ready=%d rx queue empty=%d copied=%d",
+ 		 msk, test_bit(MPTCP_DATA_READY, &msk->flags),
+ 		 skb_queue_empty_lockless(&sk->sk_receive_queue), copied);
+-	mptcp_rcv_space_adjust(msk, copied);
++	if (!(flags & MSG_PEEK))
++		mptcp_rcv_space_adjust(msk, copied);
+ 
+ 	release_sock(sk);
+ 	return copied;
+-- 
+1.8.3.1
 
-Christoph
-
-On 04/14/21 - 18:31, Matthieu Baerts wrote:
-> Hello everybody!
-> 
-> Our public MPTCP upstreaming weekly web conference is scheduled for
-> tomorrow.
-> 
-> The list of topics is available here:
-> https://annuel2.framapad.org/p/mptcp_upstreaming_20210415
-> 
-> Feel free to add/modify topics!
-> 
-> Anybody can join the meeting using Google Meet website/app/phone:
-> https://meet.google.com/edk-rkrk-vaj
-> 
-> See/Speak to you tomorrow!
-> Matt
-> -- 
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
-> 
