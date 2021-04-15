@@ -1,17 +1,17 @@
 Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95F5E6D32
-	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 01:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45B6A6D32
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 01:59:57 +0000 (UTC)
 HMM_SOURCE_IP:172.18.0.48:54452.1147090965
 HMM_ATTACHE_NUM:0000
 HMM_SOURCE_TYPE:SMTP
 Received: from clientip-36.111.140.9?logid-a24984fa52b0421db8890352ca924471 (unknown [172.18.0.48])
-	by chinatelecom.cn (HERMES) with SMTP id 104412800EC;
-	Thu, 15 Apr 2021 09:59:45 +0800 (CST)
+	by chinatelecom.cn (HERMES) with SMTP id C674B2800EA;
+	Thu, 15 Apr 2021 10:00:00 +0800 (CST)
 X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
 Received: from  ([172.18.0.48])
-	by app0024 with ESMTP id a24984fa52b0421db8890352ca924471 for mptcp@lists.linux.dev;
-	Thu Apr 15 09:59:42 2021
-X-Transaction-ID: a24984fa52b0421db8890352ca924471
+	by app0024 with ESMTP id c4c96ebe039c4026a390f069cdaf879e for mptcp@lists.linux.dev;
+	Thu Apr 15 09:59:56 2021
+X-Transaction-ID: c4c96ebe039c4026a390f069cdaf879e
 X-filter-score:  filter<0>
 X-Real-From: liyonglong@chinatelecom.cn
 X-Receive-IP: 172.18.0.48
@@ -20,10 +20,12 @@ Sender: liyonglong@chinatelecom.cn
 From: Yonglong Li <liyonglong@chinatelecom.cn>
 To: mptcp@lists.linux.dev,
 	liyonglong@chinatelecom.cn
-Subject: [PATCH v2 1/2] mptcp: add MSG_PEEK support
-Date: Thu, 15 Apr 2021 09:58:54 +0800
-Message-Id: <1618451935-78322-1-git-send-email-liyonglong@chinatelecom.cn>
+Subject: [PATCH v2 2/2] selftests: mptcp: add a test case for MSG_PEEK
+Date: Thu, 15 Apr 2021 09:58:55 +0800
+Message-Id: <1618451935-78322-2-git-send-email-liyonglong@chinatelecom.cn>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1618451935-78322-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1618451935-78322-1-git-send-email-liyonglong@chinatelecom.cn>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
@@ -32,87 +34,212 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-This patch adds support for MSG_PEEK flag. Packets are not removed
-from the receive_queue if MSG_PEEK set in recv() system call.
+Extend mptcp_connect tool with MSG_PEEK support and add a test case in
+mptcp_connect.sh that checks the data recvived from/after recv() with
+MSG_PEEK.
+
+eg: sh mptcp_connect.sh -4 -m poll -P
 
 Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
 ---
- net/mptcp/protocol.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c  | 45 +++++++++++++++++++-
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 49 +++++++++++++++++++++-
+ 2 files changed, 90 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2d895c3..93367ff 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1710,12 +1710,12 @@ static void mptcp_wait_data(struct sock *sk, long *timeo)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 69d89b5..3e348e2 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -45,7 +45,14 @@ enum cfg_mode {
+ 	CFG_MODE_SENDFILE,
+ };
  
- static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
- 				struct msghdr *msg,
--				size_t len)
-+				size_t len, int flags)
++enum cfg_peek {
++	CFG_NONE_PEEK,
++	CFG_WITH_PEEK,
++	CFG_AFTER_PEEK,
++};
++
+ static enum cfg_mode cfg_mode = CFG_MODE_POLL;
++static enum cfg_peek cfg_peek = CFG_NONE_PEEK;
+ static const char *cfg_host;
+ static const char *cfg_port	= "12000";
+ static int cfg_sock_proto	= IPPROTO_MPTCP;
+@@ -71,6 +78,7 @@ static void die_usage(void)
+ 	fprintf(stderr, "\t-m [poll|mmap|sendfile] -- use poll(default)/mmap+write/sendfile\n");
+ 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
+ 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
++	fprintf(stderr, "\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket \n");
+ 	exit(1);
+ }
+ 
+@@ -315,6 +323,8 @@ static size_t do_write(const int fd, char *buf, const size_t len)
+ 
+ static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
  {
--	struct sk_buff *skb;
-+	struct sk_buff *skb, *tmp;
- 	int copied = 0;
++	int ret = 0;
++	char tmp[16384];
+ 	size_t cap = rand();
  
--	while ((skb = skb_peek(&msk->receive_queue)) != NULL) {
-+	skb_queue_walk_safe(&msk->receive_queue, skb, tmp) {
- 		u32 offset = MPTCP_SKB_CB(skb)->offset;
- 		u32 data_len = skb->len - offset;
- 		u32 count = min_t(size_t, len - copied, data_len);
-@@ -1731,15 +1731,18 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
- 		copied += count;
+ 	cap &= 0xffff;
+@@ -324,7 +334,17 @@ static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
+ 	else if (cap > len)
+ 		cap = len;
  
- 		if (count < data_len) {
--			MPTCP_SKB_CB(skb)->offset += count;
-+			if (!(flags & MSG_PEEK))
-+				MPTCP_SKB_CB(skb)->offset += count;
+-	return read(fd, buf, cap);
++	if (cfg_peek == CFG_WITH_PEEK) {
++		ret = recv(fd, buf, cap, MSG_PEEK);
++		ret = (ret < 0) ? ret : read(fd, tmp, ret);
++	} else if (cfg_peek == CFG_AFTER_PEEK) {
++		ret = recv(fd, buf, cap, MSG_PEEK);
++		ret = (ret < 0) ? ret : read(fd, buf, cap);
++	} else {
++		ret = read(fd, buf, cap);
++	}
++
++	return ret;
+ }
+ 
+ static void set_nonblock(int fd)
+@@ -803,6 +823,24 @@ int parse_mode(const char *mode)
+ 	return 0;
+ }
+ 
++int parse_peek(const char *mode)
++{
++	if (!strcasecmp(mode, "saveWithPeek"))
++		return CFG_WITH_PEEK;
++	if (!strcasecmp(mode, "saveAfterPeek"))
++		return CFG_AFTER_PEEK;
++
++	fprintf(stderr, "Unknown: %s\n", mode);
++	fprintf(stderr, "Supported MSG_PEEK mode are:\n");
++	fprintf(stderr, "\t\t\"saveWithPeek\" - recv data with flags 'MSG_PEEK' and save the peek data into file \n");
++	fprintf(stderr, "\t\t\"saveAfterPeek\" - read data form socket and save it into file after recv with flags 'MSG_PEEK' \n");
++
++	die_usage();
++
++	/* silence compiler warning */
++	return 0;
++}
++
+ static int parse_int(const char *size)
+ {
+ 	unsigned long s;
+@@ -830,7 +868,7 @@ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ 
+-	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:")) != -1) {
++	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:P:")) != -1) {
+ 		switch (c) {
+ 		case 'j':
+ 			cfg_join = true;
+@@ -880,6 +918,9 @@ static void parse_opts(int argc, char **argv)
+ 		case 'w':
+ 			cfg_wait = atoi(optarg)*1000000;
  			break;
++		case 'P':
++			cfg_peek = parse_peek(optarg);
++			break;
  		}
+ 	}
  
--		/* we will bulk release the skb memory later */
--		skb->destructor = NULL;
--		msk->rmem_released += skb->truesize;
--		__skb_unlink(skb, &msk->receive_queue);
--		__kfree_skb(skb);
-+		if (!(flags & MSG_PEEK)) {
-+			/* we will bulk release the skb memory later */
-+			skb->destructor = NULL;
-+			msk->rmem_released += skb->truesize;
-+			__skb_unlink(skb, &msk->receive_queue);
-+			__kfree_skb(skb);
-+		}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 385cdc9..c07ea4f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -3,7 +3,7 @@
  
- 		if (copied >= len)
- 			break;
-@@ -1916,7 +1919,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	int target;
- 	long timeo;
+ time_start=$(date +%s)
  
--	if (msg->msg_flags & ~(MSG_WAITALL | MSG_DONTWAIT))
-+	if (flags & ~(MSG_PEEK | MSG_WAITALL | MSG_DONTWAIT))
- 		return -EOPNOTSUPP;
+-optstring="S:R:d:e:l:r:h4cm:f:t"
++optstring="S:R:d:e:l:r:h4cm:f:tp"
+ ret=0
+ sin=""
+ sout=""
+@@ -23,6 +23,8 @@ rcvbuf=0
+ options_log=true
+ do_tcp=0
+ filesize=0
++testpeek=false
++peekmode=""
  
- 	mptcp_lock_sock(sk, __mptcp_splice_receive_queue(sk));
-@@ -1933,7 +1936,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	while (copied < len) {
- 		int bytes_read;
+ if [ $tc_loss -eq 100 ];then
+ 	tc_loss=1%
+@@ -47,6 +49,7 @@ usage() {
+ 	echo -e "\t-R: set rcvbuf value (default: use kernel default)"
+ 	echo -e "\t-m: test mode (poll, sendfile; default: poll)"
+ 	echo -e "\t-t: also run tests with TCP (use twice to non-fallback tcp)"
++	echo -e "\t-P: test MSG_PEEK flags of recv() function"
+ }
  
--		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied);
-+		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags);
- 		if (unlikely(bytes_read < 0)) {
- 			if (!copied)
- 				copied = bytes_read;
-@@ -2017,7 +2020,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	pr_debug("msk=%p data_ready=%d rx queue empty=%d copied=%d",
- 		 msk, test_bit(MPTCP_DATA_READY, &msk->flags),
- 		 skb_queue_empty_lockless(&sk->sk_receive_queue), copied);
--	mptcp_rcv_space_adjust(msk, copied);
-+	if (!(flags & MSG_PEEK))
-+		mptcp_rcv_space_adjust(msk, copied);
+ while getopts "$optstring" option;do
+@@ -104,6 +107,10 @@ while getopts "$optstring" option;do
+ 	"t")
+ 		do_tcp=$((do_tcp+1))
+ 		;;
++	"P")
++		testpeek=true
++		peekmode="saveWithPeek"
++		;;
+ 	"?")
+ 		usage $0
+ 		exit 1
+@@ -393,6 +400,10 @@ do_transfer()
+ 		extra_args="$extra_args -m $testmode"
+ 	fi
  
- 	release_sock(sk);
- 	return copied;
++	if $testpeek; then
++		extra_args="$extra_args -P $peekmode"
++	fi
++
+ 	if [ -n "$extra_args" ] && $options_log; then
+ 		options_log=false
+ 		echo "INFO: extra options: $extra_args"
+@@ -734,7 +745,41 @@ done
+ 
+ time_end=$(date +%s)
+ time_run=$((time_end-time_start))
+-
+ echo "Time: ${time_run} seconds"
+ 
++# if testpeek enable, set peekmode="saveAfterPeek" and test again
++if $testpeek; then
++	time_start=$(date +%s)
++	peekmode="saveAfterPeek"
++	options_log=true
++	for sender in $ns1 $ns2 $ns3 $ns4;do
++		run_tests_lo "$ns1" "$sender" 10.0.1.1 1
++		if [ $ret -ne 0 ] ;then
++			echo "FAIL: Could not even run loopback test" 1>&2
++			exit $ret
++		fi
++		run_tests_lo "$ns1" $sender dead:beef:1::1 1
++		if [ $ret -ne 0 ] ;then
++			echo "FAIL: Could not even run loopback v6 test" 2>&1
++			exit $ret
++		fi
++
++		run_tests "$ns2" $sender 10.0.1.2
++		run_tests "$ns2" $sender dead:beef:1::2
++		run_tests "$ns2" $sender 10.0.2.1
++		run_tests "$ns2" $sender dead:beef:2::1
++
++		run_tests "$ns3" $sender 10.0.2.2
++		run_tests "$ns3" $sender dead:beef:2::2
++		run_tests "$ns3" $sender 10.0.3.2
++		run_tests "$ns3" $sender dead:beef:3::2
++
++		run_tests "$ns4" $sender 10.0.3.1
++		run_tests "$ns4" $sender dead:beef:3::1
++	done
++	time_end=$(date +%s)
++	time_run=$((time_end-time_start))
++	echo "Time: ${time_run} seconds"
++fi
++
+ exit $ret
 -- 
 1.8.3.1
 
