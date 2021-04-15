@@ -1,83 +1,103 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC1C6D13
-	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 15:35:51 +0000 (UTC)
-IronPort-SDR: VLzaTK13dg+Ms3E2C8jE1hHsaNCuzEObVKBgp2oAcy7keOGp423QvYI5fJiGCVqaxB1MZoRdK3
- V67kUINwst9A==
-X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="280190171"
-X-IronPort-AV: E=Sophos;i="5.82,225,1613462400"; 
-   d="scan'208";a="280190171"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 08:35:43 -0700
-IronPort-SDR: MLZMoC5batTHQko0GGDE5SclEaYizymmairp0Zd7no/42g9m1U7oFYmgivUyqywNYNFKYdwrwt
- 1vGNPdMLlxEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,225,1613462400"; 
-   d="scan'208";a="601170476"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga005.jf.intel.com with ESMTP; 15 Apr 2021 08:35:42 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 15 Apr 2021 08:35:42 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 15 Apr 2021 08:35:41 -0700
-Received: from fmsmsx611.amr.corp.intel.com ([10.18.126.91]) by
- fmsmsx611.amr.corp.intel.com ([10.18.126.91]) with mapi id 15.01.2106.013;
- Thu, 15 Apr 2021 08:35:41 -0700
-From: "Othman, Ossama" <ossama.othman@intel.com>
-To: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
-Subject: Multipath TCP Daemon (mptcpd) 0.7 released
-Thread-Topic: Multipath TCP Daemon (mptcpd) 0.7 released
-Thread-Index: AdcyDPv8t9CLblM9Tum7N2HTmsrHng==
-Date: Thu, 15 Apr 2021 15:35:40 +0000
-Message-ID: <5d92066d64c447249e2010a6973e65a9@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-dlp-version: 11.5.1.3
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417406D13
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 16:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1618502539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iOHM92Yej9K9CSF9XVh2xWi+uCa8vLYiECJkZyq1YKc=;
+	b=DUNfLCnY+T9s8YWDvGS8DfRddDZmCICoEM9U0R7GvtYX5KRfV3CEywSfI/qy90ibBM/i+C
+	Rcv59HWMuOiXTfetRDFn5M0iFjFe366p1UhPfc7ty+0Lc/s+95puu2KQEbcnSV+XlaQuCg
+	c8THzmfzaEImqrvrNI9GlmI1QBxZ7ac=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-563-mM8af9BwO4iYbeLWXtNfqA-1; Thu, 15 Apr 2021 12:02:17 -0400
+X-MC-Unique: mM8af9BwO4iYbeLWXtNfqA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90803195D598
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 16:02:16 +0000 (UTC)
+Received: from gerbillo.redhat.com (ovpn-115-128.ams2.redhat.com [10.36.115.128])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EF55B51F18
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 16:02:15 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH net-next 2/3] mptcp: implement MSG_TRUNC support
+Date: Thu, 15 Apr 2021 18:02:06 +0200
+Message-Id: <1a088075a75c545c92597828e933ded0a8ff0ed7.1618502178.git.pabeni@redhat.com>
+In-Reply-To: <cover.1618502178.git.pabeni@redhat.com>
+References: <cover.1618502178.git.pabeni@redhat.com>
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
 
-The mptcpd 0.7 release is now available on GitHub:
+The mentioned flag is currently silenlty ignored. This
+change implementes the TCP-like behaviour, dropping the
+pending data up to the specified length.
 
-    https://github.com/intel/mptcpd/releases
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+Note: this will conflict with the pending MSG_PEEK,
+with hopefully simple conflict resolutions (same change in both patches)
+---
+ net/mptcp/protocol.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-Notable changes include the following:
-
-- MPTCP path management generic netlink events recently added to the
-  upstream Linux kernel are now supported, and propagated to mptcpd
-  plugins.  The same API is also found in the multipath-tcp.org
-  kernel.  Differences between the two kernels are transparent to
-  mptcpd plugins.
-
-- Mptcpd now supports the upstream Linux kernel server-oriented
-  MPTCP_PM_CMD_SET_FLAGS generic netlink command through the new
-  mptcpd_pm_set_flags() function.  It allows the user to set MPTCP
-  flags for a specific local IP address.
-
-- An incorrect buffer size calculation when calling
-  mptcpd_pm_add_addr() when using an IPv6 addresses on platforms
-  running the upstream Linux kernel was corrected.
-
-- An "operation not supported" error that occurred when attempting to
-  retrieve MPTCP resource limits through the mptcpd_pm_get_limits()
-  function was fixed.
-
-- A network interface lookup problem in the "sspi" plugin was
-  corrected.
-
-- Building mptcpd against ELL 0.39 is now supported.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ed9ada31f2da..e6d1c293a615 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1739,7 +1739,7 @@ static void mptcp_wait_data(struct sock *sk, long *timeo)
+ 
+ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 				struct msghdr *msg,
+-				size_t len)
++				size_t len, int flags)
+ {
+ 	struct sk_buff *skb;
+ 	int copied = 0;
+@@ -1750,11 +1750,13 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+ 		u32 count = min_t(size_t, len - copied, data_len);
+ 		int err;
+ 
+-		err = skb_copy_datagram_msg(skb, offset, msg, count);
+-		if (unlikely(err < 0)) {
+-			if (!copied)
+-				return err;
+-			break;
++		if (!(flags & MSG_TRUNC)) {
++			err = skb_copy_datagram_msg(skb, offset, msg, count);
++			if (unlikely(err < 0)) {
++				if (!copied)
++					return err;
++				break;
++			}
+ 		}
+ 
+ 		copied += count;
+@@ -1966,7 +1968,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 	while (copied < len) {
+ 		int bytes_read;
+ 
+-		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied);
++		bytes_read = __mptcp_recvmsg_mskq(msk, msg, len - copied, flags);
+ 		if (unlikely(bytes_read < 0)) {
+ 			if (!copied)
+ 				copied = bytes_read;
+-- 
+2.26.2
 
