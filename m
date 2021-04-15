@@ -1,125 +1,105 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E786D28
-	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 06:01:24 +0000 (UTC)
-Received: by mail-lj1-f178.google.com with SMTP id z8so25786591ljm.12
-        for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 23:01:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0D86D13
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 07:10:13 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id e7so26668308edu.10
+        for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 00:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qdo7GLfDZ1fKfLETl+AnnMu4LOm28kYyjEjCWeEN/kM=;
-        b=PZxrip/lkWUIJnUpal2tRZVXiAofn50XVw3/lU7TzdlDxJ3ozNg0JLo+iujw/3cE3A
-         7ozR/Gb7FWcOZSffC3ERKXcAVMqYX+YUIIHGzcVHpjaC2fhw6cvyROe7+ZOEORYP34gO
-         4rktudHPimrrD0KrViFavSSLb6Lfr99RTv1ImY4Ya8S+Tu4Lxwif0WmaVLv27ZZj9Be8
-         UX5lMfwFptT5vX2mIZh3o/ufbjoBKPI99et2JkncXPrOAFkC0J2O+KV2mRPrv6obQ8+/
-         NcGLJ772C8lX+8IbfHtw7egTBQodFI6Z5S9hmkz8qnGic7XsyD0KTZWn32nrdgIvO23n
-         CQbw==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cVJbiBboy1l3Ex5mXO1TqNUpkFbiSXvC2bEmtOt51do=;
+        b=o3uvJtrcuH/G7imD/Au58YPKPN98NKGlM/g+B1oDZtDbqRb1Wn4OIZOQW9jV95E0IN
+         L0Ou+PdFlVMqLSU0ZnVfigJidlWASZ8NrtRuGkxzhotKufy3ZNjQ1irtu6SlCcQGdDCq
+         LsODTEAaD1/yXJFdVQHAIsfOFBY1lpO5vLejISh+uDE9asQS2YlnXQRT9WdyK6ymdTOI
+         oBO6Cyd2+rGjIJE1SnGocRO6nb9ebp0f3a5jAb4x1jPlzdj67O0tHydByRAAXi/4mMbw
+         kzSjVbX9sFxmNwW7Zw7XQLZkJNzMfEdTi3IE/HpPn0XzKBg5HtWXLMV62G6gJW/Alkjh
+         j1zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qdo7GLfDZ1fKfLETl+AnnMu4LOm28kYyjEjCWeEN/kM=;
-        b=FCNng+/nSa81cfTQukNMutg1O0GWtWmaqcpTVBPNybqIqdTIDpiH+xR3/OuCoKHG1l
-         oFUhvY6CRzuAFX+eQEt1pqWCpIFQ93i3TGAcHCSEeVa4ukeMbe4P/1byxgnwqoeBws9i
-         ksEj13R9y8QSGM3EbjFjEVcvVDLM/HryWsJGd84P1WTMs4f8bwRieyLKywh7nN80xAHg
-         PYC8zip3zWIPSn6r2LbjD/QfG1HfC2rjLFi20k8vVwJ67TE+ZJ68V3Q2GYI3sQnn/E7y
-         BeCGzxFyTaGxLFyaY44dXdiDD8qkgz1DjOMQQ5fQVQIkMptrwF/b360sbb7Ku18PNmVs
-         okug==
-X-Gm-Message-State: AOAM532AOfhMiUExx+FS7bJTZFsE8eulNWEEVuqGJEsTh/3QcHR2afmo
-	TEQH12QZJoSSVK09uESb6cyVByF7PCf8FiuVu2Y27w==
-X-Google-Smtp-Source: ABdhPJy9te6R+p8u4q5ZbHoZtpIs4d6hU7Z7VX61/DbN9iNOvSUCxpMUf/Ps0cuyIkT9nOAmt7XlbbjeLhPd7cK0OuU=
-X-Received: by 2002:a2e:8797:: with SMTP id n23mr831519lji.347.1618466482085;
- Wed, 14 Apr 2021 23:01:22 -0700 (PDT)
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cVJbiBboy1l3Ex5mXO1TqNUpkFbiSXvC2bEmtOt51do=;
+        b=lXwIvcbMqSD78C7kBxa6cIUGoXsufmMvEFhjAQSvfrPy8UXxd7X5nYjZ2Dx9w/KRVN
+         vckeBkcHf8lJ3zv2CEjXhPTlJJAgZ2PEfzee+6FYO4q16bZZS7gEIWqLOXxyDHa7WwN+
+         gtRSbnjlDTdcTIQk899/+wWSmvK233WGLmZgO+rR8fYRIRxU7TEUaUMeuOojTP7kSKzu
+         +5hVWrJz5GRFJ6tsronedoGF95mMxcw/26TCu575ncL/0jO+/r+8jleH1uerWA1fYO7Z
+         LKESlcz+qhlZAhQIdLB8UEbJfnjJqSz3HIx/7SHH2a5uNvLYwbh6uI4eCWRvfKfsPbkE
+         Yb9w==
+X-Gm-Message-State: AOAM533oGuZX9+horbErGMm1rLNl1ulaQRSITbrlLnOvvRJb452DLSVp
+	73ggozE8e6pw+tS/wNUShnmsZ1yy3Xrs3Q==
+X-Google-Smtp-Source: ABdhPJxUb5VhQZnEL91I2SJ6ZNy+oArB6BT1PUTEgTaNKWNU7cSgQhqUpHB8lUZMWvgfsQiAyskrqw==
+X-Received: by 2002:a05:6402:1255:: with SMTP id l21mr1740882edw.362.1618470611776;
+        Thu, 15 Apr 2021 00:10:11 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:4aaf:625b:29ae:a5])
+        by smtp.gmail.com with ESMTPSA id c16sm1250634ejx.81.2021.04.15.00.10.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Apr 2021 00:10:11 -0700 (PDT)
+To: David Gow <davidgow@google.com>, Nico Pache <npache@redhat.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Brendan Higgins <brendanhiggins@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-ext4@vger.kernel.org,
+ Networking <netdev@vger.kernel.org>, rafael@kernel.org,
+ linux-m68k@lists.linux-m68k.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Theodore Ts'o <tytso@mit.edu>, mathew.j.martineau@linux.intel.com,
+ davem@davemloft.net, Mark Brown <broonie@kernel.org>,
+ Shuah Khan <skhan@linuxfoundation.org>, mptcp@lists.linux.dev
+References: <cover.1618388989.git.npache@redhat.com>
+ <0fa191715b236766ad13c5f786d8daf92a9a0cf2.1618388989.git.npache@redhat.com>
+ <e26fbcc8-ba3e-573a-523d-9c5d5f84bc46@tessares.net>
+ <CABVgOSm9Lfcu--iiFo=PNLCWCj4vkxqAqO0aZT9B2r3Kw5Fhaw@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH v2 5/6] kunit: mptcp: adhear to KUNIT formatting standard
+Message-ID: <b57a1cc8-4921-6ed5-adb8-0510d1918d28@tessares.net>
+Date: Thu, 15 Apr 2021 09:10:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1618388989.git.npache@redhat.com> <0fa191715b236766ad13c5f786d8daf92a9a0cf2.1618388989.git.npache@redhat.com>
- <e26fbcc8-ba3e-573a-523d-9c5d5f84bc46@tessares.net>
-In-Reply-To: <e26fbcc8-ba3e-573a-523d-9c5d5f84bc46@tessares.net>
-From: David Gow <davidgow@google.com>
-Date: Thu, 15 Apr 2021 14:01:10 +0800
-Message-ID: <CABVgOSm9Lfcu--iiFo=PNLCWCj4vkxqAqO0aZT9B2r3Kw5Fhaw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] kunit: mptcp: adhear to KUNIT formatting standard
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Nico Pache <npache@redhat.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Brendan Higgins <brendanhiggins@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-ext4@vger.kernel.org, Networking <netdev@vger.kernel.org>, rafael@kernel.org, 
-	linux-m68k@lists.linux-m68k.org, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	"Theodore Ts'o" <tytso@mit.edu>, mathew.j.martineau@linux.intel.com, davem@davemloft.net, 
-	Mark Brown <broonie@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CABVgOSm9Lfcu--iiFo=PNLCWCj4vkxqAqO0aZT9B2r3Kw5Fhaw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 
-Hi Nico, Matthieu,
+Hi David,
 
-Thanks for going to the trouble of making these conform to the KUnit
-style guidelines.
+Thank you for your very clear reply!
 
-On Wed, Apr 14, 2021 at 5:25 PM Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> Hi Nico,
->
-> On 14/04/2021 10:58, Nico Pache wrote:
-> > Drop 'S' from end of CONFIG_MPTCP_KUNIT_TESTS inorder to adhear to the
-> > KUNIT *_KUNIT_TEST config name format.
+On 15/04/2021 08:01, David Gow wrote:
+> On Wed, Apr 14, 2021 at 5:25 PM Matthieu Baerts
+> <matthieu.baerts@tessares.net> wrote:
+>> Up to the KUnit maintainers to decide ;-)
+> 
+> To summarise my view: personally, I'd prefer things the way this patch
+> works: have everything end in _KUNIT_TEST, even if that enables a
+> couple of suites. The extra 'S' on the end isn't a huge problem if you
+> have a good reason to particularly want to keep it, though: as long as
+> you don't have something like _K_UNIT_VERIFICATION or something
+> equally silly that'd break grepping for '_KUNIT_TEST', it's fine be
+> me.
 
-[Super nitpicky comment for this series: It's 'adhere', not 'adhear'.
-It's not worth resending this out just to fix the spelling here, but
-if you do another version, it might be worth fiing.]
+Indeed it makes sense: we don't need to split nor to have a meta-Kconfig 
+entry. We can then remove the extra 'S' and update our tests suite:
 
->
-> For MPTCP, we have multiple KUnit tests: crypto and token. That's why we
-> wrote TESTS with a S.
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-So (as this patch series attests), there are a few different config
-options which cover (or intend one day to cover) multiple suites, and
-hence end in KUNIT_TESTS. Personally, I'd still slightly prefer TEST
-here, just to have a common suffix for KUnit test options, and that's
-what I was going for when writing the style guide.
+I see that the whole series has been marked as "Not Applicable" on 
+Netdev's patchwork:
 
-That being said, it's also worth noting that there is an explicit
-exemption for existing tests, so if you (for example) have a bunch of
-automation which relies on this name and can't easily be changed,
-that's probably more important than a lone 'S'.
+https://patchwork.kernel.org/project/netdevbpf/patch/0fa191715b236766ad13c5f786d8daf92a9a0cf2.1618388989.git.npache@redhat.com/
 
-> I'm fine without S if we need to stick with KUnit' standard. But maybe
-> the standard wants us to split the two tests and create
-> MPTCP_TOKEN_KUNIT_TEST and MPTCP_TOKEN_KUNIT_TEST config?
->
-> In this case, we could eventually keep MPTCP_KUNIT_TESTS which will in
-> charge of selecting the two new ones.
+Like patch 1/6, I can apply it in MPTCP tree and send it later to 
+net-next with other patches.
+Except if you guys prefer to apply it in KUnit tree and send it to 
+linux-next?
 
-This is certainly an option if you want to do it, but personally I
-wouldn't bother unless it gives you some real advantage. One thing I
-would note, however, is that it's possible to have a per-subsystem
-'.kunitconfig' file, so if you want to run a particular group of tests
-(i.e., have a particular set of config options for testing), it'd be
-possible to have that rather than a meta-Kconfig entry.
-
-While there are some advantages to trying to have a  1:1 suite:config
-mapping, there's isn't actually anything that depends on it at the
-moment (or indeed, anything actively planned). So, in my view, there's
-no need for you to split the config entry unless you think there's a
-good reason you'd want to be able to build one set of tests but not
-the other.
-
-> Up to the KUnit maintainers to decide ;-)
-
-To summarise my view: personally, I'd prefer things the way this patch
-works: have everything end in _KUNIT_TEST, even if that enables a
-couple of suites. The extra 'S' on the end isn't a huge problem if you
-have a good reason to particularly want to keep it, though: as long as
-you don't have something like _K_UNIT_VERIFICATION or something
-equally silly that'd break grepping for '_KUNIT_TEST', it's fine be
-me.
-
-So, since it matches my prejudices, this patch is:
-
-Reviewed-by: David Gow <davidgow@google.com>
-
-Thanks,
--- David
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
