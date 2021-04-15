@@ -1,251 +1,125 @@
-Received: from chinatelecom.cn (prt-mail.chinatelecom.cn [42.123.76.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F26971
-	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 03:20:30 +0000 (UTC)
-HMM_SOURCE_IP:172.18.0.218:42688.1901079118
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.9?logid-9dddec36bfe846c68c74ae94df3bc238 (unknown [172.18.0.218])
-	by chinatelecom.cn (HERMES) with SMTP id ED83E2800DB;
-	Thu, 15 Apr 2021 11:20:30 +0800 (CST)
-X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
-Received: from  ([172.18.0.218])
-	by app0025 with ESMTP id 2e622c0b18e9455f82878196efa52b0d for mptcp@lists.linux.dev;
-	Thu Apr 15 11:20:28 2021
-X-Transaction-ID: 2e622c0b18e9455f82878196efa52b0d
-X-filter-score:  filter<0>
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 172.18.0.218
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-From: Yonglong Li <liyonglong@chinatelecom.cn>
-To: mptcp@lists.linux.dev,
-	mptcp@lists.01.org
-Cc: mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net,
-	fw@strlen.de,
-	pabeni@redhat.com,
-	wujianguo@chinatelecom.cn,
-	Yonglong Li <liyonglong@chinatelecom.cn>
-Subject: [PATCH v2 2/2] selftests: mptcp: add a test case for MSG_PEEK
-Date: Thu, 15 Apr 2021 11:19:12 +0800
-Message-Id: <1618456752-139032-2-git-send-email-liyonglong@chinatelecom.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1618456752-139032-1-git-send-email-liyonglong@chinatelecom.cn>
-References: <1618456752-139032-1-git-send-email-liyonglong@chinatelecom.cn>
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E786D28
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 06:01:24 +0000 (UTC)
+Received: by mail-lj1-f178.google.com with SMTP id z8so25786591ljm.12
+        for <mptcp@lists.linux.dev>; Wed, 14 Apr 2021 23:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qdo7GLfDZ1fKfLETl+AnnMu4LOm28kYyjEjCWeEN/kM=;
+        b=PZxrip/lkWUIJnUpal2tRZVXiAofn50XVw3/lU7TzdlDxJ3ozNg0JLo+iujw/3cE3A
+         7ozR/Gb7FWcOZSffC3ERKXcAVMqYX+YUIIHGzcVHpjaC2fhw6cvyROe7+ZOEORYP34gO
+         4rktudHPimrrD0KrViFavSSLb6Lfr99RTv1ImY4Ya8S+Tu4Lxwif0WmaVLv27ZZj9Be8
+         UX5lMfwFptT5vX2mIZh3o/ufbjoBKPI99et2JkncXPrOAFkC0J2O+KV2mRPrv6obQ8+/
+         NcGLJ772C8lX+8IbfHtw7egTBQodFI6Z5S9hmkz8qnGic7XsyD0KTZWn32nrdgIvO23n
+         CQbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qdo7GLfDZ1fKfLETl+AnnMu4LOm28kYyjEjCWeEN/kM=;
+        b=FCNng+/nSa81cfTQukNMutg1O0GWtWmaqcpTVBPNybqIqdTIDpiH+xR3/OuCoKHG1l
+         oFUhvY6CRzuAFX+eQEt1pqWCpIFQ93i3TGAcHCSEeVa4ukeMbe4P/1byxgnwqoeBws9i
+         ksEj13R9y8QSGM3EbjFjEVcvVDLM/HryWsJGd84P1WTMs4f8bwRieyLKywh7nN80xAHg
+         PYC8zip3zWIPSn6r2LbjD/QfG1HfC2rjLFi20k8vVwJ67TE+ZJ68V3Q2GYI3sQnn/E7y
+         BeCGzxFyTaGxLFyaY44dXdiDD8qkgz1DjOMQQ5fQVQIkMptrwF/b360sbb7Ku18PNmVs
+         okug==
+X-Gm-Message-State: AOAM532AOfhMiUExx+FS7bJTZFsE8eulNWEEVuqGJEsTh/3QcHR2afmo
+	TEQH12QZJoSSVK09uESb6cyVByF7PCf8FiuVu2Y27w==
+X-Google-Smtp-Source: ABdhPJy9te6R+p8u4q5ZbHoZtpIs4d6hU7Z7VX61/DbN9iNOvSUCxpMUf/Ps0cuyIkT9nOAmt7XlbbjeLhPd7cK0OuU=
+X-Received: by 2002:a2e:8797:: with SMTP id n23mr831519lji.347.1618466482085;
+ Wed, 14 Apr 2021 23:01:22 -0700 (PDT)
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1618388989.git.npache@redhat.com> <0fa191715b236766ad13c5f786d8daf92a9a0cf2.1618388989.git.npache@redhat.com>
+ <e26fbcc8-ba3e-573a-523d-9c5d5f84bc46@tessares.net>
+In-Reply-To: <e26fbcc8-ba3e-573a-523d-9c5d5f84bc46@tessares.net>
+From: David Gow <davidgow@google.com>
+Date: Thu, 15 Apr 2021 14:01:10 +0800
+Message-ID: <CABVgOSm9Lfcu--iiFo=PNLCWCj4vkxqAqO0aZT9B2r3Kw5Fhaw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] kunit: mptcp: adhear to KUNIT formatting standard
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, Nico Pache <npache@redhat.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Brendan Higgins <brendanhiggins@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-ext4@vger.kernel.org, Networking <netdev@vger.kernel.org>, rafael@kernel.org, 
+	linux-m68k@lists.linux-m68k.org, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	"Theodore Ts'o" <tytso@mit.edu>, mathew.j.martineau@linux.intel.com, davem@davemloft.net, 
+	Mark Brown <broonie@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Extend mptcp_connect tool with MSG_PEEK support and add a test case in
-mptcp_connect.sh that checks the data recvived from/after recv() with
-MSG_PEEK.
+Hi Nico, Matthieu,
 
-eg: sh mptcp_connect.sh -4 -m poll -P
+Thanks for going to the trouble of making these conform to the KUnit
+style guidelines.
 
-Signed-off-by: Yonglong Li <liyonglong@chinatelecom.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c  | 45 +++++++++++++++++++-
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 49 +++++++++++++++++++++-
- 2 files changed, 90 insertions(+), 4 deletions(-)
+On Wed, Apr 14, 2021 at 5:25 PM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+>
+> Hi Nico,
+>
+> On 14/04/2021 10:58, Nico Pache wrote:
+> > Drop 'S' from end of CONFIG_MPTCP_KUNIT_TESTS inorder to adhear to the
+> > KUNIT *_KUNIT_TEST config name format.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 2f207cf..668a041 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -45,7 +45,14 @@ enum cfg_mode {
- 	CFG_MODE_SENDFILE,
- };
- 
-+enum cfg_peek {
-+	CFG_NONE_PEEK,
-+	CFG_WITH_PEEK,
-+	CFG_AFTER_PEEK,
-+};
-+
- static enum cfg_mode cfg_mode = CFG_MODE_POLL;
-+static enum cfg_peek cfg_peek = CFG_NONE_PEEK;
- static const char *cfg_host;
- static const char *cfg_port	= "12000";
- static int cfg_sock_proto	= IPPROTO_MPTCP;
-@@ -73,6 +80,7 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-u -- check mptcp ulp\n");
- 	fprintf(stderr, "\t-w num -- wait num sec before closing the socket\n");
-+	fprintf(stderr, "\t-P [saveWithPeek|saveAfterPeek] -- save data with/after MSG_PEEK form tcp socket \n");
- 	exit(1);
- }
- 
-@@ -331,6 +339,8 @@ static size_t do_write(const int fd, char *buf, const size_t len)
- 
- static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- {
-+	int ret = 0;
-+	char tmp[16384];
- 	size_t cap = rand();
- 
- 	cap &= 0xffff;
-@@ -340,7 +350,17 @@ static ssize_t do_rnd_read(const int fd, char *buf, const size_t len)
- 	else if (cap > len)
- 		cap = len;
- 
--	return read(fd, buf, cap);
-+	if (cfg_peek == CFG_WITH_PEEK) {
-+		ret = recv(fd, buf, cap, MSG_PEEK);
-+		ret = (ret < 0) ? ret : read(fd, tmp, ret);
-+	} else if (cfg_peek == CFG_AFTER_PEEK) {
-+		ret = recv(fd, buf, cap, MSG_PEEK);
-+		ret = (ret < 0) ? ret : read(fd, buf, cap);
-+	} else {
-+		ret = read(fd, buf, cap);
-+	}
-+
-+	return ret;
- }
- 
- static void set_nonblock(int fd)
-@@ -819,6 +839,24 @@ int parse_mode(const char *mode)
- 	return 0;
- }
- 
-+int parse_peek(const char *mode)
-+{
-+	if (!strcasecmp(mode, "saveWithPeek"))
-+		return CFG_WITH_PEEK;
-+	if (!strcasecmp(mode, "saveAfterPeek"))
-+		return CFG_AFTER_PEEK;
-+
-+	fprintf(stderr, "Unknown: %s\n", mode);
-+	fprintf(stderr, "Supported MSG_PEEK mode are:\n");
-+	fprintf(stderr, "\t\t\"saveWithPeek\" - recv data with flags 'MSG_PEEK' and save the peek data into file \n");
-+	fprintf(stderr, "\t\t\"saveAfterPeek\" - read data form socket and save it into file after recv with flags 'MSG_PEEK' \n");
-+
-+	die_usage();
-+
-+	/* silence compiler warning */
-+	return 0;
-+}
-+
- static int parse_int(const char *size)
- {
- 	unsigned long s;
-@@ -846,7 +884,7 @@ static void parse_opts(int argc, char **argv)
- {
- 	int c;
- 
--	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:")) != -1) {
-+	while ((c = getopt(argc, argv, "6jr:lp:s:hut:m:S:R:w:M:P:")) != -1) {
- 		switch (c) {
- 		case 'j':
- 			cfg_join = true;
-@@ -899,6 +937,9 @@ static void parse_opts(int argc, char **argv)
- 		case 'M':
- 			cfg_mark = strtol(optarg, NULL, 0);
- 			break;
-+		case 'P':
-+			cfg_peek = parse_peek(optarg);
-+			break;
- 		}
- 	}
- 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 385cdc9..aa267f3 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -3,7 +3,7 @@
- 
- time_start=$(date +%s)
- 
--optstring="S:R:d:e:l:r:h4cm:f:t"
-+optstring="S:R:d:e:l:r:h4cm:f:tP"
- ret=0
- sin=""
- sout=""
-@@ -23,6 +23,8 @@ rcvbuf=0
- options_log=true
- do_tcp=0
- filesize=0
-+testpeek=false
-+peekmode=""
- 
- if [ $tc_loss -eq 100 ];then
- 	tc_loss=1%
-@@ -47,6 +49,7 @@ usage() {
- 	echo -e "\t-R: set rcvbuf value (default: use kernel default)"
- 	echo -e "\t-m: test mode (poll, sendfile; default: poll)"
- 	echo -e "\t-t: also run tests with TCP (use twice to non-fallback tcp)"
-+	echo -e "\t-P: test MSG_PEEK flags of recv() function"
- }
- 
- while getopts "$optstring" option;do
-@@ -104,6 +107,10 @@ while getopts "$optstring" option;do
- 	"t")
- 		do_tcp=$((do_tcp+1))
- 		;;
-+	"P")
-+		testpeek=true
-+		peekmode="saveWithPeek"
-+		;;
- 	"?")
- 		usage $0
- 		exit 1
-@@ -393,6 +400,10 @@ do_transfer()
- 		extra_args="$extra_args -m $testmode"
- 	fi
- 
-+	if $testpeek; then
-+		extra_args="$extra_args -P $peekmode"
-+	fi
-+
- 	if [ -n "$extra_args" ] && $options_log; then
- 		options_log=false
- 		echo "INFO: extra options: $extra_args"
-@@ -734,7 +745,41 @@ done
- 
- time_end=$(date +%s)
- time_run=$((time_end-time_start))
--
- echo "Time: ${time_run} seconds"
- 
-+# if testpeek enable, set peekmode="saveAfterPeek" and test again
-+if $testpeek; then
-+	time_start=$(date +%s)
-+	peekmode="saveAfterPeek"
-+	options_log=true
-+	for sender in $ns1 $ns2 $ns3 $ns4;do
-+		run_tests_lo "$ns1" "$sender" 10.0.1.1 1
-+		if [ $ret -ne 0 ] ;then
-+			echo "FAIL: Could not even run loopback test" 1>&2
-+			exit $ret
-+		fi
-+		run_tests_lo "$ns1" $sender dead:beef:1::1 1
-+		if [ $ret -ne 0 ] ;then
-+			echo "FAIL: Could not even run loopback v6 test" 2>&1
-+			exit $ret
-+		fi
-+
-+		run_tests "$ns2" $sender 10.0.1.2
-+		run_tests "$ns2" $sender dead:beef:1::2
-+		run_tests "$ns2" $sender 10.0.2.1
-+		run_tests "$ns2" $sender dead:beef:2::1
-+
-+		run_tests "$ns3" $sender 10.0.2.2
-+		run_tests "$ns3" $sender dead:beef:2::2
-+		run_tests "$ns3" $sender 10.0.3.2
-+		run_tests "$ns3" $sender dead:beef:3::2
-+
-+		run_tests "$ns4" $sender 10.0.3.1
-+		run_tests "$ns4" $sender dead:beef:3::1
-+	done
-+	time_end=$(date +%s)
-+	time_run=$((time_end-time_start))
-+	echo "Time: ${time_run} seconds"
-+fi
-+
- exit $ret
--- 
-1.8.3.1
+[Super nitpicky comment for this series: It's 'adhere', not 'adhear'.
+It's not worth resending this out just to fix the spelling here, but
+if you do another version, it might be worth fiing.]
 
+>
+> For MPTCP, we have multiple KUnit tests: crypto and token. That's why we
+> wrote TESTS with a S.
+
+So (as this patch series attests), there are a few different config
+options which cover (or intend one day to cover) multiple suites, and
+hence end in KUNIT_TESTS. Personally, I'd still slightly prefer TEST
+here, just to have a common suffix for KUnit test options, and that's
+what I was going for when writing the style guide.
+
+That being said, it's also worth noting that there is an explicit
+exemption for existing tests, so if you (for example) have a bunch of
+automation which relies on this name and can't easily be changed,
+that's probably more important than a lone 'S'.
+
+> I'm fine without S if we need to stick with KUnit' standard. But maybe
+> the standard wants us to split the two tests and create
+> MPTCP_TOKEN_KUNIT_TEST and MPTCP_TOKEN_KUNIT_TEST config?
+>
+> In this case, we could eventually keep MPTCP_KUNIT_TESTS which will in
+> charge of selecting the two new ones.
+
+This is certainly an option if you want to do it, but personally I
+wouldn't bother unless it gives you some real advantage. One thing I
+would note, however, is that it's possible to have a per-subsystem
+'.kunitconfig' file, so if you want to run a particular group of tests
+(i.e., have a particular set of config options for testing), it'd be
+possible to have that rather than a meta-Kconfig entry.
+
+While there are some advantages to trying to have a  1:1 suite:config
+mapping, there's isn't actually anything that depends on it at the
+moment (or indeed, anything actively planned). So, in my view, there's
+no need for you to split the config entry unless you think there's a
+good reason you'd want to be able to build one set of tests but not
+the other.
+
+> Up to the KUnit maintainers to decide ;-)
+
+To summarise my view: personally, I'd prefer things the way this patch
+works: have everything end in _KUNIT_TEST, even if that enables a
+couple of suites. The extra 'S' on the end isn't a huge problem if you
+have a good reason to particularly want to keep it, though: as long as
+you don't have something like _K_UNIT_VERIFICATION or something
+equally silly that'd break grepping for '_KUNIT_TEST', it's fine be
+me.
+
+So, since it matches my prejudices, this patch is:
+
+Reviewed-by: David Gow <davidgow@google.com>
+
+Thanks,
+-- David
