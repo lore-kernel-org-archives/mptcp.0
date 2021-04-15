@@ -1,32 +1,33 @@
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05596D13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A132BC2
 	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 23:45:10 +0000 (UTC)
-IronPort-SDR: /apO/TWZp7siXzvwjU/BsCXUp3JBbdXu1eDLw8FhokQb5qUdLJlwDQjWI/qJRUxTfAdHpVJzAX
- miWq+Au6y6xw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="258923274"
+IronPort-SDR: nrb6P/6zjd1Sc1HUTSANsW0FTGnGfP07XiCoPU95t9r0t3d9hhRiwT2+JslDT8ANjt6Qi+27RI
+ buI2XfM4x3KA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="258923276"
 X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
-   d="scan'208";a="258923274"
+   d="scan'208";a="258923276"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:45:07 -0700
-IronPort-SDR: 3KrRNt/vTrvfCpRS+Io6onEaz7KRh420SMTCFqcb/Bj+svsIuzGSXJuoSagsuoI5eGFOnwJVsk
- Gn7l3WghuCvA==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:45:08 -0700
+IronPort-SDR: 6ZJ/QtR3RtVOqP/JqGxlQ/gwc+Mjv8wWvWuGhMJ2HEOvDUBfljBugPoqPtezeej7t2d1Mk6njO
+ nDBTe83UsWSA==
 X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
-   d="scan'208";a="461793356"
+   d="scan'208";a="461793360"
 Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.243.150])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:45:07 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
+Cc: Florian Westphal <fw@strlen.de>,
 	davem@davemloft.net,
 	kuba@kernel.org,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
+	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 03/13] mptcp: only admit explicitly supported sockopt
-Date: Thu, 15 Apr 2021 16:44:52 -0700
-Message-Id: <20210415234502.224225-4-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 05/13] mptcp: tag sequence_seq with socket state
+Date: Thu, 15 Apr 2021 16:44:54 -0700
+Message-Id: <20210415234502.224225-6-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210415234502.224225-1-mathew.j.martineau@linux.intel.com>
 References: <20210415234502.224225-1-mathew.j.martineau@linux.intel.com>
@@ -37,270 +38,192 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Florian Westphal <fw@strlen.de>
 
-Unrolling mcast state at msk dismantel time is bug prone, as
-syzkaller reported:
+Paolo Abeni suggested to avoid re-syncing new subflows because
+they inherit options from listener. In case options were set on
+listener but are not set on mptcp-socket there is no need to
+do any synchronisation for new subflows.
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.11.0-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor905/8822 is trying to acquire lock:
-ffffffff8d678fe8 (rtnl_mutex){+.+.}-{3:3}, at: ipv6_sock_mc_close+0xd7/0x110 net/ipv6/mcast.c:323
+This change sets sockopt_seq of new mptcp sockets to the seq of
+the mptcp listener sock.
 
-but task is already holding lock:
-ffff888024390120 (sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1600 [inline]
-ffff888024390120 (sk_lock-AF_INET6){+.+.}-{0:0}, at: mptcp6_release+0x57/0x130 net/mptcp/protocol.c:3507
+Subflow sequence is set to the embedded tcp listener sk.
+Add a comment explaing why sk_state is involved in sockopt_seq
+generation.
 
-which lock already depends on the new lock.
-
-Instead we can simply forbid any mcast-related setsockopt.
-Let's do the same with all other non supported sockopts.
-
-Fixes: 717e79c867ca5 ("mptcp: Add setsockopt()/getsockopt() socket operations")
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/sockopt.c | 216 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 216 insertions(+)
+ net/mptcp/protocol.c | 12 ++++++++---
+ net/mptcp/protocol.h |  4 ++++
+ net/mptcp/sockopt.c  | 47 ++++++++++++++++++++++++++++++++++++++++++--
+ net/mptcp/subflow.c  |  4 ++++
+ 4 files changed, 62 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 479f75653969..fb98fab252df 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -82,6 +82,219 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 	return ret;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1399d301d47f..5cba90948a7e 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -733,18 +733,23 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ static bool mptcp_do_flush_join_list(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow;
++	bool ret = false;
+ 
+ 	if (likely(list_empty(&msk->join_list)))
+ 		return false;
+ 
+ 	spin_lock_bh(&msk->join_list_lock);
+-	list_for_each_entry(subflow, &msk->join_list, node)
+-		mptcp_propagate_sndbuf((struct sock *)msk, mptcp_subflow_tcp_sock(subflow));
++	list_for_each_entry(subflow, &msk->join_list, node) {
++		u32 sseq = READ_ONCE(subflow->setsockopt_seq);
+ 
++		mptcp_propagate_sndbuf((struct sock *)msk, mptcp_subflow_tcp_sock(subflow));
++		if (READ_ONCE(msk->setsockopt_seq) != sseq)
++			ret = true;
++	}
+ 	list_splice_tail_init(&msk->join_list, &msk->conn_list);
+ 	spin_unlock_bh(&msk->join_list_lock);
+ 
+-	return true;
++	return ret;
  }
  
-+static bool mptcp_supported_sockopt(int level, int optname)
+ void __mptcp_flush_join_list(struct mptcp_sock *msk)
+@@ -2718,6 +2723,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 	msk->snd_nxt = msk->write_seq;
+ 	msk->snd_una = msk->write_seq;
+ 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
++	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+ 
+ 	if (mp_opt->mp_capable) {
+ 		msk->can_ack = true;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 0186aad3108a..df269c26f145 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -256,6 +256,8 @@ struct mptcp_sock {
+ 		u64	time;	/* start time of measurement window */
+ 		u64	rtt_us; /* last maximum rtt of subflows */
+ 	} rcvq_space;
++
++	u32 setsockopt_seq;
+ };
+ 
+ #define mptcp_lock_sock(___sk, cb) do {					\
+@@ -414,6 +416,8 @@ struct mptcp_subflow_context {
+ 	long	delegated_status;
+ 	struct	list_head delegated_node;   /* link into delegated_action, protected by local BH */
+ 
++	u32 setsockopt_seq;
++
+ 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
+ 	struct	sock *conn;	    /* parent mptcp_sock */
+ 	const	struct inet_connection_sock_af_ops *icsk_af_ops;
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 4fdc0ad6acf7..27b49543fc58 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -24,6 +24,27 @@ static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ 	return msk->first;
+ }
+ 
++static u32 sockopt_seq_reset(const struct sock *sk)
 +{
-+	if (level == SOL_SOCKET) {
-+		switch (optname) {
-+		case SO_DEBUG:
-+		case SO_REUSEPORT:
-+		case SO_REUSEADDR:
++	sock_owned_by_me(sk);
 +
-+		/* the following ones need a better implementation,
-+		 * but are quite common we want to preserve them
-+		 */
-+		case SO_BINDTODEVICE:
-+		case SO_SNDBUF:
-+		case SO_SNDBUFFORCE:
-+		case SO_RCVBUF:
-+		case SO_RCVBUFFORCE:
-+		case SO_KEEPALIVE:
-+		case SO_PRIORITY:
-+		case SO_LINGER:
-+		case SO_TIMESTAMP_OLD:
-+		case SO_TIMESTAMP_NEW:
-+		case SO_TIMESTAMPNS_OLD:
-+		case SO_TIMESTAMPNS_NEW:
-+		case SO_TIMESTAMPING_OLD:
-+		case SO_TIMESTAMPING_NEW:
-+		case SO_RCVLOWAT:
-+		case SO_RCVTIMEO_OLD:
-+		case SO_RCVTIMEO_NEW:
-+		case SO_SNDTIMEO_OLD:
-+		case SO_SNDTIMEO_NEW:
-+		case SO_MARK:
-+		case SO_INCOMING_CPU:
-+		case SO_BINDTOIFINDEX:
-+		case SO_BUSY_POLL:
-+		case SO_PREFER_BUSY_POLL:
-+		case SO_BUSY_POLL_BUDGET:
++	/* Highbits contain state.  Allows to distinguish sockopt_seq
++	 * of listener and established:
++	 * s0 = new_listener()
++	 * sockopt(s0) - seq is 1
++	 * s1 = accept(s0) - s1 inherits seq 1 if listener sk (s0)
++	 * sockopt(s0) - seq increments to 2 on s0
++	 * sockopt(s1) // seq increments to 2 on s1 (different option)
++	 * new ssk completes join, inherits options from s0 // seq 2
++	 * Needs sync from mptcp join logic, but ssk->seq == msk->seq
++	 *
++	 * Set High order bits to sk_state so ssk->seq == msk->seq test
++	 * will fail.
++	 */
 +
-+		/* next ones are no-op for plain TCP */
-+		case SO_NO_CHECK:
-+		case SO_DONTROUTE:
-+		case SO_BROADCAST:
-+		case SO_BSDCOMPAT:
-+		case SO_PASSCRED:
-+		case SO_PASSSEC:
-+		case SO_RXQ_OVFL:
-+		case SO_WIFI_STATUS:
-+		case SO_NOFCS:
-+		case SO_SELECT_ERR_QUEUE:
-+			return true;
-+		}
-+
-+		/* SO_OOBINLINE is not supported, let's avoid the related mess */
-+		/* SO_ATTACH_FILTER, SO_ATTACH_BPF, SO_ATTACH_REUSEPORT_CBPF,
-+		 * SO_DETACH_REUSEPORT_BPF, SO_DETACH_FILTER, SO_LOCK_FILTER,
-+		 * we must be careful with subflows
-+		 */
-+		/* SO_ATTACH_REUSEPORT_EBPF is not supported, at it checks
-+		 * explicitly the sk_protocol field
-+		 */
-+		/* SO_PEEK_OFF is unsupported, as it is for plain TCP */
-+		/* SO_MAX_PACING_RATE is unsupported, we must be careful with subflows */
-+		/* SO_CNX_ADVICE is currently unsupported, could possibly be relevant,
-+		 * but likely needs careful design
-+		 */
-+		/* SO_ZEROCOPY is currently unsupported, TODO in sndmsg */
-+		/* SO_TXTIME is currently unsupported */
-+		return false;
-+	}
-+	if (level == SOL_IP) {
-+		switch (optname) {
-+		/* should work fine */
-+		case IP_FREEBIND:
-+		case IP_TRANSPARENT:
-+
-+		/* the following are control cmsg related */
-+		case IP_PKTINFO:
-+		case IP_RECVTTL:
-+		case IP_RECVTOS:
-+		case IP_RECVOPTS:
-+		case IP_RETOPTS:
-+		case IP_PASSSEC:
-+		case IP_RECVORIGDSTADDR:
-+		case IP_CHECKSUM:
-+		case IP_RECVFRAGSIZE:
-+
-+		/* common stuff that need some love */
-+		case IP_TOS:
-+		case IP_TTL:
-+		case IP_BIND_ADDRESS_NO_PORT:
-+		case IP_MTU_DISCOVER:
-+		case IP_RECVERR:
-+
-+		/* possibly less common may deserve some love */
-+		case IP_MINTTL:
-+
-+		/* the following is apparently a no-op for plain TCP */
-+		case IP_RECVERR_RFC4884:
-+			return true;
-+		}
-+
-+		/* IP_OPTIONS is not supported, needs subflow care */
-+		/* IP_HDRINCL, IP_NODEFRAG are not supported, RAW specific */
-+		/* IP_MULTICAST_TTL, IP_MULTICAST_LOOP, IP_UNICAST_IF,
-+		 * IP_ADD_MEMBERSHIP, IP_ADD_SOURCE_MEMBERSHIP, IP_DROP_MEMBERSHIP,
-+		 * IP_DROP_SOURCE_MEMBERSHIP, IP_BLOCK_SOURCE, IP_UNBLOCK_SOURCE,
-+		 * MCAST_JOIN_GROUP, MCAST_LEAVE_GROUP MCAST_JOIN_SOURCE_GROUP,
-+		 * MCAST_LEAVE_SOURCE_GROUP, MCAST_BLOCK_SOURCE, MCAST_UNBLOCK_SOURCE,
-+		 * MCAST_MSFILTER, IP_MULTICAST_ALL are not supported, better not deal
-+		 * with mcast stuff
-+		 */
-+		/* IP_IPSEC_POLICY, IP_XFRM_POLICY are nut supported, unrelated here */
-+		return false;
-+	}
-+	if (level == SOL_IPV6) {
-+		switch (optname) {
-+		case IPV6_V6ONLY:
-+
-+		/* the following are control cmsg related */
-+		case IPV6_RECVPKTINFO:
-+		case IPV6_2292PKTINFO:
-+		case IPV6_RECVHOPLIMIT:
-+		case IPV6_2292HOPLIMIT:
-+		case IPV6_RECVRTHDR:
-+		case IPV6_2292RTHDR:
-+		case IPV6_RECVHOPOPTS:
-+		case IPV6_2292HOPOPTS:
-+		case IPV6_RECVDSTOPTS:
-+		case IPV6_2292DSTOPTS:
-+		case IPV6_RECVTCLASS:
-+		case IPV6_FLOWINFO:
-+		case IPV6_RECVPATHMTU:
-+		case IPV6_RECVORIGDSTADDR:
-+		case IPV6_RECVFRAGSIZE:
-+
-+		/* the following ones need some love but are quite common */
-+		case IPV6_TCLASS:
-+		case IPV6_TRANSPARENT:
-+		case IPV6_FREEBIND:
-+		case IPV6_PKTINFO:
-+		case IPV6_2292PKTOPTIONS:
-+		case IPV6_UNICAST_HOPS:
-+		case IPV6_MTU_DISCOVER:
-+		case IPV6_MTU:
-+		case IPV6_RECVERR:
-+		case IPV6_FLOWINFO_SEND:
-+		case IPV6_FLOWLABEL_MGR:
-+		case IPV6_MINHOPCOUNT:
-+		case IPV6_DONTFRAG:
-+		case IPV6_AUTOFLOWLABEL:
-+
-+		/* the following one is a no-op for plain TCP */
-+		case IPV6_RECVERR_RFC4884:
-+			return true;
-+		}
-+
-+		/* IPV6_HOPOPTS, IPV6_RTHDRDSTOPTS, IPV6_RTHDR, IPV6_DSTOPTS are
-+		 * not supported
-+		 */
-+		/* IPV6_MULTICAST_HOPS, IPV6_MULTICAST_LOOP, IPV6_UNICAST_IF,
-+		 * IPV6_MULTICAST_IF, IPV6_ADDRFORM,
-+		 * IPV6_ADD_MEMBERSHIP, IPV6_DROP_MEMBERSHIP, IPV6_JOIN_ANYCAST,
-+		 * IPV6_LEAVE_ANYCAST, IPV6_MULTICAST_ALL, MCAST_JOIN_GROUP, MCAST_LEAVE_GROUP,
-+		 * MCAST_JOIN_SOURCE_GROUP, MCAST_LEAVE_SOURCE_GROUP,
-+		 * MCAST_BLOCK_SOURCE, MCAST_UNBLOCK_SOURCE, MCAST_MSFILTER
-+		 * are not supported better not deal with mcast
-+		 */
-+		/* IPV6_ROUTER_ALERT, IPV6_ROUTER_ALERT_ISOLATE are not supported, since are evil */
-+
-+		/* IPV6_IPSEC_POLICY, IPV6_XFRM_POLICY are not supported */
-+		/* IPV6_ADDR_PREFERENCES is not supported, we must be careful with subflows */
-+		return false;
-+	}
-+	if (level == SOL_TCP) {
-+		switch (optname) {
-+		/* the following are no-op or should work just fine */
-+		case TCP_THIN_DUPACK:
-+		case TCP_DEFER_ACCEPT:
-+
-+		/* the following need some love */
-+		case TCP_MAXSEG:
-+		case TCP_NODELAY:
-+		case TCP_THIN_LINEAR_TIMEOUTS:
-+		case TCP_CONGESTION:
-+		case TCP_ULP:
-+		case TCP_CORK:
-+		case TCP_KEEPIDLE:
-+		case TCP_KEEPINTVL:
-+		case TCP_KEEPCNT:
-+		case TCP_SYNCNT:
-+		case TCP_SAVE_SYN:
-+		case TCP_LINGER2:
-+		case TCP_WINDOW_CLAMP:
-+		case TCP_QUICKACK:
-+		case TCP_USER_TIMEOUT:
-+		case TCP_TIMESTAMP:
-+		case TCP_NOTSENT_LOWAT:
-+		case TCP_TX_DELAY:
-+			return true;
-+		}
-+
-+		/* TCP_MD5SIG, TCP_MD5SIG_EXT are not supported, MD5 is not compatible with MPTCP */
-+
-+		/* TCP_REPAIR, TCP_REPAIR_QUEUE, TCP_QUEUE_SEQ, TCP_REPAIR_OPTIONS,
-+		 * TCP_REPAIR_WINDOW are not supported, better avoid this mess
-+		 */
-+		/* TCP_FASTOPEN_KEY, TCP_FASTOPEN TCP_FASTOPEN_CONNECT, TCP_FASTOPEN_NO_COOKIE,
-+		 * are not supported fastopen is currently unsupported
-+		 */
-+		/* TCP_INQ is currently unsupported, needs some recvmsg work */
-+	}
-+	return false;
++	return (u32)sk->sk_state << 24u;
 +}
 +
- int mptcp_setsockopt(struct sock *sk, int level, int optname,
- 		     sockptr_t optval, unsigned int optlen)
+ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 				       sockptr_t optval, unsigned int optlen)
  {
-@@ -90,6 +303,9 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
+@@ -350,22 +371,44 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 	return -EOPNOTSUPP;
+ }
  
- 	pr_debug("msk=%p", msk);
- 
-+	if (!mptcp_supported_sockopt(level, optname))
-+		return -ENOPROTOOPT;
++static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
++{
++}
 +
- 	if (level == SOL_SOCKET)
- 		return mptcp_setsockopt_sol_socket(msk, optname, optval, optlen);
+ void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
+ {
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
++
+ 	msk_owned_by_me(msk);
++
++	if (READ_ONCE(subflow->setsockopt_seq) != msk->setsockopt_seq) {
++		__mptcp_sockopt_sync(msk, ssk);
++
++		subflow->setsockopt_seq = msk->setsockopt_seq;
++	}
+ }
  
+ void mptcp_sockopt_sync_all(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	u32 seq;
+ 
+-	msk_owned_by_me(msk);
++	seq = sockopt_seq_reset(sk);
+ 
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		u32 sseq = READ_ONCE(subflow->setsockopt_seq);
+ 
+-		mptcp_sockopt_sync(msk, ssk);
++		if (sseq != msk->setsockopt_seq) {
++			__mptcp_sockopt_sync(msk, ssk);
++			WRITE_ONCE(subflow->setsockopt_seq, seq);
++		} else if (sseq != seq) {
++			WRITE_ONCE(subflow->setsockopt_seq, seq);
++		}
+ 
+ 		cond_resched();
+ 	}
++
++	msk->setsockopt_seq = seq;
+ }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 350c51c6bf9d..c3da84576b3c 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -679,6 +679,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 			goto out;
+ 		}
+ 
++		/* ssk inherits options of listener sk */
++		ctx->setsockopt_seq = listener->setsockopt_seq;
++
+ 		if (ctx->mp_capable) {
+ 			/* this can't race with mptcp_close(), as the msk is
+ 			 * not yet exposted to user-space
+@@ -694,6 +697,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 			 * created mptcp socket
+ 			 */
+ 			new_msk->sk_destruct = mptcp_sock_destruct;
++			mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
+ 			mptcp_pm_new_connection(mptcp_sk(new_msk), child, 1);
+ 			mptcp_token_accept(subflow_req, mptcp_sk(new_msk));
+ 			ctx->conn = new_msk;
 -- 
 2.31.1
 
