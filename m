@@ -1,100 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [63.128.21.124])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B026D13
-	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 16:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1618502556;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VJtz8jweh4LNEcP7q3KQb6D8EoEPJUsr5mLhNo3rO3M=;
-	b=W0SBT/X1eRG9iey4eccu+Sxli1xnDQmSg51MiiXusyKPQTDzgvXi6uiefFdxFPsN3O5x1m
-	nvG9nsGiTwLFuxGmCu9OoDe95cMOYhd2RFcqQ4/Pvne1WeMIMbn6ibnUw/UBPXmaH8GMvG
-	/jtptqrvlDgeiIlPINyfyk83EjmZ8s0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-600-OVunpmmoNl6HxHkusa44Vw-1; Thu, 15 Apr 2021 12:02:32 -0400
-X-MC-Unique: OVunpmmoNl6HxHkusa44Vw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7952F64169
-	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 16:02:17 +0000 (UTC)
-Received: from gerbillo.redhat.com (ovpn-115-128.ams2.redhat.com [10.36.115.128])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E4E48610A8
-	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 16:02:16 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH net-next 3/3] mptcp: ignore unsupported msg flags
-Date: Thu, 15 Apr 2021 18:02:07 +0200
-Message-Id: <6254a6cfbb7269d0833be8aa07cbde1fd51a158c.1618502178.git.pabeni@redhat.com>
-In-Reply-To: <cover.1618502178.git.pabeni@redhat.com>
-References: <cover.1618502178.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF1A6D3D
+	for <mptcp@lists.linux.dev>; Thu, 15 Apr 2021 23:45:08 +0000 (UTC)
+IronPort-SDR: EAGvwxKerSZJPLoX/4JzKdhQZ6mtm8Ap5OeTM4uORyJu/eVdLOZV+nA0q9FvujY1Ee1CqjpCX/
+ y+hsRfjwyLzg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="258923269"
+X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
+   d="scan'208";a="258923269"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:45:07 -0700
+IronPort-SDR: /x+FmtNv0HHgxaYPbXp/rtB6Qkeahz6UXTytJrXL8G2F0fJQV8zDz82qyr51t+4bnKamjAdfRb
+ GDLxoRkAxz3Q==
+X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
+   d="scan'208";a="461793351"
+Received: from mjmartin-desk2.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.243.150])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:45:07 -0700
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 00/13] mptcp: Improve socket option handling
+Date: Thu, 15 Apr 2021 16:44:49 -0700
+Message-Id: <20210415234502.224225-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pabeni@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"
 
-Currently mptcp_sendmsg() fails with EOPNOTSUPP if the
-user-space provides some unsupported flag. That is unexpected
-and may foul existing applications migrated to MPTCP, which
-expect a different behavior.
+MPTCP sockets have previously had limited socket option support. The
+architecture of MPTCP sockets (one userspace-facing MPTCP socket that
+manages one or more in-kernel TCP subflow sockets) adds complexity for
+passing options through to lower levels. This patch set adds MPTCP
+support for socket options commonly used with TCP.
 
-Change the mentioned function to silently ignore the unsupported
-flags except MSG_FASTOPEN. This is the only flags currently not
-supported by MPTCP with user-space visible side-effects.
+Patch 1 reverts an interim socket option fix (a socket option blocklist)
+that was merged in the net tree for v5.12.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/162
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v1 -> v2:
- - bail on MSG_FASTOPEN only
+Patch 2 moves the socket option code to a separate file, with no
+functional changes.
 
-Note: this will conflict with the pending MSG_PEEK changes, with
-hopefully simple resolution
----
- net/mptcp/protocol.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Patch 3 adds an allowlist for socket options that are known to function
+with MPTCP. Later patches in this set add more allowed options.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e6d1c293a615..04cb937630f6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1614,8 +1614,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 	int ret = 0;
- 	long timeo;
- 
--	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
--		return -EOPNOTSUPP;
-+	/* we don't support FASTOPEN yet */
-+	if (msg->msg_flags & MSG_FASTOPEN)
-+		return -ENOTSUPP;
-+
-+	/* silently ignore everything else */
-+	msg->msg_flags &= MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL;
- 
- 	mptcp_lock_sock(sk, __mptcp_wmem_reserve(sk, min_t(size_t, 1 << 20, len)));
- 
-@@ -1951,9 +1955,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	if (unlikely(flags & MSG_ERRQUEUE))
- 		return inet_recv_error(sk, msg, len, addr_len);
- 
--	if (msg->msg_flags & ~(MSG_WAITALL | MSG_DONTWAIT))
--		return -EOPNOTSUPP;
--
- 	mptcp_lock_sock(sk, __mptcp_splice_receive_queue(sk));
- 	if (unlikely(sk->sk_state == TCP_LISTEN)) {
- 		copied = -ENOTCONN;
+Patches 4 and 5 add infrastructure for syncing MPTCP-level options with
+the TCP subflows.
+
+Patches 6-12 add support for specific socket options.
+
+Patch 13 adds a socket option self test.
+
+
+Florian Westphal (10):
+  mptcp: add skeleton to sync msk socket options to subflows
+  mptcp: tag sequence_seq with socket state
+  mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY
+  mptcp: setsockopt: handle receive/send buffer and device bind
+  mptcp: setsockopt: support SO_LINGER
+  mptcp: setsockopt: add SO_MARK support
+  mptcp: setsockopt: add SO_INCOMING_CPU
+  mptcp: setsockopt: SO_DEBUG and no-op options
+  mptcp: sockopt: add TCP_CONGESTION and TCP_INFO
+  selftests: mptcp: add packet mark test case
+
+Matthieu Baerts (1):
+  mptcp: revert "mptcp: forbit mcast-related sockopt on MPTCP sockets"
+
+Paolo Abeni (2):
+  mptcp: move sockopt function into a new file
+  mptcp: only admit explicitly supported sockopt
+
+ net/mptcp/Makefile                            |   2 +-
+ net/mptcp/protocol.c                          | 219 ++---
+ net/mptcp/protocol.h                          |  16 +
+ net/mptcp/sockopt.c                           | 756 ++++++++++++++++++
+ net/mptcp/subflow.c                           |   5 +
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ .../selftests/net/mptcp/mptcp_connect.c       |  23 +-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      | 276 +++++++
+ 8 files changed, 1122 insertions(+), 177 deletions(-)
+ create mode 100644 net/mptcp/sockopt.c
+ create mode 100755 tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+
+
+base-commit: 3a1aa533f7f676aad68f8dbbbba10b9502903770
 -- 
-2.26.2
+2.31.1
 
